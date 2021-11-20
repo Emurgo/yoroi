@@ -6,69 +6,6 @@ import {assetMessages, txLabels} from '../../../legacy/i18n/global-messages'
 import {COLORS} from '../../../legacy/styles/config'
 import {Spacer} from '../../components/Spacer'
 
-const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-    backgroundColor: COLORS.BACKGROUND_GRAY,
-  },
-  centralized: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  grid: {
-    justifyContent: 'space-between',
-  },
-  row: {
-    flexDirection: 'row',
-  },
-  tabPanel: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-    minHeight: 43,
-    minWidth: 137,
-  },
-  tabText: {
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-  tabTextActive: {
-    color: COLORS.LIGHT_POSITIVE_GREEN,
-  },
-  tabTextInactive: {
-    color: COLORS.TEXT_INPUT,
-  },
-  indicator: {
-    height: 3,
-    width: '100%',
-    maxWidth: 137,
-    borderTopLeftRadius: 2,
-    borderTopRightRadius: 2,
-  },
-  indicatorActive: {
-    backgroundColor: COLORS.LIGHT_POSITIVE_GREEN,
-  },
-  indicatorInactive: {
-    backgroundColor: 'transparent',
-  },
-  tabNavigatorRoot: {
-    flex: 1,
-    paddingTop: 8,
-    backgroundColor: '#fff',
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
-  },
-  grabber: {
-    display: 'flex',
-    height: 4,
-    width: 40,
-    borderRadius: 3,
-    backgroundColor: COLORS.BORDER_GRAY,
-    alignSelf: 'center',
-  },
-})
-
 interface TabNavigatorProps {
   render: (active: number) => JSX.Element | undefined
 }
@@ -115,3 +52,66 @@ const useStrings = () => {
     assets: intl.formatMessage(assetMessages.assets),
   }
 }
+
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: COLORS.BACKGROUND_GRAY,
+  },
+  centralized: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  grid: {
+    justifyContent: 'space-between',
+  },
+  row: {
+    flexDirection: 'row',
+  },
+  tabPanel: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+    minHeight: 43,
+    minWidth: 137,
+  },
+  tabText: {
+    fontSize: 14,
+    fontFamily: 'Rubik-Medium',
+  },
+  tabTextActive: {
+    color: COLORS.LIGHT_POSITIVE_GREEN,
+  },
+  tabTextInactive: {
+    color: COLORS.TEXT_INPUT,
+  },
+  indicator: {
+    height: 3,
+    width: '100%',
+    maxWidth: 137,
+    borderTopLeftRadius: 2,
+    borderTopRightRadius: 2,
+  },
+  indicatorActive: {
+    backgroundColor: COLORS.LIGHT_POSITIVE_GREEN,
+  },
+  indicatorInactive: {
+    backgroundColor: 'transparent',
+  },
+  tabNavigatorRoot: {
+    flex: 1,
+    paddingTop: 8,
+    backgroundColor: '#fff',
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+  },
+  grabber: {
+    display: 'flex',
+    height: 4,
+    width: 40,
+    borderRadius: 3,
+    backgroundColor: COLORS.BORDER_GRAY,
+    alignSelf: 'center',
+  },
+})

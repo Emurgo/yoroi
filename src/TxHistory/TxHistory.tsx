@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {RefreshControl, ScrollView, StyleSheet, View} from 'react-native'
@@ -12,10 +11,10 @@ import infoIcon from '../../legacy/assets/img/icon/info-light-green.png'
 import {OfflineBanner, StatusBar, Text, WarningBanner} from '../../legacy/components/UiKit'
 import {isByron} from '../../legacy/config/config'
 import {
+  hasAnyTransaction,
   isOnlineSelector,
   isSynchronizingHistorySelector,
   lastHistorySyncErrorSelector,
-  transactionsInfoSelector,
   walletIsInitializedSelector,
   walletMetaSelector,
 } from '../../legacy/selectors'
@@ -25,10 +24,10 @@ import {SyncErrorBanner} from './SyncErrorBanner'
 import {TxHistoryList} from './TxHistoryList'
 import {WalletHero} from './WalletHero'
 
-const TxHistory = () => {
-  const intl = useIntl()
+export const TxHistory = () => {
+  const strings = useStrings()
   const dispatch = useDispatch()
-  const transactionsInfo = useSelector(transactionsInfoSelector)
+  const hasTransaction = useSelector(hasAnyTransaction)
   const isSyncing = useSelector(isSynchronizingHistorySelector)
   const lastSyncError = useSelector(lastHistorySyncErrorSelector)
   const isOnline = useSelector(isOnlineSelector)
@@ -62,16 +61,16 @@ const TxHistory = () => {
                 <View style={styles.tabNavigatorRoot}>
                   {isByron(walletMeta.walletImplementationId) && showWarning && (
                     <WarningBanner
-                      title={intl.formatMessage(warningBannerMessages.title).toUpperCase()}
+                      title={strings.warningTitle.toUpperCase()}
                       icon={infoIcon}
-                      message={intl.formatMessage(warningBannerMessages.message)}
+                      message={strings.warningMessage}
                       showCloseIcon
                       onRequestClose={() => setShowWarning(false)}
                       style={styles.warningNoteStyles}
                     />
                   )}
 
-                  {_.isEmpty(transactionsInfo) ? (
+                  {!hasTransaction ? (
                     <ScrollView
                       refreshControl={
                         <RefreshControl onRefresh={() => dispatch(updateHistory())} refreshing={isSyncing} />
@@ -80,11 +79,7 @@ const TxHistory = () => {
                       <EmptyHistory />
                     </ScrollView>
                   ) : (
-                    <TxHistoryList
-                      refreshing={isSyncing}
-                      onRefresh={() => dispatch(updateHistory())}
-                      transactions={transactionsInfo}
-                    />
+                    <TxHistoryList refreshing={isSyncing} onRefresh={() => dispatch(updateHistory())} />
                   )}
                 </View>
               )
@@ -113,6 +108,15 @@ const warningBannerMessages = defineMessages({
   },
 })
 
+const useStrings = () => {
+  const intl = useIntl()
+
+  return {
+    warningTitle: intl.formatMessage(warningBannerMessages.title),
+    warningMessage: intl.formatMessage(warningBannerMessages.message),
+  }
+}
+
 const styles = StyleSheet.create({
   tabNavigatorRoot: {
     flex: 1,
@@ -135,5 +139,3 @@ const styles = StyleSheet.create({
     bottom: 0,
   },
 })
-
-export default TxHistory
