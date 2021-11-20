@@ -42,7 +42,11 @@
       "prettier --write",
       "bash -c tsc -p tsconfig.json --noEmit"
     ],
-    "*.{md,json}": "prettier --write"
+    "*.{md,json}": "prettier --write",
+    "*.{stories}.*": [
+      "yarn prestorybook",
+      "git add ./storybook/storyLoader.js"
+    ]
   },
   "jest": {
     "preset": "react-native",
@@ -123,7 +127,7 @@
     "react-native-qrcode-scanner": "1.4.1",
     "react-native-qrcode-svg": "6.0.6",
     "react-native-randombytes": "3.6.0",
-    "react-native-reanimated": "1.13.2",
+    "react-native-reanimated": "1.13.3",
     "react-native-safe-area-context": "3.1.9",
     "react-native-safe-area-view": "2.0.0",
     "react-native-screens": "2.11.0",
