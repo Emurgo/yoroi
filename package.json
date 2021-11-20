@@ -42,7 +42,11 @@
       "prettier --write",
       "bash -c tsc -p tsconfig.json --noEmit"
     ],
-    "*.{md,json}": "prettier --write"
+    "*.{md,json}": "prettier --write",
+    "*.{stories}.*": [
+      "yarn prestorybook",
+      "git add ./storybook/storyLoader.js"
+    ]
   },
   "jest": {
     "preset": "react-native",
@@ -57,7 +61,7 @@
   "dependencies": {
     "@cardano-foundation/ledgerjs-hw-app-cardano": "4.0.0",
     "@emurgo/cip14-js": "2.0.0",
-    "@emurgo/cip4-js": "1.0.5",
+    "@emurgo/cip4-js": "1.0.6",
     "@emurgo/react-native-haskell-shelley": "^3.1.1",
     "@formatjs/intl": "^1.14.1",
     "@formatjs/intl-datetimeformat": "^4.2.3",
