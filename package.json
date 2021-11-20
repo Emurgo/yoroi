@@ -42,7 +42,11 @@
       "prettier --write",
       "bash -c tsc -p tsconfig.json --noEmit"
     ],
-    "*.{md,json}": "prettier --write"
+    "*.{md,json}": "prettier --write",
+    "*.{stories}.*": [
+      "yarn prestorybook",
+      "git add ./storybook/storyLoader.js"
+    ]
   },
   "jest": {
     "preset": "react-native",
