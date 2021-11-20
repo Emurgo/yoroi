@@ -32,10 +32,8 @@ function loadStories() {
 	require('../legacy/components/Settings/ApplicationSettingsScreen.stories');
 	require('../legacy/components/Settings/BiometricsLinkScreen.stories');
 	require('../legacy/components/Settings/ChangeWalletName.stories');
-	require('../legacy/components/Settings/RemoveWalletScreen.stories');
 	require('../legacy/components/Settings/TermsOfServiceScreen.stories');
 	require('../legacy/components/Settings/ToggleEasyConfirmationScreen.stories');
-	require('../legacy/components/Settings/WalletSettingsScreen.stories');
 	require('../legacy/components/Transfer/TransferSummary.stories');
 	require('../legacy/components/UiKit/Button.stories');
 	require('../legacy/components/UiKit/Checkbox.stories');
@@ -65,6 +63,8 @@ function loadStories() {
 	require('../src/FirstRun/LanguagePickerScreen.stories');
 	require('../src/SelectedWallet/WalletSelection/WalletSelectionScreen.stories');
 	require('../src/Settings/ChangePassword/ChangePasswordScreen.stories');
+	require('../src/Settings/RemoveWalletScreen.stories');
+	require('../src/Settings/WalletSettingsScreen.stories');
 	require('../src/TxHistory/ChipButton.stories');
 	require('../src/TxHistory/TxHistory.stories');
 	require('../src/TxHistory/TxListActionsBanner.stories');
@@ -101,10 +101,8 @@ const stories = [
 	'../legacy/components/Settings/ApplicationSettingsScreen.stories',
 	'../legacy/components/Settings/BiometricsLinkScreen.stories',
 	'../legacy/components/Settings/ChangeWalletName.stories',
-	'../legacy/components/Settings/RemoveWalletScreen.stories',
 	'../legacy/components/Settings/TermsOfServiceScreen.stories',
 	'../legacy/components/Settings/ToggleEasyConfirmationScreen.stories',
-	'../legacy/components/Settings/WalletSettingsScreen.stories',
 	'../legacy/components/Transfer/TransferSummary.stories',
 	'../legacy/components/UiKit/Button.stories',
 	'../legacy/components/UiKit/Checkbox.stories',
@@ -134,6 +132,8 @@ const stories = [
 	'../src/FirstRun/LanguagePickerScreen.stories',
 	'../src/SelectedWallet/WalletSelection/WalletSelectionScreen.stories',
 	'../src/Settings/ChangePassword/ChangePasswordScreen.stories',
+	'../src/Settings/RemoveWalletScreen.stories',
+	'../src/Settings/WalletSettingsScreen.stories',
 	'../src/TxHistory/ChipButton.stories',
 	'../src/TxHistory/TxHistory.stories',
 	'../src/TxHistory/TxListActionsBanner.stories',
