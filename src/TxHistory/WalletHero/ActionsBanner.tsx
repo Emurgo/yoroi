@@ -100,6 +100,7 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     fontSize: 10,
     color: COLORS.TEXT_GRAY3,
+    fontFamily: 'Rubik-Regular',
   },
 })
 

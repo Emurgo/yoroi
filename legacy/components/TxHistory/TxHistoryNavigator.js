@@ -7,7 +7,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import {useSelector} from 'react-redux'
 
 // $FlowFixMe
-import TxHistory from '../../../src/TxHistory/TxHistory'
+import {TxHistory} from '../../../src/TxHistory/TxHistory'
 import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../navigationOptions'
 import {TX_HISTORY_ROUTES, WALLET_ROOT_ROUTES} from '../../RoutesList'
 import {transactionsInfoSelector, walletMetaSelector} from '../../selectors'
@@ -30,6 +30,10 @@ const headerBar =
       backgroundColor: COLORS.BACKGROUND_GRAY,
       elevation: 0,
       shadowOpacity: 0,
+    },
+    headerTitleStyle: {
+      fontSize: 16,
+      fontFamily: 'Rubik-Medium',
     },
     headerTintColor: COLORS.ERROR_TEXT_COLOR_DARK,
     headerRight: () => (
