@@ -26,6 +26,7 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     fontSize: 14,
     lineHeight: 22,
+    fontFamily: 'Rubik-Regular',
   },
   selected: {
     backgroundColor: '#F0F3F5',

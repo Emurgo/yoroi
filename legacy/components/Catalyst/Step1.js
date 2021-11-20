@@ -15,6 +15,7 @@ import AppDownload from '../../assets/img/pic-catalyst-step1.png'
 import globalMessages, {confirmationMessages} from '../../i18n/global-messages'
 import {CATALYST_ROUTES} from '../../RoutesList'
 import {isDelegatingSelector} from '../../selectors'
+import {Logger} from '../../utils/logging'
 import StandardModal from '../Common/StandardModal'
 import {Button, ProgressStep, Spacer, Text} from '../UiKit'
 import {Actions, Row} from './components'
@@ -85,7 +86,13 @@ export default Step1
 const Tip = (props) => <View {...props} style={styles.tip} />
 
 const PlayStoreButton = () => {
-  const openPlayStore = () => Linking.openURL('https://play.google.com/store/apps/details?id=io.iohk.vitvoting')
+  const openPlayStore = async () => {
+    try {
+      await Linking.openURL('https://play.google.com/store/apps/details?id=io.iohk.vitvoting')
+    } catch (e) {
+      Logger.error(e)
+    }
+  }
 
   return (
     <TouchableOpacity onPress={() => openPlayStore()}>
@@ -95,7 +102,13 @@ const PlayStoreButton = () => {
 }
 
 const AppStoreButton = () => {
-  const openAppStore = () => Linking.openURL('https://apps.apple.com/kg/app/catalyst-voting/id1517473397')
+  const openAppStore = async () => {
+    try {
+      await Linking.openURL('https://apps.apple.com/kg/app/catalyst-voting/id1517473397')
+    } catch (e) {
+      Logger.error(e)
+    }
+  }
 
   return (
     <TouchableOpacity onPress={() => openAppStore()}>
