@@ -5,13 +5,14 @@ import React from 'react'
 import {useDispatch} from 'react-redux'
 
 // $FlowExpectedError
-import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../../../../src/SelectedWallet/SelectedWalletContext'
+import {useSetSelectedWalletMeta} from '../../../../src/SelectedWallet/SelectedWalletContext'
 import {createWalletWithBip44Account} from '../../../actions'
 import {saveHW} from '../../../actions/hwWallet'
 import image from '../../../assets/img/ledger_2.png'
 import {CONFIG} from '../../../config/config'
 import type {NetworkId, WalletImplementationId} from '../../../config/types'
 import type {HWDeviceInfo} from '../../../crypto/shelley/ledgerUtils'
+import type {WalletInterface} from '../../../crypto/WalletInterface'
 import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../../RoutesList'
 import type {WalletMeta} from '../../../state'
 import assert from '../../../utils/assert'
@@ -28,13 +29,12 @@ const SaveNanoXScreen = () => {
   const route = useRoute()
   const dispatch = useDispatch()
   const setSelectedWalletMeta = useSetSelectedWalletMeta()
-  const setSelectedWallet = useSetSelectedWallet()
 
   const onSubmit = async ({name}) => {
     const {networkId, walletImplementationId, hwDeviceInfo}: Params = (route.params: any)
     assert.assert(hwDeviceInfo != null, 'SaveNanoXScreen::onPress hwDeviceInfo')
 
-    const wallet = await dispatch(
+    const wallet: WalletInterface = await dispatch(
       createWalletWithBip44Account(
         name,
         hwDeviceInfo.bip44AccountPublic,
@@ -45,16 +45,17 @@ const SaveNanoXScreen = () => {
       ),
     )
     const walletMeta: WalletMeta = {
-      id: wallet.id,
       name,
-      networkId,
-      walletImplementationId,
+
+      id: wallet.id,
+      networkId: wallet.networkId,
+      walletImplementationId: wallet.walletImplementationId,
       isHW: wallet.isHW,
       checksum: wallet.checksum,
-      isEasyConfirmationEnabled: false,
+      isEasyConfirmationEnabled: wallet.isEasyConfirmationEnabled,
+      provider: wallet.provider,
     }
     setSelectedWalletMeta(walletMeta)
-    setSelectedWallet(wallet)
     dispatch(saveHW(hwDeviceInfo))
     navigation.navigate(ROOT_ROUTES.WALLET, {
       screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES,
