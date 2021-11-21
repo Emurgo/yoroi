@@ -10,7 +10,7 @@ import getConfiguredStore from '../legacy/helpers/configureStore'
 import translations from '../legacy/i18n/translations'
 import {languageSelector} from '../legacy/selectors'
 import {setLogLevel} from '../legacy/utils/logging'
-import App from './App'
+import {App} from './App'
 import {name as appName} from './app.json'
 
 setLogLevel(CONFIG.LOG_LEVEL)

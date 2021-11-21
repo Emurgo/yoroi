@@ -25,7 +25,7 @@ export var walletMetaSelector: (state: State) => WalletMeta
 export var walletsListSelector: (state: State) => Array<WalletMeta>
 export var easyConfirmationSelector: (state: State) => boolean
 export var isHWSelector: (state: State) => boolean
-export var walletNameSelector: (state: State) => boolean
+export var walletNameSelector: (state: State) => string
 
 // prettier-ignore
 interface PartialMultiToken {

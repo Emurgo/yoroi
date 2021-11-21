@@ -1,13 +1,11 @@
-// @flow
-
 import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
 import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../legacy/navigationOptions'
-import AcceptTermsOfServiceScreen from './AcceptTermsOfServiceScreen'
-import CustomPinScreen from './CustomPinScreen'
-import LanguagePickerScreen from './LanguagePickerScreen'
+import {AcceptTermsOfServiceScreen} from './AcceptTermsOfServiceScreen'
+import {CustomPinScreen} from './CustomPinScreen'
+import {LanguagePickerScreen} from './LanguagePickerScreen'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 type FirstRunRoute = {
@@ -19,7 +17,7 @@ type FirstRunRoute = {
 
 const Stack = createStackNavigator<FirstRunRoute>()
 
-const FirstRunNavigator = () => {
+export const FirstRunNavigator = () => {
   const strings = useStrings()
 
   return (
@@ -46,7 +44,6 @@ const FirstRunNavigator = () => {
     </Stack.Navigator>
   )
 }
-export default FirstRunNavigator
 
 const messages = defineMessages({
   acceptTermsTitle: {
