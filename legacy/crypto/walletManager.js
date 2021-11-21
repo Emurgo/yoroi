@@ -411,12 +411,6 @@ class WalletManager {
     this._notify()
   }
 
-  async changePassword(masterPassword: string, newPassword: string, intl: IntlShape) {
-    const wallet = this.getWallet()
-
-    await wallet.changePassword(masterPassword, newPassword, intl)
-  }
-
   canBiometricsSignInBeDisabled() {
     if (!this._wallets) {
       throw new Error('Wallet list is not initialized')
