@@ -18,6 +18,7 @@ import {
   walletIsInitializedSelector,
   walletMetaSelector,
 } from '../../legacy/selectors'
+
 import {AssetList} from './AssetList'
 import {EmptyHistory} from './EmptyHistory'
 import {SyncErrorBanner} from './SyncErrorBanner'

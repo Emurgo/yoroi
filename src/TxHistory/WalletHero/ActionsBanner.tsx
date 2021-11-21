@@ -8,6 +8,7 @@ import {actionMessages} from '../../../legacy/i18n/global-messages'
 import {WALLET_ROUTES} from '../../../legacy/RoutesList'
 import {isReadOnlySelector} from '../../../legacy/selectors'
 import {COLORS} from '../../../legacy/styles/config'
+
 import {Icon, Spacer} from '../../components'
 import {features} from '../../features'
 

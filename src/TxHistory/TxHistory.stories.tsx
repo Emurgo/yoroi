@@ -5,6 +5,7 @@ import React from 'react'
 import {defaultStackNavigatorOptions} from '../../legacy/navigationOptions'
 import {COLORS} from '../../legacy/styles/config'
 import {MockAppStateWrapper, mockV2NavigatorOptions} from '../../legacy/utils/mocks'
+
 import {TxHistory as TxHistoryScreen} from './TxHistory'
 
 storiesOf('V2/TxHistory', module).add('No transactions', () => {

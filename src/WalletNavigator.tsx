@@ -15,6 +15,7 @@ import {isHaskellShelley} from '../legacy/config/config'
 import {defaultNavigationOptions} from '../legacy/navigationOptions'
 import {isReadOnlySelector} from '../legacy/selectors'
 import {theme} from '../legacy/styles/config'
+
 import iconDashboard from './assets/img/icon/dashboard.png'
 import iconDashboardActive from './assets/img/icon/dashboard-active.png'
 import iconDelegate from './assets/img/icon/delegation.png'

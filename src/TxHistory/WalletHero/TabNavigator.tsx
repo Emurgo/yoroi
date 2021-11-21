@@ -4,6 +4,7 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {assetMessages, txLabels} from '../../../legacy/i18n/global-messages'
 import {COLORS} from '../../../legacy/styles/config'
+
 import {Spacer} from '../../components/Spacer'
 
 interface TabNavigatorProps {

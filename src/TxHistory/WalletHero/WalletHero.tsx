@@ -2,6 +2,7 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {COLORS} from '../../../legacy/styles/config'
+
 import {ActionsBanner} from './ActionsBanner'
 import {BalanceBanner} from './BalanceBanner'
 import {TabNavigator} from './TabNavigator'

@@ -17,6 +17,7 @@ import {ROOT_ROUTES, WALLET_INIT_ROUTES, WALLET_ROOT_ROUTES} from '../../../lega
 import {walletsListSelector} from '../../../legacy/selectors'
 import {WalletMeta} from '../../../legacy/state'
 import {COLORS} from '../../../legacy/styles/config'
+
 import {useSetSelectedWalletMeta} from '..'
 import {WalletListItem} from './WalletListItem'
 

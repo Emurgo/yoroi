@@ -11,6 +11,7 @@ import globalMessages, {actionMessages} from '../../legacy/i18n/global-messages'
 import {tokenBalanceSelector, tokenInfoSelector} from '../../legacy/selectors'
 import {COLORS} from '../../legacy/styles/config'
 import {formatTokenAmount, getAssetDenominationOrId} from '../../legacy/utils/format'
+
 import AdaImage from '../assets/img/icon/asset_ada.png'
 import NoImage from '../assets/img/icon/asset_no_image.png'
 import {Spacer} from '../components/Spacer'

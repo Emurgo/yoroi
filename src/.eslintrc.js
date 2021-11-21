@@ -34,7 +34,12 @@ module.exports = {
     'react/no-typos': 2,
     'react/sort-comp': [2, {order: ['instance-variables', 'lifecycle', 'everything-else', 'render']}],
     'simple-import-sort/exports': 'error',
-    'simple-import-sort/imports': 'error',
+    'simple-import-sort/imports': [
+      'error',
+      {
+        groups: [['^\\u0000'], ['^@?\\w'], ['legacy'], ['^']],
+      },
+    ],
     'spaced-comment': 1,
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': ['error', {argsIgnorePattern: '^_'}],

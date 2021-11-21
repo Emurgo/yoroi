@@ -5,6 +5,7 @@ import {useSelector} from 'react-redux'
 import {availableAssetsSelector, tokenBalanceSelector, walletMetaSelector} from '../../../legacy/selectors'
 import {COLORS} from '../../../legacy/styles/config'
 import {formatTokenWithText, formatTokenWithTextWhenHidden} from '../../../legacy/utils/format'
+
 import closedEyeIcon from '../../assets/img/icon/visibility-closed.png'
 import openedEyeIcon from '../../assets/img/icon/visibility-opened.png'
 import {Icon, Spacer} from '../../components'

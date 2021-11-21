@@ -11,6 +11,7 @@ import walletManager from '../../../legacy/crypto/walletManager'
 import {errorMessages} from '../../../legacy/i18n/global-messages'
 import {COLORS} from '../../../legacy/styles/config'
 import {REQUIRED_PASSWORD_LENGTH, validatePassword} from '../../../legacy/utils/validators'
+
 import {WalletInterface} from '../../types'
 
 export const ChangePasswordScreen = () => {

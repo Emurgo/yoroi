@@ -10,6 +10,7 @@ import {QueryClient, QueryClientProvider} from 'react-query'
 import {useDispatch} from 'react-redux'
 
 import {initApp} from '../legacy/actions'
+
 import {AppNavigator} from './AppNavigator'
 import {SelectedWalletMetaProvider} from './SelectedWallet/SelectedWalletContext'
 

@@ -4,6 +4,7 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {CONFIG, isByron, isHaskellShelley, isJormun, isNightly} from '../../../legacy/config/config'
 import stylesConfig, {COLORS} from '../../../legacy/styles/config'
+
 import {Icon} from '../../../src/components'
 import type {WalletMeta} from '../../state'
 type Props = {

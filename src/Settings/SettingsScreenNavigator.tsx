@@ -16,6 +16,7 @@ import ToggleEasyConfirmationScreen from '../../legacy/components/Settings/Toggl
 import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../legacy/navigationOptions'
 import {SETTINGS_ROUTES, SETTINGS_TABS} from '../../legacy/RoutesList'
 import {COLORS} from '../../legacy/styles/config'
+
 import {ChangePasswordScreen} from './ChangePassword/ChangePasswordScreen'
 import {RemoveWalletScreen} from './RemoveWalletScreen'
 import {WalletSettingsScreen} from './WalletSettingsScreen'
