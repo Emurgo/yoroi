@@ -47,11 +47,7 @@ export const WalletSettingsScreen = () => {
   const onLogout = React.useCallback(
     ignoreConcurrentAsyncHandler(
       () => async () => {
-        const selection = await showConfirmationDialog(
-          // $FlowFixMe
-          confirmationMessages.logout,
-          intl,
-        )
+        const selection = await showConfirmationDialog(confirmationMessages.logout, intl)
 
         if (selection === DIALOG_BUTTONS.YES) {
           await dispatch(logout())
