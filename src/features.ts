@@ -1,7 +1,7 @@
 // Testing purposes forcing prod view
 // const __DEV__ = false
 
-export const features = {
+export default {
   walletHero: {
     fiat: __DEV__ || false,
     buy: __DEV__ || false,

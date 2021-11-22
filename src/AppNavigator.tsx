@@ -25,10 +25,10 @@ import {
   isSystemAuthEnabledSelector,
 } from '../legacy/selectors'
 import type {State} from '../legacy/state'
-import {FirstRunNavigator} from './FirstRun/FirstRunNavigator'
+import FirstRunNavigator from './FirstRun/FirstRunNavigator'
 import {CustomPinLogin} from './Login'
-import {StorybookScreen} from './StorybookScreen'
-import {WalletNavigator} from './WalletNavigator'
+import StorybookScreen from './StorybookScreen'
+import WalletNavigator from './WalletNavigator'
 
 const IS_STORYBOOK = env.getBoolean('IS_STORYBOOK', false)
 
@@ -152,6 +152,8 @@ const StoryBook = () => (
   </Stack.Navigator>
 )
 
-export const AppNavigator = () => {
+const AppNavigator = () => {
   return <NavigationContainer>{IS_STORYBOOK ? <StoryBook /> : <NavigatorSwitch />}</NavigationContainer>
 }
+
+export default AppNavigator

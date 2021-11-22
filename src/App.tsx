@@ -10,7 +10,7 @@ import {QueryClient, QueryClientProvider} from 'react-query'
 import {useDispatch} from 'react-redux'
 
 import {initApp} from '../legacy/actions'
-import {AppNavigator} from './AppNavigator'
+import AppNavigator from './AppNavigator'
 import {SelectedWalletMetaProvider} from './SelectedWallet/SelectedWalletContext'
 
 const queryClient = new QueryClient()
@@ -46,7 +46,7 @@ const useHideScreenInAppSwitcher = () => {
   }, [])
 }
 
-export const App = () => {
+const App = () => {
   useHideScreenInAppSwitcher()
   useInitializeApp()
 
@@ -62,3 +62,5 @@ export const App = () => {
     </SafeAreaProvider>
   )
 }
+
+export default App

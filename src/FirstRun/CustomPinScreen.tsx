@@ -1,3 +1,5 @@
+// @flow
+
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet} from 'react-native'
@@ -9,7 +11,7 @@ import PinRegistrationForm from '../../legacy/components/Common/PinRegistrationF
 import {StatusBar} from '../../legacy/components/UiKit'
 import {isAuthenticatedSelector} from '../../legacy/selectors'
 
-export const CustomPinScreen = () => {
+const CustomPinScreen = () => {
   const strings = useStrings()
   const isAuth = useSelector(isAuthenticatedSelector)
   const dispatch = useDispatch()
@@ -37,6 +39,8 @@ export const CustomPinScreen = () => {
     </SafeAreaView>
   )
 }
+
+export default CustomPinScreen
 
 const messages = defineMessages({
   pinInputTitle: {

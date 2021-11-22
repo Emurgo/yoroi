@@ -8,7 +8,7 @@ import {formatTokenWithText, formatTokenWithTextWhenHidden} from '../../../legac
 import closedEyeIcon from '../../assets/img/icon/visibility-closed.png'
 import openedEyeIcon from '../../assets/img/icon/visibility-opened.png'
 import {Icon, Spacer} from '../../components'
-import {features} from '../../features'
+import features from '../../features'
 
 const BALANCE_WHEN_HIDDEN = '*.******'
 const TOTAL_WHEN_HIDDEN = '*.**'
