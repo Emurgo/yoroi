@@ -1,3 +1,5 @@
+// @flow
+
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -13,7 +15,7 @@ import {canBiometricEncryptionBeEnabled} from '../../legacy/helpers/deviceSettin
 import globalMessages from '../../legacy/i18n/global-messages'
 import {FIRST_RUN_ROUTES} from '../../legacy/RoutesList'
 
-export const AcceptTermsOfServiceScreen = () => {
+const AcceptTermsOfServiceScreen = () => {
   const strings = useStrings()
   const navigation = useNavigation()
   const [acceptedTos, setAcceptedTos] = React.useState(false)
@@ -78,6 +80,7 @@ export const AcceptTermsOfServiceScreen = () => {
     </SafeAreaView>
   )
 }
+export default AcceptTermsOfServiceScreen
 
 const Footer = ({children}: {children: React.ReactNode}) => <View style={styles.footer}>{children}</View>
 

@@ -9,7 +9,7 @@ import {WALLET_ROUTES} from '../../../legacy/RoutesList'
 import {isReadOnlySelector} from '../../../legacy/selectors'
 import {COLORS} from '../../../legacy/styles/config'
 import {Icon, Spacer} from '../../components'
-import {features} from '../../features'
+import features from '../../features'
 
 const ACTION_PROPS = {
   height: 36,

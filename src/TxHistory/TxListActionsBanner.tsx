@@ -3,7 +3,7 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import {Spacer} from '../components/Spacer'
-import {features} from '../features'
+import features from '../features'
 import {ChipButton} from './ChipButton'
 
 type AssetsOptions = 'tokens' | 'nfts'

@@ -10,7 +10,7 @@ import {Text} from '../../legacy/components/UiKit'
 import {actionMessages} from '../../legacy/i18n/global-messages'
 import {transactionsInfoSelector} from '../../legacy/selectors'
 import {formatDateRelative} from '../../legacy/utils/format'
-import {features} from '../features'
+import features from '../features'
 import {TxListActionsBannerForTransactionsTab} from './TxListActionsBanner'
 import {TransactionInfo} from './types'
 
