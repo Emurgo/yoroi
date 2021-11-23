@@ -12,14 +12,8 @@ const wallet = {
   walletImplementationId: 'haskell-shelley',
 }
 
-storiesOf('StakingCenter', module).add('with 100 ADA to delegate', ({route, navigation}) => {
-  route.params = {
-    poolList: ['af22f95915a19cd57adb14c558dcc4a175f60c6193dc23b8bd2d8beb'],
-  }
-
-  return (
-    <SelectedWalletProvider wallet={wallet}>
-      <StakingCenter navigation={navigation} route={route} />
-    </SelectedWalletProvider>
-  )
-})
+storiesOf('StakingCenter', module).add('with 100 ADA to delegate', () => (
+  <SelectedWalletProvider wallet={wallet}>
+    <StakingCenter />
+  </SelectedWalletProvider>
+))
