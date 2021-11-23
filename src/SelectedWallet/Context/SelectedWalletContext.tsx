@@ -1,0 +1,51 @@
+import * as React from 'react'
+
+import {WalletInterface} from '../../types'
+
+type SelectedWallet = WalletInterface
+type SetSelectedWallet = (selectedWallet?: SelectedWallet) => void
+type SelectedWalletContext = readonly [SelectedWallet | undefined, SetSelectedWallet]
+
+const SelectedWalletContext = React.createContext<SelectedWalletContext | undefined>(undefined)
+
+export const SelectedWalletProvider: React.FC = ({children}) => {
+  const [selectedWallet, selectWallet] = React.useState<SelectedWallet | undefined>(undefined)
+
+  return (
+    <SelectedWalletContext.Provider value={[selectedWallet, selectWallet] as const}>
+      {children}
+    </SelectedWalletContext.Provider>
+  )
+}
+
+export const useSelectedWallet = () => {
+  const [wallet] = useSelectedWalletContext()
+
+  if (!wallet) {
+    throw new Error('SelectedWalletBoundary is missing')
+  }
+
+  return wallet
+}
+
+export const useSetSelectedWallet = () => {
+  const [, setSelectedWallet] = useSelectedWalletContext()
+
+  return setSelectedWallet
+}
+
+export const SelectedWalletBoundary: React.FC<{fallback?: React.ReactNode}> = ({children, fallback = null}) => {
+  const [wallet] = useSelectedWalletContext()
+
+  if (!wallet) return <>{fallback}</>
+
+  return <>{children}</>
+}
+
+export const useSelectedWalletContext = () => React.useContext(SelectedWalletContext) || missingProvider()
+
+// //////////////////////////////////////////////////////////////
+
+const missingProvider = () => {
+  throw new Error('SelectedWalletProvider is missing')
+}

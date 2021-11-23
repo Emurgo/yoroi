@@ -6,7 +6,7 @@ import {ActivityIndicator} from 'react-native'
 import {useDispatch} from 'react-redux'
 
 // $FlowExpectedError
-import {useSetSelectedWalletMeta} from '../../../../src/SelectedWallet/SelectedWalletContext'
+import {useSetSelectedWalletMeta} from '../../../../src/SelectedWallet'
 import {createWallet, updateVersion} from '../../../actions'
 import type {WalletInterface} from '../../../crypto/WalletInterface'
 import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../../RoutesList'

@@ -1,2 +1,2 @@
-export * from './SelectedWalletContext'
+export * from './Context'
 export * from './WalletSelection'

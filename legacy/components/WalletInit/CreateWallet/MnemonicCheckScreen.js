@@ -8,7 +8,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch} from 'react-redux'
 
 // $FlowExpectedError
-import {useSetSelectedWalletMeta} from '../../../../src/SelectedWallet/SelectedWalletContext'
+import {useSetSelectedWalletMeta} from '../../../../src/SelectedWallet'
 import {createWallet} from '../../../actions'
 import type {NetworkId, WalletImplementationId, YoroiProvider} from '../../../config/types'
 import type {WalletInterface} from '../../../crypto/WalletInterface'

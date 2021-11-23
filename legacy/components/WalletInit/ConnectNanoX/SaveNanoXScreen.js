@@ -5,7 +5,7 @@ import React from 'react'
 import {useDispatch} from 'react-redux'
 
 // $FlowExpectedError
-import {useSetSelectedWalletMeta} from '../../../../src/SelectedWallet/SelectedWalletContext'
+import {useSetSelectedWalletMeta} from '../../../../src/SelectedWallet'
 import {createWalletWithBip44Account} from '../../../actions'
 import {saveHW} from '../../../actions/hwWallet'
 import image from '../../../assets/img/ledger_2.png'
