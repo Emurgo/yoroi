@@ -8,7 +8,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch} from 'react-redux'
 
 // $FlowExpectedError
-import {useSetSelectedWalletMeta} from '../../../../src/SelectedWallet'
+import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../../../../src/SelectedWallet'
 import {createWallet} from '../../../actions'
 import type {NetworkId, WalletImplementationId, YoroiProvider} from '../../../config/types'
 import type {WalletInterface} from '../../../crypto/WalletInterface'
@@ -48,6 +48,7 @@ const MnemonicCheckScreen = () => {
   const isPhraseValid = userEntries.map((entry) => entry.word).join(' ') === mnemonic
 
   const setSelectedWalletMeta = useSetSelectedWalletMeta()
+  const setSelectedWallet = useSetSelectedWallet()
   const dispatch = useDispatch()
   const handleWalletConfirmation = async () => {
     assertions({mnemonic, password, name, networkId, walletImplementationId})
@@ -68,6 +69,7 @@ const MnemonicCheckScreen = () => {
       provider: wallet.provider,
     }
     setSelectedWalletMeta(walletMeta)
+    setSelectedWallet(wallet)
 
     navigation.navigate(ROOT_ROUTES.WALLET, {
       screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES,

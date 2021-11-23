@@ -6,7 +6,7 @@ import {ActivityIndicator} from 'react-native'
 import {useDispatch} from 'react-redux'
 
 // $FlowExpectedError
-import {useSetSelectedWalletMeta} from '../../../../src/SelectedWallet'
+import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../../../../src/SelectedWallet'
 import {createWallet, updateVersion} from '../../../actions'
 import type {WalletInterface} from '../../../crypto/WalletInterface'
 import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../../RoutesList'
@@ -21,6 +21,7 @@ const WalletCredentialsScreen = () => {
   const [waiting, setWaiting] = React.useState(false)
   const dispatch = useDispatch()
   const setSelectedWalletMeta = useSetSelectedWalletMeta()
+  const setSelectedWallet = useSetSelectedWallet()
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const navigateToWallet = React.useCallback(
@@ -48,6 +49,7 @@ const WalletCredentialsScreen = () => {
               provider: wallet.provider,
             }
             setSelectedWalletMeta(walletMeta)
+            setSelectedWallet(wallet)
             await dispatch(updateVersion())
           } finally {
             setWaiting(false)
