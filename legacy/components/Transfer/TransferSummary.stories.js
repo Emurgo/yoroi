@@ -25,6 +25,8 @@ const other = {
 
 const wallet = {
   networkId: 1,
+  isEasyConfirmationEnabled: true,
+  isHW: false,
 }
 
 storiesOf('TransferSummary', module)

@@ -9,6 +9,7 @@ import ReceiveScreen from './ReceiveScreen'
 
 const wallet = {
   walletImplementationId: 'haskell-shelley',
+  networkId: 1,
 }
 
 storiesOf('ReceiveScreen', module).add('default', () => (

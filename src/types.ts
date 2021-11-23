@@ -7,5 +7,6 @@ export interface WalletInterface {
   checksum: WalletChecksum
   isReadOnly: boolean
   isHW: boolean
+  isEasyConfirmationEnabled: boolean
   changePassword(masterPassword: string, newPassword: string, intl: IntlShape): Promise<void>
 }
