@@ -5,7 +5,7 @@ import React from 'react'
 import {useDispatch} from 'react-redux'
 
 // $FlowExpectedError
-import {useSetSelectedWalletMeta} from '../../../../src/SelectedWallet/SelectedWalletContext'
+import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../../../../src/SelectedWallet'
 import {createWalletWithBip44Account} from '../../../actions'
 import {saveHW} from '../../../actions/hwWallet'
 import image from '../../../assets/img/ledger_2.png'
@@ -29,6 +29,7 @@ const SaveNanoXScreen = () => {
   const route = useRoute()
   const dispatch = useDispatch()
   const setSelectedWalletMeta = useSetSelectedWalletMeta()
+  const setSelectedWallet = useSetSelectedWallet()
 
   const onSubmit = async ({name}) => {
     const {networkId, walletImplementationId, hwDeviceInfo}: Params = (route.params: any)
@@ -56,6 +57,7 @@ const SaveNanoXScreen = () => {
       provider: wallet.provider,
     }
     setSelectedWalletMeta(walletMeta)
+    setSelectedWallet(wallet)
     dispatch(saveHW(hwDeviceInfo))
     navigation.navigate(ROOT_ROUTES.WALLET, {
       screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES,

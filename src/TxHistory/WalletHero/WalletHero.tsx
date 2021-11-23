@@ -6,13 +6,6 @@ import {ActionsBanner} from './ActionsBanner'
 import {BalanceBanner} from './BalanceBanner'
 import {TabNavigator} from './TabNavigator'
 
-const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-    backgroundColor: COLORS.BACKGROUND_GRAY,
-  },
-})
-
 type WalletHeroProps = {
   render: (active: number) => JSX.Element | undefined
 }
@@ -26,3 +19,10 @@ export const WalletHero = ({render}: WalletHeroProps) => {
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: COLORS.BACKGROUND_GRAY,
+  },
+})

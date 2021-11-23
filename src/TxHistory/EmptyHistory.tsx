@@ -6,13 +6,13 @@ import image from '../assets/img/no_transactions.png'
 import {Spacer} from '../components/Spacer'
 
 export const EmptyHistory = () => {
-  const intl = useIntl()
+  const strings = useStrings()
 
   return (
     <View style={styles.empty}>
       <Image style={styles.image} source={image} />
       <Spacer height={20} />
-      <Text style={styles.emptyText}>{intl.formatMessage(messages.noTransactions)}</Text>
+      <Text style={styles.emptyText}>{strings.noTransactions}</Text>
     </View>
   )
 }
@@ -43,3 +43,11 @@ const messages = defineMessages({
     defaultMessage: '!!!No transactions to show yet',
   },
 })
+
+const useStrings = () => {
+  const intl = useIntl()
+
+  return {
+    noTransactions: intl.formatMessage(messages.noTransactions),
+  }
+}

@@ -5,6 +5,8 @@ import {useIntl} from 'react-intl'
 import {Platform} from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
 
+// $FlowExpectedError
+import {useSelectedWallet} from '../../../../src/SelectedWallet'
 import {showErrorDialog} from '../../../actions'
 import {setLedgerDeviceId, setLedgerDeviceObj} from '../../../actions/hwWallet'
 import {CONFIG} from '../../../config/config'
@@ -14,7 +16,7 @@ import {verifyAddress} from '../../../crypto/shelley/ledgerUtils'
 import walletManager from '../../../crypto/walletManager'
 import {errorMessages} from '../../../i18n/global-messages'
 import LocalizableError from '../../../i18n/LocalizableError'
-import {externalAddressIndexSelector, hwDeviceInfoSelector, walletMetaSelector} from '../../../selectors'
+import {externalAddressIndexSelector, hwDeviceInfoSelector} from '../../../selectors'
 import {Logger} from '../../../utils/logging'
 import LedgerConnect from '../../Ledger/LedgerConnect'
 import LedgerTransportSwitchModal from '../../Ledger/LedgerTransportSwitchModal'
@@ -37,7 +39,7 @@ export const Modals = ({address, onDone}: ModalsProps) => {
   const intl = useIntl()
   const index = useSelector(externalAddressIndexSelector)
   const hwDeviceInfo = useSelector(hwDeviceInfoSelector)
-  const walletMeta = useSelector(walletMetaSelector)
+  const wallet = useSelectedWallet()
   const dispatch = useDispatch()
   const [isWaiting, setIsWaiting] = React.useState(false)
   const [useUSB, setUseUSB] = React.useState(false)
@@ -51,8 +53,8 @@ export const Modals = ({address, onDone}: ModalsProps) => {
 
     setIsWaiting(true)
     verifyAddress(
-      walletMeta.walletImplementationId,
-      walletMeta.networkId,
+      wallet.walletImplementationId,
+      wallet.networkId,
       getCardanoByronConfig().PROTOCOL_MAGIC,
       address,
       walletManager.getAddressingInfo(address),
@@ -123,7 +125,7 @@ export const Modals = ({address, onDone}: ModalsProps) => {
         onRequestClose={onDone}
         onConfirm={() => onVerifyAddress(address)}
         address={address}
-        path={formatPath(0, 'External', index, walletMeta.walletImplementationId)}
+        path={formatPath(0, 'External', index, wallet.walletImplementationId)}
         isWaiting={isWaiting}
         useUSB={useUSB}
       />

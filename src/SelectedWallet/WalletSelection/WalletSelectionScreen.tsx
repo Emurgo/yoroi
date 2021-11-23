@@ -17,7 +17,7 @@ import {ROOT_ROUTES, WALLET_INIT_ROUTES, WALLET_ROOT_ROUTES} from '../../../lega
 import {walletsListSelector} from '../../../legacy/selectors'
 import {WalletMeta} from '../../../legacy/state'
 import {COLORS} from '../../../legacy/styles/config'
-import {useSetSelectedWalletMeta} from '..'
+import {useSetSelectedWallet, useSetSelectedWalletMeta} from '..'
 import {WalletListItem} from './WalletListItem'
 
 export const WalletSelectionScreen = () => {
@@ -26,6 +26,7 @@ export const WalletSelectionScreen = () => {
   const navigation = useNavigation()
   const wallets = useSelector(walletsListSelector)
   const selectWalletMeta = useSetSelectedWalletMeta()
+  const selectWallet = useSetSelectedWallet()
 
   const openWallet = async (walletMeta: WalletMeta) => {
     try {
@@ -33,8 +34,10 @@ export const WalletSelectionScreen = () => {
         await showErrorDialog(errorMessages.itnNotSupported, intl)
         return
       }
-      await walletManager.openWallet(walletMeta)
+      const wallet = await walletManager.openWallet(walletMeta)
       selectWalletMeta(walletMeta)
+      selectWallet(wallet)
+
       const route = WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES
       navigation.navigate(route)
     } catch (e) {

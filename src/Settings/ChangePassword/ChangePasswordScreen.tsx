@@ -7,10 +7,10 @@ import {MutationOptions, useMutation} from 'react-query'
 
 import {Button, Spacer, TextInput} from '../../../legacy/components/UiKit'
 import {Checkmark} from '../../../legacy/components/UiKit/TextInput'
-import walletManager from '../../../legacy/crypto/walletManager'
 import {errorMessages} from '../../../legacy/i18n/global-messages'
 import {COLORS} from '../../../legacy/styles/config'
 import {REQUIRED_PASSWORD_LENGTH, validatePassword} from '../../../legacy/utils/validators'
+import {useSelectedWallet} from '../../SelectedWallet'
 import {WalletInterface} from '../../types'
 
 export const ChangePasswordScreen = () => {
@@ -30,7 +30,8 @@ export const ChangePasswordScreen = () => {
 
   const hasErrors = Object.keys(currentPasswordErrors).length > 0 || Object.keys(newPasswordErrors).length > 0
 
-  const {changePassword, isError, reset} = useChangePassword(walletManager.getWallet(), {
+  const wallet = useSelectedWallet()
+  const {changePassword, isError, reset} = useChangePassword(wallet, {
     onSuccess: () => navigation.goBack(),
     onError: () => currentPasswordRef.current?.focus(),
   })

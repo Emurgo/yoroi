@@ -18,82 +18,6 @@ import {BulletPointItem, Button, Spacer, StatusBar, Text} from '../../UiKit'
 import styles from './styles/VerifyRestoredWallet.style'
 import WalletAddress from './WalletAddress'
 
-const messages = defineMessages({
-  checksumLabel: {
-    id: 'components.walletinit.verifyrestoredwallet.checksumLabel',
-    defaultMessage: '!!!Checksum label',
-  },
-  instructionLabel: {
-    id: 'components.walletinit.verifyrestoredwallet.instructionLabel',
-    defaultMessage: '!!!Be careful about wallet restoration:',
-  },
-  instructions1: {
-    id: 'components.walletinit.verifyrestoredwallet.instructionLabel-1',
-    defaultMessage: '!!!Make sure your wallet account checksum and icon match what you remember.',
-  },
-  instructions2: {
-    id: 'components.walletinit.verifyrestoredwallet.instructionLabel-2',
-    defaultMessage: '!!!Make sure the address(es) match what you remember',
-  },
-  instructions3: {
-    id: 'components.walletinit.verifyrestoredwallet.instructionLabel-3',
-    defaultMessage:
-      '!!!If you’ve entered wrong mnemonics you will just open ' +
-      'another empty wallet with wrong account checksum and wrong addresses.',
-  },
-  walletAddressLabel: {
-    id: 'components.walletinit.verifyrestoredwallet.walletAddressLabel',
-    defaultMessage: '!!!Wallet Address(es):',
-  },
-  buttonText: {
-    id: 'components.walletinit.verifyrestoredwallet.buttonText',
-    defaultMessage: '!!!Continue',
-  },
-})
-
-const usePlateFromMnemonic = ({
-  mnemonic,
-  networkId,
-  walletImplementationId,
-}: {
-  mnemonic: string,
-  networkId: number,
-  walletImplementationId: string,
-}) => {
-  const [addresses, setAddresses] = useState()
-  const [plate, setPlate] = useState()
-
-  useEffect(() => {
-    const getPlate = async (
-      walletImplId: WalletImplementationId,
-      networkId: NetworkId,
-      mnemonic: string,
-      count: number,
-    ) => {
-      switch (walletImplId) {
-        case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY:
-        case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY_24:
-          return await generateShelleyPlateFromMnemonics(mnemonic, count, networkId)
-        case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON:
-          return generateByronPlateFromMnemonics(mnemonic, count)
-        default:
-          throw new Error('wallet implementation id is not valid')
-      }
-    }
-
-    const generatePlates = async () => {
-      const {addresses, accountPlate} = await getPlate(walletImplementationId, networkId, mnemonic, 1)
-      setAddresses(addresses)
-      setPlate(accountPlate)
-    }
-
-    generatePlates()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  return [plate, addresses]
-}
-
 const VerifyWalletScreen = () => {
   const intl = useIntl()
   const navigation = useNavigation()
@@ -171,3 +95,79 @@ const Plate = (props) => <View {...props} style={styles.plate} />
 const Instructions = (props) => <View {...props} />
 const Addresses = (props) => <View {...props} />
 const Actions = (props) => <View {...props} style={styles.actions} />
+
+const messages = defineMessages({
+  checksumLabel: {
+    id: 'components.walletinit.verifyrestoredwallet.checksumLabel',
+    defaultMessage: '!!!Checksum label',
+  },
+  instructionLabel: {
+    id: 'components.walletinit.verifyrestoredwallet.instructionLabel',
+    defaultMessage: '!!!Be careful about wallet restoration:',
+  },
+  instructions1: {
+    id: 'components.walletinit.verifyrestoredwallet.instructionLabel-1',
+    defaultMessage: '!!!Make sure your wallet account checksum and icon match what you remember.',
+  },
+  instructions2: {
+    id: 'components.walletinit.verifyrestoredwallet.instructionLabel-2',
+    defaultMessage: '!!!Make sure the address(es) match what you remember',
+  },
+  instructions3: {
+    id: 'components.walletinit.verifyrestoredwallet.instructionLabel-3',
+    defaultMessage:
+      '!!!If you’ve entered wrong mnemonics you will just open ' +
+      'another empty wallet with wrong account checksum and wrong addresses.',
+  },
+  walletAddressLabel: {
+    id: 'components.walletinit.verifyrestoredwallet.walletAddressLabel',
+    defaultMessage: '!!!Wallet Address(es):',
+  },
+  buttonText: {
+    id: 'components.walletinit.verifyrestoredwallet.buttonText',
+    defaultMessage: '!!!Continue',
+  },
+})
+
+const usePlateFromMnemonic = ({
+  mnemonic,
+  networkId,
+  walletImplementationId,
+}: {
+  mnemonic: string,
+  networkId: number,
+  walletImplementationId: string,
+}) => {
+  const [addresses, setAddresses] = useState()
+  const [plate, setPlate] = useState()
+
+  useEffect(() => {
+    const getPlate = async (
+      walletImplId: WalletImplementationId,
+      networkId: NetworkId,
+      mnemonic: string,
+      count: number,
+    ) => {
+      switch (walletImplId) {
+        case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY:
+        case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY_24:
+          return await generateShelleyPlateFromMnemonics(mnemonic, count, networkId)
+        case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON:
+          return generateByronPlateFromMnemonics(mnemonic, count)
+        default:
+          throw new Error('wallet implementation id is not valid')
+      }
+    }
+
+    const generatePlates = async () => {
+      const {addresses, accountPlate} = await getPlate(walletImplementationId, networkId, mnemonic, 1)
+      setAddresses(addresses)
+      setPlate(accountPlate)
+    }
+
+    generatePlates()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  return [plate, addresses]
+}

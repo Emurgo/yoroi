@@ -11,7 +11,7 @@ import {useDispatch} from 'react-redux'
 
 import {initApp} from '../legacy/actions'
 import AppNavigator from './AppNavigator'
-import {SelectedWalletMetaProvider} from './SelectedWallet/SelectedWalletContext'
+import {SelectedWalletMetaProvider, SelectedWalletProvider} from './SelectedWallet'
 
 const queryClient = new QueryClient()
 
@@ -55,7 +55,9 @@ const App = () => {
       <RNP.Provider>
         <QueryClientProvider client={queryClient}>
           <SelectedWalletMetaProvider>
-            <AppNavigator />
+            <SelectedWalletProvider>
+              <AppNavigator />
+            </SelectedWalletProvider>
           </SelectedWalletMetaProvider>
         </QueryClientProvider>
       </RNP.Provider>

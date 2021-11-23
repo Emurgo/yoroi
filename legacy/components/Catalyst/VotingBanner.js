@@ -5,18 +5,19 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
+// $FlowExpectedError
+import {useSelectedWallet} from '../../../src/SelectedWallet'
 import CatalystLogo from '../../assets/img/voting.png'
 import StandardModal from '../../components/Common/StandardModal'
 import {CONFIG, isHaskellShelley, isNightly} from '../../config/config'
 import {isRegistrationOpen} from '../../crypto/shelley/catalystUtils'
 import walletManager from '../../crypto/walletManager'
 import globalMessages, {confirmationMessages} from '../../i18n/global-messages'
-import {availableAssetsSelector, tokenBalanceSelector, walletMetaSelector} from '../../selectors'
+import {availableAssetsSelector, tokenBalanceSelector} from '../../selectors'
 import {COLORS} from '../../styles/config'
 import {formatTokenWithText} from '../../utils/format'
 import {Logger} from '../../utils/logging'
 import {Text} from '../UiKit'
-
 type Props = {|
   onPress: () => void,
   disabled: boolean,
@@ -24,14 +25,14 @@ type Props = {|
 
 const VotingBanner = ({onPress, disabled}: Props) => {
   const strings = useStrings()
-  const walletMeta = useSelector(walletMetaSelector)
+  const wallet = useSelectedWallet()
 
   const tokenBalance = useSelector(tokenBalanceSelector)
   const availableAssets = useSelector(availableAssetsSelector)
   const assetMetaData = availableAssets[tokenBalance.getDefaultId()]
 
   const [showInsufficientFundsModal, setShowInsufficientFundsModal] = useState<boolean>(false)
-  const canVote = isHaskellShelley(walletMeta.walletImplementationId)
+  const canVote = isHaskellShelley(wallet.walletImplementationId)
   const [showCatalystBanner, setShowCatalystBanner] = useState<boolean>(canVote)
 
   useEffect(() => {

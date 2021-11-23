@@ -13,51 +13,6 @@ import {COLORS} from '../../../styles/config'
 import {formatTokenWithText, formatTokenWithTextWhenHidden} from '../../../utils/format'
 import {Spacer} from '../../UiKit'
 
-const BALANCE_WHEN_HIDDEN = '*.******'
-const TOTAL_WHEN_HIDDEN = '*.**'
-const QUOTE_PAIR_CURRENCY = 'USD'
-
-// NOTE: layout is following inVision spec
-// https://projects.invisionapp.com/d/main?origin=v7#/console/21500065/456867605/inspect?scrollOffset=2856#project_console
-const styles = StyleSheet.create({
-  banner: {
-    backgroundColor: COLORS.BACKGROUND_GRAY,
-  },
-  centralized: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  balanceText: {
-    fontSize: 16,
-    lineHeight: 24,
-    fontWeight: 'bold',
-    color: COLORS.ERROR_TEXT_COLOR_DARK,
-  },
-  totalText: {
-    fontSize: 16,
-    lineHeight: 24,
-    color: COLORS.TEXT_INPUT,
-  },
-  walletIcon: {
-    height: 40,
-    width: 40,
-    borderRadius: 20,
-  },
-  showIcon: {
-    paddingLeft: 12,
-    alignSelf: 'center',
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  column: {
-    paddingLeft: 24,
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-})
-
 const BalanceBanner = () => {
   const tokenBalance = useSelector(tokenBalanceSelector)
   const walletMeta = useSelector(walletMetaSelector)
@@ -104,3 +59,48 @@ const BalanceBanner = () => {
 }
 
 export default BalanceBanner
+
+const BALANCE_WHEN_HIDDEN = '*.******'
+const TOTAL_WHEN_HIDDEN = '*.**'
+const QUOTE_PAIR_CURRENCY = 'USD'
+
+// NOTE: layout is following inVision spec
+// https://projects.invisionapp.com/d/main?origin=v7#/console/21500065/456867605/inspect?scrollOffset=2856#project_console
+const styles = StyleSheet.create({
+  banner: {
+    backgroundColor: COLORS.BACKGROUND_GRAY,
+  },
+  centralized: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  balanceText: {
+    fontSize: 16,
+    lineHeight: 24,
+    fontWeight: 'bold',
+    color: COLORS.ERROR_TEXT_COLOR_DARK,
+  },
+  totalText: {
+    fontSize: 16,
+    lineHeight: 24,
+    color: COLORS.TEXT_INPUT,
+  },
+  walletIcon: {
+    height: 40,
+    width: 40,
+    borderRadius: 20,
+  },
+  showIcon: {
+    paddingLeft: 12,
+    alignSelf: 'center',
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  column: {
+    paddingLeft: 24,
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+})

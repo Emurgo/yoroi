@@ -3,7 +3,6 @@ import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Image} from 'react-native'
-import {useSelector} from 'react-redux'
 
 import CatalystNavigator from '../legacy/components/Catalyst/CatalystNavigator'
 import StakingCenterNavigator from '../legacy/components/Delegation/StakingCenterNavigator'
@@ -13,7 +12,6 @@ import SendScreenNavigator from '../legacy/components/Send/SendScreenNavigator'
 import TxHistoryNavigator from '../legacy/components/TxHistory/TxHistoryNavigator'
 import {isHaskellShelley} from '../legacy/config/config'
 import {defaultNavigationOptions} from '../legacy/navigationOptions'
-import {isReadOnlySelector} from '../legacy/selectors'
 import {theme} from '../legacy/styles/config'
 import iconDashboard from './assets/img/icon/dashboard.png'
 import iconDashboardActive from './assets/img/icon/dashboard-active.png'
@@ -25,7 +23,7 @@ import iconSend from './assets/img/icon/send.png'
 import iconSendActive from './assets/img/icon/send-active.png'
 import iconHistory from './assets/img/icon/txhistory.png'
 import iconHistoryActive from './assets/img/icon/txhistory-active.png'
-import {useSelectedWalletMeta, WalletSelectionScreen} from './SelectedWallet'
+import {useSelectedWallet, WalletSelectionScreen} from './SelectedWallet'
 import {SettingsScreenNavigator} from './Settings'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -41,12 +39,8 @@ type WalletTabRoutes = {
 const Tab = createBottomTabNavigator<WalletTabRoutes>()
 const WalletTabNavigator = () => {
   const strings = useStrings()
-  const walletMeta = useSelectedWalletMeta()
-
-  const isReadOnly = useSelector(isReadOnlySelector)
-
-  const {walletImplementationId} = walletMeta
-  const initialRoute = isHaskellShelley(walletImplementationId) ? 'staking-dashboard' : 'history'
+  const wallet = useSelectedWallet()
+  const initialRoute = isHaskellShelley(wallet.walletImplementationId) ? 'staking-dashboard' : 'history'
 
   return (
     <Tab.Navigator
@@ -58,7 +52,7 @@ const WalletTabNavigator = () => {
         inactiveTintColor: theme.COLORS.NAVIGATION_INACTIVE,
       }}
     >
-      {isHaskellShelley(walletImplementationId) && (
+      {isHaskellShelley(wallet.walletImplementationId) && (
         <Tab.Screen
           name={'staking-dashboard'}
           component={StakingDashboardNavigator}
@@ -78,7 +72,7 @@ const WalletTabNavigator = () => {
         }}
       />
 
-      {!isReadOnly && (
+      {!wallet.isReadOnly && (
         <Tab.Screen
           name={'send-ada'}
           component={SendScreenNavigator}
@@ -98,7 +92,7 @@ const WalletTabNavigator = () => {
         }}
       />
 
-      {isHaskellShelley(walletImplementationId) && !isReadOnly && (
+      {isHaskellShelley(wallet.walletImplementationId) && !wallet.isReadOnly && (
         <Tab.Screen
           name={'staking-center'}
           component={StakingCenterNavigator}
