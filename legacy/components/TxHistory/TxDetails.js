@@ -8,6 +8,8 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Image, LayoutAnimation, Linking, TouchableOpacity, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
+// $FlowExpectedError
+import {useSelectedWallet} from '../../../src/SelectedWallet'
 import arrowDown from '../../assets/img/chevron_down.png'
 import arrowUp from '../../assets/img/chevron_up.png'
 import Screen from '../../components/Screen'
@@ -20,7 +22,6 @@ import {
   internalAddressIndexSelector,
   tokenInfoSelector,
   transactionsInfoSelector,
-  walletMetaSelector,
 } from '../../selectors'
 import {type Token, TRANSACTION_DIRECTION} from '../../types/HistoryTransaction'
 import {formatTokenWithSymbol} from '../../utils/format'
@@ -199,7 +200,7 @@ const TxDetails = () => {
   const transaction = useSelector(transactionsInfoSelector)[route.params.id]
   const internalAddressIndex = useSelector(internalAddressIndexSelector)
   const externalAddressIndex = useSelector(externalAddressIndexSelector)
-  const walletMeta = useSelector(walletMetaSelector)
+  const wallet = useSelectedWallet()
   const tokenMetadata = useSelector(tokenInfoSelector)
   const defaultNetworkAsset = useSelector(defaultNetworkAssetSelector)
 
@@ -207,7 +208,7 @@ const TxDetails = () => {
 
   const openInExplorer = () => {
     if (transaction) {
-      const networkConfig = getNetworkConfigById(walletMeta.networkId, walletMeta.provider)
+      const networkConfig = getNetworkConfigById(wallet.networkId, wallet.provider)
       // note: don't await on purpose
       Linking.openURL(networkConfig.EXPLORER_URL_FOR_TX(transaction.id))
     }

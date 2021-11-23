@@ -21,15 +21,9 @@ import type {NetworkId, WalletImplementationId} from '../../legacy/config/types'
 import walletManager from '../../legacy/crypto/walletManager'
 import {confirmationMessages} from '../../legacy/i18n/global-messages'
 import {CATALYST_ROUTES, SETTINGS_ROUTES, WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
-import {
-  easyConfirmationSelector,
-  isHWSelector,
-  isReadOnlySelector,
-  isSystemAuthEnabledSelector,
-  walletMetaSelector,
-  walletNameSelector,
-} from '../../legacy/selectors'
+import {easyConfirmationSelector, isSystemAuthEnabledSelector, walletNameSelector} from '../../legacy/selectors'
 import {ignoreConcurrentAsyncHandler} from '../../legacy/utils/utils'
+import {useSelectedWallet} from '../SelectedWallet'
 
 export const WalletSettingsScreen = () => {
   const intl = useIntl()
@@ -38,9 +32,7 @@ export const WalletSettingsScreen = () => {
   const isSystemAuthEnabled = useSelector(isSystemAuthEnabledSelector)
   const isEasyConfirmationEnabled = useSelector(easyConfirmationSelector)
   const walletName = useSelector(walletNameSelector)
-  const isHW = useSelector(isHWSelector)
-  const isReadOnly = useSelector(isReadOnlySelector)
-  const walletMeta = useSelector(walletMetaSelector)
+  const wallet = useSelectedWallet()
 
   const dispatch = useDispatch()
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -87,14 +79,17 @@ export const WalletSettingsScreen = () => {
         <NavigatedSettingsItem
           label={strings.changePassword}
           navigateTo={SETTINGS_ROUTES.CHANGE_PASSWORD}
-          disabled={isHW || isReadOnly}
+          disabled={wallet.isHW || wallet.isReadOnly}
         />
 
-        <SettingsItem label={strings.easyConfirmation} disabled={!isSystemAuthEnabled || isHW || isReadOnly}>
+        <SettingsItem
+          label={strings.easyConfirmation}
+          disabled={!isSystemAuthEnabled || wallet.isHW || wallet.isReadOnly}
+        >
           <Switch
             value={isEasyConfirmationEnabled}
             onValueChange={onToggleEasyConfirmation}
-            disabled={!isSystemAuthEnabled || isHW || isReadOnly}
+            disabled={!isSystemAuthEnabled || wallet.isHW || wallet.isReadOnly}
           />
         </SettingsItem>
       </SettingsSection>
@@ -104,11 +99,11 @@ export const WalletSettingsScreen = () => {
       </SettingsSection>
 
       <SettingsSection title={strings.about}>
-        <SettingsBuildItem label={strings.network} value={getNetworkName(walletMeta.networkId)} />
+        <SettingsBuildItem label={strings.network} value={getNetworkName(wallet.networkId)} />
 
         <SettingsBuildItem
           label={strings.walletType}
-          value={intl.formatMessage(getWalletType(walletMeta.walletImplementationId))}
+          value={intl.formatMessage(getWalletType(wallet.walletImplementationId))}
         />
       </SettingsSection>
 

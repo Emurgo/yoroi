@@ -9,6 +9,8 @@ import {View} from 'react-native'
 import {WebView} from 'react-native-webview'
 import {useSelector} from 'react-redux'
 
+// $FlowExpectedError
+import {useSelectedWallet} from '../../../src/SelectedWallet'
 import {showErrorDialog} from '../../actions'
 import {ApiError, NetworkError} from '../../api/errors'
 import type {RawUtxo} from '../../api/types'
@@ -24,7 +26,6 @@ import {
   poolOperatorSelector,
   serverStatusSelector,
   utxosSelector,
-  walletMetaSelector,
 } from '../../selectors'
 import type {ServerStatusCache} from '../../state'
 import type {DefaultAsset} from '../../types/HistoryTransaction'
@@ -201,10 +202,9 @@ const StakingCenter = ({intl}: Props) => {
   const poolOperator = useSelector(poolOperatorSelector)
   const languageCode = useSelector(languageSelector)
   const serverStatus = useSelector(serverStatusSelector)
-  const walletMeta = useSelector(walletMetaSelector)
+  const wallet = useSelectedWallet()
 
-  const {networkId, provider} = walletMeta
-  const nightlyAndDevPoolHashes = getTestStakingPool(networkId, provider)
+  const nightlyAndDevPoolHashes = getTestStakingPool(wallet.networkId, wallet.provider)
 
   // pools user is currently delegating to
   const poolList = poolOperator != null ? [poolOperator] : null

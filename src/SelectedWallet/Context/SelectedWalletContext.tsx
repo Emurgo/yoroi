@@ -8,8 +8,8 @@ type SelectedWalletContext = readonly [SelectedWallet | undefined, SetSelectedWa
 
 const SelectedWalletContext = React.createContext<SelectedWalletContext | undefined>(undefined)
 
-export const SelectedWalletProvider: React.FC = ({children}) => {
-  const [selectedWallet, selectWallet] = React.useState<SelectedWallet | undefined>(undefined)
+export const SelectedWalletProvider: React.FC<{wallet?: WalletInterface}> = ({children, wallet}) => {
+  const [selectedWallet, selectWallet] = React.useState<SelectedWallet | undefined>(wallet)
 
   return (
     <SelectedWalletContext.Provider value={[selectedWallet, selectWallet] as const}>
