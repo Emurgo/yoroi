@@ -1,7 +1,7 @@
 // @flow
 
 import {useNavigation} from '@react-navigation/native'
-import React, {useCallback} from 'react'
+import React from 'react'
 import {useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {useSelector} from 'react-redux'
@@ -13,6 +13,52 @@ import {WALLET_ROUTES} from '../../../RoutesList'
 import {isReadOnlySelector} from '../../../selectors'
 import {COLORS} from '../../../styles/config'
 import {Spacer} from '../../UiKit'
+
+const ActionsBanner = () => {
+  const navigation = useNavigation()
+  const isReadOnly = useSelector(isReadOnlySelector)
+  const strings = useStrings()
+
+  return (
+    <View style={styles.banner}>
+      <Spacer height={16} />
+      <View style={styles.centralized}>
+        <View style={styles.row}>
+          {!isReadOnly && (
+            <View style={styles.centralized}>
+              <TouchableOpacity style={styles.actionIcon} onPress={() => navigation.navigate(WALLET_ROUTES.SEND)}>
+                <Icon.Sent {...ACTION_PROPS} />
+              </TouchableOpacity>
+              <Text style={styles.actionLabel}>{strings.send}</Text>
+            </View>
+          )}
+
+          {!isReadOnly && <Spacer width={32} />}
+
+          <View style={styles.centralized}>
+            <TouchableOpacity style={styles.actionIcon} onPress={() => navigation.navigate(WALLET_ROUTES.RECEIVE)}>
+              <Icon.Received {...ACTION_PROPS} />
+            </TouchableOpacity>
+            <Text style={styles.actionLabel}>{strings.receive}</Text>
+          </View>
+
+          <Spacer width={32} />
+
+          <View style={styles.centralized}>
+            <TouchableOpacity style={{...styles.actionIcon, ...styles.cta}} onPress={() => alert(strings.buy)}>
+              {/* TODO: request buy icon to the design team */}
+              <Text style={styles.buyButton}>+</Text>
+            </TouchableOpacity>
+            <Text style={styles.actionLabel}>{strings.buy}</Text>
+          </View>
+        </View>
+      </View>
+      <Spacer height={21} />
+    </View>
+  )
+}
+
+export default ActionsBanner
 
 // NOTE: layout is following inVision spec
 // https://projects.invisionapp.com/d/main?origin=v7#/console/21500065/456867605/inspect?scrollOffset=2856#project_console
@@ -60,58 +106,13 @@ const ACTION_PROPS = {
   color: COLORS.WHITE,
 }
 
-const ActionsBanner = () => {
-  const navigation = useNavigation()
-  const isReadOnly = useSelector(isReadOnlySelector)
+const useStrings = () => {
   const intl = useIntl()
 
-  const sendLabel = intl.formatMessage(actionMessages.send)
-  const receiveLabel = intl.formatMessage(actionMessages.receive)
-  const buyLabel = intl.formatMessage(actionMessages.buy)
-  const messageBuy = intl.formatMessage(actionMessages.soon)
-
-  // TODO: adjust navigation for the next wallet tab navigator
-  const onSend = useCallback(() => navigation.navigate(WALLET_ROUTES.SEND), [navigation])
-  const onReceive = useCallback(() => navigation.navigate(WALLET_ROUTES.RECEIVE), [navigation])
-  const onBuy = useCallback(() => alert(messageBuy), [messageBuy])
-
-  return (
-    <View style={styles.banner}>
-      <Spacer height={16} />
-      <View style={styles.centralized}>
-        <View style={styles.row}>
-          {!isReadOnly && (
-            <View style={styles.centralized}>
-              <TouchableOpacity style={styles.actionIcon} onPress={onSend}>
-                <Icon.Sent {...ACTION_PROPS} />
-              </TouchableOpacity>
-              <Text style={styles.actionLabel}>{sendLabel}</Text>
-            </View>
-          )}
-
-          {!isReadOnly && <Spacer width={32} />}
-
-          <View style={styles.centralized}>
-            <TouchableOpacity style={styles.actionIcon} onPress={onReceive}>
-              <Icon.Received {...ACTION_PROPS} />
-            </TouchableOpacity>
-            <Text style={styles.actionLabel}>{receiveLabel}</Text>
-          </View>
-
-          <Spacer width={32} />
-
-          <View style={styles.centralized}>
-            <TouchableOpacity style={{...styles.actionIcon, ...styles.cta}} onPress={onBuy}>
-              {/* TODO: request buy icon to the design team */}
-              <Text style={styles.buyButton}>+</Text>
-            </TouchableOpacity>
-            <Text style={styles.actionLabel}>{buyLabel}</Text>
-          </View>
-        </View>
-      </View>
-      <Spacer height={21} />
-    </View>
-  )
+  return {
+    send: intl.formatMessage(actionMessages.send),
+    receive: intl.formatMessage(actionMessages.receive),
+    buy: intl.formatMessage(actionMessages.buy),
+    soon: intl.formatMessage(actionMessages.soon),
+  }
 }
-
-export default ActionsBanner
