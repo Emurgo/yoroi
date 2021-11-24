@@ -9,7 +9,6 @@ import ApplicationSettingsScreen from '../../legacy/components/Settings/Applicat
 import BiometricsLinkScreen from '../../legacy/components/Settings/BiometricsLinkScreen'
 import ChangeCustomPinScreen from '../../legacy/components/Settings/ChangeCustomPinScreen'
 import LanguagePickerScreen from '../../legacy/components/Settings/ChangeLanguageScreen'
-import ChangeWalletName from '../../legacy/components/Settings/ChangeWalletName'
 import SupportScreen from '../../legacy/components/Settings/SupportScreen'
 import TermsOfServiceScreen from '../../legacy/components/Settings/TermsOfServiceScreen'
 import ToggleEasyConfirmationScreen from '../../legacy/components/Settings/ToggleEasyConfirmationScreen'
@@ -17,6 +16,7 @@ import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../lega
 import {SETTINGS_ROUTES, SETTINGS_TABS} from '../../legacy/RoutesList'
 import {COLORS} from '../../legacy/styles/config'
 import {ChangePasswordScreen} from './ChangePassword/ChangePasswordScreen'
+import {ChangeWalletName} from './ChangeWalletName/ChangeWalletName'
 import {RemoveWalletScreen} from './RemoveWalletScreen'
 import {WalletSettingsScreen} from './WalletSettingsScreen'
 
