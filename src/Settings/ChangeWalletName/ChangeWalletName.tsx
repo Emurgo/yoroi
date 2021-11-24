@@ -3,24 +3,25 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
+import {useMutation} from 'react-query'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {changeWalletName} from '../../../legacy/actions'
+import {updateWallets} from '../../../legacy/actions'
 import {Button, TextInput} from '../../../legacy/components/UiKit'
+import walletManager from '../../../legacy/crypto/walletManager'
 import globalMessages from '../../../legacy/i18n/global-messages'
-import {walletNameSelector, walletNamesSelector} from '../../../legacy/selectors'
+import {walletNamesSelector} from '../../../legacy/selectors'
 import {COLORS} from '../../../legacy/styles/config'
 import {getWalletNameError, validateWalletName} from '../../../legacy/utils/validators'
+import {useSelectedWalletMeta} from '../../SelectedWallet'
 
 export const ChangeWalletName = () => {
   const strings = useStrings()
-  const navigation = useNavigation()
-  const oldWalletName = useSelector(walletNameSelector)
+  const walletMeta = useSelectedWalletMeta()
   const walletNames = useSelector(walletNamesSelector)
-  const [newWalletName, setNewWalletName] = React.useState(oldWalletName)
-  const validationErrors = validateWalletName(newWalletName, oldWalletName, walletNames)
+  const [newWalletName, setNewWalletName] = React.useState(walletMeta?.name || '')
+  const validationErrors = validateWalletName(newWalletName, walletMeta?.name, walletNames)
   const hasErrors = Object.keys(validationErrors).length > 0
-
   const errorText =
     getWalletNameError(
       {
@@ -31,13 +32,8 @@ export const ChangeWalletName = () => {
       validationErrors,
     ) || undefined
 
-  const dispatch = useDispatch()
-  const changeAndNavigate = async () => {
-    if (hasErrors) return
-
-    await dispatch(changeWalletName(newWalletName))
-    navigation.goBack()
-  }
+  const navigation = useNavigation()
+  const {renameWallet, isLoading} = useChangeWalletName({onSuccess: () => navigation.goBack()})
 
   return (
     <SafeAreaView style={styles.safeAreaView} edges={['left', 'right', 'bottom']}>
@@ -59,7 +55,14 @@ export const ChangeWalletName = () => {
       </ScrollView>
 
       <View style={styles.action}>
-        <Button onPress={changeAndNavigate} title={strings.changeButton} disabled={hasErrors} />
+        <Button
+          onPress={() => {
+            if (hasErrors || !newWalletName) return
+            renameWallet(newWalletName)
+          }}
+          title={strings.changeButton}
+          disabled={hasErrors || isLoading}
+        />
       </View>
     </SafeAreaView>
   )
@@ -103,5 +106,18 @@ const useStrings = () => {
     tooLong: intl.formatMessage(globalMessages.walletNameErrorTooLong),
     nameAlreadyTaken: intl.formatMessage(globalMessages.walletNameErrorNameAlreadyTaken),
     mustBeFilled: intl.formatMessage(globalMessages.walletNameErrorMustBeFilled),
+  }
+}
+
+const useChangeWalletName = (options) => {
+  const dispatch = useDispatch()
+  const mutation = useMutation<void, Error, string>((newName) => walletManager.rename(newName), options)
+
+  return {
+    renameWallet: React.useCallback(
+      (newName: string) => mutation.mutate(newName, {onSuccess: () => dispatch(updateWallets())}),
+      [dispatch, mutation],
+    ),
+    ...mutation,
   }
 }
