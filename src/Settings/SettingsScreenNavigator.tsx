@@ -16,7 +16,7 @@ import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../lega
 import {SETTINGS_ROUTES, SETTINGS_TABS} from '../../legacy/RoutesList'
 import {COLORS} from '../../legacy/styles/config'
 import {ChangePasswordScreen} from './ChangePassword/ChangePasswordScreen'
-import ChangeWalletName from './ChangeWalletName/ChangeWalletName'
+import {ChangeWalletName} from './ChangeWalletName/ChangeWalletName'
 import {RemoveWalletScreen} from './RemoveWalletScreen'
 import {WalletSettingsScreen} from './WalletSettingsScreen'
 

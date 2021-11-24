@@ -1,9 +1,7 @@
-// @flow
-
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ScrollView, View} from 'react-native'
+import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch, useSelector} from 'react-redux'
 
@@ -11,24 +9,11 @@ import {changeWalletName} from '../../../legacy/actions'
 import {Button, TextInput} from '../../../legacy/components/UiKit'
 import globalMessages from '../../../legacy/i18n/global-messages'
 import {walletNameSelector, walletNamesSelector} from '../../../legacy/selectors'
+import {COLORS} from '../../../legacy/styles/config'
 import {getWalletNameError, validateWalletName} from '../../../legacy/utils/validators'
-import styles from './ChangeWalletName.style'
 
-const WalletNameInput = TextInput
-
-const messages = defineMessages({
-  changeButton: {
-    id: 'components.settings.changewalletname.changeButton',
-    defaultMessage: '!!!Change name',
-  },
-  walletNameInputLabel: {
-    id: 'components.settings.changewalletname.walletNameInputLabel',
-    defaultMessage: '!!!Wallet name',
-  },
-})
-
-const ChangeWalletName = () => {
-  const intl = useIntl()
+export const ChangeWalletName = () => {
+  const strings = useStrings()
   const navigation = useNavigation()
   const oldWalletName = useSelector(walletNameSelector)
   const walletNames = useSelector(walletNamesSelector)
@@ -39,9 +24,9 @@ const ChangeWalletName = () => {
   const errorText =
     getWalletNameError(
       {
-        tooLong: intl.formatMessage(globalMessages.walletNameErrorTooLong),
-        nameAlreadyTaken: intl.formatMessage(globalMessages.walletNameErrorNameAlreadyTaken),
-        mustBeFilled: intl.formatMessage(globalMessages.walletNameErrorMustBeFilled),
+        tooLong: strings.tooLong,
+        nameAlreadyTaken: strings.nameAlreadyTaken,
+        mustBeFilled: strings.mustBeFilled,
       },
       validationErrors,
     ) || undefined
@@ -66,7 +51,7 @@ const ChangeWalletName = () => {
           errorDelay={0}
           enablesReturnKeyAutomatically
           autoFocus
-          label={intl.formatMessage(messages.walletNameInputLabel)}
+          label={strings.walletNameInputLabel}
           value={newWalletName}
           onChangeText={setNewWalletName}
           errorText={errorText}
@@ -74,10 +59,49 @@ const ChangeWalletName = () => {
       </ScrollView>
 
       <View style={styles.action}>
-        <Button onPress={changeAndNavigate} title={intl.formatMessage(messages.changeButton)} disabled={hasErrors} />
+        <Button onPress={changeAndNavigate} title={strings.changeButton} disabled={hasErrors} />
       </View>
     </SafeAreaView>
   )
 }
 
-export default ChangeWalletName
+const styles = StyleSheet.create({
+  safeAreaView: {
+    backgroundColor: COLORS.BACKGROUND,
+    flex: 1,
+  },
+  scrollContentContainer: {
+    flex: 1,
+    paddingHorizontal: 16,
+    paddingTop: 40,
+  },
+  action: {
+    padding: 16,
+    backgroundColor: COLORS.BACKGROUND,
+  },
+})
+
+const WalletNameInput = TextInput
+
+const messages = defineMessages({
+  changeButton: {
+    id: 'components.settings.changewalletname.changeButton',
+    defaultMessage: '!!!Change name',
+  },
+  walletNameInputLabel: {
+    id: 'components.settings.changewalletname.walletNameInputLabel',
+    defaultMessage: '!!!Wallet name',
+  },
+})
+
+const useStrings = () => {
+  const intl = useIntl()
+
+  return {
+    changeButton: intl.formatMessage(messages.changeButton),
+    walletNameInputLabel: intl.formatMessage(messages.walletNameInputLabel),
+    tooLong: intl.formatMessage(globalMessages.walletNameErrorTooLong),
+    nameAlreadyTaken: intl.formatMessage(globalMessages.walletNameErrorNameAlreadyTaken),
+    mustBeFilled: intl.formatMessage(globalMessages.walletNameErrorMustBeFilled),
+  }
+}
