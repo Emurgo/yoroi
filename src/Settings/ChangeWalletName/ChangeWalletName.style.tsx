@@ -2,7 +2,7 @@
 
 import {StyleSheet} from 'react-native'
 
-import {COLORS} from '../../../styles/config'
+import {COLORS} from '../../../legacy/styles/config'
 
 export default StyleSheet.create({
   safeAreaView: {

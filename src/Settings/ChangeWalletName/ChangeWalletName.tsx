@@ -7,12 +7,12 @@ import {ScrollView, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {changeWalletName} from '../../actions'
-import globalMessages from '../../i18n/global-messages'
-import {walletNameSelector, walletNamesSelector} from '../../selectors'
-import {getWalletNameError, validateWalletName} from '../../utils/validators'
-import {Button, TextInput} from '../UiKit'
-import styles from './styles/ChangeWalletName.style'
+import {changeWalletName} from '../../../legacy/actions'
+import {Button, TextInput} from '../../../legacy/components/UiKit'
+import globalMessages from '../../../legacy/i18n/global-messages'
+import {walletNameSelector, walletNamesSelector} from '../../../legacy/selectors'
+import {getWalletNameError, validateWalletName} from '../../../legacy/utils/validators'
+import styles from './ChangeWalletName.style'
 
 const WalletNameInput = TextInput
 
