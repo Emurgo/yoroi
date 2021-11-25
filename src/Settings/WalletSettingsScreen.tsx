@@ -3,9 +3,10 @@ import React from 'react'
 import type {MessageDescriptor} from 'react-intl'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, Switch} from 'react-native'
+import {useMutation, UseMutationOptions} from 'react-query'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {DIALOG_BUTTONS, logout, showConfirmationDialog, updateWallets} from '../../legacy/actions'
+import {DIALOG_BUTTONS, showConfirmationDialog, signout, updateWallets} from '../../legacy/actions'
 import VotingBanner from '../../legacy/components/Catalyst/VotingBanner'
 import {
   NavigatedSettingsItem,
@@ -22,8 +23,7 @@ import walletManager from '../../legacy/crypto/walletManager'
 import {confirmationMessages} from '../../legacy/i18n/global-messages'
 import {CATALYST_ROUTES, SETTINGS_ROUTES, WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
 import {easyConfirmationSelector, isSystemAuthEnabledSelector, walletNameSelector} from '../../legacy/selectors'
-import {ignoreConcurrentAsyncHandler} from '../../legacy/utils/utils'
-import {useSelectedWallet} from '../SelectedWallet'
+import {useSelectedWallet, useSetSelectedWallet, useSetSelectedWalletMeta} from '../SelectedWallet'
 
 export const WalletSettingsScreen = () => {
   const intl = useIntl()
@@ -35,20 +35,8 @@ export const WalletSettingsScreen = () => {
   const wallet = useSelectedWallet()
 
   const dispatch = useDispatch()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const onLogout = React.useCallback(
-    ignoreConcurrentAsyncHandler(
-      () => async () => {
-        const selection = await showConfirmationDialog(confirmationMessages.logout, intl)
 
-        if (selection === DIALOG_BUTTONS.YES) {
-          await dispatch(logout())
-        }
-      },
-      500,
-    )(),
-    [],
-  )
+  const {logoutWithConfirmation} = useLogout()
 
   const [pending, setPending] = React.useState(false)
   const onSwitchWallet = async () => {
@@ -68,7 +56,7 @@ export const WalletSettingsScreen = () => {
 
       <SettingsSection>
         <PressableSettingsItem label={strings.switchWallet} onPress={onSwitchWallet} disabled={pending} />
-        <PressableSettingsItem label={strings.logout} onPress={onLogout} />
+        <PressableSettingsItem label={strings.logout} onPress={logoutWithConfirmation} />
       </SettingsSection>
 
       <SettingsSection title={strings.walletName}>
@@ -216,4 +204,45 @@ const getWalletType = (implementationId: WalletImplementationId): MessageDescrip
   if (isHaskellShelley(implementationId)) return messages.shelleyWallet
 
   return messages.unknownWalletType
+}
+
+const useLogout = (options?: UseMutationOptions<void, Error>) => {
+  const intl = useIntl()
+  const dispatch = useDispatch()
+  const setSelectedWallet = useSetSelectedWallet()
+  const setSelectedWalletMeta = useSetSelectedWalletMeta()
+  const {closeWallet, ...mutation} = useCloseWallet({
+    onSuccess: () => {
+      setSelectedWallet(undefined)
+      setSelectedWalletMeta(undefined)
+    },
+    ...options,
+  })
+
+  return {
+    logout: () => {
+      dispatch(signout()) // triggers navigation to login
+      setTimeout(() => closeWallet(), 1000) // wait for navigation to finish
+    },
+    logoutWithConfirmation: async () => {
+      const selection = await showConfirmationDialog(confirmationMessages.logout, intl)
+      if (selection === DIALOG_BUTTONS.YES) {
+        dispatch(signout()) // triggers navigation to login
+        setTimeout(() => closeWallet(), 1000) // wait for navigation to finish
+      }
+    },
+    ...mutation,
+  }
+}
+
+const useCloseWallet = (options?: UseMutationOptions<void, Error>) => {
+  const mutation = useMutation({
+    mutationFn: () => walletManager.closeWallet(),
+    ...options,
+  })
+
+  return {
+    ...mutation,
+    closeWallet: () => mutation.mutate(),
+  }
 }
