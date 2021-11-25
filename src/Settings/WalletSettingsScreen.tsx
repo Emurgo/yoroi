@@ -36,8 +36,6 @@ export const WalletSettingsScreen = () => {
 
   const dispatch = useDispatch()
 
-  const {logoutWithConfirmation} = useLogout()
-
   const [pending, setPending] = React.useState(false)
   const onSwitchWallet = async () => {
     setPending(true)
@@ -56,7 +54,7 @@ export const WalletSettingsScreen = () => {
 
       <SettingsSection>
         <PressableSettingsItem label={strings.switchWallet} onPress={onSwitchWallet} disabled={pending} />
-        <PressableSettingsItem label={strings.logout} onPress={logoutWithConfirmation} />
+        <LogoutButton />
       </SettingsSection>
 
       <SettingsSection title={strings.walletName}>
@@ -245,4 +243,11 @@ const useCloseWallet = (options?: UseMutationOptions<void, Error>) => {
     ...mutation,
     closeWallet: () => mutation.mutate(),
   }
+}
+
+const LogoutButton = () => {
+  const strings = useStrings()
+  const {logoutWithConfirmation, isLoading} = useLogout()
+
+  return <PressableSettingsItem label={strings.logout} onPress={logoutWithConfirmation} disabled={isLoading} />
 }
