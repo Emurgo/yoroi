@@ -58,7 +58,7 @@
     "@cardano-foundation/ledgerjs-hw-app-cardano": "4.0.0",
     "@emurgo/cip14-js": "2.0.0",
     "@emurgo/cip4-js": "1.0.5",
-    "@emurgo/react-native-haskell-shelley": "3.1.2-beta.1",
+    "@emurgo/react-native-haskell-shelley": "3.1.2",
     "@formatjs/intl": "^1.14.1",
     "@formatjs/intl-datetimeformat": "^4.2.3",
     "@formatjs/intl-getcanonicallocales": "^1.7.3",
