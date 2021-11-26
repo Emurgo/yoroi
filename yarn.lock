@@ -4002,14 +4002,13 @@
     "@typescript-eslint/types" "5.0.0"
     eslint-visitor-keys "^3.0.0"
 
-"@unstoppabledomains/resolution@5.0.2":
-  version "5.0.2"
-  resolved "https://registry.yarnpkg.com/@unstoppabledomains/resolution/-/resolution-5.0.2.tgz#5390ab5d28b96ae6a3e05a2de17cb4f756ba1d3c"
-  integrity sha512-CHZeUi0fjqAJL1R5qLjOzpfWTTQ74Mha8g+HWbOY84Nb63OxvPA8wwJUbq4LST77exY3RJdEhq2chWjQdFOM7A==
+"@unstoppabledomains/resolution@6.0.3":
+  version "6.0.3"
+  resolved "https://registry.yarnpkg.com/@unstoppabledomains/resolution/-/resolution-6.0.3.tgz#a70888840c86a5918cb3134e7ac745e054c92aa5"
+  integrity sha512-J57SOzDqTDbrTfTzMSybM010LNvyNgEqKtdNcC5CAFg1IeNjC9woX5j1o/IbglXd9CPp1NL7n2Q1mVn9py211g==
   dependencies:
     "@ethersproject/abi" "^5.0.1"
     bn.js "^4.4.0"
-    commander "^4.1.1"
     cross-fetch "^3.1.4"
     elliptic "^6.5.4"
     ethereum-ens-network-map "^1.0.2"
@@ -14946,10 +14945,10 @@ requires-port@^1.0.0:
   resolved "https://registry.yarnpkg.com/requires-port/-/requires-port-1.0.0.tgz#925d2601d39ac485e091cf0da5c6e694dc3dcaff"
   integrity sha1-kl0mAdOaxIXgkc8NpcbmlNw9yv8=
 
-reselect@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/reselect/-/reselect-4.0.0.tgz#f2529830e5d3d0e021408b246a206ef4ea4437f7"
-  integrity sha512-qUgANli03jjAyGlnbYVAV5vvnOmJnODyABz51RdBN7M4WaVu8mecZWgyQNkG8Yqe3KRGRt0l4K4B3XVEULC4CA==
+reselect@^4.1.5:
+  version "4.1.5"
+  resolved "https://registry.yarnpkg.com/reselect/-/reselect-4.1.5.tgz#852c361247198da6756d07d9296c2b51eddb79f6"
+  integrity sha512-uVdlz8J7OO+ASpBYoz1Zypgx0KasCY20H+N8JD13oUMtPvSHQuscrHop4KbXrbsBcdB9Ds7lVK7eRkBIfO43vQ==
 
 resize-observer-polyfill@^1.5.1:
   version "1.5.1"
