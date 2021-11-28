@@ -3,6 +3,7 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
+import {useMutation, UseMutationOptions} from 'react-query'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {updateWallets} from '../../legacy/actions'
@@ -15,22 +16,18 @@ import {isHWSelector, walletNameSelector} from '../../legacy/selectors'
 
 export const RemoveWalletScreen = () => {
   const strings = useStrings()
-  const navigation = useNavigation()
   const walletName = useSelector(walletNameSelector)
   const isHW = useSelector(isHWSelector)
 
-  const dispatch = useDispatch()
-  const [pending, setPending] = React.useState(false)
-  const handleRemoveWallet = async () => {
-    setPending(true)
-    navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
-    await walletManager.removeCurrentWallet()
-    dispatch(updateWallets())
-  }
+  const navigation = useNavigation()
+  const {removeWallet, isLoading} = useRemoveWallet({
+    onMutate: () => navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION),
+  })
+
   const [hasMnemonicWrittenDown, setHasMnemonicWrittenDown] = React.useState(false)
   const [typedWalletName, setTypedWalletName] = React.useState('')
 
-  const disabled = pending || (!isHW && !hasMnemonicWrittenDown) || walletName !== typedWalletName
+  const disabled = isLoading || (!isHW && !hasMnemonicWrittenDown) || walletName !== typedWalletName
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
@@ -72,7 +69,7 @@ export const RemoveWalletScreen = () => {
 
         <Spacer height={16} />
 
-        <Button onPress={handleRemoveWallet} title={strings.remove} style={styles.removeButton} disabled={disabled} />
+        <Button onPress={removeWallet} title={strings.remove} style={styles.removeButton} disabled={disabled} />
       </Actions>
     </SafeAreaView>
   )
@@ -135,5 +132,21 @@ const useStrings = () => {
     walletNameMismatchError: intl.formatMessage(messages.walletNameMismatchError),
     remove: intl.formatMessage(messages.remove),
     hasWrittenDownMnemonic: intl.formatMessage(messages.hasWrittenDownMnemonic),
+  }
+}
+
+const useRemoveWallet = (options: UseMutationOptions<void, Error, void>) => {
+  const dispatch = useDispatch()
+  const {mutate, ...mutation} = useMutation({
+    mutationFn: () => walletManager.removeCurrentWallet(),
+    ...options,
+  })
+
+  return {
+    removeWallet: React.useCallback(
+      () => mutate(undefined, {onSuccess: () => dispatch(updateWallets())}),
+      [dispatch, mutate],
+    ),
+    ...mutation,
   }
 }
