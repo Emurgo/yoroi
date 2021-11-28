@@ -2,7 +2,7 @@
 
 import BigNumber from 'bignumber.js'
 
-import {Token, TransactionInfo} from '../src/TxHistory/types'
+import {Token, TransactionInfo} from '../src/types/cardano'
 import type {State, WalletMeta} from './state'
 
 export var availableAssetsSelector: (state: State) => Record<string, Token>
