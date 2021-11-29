@@ -14,7 +14,6 @@ import SaveReadOnlyWalletScreen from '../../legacy/components/WalletInit/Restore
 import VerifyRestoredWallet from '../../legacy/components/WalletInit/RestoreWallet/VerifyRestoredWallet'
 import WalletCredentialsScreen from '../../legacy/components/WalletInit/RestoreWallet/WalletCredentialsScreen'
 import WalletFreshInitScreen from '../../legacy/components/WalletInit/WalletFreshInitScreen'
-import WalletInitScreen from '../../legacy/components/WalletInit/WalletInitScreen'
 import {isJormungandr} from '../../legacy/config/networks'
 import {
   defaultNavigationOptions,
@@ -22,6 +21,7 @@ import {
   jormunNavigationOptions,
 } from '../../legacy/navigationOptions'
 import {WALLET_INIT_ROUTES} from '../../legacy/RoutesList'
+import WalletInitScreen from './WalletInitScreen'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const Stack = createStackNavigator<{

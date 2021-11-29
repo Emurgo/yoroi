@@ -1,21 +1,19 @@
-// @flow
-
 import {useNavigation, useRoute} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {CONFIG, isByron, isHaskellShelley} from '../../config/config'
-import {isJormungandr} from '../../config/networks'
-import type {NetworkId, WalletImplementationId, YoroiProvider} from '../../config/types'
-import globalMessages from '../../i18n/global-messages'
-import {WALLET_INIT_ROUTES} from '../../RoutesList'
-import ExapandableItem from '../Common/ExpandableItem'
-import LedgerTransportSwitchModal from '../Ledger/LedgerTransportSwitchModal'
-import {Button, Modal, ScreenBackground, StatusBar} from '../UiKit'
-import styles from './styles/WalletInitScreen.style'
-import WalletDescription from './WalletDescription'
+import ExapandableItem from '../../legacy/components/Common/ExpandableItem'
+import LedgerTransportSwitchModal from '../../legacy/components/Ledger/LedgerTransportSwitchModal'
+import {Button, Modal, ScreenBackground, StatusBar} from '../../legacy/components/UiKit'
+import styles from '../../legacy/components/WalletInit/styles/WalletInitScreen.style'
+import WalletDescription from '../../legacy/components/WalletInit/WalletDescription'
+import {CONFIG, isByron, isHaskellShelley} from '../../legacy/config/config'
+import {isJormungandr} from '../../legacy/config/networks'
+import type {NetworkId, WalletImplementationId, YoroiProvider} from '../../legacy/config/types'
+import globalMessages from '../../legacy/i18n/global-messages'
+import {WALLET_INIT_ROUTES} from '../../legacy/RoutesList'
 
 const messages = defineMessages({
   createWalletButton: {
@@ -61,21 +59,23 @@ const MODAL_STATES = {
   CLOSED: 'CLOSED',
   CHOOSE_MNEMONICS_LEN: 'CHOOSE_MNEMONICS_LEN',
   LEDGER_TRANSPORT_SWITCH: 'LEDGER_TRANSPORT_SWITCH',
-}
-type ModalState = $Values<typeof MODAL_STATES>
+} as const
+type ModalState = typeof MODAL_STATES[keyof typeof MODAL_STATES]
 
 const WalletInitScreen = () => {
   const intl = useIntl()
   const navigation = useNavigation()
-  const route = (useRoute(): any)
-  const [modalState, _setModalState] = React.useState(MODAL_STATES.CLOSED)
-  const setModalState = (event: Object, modalState: ModalState) => _setModalState(modalState)
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+  const route: any = useRoute()
+  /* eslint-enable @typescript-eslint/no-explicit-any */
+  const [modalState, _setModalState] = React.useState<ModalState>(MODAL_STATES.CLOSED)
+  const setModalState = (event: Record<string, unknown>, modalState: ModalState) => _setModalState(modalState)
 
   const navigateRestoreWallet = (
-    event: Object,
+    event: Record<string, unknown>,
     networkId: NetworkId,
     walletImplementationId: WalletImplementationId,
-    provider: ?YoroiProvider,
+    provider?: YoroiProvider,
   ) =>
     navigation.navigate(WALLET_INIT_ROUTES.RESTORE_WALLET, {
       networkId,
@@ -83,10 +83,10 @@ const WalletInitScreen = () => {
       provider,
     })
   const navigateCreateWallet = (
-    event: Object,
+    event: Record<string, unknown>,
     networkId: NetworkId,
     walletImplementationId: WalletImplementationId,
-    provider: ?YoroiProvider,
+    provider?: YoroiProvider,
   ) =>
     navigation.navigate(WALLET_INIT_ROUTES.CREATE_WALLET, {
       networkId,
@@ -94,7 +94,7 @@ const WalletInitScreen = () => {
       provider,
     })
   const navigateCheckNanoX = (
-    event: Object,
+    event: Record<string, unknown>,
     networkId: NetworkId,
     walletImplementationId: WalletImplementationId,
     useUSB: boolean,
@@ -105,7 +105,7 @@ const WalletInitScreen = () => {
       useUSB,
     })
   const navigateImportReadOnlyWallet = (
-    _event: Object,
+    _event: Record<string, unknown>,
     networkId: NetworkId,
     walletImplementationId: WalletImplementationId,
   ) =>

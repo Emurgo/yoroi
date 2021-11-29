@@ -8,6 +8,7 @@ export var CONFIG: {
   HARDWARE_WALLETS: {
     LEDGER_NANO: {
       ENABLE_USB_TRANSPORT: boolean,
+      ENABLED: boolean
     }
   },
   LOG_LEVEL: string,
@@ -18,6 +19,7 @@ export var CONFIG: {
   PIN_LENGTH: number,
   WALLETS: {
     HASKELL_SHELLEY: WalletConfig,
+    HASKELL_SHELLEY_24: WalletConfig,
     HASKELL_BYRON: WalletConfig,
     JORMUNGANDR_ITN: WalletConfig,
   },
