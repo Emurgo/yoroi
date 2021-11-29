@@ -5,6 +5,11 @@ export var isByron: (walletImplementationId: string) => boolean
 
 // prettier-ignore
 export var CONFIG: {
+  HARDWARE_WALLETS: {
+    LEDGER_NANO: {
+      ENABLE_USB_TRANSPORT: boolean,
+    }
+  },
   LOG_LEVEL: string,
   ANDROID_BIO_AUTH_EXCLUDED_SDK: Array<number>,
   DEBUG: {

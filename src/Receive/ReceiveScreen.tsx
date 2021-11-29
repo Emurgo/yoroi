@@ -7,7 +7,6 @@ import {useDispatch, useSelector} from 'react-redux'
 
 import {generateNewReceiveAddress, generateNewReceiveAddressIfNeeded} from '../../legacy/actions'
 import AddressDetail from '../../legacy/components/Receive/AddressDetail'
-import {UnusedAddresses, UsedAddresses} from '../../legacy/components/Receive/Addresses'
 import {Banner, Button, OfflineBanner, Spacer, StatusBar} from '../../legacy/components/UiKit'
 import {
   canGenerateNewReceiveAddressSelector,
@@ -15,6 +14,7 @@ import {
   receiveAddressesSelector,
 } from '../../legacy/selectors'
 import {COLORS} from '../../legacy/styles/config'
+import {UnusedAddresses, UsedAddresses} from './Addresses'
 
 export const ReceiveScreen = () => {
   const strings = useStrings()
@@ -63,9 +63,9 @@ export const ReceiveScreen = () => {
 
           <Spacer height={24} />
 
-          <UnusedAddresses addresses={receiveAddresses} />
+          <UnusedAddresses />
           <Spacer height={24} />
-          <UsedAddresses addresses={receiveAddresses} />
+          <UsedAddresses />
         </Content>
       </ScrollView>
     </SafeAreaView>

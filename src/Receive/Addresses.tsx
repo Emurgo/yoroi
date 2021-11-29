@@ -1,14 +1,16 @@
-// @flow
-
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
-import verifyIcon from '../../../assets/img/icon/verify-address.png'
-import {externalAddressIndexSelector, isUsedAddressIndexSelector, receiveAddressesSelector} from '../../../selectors'
-import {Spacer, Text} from '../../UiKit'
-import {CopyButton} from '../../UiKit'
+import verifyIcon from '../../legacy/assets/img/icon/verify-address.png'
+import {Spacer, Text} from '../../legacy/components/UiKit'
+import {CopyButton} from '../../legacy/components/UiKit'
+import {
+  externalAddressIndexSelector,
+  isUsedAddressIndexSelector,
+  receiveAddressesSelector,
+} from '../../legacy/selectors'
 import {Modals} from './Modals'
 
 export const UnusedAddresses = () => {
@@ -58,7 +60,7 @@ export const UsedAddresses = () => {
   )
 }
 
-const UsedAddress = ({address, onPress}: {address: string, onPress: () => void}) => {
+const UsedAddress = ({address, onPress}: {address: string; onPress: () => void}) => {
   const index = useAddressIndex(address)
 
   return (
@@ -81,7 +83,7 @@ const UsedAddress = ({address, onPress}: {address: string, onPress: () => void})
   )
 }
 
-const UnusedAddress = ({address, onPress}: {address: string, onPress: () => void}) => {
+const UnusedAddress = ({address, onPress}: {address: string; onPress: () => void}) => {
   const index = useAddressIndex(address)
 
   return (
