@@ -15,55 +15,8 @@ import type {NetworkId, WalletImplementationId, YoroiProvider} from '../../legac
 import globalMessages from '../../legacy/i18n/global-messages'
 import {WALLET_INIT_ROUTES} from '../../legacy/RoutesList'
 
-const messages = defineMessages({
-  createWalletButton: {
-    id: 'components.walletinit.walletinitscreen.createWalletButton',
-    defaultMessage: '!!!Create wallet',
-  },
-  restoreWalletButton: {
-    id: 'components.walletinit.walletinitscreen.restoreWalletButton',
-    defaultMessage: '!!!Restore wallet',
-  },
-  restoreNormalWalletLabel: {
-    id: 'components.walletinit.walletinitscreen.restoreNormalWalletLabel',
-    defaultMessage: '!!!15-word Wallet',
-  },
-  restore24WordWalletLabel: {
-    id: 'components.walletinit.walletinitscreen.restore24WordWalletLabel',
-    defaultMessage: '!!!24-word Wallet',
-  },
-  restoreNWordWalletExplanation: {
-    id: 'components.walletinit.walletinitscreen.restoreNWordWalletExplanation',
-    defaultMessage:
-      '!!!If you have a recovery phrase consisting of {mnemonicLength} ' +
-      'words, choose this option to restore your wallet.',
-  },
-  importReadOnlyWalletLabel: {
-    id: 'components.walletinit.walletinitscreen.importReadOnlyWalletLabel',
-    defaultMessage: '!!!Read-only wallet',
-  },
-  importReadOnlyWalletExplanation: {
-    id: 'components.walletinit.walletinitscreen.importReadOnlyWalletExplanation',
-    defaultMessage:
-      "!!!The Yoroi extension allows you to export any of your wallets' " +
-      'public keys in a QR code. Choose this option to import a wallet from ' +
-      ' a QR code in read-only mode.',
-  },
-  createWalletWithLedgerButton: {
-    id: 'components.walletinit.walletinitscreen.createWalletWithLedgerButton',
-    defaultMessage: '!!!Connect to Ledger Nano',
-  },
-})
-
-const MODAL_STATES = {
-  CLOSED: 'CLOSED',
-  CHOOSE_MNEMONICS_LEN: 'CHOOSE_MNEMONICS_LEN',
-  LEDGER_TRANSPORT_SWITCH: 'LEDGER_TRANSPORT_SWITCH',
-} as const
-type ModalState = typeof MODAL_STATES[keyof typeof MODAL_STATES]
-
 const WalletInitScreen = () => {
-  const intl = useIntl()
+  const strings = useStrings()
   const navigation = useNavigation()
   /* eslint-disable @typescript-eslint/no-explicit-any */
   const route: any = useRoute()
@@ -72,7 +25,7 @@ const WalletInitScreen = () => {
   const setModalState = (event: Record<string, unknown>, modalState: ModalState) => _setModalState(modalState)
 
   const navigateRestoreWallet = (
-    event: Record<string, unknown>,
+    _event: Record<string, unknown>,
     networkId: NetworkId,
     walletImplementationId: WalletImplementationId,
     provider?: YoroiProvider,
@@ -83,7 +36,7 @@ const WalletInitScreen = () => {
       provider,
     })
   const navigateCreateWallet = (
-    event: Record<string, unknown>,
+    _event: Record<string, unknown>,
     networkId: NetworkId,
     walletImplementationId: WalletImplementationId,
     provider?: YoroiProvider,
@@ -94,7 +47,7 @@ const WalletInitScreen = () => {
       provider,
     })
   const navigateCheckNanoX = (
-    event: Record<string, unknown>,
+    _event: Record<string, unknown>,
     networkId: NetworkId,
     walletImplementationId: WalletImplementationId,
     useUSB: boolean,
@@ -117,9 +70,9 @@ const WalletInitScreen = () => {
   const networkId: NetworkId = route.params.networkId
   const provider = route.params.provider
   const implementationId: WalletImplementationId = route.params.walletImplementationId
-  let createWalletLabel = intl.formatMessage(messages.createWalletButton)
-  let restoreWalletLabel = intl.formatMessage(messages.restoreWalletButton)
-  let createWalletWithLedgerLabel = intl.formatMessage(messages.createWalletWithLedgerButton)
+  let createWalletLabel = strings.createWalletButton
+  let restoreWalletLabel = strings.restoreWalletButton
+  let createWalletWithLedgerLabel = strings.createWalletWithLedgerButton
   if (isJormungandr(networkId)) {
     createWalletLabel += ' (ITN)'
     restoreWalletLabel += ' (ITN)'
@@ -186,12 +139,12 @@ const WalletInitScreen = () => {
             >
               <Button
                 onPress={(event) => navigateRestoreWallet(event, networkId, implementationId, provider)}
-                title={intl.formatMessage(messages.restoreNormalWalletLabel)}
+                title={strings.restoreNormalWalletLabel}
                 style={styles.mnemonicDialogButton}
               />
               <ExapandableItem
-                label={intl.formatMessage(globalMessages.learnMore)}
-                content={intl.formatMessage(messages.restoreNWordWalletExplanation, {mnemonicLength: 15})}
+                label={strings.learnMore}
+                content={strings.restoreNWordWalletExplanation({mnemonicLength: 15})}
               />
               <Button
                 outlineOnLight
@@ -203,24 +156,21 @@ const WalletInitScreen = () => {
                     provider,
                   )
                 }
-                title={intl.formatMessage(messages.restore24WordWalletLabel)}
+                title={strings.restore24WordWalletLabel}
                 style={styles.mnemonicDialogButton}
               />
               <ExapandableItem
-                label={intl.formatMessage(globalMessages.learnMore)}
-                content={intl.formatMessage(messages.restoreNWordWalletExplanation, {mnemonicLength: 24})}
+                label={strings.learnMore}
+                content={strings.restoreNWordWalletExplanation({mnemonicLength: 24})}
               />
               <Button
                 outlineOnLight
                 onPress={(event) => navigateImportReadOnlyWallet(event, networkId, implementationId)}
-                title={intl.formatMessage(messages.importReadOnlyWalletLabel)}
+                title={strings.importReadOnlyWalletLabel}
                 style={styles.mnemonicDialogButton}
                 testID="importReadOnlyWalletButton"
               />
-              <ExapandableItem
-                label={intl.formatMessage(globalMessages.learnMore)}
-                content={intl.formatMessage(messages.importReadOnlyWalletExplanation)}
-              />
+              <ExapandableItem label={strings.learnMore} content={strings.importReadOnlyWalletExplanation} />
             </Modal>
           )}
         </View>
@@ -229,3 +179,66 @@ const WalletInitScreen = () => {
   )
 }
 export default WalletInitScreen
+
+const messages = defineMessages({
+  createWalletButton: {
+    id: 'components.walletinit.walletinitscreen.createWalletButton',
+    defaultMessage: '!!!Create wallet',
+  },
+  restoreWalletButton: {
+    id: 'components.walletinit.walletinitscreen.restoreWalletButton',
+    defaultMessage: '!!!Restore wallet',
+  },
+  restoreNormalWalletLabel: {
+    id: 'components.walletinit.walletinitscreen.restoreNormalWalletLabel',
+    defaultMessage: '!!!15-word Wallet',
+  },
+  restore24WordWalletLabel: {
+    id: 'components.walletinit.walletinitscreen.restore24WordWalletLabel',
+    defaultMessage: '!!!24-word Wallet',
+  },
+  restoreNWordWalletExplanation: {
+    id: 'components.walletinit.walletinitscreen.restoreNWordWalletExplanation',
+    defaultMessage:
+      '!!!If you have a recovery phrase consisting of {mnemonicLength} ' +
+      'words, choose this option to restore your wallet.',
+  },
+  importReadOnlyWalletLabel: {
+    id: 'components.walletinit.walletinitscreen.importReadOnlyWalletLabel',
+    defaultMessage: '!!!Read-only wallet',
+  },
+  importReadOnlyWalletExplanation: {
+    id: 'components.walletinit.walletinitscreen.importReadOnlyWalletExplanation',
+    defaultMessage:
+      "!!!The Yoroi extension allows you to export any of your wallets' " +
+      'public keys in a QR code. Choose this option to import a wallet from ' +
+      ' a QR code in read-only mode.',
+  },
+  createWalletWithLedgerButton: {
+    id: 'components.walletinit.walletinitscreen.createWalletWithLedgerButton',
+    defaultMessage: '!!!Connect to Ledger Nano',
+  },
+})
+
+const MODAL_STATES = {
+  CLOSED: 'CLOSED',
+  CHOOSE_MNEMONICS_LEN: 'CHOOSE_MNEMONICS_LEN',
+  LEDGER_TRANSPORT_SWITCH: 'LEDGER_TRANSPORT_SWITCH',
+} as const
+type ModalState = typeof MODAL_STATES[keyof typeof MODAL_STATES]
+
+const useStrings = () => {
+  const intl = useIntl()
+
+  return {
+    createWalletButton: intl.formatMessage(messages.createWalletButton),
+    restoreWalletButton: intl.formatMessage(messages.restoreWalletButton),
+    createWalletWithLedgerButton: intl.formatMessage(messages.createWalletWithLedgerButton),
+    restoreNormalWalletLabel: intl.formatMessage(messages.restoreNormalWalletLabel),
+    learnMore: intl.formatMessage(globalMessages.learnMore),
+    restoreNWordWalletExplanation: (options) => intl.formatMessage(messages.restoreNWordWalletExplanation, options),
+    restore24WordWalletLabel: intl.formatMessage(messages.restore24WordWalletLabel),
+    importReadOnlyWalletLabel: intl.formatMessage(messages.importReadOnlyWalletLabel),
+    importReadOnlyWalletExplanation: intl.formatMessage(messages.importReadOnlyWalletExplanation),
+  }
+}
