@@ -2,85 +2,92 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {ColorSchemeName, ScrollView, Text, View} from 'react-native'
 
+import {mockTransaction} from '../../../storybook/mocks'
 import {TransactionAssurance, TransactionDirection, TransactionStatus} from '../../types/cardano'
 import {Icon, Spacer} from '..'
 
 storiesOf('Icon', module).add('Gallery', () => (
   <ScrollView contentContainerStyle={{padding: 16}}>
     <Row>
-      <Item icon={<Icon.Export size={40} />} title="Export" />
-      <Item icon={<Icon.Magnify size={40} />} title="Magnify" />
-      <Item icon={<Icon.Received />} title="Received" />
+      <Item icon={<Icon.Export size={40} />} title={'Export'} />
+      <Item icon={<Icon.Magnify size={40} />} title={'Magnify'} />
+      <Item icon={<Icon.Received />} title={'Received'} />
     </Row>
 
     <Spacer height={16} />
 
     <Row>
-      <Item icon={<Icon.Sent />} title="Sent" />
-      <Item icon={<Icon.WalletAccount iconSeed={'asdasd'} />} title="WalletAccount" />
-      <Item icon={<Icon.Emurgo width={40} height={40} />} title="Emurgo" />
+      <Item icon={<Icon.Sent />} title={'Sent'} />
+      <Item icon={<Icon.WalletAccount iconSeed={'asdasd'} />} title={'WalletAccount'} />
+      <Item icon={<Icon.Emurgo width={40} height={40} />} title={'Emurgo'} />
     </Row>
 
     <Spacer height={16} />
 
     <Row>
-      <Item icon={<Icon.Check height={40} width={40} />} title="Check" />
-      <Item mode={'dark'} icon={<Icon.YoroiWallet height={40} width={40} />} title="YoroiWallet" />
-      <Item icon={<Icon.Cardano height={40} width={40} />} title="Cardano" />
+      <Item icon={<Icon.Check height={40} width={40} />} title={'Check'} />
+      <Item mode={'dark'} icon={<Icon.YoroiWallet height={40} width={40} />} title={'YoroiWallet'} />
+      <Item icon={<Icon.Cardano height={40} width={40} />} title={'Cardano'} />
     </Row>
 
     <Spacer height={16} />
 
     <Row>
-      <Item icon={<Icon.Ada height={40} width={40} />} title="AdaIcon" />
-      <Item icon={<Icon.RewardManuallyPayout height={40} width={40} />} title="RewardManuallyPayout" />
-      <Item icon={<Icon.RewardWithdrawn height={40} width={40} />} title="RewardWithdrawn" />
+      <Item icon={<Icon.Ada height={40} width={40} />} title={'AdaIcon'} />
+      <Item icon={<Icon.RewardManuallyPayout height={40} width={40} />} title={'RewardManuallyPayout'} />
+      <Item icon={<Icon.RewardWithdrawn height={40} width={40} />} title={'RewardWithdrawn'} />
     </Row>
 
     <Spacer height={16} />
 
     <Row>
-      <Item icon={<Icon.StakingKeyDeregistered height={40} width={40} />} title="StakingKeyDeregistered" />
-      <Item icon={<Icon.StakingKeyRegistered height={40} width={40} />} title="StakingKeyRegistered" />
-      <Item icon={<Icon.Transaction height={40} width={40} />} title="Transaction" />
+      <Item icon={<Icon.StakingKeyDeregistered height={40} width={40} />} title={'StakingKeyDeregistered'} />
+      <Item icon={<Icon.StakingKeyRegistered height={40} width={40} />} title={'StakingKeyRegistered'} />
+      <Item icon={<Icon.Transaction height={40} width={40} />} title={'Transaction'} />
     </Row>
 
     <Spacer height={16} />
 
     <Row>
-      <Item icon={<Icon.TotalAda height={40} width={40} />} title="TotalAdaIcon" />
-      <Item icon={<Icon.TotalDelegated height={40} width={40} />} title="TotalDelegated" />
-      <Item icon={<Icon.TotalReward height={40} width={40} />} title="TotalReward" />
+      <Item icon={<Icon.TotalAda height={40} width={40} />} title={'TotalAdaIcon'} />
+      <Item icon={<Icon.TotalDelegated height={40} width={40} />} title={'TotalDelegated'} />
+      <Item icon={<Icon.TotalReward height={40} width={40} />} title={'TotalReward'} />
     </Row>
 
     <Spacer height={16} />
 
     <Row>
-      <Item icon={<Icon.ChevronDown />} title="ChevronDown" />
-      <Item icon={<Icon.ChevronUp />} title="ChevronUp" />
-      <Item icon={<Icon.Verify />} title="Verify" />
+      <Item icon={<Icon.ChevronDown />} title={'ChevronDown'} />
+      <Item icon={<Icon.ChevronUp />} title={'ChevronUp'} />
+      <Item icon={<Icon.Verify />} title={'Verify'} />
     </Row>
 
     <Spacer height={16} />
 
     <Row>
-      <Item icon={<Icon.Direction transaction={transactionFor('SENT', 'SUCCESSFUL')} />} title="Success-Sent" />
-      <Item icon={<Icon.Direction transaction={transactionFor('RECEIVED', 'SUCCESSFUL')} />} title="Success-Received" />
-      <Item icon={<Icon.Direction transaction={transactionFor('SELF', 'SUCCESSFUL')} />} title="Success-Intrawallet" />
+      <Item icon={<Icon.Direction transaction={transactionFor('SENT', 'SUCCESSFUL')} />} title={'Success-Sent'} />
+      <Item
+        icon={<Icon.Direction transaction={transactionFor('RECEIVED', 'SUCCESSFUL')} />}
+        title={'Success-Received'}
+      />
+      <Item
+        icon={<Icon.Direction transaction={transactionFor('SELF', 'SUCCESSFUL')} />}
+        title={'Success-Intrawallet'}
+      />
     </Row>
 
     <Spacer height={16} />
 
     <Row>
-      <Item icon={<Icon.Direction transaction={transactionFor('SENT', 'PENDING')} />} title="Pending-Sent" />
-      <Item icon={<Icon.Direction transaction={transactionFor('RECEIVED', 'PENDING')} />} title="Pending-Received" />
-      <Item icon={<Icon.Direction transaction={transactionFor('SELF', 'PENDING')} />} title="Pending-Intrawallet" />
+      <Item icon={<Icon.Direction transaction={transactionFor('SENT', 'PENDING')} />} title={'Pending-Sent'} />
+      <Item icon={<Icon.Direction transaction={transactionFor('RECEIVED', 'PENDING')} />} title={'Pending-Received'} />
+      <Item icon={<Icon.Direction transaction={transactionFor('SELF', 'PENDING')} />} title={'Pending-Intrawallet'} />
     </Row>
 
     <Spacer height={16} />
 
     <Row>
-      <Item icon={<Icon.NoAssetImage />} title="No Asset Image" />
+      <Item icon={<Icon.NoAssetImage />} title={'No Asset Image'} />
     </Row>
   </ScrollView>
 ))
@@ -116,8 +123,9 @@ const transactionFor = (
   direction: TransactionDirection,
   status: TransactionStatus,
   assurance: TransactionAssurance = 'HIGH',
-) => ({
-  assurance,
-  direction,
-  status,
-})
+) =>
+  mockTransaction({
+    assurance,
+    direction,
+    status,
+  })
