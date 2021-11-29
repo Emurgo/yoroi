@@ -7,7 +7,7 @@ import {Sent} from '../Icon/Sent'
 import {Transaction} from '../Icon/Transaction'
 
 type Props = {
-  transaction: Required<Pick<TransactionInfo, 'assurance' | 'direction' | 'status'>>
+  transaction: TransactionInfo
   size?: number
 }
 
