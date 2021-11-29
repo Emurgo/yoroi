@@ -21,7 +21,7 @@ import {
   jormunNavigationOptions,
 } from '../../legacy/navigationOptions'
 import {WALLET_INIT_ROUTES} from '../../legacy/RoutesList'
-import WalletInitScreen from './WalletInitScreen'
+import {WalletInitScreen} from './WalletInitScreen'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const Stack = createStackNavigator<{
