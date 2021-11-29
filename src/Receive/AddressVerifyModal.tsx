@@ -1,25 +1,24 @@
-// @flow
-
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, ScrollView, View} from 'react-native'
+import {StyleSheet} from 'react-native'
 
-import {confirmationMessages} from '../../i18n/global-messages'
-import HWInstructions from '../Ledger/HWInstructions'
-import {Button, Modal, Text} from '../UiKit'
-import styles from './styles/AddressVerifyModal.style'
+import HWInstructions from '../../legacy/components/Ledger/HWInstructions'
+import {Button, Modal, Text} from '../../legacy/components/UiKit'
+import {confirmationMessages} from '../../legacy/i18n/global-messages'
+import {COLORS, spacing} from '../../legacy/styles/config'
 
-type Props = {|
-  visible: boolean,
-  onConfirm: () => mixed,
-  onRequestClose: () => any,
-  address: string,
-  path: string,
-  isWaiting: boolean,
-  useUSB: boolean,
-|}
+type Props = {
+  visible: boolean
+  onConfirm: () => void
+  onRequestClose: () => void
+  address: string
+  path: string
+  isWaiting: boolean
+  useUSB: boolean
+}
 
-const AddressVerifyModal = ({visible, onConfirm, onRequestClose, address, path, isWaiting, useUSB}: Props) => {
+export const AddressVerifyModal = ({visible, onConfirm, onRequestClose, address, path, isWaiting, useUSB}: Props) => {
   const strings = useStrings()
 
   return (
@@ -51,8 +50,6 @@ const AddressVerifyModal = ({visible, onConfirm, onRequestClose, address, path, 
   )
 }
 
-export default AddressVerifyModal
-
 const messages = defineMessages({
   title: {
     id: 'components.receive.addressverifymodal.title',
@@ -76,3 +73,41 @@ const useStrings = () => {
     confirmButton: intl.formatMessage(confirmationMessages.commonButtons.confirmButton),
   }
 }
+
+const styles = StyleSheet.create({
+  scrollView: {
+    paddingRight: 10,
+    marginBottom: 12,
+  },
+  paragraph: {
+    marginBottom: 12,
+    fontSize: 14,
+    lineHeight: 22,
+  },
+  heading: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  title: {
+    fontSize: 20,
+    lineHeight: 22,
+    fontWeight: 'bold',
+    marginBottom: spacing.paragraphBottomMargin,
+  },
+  button: {
+    marginHorizontal: 10,
+  },
+  addressDetailsView: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 1,
+    shadowOffset: {width: 2, height: 2},
+    shadowRadius: 12,
+    shadowOpacity: 1,
+    shadowColor: COLORS.SHADOW_COLOR,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    marginBottom: 10,
+    padding: 8,
+  },
+})

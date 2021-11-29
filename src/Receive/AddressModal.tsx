@@ -1,25 +1,23 @@
-// @flow
-
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 import QRCode from 'react-native-qrcode-svg'
 import {useSelector} from 'react-redux'
 
-import {formatPath} from '../../crypto/commonUtils'
-import {AddressDTOCardano} from '../../crypto/shelley/Address.dto'
-import {externalAddressIndexSelector, walletMetaSelector} from '../../selectors'
-import {type WalletMeta} from '../../state'
-import {Button, CopyButton, Modal, Spacer, Text} from '../UiKit'
+import {Button, CopyButton, Modal, Spacer, Text} from '../../legacy/components/UiKit'
+import {formatPath} from '../../legacy/crypto/commonUtils'
+import {AddressDTOCardano} from '../../legacy/crypto/shelley/Address.dto'
+import {externalAddressIndexSelector, walletMetaSelector} from '../../legacy/selectors'
+import type {WalletMeta} from '../../legacy/state'
 
-type Props = {|
-  address: string,
-  onRequestClose: () => any,
-  visible: boolean,
-  onAddressVerify: () => void,
-  walletMeta: WalletMeta,
-  index: number,
-|}
+type Props = {
+  address: string
+  onRequestClose: () => void
+  visible: boolean
+  onAddressVerify: () => void
+  walletMeta: WalletMeta
+  index: number
+}
 
 export const AddressModal = ({address, visible, onRequestClose, walletMeta, index, onAddressVerify}: Props) => {
   const strings = useStrings()
@@ -81,18 +79,17 @@ export const AddressModal = ({address, visible, onRequestClose, walletMeta, inde
   )
 }
 
-type ExternalProps = {|
-  address: string,
-  onRequestClose: () => any,
-  visible: boolean,
-  onAddressVerify: () => void,
-|}
+type ExternalProps = {
+  address: string
+  onRequestClose: () => void
+  visible: boolean
+  onAddressVerify: () => void
+}
 
 export default (props: ExternalProps) => {
   const index = useSelector(externalAddressIndexSelector)[props.address]
   const walletMeta = useSelector(walletMetaSelector)
 
-  // $FlowFixMe
   return <AddressModal index={index} walletMeta={walletMeta} {...props} />
 }
 
@@ -160,7 +157,7 @@ const useStrings = () => {
 }
 
 const useKeyHashes = (address) => {
-  const [keyHashes, setKeyHashes] = React.useState(null)
+  const [keyHashes, setKeyHashes] = React.useState<null | {staking: unknown; spending: unknown}>(null)
 
   React.useEffect(() => {
     const addressInfo = new AddressDTOCardano(address)

@@ -9,6 +9,8 @@ import {Image, LayoutAnimation, Linking, TouchableOpacity, View} from 'react-nat
 import {useSelector} from 'react-redux'
 
 // $FlowExpectedError
+import {AddressModal} from '../../../src/Receive/AddressModal'
+// $FlowExpectedError
 import {useSelectedWallet} from '../../../src/SelectedWallet'
 import arrowDown from '../../assets/img/chevron_down.png'
 import arrowUp from '../../assets/img/chevron_up.png'
@@ -27,7 +29,6 @@ import {type Token, TRANSACTION_DIRECTION} from '../../types/HistoryTransaction'
 import {formatTokenWithSymbol} from '../../utils/format'
 import AssetList from '../Common/MultiAsset/AssetList'
 import assetListStyle from '../Common/MultiAsset/styles/AssetListTransaction.style'
-import AddressModal from '../Receive/AddressModal'
 import {Banner, Button, CopyButton, OfflineBanner, StatusBar, Text} from '../UiKit'
 import styles from './styles/TxDetails.style'
 

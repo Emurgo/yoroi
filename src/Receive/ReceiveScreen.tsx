@@ -6,7 +6,6 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {generateNewReceiveAddress, generateNewReceiveAddressIfNeeded} from '../../legacy/actions'
-import AddressDetail from '../../legacy/components/Receive/AddressDetail'
 import {Banner, Button, OfflineBanner, Spacer, StatusBar} from '../../legacy/components/UiKit'
 import {
   canGenerateNewReceiveAddressSelector,
@@ -14,6 +13,7 @@ import {
   receiveAddressesSelector,
 } from '../../legacy/selectors'
 import {COLORS} from '../../legacy/styles/config'
+import {AddressDetail} from './AddressDetail'
 import {UnusedAddresses, UsedAddresses} from './Addresses'
 
 export const ReceiveScreen = () => {

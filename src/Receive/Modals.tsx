@@ -7,8 +7,6 @@ import {showErrorDialog} from '../../legacy/actions'
 import {setLedgerDeviceId, setLedgerDeviceObj} from '../../legacy/actions/hwWallet'
 import LedgerConnect from '../../legacy/components/Ledger/LedgerConnect'
 import LedgerTransportSwitchModal from '../../legacy/components/Ledger/LedgerTransportSwitchModal'
-import AddressModal from '../../legacy/components/Receive/AddressModal'
-import AddressVerifyModal from '../../legacy/components/Receive/AddressVerifyModal'
 import {Modal} from '../../legacy/components/UiKit'
 import {CONFIG} from '../../legacy/config/config'
 import {getCardanoByronConfig} from '../../legacy/config/networks'
@@ -20,6 +18,8 @@ import LocalizableError from '../../legacy/i18n/LocalizableError'
 import {externalAddressIndexSelector, hwDeviceInfoSelector} from '../../legacy/selectors'
 import {Logger} from '../../legacy/utils/logging'
 import {useSelectedWallet} from '../SelectedWallet'
+import AddressModal from './AddressModal'
+import {AddressVerifyModal} from './AddressVerifyModal'
 
 export const Modals = ({address, onDone}: {address: string; onDone: () => void}) => {
   const intl = useIntl()
