@@ -23,6 +23,131 @@ import {
 } from '../../legacy/navigationOptions'
 import {WALLET_INIT_ROUTES} from '../../legacy/RoutesList'
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+const Stack = createStackNavigator<{
+  'choose-create-restore': any
+  'initial-choose-create-restore': any
+  'create-wallet-form': any
+  'restore-wallet-form': any
+  'import-read-only': any
+  'save-read-only': any
+  'check-nano-x': any
+  'connect-nano-x': any
+  'save-nano-x': any
+  'mnemoinc-show': any
+  'mnemonic-check': any
+  'wallet-account-checksum': any
+  'wallet-credentials': any
+}>()
+/* eslint-enable @typescript-eslint/no-explicit-any */
+
+export const WalletInitNavigator = () => {
+  const strings = useStrings()
+
+  return (
+    <Stack.Navigator
+      initialRouteName={WALLET_INIT_ROUTES.INITIAL_CREATE_RESTORE_SWITCH}
+      screenOptions={({route}) => {
+        // note: jormun is currently not supported. If you want to add this
+        // jormun style, make sure to pass the networkId as a route param
+        const extraOptions = isJormungandr(route.params?.networkId) ? jormunNavigationOptions : {}
+
+        return {
+          cardStyle: {backgroundColor: 'transparent'},
+          title: route.params?.title ?? undefined,
+          ...defaultNavigationOptions,
+          ...defaultStackNavigatorOptions,
+          ...extraOptions,
+        }
+      }}
+    >
+      <Stack.Screen
+        name={WALLET_INIT_ROUTES.INITIAL_CREATE_RESTORE_SWITCH}
+        component={WalletFreshInitScreen}
+        options={{headerShown: false}}
+      />
+
+      <Stack.Screen
+        name={WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH}
+        component={WalletInitScreen}
+        options={{title: strings.addWalletTitle}}
+      />
+
+      <Stack.Screen
+        name={WALLET_INIT_ROUTES.CREATE_WALLET}
+        component={CreateWalletScreen}
+        options={{title: strings.createWalletTitle}}
+      />
+
+      <Stack.Screen
+        name={WALLET_INIT_ROUTES.RESTORE_WALLET}
+        component={RestoreWalletScreen}
+        options={{title: strings.restoreWalletTitle}}
+      />
+
+      <Stack.Screen
+        name={WALLET_INIT_ROUTES.IMPORT_READ_ONLY_WALLET}
+        component={ImportReadOnlyWalletScreen}
+        options={{
+          title: strings.importReadOnlyTitle,
+          headerTransparent: true,
+        }}
+      />
+
+      <Stack.Screen
+        name={WALLET_INIT_ROUTES.SAVE_READ_ONLY_WALLET}
+        component={SaveReadOnlyWalletScreen}
+        options={{title: strings.saveReadOnlyWalletTitle}}
+      />
+
+      <Stack.Screen
+        name={WALLET_INIT_ROUTES.CHECK_NANO_X}
+        component={CheckNanoXScreen}
+        options={{title: strings.checkNanoXTitle}}
+      />
+
+      <Stack.Screen //
+        name={WALLET_INIT_ROUTES.CONNECT_NANO_X}
+        options={{title: strings.connectNanoXTitle}}
+      >
+        {(props) => <ConnectNanoXScreen {...props} defaultDevices={null} />}
+      </Stack.Screen>
+
+      <Stack.Screen
+        name={WALLET_INIT_ROUTES.SAVE_NANO_X}
+        component={SaveNanoXScreen}
+        options={{
+          title: strings.saveNanoXTitle,
+        }}
+      />
+
+      <Stack.Screen
+        name={WALLET_INIT_ROUTES.MNEMONIC_SHOW}
+        component={MnemonicShowScreen}
+        options={{title: strings.mnemonicShowTitle}}
+      />
+
+      <Stack.Screen
+        name={WALLET_INIT_ROUTES.MNEMONIC_CHECK}
+        component={MnemonicCheckScreen}
+        options={{title: strings.mnemonicCheckTitle}}
+      />
+
+      <Stack.Screen
+        name={WALLET_INIT_ROUTES.VERIFY_RESTORED_WALLET}
+        component={VerifyRestoredWallet}
+        options={{title: strings.verifyRestoredWalletTitle}}
+      />
+
+      <Stack.Screen
+        name={WALLET_INIT_ROUTES.WALLET_CREDENTIALS}
+        component={WalletCredentialsScreen}
+        options={{title: strings.walletCredentialsTitle}}
+      />
+    </Stack.Navigator>
+  )
+}
+
 const messages = defineMessages({
   addWalletTitle: {
     id: 'components.walletinit.walletinitscreen.title',
@@ -74,120 +199,21 @@ const messages = defineMessages({
   },
 })
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-const Stack = createStackNavigator<{
-  'choose-create-restore': any
-  'initial-choose-create-restore': any
-  'create-wallet-form': any
-  'restore-wallet-form': any
-  'import-read-only': any
-  'save-read-only': any
-  'check-nano-x': any
-  'connect-nano-x': any
-  'save-nano-x': any
-  'mnemoinc-show': any
-  'mnemonic-check': any
-  'wallet-account-checksum': any
-  'wallet-credentials': any
-}>()
-/* eslint-enable @typescript-eslint/no-explicit-any */
-
-const WalletInitNavigator = () => {
+const useStrings = () => {
   const intl = useIntl()
 
-  return (
-    <Stack.Navigator
-      initialRouteName={WALLET_INIT_ROUTES.INITIAL_CREATE_RESTORE_SWITCH}
-      screenOptions={({route}) => {
-        // note: jormun is currently not supported. If you want to add this
-        // jormun style, make sure to pass the networkId as a route param
-
-        // $FlowFixMe mixed is incompatible with number
-        const extraOptions = isJormungandr(route.params?.networkId) ? jormunNavigationOptions : {}
-        return {
-          cardStyle: {
-            backgroundColor: 'transparent',
-          },
-          title: route.params?.title ?? undefined,
-          ...defaultNavigationOptions,
-          ...defaultStackNavigatorOptions,
-          ...extraOptions,
-        }
-      }}
-    >
-      <Stack.Screen
-        name={WALLET_INIT_ROUTES.INITIAL_CREATE_RESTORE_SWITCH}
-        component={WalletFreshInitScreen}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name={WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH}
-        component={WalletInitScreen}
-        options={{title: intl.formatMessage(messages.addWalletTitle)}}
-      />
-      <Stack.Screen
-        name={WALLET_INIT_ROUTES.CREATE_WALLET}
-        component={CreateWalletScreen}
-        options={{title: intl.formatMessage(messages.createWalletTitle)}}
-      />
-      <Stack.Screen
-        name={WALLET_INIT_ROUTES.RESTORE_WALLET}
-        component={RestoreWalletScreen}
-        options={{title: intl.formatMessage(messages.restoreWalletTitle)}}
-      />
-      <Stack.Screen
-        name={WALLET_INIT_ROUTES.IMPORT_READ_ONLY_WALLET}
-        component={ImportReadOnlyWalletScreen}
-        options={{
-          title: intl.formatMessage(messages.importReadOnlyTitle),
-          headerTransparent: true,
-        }}
-      />
-      <Stack.Screen
-        name={WALLET_INIT_ROUTES.SAVE_READ_ONLY_WALLET}
-        component={SaveReadOnlyWalletScreen}
-        options={{title: intl.formatMessage(messages.saveReadOnlyWalletTitle)}}
-      />
-      <Stack.Screen
-        name={WALLET_INIT_ROUTES.CHECK_NANO_X}
-        component={CheckNanoXScreen}
-        options={{title: intl.formatMessage(messages.checkNanoXTitle)}}
-      />
-      <Stack.Screen
-        name={WALLET_INIT_ROUTES.CONNECT_NANO_X}
-        options={{title: intl.formatMessage(messages.connectNanoXTitle)}}
-      >
-        {(props) => <ConnectNanoXScreen {...props} defaultDevices={null} />}
-      </Stack.Screen>
-      <Stack.Screen
-        name={WALLET_INIT_ROUTES.SAVE_NANO_X}
-        component={SaveNanoXScreen}
-        options={{
-          title: intl.formatMessage(messages.saveNanoXTitle),
-        }}
-      />
-      <Stack.Screen
-        name={WALLET_INIT_ROUTES.MNEMONIC_SHOW}
-        component={MnemonicShowScreen}
-        options={{title: intl.formatMessage(messages.mnemonicShowTitle)}}
-      />
-      <Stack.Screen
-        name={WALLET_INIT_ROUTES.MNEMONIC_CHECK}
-        component={MnemonicCheckScreen}
-        options={{title: intl.formatMessage(messages.mnemonicCheckTitle)}}
-      />
-      <Stack.Screen
-        name={WALLET_INIT_ROUTES.VERIFY_RESTORED_WALLET}
-        component={VerifyRestoredWallet}
-        options={{title: intl.formatMessage(messages.verifyRestoredWalletTitle)}}
-      />
-      <Stack.Screen
-        name={WALLET_INIT_ROUTES.WALLET_CREDENTIALS}
-        component={WalletCredentialsScreen}
-        options={{title: intl.formatMessage(messages.walletCredentialsTitle)}}
-      />
-    </Stack.Navigator>
-  )
+  return {
+    addWalletTitle: intl.formatMessage(messages.addWalletTitle),
+    createWalletTitle: intl.formatMessage(messages.createWalletTitle),
+    restoreWalletTitle: intl.formatMessage(messages.restoreWalletTitle),
+    importReadOnlyTitle: intl.formatMessage(messages.importReadOnlyTitle),
+    saveReadOnlyWalletTitle: intl.formatMessage(messages.saveReadOnlyWalletTitle),
+    mnemonicShowTitle: intl.formatMessage(messages.mnemonicShowTitle),
+    mnemonicCheckTitle: intl.formatMessage(messages.mnemonicCheckTitle),
+    verifyRestoredWalletTitle: intl.formatMessage(messages.verifyRestoredWalletTitle),
+    walletCredentialsTitle: intl.formatMessage(messages.walletCredentialsTitle),
+    connectNanoXTitle: intl.formatMessage(messages.connectNanoXTitle),
+    checkNanoXTitle: intl.formatMessage(messages.checkNanoXTitle),
+    saveNanoXTitle: intl.formatMessage(messages.saveNanoXTitle),
+  }
 }
-
-export default WalletInitNavigator
