@@ -50,7 +50,6 @@ function loadStories() {
 	require('../legacy/components/WalletInit/RestoreWallet/VerifyRestoredWallet.stories');
 	require('../legacy/components/WalletInit/RestoreWallet/WalletAddress.stories');
 	require('../legacy/components/WalletInit/RestoreWallet/WalletCredentialsScreen.stories');
-	require('../legacy/components/WalletInit/WalletFreshInitScreen.stories');
 	require('../src/FirstRun/AcceptTermsOfService.stories');
 	require('../src/FirstRun/CustomPinScreen.stories');
 	require('../src/FirstRun/LanguagePickerScreen.stories');
@@ -66,6 +65,7 @@ function loadStories() {
 	require('../src/TxHistory/ChipButton.stories');
 	require('../src/TxHistory/TxHistory.stories');
 	require('../src/TxHistory/TxListActionsBanner.stories');
+	require('../src/WalletInit/WalletFreshInitScreen.stories');
 	require('../src/WalletInit/WalletInitScreen.stories');
 	require('../src/WalletInit/WalletNameForm.stories');
 	require('../src/components/Icon/Icon.stories');
@@ -119,7 +119,6 @@ const stories = [
 	'../legacy/components/WalletInit/RestoreWallet/VerifyRestoredWallet.stories',
 	'../legacy/components/WalletInit/RestoreWallet/WalletAddress.stories',
 	'../legacy/components/WalletInit/RestoreWallet/WalletCredentialsScreen.stories',
-	'../legacy/components/WalletInit/WalletFreshInitScreen.stories',
 	'../src/FirstRun/AcceptTermsOfService.stories',
 	'../src/FirstRun/CustomPinScreen.stories',
 	'../src/FirstRun/LanguagePickerScreen.stories',
@@ -135,6 +134,7 @@ const stories = [
 	'../src/TxHistory/ChipButton.stories',
 	'../src/TxHistory/TxHistory.stories',
 	'../src/TxHistory/TxListActionsBanner.stories',
+	'../src/WalletInit/WalletFreshInitScreen.stories',
 	'../src/WalletInit/WalletInitScreen.stories',
 	'../src/WalletInit/WalletNameForm.stories',
 	'../src/components/Icon/Icon.stories',

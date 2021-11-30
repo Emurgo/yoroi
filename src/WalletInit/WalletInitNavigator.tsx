@@ -13,7 +13,6 @@ import {RestoreWalletScreen} from '../../legacy/components/WalletInit/RestoreWal
 import SaveReadOnlyWalletScreen from '../../legacy/components/WalletInit/RestoreWallet/SaveReadOnlyWalletScreen'
 import VerifyRestoredWallet from '../../legacy/components/WalletInit/RestoreWallet/VerifyRestoredWallet'
 import WalletCredentialsScreen from '../../legacy/components/WalletInit/RestoreWallet/WalletCredentialsScreen'
-import WalletFreshInitScreen from '../../legacy/components/WalletInit/WalletFreshInitScreen'
 import {isJormungandr} from '../../legacy/config/networks'
 import {
   defaultNavigationOptions,
@@ -21,6 +20,7 @@ import {
   jormunNavigationOptions,
 } from '../../legacy/navigationOptions'
 import {WALLET_INIT_ROUTES} from '../../legacy/RoutesList'
+import WalletFreshInitScreen from './WalletFreshInitScreen'
 import {WalletInitScreen} from './WalletInitScreen'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
