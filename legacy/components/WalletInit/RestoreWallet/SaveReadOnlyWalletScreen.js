@@ -11,7 +11,7 @@ import {useDispatch} from 'react-redux'
 // $FlowExpectedError
 import {Icon} from '../../../../src/components'
 // $FlowExpectedError
-import WalletNameForm from '../../../../src/WalletInit/WalletNameForm'
+import {WalletNameForm} from '../../../../src/WalletInit/WalletNameForm'
 import {createWalletWithBip44Account, handleGeneralError} from '../../../actions'
 import {CONFIG} from '../../../config/config'
 import type {NetworkId} from '../../../config/types'

@@ -6,7 +6,7 @@ import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import image from '../../legacy/assets/img/ledger_2.png'
-import WalletNameForm from './WalletNameForm'
+import {WalletNameForm} from './WalletNameForm'
 
 const styles = StyleSheet.create({
   container: {

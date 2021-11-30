@@ -1,31 +1,19 @@
-// @flow
-
 import type {ReactNode} from 'react'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
+import {StyleSheet} from 'react-native'
 import {ActivityIndicator, Image, SafeAreaView, View} from 'react-native'
 import type {ImageSource} from 'react-native/Libraries/Image/ImageSource'
 import type {ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
 import {useSelector} from 'react-redux'
 
 import {Button, ProgressStep, TextInput} from '../../legacy/components/UiKit'
-import styles from '../../legacy/components/WalletInit/styles/WalletNameForm.style'
 import {CONFIG} from '../../legacy/config/config'
 import globalMessages from '../../legacy/i18n/global-messages'
 import {walletNamesSelector} from '../../legacy/selectors'
+import {spacing} from '../../legacy/styles/config'
 import {ignoreConcurrentAsyncHandler} from '../../legacy/utils/utils'
 import {getWalletNameError, validateWalletName} from '../../legacy/utils/validators'
-
-const messages = defineMessages({
-  walletNameInputLabel: {
-    id: 'components.walletinit.walletform.walletNameInputLabel',
-    defaultMessage: '!!!Wallet name',
-  },
-  save: {
-    id: 'components.walletinit.connectnanox.savenanoxscreen.save',
-    defaultMessage: '!!!Save',
-  },
-})
 
 type Props = {
   onSubmit: ({name: string}) => void
@@ -42,7 +30,7 @@ type Props = {
   isWaiting?: boolean
 }
 
-const WalletNameForm = ({
+export const WalletNameForm = ({
   onSubmit,
   image,
   progress,
@@ -52,15 +40,15 @@ const WalletNameForm = ({
   bottomContent,
   isWaiting = false,
 }: Props) => {
-  const intl = useIntl()
+  const strings = useStrings()
   const [name, setName] = React.useState(CONFIG.HARDWARE_WALLETS.LEDGER_NANO.DEFAULT_WALLET_NAME || '')
   const walletNames = useSelector(walletNamesSelector)
   const validationErrors = validateWalletName(name, null, walletNames)
   const hasErrors = Object.keys(validationErrors).length > 0
   const errorMessages = {
-    tooLong: intl.formatMessage(globalMessages.walletNameErrorTooLong),
-    nameAlreadyTaken: intl.formatMessage(globalMessages.walletNameErrorNameAlreadyTaken),
-    mustBeFilled: intl.formatMessage(globalMessages.walletNameErrorMustBeFilled),
+    tooLong: strings.walletNameErrorTooLong,
+    nameAlreadyTaken: strings.walletNameErrorNameAlreadyTaken,
+    mustBeFilled: strings.walletNameErrorMustBeFilled,
   }
   const walletNameErrorText = getWalletNameError(errorMessages, validationErrors) || undefined
 
@@ -80,7 +68,7 @@ const WalletNameForm = ({
 
         <TextInput
           autoFocus
-          label={intl.formatMessage(messages.walletNameInputLabel)}
+          label={strings.walletNameInputLabel}
           value={name}
           onChangeText={setName}
           errorText={walletNameErrorText}
@@ -94,7 +82,7 @@ const WalletNameForm = ({
         <Button
           block
           onPress={submit}
-          title={intl.formatMessage(messages.save)}
+          title={strings.save}
           style={[styles.button, buttonStyle]}
           disabled={hasErrors || isWaiting}
           testID="saveWalletButton"
@@ -106,4 +94,50 @@ const WalletNameForm = ({
   )
 }
 
-export default WalletNameForm
+const styles = StyleSheet.create({
+  safeAreaView: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  container: {
+    paddingVertical: 24,
+    paddingHorizontal: 16,
+    flex: 1,
+  },
+  heading: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: spacing.paragraphBottomMargin,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    marginTop: 12,
+  },
+  button: {
+    marginHorizontal: 10,
+    marginVertical: 16,
+  },
+})
+
+const messages = defineMessages({
+  walletNameInputLabel: {
+    id: 'components.walletinit.walletform.walletNameInputLabel',
+    defaultMessage: '!!!Wallet name',
+  },
+  save: {
+    id: 'components.walletinit.connectnanox.savenanoxscreen.save',
+    defaultMessage: '!!!Save',
+  },
+})
+
+const useStrings = () => {
+  const intl = useIntl()
+
+  return {
+    walletNameInputLabel: intl.formatMessage(messages.walletNameInputLabel),
+    save: intl.formatMessage(messages.save),
+    walletNameErrorTooLong: intl.formatMessage(globalMessages.walletNameErrorTooLong),
+    walletNameErrorNameAlreadyTaken: intl.formatMessage(globalMessages.walletNameErrorNameAlreadyTaken),
+    walletNameErrorMustBeFilled: intl.formatMessage(globalMessages.walletNameErrorMustBeFilled),
+  }
+}
