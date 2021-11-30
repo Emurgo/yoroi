@@ -10,3 +10,11 @@ export interface WalletInterface {
   isEasyConfirmationEnabled: boolean
   changePassword(masterPassword: string, newPassword: string, intl: IntlShape): Promise<void>
 }
+export type WalletImplementation = {
+  WALLET_IMPLEMENTATION_ID: 'haskell-byron' | 'haskell-shelley' | 'haskell-shelley-24' | 'jormungandr-itn' | ''
+  TYPE: 'bip44' | 'cip1852'
+  MNEMONIC_LEN: number
+  DISCOVERY_GAP_SIZE: number
+  DISCOVERY_BLOCK_SIZE: number
+  MAX_GENERATED_UNUSED: number
+}

@@ -1,5 +1,7 @@
 // @flow
 
+import type {WalletImplementation} from '../../src/types'
+
 export var isHaskellShelley: (walletImplementationId: string) => boolean
 export var isByron: (walletImplementationId: string) => boolean
 
@@ -45,3 +47,5 @@ type NetworkConfig = {
 type WalletConfig = {
   WALLET_IMPLEMENTATION_ID: number
 }
+
+export var getWalletConfigById: (walletImplementationId: string) => WalletImplementation

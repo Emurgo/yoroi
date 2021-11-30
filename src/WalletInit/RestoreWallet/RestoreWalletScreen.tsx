@@ -1,24 +1,20 @@
-/* eslint-disable no-use-before-define */
-/* eslint-disable react-native/no-inline-styles */
-// @flow
-
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {getWalletConfigById} from '../../../../config/config'
-import type {NetworkId, WalletImplementationId} from '../../../../config/types'
-import {useParams} from '../../../../navigation'
-import {WALLET_INIT_ROUTES} from '../../../../RoutesList'
-import {Button, KeyboardSpacer, ScrollableView, Spacer, StatusBar, Text} from '../../../UiKit'
-import {MnemonicInput} from './MnemonicInput'
+import {Button, KeyboardSpacer, ScrollableView, Spacer, StatusBar, Text} from '../../../legacy/components/UiKit'
+import {MnemonicInput} from '../../../legacy/components/WalletInit/RestoreWallet/RestoreWalletScreen/MnemonicInput'
+import {getWalletConfigById} from '../../../legacy/config/config'
+import type {NetworkId, WalletImplementationId} from '../../../legacy/config/types'
+import {useParams} from '../../../legacy/navigation'
+import {WALLET_INIT_ROUTES} from '../../../legacy/RoutesList'
 
 type Params = {
-  networkId: NetworkId,
-  walletImplementationId: WalletImplementationId,
-  provider: string,
+  networkId: NetworkId
+  walletImplementationId: WalletImplementationId
+  provider: string
 }
 
 export const RestoreWalletScreen = () => {

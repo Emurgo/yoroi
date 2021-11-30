@@ -8,7 +8,6 @@ import SaveNanoXScreen from '../../legacy/components/WalletInit/ConnectNanoX/Sav
 import CreateWalletScreen from '../../legacy/components/WalletInit/CreateWallet/CreateWalletScreen'
 import MnemonicCheckScreen from '../../legacy/components/WalletInit/CreateWallet/MnemonicCheckScreen'
 import MnemonicShowScreen from '../../legacy/components/WalletInit/CreateWallet/MnemonicShowScreen'
-import {RestoreWalletScreen} from '../../legacy/components/WalletInit/RestoreWallet/RestoreWalletScreen'
 import SaveReadOnlyWalletScreen from '../../legacy/components/WalletInit/RestoreWallet/SaveReadOnlyWalletScreen'
 import VerifyRestoredWallet from '../../legacy/components/WalletInit/RestoreWallet/VerifyRestoredWallet'
 import WalletCredentialsScreen from '../../legacy/components/WalletInit/RestoreWallet/WalletCredentialsScreen'
@@ -20,6 +19,7 @@ import {
 } from '../../legacy/navigationOptions'
 import {WALLET_INIT_ROUTES} from '../../legacy/RoutesList'
 import {ImportReadOnlyWalletScreen} from './RestoreWallet/ImportReadOnlyWalletScreen'
+import {RestoreWalletScreen} from './RestoreWallet/RestoreWalletScreen'
 import {WalletFreshInitScreen} from './WalletFreshInitScreen'
 import {WalletInitScreen} from './WalletInitScreen'
 
