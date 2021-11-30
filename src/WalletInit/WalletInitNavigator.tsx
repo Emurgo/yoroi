@@ -20,7 +20,7 @@ import {
   jormunNavigationOptions,
 } from '../../legacy/navigationOptions'
 import {WALLET_INIT_ROUTES} from '../../legacy/RoutesList'
-import WalletFreshInitScreen from './WalletFreshInitScreen'
+import {WalletFreshInitScreen} from './WalletFreshInitScreen'
 import {WalletInitScreen} from './WalletInitScreen'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
