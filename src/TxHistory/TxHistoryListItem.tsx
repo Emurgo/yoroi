@@ -25,7 +25,7 @@ import {
 } from '../../legacy/utils/format'
 import utfSymbols from '../../legacy/utils/utfSymbols'
 import {Icon} from '../components/Icon'
-import {IOData, Token, TransactionAssurance, TransactionDirection, TransactionInfo} from '../types/cardano'
+import {DefaultAsset, IOData, TransactionAssurance, TransactionDirection, TransactionInfo} from '../types/cardano'
 
 const filtersTxIO = (address: string) => {
   const isMyReceive = (extAddrIdx) => extAddrIdx[address] != null
@@ -71,7 +71,7 @@ export const TxHistoryListItem = ({transaction}: Props) => {
   const fee = transaction.fee ? transaction.fee[0] : null
   const amountAsMT = MultiToken.fromArray(transaction.amount)
   const amount: BigNumber = amountAsMT.getDefault()
-  const amountDefaultAsset: Token = availableAssets[amountAsMT.getDefaultId()]
+  const amountDefaultAsset = availableAssets[amountAsMT.getDefaultId()] as DefaultAsset
 
   const defaultAsset = amountDefaultAsset || defaultNetworkAsset
 

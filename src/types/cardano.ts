@@ -152,6 +152,17 @@ export type Token = {
   metadata: TokenMetadata
 }
 
+export type DefaultAssetMetadata = TokenCommonMetadata & {
+  type: 'Cardano'
+  policyId: string // empty string for ADA
+  assetName: string // empty string for ADA
+  ticker: string
+}
+
+export type DefaultAsset = Token & {
+  metadata: DefaultAssetMetadata
+}
+
 // Catalyst
 
 export type FundInfos = {

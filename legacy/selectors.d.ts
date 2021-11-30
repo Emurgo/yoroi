@@ -2,10 +2,10 @@
 
 import BigNumber from 'bignumber.js'
 
-import {Token, TransactionInfo} from '../src/types/cardano'
+import {DefaultAsset, Token, TransactionInfo} from '../src/types/cardano'
 import type {State, WalletMeta} from './state'
 
-export var availableAssetsSelector: (state: State) => Record<string, Token>
+export var availableAssetsSelector: (state: State) => Record<string, Token | DefaultAsset>
 export var customPinHashSelector: (state: State) => string | undefined
 export var hasAnyTransaction: (state: State) => boolean
 export var installationIdSelector: (state: State) => boolean
@@ -27,7 +27,7 @@ export var easyConfirmationSelector: (state: State) => boolean
 export var isHWSelector: (state: State) => boolean
 export var walletNameSelector: (state: State) => string
 export var walletNamesSelector: (state: State) => Array<string>
-export var defaultNetworkAssetSelector: (state: State) => Token
+export var defaultNetworkAssetSelector: (state: State) => DefaultAsset
 export var externalAddressIndexSelector: (state: State) => Record<string, number>
 export var internalAddressIndexSelector: (state: State) => Record<string, number>
 export var canGenerateNewReceiveAddressSelector: (state: State) => boolean
