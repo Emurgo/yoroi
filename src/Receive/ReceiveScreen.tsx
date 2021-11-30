@@ -1,5 +1,3 @@
-// @flow
-
 import _ from 'lodash'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -7,18 +5,18 @@ import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {generateNewReceiveAddress, generateNewReceiveAddressIfNeeded} from '../../actions'
+import {generateNewReceiveAddress, generateNewReceiveAddressIfNeeded} from '../../legacy/actions'
+import {Banner, Button, OfflineBanner, Spacer, StatusBar} from '../../legacy/components/UiKit'
 import {
   canGenerateNewReceiveAddressSelector,
   isUsedAddressIndexSelector,
   receiveAddressesSelector,
-} from '../../selectors'
-import {COLORS} from '../../styles/config'
-import {Banner, Button, OfflineBanner, Spacer, StatusBar} from '../UiKit'
-import AddressDetail from './AddressDetail'
+} from '../../legacy/selectors'
+import {COLORS} from '../../legacy/styles/config'
+import {AddressDetail} from './AddressDetail'
 import {UnusedAddresses, UsedAddresses} from './Addresses'
 
-const ReceiveScreen = () => {
+export const ReceiveScreen = () => {
   const strings = useStrings()
   const receiveAddresses = useSelector(receiveAddressesSelector)
   const addressLimitReached = !useSelector(canGenerateNewReceiveAddressSelector)
@@ -65,16 +63,14 @@ const ReceiveScreen = () => {
 
           <Spacer height={24} />
 
-          <UnusedAddresses addresses={receiveAddresses} />
+          <UnusedAddresses />
           <Spacer height={24} />
-          <UsedAddresses addresses={receiveAddresses} />
+          <UsedAddresses />
         </Content>
       </ScrollView>
     </SafeAreaView>
   )
 }
-
-export default ReceiveScreen
 
 const Content = (props) => <View {...props} style={styles.content} />
 

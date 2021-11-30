@@ -1,11 +1,9 @@
-// @flow
-
 import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {WithModalProps} from '../../../storybook'
-import AddressVerifyModal from './AddressVerifyModal'
+import {WithModalProps} from '../../storybook'
+import {AddressVerifyModal} from './AddressVerifyModal'
 
 const address =
   'addr1qxxvt9rzpdxxysmqp50d7f5a3gdescgrejsu7zsdxqjy8yun4cngaq46gr8c9qyz4td9ddajzqhjnrqvfh0gspzv9xnsmq6nqx'

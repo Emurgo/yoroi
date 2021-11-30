@@ -27,6 +27,11 @@ export var easyConfirmationSelector: (state: State) => boolean
 export var isHWSelector: (state: State) => boolean
 export var walletNameSelector: (state: State) => string
 export var walletNamesSelector: (state: State) => Array<string>
+export var canGenerateNewReceiveAddressSelector: (state: State) => boolean
+export var isUsedAddressIndexSelector: (state: State) => Record<string, boolean>
+export var receiveAddressesSelector: (state: State) => Array<string>
+export var externalAddressIndexSelector: (state: State) => Record<string, number>
+export var hwDeviceInfoSelector: (state: State) => {bip44AccountPublic: string; hwFeatures: HWFeatures} | null
 
 // prettier-ignore
 interface PartialMultiToken {
