@@ -6,10 +6,10 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import recoveryPhrase from '../../legacy/assets/img/recovery_phrase.png'
 import {Button, StatusBar, Text} from '../../legacy/components/UiKit'
-import MnemonicBackupImportanceModal from '../../legacy/components/WalletInit/CreateWallet/MnemonicBackupImportanceModal'
 import styles from '../../legacy/components/WalletInit/CreateWallet/styles/MnemonicShowScreen.style'
 import {WALLET_INIT_ROUTES} from '../../legacy/RoutesList'
 import assert from '../../legacy/utils/assert'
+import {MnemonicBackupImportanceModal} from './MnemonicBackupImportanceModal'
 
 export const MnemonicShowScreen = () => {
   const navigation = useNavigation()
