@@ -7,13 +7,14 @@ import {useDispatch} from 'react-redux'
 
 // $FlowExpectedError
 import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../../../../src/SelectedWallet'
+// $FlowExpectedError
+import {WalletForm} from '../../../../src/WalletInit/WalletForm'
 import {createWallet, updateVersion} from '../../../actions'
 import type {WalletInterface} from '../../../crypto/WalletInterface'
 import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../../RoutesList'
 import type {WalletMeta} from '../../../state'
 import assert from '../../../utils/assert'
 import {ignoreConcurrentAsyncHandler} from '../../../utils/utils'
-import WalletForm from '../WalletForm'
 
 const WalletCredentialsScreen = () => {
   const navigation = useNavigation()

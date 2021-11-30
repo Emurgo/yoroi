@@ -8,12 +8,12 @@ import ExapandableItem from '../../legacy/components/Common/ExpandableItem'
 import LedgerTransportSwitchModal from '../../legacy/components/Ledger/LedgerTransportSwitchModal'
 import {Button, Modal, ScreenBackground, StatusBar} from '../../legacy/components/UiKit'
 import styles from '../../legacy/components/WalletInit/styles/WalletInitScreen.style'
-import WalletDescription from '../../legacy/components/WalletInit/WalletDescription'
 import {CONFIG, isByron, isHaskellShelley} from '../../legacy/config/config'
 import {isJormungandr} from '../../legacy/config/networks'
 import type {NetworkId, WalletImplementationId, YoroiProvider} from '../../legacy/config/types'
 import globalMessages from '../../legacy/i18n/global-messages'
 import {WALLET_INIT_ROUTES} from '../../legacy/RoutesList'
+import {WalletDescription} from './WalletDescription'
 
 export const WalletInitScreen = () => {
   const strings = useStrings()

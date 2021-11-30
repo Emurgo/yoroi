@@ -2,10 +2,11 @@
 
 import React from 'react'
 
+// $FlowExpectedError
+import {WalletForm} from '../../../../src/WalletInit/WalletForm'
 import {generateAdaMnemonic} from '../../../crypto/commonUtils'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
 import Screen from '../../Screen'
-import WalletForm from '../WalletForm'
 import MnemonicExplanationModal from './MnemonicExplanationModal'
 
 type Props = {|
