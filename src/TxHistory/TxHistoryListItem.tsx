@@ -58,13 +58,11 @@ export const TxHistoryListItem = ({transaction}: Props) => {
   const showDetails = () => navigation.navigate(TX_HISTORY_ROUTES.TX_DETAIL, {id: transaction.id})
   const submittedAt = formatTimeToSeconds(transaction.submittedAt)
 
-  // class
   const isPending = transaction.assurance === 'PENDING'
   const isReceived = transaction.direction === 'RECEIVED'
 
   const rootBgColor = bgColorByAssurance(transaction.assurance)
 
-  // populate
   const availableAssets = useSelector(availableAssetsSelector)
   const internalAddressIndex = useSelector(internalAddressIndexSelector)
   const externalAddressIndex = useSelector(externalAddressIndexSelector)
