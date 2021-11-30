@@ -4,10 +4,17 @@ import _ from 'lodash'
 import React from 'react'
 import {defineMessages, MessageDescriptor, useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {useSelector} from 'react-redux'
 
 import {Text} from '../../legacy/components/UiKit'
 import {MultiToken} from '../../legacy/crypto/MultiToken'
 import {TX_HISTORY_ROUTES} from '../../legacy/RoutesList'
+import {
+  availableAssetsSelector,
+  defaultNetworkAssetSelector,
+  externalAddressIndexSelector,
+  internalAddressIndexSelector,
+} from '../../legacy/selectors'
 import {COLORS} from '../../legacy/styles/config'
 import {
   ASSET_DENOMINATION,
@@ -58,23 +65,10 @@ export const TxHistoryListItem = ({transaction}: Props) => {
   const rootBgColor = bgColorByAssurance(transaction.assurance)
 
   // populate
-  const availableAssets: Record<string, Token> = {}
-  const internalAddressIndex: Record<string, number> = {}
-  const externalAddressIndex: Record<string, number> = {}
-  const defaultNetworkAsset: Token = {
-    networkId: 300,
-    isDefault: true,
-    identifier: '',
-    metadata: {
-      assetName: '',
-      longName: '',
-      maxSupply: '45000000000000',
-      numberOfDecimals: 18,
-      policyId: '',
-      ticker: 'ADA',
-      type: 'Cardano',
-    },
-  }
+  const availableAssets = useSelector(availableAssetsSelector)
+  const internalAddressIndex = useSelector(internalAddressIndexSelector)
+  const externalAddressIndex = useSelector(externalAddressIndexSelector)
+  const defaultNetworkAsset = useSelector(defaultNetworkAssetSelector)
 
   const fee = transaction.fee ? transaction.fee[0] : null
   const amountAsMT = MultiToken.fromArray(transaction.amount)
@@ -150,7 +144,7 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
     flexDirection: 'row',
-    borderRadius: 8,
+    borderRadius: 10,
     elevation: 2,
     shadowOffset: {width: 0, height: -2},
     shadowRadius: 10,
@@ -191,7 +185,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   iconRoot: {
-    flex: 2,
+    paddingRight: 8,
   },
   transactionRoot: {
     flex: 14,
@@ -281,5 +275,7 @@ const bgColorByAssurance = (assurance: TransactionAssurance) => {
       return 'rgba(207, 217, 224, 0.6)'
     case 'FAILED':
       return '#F8D7DA'
+    default:
+      return '#FFF'
   }
 }

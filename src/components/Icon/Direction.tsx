@@ -41,11 +41,11 @@ const iconMap: Record<
 
 const colorsMap: Record<ThemeStatus, {background: string; icon: string}> = {
   PENDING: {
-    background: '#EDEFF3',
+    background: '#DCE0E9',
     icon: '#6B7384',
   },
   NORMAL: {
-    background: '#DCE0E9',
+    background: '#EDEFF3',
     icon: '#6B7384',
   },
   DIRECT_CREDIT: {

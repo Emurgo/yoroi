@@ -27,6 +27,9 @@ export var easyConfirmationSelector: (state: State) => boolean
 export var isHWSelector: (state: State) => boolean
 export var walletNameSelector: (state: State) => string
 export var walletNamesSelector: (state: State) => Array<string>
+export var defaultNetworkAssetSelector: (state: State) => Token
+export var externalAddressIndexSelector: (state: State) => Record<string, number>
+export var internalAddressIndexSelector: (state: State) => Record<string, number>
 
 // prettier-ignore
 interface PartialMultiToken {
