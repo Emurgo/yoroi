@@ -1,5 +1,6 @@
 // @flow
 
+import type {ReactNode} from 'react'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, Image, SafeAreaView, View} from 'react-native'
@@ -7,13 +8,13 @@ import type {ImageSource} from 'react-native/Libraries/Image/ImageSource'
 import type {ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
 import {useSelector} from 'react-redux'
 
-import {CONFIG} from '../../config/config'
-import globalMessages from '../../i18n/global-messages'
-import {walletNamesSelector} from '../../selectors'
-import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
-import {getWalletNameError, validateWalletName} from '../../utils/validators'
-import {Button, ProgressStep, TextInput} from '../UiKit'
-import styles from './styles/WalletNameForm.style'
+import {Button, ProgressStep, TextInput} from '../../legacy/components/UiKit'
+import styles from '../../legacy/components/WalletInit/styles/WalletNameForm.style'
+import {CONFIG} from '../../legacy/config/config'
+import globalMessages from '../../legacy/i18n/global-messages'
+import {walletNamesSelector} from '../../legacy/selectors'
+import {ignoreConcurrentAsyncHandler} from '../../legacy/utils/utils'
+import {getWalletNameError, validateWalletName} from '../../legacy/utils/validators'
 
 const messages = defineMessages({
   walletNameInputLabel: {
@@ -26,20 +27,20 @@ const messages = defineMessages({
   },
 })
 
-type Props = {|
-  onSubmit: ({name: string}) => any,
-  defaultWalletName?: string,
-  image?: ImageSource,
+type Props = {
+  onSubmit: ({name: string}) => void
+  defaultWalletName?: string
+  image?: ImageSource
   progress?: {
-    currentStep: number,
-    totalSteps: number,
-  },
-  containerStyle?: ViewStyleProp,
-  buttonStyle?: ViewStyleProp,
-  topContent?: React$Node,
-  bottomContent?: React$Node,
-  isWaiting?: boolean,
-|}
+    currentStep: number
+    totalSteps: number
+  }
+  containerStyle?: ViewStyleProp
+  buttonStyle?: ViewStyleProp
+  topContent?: ReactNode
+  bottomContent?: ReactNode
+  isWaiting?: boolean
+}
 
 const WalletNameForm = ({
   onSubmit,

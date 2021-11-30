@@ -8,7 +8,8 @@ export var CONFIG: {
   HARDWARE_WALLETS: {
     LEDGER_NANO: {
       ENABLE_USB_TRANSPORT: boolean,
-      ENABLED: boolean
+      ENABLED: boolean,
+      DEFAULT_WALLET_NAME: string
     }
   },
   LOG_LEVEL: string,
