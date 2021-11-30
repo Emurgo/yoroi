@@ -6,6 +6,8 @@ import {useDispatch} from 'react-redux'
 
 // $FlowExpectedError
 import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../../../../src/SelectedWallet'
+// $FlowExpectedError
+import {WalletNameForm} from '../../../../src/WalletInit/WalletNameForm'
 import {createWalletWithBip44Account} from '../../../actions'
 import {saveHW} from '../../../actions/hwWallet'
 import image from '../../../assets/img/ledger_2.png'
@@ -16,7 +18,6 @@ import type {WalletInterface} from '../../../crypto/WalletInterface'
 import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../../RoutesList'
 import type {WalletMeta} from '../../../state'
 import assert from '../../../utils/assert'
-import WalletNameForm from '../WalletNameForm'
 
 export type Params = {
   networkId: NetworkId,
