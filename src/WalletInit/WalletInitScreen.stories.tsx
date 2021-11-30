@@ -6,6 +6,20 @@ import {CONFIG} from '../../legacy/config/config'
 import {WalletInitScreen} from './WalletInitScreen'
 
 storiesOf('WalletInitScreen', module)
+  .add('Jormungandr', () => (
+    <NavigationRouteContext.Provider
+      value={{
+        key: 'key',
+        name: 'name',
+        params: {
+          networkId: CONFIG.NETWORKS.JORMUNGANDR.NETWORK_ID,
+          walletImplementationId: CONFIG.WALLETS.JORMUNGANDR_ITN.WALLET_IMPLEMENTATION_ID,
+        },
+      }}
+    >
+      <WalletInitScreen />
+    </NavigationRouteContext.Provider>
+  ))
   .add('Byron', () => (
     <NavigationRouteContext.Provider
       value={{

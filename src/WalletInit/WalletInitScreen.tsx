@@ -25,14 +25,6 @@ export const WalletInitScreen = () => {
   const networkId: NetworkId = route.params.networkId
   const provider = route.params.provider
   const implementationId: WalletImplementationId = route.params.walletImplementationId
-  let createWalletLabel = strings.createWalletButton
-  let restoreWalletLabel = strings.restoreWalletButton
-  let createWalletWithLedgerLabel = strings.createWalletWithLedgerButton
-  if (isJormungandr(networkId)) {
-    createWalletLabel += ' (ITN)'
-    restoreWalletLabel += ' (ITN)'
-    createWalletWithLedgerLabel += ' (ITN)'
-  }
   const navigateTo = useNavigateTo({networkId})
 
   return (
@@ -48,7 +40,7 @@ export const WalletInitScreen = () => {
           {!isByron(implementationId) && (
             <Button
               onPress={() => navigateTo.createWallet(implementationId, provider)}
-              title={createWalletLabel}
+              title={strings.createWalletButton({networkId})}
               style={styles.createButton}
               testID="createWalletButton"
             />
@@ -60,7 +52,7 @@ export const WalletInitScreen = () => {
                 ? setModalState(MODAL_STATES.CHOOSE_MNEMONICS_LEN)
                 : navigateTo.restoreWallet(implementationId, provider)
             }}
-            title={restoreWalletLabel}
+            title={strings.restoreWalletButton({networkId})}
             style={styles.createButton}
             testID="restoreWalletButton"
           />
@@ -71,7 +63,7 @@ export const WalletInitScreen = () => {
                 disabled={!CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLED}
                 outline
                 onPress={() => setModalState(MODAL_STATES.LEDGER_TRANSPORT_SWITCH)}
-                title={createWalletWithLedgerLabel}
+                title={strings.createWalletWithLedgerButton({networkId})}
                 style={styles.createButton}
               />
               <LedgerTransportSwitchModal
@@ -183,9 +175,18 @@ const useStrings = () => {
   const intl = useIntl()
 
   return {
-    createWalletButton: intl.formatMessage(messages.createWalletButton),
-    restoreWalletButton: intl.formatMessage(messages.restoreWalletButton),
-    createWalletWithLedgerButton: intl.formatMessage(messages.createWalletWithLedgerButton),
+    createWalletButton: ({networkId}) =>
+      isJormungandr(networkId)
+        ? intl.formatMessage(messages.createWalletButton) + ' (ITN)'
+        : intl.formatMessage(messages.createWalletButton),
+    restoreWalletButton: ({networkId}) =>
+      isJormungandr(networkId)
+        ? intl.formatMessage(messages.restoreWalletButton) + ' (ITN)'
+        : intl.formatMessage(messages.restoreWalletButton),
+    createWalletWithLedgerButton: ({networkId}) =>
+      isJormungandr(networkId)
+        ? intl.formatMessage(messages.createWalletWithLedgerButton) + ' (ITN)'
+        : intl.formatMessage(messages.createWalletWithLedgerButton),
     restoreNormalWalletLabel: intl.formatMessage(messages.restoreNormalWalletLabel),
     learnMore: intl.formatMessage(globalMessages.learnMore),
     restoreNWordWalletExplanation: (options) => intl.formatMessage(messages.restoreNWordWalletExplanation, options),
