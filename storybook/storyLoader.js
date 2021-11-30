@@ -43,7 +43,6 @@ function loadStories() {
 	require('../legacy/components/WalletInit/CreateWallet/MnemonicCheckScreen.stories');
 	require('../legacy/components/WalletInit/CreateWallet/MnemonicExplanationModal.stories');
 	require('../legacy/components/WalletInit/CreateWallet/MnemonicShowScreen.stories');
-	require('../legacy/components/WalletInit/RestoreWallet/ImportReadOnlyWalletScreen.stories');
 	require('../legacy/components/WalletInit/RestoreWallet/RestoreWalletScreen/MnemonicInput.stories');
 	require('../legacy/components/WalletInit/RestoreWallet/RestoreWalletScreen/RestoreWalletScreen.stories');
 	require('../legacy/components/WalletInit/RestoreWallet/SaveReadOnlyWalletScreen.stories');
@@ -65,6 +64,7 @@ function loadStories() {
 	require('../src/TxHistory/ChipButton.stories');
 	require('../src/TxHistory/TxHistory.stories');
 	require('../src/TxHistory/TxListActionsBanner.stories');
+	require('../src/WalletInit/RestoreWallet/ImportReadOnlyWalletScreen.stories');
 	require('../src/WalletInit/WalletFreshInitScreen.stories');
 	require('../src/WalletInit/WalletInitScreen.stories');
 	require('../src/WalletInit/WalletNameForm.stories');
@@ -112,7 +112,6 @@ const stories = [
 	'../legacy/components/WalletInit/CreateWallet/MnemonicCheckScreen.stories',
 	'../legacy/components/WalletInit/CreateWallet/MnemonicExplanationModal.stories',
 	'../legacy/components/WalletInit/CreateWallet/MnemonicShowScreen.stories',
-	'../legacy/components/WalletInit/RestoreWallet/ImportReadOnlyWalletScreen.stories',
 	'../legacy/components/WalletInit/RestoreWallet/RestoreWalletScreen/MnemonicInput.stories',
 	'../legacy/components/WalletInit/RestoreWallet/RestoreWalletScreen/RestoreWalletScreen.stories',
 	'../legacy/components/WalletInit/RestoreWallet/SaveReadOnlyWalletScreen.stories',
@@ -134,6 +133,7 @@ const stories = [
 	'../src/TxHistory/ChipButton.stories',
 	'../src/TxHistory/TxHistory.stories',
 	'../src/TxHistory/TxListActionsBanner.stories',
+	'../src/WalletInit/RestoreWallet/ImportReadOnlyWalletScreen.stories',
 	'../src/WalletInit/WalletFreshInitScreen.stories',
 	'../src/WalletInit/WalletInitScreen.stories',
 	'../src/WalletInit/WalletNameForm.stories',
