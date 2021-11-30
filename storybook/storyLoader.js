@@ -41,7 +41,6 @@ function loadStories() {
 	require('../legacy/components/WalletInit/CreateWallet/MnemonicBackupImportanceModal.stories');
 	require('../legacy/components/WalletInit/CreateWallet/MnemonicCheckScreen.stories');
 	require('../legacy/components/WalletInit/CreateWallet/MnemonicExplanationModal.stories');
-	require('../legacy/components/WalletInit/CreateWallet/MnemonicShowScreen.stories');
 	require('../legacy/components/WalletInit/RestoreWallet/RestoreWalletScreen/MnemonicInput.stories');
 	require('../legacy/components/WalletInit/RestoreWallet/SaveReadOnlyWalletScreen.stories');
 	require('../legacy/components/WalletInit/RestoreWallet/VerifyRestoredWallet.stories');
@@ -63,6 +62,7 @@ function loadStories() {
 	require('../src/TxHistory/TxHistory.stories');
 	require('../src/TxHistory/TxListActionsBanner.stories');
 	require('../src/WalletInit/CreateWalletScreen.stories');
+	require('../src/WalletInit/MnemonicShowScreen.stories');
 	require('../src/WalletInit/RestoreWallet/ImportReadOnlyWalletScreen.stories');
 	require('../src/WalletInit/RestoreWallet/RestoreWalletScreen.stories');
 	require('../src/WalletInit/WalletFreshInitScreen.stories');
@@ -110,7 +110,6 @@ const stories = [
 	'../legacy/components/WalletInit/CreateWallet/MnemonicBackupImportanceModal.stories',
 	'../legacy/components/WalletInit/CreateWallet/MnemonicCheckScreen.stories',
 	'../legacy/components/WalletInit/CreateWallet/MnemonicExplanationModal.stories',
-	'../legacy/components/WalletInit/CreateWallet/MnemonicShowScreen.stories',
 	'../legacy/components/WalletInit/RestoreWallet/RestoreWalletScreen/MnemonicInput.stories',
 	'../legacy/components/WalletInit/RestoreWallet/SaveReadOnlyWalletScreen.stories',
 	'../legacy/components/WalletInit/RestoreWallet/VerifyRestoredWallet.stories',
@@ -132,6 +131,7 @@ const stories = [
 	'../src/TxHistory/TxHistory.stories',
 	'../src/TxHistory/TxListActionsBanner.stories',
 	'../src/WalletInit/CreateWalletScreen.stories',
+	'../src/WalletInit/MnemonicShowScreen.stories',
 	'../src/WalletInit/RestoreWallet/ImportReadOnlyWalletScreen.stories',
 	'../src/WalletInit/RestoreWallet/RestoreWalletScreen.stories',
 	'../src/WalletInit/WalletFreshInitScreen.stories',

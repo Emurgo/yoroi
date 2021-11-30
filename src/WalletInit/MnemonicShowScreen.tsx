@@ -1,37 +1,21 @@
-// @flow
-
 import {useNavigation, useRoute} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Dimensions, Image, ScrollView, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import recoveryPhrase from '../../../assets/img/recovery_phrase.png'
-import {WALLET_INIT_ROUTES} from '../../../RoutesList'
-import assert from '../../../utils/assert'
-import {Button, StatusBar, Text} from '../../UiKit'
-import MnemonicBackupImportanceModal from './MnemonicBackupImportanceModal'
-import styles from './styles/MnemonicShowScreen.style'
+import recoveryPhrase from '../../legacy/assets/img/recovery_phrase.png'
+import {Button, StatusBar, Text} from '../../legacy/components/UiKit'
+import MnemonicBackupImportanceModal from '../../legacy/components/WalletInit/CreateWallet/MnemonicBackupImportanceModal'
+import styles from '../../legacy/components/WalletInit/CreateWallet/styles/MnemonicShowScreen.style'
+import {WALLET_INIT_ROUTES} from '../../legacy/RoutesList'
+import assert from '../../legacy/utils/assert'
 
-const messages = defineMessages({
-  mnemonicNote: {
-    id: 'components.walletinit.createwallet.mnemonicshowscreen.mnemonicNote',
-    defaultMessage:
-      '!!!Please, make sure you have carefully written down your ' +
-      'recovery phrase somewhere safe. ' +
-      'You will need this phrase to use and restore your wallet. ' +
-      'Phrase is case sensitive.',
-  },
-  confirmationButton: {
-    id: 'components.walletinit.createwallet.mnemonicshowscreen.confirmationButton',
-    defaultMessage: '!!!Yes, I have written it down',
-  },
-})
-
-const MnemonicShowScreen = () => {
+export const MnemonicShowScreen = () => {
   const navigation = useNavigation()
-  const route = (useRoute(): any)
-  const intl = useIntl()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const route: any = useRoute()
+  const strings = useStrings()
   const mnemonic = route.params.mnemonic
   const provider = route.params.provider
   const [modal, setModal] = React.useState(false)
@@ -63,7 +47,7 @@ const MnemonicShowScreen = () => {
       <View style={styles.content}>
         <ScrollView contentContainerStyle={styles.scrollViewContentContainer} bounces={false}>
           <View style={styles.mnemonicNote}>
-            <Text>{intl.formatMessage(messages.mnemonicNote)}</Text>
+            <Text>{strings.mnemonicNote}</Text>
           </View>
 
           <View style={styles.mnemonicWords}>
@@ -83,11 +67,7 @@ const MnemonicShowScreen = () => {
         </ScrollView>
 
         <View style={styles.button}>
-          <Button
-            onPress={showModal}
-            title={intl.formatMessage(messages.confirmationButton)}
-            testID="mnemonicShowScreen::confirm"
-          />
+          <Button onPress={showModal} title={strings.confirmationButton} testID="mnemonicShowScreen::confirm" />
         </View>
 
         {modal && (
@@ -102,4 +82,26 @@ const MnemonicShowScreen = () => {
   )
 }
 
-export default MnemonicShowScreen
+const messages = defineMessages({
+  mnemonicNote: {
+    id: 'components.walletinit.createwallet.mnemonicshowscreen.mnemonicNote',
+    defaultMessage:
+      '!!!Please, make sure you have carefully written down your ' +
+      'recovery phrase somewhere safe. ' +
+      'You will need this phrase to use and restore your wallet. ' +
+      'Phrase is case sensitive.',
+  },
+  confirmationButton: {
+    id: 'components.walletinit.createwallet.mnemonicshowscreen.confirmationButton',
+    defaultMessage: '!!!Yes, I have written it down',
+  },
+})
+
+const useStrings = () => {
+  const intl = useIntl()
+
+  return {
+    mnemonicNote: intl.formatMessage(messages.mnemonicNote),
+    confirmationButton: intl.formatMessage(messages.confirmationButton),
+  }
+}
