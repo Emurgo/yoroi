@@ -1,10 +1,8 @@
-// @flow
-
 import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {WithModalProps} from '../../../storybook'
+import {WithModalProps} from '../../storybook'
 import {AddressModal} from './AddressModal'
 
 const address =

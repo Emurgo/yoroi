@@ -1,41 +1,27 @@
-// @flow
-
 import React from 'react'
 import {useIntl} from 'react-intl'
 import {Platform} from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
 
-// $FlowExpectedError
-import {useSelectedWallet} from '../../../../src/SelectedWallet'
-import {showErrorDialog} from '../../../actions'
-import {setLedgerDeviceId, setLedgerDeviceObj} from '../../../actions/hwWallet'
-import {CONFIG} from '../../../config/config'
-import {getCardanoByronConfig} from '../../../config/networks'
-import {formatPath} from '../../../crypto/commonUtils'
-import {verifyAddress} from '../../../crypto/shelley/ledgerUtils'
-import walletManager from '../../../crypto/walletManager'
-import {errorMessages} from '../../../i18n/global-messages'
-import LocalizableError from '../../../i18n/LocalizableError'
-import {externalAddressIndexSelector, hwDeviceInfoSelector} from '../../../selectors'
-import {Logger} from '../../../utils/logging'
-import LedgerConnect from '../../Ledger/LedgerConnect'
-import LedgerTransportSwitchModal from '../../Ledger/LedgerTransportSwitchModal'
-import {Modal} from '../../UiKit'
-import AddressModal from '../AddressModal'
-import AddressVerifyModal from '../AddressVerifyModal'
+import {showErrorDialog} from '../../legacy/actions'
+import {setLedgerDeviceId, setLedgerDeviceObj} from '../../legacy/actions/hwWallet'
+import LedgerConnect from '../../legacy/components/Ledger/LedgerConnect'
+import LedgerTransportSwitchModal from '../../legacy/components/Ledger/LedgerTransportSwitchModal'
+import {Modal} from '../../legacy/components/UiKit'
+import {CONFIG} from '../../legacy/config/config'
+import {getCardanoByronConfig} from '../../legacy/config/networks'
+import {formatPath} from '../../legacy/crypto/commonUtils'
+import {verifyAddress} from '../../legacy/crypto/shelley/ledgerUtils'
+import walletManager from '../../legacy/crypto/walletManager'
+import {errorMessages} from '../../legacy/i18n/global-messages'
+import LocalizableError from '../../legacy/i18n/LocalizableError'
+import {externalAddressIndexSelector, hwDeviceInfoSelector} from '../../legacy/selectors'
+import {Logger} from '../../legacy/utils/logging'
+import {useSelectedWallet} from '../SelectedWallet'
+import AddressModal from './AddressModal'
+import {AddressVerifyModal} from './AddressVerifyModal'
 
-const ADDRESS_DIALOG_STEPS = {
-  ADDRESS_DETAILS: 'ADDRESS_DETAILS',
-  CHOOSE_TRANSPORT: 'CHOOSE_TRANSPORT',
-  ADDRESS_VERIFY: 'ADDRESS_VERIFY',
-  LEDGER_CONNECT: 'LEDGER_CONNECT',
-}
-type AddressDialogSteps = $Values<typeof ADDRESS_DIALOG_STEPS>
-type ModalsProps = {
-  address: string,
-  onDone: () => void,
-}
-export const Modals = ({address, onDone}: ModalsProps) => {
+export const Modals = ({address, onDone}: {address: string; onDone: () => void}) => {
   const intl = useIntl()
   const index = useSelector(externalAddressIndexSelector)
   const hwDeviceInfo = useSelector(hwDeviceInfoSelector)
@@ -132,3 +118,11 @@ export const Modals = ({address, onDone}: ModalsProps) => {
     </>
   )
 }
+
+const ADDRESS_DIALOG_STEPS = {
+  ADDRESS_DETAILS: 'ADDRESS_DETAILS',
+  CHOOSE_TRANSPORT: 'CHOOSE_TRANSPORT',
+  ADDRESS_VERIFY: 'ADDRESS_VERIFY',
+  LEDGER_CONNECT: 'LEDGER_CONNECT',
+} as const
+type AddressDialogSteps = typeof ADDRESS_DIALOG_STEPS[keyof typeof ADDRESS_DIALOG_STEPS]
