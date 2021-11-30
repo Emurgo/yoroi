@@ -1,23 +1,20 @@
-// @flow
-
+import {useNavigation, useRoute} from '@react-navigation/native'
 import React from 'react'
 
-// $FlowExpectedError
-import {WalletForm} from '../../../../src/WalletInit/WalletForm'
-import {generateAdaMnemonic} from '../../../crypto/commonUtils'
-import {WALLET_INIT_ROUTES} from '../../../RoutesList'
-import Screen from '../../Screen'
-import MnemonicExplanationModal from './MnemonicExplanationModal'
+import Screen from '../../legacy/components/Screen'
+import MnemonicExplanationModal from '../../legacy/components/WalletInit/CreateWallet/MnemonicExplanationModal'
+import {generateAdaMnemonic} from '../../legacy/crypto/commonUtils'
+import {WALLET_INIT_ROUTES} from '../../legacy/RoutesList'
+import {WalletForm} from './WalletForm'
 
-type Props = {|
-  navigation: any,
-  route: any,
-|}
-
-const CreateWalletScreen = ({navigation, route}: Props) => {
+export const CreateWalletScreen = () => {
+  const navigation = useNavigation()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const route: any = useRoute()
   const [visibleMnemonicExplanation, setVisibleMnemonicExplanation] = React.useState(false)
-  const [formData, _setFormData] = React.useState(null)
+  const [formData, _setFormData] = React.useState<null | {name: string; password: string}>(null)
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const setFormData = (formData: any) => {
     _setFormData(formData)
     setVisibleMnemonicExplanation(true)
@@ -47,7 +44,7 @@ const CreateWalletScreen = ({navigation, route}: Props) => {
 
   return (
     <Screen>
-      <WalletForm onSubmit={setFormData} navigation={navigation} />
+      <WalletForm onSubmit={setFormData} />
       <MnemonicExplanationModal
         visible={visibleMnemonicExplanation}
         onRequestClose={hideMnemonicExplanation}
@@ -56,5 +53,3 @@ const CreateWalletScreen = ({navigation, route}: Props) => {
     </Screen>
   )
 }
-
-export default CreateWalletScreen

@@ -38,7 +38,6 @@ function loadStories() {
 	require('../legacy/components/WalletInit/ConnectNanoX/CheckNanoXScreen.stories');
 	require('../legacy/components/WalletInit/ConnectNanoX/ConnectNanoXScreen.stories');
 	require('../legacy/components/WalletInit/ConnectNanoX/SaveNanoXScreen.stories');
-	require('../legacy/components/WalletInit/CreateWallet/CreateWalletScreen.stories');
 	require('../legacy/components/WalletInit/CreateWallet/MnemonicBackupImportanceModal.stories');
 	require('../legacy/components/WalletInit/CreateWallet/MnemonicCheckScreen.stories');
 	require('../legacy/components/WalletInit/CreateWallet/MnemonicExplanationModal.stories');
@@ -63,6 +62,7 @@ function loadStories() {
 	require('../src/TxHistory/ChipButton.stories');
 	require('../src/TxHistory/TxHistory.stories');
 	require('../src/TxHistory/TxListActionsBanner.stories');
+	require('../src/WalletInit/CreateWalletScreen.stories');
 	require('../src/WalletInit/RestoreWallet/ImportReadOnlyWalletScreen.stories');
 	require('../src/WalletInit/RestoreWallet/RestoreWalletScreen.stories');
 	require('../src/WalletInit/WalletFreshInitScreen.stories');
@@ -107,7 +107,6 @@ const stories = [
 	'../legacy/components/WalletInit/ConnectNanoX/CheckNanoXScreen.stories',
 	'../legacy/components/WalletInit/ConnectNanoX/ConnectNanoXScreen.stories',
 	'../legacy/components/WalletInit/ConnectNanoX/SaveNanoXScreen.stories',
-	'../legacy/components/WalletInit/CreateWallet/CreateWalletScreen.stories',
 	'../legacy/components/WalletInit/CreateWallet/MnemonicBackupImportanceModal.stories',
 	'../legacy/components/WalletInit/CreateWallet/MnemonicCheckScreen.stories',
 	'../legacy/components/WalletInit/CreateWallet/MnemonicExplanationModal.stories',
@@ -132,6 +131,7 @@ const stories = [
 	'../src/TxHistory/ChipButton.stories',
 	'../src/TxHistory/TxHistory.stories',
 	'../src/TxHistory/TxListActionsBanner.stories',
+	'../src/WalletInit/CreateWalletScreen.stories',
 	'../src/WalletInit/RestoreWallet/ImportReadOnlyWalletScreen.stories',
 	'../src/WalletInit/RestoreWallet/RestoreWalletScreen.stories',
 	'../src/WalletInit/WalletFreshInitScreen.stories',
