@@ -56,13 +56,3 @@ allprojects {
         maven { url 'https://jitpack.io' }
     }
 }
-
-subprojects {project ->
-    if ('react-native-svg' == project.name) {
-        buildscript {
-            repositories {
-                maven { url "https://dl.bintray.com/android/android-tools/"  }
-            }
-        }
-    }
-}
