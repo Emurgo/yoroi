@@ -7,6 +7,9 @@ export var isByron: (walletImplementationId: string) => boolean
 
 // prettier-ignore
 export var CONFIG: {
+  NUMBERS: {
+    HARD_DERIVATION_START: number
+  },
   DEBUG: {
     PREFILL_FORMS: boolean,
     WALLET_NAME: string,
