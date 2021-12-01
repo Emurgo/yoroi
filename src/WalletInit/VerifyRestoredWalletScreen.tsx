@@ -7,13 +7,13 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {BulletPointItem, Button, Spacer, StatusBar, Text} from '../../legacy/components/UiKit'
 import styles from '../../legacy/components/WalletInit/RestoreWallet/styles/VerifyRestoredWallet.style'
-import WalletAddress from '../../legacy/components/WalletInit/RestoreWallet/WalletAddress'
 import type {NetworkId, WalletImplementationId} from '../../legacy/config/types'
 import {WALLET_IMPLEMENTATION_REGISTRY} from '../../legacy/config/types'
 import {generateByronPlateFromMnemonics} from '../../legacy/crypto/byron/plate'
 import {generateShelleyPlateFromMnemonics} from '../../legacy/crypto/shelley/plate'
 import {WALLET_INIT_ROUTES} from '../../legacy/RoutesList'
 import {Icon} from '../components'
+import {WalletAddress} from './WalletAddress'
 
 export const VerifyRestoredWalletScreen = () => {
   const strings = useStrings()

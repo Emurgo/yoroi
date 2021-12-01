@@ -4,7 +4,7 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import WalletAddress from './WalletAddress'
+import {WalletAddress} from './WalletAddress'
 
 const styles = StyleSheet.create({
   container: {

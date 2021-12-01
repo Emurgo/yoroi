@@ -11,6 +11,8 @@ import {useDispatch} from 'react-redux'
 // $FlowExpectedError
 import {Icon} from '../../../../src/components'
 // $FlowExpectedError
+import WalletAddress from '../../../../src/WalletInit/WalletAddress'
+// $FlowExpectedError
 import {WalletNameForm} from '../../../../src/WalletInit/WalletNameForm'
 import {createWalletWithBip44Account, handleGeneralError} from '../../../actions'
 import {CONFIG} from '../../../config/config'
@@ -22,7 +24,6 @@ import {Logger} from '../../../utils/logging'
 import {ignoreConcurrentAsyncHandler} from '../../../utils/utils'
 import {Line, StatusBar, Text} from '../../UiKit'
 import styles from './styles/SaveReadOnlyWalletScreen.style'
-import WalletAddress from './WalletAddress'
 
 const messages = defineMessages({
   defaultWalletName: {
