@@ -1,36 +1,33 @@
-// @flow
-
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, TouchableOpacity, View} from 'react-native'
+import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch} from 'react-redux'
 
-// $FlowExpectedError
-import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../../../../src/SelectedWallet'
-import {createWallet} from '../../../actions'
-import type {NetworkId, WalletImplementationId, YoroiProvider} from '../../../config/types'
-import type {WalletInterface} from '../../../crypto/WalletInterface'
-import {useParams} from '../../../navigation'
-import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../../RoutesList'
-import type {WalletMeta} from '../../../state'
-import assert from '../../../utils/assert'
-import {ignoreConcurrentAsyncHandler} from '../../../utils/utils'
-import {Button, Spacer, StatusBar, Text} from '../../UiKit'
-import styles from './styles/MnemonicCheckScreen.style'
+import {createWallet} from '../../legacy/actions'
+import {Button, Spacer, StatusBar, Text} from '../../legacy/components/UiKit'
+import type {NetworkId, WalletImplementationId, YoroiProvider} from '../../legacy/config/types'
+import type {WalletInterface} from '../../legacy/crypto/WalletInterface'
+import {useParams} from '../../legacy/navigation'
+import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
+import type {WalletMeta} from '../../legacy/state'
+import {COLORS} from '../../legacy/styles/config'
+import assert from '../../legacy/utils/assert'
+import {ignoreConcurrentAsyncHandler} from '../../legacy/utils/utils'
+import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../SelectedWallet'
+
 export type Params = {
-  mnemonic: string,
-  password: string,
-  name: string,
-  networkId: NetworkId,
-  walletImplementationId: WalletImplementationId,
-  provider: YoroiProvider,
+  mnemonic: string
+  password: string
+  name: string
+  networkId: NetworkId
+  walletImplementationId: WalletImplementationId
+  provider: YoroiProvider
 }
 
-type Entry = {id: number, word: string}
-
-const MnemonicCheckScreen = () => {
+export const MnemonicCheckScreen = () => {
   const strings = useStrings()
   const navigation = useNavigation()
   const {mnemonic, password, name, networkId, walletImplementationId, provider} = useParams<Params>()
@@ -121,12 +118,10 @@ const MnemonicCheckScreen = () => {
   )
 }
 
-export default MnemonicCheckScreen
-
 type MnemonicInputProps = {
-  userEntries: Array<Entry>,
-  error: boolean,
-  onPress: () => any,
+  userEntries: Array<Entry>
+  error: boolean
+  onPress: () => void
 }
 const MnemonicInput = ({userEntries, error, onPress}: MnemonicInputProps) => {
   return (
@@ -167,9 +162,9 @@ const ErrorMessage = ({visible}: {visible: boolean}) => {
 }
 
 type WordBadgesProps = {
-  mnemonicEntries: Array<Entry>,
-  userEntries: Array<Entry>,
-  onPress: (wordEntry: Entry) => any,
+  mnemonicEntries: Array<Entry>
+  userEntries: Array<Entry>
+  onPress: (wordEntry: Entry) => void
 }
 const WordBadges = ({mnemonicEntries, userEntries, onPress}: WordBadgesProps) => {
   const isWordUsed = (entryId: number) => userEntries.some((entry) => entry.id === entryId)
@@ -195,12 +190,13 @@ const WordBadges = ({mnemonicEntries, userEntries, onPress}: WordBadgesProps) =>
 }
 
 type WordBadgeProps = {
-  word: string,
-  disabled?: boolean,
-  onPress?: () => any,
+  word: string
+  disabled?: boolean
+  onPress?: () => void
+  testID?: string
 }
-const WordBadge = ({word, onPress, disabled}: WordBadgeProps) => (
-  <TouchableOpacity activeOpacity={0.5} onPress={onPress} disabled={disabled} style={styles.wordBadge}>
+const WordBadge = ({word, onPress, disabled, testID}: WordBadgeProps) => (
+  <TouchableOpacity testID={testID} activeOpacity={0.5} onPress={onPress} disabled={disabled} style={styles.wordBadge}>
     <Text style={styles.wordBadgeText}>{word}</Text>
   </TouchableOpacity>
 )
@@ -212,11 +208,11 @@ const assertions = ({
   networkId,
   walletImplementationId,
 }: {
-  mnemonic: string,
-  name: string,
-  password: string,
-  networkId: NetworkId,
-  walletImplementationId: WalletImplementationId,
+  mnemonic: string
+  name: string
+  password: string
+  networkId: NetworkId
+  walletImplementationId: WalletImplementationId
 }) => {
   assert.assert(!!mnemonic, 'handleWalletConfirmation:: mnemonic')
   assert.assert(!!password, 'handleWalletConfirmation:: password')
@@ -249,3 +245,72 @@ const useStrings = () => {
     mnemonicWordsInputInvalidPhrase: intl.formatMessage(messages.mnemonicWordsInputInvalidPhrase),
   }
 }
+
+const styles = StyleSheet.create({
+  safeAreaView: {
+    backgroundColor: COLORS.WHITE,
+    flex: 1,
+  },
+  scrollViewContentContainer: {
+    paddingHorizontal: 16,
+    paddingBottom: 16,
+  },
+  instructions: {
+    paddingHorizontal: 16,
+  },
+  recoveryPhrase: {
+    height: 26 * 6,
+    paddingHorizontal: 16,
+  },
+  recoveryPhraseOutline: {
+    flex: 1,
+    borderRadius: 8,
+    borderColor: COLORS.DARK_GRAY,
+    borderWidth: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    padding: 8,
+  },
+  recoveryPhraseError: {
+    borderColor: COLORS.RED,
+  },
+  error: {
+    paddingHorizontal: 16,
+  },
+  errorMessage: {
+    color: COLORS.ERROR_TEXT_COLOR,
+  },
+  words: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    paddingVertical: 12,
+  },
+  buttons: {
+    flexDirection: 'row',
+    padding: 16,
+  },
+  confirmButton: {
+    paddingLeft: 12,
+  },
+  wordBadgeContainer: {
+    padding: 4,
+  },
+  wordBadge: {
+    backgroundColor: COLORS.LIGHT_GRAY,
+    borderRadius: 8,
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    justifyContent: 'center',
+  },
+  wordBadgeText: {
+    color: COLORS.WORD_BADGE_TEXT,
+  },
+  selected: {
+    opacity: 0.5,
+  },
+  hidden: {
+    opacity: 0,
+  },
+})
+
+type Entry = {id: number; word: string}

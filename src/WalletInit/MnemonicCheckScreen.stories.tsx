@@ -1,11 +1,9 @@
-// @flow
-
 import {NavigationRouteContext} from '@react-navigation/native'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {CONFIG} from '../../../config/config'
-import MnemonicCheckScreen from './MnemonicCheckScreen'
+import {CONFIG} from '../../legacy/config/config'
+import {MnemonicCheckScreen} from './MnemonicCheckScreen'
 
 storiesOf('MnemonicCheckScreen', module)
   .add('Default', () => {
