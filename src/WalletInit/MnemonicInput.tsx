@@ -1,19 +1,25 @@
-// @flow
-
 import {validateMnemonic, wordlists} from 'bip39'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Keyboard, ScrollView, StyleSheet, View} from 'react-native'
 
-import {COLORS} from '../../../../styles/config'
-import {Menu, TextInput, useScrollView} from '../../../UiKit'
+import {Menu, TextInput, useScrollView} from '../../legacy/components/UiKit'
+import {COLORS} from '../../legacy/styles/config'
 
-export const MnemonicInput = ({length, onDone}: {length: number, onDone: (phrase: string) => mixed}) => {
+export const MnemonicInput = ({
+  length,
+  onDone,
+  validate = validateMnemonic,
+}: {
+  length: number
+  onDone: (phrase: string) => void
+  validate?: (text: string) => boolean
+}) => {
   const strings = useStrings()
-  const [mnemonicWords, setMnemonicWords] = React.useState<Array<string>>((Array.from({length}).map(() => ''): any))
+  const [mnemonicWords, setMnemonicWords] = React.useState<Array<string>>(Array.from({length}).map(() => ''))
 
   const mnemonicWordsComplete = mnemonicWords.every(Boolean)
-  const isValid: boolean = mnemonicWordsComplete ? validateMnemonic(mnemonicWords.join(' ')) : false
+  const isValid: boolean = mnemonicWordsComplete ? validate(mnemonicWords.join(' ')) : false
   const errorText = !isValid && mnemonicWordsComplete ? strings.invalidChecksum : ''
 
   const onSelect = (index: number, word: string) =>
@@ -35,7 +41,7 @@ export const MnemonicInput = ({length, onDone}: {length: number, onDone: (phrase
     <TextInput
       value={mnemonicWords.join(' ')}
       errorText={errorText}
-      render={({ref: _ref, ...inputProps}: any) => (
+      render={({ref: _ref, ...inputProps}) => (
         <MnemonicWordsInput onSelect={onSelect} words={mnemonicWords} {...inputProps} />
       )}
     />
@@ -43,11 +49,11 @@ export const MnemonicInput = ({length, onDone}: {length: number, onDone: (phrase
 }
 
 type MnemonicWordsInputProps = {
-  words: Array<string>,
-  onSelect: (index: number, word: string) => mixed,
+  words: Array<string>
+  onSelect: (index: number, word: string) => void
 }
 const MnemonicWordsInput = ({onSelect, words}: MnemonicWordsInputProps) => {
-  const refs = React.useRef(words.map(() => React.createRef<any>())).current
+  const refs = React.useRef(words.map(() => React.createRef<TextInput>())).current
   const scrollView = useScrollView()
   const rowHeightRef = React.useRef<number | void>()
 
@@ -69,7 +75,6 @@ const MnemonicWordsInput = ({onSelect, words}: MnemonicWordsInputProps) => {
               refs[index + 1].current?.focus()
             }}
             id={index + 1}
-            word={word}
             onFocus={() => {
               if (rowHeightRef.current == null) return
               const columnNumber = index % 3
@@ -84,9 +89,9 @@ const MnemonicWordsInput = ({onSelect, words}: MnemonicWordsInputProps) => {
 }
 
 type MnemonicWordInputProps = {
-  id: number,
-  onSelect: (word: string) => mixed,
-  onFocus: () => void,
+  id: number
+  onSelect: (word: string) => void
+  onFocus: () => void
 }
 const MnemonicWordInput = React.forwardRef(({id, onSelect, onFocus}: MnemonicWordInputProps, ref) => {
   const [word, setWord] = React.useState('')
@@ -142,7 +147,7 @@ const normalizeText = (text: string) => {
   return text.trim().toLowerCase().replace(NON_LOWERCASE_LETTERS, '')
 }
 const getMatchingWords = (targetWord: string) =>
-  (wordlists.EN: Array<string>).filter((word) => word.startsWith(normalizeText(targetWord)))
+  (wordlists.EN as Array<string>).filter((word) => word.startsWith(normalizeText(targetWord)))
 
 const useAutoFocus = (ref) =>
   React.useEffect(() => {

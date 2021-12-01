@@ -5,11 +5,11 @@ import {View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, KeyboardSpacer, ScrollableView, Spacer, StatusBar, Text} from '../../../legacy/components/UiKit'
-import {MnemonicInput} from '../../../legacy/components/WalletInit/RestoreWallet/RestoreWalletScreen/MnemonicInput'
 import {getWalletConfigById} from '../../../legacy/config/config'
 import type {NetworkId, WalletImplementationId} from '../../../legacy/config/types'
 import {useParams} from '../../../legacy/navigation'
 import {WALLET_INIT_ROUTES} from '../../../legacy/RoutesList'
+import {MnemonicInput} from '../MnemonicInput'
 
 type Params = {
   networkId: NetworkId
