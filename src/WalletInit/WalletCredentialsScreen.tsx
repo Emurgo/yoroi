@@ -1,23 +1,20 @@
-// @flow
-
 import {useNavigation, useRoute} from '@react-navigation/native'
 import React from 'react'
 import {ActivityIndicator} from 'react-native'
 import {useDispatch} from 'react-redux'
 
-// $FlowExpectedError
-import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../../../../src/SelectedWallet'
-// $FlowExpectedError
-import {WalletForm} from '../../../../src/WalletInit/WalletForm'
-import {createWallet, updateVersion} from '../../../actions'
-import type {WalletInterface} from '../../../crypto/WalletInterface'
-import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../../RoutesList'
-import type {WalletMeta} from '../../../state'
-import assert from '../../../utils/assert'
-import {ignoreConcurrentAsyncHandler} from '../../../utils/utils'
+import {createWallet, updateVersion} from '../../legacy/actions'
+import type {WalletInterface} from '../../legacy/crypto/WalletInterface'
+import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
+import type {WalletMeta} from '../../legacy/state'
+import assert from '../../legacy/utils/assert'
+import {ignoreConcurrentAsyncHandler} from '../../legacy/utils/utils'
+import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../SelectedWallet'
+import {WalletForm} from './WalletForm'
 
-const WalletCredentialsScreen = () => {
+export const WalletCredentialsScreen = () => {
   const navigation = useNavigation()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const route: any = useRoute()
   const [waiting, setWaiting] = React.useState(false)
   const dispatch = useDispatch()
@@ -67,10 +64,8 @@ const WalletCredentialsScreen = () => {
 
   return (
     <>
-      <WalletForm onSubmit={navigateToWallet} navigation={navigation} />
+      <WalletForm onSubmit={navigateToWallet} />
       {waiting && <ActivityIndicator />}
     </>
   )
 }
-
-export default WalletCredentialsScreen
