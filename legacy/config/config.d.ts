@@ -12,7 +12,9 @@ export var CONFIG: {
     WALLET_NAME: string,
     PASSWORD: string,
     START_WITH_INDEX_SCREEN: boolean,
-    MNEMONIC1: string
+    MNEMONIC1: string,
+    MNEMONIC2: string,
+    MNEMONIC3: string,
   },
   HARDWARE_WALLETS: {
     LEDGER_NANO: {

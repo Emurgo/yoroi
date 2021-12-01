@@ -7,7 +7,6 @@ import ConnectNanoXScreen from '../../legacy/components/WalletInit/ConnectNanoX/
 import SaveNanoXScreen from '../../legacy/components/WalletInit/ConnectNanoX/SaveNanoXScreen'
 import MnemonicCheckScreen from '../../legacy/components/WalletInit/CreateWallet/MnemonicCheckScreen'
 import SaveReadOnlyWalletScreen from '../../legacy/components/WalletInit/RestoreWallet/SaveReadOnlyWalletScreen'
-import VerifyRestoredWallet from '../../legacy/components/WalletInit/RestoreWallet/VerifyRestoredWallet'
 import {isJormungandr} from '../../legacy/config/networks'
 import {
   defaultNavigationOptions,
@@ -19,6 +18,7 @@ import {CreateWalletScreen} from './CreateWalletScreen'
 import {MnemonicShowScreen} from './MnemonicShowScreen'
 import {ImportReadOnlyWalletScreen} from './RestoreWallet/ImportReadOnlyWalletScreen'
 import {RestoreWalletScreen} from './RestoreWallet/RestoreWalletScreen'
+import {VerifyRestoredWalletScreen} from './VerifyRestoredWalletScreen'
 import {WalletCredentialsScreen} from './WalletCredentialsScreen'
 import {WalletFreshInitScreen} from './WalletFreshInitScreen'
 import {WalletInitScreen} from './WalletInitScreen'
@@ -135,7 +135,7 @@ export const WalletInitNavigator = () => {
 
       <Stack.Screen
         name={WALLET_INIT_ROUTES.VERIFY_RESTORED_WALLET}
-        component={VerifyRestoredWallet}
+        component={VerifyRestoredWalletScreen}
         options={{title: strings.verifyRestoredWalletTitle}}
       />
 

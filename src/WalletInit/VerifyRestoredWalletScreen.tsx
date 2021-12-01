@@ -1,28 +1,25 @@
-/* eslint-disable react-native/no-inline-styles */
-// @flow
-
+import {WalletChecksum} from '@emurgo/cip4-js'
 import {useNavigation, useRoute} from '@react-navigation/native'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, ScrollView, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-// $FlowExpectedError
-import {Icon} from '../../../../src/components'
-import type {NetworkId, WalletImplementationId} from '../../../config/types'
-import {WALLET_IMPLEMENTATION_REGISTRY} from '../../../config/types'
-import {generateByronPlateFromMnemonics} from '../../../crypto/byron/plate'
-import {generateShelleyPlateFromMnemonics} from '../../../crypto/shelley/plate'
-import {WALLET_INIT_ROUTES} from '../../../RoutesList'
-import {BulletPointItem, Button, Spacer, StatusBar, Text} from '../../UiKit'
-import styles from './styles/VerifyRestoredWallet.style'
-import WalletAddress from './WalletAddress'
+import {BulletPointItem, Button, Spacer, StatusBar, Text} from '../../legacy/components/UiKit'
+import styles from '../../legacy/components/WalletInit/RestoreWallet/styles/VerifyRestoredWallet.style'
+import WalletAddress from '../../legacy/components/WalletInit/RestoreWallet/WalletAddress'
+import type {NetworkId, WalletImplementationId} from '../../legacy/config/types'
+import {WALLET_IMPLEMENTATION_REGISTRY} from '../../legacy/config/types'
+import {generateByronPlateFromMnemonics} from '../../legacy/crypto/byron/plate'
+import {generateShelleyPlateFromMnemonics} from '../../legacy/crypto/shelley/plate'
+import {WALLET_INIT_ROUTES} from '../../legacy/RoutesList'
+import {Icon} from '../components'
 
-const VerifyWalletScreen = () => {
-  const intl = useIntl()
+export const VerifyRestoredWalletScreen = () => {
+  const strings = useStrings()
   const navigation = useNavigation()
-  const route = (useRoute(): any)
-  const {formatMessage} = intl
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const route: any = useRoute()
   const {phrase, networkId, walletImplementationId} = route.params
   const [plate, addresses] = usePlateFromMnemonic({mnemonic: phrase, networkId, walletImplementationId})
 
@@ -41,7 +38,7 @@ const VerifyWalletScreen = () => {
 
       <ScrollView bounces={false} contentContainerStyle={styles.contentContainer}>
         <WalletInfo>
-          <Text style={styles.checksumLabel}>{formatMessage(messages.checksumLabel)}</Text>
+          <Text style={styles.checksumLabel}>{strings.checksumLabel}</Text>
         </WalletInfo>
 
         <Spacer height={24} />
@@ -61,18 +58,18 @@ const VerifyWalletScreen = () => {
         <Spacer height={40} />
 
         <Instructions>
-          <Text style={styles.instructionsLabel}>{formatMessage(messages.instructionLabel)}</Text>
-          <BulletPointItem textRow={formatMessage(messages.instructions1)} style={styles.bulletPoint} />
+          <Text style={styles.instructionsLabel}>{strings.instructionLabel}</Text>
+          <BulletPointItem textRow={strings.instructions1} style={styles.bulletPoint} />
           <Spacer height={8} />
-          <BulletPointItem textRow={formatMessage(messages.instructions2)} style={styles.bulletPoint} />
+          <BulletPointItem textRow={strings.instructions2} style={styles.bulletPoint} />
           <Spacer height={8} />
-          <BulletPointItem textRow={formatMessage(messages.instructions3)} style={styles.bulletPoint} />
+          <BulletPointItem textRow={strings.instructions3} style={styles.bulletPoint} />
         </Instructions>
 
         <Spacer height={32} />
 
         <Addresses>
-          <Text style={styles.addressesLabel}>{formatMessage(messages.walletAddressLabel)}</Text>
+          <Text style={styles.addressesLabel}>{strings.walletAddressLabel}</Text>
           {addresses ? (
             <WalletAddress addressHash={addresses[0]} networkId={networkId} />
           ) : (
@@ -82,13 +79,11 @@ const VerifyWalletScreen = () => {
       </ScrollView>
 
       <Actions>
-        <Button onPress={navigateToWalletCredentials} title={formatMessage(messages.buttonText)} />
+        <Button onPress={navigateToWalletCredentials} title={strings.buttonText} />
       </Actions>
     </SafeAreaView>
   )
 }
-
-export default VerifyWalletScreen
 
 const WalletInfo = (props) => <View {...props} />
 const Plate = (props) => <View {...props} style={styles.plate} />
@@ -129,17 +124,31 @@ const messages = defineMessages({
   },
 })
 
+const useStrings = () => {
+  const intl = useIntl()
+
+  return {
+    checksumLabel: intl.formatMessage(messages.checksumLabel),
+    instructionLabel: intl.formatMessage(messages.instructionLabel),
+    instructions1: intl.formatMessage(messages.instructions1),
+    instructions2: intl.formatMessage(messages.instructions2),
+    instructions3: intl.formatMessage(messages.instructions3),
+    walletAddressLabel: intl.formatMessage(messages.walletAddressLabel),
+    buttonText: intl.formatMessage(messages.buttonText),
+  }
+}
+
 const usePlateFromMnemonic = ({
   mnemonic,
   networkId,
   walletImplementationId,
 }: {
-  mnemonic: string,
-  networkId: number,
-  walletImplementationId: string,
+  mnemonic: string
+  networkId: number
+  walletImplementationId: string
 }) => {
   const [addresses, setAddresses] = useState()
-  const [plate, setPlate] = useState()
+  const [plate, setPlate] = useState<undefined | WalletChecksum>(undefined)
 
   useEffect(() => {
     const getPlate = async (
