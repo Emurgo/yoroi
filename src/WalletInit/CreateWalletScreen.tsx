@@ -2,9 +2,9 @@ import {useNavigation, useRoute} from '@react-navigation/native'
 import React from 'react'
 
 import Screen from '../../legacy/components/Screen'
-import MnemonicExplanationModal from '../../legacy/components/WalletInit/CreateWallet/MnemonicExplanationModal'
 import {generateAdaMnemonic} from '../../legacy/crypto/commonUtils'
 import {WALLET_INIT_ROUTES} from '../../legacy/RoutesList'
+import {MnemonicExplanationModal} from './MnemonicExplanationModal'
 import {WalletForm} from './WalletForm'
 
 export const CreateWalletScreen = () => {
