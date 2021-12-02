@@ -1,11 +1,10 @@
-// @flow
-
 import {NavigationRouteContext} from '@react-navigation/native'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {CONFIG} from '../../../config/config'
-import SaveNanoXScreen, {type Params} from './SaveNanoXScreen'
+import {CONFIG} from '../../../legacy/config/config'
+import type {Params} from './SaveNanoXScreen'
+import {SaveNanoXScreen} from './SaveNanoXScreen'
 
 const params: Params = {
   networkId: CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,

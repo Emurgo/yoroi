@@ -1,31 +1,27 @@
-// @flow
-
 import {useNavigation, useRoute} from '@react-navigation/native'
 import React from 'react'
 import {useDispatch} from 'react-redux'
 
-// $FlowExpectedError
-import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../../../../src/SelectedWallet'
-// $FlowExpectedError
-import {WalletNameForm} from '../../../../src/WalletInit/WalletNameForm'
-import {createWalletWithBip44Account} from '../../../actions'
-import {saveHW} from '../../../actions/hwWallet'
-import image from '../../../assets/img/ledger_2.png'
-import {CONFIG} from '../../../config/config'
-import type {NetworkId, WalletImplementationId} from '../../../config/types'
-import type {HWDeviceInfo} from '../../../crypto/shelley/ledgerUtils'
-import type {WalletInterface} from '../../../crypto/WalletInterface'
-import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../../RoutesList'
-import type {WalletMeta} from '../../../state'
-import assert from '../../../utils/assert'
+import {createWalletWithBip44Account} from '../../../legacy/actions'
+import {saveHW} from '../../../legacy/actions/hwWallet'
+import image from '../../../legacy/assets/img/ledger_2.png'
+import {CONFIG} from '../../../legacy/config/config'
+import type {NetworkId, WalletImplementationId} from '../../../legacy/config/types'
+import type {HWDeviceInfo} from '../../../legacy/crypto/shelley/ledgerUtils'
+import type {WalletInterface} from '../../../legacy/crypto/WalletInterface'
+import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../../legacy/RoutesList'
+import type {WalletMeta} from '../../../legacy/state'
+import assert from '../../../legacy/utils/assert'
+import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
+import {WalletNameForm} from '../WalletNameForm'
 
 export type Params = {
-  networkId: NetworkId,
-  walletImplementationId: WalletImplementationId,
-  hwDeviceInfo: HWDeviceInfo,
+  networkId: NetworkId
+  walletImplementationId: WalletImplementationId
+  hwDeviceInfo: HWDeviceInfo
 }
 
-const SaveNanoXScreen = () => {
+export const SaveNanoXScreen = () => {
   const navigation = useNavigation()
   const route = useRoute()
   const dispatch = useDispatch()
@@ -33,7 +29,7 @@ const SaveNanoXScreen = () => {
   const setSelectedWallet = useSetSelectedWallet()
 
   const onSubmit = async ({name}) => {
-    const {networkId, walletImplementationId, hwDeviceInfo}: Params = (route.params: any)
+    const {networkId, walletImplementationId, hwDeviceInfo} = route.params as Params
     assert.assert(hwDeviceInfo != null, 'SaveNanoXScreen::onPress hwDeviceInfo')
 
     const wallet: WalletInterface = await dispatch(
@@ -77,5 +73,3 @@ const SaveNanoXScreen = () => {
     />
   )
 }
-
-export default SaveNanoXScreen

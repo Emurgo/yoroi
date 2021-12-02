@@ -3,7 +3,6 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
 import ConnectNanoXScreen from '../../legacy/components/WalletInit/ConnectNanoX/ConnectNanoXScreen'
-import SaveNanoXScreen from '../../legacy/components/WalletInit/ConnectNanoX/SaveNanoXScreen'
 import {isJormungandr} from '../../legacy/config/networks'
 import {
   defaultNavigationOptions,
@@ -17,6 +16,7 @@ import {ImportReadOnlyWalletScreen} from './ImportReadOnlyWallet'
 import {MnemonicCheckScreen} from './MnemonicCheck'
 import {MnemonicShowScreen} from './MnemonicShow'
 import {RestoreWalletScreen} from './RestoreWallet'
+import {SaveNanoXScreen} from './SaveNanoX/SaveNanoXScreen'
 import {SaveReadOnlyWalletScreen} from './SaveReadOnlyWallet'
 import {VerifyRestoredWalletScreen} from './VerifyRestoredWallet'
 import {WalletCredentialsScreen} from './WalletCredentials'
