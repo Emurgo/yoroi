@@ -66,7 +66,7 @@
     "@formatjs/intl": "^1.14.1",
     "@formatjs/intl-datetimeformat": "^4.2.3",
     "@formatjs/intl-getcanonicallocales": "^1.7.3",
-    "@formatjs/intl-locale": "^2.4.37",
+    "@formatjs/intl-locale": "^2.4.41",
     "@formatjs/intl-numberformat": "^7.2.3",
     "@formatjs/intl-pluralrules": "^4.1.3",
     "@formatjs/intl-relativetimeformat": "^9.2.3",
