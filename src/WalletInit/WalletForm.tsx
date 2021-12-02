@@ -18,7 +18,7 @@ import {
 } from '../../legacy/utils/validators'
 
 type Props = {
-  onSubmit: (args: {name: string; password: string}) => unknown
+  onSubmit: (credentials: {name: string; password: string}) => void
 }
 
 export const WalletForm = ({onSubmit}: Props) => {
