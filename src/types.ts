@@ -18,3 +18,12 @@ export type WalletImplementation = {
   DISCOVERY_BLOCK_SIZE: number
   MAX_GENERATED_UNUSED: number
 }
+
+export type WalletImplementationId = WalletImplementation['WALLET_IMPLEMENTATION_ID']
+
+export type NetworkId = number
+
+export type Device = {
+  id: number
+  name: string
+}

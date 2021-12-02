@@ -1,48 +1,36 @@
-// @flow
-
 import {useNavigation, useRoute} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {showErrorDialog} from '../../../actions'
-import type {WalletImplementationId} from '../../../config/types'
-import type {DeviceId, DeviceObj} from '../../../crypto/shelley/ledgerUtils'
-import {getHWDeviceInfo} from '../../../crypto/shelley/ledgerUtils'
-import {errorMessages} from '../../../i18n/global-messages'
-import LocalizableError from '../../../i18n/LocalizableError'
-import {WALLET_INIT_ROUTES} from '../../../RoutesList'
-import {Logger} from '../../../utils/logging'
-import LedgerConnect from '../../Ledger/LedgerConnect'
-import type {Device} from '../../Ledger/types'
-import {ProgressStep} from '../../UiKit'
+import {showErrorDialog} from '../../../legacy/actions'
+import LedgerConnect from '../../../legacy/components/Ledger/LedgerConnect'
+import {ProgressStep} from '../../../legacy/components/UiKit'
+import type {DeviceId, DeviceObj} from '../../../legacy/crypto/shelley/ledgerUtils'
+import {getHWDeviceInfo} from '../../../legacy/crypto/shelley/ledgerUtils'
+import {errorMessages} from '../../../legacy/i18n/global-messages'
+import LocalizableError from '../../../legacy/i18n/LocalizableError'
+import {WALLET_INIT_ROUTES} from '../../../legacy/RoutesList'
+import {Logger} from '../../../legacy/utils/logging'
+import {Device, NetworkId, WalletImplementationId} from '../../types'
 
-const messages = defineMessages({
-  exportKey: {
-    id: 'components.walletinit.connectnanox.connectnanoxscreen.exportKey',
-    defaultMessage: '!!!Action needed: Please, export public key from your Ledger device.',
-  },
-})
-
-const styles = StyleSheet.create({
-  safeAreaView: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-})
-
-type Props = {
-  defaultDevices: ?Array<Device>, // for storybook
+export type Params = {
+  useUSB?: boolean
+  walletImplementationId: WalletImplementationId
+  networkId: NetworkId
 }
 
-const ConnectNanoXScreen = ({defaultDevices}: Props) => {
+type Props = {
+  defaultDevices?: Array<Device> // for storybook
+}
+
+export const ConnectNanoXScreen = ({defaultDevices}: Props) => {
   const intl = useIntl()
+  const strings = useStrings()
   const navigation = useNavigation()
   const route = useRoute()
-  const walletImplementationId: WalletImplementationId = (route.params?.walletImplementationId: any)
-  const useUSB = route.params?.useUSB === true
-  const networkId = route.params?.networkId
+  const {walletImplementationId, useUSB, networkId} = route.params as Params
 
   const onSuccess = (hwDeviceInfo) =>
     navigation.navigate(WALLET_INIT_ROUTES.SAVE_NANO_X, {
@@ -78,7 +66,7 @@ const ConnectNanoXScreen = ({defaultDevices}: Props) => {
         onConnectBLE={onConnectBLE}
         onConnectUSB={onConnectUSB}
         useUSB={useUSB}
-        onWaitingMessage={intl.formatMessage(messages.exportKey)}
+        onWaitingMessage={strings.exportKey}
         defaultDevices={defaultDevices}
         fillSpace
       />
@@ -86,4 +74,24 @@ const ConnectNanoXScreen = ({defaultDevices}: Props) => {
   )
 }
 
-export default ConnectNanoXScreen
+const messages = defineMessages({
+  exportKey: {
+    id: 'components.walletinit.connectnanox.connectnanoxscreen.exportKey',
+    defaultMessage: '!!!Action needed: Please, export public key from your Ledger device.',
+  },
+})
+
+const useStrings = () => {
+  const intl = useIntl()
+
+  return {
+    exportKey: intl.formatMessage(messages.exportKey),
+  }
+}
+
+const styles = StyleSheet.create({
+  safeAreaView: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+})

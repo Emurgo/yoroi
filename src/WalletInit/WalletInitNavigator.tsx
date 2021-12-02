@@ -2,7 +2,6 @@ import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import ConnectNanoXScreen from '../../legacy/components/WalletInit/ConnectNanoX/ConnectNanoXScreen'
 import {isJormungandr} from '../../legacy/config/networks'
 import {
   defaultNavigationOptions,
@@ -11,6 +10,7 @@ import {
 } from '../../legacy/navigationOptions'
 import {WALLET_INIT_ROUTES} from '../../legacy/RoutesList'
 import {CheckNanoXScreen} from './CheckNanoX'
+import {ConnectNanoXScreen} from './ConnectNanoX/ConnectNanoXScreen'
 import {CreateWalletScreen} from './CreateWallet'
 import {ImportReadOnlyWalletScreen} from './ImportReadOnlyWallet'
 import {MnemonicCheckScreen} from './MnemonicCheck'
@@ -109,9 +109,8 @@ export const WalletInitNavigator = () => {
       <Stack.Screen //
         name={WALLET_INIT_ROUTES.CONNECT_NANO_X}
         options={{title: strings.connectNanoXTitle}}
-      >
-        {(props) => <ConnectNanoXScreen {...props} defaultDevices={null} />}
-      </Stack.Screen>
+        component={ConnectNanoXScreen}
+      />
 
       <Stack.Screen
         name={WALLET_INIT_ROUTES.SAVE_NANO_X}
