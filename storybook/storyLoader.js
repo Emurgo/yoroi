@@ -35,7 +35,6 @@ function loadStories() {
 	require('../legacy/components/UiKit/Checkbox.stories');
 	require('../legacy/components/UiKit/Link.stories');
 	require('../legacy/components/UiKit/TextInput.stories');
-	require('../legacy/components/WalletInit/ConnectNanoX/CheckNanoXScreen.stories');
 	require('../legacy/components/WalletInit/ConnectNanoX/ConnectNanoXScreen.stories');
 	require('../legacy/components/WalletInit/ConnectNanoX/SaveNanoXScreen.stories');
 	require('../src/FirstRun/AcceptTermsOfService.stories');
@@ -53,6 +52,7 @@ function loadStories() {
 	require('../src/TxHistory/ChipButton.stories');
 	require('../src/TxHistory/TxHistory.stories');
 	require('../src/TxHistory/TxListActionsBanner.stories');
+	require('../src/WalletInit/CheckNanoX/CheckNanoXScreen.stories');
 	require('../src/WalletInit/CreateWallet/CreateWalletScreen.stories');
 	require('../src/WalletInit/ImportReadOnlyWallet/ImportReadOnlyWalletScreen.stories');
 	require('../src/WalletInit/MnemonicBackupModal/MnemonicBackupImportanceModal.stories');
@@ -104,7 +104,6 @@ const stories = [
 	'../legacy/components/UiKit/Checkbox.stories',
 	'../legacy/components/UiKit/Link.stories',
 	'../legacy/components/UiKit/TextInput.stories',
-	'../legacy/components/WalletInit/ConnectNanoX/CheckNanoXScreen.stories',
 	'../legacy/components/WalletInit/ConnectNanoX/ConnectNanoXScreen.stories',
 	'../legacy/components/WalletInit/ConnectNanoX/SaveNanoXScreen.stories',
 	'../src/FirstRun/AcceptTermsOfService.stories',
@@ -122,6 +121,7 @@ const stories = [
 	'../src/TxHistory/ChipButton.stories',
 	'../src/TxHistory/TxHistory.stories',
 	'../src/TxHistory/TxListActionsBanner.stories',
+	'../src/WalletInit/CheckNanoX/CheckNanoXScreen.stories',
 	'../src/WalletInit/CreateWallet/CreateWalletScreen.stories',
 	'../src/WalletInit/ImportReadOnlyWallet/ImportReadOnlyWalletScreen.stories',
 	'../src/WalletInit/MnemonicBackupModal/MnemonicBackupImportanceModal.stories',

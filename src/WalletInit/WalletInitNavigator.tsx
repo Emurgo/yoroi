@@ -2,7 +2,6 @@ import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import CheckNanoXScreen from '../../legacy/components/WalletInit/ConnectNanoX/CheckNanoXScreen'
 import ConnectNanoXScreen from '../../legacy/components/WalletInit/ConnectNanoX/ConnectNanoXScreen'
 import SaveNanoXScreen from '../../legacy/components/WalletInit/ConnectNanoX/SaveNanoXScreen'
 import {isJormungandr} from '../../legacy/config/networks'
@@ -12,6 +11,7 @@ import {
   jormunNavigationOptions,
 } from '../../legacy/navigationOptions'
 import {WALLET_INIT_ROUTES} from '../../legacy/RoutesList'
+import {CheckNanoXScreen} from './CheckNanoX'
 import {CreateWalletScreen} from './CreateWallet'
 import {ImportReadOnlyWalletScreen} from './ImportReadOnlyWallet'
 import {MnemonicCheckScreen} from './MnemonicCheck'
