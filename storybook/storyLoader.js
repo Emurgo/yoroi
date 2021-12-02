@@ -53,21 +53,21 @@ function loadStories() {
 	require('../src/TxHistory/ChipButton.stories');
 	require('../src/TxHistory/TxHistory.stories');
 	require('../src/TxHistory/TxListActionsBanner.stories');
-	require('../src/WalletInit/CreateWalletScreen.stories');
-	require('../src/WalletInit/MnemonicBackupImportanceModal.stories');
-	require('../src/WalletInit/MnemonicCheckScreen.stories');
-	require('../src/WalletInit/MnemonicExplanationModal.stories');
-	require('../src/WalletInit/MnemonicInput.stories');
-	require('../src/WalletInit/MnemonicShowScreen.stories');
-	require('../src/WalletInit/RestoreWallet/ImportReadOnlyWalletScreen.stories');
+	require('../src/WalletInit/CreateWallet/CreateWalletScreen.stories');
+	require('../src/WalletInit/ImportReadOnlyWallet/ImportReadOnlyWalletScreen.stories');
+	require('../src/WalletInit/MnemonicBackupModal/MnemonicBackupImportanceModal.stories');
+	require('../src/WalletInit/MnemonicCheck/MnemonicCheckScreen.stories');
+	require('../src/WalletInit/MnemonicExplanationModal/MnemonicExplanationModal.stories');
+	require('../src/WalletInit/MnemonicInput/MnemonicInput.stories');
+	require('../src/WalletInit/MnemonicShow/MnemonicShowScreen.stories');
 	require('../src/WalletInit/RestoreWallet/RestoreWalletScreen.stories');
-	require('../src/WalletInit/SaveReadOnlyWalletScreen.stories');
-	require('../src/WalletInit/VerifyRestoredWalletScreen.stories');
-	require('../src/WalletInit/WalletAddress.stories');
-	require('../src/WalletInit/WalletCredentialsScreen.stories');
-	require('../src/WalletInit/WalletFreshInitScreen.stories');
-	require('../src/WalletInit/WalletInitScreen.stories');
-	require('../src/WalletInit/WalletNameForm.stories');
+	require('../src/WalletInit/SaveReadOnlyWallet/SaveReadOnlyWalletScreen.stories');
+	require('../src/WalletInit/VerifyRestoredWallet/VerifyRestoredWalletScreen.stories');
+	require('../src/WalletInit/WalletAddress/WalletAddress.stories');
+	require('../src/WalletInit/WalletCredentials/WalletCredentialsScreen.stories');
+	require('../src/WalletInit/WalletFreshInit/WalletFreshInitScreen.stories');
+	require('../src/WalletInit/WalletInit/WalletInitScreen.stories');
+	require('../src/WalletInit/WalletNameForm/WalletNameForm.stories');
 	require('../src/components/Icon/Icon.stories');
 	require('./Example/Example.stories');
 }
@@ -122,21 +122,21 @@ const stories = [
 	'../src/TxHistory/ChipButton.stories',
 	'../src/TxHistory/TxHistory.stories',
 	'../src/TxHistory/TxListActionsBanner.stories',
-	'../src/WalletInit/CreateWalletScreen.stories',
-	'../src/WalletInit/MnemonicBackupImportanceModal.stories',
-	'../src/WalletInit/MnemonicCheckScreen.stories',
-	'../src/WalletInit/MnemonicExplanationModal.stories',
-	'../src/WalletInit/MnemonicInput.stories',
-	'../src/WalletInit/MnemonicShowScreen.stories',
-	'../src/WalletInit/RestoreWallet/ImportReadOnlyWalletScreen.stories',
+	'../src/WalletInit/CreateWallet/CreateWalletScreen.stories',
+	'../src/WalletInit/ImportReadOnlyWallet/ImportReadOnlyWalletScreen.stories',
+	'../src/WalletInit/MnemonicBackupModal/MnemonicBackupImportanceModal.stories',
+	'../src/WalletInit/MnemonicCheck/MnemonicCheckScreen.stories',
+	'../src/WalletInit/MnemonicExplanationModal/MnemonicExplanationModal.stories',
+	'../src/WalletInit/MnemonicInput/MnemonicInput.stories',
+	'../src/WalletInit/MnemonicShow/MnemonicShowScreen.stories',
 	'../src/WalletInit/RestoreWallet/RestoreWalletScreen.stories',
-	'../src/WalletInit/SaveReadOnlyWalletScreen.stories',
-	'../src/WalletInit/VerifyRestoredWalletScreen.stories',
-	'../src/WalletInit/WalletAddress.stories',
-	'../src/WalletInit/WalletCredentialsScreen.stories',
-	'../src/WalletInit/WalletFreshInitScreen.stories',
-	'../src/WalletInit/WalletInitScreen.stories',
-	'../src/WalletInit/WalletNameForm.stories',
+	'../src/WalletInit/SaveReadOnlyWallet/SaveReadOnlyWalletScreen.stories',
+	'../src/WalletInit/VerifyRestoredWallet/VerifyRestoredWalletScreen.stories',
+	'../src/WalletInit/WalletAddress/WalletAddress.stories',
+	'../src/WalletInit/WalletCredentials/WalletCredentialsScreen.stories',
+	'../src/WalletInit/WalletFreshInit/WalletFreshInitScreen.stories',
+	'../src/WalletInit/WalletInit/WalletInitScreen.stories',
+	'../src/WalletInit/WalletNameForm/WalletNameForm.stories',
 	'../src/components/Icon/Icon.stories',
 	'./Example/Example.stories'
 ];

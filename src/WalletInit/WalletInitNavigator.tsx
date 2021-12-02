@@ -12,16 +12,16 @@ import {
   jormunNavigationOptions,
 } from '../../legacy/navigationOptions'
 import {WALLET_INIT_ROUTES} from '../../legacy/RoutesList'
-import {CreateWalletScreen} from './CreateWalletScreen'
-import {MnemonicCheckScreen} from './MnemonicCheckScreen'
-import {MnemonicShowScreen} from './MnemonicShowScreen'
-import {ImportReadOnlyWalletScreen} from './RestoreWallet/ImportReadOnlyWalletScreen'
-import {RestoreWalletScreen} from './RestoreWallet/RestoreWalletScreen'
-import {SaveReadOnlyWalletScreen} from './SaveReadOnlyWalletScreen'
-import {VerifyRestoredWalletScreen} from './VerifyRestoredWalletScreen'
-import {WalletCredentialsScreen} from './WalletCredentialsScreen'
-import {WalletFreshInitScreen} from './WalletFreshInitScreen'
-import {WalletInitScreen} from './WalletInitScreen'
+import {CreateWalletScreen} from './CreateWallet'
+import {ImportReadOnlyWalletScreen} from './ImportReadOnlyWallet'
+import {MnemonicCheckScreen} from './MnemonicCheck'
+import {MnemonicShowScreen} from './MnemonicShow'
+import {RestoreWalletScreen} from './RestoreWallet'
+import {SaveReadOnlyWalletScreen} from './SaveReadOnlyWallet'
+import {VerifyRestoredWalletScreen} from './VerifyRestoredWallet'
+import {WalletCredentialsScreen} from './WalletCredentials'
+import {WalletFreshInitScreen} from './WalletFreshInit'
+import {WalletInitScreen} from './WalletInit'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const Stack = createStackNavigator<{
