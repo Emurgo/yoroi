@@ -813,7 +813,7 @@ const messages = defineMessages({
     defaultMessage: '!!!-',
   },
   balanceAfterLabel: {
-    id: 'components.send.sendscreen.balanceAfterLabel',
+    id: 'global.txLabels.balanceAfterTx',
     defaultMessage: '!!!Balance after',
   },
   balanceAfterNotAvailable: {
