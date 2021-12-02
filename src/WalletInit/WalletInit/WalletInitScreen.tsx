@@ -1,18 +1,18 @@
 import {useNavigation, useRoute} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import ExapandableItem from '../../../legacy/components/Common/ExpandableItem'
 import LedgerTransportSwitchModal from '../../../legacy/components/Ledger/LedgerTransportSwitchModal'
 import {Button, Modal, ScreenBackground, StatusBar} from '../../../legacy/components/UiKit'
-import styles from '../../../legacy/components/WalletInit/styles/WalletInitScreen.style'
 import {CONFIG, isByron, isHaskellShelley} from '../../../legacy/config/config'
 import {isJormungandr} from '../../../legacy/config/networks'
 import type {NetworkId, WalletImplementationId, YoroiProvider} from '../../../legacy/config/types'
 import globalMessages from '../../../legacy/i18n/global-messages'
 import {WALLET_INIT_ROUTES} from '../../../legacy/RoutesList'
+import {COLORS} from '../../../legacy/styles/config'
 import {WalletDescription} from '../WalletDescription'
 
 export const WalletInitScreen = () => {
@@ -228,3 +228,24 @@ const useNavigateTo = ({networkId}: {networkId: NetworkId}) => {
       }),
   }
 }
+
+const styles = StyleSheet.create({
+  safeAreaView: {
+    flex: 1,
+    backgroundColor: COLORS.BACKGROUND_BLUE,
+  },
+  container: {
+    flex: 1,
+    padding: 16,
+  },
+  content: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  createButton: {
+    marginBottom: 10,
+  },
+  mnemonicDialogButton: {
+    marginTop: 15,
+  },
+})

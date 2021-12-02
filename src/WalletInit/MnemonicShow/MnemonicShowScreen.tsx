@@ -1,12 +1,11 @@
 import {useNavigation, useRoute} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Dimensions, Image, ScrollView, View} from 'react-native'
+import {Dimensions, Image, ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import recoveryPhrase from '../../../legacy/assets/img/recovery_phrase.png'
 import {Button, StatusBar, Text} from '../../../legacy/components/UiKit'
-import styles from '../../../legacy/components/WalletInit/CreateWallet/styles/MnemonicShowScreen.style'
 import {WALLET_INIT_ROUTES} from '../../../legacy/RoutesList'
 import assert from '../../../legacy/utils/assert'
 import {MnemonicBackupImportanceModal} from '../MnemonicBackupModal'
@@ -105,3 +104,42 @@ const useStrings = () => {
     confirmationButton: intl.formatMessage(messages.confirmationButton),
   }
 }
+
+const styles = StyleSheet.create({
+  safeAreaView: {
+    backgroundColor: '#fff',
+    flex: 1,
+  },
+  content: {
+    flex: 1,
+  },
+  scrollViewContentContainer: {
+    paddingTop: 32,
+    paddingHorizontal: 16,
+    paddingBottom: 16,
+  },
+  mnemonicNote: {
+    paddingBottom: 16,
+  },
+  mnemonicWords: {
+    backgroundColor: '#fff',
+    borderColor: '#9B9B9B',
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  mnemonicText: {
+    lineHeight: 30,
+    marginRight: 24,
+  },
+  image: {
+    paddingTop: 24,
+    alignItems: 'center',
+  },
+  button: {
+    padding: 16,
+  },
+})

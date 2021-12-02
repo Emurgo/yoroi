@@ -2,16 +2,16 @@ import {WalletChecksum} from '@emurgo/cip4-js'
 import {useNavigation, useRoute} from '@react-navigation/native'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ActivityIndicator, ScrollView, View} from 'react-native'
+import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {BulletPointItem, Button, Spacer, StatusBar, Text} from '../../../legacy/components/UiKit'
-import styles from '../../../legacy/components/WalletInit/RestoreWallet/styles/VerifyRestoredWallet.style'
 import type {NetworkId, WalletImplementationId} from '../../../legacy/config/types'
 import {WALLET_IMPLEMENTATION_REGISTRY} from '../../../legacy/config/types'
 import {generateByronPlateFromMnemonics} from '../../../legacy/crypto/byron/plate'
 import {generateShelleyPlateFromMnemonics} from '../../../legacy/crypto/shelley/plate'
 import {WALLET_INIT_ROUTES} from '../../../legacy/RoutesList'
+import {COLORS} from '../../../legacy/styles/config'
 import {Icon} from '../../components'
 import {WalletAddress} from '../WalletAddress'
 
@@ -180,3 +180,41 @@ const usePlateFromMnemonic = ({
 
   return [plate, addresses]
 }
+
+const styles = StyleSheet.create({
+  safeAreaView: {
+    flex: 1,
+    justifyContent: 'space-between',
+    backgroundColor: COLORS.WHITE,
+  },
+  contentContainer: {
+    paddingTop: 24,
+    paddingHorizontal: 16,
+  },
+  checksumLabel: {
+    fontSize: 14,
+    color: COLORS.DARK_TEXT,
+  },
+  instructionsLabel: {
+    lineHeight: 32,
+    color: COLORS.DARK_TEXT,
+  },
+  bulletPoint: {
+    lineHeight: 24,
+    color: COLORS.DARK_TEXT,
+  },
+  addressesLabel: {
+    color: COLORS.DARK_TEXT,
+  },
+  checksum: {
+    fontWeight: 'bold',
+  },
+
+  plate: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  actions: {
+    padding: 16,
+  },
+})

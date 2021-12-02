@@ -1,13 +1,12 @@
 import Clipboard from '@react-native-community/clipboard'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Image, Linking, TouchableOpacity, View} from 'react-native'
+import {Image, Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 import type {ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
 
 import copyIcon from '../../../legacy/assets/img/icon/copy.png'
 import {FadeOutView} from '../../../legacy/components/Common/FadeOutView'
 import {Text} from '../../../legacy/components/UiKit'
-import styles from '../../../legacy/components/WalletInit/RestoreWallet/styles/VerifyRestoredWallet.style'
 import {getNetworkConfigById} from '../../../legacy/config/networks'
 import type {NetworkId} from '../../../legacy/config/types'
 
@@ -71,3 +70,26 @@ const useStrings = () => {
     copied: intl.formatMessage(messages.copied),
   }
 }
+
+const styles = StyleSheet.create({
+  addressRowStyles: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+  },
+  copyButton: {
+    padding: 4,
+  },
+  copyIcon: {
+    width: 22,
+    height: 22,
+  },
+  notifView: {
+    paddingLeft: 4,
+  },
+  addressHash: {
+    width: 280,
+    color: '#9B9B9B',
+    lineHeight: 30,
+  },
+})
