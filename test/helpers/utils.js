@@ -1,12 +1,12 @@
-const pinCodePage = require('../pageObjects/pinCode.screen');
+const pinCodeScreen = require('../screenObjects/pinCode.screen');
 
 async function enterPinCode(pinCode) {
     for (const pinNumber of pinCode) {
-        await pinCodePage.getPinKey(pinNumber).click();
+        await pinCodeScreen.getPinKey(pinNumber).click();
     }
 }
 
-async function isChecked(element) {
+async function isElementChecked(element) {
     await driver.setImplicitTimeout(300);
     const result = await element.getAttribute('checked');
     console.log(`Element is checked: ${result}`);
@@ -14,4 +14,4 @@ async function isChecked(element) {
     return result === 'true';
 }
 
-module.exports = {enterPinCode, isChecked};
+module.exports = {enterPinCode, isElementChecked};
