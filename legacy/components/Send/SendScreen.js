@@ -130,7 +130,7 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
       prevAddressInput !== addressInput ||
       prevAmount !== amount ||
       prevProps.sendAll !== sendAll ||
-      prevProps.selectedAsset !== selectedAsset
+      prevProps.selectedAsset.identifier !== selectedAsset.identifier
     ) {
       await this.revalidate({utxos, addressInput, amount, sendAll, selectedAsset})
     }
