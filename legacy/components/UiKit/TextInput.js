@@ -26,6 +26,7 @@ type Props = {|
   right?: Element<any>,
   noErrors?: boolean,
   dense?: boolean,
+  faded?: boolean,
   textAlign?: 'left' | 'center' | 'right',
   render?: (props: TextInputProps) => Element<any>,
 |}
@@ -58,6 +59,7 @@ const TextInputWithRef = (
     right,
     noErrors,
     textAlign,
+    faded,
     ...restProps
   }: Props,
   ref,
@@ -84,8 +86,8 @@ const TextInputWithRef = (
           roundness: 8,
           colors: {
             background: COLORS.BACKGROUND,
-            placeholder: COLORS.TEXT_INPUT,
-            primary: COLORS.BLACK,
+            placeholder: faded ? COLORS.GREY_6 : COLORS.TEXT_INPUT,
+            primary: faded ? COLORS.GREY_6 : COLORS.BLACK,
             error: COLORS.ERROR_TEXT_COLOR,
           },
         }}
@@ -94,7 +96,7 @@ const TextInputWithRef = (
         error={errorTextEnabled && !!errorText}
         render={({style, ...inputProps}) => (
           <InputContainer>
-            <RNTextInput {...inputProps} style={[style, {color: COLORS.BLACK}]} />
+            <RNTextInput {...inputProps} style={[style, {color: faded ? COLORS.GREY_6 : COLORS.BLACK}]} />
             {right ? <AdornmentContainer style={styles.checkmarkContainer}>{right}</AdornmentContainer> : null}
 
             {secureTextEntry ? (

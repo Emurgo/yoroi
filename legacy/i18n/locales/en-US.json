@@ -446,6 +446,7 @@
   "global.actions.dialogs.wrongPinError.message": "PIN is incorrect.",
   "global.actions.dialogs.wrongPinError.title": "Invalid PIN",
   "global.assets.assetsLabel": "Assets",
+  "global.assets.assetLabel": "Asset",
   "global.availableFunds": "Available funds",
   "global.buy": "Buy",
   "global.close": "close",
