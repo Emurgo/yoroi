@@ -35,22 +35,6 @@ function loadStories() {
 	require('../legacy/components/UiKit/Checkbox.stories');
 	require('../legacy/components/UiKit/Link.stories');
 	require('../legacy/components/UiKit/TextInput.stories');
-	require('../legacy/components/WalletInit/ConnectNanoX/CheckNanoXScreen.stories');
-	require('../legacy/components/WalletInit/ConnectNanoX/ConnectNanoXScreen.stories');
-	require('../legacy/components/WalletInit/ConnectNanoX/SaveNanoXScreen.stories');
-	require('../legacy/components/WalletInit/CreateWallet/CreateWalletScreen.stories');
-	require('../legacy/components/WalletInit/CreateWallet/MnemonicBackupImportanceModal.stories');
-	require('../legacy/components/WalletInit/CreateWallet/MnemonicCheckScreen.stories');
-	require('../legacy/components/WalletInit/CreateWallet/MnemonicExplanationModal.stories');
-	require('../legacy/components/WalletInit/CreateWallet/MnemonicShowScreen.stories');
-	require('../legacy/components/WalletInit/RestoreWallet/ImportReadOnlyWalletScreen.stories');
-	require('../legacy/components/WalletInit/RestoreWallet/RestoreWalletScreen/MnemonicInput.stories');
-	require('../legacy/components/WalletInit/RestoreWallet/RestoreWalletScreen/RestoreWalletScreen.stories');
-	require('../legacy/components/WalletInit/RestoreWallet/SaveReadOnlyWalletScreen.stories');
-	require('../legacy/components/WalletInit/RestoreWallet/VerifyRestoredWallet.stories');
-	require('../legacy/components/WalletInit/RestoreWallet/WalletAddress.stories');
-	require('../legacy/components/WalletInit/RestoreWallet/WalletCredentialsScreen.stories');
-	require('../legacy/components/WalletInit/WalletFreshInitScreen.stories');
 	require('../src/FirstRun/AcceptTermsOfService.stories');
 	require('../src/FirstRun/CustomPinScreen.stories');
 	require('../src/FirstRun/LanguagePickerScreen.stories');
@@ -66,8 +50,24 @@ function loadStories() {
 	require('../src/TxHistory/ChipButton.stories');
 	require('../src/TxHistory/TxHistory.stories');
 	require('../src/TxHistory/TxListActionsBanner.stories');
-	require('../src/WalletInit/WalletInitScreen.stories');
-	require('../src/WalletInit/WalletNameForm.stories');
+	require('../src/WalletInit/CheckNanoX/CheckNanoXScreen.stories');
+	require('../src/WalletInit/ConnectNanoX/ConnectNanoXScreen.stories');
+	require('../src/WalletInit/CreateWallet/CreateWalletScreen.stories');
+	require('../src/WalletInit/ImportReadOnlyWallet/ImportReadOnlyWalletScreen.stories');
+	require('../src/WalletInit/MnemonicBackupModal/MnemonicBackupImportanceModal.stories');
+	require('../src/WalletInit/MnemonicCheck/MnemonicCheckScreen.stories');
+	require('../src/WalletInit/MnemonicExplanationModal/MnemonicExplanationModal.stories');
+	require('../src/WalletInit/MnemonicInput/MnemonicInput.stories');
+	require('../src/WalletInit/MnemonicShow/MnemonicShowScreen.stories');
+	require('../src/WalletInit/RestoreWallet/RestoreWalletScreen.stories');
+	require('../src/WalletInit/SaveNanoX/SaveNanoXScreen.stories');
+	require('../src/WalletInit/SaveReadOnlyWallet/SaveReadOnlyWalletScreen.stories');
+	require('../src/WalletInit/VerifyRestoredWallet/VerifyRestoredWalletScreen.stories');
+	require('../src/WalletInit/WalletAddress/WalletAddress.stories');
+	require('../src/WalletInit/WalletCredentials/WalletCredentialsScreen.stories');
+	require('../src/WalletInit/WalletFreshInit/WalletFreshInitScreen.stories');
+	require('../src/WalletInit/WalletInit/WalletInitScreen.stories');
+	require('../src/WalletInit/WalletNameForm/WalletNameForm.stories');
 	require('../src/components/Icon/Icon.stories');
 	require('./Example/Example.stories');
 }
@@ -104,22 +104,6 @@ const stories = [
 	'../legacy/components/UiKit/Checkbox.stories',
 	'../legacy/components/UiKit/Link.stories',
 	'../legacy/components/UiKit/TextInput.stories',
-	'../legacy/components/WalletInit/ConnectNanoX/CheckNanoXScreen.stories',
-	'../legacy/components/WalletInit/ConnectNanoX/ConnectNanoXScreen.stories',
-	'../legacy/components/WalletInit/ConnectNanoX/SaveNanoXScreen.stories',
-	'../legacy/components/WalletInit/CreateWallet/CreateWalletScreen.stories',
-	'../legacy/components/WalletInit/CreateWallet/MnemonicBackupImportanceModal.stories',
-	'../legacy/components/WalletInit/CreateWallet/MnemonicCheckScreen.stories',
-	'../legacy/components/WalletInit/CreateWallet/MnemonicExplanationModal.stories',
-	'../legacy/components/WalletInit/CreateWallet/MnemonicShowScreen.stories',
-	'../legacy/components/WalletInit/RestoreWallet/ImportReadOnlyWalletScreen.stories',
-	'../legacy/components/WalletInit/RestoreWallet/RestoreWalletScreen/MnemonicInput.stories',
-	'../legacy/components/WalletInit/RestoreWallet/RestoreWalletScreen/RestoreWalletScreen.stories',
-	'../legacy/components/WalletInit/RestoreWallet/SaveReadOnlyWalletScreen.stories',
-	'../legacy/components/WalletInit/RestoreWallet/VerifyRestoredWallet.stories',
-	'../legacy/components/WalletInit/RestoreWallet/WalletAddress.stories',
-	'../legacy/components/WalletInit/RestoreWallet/WalletCredentialsScreen.stories',
-	'../legacy/components/WalletInit/WalletFreshInitScreen.stories',
 	'../src/FirstRun/AcceptTermsOfService.stories',
 	'../src/FirstRun/CustomPinScreen.stories',
 	'../src/FirstRun/LanguagePickerScreen.stories',
@@ -135,8 +119,24 @@ const stories = [
 	'../src/TxHistory/ChipButton.stories',
 	'../src/TxHistory/TxHistory.stories',
 	'../src/TxHistory/TxListActionsBanner.stories',
-	'../src/WalletInit/WalletInitScreen.stories',
-	'../src/WalletInit/WalletNameForm.stories',
+	'../src/WalletInit/CheckNanoX/CheckNanoXScreen.stories',
+	'../src/WalletInit/ConnectNanoX/ConnectNanoXScreen.stories',
+	'../src/WalletInit/CreateWallet/CreateWalletScreen.stories',
+	'../src/WalletInit/ImportReadOnlyWallet/ImportReadOnlyWalletScreen.stories',
+	'../src/WalletInit/MnemonicBackupModal/MnemonicBackupImportanceModal.stories',
+	'../src/WalletInit/MnemonicCheck/MnemonicCheckScreen.stories',
+	'../src/WalletInit/MnemonicExplanationModal/MnemonicExplanationModal.stories',
+	'../src/WalletInit/MnemonicInput/MnemonicInput.stories',
+	'../src/WalletInit/MnemonicShow/MnemonicShowScreen.stories',
+	'../src/WalletInit/RestoreWallet/RestoreWalletScreen.stories',
+	'../src/WalletInit/SaveNanoX/SaveNanoXScreen.stories',
+	'../src/WalletInit/SaveReadOnlyWallet/SaveReadOnlyWalletScreen.stories',
+	'../src/WalletInit/VerifyRestoredWallet/VerifyRestoredWalletScreen.stories',
+	'../src/WalletInit/WalletAddress/WalletAddress.stories',
+	'../src/WalletInit/WalletCredentials/WalletCredentialsScreen.stories',
+	'../src/WalletInit/WalletFreshInit/WalletFreshInitScreen.stories',
+	'../src/WalletInit/WalletInit/WalletInitScreen.stories',
+	'../src/WalletInit/WalletNameForm/WalletNameForm.stories',
 	'../src/components/Icon/Icon.stories',
 	'./Example/Example.stories'
 ];
