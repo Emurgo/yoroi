@@ -2,18 +2,6 @@ import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import CheckNanoXScreen from '../../legacy/components/WalletInit/ConnectNanoX/CheckNanoXScreen'
-import ConnectNanoXScreen from '../../legacy/components/WalletInit/ConnectNanoX/ConnectNanoXScreen'
-import SaveNanoXScreen from '../../legacy/components/WalletInit/ConnectNanoX/SaveNanoXScreen'
-import CreateWalletScreen from '../../legacy/components/WalletInit/CreateWallet/CreateWalletScreen'
-import MnemonicCheckScreen from '../../legacy/components/WalletInit/CreateWallet/MnemonicCheckScreen'
-import MnemonicShowScreen from '../../legacy/components/WalletInit/CreateWallet/MnemonicShowScreen'
-import ImportReadOnlyWalletScreen from '../../legacy/components/WalletInit/RestoreWallet/ImportReadOnlyWalletScreen'
-import {RestoreWalletScreen} from '../../legacy/components/WalletInit/RestoreWallet/RestoreWalletScreen'
-import SaveReadOnlyWalletScreen from '../../legacy/components/WalletInit/RestoreWallet/SaveReadOnlyWalletScreen'
-import VerifyRestoredWallet from '../../legacy/components/WalletInit/RestoreWallet/VerifyRestoredWallet'
-import WalletCredentialsScreen from '../../legacy/components/WalletInit/RestoreWallet/WalletCredentialsScreen'
-import WalletFreshInitScreen from '../../legacy/components/WalletInit/WalletFreshInitScreen'
 import {isJormungandr} from '../../legacy/config/networks'
 import {
   defaultNavigationOptions,
@@ -21,7 +9,19 @@ import {
   jormunNavigationOptions,
 } from '../../legacy/navigationOptions'
 import {WALLET_INIT_ROUTES} from '../../legacy/RoutesList'
-import {WalletInitScreen} from './WalletInitScreen'
+import {CheckNanoXScreen} from './CheckNanoX'
+import {ConnectNanoXScreen} from './ConnectNanoX/ConnectNanoXScreen'
+import {CreateWalletScreen} from './CreateWallet'
+import {ImportReadOnlyWalletScreen} from './ImportReadOnlyWallet'
+import {MnemonicCheckScreen} from './MnemonicCheck'
+import {MnemonicShowScreen} from './MnemonicShow'
+import {RestoreWalletScreen} from './RestoreWallet'
+import {SaveNanoXScreen} from './SaveNanoX/SaveNanoXScreen'
+import {SaveReadOnlyWalletScreen} from './SaveReadOnlyWallet'
+import {VerifyRestoredWalletScreen} from './VerifyRestoredWallet'
+import {WalletCredentialsScreen} from './WalletCredentials'
+import {WalletFreshInitScreen} from './WalletFreshInit'
+import {WalletInitScreen} from './WalletInit'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const Stack = createStackNavigator<{
@@ -109,9 +109,8 @@ export const WalletInitNavigator = () => {
       <Stack.Screen //
         name={WALLET_INIT_ROUTES.CONNECT_NANO_X}
         options={{title: strings.connectNanoXTitle}}
-      >
-        {(props) => <ConnectNanoXScreen {...props} defaultDevices={null} />}
-      </Stack.Screen>
+        component={ConnectNanoXScreen}
+      />
 
       <Stack.Screen
         name={WALLET_INIT_ROUTES.SAVE_NANO_X}
@@ -135,7 +134,7 @@ export const WalletInitNavigator = () => {
 
       <Stack.Screen
         name={WALLET_INIT_ROUTES.VERIFY_RESTORED_WALLET}
-        component={VerifyRestoredWallet}
+        component={VerifyRestoredWalletScreen}
         options={{title: strings.verifyRestoredWalletTitle}}
       />
 
