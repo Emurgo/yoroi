@@ -15,6 +15,7 @@ import {setLedgerDeviceId, setLedgerDeviceObj} from '../../actions/hwWallet'
 import {fetchPoolInfo} from '../../actions/pools'
 import {fetchUTXOs} from '../../actions/utxo'
 import type {RawUtxo, RemotePoolMetaSuccess} from '../../api/types'
+import VotingBanner from '../../components/Catalyst/VotingBanner'
 import {CONFIG, getCardanoBaseConfig} from '../../config/config'
 import {getCardanoNetworkConfigById} from '../../config/networks'
 import {WrongPassword} from '../../crypto/errors'
@@ -26,7 +27,7 @@ import type {DeviceId, DeviceObj, HWDeviceInfo} from '../../crypto/shelley/ledge
 import walletManager, {SystemAuthDisabled} from '../../crypto/walletManager'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
 import LocalizableError from '../../i18n/LocalizableError'
-import {DELEGATION_ROUTES, SEND_ROUTES, WALLET_ROOT_ROUTES, WALLET_ROUTES} from '../../RoutesList'
+import {CATALYST_ROUTES, DELEGATION_ROUTES, SEND_ROUTES, WALLET_ROOT_ROUTES, WALLET_ROUTES} from '../../RoutesList'
 import {
   accountBalanceSelector,
   defaultNetworkAssetSelector,
@@ -530,6 +531,13 @@ class StakingDashboard extends React.Component<Props, State> {
                 disableWithdraw={this.props.isReadOnly}
               />
             </View>
+
+            <VotingBanner
+              onPress={() => {
+                navigation.navigate(CATALYST_ROUTES.ROOT)
+              }}
+              disabled={false}
+            />
 
             {poolInfo != null && !!poolOperator ? (
               <View style={styles.row}>
