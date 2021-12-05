@@ -2,10 +2,10 @@
 
 import BigNumber from 'bignumber.js'
 
-import {Token, TransactionInfo} from '../src/TxHistory/types'
+import {DefaultAsset, Token, TransactionInfo} from '../src/types/cardano'
 import type {State, WalletMeta} from './state'
 
-export var availableAssetsSelector: (state: State) => Record<string, Token>
+export var availableAssetsSelector: (state: State) => Record<string, Token | DefaultAsset>
 export var customPinHashSelector: (state: State) => string | undefined
 export var hasAnyTransaction: (state: State) => boolean
 export var installationIdSelector: (state: State) => boolean
@@ -27,10 +27,12 @@ export var easyConfirmationSelector: (state: State) => boolean
 export var isHWSelector: (state: State) => boolean
 export var walletNameSelector: (state: State) => string
 export var walletNamesSelector: (state: State) => Array<string>
+export var defaultNetworkAssetSelector: (state: State) => DefaultAsset
+export var externalAddressIndexSelector: (state: State) => Record<string, number>
+export var internalAddressIndexSelector: (state: State) => Record<string, number>
 export var canGenerateNewReceiveAddressSelector: (state: State) => boolean
 export var isUsedAddressIndexSelector: (state: State) => Record<string, boolean>
 export var receiveAddressesSelector: (state: State) => Array<string>
-export var externalAddressIndexSelector: (state: State) => Record<string, number>
 export var hwDeviceInfoSelector: (state: State) => {bip44AccountPublic: string; hwFeatures: HWFeatures} | null
 
 // prettier-ignore

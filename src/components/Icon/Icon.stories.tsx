@@ -2,6 +2,7 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {ColorSchemeName, ScrollView, Text, View} from 'react-native'
 
+import {mockTransaction} from '../../../storybook/mocks'
 import {Icon, Spacer} from '..'
 
 storiesOf('Icon', module).add('Gallery', () => (
@@ -58,6 +59,40 @@ storiesOf('Icon', module).add('Gallery', () => (
       <Item icon={<Icon.ChevronDown />} title={'ChevronDown'} />
       <Item icon={<Icon.ChevronUp />} title={'ChevronUp'} />
       <Item icon={<Icon.Verify />} title={'Verify'} />
+    </Row>
+
+    <Spacer height={16} />
+
+    <Row>
+      <Item
+        icon={<Icon.Direction transaction={mockTransaction({direction: 'SENT', status: 'SUCCESSFUL'})} />}
+        title={'Success-Sent'}
+      />
+      <Item
+        icon={<Icon.Direction transaction={mockTransaction({direction: 'RECEIVED', status: 'SUCCESSFUL'})} />}
+        title={'Success-Received'}
+      />
+      <Item
+        icon={<Icon.Direction transaction={mockTransaction({direction: 'SELF', status: 'SUCCESSFUL'})} />}
+        title={'Success-Intrawallet'}
+      />
+    </Row>
+
+    <Spacer height={16} />
+
+    <Row>
+      <Item
+        icon={<Icon.Direction transaction={mockTransaction({direction: 'SENT', status: 'PENDING'})} />}
+        title={'Pending-Sent'}
+      />
+      <Item
+        icon={<Icon.Direction transaction={mockTransaction({direction: 'RECEIVED', status: 'PENDING'})} />}
+        title={'Pending-Received'}
+      />
+      <Item
+        icon={<Icon.Direction transaction={mockTransaction({direction: 'SELF', status: 'PENDING'})} />}
+        title={'Pending-Intrawallet'}
+      />
     </Row>
 
     <Spacer height={16} />
