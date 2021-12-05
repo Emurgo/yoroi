@@ -130,7 +130,7 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
       prevAddressInput !== addressInput ||
       prevAmount !== amount ||
       prevProps.sendAll !== sendAll ||
-      prevProps.selectedAsset !== selectedAsset
+      prevProps.selectedAsset.identifier !== selectedAsset.identifier
     ) {
       await this.revalidate({utxos, addressInput, amount, sendAll, selectedAsset})
     }
@@ -305,7 +305,7 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
       : intl.formatMessage(messages.balanceAfterNotAvailable)
 
     return (
-      <Text small>
+      <Text style={styles.info}>
         {intl.formatMessage(messages.balanceAfterLabel)}
         {': '}
         {value}
@@ -320,7 +320,7 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
     const value = fee ? formatTokenWithSymbol(fee, defaultAsset) : intl.formatMessage(messages.feeNotAvailable)
 
     return (
-      <Text small>
+      <Text style={styles.info}>
         {intl.formatMessage(messages.feeLabel)}
         {': '}
         {value}
@@ -451,15 +451,6 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
 
           <Spacer height={16} />
 
-          <TouchableOpacity onPress={() => navigation.navigate('select-asset')}>
-            <TextInput
-              right={<Image source={require('../../assets/img/arrow_down_fill.png')} />}
-              editable={false}
-              label={'Select Asset'}
-              value={`${assetDenomination}: ${formatTokenAmount(selectedAsset.amount, selectedAssetMeta, 15)}`}
-            />
-          </TouchableOpacity>
-
           <TextInput
             value={this.state.addressInput || ''}
             multiline
@@ -482,6 +473,15 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
             error={amountErrorText}
             editable={!sendAll}
           />
+
+          <TouchableOpacity onPress={() => navigation.navigate('select-asset')}>
+            <TextInput
+              right={<Image source={require('../../assets/img/arrow_down_fill.png')} />}
+              editable={false}
+              label={intl.formatMessage(messages.asset)}
+              value={`${assetDenomination}: ${formatTokenAmount(selectedAsset.amount, selectedAssetMeta, 15)}`}
+            />
+          </TouchableOpacity>
 
           <Checkbox
             checked={sendAll}
@@ -813,7 +813,7 @@ const messages = defineMessages({
     defaultMessage: '!!!-',
   },
   balanceAfterLabel: {
-    id: 'components.send.sendscreen.balanceAfterLabel',
+    id: 'global.txLabels.balanceAfterTx',
     defaultMessage: '!!!Balance after',
   },
   balanceAfterNotAvailable: {
@@ -833,7 +833,7 @@ const messages = defineMessages({
     defaultMessage: '!!!Please enter valid address',
   },
   addressInputLabel: {
-    id: 'components.send.sendscreen.addressInputLabel',
+    id: 'components.send.confirmscreen.receiver',
     defaultMessage: '!!!Address',
   },
   checkboxSendAllAssets: {
@@ -893,5 +893,9 @@ const messages = defineMessages({
   errorBannerPendingOutgoingTransaction: {
     id: 'components.send.sendscreen.errorBannerPendingOutgoingTransaction',
     defaultMessage: '!!!You cannot send a new transaction while an existing one is still pending',
+  },
+  asset: {
+    id: 'global.assets.assetLabel',
+    defaultMessage: '!!!Asset',
   },
 })
