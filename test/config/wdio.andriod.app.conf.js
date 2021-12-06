@@ -16,11 +16,11 @@ config.specs = [
 config.capabilities = [
     {
         platformName: 'Android',
-        'appium:deviceName': 'Pixel_XL',
+        'appium:deviceName': 'Pixel_5',
         'appium:appWaitActivity': 'com.emurgo.*',
         'appium:orientation': 'PORTRAIT',
         'appium:automationName': 'UiAutomator2',
-        'appium:app': join(process.cwd(), '\\app\\YoroiWallet-Nightly.apk'),
+        'appium:app': join(process.cwd(), '/test/app/Yoroi-Nightly.apk'),
     }
 ]
 
