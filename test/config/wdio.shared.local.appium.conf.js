@@ -9,13 +9,8 @@ config.services = (config.services ? config.services : []).concat([
     [
         'appium',
         {
-            args: {
-                // debugLogSpacing: true,
-                // sessionOverride: true,
-                // logPath: '../test/',
-            },
             command : 'appium',
-            logPath: '../test/appium_info.log',
+            logPath: './test/appium_info.log',
         }
     ],
     ['selenium-standalone'],
