@@ -31,6 +31,7 @@ export const AssetList = ({refreshing}: AssetListProps) => {
   const orderedTokens = assetTokens
     .sort((a, b) => (a.amount.isGreaterThan(b.amount) ? -1 : 1))
     .sort((a) => (getTokenInfo(assetTokenInfos, a)?.isDefault ? -1 : 1))
+    .filter((t) => assetTokenInfos[t.identifier] != null)
 
   const handleOnPressNFTs = () => Alert.alert(strings.soon, strings.soon)
   const handleOnPressTokens = () => Alert.alert(strings.soon, strings.soon)
