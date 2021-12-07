@@ -49,54 +49,58 @@ const TxHistory = () => {
 
   return (
     <SafeAreaView style={styles.scrollView}>
-      <StatusBar type="light" />
+      <StatusBar type="dark" />
 
       <View style={styles.container}>
-        <OfflineBanner />
-        <SyncErrorBanner showRefresh={!isSyncing} isOpen={isOnline && lastSyncError} />
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              onRefresh={() => dispatch(updateHistory())}
+              refreshing={isSyncing}
+              progressViewOffset={150}
+            />
+          }
+        >
+          <OfflineBanner />
+          <SyncErrorBanner showRefresh={!isSyncing} isOpen={isOnline && lastSyncError} />
 
-        <WalletHero
-          render={(active) => {
-            if (active === 0) {
-              return (
-                <View style={styles.tabNavigatorRoot}>
-                  {isByron(walletMeta.walletImplementationId) && showWarning && (
-                    <WarningBanner
-                      title={intl.formatMessage(warningBannerMessages.title).toUpperCase()}
-                      icon={infoIcon}
-                      message={intl.formatMessage(warningBannerMessages.message)}
-                      showCloseIcon
-                      onRequestClose={() => setShowWarning(false)}
-                      style={styles.warningNoteStyles}
-                    />
-                  )}
+          <WalletHero
+            render={(active) => {
+              if (active === 0) {
+                return (
+                  <View style={styles.tabNavigatorRoot}>
+                    {isByron(walletMeta.walletImplementationId) && showWarning && (
+                      <WarningBanner
+                        title={intl.formatMessage(warningBannerMessages.title).toUpperCase()}
+                        icon={infoIcon}
+                        message={intl.formatMessage(warningBannerMessages.message)}
+                        showCloseIcon
+                        onRequestClose={() => setShowWarning(false)}
+                        style={styles.warningNoteStyles}
+                      />
+                    )}
 
-                  {_.isEmpty(transactionsInfo) ? (
-                    <ScrollView
-                      refreshControl={
-                        <RefreshControl onRefresh={() => dispatch(updateHistory())} refreshing={isSyncing} />
-                      }
-                    >
+                    {_.isEmpty(transactionsInfo) ? (
                       <EmptyHistory />
-                    </ScrollView>
-                  ) : (
-                    <TxHistoryList
-                      refreshing={isSyncing}
-                      onRefresh={() => dispatch(updateHistory())}
-                      transactions={transactionsInfo}
-                    />
-                  )}
-                </View>
-              )
-            } else if (active === 1) {
-              return (
-                <View style={styles.tabNavigatorRoot}>
-                  <AssetList refreshing={isSyncing} onRefresh={() => dispatch(updateHistory())} />
-                </View>
-              )
-            }
-          }}
-        />
+                    ) : (
+                      <TxHistoryList
+                        refreshing={isSyncing}
+                        onRefresh={() => dispatch(updateHistory())}
+                        transactions={transactionsInfo}
+                      />
+                    )}
+                  </View>
+                )
+              } else if (active === 1) {
+                return (
+                  <View style={styles.tabNavigatorRoot}>
+                    <AssetList refreshing={isSyncing} onRefresh={() => dispatch(updateHistory())} />
+                  </View>
+                )
+              }
+            }}
+          />
+        </ScrollView>
       </View>
     </SafeAreaView>
   )
