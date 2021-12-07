@@ -22,7 +22,7 @@ type AssetListProps = {
   onRefresh: () => void
 }
 
-export const AssetList = ({refreshing}: AssetListProps) => {
+export const AssetList = ({refreshing, onRefresh}: AssetListProps) => {
   const strings = useStrings()
   const tokenBalance = useSelector(tokenBalanceSelector)
   const assetTokenInfos = useSelector(tokenInfoSelector)
@@ -48,7 +48,7 @@ export const AssetList = ({refreshing}: AssetListProps) => {
       />
 
       <FlatList
-        // onRefresh={onRefresh}
+        onRefresh={onRefresh}
         refreshing={refreshing}
         data={orderedTokens}
         renderItem={({item: assetToken}) => (
