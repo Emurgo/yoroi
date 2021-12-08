@@ -16,6 +16,7 @@ config.specs = [
 config.capabilities = [
     {
         platformName: 'Android',
+        maxInstances: 1,
         'appium:deviceName': 'Pixel_5',
         'appium:appWaitActivity': 'com.emurgo.*',
         'appium:orientation': 'PORTRAIT',
