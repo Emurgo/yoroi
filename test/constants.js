@@ -1,3 +1,11 @@
 const DEFAULT_TIMEOUT = 11000;
+const VALID_PIN = "123456";
+const WALLET_NAME = "Testnet Wallet";
+const SPENDING_PASSWORD = "1234567890";
 
-module.exports = { DEFAULT_TIMEOUT };
+module.exports = {
+  DEFAULT_TIMEOUT,
+  VALID_PIN,
+  WALLET_NAME,
+  SPENDING_PASSWORD
+};
