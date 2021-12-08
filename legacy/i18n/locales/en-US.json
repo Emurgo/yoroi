@@ -440,7 +440,7 @@
   "global.actions.dialogs.notSupportedError.message": "This feature is not yet supported. It will be enabled in a future release.",
   "global.actions.dialogs.pinMismatch.message": "PINs do not match.",
   "global.actions.dialogs.pinMismatch.title": "Invalid PIN",
-  "global.actions.dialogs.resync.message": "This will fetch all your wallet data, do you want to proceed?",
+  "global.actions.dialogs.resync.message": "This will clear and fetch all your wallet data. Do you want to proceed?",
   "global.actions.dialogs.resync.title": "Resync wallet",
   "global.actions.dialogs.walletKeysInvalidated.message": "We detected that biometrics in phone changed. As a result, the easy transaction confirmation was disabled and transaction submitting is allowed only with master password. You can re-enable easy transactions confirmation in settings",
   "global.actions.dialogs.walletKeysInvalidated.title": "Biometrics changed",

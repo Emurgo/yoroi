@@ -261,13 +261,8 @@ const LogoutButton = () => {
 const useResync = (options?: UseMutationOptions<void, Error>) => {
   const intl = useIntl()
   const navigation = useNavigation()
-  const setSelectedWallet = useSetSelectedWallet()
-  const setSelectedWalletMeta = useSetSelectedWalletMeta()
-  const {resyncWallet, ...mutation} = useResyncWallet({
-    onSuccess: () => {
-      setSelectedWallet(undefined)
-      setSelectedWalletMeta(undefined)
-    },
+  const mutation = useMutation({
+    mutationFn: () => walletManager.resyncWallet(),
     ...options,
   })
 
@@ -277,22 +272,10 @@ const useResync = (options?: UseMutationOptions<void, Error>) => {
       if (selection === DIALOG_BUTTONS.YES) {
         navigation.goBack()
         navigation.goBack()
-        setTimeout(() => resyncWallet(), 1000) // wait for navigation to finish
+        setTimeout(() => mutation.mutate(), 1000) // wait for navigation to finish
       }
     },
     ...mutation,
-  }
-}
-
-const useResyncWallet = (options?: UseMutationOptions<void, Error>) => {
-  const mutation = useMutation({
-    mutationFn: () => walletManager.resyncWallet(),
-    ...options,
-  })
-
-  return {
-    ...mutation,
-    resyncWallet: () => mutation.mutate(),
   }
 }
 
