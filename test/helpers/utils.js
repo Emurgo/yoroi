@@ -1,4 +1,7 @@
 const pinCodeScreen = require('../screenObjects/pinCode.screen');
+const chooseLanguageScreen = require("../screenObjects/chooseLanguage.screen");
+const tosScreen = require("../screenObjects/tos.screen");
+const { VALID_PIN } = require("../constants");
 
 async function enterPinCode(pinCode) {
     for (const pinNumber of pinCode) {
@@ -14,4 +17,22 @@ async function isElementChecked(element) {
     return result === 'true';
 }
 
-module.exports = {enterPinCode, isElementChecked};
+async function firstAppLaunch() {
+    await chooseLanguageScreen.chooseLanguageButton.click();
+    await tosScreen.acceptToSCheckbox.click();
+    await tosScreen.acceptToSButton.click();
+    await enterPinCode(VALID_PIN);
+    await enterPinCode(VALID_PIN);
+    await driver.setImplicitTimeout(500);
+}
+
+async function hideKeyboard() {
+    await driver.hideKeyboard('pressKey', 'Done');
+}
+
+module.exports = {
+    enterPinCode,
+    isElementChecked,
+    firstAppLaunch,
+    hideKeyboard,
+};
