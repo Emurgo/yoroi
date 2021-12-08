@@ -1,14 +1,15 @@
 class AddWallets {
     get addWalletButton(){
-        return driver.$('//android.view.ViewGroup[@resource-id="addWalletOnHaskellShelleyButton"]');
+        return driver.$('//*[@resource-id="addWalletOnHaskellShelleyButton"]');
     }
 
     get addWalletByronButton(){
-        return driver.$('//android.view.ViewGroup[@resource-id="addWalletOnByronButton"]');
+        return driver.$('//*[@resource-id="addWalletOnByronButton"]');
     }
 
+    // temporary solution
     get addWalletTestnetButton(){
-        return driver.$('//android.view.ViewGroup[@resource-id=""]');
+        return driver.$('[text="ADD WALLET ON TESTNET (SHELLEY-ERA)"]');
     }
 
     get isDisplayed() {
