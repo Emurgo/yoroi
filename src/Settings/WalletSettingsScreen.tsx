@@ -22,7 +22,6 @@ import walletManager from '../../legacy/crypto/walletManager'
 import {confirmationMessages} from '../../legacy/i18n/global-messages'
 import {SETTINGS_ROUTES, WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
 import {easyConfirmationSelector, isSystemAuthEnabledSelector, walletNameSelector} from '../../legacy/selectors'
-import {VotingBanner} from '../Catalyst/VotingBanner'
 import {useSelectedWallet, useSetSelectedWallet, useSetSelectedWalletMeta} from '../SelectedWallet'
 
 export const WalletSettingsScreen = () => {
