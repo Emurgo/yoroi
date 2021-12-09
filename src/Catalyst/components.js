@@ -1,11 +1,9 @@
-// @flow
-
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import type {ViewProps} from 'react-native/Libraries/Components/View/ViewPropTypes'
 import type {TextProps} from 'react-native/Libraries/Text/TextProps'
 
-import {Text} from '../UiKit'
+import {Text} from '../../legacy/components/UiKit'
 
 export const Title = ({style, ...props}: TextProps) => <Text {...props} style={[styles.title, style]} />
 export const Description = ({style, ...props}: TextProps) => <Text {...props} style={[styles.description, style]} />

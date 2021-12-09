@@ -1,5 +1,3 @@
-// @flow
-
 /**
  * Step 5 for the Catalyst registration
  * Ask password used for signing transaction or sign with HW wallet
@@ -9,18 +7,18 @@
 import React from 'react'
 import {useIntl} from 'react-intl'
 
-import type {DeviceId, DeviceObj} from '../../crypto/shelley/ledgerUtils'
-import globalMessages, {ledgerMessages, txLabels} from '../../i18n/global-messages'
-import {ErrorView} from '../Common/ErrorModal'
-import LedgerConnect from '../Ledger/LedgerConnect'
-import {LedgerTransportSwitch} from '../Ledger/LedgerTransportSwitchModal'
-import {Modal} from '../UiKit'
-import {PleaseWaitView} from '../UiKit/PleaseWaitModal'
+import {ErrorView} from '../../legacy/components/Common/ErrorModal'
+import LedgerConnect from '../../legacy/components/Ledger/LedgerConnect'
+import {LedgerTransportSwitch} from '../../legacy/components/Ledger/LedgerTransportSwitchModal'
+import {Modal} from '../../legacy/components/UiKit'
+import {PleaseWaitView} from '../../legacy/components/UiKit/PleaseWaitModal'
+import type {DeviceId, DeviceObj} from '../../legacy/crypto/shelley/ledgerUtils'
+import globalMessages, {ledgerMessages, txLabels} from '../../legacy/i18n/global-messages'
 
-type ErrorData = {|
-  errorMessage: string,
-  errorLogs: ?string,
-|}
+type ErrorData = {
+  errorMessage: string
+  errorLogs?: string
+}
 
 export const DIALOG_STEPS = {
   CLOSED: 'CLOSED',
@@ -30,18 +28,18 @@ export const DIALOG_STEPS = {
   SUBMITTING: 'SUBMITTING',
   WAITING_HW_RESPONSE: 'WAITING_HW_RESPONSE',
 }
-export type DialogStep = $Values<typeof DIALOG_STEPS>
+export type DialogStep = typeof DIALOG_STEPS[keyof typeof DIALOG_STEPS]
 
 type DialogProps = {
-  +step: DialogStep,
-  +onRequestClose: () => void,
-  +onChooseTransport: (Object, boolean) => mixed,
-  +onConnectBLE: (DeviceId) => mixed,
-  +onConnectUSB: (DeviceObj) => mixed,
-  +useUSB: boolean,
-  +errorData: ErrorData,
+  step: DialogStep
+  onRequestClose: () => void
+  onChooseTransport: (object: Record<string, unknown>, bool: boolean) => void
+  onConnectBLE: (id: DeviceId) => void
+  onConnectUSB: (obj: DeviceObj) => void
+  useUSB: boolean
+  errorData: ErrorData
 }
-const Dialog = ({
+export const Dialog = ({
   step,
   onRequestClose,
   onChooseTransport,
@@ -86,8 +84,6 @@ const Dialog = ({
     </Modal>
   )
 }
-
-export default Dialog
 
 const useStrings = () => {
   const intl = useIntl()

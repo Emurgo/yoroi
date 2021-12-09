@@ -18,6 +18,13 @@ export var CONFIG: {
     MNEMONIC1: string,
     MNEMONIC2: string,
     MNEMONIC3: string,
+    START_WITH_INDEX_SCREEN: boolean,
+    PREFILL_FORMS: boolean,
+    PASSWORD: string
+  },
+  CATALYST: {
+    MIN_ADA: any,
+    DISPLAYED_MIN_ADA: any,
   },
   HARDWARE_WALLETS: {
     LEDGER_NANO: {

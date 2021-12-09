@@ -270,3 +270,4 @@ export const walletsListSelector = (state: State) =>
 
 export const unsignedTxSelector = (state: State) => state.voting.unsignedTx
 export const encryptedKeySelector = (state: State) => state.voting.encryptedKey
+export const pinSelector = (state: State) => state.voting.pin

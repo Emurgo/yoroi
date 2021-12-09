@@ -4,8 +4,6 @@
 // https://github.com/elderfo/react-native-storybook-loader.git
 
 function loadStories() {
-	require('../legacy/components/Catalyst/Catalyst.stories');
-	require('../legacy/components/Catalyst/VotingBanner.stories');
 	require('../legacy/components/Common/DangerousActionModal.stories');
 	require('../legacy/components/Common/ErrorModal.stories');
 	require('../legacy/components/Common/ExpandableItem.stories');
@@ -35,6 +33,8 @@ function loadStories() {
 	require('../legacy/components/UiKit/Checkbox.stories');
 	require('../legacy/components/UiKit/Link.stories');
 	require('../legacy/components/UiKit/TextInput.stories');
+	require('../src/Catalyst/Catalyst.stories');
+	require('../src/Catalyst/VotingBanner.stories');
 	require('../src/FirstRun/AcceptTermsOfService.stories');
 	require('../src/FirstRun/CustomPinScreen.stories');
 	require('../src/FirstRun/LanguagePickerScreen.stories');
@@ -73,8 +73,6 @@ function loadStories() {
 }
 
 const stories = [
-	'../legacy/components/Catalyst/Catalyst.stories',
-	'../legacy/components/Catalyst/VotingBanner.stories',
 	'../legacy/components/Common/DangerousActionModal.stories',
 	'../legacy/components/Common/ErrorModal.stories',
 	'../legacy/components/Common/ExpandableItem.stories',
@@ -104,6 +102,8 @@ const stories = [
 	'../legacy/components/UiKit/Checkbox.stories',
 	'../legacy/components/UiKit/Link.stories',
 	'../legacy/components/UiKit/TextInput.stories',
+	'../src/Catalyst/Catalyst.stories',
+	'../src/Catalyst/VotingBanner.stories',
 	'../src/FirstRun/AcceptTermsOfService.stories',
 	'../src/FirstRun/CustomPinScreen.stories',
 	'../src/FirstRun/LanguagePickerScreen.stories',

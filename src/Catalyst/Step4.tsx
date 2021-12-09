@@ -1,5 +1,3 @@
-// @flow
-
 import {useNavigation} from '@react-navigation/native'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -7,26 +5,26 @@ import {ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {showErrorDialog} from '../../actions'
-import {generateVotingTransaction} from '../../actions/voting'
-import {CONFIG} from '../../config/config'
-import {WrongPassword} from '../../crypto/errors'
-import KeyStore from '../../crypto/KeyStore'
-import walletManager, {SystemAuthDisabled} from '../../crypto/walletManager'
-import {confirmationMessages, errorMessages, txLabels} from '../../i18n/global-messages'
-import {CATALYST_ROUTES, WALLET_ROOT_ROUTES} from '../../RoutesList'
-import {easyConfirmationSelector, isHWSelector} from '../../selectors'
-import ErrorModal from '../Common/ErrorModal'
-import {Button, OfflineBanner, ProgressStep, Spacer, TextInput} from '../UiKit'
+import {showErrorDialog} from '../../legacy/actions'
+import {generateVotingTransaction} from '../../legacy/actions/voting'
+import ErrorModal from '../../legacy/components/Common/ErrorModal'
+import {Button, OfflineBanner, ProgressStep, Spacer, TextInput} from '../../legacy/components/UiKit'
+import {CONFIG} from '../../legacy/config/config'
+import {WrongPassword} from '../../legacy/crypto/errors'
+import KeyStore from '../../legacy/crypto/KeyStore'
+import walletManager, {SystemAuthDisabled} from '../../legacy/crypto/walletManager'
+import {confirmationMessages, errorMessages, txLabels} from '../../legacy/i18n/global-messages'
+import {CATALYST_ROUTES, WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
+import {easyConfirmationSelector, isHWSelector} from '../../legacy/selectors'
 import {Actions, Description, Title} from './components'
 
-type ErrorData = {|
-  showErrorDialog: boolean,
-  errorMessage: string,
-  errorLogs: ?string,
-|}
+type ErrorData = {
+  showErrorDialog: boolean
+  errorMessage: string
+  errorLogs: string | null
+}
 
-const Step4 = () => {
+export const Step4 = () => {
   const intl = useIntl()
   const strings = useStrings()
   const isHW = useSelector(isHWSelector)
@@ -75,7 +73,7 @@ const Step4 = () => {
           navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
 
           return
-        } else {
+        } else if (error instanceof Error) {
           setErrorData({
             showErrorDialog: true,
             errorMessage: strings.errorMessage,
@@ -92,7 +90,7 @@ const Step4 = () => {
     } catch (error) {
       if (error instanceof WrongPassword) {
         await showErrorDialog(errorMessages.incorrectPassword, intl)
-      } else {
+      } else if (error instanceof Error) {
         setErrorData({
           showErrorDialog: true,
           errorMessage: strings.errorMessage,
@@ -165,8 +163,6 @@ const Step4 = () => {
     </SafeAreaView>
   )
 }
-
-export default Step4
 
 const messages = defineMessages({
   subTitle: {

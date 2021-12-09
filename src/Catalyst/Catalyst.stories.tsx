@@ -1,40 +1,24 @@
-// @flow
-
 import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {WithModalProps} from '../../../storybook/decorators'
-import {CONFIG} from '../../config/config'
-import {strToDefaultMultiAsset} from '../../crypto/MultiToken'
-import CatalystBackupCheckModal from './CatalystBackupCheckModal'
-import Dialog, {DIALOG_STEPS} from './Dialog'
-import Step1 from './Step1'
-import Step2 from './Step2'
-import Step3 from './Step3'
-import Step4 from './Step4'
-import Step5 from './Step5'
-import Step6 from './Step6'
-
-const fee = strToDefaultMultiAsset('173921', CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID)
-
-const encryptedKey =
-  '0100af1a78621391225073b608d100878c472c1bfd2edf9993bd1d1' +
-  'cbce0fa25f563ff90cb1c404a7eb7cb3b148012d112de7ac3dd85143f146a57298775855ae' +
-  'b0f669b303a8e33a94126caa45fd05ebbb10fc186e6488e61be1afbe756b9db9e5bf5a32dd' +
-  '713beb3811385ab'
-
-const mockUnsignedTx = {
-  fee: () => Promise.resolve(fee),
-}
+import {WithModalProps} from '../../storybook'
+import {CatalystBackupCheckModal} from './CatalystBackupCheckModal'
+import {Dialog, DIALOG_STEPS} from './Dialog'
+import {Step1} from './Step1'
+import {Step2} from './Step2'
+import {Step3} from './Step3'
+import {Step4} from './Step4'
+import {Step5} from './Step5'
+import {Step6} from './Step6'
 
 storiesOf('Catalyst', module)
   .add('Step 1', () => <Step1 />)
   .add('Step 2', () => <Step2 />)
   .add('Step 3', () => <Step3 />)
   .add('Step 4', () => <Step4 />)
-  .add('Step 5', () => <Step5 unsignedTx={mockUnsignedTx} />)
-  .add('Step 6', () => <Step6 encryptedKey={encryptedKey} />)
+  .add('Step 5', () => <Step5 />)
+  .add('Step 6', () => <Step6 />)
   .add('Dialog - USB - CLOSED', () => (
     <WithModalProps>
       {(modalProps) => (
