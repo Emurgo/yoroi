@@ -7,7 +7,6 @@ import {useMutation, UseMutationOptions} from 'react-query'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {DIALOG_BUTTONS, showConfirmationDialog, signout, updateWallets} from '../../legacy/actions'
-import VotingBanner from '../../legacy/components/Catalyst/VotingBanner'
 import {
   NavigatedSettingsItem,
   PressableSettingsItem,
@@ -21,7 +20,7 @@ import {getNetworkConfigById} from '../../legacy/config/networks'
 import type {NetworkId, WalletImplementationId} from '../../legacy/config/types'
 import walletManager from '../../legacy/crypto/walletManager'
 import {confirmationMessages} from '../../legacy/i18n/global-messages'
-import {CATALYST_ROUTES, SETTINGS_ROUTES, WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
+import {SETTINGS_ROUTES, WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
 import {easyConfirmationSelector, isSystemAuthEnabledSelector, walletNameSelector} from '../../legacy/selectors'
 import {useSelectedWallet, useSetSelectedWallet, useSetSelectedWalletMeta} from '../SelectedWallet'
 
@@ -90,15 +89,6 @@ export const WalletSettingsScreen = () => {
         <SettingsBuildItem
           label={strings.walletType}
           value={intl.formatMessage(getWalletType(wallet.walletImplementationId))}
-        />
-      </SettingsSection>
-
-      <SettingsSection>
-        <VotingBanner
-          onPress={() => {
-            navigation.navigate(CATALYST_ROUTES.ROOT)
-          }}
-          disabled={false}
         />
       </SettingsSection>
     </ScrollView>
