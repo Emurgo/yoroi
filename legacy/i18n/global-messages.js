@@ -27,6 +27,24 @@ export const confirmationMessages = {
       defaultMessage: '!!!No',
     },
   }),
+  resync: defineMessages({
+    title: {
+      id: 'global.actions.dialogs.resync.title',
+      defaultMessage: '!!!Title',
+    },
+    message: {
+      id: 'global.actions.dialogs.resync.message',
+      defaultMessage: '!!!Message',
+    },
+    yesButton: {
+      id: 'global.actions.dialogs.logout.yesButton',
+      defaultMessage: '!!!Yes',
+    },
+    noButton: {
+      id: 'global.actions.dialogs.logout.noButton',
+      defaultMessage: '!!!No',
+    },
+  }),
   commonButtons: defineMessages({
     confirmButton: {
       id: 'global.actions.dialogs.commonbuttons.confirmButton',
