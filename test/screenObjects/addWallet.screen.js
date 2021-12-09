@@ -1,10 +1,10 @@
 class AddWallet {
   get createWalletButton() {
-    return driver.$('//android.view.ViewGroup[@resource-id="createWalletButton"]');
+    return driver.$('//*[@resource-id="createWalletButton"]');
   }
 
   get restoreWalletButton() {
-    return driver.$('//android.view.ViewGroup[@resource-id="restoreWalletButton"]');
+    return driver.$('//*[@resource-id="restoreWalletButton"]');
   }
 }
 

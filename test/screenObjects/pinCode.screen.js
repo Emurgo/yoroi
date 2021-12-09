@@ -1,10 +1,10 @@
 class PinCode {
     getPinKey(pinNumber) {
-        return driver.$(`//android.view.ViewGroup[@resource-id="pinKey${pinNumber}"]`);
+        return driver.$(`//*[@resource-id="pinKey${pinNumber}"]`);
     };
 
     get backspaceButton() {
-        return driver.$('//android.view.ViewGroup[@resource-id="pinKey⌫"]');
+        return driver.$('//*[@resource-id="pinKey⌫"]');
     }
 }
 

@@ -1,7 +1,6 @@
 class ChooseLanguage {
     get chooseLanguageButton() {
-        // return $('~chooseLangButton');
-        return driver.$('//android.view.ViewGroup[@resource-id="chooseLangButton"]');
+        return driver.$('//*[@resource-id="chooseLangButton"]');
     };
 }
 

@@ -1,18 +1,18 @@
-class MyWallets {
+class MyWallets{
     get pageTitle() {
-        return driver.$('//android.widget.TextView[@text="My wallets"]');
+        return driver.$('[text="My wallets"]');
     }
 
-    get addWalletButton() {
-        return driver.$('//android.widget.TextView[@text="My wallets"]');
+    get addWalletButton(){
+        return driver.$('//*[@resource-id="addWalletOnHaskellShelleyButton"]');
     }
 
-    get addWalletTestnetButton() {
-
+    get addWalletByronButton(){
+        return driver.$('//*[@resource-id="addWalletOnByronButton"]');
     }
 
-    get addWalletBayronEraButton(){
-
+    get addWalletTestnetButton(){
+        return driver.$('[text="ADD WALLET ON TESTNET (SHELLEY-ERA)"]');
     }
 
     get isDisplayed() {
