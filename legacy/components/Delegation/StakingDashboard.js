@@ -11,6 +11,7 @@ import {compose} from 'redux'
 
 import {checkForFlawedWallets, showErrorDialog, submitSignedTx, submitTransaction} from '../../actions'
 import {fetchAccountState} from '../../actions/account'
+import {updateHistory} from '../../actions/history'
 import {setLedgerDeviceId, setLedgerDeviceObj} from '../../actions/hwWallet'
 import {fetchPoolInfo} from '../../actions/pools'
 import {fetchUTXOs} from '../../actions/utxo'
@@ -111,6 +112,7 @@ type Props = {|
   defaultAsset: DefaultAsset,
   serverStatus: ServerStatusCache,
   walletMeta: $Diff<WalletMeta, {id: string}>,
+  updateHistory: () => any,
 |}
 
 type State = {|
@@ -170,6 +172,7 @@ class StakingDashboard extends React.Component<Props, State> {
       1000,
     )
     this.props.checkForFlawedWallets()
+    this.fullRefresh()
     this._unsubscribe = this.props.navigation.addListener('focus', () => this.handleDidFocus())
   }
 
@@ -194,6 +197,12 @@ class StakingDashboard extends React.Component<Props, State> {
   navigateToStakingCenter: (void) => void = () => {
     const {navigation} = this.props
     navigation.navigate(DELEGATION_ROUTES.STAKING_CENTER)
+  }
+
+  fullRefresh: (void) => Promise<void> = async () => {
+    await this.props.updateHistory()
+    this.props.fetchUTXOs()
+    this.props.fetchAccountState()
   }
 
   handleDidFocus: (void) => void = () => {
@@ -620,6 +629,7 @@ export default injectIntl(
         setLedgerDeviceObj,
         submitTransaction,
         submitSignedTx,
+        updateHistory,
       },
       (state, dispatchProps, ownProps) => ({
         ...state,
