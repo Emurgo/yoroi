@@ -9,6 +9,8 @@ import SafeAreaView from 'react-native-safe-area-view'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 
+// $FlowExpectedError
+import {VotingBanner} from '../../../src/Catalyst/VotingBanner'
 import {checkForFlawedWallets, showErrorDialog, submitSignedTx, submitTransaction} from '../../actions'
 import {fetchAccountState} from '../../actions/account'
 import {setLedgerDeviceId, setLedgerDeviceObj} from '../../actions/hwWallet'
@@ -26,7 +28,7 @@ import type {DeviceId, DeviceObj, HWDeviceInfo} from '../../crypto/shelley/ledge
 import walletManager, {SystemAuthDisabled} from '../../crypto/walletManager'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
 import LocalizableError from '../../i18n/LocalizableError'
-import {DELEGATION_ROUTES, SEND_ROUTES, WALLET_ROOT_ROUTES, WALLET_ROUTES} from '../../RoutesList'
+import {CATALYST_ROUTES, DELEGATION_ROUTES, SEND_ROUTES, WALLET_ROOT_ROUTES, WALLET_ROUTES} from '../../RoutesList'
 import {
   accountBalanceSelector,
   defaultNetworkAssetSelector,
@@ -530,6 +532,13 @@ class StakingDashboard extends React.Component<Props, State> {
                 disableWithdraw={this.props.isReadOnly}
               />
             </View>
+
+            <VotingBanner
+              onPress={() => {
+                navigation.navigate(CATALYST_ROUTES.ROOT)
+              }}
+              disabled={false}
+            />
 
             {poolInfo != null && !!poolOperator ? (
               <View style={styles.row}>

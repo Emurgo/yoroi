@@ -1,5 +1,3 @@
-// @flow
-
 import {useNavigation} from '@react-navigation/native'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -7,20 +5,20 @@ import {Image, Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 're
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {fetchUTXOs} from '../../actions/utxo'
-import {generateVotingKeys} from '../../actions/voting'
-import appstoreBadge from '../../assets/img/app-store-badge.png'
-import playstoreBadge from '../../assets/img/google-play-badge.png'
-import AppDownload from '../../assets/img/pic-catalyst-step1.png'
-import globalMessages, {confirmationMessages} from '../../i18n/global-messages'
-import {CATALYST_ROUTES} from '../../RoutesList'
-import {isDelegatingSelector} from '../../selectors'
-import {Logger} from '../../utils/logging'
-import StandardModal from '../Common/StandardModal'
-import {Button, ProgressStep, Spacer, Text} from '../UiKit'
+import StandardModal from '../../legacy//components/Common/StandardModal'
+import {Button, ProgressStep, Spacer, Text} from '../../legacy//components/UiKit'
+import {fetchUTXOs} from '../../legacy/actions/utxo'
+import {generateVotingKeys} from '../../legacy/actions/voting'
+import appstoreBadge from '../../legacy/assets/img/app-store-badge.png'
+import playstoreBadge from '../../legacy/assets/img/google-play-badge.png'
+import AppDownload from '../../legacy/assets/img/pic-catalyst-step1.png'
+import globalMessages, {confirmationMessages} from '../../legacy/i18n/global-messages'
+import {CATALYST_ROUTES} from '../../legacy/RoutesList'
+import {isDelegatingSelector} from '../../legacy/selectors'
+import {Logger} from '../../legacy/utils/logging'
 import {Actions, Row} from './components'
 
-const Step1 = () => {
+export const Step1 = () => {
   const strings = useStrings()
   const navigation = useNavigation()
   const isDelegating = useSelector(isDelegatingSelector)
@@ -80,8 +78,6 @@ const Step1 = () => {
     </SafeAreaView>
   )
 }
-
-export default Step1
 
 const Tip = (props) => <View {...props} style={styles.tip} />
 
