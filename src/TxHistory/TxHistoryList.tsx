@@ -18,7 +18,7 @@ type Props = {
   onRefresh: () => void
 }
 
-export const TxHistoryList = ({transactions, refreshing}: Props) => {
+export const TxHistoryList = ({transactions, refreshing, onRefresh}: Props) => {
   const strings = useStrings()
   const navigation = useNavigation()
   const groupedTransactions = getTransactionsByDate(transactions)
@@ -35,6 +35,7 @@ export const TxHistoryList = ({transactions, refreshing}: Props) => {
         renderItem={({item}) => <TxHistoryListItem navigation={navigation} id={item.id} />}
         renderSectionHeader={({section: {data}}) => <DayHeader ts={data[0].submittedAt} />}
         refreshing={refreshing}
+        onRefresh={onRefresh}
         sections={groupedTransactions}
         keyExtractor={(item) => item.id}
         stickySectionHeadersEnabled={false}
