@@ -212,4 +212,6 @@ export interface WalletInterface {
   fetchTokenInfo(request: TokenInfoRequest): Promise<TokenInfoResponse>;
 
   fetchFundInfo(): Promise<FundInfoResponse>;
+
+  resync(): void;
 }

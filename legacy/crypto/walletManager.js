@@ -583,6 +583,14 @@ class WalletManager {
     })
   }
 
+  async resyncWallet() {
+    if (!this._wallet) return
+    const wallet = this._wallet
+    wallet.resync()
+    this.save()
+    await this.closeWallet()
+  }
+
   async removeCurrentWallet() {
     if (!this._wallet) return
     const id = this._id

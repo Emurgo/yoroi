@@ -3,6 +3,7 @@ import {Cardano} from './Cardano'
 import {Check} from './Check'
 import {ChevronDown} from './ChevronDown'
 import {ChevronUp} from './ChevronUp'
+import {Direction} from './Direction'
 import {Emurgo} from './Emurgo'
 import {Export, Magnify} from './Icon'
 import {NoAssetImage} from './NoAssetImage'
@@ -26,6 +27,7 @@ export const Icon = {
   Check,
   ChevronUp,
   ChevronDown,
+  Direction,
   Emurgo,
   Export,
   Magnify,
