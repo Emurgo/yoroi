@@ -6,7 +6,12 @@ const recoveryPhraseRememberScreen = require('../screenObjects/createWalletScree
 const recoveryPhraseNotificationScreen = require('../screenObjects/createWalletScreens/recoveryPhraseNotification.screen');
 const recoveryPhraseEnterScreen = require('../screenObjects/createWalletScreens/recoveryPhraseEnter.screen');
 const { firstAppLaunch, hideKeyboard } = require("../helpers/utils");
-const { WALLET_NAME, SPENDING_PASSWORD } = require("../constants");
+const {
+  WALLET_NAME,
+  SPENDING_PASSWORD,
+  DEFAULT_TIMEOUT,
+  DEFAULT_INTERVAL,
+} = require("../constants");
 const expect = require('chai').expect;
 
 describe('Creating a wallet', () => {
@@ -44,6 +49,6 @@ describe('Creating a wallet', () => {
     await recoveryPhraseEnterScreen.enterRecoveryPhrase(allWords);
     await recoveryPhraseEnterScreen.confirmButton.click();
 
-    expect(await driver.$(`[text="${WALLET_NAME}"]`).waitForExist({timeout: 2000, interval: 100})).to.be.true;
+    expect(await driver.$(`[text="${WALLET_NAME}"]`).waitForExist({timeout: DEFAULT_TIMEOUT, interval: DEFAULT_INTERVAL})).to.be.true;
   });
 });
