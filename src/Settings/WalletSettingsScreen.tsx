@@ -81,6 +81,7 @@ export const WalletSettingsScreen = () => {
 
       <SettingsSection>
         <NavigatedSettingsItem label={strings.removeWallet} navigateTo={SETTINGS_ROUTES.REMOVE_WALLET} />
+        <ResyncButton />
       </SettingsSection>
 
       <SettingsSection title={strings.about}>
@@ -149,6 +150,10 @@ const messages = defineMessages({
     id: 'components.settings.walletsettingscreen.about',
     defaultMessage: '!!!About',
   },
+  resync: {
+    id: 'components.settings.walletsettingscreen.resyncWallet',
+    defaultMessage: '!!!Resync',
+  },
 })
 
 const useStrings = () => {
@@ -168,6 +173,7 @@ const useStrings = () => {
     shelleyWallet: intl.formatMessage(messages.shelleyWallet),
     unknownWalletType: intl.formatMessage(messages.unknownWalletType),
     about: intl.formatMessage(messages.about),
+    resync: intl.formatMessage(messages.resync),
   }
 }
 
@@ -240,4 +246,32 @@ const LogoutButton = () => {
   const {logoutWithConfirmation, isLoading} = useLogout()
 
   return <PressableSettingsItem label={strings.logout} onPress={logoutWithConfirmation} disabled={isLoading} />
+}
+
+const useResync = (options?: UseMutationOptions<void, Error>) => {
+  const intl = useIntl()
+  const navigation = useNavigation()
+  const mutation = useMutation({
+    mutationFn: () => walletManager.resyncWallet(),
+    ...options,
+  })
+
+  return {
+    resyncWithConfirmation: async () => {
+      const selection = await showConfirmationDialog(confirmationMessages.resync, intl)
+      if (selection === DIALOG_BUTTONS.YES) {
+        navigation.goBack()
+        navigation.goBack()
+        setTimeout(() => mutation.mutate(), 1000) // wait for navigation to finish
+      }
+    },
+    ...mutation,
+  }
+}
+
+const ResyncButton = () => {
+  const strings = useStrings()
+  const {resyncWithConfirmation, isLoading} = useResync()
+
+  return <PressableSettingsItem label={strings.resync} onPress={resyncWithConfirmation} disabled={isLoading} />
 }

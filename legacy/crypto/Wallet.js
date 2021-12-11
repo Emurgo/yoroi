@@ -254,6 +254,10 @@ export default class Wallet {
     return this.transactionCache.transactions
   }
 
+  resync() {
+    this.transactionCache.resetState()
+  }
+
   // ========== UI state ============= //
 
   /* global $Shape */

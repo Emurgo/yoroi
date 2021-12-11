@@ -105,3 +105,6 @@ coverage-ts
 # Logs/tmp
 *.log
 
+#Test's data
+test/app
+test/artifacts
