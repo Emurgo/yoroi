@@ -51,7 +51,7 @@ export const WalletFreshInitScreen = () => {
 const Actions = (props) => <View {...props} style={styles.actions} />
 
 const ShelleyButton = (props) => <Button {...props} testID="addWalletOnHaskellShelleyButton" />
-const ShelleyTestnetButton = (props) => <Button {...props} />
+const ShelleyTestnetButton = (props) => <Button {...props} testID="addWalletTestnetShelleyButton" />
 const ByronButton = (props) => <Button {...props} outline testID="addWalletOnByronButton" />
 const JormungandrButton = (props) => <Button {...props} outline testID="addWalletOnShelleyButton" />
 
