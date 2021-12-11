@@ -1,3 +1,7 @@
+import fs, { promises as fsAsync } from 'fs';
+
+const { screenshotsDir } = require('./testPaths.config.js');
+
 exports.config = {
     //
     // ====================
@@ -191,8 +195,19 @@ exports.config = {
      * @param {Boolean} result.passed    true if test has passed, otherwise false
      * @param {Object}  result.retries   informations to spec related retries, e.g. `{ attempts: 0, limit: 0 }`
      */
-    // afterTest: function(test, context, { error, result, duration, passed, retries }) {
-    // },
+    afterTest: async function(test, context, { error, result, duration, passed, retries }) {
+        // take a screenshot anytime a test fails and throws an error
+        console.log(`Test: ${test.parent} -> ${test.title}\nPassed: ${passed}`);
+        if (error) {
+            if (!fs.existsSync(screenshotsDir)) {
+                fs.mkdirSync(screenshotsDir, { recursive: true });
+            }
+            const screenshotName = `${test.parent.replace(/ /g, '_')}-${test.title.replace(/ /g, '_')}.png`;
+            const screenshotPath = `${screenshotsDir}${screenshotName}`;
+            const screenshot = await driver.takeScreenshot();
+            await fsAsync.writeFile(screenshotPath, screenshot, 'base64');
+        }
+    },
 
 
     /**
@@ -233,7 +248,7 @@ exports.config = {
      * @param {Object} exitCode 0 - success, 1 - fail
      * @param {Object} config wdio configuration object
      * @param {Array.<Object>} capabilities list of capabilities details
-     * @param {<Object>} results object containing test results
+     * @param {Object} results object containing test results
      */
     // onComplete: function(exitCode, config, capabilities, results) {
     // },

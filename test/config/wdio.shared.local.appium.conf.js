@@ -1,4 +1,5 @@
 const { config } = require('./wdio.shared.conf');
+const { appiumLogsPath } = require('./testPaths.config.js');
 
 //
 // ======
@@ -10,7 +11,7 @@ config.services = (config.services ? config.services : []).concat([
         'appium',
         {
             command : 'appium',
-            logPath: './test/appium_info.log',
+            logPath: appiumLogsPath,
         }
     ],
     ['selenium-standalone'],
