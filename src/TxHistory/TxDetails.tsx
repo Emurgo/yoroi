@@ -1,56 +1,51 @@
-// @flow
-
 import {useRoute} from '@react-navigation/native'
 import {BigNumber} from 'bignumber.js'
 import _ from 'lodash'
 import React, {useState} from 'react'
-import {defineMessages, useIntl} from 'react-intl'
-import {Image, LayoutAnimation, Linking, TouchableOpacity, View} from 'react-native'
+import {defineMessages, IntlShape, useIntl} from 'react-intl'
+import {Image, LayoutAnimation, Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
-// $FlowExpectedError
-import {AddressModal} from '../../../src/Receive/AddressModal'
-// $FlowExpectedError
-import {useSelectedWallet} from '../../../src/SelectedWallet'
-import arrowDown from '../../assets/img/chevron_down.png'
-import arrowUp from '../../assets/img/chevron_up.png'
-import Screen from '../../components/Screen'
-import {getNetworkConfigById} from '../../config/networks'
-import {MultiToken} from '../../crypto/MultiToken'
-import globalMessages from '../../i18n/global-messages'
+import AssetList from '../../legacy/components/Common/MultiAsset/AssetList'
+import assetListStyle from '../../legacy/components/Common/MultiAsset/styles/AssetListTransaction.style'
+import Screen from '../../legacy/components/Screen'
+import {Banner, Button, CopyButton, OfflineBanner, StatusBar, Text} from '../../legacy/components/UiKit'
+import {getNetworkConfigById} from '../../legacy/config/networks'
+import {MultiToken} from '../../legacy/crypto/MultiToken'
+import globalMessages from '../../legacy/i18n/global-messages'
 import {
   defaultNetworkAssetSelector,
   externalAddressIndexSelector,
   internalAddressIndexSelector,
   tokenInfoSelector,
   transactionsInfoSelector,
-} from '../../selectors'
-import {type Token, TRANSACTION_DIRECTION} from '../../types/HistoryTransaction'
-import {formatTokenWithSymbol} from '../../utils/format'
-import AssetList from '../Common/MultiAsset/AssetList'
-import assetListStyle from '../Common/MultiAsset/styles/AssetListTransaction.style'
-import {Banner, Button, CopyButton, OfflineBanner, StatusBar, Text} from '../UiKit'
-import styles from './styles/TxDetails.style'
+} from '../../legacy/selectors'
+import stylesConfig, {COLORS} from '../../legacy/styles/config'
+import {formatTokenWithSymbol} from '../../legacy/utils/format'
+import arrowDown from '../assets/img/icon/chevron_down.png'
+import arrowUp from '../assets/img/icon/chevron_up.png'
+import AddressModal from '../Receive/AddressModal'
+import {useSelectedWallet} from '../SelectedWallet'
+import {Token, TransactionInfo} from '../types/cardano'
 
-const TxDetails = () => {
+export type Params = {
+  id: string
+}
+
+export const TxDetails = () => {
+  const strings = useStrings()
   const intl = useIntl()
-  const route = (useRoute(): any)
-  const transaction = useSelector(transactionsInfoSelector)[route.params.id]
+  const {id} = useRoute().params as Params
   const internalAddressIndex = useSelector(internalAddressIndexSelector)
   const externalAddressIndex = useSelector(externalAddressIndexSelector)
   const wallet = useSelectedWallet()
   const tokenMetadata = useSelector(tokenInfoSelector)
   const defaultNetworkAsset = useSelector(defaultNetworkAssetSelector)
-
+  const transactions = useSelector(transactionsInfoSelector)
+  const [expandedIn, setExpandedIn] = useState(false)
+  const [expandedOut, setExpandedOut] = useState(false)
   const [addressDetail, setAddressDetail] = React.useState(null)
-
-  const openInExplorer = () => {
-    if (transaction) {
-      const networkConfig = getNetworkConfigById(wallet.networkId, wallet.provider)
-      // note: don't await on purpose
-      Linking.openURL(networkConfig.EXPLORER_URL_FOR_TX(transaction.id))
-    }
-  }
+  const transaction = transactions[id]
 
   const showModalForAddress = (address) => {
     setAddressDetail(address)
@@ -60,17 +55,14 @@ const TxDetails = () => {
     setAddressDetail(null)
   }
 
-  const {fromFiltered, cntOmittedFrom, toFiltered, cntOmittedTo} =
+  const {fromFiltered, toFiltered, cntOmittedTo} =
     transaction && getShownAddresses(intl, transaction, internalAddressIndex, externalAddressIndex)
-  const txFee: ?BigNumber = transaction.fee ? MultiToken.fromArray(transaction.fee).getDefault() : null
+  const txFee: BigNumber = transaction.fee ? MultiToken.fromArray(transaction.fee).getDefault() : null
   const amountAsMT = MultiToken.fromArray(transaction.amount)
   const amount: BigNumber = amountAsMT.getDefault()
-  const amountDefaultAsset: ?Token = tokenMetadata[amountAsMT.getDefaultId()]
+  const amountDefaultAsset: Token = tokenMetadata[amountAsMT.getDefaultId()]
 
   const defaultAsset = amountDefaultAsset || defaultNetworkAsset
-
-  const [expandedIn, setExpandedIn] = useState(false)
-  const [expandedOut, setExpandedOut] = useState(false)
 
   const toggleExpandIn = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
@@ -88,67 +80,58 @@ const TxDetails = () => {
 
       <OfflineBanner />
       <Screen scroll>
-        <Banner label={intl.formatMessage(txTypeMessages[transaction.direction])}>
+        <Banner label={strings[transaction.direction]}>
           <AdaAmount amount={amount} token={defaultAsset} />
           {txFee && (
             <Text small>
-              {intl.formatMessage(messages.fee)} {formatTokenWithSymbol(txFee, defaultAsset)}
+              {strings.fee} {formatTokenWithSymbol(txFee, defaultAsset)}
             </Text>
           )}
         </Banner>
         <View style={styles.content}>
-          <Label>{intl.formatMessage(messages.fromAddresses)}</Label>
+          <Label>{strings.fromAddresses}</Label>
           {fromFiltered.map((item) => (
             <View key={item.address}>
               <AddressEntry {...item} showModalForAddress={showModalForAddress} />
               {item.assets.length > 0 && (
                 <TouchableOpacity style={styles.assetsExpandable} activeOpacity={0.5} onPress={() => toggleExpandIn()}>
-                  <Text style={styles.assetsTitle}>
-                    {` -${item.assets.length} ${intl.formatMessage(globalMessages.assetsLabel)} `}
-                  </Text>
+                  <Text style={styles.assetsTitle}>{` -${item.assets.length} ${strings.assetsLabel} `}</Text>
                   <Image source={expandedIn ? arrowUp : arrowDown} />
                 </TouchableOpacity>
               )}
               {expandedIn && <AssetList styles={assetListStyle} assets={item.assets} assetsMetadata={tokenMetadata} />}
             </View>
           ))}
-          {cntOmittedFrom > 0 && <Text>{intl.formatMessage(messages.omittedCount, {cnt: cntOmittedFrom})}</Text>}
 
           <View style={styles.borderTop}>
-            <Label>{intl.formatMessage(messages.toAddresses)}</Label>
+            <Label>{strings.toAddresses}</Label>
           </View>
           {toFiltered.map((item) => (
             <View key={item.address}>
               <AddressEntry {...item} showModalForAddress={showModalForAddress} />
               {item.assets.length > 0 && (
                 <TouchableOpacity style={styles.assetsExpandable} activeOpacity={0.5} onPress={() => toggleExpandOut()}>
-                  <Text style={styles.assetsTitle}>
-                    {` +${item.assets.length} ${intl.formatMessage(globalMessages.assetsLabel)} `}
-                  </Text>
+                  <Text style={styles.assetsTitle}>{` +${item.assets.length} ${strings.assetsLabel} `}</Text>
                   <Image source={expandedOut ? arrowUp : arrowDown} />
                 </TouchableOpacity>
               )}
               {expandedOut && <AssetList styles={assetListStyle} assets={item.assets} assetsMetadata={tokenMetadata} />}
             </View>
           ))}
-          {cntOmittedTo > 0 && <Text>{intl.formatMessage(messages.omittedCount, {cnt: cntOmittedTo})}</Text>}
+          {cntOmittedTo > 0 && <Text>{strings.omittedCount(cntOmittedTo)}</Text>}
           <View style={styles.borderTop}>
-            <Label>{intl.formatMessage(messages.txAssuranceLevel)}</Label>
+            <Label>{strings.txAssuranceLevel}</Label>
           </View>
           <View>
-            <Text secondary>
-              {intl.formatMessage(messages.confirmations, {
-                cnt: transaction.confirmations,
-              })}
-            </Text>
-            <Label>{intl.formatMessage(messages.transactionId)}</Label>
+            <Text secondary>{strings.confirmations(transaction.confirmations)}</Text>
+            <Label>{strings.transactionId}</Label>
             <View style={styles.dataContainer}>
               <Text secondary monospace numberOfLines={1} ellipsizeMode="middle">
                 {transaction.id}
               </Text>
               <CopyButton value={transaction.id} />
             </View>
-            <Button onPress={openInExplorer} title={intl.formatMessage(messages.openInExplorer)} />
+            <Button onPress={() => openInExplorer(transaction, wallet.networkId)} title={strings.openInExplorer} />
           </View>
         </View>
       </Screen>
@@ -164,21 +147,19 @@ const TxDetails = () => {
   )
 }
 
-export default TxDetails
-
 const Label = ({children}: {children: string}) => <Text style={styles.label}>{children}</Text>
 
-const AdaAmount = ({amount, token}: {amount: BigNumber, token: Token}) => {
+const AdaAmount = ({amount, token}: {amount: BigNumber; token: Token}) => {
   const amountStyle = amount.gte(0) ? styles.positiveAmount : styles.negativeAmount
 
   return <Text style={amountStyle}>{formatTokenWithSymbol(amount, token)}</Text>
 }
 
 type AddressEntryProps = {
-  address: any,
-  path: any,
-  isHighlighted: any,
-  showModalForAddress: any,
+  address: string
+  path: string
+  isHighlighted: boolean
+  showModalForAddress: (string) => void
 }
 const AddressEntry = ({address, path, isHighlighted, showModalForAddress}: AddressEntryProps) => {
   return (
@@ -190,7 +171,12 @@ const AddressEntry = ({address, path, isHighlighted, showModalForAddress}: Addre
   )
 }
 
-const getShownAddresses = (intl, transaction, internalAddressIndex, externalAddressIndex) => {
+const getShownAddresses = (
+  intl: IntlShape,
+  transaction: TransactionInfo,
+  internalAddressIndex: Record<string, number>,
+  externalAddressIndex: Record<string, number>,
+) => {
   const isMyReceive = (address) => externalAddressIndex[address] != null
   const isMyChange = (address) => internalAddressIndex[address] != null
   const isMyAddress = (address) => isMyReceive(address) || isMyChange(address)
@@ -209,28 +195,24 @@ const getShownAddresses = (intl, transaction, internalAddressIndex, externalAddr
     }
   }
 
-  const {isHighlightedFrom, filterFrom, isHighlightedTo, filterTo} = {
-    [TRANSACTION_DIRECTION.SENT]: {
+  const {isHighlightedFrom, isHighlightedTo, filterTo} = {
+    SENT: {
       isHighlightedFrom: (_address) => false,
-      filterFrom: null,
       isHighlightedTo: (address) => !isMyAddress(address),
       filterTo: null,
     },
-    [TRANSACTION_DIRECTION.RECEIVED]: {
+    RECEIVED: {
       isHighlightedFrom: (_address) => false,
-      filterFrom: null,
       isHighlightedTo: (address) => isMyAddress(address),
       filterTo: (address) => isMyAddress(address),
     },
-    [TRANSACTION_DIRECTION.SELF]: {
+    SELF: {
       isHighlightedFrom: (_address) => false,
-      filterFrom: null,
       isHighlightedTo: (address) => !isMyChange(address),
       filterTo: null,
     },
-    [TRANSACTION_DIRECTION.MULTI]: {
+    MULTI: {
       isHighlightedFrom: (address) => isMyAddress(address),
-      filterFrom: null,
       isHighlightedTo: (address) => isMyAddress(address),
       filterTo: null,
     },
@@ -243,8 +225,6 @@ const getShownAddresses = (intl, transaction, internalAddressIndex, externalAddr
     path: getPath(address),
     isHighlighted: isHighlightedFrom(address),
   }))
-  const fromFiltered = fromAddresses.filter(({address}) => (filterFrom ? filterFrom(address) : true))
-  const cntOmittedFrom = fromAddresses.length - fromFiltered.length
 
   const toAddresses = _.uniq(transaction.outputs).map(({address, assets}) => ({
     address,
@@ -256,10 +236,29 @@ const getShownAddresses = (intl, transaction, internalAddressIndex, externalAddr
   const cntOmittedTo = toAddresses.length - toFiltered.length
 
   return {
-    fromFiltered,
-    cntOmittedFrom,
+    fromFiltered: fromAddresses,
     toFiltered,
     cntOmittedTo,
+  }
+}
+
+const useStrings = () => {
+  const intl = useIntl()
+
+  return {
+    fee: intl.formatMessage(messages.fee),
+    fromAddresses: intl.formatMessage(messages.fromAddresses),
+    toAddresses: intl.formatMessage(messages.toAddresses),
+    transactionId: intl.formatMessage(messages.transactionId),
+    txAssuranceLevel: intl.formatMessage(messages.txAssuranceLevel),
+    confirmations: (cnt) => intl.formatMessage(messages.confirmations, {cnt}),
+    omittedCount: (cnt) => intl.formatMessage(messages.omittedCount, {cnt}),
+    openInExplorer: intl.formatMessage(messages.openInExplorer),
+    SENT: intl.formatMessage(txTypeMessages.SENT),
+    RECEIVED: intl.formatMessage(txTypeMessages.RECEIVED),
+    SELF: intl.formatMessage(txTypeMessages.SELF),
+    MULTI: intl.formatMessage(txTypeMessages.MULTI),
+    assetsLabel: intl.formatMessage(globalMessages.assetsLabel),
   }
 }
 
@@ -328,3 +327,50 @@ const messages = defineMessages({
     defaultMessage: '!!!Open in explorer',
   },
 })
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  content: {
+    paddingHorizontal: 16,
+  },
+  positiveAmount: {
+    color: COLORS.POSITIVE_AMOUNT,
+    fontWeight: '500',
+  },
+  negativeAmount: {
+    color: COLORS.NEGATIVE_AMOUNT,
+    fontWeight: '500',
+  },
+  label: {
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  assetsExpandable: {
+    paddingTop: 12,
+    paddingBottom: 24,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignContent: 'center',
+  },
+  assetsTitle: {
+    fontSize: 14,
+    fontFamily: stylesConfig.defaultFont,
+    color: COLORS.TEXT_GRAY,
+  },
+  borderTop: {
+    borderTopWidth: 1,
+    borderColor: 'rgba(173, 174, 182, 0.3)',
+  },
+  dataContainer: {
+    flexDirection: 'row',
+    paddingRight: 70,
+    marginBottom: 20,
+  },
+})
+
+const openInExplorer = async (transaction: TransactionInfo, networkId: number) => {
+  const networkConfig = getNetworkConfigById(networkId)
+  await Linking.openURL(networkConfig.EXPLORER_URL_FOR_TX(transaction.id))
+}
