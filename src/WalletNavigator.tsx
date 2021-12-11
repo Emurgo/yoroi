@@ -7,7 +7,6 @@ import {Image} from 'react-native'
 import StakingCenterNavigator from '../legacy/components/Delegation/StakingCenterNavigator'
 import StakingDashboardNavigator from '../legacy/components/Delegation/StakingDashboardNavigator'
 import SendScreenNavigator from '../legacy/components/Send/SendScreenNavigator'
-import TxHistoryNavigator from '../legacy/components/TxHistory/TxHistoryNavigator'
 import {isHaskellShelley} from '../legacy/config/config'
 import {defaultNavigationOptions} from '../legacy/navigationOptions'
 import {theme} from '../legacy/styles/config'
@@ -25,6 +24,7 @@ import {CatalystNavigator} from './Catalyst/CatalystNavigator'
 import {ReceiveScreenNavigator} from './Receive/ReceiveScreenNavigator'
 import {useSelectedWallet, WalletSelectionScreen} from './SelectedWallet'
 import {SettingsScreenNavigator} from './Settings'
+import {TxHistoryNavigator} from './TxHistory/TxHistoryNavigator'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 type WalletTabRoutes = {
