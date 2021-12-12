@@ -1,13 +1,11 @@
-// @flow
-
 import {useNavigation, useRoute} from '@react-navigation/native'
 import React from 'react'
 import {StyleSheet} from 'react-native'
 
 import iconQR from '../../assets/img/qr_code.png'
-import {SEND_ROUTES} from '../../RoutesList'
-import {Button} from '../UiKit'
-import {pastedFormatter} from './amountUtils'
+import {pastedFormatter} from '../../legacy/components/Send/amountUtils'
+import {Button} from '../../legacy/components/UiKit'
+import {SEND_ROUTES} from '../../legacy/RoutesList'
 
 export const ScannerButton = () => {
   const navigation = useNavigation()
@@ -18,14 +16,18 @@ export const ScannerButton = () => {
       style={styles.scannerButton}
       onPress={() =>
         navigation.navigate(SEND_ROUTES.ADDRESS_READER_QR, {
-          onSuccess: (stringQR) => {
+          onSuccess: (stringQR: string) => {
             const regex = /(cardano):([a-zA-Z1-9]\w+)\??/
 
             if (regex.test(stringQR)) {
-              const address = stringQR.match(regex)[2]
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              const address = (stringQR.match(regex) as any)[2]
+
               if (stringQR.indexOf('?') !== -1) {
                 const index = stringQR.indexOf('?')
-                const params = getParams(stringQR.substr(index))
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const params: any = getParams(stringQR.substr(index))
+
                 if ('amount' in params) {
                   setAddress(address, route)
                   setAmount(params.amount, route)
@@ -38,6 +40,7 @@ export const ScannerButton = () => {
               setAddress(stringQR, route)
               setAmount('', route)
             }
+
             navigation.navigate(SEND_ROUTES.MAIN)
           },
         })
@@ -60,12 +63,12 @@ const getParams = (params) => {
 }
 
 const setAddress = (address, route) => {
-  const handlerAddress: ((string) => void) | void = (route.params?.onScanAddress: any)
+  const handlerAddress: ((string) => void) | void = route.params?.onScanAddress
   handlerAddress && handlerAddress(address)
 }
 
 const setAmount = (amount, route) => {
-  const handlerAmount: ((string) => void) | void = (route.params?.onScanAmount: any)
+  const handlerAmount: ((string) => void) | void = route.params?.onScanAmount
 
   handlerAmount && handlerAmount(pastedFormatter(amount))
 }

@@ -6,7 +6,6 @@ import {Image} from 'react-native'
 
 import StakingCenterNavigator from '../legacy/components/Delegation/StakingCenterNavigator'
 import StakingDashboardNavigator from '../legacy/components/Delegation/StakingDashboardNavigator'
-import SendScreenNavigator from '../legacy/components/Send/SendScreenNavigator'
 import TxHistoryNavigator from '../legacy/components/TxHistory/TxHistoryNavigator'
 import {isHaskellShelley} from '../legacy/config/config'
 import {defaultNavigationOptions} from '../legacy/navigationOptions'
@@ -24,6 +23,7 @@ import iconHistoryActive from './assets/img/icon/txhistory-active.png'
 import {CatalystNavigator} from './Catalyst/CatalystNavigator'
 import {ReceiveScreenNavigator} from './Receive/ReceiveScreenNavigator'
 import {useSelectedWallet, WalletSelectionScreen} from './SelectedWallet'
+import {SendScreenNavigator} from './Send'
 import {SettingsScreenNavigator} from './Settings'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
