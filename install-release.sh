@@ -2,7 +2,8 @@ nvm i \
 && yarn install \
 && yarn setup_configs \
 && . get_commit.sh \
-&& npx jetifier
+&& npx jetifier \
+&& (cd ios; pod install)
 
 function ask() {
   read -p "$1 > " -r
