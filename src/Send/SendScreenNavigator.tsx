@@ -3,14 +3,14 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {useSelector} from 'react-redux'
 
-import AddressReaderQR from '../../legacy/components/Send/AddressReaderQR'
-import AssetSelectorScreen from '../../legacy/components/Send/AssetSelectorScreen/AssetSelectorScreen'
 import BiometricAuthScreen from '../../legacy/components/Send/BiometricAuthScreen'
 import ConfirmScreen from '../../legacy/components/Send/ConfirmScreen'
 import SendScreen from '../../legacy/components/Send/SendScreen'
 import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../legacy/navigationOptions'
 import {SEND_ROUTES} from '../../legacy/RoutesList'
 import {tokenBalanceSelector, tokenInfoSelector} from '../../legacy/selectors'
+import {AddressReaderQR} from './AddressReaderQR'
+import {AssetSelectorScreen} from './AssetSelectorScreen'
 import {ScannerButton} from './ScannerButton'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */

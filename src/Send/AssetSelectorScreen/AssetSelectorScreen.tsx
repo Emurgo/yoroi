@@ -1,6 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
-// @flow
-
 import React from 'react'
 import {defineMessages} from 'react-intl'
 import {useIntl} from 'react-intl'
@@ -8,20 +5,20 @@ import {FlatList, TouchableOpacity, View} from 'react-native'
 import {Avatar} from 'react-native-paper'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import AdaImage from '../../../assets/img/asset_ada.png'
-import NoImage from '../../../assets/img/asset_no_image.png'
-import type {TokenEntry} from '../../../crypto/MultiToken'
-import globalMessages, {txLabels} from '../../../i18n/global-messages'
-import {COLORS} from '../../../styles/config'
-import {type Token} from '../../../types/HistoryTransaction'
-import {decodeHexAscii, formatTokenAmount, getAssetDenominationOrId} from '../../../utils/format'
-import {Button, Spacer, Text, TextInput} from '../../UiKit'
+import AdaImage from '../../../legacy/assets/img/asset_ada.png'
+import NoImage from '../../../legacy/assets/img/asset_no_image.png'
+import {Button, Spacer, Text, TextInput} from '../../../legacy/components/UiKit'
+import type {TokenEntry} from '../../../legacy/crypto/MultiToken'
+import globalMessages, {txLabels} from '../../../legacy/i18n/global-messages'
+import {COLORS} from '../../../legacy/styles/config'
+import type {Token} from '../../../legacy/types/HistoryTransaction'
+import {decodeHexAscii, formatTokenAmount, getAssetDenominationOrId} from '../../../legacy/utils/format'
 
 type Props = {
-  assetTokens: Array<TokenEntry>,
-  assetTokenInfos: Dict<Token>,
-  onSelect: (TokenEntry) => mixed,
-  onSelectAll: () => mixed,
+  assetTokens: Array<TokenEntry>
+  assetTokenInfos: Record<string, Token>
+  onSelect: (TokenEntry) => void
+  onSelectAll: () => void
 }
 export const AssetSelectorScreen = ({assetTokens, assetTokenInfos, onSelect, onSelectAll}: Props) => {
   const intl = useIntl()
@@ -72,9 +69,9 @@ export const AssetSelectorScreen = ({assetTokens, assetTokenInfos, onSelect, onS
 export default AssetSelectorScreen
 
 type AssetSelectorItemProps = {
-  assetToken: TokenEntry,
-  tokenInfo: Token,
-  onPress: (TokenEntry) => mixed,
+  assetToken: TokenEntry
+  tokenInfo: Token
+  onPress: (TokenEntry) => void
 }
 const AssetSelectorItem = ({assetToken, tokenInfo, onPress}: AssetSelectorItemProps) => {
   const intl = useIntl()
@@ -119,8 +116,8 @@ const SearchInput = (props) => {
   const intl = useIntl()
   return <TextInput {...props} label={intl.formatMessage(messages.searchLabel)} />
 }
-const getTokenInfo = (tokenInfos: Dict<Token>, token: TokenEntry) => tokenInfos[token.identifier]
-const matches = (tokenInfos: Dict<Token>, tokens: Array<TokenEntry>, filter: string) =>
+const getTokenInfo = (tokenInfos: Record<string, Token>, token: TokenEntry) => tokenInfos[token.identifier]
+const matches = (tokenInfos: Record<string, Token>, tokens: Array<TokenEntry>, filter: string) =>
   tokens.filter((assetToken) => {
     const tokenInfo = getTokenInfo(tokenInfos, assetToken)
 
