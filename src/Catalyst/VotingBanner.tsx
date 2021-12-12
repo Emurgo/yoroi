@@ -1,29 +1,23 @@
-// @flow
-
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
-// $FlowExpectedError
-import {useSelectedWallet} from '../../../src/SelectedWallet'
-import CatalystLogo from '../../assets/img/voting.png'
-import StandardModal from '../../components/Common/StandardModal'
-import {CONFIG, isHaskellShelley, isNightly} from '../../config/config'
-import {isRegistrationOpen} from '../../crypto/shelley/catalystUtils'
-import walletManager from '../../crypto/walletManager'
-import globalMessages, {confirmationMessages} from '../../i18n/global-messages'
-import {availableAssetsSelector, tokenBalanceSelector} from '../../selectors'
-import {COLORS} from '../../styles/config'
-import {formatTokenWithText} from '../../utils/format'
-import {Logger} from '../../utils/logging'
-import {Text} from '../UiKit'
-type Props = {|
-  onPress: () => void,
-  disabled: boolean,
-|}
+import CatalystLogo from '../../legacy/assets/img/voting.png'
+import StandardModal from '../../legacy/components/Common/StandardModal'
+import {Text} from '../../legacy/components/UiKit'
+import {CONFIG, isHaskellShelley, isNightly} from '../../legacy/config/config'
+import {isRegistrationOpen} from '../../legacy/crypto/shelley/catalystUtils'
+import walletManager from '../../legacy/crypto/walletManager'
+import globalMessages, {confirmationMessages} from '../../legacy/i18n/global-messages'
+import {availableAssetsSelector, tokenBalanceSelector} from '../../legacy/selectors'
+import {COLORS} from '../../legacy/styles/config'
+import {formatTokenWithText} from '../../legacy/utils/format'
+import {Logger} from '../../legacy/utils/logging'
+import {useSelectedWallet} from '../../src/SelectedWallet'
+type Props = {onPress: () => void; disabled: boolean}
 
-const VotingBanner = ({onPress, disabled}: Props) => {
+export const VotingBanner = ({onPress, disabled}: Props) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
 
@@ -37,10 +31,10 @@ const VotingBanner = ({onPress, disabled}: Props) => {
 
   useEffect(() => {
     const checkCatalystFundInfo = async () => {
-      let fundInfo: {|
-        registrationStart: string,
-        registrationEnd: string,
-      |} | null = null
+      let fundInfo: {
+        registrationStart: string
+        registrationEnd: string
+      } | null = null
 
       if (canVote) {
         try {
@@ -105,8 +99,6 @@ const VotingBanner = ({onPress, disabled}: Props) => {
     </View>
   )
 }
-
-export default VotingBanner
 
 const messages = defineMessages({
   name: {

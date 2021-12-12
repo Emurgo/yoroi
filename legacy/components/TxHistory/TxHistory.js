@@ -8,6 +8,8 @@ import {RefreshControl, ScrollView, StyleSheet, View} from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'
 import {useDispatch, useSelector} from 'react-redux'
 
+// $FlowExpectedError
+import {VotingBanner} from '../../../src/Catalyst/VotingBanner'
 import {checkForFlawedWallets} from '../../actions'
 import {fetchAccountState} from '../../actions/account'
 import {updateHistory} from '../../actions/history'
@@ -31,7 +33,6 @@ import {
 } from '../../selectors'
 import {formatTokenWithText} from '../../utils/format'
 import {Logger} from '../../utils/logging'
-import VotingBanner from '../Catalyst/VotingBanner'
 import StandardModal from '../Common/StandardModal'
 import {OfflineBanner, StatusBar, Text, WarningBanner} from '../UiKit'
 import ActionsBanner from './components/ActionsBanner'

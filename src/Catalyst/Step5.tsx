@@ -1,5 +1,3 @@
-// @flow
-
 import {useNavigation} from '@react-navigation/native'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -8,39 +6,39 @@ import {ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {showErrorDialog, submitSignedTx, submitTransaction} from '../../actions'
-import {setLedgerDeviceId, setLedgerDeviceObj} from '../../actions/hwWallet'
-import {generateVotingTransaction} from '../../actions/voting'
-import {CONFIG} from '../../config/config'
-import {WrongPassword} from '../../crypto/errors'
-import KeyStore from '../../crypto/KeyStore'
-import type {DeviceId, DeviceObj} from '../../crypto/shelley/ledgerUtils'
-import walletManager, {SystemAuthDisabled} from '../../crypto/walletManager'
-import {confirmationMessages, errorMessages, txLabels} from '../../i18n/global-messages'
-import LocalizableError from '../../i18n/LocalizableError'
-import {CATALYST_ROUTES, WALLET_ROOT_ROUTES} from '../../RoutesList'
+import {showErrorDialog, submitSignedTx, submitTransaction} from '../../legacy/actions'
+import {setLedgerDeviceId, setLedgerDeviceObj} from '../../legacy/actions/hwWallet'
+import {generateVotingTransaction} from '../../legacy/actions/voting'
+import HWInstructions from '../../legacy/components/Ledger/HWInstructions'
+import {Button, OfflineBanner, ProgressStep} from '../../legacy/components/UiKit'
+import {Spacer, TextInput} from '../../legacy/components/UiKit'
+import {CONFIG} from '../../legacy/config/config'
+import {WrongPassword} from '../../legacy/crypto/errors'
+import KeyStore from '../../legacy/crypto/KeyStore'
+import type {DeviceId, DeviceObj} from '../../legacy/crypto/shelley/ledgerUtils'
+import walletManager, {SystemAuthDisabled} from '../../legacy/crypto/walletManager'
+import {confirmationMessages, errorMessages, txLabels} from '../../legacy/i18n/global-messages'
+import LocalizableError from '../../legacy/i18n/LocalizableError'
+import {CATALYST_ROUTES, WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
 import {
   defaultNetworkAssetSelector,
   easyConfirmationSelector,
   hwDeviceInfoSelector,
   isHWSelector,
   unsignedTxSelector,
-} from '../../selectors'
-import assert from '../../utils/assert'
-import {formatTokenWithSymbol} from '../../utils/format'
-import HWInstructions from '../Ledger/HWInstructions'
-import {Button, OfflineBanner, ProgressStep} from '../UiKit'
-import {Spacer, TextInput} from '../UiKit'
+} from '../../legacy/selectors'
+import assert from '../../legacy/utils/assert'
+import {formatTokenWithSymbol} from '../../legacy/utils/format'
 import {Actions, Description, Title} from './components'
 import type {DialogStep} from './Dialog'
-import Dialog, {DIALOG_STEPS} from './Dialog'
+import {Dialog, DIALOG_STEPS} from './Dialog'
 
-type ErrorData = {|
-  errorMessage: string,
-  errorLogs: ?string,
-|}
+type ErrorData = {
+  errorMessage: string
+  errorLogs?: string
+}
 
-const Step5 = () => {
+export const Step5 = () => {
   const intl = useIntl()
   const strings = useStrings()
   const navigation = useNavigation()
@@ -175,12 +173,14 @@ const Step5 = () => {
       if (error instanceof LocalizableError) {
         setErrorData({
           errorMessage: strings.errorMessage(error),
-          errorLogs: error.values.response || null,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          errorLogs: (error as any).values.response || null,
         })
       } else {
         setErrorData({
           errorMessage: strings.generalTxErrorMessage,
-          errorLogs: error.message || null,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          errorLogs: (error as any).message || null,
         })
       }
       setDialogStep(DIALOG_STEPS.ERROR)
@@ -237,8 +237,6 @@ const Step5 = () => {
     </SafeAreaView>
   )
 }
-
-export default Step5
 
 const messages = defineMessages({
   subTitle: {
