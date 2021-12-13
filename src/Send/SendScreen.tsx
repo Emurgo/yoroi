@@ -68,37 +68,38 @@ import type {
   BalanceValidationErrors,
 } from '../../legacy/utils/validators'
 import {getUnstoppableDomainAddress, isReceiverAddressValid, validateAmount} from '../../legacy/utils/validators'
+import {SendTokenList} from '../types/cardano'
 
 type LegacyProps = {
-  intl: IntlShape,
-  navigation: Navigation,
-  selectedAsset: TokenEntry,
-  sendAll: boolean,
-  tokenBalance: MultiToken,
-  isFetchingBalance: boolean,
-  lastFetchingError: Error | null,
-  tokenMetadata: Record<string, Token>,
-  defaultAsset: DefaultAsset,
-  utxos: ?Array<RawUtxo>,
-  isOnline: boolean,
-  hasPendingOutgoingTransaction: boolean,
-  serverStatus: ServerStatusCache,
-  fetchUTXOs: () => void,
-  onSendAll: (boolean) => void,
-  walletMetadata: Omit<WalletMeta, {id: string}>,
+  intl: IntlShape
+  navigation: Navigation
+  selectedAsset: TokenEntry
+  sendAll: boolean
+  tokenBalance: MultiToken
+  isFetchingBalance: boolean
+  lastFetchingError: Error | null
+  tokenMetadata: Record<string, Token>
+  defaultAsset: DefaultAsset
+  utxos: Array<RawUtxo> | null
+  isOnline: boolean
+  hasPendingOutgoingTransaction: boolean
+  serverStatus: ServerStatusCache
+  fetchUTXOs: () => void
+  onSendAll: (boolean) => void
+  walletMetadata: Omit<WalletMeta, 'id'>
 }
 
 type State = {
-  address: string,
-  addressInput: string,
-  addressErrors: AddressValidationErrors,
-  amount: string,
-  amountErrors: AmountValidationErrors,
-  balanceErrors: BalanceValidationErrors,
-  fee: ?BigNumber,
-  balanceAfter: ?BigNumber,
-  recomputing: boolean,
-  showSendAllWarning: boolean,
+  address: string
+  addressInput: string
+  addressErrors: AddressValidationErrors
+  amount: string
+  amountErrors: AmountValidationErrors
+  balanceErrors: BalanceValidationErrors
+  fee: BigNumber | null
+  balanceAfter: BigNumber | null
+  recomputing: boolean
+  showSendAllWarning: boolean
 }
 
 // eslint-disable-next-line react-prefer-function-component/react-prefer-function-component
@@ -150,11 +151,11 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
     sendAll,
     selectedAsset,
   }: {
-    utxos: ?Array<RawUtxo>,
-    addressInput: string,
-    amount: string,
-    sendAll: boolean,
-    selectedAsset: TokenEntry,
+    utxos: Array<RawUtxo> | null
+    addressInput: string
+    amount: string
+    sendAll: boolean
+    selectedAsset: TokenEntry
   }) {
     this.setState({
       fee: null,
@@ -253,7 +254,7 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
       this.props.utxos === utxos
 
     if (isValid === true) {
-      /* :: if (!utxos) throw 'assert' */
+      if (!utxos) throw 'assert'
       const transactionData = await getTransactionData(
         utxos,
         address,
@@ -520,9 +521,9 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
 }
 
 type Props = {
-  selectedTokenIdentifier: string,
-  sendAll: boolean,
-  onSendAll: (boolean) => void,
+  selectedTokenIdentifier: string
+  sendAll: boolean
+  onSendAll: (sendAll: boolean) => void
 }
 export const SendScreen = ({selectedTokenIdentifier, sendAll, onSendAll}: Props) => {
   const intl = useIntl()
@@ -617,7 +618,7 @@ const getTransactionData = async (
     defaultNetworkId: defaultAsset.networkId,
     defaultIdentifier: defaultAsset.identifier,
   }
-  const sendTokenList = []
+  const sendTokenList: SendTokenList = []
 
   if (sendAll) {
     sendTokenList.push({
@@ -659,7 +660,11 @@ const recomputeAll = async ({
     try {
       address = await getUnstoppableDomainAddress(addressInput)
     } catch (e) {
-      addressErrors = JSON.parse(e.message)
+      if (e instanceof Error) {
+        addressErrors = JSON.parse(e.message)
+      }
+
+      throw e
     }
   }
 
@@ -669,12 +674,12 @@ const recomputeAll = async ({
 
   let balanceErrors = Object.freeze({})
   let fee = null
-  let balanceAfter = null
+  let balanceAfter: null | BigNumber = null
   let recomputedAmount = amount
 
   if (_.isEmpty(addressErrors) && utxos) {
     try {
-      let _fee: ?MultiToken
+      let _fee: MultiToken | null | undefined
 
       // we'll substract minAda from ADA balance if we are sending a token
       const minAda =

@@ -39,6 +39,11 @@ export var unsignedTxSelector = (state: State) => state.voting.unsignedTx
 export var encryptedKeySelector: (state: State) => string
 export var pinSelector: (state: State) => Array<string>
 export var tokenBalanceSelector: (state: State) => MultiToken
+export var hasPendingOutgoingTransactionSelector = (state: State) => boolean
+export var isFetchingUtxosSelector = (state: State) => state.balance.isFetching
+export var lastUtxosFetchErrorSelector = (state: State) => state.balance.lastFetchingError
+export var serverStatusSelector = (state: State) => state.serverStatus
+export var utxosSelector = (state: State) => state.balance.utxos
 
 // prettier-ignore
 interface MultiToken {
@@ -46,4 +51,14 @@ interface MultiToken {
   getDefault: () => BigNumber,
   getDefaultEntry: () => TokenEntry,
   values: Array<{amount: BigNumber, identifier: string, networkId: number}>
+}
+
+// prettier-ignore
+export type RawUtxo = {
+  amount: string,
+  receiver: string,
+  tx_hash: string,
+  tx_index: number,
+  utxo_id: string,
+  assets: Array<RemoteAsset>,
 }

@@ -163,6 +163,17 @@ export type DefaultAsset = Token & {
   metadata: DefaultAssetMetadata
 }
 
+export type SendTokenList = Array<
+  | {
+      token: Token
+      amount: string // in lovelaces
+    }
+  | {
+      token: Token
+      shouldSendAll: true
+    }
+>
+
 // Catalyst
 
 export type FundInfos = {

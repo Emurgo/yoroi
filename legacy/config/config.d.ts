@@ -20,7 +20,9 @@ export var CONFIG: {
     MNEMONIC3: string,
     START_WITH_INDEX_SCREEN: boolean,
     PREFILL_FORMS: boolean,
-    PASSWORD: string
+    PASSWORD: string,
+    SEND_ADDRESS: string,
+    SEND_AMOUNT: string,
   },
   CATALYST: {
     MIN_ADA: any,
