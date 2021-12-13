@@ -283,7 +283,7 @@ PODS:
     - React-Core
   - react-native-config (0.12.0):
     - React
-  - react-native-haskell-shelley (3.1.0):
+  - react-native-haskell-shelley (3.1.2):
     - React
   - react-native-netinfo (5.9.9):
     - React-Core
@@ -291,7 +291,7 @@ PODS:
     - React-Core
   - react-native-safe-area-context (3.1.9):
     - React-Core
-  - react-native-webview (11.6.2):
+  - react-native-webview (11.14.0):
     - React-Core
   - React-perflogger (0.64.2)
   - React-RCTActionSheet (0.64.2):
@@ -369,8 +369,8 @@ PODS:
     - React
   - RNGestureHandler (1.10.3):
     - React-Core
-  - RNKeychain (3.0.0):
-    - React
+  - RNKeychain (7.0.0):
+    - React-Core
   - RNPermissions (2.2.2):
     - React-Core
   - RNReanimated (1.13.2):
@@ -382,6 +382,8 @@ PODS:
     - Sentry (~> 5.1.4)
   - RNSVG (7.2.1):
     - React
+  - RNVectorIcons (8.1.0):
+    - React-Core
   - Sentry (5.1.10):
     - Sentry/Core (= 5.1.10)
   - Sentry/Core (5.1.10)
@@ -461,6 +463,7 @@ DEPENDENCIES:
   - RNScreens (from `../node_modules/react-native-screens`)
   - "RNSentry (from `../node_modules/@sentry/react-native`)"
   - RNSVG (from `../node_modules/react-native-svg`)
+  - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -581,6 +584,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@sentry/react-native"
   RNSVG:
     :path: "../node_modules/react-native-svg"
+  RNVectorIcons:
+    :path: "../node_modules/react-native-vector-icons"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -618,11 +623,11 @@ SPEC CHECKSUMS:
   react-native-ble-plx: caac53ee98151ec81198239d591c203809a1ed6e
   react-native-camera: e46c64f0d1212124c915bf83ee9b855ac6d35164
   react-native-config: f2c2ae45625a068c35681a16b9bfb1ca58b0adc7
-  react-native-haskell-shelley: 43928fdbbcf5adb71a2d565f21a5f1e006791fd7
+  react-native-haskell-shelley: f4e4e019ba05a0846b67c4251431e800f95f9c70
   react-native-netinfo: 0212ce8604e88edf686f1481b925b17a42a52449
   react-native-randombytes: b6677f7d495c27e9ee0dbd77ebc97b3c59173729
   react-native-safe-area-context: b6e0e284002381d2ff29fa4fff42b4d8282e3c94
-  react-native-webview: 193d233c29eacce1f42ca2637dab7ba79c25a6de
+  react-native-webview: d70bc760daaa0e2667dec569b93014882565819c
   React-perflogger: 25373e382fed75ce768a443822f07098a15ab737
   React-RCTActionSheet: af7796ba49ffe4ca92e7277a5d992d37203f7da5
   React-RCTAnimation: 6a2e76ab50c6f25b428d81b76a5a45351c4d77aa
@@ -641,16 +646,17 @@ SPEC CHECKSUMS:
   RNCMaskedView: 5a8ec07677aa885546a0d98da336457e2bea557f
   RNDeviceInfo: 6dd5c07a482f2a5e4a29fe8a9d99eadd4277175a
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
-  RNKeychain: 3aa3cf891a09a0d18d306862ab2bb9e106079b24
+  RNKeychain: f75b8c8b2f17d3b2aa1f25b4a0ac5b83d947ff8f
   RNPermissions: 5df468064df661a4c8c017e2791ce90d7695eea5
   RNReanimated: e03f7425cb7a38dcf1b644d680d1bfc91c3337ad
   RNScreens: 0e91da98ab26d5d04c7b59a9b6bd694124caf88c
   RNSentry: 0a70359ddacbfb9b1cbbb0971e54065b9f70ac57
   RNSVG: 6c8e8c6f9e5a0caf910dd25aa6e4216045426e1d
+  RNVectorIcons: 31cebfcf94e8cf8686eb5303ae0357da64d7a5a4
   Sentry: 8715e88b813bde9ad37aead365d5b04ac7302153
   Yoga: 575c581c63e0d35c9a83f4b46d01d63abc1100ac
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 2a03d8f59ad7847fa9d6d7d5a862e4f5b84f242b
+PODFILE CHECKSUM: 3ccb793791e4434223a7c95969374ada5cf43093
 
 COCOAPODS: 1.10.2

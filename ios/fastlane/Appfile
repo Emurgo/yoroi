@@ -1,8 +1,8 @@
 # For production builds:
-app_identifier("com.emurgo.yoroi") # The bundle identifier of your app
+# app_identifier("com.emurgo.yoroi") # The bundle identifier of your app
 
 # For nightly:
-# app_identifier("com.emurgo.yoroi-nightly")
+app_identifier("com.emurgo.yoroi-nightly")
 
 apple_id("ruslan@emurgo.io") # Your Apple email address
 

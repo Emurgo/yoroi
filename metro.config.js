@@ -5,16 +5,19 @@
  * @format
  */
 
+// @flow
+
 module.exports = {
   transformer: {
     getTransformOptions: async () => ({
       transform: {
         experimentalImportSupport: false,
-        inlineRequires: false,
+        inlineRequires: true,
       },
     }),
   },
   resolver: {
+    sourceExts: ['js', 'jsx', 'ts', 'tsx'],
     assetExts: ['png', 'md', 'json'],
     extraNodeModules: {
       buffer: require.resolve('safe-buffer'),

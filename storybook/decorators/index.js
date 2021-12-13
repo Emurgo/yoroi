@@ -1,5 +1,6 @@
 // @flow
 
+export * from './withIntlProp'
 export * from './withModalProps'
-export * from './withProvider'
 export * from './withNavigationProps'
+export * from './withProvider'
