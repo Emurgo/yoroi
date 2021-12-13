@@ -1,5 +1,3 @@
-// @flow
-
 import Clipboard from '@react-native-community/clipboard'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import React, {useEffect, useState} from 'react'
@@ -18,18 +16,18 @@ import QRCodeSVG from 'react-native-qrcode-svg'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useSelector} from 'react-redux'
 
-import copyImage from '../../assets/img/copyd.png'
-import {confirmationMessages} from '../../i18n/global-messages'
-import {WALLET_ROOT_ROUTES} from '../../RoutesList'
-import {encryptedKeySelector} from '../../selectors'
-import {COLORS} from '../../styles/config'
-import {Button, ProgressStep, Spacer, Text} from '../UiKit'
-import CatalystBackupCheckModal from './CatalystBackupCheckModal'
+import copyImage from '../../legacy/assets/img/copyd.png'
+import {Button, ProgressStep, Spacer, Text} from '../../legacy/components/UiKit'
+import {confirmationMessages} from '../../legacy/i18n/global-messages'
+import {WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
+import {encryptedKeySelector} from '../../legacy/selectors'
+import {COLORS} from '../../legacy/styles/config'
+import {CatalystBackupCheckModal} from './CatalystBackupCheckModal'
 import {Actions, Description, Title} from './components'
 
 const {FlagSecure} = NativeModules
 
-const Step6 = () => {
+export const Step6 = () => {
   const strings = useStrings()
   const encryptedKey = useSelector(encryptedKeySelector)
   const navigation = useNavigation()
@@ -112,8 +110,6 @@ const Step6 = () => {
     </SafeAreaView>
   )
 }
-
-export default Step6
 
 const AlertBox = (props) => <View {...props} style={styles.alertBox} />
 const QRCode = ({text}: {text: string}) => (

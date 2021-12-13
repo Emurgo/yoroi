@@ -189,12 +189,11 @@ export class TransactionCache {
   }
 
   resetState() {
-    this._state = {
+    this.updateState({
       perAddressSyncMetadata: {},
       transactions: {},
       bestBlockNum: 0,
-    }
-    this._subscriptions.forEach((handler) => handler())
+    })
   }
 
   get transactions() {

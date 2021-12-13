@@ -1,19 +1,17 @@
-// @flow
-
 import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 
-import globalMessages, {confirmationMessages} from '../../i18n/global-messages'
-import {Button, Checkbox, Modal, Spacer, Text} from '../UiKit'
+import {Button, Checkbox, Modal, Spacer, Text} from '../../legacy/components/UiKit'
+import globalMessages, {confirmationMessages} from '../../legacy/i18n/global-messages'
 
 type Props = {
-  onConfirm: () => void,
-  visible: boolean,
-  onRequestClose: () => void,
+  onConfirm: () => void
+  visible: boolean
+  onRequestClose: () => void
 }
 
-const CatalystBackupCheckModal = ({onConfirm, visible, onRequestClose}: Props) => {
+export const CatalystBackupCheckModal = ({onConfirm, visible, onRequestClose}: Props) => {
   const strings = useStrings()
   const [acceptedPin, setAcceptedPin] = useState(false)
   const [acceptedQrCode, setAcceptedQrCode] = useState(false)
@@ -51,8 +49,6 @@ const CatalystBackupCheckModal = ({onConfirm, visible, onRequestClose}: Props) =
     </Modal>
   )
 }
-
-export default CatalystBackupCheckModal
 
 const PinCheckbox = Checkbox
 const QRCodeCheckbox = Checkbox

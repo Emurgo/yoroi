@@ -1,5 +1,3 @@
-// @flow
-
 import {useNavigation} from '@react-navigation/native'
 import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -7,21 +5,21 @@ import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useSelector} from 'react-redux'
 
-import {showErrorDialog} from '../../actions'
-import {errorMessages} from '../../i18n/global-messages'
-import {CATALYST_ROUTES} from '../../RoutesList'
-import {isHWSelector} from '../../selectors'
-import PinInputKeyboard from '../Common/PinInputKeyboard'
-import {ProgressStep, Spacer} from '../UiKit'
+import {showErrorDialog} from '../../legacy/actions'
+import PinInputKeyboard from '../../legacy/components/Common/PinInputKeyboard'
+import {ProgressStep, Spacer} from '../../legacy/components/UiKit'
+import {errorMessages} from '../../legacy/i18n/global-messages'
+import {CATALYST_ROUTES} from '../../legacy/RoutesList'
+import {isHWSelector, pinSelector} from '../../legacy/selectors'
 import {Description, PinBox, Row, Title} from './components'
 
 const PIN_LENGTH = 4
 
-const Step3 = () => {
+export const Step3 = () => {
   const intl = useIntl()
   const strings = useStrings()
   const navigation = useNavigation()
-  const pin = useSelector((state) => state.voting.pin)
+  const pin = useSelector(pinSelector)
   const isHW = useSelector(isHWSelector)
   const [confirmPin, setPin] = useState('')
 
@@ -74,8 +72,6 @@ const Step3 = () => {
     </SafeAreaView>
   )
 }
-
-export default Step3
 
 const messages = defineMessages({
   subTitle: {
