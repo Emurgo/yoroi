@@ -11,11 +11,11 @@ import {TouchableOpacity} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {fetchUTXOs} from '../../legacy/actions/utxo'
-import type {RawUtxo} from '../../legacy/api/types'
-import DangerousActionModal from '../../legacy/components/Common/DangerousActionModal'
-import AmountField from '../../legacy/components/Send/AmountField'
-import UtxoAutoRefresher from '../../legacy/components/Send/UtxoAutoRefresher'
+import {fetchUTXOs} from '../../../legacy/actions/utxo'
+import type {RawUtxo} from '../../../legacy/api/types'
+import DangerousActionModal from '../../../legacy/components/Common/DangerousActionModal'
+import AmountField from '../../../legacy/components/Send/AmountField'
+import UtxoAutoRefresher from '../../../legacy/components/Send/UtxoAutoRefresher'
 import {
   Banner,
   Button,
@@ -25,17 +25,17 @@ import {
   StatusBar,
   Text,
   TextInput,
-} from '../../legacy/components/UiKit'
-import {CONFIG} from '../../legacy/config/config'
-import {getCardanoNetworkConfigById, isHaskellShelleyNetwork} from '../../legacy/config/networks'
-import {AssetOverflowError, InsufficientFunds} from '../../legacy/crypto/errors'
-import type {TokenEntry} from '../../legacy/crypto/MultiToken'
-import {MultiToken} from '../../legacy/crypto/MultiToken'
-import type {CreateUnsignedTxResponse} from '../../legacy/crypto/shelley/transactionUtils'
-import {cardanoValueFromMultiToken} from '../../legacy/crypto/shelley/utils'
-import walletManager from '../../legacy/crypto/walletManager'
-import globalMessages, {confirmationMessages} from '../../legacy/i18n/global-messages'
-import {SEND_ROUTES} from '../../legacy/RoutesList'
+} from '../../../legacy/components/UiKit'
+import {CONFIG} from '../../../legacy/config/config'
+import {getCardanoNetworkConfigById, isHaskellShelleyNetwork} from '../../../legacy/config/networks'
+import {AssetOverflowError, InsufficientFunds} from '../../../legacy/crypto/errors'
+import type {TokenEntry} from '../../../legacy/crypto/MultiToken'
+import {MultiToken} from '../../../legacy/crypto/MultiToken'
+import type {CreateUnsignedTxResponse} from '../../../legacy/crypto/shelley/transactionUtils'
+import {cardanoValueFromMultiToken} from '../../../legacy/crypto/shelley/utils'
+import walletManager from '../../../legacy/crypto/walletManager'
+import globalMessages, {confirmationMessages} from '../../../legacy/i18n/global-messages'
+import {SEND_ROUTES} from '../../../legacy/RoutesList'
 import {
   defaultNetworkAssetSelector,
   hasPendingOutgoingTransactionSelector,
@@ -47,11 +47,11 @@ import {
   tokenInfoSelector,
   utxosSelector,
   walletMetaSelector,
-} from '../../legacy/selectors'
-import type {ServerStatusCache, WalletMeta} from '../../legacy/state'
-import {COLORS} from '../../legacy/styles/config'
-import type {DefaultAsset, Token} from '../../legacy/types/HistoryTransaction'
-import type {Navigation} from '../../legacy/types/navigation'
+} from '../../../legacy/selectors'
+import type {ServerStatusCache, WalletMeta} from '../../../legacy/state'
+import {COLORS} from '../../../legacy/styles/config'
+import type {DefaultAsset, Token} from '../../../legacy/types/HistoryTransaction'
+import type {Navigation} from '../../../legacy/types/navigation'
 import {
   formatTokenAmount,
   formatTokenInteger,
@@ -60,15 +60,15 @@ import {
   getAssetDenominationOrId,
   normalizeTokenAmount,
   truncateWithEllipsis,
-} from '../../legacy/utils/format'
-import {InvalidAssetAmount, parseAmountDecimal} from '../../legacy/utils/parsing'
+} from '../../../legacy/utils/format'
+import {InvalidAssetAmount, parseAmountDecimal} from '../../../legacy/utils/parsing'
 import type {
   AddressValidationErrors,
   AmountValidationErrors,
   BalanceValidationErrors,
-} from '../../legacy/utils/validators'
-import {getUnstoppableDomainAddress, isReceiverAddressValid, validateAmount} from '../../legacy/utils/validators'
-import {SendTokenList} from '../types/cardano'
+} from '../../../legacy/utils/validators'
+import {getUnstoppableDomainAddress, isReceiverAddressValid, validateAmount} from '../../../legacy/utils/validators'
+import {SendTokenList} from '../../types/cardano'
 
 type LegacyProps = {
   intl: IntlShape
@@ -484,7 +484,7 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
 
           <TouchableOpacity onPress={() => navigation.navigate('select-asset')}>
             <TextInput
-              right={<Image source={require('../../legacy/assets/img/arrow_down_fill.png')} />}
+              right={<Image source={require('../../../legacy/assets/img/arrow_down_fill.png')} />}
               editable={false}
               label={intl.formatMessage(messages.asset)}
               value={`${assetDenomination}: ${formatTokenAmount(selectedAsset.amount, selectedAssetMeta, 15)}`}

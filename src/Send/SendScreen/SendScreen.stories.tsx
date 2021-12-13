@@ -3,7 +3,7 @@ import {storiesOf} from '@storybook/react-native'
 import {BigNumber} from 'bignumber.js'
 import React from 'react'
 
-import type {TokenEntry} from '../../legacy/crypto/MultiToken'
+import type {TokenEntry} from '../../../legacy/crypto/MultiToken'
 import {SendScreen} from './SendScreen'
 
 storiesOf('SendScreen', module)
