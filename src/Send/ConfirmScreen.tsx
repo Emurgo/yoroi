@@ -1,42 +1,53 @@
-// @flow
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {CommonActions} from '@react-navigation/routers'
 import {BigNumber} from 'bignumber.js'
 import React from 'react'
-import {type IntlShape, injectIntl} from 'react-intl'
+import type {IntlShape} from 'react-intl'
+import {injectIntl} from 'react-intl'
+import {StyleSheet} from 'react-native'
 import {Platform, ScrollView, View} from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'
 import {connect} from 'react-redux'
 import {withHandlers, withStateHandlers} from 'recompose'
 import {compose} from 'redux'
 
-import {showErrorDialog, submitSignedTx, submitTransaction} from '../../actions'
-import {setLedgerDeviceId, setLedgerDeviceObj} from '../../actions/hwWallet'
-import {CONFIG} from '../../config/config'
-import {WrongPassword} from '../../crypto/errors'
-import {ISignRequest} from '../../crypto/ISignRequest'
-import KeyStore from '../../crypto/KeyStore'
-import type {TokenEntry} from '../../crypto/MultiToken'
-import type {CreateUnsignedTxResponse} from '../../crypto/shelley/transactionUtils'
-import walletManager, {SystemAuthDisabled} from '../../crypto/walletManager'
-import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../i18n/global-messages'
-import LocalizableError from '../../i18n/LocalizableError'
-import {SEND_ROUTES, WALLET_ROOT_ROUTES, WALLET_ROUTES} from '../../RoutesList'
+import {showErrorDialog, submitSignedTx, submitTransaction} from '../../legacy/actions'
+import {setLedgerDeviceId, setLedgerDeviceObj} from '../../legacy/actions/hwWallet'
+import ErrorModal from '../../legacy/components/Common/ErrorModal'
+import HWInstructions from '../../legacy/components/Ledger/HWInstructions'
+import LedgerConnect from '../../legacy/components/Ledger/LedgerConnect'
+import LedgerTransportSwitchModal from '../../legacy/components/Ledger/LedgerTransportSwitchModal'
+import {
+  Banner,
+  Button,
+  Modal,
+  OfflineBanner,
+  PleaseWaitModal,
+  StatusBar,
+  Text,
+  ValidatedTextInput,
+} from '../../legacy/components/UiKit'
+import {CONFIG} from '../../legacy/config/config'
+import {WrongPassword} from '../../legacy/crypto/errors'
+import {ISignRequest} from '../../legacy/crypto/ISignRequest'
+import KeyStore from '../../legacy/crypto/KeyStore'
+import type {TokenEntry} from '../../legacy/crypto/MultiToken'
+import type {CreateUnsignedTxResponse} from '../../legacy/crypto/shelley/transactionUtils'
+import walletManager, {SystemAuthDisabled} from '../../legacy/crypto/walletManager'
+import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../legacy/i18n/global-messages'
+import LocalizableError from '../../legacy/i18n/LocalizableError'
+import {SEND_ROUTES, WALLET_ROOT_ROUTES, WALLET_ROUTES} from '../../legacy/RoutesList'
 import {
   defaultNetworkAssetSelector,
   easyConfirmationSelector,
   hwDeviceInfoSelector,
   isHWSelector,
   tokenInfoSelector,
-} from '../../selectors'
-import {formatTokenWithSymbol, formatTokenWithText} from '../../utils/format'
-import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
-import ErrorModal from '../Common/ErrorModal'
-import HWInstructions from '../Ledger/HWInstructions'
-import LedgerConnect from '../Ledger/LedgerConnect'
-import LedgerTransportSwitchModal from '../Ledger/LedgerTransportSwitchModal'
-import {Banner, Button, Modal, OfflineBanner, PleaseWaitModal, StatusBar, Text, ValidatedTextInput} from '../UiKit'
-import styles from './styles/ConfirmScreen.style'
+} from '../../legacy/selectors'
+import {State} from '../../legacy/state'
+import {COLORS} from '../../legacy/styles/config'
+import {formatTokenWithSymbol, formatTokenWithText} from '../../legacy/utils/format'
+import {ignoreConcurrentAsyncHandler} from '../../legacy/utils/utils'
 
 const handleOnConfirm = async (
   navigation,
@@ -55,7 +66,7 @@ const handleOnConfirm = async (
 ) => {
   const signRequest: CreateUnsignedTxResponse = route.params.transactionData
 
-  const submitTx = async <T>(tx: string | ISignRequest<T>, decryptedKey: ?string) => {
+  const submitTx = async (tx: string | ISignRequest, decryptedKey?: string) => {
     await withPleaseWaitModal(async () => {
       if (decryptedKey != null) {
         await submitTransaction(tx, decryptedKey)
@@ -64,7 +75,7 @@ const handleOnConfirm = async (
       }
       navigation.dispatch(
         CommonActions.reset({
-          key: null,
+          key: null as any,
           index: 0,
           routes: [{name: SEND_ROUTES.MAIN}],
         }),
@@ -121,13 +132,18 @@ const handleOnConfirm = async (
     }
   } catch (e) {
     if (e instanceof LocalizableError) {
+      const localizableError: any = e
       setErrorData(
         true,
-        intl.formatMessage({id: e.id, defaultMessage: e.defaultMessage}, e.values),
-        e.values.response || null, // API errors should include a response
+        intl.formatMessage(
+          {id: localizableError.id, defaultMessage: localizableError.defaultMessage},
+          localizableError.values,
+        ),
+        localizableError.values.response || null, // API errors should include a response
       )
     } else {
-      setErrorData(true, intl.formatMessage(errorMessages.generalTxError.message), e.message || null)
+      const localizableError: any = e
+      setErrorData(true, intl.formatMessage(errorMessages.generalTxError.message), localizableError.message || null)
     }
   }
 }
@@ -161,7 +177,7 @@ const ConfirmScreen = (
     showErrorModal,
     errorMessage,
     errorLogs,
-  }: {intl: IntlShape} & Object /* TODO: type */,
+  }: {intl: IntlShape} & Record<string, any> /* TODO: type */,
 ) => {
   const {
     defaultAssetAmount,
@@ -170,14 +186,14 @@ const ConfirmScreen = (
     availableAmount,
     fee,
     tokens,
-  }: {|
-    defaultAssetAmount: BigNumber,
-    address: string,
-    balanceAfterTx: BigNumber,
-    availableAmount: BigNumber,
-    fee: BigNumber,
-    tokens: Array<TokenEntry>,
-  |} = route.params
+  }: {
+    defaultAssetAmount: BigNumber
+    address: string
+    balanceAfterTx: BigNumber
+    availableAmount: BigNumber
+    fee: BigNumber
+    tokens: Array<TokenEntry>
+  } = (route as any).params
 
   const isConfirmationDisabled = !isEasyConfirmationEnabled && !password && !isHW
 
@@ -264,9 +280,9 @@ const ConfirmScreen = (
 }
 
 export default injectIntl(
-  compose(
+  compose<any>(
     connect(
-      (state) => ({
+      (state: State) => ({
         isEasyConfirmationEnabled: easyConfirmationSelector(state),
         isHW: isHWSelector(state),
         hwDeviceInfo: hwDeviceInfoSelector(state),
@@ -376,7 +392,7 @@ export default injectIntl(
               intl,
               useUSB,
               setErrorData,
-            }: {intl: IntlShape} & Object /* TODO: type */,
+            }: {intl: IntlShape} & Record<string, unknown> /* TODO: type */,
           ) =>
           async (_event) => {
             await handleOnConfirm(
@@ -400,3 +416,30 @@ export default injectIntl(
     }),
   )(ConfirmScreen),
 )
+
+const styles = StyleSheet.create({
+  safeAreaView: {
+    backgroundColor: COLORS.WHITE,
+    flex: 1,
+  },
+  root: {
+    flex: 1,
+  },
+  container: {
+    backgroundColor: COLORS.WHITE,
+    flex: 1,
+    padding: 16,
+  },
+  heading: {
+    marginTop: 16,
+  },
+  actions: {
+    padding: 16,
+  },
+  input: {
+    marginTop: 16,
+  },
+  amount: {
+    color: COLORS.POSITIVE_AMOUNT,
+  },
+})
