@@ -1,29 +1,41 @@
-// @flow
-
-/* eslint-disable-next-line camelcase */
 import {BigNum, min_ada_required} from '@emurgo/react-native-haskell-shelley'
 import {useNavigation} from '@react-navigation/native'
 import {BigNumber} from 'bignumber.js'
 import _ from 'lodash'
 import React, {Component} from 'react'
-import {type IntlShape, defineMessages, useIntl} from 'react-intl'
+import type {IntlShape} from 'react-intl'
+import {defineMessages, useIntl} from 'react-intl'
+import {StyleSheet} from 'react-native'
 import {ActivityIndicator, Image, ScrollView, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {fetchUTXOs} from '../../actions/utxo'
-import type {RawUtxo} from '../../api/types'
-import {CONFIG} from '../../config/config'
-import {getCardanoNetworkConfigById, isHaskellShelleyNetwork} from '../../config/networks'
-import {AssetOverflowError, InsufficientFunds} from '../../crypto/errors'
-import type {TokenEntry} from '../../crypto/MultiToken'
-import {MultiToken} from '../../crypto/MultiToken'
-import type {CreateUnsignedTxResponse} from '../../crypto/shelley/transactionUtils'
-import {cardanoValueFromMultiToken} from '../../crypto/shelley/utils'
-import walletManager from '../../crypto/walletManager'
-import globalMessages, {confirmationMessages} from '../../i18n/global-messages'
-import {SEND_ROUTES} from '../../RoutesList'
+import {fetchUTXOs} from '../../legacy/actions/utxo'
+import type {RawUtxo} from '../../legacy/api/types'
+import DangerousActionModal from '../../legacy/components/Common/DangerousActionModal'
+import AmountField from '../../legacy/components/Send/AmountField'
+import UtxoAutoRefresher from '../../legacy/components/Send/UtxoAutoRefresher'
+import {
+  Banner,
+  Button,
+  Checkbox,
+  OfflineBanner,
+  Spacer,
+  StatusBar,
+  Text,
+  TextInput,
+} from '../../legacy/components/UiKit'
+import {CONFIG} from '../../legacy/config/config'
+import {getCardanoNetworkConfigById, isHaskellShelleyNetwork} from '../../legacy/config/networks'
+import {AssetOverflowError, InsufficientFunds} from '../../legacy/crypto/errors'
+import type {TokenEntry} from '../../legacy/crypto/MultiToken'
+import {MultiToken} from '../../legacy/crypto/MultiToken'
+import type {CreateUnsignedTxResponse} from '../../legacy/crypto/shelley/transactionUtils'
+import {cardanoValueFromMultiToken} from '../../legacy/crypto/shelley/utils'
+import walletManager from '../../legacy/crypto/walletManager'
+import globalMessages, {confirmationMessages} from '../../legacy/i18n/global-messages'
+import {SEND_ROUTES} from '../../legacy/RoutesList'
 import {
   defaultNetworkAssetSelector,
   hasPendingOutgoingTransactionSelector,
@@ -35,10 +47,11 @@ import {
   tokenInfoSelector,
   utxosSelector,
   walletMetaSelector,
-} from '../../selectors'
-import type {ServerStatusCache, WalletMeta} from '../../state'
-import type {DefaultAsset, Token} from '../../types/HistoryTransaction'
-import type {Navigation} from '../../types/navigation'
+} from '../../legacy/selectors'
+import type {ServerStatusCache, WalletMeta} from '../../legacy/state'
+import {COLORS} from '../../legacy/styles/config'
+import type {DefaultAsset, Token} from '../../legacy/types/HistoryTransaction'
+import type {Navigation} from '../../legacy/types/navigation'
 import {
   formatTokenAmount,
   formatTokenInteger,
@@ -47,39 +60,33 @@ import {
   getAssetDenominationOrId,
   normalizeTokenAmount,
   truncateWithEllipsis,
-} from '../../utils/format'
-import {InvalidAssetAmount, parseAmountDecimal} from '../../utils/parsing'
-import type {AddressValidationErrors, AmountValidationErrors, BalanceValidationErrors} from '../../utils/validators'
-import {getUnstoppableDomainAddress, isReceiverAddressValid, validateAmount} from '../../utils/validators'
-import DangerousActionModal from '../Common/DangerousActionModal'
-import {Banner, Button, Checkbox, OfflineBanner, Spacer, StatusBar, Text, TextInput} from '../UiKit'
-import AmountField from './AmountField'
-import styles from './styles/SendScreen.style'
-import UtxoAutoRefresher from './UtxoAutoRefresher'
+} from '../../legacy/utils/format'
+import {InvalidAssetAmount, parseAmountDecimal} from '../../legacy/utils/parsing'
+import type {
+  AddressValidationErrors,
+  AmountValidationErrors,
+  BalanceValidationErrors,
+} from '../../legacy/utils/validators'
+import {getUnstoppableDomainAddress, isReceiverAddressValid, validateAmount} from '../../legacy/utils/validators'
 
-type LegacyProps = {|
+type LegacyProps = {
   intl: IntlShape,
   navigation: Navigation,
   selectedAsset: TokenEntry,
   sendAll: boolean,
   tokenBalance: MultiToken,
   isFetchingBalance: boolean,
-  lastFetchingError: any,
-  tokenMetadata: Dict<Token>,
+  lastFetchingError: Error | null,
+  tokenMetadata: Record<string, Token>,
   defaultAsset: DefaultAsset,
   utxos: ?Array<RawUtxo>,
   isOnline: boolean,
   hasPendingOutgoingTransaction: boolean,
   serverStatus: ServerStatusCache,
   fetchUTXOs: () => void,
-  onSendAll: (boolean) => mixed,
-  walletMetadata: $Diff<
-    WalletMeta,
-    {
-      id: string,
-    },
-  >,
-|}
+  onSendAll: (boolean) => void,
+  walletMetadata: Omit<WalletMeta, {id: string}>,
+}
 
 type State = {
   address: string,
@@ -476,7 +483,7 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
 
           <TouchableOpacity onPress={() => navigation.navigate('select-asset')}>
             <TextInput
-              right={<Image source={require('../../assets/img/arrow_down_fill.png')} />}
+              right={<Image source={require('../../legacy/assets/img/arrow_down_fill.png')} />}
               editable={false}
               label={intl.formatMessage(messages.asset)}
               value={`${assetDenomination}: ${formatTokenAmount(selectedAsset.amount, selectedAssetMeta, 15)}`}
@@ -512,11 +519,11 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
   }
 }
 
-type Props = {|
+type Props = {
   selectedTokenIdentifier: string,
   sendAll: boolean,
-  onSendAll: (boolean) => mixed,
-|}
+  onSendAll: (boolean) => void,
+}
 export const SendScreen = ({selectedTokenIdentifier, sendAll, onSendAll}: Props) => {
   const intl = useIntl()
   const navigation = useNavigation()
@@ -560,8 +567,6 @@ export const SendScreen = ({selectedTokenIdentifier, sendAll, onSendAll}: Props)
     />
   )
 }
-
-export default SendScreen
 
 const Indicator = () => (
   <View style={styles.indicator}>
@@ -645,7 +650,7 @@ const recomputeAll = async ({
   tokenBalance,
   walletMetadata,
 }) => {
-  let addressErrors: Object = {}
+  let addressErrors: Record<string, boolean> = {}
   let address = addressInput
   const {networkId} = walletMetadata
   let amountErrors = validateAmount(amount, selectedTokenMeta)
@@ -897,5 +902,26 @@ const messages = defineMessages({
   asset: {
     id: 'global.assets.assetLabel',
     defaultMessage: '!!!Asset',
+  },
+})
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: COLORS.WHITE,
+  },
+  content: {
+    padding: 16,
+  },
+  actions: {
+    marginHorizontal: 16,
+    marginBottom: 16,
+  },
+  indicator: {
+    marginTop: 26,
+  },
+  info: {
+    fontSize: 14,
+    lineHeight: 22,
   },
 })

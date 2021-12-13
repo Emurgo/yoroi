@@ -5,13 +5,13 @@ import {useSelector} from 'react-redux'
 
 import BiometricAuthScreen from '../../legacy/components/Send/BiometricAuthScreen'
 import ConfirmScreen from '../../legacy/components/Send/ConfirmScreen'
-import SendScreen from '../../legacy/components/Send/SendScreen'
 import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../legacy/navigationOptions'
 import {SEND_ROUTES} from '../../legacy/RoutesList'
 import {tokenBalanceSelector, tokenInfoSelector} from '../../legacy/selectors'
 import {AddressReaderQR} from './AddressReaderQR'
 import {AssetSelectorScreen} from './AssetSelectorScreen'
 import {ScannerButton} from './ScannerButton'
+import {SendScreen} from './SendScreen'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 type SendScreenNavigatorRoutes = {
