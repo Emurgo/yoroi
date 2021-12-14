@@ -17,7 +17,7 @@ storiesOf('ConfirmScreen', module).add('Default', () => {
       fee: new BigNumber('1'),
       tokens: [],
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      signRequest: null as any,
+      transactionData: null as any,
     } as Params,
   }
 

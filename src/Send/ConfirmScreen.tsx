@@ -7,7 +7,7 @@ import {useIntl} from 'react-intl'
 import {StyleSheet} from 'react-native'
 import {Platform, ScrollView, View} from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'
-import {useSelector} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 
 import {showErrorDialog, submitSignedTx, submitTransaction} from '../../legacy/actions'
 import {setLedgerDeviceId, setLedgerDeviceObj} from '../../legacy/actions/hwWallet'
@@ -59,16 +59,23 @@ export type Params = {
   availableAmount: BigNumber
   fee: BigNumber
   tokens: Array<TokenEntry>
-  signRequest: CreateUnsignedTxResponse
+  transactionData: CreateUnsignedTxResponse
 }
 
 export const ConfirmScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
   const route = useRoute()
-  const {defaultAssetAmount, address, balanceAfterTx, availableAmount, fee, tokens, signRequest}: Params = (
-    route as any
-  ).params
+  const dispatch = useDispatch()
+  const {
+    defaultAssetAmount,
+    address,
+    balanceAfterTx,
+    availableAmount,
+    fee,
+    tokens,
+    transactionData: signRequest,
+  }: Params = (route as any).params
 
   const isEasyConfirmationEnabled = useSelector(easyConfirmationSelector)
   const isHW = useSelector(isHWSelector)
@@ -97,17 +104,6 @@ export const ConfirmScreen = () => {
 
   const isConfirmationDisabled = !isEasyConfirmationEnabled && !password && !isHW
 
-  const navigation = useNavigation()
-  const onConfirm = async () => {
-    try {
-      await handleOnConfirm().then((result) => {
-        console.log('QWE', {result})
-      })
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
   const onChooseTransport = (useUSB: boolean) => {
     setUseUSB(useUSB)
     if (
@@ -121,12 +117,12 @@ export const ConfirmScreen = () => {
   }
 
   const onConnectUSB = async (deviceObj) => {
-    await setLedgerDeviceObj(deviceObj)
+    await dispatch(setLedgerDeviceObj(deviceObj))
     closeLedgerDialog()
   }
 
   const onConnectBLE = async (deviceId) => {
-    await setLedgerDeviceId(deviceId)
+    await dispatch(setLedgerDeviceId(deviceId))
     closeLedgerDialog()
   }
 
@@ -147,13 +143,14 @@ export const ConfirmScreen = () => {
     }
   }
 
-  const handleOnConfirm = async () => {
+  const navigation = useNavigation()
+  const onConfirm = async () => {
     const submitTx = async (tx: string | ISignRequest, decryptedKey?: string) => {
       await withPleaseWaitModal(async () => {
         if (decryptedKey != null) {
-          await submitTransaction(tx, decryptedKey)
+          await dispatch(submitTransaction(tx, decryptedKey))
         } else {
-          await submitSignedTx(tx)
+          await dispatch(submitSignedTx(tx))
         }
         navigation.dispatch(
           CommonActions.reset({
