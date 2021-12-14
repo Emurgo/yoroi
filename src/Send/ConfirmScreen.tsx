@@ -1,15 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {useNavigation, useRoute} from '@react-navigation/native'
 import {CommonActions} from '@react-navigation/routers'
 import {BigNumber} from 'bignumber.js'
 import React from 'react'
-import type {IntlShape} from 'react-intl'
-import {injectIntl} from 'react-intl'
+import {useIntl} from 'react-intl'
 import {StyleSheet} from 'react-native'
 import {Platform, ScrollView, View} from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'
-import {connect} from 'react-redux'
-import {withHandlers, withStateHandlers} from 'recompose'
-import {compose} from 'redux'
+import {useSelector} from 'react-redux'
 
 import {showErrorDialog, submitSignedTx, submitTransaction} from '../../legacy/actions'
 import {setLedgerDeviceId, setLedgerDeviceObj} from '../../legacy/actions/hwWallet'
@@ -44,109 +42,9 @@ import {
   isHWSelector,
   tokenInfoSelector,
 } from '../../legacy/selectors'
-import {State} from '../../legacy/state'
 import {COLORS} from '../../legacy/styles/config'
 import {formatTokenWithSymbol, formatTokenWithText} from '../../legacy/utils/format'
-import {ignoreConcurrentAsyncHandler} from '../../legacy/utils/utils'
-
-const handleOnConfirm = async (
-  navigation,
-  route,
-  isHW,
-  hwDeviceInfo,
-  isEasyConfirmationEnabled,
-  password,
-  submitTransaction,
-  submitSignedTx,
-  withPleaseWaitModal,
-  withDisabledButton,
-  intl,
-  useUSB,
-  setErrorData,
-) => {
-  const signRequest: CreateUnsignedTxResponse = route.params.transactionData
-
-  const submitTx = async (tx: string | ISignRequest, decryptedKey?: string) => {
-    await withPleaseWaitModal(async () => {
-      if (decryptedKey != null) {
-        await submitTransaction(tx, decryptedKey)
-      } else {
-        await submitSignedTx(tx)
-      }
-      navigation.dispatch(
-        CommonActions.reset({
-          key: null as any,
-          index: 0,
-          routes: [{name: SEND_ROUTES.MAIN}],
-        }),
-      )
-      navigation.navigate(WALLET_ROUTES.TX_HISTORY)
-    })
-  }
-
-  try {
-    if (isHW) {
-      await withDisabledButton(async () => {
-        const signedTx = await walletManager.signTxWithLedger(signRequest, useUSB)
-        await submitTx(Buffer.from(signedTx.encodedTx).toString('base64'))
-      })
-      return
-    }
-
-    if (isEasyConfirmationEnabled) {
-      try {
-        await walletManager.ensureKeysValidity()
-        navigation.navigate(SEND_ROUTES.BIOMETRICS_SIGNING, {
-          keyId: walletManager._id,
-          onSuccess: async (decryptedKey) => {
-            navigation.navigate(SEND_ROUTES.CONFIRM)
-
-            await submitTx(signRequest, decryptedKey)
-          },
-          onFail: () => navigation.goBack(),
-        })
-      } catch (e) {
-        if (e instanceof SystemAuthDisabled) {
-          await walletManager.closeWallet()
-          await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
-          navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
-
-          return
-        } else {
-          throw e
-        }
-      }
-      return
-    }
-
-    try {
-      const decryptedData = await KeyStore.getData(walletManager._id, 'MASTER_PASSWORD', '', password, intl)
-
-      await submitTx(signRequest, decryptedData)
-    } catch (e) {
-      if (e instanceof WrongPassword) {
-        await showErrorDialog(errorMessages.incorrectPassword, intl)
-      } else {
-        throw e
-      }
-    }
-  } catch (e) {
-    if (e instanceof LocalizableError) {
-      const localizableError: any = e
-      setErrorData(
-        true,
-        intl.formatMessage(
-          {id: localizableError.id, defaultMessage: localizableError.defaultMessage},
-          localizableError.values,
-        ),
-        localizableError.values.response || null, // API errors should include a response
-      )
-    } else {
-      const localizableError: any = e
-      setErrorData(true, intl.formatMessage(errorMessages.generalTxError.message), localizableError.message || null)
-    }
-  }
-}
+import {Spacer} from '../components'
 
 const LEDGER_DIALOG_STEPS = {
   CLOSED: 'CLOSED',
@@ -154,48 +52,182 @@ const LEDGER_DIALOG_STEPS = {
   LEDGER_CONNECT: 'LEDGER_CONNECT',
 }
 
-const ConfirmScreen = (
-  {
-    onConfirm,
-    intl,
-    route,
-    password,
-    setPassword,
-    isEasyConfirmationEnabled,
-    isHW,
-    defaultAsset,
-    tokenMetadata,
-    sendingTransaction,
-    buttonDisabled,
-    ledgerDialogStep,
-    closeLedgerDialog,
-    useUSB,
-    onChooseTransport,
-    onConnectBLE,
-    onConnectUSB,
-    closeErrorModal,
-    showErrorModal,
-    errorMessage,
-    errorLogs,
-  }: {intl: IntlShape} & Record<string, any> /* TODO: type */,
-) => {
-  const {
-    defaultAssetAmount,
-    address,
-    balanceAfterTx,
-    availableAmount,
-    fee,
-    tokens,
-  }: {
-    defaultAssetAmount: BigNumber
-    address: string
-    balanceAfterTx: BigNumber
-    availableAmount: BigNumber
-    fee: BigNumber
-    tokens: Array<TokenEntry>
-  } = (route as any).params
+export type Params = {
+  defaultAssetAmount: BigNumber
+  address: string
+  balanceAfterTx: BigNumber
+  availableAmount: BigNumber
+  fee: BigNumber
+  tokens: Array<TokenEntry>
+  signRequest: CreateUnsignedTxResponse
+}
+
+export const ConfirmScreen = () => {
+  const intl = useIntl()
+  const route = useRoute()
+  const {defaultAssetAmount, address, balanceAfterTx, availableAmount, fee, tokens, signRequest}: Params = (
+    route as any
+  ).params
+
+  const isEasyConfirmationEnabled = useSelector(easyConfirmationSelector)
+  const isHW = useSelector(isHWSelector)
+  const hwDeviceInfo = useSelector(hwDeviceInfoSelector)
+  const defaultAsset = useSelector(defaultNetworkAssetSelector)
+  const tokenMetadata = useSelector(tokenInfoSelector)
+
+  const [password, setPassword] = React.useState(CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '')
+  const [sendingTransaction, setSendingTransaction] = React.useState(false)
+  const [buttonDisabled, setButtonDisabled] = React.useState(false)
+  const [useUSB, setUseUSB] = React.useState(false)
+  const [ledgerDialogStep, setLedgerDialogStep] = React.useState(LEDGER_DIALOG_STEPS.CHOOSE_TRANSPORT)
+  const [showErrorModal, setShowErrorModal] = React.useState(false)
+  const [errorMessage, setErrorMessage] = React.useState('')
+  const [errorLogs, setErrorLogs] = React.useState('')
+
+  const openLedgerConnect = () => setLedgerDialogStep(LEDGER_DIALOG_STEPS.LEDGER_CONNECT)
+  const closeLedgerDialog = () => setLedgerDialogStep(LEDGER_DIALOG_STEPS.CLOSED)
+
+  const closeErrorModal = () => setShowErrorModal(false)
+  const setErrorData = (showErrorModal, errorMessage, errorLogs) => {
+    setShowErrorModal(showErrorModal)
+    setErrorMessage(errorMessage)
+    setErrorLogs(errorLogs)
+  }
 
   const isConfirmationDisabled = !isEasyConfirmationEnabled && !password && !isHW
+
+  const navigation = useNavigation()
+  const onConfirm = async () => {
+    try {
+      await handleOnConfirm().then((result) => {
+        console.log('QWE', {result})
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const onChooseTransport = (useUSB: boolean) => {
+    setUseUSB(useUSB)
+    if (
+      (useUSB && hwDeviceInfo?.hwFeatures.deviceObj == null) ||
+      (!useUSB && hwDeviceInfo?.hwFeatures.deviceId == null)
+    ) {
+      openLedgerConnect()
+    } else {
+      closeLedgerDialog()
+    }
+  }
+
+  const onConnectUSB = async (deviceObj) => {
+    await setLedgerDeviceObj(deviceObj)
+    closeLedgerDialog()
+  }
+
+  const onConnectBLE = async (deviceId) => {
+    await setLedgerDeviceId(deviceId)
+    closeLedgerDialog()
+  }
+
+  const withPleaseWaitModal = async (func: () => Promise<void>): Promise<void> => {
+    setSendingTransaction(true)
+    try {
+      await func()
+    } finally {
+      setSendingTransaction(false)
+    }
+  }
+  const withDisabledButton = async (func: () => Promise<void>): Promise<void> => {
+    setButtonDisabled(true)
+    try {
+      await func()
+    } finally {
+      setButtonDisabled(false)
+    }
+  }
+
+  const handleOnConfirm = async () => {
+    const submitTx = async (tx: string | ISignRequest, decryptedKey?: string) => {
+      await withPleaseWaitModal(async () => {
+        if (decryptedKey != null) {
+          await submitTransaction(tx, decryptedKey)
+        } else {
+          await submitSignedTx(tx)
+        }
+        navigation.dispatch(
+          CommonActions.reset({
+            key: null as any,
+            index: 0,
+            routes: [{name: SEND_ROUTES.MAIN}],
+          }),
+        )
+        navigation.navigate(WALLET_ROUTES.TX_HISTORY)
+      })
+    }
+
+    try {
+      if (isHW) {
+        await withDisabledButton(async () => {
+          const signedTx = await walletManager.signTxWithLedger(signRequest, useUSB)
+          await submitTx(Buffer.from(signedTx.encodedTx).toString('base64'))
+        })
+        return
+      }
+
+      if (isEasyConfirmationEnabled) {
+        try {
+          await walletManager.ensureKeysValidity()
+          navigation.navigate(SEND_ROUTES.BIOMETRICS_SIGNING, {
+            keyId: walletManager._id,
+            onSuccess: async (decryptedKey) => {
+              navigation.navigate(SEND_ROUTES.CONFIRM)
+
+              await submitTx(signRequest, decryptedKey)
+            },
+            onFail: () => navigation.goBack(),
+          })
+        } catch (e) {
+          if (e instanceof SystemAuthDisabled) {
+            await walletManager.closeWallet()
+            await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
+            navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
+
+            return
+          } else {
+            throw e
+          }
+        }
+        return
+      }
+
+      try {
+        const decryptedData = await KeyStore.getData(walletManager._id, 'MASTER_PASSWORD', '', password, intl)
+
+        await submitTx(signRequest, decryptedData)
+      } catch (e) {
+        if (e instanceof WrongPassword) {
+          await showErrorDialog(errorMessages.incorrectPassword, intl)
+        } else {
+          throw e
+        }
+      }
+    } catch (e) {
+      if (e instanceof LocalizableError) {
+        const localizableError: any = e
+        setErrorData(
+          true,
+          intl.formatMessage(
+            {id: localizableError.id, defaultMessage: localizableError.defaultMessage},
+            localizableError.values,
+          ),
+          localizableError.values.response || null, // API errors should include a response
+        )
+      } else {
+        const localizableError: any = e
+        setErrorData(true, intl.formatMessage(errorMessages.generalTxError.message), localizableError.message || null)
+      }
+    }
+  }
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
@@ -203,6 +235,7 @@ const ConfirmScreen = (
         <StatusBar type="dark" />
 
         <OfflineBanner />
+
         <Banner
           label={intl.formatMessage(globalMessages.availableFunds)}
           text={formatTokenWithText(availableAmount, defaultAsset)}
@@ -213,14 +246,23 @@ const ConfirmScreen = (
           <Text small>
             {intl.formatMessage(txLabels.fees)}: {formatTokenWithSymbol(fee, defaultAsset)}
           </Text>
+
           <Text small>
             {intl.formatMessage(txLabels.balanceAfterTx)}: {formatTokenWithSymbol(balanceAfterTx, defaultAsset)}
           </Text>
 
-          <Text style={styles.heading}>{intl.formatMessage(txLabels.receiver)}</Text>
+          <Spacer height={16} />
+
+          <Text>{intl.formatMessage(txLabels.receiver)}</Text>
+
           <Text>{address}</Text>
-          <Text style={styles.heading}>{intl.formatMessage(globalMessages.total)}</Text>
+
+          <Spacer height={16} />
+
+          <Text>{intl.formatMessage(globalMessages.total)}</Text>
+
           <Text style={styles.amount}>{formatTokenWithSymbol(defaultAssetAmount, defaultAsset)}</Text>
+
           {tokens.map((t, i) => (
             <Text style={styles.amount} key={i}>
               {formatTokenWithText(t.amount, tokenMetadata[t.identifier])}
@@ -228,17 +270,21 @@ const ConfirmScreen = (
           ))}
 
           {!isEasyConfirmationEnabled && !isHW && (
-            <View style={styles.input}>
+            <>
+              <Spacer height={16} />
+
               <ValidatedTextInput
                 secureTextEntry
                 value={password}
                 label={intl.formatMessage(txLabels.password)}
                 onChangeText={setPassword}
               />
-            </View>
+            </>
           )}
+
           {isHW && <HWInstructions useUSB={useUSB} addMargin />}
         </ScrollView>
+
         <View style={styles.actions}>
           <Button
             onPress={onConfirm}
@@ -253,15 +299,17 @@ const ConfirmScreen = (
           <LedgerTransportSwitchModal
             visible={ledgerDialogStep === LEDGER_DIALOG_STEPS.CHOOSE_TRANSPORT}
             onRequestClose={closeLedgerDialog}
-            onSelectUSB={(event) => onChooseTransport(event, true)}
-            onSelectBLE={(event) => onChooseTransport(event, false)}
+            onSelectUSB={() => onChooseTransport(true)}
+            onSelectBLE={() => onChooseTransport(false)}
             showCloseIcon
           />
+
           <Modal visible={ledgerDialogStep === LEDGER_DIALOG_STEPS.LEDGER_CONNECT} onRequestClose={closeLedgerDialog}>
             <LedgerConnect onConnectBLE={onConnectBLE} onConnectUSB={onConnectUSB} useUSB={useUSB} />
           </Modal>
         </>
       )}
+
       <ErrorModal
         visible={showErrorModal}
         title={intl.formatMessage(errorMessages.generalTxError.title)}
@@ -279,144 +327,6 @@ const ConfirmScreen = (
   )
 }
 
-export default injectIntl(
-  compose<any>(
-    connect(
-      (state: State) => ({
-        isEasyConfirmationEnabled: easyConfirmationSelector(state),
-        isHW: isHWSelector(state),
-        hwDeviceInfo: hwDeviceInfoSelector(state),
-        defaultAsset: defaultNetworkAssetSelector(state),
-        tokenMetadata: tokenInfoSelector(state),
-      }),
-      {
-        submitTransaction,
-        submitSignedTx,
-        setLedgerDeviceId,
-        setLedgerDeviceObj,
-      },
-    ),
-    withStateHandlers(
-      {
-        password: CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '',
-        sendingTransaction: false,
-        buttonDisabled: false,
-        useUSB: false,
-        ledgerDialogStep: LEDGER_DIALOG_STEPS.CHOOSE_TRANSPORT,
-        showErrorModal: false,
-        errorMessage: '',
-        errorLogs: '',
-      },
-      {
-        setPassword: () => (value) => ({password: value}),
-        setSendingTransaction: () => (sendingTransaction) => ({
-          sendingTransaction,
-        }),
-        setButtonDisabled: () => (buttonDisabled) => ({buttonDisabled}),
-        openLedgerConnect: () => () => ({
-          ledgerDialogStep: LEDGER_DIALOG_STEPS.LEDGER_CONNECT,
-        }),
-        closeLedgerDialog: () => () => ({
-          ledgerDialogStep: LEDGER_DIALOG_STEPS.CLOSED,
-        }),
-        setUseUSB: () => (useUSB) => ({useUSB}),
-        closeErrorModal: () => () => ({showErrorModal: false}),
-        setErrorData: () => (showErrorModal, errorMessage, errorLogs) => ({
-          showErrorModal,
-          errorMessage,
-          errorLogs,
-        }),
-      },
-    ),
-    withHandlers({
-      withPleaseWaitModal:
-        ({setSendingTransaction}) =>
-        async (func: () => Promise<void>): Promise<void> => {
-          setSendingTransaction(true)
-          try {
-            await func()
-          } finally {
-            setSendingTransaction(false)
-          }
-        },
-      withDisabledButton:
-        ({setButtonDisabled}) =>
-        async (func: () => Promise<void>): Promise<void> => {
-          setButtonDisabled(true)
-          try {
-            await func()
-          } finally {
-            setButtonDisabled(false)
-          }
-        },
-    }),
-    withHandlers({
-      onChooseTransport:
-        ({hwDeviceInfo, setUseUSB, openLedgerConnect, closeLedgerDialog}) =>
-        (event, useUSB) => {
-          setUseUSB(useUSB)
-          if (
-            (useUSB && hwDeviceInfo.hwFeatures.deviceObj == null) ||
-            (!useUSB && hwDeviceInfo.hwFeatures.deviceId == null)
-          ) {
-            openLedgerConnect()
-          } else {
-            closeLedgerDialog()
-          }
-        },
-      onConnectUSB:
-        ({setLedgerDeviceObj, closeLedgerDialog}) =>
-        async (deviceObj) => {
-          await setLedgerDeviceObj(deviceObj)
-          closeLedgerDialog()
-        },
-      onConnectBLE:
-        ({setLedgerDeviceId, closeLedgerDialog}) =>
-        async (deviceId) => {
-          await setLedgerDeviceId(deviceId)
-          closeLedgerDialog()
-        },
-      onConfirm: ignoreConcurrentAsyncHandler(
-        (
-            {
-              navigation,
-              route,
-              isHW,
-              hwDeviceInfo,
-              isEasyConfirmationEnabled,
-              password,
-              submitTransaction,
-              submitSignedTx,
-              withPleaseWaitModal,
-              withDisabledButton,
-              intl,
-              useUSB,
-              setErrorData,
-            }: {intl: IntlShape} & Record<string, unknown> /* TODO: type */,
-          ) =>
-          async (_event) => {
-            await handleOnConfirm(
-              navigation,
-              route,
-              isHW,
-              hwDeviceInfo,
-              isEasyConfirmationEnabled,
-              password,
-              submitTransaction,
-              submitSignedTx,
-              withPleaseWaitModal,
-              withDisabledButton,
-              intl,
-              useUSB,
-              setErrorData,
-            )
-          },
-        1000,
-      ),
-    }),
-  )(ConfirmScreen),
-)
-
 const styles = StyleSheet.create({
   safeAreaView: {
     backgroundColor: COLORS.WHITE,
@@ -430,14 +340,8 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
   },
-  heading: {
-    marginTop: 16,
-  },
   actions: {
     padding: 16,
-  },
-  input: {
-    marginTop: 16,
   },
   amount: {
     color: COLORS.POSITIVE_AMOUNT,

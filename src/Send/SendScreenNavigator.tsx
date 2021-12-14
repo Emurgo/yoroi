@@ -9,7 +9,7 @@ import {SEND_ROUTES} from '../../legacy/RoutesList'
 import {tokenBalanceSelector, tokenInfoSelector} from '../../legacy/selectors'
 import {AddressReaderQR} from './AddressReaderQR'
 import {AssetSelectorScreen} from './AssetSelectorScreen'
-import ConfirmScreen from './ConfirmScreen'
+import {ConfirmScreen} from './ConfirmScreen'
 import {ScannerButton} from './ScannerButton'
 import {SendScreen} from './SendScreen'
 
