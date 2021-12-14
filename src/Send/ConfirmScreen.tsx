@@ -64,6 +64,7 @@ export type Params = {
 
 export const ConfirmScreen = () => {
   const intl = useIntl()
+  const strings = useStrings()
   const route = useRoute()
   const {defaultAssetAmount, address, balanceAfterTx, availableAmount, fee, tokens, signRequest}: Params = (
     route as any
@@ -236,30 +237,26 @@ export const ConfirmScreen = () => {
 
         <OfflineBanner />
 
-        <Banner
-          label={intl.formatMessage(globalMessages.availableFunds)}
-          text={formatTokenWithText(availableAmount, defaultAsset)}
-          boldText
-        />
+        <Banner label={strings.availableFunds} text={formatTokenWithText(availableAmount, defaultAsset)} boldText />
 
         <ScrollView style={styles.container}>
           <Text small>
-            {intl.formatMessage(txLabels.fees)}: {formatTokenWithSymbol(fee, defaultAsset)}
+            {strings.fees}: {formatTokenWithSymbol(fee, defaultAsset)}
           </Text>
 
           <Text small>
-            {intl.formatMessage(txLabels.balanceAfterTx)}: {formatTokenWithSymbol(balanceAfterTx, defaultAsset)}
+            {strings.balanceAfterTx}: {formatTokenWithSymbol(balanceAfterTx, defaultAsset)}
           </Text>
 
           <Spacer height={16} />
 
-          <Text>{intl.formatMessage(txLabels.receiver)}</Text>
+          <Text>{strings.receiver}</Text>
 
           <Text>{address}</Text>
 
           <Spacer height={16} />
 
-          <Text>{intl.formatMessage(globalMessages.total)}</Text>
+          <Text>{strings.total}</Text>
 
           <Text style={styles.amount}>{formatTokenWithSymbol(defaultAssetAmount, defaultAsset)}</Text>
 
@@ -276,7 +273,7 @@ export const ConfirmScreen = () => {
               <ValidatedTextInput
                 secureTextEntry
                 value={password}
-                label={intl.formatMessage(txLabels.password)}
+                label={strings.password}
                 onChangeText={setPassword}
               />
             </>
@@ -288,7 +285,7 @@ export const ConfirmScreen = () => {
         <View style={styles.actions}>
           <Button
             onPress={onConfirm}
-            title={intl.formatMessage(confirmationMessages.commonButtons.confirmButton)}
+            title={strings.confirmButton}
             disabled={isConfirmationDisabled || buttonDisabled}
           />
         </View>
@@ -312,17 +309,13 @@ export const ConfirmScreen = () => {
 
       <ErrorModal
         visible={showErrorModal}
-        title={intl.formatMessage(errorMessages.generalTxError.title)}
+        title={strings.generalTxError}
         errorMessage={errorMessage}
         errorLogs={errorLogs}
         onRequestClose={closeErrorModal}
       />
 
-      <PleaseWaitModal
-        title={intl.formatMessage(txLabels.submittingTx)}
-        spinnerText={intl.formatMessage(globalMessages.pleaseWait)}
-        visible={sendingTransaction}
-      />
+      <PleaseWaitModal title={strings.submittingTx} spinnerText={strings.pleaseWait} visible={sendingTransaction} />
     </SafeAreaView>
   )
 }
@@ -347,3 +340,20 @@ const styles = StyleSheet.create({
     color: COLORS.POSITIVE_AMOUNT,
   },
 })
+
+const useStrings = () => {
+  const intl = useIntl()
+
+  return {
+    availableFunds: intl.formatMessage(globalMessages.availableFunds),
+    fees: intl.formatMessage(txLabels.fees),
+    balanceAfterTx: intl.formatMessage(txLabels.balanceAfterTx),
+    receiver: intl.formatMessage(txLabels.receiver),
+    total: intl.formatMessage(globalMessages.total),
+    password: intl.formatMessage(txLabels.password),
+    confirmButton: intl.formatMessage(confirmationMessages.commonButtons.confirmButton),
+    generalTxError: intl.formatMessage(errorMessages.generalTxError.title),
+    submittingTx: intl.formatMessage(txLabels.submittingTx),
+    pleaseWait: intl.formatMessage(globalMessages.pleaseWait),
+  }
+}
