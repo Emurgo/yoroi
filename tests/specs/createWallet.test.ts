@@ -5,14 +5,14 @@ import * as nobodyLookingScreen from '../screenObjects/createWalletScreens/nobod
 import * as recoveryPhraseRememberScreen from '../screenObjects/createWalletScreens/recoveryPhraseRemember.screen'
 import * as recoveryPhraseNotificationScreen from '../screenObjects/createWalletScreens/recoveryPhraseNotification.screen'
 import * as recoveryPhraseEnterScreen from '../screenObjects/createWalletScreens/recoveryPhraseEnter.screen'
-import {firstAppLaunch, hideKeyboard} from '../helpers/utils'
-import {WALLET_NAME, SPENDING_PASSWORD, DEFAULT_TIMEOUT, DEFAULT_INTERVAL} from '../constants'
+import {firstAppLaunch, hideKeyboard, enterPinCode} from '../helpers/utils'
+import {WALLET_NAME, SPENDING_PASSWORD, DEFAULT_TIMEOUT, DEFAULT_INTERVAL, VALID_PIN} from '../constants'
 
 const expect = require('chai').expect
 
 describe('Creating a wallet', () => {
   // Execute a block of code before every tests
-  beforeEach(() => {
+  beforeEach(async () => {
     driver.launchApp()
   })
   // Execute a block of code after every tests
@@ -20,7 +20,7 @@ describe('Creating a wallet', () => {
     driver.closeApp()
   })
 
-  it('a straight happy path', async () => {
+  it('A straight happy path', async () => {
     await firstAppLaunch()
     await addWalletsScreen.addWalletTestnetButton().click()
     await addWalletScreen.createWalletButton().click()
@@ -47,6 +47,21 @@ describe('Creating a wallet', () => {
 
     expect(
       await driver.$(`[text="${WALLET_NAME}"]`).waitForExist({timeout: DEFAULT_TIMEOUT, interval: DEFAULT_INTERVAL}),
+    ).to.be.true
+  })
+
+  it('Already existing name', async () => {
+    await enterPinCode(VALID_PIN)
+    await addWalletsScreen.addWalletTestnetButton().click()
+    await addWalletScreen.createWalletButton().click()
+
+    await createNewWalletCredentialsScreen.walletNameEdit().addValue(WALLET_NAME)
+    await createNewWalletCredentialsScreen.spendingPasswordEdit().click()
+
+    const walletExistsError = await createNewWalletCredentialsScreen.walletNameExistsError()
+    expect(
+      await walletExistsError.isDisplayed(),
+      'The message "You already have a wallet with this name" is not displayed',
     ).to.be.true
   })
 })
