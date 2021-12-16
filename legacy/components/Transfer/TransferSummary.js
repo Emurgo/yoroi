@@ -6,11 +6,13 @@ import {defineMessages, useIntl} from 'react-intl'
 import {View} from 'react-native'
 import {useSelector} from 'react-redux'
 
+// $FlowExpectedError
+import {useSelectedWallet} from '../../../src/SelectedWallet'
 import {CONFIG} from '../../config/config'
 import {getNetworkConfigById} from '../../config/networks'
 import {MultiToken} from '../../crypto/MultiToken'
 import {confirmationMessages, txLabels} from '../../i18n/global-messages'
-import {defaultNetworkAssetSelector, walletMetaSelector} from '../../selectors'
+import {defaultNetworkAssetSelector} from '../../selectors'
 import {formatTokenWithText} from '../../utils/format'
 import AddressEntry from '../Common/AddressEntry'
 import TwoActionView from '../Common/TwoActionView'
@@ -67,7 +69,7 @@ const TransferSummary = ({
   useUSB,
 }: Props) => {
   const intl = useIntl()
-  const walletMeta = useSelector(walletMetaSelector)
+  const wallet = useSelectedWallet()
   const defaultAsset = useSelector(defaultNetworkAssetSelector)
   const [password, setPassword] = React.useState(CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '')
 
@@ -102,7 +104,7 @@ const TransferSummary = ({
             <AddressEntry
               key={i}
               address={withdrawal.address}
-              explorerForAddress={getNetworkConfigById(walletMeta.networkId).EXPLORER_URL_FOR_ADDRESS}
+              explorerForAddress={getNetworkConfigById(wallet.networkId).EXPLORER_URL_FOR_ADDRESS}
             />
           ))}
         </Item>
@@ -116,7 +118,7 @@ const TransferSummary = ({
               <AddressEntry
                 key={i}
                 address={deregistration.rewardAddress}
-                explorerForAddress={getNetworkConfigById(walletMeta.networkId).EXPLORER_URL_FOR_ADDRESS}
+                explorerForAddress={getNetworkConfigById(wallet.networkId).EXPLORER_URL_FOR_ADDRESS}
               />
             ))}
           </Item>
@@ -143,9 +145,9 @@ const TransferSummary = ({
       )}
 
       {/* $FlowFixMe */}
-      {walletMeta.isHW && <HWInstructions useUSB={useUSB} addMargin />}
+      {wallet.isHW && <HWInstructions useUSB={useUSB} addMargin />}
 
-      {!walletMeta.isEasyConfirmationEnabled && !walletMeta.isHW && (
+      {!wallet.isEasyConfirmationEnabled && !wallet.isHW && (
         <View style={styles.input}>
           <PasswordInput
             secureTextEntry

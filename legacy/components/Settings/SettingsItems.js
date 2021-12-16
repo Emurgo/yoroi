@@ -83,10 +83,11 @@ export const NavigatedSettingsItem = ({label, navigateTo, disabled}: NavigatedSe
 type PressableSettingsItemProps = {|
   label: string,
   onPress: () => any,
+  disabled?: boolean,
 |}
 
-export const PressableSettingsItem = ({label, onPress}: PressableSettingsItemProps) => (
-  <Touchable onPress={onPress}>
+export const PressableSettingsItem = ({label, onPress, disabled}: PressableSettingsItemProps) => (
+  <Touchable onPress={onPress} disable={disabled}>
     <SettingsItem label={label}>
       <Image source={chevronRight} />
     </SettingsItem>

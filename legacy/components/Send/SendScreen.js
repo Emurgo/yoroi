@@ -60,7 +60,7 @@ import UtxoAutoRefresher from './UtxoAutoRefresher'
 type LegacyProps = {|
   intl: IntlShape,
   navigation: Navigation,
-  selectedTokenIdentifier: string,
+  selectedAsset: TokenEntry,
   sendAll: boolean,
   tokenBalance: MultiToken,
   isFetchingBalance: boolean,
@@ -120,7 +120,7 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
   }
 
   async componentDidUpdate(prevProps: LegacyProps, prevState: State) {
-    const {selectedTokenIdentifier, utxos, sendAll} = this.props
+    const {selectedAsset, utxos, sendAll} = this.props
     const {addressInput, amount} = this.state
 
     const {addressInput: prevAddressInput, amount: prevAmount} = prevState
@@ -130,9 +130,9 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
       prevAddressInput !== addressInput ||
       prevAmount !== amount ||
       prevProps.sendAll !== sendAll ||
-      prevProps.selectedTokenIdentifier !== selectedTokenIdentifier
+      prevProps.selectedAsset.identifier !== selectedAsset.identifier
     ) {
-      await this.revalidate({utxos, addressInput, amount, sendAll, selectedTokenIdentifier})
+      await this.revalidate({utxos, addressInput, amount, sendAll, selectedAsset})
     }
   }
 
@@ -141,13 +141,13 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
     addressInput,
     amount,
     sendAll,
-    selectedTokenIdentifier,
+    selectedAsset,
   }: {
     utxos: ?Array<RawUtxo>,
     addressInput: string,
     amount: string,
     sendAll: boolean,
-    selectedTokenIdentifier: string,
+    selectedAsset: TokenEntry,
   }) {
     this.setState({
       fee: null,
@@ -155,7 +155,7 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
       recomputing: true,
     })
     const {defaultAsset, tokenMetadata, tokenBalance, walletMetadata} = this.props
-    if (tokenMetadata[selectedTokenIdentifier] == null) {
+    if (tokenMetadata[selectedAsset.identifier] == null) {
       throw new Error('revalidate: no asset metadata found for the asset selected')
     }
     const newState = await recomputeAll({
@@ -164,7 +164,7 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
       amount,
       sendAll,
       defaultAsset,
-      selectedTokenMeta: tokenMetadata[selectedTokenIdentifier],
+      selectedTokenMeta: tokenMetadata[selectedAsset.identifier],
       tokenBalance,
       walletMetadata,
     })
@@ -209,12 +209,12 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
       tokenMetadata,
       serverStatus,
       sendAll,
-      selectedTokenIdentifier,
+      selectedAsset,
       walletMetadata,
     } = this.props
     const {address, addressInput, amount} = this.state
 
-    const selectedTokenMeta = tokenMetadata[selectedTokenIdentifier]
+    const selectedTokenMeta = tokenMetadata[selectedAsset.identifier]
     if (selectedTokenMeta == null) {
       throw new Error('SendScreen::handleConfirm: no asset metadata found for the asset selected')
     }
@@ -242,7 +242,7 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
       _.isEmpty(balanceErrors) &&
       this.state.amount === amount &&
       this.state.address === address &&
-      this.props.selectedTokenIdentifier === selectedTokenIdentifier &&
+      this.props.selectedAsset === selectedAsset &&
       this.props.utxos === utxos
 
     if (isValid === true) {
@@ -305,7 +305,7 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
       : intl.formatMessage(messages.balanceAfterNotAvailable)
 
     return (
-      <Text small>
+      <Text style={styles.info}>
         {intl.formatMessage(messages.balanceAfterLabel)}
         {': '}
         {value}
@@ -320,7 +320,7 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
     const value = fee ? formatTokenWithSymbol(fee, defaultAsset) : intl.formatMessage(messages.feeNotAvailable)
 
     return (
-      <Text small>
+      <Text style={styles.info}>
         {intl.formatMessage(messages.feeLabel)}
         {': '}
         {value}
@@ -362,10 +362,10 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
   }
 
   renderSendAllWarning = () => {
-    const {intl, tokenMetadata, selectedTokenIdentifier} = this.props
+    const {intl, tokenMetadata, selectedAsset} = this.props
     const {showSendAllWarning} = this.state
 
-    const selectedTokenMeta = tokenMetadata[selectedTokenIdentifier]
+    const selectedTokenMeta = tokenMetadata[selectedAsset.identifier]
     const isDefault = selectedTokenMeta.isDefault
     const assetNameOrId = truncateWithEllipsis(getAssetDenominationOrId(selectedTokenMeta), 20)
     const alertBoxContent = {
@@ -414,8 +414,7 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
       hasPendingOutgoingTransaction,
       defaultAsset,
       tokenMetadata,
-      selectedTokenIdentifier,
-      tokenBalance,
+      selectedAsset,
       navigation,
       sendAll,
     } = this.props
@@ -434,7 +433,7 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
 
     const amountErrorText = getAmountErrorText(intl, amountErrors, balanceErrors, defaultAsset)
 
-    const selectedAssetMeta = tokenMetadata[selectedTokenIdentifier]
+    const selectedAssetMeta = tokenMetadata[selectedAsset.identifier]
 
     const assetDenomination = truncateWithEllipsis(getAssetDenominationOrId(selectedAssetMeta), 20)
 
@@ -451,19 +450,6 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
           {this.renderFee()}
 
           <Spacer height={16} />
-
-          <TouchableOpacity onPress={() => navigation.navigate('select-asset')}>
-            <TextInput
-              right={<Image source={require('../../assets/img/arrow_down_fill.png')} />}
-              editable={false}
-              label={'Select Asset'}
-              value={`${assetDenomination}: ${formatTokenAmount(
-                tokenBalance.get(selectedTokenIdentifier) || new BigNumber('0'),
-                selectedAssetMeta,
-                15,
-              )}`}
-            />
-          </TouchableOpacity>
 
           <TextInput
             value={this.state.addressInput || ''}
@@ -487,6 +473,15 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
             error={amountErrorText}
             editable={!sendAll}
           />
+
+          <TouchableOpacity onPress={() => navigation.navigate('select-asset')}>
+            <TextInput
+              right={<Image source={require('../../assets/img/arrow_down_fill.png')} />}
+              editable={false}
+              label={intl.formatMessage(messages.asset)}
+              value={`${assetDenomination}: ${formatTokenAmount(selectedAsset.amount, selectedAssetMeta, 15)}`}
+            />
+          </TouchableOpacity>
 
           <Checkbox
             checked={sendAll}
@@ -536,6 +531,11 @@ export const SendScreen = ({selectedTokenIdentifier, sendAll, onSendAll}: Props)
   const isOnline = useSelector(isOnlineSelector)
   const serverStatus = useSelector(serverStatusSelector)
   const walletMetadata = useSelector(walletMetaSelector)
+  const selectedAsset = tokenBalance.values.find(({identifier}) => identifier === selectedTokenIdentifier)
+
+  if (!selectedAsset) {
+    throw new Error('Invalid token')
+  }
 
   const dispatch = useDispatch()
 
@@ -554,7 +554,7 @@ export const SendScreen = ({selectedTokenIdentifier, sendAll, onSendAll}: Props)
       isOnline={isOnline}
       serverStatus={serverStatus}
       walletMetadata={walletMetadata}
-      selectedTokenIdentifier={selectedTokenIdentifier}
+      selectedAsset={selectedAsset}
       sendAll={sendAll}
       onSendAll={onSendAll}
     />
@@ -813,7 +813,7 @@ const messages = defineMessages({
     defaultMessage: '!!!-',
   },
   balanceAfterLabel: {
-    id: 'components.send.sendscreen.balanceAfterLabel',
+    id: 'global.txLabels.balanceAfterTx',
     defaultMessage: '!!!Balance after',
   },
   balanceAfterNotAvailable: {
@@ -833,7 +833,7 @@ const messages = defineMessages({
     defaultMessage: '!!!Please enter valid address',
   },
   addressInputLabel: {
-    id: 'components.send.sendscreen.addressInputLabel',
+    id: 'components.send.confirmscreen.receiver',
     defaultMessage: '!!!Address',
   },
   checkboxSendAllAssets: {
@@ -893,5 +893,9 @@ const messages = defineMessages({
   errorBannerPendingOutgoingTransaction: {
     id: 'components.send.sendscreen.errorBannerPendingOutgoingTransaction',
     defaultMessage: '!!!You cannot send a new transaction while an existing one is still pending',
+  },
+  asset: {
+    id: 'global.assets.assetLabel',
+    defaultMessage: '!!!Asset',
   },
 })

@@ -9,13 +9,14 @@ import SafeAreaView from 'react-native-safe-area-view'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 
+// $FlowExpectedError
+import {VotingBanner} from '../../../src/Catalyst/VotingBanner'
 import {checkForFlawedWallets, showErrorDialog, submitSignedTx, submitTransaction} from '../../actions'
 import {fetchAccountState} from '../../actions/account'
 import {setLedgerDeviceId, setLedgerDeviceObj} from '../../actions/hwWallet'
 import {fetchPoolInfo} from '../../actions/pools'
 import {fetchUTXOs} from '../../actions/utxo'
 import type {RawUtxo, RemotePoolMetaSuccess} from '../../api/types'
-import VotingBanner from '../../components/Catalyst/VotingBanner'
 import {CONFIG, getCardanoBaseConfig} from '../../config/config'
 import {getCardanoNetworkConfigById} from '../../config/networks'
 import {WrongPassword} from '../../crypto/errors'
@@ -536,7 +537,6 @@ class StakingDashboard extends React.Component<Props, State> {
               onPress={() => {
                 navigation.navigate(CATALYST_ROUTES.ROOT)
               }}
-              disabled={false}
             />
 
             {poolInfo != null && !!poolOperator ? (

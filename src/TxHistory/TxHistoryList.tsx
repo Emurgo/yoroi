@@ -1,27 +1,27 @@
-import {useNavigation} from '@react-navigation/native'
 import _ from 'lodash'
 import React from 'react'
 import {useIntl} from 'react-intl'
 import {Alert, SectionList, StyleSheet, View} from 'react-native'
+import {useSelector} from 'react-redux'
 
-import TxHistoryListItem from '../../legacy/components/TxHistory/TxHistoryListItem'
 import {Text} from '../../legacy/components/UiKit'
 import {actionMessages} from '../../legacy/i18n/global-messages'
+import {transactionsInfoSelector} from '../../legacy/selectors'
 import {formatDateRelative} from '../../legacy/utils/format'
 import features from '../features'
+import {TransactionInfo} from '../types/cardano'
+import {TxHistoryListItem} from './TxHistoryListItem'
 import {TxListActionsBannerForTransactionsTab} from './TxListActionsBanner'
-import {TransactionInfo} from './types'
 
 type Props = {
-  transactions: Record<string, TransactionInfo>
   refreshing: boolean
   onRefresh: () => void
 }
 
-export const TxHistoryList = ({transactions, refreshing, onRefresh}: Props) => {
+export const TxHistoryList = ({refreshing, onRefresh}: Props) => {
   const strings = useStrings()
-  const navigation = useNavigation()
-  const groupedTransactions = getTransactionsByDate(transactions)
+  const transactionsInfo = useSelector(transactionsInfoSelector)
+  const groupedTransactions = getTransactionsByDate(transactionsInfo)
 
   const handleExport = () => Alert.alert(strings.soon, strings.soon)
   const handleSearch = () => Alert.alert(strings.soon, strings.soon)
@@ -32,10 +32,10 @@ export const TxHistoryList = ({transactions, refreshing, onRefresh}: Props) => {
         <TxListActionsBannerForTransactionsTab onExport={handleExport} onSearch={handleSearch} />
       )}
       <SectionList
-        renderItem={({item}) => <TxHistoryListItem navigation={navigation} id={item.id} />}
-        renderSectionHeader={({section: {data}}) => <DayHeader ts={data[0].submittedAt} />}
-        refreshing={refreshing}
         onRefresh={onRefresh}
+        refreshing={refreshing}
+        renderItem={({item}) => <TxHistoryListItem transaction={item} />}
+        renderSectionHeader={({section: {data}}) => <DayHeader ts={data[0].submittedAt} />}
         sections={groupedTransactions}
         keyExtractor={(item) => item.id}
         stickySectionHeadersEnabled={false}

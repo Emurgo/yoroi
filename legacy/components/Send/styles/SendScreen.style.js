@@ -30,6 +30,10 @@ const styles = StyleSheet.create({
   indicator: {
     marginTop: 26,
   },
+  info: {
+    fontSize: 14,
+    lineHeight: 22,
+  },
 })
 
 export default styles

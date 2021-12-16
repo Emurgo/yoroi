@@ -10,18 +10,23 @@ type Props = {
 }
 
 export const SyncErrorBanner = ({showRefresh, isOpen}: Props) => {
-  const intl = useIntl()
+  const strings = useStrings()
 
   if (!isOpen) return null
 
   return (
     <Banner
       error
-      text={
-        showRefresh
-          ? intl.formatMessage(globalMessages.syncErrorBannerTextWithRefresh)
-          : intl.formatMessage(globalMessages.syncErrorBannerTextWithoutRefresh)
-      }
+      text={showRefresh ? strings.syncErrorBannerTextWithRefresh : strings.syncErrorBannerTextWithoutRefresh}
     />
   )
+}
+
+const useStrings = () => {
+  const intl = useIntl()
+
+  return {
+    syncErrorBannerTextWithRefresh: intl.formatMessage(globalMessages.syncErrorBannerTextWithRefresh),
+    syncErrorBannerTextWithoutRefresh: intl.formatMessage(globalMessages.syncErrorBannerTextWithoutRefresh),
+  }
 }

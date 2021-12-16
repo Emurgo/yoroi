@@ -70,13 +70,7 @@ const UserSummary = ({intl, totalAdaSum, totalRewards, totalDelegated, onWithdra
           </View>
           <View style={styles.withdrawBlock}>
             <Button
-              disabled={
-                disableWithdraw ||
-                totalAdaSum == null ||
-                (totalAdaSum != null && totalAdaSum.eq(0)) ||
-                totalRewards == null ||
-                (totalRewards != null && totalRewards.eq(0))
-              }
+              disabled={disableWithdraw}
               outlineOnLight
               shelleyTheme
               onPress={onWithdraw}

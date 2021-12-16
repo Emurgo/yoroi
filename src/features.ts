@@ -1,5 +1,5 @@
 // Testing purposes forcing prod view
-const __DEV__ = false
+// const __DEV__ = false
 
 export default {
   walletHero: {
