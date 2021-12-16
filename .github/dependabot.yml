@@ -5,7 +5,7 @@ updates:
   schedule:
     interval: monthly
     timezone: PST8PDT
-  open-pull-requests-limit: 99
+  open-pull-requests-limit: 3
   ignore:
   - dependency-name: localized-strings
     versions:

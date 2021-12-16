@@ -95,7 +95,7 @@ const _updateWallets = (wallets) => ({
   type: 'UPDATE_WALLETS',
 })
 
-const updateWallets = () => (dispatch: Dispatch<any>) => {
+export const updateWallets = () => (dispatch: Dispatch<any>) => {
   const wallets = walletManager.getWallets()
   dispatch(_updateWallets(wallets))
 }
@@ -357,8 +357,10 @@ export const createWallet =
     provider: YoroiProvider,
   ) =>
   async (dispatch: Dispatch<any>) => {
-    await walletManager.createWallet(name, mnemonic, password, networkId, implementationId, provider)
+    const wallet = await walletManager.createWallet(name, mnemonic, password, networkId, implementationId, provider)
     dispatch(updateWallets())
+
+    return wallet
   }
 
 export const createWalletWithBip44Account =
@@ -371,7 +373,7 @@ export const createWalletWithBip44Account =
     readOnly: boolean,
   ) =>
   async (dispatch: Dispatch<any>) => {
-    await walletManager.createWalletWithBip44Account(
+    const wallet = await walletManager.createWalletWithBip44Account(
       name,
       bip44AccountPublic,
       networkId,
@@ -380,12 +382,9 @@ export const createWalletWithBip44Account =
       readOnly,
     )
     dispatch(updateWallets())
-  }
 
-export const removeCurrentWallet = () => async (dispatch: Dispatch<any>) => {
-  await walletManager.removeCurrentWallet()
-  dispatch(updateWallets())
-}
+    return wallet
+  }
 
 type DialogOptions = {|
   title: string,

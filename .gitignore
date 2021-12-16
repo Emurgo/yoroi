@@ -101,3 +101,10 @@ java_pid*
 flow-coverage
 .eslintcache
 coverage-ts
+
+# Logs/tmp
+*.log
+
+#Test's data
+test/app
+test/artifacts

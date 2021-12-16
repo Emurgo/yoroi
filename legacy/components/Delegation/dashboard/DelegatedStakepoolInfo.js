@@ -22,7 +22,7 @@ const messages = defineMessages({
       '!!!If you just delegated to a new stake pool it may ' +
       ' take a couple of minutes for the network to process your request.',
   },
-  fullDescriptionButtonLabel: {
+  goToWebsiteButtonLabel: {
     id: 'components.delegationsummary.delegatedStakepoolInfo.fullDescriptionButtonLabel',
     defaultMessage: '!!!Go to website',
   },
@@ -124,14 +124,16 @@ const DelegatedStakepoolInfo = ({intl, poolTicker, poolName, poolHash, poolURL}:
           </View>
         </View>
 
-        <View style={styles.bottomBlock}>
-          <Button
-            outlineOnLight
-            shelleyTheme
-            onPress={openExternalURL}
-            title={intl.formatMessage(messages.fullDescriptionButtonLabel)}
-          />
-        </View>
+        {poolURL && (
+          <View style={styles.bottomBlock}>
+            <Button
+              outlineOnLight
+              shelleyTheme
+              onPress={openExternalURL}
+              title={intl.formatMessage(messages.goToWebsiteButtonLabel)}
+            />
+          </View>
+        )}
       </TitledCard>
 
       <View style={styles.warning}>

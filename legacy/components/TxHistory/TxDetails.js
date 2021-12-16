@@ -8,6 +8,10 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Image, LayoutAnimation, Linking, TouchableOpacity, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
+// $FlowExpectedError
+import {AddressModal} from '../../../src/Receive/AddressModal'
+// $FlowExpectedError
+import {useSelectedWallet} from '../../../src/SelectedWallet'
 import arrowDown from '../../assets/img/chevron_down.png'
 import arrowUp from '../../assets/img/chevron_up.png'
 import Screen from '../../components/Screen'
@@ -20,178 +24,13 @@ import {
   internalAddressIndexSelector,
   tokenInfoSelector,
   transactionsInfoSelector,
-  walletMetaSelector,
 } from '../../selectors'
 import {type Token, TRANSACTION_DIRECTION} from '../../types/HistoryTransaction'
 import {formatTokenWithSymbol} from '../../utils/format'
 import AssetList from '../Common/MultiAsset/AssetList'
 import assetListStyle from '../Common/MultiAsset/styles/AssetListTransaction.style'
-import AddressModal from '../Receive/AddressModal'
 import {Banner, Button, CopyButton, OfflineBanner, StatusBar, Text} from '../UiKit'
 import styles from './styles/TxDetails.style'
-
-const txTypeMessages = defineMessages({
-  SENT: {
-    id: 'components.txhistory.txdetails.txTypeSent',
-    defaultMessage: '!!!Sent funds',
-  },
-  RECEIVED: {
-    id: 'components.txhistory.txdetails.txTypeReceived',
-    defaultMessage: '!!!Received funds',
-  },
-  SELF: {
-    id: 'components.txhistory.txdetails.txTypeSelf',
-    defaultMessage: '!!!Intrawallet transaction',
-  },
-  MULTI: {
-    id: 'components.txhistory.txdetails.txTypeMulti',
-    defaultMessage: '!!!Multi-party transaction',
-  },
-})
-
-const messages = defineMessages({
-  addressPrefixReceive: {
-    id: 'components.txhistory.txdetails.addressPrefixReceive',
-    defaultMessage: '!!!/{idx}',
-  },
-  addressPrefixChange: {
-    id: 'components.txhistory.txdetails.addressPrefixChange',
-    defaultMessage: '!!!/change',
-  },
-  addressPrefixNotMine: {
-    id: 'components.txhistory.txdetails.addressPrefixNotMine',
-    defaultMessage: '!!!not mine',
-  },
-  fee: {
-    id: 'components.txhistory.txdetails.fee',
-    defaultMessage: '!!!Fee: ',
-  },
-  fromAddresses: {
-    id: 'components.txhistory.txdetails.fromAddresses',
-    defaultMessage: '!!!From Addresses',
-  },
-  toAddresses: {
-    id: 'components.txhistory.txdetails.toAddresses',
-    defaultMessage: '!!!To Addresses',
-  },
-  transactionId: {
-    id: 'components.txhistory.txdetails.transactionId',
-    defaultMessage: '!!!Transaction ID',
-  },
-  txAssuranceLevel: {
-    id: 'components.txhistory.txdetails.txAssuranceLevel',
-    defaultMessage: '!!!Transaction assurance level',
-  },
-  confirmations: {
-    id: 'components.txhistory.txdetails.confirmations',
-    defaultMessage: '!!!{cnt} {cnt, plural, one {CONFIRMATION} other {CONFIRMATIONS}}',
-  },
-  omittedCount: {
-    id: 'components.txhistory.txdetails.omittedCount',
-    defaultMessage: '!!!+ {cnt} omitted {cnt, plural, one {address} other {addresses}}',
-  },
-  openInExplorer: {
-    id: 'global.openInExplorer',
-    defaultMessage: '!!!Open in explorer',
-  },
-})
-
-const Label = ({children}: {children: string}) => <Text style={styles.label}>{children}</Text>
-
-const AdaAmount = ({amount, token}: {amount: BigNumber, token: Token}) => {
-  const amountStyle = amount.gte(0) ? styles.positiveAmount : styles.negativeAmount
-
-  return <Text style={amountStyle}>{formatTokenWithSymbol(amount, token)}</Text>
-}
-
-type AddressEntryProps = {
-  address: any,
-  path: any,
-  isHighlighted: any,
-  showModalForAddress: any,
-}
-const AddressEntry = ({address, path, isHighlighted, showModalForAddress}: AddressEntryProps) => {
-  return (
-    <TouchableOpacity activeOpacity={0.5} onPress={() => showModalForAddress(address)}>
-      <Text secondary bold={isHighlighted}>
-        ({path}) {address}
-      </Text>
-    </TouchableOpacity>
-  )
-}
-
-const getShownAddresses = (intl, transaction, internalAddressIndex, externalAddressIndex) => {
-  const isMyReceive = (address) => externalAddressIndex[address] != null
-  const isMyChange = (address) => internalAddressIndex[address] != null
-  const isMyAddress = (address) => isMyReceive(address) || isMyChange(address)
-
-  const getPath = (address) => {
-    if (isMyReceive(address)) {
-      return intl.formatMessage(messages.addressPrefixReceive, {
-        idx: externalAddressIndex[address],
-      })
-    } else if (isMyChange(address)) {
-      return intl.formatMessage(messages.addressPrefixChange, {
-        idx: internalAddressIndex[address],
-      })
-    } else {
-      return intl.formatMessage(messages.addressPrefixNotMine)
-    }
-  }
-
-  const {isHighlightedFrom, filterFrom, isHighlightedTo, filterTo} = {
-    [TRANSACTION_DIRECTION.SENT]: {
-      isHighlightedFrom: (_address) => false,
-      filterFrom: null,
-      isHighlightedTo: (address) => !isMyAddress(address),
-      filterTo: null,
-    },
-    [TRANSACTION_DIRECTION.RECEIVED]: {
-      isHighlightedFrom: (_address) => false,
-      filterFrom: null,
-      isHighlightedTo: (address) => isMyAddress(address),
-      filterTo: (address) => isMyAddress(address),
-    },
-    [TRANSACTION_DIRECTION.SELF]: {
-      isHighlightedFrom: (_address) => false,
-      filterFrom: null,
-      isHighlightedTo: (address) => !isMyChange(address),
-      filterTo: null,
-    },
-    [TRANSACTION_DIRECTION.MULTI]: {
-      isHighlightedFrom: (address) => isMyAddress(address),
-      filterFrom: null,
-      isHighlightedTo: (address) => isMyAddress(address),
-      filterTo: null,
-    },
-  }[transaction.direction]
-
-  // TODO(ppershing): decide on importance based on Tx direction
-  const fromAddresses = _.uniq(transaction.inputs).map(({address, assets}) => ({
-    address,
-    assets,
-    path: getPath(address),
-    isHighlighted: isHighlightedFrom(address),
-  }))
-  const fromFiltered = fromAddresses.filter(({address}) => (filterFrom ? filterFrom(address) : true))
-  const cntOmittedFrom = fromAddresses.length - fromFiltered.length
-
-  const toAddresses = _.uniq(transaction.outputs).map(({address, assets}) => ({
-    address,
-    assets,
-    path: getPath(address),
-    isHighlighted: isHighlightedTo(address),
-  }))
-  const toFiltered = toAddresses.filter(({address}) => (filterTo ? filterTo(address) : true))
-  const cntOmittedTo = toAddresses.length - toFiltered.length
-
-  return {
-    fromFiltered,
-    cntOmittedFrom,
-    toFiltered,
-    cntOmittedTo,
-  }
-}
 
 const TxDetails = () => {
   const intl = useIntl()
@@ -199,7 +38,7 @@ const TxDetails = () => {
   const transaction = useSelector(transactionsInfoSelector)[route.params.id]
   const internalAddressIndex = useSelector(internalAddressIndexSelector)
   const externalAddressIndex = useSelector(externalAddressIndexSelector)
-  const walletMeta = useSelector(walletMetaSelector)
+  const wallet = useSelectedWallet()
   const tokenMetadata = useSelector(tokenInfoSelector)
   const defaultNetworkAsset = useSelector(defaultNetworkAssetSelector)
 
@@ -207,7 +46,7 @@ const TxDetails = () => {
 
   const openInExplorer = () => {
     if (transaction) {
-      const networkConfig = getNetworkConfigById(walletMeta.networkId, walletMeta.provider)
+      const networkConfig = getNetworkConfigById(wallet.networkId, wallet.provider)
       // note: don't await on purpose
       Linking.openURL(networkConfig.EXPLORER_URL_FOR_TX(transaction.id))
     }
@@ -326,3 +165,166 @@ const TxDetails = () => {
 }
 
 export default TxDetails
+
+const Label = ({children}: {children: string}) => <Text style={styles.label}>{children}</Text>
+
+const AdaAmount = ({amount, token}: {amount: BigNumber, token: Token}) => {
+  const amountStyle = amount.gte(0) ? styles.positiveAmount : styles.negativeAmount
+
+  return <Text style={amountStyle}>{formatTokenWithSymbol(amount, token)}</Text>
+}
+
+type AddressEntryProps = {
+  address: any,
+  path: any,
+  isHighlighted: any,
+  showModalForAddress: any,
+}
+const AddressEntry = ({address, path, isHighlighted, showModalForAddress}: AddressEntryProps) => {
+  return (
+    <TouchableOpacity activeOpacity={0.5} onPress={() => showModalForAddress(address)}>
+      <Text secondary bold={isHighlighted}>
+        ({path}) {address}
+      </Text>
+    </TouchableOpacity>
+  )
+}
+
+const getShownAddresses = (intl, transaction, internalAddressIndex, externalAddressIndex) => {
+  const isMyReceive = (address) => externalAddressIndex[address] != null
+  const isMyChange = (address) => internalAddressIndex[address] != null
+  const isMyAddress = (address) => isMyReceive(address) || isMyChange(address)
+
+  const getPath = (address) => {
+    if (isMyReceive(address)) {
+      return intl.formatMessage(messages.addressPrefixReceive, {
+        idx: externalAddressIndex[address],
+      })
+    } else if (isMyChange(address)) {
+      return intl.formatMessage(messages.addressPrefixChange, {
+        idx: internalAddressIndex[address],
+      })
+    } else {
+      return intl.formatMessage(messages.addressPrefixNotMine)
+    }
+  }
+
+  const {isHighlightedFrom, filterFrom, isHighlightedTo, filterTo} = {
+    [TRANSACTION_DIRECTION.SENT]: {
+      isHighlightedFrom: (_address) => false,
+      filterFrom: null,
+      isHighlightedTo: (address) => !isMyAddress(address),
+      filterTo: null,
+    },
+    [TRANSACTION_DIRECTION.RECEIVED]: {
+      isHighlightedFrom: (_address) => false,
+      filterFrom: null,
+      isHighlightedTo: (address) => isMyAddress(address),
+      filterTo: (address) => isMyAddress(address),
+    },
+    [TRANSACTION_DIRECTION.SELF]: {
+      isHighlightedFrom: (_address) => false,
+      filterFrom: null,
+      isHighlightedTo: (address) => !isMyChange(address),
+      filterTo: null,
+    },
+    [TRANSACTION_DIRECTION.MULTI]: {
+      isHighlightedFrom: (address) => isMyAddress(address),
+      filterFrom: null,
+      isHighlightedTo: (address) => isMyAddress(address),
+      filterTo: null,
+    },
+  }[transaction.direction]
+
+  // TODO(ppershing): decide on importance based on Tx direction
+  const fromAddresses = _.uniq(transaction.inputs).map(({address, assets}) => ({
+    address,
+    assets,
+    path: getPath(address),
+    isHighlighted: isHighlightedFrom(address),
+  }))
+  const fromFiltered = fromAddresses.filter(({address}) => (filterFrom ? filterFrom(address) : true))
+  const cntOmittedFrom = fromAddresses.length - fromFiltered.length
+
+  const toAddresses = _.uniq(transaction.outputs).map(({address, assets}) => ({
+    address,
+    assets,
+    path: getPath(address),
+    isHighlighted: isHighlightedTo(address),
+  }))
+  const toFiltered = toAddresses.filter(({address}) => (filterTo ? filterTo(address) : true))
+  const cntOmittedTo = toAddresses.length - toFiltered.length
+
+  return {
+    fromFiltered,
+    cntOmittedFrom,
+    toFiltered,
+    cntOmittedTo,
+  }
+}
+
+const txTypeMessages = defineMessages({
+  SENT: {
+    id: 'components.txhistory.txdetails.txTypeSent',
+    defaultMessage: '!!!Sent funds',
+  },
+  RECEIVED: {
+    id: 'components.txhistory.txdetails.txTypeReceived',
+    defaultMessage: '!!!Received funds',
+  },
+  SELF: {
+    id: 'components.txhistory.txdetails.txTypeSelf',
+    defaultMessage: '!!!Intrawallet transaction',
+  },
+  MULTI: {
+    id: 'components.txhistory.txdetails.txTypeMulti',
+    defaultMessage: '!!!Multi-party transaction',
+  },
+})
+
+const messages = defineMessages({
+  addressPrefixReceive: {
+    id: 'components.txhistory.txdetails.addressPrefixReceive',
+    defaultMessage: '!!!/{idx}',
+  },
+  addressPrefixChange: {
+    id: 'components.txhistory.txdetails.addressPrefixChange',
+    defaultMessage: '!!!/change',
+  },
+  addressPrefixNotMine: {
+    id: 'components.txhistory.txdetails.addressPrefixNotMine',
+    defaultMessage: '!!!not mine',
+  },
+  fee: {
+    id: 'components.txhistory.txdetails.fee',
+    defaultMessage: '!!!Fee: ',
+  },
+  fromAddresses: {
+    id: 'components.txhistory.txdetails.fromAddresses',
+    defaultMessage: '!!!From Addresses',
+  },
+  toAddresses: {
+    id: 'components.txhistory.txdetails.toAddresses',
+    defaultMessage: '!!!To Addresses',
+  },
+  transactionId: {
+    id: 'components.txhistory.txdetails.transactionId',
+    defaultMessage: '!!!Transaction ID',
+  },
+  txAssuranceLevel: {
+    id: 'components.txhistory.txdetails.txAssuranceLevel',
+    defaultMessage: '!!!Transaction assurance level',
+  },
+  confirmations: {
+    id: 'components.txhistory.txdetails.confirmations',
+    defaultMessage: '!!!{cnt} {cnt, plural, one {CONFIRMATION} other {CONFIRMATIONS}}',
+  },
+  omittedCount: {
+    id: 'components.txhistory.txdetails.omittedCount',
+    defaultMessage: '!!!+ {cnt} omitted {cnt, plural, one {address} other {addresses}}',
+  },
+  openInExplorer: {
+    id: 'global.openInExplorer',
+    defaultMessage: '!!!Open in explorer',
+  },
+})

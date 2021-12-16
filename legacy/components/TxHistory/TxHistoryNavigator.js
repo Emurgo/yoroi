@@ -7,7 +7,7 @@ import React from 'react'
 import {useSelector} from 'react-redux'
 
 // $FlowFixMe
-import TxHistory from '../../../src/TxHistory/TxHistory'
+import {TxHistory} from '../../../src/TxHistory/TxHistory'
 import iconGear from '../../assets/img/gear.png'
 import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../navigationOptions'
 import {TX_HISTORY_ROUTES, WALLET_ROOT_ROUTES} from '../../RoutesList'
@@ -35,6 +35,16 @@ const headerBar =
       shadowOpacity: 0,
     },
     headerTintColor: '#fff',
+    headerTitleStyle: {
+      fontSize: 16,
+      fontFamily: 'Rubik-Medium',
+    },
+    // headerTintColor: COLORS.ERROR_TEXT_COLOR_DARK,
+    // headerRight: () => (
+    //   <TouchableOpacity onPress={() => navigation.navigate(WALLET_ROOT_ROUTES.SETTINGS)}>
+    //     <Icon name="dots-vertical" size={30} color="#8A92A3" />
+    //   </TouchableOpacity>
+    // ),
     headerRight: () => (
       <Button
         style={styles.settingsButton}
