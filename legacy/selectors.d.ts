@@ -50,7 +50,7 @@ interface MultiToken {
   getDefaultId: () => string,
   getDefault: () => BigNumber,
   getDefaultEntry: () => TokenEntry,
-  values: Array<{amount: BigNumber, identifier: string, networkId: number}>
+  values: Array<TokenEntry>
 }
 
 // prettier-ignore
