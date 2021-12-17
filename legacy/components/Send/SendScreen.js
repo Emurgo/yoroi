@@ -266,19 +266,16 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
           tokenBalance.getDefault().minus(balanceAfter ?? 0)
 
       const tokens: Array<TokenEntry> = await (async () => {
-        if (sendAll && isDefaultAssetSelected) {
-          return (await transactionData.totalOutput()).nonDefaultEntries()
+        if (isDefaultAssetSelected) {
+          return sendAll
+            ? (await transactionData.totalOutput()).nonDefaultEntries()
+            : [];
         }
-        if (!isDefaultAssetSelected) {
-          return [
-            {
-              identifier: selectedTokenMeta.identifier,
-              networkId: selectedTokenMeta.networkId,
-              amount: parseAmountDecimal(amount, selectedTokenMeta),
-            },
-          ]
-        }
-        return []
+        return [{
+          identifier: selectedTokenMeta.identifier,
+          networkId: selectedTokenMeta.networkId,
+          amount: parseAmountDecimal(amount, selectedTokenMeta),
+        }];
       })()
 
       this.closeSendAllWarning()
