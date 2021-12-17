@@ -259,7 +259,7 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
 
       const fee = (await transactionData.fee()).getDefault()
 
-      const isDefaultAssetSelected = selectedTokenMeta.isDefault;
+      const isDefaultAssetSelected = selectedTokenMeta.isDefault
       const defaultAssetAmount = isDefaultAssetSelected
         ? parseAmountDecimal(amount, selectedTokenMeta)
         : // note: inside this if balanceAfter shouldn't be null
