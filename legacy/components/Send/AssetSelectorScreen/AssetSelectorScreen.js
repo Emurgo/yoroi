@@ -126,6 +126,7 @@ const matches = (tokenInfos: Dict<Token>, tokens: Array<TokenEntry>, filter: str
 
     return (
       normalize(decodeHexAscii(tokenInfo.metadata.assetName) || '').includes(filter) ||
+      normalize(getTokenFingerprint(tokenInfo) || '').includes(filter) ||
       normalize(tokenInfo.metadata.ticker || '').includes(filter) ||
       normalize(tokenInfo.metadata.longName || '').includes(filter) ||
       normalize(tokenInfo.identifier).includes(filter) ||
