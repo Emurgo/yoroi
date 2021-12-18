@@ -14,7 +14,7 @@ import type {TokenEntry} from '../../../crypto/MultiToken'
 import globalMessages, {txLabels} from '../../../i18n/global-messages'
 import {COLORS} from '../../../styles/config'
 import {type Token} from '../../../types/HistoryTransaction'
-import {decodeHexAscii, formatTokenAmount, getAssetDenominationOrId} from '../../../utils/format'
+import {decodeHexAscii, formatTokenAmount, getAssetDenominationOrId, getTokenFingerprint} from '../../../utils/format'
 import {Button, Spacer, Text, TextInput} from '../../UiKit'
 
 type Props = {
@@ -91,7 +91,7 @@ const AssetSelectorItem = ({assetToken, tokenInfo, onPress}: AssetSelectorItemPr
             {getAssetDenominationOrId(tokenInfo) || intl.formatMessage(messages.unknownAsset)}
           </Text>
           <Text numberOfLines={1} ellipsizeMode={'middle'} style={{color: COLORS.TEXT_INPUT}}>
-            {tokenInfo.metadata.assetName}
+            {tokenInfo.isDefault ? '' : getTokenFingerprint(tokenInfo)}
           </Text>
         </View>
 
