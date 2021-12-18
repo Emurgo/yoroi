@@ -14,7 +14,6 @@ import {useDispatch, useSelector} from 'react-redux'
 import {fetchUTXOs} from '../../../legacy/actions/utxo'
 import type {RawUtxo} from '../../../legacy/api/types'
 import DangerousActionModal from '../../../legacy/components/Common/DangerousActionModal'
-import AmountField from '../../../legacy/components/Send/AmountField'
 import UtxoAutoRefresher from '../../../legacy/components/Send/UtxoAutoRefresher'
 import {
   Banner,
@@ -65,6 +64,7 @@ import type {
 } from '../../../legacy/utils/validators'
 import {getUnstoppableDomainAddress, isReceiverAddressValid, validateAmount} from '../../../legacy/utils/validators'
 import {DefaultAsset, SendTokenList, Token} from '../../types/cardano'
+import {AmountField} from '../AmountField'
 
 type Props = {
   selectedTokenIdentifier: string

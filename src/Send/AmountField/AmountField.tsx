@@ -1,28 +1,19 @@
-// @flow
-
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import {TextInput} from '../UiKit'
-import {editedFormatter, pastedFormatter} from './amountUtils'
-
-export const messages = defineMessages({
-  label: {
-    id: 'components.send.amountfield.label',
-    defaultMessage: '!!!Amount',
-  },
-})
+import {editedFormatter, pastedFormatter} from '../../../legacy/components/Send/amountUtils'
+import {TextInput} from '../../../legacy/components/UiKit'
 
 type Props = {
-  amount: string,
-  setAmount: (amount: string) => mixed,
-  error: ?string,
-  editable?: boolean,
+  amount: string
+  setAmount: (amount: string) => void
+  error?: string | null | undefined
+  editable?: boolean
 }
 
-const AmountField = ({amount, error, editable, setAmount}: Props) => {
+export const AmountField = ({amount, error, editable, setAmount}: Props) => {
   const intl = useIntl()
-  const handleSetAmount = (text) => {
+  const handleSetAmount = (text: string) => {
     const shorterStringLength = Math.min(text.length, amount.length)
     const wasPasted =
       Math.abs(amount.length - text.length) > 1 ||
@@ -47,4 +38,9 @@ const AmountField = ({amount, error, editable, setAmount}: Props) => {
   )
 }
 
-export default AmountField
+const messages = defineMessages({
+  label: {
+    id: 'components.send.amountfield.label',
+    defaultMessage: '!!!Amount',
+  },
+})

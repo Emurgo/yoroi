@@ -9,12 +9,12 @@ import {Platform, ScrollView, View} from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {showErrorDialog, submitSignedTx, submitTransaction} from '../../legacy/actions'
-import {setLedgerDeviceId, setLedgerDeviceObj} from '../../legacy/actions/hwWallet'
-import ErrorModal from '../../legacy/components/Common/ErrorModal'
-import HWInstructions from '../../legacy/components/Ledger/HWInstructions'
-import LedgerConnect from '../../legacy/components/Ledger/LedgerConnect'
-import LedgerTransportSwitchModal from '../../legacy/components/Ledger/LedgerTransportSwitchModal'
+import {showErrorDialog, submitSignedTx, submitTransaction} from '../../../legacy/actions'
+import {setLedgerDeviceId, setLedgerDeviceObj} from '../../../legacy/actions/hwWallet'
+import ErrorModal from '../../../legacy/components/Common/ErrorModal'
+import HWInstructions from '../../../legacy/components/Ledger/HWInstructions'
+import LedgerConnect from '../../../legacy/components/Ledger/LedgerConnect'
+import LedgerTransportSwitchModal from '../../../legacy/components/Ledger/LedgerTransportSwitchModal'
 import {
   Banner,
   Button,
@@ -24,27 +24,27 @@ import {
   StatusBar,
   Text,
   ValidatedTextInput,
-} from '../../legacy/components/UiKit'
-import {CONFIG} from '../../legacy/config/config'
-import {WrongPassword} from '../../legacy/crypto/errors'
-import {ISignRequest} from '../../legacy/crypto/ISignRequest'
-import KeyStore from '../../legacy/crypto/KeyStore'
-import type {TokenEntry} from '../../legacy/crypto/MultiToken'
-import type {CreateUnsignedTxResponse} from '../../legacy/crypto/shelley/transactionUtils'
-import walletManager, {SystemAuthDisabled} from '../../legacy/crypto/walletManager'
-import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../legacy/i18n/global-messages'
-import LocalizableError from '../../legacy/i18n/LocalizableError'
-import {SEND_ROUTES, WALLET_ROOT_ROUTES, WALLET_ROUTES} from '../../legacy/RoutesList'
+} from '../../../legacy/components/UiKit'
+import {CONFIG} from '../../../legacy/config/config'
+import {WrongPassword} from '../../../legacy/crypto/errors'
+import {ISignRequest} from '../../../legacy/crypto/ISignRequest'
+import KeyStore from '../../../legacy/crypto/KeyStore'
+import type {TokenEntry} from '../../../legacy/crypto/MultiToken'
+import type {CreateUnsignedTxResponse} from '../../../legacy/crypto/shelley/transactionUtils'
+import walletManager, {SystemAuthDisabled} from '../../../legacy/crypto/walletManager'
+import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../../legacy/i18n/global-messages'
+import LocalizableError from '../../../legacy/i18n/LocalizableError'
+import {SEND_ROUTES, WALLET_ROOT_ROUTES, WALLET_ROUTES} from '../../../legacy/RoutesList'
 import {
   defaultNetworkAssetSelector,
   easyConfirmationSelector,
   hwDeviceInfoSelector,
   isHWSelector,
   tokenInfoSelector,
-} from '../../legacy/selectors'
-import {COLORS} from '../../legacy/styles/config'
-import {formatTokenWithSymbol, formatTokenWithText} from '../../legacy/utils/format'
-import {Spacer} from '../components'
+} from '../../../legacy/selectors'
+import {COLORS} from '../../../legacy/styles/config'
+import {formatTokenWithSymbol, formatTokenWithText} from '../../../legacy/utils/format'
+import {Spacer} from '../../components'
 
 const LEDGER_DIALOG_STEPS = {
   CLOSED: 'CLOSED',
