@@ -4,9 +4,9 @@ import {BigNumber} from 'bignumber.js'
 import React from 'react'
 
 import {RemotePoolMetaSuccess} from '../../legacy/selectors'
-import {SelectedWalletProvider} from '../../src/SelectedWallet'
+import {SelectedWalletProvider} from '../SelectedWallet'
 import {WalletInterface} from '../types'
-import {StakingDashboard} from './StakingDashboard'
+import {Dashboard} from './Dashboard'
 
 const poolInfo: RemotePoolMetaSuccess = {
   info: {
@@ -40,10 +40,10 @@ const availableFunds = new BigNumber(1000000)
 const totalRewards = new BigNumber(123123)
 const totalDelegated = availableFunds.plus(totalRewards)
 
-storiesOf('StakingDashboard', module)
+storiesOf('Dashboard', module)
   .add('Default', ({navigation}: any) => (
     <SelectedWalletProvider wallet={wallet}>
-      <StakingDashboard
+      <Dashboard
         navigation={navigation}
         poolInfo={poolInfo}
         utxoBalance={availableFunds}
@@ -54,7 +54,7 @@ storiesOf('StakingDashboard', module)
   ))
   .add('Loading', ({navigation}: any) => (
     <SelectedWalletProvider wallet={wallet}>
-      <StakingDashboard
+      <Dashboard
         navigation={navigation}
         poolInfo={null}
         poolOperator={'poolOperator'}
@@ -68,7 +68,7 @@ storiesOf('StakingDashboard', module)
   ))
   .add('Loaded', ({navigation}: any) => (
     <SelectedWalletProvider wallet={wallet}>
-      <StakingDashboard
+      <Dashboard
         navigation={navigation}
         poolInfo={poolInfo}
         poolOperator={'poolOperator'}

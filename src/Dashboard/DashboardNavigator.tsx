@@ -15,7 +15,7 @@ import {
 } from '../../legacy/navigationOptions'
 import {SEND_ROUTES, STAKING_DASHBOARD_ROUTES, WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
 import {walletNameSelector} from '../../legacy/selectors'
-import {StakingDashboard} from './StakingDashboard'
+import {Dashboard} from './Dashboard'
 
 const Stack = createStackNavigator<{
   'staking-dashboard': any
@@ -44,7 +44,7 @@ export const DashboardNavigator = () => {
     >
       <Stack.Screen
         name={STAKING_DASHBOARD_ROUTES.MAIN}
-        component={StakingDashboard}
+        component={Dashboard}
         options={({navigation}) => ({
           title: walletName,
           headerRight: () => (

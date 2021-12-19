@@ -128,7 +128,7 @@ type Props = {
   walletMeta: Omit<WalletMeta, 'id'>
 }
 
-type StakingDashboardState = {
+type DashboardState = {
   currentTime: Date
   withdrawalDialogStep: WithdrawalDialogSteps
   useUSB: boolean
@@ -151,7 +151,7 @@ type StakingDashboardState = {
 }
 
 // eslint-disable-next-line react-prefer-function-component/react-prefer-function-component
-export class StakingDashboardLegacy extends React.Component<Props, StakingDashboardState> {
+export class DashboardLegacy extends React.Component<Props, DashboardState> {
   state = {
     currentTime: new Date(),
     withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.CLOSED,
@@ -596,7 +596,7 @@ export class StakingDashboardLegacy extends React.Component<Props, StakingDashbo
   }
 }
 
-export const StakingDashboard = injectIntl(
+export const Dashboard = injectIntl(
   compose(
     connect(
       (state: State) => ({
@@ -637,6 +637,6 @@ export const StakingDashboard = injectIntl(
         ...dispatchProps,
         ...ownProps,
       }),
-    )(StakingDashboardLegacy),
+    )(DashboardLegacy),
   ),
 )

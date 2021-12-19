@@ -19,11 +19,11 @@ import iconSendActive from './assets/img/icon/send-active.png'
 import iconHistory from './assets/img/icon/txhistory.png'
 import iconHistoryActive from './assets/img/icon/txhistory-active.png'
 import {CatalystNavigator} from './Catalyst/CatalystNavigator'
+import {DashboardNavigator} from './Dashboard'
 import {ReceiveScreenNavigator} from './Receive/ReceiveScreenNavigator'
 import {useSelectedWallet, WalletSelectionScreen} from './SelectedWallet'
 import {SendScreenNavigator} from './Send'
 import {SettingsScreenNavigator} from './Settings'
-import {DashboardNavigator} from './StakingDashboard'
 import {TxHistoryNavigator} from './TxHistory/TxHistoryNavigator'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
