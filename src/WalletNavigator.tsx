@@ -5,7 +5,6 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Image} from 'react-native'
 
 import StakingCenterNavigator from '../legacy/components/Delegation/StakingCenterNavigator'
-import StakingDashboardNavigator from '../legacy/components/Delegation/StakingDashboardNavigator'
 import {isHaskellShelley} from '../legacy/config/config'
 import {defaultNavigationOptions} from '../legacy/navigationOptions'
 import {theme} from '../legacy/styles/config'
@@ -24,6 +23,7 @@ import {ReceiveScreenNavigator} from './Receive/ReceiveScreenNavigator'
 import {useSelectedWallet, WalletSelectionScreen} from './SelectedWallet'
 import {SendScreenNavigator} from './Send'
 import {SettingsScreenNavigator} from './Settings'
+import {DashboardNavigator} from './StakingDashboard'
 import {TxHistoryNavigator} from './TxHistory/TxHistoryNavigator'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -55,7 +55,7 @@ const WalletTabNavigator = () => {
       {isHaskellShelley(wallet.walletImplementationId) && (
         <Tab.Screen
           name={'staking-dashboard'}
-          component={StakingDashboardNavigator}
+          component={DashboardNavigator}
           options={{
             tabBarIcon: ({focused}) => <Image source={focused ? iconDashboardActive : iconDashboard} />,
             tabBarLabel: strings.dashboardTabBarLabel,

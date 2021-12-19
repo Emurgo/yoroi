@@ -65,4 +65,12 @@ type WalletConfig = {
 
 export var getWalletConfigById: (walletImplementationId: string) => WalletImplementation
 
+// prettier-ignore
+export var getCardanoBaseConfig: (networkConfig: CardanoHaskellShelleyNetwork) => Array<{
+  StartAt?: number,
+  GenesisDate?: string,
+  SlotsPerEpoch?: number,
+  SlotDuration?: number,
+}>
+
 export var UI_V2: boolean

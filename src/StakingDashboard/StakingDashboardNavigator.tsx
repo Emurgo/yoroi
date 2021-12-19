@@ -1,34 +1,34 @@
-// @flow
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
+import {StyleSheet} from 'react-native'
 import {useSelector} from 'react-redux'
 
 import iconGear from '../../assets/img/gear.png'
-import {isJormungandr} from '../../config/networks'
-import {defaultNavigationOptions, defaultStackNavigatorOptions, jormunNavigationOptions} from '../../navigationOptions'
-import {SEND_ROUTES, STAKING_DASHBOARD_ROUTES, WALLET_ROOT_ROUTES} from '../../RoutesList'
-import {walletNameSelector} from '../../selectors'
-import BiometricAuthScreen from '../Send/BiometricAuthScreen'
-import {Button} from '../UiKit'
-import StakingDashboard from './StakingDashboard'
-import styles from './styles/SettingsButton.style'
+import BiometricAuthScreen from '../../legacy/components/Send/BiometricAuthScreen'
+import {Button} from '../../legacy/components/UiKit'
+import {isJormungandr} from '../../legacy/config/networks'
+import {
+  defaultNavigationOptions,
+  defaultStackNavigatorOptions,
+  jormunNavigationOptions,
+} from '../../legacy/navigationOptions'
+import {SEND_ROUTES, STAKING_DASHBOARD_ROUTES, WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
+import {walletNameSelector} from '../../legacy/selectors'
+import {StakingDashboard} from './StakingDashboard'
 
-type DelegationNavigatorRoutes = {
-  'staking-dashboard': any,
-  'staking-center': any,
-  'biometrics-signing': any,
-}
+const Stack = createStackNavigator<{
+  'staking-dashboard': any
+  'staking-center': any
+  'biometrics-signing': any
+}>()
 
-const Stack = createStackNavigator<any, DelegationNavigatorRoutes, any>()
-
-const DelegationNavigatorSummary = () => {
+export const DashboardNavigator = () => {
   const walletName = useSelector(walletNameSelector)
 
   return (
     <Stack.Navigator
       screenOptions={({route}) => {
-        // $FlowFixMe mixed is incompatible with number
         const extraOptions = isJormungandr(route.params?.networkId) ? jormunNavigationOptions : {}
         return {
           cardStyle: {
@@ -49,7 +49,6 @@ const DelegationNavigatorSummary = () => {
           title: walletName,
           headerRight: () => (
             <Button
-              style={styles.settingsButton}
               onPress={() => navigation.navigate(WALLET_ROOT_ROUTES.SETTINGS)}
               iconImage={iconGear}
               title=""
@@ -66,5 +65,3 @@ const DelegationNavigatorSummary = () => {
     </Stack.Navigator>
   )
 }
-
-export default DelegationNavigatorSummary

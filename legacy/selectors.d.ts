@@ -44,6 +44,18 @@ export var lastUtxosFetchErrorSelector: (state: State) => typeof state.balance.l
 export var serverStatusSelector: (state: State) => ServerStatusCache
 export var utxosSelector: (state: State) => typeof state.balance.utxos
 
+export var accountBalanceSelector = (state: State) => BigNumber | null | undefined
+export var isFetchingAccountStateSelector = (state: State) => boolean
+export var isFetchingPoolInfoSelector = (state: State) => boolean
+export var isFlawedWalletSelector = (state: State) => boolean
+export var lastAccountStateFetchErrorSelector = (state: State) => any
+export var poolInfoSelector = (state: State) => RemotePoolMetaSuccess | null
+export var poolOperatorSelector = (state: State) => null | string
+export var serverStatusSelector = (state: State) => ServerStatusCache
+export var totalDelegatedSelector = (state: State) => BigNumber | null
+export var utxoBalanceSelector = (state: State) => BigNumber | null
+export var utxosSelector = (state: State) => state.balance.utxos
+
 // prettier-ignore
 interface MultiToken {
   getDefaultId: () => string,
@@ -59,4 +71,21 @@ export type ServerStatusCache = {
   isServerOk: boolean,
   isMaintenance: boolean,
   serverTime: Date | null,
+}
+
+export type RemotePoolMetaSuccess = {
+  info: null | {
+    name?: string | null
+    ticker?: string | null
+    description?: string | null
+    homepage?: string | null
+    // other stuff from SMASH.
+  }
+  history: Array<{
+    epoch: number
+    slot: number
+    tx_ordinal: number
+    cert_ordinal: number
+    payload: RemoteCertificate
+  }>
 }

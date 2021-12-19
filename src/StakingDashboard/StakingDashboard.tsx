@@ -1,34 +1,53 @@
-// @flow
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import {BigNumber} from 'bignumber.js'
-import type {ComponentType} from 'react'
 import React from 'react'
-import {type IntlShape, injectIntl} from 'react-intl'
+import type {IntlShape} from 'react-intl'
+import {injectIntl} from 'react-intl'
 import {ActivityIndicator, Platform, RefreshControl, ScrollView, View} from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 
-// $FlowExpectedError
-import {VotingBanner} from '../../../src/Catalyst/VotingBanner'
-import {checkForFlawedWallets, showErrorDialog, submitSignedTx, submitTransaction} from '../../actions'
-import {fetchAccountState} from '../../actions/account'
-import {setLedgerDeviceId, setLedgerDeviceObj} from '../../actions/hwWallet'
-import {fetchPoolInfo} from '../../actions/pools'
-import {fetchUTXOs} from '../../actions/utxo'
-import type {RawUtxo, RemotePoolMetaSuccess} from '../../api/types'
-import {CONFIG, getCardanoBaseConfig} from '../../config/config'
-import {getCardanoNetworkConfigById} from '../../config/networks'
-import {WrongPassword} from '../../crypto/errors'
-import {ISignRequest} from '../../crypto/ISignRequest'
-import KeyStore from '../../crypto/KeyStore'
-import {MultiToken} from '../../crypto/MultiToken'
-import {HaskellShelleyTxSignRequest} from '../../crypto/shelley/HaskellShelleyTxSignRequest'
-import type {DeviceId, DeviceObj, HWDeviceInfo} from '../../crypto/shelley/ledgerUtils'
-import walletManager, {SystemAuthDisabled} from '../../crypto/walletManager'
-import globalMessages, {errorMessages} from '../../i18n/global-messages'
-import LocalizableError from '../../i18n/LocalizableError'
-import {CATALYST_ROUTES, DELEGATION_ROUTES, SEND_ROUTES, WALLET_ROOT_ROUTES, WALLET_ROUTES} from '../../RoutesList'
+import {checkForFlawedWallets, showErrorDialog, submitSignedTx, submitTransaction} from '../../legacy/actions'
+import {fetchAccountState} from '../../legacy/actions/account'
+import {setLedgerDeviceId, setLedgerDeviceObj} from '../../legacy/actions/hwWallet'
+import {fetchPoolInfo} from '../../legacy/actions/pools'
+import {fetchUTXOs} from '../../legacy/actions/utxo'
+import type {RawUtxo, RemotePoolMetaSuccess} from '../../legacy/api/types'
+import AccountAutoRefresher from '../../legacy/components/Delegation/AccountAutoRefresher'
+import {
+  DelegatedStakepoolInfo,
+  EpochProgress,
+  NotDelegatedInfo,
+  UserSummary,
+} from '../../legacy/components/Delegation/dashboard'
+import DelegationNavigationButtons from '../../legacy/components/Delegation/DelegationNavigationButtons'
+import FlawedWalletScreen from '../../legacy/components/Delegation/FlawedWalletScreen'
+import styles from '../../legacy/components/Delegation/styles/DelegationSummary.style'
+import type {WithdrawalDialogSteps} from '../../legacy/components/Delegation/types'
+import {WITHDRAWAL_DIALOG_STEPS} from '../../legacy/components/Delegation/types'
+import WithdrawalDialog from '../../legacy/components/Delegation/WithdrawalDialog'
+import UtxoAutoRefresher from '../../legacy/components/Send/UtxoAutoRefresher'
+import {Banner, OfflineBanner, StatusBar} from '../../legacy/components/UiKit'
+import {CONFIG, getCardanoBaseConfig} from '../../legacy/config/config'
+import {getCardanoNetworkConfigById} from '../../legacy/config/networks'
+import {WrongPassword} from '../../legacy/crypto/errors'
+import {ISignRequest} from '../../legacy/crypto/ISignRequest'
+import KeyStore from '../../legacy/crypto/KeyStore'
+import {MultiToken} from '../../legacy/crypto/MultiToken'
+import {HaskellShelleyTxSignRequest} from '../../legacy/crypto/shelley/HaskellShelleyTxSignRequest'
+import type {DeviceId, DeviceObj, HWDeviceInfo} from '../../legacy/crypto/shelley/ledgerUtils'
+import walletManager, {SystemAuthDisabled} from '../../legacy/crypto/walletManager'
+import globalMessages, {errorMessages} from '../../legacy/i18n/global-messages'
+import LocalizableError from '../../legacy/i18n/LocalizableError'
+import {
+  CATALYST_ROUTES,
+  DELEGATION_ROUTES,
+  SEND_ROUTES,
+  WALLET_ROOT_ROUTES,
+  WALLET_ROUTES,
+} from '../../legacy/RoutesList'
 import {
   accountBalanceSelector,
   defaultNetworkAssetSelector,
@@ -51,94 +70,88 @@ import {
   utxosSelector,
   walletMetaSelector,
   walletNameSelector,
-} from '../../selectors'
-import type {ServerStatusCache, WalletMeta} from '../../state'
-import type {DefaultAsset} from '../../types/HistoryTransaction'
-import type {Navigation} from '../../types/navigation'
+} from '../../legacy/selectors'
+import type {ServerStatusCache, State, WalletMeta} from '../../legacy/state'
+import type {DefaultAsset} from '../../legacy/types/HistoryTransaction'
+import type {Navigation} from '../../legacy/types/navigation'
 import {
   genCurrentEpochLength,
   genCurrentSlotLength,
   genTimeToSlot,
   genToRelativeSlotNumber,
-} from '../../utils/timeUtils'
-import UtxoAutoRefresher from '../Send/UtxoAutoRefresher'
-import {Banner, OfflineBanner, StatusBar} from '../UiKit'
-import AccountAutoRefresher from './AccountAutoRefresher'
-import {DelegatedStakepoolInfo, EpochProgress, NotDelegatedInfo, UserSummary} from './dashboard'
-import DelegationNavigationButtons from './DelegationNavigationButtons'
-import FlawedWalletScreen from './FlawedWalletScreen'
-import styles from './styles/DelegationSummary.style'
-import {type WithdrawalDialogSteps, WITHDRAWAL_DIALOG_STEPS} from './types'
-import WithdrawalDialog from './WithdrawalDialog'
+} from '../../legacy/utils/timeUtils'
+import {VotingBanner} from '../Catalyst/VotingBanner'
 
-const SyncErrorBanner = injectIntl(({intl, showRefresh}: {intl: IntlShape} & Object /* TODO: type */) => (
-  <Banner
-    error
-    text={
-      showRefresh
-        ? intl.formatMessage(globalMessages.syncErrorBannerTextWithRefresh)
-        : intl.formatMessage(globalMessages.syncErrorBannerTextWithoutRefresh)
-    }
-  />
-))
+const SyncErrorBanner = injectIntl(
+  ({intl, showRefresh}: {intl: IntlShape} & Record<string, unknown> /* TODO: type */) => (
+    <Banner
+      error
+      text={
+        showRefresh
+          ? intl.formatMessage(globalMessages.syncErrorBannerTextWithRefresh)
+          : intl.formatMessage(globalMessages.syncErrorBannerTextWithoutRefresh)
+      }
+    />
+  ),
+)
 
-type Props = {|
-  intl: IntlShape,
-  navigation: Navigation,
-  isOnline: boolean,
-  utxoBalance: ?BigNumber,
-  utxos: ?Array<RawUtxo>,
-  accountBalance: ?BigNumber,
-  isDelegating: boolean,
-  isFetchingAccountState: boolean,
-  fetchUTXOs: () => any,
-  isFetchingUtxos: boolean,
-  poolOperator: string,
-  fetchPoolInfo: () => any,
-  isFetchingPoolInfo: boolean,
-  fetchAccountState: () => any,
-  poolInfo: ?RemotePoolMetaSuccess,
-  totalDelegated: ?BigNumber,
-  lastAccountStateSyncError: any,
-  checkForFlawedWallets: () => any,
-  setLedgerDeviceId: (DeviceId) => Promise<void>,
-  setLedgerDeviceObj: (DeviceObj) => Promise<void>,
-  isFlawedWallet: boolean,
-  isHW: boolean,
-  isReadOnly: boolean,
-  isEasyConfirmationEnabled: boolean,
-  hwDeviceInfo: HWDeviceInfo,
-  submitTransaction: <T>(ISignRequest<T>, string) => Promise<void>,
-  submitSignedTx: (string) => Promise<void>,
-  defaultAsset: DefaultAsset,
-  serverStatus: ServerStatusCache,
-  walletMeta: $Diff<WalletMeta, {id: string}>,
-|}
+type Props = {
+  intl: IntlShape
+  navigation: Navigation
+  isOnline: boolean
+  utxoBalance: BigNumber | null
+  utxos: Array<RawUtxo> | null
+  accountBalance: BigNumber | null
+  isDelegating: boolean
+  isFetchingAccountState: boolean
+  fetchUTXOs: () => any
+  isFetchingUtxos: boolean
+  poolOperator: string
+  fetchPoolInfo: () => any
+  isFetchingPoolInfo: boolean
+  fetchAccountState: () => void
+  poolInfo: RemotePoolMetaSuccess | null
+  totalDelegated: BigNumber | null
+  lastAccountStateSyncError: any
+  checkForFlawedWallets: () => any
+  setLedgerDeviceId: (deviceID: DeviceId) => Promise<void>
+  setLedgerDeviceObj: (deviceObj: DeviceObj) => Promise<void>
+  isFlawedWallet: boolean
+  isHW: boolean
+  isReadOnly: boolean
+  isEasyConfirmationEnabled: boolean
+  hwDeviceInfo: HWDeviceInfo
+  submitTransaction: (request: ISignRequest, text: string) => Promise<void>
+  submitSignedTx: (text: string) => Promise<void>
+  defaultAsset: DefaultAsset
+  serverStatus: ServerStatusCache
+  walletMeta: Omit<WalletMeta, 'id'>
+}
 
-type State = {|
-  +currentTime: Date,
-  withdrawalDialogStep: WithdrawalDialogSteps,
-  useUSB: boolean,
-  signTxRequest: ?HaskellShelleyTxSignRequest,
-  withdrawals: ?Array<{|
-    address: string,
-    amount: MultiToken,
-  |}>,
-  deregistrations: ?Array<{|
-    rewardAddress: string,
-    refund: MultiToken,
-  |}>,
-  balance: BigNumber,
-  finalBalance: BigNumber,
-  fees: BigNumber,
+type StakingDashboardState = {
+  currentTime: Date
+  withdrawalDialogStep: WithdrawalDialogSteps
+  useUSB: boolean
+  signTxRequest: HaskellShelleyTxSignRequest | null
+  withdrawals: Array<{
+    address: string
+    amount: MultiToken
+  }> | null
+  deregistrations: Array<{
+    rewardAddress: string
+    refund: MultiToken
+  }> | null
+  balance: BigNumber
+  finalBalance: BigNumber
+  fees: BigNumber
   error: {
-    errorMessage: ?string,
-    errorLogs?: ?string,
-  },
-|}
+    errorMessage: string | null
+    errorLogs?: string | null
+  }
+}
 
 // eslint-disable-next-line react-prefer-function-component/react-prefer-function-component
-class StakingDashboard extends React.Component<Props, State> {
+export class StakingDashboardLegacy extends React.Component<Props, StakingDashboardState> {
   state = {
     currentTime: new Date(),
     withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.CLOSED,
@@ -155,13 +168,13 @@ class StakingDashboard extends React.Component<Props, State> {
     },
   }
 
-  _firstFocus: boolean = true
+  _firstFocus = true
 
-  _shouldDeregister: boolean = false
+  _shouldDeregister = false
 
-  _intervalId: void | IntervalID = undefined
+  _intervalId: void | any = undefined
 
-  _unsubscribe: void | (() => mixed) = undefined
+  _unsubscribe: void | (() => void) = undefined
 
   componentDidMount() {
     this._intervalId = setInterval(
@@ -193,12 +206,12 @@ class StakingDashboard extends React.Component<Props, State> {
     if (this._unsubscribe != null) this._unsubscribe()
   }
 
-  navigateToStakingCenter: (void) => void = () => {
+  navigateToStakingCenter: () => void = () => {
     const {navigation} = this.props
     navigation.navigate(DELEGATION_ROUTES.STAKING_CENTER)
   }
 
-  handleDidFocus: (void) => void = () => {
+  handleDidFocus: () => void = () => {
     if (this._firstFocus) {
       this._firstFocus = false
       // skip first focus to avoid
@@ -279,8 +292,8 @@ class StakingDashboard extends React.Component<Props, State> {
           withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.ERROR,
           error: {
             errorMessage: intl.formatMessage({
-              id: e.id,
-              defaultMessage: e.defaultMessage,
+              id: (e as any).id,
+              defaultMessage: (e as any).defaultMessage,
             }),
           },
         })
@@ -288,7 +301,7 @@ class StakingDashboard extends React.Component<Props, State> {
         this.setState({
           withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.ERROR,
           error: {
-            errorMessage: intl.formatMessage(errorMessages.generalError.message, {message: e.message}),
+            errorMessage: intl.formatMessage(errorMessages.generalError.message, {message: (e as any).message}),
           },
         })
       }
@@ -326,12 +339,12 @@ class StakingDashboard extends React.Component<Props, State> {
   // TODO: this code has been copy-pasted from the tx confirmation page.
   // Ideally, all this logic should be moved away and perhaps written as a
   // redux action that can be reused in all components with tx signing and sending
-  onConfirm: (Object, string | void) => Promise<void> = async (event, password) => {
+  onConfirm: (x: Record<string, unknown>, y: string | void) => Promise<void> = async (_event, password) => {
     const {signTxRequest, useUSB} = this.state
     const {intl, navigation, isHW, isEasyConfirmationEnabled, submitTransaction, submitSignedTx} = this.props
     if (signTxRequest == null) throw new Error('no tx data')
 
-    const submitTx = async <T>(tx: string | ISignRequest<T>, decryptedKey: ?string) => {
+    const submitTx = async (tx: string | ISignRequest, decryptedKey?: string) => {
       if (decryptedKey == null && typeof tx === 'string') {
         await submitSignedTx(tx)
       } else if (decryptedKey != null && !(typeof tx === 'string' || tx instanceof String)) {
@@ -404,8 +417,11 @@ class StakingDashboard extends React.Component<Props, State> {
         this.setState({
           withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.ERROR,
           error: {
-            errorMessage: intl.formatMessage({id: e.id, defaultMessage: e.defaultMessage}, e.values),
-            errorLogs: e.values.response || null,
+            errorMessage: intl.formatMessage(
+              {id: (e as any).id, defaultMessage: (e as any).defaultMessage},
+              (e as any).values,
+            ),
+            errorLogs: (e as any).values.response || null,
           },
         })
       } else {
@@ -413,7 +429,7 @@ class StakingDashboard extends React.Component<Props, State> {
           withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.ERROR,
           error: {
             errorMessage: intl.formatMessage(errorMessages.generalTxError.message),
-            errorLogs: e.message || null,
+            errorLogs: (e as any).message || null,
           },
         })
       }
@@ -542,12 +558,9 @@ class StakingDashboard extends React.Component<Props, State> {
             {poolInfo != null && !!poolOperator ? (
               <View style={styles.row}>
                 <DelegatedStakepoolInfo
-                  // $FlowFixMe TODO: null or undefined is not compatible with string
                   poolTicker={poolInfo.info?.ticker}
-                  // $FlowFixMe TODO: null or undefined is not compatible with string
                   poolName={poolInfo.info?.name}
                   poolHash={poolOperator != null ? poolOperator : ''}
-                  // $FlowFixMe TODO: null or undefined is not compatible with string
                   poolURL={poolInfo.info?.homepage}
                 />
               </View>
@@ -567,13 +580,9 @@ class StakingDashboard extends React.Component<Props, State> {
           onDeregisterKey={(event) => this.onKeepOrDeregisterKey(event, true)}
           onChooseTransport={this.onChooseTransport}
           useUSB={this.state.useUSB}
-          // $FlowFixMe
           onConnectBLE={this.onConnectBLE}
-          // $FlowFixMe
           onConnectUSB={this.onConnectUSB}
-          // $FlowFixMe
           withdrawals={this.state.withdrawals}
-          // $FlowFixMe
           deregistrations={this.state.deregistrations}
           balance={this.state.balance}
           finalBalance={this.state.finalBalance}
@@ -587,16 +596,10 @@ class StakingDashboard extends React.Component<Props, State> {
   }
 }
 
-type ExternalProps = {|
-  navigation: Navigation,
-  route: any,
-  intl: IntlShape,
-|}
-
-export default injectIntl(
-  (compose(
+export const StakingDashboard = injectIntl(
+  compose(
     connect(
-      (state) => ({
+      (state: State) => ({
         utxoBalance: utxoBalanceSelector(state),
         utxos: utxosSelector(state),
         isFetchingUtxos: isFetchingUtxosSelector(state),
@@ -629,11 +632,11 @@ export default injectIntl(
         submitTransaction,
         submitSignedTx,
       },
-      (state, dispatchProps, ownProps) => ({
+      (state, dispatchProps, ownProps: any) => ({
         ...state,
         ...dispatchProps,
         ...ownProps,
       }),
-    ),
-  )(StakingDashboard): ComponentType<ExternalProps>),
+    )(StakingDashboardLegacy),
+  ),
 )
