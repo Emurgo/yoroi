@@ -1,19 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import {useNavigation} from '@react-navigation/native'
 import {BigNumber} from 'bignumber.js'
 import React from 'react'
-import type {IntlShape} from 'react-intl'
-import {injectIntl} from 'react-intl'
+import {IntlShape, useIntl} from 'react-intl'
 import {ActivityIndicator, Platform, RefreshControl, ScrollView, View} from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'
-import {connect} from 'react-redux'
-import {compose} from 'redux'
+import {useDispatch, useSelector} from 'react-redux'
 
-import {checkForFlawedWallets, showErrorDialog, submitSignedTx, submitTransaction} from '../../legacy/actions'
-import {fetchAccountState} from '../../legacy/actions/account'
-import {setLedgerDeviceId, setLedgerDeviceObj} from '../../legacy/actions/hwWallet'
-import {fetchPoolInfo} from '../../legacy/actions/pools'
-import {fetchUTXOs} from '../../legacy/actions/utxo'
+import {showErrorDialog} from '../../legacy/actions'
 import type {RawUtxo, RemotePoolMetaSuccess} from '../../legacy/api/types'
 import AccountAutoRefresher from '../../legacy/components/Delegation/AccountAutoRefresher'
 import {
@@ -69,9 +64,8 @@ import {
   utxoBalanceSelector,
   utxosSelector,
   walletMetaSelector,
-  walletNameSelector,
 } from '../../legacy/selectors'
-import type {ServerStatusCache, State, WalletMeta} from '../../legacy/state'
+import type {ServerStatusCache, WalletMeta} from '../../legacy/state'
 import type {DefaultAsset} from '../../legacy/types/HistoryTransaction'
 import type {Navigation} from '../../legacy/types/navigation'
 import {
@@ -81,19 +75,6 @@ import {
   genToRelativeSlotNumber,
 } from '../../legacy/utils/timeUtils'
 import {VotingBanner} from '../Catalyst/VotingBanner'
-
-const SyncErrorBanner = injectIntl(
-  ({intl, showRefresh}: {intl: IntlShape} & Record<string, unknown> /* TODO: type */) => (
-    <Banner
-      error
-      text={
-        showRefresh
-          ? intl.formatMessage(globalMessages.syncErrorBannerTextWithRefresh)
-          : intl.formatMessage(globalMessages.syncErrorBannerTextWithoutRefresh)
-      }
-    />
-  ),
-)
 
 type Props = {
   intl: IntlShape
@@ -596,47 +577,89 @@ export class DashboardLegacy extends React.Component<Props, DashboardState> {
   }
 }
 
-export const Dashboard = injectIntl(
-  compose(
-    connect(
-      (state: State) => ({
-        utxoBalance: utxoBalanceSelector(state),
-        utxos: utxosSelector(state),
-        isFetchingUtxos: isFetchingUtxosSelector(state),
-        accountBalance: accountBalanceSelector(state),
-        isDelegating: isDelegatingSelector(state),
-        isFetchingAccountState: isFetchingAccountStateSelector(state),
-        lastAccountStateSyncError: lastAccountStateFetchErrorSelector(state),
-        poolOperator: poolOperatorSelector(state),
-        poolInfo: poolInfoSelector(state),
-        isFetchingPoolInfo: isFetchingPoolInfoSelector(state),
-        totalDelegated: totalDelegatedSelector(state),
-        isOnline: isOnlineSelector(state),
-        walletName: walletNameSelector(state),
-        isFlawedWallet: isFlawedWalletSelector(state),
-        isEasyConfirmationEnabled: easyConfirmationSelector(state),
-        isHW: isHWSelector(state),
-        isReadOnly: isReadOnlySelector(state),
-        hwDeviceInfo: hwDeviceInfoSelector(state),
-        defaultAsset: defaultNetworkAssetSelector(state),
-        serverStatus: serverStatusSelector(state),
-        walletMeta: walletMetaSelector(state),
-      }),
-      {
-        fetchPoolInfo,
-        fetchAccountState,
-        fetchUTXOs,
-        checkForFlawedWallets,
-        setLedgerDeviceId,
-        setLedgerDeviceObj,
-        submitTransaction,
-        submitSignedTx,
-      },
-      (state, dispatchProps, ownProps: any) => ({
-        ...state,
-        ...dispatchProps,
-        ...ownProps,
-      }),
-    )(DashboardLegacy),
-  ),
-)
+export const Dashboard = (ownProps: Record<string, unknown>) => {
+  const intl = useIntl()
+  const navigation = useNavigation()
+  const utxoBalance = useSelector(utxoBalanceSelector)
+  const utxos = useSelector(utxosSelector)
+  const isFetchingUtxos = useSelector(isFetchingUtxosSelector)
+  const accountBalance = useSelector(accountBalanceSelector)
+  const isDelegating = useSelector(isDelegatingSelector)
+  const isFetchingAccountState = useSelector(isFetchingAccountStateSelector)
+  const lastAccountStateSyncError = useSelector(lastAccountStateFetchErrorSelector)
+  const poolOperator = useSelector(poolOperatorSelector)
+  const poolInfo = useSelector(poolInfoSelector)
+  const isFetchingPoolInfo = useSelector(isFetchingPoolInfoSelector)
+  const totalDelegated = useSelector(totalDelegatedSelector)
+  const isOnline = useSelector(isOnlineSelector)
+  const isFlawedWallet = useSelector(isFlawedWalletSelector)
+  const isEasyConfirmationEnabled = useSelector(easyConfirmationSelector)
+  const isHW = useSelector(isHWSelector)
+  const isReadOnly = useSelector(isReadOnlySelector)
+  const hwDeviceInfo = useSelector(hwDeviceInfoSelector)
+  const defaultAsset = useSelector(defaultNetworkAssetSelector)
+  const serverStatus = useSelector(serverStatusSelector)
+  const walletMeta = useSelector(walletMetaSelector)
+
+  const dispatch = useDispatch()
+
+  const fetchPoolInfo = () => dispatch(fetchPoolInfo())
+  const fetchAccountState = () => dispatch(fetchAccountState())
+  const fetchUTXOs = () => dispatch(fetchUTXOs())
+  const checkForFlawedWallets = () => dispatch(checkForFlawedWallets())
+  const setLedgerDeviceId = () => dispatch(setLedgerDeviceId())
+  const setLedgerDeviceObj = () => dispatch(setLedgerDeviceObj())
+  const submitTransaction = () => dispatch(submitTransaction())
+  const submitSignedTx = () => dispatch(submitSignedTx())
+
+  const props: Props = {
+    intl,
+    navigation,
+    utxoBalance,
+    utxos,
+    isFetchingUtxos,
+    accountBalance,
+    isDelegating,
+    isFetchingAccountState,
+    lastAccountStateSyncError,
+    poolOperator,
+    poolInfo,
+    isFetchingPoolInfo,
+    totalDelegated,
+    isOnline,
+    isFlawedWallet,
+    isEasyConfirmationEnabled,
+    isHW,
+    isReadOnly,
+    hwDeviceInfo,
+    defaultAsset,
+    serverStatus,
+    walletMeta,
+    fetchPoolInfo,
+    fetchAccountState,
+    fetchUTXOs,
+    checkForFlawedWallets,
+    setLedgerDeviceId,
+    setLedgerDeviceObj,
+    submitTransaction,
+    submitSignedTx,
+    ...ownProps,
+  }
+
+  return <DashboardLegacy {...props} />
+}
+
+const SyncErrorBanner = ({showRefresh}: Record<string, unknown> /* TODO: type */) => {
+  const intl = useIntl()
+
+  return (
+    <Banner
+      error
+      text={
+        showRefresh
+          ? intl.formatMessage(globalMessages.syncErrorBannerTextWithRefresh)
+          : intl.formatMessage(globalMessages.syncErrorBannerTextWithoutRefresh)
+      }
+    />
+  )
+}

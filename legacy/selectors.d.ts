@@ -39,22 +39,20 @@ export var unsignedTxSelector: (state: State) => state.voting.unsignedTx
 export var encryptedKeySelector: (state: State) => string
 export var pinSelector: (state: State) => Array<string>
 export var hasPendingOutgoingTransactionSelector: (state: State) => boolean
-export var isFetchingUtxosSelector: (state: State) => boolean
 export var lastUtxosFetchErrorSelector: (state: State) => typeof state.balance.lastFetchingError
-export var serverStatusSelector: (state: State) => ServerStatusCache
 export var utxosSelector: (state: State) => typeof state.balance.utxos
 
-export var accountBalanceSelector = (state: State) => BigNumber | null | undefined
-export var isFetchingAccountStateSelector = (state: State) => boolean
-export var isFetchingPoolInfoSelector = (state: State) => boolean
-export var isFlawedWalletSelector = (state: State) => boolean
-export var lastAccountStateFetchErrorSelector = (state: State) => any
-export var poolInfoSelector = (state: State) => RemotePoolMetaSuccess | null
-export var poolOperatorSelector = (state: State) => null | string
-export var serverStatusSelector = (state: State) => ServerStatusCache
-export var totalDelegatedSelector = (state: State) => BigNumber | null
-export var utxoBalanceSelector = (state: State) => BigNumber | null
-export var utxosSelector = (state: State) => state.balance.utxos
+export var accountBalanceSelector: (state: State) => typeof state.accountState.value | null | undefined
+export var isFetchingAccountStateSelector: (state: State) => typeof state.accountState.isFetching
+export var isFetchingPoolInfoSelector: (state: State) => typeof state.poolInfo.isFetching
+export var isFetchingUtxosSelector: (state: State) => typeof state.balance.isFetching
+export var isFlawedWalletSelector: (state: State) => typeof state.isFlawedWallet
+export var lastAccountStateFetchErrorSelector: (state: State) => typeof state.accountState.lastFetchingError
+export var poolInfoSelector: (state: State) => null | typeof state.poolInfo.meta
+export var poolOperatorSelector: (state: State) => null | typeof state.accountState.poolOperator
+export var serverStatusSelector: (state: State) => typeof state.serverStatus
+export var totalDelegatedSelector: (state: State) => null | typeof state.accountState.totalDelegated
+export var utxoBalanceSelector: (state: State) => BigNumber | null
 
 // prettier-ignore
 interface MultiToken {
@@ -73,19 +71,22 @@ export type ServerStatusCache = {
   serverTime: Date | null,
 }
 
+// prettier-ignore
 export type RemotePoolMetaSuccess = {
   info: null | {
-    name?: string | null
-    ticker?: string | null
-    description?: string | null
-    homepage?: string | null
+    name?: string | null,
+    ticker?: string | null,
+    description?: string | null,
+    homepage?: string | null,
     // other stuff from SMASH.
-  }
+  },
   history: Array<{
-    epoch: number
-    slot: number
-    tx_ordinal: number
-    cert_ordinal: number
-    payload: RemoteCertificate
+    epoch: number,
+    slot: number,
+    tx_ordinal: number,
+    cert_ordinal: number,
+    payload: RemoteCertificate,
   }>
 }
+
+export type ServerStatusCache = any
