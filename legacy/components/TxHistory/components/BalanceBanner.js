@@ -1,16 +1,64 @@
 // @flow
 
-import React, {memo, useCallback, useEffect, useState} from 'react'
+import React, {useCallback, useEffect, useState} from 'react'
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
+// $FlowExpectedError
+import {Icon} from '../../../../src/components'
 import closedEyeIcon from '../../../assets/img/icon/visibility-closed.png'
 import openedEyeIcon from '../../../assets/img/icon/visibility-opened.png'
 import {availableAssetsSelector, tokenBalanceSelector, walletMetaSelector} from '../../../selectors'
 import {COLORS} from '../../../styles/config'
 import {formatTokenWithText, formatTokenWithTextWhenHidden} from '../../../utils/format'
-import WalletAccountIcon from '../../Common/WalletAccountIcon'
 import {Spacer} from '../../UiKit'
+
+const BalanceBanner = () => {
+  const tokenBalance = useSelector(tokenBalanceSelector)
+  const walletMeta = useSelector(walletMetaSelector)
+  const availableAssets = useSelector(availableAssetsSelector)
+  const [showValues, setShowValues] = useState<boolean>(true)
+  const [balanceToShow, setBalance] = useState<string>('')
+  const [totalToShow, setTotal] = useState<string>('')
+
+  const onSwitchShowValues = useCallback(() => {
+    setShowValues((state) => !state)
+  }, [setShowValues])
+
+  useEffect(() => {
+    const balance = tokenBalance.getDefault()
+    const token = availableAssets[tokenBalance.getDefaultId()]
+    setBalance(
+      showValues ? formatTokenWithText(balance, token) : formatTokenWithTextWhenHidden(BALANCE_WHEN_HIDDEN, token),
+    )
+    setTotal(showValues ? '0.00' : TOTAL_WHEN_HIDDEN)
+  }, [showValues, tokenBalance, availableAssets])
+
+  return (
+    <View style={styles.banner}>
+      <Spacer height={16} />
+      <View style={styles.centralized}>
+        <Icon.WalletAccount style={styles.walletIcon} iconSeed={walletMeta.checksum.ImagePart} />
+      </View>
+      <Spacer height={12} />
+      <TouchableOpacity onPress={onSwitchShowValues}>
+        <View style={styles.row}>
+          <View style={styles.column}>
+            <Text style={styles.balanceText}>{balanceToShow}</Text>
+            <Text style={styles.totalText}>
+              {totalToShow} {QUOTE_PAIR_CURRENCY}
+            </Text>
+          </View>
+          <View style={styles.showIcon}>
+            {showValues ? <Image source={closedEyeIcon} /> : <Image source={openedEyeIcon} />}
+          </View>
+        </View>
+      </TouchableOpacity>
+    </View>
+  )
+}
+
+export default BalanceBanner
 
 const BALANCE_WHEN_HIDDEN = '*.******'
 const TOTAL_WHEN_HIDDEN = '*.**'
@@ -56,50 +104,3 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 })
-
-const BalanceBanner = () => {
-  const tokenBalance = useSelector(tokenBalanceSelector)
-  const walletMeta = useSelector(walletMetaSelector)
-  const availableAssets = useSelector(availableAssetsSelector)
-  const [showValues, setShowValues] = useState<boolean>(true)
-  const [balanceToShow, setBalance] = useState<string>('')
-  const [totalToShow, setTotal] = useState<string>('')
-
-  const onSwitchShowValues = useCallback(() => {
-    setShowValues((state) => !state)
-  }, [setShowValues])
-
-  useEffect(() => {
-    const balance = tokenBalance.getDefault()
-    const token = availableAssets[tokenBalance.getDefaultId()]
-    setBalance(
-      showValues ? formatTokenWithText(balance, token) : formatTokenWithTextWhenHidden(BALANCE_WHEN_HIDDEN, token),
-    )
-    setTotal(showValues ? '0.00' : TOTAL_WHEN_HIDDEN)
-  }, [showValues, tokenBalance, availableAssets])
-
-  return (
-    <View style={styles.banner}>
-      <Spacer height={16} />
-      <View style={styles.centralized}>
-        <WalletAccountIcon style={styles.walletIcon} iconSeed={walletMeta.checksum.ImagePart} />
-      </View>
-      <Spacer height={12} />
-      <TouchableOpacity onPress={onSwitchShowValues}>
-        <View style={styles.row}>
-          <View style={styles.column}>
-            <Text style={styles.balanceText}>{balanceToShow}</Text>
-            <Text style={styles.totalText}>
-              {totalToShow} {QUOTE_PAIR_CURRENCY}
-            </Text>
-          </View>
-          <View style={styles.showIcon}>
-            {showValues ? <Image source={closedEyeIcon} /> : <Image source={openedEyeIcon} />}
-          </View>
-        </View>
-      </TouchableOpacity>
-    </View>
-  )
-}
-
-export default memo<mixed>(BalanceBanner)

@@ -207,6 +207,21 @@ export const mockState = (mockedState: ?State): State => {
       unsignedTx: undefined,
     },
     wallet: mockReduxWallet,
+    wallets: {
+      '6cad6524-55bf-4ff8-903e-eb8af29b1b60': {
+        id: '6cad6524-55bf-4ff8-903e-eb8af29b1b60',
+        name: '1',
+        networkId: 300,
+        walletImplementationId: 'haskell-shelley',
+        isHW: false,
+        checksum: {
+          ImagePart:
+            'f54591c27ce0049ff4bb84c07f570d5c5c976bc03bcca77cac1c608aea75e766a5806bb8542c4e04e1a98e066ee639478521eccba5450aca0afb25fd929bbcba',
+          TextPart: 'BJNB-3359',
+        },
+        isEasyConfirmationEnabled: false,
+      },
+    },
     tokenInfo: {
       isFetching: false,
       lastFetchingError: null,

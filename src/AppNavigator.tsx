@@ -8,10 +8,8 @@ import {useDispatch, useSelector} from 'react-redux'
 
 import {showErrorDialog, signin} from '../legacy/actions'
 import IndexScreen from '../legacy/components/IndexScreen'
-import CustomPinLogin from '../legacy/components/Login/CustomPinLogin'
 import MaintenanceScreen from '../legacy/components/MaintenanceScreen'
 import BiometricAuthScreen from '../legacy/components/Send/BiometricAuthScreen'
-import WalletInitNavigator from '../legacy/components/WalletInit/WalletInitNavigator'
 import {CONFIG} from '../legacy/config/config'
 import KeyStore from '../legacy/crypto/KeyStore'
 import env from '../legacy/env'
@@ -27,7 +25,9 @@ import {
 } from '../legacy/selectors'
 import type {State} from '../legacy/state'
 import FirstRunNavigator from './FirstRun/FirstRunNavigator'
+import {CustomPinLogin} from './Login'
 import StorybookScreen from './StorybookScreen'
+import {WalletInitNavigator} from './WalletInit/WalletInitNavigator'
 import WalletNavigator from './WalletNavigator'
 
 const IS_STORYBOOK = env.getBoolean('IS_STORYBOOK', false)

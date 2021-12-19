@@ -14,8 +14,8 @@ import {formatTokenAmount, getAssetDenominationOrId, getTokenFingerprint} from '
 import AdaImage from '../assets/img/icon/asset_ada.png'
 import NoImage from '../assets/img/icon/asset_no_image.png'
 import {Spacer} from '../components/Spacer'
+import {Token, TokenEntry} from '../types/cardano'
 import {TxListActionsBannerForAssetsTab} from './TxListActionsBanner'
-import {Token, TokenEntry} from './types'
 
 type AssetListProps = {
   refreshing: boolean
