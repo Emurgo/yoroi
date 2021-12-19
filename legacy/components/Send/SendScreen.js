@@ -60,7 +60,7 @@ import UtxoAutoRefresher from './UtxoAutoRefresher'
 type LegacyProps = {|
   intl: IntlShape,
   navigation: Navigation,
-  selectedAsset: TokenEntry,
+  selectedTokenIdentifier: string,
   sendAll: boolean,
   tokenBalance: MultiToken,
   isFetchingBalance: boolean,
@@ -120,7 +120,7 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
   }
 
   async componentDidUpdate(prevProps: LegacyProps, prevState: State) {
-    const {selectedAsset, utxos, sendAll} = this.props
+    const {selectedTokenIdentifier, utxos, sendAll} = this.props
     const {addressInput, amount} = this.state
 
     const {addressInput: prevAddressInput, amount: prevAmount} = prevState
@@ -130,9 +130,9 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
       prevAddressInput !== addressInput ||
       prevAmount !== amount ||
       prevProps.sendAll !== sendAll ||
-      prevProps.selectedAsset.identifier !== selectedAsset.identifier
+      prevProps.selectedTokenIdentifier !== selectedTokenIdentifier
     ) {
-      await this.revalidate({utxos, addressInput, amount, sendAll, selectedAsset})
+      await this.revalidate({utxos, addressInput, amount, sendAll, selectedTokenIdentifier})
     }
   }
 
@@ -141,13 +141,13 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
     addressInput,
     amount,
     sendAll,
-    selectedAsset,
+    selectedTokenIdentifier,
   }: {
     utxos: ?Array<RawUtxo>,
     addressInput: string,
     amount: string,
     sendAll: boolean,
-    selectedAsset: TokenEntry,
+    selectedTokenIdentifier: string,
   }) {
     this.setState({
       fee: null,
@@ -155,7 +155,7 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
       recomputing: true,
     })
     const {defaultAsset, tokenMetadata, tokenBalance, walletMetadata} = this.props
-    if (tokenMetadata[selectedAsset.identifier] == null) {
+    if (tokenMetadata[selectedTokenIdentifier] == null) {
       throw new Error('revalidate: no asset metadata found for the asset selected')
     }
     const newState = await recomputeAll({
@@ -164,7 +164,7 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
       amount,
       sendAll,
       defaultAsset,
-      selectedTokenMeta: tokenMetadata[selectedAsset.identifier],
+      selectedTokenMeta: tokenMetadata[selectedTokenIdentifier],
       tokenBalance,
       walletMetadata,
     })
@@ -209,12 +209,12 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
       tokenMetadata,
       serverStatus,
       sendAll,
-      selectedAsset,
+      selectedTokenIdentifier,
       walletMetadata,
     } = this.props
     const {address, addressInput, amount} = this.state
 
-    const selectedTokenMeta = tokenMetadata[selectedAsset.identifier]
+    const selectedTokenMeta = tokenMetadata[selectedTokenIdentifier]
     if (selectedTokenMeta == null) {
       throw new Error('SendScreen::handleConfirm: no asset metadata found for the asset selected')
     }
@@ -242,7 +242,7 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
       _.isEmpty(balanceErrors) &&
       this.state.amount === amount &&
       this.state.address === address &&
-      this.props.selectedAsset === selectedAsset &&
+      this.props.selectedTokenIdentifier === selectedTokenIdentifier &&
       this.props.utxos === utxos
 
     if (isValid === true) {
@@ -362,10 +362,10 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
   }
 
   renderSendAllWarning = () => {
-    const {intl, tokenMetadata, selectedAsset} = this.props
+    const {intl, tokenMetadata, selectedTokenIdentifier} = this.props
     const {showSendAllWarning} = this.state
 
-    const selectedTokenMeta = tokenMetadata[selectedAsset.identifier]
+    const selectedTokenMeta = tokenMetadata[selectedTokenIdentifier]
     const isDefault = selectedTokenMeta.isDefault
     const assetNameOrId = truncateWithEllipsis(getAssetDenominationOrId(selectedTokenMeta), 20)
     const alertBoxContent = {
@@ -414,7 +414,8 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
       hasPendingOutgoingTransaction,
       defaultAsset,
       tokenMetadata,
-      selectedAsset,
+      selectedTokenIdentifier,
+      tokenBalance,
       navigation,
       sendAll,
     } = this.props
@@ -433,7 +434,7 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
 
     const amountErrorText = getAmountErrorText(intl, amountErrors, balanceErrors, defaultAsset)
 
-    const selectedAssetMeta = tokenMetadata[selectedAsset.identifier]
+    const selectedAssetMeta = tokenMetadata[selectedTokenIdentifier]
 
     const assetDenomination = truncateWithEllipsis(getAssetDenominationOrId(selectedAssetMeta), 20)
 
@@ -479,7 +480,11 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
               right={<Image source={require('../../assets/img/arrow_down_fill.png')} />}
               editable={false}
               label={intl.formatMessage(messages.asset)}
-              value={`${assetDenomination}: ${formatTokenAmount(selectedAsset.amount, selectedAssetMeta, 15)}`}
+              value={`${assetDenomination}: ${formatTokenAmount(
+                tokenBalance.get(selectedTokenIdentifier) || new BigNumber('0'),
+                selectedAssetMeta,
+                15,
+              )}`}
             />
           </TouchableOpacity>
 
@@ -531,11 +536,6 @@ export const SendScreen = ({selectedTokenIdentifier, sendAll, onSendAll}: Props)
   const isOnline = useSelector(isOnlineSelector)
   const serverStatus = useSelector(serverStatusSelector)
   const walletMetadata = useSelector(walletMetaSelector)
-  const selectedAsset = tokenBalance.values.find(({identifier}) => identifier === selectedTokenIdentifier)
-
-  if (!selectedAsset) {
-    throw new Error('Invalid token')
-  }
 
   const dispatch = useDispatch()
 
@@ -554,7 +554,7 @@ export const SendScreen = ({selectedTokenIdentifier, sendAll, onSendAll}: Props)
       isOnline={isOnline}
       serverStatus={serverStatus}
       walletMetadata={walletMetadata}
-      selectedAsset={selectedAsset}
+      selectedTokenIdentifier={selectedTokenIdentifier}
       sendAll={sendAll}
       onSendAll={onSendAll}
     />

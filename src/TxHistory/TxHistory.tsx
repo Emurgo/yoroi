@@ -48,7 +48,8 @@ export const TxHistory = () => {
 
   return (
     <SafeAreaView style={styles.scrollView}>
-      <StatusBar type="light" />
+      <StatusBar type="dark" />
+      {/* <StatusBar type="light" /> */}
 
       <View style={styles.container}>
         <OfflineBanner />

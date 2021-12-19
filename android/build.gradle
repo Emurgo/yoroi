@@ -2,10 +2,10 @@
 
 buildscript {
     ext {
-        buildToolsVersion = "29.0.2"
+        buildToolsVersion = "30.0.2"
         minSdkVersion = 21
-        compileSdkVersion = 29
-        targetSdkVersion = 29
+        compileSdkVersion = 30
+        targetSdkVersion = 30
         supportLibVersion = "28.0.0"
         androidXAnnotation = "1.1.0"
         firebaseIidVersion = "19.0.1" // DeviceInfo
@@ -54,15 +54,5 @@ allprojects {
         // react-native-ble-plx setup
         // https://github.com/Polidea/react-native-ble-plx (@2.0.0)
         maven { url 'https://jitpack.io' }
-    }
-}
-
-subprojects {project ->
-    if ('react-native-svg' == project.name) {
-        buildscript {
-            repositories {
-                maven { url "https://dl.bintray.com/android/android-tools/"  }
-            }
-        }
     }
 }

@@ -32,13 +32,14 @@ export const TxHistoryList = ({refreshing, onRefresh}: Props) => {
         <TxListActionsBannerForTransactionsTab onExport={handleExport} onSearch={handleSearch} />
       )}
       <SectionList
-        onRefresh={onRefresh}
-        refreshing={refreshing}
         renderItem={({item}) => <TxHistoryListItem transaction={item} />}
         renderSectionHeader={({section: {data}}) => <DayHeader ts={data[0].submittedAt} />}
+        refreshing={refreshing}
+        onRefresh={onRefresh}
         sections={groupedTransactions}
         keyExtractor={(item) => item.id}
         stickySectionHeadersEnabled={false}
+        nestedScrollEnabled={true}
       />
     </View>
   )
