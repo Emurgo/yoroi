@@ -1,13 +1,134 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {storiesOf} from '@storybook/react-native'
-import {BigNumber} from 'bignumber.js'
 import React from 'react'
+import {QueryClient, QueryClientProvider} from 'react-query'
+import {Provider} from 'react-redux'
 
+import getConfiguredStore from '../../legacy/helpers/configureStore'
 import {RemotePoolMetaSuccess} from '../../legacy/selectors'
 import {SelectedWalletProvider} from '../SelectedWallet'
-import {WalletInterface} from '../types'
+import {PoolInfoResponse, RemotePoolMetaFailure, WalletInterface} from '../types'
 import {Dashboard} from './Dashboard'
 
+storiesOf('Dashboard', module)
+  .add('not delegating', () => {
+    const store = getConfiguredStore(true, true, {
+      accountState: {
+        isDelegating: false,
+      },
+    })
+    const notDelegatingWallet: WalletInterface = {
+      ...mockWallet,
+    }
+
+    return (
+      <QueryClientProvider client={new QueryClient()}>
+        <Provider store={store}>
+          <SelectedWalletProvider wallet={notDelegatingWallet}>
+            <Dashboard />
+          </SelectedWalletProvider>
+        </Provider>
+      </QueryClientProvider>
+    )
+  })
+  .add('Loading', () => {
+    const store = getConfiguredStore(true, true, {
+      accountState: {
+        isDelegating: true,
+        poolOperator,
+      },
+    })
+    const loadingWallet: WalletInterface = {
+      ...mockWallet,
+      fetchPoolInfo: () => new Promise((_resolve, _reject) => undefined), // never resolves
+    }
+
+    return (
+      <QueryClientProvider client={new QueryClient()}>
+        <Provider store={store}>
+          <SelectedWalletProvider wallet={loadingWallet}>
+            <Dashboard />
+          </SelectedWalletProvider>
+        </Provider>
+      </QueryClientProvider>
+    )
+  })
+  .add('Loaded, single pool success', () => {
+    const store = getConfiguredStore(true, true, {
+      accountState: {isDelegating: true, poolOperator},
+    })
+
+    const poolInfoResponse = {
+      [poolOperator]: poolInfo,
+    } as PoolInfoResponse
+
+    const loadedWallet: WalletInterface = {
+      ...mockWallet,
+      fetchPoolInfo: () => Promise.resolve(poolInfoResponse),
+    }
+
+    return (
+      <QueryClientProvider client={new QueryClient()}>
+        <Provider store={store}>
+          <SelectedWalletProvider wallet={loadedWallet}>
+            <Dashboard />
+          </SelectedWalletProvider>
+        </Provider>
+      </QueryClientProvider>
+    )
+  })
+  .add('Loaded, single pool error', () => {
+    const store = getConfiguredStore(true, true, {
+      accountState: {isDelegating: true, poolOperator},
+    })
+
+    const poolInfoResponse = {
+      [poolOperatorWithError]: poolInfoWithError,
+    } as PoolInfoResponse
+
+    const loadedWallet: WalletInterface = {
+      ...mockWallet,
+      fetchPoolInfo: () => Promise.resolve(poolInfoResponse),
+    }
+
+    return (
+      <QueryClientProvider client={new QueryClient()}>
+        <Provider store={store}>
+          <SelectedWalletProvider wallet={loadedWallet}>
+            <Dashboard />
+          </SelectedWalletProvider>
+        </Provider>
+      </QueryClientProvider>
+    )
+  })
+  .add('Loaded, multiple pools', () => {
+    const store = getConfiguredStore(true, true, {
+      accountState: {isDelegating: true, poolOperator},
+    })
+
+    const poolInfoResponse = {
+      [poolOperator]: poolInfo,
+      ['poolOperator']: poolInfo,
+      [poolOperatorWithError]: poolInfoWithError,
+    } as PoolInfoResponse
+
+    const loadedWallet: WalletInterface = {
+      ...mockWallet,
+      fetchPoolInfo: () => Promise.resolve(poolInfoResponse),
+    }
+
+    return (
+      <QueryClientProvider client={new QueryClient()}>
+        <Provider store={store}>
+          <SelectedWalletProvider wallet={loadedWallet}>
+            <Dashboard />
+          </SelectedWalletProvider>
+        </Provider>
+      </QueryClientProvider>
+    )
+  })
+
+const poolOperator = 'pool-operator-hash'
 const poolInfo: RemotePoolMetaSuccess = {
   info: {
     ticker: 'EMUR1',
@@ -23,60 +144,31 @@ const poolInfo: RemotePoolMetaSuccess = {
       tx_ordinal: 0,
       cert_ordinal: 0,
       payload: {
-        payloadKind: 'PoolRegistration',
-        payloadKindId: 2,
-        payloadHex:
-          '0000000000000000000000000000000000000000000000000000000000000001c25187699ae107c9527bc7300d23eb39e3093eb8c85086244caed2d7f3baac5a11becc4a3de489336cbf3da0253e6da176f5bf6294fd8ba6e33a744d084dfbab016eab602ca57a3c92a8d2074170ba2aed43b30f9f14f9074def24330e30bc874d00000000000bd86110000000000000000e00000000000000640004c01b50ace23f00',
+        kind: 'PoolRegistration',
+        certIndex: 123,
+        poolParams: {},
       },
     },
   ],
 }
 
-const wallet = {
+const poolOperatorWithError = 'poolOperatorWithError'
+const poolInfoWithError: RemotePoolMetaFailure = {
+  error: new Error('Pool operator not found'),
+}
+
+const mockWallet: WalletInterface = {
+  id: 'wallet-id',
   walletImplementationId: 'haskell-shelley',
-} as WalletInterface
-
-const availableFunds = new BigNumber(1000000)
-const totalRewards = new BigNumber(123123)
-const totalDelegated = availableFunds.plus(totalRewards)
-
-storiesOf('Dashboard', module)
-  .add('Default', ({navigation}: any) => (
-    <SelectedWalletProvider wallet={wallet}>
-      <Dashboard
-        navigation={navigation}
-        poolInfo={poolInfo}
-        utxoBalance={availableFunds}
-        accountBalance={totalRewards}
-        totalDelegated={totalDelegated}
-      />
-    </SelectedWalletProvider>
-  ))
-  .add('Loading', ({navigation}: any) => (
-    <SelectedWalletProvider wallet={wallet}>
-      <Dashboard
-        navigation={navigation}
-        poolInfo={null}
-        poolOperator={'poolOperator'}
-        // UserSummary
-        utxoBalance={availableFunds}
-        accountBalance={totalRewards}
-        totalDelegated={totalDelegated}
-        isDelegating
-      />
-    </SelectedWalletProvider>
-  ))
-  .add('Loaded', ({navigation}: any) => (
-    <SelectedWalletProvider wallet={wallet}>
-      <Dashboard
-        navigation={navigation}
-        poolInfo={poolInfo}
-        poolOperator={'poolOperator'}
-        // UserSummary
-        utxoBalance={availableFunds}
-        accountBalance={totalRewards}
-        totalDelegated={totalDelegated}
-        isDelegating
-      />
-    </SelectedWalletProvider>
-  ))
+  networkId: 300,
+  checksum: {TextPart: 'text-part', ImagePart: 'image-part'},
+  isHW: false,
+  isReadOnly: false,
+  isEasyConfirmationEnabled: false,
+  fetchPoolInfo: () => {
+    throw new Error('Not implemented')
+  },
+  changePassword: () => {
+    throw new Error('Not implemented')
+  },
+}
