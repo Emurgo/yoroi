@@ -35,7 +35,6 @@ export var isUsedAddressIndexSelector: (state: State) => Record<string, boolean>
 export var receiveAddressesSelector: (state: State) => Array<string>
 export var hwDeviceInfoSelector: (state: State) => {bip44AccountPublic: string; hwFeatures: HWFeatures} | null
 export var isDelegatingSelector: (state: State) => boolean
-export var defaultNetworkAssetSelector: (state: State) => DefaultAsset
 export var unsignedTxSelector = (state: State) => state.voting.unsignedTx
 export var encryptedKeySelector: (state: State) => string
 export var pinSelector: (state: State) => Array<string>
