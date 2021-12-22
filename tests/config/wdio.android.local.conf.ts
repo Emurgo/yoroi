@@ -2,7 +2,6 @@ import fs, {promises as fsAsync} from 'fs'
 import {appiumLogsPath, screenshotsDir} from './testPaths'
 import {APP_ID, APP_ID_PARENT, APP_PATH} from '../constants'
 
-// @ts-ignore
 export const config: WebdriverIO.Config = {
   runner: 'local',
   // ============
@@ -14,6 +13,7 @@ export const config: WebdriverIO.Config = {
       platformName: 'Android',
       maxInstances: 1,
       'appium:deviceName': 'Pixel_5',
+      // @ts-ignore
       'appium:autoLaunch': false,
       'appium:appWaitActivity': APP_ID_PARENT,
       'appium:noReset': true,
