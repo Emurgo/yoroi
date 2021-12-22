@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
-import {useIntl} from 'react-intl'
-import {ActivityIndicator, RefreshControl, ScrollView, View} from 'react-native'
+import {defineMessages, useIntl} from 'react-intl'
+import {ActivityIndicator, RefreshControl, ScrollView, StyleSheet, View} from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'
 import {useQuery} from 'react-query'
 import {useDispatch, useSelector} from 'react-redux'
@@ -11,16 +11,8 @@ import {fetchAccountState} from '../../legacy/actions/account'
 import {setLedgerDeviceId, setLedgerDeviceObj} from '../../legacy/actions/hwWallet'
 import {fetchUTXOs} from '../../legacy/actions/utxo'
 import AccountAutoRefresher from '../../legacy/components/Delegation/AccountAutoRefresher'
-import {
-  DelegatedStakepoolInfo,
-  EpochProgress,
-  NotDelegatedInfo,
-  UserSummary,
-} from '../../legacy/components/Delegation/dashboard'
-import DelegationNavigationButtons from '../../legacy/components/Delegation/DelegationNavigationButtons'
-import styles from '../../legacy/components/Delegation/styles/DelegationSummary.style'
 import UtxoAutoRefresher from '../../legacy/components/Send/UtxoAutoRefresher'
-import {Banner, OfflineBanner, StatusBar} from '../../legacy/components/UiKit'
+import {Banner, Button, OfflineBanner, StatusBar} from '../../legacy/components/UiKit'
 import {getCardanoBaseConfig} from '../../legacy/config/config'
 import {getCardanoNetworkConfigById} from '../../legacy/config/networks'
 import globalMessages from '../../legacy/i18n/global-messages'
@@ -52,6 +44,10 @@ import {
 import {VotingBanner} from '../Catalyst/VotingBanner'
 import {useSelectedWallet} from '../SelectedWallet'
 import {RemotePoolMetaFailure, RemotePoolMetaSuccess, WalletInterface} from '../types'
+import {DelegatedStakepoolInfo} from './DelegatedStakepoolInfo'
+import {EpochProgress} from './EpochProgress'
+import {NotDelegatedInfo} from './NotDelegatedInfo'
+import {UserSummary} from './UserSummary'
 import {WithdrawStakingRewards} from './WithdrawStakingRewards'
 
 export const Dashboard = () => {
@@ -124,10 +120,15 @@ export const Dashboard = () => {
           {isDelegating && <StakingInfo />}
         </ScrollView>
 
-        <DelegationNavigationButtons
-          onPress={() => navigation.navigate(DELEGATION_ROUTES.STAKING_CENTER)}
-          disabled={isReadOnly}
-        />
+        <Actions>
+          <Button
+            onPress={() => navigation.navigate(DELEGATION_ROUTES.STAKING_CENTER)}
+            title={intl.formatMessage(messages.stakingCenterButton)}
+            disabled={isReadOnly}
+            shelleyTheme
+            block
+          />
+        </Actions>
       </View>
 
       {showWithdrawalDialog && (
@@ -227,13 +228,9 @@ const StakingInfo = () => {
   return (
     <View style={styles.row}>
       {poolInfos ? (
-        Object.entries(poolInfos).map(([poolOperator, poolInfo]) =>
-          isRemotePoolMetaFailure(poolInfo) ? (
-            <PoolInfoError />
-          ) : (
-            <PoolInfo poolInfo={poolInfo} poolOperator={poolOperator} />
-          ),
-        )
+        Object.entries(poolInfos).map(([poolOperator, poolInfo]) => (
+          <PoolInfo key={poolOperator} poolInfo={poolInfo} poolOperator={poolOperator} />
+        ))
       ) : isLoading ? (
         <View style={styles.activityIndicator}>
           <ActivityIndicator size={'large'} color={'black'} />
@@ -243,13 +240,21 @@ const StakingInfo = () => {
   )
 }
 
-const PoolInfo = ({poolInfo, poolOperator}: {poolInfo: RemotePoolMetaSuccess; poolOperator: string}) => {
-  return (
+const PoolInfo = ({
+  poolInfo,
+  poolOperator,
+}: {
+  poolInfo: RemotePoolMetaSuccess | RemotePoolMetaFailure
+  poolOperator: string
+}) => {
+  return isRemotePoolMetaFailure(poolInfo) ? (
+    <PoolInfoError />
+  ) : (
     <DelegatedStakepoolInfo
-      poolTicker={poolInfo.info?.ticker}
-      poolName={poolInfo.info?.name}
+      poolTicker={poolInfo.info?.ticker || null}
+      poolName={poolInfo.info?.name || null}
       poolHash={poolOperator != null ? poolOperator : ''}
-      poolURL={poolInfo.info?.homepage}
+      poolURL={poolInfo.info?.homepage || null}
     />
   )
 }
@@ -275,3 +280,49 @@ const usePoolInfos = (wallet: WalletInterface, poolOperator: string | null) => {
 const isRemotePoolMetaFailure = (
   poolResponse: RemotePoolMetaSuccess | RemotePoolMetaFailure,
 ): poolResponse is RemotePoolMetaFailure => 'error' in poolResponse
+
+const Actions = (props) => <View {...props} style={styles.actions} />
+
+const messages = defineMessages({
+  stakingCenterButton: {
+    id: 'components.delegation.delegationnavigationbuttons.stakingCenterButton',
+    defaultMessage: '!!!Go to Staking Center',
+  },
+})
+
+const styles = StyleSheet.create({
+  safeAreaView: {
+    flex: 1,
+  },
+  container: {
+    flexDirection: 'column',
+    flex: 1,
+  },
+  scrollView: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  contentContainer: {
+    paddingTop: 16,
+    paddingHorizontal: 16,
+  },
+  row: {
+    flex: 1,
+    paddingVertical: 12,
+  },
+  activityIndicator: {
+    paddingVertical: 32,
+  },
+  actions: {
+    flexDirection: 'row',
+    backgroundColor: '#fff',
+    padding: 16,
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+    elevation: 1,
+    shadowOpacity: 0.06,
+    shadowColor: 'black',
+    shadowRadius: 6,
+    shadowOffset: {width: 0, height: -8},
+  },
+})
