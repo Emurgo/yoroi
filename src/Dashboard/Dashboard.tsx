@@ -1,9 +1,8 @@
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ActivityIndicator, RefreshControl, ScrollView, StyleSheet, View} from 'react-native'
+import {RefreshControl, ScrollView, StyleSheet, View} from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'
-import {useQuery} from 'react-query'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {submitSignedTx, submitTransaction} from '../../legacy/actions'
@@ -20,16 +19,11 @@ import {CATALYST_ROUTES, DELEGATION_ROUTES} from '../../legacy/RoutesList'
 import {
   accountBalanceSelector,
   defaultNetworkAssetSelector,
-  easyConfirmationSelector,
   hwDeviceInfoSelector,
-  isDelegatingSelector,
   isFetchingAccountStateSelector,
   isFetchingUtxosSelector,
-  isHWSelector,
   isOnlineSelector,
-  isReadOnlySelector,
   lastAccountStateFetchErrorSelector,
-  poolOperatorSelector,
   serverStatusSelector,
   totalDelegatedSelector,
   utxoBalanceSelector,
@@ -43,10 +37,9 @@ import {
 } from '../../legacy/utils/timeUtils'
 import {VotingBanner} from '../Catalyst/VotingBanner'
 import {useSelectedWallet} from '../SelectedWallet'
-import {RemotePoolMetaFailure, RemotePoolMetaSuccess, WalletInterface} from '../types'
-import {DelegatedStakepoolInfo} from './DelegatedStakepoolInfo'
 import {EpochProgress} from './EpochProgress'
 import {NotDelegatedInfo} from './NotDelegatedInfo'
+import {StakePoolInfos, useStakingStatus} from './StakePoolInfos'
 import {UserSummary} from './UserSummary'
 import {WithdrawStakingRewards} from './WithdrawStakingRewards'
 
@@ -59,14 +52,10 @@ export const Dashboard = () => {
   const utxos = useSelector(utxosSelector)
   const isFetchingUtxos = useSelector(isFetchingUtxosSelector)
   const accountBalance = useSelector(accountBalanceSelector)
-  const isDelegating = useSelector(isDelegatingSelector)
   const isFetchingAccountState = useSelector(isFetchingAccountStateSelector)
   const lastAccountStateSyncError = useSelector(lastAccountStateFetchErrorSelector)
   const totalDelegated = useSelector(totalDelegatedSelector)
   const isOnline = useSelector(isOnlineSelector)
-  const isEasyConfirmationEnabled = useSelector(easyConfirmationSelector)
-  const isHW = useSelector(isHWSelector)
-  const isReadOnly = useSelector(isReadOnlySelector)
   const hwDeviceInfo = useSelector(hwDeviceInfoSelector)
   const defaultAsset = useSelector(defaultNetworkAssetSelector)
   const serverStatus = useSelector(serverStatusSelector)
@@ -74,11 +63,13 @@ export const Dashboard = () => {
 
   const [showWithdrawalDialog, setShowWithdrawalDialog] = React.useState(false)
 
+  const {stakingStatus} = useStakingStatus(wallet)
+
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <StatusBar type="dark" />
       <UtxoAutoRefresher />
-      <AccountAutoRefresher wallet={wallet} />
+      <AccountAutoRefresher />
 
       <View style={styles.container}>
         <OfflineBanner />
@@ -99,32 +90,36 @@ export const Dashboard = () => {
             />
           }
         >
-          {!isDelegating && <NotDelegatedInfo />}
+          {stakingStatus && !stakingStatus.isRegistered && <NotDelegatedInfo />}
 
-          <View style={styles.row}>
+          <Row>
             <EpochInfo />
-          </View>
+          </Row>
 
-          <View style={styles.row}>
+          <Row>
             <UserSummary
               totalAdaSum={utxoBalance}
               totalRewards={accountBalance}
               totalDelegated={totalDelegated}
               onWithdraw={() => setShowWithdrawalDialog(true)}
-              disableWithdraw={isReadOnly}
+              disableWithdraw={wallet.isReadOnly}
             />
-          </View>
+          </Row>
 
           <VotingBanner onPress={() => navigation.navigate(CATALYST_ROUTES.ROOT)} disabled={false} />
 
-          {isDelegating && <StakingInfo />}
+          {stakingStatus?.isRegistered && (
+            <Row>
+              <StakePoolInfos />
+            </Row>
+          )}
         </ScrollView>
 
         <Actions>
           <Button
             onPress={() => navigation.navigate(DELEGATION_ROUTES.STAKING_CENTER)}
             title={intl.formatMessage(messages.stakingCenterButton)}
-            disabled={isReadOnly}
+            disabled={wallet.isReadOnly}
             shelleyTheme
             block
           />
@@ -136,8 +131,8 @@ export const Dashboard = () => {
           intl={intl}
           navigation={navigation}
           utxos={utxos}
-          isEasyConfirmationEnabled={isEasyConfirmationEnabled}
-          isHW={isHW}
+          isEasyConfirmationEnabled={wallet.isEasyConfirmationEnabled}
+          isHW={wallet.isHW}
           hwDeviceInfo={hwDeviceInfo}
           defaultAsset={defaultAsset}
           serverStatus={serverStatus}
@@ -151,6 +146,8 @@ export const Dashboard = () => {
     </SafeAreaView>
   )
 }
+
+const Row = (props) => <View {...props} style={styles.row} />
 
 const SyncErrorBanner = ({showRefresh}: Record<string, unknown> /* TODO: type */) => {
   const intl = useIntl()
@@ -220,67 +217,6 @@ const EpochInfo = () => {
   )
 }
 
-const StakingInfo = () => {
-  const wallet = useSelectedWallet()
-  const poolOperator = useSelector(poolOperatorSelector)
-  const {poolInfos, isLoading} = usePoolInfos(wallet, poolOperator)
-
-  return (
-    <View style={styles.row}>
-      {poolInfos ? (
-        Object.entries(poolInfos).map(([poolOperator, poolInfo]) => (
-          <PoolInfo key={poolOperator} poolInfo={poolInfo} poolOperator={poolOperator} />
-        ))
-      ) : isLoading ? (
-        <View style={styles.activityIndicator}>
-          <ActivityIndicator size={'large'} color={'black'} />
-        </View>
-      ) : null}
-    </View>
-  )
-}
-
-const PoolInfo = ({
-  poolInfo,
-  poolOperator,
-}: {
-  poolInfo: RemotePoolMetaSuccess | RemotePoolMetaFailure
-  poolOperator: string
-}) => {
-  return isRemotePoolMetaFailure(poolInfo) ? (
-    <PoolInfoError />
-  ) : (
-    <DelegatedStakepoolInfo
-      poolTicker={poolInfo.info?.ticker || null}
-      poolName={poolInfo.info?.name || null}
-      poolHash={poolOperator != null ? poolOperator : ''}
-      poolURL={poolInfo.info?.homepage || null}
-    />
-  )
-}
-const PoolInfoError = () => {
-  return null
-}
-
-const usePoolInfos = (wallet: WalletInterface, poolOperator: string | null) => {
-  const query = useQuery({
-    queryKey: [wallet.id, 'poolInfo', poolOperator],
-    queryFn: async () => {
-      if (!poolOperator) {
-        throw new Error('Invalid Pool Operator')
-      }
-      return wallet.fetchPoolInfo({poolIds: [poolOperator]})
-    },
-    enabled: !!poolOperator,
-  })
-
-  return {poolInfos: query.data, ...query}
-}
-
-const isRemotePoolMetaFailure = (
-  poolResponse: RemotePoolMetaSuccess | RemotePoolMetaFailure,
-): poolResponse is RemotePoolMetaFailure => 'error' in poolResponse
-
 const Actions = (props) => <View {...props} style={styles.actions} />
 
 const messages = defineMessages({
@@ -309,9 +245,6 @@ const styles = StyleSheet.create({
   row: {
     flex: 1,
     paddingVertical: 12,
-  },
-  activityIndicator: {
-    paddingVertical: 32,
   },
   actions: {
     flexDirection: 'row',

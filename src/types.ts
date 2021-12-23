@@ -11,8 +11,15 @@ export interface WalletInterface {
   isHW: boolean
   isEasyConfirmationEnabled: boolean
   changePassword(masterPassword: string, newPassword: string, intl: IntlShape): Promise<void>
-  fetchPoolInfo(request: PoolInfoRequest): Promise<PoolInfoResponse>
+  fetchPoolInfo(request: StakePoolInfoRequest): Promise<StakePoolInfosAndHistories>
+  getDelegationStatus(): Promise<StakingStatus>
 }
+
+export type StakingStatus = {
+  isRegistered: boolean
+  poolKeyHash: string | null
+}
+
 export type WalletImplementation = {
   WALLET_IMPLEMENTATION_ID: 'haskell-byron' | 'haskell-shelley' | 'haskell-shelley-24' | 'jormungandr-itn' | ''
   TYPE: 'bip44' | 'cip1852'
@@ -34,43 +41,39 @@ export type Device = {
 export type YoroiProvider = '' | 'emurgo-alonzo'
 
 // STAKING
-export type PoolInfoRequest = {
+export type StakePoolInfoRequest = {
   poolIds: Array<string>
 }
 
-export type PoolInfoResponse = {
-  [key: string]: RemotePoolMetaSuccess | RemotePoolMetaFailure
+export type StakePoolInfosAndHistories = {
+  [key: string]: StakePoolInfoAndHistory | RemotePoolMetaFailure
 }
 
-export type RemotePoolMetaSuccess = {
-  info: {
-    name?: string
-    ticker?: string
-    description?: string
-    homepage?: string
-    // other stuff from SMASH.
-  }
-  history: Array<{
-    epoch: number
-    slot: number
-    tx_ordinal: number
-    cert_ordinal: number
-    payload: RemoteCertificate
-  }>
+export type StakePoolInfo = {
+  name?: string
+  ticker?: string
+  description?: string
+  homepage?: string
+  // other stuff from SMASH.
+}
+
+type StakePoolHistory = Array<{
+  epoch: number
+  slot: number
+  tx_ordinal: number
+  cert_ordinal: number
+  payload: RemoteCertificate
+}>
+
+export type StakePoolInfoAndHistory = {
+  info: StakePoolInfo
+  history: StakePoolHistory
 }
 
 export type RemotePoolMetaFailure = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   error: any
 }
-
-export type RemoteCertificateMeta =
-  | {kind: 'StakeRegistration'; rewardAddress: string /* hex */}
-  | {kind: 'StakeDeregistration'; rewardAddress: string /* hex */}
-  | {kind: 'StakeDelegation'; rewardAddress: string /* hex */; poolKeyHash: string /* hex */}
-  | {kind: 'PoolRegistration'; poolParams: Record<string, unknown> /* we don't care about this for now */}
-  | {kind: 'PoolRetirement'; poolKeyHash: string /* hex */}
-  | {kind: 'MoveInstantaneousRewardsCert'; rewards: {[addresses: string]: string}; pot: 0 | 1}
 
 export type RemoteCertificate = {
   kind: 'PoolRegistration' | 'PoolRetirement'

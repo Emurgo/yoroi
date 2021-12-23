@@ -2,18 +2,14 @@
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {QueryClient, QueryClientProvider} from 'react-query'
-import {Provider} from 'react-redux'
 
-import getConfiguredStore from '../../legacy/helpers/configureStore'
 import {RemotePoolMetaSuccess} from '../../legacy/selectors'
 import {SelectedWalletProvider} from '../SelectedWallet'
 import {StakePoolInfosAndHistories, WalletInterface} from '../types'
-import {Dashboard} from './Dashboard'
+import {StakePoolInfos} from './StakePoolInfos'
 
-storiesOf('Dashboard', module)
+storiesOf('StakePoolInfos', module)
   .add('not delegating', () => {
-    const store = getConfiguredStore(true, true, {accountState: {isDelegating: false}})
-
     const notDelegatingWallet: WalletInterface = {
       ...mockWallet,
       getDelegationStatus: () => Promise.resolve({isRegistered: false, poolKeyHash: null}),
@@ -21,17 +17,14 @@ storiesOf('Dashboard', module)
 
     return (
       <QueryClientProvider client={new QueryClient()}>
-        <Provider store={store}>
-          <SelectedWalletProvider wallet={notDelegatingWallet}>
-            <Dashboard />
-          </SelectedWalletProvider>
-        </Provider>
+        <SelectedWalletProvider wallet={notDelegatingWallet}>
+          <StakePoolInfos />
+        </SelectedWalletProvider>
       </QueryClientProvider>
     )
   })
-  .add('Loading ids', () => {
-    const store = getConfiguredStore(true, true, {accountState: {isDelegating: true, poolOperator: stakePoolId}})
 
+  .add('Loading ids', () => {
     const loadingWallet: WalletInterface = {
       ...mockWallet,
       getDelegationStatus: () => new Promise((_resolve, _reject) => undefined), // never resolves
@@ -39,17 +32,14 @@ storiesOf('Dashboard', module)
 
     return (
       <QueryClientProvider client={new QueryClient()}>
-        <Provider store={store}>
-          <SelectedWalletProvider wallet={loadingWallet}>
-            <Dashboard />
-          </SelectedWalletProvider>
-        </Provider>
+        <SelectedWalletProvider wallet={loadingWallet}>
+          <StakePoolInfos />
+        </SelectedWalletProvider>
       </QueryClientProvider>
     )
   })
-  .add('Loading StakePoolInfo', () => {
-    const store = getConfiguredStore(true, true, {accountState: {isDelegating: true, poolOperator: stakePoolId}})
 
+  .add('Loading StakePoolInfo', () => {
     const loadingWallet: WalletInterface = {
       ...mockWallet,
       getDelegationStatus: () => Promise.resolve({isRegistered: true, poolKeyHash: stakePoolId}),
@@ -58,17 +48,14 @@ storiesOf('Dashboard', module)
 
     return (
       <QueryClientProvider client={new QueryClient()}>
-        <Provider store={store}>
-          <SelectedWalletProvider wallet={loadingWallet}>
-            <Dashboard />
-          </SelectedWalletProvider>
-        </Provider>
+        <SelectedWalletProvider wallet={loadingWallet}>
+          <StakePoolInfos />
+        </SelectedWalletProvider>
       </QueryClientProvider>
     )
   })
-  .add('Loaded, StakePoolInfo success', () => {
-    const store = getConfiguredStore(true, true, {accountState: {isDelegating: true, poolOperator: stakePoolId}})
 
+  .add('Loaded, StakePoolInfo success', () => {
     const loadedWallet: WalletInterface = {
       ...mockWallet,
       getDelegationStatus: () => Promise.resolve({isRegistered: true, poolKeyHash: stakePoolId}),
@@ -77,17 +64,14 @@ storiesOf('Dashboard', module)
 
     return (
       <QueryClientProvider client={new QueryClient()}>
-        <Provider store={store}>
-          <SelectedWalletProvider wallet={loadedWallet}>
-            <Dashboard />
-          </SelectedWalletProvider>
-        </Provider>
+        <SelectedWalletProvider wallet={loadedWallet}>
+          <StakePoolInfos />
+        </SelectedWalletProvider>
       </QueryClientProvider>
     )
   })
-  .add('Loaded, StakePoolInfo error', () => {
-    const store = getConfiguredStore(true, true, {accountState: {isDelegating: true, poolOperator: stakePoolId}})
 
+  .add('Loaded, StakePoolInfo error', () => {
     const loadedWallet: WalletInterface = {
       ...mockWallet,
       getDelegationStatus: () => Promise.resolve({isRegistered: true, poolKeyHash: stakePoolId}),
@@ -99,11 +83,9 @@ storiesOf('Dashboard', module)
 
     return (
       <QueryClientProvider client={new QueryClient()}>
-        <Provider store={store}>
-          <SelectedWalletProvider wallet={loadedWallet}>
-            <Dashboard />
-          </SelectedWalletProvider>
-        </Provider>
+        <SelectedWalletProvider wallet={loadedWallet}>
+          <StakePoolInfos />
+        </SelectedWalletProvider>
       </QueryClientProvider>
     )
   })

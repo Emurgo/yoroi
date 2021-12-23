@@ -32,6 +32,7 @@ function loadStories() {
 	require('../src/Catalyst/Catalyst.stories');
 	require('../src/Catalyst/VotingBanner.stories');
 	require('../src/Dashboard/Dashboard.stories');
+	require('../src/Dashboard/StakePoolInfos.stories');
 	require('../src/FirstRun/AcceptTermsOfService.stories');
 	require('../src/FirstRun/CustomPinScreen.stories');
 	require('../src/FirstRun/LanguagePickerScreen.stories');
@@ -102,6 +103,7 @@ const stories = [
 	'../src/Catalyst/Catalyst.stories',
 	'../src/Catalyst/VotingBanner.stories',
 	'../src/Dashboard/Dashboard.stories',
+	'../src/Dashboard/StakePoolInfos.stories',
 	'../src/FirstRun/AcceptTermsOfService.stories',
 	'../src/FirstRun/CustomPinScreen.stories',
 	'../src/FirstRun/LanguagePickerScreen.stories',
