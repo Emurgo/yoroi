@@ -2,7 +2,7 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {COLORS} from '../../../legacy/styles/config'
-import {ActionsBanner} from './ActionsBanner'
+// import {ActionsBanner} from './ActionsBanner'
 import {BalanceBanner} from './BalanceBanner'
 import {TabNavigator} from './TabNavigator'
 
@@ -14,7 +14,7 @@ export const WalletHero = ({render}: WalletHeroProps) => {
   return (
     <View style={styles.root}>
       <BalanceBanner />
-      <ActionsBanner />
+      {/* <ActionsBanner /> */}
       <TabNavigator render={render} />
     </View>
   )

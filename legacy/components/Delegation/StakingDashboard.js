@@ -537,7 +537,6 @@ class StakingDashboard extends React.Component<Props, State> {
               onPress={() => {
                 navigation.navigate(CATALYST_ROUTES.ROOT)
               }}
-              disabled={false}
             />
 
             {poolInfo != null && !!poolOperator ? (

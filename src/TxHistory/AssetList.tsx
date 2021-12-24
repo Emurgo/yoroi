@@ -10,7 +10,7 @@ import {Text} from '../../legacy/components/UiKit'
 import globalMessages, {actionMessages} from '../../legacy/i18n/global-messages'
 import {tokenBalanceSelector, tokenInfoSelector} from '../../legacy/selectors'
 import {COLORS} from '../../legacy/styles/config'
-import {formatTokenAmount, getAssetDenominationOrId} from '../../legacy/utils/format'
+import {formatTokenAmount, getAssetDenominationOrId, getTokenFingerprint} from '../../legacy/utils/format'
 import AdaImage from '../assets/img/icon/asset_ada.png'
 import NoImage from '../assets/img/icon/asset_no_image.png'
 import {Spacer} from '../components/Spacer'
@@ -31,6 +31,7 @@ export const AssetList = ({refreshing, onRefresh}: AssetListProps) => {
   const orderedTokens = assetTokens
     .sort((a, b) => (a.amount.isGreaterThan(b.amount) ? -1 : 1))
     .sort((a) => (getTokenInfo(assetTokenInfos, a)?.isDefault ? -1 : 1))
+    .filter((t) => assetTokenInfos[t.identifier] != null)
 
   const handleOnPressNFTs = () => Alert.alert(strings.soon, strings.soon)
   const handleOnPressTokens = () => Alert.alert(strings.soon, strings.soon)
@@ -86,7 +87,7 @@ const AssetItem = ({assetToken, tokenInfo, onPress}: AssetItemProps) => {
             {getAssetDenominationOrId(tokenInfo) || strings.unknown}
           </Text>
           <Text numberOfLines={1} ellipsizeMode={'middle'} style={styles.tokenName}>
-            {tokenInfo.metadata.assetName}
+            {tokenInfo.isDefault ? '' : getTokenFingerprint(tokenInfo)}
           </Text>
         </View>
 
