@@ -4,7 +4,7 @@ import {useFocusEffect} from '@react-navigation/native'
 import type {ComponentType} from 'react'
 import React, {useEffect, useState} from 'react'
 import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
-import {AppState, Platform} from 'react-native'
+import {Alert, AppState, Platform} from 'react-native'
 import {withHandlers, withStateHandlers} from 'recompose'
 import {compose} from 'redux'
 
@@ -16,7 +16,7 @@ import type {Navigation} from '../../types/navigation'
 import {Logger} from '../../utils/logging'
 import {onWillUnmount} from '../../utils/renderUtils'
 import FingerprintScreenBase from '../Common/FingerprintScreenBase'
-import {Button} from '../UiKit'
+import {Button, Spacer} from '../UiKit'
 import styles from './styles/BiometricAuthScreen.style'
 
 const errorMessages = defineMessages({
@@ -63,9 +63,22 @@ const messages = defineMessages({
     id: 'components.send.biometricauthscreen.cancelButton',
     defaultMessage: '!!!Cancel',
   },
+  tryAgainButton: {
+    id: 'global.tryAgain',
+    defaultMessage: '!!!Try again',
+  },
+  actionFailed: {
+    id: 'global.actions.dialogs.enableFingerprintsFirst.title',
+    defaultMessage: '!!!Action failed',
+  },
 })
 
 const handleOnConfirm = async (route, setError, clearError, useFallback = false, intl) => {
+  if (!(await canBiometricEncryptionBeEnabled())) {
+    await showErrorDialog(globalErrorMessages.biometricsIsTurnedOff, intl)
+    return
+  }
+
   const {keyId, onSuccess, onFail} = route.params
 
   try {
@@ -77,7 +90,6 @@ const handleOnConfirm = async (route, setError, clearError, useFallback = false,
       intl,
     )
     onSuccess(decryptedData)
-    return
   } catch (error) {
     if (error.code === KeyStore.REJECTIONS.SWAPPED_TO_FALLBACK) {
       clearError()
@@ -90,9 +102,8 @@ const handleOnConfirm = async (route, setError, clearError, useFallback = false,
       setError('SENSOR_LOCKOUT')
     } else if (error.code === KeyStore.REJECTIONS.SENSOR_LOCKOUT_PERMANENT) {
       setError('SENSOR_LOCKOUT_PERMANENT')
-    } else if (error.code !== KeyStore.REJECTIONS.DECRYPTION_FAILED) {
-      await handleOnConfirm(route, setError, clearError, false, intl)
     } else {
+      Alert.alert(intl.formatMessage(messages.actionFailed), error.message)
       Logger.error('BiometricAuthScreen', error)
       setError('UNKNOWN_ERROR')
     }
@@ -110,10 +121,6 @@ const handleOnFocus = async ({
   clearError: any,
   intl: IntlShape,
 }) => {
-  if (!(await canBiometricEncryptionBeEnabled())) {
-    await showErrorDialog(globalErrorMessages.biometricsIsTurnedOff, intl)
-    return
-  }
   await handleOnConfirm(route, setError, clearError, false, intl)
 }
 
@@ -158,6 +165,13 @@ const BiometricAuthScreen = (
       headings={[intl.formatMessage(messages.headings1), intl.formatMessage(messages.headings2)]}
       subHeadings={route.params?.instructions || undefined}
       buttons={[
+        <Button
+          key={'try-again'}
+          outline
+          title={intl.formatMessage(messages.tryAgainButton)}
+          onPress={() => handleOnConfirm(route, setError, clearError, false, intl)}
+        />,
+        <Spacer key={'spacer'} width={4} />,
         <Button
           key={'use-fallback'}
           outline

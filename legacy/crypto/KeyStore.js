@@ -41,7 +41,7 @@ class KeyStore {
     if (Platform.OS === 'ios' && encryptionMethod !== 'MASTER_PASSWORD') {
       const credentials = await Keychain.getGenericPassword({
         service: dataKey,
-        authenticationPrompt: message,
+        authenticationPrompt: {title: message},
       })
 
       if (!credentials) throw new Error('credentials not found')
