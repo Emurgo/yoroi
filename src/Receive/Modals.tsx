@@ -45,7 +45,7 @@ export const Modals = ({address, onDone}: {address: string; onDone: () => void})
       address,
       walletManager.getAddressingInfo(address),
       hwDeviceInfo,
-      true,
+      useUSB,
     )
       .catch((error) => {
         if (error instanceof LocalizableError) {

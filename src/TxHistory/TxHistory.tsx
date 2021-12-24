@@ -9,6 +9,7 @@ import {fetchAccountState} from '../../legacy/actions/account'
 import {updateHistory} from '../../legacy/actions/history'
 import infoIcon from '../../legacy/assets/img/icon/info-light-green.png'
 import {OfflineBanner, StatusBar, Text, WarningBanner} from '../../legacy/components/UiKit'
+import {UI_V2} from '../../legacy/config/config'
 import {isByron} from '../../legacy/config/config'
 import {
   hasAnyTransaction,
@@ -48,7 +49,7 @@ export const TxHistory = () => {
 
   return (
     <SafeAreaView style={styles.scrollView}>
-      <StatusBar type="light" />
+      <StatusBar type={UI_V2 ? 'light' : 'dark'} />
 
       <View style={styles.container}>
         <OfflineBanner />

@@ -79,6 +79,7 @@ const WalletTabNavigator = () => {
           options={{
             tabBarIcon: ({focused}) => <Image source={focused ? iconSendActive : iconSend} />,
             tabBarLabel: strings.sendTabBarLabel,
+            unmountOnBlur: true,
           }}
         />
       )}
