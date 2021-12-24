@@ -1,5 +1,3 @@
-// @flow
-
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {StyleSheet} from 'react-native'
@@ -11,7 +9,7 @@ import LanguagePicker from '../../legacy/components/Common/LanguagePicker'
 import {FIRST_RUN_ROUTES} from '../../legacy/RoutesList'
 import {languageSelector} from '../../legacy/selectors'
 
-const LanguagePickerScreen = () => {
+export const LanguagePickerScreen = () => {
   const navigation = useNavigation()
   const languageCode = useSelector(languageSelector) || 'en-US'
   const dispatch = useDispatch()
@@ -24,12 +22,14 @@ const LanguagePickerScreen = () => {
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      <LanguagePicker languageCode={languageCode} changeLanguage={changeLanguage} handleContinue={handleContinue} />
+      <LanguagePicker
+        languageCode={languageCode}
+        changeLanguage={(languageCode: string) => dispatch(changeLanguage(languageCode))}
+        handleContinue={handleContinue}
+      />
     </SafeAreaView>
   )
 }
-
-export default LanguagePickerScreen
 
 const styles = StyleSheet.create({
   safeAreaView: {
