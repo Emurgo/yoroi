@@ -64,6 +64,13 @@ How to do that, please read <a href='https://docs.microsoft.com/en-us/windows/ws
 
 #### WSL2 Ubuntu preparation
 
+- Install additional tools:
+
+```shell
+sudo apt-get update
+sudo apt-get install build-essential git curl wget unzip socat -y
+```
+
 - Install Rust:
 
 ```shell
@@ -76,21 +83,30 @@ rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-andro
 ```
 
 - Install `wasm-prkg`:
-  </br>`curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh`
-- [Install git](https://docs.microsoft.com/en-us/windows/wsl/tutorials/wsl-git)
+
+```shell
+curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+```
+
 - [Install nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-- Clone the project
-- Run the `nvm use` command in the project root directory
-- Install `yarn`:
-  </br>`npm --install yarn`
-- Check that Yarn is installed:
-  </br>`yarn --version`
 - Install Java 8:
-  </br>`sudo apt-get install openjdk-8-jdk`.
+
+```shell
+sudo apt-get install openjdk-8-jdk
+```
+
 - If you have other java version switch to the 8 version by running the command:
-  </br>`sudo update-alternatives --config java`
+
+```shell
+sudo update-alternatives --config java
+```
+
 - Install Python 2:
-  </br>`sudo apt-get install python`
+
+```shell
+sudo apt-get install python
+```
+
 - Install the Android SDK:
 
 ```shell
@@ -99,9 +115,6 @@ cd ~
 mkdir -p Android/Sdk
 unzip commandlinetools-linux-6200805_latest.zip -d Android/Sdk
 ```
-
-- Install dependencies:
-  </br>`yarn install`
 
 - Add the next lines to your `.bashrc`
 
@@ -124,12 +137,44 @@ sdkmanager "build-tools;28.0.3" "platform-tools" "platforms;android-28" "tools"
 sdkmanager --licenses
 ```
 
-- Install the Gradle:
-  </br>`sudo apt install gradle`
 - Install the Android NDK:
-  </br>`sdkmanager --install "ndk;20.0.5594570"`
-- Install the `socat` (the step is only necessary if you use Windows + WSL2 Ubuntu):
-  </br>`sudo apt install socat`
+
+```shell
+sdkmanager --install "ndk;20.0.5594570"
+```
+
+- Install the Gradle:
+
+```shell
+sudo apt install gradle -y
+```
+
+- Clone the project
+
+```shell
+cd ~ && mkdir Emurgo && cd Emurgo
+git clone https://github.com/Emurgo/yoroi-mobile.git
+cd yoroi-mobile
+```
+
+- Run the `nvm use` command
+- Install `yarn`:
+
+```shell
+npm install -g yarn
+```
+
+- Check that Yarn is installed:
+
+```shell
+yarn --version
+```
+
+- Install dependencies:
+
+```shell
+yarn install
+```
 
 ---
 

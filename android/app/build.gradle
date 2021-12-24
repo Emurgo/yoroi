@@ -148,8 +148,8 @@ android {
         applicationId "com.emurgo"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 302
-        versionName "4.4.2"
+        versionCode 320
+        versionName "4.5.2"
         ndk {
           abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
         }
@@ -199,8 +199,8 @@ android {
             dimension "version"
             applicationId 'com.emurgo'
             minSdkVersion 21
-            compileSdkVersion = 29
-            targetSdkVersion 29
+            compileSdkVersion = 30
+            targetSdkVersion 30
             resValue "string", "build_config_package", "com.emurgo"
         }
         dev {
@@ -208,8 +208,8 @@ android {
             applicationIdSuffix ".staging"
             applicationId 'com.emurgo'
             minSdkVersion 21
-            compileSdkVersion = 29
-            targetSdkVersion 29
+            compileSdkVersion = 30
+            targetSdkVersion 30
             resValue "string", "build_config_package", "com.emurgo"
         }
         nightly {
@@ -217,8 +217,8 @@ android {
             applicationIdSuffix ".nightly"
             applicationId 'com.emurgo'
             minSdkVersion 21
-            compileSdkVersion = 29
-            targetSdkVersion 29
+            compileSdkVersion = 30
+            targetSdkVersion 30
             resValue "string", "build_config_package", "com.emurgo"
         }
         storybook {
@@ -226,8 +226,8 @@ android {
             applicationIdSuffix ".storybook"
             applicationId 'com.emurgo'
             minSdkVersion 21
-            compileSdkVersion = 29
-            targetSdkVersion 29
+            compileSdkVersion = 30
+            targetSdkVersion 30
             resValue "string", "build_config_package", "com.emurgo"
         }
     }
