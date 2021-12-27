@@ -1,6 +1,6 @@
 import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
-import {StyleSheet, TouchableOpacity} from 'react-native'
+import {TouchableOpacity} from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import {useSelector} from 'react-redux'
 
@@ -42,12 +42,6 @@ export const TxHistoryNavigator = () => {
   )
 }
 
-const styles = StyleSheet.create({
-  settingsButton: {
-    height: '80%',
-  },
-})
-
 const headerBarOptions =
   (walletName: string) =>
   ({navigation}) => {
@@ -60,7 +54,6 @@ const headerBarOptions =
       headerTintColor: '#fff',
       headerRight: () => (
         <Button
-          style={styles.settingsButton}
           onPress={() => navigation.navigate(WALLET_ROOT_ROUTES.SETTINGS)}
           iconImage={iconGear}
           title=""
