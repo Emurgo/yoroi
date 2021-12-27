@@ -218,7 +218,7 @@ class KeyStore {
       return KeyStoreBridge.REJECTION_MESSAGES[key]
     }
 
-    // from https://opensource.apple.com/source/Security/Security-55471/sec/Security/SecBase.h.auto.html
+    // https://opensource.apple.com/source/Security/Security-55471/libsecurity_keychain/lib/SecBase.h.auto.html
     if (Platform.OS === 'ios') {
       switch (key) {
         case 'NOT_RECOGNIZED': {
