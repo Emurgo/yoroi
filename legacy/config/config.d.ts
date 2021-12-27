@@ -62,3 +62,5 @@ type WalletConfig = {
 }
 
 export var getWalletConfigById: (walletImplementationId: string) => WalletImplementation
+
+export var UI_V2: boolean

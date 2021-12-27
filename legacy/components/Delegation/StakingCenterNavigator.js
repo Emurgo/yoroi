@@ -9,10 +9,10 @@ import iconGear from '../../assets/img/gear.png'
 import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../navigationOptions'
 import {SEND_ROUTES, STAKING_CENTER_ROUTES, WALLET_ROOT_ROUTES} from '../../RoutesList'
 import BiometricAuthScreen from '../Send/BiometricAuthScreen'
-import styles from '../TxHistory/styles/SettingsButton.style'
 import {Button} from '../UiKit'
 import DelegationConfirmation from './DelegationConfirmation'
 import StakingCenter from './StakingCenter'
+import styles from './styles/SettingsButton.style'
 
 type StakingCenterRoutes = {
   'staking-center': any,

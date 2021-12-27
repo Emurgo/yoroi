@@ -10,9 +10,9 @@ import {defaultNavigationOptions, defaultStackNavigatorOptions, jormunNavigation
 import {SEND_ROUTES, STAKING_DASHBOARD_ROUTES, WALLET_ROOT_ROUTES} from '../../RoutesList'
 import {walletNameSelector} from '../../selectors'
 import BiometricAuthScreen from '../Send/BiometricAuthScreen'
-import styles from '../TxHistory/styles/SettingsButton.style'
 import {Button} from '../UiKit'
 import StakingDashboard from './StakingDashboard'
+import styles from './styles/SettingsButton.style'
 
 type DelegationNavigatorRoutes = {
   'staking-dashboard': any,
