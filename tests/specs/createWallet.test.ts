@@ -20,16 +20,22 @@ describe('Creating a wallet', () => {
     driver.closeApp()
   })
 
-  it('a straight happy path', async () => {
+  it('A straight happy path', async () => {
     await firstAppLaunch()
     await addWalletsScreen.addWalletTestnetButton().click()
     await addWalletScreen.createWalletButton().click()
 
-    await createNewWalletCredentialsScreen.walletNameEdit().addValue(WALLET_NAME)
+    await createNewWalletCredentialsScreen.walletNameEdit().click()
     await createNewWalletCredentialsScreen.spendingPasswordEdit().click()
     await createNewWalletCredentialsScreen.spendingPasswordEdit().addValue(SPENDING_PASSWORD)
     await createNewWalletCredentialsScreen.repeatSpendingPasswordEdit().click()
     await createNewWalletCredentialsScreen.repeatSpendingPasswordEdit().addValue(SPENDING_PASSWORD)
+    await hideKeyboard()
+
+    await createNewWalletCredentialsScreen.continueButton().click()
+    expect(await nobodyLookingScreen.understandButton().isDisplayed()).to.be.false
+
+    await createNewWalletCredentialsScreen.walletNameEdit().addValue(WALLET_NAME)
     await hideKeyboard()
     await createNewWalletCredentialsScreen.continueButton().click()
 

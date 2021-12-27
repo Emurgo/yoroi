@@ -17,7 +17,7 @@
       "react-redux",
       "jest",
       "node",
-      "webdriverio/sync",
+      "webdriverio/async",
       "@wdio/mocha-framework",
       "chai"
     ],
