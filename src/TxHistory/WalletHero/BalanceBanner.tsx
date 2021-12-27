@@ -5,7 +5,7 @@ import {useSelector} from 'react-redux'
 
 import {UI_V2} from '../../../legacy/config/config'
 import globalMessages from '../../../legacy/i18n/global-messages'
-import {availableAssetsSelector, tokenBalanceSelector, walletMetaSelector} from '../../../legacy/selectors'
+import {availableAssetsSelector, tokenBalanceSelector} from '../../../legacy/selectors'
 import {COLORS} from '../../../legacy/styles/config'
 import {formatTokenWithText, formatTokenWithTextWhenHidden} from '../../../legacy/utils/format'
 import closedEyeIcon from '../../assets/img/icon/visibility-closed.png'
@@ -13,6 +13,7 @@ import openedEyeIcon from '../../assets/img/icon/visibility-opened.png'
 import {Spacer} from '../../components'
 import {Icon} from '../../components/Icon'
 import features from '../../features'
+import {useSelectedWalletMeta} from '../../SelectedWallet'
 
 const BALANCE_WHEN_HIDDEN = '*.******'
 const TOTAL_WHEN_HIDDEN = '*.**'
@@ -21,7 +22,7 @@ const QUOTE_PAIR_CURRENCY = 'USD'
 export const BalanceBanner = () => {
   const intl = useIntl()
   const tokenBalance = useSelector(tokenBalanceSelector)
-  const walletMeta = useSelector(walletMetaSelector)
+  const walletMeta = useSelectedWalletMeta()
   const availableAssets = useSelector(availableAssetsSelector)
   const [showValues, setShowValues] = useState<boolean>(true)
 
@@ -33,7 +34,7 @@ export const BalanceBanner = () => {
     <View style={styles.banner}>
       <Spacer height={14} />
 
-      {UI_V2 && (
+      {UI_V2 && walletMeta && (
         <View style={styles.centralized}>
           <Icon.WalletAccount style={styles.walletIcon} iconSeed={walletMeta.checksum.ImagePart} />
         </View>
