@@ -6,7 +6,7 @@ import _ from 'lodash'
 import React, {Component} from 'react'
 import type {IntlShape} from 'react-intl'
 import {defineMessages, useIntl} from 'react-intl'
-import {ActivityIndicator, Image, ScrollView, View} from 'react-native'
+import {ActivityIndicator, Image, ScrollView, StyleSheet, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch, useSelector} from 'react-redux'
@@ -15,7 +15,6 @@ import {fetchUTXOs} from '../../legacy/actions/utxo'
 import type {RawUtxo} from '../../legacy/api/types'
 import DangerousActionModal from '../../legacy/components/Common/DangerousActionModal'
 import AmountField from '../../legacy/components/Send/AmountField'
-import styles from '../../legacy/components/Send/styles/SendScreen.style'
 import UtxoAutoRefresher from '../../legacy/components/Send/UtxoAutoRefresher'
 import {
   Banner,
@@ -50,6 +49,7 @@ import {
   walletMetaSelector,
 } from '../../legacy/selectors'
 import type {ServerStatusCache, WalletMeta} from '../../legacy/state'
+import {COLORS} from '../../legacy/styles/config'
 import type {DefaultAsset} from '../../legacy/types/HistoryTransaction'
 import type {Navigation} from '../../legacy/types/navigation'
 import {
@@ -773,6 +773,27 @@ const getAmountErrorText = (intl, amountErrors, balanceErrors, defaultAsset) => 
   }
   return null
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: COLORS.WHITE,
+  },
+  content: {
+    padding: 16,
+  },
+  actions: {
+    marginHorizontal: 16,
+    marginBottom: 16,
+  },
+  indicator: {
+    marginTop: 26,
+  },
+  info: {
+    fontSize: 14,
+    lineHeight: 22,
+  },
+})
 
 const amountInputErrorMessages = defineMessages({
   INVALID_AMOUNT: {
