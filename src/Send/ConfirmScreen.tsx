@@ -4,7 +4,7 @@ import {BigNumber} from 'bignumber.js'
 import React from 'react'
 import type {IntlShape} from 'react-intl'
 import {injectIntl} from 'react-intl'
-import {Platform, ScrollView, View} from 'react-native'
+import {Platform, ScrollView, StyleSheet, View} from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'
 import {connect} from 'react-redux'
 import {withHandlers, withStateHandlers} from 'recompose'
@@ -16,7 +16,6 @@ import ErrorModal from '../../legacy/components/Common/ErrorModal'
 import HWInstructions from '../../legacy/components/Ledger/HWInstructions'
 import LedgerConnect from '../../legacy/components/Ledger/LedgerConnect'
 import LedgerTransportSwitchModal from '../../legacy/components/Ledger/LedgerTransportSwitchModal'
-import styles from '../../legacy/components/Send/styles/ConfirmScreen.style'
 import {
   Banner,
   Button,
@@ -45,6 +44,7 @@ import {
   tokenInfoSelector,
 } from '../../legacy/selectors'
 import {State} from '../../legacy/state'
+import {COLORS} from '../../legacy/styles/config'
 import {formatTokenWithSymbol, formatTokenWithText} from '../../legacy/utils/format'
 import {ignoreConcurrentAsyncHandler} from '../../legacy/utils/utils'
 
@@ -416,3 +416,30 @@ export default injectIntl(
     ) as any
   )(ConfirmScreen),
 )
+
+const styles = StyleSheet.create({
+  safeAreaView: {
+    backgroundColor: COLORS.WHITE,
+    flex: 1,
+  },
+  root: {
+    flex: 1,
+  },
+  container: {
+    backgroundColor: COLORS.WHITE,
+    flex: 1,
+    padding: 16,
+  },
+  heading: {
+    marginTop: 16,
+  },
+  actions: {
+    padding: 16,
+  },
+  input: {
+    marginTop: 16,
+  },
+  amount: {
+    color: COLORS.POSITIVE_AMOUNT,
+  },
+})
