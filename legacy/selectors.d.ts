@@ -2,7 +2,7 @@
 
 import BigNumber from 'bignumber.js'
 
-import {DefaultAsset, Token, TransactionInfo} from '../src/types/cardano'
+import {DefaultAsset, Token, TokenEntry, TransactionInfo} from '../src/types/cardano'
 import type {State, WalletMeta} from './state'
 
 export var availableAssetsSelector: (state: State) => Record<string, Token | DefaultAsset>
@@ -40,9 +40,10 @@ export var encryptedKeySelector: (state: State) => string
 export var pinSelector: (state: State) => Array<string>
 
 // prettier-ignore
-interface PartialMultiToken {
+interface MultiToken {
   getDefaultId: () => string,
   getDefault: () => BigNumber,
+  getDefaultEntry: () => TokenEntry,
   values: Array<{amount: BigNumber, identifier: string, networkId: number}>
 }
-export var tokenBalanceSelector: (state: State) => PartialMultiToken
+export var tokenBalanceSelector: (state: State) => MultiToken
