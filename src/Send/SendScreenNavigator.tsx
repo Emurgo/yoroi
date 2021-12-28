@@ -11,7 +11,7 @@ import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../lega
 import {SEND_ROUTES} from '../../legacy/RoutesList'
 import {tokenBalanceSelector, tokenInfoSelector} from '../../legacy/selectors'
 import {AddressReaderQR} from './AddressReaderQR'
-import ConfirmScreen from './ConfirmScreen'
+import {ConfirmScreen} from './ConfirmScreen'
 import {SendScreen} from './SendScreen'
 
 const Stack = createStackNavigator<{
@@ -26,7 +26,7 @@ export const SendScreenNavigator = () => {
   const strings = useStrings()
 
   const tokenBalance = useSelector(tokenBalanceSelector)
-  const [selectedTokenIdentifier, setSelectedTokenIdentifier] = React.useState<string>(
+  const [selectedTokenIdentifier, setSelectedTokenIdentifier] = React.useState(
     tokenBalance.getDefaultEntry().identifier,
   )
   const tokenInfos = useSelector(tokenInfoSelector)
@@ -78,7 +78,11 @@ export const SendScreenNavigator = () => {
         options={{title: strings.qrScannerTitle}}
       />
 
-      <Stack.Screen name={SEND_ROUTES.CONFIRM} component={ConfirmScreen} options={{title: strings.confirmTitle}} />
+      <Stack.Screen //
+        name={SEND_ROUTES.CONFIRM}
+        component={ConfirmScreen}
+        options={{title: strings.confirmTitle}}
+      />
 
       <Stack.Screen
         name={SEND_ROUTES.BIOMETRICS_SIGNING}
