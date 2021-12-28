@@ -15,7 +15,7 @@ import {COLORS} from '../../legacy/styles/config'
 import {formatTokenWithText} from '../../legacy/utils/format'
 import {Logger} from '../../legacy/utils/logging'
 import {useSelectedWallet} from '../../src/SelectedWallet'
-type Props = {onPress: () => void; disabled: boolean}
+type Props = {onPress: () => void; disabled?: boolean}
 
 export const VotingBanner = ({onPress, disabled}: Props) => {
   const strings = useStrings()

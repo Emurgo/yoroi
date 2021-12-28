@@ -106,7 +106,7 @@ export const Dashboard = () => {
             />
           </Row>
 
-          <VotingBanner onPress={() => navigation.navigate(CATALYST_ROUTES.ROOT)} disabled={false} />
+          <VotingBanner onPress={() => navigation.navigate(CATALYST_ROUTES.ROOT)} />
 
           {stakingStatus?.isRegistered && (
             <Row>

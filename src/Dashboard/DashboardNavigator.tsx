@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
-import {StyleSheet} from 'react-native'
 import {useSelector} from 'react-redux'
 
 import iconGear from '../../assets/img/gear.png'

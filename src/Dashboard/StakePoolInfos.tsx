@@ -43,6 +43,6 @@ export const useStakePoolIds = (wallet: WalletInterface) => {
 
   return {
     ...stakingStatusQuery,
-    stakePoolIds: stakingStatus?.poolKeyHash ? [stakingStatus.poolKeyHash] : undefined,
+    stakePoolIds: !stakingStatus ? undefined : stakingStatus.poolKeyHash ? [stakingStatus.poolKeyHash] : [],
   }
 }
