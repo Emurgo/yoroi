@@ -1,12 +1,10 @@
-// @flow
-
 import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import {BigNumber} from 'bignumber.js'
 import React from 'react'
 
-import {type TokenEntry} from '../../crypto/MultiToken'
-import SendScreen from './SendScreen'
+import type {TokenEntry} from '../types/cardano'
+import {SendScreen} from './SendScreen'
 
 storiesOf('SendScreen', module)
   .add('Default', () => {

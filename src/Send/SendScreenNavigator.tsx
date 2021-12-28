@@ -9,10 +9,10 @@ import AssetSelectorScreen from '../../legacy/components/Send/AssetSelectorScree
 import BiometricAuthScreen from '../../legacy/components/Send/BiometricAuthScreen'
 import ConfirmScreen from '../../legacy/components/Send/ConfirmScreen'
 import {ScannerButton} from '../../legacy/components/Send/ScannerButton'
-import SendScreen from '../../legacy/components/Send/SendScreen'
 import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../legacy/navigationOptions'
 import {SEND_ROUTES} from '../../legacy/RoutesList'
 import {tokenBalanceSelector, tokenInfoSelector} from '../../legacy/selectors'
+import {SendScreen} from './SendScreen'
 
 const Stack = createStackNavigator<{
   'send-ada': any

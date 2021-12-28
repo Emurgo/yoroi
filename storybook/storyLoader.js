@@ -23,7 +23,6 @@ function loadStories() {
 	require('../legacy/components/Send/AddressReaderQR.stories');
 	require('../legacy/components/Send/AssetSelectorScreen/AssetSelectorScreen.stories');
 	require('../legacy/components/Send/BiometricAuthScreen.stories');
-	require('../legacy/components/Send/SendScreen.stories');
 	require('../legacy/components/Settings/ApplicationSettingsScreen.stories');
 	require('../legacy/components/Settings/BiometricsLinkScreen.stories');
 	require('../legacy/components/Settings/TermsOfServiceScreen.stories');
@@ -43,6 +42,7 @@ function loadStories() {
 	require('../src/Receive/Addresses.stories');
 	require('../src/Receive/ReceiveScreen.stories');
 	require('../src/SelectedWallet/WalletSelection/WalletSelectionScreen.stories');
+	require('../src/Send/SendScreen.stories');
 	require('../src/Settings/ChangePassword/ChangePasswordScreen.stories');
 	require('../src/Settings/ChangeWalletName/ChangeWalletName.stories');
 	require('../src/Settings/RemoveWalletScreen.stories');
@@ -92,7 +92,6 @@ const stories = [
 	'../legacy/components/Send/AddressReaderQR.stories',
 	'../legacy/components/Send/AssetSelectorScreen/AssetSelectorScreen.stories',
 	'../legacy/components/Send/BiometricAuthScreen.stories',
-	'../legacy/components/Send/SendScreen.stories',
 	'../legacy/components/Settings/ApplicationSettingsScreen.stories',
 	'../legacy/components/Settings/BiometricsLinkScreen.stories',
 	'../legacy/components/Settings/TermsOfServiceScreen.stories',
@@ -112,6 +111,7 @@ const stories = [
 	'../src/Receive/Addresses.stories',
 	'../src/Receive/ReceiveScreen.stories',
 	'../src/SelectedWallet/WalletSelection/WalletSelectionScreen.stories',
+	'../src/Send/SendScreen.stories',
 	'../src/Settings/ChangePassword/ChangePasswordScreen.stories',
 	'../src/Settings/ChangeWalletName/ChangeWalletName.stories',
 	'../src/Settings/RemoveWalletScreen.stories',
