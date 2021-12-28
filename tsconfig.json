@@ -11,7 +11,16 @@
     "strict": true,
     "noImplicitAny": false,
     "target": "esnext",
-    "types": ["react", "react-native", "react-redux", "jest"],
+    "types": [
+      "react",
+      "react-native",
+      "react-redux",
+      "jest",
+      "node",
+      "webdriverio/async",
+      "@wdio/mocha-framework",
+      "chai"
+    ],
     "resolveJsonModule": true,
     "skipLibCheck": true
   },
