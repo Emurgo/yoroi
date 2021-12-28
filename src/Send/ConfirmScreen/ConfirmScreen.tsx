@@ -12,15 +12,15 @@ import {
   showErrorDialog,
   submitSignedTx as _submitSignedTx,
   submitTransaction as _submitTransaction,
-} from '../../legacy/actions'
+} from '../../../legacy/actions'
 import {
   setLedgerDeviceId as _setLedgerDeviceId,
   setLedgerDeviceObj as _setLedgerDeviceObj,
-} from '../../legacy/actions/hwWallet'
-import ErrorModal from '../../legacy/components/Common/ErrorModal'
-import HWInstructions from '../../legacy/components/Ledger/HWInstructions'
-import LedgerConnect from '../../legacy/components/Ledger/LedgerConnect'
-import LedgerTransportSwitchModal from '../../legacy/components/Ledger/LedgerTransportSwitchModal'
+} from '../../../legacy/actions/hwWallet'
+import ErrorModal from '../../../legacy/components/Common/ErrorModal'
+import HWInstructions from '../../../legacy/components/Ledger/HWInstructions'
+import LedgerConnect from '../../../legacy/components/Ledger/LedgerConnect'
+import LedgerTransportSwitchModal from '../../../legacy/components/Ledger/LedgerTransportSwitchModal'
 import {
   Banner,
   Button,
@@ -30,26 +30,26 @@ import {
   StatusBar,
   Text,
   ValidatedTextInput,
-} from '../../legacy/components/UiKit'
-import {CONFIG} from '../../legacy/config/config'
-import {WrongPassword} from '../../legacy/crypto/errors'
-import {ISignRequest} from '../../legacy/crypto/ISignRequest'
-import KeyStore from '../../legacy/crypto/KeyStore'
-import type {TokenEntry} from '../../legacy/crypto/MultiToken'
-import type {CreateUnsignedTxResponse} from '../../legacy/crypto/shelley/transactionUtils'
-import walletManager, {SystemAuthDisabled} from '../../legacy/crypto/walletManager'
-import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../legacy/i18n/global-messages'
-import LocalizableError from '../../legacy/i18n/LocalizableError'
-import {SEND_ROUTES, WALLET_ROOT_ROUTES, WALLET_ROUTES} from '../../legacy/RoutesList'
+} from '../../../legacy/components/UiKit'
+import {CONFIG} from '../../../legacy/config/config'
+import {WrongPassword} from '../../../legacy/crypto/errors'
+import {ISignRequest} from '../../../legacy/crypto/ISignRequest'
+import KeyStore from '../../../legacy/crypto/KeyStore'
+import type {TokenEntry} from '../../../legacy/crypto/MultiToken'
+import type {CreateUnsignedTxResponse} from '../../../legacy/crypto/shelley/transactionUtils'
+import walletManager, {SystemAuthDisabled} from '../../../legacy/crypto/walletManager'
+import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../../legacy/i18n/global-messages'
+import LocalizableError from '../../../legacy/i18n/LocalizableError'
+import {SEND_ROUTES, WALLET_ROOT_ROUTES, WALLET_ROUTES} from '../../../legacy/RoutesList'
 import {
   defaultNetworkAssetSelector,
   easyConfirmationSelector,
   hwDeviceInfoSelector,
   isHWSelector,
   tokenInfoSelector,
-} from '../../legacy/selectors'
-import {COLORS} from '../../legacy/styles/config'
-import {formatTokenWithSymbol, formatTokenWithText} from '../../legacy/utils/format'
+} from '../../../legacy/selectors'
+import {COLORS} from '../../../legacy/styles/config'
+import {formatTokenWithSymbol, formatTokenWithText} from '../../../legacy/utils/format'
 
 export const ConfirmScreen = () => {
   const intl = useIntl()
