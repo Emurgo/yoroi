@@ -484,7 +484,7 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
 
           <TouchableOpacity onPress={() => navigation.navigate('select-asset')}>
             <TextInput
-              right={<Image source={require('../../assets/img/arrow_down_fill.png')} />}
+              right={<Image source={require('../../legacy/assets/img/arrow_down_fill.png')} />}
               editable={false}
               label={intl.formatMessage(messages.asset)}
               value={`${assetDenomination}: ${formatTokenAmount(

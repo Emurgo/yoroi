@@ -42,6 +42,7 @@ function loadStories() {
 	require('../src/SelectedWallet/WalletSelection/WalletSelectionScreen.stories');
 	require('../src/Send/AddressReaderQR/AddressReaderQR.stories');
 	require('../src/Send/AssetSelectorScreen/AssetSelectorScreen.stories');
+	require('../src/Send/ConfirmScreen.stories');
 	require('../src/Send/SendScreen.stories');
 	require('../src/Settings/ChangePassword/ChangePasswordScreen.stories');
 	require('../src/Settings/ChangeWalletName/ChangeWalletName.stories');
@@ -111,6 +112,7 @@ const stories = [
 	'../src/SelectedWallet/WalletSelection/WalletSelectionScreen.stories',
 	'../src/Send/AddressReaderQR/AddressReaderQR.stories',
 	'../src/Send/AssetSelectorScreen/AssetSelectorScreen.stories',
+	'../src/Send/ConfirmScreen.stories',
 	'../src/Send/SendScreen.stories',
 	'../src/Settings/ChangePassword/ChangePasswordScreen.stories',
 	'../src/Settings/ChangeWalletName/ChangeWalletName.stories',
