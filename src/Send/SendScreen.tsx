@@ -255,7 +255,7 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
       this.props.utxos === utxos
 
     if (isValid === true) {
-      if (!utxos) throw 'assert'
+      if (!utxos) throw new Error('Invalid utxos')
       const transactionData = await getTransactionData(
         utxos,
         address,
