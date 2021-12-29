@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {useNavigation, useRoute} from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/native'
 import {CommonActions} from '@react-navigation/routers'
 import {BigNumber} from 'bignumber.js'
 import React from 'react'
 import {useIntl} from 'react-intl'
-import {Platform, ScrollView, StyleSheet, View} from 'react-native'
+import {Platform, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'
 import {useDispatch, useSelector} from 'react-redux'
 
@@ -50,11 +50,51 @@ import {
 } from '../../../legacy/selectors'
 import {COLORS} from '../../../legacy/styles/config'
 import {formatTokenWithSymbol, formatTokenWithText} from '../../../legacy/utils/format'
+import {Spacer} from '../../components'
+import {useParams} from '../../navigation'
+
+export type Params = {
+  transactionData: CreateUnsignedTxResponse
+  defaultAssetAmount: BigNumber
+  address: string
+  balanceAfterTx: BigNumber
+  availableAmount: BigNumber
+  fee: BigNumber
+  tokens: TokenEntry[]
+}
+
+const isParams = (params?: Params | object | undefined): params is Params => {
+  return (
+    !!params &&
+    'transactionData' in params &&
+    typeof params.transactionData === 'object' &&
+    'defaultAssetAmount' in params &&
+    params.defaultAssetAmount instanceof BigNumber &&
+    'address' in params &&
+    typeof params.address === 'string' &&
+    'balanceAfterTx' in params &&
+    params.balanceAfterTx instanceof BigNumber &&
+    'availableAmount' in params &&
+    params.availableAmount instanceof BigNumber &&
+    'fee' in params &&
+    params.fee instanceof BigNumber &&
+    'tokens' in params &&
+    Array.isArray(params.tokens)
+  )
+}
 
 export const ConfirmScreen = () => {
   const intl = useIntl()
-  const route = useRoute()
-  const navigation = useNavigation()
+  const strings = useStrings()
+  const {
+    defaultAssetAmount,
+    address,
+    balanceAfterTx,
+    availableAmount,
+    fee,
+    tokens,
+    transactionData: signRequest,
+  } = useParams(isParams)
   const isEasyConfirmationEnabled = useSelector(easyConfirmationSelector)
   const isHW = useSelector(isHWSelector)
   const defaultAsset = useSelector(defaultNetworkAssetSelector)
@@ -72,7 +112,8 @@ export const ConfirmScreen = () => {
 
   const openLedgerConnect = () => setLedgerDialogStep(LEDGER_DIALOG_STEPS.LEDGER_CONNECT)
   const closeLedgerDialog = () => setLedgerDialogStep(LEDGER_DIALOG_STEPS.CLOSED)
-  const closeErrorModal = () => ({showErrorModal: false})
+
+  const closeErrorModal = () => setShowErrorModal(false)
   const setErrorData = (showErrorModal, errorMessage, errorLogs) => {
     setShowErrorModal(showErrorModal)
     setErrorMessage(errorMessage)
@@ -98,12 +139,12 @@ export const ConfirmScreen = () => {
   }
 
   const dispatch = useDispatch()
-  const submitTransaction = () => dispatch(_submitTransaction())
-  const submitSignedTx = () => dispatch(_submitSignedTx())
+  const submitTransaction = (...args) => dispatch(_submitTransaction(...args))
+  const submitSignedTx = (...args) => dispatch(_submitSignedTx(...args))
   const setLedgerDeviceId = (deviceId) => dispatch(_setLedgerDeviceId(deviceId))
   const setLedgerDeviceObj = (deviceObj) => dispatch(_setLedgerDeviceObj(deviceObj))
 
-  const onChooseTransport = (event, useUSB) => {
+  const onChooseTransport = (useUSB: boolean) => {
     if (!hwDeviceInfo) throw new Error('No device info')
 
     setUseUSB(useUSB)
@@ -127,38 +168,88 @@ export const ConfirmScreen = () => {
     closeLedgerDialog()
   }
 
-  const onConfirm = async () =>
-    handleOnConfirm(
-      navigation,
-      route,
-      isHW,
-      hwDeviceInfo,
-      isEasyConfirmationEnabled,
-      password,
-      submitTransaction,
-      submitSignedTx,
-      withPleaseWaitModal,
-      withDisabledButton,
-      intl,
-      useUSB,
-      setErrorData,
-    )
+  const navigation = useNavigation()
+  const onConfirm = async () => {
+    const submitTx = async (tx: string | ISignRequest, decryptedKey?: string) => {
+      await withPleaseWaitModal(async () => {
+        if (decryptedKey != null) {
+          await submitTransaction(tx, decryptedKey)
+        } else {
+          await submitSignedTx(tx)
+        }
+        navigation.dispatch(
+          CommonActions.reset({
+            key: null,
+            index: 0,
+            routes: [{name: SEND_ROUTES.MAIN}],
+          } as any),
+        )
+        navigation.navigate(WALLET_ROUTES.TX_HISTORY)
+      })
+    }
 
-  const {
-    defaultAssetAmount,
-    address,
-    balanceAfterTx,
-    availableAmount,
-    fee,
-    tokens,
-  }: {
-    defaultAssetAmount: BigNumber
-    address: string
-    balanceAfterTx: BigNumber
-    availableAmount: BigNumber
-    fee: BigNumber
-    tokens: Array<TokenEntry>
-  } = (route as any).params
+    try {
+      if (isHW) {
+        await withDisabledButton(async () => {
+          const signedTx = await walletManager.signTxWithLedger(signRequest, useUSB)
+          await submitTx(Buffer.from(signedTx.encodedTx).toString('base64'))
+        })
+        return
+      }
+
+      if (isEasyConfirmationEnabled) {
+        try {
+          await walletManager.ensureKeysValidity()
+          navigation.navigate(SEND_ROUTES.BIOMETRICS_SIGNING, {
+            keyId: walletManager._id,
+            onSuccess: async (decryptedKey) => {
+              navigation.navigate(SEND_ROUTES.CONFIRM)
+
+              await submitTx(signRequest, decryptedKey)
+            },
+            onFail: () => navigation.goBack(),
+          })
+        } catch (e) {
+          if (e instanceof SystemAuthDisabled) {
+            await walletManager.closeWallet()
+            await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
+            navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
+
+            return
+          } else {
+            throw e
+          }
+        }
+        return
+      }
+
+      try {
+        const decryptedData = await KeyStore.getData(walletManager._id, 'MASTER_PASSWORD', '', password, intl)
+
+        await submitTx(signRequest, decryptedData)
+      } catch (e) {
+        if (e instanceof WrongPassword) {
+          await showErrorDialog(errorMessages.incorrectPassword, intl)
+        } else {
+          throw e
+        }
+      }
+    } catch (e) {
+      if (e instanceof LocalizableError) {
+        const localizableError: any = e
+        setErrorData(
+          true,
+          intl.formatMessage(
+            {id: localizableError.id, defaultMessage: localizableError.defaultMessage},
+            localizableError.values,
+          ),
+          localizableError.values.response || null, // API errors should include a response
+        )
+      } else {
+        setErrorData(true, strings.generalTxError.message, (e as any).message || null)
+      }
+    }
+  }
 
   const isConfirmationDisabled = !isEasyConfirmationEnabled && !password && !isHW
 
@@ -168,49 +259,56 @@ export const ConfirmScreen = () => {
         <StatusBar type="dark" />
 
         <OfflineBanner />
-        <Banner
-          label={intl.formatMessage(globalMessages.availableFunds)}
-          text={formatTokenWithText(availableAmount, defaultAsset)}
-          boldText
-        />
+
+        <Banner label={strings.availableFunds} text={formatTokenWithText(availableAmount, defaultAsset)} boldText />
 
         <ScrollView style={styles.container}>
           <Text small>
-            {intl.formatMessage(txLabels.fees)}: {formatTokenWithSymbol(fee, defaultAsset)}
-          </Text>
-          <Text small>
-            {intl.formatMessage(txLabels.balanceAfterTx)}: {formatTokenWithSymbol(balanceAfterTx, defaultAsset)}
+            {strings.fees}: {formatTokenWithSymbol(fee, defaultAsset)}
           </Text>
 
-          <Text style={styles.heading}>{intl.formatMessage(txLabels.receiver)}</Text>
+          <Text small>
+            {strings.balanceAfterTx}: {formatTokenWithSymbol(balanceAfterTx, defaultAsset)}
+          </Text>
+
+          <Spacer height={16} />
+
+          <Text>{strings.receiver}</Text>
           <Text>{address}</Text>
-          <Text style={styles.heading}>{intl.formatMessage(globalMessages.total)}</Text>
+
+          <Spacer height={16} />
+
+          <Text>{strings.total}</Text>
           <Text style={styles.amount}>{formatTokenWithSymbol(defaultAssetAmount, defaultAsset)}</Text>
+
           {tokens.map((t, i) => (
             <Text style={styles.amount} key={i}>
-              {formatTokenWithText(t.amount, (tokenMetadata as any)[t.identifier])}
+              {formatTokenWithText(t.amount, tokenMetadata[t.identifier])}
             </Text>
           ))}
 
           {!isEasyConfirmationEnabled && !isHW && (
-            <View style={styles.input}>
+            <>
+              <Spacer height={16} />
               <ValidatedTextInput
                 secureTextEntry
                 value={password}
-                label={intl.formatMessage(txLabels.password)}
+                label={strings.password}
                 onChangeText={setPassword}
               />
-            </View>
+            </>
           )}
+
           {isHW && <HWInstructions useUSB={useUSB} addMargin />}
         </ScrollView>
-        <View style={styles.actions}>
+
+        <Actions>
           <Button
             onPress={onConfirm}
-            title={intl.formatMessage(confirmationMessages.commonButtons.confirmButton)}
+            title={strings.confirmButton}
             disabled={isConfirmationDisabled || buttonDisabled}
           />
-        </View>
+        </Actions>
       </View>
 
       {isHW && Platform.OS === 'android' && CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT && (
@@ -218,31 +316,31 @@ export const ConfirmScreen = () => {
           <LedgerTransportSwitchModal
             visible={ledgerDialogStep === LEDGER_DIALOG_STEPS.CHOOSE_TRANSPORT}
             onRequestClose={closeLedgerDialog}
-            onSelectUSB={(event) => (onChooseTransport as any)(event, true)}
-            onSelectBLE={(event) => (onChooseTransport as any)(event, false)}
+            onSelectUSB={() => onChooseTransport(true)}
+            onSelectBLE={() => onChooseTransport(false)}
             showCloseIcon
           />
+
           <Modal visible={ledgerDialogStep === LEDGER_DIALOG_STEPS.LEDGER_CONNECT} onRequestClose={closeLedgerDialog}>
             <LedgerConnect onConnectBLE={onConnectBLE} onConnectUSB={onConnectUSB} useUSB={useUSB} />
           </Modal>
         </>
       )}
+
       <ErrorModal
         visible={showErrorModal}
-        title={intl.formatMessage(errorMessages.generalTxError.title)}
+        title={strings.generalTxError.title}
         errorMessage={errorMessage}
         errorLogs={errorLogs}
         onRequestClose={closeErrorModal}
       />
 
-      <PleaseWaitModal
-        title={intl.formatMessage(txLabels.submittingTx)}
-        spinnerText={intl.formatMessage(globalMessages.pleaseWait)}
-        visible={sendingTransaction}
-      />
+      <PleaseWaitModal title={strings.submittingTx} spinnerText={strings.pleaseWait} visible={sendingTransaction} />
     </SafeAreaView>
   )
 }
+
+const Actions = (props: ViewProps) => <View {...props} style={{padding: 16}} />
 
 const styles = StyleSheet.create({
   safeAreaView: {
@@ -257,120 +355,33 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
   },
-  heading: {
-    marginTop: 16,
-  },
-  actions: {
-    padding: 16,
-  },
-  input: {
-    marginTop: 16,
-  },
   amount: {
     color: COLORS.POSITIVE_AMOUNT,
   },
 })
 
-const handleOnConfirm = async (
-  navigation,
-  route,
-  isHW,
-  hwDeviceInfo,
-  isEasyConfirmationEnabled,
-  password,
-  submitTransaction,
-  submitSignedTx,
-  withPleaseWaitModal,
-  withDisabledButton,
-  intl,
-  useUSB,
-  setErrorData,
-) => {
-  const signRequest: CreateUnsignedTxResponse = route.params.transactionData
-
-  const submitTx = async (tx: string | ISignRequest, decryptedKey?: string) => {
-    await withPleaseWaitModal(async () => {
-      if (decryptedKey != null) {
-        await submitTransaction(tx, decryptedKey)
-      } else {
-        await submitSignedTx(tx)
-      }
-      navigation.dispatch(
-        CommonActions.reset({
-          key: null,
-          index: 0,
-          routes: [{name: SEND_ROUTES.MAIN}],
-        } as any),
-      )
-      navigation.navigate(WALLET_ROUTES.TX_HISTORY)
-    })
-  }
-
-  try {
-    if (isHW) {
-      await withDisabledButton(async () => {
-        const signedTx = await walletManager.signTxWithLedger(signRequest, useUSB)
-        await submitTx(Buffer.from(signedTx.encodedTx).toString('base64'))
-      })
-      return
-    }
-
-    if (isEasyConfirmationEnabled) {
-      try {
-        await walletManager.ensureKeysValidity()
-        navigation.navigate(SEND_ROUTES.BIOMETRICS_SIGNING, {
-          keyId: walletManager._id,
-          onSuccess: async (decryptedKey) => {
-            navigation.navigate(SEND_ROUTES.CONFIRM)
-
-            await submitTx(signRequest, decryptedKey)
-          },
-          onFail: () => navigation.goBack(),
-        })
-      } catch (e) {
-        if (e instanceof SystemAuthDisabled) {
-          await walletManager.closeWallet()
-          await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
-          navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
-
-          return
-        } else {
-          throw e
-        }
-      }
-      return
-    }
-
-    try {
-      const decryptedData = await KeyStore.getData(walletManager._id, 'MASTER_PASSWORD', '', password, intl)
-
-      await submitTx(signRequest, decryptedData)
-    } catch (e) {
-      if (e instanceof WrongPassword) {
-        await showErrorDialog(errorMessages.incorrectPassword, intl)
-      } else {
-        throw e
-      }
-    }
-  } catch (e) {
-    if (e instanceof LocalizableError) {
-      const localizableError: any = e
-      setErrorData(
-        true,
-        intl.formatMessage(
-          {id: localizableError.id, defaultMessage: localizableError.defaultMessage},
-          localizableError.values,
-        ),
-        localizableError.values.response || null, // API errors should include a response
-      )
-    } else {
-      setErrorData(true, intl.formatMessage(errorMessages.generalTxError.message), (e as any).message || null)
-    }
-  }
-}
-
 const LEDGER_DIALOG_STEPS = {
   CLOSED: 'CLOSED',
   CHOOSE_TRANSPORT: 'CHOOSE_TRANSPORT',
   LEDGER_CONNECT: 'LEDGER_CONNECT',
+}
+
+const useStrings = () => {
+  const intl = useIntl()
+
+  return {
+    availableFunds: intl.formatMessage(globalMessages.availableFunds),
+    fees: intl.formatMessage(txLabels.fees),
+    balanceAfterTx: intl.formatMessage(txLabels.balanceAfterTx),
+    receiver: intl.formatMessage(txLabels.receiver),
+    total: intl.formatMessage(globalMessages.total),
+    password: intl.formatMessage(txLabels.password),
+    confirmButton: intl.formatMessage(confirmationMessages.commonButtons.confirmButton),
+    submittingTx: intl.formatMessage(txLabels.submittingTx),
+    pleaseWait: intl.formatMessage(globalMessages.pleaseWait),
+    generalTxError: {
+      title: intl.formatMessage(errorMessages.generalTxError.title),
+      message: intl.formatMessage(errorMessages.generalTxError.message),
+    },
+  }
 }

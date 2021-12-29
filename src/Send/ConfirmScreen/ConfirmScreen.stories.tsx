@@ -3,6 +3,7 @@ import {storiesOf} from '@storybook/react-native'
 import BigNumber from 'bignumber.js'
 import React from 'react'
 
+import type {Params} from './ConfirmScreen'
 import {ConfirmScreen} from './ConfirmScreen'
 
 storiesOf('ConfirmScreen', module).add('Default', () => {
@@ -18,7 +19,7 @@ storiesOf('ConfirmScreen', module).add('Default', () => {
       tokens: [],
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       transactionData: null as any,
-    },
+    } as Params,
   }
 
   return (
