@@ -5,13 +5,13 @@ import {defineMessages, useIntl} from 'react-intl'
 import {useSelector} from 'react-redux'
 
 import BiometricAuthScreen from '../../legacy/components/Send/BiometricAuthScreen'
-import {ScannerButton} from '../../legacy/components/Send/ScannerButton'
 import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../legacy/navigationOptions'
 import {SEND_ROUTES} from '../../legacy/RoutesList'
 import {tokenBalanceSelector, tokenInfoSelector} from '../../legacy/selectors'
 import {AddressReaderQR} from './AddressReaderQR'
 import {AssetSelectorScreen} from './AssetSelectorScreen'
 import {ConfirmScreen} from './ConfirmScreen'
+import {ScannerButton} from './ScannerButton'
 import {SendScreen} from './SendScreen'
 
 const Stack = createStackNavigator<{

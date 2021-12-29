@@ -1,13 +1,12 @@
-// @flow
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {useNavigation, useRoute} from '@react-navigation/native'
 import React from 'react'
 import {StyleSheet} from 'react-native'
 
-import iconQR from '../../assets/img/qr_code.png'
-import {SEND_ROUTES} from '../../RoutesList'
-import {Button} from '../UiKit'
-import {pastedFormatter} from './amountUtils'
+import iconQR from '../../legacy/assets/img/qr_code.png'
+import {pastedFormatter} from '../../legacy/components/Send/amountUtils'
+import {Button} from '../../legacy/components/UiKit'
+import {SEND_ROUTES} from '../../legacy/RoutesList'
 
 export const ScannerButton = () => {
   const navigation = useNavigation()
@@ -49,9 +48,9 @@ export const ScannerButton = () => {
   )
 }
 
-const getParams = (params) => {
+const getParams = (params: string) => {
   const query = params.substr(1)
-  const result = {}
+  const result: {amount?: string; address?: string} = {}
   query.split('?').forEach((part) => {
     const item = part.split('=')
     result[item[0]] = decodeURIComponent(item[1])
@@ -60,12 +59,12 @@ const getParams = (params) => {
 }
 
 const setAddress = (address, route) => {
-  const handlerAddress: ((string) => void) | void = (route.params?.onScanAddress: any)
+  const handlerAddress: ((string) => void) | void = route.params?.onScanAddress as any
   handlerAddress && handlerAddress(address)
 }
 
 const setAmount = (amount, route) => {
-  const handlerAmount: ((string) => void) | void = (route.params?.onScanAmount: any)
+  const handlerAmount: ((string) => void) | void = route.params?.onScanAmount as any
 
   handlerAmount && handlerAmount(pastedFormatter(amount))
 }
