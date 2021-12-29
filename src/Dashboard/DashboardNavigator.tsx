@@ -3,7 +3,7 @@ import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {useSelector} from 'react-redux'
 
-import iconGear from '../../assets/img/gear.png'
+import iconGear from '../../legacy/assets/img/gear.png'
 import BiometricAuthScreen from '../../legacy/components/Send/BiometricAuthScreen'
 import {Button} from '../../legacy/components/UiKit'
 import {isJormungandr} from '../../legacy/config/networks'
