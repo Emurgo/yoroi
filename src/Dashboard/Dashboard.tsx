@@ -136,10 +136,10 @@ export const Dashboard = () => {
           hwDeviceInfo={hwDeviceInfo}
           defaultAsset={defaultAsset}
           serverStatus={serverStatus}
-          setLedgerDeviceId={() => dispatch(setLedgerDeviceId())}
-          setLedgerDeviceObj={() => dispatch(setLedgerDeviceObj())}
-          submitTransaction={() => dispatch(submitTransaction())}
-          submitSignedTx={() => dispatch(submitSignedTx())}
+          setLedgerDeviceId={(...args) => dispatch(setLedgerDeviceId(...args))}
+          setLedgerDeviceObj={(...args) => dispatch(setLedgerDeviceObj(...args))}
+          submitTransaction={(...args) => dispatch(submitTransaction(...args))}
+          submitSignedTx={(...args) => dispatch(submitSignedTx(...args))}
           onDone={() => setShowWithdrawalDialog(false)}
         />
       )}
