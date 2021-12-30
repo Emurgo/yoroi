@@ -11,10 +11,10 @@ import {TouchableOpacity} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {fetchUTXOs} from '../../legacy/actions/utxo'
-import type {RawUtxo} from '../../legacy/api/types'
-import DangerousActionModal from '../../legacy/components/Common/DangerousActionModal'
-import UtxoAutoRefresher from '../../legacy/components/Send/UtxoAutoRefresher'
+import {fetchUTXOs} from '../../../legacy/actions/utxo'
+import type {RawUtxo} from '../../../legacy/api/types'
+import DangerousActionModal from '../../../legacy/components/Common/DangerousActionModal'
+import UtxoAutoRefresher from '../../../legacy/components/Send/UtxoAutoRefresher'
 import {
   Banner,
   Button,
@@ -24,17 +24,17 @@ import {
   StatusBar,
   Text,
   TextInput,
-} from '../../legacy/components/UiKit'
-import {CONFIG} from '../../legacy/config/config'
-import {getCardanoNetworkConfigById, isHaskellShelleyNetwork} from '../../legacy/config/networks'
-import {AssetOverflowError, InsufficientFunds} from '../../legacy/crypto/errors'
-import type {TokenEntry} from '../../legacy/crypto/MultiToken'
-import {MultiToken} from '../../legacy/crypto/MultiToken'
-import type {CreateUnsignedTxResponse} from '../../legacy/crypto/shelley/transactionUtils'
-import {cardanoValueFromMultiToken} from '../../legacy/crypto/shelley/utils'
-import walletManager from '../../legacy/crypto/walletManager'
-import globalMessages, {confirmationMessages} from '../../legacy/i18n/global-messages'
-import {SEND_ROUTES} from '../../legacy/RoutesList'
+} from '../../../legacy/components/UiKit'
+import {CONFIG} from '../../../legacy/config/config'
+import {getCardanoNetworkConfigById, isHaskellShelleyNetwork} from '../../../legacy/config/networks'
+import {AssetOverflowError, InsufficientFunds} from '../../../legacy/crypto/errors'
+import type {TokenEntry} from '../../../legacy/crypto/MultiToken'
+import {MultiToken} from '../../../legacy/crypto/MultiToken'
+import type {CreateUnsignedTxResponse} from '../../../legacy/crypto/shelley/transactionUtils'
+import {cardanoValueFromMultiToken} from '../../../legacy/crypto/shelley/utils'
+import walletManager from '../../../legacy/crypto/walletManager'
+import globalMessages, {confirmationMessages} from '../../../legacy/i18n/global-messages'
+import {SEND_ROUTES} from '../../../legacy/RoutesList'
 import {
   defaultNetworkAssetSelector,
   hasPendingOutgoingTransactionSelector,
@@ -46,11 +46,11 @@ import {
   tokenInfoSelector,
   utxosSelector,
   walletMetaSelector,
-} from '../../legacy/selectors'
-import type {ServerStatusCache, WalletMeta} from '../../legacy/state'
-import {COLORS} from '../../legacy/styles/config'
-import type {DefaultAsset} from '../../legacy/types/HistoryTransaction'
-import type {Navigation} from '../../legacy/types/navigation'
+} from '../../../legacy/selectors'
+import type {ServerStatusCache, WalletMeta} from '../../../legacy/state'
+import {COLORS} from '../../../legacy/styles/config'
+import type {DefaultAsset} from '../../../legacy/types/HistoryTransaction'
+import type {Navigation} from '../../../legacy/types/navigation'
 import {
   formatTokenAmount,
   formatTokenInteger,
@@ -59,16 +59,16 @@ import {
   getAssetDenominationOrId,
   normalizeTokenAmount,
   truncateWithEllipsis,
-} from '../../legacy/utils/format'
-import {InvalidAssetAmount, parseAmountDecimal} from '../../legacy/utils/parsing'
+} from '../../../legacy/utils/format'
+import {InvalidAssetAmount, parseAmountDecimal} from '../../../legacy/utils/parsing'
 import type {
   AddressValidationErrors,
   AmountValidationErrors,
   BalanceValidationErrors,
-} from '../../legacy/utils/validators'
-import {getUnstoppableDomainAddress, isReceiverAddressValid, validateAmount} from '../../legacy/utils/validators'
-import type {SendTokenList, Token} from '../types/cardano'
-import {AmountField} from './AmountField'
+} from '../../../legacy/utils/validators'
+import {getUnstoppableDomainAddress, isReceiverAddressValid, validateAmount} from '../../../legacy/utils/validators'
+import type {SendTokenList, Token} from '../../types/cardano'
+import {AmountField} from './../AmountField'
 
 type LegacyProps = {
   intl: IntlShape
@@ -302,115 +302,6 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
     }
   }
 
-  renderBalanceAfterTransaction = () => {
-    const {balanceAfter} = this.state
-    const {intl, tokenMetadata, tokenBalance} = this.props
-    const assetMetaData = tokenMetadata[tokenBalance.getDefaultId()]
-
-    const value = balanceAfter
-      ? formatTokenWithSymbol(balanceAfter, assetMetaData)
-      : intl.formatMessage(messages.balanceAfterNotAvailable)
-
-    return (
-      <Text style={styles.info}>
-        {intl.formatMessage(messages.balanceAfterLabel)}
-        {': '}
-        {value}
-      </Text>
-    )
-  }
-
-  renderFee = () => {
-    const {fee} = this.state
-    const {intl, defaultAsset} = this.props
-
-    const value = fee ? formatTokenWithSymbol(fee, defaultAsset) : intl.formatMessage(messages.feeNotAvailable)
-
-    return (
-      <Text style={styles.info}>
-        {intl.formatMessage(messages.feeLabel)}
-        {': '}
-        {value}
-      </Text>
-    )
-  }
-
-  renderAvailableAmountBanner = () => {
-    const {isFetchingBalance, tokenBalance, tokenMetadata, intl} = this.props
-    const assetMetaData = tokenMetadata[tokenBalance.getDefaultId()]
-
-    return (
-      <Banner
-        label={intl.formatMessage(globalMessages.availableFunds)}
-        text={
-          isFetchingBalance
-            ? intl.formatMessage(messages.availableFundsBannerIsFetching)
-            : tokenBalance
-            ? formatTokenWithText(tokenBalance.getDefault(), assetMetaData)
-            : intl.formatMessage(messages.availableFundsBannerNotAvailable)
-        }
-        boldText
-      />
-    )
-  }
-
-  renderErrorBanners = () => {
-    const {intl, isOnline, lastFetchingError, isFetchingBalance, hasPendingOutgoingTransaction, fetchUTXOs} = this.props
-
-    if (!isOnline) {
-      return <OfflineBanner />
-    } else if (lastFetchingError && !isFetchingBalance) {
-      return <Banner error onPress={fetchUTXOs} text={intl.formatMessage(messages.errorBannerNetworkError)} />
-    } else if (hasPendingOutgoingTransaction) {
-      return <Banner error text={intl.formatMessage(messages.errorBannerPendingOutgoingTransaction)} />
-    } else {
-      return null
-    }
-  }
-
-  renderSendAllWarning = () => {
-    const {intl, tokenMetadata, selectedTokenIdentifier} = this.props
-    const {showSendAllWarning} = this.state
-
-    const selectedTokenMeta = tokenMetadata[selectedTokenIdentifier]
-    const isDefault = selectedTokenMeta.isDefault
-    const assetNameOrId = truncateWithEllipsis(getAssetDenominationOrId(selectedTokenMeta), 20)
-    const alertBoxContent = {
-      content: isDefault
-        ? [
-            intl.formatMessage(messages.sendAllWarningAlert1, {
-              assetNameOrId,
-            }),
-            intl.formatMessage(messages.sendAllWarningAlert2),
-            intl.formatMessage(messages.sendAllWarningAlert3),
-          ]
-        : [
-            intl.formatMessage(messages.sendAllWarningAlert1, {
-              assetNameOrId,
-            }),
-          ],
-    }
-    return (
-      <DangerousActionModal
-        visible={showSendAllWarning}
-        onRequestClose={this.closeSendAllWarning}
-        showCloseIcon
-        title={intl.formatMessage(messages.sendAllWarningTitle)}
-        primaryButton={{
-          label: intl.formatMessage(confirmationMessages.commonButtons.backButton),
-          onPress: this.closeSendAllWarning,
-        }}
-        secondaryButton={{
-          label: intl.formatMessage(confirmationMessages.commonButtons.continueButton),
-          onPress: this.handleConfirm,
-        }}
-        alertBox={alertBoxContent}
-      >
-        <Text>{intl.formatMessage(messages.sendAllWarningText)}</Text>
-      </DangerousActionModal>
-    )
-  }
-
   render() {
     const {
       intl,
@@ -450,12 +341,12 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
         <StatusBar type="dark" />
 
         <UtxoAutoRefresher />
-        {this.renderErrorBanners()}
-        {this.renderAvailableAmountBanner()}
+        <ErrorBanners />
+        <AvailableAmountBanner />
 
         <ScrollView style={styles.content} keyboardDismissMode="on-drag">
-          {this.renderBalanceAfterTransaction()}
-          {this.renderFee()}
+          <BalanceAfterTransaction balanceAfter={this.state.balanceAfter} />
+          <Fee fee={this.state.fee} />
 
           <Spacer height={16} />
 
@@ -484,7 +375,7 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
 
           <TouchableOpacity onPress={() => navigation.navigate('select-asset')}>
             <TextInput
-              right={<Image source={require('../../legacy/assets/img/arrow_down_fill.png')} />}
+              right={<Image source={require('../../../legacy/assets/img/arrow_down_fill.png')} />}
               editable={false}
               label={intl.formatMessage(messages.asset)}
               value={`${assetDenomination}: ${formatTokenAmount(
@@ -497,9 +388,7 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
 
           <Checkbox
             checked={sendAll}
-            onChange={(sendAll) => {
-              this.props.onSendAll(sendAll)
-            }}
+            onChange={this.props.onSendAll}
             text={
               selectedAssetMeta.isDefault
                 ? intl.formatMessage(messages.checkboxSendAllAssets)
@@ -518,7 +407,12 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
           />
         </View>
 
-        {this.renderSendAllWarning()}
+        <SendAllWarning
+          selectedTokenIdentifier={this.props.selectedTokenIdentifier}
+          onConfirm={this.handleConfirm}
+          onCancel={this.closeSendAllWarning}
+          showSendAllWarning={this.state.showSendAllWarning}
+        />
       </SafeAreaView>
     )
   }
@@ -527,7 +421,7 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
 type Props = {
   selectedTokenIdentifier: string
   sendAll: boolean
-  onSendAll: (sendAll: boolean) => unknown
+  onSendAll: (sendAll: boolean) => void
 }
 
 export const SendScreen = ({selectedTokenIdentifier, sendAll, onSendAll}: Props) => {
@@ -566,6 +460,131 @@ export const SendScreen = ({selectedTokenIdentifier, sendAll, onSendAll}: Props)
       sendAll={sendAll}
       onSendAll={onSendAll}
     />
+  )
+}
+
+const ErrorBanners = () => {
+  const intl = useIntl()
+  const isFetchingBalance = useSelector(isFetchingUtxosSelector)
+  const lastFetchingError = useSelector(lastUtxosFetchErrorSelector)
+  const hasPendingOutgoingTransaction = useSelector(hasPendingOutgoingTransactionSelector)
+  const isOnline = useSelector(isOnlineSelector)
+
+  if (!isOnline) {
+    return <OfflineBanner />
+  } else if (lastFetchingError && !isFetchingBalance) {
+    return <Banner error onPress={fetchUTXOs} text={intl.formatMessage(messages.errorBannerNetworkError)} />
+  } else if (hasPendingOutgoingTransaction) {
+    return <Banner error text={intl.formatMessage(messages.errorBannerPendingOutgoingTransaction)} />
+  } else {
+    return null
+  }
+}
+
+const AvailableAmountBanner = () => {
+  const intl = useIntl()
+  const tokenBalance = useSelector(tokenBalanceSelector)
+  const isFetchingBalance = useSelector(isFetchingUtxosSelector)
+  const tokenMetadata = useSelector(tokenInfoSelector)
+
+  const assetMetaData = tokenMetadata[tokenBalance.getDefaultId()]
+
+  return (
+    <Banner
+      label={intl.formatMessage(globalMessages.availableFunds)}
+      text={
+        isFetchingBalance
+          ? intl.formatMessage(messages.availableFundsBannerIsFetching)
+          : tokenBalance
+          ? formatTokenWithText(tokenBalance.getDefault(), assetMetaData)
+          : intl.formatMessage(messages.availableFundsBannerNotAvailable)
+      }
+      boldText
+    />
+  )
+}
+
+const BalanceAfterTransaction = ({balanceAfter}: {balanceAfter: BigNumber | null}) => {
+  const intl = useIntl()
+  const tokenBalance = useSelector(tokenBalanceSelector)
+  const tokenMetadata = useSelector(tokenInfoSelector)
+
+  const assetMetaData = tokenMetadata[tokenBalance.getDefaultId()]
+
+  const value = balanceAfter
+    ? formatTokenWithSymbol(balanceAfter, assetMetaData)
+    : intl.formatMessage(messages.balanceAfterNotAvailable)
+
+  return (
+    <Text style={styles.info}>
+      {intl.formatMessage(messages.balanceAfterLabel)}
+      {': '}
+      {value}
+    </Text>
+  )
+}
+
+const Fee = ({fee}: {fee: BigNumber | null}) => {
+  const intl = useIntl()
+  const defaultAsset = useSelector(defaultNetworkAssetSelector)
+
+  const value = fee ? formatTokenWithSymbol(fee, defaultAsset) : intl.formatMessage(messages.feeNotAvailable)
+
+  return (
+    <Text style={styles.info}>
+      {intl.formatMessage(messages.feeLabel)}
+      {': '}
+      {value}
+    </Text>
+  )
+}
+
+type SendAllWarningProps = {
+  selectedTokenIdentifier: string
+  onConfirm: () => void
+  onCancel: () => void
+  showSendAllWarning: boolean
+}
+const SendAllWarning = ({showSendAllWarning, selectedTokenIdentifier, onCancel, onConfirm}: SendAllWarningProps) => {
+  const intl = useIntl()
+  const tokenMetadata = useSelector(tokenInfoSelector)
+
+  const selectedTokenMeta = tokenMetadata[selectedTokenIdentifier]
+  const isDefault = selectedTokenMeta.isDefault
+  const assetNameOrId = truncateWithEllipsis(getAssetDenominationOrId(selectedTokenMeta), 20)
+  const alertBoxContent = {
+    content: isDefault
+      ? [
+          intl.formatMessage(messages.sendAllWarningAlert1, {
+            assetNameOrId,
+          }),
+          intl.formatMessage(messages.sendAllWarningAlert2),
+          intl.formatMessage(messages.sendAllWarningAlert3),
+        ]
+      : [
+          intl.formatMessage(messages.sendAllWarningAlert1, {
+            assetNameOrId,
+          }),
+        ],
+  }
+  return (
+    <DangerousActionModal
+      visible={showSendAllWarning}
+      onRequestClose={onCancel}
+      showCloseIcon
+      title={intl.formatMessage(messages.sendAllWarningTitle)}
+      primaryButton={{
+        label: intl.formatMessage(confirmationMessages.commonButtons.backButton),
+        onPress: onCancel,
+      }}
+      secondaryButton={{
+        label: intl.formatMessage(confirmationMessages.commonButtons.continueButton),
+        onPress: onConfirm,
+      }}
+      alertBox={alertBoxContent}
+    >
+      <Text>{intl.formatMessage(messages.sendAllWarningText)}</Text>
+    </DangerousActionModal>
   )
 }
 

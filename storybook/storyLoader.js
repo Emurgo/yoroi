@@ -43,7 +43,7 @@ function loadStories() {
 	require('../src/Send/AddressReaderQR/AddressReaderQR.stories');
 	require('../src/Send/AssetSelectorScreen/AssetSelectorScreen.stories');
 	require('../src/Send/ConfirmScreen/ConfirmScreen.stories');
-	require('../src/Send/SendScreen.stories');
+	require('../src/Send/SendScreen/SendScreen.stories');
 	require('../src/Settings/ChangePassword/ChangePasswordScreen.stories');
 	require('../src/Settings/ChangeWalletName/ChangeWalletName.stories');
 	require('../src/Settings/RemoveWalletScreen.stories');
@@ -113,7 +113,7 @@ const stories = [
 	'../src/Send/AddressReaderQR/AddressReaderQR.stories',
 	'../src/Send/AssetSelectorScreen/AssetSelectorScreen.stories',
 	'../src/Send/ConfirmScreen/ConfirmScreen.stories',
-	'../src/Send/SendScreen.stories',
+	'../src/Send/SendScreen/SendScreen.stories',
 	'../src/Settings/ChangePassword/ChangePasswordScreen.stories',
 	'../src/Settings/ChangeWalletName/ChangeWalletName.stories',
 	'../src/Settings/RemoveWalletScreen.stories',
