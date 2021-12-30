@@ -3,8 +3,7 @@ import {BigNum, min_ada_required} from '@emurgo/react-native-haskell-shelley'
 import {useNavigation} from '@react-navigation/native'
 import {BigNumber} from 'bignumber.js'
 import _ from 'lodash'
-import React, {Component} from 'react'
-import type {IntlShape} from 'react-intl'
+import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, Image, ScrollView, StyleSheet, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
@@ -47,10 +46,8 @@ import {
   utxosSelector,
   walletMetaSelector,
 } from '../../../legacy/selectors'
-import type {ServerStatusCache, WalletMeta} from '../../../legacy/state'
 import {COLORS} from '../../../legacy/styles/config'
 import type {DefaultAsset} from '../../../legacy/types/HistoryTransaction'
-import type {Navigation} from '../../../legacy/types/navigation'
 import {
   formatTokenAmount,
   formatTokenInteger,
@@ -70,159 +67,111 @@ import {getUnstoppableDomainAddress, isReceiverAddressValid, validateAmount} fro
 import type {SendTokenList, Token} from '../../types/cardano'
 import {AmountField} from './../AmountField'
 
-type LegacyProps = {
-  intl: IntlShape
-  navigation: Navigation
+type Props = {
   selectedTokenIdentifier: string
   sendAll: boolean
-  tokenBalance: MultiToken
-  isFetchingBalance: boolean
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  lastFetchingError: any
-  tokenMetadata: Record<string, Token>
-  defaultAsset: DefaultAsset
-  utxos: Array<RawUtxo> | null
-  isOnline: boolean
-  hasPendingOutgoingTransaction: boolean
-  serverStatus: ServerStatusCache
-  fetchUTXOs: () => void
-  onSendAll: (boolean) => void
-  walletMetadata: Omit<WalletMeta, 'id'>
+  onSendAll: (sendAll: boolean) => void
 }
 
-type State = {
-  address: string
-  addressInput: string
-  addressErrors: AddressValidationErrors
-  amount: string
-  amountErrors: AmountValidationErrors
-  balanceErrors: BalanceValidationErrors
-  fee: BigNumber | null
-  balanceAfter: BigNumber | null
-  recomputing: boolean
-  showSendAllWarning: boolean
-}
+export const SendScreen = ({selectedTokenIdentifier, sendAll, onSendAll}: Props) => {
+  const intl = useIntl()
+  const navigation = useNavigation()
 
-// eslint-disable-next-line react-prefer-function-component/react-prefer-function-component
-class SendScreenLegacy extends Component<LegacyProps, State> {
-  state = {
-    address: '',
-    addressInput: '',
-    addressErrors: {addressIsRequired: true},
-    amount: '',
-    amountErrors: {amountIsRequired: true},
-    fee: null,
-    balanceAfter: null,
-    balanceErrors: Object.freeze({}),
-    recomputing: false,
-    showSendAllWarning: false,
-  }
+  const tokenBalance = useSelector(tokenBalanceSelector)
+  const isFetchingBalance = useSelector(isFetchingUtxosSelector)
+  const lastFetchingError = useSelector(lastUtxosFetchErrorSelector)
+  const tokenMetadata = useSelector(tokenInfoSelector)
+  const defaultAsset = useSelector(defaultNetworkAssetSelector)
+  const utxos = useSelector(utxosSelector)
+  const hasPendingOutgoingTransaction = useSelector(hasPendingOutgoingTransactionSelector)
+  const isOnline = useSelector(isOnlineSelector)
+  const serverStatus = useSelector(serverStatusSelector)
+  const walletMetadata = useSelector(walletMetaSelector)
 
-  componentDidMount() {
+  const [addressInput, setAddressInput] = React.useState('')
+  const [address, setAddress] = React.useState('')
+  const [amount, setAmount] = React.useState('')
+  const [fee, setFee] = React.useState<BigNumber | null>(null)
+  const [recomputing, setRecomputing] = React.useState(false)
+  const [showSendAllWarning, setShowSendAllWarning] = React.useState(false)
+  const [balanceAfter, setBalanceAfter] = React.useState<BigNumber | null>(null)
+
+  const [balanceErrors, setBalanceErrors] = React.useState<BalanceValidationErrors>({})
+  const [amountErrors, setAmountErrors] = React.useState<AmountValidationErrors>({})
+  const [addressErrors, setAddressErrors] = React.useState<AddressValidationErrors>({})
+
+  React.useEffect(() => {
     if (CONFIG.DEBUG.PREFILL_FORMS) {
       if (!__DEV__) throw new Error('using debug data in non-dev env')
-      this.handleAddressChange(CONFIG.DEBUG.SEND_ADDRESS)
-      this.handleAmountChange(CONFIG.DEBUG.SEND_AMOUNT)
+      setAddressInput(CONFIG.DEBUG.SEND_ADDRESS)
+      setAmount(CONFIG.DEBUG.SEND_AMOUNT)
     }
-    this.props.navigation.setParams({onScanAddress: this.handleAddressChange})
-    this.props.navigation.setParams({onScanAmount: this.handleAmountChange})
-  }
+    navigation.setParams({onScanAddress: setAddressInput})
+    navigation.setParams({onScanAmount: setAmount})
+  }, [navigation])
 
-  async componentDidUpdate(prevProps: LegacyProps, prevState: State) {
-    const {selectedTokenIdentifier, utxos, sendAll} = this.props
-    const {addressInput, amount} = this.state
+  React.useEffect(() => {
+    const revalidate = async () => {
+      setBalanceAfter(null)
+      setRecomputing(true)
+      setFee(null)
 
-    const {addressInput: prevAddressInput, amount: prevAmount} = prevState
+      if (tokenMetadata[selectedTokenIdentifier] == null) {
+        throw new Error('revalidate: no asset metadata found for the asset selected')
+      }
+      const {
+        address,
+        amount: newAmount,
+        fee,
+        balanceAfter,
+        ...newState
+      } = await recomputeAll({
+        utxos,
+        addressInput,
+        amount,
+        sendAll,
+        defaultAsset,
+        selectedTokenMeta: tokenMetadata[selectedTokenIdentifier],
+        tokenBalance,
+        walletMetadata,
+      })
 
-    if (
-      prevProps.utxos !== utxos ||
-      prevAddressInput !== addressInput ||
-      prevAmount !== amount ||
-      prevProps.sendAll !== sendAll ||
-      prevProps.selectedTokenIdentifier !== selectedTokenIdentifier
-    ) {
-      await this.revalidate({utxos, addressInput, amount, sendAll, selectedTokenIdentifier})
+      if (addressInput !== addressInput || amount !== amount || sendAll !== sendAll || utxos !== utxos) {
+        return
+      }
+
+      setAddress(address)
+      setAmount(newAmount)
+      setFee(fee)
+      setRecomputing(false)
+      setBalanceAfter(balanceAfter)
+      setBalanceErrors(newState.balanceErrors)
+      setAddressErrors(newState.addressErrors)
+      setAmountErrors(newState.amountErrors)
     }
-  }
 
-  async revalidate({
-    utxos,
+    revalidate()
+  }, [
     addressInput,
     amount,
-    sendAll,
+    defaultAsset,
     selectedTokenIdentifier,
-  }: {
-    utxos: Array<RawUtxo> | null
-    addressInput: string
-    amount: string
-    sendAll: boolean
-    selectedTokenIdentifier: string
-  }) {
-    this.setState({
-      fee: null,
-      balanceAfter: null,
-      recomputing: true,
-    })
-    const {defaultAsset, tokenMetadata, tokenBalance, walletMetadata} = this.props
-    if (tokenMetadata[selectedTokenIdentifier] == null) {
-      throw new Error('revalidate: no asset metadata found for the asset selected')
-    }
-    const newState = await recomputeAll({
-      utxos,
-      addressInput,
-      amount,
-      sendAll,
-      defaultAsset,
-      selectedTokenMeta: tokenMetadata[selectedTokenIdentifier],
-      tokenBalance,
-      walletMetadata,
-    })
+    sendAll,
+    tokenBalance,
+    tokenMetadata,
+    utxos,
+    walletMetadata,
+  ])
 
-    if (
-      this.state.addressInput !== addressInput ||
-      this.state.amount !== amount ||
-      this.props.sendAll !== sendAll ||
-      this.props.utxos !== utxos
-    ) {
+  const onConfirm = async () => {
+    if (sendAll) {
+      setShowSendAllWarning(true)
       return
     }
-
-    this.setState({
-      ...newState,
-      recomputing: false,
-    })
+    await handleConfirm()
   }
 
-  handleAddressChange: (string) => void = (addressInput) => this.setState({addressInput})
-
-  handleAmountChange: (string) => void = (amount) => this.setState({amount})
-
-  openSendAllWarning: () => void = () => this.setState({showSendAllWarning: true})
-
-  closeSendAllWarning: () => void = () => this.setState({showSendAllWarning: false})
-
-  onConfirm: () => Promise<void> = async () => {
-    if (this.props.sendAll) {
-      this.openSendAllWarning()
-      return
-    }
-    await this.handleConfirm()
-  }
-
-  handleConfirm: () => Promise<void> = async () => {
-    const {
-      navigation,
-      utxos,
-      tokenBalance,
-      defaultAsset,
-      tokenMetadata,
-      serverStatus,
-      sendAll,
-      selectedTokenIdentifier,
-      walletMetadata,
-    } = this.props
-    const {address, addressInput, amount} = this.state
-
+  const handleConfirm = async () => {
     const selectedTokenMeta = tokenMetadata[selectedTokenIdentifier]
     if (selectedTokenMeta == null) {
       throw new Error('SendScreen::handleConfirm: no asset metadata found for the asset selected')
@@ -242,17 +191,17 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
     // Note(ppershing): use this.props as they might have
     // changed during await
     const isValid =
-      this.props.isOnline &&
-      !this.props.hasPendingOutgoingTransaction &&
-      !this.props.isFetchingBalance &&
+      isOnline &&
+      hasPendingOutgoingTransaction &&
+      isFetchingBalance &&
       utxos &&
       _.isEmpty(addressErrors) &&
       _.isEmpty(amountErrors) &&
       _.isEmpty(balanceErrors) &&
-      this.state.amount === amount &&
-      this.state.address === address &&
-      this.props.selectedTokenIdentifier === selectedTokenIdentifier &&
-      this.props.utxos === utxos
+      amount === amount &&
+      address === address &&
+      selectedTokenIdentifier === selectedTokenIdentifier &&
+      utxos === utxos
 
     if (isValid === true) {
       if (!utxos) throw new Error('Invalid utxos')
@@ -287,7 +236,7 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
         ]
       })()
 
-      this.closeSendAllWarning()
+      setShowSendAllWarning(false)
 
       navigation.navigate(SEND_ROUTES.CONFIRM, {
         availableAmount: tokenBalance.getDefault(),
@@ -302,164 +251,95 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
     }
   }
 
-  render() {
-    const {
-      intl,
-      isFetchingBalance,
-      lastFetchingError,
-      utxos,
-      isOnline,
-      hasPendingOutgoingTransaction,
-      defaultAsset,
-      tokenMetadata,
-      selectedTokenIdentifier,
-      tokenBalance,
-      navigation,
-      sendAll,
-    } = this.props
+  const isValid =
+    isOnline &&
+    !hasPendingOutgoingTransaction &&
+    !isFetchingBalance &&
+    !lastFetchingError &&
+    utxos &&
+    _.isEmpty(addressErrors) &&
+    _.isEmpty(amountErrors) &&
+    _.isEmpty(balanceErrors)
 
-    const {address, addressInput, amount, amountErrors, addressErrors, balanceErrors} = this.state
+  const amountErrorText = getAmountErrorText(intl, amountErrors, balanceErrors, defaultAsset)
 
-    const isValid =
-      isOnline &&
-      !hasPendingOutgoingTransaction &&
-      !isFetchingBalance &&
-      !lastFetchingError &&
-      utxos &&
-      _.isEmpty(addressErrors) &&
-      _.isEmpty(amountErrors) &&
-      _.isEmpty(balanceErrors)
+  const selectedAssetMeta = tokenMetadata[selectedTokenIdentifier]
 
-    const amountErrorText = getAmountErrorText(intl, amountErrors, balanceErrors, defaultAsset)
-
-    const selectedAssetMeta = tokenMetadata[selectedTokenIdentifier]
-
-    const assetDenomination = truncateWithEllipsis(getAssetDenominationOrId(selectedAssetMeta), 20)
-
-    return (
-      <SafeAreaView edges={['left', 'right']} style={styles.container}>
-        <StatusBar type="dark" />
-
-        <UtxoAutoRefresher />
-        <ErrorBanners />
-        <AvailableAmountBanner />
-
-        <ScrollView style={styles.content} keyboardDismissMode="on-drag">
-          <BalanceAfterTransaction balanceAfter={this.state.balanceAfter} />
-          <Fee fee={this.state.fee} />
-
-          <Spacer height={16} />
-
-          <TextInput
-            value={this.state.addressInput || ''}
-            multiline
-            errorOnMount
-            onChangeText={this.handleAddressChange}
-            label={intl.formatMessage(messages.addressInputLabel)}
-            errorText={getAddressErrorText(intl, addressErrors)}
-          />
-          {this.state.recomputing === false && addressInput !== address ? (
-            <Text ellipsizeMode="middle" numberOfLines={1}>
-              {`Resolves to: ${address}`}
-            </Text>
-          ) : (
-            <></>
-          )}
-
-          <AmountField
-            amount={amount}
-            setAmount={this.handleAmountChange}
-            error={amountErrorText}
-            editable={!sendAll}
-          />
-
-          <TouchableOpacity onPress={() => navigation.navigate('select-asset')}>
-            <TextInput
-              right={<Image source={require('../../../legacy/assets/img/arrow_down_fill.png')} />}
-              editable={false}
-              label={intl.formatMessage(messages.asset)}
-              value={`${assetDenomination}: ${formatTokenAmount(
-                tokenBalance.get(selectedTokenIdentifier) || new BigNumber('0'),
-                selectedAssetMeta,
-                15,
-              )}`}
-            />
-          </TouchableOpacity>
-
-          <Checkbox
-            checked={sendAll}
-            onChange={this.props.onSendAll}
-            text={
-              selectedAssetMeta.isDefault
-                ? intl.formatMessage(messages.checkboxSendAllAssets)
-                : intl.formatMessage(messages.checkboxSendAll, {assetId: assetDenomination})
-            }
-          />
-
-          {this.state.recomputing && <Indicator />}
-        </ScrollView>
-
-        <View style={styles.actions}>
-          <Button
-            onPress={this.onConfirm}
-            title={intl.formatMessage(messages.continueButton)}
-            disabled={!isValid || this.state.fee == null}
-          />
-        </View>
-
-        <SendAllWarning
-          selectedTokenIdentifier={this.props.selectedTokenIdentifier}
-          onConfirm={this.handleConfirm}
-          onCancel={this.closeSendAllWarning}
-          showSendAllWarning={this.state.showSendAllWarning}
-        />
-      </SafeAreaView>
-    )
-  }
-}
-
-type Props = {
-  selectedTokenIdentifier: string
-  sendAll: boolean
-  onSendAll: (sendAll: boolean) => void
-}
-
-export const SendScreen = ({selectedTokenIdentifier, sendAll, onSendAll}: Props) => {
-  const intl = useIntl()
-  const navigation = useNavigation()
-
-  const tokenBalance = useSelector(tokenBalanceSelector)
-  const isFetchingBalance = useSelector(isFetchingUtxosSelector)
-  const lastFetchingError = useSelector(lastUtxosFetchErrorSelector)
-  const tokenMetadata = useSelector(tokenInfoSelector)
-  const defaultAsset = useSelector(defaultNetworkAssetSelector)
-  const utxos = useSelector(utxosSelector)
-  const hasPendingOutgoingTransaction = useSelector(hasPendingOutgoingTransactionSelector)
-  const isOnline = useSelector(isOnlineSelector)
-  const serverStatus = useSelector(serverStatusSelector)
-  const walletMetadata = useSelector(walletMetaSelector)
-
-  const dispatch = useDispatch()
+  const assetDenomination = truncateWithEllipsis(getAssetDenominationOrId(selectedAssetMeta), 20)
 
   return (
-    <SendScreenLegacy
-      intl={intl}
-      navigation={navigation}
-      fetchUTXOs={() => dispatch(fetchUTXOs())}
-      tokenBalance={tokenBalance}
-      isFetchingBalance={isFetchingBalance}
-      lastFetchingError={lastFetchingError}
-      defaultAsset={defaultAsset}
-      tokenMetadata={tokenMetadata}
-      utxos={utxos}
-      hasPendingOutgoingTransaction={hasPendingOutgoingTransaction}
-      isOnline={isOnline}
-      serverStatus={serverStatus}
-      walletMetadata={walletMetadata}
-      selectedTokenIdentifier={selectedTokenIdentifier}
-      sendAll={sendAll}
-      onSendAll={onSendAll}
-    />
+    <SafeAreaView edges={['left', 'right']} style={styles.container}>
+      <StatusBar type="dark" />
+
+      <UtxoAutoRefresher />
+      <ErrorBanners />
+      <AvailableAmountBanner />
+
+      <ScrollView style={styles.content} keyboardDismissMode="on-drag">
+        <BalanceAfterTransaction balanceAfter={balanceAfter} />
+        <Fee fee={fee} />
+
+        <Spacer height={16} />
+
+        <TextInput
+          value={addressInput || ''}
+          multiline
+          errorOnMount
+          onChangeText={setAddressInput}
+          label={intl.formatMessage(messages.addressInputLabel)}
+          errorText={getAddressErrorText(intl, addressErrors)}
+        />
+        {recomputing === false && addressInput !== address ? (
+          <Text ellipsizeMode="middle" numberOfLines={1}>
+            {`Resolves to: ${address}`}
+          </Text>
+        ) : (
+          <></>
+        )}
+
+        <AmountField amount={amount} setAmount={setAmount} error={amountErrorText} editable={!sendAll} />
+
+        <TouchableOpacity onPress={() => navigation.navigate('select-asset')}>
+          <TextInput
+            right={<Image source={require('../../../legacy/assets/img/arrow_down_fill.png')} />}
+            editable={false}
+            label={intl.formatMessage(messages.asset)}
+            value={`${assetDenomination}: ${formatTokenAmount(
+              tokenBalance.get(selectedTokenIdentifier) || new BigNumber('0'),
+              selectedAssetMeta,
+              15,
+            )}`}
+          />
+        </TouchableOpacity>
+
+        <Checkbox
+          checked={sendAll}
+          onChange={onSendAll}
+          text={
+            selectedAssetMeta.isDefault
+              ? intl.formatMessage(messages.checkboxSendAllAssets)
+              : intl.formatMessage(messages.checkboxSendAll, {assetId: assetDenomination})
+          }
+        />
+
+        {recomputing && <Indicator />}
+      </ScrollView>
+
+      <View style={styles.actions}>
+        <Button
+          onPress={onConfirm}
+          title={intl.formatMessage(messages.continueButton)}
+          disabled={!isValid || fee == null}
+        />
+      </View>
+
+      <SendAllWarning
+        selectedTokenIdentifier={selectedTokenIdentifier}
+        onConfirm={handleConfirm}
+        onCancel={() => setShowSendAllWarning(false)}
+        showSendAllWarning={showSendAllWarning}
+      />
+    </SafeAreaView>
   )
 }
 
@@ -469,11 +349,18 @@ const ErrorBanners = () => {
   const lastFetchingError = useSelector(lastUtxosFetchErrorSelector)
   const hasPendingOutgoingTransaction = useSelector(hasPendingOutgoingTransactionSelector)
   const isOnline = useSelector(isOnlineSelector)
+  const dispatch = useDispatch()
 
   if (!isOnline) {
     return <OfflineBanner />
   } else if (lastFetchingError && !isFetchingBalance) {
-    return <Banner error onPress={fetchUTXOs} text={intl.formatMessage(messages.errorBannerNetworkError)} />
+    return (
+      <Banner
+        error
+        onPress={() => dispatch(fetchUTXOs())}
+        text={intl.formatMessage(messages.errorBannerNetworkError)}
+      />
+    )
   } else if (hasPendingOutgoingTransaction) {
     return <Banner error text={intl.formatMessage(messages.errorBannerPendingOutgoingTransaction)} />
   } else {

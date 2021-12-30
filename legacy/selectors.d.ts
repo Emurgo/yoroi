@@ -49,6 +49,7 @@ interface MultiToken {
   getDefaultId: () => string,
   getDefault: () => BigNumber,
   getDefaultEntry: () => TokenEntry,
+  get(tokenIdentifier: string): BigNumber | void,
   values: Array<{amount: BigNumber, identifier: string, networkId: number}>
 }
 export var tokenBalanceSelector: (state: State) => MultiToken
