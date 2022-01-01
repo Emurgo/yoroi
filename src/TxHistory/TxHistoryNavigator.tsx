@@ -1,7 +1,7 @@
 import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
+import {defineMessages, useIntl} from 'react-intl'
 import {TouchableOpacity} from 'react-native'
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import {useSelector} from 'react-redux'
 
 import {Button} from '../../legacy/components/UiKit'
@@ -12,79 +12,91 @@ import {transactionsInfoSelector, walletMetaSelector} from '../../legacy/selecto
 import {COLORS} from '../../legacy/styles/config'
 import {formatDateToSeconds} from '../../legacy/utils/format'
 import iconGear from '../assets/img/icon/gear.png'
+import {Icon} from '../components'
+import {buildOptionsWithDefault, SettingsButton, TxHistoryStackParamList} from '../navigation'
+import {ReceiveProvider, useReceiveContextInfoModal} from '../Receive/Context'
+import {ReceiveScreen} from '../Receive/ReceiveScreen'
 import {TxDetails} from './TxDetails'
 import {TxHistory} from './TxHistory'
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-const Stack = createStackNavigator<{
-  'tx-history-list': any
-  'tx-details': any
-}>()
-/* eslint-enable @typescript-eslint/no-explicit-any */
+const Stack = createStackNavigator<TxHistoryStackParamList>()
 
 export const TxHistoryNavigator = () => {
+  const strings = useStrings()
   const walletMeta = useSelector(walletMetaSelector)
   const transactionInfos = useSelector(transactionsInfoSelector)
-
   return (
-    <Stack.Navigator screenOptions={defaultStackNavigatorOptions} initialRouteName={TX_HISTORY_ROUTES.MAIN}>
-      <Stack.Screen name={TX_HISTORY_ROUTES.MAIN} component={TxHistory} options={headerBarOptions(walletMeta.name)} />
+    <ReceiveProvider>
+      <Stack.Navigator screenOptions={defaultStackNavigatorOptions} initialRouteName={TX_HISTORY_ROUTES.MAIN}>
+        <Stack.Screen
+          name="TxHistory"
+          component={TxHistory}
+          options={
+            UI_V2
+              ? buildOptionsWithDefault({title: walletMeta.name, headerRight: SettingsButton})
+              : buildOptionsWithDefaultV1(walletMeta.name)
+          }
+        />
 
-      <Stack.Screen
-        name={TX_HISTORY_ROUTES.TX_DETAIL}
-        component={TxDetails}
-        options={({route}) => ({
-          title: formatDateToSeconds(transactionInfos[route.params?.id].submittedAt),
-          ...defaultNavigationOptions,
-        })}
-      />
-    </Stack.Navigator>
+        <Stack.Screen
+          name="TxDetails"
+          component={TxDetails}
+          options={({route}) => ({
+            title: formatDateToSeconds(transactionInfos[route.params?.id].submittedAt),
+            ...defaultNavigationOptions,
+          })}
+        />
+
+        <Stack.Screen
+          name="ReceiveScreen"
+          component={ReceiveScreen}
+          options={buildOptionsWithDefault({
+            title: strings.receiveTitle,
+            headerRight: ShowReceiveInfoButton,
+            backgroundColor: '#fff',
+          })}
+        />
+      </Stack.Navigator>
+    </ReceiveProvider>
   )
 }
 
-const headerBarOptions =
-  (walletName: string) =>
-  ({navigation}) => {
-    const headerV1 = {
-      headerStyle: {
-        backgroundColor: COLORS.BACKGROUND_BLUE,
-        elevation: 0,
-        shadowOpacity: 0,
-      },
-      headerTintColor: '#fff',
-      headerRight: () => (
-        <Button
-          onPress={() => navigation.navigate(WALLET_ROOT_ROUTES.SETTINGS)}
-          iconImage={iconGear}
-          title=""
-          withoutBackground
-        />
-      ),
-    }
-    const headerV2 = {
-      headerStyle: {
-        backgroundColor: COLORS.BACKGROUND_GRAY,
-        elevation: 0,
-        shadowOpacity: 0,
-      },
-      headerTintColor: COLORS.ERROR_TEXT_COLOR_DARK,
-      headerRight: () => (
-        <TouchableOpacity onPress={() => navigation.navigate(WALLET_ROOT_ROUTES.SETTINGS)}>
-          <Icon name="dots-vertical" size={30} color="#8A92A3" />
-        </TouchableOpacity>
-      ),
-    }
+const messages = defineMessages({
+  receiveTitle: {
+    id: 'components.receive.receivescreen.title',
+    defaultMessage: '!!!Receive',
+  },
+})
 
-    const header = UI_V2 ? headerV2 : headerV1
+const useStrings = () => {
+  const intl = useIntl()
 
-    const headerOptions = {
-      title: walletName,
-      headerTitleStyle: {
-        fontSize: 16,
-        fontFamily: 'Rubik-Medium',
-      },
-      ...header,
-    }
-
-    return headerOptions
+  return {
+    receiveTitle: intl.formatMessage(messages.receiveTitle),
   }
+}
+
+export const ShowReceiveInfoButton = () => {
+  const {showInfoModal} = useReceiveContextInfoModal()
+
+  return (
+    <TouchableOpacity onPress={showInfoModal}>
+      <Icon.Info size={25} color={COLORS.ACTION_GRAY} />
+    </TouchableOpacity>
+  )
+}
+
+const buildOptionsWithDefaultV1 =
+  (title: string) =>
+  ({navigation}) => ({
+    ...defaultNavigationOptions,
+    headerRight: () => (
+      <Button
+        onPress={() => navigation.navigate(WALLET_ROOT_ROUTES.SETTINGS)}
+        iconImage={iconGear}
+        title=""
+        withoutBackground
+      />
+    ),
+    title,
+  })
