@@ -8,7 +8,6 @@ import {useSelector} from 'react-redux'
 
 import {Text} from '../../legacy/components/UiKit'
 import {MultiToken} from '../../legacy/crypto/MultiToken'
-import {TX_HISTORY_ROUTES} from '../../legacy/RoutesList'
 import {
   availableAssetsSelector,
   defaultNetworkAssetSelector,
@@ -25,6 +24,7 @@ import {
 } from '../../legacy/utils/format'
 import utfSymbols from '../../legacy/utils/utfSymbols'
 import {Icon} from '../components/Icon'
+import {TxHistoryStackRootProps} from '../navigation'
 import {DefaultAsset, IOData, TransactionAssurance, TransactionDirection, TransactionInfo} from '../types/cardano'
 
 const filtersTxIO = (address: string) => {
@@ -53,9 +53,9 @@ type Props = {
 
 export const TxHistoryListItem = ({transaction}: Props) => {
   const strings = useStrings()
-  const navigation = useNavigation()
+  const navigation = useNavigation<TxHistoryStackRootProps>()
 
-  const showDetails = () => navigation.navigate(TX_HISTORY_ROUTES.TX_DETAIL, {id: transaction.id})
+  const showDetails = () => navigation.navigate('TxDetails', {id: transaction.id})
   const submittedAt = formatTimeToSeconds(transaction.submittedAt)
 
   const isPending = transaction.assurance === 'PENDING'
