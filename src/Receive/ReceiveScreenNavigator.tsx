@@ -7,6 +7,7 @@ import styles from '../../legacy/components/Receive/styles/SettingsButton.style'
 import {Button} from '../../legacy/components/UiKit'
 import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../legacy/navigationOptions'
 import {RECEIVE_ROUTES, WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
+import {ReceiveProvider} from './Context'
 import {ReceiveScreen} from './ReceiveScreen'
 
 const Stack = createStackNavigator<{
@@ -17,31 +18,33 @@ export const ReceiveScreenNavigator = () => {
   const strings = useStrings()
 
   return (
-    <Stack.Navigator
-      screenOptions={{
-        ...defaultNavigationOptions,
-        ...defaultStackNavigatorOptions,
-      }}
-      initialRouteName={RECEIVE_ROUTES.MAIN}
-    >
-      <Stack.Screen
-        name={RECEIVE_ROUTES.MAIN}
-        component={ReceiveScreen}
-        options={({navigation}) => ({
-          title: strings.receiveTitle,
-          headerRight: () => (
-            <Button
-              style={styles.settingsButton}
-              onPress={() => navigation.navigate(WALLET_ROOT_ROUTES.SETTINGS)}
-              iconImage={iconGear}
-              title=""
-              withoutBackground
-            />
-          ),
+    <ReceiveProvider>
+      <Stack.Navigator
+        screenOptions={{
           ...defaultNavigationOptions,
-        })}
-      />
-    </Stack.Navigator>
+          ...defaultStackNavigatorOptions,
+        }}
+        initialRouteName={RECEIVE_ROUTES.MAIN}
+      >
+        <Stack.Screen
+          name={RECEIVE_ROUTES.MAIN}
+          component={ReceiveScreen}
+          options={({navigation}) => ({
+            title: strings.receiveTitle,
+            headerRight: () => (
+              <Button
+                style={styles.settingsButton}
+                onPress={() => navigation.navigate(WALLET_ROOT_ROUTES.SETTINGS)}
+                iconImage={iconGear}
+                title=""
+                withoutBackground
+              />
+            ),
+            ...defaultNavigationOptions,
+          })}
+        />
+      </Stack.Navigator>
+    </ReceiveProvider>
   )
 }
 
