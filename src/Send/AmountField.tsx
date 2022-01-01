@@ -7,7 +7,7 @@ import {TextInput} from '../../legacy/components/UiKit'
 type Props = {
   amount: string
   setAmount: (amount: string) => unknown
-  error?: string
+  error?: string | null
   editable?: boolean
 }
 
