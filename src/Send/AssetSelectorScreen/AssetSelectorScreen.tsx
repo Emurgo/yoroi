@@ -158,7 +158,7 @@ const messages = defineMessages({
     defaultMessage: '!!!SELECT ALL ASSETS',
   },
   unknownAsset: {
-    id: 'components.send.assetselectorscreen.unknownasset',
+    id: 'components.send.assetselectorscreen.unknownAsset',
     defaultMessage: '!!!Unknown asset',
   },
 })
