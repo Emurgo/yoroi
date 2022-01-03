@@ -9,8 +9,8 @@ import {withHandlers, withStateHandlers} from 'recompose'
 import {compose} from 'redux'
 
 import {showErrorDialog} from '../../actions'
-import KeyStore from '../../crypto/KeyStore'
-import {canBiometricEncryptionBeEnabled} from '../../helpers/deviceSettings'
+import KeyStore, {CredentialsNotFound} from '../../crypto/KeyStore'
+import {canBiometricEncryptionBeEnabled, recreateAppSignInKeys} from '../../helpers/deviceSettings'
 import {errorMessages as globalErrorMessages} from '../../i18n/global-messages'
 import type {Navigation} from '../../types/navigation'
 import {Logger} from '../../utils/logging'
@@ -73,7 +73,7 @@ const messages = defineMessages({
   },
 })
 
-const handleOnConfirm = async (route, setError, clearError, isFallback = false, intl) => {
+const handleOnConfirm = async (route, setError, clearError, isFallback = false, intl, retryCounter = 0) => {
   if (!(await canBiometricEncryptionBeEnabled()) && !isFallback) {
     await showErrorDialog(globalErrorMessages.biometricsIsTurnedOff, intl)
     return
@@ -99,6 +99,14 @@ const handleOnConfirm = async (route, setError, clearError, isFallback = false, 
       clearError()
       onFail(KeyStore.REJECTIONS.CANCELED, intl)
     } else {
+      // create keys back for iOS
+      if (error instanceof CredentialsNotFound && Platform.OS === 'ios') {
+        await recreateAppSignInKeys(keyId)
+      }
+      if (retryCounter <= 3) {
+        await handleOnConfirm(route, setError, clearError, isFallback, intl, retryCounter + 1)
+        return
+      }
       // on ios most errors will map to FAILED_UNKNOWN_ERROR
       Alert.alert(intl.formatMessage(messages.actionFailed), `${error.code} : ${error.message}`)
       Logger.error('BiometricAuthScreen', error)
@@ -108,20 +116,6 @@ const handleOnConfirm = async (route, setError, clearError, isFallback = false, 
   }
 }
 
-const handleOnFocus = async ({
-  route,
-  setError,
-  clearError,
-  intl,
-}: {
-  route: any,
-  setError: any,
-  clearError: any,
-  intl: IntlShape,
-}) => {
-  await handleOnConfirm(route, setError, clearError, false, intl)
-}
-
 const BiometricAuthScreen = (
   {cancelScanning, fallback, error, intl, route, setError, clearError}: {intl: IntlShape} & Object /* TODO: type */,
 ) => {
@@ -129,7 +123,7 @@ const BiometricAuthScreen = (
 
   useFocusEffect(
     React.useCallback(() => {
-      handleOnFocus({route, setError, clearError, intl})
+      handleOnConfirm(route, setError, clearError, false, intl)
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []),
   )
@@ -142,7 +136,7 @@ const BiometricAuthScreen = (
       setAppState(nextAppState)
       if (previousAppState != null && previousAppState.match(/inactive|background/) && nextAppState === 'active') {
         await KeyStore.cancelFingerprintScanning(KeyStore.REJECTIONS.CANCELED)
-        await handleOnFocus({route, setError, clearError, intl})
+        await handleOnConfirm(route, setError, clearError, false, intl)
       } else if (previousAppState === 'active' && nextAppState != null && nextAppState.match(/inactive|background/)) {
         // we cancel the operation when the app goes to background otherwise
         // the app may crash. This could happen when the app logs out, as reopening
