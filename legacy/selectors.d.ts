@@ -2,7 +2,7 @@
 
 import BigNumber from 'bignumber.js'
 
-import {DefaultAsset, Token, TransactionInfo} from '../src/types/cardano'
+import {DefaultAsset, Token, TokenEntry, TransactionInfo} from '../src/types/cardano'
 import type {State, WalletMeta} from './state'
 
 export var availableAssetsSelector: (state: State) => Record<string, Token | DefaultAsset>
@@ -35,14 +35,28 @@ export var isUsedAddressIndexSelector: (state: State) => Record<string, boolean>
 export var receiveAddressesSelector: (state: State) => Array<string>
 export var hwDeviceInfoSelector: (state: State) => {bip44AccountPublic: string; hwFeatures: HWFeatures} | null
 export var isDelegatingSelector: (state: State) => boolean
-export var unsignedTxSelector = (state: State) => state.voting.unsignedTx
+export var unsignedTxSelector: (state: State) => state.voting.unsignedTx
 export var encryptedKeySelector: (state: State) => string
 export var pinSelector: (state: State) => Array<string>
+export var hasPendingOutgoingTransactionSelector: (state: State) => boolean
+export var isFetchingUtxosSelector: (state: State) => boolean
+export var lastUtxosFetchErrorSelector: (state: State) => typeof state.balance.lastFetchingError
+export var serverStatusSelector: (state: State) => ServerStatusCache
+export var utxosSelector: (state: State) => typeof state.balance.utxos
 
 // prettier-ignore
-interface PartialMultiToken {
+interface MultiToken {
   getDefaultId: () => string,
   getDefault: () => BigNumber,
+  getDefaultEntry: () => TokenEntry,
+  get(tokenIdentifier: string): BigNumber | void,
   values: Array<{amount: BigNumber, identifier: string, networkId: number}>
 }
-export var tokenBalanceSelector: (state: State) => PartialMultiToken
+export var tokenBalanceSelector: (state: State) => MultiToken
+
+// prettier-ignore
+export type ServerStatusCache = {
+  isServerOk: boolean,
+  isMaintenance: boolean,
+  serverTime: Date | null,
+}

@@ -1,22 +1,20 @@
-// @flow
-
 import {NavigationRouteContext} from '@react-navigation/native'
+import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
-import {Alert} from 'react-native'
 
-import AddressReaderQR from './AddressReaderQR'
+import {AddressReaderQR} from './AddressReaderQR'
 
 storiesOf('AddressReaderQR', module).add('Default', () => {
   const route = {
     key: 'key',
     name: 'name',
-    params: {onSuccess: (data: string) => Alert.alert(data)},
+    params: {onSuccess: action('onSuccess')},
   }
 
   return (
     <NavigationRouteContext.Provider value={route}>
-      <AddressReaderQR route={route} />
+      <AddressReaderQR />
     </NavigationRouteContext.Provider>
   )
 })

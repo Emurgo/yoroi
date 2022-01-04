@@ -1,35 +1,32 @@
-// @flow
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {useSelector} from 'react-redux'
 
-import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../navigationOptions'
-import {SEND_ROUTES} from '../../RoutesList'
-import {tokenBalanceSelector, tokenInfoSelector} from '../../selectors'
-import AddressReaderQR from './AddressReaderQR'
-import AssetSelectorScreen from './AssetSelectorScreen/AssetSelectorScreen'
-import BiometricAuthScreen from './BiometricAuthScreen'
-import ConfirmScreen from './ConfirmScreen'
+import BiometricAuthScreen from '../../legacy/components/Send/BiometricAuthScreen'
+import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../legacy/navigationOptions'
+import {SEND_ROUTES} from '../../legacy/RoutesList'
+import {tokenBalanceSelector, tokenInfoSelector} from '../../legacy/selectors'
+import {AddressReaderQR} from './AddressReaderQR'
+import {AssetSelectorScreen} from './AssetSelectorScreen'
+import {ConfirmScreen} from './ConfirmScreen'
 import {ScannerButton} from './ScannerButton'
-import SendScreen from './SendScreen'
+import {SendScreen} from './SendScreen'
 
-type SendScreenNavigatorRoutes = {
-  'send-ada': any,
-  'select-asset': any,
-  'address-reader-qr': any,
-  'send-ada-confirm': any,
-  'biometrics-signing': any,
-}
+const Stack = createStackNavigator<{
+  'send-ada': any
+  'select-asset': any
+  'address-reader-qr': any
+  'send-ada-confirm': any
+  'biometrics-signing': any
+}>()
 
-const Stack = createStackNavigator<any, SendScreenNavigatorRoutes, any>()
-
-const SendScreenNavigator = () => {
+export const SendScreenNavigator = () => {
   const strings = useStrings()
 
   const tokenBalance = useSelector(tokenBalanceSelector)
-  const [selectedTokenIdentifier, setSelectedTokenIdentifier] = React.useState<string>(
+  const [selectedTokenIdentifier, setSelectedTokenIdentifier] = React.useState(
     tokenBalance.getDefaultEntry().identifier,
   )
   const tokenInfos = useSelector(tokenInfoSelector)
@@ -38,18 +35,18 @@ const SendScreenNavigator = () => {
   return (
     <Stack.Navigator
       initialRouteName={SEND_ROUTES.MAIN}
-      screenOptions={() => ({
+      screenOptions={{
         ...defaultNavigationOptions,
         ...defaultStackNavigatorOptions,
-      })}
+      }}
     >
       <Stack.Screen
         name={SEND_ROUTES.MAIN}
-        options={() => ({
+        options={{
           title: strings.sendTitle,
           headerRight: () => <ScannerButton />,
           ...defaultNavigationOptions,
-        })}
+        }}
       >
         {() => (
           <SendScreen selectedTokenIdentifier={selectedTokenIdentifier} onSendAll={setSendAll} sendAll={sendAll} />
@@ -81,7 +78,11 @@ const SendScreenNavigator = () => {
         options={{title: strings.qrScannerTitle}}
       />
 
-      <Stack.Screen name={SEND_ROUTES.CONFIRM} component={ConfirmScreen} options={{title: strings.confirmTitle}} />
+      <Stack.Screen //
+        name={SEND_ROUTES.CONFIRM}
+        component={ConfirmScreen}
+        options={{title: strings.confirmTitle}}
+      />
 
       <Stack.Screen
         name={SEND_ROUTES.BIOMETRICS_SIGNING}
@@ -91,8 +92,6 @@ const SendScreenNavigator = () => {
     </Stack.Navigator>
   )
 }
-
-export default SendScreenNavigator
 
 const messages = defineMessages({
   sendTitle: {

@@ -14,7 +14,7 @@ import type {Token, Transaction} from './types/HistoryTransaction'
 export type ServerStatusCache = {
   isServerOk: boolean,
   isMaintenance: boolean,
-  serverTime: Date | void | null,
+  serverTime: Date | null,
 }
 
 // prettier-ignore
@@ -64,7 +64,7 @@ export type State = {
   balance: {
     isFetching: boolean,
     lastFetchingError: any,
-    utxos: Array<RawUtxo> | void | null,
+    utxos: Array<RawUtxo> | null,
   },
   accountState: {
     isFetching: boolean,
