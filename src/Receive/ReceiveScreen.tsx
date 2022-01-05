@@ -7,6 +7,7 @@ import {useDispatch, useSelector} from 'react-redux'
 
 import {generateNewReceiveAddress, generateNewReceiveAddressIfNeeded} from '../../legacy/actions'
 import {Banner, Button, OfflineBanner, Spacer, StatusBar} from '../../legacy/components/UiKit'
+import {UI_V2} from '../../legacy/config/config'
 import {
   canGenerateNewReceiveAddressSelector,
   isUsedAddressIndexSelector,
@@ -37,11 +38,12 @@ export const ReceiveScreen = () => {
 
   return (
     <SafeAreaView edges={['left', 'right']} style={styles.safeAreaView}>
-      <StatusBar type="dark" />
+      <StatusBar type={UI_V2 ? 'light' : 'dark'} />
       <OfflineBanner />
 
       <ScrollView>
-        <Banner text={strings.infoText} />
+        {!UI_V2 && <Banner text={strings.infoText} />}
+        {UI_V2 && <Spacer height={24} />}
 
         <Content>
           <View style={styles.address}>

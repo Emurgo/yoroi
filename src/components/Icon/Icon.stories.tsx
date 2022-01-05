@@ -99,6 +99,8 @@ storiesOf('Icon', module).add('Gallery', () => (
 
     <Row>
       <Item icon={<Icon.NoAssetImage />} title={'No Asset Image'} />
+      <Item icon={<Icon.Settings size={40} />} title={'Settings'} />
+      <Item icon={<Icon.Info size={40} />} title={'Settings'} />
     </Row>
   </ScrollView>
 ))
