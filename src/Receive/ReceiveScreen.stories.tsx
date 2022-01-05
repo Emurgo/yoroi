@@ -3,7 +3,6 @@ import React from 'react'
 
 import {SelectedWalletProvider} from '../../src/SelectedWallet'
 import {WalletInterface} from '../types'
-import {ReceiveProvider} from './Context'
 import {ReceiveScreen} from './ReceiveScreen'
 
 const wallet = {
@@ -11,18 +10,8 @@ const wallet = {
   networkId: 1,
 } as WalletInterface
 
-storiesOf('ReceiveScreen', module)
-  .add('Default', () => (
-    <ReceiveProvider>
-      <SelectedWalletProvider wallet={wallet}>
-        <ReceiveScreen />
-      </SelectedWalletProvider>
-    </ReceiveProvider>
-  ))
-  .add('Info modal opened', () => (
-    <ReceiveProvider initialState={{isInfoModalOpen: true}}>
-      <SelectedWalletProvider wallet={wallet}>
-        <ReceiveScreen />
-      </SelectedWalletProvider>
-    </ReceiveProvider>
-  ))
+storiesOf('ReceiveScreen', module).add('Default', () => (
+  <SelectedWalletProvider wallet={wallet}>
+    <ReceiveScreen />
+  </SelectedWalletProvider>
+))

@@ -55,7 +55,7 @@ export const TxHistoryListItem = ({transaction}: Props) => {
   const strings = useStrings()
   const navigation = useNavigation<TxHistoryStackRootProps>()
 
-  const showDetails = () => navigation.navigate('TxDetails', {id: transaction.id})
+  const showDetails = () => navigation.navigate('history-details', {id: transaction.id})
   const submittedAt = formatTimeToSeconds(transaction.submittedAt)
 
   const isPending = transaction.assurance === 'PENDING'

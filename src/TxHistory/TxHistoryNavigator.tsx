@@ -1,7 +1,8 @@
+import {useNavigation} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {TouchableOpacity} from 'react-native'
+import {TouchableOpacity, TouchableOpacityProps} from 'react-native'
 import {useSelector} from 'react-redux'
 
 import {Button} from '../../legacy/components/UiKit'
@@ -13,9 +14,9 @@ import {COLORS} from '../../legacy/styles/config'
 import {formatDateToSeconds} from '../../legacy/utils/format'
 import iconGear from '../assets/img/icon/gear.png'
 import {Icon} from '../components'
-import {buildOptionsWithDefault, SettingsButton, TxHistoryStackParamList} from '../navigation'
-import {ReceiveProvider, useReceiveContextInfoModal} from '../Receive/Context'
+import {buildOptionsWithDefault, TxHistoryStackParamList} from '../navigation'
 import {ReceiveScreen} from '../Receive/ReceiveScreen'
+import {ModalInfo, ModalInfoProvider, useModalInfo} from './ModalInfo'
 import {TxDetails} from './TxDetails'
 import {TxHistory} from './TxHistory'
 
@@ -26,20 +27,20 @@ export const TxHistoryNavigator = () => {
   const walletMeta = useSelector(walletMetaSelector)
   const transactionInfos = useSelector(transactionsInfoSelector)
   return (
-    <ReceiveProvider>
+    <ModalInfoProvider>
       <Stack.Navigator screenOptions={defaultStackNavigatorOptions} initialRouteName={TX_HISTORY_ROUTES.MAIN}>
         <Stack.Screen
-          name="TxHistory"
+          name="history-list"
           component={TxHistory}
           options={
             UI_V2
-              ? buildOptionsWithDefault({title: walletMeta.name, headerRight: SettingsButton})
+              ? buildOptionsWithDefault({title: walletMeta.name, headerRight: () => <HeaderRightHistory />})
               : buildOptionsWithDefaultV1(walletMeta.name)
           }
         />
 
         <Stack.Screen
-          name="TxDetails"
+          name="history-details"
           component={TxDetails}
           options={({route}) => ({
             title: formatDateToSeconds(transactionInfos[route.params?.id].submittedAt),
@@ -48,16 +49,17 @@ export const TxHistoryNavigator = () => {
         />
 
         <Stack.Screen
-          name="ReceiveScreen"
+          name="receive"
           component={ReceiveScreen}
           options={buildOptionsWithDefault({
             title: strings.receiveTitle,
-            headerRight: ShowReceiveInfoButton,
+            headerRight: () => <HeaderRightReceive />,
             backgroundColor: '#fff',
           })}
         />
       </Stack.Navigator>
-    </ReceiveProvider>
+      <ModalInfo />
+    </ModalInfoProvider>
   )
 }
 
@@ -76,14 +78,32 @@ const useStrings = () => {
   }
 }
 
-export const ShowReceiveInfoButton = () => {
-  const {showInfoModal} = useReceiveContextInfoModal()
-
+const ModalInfoIconButton = (props: TouchableOpacityProps) => {
   return (
-    <TouchableOpacity onPress={showInfoModal}>
+    <TouchableOpacity {...props}>
       <Icon.Info size={25} color={COLORS.ACTION_GRAY} />
     </TouchableOpacity>
   )
+}
+
+const SettingsIconButton = (props: TouchableOpacityProps) => {
+  return (
+    <TouchableOpacity {...props}>
+      <Icon.Settings size={30} color={COLORS.ACTION_GRAY} />
+    </TouchableOpacity>
+  )
+}
+
+const HeaderRightReceive = () => {
+  const {showModalInfo} = useModalInfo()
+
+  return <ModalInfoIconButton onPress={showModalInfo} />
+}
+
+const HeaderRightHistory = () => {
+  const navigation = useNavigation()
+
+  return <SettingsIconButton onPress={() => navigation.navigate(WALLET_ROOT_ROUTES.SETTINGS)} />
 }
 
 const buildOptionsWithDefaultV1 =

@@ -121,7 +121,7 @@ const useNavigations = () => {
 
   return {
     onSend: () => navigation.navigate(WALLET_ROUTES.SEND),
-    onReceive: () => navigation.navigate('ReceiveScreen'),
+    onReceive: () => navigation.navigate('receive'),
     onBuy: () => Alert.alert(strings.messageBuy, strings.messageBuy),
   }
 }
