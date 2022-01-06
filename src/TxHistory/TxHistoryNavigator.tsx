@@ -188,8 +188,7 @@ const SettingsIconButton = (props: TouchableOpacityProps) => {
 }
 
 type HeaderRightReceiveProps = {showModalInfo: () => void}
-const HeaderRightReceive = (props: HeaderRightReceiveProps) => {
-  const {showModalInfo} = props
+const HeaderRightReceive: React.FC<HeaderRightReceiveProps> = ({showModalInfo}) => {
   return <ModalInfoIconButton onPress={showModalInfo} />
 }
 
