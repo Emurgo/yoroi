@@ -21,7 +21,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>331</string>
+	<string>343</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
@@ -46,7 +46,7 @@
 	<key>NSCalendarsUsageDescription</key>
 	<string>Enable calendars usage</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Enabling camera allows you to scan QR codes.</string>
+	<string>Yoroi Mobile will only use camera when user requests to scan a QR-code with a blockchain address, instead of typing the address in manually.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Enabling Face ID allows you quick and secure access to your account.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
