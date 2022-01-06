@@ -49,6 +49,7 @@ function loadStories() {
 	require('../src/Settings/RemoveWalletScreen.stories');
 	require('../src/Settings/WalletSettingsScreen.stories');
 	require('../src/TxHistory/ChipButton.stories');
+	require('../src/TxHistory/ModalInfo/ModalInfo.stories');
 	require('../src/TxHistory/TxHistory.stories');
 	require('../src/TxHistory/TxListActionsBanner.stories');
 	require('../src/WalletInit/CheckNanoX/CheckNanoXScreen.stories');
@@ -119,6 +120,7 @@ const stories = [
 	'../src/Settings/RemoveWalletScreen.stories',
 	'../src/Settings/WalletSettingsScreen.stories',
 	'../src/TxHistory/ChipButton.stories',
+	'../src/TxHistory/ModalInfo/ModalInfo.stories',
 	'../src/TxHistory/TxHistory.stories',
 	'../src/TxHistory/TxListActionsBanner.stories',
 	'../src/WalletInit/CheckNanoX/CheckNanoXScreen.stories',
