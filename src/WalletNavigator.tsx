@@ -6,7 +6,7 @@ import {Image} from 'react-native'
 
 import StakingCenterNavigator from '../legacy/components/Delegation/StakingCenterNavigator'
 import StakingDashboardNavigator from '../legacy/components/Delegation/StakingDashboardNavigator'
-import {isHaskellShelley} from '../legacy/config/config'
+import {isHaskellShelley, UI_V2} from '../legacy/config/config'
 import {defaultNavigationOptions} from '../legacy/navigationOptions'
 import {theme} from '../legacy/styles/config'
 import iconDashboard from './assets/img/icon/dashboard.png'
@@ -52,6 +52,17 @@ const WalletTabNavigator = () => {
         inactiveTintColor: theme.COLORS.NAVIGATION_INACTIVE,
       }}
     >
+      {UI_V2 && (
+        <Tab.Screen
+          name={'history'}
+          component={TxHistoryNavigator}
+          options={{
+            tabBarIcon: ({focused}) => <Image source={focused ? iconHistoryActive : iconHistory} />,
+            tabBarLabel: strings.walletTabBarLabel,
+          }}
+        />
+      )}
+
       {isHaskellShelley(wallet.walletImplementationId) && (
         <Tab.Screen
           name={'staking-dashboard'}
@@ -63,16 +74,18 @@ const WalletTabNavigator = () => {
         />
       )}
 
-      <Tab.Screen
-        name={'history'}
-        component={TxHistoryNavigator}
-        options={{
-          tabBarIcon: ({focused}) => <Image source={focused ? iconHistoryActive : iconHistory} />,
-          tabBarLabel: strings.txHistoryTabBarLabel,
-        }}
-      />
+      {!UI_V2 && (
+        <Tab.Screen
+          name={'history'}
+          component={TxHistoryNavigator}
+          options={{
+            tabBarIcon: ({focused}) => <Image source={focused ? iconHistoryActive : iconHistory} />,
+            tabBarLabel: strings.txHistoryTabBarLabel,
+          }}
+        />
+      )}
 
-      {!wallet.isReadOnly && (
+      {!wallet.isReadOnly && !UI_V2 && (
         <Tab.Screen
           name={'send-ada'}
           component={SendScreenNavigator}
@@ -84,14 +97,16 @@ const WalletTabNavigator = () => {
         />
       )}
 
-      <Tab.Screen
-        name={'receive-ada'}
-        component={ReceiveScreenNavigator}
-        options={{
-          tabBarIcon: ({focused}) => <Image source={focused ? iconReceiveActive : iconReceive} />,
-          tabBarLabel: strings.receiveTabBarLabel,
-        }}
-      />
+      {!UI_V2 && (
+        <Tab.Screen
+          name={'receive-ada'}
+          component={ReceiveScreenNavigator}
+          options={{
+            tabBarIcon: ({focused}) => <Image source={focused ? iconReceiveActive : iconReceive} />,
+            tabBarLabel: strings.receiveTabBarLabel,
+          }}
+        />
+      )}
 
       {isHaskellShelley(wallet.walletImplementationId) && !wallet.isReadOnly && (
         <Tab.Screen
@@ -149,6 +164,10 @@ const messages = defineMessages({
     id: 'components.common.navigation.delegateButton',
     defaultMessage: '!!!Delegate',
   },
+  walletButton: {
+    id: 'components.settings.walletsettingscreen.tabTitle',
+    defaultMessage: '!!!Wallet',
+  },
 })
 
 const useStrings = () => {
@@ -160,5 +179,6 @@ const useStrings = () => {
     sendTabBarLabel: intl.formatMessage(messages.sendButton),
     receiveTabBarLabel: intl.formatMessage(messages.receiveButton),
     delegateTabBarLabel: intl.formatMessage(messages.delegateButton),
+    walletTabBarLabel: intl.formatMessage(messages.walletButton),
   }
 }
