@@ -22,6 +22,11 @@ export type TxHistoryStackParamList = {
     id: string
   }
   receive: undefined
+  send: undefined
+  'select-asset': undefined
+  'address-reader-qr': undefined
+  'send-ada-confirm': undefined
+  'biometrics-signing': undefined
 }
 
 export type TxHistoryStackRootProps = StackNavigationProp<TxHistoryStackParamList>
