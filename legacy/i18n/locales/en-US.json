@@ -167,7 +167,7 @@
   "components.settings.applicationsettingsscreen.title": "Settings",
   "components.settings.applicationsettingsscreen.version": "Current version:",
   "components.settings.biometricslinkscreen.enableFingerprintsMessage": "Enable use of fingerprints in device settings first!",
-  "components.settings.biometricslinkscreen.heading": "Use your fingerprint",
+  "components.settings.biometricslinkscreen.heading": "Use your device biometrics",
   "components.settings.biometricslinkscreen.linkButton": "Link",
   "components.settings.biometricslinkscreen.notNowButton": "Not now",
   "components.settings.biometricslinkscreen.subHeading1": "for faster, easier access",
