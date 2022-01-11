@@ -66,6 +66,7 @@ const MnemonicWordsInput = ({onSelect, words}: MnemonicWordsInputProps) => {
           key={index}
           style={{width: '33%', padding: 4}}
           onLayout={({nativeEvent}) => (rowHeightRef.current = nativeEvent.layout.height)}
+          testID={`mnemonicInput${index}`}
         >
           <MnemonicWordInput
             ref={refs[index]}
@@ -124,7 +125,6 @@ const MnemonicWordInput = React.forwardRef(({id, onSelect, onFocus}: MnemonicWor
           noErrors
           errorDelay={0}
           errorText={matchingWords.length <= 0 ? 'No matching words' : ''}
-          testID={`mnemonicInput${id}`}
         />
       }
       visible={menuEnabled && word.length >= 3 && !!word}
