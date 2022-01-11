@@ -26,3 +26,4 @@ export const RESTORED_WALLET = [
     'fence',
     'east'
 ]
+export const RESTORED_WALLET_CHECKSUM = 'CONL-2085'
