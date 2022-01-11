@@ -124,6 +124,7 @@ const MnemonicWordInput = React.forwardRef(({id, onSelect, onFocus}: MnemonicWor
           noErrors
           errorDelay={0}
           errorText={matchingWords.length <= 0 ? 'No matching words' : ''}
+          testID={`mnemonicInput${id}`}
         />
       }
       visible={menuEnabled && word.length >= 3 && !!word}
