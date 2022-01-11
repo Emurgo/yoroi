@@ -38,6 +38,7 @@ describe('Restore a wallet', () => {
 
     expect(await verifyRestoredWalletScreen.walletChecksumText().isDisplayed()).to.be.true
     expect(await verifyRestoredWalletScreen.walletChecksumText().getText()).to.be.equal(RESTORED_WALLET_CHECKSUM)
+    await verifyRestoredWalletScreen.continueButton().click()
 
     await createNewWalletCredentialsScreen.walletNameEdit().click()
     await createNewWalletCredentialsScreen.walletNameEdit().addValue(WALLET_NAME_RESTORED)
@@ -46,6 +47,11 @@ describe('Restore a wallet', () => {
     await createNewWalletCredentialsScreen.repeatSpendingPasswordEdit().click()
     await createNewWalletCredentialsScreen.repeatSpendingPasswordEdit().addValue(SPENDING_PASSWORD)
     await hideKeyboard()
+    await createNewWalletCredentialsScreen.continueButton().click()
+
+    // It is necessary step, till the revamp will be done.
+    // After that the Dashboard screen will be created and wallet name (or other component) will be used from there
+    await driver.pause(2000)
 
     expect(
       await driver.$(`[text="${WALLET_NAME_RESTORED}"]`).waitForExist({timeout: DEFAULT_TIMEOUT, interval: DEFAULT_INTERVAL}),

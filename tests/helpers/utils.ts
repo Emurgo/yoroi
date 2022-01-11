@@ -35,8 +35,9 @@ export async function enterRecoveryPhrase(recoveryPhrase: string[]): Promise<voi
   const phraseLength = recoveryPhrase.length
   for (let index = 0; index < phraseLength; index++) {
     const mnemonicInput = await recoveryPhraseScreen.getMnemonicField(index)
-    mnemonicInput.click()
-    mnemonicInput.addValue(recoveryPhrase[index])
-    driver.keys('Enter')
+    const mnemonicInputTextField = await mnemonicInput.$('//android.widget.EditText')
+    await mnemonicInputTextField.setValue(recoveryPhrase[index])
+    // Using the KEYCODE_ENTER for Android.
+    await driver.pressKeyCode(66)
   }
 }
