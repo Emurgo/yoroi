@@ -35,7 +35,7 @@ export async function firstAppLaunch(appPIN: string = VALID_PIN): Promise<void> 
   await tosScreen.acceptToSButton().click()
   await enterPinCode(appPIN)
   await enterPinCode(appPIN)
-  await driver.setImplicitTimeout(500)
+  await driver.pause(500)
 }
 
 export async function hideKeyboard(): Promise<void> {

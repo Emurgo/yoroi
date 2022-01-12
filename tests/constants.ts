@@ -1,16 +1,21 @@
 import {join} from 'path'
 
+export enum WalletType {
+  NormalWallet,
+  DaedalusWallet,
+}
+
 /**
  * @property {String} checksum wallet checksum
  * @property {String} name wallet name
  * @property {Array<String>} phrase wallet recovery phrase
- * @property {Number} type 1 is for a 15-word wallet, 2 is for a 24-word wallet
+ * @property {WalletType} type  a 15-word wallet or a 24-word wallet
  */
 type RestoredWallet = {
   checksum: string
   name: string
   phrase: string[]
-  type: number
+  type: WalletType
 }
 
 export const DEFAULT_TIMEOUT = 5000
@@ -43,7 +48,7 @@ export const RESTORED_WALLETS: RestoredWallet[] = [
       'fence',
       'east',
     ],
-    type: 1,
+    type: WalletType.NormalWallet,
   },
   {
     name: '24-word',
@@ -74,6 +79,6 @@ export const RESTORED_WALLETS: RestoredWallet[] = [
       'salmon',
       'cry',
     ],
-    type: 2,
+    type: WalletType.DaedalusWallet,
   },
 ]

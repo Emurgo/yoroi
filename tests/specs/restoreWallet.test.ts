@@ -6,12 +6,13 @@ import * as recoveryPhraseInputScreen from '../screenObjects/restoreWalletsScree
 import * as verifyRestoredWalletScreen from '../screenObjects/restoreWalletsScreens/verifyRestoredWallet.screen'
 import {firstAppLaunch, hideKeyboard, enterRecoveryPhrase, enterPinCodeIfNecessary} from '../helpers/utils'
 import {
-  WALLET_NAME_RESTORED,
+  DEFAULT_INTERVAL,
+  DEFAULT_TIMEOUT,
   RESTORED_WALLETS,
   SPENDING_PASSWORD,
-  DEFAULT_TIMEOUT,
-  DEFAULT_INTERVAL,
   VALID_PIN,
+  WALLET_NAME_RESTORED,
+  WalletType,
 } from '../constants'
 
 const expect = require('chai').expect
@@ -37,9 +38,9 @@ describe('Restore a wallet', () => {
       await addWalletsScreen.addWalletTestnetButton().click()
       await addWalletScreen.restoreWalletButton().click()
 
-      if (restoredWallet.type == 1) {
+      if (restoredWallet.type == WalletType.NormalWallet) {
         await selectWalletToRestoreScreen.restoreNormalWalletButton().click()
-      } else if (restoredWallet.type == 2) {
+      } else if (restoredWallet.type == WalletType.DaedalusWallet) {
         await selectWalletToRestoreScreen.restore24WordWalletButton().click()
       } else {
         throw Error(`Unknown wallet type: wallet type is ${restoredWallet.type}`)
@@ -68,6 +69,7 @@ describe('Restore a wallet', () => {
 
       expect(
         await driver.$(`[text="${walletName}"]`).waitForExist({timeout: DEFAULT_TIMEOUT, interval: DEFAULT_INTERVAL}),
+        `The text ${walletName} wasn't found`,
       ).to.be.true
     })
   })
