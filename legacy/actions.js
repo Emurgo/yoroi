@@ -457,12 +457,6 @@ export const showConfirmationDialog = (dialog: DialogOptions, intl: IntlShape): 
   })
 
 export const setSystemAuth = (enable: boolean) => async (dispatch: Dispatch<any>, getState: any) => {
-  const canBeDisabled = walletManager.canBiometricsSignInBeDisabled()
-
-  if (!enable && !canBeDisabled) {
-    throw new Error('Can not disable system auth without disabling easy confirmation.')
-  }
-
   await dispatch(setAppSettingField(APP_SETTINGS_KEYS.SYSTEM_AUTH_ENABLED, enable))
 
   const installationId = installationIdSelector(getState())
