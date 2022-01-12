@@ -34,8 +34,8 @@ export const WalletSelectionScreen = () => {
         await showErrorDialog(errorMessages.itnNotSupported, intl)
         return
       }
-      const wallet = await walletManager.openWallet(walletMeta)
-      selectWalletMeta(walletMeta)
+      const [wallet, newWalletMeta] = await walletManager.openWallet(walletMeta)
+      selectWalletMeta(newWalletMeta)
       selectWallet(wallet)
 
       const route = WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES
