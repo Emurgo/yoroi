@@ -2,11 +2,22 @@ import * as pinCodeScreen from '../screenObjects/pinCode.screen'
 import * as chooseLanguageScreen from '../screenObjects/chooseLanguage.screen'
 import * as tosScreen from '../screenObjects/tos.screen'
 import * as recoveryPhraseScreen from '../screenObjects/restoreWalletsScreens/recoveryPhraseEnterManually.screen'
-import {VALID_PIN} from '../constants'
+import {DEFAULT_INTERVAL, DEFAULT_TIMEOUT, VALID_PIN} from '../constants'
 
 export async function enterPinCode(pinCode: string): Promise<void> {
   for (const pinNumber of pinCode) {
     await pinCodeScreen.getPinKey(pinNumber).click()
+  }
+}
+
+export async function enterPinCodeIfNecessary(pinCode: string): Promise<void> {
+  try {
+    await pinCodeScreen
+      .getPinKey('1')
+      .waitForExist({timeout: DEFAULT_TIMEOUT, interval: DEFAULT_INTERVAL})
+    await enterPinCode(pinCode)
+  } catch (e) {
+    // Pin pad is not shown, nothing to do
   }
 }
 
@@ -18,13 +29,13 @@ export async function isElementChecked(element: WebdriverIO.Element): Promise<bo
   return result === 'true'
 }
 
-export async function firstAppLaunch(): Promise<void> {
+export async function firstAppLaunch(appPIN: string = VALID_PIN): Promise<void> {
   await chooseLanguageScreen.chooseLanguageButton().click()
   await tosScreen.acceptToSCheckbox().click()
   await tosScreen.acceptToSButton().click()
-  await enterPinCode(VALID_PIN)
-  await enterPinCode(VALID_PIN)
-  await driver.setImplicitTimeout(500)
+  await enterPinCode(appPIN)
+  await enterPinCode(appPIN)
+  await driver.pause(500)
 }
 
 export async function hideKeyboard(): Promise<void> {

@@ -4,14 +4,15 @@ import * as createNewWalletCredentialsScreen from '../screenObjects/createWallet
 import * as selectWalletToRestoreScreen from '../screenObjects/selectWalletToRestore.screen'
 import * as recoveryPhraseInputScreen from '../screenObjects/restoreWalletsScreens/recoveryPhraseEnterManually.screen'
 import * as verifyRestoredWalletScreen from '../screenObjects/restoreWalletsScreens/verifyRestoredWallet.screen'
-import {firstAppLaunch, hideKeyboard, enterRecoveryPhrase} from '../helpers/utils'
+import {firstAppLaunch, hideKeyboard, enterRecoveryPhrase, enterPinCodeIfNecessary} from '../helpers/utils'
 import {
-  WALLET_NAME_RESTORED,
-  RESTORED_WALLET,
-  RESTORED_WALLET_CHECKSUM,
-  SPENDING_PASSWORD,
-  DEFAULT_TIMEOUT,
   DEFAULT_INTERVAL,
+  DEFAULT_TIMEOUT,
+  RESTORED_WALLETS,
+  SPENDING_PASSWORD,
+  VALID_PIN,
+  WALLET_NAME_RESTORED,
+  WalletType,
 } from '../constants'
 
 const expect = require('chai').expect
@@ -26,35 +27,50 @@ describe('Restore a wallet', () => {
     driver.closeApp()
   })
 
-  it('Straight happy path', async () => {
-    await firstAppLaunch()
-    await addWalletsScreen.addWalletTestnetButton().click()
-    await addWalletScreen.restoreWalletButton().click()
+  it('Prepare the app', async () => {
+    await firstAppLaunch(VALID_PIN)
+  })
 
-    await selectWalletToRestoreScreen.restoreNormalWalletButton().click()
-    await enterRecoveryPhrase(RESTORED_WALLET)
-    await hideKeyboard()
-    await recoveryPhraseInputScreen.restoreWalletButton().click()
+  RESTORED_WALLETS.forEach((restoredWallet) => {
+    it(`Straight happy path restoring a ${restoredWallet.name} wallet`, async () => {
+      await enterPinCodeIfNecessary(VALID_PIN)
+      const walletName = `${WALLET_NAME_RESTORED} ${restoredWallet.name}`
+      await addWalletsScreen.addWalletTestnetButton().click()
+      await addWalletScreen.restoreWalletButton().click()
 
-    expect(await verifyRestoredWalletScreen.walletChecksumText().isDisplayed()).to.be.true
-    expect(await verifyRestoredWalletScreen.walletChecksumText().getText()).to.be.equal(RESTORED_WALLET_CHECKSUM)
-    await verifyRestoredWalletScreen.continueButton().click()
+      if (restoredWallet.type == WalletType.NormalWallet) {
+        await selectWalletToRestoreScreen.restoreNormalWalletButton().click()
+      } else if (restoredWallet.type == WalletType.DaedalusWallet) {
+        await selectWalletToRestoreScreen.restore24WordWalletButton().click()
+      } else {
+        throw Error(`Unknown wallet type: wallet type is ${restoredWallet.type}`)
+      }
+      await enterRecoveryPhrase(restoredWallet.phrase)
+      await hideKeyboard()
+      await recoveryPhraseInputScreen.restoreWalletButton().click()
 
-    await createNewWalletCredentialsScreen.walletNameEdit().click()
-    await createNewWalletCredentialsScreen.walletNameEdit().addValue(WALLET_NAME_RESTORED)
-    await createNewWalletCredentialsScreen.spendingPasswordEdit().click()
-    await createNewWalletCredentialsScreen.spendingPasswordEdit().addValue(SPENDING_PASSWORD)
-    await createNewWalletCredentialsScreen.repeatSpendingPasswordEdit().click()
-    await createNewWalletCredentialsScreen.repeatSpendingPasswordEdit().addValue(SPENDING_PASSWORD)
-    await hideKeyboard()
-    await createNewWalletCredentialsScreen.continueButton().click()
+      expect(await verifyRestoredWalletScreen.walletChecksumText().isDisplayed()).to.be.true
+      expect(await verifyRestoredWalletScreen.walletChecksumText().getText()).to.be.equal(restoredWallet.checksum)
+      await verifyRestoredWalletScreen.continueButton().click()
 
-    // It is necessary step, till the revamp will be done.
-    // After that the Dashboard screen will be created and wallet name (or other component) will be used from there
-    await driver.pause(2000)
+      await createNewWalletCredentialsScreen.walletNameEdit().click()
+      await createNewWalletCredentialsScreen.walletNameEdit().addValue(walletName)
+      await createNewWalletCredentialsScreen.spendingPasswordEdit().click()
+      await createNewWalletCredentialsScreen.spendingPasswordEdit().addValue(SPENDING_PASSWORD)
+      await createNewWalletCredentialsScreen.repeatSpendingPasswordEdit().click()
+      await createNewWalletCredentialsScreen.repeatSpendingPasswordEdit().addValue(SPENDING_PASSWORD)
+      await hideKeyboard()
+      await createNewWalletCredentialsScreen.continueButton().click()
 
-    expect(
-      await driver.$(`[text="${WALLET_NAME_RESTORED}"]`).waitForExist({timeout: DEFAULT_TIMEOUT, interval: DEFAULT_INTERVAL}),
-    ).to.be.true
+      // It is necessary step, till the revamp will be done.
+      // After that the Dashboard screen will be created and wallet name (or other component) will be used from there
+      await enterPinCodeIfNecessary(VALID_PIN)
+      await driver.pause(2000)
+
+      expect(
+        await driver.$(`[text="${walletName}"]`).waitForExist({timeout: DEFAULT_TIMEOUT, interval: DEFAULT_INTERVAL}),
+        `The text ${walletName} wasn't found`,
+      ).to.be.true
+    })
   })
 })
