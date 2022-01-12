@@ -6,6 +6,8 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, View} from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
 
+// $FlowExpectedError
+import {useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../../src/SelectedWallet'
 import {setEasyConfirmation, showErrorDialog} from '../../actions'
 import {WrongPassword} from '../../crypto/errors'
 import walletManager from '../../crypto/walletManager'
@@ -55,11 +57,17 @@ const ToggleEasyConfirmationScreen = () => {
   const dispatch = useDispatch()
   const [masterPassword, setMasterPassword] = React.useState('')
   const clearPassword = () => setMasterPassword('')
+  const walletMeta = useSelectedWalletMeta()
+  const selectedWalletMeta = useSetSelectedWalletMeta()
+
   const enableEasyConfirmation = async () => {
     try {
       await walletManager.enableEasyConfirmation(masterPassword, intl)
       dispatch(setEasyConfirmation(true))
-
+      selectedWalletMeta({
+        ...walletMeta,
+        isEasyConfirmationEnabled: true,
+      })
       navigation.goBack()
     } catch (error) {
       if (error instanceof WrongPassword) {
@@ -73,6 +81,10 @@ const ToggleEasyConfirmationScreen = () => {
   const disableEasyConfirmation = async () => {
     await walletManager.disableEasyConfirmation()
     dispatch(setEasyConfirmation(false))
+    selectedWalletMeta({
+      ...walletMeta,
+      isEasyConfirmationEnabled: false,
+    })
     navigation.goBack()
   }
 
