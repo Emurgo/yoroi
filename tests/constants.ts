@@ -1,5 +1,18 @@
 import {join} from 'path'
 
+/**
+ * @property {String} checksum wallet checksum
+ * @property {String} name wallet name
+ * @property {Array<String>} phrase wallet recovery phrase
+ * @property {Number} type 1 is for a 15-word wallet, 2 is for a 24-word wallet
+ */
+type RestoredWallet = {
+  checksum: string
+  name: string
+  phrase: string[]
+  type: number
+}
+
 export const DEFAULT_TIMEOUT = 5000
 export const DEFAULT_INTERVAL = 200
 export const VALID_PIN = '123456'
@@ -9,10 +22,10 @@ export const SPENDING_PASSWORD = '1234567890'
 export const APP_ID = 'com.emurgo.nightly'
 export const APP_ID_PARENT = 'com.emurgo.*'
 export const APP_PATH = join(process.cwd(), '/tests/app/Yoroi-Nightly.apk')
-export const RESTORED_WALLETS = [
+export const RESTORED_WALLETS: RestoredWallet[] = [
   {
-    name: '15-word',
     checksum: 'CONL-2085',
+    name: '15-word',
     phrase: [
       'ritual',
       'nerve',
@@ -30,6 +43,7 @@ export const RESTORED_WALLETS = [
       'fence',
       'east',
     ],
+    type: 1,
   },
   {
     name: '24-word',
@@ -60,5 +74,6 @@ export const RESTORED_WALLETS = [
       'salmon',
       'cry',
     ],
+    type: 2,
   },
 ]

@@ -4,25 +4,19 @@ import * as createNewWalletCredentialsScreen from '../screenObjects/createWallet
 import * as selectWalletToRestoreScreen from '../screenObjects/selectWalletToRestore.screen'
 import * as recoveryPhraseInputScreen from '../screenObjects/restoreWalletsScreens/recoveryPhraseEnterManually.screen'
 import * as verifyRestoredWalletScreen from '../screenObjects/restoreWalletsScreens/verifyRestoredWallet.screen'
-import {firstAppLaunch, hideKeyboard, enterRecoveryPhrase} from '../helpers/utils'
+import {firstAppLaunch, hideKeyboard, enterRecoveryPhrase, enterPinCodeIfNecessary} from '../helpers/utils'
 import {
   WALLET_NAME_RESTORED,
   RESTORED_WALLETS,
   SPENDING_PASSWORD,
   DEFAULT_TIMEOUT,
   DEFAULT_INTERVAL,
+  VALID_PIN,
 } from '../constants'
-import { before } from "mocha";
 
 const expect = require('chai').expect
 
 describe('Restore a wallet', () => {
-  before(async () => {
-    driver.launchApp()
-    await firstAppLaunch()
-    driver.closeApp()
-  })
-
   // Execute a block of code before every tests
   beforeEach(() => {
     driver.launchApp()
@@ -32,14 +26,24 @@ describe('Restore a wallet', () => {
     driver.closeApp()
   })
 
+  it('Prepare the app', async () => {
+    await firstAppLaunch(VALID_PIN)
+  })
+
   RESTORED_WALLETS.forEach((restoredWallet) => {
     it(`Straight happy path restoring a ${restoredWallet.name} wallet`, async () => {
-      // await firstAppLaunch()
+      await enterPinCodeIfNecessary(VALID_PIN)
       const walletName = `${WALLET_NAME_RESTORED} ${restoredWallet.name}`
       await addWalletsScreen.addWalletTestnetButton().click()
       await addWalletScreen.restoreWalletButton().click()
 
-      await selectWalletToRestoreScreen.restoreNormalWalletButton().click()
+      if (restoredWallet.type == 1) {
+        await selectWalletToRestoreScreen.restoreNormalWalletButton().click()
+      } else if (restoredWallet.type == 2) {
+        await selectWalletToRestoreScreen.restore24WordWalletButton().click()
+      } else {
+        throw Error(`Unknown wallet type: wallet type is ${restoredWallet.type}`)
+      }
       await enterRecoveryPhrase(restoredWallet.phrase)
       await hideKeyboard()
       await recoveryPhraseInputScreen.restoreWalletButton().click()
@@ -59,6 +63,7 @@ describe('Restore a wallet', () => {
 
       // It is necessary step, till the revamp will be done.
       // After that the Dashboard screen will be created and wallet name (or other component) will be used from there
+      await enterPinCodeIfNecessary(VALID_PIN)
       await driver.pause(2000)
 
       expect(
