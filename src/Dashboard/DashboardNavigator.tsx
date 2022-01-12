@@ -3,7 +3,6 @@ import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {useSelector} from 'react-redux'
 
-import iconGear from '../../legacy/assets/img/gear.png'
 import BiometricAuthScreen from '../../legacy/components/Send/BiometricAuthScreen'
 import {Button} from '../../legacy/components/UiKit'
 import {isJormungandr} from '../../legacy/config/networks'
@@ -14,6 +13,7 @@ import {
 } from '../../legacy/navigationOptions'
 import {SEND_ROUTES, STAKING_DASHBOARD_ROUTES, WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
 import {walletNameSelector} from '../../legacy/selectors'
+import iconGear from '../assets/img/icon/gear.png'
 import {Dashboard} from './Dashboard'
 
 const Stack = createStackNavigator<{

@@ -42,7 +42,7 @@ export var hasPendingOutgoingTransactionSelector: (state: State) => boolean
 export var lastUtxosFetchErrorSelector: (state: State) => typeof state.balance.lastFetchingError
 export var utxosSelector: (state: State) => typeof state.balance.utxos
 
-export var accountBalanceSelector: (state: State) => typeof state.accountState.value | null | undefined
+export var accountBalanceSelector: (state: State) => typeof state.accountState.value | null
 export var isFetchingAccountStateSelector: (state: State) => typeof state.accountState.isFetching
 export var isFetchingPoolInfoSelector: (state: State) => typeof state.poolInfo.isFetching
 export var isFetchingUtxosSelector: (state: State) => typeof state.balance.isFetching
