@@ -43,6 +43,8 @@ export var isFetchingUtxosSelector: (state: State) => boolean
 export var lastUtxosFetchErrorSelector: (state: State) => typeof state.balance.lastFetchingError
 export var serverStatusSelector: (state: State) => ServerStatusCache
 export var utxosSelector: (state: State) => typeof state.balance.utxos
+export var isAppInitializedSelector: (state: State) => boolean
+export var canEnableBiometricSelector: (state: State) => boolean
 
 // prettier-ignore
 interface MultiToken {
