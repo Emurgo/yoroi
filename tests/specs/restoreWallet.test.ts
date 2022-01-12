@@ -7,16 +7,22 @@ import * as verifyRestoredWalletScreen from '../screenObjects/restoreWalletsScre
 import {firstAppLaunch, hideKeyboard, enterRecoveryPhrase} from '../helpers/utils'
 import {
   WALLET_NAME_RESTORED,
-  RESTORED_WALLET,
-  RESTORED_WALLET_CHECKSUM,
+  RESTORED_WALLETS,
   SPENDING_PASSWORD,
   DEFAULT_TIMEOUT,
   DEFAULT_INTERVAL,
 } from '../constants'
+import { before } from "mocha";
 
 const expect = require('chai').expect
 
 describe('Restore a wallet', () => {
+  before(async () => {
+    driver.launchApp()
+    await firstAppLaunch()
+    driver.closeApp()
+  })
+
   // Execute a block of code before every tests
   beforeEach(() => {
     driver.launchApp()
@@ -26,35 +32,38 @@ describe('Restore a wallet', () => {
     driver.closeApp()
   })
 
-  it('Straight happy path', async () => {
-    await firstAppLaunch()
-    await addWalletsScreen.addWalletTestnetButton().click()
-    await addWalletScreen.restoreWalletButton().click()
+  RESTORED_WALLETS.forEach((restoredWallet) => {
+    it(`Straight happy path restoring a ${restoredWallet.name} wallet`, async () => {
+      // await firstAppLaunch()
+      const walletName = `${WALLET_NAME_RESTORED} ${restoredWallet.name}`
+      await addWalletsScreen.addWalletTestnetButton().click()
+      await addWalletScreen.restoreWalletButton().click()
 
-    await selectWalletToRestoreScreen.restoreNormalWalletButton().click()
-    await enterRecoveryPhrase(RESTORED_WALLET)
-    await hideKeyboard()
-    await recoveryPhraseInputScreen.restoreWalletButton().click()
+      await selectWalletToRestoreScreen.restoreNormalWalletButton().click()
+      await enterRecoveryPhrase(restoredWallet.phrase)
+      await hideKeyboard()
+      await recoveryPhraseInputScreen.restoreWalletButton().click()
 
-    expect(await verifyRestoredWalletScreen.walletChecksumText().isDisplayed()).to.be.true
-    expect(await verifyRestoredWalletScreen.walletChecksumText().getText()).to.be.equal(RESTORED_WALLET_CHECKSUM)
-    await verifyRestoredWalletScreen.continueButton().click()
+      expect(await verifyRestoredWalletScreen.walletChecksumText().isDisplayed()).to.be.true
+      expect(await verifyRestoredWalletScreen.walletChecksumText().getText()).to.be.equal(restoredWallet.checksum)
+      await verifyRestoredWalletScreen.continueButton().click()
 
-    await createNewWalletCredentialsScreen.walletNameEdit().click()
-    await createNewWalletCredentialsScreen.walletNameEdit().addValue(WALLET_NAME_RESTORED)
-    await createNewWalletCredentialsScreen.spendingPasswordEdit().click()
-    await createNewWalletCredentialsScreen.spendingPasswordEdit().addValue(SPENDING_PASSWORD)
-    await createNewWalletCredentialsScreen.repeatSpendingPasswordEdit().click()
-    await createNewWalletCredentialsScreen.repeatSpendingPasswordEdit().addValue(SPENDING_PASSWORD)
-    await hideKeyboard()
-    await createNewWalletCredentialsScreen.continueButton().click()
+      await createNewWalletCredentialsScreen.walletNameEdit().click()
+      await createNewWalletCredentialsScreen.walletNameEdit().addValue(walletName)
+      await createNewWalletCredentialsScreen.spendingPasswordEdit().click()
+      await createNewWalletCredentialsScreen.spendingPasswordEdit().addValue(SPENDING_PASSWORD)
+      await createNewWalletCredentialsScreen.repeatSpendingPasswordEdit().click()
+      await createNewWalletCredentialsScreen.repeatSpendingPasswordEdit().addValue(SPENDING_PASSWORD)
+      await hideKeyboard()
+      await createNewWalletCredentialsScreen.continueButton().click()
 
-    // It is necessary step, till the revamp will be done.
-    // After that the Dashboard screen will be created and wallet name (or other component) will be used from there
-    await driver.pause(2000)
+      // It is necessary step, till the revamp will be done.
+      // After that the Dashboard screen will be created and wallet name (or other component) will be used from there
+      await driver.pause(2000)
 
-    expect(
-      await driver.$(`[text="${WALLET_NAME_RESTORED}"]`).waitForExist({timeout: DEFAULT_TIMEOUT, interval: DEFAULT_INTERVAL}),
-    ).to.be.true
+      expect(
+        await driver.$(`[text="${walletName}"]`).waitForExist({timeout: DEFAULT_TIMEOUT, interval: DEFAULT_INTERVAL}),
+      ).to.be.true
+    })
   })
 })
