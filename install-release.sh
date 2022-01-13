@@ -25,9 +25,7 @@ function prompt() {
   then exit; fi
 }
 
-function doAndroid() {
-  prompt "Android : bump";
-
+function bumpAndroid() {
   APP_GRADLE_FILE='android/app/build.gradle'
   TMP_FILE='zzzzz.tmp'
 
@@ -54,16 +52,14 @@ function doAndroid() {
   awk "{sub(/$OLD_VC_LINE/,\"$VC_LINE\")}1 {sub(/$OLD_VN_LINE/,\"$VN_LINE\")}1" $APP_GRADLE_FILE > $TMP_FILE && mv $TMP_FILE $APP_GRADLE_FILE
 
   echo "Bumped $APP_GRADLE_FILE"
+}
 
-  prompt "Android : build";
-
+function buildAndroid() {
   if ask-yn "Build nightly"
   then BUILD_TYPE="Nightly"; BUILD_DIR="nightly";
-  else
-    if ask-yn "Build prod"
-    then BUILD_TYPE="Mainnet"; BUILD_DIR="mainnet";
-    else echo "No build selected"; exit 1;
-    fi
+  elif ask-yn "Build prod"
+  then BUILD_TYPE="Mainnet"; BUILD_DIR="mainnet";
+  else echo "No build selected"; exit 1;
   fi
 
   prompt "Android : building gradle \"${BUILD_TYPE}\""
@@ -73,16 +69,26 @@ function doAndroid() {
   && open app/build/outputs/apk/${BUILD_DIR}/release)
 }
 
+function doAndroid() {
+
+  if ask-yn "Android : bump"
+  then bumpAndroid
+  fi
+
+  if ask-yn "Android : build"
+  then buildAndroid
+  fi
+}
+
 function doApple() {
+
   prompt "!!! Cannot bump iOS versions yet! You need to bump them manually. Proceed"
 
   if ask-yn "Build nightly"
   then BUILD_TYPE="nightly"; BUILD_DIR="nightly";
-  else
-    if ask-yn "Build prod"
-    then BUILD_TYPE="mainnet"; BUILD_DIR="mainnet";
-    else echo "No build selected"; exit 1;
-    fi
+  elif ask-yn "Build prod"
+  then BUILD_TYPE="mainnet"; BUILD_DIR="mainnet";
+  else echo "No build selected"; exit 1;
   fi
 
   prompt "Apple : building fastlane \"${BUILD_TYPE}\""
