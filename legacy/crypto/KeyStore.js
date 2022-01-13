@@ -1,5 +1,6 @@
 // @flow
 
+import ExtendableError from 'es6-error'
 import {type IntlShape, defineMessages} from 'react-intl'
 import {NativeModules, Platform} from 'react-native'
 import * as Keychain from 'react-native-keychain'
@@ -26,6 +27,8 @@ const messages = defineMessages({
   },
 })
 
+export class CredentialsNotFound extends ExtendableError {}
+
 class KeyStore {
   static storagePrefix = '/keystore'
 
@@ -44,7 +47,7 @@ class KeyStore {
         authenticationPrompt: {title: message},
       })
 
-      if (!credentials) throw new Error('credentials not found')
+      if (!credentials) throw new CredentialsNotFound('credentials not found')
 
       return credentials.password
     }

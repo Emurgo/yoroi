@@ -14,7 +14,6 @@ function loadStories() {
 	require('../legacy/components/Delegation/FlawedWalletScreen.stories');
 	require('../legacy/components/Delegation/PoolDetailScreen.stories');
 	require('../legacy/components/Delegation/StakingCenter.stories');
-	require('../legacy/components/Delegation/StakingDashboard.stories');
 	require('../legacy/components/FirstRun/CustomPinScreen.stories');
 	require('../legacy/components/Ledger/DeviceItem/DeviceItem.stories');
 	require('../legacy/components/Ledger/LedgerConnect.stories');
@@ -32,6 +31,8 @@ function loadStories() {
 	require('../legacy/components/UiKit/TextInput.stories');
 	require('../src/Catalyst/Catalyst.stories');
 	require('../src/Catalyst/VotingBanner.stories');
+	require('../src/Dashboard/Dashboard.stories');
+	require('../src/Dashboard/StakePoolInfos.stories');
 	require('../src/FirstRun/AcceptTermsOfService.stories');
 	require('../src/FirstRun/CustomPinScreen.stories');
 	require('../src/FirstRun/LanguagePickerScreen.stories');
@@ -85,7 +86,6 @@ const stories = [
 	'../legacy/components/Delegation/FlawedWalletScreen.stories',
 	'../legacy/components/Delegation/PoolDetailScreen.stories',
 	'../legacy/components/Delegation/StakingCenter.stories',
-	'../legacy/components/Delegation/StakingDashboard.stories',
 	'../legacy/components/FirstRun/CustomPinScreen.stories',
 	'../legacy/components/Ledger/DeviceItem/DeviceItem.stories',
 	'../legacy/components/Ledger/LedgerConnect.stories',
@@ -103,6 +103,8 @@ const stories = [
 	'../legacy/components/UiKit/TextInput.stories',
 	'../src/Catalyst/Catalyst.stories',
 	'../src/Catalyst/VotingBanner.stories',
+	'../src/Dashboard/Dashboard.stories',
+	'../src/Dashboard/StakePoolInfos.stories',
 	'../src/FirstRun/AcceptTermsOfService.stories',
 	'../src/FirstRun/CustomPinScreen.stories',
 	'../src/FirstRun/LanguagePickerScreen.stories',

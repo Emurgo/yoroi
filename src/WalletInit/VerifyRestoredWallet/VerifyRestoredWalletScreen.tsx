@@ -48,7 +48,9 @@ export const VerifyRestoredWalletScreen = () => {
             <>
               <Icon.WalletAccount iconSeed={plate.ImagePart} />
               <Spacer />
-              <Text style={styles.checksum}>{plate.TextPart}</Text>
+              <Text style={styles.checksum} testID="walletChecksum">
+                {plate.TextPart}
+              </Text>
             </>
           ) : (
             <ActivityIndicator style={{flex: 1}} size={'large'} color={'black'} />
@@ -79,7 +81,7 @@ export const VerifyRestoredWalletScreen = () => {
       </ScrollView>
 
       <Actions>
-        <Button onPress={navigateToWalletCredentials} title={strings.buttonText} />
+        <Button onPress={navigateToWalletCredentials} title={strings.buttonText} testID="verifyWalletContinueButton" />
       </Actions>
     </SafeAreaView>
   )
