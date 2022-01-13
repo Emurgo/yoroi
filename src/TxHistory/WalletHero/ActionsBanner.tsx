@@ -19,7 +19,7 @@ const ACTION_PROPS = {
 
 export const ActionsBanner = () => {
   const strings = useStrings()
-  const navigateTo = useNavigations()
+  const navigateTo = useNavigateTo()
   const isReadOnly = useSelector(isReadOnlySelector)
 
   return (
@@ -30,7 +30,7 @@ export const ActionsBanner = () => {
         <View style={styles.row}>
           {!isReadOnly && (
             <View style={styles.centralized}>
-              <TouchableOpacity style={styles.actionIcon} onPress={navigateTo.onSend}>
+              <TouchableOpacity style={styles.actionIcon} onPress={navigateTo.send}>
                 <Icon.Sent {...ACTION_PROPS} />
               </TouchableOpacity>
               <Text style={styles.actionLabel}>{strings.sendLabel}</Text>
@@ -40,7 +40,7 @@ export const ActionsBanner = () => {
           {!isReadOnly && <Spacer width={32} />}
 
           <View style={styles.centralized}>
-            <TouchableOpacity style={styles.actionIcon} onPress={navigateTo.onReceive}>
+            <TouchableOpacity style={styles.actionIcon} onPress={navigateTo.receive}>
               <Icon.Received {...ACTION_PROPS} />
             </TouchableOpacity>
             <Text style={styles.actionLabel}>{strings.receiveLabel}</Text>
@@ -50,7 +50,7 @@ export const ActionsBanner = () => {
 
           {features.walletHero.buy && (
             <View style={styles.centralized}>
-              <TouchableOpacity style={[styles.actionIcon, styles.cta]} onPress={navigateTo.onBuy}>
+              <TouchableOpacity style={[styles.actionIcon, styles.cta]} onPress={navigateTo.buy}>
                 {/* TODO: request buy icon to the design team */}
                 <Text style={styles.buyButton}>+</Text>
               </TouchableOpacity>
@@ -115,13 +115,13 @@ const useStrings = () => {
   }
 }
 
-const useNavigations = () => {
+const useNavigateTo = () => {
   const navigation = useNavigation<TxHistoryStackRootProps>()
   const strings = useStrings()
 
   return {
-    onSend: () => navigation.navigate('send'),
-    onReceive: () => navigation.navigate('receive'),
-    onBuy: () => Alert.alert(strings.messageBuy, strings.messageBuy),
+    send: () => navigation.navigate('send'),
+    receive: () => navigation.navigate('receive'),
+    buy: () => Alert.alert(strings.messageBuy, strings.messageBuy),
   }
 }
