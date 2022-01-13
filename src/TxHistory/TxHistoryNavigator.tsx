@@ -74,7 +74,7 @@ export const TxHistoryNavigator = () => {
           component={ReceiveScreen}
           options={buildOptionsWithDefault({
             title: strings.receiveTitle,
-            headerRight: () => <HeaderRightReceive showModalInfo={showModalInfo} />,
+            headerRight: () => <ModalInfoIconButton onPress={showModalInfo} />,
             backgroundColor: '#fff',
           })}
         />
@@ -185,11 +185,6 @@ const SettingsIconButton = (props: TouchableOpacityProps) => {
       <Icon.Settings size={30} color={COLORS.ACTION_GRAY} />
     </TouchableOpacity>
   )
-}
-
-type HeaderRightReceiveProps = {showModalInfo: () => void}
-const HeaderRightReceive: React.FC<HeaderRightReceiveProps> = ({showModalInfo}) => {
-  return <ModalInfoIconButton onPress={showModalInfo} />
 }
 
 const HeaderRightHistory = () => {
