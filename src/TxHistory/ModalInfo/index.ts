@@ -1,1 +1,1 @@
-export * from './ModaInfo'
+export * from './ModalInfo'
