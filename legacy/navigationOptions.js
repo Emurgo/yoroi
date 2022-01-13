@@ -11,8 +11,8 @@ const GradientHeader = () => <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y:
 export const defaultNavigationOptions = {
   headerStyle: {
     backgroundColor: COLORS.BACKGROUND_BLUE,
-    borderBottomWidth: 0,
-    shadowColor: 'transparent',
+    elevation: 0,
+    shadowOpacity: 0,
   },
   headerTintColor: '#fff',
 }

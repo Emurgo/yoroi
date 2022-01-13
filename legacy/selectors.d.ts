@@ -2,7 +2,7 @@
 
 import BigNumber from 'bignumber.js'
 
-import {DefaultAsset, Token, TransactionInfo} from '../src/types/cardano'
+import {DefaultAsset, Token, TokenEntry, TransactionInfo} from '../src/types/cardano'
 import type {State, WalletMeta} from './state'
 
 export var availableAssetsSelector: (state: State) => Record<string, Token | DefaultAsset>
@@ -35,14 +35,58 @@ export var isUsedAddressIndexSelector: (state: State) => Record<string, boolean>
 export var receiveAddressesSelector: (state: State) => Array<string>
 export var hwDeviceInfoSelector: (state: State) => {bip44AccountPublic: string; hwFeatures: HWFeatures} | null
 export var isDelegatingSelector: (state: State) => boolean
-export var unsignedTxSelector = (state: State) => state.voting.unsignedTx
+export var unsignedTxSelector: (state: State) => typeof state.voting.unsignedTx
 export var encryptedKeySelector: (state: State) => string
 export var pinSelector: (state: State) => Array<string>
+export var hasPendingOutgoingTransactionSelector: (state: State) => boolean
+export var lastUtxosFetchErrorSelector: (state: State) => typeof state.balance.lastFetchingError
+export var utxosSelector: (state: State) => typeof state.balance.utxos
+
+export var accountBalanceSelector: (state: State) => typeof state.accountState.value | null
+export var isFetchingAccountStateSelector: (state: State) => typeof state.accountState.isFetching
+export var isFetchingPoolInfoSelector: (state: State) => typeof state.poolInfo.isFetching
+export var isFetchingUtxosSelector: (state: State) => typeof state.balance.isFetching
+export var isFlawedWalletSelector: (state: State) => typeof state.isFlawedWallet
+export var lastAccountStateFetchErrorSelector: (state: State) => typeof state.accountState.lastFetchingError
+export var poolInfoSelector: (state: State) => null | typeof state.poolInfo.meta
+export var poolOperatorSelector: (state: State) => null | typeof state.accountState.poolOperator
+export var serverStatusSelector: (state: State) => typeof state.serverStatus
+export var totalDelegatedSelector: (state: State) => null | typeof state.accountState.totalDelegated
+export var utxoBalanceSelector: (state: State) => BigNumber | null
 
 // prettier-ignore
-interface PartialMultiToken {
+interface MultiToken {
   getDefaultId: () => string,
   getDefault: () => BigNumber,
+  getDefaultEntry: () => TokenEntry,
+  get(tokenIdentifier: string): BigNumber | void,
   values: Array<{amount: BigNumber, identifier: string, networkId: number}>
 }
-export var tokenBalanceSelector: (state: State) => PartialMultiToken
+export var tokenBalanceSelector: (state: State) => MultiToken
+
+// prettier-ignore
+export type ServerStatusCache = {
+  isServerOk: boolean,
+  isMaintenance: boolean,
+  serverTime: Date | null,
+}
+
+// prettier-ignore
+export type RemotePoolMetaSuccess = {
+  info: null | {
+    name?: string | null,
+    ticker?: string | null,
+    description?: string | null,
+    homepage?: string | null,
+    // other stuff from SMASH.
+  },
+  history: Array<{
+    epoch: number,
+    slot: number,
+    tx_ordinal: number,
+    cert_ordinal: number,
+    payload: RemoteCertificate,
+  }>
+}
+
+export type ServerStatusCache = any

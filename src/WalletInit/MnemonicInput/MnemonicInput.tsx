@@ -66,6 +66,7 @@ const MnemonicWordsInput = ({onSelect, words}: MnemonicWordsInputProps) => {
           key={index}
           style={{width: '33%', padding: 4}}
           onLayout={({nativeEvent}) => (rowHeightRef.current = nativeEvent.layout.height)}
+          testID={`mnemonicInput${index}`}
         >
           <MnemonicWordInput
             ref={refs[index]}

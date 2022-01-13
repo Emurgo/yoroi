@@ -49,7 +49,12 @@ export const RestoreWalletScreen = () => {
       </ScrollableView>
 
       <Actions>
-        <Button onPress={navigateToWalletCredentials} title={strings.restoreButton} disabled={!phrase} />
+        <Button
+          onPress={navigateToWalletCredentials}
+          title={strings.restoreButton}
+          disabled={!phrase}
+          testID="restoreButton"
+        />
       </Actions>
     </SafeAreaView>
   )

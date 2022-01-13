@@ -20,7 +20,9 @@ export var CONFIG: {
     MNEMONIC3: string,
     START_WITH_INDEX_SCREEN: boolean,
     PREFILL_FORMS: boolean,
-    PASSWORD: string
+    PASSWORD: string,
+    SEND_ADDRESS: string,
+    SEND_AMOUNT: string,
   },
   CATALYST: {
     MIN_ADA: any,
@@ -62,5 +64,13 @@ type WalletConfig = {
 }
 
 export var getWalletConfigById: (walletImplementationId: string) => WalletImplementation
+
+// prettier-ignore
+export var getCardanoBaseConfig: (networkConfig: CardanoHaskellShelleyNetwork) => Array<{
+  StartAt?: number,
+  GenesisDate?: string,
+  SlotsPerEpoch?: number,
+  SlotDuration?: number,
+}>
 
 export var UI_V2: boolean

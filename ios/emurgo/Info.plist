@@ -23,7 +23,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>331</string>
+	<string>351</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
@@ -44,13 +44,13 @@
 	<key>NSAppleMusicUsageDescription</key>
 	<string>Enable apple music usage</string>
 	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>Yoroi mobile needs to access Bluetooth in order to be able to pair with hardware wallets that support this feature</string>
+	<string>Yoroi Mobile needs to access Bluetooth in order to be able to pair with hardware wallets that support this feature</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>Enable bluetooth usage</string>
 	<key>NSCalendarsUsageDescription</key>
 	<string>Enable calendars usage</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Enabling camera allows you to scan QR codes.</string>
+	<string>Yoroi Mobile will only use camera when user requests to scan a QR-code with a blockchain address, instead of typing the address in manually.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Enabling Face ID allows you quick and secure access to your account.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
