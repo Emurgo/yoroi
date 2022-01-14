@@ -24,7 +24,7 @@ import {
   Text,
   TextInput,
 } from '../../../legacy/components/UiKit'
-import {CONFIG} from '../../../legacy/config/config'
+import {CONFIG, UI_V2} from '../../../legacy/config/config'
 import {getCardanoNetworkConfigById, isHaskellShelleyNetwork} from '../../../legacy/config/networks'
 import {AssetOverflowError, InsufficientFunds} from '../../../legacy/crypto/errors'
 import {MultiToken} from '../../../legacy/crypto/MultiToken'
@@ -200,7 +200,7 @@ export const SendScreen = ({selectedTokenIdentifier, sendAll, onSendAll}: Props)
 
     setShowSendAllWarning(false)
 
-    navigation.navigate(SEND_ROUTES.CONFIRM, {
+    navigation.navigate(UI_V2 ? 'send-confirm' : SEND_ROUTES.CONFIRM, {
       availableAmount: tokenBalance.getDefault(),
       address,
       defaultAssetAmount,
