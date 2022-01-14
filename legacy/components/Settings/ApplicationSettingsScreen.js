@@ -7,13 +7,14 @@ import {Platform, ScrollView, StyleSheet, Switch} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {setAppSettingField, setSystemAuth, showErrorDialog} from '../../actions'
+// $FlowExpectedError
+import {useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../../src/SelectedWallet'
+import {setAppSettingField, setEasyConfirmation, setSystemAuth} from '../../actions'
 import {CONFIG} from '../../config/config'
 import KeyStore from '../../crypto/KeyStore'
 import walletManager from '../../crypto/walletManager'
 import {APP_SETTINGS_KEYS} from '../../helpers/appSettings'
 import {canBiometricEncryptionBeEnabled, isBiometricEncryptionHardwareSupported} from '../../helpers/deviceSettings'
-import {errorMessages} from '../../i18n/global-messages'
 import {SETTINGS_ROUTES} from '../../RoutesList'
 import {
   biometricHwSupportSelector,
@@ -88,25 +89,26 @@ const ApplicationSettingsScreen = () => {
   const isSystemAuthEnabled = useSelector(isSystemAuthEnabledSelector)
   const installationId = useSelector(installationIdSelector)
   const dispatch = useDispatch()
+  const walletMeta = useSelectedWalletMeta()
+  const setSelectedWalletMeta = useSetSelectedWalletMeta()
 
   const setCrashReporting = (value: boolean) =>
     dispatch(setAppSettingField(APP_SETTINGS_KEYS.SEND_CRASH_REPORTS, value))
 
   const onToggleBiometricsAuthIn = async () => {
     if (isSystemAuthEnabled) {
-      if (!walletManager.canBiometricsSignInBeDisabled()) {
-        await showErrorDialog(errorMessages.disableEasyConfirmationFirst, intl)
-
-        return
-      }
-
       navigation.navigate(SETTINGS_ROUTES.BIO_AUTHENTICATE, {
         keyId: installationId,
         onSuccess: () =>
           navigation.navigate(SETTINGS_ROUTES.SETUP_CUSTOM_PIN, {
             onSuccess: async () => {
               await dispatch(setSystemAuth(false))
-
+              await walletManager.disableEasyConfirmation()
+              dispatch(setEasyConfirmation(false))
+              setSelectedWalletMeta({
+                ...walletMeta,
+                isEasyConfirmationEnabled: false,
+              })
               navigation.navigate(SETTINGS_ROUTES.MAIN)
             },
           }),
@@ -167,7 +169,7 @@ const ApplicationSettingsScreen = () => {
 
         <SettingsItem
           label={intl.formatMessage(messages.biometricsSignIn)}
-          disabled={!isBiometricEncryptionHardwareSupported || shouldNotEnableBiometricAuth}
+          disabled={!isBiometricHardwareSupported || shouldNotEnableBiometricAuth}
         >
           <Switch
             value={isSystemAuthEnabled}

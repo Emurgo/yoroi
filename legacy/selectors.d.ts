@@ -41,6 +41,8 @@ export var pinSelector: (state: State) => Array<string>
 export var hasPendingOutgoingTransactionSelector: (state: State) => boolean
 export var lastUtxosFetchErrorSelector: (state: State) => typeof state.balance.lastFetchingError
 export var utxosSelector: (state: State) => typeof state.balance.utxos
+export var isAppInitializedSelector: (state: State) => boolean
+export var canEnableBiometricSelector: (state: State) => boolean
 
 export var accountBalanceSelector: (state: State) => typeof state.accountState.value | null
 export var isFetchingAccountStateSelector: (state: State) => typeof state.accountState.isFetching
