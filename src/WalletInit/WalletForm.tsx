@@ -49,8 +49,12 @@ export const WalletForm = ({onSubmit}: Props) => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
-      <ScrollView keyboardShouldPersistTaps={'always'} contentContainerStyle={styles.scrollContentContainer}>
-        <WalletNameInput
+      <ScrollView
+        keyboardShouldPersistTaps={'always'}
+        contentContainerStyle={styles.scrollContentContainer}
+        testID={'credentialsView'}
+      >
+        <TextInput
           enablesReturnKeyAutomatically
           autoFocus
           label={strings.walletNameInputLabel}
@@ -65,7 +69,7 @@ export const WalletForm = ({onSubmit}: Props) => {
 
         <Spacer />
 
-        <PasswordInput
+        <TextInput
           enablesReturnKeyAutomatically
           ref={passwordRef}
           secureTextEntry
@@ -84,7 +88,7 @@ export const WalletForm = ({onSubmit}: Props) => {
 
         <Spacer />
 
-        <PasswordConfirmationInput
+        <TextInput
           enablesReturnKeyAutomatically
           ref={passwordConfirmationRef}
           secureTextEntry
@@ -112,9 +116,9 @@ export const WalletForm = ({onSubmit}: Props) => {
   )
 }
 
-const WalletNameInput = TextInput
-const PasswordInput = TextInput
-const PasswordConfirmationInput = TextInput
+// const WalletNameInput = TextInput
+// const PasswordInput = TextInput
+// const PasswordConfirmationInput = TextInput
 const Actions = (props) => <View {...props} style={styles.actions} />
 
 const styles = StyleSheet.create({
