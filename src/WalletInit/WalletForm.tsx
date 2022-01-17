@@ -54,7 +54,7 @@ export const WalletForm = ({onSubmit}: Props) => {
         contentContainerStyle={styles.scrollContentContainer}
         testID={'credentialsView'}
       >
-        <TextInput
+        <WalletNameInput
           enablesReturnKeyAutomatically
           autoFocus
           label={strings.walletNameInputLabel}
@@ -69,7 +69,7 @@ export const WalletForm = ({onSubmit}: Props) => {
 
         <Spacer />
 
-        <TextInput
+        <PasswordInput
           enablesReturnKeyAutomatically
           ref={passwordRef}
           secureTextEntry
@@ -88,7 +88,7 @@ export const WalletForm = ({onSubmit}: Props) => {
 
         <Spacer />
 
-        <TextInput
+        <PasswordConfirmationInput
           enablesReturnKeyAutomatically
           ref={passwordConfirmationRef}
           secureTextEntry
@@ -116,9 +116,9 @@ export const WalletForm = ({onSubmit}: Props) => {
   )
 }
 
-// const WalletNameInput = TextInput
-// const PasswordInput = TextInput
-// const PasswordConfirmationInput = TextInput
+const WalletNameInput = TextInput
+const PasswordInput = TextInput
+const PasswordConfirmationInput = TextInput
 const Actions = (props) => <View {...props} style={styles.actions} />
 
 const styles = StyleSheet.create({
