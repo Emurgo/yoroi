@@ -7,9 +7,10 @@ import * as RNP from 'react-native-paper'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {enableScreens} from 'react-native-screens'
 import {QueryClient, QueryClientProvider} from 'react-query'
-import {useDispatch} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 
 import {initApp} from '../legacy/actions'
+import {isAppInitializedSelector} from '../legacy/selectors'
 import AppNavigator from './AppNavigator'
 import {SelectedWalletMetaProvider, SelectedWalletProvider} from './SelectedWallet'
 
@@ -49,6 +50,9 @@ const useHideScreenInAppSwitcher = () => {
 const App = () => {
   useHideScreenInAppSwitcher()
   useInitializeApp()
+  const isAppInitialized = useSelector(isAppInitializedSelector)
+
+  if (!isAppInitialized) return null
 
   return (
     <SafeAreaProvider>
