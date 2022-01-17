@@ -19,6 +19,7 @@ import iconSendActive from './assets/img/icon/send-active.png'
 import iconHistory from './assets/img/icon/txhistory.png'
 import iconHistoryActive from './assets/img/icon/txhistory-active.png'
 import {CatalystNavigator} from './Catalyst/CatalystNavigator'
+import {Icon} from './components/Icon'
 import {DashboardNavigator} from './Dashboard'
 import {ReceiveScreenNavigator} from './Receive/ReceiveScreenNavigator'
 import {useSelectedWallet, WalletSelectionScreen} from './SelectedWallet'
@@ -57,7 +58,12 @@ const WalletTabNavigator = () => {
           name={'history'}
           component={TxHistoryNavigator}
           options={{
-            tabBarIcon: ({focused}) => <Image source={focused ? iconHistoryActive : iconHistory} />,
+            tabBarIcon: ({focused}) => (
+              <Icon.TabWallet
+                size={24}
+                color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
+              />
+            ),
             tabBarLabel: strings.walletTabBarLabel,
           }}
         />
@@ -68,7 +74,15 @@ const WalletTabNavigator = () => {
           name={'staking-dashboard'}
           component={DashboardNavigator}
           options={{
-            tabBarIcon: ({focused}) => <Image source={focused ? iconDashboardActive : iconDashboard} />,
+            tabBarIcon: ({focused}) =>
+              !UI_V2 ? (
+                <Image source={focused ? iconDashboardActive : iconDashboard} />
+              ) : (
+                <Icon.TabStaking
+                  size={24}
+                  color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
+                />
+              ),
             tabBarLabel: strings.dashboardTabBarLabel,
           }}
         />
@@ -167,6 +181,10 @@ const messages = defineMessages({
   walletButton: {
     id: 'components.settings.walletsettingscreen.tabTitle',
     defaultMessage: '!!!Wallet',
+  },
+  stakingButton: {
+    id: 'global.staking',
+    defaultMessage: '!!!Staking',
   },
 })
 
