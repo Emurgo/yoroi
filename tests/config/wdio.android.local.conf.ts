@@ -7,7 +7,7 @@ export const config: WebdriverIO.Config = {
   // ============
   // Specs
   // ============
-  specs: ['./tests/specs/**/*.ts'],
+  specs: ['./tests/specs/*.test.ts'],
   capabilities: [
     {
       platformName: 'Android',
