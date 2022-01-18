@@ -1272,9 +1272,10 @@
     buffer-crc32 "0.2.13"
     fnv-plus "1.3.1"
 
-"@emurgo/react-native-haskell-shelley@git+https://github.com/Emurgo/react-native-haskell-shelley#bump-serialization-lib":
-  version "3.1.3"
-  resolved "git+https://github.com/Emurgo/react-native-haskell-shelley#66e2b7b1f6edc47cc9c344036634ee6eedca7f32"
+"@emurgo/react-native-haskell-shelley@3.1.3-beta.0":
+  version "3.1.3-beta.0"
+  resolved "https://registry.yarnpkg.com/@emurgo/react-native-haskell-shelley/-/react-native-haskell-shelley-3.1.3-beta.0.tgz#d3c951087d94d30b461a187ed93f0c3abf0e8431"
+  integrity sha512-Flptvh+E8yqV+lzhbkv2rZ5h2dPfGmubR375irVW5nMcmkmidDjJAAJytBTiv4cUVW+A0DzQrWdMtviEdBBK/w==
   dependencies:
     base-64 "0.1.0"
 
