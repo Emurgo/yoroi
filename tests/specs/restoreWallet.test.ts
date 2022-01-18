@@ -53,6 +53,7 @@ describe('Restore a wallet', () => {
       expect(await verifyRestoredWalletScreen.walletChecksumText().getText()).to.be.equal(restoredWallet.checksum)
       await verifyRestoredWalletScreen.continueButton().click()
 
+      await driver.waitUntil(async () => await createNewWalletCredentialsScreen.credentialsView().isDisplayed())
       await createNewWalletCredentialsScreen.walletNameEdit().click()
       await createNewWalletCredentialsScreen.walletNameEdit().addValue(walletName)
       await createNewWalletCredentialsScreen.spendingPasswordEdit().click()

@@ -43,8 +43,7 @@ export async function hideKeyboard(): Promise<void> {
 }
 
 export async function enterRecoveryPhrase(recoveryPhrase: string[]): Promise<void> {
-  const phraseLength = recoveryPhrase.length
-  for (let index = 0; index < phraseLength; index++) {
+  for (let index = 0; index < recoveryPhrase.length; index++) {
     const mnemonicInput = await recoveryPhraseScreen.getMnemonicField(index)
     const mnemonicInputTextField = await mnemonicInput.$('//android.widget.EditText')
     await mnemonicInputTextField.setValue(recoveryPhrase[index])

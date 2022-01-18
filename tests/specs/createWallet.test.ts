@@ -25,6 +25,7 @@ describe('Creating a wallet', () => {
     await addWalletsScreen.addWalletTestnetButton().click()
     await addWalletScreen.createWalletButton().click()
 
+    await driver.waitUntil(async () => await createNewWalletCredentialsScreen.credentialsView().isDisplayed())
     await createNewWalletCredentialsScreen.walletNameEdit().click()
     await createNewWalletCredentialsScreen.spendingPasswordEdit().click()
     await createNewWalletCredentialsScreen.spendingPasswordEdit().addValue(SPENDING_PASSWORD)
