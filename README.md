@@ -418,6 +418,56 @@ active toolchain
 rustc 1.41.0 (5e1a79984 2020-01-27)
 ```
 
+## Binaryen submodule problems
+
+If you have been facing the problem
+
+```bash
+failed to fetch submodule `binaryen` from git@github.com:WebAssembly/binaryen.git
+```
+
+These steps should help you.
+
+1. It is necessary to create a ssh-key and to add it to your GitHub account. [The GitHub instruction how to do that](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) </br>
+2. Add the generated ssh-key to your ssh-agent
+
+```bash
+eval `ssh-agent -s`
+ssh-add ~/.ssh/<your_private_key>
+```
+
+### If the error still persists.
+
+Add the `github.com` to your `~/.ssh/known_hosts`
+
+1. Get the `github.com` ip-address
+
+```bash
+ping github.com -c 1
+```
+
+2. Get the github.com public ssh keys by GitHub ip-address
+
+```bash
+ssh-keyscan <github.com ip-address>
+```
+
+The output will be something like that
+
+```bash
+140.82.121.3 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==
+140.82.121.3 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEmKSENjQEezOmxkZMy7opKgwFB9nkt5YRrYMjNuG5N87uRgg6CLrbo5wAdT/y6v0mKV0U2w0WZ2YB/++Tpockg=
+140.82.121.3 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl
+```
+
+3. Copy one of output strings and place it into your `~/.ssh/known_hosts`.
+   - If the setting `HashKnownHosts` is `yes` (Debian and Ubuntu it is `yes` by default) it is necessary to re-hash your `known-hosts` file.
+     - To check the state of the setting, check the file `/etc/ssh/ssh_config` (Ubuntu)
+     - Re-hashing the `known_hosts` file
+   ```bash
+   ssh-keygen -Hf ~/.ssh/known_hosts
+   ```
+
 ---
 
 # Code style
