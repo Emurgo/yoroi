@@ -10,7 +10,7 @@ import {useDispatch, useSelector} from 'react-redux'
 // $FlowExpectedError
 import {useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../../src/SelectedWallet'
 import {setAppSettingField, setEasyConfirmation, setSystemAuth} from '../../actions'
-import {CONFIG} from '../../config/config'
+import {CONFIG, isNightly} from '../../config/config'
 import KeyStore from '../../crypto/KeyStore'
 import walletManager from '../../crypto/walletManager'
 import {APP_SETTINGS_KEYS} from '../../helpers/appSettings'
@@ -181,7 +181,7 @@ const ApplicationSettingsScreen = () => {
 
       <SettingsSection title={intl.formatMessage(messages.crashReporting)}>
         <SettingsItem label={intl.formatMessage(messages.crashReportingText)}>
-          <Switch value={sendCrashReports} onValueChange={setCrashReporting} />
+          <Switch value={sendCrashReports} onValueChange={setCrashReporting} disabled={isNightly()} />
         </SettingsItem>
       </SettingsSection>
 
