@@ -60,7 +60,10 @@ const MnemonicWordsInput = ({onSelect, words}: MnemonicWordsInputProps) => {
   useAutoFocus(refs[0]) // RNP.TextInput has a buggy autoFocus
 
   return (
-    <View style={{padding: 4, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-around'}}>
+    <View
+      style={{padding: 4, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-around'}}
+      testID={'mnemonicInputsView'}
+    >
       {words.map((word, index) => (
         <View
           key={index}
