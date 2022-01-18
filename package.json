@@ -44,7 +44,7 @@
       "bash -c tsc -p tsconfig.json --noEmit"
     ],
     "*.{md,json}": "prettier --write",
-    "*.{stories}.*": [
+    "*.stories.*": [
       "yarn prestorybook",
       "git add ./storybook/storyLoader.js"
     ]
