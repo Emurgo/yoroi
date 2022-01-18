@@ -461,7 +461,7 @@ The output will be something like that
 ```
 
 3. Copy one of output strings and place it into your `~/.ssh/known_hosts`.
-   - If the setting `HashKnownHosts` is `yes` (Debian and Ubuntu it is `yea` by default) it is necessary to re-hash your `known-hosts` file.
+   - If the setting `HashKnownHosts` is `yes` (Debian and Ubuntu it is `yes` by default) it is necessary to re-hash your `known-hosts` file.
      - To check the state of the setting, check the file `/etc/ssh/ssh_config` (Ubuntu)
      - Re-hashing the `known_hosts` file
    ```bash
