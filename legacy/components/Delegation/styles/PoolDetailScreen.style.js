@@ -7,7 +7,7 @@ import {COLORS, spacing} from '../../../styles/config'
 export default StyleSheet.create({
   content: {
     flex: 1,
-    paddingTop: 32,
+    padding: 24,
   },
   heading: {
     alignItems: 'center',
@@ -20,10 +20,6 @@ export default StyleSheet.create({
     paddingBottom: spacing.paragraphBottomMargin,
   },
   button: {
-    padding: 16,
-  },
-  buttons: {
-    justifyContent: 'space-around',
-    flexDirection: 'row',
+    padding: 8,
   },
 })
