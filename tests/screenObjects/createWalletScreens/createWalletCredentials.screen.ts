@@ -2,6 +2,7 @@ import {WALLET_ALREADY_EXISTS, MUST_BE_FILLED} from '../../helpers/errors'
 
 const getAllEditFields = () => driver.$$('//android.widget.EditText')
 
+export const credentialsView = () => driver.$('//*[@resource-id="credentialsView"]')
 // @ts-ignore
 export const walletNameEdit = (): WebdriverIO.Element => getAllEditFields()[0]
 export const walletNameExistsError = () => driver.$(`[text="${WALLET_ALREADY_EXISTS}"]`);
