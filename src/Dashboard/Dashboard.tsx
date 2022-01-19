@@ -1,7 +1,8 @@
 import {useNavigation} from '@react-navigation/native'
+import BigNumber from 'bignumber.js'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {RefreshControl, ScrollView, StyleSheet, View} from 'react-native'
+import {ActivityIndicator, RefreshControl, ScrollView, StyleSheet, View} from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'
 import {useDispatch, useSelector} from 'react-redux'
 
@@ -17,7 +18,6 @@ import {getCardanoNetworkConfigById} from '../../legacy/config/networks'
 import globalMessages from '../../legacy/i18n/global-messages'
 import {CATALYST_ROUTES, DELEGATION_ROUTES} from '../../legacy/RoutesList'
 import {
-  accountBalanceSelector,
   defaultNetworkAssetSelector,
   hwDeviceInfoSelector,
   isFetchingAccountStateSelector,
@@ -25,7 +25,6 @@ import {
   isOnlineSelector,
   lastAccountStateFetchErrorSelector,
   serverStatusSelector,
-  totalDelegatedSelector,
   utxoBalanceSelector,
   utxosSelector,
 } from '../../legacy/selectors'
@@ -39,7 +38,7 @@ import {VotingBanner} from '../Catalyst/VotingBanner'
 import {useSelectedWallet} from '../SelectedWallet'
 import {EpochProgress} from './EpochProgress'
 import {NotDelegatedInfo} from './NotDelegatedInfo'
-import {StakePoolInfos, useStakingStatus} from './StakePoolInfos'
+import {StakePoolInfos, useStakingInfo} from './StakePoolInfos'
 import {UserSummary} from './UserSummary'
 import {WithdrawStakingRewards} from './WithdrawStakingRewards'
 
@@ -51,10 +50,8 @@ export const Dashboard = () => {
   const utxoBalance = useSelector(utxoBalanceSelector)
   const utxos = useSelector(utxosSelector)
   const isFetchingUtxos = useSelector(isFetchingUtxosSelector)
-  const accountBalance = useSelector(accountBalanceSelector)
   const isFetchingAccountState = useSelector(isFetchingAccountStateSelector)
   const lastAccountStateSyncError = useSelector(lastAccountStateFetchErrorSelector)
-  const totalDelegated = useSelector(totalDelegatedSelector)
   const isOnline = useSelector(isOnlineSelector)
   const hwDeviceInfo = useSelector(hwDeviceInfoSelector)
   const defaultAsset = useSelector(defaultNetworkAssetSelector)
@@ -63,7 +60,7 @@ export const Dashboard = () => {
 
   const [showWithdrawalDialog, setShowWithdrawalDialog] = React.useState(false)
 
-  const {stakingStatus} = useStakingStatus(wallet)
+  const {stakingInfo, refetch, error} = useStakingInfo(wallet)
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
@@ -73,7 +70,7 @@ export const Dashboard = () => {
 
       <View style={styles.container}>
         <OfflineBanner />
-        {isOnline && lastAccountStateSyncError && (
+        {isOnline && (lastAccountStateSyncError || error) && (
           <SyncErrorBanner showRefresh={!(isFetchingAccountState || isFetchingUtxos)} />
         )}
 
@@ -84,31 +81,36 @@ export const Dashboard = () => {
             <RefreshControl
               onRefresh={() => {
                 fetchUTXOs()
-                fetchAccountState(wallet)
+                fetchAccountState()
+                return refetch()
               }}
               refreshing={false}
             />
           }
         >
-          {stakingStatus && !stakingStatus.isRegistered && <NotDelegatedInfo />}
+          {stakingInfo && !stakingInfo.isRegistered && <NotDelegatedInfo />}
 
           <Row>
             <EpochInfo />
           </Row>
 
-          <Row>
-            <UserSummary
-              totalAdaSum={utxoBalance}
-              totalRewards={accountBalance}
-              totalDelegated={totalDelegated}
-              onWithdraw={() => setShowWithdrawalDialog(true)}
-              disableWithdraw={wallet.isReadOnly}
-            />
-          </Row>
+          {!stakingInfo ? (
+            <ActivityIndicator size={'large'} />
+          ) : stakingInfo?.isRegistered ? (
+            <Row>
+              <UserSummary
+                totalAdaSum={utxoBalance}
+                totalRewards={new BigNumber(stakingInfo.rewards)}
+                totalDelegated={new BigNumber(stakingInfo.amount)}
+                onWithdraw={() => setShowWithdrawalDialog(true)}
+                disableWithdraw={wallet.isReadOnly}
+              />
+            </Row>
+          ) : null}
 
           <VotingBanner onPress={() => navigation.navigate(CATALYST_ROUTES.ROOT)} />
 
-          {stakingStatus?.isRegistered && (
+          {stakingInfo?.isRegistered && (
             <Row>
               <StakePoolInfos />
             </Row>

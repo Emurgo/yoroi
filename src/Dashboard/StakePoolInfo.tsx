@@ -1,6 +1,6 @@
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Linking, View} from 'react-native'
+import {ActivityIndicator, Linking, View} from 'react-native'
 import {StyleSheet} from 'react-native'
 import {useQuery} from 'react-query'
 
@@ -12,7 +12,11 @@ import {RemotePoolMetaFailure, StakePoolInfoAndHistory, WalletInterface} from '.
 export const StakePoolInfo = ({stakePoolId}: {stakePoolId: string}) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
-  const {stakePoolInfo} = useStakePoolInfo(wallet, stakePoolId)
+  const {stakePoolInfo, isLoading} = useStakePoolInfo(wallet, stakePoolId)
+
+  if (isLoading) {
+    return <ActivityIndicator size={'large'} />
+  }
 
   return stakePoolInfo ? (
     <View>

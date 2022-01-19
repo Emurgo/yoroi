@@ -131,4 +131,21 @@ const mockWallet: WalletInterface = {
   getDelegationStatus: () => {
     throw new Error('Not implemented')
   },
+  subscribe: () => {
+    throw new Error('Not implemented')
+  },
+  subscribeOnTxHistoryUpdate: () => {
+    null
+  },
+  fetchAccountState: () =>
+    Promise.resolve({
+      ['reward-address-hex']: {
+        remainingAmount: '0',
+        rewards: '0',
+        withdrawals: '',
+      },
+    }),
+  fetchUTXOs: () => Promise.resolve([]),
+  getAllUtxosForKey: () => Promise.resolve([]),
+  rewardAddressHex: 'reward-address-hex',
 }
