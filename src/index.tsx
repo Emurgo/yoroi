@@ -18,6 +18,7 @@ setLogLevel(CONFIG.LOG_LEVEL)
 bluebird.config({
   longStackTraces: true,
   warnings: true,
+  cancelation: true,
 })
 
 /*
