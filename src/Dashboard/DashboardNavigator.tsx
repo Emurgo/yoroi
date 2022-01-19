@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
-import {useSelector} from 'react-redux'
 
 import BiometricAuthScreen from '../../legacy/components/Send/BiometricAuthScreen'
 import {Button} from '../../legacy/components/UiKit'
@@ -12,8 +11,9 @@ import {
   jormunNavigationOptions,
 } from '../../legacy/navigationOptions'
 import {SEND_ROUTES, STAKING_DASHBOARD_ROUTES, WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
-import {walletNameSelector} from '../../legacy/selectors'
 import iconGear from '../assets/img/icon/gear.png'
+import {useWalletName} from '../hooks'
+import {useSelectedWallet} from '../SelectedWallet'
 import {Dashboard} from './Dashboard'
 
 const Stack = createStackNavigator<{
@@ -23,7 +23,8 @@ const Stack = createStackNavigator<{
 }>()
 
 export const DashboardNavigator = () => {
-  const walletName = useSelector(walletNameSelector)
+  const wallet = useSelectedWallet()
+  const walletName = useWalletName(wallet)
 
   return (
     <Stack.Navigator

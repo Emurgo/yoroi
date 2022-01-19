@@ -62,7 +62,6 @@ export const updateHistory = () => async (dispatch: Dispatch<any>) => {
 
 export const mirrorTxHistory = () => (dispatch: Dispatch<any>) => {
   const {
-    walletName: name,
     isInitialized,
     networkId,
     walletImplementationId,
@@ -86,7 +85,6 @@ export const mirrorTxHistory = () => (dispatch: Dispatch<any>) => {
     type: 'Mirror walletManager TxHistory',
     path: ['wallet'],
     payload: {
-      name,
       isEasyConfirmationEnabled,
       isInitialized,
       networkId,

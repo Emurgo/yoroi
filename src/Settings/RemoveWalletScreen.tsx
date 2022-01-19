@@ -12,11 +12,14 @@ import {Button, Checkbox, Spacer, StatusBar, Text, TextInput} from '../../legacy
 import {Checkmark} from '../../legacy/components/UiKit/TextInput'
 import walletManager from '../../legacy/crypto/walletManager'
 import {WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
-import {isHWSelector, walletNameSelector} from '../../legacy/selectors'
+import {isHWSelector} from '../../legacy/selectors'
+import {useWalletName} from '../hooks'
+import {useSelectedWallet} from '../SelectedWallet'
 
 export const RemoveWalletScreen = () => {
   const strings = useStrings()
-  const walletName = useSelector(walletNameSelector)
+  const wallet = useSelectedWallet()
+  const walletName = useWalletName(wallet)
   const isHW = useSelector(isHWSelector)
 
   const navigation = useNavigation()

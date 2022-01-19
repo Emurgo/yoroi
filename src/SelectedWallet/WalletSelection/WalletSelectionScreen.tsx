@@ -3,7 +3,7 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, ScrollView, StyleSheet, Text} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useDispatch, useSelector} from 'react-redux'
+import {useDispatch} from 'react-redux'
 
 import {setEasyConfirmation, showErrorDialog, updateVersion} from '../../../legacy/actions'
 import Screen from '../../../legacy/components/Screen'
@@ -14,9 +14,9 @@ import {InvalidState} from '../../../legacy/crypto/errors'
 import walletManager, {KeysAreInvalid, SystemAuthDisabled} from '../../../legacy/crypto/walletManager'
 import globalMessages, {errorMessages} from '../../../legacy/i18n/global-messages'
 import {ROOT_ROUTES, WALLET_INIT_ROUTES, WALLET_ROOT_ROUTES} from '../../../legacy/RoutesList'
-import {walletsListSelector} from '../../../legacy/selectors'
 import {WalletMeta} from '../../../legacy/state'
 import {COLORS} from '../../../legacy/styles/config'
+import {useWalletMetas} from '../../hooks'
 import {useSetSelectedWallet, useSetSelectedWalletMeta} from '..'
 import {WalletListItem} from './WalletListItem'
 
@@ -24,7 +24,7 @@ export const WalletSelectionScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
   const navigation = useNavigation()
-  const wallets = useSelector(walletsListSelector)
+  const walletMetas = useWalletMetas()
   const selectWalletMeta = useSetSelectedWalletMeta()
   const selectWallet = useSetSelectedWallet()
   const dispatch = useDispatch()
@@ -77,10 +77,10 @@ export const WalletSelectionScreen = () => {
           <Text style={styles.title}>{strings.header}</Text>
 
           <ScrollView style={styles.wallets}>
-            {wallets ? (
-              wallets
+            {walletMetas ? (
+              walletMetas
                 .sort(byName)
-                .map((wallet) => <WalletListItem key={wallet.id} wallet={wallet} onPress={openWallet} />)
+                .map((walletMeta) => <WalletListItem key={walletMeta.id} wallet={walletMeta} onPress={openWallet} />)
             ) : (
               <ActivityIndicator />
             )}

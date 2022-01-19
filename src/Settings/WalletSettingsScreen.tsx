@@ -22,7 +22,8 @@ import type {NetworkId, WalletImplementationId} from '../../legacy/config/types'
 import walletManager from '../../legacy/crypto/walletManager'
 import {confirmationMessages} from '../../legacy/i18n/global-messages'
 import {SETTINGS_ROUTES, WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
-import {easyConfirmationSelector, isSystemAuthEnabledSelector, walletNameSelector} from '../../legacy/selectors'
+import {easyConfirmationSelector, isSystemAuthEnabledSelector} from '../../legacy/selectors'
+import {useWalletName} from '../hooks'
 import {useSelectedWallet, useSetSelectedWallet, useSetSelectedWalletMeta} from '../SelectedWallet'
 
 export const WalletSettingsScreen = () => {
@@ -31,8 +32,8 @@ export const WalletSettingsScreen = () => {
   const navigation = useNavigation()
   const isSystemAuthEnabled = useSelector(isSystemAuthEnabledSelector)
   const isEasyConfirmationEnabled = useSelector(easyConfirmationSelector)
-  const walletName = useSelector(walletNameSelector)
   const wallet = useSelectedWallet()
+  const walletName = useWalletName(wallet)
 
   const dispatch = useDispatch()
 
