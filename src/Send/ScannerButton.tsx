@@ -6,6 +6,7 @@ import {StyleSheet} from 'react-native'
 import iconQR from '../../legacy/assets/img/qr_code.png'
 import {pastedFormatter} from '../../legacy/components/Send/amountUtils'
 import {Button} from '../../legacy/components/UiKit'
+import {UI_V2} from '../../legacy/config/config'
 import {SEND_ROUTES} from '../../legacy/RoutesList'
 
 export const ScannerButton = () => {
@@ -37,7 +38,7 @@ export const ScannerButton = () => {
               setAddress(stringQR, route)
               setAmount('', route)
             }
-            navigation.navigate(SEND_ROUTES.MAIN)
+            navigation.navigate(UI_V2 ? 'send' : SEND_ROUTES.MAIN)
           },
         })
       }

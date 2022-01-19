@@ -102,6 +102,12 @@ storiesOf('Icon', module).add('Gallery', () => (
       <Item icon={<Icon.Settings size={40} />} title={'Settings'} />
       <Item icon={<Icon.Info size={40} />} title={'Settings'} />
     </Row>
+    <Spacer height={16} />
+
+    <Row>
+      <Item icon={<Icon.TabWallet size={40} />} title={'Tab Wallet'} />
+      <Item icon={<Icon.TabStaking size={40} />} title={'Tab Stake'} />
+    </Row>
   </ScrollView>
 ))
 

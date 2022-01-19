@@ -13,6 +13,8 @@ import {RewardWithdrawn} from './RewardWithdrawn'
 import {Sent} from './Sent'
 import {StakingKeyDeregistered} from './StakingKeyDeregistered'
 import {StakingKeyRegistered} from './StakingKeyRegistered'
+import {TabStaking} from './TabStaking'
+import {TabWallet} from './TabWallet'
 import {TotalAda} from './TotalAda'
 import {TotalDelegated} from './TotalDelegated'
 import {TotalReward} from './TotalReward'
@@ -40,6 +42,8 @@ export const Icon = {
   Settings,
   StakingKeyDeregistered,
   StakingKeyRegistered,
+  TabStaking,
+  TabWallet,
   TotalAda,
   TotalDelegated,
   TotalReward,

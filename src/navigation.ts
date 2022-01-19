@@ -25,7 +25,7 @@ export type TxHistoryStackParamList = {
   send: undefined
   'select-asset': undefined
   'address-reader-qr': undefined
-  'send-ada-confirm': undefined
+  'send-confirm': undefined
   'biometrics-signing': undefined
 }
 
