@@ -16,7 +16,7 @@
 import {useNavigation} from '@react-navigation/native'
 import type {Node} from 'react'
 import React from 'react'
-import {Image, Modal as RNModal, TouchableOpacity, View} from 'react-native'
+import {Image, Modal as RNModal, Text, TouchableOpacity, View} from 'react-native'
 
 import closeIcon from '../../assets/img/close.png'
 import styles from './styles/Modal.style'
@@ -28,6 +28,7 @@ type Props = {
   showCloseIcon?: boolean,
   noPadding?: boolean,
   navigation: any,
+  title?: string,
 }
 
 type State = {
@@ -61,19 +62,20 @@ class Modal extends React.Component<Props, State> {
   handleWillFocus = () => this.setState({isFocused: true})
 
   render() {
-    const {visible, showCloseIcon, onRequestClose, noPadding, children} = this.props
+    const {visible, showCloseIcon, onRequestClose, noPadding, children, title} = this.props
     const {isFocused} = this.state
 
     return (
       <RNModal transparent animationType="fade" visible={visible && isFocused} onRequestClose={onRequestClose}>
         <View style={styles.backdrop}>
-          <View style={[styles.container, noPadding === true && styles.noPadding]}>
-            <View style={[styles.content, noPadding === true && styles.noPadding]}>{children}</View>
-            {showCloseIcon === true && (
+          <View style={[styles.container, noPadding && styles.noPadding, title && styles.withTitle]}>
+            {title && <Text style={styles.title}>{title}</Text>}
+            {showCloseIcon && (
               <TouchableOpacity style={styles.close} onPress={onRequestClose}>
                 <Image source={closeIcon} />
               </TouchableOpacity>
             )}
+            <View style={[styles.content, noPadding === true && styles.noPadding]}>{children}</View>
           </View>
         </View>
       </RNModal>

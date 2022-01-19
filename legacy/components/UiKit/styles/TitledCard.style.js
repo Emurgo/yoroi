@@ -5,9 +5,7 @@ import {StyleSheet} from 'react-native'
 import {COLORS} from '../../../styles/config'
 
 export default StyleSheet.create({
-  wrapper: {
-    flex: 1,
-  },
+  wrapper: {},
   title: {
     fontSize: 16,
     height: 28,
@@ -16,7 +14,6 @@ export default StyleSheet.create({
     justifyContent: 'center',
   },
   content: {
-    flex: 1,
     flexDirection: 'row',
     padding: 12,
     borderRadius: 8,

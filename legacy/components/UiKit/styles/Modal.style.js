@@ -2,6 +2,8 @@
 
 import {StyleSheet} from 'react-native'
 
+import {COLORS} from '../../../styles/config'
+
 const styles = StyleSheet.create({
   backdrop: {
     flex: 1,
@@ -27,6 +29,18 @@ const styles = StyleSheet.create({
   },
   content: {
     marginTop: 15,
+  },
+  withTitle: {
+    paddingTop: 0,
+    marginTop: 0,
+  },
+  title: {
+    fontSize: 20,
+    fontFamily: 'Rubik-Medium',
+    lineHeight: 30,
+    color: COLORS.MODAL_HEADING,
+    alignSelf: 'center',
+    paddingTop: 8,
   },
 })
 

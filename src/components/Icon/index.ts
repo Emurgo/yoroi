@@ -5,7 +5,7 @@ import {ChevronDown} from './ChevronDown'
 import {ChevronUp} from './ChevronUp'
 import {Direction} from './Direction'
 import {Emurgo} from './Emurgo'
-import {Export, Magnify} from './Icon'
+import {Export, Info, Magnify, Settings} from './Icon'
 import {NoAssetImage} from './NoAssetImage'
 import {Received} from './Received'
 import {RewardManuallyPayout} from './RewardManuallyPayout'
@@ -30,12 +30,14 @@ export const Icon = {
   Direction,
   Emurgo,
   Export,
+  Info,
   Magnify,
   NoAssetImage,
   Received,
   RewardManuallyPayout,
   RewardWithdrawn,
   Sent,
+  Settings,
   StakingKeyDeregistered,
   StakingKeyRegistered,
   TotalAda,

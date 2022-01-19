@@ -4,37 +4,37 @@ import {useFocusEffect} from '@react-navigation/native'
 import type {ComponentType} from 'react'
 import React, {useEffect, useState} from 'react'
 import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
-import {AppState, Platform} from 'react-native'
+import {Alert, AppState, Platform} from 'react-native'
 import {withHandlers, withStateHandlers} from 'recompose'
 import {compose} from 'redux'
 
 import {showErrorDialog} from '../../actions'
-import KeyStore from '../../crypto/KeyStore'
-import {canBiometricEncryptionBeEnabled} from '../../helpers/deviceSettings'
+import KeyStore, {CredentialsNotFound} from '../../crypto/KeyStore'
+import {canBiometricEncryptionBeEnabled, recreateAppSignInKeys} from '../../helpers/deviceSettings'
 import {errorMessages as globalErrorMessages} from '../../i18n/global-messages'
 import type {Navigation} from '../../types/navigation'
 import {Logger} from '../../utils/logging'
 import {onWillUnmount} from '../../utils/renderUtils'
 import FingerprintScreenBase from '../Common/FingerprintScreenBase'
-import {Button} from '../UiKit'
+import {Button, Spacer} from '../UiKit'
 import styles from './styles/BiometricAuthScreen.style'
 
 const errorMessages = defineMessages({
-  NOT_RECOGNIZED: {
+  [KeyStore.REJECTIONS.NOT_RECOGNIZED]: {
     id: 'components.send.biometricauthscreen.NOT_RECOGNIZED',
     defaultMessage: '!!!Biometrics were not recognized. Try again',
   },
-  SENSOR_LOCKOUT: {
+  [KeyStore.REJECTIONS.DECRYPTION_FAILED]: {
+    id: 'components.send.biometricauthscreen.DECRYPTION_FAILED',
+    defaultMessage: '!!!Biometrics login failed. Please use an alternate login method.',
+  },
+  [KeyStore.REJECTIONS.SENSOR_LOCKOUT]: {
     id: 'components.send.biometricauthscreen.SENSOR_LOCKOUT',
     defaultMessage: '!!!Too many failed attempts. The sensor is now disabled',
   },
-  SENSOR_LOCKOUT_PERMANENT: {
+  [KeyStore.REJECTIONS.SENSOR_LOCKOUT_PERMANENT]: {
     id: 'components.send.biometricauthscreen.SENSOR_LOCKOUT_PERMANENT',
     defaultMessage: '!!!Your biometrics sensor has been permanently locked. Use an alternate login method.',
-  },
-  DECRYPTION_FAILED: {
-    id: 'components.send.biometricauthscreen.DECRYPTION_FAILED',
-    defaultMessage: '!!!Biometrics login failed. Please use an alternate login method.',
   },
   UNKNOWN_ERROR: {
     id: 'components.send.biometricauthscreen.UNKNOWN_ERROR',
@@ -47,7 +47,7 @@ const messages = defineMessages({
     id: 'components.send.biometricauthscreen.authorizeOperation',
     defaultMessage: '!!!Authorize operation',
   },
-  useFallbackButton: {
+  fallbackButton: {
     id: 'components.send.biometricauthscreen.useFallbackButton',
     defaultMessage: '!!!Use fallback',
   },
@@ -63,68 +63,67 @@ const messages = defineMessages({
     id: 'components.send.biometricauthscreen.cancelButton',
     defaultMessage: '!!!Cancel',
   },
+  tryAgainButton: {
+    id: 'global.tryAgain',
+    defaultMessage: '!!!Try again',
+  },
+  actionFailed: {
+    id: 'global.actions.dialogs.enableFingerprintsFirst.title',
+    defaultMessage: '!!!Action failed',
+  },
 })
 
-const handleOnConfirm = async (route, setError, clearError, useFallback = false, intl) => {
+const handleOnConfirm = async (route, setError, clearError, isFallback = false, intl, retryCounter = 0) => {
+  if (!(await canBiometricEncryptionBeEnabled()) && !isFallback) {
+    await showErrorDialog(globalErrorMessages.biometricsIsTurnedOff, intl)
+    return
+  }
+
   const {keyId, onSuccess, onFail} = route.params
 
   try {
     const decryptedData = await KeyStore.getData(
       keyId,
-      useFallback ? 'SYSTEM_PIN' : 'BIOMETRICS',
+      isFallback ? 'SYSTEM_PIN' : 'BIOMETRICS',
       intl.formatMessage(messages.authorizeOperation),
       '',
       intl,
     )
     onSuccess(decryptedData)
-    return
   } catch (error) {
-    if (error.code === KeyStore.REJECTIONS.SWAPPED_TO_FALLBACK) {
+    if (error.code === KeyStore.REJECTIONS.SWAPPED_TO_FALLBACK && Platform.OS === 'android') {
       clearError()
+    } else if (error.code === KeyStore.REJECTIONS.INVALID_KEY && Platform.OS === 'android') {
+      onFail(KeyStore.REJECTIONS.INVALID_KEY, intl)
     } else if (error.code === KeyStore.REJECTIONS.CANCELED) {
       clearError()
       onFail(KeyStore.REJECTIONS.CANCELED, intl)
-    } else if (error.code === KeyStore.REJECTIONS.INVALID_KEY) {
-      onFail(KeyStore.REJECTIONS.INVALID_KEY, intl)
-    } else if (error.code === KeyStore.REJECTIONS.SENSOR_LOCKOUT) {
-      setError('SENSOR_LOCKOUT')
-    } else if (error.code === KeyStore.REJECTIONS.SENSOR_LOCKOUT_PERMANENT) {
-      setError('SENSOR_LOCKOUT_PERMANENT')
-    } else if (error.code !== KeyStore.REJECTIONS.DECRYPTION_FAILED) {
-      await handleOnConfirm(route, setError, clearError, false, intl)
     } else {
+      // create keys back for iOS
+      if (error instanceof CredentialsNotFound && Platform.OS === 'ios') {
+        await recreateAppSignInKeys(keyId)
+      }
+      if (retryCounter <= 3) {
+        await handleOnConfirm(route, setError, clearError, isFallback, intl, retryCounter + 1)
+        return
+      }
+      // on ios most errors will map to FAILED_UNKNOWN_ERROR
+      Alert.alert(intl.formatMessage(messages.actionFailed), `${error.code} : ${error.message}`)
       Logger.error('BiometricAuthScreen', error)
-      setError('UNKNOWN_ERROR')
+      const errorMessageKey = error.code && errorMessages[error.code] ? error.code : 'UNKNOWN_ERROR'
+      setError(intl.formatMessage(errorMessages[errorMessageKey]))
     }
   }
 }
 
-const handleOnFocus = async ({
-  route,
-  setError,
-  clearError,
-  intl,
-}: {
-  route: any,
-  setError: any,
-  clearError: any,
-  intl: IntlShape,
-}) => {
-  if (!(await canBiometricEncryptionBeEnabled())) {
-    await showErrorDialog(globalErrorMessages.biometricsIsTurnedOff, intl)
-    return
-  }
-  await handleOnConfirm(route, setError, clearError, false, intl)
-}
-
 const BiometricAuthScreen = (
-  {cancelScanning, useFallback, error, intl, route, setError, clearError}: {intl: IntlShape} & Object /* TODO: type */,
+  {cancelScanning, fallback, error, intl, route, setError, clearError}: {intl: IntlShape} & Object /* TODO: type */,
 ) => {
   const [appState, setAppState] = useState<?string>(AppState.currentState)
 
   useFocusEffect(
     React.useCallback(() => {
-      handleOnFocus({route, setError, clearError, intl})
+      handleOnConfirm(route, setError, clearError, false, intl)
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []),
   )
@@ -137,7 +136,7 @@ const BiometricAuthScreen = (
       setAppState(nextAppState)
       if (previousAppState != null && previousAppState.match(/inactive|background/) && nextAppState === 'active') {
         await KeyStore.cancelFingerprintScanning(KeyStore.REJECTIONS.CANCELED)
-        await handleOnFocus({route, setError, clearError, intl})
+        await handleOnConfirm(route, setError, clearError, false, intl)
       } else if (previousAppState === 'active' && nextAppState != null && nextAppState.match(/inactive|background/)) {
         // we cancel the operation when the app goes to background otherwise
         // the app may crash. This could happen when the app logs out, as reopening
@@ -159,14 +158,21 @@ const BiometricAuthScreen = (
       subHeadings={route.params?.instructions || undefined}
       buttons={[
         <Button
+          key={'try-again'}
+          outline
+          title={intl.formatMessage(messages.tryAgainButton)}
+          onPress={() => handleOnConfirm(route, setError, clearError, false, intl)}
+        />,
+        <Spacer key={'spacer'} width={4} />,
+        <Button
           key={'use-fallback'}
           outline
-          title={intl.formatMessage(messages.useFallbackButton)}
-          onPress={useFallback}
-          containerStyle={styles.useFallback}
+          title={intl.formatMessage(messages.fallbackButton)}
+          onPress={fallback}
+          containerStyle={styles.fallbackButton}
         />,
       ]}
-      error={error && intl.formatMessage(errorMessages[error])}
+      error={error}
       addWelcomeMessage={route.params?.addWelcomeMessage === true}
       intl={intl}
     />
@@ -179,26 +185,19 @@ type ExternalProps = {|
   intl: IntlShape,
 |}
 
-type ErrorCode =
-  | 'NOT_RECOGNIZED'
-  | 'SENSOR_LOCKOUT'
-  | 'SENSOR_LOCKOUT_PERMANENT'
-  | 'DECRYPTION_FAILED'
-  | 'UNKNOWN_ERROR'
-
 type State = {
-  error: null | ErrorCode,
+  error: string,
 }
 
 export default injectIntl(
   (compose(
     withStateHandlers(
       ({
-        error: null,
+        error: '',
       }: State),
       {
-        setError: () => (error: ErrorCode) => ({error}),
-        clearError: () => () => ({error: null}),
+        setError: () => (error) => ({error}),
+        clearError: () => () => ({error: ''}),
       },
     ),
     withHandlers({
@@ -217,7 +216,7 @@ export default injectIntl(
             onFail(KeyStore.REJECTIONS.CANCELED, intl)
           }
         },
-      useFallback:
+      fallback:
         ({route, setError, clearError, intl}: {route: any, setError: any, clearError: any, intl: IntlShape}) =>
         async () => {
           await KeyStore.cancelFingerprintScanning(KeyStore.REJECTIONS.SWAPPED_TO_FALLBACK)

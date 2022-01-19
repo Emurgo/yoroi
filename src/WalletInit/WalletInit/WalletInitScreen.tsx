@@ -86,6 +86,7 @@ export const WalletInitScreen = () => {
                 onPress={() => navigateTo.restoreWallet(implementationId, provider)}
                 title={strings.restoreNormalWalletLabel}
                 style={styles.mnemonicDialogButton}
+                testID="restoreNormalWalletButton"
               />
 
               <ExapandableItem
@@ -100,6 +101,7 @@ export const WalletInitScreen = () => {
                 }
                 title={strings.restore24WordWalletLabel}
                 style={styles.mnemonicDialogButton}
+                testID="restore24WordWalletButton"
               />
 
               <ExapandableItem
