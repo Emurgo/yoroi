@@ -49,7 +49,11 @@ export const WalletForm = ({onSubmit}: Props) => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
-      <ScrollView keyboardShouldPersistTaps={'always'} contentContainerStyle={styles.scrollContentContainer}>
+      <ScrollView
+        keyboardShouldPersistTaps={'always'}
+        contentContainerStyle={styles.scrollContentContainer}
+        testID={'credentialsView'}
+      >
         <WalletNameInput
           enablesReturnKeyAutomatically
           autoFocus
