@@ -14,11 +14,11 @@ import AccountAutoRefresher from '../../legacy/components/Delegation/AccountAuto
 import UtxoAutoRefresher from '../../legacy/components/Send/UtxoAutoRefresher'
 import {Banner, Button, OfflineBanner, StatusBar} from '../../legacy/components/UiKit'
 import {getCardanoBaseConfig} from '../../legacy/config/config'
+import {getDefaultAssetByNetworkId} from '../../legacy/config/config'
 import {getCardanoNetworkConfigById} from '../../legacy/config/networks'
 import globalMessages from '../../legacy/i18n/global-messages'
 import {CATALYST_ROUTES, DELEGATION_ROUTES} from '../../legacy/RoutesList'
 import {
-  defaultNetworkAssetSelector,
   hwDeviceInfoSelector,
   isFetchingAccountStateSelector,
   isFetchingUtxosSelector,
@@ -54,13 +54,13 @@ export const Dashboard = () => {
   const lastAccountStateSyncError = useSelector(lastAccountStateFetchErrorSelector)
   const isOnline = useSelector(isOnlineSelector)
   const hwDeviceInfo = useSelector(hwDeviceInfoSelector)
-  const defaultAsset = useSelector(defaultNetworkAssetSelector)
   const serverStatus = useSelector(serverStatusSelector)
+
   const wallet = useSelectedWallet()
+  const defaultAsset = getDefaultAssetByNetworkId(wallet.networkId)
+  const {stakingInfo, refetch, error} = useStakingInfo(wallet)
 
   const [showWithdrawalDialog, setShowWithdrawalDialog] = React.useState(false)
-
-  const {stakingInfo, refetch, error} = useStakingInfo(wallet)
 
   return (
     <SafeAreaView style={styles.safeAreaView}>

@@ -1,6 +1,7 @@
 // @flow
 
 import type {WalletImplementation} from '../../src/types'
+import type {DefaultAsset} from '../../src/types/cardano'
 
 export var isHaskellShelley: (walletImplementationId: string) => boolean
 export var isByron: (walletImplementationId: string) => boolean
@@ -72,5 +73,7 @@ export var getCardanoBaseConfig: (networkConfig: CardanoHaskellShelleyNetwork) =
   SlotsPerEpoch?: number,
   SlotDuration?: number,
 }>
+
+export var getDefaultAssetByNetworkId: (networkId: number) => DefaultAsset
 
 export var UI_V2: boolean
