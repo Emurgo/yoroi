@@ -61,18 +61,26 @@ const StakingCenter = () => {
   // pools user is currently delegating to
   const poolList = poolOperator != null ? [poolOperator] : null
 
-  const handleOnMessage = async (event) => {
-    const selectedPoolHashes: Array<string> = !event
-      ? nightlyAndDevPoolHashes
-      : JSON.parse(decodeURI(event.nativeEvent.data))
+  const handleOnPress = (poolHash?: string) => {
+    const selectedPoolHashes = poolHash ? [poolHash] : nightlyAndDevPoolHashes
+    Logger.debug('manual inputted or config pool:', selectedPoolHashes)
+    _delegate(selectedPoolHashes)
+  }
 
+  const handleOnMessage = async (event) => {
+    if (event) {
+      const selectedPoolHashes: Array<string> = JSON.parse(decodeURI(event.nativeEvent.data))
+      Logger.debug('selected pools from explorer:', selectedPoolHashes)
+      _delegate(selectedPoolHashes)
+    }
+  }
+
+  const _delegate = async (selectedPoolHashes: Array<string> = []) => {
     try {
       setBusy(true)
 
       if (selectedPoolHashes.length) {
-        Logger.debug('selected pools from explorer:', selectedPoolHashes)
-
-        await _handleOnMessage(
+        await _handleSelectedPoolHashes(
           selectedPoolHashes,
           setSelectedPools,
           setReputationInfo,
@@ -114,7 +122,10 @@ const StakingCenter = () => {
     <>
       {IS_STAKING_ON_TEST_BUILD && (
         <View style={styles.container}>
-          <PoolDetailScreen onPressDelegate={() => handleOnMessage()} disabled={!nightlyAndDevPoolHashes.length} />
+          <PoolDetailScreen
+            onPressDelegate={(poolHash) => handleOnPress(poolHash)}
+            disabled={!nightlyAndDevPoolHashes.length}
+          />
         </View>
       )}
       {(!IS_STAKING_ON_TEST_BUILD || SHOW_PROD_POOLS_IN_DEV) && (
@@ -231,7 +242,7 @@ const navigateToDelegationConfirm = async (
   }
 }
 
-const _handleOnMessage = async (
+const _handleSelectedPoolHashes = async (
   selectedPoolHashes: Array<string>,
   setSelectedPools: (selectedPools: Array<SelectedPool>) => void,
   setReputationInfo: (reputationInfo: Object) => void,
@@ -253,7 +264,7 @@ const _handleOnMessage = async (
     // TODO: fetch reputation info once an endpoint is implemented
     const poolsReputation: {[key: string]: mixed} = {}
 
-    if (poolInfo.info != null) {
+    if (poolInfo && poolInfo.info != null) {
       const selectedPools: Array<SelectedPool> = [
         {
           poolName: poolInfo.info.name,

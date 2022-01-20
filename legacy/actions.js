@@ -13,7 +13,7 @@ import {changeAndSaveLanguage} from './actions/language'
 import {fetchTokenInfo} from './actions/tokenInfo'
 import {clearUTXOs} from './actions/utxo'
 import * as api from './api/shelley/api'
-import {CONFIG} from './config/config'
+import {CONFIG, isNightly} from './config/config'
 import {getCardanoNetworkConfigById} from './config/networks'
 import type {NetworkId, WalletImplementationId, YoroiProvider} from './config/types'
 import {encryptCustomPin} from './crypto/customPin'
@@ -221,6 +221,10 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
     )
   } catch (e) {
     Logger.warn('actions::initApp could not retrieve server status', e)
+  }
+
+  if (isNightly()) {
+    dispatch(setAppSettingField(APP_SETTINGS_KEYS.SEND_CRASH_REPORTS, true))
   }
 
   await dispatch(reloadAppSettings())
