@@ -4,15 +4,15 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
 import BiometricAuthScreen from '../../legacy/components/Send/BiometricAuthScreen'
-import BiometricsLinkScreen from '../../legacy/components/Settings/BiometricsLinkScreen'
 import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../legacy/navigationOptions'
 import {SETTINGS_ROUTES, SETTINGS_TABS} from '../../legacy/RoutesList'
 import {COLORS} from '../../legacy/styles/config'
 import {ApplicationSettingsScreen} from './ApplicationSettings'
-import {ChangeLanguageScreen} from './ChangeLanguage/ChangeLanguageScreen'
-import {ChangePasswordScreen} from './ChangePassword/ChangePasswordScreen'
+import {BiometricsLinkScreen} from './BiometricsLink/'
+import {ChangeLanguageScreen} from './ChangeLanguage'
+import {ChangePasswordScreen} from './ChangePassword'
 import {ChangePinScreen} from './ChangePin'
-import {ChangeWalletName} from './ChangeWalletName/ChangeWalletName'
+import {ChangeWalletName} from './ChangeWalletName'
 import {CustomPinScreen} from './CustomPin'
 import {RemoveWalletScreen} from './RemoveWallet'
 import {SupportScreen} from './Support'
@@ -62,7 +62,7 @@ export const SettingsScreenNavigator = () => {
         component={TermsOfServiceScreen}
         options={{title: strings.termsOfServiceTitle}}
       />
-      <Stack.Screen // prettier-ignore
+      <Stack.Screen //
         name={SETTINGS_ROUTES.SUPPORT}
         component={SupportScreen}
         options={{title: strings.supportTitle}}
