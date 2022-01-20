@@ -1,4 +1,5 @@
 import {useNavigation} from '@react-navigation/native'
+import {CommonActions} from '@react-navigation/routers'
 import React from 'react'
 import type {MessageDescriptor} from 'react-intl'
 import {defineMessages, useIntl} from 'react-intl'
@@ -15,7 +16,7 @@ import {
   SettingsSection,
 } from '../../legacy/components/Settings/SettingsItems'
 import {StatusBar} from '../../legacy/components/UiKit'
-import {isByron, isHaskellShelley} from '../../legacy/config/config'
+import {CONFIG, isByron, isHaskellShelley} from '../../legacy/config/config'
 import {getNetworkConfigById} from '../../legacy/config/networks'
 import type {NetworkId, WalletImplementationId} from '../../legacy/config/types'
 import walletManager from '../../legacy/crypto/walletManager'
@@ -248,6 +249,8 @@ const LogoutButton = () => {
   return <PressableSettingsItem label={strings.logout} onPress={logoutWithConfirmation} disabled={isLoading} />
 }
 
+const rootRoute = __DEV__ && CONFIG.DEBUG.START_WITH_INDEX_SCREEN ? 'screens-index' : 'app-root'
+
 const useResync = (options?: UseMutationOptions<void, Error>) => {
   const intl = useIntl()
   const navigation = useNavigation()
@@ -260,8 +263,13 @@ const useResync = (options?: UseMutationOptions<void, Error>) => {
     resyncWithConfirmation: async () => {
       const selection = await showConfirmationDialog(confirmationMessages.resync, intl)
       if (selection === DIALOG_BUTTONS.YES) {
-        navigation.goBack()
-        navigation.goBack()
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{name: rootRoute}],
+          }),
+        )
+        navigation.navigate(rootRoute)
         setTimeout(() => mutation.mutate(), 1000) // wait for navigation to finish
       }
     },

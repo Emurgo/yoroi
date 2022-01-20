@@ -31,7 +31,7 @@ import {
   Text,
   ValidatedTextInput,
 } from '../../../legacy/components/UiKit'
-import {CONFIG} from '../../../legacy/config/config'
+import {CONFIG, UI_V2} from '../../../legacy/config/config'
 import {WrongPassword} from '../../../legacy/crypto/errors'
 import {ISignRequest} from '../../../legacy/crypto/ISignRequest'
 import KeyStore from '../../../legacy/crypto/KeyStore'
@@ -181,10 +181,12 @@ export const ConfirmScreen = () => {
           CommonActions.reset({
             key: null,
             index: 0,
-            routes: [{name: SEND_ROUTES.MAIN}],
+            routes: [{name: UI_V2 ? 'history' : SEND_ROUTES.MAIN}],
           } as any),
         )
-        navigation.navigate(WALLET_ROUTES.TX_HISTORY)
+        if (!UI_V2) {
+          navigation.navigate(WALLET_ROUTES.TX_HISTORY)
+        }
       })
     }
 
@@ -203,7 +205,7 @@ export const ConfirmScreen = () => {
           navigation.navigate(SEND_ROUTES.BIOMETRICS_SIGNING, {
             keyId: walletManager._id,
             onSuccess: async (decryptedKey) => {
-              navigation.navigate(SEND_ROUTES.CONFIRM)
+              navigation.navigate(UI_V2 ? 'send-confirm' : SEND_ROUTES.CONFIRM)
 
               await submitTx(signRequest, decryptedKey)
             },

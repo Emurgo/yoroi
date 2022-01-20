@@ -488,6 +488,7 @@
   "global.pleaseWait": "please wait ...",
   "global.receive": "Receive",
   "global.send": "Send",
+  "global.staking": "Staking",
   "global.staking.epochLabel": "Epoch",
   "global.staking.stakePoolName": "Stake pool name",
   "global.staking.stakePoolHash": "Stake pool hash",
