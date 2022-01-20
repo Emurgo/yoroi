@@ -1,10 +1,8 @@
-// @flow
-
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import TermsOfServiceScreen from './TermsOfServiceScreen'
+import {TermsOfServiceScreen} from './TermsOfServiceScreen'
 
 const styles = StyleSheet.create({
   termsOfServiceScreen: {

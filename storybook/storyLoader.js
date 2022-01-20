@@ -19,7 +19,6 @@ function loadStories() {
 	require('../legacy/components/MaintenanceScreen.stories');
 	require('../legacy/components/Send/BiometricAuthScreen.stories');
 	require('../legacy/components/Settings/BiometricsLinkScreen.stories');
-	require('../legacy/components/Settings/TermsOfServiceScreen.stories');
 	require('../legacy/components/Settings/ToggleEasyConfirmationScreen.stories');
 	require('../legacy/components/Transfer/TransferSummary.stories');
 	require('../legacy/components/UiKit/Button.stories');
@@ -47,6 +46,8 @@ function loadStories() {
 	require('../src/Settings/ChangeWalletName/ChangeWalletName.stories');
 	require('../src/Settings/CustomPin/CustomPinScreen.stories');
 	require('../src/Settings/RemoveWallet/RemoveWalletScreen.stories');
+	require('../src/Settings/Support/SupportScreen.stories');
+	require('../src/Settings/TermsOfService/TermsOfServiceScreen.stories');
 	require('../src/Settings/WalletSettings/WalletSettingsScreen.stories');
 	require('../src/TxHistory/ChipButton.stories');
 	require('../src/TxHistory/ModalInfo/ModalInfo.stories');
@@ -91,7 +92,6 @@ const stories = [
 	'../legacy/components/MaintenanceScreen.stories',
 	'../legacy/components/Send/BiometricAuthScreen.stories',
 	'../legacy/components/Settings/BiometricsLinkScreen.stories',
-	'../legacy/components/Settings/TermsOfServiceScreen.stories',
 	'../legacy/components/Settings/ToggleEasyConfirmationScreen.stories',
 	'../legacy/components/Transfer/TransferSummary.stories',
 	'../legacy/components/UiKit/Button.stories',
@@ -119,6 +119,8 @@ const stories = [
 	'../src/Settings/ChangeWalletName/ChangeWalletName.stories',
 	'../src/Settings/CustomPin/CustomPinScreen.stories',
 	'../src/Settings/RemoveWallet/RemoveWalletScreen.stories',
+	'../src/Settings/Support/SupportScreen.stories',
+	'../src/Settings/TermsOfService/TermsOfServiceScreen.stories',
 	'../src/Settings/WalletSettings/WalletSettingsScreen.stories',
 	'../src/TxHistory/ChipButton.stories',
 	'../src/TxHistory/ModalInfo/ModalInfo.stories',
