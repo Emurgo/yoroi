@@ -1,10 +1,8 @@
-// @flow
-
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import ApplicationSettingsScreen from './ApplicationSettingsScreen'
+import {ApplicationSettingsScreen} from './ApplicationSettingsScreen'
 
 const styles = StyleSheet.create({
   applicationSettingsScreen: {
