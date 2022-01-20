@@ -59,6 +59,9 @@
       "^.+\\.js$": "<rootDir>/node_modules/react-native/jest/preprocessor.js"
     }
   },
+  "resolutions": {
+    "react-devtools-core": "4.14.0"
+  },
   "dependencies": {
     "@cardano-foundation/ledgerjs-hw-app-cardano": "4.0.0",
     "@emurgo/cip14-js": "2.0.0",
