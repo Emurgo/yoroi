@@ -5,7 +5,6 @@ import {defineMessages, useIntl} from 'react-intl'
 
 import BiometricAuthScreen from '../../legacy/components/Send/BiometricAuthScreen'
 import BiometricsLinkScreen from '../../legacy/components/Settings/BiometricsLinkScreen'
-import ToggleEasyConfirmationScreen from '../../legacy/components/Settings/ToggleEasyConfirmationScreen'
 import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../legacy/navigationOptions'
 import {SETTINGS_ROUTES, SETTINGS_TABS} from '../../legacy/RoutesList'
 import {COLORS} from '../../legacy/styles/config'
@@ -18,6 +17,7 @@ import {CustomPinScreen} from './CustomPin'
 import {RemoveWalletScreen} from './RemoveWallet'
 import {SupportScreen} from './Support'
 import {TermsOfServiceScreen} from './TermsOfService'
+import {ToggleEasyConfirmationScreen} from './ToggleEasyConfirmation'
 import {WalletSettingsScreen} from './WalletSettings'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */

@@ -1,10 +1,8 @@
-// @flow
-
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import ToggleEasyConfirmationScreen from './ToggleEasyConfirmationScreen'
+import {ToggleEasyConfirmationScreen} from './ToggleEasyConfirmationScreen'
 
 const styles = StyleSheet.create({
   toggleEasyConfirmationScreen: {
