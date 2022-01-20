@@ -13,7 +13,6 @@ function loadStories() {
 	require('../legacy/components/Delegation/FlawedWalletScreen.stories');
 	require('../legacy/components/Delegation/PoolDetailScreen.stories');
 	require('../legacy/components/Delegation/StakingCenter.stories');
-	require('../legacy/components/FirstRun/CustomPinScreen.stories');
 	require('../legacy/components/Ledger/DeviceItem/DeviceItem.stories');
 	require('../legacy/components/Ledger/LedgerConnect.stories');
 	require('../legacy/components/Ledger/LedgerTransportSwitchModal.stories');
@@ -46,6 +45,7 @@ function loadStories() {
 	require('../src/Settings/ApplicationSettings/ApplicationSettingsScreen.stories');
 	require('../src/Settings/ChangePassword/ChangePasswordScreen.stories');
 	require('../src/Settings/ChangeWalletName/ChangeWalletName.stories');
+	require('../src/Settings/CustomPin/CustomPinScreen.stories');
 	require('../src/Settings/RemoveWallet/RemoveWalletScreen.stories');
 	require('../src/Settings/WalletSettings/WalletSettingsScreen.stories');
 	require('../src/TxHistory/ChipButton.stories');
@@ -85,7 +85,6 @@ const stories = [
 	'../legacy/components/Delegation/FlawedWalletScreen.stories',
 	'../legacy/components/Delegation/PoolDetailScreen.stories',
 	'../legacy/components/Delegation/StakingCenter.stories',
-	'../legacy/components/FirstRun/CustomPinScreen.stories',
 	'../legacy/components/Ledger/DeviceItem/DeviceItem.stories',
 	'../legacy/components/Ledger/LedgerConnect.stories',
 	'../legacy/components/Ledger/LedgerTransportSwitchModal.stories',
@@ -118,6 +117,7 @@ const stories = [
 	'../src/Settings/ApplicationSettings/ApplicationSettingsScreen.stories',
 	'../src/Settings/ChangePassword/ChangePasswordScreen.stories',
 	'../src/Settings/ChangeWalletName/ChangeWalletName.stories',
+	'../src/Settings/CustomPin/CustomPinScreen.stories',
 	'../src/Settings/RemoveWallet/RemoveWalletScreen.stories',
 	'../src/Settings/WalletSettings/WalletSettingsScreen.stories',
 	'../src/TxHistory/ChipButton.stories',
