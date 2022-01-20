@@ -2,8 +2,8 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {SelectedWalletProvider} from '../SelectedWallet'
-import {WalletInterface} from '../types'
+import {SelectedWalletProvider} from '../../SelectedWallet'
+import {WalletInterface} from '../../types'
 import {WalletSettingsScreen} from './WalletSettingsScreen'
 
 const styles = StyleSheet.create({

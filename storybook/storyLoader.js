@@ -46,8 +46,8 @@ function loadStories() {
 	require('../src/Send/SendScreen/SendScreen.stories');
 	require('../src/Settings/ChangePassword/ChangePasswordScreen.stories');
 	require('../src/Settings/ChangeWalletName/ChangeWalletName.stories');
-	require('../src/Settings/RemoveWalletScreen.stories');
-	require('../src/Settings/WalletSettingsScreen.stories');
+	require('../src/Settings/RemoveWallet/RemoveWalletScreen.stories');
+	require('../src/Settings/WalletSettings/WalletSettingsScreen.stories');
 	require('../src/TxHistory/ChipButton.stories');
 	require('../src/TxHistory/ModalInfo/ModalInfo.stories');
 	require('../src/TxHistory/TxDetails/AssetList.stories');
@@ -118,8 +118,8 @@ const stories = [
 	'../src/Send/SendScreen/SendScreen.stories',
 	'../src/Settings/ChangePassword/ChangePasswordScreen.stories',
 	'../src/Settings/ChangeWalletName/ChangeWalletName.stories',
-	'../src/Settings/RemoveWalletScreen.stories',
-	'../src/Settings/WalletSettingsScreen.stories',
+	'../src/Settings/RemoveWallet/RemoveWalletScreen.stories',
+	'../src/Settings/WalletSettings/WalletSettingsScreen.stories',
 	'../src/TxHistory/ChipButton.stories',
 	'../src/TxHistory/ModalInfo/ModalInfo.stories',
 	'../src/TxHistory/TxDetails/AssetList.stories',

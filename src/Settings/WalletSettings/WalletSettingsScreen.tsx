@@ -7,24 +7,24 @@ import {ScrollView, StyleSheet, Switch} from 'react-native'
 import {useMutation, UseMutationOptions} from 'react-query'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {DIALOG_BUTTONS, showConfirmationDialog, signout, updateWallets} from '../../legacy/actions'
+import {DIALOG_BUTTONS, showConfirmationDialog, signout, updateWallets} from '../../../legacy/actions'
 import {
   NavigatedSettingsItem,
   PressableSettingsItem,
   SettingsBuildItem,
   SettingsItem,
   SettingsSection,
-} from '../../legacy/components/Settings/SettingsItems'
-import {StatusBar} from '../../legacy/components/UiKit'
-import {CONFIG, isByron, isHaskellShelley} from '../../legacy/config/config'
-import {getNetworkConfigById} from '../../legacy/config/networks'
-import type {NetworkId, WalletImplementationId} from '../../legacy/config/types'
-import walletManager from '../../legacy/crypto/walletManager'
-import {confirmationMessages} from '../../legacy/i18n/global-messages'
-import {SETTINGS_ROUTES, WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
-import {easyConfirmationSelector, isSystemAuthEnabledSelector} from '../../legacy/selectors'
-import {useWalletName} from '../hooks'
-import {useSelectedWallet, useSetSelectedWallet, useSetSelectedWalletMeta} from '../SelectedWallet'
+} from '../../../legacy/components/Settings/SettingsItems'
+import {StatusBar} from '../../../legacy/components/UiKit'
+import {CONFIG, isByron, isHaskellShelley} from '../../../legacy/config/config'
+import {getNetworkConfigById} from '../../../legacy/config/networks'
+import type {NetworkId, WalletImplementationId} from '../../../legacy/config/types'
+import walletManager from '../../../legacy/crypto/walletManager'
+import {confirmationMessages} from '../../../legacy/i18n/global-messages'
+import {SETTINGS_ROUTES, WALLET_ROOT_ROUTES} from '../../../legacy/RoutesList'
+import {easyConfirmationSelector, isSystemAuthEnabledSelector} from '../../../legacy/selectors'
+import {useWalletName} from '../../hooks'
+import {useSelectedWallet, useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
 
 export const WalletSettingsScreen = () => {
   const intl = useIntl()

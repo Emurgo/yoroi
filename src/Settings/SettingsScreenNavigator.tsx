@@ -17,8 +17,8 @@ import {SETTINGS_ROUTES, SETTINGS_TABS} from '../../legacy/RoutesList'
 import {COLORS} from '../../legacy/styles/config'
 import {ChangePasswordScreen} from './ChangePassword/ChangePasswordScreen'
 import {ChangeWalletName} from './ChangeWalletName/ChangeWalletName'
-import {RemoveWalletScreen} from './RemoveWalletScreen'
-import {WalletSettingsScreen} from './WalletSettingsScreen'
+import {RemoveWalletScreen} from './RemoveWallet'
+import {WalletSettingsScreen} from './WalletSettings'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const Stack = createStackNavigator<{
