@@ -32,9 +32,9 @@ function loadStories() {
 	require('../src/Catalyst/VotingBanner.stories');
 	require('../src/Dashboard/Dashboard.stories');
 	require('../src/Dashboard/StakePoolInfos.stories');
-	require('../src/FirstRun/AcceptTermsOfService.stories');
-	require('../src/FirstRun/CustomPinScreen.stories');
-	require('../src/FirstRun/LanguagePickerScreen.stories');
+	require('../src/FirstRun/CustomPinScreen/CustomPinScreen.stories');
+	require('../src/FirstRun/LanguagePickerScreen/LanguagePickerScreen.stories');
+	require('../src/FirstRun/TermsOfServiceScreen/TermsOfServiceScreen.stories');
 	require('../src/Receive/AddressModal.stories');
 	require('../src/Receive/AddressVerifyModal.stories');
 	require('../src/Receive/Addresses.stories');
@@ -104,9 +104,9 @@ const stories = [
 	'../src/Catalyst/VotingBanner.stories',
 	'../src/Dashboard/Dashboard.stories',
 	'../src/Dashboard/StakePoolInfos.stories',
-	'../src/FirstRun/AcceptTermsOfService.stories',
-	'../src/FirstRun/CustomPinScreen.stories',
-	'../src/FirstRun/LanguagePickerScreen.stories',
+	'../src/FirstRun/CustomPinScreen/CustomPinScreen.stories',
+	'../src/FirstRun/LanguagePickerScreen/LanguagePickerScreen.stories',
+	'../src/FirstRun/TermsOfServiceScreen/TermsOfServiceScreen.stories',
 	'../src/Receive/AddressModal.stories',
 	'../src/Receive/AddressVerifyModal.stories',
 	'../src/Receive/Addresses.stories',

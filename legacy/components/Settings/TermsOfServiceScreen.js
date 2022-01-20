@@ -4,7 +4,8 @@ import React from 'react'
 import {ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import TermsOfService from '../Common/TermsOfService'
+// $FlowExpectedError
+import {TermsOfService} from '../../../src/FirstRun/TermsOfServiceScreen/TermsOfService'
 import {StatusBar} from '../UiKit'
 import styles from './styles/TermsOfServiceScreen.styles'
 
