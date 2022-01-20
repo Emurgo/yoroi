@@ -1,45 +1,20 @@
-// @flow
-
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {View} from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {encryptAndStoreCustomPin, showErrorDialog} from '../../actions'
-import {CONFIG} from '../../config/config'
-import {authenticateByCustomPin} from '../../crypto/customPin'
-import {errorMessages} from '../../i18n/global-messages'
-import {customPinHashSelector} from '../../selectors'
-import PinInput from '../Common/PinInput'
-import PinRegistrationForm from '../Common/PinRegistrationForm'
-import {StatusBar} from '../UiKit'
-import styles from './styles/ChangeCustomPinScreen.style'
+import {encryptAndStoreCustomPin, showErrorDialog} from '../../../legacy/actions'
+import PinInput from '../../../legacy/components/Common/PinInput'
+import PinRegistrationForm from '../../../legacy/components/Common/PinRegistrationForm'
+import styles from '../../../legacy/components/Settings/styles/ChangeCustomPinScreen.style'
+import {StatusBar} from '../../../legacy/components/UiKit'
+import {CONFIG} from '../../../legacy/config/config'
+import {authenticateByCustomPin} from '../../../legacy/crypto/customPin'
+import {errorMessages} from '../../../legacy/i18n/global-messages'
+import {customPinHashSelector} from '../../../legacy/selectors'
 
-const messages = defineMessages({
-  currentPinInputTitle: {
-    id: 'components.settings.changecustompinscreen.CurrentPinInput.title',
-    defaultMessage: '!!!Enter PIN',
-  },
-  currentPinInputSubtitle: {
-    id: 'components.settings.changecustompinscreen.CurrentPinInput.subtitle',
-    defaultMessage: '!!!Enter your current PIN',
-  },
-  pinInputTitle: {
-    id: 'components.settings.changecustompinscreen.PinRegistrationForm.PinInput.title',
-    defaultMessage: '!!!Enter PIN',
-  },
-  pinInputSubtitle: {
-    id: 'components.settings.changecustompinscreen.PinRegistrationForm.PinInput.subtitle',
-    defaultMessage: '!!!Choose new PIN for quick access to wallet.',
-  },
-  pinConfirmationTitle: {
-    id: 'components.settings.changecustompinscreen.PinRegistrationForm.PinConfirmationInput.title',
-    defaultMessage: '!!!Repeat PIN',
-  },
-})
-
-const ChangeCustomPinScreen = () => {
+export const ChangePinScreen = () => {
   const intl = useIntl()
   const navigation = useNavigation()
   const dispatch = useDispatch()
@@ -55,7 +30,7 @@ const ChangeCustomPinScreen = () => {
     } catch (err) {
       setIsCurrentPinVerified(false)
       await showErrorDialog(errorMessages.generalError, intl, {
-        message: err.message,
+        message: (err as Error).message,
       })
       return true
     }
@@ -105,4 +80,25 @@ const ChangeCustomPinScreen = () => {
   )
 }
 
-export default ChangeCustomPinScreen
+const messages = defineMessages({
+  currentPinInputTitle: {
+    id: 'components.settings.changecustompinscreen.CurrentPinInput.title',
+    defaultMessage: '!!!Enter PIN',
+  },
+  currentPinInputSubtitle: {
+    id: 'components.settings.changecustompinscreen.CurrentPinInput.subtitle',
+    defaultMessage: '!!!Enter your current PIN',
+  },
+  pinInputTitle: {
+    id: 'components.settings.changecustompinscreen.PinRegistrationForm.PinInput.title',
+    defaultMessage: '!!!Enter PIN',
+  },
+  pinInputSubtitle: {
+    id: 'components.settings.changecustompinscreen.PinRegistrationForm.PinInput.subtitle',
+    defaultMessage: '!!!Choose new PIN for quick access to wallet.',
+  },
+  pinConfirmationTitle: {
+    id: 'components.settings.changecustompinscreen.PinRegistrationForm.PinConfirmationInput.title',
+    defaultMessage: '!!!Repeat PIN',
+  },
+})

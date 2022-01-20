@@ -5,7 +5,6 @@ import {defineMessages, useIntl} from 'react-intl'
 
 import BiometricAuthScreen from '../../legacy/components/Send/BiometricAuthScreen'
 import BiometricsLinkScreen from '../../legacy/components/Settings/BiometricsLinkScreen'
-import ChangeCustomPinScreen from '../../legacy/components/Settings/ChangeCustomPinScreen'
 import LanguagePickerScreen from '../../legacy/components/Settings/ChangeLanguageScreen'
 import SupportScreen from '../../legacy/components/Settings/SupportScreen'
 import TermsOfServiceScreen from '../../legacy/components/Settings/TermsOfServiceScreen'
@@ -15,6 +14,7 @@ import {SETTINGS_ROUTES, SETTINGS_TABS} from '../../legacy/RoutesList'
 import {COLORS} from '../../legacy/styles/config'
 import {ApplicationSettingsScreen} from './ApplicationSettings'
 import {ChangePasswordScreen} from './ChangePassword/ChangePasswordScreen'
+import {ChangePinScreen} from './ChangePin'
 import {ChangeWalletName} from './ChangeWalletName/ChangeWalletName'
 import {CustomPinScreen} from './CustomPin'
 import {RemoveWalletScreen} from './RemoveWallet'
@@ -94,7 +94,7 @@ export const SettingsScreenNavigator = () => {
       />
       <Stack.Screen
         name={SETTINGS_ROUTES.CHANGE_CUSTOM_PIN}
-        component={ChangeCustomPinScreen}
+        component={ChangePinScreen}
         options={{
           title: strings.changeCustomPinTitle,
           headerStyle: {
@@ -154,7 +154,7 @@ const messages = defineMessages({
     defaultMessage: '!!!Application',
   },
   changeCustomPinTitle: {
-    id: 'components.settings.changecustompinscreen.title',
+    id: 'components.settings.changepinscreen.title',
     defaultMessage: '!!!Change PIN',
   },
   changePasswordTitle: {
