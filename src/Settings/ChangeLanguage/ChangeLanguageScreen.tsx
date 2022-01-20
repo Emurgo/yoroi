@@ -1,16 +1,14 @@
-// @flow
-
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {changeAndSaveLanguage, changeLanguage} from '../../actions/language'
-import {languageSelector} from '../../selectors'
-import LanguagePicker from '../Common/LanguagePicker'
-import styles from './styles/ChangeLanguageScreen.style'
+import {changeAndSaveLanguage, changeLanguage} from '../../../legacy/actions/language'
+import LanguagePicker from '../../../legacy/components/Common/LanguagePicker'
+import styles from '../../../legacy/components/Settings/styles/ChangeLanguageScreen.style'
+import {languageSelector} from '../../../legacy/selectors'
 
-const LanguagePickerScreen = () => {
+export const ChangeLanguageScreen = () => {
   const navigation = useNavigation()
   const languageCode = useSelector(languageSelector)
   const dispatch = useDispatch()
@@ -29,5 +27,3 @@ const LanguagePickerScreen = () => {
     </SafeAreaView>
   )
 }
-
-export default LanguagePickerScreen

@@ -5,12 +5,12 @@ import {defineMessages, useIntl} from 'react-intl'
 
 import BiometricAuthScreen from '../../legacy/components/Send/BiometricAuthScreen'
 import BiometricsLinkScreen from '../../legacy/components/Settings/BiometricsLinkScreen'
-import LanguagePickerScreen from '../../legacy/components/Settings/ChangeLanguageScreen'
 import ToggleEasyConfirmationScreen from '../../legacy/components/Settings/ToggleEasyConfirmationScreen'
 import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../legacy/navigationOptions'
 import {SETTINGS_ROUTES, SETTINGS_TABS} from '../../legacy/RoutesList'
 import {COLORS} from '../../legacy/styles/config'
 import {ApplicationSettingsScreen} from './ApplicationSettings'
+import {ChangeLanguageScreen} from './ChangeLanguage/ChangeLanguageScreen'
 import {ChangePasswordScreen} from './ChangePassword/ChangePasswordScreen'
 import {ChangePinScreen} from './ChangePin'
 import {ChangeWalletName} from './ChangeWalletName/ChangeWalletName'
@@ -79,7 +79,7 @@ export const SettingsScreenNavigator = () => {
       />
       <Stack.Screen
         name={SETTINGS_ROUTES.CHANGE_LANGUAGE}
-        component={LanguagePickerScreen}
+        component={ChangeLanguageScreen}
         options={{headerShown: false}}
       />
       <Stack.Screen
