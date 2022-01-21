@@ -72,6 +72,17 @@ export type RemoteCertificateMeta =
       pot: 0 | 1
     }
 
+export type RemoteAccountState = {
+  // poolOperator: null, // not implemented yet
+  remainingAmount: string // current remaining awards
+  rewards: string // all the rewards every added
+  withdrawals: string // all the withdrawals that have ever happened
+}
+
+export type AccountStates = {
+  [key: string]: null | RemoteAccountState
+}
+
 // Transaction
 
 export type Era = 'byron' | 'shelley'
@@ -98,6 +109,31 @@ export type RawTransaction = {
 }
 
 // Utxo data
+
+export type Addressing = {
+  addressing: {
+    path: Array<number>
+    startLevel: number
+  }
+}
+
+export type RemoteAsset = {
+  amount: string
+  assetId: string
+  policyId: string
+  name: string
+}
+
+export type RawUtxo = {
+  amount: string
+  receiver: string
+  tx_hash: string
+  tx_index: number
+  utxo_id: string
+  assets: Array<RemoteAsset>
+}
+
+export type AddressedUtxo = RawUtxo & Addressing
 
 export type IOData = {
   address: string

@@ -1,7 +1,8 @@
 import {useNavigation} from '@react-navigation/native'
+import BigNumber from 'bignumber.js'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {RefreshControl, ScrollView, StyleSheet, View} from 'react-native'
+import {ActivityIndicator, RefreshControl, ScrollView, StyleSheet, View} from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'
 import {useDispatch, useSelector} from 'react-redux'
 
@@ -13,20 +14,18 @@ import AccountAutoRefresher from '../../legacy/components/Delegation/AccountAuto
 import UtxoAutoRefresher from '../../legacy/components/Send/UtxoAutoRefresher'
 import {Banner, Button, OfflineBanner, StatusBar} from '../../legacy/components/UiKit'
 import {getCardanoBaseConfig} from '../../legacy/config/config'
+import {getDefaultAssetByNetworkId} from '../../legacy/config/config'
 import {getCardanoNetworkConfigById} from '../../legacy/config/networks'
 import globalMessages from '../../legacy/i18n/global-messages'
 import {CATALYST_ROUTES, DELEGATION_ROUTES} from '../../legacy/RoutesList'
 import {
-  accountBalanceSelector,
-  defaultNetworkAssetSelector,
   hwDeviceInfoSelector,
   isFetchingAccountStateSelector,
   isFetchingUtxosSelector,
   isOnlineSelector,
   lastAccountStateFetchErrorSelector,
   serverStatusSelector,
-  totalDelegatedSelector,
-  utxoBalanceSelector,
+  tokenBalanceSelector,
   utxosSelector,
 } from '../../legacy/selectors'
 import {
@@ -37,9 +36,10 @@ import {
 } from '../../legacy/utils/timeUtils'
 import {VotingBanner} from '../Catalyst/VotingBanner'
 import {useSelectedWallet} from '../SelectedWallet'
+import {WalletInterface} from '../types'
 import {EpochProgress} from './EpochProgress'
 import {NotDelegatedInfo} from './NotDelegatedInfo'
-import {StakePoolInfos, useStakingStatus} from './StakePoolInfos'
+import {StakePoolInfos, useStakingInfo} from './StakePoolInfos'
 import {UserSummary} from './UserSummary'
 import {WithdrawStakingRewards} from './WithdrawStakingRewards'
 
@@ -48,22 +48,19 @@ export const Dashboard = () => {
   const navigation = useNavigation()
   const dispatch = useDispatch()
 
-  const utxoBalance = useSelector(utxoBalanceSelector)
-  const utxos = useSelector(utxosSelector)
   const isFetchingUtxos = useSelector(isFetchingUtxosSelector)
-  const accountBalance = useSelector(accountBalanceSelector)
   const isFetchingAccountState = useSelector(isFetchingAccountStateSelector)
   const lastAccountStateSyncError = useSelector(lastAccountStateFetchErrorSelector)
-  const totalDelegated = useSelector(totalDelegatedSelector)
   const isOnline = useSelector(isOnlineSelector)
   const hwDeviceInfo = useSelector(hwDeviceInfoSelector)
-  const defaultAsset = useSelector(defaultNetworkAssetSelector)
   const serverStatus = useSelector(serverStatusSelector)
+
   const wallet = useSelectedWallet()
+  const balances = useBalances(wallet)
+  const utxos = useSelector(utxosSelector)
+  const {stakingInfo, refetch: refetchStakingInfo, error} = useStakingInfo(wallet)
 
   const [showWithdrawalDialog, setShowWithdrawalDialog] = React.useState(false)
-
-  const {stakingStatus} = useStakingStatus(wallet)
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
@@ -73,7 +70,7 @@ export const Dashboard = () => {
 
       <View style={styles.container}>
         <OfflineBanner />
-        {isOnline && lastAccountStateSyncError && (
+        {isOnline && (lastAccountStateSyncError || error) && (
           <SyncErrorBanner showRefresh={!(isFetchingAccountState || isFetchingUtxos)} />
         )}
 
@@ -83,32 +80,45 @@ export const Dashboard = () => {
           refreshControl={
             <RefreshControl
               onRefresh={() => {
-                fetchUTXOs()
-                fetchAccountState(wallet)
+                dispatch(fetchUTXOs())
+                dispatch(fetchAccountState())
+                refetchStakingInfo()
               }}
               refreshing={false}
             />
           }
         >
-          {stakingStatus && !stakingStatus.isRegistered && <NotDelegatedInfo />}
+          {stakingInfo && !stakingInfo.isRegistered && <NotDelegatedInfo />}
 
           <Row>
             <EpochInfo />
           </Row>
 
           <Row>
-            <UserSummary
-              totalAdaSum={utxoBalance}
-              totalRewards={accountBalance}
-              totalDelegated={totalDelegated}
-              onWithdraw={() => setShowWithdrawalDialog(true)}
-              disableWithdraw={wallet.isReadOnly}
-            />
+            {!stakingInfo ? (
+              <ActivityIndicator size={'large'} />
+            ) : stakingInfo?.isRegistered ? (
+              <UserSummary
+                totalAdaSum={balances['ADA'] ? new BigNumber(balances['ADA']) : null}
+                totalRewards={new BigNumber(stakingInfo.rewards)}
+                totalDelegated={new BigNumber(stakingInfo.amount)}
+                onWithdraw={() => setShowWithdrawalDialog(true)}
+                disableWithdraw={wallet.isReadOnly}
+              />
+            ) : (
+              <UserSummary
+                totalAdaSum={balances['ADA'] ? new BigNumber(balances['ADA']) : null}
+                totalRewards={null}
+                totalDelegated={null}
+                onWithdraw={() => setShowWithdrawalDialog(true)}
+                disableWithdraw
+              />
+            )}
           </Row>
 
           <VotingBanner onPress={() => navigation.navigate(CATALYST_ROUTES.ROOT)} />
 
-          {stakingStatus?.isRegistered && (
+          {stakingInfo?.isRegistered && (
             <Row>
               <StakePoolInfos />
             </Row>
@@ -134,7 +144,7 @@ export const Dashboard = () => {
           isEasyConfirmationEnabled={wallet.isEasyConfirmationEnabled}
           isHW={wallet.isHW}
           hwDeviceInfo={hwDeviceInfo}
-          defaultAsset={defaultAsset}
+          defaultAsset={getDefaultAssetByNetworkId(wallet.networkId)}
           serverStatus={serverStatus}
           setLedgerDeviceId={(...args) => dispatch(setLedgerDeviceId(...args))}
           setLedgerDeviceObj={(...args) => dispatch(setLedgerDeviceObj(...args))}
@@ -259,3 +269,15 @@ const styles = StyleSheet.create({
     shadowOffset: {width: 0, height: -8},
   },
 })
+
+const useBalances = (_wallet: WalletInterface) => {
+  const multitoken = useSelector(tokenBalanceSelector)
+
+  return multitoken.values.reduce(
+    (result, token) => ({
+      ...result,
+      [token.identifier === '' ? 'ADA' : token.identifier]: token.amount.toString(),
+    }),
+    {},
+  )
+}

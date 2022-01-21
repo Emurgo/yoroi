@@ -1,6 +1,8 @@
 import {WalletChecksum} from '@emurgo/cip4-js'
 import type {IntlShape} from 'react-intl'
 
+import {AccountStates, AddressedUtxo, RawUtxo} from './types/cardano'
+
 export interface WalletInterface {
   id: string
   walletImplementationId: string
@@ -13,11 +15,22 @@ export interface WalletInterface {
   changePassword(masterPassword: string, newPassword: string, intl: IntlShape): Promise<void>
   fetchPoolInfo(request: StakePoolInfoRequest): Promise<StakePoolInfosAndHistories>
   getDelegationStatus(): Promise<StakingStatus>
+  getAllUtxosForKey(utxos: Array<RawUtxo>): Promise<Array<AddressedUtxo>>
+  fetchAccountState(): Promise<AccountStates>
+  fetchUTXOs(): Promise<Array<RawUtxo>>
+  rewardAddressHex: string
+  subscribe(handler: (wallet: WalletInterface) => void): void
+  subscribeOnTxHistoryUpdate(handler: () => void): void
 }
 
-export type StakingStatus = {
-  isRegistered: boolean
-  poolKeyHash: string | null
+export type StakingStatus = Registered | NotRegistered
+type Registered = {
+  isRegistered: true
+  poolKeyHash: string
+}
+type NotRegistered = {
+  isRegistered: false
+  poolKeyHash: null
 }
 
 export type WalletImplementation = {
