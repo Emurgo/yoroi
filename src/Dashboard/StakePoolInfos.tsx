@@ -43,7 +43,6 @@ type NotRegistered = {
 
 export const useStakingInfo = (wallet: WalletInterface) => {
   const query = useQuery<StakingInfo>({
-    onError: (error) => console.log('QWE', error),
     retry: false,
     queryKey: [wallet.id, 'stakingInfo'],
     queryFn: async () => {

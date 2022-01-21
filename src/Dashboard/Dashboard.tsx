@@ -25,7 +25,7 @@ import {
   isOnlineSelector,
   lastAccountStateFetchErrorSelector,
   serverStatusSelector,
-  utxoBalanceSelector,
+  tokenBalanceSelector,
   utxosSelector,
 } from '../../legacy/selectors'
 import {
@@ -36,6 +36,7 @@ import {
 } from '../../legacy/utils/timeUtils'
 import {VotingBanner} from '../Catalyst/VotingBanner'
 import {useSelectedWallet} from '../SelectedWallet'
+import {WalletInterface} from '../types'
 import {EpochProgress} from './EpochProgress'
 import {NotDelegatedInfo} from './NotDelegatedInfo'
 import {StakePoolInfos, useStakingInfo} from './StakePoolInfos'
@@ -47,8 +48,6 @@ export const Dashboard = () => {
   const navigation = useNavigation()
   const dispatch = useDispatch()
 
-  const utxoBalance = useSelector(utxoBalanceSelector)
-  const utxos = useSelector(utxosSelector)
   const isFetchingUtxos = useSelector(isFetchingUtxosSelector)
   const isFetchingAccountState = useSelector(isFetchingAccountStateSelector)
   const lastAccountStateSyncError = useSelector(lastAccountStateFetchErrorSelector)
@@ -57,8 +56,9 @@ export const Dashboard = () => {
   const serverStatus = useSelector(serverStatusSelector)
 
   const wallet = useSelectedWallet()
-  const defaultAsset = getDefaultAssetByNetworkId(wallet.networkId)
-  const {stakingInfo, refetch, error} = useStakingInfo(wallet)
+  const balances = useBalances(wallet)
+  const utxos = useSelector(utxosSelector)
+  const {stakingInfo, refetch: refetchStakingInfo, error} = useStakingInfo(wallet)
 
   const [showWithdrawalDialog, setShowWithdrawalDialog] = React.useState(false)
 
@@ -80,9 +80,9 @@ export const Dashboard = () => {
           refreshControl={
             <RefreshControl
               onRefresh={() => {
-                fetchUTXOs()
-                fetchAccountState()
-                return refetch()
+                dispatch(fetchUTXOs())
+                dispatch(fetchAccountState())
+                refetchStakingInfo()
               }}
               refreshing={false}
             />
@@ -94,19 +94,27 @@ export const Dashboard = () => {
             <EpochInfo />
           </Row>
 
-          {!stakingInfo ? (
-            <ActivityIndicator size={'large'} />
-          ) : stakingInfo?.isRegistered ? (
-            <Row>
+          <Row>
+            {!stakingInfo ? (
+              <ActivityIndicator size={'large'} />
+            ) : stakingInfo?.isRegistered ? (
               <UserSummary
-                totalAdaSum={utxoBalance}
+                totalAdaSum={balances['ADA'] ? new BigNumber(balances['ADA']) : null}
                 totalRewards={new BigNumber(stakingInfo.rewards)}
                 totalDelegated={new BigNumber(stakingInfo.amount)}
                 onWithdraw={() => setShowWithdrawalDialog(true)}
                 disableWithdraw={wallet.isReadOnly}
               />
-            </Row>
-          ) : null}
+            ) : (
+              <UserSummary
+                totalAdaSum={balances['ADA'] ? new BigNumber(balances['ADA']) : null}
+                totalRewards={null}
+                totalDelegated={null}
+                onWithdraw={() => setShowWithdrawalDialog(true)}
+                disableWithdraw
+              />
+            )}
+          </Row>
 
           <VotingBanner onPress={() => navigation.navigate(CATALYST_ROUTES.ROOT)} />
 
@@ -136,7 +144,7 @@ export const Dashboard = () => {
           isEasyConfirmationEnabled={wallet.isEasyConfirmationEnabled}
           isHW={wallet.isHW}
           hwDeviceInfo={hwDeviceInfo}
-          defaultAsset={defaultAsset}
+          defaultAsset={getDefaultAssetByNetworkId(wallet.networkId)}
           serverStatus={serverStatus}
           setLedgerDeviceId={(...args) => dispatch(setLedgerDeviceId(...args))}
           setLedgerDeviceObj={(...args) => dispatch(setLedgerDeviceObj(...args))}
@@ -261,3 +269,15 @@ const styles = StyleSheet.create({
     shadowOffset: {width: 0, height: -8},
   },
 })
+
+const useBalances = (_wallet: WalletInterface) => {
+  const multitoken = useSelector(tokenBalanceSelector)
+
+  return multitoken.values.reduce(
+    (result, token) => ({
+      ...result,
+      [token.identifier === '' ? 'ADA' : token.identifier]: token.amount.toString(),
+    }),
+    {},
+  )
+}
