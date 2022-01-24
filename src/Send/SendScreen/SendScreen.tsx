@@ -183,9 +183,10 @@ export const SendScreen = ({selectedTokenIdentifier, sendAll, onSendAll}: Props)
         tokenBalance.getDefault().minus(balanceAfter ?? 0)
 
     const tokens: Array<TokenEntry> = await (async () => {
-      if (sendAll) {
-        return (await unsignedTx.totalOutput()).nonDefaultEntries()
+      if (selectedTokenMeta.isDefault) {
+        return sendAll ? (await unsignedTx.totalOutput()).nonDefaultEntries() : []
       }
+
       if (!selectedTokenMeta.isDefault) {
         return [
           {
@@ -195,7 +196,6 @@ export const SendScreen = ({selectedTokenIdentifier, sendAll, onSendAll}: Props)
           },
         ]
       }
-      return []
     })()
 
     setShowSendAllWarning(false)
