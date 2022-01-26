@@ -3,9 +3,11 @@
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {FlatList, Text, TouchableOpacity, View} from 'react-native'
+import {useSelector} from 'react-redux'
 
 import type {TokenEntry} from '../../../crypto/MultiToken'
 import globalMessages, {txLabels} from '../../../i18n/global-messages'
+import {availableAssetsSelector} from '../../../selectors'
 import type {Token} from '../../../types/HistoryTransaction'
 import {formatTokenAmount, getName, getTicker, getTokenFingerprint} from '../../../utils/format'
 import assetListSendStyle from './styles/AssetListSend.style'
@@ -63,6 +65,7 @@ type AssetListProps = {
 const AssetList = ({assets, assetsMetadata, styles, onSelect}: AssetListProps) => {
   const intl = useIntl()
   const colors = [styles.rowColor1, styles.rowColor2]
+  const availableAssets = useSelector(availableAssetsSelector)
 
   return (
     <View>
@@ -78,7 +81,7 @@ const AssetList = ({assets, assetsMetadata, styles, onSelect}: AssetListProps) =
           renderItem={({item, index}) => (
             <AssetRow
               asset={item}
-              assetMetadata={assetsMetadata[item.identifier]}
+              assetMetadata={assetsMetadata[item.identifier] || availableAssets[item.identifier]}
               styles={styles}
               backColor={colors[index % colors.length]}
               onSelect={onSelect}

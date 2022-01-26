@@ -8,7 +8,7 @@ import {useSelector} from 'react-redux'
 
 import {Text} from '../../legacy/components/UiKit'
 import globalMessages, {actionMessages} from '../../legacy/i18n/global-messages'
-import {tokenBalanceSelector, tokenInfoSelector} from '../../legacy/selectors'
+import {availableAssetsSelector, tokenBalanceSelector, tokenInfoSelector} from '../../legacy/selectors'
 import {COLORS} from '../../legacy/styles/config'
 import {formatTokenAmount, getAssetDenominationOrId, getTokenFingerprint} from '../../legacy/utils/format'
 import AdaImage from '../assets/img/icon/asset_ada.png'
@@ -26,12 +26,13 @@ export const AssetList = ({refreshing, onRefresh}: AssetListProps) => {
   const strings = useStrings()
   const tokenBalance = useSelector(tokenBalanceSelector)
   const assetTokenInfos = useSelector(tokenInfoSelector)
+  const availableAssets = useSelector(availableAssetsSelector)
   const assetTokens: Array<TokenEntry> = tokenBalance.values
 
   const orderedTokens = assetTokens
     .sort((a, b) => (a.amount.isGreaterThan(b.amount) ? -1 : 1))
     .sort((a) => (getTokenInfo(assetTokenInfos, a)?.isDefault ? -1 : 1))
-    .filter((t) => assetTokenInfos[t.identifier] != null)
+    .filter((t) => assetTokenInfos[t.identifier] || availableAssets[t.identifier])
 
   const handleOnPressNFTs = () => Alert.alert(strings.soon, strings.soon)
   const handleOnPressTokens = () => Alert.alert(strings.soon, strings.soon)
@@ -55,7 +56,7 @@ export const AssetList = ({refreshing, onRefresh}: AssetListProps) => {
           <AssetItem
             key={assetToken.identifier}
             assetToken={assetToken}
-            tokenInfo={assetTokenInfos[assetToken.identifier]}
+            tokenInfo={assetTokenInfos[assetToken.identifier] || availableAssets[assetToken.identifier]}
           />
         )}
         ItemSeparatorComponent={() => <Spacer height={16} />}
