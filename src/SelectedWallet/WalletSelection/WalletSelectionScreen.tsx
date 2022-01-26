@@ -5,7 +5,7 @@ import {ActivityIndicator, ScrollView, StyleSheet, Text} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {showErrorDialog, updateVersion} from '../../../legacy/actions'
+import {setEasyConfirmation, showErrorDialog, updateVersion} from '../../../legacy/actions'
 import Screen from '../../../legacy/components/Screen'
 import {Button, ScreenBackground, StatusBar} from '../../../legacy/components/UiKit'
 import {CONFIG, isNightly} from '../../../legacy/config/config'
@@ -27,8 +27,9 @@ export const WalletSelectionScreen = () => {
   const wallets = useSelector(walletsListSelector)
   const selectWalletMeta = useSetSelectedWalletMeta()
   const selectWallet = useSetSelectedWallet()
+  const dispatch = useDispatch()
 
-  const openWallet = async (walletMeta: WalletMeta) => {
+  const openWallet = async (walletMeta: WalletMeta, isRetry?: boolean) => {
     try {
       if (walletMeta.isShelley || isJormungandr(walletMeta.networkId)) {
         await showErrorDialog(errorMessages.itnNotSupported, intl)
@@ -51,14 +52,18 @@ export const WalletSelectionScreen = () => {
         navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
       } else if (e instanceof KeysAreInvalid) {
         await walletManager.cleanupInvalidKeys()
+        await walletManager.disableEasyConfirmation()
+        await dispatch(setEasyConfirmation(false))
         await showErrorDialog(errorMessages.walletKeysInvalidated, intl)
+        if (!isRetry) {
+          await openWallet(walletMeta, true)
+        }
       } else {
         throw e
       }
     }
   }
 
-  const dispatch = useDispatch()
   React.useEffect(() => {
     dispatch(updateVersion())
   }, [dispatch])
