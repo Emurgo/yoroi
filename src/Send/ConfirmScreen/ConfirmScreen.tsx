@@ -46,11 +46,11 @@ import {
   easyConfirmationSelector,
   hwDeviceInfoSelector,
   isHWSelector,
-  tokenInfoSelector,
 } from '../../../legacy/selectors'
 import {COLORS} from '../../../legacy/styles/config'
 import {formatTokenWithSymbol, formatTokenWithText} from '../../../legacy/utils/format'
 import {Spacer} from '../../components'
+import {useTokenInfos} from '../../hooks'
 import {useParams} from '../../navigation'
 
 export type Params = {
@@ -98,7 +98,7 @@ export const ConfirmScreen = () => {
   const isEasyConfirmationEnabled = useSelector(easyConfirmationSelector)
   const isHW = useSelector(isHWSelector)
   const defaultAsset = useSelector(defaultNetworkAssetSelector)
-  const tokenMetadata = useSelector(tokenInfoSelector)
+  const tokenInfos = useTokenInfos()
   const hwDeviceInfo = useSelector(hwDeviceInfoSelector)
 
   const [password, setPassword] = React.useState(CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '')
@@ -285,7 +285,7 @@ export const ConfirmScreen = () => {
 
           {tokens.map((t, i) => (
             <Text style={styles.amount} key={i}>
-              {formatTokenWithText(t.amount, tokenMetadata[t.identifier])}
+              {formatTokenWithText(t.amount, tokenInfos[t.identifier])}
             </Text>
           ))}
 

@@ -40,7 +40,6 @@ import {
   isOnlineSelector,
   lastUtxosFetchErrorSelector,
   tokenBalanceSelector,
-  tokenInfoSelector,
   utxosSelector,
   walletMetaSelector,
 } from '../../../legacy/selectors'
@@ -62,6 +61,7 @@ import type {
   BalanceValidationErrors,
 } from '../../../legacy/utils/validators'
 import {getUnstoppableDomainAddress, isReceiverAddressValid, validateAmount} from '../../../legacy/utils/validators'
+import {useTokenInfo} from '../../hooks'
 import type {DefaultAsset, SendTokenList, Token, TokenEntry} from '../../types/cardano'
 import {AmountField} from './../AmountField'
 
@@ -79,7 +79,6 @@ export const SendScreen = ({selectedTokenIdentifier, sendAll, onSendAll}: Props)
   const tokenBalance = useSelector(tokenBalanceSelector)
   const isFetchingBalance = useSelector(isFetchingUtxosSelector)
   const lastFetchingError = useSelector(lastUtxosFetchErrorSelector)
-  const tokenMetadata = useSelector(tokenInfoSelector)
   const defaultAsset = useSelector(defaultNetworkAssetSelector)
   const utxos = useSelector(utxosSelector)
   const hasPendingOutgoingTransaction = useSelector(hasPendingOutgoingTransactionSelector)
@@ -103,8 +102,8 @@ export const SendScreen = ({selectedTokenIdentifier, sendAll, onSendAll}: Props)
   const [recomputing, setRecomputing] = React.useState(false)
   const [showSendAllWarning, setShowSendAllWarning] = React.useState(false)
 
-  const selectedAssetMeta = tokenMetadata[selectedTokenIdentifier]
-  const assetDenomination = truncateWithEllipsis(getAssetDenominationOrId(selectedAssetMeta), 20)
+  const tokenInfo = useTokenInfo(selectedTokenIdentifier)
+  const assetDenomination = truncateWithEllipsis(getAssetDenominationOrId(tokenInfo), 20)
   const amountErrorText = getAmountErrorText(intl, amountErrors, balanceErrors, defaultAsset)
   const isValid =
     isOnline &&
@@ -132,17 +131,13 @@ export const SendScreen = ({selectedTokenIdentifier, sendAll, onSendAll}: Props)
     setBalanceAfter(null)
     setRecomputing(true)
 
-    if (tokenMetadata[selectedTokenIdentifier] == null) {
-      throw new Error('revalidate: no asset metadata found for the asset selected')
-    }
-
     const promise = recomputeAll({
       utxos,
       addressInput,
       amount,
       sendAll,
       defaultAsset,
-      selectedTokenMeta: tokenMetadata[selectedTokenIdentifier],
+      selectedTokenInfo: tokenInfo,
       tokenBalance,
       walletMetadata,
     })
@@ -176,23 +171,22 @@ export const SendScreen = ({selectedTokenIdentifier, sendAll, onSendAll}: Props)
   const handleConfirm = async () => {
     if (!isValid || recomputing || !unsignedTx) return
 
-    const selectedTokenMeta = tokenMetadata[selectedTokenIdentifier]
-    const defaultAssetAmount = selectedTokenMeta.isDefault
-      ? parseAmountDecimal(amount, selectedTokenMeta)
+    const defaultAssetAmount = tokenInfo.isDefault
+      ? parseAmountDecimal(amount, tokenInfo)
       : // note: inside this if balanceAfter shouldn't be null
         tokenBalance.getDefault().minus(balanceAfter ?? 0)
 
     const tokens: Array<TokenEntry> = await (async () => {
-      if (selectedTokenMeta.isDefault) {
+      if (tokenInfo.isDefault) {
         return sendAll ? (await unsignedTx.totalOutput()).nonDefaultEntries() : []
       }
 
-      if (!selectedTokenMeta.isDefault) {
+      if (!tokenInfo.isDefault) {
         return [
           {
-            identifier: selectedTokenMeta.identifier,
-            networkId: selectedTokenMeta.networkId,
-            amount: parseAmountDecimal(amount, selectedTokenMeta),
+            identifier: tokenInfo.identifier,
+            networkId: tokenInfo.networkId,
+            amount: parseAmountDecimal(amount, tokenInfo),
           },
         ]
       }
@@ -253,7 +247,7 @@ export const SendScreen = ({selectedTokenIdentifier, sendAll, onSendAll}: Props)
             label={strings.asset}
             value={`${assetDenomination}: ${formatTokenAmount(
               tokenBalance.get(selectedTokenIdentifier) || new BigNumber('0'),
-              selectedAssetMeta,
+              tokenInfo,
               15,
             )}`}
           />
@@ -263,9 +257,7 @@ export const SendScreen = ({selectedTokenIdentifier, sendAll, onSendAll}: Props)
           checked={sendAll}
           onChange={onSendAll}
           text={
-            selectedAssetMeta.isDefault
-              ? strings.checkboxSendAllAssets
-              : strings.checkboxSendAll({assetId: assetDenomination})
+            tokenInfo.isDefault ? strings.checkboxSendAllAssets : strings.checkboxSendAll({assetId: assetDenomination})
           }
         />
 
@@ -358,7 +350,7 @@ const recomputeAll = async ({
   utxos,
   sendAll,
   defaultAsset,
-  selectedTokenMeta,
+  selectedTokenInfo,
   tokenBalance,
   walletMetadata,
 }: {
@@ -368,13 +360,13 @@ const recomputeAll = async ({
   utxos: Array<RawUtxo> | null
   sendAll: boolean
   defaultAsset: DefaultAsset
-  selectedTokenMeta: Token
+  selectedTokenInfo: Token
   tokenBalance: MultiToken
 }) => {
   let addressErrors: AddressValidationErrors = {}
   let address = addressInput
   const {networkId} = walletMetadata
-  let amountErrors = validateAmount(amount, selectedTokenMeta)
+  let amountErrors = validateAmount(amount, selectedTokenInfo)
 
   if (isDomain(addressInput)) {
     try {
@@ -401,36 +393,36 @@ const recomputeAll = async ({
 
       // we'll substract minAda from ADA balance if we are sending a token
       const minAda =
-        !selectedTokenMeta.isDefault && isHaskellShelleyNetwork(selectedTokenMeta.networkId)
-          ? new BigNumber(await getMinAda(selectedTokenMeta, defaultAsset))
+        !selectedTokenInfo.isDefault && isHaskellShelleyNetwork(selectedTokenInfo.networkId)
+          ? new BigNumber(await getMinAda(selectedTokenInfo, defaultAsset))
           : new BigNumber('0')
 
       if (sendAll) {
-        unsignedTx = await getTransactionData(utxos, address, amount, sendAll, defaultAsset, selectedTokenMeta)
+        unsignedTx = await getTransactionData(utxos, address, amount, sendAll, defaultAsset, selectedTokenInfo)
         _fee = await unsignedTx.fee()
 
-        if (selectedTokenMeta.isDefault) {
+        if (selectedTokenInfo.isDefault) {
           recomputedAmount = normalizeTokenAmount(
             tokenBalance.getDefault().minus(_fee.getDefault()),
-            selectedTokenMeta,
+            selectedTokenInfo,
           ).toString()
           balanceAfter = new BigNumber('0')
         } else {
-          const selectedTokenBalance = tokenBalance.get(selectedTokenMeta.identifier)
+          const selectedTokenBalance = tokenBalance.get(selectedTokenInfo.identifier)
           if (selectedTokenBalance == null) {
             throw new Error('selectedTokenBalance is null, shouldnt happen')
           }
-          recomputedAmount = normalizeTokenAmount(selectedTokenBalance, selectedTokenMeta).toString()
+          recomputedAmount = normalizeTokenAmount(selectedTokenBalance, selectedTokenInfo).toString()
           balanceAfter = tokenBalance.getDefault().minus(_fee.getDefault()).minus(minAda)
         }
 
         // for sendAll we set the amount so the format is error-free
         amountErrors = Object.freeze({})
       } else if (_.isEmpty(amountErrors)) {
-        const parsedAmount = selectedTokenMeta.isDefault
-          ? parseAmountDecimal(amount, selectedTokenMeta)
+        const parsedAmount = selectedTokenInfo.isDefault
+          ? parseAmountDecimal(amount, selectedTokenInfo)
           : new BigNumber('0')
-        unsignedTx = await getTransactionData(utxos, address, amount, false, defaultAsset, selectedTokenMeta)
+        unsignedTx = await getTransactionData(utxos, address, amount, false, defaultAsset, selectedTokenInfo)
         _fee = await unsignedTx.fee()
         balanceAfter = tokenBalance.getDefault().minus(parsedAmount).minus(minAda).minus(_fee.getDefault())
       }
@@ -566,11 +558,9 @@ const Indicator = () => (
 const BalanceAfterTransaction = ({balanceAfter}: {balanceAfter: BigNumber | null}) => {
   const strings = useStrings()
   const tokenBalance = useSelector(tokenBalanceSelector)
-  const tokenMetadata = useSelector(tokenInfoSelector)
+  const tokenInfo = useTokenInfo(tokenBalance.getDefaultId())
 
-  const assetMetaData = tokenMetadata[tokenBalance.getDefaultId()]
-
-  const value = balanceAfter ? formatTokenWithSymbol(balanceAfter, assetMetaData) : strings.balanceAfterNotAvailable
+  const value = balanceAfter ? formatTokenWithSymbol(balanceAfter, tokenInfo) : strings.balanceAfterNotAvailable
 
   return (
     <Text style={styles.info}>
@@ -619,9 +609,7 @@ const AvailableAmountBanner = () => {
   const strings = useStrings()
   const tokenBalance = useSelector(tokenBalanceSelector)
   const isFetchingBalance = useSelector(isFetchingUtxosSelector)
-  const tokenMetadata = useSelector(tokenInfoSelector)
-
-  const assetMetaData = tokenMetadata[tokenBalance.getDefaultId()]
+  const tokenInfo = useTokenInfo(tokenBalance.getDefaultId())
 
   return (
     <Banner
@@ -630,7 +618,7 @@ const AvailableAmountBanner = () => {
         isFetchingBalance
           ? strings.availableFundsBannerIsFetching
           : tokenBalance
-          ? formatTokenWithText(tokenBalance.getDefault(), assetMetaData)
+          ? formatTokenWithText(tokenBalance.getDefault(), tokenInfo)
           : strings.availableFundsBannerNotAvailable
       }
       boldText
@@ -646,13 +634,10 @@ type SendAllWarningProps = {
 }
 const SendAllWarning = ({showSendAllWarning, selectedTokenIdentifier, onCancel, onConfirm}: SendAllWarningProps) => {
   const strings = useStrings()
-  const tokenMetadata = useSelector(tokenInfoSelector)
-
-  const selectedTokenMeta = tokenMetadata[selectedTokenIdentifier]
-  const isDefault = selectedTokenMeta.isDefault
-  const assetNameOrId = truncateWithEllipsis(getAssetDenominationOrId(selectedTokenMeta), 20)
+  const tokenInfo = useTokenInfo(selectedTokenIdentifier)
+  const assetNameOrId = truncateWithEllipsis(getAssetDenominationOrId(tokenInfo), 20)
   const alertBoxContent = {
-    content: isDefault
+    content: tokenInfo.isDefault
       ? [strings.sendAllWarningAlert1({assetNameOrId}), strings.sendAllWarningAlert2, strings.sendAllWarningAlert3]
       : [strings.sendAllWarningAlert1({assetNameOrId})],
   }

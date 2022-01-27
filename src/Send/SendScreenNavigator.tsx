@@ -7,7 +7,8 @@ import {useSelector} from 'react-redux'
 import BiometricAuthScreen from '../../legacy/components/Send/BiometricAuthScreen'
 import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../legacy/navigationOptions'
 import {SEND_ROUTES} from '../../legacy/RoutesList'
-import {tokenBalanceSelector, tokenInfoSelector} from '../../legacy/selectors'
+import {tokenBalanceSelector} from '../../legacy/selectors'
+import {useTokenInfos} from '../hooks'
 import {AddressReaderQR} from './AddressReaderQR'
 import {AssetSelectorScreen} from './AssetSelectorScreen'
 import {ConfirmScreen} from './ConfirmScreen'
@@ -29,7 +30,7 @@ export const SendScreenNavigator = () => {
   const [selectedTokenIdentifier, setSelectedTokenIdentifier] = React.useState(
     tokenBalance.getDefaultEntry().identifier,
   )
-  const tokenInfos = useSelector(tokenInfoSelector)
+  const tokenInfos = useTokenInfos()
   const [sendAll, setSendAll] = React.useState(false)
 
   return (

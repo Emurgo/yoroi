@@ -1,15 +1,12 @@
-// @flow
-
 import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import {BigNumber} from 'bignumber.js'
 import React from 'react'
 
-import type {TokenEntry} from '../../../crypto/MultiToken'
-import {type Token} from '../../../types/HistoryTransaction'
-import AssetList from './AssetList'
-import sendStyle from './styles/AssetListSend.style'
-import baseStyle from './styles/Base.style'
+import sendStyle from '../../../legacy/components/Common/MultiAsset/styles/AssetListSend.style'
+import baseStyle from '../../../legacy/components/Common/MultiAsset/styles/Base.style'
+import type {Token, TokenEntry} from '../../types/cardano'
+import {AssetList} from './AssetList'
 
 storiesOf('AssetList', module)
   .add('baseStyle', () => (
@@ -61,7 +58,7 @@ const assetTokens: Array<TokenEntry> = [
     amount: new BigNumber(0.00001),
   },
 ]
-const assetTokenInfos: Dict<Token> = {
+const assetTokenInfos: Record<string, Token> = {
   policyId123assetName123: {
     networkId: 123,
     isDefault: false,
