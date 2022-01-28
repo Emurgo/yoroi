@@ -15,8 +15,9 @@ type Params = {
 }
 
 export const CustomPinScreen = () => {
-  const intl = useIntl()
+  const strings = useStrings()
   const isAuth = useSelector(isAuthenticatedSelector)
+
   const {onSuccess} = useParams(isParams)
   const dispatch = useDispatch()
 
@@ -34,11 +35,11 @@ export const CustomPinScreen = () => {
         onPinEntered={handlePinEntered}
         labels={{
           PinInput: {
-            title: intl.formatMessage(messages.pinInputTitle),
-            subtitle: intl.formatMessage(messages.pinInputSubtitle),
+            title: strings.pinInputTitle,
+            subtitle: strings.pinInputSubtitle,
           },
           PinConfirmationInput: {
-            title: intl.formatMessage(messages.pinConfirmationTitle),
+            title: strings.pinConfirmationTitle,
           },
         }}
       />
@@ -48,6 +49,16 @@ export const CustomPinScreen = () => {
 
 const isParams = (params?: Params | object | undefined): params is Params => {
   return typeof params === 'object' && 'onSuccess' in params && typeof params.onSuccess === 'function'
+}
+
+const useStrings = () => {
+  const intl = useIntl()
+
+  return {
+    pinInputTitle: intl.formatMessage(messages.pinInputTitle),
+    pinInputSubtitle: intl.formatMessage(messages.pinInputSubtitle),
+    pinConfirmationTitle: intl.formatMessage(messages.pinConfirmationTitle),
+  }
 }
 
 const messages = defineMessages({
