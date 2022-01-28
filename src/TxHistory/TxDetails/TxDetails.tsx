@@ -6,27 +6,27 @@ import {defineMessages, IntlShape, useIntl} from 'react-intl'
 import {Image, LayoutAnimation, Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
-import AssetList from '../../legacy/components/Common/MultiAsset/AssetList'
-import assetListStyle from '../../legacy/components/Common/MultiAsset/styles/AssetListTransaction.style'
-import Screen from '../../legacy/components/Screen'
-import {Banner, Button, CopyButton, OfflineBanner, StatusBar, Text} from '../../legacy/components/UiKit'
-import {getNetworkConfigById} from '../../legacy/config/networks'
-import {MultiToken} from '../../legacy/crypto/MultiToken'
-import globalMessages from '../../legacy/i18n/global-messages'
+import assetListStyle from '../../../legacy/components/Common/MultiAsset/styles/AssetListTransaction.style'
+import Screen from '../../../legacy/components/Screen'
+import {Banner, Button, CopyButton, OfflineBanner, StatusBar, Text} from '../../../legacy/components/UiKit'
+import {getNetworkConfigById} from '../../../legacy/config/networks'
+import {MultiToken} from '../../../legacy/crypto/MultiToken'
+import globalMessages from '../../../legacy/i18n/global-messages'
 import {
   defaultNetworkAssetSelector,
   externalAddressIndexSelector,
   internalAddressIndexSelector,
-  tokenInfoSelector,
   transactionsInfoSelector,
-} from '../../legacy/selectors'
-import stylesConfig, {COLORS} from '../../legacy/styles/config'
-import {formatTokenWithSymbol} from '../../legacy/utils/format'
-import arrowDown from '../assets/img/icon/chevron_down.png'
-import arrowUp from '../assets/img/icon/chevron_up.png'
-import AddressModal from '../Receive/AddressModal'
-import {useSelectedWallet} from '../SelectedWallet'
-import {Token, TransactionInfo} from '../types/cardano'
+} from '../../../legacy/selectors'
+import stylesConfig, {COLORS} from '../../../legacy/styles/config'
+import {formatTokenWithSymbol} from '../../../legacy/utils/format'
+import arrowDown from '../../assets/img/icon/chevron_down.png'
+import arrowUp from '../../assets/img/icon/chevron_up.png'
+import {useTokenInfos} from '../../hooks'
+import AddressModal from '../../Receive/AddressModal'
+import {useSelectedWallet} from '../../SelectedWallet'
+import {Token, TransactionInfo} from '../../types/cardano'
+import {AssetList} from './AssetList'
 
 export type Params = {
   id: string
@@ -39,7 +39,7 @@ export const TxDetails = () => {
   const internalAddressIndex = useSelector(internalAddressIndexSelector)
   const externalAddressIndex = useSelector(externalAddressIndexSelector)
   const wallet = useSelectedWallet()
-  const tokenMetadata = useSelector(tokenInfoSelector)
+  const tokenInfos = useTokenInfos()
   const defaultNetworkAsset = useSelector(defaultNetworkAssetSelector)
   const transactions = useSelector(transactionsInfoSelector)
   const [expandedIn, setExpandedIn] = useState(false)
@@ -60,7 +60,7 @@ export const TxDetails = () => {
   const txFee: BigNumber = transaction.fee ? MultiToken.fromArray(transaction.fee).getDefault() : null
   const amountAsMT = MultiToken.fromArray(transaction.amount)
   const amount: BigNumber = amountAsMT.getDefault()
-  const amountDefaultAsset: Token = tokenMetadata[amountAsMT.getDefaultId()]
+  const amountDefaultAsset: Token = tokenInfos[amountAsMT.getDefaultId()]
 
   const defaultAsset = amountDefaultAsset || defaultNetworkAsset
 
@@ -99,7 +99,7 @@ export const TxDetails = () => {
                   <Image source={expandedIn ? arrowUp : arrowDown} />
                 </TouchableOpacity>
               )}
-              {expandedIn && <AssetList styles={assetListStyle} assets={item.assets} assetsMetadata={tokenMetadata} />}
+              {expandedIn && <AssetList styles={assetListStyle} assets={item.assets} assetsMetadata={tokenInfos} />}
             </View>
           ))}
 
@@ -115,7 +115,7 @@ export const TxDetails = () => {
                   <Image source={expandedOut ? arrowUp : arrowDown} />
                 </TouchableOpacity>
               )}
-              {expandedOut && <AssetList styles={assetListStyle} assets={item.assets} assetsMetadata={tokenMetadata} />}
+              {expandedOut && <AssetList styles={assetListStyle} assets={item.assets} assetsMetadata={tokenInfos} />}
             </View>
           ))}
           {cntOmittedTo > 0 && <Text>{strings.omittedCount(cntOmittedTo)}</Text>}
