@@ -3,13 +3,11 @@ import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import iconGear from '../../legacy/assets/img/gear.png'
 import DelegationConfirmation from '../../legacy/components/Delegation/DelegationConfirmation'
-import styles from '../../legacy/components/Delegation/styles/SettingsButton.style'
 import BiometricAuthScreen from '../../legacy/components/Send/BiometricAuthScreen'
-import {Button} from '../../legacy/components/UiKit'
 import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../legacy/navigationOptions'
 import {SEND_ROUTES, STAKING_CENTER_ROUTES, WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
+import {SettingsButton} from '../components/Button'
 import {StakingCenter} from './StakingCenter/StakingCenter'
 
 type StakingCenterRoutes = {
@@ -35,15 +33,8 @@ export const StakingCenterNavigator = () => {
         component={StakingCenter}
         options={({navigation}) => ({
           title: strings.title,
-          headerRight: () => (
-            <Button
-              style={styles.settingsButton}
-              onPress={() => navigation.navigate(WALLET_ROOT_ROUTES.SETTINGS)}
-              iconImage={iconGear}
-              title=""
-              withoutBackground
-            />
-          ),
+          headerRight: () => <SettingsButton onPress={() => navigation.navigate(WALLET_ROOT_ROUTES.SETTINGS)} />,
+          headerRightContainerStyle: {paddingRight: 16},
         })}
       />
 
