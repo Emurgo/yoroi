@@ -3,14 +3,14 @@ import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import iconGear from '../../assets/img/gear.png'
+import iconGear from '../../legacy/assets/img/gear.png'
 import DelegationConfirmation from '../../legacy/components/Delegation/DelegationConfirmation'
-import StakingCenter from '../../legacy/components/Delegation/StakingCenter'
 import styles from '../../legacy/components/Delegation/styles/SettingsButton.style'
 import BiometricAuthScreen from '../../legacy/components/Send/BiometricAuthScreen'
 import {Button} from '../../legacy/components/UiKit'
 import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../legacy/navigationOptions'
 import {SEND_ROUTES, STAKING_CENTER_ROUTES, WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
+import {StakingCenter} from './StakingCenter/StakingCenter'
 
 type StakingCenterRoutes = {
   'staking-center': any
