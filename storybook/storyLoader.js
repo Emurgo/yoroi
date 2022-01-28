@@ -6,7 +6,6 @@
 function loadStories() {
 	require('../legacy/components/Common/DangerousActionModal.stories');
 	require('../legacy/components/Common/ErrorModal.stories');
-	require('../legacy/components/Common/ExpandableItem.stories');
 	require('../legacy/components/Common/FingerprinScreenBase.stories');
 	require('../legacy/components/Common/PinRegistrationForm.stories');
 	require('../legacy/components/Delegation/DelegationConfirmation.stories');
@@ -71,6 +70,7 @@ function loadStories() {
 	require('../src/WalletInit/WalletAddress/WalletAddress.stories');
 	require('../src/WalletInit/WalletCredentials/WalletCredentialsScreen.stories');
 	require('../src/WalletInit/WalletFreshInit/WalletFreshInitScreen.stories');
+	require('../src/WalletInit/WalletInit/ExpandableItem/ExpandableItem.stories');
 	require('../src/WalletInit/WalletInit/WalletInitScreen.stories');
 	require('../src/WalletInit/WalletNameForm/WalletNameForm.stories');
 	require('../src/components/Icon/Icon.stories');
@@ -80,7 +80,6 @@ function loadStories() {
 const stories = [
 	'../legacy/components/Common/DangerousActionModal.stories',
 	'../legacy/components/Common/ErrorModal.stories',
-	'../legacy/components/Common/ExpandableItem.stories',
 	'../legacy/components/Common/FingerprinScreenBase.stories',
 	'../legacy/components/Common/PinRegistrationForm.stories',
 	'../legacy/components/Delegation/DelegationConfirmation.stories',
@@ -145,6 +144,7 @@ const stories = [
 	'../src/WalletInit/WalletAddress/WalletAddress.stories',
 	'../src/WalletInit/WalletCredentials/WalletCredentialsScreen.stories',
 	'../src/WalletInit/WalletFreshInit/WalletFreshInitScreen.stories',
+	'../src/WalletInit/WalletInit/ExpandableItem/ExpandableItem.stories',
 	'../src/WalletInit/WalletInit/WalletInitScreen.stories',
 	'../src/WalletInit/WalletNameForm/WalletNameForm.stories',
 	'../src/components/Icon/Icon.stories',

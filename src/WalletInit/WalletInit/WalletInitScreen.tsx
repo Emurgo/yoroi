@@ -4,7 +4,6 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import ExapandableItem from '../../../legacy/components/Common/ExpandableItem'
 import LedgerTransportSwitchModal from '../../../legacy/components/Ledger/LedgerTransportSwitchModal'
 import {Button, Modal, ScreenBackground, StatusBar} from '../../../legacy/components/UiKit'
 import {CONFIG, isByron, isHaskellShelley} from '../../../legacy/config/config'
@@ -14,6 +13,7 @@ import globalMessages from '../../../legacy/i18n/global-messages'
 import {WALLET_INIT_ROUTES} from '../../../legacy/RoutesList'
 import {COLORS} from '../../../legacy/styles/config'
 import {WalletDescription} from '../WalletDescription'
+import {ExpandableItem} from './ExpandableItem'
 
 export const WalletInitScreen = () => {
   const strings = useStrings()
@@ -89,7 +89,7 @@ export const WalletInitScreen = () => {
                 testID="restoreNormalWalletButton"
               />
 
-              <ExapandableItem
+              <ExpandableItem
                 label={strings.learnMore}
                 content={strings.restoreNWordWalletExplanation({mnemonicLength: 15})}
               />
@@ -104,7 +104,7 @@ export const WalletInitScreen = () => {
                 testID="restore24WordWalletButton"
               />
 
-              <ExapandableItem
+              <ExpandableItem
                 label={strings.learnMore}
                 content={strings.restoreNWordWalletExplanation({mnemonicLength: 24})}
               />
@@ -117,7 +117,7 @@ export const WalletInitScreen = () => {
                 testID="importReadOnlyWalletButton"
               />
 
-              <ExapandableItem label={strings.learnMore} content={strings.importReadOnlyWalletExplanation} />
+              <ExpandableItem label={strings.learnMore} content={strings.importReadOnlyWalletExplanation} />
             </Modal>
           )}
         </View>
