@@ -11,7 +11,6 @@ function loadStories() {
 	require('../legacy/components/Common/PinRegistrationForm.stories');
 	require('../legacy/components/Delegation/DelegationConfirmation.stories');
 	require('../legacy/components/Delegation/FlawedWalletScreen.stories');
-	require('../legacy/components/Delegation/PoolDetailScreen.stories');
 	require('../legacy/components/Ledger/DeviceItem/DeviceItem.stories');
 	require('../legacy/components/Ledger/LedgerConnect.stories');
 	require('../legacy/components/Ledger/LedgerTransportSwitchModal.stories');
@@ -49,6 +48,7 @@ function loadStories() {
 	require('../src/Settings/TermsOfService/TermsOfServiceScreen.stories');
 	require('../src/Settings/ToggleEasyConfirmation/ToggleEasyConfirmationScreen.stories');
 	require('../src/Settings/WalletSettings/WalletSettingsScreen.stories');
+	require('../src/Staking/PoolDetails/PoolDetailScreen.stories');
 	require('../src/Staking/StakingCenter/StakingCenter.stories');
 	require('../src/TxHistory/ChipButton.stories');
 	require('../src/TxHistory/ModalInfo/ModalInfo.stories');
@@ -85,7 +85,6 @@ const stories = [
 	'../legacy/components/Common/PinRegistrationForm.stories',
 	'../legacy/components/Delegation/DelegationConfirmation.stories',
 	'../legacy/components/Delegation/FlawedWalletScreen.stories',
-	'../legacy/components/Delegation/PoolDetailScreen.stories',
 	'../legacy/components/Ledger/DeviceItem/DeviceItem.stories',
 	'../legacy/components/Ledger/LedgerConnect.stories',
 	'../legacy/components/Ledger/LedgerTransportSwitchModal.stories',
@@ -123,6 +122,7 @@ const stories = [
 	'../src/Settings/TermsOfService/TermsOfServiceScreen.stories',
 	'../src/Settings/ToggleEasyConfirmation/ToggleEasyConfirmationScreen.stories',
 	'../src/Settings/WalletSettings/WalletSettingsScreen.stories',
+	'../src/Staking/PoolDetails/PoolDetailScreen.stories',
 	'../src/Staking/StakingCenter/StakingCenter.stories',
 	'../src/TxHistory/ChipButton.stories',
 	'../src/TxHistory/ModalInfo/ModalInfo.stories',

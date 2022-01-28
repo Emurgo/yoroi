@@ -11,7 +11,6 @@ import {showErrorDialog} from '../../../legacy/actions'
 import {ApiError, NetworkError} from '../../../legacy/api/errors'
 import type {RawUtxo} from '../../../legacy/api/types'
 import AccountAutoRefresher from '../../../legacy/components/Delegation/AccountAutoRefresher'
-import PoolDetailScreen from '../../../legacy/components/Delegation/PoolDetailScreen'
 import PoolWarningModal from '../../../legacy/components/Delegation/PoolWarningModal'
 import styles from '../../../legacy/components/Delegation/styles/DelegationCenter.style'
 import UtxoAutoRefresher from '../../../legacy/components/Send/UtxoAutoRefresher'
@@ -35,6 +34,7 @@ import {ObjectValues} from '../../../legacy/utils/flow'
 import {normalizeTokenAmount} from '../../../legacy/utils/format'
 import {Logger} from '../../../legacy/utils/logging'
 import {useSelectedWallet} from '../../SelectedWallet'
+import {PoolDetailScreen} from '../PoolDetails'
 
 export const StakingCenter = () => {
   const intl = useIntl()
