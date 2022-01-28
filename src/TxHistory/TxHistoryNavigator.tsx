@@ -10,16 +10,12 @@ import {Button} from '../../legacy/components/UiKit'
 import {UI_V2} from '../../legacy/config/config'
 import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../legacy/navigationOptions'
 import {TX_HISTORY_ROUTES, WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
-import {
-  tokenBalanceSelector,
-  tokenInfoSelector,
-  transactionsInfoSelector,
-  walletMetaSelector,
-} from '../../legacy/selectors'
+import {tokenBalanceSelector, transactionsInfoSelector, walletMetaSelector} from '../../legacy/selectors'
 import {COLORS} from '../../legacy/styles/config'
 import {formatDateToSeconds} from '../../legacy/utils/format'
 import iconGear from '../assets/img/icon/gear.png'
 import {Icon} from '../components'
+import {useTokenInfos} from '../hooks'
 import {buildOptionsWithDefault, TxHistoryStackParamList, TxHistoryStackRootProps} from '../navigation'
 import {ReceiveScreen} from '../Receive/ReceiveScreen'
 import {AddressReaderQR} from '../Send/AddressReaderQR'
@@ -44,7 +40,7 @@ export const TxHistoryNavigator = () => {
   const [selectedTokenIdentifier, setSelectedTokenIdentifier] = React.useState(
     tokenBalance.getDefaultEntry().identifier,
   )
-  const tokenInfos = useSelector(tokenInfoSelector)
+  const tokenInfos = useTokenInfos()
   const [sendAll, setSendAll] = React.useState(false)
 
   return (
