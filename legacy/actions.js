@@ -13,7 +13,7 @@ import {changeAndSaveLanguage} from './actions/language'
 import {fetchTokenInfo} from './actions/tokenInfo'
 import {clearUTXOs} from './actions/utxo'
 import * as api from './api/shelley/api'
-import {CONFIG} from './config/config'
+import {CONFIG, isNightly} from './config/config'
 import {getCardanoNetworkConfigById} from './config/networks'
 import type {NetworkId, WalletImplementationId, YoroiProvider} from './config/types'
 import {encryptCustomPin} from './crypto/customPin'
@@ -95,7 +95,7 @@ const _updateWallets = (wallets) => ({
   type: 'UPDATE_WALLETS',
 })
 
-const updateWallets = () => (dispatch: Dispatch<any>) => {
+export const updateWallets = () => (dispatch: Dispatch<any>) => {
   const wallets = walletManager.getWallets()
   dispatch(_updateWallets(wallets))
 }
@@ -221,6 +221,10 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
     )
   } catch (e) {
     Logger.warn('actions::initApp could not retrieve server status', e)
+  }
+
+  if (isNightly()) {
+    dispatch(setAppSettingField(APP_SETTINGS_KEYS.SEND_CRASH_REPORTS, true))
   }
 
   await dispatch(reloadAppSettings())
@@ -357,8 +361,10 @@ export const createWallet =
     provider: YoroiProvider,
   ) =>
   async (dispatch: Dispatch<any>) => {
-    await walletManager.createWallet(name, mnemonic, password, networkId, implementationId, provider)
+    const wallet = await walletManager.createWallet(name, mnemonic, password, networkId, implementationId, provider)
     dispatch(updateWallets())
+
+    return wallet
   }
 
 export const createWalletWithBip44Account =
@@ -371,7 +377,7 @@ export const createWalletWithBip44Account =
     readOnly: boolean,
   ) =>
   async (dispatch: Dispatch<any>) => {
-    await walletManager.createWalletWithBip44Account(
+    const wallet = await walletManager.createWalletWithBip44Account(
       name,
       bip44AccountPublic,
       networkId,
@@ -380,12 +386,9 @@ export const createWalletWithBip44Account =
       readOnly,
     )
     dispatch(updateWallets())
-  }
 
-export const removeCurrentWallet = () => async (dispatch: Dispatch<any>) => {
-  await walletManager.removeCurrentWallet()
-  dispatch(updateWallets())
-}
+    return wallet
+  }
 
 type DialogOptions = {|
   title: string,
@@ -458,12 +461,6 @@ export const showConfirmationDialog = (dialog: DialogOptions, intl: IntlShape): 
   })
 
 export const setSystemAuth = (enable: boolean) => async (dispatch: Dispatch<any>, getState: any) => {
-  const canBeDisabled = walletManager.canBiometricsSignInBeDisabled()
-
-  if (!enable && !canBeDisabled) {
-    throw new Error('Can not disable system auth without disabling easy confirmation.')
-  }
-
   await dispatch(setAppSettingField(APP_SETTINGS_KEYS.SYSTEM_AUTH_ENABLED, enable))
 
   const installationId = installationIdSelector(getState())

@@ -112,8 +112,8 @@ export const CONFIG = {
     // WARNING: NEVER change these flags
     START_WITH_INDEX_SCREEN: __DEV__ ? SHOW_INIT_DEBUG_SCREEN : false,
     PREFILL_FORMS: __DEV__ ? PREFILL_WALLET_INFO : false,
-    WALLET_NAME: 'My wallet',
-    PASSWORD: 'aeg?eP3M:)(:',
+    WALLET_NAME: USE_TESTNET ? 'Auto Testnet' : 'Auto Nightly',
+    PASSWORD: '1234567890',
     MNEMONIC1: ['dry balcony arctic what garbage sort', 'cart shine egg lamp manual bottom', 'slide assault bus'].join(
       ' ',
     ),
@@ -128,9 +128,10 @@ export const CONFIG = {
       'boss already cement scrub',
       'nut priority',
     ].join(' '),
-    SEND_ADDRESS:
-      'addr1q8dewyn53xdjyzu20xjj6wg7kkxyqq63upxqevt24jga8fgcdwap96xuy84apchhj8u6r7uvl974sy9qz0sedc7ayjks3sxz7a',
-    SEND_AMOUNT: '1',
+    SEND_ADDRESS: USE_TESTNET
+      ? 'addr_test1qpaufs29emf7r62prt8r0l072nuvs4vezrgve2ty5csvvjwr3y3kdut55a40jff00qmg74686vz44v6k363md06qkq0qj8n0y9'
+      : 'addr1q8dewyn53xdjyzu20xjj6wg7kkxyqq63upxqevt24jga8fgcdwap96xuy84apchhj8u6r7uvl974sy9qz0sedc7ayjks3sxz7a',
+    SEND_AMOUNT: USE_TESTNET ? '3.3333' : '1',
     POOL_HASH: 'af22f95915a19cd57adb14c558dcc4a175f60c6193dc23b8bd2d8beb',
     PUB_KEY:
       '42cfdc53da2220ba52ce62f8e20ab9bb99857a3fceacf43d676d7987ad909b53' +
@@ -149,7 +150,7 @@ export const CONFIG = {
   SENTRY,
   MNEMONIC_STRENGTH: 160,
   ASSURANCE_LEVELS: _ASSURANCE_STRICT ? ASSURANCE_LEVELS.STRICT : ASSURANCE_LEVELS.NORMAL,
-  HISTORY_REFRESH_TIME: 10 * 1000,
+  HISTORY_REFRESH_TIME: 25 * 1000,
   NUMBERS,
   WALLETS,
 

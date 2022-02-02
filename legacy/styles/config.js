@@ -9,7 +9,7 @@ import {Platform} from 'react-native'
 export const COLORS = {
   TRANSPARENT: 'transparent',
   BACKGROUND: '#fff',
-  BACKGROUND_GRAY: '#f9f9f9',
+  BACKGROUND_GRAY: '#f8f8f8',
   BACKGROUND_BLUE: '#254BC9',
   BACKGROUND_LIGHT_GRAY: '#F4F6FC',
   BACKGROUND_RED: '#ff0000',
@@ -51,6 +51,7 @@ export const COLORS = {
   BORDER_GRAY: '#DCE0E9',
   BLUE_LIGHTER: '#164FD6',
   GREY_6: '#A7AFC0',
+  ACTION_GRAY: '#8A92A3',
 }
 
 // TODO: use lowercase for key names. Eg navigationActive

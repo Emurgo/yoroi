@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 // @flow
 
 import type {Element, Node} from 'react'
@@ -8,7 +7,8 @@ import type {Props as TextInputProps} from 'react-native/Libraries/Components/Te
 import type {ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
 import {HelperText, TextInput as RNPTextInput} from 'react-native-paper'
 
-import CheckIcon from '../../assets/CheckIcon'
+// $FlowExpectedError
+import {Icon} from '../../../src/components'
 import closedEyeIcon from '../../assets/img/icon/visibility-closed.png'
 import openedEyeIcon from '../../assets/img/icon/visibility-opened.png'
 import {COLORS} from '../../styles/config'
@@ -26,6 +26,7 @@ type Props = {|
   right?: Element<any>,
   noErrors?: boolean,
   dense?: boolean,
+  faded?: boolean,
   textAlign?: 'left' | 'center' | 'right',
   render?: (props: TextInputProps) => Element<any>,
 |}
@@ -58,6 +59,7 @@ const TextInputWithRef = (
     right,
     noErrors,
     textAlign,
+    faded,
     ...restProps
   }: Props,
   ref,
@@ -84,8 +86,8 @@ const TextInputWithRef = (
           roundness: 8,
           colors: {
             background: COLORS.BACKGROUND,
-            placeholder: COLORS.TEXT_INPUT,
-            primary: COLORS.BLACK,
+            placeholder: faded ? COLORS.GREY_6 : COLORS.TEXT_INPUT,
+            primary: faded ? COLORS.GREY_6 : COLORS.BLACK,
             error: COLORS.ERROR_TEXT_COLOR,
           },
         }}
@@ -94,7 +96,7 @@ const TextInputWithRef = (
         error={errorTextEnabled && !!errorText}
         render={({style, ...inputProps}) => (
           <InputContainer>
-            <RNTextInput {...inputProps} style={[style, {color: COLORS.BLACK}]} />
+            <RNTextInput {...inputProps} style={[style, {color: faded ? COLORS.GREY_6 : COLORS.BLACK}]} />
             {right ? <AdornmentContainer style={styles.checkmarkContainer}>{right}</AdornmentContainer> : null}
 
             {secureTextEntry ? (
@@ -116,7 +118,7 @@ const TextInputWithRef = (
 
 const TextInput = React.forwardRef<Props, {focus: () => void}>(TextInputWithRef)
 
-export const Checkmark = () => <CheckIcon height={24} width={24} color={COLORS.LIGHT_POSITIVE_GREEN} />
+export const Checkmark = () => <Icon.Check height={24} width={24} color={COLORS.LIGHT_POSITIVE_GREEN} />
 
 const SecureTextEntryToggle = ({showPassword, onPress}: {showPassword: boolean, onPress: () => any}) => (
   <AdornmentContainer style={styles.secureTextEntryToggleContainer}>

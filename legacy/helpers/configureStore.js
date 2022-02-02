@@ -10,7 +10,7 @@ import getInitialState, {mockState} from '../state'
 import type {Dispatch, GenericAction} from '../types/reduxTypes'
 import rootReducer from './rootReducer'
 
-export default (useMockState: boolean = false, storybook: boolean = false, mockedState: ?State) => {
+export const getConfiguredStore = (useMockState: boolean = false, storybook: boolean = false, mockedState: ?State) => {
   const logger = {
     log: (_message: string, _payload: Object) => null,
   }
@@ -51,3 +51,5 @@ export default (useMockState: boolean = false, storybook: boolean = false, mocke
 
   return store
 }
+
+export default getConfiguredStore

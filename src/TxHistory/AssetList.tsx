@@ -8,14 +8,15 @@ import {useSelector} from 'react-redux'
 
 import {Text} from '../../legacy/components/UiKit'
 import globalMessages, {actionMessages} from '../../legacy/i18n/global-messages'
-import {tokenBalanceSelector, tokenInfoSelector} from '../../legacy/selectors'
+import {tokenBalanceSelector} from '../../legacy/selectors'
 import {COLORS} from '../../legacy/styles/config'
 import {formatTokenAmount, getAssetDenominationOrId, getTokenFingerprint} from '../../legacy/utils/format'
 import AdaImage from '../assets/img/icon/asset_ada.png'
 import NoImage from '../assets/img/icon/asset_no_image.png'
 import {Spacer} from '../components/Spacer'
+import {useTokenInfo, useTokenInfos} from '../hooks'
+import {Token, TokenEntry} from '../types/cardano'
 import {TxListActionsBannerForAssetsTab} from './TxListActionsBanner'
-import {Token, TokenEntry} from './types'
 
 type AssetListProps = {
   refreshing: boolean
@@ -25,13 +26,14 @@ type AssetListProps = {
 export const AssetList = ({refreshing, onRefresh}: AssetListProps) => {
   const strings = useStrings()
   const tokenBalance = useSelector(tokenBalanceSelector)
-  const assetTokenInfos = useSelector(tokenInfoSelector)
+  const tokenInfos = useTokenInfos()
+
   const assetTokens: Array<TokenEntry> = tokenBalance.values
 
   const orderedTokens = assetTokens
     .sort((a, b) => (a.amount.isGreaterThan(b.amount) ? -1 : 1))
-    .sort((a) => (getTokenInfo(assetTokenInfos, a)?.isDefault ? -1 : 1))
-    .filter((t) => assetTokenInfos[t.identifier] != null)
+    .sort((a) => (getTokenInfo(tokenInfos, a)?.isDefault ? -1 : 1))
+    .filter((t) => tokenInfos[t.identifier])
 
   const handleOnPressNFTs = () => Alert.alert(strings.soon, strings.soon)
   const handleOnPressTokens = () => Alert.alert(strings.soon, strings.soon)
@@ -51,13 +53,7 @@ export const AssetList = ({refreshing, onRefresh}: AssetListProps) => {
         onRefresh={onRefresh}
         refreshing={refreshing}
         data={orderedTokens}
-        renderItem={({item: assetToken}) => (
-          <AssetItem
-            key={assetToken.identifier}
-            assetToken={assetToken}
-            tokenInfo={assetTokenInfos[assetToken.identifier]}
-          />
-        )}
+        renderItem={({item: assetToken}) => <AssetItem key={assetToken.identifier} assetToken={assetToken} />}
         ItemSeparatorComponent={() => <Spacer height={16} />}
         bounces={false}
         contentContainerStyle={{paddingTop: 16, paddingHorizontal: 16}}
@@ -69,12 +65,13 @@ export const AssetList = ({refreshing, onRefresh}: AssetListProps) => {
 
 type AssetItemProps = {
   assetToken: TokenEntry
-  tokenInfo: Token
   onPress?: () => void
 }
 
-const AssetItem = ({assetToken, tokenInfo, onPress}: AssetItemProps) => {
+const AssetItem = ({assetToken, onPress}: AssetItemProps) => {
   const strings = useStrings()
+  const tokenInfo = useTokenInfo(assetToken.identifier)
+
   return (
     <TouchableOpacity onPress={onPress}>
       <View style={styles.tokenRoot}>

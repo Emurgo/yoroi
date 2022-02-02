@@ -216,6 +216,8 @@ export const utxosSelector = (state: State): ?Array<RawUtxo> => state.balance.ut
 
 export const biometricHwSupportSelector = (state: State): boolean => state.appSettings.isBiometricHardwareSupported
 
+export const canEnableBiometricSelector = (state: State): boolean => state.appSettings.canEnableBiometricEncryption
+
 export const isSystemAuthEnabledSelector = (state: State): boolean => state.appSettings.isSystemAuthEnabled
 
 export const sendCrashReportsSelector = (state: State): boolean => state.appSettings.sendCrashReports
@@ -270,3 +272,4 @@ export const walletsListSelector = (state: State) =>
 
 export const unsignedTxSelector = (state: State) => state.voting.unsignedTx
 export const encryptedKeySelector = (state: State) => state.voting.encryptedKey
+export const pinSelector = (state: State) => state.voting.pin

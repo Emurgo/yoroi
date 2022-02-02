@@ -18,6 +18,7 @@ setLogLevel(CONFIG.LOG_LEVEL)
 bluebird.config({
   longStackTraces: true,
   warnings: true,
+  cancelation: true,
 })
 
 /*
@@ -32,16 +33,10 @@ const cache = createIntlCache()
 const intl = createIntl({locale: 'en-US', messages: translations['en-US']}, cache)
 global.onunhandledrejection = (e) => handleGeneralError(e.message, e, intl)
 
+const store = getConfiguredStore()
+store.dispatch(setupHooks())
+
 const AppWithProviders = () => {
-  const store = getConfiguredStore()
-  store.dispatch(setupHooks())
-
-  const IntlProviderWrapper = (props) => {
-    const locale = useSelector(languageSelector) || 'en-US'
-
-    return <IntlProvider {...props} locale={locale} messages={translations[locale]} textComponent={Text} />
-  }
-
   return (
     <Provider store={store}>
       <IntlProviderWrapper>
@@ -52,3 +47,9 @@ const AppWithProviders = () => {
 }
 
 AppRegistry.registerComponent(appName, () => AppWithProviders)
+
+const IntlProviderWrapper = (props) => {
+  const locale = useSelector(languageSelector) || 'en-US'
+
+  return <IntlProvider {...props} locale={locale} messages={translations[locale]} textComponent={Text} />
+}

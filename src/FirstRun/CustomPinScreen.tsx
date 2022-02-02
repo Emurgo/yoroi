@@ -1,21 +1,20 @@
-// @flow
-
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {encryptAndStoreCustomPin, signin} from '../../legacy/actions'
+import {encryptAndStoreCustomPin, setSystemAuth, signin} from '../../legacy/actions'
 import PinRegistrationForm from '../../legacy/components/Common/PinRegistrationForm'
 import {StatusBar} from '../../legacy/components/UiKit'
 import {isAuthenticatedSelector} from '../../legacy/selectors'
 
-const CustomPinScreen = () => {
+export const CustomPinScreen = () => {
   const strings = useStrings()
   const isAuth = useSelector(isAuthenticatedSelector)
   const dispatch = useDispatch()
   const handlePinEntered = async (pin: string) => {
+    await dispatch(setSystemAuth(false))
     await dispatch(encryptAndStoreCustomPin(pin))
     if (!isAuth) dispatch(signin()) // because in first run user is not authenticated
   }
@@ -39,8 +38,6 @@ const CustomPinScreen = () => {
     </SafeAreaView>
   )
 }
-
-export default CustomPinScreen
 
 const messages = defineMessages({
   pinInputTitle: {

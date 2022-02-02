@@ -118,7 +118,7 @@ export const getAccountState = (request: AccountStateRequest, config: BackendCon
     request.addresses.length <= config.FETCH_UTXOS_MAX_ADDRESSES,
     'getAccountState: too many addresses',
   )
-  return fetchDefault('getAccountState', request, config)
+  return fetchDefault('account/state', request, config)
 }
 
 export const bulkGetAccountState = async (
