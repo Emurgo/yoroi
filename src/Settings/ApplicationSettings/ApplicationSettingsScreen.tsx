@@ -6,12 +6,6 @@ import DeviceInfo from 'react-native-device-info'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {setAppSettingField, setEasyConfirmation, setSystemAuth} from '../../../legacy/actions'
-import {
-  NavigatedSettingsItem,
-  SettingsBuildItem,
-  SettingsItem,
-  SettingsSection,
-} from '../../../legacy/components/Settings/SettingsItems'
 import {StatusBar} from '../../../legacy/components/UiKit'
 import {CONFIG, isNightly} from '../../../legacy/config/config'
 import KeyStore from '../../../legacy/crypto/KeyStore'
@@ -29,6 +23,7 @@ import {
   sendCrashReportsSelector,
 } from '../../../legacy/selectors'
 import {useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../SelectedWallet'
+import {NavigatedSettingsItem, SettingsBuildItem, SettingsItem, SettingsSection} from '../SettingsItems'
 
 const version = DeviceInfo.getVersion()
 

@@ -154,7 +154,7 @@ const messages = defineMessages({
     defaultMessage: '!!!Application',
   },
   changeCustomPinTitle: {
-    id: 'components.settings.changepinscreen.title',
+    id: 'components.settings.applicationsettingsscreen.changePin',
     defaultMessage: '!!!Change PIN',
   },
   changePasswordTitle: {

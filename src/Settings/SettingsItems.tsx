@@ -1,29 +1,28 @@
-// @flow
-
-import {useNavigation} from '@react-navigation/native'
+import {NavigationProp, useNavigation} from '@react-navigation/native'
 import React from 'react'
-import {Image, TouchableOpacity, View} from 'react-native'
+import {Image, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 
-import chevronRight from '../../assets/img/chevron_right.png'
-import {Text} from '../UiKit'
-import styles from './styles/SettingsItems.style'
+import chevronRight from '../../legacy/assets/img/chevron_right.png'
+import styles from '../../legacy/components/Settings/styles/SettingsItems.style'
+import {Text} from '../../legacy/components/UiKit'
 
-const Touchable = <Props>(props: Props) => <TouchableOpacity {...props} activeOpacity={0.5} />
+const Touchable = (props: TouchableOpacityProps) => <TouchableOpacity {...props} activeOpacity={0.5} />
 
-type NavigateToProps = {|
-  to: string,
-  navigation: any,
-  children: React$Node,
-  disabled?: boolean,
-|}
+type NavigateToProps = {
+  to: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  navigation: NavigationProp<any>
+  children: React.ReactNode
+  disabled?: boolean
+}
 
 const NavigateTo = ({navigation, to, ...props}: NavigateToProps) => {
   return <Touchable onPress={() => navigation.navigate(to)} {...props} />
 }
 
 type SettingsSectionProps = {
-  title?: string,
-  children: React$Node,
+  title?: string
+  children: React.ReactNode
 }
 
 export const SettingsSection = ({title, children}: SettingsSectionProps) => (
@@ -37,11 +36,11 @@ export const SettingsSection = ({title, children}: SettingsSectionProps) => (
   </View>
 )
 
-type SettingsItemProps = {|
-  label: string,
-  children: React$Node,
-  disabled?: boolean,
-|}
+type SettingsItemProps = {
+  label: string
+  children: React.ReactNode
+  disabled?: boolean
+}
 
 export const SettingsItem = ({label, children, disabled}: SettingsItemProps) => (
   <View style={styles.item}>
@@ -50,10 +49,10 @@ export const SettingsItem = ({label, children, disabled}: SettingsItemProps) => 
   </View>
 )
 
-type SettingsBuildItemProps = {|
-  label: string,
-  value: string,
-|}
+type SettingsBuildItemProps = {
+  label: string
+  value: string
+}
 
 export const SettingsBuildItem = ({label, value}: SettingsBuildItemProps) => (
   <SettingsItem label={label}>
@@ -63,11 +62,11 @@ export const SettingsBuildItem = ({label, value}: SettingsBuildItemProps) => (
   </SettingsItem>
 )
 
-type NavigatedSettingsItemProps = {|
-  label: string,
-  navigateTo: string,
-  disabled?: boolean,
-|}
+type NavigatedSettingsItemProps = {
+  label: string
+  navigateTo: string
+  disabled?: boolean
+}
 
 export const NavigatedSettingsItem = ({label, navigateTo, disabled}: NavigatedSettingsItemProps) => {
   const navigation = useNavigation()
@@ -80,14 +79,14 @@ export const NavigatedSettingsItem = ({label, navigateTo, disabled}: NavigatedSe
   )
 }
 
-type PressableSettingsItemProps = {|
-  label: string,
-  onPress: () => any,
-  disabled?: boolean,
-|}
+type PressableSettingsItemProps = {
+  label: string
+  onPress: () => void
+  disabled?: boolean
+}
 
 export const PressableSettingsItem = ({label, onPress, disabled}: PressableSettingsItemProps) => (
-  <Touchable onPress={onPress} disable={disabled}>
+  <Touchable onPress={onPress} disabled={disabled}>
     <SettingsItem label={label}>
       <Image source={chevronRight} />
     </SettingsItem>

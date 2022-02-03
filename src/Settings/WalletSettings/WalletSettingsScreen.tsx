@@ -8,13 +8,6 @@ import {useMutation, UseMutationOptions} from 'react-query'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {DIALOG_BUTTONS, showConfirmationDialog, signout, updateWallets} from '../../../legacy/actions'
-import {
-  NavigatedSettingsItem,
-  PressableSettingsItem,
-  SettingsBuildItem,
-  SettingsItem,
-  SettingsSection,
-} from '../../../legacy/components/Settings/SettingsItems'
 import {StatusBar} from '../../../legacy/components/UiKit'
 import {CONFIG, isByron, isHaskellShelley} from '../../../legacy/config/config'
 import {getNetworkConfigById} from '../../../legacy/config/networks'
@@ -25,6 +18,13 @@ import {SETTINGS_ROUTES, WALLET_ROOT_ROUTES} from '../../../legacy/RoutesList'
 import {easyConfirmationSelector, isSystemAuthEnabledSelector} from '../../../legacy/selectors'
 import {useWalletName} from '../../hooks'
 import {useSelectedWallet, useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
+import {
+  NavigatedSettingsItem,
+  PressableSettingsItem,
+  SettingsBuildItem,
+  SettingsItem,
+  SettingsSection,
+} from '../SettingsItems'
 
 export const WalletSettingsScreen = () => {
   const intl = useIntl()
