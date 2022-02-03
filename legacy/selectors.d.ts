@@ -53,6 +53,8 @@ export var poolOperatorSelector: (state: State) => null | typeof state.accountSt
 export var serverStatusSelector: (state: State) => typeof state.serverStatus
 export var totalDelegatedSelector: (state: State) => null | typeof state.accountState.totalDelegated
 export var utxoBalanceSelector: (state: State) => BigNumber | null
+export var sendCrashReportsSelector: (state: State) => typeof state.appSettings.sendCrashReports
+export var biometricHwSupportSelector: (state: State) => typeof state.appSettings.isBiometricHardwareSupported
 
 // prettier-ignore
 interface MultiToken {

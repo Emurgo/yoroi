@@ -3,22 +3,22 @@ import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import CustomPinScreen from '../../legacy/components/FirstRun/CustomPinScreen'
 import BiometricAuthScreen from '../../legacy/components/Send/BiometricAuthScreen'
-import ApplicationSettingsScreen from '../../legacy/components/Settings/ApplicationSettingsScreen'
-import BiometricsLinkScreen from '../../legacy/components/Settings/BiometricsLinkScreen'
-import ChangeCustomPinScreen from '../../legacy/components/Settings/ChangeCustomPinScreen'
-import LanguagePickerScreen from '../../legacy/components/Settings/ChangeLanguageScreen'
-import SupportScreen from '../../legacy/components/Settings/SupportScreen'
-import TermsOfServiceScreen from '../../legacy/components/Settings/TermsOfServiceScreen'
-import ToggleEasyConfirmationScreen from '../../legacy/components/Settings/ToggleEasyConfirmationScreen'
 import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../legacy/navigationOptions'
 import {SETTINGS_ROUTES, SETTINGS_TABS} from '../../legacy/RoutesList'
 import {COLORS} from '../../legacy/styles/config'
-import {ChangePasswordScreen} from './ChangePassword/ChangePasswordScreen'
-import {ChangeWalletName} from './ChangeWalletName/ChangeWalletName'
-import {RemoveWalletScreen} from './RemoveWalletScreen'
-import {WalletSettingsScreen} from './WalletSettingsScreen'
+import {ApplicationSettingsScreen} from './ApplicationSettings'
+import {BiometricsLinkScreen} from './BiometricsLink/'
+import {ChangeLanguageScreen} from './ChangeLanguage'
+import {ChangePasswordScreen} from './ChangePassword'
+import {ChangePinScreen} from './ChangePin'
+import {ChangeWalletName} from './ChangeWalletName'
+import {CustomPinScreen} from './CustomPin'
+import {RemoveWalletScreen} from './RemoveWallet'
+import {SupportScreen} from './Support'
+import {TermsOfServiceScreen} from './TermsOfService'
+import {ToggleEasyConfirmationScreen} from './ToggleEasyConfirmation'
+import {WalletSettingsScreen} from './WalletSettings'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const Stack = createStackNavigator<{
@@ -62,7 +62,7 @@ export const SettingsScreenNavigator = () => {
         component={TermsOfServiceScreen}
         options={{title: strings.termsOfServiceTitle}}
       />
-      <Stack.Screen // prettier-ignore
+      <Stack.Screen //
         name={SETTINGS_ROUTES.SUPPORT}
         component={SupportScreen}
         options={{title: strings.supportTitle}}
@@ -79,7 +79,7 @@ export const SettingsScreenNavigator = () => {
       />
       <Stack.Screen
         name={SETTINGS_ROUTES.CHANGE_LANGUAGE}
-        component={LanguagePickerScreen}
+        component={ChangeLanguageScreen}
         options={{headerShown: false}}
       />
       <Stack.Screen
@@ -94,7 +94,7 @@ export const SettingsScreenNavigator = () => {
       />
       <Stack.Screen
         name={SETTINGS_ROUTES.CHANGE_CUSTOM_PIN}
-        component={ChangeCustomPinScreen}
+        component={ChangePinScreen}
         options={{
           title: strings.changeCustomPinTitle,
           headerStyle: {
@@ -154,7 +154,7 @@ const messages = defineMessages({
     defaultMessage: '!!!Application',
   },
   changeCustomPinTitle: {
-    id: 'components.settings.changecustompinscreen.title',
+    id: 'components.settings.applicationsettingsscreen.changePin',
     defaultMessage: '!!!Change PIN',
   },
   changePasswordTitle: {

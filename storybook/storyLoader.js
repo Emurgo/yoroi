@@ -13,16 +13,11 @@ function loadStories() {
 	require('../legacy/components/Delegation/FlawedWalletScreen.stories');
 	require('../legacy/components/Delegation/PoolDetailScreen.stories');
 	require('../legacy/components/Delegation/StakingCenter.stories');
-	require('../legacy/components/FirstRun/CustomPinScreen.stories');
 	require('../legacy/components/Ledger/DeviceItem/DeviceItem.stories');
 	require('../legacy/components/Ledger/LedgerConnect.stories');
 	require('../legacy/components/Ledger/LedgerTransportSwitchModal.stories');
 	require('../legacy/components/MaintenanceScreen.stories');
 	require('../legacy/components/Send/BiometricAuthScreen.stories');
-	require('../legacy/components/Settings/ApplicationSettingsScreen.stories');
-	require('../legacy/components/Settings/BiometricsLinkScreen.stories');
-	require('../legacy/components/Settings/TermsOfServiceScreen.stories');
-	require('../legacy/components/Settings/ToggleEasyConfirmationScreen.stories');
 	require('../legacy/components/Transfer/TransferSummary.stories');
 	require('../legacy/components/UiKit/Button.stories');
 	require('../legacy/components/UiKit/Checkbox.stories');
@@ -32,9 +27,9 @@ function loadStories() {
 	require('../src/Catalyst/VotingBanner.stories');
 	require('../src/Dashboard/Dashboard.stories');
 	require('../src/Dashboard/StakePoolInfos.stories');
-	require('../src/FirstRun/AcceptTermsOfService.stories');
-	require('../src/FirstRun/CustomPinScreen.stories');
-	require('../src/FirstRun/LanguagePickerScreen.stories');
+	require('../src/FirstRun/CustomPinScreen/CustomPinScreen.stories');
+	require('../src/FirstRun/LanguagePickerScreen/LanguagePickerScreen.stories');
+	require('../src/FirstRun/TermsOfServiceScreen/TermsOfServiceScreen.stories');
 	require('../src/Receive/AddressModal.stories');
 	require('../src/Receive/AddressVerifyModal.stories');
 	require('../src/Receive/Addresses.stories');
@@ -44,10 +39,17 @@ function loadStories() {
 	require('../src/Send/AssetSelectorScreen/AssetSelectorScreen.stories');
 	require('../src/Send/ConfirmScreen/ConfirmScreen.stories');
 	require('../src/Send/SendScreen/SendScreen.stories');
+	require('../src/Settings/ApplicationSettings/ApplicationSettingsScreen.stories');
+	require('../src/Settings/BiometricsLink/BiometricsLinkScreen.stories');
+	require('../src/Settings/ChangeLanguage/ChangeLanguageScreen.stories');
 	require('../src/Settings/ChangePassword/ChangePasswordScreen.stories');
 	require('../src/Settings/ChangeWalletName/ChangeWalletName.stories');
-	require('../src/Settings/RemoveWalletScreen.stories');
-	require('../src/Settings/WalletSettingsScreen.stories');
+	require('../src/Settings/CustomPin/CustomPinScreen.stories');
+	require('../src/Settings/RemoveWallet/RemoveWalletScreen.stories');
+	require('../src/Settings/Support/SupportScreen.stories');
+	require('../src/Settings/TermsOfService/TermsOfServiceScreen.stories');
+	require('../src/Settings/ToggleEasyConfirmation/ToggleEasyConfirmationScreen.stories');
+	require('../src/Settings/WalletSettings/WalletSettingsScreen.stories');
 	require('../src/TxHistory/ChipButton.stories');
 	require('../src/TxHistory/ModalInfo/ModalInfo.stories');
 	require('../src/TxHistory/TxDetails/AssetList.stories');
@@ -85,16 +87,11 @@ const stories = [
 	'../legacy/components/Delegation/FlawedWalletScreen.stories',
 	'../legacy/components/Delegation/PoolDetailScreen.stories',
 	'../legacy/components/Delegation/StakingCenter.stories',
-	'../legacy/components/FirstRun/CustomPinScreen.stories',
 	'../legacy/components/Ledger/DeviceItem/DeviceItem.stories',
 	'../legacy/components/Ledger/LedgerConnect.stories',
 	'../legacy/components/Ledger/LedgerTransportSwitchModal.stories',
 	'../legacy/components/MaintenanceScreen.stories',
 	'../legacy/components/Send/BiometricAuthScreen.stories',
-	'../legacy/components/Settings/ApplicationSettingsScreen.stories',
-	'../legacy/components/Settings/BiometricsLinkScreen.stories',
-	'../legacy/components/Settings/TermsOfServiceScreen.stories',
-	'../legacy/components/Settings/ToggleEasyConfirmationScreen.stories',
 	'../legacy/components/Transfer/TransferSummary.stories',
 	'../legacy/components/UiKit/Button.stories',
 	'../legacy/components/UiKit/Checkbox.stories',
@@ -104,9 +101,9 @@ const stories = [
 	'../src/Catalyst/VotingBanner.stories',
 	'../src/Dashboard/Dashboard.stories',
 	'../src/Dashboard/StakePoolInfos.stories',
-	'../src/FirstRun/AcceptTermsOfService.stories',
-	'../src/FirstRun/CustomPinScreen.stories',
-	'../src/FirstRun/LanguagePickerScreen.stories',
+	'../src/FirstRun/CustomPinScreen/CustomPinScreen.stories',
+	'../src/FirstRun/LanguagePickerScreen/LanguagePickerScreen.stories',
+	'../src/FirstRun/TermsOfServiceScreen/TermsOfServiceScreen.stories',
 	'../src/Receive/AddressModal.stories',
 	'../src/Receive/AddressVerifyModal.stories',
 	'../src/Receive/Addresses.stories',
@@ -116,10 +113,17 @@ const stories = [
 	'../src/Send/AssetSelectorScreen/AssetSelectorScreen.stories',
 	'../src/Send/ConfirmScreen/ConfirmScreen.stories',
 	'../src/Send/SendScreen/SendScreen.stories',
+	'../src/Settings/ApplicationSettings/ApplicationSettingsScreen.stories',
+	'../src/Settings/BiometricsLink/BiometricsLinkScreen.stories',
+	'../src/Settings/ChangeLanguage/ChangeLanguageScreen.stories',
 	'../src/Settings/ChangePassword/ChangePasswordScreen.stories',
 	'../src/Settings/ChangeWalletName/ChangeWalletName.stories',
-	'../src/Settings/RemoveWalletScreen.stories',
-	'../src/Settings/WalletSettingsScreen.stories',
+	'../src/Settings/CustomPin/CustomPinScreen.stories',
+	'../src/Settings/RemoveWallet/RemoveWalletScreen.stories',
+	'../src/Settings/Support/SupportScreen.stories',
+	'../src/Settings/TermsOfService/TermsOfServiceScreen.stories',
+	'../src/Settings/ToggleEasyConfirmation/ToggleEasyConfirmationScreen.stories',
+	'../src/Settings/WalletSettings/WalletSettingsScreen.stories',
 	'../src/TxHistory/ChipButton.stories',
 	'../src/TxHistory/ModalInfo/ModalInfo.stories',
 	'../src/TxHistory/TxDetails/AssetList.stories',
