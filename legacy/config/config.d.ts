@@ -50,9 +50,12 @@ export var CONFIG: {
     HASKELL_SHELLEY_TESTNET: NetworkConfig,
     JORMUNGANDR: NetworkConfig,
   }
+  IS_TESTNET_BUILD: boolean,
 }
 
 export var isNightly: () => boolean
+
+export var isJormun: (id: WalletImplementationId) => boolean
 
 // prettier-ignore
 type NetworkConfig = {

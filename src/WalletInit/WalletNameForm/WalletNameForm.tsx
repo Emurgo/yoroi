@@ -5,15 +5,14 @@ import {StyleSheet} from 'react-native'
 import {ActivityIndicator, Image, SafeAreaView, View} from 'react-native'
 import type {ImageSource} from 'react-native/Libraries/Image/ImageSource'
 import type {ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
-import {useSelector} from 'react-redux'
 
 import {Button, ProgressStep, TextInput} from '../../../legacy/components/UiKit'
 import {CONFIG} from '../../../legacy/config/config'
 import globalMessages from '../../../legacy/i18n/global-messages'
-import {walletNamesSelector} from '../../../legacy/selectors'
 import {spacing} from '../../../legacy/styles/config'
 import {ignoreConcurrentAsyncHandler} from '../../../legacy/utils/utils'
 import {getWalletNameError, validateWalletName} from '../../../legacy/utils/validators'
+import {useWalletNames} from '../../hooks'
 
 type Props = {
   onSubmit: ({name: string}) => void
@@ -42,7 +41,7 @@ export const WalletNameForm = ({
 }: Props) => {
   const strings = useStrings()
   const [name, setName] = React.useState(CONFIG.HARDWARE_WALLETS.LEDGER_NANO.DEFAULT_WALLET_NAME || '')
-  const walletNames = useSelector(walletNamesSelector)
+  const walletNames = useWalletNames()
   const validationErrors = validateWalletName(name, null, walletNames)
   const hasErrors = Object.keys(validationErrors).length > 0
   const errorMessages = {

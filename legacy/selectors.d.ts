@@ -25,8 +25,6 @@ export var walletMetaSelector: (state: State) => WalletMeta
 export var walletsListSelector: (state: State) => Array<WalletMeta>
 export var easyConfirmationSelector: (state: State) => boolean
 export var isHWSelector: (state: State) => boolean
-export var walletNameSelector: (state: State) => string
-export var walletNamesSelector: (state: State) => Array<string>
 export var defaultNetworkAssetSelector: (state: State) => DefaultAsset
 export var externalAddressIndexSelector: (state: State) => Record<string, number>
 export var internalAddressIndexSelector: (state: State) => Record<string, number>
@@ -90,5 +88,3 @@ export type RemotePoolMetaSuccess = {
     payload: RemoteCertificate,
   }>
 }
-
-export type ServerStatusCache = any
