@@ -4,7 +4,6 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Image} from 'react-native'
 
-import StakingCenterNavigator from '../legacy/components/Delegation/StakingCenterNavigator'
 import {isHaskellShelley, UI_V2} from '../legacy/config/config'
 import {defaultNavigationOptions} from '../legacy/navigationOptions'
 import {theme} from '../legacy/styles/config'
@@ -25,6 +24,7 @@ import {ReceiveScreenNavigator} from './Receive/ReceiveScreenNavigator'
 import {useSelectedWallet, WalletSelectionScreen} from './SelectedWallet'
 import {SendScreenNavigator} from './Send'
 import {SettingsScreenNavigator} from './Settings'
+import {StakingCenterNavigator} from './Staking'
 import {TxHistoryNavigator} from './TxHistory/TxHistoryNavigator'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */

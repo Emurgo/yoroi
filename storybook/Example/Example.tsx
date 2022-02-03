@@ -1,8 +1,5 @@
-/* eslint-disable react-native/no-inline-styles */
-// @flow
-
 import {useNavigation, useRoute} from '@react-navigation/native'
-import React from 'react'
+import * as React from 'react'
 import {Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
@@ -19,7 +16,7 @@ export const Example = () => {
 
 export default Example
 
-const Row = ({title, access}: {title: string, access: boolean}) => (
+const Row = ({title, access}: {title: string; access: boolean}) => (
   <View style={{padding: 16, borderWidth: 1, flexDirection: 'row', backgroundColor: access ? 'green' : 'red'}}>
     <View style={{padding: 16, flexDirection: 'row'}}>
       <Text>{title}</Text>

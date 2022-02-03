@@ -1,5 +1,3 @@
-// @flow
-
 import './rn-addons'
 
 import AsyncStorage from '@react-native-community/async-storage'
@@ -11,9 +9,9 @@ import {loadStories} from './storyLoader'
 
 configure(() => loadStories(), module)
 
-addDecorator(withProvider)
-addDecorator(withNavigationProps)
-addDecorator(withIntlProp)
+addDecorator(withProvider as any)
+addDecorator(withNavigationProps as any)
+addDecorator(withIntlProp as any)
 
 // Refer to
 // https://github.com/storybookjs/storybook/tree/master/app/react-native#start-command-parameters

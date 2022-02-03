@@ -7,6 +7,7 @@ import React from 'react'
 
 // $FlowExpectedError
 import {SelectedWalletProvider} from '../../../src/SelectedWallet'
+// $FlowExpectedError
 import {withModalProps} from '../../../storybook'
 import {NETWORKS, PRIMARY_ASSET_CONSTANTS} from '../../config/networks'
 import {MultiToken} from '../../crypto/MultiToken'

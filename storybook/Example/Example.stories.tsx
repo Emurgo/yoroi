@@ -1,6 +1,4 @@
-// @flow
-
-import React from 'react'
+import * as React from 'react'
 import {storiesOf} from '@storybook/react-native'
 
 import {LayoutGrid, SafeAreaInsets} from '../../storybook'

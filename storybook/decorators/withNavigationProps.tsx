@@ -1,6 +1,4 @@
-// @flow
-
-import React, {type Node} from 'react'
+import * as React from 'react'
 import {NavigationContext, NavigationRouteContext} from '@react-navigation/native'
 import {action} from '@storybook/addon-actions'
 
@@ -36,11 +34,11 @@ const navigation = {
   dangerouslyGetState: action('dangerouslyGetState'),
 }
 
-type NavigationProps = {navigation: typeof navigation, route: typeof route}
-type StoryFn = (navigationProps: NavigationProps) => Node
+type NavigationProps = {navigation: typeof navigation; route: typeof route}
+type StoryFn = (navigationProps: NavigationProps) => React.ReactNode
 
 export const withNavigationProps = (storyFn: StoryFn) => (
-  <NavigationContext.Provider value={navigation}>
+  <NavigationContext.Provider value={navigation as any}>
     <NavigationRouteContext.Provider value={route}>{storyFn({navigation, route})}</NavigationRouteContext.Provider>
   </NavigationContext.Provider>
 )

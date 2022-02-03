@@ -11,8 +11,6 @@ function loadStories() {
 	require('../legacy/components/Common/PinRegistrationForm.stories');
 	require('../legacy/components/Delegation/DelegationConfirmation.stories');
 	require('../legacy/components/Delegation/FlawedWalletScreen.stories');
-	require('../legacy/components/Delegation/PoolDetailScreen.stories');
-	require('../legacy/components/Delegation/StakingCenter.stories');
 	require('../legacy/components/FirstRun/CustomPinScreen.stories');
 	require('../legacy/components/Ledger/DeviceItem/DeviceItem.stories');
 	require('../legacy/components/Ledger/LedgerConnect.stories');
@@ -48,6 +46,9 @@ function loadStories() {
 	require('../src/Settings/ChangeWalletName/ChangeWalletName.stories');
 	require('../src/Settings/RemoveWalletScreen.stories');
 	require('../src/Settings/WalletSettingsScreen.stories');
+	require('../src/Staking/StakingCenter/PoolDetails/PoolDetail.stories');
+	require('../src/Staking/StakingCenter/PoolWarningModal/PoolWarningModal.stories');
+	require('../src/Staking/StakingCenter/StakingCenter.stories');
 	require('../src/TxHistory/ChipButton.stories');
 	require('../src/TxHistory/ModalInfo/ModalInfo.stories');
 	require('../src/TxHistory/TxDetails/AssetList.stories');
@@ -83,8 +84,6 @@ const stories = [
 	'../legacy/components/Common/PinRegistrationForm.stories',
 	'../legacy/components/Delegation/DelegationConfirmation.stories',
 	'../legacy/components/Delegation/FlawedWalletScreen.stories',
-	'../legacy/components/Delegation/PoolDetailScreen.stories',
-	'../legacy/components/Delegation/StakingCenter.stories',
 	'../legacy/components/FirstRun/CustomPinScreen.stories',
 	'../legacy/components/Ledger/DeviceItem/DeviceItem.stories',
 	'../legacy/components/Ledger/LedgerConnect.stories',
@@ -120,6 +119,9 @@ const stories = [
 	'../src/Settings/ChangeWalletName/ChangeWalletName.stories',
 	'../src/Settings/RemoveWalletScreen.stories',
 	'../src/Settings/WalletSettingsScreen.stories',
+	'../src/Staking/StakingCenter/PoolDetails/PoolDetail.stories',
+	'../src/Staking/StakingCenter/PoolWarningModal/PoolWarningModal.stories',
+	'../src/Staking/StakingCenter/StakingCenter.stories',
 	'../src/TxHistory/ChipButton.stories',
 	'../src/TxHistory/ModalInfo/ModalInfo.stories',
 	'../src/TxHistory/TxDetails/AssetList.stories',
