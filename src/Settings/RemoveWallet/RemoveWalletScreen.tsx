@@ -2,17 +2,18 @@ import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, View} from 'react-native'
+import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useMutation, UseMutationOptions} from 'react-query'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {updateWallets} from '../../../legacy/actions'
-import styles from '../../../legacy/components/Settings/styles/RemoveWalletScreen.style'
 import {Button, Checkbox, Spacer, StatusBar, Text, TextInput} from '../../../legacy/components/UiKit'
 import {Checkmark} from '../../../legacy/components/UiKit/TextInput'
 import walletManager from '../../../legacy/crypto/walletManager'
 import {WALLET_ROOT_ROUTES} from '../../../legacy/RoutesList'
 import {isHWSelector} from '../../../legacy/selectors'
+import {COLORS} from '../../../legacy/styles/config'
 import {useWalletName} from '../../hooks'
 import {useSelectedWallet} from '../../SelectedWallet'
 
@@ -153,3 +154,38 @@ const useRemoveWallet = (options: UseMutationOptions<void, Error, void>) => {
     ...mutation,
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: COLORS.BACKGROUND,
+  },
+
+  descriptionContainer: {
+    backgroundColor: COLORS.BACKGROUND,
+  },
+  description: {
+    fontSize: 16,
+    lineHeight: 24,
+    textAlign: 'center',
+  },
+
+  walletNameLabel: {
+    fontSize: 16,
+  },
+  walletName: {
+    color: COLORS.DISABLED,
+    fontSize: 16,
+  },
+
+  contentContainer: {
+    padding: 16,
+  },
+
+  actions: {
+    padding: 16,
+  },
+  removeButton: {
+    backgroundColor: COLORS.RED,
+  },
+})

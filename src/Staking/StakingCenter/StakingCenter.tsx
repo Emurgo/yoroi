@@ -1,5 +1,3 @@
-// @flow
-
 import {useNavigation} from '@react-navigation/native'
 import {BigNumber} from 'bignumber.js'
 import React, {useEffect, useState} from 'react'
@@ -9,16 +7,19 @@ import {View} from 'react-native'
 import {WebView} from 'react-native-webview'
 import {useSelector} from 'react-redux'
 
-// $FlowExpectedError
-import {useSelectedWallet} from '../../../src/SelectedWallet'
-import {showErrorDialog} from '../../actions'
-import {ApiError, NetworkError} from '../../api/errors'
-import type {RawUtxo} from '../../api/types'
-import {CONFIG, getTestStakingPool, isNightly, SHOW_PROD_POOLS_IN_DEV} from '../../config/config'
-import {InsufficientFunds} from '../../crypto/errors'
-import walletManager from '../../crypto/walletManager'
-import globalMessages, {errorMessages} from '../../i18n/global-messages'
-import {STAKING_CENTER_ROUTES} from '../../RoutesList'
+import {showErrorDialog} from '../../../legacy/actions'
+import {ApiError, NetworkError} from '../../../legacy/api/errors'
+import type {RawUtxo} from '../../../legacy/api/types'
+import AccountAutoRefresher from '../../../legacy/components/Delegation/AccountAutoRefresher'
+import PoolWarningModal from '../../../legacy/components/Delegation/PoolWarningModal'
+import styles from '../../../legacy/components/Delegation/styles/DelegationCenter.style'
+import UtxoAutoRefresher from '../../../legacy/components/Send/UtxoAutoRefresher'
+import {PleaseWaitModal} from '../../../legacy/components/UiKit'
+import {CONFIG, getTestStakingPool, isNightly, SHOW_PROD_POOLS_IN_DEV} from '../../../legacy/config/config'
+import {InsufficientFunds} from '../../../legacy/crypto/errors'
+import walletManager from '../../../legacy/crypto/walletManager'
+import globalMessages, {errorMessages} from '../../../legacy/i18n/global-messages'
+import {STAKING_CENTER_ROUTES} from '../../../legacy/RoutesList'
 import {
   accountBalanceSelector,
   defaultNetworkAssetSelector,
@@ -26,24 +27,20 @@ import {
   poolOperatorSelector,
   serverStatusSelector,
   utxosSelector,
-} from '../../selectors'
-import type {ServerStatusCache} from '../../state'
-import type {DefaultAsset} from '../../types/HistoryTransaction'
-import {ObjectValues} from '../../utils/flow'
-import {normalizeTokenAmount} from '../../utils/format'
-import {Logger} from '../../utils/logging'
-import UtxoAutoRefresher from '../Send/UtxoAutoRefresher'
-import {PleaseWaitModal} from '../UiKit'
-import AccountAutoRefresher from './AccountAutoRefresher'
-import PoolDetailScreen from './PoolDetailScreen'
-import PoolWarningModal from './PoolWarningModal'
-import styles from './styles/DelegationCenter.style'
+} from '../../../legacy/selectors'
+import type {ServerStatusCache} from '../../../legacy/state'
+import type {DefaultAsset} from '../../../legacy/types/HistoryTransaction'
+import {ObjectValues} from '../../../legacy/utils/flow'
+import {normalizeTokenAmount} from '../../../legacy/utils/format'
+import {Logger} from '../../../legacy/utils/logging'
+import {useSelectedWallet} from '../../SelectedWallet'
+import {PoolDetailScreen} from '../PoolDetails'
 
-const StakingCenter = () => {
+export const StakingCenter = () => {
   const intl = useIntl()
   const navigation = useNavigation()
   const [amountToDelegate, setAmountToDelegate] = useState<string | null>(null)
-  const [selectedPools, setSelectedPools] = useState([])
+  const [selectedPools, setSelectedPools] = useState<Array<SelectedPool>>([])
   const [reputationInfo, setReputationInfo] = useState({})
   const [showPoolWarning, setShowPoolWarning] = useState(false)
   const [busy, setBusy] = useState(false)
@@ -164,8 +161,6 @@ const StakingCenter = () => {
   )
 }
 
-export default StakingCenter
-
 const IS_STAKING_ON_TEST_BUILD = isNightly() || CONFIG.IS_TESTNET_BUILD
 
 const noPoolDataDialog = defineMessages({
@@ -179,10 +174,10 @@ const noPoolDataDialog = defineMessages({
   },
 })
 
-type SelectedPool = {|
-  +poolName: ?string,
-  +poolHash: string,
-|}
+type SelectedPool = {
+  poolName?: string
+  poolHash: string
+}
 
 /**
  * Prepares WebView's target staking URI
@@ -205,7 +200,7 @@ const prepareStakingURL = (poolList: Array<string> | null, amountToDelegate: str
 }
 
 const navigateToDelegationConfirm = async (
-  accountBalance: ?BigNumber,
+  accountBalance: BigNumber | undefined | null,
   utxos: Array<RawUtxo>,
   selectedPools: Array<SelectedPool>,
   defaultAsset: DefaultAsset,
@@ -236,7 +231,7 @@ const navigateToDelegationConfirm = async (
     } else {
       Logger.error(e)
       await showErrorDialog(errorMessages.generalError, intl, {
-        message: e.message,
+        message: (e as Error).message,
       })
     }
   }
@@ -245,9 +240,9 @@ const navigateToDelegationConfirm = async (
 const _handleSelectedPoolHashes = async (
   selectedPoolHashes: Array<string>,
   setSelectedPools: (selectedPools: Array<SelectedPool>) => void,
-  setReputationInfo: (reputationInfo: Object) => void,
+  setReputationInfo: (reputationInfo: Record<string, unknown>) => void,
   setShowPoolWarning: (showPoolWarning: boolean) => void,
-  accountBalance: ?BigNumber,
+  accountBalance: BigNumber | undefined | null,
   utxos: Array<RawUtxo>,
   defaultAsset,
   intl: IntlShape,
@@ -262,7 +257,7 @@ const _handleSelectedPoolHashes = async (
     Logger.debug('StakingCenter::poolInfo', poolInfo)
 
     // TODO: fetch reputation info once an endpoint is implemented
-    const poolsReputation: {[key: string]: mixed} = {}
+    const poolsReputation: {[key: string]: SelectedPool} = {}
 
     if (poolInfo && poolInfo.info != null) {
       const selectedPools: Array<SelectedPool> = [
@@ -274,7 +269,7 @@ const _handleSelectedPoolHashes = async (
       setSelectedPools(selectedPools)
 
       // check if pool in blacklist
-      const poolsInBlackList = []
+      const poolsInBlackList: Array<string> = []
       for (const pool of selectedPoolHashes) {
         if (pool in poolsReputation) {
           poolsInBlackList.push(pool)
@@ -305,7 +300,7 @@ const _handleSelectedPoolHashes = async (
     } else {
       Logger.error(e)
       await showErrorDialog(errorMessages.generalError, intl, {
-        message: e.message,
+        message: (e as Error).message,
       })
     }
   }

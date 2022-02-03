@@ -4,25 +4,25 @@ import React from 'react'
 import {IntlShape} from 'react-intl'
 import {Platform} from 'react-native'
 
-import {showErrorDialog} from '../../legacy/actions'
-import type {RawUtxo} from '../../legacy/api/types'
-import type {WithdrawalDialogSteps} from '../../legacy/components/Delegation/types'
-import {WITHDRAWAL_DIALOG_STEPS} from '../../legacy/components/Delegation/types'
-import WithdrawalDialog from '../../legacy/components/Delegation/WithdrawalDialog'
-import {CONFIG} from '../../legacy/config/config'
-import {WrongPassword} from '../../legacy/crypto/errors'
-import {ISignRequest} from '../../legacy/crypto/ISignRequest'
-import KeyStore from '../../legacy/crypto/KeyStore'
-import {MultiToken} from '../../legacy/crypto/MultiToken'
-import {HaskellShelleyTxSignRequest} from '../../legacy/crypto/shelley/HaskellShelleyTxSignRequest'
-import type {DeviceId, DeviceObj, HWDeviceInfo} from '../../legacy/crypto/shelley/ledgerUtils'
-import walletManager, {SystemAuthDisabled} from '../../legacy/crypto/walletManager'
-import {errorMessages} from '../../legacy/i18n/global-messages'
-import LocalizableError from '../../legacy/i18n/LocalizableError'
-import {DELEGATION_ROUTES, SEND_ROUTES, WALLET_ROOT_ROUTES, WALLET_ROUTES} from '../../legacy/RoutesList'
-import type {ServerStatusCache} from '../../legacy/state'
-import type {DefaultAsset} from '../../legacy/types/HistoryTransaction'
-import type {Navigation} from '../../legacy/types/navigation'
+import {showErrorDialog} from '../../../legacy/actions'
+import type {RawUtxo} from '../../../legacy/api/types'
+import type {WithdrawalDialogSteps} from '../../../legacy/components/Delegation/types'
+import {WITHDRAWAL_DIALOG_STEPS} from '../../../legacy/components/Delegation/types'
+import {CONFIG} from '../../../legacy/config/config'
+import {WrongPassword} from '../../../legacy/crypto/errors'
+import {ISignRequest} from '../../../legacy/crypto/ISignRequest'
+import KeyStore from '../../../legacy/crypto/KeyStore'
+import {MultiToken} from '../../../legacy/crypto/MultiToken'
+import {HaskellShelleyTxSignRequest} from '../../../legacy/crypto/shelley/HaskellShelleyTxSignRequest'
+import type {DeviceId, DeviceObj, HWDeviceInfo} from '../../../legacy/crypto/shelley/ledgerUtils'
+import walletManager, {SystemAuthDisabled} from '../../../legacy/crypto/walletManager'
+import {errorMessages} from '../../../legacy/i18n/global-messages'
+import LocalizableError from '../../../legacy/i18n/LocalizableError'
+import {DELEGATION_ROUTES, SEND_ROUTES, WALLET_ROOT_ROUTES, WALLET_ROUTES} from '../../../legacy/RoutesList'
+import type {ServerStatusCache} from '../../../legacy/state'
+import type {DefaultAsset} from '../../../legacy/types/HistoryTransaction'
+import type {Navigation} from '../../../legacy/types/navigation'
+import {WithdrawalDialog} from './WithdrawalDialog'
 
 type Props = {
   intl: IntlShape
@@ -87,7 +87,7 @@ export class WithdrawStakingRewards extends React.Component<Props, State> {
       withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.WARNING,
     })
 
-  onKeepOrDeregisterKey = async (event: Record<string, unknown>, shouldDeregister: boolean): Promise<void> => {
+  onKeepOrDeregisterKey = async (shouldDeregister: boolean): Promise<void> => {
     this._shouldDeregister = shouldDeregister
     if (this.props.isHW && Platform.OS === 'android' && CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT) {
       // toggle ledger transport switch modal
@@ -300,8 +300,8 @@ export class WithdrawStakingRewards extends React.Component<Props, State> {
     return (
       <WithdrawalDialog
         step={this.state.withdrawalDialogStep}
-        onKeepKey={(event) => this.onKeepOrDeregisterKey(event, false)}
-        onDeregisterKey={(event) => this.onKeepOrDeregisterKey(event, true)}
+        onKeepKey={() => this.onKeepOrDeregisterKey(false)}
+        onDeregisterKey={() => this.onKeepOrDeregisterKey(true)}
         onChooseTransport={this.onChooseTransport}
         useUSB={this.state.useUSB}
         onConnectBLE={this.onConnectBLE}

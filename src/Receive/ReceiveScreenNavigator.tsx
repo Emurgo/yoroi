@@ -2,11 +2,9 @@ import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import iconGear from '../../legacy/assets/img/gear.png'
-import styles from '../../legacy/components/Receive/styles/SettingsButton.style'
-import {Button} from '../../legacy/components/UiKit'
 import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../legacy/navigationOptions'
 import {RECEIVE_ROUTES, WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
+import {SettingsButton} from '../components/Button'
 import {ReceiveScreen} from './ReceiveScreen'
 
 const Stack = createStackNavigator<{
@@ -29,15 +27,8 @@ export const ReceiveScreenNavigator = () => {
         component={ReceiveScreen}
         options={({navigation}) => ({
           title: strings.receiveTitle,
-          headerRight: () => (
-            <Button
-              style={styles.settingsButton}
-              onPress={() => navigation.navigate(WALLET_ROOT_ROUTES.SETTINGS)}
-              iconImage={iconGear}
-              title=""
-              withoutBackground
-            />
-          ),
+          headerRight: () => <SettingsButton onPress={() => navigation.navigate(WALLET_ROOT_ROUTES.SETTINGS)} />,
+          headerRightContainerStyle: {paddingRight: 16},
           ...defaultNavigationOptions,
         })}
       />

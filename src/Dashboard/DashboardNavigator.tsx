@@ -3,7 +3,6 @@ import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 
 import BiometricAuthScreen from '../../legacy/components/Send/BiometricAuthScreen'
-import {Button} from '../../legacy/components/UiKit'
 import {isJormungandr} from '../../legacy/config/networks'
 import {
   defaultNavigationOptions,
@@ -11,7 +10,7 @@ import {
   jormunNavigationOptions,
 } from '../../legacy/navigationOptions'
 import {SEND_ROUTES, STAKING_DASHBOARD_ROUTES, WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
-import iconGear from '../assets/img/icon/gear.png'
+import {SettingsButton} from '../components/Button'
 import {useWalletName} from '../hooks'
 import {useSelectedWallet} from '../SelectedWallet'
 import {Dashboard} from './Dashboard'
@@ -47,14 +46,8 @@ export const DashboardNavigator = () => {
         component={Dashboard}
         options={({navigation}) => ({
           title: walletName,
-          headerRight: () => (
-            <Button
-              onPress={() => navigation.navigate(WALLET_ROOT_ROUTES.SETTINGS)}
-              iconImage={iconGear}
-              title=""
-              withoutBackground
-            />
-          ),
+          headerRight: () => <SettingsButton onPress={() => navigation.navigate(WALLET_ROOT_ROUTES.SETTINGS)} />,
+          headerRightContainerStyle: {paddingRight: 16},
         })}
       />
       <Stack.Screen

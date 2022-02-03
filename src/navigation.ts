@@ -7,14 +7,14 @@ import {COLORS} from '../legacy/styles/config'
 export const useParams = <Params>(guard: Guard<Params>): Params => {
   const params = useRoute().params
 
-  if (!guard(params)) {
+  if (!params || !guard(params)) {
     throw new Error(`useParams: guard failed: ${JSON.stringify(params, null, 2)}`)
   }
 
   return params
 }
 
-type Guard<Params> = (params?: Params | object | undefined) => params is Params
+type Guard<Params> = (params: Params | object) => params is Params
 
 export type TxHistoryStackParamList = {
   'history-list': undefined

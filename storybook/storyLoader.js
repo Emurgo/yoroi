@@ -6,13 +6,10 @@
 function loadStories() {
 	require('../legacy/components/Common/DangerousActionModal.stories');
 	require('../legacy/components/Common/ErrorModal.stories');
-	require('../legacy/components/Common/ExpandableItem.stories');
 	require('../legacy/components/Common/FingerprinScreenBase.stories');
 	require('../legacy/components/Common/PinRegistrationForm.stories');
 	require('../legacy/components/Delegation/DelegationConfirmation.stories');
 	require('../legacy/components/Delegation/FlawedWalletScreen.stories');
-	require('../legacy/components/Delegation/PoolDetailScreen.stories');
-	require('../legacy/components/Delegation/StakingCenter.stories');
 	require('../legacy/components/Ledger/DeviceItem/DeviceItem.stories');
 	require('../legacy/components/Ledger/LedgerConnect.stories');
 	require('../legacy/components/Ledger/LedgerTransportSwitchModal.stories');
@@ -50,6 +47,8 @@ function loadStories() {
 	require('../src/Settings/TermsOfService/TermsOfServiceScreen.stories');
 	require('../src/Settings/ToggleEasyConfirmation/ToggleEasyConfirmationScreen.stories');
 	require('../src/Settings/WalletSettings/WalletSettingsScreen.stories');
+	require('../src/Staking/PoolDetails/PoolDetailScreen.stories');
+	require('../src/Staking/StakingCenter/StakingCenter.stories');
 	require('../src/TxHistory/ChipButton.stories');
 	require('../src/TxHistory/ModalInfo/ModalInfo.stories');
 	require('../src/TxHistory/TxDetails/AssetList.stories');
@@ -71,6 +70,7 @@ function loadStories() {
 	require('../src/WalletInit/WalletAddress/WalletAddress.stories');
 	require('../src/WalletInit/WalletCredentials/WalletCredentialsScreen.stories');
 	require('../src/WalletInit/WalletFreshInit/WalletFreshInitScreen.stories');
+	require('../src/WalletInit/WalletInit/ExpandableItem/ExpandableItem.stories');
 	require('../src/WalletInit/WalletInit/WalletInitScreen.stories');
 	require('../src/WalletInit/WalletNameForm/WalletNameForm.stories');
 	require('../src/components/Icon/Icon.stories');
@@ -80,13 +80,10 @@ function loadStories() {
 const stories = [
 	'../legacy/components/Common/DangerousActionModal.stories',
 	'../legacy/components/Common/ErrorModal.stories',
-	'../legacy/components/Common/ExpandableItem.stories',
 	'../legacy/components/Common/FingerprinScreenBase.stories',
 	'../legacy/components/Common/PinRegistrationForm.stories',
 	'../legacy/components/Delegation/DelegationConfirmation.stories',
 	'../legacy/components/Delegation/FlawedWalletScreen.stories',
-	'../legacy/components/Delegation/PoolDetailScreen.stories',
-	'../legacy/components/Delegation/StakingCenter.stories',
 	'../legacy/components/Ledger/DeviceItem/DeviceItem.stories',
 	'../legacy/components/Ledger/LedgerConnect.stories',
 	'../legacy/components/Ledger/LedgerTransportSwitchModal.stories',
@@ -124,6 +121,8 @@ const stories = [
 	'../src/Settings/TermsOfService/TermsOfServiceScreen.stories',
 	'../src/Settings/ToggleEasyConfirmation/ToggleEasyConfirmationScreen.stories',
 	'../src/Settings/WalletSettings/WalletSettingsScreen.stories',
+	'../src/Staking/PoolDetails/PoolDetailScreen.stories',
+	'../src/Staking/StakingCenter/StakingCenter.stories',
 	'../src/TxHistory/ChipButton.stories',
 	'../src/TxHistory/ModalInfo/ModalInfo.stories',
 	'../src/TxHistory/TxDetails/AssetList.stories',
@@ -145,6 +144,7 @@ const stories = [
 	'../src/WalletInit/WalletAddress/WalletAddress.stories',
 	'../src/WalletInit/WalletCredentials/WalletCredentialsScreen.stories',
 	'../src/WalletInit/WalletFreshInit/WalletFreshInitScreen.stories',
+	'../src/WalletInit/WalletInit/ExpandableItem/ExpandableItem.stories',
 	'../src/WalletInit/WalletInit/WalletInitScreen.stories',
 	'../src/WalletInit/WalletNameForm/WalletNameForm.stories',
 	'../src/components/Icon/Icon.stories',
