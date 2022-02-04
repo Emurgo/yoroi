@@ -5,9 +5,9 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {encryptAndStoreCustomPin, setSystemAuth, signin} from '../../../legacy/actions'
-import PinRegistrationForm from '../../../legacy/components/Common/PinRegistrationForm'
 import {StatusBar} from '../../../legacy/components/UiKit'
 import {isAuthenticatedSelector} from '../../../legacy/selectors'
+import {PinRegistrationForm} from '../../auth'
 
 export const CustomPinScreen = () => {
   const strings = useStrings()

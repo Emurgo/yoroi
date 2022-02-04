@@ -1,17 +1,15 @@
-// @flow
-
 import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import {BigNumber} from 'bignumber.js'
 import React from 'react'
 
-// $FlowExpectedError
-import {SelectedWalletProvider} from '../../../src/SelectedWallet'
-import {withModalProps} from '../../../storybook'
-import {NETWORKS, PRIMARY_ASSET_CONSTANTS} from '../../config/networks'
-import {MultiToken} from '../../crypto/MultiToken'
-import {Modal} from '../UiKit'
-import TransferSummary from './TransferSummary'
+import {Modal} from '../../../../../legacy/components/UiKit'
+import {NETWORKS, PRIMARY_ASSET_CONSTANTS} from '../../../../../legacy/config/networks'
+import {MultiToken} from '../../../../../legacy/crypto/MultiToken'
+import {withModalProps} from '../../../../../storybook'
+import {SelectedWalletProvider} from '../../../../SelectedWallet'
+import {WalletInterface} from '../../../../types'
+import {TransferSummary} from './TransferSummary'
 
 const other = {
   // arbitrary values controlled by parent
@@ -27,7 +25,7 @@ const wallet = {
   networkId: 1,
   isEasyConfirmationEnabled: true,
   isHW: false,
-}
+} as WalletInterface
 
 storiesOf('TransferSummary', module)
   .addDecorator(withModalProps)
@@ -50,7 +48,7 @@ storiesOf('TransferSummary', module)
         ),
       },
     ]
-    const deregistrations = undefined
+    const deregistrations = null
 
     return (
       <SelectedWalletProvider wallet={wallet}>
@@ -61,7 +59,7 @@ storiesOf('TransferSummary', module)
     )
   })
   .add('deregistrations, no withdrawals', (modalProps) => {
-    const withdrawals = undefined
+    const withdrawals = null
     const deregistrations = [
       {
         rewardAddress: 'deregistration address',
@@ -137,8 +135,8 @@ storiesOf('TransferSummary', module)
     )
   })
   .add('no withdrawals, no deregistrations', (modalProps) => {
-    const withdrawals = undefined
-    const deregistrations = undefined
+    const withdrawals = null
+    const deregistrations = null
 
     return (
       <SelectedWalletProvider wallet={wallet}>
