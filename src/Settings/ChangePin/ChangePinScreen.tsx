@@ -6,13 +6,13 @@ import {useDispatch, useSelector} from 'react-redux'
 
 import {encryptAndStoreCustomPin, showErrorDialog} from '../../../legacy/actions'
 import PinInput from '../../../legacy/components/Common/PinInput'
-import PinRegistrationForm from '../../../legacy/components/Common/PinRegistrationForm'
 import styles from '../../../legacy/components/Settings/styles/ChangeCustomPinScreen.style'
 import {StatusBar} from '../../../legacy/components/UiKit'
 import {CONFIG} from '../../../legacy/config/config'
 import {authenticateByCustomPin} from '../../../legacy/crypto/customPin'
 import {errorMessages} from '../../../legacy/i18n/global-messages'
 import {customPinHashSelector} from '../../../legacy/selectors'
+import {PinRegistrationForm} from '../../auth'
 
 export const ChangePinScreen = () => {
   const intl = useIntl()

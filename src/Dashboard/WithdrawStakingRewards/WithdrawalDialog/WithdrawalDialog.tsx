@@ -10,12 +10,22 @@ import type {WithdrawalDialogSteps} from '../../../../legacy/components/Delegati
 import {WITHDRAWAL_DIALOG_STEPS} from '../../../../legacy/components/Delegation/types'
 import LedgerConnect from '../../../../legacy/components/Ledger/LedgerConnect'
 import {LedgerTransportSwitch} from '../../../../legacy/components/Ledger/LedgerTransportSwitchModal'
-import TransferSummary from '../../../../legacy/components/Transfer/TransferSummary'
 import {Modal, Spacer} from '../../../../legacy/components/UiKit'
 import {PleaseWaitView} from '../../../../legacy/components/UiKit/PleaseWaitModal'
 import {MultiToken} from '../../../../legacy/crypto/MultiToken'
 import globalMessages, {ledgerMessages} from '../../../../legacy/i18n/global-messages'
 import {theme} from '../../../../legacy/styles/config'
+import {TransferSummary} from './TransferSummary'
+
+export type Withdrawal = {
+  address: string
+  amount: MultiToken
+}
+
+export type Deregistration = {
+  rewardAddress: string
+  refund: MultiToken
+}
 
 type Props = {
   step: WithdrawalDialogSteps
@@ -24,14 +34,8 @@ type Props = {
   onChooseTransport: (object: Record<string, unknown>, bool: boolean) => void
   onConnectBLE: (...args: unknown[]) => void
   onConnectUSB: (...args: unknown[]) => void
-  withdrawals: null | Array<{
-    address: string
-    amount: MultiToken
-  }>
-  deregistrations: null | Array<{
-    rewardAddress: string
-    refund: MultiToken
-  }>
+  withdrawals: null | Array<Withdrawal>
+  deregistrations: null | Array<Deregistration>
   balance: BigNumber
   finalBalance: BigNumber
   fees: BigNumber

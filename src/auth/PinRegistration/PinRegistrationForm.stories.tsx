@@ -1,10 +1,8 @@
-// @flow
-
 import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import PinRegistrationForm from './PinRegistrationForm'
+import {PinRegistrationForm} from './PinRegistrationForm'
 
 storiesOf('PinRegistrationForm', module).add('Default', () => (
   <PinRegistrationForm

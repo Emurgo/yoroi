@@ -1,29 +1,27 @@
-// @flow
-
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
-import {type IntlShape, injectIntl} from 'react-intl'
+import {useIntl} from 'react-intl'
 import {View} from 'react-native'
 
-import {showErrorDialog} from '../../actions'
-import {CONFIG} from '../../config/config'
-import {errorMessages} from '../../i18n/global-messages'
-import type {PinInputLabels} from './PinInput'
-import PinInput from './PinInput'
-import styles from './styles/PinRegistrationForm.style'
+import {showErrorDialog} from '../../../legacy/actions'
+import type {PinInputLabels} from '../../../legacy/components/Common/PinInput'
+import PinInput from '../../../legacy/components/Common/PinInput'
+import styles from '../../../legacy/components/Common/styles/PinRegistrationForm.style'
+import {CONFIG} from '../../../legacy/config/config'
+import {errorMessages} from '../../../legacy/i18n/global-messages'
 
 type PinRegistrationFormLabels = {
-  PinInput: PinInputLabels,
-  PinConfirmationInput: PinInputLabels,
+  PinInput: PinInputLabels
+  PinConfirmationInput: PinInputLabels
 }
 
 type Props = {
-  labels: PinRegistrationFormLabels,
-  onPinEntered: (string) => any,
-  intl: IntlShape,
+  labels: PinRegistrationFormLabels
+  onPinEntered: (pin: string) => void
 }
 
-const PinRegistrationForm = ({labels, onPinEntered, intl}: Props) => {
+export const PinRegistrationForm = ({labels, onPinEntered}: Props) => {
+  const intl = useIntl()
   const navigation = useNavigation()
   const [pin, setPin] = React.useState('')
   const clearPin = React.useCallback(() => setPin(''), [])
@@ -49,7 +47,7 @@ const PinRegistrationForm = ({labels, onPinEntered, intl}: Props) => {
     } catch (err) {
       setPin('')
       await showErrorDialog(errorMessages.generalError, intl, {
-        message: err.message,
+        message: (err as Error).message,
       })
 
       return true
@@ -75,5 +73,3 @@ const PinRegistrationForm = ({labels, onPinEntered, intl}: Props) => {
     </View>
   )
 }
-
-export default injectIntl(PinRegistrationForm)
