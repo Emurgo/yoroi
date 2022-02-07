@@ -49,11 +49,12 @@ function loadStories() {
 	require('../src/Settings/WalletSettings/WalletSettingsScreen.stories');
 	require('../src/Staking/PoolDetails/PoolDetailScreen.stories');
 	require('../src/Staking/StakingCenter/StakingCenter.stories');
-	require('../src/TxHistory/ChipButton.stories');
+	require('../src/TxHistory/AssetList/ActionsBanner.stories');
+	require('../src/TxHistory/AssetList/ChipButton/ChipButton.stories');
 	require('../src/TxHistory/ModalInfo/ModalInfo.stories');
 	require('../src/TxHistory/TxDetails/AssetList.stories');
 	require('../src/TxHistory/TxHistory.stories');
-	require('../src/TxHistory/TxListActionsBanner.stories');
+	require('../src/TxHistory/TxHistoryList/ActionsBanner/ActionsBanner.stories');
 	require('../src/WalletInit/CheckNanoX/CheckNanoXScreen.stories');
 	require('../src/WalletInit/ConnectNanoX/ConnectNanoXScreen.stories');
 	require('../src/WalletInit/CreateWallet/CreateWalletScreen.stories');
@@ -123,11 +124,12 @@ const stories = [
 	'../src/Settings/WalletSettings/WalletSettingsScreen.stories',
 	'../src/Staking/PoolDetails/PoolDetailScreen.stories',
 	'../src/Staking/StakingCenter/StakingCenter.stories',
-	'../src/TxHistory/ChipButton.stories',
+	'../src/TxHistory/AssetList/ActionsBanner.stories',
+	'../src/TxHistory/AssetList/ChipButton/ChipButton.stories',
 	'../src/TxHistory/ModalInfo/ModalInfo.stories',
 	'../src/TxHistory/TxDetails/AssetList.stories',
 	'../src/TxHistory/TxHistory.stories',
-	'../src/TxHistory/TxListActionsBanner.stories',
+	'../src/TxHistory/TxHistoryList/ActionsBanner/ActionsBanner.stories',
 	'../src/WalletInit/CheckNanoX/CheckNanoXScreen.stories',
 	'../src/WalletInit/ConnectNanoX/ConnectNanoXScreen.stories',
 	'../src/WalletInit/CreateWallet/CreateWalletScreen.stories',

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {RefreshControl, ScrollView, StyleSheet, View} from 'react-native'
+import {LayoutAnimation, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'
 import {useDispatch, useSelector} from 'react-redux'
 
@@ -8,40 +8,59 @@ import {checkForFlawedWallets} from '../../legacy/actions'
 import {fetchAccountState} from '../../legacy/actions/account'
 import {updateHistory} from '../../legacy/actions/history'
 import infoIcon from '../../legacy/assets/img/icon/info-light-green.png'
-import {OfflineBanner, StatusBar, Text, WarningBanner} from '../../legacy/components/UiKit'
+import {OfflineBanner, StatusBar, Text} from '../../legacy/components/UiKit'
 import {UI_V2} from '../../legacy/config/config'
 import {isByron} from '../../legacy/config/config'
+import {assetMessages, txLabels} from '../../legacy/i18n/global-messages'
 import {
-  hasAnyTransaction,
   isOnlineSelector,
   isSynchronizingHistorySelector,
   lastHistorySyncErrorSelector,
   walletIsInitializedSelector,
-  walletMetaSelector,
 } from '../../legacy/selectors'
+import {COLORS} from '../../legacy/styles/config'
+import {useSelectedWallet} from '../SelectedWallet'
+import {ActionsBanner} from './ActionsBanner'
 import {AssetList} from './AssetList'
-import {EmptyHistory} from './EmptyHistory'
+import {BalanceBanner} from './BalanceBanner'
 import {SyncErrorBanner} from './SyncErrorBanner'
 import {TxHistoryList} from './TxHistoryList'
-import {WalletHero} from './WalletHero'
+import {WarningBanner} from './WarningBanner'
+
+type Tab = 'transactions' | 'assets'
 
 export const TxHistory = () => {
   const strings = useStrings()
   const dispatch = useDispatch()
-  const hasTransaction = useSelector(hasAnyTransaction)
   const isSyncing = useSelector(isSynchronizingHistorySelector)
   const lastSyncError = useSelector(lastHistorySyncErrorSelector)
   const isOnline = useSelector(isOnlineSelector)
-  const walletMeta = useSelector(walletMetaSelector)
+  const wallet = useSelectedWallet()
   const walletIsInitialized = useSelector(walletIsInitializedSelector)
 
-  const [showWarning, setShowWarning] = useState<boolean>(isByron(walletMeta.walletImplementationId))
+  const [showWarning, setShowWarning] = useState(isByron(wallet.walletImplementationId))
 
   useEffect(() => {
     dispatch(checkForFlawedWallets())
     dispatch(updateHistory())
     dispatch(fetchAccountState())
   }, [dispatch])
+
+  const [expanded, setExpanded] = useState(true)
+  const onScrollUp = () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    setExpanded(false)
+  }
+  const onScrollDown = () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    setExpanded(true)
+  }
+
+  const [activeTab, setActiveTab] = useState<Tab>('transactions')
+  const onSelectTab = (tab: Tab) => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    setActiveTab(tab)
+  }
 
   if (!walletIsInitialized) {
     return <Text>l10n Please wait while wallet is initialized...</Text>
@@ -55,47 +74,89 @@ export const TxHistory = () => {
         <OfflineBanner />
         <SyncErrorBanner showRefresh={!isSyncing} isOpen={isOnline && lastSyncError} />
 
-        <WalletHero
-          render={(active) => {
-            if (active === 0) {
-              return (
-                <View style={styles.tabNavigatorRoot}>
-                  {isByron(walletMeta.walletImplementationId) && showWarning && (
-                    <WarningBanner
-                      title={strings.warningTitle.toUpperCase()}
-                      icon={infoIcon}
-                      message={strings.warningMessage}
-                      showCloseIcon
-                      onRequestClose={() => setShowWarning(false)}
-                      style={styles.warningNoteStyles}
-                    />
-                  )}
+        <CollapsibleHeader expanded={expanded}>
+          <BalanceBanner />
+          {UI_V2 && <ActionsBanner />}
+        </CollapsibleHeader>
 
-                  {!hasTransaction ? (
-                    <ScrollView
-                      refreshControl={
-                        <RefreshControl onRefresh={() => dispatch(updateHistory())} refreshing={isSyncing} />
-                      }
-                    >
-                      <EmptyHistory />
-                    </ScrollView>
-                  ) : (
-                    <TxHistoryList refreshing={isSyncing} onRefresh={() => dispatch(updateHistory())} />
-                  )}
-                </View>
-              )
-            } else if (active === 1) {
-              return (
-                <View style={styles.tabNavigatorRoot}>
-                  <AssetList refreshing={isSyncing} onRefresh={() => dispatch(updateHistory())} />
-                </View>
-              )
-            }
-          }}
-        />
+        <Tabs>
+          <Tab
+            onPress={() => onSelectTab('transactions')}
+            label={strings.transactions}
+            active={activeTab === 'transactions'}
+          />
+          <Tab //
+            onPress={() => onSelectTab('assets')}
+            label={strings.assets}
+            active={activeTab === 'assets'}
+          />
+        </Tabs>
+
+        <TabPanels>
+          <TabPanel active={activeTab === 'transactions'}>
+            {isByron(wallet.walletImplementationId) && showWarning && (
+              <WarningBanner
+                title={strings.warningTitle.toUpperCase()}
+                icon={infoIcon}
+                message={strings.warningMessage}
+                showCloseIcon
+                onRequestClose={() => {
+                  LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+                  setShowWarning(false)
+                }}
+                style={styles.warningNoteStyles}
+              />
+            )}
+            <TxHistoryList
+              onScrollUp={onScrollUp}
+              onScrollDown={onScrollDown}
+              refreshing={isSyncing}
+              onRefresh={() => dispatch(updateHistory())}
+            />
+          </TabPanel>
+
+          <TabPanel active={activeTab === 'assets'}>
+            <AssetList
+              onScrollUp={onScrollUp}
+              onScrollDown={onScrollDown}
+              refreshing={isSyncing}
+              onRefresh={() => dispatch(updateHistory())}
+            />
+          </TabPanel>
+        </TabPanels>
       </View>
     </SafeAreaView>
   )
+}
+
+const CollapsibleHeader = ({expanded, children}: {expanded: boolean} & ViewProps) => (
+  <View style={{overflow: 'hidden'}}>
+    <View style={!expanded && {position: 'absolute', width: '100%'}}>{children}</View>
+  </View>
+)
+
+const Tabs: React.FC = ({children}) => <View style={styles.tabs}>{children}</View>
+const Tab = ({onPress, active, label}: {onPress: () => void; active: boolean; label: string}) => (
+  <TouchableOpacity style={styles.tab} onPress={onPress}>
+    <View style={styles.centered}>
+      <Text style={[styles.tabText, active ? styles.tabTextActive : styles.tabTextInactive]}>{label}</Text>
+    </View>
+
+    {active && <View style={styles.indicator} />}
+  </TouchableOpacity>
+)
+const TabPanels: React.FC = ({children}) => <View style={styles.tabNavigatorRoot}>{children}</View>
+const TabPanel: React.FC<{active: boolean}> = ({active, children}) => <>{active ? children : null}</>
+
+const useStrings = () => {
+  const intl = useIntl()
+
+  return {
+    warningTitle: intl.formatMessage(warningBannerMessages.title),
+    warningMessage: intl.formatMessage(warningBannerMessages.message),
+    transactions: intl.formatMessage(txLabels.transactions),
+    assets: intl.formatMessage(assetMessages.assets),
+  }
 }
 
 const warningBannerMessages = defineMessages({
@@ -109,26 +170,10 @@ const warningBannerMessages = defineMessages({
   },
 })
 
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    warningTitle: intl.formatMessage(warningBannerMessages.title),
-    warningMessage: intl.formatMessage(warningBannerMessages.message),
-  }
-}
-
 const styles = StyleSheet.create({
-  tabNavigatorRoot: {
-    flex: 1,
-    paddingTop: 8,
-    backgroundColor: '#fff',
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
-  },
   scrollView: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.BACKGROUND_GRAY,
   },
   container: {
     flexDirection: 'column',
@@ -138,5 +183,45 @@ const styles = StyleSheet.create({
     position: 'absolute',
     zIndex: 2,
     bottom: 0,
+  },
+  centered: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  tabs: {
+    flexDirection: 'row',
+  },
+  tab: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 16,
+    flex: 1,
+  },
+  tabText: {
+    fontSize: 14,
+    fontFamily: 'Rubik-Medium',
+  },
+  tabTextActive: {
+    color: COLORS.LIGHT_POSITIVE_GREEN,
+  },
+  tabTextInactive: {
+    color: COLORS.TEXT_INPUT,
+  },
+  indicator: {
+    position: 'absolute',
+    bottom: 0,
+    height: 3,
+    width: '100%',
+    borderTopLeftRadius: 2,
+    borderTopRightRadius: 2,
+    backgroundColor: COLORS.LIGHT_POSITIVE_GREEN,
+  },
+
+  tabNavigatorRoot: {
+    flex: 1,
+    paddingTop: 8,
+    backgroundColor: '#fff',
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
   },
 })
