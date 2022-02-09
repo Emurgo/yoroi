@@ -1,27 +1,33 @@
 import _ from 'lodash'
 import React from 'react'
 import {useIntl} from 'react-intl'
-import {Alert, SectionList, StyleSheet, View} from 'react-native'
+import {Alert, SectionList, SectionListProps, StyleSheet, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
-import {Text} from '../../legacy/components/UiKit'
-import {actionMessages} from '../../legacy/i18n/global-messages'
-import {transactionsInfoSelector} from '../../legacy/selectors'
-import {formatDateRelative} from '../../legacy/utils/format'
-import features from '../features'
-import {TransactionInfo} from '../types/cardano'
+import {Text} from '../../../legacy/components/UiKit'
+import {actionMessages} from '../../../legacy/i18n/global-messages'
+import {transactionsInfoSelector} from '../../../legacy/selectors'
+import {formatDateRelative} from '../../../legacy/utils/format'
+import features from '../../features'
+import {TransactionInfo} from '../../types/cardano'
+import {useOnScroll} from '../useOnScroll'
+import {ActionsBanner} from './ActionsBanner'
+import {EmptyHistory} from './EmptyHistory'
 import {TxHistoryListItem} from './TxHistoryListItem'
-import {TxListActionsBannerForTransactionsTab} from './TxListActionsBanner'
 
-type Props = {
-  refreshing: boolean
-  onRefresh: () => void
+type ListProps = SectionListProps<TransactionInfo>
+
+type Props = Partial<ListProps> & {
+  onScrollUp: ListProps['onScroll']
+  onScrollDown: ListProps['onScroll']
 }
-
-export const TxHistoryList = ({refreshing, onRefresh}: Props) => {
+export const TxHistoryList = ({onScrollUp, onScrollDown, ...props}: Props) => {
   const strings = useStrings()
+
   const transactionsInfo = useSelector(transactionsInfoSelector)
   const groupedTransactions = getTransactionsByDate(transactionsInfo)
+
+  const onScroll = useOnScroll({onScrollUp, onScrollDown})
 
   const handleExport = () => Alert.alert(strings.soon, strings.soon)
   const handleSearch = () => Alert.alert(strings.soon, strings.soon)
@@ -29,13 +35,14 @@ export const TxHistoryList = ({refreshing, onRefresh}: Props) => {
   return (
     <View style={styles.listRoot}>
       {(features.txHistory.export || features.txHistory.search) && (
-        <TxListActionsBannerForTransactionsTab onExport={handleExport} onSearch={handleSearch} />
+        <ActionsBanner onExport={handleExport} onSearch={handleSearch} />
       )}
       <SectionList
+        {...props}
+        onScroll={onScroll}
+        ListEmptyComponent={<EmptyHistory />}
         renderItem={({item}) => <TxHistoryListItem transaction={item} />}
         renderSectionHeader={({section: {data}}) => <DayHeader ts={data[0].submittedAt} />}
-        refreshing={refreshing}
-        onRefresh={onRefresh}
         sections={groupedTransactions}
         keyExtractor={(item) => item.id}
         stickySectionHeadersEnabled={false}

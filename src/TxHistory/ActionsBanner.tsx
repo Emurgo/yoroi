@@ -4,12 +4,12 @@ import {useIntl} from 'react-intl'
 import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
-import {actionMessages} from '../../../legacy/i18n/global-messages'
-import {isReadOnlySelector} from '../../../legacy/selectors'
-import {COLORS} from '../../../legacy/styles/config'
-import {Icon, Spacer} from '../../components'
-import features from '../../features'
-import {TxHistoryStackRootProps} from '../../navigation'
+import {actionMessages} from '../../legacy/i18n/global-messages'
+import {isReadOnlySelector} from '../../legacy/selectors'
+import {COLORS} from '../../legacy/styles/config'
+import {Icon, Spacer} from '../components'
+import features from '../features'
+import {TxHistoryStackRootProps} from '../navigation'
 
 const ACTION_PROPS = {
   height: 36,

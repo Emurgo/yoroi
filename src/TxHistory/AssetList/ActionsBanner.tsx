@@ -2,47 +2,21 @@ import React, {useState} from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 
-import {Spacer} from '../components/Spacer'
-import features from '../features'
+import {Spacer} from '../../components/Spacer'
+import features from '../../features'
 import {ChipButton} from './ChipButton'
 
 type AssetsOptions = 'tokens' | 'nfts'
 
-type ActionListBaseProps = {
-  onSearch: () => void
-}
-
-type TxListActionsBannerForTransactionsTabProps = ActionListBaseProps & {
-  onExport: () => void
-}
-
-type TxListActionsBannerForAssetsTabProps = ActionListBaseProps & {
+type Props = {
   tokensLabel: string
   nftsLabel: string
   onPressTokens: () => void
   onPressNFTs: () => void
+  onSearch: () => void
 }
 
-export const TxListActionsBannerForTransactionsTab = (props: TxListActionsBannerForTransactionsTabProps) => {
-  const {onExport, onSearch} = props
-  return (
-    <View style={styles.actionsRoot}>
-      {features.txHistory.export && (
-        <TouchableOpacity onPress={onExport}>
-          <Icon name="export" size={24} color="#6B7384" />
-        </TouchableOpacity>
-      )}
-
-      {features.txHistory.search && (
-        <TouchableOpacity onPress={onSearch}>
-          <Icon name="magnify" size={24} color="#6B7384" />
-        </TouchableOpacity>
-      )}
-    </View>
-  )
-}
-
-export const TxListActionsBannerForAssetsTab = (props: TxListActionsBannerForAssetsTabProps) => {
+export const ActionsBanner = (props: Props) => {
   const [assetSelected, setAssetSelected] = useState<AssetsOptions>('tokens')
   const {onPressTokens, onPressNFTs, tokensLabel, nftsLabel} = props
 

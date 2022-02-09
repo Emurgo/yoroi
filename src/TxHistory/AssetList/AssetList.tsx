@@ -1,29 +1,31 @@
 import React from 'react'
 import {defineMessages} from 'react-intl'
 import {useIntl} from 'react-intl'
-import {Alert, FlatList, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {Alert, FlatList, FlatListProps, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {Avatar} from 'react-native-paper'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useSelector} from 'react-redux'
 
-import {Text} from '../../legacy/components/UiKit'
-import globalMessages, {actionMessages} from '../../legacy/i18n/global-messages'
-import {tokenBalanceSelector} from '../../legacy/selectors'
-import {COLORS} from '../../legacy/styles/config'
-import {formatTokenAmount, getAssetDenominationOrId, getTokenFingerprint} from '../../legacy/utils/format'
-import AdaImage from '../assets/img/icon/asset_ada.png'
-import NoImage from '../assets/img/icon/asset_no_image.png'
-import {Spacer} from '../components/Spacer'
-import {useTokenInfo, useTokenInfos} from '../hooks'
-import {Token, TokenEntry} from '../types/cardano'
-import {TxListActionsBannerForAssetsTab} from './TxListActionsBanner'
+import {Text} from '../../../legacy/components/UiKit'
+import globalMessages, {actionMessages} from '../../../legacy/i18n/global-messages'
+import {tokenBalanceSelector} from '../../../legacy/selectors'
+import {COLORS} from '../../../legacy/styles/config'
+import {formatTokenAmount, getAssetDenominationOrId, getTokenFingerprint} from '../../../legacy/utils/format'
+import AdaImage from '../../assets/img/icon/asset_ada.png'
+import NoImage from '../../assets/img/icon/asset_no_image.png'
+import {Spacer} from '../../components/Spacer'
+import {useTokenInfo, useTokenInfos} from '../../hooks'
+import {Token, TokenEntry} from '../../types/cardano'
+import {useOnScroll} from '../useOnScroll'
+import {ActionsBanner} from './ActionsBanner'
 
-type AssetListProps = {
-  refreshing: boolean
-  onRefresh: () => void
+type ListProps = FlatListProps<TokenEntry>
+
+type Props = Partial<ListProps> & {
+  onScrollUp: ListProps['onScroll']
+  onScrollDown: ListProps['onScroll']
 }
-
-export const AssetList = ({refreshing, onRefresh}: AssetListProps) => {
+export const AssetList = ({onScrollUp, onScrollDown, ...props}: Props) => {
   const strings = useStrings()
   const tokenBalance = useSelector(tokenBalanceSelector)
   const tokenInfos = useTokenInfos()
@@ -39,9 +41,11 @@ export const AssetList = ({refreshing, onRefresh}: AssetListProps) => {
   const handleOnPressTokens = () => Alert.alert(strings.soon, strings.soon)
   const handleSearch = () => Alert.alert(strings.soon, strings.soon)
 
+  const onScroll = useOnScroll({onScrollUp, onScrollDown})
+
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.listRoot}>
-      <TxListActionsBannerForAssetsTab
+      <ActionsBanner
         tokensLabel={strings.tokens(orderedTokens.length)}
         nftsLabel={strings.nfts(0)}
         onPressNFTs={handleOnPressNFTs}
@@ -50,12 +54,11 @@ export const AssetList = ({refreshing, onRefresh}: AssetListProps) => {
       />
 
       <FlatList
-        onRefresh={onRefresh}
-        refreshing={refreshing}
+        {...props}
+        onScroll={onScroll}
         data={orderedTokens}
         renderItem={({item: assetToken}) => <AssetItem key={assetToken.identifier} assetToken={assetToken} />}
         ItemSeparatorComponent={() => <Spacer height={16} />}
-        bounces={false}
         contentContainerStyle={{paddingTop: 16, paddingHorizontal: 16}}
         keyExtractor={(item) => item.identifier}
       />

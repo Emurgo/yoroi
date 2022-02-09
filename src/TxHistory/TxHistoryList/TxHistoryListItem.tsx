@@ -6,26 +6,26 @@ import {defineMessages, MessageDescriptor, useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
-import {Text} from '../../legacy/components/UiKit'
-import {MultiToken} from '../../legacy/crypto/MultiToken'
+import {Text} from '../../../legacy/components/UiKit'
+import {MultiToken} from '../../../legacy/crypto/MultiToken'
 import {
   availableAssetsSelector,
   defaultNetworkAssetSelector,
   externalAddressIndexSelector,
   internalAddressIndexSelector,
-} from '../../legacy/selectors'
-import {COLORS} from '../../legacy/styles/config'
+} from '../../../legacy/selectors'
+import {COLORS} from '../../../legacy/styles/config'
 import {
   ASSET_DENOMINATION,
   formatTimeToSeconds,
   formatTokenFractional,
   formatTokenInteger,
   getAssetDenominationOrId,
-} from '../../legacy/utils/format'
-import utfSymbols from '../../legacy/utils/utfSymbols'
-import {Icon} from '../components/Icon'
-import {TxHistoryStackRootProps} from '../navigation'
-import {DefaultAsset, IOData, TransactionAssurance, TransactionDirection, TransactionInfo} from '../types/cardano'
+} from '../../../legacy/utils/format'
+import utfSymbols from '../../../legacy/utils/utfSymbols'
+import {Icon} from '../../components/Icon'
+import {TxHistoryStackRootProps} from '../../navigation'
+import {DefaultAsset, IOData, TransactionAssurance, TransactionDirection, TransactionInfo} from '../../types/cardano'
 
 const filtersTxIO = (address: string) => {
   const isMyReceive = (extAddrIdx) => extAddrIdx[address] != null
