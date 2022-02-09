@@ -22,7 +22,7 @@ const QUOTE_PAIR_CURRENCY = 'USD'
 export const BalanceBanner = () => {
   const wallet = useSelectedWallet()
 
-  const [privacyMode, setPrivacyMode] = useState(true)
+  const [privacyMode, setPrivacyMode] = useState(false)
 
   return (
     <View style={styles.banner}>
@@ -77,7 +77,7 @@ const Balance = ({privacyMode}: {privacyMode: boolean}) => {
 }
 
 const PrivacyIndicator = ({privacyMode}: {privacyMode: boolean}) =>
-  privacyMode ? <Image source={closedEyeIcon} /> : <Image source={openedEyeIcon} />
+  !privacyMode ? <Image source={closedEyeIcon} /> : <Image source={openedEyeIcon} />
 
 const styles = StyleSheet.create({
   banner: {
