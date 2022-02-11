@@ -42,7 +42,7 @@ export const WalletNameForm = ({
   const strings = useStrings()
   const [name, setName] = React.useState(CONFIG.HARDWARE_WALLETS.LEDGER_NANO.DEFAULT_WALLET_NAME || '')
   const walletNames = useWalletNames()
-  const validationErrors = validateWalletName(name, null, walletNames)
+  const validationErrors = validateWalletName(name, null, walletNames || [])
   const hasErrors = Object.keys(validationErrors).length > 0
   const errorMessages = {
     tooLong: strings.walletNameErrorTooLong,

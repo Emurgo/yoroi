@@ -21,7 +21,7 @@ export const ChangeWalletName = () => {
 
   const walletNames = useWalletNames()
   const [newWalletName, setNewWalletName] = React.useState(walletName || '')
-  const validationErrors = validateWalletName(newWalletName, walletName, walletNames)
+  const validationErrors = validateWalletName(newWalletName, walletName, walletNames || [])
   const hasErrors = Object.keys(validationErrors).length > 0
   const errorText =
     getWalletNameError(
