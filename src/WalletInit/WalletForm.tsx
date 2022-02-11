@@ -24,7 +24,7 @@ export const WalletForm = ({onSubmit}: Props) => {
   const strings = useStrings()
   const walletNames = useWalletNames()
   const [name, setName] = React.useState(CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.WALLET_NAME : '')
-  const nameErrors = validateWalletName(name, null, walletNames)
+  const nameErrors = validateWalletName(name, null, walletNames || [])
   const walletNameErrorText =
     getWalletNameError(
       {tooLong: strings.tooLong, nameAlreadyTaken: strings.nameAlreadyTaken, mustBeFilled: strings.mustBeFilled},
