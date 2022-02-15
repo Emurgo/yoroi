@@ -176,7 +176,7 @@ export const getTokenInfo = async (request: TokenInfoRequest, config: BackendCon
         v.decimals = resp.decimals.value
       }
 
-      if (resp.name?.value) {
+      if (resp.description?.value) {
         v.longName = resp.name.value
       }
 
