@@ -58,14 +58,12 @@ export const AssetSelectorScreen = ({assetTokens, onSelect, onSelectAll}: Props)
         data={sortedAssetTokens}
         renderItem={({item: assetToken}) => (
           <Boundary>
-            <Spacer height={16} />
             <AssetSelectorItem
               key={assetToken.identifier}
               assetToken={assetToken}
               onPress={onSelect}
               matcher={matcher}
             />
-            <Spacer height={16} />
           </Boundary>
         )}
         bounces={false}
@@ -93,7 +91,7 @@ const AssetSelectorItem = ({assetToken, onPress, matcher}: AssetSelectorItemProp
   if (!matches(tokenInfo, matcher)) return null
 
   return (
-    <TouchableOpacity onPress={() => onPress(assetToken)}>
+    <TouchableOpacity style={{paddingVertical: 16}} onPress={() => onPress(assetToken)}>
       <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
         <View style={{padding: 4}}>
           <Icon source={tokenInfo.isDefault ? AdaImage : NoImage} />
