@@ -288,11 +288,6 @@ export const ConfirmScreen = () => {
               <Entry tokenEntry={entry} />
             </Boundary>
           ))}
-          {tokenEntries.map((entry) => (
-            <Boundary key={entry.identifier}>
-              <Entry tokenEntry={entry} />
-            </Boundary>
-          ))}
 
           {!isEasyConfirmationEnabled && !isHW && (
             <>
