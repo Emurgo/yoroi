@@ -8,7 +8,7 @@ import BiometricAuthScreen from '../../legacy/components/Send/BiometricAuthScree
 import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../legacy/navigationOptions'
 import {SEND_ROUTES} from '../../legacy/RoutesList'
 import {tokenBalanceSelector} from '../../legacy/selectors'
-import {useTokenInfos} from '../hooks'
+import {Boundary} from '../components'
 import {AddressReaderQR} from './AddressReaderQR'
 import {AssetSelectorScreen} from './AssetSelectorScreen'
 import {ConfirmScreen} from './ConfirmScreen'
@@ -30,7 +30,6 @@ export const SendScreenNavigator = () => {
   const [selectedTokenIdentifier, setSelectedTokenIdentifier] = React.useState(
     tokenBalance.getDefaultEntry().identifier,
   )
-  const tokenInfos = useTokenInfos()
   const [sendAll, setSendAll] = React.useState(false)
 
   return (
@@ -50,7 +49,9 @@ export const SendScreenNavigator = () => {
         }}
       >
         {() => (
-          <SendScreen selectedTokenIdentifier={selectedTokenIdentifier} onSendAll={setSendAll} sendAll={sendAll} />
+          <Boundary>
+            <SendScreen selectedTokenIdentifier={selectedTokenIdentifier} onSendAll={setSendAll} sendAll={sendAll} />
+          </Boundary>
         )}
       </Stack.Screen>
 
@@ -58,7 +59,6 @@ export const SendScreenNavigator = () => {
         {({navigation}) => (
           <AssetSelectorScreen
             assetTokens={tokenBalance.values}
-            assetTokenInfos={tokenInfos}
             onSelect={(token) => {
               setSendAll(false)
               setSelectedTokenIdentifier(token.identifier)

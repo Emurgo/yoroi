@@ -3,10 +3,13 @@ import {storiesOf} from '@storybook/react-native'
 import {BigNumber} from 'bignumber.js'
 import React from 'react'
 
+import {mockWallet} from '../../../storybook/mockWallet'
+import {SelectedWalletProvider} from '../../SelectedWallet'
 import type {TokenEntry} from '../../types/cardano'
 import {SendScreen} from './SendScreen'
 
 storiesOf('SendScreen', module)
+  .addDecorator((story) => <SelectedWalletProvider wallet={mockWallet}>{story()}</SelectedWalletProvider>)
   .add('Default', () => {
     const selectedAsset: TokenEntry = {
       networkId: 300,

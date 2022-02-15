@@ -4,6 +4,7 @@ import DangerousActionModal from '../../../legacy/components/Common/DangerousAct
 import {Text} from '../../../legacy/components/UiKit'
 import {getAssetDenominationOrId, truncateWithEllipsis} from '../../../legacy/utils/format'
 import {useTokenInfo} from '../../hooks'
+import {useSelectedWallet} from '../../SelectedWallet'
 import {useStrings} from './strings'
 
 type SendAllWarningProps = {
@@ -19,7 +20,8 @@ export const SendAllWarning = ({
   onConfirm,
 }: SendAllWarningProps) => {
   const strings = useStrings()
-  const tokenInfo = useTokenInfo(selectedTokenIdentifier)
+  const wallet = useSelectedWallet()
+  const tokenInfo = useTokenInfo({wallet, tokenId: selectedTokenIdentifier})
   const assetNameOrId = truncateWithEllipsis(getAssetDenominationOrId(tokenInfo), 20)
   const alertBoxContent = {
     content: tokenInfo.isDefault

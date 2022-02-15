@@ -14,8 +14,8 @@ import {tokenBalanceSelector, transactionsInfoSelector} from '../../legacy/selec
 import {COLORS} from '../../legacy/styles/config'
 import {formatDateToSeconds} from '../../legacy/utils/format'
 import iconGear from '../assets/img/icon/gear.png'
-import {Icon} from '../components'
-import {useTokenInfos, useWalletName} from '../hooks'
+import {Boundary, Icon} from '../components'
+import {useWalletName} from '../hooks'
 import {buildOptionsWithDefault, TxHistoryStackParamList, TxHistoryStackRootProps} from '../navigation'
 import {ReceiveScreen} from '../Receive/ReceiveScreen'
 import {useSelectedWallet} from '../SelectedWallet'
@@ -42,7 +42,6 @@ export const TxHistoryNavigator = () => {
   const [selectedTokenIdentifier, setSelectedTokenIdentifier] = React.useState(
     tokenBalance.getDefaultEntry().identifier,
   )
-  const tokenInfos = useTokenInfos()
   const [sendAll, setSendAll] = React.useState(false)
 
   return (
@@ -86,7 +85,9 @@ export const TxHistoryNavigator = () => {
           }}
         >
           {() => (
-            <SendScreen selectedTokenIdentifier={selectedTokenIdentifier} onSendAll={setSendAll} sendAll={sendAll} />
+            <Boundary>
+              <SendScreen selectedTokenIdentifier={selectedTokenIdentifier} onSendAll={setSendAll} sendAll={sendAll} />
+            </Boundary>
           )}
         </Stack.Screen>
 
@@ -94,7 +95,6 @@ export const TxHistoryNavigator = () => {
           {({navigation}: {navigation: TxHistoryStackRootProps}) => (
             <AssetSelectorScreen
               assetTokens={tokenBalance.values}
-              assetTokenInfos={tokenInfos}
               onSelect={(token) => {
                 setSendAll(false)
                 setSelectedTokenIdentifier(token.identifier)

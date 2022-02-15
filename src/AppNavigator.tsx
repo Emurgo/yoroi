@@ -26,6 +26,7 @@ import {
   isSystemAuthEnabledSelector,
 } from '../legacy/selectors'
 import type {State} from '../legacy/state'
+import {Boundary} from './components'
 import {CustomPinScreen} from './FirstRun/CustomPinScreen'
 import {FirstRunNavigator} from './FirstRun/FirstRunNavigator'
 import {CustomPinLogin} from './Login'
@@ -179,7 +180,11 @@ const StoryBook = () => (
 )
 
 const AppNavigator = () => {
-  return <NavigationContainer>{IS_STORYBOOK ? <StoryBook /> : <NavigatorSwitch />}</NavigationContainer>
+  return (
+    <NavigationContainer>
+      <Boundary>{IS_STORYBOOK ? <StoryBook /> : <NavigatorSwitch />}</Boundary>
+    </NavigationContainer>
+  )
 }
 
 const useStrings = () => {

@@ -1,7 +1,7 @@
 import React from 'react'
 import {defineMessages} from 'react-intl'
 import {useIntl} from 'react-intl'
-import {FlatList, TouchableOpacity, View} from 'react-native'
+import {FlatList, LayoutAnimation, TouchableOpacity, View} from 'react-native'
 import {Avatar} from 'react-native-paper'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
@@ -16,27 +16,33 @@ import {
   getAssetDenominationOrId,
   getTokenFingerprint,
 } from '../../../legacy/utils/format'
+import {Boundary} from '../../components'
+import {useTokenInfo} from '../../hooks'
+import {useSelectedWallet} from '../../SelectedWallet'
 import {Token, TokenEntry} from '../../types/cardano'
 
 type Props = {
   assetTokens: Array<TokenEntry>
-  assetTokenInfos: Record<string, Token>
   onSelect: (tokenEntry: TokenEntry) => void
   onSelectAll: () => void
 }
 
-export const AssetSelectorScreen = ({assetTokens, assetTokenInfos, onSelect, onSelectAll}: Props) => {
+export const AssetSelectorScreen = ({assetTokens, onSelect, onSelectAll}: Props) => {
   const strings = useStrings()
 
-  const [filter, setFilter] = React.useState('')
-  const visibleAssetTokens = matches(assetTokenInfos, assetTokens, filter)
+  const [matcher, setMatcher] = React.useState('')
+  const onChangeMatcher = (matcher: string) => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    setMatcher(matcher)
+  }
+  const sortedAssetTokens = assetTokens
     .sort((a: TokenEntry, b: TokenEntry) => (a.amount.isGreaterThan(b.amount) ? -1 : 1))
-    .sort((a) => (getTokenInfo(assetTokenInfos, a).isDefault ? -1 : 1))
+    .sort((assetToken) => (assetToken.identifier === '' ? -1 : 1))
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={{flex: 1, backgroundColor: 'white'}}>
       <View style={{paddingTop: 16, paddingHorizontal: 16}}>
-        <SearchInput onChangeText={(text) => setFilter(normalize(text))} />
+        <SearchInput onChangeText={(text) => onChangeMatcher(normalize(text))} />
 
         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
           <Text style={{color: COLORS.GREY_6}}>{strings.assetsLabel}</Text>
@@ -49,18 +55,21 @@ export const AssetSelectorScreen = ({assetTokens, assetTokenInfos, onSelect, onS
       </View>
 
       <FlatList
-        data={visibleAssetTokens}
+        data={sortedAssetTokens}
         renderItem={({item: assetToken}) => (
-          <AssetSelectorItem
-            key={assetToken.identifier}
-            assetToken={assetToken}
-            tokenInfo={assetTokenInfos[assetToken.identifier]}
-            onPress={onSelect}
-          />
+          <Boundary>
+            <Spacer height={16} />
+            <AssetSelectorItem
+              key={assetToken.identifier}
+              assetToken={assetToken}
+              onPress={onSelect}
+              matcher={matcher}
+            />
+            <Spacer height={16} />
+          </Boundary>
         )}
-        ItemSeparatorComponent={() => <Spacer height={32} />}
         bounces={false}
-        contentContainerStyle={{paddingTop: 16, paddingHorizontal: 16}}
+        contentContainerStyle={{paddingHorizontal: 16}}
         keyExtractor={(item) => item.identifier}
       />
 
@@ -73,11 +82,15 @@ export const AssetSelectorScreen = ({assetTokens, assetTokenInfos, onSelect, onS
 
 type AssetSelectorItemProps = {
   assetToken: TokenEntry
-  tokenInfo: Token
   onPress: (tokenEntry: TokenEntry) => void
+  matcher: string
 }
-const AssetSelectorItem = ({assetToken, tokenInfo, onPress}: AssetSelectorItemProps) => {
+const AssetSelectorItem = ({assetToken, onPress, matcher}: AssetSelectorItemProps) => {
   const strings = useStrings()
+  const wallet = useSelectedWallet()
+  const tokenInfo = useTokenInfo({wallet, tokenId: assetToken.identifier})
+
+  if (!matches(tokenInfo, matcher)) return null
 
   return (
     <TouchableOpacity onPress={() => onPress(assetToken)}>
@@ -120,21 +133,15 @@ const SearchInput = (props) => {
 
   return <TextInput {...props} label={strings.searchLabel} />
 }
-const getTokenInfo = (tokenInfos: Record<string, Token>, token: TokenEntry) => tokenInfos[token.identifier]
-const matches = (tokenInfos: Record<string, Token>, tokens: Array<TokenEntry>, filter: string) =>
-  tokens.filter((assetToken) => {
-    const tokenInfo = getTokenInfo(tokenInfos, assetToken)
 
-    return (
-      normalize(decodeHexAscii(tokenInfo.metadata.assetName) || '').includes(filter) ||
-      normalize(getTokenFingerprint(tokenInfo) || '').includes(filter) ||
-      normalize(tokenInfo.metadata.ticker || '').includes(filter) ||
-      normalize(tokenInfo.metadata.longName || '').includes(filter) ||
-      normalize(tokenInfo.identifier).includes(filter) ||
-      normalize(tokenInfo.metadata.assetName).includes(filter) ||
-      normalize(tokenInfo.metadata.policyId).includes(filter)
-    )
-  })
+const matches = (token: Token, matcher: string) =>
+  normalize(decodeHexAscii(token.metadata.assetName) || '').includes(matcher) ||
+  normalize(getTokenFingerprint(token) || '').includes(matcher) ||
+  normalize(token.metadata.ticker || '').includes(matcher) ||
+  normalize(token.metadata.longName || '').includes(matcher) ||
+  normalize(token.identifier).includes(matcher) ||
+  normalize(token.metadata.assetName).includes(matcher) ||
+  normalize(token.metadata.policyId).includes(matcher)
 
 const useStrings = () => {
   const intl = useIntl()

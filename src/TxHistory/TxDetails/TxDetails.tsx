@@ -13,7 +13,6 @@ import {getNetworkConfigById} from '../../../legacy/config/networks'
 import {MultiToken} from '../../../legacy/crypto/MultiToken'
 import globalMessages from '../../../legacy/i18n/global-messages'
 import {
-  defaultNetworkAssetSelector,
   externalAddressIndexSelector,
   internalAddressIndexSelector,
   transactionsInfoSelector,
@@ -22,10 +21,11 @@ import stylesConfig, {COLORS} from '../../../legacy/styles/config'
 import {formatTokenWithSymbol} from '../../../legacy/utils/format'
 import arrowDown from '../../assets/img/icon/chevron_down.png'
 import arrowUp from '../../assets/img/icon/chevron_up.png'
-import {useTokenInfos} from '../../hooks'
+import {Boundary} from '../../components'
+import {useTokenInfo} from '../../hooks'
 import AddressModal from '../../Receive/AddressModal'
 import {useSelectedWallet} from '../../SelectedWallet'
-import {Token, TransactionInfo} from '../../types/cardano'
+import {TransactionInfo} from '../../types/cardano'
 import {AssetList} from './AssetList'
 
 export type Params = {
@@ -39,8 +39,6 @@ export const TxDetails = () => {
   const internalAddressIndex = useSelector(internalAddressIndexSelector)
   const externalAddressIndex = useSelector(externalAddressIndexSelector)
   const wallet = useSelectedWallet()
-  const tokenInfos = useTokenInfos()
-  const defaultNetworkAsset = useSelector(defaultNetworkAssetSelector)
   const transactions = useSelector(transactionsInfoSelector)
   const [expandedIn, setExpandedIn] = useState(false)
   const [expandedOut, setExpandedOut] = useState(false)
@@ -60,9 +58,6 @@ export const TxDetails = () => {
   const txFee: BigNumber = transaction.fee ? MultiToken.fromArray(transaction.fee).getDefault() : null
   const amountAsMT = MultiToken.fromArray(transaction.amount)
   const amount: BigNumber = amountAsMT.getDefault()
-  const amountDefaultAsset: Token = tokenInfos[amountAsMT.getDefaultId()]
-
-  const defaultAsset = amountDefaultAsset || defaultNetworkAsset
 
   const toggleExpandIn = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
@@ -81,13 +76,12 @@ export const TxDetails = () => {
       <OfflineBanner />
       <Screen scroll>
         <Banner label={strings[transaction.direction]}>
-          <AdaAmount amount={amount} token={defaultAsset} />
-          {txFee && (
-            <Text small>
-              {strings.fee} {formatTokenWithSymbol(txFee, defaultAsset)}
-            </Text>
-          )}
+          <Boundary>
+            <AdaAmount amount={amount} />
+            {txFee && <Fee amount={txFee} />}
+          </Boundary>
         </Banner>
+
         <View style={styles.content}>
           <Label>{strings.fromAddresses}</Label>
           {fromFiltered.map((item) => (
@@ -99,7 +93,7 @@ export const TxDetails = () => {
                   <Image source={expandedIn ? arrowUp : arrowDown} />
                 </TouchableOpacity>
               )}
-              {expandedIn && <AssetList styles={assetListStyle} assets={item.assets} assetsMetadata={tokenInfos} />}
+              {expandedIn && <AssetList styles={assetListStyle} assets={item.assets} />}
             </View>
           ))}
 
@@ -115,9 +109,10 @@ export const TxDetails = () => {
                   <Image source={expandedOut ? arrowUp : arrowDown} />
                 </TouchableOpacity>
               )}
-              {expandedOut && <AssetList styles={assetListStyle} assets={item.assets} assetsMetadata={tokenInfos} />}
+              {expandedOut && <AssetList styles={assetListStyle} assets={item.assets} />}
             </View>
           ))}
+
           {cntOmittedTo > 0 && <Text>{strings.omittedCount(cntOmittedTo)}</Text>}
           <View style={styles.borderTop}>
             <Label>{strings.txAssuranceLevel}</Label>
@@ -135,6 +130,7 @@ export const TxDetails = () => {
           </View>
         </View>
       </Screen>
+
       {addressDetail && (
         <AddressModal
           visible
@@ -149,10 +145,24 @@ export const TxDetails = () => {
 
 const Label = ({children}: {children: string}) => <Text style={styles.label}>{children}</Text>
 
-const AdaAmount = ({amount, token}: {amount: BigNumber; token: Token}) => {
+const AdaAmount = ({amount}: {amount: BigNumber}) => {
+  const wallet = useSelectedWallet()
+  const tokenInfo = useTokenInfo({wallet, tokenId: ''})
   const amountStyle = amount.gte(0) ? styles.positiveAmount : styles.negativeAmount
 
-  return <Text style={amountStyle}>{formatTokenWithSymbol(amount, token)}</Text>
+  return <Text style={amountStyle}>{formatTokenWithSymbol(amount, tokenInfo)}</Text>
+}
+
+const Fee = ({amount}: {amount: BigNumber}) => {
+  const strings = useStrings()
+  const wallet = useSelectedWallet()
+  const tokenInfo = useTokenInfo({wallet, tokenId: ''})
+
+  return (
+    <Text small>
+      {strings.fee} {formatTokenWithSymbol(amount, tokenInfo)}
+    </Text>
+  )
 }
 
 type AddressEntryProps = {

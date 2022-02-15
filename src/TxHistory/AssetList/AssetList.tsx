@@ -13,29 +13,29 @@ import {COLORS} from '../../../legacy/styles/config'
 import {formatTokenAmount, getAssetDenominationOrId, getTokenFingerprint} from '../../../legacy/utils/format'
 import AdaImage from '../../assets/img/icon/asset_ada.png'
 import NoImage from '../../assets/img/icon/asset_no_image.png'
+import {Boundary} from '../../components'
 import {Spacer} from '../../components/Spacer'
-import {useTokenInfo, useTokenInfos} from '../../hooks'
-import {Token, TokenEntry} from '../../types/cardano'
+import {useTokenInfo} from '../../hooks'
+import {useSelectedWallet} from '../../SelectedWallet'
+import {TokenEntry} from '../../types/cardano'
 import {useOnScroll} from '../useOnScroll'
 import {ActionsBanner} from './ActionsBanner'
 
 type ListProps = FlatListProps<TokenEntry>
-
 type Props = Partial<ListProps> & {
   onScrollUp: ListProps['onScroll']
   onScrollDown: ListProps['onScroll']
+  refreshing: boolean
+  onRefresh: () => void
 }
 export const AssetList = ({onScrollUp, onScrollDown, ...props}: Props) => {
   const strings = useStrings()
   const tokenBalance = useSelector(tokenBalanceSelector)
-  const tokenInfos = useTokenInfos()
-
   const assetTokens: Array<TokenEntry> = tokenBalance.values
 
   const orderedTokens = assetTokens
-    .sort((a, b) => (a.amount.isGreaterThan(b.amount) ? -1 : 1))
-    .sort((a) => (getTokenInfo(tokenInfos, a)?.isDefault ? -1 : 1))
-    .filter((t) => tokenInfos[t.identifier])
+    .sort((assetTokenA, assetTokenB) => (assetTokenA.amount.isGreaterThan(assetTokenB.amount) ? -1 : 1))
+    .sort((assetToken) => (assetToken.identifier === '' ? -1 : 1))
 
   const handleOnPressNFTs = () => Alert.alert(strings.soon, strings.soon)
   const handleOnPressTokens = () => Alert.alert(strings.soon, strings.soon)
@@ -57,7 +57,11 @@ export const AssetList = ({onScrollUp, onScrollDown, ...props}: Props) => {
         {...props}
         onScroll={onScroll}
         data={orderedTokens}
-        renderItem={({item: assetToken}) => <AssetItem key={assetToken.identifier} assetToken={assetToken} />}
+        renderItem={({item: assetToken}) => (
+          <Boundary fallbackProps={{size: 'small'}}>
+            <AssetItem key={assetToken.identifier} assetToken={assetToken} />
+          </Boundary>
+        )}
         ItemSeparatorComponent={() => <Spacer height={16} />}
         contentContainerStyle={{paddingTop: 16, paddingHorizontal: 16}}
         keyExtractor={(item) => item.identifier}
@@ -73,7 +77,8 @@ type AssetItemProps = {
 
 const AssetItem = ({assetToken, onPress}: AssetItemProps) => {
   const strings = useStrings()
-  const tokenInfo = useTokenInfo(assetToken.identifier)
+  const wallet = useSelectedWallet()
+  const tokenInfo = useTokenInfo({wallet, tokenId: assetToken.identifier})
 
   return (
     <TouchableOpacity onPress={onPress}>
@@ -137,8 +142,6 @@ const styles = StyleSheet.create({
     color: COLORS.DARK_TEXT,
   },
 })
-
-const getTokenInfo = (assetTokenInfos: Record<string, Token>, token: TokenEntry) => assetTokenInfos[token.identifier]
 
 const Icon = (props) => (
   <Avatar.Image

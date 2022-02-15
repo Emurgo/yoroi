@@ -12,15 +12,37 @@ export interface WalletInterface {
   isReadOnly: boolean
   isHW: boolean
   isEasyConfirmationEnabled: boolean
+  rewardAddressHex: string
   changePassword(masterPassword: string, newPassword: string, intl: IntlShape): Promise<void>
   fetchPoolInfo(request: StakePoolInfoRequest): Promise<StakePoolInfosAndHistories>
   getDelegationStatus(): Promise<StakingStatus>
   getAllUtxosForKey(utxos: Array<RawUtxo>): Promise<Array<AddressedUtxo>>
   fetchAccountState(): Promise<AccountStates>
   fetchUTXOs(): Promise<Array<RawUtxo>>
-  rewardAddressHex: string
+  fetchTokenInfo(request: {tokenIds: Array<string>}): Promise<Record<string, TokenMetadata | null>>
   subscribe(handler: (wallet: WalletInterface) => void): void
   subscribeOnTxHistoryUpdate(handler: () => void): void
+}
+
+export type TokenMetadata = {
+  name: string
+  decimals?: number
+  assetName: string
+  policyId: string
+  longName?: string
+  ticker?: string
+}
+
+// https://github.com/cardano-foundation/cardano-token-registry#semantic-content-of-registry-entries
+export type TokenRegistryEntry = {
+  subject: string
+  name: string
+  description: string
+  policy?: string
+  ticker?: string
+  url?: string
+  logo?: string
+  decimals?: number
 }
 
 export type StakingStatus = Registered | NotRegistered
