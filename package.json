@@ -172,6 +172,7 @@
     "@storybook/addons": "^5.3.22",
     "@storybook/react-native": "^5.3.25",
     "@storybook/react-native-server": "^5.3.23",
+    "@types/bluebird": "^3.5.36",
     "@types/jest": "^27.0.2",
     "@types/lodash": "^4.14.175",
     "@types/node": "^16.11.19",
