@@ -5,13 +5,15 @@ import {Banner} from '../../../legacy/components/UiKit'
 import {isFetchingUtxosSelector, tokenBalanceSelector} from '../../../legacy/selectors'
 import {formatTokenWithText} from '../../../legacy/utils/format'
 import {useTokenInfo} from '../../hooks'
+import {useSelectedWallet} from '../../SelectedWallet'
 import {useStrings} from './strings'
 
 export const AvailableAmountBanner = () => {
   const strings = useStrings()
   const tokenBalance = useSelector(tokenBalanceSelector)
   const isFetchingBalance = useSelector(isFetchingUtxosSelector)
-  const tokenInfo = useTokenInfo(tokenBalance.getDefaultId())
+  const wallet = useSelectedWallet()
+  const tokenInfo = useTokenInfo({wallet, tokenId: tokenBalance.getDefaultId()})
 
   return (
     <Banner

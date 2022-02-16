@@ -142,7 +142,7 @@
     "react-native-tab-view": "2.15.2",
     "react-native-vector-icons": "^8.1.0",
     "react-native-webview": "11.14.4",
-    "react-query": "^3.32.2",
+    "react-query": "^3.34.14",
     "react-redux": "7.2.2",
     "recompose": "^0.30.0",
     "redux": "^4.0.5",

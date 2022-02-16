@@ -93,6 +93,10 @@ export type RemoteTokenInfo = {|
   // from token metadata (off chain)
   +name?: string,
   +decimals?: number,
+  +policyId?: string,
+  +assetName?: string,
+  +longName?: string,
+  +ticker?: string,
 |}
 export type TokenInfoResponse = {
   [key: string]: RemoteTokenInfo | null,

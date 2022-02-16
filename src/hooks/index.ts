@@ -1,9 +1,6 @@
-import React from 'react'
-import {useMutation, UseMutationOptions, useQuery, useQueryClient, UseQueryOptions} from 'react-query'
-import {useSelector} from 'react-redux'
+import {useMutation, UseMutationOptions, useQueries, useQuery, useQueryClient, UseQueryOptions} from 'react-query'
 
 import walletManager from '../../legacy/crypto/walletManager'
-import {availableAssetsSelector, tokenInfoSelector} from '../../legacy/selectors'
 import {WalletMeta} from '../../legacy/state'
 import {WalletInterface} from '../types'
 import {Token} from '../types/cardano'
@@ -45,19 +42,110 @@ export const useChangeWalletName = (wallet: WalletInterface, options: UseMutatio
   }
 }
 
-export const useTokenInfos = () => {
-  const availableAssets = useSelector(availableAssetsSelector) as Record<string, Token>
-  const tokenInfos = useSelector(tokenInfoSelector)
+export const primaryTokenInfo: Token = {
+  networkId: 1,
+  identifier: '',
+  isDefault: true,
+  metadata: {
+    type: 'Cardano',
+    policyId: '',
+    assetName: '',
+    ticker: 'ADA',
+    longName: null,
+    numberOfDecimals: 6,
+    maxSupply: String(45000000000),
+  },
+} as const
 
-  return React.useMemo(() => ({...availableAssets, ...tokenInfos}), [availableAssets, tokenInfos])
+export const primaryTokenInfoTestnet: Token = {
+  networkId: 300,
+  identifier: '',
+  isDefault: true,
+  metadata: {
+    type: 'Cardano',
+    policyId: '',
+    assetName: '',
+    ticker: 'TADA',
+    longName: null,
+    numberOfDecimals: 6,
+    maxSupply: String(45000000000),
+  },
+} as const
+
+export const useTokenInfo = ({wallet, tokenId}: {wallet: WalletInterface; tokenId: string}) => {
+  const _queryKey = queryKey({wallet, tokenId})
+  const query = useQuery<Token, Error>({
+    suspense: true,
+    queryKey: _queryKey,
+    queryFn: () => fetchTokenInfo({wallet, tokenId}),
+  })
+
+  if (!query.data) throw new Error('Invalid token id')
+
+  return query.data
 }
 
-export const useTokenInfo = (tokenId: string) => {
-  const tokenInfo = useTokenInfos()[tokenId]
+export const useTokenInfos = ({wallet, tokenIds}: {wallet: WalletInterface; tokenIds: Array<string>}) => {
+  const queries = useQueries(
+    tokenIds.map((tokenId: string) => ({
+      queryKey: queryKey({wallet, tokenId}),
+      queryFn: () => fetchTokenInfo({wallet, tokenId}),
+    })),
+  )
 
-  if (!tokenInfo) throw new Error('Missing tokenInfo')
+  const tokens = queries
+    .filter((result) => result.isSuccess)
+    .map((result) => {
+      if (!result.data) throw new Error('Invalid tokenInfo')
 
-  return tokenInfo
+      return result.data
+    })
+    .reduce((result, current) => ({...result, [current.identifier]: current}), {} as Record<string, Token>)
+
+  return queries.every((query) => !query.isLoading) ? tokens : undefined
+}
+
+export const queryKey = ({wallet, tokenId}) => [wallet.id, 'tokenInfo', tokenId]
+export const fetchTokenInfo = async ({wallet, tokenId}: {wallet: WalletInterface; tokenId: string}): Promise<Token> => {
+  if ((tokenId === '' || tokenId === 'ADA') && wallet.networkId === 1) return primaryTokenInfo
+  if ((tokenId === '' || tokenId === 'ADA' || tokenId === 'TADA') && wallet.networkId === 300)
+    return primaryTokenInfoTestnet
+
+  const tokenSubject = tokenId.replace('.', '')
+  const tokenMetadatas = await wallet.fetchTokenInfo({tokenIds: [tokenSubject]})
+  const tokenMetadata = tokenMetadatas[tokenSubject]
+
+  if (!tokenMetadata) {
+    return {
+      networkId: wallet.networkId,
+      identifier: tokenId,
+      isDefault: false,
+      metadata: {
+        type: 'Cardano',
+        policyId: tokenId.split('.')[0],
+        assetName: tokenId.split('.')[1],
+        ticker: null,
+        longName: null,
+        numberOfDecimals: 0,
+        maxSupply: null,
+      },
+    }
+  }
+
+  return {
+    networkId: 300,
+    identifier: tokenId,
+    isDefault: false,
+    metadata: {
+      type: 'Cardano',
+      policyId: tokenId.split('.')[0],
+      assetName: tokenId.split('.')[1],
+      ticker: null,
+      longName: null,
+      numberOfDecimals: tokenMetadata.decimals || 0,
+      maxSupply: null,
+    },
+  }
 }
 
 // WALLET MANAGER

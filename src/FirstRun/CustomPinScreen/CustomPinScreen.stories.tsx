@@ -3,6 +3,6 @@ import React from 'react'
 
 import {CustomPinScreen} from './CustomPinScreen'
 
-storiesOf('CustomPinScreen', module).add('Default', () => {
+storiesOf('CustomPinScreen firstrun', module).add('Default', () => {
   return <CustomPinScreen />
 })

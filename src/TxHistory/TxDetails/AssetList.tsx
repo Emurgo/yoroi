@@ -7,15 +7,17 @@ import assetListTransactionStyle from '../../../legacy/components/Common/MultiAs
 import baseStyle from '../../../legacy/components/Common/MultiAsset/styles/Base.style'
 import globalMessages, {txLabels} from '../../../legacy/i18n/global-messages'
 import {formatTokenAmount, getName, getTicker, getTokenFingerprint} from '../../../legacy/utils/format'
-import type {Token, TokenEntry} from '../../types/cardano'
+import {Boundary} from '../../components'
+import {useTokenInfo} from '../../hooks'
+import {useSelectedWallet} from '../../SelectedWallet'
+import type {TokenEntry} from '../../types/cardano'
 
 type AssetListProps = {
   assets: Array<TokenEntry>
-  assetsMetadata: Record<string, Token>
   styles: NodeStyle
   onSelect?: (tokenEntry: TokenEntry) => void
 }
-export const AssetList = ({assets, assetsMetadata, styles, onSelect}: AssetListProps) => {
+export const AssetList = ({assets, styles, onSelect}: AssetListProps) => {
   const intl = useIntl()
   const colors = [styles.rowColor1, styles.rowColor2]
 
@@ -28,16 +30,12 @@ export const AssetList = ({assets, assetsMetadata, styles, onSelect}: AssetListP
 
       <View>
         <FlatList
-          data={assets.sort((a) => (assetsMetadata[a.identifier].isDefault ? -1 : 1))}
+          data={assets.sort((asset) => (asset.identifier === '' ? -1 : 1))}
           keyExtractor={(item) => item.identifier}
-          renderItem={({item, index}) => (
-            <AssetRow
-              asset={item}
-              assetMetadata={assetsMetadata[item.identifier]}
-              styles={styles}
-              backColor={colors[index % colors.length]}
-              onSelect={onSelect}
-            />
+          renderItem={({item: entry, index}) => (
+            <Boundary fallbackProps={{size: 'small', style: {padding: 16}}}>
+              <AssetRow entry={entry} styles={styles} backColor={colors[index % colors.length]} onSelect={onSelect} />
+            </Boundary>
           )}
         />
       </View>
@@ -48,29 +46,31 @@ export const AssetList = ({assets, assetsMetadata, styles, onSelect}: AssetListP
 type NodeStyle = typeof baseStyle | typeof assetListTransactionStyle | typeof assetListSendStyle
 type AssetRowProps = {
   styles: NodeStyle
-  asset: TokenEntry
-  assetMetadata: Token
+  entry: TokenEntry
   backColor: {backgroundColor: string}
   onSelect?: (tokenEntry: TokenEntry) => void
 }
-const AssetRow = ({styles, asset, assetMetadata, backColor, onSelect}: AssetRowProps) => {
+const AssetRow = ({styles, entry, backColor, onSelect}: AssetRowProps) => {
   const intl = useIntl()
+  const wallet = useSelectedWallet()
+  const tokenInfo = useTokenInfo({wallet, tokenId: entry.identifier})
+
   const item = (
     <>
       <View style={styles.tokenMetaView}>
         <Text style={styles.assetName}>
-          {assetMetadata.isDefault
-            ? getTicker(assetMetadata) || intl.formatMessage(messages.unknownAssetName)
-            : getName(assetMetadata) || intl.formatMessage(messages.unknownAssetName)}
+          {tokenInfo.isDefault
+            ? getTicker(tokenInfo) || intl.formatMessage(messages.unknownAssetName)
+            : getName(tokenInfo) || intl.formatMessage(messages.unknownAssetName)}
         </Text>
 
         <Text style={styles.assetMeta} ellipsizeMode="middle" numberOfLines={1}>
-          {assetMetadata.isDefault ? '' : getTokenFingerprint(assetMetadata)}
+          {tokenInfo.isDefault ? '' : getTokenFingerprint(tokenInfo)}
         </Text>
       </View>
 
       <View style={styles.assetBalanceView}>
-        <Text style={styles.assetBalance}>{formatTokenAmount(asset.amount, assetMetadata, 15)}</Text>
+        <Text style={styles.assetBalance}>{formatTokenAmount(entry.amount, tokenInfo, 15)}</Text>
       </View>
     </>
   )
@@ -79,7 +79,7 @@ const AssetRow = ({styles, asset, assetMetadata, backColor, onSelect}: AssetRowP
     return <View style={[styles.assetRow, styles.py5, styles.px5, backColor]}>{item}</View>
   } else {
     return (
-      <TouchableOpacity onPress={() => onSelect(asset)} style={[styles.assetRow, styles.py5, styles.px5, backColor]}>
+      <TouchableOpacity onPress={() => onSelect(entry)} style={[styles.assetRow, styles.py5, styles.px5, backColor]}>
         {item}
       </TouchableOpacity>
     )

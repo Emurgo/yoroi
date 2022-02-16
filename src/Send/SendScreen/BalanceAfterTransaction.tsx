@@ -7,12 +7,14 @@ import {Text} from '../../../legacy/components/UiKit'
 import {tokenBalanceSelector} from '../../../legacy/selectors'
 import {formatTokenWithSymbol} from '../../../legacy/utils/format'
 import {useTokenInfo} from '../../hooks'
+import {useSelectedWallet} from '../../SelectedWallet'
 import {useStrings} from './strings'
 
 export const BalanceAfterTransaction = ({balanceAfter}: {balanceAfter: BigNumber | null}) => {
   const strings = useStrings()
   const tokenBalance = useSelector(tokenBalanceSelector)
-  const tokenInfo = useTokenInfo(tokenBalance.getDefaultId())
+  const wallet = useSelectedWallet()
+  const tokenInfo = useTokenInfo({wallet, tokenId: tokenBalance.getDefaultId()})
 
   const value = balanceAfter ? formatTokenWithSymbol(balanceAfter, tokenInfo) : strings.balanceAfterNotAvailable
 

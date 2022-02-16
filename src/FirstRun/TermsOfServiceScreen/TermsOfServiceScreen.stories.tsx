@@ -3,4 +3,4 @@ import React from 'react'
 
 import {TermsOfServiceScreen} from './TermsOfServiceScreen'
 
-storiesOf('TermsOfServiceScreen', module).add('Default', () => <TermsOfServiceScreen />)
+storiesOf('TermsOfServiceScreen firstrun', module).add('Default', () => <TermsOfServiceScreen />)

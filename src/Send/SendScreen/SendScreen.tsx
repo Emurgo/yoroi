@@ -33,6 +33,7 @@ import type {
   BalanceValidationErrors,
 } from '../../../legacy/utils/validators'
 import {useTokenInfo} from '../../hooks'
+import {useSelectedWallet} from '../../SelectedWallet'
 import type {TokenEntry} from '../../types/cardano'
 import {AmountField} from './../AmountField'
 import {AvailableAmountBanner} from './AvailableAmountBanner'
@@ -80,7 +81,8 @@ export const SendScreen = ({selectedTokenIdentifier, sendAll, onSendAll}: Props)
   const [recomputing, setRecomputing] = React.useState(false)
   const [showSendAllWarning, setShowSendAllWarning] = React.useState(false)
 
-  const tokenInfo = useTokenInfo(selectedTokenIdentifier)
+  const wallet = useSelectedWallet()
+  const tokenInfo = useTokenInfo({wallet, tokenId: selectedTokenIdentifier})
   const assetDenomination = truncateWithEllipsis(getAssetDenominationOrId(tokenInfo), 20)
   const amountErrorText = getAmountErrorText(intl, amountErrors, balanceErrors, defaultAsset)
   const isValid =
