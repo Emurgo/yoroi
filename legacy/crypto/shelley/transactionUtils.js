@@ -37,9 +37,9 @@ export const createUnsignedTx = async (request: CreateUnsignedTxRequest): Promis
     const KEY_DEPOSIT = networkConfig.KEY_DEPOSIT
     const POOL_DEPOSIT = networkConfig.POOL_DEPOSIT
     const LINEAR_FEE = networkConfig.LINEAR_FEE
-    const MINIMUM_UTXO_VAL = networkConfig.MINIMUM_UTXO_VAL
     const NETWORK_ID = networkConfig.NETWORK_ID
     const CHAIN_NETWORK_ID = networkConfig.CHAIN_NETWORK_ID
+    const COINS_PER_UTXO_WORD = networkConfig.COINS_PER_UTXO_WORD
 
     const protocolParams = {
       keyDeposit: await BigNum.from_str(KEY_DEPOSIT),
@@ -47,9 +47,9 @@ export const createUnsignedTx = async (request: CreateUnsignedTxRequest): Promis
         await BigNum.from_str(LINEAR_FEE.COEFFICIENT),
         await BigNum.from_str(LINEAR_FEE.CONSTANT),
       ),
-      minimumUtxoVal: await BigNum.from_str(MINIMUM_UTXO_VAL),
       poolDeposit: await BigNum.from_str(POOL_DEPOSIT),
       networkId: NETWORK_ID,
+      coinsPerUtxoWord: await BigNum.from_str(COINS_PER_UTXO_WORD),
     }
 
     let unsignedTxResponse

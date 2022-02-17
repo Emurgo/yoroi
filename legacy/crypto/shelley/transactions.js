@@ -14,7 +14,6 @@ import {
   Certificate,
   Certificates,
   hash_transaction,
-  LinearFee,
   make_icarus_bootstrap_witness,
   make_vkey_witness,
   min_ada_required,
@@ -23,6 +22,7 @@ import {
   Transaction,
   TransactionBody,
   TransactionBuilder,
+  TransactionBuilderConfigBuilder,
   TransactionHash,
   TransactionInput,
   TransactionOutput,
@@ -37,7 +37,7 @@ import {BigNumber} from 'bignumber.js'
 import type {RawUtxo} from '../../api/types'
 /* eslint-enable camelcase */
 import {CONFIG} from '../../config/config'
-import {MAX_TX_BYTES, MAX_VALUE_BYTES} from '../../config/networks'
+import {MAX_TX_SIZE, MAX_VALUE_SIZE} from '../../config/networks'
 import {AssetOverflowError, InsufficientFunds, NoOutputsError} from '../errors'
 import type {
   Address,
@@ -73,6 +73,30 @@ const PRIMARY_ASSET_CONSTANTS = CONFIG.PRIMARY_ASSET_CONSTANTS
  * note: slots are 1 second in Shelley mainnet, so this is 2 minutes
  */
 const defaultTtlOffset = 7200
+const withoutDataHash = 0
+
+const txBuilderFactory = async (protocolParams: ProtocolParameters): Promise<TransactionBuilder> => {
+  const {
+    linearFee,
+    poolDeposit,
+    keyDeposit,
+    maxTxBytes = MAX_TX_SIZE,
+    maxValueBytes = MAX_VALUE_SIZE,
+    coinsPerUtxoWord,
+  } = protocolParams
+  const txBuilderConfigBuilder = await TransactionBuilderConfigBuilder.new(
+    linearFee,
+    poolDeposit,
+    keyDeposit,
+    maxTxBytes,
+    maxValueBytes,
+    coinsPerUtxoWord,
+    0,
+  )
+  const txBuilderConfig = await txBuilderConfigBuilder.build()
+  const txBuilder = await TransactionBuilder.new(txBuilderConfig)
+  return txBuilder
+}
 
 export const sendAllUnsignedTxFromUtxo = async (
   receiver: {|...Address, ...InexactSubset<Addressing>|},
@@ -88,16 +112,7 @@ export const sendAllUnsignedTxFromUtxo = async (
     throw new InsufficientFunds()
   }
 
-  const txBuilder = await TransactionBuilder.new(
-    protocolParams.linearFee,
-    protocolParams.minimumUtxoVal,
-    protocolParams.poolDeposit,
-    protocolParams.keyDeposit,
-    // $FlowFixMe sketchy-null-number
-    protocolParams.maxValueBytes || MAX_VALUE_BYTES,
-    // $FlowFixMe sketchy-null-number
-    protocolParams.maxTxBytes || MAX_TX_BYTES,
-  )
+  const txBuilder = await txBuilderFactory(protocolParams)
   await txBuilder.set_ttl(absSlotNumber.plus(defaultTtlOffset).toNumber())
   for (const input of allUtxos) {
     if (
@@ -164,13 +179,7 @@ export const sendAllUnsignedTx = async (
   receiver: {|...Address, ...InexactSubset<Addressing>|},
   allUtxos: Array<AddressedUtxo>,
   absSlotNumber: BigNumber,
-  protocolParams: {|
-    linearFee: LinearFee,
-    minimumUtxoVal: BigNum,
-    poolDeposit: BigNum,
-    keyDeposit: BigNum,
-    networkId: number,
-  |},
+  protocolParams: ProtocolParameters,
   auxiliaryData: AuxiliaryData | void,
 ): Promise<V4UnsignedTxAddressedUtxoResponse> => {
   const addressingMap = new Map<RawUtxo, AddressedUtxo>()
@@ -343,16 +352,7 @@ export const newAdaUnsignedTxFromUtxo = async (
   const emptyAsset = await MultiAsset.new()
   await shouldForceChange(undefined)
 
-  const txBuilder = await TransactionBuilder.new(
-    protocolParams.linearFee,
-    protocolParams.minimumUtxoVal,
-    protocolParams.poolDeposit,
-    protocolParams.keyDeposit,
-    // $FlowFixMe sketchy-null-number
-    protocolParams.maxValueBytes || MAX_VALUE_BYTES,
-    // $FlowFixMe sketchy-null-number
-    protocolParams.maxTxBytes || MAX_TX_BYTES,
-  )
+  const txBuilder = await txBuilderFactory(protocolParams)
   if (certificates.length > 0) {
     const certsNative = await Certificates.new()
     for (const cert of certificates) {
@@ -539,13 +539,7 @@ export const newAdaUnsignedTx = async (
   changeAdaAddr: void | {|...Address, ...Addressing|},
   allUtxos: Array<AddressedUtxo>,
   absSlotNumber: BigNumber,
-  protocolParams: {|
-    linearFee: LinearFee,
-    minimumUtxoVal: BigNum,
-    poolDeposit: BigNum,
-    keyDeposit: BigNum,
-    networkId: number,
-  |},
+  protocolParams: ProtocolParameters,
   certificates: $ReadOnlyArray<Certificate>,
   withdrawals: $ReadOnlyArray<{|
     address: RewardAddress,
@@ -608,7 +602,7 @@ async function minRequiredForChange(
   if (wasmChange == null) {
     throw new Error('transactions::minRequiredForChange: change not a valid Shelley address')
   }
-  const minimumAda = await min_ada_required(value, protocolParams.minimumUtxoVal)
+  const minimumAda = await min_ada_required(value, withoutDataHash, protocolParams.coinsPerUtxoWord)
   // we may have to increase the value used up to the minimum ADA required
   const baseValue = await (async () => {
     if ((await (await value.coin()).compare(minimumAda)) < 0) {

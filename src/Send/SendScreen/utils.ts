@@ -41,7 +41,8 @@ export const getMinAda = async (selectedToken: Token, defaultAsset: DefaultAsset
   )
   const minAmount = await min_ada_required(
     await cardanoValueFromMultiToken(fakeMultitoken),
-    await BigNum.from_str(networkConfig.MINIMUM_UTXO_VAL),
+    0,
+    await BigNum.from_str(networkConfig.COINS_PER_UTXO_WORD),
   )
   // if the user is sending a token, we need to make sure the resulting utxo
   // has at least the minimum amount of ADA in it

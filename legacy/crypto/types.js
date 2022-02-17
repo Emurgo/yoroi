@@ -3,9 +3,9 @@
 import type {WalletChecksum} from '@emurgo/cip4-js'
 import {
   Certificate as V4Certificate,
+  LinearFee,
   TransactionBuilder as V4TransactionBuilder,
 } from '@emurgo/react-native-haskell-shelley'
-import {LinearFee} from '@emurgo/react-native-haskell-shelley'
 import {BigNumber} from 'bignumber.js'
 
 import type {RawUtxo} from '../api/types'
@@ -162,10 +162,10 @@ export type PlateResponse = {|
 
 export type ProtocolParameters = {|
   +linearFee: LinearFee,
-  +minimumUtxoVal: BigNumber,
   +poolDeposit: BigNumber,
   +keyDeposit: BigNumber,
   +networkId: number,
+  +coinsPerUtxoWord: BigNumber,
   +maxValueBytes?: number,
   +maxTxBytes?: number,
 |}

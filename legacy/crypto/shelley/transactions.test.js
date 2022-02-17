@@ -32,7 +32,7 @@ import {NETWORKS} from '../../config/networks'
 import jestSetup from '../../jestSetup'
 import {AssetOverflowError, InsufficientFunds, NoOutputsError} from '../errors'
 import {MultiToken} from '../MultiToken'
-import type {Address, AddressedUtxo, Addressing} from '../types'
+import type {Address, AddressedUtxo, Addressing, ProtocolParameters} from '../types'
 import {newAdaUnsignedTx, newAdaUnsignedTxFromUtxo, sendAllUnsignedTxFromUtxo, signTransaction} from './transactions'
 import {byronAddrToHex, identifierToCardanoAsset} from './utils'
 
@@ -183,16 +183,10 @@ const genAddressedUtxos: (void) => Promise<Array<AddressedUtxo>> = async () => {
   })
 }
 
-const getProtocolParams: () => Promise<{|
-  linearFee: LinearFee,
-  minimumUtxoVal: BigNum,
-  poolDeposit: BigNum,
-  keyDeposit: BigNum,
-  networkId: number,
-|}> = async () => {
+const getProtocolParams: () => Promise<ProtocolParameters> = async () => {
   return {
     linearFee: await LinearFee.new(await BigNum.from_str('2'), await BigNum.from_str('500')),
-    minimumUtxoVal: await BigNum.from_str('1'),
+    coinsPerUtxoWord: await BigNum.from_str('34482'),
     poolDeposit: await BigNum.from_str('500'),
     keyDeposit: await BigNum.from_str('500'),
     networkId: NETWORK.NETWORK_ID,
@@ -319,7 +313,6 @@ describe('Create unsigned TX from UTXO', () => {
           {
             ...(await getProtocolParams()),
             // high enough that we can't send the remaining amount as change
-            minimumUtxoVal: BigNum.from_str('999100'),
           },
           [],
           [],
@@ -336,7 +329,6 @@ describe('Create unsigned TX from UTXO', () => {
           new BigNumber(0),
           {
             ...(await getProtocolParams()),
-            minimumUtxoVal: await BigNum.from_str('999000'),
           },
           [],
           [],
@@ -353,7 +345,6 @@ describe('Create unsigned TX from UTXO', () => {
           new BigNumber(0),
           {
             ...(await getProtocolParams()),
-            minimumUtxoVal: await BigNum.from_str('998500'),
           },
           [],
           [],
@@ -444,15 +435,12 @@ describe('Create unsigned TX from UTXO', () => {
       [utxos[0], utxos[1]],
       new BigNumber(0),
       {
+        ...(await getProtocolParams()),
         linearFee: await LinearFee.new(
           // make sure the 1st utxo is excluded since it's too small
           await BigNum.from_str(new BigNumber(utxos[0].amount).plus(1).toString()),
           await BigNum.from_str('500'),
         ),
-        minimumUtxoVal: await BigNum.from_str('1'),
-        poolDeposit: await BigNum.from_str('500'),
-        keyDeposit: await BigNum.from_str('500'),
-        networkId: NETWORK.NETWORK_ID,
       },
       [],
       [],
@@ -589,7 +577,6 @@ describe('Create unsigned TX from UTXO', () => {
         {
           ...(await getProtocolParams()),
           // high enough that we can't send the remaining amount as change
-          minimumUtxoVal: await BigNum.from_str('500000'),
         },
         [],
         [],
@@ -610,7 +597,6 @@ describe('Create unsigned TX from UTXO', () => {
         {
           ...(await getProtocolParams()),
           // high enough that we can't send the remaining amount as change
-          minimumUtxoVal: await BigNum.from_str('500000'),
         },
         undefined,
       ),
@@ -1016,6 +1002,7 @@ describe('Create signed transactions', () => {
       throw new Error('missing network id')
     }
 
+    // $FlowExpectedError
     const protocolParams = await getProtocolParams()
     const withdrawAmount = '1000000'
     const addressedUtxos = await genAddressedUtxos()

@@ -641,7 +641,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
           await BigNum.from_str(config.LINEAR_FEE.COEFFICIENT),
           await BigNum.from_str(config.LINEAR_FEE.CONSTANT),
         ),
-        minimumUtxoVal: await BigNum.from_str(config.MINIMUM_UTXO_VAL),
+        coinsPerUtxoWord: await BigNum.from_str(config.COINS_PER_UTXO_WORD),
         poolDeposit: await BigNum.from_str(config.POOL_DEPOSIT),
         networkId: config.NETWORK_ID,
       }

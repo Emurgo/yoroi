@@ -257,7 +257,7 @@ export const createDelegationTx = async (request: CreateDelegationTxRequest): Pr
         await BigNum.from_str(networkConfig.LINEAR_FEE.COEFFICIENT),
         await BigNum.from_str(networkConfig.LINEAR_FEE.CONSTANT),
       ),
-      minimumUtxoVal: await BigNum.from_str(networkConfig.MINIMUM_UTXO_VAL),
+      coinsPerUtxoWord: await BigNum.from_str(networkConfig.COINS_PER_UTXO_WORD),
       poolDeposit: await BigNum.from_str(networkConfig.POOL_DEPOSIT),
       networkId: networkConfig.NETWORK_ID,
     }
@@ -364,7 +364,7 @@ export const createWithdrawalTx = async (request: CreateWithdrawalTxRequest): Pr
         await BigNum.from_str(networkConfig.LINEAR_FEE.COEFFICIENT),
         await BigNum.from_str(networkConfig.LINEAR_FEE.CONSTANT),
       ),
-      minimumUtxoVal: await BigNum.from_str(networkConfig.MINIMUM_UTXO_VAL),
+      coinsPerUtxoWord: await BigNum.from_str(networkConfig.COINS_PER_UTXO_WORD),
       poolDeposit: await BigNum.from_str(networkConfig.POOL_DEPOSIT),
       networkId: networkConfig.NETWORK_ID,
     }

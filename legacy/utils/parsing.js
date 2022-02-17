@@ -3,8 +3,7 @@
 import {BigNumber} from 'bignumber.js'
 import ExtendableError from 'es6-error'
 
-import {CONFIG, getCardanoDefaultAsset} from '../config/config'
-import {isHaskellShelleyNetwork} from '../config/networks'
+import {getCardanoDefaultAsset} from '../config/config'
 import type {Token} from '../types/HistoryTransaction'
 
 export class InvalidAssetAmount extends ExtendableError {
@@ -14,7 +13,6 @@ export class InvalidAssetAmount extends ExtendableError {
     TOO_MANY_DECIMAL_PLACES: 'TOO_MANY_DECIMAL_PLACES',
     TOO_LARGE: 'TOO_LARGE',
     TOO_LOW: 'TOO_LOW',
-    LT_MIN_UTXO: 'LT_MIN_UTXO', // amount is less than min utxo value allowed
     NEGATIVE: 'NEGATIVE',
   }
 
@@ -46,14 +44,6 @@ export const parseAmountDecimal = (amount: string, token: Token): BigNumber => {
 
   if (maxSupply != null && value.gte(maxSupply)) {
     throw new InvalidAssetAmount(InvalidAssetAmount.ERROR_CODES.TOO_LARGE)
-  }
-
-  if (isHaskellShelleyNetwork(assetMeta.networkId) && assetMeta.isDefault) {
-    // ...this is ADA or tADA
-    const minValue = CONFIG.NETWORKS.HASKELL_SHELLEY.MINIMUM_UTXO_VAL
-    if (value.lt(minValue)) {
-      throw new InvalidAssetAmount(InvalidAssetAmount.ERROR_CODES.LT_MIN_UTXO)
-    }
   }
 
   if (value.lt(1)) {
