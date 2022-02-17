@@ -3,7 +3,7 @@ import {storiesOf} from '@storybook/react-native'
 import BigNumber from 'bignumber.js'
 import React from 'react'
 
-import {mockWallet, tokenEntries} from '../../../storybook/mockWallet'
+import {mockWallet, tokenEntries} from '../../../storybook'
 import {SelectedWalletProvider} from '../../SelectedWallet'
 import type {Params} from './ConfirmScreen'
 import {ConfirmScreen} from './ConfirmScreen'

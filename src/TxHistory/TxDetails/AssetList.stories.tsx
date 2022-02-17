@@ -5,7 +5,7 @@ import {QueryClient, QueryClientProvider} from 'react-query'
 
 import sendStyle from '../../../legacy/components/Common/MultiAsset/styles/AssetListSend.style'
 import baseStyle from '../../../legacy/components/Common/MultiAsset/styles/Base.style'
-import {mockWallet, tokenEntries} from '../../../storybook/mockWallet'
+import {mockWallet, tokenEntries} from '../../../storybook'
 import {SelectedWalletProvider} from '../../SelectedWallet'
 import {AssetList} from './AssetList'
 

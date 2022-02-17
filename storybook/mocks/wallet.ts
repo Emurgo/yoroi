@@ -1,8 +1,8 @@
 import BigNumber from 'bignumber.js'
 
-import type {WalletInterface, StakePoolInfosAndHistories, TokenMetadata} from '../src/types'
-import type {TokenEntry} from '../src/types/cardano'
-import {RemotePoolMetaSuccess} from '../legacy/selectors'
+import {RemotePoolMetaSuccess} from '../../legacy/selectors'
+import {StakePoolInfosAndHistories, TokenMetadata, WalletInterface} from '../../src/types'
+import {TokenEntry} from '../../src/types/cardano'
 
 export const mockWallet: WalletInterface = {
   id: 'wallet-id',

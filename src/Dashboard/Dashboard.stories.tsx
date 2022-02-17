@@ -1,11 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {QueryClient, QueryClientProvider} from 'react-query'
 import {Provider} from 'react-redux'
 
 import getConfiguredStore from '../../legacy/helpers/configureStore'
-import {mockWallet, poolInfoAndHistory, stakePoolId} from '../../storybook/mockWallet'
+import {mockWallet, poolInfoAndHistory, stakePoolId} from '../../storybook'
 import {SelectedWalletProvider} from '../SelectedWallet'
 import {StakePoolInfosAndHistories, WalletInterface} from '../types'
 import {Dashboard} from './Dashboard'

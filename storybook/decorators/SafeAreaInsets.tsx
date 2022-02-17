@@ -1,13 +1,10 @@
-/* eslint-disable react-native/no-inline-styles */
-// @flow
-
 import React from 'react'
-import {View, Text} from 'react-native'
+import {View, Text, ViewStyle} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 type Side = 'top' | 'left' | 'right' | 'bottom'
 
-export const SafeAreaInsets = ({sides, children}: {sides: Array<Side>, children: React$Node}) => (
+export const SafeAreaInsets = ({sides, children}: {sides: Array<Side>; children: React.ReactNode}) => (
   <>
     {children}
 
@@ -18,7 +15,7 @@ export const SafeAreaInsets = ({sides, children}: {sides: Array<Side>, children:
   </>
 )
 
-const safeAreaStyle = {
+const safeAreaStyle: ViewStyle = {
   alignItems: 'center',
   justifyContent: 'center',
   position: 'absolute',
