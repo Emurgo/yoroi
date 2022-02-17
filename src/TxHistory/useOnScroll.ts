@@ -23,9 +23,13 @@ export const useOnScroll = ({onScrollUp, onScrollDown}) => {
     if (scrollDown) {
       onScrollDown(event)
     }
+  }
+
+  const onMomentumScrollEnd = (event) => {
+    const {nativeEvent} = event
 
     scrollOffset.current = nativeEvent.contentOffset.y
   }
 
-  return onScroll
+  return {onScroll, onMomentumScrollEnd}
 }
