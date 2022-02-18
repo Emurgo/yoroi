@@ -101,8 +101,8 @@ export const TxHistory = () => {
               />
             )}
             <TxHistoryList
-              onScrollUp={() => setExpanded(false)}
-              onScrollDown={() => setExpanded(true)}
+              onScrollUp={() => setExpanded(true)}
+              onScrollDown={() => setExpanded(false)}
               refreshing={isSyncing}
               onRefresh={() => dispatch(updateHistory())}
             />
@@ -110,8 +110,8 @@ export const TxHistory = () => {
 
           <TabPanel active={activeTab === 'assets'}>
             <AssetList
-              onScrollUp={() => setExpanded(false)}
-              onScrollDown={() => setExpanded(true)}
+              onScrollUp={() => setExpanded(true)}
+              onScrollDown={() => setExpanded(false)}
               refreshing={isSyncing}
               onRefresh={() => dispatch(updateHistory())}
             />
