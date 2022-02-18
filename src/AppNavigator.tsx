@@ -32,7 +32,7 @@ import {FirstRunNavigator} from './FirstRun/FirstRunNavigator'
 import {CustomPinLogin} from './Login'
 import StorybookScreen from './StorybookScreen'
 import {WalletInitNavigator} from './WalletInit/WalletInitNavigator'
-import WalletNavigator from './WalletNavigator'
+import {WalletNavigator} from './WalletNavigator'
 
 const IS_STORYBOOK = env.getBoolean('IS_STORYBOOK', false)
 

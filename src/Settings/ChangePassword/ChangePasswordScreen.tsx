@@ -5,11 +5,12 @@ import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {MutationOptions, useMutation} from 'react-query'
 
-import {Button, Spacer, TextInput} from '../../../legacy/components/UiKit'
+import {Button, TextInput} from '../../../legacy/components/UiKit'
 import {Checkmark} from '../../../legacy/components/UiKit/TextInput'
 import {errorMessages} from '../../../legacy/i18n/global-messages'
 import {COLORS} from '../../../legacy/styles/config'
 import {REQUIRED_PASSWORD_LENGTH, validatePassword} from '../../../legacy/utils/validators'
+import {Spacer} from '../../components'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {WalletInterface} from '../../types'
 

@@ -10,11 +10,12 @@ import type {WithdrawalDialogSteps} from '../../../../legacy/components/Delegati
 import {WITHDRAWAL_DIALOG_STEPS} from '../../../../legacy/components/Delegation/types'
 import LedgerConnect from '../../../../legacy/components/Ledger/LedgerConnect'
 import {LedgerTransportSwitch} from '../../../../legacy/components/Ledger/LedgerTransportSwitchModal'
-import {Modal, Spacer} from '../../../../legacy/components/UiKit'
+import {Modal} from '../../../../legacy/components/UiKit'
 import {PleaseWaitView} from '../../../../legacy/components/UiKit/PleaseWaitModal'
 import {MultiToken} from '../../../../legacy/crypto/MultiToken'
 import globalMessages, {ledgerMessages} from '../../../../legacy/i18n/global-messages'
 import {theme} from '../../../../legacy/styles/config'
+import {Spacer} from '../../../components'
 import {TransferSummary} from './TransferSummary'
 
 export type Withdrawal = {

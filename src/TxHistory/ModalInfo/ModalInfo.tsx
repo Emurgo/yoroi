@@ -2,9 +2,9 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet} from 'react-native'
 
-import {Modal, Spacer} from '../../../legacy/components/UiKit'
+import {Modal} from '../../../legacy/components/UiKit'
 import {COLORS} from '../../../legacy/styles/config'
-import {Icon} from '../../components'
+import {Icon, Spacer} from '../../components'
 
 type Props = {
   visible: boolean

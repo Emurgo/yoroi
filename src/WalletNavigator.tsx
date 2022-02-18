@@ -146,7 +146,7 @@ type WalletStackRoute = {
 /* eslint-enable @typescript-eslint/no-explicit-any */
 
 const Stack = createStackNavigator<WalletStackRoute>()
-const WalletNavigator = () => (
+export const WalletNavigator = () => (
   <Stack.Navigator initialRouteName={'wallet-selection'} screenOptions={{headerShown: false}}>
     <Stack.Screen name={'wallet-selection'} component={WalletSelectionScreen} />
     <Stack.Screen name={'main-wallet-routes'} component={WalletTabNavigator} />
@@ -154,8 +154,6 @@ const WalletNavigator = () => (
     <Stack.Screen name={'catalyst-router'} component={CatalystNavigator} options={defaultNavigationOptions} />
   </Stack.Navigator>
 )
-
-export default WalletNavigator
 
 const messages = defineMessages({
   transactionsButton: {

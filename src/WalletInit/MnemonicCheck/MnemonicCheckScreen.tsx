@@ -7,7 +7,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch} from 'react-redux'
 
 import {createWallet} from '../../../legacy/actions'
-import {Button, Spacer, StatusBar, Text} from '../../../legacy/components/UiKit'
+import {Button, StatusBar, Text} from '../../../legacy/components/UiKit'
 import type {NetworkId, WalletImplementationId, YoroiProvider} from '../../../legacy/config/types'
 import type {WalletInterface} from '../../../legacy/crypto/WalletInterface'
 import {useParams} from '../../../legacy/navigation'
@@ -16,6 +16,7 @@ import type {WalletMeta} from '../../../legacy/state'
 import {COLORS} from '../../../legacy/styles/config'
 import assert from '../../../legacy/utils/assert'
 import {ignoreConcurrentAsyncHandler} from '../../../legacy/utils/utils'
+import {Spacer} from '../../components'
 import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
 
 export type Params = {

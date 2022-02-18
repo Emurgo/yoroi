@@ -9,7 +9,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useSelector} from 'react-redux'
 
 import UtxoAutoRefresher from '../../../legacy/components/Send/UtxoAutoRefresher'
-import {Button, Checkbox, Spacer, StatusBar, Text, TextInput} from '../../../legacy/components/UiKit'
+import {Button, Checkbox, StatusBar, Text, TextInput} from '../../../legacy/components/UiKit'
 import {CONFIG, UI_V2} from '../../../legacy/config/config'
 import {MultiToken} from '../../../legacy/crypto/MultiToken'
 import type {CreateUnsignedTxResponse} from '../../../legacy/crypto/shelley/transactionUtils'
@@ -32,6 +32,7 @@ import type {
   AmountValidationErrors,
   BalanceValidationErrors,
 } from '../../../legacy/utils/validators'
+import {Spacer} from '../../components'
 import {useTokenInfo} from '../../hooks'
 import {useSelectedWallet} from '../../SelectedWallet'
 import type {TokenEntry} from '../../types/cardano'
