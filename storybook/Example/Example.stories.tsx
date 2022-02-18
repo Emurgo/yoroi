@@ -1,12 +1,14 @@
-// @flow
-
 import React from 'react'
 import {storiesOf} from '@storybook/react-native'
 
-import {LayoutGrid, SafeAreaInsets} from '../../storybook'
-import Example from './Example'
-import {StackNavigation, TabNavigation} from '../navigation'
-import {NavigationRouteContext} from '@react-navigation/native'
+import {
+  LayoutGrid,
+  RouteProvider,
+  SafeAreaInsets,
+  StackNavigationProvider,
+  TabNavigationProvider,
+} from '../../storybook'
+import {Example} from './Example'
 
 storiesOf('Example', module)
   .add('Default', () => <Example />)
@@ -21,23 +23,17 @@ storiesOf('Example', module)
     </SafeAreaInsets>
   ))
   .add('with Stack Navigation', () => (
-    <StackNavigation>
+    <StackNavigationProvider>
       <Example />
-    </StackNavigation>
+    </StackNavigationProvider>
   ))
   .add('with Tab Navigation', () => (
-    <TabNavigation>
+    <TabNavigationProvider>
       <Example />
-    </TabNavigation>
+    </TabNavigationProvider>
   ))
   .add('with Route Params', () => (
-    <NavigationRouteContext.Provider
-      value={{
-        key: 'key',
-        name: 'name',
-        params: {address: 'Good bye'},
-      }}
-    >
+    <RouteProvider params={{address: 'Good bye'}}>
       <Example />
-    </NavigationRouteContext.Provider>
+    </RouteProvider>
   ))

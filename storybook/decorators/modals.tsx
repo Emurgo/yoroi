@@ -1,15 +1,15 @@
-// @flow
-
 import {action} from '@storybook/addon-actions'
-import type {Node} from 'react'
+
 import React from 'react'
 import {Button, View} from 'react-native'
 
-export const WithModalProps = ({
-  children,
-}: {
-  children: ({|visible: boolean, onRequestClose: () => any, onPress: () => any|}) => Node,
-}) => {
+type childrenFn = (modalProps: {
+  visible: boolean
+  onRequestClose: () => void
+  onPress: typeof action
+}) => React.ReactNode
+
+export const WithModalProps = ({children}: {children: childrenFn}) => {
   const [visible, setVisible] = React.useState(false) // weird behavior when starting with visible: true
 
   React.useEffect(() => {
@@ -17,7 +17,6 @@ export const WithModalProps = ({
   }, [])
 
   return (
-    // eslint-disable-next-line react-native/no-inline-styles
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
       <Button onPress={() => setVisible(true)} title={'show modal'} />
 

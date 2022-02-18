@@ -1,15 +1,12 @@
-/* eslint-disable react-native/no-inline-styles */
-// @flow
-
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-export const LayoutGrid = ({children}: {children: React$Node}) => {
+export const LayoutGrid = ({children}: {children: React.ReactNode}) => {
   return (
     <>
       {children}
 
-      <View style={{...StyleSheet.absoluteFill, flexDirection: 'row'}}>
+      <View style={[StyleSheet.absoluteFill, {flexDirection: 'row'}]}>
         <Margin />
 
         <Column />

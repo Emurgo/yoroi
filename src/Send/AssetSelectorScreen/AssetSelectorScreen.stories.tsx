@@ -2,7 +2,7 @@ import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {mockWallet, tokenEntries} from '../../../storybook/mockWallet'
+import {mockWallet, tokenEntries} from '../../../storybook'
 import {SelectedWalletProvider} from '../../SelectedWallet'
 import {AssetSelectorScreen} from './AssetSelectorScreen'
 
