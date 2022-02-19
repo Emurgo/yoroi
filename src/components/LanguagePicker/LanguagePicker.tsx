@@ -1,29 +1,78 @@
-// @flow
-
 import React from 'react'
-import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
-import {FlatList, View} from 'react-native'
+import {defineMessages, IntlShape, useIntl} from 'react-intl'
+import {FlatList, StyleSheet, View} from 'react-native'
 import Markdown from 'react-native-easy-markdown'
 
-import brazilianFlagIcon from '../../assets/img/flags/brazilian.png'
-import chineseFlagIcon from '../../assets/img/flags/chinese.png'
-import czechFlagIcon from '../../assets/img/flags/czech.png'
-import dutchFlagIcon from '../../assets/img/flags/dutch.png'
-import englishFlagIcon from '../../assets/img/flags/english.png'
-import frenchFlagIcon from '../../assets/img/flags/french.png'
-import germanFlagIcon from '../../assets/img/flags/german.png'
-import hungarianFlagIcon from '../../assets/img/flags/hungarian.png'
-import indonesianFlagIcon from '../../assets/img/flags/indonesian.png'
-import italianFlagIcon from '../../assets/img/flags/italian.png'
-import japaneseFlagIcon from '../../assets/img/flags/japanese.png'
-import koreanFlagIcon from '../../assets/img/flags/korean.png'
-import russianFlagIcon from '../../assets/img/flags/russian.png'
-import slovakFlagIcon from '../../assets/img/flags/slovak.png'
-import spanishFlagIcon from '../../assets/img/flags/spanish.png'
-import {LANGUAGES} from '../../i18n/languages'
-import {Button, StatusBar} from '../UiKit'
-import LanguageListItem from './LanguageListItem'
-import styles from './styles/LanguagePicker.style'
+import {Button, StatusBar} from '../../../legacy/components/UiKit'
+import {LANGUAGES} from '../../../legacy/i18n/languages'
+import * as Flags from './flags'
+import {LanguageListItem} from './LanguageListItem'
+
+type Props = {
+  changeLanguage: (string) => void
+  handleContinue: () => void
+  languageCode: string
+}
+
+export const LanguagePicker = ({changeLanguage, languageCode, handleContinue}: Props) => {
+  const intl = useIntl()
+
+  return (
+    <View style={styles.container}>
+      <StatusBar type="light" />
+
+      <FlatList
+        style={styles.list}
+        contentContainerStyle={styles.listContainer}
+        data={supportedLanguages(intl)}
+        keyExtractor={({code}) => code}
+        extraData={languageCode}
+        renderItem={({item: {label, code, icon}}) => (
+          <LanguageListItem
+            label={label}
+            iconSource={icon}
+            selectLanguage={changeLanguage}
+            isSelected={languageCode === code}
+            languageCode={code}
+          />
+        )}
+      />
+
+      {languageCode !== 'en-US' && languageCode !== 'ja-JP' && (
+        <View style={styles.ackBlock}>
+          {intl.formatMessage(messages.contributors) !== '_' ? (
+            <Markdown>
+              {`${intl.formatMessage(messages.acknowledgement)}: **${intl.formatMessage(messages.contributors)}**`}
+            </Markdown>
+          ) : (
+            <Markdown>{`${intl.formatMessage(messages.acknowledgement)}.`}</Markdown>
+          )}
+        </View>
+      )}
+
+      <Button onPress={handleContinue} title={intl.formatMessage(messages.continueButton)} testID="chooseLangButton" />
+    </View>
+  )
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  list: {
+    flex: 1,
+  },
+  listContainer: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  ackBlock: {
+    marginTop: 16,
+    marginHorizontal: 16,
+    marginBottom: 40,
+  },
+})
 
 const messages = defineMessages({
   english: {
@@ -102,136 +151,88 @@ const messages = defineMessages({
   },
 })
 
-const supportedLanguages = (intl) => {
+const supportedLanguages = (intl: IntlShape) => {
   return [
     {
       label: intl.formatMessage(messages.english),
       code: LANGUAGES.ENGLISH,
-      icon: englishFlagIcon,
+      icon: Flags.English,
     },
     {
       label: intl.formatMessage(messages.japanese),
       code: LANGUAGES.JAPANESE,
-      icon: japaneseFlagIcon,
+      icon: Flags.Japanese,
     },
     {
       label: intl.formatMessage(messages.korean),
       code: LANGUAGES.KOREAN,
-      icon: koreanFlagIcon,
+      icon: Flags.Korean,
     },
     {
       label: intl.formatMessage(messages.russian),
       code: LANGUAGES.RUSSIAN,
-      icon: russianFlagIcon,
+      icon: Flags.Russian,
     },
     {
       label: intl.formatMessage(messages.spanish),
       code: LANGUAGES.SPANISH,
-      icon: spanishFlagIcon,
+      icon: Flags.Spanish,
     },
     {
       label: intl.formatMessage(messages.chinese),
       code: LANGUAGES.CHINESE_SIMPLIFIED,
-      icon: chineseFlagIcon,
+      icon: Flags.Chinese,
     },
     {
       label: intl.formatMessage(messages.indonesian),
       code: LANGUAGES.INDONESIAN,
-      icon: indonesianFlagIcon,
+      icon: Flags.Indonesian,
     },
     {
       label: intl.formatMessage(messages.brazilian),
       code: LANGUAGES.BRAZILIAN,
-      icon: brazilianFlagIcon,
+      icon: Flags.Brazilian,
     },
     {
       label: intl.formatMessage(messages.german),
       code: LANGUAGES.GERMAN,
-      icon: germanFlagIcon,
+      icon: Flags.German,
     },
     {
       label: intl.formatMessage(messages.french),
       code: LANGUAGES.FRENCH,
-      icon: frenchFlagIcon,
+      icon: Flags.French,
     },
     {
       label: intl.formatMessage(messages.italian),
       code: LANGUAGES.ITALIAN,
-      icon: italianFlagIcon,
+      icon: Flags.Italian,
     },
     {
       label: intl.formatMessage(messages.dutch),
       code: LANGUAGES.DUTCH,
-      icon: dutchFlagIcon,
+      icon: Flags.Dutch,
     },
     {
       label: intl.formatMessage(messages.czech),
       code: LANGUAGES.CZECH,
-      icon: czechFlagIcon,
+      icon: Flags.Czech,
     },
     {
       label: intl.formatMessage(messages.hungarian),
       code: LANGUAGES.HUNGARIAN,
-      icon: hungarianFlagIcon,
+      icon: Flags.Hungarian,
     },
     {
       label: intl.formatMessage(messages.slovak),
       code: LANGUAGES.SLOVAK,
-      icon: slovakFlagIcon,
+      icon: Flags.Slovak,
     },
     // TODO: Add back when chinese traditional is available
     // {
     //   label: languages.chineseTraditional,
     //   code: LANGUAGES.CHINESE_TRADITIONAL,
-    //   icon: chineseFlagIcon,
+    //   icon: Flags.Chinese,
     // },
   ]
 }
-
-type Props = {
-  changeLanguage: (string) => any,
-  handleContinue: () => mixed,
-  languageCode: string,
-  intl: IntlShape,
-}
-
-export const LanguagePicker = ({changeLanguage, languageCode, handleContinue, intl}: Props) => {
-  return (
-    <View style={styles.container}>
-      <StatusBar type="light" />
-
-      <FlatList
-        style={styles.list}
-        contentContainerStyle={styles.listContainer}
-        data={supportedLanguages(intl)}
-        keyExtractor={({code}) => code}
-        extraData={languageCode}
-        renderItem={({item: {label, code, icon}}) => (
-          <LanguageListItem
-            label={label}
-            iconSource={icon}
-            selectLanguage={changeLanguage}
-            isSelected={languageCode === code}
-            languageCode={code}
-          />
-        )}
-      />
-
-      {languageCode !== 'en-US' && languageCode !== 'ja-JP' && (
-        <View style={styles.ackBlock}>
-          {intl.formatMessage(messages.contributors) !== '_' ? (
-            <Markdown>
-              {`${intl.formatMessage(messages.acknowledgement)}: **${intl.formatMessage(messages.contributors)}**`}
-            </Markdown>
-          ) : (
-            <Markdown>{`${intl.formatMessage(messages.acknowledgement)}.`}</Markdown>
-          )}
-        </View>
-      )}
-
-      <Button onPress={handleContinue} title={intl.formatMessage(messages.continueButton)} testID="chooseLangButton" />
-    </View>
-  )
-}
-
-export default injectIntl(LanguagePicker)
