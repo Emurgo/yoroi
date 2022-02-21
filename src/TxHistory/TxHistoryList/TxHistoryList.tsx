@@ -39,7 +39,7 @@ export const TxHistoryList = ({onScrollUp, onScrollDown, ...props}: Props) => {
       )}
       <SectionList
         {...props}
-        onScroll={onScroll}
+        {...onScroll}
         ListEmptyComponent={<EmptyHistory />}
         renderItem={({item}) => <TxHistoryListItem transaction={item} />}
         renderSectionHeader={({section: {data}}) => <DayHeader ts={data[0].submittedAt} />}

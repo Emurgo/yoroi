@@ -55,7 +55,7 @@ export const AssetList = ({onScrollUp, onScrollDown, ...props}: Props) => {
 
       <FlatList
         {...props}
-        onScroll={onScroll}
+        {...onScroll}
         data={orderedTokens}
         renderItem={({item: assetToken}) => (
           <Boundary fallbackProps={{size: 'small'}}>
