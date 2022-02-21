@@ -8,7 +8,7 @@ import {useDispatch, useSelector} from 'react-redux'
 import {showErrorDialog} from '../../legacy/actions'
 import {generateVotingTransaction} from '../../legacy/actions/voting'
 import ErrorModal from '../../legacy/components/Common/ErrorModal'
-import {Button, OfflineBanner, ProgressStep, Spacer, TextInput} from '../../legacy/components/UiKit'
+import {Button, OfflineBanner, ProgressStep, TextInput} from '../../legacy/components/UiKit'
 import {CONFIG} from '../../legacy/config/config'
 import {WrongPassword} from '../../legacy/crypto/errors'
 import KeyStore from '../../legacy/crypto/KeyStore'
@@ -16,6 +16,7 @@ import walletManager, {SystemAuthDisabled} from '../../legacy/crypto/walletManag
 import {confirmationMessages, errorMessages, txLabels} from '../../legacy/i18n/global-messages'
 import {CATALYST_ROUTES, WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
 import {easyConfirmationSelector, isHWSelector} from '../../legacy/selectors'
+import {Spacer} from '../components'
 import {Actions, Description, Title} from './components'
 
 type ErrorData = {

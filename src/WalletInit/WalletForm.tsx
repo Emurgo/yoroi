@@ -3,7 +3,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, Spacer, TextInput} from '../../legacy/components/UiKit'
+import {Button, TextInput} from '../../legacy/components/UiKit'
 import {Checkmark} from '../../legacy/components/UiKit/TextInput'
 import {CONFIG} from '../../legacy/config/config'
 import globalMessages from '../../legacy/i18n/global-messages'
@@ -14,6 +14,7 @@ import {
   validatePassword,
   validateWalletName,
 } from '../../legacy/utils/validators'
+import {Spacer} from '../components'
 import {useWalletNames} from '../hooks'
 
 type Props = {

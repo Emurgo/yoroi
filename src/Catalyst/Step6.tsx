@@ -17,11 +17,12 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useSelector} from 'react-redux'
 
 import copyImage from '../../legacy/assets/img/copyd.png'
-import {Button, ProgressStep, Spacer, Text} from '../../legacy/components/UiKit'
+import {Button, ProgressStep, Text} from '../../legacy/components/UiKit'
 import {confirmationMessages} from '../../legacy/i18n/global-messages'
 import {WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
 import {encryptedKeySelector} from '../../legacy/selectors'
 import {COLORS} from '../../legacy/styles/config'
+import {Spacer} from '../components'
 import {CatalystBackupCheckModal} from './CatalystBackupCheckModal'
 import {Actions, Description, Title} from './components'
 

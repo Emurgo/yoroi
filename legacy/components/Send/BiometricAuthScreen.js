@@ -8,6 +8,8 @@ import {Alert, AppState, Platform} from 'react-native'
 import {withHandlers, withStateHandlers} from 'recompose'
 import {compose} from 'redux'
 
+// $FlowExpectedError
+import {Spacer} from '../../../src/components'
 import {showErrorDialog} from '../../actions'
 import KeyStore, {CredentialsNotFound} from '../../crypto/KeyStore'
 import {canBiometricEncryptionBeEnabled, recreateAppSignInKeys} from '../../helpers/deviceSettings'
@@ -16,7 +18,7 @@ import type {Navigation} from '../../types/navigation'
 import {Logger} from '../../utils/logging'
 import {onWillUnmount} from '../../utils/renderUtils'
 import FingerprintScreenBase from '../Common/FingerprintScreenBase'
-import {Button, Spacer} from '../UiKit'
+import {Button} from '../UiKit'
 import styles from './styles/BiometricAuthScreen.style'
 
 const errorMessages = defineMessages({
