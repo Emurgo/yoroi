@@ -4,18 +4,16 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, View} from 'react-native'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useMutation, UseMutationOptions} from 'react-query'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {updateWallets} from '../../../legacy/actions'
 import {Button, Checkbox, StatusBar, Text, TextInput} from '../../../legacy/components/UiKit'
 import {Checkmark} from '../../../legacy/components/UiKit/TextInput'
-import walletManager from '../../../legacy/crypto/walletManager'
 import {WALLET_ROOT_ROUTES} from '../../../legacy/RoutesList'
 import {isHWSelector} from '../../../legacy/selectors'
 import {COLORS} from '../../../legacy/styles/config'
 import {Spacer} from '../../components'
-import {useWalletName} from '../../hooks'
+import {useRemoveWallet, useWalletName} from '../../hooks'
 import {useSelectedWallet} from '../../SelectedWallet'
 
 export const RemoveWalletScreen = () => {
@@ -25,8 +23,10 @@ export const RemoveWalletScreen = () => {
   const isHW = useSelector(isHWSelector)
 
   const navigation = useNavigation()
+  const dispatch = useDispatch()
   const {removeWallet, isLoading} = useRemoveWallet({
     onMutate: () => navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION),
+    onSuccess: () => dispatch(updateWallets()),
   })
 
   const [hasMnemonicWrittenDown, setHasMnemonicWrittenDown] = React.useState(false)
@@ -137,22 +137,6 @@ const useStrings = () => {
     walletNameMismatchError: intl.formatMessage(messages.walletNameMismatchError),
     remove: intl.formatMessage(messages.remove),
     hasWrittenDownMnemonic: intl.formatMessage(messages.hasWrittenDownMnemonic),
-  }
-}
-
-const useRemoveWallet = (options: UseMutationOptions<void, Error, void>) => {
-  const dispatch = useDispatch()
-  const {mutate, ...mutation} = useMutation({
-    mutationFn: () => walletManager.removeCurrentWallet(),
-    ...options,
-  })
-
-  return {
-    removeWallet: React.useCallback(
-      () => mutate(undefined, {onSuccess: () => dispatch(updateWallets())}),
-      [dispatch, mutate],
-    ),
-    ...mutation,
   }
 }
 

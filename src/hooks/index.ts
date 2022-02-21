@@ -151,7 +151,7 @@ export const fetchTokenInfo = async ({wallet, tokenId}: {wallet: WalletInterface
 // WALLET MANAGER
 export const useWalletNames = () => {
   const query = useQuery<Array<string>, Error>({
-    queryKey: 'walletNames',
+    queryKey: ['walletNames'],
     queryFn: async () => {
       const walletMetas = await walletManager.listWallets()
 
@@ -173,4 +173,22 @@ export const useWalletMetas = () => {
   })
 
   return query.data
+}
+
+export const useRemoveWallet = (mutationOptions: UseMutationOptions<void, Error, void>) => {
+  const queryClient = useQueryClient()
+  const {onSuccess, ...options} = mutationOptions || {}
+  const mutation = useMutation({
+    mutationFn: () => walletManager.removeCurrentWallet(),
+    onSuccess: (...args) => {
+      queryClient.invalidateQueries('walletMetas')
+      onSuccess?.(...args)
+    },
+    ...options,
+  })
+
+  return {
+    removeWallet: mutation.mutate,
+    ...mutation,
+  }
 }
