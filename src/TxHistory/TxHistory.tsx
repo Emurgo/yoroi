@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {LayoutAnimation, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
+import {LayoutAnimation, StyleSheet, TouchableOpacity, View} from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'
 import {useDispatch, useSelector} from 'react-redux'
 
@@ -23,6 +23,7 @@ import {useSelectedWallet} from '../SelectedWallet'
 import {ActionsBanner} from './ActionsBanner'
 import {AssetList} from './AssetList'
 import {BalanceBanner} from './BalanceBanner'
+import {CollapsibleHeader} from './CollapsibleHeader'
 import {SyncErrorBanner} from './SyncErrorBanner'
 import {TxHistoryList} from './TxHistoryList'
 import {WarningBanner} from './WarningBanner'
@@ -47,14 +48,6 @@ export const TxHistory = () => {
   }, [dispatch])
 
   const [expanded, setExpanded] = useState(true)
-  const onScrollUp = () => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-    setExpanded(false)
-  }
-  const onScrollDown = () => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-    setExpanded(true)
-  }
 
   const [activeTab, setActiveTab] = useState<Tab>('transactions')
   const onSelectTab = (tab: Tab) => {
@@ -108,8 +101,8 @@ export const TxHistory = () => {
               />
             )}
             <TxHistoryList
-              onScrollUp={onScrollUp}
-              onScrollDown={onScrollDown}
+              onScrollUp={() => setExpanded(true)}
+              onScrollDown={() => setExpanded(false)}
               refreshing={isSyncing}
               onRefresh={() => dispatch(updateHistory())}
             />
@@ -117,8 +110,8 @@ export const TxHistory = () => {
 
           <TabPanel active={activeTab === 'assets'}>
             <AssetList
-              onScrollUp={onScrollUp}
-              onScrollDown={onScrollDown}
+              onScrollUp={() => setExpanded(true)}
+              onScrollDown={() => setExpanded(false)}
               refreshing={isSyncing}
               onRefresh={() => dispatch(updateHistory())}
             />
@@ -128,12 +121,6 @@ export const TxHistory = () => {
     </SafeAreaView>
   )
 }
-
-const CollapsibleHeader = ({expanded, children}: {expanded: boolean} & ViewProps) => (
-  <View style={{overflow: 'hidden'}}>
-    <View style={!expanded && {position: 'absolute', width: '100%'}}>{children}</View>
-  </View>
-)
 
 const Tabs: React.FC = ({children}) => <View style={styles.tabs}>{children}</View>
 const Tab = ({onPress, active, label}: {onPress: () => void; active: boolean; label: string}) => (
