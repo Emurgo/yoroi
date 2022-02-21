@@ -1,4 +1,5 @@
 export * from './Boundary'
 export * from './Icon'
+export * from './LanguagePicker'
 export * from './ScrollableView'
 export * from './Spacer'
