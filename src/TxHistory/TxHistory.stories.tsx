@@ -5,30 +5,21 @@ import React from 'react'
 import {defaultStackNavigatorOptions} from '../../legacy/navigationOptions'
 import {COLORS} from '../../legacy/styles/config'
 import {MockAppStateWrapper, mockV2NavigatorOptions} from '../../legacy/utils/mocks'
+import {mockWallet} from '../../storybook'
 import {SelectedWalletProvider} from '../SelectedWallet'
-import {WalletInterface} from '../types'
 import {TxHistory as TxHistoryScreen} from './TxHistory'
-
-const wallet = {
-  walletImplementationId: 'haskell-shelley',
-  networkId: 300,
-  checksum: {
-    ImagePart: '123123',
-    TextPart: '123123',
-  },
-} as WalletInterface
 
 storiesOf('V2/TxHistory', module)
   .add('default', () => {
     return (
-      <SelectedWalletProvider wallet={wallet}>
+      <SelectedWalletProvider wallet={mockWallet}>
         <TxHistoryScreen />
       </SelectedWalletProvider>
     )
   })
   .add('byron', () => {
     return (
-      <SelectedWalletProvider wallet={{...wallet, walletImplementationId: 'haskell-byron'}}>
+      <SelectedWalletProvider wallet={{...mockWallet, walletImplementationId: 'haskell-byron'}}>
         <TxHistoryScreen />
       </SelectedWalletProvider>
     )

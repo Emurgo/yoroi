@@ -81,12 +81,18 @@ export const TxHistory = () => {
 
         <Tabs>
           <Tab
-            onPress={() => onSelectTab('transactions')}
+            onPress={() => {
+              setExpanded(true)
+              onSelectTab('transactions')
+            }}
             label={strings.transactions}
             active={activeTab === 'transactions'}
           />
           <Tab //
-            onPress={() => onSelectTab('assets')}
+            onPress={() => {
+              setExpanded(true)
+              onSelectTab('assets')
+            }}
             label={strings.assets}
             active={activeTab === 'assets'}
           />
