@@ -1,24 +1,21 @@
 import {useNavigation, useRoute} from '@react-navigation/native'
-import React, {useEffect, useState} from 'react'
+import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-// TODO: in the future, prefer SafeAreaView from react-native-safe-area-context,
-// current version however doesn't work well on iOS
-import {FlatList, SafeAreaView, ScrollView, View} from 'react-native'
+import {FlatList, ScrollView, View} from 'react-native'
 import {StyleSheet} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch} from 'react-redux'
 
-import {createWalletWithBip44Account, handleGeneralError} from '../../../legacy/actions'
+import {handleGeneralError, updateWallets} from '../../../legacy/actions'
 import {Line, StatusBar, Text} from '../../../legacy/components/UiKit'
 import {CONFIG} from '../../../legacy/config/config'
 import type {NetworkId} from '../../../legacy/config/types'
-import {generateShelleyPlateFromKey} from '../../../legacy/crypto/shelley/plate'
 import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../../legacy/RoutesList'
 import {WalletMeta} from '../../../legacy/state'
 import {theme} from '../../../legacy/styles/config'
-import assert from '../../../legacy/utils/assert'
 import {Logger} from '../../../legacy/utils/logging'
-import {ignoreConcurrentAsyncHandler} from '../../../legacy/utils/utils'
-import {Icon} from '../../components'
+import {Boundary, Icon} from '../../components'
+import {useCreateBip44Wallet, usePlate} from '../../hooks'
 import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
 import {WalletAddress} from '../WalletAddress'
 import {WalletNameForm} from '../WalletNameForm'
@@ -29,15 +26,7 @@ export const SaveReadOnlyWalletScreen = () => {
   const navigation = useNavigation()
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const route: any = useRoute()
-  const [isWaiting, setIsWaiting] = React.useState(false)
   const dispatch = useDispatch()
-  const [plate, setPlate] = useState({
-    accountPlate: {
-      ImagePart: '',
-      TextPart: '',
-    },
-    addresses: [],
-  })
 
   const {publicKeyHex, path, networkId, walletImplementationId} = route.params
 
@@ -48,99 +37,63 @@ export const SaveReadOnlyWalletScreen = () => {
     return i
   })
 
-  const withActivityIndicator = async (func: () => Promise<void>): Promise<void> => {
-    setIsWaiting(true)
-    try {
-      await func()
-    } finally {
-      setIsWaiting(false)
-    }
-  }
-
   const setSelectedWalletMeta = useSetSelectedWalletMeta()
   const setSelectedWallet = useSetSelectedWallet()
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const onSubmit = React.useCallback(
-    ignoreConcurrentAsyncHandler(
-      () =>
-        async ({name}) => {
-          try {
-            assert.assert(publicKeyHex != null, 'SaveReadOnlyWalletScreen::onPress publicKeyHex')
-            assert.assert(networkId != null, 'networkId')
-            assert.assert(!!walletImplementationId, 'walletImplementationId')
+  const {createWallet, isLoading} = useCreateBip44Wallet({
+    onError: async (error) => {
+      Logger.error('SaveReadOnlyWalletScreen::onSubmit', error)
+      if (error instanceof Error) {
+        await handleGeneralError(error.message, error, intl)
+      }
 
-            withActivityIndicator(async () => {
-              const wallet = await dispatch(
-                createWalletWithBip44Account(
-                  name,
-                  publicKeyHex,
-                  networkId,
-                  walletImplementationId,
-                  null,
-                  true, // important: read-only flag
-                ),
-              )
+      throw error
+    },
+    onSuccess: (wallet, {name}) => {
+      dispatch(updateWallets())
 
-              const walletMeta: WalletMeta = {
-                name,
+      const walletMeta: WalletMeta = {
+        name,
 
-                id: wallet.id,
-                networkId: wallet.networkId,
-                walletImplementationId: wallet.walletImplementationId,
-                isHW: wallet.isHW,
-                checksum: wallet.checksum,
-                isEasyConfirmationEnabled: wallet.isEasyConfirmationEnabled,
-                provider: wallet.provider,
-              }
-              setSelectedWalletMeta(walletMeta)
-              setSelectedWallet(wallet)
-            })
+        id: wallet.id,
+        networkId: wallet.networkId,
+        walletImplementationId: wallet.walletImplementationId,
+        isHW: wallet.isHW,
+        checksum: wallet.checksum,
+        isEasyConfirmationEnabled: wallet.isEasyConfirmationEnabled,
+        provider: wallet.provider,
+      }
+      setSelectedWalletMeta(walletMeta)
+      setSelectedWallet(wallet)
 
-            navigation.navigate(ROOT_ROUTES.WALLET, {
-              screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES,
-            })
-          } catch (e) {
-            setIsWaiting(false)
-            Logger.error('SaveReadOnlyWalletScreen::onSubmit', e)
-            if (e instanceof Error) {
-              await handleGeneralError(e.message, e, intl)
-            }
+      navigation.navigate(ROOT_ROUTES.WALLET, {screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES})
+    },
+  })
 
-            throw e
-          }
-        },
-      1000,
-    )(),
-    [publicKeyHex, networkId, walletImplementationId, navigation, route],
-  )
-
-  useEffect(() => {
-    const generatePlates = async () => {
-      const {addresses, accountPlate} = await generateShelleyPlateFromKey(publicKeyHex, 1, networkId)
-      setPlate({addresses, accountPlate})
-    }
-
-    generatePlates()
-  }, [networkId, publicKeyHex])
+  const onSubmit = ({name}) => {
+    createWallet({
+      name,
+      networkId,
+      implementationId: walletImplementationId,
+      bip44AccountPublic: publicKeyHex,
+      readOnly: true,
+    })
+  }
 
   return (
-    <SafeAreaView style={styles.container} testID="saveReadOnlyWalletContainer">
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container} testID="saveReadOnlyWalletContainer">
       <StatusBar type="dark" />
       <WalletNameForm
         onSubmit={onSubmit}
         defaultWalletName={strings.defaultWalletName}
         containerStyle={styles.walletFormStyle}
         bottomContent={
-          <WalletInfoView
-            plate={plate}
-            normalizedPath={normalizedPath}
-            publicKeyHex={publicKeyHex}
-            networkId={networkId}
-          />
+          <Boundary>
+            <WalletInfoView normalizedPath={normalizedPath} publicKeyHex={publicKeyHex} networkId={networkId} />
+          </Boundary>
         }
         buttonStyle={styles.walletFormButtonStyle}
-        isWaiting={isWaiting}
+        isWaiting={isLoading}
       />
     </SafeAreaView>
   )
@@ -206,7 +159,7 @@ const messages = defineMessages({
   },
   checksumLabel: {
     id: 'components.walletinit.verifyrestoredwallet.checksumLabel',
-    defaultMessage: '!!!Chacksum label',
+    defaultMessage: '!!!Checksum label',
   },
   walletAddressLabel: {
     id: 'components.walletinit.verifyrestoredwallet.walletAddressLabel',
@@ -242,20 +195,14 @@ const CheckSumView = ({icon, checksum}: {icon: string; checksum: string}) => (
 )
 
 type WalletInfoProps = {
-  plate: {
-    accountPlate: {
-      ImagePart: string
-      TextPart: string
-    }
-    addresses: Array<string>
-  }
   normalizedPath: Array<number>
   publicKeyHex: string
   networkId: NetworkId
 }
 
-const WalletInfoView = ({plate, normalizedPath, publicKeyHex, networkId}: WalletInfoProps) => {
+const WalletInfoView = ({normalizedPath, publicKeyHex, networkId}: WalletInfoProps) => {
   const strings = useStrings()
+  const plate = usePlate({networkId, publicKeyHex})
 
   return (
     <View style={styles.walletInfoContainer}>

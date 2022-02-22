@@ -1,5 +1,6 @@
 import {useMutation, UseMutationOptions, useQueries, useQuery, useQueryClient, UseQueryOptions} from 'react-query'
 
+import {generateShelleyPlateFromKey} from '../../legacy/crypto/shelley/plate'
 import walletManager from '../../legacy/crypto/walletManager'
 import {WalletMeta} from '../../legacy/state'
 import {WalletInterface} from '../types'
@@ -148,6 +149,16 @@ export const fetchTokenInfo = async ({wallet, tokenId}: {wallet: WalletInterface
   }
 }
 
+export const usePlate = ({networkId, publicKeyHex}: {networkId: string; publicKeyHex: string}) => {
+  const query = useQuery({
+    suspense: true,
+    queryKey: ['plate', networkId, publicKeyHex],
+    queryFn: () => generateShelleyPlateFromKey(publicKeyHex, 1, networkId),
+  })
+
+  return query.data
+}
+
 // WALLET MANAGER
 export const useWalletNames = () => {
   const query = useQuery<Array<string>, Error>({
@@ -189,6 +200,38 @@ export const useRemoveWallet = (mutationOptions: UseMutationOptions<void, Error,
 
   return {
     removeWallet: mutation.mutate,
+    ...mutation,
+  }
+}
+
+type CreateWalletOptions = {
+  name: string
+  bip44AccountPublic: string
+  networkId: number
+  implementationId: string
+  hwDeviceInfo?: Record<string, unknown>
+  readOnly: boolean
+}
+
+export const useCreateBip44Wallet = (
+  mutationOptions?: UseMutationOptions<WalletInterface, Error, CreateWalletOptions>,
+) => {
+  const mutation = useMutation<WalletInterface, Error, CreateWalletOptions>(
+    ({name, bip44AccountPublic, networkId, implementationId, hwDeviceInfo, readOnly}) => {
+      return walletManager.createWalletWithBip44Account(
+        name,
+        bip44AccountPublic,
+        networkId,
+        implementationId,
+        hwDeviceInfo,
+        readOnly,
+      )
+    },
+    mutationOptions,
+  )
+
+  return {
+    createWallet: mutation.mutate,
     ...mutation,
   }
 }
