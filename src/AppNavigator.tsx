@@ -29,7 +29,7 @@ import type {State} from '../legacy/state'
 import {Boundary} from './components'
 import {CustomPinScreen} from './FirstRun/CustomPinScreen'
 import {FirstRunNavigator} from './FirstRun/FirstRunNavigator'
-import {CustomPinLogin} from './Login'
+import {CustomPinLoginScreen} from './Login'
 import StorybookScreen from './StorybookScreen'
 import {WalletInitNavigator} from './WalletInit/WalletInitNavigator'
 import {WalletNavigator} from './WalletNavigator'
@@ -120,7 +120,11 @@ const NavigatorSwitch = () => {
         })}
       >
         {!isSystemAuthEnabled && (
-          <Stack.Screen name={'custom-pin-auth'} component={CustomPinLogin} options={{title: strings.loginPinTitle}} />
+          <Stack.Screen
+            name={'custom-pin-auth'}
+            component={CustomPinLoginScreen}
+            options={{title: strings.loginPinTitle}}
+          />
         )}
         {isSystemAuthEnabled && canEnableBiometrics && (
           <Stack.Screen

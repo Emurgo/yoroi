@@ -1,18 +1,18 @@
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet, View} from 'react-native'
+import {StyleSheet} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {showErrorDialog, signin} from '../../legacy/actions'
-import PinInput from '../../legacy/components/Common/PinInput'
 import {StatusBar} from '../../legacy/components/UiKit'
 import {CONFIG} from '../../legacy/config/config'
 import {authenticateByCustomPin} from '../../legacy/crypto/customPin'
 import {errorMessages} from '../../legacy/i18n/global-messages'
 import {customPinHashSelector} from '../../legacy/selectors'
-import {COLORS} from '../../legacy/styles/config'
+import {PinInput} from '../components'
 
-export const CustomPinLogin = () => {
+export const CustomPinLoginScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
   const dispatch = useDispatch()
@@ -33,7 +33,7 @@ export const CustomPinLogin = () => {
   }
 
   return (
-    <View style={styles.root}>
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
       <StatusBar type="dark" />
 
       <PinInput
@@ -45,14 +45,13 @@ export const CustomPinLogin = () => {
         }}
         onPinEnter={onPinEnter}
       />
-    </View>
+    </SafeAreaView>
   )
 }
 
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: COLORS.WHITE,
   },
 })
 

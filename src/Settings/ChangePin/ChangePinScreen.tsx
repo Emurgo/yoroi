@@ -1,11 +1,10 @@
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {View} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {encryptAndStoreCustomPin, showErrorDialog} from '../../../legacy/actions'
-import PinInput from '../../../legacy/components/Common/PinInput'
 import styles from '../../../legacy/components/Settings/styles/ChangeCustomPinScreen.style'
 import {StatusBar} from '../../../legacy/components/UiKit'
 import {CONFIG} from '../../../legacy/config/config'
@@ -13,6 +12,7 @@ import {authenticateByCustomPin} from '../../../legacy/crypto/customPin'
 import {errorMessages} from '../../../legacy/i18n/global-messages'
 import {customPinHashSelector} from '../../../legacy/selectors'
 import {PinRegistrationForm} from '../../auth'
+import {PinInput} from '../../components'
 
 export const ChangePinScreen = () => {
   const intl = useIntl()
@@ -50,7 +50,7 @@ export const ChangePinScreen = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
       <StatusBar type="dark" />
 
       {isCurrentPinVerified ? (
@@ -76,7 +76,7 @@ export const ChangePinScreen = () => {
           pinMaxLength={CONFIG.PIN_LENGTH}
         />
       )}
-    </View>
+    </SafeAreaView>
   )
 }
 
