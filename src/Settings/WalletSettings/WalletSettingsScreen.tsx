@@ -16,7 +16,7 @@ import walletManager from '../../../legacy/crypto/walletManager'
 import {confirmationMessages} from '../../../legacy/i18n/global-messages'
 import {SETTINGS_ROUTES, WALLET_ROOT_ROUTES} from '../../../legacy/RoutesList'
 import {easyConfirmationSelector, isSystemAuthEnabledSelector} from '../../../legacy/selectors'
-import {useWalletName} from '../../hooks'
+import {useCloseWallet, useWalletName} from '../../hooks'
 import {useSelectedWallet, useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
 import {
   NavigatedSettingsItem,
@@ -228,18 +228,6 @@ const useLogout = (options?: UseMutationOptions<void, Error>) => {
       }
     },
     ...mutation,
-  }
-}
-
-const useCloseWallet = (options?: UseMutationOptions<void, Error>) => {
-  const mutation = useMutation({
-    mutationFn: () => walletManager.closeWallet(),
-    ...options,
-  })
-
-  return {
-    ...mutation,
-    closeWallet: () => mutation.mutate(),
   }
 }
 

@@ -20,6 +20,7 @@ import iconHistoryActive from './assets/img/icon/txhistory-active.png'
 import {CatalystNavigator} from './Catalyst'
 import {Icon} from './components'
 import {DashboardNavigator} from './Dashboard'
+import {MenuNavigator} from './Menu'
 import {ReceiveScreenNavigator} from './Receive'
 import {useSelectedWallet, WalletSelectionScreen} from './SelectedWallet'
 import {SendScreenNavigator} from './Send'
@@ -34,6 +35,7 @@ type WalletTabRoutes = {
   'receive-ada': any
   'staking-dashboard': any
   'staking-center': any
+  menu: undefined
 }
 /* eslint-enable @typescript-eslint/no-explicit-any */
 
@@ -132,6 +134,17 @@ const WalletTabNavigator = () => {
           }}
         />
       )}
+
+      {UI_V2 && (
+        <Tab.Screen
+          name={'menu'}
+          component={MenuNavigator}
+          options={{
+            tabBarIcon: ({focused}) => <Icon.Menu size={20} color={focused ? '#17d1aa' : '#A7AFC0'} />,
+            tabBarLabel: strings.menuTabBarLabel,
+          }}
+        />
+      )}
     </Tab.Navigator>
   )
 }
@@ -184,6 +197,10 @@ const messages = defineMessages({
     id: 'global.staking',
     defaultMessage: '!!!Staking',
   },
+  menuButton: {
+    id: 'menu',
+    defaultMessage: '!!!Menu',
+  },
 })
 
 const useStrings = () => {
@@ -196,5 +213,6 @@ const useStrings = () => {
     receiveTabBarLabel: intl.formatMessage(messages.receiveButton),
     delegateTabBarLabel: intl.formatMessage(messages.delegateButton),
     walletTabBarLabel: intl.formatMessage(messages.walletButton),
+    menuTabBarLabel: intl.formatMessage(messages.menuButton),
   }
 }

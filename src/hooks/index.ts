@@ -7,6 +7,18 @@ import {WalletInterface} from '../types'
 import {Token} from '../types/cardano'
 
 // WALLET
+export const useCloseWallet = (options?: UseMutationOptions<void, Error>) => {
+  const mutation = useMutation({
+    mutationFn: () => walletManager.closeWallet(),
+    ...options,
+  })
+
+  return {
+    ...mutation,
+    closeWallet: mutation.mutate,
+  }
+}
+
 export const useWalletName = (wallet: WalletInterface, options?: UseQueryOptions<string, Error>) => {
   const query = useQuery({
     queryKey: [wallet.id, 'name'],
