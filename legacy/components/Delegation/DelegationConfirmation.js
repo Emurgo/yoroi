@@ -13,7 +13,7 @@ import {compose} from 'redux'
 
 import {showErrorDialog, submitSignedTx, submitTransaction} from '../../actions'
 import {setLedgerDeviceId, setLedgerDeviceObj} from '../../actions/hwWallet'
-import {CONFIG} from '../../config/config'
+import {CONFIG, UI_V2} from '../../config/config'
 import {WrongPassword} from '../../crypto/errors'
 import {ISignRequest} from '../../crypto/ISignRequest'
 import KeyStore from '../../crypto/KeyStore'
@@ -23,7 +23,13 @@ import walletManager, {SystemAuthDisabled} from '../../crypto/walletManager'
 import globalMessages, {errorMessages, txLabels} from '../../i18n/global-messages'
 import LocalizableError from '../../i18n/LocalizableError'
 import {useParams} from '../../navigation'
-import {SEND_ROUTES, STAKING_CENTER_ROUTES, WALLET_ROOT_ROUTES, WALLET_ROUTES} from '../../RoutesList'
+import {
+  SEND_ROUTES,
+  STAKING_CENTER_ROUTES,
+  STAKING_DASHBOARD_ROUTES,
+  WALLET_ROOT_ROUTES,
+  WALLET_ROUTES,
+} from '../../RoutesList'
 import {
   defaultNetworkAssetSelector,
   easyConfirmationSelector,
@@ -103,6 +109,15 @@ const handleOnConfirm = async (
           routes: [{name: STAKING_CENTER_ROUTES.MAIN}],
         }),
       )
+      if (UI_V2) {
+        navigation.dispatch(
+          CommonActions.reset({
+            key: null,
+            index: 0,
+            routes: [{name: STAKING_DASHBOARD_ROUTES.MAIN}],
+          }),
+        )
+      }
       navigation.navigate(WALLET_ROUTES.TX_HISTORY)
     } finally {
       setSendingTransaction(false)

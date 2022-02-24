@@ -124,7 +124,7 @@ const WalletTabNavigator = () => {
         />
       )}
 
-      {isHaskellShelley(wallet.walletImplementationId) && !wallet.isReadOnly && (
+      {!UI_V2 && isHaskellShelley(wallet.walletImplementationId) && !wallet.isReadOnly && (
         <Tab.Screen
           name={'staking-center'}
           component={StakingCenterNavigator}
