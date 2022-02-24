@@ -1,7 +1,6 @@
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View} from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, TextInput} from '../../legacy/components/UiKit'
 import {Checkmark} from '../../legacy/components/UiKit/TextInput'
@@ -48,11 +47,12 @@ export const WalletForm = ({onSubmit}: Props) => {
     : undefined
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
+    <View style={styles.safeAreaView}>
       <ScrollView
         keyboardShouldPersistTaps={'always'}
         contentContainerStyle={styles.scrollContentContainer}
         testID={'credentialsView'}
+        bounces={false}
       >
         <WalletNameInput
           enablesReturnKeyAutomatically
@@ -112,7 +112,7 @@ export const WalletForm = ({onSubmit}: Props) => {
           testID="walletFormContinueButton"
         />
       </Actions>
-    </SafeAreaView>
+    </View>
   )
 }
 
@@ -127,7 +127,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContentContainer: {
-    flex: 1,
     paddingHorizontal: 16,
     paddingTop: 40,
   },

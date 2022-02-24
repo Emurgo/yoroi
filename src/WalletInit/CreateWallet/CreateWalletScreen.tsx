@@ -1,7 +1,7 @@
 import {useNavigation, useRoute} from '@react-navigation/native'
 import React from 'react'
+import {SafeAreaView} from 'react-native-safe-area-context'
 
-import Screen from '../../../legacy/components/Screen'
 import {generateAdaMnemonic} from '../../../legacy/crypto/commonUtils'
 import {WALLET_INIT_ROUTES} from '../../../legacy/RoutesList'
 import {MnemonicExplanationModal} from '../MnemonicExplanationModal'
@@ -43,13 +43,13 @@ export const CreateWalletScreen = () => {
   }
 
   return (
-    <Screen>
+    <SafeAreaView style={{flex: 1}} edges={['left', 'right', 'bottom']}>
       <WalletForm onSubmit={setFormData} />
       <MnemonicExplanationModal
         visible={visibleMnemonicExplanation}
         onRequestClose={hideMnemonicExplanation}
         onConfirm={navigateToMnemonicScreen}
       />
-    </Screen>
+    </SafeAreaView>
   )
 }

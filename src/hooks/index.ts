@@ -216,7 +216,7 @@ export const useRemoveWallet = (mutationOptions: UseMutationOptions<void, Error,
   }
 }
 
-type CreateWalletOptions = {
+type CreateBip44WalletInfo = {
   name: string
   bip44AccountPublic: string
   networkId: number
@@ -226,20 +226,48 @@ type CreateWalletOptions = {
 }
 
 export const useCreateBip44Wallet = (
-  mutationOptions?: UseMutationOptions<WalletInterface, Error, CreateWalletOptions>,
+  mutationOptions?: UseMutationOptions<WalletInterface, Error, CreateBip44WalletInfo>,
 ) => {
-  const mutation = useMutation<WalletInterface, Error, CreateWalletOptions>(
-    ({name, bip44AccountPublic, networkId, implementationId, hwDeviceInfo, readOnly}) => {
-      return walletManager.createWalletWithBip44Account(
+  const mutation = useMutation<WalletInterface, Error, CreateBip44WalletInfo>(
+    ({name, bip44AccountPublic, networkId, implementationId, hwDeviceInfo, readOnly}) =>
+      walletManager.createWalletWithBip44Account(
         name,
         bip44AccountPublic,
         networkId,
         implementationId,
         hwDeviceInfo,
         readOnly,
-      )
-    },
+      ),
     mutationOptions,
+  )
+
+  return {
+    createWallet: mutation.mutate,
+    ...mutation,
+  }
+}
+
+export type CreateWalletInfo = {
+  name: string
+  mnemonicPhrase: string
+  password: string
+  networkId: number
+  walletImplementationId: string
+  provider?: string
+}
+
+export const useCreateWallet = (mutationOptions?: UseMutationOptions<WalletInterface, Error, CreateWalletInfo>) => {
+  const queryClient = useQueryClient()
+  const mutation = useMutation(
+    ({name, mnemonicPhrase, password, networkId, walletImplementationId, provider}) =>
+      walletManager.createWallet(name, mnemonicPhrase, password, networkId, walletImplementationId, provider),
+    {
+      ...mutationOptions,
+      onSuccess: (...args) => {
+        queryClient.invalidateQueries(['walletMetas'])
+        mutationOptions?.onSuccess?.(...args)
+      },
+    },
   )
 
   return {
