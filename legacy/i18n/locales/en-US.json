@@ -1,4 +1,9 @@
 {
+  "menu": "Menu",
+  "menu.allWallets": "All Wallets",
+  "menu.catalystVoting": "Catalyst Voting",
+  "menu.settings": "Settings",
+  "menu.faq": "FAQ",
   "components.common.errormodal.hideError": "Hide error message",
   "components.common.errormodal.showError": "Show error message",
   "components.common.fingerprintscreenbase.welcomeMessage": "Welcome Back",

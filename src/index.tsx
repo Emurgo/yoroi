@@ -27,7 +27,8 @@ bluebird.config({
   https://github.com/facebook/react-native/issues/19490
   https://github.com/facebook/react-native/issues/17972
 */
-global.Promise = bluebird
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+global.Promise = bluebird as any
 
 const cache = createIntlCache()
 const intl = createIntl({locale: 'en-US', messages: translations['en-US']}, cache)
