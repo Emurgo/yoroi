@@ -4,11 +4,10 @@ import {useIntl} from 'react-intl'
 import {View} from 'react-native'
 
 import {showErrorDialog} from '../../../legacy/actions'
-import type {PinInputLabels} from '../../../legacy/components/Common/PinInput'
-import PinInput from '../../../legacy/components/Common/PinInput'
 import styles from '../../../legacy/components/Common/styles/PinRegistrationForm.style'
 import {CONFIG} from '../../../legacy/config/config'
 import {errorMessages} from '../../../legacy/i18n/global-messages'
+import {PinInput, PinInputLabels} from '../../components/'
 
 type PinRegistrationFormLabels = {
   PinInput: PinInputLabels

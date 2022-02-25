@@ -1,1 +1,1 @@
-export * from './CustomPinLogin'
+export * from './CustomPinLoginScreen'
