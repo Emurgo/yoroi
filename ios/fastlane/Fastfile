@@ -29,7 +29,7 @@ platform :ios do
           verbose: true,
           git_url: "git@github.com:Emurgo/yoroi-certs.git")
 
-    increment_build_number(xcodeproj: "emurgo.xcodeproj")
+    # increment_build_number(xcodeproj: "emurgo.xcodeproj")
     build_app(workspace: "emurgo.xcworkspace", scheme: "emurgo-staging")
     upload_to_testflight(skip_submission: true, skip_waiting_for_build_processing: true)
   end
@@ -43,7 +43,7 @@ platform :ios do
           verbose: true,
           git_url: "git@github.com:Emurgo/yoroi-certs.git")
 
-    increment_build_number(xcodeproj: "emurgo.xcodeproj")
+    # increment_build_number(xcodeproj: "emurgo.xcodeproj")
     build_app(workspace: "emurgo.xcworkspace", scheme: "emurgo-nightly")
     upload_to_testflight(skip_submission: true, skip_waiting_for_build_processing: true)
   end
@@ -57,7 +57,7 @@ platform :ios do
           verbose: true,
           git_url: "git@github.com:Emurgo/yoroi-certs.git")
 
-    increment_build_number(xcodeproj: "emurgo.xcodeproj")
+    # increment_build_number(xcodeproj: "emurgo.xcodeproj")
     build_app(workspace: "emurgo.xcworkspace", scheme: "emurgo")
     upload_to_testflight(skip_submission: true, skip_waiting_for_build_processing: true)
   end
