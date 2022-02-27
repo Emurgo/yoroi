@@ -13,11 +13,11 @@ function loadStories() {
 	require('../legacy/components/Ledger/LedgerConnect.stories');
 	require('../legacy/components/Ledger/LedgerTransportSwitchModal.stories');
 	require('../legacy/components/MaintenanceScreen.stories');
-	require('../legacy/components/Send/BiometricAuthScreen.stories');
 	require('../legacy/components/UiKit/Button.stories');
 	require('../legacy/components/UiKit/Checkbox.stories');
 	require('../legacy/components/UiKit/Link.stories');
 	require('../legacy/components/UiKit/TextInput.stories');
+	require('../src/BiometricAuth/BiometricAuthScreen.stories');
 	require('../src/Catalyst/Catalyst.stories');
 	require('../src/Catalyst/VotingBanner.stories');
 	require('../src/Dashboard/Dashboard.stories');
@@ -91,11 +91,11 @@ const stories = [
 	'../legacy/components/Ledger/LedgerConnect.stories',
 	'../legacy/components/Ledger/LedgerTransportSwitchModal.stories',
 	'../legacy/components/MaintenanceScreen.stories',
-	'../legacy/components/Send/BiometricAuthScreen.stories',
 	'../legacy/components/UiKit/Button.stories',
 	'../legacy/components/UiKit/Checkbox.stories',
 	'../legacy/components/UiKit/Link.stories',
 	'../legacy/components/UiKit/TextInput.stories',
+	'../src/BiometricAuth/BiometricAuthScreen.stories',
 	'../src/Catalyst/Catalyst.stories',
 	'../src/Catalyst/VotingBanner.stories',
 	'../src/Dashboard/Dashboard.stories',

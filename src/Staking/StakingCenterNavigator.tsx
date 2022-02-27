@@ -4,9 +4,9 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
 import DelegationConfirmation from '../../legacy/components/Delegation/DelegationConfirmation'
-import BiometricAuthScreen from '../../legacy/components/Send/BiometricAuthScreen'
 import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../legacy/navigationOptions'
 import {SEND_ROUTES, STAKING_CENTER_ROUTES, WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
+import {BiometricAuthScreen} from '../BiometricAuth'
 import {SettingsButton} from '../components/Button'
 import {StakingCenter} from './StakingCenter/StakingCenter'
 
