@@ -1,4 +1,12 @@
-import {useMutation, UseMutationOptions, useQueries, useQuery, useQueryClient, UseQueryOptions} from 'react-query'
+import {
+  QueryKey,
+  useMutation,
+  UseMutationOptions,
+  useQueries,
+  useQuery,
+  useQueryClient,
+  UseQueryOptions,
+} from 'react-query'
 
 import {generateShelleyPlateFromKey} from '../../legacy/crypto/shelley/plate'
 import walletManager from '../../legacy/crypto/walletManager'
@@ -36,16 +44,10 @@ export const useWalletName = (wallet: WalletInterface, options?: UseQueryOptions
 }
 
 export const useChangeWalletName = (wallet: WalletInterface, options: UseMutationOptions<void, Error, string> = {}) => {
-  const queryClient = useQueryClient()
-  const {onSuccess, ...rest} = options
-  const mutation = useMutation<void, Error, string>({
+  const mutation = useMutationWithInvalidations<void, Error, string>({
     mutationFn: (newName) => walletManager.rename(newName),
-    onSuccess: (...args) => {
-      onSuccess?.(...args)
-      queryClient.invalidateQueries([wallet.id, 'name'])
-      queryClient.invalidateQueries(['walletMetas'])
-    },
-    ...rest,
+    invalidateQueries: [[wallet.id, 'name'], ['walletMetas']],
+    ...options,
   })
 
   return {
@@ -198,15 +200,10 @@ export const useWalletMetas = () => {
   return query.data
 }
 
-export const useRemoveWallet = (mutationOptions: UseMutationOptions<void, Error, void>) => {
-  const queryClient = useQueryClient()
-  const {onSuccess, ...options} = mutationOptions || {}
-  const mutation = useMutation({
+export const useRemoveWallet = (options: UseMutationOptions<void, Error, void>) => {
+  const mutation = useMutationWithInvalidations({
     mutationFn: () => walletManager.removeCurrentWallet(),
-    onSuccess: (...args) => {
-      queryClient.invalidateQueries('walletMetas')
-      onSuccess?.(...args)
-    },
+    invalidateQueries: [['walletMetas']],
     ...options,
   })
 
@@ -225,11 +222,9 @@ type CreateBip44WalletInfo = {
   readOnly: boolean
 }
 
-export const useCreateBip44Wallet = (
-  mutationOptions?: UseMutationOptions<WalletInterface, Error, CreateBip44WalletInfo>,
-) => {
-  const mutation = useMutation<WalletInterface, Error, CreateBip44WalletInfo>(
-    ({name, bip44AccountPublic, networkId, implementationId, hwDeviceInfo, readOnly}) =>
+export const useCreateBip44Wallet = (options?: UseMutationOptions<WalletInterface, Error, CreateBip44WalletInfo>) => {
+  const mutation = useMutationWithInvalidations<WalletInterface, Error, CreateBip44WalletInfo>({
+    mutationFn: ({name, bip44AccountPublic, networkId, implementationId, hwDeviceInfo, readOnly}) =>
       walletManager.createWalletWithBip44Account(
         name,
         bip44AccountPublic,
@@ -238,8 +233,9 @@ export const useCreateBip44Wallet = (
         hwDeviceInfo,
         readOnly,
       ),
-    mutationOptions,
-  )
+    invalidateQueries: [['walletMetas']],
+    ...options,
+  })
 
   return {
     createWallet: mutation.mutate,
@@ -256,22 +252,35 @@ export type CreateWalletInfo = {
   provider?: string
 }
 
-export const useCreateWallet = (mutationOptions?: UseMutationOptions<WalletInterface, Error, CreateWalletInfo>) => {
-  const queryClient = useQueryClient()
-  const mutation = useMutation(
-    ({name, mnemonicPhrase, password, networkId, walletImplementationId, provider}) =>
+export const useCreateWallet = (options?: UseMutationOptions<WalletInterface, Error, CreateWalletInfo>) => {
+  const mutation = useMutationWithInvalidations({
+    mutationFn: ({name, mnemonicPhrase, password, networkId, walletImplementationId, provider}) =>
       walletManager.createWallet(name, mnemonicPhrase, password, networkId, walletImplementationId, provider),
-    {
-      ...mutationOptions,
-      onSuccess: (...args) => {
-        queryClient.invalidateQueries(['walletMetas'])
-        mutationOptions?.onSuccess?.(...args)
-      },
-    },
-  )
+    invalidateQueries: [['walletMetas']],
+    ...options,
+  })
 
   return {
     createWallet: mutation.mutate,
     ...mutation,
   }
+}
+
+export const useMutationWithInvalidations = <TData = unknown, TError = unknown, TVariables = void, TContext = unknown>({
+  invalidateQueries,
+  ...options
+}: UseMutationOptions<TData, TError, TVariables, TContext> & {invalidateQueries?: Array<QueryKey>} = {}) => {
+  const queryClient = useQueryClient()
+
+  return useMutation<TData, TError, TVariables, TContext>({
+    ...options,
+    onMutate: (variables) => {
+      invalidateQueries?.forEach((key) => queryClient.cancelQueries(key))
+      return options?.onMutate?.(variables)
+    },
+    onSuccess: (data, variables, context) => {
+      invalidateQueries?.forEach((key) => queryClient.invalidateQueries(key))
+      return options?.onSuccess?.(data, variables, context)
+    },
+  })
 }
