@@ -6,7 +6,6 @@
 function loadStories() {
 	require('../legacy/components/Common/DangerousActionModal.stories');
 	require('../legacy/components/Common/ErrorModal.stories');
-	require('../legacy/components/Common/FingerprinScreenBase.stories');
 	require('../legacy/components/Delegation/FlawedWalletScreen.stories');
 	require('../legacy/components/Ledger/DeviceItem/DeviceItem.stories');
 	require('../legacy/components/Ledger/LedgerConnect.stories');
@@ -17,6 +16,7 @@ function loadStories() {
 	require('../legacy/components/UiKit/Link.stories');
 	require('../legacy/components/UiKit/TextInput.stories');
 	require('../src/BiometricAuth/BiometricAuthScreen.stories');
+	require('../src/BiometricAuth/FingerprintScreenBase/FingerprintScreenBase.stories');
 	require('../src/Catalyst/Catalyst.stories');
 	require('../src/Catalyst/VotingBanner.stories');
 	require('../src/Dashboard/Dashboard.stories');
@@ -85,7 +85,6 @@ function loadStories() {
 const stories = [
 	'../legacy/components/Common/DangerousActionModal.stories',
 	'../legacy/components/Common/ErrorModal.stories',
-	'../legacy/components/Common/FingerprinScreenBase.stories',
 	'../legacy/components/Delegation/FlawedWalletScreen.stories',
 	'../legacy/components/Ledger/DeviceItem/DeviceItem.stories',
 	'../legacy/components/Ledger/LedgerConnect.stories',
@@ -96,6 +95,7 @@ const stories = [
 	'../legacy/components/UiKit/Link.stories',
 	'../legacy/components/UiKit/TextInput.stories',
 	'../src/BiometricAuth/BiometricAuthScreen.stories',
+	'../src/BiometricAuth/FingerprintScreenBase/FingerprintScreenBase.stories',
 	'../src/Catalyst/Catalyst.stories',
 	'../src/Catalyst/VotingBanner.stories',
 	'../src/Dashboard/Dashboard.stories',

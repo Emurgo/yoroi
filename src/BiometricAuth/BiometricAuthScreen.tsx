@@ -5,13 +5,13 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Alert, AppState, Platform, StyleSheet} from 'react-native'
 
 import {showErrorDialog} from '../../legacy/actions'
-import FingerprintScreenBase from '../../legacy/components/Common/FingerprintScreenBase'
 import {Button} from '../../legacy/components/UiKit'
 import KeyStore, {CredentialsNotFound} from '../../legacy/crypto/KeyStore'
 import {canBiometricEncryptionBeEnabled, recreateAppSignInKeys} from '../../legacy/helpers/deviceSettings'
 import {errorMessages as globalErrorMessages} from '../../legacy/i18n/global-messages'
 import {Logger} from '../../legacy/utils/logging'
 import {Spacer} from '../components'
+import {FingerprintScreenBase} from './FingerprintScreenBase'
 
 export const BiometricAuthScreen = () => {
   const intl = useIntl()
@@ -93,7 +93,6 @@ export const BiometricAuthScreen = () => {
       ]}
       error={error}
       addWelcomeMessage={route.params?.addWelcomeMessage === true}
-      intl={intl}
     />
   )
 }

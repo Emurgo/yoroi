@@ -1,11 +1,9 @@
-// @flow
-
 import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {Button} from '../UiKit'
-import FingerprintScreenBase from './FingerprintScreenBase'
+import {Button} from '../../../legacy/components/UiKit'
+import {FingerprintScreenBase} from './FingerprintScreenBase'
 
 storiesOf('FingerprintScreenBase', module)
   .add('Default', () => <FingerprintScreenBase headings={['heading1', 'heading2']} buttons={[]} />)
