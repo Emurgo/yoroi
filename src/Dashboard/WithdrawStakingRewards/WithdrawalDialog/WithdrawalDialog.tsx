@@ -4,7 +4,6 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet} from 'react-native'
 import Markdown from 'react-native-easy-markdown'
 
-import {DangerousAction} from '../../../../legacy/components/Common/DangerousActionModal'
 import {ErrorView} from '../../../../legacy/components/Common/ErrorModal'
 import type {WithdrawalDialogSteps} from '../../../../legacy/components/Delegation/types'
 import {WITHDRAWAL_DIALOG_STEPS} from '../../../../legacy/components/Delegation/types'
@@ -15,7 +14,7 @@ import {PleaseWaitView} from '../../../../legacy/components/UiKit/PleaseWaitModa
 import {MultiToken} from '../../../../legacy/crypto/MultiToken'
 import globalMessages, {ledgerMessages} from '../../../../legacy/i18n/global-messages'
 import {theme} from '../../../../legacy/styles/config'
-import {Spacer} from '../../../components'
+import {DangerousAction, Spacer} from '../../../components'
 import {TransferSummary} from './TransferSummary'
 
 export type Withdrawal = {

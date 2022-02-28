@@ -1,4 +1,5 @@
 export * from './Boundary'
+export * from './DangerousActionModal'
 export * from './Icon'
 export * from './LanguagePicker'
 export * from './PinInput'
