@@ -1,7 +1,7 @@
 import React from 'react'
 
-import TwoActionView from '../../../legacy/components/Common/TwoActionView'
 import {Modal} from '../../../legacy/components/UiKit'
+import {TwoActionView} from '../TwoActionView'
 
 type Props = {
   visible: boolean

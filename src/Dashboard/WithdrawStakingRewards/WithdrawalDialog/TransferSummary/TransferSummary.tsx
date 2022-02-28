@@ -4,7 +4,6 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
-import TwoActionView from '../../../../../legacy/components/Common/TwoActionView'
 import {Text, TextInput} from '../../../../../legacy/components/UiKit'
 import {CONFIG} from '../../../../../legacy/config/config'
 import {getNetworkConfigById} from '../../../../../legacy/config/networks'
@@ -13,6 +12,7 @@ import {confirmationMessages, txLabels} from '../../../../../legacy/i18n/global-
 import {defaultNetworkAssetSelector} from '../../../../../legacy/selectors'
 import {COLORS} from '../../../../../legacy/styles/config'
 import {formatTokenWithText} from '../../../../../legacy/utils/format'
+import {TwoActionView} from '../../../../components'
 import {Instructions as HWInstructions} from '../../../../HW'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import type {Deregistration, Withdrawal} from '../WithdrawalDialog'
@@ -23,7 +23,7 @@ type Props = {
   balance: BigNumber
   finalBalance: BigNumber
   fees: BigNumber
-  onConfirm: (event: Record<string, unknown>, password?: string | void) => void
+  onConfirm: (password?: string | void) => void
   onCancel: () => void
   useUSB?: boolean
 }
@@ -48,7 +48,7 @@ export const TransferSummary = ({
       title={strings.confirmTx}
       primaryButton={{
         label: strings.confirmButton,
-        onPress: (event) => onConfirm(event, password),
+        onPress: () => onConfirm(password),
       }}
       secondaryButton={{onPress: () => onCancel()}}
     >

@@ -196,7 +196,7 @@ export class WithdrawStakingRewards extends React.Component<Props, State> {
   // TODO: this code has been copy-pasted from the tx confirmation page.
   // Ideally, all this logic should be moved away and perhaps written as a
   // redux action that can be reused in all components with tx signing and sending
-  onConfirm = async (_event: Record<string, unknown>, password: string | void): Promise<void> => {
+  onConfirm = async (password: string | void): Promise<void> => {
     const {signTxRequest, useUSB} = this.state
     const {intl, navigation, isHW, isEasyConfirmationEnabled, submitTransaction, submitSignedTx} = this.props
     if (signTxRequest == null) throw new Error('no tx data')
