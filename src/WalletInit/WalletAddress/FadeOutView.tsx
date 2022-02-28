@@ -1,29 +1,14 @@
-// @flow
-
-import type {Node} from 'react'
 import React from 'react'
-import {Animated} from 'react-native'
-import type {ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
+import {Animated, ViewStyle} from 'react-native'
 
-type FadeOutViewProps = {
-  displayDuration?: number,
-  fadeDuration?: number,
-  onStart?: () => any,
-  onEnd?: () => any,
-  visible: boolean,
-  style?: ViewStyleProp,
-  children: Node,
-}
-
-export const FadeOutView = ({
-  displayDuration = 3000,
-  fadeDuration = 2000,
-  onStart,
-  onEnd,
-  visible,
-  style,
-  children,
-}: FadeOutViewProps) => {
+export const FadeOutView: React.FC<{
+  displayDuration?: number
+  fadeDuration?: number
+  onStart?: () => void
+  onEnd?: () => void
+  visible: boolean
+  style?: ViewStyle
+}> = ({displayDuration = 3000, fadeDuration = 2000, onStart, onEnd, visible, style, children}) => {
   const opacity = React.useRef(new Animated.Value(1)).current
 
   React.useEffect(() => {
@@ -44,5 +29,3 @@ export const FadeOutView = ({
   // eslint-disable-next-line react-native/no-inline-styles
   return <Animated.View style={[{opacity: visible ? opacity : 0}, style]}>{children}</Animated.View>
 }
-
-export default FadeOutView
