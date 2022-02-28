@@ -25,6 +25,7 @@ function loadStories() {
 	require('../src/FirstRun/CustomPinScreen/CustomPinScreen.stories');
 	require('../src/FirstRun/LanguagePickerScreen/LanguagePickerScreen.stories');
 	require('../src/FirstRun/TermsOfServiceScreen/TermsOfServiceScreen.stories');
+	require('../src/HW/Instructions/Instructions.stories');
 	require('../src/Login/CustomPinLoginScreen.stories');
 	require('../src/Menu/Menu.stories');
 	require('../src/Receive/AddressModal.stories');
@@ -103,6 +104,7 @@ const stories = [
 	'../src/FirstRun/CustomPinScreen/CustomPinScreen.stories',
 	'../src/FirstRun/LanguagePickerScreen/LanguagePickerScreen.stories',
 	'../src/FirstRun/TermsOfServiceScreen/TermsOfServiceScreen.stories',
+	'../src/HW/Instructions/Instructions.stories',
 	'../src/Login/CustomPinLoginScreen.stories',
 	'../src/Menu/Menu.stories',
 	'../src/Receive/AddressModal.stories',
