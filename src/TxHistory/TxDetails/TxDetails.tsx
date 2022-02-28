@@ -25,7 +25,7 @@ import {Boundary} from '../../components'
 import {useTokenInfo} from '../../hooks'
 import AddressModal from '../../Receive/AddressModal'
 import {useSelectedWallet} from '../../SelectedWallet'
-import {TransactionInfo} from '../../types/cardano'
+import {TokenEntry, TransactionInfo} from '../../types/cardano'
 import {AssetList} from './AssetList'
 
 export type Params = {
@@ -93,7 +93,7 @@ export const TxDetails = () => {
                   <Image source={expandedIn ? arrowUp : arrowDown} />
                 </TouchableOpacity>
               )}
-              {expandedIn && <AssetList styles={assetListStyle} assets={item.assets} />}
+              <ExpandableAssetList expanded={expandedIn} assets={item.assets} />
             </View>
           ))}
 
@@ -109,7 +109,7 @@ export const TxDetails = () => {
                   <Image source={expandedOut ? arrowUp : arrowDown} />
                 </TouchableOpacity>
               )}
-              {expandedOut && <AssetList styles={assetListStyle} assets={item.assets} />}
+              <ExpandableAssetList expanded={expandedOut} assets={item.assets} />
             </View>
           ))}
 
@@ -164,6 +164,20 @@ const Fee = ({amount}: {amount: BigNumber}) => {
     </Text>
   )
 }
+
+const ExpandableAssetList: React.VFC<{expanded: boolean; assets: TokenEntry[]}> = ({
+  expanded,
+  assets,
+}: {
+  expanded: boolean
+  assets: TokenEntry[]
+}) => (
+  <View style={{borderWidth: 1, borderColor: 'transparent'}}>
+    {/* ↑↑↑ View wrapper fixes bug ↑↑↑ */}
+    {expanded && <AssetList styles={assetListStyle} assets={assets} />}
+    {/* ↓↓↓ View wrapper fixes bug ↓↓↓ */}
+  </View>
+)
 
 type AddressEntryProps = {
   address: string
