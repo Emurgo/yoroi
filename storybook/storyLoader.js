@@ -7,7 +7,6 @@ function loadStories() {
 	require('../legacy/components/Common/DangerousActionModal.stories');
 	require('../legacy/components/Common/ErrorModal.stories');
 	require('../legacy/components/Common/FingerprinScreenBase.stories');
-	require('../legacy/components/Delegation/DelegationConfirmation.stories');
 	require('../legacy/components/Delegation/FlawedWalletScreen.stories');
 	require('../legacy/components/Ledger/DeviceItem/DeviceItem.stories');
 	require('../legacy/components/Ledger/LedgerConnect.stories');
@@ -48,6 +47,7 @@ function loadStories() {
 	require('../src/Settings/TermsOfService/TermsOfServiceScreen.stories');
 	require('../src/Settings/ToggleEasyConfirmation/ToggleEasyConfirmationScreen.stories');
 	require('../src/Settings/WalletSettings/WalletSettingsScreen.stories');
+	require('../src/Staking/DelegationConfirmation/DelegationConfirmation.stories');
 	require('../src/Staking/PoolDetails/PoolDetailScreen.stories');
 	require('../src/Staking/StakingCenter/StakingCenter.stories');
 	require('../src/TxHistory/AssetList/ActionsBanner.stories');
@@ -85,7 +85,6 @@ const stories = [
 	'../legacy/components/Common/DangerousActionModal.stories',
 	'../legacy/components/Common/ErrorModal.stories',
 	'../legacy/components/Common/FingerprinScreenBase.stories',
-	'../legacy/components/Delegation/DelegationConfirmation.stories',
 	'../legacy/components/Delegation/FlawedWalletScreen.stories',
 	'../legacy/components/Ledger/DeviceItem/DeviceItem.stories',
 	'../legacy/components/Ledger/LedgerConnect.stories',
@@ -126,6 +125,7 @@ const stories = [
 	'../src/Settings/TermsOfService/TermsOfServiceScreen.stories',
 	'../src/Settings/ToggleEasyConfirmation/ToggleEasyConfirmationScreen.stories',
 	'../src/Settings/WalletSettings/WalletSettingsScreen.stories',
+	'../src/Staking/DelegationConfirmation/DelegationConfirmation.stories',
 	'../src/Staking/PoolDetails/PoolDetailScreen.stories',
 	'../src/Staking/StakingCenter/StakingCenter.stories',
 	'../src/TxHistory/AssetList/ActionsBanner.stories',

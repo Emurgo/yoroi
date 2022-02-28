@@ -3,7 +3,6 @@ import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import DelegationConfirmation from '../../legacy/components/Delegation/DelegationConfirmation'
 import {UI_V2} from '../../legacy/config/config'
 import {isJormungandr} from '../../legacy/config/networks'
 import {
@@ -16,6 +15,7 @@ import {BiometricAuthScreen} from '../BiometricAuth'
 import {SettingsButton} from '../components/Button'
 import {useWalletName} from '../hooks'
 import {useSelectedWallet} from '../SelectedWallet'
+import {DelegationConfirmation} from '../Staking'
 import {StakingCenter} from '../Staking/StakingCenter'
 import {Dashboard} from './Dashboard'
 
