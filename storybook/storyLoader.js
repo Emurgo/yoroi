@@ -79,6 +79,7 @@ function loadStories() {
 	require('../src/components/Boundary/Boundary.stories');
 	require('../src/components/DangerousActionModal/DangerousActionModal.stories');
 	require('../src/components/Icon/Icon.stories');
+	require('../src/components/StandardModal/StandardModal.stories');
 	require('./Example/Example.stories');
 }
 
@@ -158,6 +159,7 @@ const stories = [
 	'../src/components/Boundary/Boundary.stories',
 	'../src/components/DangerousActionModal/DangerousActionModal.stories',
 	'../src/components/Icon/Icon.stories',
+	'../src/components/StandardModal/StandardModal.stories',
 	'./Example/Example.stories'
 ];
 
