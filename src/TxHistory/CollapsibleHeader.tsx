@@ -1,11 +1,5 @@
 import React from 'react'
-import {LayoutAnimation, Platform, UIManager, View, ViewProps} from 'react-native'
-
-if (Platform.OS === 'android') {
-  if (UIManager.setLayoutAnimationEnabledExperimental) {
-    UIManager.setLayoutAnimationEnabledExperimental(true)
-  }
-}
+import {LayoutAnimation, View, ViewProps} from 'react-native'
 
 export const CollapsibleHeader = ({expanded, children}: {expanded: boolean} & ViewProps) => {
   const [_expanded, setExpanded] = React.useState(expanded)
