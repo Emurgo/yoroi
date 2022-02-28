@@ -6,12 +6,12 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useSelector} from 'react-redux'
 
 import {showErrorDialog} from '../../legacy/actions'
-import PinInputKeyboard from '../../legacy/components/Common/PinInputKeyboard'
 import {ProgressStep} from '../../legacy/components/UiKit'
 import {errorMessages} from '../../legacy/i18n/global-messages'
 import {CATALYST_ROUTES} from '../../legacy/RoutesList'
 import {isHWSelector, pinSelector} from '../../legacy/selectors'
 import {Spacer} from '../components'
+import {PinInputKeyboard} from '../components'
 import {Description, PinBox, Row, Title} from './components'
 
 const PIN_LENGTH = 4

@@ -1,11 +1,9 @@
-// @flow
-
 import React, {useState} from 'react'
 import {Image, StyleSheet, TouchableHighlight, View} from 'react-native'
 
-import backspaceIcon from '../../assets/img/backspace.png'
-import utfSymbols from '../../utils/utfSymbols'
-import {Text} from '../UiKit'
+import backspaceIcon from '../../../legacy/assets/img/backspace.png'
+import {Text} from '../../../legacy/components/UiKit'
+import utfSymbols from '../../../legacy/utils/utfSymbols'
 
 const BACKSPACE = utfSymbols.ERASE_TO_LEFT
 
@@ -28,8 +26,8 @@ const processPin = (pin, setPin, pinMaxLength, keyDown) => {
 }
 
 type KeyboardKeyProps = {
-  value: string,
-  onKeyDown: (value: string) => any,
+  value: string
+  onKeyDown: (value: string) => void
 }
 const KeyboardKey = ({value, onKeyDown}: KeyboardKeyProps) => {
   const isEmpty = value === ''
@@ -50,11 +48,11 @@ const KeyboardKey = ({value, onKeyDown}: KeyboardKeyProps) => {
 }
 
 type Props = {
-  onPinChange: (string) => PossiblyAsync<void>,
-  pinLength: number,
+  onPinChange: (string) => Promise<void> | void
+  pinLength: number
 }
 
-const PinInputKeyboard = ({onPinChange, pinLength}: Props) => {
+export const PinInputKeyboard = ({onPinChange, pinLength}: Props) => {
   const [pin, setPin] = useState('')
 
   const updatePin = async (newPin) => {
@@ -90,8 +88,6 @@ const PinInputKeyboard = ({onPinChange, pinLength}: Props) => {
     </View>
   )
 }
-
-export default PinInputKeyboard
 
 const Row = (props) => <View {...props} style={styles.keyboardRow} />
 
