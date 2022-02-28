@@ -11,7 +11,6 @@ import {useDispatch, useSelector} from 'react-redux'
 
 import {showErrorDialog, submitSignedTx, submitTransaction} from '../../../legacy/actions'
 import {setLedgerDeviceId, setLedgerDeviceObj} from '../../../legacy/actions/hwWallet'
-import ErrorModal from '../../../legacy/components/Common/ErrorModal'
 import LedgerConnect from '../../../legacy/components/Ledger/LedgerConnect'
 import LedgerTransportSwitchModal from '../../../legacy/components/Ledger/LedgerTransportSwitchModal'
 import {Button, Modal, OfflineBanner, PleaseWaitModal, Text, ValidatedTextInput} from '../../../legacy/components/UiKit'
@@ -40,6 +39,7 @@ import {
 } from '../../../legacy/selectors'
 import {COLORS} from '../../../legacy/styles/config'
 import {formatTokenAmount, formatTokenWithText} from '../../../legacy/utils/format'
+import {ErrorModal} from '../../components'
 import {Instructions as HWInstructions} from '../../HW'
 import {DefaultAsset} from '../../types/cardano'
 

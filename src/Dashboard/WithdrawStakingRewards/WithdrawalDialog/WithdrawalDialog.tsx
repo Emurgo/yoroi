@@ -4,7 +4,6 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet} from 'react-native'
 import Markdown from 'react-native-easy-markdown'
 
-import {ErrorView} from '../../../../legacy/components/Common/ErrorModal'
 import type {WithdrawalDialogSteps} from '../../../../legacy/components/Delegation/types'
 import {WITHDRAWAL_DIALOG_STEPS} from '../../../../legacy/components/Delegation/types'
 import LedgerConnect from '../../../../legacy/components/Ledger/LedgerConnect'
@@ -15,6 +14,7 @@ import {MultiToken} from '../../../../legacy/crypto/MultiToken'
 import globalMessages, {ledgerMessages} from '../../../../legacy/i18n/global-messages'
 import {theme} from '../../../../legacy/styles/config'
 import {DangerousAction, Spacer} from '../../../components'
+import {ErrorView} from '../../../components'
 import {TransferSummary} from './TransferSummary'
 
 export type Withdrawal = {
@@ -43,10 +43,12 @@ type Props = {
   onRequestClose: () => void
   useUSB: boolean
   showCloseIcon?: boolean
-  error: {
-    errorMessage: string | null
-    errorLogs: string | null
-  }
+  error:
+    | undefined
+    | {
+        errorMessage: string
+        errorLogs: string | null
+      }
 }
 
 export const WithdrawalDialog = ({
@@ -122,6 +124,7 @@ export const WithdrawalDialog = ({
       case WITHDRAWAL_DIALOG_STEPS.WAITING:
         return <PleaseWaitView title={''} spinnerText={strings.pleaseWait} />
       case WITHDRAWAL_DIALOG_STEPS.ERROR:
+        if (!error) throw new Error("Invalid state: 'error' is undefined")
         return <ErrorView errorMessage={error.errorMessage} errorLogs={error.errorLogs} onDismiss={onRequestClose} />
       default:
         return null

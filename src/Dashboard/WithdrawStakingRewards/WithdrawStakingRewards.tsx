@@ -55,10 +55,12 @@ type State = {
   balance: BigNumber
   finalBalance: BigNumber
   fees: BigNumber
-  error: {
-    errorMessage: string | null
-    errorLogs?: string | null
-  }
+  error:
+    | undefined
+    | {
+        errorMessage: string
+        errorLogs?: string | null
+      }
 }
 
 // eslint-disable-next-line react-prefer-function-component/react-prefer-function-component
@@ -72,10 +74,7 @@ export class WithdrawStakingRewards extends React.Component<Props, State> {
     balance: new BigNumber(0),
     finalBalance: new BigNumber(0),
     fees: new BigNumber(0),
-    error: {
-      errorMessage: null,
-      errorLogs: null,
-    },
+    error: undefined,
   }
 
   _shouldDeregister = false

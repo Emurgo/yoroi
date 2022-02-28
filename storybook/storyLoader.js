@@ -4,7 +4,6 @@
 // https://github.com/elderfo/react-native-storybook-loader.git
 
 function loadStories() {
-	require('../legacy/components/Common/ErrorModal.stories');
 	require('../legacy/components/Delegation/FlawedWalletScreen.stories');
 	require('../legacy/components/Ledger/DeviceItem/DeviceItem.stories');
 	require('../legacy/components/Ledger/LedgerConnect.stories');
@@ -78,13 +77,13 @@ function loadStories() {
 	require('../src/auth/PinRegistration/PinRegistrationForm.stories');
 	require('../src/components/Boundary/Boundary.stories');
 	require('../src/components/DangerousActionModal/DangerousActionModal.stories');
+	require('../src/components/ErrorModal/ErrorModal.stories');
 	require('../src/components/Icon/Icon.stories');
 	require('../src/components/StandardModal/StandardModal.stories');
 	require('./Example/Example.stories');
 }
 
 const stories = [
-	'../legacy/components/Common/ErrorModal.stories',
 	'../legacy/components/Delegation/FlawedWalletScreen.stories',
 	'../legacy/components/Ledger/DeviceItem/DeviceItem.stories',
 	'../legacy/components/Ledger/LedgerConnect.stories',
@@ -158,6 +157,7 @@ const stories = [
 	'../src/auth/PinRegistration/PinRegistrationForm.stories',
 	'../src/components/Boundary/Boundary.stories',
 	'../src/components/DangerousActionModal/DangerousActionModal.stories',
+	'../src/components/ErrorModal/ErrorModal.stories',
 	'../src/components/Icon/Icon.stories',
 	'../src/components/StandardModal/StandardModal.stories',
 	'./Example/Example.stories'
