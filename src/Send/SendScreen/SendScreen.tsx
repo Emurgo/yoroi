@@ -8,12 +8,16 @@ import {TouchableOpacity} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useSelector} from 'react-redux'
 
+import {showErrorDialog} from '../../../legacy/actions'
 import UtxoAutoRefresher from '../../../legacy/components/Send/UtxoAutoRefresher'
 import {Button, Checkbox, StatusBar, Text, TextInput} from '../../../legacy/components/UiKit'
 import {CONFIG, UI_V2} from '../../../legacy/config/config'
 import {MultiToken} from '../../../legacy/crypto/MultiToken'
 import type {CreateUnsignedTxResponse} from '../../../legacy/crypto/shelley/transactionUtils'
-import {SEND_ROUTES} from '../../../legacy/RoutesList'
+import {SystemAuthDisabled} from '../../../legacy/crypto/walletManager'
+import {ensureKeysValidity} from '../../../legacy/helpers/deviceSettings'
+import {errorMessages} from '../../../legacy/i18n/global-messages'
+import {SEND_ROUTES, WALLET_ROOT_ROUTES} from '../../../legacy/RoutesList'
 import {
   defaultNetworkAssetSelector,
   hasPendingOutgoingTransactionSelector,
@@ -33,8 +37,8 @@ import type {
   BalanceValidationErrors,
 } from '../../../legacy/utils/validators'
 import {Spacer} from '../../components'
-import {useTokenInfo} from '../../hooks'
-import {useSelectedWallet} from '../../SelectedWallet'
+import {useCloseWallet, useTokenInfo} from '../../hooks'
+import {useSelectedWallet, useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
 import type {TokenEntry} from '../../types/cardano'
 import {AmountField} from './../AmountField'
 import {AvailableAmountBanner} from './AvailableAmountBanner'
@@ -84,6 +88,14 @@ export const SendScreen = ({selectedTokenIdentifier, sendAll, onSendAll}: Props)
 
   const wallet = useSelectedWallet()
   const tokenInfo = useTokenInfo({wallet, tokenId: selectedTokenIdentifier})
+  const setSelectedWallet = useSetSelectedWallet()
+  const setSelectedWalletMeta = useSetSelectedWalletMeta()
+  const {closeWallet} = useCloseWallet({
+    onSuccess: () => {
+      setSelectedWallet(undefined)
+      setSelectedWalletMeta(undefined)
+    },
+  })
   const assetDenomination = truncateWithEllipsis(getAssetDenominationOrId(tokenInfo), 20)
   const amountErrorText = getAmountErrorText(intl, amountErrors, balanceErrors, defaultAsset)
   const isValid =
@@ -175,6 +187,39 @@ export const SendScreen = ({selectedTokenIdentifier, sendAll, onSendAll}: Props)
 
     setShowSendAllWarning(false)
 
+    if (wallet.isEasyConfirmationEnabled) {
+      try {
+        await ensureKeysValidity(wallet.id)
+        navigation.navigate(SEND_ROUTES.BIOMETRICS_SIGNING, {
+          keyId: wallet.id,
+          onSuccess: async (decryptedKey) => {
+            navigation.navigate(UI_V2 ? 'send-confirm' : SEND_ROUTES.CONFIRM, {
+              availableAmount: tokenBalance.getDefault(),
+              address,
+              defaultAssetAmount,
+              transactionData: unsignedTx,
+              balanceAfterTx: balanceAfter,
+              utxos,
+              fee,
+              tokens,
+              easyConfirmDecryptKey: decryptedKey,
+            })
+          },
+          onFail: () => navigation.goBack(),
+        })
+      } catch (err) {
+        if (err instanceof SystemAuthDisabled) {
+          await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
+          navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
+          setTimeout(() => closeWallet(), 1000)
+          return
+        } else {
+          throw err
+        }
+      }
+      return
+    }
+
     navigation.navigate(UI_V2 ? 'send-confirm' : SEND_ROUTES.CONFIRM, {
       availableAmount: tokenBalance.getDefault(),
       address,
@@ -184,7 +229,9 @@ export const SendScreen = ({selectedTokenIdentifier, sendAll, onSendAll}: Props)
       utxos,
       fee,
       tokens,
+      easyConfirmDecryptKey: '',
     })
+    return
   }
 
   return (

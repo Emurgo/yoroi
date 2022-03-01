@@ -8,11 +8,7 @@ import {Platform, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {
-  showErrorDialog,
-  submitSignedTx as _submitSignedTx,
-  submitTransaction as _submitTransaction,
-} from '../../../legacy/actions'
+import {showErrorDialog} from '../../../legacy/actions'
 import {
   setLedgerDeviceId as _setLedgerDeviceId,
   setLedgerDeviceObj as _setLedgerDeviceObj,
@@ -33,13 +29,12 @@ import {
 } from '../../../legacy/components/UiKit'
 import {CONFIG, UI_V2} from '../../../legacy/config/config'
 import {WrongPassword} from '../../../legacy/crypto/errors'
-import {ISignRequest} from '../../../legacy/crypto/ISignRequest'
 import KeyStore from '../../../legacy/crypto/KeyStore'
 import type {CreateUnsignedTxResponse} from '../../../legacy/crypto/shelley/transactionUtils'
-import walletManager, {SystemAuthDisabled} from '../../../legacy/crypto/walletManager'
+import walletManager from '../../../legacy/crypto/walletManager'
 import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../../legacy/i18n/global-messages'
 import LocalizableError from '../../../legacy/i18n/LocalizableError'
-import {SEND_ROUTES, WALLET_ROOT_ROUTES, WALLET_ROUTES} from '../../../legacy/RoutesList'
+import {SEND_ROUTES, WALLET_ROUTES} from '../../../legacy/RoutesList'
 import {
   defaultNetworkAssetSelector,
   easyConfirmationSelector,
@@ -49,7 +44,7 @@ import {
 import {COLORS} from '../../../legacy/styles/config'
 import {formatTokenWithSymbol, formatTokenWithText} from '../../../legacy/utils/format'
 import {Boundary, Spacer} from '../../components'
-import {useTokenInfo} from '../../hooks'
+import {useSaveAndSubmitSignedTx, useTokenInfo} from '../../hooks'
 import {useParams} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {TokenEntry} from '../../types/cardano'
@@ -62,6 +57,7 @@ export type Params = {
   availableAmount: BigNumber
   fee: BigNumber
   tokens: TokenEntry[]
+  easyConfirmDecryptKey: string
 }
 
 const isParams = (params?: Params | object | undefined): params is Params => {
@@ -80,7 +76,9 @@ const isParams = (params?: Params | object | undefined): params is Params => {
     'fee' in params &&
     params.fee instanceof BigNumber &&
     'tokens' in params &&
-    Array.isArray(params.tokens)
+    Array.isArray(params.tokens) &&
+    'easyConfirmDecryptKey' in params &&
+    typeof params.easyConfirmDecryptKey === 'string'
   )
 }
 
@@ -95,14 +93,17 @@ export const ConfirmScreen = () => {
     fee,
     tokens: tokenEntries,
     transactionData: signRequest,
+    easyConfirmDecryptKey,
   } = useParams(isParams)
   const isEasyConfirmationEnabled = useSelector(easyConfirmationSelector)
   const isHW = useSelector(isHWSelector)
   const defaultAsset = useSelector(defaultNetworkAssetSelector)
   const hwDeviceInfo = useSelector(hwDeviceInfoSelector)
+  const wallet = useSelectedWallet()
+  const {saveAndSubmitTx, isLoading: sendingTransaction} = useSaveAndSubmitSignedTx({wallet})
 
   const [password, setPassword] = React.useState(CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '')
-  const [sendingTransaction, setSendingTransaction] = React.useState(false)
+  // const [sendingTransaction, setSendingTransaction] = React.useState(false)
   const [buttonDisabled, setButtonDisabled] = React.useState(false)
   const [useUSB, setUseUSB] = React.useState(false)
   const [ledgerDialogStep, setLedgerDialogStep] = React.useState(LEDGER_DIALOG_STEPS.CHOOSE_TRANSPORT)
@@ -120,27 +121,7 @@ export const ConfirmScreen = () => {
     setErrorLogs(errorLogs)
   }
 
-  const withPleaseWaitModal = async (func: () => Promise<void>) => {
-    setSendingTransaction(true)
-    try {
-      await func()
-    } finally {
-      setSendingTransaction(false)
-    }
-  }
-
-  const withDisabledButton = async (func: () => Promise<void>) => {
-    setButtonDisabled(true)
-    try {
-      await func()
-    } finally {
-      setButtonDisabled(false)
-    }
-  }
-
   const dispatch = useDispatch()
-  const submitTransaction = (...args) => dispatch(_submitTransaction(...args))
-  const submitSignedTx = (...args) => dispatch(_submitSignedTx(...args))
   const setLedgerDeviceId = (deviceId) => dispatch(_setLedgerDeviceId(deviceId))
   const setLedgerDeviceObj = (deviceObj) => dispatch(_setLedgerDeviceObj(deviceObj))
 
@@ -170,86 +151,56 @@ export const ConfirmScreen = () => {
 
   const navigation = useNavigation()
   const onConfirm = async () => {
-    const submitTx = async (tx: string | ISignRequest, decryptedKey?: string) => {
-      await withPleaseWaitModal(async () => {
-        if (decryptedKey != null) {
-          await submitTransaction(tx, decryptedKey)
-        } else {
-          await submitSignedTx(tx)
-        }
-        navigation.dispatch(
-          CommonActions.reset({
-            key: null,
-            index: 0,
-            routes: [{name: UI_V2 ? 'history' : SEND_ROUTES.MAIN}],
-          } as any),
-        )
-        if (!UI_V2) {
-          navigation.navigate(WALLET_ROUTES.TX_HISTORY)
-        }
-      })
-    }
-
     try {
+      setButtonDisabled(true)
+      let signedTx
       if (isHW) {
-        await withDisabledButton(async () => {
-          const signedTx = await walletManager.signTxWithLedger(signRequest, useUSB)
-          await submitTx(Buffer.from(signedTx.encodedTx).toString('base64'))
-        })
-        return
-      }
-
-      if (isEasyConfirmationEnabled) {
-        try {
-          await walletManager.ensureKeysValidity()
-          navigation.navigate(SEND_ROUTES.BIOMETRICS_SIGNING, {
-            keyId: walletManager._id,
-            onSuccess: async (decryptedKey) => {
-              navigation.navigate(UI_V2 ? 'send-confirm' : SEND_ROUTES.CONFIRM)
-
-              await submitTx(signRequest, decryptedKey)
-            },
-            onFail: () => navigation.goBack(),
-          })
-        } catch (e) {
-          if (e instanceof SystemAuthDisabled) {
-            await walletManager.closeWallet()
-            await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
-            navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
-
-            return
-          } else {
-            throw e
-          }
-        }
-        return
-      }
-
-      try {
-        const decryptedData = await KeyStore.getData(walletManager._id, 'MASTER_PASSWORD', '', password, intl)
-
-        await submitTx(signRequest, decryptedData)
-      } catch (e) {
-        if (e instanceof WrongPassword) {
-          await showErrorDialog(errorMessages.incorrectPassword, intl)
-        } else {
-          throw e
-        }
-      }
-    } catch (e) {
-      if (e instanceof LocalizableError) {
-        const localizableError: any = e
-        setErrorData(
-          true,
-          intl.formatMessage(
-            {id: localizableError.id, defaultMessage: localizableError.defaultMessage},
-            localizableError.values,
-          ),
-          localizableError.values.response || null, // API errors should include a response
-        )
+        signedTx = await wallet.signTxWithLedger(signRequest, useUSB)
       } else {
-        setErrorData(true, strings.generalTxError.message, (e as any).message || null)
+        if (isEasyConfirmationEnabled) {
+          signedTx = await wallet.signTx(signRequest, easyConfirmDecryptKey)
+        } else {
+          const decryptedKey = await KeyStore.getData(walletManager._id, 'MASTER_PASSWORD', '', password, intl)
+          signedTx = await wallet.signTx(signRequest, decryptedKey)
+        }
       }
+      saveAndSubmitTx(signedTx, {
+        onSuccess: () => {
+          navigation.dispatch(
+            CommonActions.reset({
+              key: null,
+              index: 0,
+              routes: [{name: UI_V2 ? 'history' : SEND_ROUTES.MAIN}],
+            } as any),
+          )
+          if (!UI_V2) {
+            navigation.navigate(WALLET_ROUTES.TX_HISTORY)
+          }
+        },
+        onError: (err) => {
+          if (err instanceof LocalizableError) {
+            const localizableError: any = err
+            setErrorData(
+              true,
+              intl.formatMessage(
+                {id: localizableError.id, defaultMessage: localizableError.defaultMessage},
+                localizableError.values,
+              ),
+              localizableError.values.response || null, // API errors should include a response
+            )
+          } else {
+            setErrorData(true, strings.generalTxError.message, (err as any).message || null)
+          }
+        },
+      })
+    } catch (err) {
+      if (err instanceof WrongPassword) {
+        await showErrorDialog(errorMessages.incorrectPassword, intl)
+      } else {
+        setErrorData(true, strings.generalTxError.message, (err as any).message || null)
+      }
+    } finally {
+      setButtonDisabled(false)
     }
   }
 

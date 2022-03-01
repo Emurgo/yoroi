@@ -650,7 +650,6 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
         networkId: config.NETWORK_ID,
       }
 
-      // $FlowFixMe
       const unsignedTx = await newAdaUnsignedTx(
         [],
         {
@@ -666,34 +665,31 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
         auxiliaryData,
       )
 
-      const signRequest = new HaskellShelleyTxSignRequest(
-        {
-          senderUtxos: unsignedTx.senderUtxos,
-          unsignedTx: unsignedTx.txBuilder,
-          changeAddr: unsignedTx.changeAddr,
-          auxiliaryData,
-          networkSettingSnapshot: {
-            NetworkId: config.NETWORK_ID,
-            ChainNetworkId: Number.parseInt(config.CHAIN_NETWORK_ID, 10),
-            KeyDeposit: new BigNumber(config.KEY_DEPOSIT),
-            PoolDeposit: new BigNumber(config.POOL_DEPOSIT),
-          },
-          neededStakingKeyHashes: {
-            neededHashes: new Set(),
-            wits: new Set(),
-          },
-          ledgerNanoCatalystRegistrationTxSignData: this.isHW
-            ? {
-                votingPublicKey,
-                stakingKeyPath: this.getStakingKeyPath(),
-                stakingKey: Buffer.from(await stakePublicKey.as_bytes()).toString('hex'),
-                rewardAddress: Buffer.from(await rewardAddress.to_bytes()).toString('hex'),
-                nonce,
-              }
-            : undefined,
+      const signRequest = new HaskellShelleyTxSignRequest({
+        senderUtxos: unsignedTx.senderUtxos,
+        unsignedTx: unsignedTx.txBuilder,
+        changeAddr: unsignedTx.changeAddr,
+        auxiliaryData,
+        networkSettingSnapshot: {
+          NetworkId: config.NETWORK_ID,
+          ChainNetworkId: Number.parseInt(config.CHAIN_NETWORK_ID, 10),
+          KeyDeposit: new BigNumber(config.KEY_DEPOSIT),
+          PoolDeposit: new BigNumber(config.POOL_DEPOSIT),
         },
-        unsignedTx,
-      )
+        neededStakingKeyHashes: {
+          neededHashes: new Set(),
+          wits: new Set(),
+        },
+        ledgerNanoCatalystRegistrationTxSignData: this.isHW
+          ? {
+              votingPublicKey,
+              stakingKeyPath: this.getStakingKeyPath(),
+              stakingKey: Buffer.from(await stakePublicKey.as_bytes()).toString('hex'),
+              rewardAddress: Buffer.from(await rewardAddress.to_bytes()).toString('hex'),
+              nonce,
+            }
+          : undefined,
+      })
       return signRequest
     } catch (e) {
       if (e instanceof LocalizableError || e instanceof ExtendableError) throw e

@@ -17,11 +17,9 @@ import {
   RewardAddress,
   ScriptHash,
   StakeCredential,
-  Transaction,
   Value,
 } from '@emurgo/react-native-haskell-shelley'
 import {BigNumber} from 'bignumber.js'
-import blake2b from 'blake2b'
 
 import type {RawUtxo} from '../../api/types'
 import {CONFIG} from '../../config/config'
@@ -321,12 +319,4 @@ export const multiTokenFromRemote = (remoteValue: RemoteValue, networkId: number
     }
   }
   return result
-}
-
-export async function computeTxId(signedTx: string): Promise<string> {
-  const txPtr = await Transaction.from_bytes(Buffer.from(signedTx, 'base64'))
-  const txBody = await txPtr.body()
-  const txBodyInBytes = await txBody.to_bytes()
-
-  return await blake2b(txBodyInBytes, 256)
 }

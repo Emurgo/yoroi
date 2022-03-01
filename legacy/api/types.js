@@ -254,6 +254,6 @@ export type TxSubmissionStatus = {|
 export type TxStatusRequest = {|txHashes: Array<string>|}
 
 export type TxStatusResponse = {|
-  +depth: {[txId: string]: number},
-  +submissionStatus: {[txId: string]: TxSubmissionStatus},
+  +depth?: {[txId: string]: number},
+  +submissionStatus?: {[txId: string]: TxSubmissionStatus},
 |}

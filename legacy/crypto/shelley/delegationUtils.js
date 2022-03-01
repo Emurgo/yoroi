@@ -263,7 +263,6 @@ export const createDelegationTx = async (request: CreateDelegationTxRequest): Pr
     }
 
     const stakeDelegationCert = await createCertificate(stakingKey, registrationStatus, poolRequest)
-    // $FlowFixMe
     const unsignedTx = await newAdaUnsignedTx(
       [],
       {
@@ -285,7 +284,6 @@ export const createDelegationTx = async (request: CreateDelegationTxRequest): Pr
       false,
     )
     const utxoSum = allUtxosForKey.reduce((sum, utxo) => sum.plus(new BigNumber(utxo.amount)), new BigNumber(0))
-    // $FlowFixMe
     const differenceAfterTx = await getDifferenceAfterTx(unsignedTx, addressedUtxos, stakingKey)
 
     const totalAmountToDelegateBigNum = utxoSum
@@ -306,27 +304,24 @@ export const createDelegationTx = async (request: CreateDelegationTxRequest): Pr
       },
     )
 
-    const signRequest = new HaskellShelleyTxSignRequest(
-      {
-        senderUtxos: unsignedTx.senderUtxos,
-        unsignedTx: unsignedTx.txBuilder,
-        changeAddr: unsignedTx.changeAddr,
-        auxiliaryData: undefined,
-        networkSettingSnapshot: {
-          NetworkId: networkConfig.NETWORK_ID,
-          ChainNetworkId: Number.parseInt(networkConfig.CHAIN_NETWORK_ID, 10),
-          KeyDeposit: new BigNumber(networkConfig.KEY_DEPOSIT),
-          PoolDeposit: new BigNumber(networkConfig.POOL_DEPOSIT),
-        },
-        neededStakingKeyHashes: {
-          neededHashes: new Set([
-            Buffer.from(await (await StakeCredential.from_keyhash(await stakingKey.hash())).to_bytes()).toString('hex'),
-          ]),
-          wits: new Set(),
-        },
+    const signRequest = new HaskellShelleyTxSignRequest({
+      senderUtxos: unsignedTx.senderUtxos,
+      unsignedTx: unsignedTx.txBuilder,
+      changeAddr: unsignedTx.changeAddr,
+      auxiliaryData: undefined,
+      networkSettingSnapshot: {
+        NetworkId: networkConfig.NETWORK_ID,
+        ChainNetworkId: Number.parseInt(networkConfig.CHAIN_NETWORK_ID, 10),
+        KeyDeposit: new BigNumber(networkConfig.KEY_DEPOSIT),
+        PoolDeposit: new BigNumber(networkConfig.POOL_DEPOSIT),
       },
-      unsignedTx,
-    )
+      neededStakingKeyHashes: {
+        neededHashes: new Set([
+          Buffer.from(await (await StakeCredential.from_keyhash(await stakingKey.hash())).to_bytes()).toString('hex'),
+        ]),
+        wits: new Set(),
+      },
+    })
     return {
       signRequest,
       totalAmountToDelegate,
@@ -447,7 +442,6 @@ export const createWithdrawalTx = async (request: CreateWithdrawalTxRequest): Pr
       throw new RewardAddressEmptyError()
     }
 
-    // $FlowFixMe
     const unsignedTxResponse = await newAdaUnsignedTx(
       [],
       {
@@ -480,22 +474,19 @@ export const createWithdrawalTx = async (request: CreateWithdrawalTxRequest): Pr
         }
       }
     }
-    return new HaskellShelleyTxSignRequest(
-      {
-        senderUtxos: unsignedTxResponse.senderUtxos,
-        unsignedTx: unsignedTxResponse.txBuilder,
-        changeAddr: unsignedTxResponse.changeAddr,
-        auxiliaryData: undefined,
-        networkSettingSnapshot: {
-          NetworkId: networkConfig.NETWORK_ID,
-          ChainNetworkId: Number.parseInt(networkConfig.CHAIN_NETWORK_ID, 10),
-          KeyDeposit: new BigNumber(networkConfig.KEY_DEPOSIT),
-          PoolDeposit: new BigNumber(networkConfig.POOL_DEPOSIT),
-        },
-        neededStakingKeyHashes: neededKeys,
+    return new HaskellShelleyTxSignRequest({
+      senderUtxos: unsignedTxResponse.senderUtxos,
+      unsignedTx: unsignedTxResponse.txBuilder,
+      changeAddr: unsignedTxResponse.changeAddr,
+      auxiliaryData: undefined,
+      networkSettingSnapshot: {
+        NetworkId: networkConfig.NETWORK_ID,
+        ChainNetworkId: Number.parseInt(networkConfig.CHAIN_NETWORK_ID, 10),
+        KeyDeposit: new BigNumber(networkConfig.KEY_DEPOSIT),
+        PoolDeposit: new BigNumber(networkConfig.POOL_DEPOSIT),
       },
-      unsignedTxResponse,
-    )
+      neededStakingKeyHashes: neededKeys,
+    })
   } catch (e) {
     if (e instanceof LocalizableError || e instanceof ExtendableError) throw e
     Logger.error('delegationUtils::createWithdrawalTx error:', JSON.stringify(e))

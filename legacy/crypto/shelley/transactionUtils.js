@@ -77,25 +77,22 @@ export const createUnsignedTx = async (request: CreateUnsignedTxRequest): Promis
     }
 
     Logger.debug(`createUnsignedTx success: ${JSON.stringify(unsignedTxResponse)}`)
-    return new HaskellShelleyTxSignRequest(
-      {
-        senderUtxos: unsignedTxResponse.senderUtxos,
-        unsignedTx: unsignedTxResponse.txBuilder,
-        changeAddr: unsignedTxResponse.changeAddr,
-        auxiliaryData,
-        networkSettingSnapshot: {
-          NetworkId: NETWORK_ID,
-          ChainNetworkId: Number.parseInt(CHAIN_NETWORK_ID, 10),
-          KeyDeposit: new BigNumber(KEY_DEPOSIT),
-          PoolDeposit: new BigNumber(POOL_DEPOSIT),
-        },
-        neededStakingKeyHashes: {
-          neededHashes: new Set(),
-          wits: new Set(),
-        },
+    return new HaskellShelleyTxSignRequest({
+      senderUtxos: unsignedTxResponse.senderUtxos,
+      unsignedTx: unsignedTxResponse.txBuilder,
+      changeAddr: unsignedTxResponse.changeAddr,
+      auxiliaryData,
+      networkSettingSnapshot: {
+        NetworkId: NETWORK_ID,
+        ChainNetworkId: Number.parseInt(CHAIN_NETWORK_ID, 10),
+        KeyDeposit: new BigNumber(KEY_DEPOSIT),
+        PoolDeposit: new BigNumber(POOL_DEPOSIT),
       },
-      request,
-    )
+      neededStakingKeyHashes: {
+        neededHashes: new Set(),
+        wits: new Set(),
+      },
+    })
   } catch (e) {
     if (e instanceof InsufficientFunds || e instanceof NoOutputsError) throw e
     Logger.error(`shelley::createUnsignedTx:: ${e.message}`, e)

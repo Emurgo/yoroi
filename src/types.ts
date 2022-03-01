@@ -23,6 +23,7 @@ export interface WalletInterface {
   fetchTokenInfo(request: {tokenIds: Array<string>}): Promise<Record<string, TokenMetadata | null>>
   signTx<T>(signRequest: ISignRequest<T>, decryptedKey: string): Promise<SignedTx>
   signTxWithLedger<T>(signRequest: ISignRequest<T>, connectionUSB: boolean): Promise<SignedTx>
+  submitTransaction(signedTx: string): Promise<[]>
   fetchTxStatus(request: TxStatusRequest): Promise<TxStatusResponse>
   subscribe(handler: (wallet: WalletInterface) => void): void
   subscribeOnTxHistoryUpdate(handler: () => void): void
@@ -121,15 +122,15 @@ export type RemoteCertificate = {
 }
 
 export type TxSubmissionStatus = {
-  submissionStatus: 'WAITING' | 'FAILED' | 'MAX_RETRY_REACHED' | 'SUCCESS'
-  reason?: string
+  status: 'WAITING' | 'FAILED' | 'MAX_RETRY_REACHED' | 'SUCCESS'
+  reason?: string | null
 }
 
 export type TxStatusRequest = {txHashes: Array<string>}
 
 export type TxStatusResponse = {
-  depth: {[txId: string]: number}
-  submissionStatus: {[txId: string]: TxSubmissionStatus}
+  depth?: {[txId: string]: number}
+  submissionStatus?: {[txId: string]: TxSubmissionStatus}
 }
 
 export type SignedTx = {

@@ -1,3 +1,4 @@
+import {delay} from 'bluebird'
 import {
   QueryKey,
   useMutation,
@@ -11,7 +12,7 @@ import {
 import {generateShelleyPlateFromKey} from '../../legacy/crypto/shelley/plate'
 import walletManager from '../../legacy/crypto/walletManager'
 import {WalletMeta} from '../../legacy/state'
-import {WalletInterface} from '../types'
+import {SignedTx, TxSubmissionStatus, WalletInterface} from '../types'
 import {Token} from '../types/cardano'
 
 // WALLET
@@ -263,6 +264,89 @@ export const useCreateWallet = (options?: UseMutationOptions<WalletInterface, Er
   return {
     createWallet: mutation.mutate,
     ...mutation,
+  }
+}
+
+const isTxQueueOnline = true
+export const useSaveAndSubmitSignedTx = (
+  {wallet}: {wallet: WalletInterface},
+  options: UseMutationOptions<undefined | TxSubmissionStatus, Error, SignedTx> = {},
+) => {
+  const queryClient = useQueryClient()
+  const mutation = useMutation<undefined | TxSubmissionStatus, Error, SignedTx>({
+    mutationFn: async (signedTx: SignedTx) => {
+      queryClient.invalidateQueries([wallet.id, 'pendingTxs'])
+
+      await wallet.submitTransaction(signedTx.base64)
+
+      if (isTxQueueOnline) {
+        const txStatus = await fetchTxStatus(wallet, signedTx.id, false)
+        if (!txStatus) {
+          queryClient.invalidateQueries([wallet.id, 'serverStatus'])
+        }
+        return txStatus
+      }
+    },
+    ...options,
+  })
+
+  return {
+    saveAndSubmitTx: mutation.mutate,
+    ...mutation,
+  }
+}
+
+const txQueueRetryDelay = 1000
+const txQueueRetryTimes = 5
+export const fetchTxStatus = async (
+  wallet: WalletInterface,
+  txHash: string,
+  waitProcessing = false,
+): Promise<TxSubmissionStatus | undefined> => {
+  let isWaiting = false
+  for (let i = txQueueRetryTimes; i > 0; i--) {
+    try {
+      const statusResponse = await wallet.fetchTxStatus({
+        txHashes: [txHash],
+      })
+      const confirmations = statusResponse?.depth?.[txHash] || 0
+      const submission = statusResponse?.submissionStatus?.[txHash]
+      // processed
+      if (confirmations > 0) {
+        return {
+          status: 'SUCCESS',
+        }
+      }
+      // not in the queue
+      if (!submission) {
+        await delay(txQueueRetryDelay)
+        continue
+      }
+      if (
+        submission.status === 'FAILED' ||
+        submission.status === 'MAX_RETRY_REACHED' ||
+        submission.status === 'SUCCESS'
+      ) {
+        return submission
+      }
+      if (submission.status === 'WAITING') {
+        isWaiting = true
+        if (!waitProcessing) {
+          return submission
+        }
+        await delay(txQueueRetryDelay)
+      }
+    } catch (e) {
+      if (i === 1) {
+        throw e
+      }
+      await delay(txQueueRetryDelay)
+    }
+  }
+  if (isWaiting) {
+    return {
+      status: 'WAITING',
+    }
   }
 }
 

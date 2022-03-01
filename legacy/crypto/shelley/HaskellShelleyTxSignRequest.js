@@ -78,24 +78,19 @@ export class HaskellShelleyTxSignRequest implements ISignRequest<TransactionBuil
   |}
 
   ledgerNanoCatalystRegistrationTxSignData: void | LedgerNanoCatalystRegistrationTxSignData
-  request: void | CreateUnsignedTxRequest
 
-  constructor(
-    data: {
-      senderUtxos: Array<AddressedUtxo>,
-      unsignedTx: TransactionBuilder,
-      changeAddr: Array<{|...Address, ...Value, ...Addressing|}>,
-      auxiliaryData: void | AuxiliaryData,
-      networkSettingSnapshot: NetworkSettingSnapshot,
-      neededStakingKeyHashes: {|
-        neededHashes: Set<string>, // StakeCredential
-        wits: Set<string>, // Vkeywitness
-      |},
-      ledgerNanoCatalystRegistrationTxSignData?: void | LedgerNanoCatalystRegistrationTxSignData,
-    },
-    request?: CreateUnsignedTxRequest,
-  ) {
-    this.request = request
+  constructor(data: {
+    senderUtxos: Array<AddressedUtxo>,
+    unsignedTx: TransactionBuilder,
+    changeAddr: Array<{|...Address, ...Value, ...Addressing|}>,
+    auxiliaryData: void | AuxiliaryData,
+    networkSettingSnapshot: NetworkSettingSnapshot,
+    neededStakingKeyHashes: {|
+      neededHashes: Set<string>, // StakeCredential
+      wits: Set<string>, // Vkeywitness
+    |},
+    ledgerNanoCatalystRegistrationTxSignData?: void | LedgerNanoCatalystRegistrationTxSignData,
+  }) {
     this.senderUtxos = data.senderUtxos
     this.unsignedTx = data.unsignedTx
     this.changeAddr = data.changeAddr
