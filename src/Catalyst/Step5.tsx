@@ -17,6 +17,7 @@ import {WrongPassword} from '../../legacy/crypto/errors'
 import KeyStore from '../../legacy/crypto/KeyStore'
 import type {DeviceId, DeviceObj} from '../../legacy/crypto/shelley/ledgerUtils'
 import walletManager, {SystemAuthDisabled} from '../../legacy/crypto/walletManager'
+import {ensureKeysValidity} from '../../legacy/helpers/deviceSettings'
 import {confirmationMessages, errorMessages, txLabels} from '../../legacy/i18n/global-messages'
 import LocalizableError from '../../legacy/i18n/LocalizableError'
 import {CATALYST_ROUTES, WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
@@ -136,7 +137,7 @@ export const Step5 = () => {
 
       if (isEasyConfirmationEnabled) {
         try {
-          await walletManager.ensureKeysValidity()
+          await ensureKeysValidity(walletManager._id)
           navigation.navigate(CATALYST_ROUTES.BIOMETRICS_SIGNING, {
             keyId: walletManager._id,
             onSuccess: async (decryptedKey) => {

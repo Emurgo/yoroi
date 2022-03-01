@@ -13,6 +13,7 @@ import {CONFIG} from '../../legacy/config/config'
 import {WrongPassword} from '../../legacy/crypto/errors'
 import KeyStore from '../../legacy/crypto/KeyStore'
 import walletManager, {SystemAuthDisabled} from '../../legacy/crypto/walletManager'
+import {ensureKeysValidity} from '../../legacy/helpers/deviceSettings'
 import {confirmationMessages, errorMessages, txLabels} from '../../legacy/i18n/global-messages'
 import {CATALYST_ROUTES, WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
 import {easyConfirmationSelector, isHWSelector} from '../../legacy/selectors'
@@ -56,7 +57,7 @@ export const Step4 = () => {
 
     if (isEasyConfirmationEnabled) {
       try {
-        await walletManager.ensureKeysValidity()
+        await ensureKeysValidity(walletManager._id)
         navigation.navigate(CATALYST_ROUTES.BIOMETRICS_SIGNING, {
           keyId: walletManager._id,
           onSuccess: async (decryptedKey) => {

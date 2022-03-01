@@ -1,6 +1,7 @@
 import {WalletChecksum} from '@emurgo/cip4-js'
 import type {IntlShape} from 'react-intl'
 
+import {ISignRequest} from '../legacy/crypto/ISignRequest'
 import {AccountStates, AddressedUtxo, RawUtxo} from './types/cardano'
 
 export interface WalletInterface {
@@ -20,6 +21,9 @@ export interface WalletInterface {
   fetchAccountState(): Promise<AccountStates>
   fetchUTXOs(): Promise<Array<RawUtxo>>
   fetchTokenInfo(request: {tokenIds: Array<string>}): Promise<Record<string, TokenMetadata | null>>
+  signTx<T>(signRequest: ISignRequest<T>, decryptedKey: string): Promise<SignedTx>
+  signTxWithLedger<T>(signRequest: ISignRequest<T>, connectionUSB: boolean): Promise<SignedTx>
+  fetchTxStatus(request: TxStatusRequest): Promise<TxStatusResponse>
   subscribe(handler: (wallet: WalletInterface) => void): void
   subscribeOnTxHistoryUpdate(handler: () => void): void
 }
@@ -114,4 +118,22 @@ export type RemoteCertificate = {
   kind: 'PoolRegistration' | 'PoolRetirement'
   certIndex: number
   poolParams: Record<string, unknown> // don't think this is relevant
+}
+
+export type TxSubmissionStatus = {
+  submissionStatus: 'WAITING' | 'FAILED' | 'MAX_RETRY_REACHED' | 'SUCCESS'
+  reason?: string
+}
+
+export type TxStatusRequest = {txHashes: Array<string>}
+
+export type TxStatusResponse = {
+  depth: {[txId: string]: number}
+  submissionStatus: {[txId: string]: TxSubmissionStatus}
+}
+
+export type SignedTx = {
+  id: string
+  encodedTx: Uint8Array
+  base64: string
 }

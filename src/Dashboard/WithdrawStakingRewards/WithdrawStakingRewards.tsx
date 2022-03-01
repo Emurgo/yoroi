@@ -16,6 +16,7 @@ import {MultiToken} from '../../../legacy/crypto/MultiToken'
 import {HaskellShelleyTxSignRequest} from '../../../legacy/crypto/shelley/HaskellShelleyTxSignRequest'
 import type {DeviceId, DeviceObj, HWDeviceInfo} from '../../../legacy/crypto/shelley/ledgerUtils'
 import walletManager, {SystemAuthDisabled} from '../../../legacy/crypto/walletManager'
+import {ensureKeysValidity} from '../../../legacy/helpers/deviceSettings'
 import {errorMessages} from '../../../legacy/i18n/global-messages'
 import LocalizableError from '../../../legacy/i18n/LocalizableError'
 import {DELEGATION_ROUTES, SEND_ROUTES, WALLET_ROOT_ROUTES, WALLET_ROUTES} from '../../../legacy/RoutesList'
@@ -226,7 +227,7 @@ export class WithdrawStakingRewards extends React.Component<Props, State> {
 
       if (isEasyConfirmationEnabled) {
         try {
-          await walletManager.ensureKeysValidity()
+          await ensureKeysValidity(walletManager._id)
           navigation.navigate(SEND_ROUTES.BIOMETRICS_SIGNING, {
             keyId: walletManager._id,
             onSuccess: async (decryptedKey) => {

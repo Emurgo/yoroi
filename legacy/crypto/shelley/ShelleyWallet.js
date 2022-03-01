@@ -40,6 +40,8 @@ import type {
   TokenInfoResponse,
   TxBodiesRequest,
   TxBodiesResponse,
+  TxStatusRequest,
+  TxStatusResponse,
 } from '../../api/types'
 import {CONFIG, getCardanoBaseConfig, getWalletConfigById, isByron, isHaskellShelley} from '../../config/config'
 import type {CardanoHaskellShelleyNetwork} from '../../config/networks'
@@ -534,9 +536,11 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     )
     const id = Buffer.from(await (await hash_transaction(await signedTx.body())).to_bytes()).toString('hex')
     const encodedTx = await signedTx.to_bytes()
+    const base64 = Buffer.from(encodedTx).toString('base64')
     return {
       id,
       encodedTx,
+      base64,
     }
   }
 
@@ -646,6 +650,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
         networkId: config.NETWORK_ID,
       }
 
+      // $FlowFixMe
       const unsignedTx = await newAdaUnsignedTx(
         [],
         {
@@ -661,31 +666,34 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
         auxiliaryData,
       )
 
-      const signRequest = new HaskellShelleyTxSignRequest({
-        senderUtxos: unsignedTx.senderUtxos,
-        unsignedTx: unsignedTx.txBuilder,
-        changeAddr: unsignedTx.changeAddr,
-        auxiliaryData,
-        networkSettingSnapshot: {
-          NetworkId: config.NETWORK_ID,
-          ChainNetworkId: Number.parseInt(config.CHAIN_NETWORK_ID, 10),
-          KeyDeposit: new BigNumber(config.KEY_DEPOSIT),
-          PoolDeposit: new BigNumber(config.POOL_DEPOSIT),
+      const signRequest = new HaskellShelleyTxSignRequest(
+        {
+          senderUtxos: unsignedTx.senderUtxos,
+          unsignedTx: unsignedTx.txBuilder,
+          changeAddr: unsignedTx.changeAddr,
+          auxiliaryData,
+          networkSettingSnapshot: {
+            NetworkId: config.NETWORK_ID,
+            ChainNetworkId: Number.parseInt(config.CHAIN_NETWORK_ID, 10),
+            KeyDeposit: new BigNumber(config.KEY_DEPOSIT),
+            PoolDeposit: new BigNumber(config.POOL_DEPOSIT),
+          },
+          neededStakingKeyHashes: {
+            neededHashes: new Set(),
+            wits: new Set(),
+          },
+          ledgerNanoCatalystRegistrationTxSignData: this.isHW
+            ? {
+                votingPublicKey,
+                stakingKeyPath: this.getStakingKeyPath(),
+                stakingKey: Buffer.from(await stakePublicKey.as_bytes()).toString('hex'),
+                rewardAddress: Buffer.from(await rewardAddress.to_bytes()).toString('hex'),
+                nonce,
+              }
+            : undefined,
         },
-        neededStakingKeyHashes: {
-          neededHashes: new Set(),
-          wits: new Set(),
-        },
-        ledgerNanoCatalystRegistrationTxSignData: this.isHW
-          ? {
-              votingPublicKey,
-              stakingKeyPath: this.getStakingKeyPath(),
-              stakingKey: Buffer.from(await stakePublicKey.as_bytes()).toString('hex'),
-              rewardAddress: Buffer.from(await rewardAddress.to_bytes()).toString('hex'),
-              nonce,
-            }
-          : undefined,
-      })
+        unsignedTx,
+      )
       return signRequest
     } catch (e) {
       if (e instanceof LocalizableError || e instanceof ExtendableError) throw e
@@ -832,10 +840,12 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     )
     const id = Buffer.from(await (await hash_transaction(await signedTx.body())).to_bytes()).toString('hex')
     const encodedTx = await signedTx.to_bytes()
+    const base64 = Buffer.from(encodedTx).toString('base64')
     Logger.debug('ShelleyWallet::signTxWithLedger::encodedTx', Buffer.from(encodedTx).toString('hex'))
     return {
       id,
       encodedTx,
+      base64,
     }
   }
 
@@ -881,5 +891,9 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
 
   async fetchFundInfo(): Promise<FundInfoResponse> {
     return await api.getFundInfo(this._getBackendConfig(), this._getNetworkConfig().IS_MAINNET)
+  }
+
+  async fetchTxStatus(request: TxStatusRequest): Promise<TxStatusResponse> {
+    return api.fetchTxStatus(request, this._getBackendConfig())
   }
 }
