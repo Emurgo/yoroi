@@ -1,18 +1,15 @@
-// @flow
-
 import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import type {Device} from '../types'
-import DeviceItem from './DeviceItem'
+import {Device, DeviceItem} from './DeviceItem'
 
 const device: Device = {
   id: 123,
   name: 'Device Name',
 }
 
-const doTheThing = () => new Promise((resolve) => setTimeout(() => resolve(), 1000))
+const doTheThing = () => new Promise((resolve) => setTimeout(resolve, 1000))
 
 const onSelect = async (device) => {
   action('onSelect start')(device)
