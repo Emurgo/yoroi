@@ -48,6 +48,7 @@ function loadStories() {
 	require('../src/Settings/WalletSettings/WalletSettingsScreen.stories');
 	require('../src/Staking/DelegationConfirmation/DelegationConfirmation.stories');
 	require('../src/Staking/PoolDetails/PoolDetailScreen.stories');
+	require('../src/Staking/PoolWarningModal/PoolWarningModal.stories');
 	require('../src/Staking/StakingCenter/StakingCenter.stories');
 	require('../src/TxHistory/AssetList/ActionsBanner.stories');
 	require('../src/TxHistory/AssetList/ChipButton/ChipButton.stories');
@@ -128,6 +129,7 @@ const stories = [
 	'../src/Settings/WalletSettings/WalletSettingsScreen.stories',
 	'../src/Staking/DelegationConfirmation/DelegationConfirmation.stories',
 	'../src/Staking/PoolDetails/PoolDetailScreen.stories',
+	'../src/Staking/PoolWarningModal/PoolWarningModal.stories',
 	'../src/Staking/StakingCenter/StakingCenter.stories',
 	'../src/TxHistory/AssetList/ActionsBanner.stories',
 	'../src/TxHistory/AssetList/ChipButton/ChipButton.stories',
