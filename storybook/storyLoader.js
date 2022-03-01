@@ -54,6 +54,7 @@ function loadStories() {
 	require('../src/TxHistory/AssetList/ChipButton/ChipButton.stories');
 	require('../src/TxHistory/ModalInfo/ModalInfo.stories');
 	require('../src/TxHistory/TxDetails/AssetList.stories');
+	require('../src/TxHistory/TxDetails/TxDetails.stories');
 	require('../src/TxHistory/TxHistory.stories');
 	require('../src/TxHistory/TxHistoryList/ActionsBanner/ActionsBanner.stories');
 	require('../src/WalletInit/CheckNanoX/CheckNanoXScreen.stories');
@@ -135,6 +136,7 @@ const stories = [
 	'../src/TxHistory/AssetList/ChipButton/ChipButton.stories',
 	'../src/TxHistory/ModalInfo/ModalInfo.stories',
 	'../src/TxHistory/TxDetails/AssetList.stories',
+	'../src/TxHistory/TxDetails/TxDetails.stories',
 	'../src/TxHistory/TxHistory.stories',
 	'../src/TxHistory/TxHistoryList/ActionsBanner/ActionsBanner.stories',
 	'../src/WalletInit/CheckNanoX/CheckNanoXScreen.stories',
