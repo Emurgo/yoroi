@@ -1,9 +1,9 @@
-// @flow
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
 import TransportHID from '@v-almonacid/react-native-hid'
 import React from 'react'
-import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import type {IntlShape} from 'react-intl'
+import {defineMessages, injectIntl} from 'react-intl'
 import {
   ActivityIndicator,
   FlatList,
@@ -12,70 +12,44 @@ import {
   Platform,
   RefreshControl,
   ScrollView,
+  StyleSheet,
   View,
 } from 'react-native'
 
-import bleImage from '../../assets/img/bluetooth.png'
-import usbImage from '../../assets/img/ledger-nano-usb.png'
-import type {DeviceId, DeviceObj} from '../../crypto/shelley/ledgerUtils'
-import {BluetoothDisabledError, RejectedByUserError} from '../../crypto/shelley/ledgerUtils'
-import {confirmationMessages, ledgerMessages} from '../../i18n/global-messages'
-import LocalizableError from '../../i18n/LocalizableError'
-import {Logger} from '../../utils/logging'
-import {BulletPointItem, Button, Text} from '../UiKit'
-import {DeviceItem} from './DeviceItem'
-import styles from './styles/LedgerConnect.style'
-import type {Device} from './types'
+import bleImage from '../../../legacy/assets/img/bluetooth.png'
+import usbImage from '../../../legacy/assets/img/ledger-nano-usb.png'
+import {DeviceItem} from '../../../legacy/components/Ledger/DeviceItem'
+import type {Device} from '../../../legacy/components/Ledger/types'
+import {BulletPointItem, Button, Text} from '../../../legacy/components/UiKit'
+import type {DeviceId, DeviceObj} from '../../../legacy/crypto/shelley/ledgerUtils'
+import {BluetoothDisabledError, RejectedByUserError} from '../../../legacy/crypto/shelley/ledgerUtils'
+import {confirmationMessages, ledgerMessages} from '../../../legacy/i18n/global-messages'
+import LocalizableError from '../../../legacy/i18n/LocalizableError'
+import {COLORS, spacing} from '../../../legacy/styles/config'
+import {Logger} from '../../../legacy/utils/logging'
 
-const messages = defineMessages({
-  caption: {
-    id: 'components.walletinit.connectnanox.connectnanoxscreen.caption',
-    defaultMessage: '!!!Scanning bluetooth devices...',
-  },
-  introline: {
-    id: 'components.walletinit.connectnanox.connectnanoxscreen.introline',
-    defaultMessage: "!!!You'll need to:",
-  },
-  usbDeviceReady: {
-    id: 'components.ledger.ledgerconnect.usbDeviceReady',
-    defaultMessage: '!!!USB device is ready, please tap on Confirm to continue.',
-  },
-  error: {
-    id: 'components.walletinit.connectnanox.connectnanoxscreen.error',
-    defaultMessage: '!!!An error occurred while trying to connect with your hardware wallet:',
-  },
-})
+type Props = {
+  intl: IntlShape
+  defaultDevices?: Array<Device> | null // for storybook
+  onConnectUSB: (deviceObj: DeviceObj) => void
+  onConnectBLE: (deviceId: DeviceId) => void
+  useUSB?: boolean
+  onWaitingMessage?: string
+  fillSpace?: boolean
+}
 
-const deviceAddition =
-  (device) =>
-  ({devices}) => {
-    return {
-      devices: devices.some((i) => i.id === device.id) ? devices : devices.concat(device),
-    }
-  }
-
-type Props = {|
-  intl: IntlShape,
-  defaultDevices?: ?Array<Device>, // for storybook
-  onConnectUSB: (DeviceObj) => any,
-  onConnectBLE: (DeviceId) => any,
-  useUSB?: boolean,
-  onWaitingMessage?: string,
-  fillSpace?: boolean,
-|}
-
-type State = {|
-  devices: Array<Device>,
-  deviceId: ?DeviceId,
-  deviceObj: ?DeviceObj,
-  error: ?Error,
-  refreshing: boolean,
-  waiting: boolean,
-|}
+type State = {
+  devices: Array<Device>
+  deviceId?: DeviceId
+  deviceObj?: DeviceObj
+  error?: any
+  refreshing: boolean
+  waiting: boolean
+}
 
 // eslint-disable-next-line react-prefer-function-component/react-prefer-function-component
-class LedgerConnect extends React.Component<Props, State> {
-  state = {
+class _LedgerConnect extends React.Component<Props, State> {
+  state: State = {
     devices: this.props.defaultDevices ? this.props.defaultDevices : [],
     deviceId: null,
     deviceObj: null,
@@ -84,10 +58,10 @@ class LedgerConnect extends React.Component<Props, State> {
     waiting: false,
   }
 
-  _subscriptions: ?{unsubscribe: () => any} = null
-  _bluetoothEnabled: ?boolean = null
-  _transportLib: Object = null
-  _isMounted: boolean = false
+  _subscriptions: null | {unsubscribe: () => void} = null
+  _bluetoothEnabled: null | boolean = null
+  _transportLib: any = null
+  _isMounted = false
 
   async componentDidMount() {
     const {useUSB} = this.props
@@ -174,7 +148,7 @@ class LedgerConnect extends React.Component<Props, State> {
     }
   }
 
-  _setStateSafe: (InexactSubset<State>) => void = (newState) => {
+  _setStateSafe = (newState) => {
     if (this._isMounted) this.setState(newState)
   }
 
@@ -217,7 +191,7 @@ class LedgerConnect extends React.Component<Props, State> {
     }
   }
 
-  _onConfirm = async (deviceObj: ?DeviceObj): Promise<void> => {
+  _onConfirm = async (deviceObj?: DeviceObj | null): Promise<void> => {
     this._unsubscribe()
     try {
       if (deviceObj == null) {
@@ -244,7 +218,7 @@ class LedgerConnect extends React.Component<Props, State> {
     const {error, waiting, deviceObj} = this.state
     const {intl, onWaitingMessage} = this.props
 
-    const ListHeaderWrapper = ({msg, err}: {msg: string, err: ?string}) => (
+    const ListHeaderWrapper = ({msg, err}: {msg: string; err?: string | null}) => (
       <View style={styles.listHeader}>
         <Text style={[styles.paragraph, styles.paragraphText]}>{msg}</Text>
         {err != null && <Text style={[styles.error, styles.paragraphText]}>{err}</Text>}
@@ -331,4 +305,86 @@ class LedgerConnect extends React.Component<Props, State> {
   }
 }
 
-export default injectIntl(LedgerConnect)
+export const LedgerConnect = injectIntl(_LedgerConnect)
+
+const messages = defineMessages({
+  caption: {
+    id: 'components.walletinit.connectnanox.connectnanoxscreen.caption',
+    defaultMessage: '!!!Scanning bluetooth devices...',
+  },
+  introline: {
+    id: 'components.walletinit.connectnanox.connectnanoxscreen.introline',
+    defaultMessage: "!!!You'll need to:",
+  },
+  usbDeviceReady: {
+    id: 'components.ledger.ledgerconnect.usbDeviceReady',
+    defaultMessage: '!!!USB device is ready, please tap on Confirm to continue.',
+  },
+  error: {
+    id: 'components.walletinit.connectnanox.connectnanoxscreen.error',
+    defaultMessage: '!!!An error occurred while trying to connect with your hardware wallet:',
+  },
+})
+
+const deviceAddition =
+  (device) =>
+  ({devices}) => {
+    return {
+      devices: devices.some((i) => i.id === device.id) ? devices : devices.concat(device),
+    }
+  }
+
+const styles = StyleSheet.create({
+  container: {
+    paddingTop: 30,
+    paddingHorizontal: 20,
+  },
+  fillSpace: {
+    flex: 1,
+  },
+  scrollView: {
+    marginBottom: 22,
+  },
+  heading: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: spacing.paragraphBottomMargin,
+  },
+  caption: {
+    marginTop: 12,
+  },
+  flatList: {
+    flex: 1,
+    flexDirection: 'column',
+    height: 150,
+  },
+  flatListContentContainer: {
+    flexGrow: 1,
+  },
+  listHeader: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  paragraph: {
+    marginBottom: spacing.paragraphBottomMargin,
+  },
+  error: {
+    color: COLORS.ERROR_TEXT_COLOR,
+  },
+  instructionsBlock: {
+    marginVertical: 24,
+  },
+  paragraphText: {
+    fontSize: 14,
+    lineHeight: 22,
+  },
+  item: {
+    marginTop: 12,
+    fontSize: 14,
+    lineHeight: 22,
+  },
+  button: {
+    marginHorizontal: 10,
+    marginBottom: 8,
+  },
+})
