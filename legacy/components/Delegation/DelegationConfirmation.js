@@ -20,6 +20,7 @@ import KeyStore from '../../crypto/KeyStore'
 import {MultiToken} from '../../crypto/MultiToken'
 import type {CreateDelegationTxResponse} from '../../crypto/shelley/delegationUtils'
 import walletManager, {SystemAuthDisabled} from '../../crypto/walletManager'
+import {ensureKeysValidity} from '../../helpers/deviceSettings'
 import globalMessages, {errorMessages, txLabels} from '../../i18n/global-messages'
 import LocalizableError from '../../i18n/LocalizableError'
 import {useParams} from '../../navigation'
@@ -138,7 +139,7 @@ const handleOnConfirm = async (
 
     if (isEasyConfirmationEnabled) {
       try {
-        await walletManager.ensureKeysValidity()
+        await ensureKeysValidity(walletManager._id)
         navigation.navigate(SEND_ROUTES.BIOMETRICS_SIGNING, {
           keyId: walletManager._id,
           onSuccess: async (decryptedKey) => {
