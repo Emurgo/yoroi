@@ -4,20 +4,14 @@
 // https://github.com/elderfo/react-native-storybook-loader.git
 
 function loadStories() {
-	require('../legacy/components/Common/DangerousActionModal.stories');
-	require('../legacy/components/Common/ErrorModal.stories');
-	require('../legacy/components/Common/FingerprinScreenBase.stories');
-	require('../legacy/components/Delegation/DelegationConfirmation.stories');
 	require('../legacy/components/Delegation/FlawedWalletScreen.stories');
-	require('../legacy/components/Ledger/DeviceItem/DeviceItem.stories');
-	require('../legacy/components/Ledger/LedgerConnect.stories');
-	require('../legacy/components/Ledger/LedgerTransportSwitchModal.stories');
 	require('../legacy/components/MaintenanceScreen.stories');
-	require('../legacy/components/Send/BiometricAuthScreen.stories');
 	require('../legacy/components/UiKit/Button.stories');
 	require('../legacy/components/UiKit/Checkbox.stories');
 	require('../legacy/components/UiKit/Link.stories');
 	require('../legacy/components/UiKit/TextInput.stories');
+	require('../src/BiometricAuth/BiometricAuthScreen.stories');
+	require('../src/BiometricAuth/FingerprintScreenBase/FingerprintScreenBase.stories');
 	require('../src/Catalyst/Catalyst.stories');
 	require('../src/Catalyst/VotingBanner.stories');
 	require('../src/Dashboard/Dashboard.stories');
@@ -26,6 +20,10 @@ function loadStories() {
 	require('../src/FirstRun/CustomPinScreen/CustomPinScreen.stories');
 	require('../src/FirstRun/LanguagePickerScreen/LanguagePickerScreen.stories');
 	require('../src/FirstRun/TermsOfServiceScreen/TermsOfServiceScreen.stories');
+	require('../src/HW/Instructions/Instructions.stories');
+	require('../src/HW/LedgerConnect/DeviceItem/DeviceItem.stories');
+	require('../src/HW/LedgerConnect/LedgerConnect.stories');
+	require('../src/HW/LedgerTransportSwitchModal/LedgerTransportSwitchModal.stories');
 	require('../src/Login/CustomPinLoginScreen.stories');
 	require('../src/Menu/Menu.stories');
 	require('../src/Receive/AddressModal.stories');
@@ -48,7 +46,9 @@ function loadStories() {
 	require('../src/Settings/TermsOfService/TermsOfServiceScreen.stories');
 	require('../src/Settings/ToggleEasyConfirmation/ToggleEasyConfirmationScreen.stories');
 	require('../src/Settings/WalletSettings/WalletSettingsScreen.stories');
+	require('../src/Staking/DelegationConfirmation/DelegationConfirmation.stories');
 	require('../src/Staking/PoolDetails/PoolDetailScreen.stories');
+	require('../src/Staking/PoolWarningModal/PoolWarningModal.stories');
 	require('../src/Staking/StakingCenter/StakingCenter.stories');
 	require('../src/TxHistory/AssetList/ActionsBanner.stories');
 	require('../src/TxHistory/AssetList/ChipButton/ChipButton.stories');
@@ -78,25 +78,22 @@ function loadStories() {
 	require('../src/WalletInit/WalletNameForm/WalletNameForm.stories');
 	require('../src/auth/PinRegistration/PinRegistrationForm.stories');
 	require('../src/components/Boundary/Boundary.stories');
+	require('../src/components/DangerousActionModal/DangerousActionModal.stories');
+	require('../src/components/ErrorModal/ErrorModal.stories');
 	require('../src/components/Icon/Icon.stories');
+	require('../src/components/StandardModal/StandardModal.stories');
 	require('./Example/Example.stories');
 }
 
 const stories = [
-	'../legacy/components/Common/DangerousActionModal.stories',
-	'../legacy/components/Common/ErrorModal.stories',
-	'../legacy/components/Common/FingerprinScreenBase.stories',
-	'../legacy/components/Delegation/DelegationConfirmation.stories',
 	'../legacy/components/Delegation/FlawedWalletScreen.stories',
-	'../legacy/components/Ledger/DeviceItem/DeviceItem.stories',
-	'../legacy/components/Ledger/LedgerConnect.stories',
-	'../legacy/components/Ledger/LedgerTransportSwitchModal.stories',
 	'../legacy/components/MaintenanceScreen.stories',
-	'../legacy/components/Send/BiometricAuthScreen.stories',
 	'../legacy/components/UiKit/Button.stories',
 	'../legacy/components/UiKit/Checkbox.stories',
 	'../legacy/components/UiKit/Link.stories',
 	'../legacy/components/UiKit/TextInput.stories',
+	'../src/BiometricAuth/BiometricAuthScreen.stories',
+	'../src/BiometricAuth/FingerprintScreenBase/FingerprintScreenBase.stories',
 	'../src/Catalyst/Catalyst.stories',
 	'../src/Catalyst/VotingBanner.stories',
 	'../src/Dashboard/Dashboard.stories',
@@ -105,6 +102,10 @@ const stories = [
 	'../src/FirstRun/CustomPinScreen/CustomPinScreen.stories',
 	'../src/FirstRun/LanguagePickerScreen/LanguagePickerScreen.stories',
 	'../src/FirstRun/TermsOfServiceScreen/TermsOfServiceScreen.stories',
+	'../src/HW/Instructions/Instructions.stories',
+	'../src/HW/LedgerConnect/DeviceItem/DeviceItem.stories',
+	'../src/HW/LedgerConnect/LedgerConnect.stories',
+	'../src/HW/LedgerTransportSwitchModal/LedgerTransportSwitchModal.stories',
 	'../src/Login/CustomPinLoginScreen.stories',
 	'../src/Menu/Menu.stories',
 	'../src/Receive/AddressModal.stories',
@@ -127,7 +128,9 @@ const stories = [
 	'../src/Settings/TermsOfService/TermsOfServiceScreen.stories',
 	'../src/Settings/ToggleEasyConfirmation/ToggleEasyConfirmationScreen.stories',
 	'../src/Settings/WalletSettings/WalletSettingsScreen.stories',
+	'../src/Staking/DelegationConfirmation/DelegationConfirmation.stories',
 	'../src/Staking/PoolDetails/PoolDetailScreen.stories',
+	'../src/Staking/PoolWarningModal/PoolWarningModal.stories',
 	'../src/Staking/StakingCenter/StakingCenter.stories',
 	'../src/TxHistory/AssetList/ActionsBanner.stories',
 	'../src/TxHistory/AssetList/ChipButton/ChipButton.stories',
@@ -157,7 +160,10 @@ const stories = [
 	'../src/WalletInit/WalletNameForm/WalletNameForm.stories',
 	'../src/auth/PinRegistration/PinRegistrationForm.stories',
 	'../src/components/Boundary/Boundary.stories',
+	'../src/components/DangerousActionModal/DangerousActionModal.stories',
+	'../src/components/ErrorModal/ErrorModal.stories',
 	'../src/components/Icon/Icon.stories',
+	'../src/components/StandardModal/StandardModal.stories',
 	'./Example/Example.stories'
 ];
 

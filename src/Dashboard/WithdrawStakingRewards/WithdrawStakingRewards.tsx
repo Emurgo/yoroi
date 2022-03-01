@@ -55,10 +55,12 @@ type State = {
   balance: BigNumber
   finalBalance: BigNumber
   fees: BigNumber
-  error: {
-    errorMessage: string | null
-    errorLogs?: string | null
-  }
+  error:
+    | undefined
+    | {
+        errorMessage: string
+        errorLogs?: string | null
+      }
 }
 
 // eslint-disable-next-line react-prefer-function-component/react-prefer-function-component
@@ -72,10 +74,7 @@ export class WithdrawStakingRewards extends React.Component<Props, State> {
     balance: new BigNumber(0),
     finalBalance: new BigNumber(0),
     fees: new BigNumber(0),
-    error: {
-      errorMessage: null,
-      errorLogs: null,
-    },
+    error: undefined,
   }
 
   _shouldDeregister = false
@@ -171,7 +170,7 @@ export class WithdrawStakingRewards extends React.Component<Props, State> {
       withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.LEDGER_CONNECT,
     })
 
-  onChooseTransport = async (event: Record<string, unknown>, useUSB: boolean): Promise<void> => {
+  onChooseTransport = async (useUSB: boolean): Promise<void> => {
     const {hwDeviceInfo} = this.props
     this.setState({useUSB})
     if (
@@ -197,7 +196,7 @@ export class WithdrawStakingRewards extends React.Component<Props, State> {
   // TODO: this code has been copy-pasted from the tx confirmation page.
   // Ideally, all this logic should be moved away and perhaps written as a
   // redux action that can be reused in all components with tx signing and sending
-  onConfirm = async (_event: Record<string, unknown>, password: string | void): Promise<void> => {
+  onConfirm = async (password: string | void): Promise<void> => {
     const {signTxRequest, useUSB} = this.state
     const {intl, navigation, isHW, isEasyConfirmationEnabled, submitTransaction, submitSignedTx} = this.props
     if (signTxRequest == null) throw new Error('no tx data')

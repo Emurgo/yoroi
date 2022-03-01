@@ -3,8 +3,6 @@ import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import DelegationConfirmation from '../../legacy/components/Delegation/DelegationConfirmation'
-import BiometricAuthScreen from '../../legacy/components/Send/BiometricAuthScreen'
 import {UI_V2} from '../../legacy/config/config'
 import {isJormungandr} from '../../legacy/config/networks'
 import {
@@ -13,9 +11,11 @@ import {
   jormunNavigationOptions,
 } from '../../legacy/navigationOptions'
 import {SEND_ROUTES, STAKING_CENTER_ROUTES, STAKING_DASHBOARD_ROUTES, WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
+import {BiometricAuthScreen} from '../BiometricAuth'
 import {SettingsButton} from '../components/Button'
 import {useWalletName} from '../hooks'
 import {useSelectedWallet} from '../SelectedWallet'
+import {DelegationConfirmation} from '../Staking'
 import {StakingCenter} from '../Staking/StakingCenter'
 import {Dashboard} from './Dashboard'
 

@@ -17,10 +17,6 @@ import {
   setLedgerDeviceId as _setLedgerDeviceId,
   setLedgerDeviceObj as _setLedgerDeviceObj,
 } from '../../../legacy/actions/hwWallet'
-import ErrorModal from '../../../legacy/components/Common/ErrorModal'
-import HWInstructions from '../../../legacy/components/Ledger/HWInstructions'
-import LedgerConnect from '../../../legacy/components/Ledger/LedgerConnect'
-import LedgerTransportSwitchModal from '../../../legacy/components/Ledger/LedgerTransportSwitchModal'
 import {
   Banner,
   Button,
@@ -49,7 +45,10 @@ import {
 import {COLORS} from '../../../legacy/styles/config'
 import {formatTokenWithSymbol, formatTokenWithText} from '../../../legacy/utils/format'
 import {Boundary, Spacer} from '../../components'
+import {ErrorModal} from '../../components'
 import {useTokenInfo} from '../../hooks'
+import {Instructions as HWInstructions, LedgerTransportSwitchModal} from '../../HW'
+import {LedgerConnect} from '../../HW'
 import {useParams} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {TokenEntry} from '../../types/cardano'

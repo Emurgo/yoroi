@@ -1,14 +1,13 @@
 import Clipboard from '@react-native-community/clipboard'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Image, Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
-import type {ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
+import {Image, Linking, StyleSheet, TouchableOpacity, View, ViewStyle} from 'react-native'
 
 import copyIcon from '../../../legacy/assets/img/icon/copy.png'
-import {FadeOutView} from '../../../legacy/components/Common/FadeOutView'
 import {Text} from '../../../legacy/components/UiKit'
 import {getNetworkConfigById} from '../../../legacy/config/networks'
 import type {NetworkId} from '../../../legacy/config/types'
+import {FadeOutView} from './FadeOutView'
 
 export const WalletAddress = ({
   addressHash,
@@ -17,7 +16,7 @@ export const WalletAddress = ({
 }: {
   addressHash: string
   networkId: NetworkId
-  style?: ViewStyleProp
+  style?: ViewStyle
 }) => {
   const strings = useStrings()
   const [showCopyNotification, setShowCopyNotification] = React.useState(false)

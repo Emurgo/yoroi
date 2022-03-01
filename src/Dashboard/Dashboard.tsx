@@ -12,7 +12,7 @@ import {setLedgerDeviceId, setLedgerDeviceObj} from '../../legacy/actions/hwWall
 import {fetchUTXOs} from '../../legacy/actions/utxo'
 import AccountAutoRefresher from '../../legacy/components/Delegation/AccountAutoRefresher'
 import UtxoAutoRefresher from '../../legacy/components/Send/UtxoAutoRefresher'
-import {Banner, Button, OfflineBanner, StatusBar} from '../../legacy/components/UiKit'
+import {Button, StatusBar} from '../../legacy/components/UiKit'
 import {getCardanoBaseConfig, UI_V2} from '../../legacy/config/config'
 import {getDefaultAssetByNetworkId} from '../../legacy/config/config'
 import {getCardanoNetworkConfigById} from '../../legacy/config/networks'
@@ -35,6 +35,7 @@ import {
   genToRelativeSlotNumber,
 } from '../../legacy/utils/timeUtils'
 import {VotingBanner} from '../Catalyst/VotingBanner'
+import {Banner, OfflineBanner} from '../components'
 import {useSelectedWallet} from '../SelectedWallet'
 import {WalletInterface} from '../types'
 import {EpochProgress} from './EpochProgress'
