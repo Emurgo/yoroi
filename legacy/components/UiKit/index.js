@@ -1,6 +1,5 @@
 // @flow
 
-export {default as Banner} from './Banner'
 export {default as BulletPointItem} from './BulletPointItem'
 export {default as Button} from './Button'
 export {default as Checkbox} from './Checkbox'
@@ -9,7 +8,6 @@ export * from './KeyboardSpacer'
 export {default as Line} from './Line'
 export {default as Link} from './Link'
 export {default as Modal} from './Modal'
-export {default as OfflineBanner} from './OfflineBanner'
 export {default as PleaseWaitModal} from './PleaseWaitModal'
 export {default as ProgressCircle} from './ProgressCircle'
 export {default as ProgressStep} from './ProgressStep'
