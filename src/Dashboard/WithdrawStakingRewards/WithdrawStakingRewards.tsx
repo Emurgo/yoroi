@@ -170,7 +170,7 @@ export class WithdrawStakingRewards extends React.Component<Props, State> {
       withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.LEDGER_CONNECT,
     })
 
-  onChooseTransport = async (event: Record<string, unknown>, useUSB: boolean): Promise<void> => {
+  onChooseTransport = async (useUSB: boolean): Promise<void> => {
     const {hwDeviceInfo} = this.props
     this.setState({useUSB})
     if (

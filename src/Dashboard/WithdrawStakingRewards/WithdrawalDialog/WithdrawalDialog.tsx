@@ -7,7 +7,6 @@ import Markdown from 'react-native-easy-markdown'
 import type {WithdrawalDialogSteps} from '../../../../legacy/components/Delegation/types'
 import {WITHDRAWAL_DIALOG_STEPS} from '../../../../legacy/components/Delegation/types'
 import LedgerConnect from '../../../../legacy/components/Ledger/LedgerConnect'
-import {LedgerTransportSwitch} from '../../../../legacy/components/Ledger/LedgerTransportSwitchModal'
 import {Modal} from '../../../../legacy/components/UiKit'
 import {PleaseWaitView} from '../../../../legacy/components/UiKit/PleaseWaitModal'
 import {MultiToken} from '../../../../legacy/crypto/MultiToken'
@@ -15,6 +14,7 @@ import globalMessages, {ledgerMessages} from '../../../../legacy/i18n/global-mes
 import {theme} from '../../../../legacy/styles/config'
 import {DangerousAction, Spacer} from '../../../components'
 import {ErrorView} from '../../../components'
+import {LedgerTransportSwitch} from '../../../HW'
 import {TransferSummary} from './TransferSummary'
 
 export type Withdrawal = {
@@ -31,7 +31,7 @@ type Props = {
   step: WithdrawalDialogSteps
   onKeepKey: () => void
   onDeregisterKey: () => void
-  onChooseTransport: (object: Record<string, unknown>, bool: boolean) => void
+  onChooseTransport: (bool: boolean) => void
   onConnectBLE: (...args: unknown[]) => void
   onConnectUSB: (...args: unknown[]) => void
   withdrawals: null | Array<Withdrawal>
@@ -100,8 +100,8 @@ export const WithdrawalDialog = ({
       case WITHDRAWAL_DIALOG_STEPS.CHOOSE_TRANSPORT:
         return (
           <LedgerTransportSwitch
-            onSelectUSB={(event) => onChooseTransport(event, true)}
-            onSelectBLE={(event) => onChooseTransport(event, false)}
+            onSelectUSB={() => onChooseTransport(true)}
+            onSelectBLE={() => onChooseTransport(false)}
           />
         )
       case WITHDRAWAL_DIALOG_STEPS.LEDGER_CONNECT:

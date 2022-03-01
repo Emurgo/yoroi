@@ -7,7 +7,6 @@ function loadStories() {
 	require('../legacy/components/Delegation/FlawedWalletScreen.stories');
 	require('../legacy/components/Ledger/DeviceItem/DeviceItem.stories');
 	require('../legacy/components/Ledger/LedgerConnect.stories');
-	require('../legacy/components/Ledger/LedgerTransportSwitchModal.stories');
 	require('../legacy/components/MaintenanceScreen.stories');
 	require('../legacy/components/UiKit/Button.stories');
 	require('../legacy/components/UiKit/Checkbox.stories');
@@ -24,6 +23,7 @@ function loadStories() {
 	require('../src/FirstRun/LanguagePickerScreen/LanguagePickerScreen.stories');
 	require('../src/FirstRun/TermsOfServiceScreen/TermsOfServiceScreen.stories');
 	require('../src/HW/Instructions/Instructions.stories');
+	require('../src/HW/LedgerTransportSwitchModal/LedgerTransportSwitchModal.stories');
 	require('../src/Login/CustomPinLoginScreen.stories');
 	require('../src/Menu/Menu.stories');
 	require('../src/Receive/AddressModal.stories');
@@ -88,7 +88,6 @@ const stories = [
 	'../legacy/components/Delegation/FlawedWalletScreen.stories',
 	'../legacy/components/Ledger/DeviceItem/DeviceItem.stories',
 	'../legacy/components/Ledger/LedgerConnect.stories',
-	'../legacy/components/Ledger/LedgerTransportSwitchModal.stories',
 	'../legacy/components/MaintenanceScreen.stories',
 	'../legacy/components/UiKit/Button.stories',
 	'../legacy/components/UiKit/Checkbox.stories',
@@ -105,6 +104,7 @@ const stories = [
 	'../src/FirstRun/LanguagePickerScreen/LanguagePickerScreen.stories',
 	'../src/FirstRun/TermsOfServiceScreen/TermsOfServiceScreen.stories',
 	'../src/HW/Instructions/Instructions.stories',
+	'../src/HW/LedgerTransportSwitchModal/LedgerTransportSwitchModal.stories',
 	'../src/Login/CustomPinLoginScreen.stories',
 	'../src/Menu/Menu.stories',
 	'../src/Receive/AddressModal.stories',

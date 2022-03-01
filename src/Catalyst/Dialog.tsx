@@ -8,12 +8,12 @@ import React from 'react'
 import {useIntl} from 'react-intl'
 
 import LedgerConnect from '../../legacy/components/Ledger/LedgerConnect'
-import {LedgerTransportSwitch} from '../../legacy/components/Ledger/LedgerTransportSwitchModal'
 import {Modal} from '../../legacy/components/UiKit'
 import {PleaseWaitView} from '../../legacy/components/UiKit/PleaseWaitModal'
 import type {DeviceId, DeviceObj} from '../../legacy/crypto/shelley/ledgerUtils'
 import globalMessages, {ledgerMessages, txLabels} from '../../legacy/i18n/global-messages'
 import {ErrorView} from '../components'
+import {LedgerTransportSwitch} from '../HW'
 
 type ErrorData = {
   errorMessage: string
@@ -33,7 +33,7 @@ export type DialogStep = typeof DIALOG_STEPS[keyof typeof DIALOG_STEPS]
 type DialogProps = {
   step: DialogStep
   onRequestClose: () => void
-  onChooseTransport: (object: Record<string, unknown>, bool: boolean) => void
+  onChooseTransport: (bool: boolean) => void
   onConnectBLE: (id: DeviceId) => void
   onConnectUSB: (obj: DeviceObj) => void
   useUSB: boolean
@@ -56,8 +56,8 @@ export const Dialog = ({
       case DIALOG_STEPS.CHOOSE_TRANSPORT:
         return (
           <LedgerTransportSwitch
-            onSelectUSB={(event) => onChooseTransport(event, true)}
-            onSelectBLE={(event) => onChooseTransport(event, false)}
+            onSelectUSB={() => onChooseTransport(true)}
+            onSelectBLE={() => onChooseTransport(false)}
           />
         )
       case DIALOG_STEPS.LEDGER_CONNECT:

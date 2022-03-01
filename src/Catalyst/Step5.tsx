@@ -59,7 +59,7 @@ export const Step5 = () => {
   const [fees, setFees] = useState(null)
   const [useUSB, setUseUSB] = useState<boolean>(false)
 
-  const onChooseTransport = (_, shouldUseUSB: boolean) => {
+  const onChooseTransport = (shouldUseUSB: boolean) => {
     setUseUSB(shouldUseUSB)
     if (
       (shouldUseUSB && hwDeviceInfo?.hwFeatures.deviceObj == null) ||

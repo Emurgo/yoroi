@@ -18,7 +18,6 @@ import {
   setLedgerDeviceObj as _setLedgerDeviceObj,
 } from '../../../legacy/actions/hwWallet'
 import LedgerConnect from '../../../legacy/components/Ledger/LedgerConnect'
-import LedgerTransportSwitchModal from '../../../legacy/components/Ledger/LedgerTransportSwitchModal'
 import {
   Banner,
   Button,
@@ -49,7 +48,7 @@ import {formatTokenWithSymbol, formatTokenWithText} from '../../../legacy/utils/
 import {Boundary, Spacer} from '../../components'
 import {ErrorModal} from '../../components'
 import {useTokenInfo} from '../../hooks'
-import {Instructions as HWInstructions} from '../../HW'
+import {Instructions as HWInstructions, LedgerTransportSwitchModal} from '../../HW'
 import {useParams} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {TokenEntry} from '../../types/cardano'

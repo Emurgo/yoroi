@@ -35,6 +35,7 @@ export var CONFIG: {
   },
   HARDWARE_WALLETS: {
     LEDGER_NANO: {
+      USB_MIN_SDK: number,
       ENABLE_USB_TRANSPORT: boolean,
       ENABLED: boolean,
       DEFAULT_WALLET_NAME: string
