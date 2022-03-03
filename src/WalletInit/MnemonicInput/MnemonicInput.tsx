@@ -2,7 +2,7 @@
 import {validateMnemonic, wordlists} from 'bip39'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Keyboard, ScrollView, StyleSheet, View} from 'react-native'
+import {Keyboard, ScrollView, StyleSheet, TextInput as RNTextInput, View} from 'react-native'
 
 import {COLORS} from '../../../legacy/styles/config'
 import {Menu, TextInput, useScrollView} from '../../components'
@@ -54,7 +54,7 @@ type MnemonicWordsInputProps = {
   onSelect: (index: number, word: string) => void
 }
 const MnemonicWordsInput = ({onSelect, words}: MnemonicWordsInputProps) => {
-  const refs = React.useRef(words.map(() => React.createRef<typeof TextInput>())).current
+  const refs = React.useRef(words.map(() => React.createRef<RNTextInput>())).current
   const scrollView = useScrollView()
   const rowHeightRef = React.useRef<number | void>()
 
@@ -77,7 +77,7 @@ const MnemonicWordsInput = ({onSelect, words}: MnemonicWordsInputProps) => {
             onSelect={(word: string) => {
               onSelect(index, word)
               if (!refs[index + 1]) return
-              ;(refs[index + 1].current as any)?.focus()
+              refs[index + 1].current?.focus()
             }}
             id={index + 1}
             onFocus={() => {
@@ -98,7 +98,7 @@ type MnemonicWordInputProps = {
   onSelect: (word: string) => void
   onFocus: () => void
 }
-const MnemonicWordInput = React.forwardRef<typeof TextInput, MnemonicWordInputProps>(({id, onSelect, onFocus}, ref) => {
+const MnemonicWordInput = React.forwardRef<RNTextInput, MnemonicWordInputProps>(({id, onSelect, onFocus}, ref) => {
   const [word, setWord] = React.useState('')
   const matchingWords = React.useMemo(() => (word ? getMatchingWords(word) : []), [word])
   const [menuEnabled, setMenuEnabled] = React.useState(false)
@@ -115,7 +115,7 @@ const MnemonicWordInput = React.forwardRef<typeof TextInput, MnemonicWordInputPr
       contentStyle={styles.menuContent}
       anchor={
         <TextInput
-          ref={ref as any}
+          ref={ref}
           value={word}
           placeholder={String(id)}
           onFocus={onFocus}
