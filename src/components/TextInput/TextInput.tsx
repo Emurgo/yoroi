@@ -11,34 +11,24 @@ import {
 } from 'react-native'
 import {HelperText, TextInput as RNPTextInput} from 'react-native-paper'
 import {TextInputProps} from 'react-native-paper/lib/typescript/components/TextInput/TextInput'
-import {RenderProps} from 'react-native-paper/lib/typescript/components/TextInput/types'
 
 import closedEyeIcon from '../../../legacy/assets/img/icon/visibility-closed.png'
 import openedEyeIcon from '../../../legacy/assets/img/icon/visibility-opened.png'
 import {COLORS} from '../../../legacy/styles/config'
 import {Icon} from '../Icon'
 
-type Props = Omit<
-  RNTextInputProps &
-    TextInputProps & {
-      containerStyle?: ViewStyle
-      label?: string
-      helperText?: string
-      errorText?: string
-      disabled?: boolean
-      errorOnMount?: boolean
-      errorDelay?: number
-      right?: React.ReactNode
-      noErrors?: boolean
-      dense?: boolean
-      faded?: boolean
-      textAlign?: 'left' | 'center' | 'right'
-      value?: string
-      secureTextEntry?: boolean
-      render?: (renderProps: RenderProps) => React.ReactNode
-    } & {selectionColor?: string},
-  'theme'
->
+type Props = RNTextInputProps &
+  Omit<TextInputProps, 'theme'> & {
+    containerStyle?: ViewStyle
+    helperText?: string
+    errorText?: string
+    disabled?: boolean
+    errorOnMount?: boolean
+    errorDelay?: number
+    noErrors?: boolean
+    dense?: boolean
+    faded?: boolean
+  }
 
 const useDebounced = (callback, value, delay = 1000) => {
   const first = React.useRef(true)
