@@ -1,24 +1,16 @@
 import React, {ForwardedRef} from 'react'
-import {
-  Image,
-  StyleSheet,
-  TextInput as RNTextInput,
-  TextInputProps as RNTextInputProps,
-  TouchableOpacity,
-  View,
-  ViewProps,
-  ViewStyle,
-} from 'react-native'
+import {Image, StyleSheet, TextInput as RNTextInput, TouchableOpacity, View, ViewProps, ViewStyle} from 'react-native'
+import * as RN from 'react-native'
 import {HelperText, TextInput as RNPTextInput} from 'react-native-paper'
-import {TextInputProps} from 'react-native-paper/lib/typescript/components/TextInput/TextInput'
+import * as RNP from 'react-native-paper'
 
 import closedEyeIcon from '../../../legacy/assets/img/icon/visibility-closed.png'
 import openedEyeIcon from '../../../legacy/assets/img/icon/visibility-opened.png'
 import {COLORS} from '../../../legacy/styles/config'
 import {Icon} from '../Icon'
 
-type Props = RNTextInputProps &
-  Omit<TextInputProps, 'theme'> & {
+type Props = RN.TextInputProps &
+  Omit<RNP.TextInputProps, 'theme'> & {
     containerStyle?: ViewStyle
     helperText?: string
     errorText?: string
