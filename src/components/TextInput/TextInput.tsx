@@ -1,7 +1,7 @@
 import React, {ForwardedRef} from 'react'
-import {Image, StyleSheet, TextInput as RNTextInput, TouchableOpacity, View, ViewProps, ViewStyle} from 'react-native'
+import {Image, StyleSheet, TouchableOpacity, View, ViewProps, ViewStyle} from 'react-native'
 import * as RN from 'react-native'
-import {HelperText, TextInput as RNPTextInput} from 'react-native-paper'
+import {HelperText} from 'react-native-paper'
 import * as RNP from 'react-native-paper'
 
 import closedEyeIcon from '../../../legacy/assets/img/icon/visibility-closed.png'
@@ -38,7 +38,7 @@ const useDebounced = (callback, value, delay = 1000) => {
   }, [callback, delay, value])
 }
 
-export const TextInput = React.forwardRef((props: Props, ref: ForwardedRef<RNTextInput>) => {
+export const TextInput = React.forwardRef((props: Props, ref: ForwardedRef<RN.TextInput>) => {
   const {
     value,
     containerStyle,
@@ -63,7 +63,7 @@ export const TextInput = React.forwardRef((props: Props, ref: ForwardedRef<RNTex
 
   return (
     <View style={containerStyle}>
-      <RNPTextInput
+      <RNP.TextInput
         ref={ref}
         style={{textAlign}}
         value={value}
@@ -85,7 +85,7 @@ export const TextInput = React.forwardRef((props: Props, ref: ForwardedRef<RNTex
         error={errorTextEnabled && !!errorText}
         render={({style, ...inputProps}) => (
           <InputContainer>
-            <RNTextInput {...inputProps} style={[style, {color: faded ? COLORS.GREY_6 : COLORS.BLACK}]} />
+            <RN.TextInput {...inputProps} style={[style, {color: faded ? COLORS.GREY_6 : COLORS.BLACK}]} />
             {right ? <AdornmentContainer style={styles.checkmarkContainer}>{right}</AdornmentContainer> : null}
 
             {secureTextEntry ? (
