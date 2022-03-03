@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {validateMnemonic, wordlists} from 'bip39'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -42,7 +41,7 @@ export const MnemonicInput = ({
     <TextInput
       value={mnemonicWords.join(' ')}
       errorText={errorText}
-      render={({ref: _ref, ...inputProps}: any) => (
+      render={({ref: _ref, ...inputProps}) => (
         <MnemonicWordsInput onSelect={onSelect} words={mnemonicWords} {...inputProps} />
       )}
     />
