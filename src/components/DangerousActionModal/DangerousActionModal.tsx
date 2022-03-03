@@ -3,10 +3,9 @@ import {useIntl} from 'react-intl'
 import {Image, ScrollView, StyleSheet, View} from 'react-native'
 
 import alertCircle from '../../../legacy/assets/img/alert-circle.png'
-import {Button, Checkbox, Modal, Text} from '../../../legacy/components/UiKit'
 import globalMessages, {confirmationMessages} from '../../../legacy/i18n/global-messages'
 import {COLORS} from '../../../legacy/styles/config'
-import {Spacer} from '..'
+import {Button, Checkbox, Modal, Spacer, Text} from '..'
 
 type DangerousActionProps = {
   title: string

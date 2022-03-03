@@ -3,10 +3,10 @@ import {storiesOf} from '@storybook/react-native'
 import {BigNumber} from 'bignumber.js'
 import React from 'react'
 
-import {Modal} from '../../../../../legacy/components/UiKit'
 import {NETWORKS, PRIMARY_ASSET_CONSTANTS} from '../../../../../legacy/config/networks'
 import {MultiToken} from '../../../../../legacy/crypto/MultiToken'
-import {withModalProps} from '../../../../../storybook'
+import {WithModalProps} from '../../../../../storybook'
+import {Modal} from '../../../../components'
 import {SelectedWalletProvider} from '../../../../SelectedWallet'
 import {WalletInterface} from '../../../../types'
 import {TransferSummary} from './TransferSummary'
@@ -28,8 +28,7 @@ const wallet = {
 } as WalletInterface
 
 storiesOf('TransferSummary', module)
-  .addDecorator(withModalProps)
-  .add('withdrawals, no registrations', (modalProps) => {
+  .add('withdrawals, no registrations', () => {
     const withdrawals = [
       {
         address: 'withdrawal address 1',
@@ -51,14 +50,18 @@ storiesOf('TransferSummary', module)
     const deregistrations = null
 
     return (
-      <SelectedWalletProvider wallet={wallet}>
-        <Modal {...modalProps} showCloseIcon>
-          <TransferSummary withdrawals={withdrawals} deregistrations={deregistrations} {...other} />
-        </Modal>
-      </SelectedWalletProvider>
+      <WithModalProps>
+        {(modalProps) => (
+          <SelectedWalletProvider wallet={wallet}>
+            <Modal {...modalProps} showCloseIcon>
+              <TransferSummary withdrawals={withdrawals} deregistrations={deregistrations} {...other} />
+            </Modal>
+          </SelectedWalletProvider>
+        )}
+      </WithModalProps>
     )
   })
-  .add('deregistrations, no withdrawals', (modalProps) => {
+  .add('deregistrations, no withdrawals', () => {
     const withdrawals = null
     const deregistrations = [
       {
@@ -85,14 +88,18 @@ storiesOf('TransferSummary', module)
     ]
 
     return (
-      <SelectedWalletProvider wallet={wallet}>
-        <Modal {...modalProps} showCloseIcon>
-          <TransferSummary withdrawals={withdrawals} deregistrations={deregistrations} {...other} />
-        </Modal>
-      </SelectedWalletProvider>
+      <WithModalProps>
+        {(modalProps) => (
+          <SelectedWalletProvider wallet={wallet}>
+            <Modal {...modalProps} showCloseIcon>
+              <TransferSummary withdrawals={withdrawals} deregistrations={deregistrations} {...other} />
+            </Modal>
+          </SelectedWalletProvider>
+        )}
+      </WithModalProps>
     )
   })
-  .add('deregistrations, withdrawals', (modalProps) => {
+  .add('deregistrations, withdrawals', () => {
     const withdrawals = [
       {
         address: 'withdrawal address 1',
@@ -127,22 +134,30 @@ storiesOf('TransferSummary', module)
     ]
 
     return (
-      <SelectedWalletProvider wallet={wallet}>
-        <Modal {...modalProps} showCloseIcon>
-          <TransferSummary withdrawals={withdrawals} deregistrations={deregistrations} {...other} />
-        </Modal>
-      </SelectedWalletProvider>
+      <WithModalProps>
+        {(modalProps) => (
+          <SelectedWalletProvider wallet={wallet}>
+            <Modal {...modalProps} showCloseIcon>
+              <TransferSummary withdrawals={withdrawals} deregistrations={deregistrations} {...other} />
+            </Modal>
+          </SelectedWalletProvider>
+        )}
+      </WithModalProps>
     )
   })
-  .add('no withdrawals, no deregistrations', (modalProps) => {
+  .add('no withdrawals, no deregistrations', () => {
     const withdrawals = null
     const deregistrations = null
 
     return (
-      <SelectedWalletProvider wallet={wallet}>
-        <Modal {...modalProps} showCloseIcon>
-          <TransferSummary withdrawals={withdrawals} deregistrations={deregistrations} {...other} />
-        </Modal>
-      </SelectedWalletProvider>
+      <WithModalProps>
+        {(modalProps) => (
+          <SelectedWalletProvider wallet={wallet}>
+            <Modal {...modalProps} showCloseIcon>
+              <TransferSummary withdrawals={withdrawals} deregistrations={deregistrations} {...other} />
+            </Modal>
+          </SelectedWalletProvider>
+        )}
+      </WithModalProps>
     )
   })

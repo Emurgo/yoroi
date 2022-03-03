@@ -1,35 +1,26 @@
-// @flow
+import React, {ForwardedRef} from 'react'
+import {Image, StyleSheet, TouchableOpacity, View, ViewProps, ViewStyle} from 'react-native'
+import * as RN from 'react-native'
+import {HelperText} from 'react-native-paper'
+import * as RNP from 'react-native-paper'
 
-import type {Element, Node} from 'react'
-import React from 'react'
-import {Image, TextInput as RNTextInput, TouchableOpacity, View} from 'react-native'
-import type {Props as TextInputProps} from 'react-native/Libraries/Components/TextInput/TextInput'
-import type {ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
-import {HelperText, TextInput as RNPTextInput} from 'react-native-paper'
+import closedEyeIcon from '../../../legacy/assets/img/icon/visibility-closed.png'
+import openedEyeIcon from '../../../legacy/assets/img/icon/visibility-opened.png'
+import {COLORS} from '../../../legacy/styles/config'
+import {Icon} from '../Icon'
 
-// $FlowExpectedError
-import {Icon} from '../../../src/components'
-import closedEyeIcon from '../../assets/img/icon/visibility-closed.png'
-import openedEyeIcon from '../../assets/img/icon/visibility-opened.png'
-import {COLORS} from '../../styles/config'
-import styles from './styles/TextInput.style'
-
-type Props = {|
-  ...TextInputProps,
-  containerStyle?: ViewStyleProp,
-  label?: string,
-  helperText?: string,
-  errorText?: string,
-  disabled?: boolean,
-  errorOnMount?: boolean,
-  errorDelay?: number,
-  right?: Element<any>,
-  noErrors?: boolean,
-  dense?: boolean,
-  faded?: boolean,
-  textAlign?: 'left' | 'center' | 'right',
-  render?: (props: TextInputProps) => Element<any>,
-|}
+type Props = RN.TextInputProps &
+  Omit<RNP.TextInputProps, 'theme'> & {
+    containerStyle?: ViewStyle
+    helperText?: string
+    errorText?: string
+    disabled?: boolean
+    errorOnMount?: boolean
+    errorDelay?: number
+    noErrors?: boolean
+    dense?: boolean
+    faded?: boolean
+  }
 
 const useDebounced = (callback, value, delay = 1000) => {
   const first = React.useRef(true)
@@ -47,8 +38,8 @@ const useDebounced = (callback, value, delay = 1000) => {
   }, [callback, delay, value])
 }
 
-const TextInputWithRef = (
-  {
+export const TextInput = React.forwardRef((props: Props, ref: ForwardedRef<RN.TextInput>) => {
+  const {
     value,
     containerStyle,
     secureTextEntry,
@@ -61,9 +52,7 @@ const TextInputWithRef = (
     textAlign,
     faded,
     ...restProps
-  }: Props,
-  ref,
-) => {
+  } = props
   const [showPassword, setShowPassword] = React.useState(false)
   const [errorTextEnabled, setErrorTextEnabled] = React.useState(errorOnMount)
   useDebounced(
@@ -74,7 +63,7 @@ const TextInputWithRef = (
 
   return (
     <View style={containerStyle}>
-      <RNPTextInput
+      <RNP.TextInput
         ref={ref}
         style={{textAlign}}
         value={value}
@@ -96,7 +85,7 @@ const TextInputWithRef = (
         error={errorTextEnabled && !!errorText}
         render={({style, ...inputProps}) => (
           <InputContainer>
-            <RNTextInput {...inputProps} style={[style, {color: faded ? COLORS.GREY_6 : COLORS.BLACK}]} />
+            <RN.TextInput {...inputProps} style={[style, {color: faded ? COLORS.GREY_6 : COLORS.BLACK}]} />
             {right ? <AdornmentContainer style={styles.checkmarkContainer}>{right}</AdornmentContainer> : null}
 
             {secureTextEntry ? (
@@ -114,13 +103,11 @@ const TextInputWithRef = (
       )}
     </View>
   )
-}
-
-const TextInput = React.forwardRef<Props, {focus: () => void}>(TextInputWithRef)
+})
 
 export const Checkmark = () => <Icon.Check height={24} width={24} color={COLORS.LIGHT_POSITIVE_GREEN} />
 
-const SecureTextEntryToggle = ({showPassword, onPress}: {showPassword: boolean, onPress: () => any}) => (
+const SecureTextEntryToggle = ({showPassword, onPress}: {showPassword: boolean; onPress: () => void}) => (
   <AdornmentContainer style={styles.secureTextEntryToggleContainer}>
     <TouchableOpacity onPress={onPress}>
       {showPassword ? <Image source={closedEyeIcon} /> : <Image source={openedEyeIcon} />}
@@ -128,10 +115,23 @@ const SecureTextEntryToggle = ({showPassword, onPress}: {showPassword: boolean, 
   </AdornmentContainer>
 )
 
-const InputContainer = ({children}: {children: Node}) => <View style={styles.inputContainer}>{children}</View>
+const InputContainer: React.FC = ({children}) => <View style={styles.inputContainer}>{children}</View>
 
-const AdornmentContainer = ({style, children}: {style: ViewStyleProp, children: Node}) => (
+const AdornmentContainer: React.FC<ViewProps> = ({style, children}) => (
   <View style={[styles.adornmentContainer, style]}>{children}</View>
 )
 
-export default TextInput
+const styles = StyleSheet.create({
+  inputContainer: {
+    flexDirection: 'row',
+  },
+  checkmarkContainer: {
+    paddingRight: 16,
+  },
+  secureTextEntryToggleContainer: {
+    paddingRight: 16,
+  },
+  adornmentContainer: {
+    justifyContent: 'center',
+  },
+})

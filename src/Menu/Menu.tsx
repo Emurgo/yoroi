@@ -7,12 +7,11 @@ import {Linking, ScrollView, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useSelector} from 'react-redux'
 
-import {Text} from '../../legacy/components/UiKit'
 import {CONFIG} from '../../legacy/config/config'
 import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../legacy/navigationOptions'
 import {tokenBalanceSelector} from '../../legacy/selectors'
 import {CatalystNavigator} from '../Catalyst/CatalystNavigator'
-import {Icon, Spacer} from '../components'
+import {Icon, Spacer, Text} from '../components'
 import {useWalletMetas} from '../hooks'
 import {InsufficientFundsModal} from './InsufficientFundsModal'
 

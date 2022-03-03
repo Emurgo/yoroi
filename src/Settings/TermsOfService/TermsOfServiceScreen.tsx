@@ -2,7 +2,7 @@ import React from 'react'
 import {ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {StatusBar} from '../../../legacy/components/UiKit'
+import {StatusBar} from '../../components'
 import {TermsOfService} from '../../FirstRun/TermsOfServiceScreen/TermsOfService'
 
 export const TermsOfServiceScreen = () => (

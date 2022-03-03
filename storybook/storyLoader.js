@@ -6,10 +6,6 @@
 function loadStories() {
 	require('../legacy/components/Delegation/FlawedWalletScreen.stories');
 	require('../legacy/components/MaintenanceScreen.stories');
-	require('../legacy/components/UiKit/Button.stories');
-	require('../legacy/components/UiKit/Checkbox.stories');
-	require('../legacy/components/UiKit/Link.stories');
-	require('../legacy/components/UiKit/TextInput.stories');
 	require('../src/BiometricAuth/BiometricAuthScreen.stories');
 	require('../src/BiometricAuth/FingerprintScreenBase/FingerprintScreenBase.stories');
 	require('../src/Catalyst/Catalyst.stories');
@@ -78,20 +74,21 @@ function loadStories() {
 	require('../src/WalletInit/WalletNameForm/WalletNameForm.stories');
 	require('../src/auth/PinRegistration/PinRegistrationForm.stories');
 	require('../src/components/Boundary/Boundary.stories');
+	require('../src/components/Button/Button.stories');
+	require('../src/components/Checkbox/Checkbox.stories');
 	require('../src/components/DangerousActionModal/DangerousActionModal.stories');
 	require('../src/components/ErrorModal/ErrorModal.stories');
 	require('../src/components/Icon/Icon.stories');
+	require('../src/components/Link/Link.stories');
+	require('../src/components/Modal/Modal.stories');
 	require('../src/components/StandardModal/StandardModal.stories');
+	require('../src/components/TextInput/TextInput.stories');
 	require('./Example/Example.stories');
 }
 
 const stories = [
 	'../legacy/components/Delegation/FlawedWalletScreen.stories',
 	'../legacy/components/MaintenanceScreen.stories',
-	'../legacy/components/UiKit/Button.stories',
-	'../legacy/components/UiKit/Checkbox.stories',
-	'../legacy/components/UiKit/Link.stories',
-	'../legacy/components/UiKit/TextInput.stories',
 	'../src/BiometricAuth/BiometricAuthScreen.stories',
 	'../src/BiometricAuth/FingerprintScreenBase/FingerprintScreenBase.stories',
 	'../src/Catalyst/Catalyst.stories',
@@ -160,10 +157,15 @@ const stories = [
 	'../src/WalletInit/WalletNameForm/WalletNameForm.stories',
 	'../src/auth/PinRegistration/PinRegistrationForm.stories',
 	'../src/components/Boundary/Boundary.stories',
+	'../src/components/Button/Button.stories',
+	'../src/components/Checkbox/Checkbox.stories',
 	'../src/components/DangerousActionModal/DangerousActionModal.stories',
 	'../src/components/ErrorModal/ErrorModal.stories',
 	'../src/components/Icon/Icon.stories',
+	'../src/components/Link/Link.stories',
+	'../src/components/Modal/Modal.stories',
 	'../src/components/StandardModal/StandardModal.stories',
+	'../src/components/TextInput/TextInput.stories',
 	'./Example/Example.stories'
 ];
 

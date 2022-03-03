@@ -1,23 +1,20 @@
-// @flow
+import React from 'react'
+import {Image, StyleSheet, TouchableOpacity, TouchableOpacityProps, View, ViewStyle} from 'react-native'
 
-import React, {type ElementConfig} from 'react'
-import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {colors} from '../../../legacy/styles/config'
+import {Text} from '../Text'
 
-import {colors} from '../../styles/config'
-import Text from './Text'
-
-type Props = {|
-  ...ElementConfig<typeof TouchableOpacity>,
-  title: string,
-  outline?: boolean,
-  outlineOnLight?: boolean,
-  containerStyle?: Object,
-  block?: boolean,
-  iconImage?: number,
-  withoutBackground?: boolean,
-  shelleyTheme?: boolean,
-  outlineShelley?: boolean,
-|}
+type Props = TouchableOpacityProps & {
+  title: string
+  outline?: boolean
+  outlineOnLight?: boolean
+  containerStyle?: ViewStyle
+  block?: boolean
+  iconImage?: number
+  withoutBackground?: boolean
+  shelleyTheme?: boolean
+  outlineShelley?: boolean
+}
 
 export const Button = (props: Props) => {
   const {
@@ -65,8 +62,6 @@ export const Button = (props: Props) => {
     </TouchableOpacity>
   )
 }
-
-export default Button
 
 const buttonOutline = {
   borderWidth: 1,

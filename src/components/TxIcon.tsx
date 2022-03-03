@@ -1,22 +1,18 @@
-// @flow
-
 import React from 'react'
-import {View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 
-// $FlowExpectedError
-import {Icon} from '../../../src/components'
-import type {TransactionInfo} from '../../types/HistoryTransaction'
-import useStyles from './styles/TxIcon.style'
+import type {TransactionInfo} from '../../legacy/types/HistoryTransaction'
+import {Icon} from './Icon'
 
-const ICON: $ReadOnly<Dict<any>> = Object.freeze({
+const ICON = {
   SENT: Icon.Sent,
   RECEIVED: Icon.Received,
   SELF: Icon.Transaction,
   MULTI: Icon.Transaction,
-})
+}
 
 const SIZE = 36
-const COLORS: $ReadOnly<Dict<any>> = Object.freeze({
+const COLORS = {
   PENDING: {
     background: '#F0F3F5',
     icon: '#6B7384',
@@ -29,14 +25,14 @@ const COLORS: $ReadOnly<Dict<any>> = Object.freeze({
     background: 'rgba(23, 209, 170, 0.1)',
     icon: '#17D1AA',
   },
-})
-type Status = $Keys<typeof COLORS>
+}
+type Status = keyof typeof COLORS
 
-type Props = {|
-  transaction: $ReadOnly<TransactionInfo>,
-|}
+type Props = {
+  transaction: TransactionInfo
+}
 
-const TxIcon = ({transaction}: Props) => {
+export const TxIcon = ({transaction}: Props) => {
   const {direction, assurance, status} = transaction
   const IconComponent = ICON[direction]
   const isPending = assurance === 'PENDING' || status === 'PENDING'
@@ -44,12 +40,19 @@ const TxIcon = ({transaction}: Props) => {
   const isDirectCredit = isReceived
   const theme: Status = isPending ? 'PENDING' : isDirectCredit ? 'DIRECT_CREDIT' : 'NORMAL'
   const color = COLORS[theme]
-  const styles = useStyles({size: SIZE, color: color.background})
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {backgroundColor: color.background}]}>
       <IconComponent color={color.icon} width={SIZE} height={SIZE} />
     </View>
   )
 }
 
-export default TxIcon
+const styles = StyleSheet.create({
+  container: {
+    display: 'flex',
+    height: SIZE,
+    width: SIZE,
+    borderRadius: SIZE / 2,
+  },
+})

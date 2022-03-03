@@ -1,8 +1,8 @@
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {Modal} from '../../../legacy/components/UiKit'
 import {WithModalProps} from '../../../storybook'
+import {Modal} from '../../components'
 import {LedgerConnect} from './LedgerConnect'
 
 const devices = [

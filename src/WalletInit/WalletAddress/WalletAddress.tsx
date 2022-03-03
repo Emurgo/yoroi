@@ -4,9 +4,9 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Image, Linking, StyleSheet, TouchableOpacity, View, ViewStyle} from 'react-native'
 
 import copyIcon from '../../../legacy/assets/img/icon/copy.png'
-import {Text} from '../../../legacy/components/UiKit'
 import {getNetworkConfigById} from '../../../legacy/config/networks'
 import type {NetworkId} from '../../../legacy/config/types'
+import {Text} from '../../components'
 import {FadeOutView} from './FadeOutView'
 
 export const WalletAddress = ({

@@ -4,8 +4,8 @@ import {Image, StyleSheet, View} from 'react-native'
 import Markdown from 'react-native-easy-markdown'
 
 import image from '../../../legacy/assets/img/mnemonic_explanation.png'
-import {Button, Modal} from '../../../legacy/components/UiKit'
 import {spacing} from '../../../legacy/styles/config'
+import {Button, Modal} from '../../components'
 
 type Props = {
   onConfirm: () => void

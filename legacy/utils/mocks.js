@@ -5,8 +5,9 @@ import {TouchableOpacity} from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import {Provider} from 'react-redux'
 
+// $FlowExpectedError
+import {Button} from '../../src/components'
 import iconGear from '../assets/img/gear.png'
-import {Button} from '../components/UiKit'
 import configureStore from '../helpers/configureStore'
 import {defaultNavigationOptions} from '../navigationOptions'
 import type {State} from '../state'

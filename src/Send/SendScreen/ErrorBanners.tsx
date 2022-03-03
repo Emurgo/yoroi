@@ -2,13 +2,13 @@ import React from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {fetchUTXOs} from '../../../legacy/actions/utxo'
-import {Banner, OfflineBanner} from '../../../legacy/components/UiKit'
 import {
   hasPendingOutgoingTransactionSelector,
   isFetchingUtxosSelector,
   isOnlineSelector,
   lastUtxosFetchErrorSelector,
 } from '../../../legacy/selectors'
+import {Banner, ClickableBanner, OfflineBanner} from '../../components'
 import {useStrings} from './strings'
 
 export const ErrorBanners = () => {
@@ -22,7 +22,7 @@ export const ErrorBanners = () => {
   if (!isOnline) {
     return <OfflineBanner />
   } else if (lastFetchingError && !isFetchingBalance) {
-    return <Banner error onPress={() => dispatch(fetchUTXOs())} text={strings.errorBannerNetworkError} />
+    return <ClickableBanner error onPress={() => dispatch(fetchUTXOs())} text={strings.errorBannerNetworkError} />
   } else if (hasPendingOutgoingTransaction) {
     return <Banner error text={strings.errorBannerPendingOutgoingTransaction} />
   } else {

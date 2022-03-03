@@ -4,9 +4,10 @@ import React from 'react'
 import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
 import {Image, ScrollView, View} from 'react-native'
 
+// $FlowExpectedError
+import {Button, Text} from '../../../src/components'
 import image from '../../assets/img/mnemonic_explanation.png'
 import {confirmationMessages} from '../../i18n/global-messages'
-import {Button, Text} from '../UiKit'
 import styles from './styles/FlawedWalletScreen.style'
 
 const messages = defineMessages({

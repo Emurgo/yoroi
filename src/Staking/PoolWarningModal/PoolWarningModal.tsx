@@ -3,9 +3,9 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Image, ScrollView, StyleSheet, TextStyle, View} from 'react-native'
 
 import image from '../../../legacy/assets/img/mnemonic_explanation.png'
-import {Button, Modal, Text} from '../../../legacy/components/UiKit'
 import {confirmationMessages} from '../../../legacy/i18n/global-messages'
 import {spacing} from '../../../legacy/styles/config'
+import {Button, Modal, Text} from '../../components'
 
 type Props = {
   visible: boolean

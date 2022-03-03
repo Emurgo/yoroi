@@ -4,7 +4,6 @@ import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
 import CatalystLogo from '../../legacy/assets/img/voting.png'
-import {Text} from '../../legacy/components/UiKit'
 import {CONFIG, isHaskellShelley, isNightly} from '../../legacy/config/config'
 import {isRegistrationOpen} from '../../legacy/crypto/shelley/catalystUtils'
 import walletManager from '../../legacy/crypto/walletManager'
@@ -14,7 +13,7 @@ import {COLORS} from '../../legacy/styles/config'
 import {formatTokenWithText} from '../../legacy/utils/format'
 import {Logger} from '../../legacy/utils/logging'
 import {useSelectedWallet} from '../../src/SelectedWallet'
-import {StandardModal} from '../components'
+import {StandardModal, Text} from '../components'
 type Props = {onPress: () => void; disabled?: boolean}
 
 export const VotingBanner = ({onPress, disabled}: Props) => {

@@ -1,67 +1,30 @@
-// @flow
-
-import type {Node} from 'react'
 import React from 'react'
-import {Platform, StyleSheet, Text as RNText} from 'react-native'
-import type {TextStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
-import type {TextProps} from 'react-native/Libraries/Text/TextProps'
+import {Platform, StyleProp, StyleSheet, Text as RNText, TextProps, TextStyle} from 'react-native'
 
-import stylesConfig, {COLORS} from '../../styles/config'
+import stylesConfig, {COLORS} from '../../legacy/styles/config'
 
-const styles = StyleSheet.create({
-  text: {
-    fontFamily: stylesConfig.defaultFont,
-    color: COLORS.BLACK,
-    lineHeight: 18,
-    fontSize: 14,
-  },
-  secondary: {
-    color: COLORS.SECONDARY_TEXT,
-  },
-  small: {
-    fontSize: 12,
-    lineHeight: 16,
-  },
-  light: {
-    color: '#fff',
-  },
-  error: {
-    color: '#FF1351',
-  },
-  bold: {
-    fontFamily: stylesConfig.bold,
-  },
-  monospace: {
-    ...Platform.select({
-      ios: {fontFamily: 'Menlo'},
-      android: {fontFamily: 'monospace'},
-    }),
-  },
-})
-
-type Props = {|
-  children: Node,
-  small?: boolean,
-  secondary?: boolean,
-  light?: boolean,
-  style?: TextStyleProp,
-  bold?: boolean,
-  monospace?: boolean,
-  error?: boolean,
-  adjustsFontSizeToFit?: boolean,
-  ...TextProps,
-|}
+type Props = TextProps & {
+  small?: boolean
+  secondary?: boolean
+  light?: boolean
+  bold?: boolean
+  monospace?: boolean
+  error?: boolean
+  adjustsFontSizeToFit?: boolean
+}
 
 type State = {
-  fontSize: number,
+  fontSize: number
 }
+
+export const foo: StyleProp<TextStyle> = false
 
 const androidAdjustsFontSizeToFitFix = (width, childrenLength) => {
   return Math.floor(1.4 * (width / childrenLength))
 }
 
 // eslint-disable-next-line react-prefer-function-component/react-prefer-function-component
-class Text extends React.Component<Props, State> {
+export class Text extends React.Component<Props, State> {
   state = {
     fontSize: 0,
   }
@@ -70,7 +33,7 @@ class Text extends React.Component<Props, State> {
     const {small, secondary, light, bold, monospace, error, style, children, adjustsFontSizeToFit, ...restProps} =
       this.props
 
-    const textStyle = [
+    const textStyle: Array<StyleProp<TextStyle>> = [
       styles.text,
       small === true && styles.small,
       secondary === true && styles.secondary,
@@ -103,7 +66,7 @@ class Text extends React.Component<Props, State> {
             }
             const {width} = event.nativeEvent.layout
             const fixedFontSize = androidAdjustsFontSizeToFitFix(width, children.length)
-            const styleFontSize: any = style != null && style.fontSize != null && style.fontSize
+            const styleFontSize = !!style && 'fontSize' in style && style.fontSize != null && style.fontSize
             const fontSize = styleFontSize ? Math.min(styleFontSize, fixedFontSize) : fixedFontSize
 
             this.setState({fontSize})
@@ -116,5 +79,33 @@ class Text extends React.Component<Props, State> {
     }
   }
 }
-
-export default Text
+const styles = StyleSheet.create({
+  text: {
+    fontFamily: stylesConfig.defaultFont,
+    color: COLORS.BLACK,
+    lineHeight: 18,
+    fontSize: 14,
+  },
+  secondary: {
+    color: COLORS.SECONDARY_TEXT,
+  },
+  small: {
+    fontSize: 12,
+    lineHeight: 16,
+  },
+  light: {
+    color: '#fff',
+  },
+  error: {
+    color: '#FF1351',
+  },
+  bold: {
+    fontFamily: stylesConfig.bold,
+  },
+  monospace: {
+    ...Platform.select({
+      ios: {fontFamily: 'Menlo'},
+      android: {fontFamily: 'monospace'},
+    }),
+  },
+})

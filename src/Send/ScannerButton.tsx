@@ -5,9 +5,9 @@ import {StyleSheet} from 'react-native'
 
 import iconQR from '../../legacy/assets/img/qr_code.png'
 import {pastedFormatter} from '../../legacy/components/Send/amountUtils'
-import {Button} from '../../legacy/components/UiKit'
 import {UI_V2} from '../../legacy/config/config'
 import {SEND_ROUTES} from '../../legacy/RoutesList'
+import {Button} from '../components'
 
 export const ScannerButton = () => {
   const navigation = useNavigation()

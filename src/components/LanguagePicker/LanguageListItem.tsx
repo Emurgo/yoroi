@@ -1,7 +1,7 @@
 import React from 'react'
 import {Image, ImageSourcePropType, StyleSheet, TouchableOpacity, View} from 'react-native'
 
-import {Text} from '../../../legacy/components/UiKit'
+import {Text} from '../Text'
 
 type Props = {
   label: string

@@ -1,16 +1,14 @@
-// @flow
-
 import React from 'react'
 import {Image, TouchableOpacity} from 'react-native'
 
-import copiedIcon from '../../assets/img/icon/copied.png'
-import copyIcon from '../../assets/img/icon/copy-ext.png'
-import {useCopy} from '../../utils/useCopy'
+import copiedIcon from '../../legacy/assets/img/icon/copied.png'
+import copyIcon from '../../legacy/assets/img/icon/copy-ext.png'
+import {useCopy} from '../../legacy/utils/useCopy'
 
-export type CopyButtonProps = {|
-  value: string,
-  onCopy?: () => void,
-|}
+export type CopyButtonProps = {
+  value: string
+  onCopy?: () => void
+}
 
 export const CopyButton = ({value, onCopy}: CopyButtonProps) => {
   const [isCopying, copy] = useCopy()
@@ -27,5 +25,3 @@ export const CopyButton = ({value, onCopy}: CopyButtonProps) => {
     </TouchableOpacity>
   )
 }
-
-export default CopyButton

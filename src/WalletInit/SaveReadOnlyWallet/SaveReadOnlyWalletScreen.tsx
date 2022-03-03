@@ -7,14 +7,13 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch} from 'react-redux'
 
 import {handleGeneralError, updateWallets} from '../../../legacy/actions'
-import {Line, StatusBar, Text} from '../../../legacy/components/UiKit'
 import {CONFIG} from '../../../legacy/config/config'
 import type {NetworkId} from '../../../legacy/config/types'
 import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../../legacy/RoutesList'
 import {WalletMeta} from '../../../legacy/state'
 import {theme} from '../../../legacy/styles/config'
 import {Logger} from '../../../legacy/utils/logging'
-import {Boundary, Icon} from '../../components'
+import {Boundary, Icon, Line, StatusBar, Text} from '../../components'
 import {useCreateBip44Wallet, usePlate} from '../../hooks'
 import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
 import {WalletAddress} from '../WalletAddress'
@@ -83,6 +82,7 @@ export const SaveReadOnlyWalletScreen = () => {
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container} testID="saveReadOnlyWalletContainer">
       <StatusBar type="dark" />
+
       <WalletNameForm
         onSubmit={onSubmit}
         defaultWalletName={strings.defaultWalletName}
