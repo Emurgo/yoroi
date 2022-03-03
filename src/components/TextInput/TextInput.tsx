@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {ForwardedRef} from 'react'
 import {
   Image,
   StyleSheet,
@@ -56,7 +56,7 @@ const useDebounced = (callback, value, delay = 1000) => {
   }, [callback, delay, value])
 }
 
-export const TextInput = React.forwardRef((props: Props, ref: React.Ref<RNTextInput>) => {
+export const TextInput = React.forwardRef((props: Props, ref: ForwardedRef<RNTextInput>) => {
   const {
     value,
     containerStyle,
