@@ -17,16 +17,6 @@ import {
   setLedgerDeviceId as _setLedgerDeviceId,
   setLedgerDeviceObj as _setLedgerDeviceObj,
 } from '../../../legacy/actions/hwWallet'
-import {
-  Banner,
-  Button,
-  Modal,
-  OfflineBanner,
-  PleaseWaitModal,
-  StatusBar,
-  Text,
-  ValidatedTextInput,
-} from '../../../legacy/components/UiKit'
 import {CONFIG, UI_V2} from '../../../legacy/config/config'
 import {WrongPassword} from '../../../legacy/crypto/errors'
 import {ISignRequest} from '../../../legacy/crypto/ISignRequest'
@@ -44,7 +34,18 @@ import {
 } from '../../../legacy/selectors'
 import {COLORS} from '../../../legacy/styles/config'
 import {formatTokenWithSymbol, formatTokenWithText} from '../../../legacy/utils/format'
-import {Boundary, Spacer} from '../../components'
+import {
+  Banner,
+  Boundary,
+  Button,
+  Modal,
+  OfflineBanner,
+  PleaseWaitModal,
+  Spacer,
+  StatusBar,
+  Text,
+  ValidatedTextInput,
+} from '../../components'
 import {ErrorModal} from '../../components'
 import {useTokenInfo} from '../../hooks'
 import {Instructions as HWInstructions, LedgerTransportSwitchModal} from '../../HW'

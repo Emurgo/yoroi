@@ -7,7 +7,6 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import AdaImage from '../../../legacy/assets/img/asset_ada.png'
 import NoImage from '../../../legacy/assets/img/asset_no_image.png'
-import {Button, Text, TextInput} from '../../../legacy/components/UiKit'
 import globalMessages, {txLabels} from '../../../legacy/i18n/global-messages'
 import {COLORS} from '../../../legacy/styles/config'
 import {
@@ -16,7 +15,7 @@ import {
   getAssetDenominationOrId,
   getTokenFingerprint,
 } from '../../../legacy/utils/format'
-import {Boundary, Spacer} from '../../components'
+import {Boundary, Button, Spacer, Text, TextInput} from '../../components'
 import {useTokenInfo} from '../../hooks'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {Token, TokenEntry} from '../../types/cardano'

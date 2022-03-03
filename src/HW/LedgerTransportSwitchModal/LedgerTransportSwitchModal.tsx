@@ -3,9 +3,9 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Platform, ScrollView, StyleSheet, View} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
-import {Button, Modal, Text} from '../../../legacy/components/UiKit'
 import {CONFIG} from '../../../legacy/config/config'
 import {spacing} from '../../../legacy/styles/config'
+import {Button, Modal, Text} from '../../components'
 
 type Props = {
   onSelectUSB: () => void

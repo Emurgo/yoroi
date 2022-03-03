@@ -3,8 +3,9 @@ import {defineMessages, IntlShape, useIntl} from 'react-intl'
 import {FlatList, StyleSheet, View} from 'react-native'
 import Markdown from 'react-native-easy-markdown'
 
-import {Button, StatusBar} from '../../../legacy/components/UiKit'
 import {LANGUAGES} from '../../../legacy/i18n/languages'
+import {Button} from '../Button'
+import {StatusBar} from '../StatusBar'
 import * as Flags from './flags'
 import {LanguageListItem} from './LanguageListItem'
 

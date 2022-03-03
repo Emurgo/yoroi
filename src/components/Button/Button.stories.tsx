@@ -1,12 +1,10 @@
-// @flow
-
 import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
 
 import icon from '../../assets/img/icon/dashboard.png'
-import Button from './Button'
+import {Button} from './Button'
 
 storiesOf('Button', module).add('default', () => (
   <ScrollView>

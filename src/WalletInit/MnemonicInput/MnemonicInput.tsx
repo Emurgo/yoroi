@@ -1,11 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {validateMnemonic, wordlists} from 'bip39'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Keyboard, ScrollView, StyleSheet, View} from 'react-native'
 
-import {Menu, TextInput} from '../../../legacy/components/UiKit'
 import {COLORS} from '../../../legacy/styles/config'
-import {useScrollView} from '../../components'
+import {Menu, TextInput, useScrollView} from '../../components'
 
 export const MnemonicInput = ({
   length,
@@ -42,7 +42,7 @@ export const MnemonicInput = ({
     <TextInput
       value={mnemonicWords.join(' ')}
       errorText={errorText}
-      render={({ref: _ref, ...inputProps}) => (
+      render={({ref: _ref, ...inputProps}: any) => (
         <MnemonicWordsInput onSelect={onSelect} words={mnemonicWords} {...inputProps} />
       )}
     />
@@ -54,7 +54,7 @@ type MnemonicWordsInputProps = {
   onSelect: (index: number, word: string) => void
 }
 const MnemonicWordsInput = ({onSelect, words}: MnemonicWordsInputProps) => {
-  const refs = React.useRef(words.map(() => React.createRef<TextInput>())).current
+  const refs = React.useRef(words.map(() => React.createRef<typeof TextInput>())).current
   const scrollView = useScrollView()
   const rowHeightRef = React.useRef<number | void>()
 
@@ -77,7 +77,7 @@ const MnemonicWordsInput = ({onSelect, words}: MnemonicWordsInputProps) => {
             onSelect={(word: string) => {
               onSelect(index, word)
               if (!refs[index + 1]) return
-              refs[index + 1].current?.focus()
+              ;(refs[index + 1].current as any)?.focus()
             }}
             id={index + 1}
             onFocus={() => {
@@ -98,7 +98,7 @@ type MnemonicWordInputProps = {
   onSelect: (word: string) => void
   onFocus: () => void
 }
-const MnemonicWordInput = React.forwardRef(({id, onSelect, onFocus}: MnemonicWordInputProps, ref) => {
+const MnemonicWordInput = React.forwardRef<typeof TextInput, MnemonicWordInputProps>(({id, onSelect, onFocus}, ref) => {
   const [word, setWord] = React.useState('')
   const matchingWords = React.useMemo(() => (word ? getMatchingWords(word) : []), [word])
   const [menuEnabled, setMenuEnabled] = React.useState(false)
@@ -115,7 +115,7 @@ const MnemonicWordInput = React.forwardRef(({id, onSelect, onFocus}: MnemonicWor
       contentStyle={styles.menuContent}
       anchor={
         <TextInput
-          ref={ref}
+          ref={ref as any}
           value={word}
           placeholder={String(id)}
           onFocus={onFocus}

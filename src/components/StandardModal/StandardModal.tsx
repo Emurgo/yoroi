@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {Modal} from '../../../legacy/components/UiKit'
+import {Modal} from '../Modal'
 import {TwoActionView} from '../TwoActionView'
 
 type Props = {

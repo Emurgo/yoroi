@@ -3,9 +3,9 @@ import {defineMessages, useIntl} from 'react-intl'
 import {View} from 'react-native'
 import {StyleSheet} from 'react-native'
 
-import {ProgressCircle, Text, TitledCard} from '../../legacy/components/UiKit'
 import globalMessages from '../../legacy/i18n/global-messages'
 import {COLORS} from '../../legacy/styles/config'
+import {ProgressCircle, Text, TitledCard} from '../components'
 
 type Props = {
   percentage: number

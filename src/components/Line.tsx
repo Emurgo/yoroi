@@ -1,20 +1,11 @@
-// @flow
-
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {COLORS} from '../../styles/config'
-
-const styles = StyleSheet.create({
-  container: {
-    height: 1,
-    opacity: 0.3,
-  },
-})
+import {COLORS} from '../../legacy/styles/config'
 
 type Props = {backgroundColor?: string}
 
-const Line = ({backgroundColor}: Props) => (
+export const Line = ({backgroundColor}: Props) => (
   <View
     style={{
       ...styles.container,
@@ -23,4 +14,9 @@ const Line = ({backgroundColor}: Props) => (
   />
 )
 
-export default Line
+const styles = StyleSheet.create({
+  container: {
+    height: 1,
+    opacity: 0.3,
+  },
+})

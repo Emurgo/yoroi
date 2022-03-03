@@ -7,13 +7,10 @@
 import React from 'react'
 import {useIntl} from 'react-intl'
 
-import {Modal} from '../../legacy/components/UiKit'
-import {PleaseWaitView} from '../../legacy/components/UiKit/PleaseWaitModal'
 import type {DeviceId, DeviceObj} from '../../legacy/crypto/shelley/ledgerUtils'
 import globalMessages, {ledgerMessages, txLabels} from '../../legacy/i18n/global-messages'
-import {ErrorView} from '../components'
-import {LedgerTransportSwitch} from '../HW'
-import {LedgerConnect} from '../HW'
+import {ErrorView, Modal, PleaseWaitView} from '../components'
+import {LedgerConnect, LedgerTransportSwitch} from '../HW'
 
 type ErrorData = {
   errorMessage: string

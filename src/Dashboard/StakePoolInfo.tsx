@@ -4,8 +4,8 @@ import {ActivityIndicator, Linking, View} from 'react-native'
 import {StyleSheet} from 'react-native'
 import {useQuery} from 'react-query'
 
-import {Button, CopyButton, Text, TitledCard} from '../../legacy/components/UiKit'
 import {COLORS} from '../../legacy/styles/config'
+import {Button, CopyButton, Text, TitledCard} from '../components'
 import {useSelectedWallet} from '../SelectedWallet'
 import {RemotePoolMetaFailure, StakePoolInfoAndHistory, WalletInterface} from '../types'
 

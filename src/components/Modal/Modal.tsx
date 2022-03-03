@@ -1,5 +1,3 @@
-// @flow
-
 /**
  * IMPORTANT:
  * Modals may have unexpected behaviours, particularly on iOS.
@@ -13,26 +11,30 @@
  * - avoid mixing modals with Alert.alert() as this may freeze the UI
  * on iOS. See https://github.com/facebook/react-native/issues/10471
  */
-import {useNavigation} from '@react-navigation/native'
-import type {Node} from 'react'
+import {NavigationProp, useNavigation} from '@react-navigation/native'
 import React from 'react'
-import {Image, Modal as RNModal, Text, TouchableOpacity, View} from 'react-native'
+import {Image, Modal as RNModal, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
-import closeIcon from '../../assets/img/close.png'
-import styles from './styles/Modal.style'
+import closeIcon from '../../../legacy/assets/img/close.png'
+import {COLORS} from '../../../legacy/styles/config'
 
 type Props = {
-  onRequestClose: () => any,
-  visible: boolean,
-  children: Node,
-  showCloseIcon?: boolean,
-  noPadding?: boolean,
-  navigation: any,
-  title?: string,
+  onRequestClose: () => void
+  visible: boolean
+  children: React.ReactNode
+  showCloseIcon?: boolean
+  noPadding?: boolean
+  title?: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+}
+
+type NavigationHookProp = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  navigation: NavigationProp<any, any, any, any, any>
 }
 
 type State = {
-  isFocused: boolean,
+  isFocused: boolean
 }
 
 // Note(ppershing): we need to hide the modal when navigating
@@ -41,17 +43,27 @@ type State = {
 // while on different screen and therefore should not keep any
 // important state!
 // eslint-disable-next-line react-prefer-function-component/react-prefer-function-component
-class Modal extends React.Component<Props, State> {
+class ModalClassComponent extends React.Component<Props & NavigationHookProp, State> {
   state = {
     isFocused: true,
   }
 
-  _subscriptions: Array<() => mixed> = []
+  _subscriptions: Array<() => void> = []
 
   componentDidMount = () => {
     const {navigation} = this.props
-    this._subscriptions.push(navigation.addListener('focus', () => this.handleWillFocus()))
-    this._subscriptions.push(navigation.addListener('blur', () => this.handleWillBlur()))
+    this._subscriptions.push(
+      navigation.addListener('focus', (...data) => {
+        console.log('QWE', ...data)
+        this.handleWillFocus()
+      }),
+    )
+    this._subscriptions.push(
+      navigation.addListener('blur', (...data) => {
+        console.log('QWE', ...data)
+        this.handleWillBlur()
+      }),
+    )
   }
 
   componentWillUnmount = () => {
@@ -68,7 +80,7 @@ class Modal extends React.Component<Props, State> {
     return (
       <RNModal transparent animationType="fade" visible={visible && isFocused} onRequestClose={onRequestClose}>
         <View style={styles.backdrop}>
-          <View style={[styles.container, noPadding && styles.noPadding, title && styles.withTitle]}>
+          <View style={[styles.container, noPadding && styles.noPadding, !!title && styles.withTitle]}>
             {title && <Text style={styles.title}>{title}</Text>}
             {showCloseIcon && (
               <TouchableOpacity style={styles.close} onPress={onRequestClose}>
@@ -83,7 +95,47 @@ class Modal extends React.Component<Props, State> {
   }
 }
 
-export default (props: $Diff<Props, {navigation: any}>) => {
+export const Modal = (props: Props) => {
   const navigation = useNavigation()
-  return <Modal {...props} navigation={navigation} />
+  return <ModalClassComponent {...props} navigation={navigation} />
 }
+
+const styles = StyleSheet.create({
+  backdrop: {
+    flex: 1,
+    alignItems: 'stretch',
+    justifyContent: 'center',
+    padding: 24,
+    backgroundColor: 'rgba(74,74,74,.9)',
+  },
+  noPadding: {
+    padding: 0,
+    marginTop: 0,
+  },
+  container: {
+    backgroundColor: '#fff',
+    borderRadius: 4,
+    padding: 24,
+  },
+  close: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    padding: 16,
+  },
+  content: {
+    marginTop: 15,
+  },
+  withTitle: {
+    paddingTop: 0,
+    marginTop: 0,
+  },
+  title: {
+    fontSize: 20,
+    fontFamily: 'Rubik-Medium',
+    lineHeight: 30,
+    color: COLORS.MODAL_HEADING,
+    alignSelf: 'center',
+    paddingTop: 8,
+  },
+})

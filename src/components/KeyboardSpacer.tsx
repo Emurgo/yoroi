@@ -1,30 +1,17 @@
-/* eslint-disable react-native/no-inline-styles */
-// @flow
-
 import * as React from 'react'
 import {Animated, Keyboard} from 'react-native'
 
-type Coords = {height: number, width: number, screenX: number, screenY: number}
-
-type KeyboardEvent = {
-  startCoordinates: Coords,
-  endCoordinates: Coords,
-  duration: number,
-  easing: string,
-  isEventFromThisApp: boolean,
-}
-
 type KeyboardSpacerProps = {
-  padding?: number,
-  duration?: number,
-  debug?: boolean,
+  padding?: number
+  duration?: number
+  debug?: boolean
 }
 export const KeyboardSpacer = ({padding = 0, duration = 500, debug}: KeyboardSpacerProps) => {
   const paddingRef = React.useRef(new Animated.Value(0))
 
   React.useEffect(() => {
     const listeners = [
-      Keyboard.addListener('keyboardDidShow', (event: KeyboardEvent) =>
+      Keyboard.addListener('keyboardDidShow', (event) =>
         Animated.timing(paddingRef.current, {
           toValue: event.endCoordinates.height + padding,
           duration,

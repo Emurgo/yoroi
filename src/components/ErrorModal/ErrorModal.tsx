@@ -5,9 +5,9 @@ import {Image, LayoutAnimation, ScrollView, StyleSheet, Text, TouchableOpacity, 
 import chevronLeft from '../../../legacy/assets/img/chevron_left.png'
 import chevronRight from '../../../legacy/assets/img/chevron_right.png'
 import image from '../../../legacy/assets/img/error.png'
-import {Button, Modal} from '../../../legacy/components/UiKit'
 import globalMessages, {errorMessages} from '../../../legacy/i18n/global-messages'
 import stylesConfig, {COLORS, spacing} from '../../../legacy/styles/config'
+import {Button, Modal} from '..'
 
 type ErrorViewProps = {
   title?: string

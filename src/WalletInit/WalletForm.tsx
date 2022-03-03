@@ -1,9 +1,7 @@
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ScrollView, StyleSheet, View} from 'react-native'
+import {ScrollView, StyleSheet, TextInput as RNTextInput, View} from 'react-native'
 
-import {Button, TextInput} from '../../legacy/components/UiKit'
-import {Checkmark} from '../../legacy/components/UiKit/TextInput'
 import {CONFIG} from '../../legacy/config/config'
 import globalMessages from '../../legacy/i18n/global-messages'
 import {COLORS} from '../../legacy/styles/config'
@@ -13,7 +11,7 @@ import {
   validatePassword,
   validateWalletName,
 } from '../../legacy/utils/validators'
-import {Spacer} from '../components'
+import {Button, Checkmark, Spacer, TextInput} from '../components'
 import {useWalletNames} from '../hooks'
 
 type Props = {
@@ -31,10 +29,10 @@ export const WalletForm = ({onSubmit}: Props) => {
       nameErrors,
     ) || undefined
 
-  const passwordRef = React.useRef<{focus: () => void} | null>(null)
+  const passwordRef = React.useRef<RNTextInput>(null)
   const [password, setPassword] = React.useState(CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '')
 
-  const passwordConfirmationRef = React.useRef<{focus: () => void} | null>(null)
+  const passwordConfirmationRef = React.useRef<RNTextInput>(null)
   const [passwordConfirmation, setPasswordConfirmation] = React.useState(
     CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '',
   )

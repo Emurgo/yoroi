@@ -5,12 +5,12 @@ import {ScrollView, StyleSheet, View} from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {setEasyConfirmation, showErrorDialog} from '../../../legacy/actions'
-import {Button, StatusBar, Text, TextInput} from '../../../legacy/components/UiKit'
 import {WrongPassword} from '../../../legacy/crypto/errors'
 import walletManager from '../../../legacy/crypto/walletManager'
 import {errorMessages} from '../../../legacy/i18n/global-messages'
 import {easyConfirmationSelector} from '../../../legacy/selectors'
 import {COLORS} from '../../../legacy/styles/config'
+import {Button, StatusBar, Text, TextInput} from '../../components'
 import {useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../SelectedWallet'
 
 export const ToggleEasyConfirmationScreen = () => {

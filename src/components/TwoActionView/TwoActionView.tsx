@@ -2,9 +2,10 @@ import React from 'react'
 import {useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View} from 'react-native'
 
-import {Button, Text} from '../../../legacy/components/UiKit'
 import {confirmationMessages} from '../../../legacy/i18n/global-messages'
 import {spacing} from '../../../legacy/styles/config'
+import {Button} from '../Button'
+import {Text} from '../Text'
 
 type Props = {
   title: string

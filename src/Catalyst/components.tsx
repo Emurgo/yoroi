@@ -1,9 +1,7 @@
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
-import type {ViewProps} from 'react-native/Libraries/Components/View/ViewPropTypes'
-import type {TextProps} from 'react-native/Libraries/Text/TextProps'
+import {StyleSheet, TextProps, View, ViewProps} from 'react-native'
 
-import {Text} from '../../legacy/components/UiKit'
+import {Text} from '../components'
 
 export const Title = ({style, ...props}: TextProps) => <Text {...props} style={[styles.title, style]} />
 export const Description = ({style, ...props}: TextProps) => <Text {...props} style={[styles.description, style]} />
@@ -12,7 +10,7 @@ export const Actions = ({style, ...props}: ViewProps) => <View {...props} style=
 export const Instructions = (props: ViewProps) => <View {...props} />
 export const Row = ({style, ...props}: ViewProps) => <View {...props} style={[styles.row, style]} />
 
-export const PinBox = ({selected, children}: {selected?: boolean, children: React$Node}) => (
+export const PinBox = ({selected, children}: {selected?: boolean; children: React.ReactNode}) => (
   <View style={[styles.pinBox, selected && styles.pinBoxSelected]}>
     <PinDigit>{children}</PinDigit>
   </View>

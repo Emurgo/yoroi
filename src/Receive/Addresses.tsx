@@ -4,14 +4,12 @@ import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
 import verifyIcon from '../../legacy/assets/img/icon/verify-address.png'
-import {Text} from '../../legacy/components/UiKit'
-import {CopyButton} from '../../legacy/components/UiKit'
 import {
   externalAddressIndexSelector,
   isUsedAddressIndexSelector,
   receiveAddressesSelector,
 } from '../../legacy/selectors'
-import {Spacer} from '../components'
+import {CopyButton, Spacer, Text} from '../components'
 import {Modals} from './Modals'
 
 export const UnusedAddresses = () => {
