@@ -14,6 +14,7 @@ import AccountAutoRefresher from '../../../legacy/components/Delegation/AccountA
 import styles from '../../../legacy/components/Delegation/styles/DelegationCenter.style'
 import UtxoAutoRefresher from '../../../legacy/components/Send/UtxoAutoRefresher'
 import {CONFIG, getTestStakingPool, isNightly, SHOW_PROD_POOLS_IN_DEV} from '../../../legacy/config/config'
+import {getNetworkConfigById} from '../../../legacy/config/networks'
 import {InsufficientFunds} from '../../../legacy/crypto/errors'
 import walletManager from '../../../legacy/crypto/walletManager'
 import globalMessages, {errorMessages} from '../../../legacy/i18n/global-messages'
@@ -52,7 +53,8 @@ export const StakingCenter = () => {
   const languageCode = useSelector(languageSelector)
   const serverStatus = useSelector(serverStatusSelector)
   const wallet = useSelectedWallet()
-
+  const config = getNetworkConfigById(wallet.networkId)
+  const isMainnet = config.IS_MAINNET
   const nightlyAndDevPoolHashes = getTestStakingPool(wallet.networkId, wallet.provider)
 
   // pools user is currently delegating to
@@ -117,7 +119,7 @@ export const StakingCenter = () => {
 
   return (
     <>
-      {IS_STAKING_ON_TEST_BUILD && (
+      {(__DEV__ || (isNightly() && !isMainnet)) && (
         <View style={styles.container}>
           <PoolDetailScreen
             onPressDelegate={(poolHash) => handleOnPress(poolHash)}
@@ -125,7 +127,7 @@ export const StakingCenter = () => {
           />
         </View>
       )}
-      {(!IS_STAKING_ON_TEST_BUILD || SHOW_PROD_POOLS_IN_DEV) && (
+      {(isMainnet || SHOW_PROD_POOLS_IN_DEV) && (
         <>
           <View style={styles.container}>
             <UtxoAutoRefresher />
@@ -160,8 +162,6 @@ export const StakingCenter = () => {
     </>
   )
 }
-
-const IS_STAKING_ON_TEST_BUILD = isNightly() || CONFIG.IS_TESTNET_BUILD
 
 const noPoolDataDialog = defineMessages({
   title: {

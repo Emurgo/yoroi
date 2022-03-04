@@ -4,7 +4,7 @@ import {Image, StyleSheet, TouchableOpacity, TouchableOpacityProps, View, ViewSt
 import {colors} from '../../../legacy/styles/config'
 import {Text} from '../Text'
 
-type Props = TouchableOpacityProps & {
+export type ButtonProps = TouchableOpacityProps & {
   title: string
   outline?: boolean
   outlineOnLight?: boolean
@@ -16,7 +16,7 @@ type Props = TouchableOpacityProps & {
   outlineShelley?: boolean
 }
 
-export const Button = (props: Props) => {
+export const Button = (props: ButtonProps) => {
   const {
     onPress,
     title,

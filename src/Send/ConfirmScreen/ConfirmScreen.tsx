@@ -2,49 +2,23 @@
 import {useNavigation} from '@react-navigation/native'
 import {CommonActions} from '@react-navigation/routers'
 import {BigNumber} from 'bignumber.js'
-import React from 'react'
+import React, {useEffect} from 'react'
 import {useIntl} from 'react-intl'
-import {Platform, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
+import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'
-import {useDispatch, useSelector} from 'react-redux'
+import {useSelector} from 'react-redux'
 
-import {showErrorDialog} from '../../../legacy/actions'
-import {
-  setLedgerDeviceId as _setLedgerDeviceId,
-  setLedgerDeviceObj as _setLedgerDeviceObj,
-} from '../../../legacy/actions/hwWallet'
 import {CONFIG, UI_V2} from '../../../legacy/config/config'
-import {WrongPassword} from '../../../legacy/crypto/errors'
-import KeyStore from '../../../legacy/crypto/KeyStore'
 import type {CreateUnsignedTxResponse} from '../../../legacy/crypto/shelley/transactionUtils'
-import walletManager from '../../../legacy/crypto/walletManager'
 import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../../legacy/i18n/global-messages'
-import LocalizableError from '../../../legacy/i18n/LocalizableError'
 import {SEND_ROUTES, WALLET_ROUTES} from '../../../legacy/RoutesList'
-import {
-  defaultNetworkAssetSelector,
-  easyConfirmationSelector,
-  hwDeviceInfoSelector,
-  isHWSelector,
-} from '../../../legacy/selectors'
+import {defaultNetworkAssetSelector} from '../../../legacy/selectors'
 import {COLORS} from '../../../legacy/styles/config'
 import {formatTokenWithSymbol, formatTokenWithText} from '../../../legacy/utils/format'
-import {
-  Banner,
-  Boundary,
-  Button,
-  Modal,
-  OfflineBanner,
-  PleaseWaitModal,
-  Spacer,
-  StatusBar,
-  Text,
-  ValidatedTextInput,
-} from '../../components'
-import {ErrorModal} from '../../components'
-import {useSaveAndSubmitSignedTx, useTokenInfo} from '../../hooks'
-import {Instructions as HWInstructions, LedgerTransportSwitchModal} from '../../HW'
-import {LedgerConnect} from '../../HW'
+import {Banner, Boundary, OfflineBanner, Spacer, StatusBar, Text, ValidatedTextInput} from '../../components'
+import {ConfirmTx} from '../../components/ConfirmTx'
+import {useTokenInfo} from '../../hooks'
+import {Instructions as HWInstructions} from '../../HW'
 import {useParams} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {TokenEntry} from '../../types/cardano'
@@ -76,14 +50,11 @@ const isParams = (params?: Params | object | undefined): params is Params => {
     'fee' in params &&
     params.fee instanceof BigNumber &&
     'tokens' in params &&
-    Array.isArray(params.tokens) &&
-    'easyConfirmDecryptKey' in params &&
-    typeof params.easyConfirmDecryptKey === 'string'
+    Array.isArray(params.tokens)
   )
 }
 
 export const ConfirmScreen = () => {
-  const intl = useIntl()
   const strings = useStrings()
   const {
     defaultAssetAmount,
@@ -93,118 +64,30 @@ export const ConfirmScreen = () => {
     fee,
     tokens: tokenEntries,
     transactionData: signRequest,
-    easyConfirmDecryptKey,
   } = useParams(isParams)
-  const isEasyConfirmationEnabled = useSelector(easyConfirmationSelector)
-  const isHW = useSelector(isHWSelector)
-  const defaultAsset = useSelector(defaultNetworkAssetSelector)
-  const hwDeviceInfo = useSelector(hwDeviceInfoSelector)
-  const wallet = useSelectedWallet()
-  const {saveAndSubmitTx, isLoading: sendingTransaction} = useSaveAndSubmitSignedTx({wallet})
-
-  const [password, setPassword] = React.useState(CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '')
-  // const [sendingTransaction, setSendingTransaction] = React.useState(false)
-  const [buttonDisabled, setButtonDisabled] = React.useState(false)
-  const [useUSB, setUseUSB] = React.useState(false)
-  const [ledgerDialogStep, setLedgerDialogStep] = React.useState(LEDGER_DIALOG_STEPS.CHOOSE_TRANSPORT)
-  const [showErrorModal, setShowErrorModal] = React.useState(false)
-  const [errorMessage, setErrorMessage] = React.useState('')
-  const [errorLogs, setErrorLogs] = React.useState('')
-
-  const openLedgerConnect = () => setLedgerDialogStep(LEDGER_DIALOG_STEPS.LEDGER_CONNECT)
-  const closeLedgerDialog = () => setLedgerDialogStep(LEDGER_DIALOG_STEPS.CLOSED)
-
-  const closeErrorModal = () => setShowErrorModal(false)
-  const setErrorData = (showErrorModal, errorMessage, errorLogs) => {
-    setShowErrorModal(showErrorModal)
-    setErrorMessage(errorMessage)
-    setErrorLogs(errorLogs)
-  }
-
-  const dispatch = useDispatch()
-  const setLedgerDeviceId = (deviceId) => dispatch(_setLedgerDeviceId(deviceId))
-  const setLedgerDeviceObj = (deviceObj) => dispatch(_setLedgerDeviceObj(deviceObj))
-
-  const onChooseTransport = (useUSB: boolean) => {
-    if (!hwDeviceInfo) throw new Error('No device info')
-
-    setUseUSB(useUSB)
-    if (
-      (useUSB && hwDeviceInfo.hwFeatures.deviceObj == null) ||
-      (!useUSB && hwDeviceInfo.hwFeatures.deviceId == null)
-    ) {
-      openLedgerConnect()
-    } else {
-      closeLedgerDialog()
-    }
-  }
-
-  const onConnectUSB = async (deviceObj) => {
-    await setLedgerDeviceObj(deviceObj)
-    closeLedgerDialog()
-  }
-
-  const onConnectBLE = async (deviceId) => {
-    await setLedgerDeviceId(deviceId)
-    closeLedgerDialog()
-  }
-
   const navigation = useNavigation()
-  const onConfirm = async () => {
-    try {
-      setButtonDisabled(true)
-      let signedTx
-      if (isHW) {
-        signedTx = await wallet.signTxWithLedger(signRequest, useUSB)
-      } else {
-        if (isEasyConfirmationEnabled) {
-          signedTx = await wallet.signTx(signRequest, easyConfirmDecryptKey)
-        } else {
-          const decryptedKey = await KeyStore.getData(walletManager._id, 'MASTER_PASSWORD', '', password, intl)
-          signedTx = await wallet.signTx(signRequest, decryptedKey)
-        }
-      }
-      saveAndSubmitTx(signedTx, {
-        onSuccess: () => {
-          navigation.dispatch(
-            CommonActions.reset({
-              key: null,
-              index: 0,
-              routes: [{name: UI_V2 ? 'history' : SEND_ROUTES.MAIN}],
-            } as any),
-          )
-          if (!UI_V2) {
-            navigation.navigate(WALLET_ROUTES.TX_HISTORY)
-          }
-        },
-        onError: (err) => {
-          if (err instanceof LocalizableError) {
-            const localizableError: any = err
-            setErrorData(
-              true,
-              intl.formatMessage(
-                {id: localizableError.id, defaultMessage: localizableError.defaultMessage},
-                localizableError.values,
-              ),
-              localizableError.values.response || null, // API errors should include a response
-            )
-          } else {
-            setErrorData(true, strings.generalTxError.message, (err as any).message || null)
-          }
-        },
-      })
-    } catch (err) {
-      if (err instanceof WrongPassword) {
-        await showErrorDialog(errorMessages.incorrectPassword, intl)
-      } else {
-        setErrorData(true, strings.generalTxError.message, (err as any).message || null)
-      }
-    } finally {
-      setButtonDisabled(false)
-    }
-  }
+  const wallet = useSelectedWallet()
+  const {isHW, isEasyConfirmationEnabled} = wallet
+  const defaultAsset = useSelector(defaultNetworkAssetSelector)
+  const [password, setPassword] = React.useState('')
+  const [useUSB, setUseUSB] = React.useState(false)
 
-  const isConfirmationDisabled = !isEasyConfirmationEnabled && !password && !isHW
+  useEffect(() => {
+    if (CONFIG.DEBUG.PREFILL_FORMS && __DEV__) {
+      setPassword(CONFIG.DEBUG.PASSWORD)
+    }
+  }, [])
+
+  const onSuccess = () => {
+    navigation.dispatch(
+      CommonActions.reset({
+        key: null,
+        index: 0,
+        routes: [{name: UI_V2 ? 'history' : SEND_ROUTES.MAIN}],
+      } as any),
+    )
+    navigation.navigate(WALLET_ROUTES.TX_HISTORY)
+  }
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
@@ -256,39 +139,16 @@ export const ConfirmScreen = () => {
         </ScrollView>
 
         <Actions>
-          <Button
-            onPress={onConfirm}
-            title={strings.confirmButton}
-            disabled={isConfirmationDisabled || buttonDisabled}
+          <ConfirmTx
+            onSuccess={onSuccess}
+            txDataSignRequest={signRequest}
+            useUSB={useUSB}
+            setUseUSB={setUseUSB}
+            isProvidingPassword
+            providedPassword={password}
           />
         </Actions>
       </View>
-
-      {isHW && Platform.OS === 'android' && CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT && (
-        <>
-          <LedgerTransportSwitchModal
-            visible={ledgerDialogStep === LEDGER_DIALOG_STEPS.CHOOSE_TRANSPORT}
-            onRequestClose={closeLedgerDialog}
-            onSelectUSB={() => onChooseTransport(true)}
-            onSelectBLE={() => onChooseTransport(false)}
-            showCloseIcon
-          />
-
-          <Modal visible={ledgerDialogStep === LEDGER_DIALOG_STEPS.LEDGER_CONNECT} onRequestClose={closeLedgerDialog}>
-            <LedgerConnect onConnectBLE={onConnectBLE} onConnectUSB={onConnectUSB} useUSB={useUSB} />
-          </Modal>
-        </>
-      )}
-
-      <ErrorModal
-        visible={showErrorModal}
-        title={strings.generalTxError.title}
-        errorMessage={errorMessage}
-        errorLogs={errorLogs}
-        onRequestClose={closeErrorModal}
-      />
-
-      <PleaseWaitModal title={strings.submittingTx} spinnerText={strings.pleaseWait} visible={sendingTransaction} />
     </SafeAreaView>
   )
 }
@@ -318,12 +178,6 @@ const styles = StyleSheet.create({
     color: COLORS.POSITIVE_AMOUNT,
   },
 })
-
-const LEDGER_DIALOG_STEPS = {
-  CLOSED: 'CLOSED',
-  CHOOSE_TRANSPORT: 'CHOOSE_TRANSPORT',
-  LEDGER_CONNECT: 'LEDGER_CONNECT',
-}
 
 const useStrings = () => {
   const intl = useIntl()

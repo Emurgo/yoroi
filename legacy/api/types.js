@@ -121,6 +121,7 @@ export type ServerStatusResponse = {|
   isServerOk: boolean,
   isMaintenance: boolean,
   serverTime: number, // in milliseconds
+  isQueueOnline?: boolean,
 |}
 
 // bestblock

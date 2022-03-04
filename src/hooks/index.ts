@@ -8,9 +8,11 @@ import {
   useQueryClient,
   UseQueryOptions,
 } from 'react-query'
+import {useSelector} from 'react-redux'
 
 import {generateShelleyPlateFromKey} from '../../legacy/crypto/shelley/plate'
 import walletManager from '../../legacy/crypto/walletManager'
+import {serverStatusSelector} from '../../legacy/selectors'
 import {WalletMeta} from '../../legacy/state'
 import {SignedTx, TxSubmissionStatus, WalletInterface} from '../types'
 import {Token} from '../types/cardano'
@@ -267,24 +269,24 @@ export const useCreateWallet = (options?: UseMutationOptions<WalletInterface, Er
   }
 }
 
-const isTxQueueOnline = true
 export const useSaveAndSubmitSignedTx = (
   {wallet}: {wallet: WalletInterface},
   options: UseMutationOptions<undefined | TxSubmissionStatus, Error, SignedTx> = {},
 ) => {
   const queryClient = useQueryClient()
+  const serverStatus = useSelector(serverStatusSelector)
   const mutation = useMutation<undefined | TxSubmissionStatus, Error, SignedTx>({
     mutationFn: async (signedTx: SignedTx) => {
       queryClient.invalidateQueries([wallet.id, 'pendingTxs'])
 
       await wallet.submitTransaction(signedTx.base64)
 
-      if (isTxQueueOnline) {
-        const txStatus = await fetchTxStatus(wallet, signedTx.id, false)
-        if (!txStatus) {
-          queryClient.invalidateQueries([wallet.id, 'serverStatus'])
-        }
-        return txStatus
+      if (serverStatus.isQueueOnline) {
+        return await fetchTxStatus(wallet, signedTx.id, false)
+      }
+
+      return {
+        status: 'SUCCESS',
       }
     },
     ...options,
