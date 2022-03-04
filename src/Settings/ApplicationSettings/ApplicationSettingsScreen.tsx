@@ -6,7 +6,6 @@ import DeviceInfo from 'react-native-device-info'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {setAppSettingField, setEasyConfirmation, setSystemAuth} from '../../../legacy/actions'
-import {StatusBar} from '../../../legacy/components/UiKit'
 import {CONFIG, isNightly} from '../../../legacy/config/config'
 import KeyStore from '../../../legacy/crypto/KeyStore'
 import walletManager from '../../../legacy/crypto/walletManager'
@@ -22,6 +21,7 @@ import {
   isSystemAuthEnabledSelector,
   sendCrashReportsSelector,
 } from '../../../legacy/selectors'
+import {StatusBar} from '../../components'
 import {useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../SelectedWallet'
 import {NavigatedSettingsItem, SettingsBuildItem, SettingsItem, SettingsSection} from '../SettingsItems'
 

@@ -5,8 +5,6 @@ import {Image, Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 're
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch, useSelector} from 'react-redux'
 
-import StandardModal from '../../legacy//components/Common/StandardModal'
-import {Button, ProgressStep, Text} from '../../legacy//components/UiKit'
 import {fetchUTXOs} from '../../legacy/actions/utxo'
 import {generateVotingKeys} from '../../legacy/actions/voting'
 import appstoreBadge from '../../legacy/assets/img/app-store-badge.png'
@@ -16,7 +14,7 @@ import globalMessages, {confirmationMessages} from '../../legacy/i18n/global-mes
 import {CATALYST_ROUTES} from '../../legacy/RoutesList'
 import {isDelegatingSelector} from '../../legacy/selectors'
 import {Logger} from '../../legacy/utils/logging'
-import {Spacer} from '../components'
+import {Button, ProgressStep, Spacer, StandardModal, Text} from '../components'
 import {Actions, Row} from './components'
 
 export const Step1 = () => {

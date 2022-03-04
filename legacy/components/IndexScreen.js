@@ -4,9 +4,10 @@ import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {SafeAreaView, ScrollView, StyleSheet, TouchableOpacity} from 'react-native'
 
+// $FlowExpectedError
+import {Button, StatusBar, Text} from '../../src/components'
 import {ROOT_ROUTES} from '../RoutesList'
 import storage from '../utils/storage'
-import {Button, StatusBar, Text} from './UiKit'
 
 const routes = [
   {label: 'Storybook', path: ROOT_ROUTES.STORYBOOK},

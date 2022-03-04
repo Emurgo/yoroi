@@ -7,12 +7,10 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {updateWallets} from '../../../legacy/actions'
-import {Button, Checkbox, StatusBar, Text, TextInput} from '../../../legacy/components/UiKit'
-import {Checkmark} from '../../../legacy/components/UiKit/TextInput'
 import {WALLET_ROOT_ROUTES} from '../../../legacy/RoutesList'
 import {isHWSelector} from '../../../legacy/selectors'
 import {COLORS} from '../../../legacy/styles/config'
-import {Spacer} from '../../components'
+import {Button, Checkbox, Checkmark, Spacer, StatusBar, Text, TextInput} from '../../components'
 import {useRemoveWallet, useWalletName} from '../../hooks'
 import {useSelectedWallet} from '../../SelectedWallet'
 
@@ -74,7 +72,7 @@ export const RemoveWalletScreen = () => {
 
         <Spacer height={16} />
 
-        <Button onPress={removeWallet} title={strings.remove} style={styles.removeButton} disabled={disabled} />
+        <Button onPress={() => removeWallet()} title={strings.remove} style={styles.removeButton} disabled={disabled} />
       </Actions>
     </SafeAreaView>
   )

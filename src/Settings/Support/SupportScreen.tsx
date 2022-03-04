@@ -1,10 +1,9 @@
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Image, Linking, TouchableOpacity, View} from 'react-native'
+import {Image, Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import chevronRight from '../../../legacy/assets/img/chevron_right.png'
-import styles from '../../../legacy/components/Settings/styles/SupportScreen.style'
-import {StatusBar, Text} from '../../../legacy/components/UiKit'
+import {StatusBar, Text} from '../../components'
 
 export const SupportScreen = () => {
   const intl = useIntl()
@@ -74,5 +73,32 @@ const messages = defineMessages({
   reportUrl: {
     id: 'components.settings.settingsscreen.reportUrl',
     defaultMessage: '!!!https://yoroi-wallet.com/support/',
+  },
+})
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    padding: 16,
+  },
+  item: {
+    marginBottom: 25,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  itemWrap: {
+    flex: 1,
+    paddingRight: 8,
+  },
+  title: {
+    marginTop: 2,
+    fontSize: 14,
+    lineHeight: 24,
+  },
+  text: {
+    fontSize: 14,
+    lineHeight: 22,
   },
 })

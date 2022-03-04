@@ -5,11 +5,10 @@ import {Image, Platform, ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import image from '../../../legacy/assets/img/ledger_1.png'
-import {BulletPointItem, Button, ProgressStep, Text} from '../../../legacy/components/UiKit'
 import type {NetworkId, WalletImplementationId} from '../../../legacy/config/types'
 import {confirmationMessages, ledgerMessages} from '../../../legacy/i18n/global-messages'
 import {WALLET_INIT_ROUTES} from '../../../legacy/RoutesList'
-import {Spacer} from '../../components'
+import {BulletPointItem, Button, ProgressStep, Spacer, Text} from '../../components'
 
 export type Params = {
   networkId: NetworkId

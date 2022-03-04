@@ -2,9 +2,8 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 
-import {Text} from '../../legacy/components/UiKit'
 import {COLORS} from '../../legacy/styles/config'
-import {Icon} from '../components'
+import {Icon, Text} from '../components'
 
 export const WalletDescription = () => {
   const strings = useStrings()

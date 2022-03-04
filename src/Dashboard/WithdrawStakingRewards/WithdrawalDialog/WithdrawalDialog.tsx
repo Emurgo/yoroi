@@ -4,18 +4,13 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet} from 'react-native'
 import Markdown from 'react-native-easy-markdown'
 
-import {DangerousAction} from '../../../../legacy/components/Common/DangerousActionModal'
-import {ErrorView} from '../../../../legacy/components/Common/ErrorModal'
 import type {WithdrawalDialogSteps} from '../../../../legacy/components/Delegation/types'
 import {WITHDRAWAL_DIALOG_STEPS} from '../../../../legacy/components/Delegation/types'
-import LedgerConnect from '../../../../legacy/components/Ledger/LedgerConnect'
-import {LedgerTransportSwitch} from '../../../../legacy/components/Ledger/LedgerTransportSwitchModal'
-import {Modal} from '../../../../legacy/components/UiKit'
-import {PleaseWaitView} from '../../../../legacy/components/UiKit/PleaseWaitModal'
 import {MultiToken} from '../../../../legacy/crypto/MultiToken'
 import globalMessages, {ledgerMessages} from '../../../../legacy/i18n/global-messages'
 import {theme} from '../../../../legacy/styles/config'
-import {Spacer} from '../../../components'
+import {DangerousAction, ErrorView, Modal, PleaseWaitView, Spacer} from '../../../components'
+import {LedgerConnect, LedgerTransportSwitch} from '../../../HW'
 import {TransferSummary} from './TransferSummary'
 
 export type Withdrawal = {
@@ -32,7 +27,7 @@ type Props = {
   step: WithdrawalDialogSteps
   onKeepKey: () => void
   onDeregisterKey: () => void
-  onChooseTransport: (object: Record<string, unknown>, bool: boolean) => void
+  onChooseTransport: (bool: boolean) => void
   onConnectBLE: (...args: unknown[]) => void
   onConnectUSB: (...args: unknown[]) => void
   withdrawals: null | Array<Withdrawal>
@@ -40,14 +35,16 @@ type Props = {
   balance: BigNumber
   finalBalance: BigNumber
   fees: BigNumber
-  onConfirm: (event: Record<string, unknown>, password?: string | void) => void
+  onConfirm: (password?: string | void) => void
   onRequestClose: () => void
   useUSB: boolean
   showCloseIcon?: boolean
-  error: {
-    errorMessage: string | null
-    errorLogs: string | null
-  }
+  error:
+    | undefined
+    | {
+        errorMessage: string
+        errorLogs: string | null
+      }
 }
 
 export const WithdrawalDialog = ({
@@ -99,8 +96,8 @@ export const WithdrawalDialog = ({
       case WITHDRAWAL_DIALOG_STEPS.CHOOSE_TRANSPORT:
         return (
           <LedgerTransportSwitch
-            onSelectUSB={(event) => onChooseTransport(event, true)}
-            onSelectBLE={(event) => onChooseTransport(event, false)}
+            onSelectUSB={() => onChooseTransport(true)}
+            onSelectBLE={() => onChooseTransport(false)}
           />
         )
       case WITHDRAWAL_DIALOG_STEPS.LEDGER_CONNECT:
@@ -123,6 +120,7 @@ export const WithdrawalDialog = ({
       case WITHDRAWAL_DIALOG_STEPS.WAITING:
         return <PleaseWaitView title={''} spinnerText={strings.pleaseWait} />
       case WITHDRAWAL_DIALOG_STEPS.ERROR:
+        if (!error) throw new Error("Invalid state: 'error' is undefined")
         return <ErrorView errorMessage={error.errorMessage} errorLogs={error.errorLogs} onDismiss={onRequestClose} />
       default:
         return null

@@ -9,9 +9,6 @@ import {useDispatch, useSelector} from 'react-redux'
 import {showErrorDialog, submitSignedTx, submitTransaction} from '../../legacy/actions'
 import {setLedgerDeviceId, setLedgerDeviceObj} from '../../legacy/actions/hwWallet'
 import {generateVotingTransaction} from '../../legacy/actions/voting'
-import HWInstructions from '../../legacy/components/Ledger/HWInstructions'
-import {Button, OfflineBanner, ProgressStep} from '../../legacy/components/UiKit'
-import {TextInput} from '../../legacy/components/UiKit'
 import {CONFIG} from '../../legacy/config/config'
 import {WrongPassword} from '../../legacy/crypto/errors'
 import KeyStore from '../../legacy/crypto/KeyStore'
@@ -30,7 +27,8 @@ import {
 } from '../../legacy/selectors'
 import assert from '../../legacy/utils/assert'
 import {formatTokenWithSymbol} from '../../legacy/utils/format'
-import {Spacer} from '../components'
+import {Button, OfflineBanner, ProgressStep, Spacer, TextInput} from '../components'
+import {Instructions as HWInstructions} from '../HW'
 import {Actions, Description, Title} from './components'
 import type {DialogStep} from './Dialog'
 import {Dialog, DIALOG_STEPS} from './Dialog'
@@ -60,7 +58,7 @@ export const Step5 = () => {
   const [fees, setFees] = useState(null)
   const [useUSB, setUseUSB] = useState<boolean>(false)
 
-  const onChooseTransport = (_, shouldUseUSB: boolean) => {
+  const onChooseTransport = (shouldUseUSB: boolean) => {
     setUseUSB(shouldUseUSB)
     if (
       (shouldUseUSB && hwDeviceInfo?.hwFeatures.deviceObj == null) ||

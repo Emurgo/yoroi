@@ -3,11 +3,11 @@ import {useIntl} from 'react-intl'
 import {Text, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
-import StandardModal from '../../legacy/components/Common/StandardModal'
 import {CONFIG} from '../../legacy/config/config'
 import globalMessages, {confirmationMessages} from '../../legacy/i18n/global-messages'
 import {availableAssetsSelector, tokenBalanceSelector} from '../../legacy/selectors'
 import {formatTokenWithText} from '../../legacy/utils/format'
+import {StandardModal} from '../components'
 
 export const InsufficientFundsModal = ({visible, onRequestClose}: {visible: boolean; onRequestClose: () => void}) => {
   const strings = useStrings()

@@ -5,12 +5,15 @@ import type {DefaultAsset} from '../../src/types/cardano'
 
 export var isHaskellShelley: (walletImplementationId: string) => boolean
 export var isByron: (walletImplementationId: string) => boolean
+export var getDefaultAssets: () => Array<DefaultAsset>
 
 // prettier-ignore
 export var CONFIG: {
   COMMIT: string,
   NUMBERS: {
-    HARD_DERIVATION_START: number
+    HARD_DERIVATION_START: number,
+    EPOCH_REWARD_DENOMINATOR: number,
+
   },
   DEBUG: {
     PREFILL_FORMS: boolean,
@@ -32,6 +35,7 @@ export var CONFIG: {
   },
   HARDWARE_WALLETS: {
     LEDGER_NANO: {
+      USB_MIN_SDK: number,
       ENABLE_USB_TRANSPORT: boolean,
       ENABLED: boolean,
       DEFAULT_WALLET_NAME: string
@@ -62,7 +66,8 @@ export var isJormun: (id: WalletImplementationId) => boolean
 type NetworkConfig = {
   NETWORK_ID: number,
   ENABLED: boolean,
-  POOL_EXPLORER: string
+  POOL_EXPLORER: string,
+  PER_EPOCH_PERCENTAGE_REWARD: number,
 }
 
 type WalletConfig = {

@@ -1,11 +1,10 @@
 import {validateMnemonic, wordlists} from 'bip39'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Keyboard, ScrollView, StyleSheet, View} from 'react-native'
+import {Keyboard, ScrollView, StyleSheet, TextInput as RNTextInput, View} from 'react-native'
 
-import {Menu, TextInput} from '../../../legacy/components/UiKit'
 import {COLORS} from '../../../legacy/styles/config'
-import {useScrollView} from '../../components'
+import {Menu, TextInput, useScrollView} from '../../components'
 
 export const MnemonicInput = ({
   length,
@@ -54,7 +53,7 @@ type MnemonicWordsInputProps = {
   onSelect: (index: number, word: string) => void
 }
 const MnemonicWordsInput = ({onSelect, words}: MnemonicWordsInputProps) => {
-  const refs = React.useRef(words.map(() => React.createRef<TextInput>())).current
+  const refs = React.useRef(words.map(() => React.createRef<RNTextInput>())).current
   const scrollView = useScrollView()
   const rowHeightRef = React.useRef<number | void>()
 
@@ -98,7 +97,7 @@ type MnemonicWordInputProps = {
   onSelect: (word: string) => void
   onFocus: () => void
 }
-const MnemonicWordInput = React.forwardRef(({id, onSelect, onFocus}: MnemonicWordInputProps, ref) => {
+const MnemonicWordInput = React.forwardRef<RNTextInput, MnemonicWordInputProps>(({id, onSelect, onFocus}, ref) => {
   const [word, setWord] = React.useState('')
   const matchingWords = React.useMemo(() => (word ? getMatchingWords(word) : []), [word])
   const [menuEnabled, setMenuEnabled] = React.useState(false)

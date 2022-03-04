@@ -13,20 +13,6 @@ import {
   setLedgerDeviceId as _setLedgerDeviceId,
   setLedgerDeviceObj as _setLedgerDeviceObj,
 } from '../../../legacy/actions/hwWallet'
-import ErrorModal from '../../../legacy/components/Common/ErrorModal'
-import HWInstructions from '../../../legacy/components/Ledger/HWInstructions'
-import LedgerConnect from '../../../legacy/components/Ledger/LedgerConnect'
-import LedgerTransportSwitchModal from '../../../legacy/components/Ledger/LedgerTransportSwitchModal'
-import {
-  Banner,
-  Button,
-  Modal,
-  OfflineBanner,
-  PleaseWaitModal,
-  StatusBar,
-  Text,
-  ValidatedTextInput,
-} from '../../../legacy/components/UiKit'
 import {CONFIG, UI_V2} from '../../../legacy/config/config'
 import {WrongPassword} from '../../../legacy/crypto/errors'
 import KeyStore from '../../../legacy/crypto/KeyStore'
@@ -43,8 +29,22 @@ import {
 } from '../../../legacy/selectors'
 import {COLORS} from '../../../legacy/styles/config'
 import {formatTokenWithSymbol, formatTokenWithText} from '../../../legacy/utils/format'
-import {Boundary, Spacer} from '../../components'
+import {
+  Banner,
+  Boundary,
+  Button,
+  Modal,
+  OfflineBanner,
+  PleaseWaitModal,
+  Spacer,
+  StatusBar,
+  Text,
+  ValidatedTextInput,
+} from '../../components'
+import {ErrorModal} from '../../components'
 import {useSaveAndSubmitSignedTx, useTokenInfo} from '../../hooks'
+import {Instructions as HWInstructions, LedgerTransportSwitchModal} from '../../HW'
+import {LedgerConnect} from '../../HW'
 import {useParams} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {TokenEntry} from '../../types/cardano'
