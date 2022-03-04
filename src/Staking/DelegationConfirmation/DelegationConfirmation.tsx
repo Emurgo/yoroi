@@ -18,6 +18,7 @@ import KeyStore from '../../../legacy/crypto/KeyStore'
 import {MultiToken} from '../../../legacy/crypto/MultiToken'
 import type {CreateDelegationTxResponse} from '../../../legacy/crypto/shelley/delegationUtils'
 import walletManager, {SystemAuthDisabled} from '../../../legacy/crypto/walletManager'
+import {ensureKeysValidity} from '../../../legacy/helpers/deviceSettings'
 import globalMessages, {errorMessages, txLabels} from '../../../legacy/i18n/global-messages'
 import LocalizableError from '../../../legacy/i18n/LocalizableError'
 import {useParams} from '../../../legacy/navigation'
@@ -152,7 +153,7 @@ export const DelegationConfirmation = ({mockDefaultAsset}: {mockDefaultAsset?: D
 
       if (isEasyConfirmationEnabled) {
         try {
-          await walletManager.ensureKeysValidity()
+          await ensureKeysValidity(walletManager._id)
           navigation.navigate(SEND_ROUTES.BIOMETRICS_SIGNING, {
             keyId: walletManager._id,
             onSuccess: async (decryptedKey) => {
