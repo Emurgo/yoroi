@@ -1,16 +1,23 @@
 import React, {ForwardedRef} from 'react'
-import {Image, StyleSheet, TouchableOpacity, View, ViewProps, ViewStyle} from 'react-native'
-import * as RN from 'react-native'
-import {HelperText} from 'react-native-paper'
-import * as RNP from 'react-native-paper'
+import {
+  Image,
+  StyleSheet,
+  TextInput as RNTextInput,
+  TextInputProps,
+  TouchableOpacity,
+  View,
+  ViewProps,
+  ViewStyle,
+} from 'react-native'
+import {HelperText, TextInput as RNPTextInput} from 'react-native-paper'
 
 import closedEyeIcon from '../../../legacy/assets/img/icon/visibility-closed.png'
 import openedEyeIcon from '../../../legacy/assets/img/icon/visibility-opened.png'
 import {COLORS} from '../../../legacy/styles/config'
 import {Icon} from '../Icon'
 
-type Props = RN.TextInputProps &
-  Omit<RNP.TextInputProps, 'theme'> & {
+type Props = TextInputProps &
+  Omit<React.ComponentProps<typeof RNPTextInput>, 'theme'> & {
     containerStyle?: ViewStyle
     helperText?: string
     errorText?: string
@@ -38,7 +45,7 @@ const useDebounced = (callback, value, delay = 1000) => {
   }, [callback, delay, value])
 }
 
-export const TextInput = React.forwardRef((props: Props, ref: ForwardedRef<RN.TextInput>) => {
+export const TextInput = React.forwardRef((props: Props, ref: ForwardedRef<RNTextInput>) => {
   const {
     value,
     containerStyle,
@@ -63,7 +70,7 @@ export const TextInput = React.forwardRef((props: Props, ref: ForwardedRef<RN.Te
 
   return (
     <View style={containerStyle}>
-      <RNP.TextInput
+      <RNPTextInput
         ref={ref}
         style={{textAlign}}
         value={value}
@@ -85,7 +92,7 @@ export const TextInput = React.forwardRef((props: Props, ref: ForwardedRef<RN.Te
         error={errorTextEnabled && !!errorText}
         render={({style, ...inputProps}) => (
           <InputContainer>
-            <RN.TextInput {...inputProps} style={[style, {color: faded ? COLORS.GREY_6 : COLORS.BLACK}]} />
+            <RNTextInput {...inputProps} style={[style, {color: faded ? COLORS.GREY_6 : COLORS.BLACK}]} />
             {right ? <AdornmentContainer style={styles.checkmarkContainer}>{right}</AdornmentContainer> : null}
 
             {secureTextEntry ? (
