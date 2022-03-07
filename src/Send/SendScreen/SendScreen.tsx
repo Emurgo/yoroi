@@ -183,9 +183,7 @@ export const SendScreen = ({selectedTokenIdentifier, sendAll, onSendAll}: Props)
       utxos,
       fee,
       tokens,
-      easyConfirmDecryptKey: '',
     })
-    return
   }
 
   return (

@@ -268,11 +268,6 @@ const useStrings = () => {
   const intl = useIntl()
 
   return {
-    availableFunds: intl.formatMessage(globalMessages.availableFunds),
-    fees: intl.formatMessage(txLabels.fees),
-    balanceAfterTx: intl.formatMessage(txLabels.balanceAfterTx),
-    receiver: intl.formatMessage(txLabels.receiver),
-    total: intl.formatMessage(globalMessages.total),
     password: intl.formatMessage(txLabels.password),
     confirmButton: intl.formatMessage(confirmationMessages.commonButtons.confirmButton),
     submittingTx: intl.formatMessage(txLabels.submittingTx),
