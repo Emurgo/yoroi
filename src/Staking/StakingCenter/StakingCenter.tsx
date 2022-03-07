@@ -217,12 +217,10 @@ const navigateToDelegationConfirm = async (
       defaultAsset,
       serverStatus.serverTime,
     )
-    const transactionFee = await transactionData.signRequest.fee()
     navigation.navigate(STAKING_CENTER_ROUTES.DELEGATION_CONFIRM, {
       poolName: selectedPool.poolName,
       poolHash: selectedPool.poolHash,
       transactionData,
-      transactionFee,
     })
   } catch (e) {
     if (e instanceof InsufficientFunds) {
