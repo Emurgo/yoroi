@@ -3,7 +3,7 @@ import {BigNumber} from 'bignumber.js'
 import React, {useEffect, useState} from 'react'
 import type {IntlShape} from 'react-intl'
 import {defineMessages, useIntl} from 'react-intl'
-import {View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 import {WebView} from 'react-native-webview'
 import {useSelector} from 'react-redux'
 
@@ -11,7 +11,6 @@ import {showErrorDialog} from '../../../legacy/actions'
 import {ApiError, NetworkError} from '../../../legacy/api/errors'
 import type {RawUtxo} from '../../../legacy/api/types'
 import AccountAutoRefresher from '../../../legacy/components/Delegation/AccountAutoRefresher'
-import styles from '../../../legacy/components/Delegation/styles/DelegationCenter.style'
 import UtxoAutoRefresher from '../../../legacy/components/Send/UtxoAutoRefresher'
 import {CONFIG, getTestStakingPool, isNightly, SHOW_PROD_POOLS_IN_DEV} from '../../../legacy/config/config'
 import {getNetworkConfigById} from '../../../legacy/config/networks'
@@ -305,3 +304,9 @@ const _handleSelectedPoolHashes = async (
     }
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+})
