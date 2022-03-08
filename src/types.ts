@@ -27,6 +27,12 @@ export interface WalletInterface {
   fetchTxStatus(request: TxStatusRequest): Promise<TxStatusResponse>
   subscribe(handler: (wallet: WalletInterface) => void): void
   subscribeOnTxHistoryUpdate(handler: () => void): void
+  createVotingRegTx(
+    utxos: Array<RawUtxo>,
+    catalystPrivateKey: string,
+    decryptedKey?: string,
+    serverTime?: Date | null,
+  ): Promise<void>
 }
 
 export type TokenMetadata = {

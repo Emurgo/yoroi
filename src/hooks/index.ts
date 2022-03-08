@@ -327,7 +327,7 @@ export const fetchTxStatus = async (
       if (
         submission.status === 'FAILED' ||
         submission.status === 'MAX_RETRY_REACHED' ||
-        submission.status === 'SUCCESS'
+        submission.status === 'SUCCESS' // submitted and accepted by node
       ) {
         return submission
       }

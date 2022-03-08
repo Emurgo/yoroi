@@ -14,6 +14,7 @@ export const WithModalProps = ({children}: {children: childrenFn}) => {
 
   React.useEffect(() => {
     setTimeout(() => setVisible(true), 500) // weird behavior when starting with visible: true
+    setTimeout(() => setVisible(false), 3500) // auto-close
   }, [])
 
   return (

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useNavigation} from '@react-navigation/native'
-import React, {useEffect} from 'react'
+import {delay} from 'bluebird'
+import React, {useEffect, useState} from 'react'
 import {useIntl} from 'react-intl'
 import {Platform, StyleSheet, View} from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
@@ -16,30 +17,123 @@ import KeyStore from '../../../legacy/crypto/KeyStore'
 import type {CreateUnsignedTxResponse} from '../../../legacy/crypto/shelley/transactionUtils'
 import walletManager, {SystemAuthDisabled} from '../../../legacy/crypto/walletManager'
 import {ensureKeysValidity} from '../../../legacy/helpers/deviceSettings'
-import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../../legacy/i18n/global-messages'
+import {confirmationMessages, errorMessages, txLabels} from '../../../legacy/i18n/global-messages'
 import LocalizableError from '../../../legacy/i18n/LocalizableError'
 import {SEND_ROUTES, WALLET_ROOT_ROUTES} from '../../../legacy/RoutesList'
 import {hwDeviceInfoSelector} from '../../../legacy/selectors'
 import {COLORS} from '../../../legacy/styles/config'
 import {useCloseWallet, useSaveAndSubmitSignedTx} from '../../hooks'
-import {LedgerTransportSwitchModal} from '../../HW'
-import {LedgerConnect} from '../../HW'
 import {useSelectedWallet, useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
-import {Button, ButtonProps, Modal, PleaseWaitModal, ValidatedTextInput} from '..'
-import {ErrorModal} from '..'
+import {SignedTx} from '../../types'
+import {Button, ButtonProps, ValidatedTextInput} from '..'
+import {Dialog, Step as DialogStep} from './Dialog'
+
+type ErrorData = {
+  errorMessage: string
+  errorLogs?: string
+}
 
 type ConfirmTxProps = {
-  txDataSignRequest: CreateUnsignedTxResponse
-  onSuccess: () => void
-  onError?: (err: Error) => void
   buttonProps?: Omit<Partial<ButtonProps>, 'disabled' | 'onPress'>
+  onSuccess: (signedTx: SignedTx) => void
+  onError?: (err: Error) => void
+  txDataSignRequest: CreateUnsignedTxResponse
   useUSB: boolean
   setUseUSB: (useUSB: boolean) => void
   isProvidingPassword: boolean
   providedPassword?: string
+  disabled?: boolean
 }
 
-export const ConfirmTx: React.FC<ConfirmTxProps> = ({
+type SignAndSubmitProps = {
+  process: 'signAndSubmit'
+} & ConfirmTxProps
+
+type OnlySignProps = {
+  process: 'onlySign'
+} & ConfirmTxProps
+
+type OnlySubmitProps = {
+  process: 'onlySubmit'
+  signedTx: SignedTx
+  onError: (err: Error) => void
+} & Pick<ConfirmTxProps, 'onSuccess' | 'buttonProps' | 'disabled'>
+
+export const ConfirmTx: React.FC<SignAndSubmitProps | OnlySignProps | OnlySubmitProps> = (props) => {
+  if (props.process === 'onlySign' || props.process === 'signAndSubmit') {
+    return <ConfirmWithSignature {...props} />
+  } else {
+    return <ConfirmSubmit {...props} />
+  }
+}
+
+export const ConfirmSubmit: React.FC<OnlySubmitProps> = ({signedTx, onError, onSuccess, buttonProps, disabled}) => {
+  const strings = useStrings()
+  const wallet = useSelectedWallet()
+
+  const [dialogStep, setDialogStep] = useState<DialogStep.Closed | DialogStep.Error | DialogStep.Submitting>(
+    DialogStep.Closed,
+  )
+
+  const [errorData, setErrorData] = useState<ErrorData>({
+    errorMessage: '',
+    errorLogs: '',
+  })
+  const showError = ({errorMessage, errorLogs}: ErrorData) => {
+    setErrorData({
+      errorMessage,
+      errorLogs,
+    })
+    setDialogStep(DialogStep.Error)
+  }
+
+  const {saveAndSubmitTx, isLoading: sendingTransaction} = useSaveAndSubmitSignedTx({wallet})
+
+  const onConfirm = () => {
+    setDialogStep(DialogStep.Submitting)
+    saveAndSubmitTx(signedTx, {
+      onSuccess: () => onSuccess(signedTx),
+      onError: (err) => {
+        if (err instanceof LocalizableError) {
+          showError({
+            errorMessage: strings.errorMessage(err),
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            errorLogs: (err as any).values.response || null,
+          })
+        } else {
+          showError({
+            errorMessage: strings.generalTxErrorMessage,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            errorLogs: (err as any).message || null,
+          })
+        }
+        onError?.(err)
+      },
+    })
+  }
+
+  return (
+    <View style={styles.root}>
+      <View style={styles.actionContainer}>
+        <Button
+          onPress={onConfirm}
+          title={strings.confirmButton}
+          {...buttonProps}
+          disabled={sendingTransaction || disabled}
+        />
+      </View>
+
+      <Dialog
+        process="withoutLedger"
+        step={dialogStep}
+        onRequestClose={() => setDialogStep(DialogStep.Closed)}
+        errorData={errorData}
+      />
+    </View>
+  )
+}
+
+export const ConfirmWithSignature: React.FC<SignAndSubmitProps | OnlySignProps> = ({
   txDataSignRequest,
   onError,
   onSuccess,
@@ -48,10 +142,16 @@ export const ConfirmTx: React.FC<ConfirmTxProps> = ({
   useUSB,
   isProvidingPassword,
   providedPassword = '',
+  process,
+  disabled,
 }) => {
   const intl = useIntl()
   const strings = useStrings()
+  const navigation = useNavigation()
+  const dispatch = useDispatch()
+
   const hwDeviceInfo = useSelector(hwDeviceInfoSelector)
+
   const setSelectedWallet = useSetSelectedWallet()
   const setSelectedWalletMeta = useSetSelectedWalletMeta()
   const {closeWallet} = useCloseWallet({
@@ -62,14 +162,16 @@ export const ConfirmTx: React.FC<ConfirmTxProps> = ({
   })
   const wallet = useSelectedWallet()
   const {isHW, isEasyConfirmationEnabled} = wallet
-  const {saveAndSubmitTx, isLoading: sendingTransaction} = useSaveAndSubmitSignedTx({wallet})
 
-  const [password, setPassword] = React.useState('')
-  const [buttonDisabled, setButtonDisabled] = React.useState(false)
-  const [ledgerDialogStep, setLedgerDialogStep] = React.useState(LEDGER_DIALOG_STEPS.CHOOSE_TRANSPORT)
-  const [showErrorModal, setShowErrorModal] = React.useState(false)
-  const [errorMessage, setErrorMessage] = React.useState('')
-  const [errorLogs, setErrorLogs] = React.useState('')
+  const {saveAndSubmitTx} = useSaveAndSubmitSignedTx({wallet})
+
+  const [password, setPassword] = useState('')
+  const [isProcessing, setIsProcessing] = useState(false)
+  const [dialogStep, setDialogStep] = useState(DialogStep.Closed)
+  const [errorData, setErrorData] = useState<ErrorData>({
+    errorMessage: '',
+    errorLogs: '',
+  })
 
   useEffect(() => {
     if (!isProvidingPassword && __DEV__) {
@@ -84,47 +186,39 @@ export const ConfirmTx: React.FC<ConfirmTxProps> = ({
     }
   }, [providedPassword, isProvidingPassword])
 
-  const openLedgerConnect = () => setLedgerDialogStep(LEDGER_DIALOG_STEPS.LEDGER_CONNECT)
-  const closeLedgerDialog = () => setLedgerDialogStep(LEDGER_DIALOG_STEPS.CLOSED)
-
-  const closeErrorModal = () => setShowErrorModal(false)
-  const setErrorData = (showErrorModal, errorMessage, errorLogs) => {
-    setShowErrorModal(showErrorModal)
-    setErrorMessage(errorMessage)
-    setErrorLogs(errorLogs)
+  const showError = ({errorMessage, errorLogs}: ErrorData) => {
+    setErrorData({
+      errorMessage,
+      errorLogs,
+    })
+    setDialogStep(DialogStep.Error)
   }
 
-  const dispatch = useDispatch()
   const setLedgerDeviceId = (deviceId) => dispatch(_setLedgerDeviceId(deviceId))
   const setLedgerDeviceObj = (deviceObj) => dispatch(_setLedgerDeviceObj(deviceObj))
 
   const onChooseTransport = (useUSB: boolean) => {
     if (!hwDeviceInfo) throw new Error('No device info')
-
     setUseUSB(useUSB)
-    if (
-      (useUSB && hwDeviceInfo.hwFeatures.deviceObj == null) ||
-      (!useUSB && hwDeviceInfo.hwFeatures.deviceId == null)
-    ) {
-      openLedgerConnect()
-    } else {
-      closeLedgerDialog()
-    }
+    setDialogStep(DialogStep.LedgerConnect)
   }
 
   const onConnectUSB = async (deviceObj) => {
     await setLedgerDeviceObj(deviceObj)
-    closeLedgerDialog()
+    await delay(1000)
+    onConfirm()
   }
 
   const onConnectBLE = async (deviceId) => {
     await setLedgerDeviceId(deviceId)
-    closeLedgerDialog()
+    await delay(1000)
+    onConfirm()
   }
 
-  const navigation = useNavigation()
   const _onConfirm = async () => {
-    if (wallet.isEasyConfirmationEnabled) {
+    if (isHW && Platform.OS === 'android' && CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT) {
+      setDialogStep(DialogStep.ChooseTransport)
+    } else if (wallet.isEasyConfirmationEnabled) {
       try {
         await ensureKeysValidity(wallet.id)
         navigation.navigate(SEND_ROUTES.BIOMETRICS_SIGNING, {
@@ -153,49 +247,67 @@ export const ConfirmTx: React.FC<ConfirmTxProps> = ({
 
   const onConfirm = async (easyConfirmDecryptKey?: string) => {
     try {
-      setButtonDisabled(true)
+      setIsProcessing(true)
+
       let signedTx
       if (isEasyConfirmationEnabled) {
         if (easyConfirmDecryptKey) {
+          setDialogStep(DialogStep.Signing)
           signedTx = await wallet.signTx(txDataSignRequest, easyConfirmDecryptKey)
         }
       } else {
         if (wallet.isHW) {
+          setDialogStep(DialogStep.WaitingHwResponse)
           signedTx = await wallet.signTxWithLedger(txDataSignRequest, useUSB)
         } else {
           const decryptedKey = await KeyStore.getData(walletManager._id, 'MASTER_PASSWORD', '', password, intl)
+          setDialogStep(DialogStep.Signing)
           signedTx = await wallet.signTx(txDataSignRequest, decryptedKey)
         }
       }
-      saveAndSubmitTx(signedTx, {
-        onSuccess: () => onSuccess(),
-        onError: (err) => {
-          setTimeout(() => {
+
+      if (process === 'onlySign') {
+        onSuccess(signedTx)
+      } else {
+        setDialogStep(DialogStep.Submitting)
+        saveAndSubmitTx(signedTx, {
+          onSuccess: () => {
+            setDialogStep(DialogStep.Closed)
+            onSuccess(signedTx)
+          },
+          onError: (err) => {
             if (err instanceof LocalizableError) {
-              const localizableError: any = err
-              setErrorData(
-                true,
-                intl.formatMessage(
-                  {id: localizableError.id, defaultMessage: localizableError.defaultMessage},
-                  localizableError.values,
-                ),
-                localizableError.values.response || null, // API errors should include a response
-              )
+              showError({
+                errorMessage: strings.errorMessage(err),
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                errorLogs: (err as any).values.response || null,
+              })
             } else {
-              setErrorData(true, strings.generalTxError.message, (err as any).message || null)
+              showError({
+                errorMessage: strings.generalTxErrorMessage,
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                errorLogs: (err as any).message || null,
+              })
             }
             onError?.(err)
-          }, 500) // RNModal issue
-        },
-      })
+          },
+        })
+      }
     } catch (err) {
       if (err instanceof WrongPassword) {
-        await showErrorDialog(errorMessages.incorrectPassword, intl)
+        showError({
+          errorMessage: strings.incorrectPasswordTitle,
+          errorLogs: strings.incorrectPasswordMessage,
+        })
       } else {
-        setErrorData(true, strings.generalTxError.message, (err as any).message || null)
+        showError({
+          errorMessage: strings.generalTxErrorMessage,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          errorLogs: (err as any).message || null,
+        })
       }
     } finally {
-      setButtonDisabled(false)
+      setIsProcessing(false)
     }
   }
 
@@ -215,36 +327,24 @@ export const ConfirmTx: React.FC<ConfirmTxProps> = ({
         <Button
           onPress={_onConfirm}
           title={strings.confirmButton}
-          disabled={isConfirmationDisabled || buttonDisabled}
           {...buttonProps}
+          disabled={isConfirmationDisabled || isProcessing || disabled}
         />
       </View>
 
-      {isHW && Platform.OS === 'android' && CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT && (
-        <>
-          <LedgerTransportSwitchModal
-            visible={ledgerDialogStep === LEDGER_DIALOG_STEPS.CHOOSE_TRANSPORT}
-            onRequestClose={closeLedgerDialog}
-            onSelectUSB={() => onChooseTransport(true)}
-            onSelectBLE={() => onChooseTransport(false)}
-            showCloseIcon
-          />
-
-          <Modal visible={ledgerDialogStep === LEDGER_DIALOG_STEPS.LEDGER_CONNECT} onRequestClose={closeLedgerDialog}>
-            <LedgerConnect onConnectBLE={onConnectBLE} onConnectUSB={onConnectUSB} useUSB={useUSB} />
-          </Modal>
-        </>
-      )}
-
-      <ErrorModal
-        visible={showErrorModal}
-        title={strings.generalTxError.title}
-        errorMessage={errorMessage}
-        errorLogs={errorLogs}
-        onRequestClose={closeErrorModal}
+      <Dialog
+        process="withLedger"
+        step={dialogStep}
+        onRequestClose={() => {
+          setIsProcessing(false)
+          setDialogStep(DialogStep.Closed)
+        }}
+        onChooseTransport={onChooseTransport}
+        onConnectUSB={onConnectUSB}
+        onConnectBLE={onConnectBLE}
+        useUSB={useUSB}
+        errorData={errorData}
       />
-
-      <PleaseWaitModal title={strings.submittingTx} spinnerText={strings.pleaseWait} visible={sendingTransaction} />
     </View>
   )
 }
@@ -258,23 +358,16 @@ const styles = StyleSheet.create({
   },
 })
 
-const LEDGER_DIALOG_STEPS = {
-  CLOSED: 'CLOSED',
-  CHOOSE_TRANSPORT: 'CHOOSE_TRANSPORT',
-  LEDGER_CONNECT: 'LEDGER_CONNECT',
-}
-
 const useStrings = () => {
   const intl = useIntl()
 
   return {
+    errorMessage: (error: LocalizableError) =>
+      intl.formatMessage({id: error.id, defaultMessage: error.defaultMessage}, error.values),
     password: intl.formatMessage(txLabels.password),
     confirmButton: intl.formatMessage(confirmationMessages.commonButtons.confirmButton),
-    submittingTx: intl.formatMessage(txLabels.submittingTx),
-    pleaseWait: intl.formatMessage(globalMessages.pleaseWait),
-    generalTxError: {
-      title: intl.formatMessage(errorMessages.generalTxError.title),
-      message: intl.formatMessage(errorMessages.generalTxError.message),
-    },
+    generalTxErrorMessage: intl.formatMessage(errorMessages.generalTxError.message),
+    incorrectPasswordTitle: intl.formatMessage(errorMessages.incorrectPassword.title),
+    incorrectPasswordMessage: intl.formatMessage(errorMessages.incorrectPassword.message),
   }
 }

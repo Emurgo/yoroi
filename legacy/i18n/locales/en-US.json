@@ -511,6 +511,7 @@
   "global.txLabels.receiver": "Receiver",
   "global.txLabels.stakeDeregistration": "Staking key deregistration",
   "global.txLabels.submittingTx": "Submitting transaction",
+  "global.txLabels.signingTx": "Signing transaction",
   "global.txLabels.transactions": "Transactions",
   "global.txLabels.withdrawals": "Withdrawals",
   "utils.format.today": "Today",

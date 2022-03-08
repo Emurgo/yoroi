@@ -131,6 +131,7 @@ export const DelegationConfirmation = ({mockDefaultAsset}: {mockDefaultAsset?: D
 
       <Actions>
         <ConfirmTx
+          process="signAndSubmit"
           buttonProps={{
             shelleyTheme: true,
             title: strings.delegateButtonLabel,

@@ -7,10 +7,11 @@ import {SelectedWalletProvider} from '../../SelectedWallet'
 import {ConfirmTx} from './ConfirmTx'
 
 storiesOf('ConfirmTx', module)
-  .add('Not providing password', () => {
+  .add('Not providing password (signAndSubmit)', () => {
     return (
       <SelectedWalletProvider wallet={mockWallet}>
         <ConfirmTx
+          process="signAndSubmit"
           onSuccess={action('onSuccess')}
           txDataSignRequest={{}}
           setUseUSB={action('setUseUSB')}
@@ -20,10 +21,25 @@ storiesOf('ConfirmTx', module)
       </SelectedWalletProvider>
     )
   })
-  .add('Providing password', () => {
+  .add('Not providing password (onlySign)', () => {
     return (
       <SelectedWalletProvider wallet={mockWallet}>
         <ConfirmTx
+          process="onlySign"
+          onSuccess={action('onSuccess')}
+          txDataSignRequest={{}}
+          setUseUSB={action('setUseUSB')}
+          isProvidingPassword={false}
+          useUSB={false}
+        />
+      </SelectedWalletProvider>
+    )
+  })
+  .add('Providing password (signAndSubmit)', () => {
+    return (
+      <SelectedWalletProvider wallet={mockWallet}>
+        <ConfirmTx
+          process="signAndSubmit"
           onSuccess={action('onSuccess')}
           txDataSignRequest={{}}
           setUseUSB={action('setUseUSB')}
@@ -34,10 +50,11 @@ storiesOf('ConfirmTx', module)
       </SelectedWalletProvider>
     )
   })
-  .add('With customized button', () => {
+  .add('With customized button (signAndSubmit)', () => {
     return (
       <SelectedWalletProvider wallet={mockWallet}>
         <ConfirmTx
+          process="signAndSubmit"
           onSuccess={action('onSuccess')}
           txDataSignRequest={{}}
           setUseUSB={action('setUseUSB')}
@@ -48,6 +65,22 @@ storiesOf('ConfirmTx', module)
             title: 'DELEGATE',
             shelleyTheme: true,
           }}
+        />
+      </SelectedWalletProvider>
+    )
+  })
+  .add('Only submit', () => {
+    return (
+      <SelectedWalletProvider wallet={mockWallet}>
+        <ConfirmTx
+          process="onlySubmit"
+          onSuccess={action('onSuccess')}
+          signedTx={{
+            base64: '',
+            encodedTx: Buffer.from(''),
+            id: '',
+          }}
+          onError={(_err) => action('')}
         />
       </SelectedWalletProvider>
     )

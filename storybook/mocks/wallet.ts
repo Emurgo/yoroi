@@ -43,6 +43,10 @@ export const mockWallet: WalletInterface = {
   submitTransaction: () => {
     throw new Error('Not implemented')
   },
+  createVotingRegTx: () => {
+    throw new Error('Not implemented')
+  },
+
 }
 
 export const tokenEntries: Array<TokenEntry> = [
