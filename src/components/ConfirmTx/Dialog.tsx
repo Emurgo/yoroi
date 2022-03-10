@@ -79,7 +79,7 @@ export const DialogWithLedger = ({
       case Step.LedgerConnect:
         return <LedgerConnect onConnectBLE={onConnectBLE} onConnectUSB={onConnectUSB} useUSB={useUSB} />
       case Step.WaitingHwResponse:
-        return <PleaseWaitView title={''} spinnerText={strings.followSteps} />
+        return <PleaseWaitView title={strings.continueOnLedger} spinnerText={strings.followSteps} />
       case Step.Signing:
         return <PleaseWaitView title={strings.signingTx} spinnerText={strings.pleaseWait} />
       case Step.Submitting:
@@ -134,6 +134,7 @@ const useStrings = () => {
 
   return {
     followSteps: intl.formatMessage(ledgerMessages.followSteps),
+    continueOnLedger: intl.formatMessage(ledgerMessages.continueOnLedger),
     submittingTx: intl.formatMessage(txLabels.submittingTx),
     signingTx: intl.formatMessage(txLabels.signingTx),
     pleaseWait: intl.formatMessage(globalMessages.pleaseWait),

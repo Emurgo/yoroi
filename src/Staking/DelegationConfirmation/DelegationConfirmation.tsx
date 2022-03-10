@@ -14,7 +14,7 @@ import type {CreateDelegationTxResponse} from '../../../legacy/crypto/shelley/de
 import type {CreateUnsignedTxResponse} from '../../../legacy/crypto/shelley/transactionUtils'
 import globalMessages, {txLabels} from '../../../legacy/i18n/global-messages'
 import {useParams} from '../../../legacy/navigation'
-import {STAKING_CENTER_ROUTES, STAKING_DASHBOARD_ROUTES, WALLET_ROUTES} from '../../../legacy/RoutesList'
+import {SEND_ROUTES, STAKING_CENTER_ROUTES, STAKING_DASHBOARD_ROUTES, WALLET_ROUTES} from '../../../legacy/RoutesList'
 import {defaultNetworkAssetSelector} from '../../../legacy/selectors'
 import {COLORS} from '../../../legacy/styles/config'
 import {formatTokenAmount, formatTokenWithText} from '../../../legacy/utils/format'
@@ -142,6 +142,7 @@ export const DelegationConfirmation = ({mockDefaultAsset}: {mockDefaultAsset?: D
           setUseUSB={setUseUSB}
           useUSB={useUSB}
           txDataSignRequest={signRequest}
+          biometricRoute={SEND_ROUTES.BIOMETRICS_SIGNING}
         />
       </Actions>
     </View>

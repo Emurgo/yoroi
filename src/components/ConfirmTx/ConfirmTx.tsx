@@ -14,12 +14,12 @@ import {
 import {CONFIG} from '../../../legacy/config/config'
 import {WrongPassword} from '../../../legacy/crypto/errors'
 import KeyStore from '../../../legacy/crypto/KeyStore'
-import type {CreateUnsignedTxResponse} from '../../../legacy/crypto/shelley/transactionUtils'
+import {HaskellShelleyTxSignRequest} from '../../../legacy/crypto/shelley/HaskellShelleyTxSignRequest'
 import walletManager, {SystemAuthDisabled} from '../../../legacy/crypto/walletManager'
 import {ensureKeysValidity} from '../../../legacy/helpers/deviceSettings'
 import {confirmationMessages, errorMessages, txLabels} from '../../../legacy/i18n/global-messages'
 import LocalizableError from '../../../legacy/i18n/LocalizableError'
-import {SEND_ROUTES, WALLET_ROOT_ROUTES} from '../../../legacy/RoutesList'
+import {WALLET_ROOT_ROUTES} from '../../../legacy/RoutesList'
 import {hwDeviceInfoSelector} from '../../../legacy/selectors'
 import {COLORS} from '../../../legacy/styles/config'
 import {useCloseWallet, useSaveAndSubmitSignedTx} from '../../hooks'
@@ -37,7 +37,7 @@ type ConfirmTxProps = {
   buttonProps?: Omit<Partial<ButtonProps>, 'disabled' | 'onPress'>
   onSuccess: (signedTx: SignedTx) => void
   onError?: (err: Error) => void
-  txDataSignRequest: CreateUnsignedTxResponse
+  txDataSignRequest: HaskellShelleyTxSignRequest
   useUSB: boolean
   setUseUSB: (useUSB: boolean) => void
   isProvidingPassword: boolean
@@ -47,10 +47,18 @@ type ConfirmTxProps = {
 
 type SignAndSubmitProps = {
   process: 'signAndSubmit'
+  autoSignIfEasyConfirmation?: boolean
+  chooseTransportOnConfirmation?: boolean
+  biometricInstructions?: Array<string>
+  biometricRoute: string
 } & ConfirmTxProps
 
 type OnlySignProps = {
   process: 'onlySign'
+  autoSignIfEasyConfirmation?: boolean
+  chooseTransportOnConfirmation?: boolean
+  biometricInstructions?: Array<string>
+  biometricRoute: string
 } & ConfirmTxProps
 
 type OnlySubmitProps = {
@@ -144,6 +152,10 @@ export const ConfirmWithSignature: React.FC<SignAndSubmitProps | OnlySignProps> 
   providedPassword = '',
   process,
   disabled,
+  autoSignIfEasyConfirmation,
+  chooseTransportOnConfirmation,
+  biometricInstructions,
+  biometricRoute,
 }) => {
   const intl = useIntl()
   const strings = useStrings()
@@ -161,9 +173,8 @@ export const ConfirmWithSignature: React.FC<SignAndSubmitProps | OnlySignProps> 
     },
   })
   const wallet = useSelectedWallet()
-  const {isHW, isEasyConfirmationEnabled} = wallet
 
-  const {saveAndSubmitTx} = useSaveAndSubmitSignedTx({wallet})
+  const {mutateAsync: saveAndSubmitTx} = useSaveAndSubmitSignedTx({wallet})
 
   const [password, setPassword] = useState('')
   const [isProcessing, setIsProcessing] = useState(false)
@@ -172,7 +183,6 @@ export const ConfirmWithSignature: React.FC<SignAndSubmitProps | OnlySignProps> 
     errorMessage: '',
     errorLogs: '',
   })
-
   useEffect(() => {
     if (!isProvidingPassword && __DEV__) {
       CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : ''
@@ -197,37 +207,132 @@ export const ConfirmWithSignature: React.FC<SignAndSubmitProps | OnlySignProps> 
   const setLedgerDeviceId = (deviceId) => dispatch(_setLedgerDeviceId(deviceId))
   const setLedgerDeviceObj = (deviceObj) => dispatch(_setLedgerDeviceObj(deviceObj))
 
-  const onChooseTransport = (useUSB: boolean) => {
+  const onConfirmationChooseTransport = (useUSB: boolean) => {
     if (!hwDeviceInfo) throw new Error('No device info')
     setUseUSB(useUSB)
     setDialogStep(DialogStep.LedgerConnect)
   }
 
+  const onMountChooseTransport = (useUSB: boolean) => {
+    if (!hwDeviceInfo) throw new Error('No device info')
+    setUseUSB(useUSB)
+    if (
+      (useUSB && hwDeviceInfo.hwFeatures.deviceObj == null) ||
+      (!useUSB && hwDeviceInfo.hwFeatures.deviceId == null)
+    ) {
+      setDialogStep(DialogStep.LedgerConnect)
+    } else {
+      setDialogStep(DialogStep.Closed)
+    }
+  }
+
   const onConnectUSB = async (deviceObj) => {
     await setLedgerDeviceObj(deviceObj)
-    await delay(1000)
-    onConfirm()
+    if (chooseTransportOnConfirmation) {
+      await delay(1000)
+      onConfirm()
+    } else {
+      setDialogStep(DialogStep.Closed)
+    }
   }
 
   const onConnectBLE = async (deviceId) => {
     await setLedgerDeviceId(deviceId)
-    await delay(1000)
-    onConfirm()
+    if (chooseTransportOnConfirmation) {
+      await delay(1000)
+      onConfirm()
+    } else {
+      setDialogStep(DialogStep.Closed)
+    }
   }
 
-  const _onConfirm = async () => {
-    if (isHW && Platform.OS === 'android' && CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT) {
+  const onConfirm = React.useCallback(
+    async (easyConfirmDecryptKey?: string) => {
+      try {
+        setIsProcessing(true)
+
+        let signedTx
+        if (wallet.isEasyConfirmationEnabled) {
+          if (easyConfirmDecryptKey) {
+            setDialogStep(DialogStep.Signing)
+            signedTx = await smoothModalNotification(wallet.signTx(txDataSignRequest, easyConfirmDecryptKey))
+          }
+        } else {
+          if (wallet.isHW) {
+            setDialogStep(DialogStep.WaitingHwResponse)
+            signedTx = await wallet.signTxWithLedger(txDataSignRequest, useUSB)
+          } else {
+            const decryptedKey = await KeyStore.getData(walletManager._id, 'MASTER_PASSWORD', '', password, intl)
+            setDialogStep(DialogStep.Signing)
+            signedTx = await smoothModalNotification(wallet.signTx(txDataSignRequest, decryptedKey))
+          }
+        }
+
+        if (process === 'onlySign') {
+          onSuccess(signedTx)
+        } else {
+          setDialogStep(DialogStep.Submitting)
+          try {
+            await smoothModalNotification(saveAndSubmitTx(signedTx))
+            setDialogStep(DialogStep.Closed)
+            onSuccess(signedTx)
+          } catch (err) {
+            if (err instanceof LocalizableError) {
+              showError({
+                errorMessage: strings.errorMessage(err),
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                errorLogs: (err as any).values.response || null,
+              })
+            } else {
+              showError({
+                errorMessage: strings.generalTxErrorMessage,
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                errorLogs: (err as any).message || null,
+              })
+            }
+            onError?.(err as Error)
+          }
+        }
+      } catch (err) {
+        if (err instanceof WrongPassword) {
+          showError({
+            errorMessage: strings.incorrectPasswordTitle,
+            errorLogs: strings.incorrectPasswordMessage,
+          })
+        } else {
+          showError({
+            errorMessage: strings.generalTxErrorMessage,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            errorLogs: (err as any).message || null,
+          })
+        }
+      } finally {
+        setIsProcessing(false)
+      }
+    },
+    [intl, onError, onSuccess, password, process, saveAndSubmitTx, strings, txDataSignRequest, useUSB, wallet],
+  )
+
+  const _onConfirm = React.useCallback(async () => {
+    if (
+      wallet.isHW &&
+      Platform.OS === 'android' &&
+      CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT &&
+      chooseTransportOnConfirmation
+    ) {
       setDialogStep(DialogStep.ChooseTransport)
     } else if (wallet.isEasyConfirmationEnabled) {
       try {
         await ensureKeysValidity(wallet.id)
-        navigation.navigate(SEND_ROUTES.BIOMETRICS_SIGNING, {
+        navigation.navigate(biometricRoute, {
           keyId: wallet.id,
-          pop: true,
           onSuccess: (decryptedKey) => {
+            navigation.goBack()
             onConfirm(decryptedKey)
           },
           onFail: () => navigation.goBack(),
+          addWelcomeMessage: false,
+          instructions: biometricInstructions,
         })
       } catch (err) {
         if (err instanceof SystemAuthDisabled) {
@@ -243,80 +348,42 @@ export const ConfirmWithSignature: React.FC<SignAndSubmitProps | OnlySignProps> 
     } else {
       return onConfirm()
     }
-  }
+  }, [
+    closeWallet,
+    intl,
+    wallet.isHW,
+    navigation,
+    onConfirm,
+    wallet.id,
+    wallet.isEasyConfirmationEnabled,
+    chooseTransportOnConfirmation,
+    biometricInstructions,
+    biometricRoute,
+  ])
 
-  const onConfirm = async (easyConfirmDecryptKey?: string) => {
-    try {
-      setIsProcessing(true)
+  const isConfirmationDisabled = !wallet.isEasyConfirmationEnabled && !password && !wallet.isHW
 
-      let signedTx
-      if (isEasyConfirmationEnabled) {
-        if (easyConfirmDecryptKey) {
-          setDialogStep(DialogStep.Signing)
-          signedTx = await wallet.signTx(txDataSignRequest, easyConfirmDecryptKey)
-        }
-      } else {
-        if (wallet.isHW) {
-          setDialogStep(DialogStep.WaitingHwResponse)
-          signedTx = await wallet.signTxWithLedger(txDataSignRequest, useUSB)
-        } else {
-          const decryptedKey = await KeyStore.getData(walletManager._id, 'MASTER_PASSWORD', '', password, intl)
-          setDialogStep(DialogStep.Signing)
-          signedTx = await wallet.signTx(txDataSignRequest, decryptedKey)
-        }
-      }
-
-      if (process === 'onlySign') {
-        onSuccess(signedTx)
-      } else {
-        setDialogStep(DialogStep.Submitting)
-        saveAndSubmitTx(signedTx, {
-          onSuccess: () => {
-            setDialogStep(DialogStep.Closed)
-            onSuccess(signedTx)
-          },
-          onError: (err) => {
-            if (err instanceof LocalizableError) {
-              showError({
-                errorMessage: strings.errorMessage(err),
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                errorLogs: (err as any).values.response || null,
-              })
-            } else {
-              showError({
-                errorMessage: strings.generalTxErrorMessage,
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                errorLogs: (err as any).message || null,
-              })
-            }
-            onError?.(err)
-          },
-        })
-      }
-    } catch (err) {
-      if (err instanceof WrongPassword) {
-        showError({
-          errorMessage: strings.incorrectPasswordTitle,
-          errorLogs: strings.incorrectPasswordMessage,
-        })
-      } else {
-        showError({
-          errorMessage: strings.generalTxErrorMessage,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          errorLogs: (err as any).message || null,
-        })
-      }
-    } finally {
-      setIsProcessing(false)
+  useEffect(() => {
+    if (wallet.isEasyConfirmationEnabled && autoSignIfEasyConfirmation) {
+      _onConfirm()
     }
-  }
+  }, [autoSignIfEasyConfirmation, wallet.isEasyConfirmationEnabled, _onConfirm])
 
-  const isConfirmationDisabled = !isEasyConfirmationEnabled && !password && !isHW
+  useEffect(() => {
+    if (
+      wallet.isHW &&
+      Platform.OS === 'android' &&
+      CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT &&
+      !chooseTransportOnConfirmation
+    ) {
+      setDialogStep(DialogStep.ChooseTransport)
+    }
+  }, [chooseTransportOnConfirmation, wallet.isHW])
 
   return (
     <View style={styles.root}>
       <View style={styles.actionContainer}>
-        {!isEasyConfirmationEnabled && !isHW && !isProvidingPassword && (
+        {!wallet.isEasyConfirmationEnabled && !wallet.isHW && !isProvidingPassword && (
           <ValidatedTextInput
             secureTextEntry
             value={password || ''}
@@ -338,8 +405,11 @@ export const ConfirmWithSignature: React.FC<SignAndSubmitProps | OnlySignProps> 
         onRequestClose={() => {
           setIsProcessing(false)
           setDialogStep(DialogStep.Closed)
+          if (dialogStep === DialogStep.WaitingHwResponse) {
+            navigation.goBack()
+          }
         }}
-        onChooseTransport={onChooseTransport}
+        onChooseTransport={chooseTransportOnConfirmation ? onConfirmationChooseTransport : onMountChooseTransport}
         onConnectUSB={onConnectUSB}
         onConnectBLE={onConnectBLE}
         useUSB={useUSB}
@@ -370,4 +440,11 @@ const useStrings = () => {
     incorrectPasswordTitle: intl.formatMessage(errorMessages.incorrectPassword.title),
     incorrectPasswordMessage: intl.formatMessage(errorMessages.incorrectPassword.message),
   }
+}
+
+const minDisplayTime = 2000
+// to avoid flicking from one message to another
+async function smoothModalNotification<T = unknown>(promise: Promise<T>) {
+  const [result] = await Promise.all([promise, delay(minDisplayTime)])
+  return result
 }

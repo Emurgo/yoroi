@@ -17,6 +17,7 @@ storiesOf('ConfirmTx', module)
           setUseUSB={action('setUseUSB')}
           isProvidingPassword={false}
           useUSB={false}
+          biometricRoute={'biometriRoute'}
         />
       </SelectedWalletProvider>
     )
@@ -31,6 +32,7 @@ storiesOf('ConfirmTx', module)
           setUseUSB={action('setUseUSB')}
           isProvidingPassword={false}
           useUSB={false}
+          biometricRoute={'biometriRoute'}
         />
       </SelectedWalletProvider>
     )
@@ -46,6 +48,7 @@ storiesOf('ConfirmTx', module)
           isProvidingPassword
           providedPassword="1234567890"
           useUSB={false}
+          biometricRoute={'biometriRoute'}
         />
       </SelectedWalletProvider>
     )
@@ -61,6 +64,7 @@ storiesOf('ConfirmTx', module)
           isProvidingPassword
           providedPassword="1234567890"
           useUSB={false}
+          biometricRoute={'biometriRoute'}
           buttonProps={{
             title: 'DELEGATE',
             shelleyTheme: true,

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {useFocusEffect, useNavigation, useRoute} from '@react-navigation/native'
+import {useFocusEffect, useRoute} from '@react-navigation/native'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Alert, AppState, Platform, StyleSheet} from 'react-native'
@@ -17,11 +17,10 @@ export const BiometricAuthScreen = () => {
   const route: any = useRoute()
   const strings = useStrings()
   const [appState, setAppState] = useState<string>(AppState.currentState)
-  const navigation = useNavigation()
 
   const fallback = async () => {
     await KeyStore.cancelFingerprintScanning(KeyStore.REJECTIONS.SWAPPED_TO_FALLBACK)
-    await handleOnConfirm(route, setError, clearError, true, intl, navigation)
+    await handleOnConfirm(route, setError, clearError, true, intl)
   }
 
   const cancelScanning = async () => {
@@ -42,7 +41,7 @@ export const BiometricAuthScreen = () => {
 
   useFocusEffect(
     React.useCallback(() => {
-      handleOnConfirm(route, setError, clearError, false, intl, navigation)
+      handleOnConfirm(route, setError, clearError, false, intl)
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []),
   )
@@ -55,7 +54,7 @@ export const BiometricAuthScreen = () => {
       setAppState(nextAppState)
       if (previousAppState != null && previousAppState.match(/inactive|background/) && nextAppState === 'active') {
         await KeyStore.cancelFingerprintScanning(KeyStore.REJECTIONS.CANCELED)
-        await handleOnConfirm(route, setError, clearError, false, intl, navigation)
+        await handleOnConfirm(route, setError, clearError, false, intl)
       } else if (previousAppState === 'active' && nextAppState != null && nextAppState.match(/inactive|background/)) {
         // we cancel the operation when the app goes to background otherwise
         // the app may crash. This could happen when the app logs out, as reopening
@@ -67,8 +66,10 @@ export const BiometricAuthScreen = () => {
 
     const subscription = AppState.addEventListener('change', handleAppStateChange)
 
-    return () => subscription.remove()
-  }, [appState, intl, navigation, route])
+    return () => {
+      if (subscription) subscription.remove()
+    }
+  }, [appState, intl, route])
 
   return (
     <FingerprintScreenBase
@@ -80,7 +81,7 @@ export const BiometricAuthScreen = () => {
           key={'try-again'}
           outline
           title={strings.tryAgainButton}
-          onPress={() => handleOnConfirm(route, setError, clearError, false, intl, navigation)}
+          onPress={() => handleOnConfirm(route, setError, clearError, false, intl)}
         />,
         <Spacer key={'spacer'} width={4} />,
         <Button
@@ -162,13 +163,13 @@ const messages = defineMessages({
   },
 })
 
-const handleOnConfirm = async (route, setError, clearError, isFallback = false, intl, navigation, retryCounter = 0) => {
+const handleOnConfirm = async (route, setError, clearError, isFallback = false, intl, retryCounter = 0) => {
   if (!(await canBiometricEncryptionBeEnabled()) && !isFallback) {
     await showErrorDialog(globalErrorMessages.biometricsIsTurnedOff, intl)
     return
   }
 
-  const {keyId, onSuccess, onFail, pop} = route.params
+  const {keyId, onSuccess, onFail} = route.params
 
   try {
     const decryptedData = await KeyStore.getData(
@@ -178,17 +179,14 @@ const handleOnConfirm = async (route, setError, clearError, isFallback = false, 
       '',
       intl,
     )
-    pop && navigation.pop()
     onSuccess(decryptedData)
   } catch (error) {
     if ((error as any).code === KeyStore.REJECTIONS.SWAPPED_TO_FALLBACK && Platform.OS === 'android') {
       clearError()
     } else if ((error as any).code === KeyStore.REJECTIONS.INVALID_KEY && Platform.OS === 'android') {
-      pop && navigation.pop()
       onFail(KeyStore.REJECTIONS.INVALID_KEY, intl)
     } else if ((error as any).code === KeyStore.REJECTIONS.CANCELED) {
       clearError()
-      pop && navigation.pop()
       onFail(KeyStore.REJECTIONS.CANCELED, intl)
     } else {
       // create keys back for iOS
@@ -196,7 +194,7 @@ const handleOnConfirm = async (route, setError, clearError, isFallback = false, 
         await recreateAppSignInKeys(keyId)
       }
       if (retryCounter <= 3) {
-        await handleOnConfirm(route, setError, clearError, isFallback, intl, navigation, retryCounter + 1)
+        await handleOnConfirm(route, setError, clearError, isFallback, intl, retryCounter + 1)
         return
       }
       // on ios most errors will map to FAILED_UNKNOWN_ERROR

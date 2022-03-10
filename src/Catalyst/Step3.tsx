@@ -3,31 +3,37 @@ import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useSelector} from 'react-redux'
 
 import {showErrorDialog} from '../../legacy/actions'
 import {errorMessages} from '../../legacy/i18n/global-messages'
 import {CATALYST_ROUTES} from '../../legacy/RoutesList'
-import {isHWSelector, pinSelector} from '../../legacy/selectors'
 import {ProgressStep, Spacer} from '../components'
 import {PinInputKeyboard} from '../components'
+import {useSelectedWallet} from '../SelectedWallet'
+import {CatalystData, useCatalyst} from './Catalyst.hooks'
 import {Description, PinBox, Row, Title} from './components'
 
 const PIN_LENGTH = 4
 
-export const Step3 = () => {
+type Props = {
+  pin: string
+  setCatalystData: (catalystData?: CatalystData) => void
+}
+export const Step3 = ({pin, setCatalystData}: Props) => {
   const intl = useIntl()
   const strings = useStrings()
   const navigation = useNavigation()
-  const pin = useSelector(pinSelector)
-  const isHW = useSelector(isHWSelector)
-  const [confirmPin, setPin] = useState('')
+  const wallet = useSelectedWallet()
+  const {mutateAsync: generateVotingTransaction} = useCatalyst({wallet})
+  const [confirmPin, setConfirmPin] = useState('')
 
-  const pinChange = (enteredPin: string) => {
-    setPin(enteredPin)
+  const pinChange = async (enteredPin: string) => {
+    setConfirmPin(enteredPin)
     if (enteredPin.length === 4) {
-      if (pin.join('') === enteredPin) {
-        if (isHW) {
+      if (pin === enteredPin) {
+        if (wallet.isHW) {
+          const catalystData = await generateVotingTransaction({pin})
+          setCatalystData(catalystData)
           navigation.navigate(CATALYST_ROUTES.STEP5)
         } else {
           navigation.navigate(CATALYST_ROUTES.STEP4)

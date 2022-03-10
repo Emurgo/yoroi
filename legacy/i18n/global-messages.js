@@ -220,6 +220,10 @@ export const ledgerMessages = defineMessages({
       '!!!Device metadata was lost or corrupted. To fix this issue' +
       ', please add a new wallet and connect it with your device.',
   },
+  continueOnLedger: {
+    id: 'global.ledgerMessages.continueOnLedger',
+    defaultMessage: '!!!Continue on Ledger',
+  },
 })
 
 export const errorMessages = {

@@ -147,6 +147,7 @@ export const ConfirmScreen = () => {
             setUseUSB={setUseUSB}
             isProvidingPassword
             providedPassword={password}
+            biometricRoute={SEND_ROUTES.BIOMETRICS_SIGNING}
           />
         </Actions>
       </View>
