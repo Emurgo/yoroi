@@ -10,7 +10,7 @@ import {formatTokenAmount, getName, getTicker, getTokenFingerprint} from '../../
 import {Boundary} from '../../components'
 import {useTokenInfo} from '../../hooks'
 import {useSelectedWallet} from '../../SelectedWallet'
-import type {TokenEntry} from '../../types/cardano'
+import type {TokenEntry} from '../../types'
 
 type AssetListProps = {
   assets: Array<TokenEntry>

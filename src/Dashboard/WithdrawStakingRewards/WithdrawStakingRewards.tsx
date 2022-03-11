@@ -20,9 +20,9 @@ import {ensureKeysValidity} from '../../../legacy/helpers/deviceSettings'
 import {errorMessages} from '../../../legacy/i18n/global-messages'
 import LocalizableError from '../../../legacy/i18n/LocalizableError'
 import {DELEGATION_ROUTES, SEND_ROUTES, WALLET_ROOT_ROUTES, WALLET_ROUTES} from '../../../legacy/RoutesList'
-import type {ServerStatusCache} from '../../../legacy/state'
 import type {DefaultAsset} from '../../../legacy/types/HistoryTransaction'
 import type {Navigation} from '../../../legacy/types/navigation'
+import {ServerStatus} from '../../types'
 import {WithdrawalDialog} from './WithdrawalDialog'
 
 type Props = {
@@ -37,7 +37,7 @@ type Props = {
   submitTransaction: (request: ISignRequest, text: string) => Promise<void>
   submitSignedTx: (text: string) => Promise<void>
   defaultAsset: DefaultAsset
-  serverStatus: ServerStatusCache
+  serverStatus: ServerStatus
   onDone: () => void
 }
 

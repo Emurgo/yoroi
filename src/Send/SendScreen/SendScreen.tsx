@@ -34,7 +34,7 @@ import type {
 import {Button, Checkbox, Spacer, StatusBar, Text, TextInput} from '../../components'
 import {useTokenInfo} from '../../hooks'
 import {useSelectedWallet} from '../../SelectedWallet'
-import type {TokenEntry} from '../../types/cardano'
+import type {TokenEntry} from '../../types'
 import {AmountField} from './../AmountField'
 import {AvailableAmountBanner} from './AvailableAmountBanner'
 import {BalanceAfterTransaction} from './BalanceAfterTransaction'

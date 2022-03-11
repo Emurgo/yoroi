@@ -24,7 +24,7 @@ import {Banner, Boundary, Button, CopyButton, OfflineBanner, StatusBar, Text} fr
 import {useTokenInfo} from '../../hooks'
 import AddressModal from '../../Receive/AddressModal'
 import {useSelectedWallet} from '../../SelectedWallet'
-import {TokenEntry, TransactionInfo} from '../../types/cardano'
+import {TokenEntry, TransactionInfo} from '../../types'
 import {AssetList} from './AssetList'
 
 export type Params = {

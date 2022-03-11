@@ -12,8 +12,7 @@ import {
 import {generateShelleyPlateFromKey} from '../../legacy/crypto/shelley/plate'
 import walletManager from '../../legacy/crypto/walletManager'
 import {WalletMeta} from '../../legacy/state'
-import {SignedTx, TxSubmissionStatus, WalletInterface} from '../types'
-import {Token} from '../types/cardano'
+import {SignedTx, Token, TxSubmissionStatus, WalletInterface} from '../types'
 
 // WALLET
 export const useCloseWallet = (options?: UseMutationOptions<void, Error>) => {

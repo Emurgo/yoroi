@@ -15,7 +15,7 @@ import {formatTokenAmount, formatTokenInteger, normalizeTokenAmount} from '../..
 import {InvalidAssetAmount, parseAmountDecimal} from '../../../legacy/utils/parsing'
 import type {AddressValidationErrors} from '../../../legacy/utils/validators'
 import {getUnstoppableDomainAddress, isReceiverAddressValid, validateAmount} from '../../../legacy/utils/validators'
-import type {DefaultAsset, SendTokenList, Token} from '../../types/cardano'
+import type {DefaultAsset, SendTokenList, Token} from '../../types'
 import {amountInputErrorMessages, messages} from './strings'
 
 export const getMinAda = async (selectedToken: Token, defaultAsset: DefaultAsset) => {

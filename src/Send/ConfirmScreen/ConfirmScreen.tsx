@@ -21,7 +21,7 @@ import {useTokenInfo} from '../../hooks'
 import {Instructions as HWInstructions} from '../../HW'
 import {useParams} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
-import {TokenEntry} from '../../types/cardano'
+import {TokenEntry} from '../../types'
 
 export type Params = {
   transactionData: CreateUnsignedTxResponse

@@ -26,13 +26,13 @@ import {
   serverStatusSelector,
   utxosSelector,
 } from '../../../legacy/selectors'
-import type {ServerStatusCache} from '../../../legacy/state'
 import type {DefaultAsset} from '../../../legacy/types/HistoryTransaction'
 import {ObjectValues} from '../../../legacy/utils/flow'
 import {normalizeTokenAmount} from '../../../legacy/utils/format'
 import {Logger} from '../../../legacy/utils/logging'
 import {PleaseWaitModal} from '../../components'
 import {useSelectedWallet} from '../../SelectedWallet'
+import {ServerStatus} from '../../types'
 import {PoolDetailScreen} from '../PoolDetails'
 import {PoolWarningModal} from '../PoolWarningModal'
 
@@ -205,7 +205,7 @@ const navigateToDelegationConfirm = async (
   defaultAsset: DefaultAsset,
   intl: IntlShape,
   navigation,
-  serverStatus: ServerStatusCache,
+  serverStatus: ServerStatus,
 ) => {
   try {
     const selectedPool = selectedPools[0]
@@ -244,7 +244,7 @@ const _handleSelectedPoolHashes = async (
   defaultAsset,
   intl: IntlShape,
   navigation,
-  serverStatus: ServerStatusCache,
+  serverStatus: ServerStatus,
 ) => {
   try {
     const poolInfoResponse = await walletManager.fetchPoolInfo({

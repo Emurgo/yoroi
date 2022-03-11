@@ -1,7 +1,7 @@
 import React from 'react'
 import {View} from 'react-native'
 
-import {TransactionDirection, TransactionInfo} from '../../types/cardano'
+import {TransactionDirection, TransactionInfo} from '../../types'
 import {Received} from '../Icon/Received'
 import {Sent} from '../Icon/Sent'
 import {Transaction} from '../Icon/Transaction'

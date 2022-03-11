@@ -2,7 +2,7 @@
 
 import BigNumber from 'bignumber.js'
 
-import {DefaultAsset, Token, TokenEntry, TransactionInfo} from '../src/types/cardano'
+import {DefaultAsset, MultiToken, Token, TransactionInfo} from '../src/types'
 import type {State, WalletMeta} from './state'
 
 export var availableAssetsSelector: (state: State) => Record<string, Token | DefaultAsset>
@@ -56,37 +56,4 @@ export var utxoBalanceSelector: (state: State) => BigNumber | null
 export var sendCrashReportsSelector: (state: State) => typeof state.appSettings.sendCrashReports
 export var biometricHwSupportSelector: (state: State) => typeof state.appSettings.isBiometricHardwareSupported
 
-// prettier-ignore
-interface MultiToken {
-  getDefaultId: () => string,
-  getDefault: () => BigNumber,
-  getDefaultEntry: () => TokenEntry,
-  get(tokenIdentifier: string): BigNumber | void,
-  values: Array<{amount: BigNumber, identifier: string, networkId: number}>
-}
 export var tokenBalanceSelector: (state: State) => MultiToken
-
-// prettier-ignore
-export type ServerStatusCache = {
-  isServerOk: boolean,
-  isMaintenance: boolean,
-  serverTime: Date | null,
-}
-
-// prettier-ignore
-export type RemotePoolMetaSuccess = {
-  info: null | {
-    name?: string | null,
-    ticker?: string | null,
-    description?: string | null,
-    homepage?: string | null,
-    // other stuff from SMASH.
-  },
-  history: Array<{
-    epoch: number,
-    slot: number,
-    tx_ordinal: number,
-    cert_ordinal: number,
-    payload: RemoteCertificate,
-  }>
-}

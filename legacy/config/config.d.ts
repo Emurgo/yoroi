@@ -1,7 +1,7 @@
 // @flow
 
 import type {WalletImplementation} from '../../src/types'
-import type {DefaultAsset} from '../../src/types/cardano'
+import type {DefaultAsset} from '../../src/types'
 
 export var isHaskellShelley: (walletImplementationId: string) => boolean
 export var isByron: (walletImplementationId: string) => boolean
