@@ -5,7 +5,7 @@ import {WithModalProps} from '../../../storybook'
 import {Dialog, Step} from './Dialog'
 
 storiesOf('Dialog', module)
-  .add('step/CHOOSE_TRANSPORT', () => {
+  .add('Choose Transport', () => {
     return (
       <WithModalProps>
         {({onRequestClose, visible}) => (
@@ -26,7 +26,7 @@ storiesOf('Dialog', module)
       </WithModalProps>
     )
   })
-  .add('step/ERROR', () => {
+  .add('Error', () => {
     return (
       <WithModalProps>
         {({onRequestClose, visible}) => (
@@ -47,7 +47,7 @@ storiesOf('Dialog', module)
       </WithModalProps>
     )
   })
-  .add('step/LEDGER_CONNECT', () => {
+  .add('Ledger Connect', () => {
     return (
       <WithModalProps>
         {({onRequestClose, visible}) => (
@@ -68,9 +68,9 @@ storiesOf('Dialog', module)
       </WithModalProps>
     )
   })
-  .add('step/SUBMITTING', () => {
+  .add('Submitting', () => {
     return (
-      <WithModalProps>
+      <WithModalProps autoClose>
         {({onRequestClose, visible}) => (
           <Dialog
             process="withLedger"
@@ -89,9 +89,9 @@ storiesOf('Dialog', module)
       </WithModalProps>
     )
   })
-  .add('step/SIGNING', () => {
+  .add('Signing', () => {
     return (
-      <WithModalProps>
+      <WithModalProps autoClose>
         {({onRequestClose, visible}) => (
           <Dialog
             process="withLedger"
@@ -110,7 +110,7 @@ storiesOf('Dialog', module)
       </WithModalProps>
     )
   })
-  .add('step/WAITING_HW_RESPONSE', () => {
+  .add('Waiting HW response', () => {
     return (
       <WithModalProps>
         {({onRequestClose, visible}) => (

@@ -27,7 +27,7 @@ export const Step3 = ({pin, setVotingRegTxData}: Props) => {
   const {createVotingRegTx} = useCreateVotingRegTx({wallet})
   const [confirmPin, setConfirmPin] = useState('')
 
-  const pinChange = async (enteredPin: string) => {
+  const pinChange = (enteredPin: string) => {
     setConfirmPin(enteredPin)
     if (enteredPin.length === 4) {
       if (pin === enteredPin) {

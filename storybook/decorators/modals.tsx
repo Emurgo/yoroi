@@ -9,12 +9,12 @@ type childrenFn = (modalProps: {
   onPress: typeof action
 }) => React.ReactNode
 
-export const WithModalProps = ({children}: {children: childrenFn}) => {
+export const WithModalProps = ({children, autoClose}: {children: childrenFn, autoClose?: boolean}) => {
   const [visible, setVisible] = React.useState(false) // weird behavior when starting with visible: true
 
   React.useEffect(() => {
     setTimeout(() => setVisible(true), 500) // weird behavior when starting with visible: true
-    setTimeout(() => setVisible(false), 3500) // auto-close
+    autoClose && setTimeout(() => setVisible(false), 3500) // auto-close
   }, [])
 
   return (
