@@ -15,8 +15,8 @@ import {CATALYST_ROUTES, WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
 import {Button, OfflineBanner, ProgressStep, Spacer, TextInput} from '../components'
 import {ErrorModal} from '../components'
 import {useSelectedWallet} from '../SelectedWallet'
-import {CatalystData, useCatalyst} from './Catalyst.hooks'
 import {Actions, Description, Title} from './components'
+import {useCreateVotingRegTx, VotingRegTxData} from './hooks'
 
 type ErrorData = {
   showErrorDialog: boolean
@@ -26,13 +26,13 @@ type ErrorData = {
 
 type Props = {
   pin: string
-  setCatalystData: (catalystData?: CatalystData | undefined) => void
+  setVotingRegTxData: (votingRegTxData?: VotingRegTxData | undefined) => void
 }
-export const Step4 = ({pin, setCatalystData}: Props) => {
+export const Step4 = ({pin, setVotingRegTxData}: Props) => {
   const intl = useIntl()
   const strings = useStrings()
   const wallet = useSelectedWallet()
-  const {mutateAsync: generateVotingTransaction} = useCatalyst({wallet})
+  const {mutateAsync: generateVotingTransaction} = useCreateVotingRegTx({wallet})
   const navigation = useNavigation()
   const [password, setPassword] = useState('')
 
@@ -49,11 +49,11 @@ export const Step4 = ({pin, setCatalystData}: Props) => {
     const generateTransaction = async (decryptedKey: string) => {
       setGeneratingTransaction(true)
       try {
-        const catalystData = await generateVotingTransaction({
+        const votingRegTxData = await generateVotingTransaction({
           decryptedKey,
           pin,
         })
-        setCatalystData(catalystData)
+        setVotingRegTxData(votingRegTxData)
       } finally {
         setGeneratingTransaction(false)
       }
@@ -114,7 +114,7 @@ export const Step4 = ({pin, setCatalystData}: Props) => {
     strings.errorMessage,
     pin,
     generateVotingTransaction,
-    setCatalystData,
+    setVotingRegTxData,
   ])
 
   useEffect(() => {
@@ -131,8 +131,8 @@ export const Step4 = ({pin, setCatalystData}: Props) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      setCatalystData(undefined)
-    }, [setCatalystData]),
+      setVotingRegTxData(undefined)
+    }, [setVotingRegTxData]),
   )
 
   return (

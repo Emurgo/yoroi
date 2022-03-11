@@ -1,8 +1,8 @@
 import {WalletChecksum} from '@emurgo/cip4-js'
+import BigNumber from 'bignumber.js'
 import type {IntlShape} from 'react-intl'
 
-import {ISignRequest} from '../legacy/crypto/ISignRequest'
-import {AccountStates, AddressedUtxo, RawUtxo} from './types/cardano'
+import {AccountStates, AddressedUtxo, RawUtxo, TokenEntry} from './types/cardano'
 
 export interface WalletInterface {
   id: string
@@ -33,6 +33,7 @@ export interface WalletInterface {
     decryptedKey?: string,
     serverTime?: Date | null,
   ): Promise<void>
+  checkServerStatus(): Promise<ServerStatus>
 }
 
 export type TokenMetadata = {
@@ -143,4 +144,30 @@ export type SignedTx = {
   id: string
   encodedTx: Uint8Array
   base64: string
+}
+
+export interface MultiToken {
+  getDefaultId: () => string
+  getDefault: () => BigNumber
+  getDefaultEntry: () => TokenEntry
+  get(tokenIdentifier: string): BigNumber | void
+  values: Array<{amount: BigNumber; identifier: string; networkId: number}>
+}
+
+export interface ISignRequest<T> {
+  totalInput(shift: boolean): Promise<MultiToken>
+  totalOutput(shift: boolean): Promise<MultiToken>
+  fee(): Promise<MultiToken>
+  uniqueSenderAddresses(): Array<string>
+  receivers(includeChange: boolean): Promise<Array<string>>
+  isEqual(tx: unknown): Promise<boolean>
+
+  self(): T
+}
+
+export type ServerStatus = {
+  isServerOk: boolean
+  isMaintenance: boolean
+  serverTime: number | null
+  isQueueOnline?: boolean
 }

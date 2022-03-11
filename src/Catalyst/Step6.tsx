@@ -20,16 +20,16 @@ import {confirmationMessages} from '../../legacy/i18n/global-messages'
 import {WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
 import {COLORS} from '../../legacy/styles/config'
 import {Button, ProgressStep, Spacer, Text} from '../components'
-import {CatalystData} from './Catalyst.hooks'
 import {CatalystBackupCheckModal} from './CatalystBackupCheckModal'
 import {Actions, Description, Title} from './components'
+import {VotingRegTxData} from './hooks'
 
 const {FlagSecure} = NativeModules
 
 type Props = {
-  catalystData?: CatalystData
+  votingRegTxData?: VotingRegTxData
 }
-export const Step6 = ({catalystData}: Props) => {
+export const Step6 = ({votingRegTxData}: Props) => {
   const strings = useStrings()
   const navigation = useNavigation()
   const [countDown, setCountDown] = useState<number>(5)
@@ -60,10 +60,7 @@ export const Step6 = ({catalystData}: Props) => {
       <ScrollView bounces={false} contentContainerStyle={styles.contentContainer}>
         <Spacer height={48} />
 
-        <Title>
-          {strings.subTitle}
-          {typeof catalystData?.signRequest}
-        </Title>
+        <Title>{strings.subTitle}</Title>
 
         <Spacer height={16} />
 
@@ -85,8 +82,8 @@ export const Step6 = ({catalystData}: Props) => {
 
         <Spacer height={32} />
 
-        {catalystData?.catalystSKHexEncrypted ? (
-          <QRCode text={catalystData?.catalystSKHexEncrypted} />
+        {votingRegTxData?.catalystSKHexEncrypted ? (
+          <QRCode text={votingRegTxData?.catalystSKHexEncrypted} />
         ) : (
           <ActivityIndicator size={'large'} color={'black'} />
         )}
@@ -96,9 +93,9 @@ export const Step6 = ({catalystData}: Props) => {
         <Text>{strings.secretCode}</Text>
 
         <SecretCodeBox>
-          <Text style={{flex: 1}}>{catalystData?.catalystSKHexEncrypted}</Text>
+          <Text style={{flex: 1}}>{votingRegTxData?.catalystSKHexEncrypted}</Text>
           <Spacer width={16} />
-          <CopyButton text={catalystData?.catalystSKHexEncrypted || ''} />
+          <CopyButton text={votingRegTxData?.catalystSKHexEncrypted || ''} />
         </SecretCodeBox>
       </ScrollView>
 

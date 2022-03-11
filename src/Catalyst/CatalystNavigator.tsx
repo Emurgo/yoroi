@@ -6,7 +6,7 @@ import globalMessages from '../../legacy/i18n/global-messages'
 import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../legacy/navigationOptions'
 import {CATALYST_ROUTES} from '../../legacy/RoutesList'
 import {BiometricAuthScreen} from '../BiometricAuth'
-import {CatalystData} from './Catalyst.hooks'
+import {VotingRegTxData} from './hooks'
 import {Step1} from './Step1'
 import {Step2} from './Step2'
 import {Step3} from './Step3'
@@ -32,7 +32,7 @@ const Stack = createStackNavigator<CatalystNavigatorRoutes>()
 export const CatalystNavigator = () => {
   const strings = useStrings()
   const [pin, setPin] = useState('')
-  const [catalystData, setCatalystData] = useState<CatalystData | undefined>()
+  const [votingRegTxData, setVotingRegTxData] = useState<VotingRegTxData | undefined>()
 
   return (
     <Stack.Navigator
@@ -49,16 +49,16 @@ export const CatalystNavigator = () => {
         {() => <Step2 pin={pin} />}
       </Stack.Screen>
       <Stack.Screen name={CATALYST_ROUTES.STEP3} options={defaultNavigationOptions}>
-        {() => <Step3 pin={pin} setCatalystData={setCatalystData} />}
+        {() => <Step3 pin={pin} setVotingRegTxData={setVotingRegTxData} />}
       </Stack.Screen>
       <Stack.Screen name={CATALYST_ROUTES.STEP4} options={defaultNavigationOptions}>
-        {() => <Step4 pin={pin} setCatalystData={setCatalystData} />}
+        {() => <Step4 pin={pin} setVotingRegTxData={setVotingRegTxData} />}
       </Stack.Screen>
       <Stack.Screen name={CATALYST_ROUTES.STEP5} options={defaultNavigationOptions}>
-        {() => <Step5 catalystData={catalystData} />}
+        {() => <Step5 votingRegTxData={votingRegTxData} />}
       </Stack.Screen>
       <Stack.Screen name={CATALYST_ROUTES.STEP6} options={defaultNavigationOptions}>
-        {() => <Step6 catalystData={catalystData} />}
+        {() => <Step6 votingRegTxData={votingRegTxData} />}
       </Stack.Screen>
       <Stack.Screen
         name={CATALYST_ROUTES.BIOMETRICS_SIGNING}

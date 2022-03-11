@@ -10,21 +10,21 @@ import {CATALYST_ROUTES} from '../../legacy/RoutesList'
 import {ProgressStep, Spacer} from '../components'
 import {PinInputKeyboard} from '../components'
 import {useSelectedWallet} from '../SelectedWallet'
-import {CatalystData, useCatalyst} from './Catalyst.hooks'
 import {Description, PinBox, Row, Title} from './components'
+import {useCreateVotingRegTx, VotingRegTxData} from './hooks'
 
 const PIN_LENGTH = 4
 
 type Props = {
   pin: string
-  setCatalystData: (catalystData?: CatalystData) => void
+  setVotingRegTxData: (votingRegTxData?: VotingRegTxData) => void
 }
-export const Step3 = ({pin, setCatalystData}: Props) => {
+export const Step3 = ({pin, setVotingRegTxData}: Props) => {
   const intl = useIntl()
   const strings = useStrings()
   const navigation = useNavigation()
   const wallet = useSelectedWallet()
-  const {mutateAsync: generateVotingTransaction} = useCatalyst({wallet})
+  const {createVotingRegTx} = useCreateVotingRegTx({wallet})
   const [confirmPin, setConfirmPin] = useState('')
 
   const pinChange = async (enteredPin: string) => {
@@ -32,9 +32,15 @@ export const Step3 = ({pin, setCatalystData}: Props) => {
     if (enteredPin.length === 4) {
       if (pin === enteredPin) {
         if (wallet.isHW) {
-          const catalystData = await generateVotingTransaction({pin})
-          setCatalystData(catalystData)
-          navigation.navigate(CATALYST_ROUTES.STEP5)
+          createVotingRegTx(
+            {pin},
+            {
+              onSuccess: (votingRegTxData) => {
+                setVotingRegTxData(votingRegTxData)
+                navigation.navigate(CATALYST_ROUTES.STEP5)
+              },
+            },
+          )
         } else {
           navigation.navigate(CATALYST_ROUTES.STEP4)
         }

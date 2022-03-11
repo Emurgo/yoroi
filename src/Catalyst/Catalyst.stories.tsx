@@ -14,8 +14,8 @@ import {Step6} from './Step6'
 storiesOf('Catalyst', module)
   .add('Step 1', () => <Step1 setPin={action('setPin')} />)
   .add('Step 2', () => <Step2 pin="1234" />)
-  .add('Step 3', () => <Step3 pin="1234" setCatalystData={action('setCatalystData')} />)
-  .add('Step 4', () => <Step4 pin="1234" setCatalystData={action('setCatalystData')} />)
+  .add('Step 3', () => <Step3 pin="1234" setVotingRegTxData={action('setVotingRegTxData')} />)
+  .add('Step 4', () => <Step4 pin="1234" setVotingRegTxData={action('setVotingRegTxData')} />)
   .add('Step 5', () => <Step5 />)
   .add('Step 6', () => <Step6 />)
   .add('CatalystBackupCheckModal', () => (

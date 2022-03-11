@@ -1,30 +1,28 @@
 import {useMutation, UseMutationOptions} from 'react-query'
-import {useSelector} from 'react-redux'
 
 import {encryptWithPassword} from '../../legacy/crypto/catalystCipher'
 import {generatePrivateKeyForCatalyst} from '../../legacy/crypto/shelley/catalystUtils'
 import {HaskellShelleyTxSignRequest} from '../../legacy/crypto/shelley/HaskellShelleyTxSignRequest'
-import {serverStatusSelector, utxosSelector} from '../../legacy/selectors'
 import {WalletInterface} from '../types'
 
-export type CatalystVariables = {
+export type VotingRegTxVariables = {
   pin: string
   decryptedKey?: string
 }
-export type CatalystData = {
+export type VotingRegTxData = {
   catalystSKHex: string
   catalystSKHexEncrypted: string
   signRequest: HaskellShelleyTxSignRequest
 }
-export const useCatalyst = (
+export const useCreateVotingRegTx = (
   {wallet}: {wallet: WalletInterface},
-  options: UseMutationOptions<CatalystData, Error, CatalystVariables> = {},
+  options: UseMutationOptions<VotingRegTxData, Error, VotingRegTxVariables> = {},
 ) => {
-  const serverStatus = useSelector(serverStatusSelector)
-  const utxos = useSelector(utxosSelector)
-  const mutation = useMutation<CatalystData, Error, CatalystVariables>({
+  const mutation = useMutation<VotingRegTxData, Error, VotingRegTxVariables>({
     mutationFn: async ({pin, decryptedKey}) => {
-      const time = serverStatus.serverTime
+      const serverTime = (await wallet.checkServerStatus())?.serverTime
+      const time = serverTime ? new Date(serverTime) : new Date()
+      const utxos = await wallet.fetchUTXOs()
 
       if (!utxos) throw new Error('Connection issues. Failed to fetch utxos')
       if (!utxos?.length) throw new Error('No balance to perform this operation')
@@ -52,5 +50,8 @@ export const useCatalyst = (
     ...options,
   })
 
-  return mutation
+  return {
+    createVotingRegTx: mutation.mutate,
+    ...mutation,
+  }
 }

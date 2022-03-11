@@ -15,13 +15,13 @@ import {OfflineBanner, ProgressStep, Spacer, TextInput} from '../components'
 import {ConfirmTx} from '../components/ConfirmTx'
 import {Instructions as HWInstructions} from '../HW'
 import {useSelectedWallet} from '../SelectedWallet'
-import {CatalystData} from './Catalyst.hooks'
 import {Actions, Description, Title} from './components'
+import {VotingRegTxData} from './hooks'
 
 type Props = {
-  catalystData?: CatalystData
+  votingRegTxData?: VotingRegTxData
 }
-export const Step5 = ({catalystData}: Props) => {
+export const Step5 = ({votingRegTxData}: Props) => {
   const strings = useStrings()
   const navigation = useNavigation()
   const wallet = useSelectedWallet()
@@ -32,12 +32,12 @@ export const Step5 = ({catalystData}: Props) => {
   const [useUSB, setUseUSB] = useState<boolean>(false)
 
   useEffect(() => {
-    if (catalystData?.signRequest != null) {
-      catalystData.signRequest.fee().then((o) => {
+    if (votingRegTxData?.signRequest != null) {
+      votingRegTxData.signRequest.fee().then((o) => {
         setFees(o.getDefault())
       })
     }
-  }, [catalystData, wallet.isHW])
+  }, [votingRegTxData, wallet.isHW])
 
   useEffect(() => {
     setPassword(CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '')
@@ -87,7 +87,7 @@ export const Step5 = ({catalystData}: Props) => {
           providedPassword={password}
           setUseUSB={setUseUSB}
           useUSB={useUSB}
-          txDataSignRequest={catalystData?.signRequest}
+          txDataSignRequest={votingRegTxData?.signRequest}
           biometricInstructions={[strings.bioAuthDescription]}
           biometricRoute={CATALYST_ROUTES.BIOMETRICS_SIGNING}
         />
