@@ -14,7 +14,7 @@ import {formatTokenWithText} from '../../../../../legacy/utils/format'
 import {Text, TextInput, TwoActionView} from '../../../../components'
 import {Instructions as HWInstructions} from '../../../../HW'
 import {useSelectedWallet} from '../../../../SelectedWallet'
-import type {Deregistration, Withdrawal} from '../WithdrawalDialog'
+import {Deregistration, Withdrawal} from '../../../../types'
 
 type Props = {
   withdrawals: Array<Withdrawal> | null

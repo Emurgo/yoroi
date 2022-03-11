@@ -9,7 +9,6 @@ import {useSelector} from 'react-redux'
 
 import {showErrorDialog} from '../../../legacy/actions'
 import {ApiError, NetworkError} from '../../../legacy/api/errors'
-import type {RawUtxo} from '../../../legacy/api/types'
 import AccountAutoRefresher from '../../../legacy/components/Delegation/AccountAutoRefresher'
 import UtxoAutoRefresher from '../../../legacy/components/Send/UtxoAutoRefresher'
 import {CONFIG, getTestStakingPool, isNightly, SHOW_PROD_POOLS_IN_DEV} from '../../../legacy/config/config'
@@ -26,13 +25,12 @@ import {
   serverStatusSelector,
   utxosSelector,
 } from '../../../legacy/selectors'
-import type {DefaultAsset} from '../../../legacy/types/HistoryTransaction'
 import {ObjectValues} from '../../../legacy/utils/flow'
 import {normalizeTokenAmount} from '../../../legacy/utils/format'
 import {Logger} from '../../../legacy/utils/logging'
 import {PleaseWaitModal} from '../../components'
 import {useSelectedWallet} from '../../SelectedWallet'
-import {ServerStatus} from '../../types'
+import {DefaultAsset, RawUtxo, ServerStatus} from '../../types'
 import {PoolDetailScreen} from '../PoolDetails'
 import {PoolWarningModal} from '../PoolWarningModal'
 

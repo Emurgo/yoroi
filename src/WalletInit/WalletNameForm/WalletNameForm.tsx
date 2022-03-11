@@ -1,10 +1,7 @@
-import type {ReactNode} from 'react'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet} from 'react-native'
+import {ImageSourcePropType, StyleSheet, ViewStyle} from 'react-native'
 import {ActivityIndicator, Image, SafeAreaView, View} from 'react-native'
-import type {ImageSource} from 'react-native/Libraries/Image/ImageSource'
-import type {ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
 
 import {CONFIG} from '../../../legacy/config/config'
 import globalMessages from '../../../legacy/i18n/global-messages'
@@ -17,15 +14,15 @@ import {useWalletNames} from '../../hooks'
 type Props = {
   onSubmit: ({name: string}) => void
   defaultWalletName?: string
-  image?: ImageSource
+  image?: ImageSourcePropType
   progress?: {
     currentStep: number
     totalSteps: number
   }
-  containerStyle?: ViewStyleProp
-  buttonStyle?: ViewStyleProp
-  topContent?: ReactNode
-  bottomContent?: ReactNode
+  containerStyle?: ViewStyle
+  buttonStyle?: ViewStyle
+  topContent?: React.ReactNode
+  bottomContent?: React.ReactNode
   isWaiting?: boolean
 }
 

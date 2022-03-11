@@ -18,7 +18,6 @@ import {
 
 import bleImage from '../../../legacy/assets/img/bluetooth.png'
 import usbImage from '../../../legacy/assets/img/ledger-nano-usb.png'
-import type {Device} from '../../../legacy/components/Ledger/types'
 import type {DeviceId, DeviceObj} from '../../../legacy/crypto/shelley/ledgerUtils'
 import {BluetoothDisabledError, RejectedByUserError} from '../../../legacy/crypto/shelley/ledgerUtils'
 import {confirmationMessages, ledgerMessages} from '../../../legacy/i18n/global-messages'
@@ -26,6 +25,7 @@ import LocalizableError from '../../../legacy/i18n/LocalizableError'
 import {COLORS, spacing} from '../../../legacy/styles/config'
 import {Logger} from '../../../legacy/utils/logging'
 import {BulletPointItem, Button, Text} from '../../components'
+import {Device} from '../../types'
 import {DeviceItem} from './DeviceItem'
 
 type Props = {

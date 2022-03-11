@@ -12,7 +12,7 @@ import {
 import {generateShelleyPlateFromKey} from '../../legacy/crypto/shelley/plate'
 import walletManager from '../../legacy/crypto/walletManager'
 import {WalletMeta} from '../../legacy/state'
-import {SignedTx, Token, TxSubmissionStatus, WalletInterface} from '../types'
+import {NetworkId, SignedTx, Token, TxSubmissionStatus, WalletInterface} from '../types'
 
 // WALLET
 export const useCloseWallet = (options?: UseMutationOptions<void, Error>) => {
@@ -163,7 +163,7 @@ export const fetchTokenInfo = async ({wallet, tokenId}: {wallet: WalletInterface
   }
 }
 
-export const usePlate = ({networkId, publicKeyHex}: {networkId: string; publicKeyHex: string}) => {
+export const usePlate = ({networkId, publicKeyHex}: {networkId: NetworkId; publicKeyHex: string}) => {
   const query = useQuery({
     suspense: true,
     queryKey: ['plate', networkId, publicKeyHex],

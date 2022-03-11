@@ -6,22 +6,12 @@ import Markdown from 'react-native-easy-markdown'
 
 import type {WithdrawalDialogSteps} from '../../../../legacy/components/Delegation/types'
 import {WITHDRAWAL_DIALOG_STEPS} from '../../../../legacy/components/Delegation/types'
-import {MultiToken} from '../../../../legacy/crypto/MultiToken'
 import globalMessages, {ledgerMessages} from '../../../../legacy/i18n/global-messages'
 import {theme} from '../../../../legacy/styles/config'
 import {DangerousAction, ErrorView, Modal, PleaseWaitView, Spacer} from '../../../components'
 import {LedgerConnect, LedgerTransportSwitch} from '../../../HW'
+import {Deregistration, Withdrawal} from '../../../types'
 import {TransferSummary} from './TransferSummary'
-
-export type Withdrawal = {
-  address: string
-  amount: MultiToken
-}
-
-export type Deregistration = {
-  rewardAddress: string
-  refund: MultiToken
-}
 
 type Props = {
   step: WithdrawalDialogSteps

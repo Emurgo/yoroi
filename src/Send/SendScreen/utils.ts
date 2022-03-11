@@ -3,7 +3,6 @@ import {BigNumber} from 'bignumber.js'
 import _ from 'lodash'
 import {IntlShape} from 'react-intl'
 
-import type {RawUtxo} from '../../../legacy/api/types'
 import {getCardanoNetworkConfigById, isHaskellShelleyNetwork} from '../../../legacy/config/networks'
 import {AssetOverflowError, InsufficientFunds} from '../../../legacy/crypto/errors'
 import {MultiToken} from '../../../legacy/crypto/MultiToken'
@@ -15,7 +14,7 @@ import {formatTokenAmount, formatTokenInteger, normalizeTokenAmount} from '../..
 import {InvalidAssetAmount, parseAmountDecimal} from '../../../legacy/utils/parsing'
 import type {AddressValidationErrors} from '../../../legacy/utils/validators'
 import {getUnstoppableDomainAddress, isReceiverAddressValid, validateAmount} from '../../../legacy/utils/validators'
-import type {DefaultAsset, SendTokenList, Token} from '../../types'
+import type {DefaultAsset, RawUtxo, SendTokenList, Token} from '../../types'
 import {amountInputErrorMessages, messages} from './strings'
 
 export const getMinAda = async (selectedToken: Token, defaultAsset: DefaultAsset) => {
