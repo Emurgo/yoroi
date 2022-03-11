@@ -22,7 +22,7 @@ import LocalizableError from '../../../legacy/i18n/LocalizableError'
 import {WALLET_ROOT_ROUTES} from '../../../legacy/RoutesList'
 import {hwDeviceInfoSelector} from '../../../legacy/selectors'
 import {COLORS} from '../../../legacy/styles/config'
-import {useCloseWallet, useSaveAndSubmitSignedTx} from '../../hooks'
+import {useCloseWallet, useSubmitTx} from '../../hooks'
 import {useSelectedWallet, useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
 import {SignedTx} from '../../types'
 import {Button, ButtonProps, ValidatedTextInput} from '..'
@@ -95,11 +95,11 @@ export const ConfirmSubmit: React.FC<OnlySubmitProps> = ({signedTx, onError, onS
     setDialogStep(DialogStep.Error)
   }
 
-  const {saveAndSubmitTx, isLoading: sendingTransaction} = useSaveAndSubmitSignedTx({wallet})
+  const {submitTx, isLoading: sendingTransaction} = useSubmitTx({wallet})
 
   const onConfirm = () => {
     setDialogStep(DialogStep.Submitting)
-    saveAndSubmitTx(signedTx, {
+    submitTx(signedTx, {
       onSuccess: () => onSuccess(signedTx),
       onError: (err) => {
         if (err instanceof LocalizableError) {
@@ -174,7 +174,7 @@ export const ConfirmWithSignature: React.FC<SignAndSubmitProps | OnlySignProps> 
   })
   const wallet = useSelectedWallet()
 
-  const {mutateAsync: saveAndSubmitTx} = useSaveAndSubmitSignedTx({wallet})
+  const {mutateAsync: submitTx} = useSubmitTx({wallet})
 
   const [password, setPassword] = useState('')
   const [isProcessing, setIsProcessing] = useState(false)
@@ -273,7 +273,7 @@ export const ConfirmWithSignature: React.FC<SignAndSubmitProps | OnlySignProps> 
         } else {
           setDialogStep(DialogStep.Submitting)
           try {
-            await smoothModalNotification(saveAndSubmitTx(signedTx))
+            await smoothModalNotification(submitTx(signedTx))
             setDialogStep(DialogStep.Closed)
             onSuccess(signedTx)
           } catch (err) {
@@ -310,7 +310,7 @@ export const ConfirmWithSignature: React.FC<SignAndSubmitProps | OnlySignProps> 
         setIsProcessing(false)
       }
     },
-    [intl, onError, onSuccess, password, process, saveAndSubmitTx, strings, txDataSignRequest, useUSB, wallet],
+    [intl, onError, onSuccess, password, process, submitTx, strings, txDataSignRequest, useUSB, wallet],
   )
 
   const _onConfirm = React.useCallback(async () => {

@@ -8,11 +8,9 @@ import {
   useQueryClient,
   UseQueryOptions,
 } from 'react-query'
-import {useSelector} from 'react-redux'
 
 import {generateShelleyPlateFromKey} from '../../legacy/crypto/shelley/plate'
 import walletManager from '../../legacy/crypto/walletManager'
-import {serverStatusSelector} from '../../legacy/selectors'
 import {WalletMeta} from '../../legacy/state'
 import {SignedTx, TxSubmissionStatus, WalletInterface} from '../types'
 import {Token} from '../types/cardano'
@@ -269,31 +267,29 @@ export const useCreateWallet = (options?: UseMutationOptions<WalletInterface, Er
   }
 }
 
-export const useSaveAndSubmitSignedTx = (
+export const useSubmitTx = (
   {wallet}: {wallet: WalletInterface},
-  options: UseMutationOptions<undefined | TxSubmissionStatus, Error, SignedTx> = {},
+  options: UseMutationOptions<TxSubmissionStatus, Error, SignedTx> = {},
 ) => {
-  const queryClient = useQueryClient()
-  const serverStatus = useSelector(serverStatusSelector)
-  const mutation = useMutation<undefined | TxSubmissionStatus, Error, SignedTx>({
-    mutationFn: async (signedTx: SignedTx) => {
-      queryClient.invalidateQueries([wallet.id, 'pendingTxs'])
-
+  const mutation = useMutationWithInvalidations({
+    mutationFn: async (signedTx) => {
+      const serverStatus = await wallet.checkServerStatus()
       await wallet.submitTransaction(signedTx.base64)
 
       if (serverStatus.isQueueOnline) {
-        return await fetchTxStatus(wallet, signedTx.id, false)
+        return fetchTxStatus(wallet, signedTx.id, false)
       }
 
       return {
         status: 'SUCCESS',
-      }
+      } as TxSubmissionStatus
     },
+    invalidateQueries: [[wallet.id, 'pendingTxs']],
     ...options,
   })
 
   return {
-    saveAndSubmitTx: mutation.mutate,
+    submitTx: mutation.mutate,
     ...mutation,
   }
 }
@@ -304,51 +300,40 @@ export const fetchTxStatus = async (
   wallet: WalletInterface,
   txHash: string,
   waitProcessing = false,
-): Promise<TxSubmissionStatus | undefined> => {
-  let isWaiting = false
+): Promise<TxSubmissionStatus> => {
   for (let i = txQueueRetryTimes; i > 0; i--) {
-    try {
-      const statusResponse = await wallet.fetchTxStatus({
-        txHashes: [txHash],
-      })
-      const confirmations = statusResponse?.depth?.[txHash] || 0
-      const submission = statusResponse?.submissionStatus?.[txHash]
-      // processed
-      if (confirmations > 0) {
-        return {
-          status: 'SUCCESS',
-        }
+    const txStatus = await wallet.fetchTxStatus({
+      txHashes: [txHash],
+    })
+
+    const confirmations = txStatus.depth?.[txHash] || 0
+    const submission = txStatus.submissionStatus?.[txHash]
+
+    // processed
+    if (confirmations > 0) {
+      return {
+        status: 'SUCCESS',
       }
-      // not in the queue
-      if (!submission) {
-        await delay(txQueueRetryDelay)
-        continue
-      }
-      if (
-        submission.status === 'FAILED' ||
-        submission.status === 'MAX_RETRY_REACHED' ||
-        submission.status === 'SUCCESS' // submitted and accepted by node
-      ) {
-        return submission
-      }
-      if (submission.status === 'WAITING') {
-        isWaiting = true
-        if (!waitProcessing) {
-          return submission
-        }
-        await delay(txQueueRetryDelay)
-      }
-    } catch (e) {
-      if (i === 1) {
-        throw e
-      }
+    }
+
+    // not processed and not in the queue
+    if (!submission) {
       await delay(txQueueRetryDelay)
+      continue
     }
+
+    // if awaiting to process
+    if (submission.status === 'WAITING' && waitProcessing) {
+      await delay(txQueueRetryDelay)
+      continue
+    }
+
+    return submission
   }
-  if (isWaiting) {
-    return {
-      status: 'WAITING',
-    }
+
+  // no submission info or waited and didn't process
+  return {
+    status: 'WAITING',
   }
 }
 
