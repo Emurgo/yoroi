@@ -1,9 +1,3 @@
-/**
- * Step 5 for the Catalyst registration
- * Ask password used for signing transaction or sign with HW wallet
- * submit the transaction
- */
-
 import React from 'react'
 import {useIntl} from 'react-intl'
 
