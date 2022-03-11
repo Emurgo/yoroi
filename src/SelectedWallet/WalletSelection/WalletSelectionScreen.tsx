@@ -82,7 +82,7 @@ export const WalletSelectionScreen = () => {
                 .sort(byName)
                 .map((walletMeta) => <WalletListItem key={walletMeta.id} wallet={walletMeta} onPress={openWallet} />)
             ) : (
-              <ActivityIndicator />
+              <ActivityIndicator color={'black'} />
             )}
           </ScrollView>
 

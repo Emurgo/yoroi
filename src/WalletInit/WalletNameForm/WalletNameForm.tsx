@@ -88,7 +88,7 @@ export const WalletNameForm = ({
         />
       </View>
 
-      {isWaiting ? <ActivityIndicator /> : null}
+      {isWaiting && <ActivityIndicator color={'black'} />}
     </SafeAreaView>
   )
 }

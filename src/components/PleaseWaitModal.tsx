@@ -11,7 +11,7 @@ export const PleaseWaitView = ({title, spinnerText}: PleaseWaitViewProps) => (
   <View style={styles.container}>
     <Text style={styles.title}>{title}</Text>
 
-    <ActivityIndicator size="large" color="#999999" />
+    <ActivityIndicator size="large" color="black" />
 
     <Spacer height={12} />
 

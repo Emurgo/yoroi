@@ -96,7 +96,7 @@ export const Dashboard = () => {
 
           <Row>
             {!stakingInfo ? (
-              <ActivityIndicator size={'large'} />
+              <ActivityIndicator size={'large'} color={'black'} />
             ) : stakingInfo?.isRegistered ? (
               <UserSummary
                 totalAdaSum={balances['ADA'] ? new BigNumber(balances['ADA']) : null}
