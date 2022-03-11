@@ -32,11 +32,10 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
   const intl = useIntl()
   const strings = useStrings()
   const wallet = useSelectedWallet()
-  const {mutateAsync: generateVotingTransaction} = useCreateVotingRegTx({wallet})
+  const {createVotingRegTx, isLoading: generatingTransaction} = useCreateVotingRegTx({wallet})
   const navigation = useNavigation()
   const [password, setPassword] = useState('')
 
-  const [generatingTransaction, setGeneratingTransaction] = useState(false)
   const [errorData, setErrorData] = useState<ErrorData>({
     showErrorDialog: false,
     errorMessage: '',
@@ -46,28 +45,29 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
   const isConfirmationDisabled = !wallet.isHW && !wallet.isEasyConfirmationEnabled && !password
 
   const onContinue = React.useCallback(async () => {
-    const generateTransaction = async (decryptedKey: string) => {
-      setGeneratingTransaction(true)
-      try {
-        const votingRegTxData = await generateVotingTransaction({
+    const createTransaction = (decryptedKey: string) => {
+      createVotingRegTx(
+        {
           decryptedKey,
           pin,
-        })
-        setVotingRegTxData(votingRegTxData)
-      } finally {
-        setGeneratingTransaction(false)
-      }
-      navigation.navigate(CATALYST_ROUTES.STEP5)
+        },
+        {
+          onSuccess: (votingRegTxData) => {
+            setVotingRegTxData(votingRegTxData)
+            navigation.navigate(CATALYST_ROUTES.STEP5)
+          },
+        },
+      )
     }
 
     if (wallet.isEasyConfirmationEnabled) {
       try {
-        await ensureKeysValidity(walletManager._id)
+        await ensureKeysValidity(wallet.id)
         navigation.navigate(CATALYST_ROUTES.BIOMETRICS_SIGNING, {
           keyId: walletManager._id,
           onSuccess: async (decryptedKey) => {
             navigation.goBack()
-            await generateTransaction(decryptedKey)
+            createTransaction(decryptedKey)
           },
           onFail: () => navigation.goBack(),
           addWelcomeMessage: false,
@@ -93,7 +93,7 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
     try {
       const decryptedKey = await KeyStore.getData(walletManager._id, 'MASTER_PASSWORD', '', password, intl)
 
-      await generateTransaction(decryptedKey)
+      return createTransaction(decryptedKey)
     } catch (error) {
       if (error instanceof WrongPassword) {
         await showErrorDialog(errorMessages.incorrectPassword, intl)
@@ -106,15 +106,16 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
       }
     }
   }, [
-    intl,
     wallet.isEasyConfirmationEnabled,
+    wallet.id,
+    createVotingRegTx,
+    pin,
+    setVotingRegTxData,
     navigation,
-    password,
     strings.bioAuthInstructions,
     strings.errorMessage,
-    pin,
-    generateVotingTransaction,
-    setVotingRegTxData,
+    intl,
+    password,
   ])
 
   useEffect(() => {
