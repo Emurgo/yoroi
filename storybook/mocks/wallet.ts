@@ -51,6 +51,13 @@ export const mockWallet: WalletInterface = {
   },
 }
 
+export function walletFactory(walletOveride: Partial<WalletInterface>): WalletInterface {
+  return {
+    ...mockWallet,
+    ...walletOveride
+  }
+}
+
 export const tokenEntries: Array<TokenEntry> = [
   {
     networkId: 123,

@@ -420,7 +420,9 @@ class WalletManager {
     } catch (e) {
       this._notifySyncError(e)
     } finally {
-      if (!DISABLE_BACKGROUND_SYNC) setTimeout(() => this._backgroundSync(), CONFIG.HISTORY_REFRESH_TIME)
+      if (!DISABLE_BACKGROUND_SYNC && process.env.NODE_ENV !== 'test') {
+        setTimeout(() => this._backgroundSync(), CONFIG.HISTORY_REFRESH_TIME)
+      }
     }
   }
 

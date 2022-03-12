@@ -294,14 +294,14 @@ export const useSubmitTx = (
   }
 }
 
-const txQueueRetryDelay = 1000
+const txQueueRetryDelay = process.env.NODE_ENV === 'test' ? 1 : 1000
 const txQueueRetryTimes = 5
 export const fetchTxStatus = async (
   wallet: WalletInterface,
   txHash: string,
   waitProcessing = false,
 ): Promise<TxSubmissionStatus> => {
-  for (let i = txQueueRetryTimes; i > 0; i--) {
+  for (let i = txQueueRetryTimes; i > 0; i -= 1) {
     const txStatus = await wallet.fetchTxStatus({
       txHashes: [txHash],
     })

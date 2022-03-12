@@ -40,7 +40,7 @@ type ConfirmTxProps = {
   txDataSignRequest: HaskellShelleyTxSignRequest
   useUSB: boolean
   setUseUSB: (useUSB: boolean) => void
-  isProvidingPassword: boolean
+  isProvidingPassword?: boolean
   providedPassword?: string
   disabled?: boolean
 }

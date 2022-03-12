@@ -29,7 +29,7 @@
     "start": "react-native start",
     "prestorybook": "rnstl  --searchDir ./src ./legacy/components ./storybook --pattern '**/*.stories.{js,tsx}'",
     "storybook": "start-storybook",
-    "test": "jest",
+    "test": "jest src",
     "tsc:cover": "yarn typescript-coverage-report -i '**/*.test.*' -i '**/*.stories*' -t html --threshold=100"
   },
   "lint-staged": {
@@ -50,17 +50,46 @@
     ]
   },
   "jest": {
+    "cacheDirectory": ".jest/cache",
+    "collectCoverageFrom": [
+      "src/**/*.{ts,tsx}"
+    ],
+    "coveragePathIgnorePatterns": [
+      "legacy/"
+    ],
+    "globals": {
+      "ts-jest": {
+        "tsconfig": "tsconfig.json",
+        "babelConfig": true
+      }
+    },
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ],
     "preset": "react-native",
-    "testMatch": [
-      "**/__tests__/**/*.[jt]s?(x)",
-      "**/?(*.)+(test).[jt]s?(x)"
+    "setupFiles": [
+      "./legacy/jestSetup.js",
+      "./node_modules/react-native-gesture-handler/jestSetup.js"
+    ],
+    "testPathIgnorePatterns": [
+      "legacy/"
     ],
     "transform": {
-      "^.+\\.js$": "<rootDir>/node_modules/react-native/jest/preprocessor.js"
-    }
+      "^.+\\.(js)$": "babel-jest",
+      "\\.(ts|tsx)$": "ts-jest"
+    },
+    "transformIgnorePatterns": [
+      "node_modules/(?!(@react-native|react-native|react-native-iphone-x-helper)/)"
+    ]
   },
   "resolutions": {
-    "react-devtools-core": "4.14.0"
+    "react-devtools-core": "4.14.0",
+    "react-native/@jest/create-cache-key-function": "^27.0.2"
   },
   "dependencies": {
     "@cardano-foundation/ledgerjs-hw-app-cardano": "4.0.0",
@@ -148,6 +177,7 @@
     "redux": "^4.0.5",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
+    "remove": "^0.1.5",
     "reselect": "^4.0.0",
     "safe-buffer": "^5.2.1",
     "stream-browserify": "3.0.0",
@@ -162,6 +192,7 @@
     "@babel/cli": "^7.15.7",
     "@babel/core": "^7.15.8",
     "@babel/node": "^7.15.8",
+    "@babel/preset-react": "^7.16.7",
     "@babel/runtime": "^7.15.4",
     "@emurgo/cardano-serialization-lib-nodejs": "^9.1.0",
     "@storybook/addon-actions": "5.3.14",
@@ -172,8 +203,9 @@
     "@storybook/addons": "^5.3.22",
     "@storybook/react-native": "^5.3.25",
     "@storybook/react-native-server": "^5.3.23",
+    "@testing-library/react-native": "^9.0.0",
     "@types/bluebird": "^3.5.36",
-    "@types/jest": "^27.0.2",
+    "@types/jest": "^27.4.1",
     "@types/lodash": "^4.14.175",
     "@types/node": "^16.11.19",
     "@types/react": "^17.0.27",
@@ -188,7 +220,7 @@
     "@wdio/mocha-framework": "^7.16.6",
     "@wdio/selenium-standalone-service": "^7.16.6",
     "@wdio/spec-reporter": "^7.16.4",
-    "babel-jest": "26.6.3",
+    "babel-jest": "^27.5.1",
     "babel-loader": "8.2.2",
     "babel-plugin-react-intl": "^3.0.1",
     "babel-plugin-require-context-hook": "^1.0.0",
@@ -209,19 +241,24 @@
     "flow-coverage-report": "^0.8.0",
     "flow-typed": "^3.3.1",
     "husky": ">=6",
-    "jest": "26.6.3",
+    "jest": "^27.5.1",
     "jest-circus": "^27.3.1",
     "lint-staged": ">=10",
     "metro-react-native-babel-preset": "^0.66.2",
     "prettier": "2.3.2",
     "prettier-plugin-packagejson": "^2.2.11",
     "prettylint": "1.0.0",
+    "react-addons-test-utils": "^15.6.2",
     "react-dom": "16.8.3",
     "react-intl-translations-manager": "^5.0.3",
     "react-native-inhibit-warnings": "git+https://github.com/Emurgo/react-native-inhibit-warnings.git",
     "react-native-schemes-manager": "^1.0.5",
     "react-native-storybook-loader": "^1.8.1",
+    "react-native-typescript-transformer": "^1.2.13",
     "react-test-renderer": "17.0.2",
+    "sinon": "^13.0.1",
+    "ts-jest": "^27.1.3",
+    "ts-sinon": "^2.0.2",
     "typescript": "^4.5.3",
     "typescript-coverage-report": "^0.6.0"
   },
