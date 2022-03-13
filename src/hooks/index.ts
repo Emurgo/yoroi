@@ -1,3 +1,4 @@
+import {delay} from 'bluebird'
 import {
   QueryKey,
   useMutation,
@@ -11,7 +12,7 @@ import {
 import {generateShelleyPlateFromKey} from '../../legacy/crypto/shelley/plate'
 import walletManager from '../../legacy/crypto/walletManager'
 import {WalletMeta} from '../../legacy/state'
-import {WalletInterface} from '../types'
+import {SignedTx, TxSubmissionStatus, WalletInterface} from '../types'
 import {Token} from '../types/cardano'
 
 // WALLET
@@ -263,6 +264,76 @@ export const useCreateWallet = (options?: UseMutationOptions<WalletInterface, Er
   return {
     createWallet: mutation.mutate,
     ...mutation,
+  }
+}
+
+export const useSubmitTx = (
+  {wallet}: {wallet: WalletInterface},
+  options: UseMutationOptions<TxSubmissionStatus, Error, SignedTx> = {},
+) => {
+  const mutation = useMutationWithInvalidations({
+    mutationFn: async (signedTx) => {
+      const serverStatus = await wallet.checkServerStatus()
+      await wallet.submitTransaction(signedTx.base64)
+
+      if (serverStatus.isQueueOnline) {
+        return fetchTxStatus(wallet, signedTx.id, false)
+      }
+
+      return {
+        status: 'SUCCESS',
+      } as TxSubmissionStatus
+    },
+    invalidateQueries: [[wallet.id, 'pendingTxs']],
+    ...options,
+  })
+
+  return {
+    submitTx: mutation.mutate,
+    ...mutation,
+  }
+}
+
+const txQueueRetryDelay = process.env.NODE_ENV === 'test' ? 1 : 1000
+const txQueueRetryTimes = 5
+export const fetchTxStatus = async (
+  wallet: WalletInterface,
+  txHash: string,
+  waitProcessing = false,
+): Promise<TxSubmissionStatus> => {
+  for (let i = txQueueRetryTimes; i > 0; i -= 1) {
+    const txStatus = await wallet.fetchTxStatus({
+      txHashes: [txHash],
+    })
+
+    const confirmations = txStatus.depth?.[txHash] || 0
+    const submission = txStatus.submissionStatus?.[txHash]
+
+    // processed
+    if (confirmations > 0) {
+      return {
+        status: 'SUCCESS',
+      }
+    }
+
+    // not processed and not in the queue
+    if (!submission) {
+      await delay(txQueueRetryDelay)
+      continue
+    }
+
+    // if awaiting to process
+    if (submission.status === 'WAITING' && waitProcessing) {
+      await delay(txQueueRetryDelay)
+      continue
+    }
+
+    return submission
+  }
+
+  // no submission info or waited and didn't process
+  return {
+    status: 'WAITING',
   }
 }
 

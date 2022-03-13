@@ -14,22 +14,23 @@ import {
 } from 'react-native'
 import QRCodeSVG from 'react-native-qrcode-svg'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useSelector} from 'react-redux'
 
 import copyImage from '../../legacy/assets/img/copyd.png'
 import {confirmationMessages} from '../../legacy/i18n/global-messages'
 import {WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
-import {encryptedKeySelector} from '../../legacy/selectors'
 import {COLORS} from '../../legacy/styles/config'
 import {Button, ProgressStep, Spacer, Text} from '../components'
 import {CatalystBackupCheckModal} from './CatalystBackupCheckModal'
 import {Actions, Description, Title} from './components'
+import {VotingRegTxData} from './hooks'
 
 const {FlagSecure} = NativeModules
 
-export const Step6 = () => {
+type Props = {
+  votingRegTxData?: VotingRegTxData
+}
+export const Step6 = ({votingRegTxData}: Props) => {
   const strings = useStrings()
-  const encryptedKey = useSelector(encryptedKeySelector)
   const navigation = useNavigation()
   const [countDown, setCountDown] = useState<number>(5)
 
@@ -81,16 +82,20 @@ export const Step6 = () => {
 
         <Spacer height={32} />
 
-        {encryptedKey ? <QRCode text={encryptedKey} /> : <ActivityIndicator size={'large'} color={'black'} />}
+        {votingRegTxData?.catalystSKHexEncrypted ? (
+          <QRCode text={votingRegTxData?.catalystSKHexEncrypted} />
+        ) : (
+          <ActivityIndicator size={'large'} color={'black'} />
+        )}
 
         <Spacer height={32} />
 
         <Text>{strings.secretCode}</Text>
 
         <SecretCodeBox>
-          <Text style={{flex: 1}}>{encryptedKey}</Text>
+          <Text style={{flex: 1}}>{votingRegTxData?.catalystSKHexEncrypted}</Text>
           <Spacer width={16} />
-          <CopyButton text={encryptedKey || ''} />
+          <CopyButton text={votingRegTxData?.catalystSKHexEncrypted || ''} />
         </SecretCodeBox>
       </ScrollView>
 

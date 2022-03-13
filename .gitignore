@@ -108,3 +108,6 @@ coverage-ts
 #Test's data
 tests/app
 tests/artifacts
+
+coverage/
+.jest/

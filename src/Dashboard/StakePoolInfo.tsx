@@ -15,7 +15,7 @@ export const StakePoolInfo = ({stakePoolId}: {stakePoolId: string}) => {
   const {stakePoolInfo, isLoading} = useStakePoolInfo(wallet, stakePoolId)
 
   if (isLoading) {
-    return <ActivityIndicator size={'large'} />
+    return <ActivityIndicator size={'large'} color={'black'} />
   }
 
   return stakePoolInfo ? (

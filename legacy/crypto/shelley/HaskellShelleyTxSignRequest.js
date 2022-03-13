@@ -10,9 +10,11 @@ import {
 import {BigNumber} from 'bignumber.js'
 
 import {CONFIG} from '../../config/config'
+import type {CardanoHaskellShelleyNetwork} from '../../config/networks'
 import {ISignRequest} from '../ISignRequest'
+import type {DefaultTokenEntry} from '../MultiToken'
 import {MultiToken} from '../MultiToken'
-import type {Address, AddressedUtxo, Addressing, Value} from '../types'
+import type {Address, AddressedUtxo, Addressing, SendTokenList, Value} from '../types'
 import {multiTokenFromCardanoValue, toHexOrBase58} from './utils'
 
 const PRIMARY_ASSET_CONSTANTS = CONFIG.PRIMARY_ASSET_CONSTANTS
@@ -47,6 +49,20 @@ type LedgerNanoCatalystRegistrationTxSignData = {|
   stakingKey: string,
   rewardAddress: string,
   nonce: number,
+|}
+
+export type CreateUnsignedTxRequest = {|
+  changeAddr: {
+    address: string,
+    ...Addressing,
+  },
+  absSlotNumber: BigNumber,
+  receiver: string,
+  addressedUtxos: Array<AddressedUtxo>,
+  defaultToken: DefaultTokenEntry,
+  tokens: SendTokenList,
+  auxiliaryData: AuxiliaryData | void,
+  networkConfig: CardanoHaskellShelleyNetwork,
 |}
 
 export class HaskellShelleyTxSignRequest implements ISignRequest<TransactionBuilder> {

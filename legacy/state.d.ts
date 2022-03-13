@@ -6,15 +6,15 @@ import {BigNumber} from 'bignumber.js'
 import type {RawUtxo, RemotePoolMetaSuccess} from './api/types'
 import type {NetworkId, WalletImplementationId, YoroiProvider} from './config/types'
 import {ISignRequest} from './crypto/ISignRequest'
-import type {HWDeviceInfo} from './crypto/shelley/ledgerUtils'
 import type {WalletInterface} from './crypto/WalletInterface'
-import type {Token, Transaction} from './types/HistoryTransaction'
+import type {Token} from './types/HistoryTransaction'
 
 // prettier-ignore
 export type ServerStatusCache = {
   isServerOk: boolean,
   isMaintenance: boolean,
   serverTime: Date | null,
+  isQueueOnline?: boolean,
 }
 
 // prettier-ignore

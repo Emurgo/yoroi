@@ -299,7 +299,7 @@ class _LedgerConnect extends React.Component<Props, State> {
             disabled={refreshing || deviceObj == null || waiting}
           />
         )}
-        {waiting && <ActivityIndicator />}
+        {waiting && <ActivityIndicator color={'black'} />}
       </>
     )
   }

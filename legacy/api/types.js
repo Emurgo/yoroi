@@ -121,6 +121,7 @@ export type ServerStatusResponse = {|
   isServerOk: boolean,
   isMaintenance: boolean,
   serverTime: number, // in milliseconds
+  isQueueOnline?: boolean,
 |}
 
 // bestblock
@@ -244,4 +245,16 @@ type FundInfo = {|
 export type FundInfoResponse = {|
   +currentFund: ?FundInfo,
   +nextFund: ?FundInfo,
+|}
+
+export type TxSubmissionStatus = {|
+  +submissionStatus: 'WAITING' | 'FAILED' | 'MAX_RETRY_REACHED' | 'SUCCESS',
+  +reason?: string,
+|}
+
+export type TxStatusRequest = {|txHashes: Array<string>|}
+
+export type TxStatusResponse = {|
+  +depth?: {[txId: string]: number},
+  +submissionStatus?: {[txId: string]: TxSubmissionStatus},
 |}

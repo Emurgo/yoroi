@@ -31,6 +31,31 @@ export const mockWallet: WalletInterface = {
   subscribe: () => {
     throw new Error('Not implemented')
   },
+  signTx: () => {
+    throw new Error('Not implemented')
+  },
+  signTxWithLedger: () => {
+    throw new Error('Not implemented')
+  },
+  fetchTxStatus: () => {
+    throw new Error('Not implemented')
+  },
+  submitTransaction: () => {
+    throw new Error('Not implemented')
+  },
+  createVotingRegTx: () => {
+    throw new Error('Not implemented')
+  },
+  checkServerStatus: () => {
+    throw new Error('Not implemented')
+  },
+}
+
+export function walletFactory(walletOveride: Partial<WalletInterface>): WalletInterface {
+  return {
+    ...mockWallet,
+    ...walletOveride
+  }
 }
 
 export const tokenEntries: Array<TokenEntry> = [

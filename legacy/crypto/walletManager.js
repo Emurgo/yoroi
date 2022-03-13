@@ -18,12 +18,12 @@ import type {
   TokenInfoResponse,
   TxBodiesRequest,
 } from '../api/types'
-import {CONFIG, WALLETS} from '../config/config'
+import {CONFIG, DISABLE_BACKGROUND_SYNC, WALLETS} from '../config/config'
 import {isJormungandr} from '../config/networks'
 import type {NetworkId, WalletImplementationId, YoroiProvider} from '../config/types'
 import {NETWORK_REGISTRY, WALLET_IMPLEMENTATION_REGISTRY} from '../config/types'
 import {APP_SETTINGS_KEYS, readAppSettings} from '../helpers/appSettings'
-import {canBiometricEncryptionBeEnabled, isSystemAuthSupported} from '../helpers/deviceSettings'
+import {ensureKeysValidity, isSystemAuthSupported} from '../helpers/deviceSettings'
 import type {ServerStatusCache, WalletMeta} from '../state'
 import type {DefaultAsset} from '../types/HistoryTransaction'
 import assert from '../utils/assert'
@@ -359,17 +359,6 @@ class WalletManager {
     wallet.isEasyConfirmationEnabled = false
   }
 
-  async ensureKeysValidity() {
-    const wallet = this.getWallet()
-
-    const canBiometricsBeUsed = await canBiometricEncryptionBeEnabled()
-    const isKeyValid = await KeyStore.isKeyValid(wallet.id, 'BIOMETRICS')
-
-    if (!isKeyValid || !canBiometricsBeUsed) {
-      throw new KeysAreInvalid()
-    }
-  }
-
   async deleteEncryptedKey(encryptionMethod: EncryptionMethod) {
     if (!this._wallet) {
       throw new Error('Empty wallet')
@@ -431,7 +420,9 @@ class WalletManager {
     } catch (e) {
       this._notifySyncError(e)
     } finally {
-      setTimeout(() => this._backgroundSync(), CONFIG.HISTORY_REFRESH_TIME)
+      if (!DISABLE_BACKGROUND_SYNC && process.env.NODE_ENV !== 'test') {
+        setTimeout(() => this._backgroundSync(), CONFIG.HISTORY_REFRESH_TIME)
+      }
     }
   }
 
@@ -548,7 +539,7 @@ class WalletManager {
     this._notifyOnOpen()
 
     if (wallet.isEasyConfirmationEnabled) {
-      await this.ensureKeysValidity()
+      await ensureKeysValidity(wallet.id)
     }
 
     return [wallet, newWalletMeta]

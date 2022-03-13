@@ -3,7 +3,7 @@ import {BigNumber} from 'bignumber.js'
 import React, {useEffect, useState} from 'react'
 import type {IntlShape} from 'react-intl'
 import {defineMessages, useIntl} from 'react-intl'
-import {View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 import {WebView} from 'react-native-webview'
 import {useSelector} from 'react-redux'
 
@@ -11,9 +11,9 @@ import {showErrorDialog} from '../../../legacy/actions'
 import {ApiError, NetworkError} from '../../../legacy/api/errors'
 import type {RawUtxo} from '../../../legacy/api/types'
 import AccountAutoRefresher from '../../../legacy/components/Delegation/AccountAutoRefresher'
-import styles from '../../../legacy/components/Delegation/styles/DelegationCenter.style'
 import UtxoAutoRefresher from '../../../legacy/components/Send/UtxoAutoRefresher'
 import {CONFIG, getTestStakingPool, isNightly, SHOW_PROD_POOLS_IN_DEV} from '../../../legacy/config/config'
+import {getNetworkConfigById} from '../../../legacy/config/networks'
 import {InsufficientFunds} from '../../../legacy/crypto/errors'
 import walletManager from '../../../legacy/crypto/walletManager'
 import globalMessages, {errorMessages} from '../../../legacy/i18n/global-messages'
@@ -52,7 +52,8 @@ export const StakingCenter = () => {
   const languageCode = useSelector(languageSelector)
   const serverStatus = useSelector(serverStatusSelector)
   const wallet = useSelectedWallet()
-
+  const config = getNetworkConfigById(wallet.networkId)
+  const isMainnet = config.IS_MAINNET
   const nightlyAndDevPoolHashes = getTestStakingPool(wallet.networkId, wallet.provider)
 
   // pools user is currently delegating to
@@ -117,7 +118,7 @@ export const StakingCenter = () => {
 
   return (
     <>
-      {IS_STAKING_ON_TEST_BUILD && (
+      {(__DEV__ || (isNightly() && !isMainnet)) && (
         <View style={styles.container}>
           <PoolDetailScreen
             onPressDelegate={(poolHash) => handleOnPress(poolHash)}
@@ -125,7 +126,7 @@ export const StakingCenter = () => {
           />
         </View>
       )}
-      {(!IS_STAKING_ON_TEST_BUILD || SHOW_PROD_POOLS_IN_DEV) && (
+      {(isMainnet || SHOW_PROD_POOLS_IN_DEV) && (
         <>
           <View style={styles.container}>
             <UtxoAutoRefresher />
@@ -160,8 +161,6 @@ export const StakingCenter = () => {
     </>
   )
 }
-
-const IS_STAKING_ON_TEST_BUILD = isNightly() || CONFIG.IS_TESTNET_BUILD
 
 const noPoolDataDialog = defineMessages({
   title: {
@@ -218,12 +217,10 @@ const navigateToDelegationConfirm = async (
       defaultAsset,
       serverStatus.serverTime,
     )
-    const transactionFee = await transactionData.signRequest.fee()
     navigation.navigate(STAKING_CENTER_ROUTES.DELEGATION_CONFIRM, {
       poolName: selectedPool.poolName,
       poolHash: selectedPool.poolHash,
       transactionData,
-      transactionFee,
     })
   } catch (e) {
     if (e instanceof InsufficientFunds) {
@@ -305,3 +302,9 @@ const _handleSelectedPoolHashes = async (
     }
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+})

@@ -21,6 +21,8 @@ import type {
   TxBodiesRequest,
   TxBodiesResponse,
   TxHistoryRequest,
+  TxStatusRequest,
+  TxStatusResponse,
 } from '../types'
 import {checkAndFacadeTransactionAsync} from './facade'
 
@@ -196,4 +198,8 @@ export const getTokenInfo = async (request: TokenInfoRequest, config: BackendCon
 export const getFundInfo = (config: BackendConfig, isMainnet: boolean): Promise<FundInfoResponse> => {
   const prefix = isMainnet ? '' : 'api/'
   return fetchDefault(`${prefix}v0/catalyst/fundInfo/`, null, config, 'GET')
+}
+
+export const fetchTxStatus = (request: TxStatusRequest, config: BackendConfig): Promise<TxStatusResponse> => {
+  return fetchDefault('tx/status', request, config)
 }

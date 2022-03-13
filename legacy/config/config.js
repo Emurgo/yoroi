@@ -24,10 +24,11 @@ const IS_DEBUG = __DEV__
  */
 const BUILD_VARIANT = env.getString('BUILD_VARIANT')
 const SHOW_INIT_DEBUG_SCREEN = env.getBoolean('SHOW_INIT_DEBUG_SCREEN', false)
-const PREFILL_WALLET_INFO = env.getBoolean('PREFILL_WALLET_INFO', false)
+const PREFILL_WALLET_INFO = !__DEV__ ? false : env.getBoolean('PREFILL_WALLET_INFO', false)
 const USE_TESTNET = env.getBoolean('USE_TESTNET', false)
-export const SHOW_PROD_POOLS_IN_DEV = env.getBoolean('SHOW_PROD_POOLS_IN_DEV', false)
+export const SHOW_PROD_POOLS_IN_DEV = !__DEV__ ? false : env.getBoolean('SHOW_PROD_POOLS_IN_DEV', false)
 export const UI_V2 = env.getBoolean('UI_V2', false)
+export const DISABLE_BACKGROUND_SYNC = !__DEV__ ? false : env.getBoolean('DISABLE_BACKGROUND_SYNC', false)
 
 // TODO(v-almonacid): consider adding 'ENABLE' as an env variable
 const SENTRY = {

@@ -28,6 +28,7 @@ export var CONFIG: {
     PASSWORD: string,
     SEND_ADDRESS: string,
     SEND_AMOUNT: string,
+    CATALYST_PIN: string,
   },
   CATALYST: {
     MIN_ADA: any,

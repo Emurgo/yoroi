@@ -66,7 +66,7 @@ export const BiometricAuthScreen = () => {
 
     const subscription = AppState.addEventListener('change', handleAppStateChange)
 
-    return () => subscription.remove()
+    return () => subscription?.remove()
   }, [appState, intl, route])
 
   return (

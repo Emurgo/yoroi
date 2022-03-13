@@ -23,7 +23,7 @@ const useIsUsbSupported = () => {
   return isUSBSupported
 }
 
-const LedgerTransportSwitchView = ({onSelectUSB, onSelectBLE}: Props) => {
+export const LedgerTransportSwitchView = ({onSelectUSB, onSelectBLE}: Props) => {
   const intl = useIntl()
   const isUSBSupported = useIsUsbSupported()
 

@@ -1,32 +1,16 @@
 // @flow
 
-import {AuxiliaryData, BigNum, LinearFee} from '@emurgo/react-native-haskell-shelley'
+import {BigNum, LinearFee} from '@emurgo/react-native-haskell-shelley'
 import {BigNumber} from 'bignumber.js'
 
-import type {CardanoHaskellShelleyNetwork} from '../../config/networks'
 import assert from '../../utils/assert'
 import {Logger} from '../../utils/logging'
 import {builtSendTokenList, hasSendAllDefault} from '../commonUtils'
 import {CardanoError, InsufficientFunds, NoOutputsError} from '../errors'
-import type {DefaultTokenEntry} from '../MultiToken'
-import type {AddressedUtxo, Addressing, SendTokenList} from '../types'
+import type {CreateUnsignedTxRequest} from './HaskellShelleyTxSignRequest'
 import {HaskellShelleyTxSignRequest} from './HaskellShelleyTxSignRequest'
 import {newAdaUnsignedTx, sendAllUnsignedTx} from './transactions'
 import {multiTokenFromRemote} from './utils'
-
-export type CreateUnsignedTxRequest = {|
-  changeAddr: {
-    address: string,
-    ...Addressing,
-  },
-  absSlotNumber: BigNumber,
-  receiver: string,
-  addressedUtxos: Array<AddressedUtxo>,
-  defaultToken: DefaultTokenEntry,
-  tokens: SendTokenList,
-  auxiliaryData: AuxiliaryData | void,
-  networkConfig: CardanoHaskellShelleyNetwork,
-|}
 
 export type CreateUnsignedTxResponse = HaskellShelleyTxSignRequest
 
