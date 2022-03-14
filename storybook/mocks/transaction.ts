@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js'
-import {TransactionInfo} from '../../src/types/cardano'
+import {TransactionInfo} from '../../src/types'
 
 export const mockTransaction = (transaction?: Partial<TransactionInfo>): TransactionInfo => {
   return {

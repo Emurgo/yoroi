@@ -1,4 +1,5 @@
 import {useNavigation} from '@react-navigation/native'
+import BigNumber from 'bignumber.js'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet} from 'react-native'
@@ -28,7 +29,7 @@ export const Step5 = ({votingRegTxData}: Props) => {
   const defaultAsset = useSelector(defaultNetworkAssetSelector)
   const [password, setPassword] = useState('')
 
-  const [fees, setFees] = useState(null)
+  const [fees, setFees] = useState<null | BigNumber>(null)
   const [useUSB, setUseUSB] = useState<boolean>(false)
 
   useEffect(() => {

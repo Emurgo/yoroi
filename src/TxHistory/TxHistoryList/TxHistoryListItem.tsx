@@ -25,7 +25,7 @@ import utfSymbols from '../../../legacy/utils/utfSymbols'
 import {Text} from '../../components'
 import {Icon} from '../../components/Icon'
 import {TxHistoryStackRootProps} from '../../navigation'
-import {DefaultAsset, IOData, TransactionAssurance, TransactionDirection, TransactionInfo} from '../../types/cardano'
+import {DefaultAsset, IOData, TransactionAssurance, TransactionDirection, TransactionInfo} from '../../types'
 
 const filtersTxIO = (address: string) => {
   const isMyReceive = (extAddrIdx) => extAddrIdx[address] != null

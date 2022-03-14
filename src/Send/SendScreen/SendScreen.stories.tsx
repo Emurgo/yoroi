@@ -5,7 +5,7 @@ import React from 'react'
 
 import {mockWallet} from '../../../storybook'
 import {SelectedWalletProvider} from '../../SelectedWallet'
-import type {TokenEntry} from '../../types/cardano'
+import type {TokenEntry} from '../../types'
 import {SendScreen} from './SendScreen'
 
 storiesOf('SendScreen', module)

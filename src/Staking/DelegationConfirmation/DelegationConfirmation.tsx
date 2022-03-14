@@ -22,7 +22,7 @@ import {OfflineBanner, Text, ValidatedTextInput} from '../../components'
 import {ConfirmTx} from '../../components/ConfirmTx'
 import {Instructions as HWInstructions} from '../../HW'
 import {useSelectedWallet} from '../../SelectedWallet'
-import {DefaultAsset} from '../../types/cardano'
+import {DefaultAsset} from '../../types'
 
 export type Params = {
   poolHash: string

@@ -5,10 +5,10 @@ import {View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {getWalletConfigById} from '../../../legacy/config/config'
-import type {NetworkId, WalletImplementationId} from '../../../legacy/config/types'
 import {useParams} from '../../../legacy/navigation'
 import {WALLET_INIT_ROUTES} from '../../../legacy/RoutesList'
 import {Button, KeyboardSpacer, ScrollableView, Spacer, StatusBar, Text} from '../../components'
+import {NetworkId, WalletImplementationId} from '../../types'
 import {MnemonicInput} from '../MnemonicInput'
 
 type Params = {

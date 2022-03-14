@@ -5,13 +5,13 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import type {NetworkId, WalletImplementationId} from '../../../legacy/config/types'
 import {WALLET_IMPLEMENTATION_REGISTRY} from '../../../legacy/config/types'
 import {generateByronPlateFromMnemonics} from '../../../legacy/crypto/byron/plate'
 import {generateShelleyPlateFromMnemonics} from '../../../legacy/crypto/shelley/plate'
 import {WALLET_INIT_ROUTES} from '../../../legacy/RoutesList'
 import {COLORS} from '../../../legacy/styles/config'
 import {BulletPointItem, Button, Icon, Spacer, StatusBar, Text} from '../../components'
+import {NetworkId, WalletImplementationId} from '../../types'
 import {WalletAddress} from '../WalletAddress'
 
 export const VerifyRestoredWalletScreen = () => {
@@ -146,7 +146,7 @@ const usePlateFromMnemonic = ({
 }: {
   mnemonic: string
   networkId: number
-  walletImplementationId: string
+  walletImplementationId: WalletImplementationId
 }) => {
   const [addresses, setAddresses] = useState()
   const [plate, setPlate] = useState<undefined | WalletChecksum>(undefined)

@@ -2,11 +2,7 @@ import React from 'react'
 import {ActivityIndicator, StyleSheet, Text, TouchableOpacity} from 'react-native'
 
 import {COLORS} from '../../../../legacy/styles/config'
-
-export type Device = {
-  id: number
-  name: string
-}
+import {Device} from '../../../types'
 
 type Props = {
   device: Device

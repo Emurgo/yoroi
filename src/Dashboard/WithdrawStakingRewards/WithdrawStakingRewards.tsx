@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {NavigationProp} from '@react-navigation/native'
 import {BigNumber} from 'bignumber.js'
 import React from 'react'
 import {IntlShape} from 'react-intl'
 import {Platform} from 'react-native'
 
 import {showErrorDialog} from '../../../legacy/actions'
-import type {RawUtxo} from '../../../legacy/api/types'
 import type {WithdrawalDialogSteps} from '../../../legacy/components/Delegation/types'
 import {WITHDRAWAL_DIALOG_STEPS} from '../../../legacy/components/Delegation/types'
 import {CONFIG} from '../../../legacy/config/config'
@@ -20,14 +20,12 @@ import {ensureKeysValidity} from '../../../legacy/helpers/deviceSettings'
 import {errorMessages} from '../../../legacy/i18n/global-messages'
 import LocalizableError from '../../../legacy/i18n/LocalizableError'
 import {DELEGATION_ROUTES, SEND_ROUTES, WALLET_ROOT_ROUTES, WALLET_ROUTES} from '../../../legacy/RoutesList'
-import type {ServerStatusCache} from '../../../legacy/state'
-import type {DefaultAsset} from '../../../legacy/types/HistoryTransaction'
-import type {Navigation} from '../../../legacy/types/navigation'
+import {DefaultAsset, RawUtxo, ServerStatus} from '../../types'
 import {WithdrawalDialog} from './WithdrawalDialog'
 
 type Props = {
   intl: IntlShape
-  navigation: Navigation
+  navigation: NavigationProp<any>
   utxos: Array<RawUtxo> | null
   setLedgerDeviceId: (deviceID: DeviceId) => Promise<void>
   setLedgerDeviceObj: (deviceObj: DeviceObj) => Promise<void>
@@ -37,7 +35,7 @@ type Props = {
   submitTransaction: (request: ISignRequest, text: string) => Promise<void>
   submitSignedTx: (text: string) => Promise<void>
   defaultAsset: DefaultAsset
-  serverStatus: ServerStatusCache
+  serverStatus: ServerStatus
   onDone: () => void
 }
 

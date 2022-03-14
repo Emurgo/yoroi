@@ -16,7 +16,7 @@ import {Boundary, Text} from '../../components'
 import {Spacer} from '../../components/Spacer'
 import {useTokenInfo} from '../../hooks'
 import {useSelectedWallet} from '../../SelectedWallet'
-import {TokenEntry} from '../../types/cardano'
+import {TokenEntry} from '../../types'
 import {useOnScroll} from '../useOnScroll'
 import {ActionsBanner} from './ActionsBanner'
 

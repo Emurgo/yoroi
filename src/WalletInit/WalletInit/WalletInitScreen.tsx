@@ -6,12 +6,12 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {CONFIG, isByron, isHaskellShelley} from '../../../legacy/config/config'
 import {isJormungandr} from '../../../legacy/config/networks'
-import type {NetworkId, WalletImplementationId, YoroiProvider} from '../../../legacy/config/types'
 import globalMessages from '../../../legacy/i18n/global-messages'
 import {WALLET_INIT_ROUTES} from '../../../legacy/RoutesList'
 import {COLORS} from '../../../legacy/styles/config'
 import {Button, Modal, ScreenBackground, StatusBar} from '../../components'
 import {LedgerTransportSwitchModal} from '../../HW'
+import {NetworkId, WalletImplementationId, YoroiProvider} from '../../types'
 import {WalletDescription} from '../WalletDescription'
 import {ExpandableItem} from './ExpandableItem'
 

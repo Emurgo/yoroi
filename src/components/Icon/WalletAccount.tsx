@@ -1,6 +1,5 @@
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
-import type {ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
+import {StyleSheet, View, ViewStyle} from 'react-native'
 import Blockies from 'react-native-blockies-svg'
 import tinycolor from 'tinycolor2'
 
@@ -42,7 +41,7 @@ type Props = {
   iconSeed: string
   scalePx?: number
   saturationFactor?: number
-  style?: ViewStyleProp
+  style?: ViewStyle
 }
 
 export const WalletAccount = ({iconSeed, scalePx = 5, saturationFactor = 0, style}: Props) => {

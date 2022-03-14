@@ -18,7 +18,7 @@ import {
 import {Boundary, Button, Spacer, Text, TextInput} from '../../components'
 import {useTokenInfo} from '../../hooks'
 import {useSelectedWallet} from '../../SelectedWallet'
-import {Token, TokenEntry} from '../../types/cardano'
+import {Token, TokenEntry} from '../../types'
 
 type Props = {
   assetTokens: Array<TokenEntry>

@@ -1,8 +1,13 @@
 import BigNumber from 'bignumber.js'
 
-import {RemotePoolMetaSuccess} from '../../legacy/selectors'
-import {StakePoolInfosAndHistories, TokenMetadata, WalletInterface} from '../../src/types'
-import {TokenEntry} from '../../src/types/cardano'
+import {
+  RemotePoolMetaSuccess,
+  StakePoolInfosAndHistories,
+  TokenEntry,
+  TokenInfo,
+  TokenMetadata,
+  WalletInterface,
+} from '../../src/types'
 
 export const mockWallet: WalletInterface = {
   id: 'wallet-id',
@@ -13,6 +18,14 @@ export const mockWallet: WalletInterface = {
   isReadOnly: false,
   isEasyConfirmationEnabled: false,
   rewardAddressHex: 'reward-address-hex',
+  hwDeviceInfo: {},
+  transactions: {},
+  internalAddresses: [],
+  externalAddresses: [],
+  confirmationCounts: {},
+  isUsedAddressIndex: {},
+  numReceiveAddresses: 0,
+  isInitialized: true,
 
   fetchUTXOs: () => Promise.resolve([]),
   getAllUtxosForKey: () => Promise.resolve([]),
@@ -91,7 +104,7 @@ export const tokenEntries: Array<TokenEntry> = [
   },
 ]
 
-export const tokenResponses: Record<string, TokenMetadata> = {
+export const tokenResponses: Record<string, TokenInfo> = {
   '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d7444524950': {
     name: 'tDRIP',
     decimals: 6,
