@@ -15,6 +15,22 @@ import {WalletMeta} from '../../legacy/state'
 import {NetworkId, SignedTx, Token, TxSubmissionStatus, WalletInterface} from '../types'
 
 // WALLET
+export const useServerStatus = ({wallet}: {wallet: WalletInterface}) => {
+  const query = useQuery({
+    suspense: true,
+    queryKey: [wallet.id, 'serverStatus'],
+    queryFn: async () => {
+      const status = await wallet.checkServerStatus()
+
+      return status
+    },
+  })
+
+  if (!query.data) throw new Error('Invalid State')
+
+  return query.data
+}
+
 export const useCloseWallet = (options?: UseMutationOptions<void, Error>) => {
   const mutation = useMutation({
     mutationFn: () => walletManager.closeWallet(),

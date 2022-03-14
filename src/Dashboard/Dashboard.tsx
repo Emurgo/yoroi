@@ -13,7 +13,6 @@ import {fetchUTXOs} from '../../legacy/actions/utxo'
 import AccountAutoRefresher from '../../legacy/components/Delegation/AccountAutoRefresher'
 import UtxoAutoRefresher from '../../legacy/components/Send/UtxoAutoRefresher'
 import {getCardanoBaseConfig, UI_V2} from '../../legacy/config/config'
-import {getDefaultAssetByNetworkId} from '../../legacy/config/config'
 import {getCardanoNetworkConfigById} from '../../legacy/config/networks'
 import globalMessages from '../../legacy/i18n/global-messages'
 import {CATALYST_ROUTES, DELEGATION_ROUTES} from '../../legacy/RoutesList'
@@ -23,7 +22,6 @@ import {
   isFetchingUtxosSelector,
   isOnlineSelector,
   lastAccountStateFetchErrorSelector,
-  serverStatusSelector,
   tokenBalanceSelector,
   utxosSelector,
 } from '../../legacy/selectors'
@@ -53,7 +51,6 @@ export const Dashboard = () => {
   const lastAccountStateSyncError = useSelector(lastAccountStateFetchErrorSelector)
   const isOnline = useSelector(isOnlineSelector)
   const hwDeviceInfo = useSelector(hwDeviceInfoSelector)
-  const serverStatus = useSelector(serverStatusSelector)
 
   const wallet = useSelectedWallet()
   const balances = useBalances(wallet)
@@ -138,14 +135,8 @@ export const Dashboard = () => {
 
       {showWithdrawalDialog && (
         <WithdrawStakingRewards
-          intl={intl}
-          navigation={navigation}
           utxos={utxos}
-          isEasyConfirmationEnabled={wallet.isEasyConfirmationEnabled}
-          isHW={wallet.isHW}
           hwDeviceInfo={hwDeviceInfo}
-          defaultAsset={getDefaultAssetByNetworkId(wallet.networkId)}
-          serverStatus={serverStatus}
           setLedgerDeviceId={(...args) => dispatch(setLedgerDeviceId(...args))}
           setLedgerDeviceObj={(...args) => dispatch(setLedgerDeviceObj(...args))}
           submitTransaction={(...args) => dispatch(submitTransaction(...args))}

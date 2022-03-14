@@ -4,24 +4,33 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet} from 'react-native'
 import Markdown from 'react-native-easy-markdown'
 
-import type {WithdrawalDialogSteps} from '../../../../legacy/components/Delegation/types'
-import {WITHDRAWAL_DIALOG_STEPS} from '../../../../legacy/components/Delegation/types'
 import globalMessages, {ledgerMessages} from '../../../../legacy/i18n/global-messages'
 import {theme} from '../../../../legacy/styles/config'
-import {DangerousAction, ErrorView, Modal, PleaseWaitView, Spacer} from '../../../components'
+import {DangerousAction, ErrorData, ErrorView, Modal, PleaseWaitView, Spacer} from '../../../components'
 import {LedgerConnect, LedgerTransportSwitch} from '../../../HW'
-import {Deregistration, Withdrawal} from '../../../types'
+import {SignRequestDeregistration, SignRequestWithdrawal} from '../../../types/cardano'
 import {TransferSummary} from './TransferSummary'
 
+export enum Steps {
+  Closed,
+  Warning,
+  ChooseTransport,
+  LedgerConnect,
+  Confirm,
+  WaitingHwResponse,
+  Waiting,
+  Error,
+}
+
 type Props = {
-  step: WithdrawalDialogSteps
+  step: Steps
   onKeepKey: () => void
   onDeregisterKey: () => void
   onChooseTransport: (bool: boolean) => void
   onConnectBLE: (...args: unknown[]) => void
   onConnectUSB: (...args: unknown[]) => void
-  withdrawals: null | Array<Withdrawal>
-  deregistrations: null | Array<Deregistration>
+  withdrawals: null | Array<SignRequestWithdrawal>
+  deregistrations: null | Array<SignRequestDeregistration>
   balance: BigNumber
   finalBalance: BigNumber
   fees: BigNumber
@@ -29,12 +38,7 @@ type Props = {
   onRequestClose: () => void
   useUSB: boolean
   showCloseIcon?: boolean
-  error:
-    | undefined
-    | {
-        errorMessage: string
-        errorLogs: string | null
-      }
+  error: undefined | ErrorData
 }
 
 export const WithdrawalDialog = ({
@@ -52,15 +56,15 @@ export const WithdrawalDialog = ({
   fees,
   onConfirm,
   onRequestClose,
-  error,
+  error: errorData,
 }: Props) => {
   const strings = useStrings()
 
   const getModalBody = () => {
     switch (step) {
-      case WITHDRAWAL_DIALOG_STEPS.CLOSED:
+      case Steps.Closed:
         return null
-      case WITHDRAWAL_DIALOG_STEPS.WARNING:
+      case Steps.Warning:
         return (
           <DangerousAction
             title={strings.warningModalTitle}
@@ -83,16 +87,16 @@ export const WithdrawalDialog = ({
             <Markdown style={styles.paragraph}>{strings.explanation3}</Markdown>
           </DangerousAction>
         )
-      case WITHDRAWAL_DIALOG_STEPS.CHOOSE_TRANSPORT:
+      case Steps.ChooseTransport:
         return (
           <LedgerTransportSwitch
             onSelectUSB={() => onChooseTransport(true)}
             onSelectBLE={() => onChooseTransport(false)}
           />
         )
-      case WITHDRAWAL_DIALOG_STEPS.LEDGER_CONNECT:
+      case Steps.LedgerConnect:
         return <LedgerConnect onConnectBLE={onConnectBLE} onConnectUSB={onConnectUSB} useUSB={useUSB} />
-      case WITHDRAWAL_DIALOG_STEPS.CONFIRM:
+      case Steps.Confirm:
         return (
           <TransferSummary
             withdrawals={withdrawals}
@@ -105,23 +109,23 @@ export const WithdrawalDialog = ({
             useUSB={useUSB}
           />
         )
-      case WITHDRAWAL_DIALOG_STEPS.WAITING_HW_RESPONSE:
+      case Steps.WaitingHwResponse:
         return <PleaseWaitView title={''} spinnerText={strings.followSteps} />
-      case WITHDRAWAL_DIALOG_STEPS.WAITING:
+      case Steps.Waiting:
         return <PleaseWaitView title={''} spinnerText={strings.pleaseWait} />
-      case WITHDRAWAL_DIALOG_STEPS.ERROR:
-        if (!error) throw new Error("Invalid state: 'error' is undefined")
-        return <ErrorView errorMessage={error.errorMessage} errorLogs={error.errorLogs} onDismiss={onRequestClose} />
+      case Steps.Error:
+        if (!errorData) throw new Error("Invalid state: 'error' is undefined")
+        return <ErrorView errorData={errorData} onDismiss={onRequestClose} />
       default:
         return null
     }
   }
-  if (step === WITHDRAWAL_DIALOG_STEPS.CLOSED) return null
+  if (step === Steps.Closed) return null
   return (
     <Modal
       visible
       onRequestClose={onRequestClose}
-      showCloseIcon={step !== WITHDRAWAL_DIALOG_STEPS.WAITING_HW_RESPONSE && step !== WITHDRAWAL_DIALOG_STEPS.WAITING}
+      showCloseIcon={step !== Steps.WaitingHwResponse && step !== Steps.Waiting}
     >
       {getModalBody()}
     </Modal>

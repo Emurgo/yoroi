@@ -9,20 +9,25 @@ import globalMessages, {errorMessages} from '../../../legacy/i18n/global-message
 import stylesConfig, {COLORS, spacing} from '../../../legacy/styles/config'
 import {Button, Modal} from '..'
 
-type ErrorViewProps = {
-  title?: string
+export type ErrorData = {
   errorMessage: string
   errorLogs?: string | null
+}
+
+type ErrorViewProps = {
+  title?: string
+  errorData: ErrorData
   onDismiss: () => void
 }
 
-export const ErrorView = ({title, errorMessage, errorLogs, onDismiss}: ErrorViewProps) => {
+export const ErrorView = ({title, errorData, onDismiss}: ErrorViewProps) => {
   const intl = useIntl()
   const [showErrorLogs, setShowErrorLogs] = React.useState(false)
   const toggleShowErrorlogs = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     setShowErrorLogs(!showErrorLogs)
   }
+  const {errorMessage, errorLogs} = errorData
 
   return (
     <ScrollView style={styles.scrollView}>
@@ -68,7 +73,7 @@ type Props = {
 
 export const ErrorModal = ({visible, title, errorMessage, errorLogs, onRequestClose}: Props) => (
   <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
-    <ErrorView title={title} errorMessage={errorMessage} errorLogs={errorLogs} onDismiss={onRequestClose} />
+    <ErrorView title={title} errorData={{errorMessage, errorLogs}} onDismiss={onRequestClose} />
   </Modal>
 )
 

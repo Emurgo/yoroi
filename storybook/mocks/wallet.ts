@@ -59,7 +59,13 @@ export const mockWallet: WalletInterface = {
   createVotingRegTx: () => {
     throw new Error('Not implemented')
   },
-  checkServerStatus: () => {
+  checkServerStatus: () =>
+    Promise.resolve({
+      isServerOk: true,
+      isMaintenance: false,
+      serverTime: Date.now(),
+    }),
+  createWithdrawalTx: () => {
     throw new Error('Not implemented')
   },
 }
@@ -67,7 +73,7 @@ export const mockWallet: WalletInterface = {
 export function walletFactory(walletOveride: Partial<WalletInterface>): WalletInterface {
   return {
     ...mockWallet,
-    ...walletOveride
+    ...walletOveride,
   }
 }
 

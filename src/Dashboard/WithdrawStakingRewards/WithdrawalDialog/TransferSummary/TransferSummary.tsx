@@ -14,11 +14,11 @@ import {formatTokenWithText} from '../../../../../legacy/utils/format'
 import {Text, TextInput, TwoActionView} from '../../../../components'
 import {Instructions as HWInstructions} from '../../../../HW'
 import {useSelectedWallet} from '../../../../SelectedWallet'
-import {Deregistration, Withdrawal} from '../../../../types'
+import {SignRequestDeregistration, SignRequestWithdrawal} from '../../../../types'
 
 type Props = {
-  withdrawals: Array<Withdrawal> | null
-  deregistrations: Array<Deregistration> | null
+  withdrawals: Array<SignRequestWithdrawal> | null
+  deregistrations: Array<SignRequestDeregistration> | null
   balance: BigNumber
   finalBalance: BigNumber
   fees: BigNumber
@@ -81,7 +81,7 @@ export const TransferSummary = ({
   )
 }
 
-const Withdrawals: React.FC<{withdrawals: Array<Withdrawal>}> = ({withdrawals}) => {
+const Withdrawals: React.FC<{withdrawals: Array<SignRequestWithdrawal>}> = ({withdrawals}) => {
   const wallet = useSelectedWallet()
   const strings = useStrings()
 
@@ -103,7 +103,7 @@ const Withdrawals: React.FC<{withdrawals: Array<Withdrawal>}> = ({withdrawals}) 
   )
 }
 
-const Deregistrations: React.FC<{deregistrations: Array<Deregistration>}> = ({deregistrations}) => {
+const Deregistrations: React.FC<{deregistrations: Array<SignRequestDeregistration>}> = ({deregistrations}) => {
   const wallet = useSelectedWallet()
   const defaultAsset = useSelector(defaultNetworkAssetSelector)
   const strings = useStrings()

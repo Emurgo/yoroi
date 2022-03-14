@@ -42,6 +42,11 @@ export interface WalletInterface {
     decryptedKey?: string,
     serverTime?: Date | null,
   ): Promise<void>
+  createWithdrawalTx<T>(
+    utxos: Array<RawUtxo>,
+    shouldDeregister: boolean,
+    serverTime: Date | void,
+  ): Promise<ISignRequest<T>>
   checkServerStatus(): Promise<ServerStatus>
 }
 
@@ -63,7 +68,7 @@ export type YoroiProvider = '' | 'emurgo-alonzo'
 export type ServerStatus = {
   isServerOk: boolean
   isMaintenance: boolean
-  serverTime: number | null
+  serverTime: number
   isQueueOnline?: boolean
 }
 
@@ -74,8 +79,20 @@ export type ISignRequest<T> = {
   uniqueSenderAddresses(): Array<string>
   receivers(includeChange: boolean): Promise<Array<string>>
   isEqual(tx?: unknown): Promise<boolean>
+  keyDeregistrations(): Promise<Array<SignRequestDeregistration>>
+  withdrawals(): Promise<Array<SignRequestWithdrawal>>
 
   self(): T
+}
+
+export type SignRequestDeregistration = {
+  rewardAddress: string
+  refund: MultiToken
+}
+
+export type SignRequestWithdrawal = {
+  address: string
+  amount: MultiToken
 }
 
 export type Block = {

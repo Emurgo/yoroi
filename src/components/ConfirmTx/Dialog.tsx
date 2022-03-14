@@ -79,9 +79,7 @@ export const DialogWithLedger = ({
       case Step.Submitting:
         return <PleaseWaitView title={strings.submittingTx} spinnerText={strings.pleaseWait} />
       case Step.Error:
-        return (
-          <ErrorView errorMessage={errorData.errorMessage} errorLogs={errorData.errorLogs} onDismiss={onRequestClose} />
-        )
+        return <ErrorView errorData={errorData} onDismiss={onRequestClose} />
       default:
         return null
     }
@@ -108,9 +106,7 @@ export const DialogSimple = ({step, onRequestClose, errorData}: DialogSimpleProp
       case Step.Submitting:
         return <PleaseWaitView title={strings.submittingTx} spinnerText={strings.pleaseWait} />
       case Step.Error:
-        return (
-          <ErrorView errorMessage={errorData.errorMessage} errorLogs={errorData.errorLogs} onDismiss={onRequestClose} />
-        )
+        return <ErrorView errorData={errorData} onDismiss={onRequestClose} />
       default:
         return null
     }

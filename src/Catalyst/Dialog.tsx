@@ -9,13 +9,8 @@ import {useIntl} from 'react-intl'
 
 import type {DeviceId, DeviceObj} from '../../legacy/crypto/shelley/ledgerUtils'
 import globalMessages, {ledgerMessages, txLabels} from '../../legacy/i18n/global-messages'
-import {ErrorView, Modal, PleaseWaitView} from '../components'
+import {ErrorData, ErrorView, Modal, PleaseWaitView} from '../components'
 import {LedgerConnect, LedgerTransportSwitch} from '../HW'
-
-type ErrorData = {
-  errorMessage: string
-  errorLogs?: string
-}
 
 export const DIALOG_STEPS = {
   CLOSED: 'CLOSED',
@@ -64,9 +59,7 @@ export const Dialog = ({
       case DIALOG_STEPS.SUBMITTING:
         return <PleaseWaitView title={strings.submittingTx} spinnerText={strings.pleaseWait} />
       case DIALOG_STEPS.ERROR:
-        return (
-          <ErrorView errorMessage={errorData.errorMessage} errorLogs={errorData.errorLogs} onDismiss={onRequestClose} />
-        )
+        return <ErrorView errorData={errorData} onDismiss={onRequestClose} />
       default:
         return null
     }

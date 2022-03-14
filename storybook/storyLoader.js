@@ -13,6 +13,7 @@ function loadStories() {
 	require('../src/Dashboard/Dashboard.stories');
 	require('../src/Dashboard/StakePoolInfos.stories');
 	require('../src/Dashboard/WithdrawStakingRewards/WithdrawalDialog/TransferSummary/TransferSummary.stories');
+	require('../src/Dashboard/WithdrawStakingRewards/WithdrawalDialog/WithdrawalDialog.stories');
 	require('../src/FirstRun/CustomPinScreen/CustomPinScreen.stories');
 	require('../src/FirstRun/LanguagePickerScreen/LanguagePickerScreen.stories');
 	require('../src/FirstRun/TermsOfServiceScreen/TermsOfServiceScreen.stories');
@@ -98,6 +99,7 @@ const stories = [
 	'../src/Dashboard/Dashboard.stories',
 	'../src/Dashboard/StakePoolInfos.stories',
 	'../src/Dashboard/WithdrawStakingRewards/WithdrawalDialog/TransferSummary/TransferSummary.stories',
+	'../src/Dashboard/WithdrawStakingRewards/WithdrawalDialog/WithdrawalDialog.stories',
 	'../src/FirstRun/CustomPinScreen/CustomPinScreen.stories',
 	'../src/FirstRun/LanguagePickerScreen/LanguagePickerScreen.stories',
 	'../src/FirstRun/TermsOfServiceScreen/TermsOfServiceScreen.stories',
