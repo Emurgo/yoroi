@@ -57,6 +57,10 @@ export var CONFIG: {
     JORMUNGANDR: NetworkConfig,
   },
   IS_TESTNET_BUILD: boolean,
+  SENTRY: {
+    DSN: string,
+    ENABLE: boolean
+  }
 }
 
 export var isNightly: () => boolean

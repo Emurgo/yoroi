@@ -33,7 +33,7 @@ export const DISABLE_BACKGROUND_SYNC = !__DEV__ ? false : env.getBoolean('DISABL
 // TODO(v-almonacid): consider adding 'ENABLE' as an env variable
 const SENTRY = {
   DSN: env.getString('SENTRY'),
-  ENABLE: false,
+  ENABLE: __DEV__ || BUILD_VARIANT === 'NIGHTLY',
 }
 const _COMMIT = env.getString('COMMIT')
 
