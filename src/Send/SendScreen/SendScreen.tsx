@@ -243,7 +243,7 @@ export const SendScreen = ({selectedTokenIdentifier, sendAll, onSendAll}: Props)
 
         {recomputing && (
           <View style={styles.indicator}>
-            <ActivityIndicator size="large" />
+            <ActivityIndicator size="large" color={'black'} />
           </View>
         )}
       </ScrollView>
