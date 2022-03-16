@@ -13,7 +13,7 @@ import {changeAndSaveLanguage} from './actions/language'
 import {fetchTokenInfo} from './actions/tokenInfo'
 import {clearUTXOs} from './actions/utxo'
 import * as api from './api/shelley/api'
-import {CONFIG, isNightly} from './config/config'
+import {CONFIG} from './config/config'
 import {getCardanoNetworkConfigById} from './config/networks'
 import type {NetworkId, WalletImplementationId, YoroiProvider} from './config/types'
 import {encryptCustomPin} from './crypto/customPin'
@@ -223,7 +223,7 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
     Logger.warn('actions::initApp could not retrieve server status', e)
   }
 
-  if (isNightly()) {
+  if (CONFIG.SENTRY.ENABLE) {
     dispatch(setAppSettingField(APP_SETTINGS_KEYS.SEND_CRASH_REPORTS, true))
   }
 
@@ -236,9 +236,8 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
     crashReporting.enable()
     // TODO(ppershing): just update crashlytic variables here
     await dispatch(reloadAppSettings())
+    crashReporting.setUserId(installationIdSelector(getState()))
   }
-
-  crashReporting.setUserId(installationIdSelector(getState()))
 
   /**
    * note(v-almonacid): temporary disable biometric auth for Android >= 10
