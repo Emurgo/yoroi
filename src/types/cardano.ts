@@ -1,6 +1,7 @@
 import {WalletChecksum} from '@emurgo/cip4-js'
 import type {IntlShape} from 'react-intl'
 
+import {StoreService} from '../store'
 import {AccountStates, StakePoolInfoRequest, StakePoolInfosAndHistories, StakingStatus} from './staking'
 import {MultiToken, TokenInfo} from './tokens'
 import {AddressedUtxo, RawUtxo} from './transactions'
@@ -23,6 +24,7 @@ export interface WalletInterface {
   isUsedAddressIndex: unknown
   numReceiveAddresses: number
   isInitialized: boolean
+  store: StoreService
   changePassword(masterPassword: string, newPassword: string, intl: IntlShape): Promise<void>
   fetchPoolInfo(request: StakePoolInfoRequest): Promise<StakePoolInfosAndHistories>
   getDelegationStatus(): Promise<StakingStatus>

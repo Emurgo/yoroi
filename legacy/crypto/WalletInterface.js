@@ -7,6 +7,8 @@ import type {WalletChecksum} from '@emurgo/cip4-js'
 import {BigNumber} from 'bignumber.js'
 import {type IntlShape} from 'react-intl'
 
+// $FlowExpectedError
+import {StoreService} from '../../src/store'
 import type {
   AccountStateResponse,
   FundInfoResponse,
@@ -78,6 +80,8 @@ export interface WalletInterface {
   transactionCache: TransactionCache;
 
   checksum: WalletChecksum;
+
+  store: StoreService;
 
   // =================== getters =================== //
 

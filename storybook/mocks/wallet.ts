@@ -1,11 +1,11 @@
 import BigNumber from 'bignumber.js'
+import { StoreService } from '../../src/store'
 
 import {
   RemotePoolMetaSuccess,
   StakePoolInfosAndHistories,
   TokenEntry,
   TokenInfo,
-  TokenMetadata,
   WalletInterface,
 } from '../../src/types'
 
@@ -26,6 +26,7 @@ export const mockWallet: WalletInterface = {
   isUsedAddressIndex: {},
   numReceiveAddresses: 0,
   isInitialized: true,
+  store: new StoreService('/mocked_wallet_v2/wallet-id/'),
 
   fetchUTXOs: () => Promise.resolve([]),
   getAllUtxosForKey: () => Promise.resolve([]),

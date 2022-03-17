@@ -7,6 +7,8 @@ import ExtendableError from 'es6-error'
 import _ from 'lodash'
 import {type IntlShape} from 'react-intl'
 
+// $FlowExpectedError
+import {StoreService} from '../../src/store'
 import type {
   AccountStateResponse,
   FundInfoResponse,
@@ -509,6 +511,7 @@ class WalletManager {
 
     await wallet.restore(data, walletMeta)
     wallet.id = walletMeta.id
+    wallet.store = new StoreService(`/wallet_v2/${walletMeta.id}`)
     this._wallet = wallet
     this._id = walletMeta.id
 
@@ -572,6 +575,8 @@ class WalletManager {
     const reject = this._closeReject
     this._closePromise = null
     this._closeReject = null
+    // $FlowExpectedError
+    this._wallet.store.destroy()
     this._wallet = null
     this._id = ''
     this._notify()

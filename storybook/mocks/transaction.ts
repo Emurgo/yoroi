@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js'
-import {TransactionInfo} from '../../src/types'
+import {PendingTransaction, TransactionInfo} from '../../src/types'
 
 export const mockTransaction = (transaction?: Partial<TransactionInfo>): TransactionInfo => {
   return {
@@ -96,5 +96,23 @@ export const mockTransaction = (transaction?: Partial<TransactionInfo>): Transac
       },
     },
     ...transaction,
+  }
+}
+
+export function mockPendingTransaction(tx?: Partial<PendingTransaction>): PendingTransaction {
+  return {
+    amount: [
+      {
+        amount: '10000',
+        identifier: 'TADA',
+        isDefault: true,
+        networkId: 1,
+      },
+    ],
+    direction: 'SENT',
+    id: '0xdeaddeaddead',
+    status: 'PENDING',
+    submittedAt: Date(),
+    ...tx,
   }
 }

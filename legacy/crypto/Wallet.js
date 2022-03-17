@@ -8,6 +8,8 @@ import _ from 'lodash'
 import {type IntlShape} from 'react-intl'
 import {defaultMemoize} from 'reselect'
 
+// $FlowExpectedError
+import {StoreService} from '../../src/store'
 import * as api from '../api/shelley/api'
 import {CONFIG} from '../config/config'
 import {getCardanoNetworkConfigById, isJormungandr} from '../config/networks'
@@ -90,6 +92,8 @@ export default class Wallet {
   }
 
   isInitialized: boolean = false
+
+  store: StoreService
 
   // $FlowFixMe null
   transactionCache: TransactionCache = null

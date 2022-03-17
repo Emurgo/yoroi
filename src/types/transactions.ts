@@ -21,6 +21,9 @@ export type TransactionInfo = {
   tokens: Record<string, Token>
 }
 
+export type PendingTransaction = Pick<TransactionInfo, 'id' | 'fee' | 'amount' | 'direction' | 'submittedAt' | 'status'>
+export type PendingTransactions = Array<PendingTransaction>
+
 export type Era = 'byron' | 'shelley'
 
 export type RawTransaction = {
