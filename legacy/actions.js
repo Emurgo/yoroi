@@ -15,11 +15,9 @@ import {clearUTXOs} from './actions/utxo'
 import * as api from './api/shelley/api'
 import {CONFIG} from './config/config'
 import {getCardanoNetworkConfigById} from './config/networks'
-import type {NetworkId, WalletImplementationId, YoroiProvider} from './config/types'
 import {encryptCustomPin} from './crypto/customPin'
 import {ISignRequest} from './crypto/ISignRequest'
 import KeyStore from './crypto/KeyStore'
-import type {HWDeviceInfo} from './crypto/shelley/ledgerUtils'
 import walletManager from './crypto/walletManager'
 import {
   type AppSettingsKey,
@@ -344,50 +342,6 @@ export const generateNewReceiveAddress = () => async (_dispatch: Dispatch<any>) 
 export const generateNewReceiveAddressIfNeeded = () => async (_dispatch: Dispatch<any>) => {
   return await walletManager.generateNewUiReceiveAddressIfNeeded()
 }
-
-export const changeWalletName = (newName: string) => async (dispatch: Dispatch<any>) => {
-  await walletManager.rename(newName)
-  dispatch(updateWallets())
-}
-
-export const createWallet =
-  (
-    name: string,
-    mnemonic: string,
-    password: string,
-    networkId: NetworkId,
-    implementationId: WalletImplementationId,
-    provider: YoroiProvider,
-  ) =>
-  async (dispatch: Dispatch<any>) => {
-    const wallet = await walletManager.createWallet(name, mnemonic, password, networkId, implementationId, provider)
-    dispatch(updateWallets())
-
-    return wallet
-  }
-
-export const createWalletWithBip44Account =
-  (
-    name: string,
-    bip44AccountPublic: string,
-    networkId: NetworkId,
-    implementationId: WalletImplementationId,
-    hwDeviceInfo: ?HWDeviceInfo,
-    readOnly: boolean,
-  ) =>
-  async (dispatch: Dispatch<any>) => {
-    const wallet = await walletManager.createWalletWithBip44Account(
-      name,
-      bip44AccountPublic,
-      networkId,
-      implementationId,
-      hwDeviceInfo,
-      readOnly,
-    )
-    dispatch(updateWallets())
-
-    return wallet
-  }
 
 type DialogOptions = {|
   title: string,

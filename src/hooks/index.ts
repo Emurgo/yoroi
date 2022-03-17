@@ -189,7 +189,7 @@ export const useWalletMetas = <T = Array<WalletMeta>>(options?: UseQueryOptions<
   const query = useQuery({
     queryKey: ['walletMetas'],
     queryFn: async () => {
-      const keys = await storage.keys('/wallet/')
+      const keys: Array<string> = await storage.keys<Array<string>>('/wallet/')
       const walletMetas = await Promise.all(keys.map((key) => storage.read(`/wallet/${key}`)))
 
       return walletMetas
