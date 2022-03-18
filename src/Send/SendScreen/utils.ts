@@ -171,7 +171,7 @@ export const recomputeAll = async ({
     } catch (err) {
       if (err instanceof InsufficientFunds) {
         balanceErrors = {insufficientBalance: true}
-      } else if (err instanceof AssetOverflowError) {
+      } else if (err instanceof AssetOverflowError || err instanceof InvalidAssetAmount) {
         balanceErrors = {assetOverflow: true}
       }
     }
