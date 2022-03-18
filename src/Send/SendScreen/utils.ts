@@ -169,10 +169,8 @@ export const recomputeAll = async ({
       // now we can update fee as well
       fee = _fee != null ? _fee.getDefault() : null
     } catch (err) {
-      if (err instanceof InsufficientFunds) {
+      if (err instanceof InsufficientFunds || err instanceof AssetOverflowError || err instanceof InvalidAssetAmount) {
         balanceErrors = {insufficientBalance: true}
-      } else if (err instanceof AssetOverflowError) {
-        balanceErrors = {assetOverflow: true}
       }
     }
   }
