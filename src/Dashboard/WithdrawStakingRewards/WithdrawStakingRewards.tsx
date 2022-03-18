@@ -50,10 +50,10 @@ export const WithdrawStakingRewards = (props: Props) => {
   const [balance, setBalance] = React.useState(new BigNumber(0))
   const [finalBalance, setFinalBalance] = React.useState(new BigNumber(0))
   const [errorData, setErrorData] = React.useState<ErrorData | undefined>(undefined)
-  const [shouldDeregister, setShouldDeregister] = React.useState(false)
+  const shouldDeregister = React.useRef(false)
 
   const onDeregisterKey = async () => {
-    setShouldDeregister(true)
+    shouldDeregister.current = true
     if (wallet.isHW && Platform.OS === 'android' && CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT) {
       // toggle ledger transport switch modal
 
@@ -106,7 +106,7 @@ export const WithdrawStakingRewards = (props: Props) => {
       setWithdrawalDialogStep(Steps.Waiting)
 
       const {serverTime} = await wallet.checkServerStatus()
-      const signTxRequest = await wallet.createWithdrawalTx(utxos, shouldDeregister, new Date(serverTime))
+      const signTxRequest = await wallet.createWithdrawalTx(utxos, shouldDeregister.current, new Date(serverTime))
       if (signTxRequest instanceof HaskellShelleyTxSignRequest) {
         const withdrawals = await signTxRequest.withdrawals()
         const deregistrations = await signTxRequest.keyDeregistrations()
