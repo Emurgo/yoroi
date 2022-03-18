@@ -15,7 +15,7 @@ import {verifyAddress} from '../../legacy/crypto/shelley/ledgerUtils'
 import walletManager from '../../legacy/crypto/walletManager'
 import {errorMessages} from '../../legacy/i18n/global-messages'
 import LocalizableError from '../../legacy/i18n/LocalizableError'
-import {externalAddressIndexSelector, hwDeviceInfoSelector} from '../../legacy/selectors'
+import {externalAddressIndexSelector} from '../../legacy/selectors'
 import {Logger} from '../../legacy/utils/logging'
 import {useSelectedWallet} from '../SelectedWallet'
 import AddressModal from './AddressModal'
@@ -24,7 +24,6 @@ import {AddressVerifyModal} from './AddressVerifyModal'
 export const Modals = ({address, onDone}: {address: string; onDone: () => void}) => {
   const intl = useIntl()
   const index = useSelector(externalAddressIndexSelector)
-  const hwDeviceInfo = useSelector(hwDeviceInfoSelector)
   const wallet = useSelectedWallet()
   const dispatch = useDispatch()
   const [isWaiting, setIsWaiting] = React.useState(false)
@@ -35,7 +34,7 @@ export const Modals = ({address, onDone}: {address: string; onDone: () => void})
   )
 
   const onVerifyAddress = (address: string) => {
-    if (!hwDeviceInfo) throw new Error('missing hwDeviceInfo')
+    if (!wallet.hwDeviceInfo) throw new Error('missing hwDeviceInfo')
 
     setIsWaiting(true)
     verifyAddress(
@@ -44,7 +43,7 @@ export const Modals = ({address, onDone}: {address: string; onDone: () => void})
       getCardanoByronConfig().PROTOCOL_MAGIC,
       address,
       walletManager.getAddressingInfo(address),
-      hwDeviceInfo,
+      wallet.hwDeviceInfo,
       useUSB,
     )
       .catch((error) => {

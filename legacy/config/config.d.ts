@@ -1,6 +1,6 @@
 // @flow
 
-import type {WalletImplementation} from '../../src/types'
+import type {WalletImplementation, WalletImplementationId} from '../../src/types'
 import type {DefaultAsset} from '../../src/types/cardano'
 
 export var isHaskellShelley: (walletImplementationId: string) => boolean
@@ -66,7 +66,7 @@ type NetworkConfig = {
 }
 
 type WalletConfig = {
-  WALLET_IMPLEMENTATION_ID: number
+  WALLET_IMPLEMENTATION_ID: WalletImplementationId
 }
 
 export var getWalletConfigById: (walletImplementationId: string) => WalletImplementation
