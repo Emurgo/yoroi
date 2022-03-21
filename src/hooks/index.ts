@@ -12,6 +12,7 @@ import {
 import {generateShelleyPlateFromKey} from '../../legacy/crypto/shelley/plate'
 import walletManager from '../../legacy/crypto/walletManager'
 import {WalletMeta} from '../../legacy/state'
+import storage from '../../legacy/utils/storage'
 import {NetworkId, SignedTx, Token, TxSubmissionStatus, WalletInterface} from '../types'
 
 // WALLET
@@ -31,8 +32,7 @@ export const useWalletName = (wallet: WalletInterface, options?: UseQueryOptions
   const query = useQuery({
     queryKey: [wallet.id, 'name'],
     queryFn: async () => {
-      const walletMetas: Array<WalletMeta> = await walletManager.listWallets()
-      const walletMeta = walletMetas.find((walletMeta) => walletMeta.id === wallet.id)
+      const walletMeta: WalletMeta = await storage.read<WalletMeta>(`/wallet/${wallet.id}`)
       if (!walletMeta) throw new Error('Invalid wallet id')
 
       return walletMeta.name
@@ -45,7 +45,12 @@ export const useWalletName = (wallet: WalletInterface, options?: UseQueryOptions
 
 export const useChangeWalletName = (wallet: WalletInterface, options: UseMutationOptions<void, Error, string> = {}) => {
   const mutation = useMutationWithInvalidations<void, Error, string>({
-    mutationFn: (newName) => walletManager.rename(newName),
+    mutationFn: async (newName) => {
+      const walletMeta = await storage.read(`/wallets/${wallet.id}`)
+      if (!walletMeta) throw new Error('Invalid wallet id')
+
+      return storage.write(`/wallets/${wallet.id}`, {...walletMeta, name: newName})
+    },
     invalidateQueries: [[wallet.id, 'name'], ['walletMetas']],
     ...options,
   })
@@ -175,26 +180,21 @@ export const usePlate = ({networkId, publicKeyHex}: {networkId: NetworkId; publi
 
 // WALLET MANAGER
 export const useWalletNames = () => {
-  const query = useQuery<Array<string>, Error>({
-    queryKey: ['walletNames'],
-    queryFn: async () => {
-      const walletMetas = await walletManager.listWallets()
-
-      return walletMetas.map((walletMeta: WalletMeta) => walletMeta.name)
-    },
+  return useWalletMetas<Array<string>>({
+    select: (walletMetas) => walletMetas.map((walletMeta) => walletMeta.name),
   })
-
-  return query.data
 }
 
-export const useWalletMetas = () => {
-  const query = useQuery<Array<WalletMeta>, Error>({
+export const useWalletMetas = <T = Array<WalletMeta>>(options?: UseQueryOptions<Array<WalletMeta>, Error, T>) => {
+  const query = useQuery({
     queryKey: ['walletMetas'],
     queryFn: async () => {
-      const walletMetas = await walletManager.listWallets()
+      const keys: Array<string> = await storage.keys<Array<string>>('/wallet/')
+      const walletMetas = await Promise.all(keys.map((key) => storage.read(`/wallet/${key}`)))
 
       return walletMetas
     },
+    ...options,
   })
 
   return query.data

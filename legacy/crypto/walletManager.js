@@ -557,12 +557,6 @@ class WalletManager {
     await storage.write(`/wallet/${wallet.id}/data`, data)
   }
 
-  async listWallets() {
-    const keys = await storage.keys('/wallet/')
-    const result = await Promise.all(keys.map((key) => storage.read(`/wallet/${key}`)))
-    return result
-  }
-
   closeWallet(): Promise<void> {
     if (!this._wallet) return Promise.resolve()
     Logger.debug('closing wallet...')
@@ -621,15 +615,6 @@ class WalletManager {
       ...this._wallets,
       [id]: merged,
     }
-  }
-
-  async rename(newName: string) {
-    if (!this._id) throw new WalletClosed()
-    const id = this._id
-
-    await this._updateMetadata(id, {name: newName})
-
-    this._notify() // update redux Store
   }
 
   async updateHWDeviceInfo(hwDeviceInfo: HWDeviceInfo) {
@@ -746,18 +731,6 @@ class WalletManager {
     const wallet = this.getWallet()
     return await this.abortWhenWalletCloses(
       wallet.createDelegationTx<mixed>(poolRequest, valueInAccount, utxos, defaultAsset, serverTime),
-    )
-  }
-
-  async createVotingRegTx(
-    utxos: Array<RawUtxo>,
-    catalystPrivateKey: string,
-    decryptedKey: string | void,
-    serverTime: Date | void,
-  ) {
-    const wallet = this.getWallet()
-    return await this.abortWhenWalletCloses(
-      wallet.createVotingRegTx<mixed>(utxos, catalystPrivateKey, decryptedKey, serverTime),
     )
   }
 
