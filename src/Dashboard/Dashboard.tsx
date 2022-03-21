@@ -13,7 +13,7 @@ import {fetchUTXOs} from '../../legacy/actions/utxo'
 import AccountAutoRefresher from '../../legacy/components/Delegation/AccountAutoRefresher'
 import UtxoAutoRefresher from '../../legacy/components/Send/UtxoAutoRefresher'
 import {Banner, Button, OfflineBanner, StatusBar} from '../../legacy/components/UiKit'
-import {getCardanoBaseConfig} from '../../legacy/config/config'
+import {getCardanoBaseConfig, UI_V2} from '../../legacy/config/config'
 import {getDefaultAssetByNetworkId} from '../../legacy/config/config'
 import {getCardanoNetworkConfigById} from '../../legacy/config/networks'
 import globalMessages from '../../legacy/i18n/global-messages'
@@ -116,7 +116,7 @@ export const Dashboard = () => {
             )}
           </Row>
 
-          <VotingBanner onPress={() => navigation.navigate(CATALYST_ROUTES.ROOT)} />
+          {!UI_V2 && <VotingBanner onPress={() => navigation.navigate(CATALYST_ROUTES.ROOT)} />}
 
           {stakingInfo?.isRegistered && (
             <Row>

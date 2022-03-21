@@ -4,11 +4,12 @@ import {defineMessages, useIntl} from 'react-intl'
 import {View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, KeyboardSpacer, ScrollableView, Spacer, StatusBar, Text} from '../../../legacy/components/UiKit'
+import {Button, KeyboardSpacer, StatusBar, Text} from '../../../legacy/components/UiKit'
 import {getWalletConfigById} from '../../../legacy/config/config'
 import type {NetworkId, WalletImplementationId} from '../../../legacy/config/types'
 import {useParams} from '../../../legacy/navigation'
 import {WALLET_INIT_ROUTES} from '../../../legacy/RoutesList'
+import {ScrollableView, Spacer} from '../../components'
 import {MnemonicInput} from '../MnemonicInput'
 
 type Params = {

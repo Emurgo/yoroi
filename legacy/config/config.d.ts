@@ -8,6 +8,7 @@ export var isByron: (walletImplementationId: string) => boolean
 
 // prettier-ignore
 export var CONFIG: {
+  COMMIT: string,
   NUMBERS: {
     HARD_DERIVATION_START: number
   },
@@ -49,15 +50,19 @@ export var CONFIG: {
     HASKELL_SHELLEY: NetworkConfig,
     HASKELL_SHELLEY_TESTNET: NetworkConfig,
     JORMUNGANDR: NetworkConfig,
-  }
+  },
+  IS_TESTNET_BUILD: boolean,
 }
 
 export var isNightly: () => boolean
 
+export var isJormun: (id: WalletImplementationId) => boolean
+
 // prettier-ignore
 type NetworkConfig = {
   NETWORK_ID: number,
-  ENABLED: boolean
+  ENABLED: boolean,
+  POOL_EXPLORER: string
 }
 
 type WalletConfig = {
@@ -77,3 +82,7 @@ export var getCardanoBaseConfig: (networkConfig: CardanoHaskellShelleyNetwork) =
 export var getDefaultAssetByNetworkId: (networkId: number) => DefaultAsset
 
 export var UI_V2: boolean
+
+export var SHOW_PROD_POOLS_IN_DEV: boolean
+
+export var getTestStakingPool: (networkId: NetworkId, provider: ?YoroiProvider) => Array<string>

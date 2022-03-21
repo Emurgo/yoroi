@@ -10,14 +10,15 @@ import {Button} from '../../legacy/components/UiKit'
 import {UI_V2} from '../../legacy/config/config'
 import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../legacy/navigationOptions'
 import {TX_HISTORY_ROUTES, WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
-import {tokenBalanceSelector, transactionsInfoSelector, walletMetaSelector} from '../../legacy/selectors'
+import {tokenBalanceSelector, transactionsInfoSelector} from '../../legacy/selectors'
 import {COLORS} from '../../legacy/styles/config'
 import {formatDateToSeconds} from '../../legacy/utils/format'
 import iconGear from '../assets/img/icon/gear.png'
-import {Icon} from '../components'
-import {useTokenInfos} from '../hooks'
+import {Boundary, Icon} from '../components'
+import {useWalletName} from '../hooks'
 import {buildOptionsWithDefault, TxHistoryStackParamList, TxHistoryStackRootProps} from '../navigation'
 import {ReceiveScreen} from '../Receive/ReceiveScreen'
+import {useSelectedWallet} from '../SelectedWallet'
 import {AddressReaderQR} from '../Send/AddressReaderQR'
 import {AssetSelectorScreen} from '../Send/AssetSelectorScreen'
 import {ConfirmScreen} from '../Send/ConfirmScreen'
@@ -31,7 +32,8 @@ const Stack = createStackNavigator<TxHistoryStackParamList>()
 
 export const TxHistoryNavigator = () => {
   const strings = useStrings()
-  const walletMeta = useSelector(walletMetaSelector)
+  const wallet = useSelectedWallet()
+  const walletName = useWalletName(wallet)
   const transactionInfos = useSelector(transactionsInfoSelector)
   const tokenBalance = useSelector(tokenBalanceSelector)
   const [modalInfoState, setModalInfoState] = React.useState(false)
@@ -40,7 +42,6 @@ export const TxHistoryNavigator = () => {
   const [selectedTokenIdentifier, setSelectedTokenIdentifier] = React.useState(
     tokenBalance.getDefaultEntry().identifier,
   )
-  const tokenInfos = useTokenInfos()
   const [sendAll, setSendAll] = React.useState(false)
 
   return (
@@ -51,8 +52,8 @@ export const TxHistoryNavigator = () => {
           component={TxHistory}
           options={
             UI_V2
-              ? buildOptionsWithDefault({title: walletMeta.name, headerRight: () => <HeaderRightHistory />})
-              : buildOptionsWithDefaultV1(walletMeta.name)
+              ? buildOptionsWithDefault({title: walletName, headerRight: () => <HeaderRightHistory />})
+              : buildOptionsWithDefaultV1(walletName || '')
           }
         />
 
@@ -84,7 +85,9 @@ export const TxHistoryNavigator = () => {
           }}
         >
           {() => (
-            <SendScreen selectedTokenIdentifier={selectedTokenIdentifier} onSendAll={setSendAll} sendAll={sendAll} />
+            <Boundary>
+              <SendScreen selectedTokenIdentifier={selectedTokenIdentifier} onSendAll={setSendAll} sendAll={sendAll} />
+            </Boundary>
           )}
         </Stack.Screen>
 
@@ -92,7 +95,6 @@ export const TxHistoryNavigator = () => {
           {({navigation}: {navigation: TxHistoryStackRootProps}) => (
             <AssetSelectorScreen
               assetTokens={tokenBalance.values}
-              assetTokenInfos={tokenInfos}
               onSelect={(token) => {
                 setSendAll(false)
                 setSelectedTokenIdentifier(token.identifier)

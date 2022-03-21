@@ -3,8 +3,9 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Keyboard, ScrollView, StyleSheet, View} from 'react-native'
 
-import {Menu, TextInput, useScrollView} from '../../../legacy/components/UiKit'
+import {Menu, TextInput} from '../../../legacy/components/UiKit'
 import {COLORS} from '../../../legacy/styles/config'
+import {useScrollView} from '../../components'
 
 export const MnemonicInput = ({
   length,

@@ -35,7 +35,6 @@ import {CONFIG, UI_V2} from '../../../legacy/config/config'
 import {WrongPassword} from '../../../legacy/crypto/errors'
 import {ISignRequest} from '../../../legacy/crypto/ISignRequest'
 import KeyStore from '../../../legacy/crypto/KeyStore'
-import type {TokenEntry} from '../../../legacy/crypto/MultiToken'
 import type {CreateUnsignedTxResponse} from '../../../legacy/crypto/shelley/transactionUtils'
 import walletManager, {SystemAuthDisabled} from '../../../legacy/crypto/walletManager'
 import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../../legacy/i18n/global-messages'
@@ -49,9 +48,11 @@ import {
 } from '../../../legacy/selectors'
 import {COLORS} from '../../../legacy/styles/config'
 import {formatTokenWithSymbol, formatTokenWithText} from '../../../legacy/utils/format'
-import {Spacer} from '../../components'
-import {useTokenInfos} from '../../hooks'
+import {Boundary, Spacer} from '../../components'
+import {useTokenInfo} from '../../hooks'
 import {useParams} from '../../navigation'
+import {useSelectedWallet} from '../../SelectedWallet'
+import {TokenEntry} from '../../types/cardano'
 
 export type Params = {
   transactionData: CreateUnsignedTxResponse
@@ -92,13 +93,12 @@ export const ConfirmScreen = () => {
     balanceAfterTx,
     availableAmount,
     fee,
-    tokens,
+    tokens: tokenEntries,
     transactionData: signRequest,
   } = useParams(isParams)
   const isEasyConfirmationEnabled = useSelector(easyConfirmationSelector)
   const isHW = useSelector(isHWSelector)
   const defaultAsset = useSelector(defaultNetworkAssetSelector)
-  const tokenInfos = useTokenInfos()
   const hwDeviceInfo = useSelector(hwDeviceInfoSelector)
 
   const [password, setPassword] = React.useState(CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '')
@@ -264,7 +264,7 @@ export const ConfirmScreen = () => {
 
         <Banner label={strings.availableFunds} text={formatTokenWithText(availableAmount, defaultAsset)} boldText />
 
-        <ScrollView style={styles.container}>
+        <ScrollView style={styles.container} contentContainerStyle={{padding: 16}}>
           <Text small>
             {strings.fees}: {formatTokenWithSymbol(fee, defaultAsset)}
           </Text>
@@ -283,10 +283,10 @@ export const ConfirmScreen = () => {
           <Text>{strings.total}</Text>
           <Text style={styles.amount}>{formatTokenWithSymbol(defaultAssetAmount, defaultAsset)}</Text>
 
-          {tokens.map((t, i) => (
-            <Text style={styles.amount} key={i}>
-              {formatTokenWithText(t.amount, tokenInfos[t.identifier])}
-            </Text>
+          {tokenEntries.map((entry) => (
+            <Boundary key={entry.identifier}>
+              <Entry tokenEntry={entry} />
+            </Boundary>
           ))}
 
           {!isEasyConfirmationEnabled && !isHW && (
@@ -342,6 +342,13 @@ export const ConfirmScreen = () => {
   )
 }
 
+const Entry = ({tokenEntry}: {tokenEntry: TokenEntry}) => {
+  const wallet = useSelectedWallet()
+  const tokenInfo = useTokenInfo({wallet, tokenId: tokenEntry.identifier})
+
+  return <Text style={styles.amount}>{formatTokenWithText(tokenEntry.amount, tokenInfo)}</Text>
+}
+
 const Actions = (props: ViewProps) => <View {...props} style={{padding: 16}} />
 
 const styles = StyleSheet.create({
@@ -355,7 +362,6 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: COLORS.WHITE,
     flex: 1,
-    padding: 16,
   },
   amount: {
     color: COLORS.POSITIVE_AMOUNT,

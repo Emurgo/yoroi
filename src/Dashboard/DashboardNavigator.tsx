@@ -1,19 +1,22 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
-import {useSelector} from 'react-redux'
+import {defineMessages, useIntl} from 'react-intl'
 
+import DelegationConfirmation from '../../legacy/components/Delegation/DelegationConfirmation'
 import BiometricAuthScreen from '../../legacy/components/Send/BiometricAuthScreen'
-import {Button} from '../../legacy/components/UiKit'
+import {UI_V2} from '../../legacy/config/config'
 import {isJormungandr} from '../../legacy/config/networks'
 import {
   defaultNavigationOptions,
   defaultStackNavigatorOptions,
   jormunNavigationOptions,
 } from '../../legacy/navigationOptions'
-import {SEND_ROUTES, STAKING_DASHBOARD_ROUTES, WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
-import {walletNameSelector} from '../../legacy/selectors'
-import iconGear from '../assets/img/icon/gear.png'
+import {SEND_ROUTES, STAKING_CENTER_ROUTES, STAKING_DASHBOARD_ROUTES, WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
+import {SettingsButton} from '../components/Button'
+import {useWalletName} from '../hooks'
+import {useSelectedWallet} from '../SelectedWallet'
+import {StakingCenter} from '../Staking/StakingCenter'
 import {Dashboard} from './Dashboard'
 
 const Stack = createStackNavigator<{
@@ -23,7 +26,9 @@ const Stack = createStackNavigator<{
 }>()
 
 export const DashboardNavigator = () => {
-  const walletName = useSelector(walletNameSelector)
+  const wallet = useSelectedWallet()
+  const walletName = useWalletName(wallet)
+  const strings = useStrings()
 
   return (
     <Stack.Navigator
@@ -46,14 +51,8 @@ export const DashboardNavigator = () => {
         component={Dashboard}
         options={({navigation}) => ({
           title: walletName,
-          headerRight: () => (
-            <Button
-              onPress={() => navigation.navigate(WALLET_ROOT_ROUTES.SETTINGS)}
-              iconImage={iconGear}
-              title=""
-              withoutBackground
-            />
-          ),
+          headerRight: () => <SettingsButton onPress={() => navigation.navigate(WALLET_ROOT_ROUTES.SETTINGS)} />,
+          headerRightContainerStyle: {paddingRight: 16},
         })}
       />
       <Stack.Screen
@@ -61,6 +60,31 @@ export const DashboardNavigator = () => {
         component={BiometricAuthScreen}
         options={{headerShown: false}}
       />
+      {UI_V2 && (
+        <Stack.Screen name={STAKING_CENTER_ROUTES.MAIN} component={StakingCenter} options={{title: strings.title}} />
+      )}
+      {UI_V2 && (
+        <Stack.Screen
+          name={STAKING_CENTER_ROUTES.DELEGATION_CONFIRM}
+          component={DelegationConfirmation}
+          options={{title: strings.title}}
+        />
+      )}
     </Stack.Navigator>
   )
 }
+
+const useStrings = () => {
+  const intl = useIntl()
+
+  return {
+    title: intl.formatMessage(messages.title),
+  }
+}
+
+const messages = defineMessages({
+  title: {
+    id: 'components.stakingcenter.title',
+    defaultMessage: '!!!Staking Center',
+  },
+})

@@ -3,6 +3,7 @@
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
+// $FlowExpectedError
 import {withModalProps} from '../../../storybook'
 import LedgerTransportSwitchModal from './LedgerTransportSwitchModal'
 

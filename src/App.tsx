@@ -1,7 +1,7 @@
 import 'intl'
 
 import React, {useEffect} from 'react'
-import {AppState, AppStateStatus, Platform} from 'react-native'
+import {AppState, AppStateStatus, Platform, UIManager} from 'react-native'
 import RNBootSplash from 'react-native-bootsplash'
 import * as RNP from 'react-native-paper'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
@@ -17,6 +17,12 @@ import {SelectedWalletMetaProvider, SelectedWalletProvider} from './SelectedWall
 const queryClient = new QueryClient()
 
 enableScreens()
+
+if (Platform.OS === 'android') {
+  if (UIManager.setLayoutAnimationEnabledExperimental) {
+    UIManager.setLayoutAnimationEnabledExperimental(true)
+  }
+}
 
 const useInitializeApp = () => {
   const dispatch = useDispatch()

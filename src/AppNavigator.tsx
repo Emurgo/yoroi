@@ -26,12 +26,13 @@ import {
   isSystemAuthEnabledSelector,
 } from '../legacy/selectors'
 import type {State} from '../legacy/state'
+import {Boundary} from './components'
 import {CustomPinScreen} from './FirstRun/CustomPinScreen'
 import {FirstRunNavigator} from './FirstRun/FirstRunNavigator'
-import {CustomPinLogin} from './Login'
+import {CustomPinLoginScreen} from './Login'
 import StorybookScreen from './StorybookScreen'
 import {WalletInitNavigator} from './WalletInit/WalletInitNavigator'
-import WalletNavigator from './WalletNavigator'
+import {WalletNavigator} from './WalletNavigator'
 
 const IS_STORYBOOK = env.getBoolean('IS_STORYBOOK', false)
 
@@ -119,7 +120,11 @@ const NavigatorSwitch = () => {
         })}
       >
         {!isSystemAuthEnabled && (
-          <Stack.Screen name={'custom-pin-auth'} component={CustomPinLogin} options={{title: strings.loginPinTitle}} />
+          <Stack.Screen
+            name={'custom-pin-auth'}
+            component={CustomPinLoginScreen}
+            options={{title: strings.loginPinTitle}}
+          />
         )}
         {isSystemAuthEnabled && canEnableBiometrics && (
           <Stack.Screen
@@ -179,7 +184,11 @@ const StoryBook = () => (
 )
 
 const AppNavigator = () => {
-  return <NavigationContainer>{IS_STORYBOOK ? <StoryBook /> : <NavigatorSwitch />}</NavigationContainer>
+  return (
+    <NavigationContainer>
+      <Boundary>{IS_STORYBOOK ? <StoryBook /> : <NavigatorSwitch />}</Boundary>
+    </NavigationContainer>
+  )
 }
 
 const useStrings = () => {

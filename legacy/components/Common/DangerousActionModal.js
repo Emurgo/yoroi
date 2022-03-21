@@ -5,9 +5,11 @@ import {type IntlShape, injectIntl} from 'react-intl'
 import {Image, ScrollView, View} from 'react-native'
 import {type PressEvent} from 'react-native/Libraries/Types/CoreEventTypes'
 
+// $FlowExpectedError
+import {Spacer} from '../../../src/components'
 import alertCircle from '../../assets/img/alert-circle.png'
 import globalMessages, {confirmationMessages} from '../../i18n/global-messages'
-import {Button, Checkbox, Modal, Spacer, Text} from '../UiKit'
+import {Button, Checkbox, Modal, Text} from '../UiKit'
 import styles, {alertStyles} from './styles/DangerousActionModal.style'
 type DangerousActionProps = {|
   +title: string,

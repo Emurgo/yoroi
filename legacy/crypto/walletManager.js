@@ -323,11 +323,6 @@ class WalletManager {
     return this.getWallet().checksum
   }
 
-  get walletName() {
-    if (!this._id) return ''
-    return this._wallets[this._id].name
-  }
-
   get provider() {
     if (!this._wallet) return ''
     return this._wallet.provider

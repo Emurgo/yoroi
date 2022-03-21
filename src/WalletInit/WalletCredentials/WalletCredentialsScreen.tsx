@@ -1,14 +1,14 @@
 import {useNavigation, useRoute} from '@react-navigation/native'
 import React from 'react'
-import {ActivityIndicator} from 'react-native'
+import {ActivityIndicator, StyleSheet} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch} from 'react-redux'
 
-import {createWallet, updateVersion} from '../../../legacy/actions'
-import type {WalletInterface} from '../../../legacy/crypto/WalletInterface'
+import {updateVersion} from '../../../legacy/actions'
 import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../../legacy/RoutesList'
 import type {WalletMeta} from '../../../legacy/state'
-import assert from '../../../legacy/utils/assert'
-import {ignoreConcurrentAsyncHandler} from '../../../legacy/utils/utils'
+import {COLORS} from '../../../legacy/styles/config'
+import {useCreateWallet} from '../../hooks'
 import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
 import {WalletForm} from '../WalletForm'
 
@@ -16,56 +16,53 @@ export const WalletCredentialsScreen = () => {
   const navigation = useNavigation()
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const route: any = useRoute()
-  const [waiting, setWaiting] = React.useState(false)
+  const {phrase, networkId, walletImplementationId, provider} = route.params
+
   const dispatch = useDispatch()
   const setSelectedWalletMeta = useSetSelectedWalletMeta()
   const setSelectedWallet = useSetSelectedWallet()
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const navigateToWallet = React.useCallback(
-    ignoreConcurrentAsyncHandler(
-      () =>
-        async ({name, password}) => {
-          setWaiting(true)
-          const {phrase, networkId, walletImplementationId, provider} = route.params
-          assert.assert(!!phrase, 'mnemonic')
-          assert.assert(networkId != null, 'networkId')
-          assert.assert(!!walletImplementationId, 'walletImplementationId')
-          try {
-            const wallet: WalletInterface = await dispatch(
-              createWallet(name, phrase, password, networkId, walletImplementationId, provider),
-            )
-            const walletMeta: WalletMeta = {
-              name,
+  const {createWallet, isLoading, isSuccess} = useCreateWallet({
+    onSuccess: async (wallet, {name}) => {
+      const walletMeta: WalletMeta = {
+        name,
 
-              id: wallet.id,
-              networkId: wallet.networkId,
-              walletImplementationId: wallet.walletImplementationId,
-              isHW: wallet.isHW,
-              checksum: wallet.checksum,
-              isEasyConfirmationEnabled: wallet.isEasyConfirmationEnabled,
-              provider: wallet.provider,
-            }
-            setSelectedWalletMeta(walletMeta)
-            setSelectedWallet(wallet)
-            await dispatch(updateVersion())
-          } finally {
-            setWaiting(false)
-          }
+        id: wallet.id,
+        networkId: wallet.networkId,
+        walletImplementationId: wallet.walletImplementationId,
+        isHW: wallet.isHW,
+        checksum: wallet.checksum,
+        isEasyConfirmationEnabled: wallet.isEasyConfirmationEnabled,
+        provider: wallet.provider,
+      }
+      setSelectedWalletMeta(walletMeta)
+      setSelectedWallet(wallet)
+      await dispatch(updateVersion())
 
-          navigation.navigate(ROOT_ROUTES.WALLET, {
-            screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES,
-          })
-        },
-      1000,
-    )(),
-    [],
-  )
+      navigation.navigate(ROOT_ROUTES.WALLET, {screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES})
+    },
+  })
 
   return (
-    <>
-      <WalletForm onSubmit={navigateToWallet} />
-      {waiting && <ActivityIndicator />}
-    </>
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
+      <WalletForm
+        onSubmit={
+          isLoading || isSuccess
+            ? NOOP
+            : ({name, password}) =>
+                createWallet({name, password, mnemonicPhrase: phrase, networkId, walletImplementationId, provider})
+        }
+      />
+      {isLoading && <ActivityIndicator />}
+    </SafeAreaView>
   )
 }
+
+const styles = StyleSheet.create({
+  safeAreaView: {
+    flex: 1,
+    backgroundColor: COLORS.WHITE,
+  },
+})
+
+const NOOP = () => undefined

@@ -4,11 +4,12 @@ import {StyleSheet, View} from 'react-native'
 import QRCode from 'react-native-qrcode-svg'
 import {useSelector} from 'react-redux'
 
-import {Button, CopyButton, Modal, Spacer, Text} from '../../legacy/components/UiKit'
+import {Button, CopyButton, Modal, Text} from '../../legacy/components/UiKit'
 import {formatPath} from '../../legacy/crypto/commonUtils'
 import {AddressDTOCardano} from '../../legacy/crypto/shelley/Address.dto'
 import {externalAddressIndexSelector, walletMetaSelector} from '../../legacy/selectors'
 import type {WalletMeta} from '../../legacy/state'
+import {Spacer} from '../components'
 
 type Props = {
   address: string
