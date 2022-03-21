@@ -1,4 +1,5 @@
 nvm i \
+&& rm -rf node_modules \
 && yarn install \
 && yarn setup_configs \
 && . get_commit.sh \
