@@ -1512,10 +1512,10 @@
     bech32 "2.0.0"
     blake2b "2.1.3"
 
-"@emurgo/cip4-js@1.0.5":
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/@emurgo/cip4-js/-/cip4-js-1.0.5.tgz#b99ca25024b61743cc6fc733011e3dc8da21d622"
-  integrity sha512-vugHV1ca5zcUpx6Hzdt85KMvUbYIBAn/zwdWuSQ/1soCyEZnrOZJShi0hYRJoUghOpQ8TjGOCEln7B+Jgf3IJg==
+"@emurgo/cip4-js@1.0.7":
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/@emurgo/cip4-js/-/cip4-js-1.0.7.tgz#a6e1fbbfb485d23a9562a2364b09c6a97f069551"
+  integrity sha512-ovhXMm1xyiq4EQf6LTbZ8I+ZmGTNYPBJ/JP5dOnnEAZEgSmXcpoDTOvp9Fp5SktzyI7nSrsmoDK9Cjq961Qo3Q==
   dependencies:
     blake2b "2.1.3"
     buffer-crc32 "0.2.13"
