@@ -13,6 +13,7 @@ export interface WalletInterface {
   isHW: boolean
   isEasyConfirmationEnabled: boolean
   rewardAddressHex: string
+  hwDeviceInfo?: HWDeviceInfo
   changePassword(masterPassword: string, newPassword: string, intl: IntlShape): Promise<void>
   fetchPoolInfo(request: StakePoolInfoRequest): Promise<StakePoolInfosAndHistories>
   getDelegationStatus(): Promise<StakingStatus>
@@ -115,3 +116,27 @@ export type RemoteCertificate = {
   certIndex: number
   poolParams: Record<string, unknown> // don't think this is relevant
 }
+
+export type HWDeviceInfo = {bip44AccountPublic: string} & {
+  hwFeatures: HWFeatures
+}
+
+export type HWFeatures = {
+  vendor: string
+  model: string
+  serial?: string
+} & TransportInfo
+
+export type TransportInfo =
+  | {deviceId: DeviceId} // for establishing a connection through BLE
+  | {deviceObj: DeviceObj} // for establishing a connection through USB)
+
+export type DeviceObj = {
+  vendorId: number
+  productId: number
+}
+
+// for bluetooth, we just save a string id
+export type DeviceId = string
+
+export type Transport = 'BLE' | 'USB'

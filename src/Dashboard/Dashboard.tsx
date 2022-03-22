@@ -19,7 +19,6 @@ import {getCardanoNetworkConfigById} from '../../legacy/config/networks'
 import globalMessages from '../../legacy/i18n/global-messages'
 import {CATALYST_ROUTES, DELEGATION_ROUTES} from '../../legacy/RoutesList'
 import {
-  hwDeviceInfoSelector,
   isFetchingAccountStateSelector,
   isFetchingUtxosSelector,
   isOnlineSelector,
@@ -52,7 +51,6 @@ export const Dashboard = () => {
   const isFetchingAccountState = useSelector(isFetchingAccountStateSelector)
   const lastAccountStateSyncError = useSelector(lastAccountStateFetchErrorSelector)
   const isOnline = useSelector(isOnlineSelector)
-  const hwDeviceInfo = useSelector(hwDeviceInfoSelector)
   const serverStatus = useSelector(serverStatusSelector)
 
   const wallet = useSelectedWallet()
@@ -143,7 +141,7 @@ export const Dashboard = () => {
           utxos={utxos}
           isEasyConfirmationEnabled={wallet.isEasyConfirmationEnabled}
           isHW={wallet.isHW}
-          hwDeviceInfo={hwDeviceInfo}
+          hwDeviceInfo={wallet.hwDeviceInfo}
           defaultAsset={getDefaultAssetByNetworkId(wallet.networkId)}
           serverStatus={serverStatus}
           setLedgerDeviceId={(...args) => dispatch(setLedgerDeviceId(...args))}
