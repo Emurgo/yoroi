@@ -1,14 +1,19 @@
 // @flow
 
-import type {WalletImplementation} from '../../src/types'
+import type {WalletImplementation, WalletImplementationId} from '../../src/types'
+import type {DefaultAsset} from '../../src/types'
 
 export var isHaskellShelley: (walletImplementationId: string) => boolean
 export var isByron: (walletImplementationId: string) => boolean
+export var getDefaultAssets: () => Array<DefaultAsset>
 
 // prettier-ignore
 export var CONFIG: {
+  COMMIT: string,
   NUMBERS: {
-    HARD_DERIVATION_START: number
+    HARD_DERIVATION_START: number,
+    EPOCH_REWARD_DENOMINATOR: number,
+
   },
   DEBUG: {
     PREFILL_FORMS: boolean,
@@ -20,7 +25,10 @@ export var CONFIG: {
     MNEMONIC3: string,
     START_WITH_INDEX_SCREEN: boolean,
     PREFILL_FORMS: boolean,
-    PASSWORD: string
+    PASSWORD: string,
+    SEND_ADDRESS: string,
+    SEND_AMOUNT: string,
+    CATALYST_PIN: string,
   },
   CATALYST: {
     MIN_ADA: any,
@@ -28,6 +36,7 @@ export var CONFIG: {
   },
   HARDWARE_WALLETS: {
     LEDGER_NANO: {
+      USB_MIN_SDK: number,
       ENABLE_USB_TRANSPORT: boolean,
       ENABLED: boolean,
       DEFAULT_WALLET_NAME: string
@@ -46,21 +55,44 @@ export var CONFIG: {
     HASKELL_SHELLEY: NetworkConfig,
     HASKELL_SHELLEY_TESTNET: NetworkConfig,
     JORMUNGANDR: NetworkConfig,
+  },
+  IS_TESTNET_BUILD: boolean,
+  SENTRY: {
+    DSN: string,
+    ENABLE: boolean
   }
 }
 
 export var isNightly: () => boolean
 
+export var isJormun: (id: WalletImplementationId) => boolean
+
 // prettier-ignore
 type NetworkConfig = {
   NETWORK_ID: number,
-  ENABLED: boolean
+  ENABLED: boolean,
+  POOL_EXPLORER: string,
+  PER_EPOCH_PERCENTAGE_REWARD: number,
 }
 
 type WalletConfig = {
-  WALLET_IMPLEMENTATION_ID: number
+  WALLET_IMPLEMENTATION_ID: WalletImplementationId
 }
 
 export var getWalletConfigById: (walletImplementationId: string) => WalletImplementation
 
+// prettier-ignore
+export var getCardanoBaseConfig: (networkConfig: CardanoHaskellShelleyNetwork) => Array<{
+  StartAt?: number,
+  GenesisDate?: string,
+  SlotsPerEpoch?: number,
+  SlotDuration?: number,
+}>
+
+export var getDefaultAssetByNetworkId: (networkId: number) => DefaultAsset
+
 export var UI_V2: boolean
+
+export var SHOW_PROD_POOLS_IN_DEV: boolean
+
+export var getTestStakingPool: (networkId: NetworkId, provider: ?YoroiProvider) => Array<string>

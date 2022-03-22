@@ -1,5 +1,6 @@
 // @flow
 
+import ExtendableError from 'es6-error'
 import {type IntlShape, defineMessages} from 'react-intl'
 import {NativeModules, Platform} from 'react-native'
 import * as Keychain from 'react-native-keychain'
@@ -26,6 +27,8 @@ const messages = defineMessages({
   },
 })
 
+export class CredentialsNotFound extends ExtendableError {}
+
 class KeyStore {
   static storagePrefix = '/keystore'
 
@@ -41,10 +44,10 @@ class KeyStore {
     if (Platform.OS === 'ios' && encryptionMethod !== 'MASTER_PASSWORD') {
       const credentials = await Keychain.getGenericPassword({
         service: dataKey,
-        authenticationPrompt: message,
+        authenticationPrompt: {title: message},
       })
 
-      if (!credentials) throw new Error('credentials not found')
+      if (!credentials) throw new CredentialsNotFound('credentials not found')
 
       return credentials.password
     }
@@ -218,7 +221,7 @@ class KeyStore {
       return KeyStoreBridge.REJECTION_MESSAGES[key]
     }
 
-    // from https://opensource.apple.com/source/Security/Security-55471/sec/Security/SecBase.h.auto.html
+    // https://opensource.apple.com/source/Security/Security-55471/libsecurity_keychain/lib/SecBase.h.auto.html
     if (Platform.OS === 'ios') {
       switch (key) {
         case 'NOT_RECOGNIZED': {

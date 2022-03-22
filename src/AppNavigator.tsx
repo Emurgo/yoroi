@@ -1,15 +1,15 @@
 import {NavigationContainer} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import {isEmpty} from 'lodash'
-import React from 'react'
+import React, {useEffect} from 'react'
 import type {IntlShape} from 'react-intl'
 import {defineMessages, useIntl} from 'react-intl'
+import {Alert} from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {showErrorDialog, signin} from '../legacy/actions'
 import IndexScreen from '../legacy/components/IndexScreen'
 import MaintenanceScreen from '../legacy/components/MaintenanceScreen'
-import BiometricAuthScreen from '../legacy/components/Send/BiometricAuthScreen'
 import {CONFIG} from '../legacy/config/config'
 import KeyStore from '../legacy/crypto/KeyStore'
 import env from '../legacy/env'
@@ -17,6 +17,7 @@ import {canBiometricEncryptionBeEnabled, recreateAppSignInKeys} from '../legacy/
 import {errorMessages} from '../legacy/i18n/global-messages'
 import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../legacy/navigationOptions'
 import {
+  canEnableBiometricSelector,
   installationIdSelector,
   isAppSetupCompleteSelector,
   isAuthenticatedSelector,
@@ -24,11 +25,14 @@ import {
   isSystemAuthEnabledSelector,
 } from '../legacy/selectors'
 import type {State} from '../legacy/state'
+import {BiometricAuthScreen} from './BiometricAuth'
+import {Boundary} from './components'
+import {CustomPinScreen} from './FirstRun/CustomPinScreen'
 import {FirstRunNavigator} from './FirstRun/FirstRunNavigator'
-import {CustomPinLogin} from './Login'
+import {CustomPinLoginScreen} from './Login'
 import StorybookScreen from './StorybookScreen'
 import {WalletInitNavigator} from './WalletInit/WalletInitNavigator'
-import WalletNavigator from './WalletNavigator'
+import {WalletNavigator} from './WalletNavigator'
 
 const IS_STORYBOOK = env.getBoolean('IS_STORYBOOK', false)
 
@@ -38,6 +42,18 @@ const messages = defineMessages({
   pinLoginTitle: {
     id: 'components.login.custompinlogin.title',
     defaultMessage: '!!!Enter PIN',
+  },
+  customPinTitle: {
+    id: 'components.firstrun.custompinscreen.title',
+    defaultMessage: '!!!Set PIN',
+  },
+  biometricsChangeTitle: {
+    id: 'global.actions.dialogs.walletKeysInvalidated.title',
+    defaultMessage: '!!!Biometrics changes',
+  },
+  biometricsChangeMessage: {
+    id: 'global.actions.dialogs.biometricsChange.message',
+    defaultMessage: '!!!Biometrics changed detected ',
   },
 })
 
@@ -50,20 +66,28 @@ type AppNavigatorRoutes = {
   'app-root': any
   'custom-pin-auth': any
   'bio-auth': any
+  'setup-custom-pin': any
 }
 /* eslint-enable @typescript-eslint/no-explicit-any */
 
 const Stack = createStackNavigator<AppNavigatorRoutes>()
 
 const NavigatorSwitch = () => {
-  const intl = useIntl()
+  const strings = useStrings()
   const isMaintenance = useSelector(isMaintenanceSelector)
   const isSystemAuthEnabled = useSelector(isSystemAuthEnabledSelector)
   const isAuthenticated = useSelector(isAuthenticatedSelector)
   const hasAnyWallet = useSelector(hasAnyWalletSelector)
   const installationId = useSelector(installationIdSelector)
   const isAppSetupComplete = useSelector(isAppSetupCompleteSelector)
+  const canEnableBiometrics = useSelector(canEnableBiometricSelector)
   const dispatch = useDispatch()
+
+  useEffect(() => {
+    if (hasAnyWallet && !isAuthenticated && isSystemAuthEnabled && !canEnableBiometrics) {
+      Alert.alert(strings.biometricsChangeTitle, strings.biometricsChangeMessage)
+    }
+  }, [hasAnyWallet, isAuthenticated, isSystemAuthEnabled, canEnableBiometrics, strings])
 
   if (isMaintenance) {
     return (
@@ -98,11 +122,11 @@ const NavigatorSwitch = () => {
         {!isSystemAuthEnabled && (
           <Stack.Screen
             name={'custom-pin-auth'}
-            component={CustomPinLogin}
-            options={{title: intl.formatMessage(messages.pinLoginTitle)}}
+            component={CustomPinLoginScreen}
+            options={{title: strings.loginPinTitle}}
           />
         )}
-        {isSystemAuthEnabled && (
+        {isSystemAuthEnabled && canEnableBiometrics && (
           <Stack.Screen
             name={'bio-auth'}
             component={BiometricAuthScreen}
@@ -123,6 +147,13 @@ const NavigatorSwitch = () => {
               },
               addWelcomeMessage: true,
             }}
+          />
+        )}
+        {isSystemAuthEnabled && !canEnableBiometrics && (
+          <Stack.Screen
+            name={'setup-custom-pin'}
+            component={CustomPinScreen}
+            options={{title: strings.customPinTitle}}
           />
         )}
       </Stack.Navigator>
@@ -153,7 +184,22 @@ const StoryBook = () => (
 )
 
 const AppNavigator = () => {
-  return <NavigationContainer>{IS_STORYBOOK ? <StoryBook /> : <NavigatorSwitch />}</NavigationContainer>
+  return (
+    <NavigationContainer>
+      <Boundary>{IS_STORYBOOK ? <StoryBook /> : <NavigatorSwitch />}</Boundary>
+    </NavigationContainer>
+  )
+}
+
+const useStrings = () => {
+  const intl = useIntl()
+
+  return {
+    customPinTitle: intl.formatMessage(messages.customPinTitle),
+    loginPinTitle: intl.formatMessage(messages.pinLoginTitle),
+    biometricsChangeTitle: intl.formatMessage(messages.biometricsChangeTitle),
+    biometricsChangeMessage: intl.formatMessage(messages.biometricsChangeMessage),
+  }
 }
 
 export default AppNavigator

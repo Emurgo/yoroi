@@ -5,14 +5,14 @@ import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {showErrorDialog} from '../../../legacy/actions'
-import LedgerConnect from '../../../legacy/components/Ledger/LedgerConnect'
-import {ProgressStep} from '../../../legacy/components/UiKit'
 import type {DeviceId, DeviceObj} from '../../../legacy/crypto/shelley/ledgerUtils'
 import {getHWDeviceInfo} from '../../../legacy/crypto/shelley/ledgerUtils'
 import {errorMessages} from '../../../legacy/i18n/global-messages'
 import LocalizableError from '../../../legacy/i18n/LocalizableError'
 import {WALLET_INIT_ROUTES} from '../../../legacy/RoutesList'
 import {Logger} from '../../../legacy/utils/logging'
+import {ProgressStep} from '../../components'
+import {LedgerConnect} from '../../HW'
 import {Device, NetworkId, WalletImplementationId} from '../../types'
 
 export type Params = {
@@ -62,6 +62,7 @@ export const ConnectNanoXScreen = ({defaultDevices}: Props) => {
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
       <ProgressStep currentStep={2} totalSteps={3} displayStepNumber />
+
       <LedgerConnect
         onConnectBLE={onConnectBLE}
         onConnectUSB={onConnectUSB}

@@ -202,10 +202,6 @@ export const tokenInfoSelector = (state: State): Dict<Token> =>
 
 export const walletIsInitializedSelector = (state: State): boolean => state.wallet.isInitialized
 
-export const walletNameSelector = (state: State): string => state.wallet.name
-
-export const walletNamesSelector = (state: State): Array<string> => ObjectValues(state.wallets).map((w) => w.name)
-
 export const isFetchingUtxosSelector = (state: State): boolean => state.balance.isFetching
 
 export const lastUtxosFetchErrorSelector = (state: State): any => state.balance.lastFetchingError
@@ -215,6 +211,8 @@ export const utxosSelector = (state: State): ?Array<RawUtxo> => state.balance.ut
 // app-related selectors
 
 export const biometricHwSupportSelector = (state: State): boolean => state.appSettings.isBiometricHardwareSupported
+
+export const canEnableBiometricSelector = (state: State): boolean => state.appSettings.canEnableBiometricEncryption
 
 export const isSystemAuthEnabledSelector = (state: State): boolean => state.appSettings.isSystemAuthEnabled
 

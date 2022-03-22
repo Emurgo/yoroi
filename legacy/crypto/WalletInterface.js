@@ -18,6 +18,8 @@ import type {
   TokenInfoResponse,
   TxBodiesRequest,
   TxBodiesResponse,
+  TxStatusRequest,
+  TxStatusResponse,
 } from '../api/types'
 import type {NetworkId, WalletImplementationId, YoroiProvider} from '../config/types'
 import type {WalletMeta} from '../state'
@@ -212,6 +214,8 @@ export interface WalletInterface {
   fetchTokenInfo(request: TokenInfoRequest): Promise<TokenInfoResponse>;
 
   fetchFundInfo(): Promise<FundInfoResponse>;
+
+  fetchTxStatus(request: TxStatusRequest): Promise<TxStatusResponse>;
 
   resync(): void;
 }

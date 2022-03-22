@@ -15,6 +15,7 @@ export type ServerStatusCache = {|
   +isServerOk: boolean,
   +isMaintenance: boolean,
   +serverTime: Date | void,
+  +isQueueOnline?: boolean,
 |}
 
 export type WalletMeta = {
@@ -178,6 +179,7 @@ export const getInitialState = (): State => ({
     isServerOk: true,
     isMaintenance: false,
     serverTime: undefined,
+    isQueueOnline: false,
   },
   isMaintenance: false,
   voting: {

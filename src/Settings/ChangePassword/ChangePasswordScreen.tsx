@@ -1,15 +1,14 @@
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ScrollView, StyleSheet, View} from 'react-native'
+import {ScrollView, StyleSheet, TextInput as RNTextInput, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {MutationOptions, useMutation} from 'react-query'
 
-import {Button, Spacer, TextInput} from '../../../legacy/components/UiKit'
-import {Checkmark} from '../../../legacy/components/UiKit/TextInput'
 import {errorMessages} from '../../../legacy/i18n/global-messages'
 import {COLORS} from '../../../legacy/styles/config'
 import {REQUIRED_PASSWORD_LENGTH, validatePassword} from '../../../legacy/utils/validators'
+import {Button, Checkmark, Spacer, TextInput} from '../../components'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {WalletInterface} from '../../types'
 
@@ -17,14 +16,14 @@ export const ChangePasswordScreen = () => {
   const strings = useStrings()
   const navigation = useNavigation()
 
-  const currentPasswordRef = React.useRef<{focus: () => void} | null>(null)
+  const currentPasswordRef = React.useRef<RNTextInput>(null)
   const [currentPassword, setCurrentPassword] = React.useState('')
   const currentPasswordErrors = currentPassword.length === 0 ? {currentPasswordRequired: true} : {}
 
-  const newPasswordRef = React.useRef<{focus: () => void} | null>(null)
+  const newPasswordRef = React.useRef<RNTextInput>(null)
   const [newPassword, setNewPassword] = React.useState('')
 
-  const newPasswordConfirmationRef = React.useRef<{focus: () => void} | null>(null)
+  const newPasswordConfirmationRef = React.useRef<RNTextInput>(null)
   const [newPasswordConfirmation, setNewPasswordConfirmation] = React.useState('')
   const newPasswordErrors = validatePassword(newPassword, newPasswordConfirmation)
 

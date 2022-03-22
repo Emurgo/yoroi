@@ -4,16 +4,16 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import ExapandableItem from '../../../legacy/components/Common/ExpandableItem'
-import LedgerTransportSwitchModal from '../../../legacy/components/Ledger/LedgerTransportSwitchModal'
-import {Button, Modal, ScreenBackground, StatusBar} from '../../../legacy/components/UiKit'
 import {CONFIG, isByron, isHaskellShelley} from '../../../legacy/config/config'
 import {isJormungandr} from '../../../legacy/config/networks'
-import type {NetworkId, WalletImplementationId, YoroiProvider} from '../../../legacy/config/types'
 import globalMessages from '../../../legacy/i18n/global-messages'
 import {WALLET_INIT_ROUTES} from '../../../legacy/RoutesList'
 import {COLORS} from '../../../legacy/styles/config'
+import {Button, Modal, ScreenBackground, StatusBar} from '../../components'
+import {LedgerTransportSwitchModal} from '../../HW'
+import {NetworkId, WalletImplementationId, YoroiProvider} from '../../types'
 import {WalletDescription} from '../WalletDescription'
+import {ExpandableItem} from './ExpandableItem'
 
 export const WalletInitScreen = () => {
   const strings = useStrings()
@@ -86,9 +86,10 @@ export const WalletInitScreen = () => {
                 onPress={() => navigateTo.restoreWallet(implementationId, provider)}
                 title={strings.restoreNormalWalletLabel}
                 style={styles.mnemonicDialogButton}
+                testID="restoreNormalWalletButton"
               />
 
-              <ExapandableItem
+              <ExpandableItem
                 label={strings.learnMore}
                 content={strings.restoreNWordWalletExplanation({mnemonicLength: 15})}
               />
@@ -100,9 +101,10 @@ export const WalletInitScreen = () => {
                 }
                 title={strings.restore24WordWalletLabel}
                 style={styles.mnemonicDialogButton}
+                testID="restore24WordWalletButton"
               />
 
-              <ExapandableItem
+              <ExpandableItem
                 label={strings.learnMore}
                 content={strings.restoreNWordWalletExplanation({mnemonicLength: 24})}
               />
@@ -115,7 +117,7 @@ export const WalletInitScreen = () => {
                 testID="importReadOnlyWalletButton"
               />
 
-              <ExapandableItem label={strings.learnMore} content={strings.importReadOnlyWalletExplanation} />
+              <ExpandableItem label={strings.learnMore} content={strings.importReadOnlyWalletExplanation} />
             </Modal>
           )}
         </View>

@@ -15,11 +15,9 @@ import {clearUTXOs} from './actions/utxo'
 import * as api from './api/shelley/api'
 import {CONFIG} from './config/config'
 import {getCardanoNetworkConfigById} from './config/networks'
-import type {NetworkId, WalletImplementationId, YoroiProvider} from './config/types'
 import {encryptCustomPin} from './crypto/customPin'
 import {ISignRequest} from './crypto/ISignRequest'
 import KeyStore from './crypto/KeyStore'
-import type {HWDeviceInfo} from './crypto/shelley/ledgerUtils'
 import walletManager from './crypto/walletManager'
 import {
   type AppSettingsKey,
@@ -223,6 +221,10 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
     Logger.warn('actions::initApp could not retrieve server status', e)
   }
 
+  if (CONFIG.SENTRY.ENABLE) {
+    dispatch(setAppSettingField(APP_SETTINGS_KEYS.SEND_CRASH_REPORTS, true))
+  }
+
   await dispatch(reloadAppSettings())
 
   const installationId = await dispatch(initInstallationId())
@@ -232,9 +234,8 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
     crashReporting.enable()
     // TODO(ppershing): just update crashlytic variables here
     await dispatch(reloadAppSettings())
+    crashReporting.setUserId(installationIdSelector(getState()))
   }
-
-  crashReporting.setUserId(installationIdSelector(getState()))
 
   /**
    * note(v-almonacid): temporary disable biometric auth for Android >= 10
@@ -342,50 +343,6 @@ export const generateNewReceiveAddressIfNeeded = () => async (_dispatch: Dispatc
   return await walletManager.generateNewUiReceiveAddressIfNeeded()
 }
 
-export const changeWalletName = (newName: string) => async (dispatch: Dispatch<any>) => {
-  await walletManager.rename(newName)
-  dispatch(updateWallets())
-}
-
-export const createWallet =
-  (
-    name: string,
-    mnemonic: string,
-    password: string,
-    networkId: NetworkId,
-    implementationId: WalletImplementationId,
-    provider: YoroiProvider,
-  ) =>
-  async (dispatch: Dispatch<any>) => {
-    const wallet = await walletManager.createWallet(name, mnemonic, password, networkId, implementationId, provider)
-    dispatch(updateWallets())
-
-    return wallet
-  }
-
-export const createWalletWithBip44Account =
-  (
-    name: string,
-    bip44AccountPublic: string,
-    networkId: NetworkId,
-    implementationId: WalletImplementationId,
-    hwDeviceInfo: ?HWDeviceInfo,
-    readOnly: boolean,
-  ) =>
-  async (dispatch: Dispatch<any>) => {
-    const wallet = await walletManager.createWalletWithBip44Account(
-      name,
-      bip44AccountPublic,
-      networkId,
-      implementationId,
-      hwDeviceInfo,
-      readOnly,
-    )
-    dispatch(updateWallets())
-
-    return wallet
-  }
-
 type DialogOptions = {|
   title: string,
   message: string,
@@ -457,12 +414,6 @@ export const showConfirmationDialog = (dialog: DialogOptions, intl: IntlShape): 
   })
 
 export const setSystemAuth = (enable: boolean) => async (dispatch: Dispatch<any>, getState: any) => {
-  const canBeDisabled = walletManager.canBiometricsSignInBeDisabled()
-
-  if (!enable && !canBeDisabled) {
-    throw new Error('Can not disable system auth without disabling easy confirmation.')
-  }
-
   await dispatch(setAppSettingField(APP_SETTINGS_KEYS.SYSTEM_AUTH_ENABLED, enable))
 
   const installationId = installationIdSelector(getState())

@@ -4,10 +4,7 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Image} from 'react-native'
 
-import StakingCenterNavigator from '../legacy/components/Delegation/StakingCenterNavigator'
-import StakingDashboardNavigator from '../legacy/components/Delegation/StakingDashboardNavigator'
-import SendScreenNavigator from '../legacy/components/Send/SendScreenNavigator'
-import {isHaskellShelley} from '../legacy/config/config'
+import {isHaskellShelley, UI_V2} from '../legacy/config/config'
 import {defaultNavigationOptions} from '../legacy/navigationOptions'
 import {theme} from '../legacy/styles/config'
 import iconDashboard from './assets/img/icon/dashboard.png'
@@ -20,11 +17,16 @@ import iconSend from './assets/img/icon/send.png'
 import iconSendActive from './assets/img/icon/send-active.png'
 import iconHistory from './assets/img/icon/txhistory.png'
 import iconHistoryActive from './assets/img/icon/txhistory-active.png'
-import {CatalystNavigator} from './Catalyst/CatalystNavigator'
-import {ReceiveScreenNavigator} from './Receive/ReceiveScreenNavigator'
+import {CatalystNavigator} from './Catalyst'
+import {Icon} from './components'
+import {DashboardNavigator} from './Dashboard'
+import {MenuNavigator} from './Menu'
+import {ReceiveScreenNavigator} from './Receive'
 import {useSelectedWallet, WalletSelectionScreen} from './SelectedWallet'
+import {SendScreenNavigator} from './Send'
 import {SettingsScreenNavigator} from './Settings'
-import {TxHistoryNavigator} from './TxHistory/TxHistoryNavigator'
+import {StakingCenterNavigator} from './Staking'
+import {TxHistoryNavigator} from './TxHistory'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 type WalletTabRoutes = {
@@ -33,6 +35,7 @@ type WalletTabRoutes = {
   'receive-ada': any
   'staking-dashboard': any
   'staking-center': any
+  menu: undefined
 }
 /* eslint-enable @typescript-eslint/no-explicit-any */
 
@@ -52,27 +55,53 @@ const WalletTabNavigator = () => {
         inactiveTintColor: theme.COLORS.NAVIGATION_INACTIVE,
       }}
     >
+      {UI_V2 && (
+        <Tab.Screen
+          name={'history'}
+          component={TxHistoryNavigator}
+          options={{
+            tabBarIcon: ({focused}) => (
+              <Icon.TabWallet
+                size={24}
+                color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
+              />
+            ),
+            tabBarLabel: strings.walletTabBarLabel,
+          }}
+        />
+      )}
+
       {isHaskellShelley(wallet.walletImplementationId) && (
         <Tab.Screen
           name={'staking-dashboard'}
-          component={StakingDashboardNavigator}
+          component={DashboardNavigator}
           options={{
-            tabBarIcon: ({focused}) => <Image source={focused ? iconDashboardActive : iconDashboard} />,
+            tabBarIcon: ({focused}) =>
+              !UI_V2 ? (
+                <Image source={focused ? iconDashboardActive : iconDashboard} />
+              ) : (
+                <Icon.TabStaking
+                  size={24}
+                  color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
+                />
+              ),
             tabBarLabel: strings.dashboardTabBarLabel,
           }}
         />
       )}
 
-      <Tab.Screen
-        name={'history'}
-        component={TxHistoryNavigator}
-        options={{
-          tabBarIcon: ({focused}) => <Image source={focused ? iconHistoryActive : iconHistory} />,
-          tabBarLabel: strings.txHistoryTabBarLabel,
-        }}
-      />
+      {!UI_V2 && (
+        <Tab.Screen
+          name={'history'}
+          component={TxHistoryNavigator}
+          options={{
+            tabBarIcon: ({focused}) => <Image source={focused ? iconHistoryActive : iconHistory} />,
+            tabBarLabel: strings.txHistoryTabBarLabel,
+          }}
+        />
+      )}
 
-      {!wallet.isReadOnly && (
+      {!wallet.isReadOnly && !UI_V2 && (
         <Tab.Screen
           name={'send-ada'}
           component={SendScreenNavigator}
@@ -84,22 +113,35 @@ const WalletTabNavigator = () => {
         />
       )}
 
-      <Tab.Screen
-        name={'receive-ada'}
-        component={ReceiveScreenNavigator}
-        options={{
-          tabBarIcon: ({focused}) => <Image source={focused ? iconReceiveActive : iconReceive} />,
-          tabBarLabel: strings.receiveTabBarLabel,
-        }}
-      />
+      {!UI_V2 && (
+        <Tab.Screen
+          name={'receive-ada'}
+          component={ReceiveScreenNavigator}
+          options={{
+            tabBarIcon: ({focused}) => <Image source={focused ? iconReceiveActive : iconReceive} />,
+            tabBarLabel: strings.receiveTabBarLabel,
+          }}
+        />
+      )}
 
-      {isHaskellShelley(wallet.walletImplementationId) && !wallet.isReadOnly && (
+      {!UI_V2 && isHaskellShelley(wallet.walletImplementationId) && !wallet.isReadOnly && (
         <Tab.Screen
           name={'staking-center'}
           component={StakingCenterNavigator}
           options={{
             tabBarIcon: ({focused}) => <Image source={focused ? iconDelegateActive : iconDelegate} />,
             tabBarLabel: strings.delegateTabBarLabel,
+          }}
+        />
+      )}
+
+      {UI_V2 && (
+        <Tab.Screen
+          name={'menu'}
+          component={MenuNavigator}
+          options={{
+            tabBarIcon: ({focused}) => <Icon.Menu size={20} color={focused ? '#17d1aa' : '#A7AFC0'} />,
+            tabBarLabel: strings.menuTabBarLabel,
           }}
         />
       )}
@@ -117,7 +159,7 @@ type WalletStackRoute = {
 /* eslint-enable @typescript-eslint/no-explicit-any */
 
 const Stack = createStackNavigator<WalletStackRoute>()
-const WalletNavigator = () => (
+export const WalletNavigator = () => (
   <Stack.Navigator initialRouteName={'wallet-selection'} screenOptions={{headerShown: false}}>
     <Stack.Screen name={'wallet-selection'} component={WalletSelectionScreen} />
     <Stack.Screen name={'main-wallet-routes'} component={WalletTabNavigator} />
@@ -125,8 +167,6 @@ const WalletNavigator = () => (
     <Stack.Screen name={'catalyst-router'} component={CatalystNavigator} options={defaultNavigationOptions} />
   </Stack.Navigator>
 )
-
-export default WalletNavigator
 
 const messages = defineMessages({
   transactionsButton: {
@@ -149,6 +189,18 @@ const messages = defineMessages({
     id: 'components.common.navigation.delegateButton',
     defaultMessage: '!!!Delegate',
   },
+  walletButton: {
+    id: 'components.settings.walletsettingscreen.tabTitle',
+    defaultMessage: '!!!Wallet',
+  },
+  stakingButton: {
+    id: 'global.staking',
+    defaultMessage: '!!!Staking',
+  },
+  menuButton: {
+    id: 'menu',
+    defaultMessage: '!!!Menu',
+  },
 })
 
 const useStrings = () => {
@@ -160,5 +212,7 @@ const useStrings = () => {
     sendTabBarLabel: intl.formatMessage(messages.sendButton),
     receiveTabBarLabel: intl.formatMessage(messages.receiveButton),
     delegateTabBarLabel: intl.formatMessage(messages.delegateButton),
+    walletTabBarLabel: intl.formatMessage(messages.walletButton),
+    menuTabBarLabel: intl.formatMessage(messages.menuButton),
   }
 }

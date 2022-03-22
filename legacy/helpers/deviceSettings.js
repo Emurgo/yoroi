@@ -1,10 +1,13 @@
 // @flow
 /* eslint-disable-next-line */
 import {Platform, NativeModules} from 'react-native'
+import ExtendableError from 'es6-error'
 import * as Keychain from 'react-native-keychain'
 import KeyStore from '../crypto/KeyStore'
 
 const {KeyStoreBridge} = NativeModules
+
+export class KeysAreInvalid extends ExtendableError {}
 
 export const isBiometricEncryptionHardwareSupported = async () => {
   if (Platform.OS === 'android') {
@@ -64,4 +67,13 @@ export const recreateAppSignInKeys = async (installationId: string) => {
 export const removeAppSignInKeys = async (installationId: string) => {
   await KeyStore.deleteData(installationId, 'BIOMETRICS')
   await KeyStore.deleteData(installationId, 'SYSTEM_PIN')
+}
+
+export const ensureKeysValidity = async (walletId: string) => {
+  const canBiometricsBeUsed = await canBiometricEncryptionBeEnabled()
+  const isKeyValid = await KeyStore.isKeyValid(walletId, 'BIOMETRICS')
+
+  if (!isKeyValid || !canBiometricsBeUsed) {
+    throw new KeysAreInvalid()
+  }
 }

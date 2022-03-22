@@ -4,19 +4,15 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, TouchableOpacity, View} from 'react-native'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useDispatch} from 'react-redux'
 
-import {createWallet} from '../../../legacy/actions'
-import {Button, Spacer, StatusBar, Text} from '../../../legacy/components/UiKit'
-import type {NetworkId, WalletImplementationId, YoroiProvider} from '../../../legacy/config/types'
-import type {WalletInterface} from '../../../legacy/crypto/WalletInterface'
 import {useParams} from '../../../legacy/navigation'
 import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../../legacy/RoutesList'
-import type {WalletMeta} from '../../../legacy/state'
+import {WalletMeta} from '../../../legacy/state'
 import {COLORS} from '../../../legacy/styles/config'
-import assert from '../../../legacy/utils/assert'
-import {ignoreConcurrentAsyncHandler} from '../../../legacy/utils/utils'
+import {Button, Spacer, StatusBar, Text} from '../../components'
+import {useCreateWallet} from '../../hooks'
 import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
+import {NetworkId, WalletImplementationId, YoroiProvider} from '../../types'
 
 export type Params = {
   mnemonic: string
@@ -46,43 +42,32 @@ export const MnemonicCheckScreen = () => {
 
   const setSelectedWalletMeta = useSetSelectedWalletMeta()
   const setSelectedWallet = useSetSelectedWallet()
-  const dispatch = useDispatch()
-  const handleWalletConfirmation = async () => {
-    assertions({mnemonic, password, name, networkId, walletImplementationId})
+  const {createWallet, isLoading, isSuccess} = useCreateWallet({
+    onSuccess: (wallet) => {
+      const walletMeta: WalletMeta = {
+        name,
 
-    const wallet: WalletInterface = await dispatch(
-      createWallet(name, mnemonic, password, networkId, walletImplementationId, provider),
-    )
+        id: wallet.id,
+        networkId: wallet.networkId,
+        walletImplementationId: wallet.walletImplementationId,
+        isHW: wallet.isHW,
+        checksum: wallet.checksum,
+        isEasyConfirmationEnabled: wallet.isEasyConfirmationEnabled,
+        provider: wallet.provider,
+      }
+      setSelectedWalletMeta(walletMeta)
+      setSelectedWallet(wallet)
 
-    const walletMeta: WalletMeta = {
-      name,
-
-      id: wallet.id,
-      networkId: wallet.networkId,
-      walletImplementationId: wallet.walletImplementationId,
-      isHW: wallet.isHW,
-      checksum: wallet.checksum,
-      isEasyConfirmationEnabled: wallet.isEasyConfirmationEnabled,
-      provider: wallet.provider,
-    }
-    setSelectedWalletMeta(walletMeta)
-    setSelectedWallet(wallet)
-
-    navigation.navigate(ROOT_ROUTES.WALLET, {
-      screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES,
-      mnemonic,
-      password,
-      name,
-      networkId,
-      walletImplementationId,
-    })
-  }
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const confirmWalletCreation = React.useCallback(
-    ignoreConcurrentAsyncHandler(() => handleWalletConfirmation, 1000)(),
-    [],
-  )
+      navigation.navigate(ROOT_ROUTES.WALLET, {
+        screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES,
+        mnemonic,
+        password,
+        name,
+        networkId,
+        walletImplementationId,
+      })
+    },
+  })
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
@@ -107,8 +92,10 @@ export const MnemonicCheckScreen = () => {
       <View style={styles.buttons}>
         <Button
           block
-          onPress={confirmWalletCreation}
-          disabled={!isPhraseComplete || !isPhraseValid}
+          onPress={() =>
+            createWallet({name, mnemonicPhrase: mnemonic, password, networkId, walletImplementationId, provider})
+          }
+          disabled={!isPhraseComplete || !isPhraseValid || isLoading || isSuccess}
           title={strings.confirmButton}
           style={styles.confirmButton}
           testID="mnemonicCheckScreen::confirm"
@@ -200,26 +187,6 @@ const WordBadge = ({word, onPress, disabled, testID}: WordBadgeProps) => (
     <Text style={styles.wordBadgeText}>{word}</Text>
   </TouchableOpacity>
 )
-
-const assertions = ({
-  mnemonic,
-  password,
-  name,
-  networkId,
-  walletImplementationId,
-}: {
-  mnemonic: string
-  name: string
-  password: string
-  networkId: NetworkId
-  walletImplementationId: WalletImplementationId
-}) => {
-  assert.assert(!!mnemonic, 'handleWalletConfirmation:: mnemonic')
-  assert.assert(!!password, 'handleWalletConfirmation:: password')
-  assert.assert(!!name, 'handleWalletConfirmation:: name')
-  assert.assert(networkId != null, 'handleWalletConfirmation:: networkId')
-  assert.assert(!!walletImplementationId, 'handleWalletConfirmation:: implementationId')
-}
 
 const messages = defineMessages({
   instructions: {

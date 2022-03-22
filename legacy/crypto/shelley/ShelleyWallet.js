@@ -40,6 +40,8 @@ import type {
   TokenInfoResponse,
   TxBodiesRequest,
   TxBodiesResponse,
+  TxStatusRequest,
+  TxStatusResponse,
 } from '../../api/types'
 import {CONFIG, getCardanoBaseConfig, getWalletConfigById, isByron, isHaskellShelley} from '../../config/config'
 import type {CardanoHaskellShelleyNetwork} from '../../config/networks'
@@ -534,9 +536,11 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     )
     const id = Buffer.from(await (await hash_transaction(await signedTx.body())).to_bytes()).toString('hex')
     const encodedTx = await signedTx.to_bytes()
+    const base64 = Buffer.from(encodedTx).toString('base64')
     return {
       id,
       encodedTx,
+      base64,
     }
   }
 
@@ -832,10 +836,12 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     )
     const id = Buffer.from(await (await hash_transaction(await signedTx.body())).to_bytes()).toString('hex')
     const encodedTx = await signedTx.to_bytes()
+    const base64 = Buffer.from(encodedTx).toString('base64')
     Logger.debug('ShelleyWallet::signTxWithLedger::encodedTx', Buffer.from(encodedTx).toString('hex'))
     return {
       id,
       encodedTx,
+      base64,
     }
   }
 
@@ -881,5 +887,9 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
 
   async fetchFundInfo(): Promise<FundInfoResponse> {
     return await api.getFundInfo(this._getBackendConfig(), this._getNetworkConfig().IS_MAINNET)
+  }
+
+  async fetchTxStatus(request: TxStatusRequest): Promise<TxStatusResponse> {
+    return api.fetchTxStatus(request, this._getBackendConfig())
   }
 }

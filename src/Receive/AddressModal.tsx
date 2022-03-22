@@ -4,11 +4,11 @@ import {StyleSheet, View} from 'react-native'
 import QRCode from 'react-native-qrcode-svg'
 import {useSelector} from 'react-redux'
 
-import {Button, CopyButton, Modal, Spacer, Text} from '../../legacy/components/UiKit'
 import {formatPath} from '../../legacy/crypto/commonUtils'
 import {AddressDTOCardano} from '../../legacy/crypto/shelley/Address.dto'
 import {externalAddressIndexSelector, walletMetaSelector} from '../../legacy/selectors'
 import type {WalletMeta} from '../../legacy/state'
+import {Button, CopyButton, Modal, Spacer, Text} from '../components'
 
 type Props = {
   address: string
@@ -157,7 +157,7 @@ const useStrings = () => {
 }
 
 const useKeyHashes = (address) => {
-  const [keyHashes, setKeyHashes] = React.useState<null | {staking: unknown; spending: unknown}>(null)
+  const [keyHashes, setKeyHashes] = React.useState<null | {staking: string; spending: string}>(null)
 
   React.useEffect(() => {
     const addressInfo = new AddressDTOCardano(address)

@@ -3,32 +3,44 @@ import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useSelector} from 'react-redux'
 
 import {showErrorDialog} from '../../legacy/actions'
-import PinInputKeyboard from '../../legacy/components/Common/PinInputKeyboard'
-import {ProgressStep, Spacer} from '../../legacy/components/UiKit'
 import {errorMessages} from '../../legacy/i18n/global-messages'
 import {CATALYST_ROUTES} from '../../legacy/RoutesList'
-import {isHWSelector, pinSelector} from '../../legacy/selectors'
+import {ProgressStep, Spacer} from '../components'
+import {PinInputKeyboard} from '../components'
+import {useSelectedWallet} from '../SelectedWallet'
 import {Description, PinBox, Row, Title} from './components'
+import {useCreateVotingRegTx, VotingRegTxData} from './hooks'
 
 const PIN_LENGTH = 4
 
-export const Step3 = () => {
+type Props = {
+  pin: string
+  setVotingRegTxData: (votingRegTxData?: VotingRegTxData) => void
+}
+export const Step3 = ({pin, setVotingRegTxData}: Props) => {
   const intl = useIntl()
   const strings = useStrings()
   const navigation = useNavigation()
-  const pin = useSelector(pinSelector)
-  const isHW = useSelector(isHWSelector)
-  const [confirmPin, setPin] = useState('')
+  const wallet = useSelectedWallet()
+  const {createVotingRegTx} = useCreateVotingRegTx({wallet})
+  const [confirmPin, setConfirmPin] = useState('')
 
   const pinChange = (enteredPin: string) => {
-    setPin(enteredPin)
+    setConfirmPin(enteredPin)
     if (enteredPin.length === 4) {
-      if (pin.join('') === enteredPin) {
-        if (isHW) {
-          navigation.navigate(CATALYST_ROUTES.STEP5)
+      if (pin === enteredPin) {
+        if (wallet.isHW) {
+          createVotingRegTx(
+            {pin},
+            {
+              onSuccess: (votingRegTxData) => {
+                setVotingRegTxData(votingRegTxData)
+                navigation.navigate(CATALYST_ROUTES.STEP5)
+              },
+            },
+          )
         } else {
           navigation.navigate(CATALYST_ROUTES.STEP4)
         }

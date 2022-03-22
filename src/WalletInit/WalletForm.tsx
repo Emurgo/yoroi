@@ -1,14 +1,9 @@
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ScrollView, StyleSheet, View} from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
-import {useSelector} from 'react-redux'
+import {ScrollView, StyleSheet, TextInput as RNTextInput, View} from 'react-native'
 
-import {Button, Spacer, TextInput} from '../../legacy/components/UiKit'
-import {Checkmark} from '../../legacy/components/UiKit/TextInput'
 import {CONFIG} from '../../legacy/config/config'
 import globalMessages from '../../legacy/i18n/global-messages'
-import {walletNamesSelector} from '../../legacy/selectors'
 import {COLORS} from '../../legacy/styles/config'
 import {
   getWalletNameError,
@@ -16,6 +11,8 @@ import {
   validatePassword,
   validateWalletName,
 } from '../../legacy/utils/validators'
+import {Button, Checkmark, Spacer, TextInput} from '../components'
+import {useWalletNames} from '../hooks'
 
 type Props = {
   onSubmit: (credentials: {name: string; password: string}) => void
@@ -23,19 +20,19 @@ type Props = {
 
 export const WalletForm = ({onSubmit}: Props) => {
   const strings = useStrings()
-  const walletNames = useSelector(walletNamesSelector)
+  const walletNames = useWalletNames()
   const [name, setName] = React.useState(CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.WALLET_NAME : '')
-  const nameErrors = validateWalletName(name, null, walletNames)
+  const nameErrors = validateWalletName(name, null, walletNames || [])
   const walletNameErrorText =
     getWalletNameError(
       {tooLong: strings.tooLong, nameAlreadyTaken: strings.nameAlreadyTaken, mustBeFilled: strings.mustBeFilled},
       nameErrors,
     ) || undefined
 
-  const passwordRef = React.useRef<{focus: () => void} | null>(null)
+  const passwordRef = React.useRef<RNTextInput>(null)
   const [password, setPassword] = React.useState(CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '')
 
-  const passwordConfirmationRef = React.useRef<{focus: () => void} | null>(null)
+  const passwordConfirmationRef = React.useRef<RNTextInput>(null)
   const [passwordConfirmation, setPasswordConfirmation] = React.useState(
     CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '',
   )
@@ -48,8 +45,13 @@ export const WalletForm = ({onSubmit}: Props) => {
     : undefined
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
-      <ScrollView keyboardShouldPersistTaps={'always'} contentContainerStyle={styles.scrollContentContainer}>
+    <View style={styles.safeAreaView}>
+      <ScrollView
+        keyboardShouldPersistTaps={'always'}
+        contentContainerStyle={styles.scrollContentContainer}
+        testID={'credentialsView'}
+        bounces={false}
+      >
         <WalletNameInput
           enablesReturnKeyAutomatically
           autoFocus
@@ -108,7 +110,7 @@ export const WalletForm = ({onSubmit}: Props) => {
           testID="walletFormContinueButton"
         />
       </Actions>
-    </SafeAreaView>
+    </View>
   )
 }
 
@@ -123,7 +125,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContentContainer: {
-    flex: 1,
     paddingHorizontal: 16,
     paddingTop: 40,
   },

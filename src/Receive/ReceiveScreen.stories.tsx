@@ -10,7 +10,7 @@ const wallet = {
   networkId: 1,
 } as WalletInterface
 
-storiesOf('ReceiveScreen', module).add('default', () => (
+storiesOf('ReceiveScreen', module).add('Default', () => (
   <SelectedWalletProvider wallet={wallet}>
     <ReceiveScreen />
   </SelectedWalletProvider>

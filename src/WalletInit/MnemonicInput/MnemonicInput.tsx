@@ -1,10 +1,10 @@
 import {validateMnemonic, wordlists} from 'bip39'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Keyboard, ScrollView, StyleSheet, View} from 'react-native'
+import {Keyboard, ScrollView, StyleSheet, TextInput as RNTextInput, View} from 'react-native'
 
-import {Menu, TextInput, useScrollView} from '../../../legacy/components/UiKit'
 import {COLORS} from '../../../legacy/styles/config'
+import {Menu, TextInput, useScrollView} from '../../components'
 
 export const MnemonicInput = ({
   length,
@@ -53,19 +53,23 @@ type MnemonicWordsInputProps = {
   onSelect: (index: number, word: string) => void
 }
 const MnemonicWordsInput = ({onSelect, words}: MnemonicWordsInputProps) => {
-  const refs = React.useRef(words.map(() => React.createRef<TextInput>())).current
+  const refs = React.useRef(words.map(() => React.createRef<RNTextInput>())).current
   const scrollView = useScrollView()
   const rowHeightRef = React.useRef<number | void>()
 
   useAutoFocus(refs[0]) // RNP.TextInput has a buggy autoFocus
 
   return (
-    <View style={{padding: 4, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-around'}}>
+    <View
+      style={{padding: 4, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-around'}}
+      testID={'mnemonicInputsView'}
+    >
       {words.map((word, index) => (
         <View
           key={index}
           style={{width: '33%', padding: 4}}
           onLayout={({nativeEvent}) => (rowHeightRef.current = nativeEvent.layout.height)}
+          testID={`mnemonicInput${index}`}
         >
           <MnemonicWordInput
             ref={refs[index]}
@@ -93,7 +97,7 @@ type MnemonicWordInputProps = {
   onSelect: (word: string) => void
   onFocus: () => void
 }
-const MnemonicWordInput = React.forwardRef(({id, onSelect, onFocus}: MnemonicWordInputProps, ref) => {
+const MnemonicWordInput = React.forwardRef<RNTextInput, MnemonicWordInputProps>(({id, onSelect, onFocus}, ref) => {
   const [word, setWord] = React.useState('')
   const matchingWords = React.useMemo(() => (word ? getMatchingWords(word) : []), [word])
   const [menuEnabled, setMenuEnabled] = React.useState(false)

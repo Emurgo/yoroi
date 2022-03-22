@@ -4,12 +4,12 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, Spacer, StatusBar} from '../../../legacy/components/UiKit'
 import {CONFIG, isNightly} from '../../../legacy/config/config'
-import type {NetworkId, WalletImplementationId} from '../../../legacy/config/types'
 // uses same styles as WalletInitScreen
 import {WALLET_INIT_ROUTES} from '../../../legacy/RoutesList'
 import {COLORS} from '../../../legacy/styles/config'
+import {Button, Spacer, StatusBar} from '../../components'
+import {NetworkId, WalletImplementationId} from '../../types'
 import {WalletDescription} from '../WalletDescription'
 
 export const WalletFreshInitScreen = () => {

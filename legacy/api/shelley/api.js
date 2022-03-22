@@ -21,6 +21,8 @@ import type {
   TxBodiesRequest,
   TxBodiesResponse,
   TxHistoryRequest,
+  TxStatusRequest,
+  TxStatusResponse,
 } from '../types'
 import {checkAndFacadeTransactionAsync} from './facade'
 
@@ -155,17 +157,40 @@ export const getTokenInfo = async (request: TokenInfoRequest, config: BackendCon
   )
   return responses.reduce((res, resp) => {
     if (resp && resp.subject) {
-      const v = {}
+      const v: {
+        policyId: string,
+        assetName: string,
+      } & {
+        name?: string,
+        decimals?: string,
+        longName?: string,
+        ticker?: string,
+      } = {
+        policyId: resp.subject.slice(0, 56),
+        assetName: resp.subject.slice(56),
+      }
+
       if (resp.name?.value) {
         v.name = resp.name.value
       }
+
       if (resp.decimals?.value) {
         v.decimals = resp.decimals.value
       }
+
+      if (resp.description?.value) {
+        v.longName = resp.name.value
+      }
+
+      if (resp.ticker?.value) {
+        v.ticker = resp.ticker.value
+      }
+
       if (v.name || v.decimals) {
         res[resp.subject] = v
       }
     }
+
     return res
   }, {})
 }
@@ -173,4 +198,8 @@ export const getTokenInfo = async (request: TokenInfoRequest, config: BackendCon
 export const getFundInfo = (config: BackendConfig, isMainnet: boolean): Promise<FundInfoResponse> => {
   const prefix = isMainnet ? '' : 'api/'
   return fetchDefault(`${prefix}v0/catalyst/fundInfo/`, null, config, 'GET')
+}
+
+export const fetchTxStatus = (request: TxStatusRequest, config: BackendConfig): Promise<TxStatusResponse> => {
+  return fetchDefault('tx/status', request, config)
 }

@@ -5,14 +5,13 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {BulletPointItem, Button, Spacer, StatusBar, Text} from '../../../legacy/components/UiKit'
-import type {NetworkId, WalletImplementationId} from '../../../legacy/config/types'
 import {WALLET_IMPLEMENTATION_REGISTRY} from '../../../legacy/config/types'
 import {generateByronPlateFromMnemonics} from '../../../legacy/crypto/byron/plate'
 import {generateShelleyPlateFromMnemonics} from '../../../legacy/crypto/shelley/plate'
 import {WALLET_INIT_ROUTES} from '../../../legacy/RoutesList'
 import {COLORS} from '../../../legacy/styles/config'
-import {Icon} from '../../components'
+import {BulletPointItem, Button, Icon, Spacer, StatusBar, Text} from '../../components'
+import {NetworkId, WalletImplementationId} from '../../types'
 import {WalletAddress} from '../WalletAddress'
 
 export const VerifyRestoredWalletScreen = () => {
@@ -48,7 +47,9 @@ export const VerifyRestoredWalletScreen = () => {
             <>
               <Icon.WalletAccount iconSeed={plate.ImagePart} />
               <Spacer />
-              <Text style={styles.checksum}>{plate.TextPart}</Text>
+              <Text style={styles.checksum} testID="walletChecksum">
+                {plate.TextPart}
+              </Text>
             </>
           ) : (
             <ActivityIndicator style={{flex: 1}} size={'large'} color={'black'} />
@@ -79,7 +80,7 @@ export const VerifyRestoredWalletScreen = () => {
       </ScrollView>
 
       <Actions>
-        <Button onPress={navigateToWalletCredentials} title={strings.buttonText} />
+        <Button onPress={navigateToWalletCredentials} title={strings.buttonText} testID="verifyWalletContinueButton" />
       </Actions>
     </SafeAreaView>
   )
@@ -145,7 +146,7 @@ const usePlateFromMnemonic = ({
 }: {
   mnemonic: string
   networkId: number
-  walletImplementationId: string
+  walletImplementationId: WalletImplementationId
 }) => {
   const [addresses, setAddresses] = useState()
   const [plate, setPlate] = useState<undefined | WalletChecksum>(undefined)

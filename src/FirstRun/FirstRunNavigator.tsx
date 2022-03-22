@@ -3,9 +3,9 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
 import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../legacy/navigationOptions'
-import {AcceptTermsOfServiceScreen} from './AcceptTermsOfServiceScreen'
 import {CustomPinScreen} from './CustomPinScreen'
 import {LanguagePickerScreen} from './LanguagePickerScreen'
+import {TermsOfServiceScreen} from './TermsOfServiceScreen'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 type FirstRunRoute = {
@@ -40,7 +40,7 @@ export const FirstRunNavigator = () => {
 
       <Stack.Screen
         name={'accept-terms-of-service'}
-        component={AcceptTermsOfServiceScreen}
+        component={TermsOfServiceScreen}
         options={{title: strings.acceptTermsTitle}}
       />
 

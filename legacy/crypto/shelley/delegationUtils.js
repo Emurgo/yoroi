@@ -284,7 +284,6 @@ export const createDelegationTx = async (request: CreateDelegationTxRequest): Pr
       false,
     )
     const utxoSum = allUtxosForKey.reduce((sum, utxo) => sum.plus(new BigNumber(utxo.amount)), new BigNumber(0))
-
     const differenceAfterTx = await getDifferenceAfterTx(unsignedTx, addressedUtxos, stakingKey)
 
     const totalAmountToDelegateBigNum = utxoSum

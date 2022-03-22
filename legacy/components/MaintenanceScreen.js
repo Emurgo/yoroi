@@ -7,11 +7,12 @@ import {AppState, BackHandler, Image, View} from 'react-native'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 
+// $FlowExpectedError
+import {Button, Link, Modal, Text} from '../../src/components'
 import {initApp} from '../actions'
 import image from '../assets/img/error.png'
 import globalMessages from '../i18n/global-messages'
 import styles from './styles/MaintenanceScreen.styles'
-import {Button, Link, Modal, Text} from './UiKit'
 
 const messages = defineMessages({
   title: {

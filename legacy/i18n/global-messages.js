@@ -111,6 +111,10 @@ export const txLabels = defineMessages({
     id: 'global.txLabels.submittingTx',
     defaultMessage: '!!!Submitting transaction',
   },
+  signingTx: {
+    id: 'global.txLabels.signingTx',
+    defaultMessage: '!!!Signing transaction',
+  },
   to: {
     id: 'components.walletinit.restorewallet.upgradeconfirmmodal.toLabel',
     defaultMessage: '!!!To',
@@ -215,6 +219,10 @@ export const ledgerMessages = defineMessages({
     defaultMessage:
       '!!!Device metadata was lost or corrupted. To fix this issue' +
       ', please add a new wallet and connect it with your device.',
+  },
+  continueOnLedger: {
+    id: 'global.ledgerMessages.continueOnLedger',
+    defaultMessage: '!!!Continue on Ledger',
   },
 })
 

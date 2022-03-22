@@ -4,7 +4,8 @@ import React from 'react'
 import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
 import {View} from 'react-native'
 
-import {Text, TitledCard} from '../../UiKit'
+// $FlowExpectedError
+import {Text, TitledCard} from '../../../../src/components'
 import styles from './styles/UpcomingRewardInfo.style'
 
 const messages = defineMessages({

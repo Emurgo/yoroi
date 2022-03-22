@@ -52,6 +52,7 @@ export type AddressedUtxo = {|
 export type SignedTx = {|
   id: string,
   encodedTx: Uint8Array,
+  base64: string,
 |}
 
 // Byron-era Types

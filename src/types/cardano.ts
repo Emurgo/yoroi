@@ -1,10 +1,82 @@
-import BigNumber from 'bignumber.js'
+import {WalletChecksum} from '@emurgo/cip4-js'
+import type {IntlShape} from 'react-intl'
 
-// Wallet Candidates
+import {AccountStates, StakePoolInfoRequest, StakePoolInfosAndHistories, StakingStatus} from './staking'
+import {MultiToken, TokenInfo} from './tokens'
+import {AddressedUtxo, RawUtxo} from './transactions'
 
-export type TransactionDirection = 'SENT' | 'RECEIVED' | 'SELF' | 'MULTI'
-export type TransactionStatus = 'SUCCESSFUL' | 'PENDING' | 'FAILED'
-export type TransactionAssurance = 'PENDING' | 'FAILED' | 'LOW' | 'MEDIUM' | 'HIGH'
+export interface WalletInterface {
+  id: string
+  walletImplementationId: WalletImplementationId
+  networkId: NetworkId
+  provider?: YoroiProvider
+  checksum: WalletChecksum
+  isReadOnly: boolean
+  isHW: boolean
+  isEasyConfirmationEnabled: boolean
+  rewardAddressHex: string
+  hwDeviceInfo: unknown
+  transactions: unknown
+  internalAddresses: unknown
+  externalAddresses: unknown
+  confirmationCounts: unknown
+  isUsedAddressIndex: unknown
+  numReceiveAddresses: number
+  isInitialized: boolean
+  changePassword(masterPassword: string, newPassword: string, intl: IntlShape): Promise<void>
+  fetchPoolInfo(request: StakePoolInfoRequest): Promise<StakePoolInfosAndHistories>
+  getDelegationStatus(): Promise<StakingStatus>
+  getAllUtxosForKey(utxos: Array<RawUtxo>): Promise<Array<AddressedUtxo>>
+  fetchAccountState(): Promise<AccountStates>
+  fetchUTXOs(): Promise<Array<RawUtxo>>
+  fetchTokenInfo(request: {tokenIds: Array<string>}): Promise<Record<string, TokenInfo | null>>
+  signTx<T>(signRequest: ISignRequest<T>, decryptedKey: string): Promise<SignedTx>
+  signTxWithLedger<T>(signRequest: ISignRequest<T>, connectionUSB: boolean): Promise<SignedTx>
+  submitTransaction(signedTx: string): Promise<[]>
+  fetchTxStatus(request: TxStatusRequest): Promise<TxStatusResponse>
+  subscribe(handler: (wallet: WalletInterface) => void): void
+  subscribeOnTxHistoryUpdate(handler: () => void): void
+  createVotingRegTx(
+    utxos: Array<RawUtxo>,
+    catalystPrivateKey: string,
+    decryptedKey?: string,
+    serverTime?: Date | null,
+  ): Promise<void>
+  checkServerStatus(): Promise<ServerStatus>
+}
+
+export type WalletImplementation = {
+  WALLET_IMPLEMENTATION_ID: 'haskell-byron' | 'haskell-shelley' | 'haskell-shelley-24' | 'jormungandr-itn' | ''
+  TYPE: 'bip44' | 'cip1852'
+  MNEMONIC_LEN: number
+  DISCOVERY_GAP_SIZE: number
+  DISCOVERY_BLOCK_SIZE: number
+  MAX_GENERATED_UNUSED: number
+}
+
+export type WalletImplementationId = WalletImplementation['WALLET_IMPLEMENTATION_ID']
+
+export type NetworkId = number
+
+export type YoroiProvider = '' | 'emurgo-alonzo'
+
+export type ServerStatus = {
+  isServerOk: boolean
+  isMaintenance: boolean
+  serverTime: number | null
+  isQueueOnline?: boolean
+}
+
+export type ISignRequest<T> = {
+  totalInput(shift: boolean): Promise<MultiToken>
+  totalOutput(shift: boolean): Promise<MultiToken>
+  fee(): Promise<MultiToken>
+  uniqueSenderAddresses(): Array<string>
+  receivers(includeChange: boolean): Promise<Array<string>>
+  isEqual(tx?: unknown): Promise<boolean>
+
+  self(): T
+}
 
 export type Block = {
   height: number
@@ -13,168 +85,20 @@ export type Block = {
   hash: string
 }
 
-export type TransactionInfo = {
+export type TxSubmissionStatus = {
+  status: 'WAITING' | 'FAILED' | 'MAX_RETRY_REACHED' | 'SUCCESS'
+  reason?: string | null
+}
+
+export type TxStatusRequest = {txHashes: Array<string>}
+
+export type TxStatusResponse = {
+  depth: {[txId: string]: number}
+  submissionStatus?: {[txId: string]: TxSubmissionStatus}
+}
+
+export type SignedTx = {
   id: string
-  inputs: Array<IOData>
-  outputs: Array<IOData>
-  amount: Array<TokenEntryPlain>
-  fee?: Array<TokenEntryPlain>
-  delta: Array<TokenEntryPlain>
-  direction: TransactionDirection
-  confirmations: number
-  submittedAt?: string
-  lastUpdatedAt: string
-  status: TransactionStatus
-  assurance: TransactionAssurance
-  tokens: Record<string, Token>
-}
-
-// Stake
-
-export type Certificate =
-  | 'StakeRegistration'
-  | 'StakeDeregistration'
-  | 'StakeDelegation'
-  | 'PoolRegistration'
-  | 'PoolRetirement'
-  | 'MoveInstantaneousRewardsCert'
-
-export type Withdrawal = {
-  address: string // hex
-  amount: string
-}
-
-export type RemoteCertificateMeta =
-  | {
-      kind: 'StakeRegistration'
-      rewardAddress: string // hex
-    }
-  | {
-      kind: 'StakeDeregistration'
-      rewardAddress: string // hex
-    }
-  | {
-      kind: 'StakeDelegation'
-      rewardAddress: string // hex
-      poolKeyHash: string // hex
-    }
-  | {
-      kind: 'PoolRegistration'
-      poolParams: unknown // we don't care about this for now
-    }
-  | {
-      kind: 'PoolRetirement'
-      poolKeyHash: string // hex
-    }
-  | {
-      kind: 'MoveInstantaneousRewardsCert'
-      rewards: Record<string, string>
-      pot: 0 | 1
-    }
-
-// Transaction
-
-export type Era = 'byron' | 'shelley'
-
-export type RawTransaction = {
-  id: string
-  type?: Era
-  fee?: string
-  status: TransactionStatus
-  inputs: Array<IOData>
-  outputs: Array<IOData>
-  blockNum?: number
-  blockHash?: string
-  txOrdinal?: number
-  submittedAt?: string
-  epoch?: number
-  slot?: number
-  lastUpdatedAt: string
-  withdrawals: Array<Withdrawal>
-  certificates: Array<RemoteCertificateMeta>
-  validContract?: boolean
-  scriptSize?: number
-  collateralInputs?: Array<IOData>
-}
-
-// Utxo data
-
-export type IOData = {
-  address: string
-  amount: string
-  assets: Array<TokenEntry>
-}
-
-// Native assets (NFT/Tokens)
-
-export type TokenLookupKey = {
-  identifier: string
-  networkId: number
-}
-
-export type TokenEntry = TokenLookupKey & {
-  amount: BigNumber
-}
-
-export type TokenEntryPlain = TokenLookupKey & {
-  amount: string
-  isDefault: boolean
-}
-
-export type DefaultTokenEntry = {
-  defaultNetworkId: number
-  defaultIdentifier: string
-}
-
-export type TokenCommonMetadata = {
-  numberOfDecimals: number
-  ticker: null | string
-  longName: null | string
-  maxSupply: null | string
-}
-
-export type TokenMetadata = TokenCommonMetadata & {
-  type: 'Cardano'
-  policyId: string // empty string for ADA
-  assetName: string // empty string for ADA
-}
-
-export type Token = {
-  networkId: number
-  isDefault: boolean
-  /**
-   * For Ergo, this is the tokenId (box id of first input in tx)
-   * for Cardano, this is policyId || assetName
-   * Note: we don't use null for the primary token of the chain
-   * As some blockchains have multiple primary tokens
-   */
-  identifier: string
-  metadata: TokenMetadata
-}
-
-export type DefaultAssetMetadata = TokenCommonMetadata & {
-  type: 'Cardano'
-  policyId: string // empty string for ADA
-  assetName: string // empty string for ADA
-  ticker: string
-}
-
-export type DefaultAsset = Token & {
-  metadata: DefaultAssetMetadata
-}
-
-// Catalyst
-
-export type FundInfos = {
-  currentFund: FundInfo
-  nextFund: FundInfo
-}
-
-export type FundInfo = {
-  id: number
-  registrationStart: string
-  registrationEnd: string
-  votingStart: string
-  votingEnd: string
-  votingPowerThreshold: string // in ADA
+  encodedTx: Uint8Array
+  base64: string
 }

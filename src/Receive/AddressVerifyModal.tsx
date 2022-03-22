@@ -3,10 +3,10 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, ScrollView, View} from 'react-native'
 import {StyleSheet} from 'react-native'
 
-import HWInstructions from '../../legacy/components/Ledger/HWInstructions'
-import {Button, Modal, Text} from '../../legacy/components/UiKit'
 import {confirmationMessages} from '../../legacy/i18n/global-messages'
 import {COLORS, spacing} from '../../legacy/styles/config'
+import {Button, Modal, Text} from '../components'
+import {Instructions as HWInstructions} from '../HW'
 
 type Props = {
   visible: boolean
@@ -44,7 +44,7 @@ export const AddressVerifyModal = ({visible, onConfirm, onRequestClose, address,
 
         <Button onPress={onConfirm} title={strings.confirmButton} style={styles.button} disabled={isWaiting} />
 
-        {isWaiting && <ActivityIndicator />}
+        {isWaiting && <ActivityIndicator color={'black'} />}
       </ScrollView>
     </Modal>
   )

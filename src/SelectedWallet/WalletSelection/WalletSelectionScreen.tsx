@@ -3,20 +3,20 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, ScrollView, StyleSheet, Text} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useDispatch, useSelector} from 'react-redux'
+import {useDispatch} from 'react-redux'
 
-import {showErrorDialog, updateVersion} from '../../../legacy/actions'
+import {setEasyConfirmation, showErrorDialog, updateVersion} from '../../../legacy/actions'
 import Screen from '../../../legacy/components/Screen'
-import {Button, ScreenBackground, StatusBar} from '../../../legacy/components/UiKit'
 import {CONFIG, isNightly} from '../../../legacy/config/config'
 import {isJormungandr} from '../../../legacy/config/networks'
 import {InvalidState} from '../../../legacy/crypto/errors'
 import walletManager, {KeysAreInvalid, SystemAuthDisabled} from '../../../legacy/crypto/walletManager'
 import globalMessages, {errorMessages} from '../../../legacy/i18n/global-messages'
 import {ROOT_ROUTES, WALLET_INIT_ROUTES, WALLET_ROOT_ROUTES} from '../../../legacy/RoutesList'
-import {walletsListSelector} from '../../../legacy/selectors'
 import {WalletMeta} from '../../../legacy/state'
 import {COLORS} from '../../../legacy/styles/config'
+import {Button, ScreenBackground, StatusBar} from '../../components'
+import {useWalletMetas} from '../../hooks'
 import {useSetSelectedWallet, useSetSelectedWalletMeta} from '..'
 import {WalletListItem} from './WalletListItem'
 
@@ -24,18 +24,19 @@ export const WalletSelectionScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
   const navigation = useNavigation()
-  const wallets = useSelector(walletsListSelector)
+  const walletMetas = useWalletMetas()
   const selectWalletMeta = useSetSelectedWalletMeta()
   const selectWallet = useSetSelectedWallet()
+  const dispatch = useDispatch()
 
-  const openWallet = async (walletMeta: WalletMeta) => {
+  const openWallet = async (walletMeta: WalletMeta, isRetry?: boolean) => {
     try {
       if (walletMeta.isShelley || isJormungandr(walletMeta.networkId)) {
         await showErrorDialog(errorMessages.itnNotSupported, intl)
         return
       }
-      const wallet = await walletManager.openWallet(walletMeta)
-      selectWalletMeta(walletMeta)
+      const [wallet, newWalletMeta] = await walletManager.openWallet(walletMeta)
+      selectWalletMeta(newWalletMeta)
       selectWallet(wallet)
 
       const route = WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES
@@ -51,14 +52,18 @@ export const WalletSelectionScreen = () => {
         navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
       } else if (e instanceof KeysAreInvalid) {
         await walletManager.cleanupInvalidKeys()
+        await walletManager.disableEasyConfirmation()
+        await dispatch(setEasyConfirmation(false))
         await showErrorDialog(errorMessages.walletKeysInvalidated, intl)
+        if (!isRetry) {
+          await openWallet(walletMeta, true)
+        }
       } else {
         throw e
       }
     }
   }
 
-  const dispatch = useDispatch()
   React.useEffect(() => {
     dispatch(updateVersion())
   }, [dispatch])
@@ -72,12 +77,12 @@ export const WalletSelectionScreen = () => {
           <Text style={styles.title}>{strings.header}</Text>
 
           <ScrollView style={styles.wallets}>
-            {wallets ? (
-              wallets
+            {walletMetas ? (
+              walletMetas
                 .sort(byName)
-                .map((wallet) => <WalletListItem key={wallet.id} wallet={wallet} onPress={openWallet} />)
+                .map((walletMeta) => <WalletListItem key={walletMeta.id} wallet={walletMeta} onPress={openWallet} />)
             ) : (
-              <ActivityIndicator />
+              <ActivityIndicator color={'black'} />
             )}
           </ScrollView>
 

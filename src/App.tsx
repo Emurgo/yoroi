@@ -1,21 +1,28 @@
 import 'intl'
 
 import React, {useEffect} from 'react'
-import {AppState, AppStateStatus, Platform} from 'react-native'
+import {AppState, AppStateStatus, Platform, UIManager} from 'react-native'
 import RNBootSplash from 'react-native-bootsplash'
 import * as RNP from 'react-native-paper'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {enableScreens} from 'react-native-screens'
 import {QueryClient, QueryClientProvider} from 'react-query'
-import {useDispatch} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 
 import {initApp} from '../legacy/actions'
+import {isAppInitializedSelector} from '../legacy/selectors'
 import AppNavigator from './AppNavigator'
 import {SelectedWalletMetaProvider, SelectedWalletProvider} from './SelectedWallet'
 
 const queryClient = new QueryClient()
 
 enableScreens()
+
+if (Platform.OS === 'android') {
+  if (UIManager.setLayoutAnimationEnabledExperimental) {
+    UIManager.setLayoutAnimationEnabledExperimental(true)
+  }
+}
 
 const useInitializeApp = () => {
   const dispatch = useDispatch()
@@ -49,6 +56,9 @@ const useHideScreenInAppSwitcher = () => {
 const App = () => {
   useHideScreenInAppSwitcher()
   useInitializeApp()
+  const isAppInitialized = useSelector(isAppInitializedSelector)
+
+  if (!isAppInitialized) return null
 
   return (
     <SafeAreaProvider>

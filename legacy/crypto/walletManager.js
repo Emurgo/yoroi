@@ -18,11 +18,12 @@ import type {
   TokenInfoResponse,
   TxBodiesRequest,
 } from '../api/types'
-import {CONFIG, WALLETS} from '../config/config'
+import {CONFIG, DISABLE_BACKGROUND_SYNC, WALLETS} from '../config/config'
 import {isJormungandr} from '../config/networks'
 import type {NetworkId, WalletImplementationId, YoroiProvider} from '../config/types'
 import {NETWORK_REGISTRY, WALLET_IMPLEMENTATION_REGISTRY} from '../config/types'
-import {canBiometricEncryptionBeEnabled, isSystemAuthSupported} from '../helpers/deviceSettings'
+import {APP_SETTINGS_KEYS, readAppSettings} from '../helpers/appSettings'
+import {ensureKeysValidity, isSystemAuthSupported} from '../helpers/deviceSettings'
 import type {ServerStatusCache, WalletMeta} from '../state'
 import type {DefaultAsset} from '../types/HistoryTransaction'
 import assert from '../utils/assert'
@@ -256,7 +257,7 @@ class WalletManager {
   }
 
   get isEasyConfirmationEnabled() {
-    if (!this._wallet) return {}
+    if (!this._wallet) return false
 
     return this.getWallet().isEasyConfirmationEnabled
   }
@@ -322,11 +323,6 @@ class WalletManager {
     return this.getWallet().checksum
   }
 
-  get walletName() {
-    if (!this._id) return ''
-    return this._wallets[this._id].name
-  }
-
   get provider() {
     if (!this._wallet) return ''
     return this._wallet.provider
@@ -363,17 +359,6 @@ class WalletManager {
     wallet.isEasyConfirmationEnabled = false
   }
 
-  async ensureKeysValidity() {
-    const wallet = this.getWallet()
-
-    const canBiometricsBeUsed = await canBiometricEncryptionBeEnabled()
-    const isKeyValid = await KeyStore.isKeyValid(wallet.id, 'BIOMETRICS')
-
-    if (!isKeyValid || !canBiometricsBeUsed) {
-      throw new KeysAreInvalid()
-    }
-  }
-
   async deleteEncryptedKey(encryptionMethod: EncryptionMethod) {
     if (!this._wallet) {
       throw new Error('Empty wallet')
@@ -383,19 +368,17 @@ class WalletManager {
   }
 
   async disableEasyConfirmation() {
-    if (!this._wallet) {
-      throw new Error('Empty wallet')
-    }
+    const wallet = this.getWallet()
 
-    await this._updateMetadata(this._wallet.id, {
+    wallet.isEasyConfirmationEnabled = false
+    await this._saveState(wallet)
+
+    await this._updateMetadata(wallet.id, {
       isEasyConfirmationEnabled: false,
     })
 
     await this.deleteEncryptedKey('BIOMETRICS')
     await this.deleteEncryptedKey('SYSTEM_PIN')
-
-    // $FlowFixMe
-    this._wallet.isEasyConfirmationEnabled = false
     this._notify()
   }
 
@@ -437,7 +420,9 @@ class WalletManager {
     } catch (e) {
       this._notifySyncError(e)
     } finally {
-      setTimeout(() => this._backgroundSync(), CONFIG.HISTORY_REFRESH_TIME)
+      if (!DISABLE_BACKGROUND_SYNC && process.env.NODE_ENV !== 'test') {
+        setTimeout(() => this._backgroundSync(), CONFIG.HISTORY_REFRESH_TIME)
+      }
     }
   }
 
@@ -511,18 +496,34 @@ class WalletManager {
     return wallet
   }
 
-  async openWallet(walletMeta: WalletMeta): Promise<WalletInterface> {
+  async openWallet(walletMeta: WalletMeta): Promise<[WalletInterface, WalletMeta]> {
     assert.preconditionCheck(!!walletMeta.id, 'openWallet:: !!id')
     const data = await storage.read(`/wallet/${walletMeta.id}/data`)
+    const appSettings = await readAppSettings()
+    const isSystemAuthEnabled = appSettings[APP_SETTINGS_KEYS.SYSTEM_AUTH_ENABLED]
     Logger.debug('openWallet::data', data)
     if (!data) throw new Error('Cannot read saved data')
 
     const wallet: WalletInterface = this._getWalletImplementation(walletMeta.walletImplementationId)
+    const newWalletMeta = {...walletMeta}
 
     await wallet.restore(data, walletMeta)
     wallet.id = walletMeta.id
     this._wallet = wallet
     this._id = walletMeta.id
+
+    const shouldDisableEasyConfirmation = walletMeta.isEasyConfirmationEnabled && !isSystemAuthEnabled
+    if (shouldDisableEasyConfirmation) {
+      wallet.isEasyConfirmationEnabled = false
+
+      await this._updateMetadata(wallet.id, {
+        isEasyConfirmationEnabled: false,
+      })
+      newWalletMeta.isEasyConfirmationEnabled = false
+
+      await this.deleteEncryptedKey('BIOMETRICS')
+      await this.deleteEncryptedKey('SYSTEM_PIN')
+    }
 
     // wallet state might have changed after restore due to migrations, so we
     // update the data in storage immediately
@@ -538,10 +539,10 @@ class WalletManager {
     this._notifyOnOpen()
 
     if (wallet.isEasyConfirmationEnabled) {
-      await this.ensureKeysValidity()
+      await ensureKeysValidity(wallet.id)
     }
 
-    return wallet
+    return [wallet, newWalletMeta]
   }
 
   async save() {
@@ -554,12 +555,6 @@ class WalletManager {
     /* :: if (!this._wallet) throw 'assert' */
     const data = wallet.toJSON()
     await storage.write(`/wallet/${wallet.id}/data`, data)
-  }
-
-  async listWallets() {
-    const keys = await storage.keys('/wallet/')
-    const result = await Promise.all(keys.map((key) => storage.read(`/wallet/${key}`)))
-    return result
   }
 
   closeWallet(): Promise<void> {
@@ -620,15 +615,6 @@ class WalletManager {
       ...this._wallets,
       [id]: merged,
     }
-  }
-
-  async rename(newName: string) {
-    if (!this._id) throw new WalletClosed()
-    const id = this._id
-
-    await this._updateMetadata(id, {name: newName})
-
-    this._notify() // update redux Store
   }
 
   async updateHWDeviceInfo(hwDeviceInfo: HWDeviceInfo) {
@@ -745,18 +731,6 @@ class WalletManager {
     const wallet = this.getWallet()
     return await this.abortWhenWalletCloses(
       wallet.createDelegationTx<mixed>(poolRequest, valueInAccount, utxos, defaultAsset, serverTime),
-    )
-  }
-
-  async createVotingRegTx(
-    utxos: Array<RawUtxo>,
-    catalystPrivateKey: string,
-    decryptedKey: string | void,
-    serverTime: Date | void,
-  ) {
-    const wallet = this.getWallet()
-    return await this.abortWhenWalletCloses(
-      wallet.createVotingRegTx<mixed>(utxos, catalystPrivateKey, decryptedKey, serverTime),
     )
   }
 

@@ -3,18 +3,18 @@ import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useSelector} from 'react-redux'
 
-import {Button, ProgressStep, Spacer} from '../../legacy/components/UiKit'
 import {confirmationMessages} from '../../legacy/i18n/global-messages'
 import {CATALYST_ROUTES} from '../../legacy/RoutesList'
-import type {State} from '../../legacy/state'
+import {Button, ProgressStep, Spacer} from '../components'
 import {Actions, Description, PinBox, Row, Title} from './components'
 
-export const Step2 = () => {
+type Props = {
+  pin: string
+}
+export const Step2 = ({pin}: Props) => {
   const strings = useStrings()
   const navigation = useNavigation()
-  const pin = useSelector((state: State) => state.voting.pin)
   const [countDown, setCountDown] = useState(5)
 
   useEffect(() => {
