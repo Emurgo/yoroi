@@ -2,9 +2,7 @@ import {useNavigation, useRoute} from '@react-navigation/native'
 import React from 'react'
 import {ActivityIndicator, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useDispatch} from 'react-redux'
 
-import {updateVersion} from '../../../legacy/actions'
 import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../../legacy/RoutesList'
 import type {WalletMeta} from '../../../legacy/state'
 import {COLORS} from '../../../legacy/styles/config'
@@ -18,7 +16,6 @@ export const WalletCredentialsScreen = () => {
   const route: any = useRoute()
   const {phrase, networkId, walletImplementationId, provider} = route.params
 
-  const dispatch = useDispatch()
   const setSelectedWalletMeta = useSetSelectedWalletMeta()
   const setSelectedWallet = useSetSelectedWallet()
 
@@ -37,7 +34,6 @@ export const WalletCredentialsScreen = () => {
       }
       setSelectedWalletMeta(walletMeta)
       setSelectedWallet(wallet)
-      await dispatch(updateVersion())
 
       navigation.navigate(ROOT_ROUTES.WALLET, {screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES})
     },
