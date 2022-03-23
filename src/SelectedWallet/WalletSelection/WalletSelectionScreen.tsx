@@ -5,7 +5,7 @@ import {ActivityIndicator, ScrollView, StyleSheet, Text} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch} from 'react-redux'
 
-import {setEasyConfirmation, showErrorDialog, updateVersion} from '../../../legacy/actions'
+import {setEasyConfirmation, showErrorDialog} from '../../../legacy/actions'
 import Screen from '../../../legacy/components/Screen'
 import {Button, ScreenBackground, StatusBar} from '../../../legacy/components/UiKit'
 import {CONFIG, isNightly} from '../../../legacy/config/config'
@@ -63,10 +63,6 @@ export const WalletSelectionScreen = () => {
       }
     }
   }
-
-  React.useEffect(() => {
-    dispatch(updateVersion())
-  }, [dispatch])
 
   return (
     <SafeAreaView style={styles.safeAreaView}>

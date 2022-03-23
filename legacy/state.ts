@@ -6,9 +6,8 @@ import {BigNumber} from 'bignumber.js'
 import type {RawUtxo, RemotePoolMetaSuccess} from './api/types'
 import type {NetworkId, WalletImplementationId, YoroiProvider} from './config/types'
 import {ISignRequest} from './crypto/ISignRequest'
-import type {HWDeviceInfo} from './crypto/shelley/ledgerUtils'
 import type {WalletInterface} from './crypto/WalletInterface'
-import type {Token, Transaction} from './types/HistoryTransaction'
+import type {Token} from './types/HistoryTransaction'
 
 // prettier-ignore
 export type ServerStatusCache = {
@@ -97,7 +96,6 @@ export type State = {
     isBiometricHardwareSupported: boolean,
     sendCrashReports: boolean,
     canEnableBiometricEncryption: boolean,
-    currentVersion: string | void | null,
   },
   // need to add as a non-wallet-specific property to avoid conflict with other
   // actions that may override this property (otherwise more refactoring is needed)
