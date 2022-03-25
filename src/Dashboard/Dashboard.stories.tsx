@@ -6,14 +6,14 @@ import {Provider} from 'react-redux'
 import getConfiguredStore from '../../legacy/helpers/configureStore'
 import {mockWallet, poolInfoAndHistory, stakePoolId} from '../../storybook'
 import {SelectedWalletProvider} from '../SelectedWallet'
-import {StakePoolInfosAndHistories, WalletInterface} from '../types'
+import {StakePoolInfosAndHistories, YoroiWallet} from '../types'
 import {Dashboard} from './Dashboard'
 
 storiesOf('Dashboard', module)
   .add('not delegating', () => {
     const store = getConfiguredStore(true, true, {accountState: {isDelegating: false}})
 
-    const notDelegatingWallet: WalletInterface = {
+    const notDelegatingWallet: YoroiWallet = {
       ...mockWallet,
       getDelegationStatus: () => Promise.resolve({isRegistered: false, poolKeyHash: null}),
     }
@@ -31,7 +31,7 @@ storiesOf('Dashboard', module)
   .add('Loading ids', () => {
     const store = getConfiguredStore(true, true, {accountState: {isDelegating: true, poolOperator: stakePoolId}})
 
-    const loadingWallet: WalletInterface = {
+    const loadingWallet: YoroiWallet = {
       ...mockWallet,
       getDelegationStatus: () => new Promise((_resolve, _reject) => undefined), // never resolves
     }
@@ -49,7 +49,7 @@ storiesOf('Dashboard', module)
   .add('Loading StakePoolInfo', () => {
     const store = getConfiguredStore(true, true, {accountState: {isDelegating: true, poolOperator: stakePoolId}})
 
-    const loadingWallet: WalletInterface = {
+    const loadingWallet: YoroiWallet = {
       ...mockWallet,
       getDelegationStatus: () => Promise.resolve({isRegistered: true, poolKeyHash: stakePoolId}),
       fetchPoolInfo: () => new Promise((_resolve, _reject) => undefined), // never resolves
@@ -68,7 +68,7 @@ storiesOf('Dashboard', module)
   .add('Loaded, StakePoolInfo success', () => {
     const store = getConfiguredStore(true, true, {accountState: {isDelegating: true, poolOperator: stakePoolId}})
 
-    const loadedWallet: WalletInterface = {
+    const loadedWallet: YoroiWallet = {
       ...mockWallet,
       getDelegationStatus: () => Promise.resolve({isRegistered: true, poolKeyHash: stakePoolId}),
       fetchPoolInfo: () => Promise.resolve({[stakePoolId]: poolInfoAndHistory} as StakePoolInfosAndHistories),
@@ -87,7 +87,7 @@ storiesOf('Dashboard', module)
   .add('Loaded, StakePoolInfo error', () => {
     const store = getConfiguredStore(true, true, {accountState: {isDelegating: true, poolOperator: stakePoolId}})
 
-    const loadedWallet: WalletInterface = {
+    const loadedWallet: YoroiWallet = {
       ...mockWallet,
       getDelegationStatus: () => Promise.resolve({isRegistered: true, poolKeyHash: stakePoolId}),
       fetchPoolInfo: () =>

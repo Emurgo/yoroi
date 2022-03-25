@@ -3,7 +3,7 @@ import {useMutation, UseMutationOptions} from 'react-query'
 import {encryptWithPassword} from '../../legacy/crypto/catalystCipher'
 import {generatePrivateKeyForCatalyst} from '../../legacy/crypto/shelley/catalystUtils'
 import {HaskellShelleyTxSignRequest} from '../../legacy/crypto/shelley/HaskellShelleyTxSignRequest'
-import {WalletInterface} from '../types'
+import {YoroiWallet} from '../types'
 
 export type VotingRegTxVariables = {
   pin: string
@@ -15,7 +15,7 @@ export type VotingRegTxData = {
   signRequest: HaskellShelleyTxSignRequest
 }
 export const useCreateVotingRegTx = (
-  {wallet}: {wallet: WalletInterface},
+  {wallet}: {wallet: YoroiWallet},
   options: UseMutationOptions<VotingRegTxData, Error, VotingRegTxVariables> = {},
 ) => {
   const mutation = useMutation<VotingRegTxData, Error, VotingRegTxVariables>({

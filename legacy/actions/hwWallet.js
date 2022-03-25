@@ -2,9 +2,10 @@
 
 import type {Dispatch} from 'redux'
 
+// $FlowExpectedError
+import {walletManager} from '../../src/yoroi-wallets'
 import type {DeviceId, DeviceObj, HWDeviceInfo} from '../crypto/shelley/ledgerUtils'
 import {NoDeviceInfoError} from '../crypto/shelley/ledgerUtils'
-import walletManager from '../crypto/walletManager'
 import {hwDeviceInfoSelector} from '../selectors'
 import type {State} from '../state'
 import {Logger} from '../utils/logging'

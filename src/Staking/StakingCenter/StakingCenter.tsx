@@ -14,7 +14,6 @@ import UtxoAutoRefresher from '../../../legacy/components/Send/UtxoAutoRefresher
 import {CONFIG, getTestStakingPool, isNightly, SHOW_PROD_POOLS_IN_DEV} from '../../../legacy/config/config'
 import {getNetworkConfigById} from '../../../legacy/config/networks'
 import {InsufficientFunds} from '../../../legacy/crypto/errors'
-import walletManager from '../../../legacy/crypto/walletManager'
 import globalMessages, {errorMessages} from '../../../legacy/i18n/global-messages'
 import {STAKING_CENTER_ROUTES} from '../../../legacy/RoutesList'
 import {
@@ -31,6 +30,7 @@ import {Logger} from '../../../legacy/utils/logging'
 import {PleaseWaitModal} from '../../components'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {DefaultAsset, RawUtxo, ServerStatus} from '../../types'
+import {walletManager} from '../../yoroi-wallets'
 import {PoolDetailScreen} from '../PoolDetails'
 import {PoolWarningModal} from '../PoolWarningModal'
 

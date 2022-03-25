@@ -3,11 +3,12 @@
 import type {WalletChecksum} from '@emurgo/cip4-js'
 import {BigNumber} from 'bignumber.js'
 
+// $FlowExpectedError
+import type {WalletInterface} from '../src/yoroi-wallets'
 import type {RawUtxo, RemotePoolMetaSuccess} from './api/types'
 import type {NetworkId, WalletImplementationId, YoroiProvider} from './config/types'
 import {NETWORK_REGISTRY} from './config/types'
 import {ISignRequest} from './crypto/ISignRequest'
-import type {WalletInterface} from './crypto/WalletInterface'
 import {mockReduxWallet} from './mockWallet'
 import type {Token} from './types/HistoryTransaction'
 

@@ -7,6 +7,8 @@ import DeviceInfo from 'react-native-device-info'
 import {type Dispatch} from 'redux'
 import uuid from 'uuid'
 
+// $FlowExpectedError
+import {walletManager} from '../src/yoroi-wallets'
 import {clearAccountState} from './actions/account'
 import {mirrorTxHistory, setBackgroundSyncError, updateHistory} from './actions/history'
 import {changeAndSaveLanguage} from './actions/language'
@@ -18,7 +20,6 @@ import {getCardanoNetworkConfigById} from './config/networks'
 import {encryptCustomPin} from './crypto/customPin'
 import {ISignRequest} from './crypto/ISignRequest'
 import KeyStore from './crypto/KeyStore'
-import walletManager from './crypto/walletManager'
 import {
   type AppSettingsKey,
   APP_SETTINGS_KEYS,

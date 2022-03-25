@@ -1,15 +1,8 @@
 import BigNumber from 'bignumber.js'
 
-import {
-  RemotePoolMetaSuccess,
-  StakePoolInfosAndHistories,
-  TokenEntry,
-  TokenInfo,
-  TokenMetadata,
-  WalletInterface,
-} from '../../src/types'
+import {RemotePoolMetaSuccess, StakePoolInfosAndHistories, TokenEntry, TokenInfo, YoroiWallet} from '../../src/types'
 
-export const mockWallet: WalletInterface = {
+export const mockWallet: YoroiWallet = {
   id: 'wallet-id',
   walletImplementationId: 'haskell-shelley',
   networkId: 300,
@@ -18,15 +11,15 @@ export const mockWallet: WalletInterface = {
   isReadOnly: false,
   isEasyConfirmationEnabled: false,
   rewardAddressHex: 'reward-address-hex',
-  hwDeviceInfo: {},
-  transactions: {},
-  internalAddresses: [],
-  externalAddresses: [],
-  confirmationCounts: {},
-  isUsedAddressIndex: {},
-  numReceiveAddresses: 0,
-  isInitialized: true,
+  provider: null,
+  publicKeyHex: 'publicKeyHex',
 
+  createDelegationTx: () => {
+    throw new Error('not implemented: createDelegationTx')
+  },
+  createWithdrawalTx: () => {
+    throw new Error('not implemented: createWithdrawalTx')
+  },
   fetchUTXOs: () => Promise.resolve([]),
   getAllUtxosForKey: () => Promise.resolve([]),
   fetchTokenInfo: () => Promise.resolve(tokenResponses),
@@ -37,11 +30,7 @@ export const mockWallet: WalletInterface = {
   },
   fetchAccountState: () =>
     Promise.resolve({['reward-address-hex']: {remainingAmount: '0', rewards: '0', withdrawals: ''}}),
-
   changePassword: () => {
-    throw new Error('Not implemented')
-  },
-  subscribe: () => {
     throw new Error('Not implemented')
   },
   signTx: () => {
@@ -62,12 +51,40 @@ export const mockWallet: WalletInterface = {
   checkServerStatus: () => {
     throw new Error('Not implemented')
   },
+
+  // enableEasyConfirmation: () => {
+  //   throw new Error('not implemented: enableEasyConfirmation')
+  // },
+
+  // canGenerateNewReceiveAddress: () => {
+  //   throw new Error('not implemented: canGenerateNewReceiveAddress')
+  // },
+
+  // generateNewUiReceiveAddress: () => {
+  //   throw new Error('not implemented: generateNewUiReceiveAddress')
+  // },
+
+  // generateNewUiReceiveAddressIfNeeded: () => {
+  //   throw new Error('not implemented: generateNewUiReceiveAddressIfNeeded')
+  // },
+
+  // getAddressingInfo: () => {
+  //   throw new Error('not implemented: getAddressingInfo')
+  // },
+
+  // createUnsignedTx: () => {
+  //   throw new Error('not implemented: createUnsignedTx')
+  // },
+
+  // fetchFundInfo: () => {
+  //   throw new Error('not implemented: fetchFundInfo')
+  // },
 }
 
-export function walletFactory(walletOveride: Partial<WalletInterface>): WalletInterface {
+export function walletFactory(walletOveride: Partial<YoroiWallet>): YoroiWallet {
   return {
     ...mockWallet,
-    ...walletOveride
+    ...walletOveride,
   }
 }
 

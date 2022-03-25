@@ -13,14 +13,14 @@ import {WrongPassword} from '../../../legacy/crypto/errors'
 import {ISignRequest} from '../../../legacy/crypto/ISignRequest'
 import KeyStore from '../../../legacy/crypto/KeyStore'
 import {MultiToken} from '../../../legacy/crypto/MultiToken'
-import {HaskellShelleyTxSignRequest} from '../../../legacy/crypto/shelley/HaskellShelleyTxSignRequest'
+import {HaskellShelleyTxSignRequest as HaskellShelleyTxSignRequestClass} from '../../../legacy/crypto/shelley/HaskellShelleyTxSignRequest'
 import type {DeviceId, DeviceObj, HWDeviceInfo} from '../../../legacy/crypto/shelley/ledgerUtils'
-import walletManager, {SystemAuthDisabled} from '../../../legacy/crypto/walletManager'
 import {ensureKeysValidity} from '../../../legacy/helpers/deviceSettings'
 import {errorMessages} from '../../../legacy/i18n/global-messages'
 import LocalizableError from '../../../legacy/i18n/LocalizableError'
 import {DELEGATION_ROUTES, SEND_ROUTES, WALLET_ROOT_ROUTES, WALLET_ROUTES} from '../../../legacy/RoutesList'
 import {DefaultAsset, RawUtxo, ServerStatus} from '../../types'
+import {HaskellShelleyTxSignRequest, SystemAuthDisabled, walletManager} from '../../yoroi-wallets'
 import {WithdrawalDialog} from './WithdrawalDialog'
 
 type Props = {
@@ -108,7 +108,7 @@ export class WithdrawStakingRewards extends React.Component<Props, State> {
         this._shouldDeregister,
         serverStatus.serverTime,
       )
-      if (signTxRequest instanceof HaskellShelleyTxSignRequest) {
+      if (signTxRequest instanceof HaskellShelleyTxSignRequestClass) {
         const withdrawals = await signTxRequest.withdrawals()
         const deregistrations = await signTxRequest.keyDeregistrations()
         const balance = withdrawals.reduce(

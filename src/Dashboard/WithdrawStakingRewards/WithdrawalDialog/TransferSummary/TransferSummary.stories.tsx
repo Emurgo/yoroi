@@ -8,7 +8,7 @@ import {MultiToken} from '../../../../../legacy/crypto/MultiToken'
 import {WithModalProps} from '../../../../../storybook'
 import {Modal} from '../../../../components'
 import {SelectedWalletProvider} from '../../../../SelectedWallet'
-import {WalletInterface} from '../../../../types'
+import {YoroiWallet} from '../../../../types'
 import {TransferSummary} from './TransferSummary'
 
 const other = {
@@ -25,7 +25,7 @@ const wallet = {
   networkId: 1,
   isEasyConfirmationEnabled: true,
   isHW: false,
-} as WalletInterface
+} as YoroiWallet
 
 storiesOf('TransferSummary', module)
   .add('withdrawals, no registrations', () => {

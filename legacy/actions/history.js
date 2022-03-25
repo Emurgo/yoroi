@@ -2,8 +2,9 @@
 
 import {type Dispatch} from 'redux'
 
+// $FlowExpectedError
+import {WalletClosed, walletManager} from '../../src/yoroi-wallets'
 import {ApiHistoryError} from '../api/errors'
-import walletManager, {WalletClosed} from '../crypto/walletManager'
 import {Logger} from '../utils/logging'
 
 const _startFetch = () => ({

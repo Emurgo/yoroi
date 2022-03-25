@@ -4,7 +4,7 @@ import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {useQuery} from 'react-query'
 
 import {useSelectedWallet} from '../SelectedWallet'
-import {WalletInterface} from '../types'
+import {YoroiWallet} from '../types'
 import {StakePoolInfo} from './StakePoolInfo'
 
 export const StakePoolInfos = () => {
@@ -41,7 +41,7 @@ type NotRegistered = {
   isRegistered: false
 }
 
-export const useStakingInfo = (wallet: WalletInterface) => {
+export const useStakingInfo = (wallet: YoroiWallet) => {
   const query = useQuery<StakingInfo>({
     retry: false,
     queryKey: [wallet.id, 'stakingInfo'],
@@ -80,7 +80,7 @@ export const useStakingInfo = (wallet: WalletInterface) => {
   }
 }
 
-export const useStakePoolIds = (wallet: WalletInterface) => {
+export const useStakePoolIds = (wallet: YoroiWallet) => {
   const {stakingInfo, ...stakingInfoQuery} = useStakingInfo(wallet)
 
   return {

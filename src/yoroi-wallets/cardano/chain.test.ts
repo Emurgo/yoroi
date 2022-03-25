@@ -1,7 +1,5 @@
-// @flow
-
-import jestSetup from '../../jestSetup'
-import type {CryptoAccount} from '../byron/util'
+import type {CryptoAccount} from '../../../legacy/crypto/byron/util'
+import jestSetup from '../../../legacy/jestSetup'
 import {AddressChain, AddressGenerator} from './chain'
 
 jestSetup.setup()
@@ -16,10 +14,7 @@ describe('AddressChain', () => {
   beforeEach(() => {
     used = []
     chain = new AddressChain(
-      // $FlowFixMe (this is a mock)
-      {
-        generate: (ids) => Promise.resolve(ids.map(getAddr)),
-      },
+      {generate: (ids) => Promise.resolve(ids.map(getAddr))} as AddressGenerator,
       5 /* block size */,
       2 /* gap limit */,
     )

@@ -1,38 +1,31 @@
-/* eslint-disable no-use-before-define */
-// @flow
-
-/**
- * Shelley- & Byron-compatible address generator
- */
-
 import {BaseAddress, Bip32PublicKey, RewardAddress, StakeCredential} from '@emurgo/react-native-haskell-shelley'
 import _ from 'lodash'
 import type {Moment} from 'moment'
 import {defaultMemoize} from 'reselect'
 
-import {CONFIG, isByron, isHaskellShelley} from '../../config/config'
-import {getNetworkConfigById} from '../../config/networks'
-import type {NetworkId, WalletImplementationId} from '../../config/types'
-import assert from '../../utils/assert'
-import {Logger} from '../../utils/logging'
-import type {CryptoAccount} from '../byron/util'
-import * as util from '../byron/util'
-import type {AddressType} from '../commonUtils'
-import {ADDRESS_TYPE_TO_CHANGE} from '../commonUtils'
+import {CONFIG, isByron, isHaskellShelley} from '../../../legacy/config/config'
+import {getNetworkConfigById} from '../../../legacy/config/networks'
+import type {NetworkId, WalletImplementationId} from '../../../legacy/config/types'
+import type {CryptoAccount} from '../../../legacy/crypto/byron/util'
+import * as util from '../../../legacy/crypto/byron/util'
+import type {AddressType} from '../../../legacy/crypto/commonUtils'
+import {ADDRESS_TYPE_TO_CHANGE} from '../../../legacy/crypto/commonUtils'
+import assert from '../../../legacy/utils/assert'
+import {Logger} from '../../../legacy/utils/logging'
 
 export type AddressBlock = [number, Moment, Array<string>]
 
-type ShelleyAddressGeneratorJSON = {|
-  accountPubKeyHex: string,
-  walletImplementationId: WalletImplementationId,
-  type: AddressType,
-|}
+type ShelleyAddressGeneratorJSON = {
+  accountPubKeyHex: string
+  walletImplementationId: WalletImplementationId
+  type: AddressType
+}
 
-type ByronAddressGeneratorJSON = {|
-  account: CryptoAccount,
-  walletImplementationId: WalletImplementationId,
-  type: AddressType,
-|}
+type ByronAddressGeneratorJSON = {
+  account: CryptoAccount
+  walletImplementationId: WalletImplementationId
+  type: AddressType
+}
 
 type AddressGeneratorJSON = ShelleyAddressGeneratorJSON | ByronAddressGeneratorJSON
 export class AddressGenerator {
@@ -41,8 +34,8 @@ export class AddressGenerator {
   walletImplementationId: WalletImplementationId
   networkId: NetworkId
 
-  _accountPubKeyPtr: Bip32PublicKey
-  _rewardAddressHex: string
+  _accountPubKeyPtr: undefined | Bip32PublicKey
+  _rewardAddressHex: undefined | string
 
   constructor(
     accountPubKeyHex: string,
@@ -88,7 +81,8 @@ export class AddressGenerator {
     const credential = await StakeCredential.from_keyhash(await stakingKey.hash())
     const rewardAddr = await RewardAddress.new(parseInt(chainNetworkId, 10), credential)
     const rewardAddrAsAddr = await rewardAddr.to_address()
-    this._rewardAddressHex = Buffer.from(await rewardAddrAsAddr.to_bytes(), 'hex').toString('hex')
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    this._rewardAddressHex = Buffer.from((await rewardAddrAsAddr.to_bytes()) as any, 'hex').toString('hex')
     return this._rewardAddressHex
   }
 
@@ -146,16 +140,16 @@ export class AddressGenerator {
 // hardfork), stored the account-level public key as a CryptoAccount object.
 // From v3.0.2 on, we simply store it as a plain hex string)
 const getPublicAddressHex = (data: AddressGeneratorJSON) => {
-  if (data.accountPubKeyHex == null) {
+  if ((data as ShelleyAddressGeneratorJSON).accountPubKeyHex == null) {
     // byron-era wallet
-    if ((data: any).account?.root_cached_key == null) {
+    if ((data as ByronAddressGeneratorJSON).account?.root_cached_key == null) {
       throw new Error('cannot retrieve account public key.')
     }
 
-    return ((data: any): ByronAddressGeneratorJSON).account.root_cached_key
+    return (data as ByronAddressGeneratorJSON).account.root_cached_key
   } else {
     // shelley-era wallet
-    return ((data: any): ShelleyAddressGeneratorJSON).accountPubKeyHex
+    return (data as ShelleyAddressGeneratorJSON).accountPubKeyHex
   }
 }
 
@@ -166,10 +160,10 @@ export type Addresses = Array<string>
 const _addressToIdxSelector = (addresses: Array<string>) => _.fromPairs(addresses.map((addr, i) => [addr, i]))
 
 export type AddressChainJSON = {
-  gapLimit: number,
-  blockSize: number,
-  addresses: Addresses,
-  addressGenerator: AddressGeneratorJSON,
+  gapLimit: number
+  blockSize: number
+  addresses: Addresses
+  addressGenerator: AddressGeneratorJSON
 }
 
 export class AddressChain {
@@ -177,9 +171,9 @@ export class AddressChain {
   _addressGenerator: AddressGenerator
   _blockSize: number
   _gapLimit: number
-  _isInitialized: boolean = false
-  _subscriptions: Array<(Addresses) => mixed> = []
-  _addressToIdxSelector: (Addresses) => Dict<number> = defaultMemoize(_addressToIdxSelector)
+  _isInitialized = false
+  _subscriptions: Array<(Addresses) => unknown> = []
+  _addressToIdxSelector: (Addresses) => Record<string, number> = defaultMemoize(_addressToIdxSelector)
 
   constructor(
     addressGenerator: AddressGenerator,
@@ -228,7 +222,7 @@ export class AddressChain {
     return await this._addressGenerator.getRewardAddressHex()
   }
 
-  addSubscriberToNewAddresses(subscriber: (Addresses) => mixed) {
+  addSubscriberToNewAddresses(subscriber: (addresses: Addresses) => unknown) {
     this._subscriptions.push(subscriber)
   }
 
@@ -288,7 +282,8 @@ export class AddressChain {
 
     // Index relative to the start of the block
     // It is okay to "overshoot" with -1 here
-    const lastUsedIdx = used.length > 0 ? block.indexOf(_.last(used)) : -1
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const lastUsedIdx = used.length > 0 ? block.indexOf(_.last(used)!) : -1
 
     const needsNewBlock = lastUsedIdx + this._gapLimit >= this._blockSize
 
@@ -326,7 +321,10 @@ export class AddressChain {
     const totalGenerated = this.addresses.length
     const block = this._getLastBlock()
     const used = await filterFn(block)
-    const lastUsedRelIdx = used.length > 0 ? block.indexOf(_.last(used)) : -1
+    const last = _.last(used)
+    if (last == null) throw new Error('invalid chain state')
+
+    const lastUsedRelIdx = used.length > 0 ? block.indexOf(last) : -1
     return totalGenerated > this._blockSize ? totalGenerated - this._blockSize + lastUsedRelIdx : lastUsedRelIdx
   }
 

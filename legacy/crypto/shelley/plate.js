@@ -3,12 +3,13 @@
 import {legacyWalletChecksum, walletChecksum} from '@emurgo/cip4-js'
 import {Bip32PrivateKey} from '@emurgo/react-native-haskell-shelley'
 
+// $FlowExpectedError
+import {AddressGenerator} from '../../../src/yoroi-wallets'
 import {CONFIG} from '../../config/config'
 import type {NetworkId} from '../../config/types'
 import {getMasterKeyFromMnemonic} from '../byron/util'
 import type {AddressType} from '../commonUtils'
 import type {PlateResponse} from '../types'
-import {AddressGenerator} from './chain'
 
 export const generateShelleyPlateFromKey = async (
   key: string,
