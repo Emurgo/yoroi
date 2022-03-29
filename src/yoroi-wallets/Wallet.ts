@@ -322,7 +322,7 @@ export class Wallet {
       isReadOnly: this.isReadOnly,
       isEasyConfirmationEnabled: this.isEasyConfirmationEnabled,
       provider: this.provider,
-    }
+    } as WalletJSON
   }
 }
 

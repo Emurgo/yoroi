@@ -1,4 +1,3 @@
-import {BigNum, min_ada_required} from '@emurgo/react-native-haskell-shelley'
 import {BigNumber} from 'bignumber.js'
 import _ from 'lodash'
 import {IntlShape} from 'react-intl'
@@ -14,7 +13,7 @@ import {InvalidAssetAmount, parseAmountDecimal} from '../../../legacy/utils/pars
 import type {AddressValidationErrors} from '../../../legacy/utils/validators'
 import {getUnstoppableDomainAddress, isReceiverAddressValid, validateAmount} from '../../../legacy/utils/validators'
 import type {DefaultAsset, RawUtxo, SendTokenList, Token} from '../../types'
-import {walletManager} from '../../yoroi-wallets'
+import {BigNum, minAdaRequired, walletManager} from '../../yoroi-wallets'
 import {amountInputErrorMessages, messages} from './strings'
 
 export const getMinAda = async (selectedToken: Token, defaultAsset: DefaultAsset) => {
@@ -38,13 +37,13 @@ export const getMinAda = async (selectedToken: Token, defaultAsset: DefaultAsset
       defaultIdentifier: defaultAsset.identifier,
     },
   )
-  const minAmount = await min_ada_required(
+  const minAmount = await minAdaRequired(
     await cardanoValueFromMultiToken(fakeMultitoken),
-    await BigNum.from_str(networkConfig.MINIMUM_UTXO_VAL),
+    await BigNum.fromStr(networkConfig.MINIMUM_UTXO_VAL),
   )
   // if the user is sending a token, we need to make sure the resulting utxo
   // has at least the minimum amount of ADA in it
-  return minAmount.to_str()
+  return minAmount.toStr()
 }
 
 export const getTransactionData = async (
