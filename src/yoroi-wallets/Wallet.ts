@@ -1,104 +1,95 @@
-// @flow
-
-// TODO(v-almonacid): transactionCache should be decoupled from this class.
-// Use an interface instead
-
 import type {WalletChecksum} from '@emurgo/cip4-js'
 import _ from 'lodash'
-import {type IntlShape} from 'react-intl'
+import type {IntlShape} from 'react-intl'
 import {defaultMemoize} from 'reselect'
 
-import * as api from '../api/shelley/api'
-import {CONFIG} from '../config/config'
-import {getCardanoNetworkConfigById, isJormungandr} from '../config/networks'
-import type {NetworkId, WalletImplementationId, YoroiProvider} from '../config/types'
-import assert from '../utils/assert'
-import {Logger} from '../utils/logging'
-import type {Mutex} from '../utils/promise'
-import {IsLockedError, nonblockingSynchronize, synchronize} from '../utils/promise'
-import {validatePassword} from '../utils/validators'
-import KeyStore from './KeyStore'
-import {type AddressChainJSON, AddressChain} from './shelley/chain'
-import type {HWDeviceInfo} from './shelley/ledgerUtils'
-import {type TransactionCacheJSON, TransactionCache} from './shelley/transactionCache'
-import type {EncryptionMethod} from './types'
+import * as api from '../../legacy/api/shelley/api'
+import {CONFIG} from '../../legacy/config/config'
+import {getCardanoNetworkConfigById, isJormungandr} from '../../legacy/config/networks'
+import type {NetworkId, WalletImplementationId, YoroiProvider} from '../../legacy/config/types'
+import KeyStore from '../../legacy/crypto/KeyStore'
+import type {HWDeviceInfo} from '../../legacy/crypto/shelley/ledgerUtils'
+import {TransactionCache, TransactionCacheJSON} from '../../legacy/crypto/shelley/transactionCache'
+import type {EncryptionMethod} from '../../legacy/crypto/types'
+import assert from '../../legacy/utils/assert'
+import {Logger} from '../../legacy/utils/logging'
+import type {Mutex} from '../../legacy/utils/promise'
+import {IsLockedError, nonblockingSynchronize, synchronize} from '../../legacy/utils/promise'
+import {validatePassword} from '../../legacy/utils/validators'
+import {AddressChain, AddressChainJSON} from './cardano/chain'
 
-type WalletState = {|
-  lastGeneratedAddressIndex: number,
-|}
-
-export type ShelleyWalletJSON = {
-  version: string,
-
-  networkId: NetworkId,
-  walletImplementationId: WalletImplementationId,
-  provider?: ?YoroiProvider,
-
-  isHW: boolean,
-  hwDeviceInfo: ?HWDeviceInfo,
-  isReadOnly: boolean,
-  isEasyConfirmationEnabled: boolean,
-
-  publicKeyHex?: string,
-
-  lastGeneratedAddressIndex: number,
-  internalChain: AddressChainJSON,
-  externalChain: AddressChainJSON,
-
-  transactionCache: TransactionCacheJSON,
+type WalletState = {
+  lastGeneratedAddressIndex: number
 }
 
-export type ByronWalletJSON = $Diff<ShelleyWalletJSON, {|account: any|}>
+export type ShelleyWalletJSON = {
+  version: string
+
+  networkId: NetworkId
+  walletImplementationId: WalletImplementationId
+  provider?: null | YoroiProvider
+
+  isHW: boolean
+  hwDeviceInfo: null | HWDeviceInfo
+  isReadOnly: boolean
+  isEasyConfirmationEnabled: boolean
+
+  publicKeyHex?: string
+
+  lastGeneratedAddressIndex: number
+  internalChain: AddressChainJSON
+  externalChain: AddressChainJSON
+
+  transactionCache: TransactionCacheJSON
+}
+
+export type ByronWalletJSON = Omit<ShelleyWalletJSON, 'account'>
 
 export type WalletJSON = ShelleyWalletJSON | ByronWalletJSON
 
-export default class Wallet {
-  // $FlowFixMe null
-  id: string = null
+export class Wallet {
+  id: null | string = null
 
   networkId: NetworkId
 
   walletImplementationId: WalletImplementationId
 
-  isHW: boolean = false
+  isHW = false
 
-  hwDeviceInfo: ?HWDeviceInfo
+  hwDeviceInfo: null | HWDeviceInfo
 
-  isReadOnly: boolean
+  isReadOnly: undefined | boolean
 
-  provider: ?YoroiProvider
+  provider: null | YoroiProvider
 
-  isEasyConfirmationEnabled: boolean = false
+  isEasyConfirmationEnabled = false
 
-  // $FlowFixMe null
-  internalChain: AddressChain = null
-  // $FlowFixMe null
-  externalChain: AddressChain = null
+  internalChain: null | AddressChain = null
+  externalChain: null | AddressChain = null
 
   // account public key
-  publicKeyHex: string
+  publicKeyHex: undefined | string
 
-  rewardAddressHex: ?string = null
+  rewardAddressHex: null | string = null
 
   // last known version the wallet has been opened on
-  version: string
+  version: undefined | string
 
-  checksum: WalletChecksum
+  checksum: undefined | WalletChecksum
 
   state: WalletState = {
     lastGeneratedAddressIndex: 0,
   }
 
-  isInitialized: boolean = false
+  isInitialized = false
 
-  // $FlowFixMe null
   transactionCache: TransactionCache = null
 
   _doFullSyncMutex: Mutex = {name: 'doFullSyncMutex', lock: null}
 
-  _subscriptions: Array<(Wallet) => any> = []
+  _subscriptions: Array<(Wallet) => void> = []
 
-  _onTxHistoryUpdateSubscriptions: Array<(Wallet) => any> = []
+  _onTxHistoryUpdateSubscriptions: Array<(Wallet) => void> = []
 
   _isUsedAddressIndexSelector = defaultMemoize((perAddressTxs) =>
     _.mapValues(perAddressTxs, (txs) => {
@@ -110,10 +101,14 @@ export default class Wallet {
   // =================== getters =================== //
 
   get internalAddresses() {
+    if (!this.internalChain) throw new Error('invalid wallet state')
+
     return this.internalChain.addresses
   }
 
   get externalAddresses() {
+    if (!this.externalChain) throw new Error('invalid wallet state')
+
     return this.externalChain.addresses
   }
 
@@ -171,7 +166,7 @@ export default class Wallet {
     this._subscriptions.forEach((handler) => handler(this))
   }
 
-  subscribe(handler: (Wallet) => any) {
+  subscribe(handler: (Wallet) => void) {
     this._subscriptions.push(handler)
   }
 
@@ -179,11 +174,14 @@ export default class Wallet {
     this._onTxHistoryUpdateSubscriptions.forEach((handler) => handler(this))
   }
 
-  subscribeOnTxHistoryUpdate(handler: () => any) {
+  subscribeOnTxHistoryUpdate(handler: () => void) {
     this._onTxHistoryUpdateSubscriptions.push(handler)
   }
 
   setupSubscriptions() {
+    if (!this.internalChain) throw new Error('invalid wallet state')
+    if (!this.externalChain) throw new Error('invalid wallet state')
+
     this.transactionCache.subscribe(this.notify)
     this.transactionCache.subscribeOnTxHistoryUpdate(this.notifyOnTxHistoryUpdate)
     this.internalChain.addSubscriberToNewAddresses(this.notify)
@@ -227,6 +225,8 @@ export default class Wallet {
     // TODO: multi-network support
     const backendConfig = getCardanoNetworkConfigById(this.networkId, this.provider).BACKEND
     const filterFn = (addrs) => api.filterUsedAddresses(addrs, backendConfig)
+    if (!this.internalChain) throw new Error('invalid wallet state')
+    if (!this.externalChain) throw new Error('invalid wallet state')
     await Promise.all([this.internalChain.sync(filterFn), this.externalChain.sync(filterFn)])
 
     const addresses =
@@ -237,12 +237,7 @@ export default class Wallet {
       Logger.info('Discovery done, now syncing transactions')
       let keepGoing = true
       while (keepGoing) {
-        keepGoing = await this.transactionCache.doSyncStep(
-          // $FlowFixMe undefined or null is incompatible with string
-          addresses,
-          this.networkId,
-          this.provider,
-        )
+        keepGoing = await this.transactionCache.doSyncStep(addresses, this.networkId, this.provider)
       }
     }
 
@@ -260,8 +255,7 @@ export default class Wallet {
 
   // ========== UI state ============= //
 
-  /* global $Shape */
-  updateState(update: $Shape<WalletState>) {
+  updateState(update: Partial<WalletState>) {
     Logger.debug('Wallet::updateState', update)
 
     this.state = {
@@ -273,6 +267,7 @@ export default class Wallet {
   }
 
   canGenerateNewReceiveAddress() {
+    if (!this.externalChain) throw new Error('invalid wallet state')
     const lastUsedIndex = this.getLastUsedIndex(this.externalChain)
     // TODO: should use specific wallet config
     const maxIndex = lastUsedIndex + CONFIG.WALLETS.HASKELL_SHELLEY.MAX_GENERATED_UNUSED
@@ -284,6 +279,7 @@ export default class Wallet {
 
   generateNewUiReceiveAddressIfNeeded() {
     /* new address is automatically generated when you use the latest unused */
+    if (!this.externalChain) throw new Error('invalid wallet state')
     const lastGeneratedAddress = this.externalChain.addresses[this.state.lastGeneratedAddressIndex]
     if (!this.isUsedAddress(lastGeneratedAddress)) {
       return false
@@ -305,6 +301,13 @@ export default class Wallet {
 
   // TODO: move to specific child class?
   toJSON(): WalletJSON {
+    if (this.version == null) throw new Error('invalid WalletJSON')
+    if (this.isReadOnly == null) throw new Error('invalid WalletJSON')
+    if (this.externalAddresses == null) throw new Error('invalid WalletJSON')
+    if (this.internalAddresses == null) throw new Error('invalid WalletJSON')
+    if (this.externalChain == null) throw new Error('invalid WalletJSON')
+    if (this.internalChain == null) throw new Error('invalid WalletJSON')
+
     return {
       lastGeneratedAddressIndex: this.state.lastGeneratedAddressIndex,
       publicKeyHex: this.publicKeyHex,
@@ -322,3 +325,5 @@ export default class Wallet {
     }
   }
 }
+
+export default Wallet

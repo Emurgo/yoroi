@@ -2,7 +2,8 @@
 
 import type {Dispatch} from 'redux'
 
-import walletManager from '../crypto/walletManager'
+// $FlowExpectedError
+import {walletManager} from '../../src/yoroi-wallets'
 import type {State} from '../state'
 
 // start fetching utxo

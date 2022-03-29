@@ -36,7 +36,7 @@ import {
 import {VotingBanner} from '../Catalyst/VotingBanner'
 import {Banner, Button, OfflineBanner, StatusBar} from '../components'
 import {useSelectedWallet} from '../SelectedWallet'
-import {WalletInterface} from '../types'
+import {YoroiWallet} from '../types'
 import {EpochProgress} from './EpochProgress'
 import {NotDelegatedInfo} from './NotDelegatedInfo'
 import {StakePoolInfos, useStakingInfo} from './StakePoolInfos'
@@ -270,7 +270,7 @@ const styles = StyleSheet.create({
   },
 })
 
-const useBalances = (_wallet: WalletInterface) => {
+const useBalances = (_wallet: YoroiWallet) => {
   const multitoken = useSelector(tokenBalanceSelector)
 
   return multitoken.values.reduce(

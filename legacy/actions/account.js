@@ -3,7 +3,8 @@
 import {BigNumber} from 'bignumber.js'
 import type {Dispatch} from 'redux'
 
-import walletManager from '../crypto/walletManager'
+// $FlowExpectedError
+import {walletManager} from '../../src/yoroi-wallets'
 import type {State} from '../state'
 import {ObjectValues} from '../utils/flow'
 import {Logger} from '../utils/logging'

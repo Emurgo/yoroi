@@ -1,17 +1,12 @@
-import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
+import {mockWallet} from '../../../storybook'
 import {SelectedWalletProvider} from '../../SelectedWallet'
-import {WalletInterface} from '../../types'
 import {ChangeLanguageScreen} from './ChangeLanguageScreen'
 
-const wallet = {
-  changePassword: action('changePassword'),
-} as WalletInterface
-
 storiesOf('ChangeLanguageScreen', module).add('Default', () => (
-  <SelectedWalletProvider wallet={wallet}>
+  <SelectedWalletProvider wallet={mockWallet}>
     <ChangeLanguageScreen />
   </SelectedWalletProvider>
 ))

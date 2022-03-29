@@ -7,7 +7,7 @@ import {useQuery} from 'react-query'
 import {COLORS} from '../../legacy/styles/config'
 import {Button, CopyButton, Text, TitledCard} from '../components'
 import {useSelectedWallet} from '../SelectedWallet'
-import {RemotePoolMetaFailure, StakePoolInfoAndHistory, WalletInterface} from '../types'
+import {RemotePoolMetaFailure, StakePoolInfoAndHistory, YoroiWallet} from '../types'
 
 export const StakePoolInfo = ({stakePoolId}: {stakePoolId: string}) => {
   const strings = useStrings()
@@ -56,7 +56,7 @@ export const StakePoolInfo = ({stakePoolId}: {stakePoolId: string}) => {
   ) : null
 }
 
-const useStakePoolInfo = (wallet: WalletInterface, stakePoolId: string) => {
+const useStakePoolInfo = (wallet: YoroiWallet, stakePoolId: string) => {
   const query = useQuery({
     queryKey: [wallet.id, 'stakePoolInfo', stakePoolId],
     queryFn: async () => {

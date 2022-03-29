@@ -6,12 +6,12 @@ import {useDispatch, useSelector} from 'react-redux'
 
 import {setEasyConfirmation, showErrorDialog} from '../../../legacy/actions'
 import {WrongPassword} from '../../../legacy/crypto/errors'
-import walletManager from '../../../legacy/crypto/walletManager'
 import {errorMessages} from '../../../legacy/i18n/global-messages'
 import {easyConfirmationSelector} from '../../../legacy/selectors'
 import {COLORS} from '../../../legacy/styles/config'
 import {Button, StatusBar, Text, TextInput} from '../../components'
 import {useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../SelectedWallet'
+import {walletManager} from '../../yoroi-wallets'
 
 export const ToggleEasyConfirmationScreen = () => {
   const intl = useIntl()

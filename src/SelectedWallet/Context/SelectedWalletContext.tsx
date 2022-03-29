@@ -1,14 +1,14 @@
 import * as React from 'react'
 
-import {WalletInterface} from '../../types'
+import {YoroiWallet} from '../../yoroi-wallets'
 
-type SelectedWallet = WalletInterface
+type SelectedWallet = YoroiWallet
 type SetSelectedWallet = (selectedWallet?: SelectedWallet) => void
 type SelectedWalletContext = readonly [SelectedWallet | undefined, SetSelectedWallet]
 
 const SelectedWalletContext = React.createContext<SelectedWalletContext | undefined>(undefined)
 
-export const SelectedWalletProvider: React.FC<{wallet?: WalletInterface}> = ({children, wallet}) => {
+export const SelectedWalletProvider: React.FC<{wallet?: SelectedWallet}> = ({children, wallet}) => {
   const [selectedWallet, selectWallet] = React.useState<SelectedWallet | undefined>(wallet)
 
   return (

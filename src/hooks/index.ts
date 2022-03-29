@@ -10,10 +10,10 @@ import {
 } from 'react-query'
 
 import {generateShelleyPlateFromKey} from '../../legacy/crypto/shelley/plate'
-import walletManager from '../../legacy/crypto/walletManager'
 import {WalletMeta} from '../../legacy/state'
 import storage from '../../legacy/utils/storage'
-import {NetworkId, SignedTx, Token, TxSubmissionStatus, WalletInterface} from '../types'
+import {NetworkId, SignedTx, Token, TxSubmissionStatus} from '../types'
+import {walletManager, YoroiWallet} from '../yoroi-wallets'
 
 // WALLET
 export const useCloseWallet = (options?: UseMutationOptions<void, Error>) => {
@@ -28,7 +28,7 @@ export const useCloseWallet = (options?: UseMutationOptions<void, Error>) => {
   }
 }
 
-export const useWalletName = (wallet: WalletInterface, options?: UseQueryOptions<string, Error>) => {
+export const useWalletName = (wallet: YoroiWallet, options?: UseQueryOptions<string, Error>) => {
   const query = useQuery({
     queryKey: [wallet.id, 'name'],
     queryFn: async () => {
@@ -43,7 +43,7 @@ export const useWalletName = (wallet: WalletInterface, options?: UseQueryOptions
   return query.data
 }
 
-export const useChangeWalletName = (wallet: WalletInterface, options: UseMutationOptions<void, Error, string> = {}) => {
+export const useChangeWalletName = (wallet: YoroiWallet, options: UseMutationOptions<void, Error, string> = {}) => {
   const mutation = useMutationWithInvalidations<void, Error, string>({
     mutationFn: async (newName) => {
       const walletMeta = await storage.read(`/wallets/${wallet.id}`)
@@ -92,7 +92,7 @@ export const primaryTokenInfoTestnet: Token = {
   },
 } as const
 
-export const useTokenInfo = ({wallet, tokenId}: {wallet: WalletInterface; tokenId: string}) => {
+export const useTokenInfo = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string}) => {
   const _queryKey = queryKey({wallet, tokenId})
   const query = useQuery<Token, Error>({
     suspense: true,
@@ -105,7 +105,7 @@ export const useTokenInfo = ({wallet, tokenId}: {wallet: WalletInterface; tokenI
   return query.data
 }
 
-export const useTokenInfos = ({wallet, tokenIds}: {wallet: WalletInterface; tokenIds: Array<string>}) => {
+export const useTokenInfos = ({wallet, tokenIds}: {wallet: YoroiWallet; tokenIds: Array<string>}) => {
   const queries = useQueries(
     tokenIds.map((tokenId: string) => ({
       queryKey: queryKey({wallet, tokenId}),
@@ -126,7 +126,7 @@ export const useTokenInfos = ({wallet, tokenIds}: {wallet: WalletInterface; toke
 }
 
 export const queryKey = ({wallet, tokenId}) => [wallet.id, 'tokenInfo', tokenId]
-export const fetchTokenInfo = async ({wallet, tokenId}: {wallet: WalletInterface; tokenId: string}): Promise<Token> => {
+export const fetchTokenInfo = async ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string}): Promise<Token> => {
   if ((tokenId === '' || tokenId === 'ADA') && wallet.networkId === 1) return primaryTokenInfo
   if ((tokenId === '' || tokenId === 'ADA' || tokenId === 'TADA') && wallet.networkId === 300)
     return primaryTokenInfoTestnet
@@ -222,8 +222,8 @@ type CreateBip44WalletInfo = {
   readOnly: boolean
 }
 
-export const useCreateBip44Wallet = (options?: UseMutationOptions<WalletInterface, Error, CreateBip44WalletInfo>) => {
-  const mutation = useMutationWithInvalidations<WalletInterface, Error, CreateBip44WalletInfo>({
+export const useCreateBip44Wallet = (options?: UseMutationOptions<YoroiWallet, Error, CreateBip44WalletInfo>) => {
+  const mutation = useMutationWithInvalidations<YoroiWallet, Error, CreateBip44WalletInfo>({
     mutationFn: ({name, bip44AccountPublic, networkId, implementationId, hwDeviceInfo, readOnly}) =>
       walletManager.createWalletWithBip44Account(
         name,
@@ -252,7 +252,7 @@ export type CreateWalletInfo = {
   provider?: string
 }
 
-export const useCreateWallet = (options?: UseMutationOptions<WalletInterface, Error, CreateWalletInfo>) => {
+export const useCreateWallet = (options?: UseMutationOptions<YoroiWallet, Error, CreateWalletInfo>) => {
   const mutation = useMutationWithInvalidations({
     mutationFn: ({name, mnemonicPhrase, password, networkId, walletImplementationId, provider}) =>
       walletManager.createWallet(name, mnemonicPhrase, password, networkId, walletImplementationId, provider),
@@ -267,7 +267,7 @@ export const useCreateWallet = (options?: UseMutationOptions<WalletInterface, Er
 }
 
 export const useSubmitTx = (
-  {wallet}: {wallet: WalletInterface},
+  {wallet}: {wallet: YoroiWallet},
   options: UseMutationOptions<TxSubmissionStatus, Error, SignedTx> = {},
 ) => {
   const mutation = useMutationWithInvalidations({
@@ -296,7 +296,7 @@ export const useSubmitTx = (
 const txQueueRetryDelay = process.env.NODE_ENV === 'test' ? 1 : 1000
 const txQueueRetryTimes = 5
 export const fetchTxStatus = async (
-  wallet: WalletInterface,
+  wallet: YoroiWallet,
   txHash: string,
   waitProcessing = false,
 ): Promise<TxSubmissionStatus> => {

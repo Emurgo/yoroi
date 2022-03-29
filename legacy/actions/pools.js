@@ -2,8 +2,9 @@
 
 import type {Dispatch} from 'redux'
 
+// $FlowExpectedError
+import {walletManager} from '../../src/yoroi-wallets'
 import type {PoolInfoRequest, PoolInfoResponse} from '../api/types'
-import walletManager from '../crypto/walletManager'
 import type {State} from '../state'
 import {Logger} from '../utils/logging'
 

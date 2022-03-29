@@ -8,13 +8,13 @@ import {AssetOverflowError, InsufficientFunds} from '../../../legacy/crypto/erro
 import {MultiToken} from '../../../legacy/crypto/MultiToken'
 import type {CreateUnsignedTxResponse} from '../../../legacy/crypto/shelley/transactionUtils'
 import {cardanoValueFromMultiToken} from '../../../legacy/crypto/shelley/utils'
-import walletManager from '../../../legacy/crypto/walletManager'
 import {WalletMeta} from '../../../legacy/state'
 import {formatTokenAmount, formatTokenInteger, normalizeTokenAmount} from '../../../legacy/utils/format'
 import {InvalidAssetAmount, parseAmountDecimal} from '../../../legacy/utils/parsing'
 import type {AddressValidationErrors} from '../../../legacy/utils/validators'
 import {getUnstoppableDomainAddress, isReceiverAddressValid, validateAmount} from '../../../legacy/utils/validators'
 import type {DefaultAsset, RawUtxo, SendTokenList, Token} from '../../types'
+import {walletManager} from '../../yoroi-wallets'
 import {amountInputErrorMessages, messages} from './strings'
 
 export const getMinAda = async (selectedToken: Token, defaultAsset: DefaultAsset) => {

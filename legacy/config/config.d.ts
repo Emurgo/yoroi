@@ -7,14 +7,64 @@ export var isHaskellShelley: (walletImplementationId: string) => boolean
 export var isByron: (walletImplementationId: string) => boolean
 export var getDefaultAssets: () => Array<DefaultAsset>
 
+export var DISABLE_BACKGROUND_SYNC: boolean
+// prettier-ignore
+export var WALLETS: {
+  JORMUNGANDR_ITN: {
+    WALLET_IMPLEMENTATION_ID: string
+  },
+  HASKELL_BYRON: {
+    WALLET_IMPLEMENTATION_ID: string
+  },
+  HASKELL_SHELLEY: {
+    WALLET_IMPLEMENTATION_ID: string
+  },
+  HASKELL_SHELLEY_24: {
+    WALLET_IMPLEMENTATION_ID: string
+  }
+}
+
 // prettier-ignore
 export var CONFIG: {
+  HISTORY_REFRESH_TIME: number,
   COMMIT: string,
   NUMBERS: {
+    DECIMAL_PLACES_IN_ADA: 6,
     HARD_DERIVATION_START: number,
     EPOCH_REWARD_DENOMINATOR: number,
-
+    WALLET_TYPE_PURPOSE: {
+      BIP44: number, // HARD_DERIVATION_START + 44;
+      CIP1852: number, // HARD_DERIVATION_START + 1852;
+    },
+    ACCOUNT_INDEX: number,
+    COIN_TYPES: {
+      CARDANO: number, // HARD_DERIVATION_START + 1815;
+    },
+    HARD_DERIVATION_START: 2147483648,
+    WALLET_TYPE_PURPOSE: {
+      BIP44: 2147483692, // HARD_DERIVATION_START + 44;
+      CIP1852: 2147485500, // HARD_DERIVATION_START + 1852;
+    },
+    COIN_TYPES: {
+      CARDANO: 2147485463, // HARD_DERIVATION_START + 1815;
+    },
+    ACCOUNT_INDEX: 0,
+    CHAIN_DERIVATIONS: {
+      EXTERNAL: 0,
+      INTERNAL: 1,
+      CHIMERIC_ACCOUNT: 2,
+    },
+    BIP44_DERIVATION_LEVELS: {
+      ROOT: 0,
+      PURPOSE: 1,
+      COIN_TYPE: 2,
+      ACCOUNT: 3,
+      CHAIN: 4,
+      ADDRESS: 5,
+    },
+    STAKING_KEY_INDEX: 0,
   },
+
   DEBUG: {
     PREFILL_FORMS: boolean,
     WALLET_NAME: string,
@@ -29,6 +79,7 @@ export var CONFIG: {
     SEND_ADDRESS: string,
     SEND_AMOUNT: string,
     CATALYST_PIN: string,
+    CATALYST_NONCE: number,
   },
   CATALYST: {
     MIN_ADA: any,
@@ -39,8 +90,8 @@ export var CONFIG: {
       USB_MIN_SDK: number,
       ENABLE_USB_TRANSPORT: boolean,
       ENABLED: boolean,
-      DEFAULT_WALLET_NAME: string
-    }
+      DEFAULT_WALLET_NAME: string,
+    },
   },
   LOG_LEVEL: string,
   ANDROID_BIO_AUTH_EXCLUDED_SDK: Array<number>,
@@ -59,7 +110,7 @@ export var CONFIG: {
   IS_TESTNET_BUILD: boolean,
   SENTRY: {
     DSN: string,
-    ENABLE: boolean
+    ENABLE: boolean,
   }
 }
 
@@ -70,13 +121,18 @@ export var isJormun: (id: WalletImplementationId) => boolean
 // prettier-ignore
 type NetworkConfig = {
   NETWORK_ID: number,
+  CHAIN_NETWORK_ID: string,
   ENABLED: boolean,
   POOL_EXPLORER: string,
   PER_EPOCH_PERCENTAGE_REWARD: number,
 }
 
+// prettier-ignore
 type WalletConfig = {
-  WALLET_IMPLEMENTATION_ID: WalletImplementationId
+  WALLET_IMPLEMENTATION_ID: WalletImplementationId,
+  MAX_GENERATED_UNUSED: number,
+  DISCOVERY_GAP_SIZE: number,
+  DISCOVERY_BLOCK_SIZE: number,
 }
 
 export var getWalletConfigById: (walletImplementationId: string) => WalletImplementation

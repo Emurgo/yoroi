@@ -10,7 +10,6 @@ import {useDispatch, useSelector} from 'react-redux'
 import {DIALOG_BUTTONS, showConfirmationDialog, signout, updateWallets} from '../../../legacy/actions'
 import {CONFIG, isByron, isHaskellShelley} from '../../../legacy/config/config'
 import {getNetworkConfigById} from '../../../legacy/config/networks'
-import walletManager from '../../../legacy/crypto/walletManager'
 import {confirmationMessages} from '../../../legacy/i18n/global-messages'
 import {SETTINGS_ROUTES, WALLET_ROOT_ROUTES} from '../../../legacy/RoutesList'
 import {easyConfirmationSelector, isSystemAuthEnabledSelector} from '../../../legacy/selectors'
@@ -18,6 +17,7 @@ import {StatusBar} from '../../components'
 import {useCloseWallet, useWalletName} from '../../hooks'
 import {useSelectedWallet, useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
 import {NetworkId, WalletImplementationId} from '../../types'
+import {walletManager} from '../../yoroi-wallets'
 import {
   NavigatedSettingsItem,
   PressableSettingsItem,
