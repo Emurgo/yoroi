@@ -9,12 +9,11 @@ storiesOf('AddressReaderQR', module).add('Default', () => {
   const route = {
     key: 'key',
     name: 'name',
-    params: {onSuccess: action('onSuccess')},
   }
 
   return (
     <NavigationRouteContext.Provider value={route}>
-      <AddressReaderQR />
+      <AddressReaderQR setQrAmount={action('setQrAmount')} setQrReceiver={action('setQrReceiver')} />
     </NavigationRouteContext.Provider>
   )
 })

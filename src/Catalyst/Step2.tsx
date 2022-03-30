@@ -7,14 +7,14 @@ import {useSelector} from 'react-redux'
 
 import {Button, ProgressStep} from '../../legacy/components/UiKit'
 import {confirmationMessages} from '../../legacy/i18n/global-messages'
-import {CATALYST_ROUTES} from '../../legacy/RoutesList'
 import type {State} from '../../legacy/state'
 import {Spacer} from '../components'
+import {CatalystRouteParams} from '../navigation'
 import {Actions, Description, PinBox, Row, Title} from './components'
 
 export const Step2 = () => {
   const strings = useStrings()
-  const navigation = useNavigation()
+  const navigation = useNavigation<CatalystRouteParams>()
   const pin = useSelector((state: State) => state.voting.pin)
   const [countDown, setCountDown] = useState(5)
 
@@ -57,7 +57,7 @@ export const Step2 = () => {
 
       <Actions>
         <Button
-          onPress={() => navigation.navigate(CATALYST_ROUTES.STEP3)}
+          onPress={() => navigation.navigate('catalyst-confirm-pin')}
           title={countDown !== 0 ? countDown.toString() : strings.continueButton}
           disabled={countDown !== 0}
         />

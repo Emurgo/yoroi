@@ -9,7 +9,6 @@ import FingerprintScreenBase from '../../../legacy/components/Common/Fingerprint
 import {Button} from '../../../legacy/components/UiKit'
 import {canBiometricEncryptionBeEnabled} from '../../../legacy/helpers/deviceSettings'
 import {errorMessages} from '../../../legacy/i18n/global-messages'
-import {SETTINGS_ROUTES} from '../../../legacy/RoutesList'
 
 export const BiometricsLinkScreen = () => {
   const intl = useIntl()
@@ -19,13 +18,26 @@ export const BiometricsLinkScreen = () => {
   const linkBiometricsSignIn = async () => {
     if (await canBiometricEncryptionBeEnabled()) {
       dispatch(setSystemAuth(true))
-        .then(() => navigation.navigate(SETTINGS_ROUTES.MAIN))
+        .then(() =>
+          navigation.navigate('app-root', {
+            screen: 'settings',
+            params: {
+              screen: 'settings-main',
+            },
+          }),
+        )
         .catch(() => showErrorDialog(errorMessages.disableEasyConfirmationFirst, intl))
     } else {
       await showErrorDialog(errorMessages.enableFingerprintsFirst, intl)
     }
   }
-  const cancelLinking = () => navigation.navigate(SETTINGS_ROUTES.MAIN)
+  const cancelLinking = () =>
+    navigation.navigate('app-root', {
+      screen: 'settings',
+      params: {
+        screen: 'settings-main',
+      },
+    })
 
   return (
     <FingerprintScreenBase

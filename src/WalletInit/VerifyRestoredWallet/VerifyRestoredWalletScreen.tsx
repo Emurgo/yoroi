@@ -1,5 +1,5 @@
 import {WalletChecksum} from '@emurgo/cip4-js'
-import {useNavigation, useRoute} from '@react-navigation/native'
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native'
@@ -10,25 +10,24 @@ import type {NetworkId, WalletImplementationId} from '../../../legacy/config/typ
 import {WALLET_IMPLEMENTATION_REGISTRY} from '../../../legacy/config/types'
 import {generateByronPlateFromMnemonics} from '../../../legacy/crypto/byron/plate'
 import {generateShelleyPlateFromMnemonics} from '../../../legacy/crypto/shelley/plate'
-import {WALLET_INIT_ROUTES} from '../../../legacy/RoutesList'
 import {COLORS} from '../../../legacy/styles/config'
 import {Icon, Spacer} from '../../components'
+import {WalletInitRouteParams, WalletInitRoutes} from '../../navigation'
 import {WalletAddress} from '../WalletAddress'
 
 export const VerifyRestoredWalletScreen = () => {
   const strings = useStrings()
-  const navigation = useNavigation()
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const route: any = useRoute()
-  const {phrase, networkId, walletImplementationId} = route.params
+  const navigation = useNavigation<WalletInitRouteParams>()
+  const route = useRoute<RouteProp<WalletInitRoutes, 'wallet-credentials'>>()
+  const {phrase, networkId, walletImplementationId, provider} = route.params
   const [plate, addresses] = usePlateFromMnemonic({mnemonic: phrase, networkId, walletImplementationId})
 
   const navigateToWalletCredentials = () => {
-    navigation.navigate(WALLET_INIT_ROUTES.WALLET_CREDENTIALS, {
-      phrase: route.params.phrase,
-      networkId: route.params.networkId,
-      walletImplementationId: route.params.walletImplementationId,
-      provider: route.params.provider,
+    navigation.navigate('wallet-credentials', {
+      phrase,
+      networkId,
+      walletImplementationId,
+      provider,
     })
   }
 

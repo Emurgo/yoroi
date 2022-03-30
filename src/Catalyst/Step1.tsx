@@ -13,15 +13,15 @@ import appstoreBadge from '../../legacy/assets/img/app-store-badge.png'
 import playstoreBadge from '../../legacy/assets/img/google-play-badge.png'
 import AppDownload from '../../legacy/assets/img/pic-catalyst-step1.png'
 import globalMessages, {confirmationMessages} from '../../legacy/i18n/global-messages'
-import {CATALYST_ROUTES} from '../../legacy/RoutesList'
 import {isDelegatingSelector} from '../../legacy/selectors'
 import {Logger} from '../../legacy/utils/logging'
 import {Spacer} from '../components'
+import {CatalystRouteParams} from '../navigation'
 import {Actions, Row} from './components'
 
 export const Step1 = () => {
   const strings = useStrings()
-  const navigation = useNavigation()
+  const navigation = useNavigation<CatalystRouteParams>()
   const isDelegating = useSelector(isDelegatingSelector)
   const [showModal, setShowModal] = useState<boolean>(!isDelegating)
 
@@ -61,7 +61,7 @@ export const Step1 = () => {
       </ScrollView>
 
       <Actions>
-        <Button onPress={() => navigation.navigate(CATALYST_ROUTES.STEP2)} title={strings.continueButton} />
+        <Button onPress={() => navigation.navigate('catalyst-generate-pin')} title={strings.continueButton} />
       </Actions>
 
       <StandardModal

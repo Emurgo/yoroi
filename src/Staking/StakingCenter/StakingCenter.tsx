@@ -19,7 +19,6 @@ import {CONFIG, getTestStakingPool, isNightly, SHOW_PROD_POOLS_IN_DEV} from '../
 import {InsufficientFunds} from '../../../legacy/crypto/errors'
 import walletManager from '../../../legacy/crypto/walletManager'
 import globalMessages, {errorMessages} from '../../../legacy/i18n/global-messages'
-import {STAKING_CENTER_ROUTES} from '../../../legacy/RoutesList'
 import {
   accountBalanceSelector,
   defaultNetworkAssetSelector,
@@ -33,12 +32,13 @@ import type {DefaultAsset} from '../../../legacy/types/HistoryTransaction'
 import {ObjectValues} from '../../../legacy/utils/flow'
 import {normalizeTokenAmount} from '../../../legacy/utils/format'
 import {Logger} from '../../../legacy/utils/logging'
+import {StakingCenterRouteParams} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {PoolDetailScreen} from '../PoolDetails'
 
 export const StakingCenter = () => {
   const intl = useIntl()
-  const navigation = useNavigation()
+  const navigation = useNavigation<StakingCenterRouteParams>()
   const [amountToDelegate, setAmountToDelegate] = useState<string | null>(null)
   const [selectedPools, setSelectedPools] = useState<Array<SelectedPool>>([])
   const [reputationInfo, setReputationInfo] = useState({})
@@ -205,7 +205,7 @@ const navigateToDelegationConfirm = async (
   selectedPools: Array<SelectedPool>,
   defaultAsset: DefaultAsset,
   intl: IntlShape,
-  navigation,
+  navigation: StakingCenterRouteParams,
   serverStatus: ServerStatusCache,
 ) => {
   try {
@@ -219,8 +219,8 @@ const navigateToDelegationConfirm = async (
       serverStatus.serverTime,
     )
     const transactionFee = await transactionData.signRequest.fee()
-    navigation.navigate(STAKING_CENTER_ROUTES.DELEGATION_CONFIRM, {
-      poolName: selectedPool.poolName,
+    navigation.navigate('delegation-confirmation', {
+      poolName: selectedPool?.poolName ?? '',
       poolHash: selectedPool.poolHash,
       transactionData,
       transactionFee,

@@ -24,7 +24,7 @@ import {
 } from '../../../legacy/utils/format'
 import utfSymbols from '../../../legacy/utils/utfSymbols'
 import {Icon} from '../../components/Icon'
-import {TxHistoryStackRootProps} from '../../navigation'
+import {TxHistoryRouteParams} from '../../navigation'
 import {DefaultAsset, IOData, TransactionAssurance, TransactionDirection, TransactionInfo} from '../../types/cardano'
 
 const filtersTxIO = (address: string) => {
@@ -53,7 +53,7 @@ type Props = {
 
 export const TxHistoryListItem = ({transaction}: Props) => {
   const strings = useStrings()
-  const navigation = useNavigation<TxHistoryStackRootProps>()
+  const navigation = useNavigation<TxHistoryRouteParams>()
 
   const showDetails = () => navigation.navigate('history-details', {id: transaction.id})
   const submittedAt = formatTimeToSeconds(transaction.submittedAt)

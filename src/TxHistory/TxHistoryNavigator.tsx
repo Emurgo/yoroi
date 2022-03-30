@@ -5,18 +5,22 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps} from 'react-native'
 import {useSelector} from 'react-redux'
 
-import BiometricAuthScreen from '../../legacy/components/Send/BiometricAuthScreen'
 import {Button} from '../../legacy/components/UiKit'
 import {UI_V2} from '../../legacy/config/config'
-import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../legacy/navigationOptions'
-import {TX_HISTORY_ROUTES, WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
 import {tokenBalanceSelector, transactionsInfoSelector} from '../../legacy/selectors'
 import {COLORS} from '../../legacy/styles/config'
 import {formatDateToSeconds} from '../../legacy/utils/format'
 import iconGear from '../assets/img/icon/gear.png'
 import {Boundary, Icon} from '../components'
 import {useWalletName} from '../hooks'
-import {buildOptionsWithDefault, TxHistoryStackParamList, TxHistoryStackRootProps} from '../navigation'
+import {
+  AppRouteParams,
+  defaultNavigationOptions,
+  defaultOptionsV2,
+  defaultStackNavigatorOptions,
+  TxHistoryRouteParams,
+  TxHistoryRoutes,
+} from '../navigation'
 import {ReceiveScreen} from '../Receive/ReceiveScreen'
 import {useSelectedWallet} from '../SelectedWallet'
 import {AddressReaderQR} from '../Send/AddressReaderQR'
@@ -28,8 +32,7 @@ import {ModalInfo} from './ModalInfo'
 import {TxDetails} from './TxDetails'
 import {TxHistory} from './TxHistory'
 
-const Stack = createStackNavigator<TxHistoryStackParamList>()
-
+const Stack = createStackNavigator<TxHistoryRoutes>()
 export const TxHistoryNavigator = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
@@ -43,18 +46,43 @@ export const TxHistoryNavigator = () => {
     tokenBalance.getDefaultEntry().identifier,
   )
   const [sendAll, setSendAll] = React.useState(false)
+  const [receiver, setReceiver] = React.useState('')
+  const [amount, setAmount] = React.useState('')
 
   return (
     <>
-      <Stack.Navigator screenOptions={defaultStackNavigatorOptions} initialRouteName={TX_HISTORY_ROUTES.MAIN}>
+      <Stack.Navigator screenOptions={defaultStackNavigatorOptions} initialRouteName="history-list">
         <Stack.Screen
           name="history-list"
           component={TxHistory}
-          options={
-            UI_V2
-              ? buildOptionsWithDefault({title: walletName, headerRight: () => <HeaderRightHistory />})
-              : buildOptionsWithDefaultV1(walletName || '')
-          }
+          options={({navigation}: {navigation: AppRouteParams}) => {
+            if (UI_V2) {
+              return {
+                ...defaultOptionsV2,
+                title: walletName,
+                headerRight: () => <HeaderRightHistory />,
+              }
+            }
+            return {
+              ...defaultNavigationOptions,
+              headerRight: () => (
+                <Button
+                  onPress={() =>
+                    navigation.navigate('app-root', {
+                      screen: 'settings',
+                      params: {
+                        screen: 'settings-main',
+                      },
+                    })
+                  }
+                  iconImage={iconGear}
+                  title=""
+                  withoutBackground
+                />
+              ),
+              title: walletName,
+            }
+          }}
         />
 
         <Stack.Screen
@@ -69,13 +97,17 @@ export const TxHistoryNavigator = () => {
         <Stack.Screen
           name="receive"
           component={ReceiveScreen}
-          options={buildOptionsWithDefault({
+          options={{
+            ...defaultOptionsV2,
             title: strings.receiveTitle,
             headerRight: () => <ModalInfoIconButton onPress={showModalInfo} />,
-            backgroundColor: '#fff',
-          })}
+            headerStyle: {
+              elevation: 0,
+              shadowOpacity: 0,
+              backgroundColor: '#fff',
+            },
+          }}
         />
-
         <Stack.Screen
           name="send"
           options={{
@@ -86,13 +118,21 @@ export const TxHistoryNavigator = () => {
         >
           {() => (
             <Boundary>
-              <SendScreen selectedTokenIdentifier={selectedTokenIdentifier} onSendAll={setSendAll} sendAll={sendAll} />
+              <SendScreen
+                selectedTokenIdentifier={selectedTokenIdentifier}
+                onSendAll={setSendAll}
+                sendAll={sendAll}
+                amount={amount}
+                setAmount={setAmount}
+                receiver={receiver}
+                setReceiver={setReceiver}
+              />
             </Boundary>
           )}
         </Stack.Screen>
 
         <Stack.Screen name="select-asset" options={{title: strings.selectAssetTitle}}>
-          {({navigation}: {navigation: TxHistoryStackRootProps}) => (
+          {({navigation}: {navigation: TxHistoryRouteParams}) => (
             <AssetSelectorScreen
               assetTokens={tokenBalance.values}
               onSelect={(token) => {
@@ -109,16 +149,20 @@ export const TxHistoryNavigator = () => {
           )}
         </Stack.Screen>
 
-        <Stack.Screen name="address-reader-qr" component={AddressReaderQR} options={{title: strings.qrScannerTitle}} />
+        <Stack.Screen //
+          name="address-reader-qr"
+          options={{title: strings.qrScannerTitle}}
+        >
+          {() => <AddressReaderQR setQrAmount={setAmount} setQrReceiver={setReceiver} />}
+        </Stack.Screen>
 
         <Stack.Screen //
           name="send-confirm"
           component={ConfirmScreen}
           options={{title: strings.confirmTitle}}
         />
-
-        <Stack.Screen name="biometrics-signing" component={BiometricAuthScreen} options={{headerShown: false}} />
       </Stack.Navigator>
+
       <ModalInfo hideModalInfo={hideModalInfo} visible={modalInfoState}>
         <Text style={styles.receiveInfoText}>{strings.receiveInfoText}</Text>
       </ModalInfo>
@@ -188,23 +232,19 @@ const SettingsIconButton = (props: TouchableOpacityProps) => {
 const HeaderRightHistory = () => {
   const navigation = useNavigation()
 
-  return <SettingsIconButton onPress={() => navigation.navigate(WALLET_ROOT_ROUTES.SETTINGS)} />
+  return (
+    <SettingsIconButton
+      onPress={() =>
+        navigation.navigate('app-root', {
+          screen: 'settings',
+          params: {
+            screen: 'settings-main',
+          },
+        })
+      }
+    />
+  )
 }
-
-const buildOptionsWithDefaultV1 =
-  (title: string) =>
-  ({navigation}) => ({
-    ...defaultNavigationOptions,
-    headerRight: () => (
-      <Button
-        onPress={() => navigation.navigate(WALLET_ROOT_ROUTES.SETTINGS)}
-        iconImage={iconGear}
-        title=""
-        withoutBackground
-      />
-    ),
-    title,
-  })
 
 const styles = StyleSheet.create({
   receiveInfoText: {

@@ -14,7 +14,6 @@ import {getNetworkConfigById} from '../../../legacy/config/networks'
 import type {NetworkId, WalletImplementationId} from '../../../legacy/config/types'
 import walletManager from '../../../legacy/crypto/walletManager'
 import {confirmationMessages} from '../../../legacy/i18n/global-messages'
-import {SETTINGS_ROUTES, WALLET_ROOT_ROUTES} from '../../../legacy/RoutesList'
 import {easyConfirmationSelector, isSystemAuthEnabledSelector} from '../../../legacy/selectors'
 import {useCloseWallet, useWalletName} from '../../hooks'
 import {useSelectedWallet, useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
@@ -40,13 +39,18 @@ export const WalletSettingsScreen = () => {
   const [pending, setPending] = React.useState(false)
   const onSwitchWallet = async () => {
     setPending(true)
-    navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
+    navigation.navigate('app-root', {screen: 'wallet-selection'})
     await walletManager.closeWallet()
     dispatch(updateWallets())
   }
 
   const onToggleEasyConfirmation = () => {
-    navigation.navigate(SETTINGS_ROUTES.EASY_CONFIRMATION)
+    navigation.navigate('app-root', {
+      screen: 'settings',
+      params: {
+        screen: 'easy-confirmation',
+      },
+    })
   }
 
   return (
@@ -59,13 +63,13 @@ export const WalletSettingsScreen = () => {
       </SettingsSection>
 
       <SettingsSection title={strings.walletName}>
-        <NavigatedSettingsItem label={walletName || ''} navigateTo={SETTINGS_ROUTES.CHANGE_WALLET_NAME} />
+        <NavigatedSettingsItem label={walletName || ''} navigateTo="change-wallet-name" />
       </SettingsSection>
 
       <SettingsSection title={strings.security}>
         <NavigatedSettingsItem
           label={strings.changePassword}
-          navigateTo={SETTINGS_ROUTES.CHANGE_PASSWORD}
+          navigateTo="change-password"
           disabled={wallet.isHW || wallet.isReadOnly}
         />
 
@@ -82,7 +86,7 @@ export const WalletSettingsScreen = () => {
       </SettingsSection>
 
       <SettingsSection>
-        <NavigatedSettingsItem label={strings.removeWallet} navigateTo={SETTINGS_ROUTES.REMOVE_WALLET} />
+        <NavigatedSettingsItem label={strings.removeWallet} navigateTo="remove-wallet" />
         <ResyncButton />
       </SettingsSection>
 
@@ -258,7 +262,6 @@ const useResync = (options?: UseMutationOptions<void, Error>) => {
             routes: [{name: rootRoute}],
           }),
         )
-        navigation.navigate(rootRoute)
         setTimeout(() => mutation.mutate(), 1000) // wait for navigation to finish
       }
     },

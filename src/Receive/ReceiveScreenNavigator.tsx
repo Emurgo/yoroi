@@ -2,15 +2,11 @@ import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../legacy/navigationOptions'
-import {RECEIVE_ROUTES, WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
 import {SettingsButton} from '../components/Button'
+import {AppRouteParams, defaultNavigationOptions, defaultStackNavigatorOptions, ReceiveRoutes} from '../navigation'
 import {ReceiveScreen} from './ReceiveScreen'
 
-const Stack = createStackNavigator<{
-  'receive-ada': {title: string}
-}>()
-
+const Stack = createStackNavigator<ReceiveRoutes>()
 export const ReceiveScreenNavigator = () => {
   const strings = useStrings()
 
@@ -20,14 +16,25 @@ export const ReceiveScreenNavigator = () => {
         ...defaultNavigationOptions,
         ...defaultStackNavigatorOptions,
       }}
-      initialRouteName={RECEIVE_ROUTES.MAIN}
+      initialRouteName="receive-ada-main"
     >
       <Stack.Screen
-        name={RECEIVE_ROUTES.MAIN}
+        name="receive-ada-main"
         component={ReceiveScreen}
-        options={({navigation}) => ({
+        options={({navigation}: {navigation: AppRouteParams}) => ({
           title: strings.receiveTitle,
-          headerRight: () => <SettingsButton onPress={() => navigation.navigate(WALLET_ROOT_ROUTES.SETTINGS)} />,
+          headerRight: () => (
+            <SettingsButton
+              onPress={() =>
+                navigation.navigate('app-root', {
+                  screen: 'settings',
+                  params: {
+                    screen: 'settings-main',
+                  },
+                })
+              }
+            />
+          ),
           headerRightContainerStyle: {paddingRight: 16},
           ...defaultNavigationOptions,
         })}

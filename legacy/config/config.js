@@ -170,7 +170,8 @@ export const CONFIG = {
   APP_LOCK_TIMEOUT: 120 * 1000,
   LOG_LEVEL: _LOG_LEVEL,
   COMMIT: _COMMIT,
-  ANDROID_BIO_AUTH_EXCLUDED_SDK: [29, 30],
+  // added next SDKs till update bridge, 31 there are installations already
+  ANDROID_BIO_AUTH_EXCLUDED_SDK: [29, 30, 32, 33],
 }
 
 // Staking pools for testing/nightly deploys

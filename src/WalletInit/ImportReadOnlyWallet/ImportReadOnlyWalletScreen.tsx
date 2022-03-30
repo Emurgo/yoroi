@@ -1,4 +1,4 @@
-import {useFocusEffect, useNavigation, useRoute} from '@react-navigation/native'
+import {RouteProp, useFocusEffect, useNavigation, useRoute} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StatusBar, StyleSheet, View} from 'react-native'
@@ -7,29 +7,24 @@ import QRCodeScanner from 'react-native-qrcode-scanner'
 import {showErrorDialog} from '../../../legacy/actions'
 import {BulletPointItem, Text} from '../../../legacy/components/UiKit'
 import {errorMessages} from '../../../legacy/i18n/global-messages'
-import {WALLET_INIT_ROUTES} from '../../../legacy/RoutesList'
 import {theme} from '../../../legacy/styles/config'
 import {isCIP1852AccountPath, isValidPublicKey} from '../../../legacy/utils/bip44Validators'
 import {Logger} from '../../../legacy/utils/logging'
 import {Spacer} from '../../components'
-
-export type Params = {
-  networkId: string
-  walletImplementationId: string
-}
+import {WalletInitRouteParams, WalletInitRoutes} from '../../navigation'
 
 export const ImportReadOnlyWalletScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
-  const navigation = useNavigation()
-  const route = useRoute()
-  const {networkId, walletImplementationId}: Params = route.params as any // eslint-disable-line @typescript-eslint/no-explicit-any
+  const navigation = useNavigation<WalletInitRouteParams>()
+  const route = useRoute<RouteProp<WalletInitRoutes, 'import-read-only'>>()
+  const {networkId, walletImplementationId} = route.params
   const scannerRef = React.useRef<QRCodeScanner | null>(null)
 
   const onRead = (event: {data: string}) => {
     parseReadOnlyWalletKey(event.data)
       .then(({publicKeyHex, path}: {publicKeyHex: string; path: string}) =>
-        navigation.navigate(WALLET_INIT_ROUTES.SAVE_READ_ONLY_WALLET, {
+        navigation.navigate('save-read-only', {
           publicKeyHex,
           path,
           networkId,

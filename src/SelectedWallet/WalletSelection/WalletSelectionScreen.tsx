@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native'
-import React from 'react'
+import React, {useEffect} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, ScrollView, StyleSheet, Text} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -13,7 +13,6 @@ import {isJormungandr} from '../../../legacy/config/networks'
 import {InvalidState} from '../../../legacy/crypto/errors'
 import walletManager, {KeysAreInvalid, SystemAuthDisabled} from '../../../legacy/crypto/walletManager'
 import globalMessages, {errorMessages} from '../../../legacy/i18n/global-messages'
-import {ROOT_ROUTES, WALLET_INIT_ROUTES, WALLET_ROOT_ROUTES} from '../../../legacy/RoutesList'
 import {WalletMeta} from '../../../legacy/state'
 import {COLORS} from '../../../legacy/styles/config'
 import {useWalletMetas} from '../../hooks'
@@ -29,6 +28,17 @@ export const WalletSelectionScreen = () => {
   const selectWallet = useSetSelectedWallet()
   const dispatch = useDispatch()
 
+  useEffect(() => {
+    if (walletMetas && !walletMetas.length)
+      navigation.navigate('new-wallet', {
+        screen: 'choose-create-restore',
+        params: {
+          networkId: CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
+          walletImplementationId: CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
+        },
+      })
+  }, [navigation, walletMetas])
+
   const openWallet = async (walletMeta: WalletMeta, isRetry?: boolean) => {
     try {
       if (walletMeta.isShelley || isJormungandr(walletMeta.networkId)) {
@@ -39,17 +49,28 @@ export const WalletSelectionScreen = () => {
       selectWalletMeta(newWalletMeta)
       selectWallet(wallet)
 
-      const route = WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES
-      navigation.navigate(route)
+      navigation.navigate('app-root', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {
+            screen: 'history-list',
+          },
+        },
+      })
     } catch (e) {
       if (e instanceof SystemAuthDisabled) {
         await walletManager.closeWallet()
         await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
-        navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
+        navigation.navigate('app-root', {
+          screen: 'wallet-selection',
+        })
       } else if (e instanceof InvalidState) {
         await walletManager.closeWallet()
         await showErrorDialog(errorMessages.walletStateInvalid, intl)
-        navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
+        navigation.navigate('app-root', {
+          screen: 'wallet-selection',
+        })
       } else if (e instanceof KeysAreInvalid) {
         await walletManager.cleanupInvalidKeys()
         await walletManager.disableEasyConfirmation()
@@ -83,12 +104,9 @@ export const WalletSelectionScreen = () => {
           </ScrollView>
 
           <ShelleyButton />
-
-          {isNightly() && <ShelleyTestnetButton />}
-
+          <OnlyNightlyShelleyTestnetButton />
           <ByronButton />
-
-          {CONFIG.NETWORKS.JORMUNGANDR.ENABLED && <JormungandrButton />}
+          <OnlyDevButton />
         </ScreenBackground>
       </Screen>
     </SafeAreaView>
@@ -130,8 +148,8 @@ const ShelleyButton = () => {
       onPress={() =>
         // note: assume wallet implementation = yoroi haskell shelley
         // (15 words), but user may choose 24 words in next screen
-        navigation.navigate(ROOT_ROUTES.NEW_WALLET, {
-          screen: WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH,
+        navigation.navigate('new-wallet', {
+          screen: 'choose-create-restore',
           params: {
             networkId: CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
             walletImplementationId: CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
@@ -144,17 +162,19 @@ const ShelleyButton = () => {
   )
 }
 
-const ShelleyTestnetButton = () => {
+const OnlyNightlyShelleyTestnetButton = () => {
   const navigation = useNavigation()
   const strings = useStrings()
+
+  if (!isNightly()) return null
 
   return (
     <Button
       onPress={() =>
         // note: assume wallet implementation = yoroi haskell shelley
         // (15 words), but user may choose 24 words in next screen
-        navigation.navigate(ROOT_ROUTES.NEW_WALLET, {
-          screen: WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH,
+        navigation.navigate('new-wallet', {
+          screen: 'choose-create-restore',
           params: {
             networkId: CONFIG.NETWORKS.HASKELL_SHELLEY_TESTNET.NETWORK_ID,
             walletImplementationId: CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
@@ -175,8 +195,8 @@ const ByronButton = () => {
     <Button
       outline
       onPress={() =>
-        navigation.navigate(ROOT_ROUTES.NEW_WALLET, {
-          screen: WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH,
+        navigation.navigate('new-wallet', {
+          screen: 'choose-create-restore',
           params: {
             networkId: CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
             walletImplementationId: CONFIG.WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID,
@@ -189,26 +209,12 @@ const ByronButton = () => {
   )
 }
 
-const JormungandrButton = () => {
+const OnlyDevButton = () => {
   const navigation = useNavigation()
-  const strings = useStrings()
 
-  return (
-    <Button
-      outline
-      onPress={() =>
-        navigation.navigate(ROOT_ROUTES.NEW_WALLET, {
-          screen: WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH,
-          params: {
-            networkId: CONFIG.NETWORKS.JORMUNGANDR.NETWORK_ID,
-            walletImplementationId: CONFIG.WALLETS.JORMUNGANDR_ITN.WALLET_IMPLEMENTATION_ID,
-          },
-        })
-      }
-      title={strings.addWalletOnShelleyButton}
-      style={styles.button}
-    />
-  )
+  if (!__DEV__) return null
+
+  return <Button onPress={() => navigation.navigate('screens-index')} title="Dev options" style={styles.button} />
 }
 
 const styles = StyleSheet.create({

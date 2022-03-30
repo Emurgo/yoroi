@@ -9,7 +9,6 @@ import {useDispatch, useSelector} from 'react-redux'
 import {updateWallets} from '../../../legacy/actions'
 import {Button, Checkbox, StatusBar, Text, TextInput} from '../../../legacy/components/UiKit'
 import {Checkmark} from '../../../legacy/components/UiKit/TextInput'
-import {WALLET_ROOT_ROUTES} from '../../../legacy/RoutesList'
 import {isHWSelector} from '../../../legacy/selectors'
 import {COLORS} from '../../../legacy/styles/config'
 import {Spacer} from '../../components'
@@ -25,7 +24,7 @@ export const RemoveWalletScreen = () => {
   const navigation = useNavigation()
   const dispatch = useDispatch()
   const {removeWallet, isLoading} = useRemoveWallet({
-    onMutate: () => navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION),
+    onMutate: () => navigation.navigate('app-root', {screen: 'wallet-selection'}),
     onSuccess: () => dispatch(updateWallets()),
   })
 

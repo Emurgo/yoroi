@@ -10,7 +10,6 @@ import {handleGeneralError, updateWallets} from '../../../legacy/actions'
 import {Line, StatusBar, Text} from '../../../legacy/components/UiKit'
 import {CONFIG} from '../../../legacy/config/config'
 import type {NetworkId} from '../../../legacy/config/types'
-import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../../legacy/RoutesList'
 import {WalletMeta} from '../../../legacy/state'
 import {theme} from '../../../legacy/styles/config'
 import {Logger} from '../../../legacy/utils/logging'
@@ -66,7 +65,15 @@ export const SaveReadOnlyWalletScreen = () => {
       setSelectedWalletMeta(walletMeta)
       setSelectedWallet(wallet)
 
-      navigation.navigate(ROOT_ROUTES.WALLET, {screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES})
+      navigation.navigate('app-root', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {
+            screen: 'history-list',
+          },
+        },
+      })
     },
   })
 

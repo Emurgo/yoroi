@@ -2,6 +2,7 @@ import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {setEasyConfirmation, showErrorDialog} from '../../../legacy/actions'
@@ -62,7 +63,7 @@ export const ToggleEasyConfirmationScreen = () => {
   }, [navigation])
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView edges={['bottom']} style={styles.container}>
       <StatusBar type="dark" />
 
       {!isEasyConfirmationEnabled ? (
@@ -97,7 +98,7 @@ export const ToggleEasyConfirmationScreen = () => {
           disabled={!masterPassword && !isEasyConfirmationEnabled}
         />
       </View>
-    </View>
+    </SafeAreaView>
   )
 }
 

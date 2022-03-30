@@ -20,7 +20,7 @@ public class MainActivity extends ReactActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         RNBootSplash.init(R.drawable.bootsplash, MainActivity.this);
-        super.onCreate(null);
+        super.onCreate(savedInstanceState);
         if (BuildConfig.FLAVOR.equals("mainnet")) {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
         }

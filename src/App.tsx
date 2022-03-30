@@ -48,7 +48,6 @@ const useHideScreenInAppSwitcher = () => {
     })
 
     return () => subscription?.remove()
-
   }, [])
 }
 

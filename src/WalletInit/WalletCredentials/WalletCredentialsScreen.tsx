@@ -1,19 +1,18 @@
-import {useNavigation, useRoute} from '@react-navigation/native'
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
 import React from 'react'
 import {ActivityIndicator, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../../legacy/RoutesList'
 import type {WalletMeta} from '../../../legacy/state'
 import {COLORS} from '../../../legacy/styles/config'
 import {useCreateWallet} from '../../hooks'
+import {WalletInitRoutes} from '../../navigation'
 import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
 import {WalletForm} from '../WalletForm'
 
 export const WalletCredentialsScreen = () => {
   const navigation = useNavigation()
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const route: any = useRoute()
+  const route = useRoute<RouteProp<WalletInitRoutes, 'wallet-credentials'>>()
   const {phrase, networkId, walletImplementationId, provider} = route.params
 
   const setSelectedWalletMeta = useSetSelectedWalletMeta()
@@ -35,7 +34,15 @@ export const WalletCredentialsScreen = () => {
       setSelectedWalletMeta(walletMeta)
       setSelectedWallet(wallet)
 
-      navigation.navigate(ROOT_ROUTES.WALLET, {screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES})
+      navigation.navigate('app-root', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {
+            screen: 'history-list',
+          },
+        },
+      })
     },
   })
 

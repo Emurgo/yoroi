@@ -19,7 +19,6 @@ import {useSelector} from 'react-redux'
 import copyImage from '../../legacy/assets/img/copyd.png'
 import {Button, ProgressStep, Text} from '../../legacy/components/UiKit'
 import {confirmationMessages} from '../../legacy/i18n/global-messages'
-import {WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
 import {encryptedKeySelector} from '../../legacy/selectors'
 import {COLORS} from '../../legacy/styles/config'
 import {Spacer} from '../components'
@@ -106,7 +105,34 @@ export const Step6 = () => {
       <CatalystBackupCheckModal
         visible={showBackupWarningModal}
         onRequestClose={() => setShowBackupWarningModal(false)}
-        onConfirm={() => navigation.navigate(WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES)}
+        onConfirm={() => {
+          navigation.reset({
+            index: 0,
+            routes: [
+              {
+                name: 'app-root',
+                state: {
+                  routes: [
+                    {name: 'wallet-selection'},
+                    {
+                      name: 'main-wallet-routes',
+                      state: {
+                        routes: [
+                          {
+                            name: 'history',
+                            state: {
+                              routes: [{name: 'history-list'}],
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+          })
+        }}
       />
     </SafeAreaView>
   )

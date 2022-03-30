@@ -18,15 +18,14 @@ import type {DeviceId, DeviceObj, HWDeviceInfo} from '../../../legacy/crypto/she
 import walletManager, {SystemAuthDisabled} from '../../../legacy/crypto/walletManager'
 import {errorMessages} from '../../../legacy/i18n/global-messages'
 import LocalizableError from '../../../legacy/i18n/LocalizableError'
-import {DELEGATION_ROUTES, SEND_ROUTES, WALLET_ROOT_ROUTES, WALLET_ROUTES} from '../../../legacy/RoutesList'
 import type {ServerStatusCache} from '../../../legacy/state'
 import type {DefaultAsset} from '../../../legacy/types/HistoryTransaction'
-import type {Navigation} from '../../../legacy/types/navigation'
+import {AppRouteParams} from '../../navigation'
 import {WithdrawalDialog} from './WithdrawalDialog'
 
 type Props = {
   intl: IntlShape
-  navigation: Navigation
+  navigation: AppRouteParams
   utxos: Array<RawUtxo> | null
   setLedgerDeviceId: (deviceID: DeviceId) => Promise<void>
   setLedgerDeviceObj: (deviceObj: DeviceObj) => Promise<void>
@@ -208,7 +207,32 @@ export class WithdrawStakingRewards extends React.Component<Props, State> {
       } else if (decryptedKey != null && !(typeof tx === 'string' || tx instanceof String)) {
         await submitTransaction(tx, decryptedKey)
       }
-      navigation.navigate(WALLET_ROUTES.TX_HISTORY)
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: 'app-root',
+            state: {
+              routes: [
+                {name: 'wallet-selection'},
+                {
+                  name: 'main-wallet-routes',
+                  state: {
+                    routes: [
+                      {
+                        name: 'history',
+                        state: {
+                          routes: [{name: 'history-list'}],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      })
     }
 
     try {
@@ -227,11 +251,9 @@ export class WithdrawStakingRewards extends React.Component<Props, State> {
       if (isEasyConfirmationEnabled) {
         try {
           await walletManager.ensureKeysValidity()
-          navigation.navigate(SEND_ROUTES.BIOMETRICS_SIGNING, {
+          navigation.navigate('biometrics', {
             keyId: walletManager._id,
             onSuccess: async (decryptedKey) => {
-              navigation.navigate(DELEGATION_ROUTES.STAKING_DASHBOARD)
-
               await submitTx(signTxRequest, decryptedKey)
             },
             onFail: () => navigation.goBack(),
@@ -241,7 +263,9 @@ export class WithdrawStakingRewards extends React.Component<Props, State> {
             this.closeWithdrawalDialog()
             await walletManager.closeWallet()
             await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
-            navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
+            navigation.navigate('app-root', {
+              screen: 'wallet-selection',
+            })
 
             return
           } else {

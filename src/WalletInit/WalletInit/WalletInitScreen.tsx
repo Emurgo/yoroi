@@ -10,8 +10,8 @@ import {CONFIG, isByron, isHaskellShelley} from '../../../legacy/config/config'
 import {isJormungandr} from '../../../legacy/config/networks'
 import type {NetworkId, WalletImplementationId, YoroiProvider} from '../../../legacy/config/types'
 import globalMessages from '../../../legacy/i18n/global-messages'
-import {WALLET_INIT_ROUTES} from '../../../legacy/RoutesList'
 import {COLORS} from '../../../legacy/styles/config'
+import {WalletInitRouteParams} from '../../navigation'
 import {WalletDescription} from '../WalletDescription'
 import {ExpandableItem} from './ExpandableItem'
 
@@ -199,32 +199,32 @@ const useStrings = () => {
 }
 
 const useNavigateTo = ({networkId}: {networkId: NetworkId}) => {
-  const navigation = useNavigation()
+  const navigation = useNavigation<WalletInitRouteParams>()
 
   return {
     restoreWallet: (walletImplementationId: WalletImplementationId, provider?: YoroiProvider) =>
-      navigation.navigate(WALLET_INIT_ROUTES.RESTORE_WALLET, {
+      navigation.navigate('restore-wallet-form', {
         networkId,
         walletImplementationId,
         provider,
       }),
 
     createWallet: (walletImplementationId: WalletImplementationId, provider?: YoroiProvider) =>
-      navigation.navigate(WALLET_INIT_ROUTES.CREATE_WALLET, {
+      navigation.navigate('create-wallet-form', {
         networkId,
         walletImplementationId,
         provider,
       }),
 
     checkNanoX: (walletImplementationId: WalletImplementationId, useUSB: boolean) =>
-      navigation.navigate(WALLET_INIT_ROUTES.CHECK_NANO_X, {
+      navigation.navigate('check-nano-x', {
         networkId,
         walletImplementationId,
         useUSB,
       }),
 
     importReadOnlyWallet: (walletImplementationId: WalletImplementationId) =>
-      navigation.navigate(WALLET_INIT_ROUTES.IMPORT_READ_ONLY_WALLET, {
+      navigation.navigate('import-read-only', {
         networkId,
         walletImplementationId,
       }),

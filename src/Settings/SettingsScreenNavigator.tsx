@@ -3,10 +3,13 @@ import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import BiometricAuthScreen from '../../legacy/components/Send/BiometricAuthScreen'
-import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../legacy/navigationOptions'
-import {SETTINGS_ROUTES, SETTINGS_TABS} from '../../legacy/RoutesList'
 import {COLORS} from '../../legacy/styles/config'
+import {
+  defaultBaseNavigationOptions,
+  defaultNavigationOptions,
+  SettingsStackRoutes,
+  SettingsTabRoutes,
+} from '../navigation'
 import {ApplicationSettingsScreen} from './ApplicationSettings'
 import {BiometricsLinkScreen} from './BiometricsLink/'
 import {ChangeLanguageScreen} from './ChangeLanguage'
@@ -20,96 +23,76 @@ import {TermsOfServiceScreen} from './TermsOfService'
 import {ToggleEasyConfirmationScreen} from './ToggleEasyConfirmation'
 import {WalletSettingsScreen} from './WalletSettings'
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-const Stack = createStackNavigator<{
-  settings: any
-  'change-wallet-name': any
-  'terms-of-use': any
-  support: any
-  'fingerprint-link': any
-  'remove-wallet': any
-  'change-language': any
-  'easy-confirmation': any
-  'change-password': any
-  'change-custom-pin': any
-  'bio-authenticate': any
-  'setup-custom-pin': any
-}>()
-/* eslint-enable @typescript-eslint/no-explicit-any */
+const Stack = createStackNavigator<SettingsStackRoutes>()
 export const SettingsScreenNavigator = () => {
   const strings = useStrings()
-
   return (
-    <Stack.Navigator
-      screenOptions={{
-        ...defaultNavigationOptions,
-        ...defaultStackNavigatorOptions,
-      }}
-      initialRouteName={SETTINGS_ROUTES.MAIN}
-    >
-      <Stack.Screen
-        name={SETTINGS_ROUTES.MAIN}
+    <Stack.Navigator screenOptions={defaultBaseNavigationOptions} initialRouteName="settings-main">
+      <Stack.Screen //
+        name="settings-main"
         component={SettingsTabNavigator}
         options={{title: strings.settingsTitle}}
       />
+
       <Stack.Screen
-        name={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
+        name="change-wallet-name"
         component={ChangeWalletName}
         options={{title: strings.changeWalletNameTitle}}
       />
+
       <Stack.Screen
-        name={SETTINGS_ROUTES.TERMS_OF_USE}
+        name="terms-of-use"
         component={TermsOfServiceScreen}
         options={{title: strings.termsOfServiceTitle}}
       />
+
       <Stack.Screen //
-        name={SETTINGS_ROUTES.SUPPORT}
+        name="support"
         component={SupportScreen}
         options={{title: strings.supportTitle}}
       />
-      <Stack.Screen
-        name={SETTINGS_ROUTES.FINGERPRINT_LINK}
+
+      <Stack.Screen //
+        name="fingerprint-link"
         component={BiometricsLinkScreen}
         options={{headerShown: false}}
       />
-      <Stack.Screen
-        name={SETTINGS_ROUTES.REMOVE_WALLET}
+
+      <Stack.Screen //
+        name="remove-wallet"
         component={RemoveWalletScreen}
         options={{title: strings.removeWalletTitle}}
       />
-      <Stack.Screen
-        name={SETTINGS_ROUTES.CHANGE_LANGUAGE}
+
+      <Stack.Screen //
+        name="change-language"
         component={ChangeLanguageScreen}
         options={{headerShown: false}}
       />
-      <Stack.Screen
-        name={SETTINGS_ROUTES.EASY_CONFIRMATION}
+
+      <Stack.Screen //
+        name="easy-confirmation"
         component={ToggleEasyConfirmationScreen}
         options={{title: strings.toggleEachConfirmationTitle}}
       />
-      <Stack.Screen
-        name={SETTINGS_ROUTES.CHANGE_PASSWORD}
+
+      <Stack.Screen //
+        name="change-password"
         component={ChangePasswordScreen}
         options={{title: strings.changePasswordTitle}}
       />
-      <Stack.Screen
-        name={SETTINGS_ROUTES.CHANGE_CUSTOM_PIN}
+
+      <Stack.Screen //
+        name="change-custom-pin"
         component={ChangePinScreen}
         options={{
           title: strings.changeCustomPinTitle,
-          headerStyle: {
-            ...defaultNavigationOptions.headerStyle,
-            elevation: 0, // turn off header shadows on Android
-          },
+          headerStyle: defaultNavigationOptions.headerStyle,
         }}
       />
-      <Stack.Screen
-        name={SETTINGS_ROUTES.BIO_AUTHENTICATE}
-        component={BiometricAuthScreen}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name={SETTINGS_ROUTES.SETUP_CUSTOM_PIN}
+
+      <Stack.Screen //
+        name="setup-custom-pin"
         component={CustomPinScreen}
         options={{title: strings.customPinTitle}}
       />
@@ -117,29 +100,21 @@ export const SettingsScreenNavigator = () => {
   )
 }
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-const Tab = createMaterialTopTabNavigator<{
-  'wallet-settings': any
-  'app-settings': any
-}>()
-/* eslint-enable @typescript-eslint/no-explicit-any */
+const Tab = createMaterialTopTabNavigator<SettingsTabRoutes>()
 const SettingsTabNavigator = () => {
   const strings = useStrings()
 
   return (
     <Tab.Navigator
       screenOptions={({route}) => ({
-        tabBarLabel: route.name === SETTINGS_TABS.WALLET_SETTINGS ? strings.walletTabTitle : strings.appTabTitle,
+        tabBarLabel: route.name === 'wallet-settings' ? strings.walletTabTitle : strings.appTabTitle,
+        tabBarStyle: {backgroundColor: COLORS.BACKGROUND_BLUE, elevation: 0, shadowOpacity: 0},
+        tabBarIndicatorStyle: {backgroundColor: '#fff', height: 2},
+        tabBarLabelStyle: {color: COLORS.WHITE},
       })}
-      tabBarOptions={{
-        style: {backgroundColor: COLORS.BACKGROUND_BLUE, elevation: 0, shadowOpacity: 0},
-        tabStyle: {elevation: 0, shadowOpacity: 0},
-        labelStyle: {color: COLORS.WHITE},
-        indicatorStyle: {backgroundColor: '#fff', height: 2},
-      }}
     >
-      <Tab.Screen name={SETTINGS_TABS.WALLET_SETTINGS} component={WalletSettingsScreen} />
-      <Tab.Screen name={SETTINGS_TABS.APP_SETTINGS} component={ApplicationSettingsScreen} />
+      <Tab.Screen name="wallet-settings" component={WalletSettingsScreen} />
+      <Tab.Screen name="app-settings" component={ApplicationSettingsScreen} />
     </Tab.Navigator>
   )
 }

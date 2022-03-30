@@ -9,22 +9,21 @@ import {useSelector} from 'react-redux'
 
 import {Text} from '../../legacy/components/UiKit'
 import {CONFIG} from '../../legacy/config/config'
-import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../legacy/navigationOptions'
 import {tokenBalanceSelector} from '../../legacy/selectors'
 import {CatalystNavigator} from '../Catalyst/CatalystNavigator'
 import {Icon, Spacer} from '../components'
 import {useWalletMetas} from '../hooks'
+import {defaultBaseNavigationOptions, MenuRoutes} from '../navigation'
 import {InsufficientFundsModal} from './InsufficientFundsModal'
 
-const MenuStack = createStackNavigator()
-
+const MenuStack = createStackNavigator<MenuRoutes>()
 export const MenuNavigator = () => {
   const strings = useStrings()
 
   return (
     <MenuStack.Navigator
       initialRouteName="menu"
-      screenOptions={{...defaultNavigationOptions, ...defaultStackNavigatorOptions, headerLeft: null}}
+      screenOptions={{...defaultBaseNavigationOptions, headerLeft: () => null}}
     >
       <MenuStack.Screen name="menu" component={Menu} options={{title: strings.menu}} />
       <MenuStack.Screen name="catalyst-voting" component={CatalystNavigator} />
@@ -122,8 +121,20 @@ const useNavigateTo = () => {
 
   return {
     allWallets: () => navigation.navigate('app-root', {screen: 'wallet-selection'}),
-    catalystVoting: () => navigation.navigate('app-root', {screen: 'catalyst-router'}),
-    settings: () => navigation.navigate('app-root', {screen: 'settings'}),
+    catalystVoting: () =>
+      navigation.navigate('app-root', {
+        screen: 'catalyst-router',
+        params: {
+          screen: 'catalyst-landing',
+        },
+      }),
+    settings: () =>
+      navigation.navigate('app-root', {
+        screen: 'settings',
+        params: {
+          screen: 'settings-main',
+        },
+      }),
     faq: () => Linking.openURL('https://yoroi-wallet.com/faq/'),
   }
 }

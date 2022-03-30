@@ -1,4 +1,4 @@
-import {useNavigation, useRoute} from '@react-navigation/native'
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Image, Platform, ScrollView, StyleSheet, View} from 'react-native'
@@ -6,25 +6,17 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import image from '../../../legacy/assets/img/ledger_1.png'
 import {BulletPointItem, Button, ProgressStep, Text} from '../../../legacy/components/UiKit'
-import type {NetworkId, WalletImplementationId} from '../../../legacy/config/types'
 import {confirmationMessages, ledgerMessages} from '../../../legacy/i18n/global-messages'
-import {WALLET_INIT_ROUTES} from '../../../legacy/RoutesList'
 import {Spacer} from '../../components'
-
-export type Params = {
-  networkId: NetworkId
-  walletImplementationId: WalletImplementationId
-  useUSB?: boolean
-}
+import {WalletInitRouteParams, WalletInitRoutes} from '../../navigation'
 
 export const CheckNanoXScreen = () => {
   const strings = useStrings()
-  const route = useRoute()
-  const {networkId, walletImplementationId, useUSB} = route.params as Params
+  const route = useRoute<RouteProp<WalletInitRoutes, 'connect-nano-x'>>()
+  const {networkId, walletImplementationId, useUSB} = route.params
 
-  const navigation = useNavigation()
-  const onContinue = () =>
-    navigation.navigate(WALLET_INIT_ROUTES.CONNECT_NANO_X, {networkId, walletImplementationId, useUSB})
+  const navigation = useNavigation<WalletInitRouteParams>()
+  const onContinue = () => navigation.navigate('connect-nano-x', {networkId, walletImplementationId, useUSB})
 
   const commonRequirements = [strings.appInstalled, strings.appOpened]
   const usbRequirements = [strings.haveOTGAdapter, strings.usbAlwaysConnected, ...commonRequirements]

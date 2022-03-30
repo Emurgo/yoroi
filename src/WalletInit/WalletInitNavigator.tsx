@@ -2,13 +2,7 @@ import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import {isJormungandr} from '../../legacy/config/networks'
-import {
-  defaultNavigationOptions,
-  defaultStackNavigatorOptions,
-  jormunNavigationOptions,
-} from '../../legacy/navigationOptions'
-import {WALLET_INIT_ROUTES} from '../../legacy/RoutesList'
+import {defaultBaseNavigationOptions, WalletInitRoutes} from '../navigation'
 import {CheckNanoXScreen} from './CheckNanoX'
 import {ConnectNanoXScreen} from './ConnectNanoX/ConnectNanoXScreen'
 import {CreateWalletScreen} from './CreateWallet'
@@ -23,70 +17,44 @@ import {WalletCredentialsScreen} from './WalletCredentials'
 import {WalletFreshInitScreen} from './WalletFreshInit'
 import {WalletInitScreen} from './WalletInit'
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-const Stack = createStackNavigator<{
-  'choose-create-restore': any
-  'initial-choose-create-restore': any
-  'create-wallet-form': any
-  'restore-wallet-form': any
-  'import-read-only': any
-  'save-read-only': any
-  'check-nano-x': any
-  'connect-nano-x': any
-  'save-nano-x': any
-  'mnemoinc-show': any
-  'mnemonic-check': any
-  'wallet-account-checksum': any
-  'wallet-credentials': any
-}>()
-/* eslint-enable @typescript-eslint/no-explicit-any */
-
+const Stack = createStackNavigator<WalletInitRoutes>()
 export const WalletInitNavigator = () => {
   const strings = useStrings()
 
   return (
     <Stack.Navigator
-      initialRouteName={WALLET_INIT_ROUTES.INITIAL_CREATE_RESTORE_SWITCH}
-      screenOptions={({route}) => {
-        // note: jormun is currently not supported. If you want to add this
-        // jormun style, make sure to pass the networkId as a route param
-        const extraOptions = isJormungandr(route.params?.networkId) ? jormunNavigationOptions : {}
-
-        return {
-          cardStyle: {backgroundColor: 'transparent'},
-          title: route.params?.title ?? undefined,
-          ...defaultNavigationOptions,
-          ...defaultStackNavigatorOptions,
-          ...extraOptions,
-        }
+      initialRouteName="initial-choose-create-restore"
+      screenOptions={{
+        cardStyle: {backgroundColor: 'transparent'},
+        ...defaultBaseNavigationOptions,
       }}
     >
       <Stack.Screen
-        name={WALLET_INIT_ROUTES.INITIAL_CREATE_RESTORE_SWITCH}
+        name="initial-choose-create-restore"
         component={WalletFreshInitScreen}
         options={{headerShown: false}}
       />
 
       <Stack.Screen
-        name={WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH}
+        name="choose-create-restore"
         component={WalletInitScreen}
         options={{title: strings.addWalletTitle}}
       />
 
       <Stack.Screen
-        name={WALLET_INIT_ROUTES.CREATE_WALLET}
+        name="create-wallet-form"
         component={CreateWalletScreen}
         options={{title: strings.createWalletTitle}}
       />
 
       <Stack.Screen
-        name={WALLET_INIT_ROUTES.RESTORE_WALLET}
+        name="restore-wallet-form"
         component={RestoreWalletScreen}
         options={{title: strings.restoreWalletTitle}}
       />
 
       <Stack.Screen
-        name={WALLET_INIT_ROUTES.IMPORT_READ_ONLY_WALLET}
+        name="import-read-only"
         component={ImportReadOnlyWalletScreen}
         options={{
           title: strings.importReadOnlyTitle,
@@ -95,51 +63,51 @@ export const WalletInitNavigator = () => {
       />
 
       <Stack.Screen
-        name={WALLET_INIT_ROUTES.SAVE_READ_ONLY_WALLET}
+        name="save-read-only"
         component={SaveReadOnlyWalletScreen}
         options={{title: strings.saveReadOnlyWalletTitle}}
       />
 
-      <Stack.Screen
-        name={WALLET_INIT_ROUTES.CHECK_NANO_X}
+      <Stack.Screen // prettier-ignore
+        name="check-nano-x"
         component={CheckNanoXScreen}
         options={{title: strings.checkNanoXTitle}}
       />
 
-      <Stack.Screen //
-        name={WALLET_INIT_ROUTES.CONNECT_NANO_X}
+      <Stack.Screen // prettier-ignore
+        name="connect-nano-x"
         options={{title: strings.connectNanoXTitle}}
         component={ConnectNanoXScreen}
       />
 
       <Stack.Screen
-        name={WALLET_INIT_ROUTES.SAVE_NANO_X}
+        name="save-nano-x"
         component={SaveNanoXScreen}
         options={{
           title: strings.saveNanoXTitle,
         }}
       />
 
-      <Stack.Screen
-        name={WALLET_INIT_ROUTES.MNEMONIC_SHOW}
+      <Stack.Screen // prettier-ignore
+        name="mnemoinc-show"
         component={MnemonicShowScreen}
         options={{title: strings.mnemonicShowTitle}}
       />
 
       <Stack.Screen
-        name={WALLET_INIT_ROUTES.MNEMONIC_CHECK}
+        name="mnemonic-check"
         component={MnemonicCheckScreen}
         options={{title: strings.mnemonicCheckTitle}}
       />
 
       <Stack.Screen
-        name={WALLET_INIT_ROUTES.VERIFY_RESTORED_WALLET}
+        name="wallet-account-checksum"
         component={VerifyRestoredWalletScreen}
         options={{title: strings.verifyRestoredWalletTitle}}
       />
 
       <Stack.Screen
-        name={WALLET_INIT_ROUTES.WALLET_CREDENTIALS}
+        name="wallet-credentials"
         component={WalletCredentialsScreen}
         options={{title: strings.walletCredentialsTitle}}
       />
