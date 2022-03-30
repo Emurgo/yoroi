@@ -15,7 +15,7 @@ import {Logger} from '../../../legacy/utils/logging'
 import {Boundary, Icon, Line, StatusBar, Text} from '../../components'
 import {useCreateBip44Wallet, usePlate} from '../../hooks'
 import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
-import {NetworkId} from '../../types'
+import {NetworkId} from '../../yoroi-wallets'
 import {WalletAddress} from '../WalletAddress'
 import {WalletNameForm} from '../WalletNameForm'
 

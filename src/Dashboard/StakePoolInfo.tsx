@@ -7,7 +7,8 @@ import {useQuery} from 'react-query'
 import {COLORS} from '../../legacy/styles/config'
 import {Button, CopyButton, Text, TitledCard} from '../components'
 import {useSelectedWallet} from '../SelectedWallet'
-import {RemotePoolMetaFailure, StakePoolInfoAndHistory, YoroiWallet} from '../types'
+import {RemotePoolMetaFailure, StakePoolInfoAndHistory} from '../types'
+import {YoroiWallet} from '../yoroi-wallets'
 
 export const StakePoolInfo = ({stakePoolId}: {stakePoolId: string}) => {
   const strings = useStrings()

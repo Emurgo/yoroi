@@ -26,12 +26,13 @@ import {
 } from '@emurgo/react-native-haskell-shelley'
 import {BigNumber} from 'bignumber.js'
 
+// $FlowExpectedError
+import {MultiToken} from '../../../src/yoroi-wallets'
 import type {RawUtxo} from '../../api/types'
 import {CONFIG, getDefaultAssets} from '../../config/config'
 import {NETWORKS} from '../../config/networks'
 import jestSetup from '../../jestSetup'
 import {AssetOverflowError, InsufficientFunds, NoOutputsError} from '../errors'
-import {MultiToken} from '../MultiToken'
 import type {Address, AddressedUtxo, Addressing} from '../types'
 import {newAdaUnsignedTx, newAdaUnsignedTxFromUtxo, sendAllUnsignedTxFromUtxo, signTransaction} from './transactions'
 import {byronAddrToHex, identifierToCardanoAsset} from './utils'

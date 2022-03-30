@@ -12,8 +12,16 @@ import {
 import {generateShelleyPlateFromKey} from '../../legacy/crypto/shelley/plate'
 import {WalletMeta} from '../../legacy/state'
 import storage from '../../legacy/utils/storage'
-import {NetworkId, SignedTx, Token, TxSubmissionStatus} from '../types'
-import {walletManager, YoroiWallet} from '../yoroi-wallets'
+import {Token} from '../types'
+import {
+  NetworkId,
+  SignedTx,
+  TxSubmissionStatus,
+  WalletImplementationId,
+  walletManager,
+  YoroiProvider,
+  YoroiWallet,
+} from '../yoroi-wallets'
 
 // WALLET
 export const useCloseWallet = (options?: UseMutationOptions<void, Error>) => {
@@ -217,7 +225,7 @@ type CreateBip44WalletInfo = {
   name: string
   bip44AccountPublic: string
   networkId: number
-  implementationId: string
+  implementationId: WalletImplementationId
   hwDeviceInfo?: Record<string, unknown>
   readOnly: boolean
 }
@@ -248,8 +256,8 @@ export type CreateWalletInfo = {
   mnemonicPhrase: string
   password: string
   networkId: number
-  walletImplementationId: string
-  provider?: string
+  walletImplementationId: WalletImplementationId
+  provider?: YoroiProvider
 }
 
 export const useCreateWallet = (options?: UseMutationOptions<YoroiWallet, Error, CreateWalletInfo>) => {

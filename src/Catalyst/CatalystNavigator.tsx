@@ -55,7 +55,11 @@ export const CatalystNavigator = () => {
         {() => <Step4 pin={pin} setVotingRegTxData={setVotingRegTxData} />}
       </Stack.Screen>
       <Stack.Screen name={CATALYST_ROUTES.STEP5} options={defaultNavigationOptions}>
-        {() => <Step5 votingRegTxData={votingRegTxData} />}
+        {() => {
+          if (!votingRegTxData) throw new Error('invalid state')
+
+          return <Step5 votingRegTxData={votingRegTxData} />
+        }}
       </Stack.Screen>
       <Stack.Screen name={CATALYST_ROUTES.STEP6} options={defaultNavigationOptions}>
         {() => <Step6 votingRegTxData={votingRegTxData} />}

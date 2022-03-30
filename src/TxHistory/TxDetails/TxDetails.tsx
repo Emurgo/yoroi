@@ -9,7 +9,6 @@ import {useSelector} from 'react-redux'
 import assetListStyle from '../../../legacy/components/Common/MultiAsset/styles/AssetListTransaction.style'
 import Screen from '../../../legacy/components/Screen'
 import {getNetworkConfigById} from '../../../legacy/config/networks'
-import {MultiToken} from '../../../legacy/crypto/MultiToken'
 import globalMessages from '../../../legacy/i18n/global-messages'
 import {
   externalAddressIndexSelector,
@@ -25,6 +24,7 @@ import {useTokenInfo} from '../../hooks'
 import AddressModal from '../../Receive/AddressModal'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {TokenEntry, TransactionInfo} from '../../types'
+import {MultiToken} from '../../yoroi-wallets'
 import {AssetList} from './AssetList'
 
 export type Params = {
@@ -54,7 +54,7 @@ export const TxDetails = () => {
 
   const {fromFiltered, toFiltered, cntOmittedTo} =
     transaction && getShownAddresses(intl, transaction, internalAddressIndex, externalAddressIndex)
-  const txFee: BigNumber = transaction.fee ? MultiToken.fromArray(transaction.fee).getDefault() : null
+  const txFee: null | BigNumber = transaction.fee ? MultiToken.fromArray(transaction.fee).getDefault() : null
   const amountAsMT = MultiToken.fromArray(transaction.amount)
   const amount: BigNumber = amountAsMT.getDefault()
 

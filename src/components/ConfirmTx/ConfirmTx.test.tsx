@@ -4,6 +4,7 @@ import React from 'react'
 import {Provider} from 'react-redux'
 
 import configureStore from '../../../legacy/helpers/configureStore.js'
+import {HaskellShelleyTxSignRequest} from '../../yoroi-wallets/index.js'
 
 global.window = {}
 global.React = React
@@ -24,10 +25,12 @@ describe('ConfirmTx', () => {
             onSuccess={handleOnSuccess}
             process="signAndSubmit"
             setUseUSB={handleSetUseUSB}
-            txDataSignRequest={{
-              senderUtxos: [],
-              changeAddr: [],
-            }}
+            txDataSignRequest={
+              {
+                senderUtxos: [],
+                changeAddr: [],
+              } as unknown as HaskellShelleyTxSignRequest
+            }
             useUSB
           />
         </NavigationContainer>

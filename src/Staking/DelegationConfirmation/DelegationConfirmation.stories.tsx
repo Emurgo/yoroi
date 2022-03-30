@@ -3,8 +3,8 @@ import {BigNumber} from 'bignumber.js'
 import React from 'react'
 
 import {getDefaultAssets} from '../../../legacy/config/config'
-import {getDefaultNetworkTokenEntry, MultiToken} from '../../../legacy/crypto/MultiToken'
 import {RouteProvider} from '../../../storybook'
+import {getDefaultNetworkTokenEntry, MultiToken} from '../../yoroi-wallets'
 import {DelegationConfirmation} from './DelegationConfirmation'
 
 const defaultNetworkId = getDefaultAssets()[0].networkId

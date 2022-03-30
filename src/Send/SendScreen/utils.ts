@@ -5,8 +5,6 @@ import {IntlShape} from 'react-intl'
 
 import {getCardanoNetworkConfigById, isHaskellShelleyNetwork} from '../../../legacy/config/networks'
 import {AssetOverflowError, InsufficientFunds} from '../../../legacy/crypto/errors'
-import {MultiToken} from '../../../legacy/crypto/MultiToken'
-import type {CreateUnsignedTxResponse} from '../../../legacy/crypto/shelley/transactionUtils'
 import {cardanoValueFromMultiToken} from '../../../legacy/crypto/shelley/utils'
 import {WalletMeta} from '../../../legacy/state'
 import {formatTokenAmount, formatTokenInteger, normalizeTokenAmount} from '../../../legacy/utils/format'
@@ -14,7 +12,7 @@ import {InvalidAssetAmount, parseAmountDecimal} from '../../../legacy/utils/pars
 import type {AddressValidationErrors} from '../../../legacy/utils/validators'
 import {getUnstoppableDomainAddress, isReceiverAddressValid, validateAmount} from '../../../legacy/utils/validators'
 import type {DefaultAsset, RawUtxo, SendTokenList, Token} from '../../types'
-import {walletManager} from '../../yoroi-wallets'
+import {HaskellShelleyTxSignRequest, MultiToken, walletManager} from '../../yoroi-wallets'
 import {amountInputErrorMessages, messages} from './strings'
 
 export const getMinAda = async (selectedToken: Token, defaultAsset: DefaultAsset) => {
@@ -55,7 +53,7 @@ export const getTransactionData = async (
   defaultAsset: DefaultAsset,
   selectedToken: Token,
   serverTime?: Date | null,
-): Promise<CreateUnsignedTxResponse> => {
+) => {
   const defaultTokenEntry = {
     defaultNetworkId: defaultAsset.networkId,
     defaultIdentifier: defaultAsset.identifier,
@@ -120,15 +118,15 @@ export const recomputeAll = async ({
   }
 
   let balanceErrors = Object.freeze({})
-  let fee = null
+  let fee: BigNumber | null = null
   let balanceAfter: null | BigNumber = null
   let recomputedAmount = amount
 
-  let unsignedTx: CreateUnsignedTxResponse | null = null
+  let unsignedTx: HaskellShelleyTxSignRequest | null = null
 
   if (_.isEmpty(addressErrors) && utxos) {
     try {
-      let _fee
+      let _fee: MultiToken | null = null
 
       // we'll substract minAda from ADA balance if we are sending a token
       const minAda =

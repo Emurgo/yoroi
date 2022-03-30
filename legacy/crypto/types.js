@@ -8,9 +8,10 @@ import {
 import {LinearFee} from '@emurgo/react-native-haskell-shelley'
 import {BigNumber} from 'bignumber.js'
 
+// $FlowExpectedError
+import {MultiToken} from '../../src/yoroi-wallets'
 import type {RawUtxo} from '../api/types'
 import type {Token} from '../types/HistoryTransaction'
-import {MultiToken} from './MultiToken'
 
 export type Address = {|
   +address: string,

@@ -1,5 +1,3 @@
-import {MultiToken} from './tokens'
-
 export type StakingStatus = Registered | NotRegistered
 type Registered = {
   isRegistered: true
@@ -61,11 +59,6 @@ export type Certificate =
 export type Withdrawal = {
   address: string // hex
   amount: string
-}
-
-export type Deregistration = {
-  rewardAddress: string
-  refund: MultiToken
 }
 
 export type RemoteCertificateMeta =

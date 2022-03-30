@@ -12,7 +12,7 @@ import {COLORS} from '../../../legacy/styles/config'
 import {Button, Spacer, StatusBar, Text} from '../../components'
 import {useCreateWallet} from '../../hooks'
 import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
-import {NetworkId, WalletImplementationId, YoroiProvider} from '../../types'
+import {NetworkId, WalletImplementationId, YoroiProvider} from '../../yoroi-wallets'
 
 export type Params = {
   mnemonic: string

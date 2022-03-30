@@ -6,7 +6,8 @@ import {Provider} from 'react-redux'
 import getConfiguredStore from '../../legacy/helpers/configureStore'
 import {mockWallet, poolInfoAndHistory, stakePoolId} from '../../storybook'
 import {SelectedWalletProvider} from '../SelectedWallet'
-import {StakePoolInfosAndHistories, YoroiWallet} from '../types'
+import {StakePoolInfosAndHistories} from '../types'
+import {YoroiWallet} from '../yoroi-wallets'
 import {Dashboard} from './Dashboard'
 
 storiesOf('Dashboard', module)

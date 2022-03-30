@@ -1,6 +1,7 @@
 import BigNumber from 'bignumber.js'
 
-import {RemotePoolMetaSuccess, StakePoolInfosAndHistories, TokenEntry, TokenInfo, YoroiWallet} from '../../src/types'
+import {RemotePoolMetaSuccess, StakePoolInfosAndHistories, TokenEntry, TokenInfo} from '../../src/types'
+import {YoroiWallet} from '../../src/yoroi-wallets'
 
 export const mockWallet: YoroiWallet = {
   id: 'wallet-id',

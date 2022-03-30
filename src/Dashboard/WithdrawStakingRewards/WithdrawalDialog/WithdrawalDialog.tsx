@@ -10,7 +10,7 @@ import globalMessages, {ledgerMessages} from '../../../../legacy/i18n/global-mes
 import {theme} from '../../../../legacy/styles/config'
 import {DangerousAction, ErrorView, Modal, PleaseWaitView, Spacer} from '../../../components'
 import {LedgerConnect, LedgerTransportSwitch} from '../../../HW'
-import {Deregistration, Withdrawal} from '../../../types'
+import {TxDeregistration, TxWithdrawal} from '../../../yoroi-wallets'
 import {TransferSummary} from './TransferSummary'
 
 type Props = {
@@ -20,8 +20,8 @@ type Props = {
   onChooseTransport: (bool: boolean) => void
   onConnectBLE: (...args: unknown[]) => void
   onConnectUSB: (...args: unknown[]) => void
-  withdrawals: null | Array<Withdrawal>
-  deregistrations: null | Array<Deregistration>
+  withdrawals: null | Array<TxWithdrawal>
+  deregistrations: null | Array<TxDeregistration>
   balance: BigNumber
   finalBalance: BigNumber
   fees: BigNumber

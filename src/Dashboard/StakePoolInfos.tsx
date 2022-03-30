@@ -4,7 +4,7 @@ import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {useQuery} from 'react-query'
 
 import {useSelectedWallet} from '../SelectedWallet'
-import {YoroiWallet} from '../types'
+import {YoroiWallet} from '../yoroi-wallets'
 import {StakePoolInfo} from './StakePoolInfo'
 
 export const StakePoolInfos = () => {

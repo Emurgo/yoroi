@@ -6,7 +6,6 @@ import {useSelector} from 'react-redux'
 
 import {CONFIG} from '../../../../../legacy/config/config'
 import {getNetworkConfigById} from '../../../../../legacy/config/networks'
-import {MultiToken} from '../../../../../legacy/crypto/MultiToken'
 import {confirmationMessages, txLabels} from '../../../../../legacy/i18n/global-messages'
 import {defaultNetworkAssetSelector} from '../../../../../legacy/selectors'
 import {COLORS} from '../../../../../legacy/styles/config'
@@ -14,11 +13,11 @@ import {formatTokenWithText} from '../../../../../legacy/utils/format'
 import {Text, TextInput, TwoActionView} from '../../../../components'
 import {Instructions as HWInstructions} from '../../../../HW'
 import {useSelectedWallet} from '../../../../SelectedWallet'
-import {Deregistration, Withdrawal} from '../../../../types'
+import {MultiToken, TxDeregistration, TxWithdrawal} from '../../../../yoroi-wallets'
 
 type Props = {
-  withdrawals: Array<Withdrawal> | null
-  deregistrations: Array<Deregistration> | null
+  withdrawals: Array<TxWithdrawal> | null
+  deregistrations: Array<TxDeregistration> | null
   balance: BigNumber
   finalBalance: BigNumber
   fees: BigNumber
@@ -81,7 +80,7 @@ export const TransferSummary = ({
   )
 }
 
-const Withdrawals: React.FC<{withdrawals: Array<Withdrawal>}> = ({withdrawals}) => {
+const Withdrawals: React.FC<{withdrawals: Array<TxWithdrawal>}> = ({withdrawals}) => {
   const wallet = useSelectedWallet()
   const strings = useStrings()
 
@@ -103,7 +102,7 @@ const Withdrawals: React.FC<{withdrawals: Array<Withdrawal>}> = ({withdrawals}) 
   )
 }
 
-const Deregistrations: React.FC<{deregistrations: Array<Deregistration>}> = ({deregistrations}) => {
+const Deregistrations: React.FC<{deregistrations: Array<TxDeregistration>}> = ({deregistrations}) => {
   const wallet = useSelectedWallet()
   const defaultAsset = useSelector(defaultNetworkAssetSelector)
   const strings = useStrings()

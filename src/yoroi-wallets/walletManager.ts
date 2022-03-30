@@ -18,11 +18,9 @@ import type {
 } from '../../legacy/api/types'
 import {CONFIG, DISABLE_BACKGROUND_SYNC, WALLETS} from '../../legacy/config/config'
 import {isJormungandr} from '../../legacy/config/networks'
-import type {NetworkId, WalletImplementationId, YoroiProvider} from '../../legacy/config/types'
 import {NETWORK_REGISTRY, WALLET_IMPLEMENTATION_REGISTRY} from '../../legacy/config/types'
 import {ISignRequest} from '../../legacy/crypto/ISignRequest'
 import KeyStore from '../../legacy/crypto/KeyStore'
-import type {DefaultTokenEntry} from '../../legacy/crypto/MultiToken'
 import type {HWDeviceInfo} from '../../legacy/crypto/shelley/ledgerUtils'
 import type {JSONMetadata} from '../../legacy/crypto/shelley/metadataUtils'
 import type {EncryptionMethod, SendTokenList} from '../../legacy/crypto/types'
@@ -34,8 +32,17 @@ import assert from '../../legacy/utils/assert'
 import {ObjectValues} from '../../legacy/utils/flow'
 import {Logger} from '../../legacy/utils/logging'
 import storage from '../../legacy/utils/storage'
-import {ServerStatus, WalletInterface} from '../types'
-import {isYoroiWallet, ShelleyWallet, YoroiWallet} from './cardano'
+import {
+  DefaultTokenEntry,
+  isYoroiWallet,
+  NetworkId,
+  ServerStatus,
+  ShelleyWallet,
+  WalletImplementationId,
+  WalletInterface,
+  YoroiProvider,
+  YoroiWallet,
+} from './cardano'
 
 export class WalletClosed extends ExtendableError {}
 export class SystemAuthDisabled extends ExtendableError {}

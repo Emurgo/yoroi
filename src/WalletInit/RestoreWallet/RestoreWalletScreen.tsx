@@ -8,7 +8,7 @@ import {getWalletConfigById} from '../../../legacy/config/config'
 import {useParams} from '../../../legacy/navigation'
 import {WALLET_INIT_ROUTES} from '../../../legacy/RoutesList'
 import {Button, KeyboardSpacer, ScrollableView, Spacer, StatusBar, Text} from '../../components'
-import {NetworkId, WalletImplementationId} from '../../types'
+import {NetworkId, WalletImplementationId} from '../../yoroi-wallets'
 import {MnemonicInput} from '../MnemonicInput'
 
 type Params = {

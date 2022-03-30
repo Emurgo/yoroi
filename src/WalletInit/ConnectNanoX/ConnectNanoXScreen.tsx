@@ -13,7 +13,8 @@ import {WALLET_INIT_ROUTES} from '../../../legacy/RoutesList'
 import {Logger} from '../../../legacy/utils/logging'
 import {ProgressStep} from '../../components'
 import {LedgerConnect} from '../../HW'
-import {Device, NetworkId, WalletImplementationId} from '../../types'
+import {Device} from '../../types'
+import {NetworkId, WalletImplementationId} from '../../yoroi-wallets'
 
 export type Params = {
   useUSB?: boolean

@@ -17,7 +17,6 @@ import {
   RewardAddress,
   StakeCredential,
   Transaction,
-  TransactionBuilder,
 } from '@emurgo/react-native-haskell-shelley'
 import {BigNumber} from 'bignumber.js'
 import ExtendableError from 'es6-error'
@@ -48,13 +47,10 @@ import {
 } from '../../../legacy/config/config'
 import type {CardanoHaskellShelleyNetwork} from '../../../legacy/config/networks'
 import {isHaskellShelleyNetwork, PROVIDERS} from '../../../legacy/config/networks'
-import type {BackendConfig, NetworkId, WalletImplementationId, YoroiProvider} from '../../../legacy/config/types'
+import type {BackendConfig} from '../../../legacy/config/types'
 import {NETWORK_REGISTRY} from '../../../legacy/config/types'
 import {ADDRESS_TYPE_TO_CHANGE, generateWalletRootKey} from '../../../legacy/crypto/commonUtils'
 import {CardanoError, InvalidState} from '../../../legacy/crypto/errors'
-import {ISignRequest} from '../../../legacy/crypto/ISignRequest'
-import type {DefaultTokenEntry} from '../../../legacy/crypto/MultiToken'
-import {MultiToken} from '../../../legacy/crypto/MultiToken'
 import * as catalystUtils from '../../../legacy/crypto/shelley/catalystUtils'
 import {
   createDelegationTx,
@@ -62,7 +58,6 @@ import {
   filterAddressesByStakingKey,
   getDelegationStatus,
 } from '../../../legacy/crypto/shelley/delegationUtils'
-import {HaskellShelleyTxSignRequest} from '../../../legacy/crypto/shelley/HaskellShelleyTxSignRequest'
 import type {HWDeviceInfo} from '../../../legacy/crypto/shelley/ledgerUtils'
 import {
   buildSignedTransaction,
@@ -83,9 +78,12 @@ import assert from '../../../legacy/utils/assert'
 import {Logger} from '../../../legacy/utils/logging'
 import {genTimeToSlot} from '../../../legacy/utils/timeUtils'
 import {versionCompare} from '../../../legacy/utils/versioning'
+import {DefaultTokenEntry} from '../../types'
 import Wallet, {WalletJSON} from '../Wallet'
 import {AddressChain, AddressGenerator} from './chain'
-import {WalletInterface} from './types'
+import {HaskellShelleyTxSignRequest} from './HaskellShelleyTxSignRequest'
+import {MultiToken} from './MultiToken'
+import {NetworkId, WalletImplementationId, WalletInterface, YoroiProvider} from './types'
 
 export default ShelleyWallet
 export class ShelleyWallet extends Wallet implements WalletInterface {
@@ -244,6 +242,8 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
       Logger.debug(`updated version from ${lastSeenVersion} to ${this.version}`)
     }
 
+    if (this.networkId == null) throw new Error('Invalid wallet: networkId')
+
     this.internalChain = AddressChain.fromJSON(data.internalChain, this.networkId)
     this.externalChain = AddressChain.fromJSON(data.externalChain, this.networkId)
     // can be null for versions < 3.0.2, in which case we can just retrieve
@@ -281,6 +281,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
         this.networkId = NETWORK_REGISTRY.HASKELL_SHELLEY
       }
       assert.assert(isHaskellShelleyNetwork(this.networkId), 'invalid networkId')
+      if (this.walletImplementationId == null) throw new Error('Invalid wallet: walletImplementationId')
       assert.assert(
         isByron(this.walletImplementationId) || isHaskellShelley(this.walletImplementationId),
         'invalid walletImplementationId',
@@ -340,6 +341,8 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
   }
 
   _getPurpose(): number {
+    if (this.walletImplementationId == null) throw new Error('Invalid wallet: walletImplementationId')
+
     if (isByron(this.walletImplementationId)) {
       return CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.BIP44
     } else if (isHaskellShelley(this.walletImplementationId)) {
@@ -380,6 +383,8 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
   }
 
   async getStakingKey(): Promise<PublicKey> {
+    if (this.walletImplementationId == null) throw new Error('Invalid wallet: walletImplementationId')
+
     assert.assert(isHaskellShelley(this.walletImplementationId), 'cannot get staking key from a byron-era wallet')
     if (!this.publicKeyHex) throw new Error('invalid wallet state')
     const accountPubKey = await Bip32PublicKey.from_bytes(Buffer.from(this.publicKeyHex, 'hex'))
@@ -393,6 +398,8 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
   }
 
   getStakingKeyPath(): Array<number> {
+    if (this.walletImplementationId == null) throw new Error('Invalid wallet: walletImplementationId')
+
     assert.assert(isHaskellShelley(this.walletImplementationId), 'cannot get staking key from a byron-era wallet')
     return [
       CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852,
@@ -404,6 +411,8 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
   }
 
   async getRewardAddress(): Promise<Address> {
+    if (this.walletImplementationId == null) throw new Error('Invalid wallet: walletImplementationId')
+
     assert.assert(isHaskellShelley(this.walletImplementationId), 'cannot get reward address from a byron-era wallet')
     const stakingKey = await this.getStakingKey()
     const credential = await StakeCredential.from_keyhash(await stakingKey.hash())
@@ -477,14 +486,14 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
 
   // =================== tx building =================== //
 
-  async createUnsignedTx<TransactionBuilder>(
+  async createUnsignedTx(
     utxos: Array<RawUtxo>,
     receiver: string,
     tokens: SendTokenList,
     defaultToken: DefaultTokenEntry,
     serverTime: Date | void,
     auxiliaryData: Array<JSONMetadata> | void,
-  ): Promise<ISignRequest<TransactionBuilder>> {
+  ): Promise<HaskellShelleyTxSignRequest> {
     const timeToSlotFn = genTimeToSlot(getCardanoBaseConfig(this._getNetworkConfig()))
     const time = serverTime !== undefined ? serverTime : new Date()
     const absSlotNumber = new BigNumber(timeToSlotFn({time}).slot)
@@ -504,10 +513,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     })
   }
 
-  async signTx<TransactionBuilder>(
-    signRequest: ISignRequest<TransactionBuilder>,
-    decryptedMasterKey: string,
-  ): Promise<SignedTx> {
+  async signTx(signRequest: HaskellShelleyTxSignRequest, decryptedMasterKey: string): Promise<SignedTx> {
     const masterKey = await Bip32PrivateKey.from_bytes(Buffer.from(decryptedMasterKey, 'hex'))
     const accountPvrKey: Bip32PrivateKey = await (
       await (await masterKey.derive(this._getPurpose())).derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO)
@@ -519,6 +525,8 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     }
 
     if (signRequest.neededStakingKeyHashes.neededHashes.size !== 0) {
+      if (this.walletImplementationId == null) throw new Error('Invalid wallet: walletImplementationId')
+
       // this is a delegation tx and we need to provide the staking key
       assert.assert(isHaskellShelley(this.walletImplementationId), 'cannot get reward address from a byron-era wallet')
       const txBuilder = signRequest.unsignedTx
@@ -561,7 +569,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     defaultAsset: DefaultAsset,
     serverTime: Date | void,
   ): Promise<{
-    signRequest: ISignRequest<TransactionBuilder>
+    signRequest: HaskellShelleyTxSignRequest
     totalAmountToDelegate: MultiToken
   }> {
     const timeToSlotFn = genTimeToSlot(getCardanoBaseConfig(this._getNetworkConfig()))
@@ -591,7 +599,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     catalystKey: string,
     decryptedKey: string | void,
     serverTime: Date | void,
-  ): Promise<ISignRequest<TransactionBuilder>> {
+  ) {
     Logger.debug('ShelleyWallet::createVotingRegTx called')
     try {
       const timeToSlotFn = await genTimeToSlot(getCardanoBaseConfig(this._getNetworkConfig()))
@@ -712,7 +720,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     utxos: Array<RawUtxo>,
     shouldDeregister: boolean,
     serverTime: Date | void,
-  ): Promise<ISignRequest<TransactionBuilder>> {
+  ): Promise<HaskellShelleyTxSignRequest> {
     const {rewardAddressHex} = this
     if (rewardAddressHex == null) throw new Error('reward address is null')
     const timeToSlotFn = genTimeToSlot(getCardanoBaseConfig(this._getNetworkConfig()))
@@ -737,7 +745,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     return resp
   }
 
-  async signTxWithLedger(request: ISignRequest<TransactionBuilder>, useUSB: boolean): Promise<SignedTx> {
+  async signTxWithLedger(request: HaskellShelleyTxSignRequest, useUSB: boolean): Promise<SignedTx> {
     Logger.debug('ShelleyWallet::signTxWithLedger called')
 
     if (!(request instanceof HaskellShelleyTxSignRequest)) {
@@ -746,6 +754,8 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
 
     const addressingInfo = {}
     for (const change of await request.changeAddr) {
+      if (this.walletImplementationId == null) throw new Error('Invalid wallet: walletImplementationId')
+
       const addressing = isByron(this.walletImplementationId)
         ? this.getAddressingInfo(change.address)
         : this.getAddressingInfo(await (await Address.from_bytes(Buffer.from(change.address, 'hex'))).to_bech32())
@@ -778,7 +788,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
       useUSB,
     )
 
-    let auxiliaryData: AuxiliaryData
+    let auxiliaryData: undefined | AuxiliaryData
     if (request.ledgerNanoCatalystRegistrationTxSignData) {
       const {votingPublicKey, nonce} = request.ledgerNanoCatalystRegistrationTxSignData
 

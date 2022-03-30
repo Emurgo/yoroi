@@ -20,8 +20,6 @@ import {
   AddressedUtxo,
   DefaultAsset,
   DefaultTokenEntry,
-  Deregistration,
-  MultiToken,
   RawUtxo,
   SendTokenList,
   StakePoolInfoRequest,
@@ -32,13 +30,15 @@ import {
 import Wallet from '../Wallet'
 import type {Addresses} from './chain'
 import {AddressChain} from './chain'
+import {HaskellShelleyTxSignRequest} from './HaskellShelleyTxSignRequest'
+import {MultiToken} from './MultiToken'
 
 export interface WalletInterface {
   id: null | string
 
-  networkId: NetworkId
+  networkId: undefined | NetworkId
 
-  walletImplementationId: WalletImplementationId
+  walletImplementationId: undefined | WalletImplementationId
 
   isHW: boolean
 
@@ -46,7 +46,7 @@ export interface WalletInterface {
 
   isReadOnly: undefined | boolean
 
-  provider: null | YoroiProvider
+  provider: null | undefined | YoroiProvider
 
   isEasyConfirmationEnabled: boolean
 
@@ -157,34 +157,34 @@ export interface WalletInterface {
 
   getDelegationStatus(): Promise<StakingStatus>
 
-  createUnsignedTx<T>(
+  createUnsignedTx(
     utxos: Array<RawUtxo>,
     receiver: string,
     tokens: SendTokenList,
     defaultToken: DefaultTokenEntry,
     serverTime: Date | null | void,
     metadata: Array<JSONMetadata> | void,
-  ): Promise<ISignRequest<T>>
+  ): Promise<HaskellShelleyTxSignRequest>
 
-  signTx<T>(signRequest: ISignRequest<T>, decryptedMasterKey: string): Promise<SignedTx>
+  signTx(signRequest: HaskellShelleyTxSignRequest, decryptedMasterKey: string): Promise<SignedTx>
 
-  createDelegationTx<T>(
+  createDelegationTx(
     poolRequest: void | string,
     valueInAccount: BigNumber,
     utxos: Array<RawUtxo>,
     defaultAsset: DefaultAsset,
     serverTime: Date | void,
   ): Promise<{
-    signRequest: ISignRequest<T>
+    signRequest: HaskellShelleyTxSignRequest
     totalAmountToDelegate: MultiToken
   }>
 
-  createVotingRegTx<T>(
+  createVotingRegTx(
     utxos: Array<RawUtxo>,
     catalystPrivateKey: string,
     decryptedKey: string | void,
     serverTime: Date | void,
-  ): Promise<ISignRequest<T>>
+  ): Promise<HaskellShelleyTxSignRequest>
 
   createWithdrawalTx(
     utxos: Array<RawUtxo>,
@@ -192,7 +192,7 @@ export interface WalletInterface {
     serverTime: Date | void,
   ): Promise<HaskellShelleyTxSignRequest>
 
-  signTxWithLedger<T>(request: ISignRequest<T>, useUSB: boolean): Promise<SignedTx>
+  signTxWithLedger(request: HaskellShelleyTxSignRequest, useUSB: boolean): Promise<SignedTx>
 
   // =================== backend API =================== //
 
@@ -239,17 +239,6 @@ export type ServerStatus = {
   isQueueOnline?: boolean
 }
 
-export type ISignRequest<T = unknown> = {
-  totalInput(shift: boolean): Promise<MultiToken>
-  totalOutput(shift: boolean): Promise<MultiToken>
-  fee(): Promise<MultiToken>
-  uniqueSenderAddresses(): Array<string>
-  receivers(includeChange: boolean): Promise<Array<string>>
-  isEqual(tx?: unknown): Promise<boolean>
-
-  self(): T
-}
-
 export type Block = {
   height: number
   epoch: number
@@ -275,16 +264,13 @@ export type SignedTx = {
   base64: string
 }
 
-export type HaskellShelleyTxSignRequest = ISignRequest & {
-  withdrawals: () => Promise<Array<{address: string; amount: MultiToken}>>
-  keyDeregistrations: () => Promise<Array<Deregistration>>
-}
-
 export type YoroiWallet = Pick<WalletInterface, YoroiWalletKeys> & {
-  id: string
-  checksum: WalletChecksum
-  rewardAddressHex: string
-  isReadOnly: boolean
+  id: NonNullable<WalletInterface['id']>
+  networkId: NonNullable<WalletInterface['networkId']>
+  walletImplementationId: NonNullable<WalletInterface['walletImplementationId']>
+  checksum: NonNullable<WalletInterface['checksum']>
+  isReadOnly: NonNullable<WalletInterface['isReadOnly']>
+  rewardAddressHex: NonNullable<WalletInterface['rewardAddressHex']>
 }
 
 export const isYoroiWallet = (wallet: unknown): wallet is YoroiWallet => {

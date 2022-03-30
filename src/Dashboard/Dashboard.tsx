@@ -36,7 +36,7 @@ import {
 import {VotingBanner} from '../Catalyst/VotingBanner'
 import {Banner, Button, OfflineBanner, StatusBar} from '../components'
 import {useSelectedWallet} from '../SelectedWallet'
-import {YoroiWallet} from '../types'
+import {YoroiWallet} from '../yoroi-wallets'
 import {EpochProgress} from './EpochProgress'
 import {NotDelegatedInfo} from './NotDelegatedInfo'
 import {StakePoolInfos, useStakingInfo} from './StakePoolInfos'

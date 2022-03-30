@@ -1,3 +1,5 @@
 export * from './chain'
+export * from './HaskellShelleyTxSignRequest'
+export * from './MultiToken'
 export * from './ShelleyWallet'
 export * from './types'

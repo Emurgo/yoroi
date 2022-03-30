@@ -16,8 +16,7 @@ import {easyConfirmationSelector, isSystemAuthEnabledSelector} from '../../../le
 import {StatusBar} from '../../components'
 import {useCloseWallet, useWalletName} from '../../hooks'
 import {useSelectedWallet, useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
-import {NetworkId, WalletImplementationId} from '../../types'
-import {walletManager} from '../../yoroi-wallets'
+import {NetworkId, WalletImplementationId, walletManager} from '../../yoroi-wallets'
 import {
   NavigatedSettingsItem,
   PressableSettingsItem,

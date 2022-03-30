@@ -10,7 +10,7 @@ import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../../legacy/RoutesList'
 import type {WalletMeta} from '../../../legacy/state'
 import {useCreateBip44Wallet} from '../../hooks'
 import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
-import {NetworkId, WalletImplementationId} from '../../types'
+import {NetworkId, WalletImplementationId} from '../../yoroi-wallets'
 import {WalletNameForm} from '../WalletNameForm'
 
 export type Params = {

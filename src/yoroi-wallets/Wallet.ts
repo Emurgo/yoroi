@@ -6,7 +6,6 @@ import {defaultMemoize} from 'reselect'
 import * as api from '../../legacy/api/shelley/api'
 import {CONFIG} from '../../legacy/config/config'
 import {getCardanoNetworkConfigById, isJormungandr} from '../../legacy/config/networks'
-import type {NetworkId, WalletImplementationId, YoroiProvider} from '../../legacy/config/types'
 import KeyStore from '../../legacy/crypto/KeyStore'
 import type {HWDeviceInfo} from '../../legacy/crypto/shelley/ledgerUtils'
 import {TransactionCache, TransactionCacheJSON} from '../../legacy/crypto/shelley/transactionCache'
@@ -16,6 +15,7 @@ import {Logger} from '../../legacy/utils/logging'
 import type {Mutex} from '../../legacy/utils/promise'
 import {IsLockedError, nonblockingSynchronize, synchronize} from '../../legacy/utils/promise'
 import {validatePassword} from '../../legacy/utils/validators'
+import {NetworkId, WalletImplementationId, YoroiProvider} from './cardano'
 import {AddressChain, AddressChainJSON} from './cardano/chain'
 
 type WalletState = {
@@ -50,9 +50,9 @@ export type WalletJSON = ShelleyWalletJSON | ByronWalletJSON
 export class Wallet {
   id: null | string = null
 
-  networkId: NetworkId
+  networkId: undefined | NetworkId
 
-  walletImplementationId: WalletImplementationId
+  walletImplementationId: undefined | WalletImplementationId
 
   isHW = false
 
@@ -60,7 +60,7 @@ export class Wallet {
 
   isReadOnly: undefined | boolean
 
-  provider: null | YoroiProvider
+  provider: null | undefined | YoroiProvider
 
   isEasyConfirmationEnabled = false
 
@@ -301,12 +301,14 @@ export class Wallet {
 
   // TODO: move to specific child class?
   toJSON(): WalletJSON {
-    if (this.version == null) throw new Error('invalid WalletJSON')
-    if (this.isReadOnly == null) throw new Error('invalid WalletJSON')
-    if (this.externalAddresses == null) throw new Error('invalid WalletJSON')
-    if (this.internalAddresses == null) throw new Error('invalid WalletJSON')
-    if (this.externalChain == null) throw new Error('invalid WalletJSON')
-    if (this.internalChain == null) throw new Error('invalid WalletJSON')
+    if (this.networkId == null) throw new Error('invalid WalletJSON: networkId')
+    if (this.walletImplementationId == null) throw new Error('invalid WalletJSON: walletImplementationId')
+    if (this.version == null) throw new Error('invalid WalletJSON: version')
+    if (this.isReadOnly == null) throw new Error('invalid WalletJSON: isReadOnly')
+    if (this.externalAddresses == null) throw new Error('invalid WalletJSON: externalAddresses')
+    if (this.internalAddresses == null) throw new Error('invalid WalletJSON: internalAddresses')
+    if (this.externalChain == null) throw new Error('invalid WalletJSON: externalChain')
+    if (this.internalChain == null) throw new Error('invalid WalletJSON: internalChain')
 
     return {
       lastGeneratedAddressIndex: this.state.lastGeneratedAddressIndex,

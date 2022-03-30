@@ -8,7 +8,7 @@ import image from '../../../legacy/assets/img/ledger_1.png'
 import {confirmationMessages, ledgerMessages} from '../../../legacy/i18n/global-messages'
 import {WALLET_INIT_ROUTES} from '../../../legacy/RoutesList'
 import {BulletPointItem, Button, ProgressStep, Spacer, Text} from '../../components'
-import {NetworkId, WalletImplementationId} from '../../types'
+import {NetworkId, WalletImplementationId} from '../../yoroi-wallets'
 
 export type Params = {
   networkId: NetworkId
