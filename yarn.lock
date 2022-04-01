@@ -1528,6 +1528,23 @@
   dependencies:
     base-64 "0.1.0"
 
+"@emurgo/yoroi-lib-core@0.0.1-alpha.1":
+  version "0.0.1-alpha.1"
+  resolved "https://registry.yarnpkg.com/@emurgo/yoroi-lib-core/-/yoroi-lib-core-0.0.1-alpha.1.tgz#7a5b6e8f7047d57f0295c45daabfdb554968e737"
+  integrity sha512-t/XtA6rUKAeztfwUz5tl2i7JFRIzCrHXe4vkCEefP1iAs9p33trlmaPfcceNl98q+EjBsk++mQavLG0oJcT5jA==
+  dependencies:
+    axios "^0.24.0"
+    bignumber.js "^9.0.1"
+    hash-wasm "^4.9.0"
+
+"@emurgo/yoroi-lib-mobile@^0.0.1-alpha.1":
+  version "0.0.1-alpha.1"
+  resolved "https://registry.yarnpkg.com/@emurgo/yoroi-lib-mobile/-/yoroi-lib-mobile-0.0.1-alpha.1.tgz#dc8db87a151a925372edc66365752c75b851394b"
+  integrity sha512-r2pLUO7E/Gr32lKduTZMmqD+licbb+sbLldUbgvadP6+GczA0yuIymkToy0uVtzPd/oBJqISXp0dvSmSWmFzOQ==
+  dependencies:
+    "@emurgo/react-native-haskell-shelley" "3.1.3"
+    "@emurgo/yoroi-lib-core" "0.0.1-alpha.1"
+
 "@eslint/eslintrc@^0.4.3":
   version "0.4.3"
   resolved "https://registry.yarnpkg.com/@eslint/eslintrc/-/eslintrc-0.4.3.tgz#9e42981ef035beb3dd49add17acb96e8ff6f394c"
@@ -5419,6 +5436,13 @@ available-typed-arrays@^1.0.5:
   resolved "https://registry.yarnpkg.com/available-typed-arrays/-/available-typed-arrays-1.0.5.tgz#92f95616501069d07d10edb2fc37d3e1c65123b7"
   integrity sha512-DMD0KiN46eipeziST1LPP/STfDU0sufISXmjSgvVsoU2tqxctQeASejWcfNtxYKqETM1UxQ8sp2OrSBWpHY6sw==
 
+axios@^0.24.0:
+  version "0.24.0"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-0.24.0.tgz#804e6fa1e4b9c5288501dd9dff56a7a0940d20d6"
+  integrity sha512-Q6cWsys88HoPgAaFAVUb0WpPk0O8iTeisR9IMqy9G8AbO4NlpVknrnQS03zzF9PGAWgO3cgletO3VjV/P7VztA==
+  dependencies:
+    follow-redirects "^1.14.4"
+
 babel-code-frame@^6.22.0, babel-code-frame@^6.26.0:
   version "6.26.0"
   resolved "https://registry.yarnpkg.com/babel-code-frame/-/babel-code-frame-6.26.0.tgz#63fd43f7dc1e3bb7ce35947db8fe369a3f58c74b"
@@ -5989,6 +6013,11 @@ bignumber.js@^7.2.1:
   version "7.2.1"
   resolved "https://registry.yarnpkg.com/bignumber.js/-/bignumber.js-7.2.1.tgz#80c048759d826800807c4bfd521e50edbba57a5f"
   integrity sha512-S4XzBk5sMB+Rcb/LNcpzXr57VRTxgAvaAEDAl1AwRx27j00hT84O6OkteE7u8UB3NuaaygCRrEpqox4uDOrbdQ==
+
+bignumber.js@^9.0.1:
+  version "9.0.2"
+  resolved "https://registry.yarnpkg.com/bignumber.js/-/bignumber.js-9.0.2.tgz#71c6c6bed38de64e24a65ebe16cfcf23ae693673"
+  integrity sha512-GAcQvbpsM0pUb0zw1EI0KhQEZ+lRwR5fYaAp3vPOYuP7aDvGy6cVN6XHLauvF8SOga2y0dcLcjt3iQDTSEliyw==
 
 binary-extensions@^1.0.0:
   version "1.13.1"
@@ -9544,6 +9573,11 @@ focus-lock@^0.10.1:
   dependencies:
     tslib "^2.0.3"
 
+follow-redirects@^1.14.4:
+  version "1.14.9"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.14.9.tgz#dd4ea157de7bfaf9ea9b3fbd85aa16951f78d8d7"
+  integrity sha512-MQDfihBQYMcyy5dhRDJUHcw7lb2Pv/TuE6xP1vyraLukNDHKbDxDNaOE3NbCAdKQApno+GPRyo1YAp89yCjK4w==
+
 for-in@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/for-in/-/for-in-1.0.2.tgz#81068d295a8142ec0ac726c6e2200c30fb6d5e80"
@@ -10250,6 +10284,11 @@ hash-base@^3.0.0:
     inherits "^2.0.4"
     readable-stream "^3.6.0"
     safe-buffer "^5.2.0"
+
+hash-wasm@^4.9.0:
+  version "4.9.0"
+  resolved "https://registry.yarnpkg.com/hash-wasm/-/hash-wasm-4.9.0.tgz#7e9dcc9f7d6bd0cc802f2a58f24edce999744206"
+  integrity sha512-7SW7ejyfnRxuOc7ptQHSf4LDoZaWOivfzqw+5rpcQku0nHfmicPKE51ra9BiRLAmT8+gGLestr1XroUkqdjL6w==
 
 hash.js@1.1.7, hash.js@^1.0.0, hash.js@^1.0.3:
   version "1.1.7"
