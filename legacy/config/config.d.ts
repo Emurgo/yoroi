@@ -26,6 +26,9 @@ export var WALLETS: {
 
 // prettier-ignore
 export var CONFIG: {
+  PRIMARY_ASSET_CONSTANTS: {
+    CARDANO: ""
+  },
   HISTORY_REFRESH_TIME: number,
   COMMIT: string,
   NUMBERS: {

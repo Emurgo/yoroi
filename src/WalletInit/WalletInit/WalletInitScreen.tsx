@@ -11,7 +11,7 @@ import {WALLET_INIT_ROUTES} from '../../../legacy/RoutesList'
 import {COLORS} from '../../../legacy/styles/config'
 import {Button, Modal, ScreenBackground, StatusBar} from '../../components'
 import {LedgerTransportSwitchModal} from '../../HW'
-import {NetworkId, WalletImplementationId, YoroiProvider} from '../../types'
+import {NetworkId, WalletImplementationId, YoroiProvider} from '../../yoroi-wallets'
 import {WalletDescription} from '../WalletDescription'
 import {ExpandableItem} from './ExpandableItem'
 

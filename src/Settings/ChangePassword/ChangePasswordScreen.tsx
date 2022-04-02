@@ -10,7 +10,7 @@ import {COLORS} from '../../../legacy/styles/config'
 import {REQUIRED_PASSWORD_LENGTH, validatePassword} from '../../../legacy/utils/validators'
 import {Button, Checkmark, Spacer, TextInput} from '../../components'
 import {useSelectedWallet} from '../../SelectedWallet'
-import {YoroiWallet} from '../../types'
+import {YoroiWallet} from '../../yoroi-wallets'
 
 export const ChangePasswordScreen = () => {
   const strings = useStrings()

@@ -4,11 +4,12 @@ import {BigNumber} from 'bignumber.js'
 import {fromPairs, isEmpty, mapValues} from 'lodash'
 import {createSelector} from 'reselect'
 
+// $FlowExpectedError
+import {getDefaultNetworkTokenEntry, MultiToken} from '../src/yoroi-wallets'
 import type {RawUtxo} from './api/types'
 import {getCardanoDefaultAsset, getDefaultAssetByNetworkId, getDefaultAssets} from './config/config'
 import type {NetworkId} from './config/types'
 import {NETWORK_REGISTRY} from './config/types'
-import {getDefaultNetworkTokenEntry, MultiToken} from './crypto/MultiToken'
 import {processTxHistoryData} from './crypto/processTransactions'
 import type {HWDeviceInfo} from './crypto/shelley/ledgerUtils'
 import type {ServerStatusCache, State, WalletMeta} from './state'

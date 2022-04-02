@@ -10,7 +10,6 @@ import {useSelector} from 'react-redux'
 
 import UtxoAutoRefresher from '../../../legacy/components/Send/UtxoAutoRefresher'
 import {CONFIG, UI_V2} from '../../../legacy/config/config'
-import {MultiToken} from '../../../legacy/crypto/MultiToken'
 import type {CreateUnsignedTxResponse} from '../../../legacy/crypto/shelley/transactionUtils'
 import {SEND_ROUTES} from '../../../legacy/RoutesList'
 import {
@@ -77,7 +76,7 @@ export const SendScreen = ({selectedTokenIdentifier, sendAll, onSendAll}: Props)
   const [balanceErrors, setBalanceErrors] = React.useState<BalanceValidationErrors>({})
   const [balanceAfter, setBalanceAfter] = React.useState<BigNumber | null>(null)
   const [unsignedTx, setUnsignedTx] = React.useState<CreateUnsignedTxResponse>(null)
-  const [fee, setFee] = React.useState<MultiToken | null>(null)
+  const [fee, setFee] = React.useState<BigNumber | null>(null)
   const [recomputing, setRecomputing] = React.useState(false)
   const [showSendAllWarning, setShowSendAllWarning] = React.useState(false)
 

@@ -1,6 +1,7 @@
+import {Addressing} from '@emurgo/yoroi-lib-core'
+
 import {RemoteCertificateMeta, Withdrawal} from './staking'
 import {Token, TokenEntry, TokenEntryPlain} from './tokens'
-
 export type TransactionDirection = 'SENT' | 'RECEIVED' | 'SELF' | 'MULTI'
 export type TransactionStatus = 'SUCCESSFUL' | 'PENDING' | 'FAILED'
 export type TransactionAssurance = 'PENDING' | 'FAILED' | 'LOW' | 'MEDIUM' | 'HIGH'
@@ -46,12 +47,7 @@ export type RawTransaction = {
 
 // UTXOs
 
-export type Addressing = {
-  addressing: {
-    path: Array<number>
-    startLevel: number
-  }
-}
+export type {Addressing} from '@emurgo/yoroi-lib-core'
 
 export type RemoteAsset = {
   amount: string

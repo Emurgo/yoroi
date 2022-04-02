@@ -5,13 +5,13 @@ import {defaultMemoize} from 'reselect'
 
 import {CONFIG, isByron, isHaskellShelley} from '../../../legacy/config/config'
 import {getNetworkConfigById} from '../../../legacy/config/networks'
-import type {NetworkId, WalletImplementationId} from '../../../legacy/config/types'
 import type {CryptoAccount} from '../../../legacy/crypto/byron/util'
 import * as util from '../../../legacy/crypto/byron/util'
 import type {AddressType} from '../../../legacy/crypto/commonUtils'
 import {ADDRESS_TYPE_TO_CHANGE} from '../../../legacy/crypto/commonUtils'
 import assert from '../../../legacy/utils/assert'
 import {Logger} from '../../../legacy/utils/logging'
+import {NetworkId, WalletImplementationId} from './types'
 
 export type AddressBlock = [number, Moment, Array<string>]
 

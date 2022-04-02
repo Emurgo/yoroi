@@ -3,12 +3,12 @@
 import {BigNum, LinearFee} from '@emurgo/react-native-haskell-shelley'
 import {BigNumber} from 'bignumber.js'
 
+// $FlowExpectedError
+import {CreateUnsignedTxRequest, HaskellShelleyTxSignRequest} from '../../../src/yoroi-wallets'
 import assert from '../../utils/assert'
 import {Logger} from '../../utils/logging'
 import {builtSendTokenList, hasSendAllDefault} from '../commonUtils'
 import {CardanoError, InsufficientFunds, NoOutputsError} from '../errors'
-import type {CreateUnsignedTxRequest} from './HaskellShelleyTxSignRequest'
-import {HaskellShelleyTxSignRequest} from './HaskellShelleyTxSignRequest'
 import {newAdaUnsignedTx, sendAllUnsignedTx} from './transactions'
 import {multiTokenFromRemote} from './utils'
 

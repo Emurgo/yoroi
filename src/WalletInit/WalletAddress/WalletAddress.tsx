@@ -6,7 +6,7 @@ import {Image, Linking, StyleSheet, TouchableOpacity, View, ViewStyle} from 'rea
 import copyIcon from '../../../legacy/assets/img/icon/copy.png'
 import {getNetworkConfigById} from '../../../legacy/config/networks'
 import {Text} from '../../components'
-import {NetworkId} from '../../types'
+import {NetworkId} from '../../yoroi-wallets'
 import {FadeOutView} from './FadeOutView'
 
 export const WalletAddress = ({

@@ -11,7 +11,7 @@ import {generateShelleyPlateFromMnemonics} from '../../../legacy/crypto/shelley/
 import {WALLET_INIT_ROUTES} from '../../../legacy/RoutesList'
 import {COLORS} from '../../../legacy/styles/config'
 import {BulletPointItem, Button, Icon, Spacer, StatusBar, Text} from '../../components'
-import {NetworkId, WalletImplementationId} from '../../types'
+import {NetworkId, WalletImplementationId} from '../../yoroi-wallets'
 import {WalletAddress} from '../WalletAddress'
 
 export const VerifyRestoredWalletScreen = () => {

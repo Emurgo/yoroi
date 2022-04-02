@@ -1,37 +1,28 @@
-// @flow
-
 // taken from Yoroi Frontend's MultiToken class
-
 import {BigNumber} from 'bignumber.js'
 
-import {getDefaultAssetByNetworkId} from '../config/config'
-import type {NetworkId} from '../config/types'
+import {getDefaultAssetByNetworkId} from '../../../legacy/config/config'
+import type {NetworkId} from '../../../legacy/config/types'
+export type TokenLookupKey = {
+  identifier: string
 
-export type TokenLookupKey = {|
-  identifier: string,
   /**
    * note: avoid putting asset metadata here directly
    * since it can update over time so best not to cache it here
    */
-  networkId: number,
-|}
-
-export type TokenEntry = {|
-  ...TokenLookupKey,
-  amount: BigNumber,
-|}
-
-export type TokenEntryPlain = {|
-  ...TokenLookupKey,
-  amount: string,
-  isDefault: boolean,
-|}
-
-export type DefaultTokenEntry = {|
-  defaultNetworkId: number,
-  defaultIdentifier: string,
-|}
-
+  networkId: number
+}
+export type TokenEntry = TokenLookupKey & {
+  amount: BigNumber
+}
+export type TokenEntryPlain = TokenLookupKey & {
+  amount: string
+  isDefault: boolean
+}
+export type DefaultTokenEntry = {
+  defaultNetworkId: number
+  defaultIdentifier: string
+}
 export class MultiToken {
   // this could be a map, but the # of elements is small enough the perf difference is trivial
   values: Array<TokenEntry>
@@ -39,7 +30,6 @@ export class MultiToken {
 
   constructor(values: Array<TokenEntry>, defaults: DefaultTokenEntry) {
     this.values = []
-
     // things are just easier if we enforce the default entry to be part of the list of tokens
     this.defaults = defaults
     this.add({
@@ -50,29 +40,33 @@ export class MultiToken {
     values.forEach((value) => this.add(value))
   }
 
-  _checkNetworkId: (number) => void = (networkId) => {
+  _checkNetworkId: (arg0: number) => void = (networkId) => {
     const ownNetworkId = this.defaults.defaultNetworkId
+
     if (ownNetworkId !== networkId) {
       throw new Error(`MultiToken:: network mismatch ${ownNetworkId} - ${networkId}`)
     }
   }
 
-  get: (string) => BigNumber | void = (identifier) => {
+  get: (arg0: string) => BigNumber | void = (identifier) => {
     return this.values.find((value) => value.identifier === identifier)?.amount
   }
 
-  add: (TokenEntry) => MultiToken = (entry) => {
+  add: (arg0: TokenEntry) => MultiToken = (entry) => {
     this._checkNetworkId(entry.networkId)
+
     const existingEntry = this.values.find((value) => value.identifier === entry.identifier)
+
     if (existingEntry == null) {
       this.values.push(entry)
       return this
     }
+
     existingEntry.amount = existingEntry.amount.plus(entry.amount)
     return this
   }
 
-  subtract: (TokenEntry) => MultiToken = (entry) => {
+  subtract: (arg0: TokenEntry) => MultiToken = (entry) => {
     return this.add({
       identifier: entry.identifier,
       amount: entry.amount.negated(),
@@ -80,31 +74,33 @@ export class MultiToken {
     })
   }
 
-  joinAddMutable: (MultiToken) => MultiToken = (target) => {
+  joinAddMutable: (arg0: MultiToken) => MultiToken = (target) => {
     for (const entry of target.values) {
       this.add(entry)
     }
+
     return this
   }
 
-  joinSubtractMutable: (MultiToken) => MultiToken = (target) => {
+  joinSubtractMutable: (arg0: MultiToken) => MultiToken = (target) => {
     for (const entry of target.values) {
       this.subtract(entry)
     }
+
     return this
   }
 
-  joinAddCopy: (MultiToken) => MultiToken = (target) => {
+  joinAddCopy: (arg0: MultiToken) => MultiToken = (target) => {
     const copy = new MultiToken(this.values, this.defaults)
     return copy.joinAddMutable(target)
   }
 
-  joinSubtractCopy: (MultiToken) => MultiToken = (target) => {
+  joinSubtractCopy: (arg0: MultiToken) => MultiToken = (target) => {
     const copy = new MultiToken(this.values, this.defaults)
     return copy.joinSubtractMutable(target)
   }
 
-  absCopy: (void) => MultiToken = () => {
+  absCopy: (arg0: void) => MultiToken = () => {
     return new MultiToken(
       this.values.map((token) => ({
         ...token,
@@ -114,38 +110,41 @@ export class MultiToken {
     )
   }
 
-  negatedCopy: (void) => MultiToken = () => {
+  negatedCopy: (arg0: void) => MultiToken = () => {
     return new MultiToken(
-      this.values.map((token) => ({...token, amount: token.amount.negated()})),
+      this.values.map((token) => ({
+        ...token,
+        amount: token.amount.negated(),
+      })),
       this.defaults,
     )
   }
 
-  getDefault: (void) => BigNumber = () => {
+  getDefault: (arg0: void) => BigNumber = () => {
     return this.getDefaultEntry().amount
   }
 
-  getDefaultEntry: (void) => TokenEntry = () => {
+  getDefaultEntry: (arg0: void) => TokenEntry = () => {
     return this.values.filter(
       (value) =>
         value.networkId === this.defaults.defaultNetworkId && value.identifier === this.defaults.defaultIdentifier,
     )[0]
   }
 
-  getDefaultId: (void) => string = () => this.defaults.defaultIdentifier
+  getDefaultId: (arg0: void) => string = () => this.defaults.defaultIdentifier
 
-  nonDefaultEntries: (void) => Array<TokenEntry> = () => {
+  nonDefaultEntries: (arg0: void) => Array<TokenEntry> = () => {
     return this.values.filter(
       (value) =>
         !(value.networkId === this.defaults.defaultNetworkId && value.identifier === this.defaults.defaultIdentifier),
     )
   }
 
-  asMap: (void) => Map<string, BigNumber> = () => {
+  asMap: (arg0: void) => Map<string, BigNumber> = () => {
     return new Map(this.values.map((value) => [value.identifier, value.amount]))
   }
 
-  isEqualTo: (MultiToken) => boolean = (tokens) => {
+  isEqualTo: (arg0: MultiToken) => boolean = (tokens) => {
     const remainingTokens = this.asMap()
 
     // remove tokens that match <identifier, amount> one at a time
@@ -156,17 +155,17 @@ export class MultiToken {
       if (!value.isEqualTo(token.amount)) return false
       remainingTokens.delete(token.identifier)
     }
+
     if (remainingTokens.size > 0) return false
     return true
   }
 
-  size: (void) => number = () => this.values.length
-
-  isEmpty: (void) => boolean = () => {
+  size: (arg0: void) => number = () => this.values.length
+  isEmpty: (arg0: void) => boolean = () => {
     return this.values.filter((token) => token.amount.gt(0)).length === 0
   }
 
-  asArray: (void) => Array<TokenEntryPlain> = () =>
+  asArray: (arg0: void) => Array<TokenEntryPlain> = () =>
     this.values.map((value) => ({
       identifier: value.identifier,
       networkId: value.networkId,
@@ -181,6 +180,7 @@ export class MultiToken {
       networkId: value.networkId,
       amount: new BigNumber(value.amount),
     })
+
     const values = entries.map(_asTokenEntry)
     const defaults = entries
       .filter((value) => value.isDefault)
@@ -195,7 +195,6 @@ export class MultiToken {
 /**
  * Utility functions
  */
-
 export const getDefaultNetworkTokenEntry = (networkId: NetworkId): DefaultTokenEntry => {
   const defaultAsset = getDefaultAssetByNetworkId(networkId)
   return {
@@ -203,7 +202,6 @@ export const getDefaultNetworkTokenEntry = (networkId: NetworkId): DefaultTokenE
     defaultIdentifier: defaultAsset.identifier,
   }
 }
-
 export const strToDefaultMultiAsset = (amount: string, networkId: NetworkId) => {
   const defaultTokenEntry = getDefaultNetworkTokenEntry(networkId)
   return new MultiToken(

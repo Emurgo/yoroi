@@ -14,12 +14,13 @@ import cryptoRandomString from 'crypto-random-string'
 /* eslint-enable camelcase */
 import {randomBytes} from 'react-native-randombytes'
 
+// $FlowExpectedError
+import {type DefaultTokenEntry, MultiToken} from '../../src/yoroi-wallets'
 import {CONFIG, getWalletConfigById} from '../config/config'
 import type {WalletImplementationId} from '../config/types'
 import {DERIVATION_TYPES} from '../config/types'
 import assert from '../utils/assert'
 import {CardanoError, WrongPassword} from './errors'
-import {type DefaultTokenEntry, MultiToken} from './MultiToken'
 import type {SendTokenList} from './types'
 
 export type AddressType = 'Internal' | 'External'

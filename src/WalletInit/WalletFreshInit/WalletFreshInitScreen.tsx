@@ -9,7 +9,7 @@ import {CONFIG, isNightly} from '../../../legacy/config/config'
 import {WALLET_INIT_ROUTES} from '../../../legacy/RoutesList'
 import {COLORS} from '../../../legacy/styles/config'
 import {Button, Spacer, StatusBar} from '../../components'
-import {NetworkId, WalletImplementationId} from '../../types'
+import {NetworkId, WalletImplementationId} from '../../yoroi-wallets'
 import {WalletDescription} from '../WalletDescription'
 
 export const WalletFreshInitScreen = () => {

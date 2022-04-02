@@ -4,11 +4,10 @@ import {BigNumber} from 'bignumber.js'
 import React from 'react'
 
 import {NETWORKS, PRIMARY_ASSET_CONSTANTS} from '../../../../../legacy/config/networks'
-import {MultiToken} from '../../../../../legacy/crypto/MultiToken'
 import {WithModalProps} from '../../../../../storybook'
 import {Modal} from '../../../../components'
 import {SelectedWalletProvider} from '../../../../SelectedWallet'
-import {YoroiWallet} from '../../../../types'
+import {MultiToken, YoroiWallet} from '../../../../yoroi-wallets'
 import {TransferSummary} from './TransferSummary'
 
 const other = {

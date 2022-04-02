@@ -23,6 +23,8 @@ node_modules/react-native/Libraries/polyfills/.*
 ; Ignore @emurgo/react-native-haskell-shelley
 .*/node_modules/@emurgo/react-native-haskell-shelley/index.js.flow
 
+.*/node_modules/@emurgo/yoroi-lib-core/**/*.flow
+
 ; Ignore recompose
 .*/node_modules/recompose/dist/Recompose.cjs.js.flow
 

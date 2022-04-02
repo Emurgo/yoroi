@@ -9,7 +9,6 @@ import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {useSelector} from 'react-redux'
 
 import {CONFIG, UI_V2} from '../../../legacy/config/config'
-import {MultiToken} from '../../../legacy/crypto/MultiToken'
 import type {CreateDelegationTxResponse} from '../../../legacy/crypto/shelley/delegationUtils'
 import type {CreateUnsignedTxResponse} from '../../../legacy/crypto/shelley/transactionUtils'
 import globalMessages, {txLabels} from '../../../legacy/i18n/global-messages'
@@ -23,6 +22,7 @@ import {ConfirmTx} from '../../components/ConfirmTx'
 import {Instructions as HWInstructions} from '../../HW'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {DefaultAsset} from '../../types'
+import {MultiToken} from '../../yoroi-wallets'
 
 export type Params = {
   poolHash: string

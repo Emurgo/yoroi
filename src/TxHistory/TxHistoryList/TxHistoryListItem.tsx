@@ -6,7 +6,6 @@ import {defineMessages, MessageDescriptor, useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
-import {MultiToken} from '../../../legacy/crypto/MultiToken'
 import {
   availableAssetsSelector,
   defaultNetworkAssetSelector,
@@ -26,6 +25,7 @@ import {Text} from '../../components'
 import {Icon} from '../../components/Icon'
 import {TxHistoryStackRootProps} from '../../navigation'
 import {DefaultAsset, IOData, TransactionAssurance, TransactionDirection, TransactionInfo} from '../../types'
+import {MultiToken} from '../../yoroi-wallets'
 
 const filtersTxIO = (address: string) => {
   const isMyReceive = (extAddrIdx) => extAddrIdx[address] != null

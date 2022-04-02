@@ -1,7 +1,8 @@
 // @flow
 
+// $FlowExpectedError
+import {type TokenEntry, type TokenEntryPlain} from '../../src/yoroi-wallets'
 import type {RemoteAsset, RemoteCertificateMeta} from '../api/types'
-import {type TokenEntry, type TokenEntryPlain} from '../crypto/MultiToken'
 
 export const TRANSACTION_DIRECTION = {
   SENT: 'SENT',

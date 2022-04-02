@@ -21,13 +21,13 @@ import {
 } from '@emurgo/react-native-haskell-shelley'
 import {BigNumber} from 'bignumber.js'
 
+// $FlowExpectedError
+import {DefaultTokenEntry, MultiToken} from '../../../src/yoroi-wallets'
 import type {RawUtxo} from '../../api/types'
 import {CONFIG} from '../../config/config'
 import {getNetworkConfigById} from '../../config/networks'
 import type {NetworkId} from '../../config/types'
 import type {BaseAsset} from '../../types/HistoryTransaction'
-import type {DefaultTokenEntry} from '../MultiToken'
-import {MultiToken} from '../MultiToken'
 import type {Addressing} from '../types'
 
 const PRIMARY_ASSET_CONSTANTS = CONFIG.PRIMARY_ASSET_CONSTANTS

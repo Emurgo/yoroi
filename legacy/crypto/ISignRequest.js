@@ -1,6 +1,7 @@
 // @flow
 
-import {MultiToken} from './MultiToken'
+// $FlowExpectedError
+import {MultiToken} from '../../src/yoroi-wallets'
 
 export interface ISignRequest<T> {
   totalInput(shift: boolean): Promise<MultiToken>;

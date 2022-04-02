@@ -20,7 +20,7 @@ import {Actions, Description, Title} from './components'
 import {VotingRegTxData} from './hooks'
 
 type Props = {
-  votingRegTxData?: VotingRegTxData
+  votingRegTxData: VotingRegTxData
 }
 export const Step5 = ({votingRegTxData}: Props) => {
   const strings = useStrings()

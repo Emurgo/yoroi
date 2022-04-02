@@ -3,9 +3,8 @@
 import type {Dispatch} from 'redux'
 
 // $FlowExpectedError
-import {walletManager} from '../../src/yoroi-wallets'
+import {MultiToken, walletManager} from '../../src/yoroi-wallets'
 import type {TokenInfoRequest, TokenInfoResponse} from '../api/types'
-import type {MultiToken} from '../crypto/MultiToken'
 import {availableAssetsSelector, tokenBalanceSelector} from '../selectors'
 import type {State} from '../state'
 import type {Token} from '../types/HistoryTransaction'
