@@ -3,7 +3,7 @@ import {useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View} from 'react-native'
 
 import {confirmationMessages} from '../../../legacy/i18n/global-messages'
-import {spacing} from '../../../legacy/styles/config'
+import {spacing} from '../../theme'
 import {Button} from '../Button'
 import {Text} from '../Text'
 

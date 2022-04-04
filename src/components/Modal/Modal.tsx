@@ -16,7 +16,7 @@ import React from 'react'
 import {Image, Modal as RNModal, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import closeIcon from '../../../legacy/assets/img/close.png'
-import {COLORS} from '../../../legacy/styles/config'
+import {COLORS} from '../../theme'
 
 type Props = {
   onRequestClose: () => void

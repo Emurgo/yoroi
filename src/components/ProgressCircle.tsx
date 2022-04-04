@@ -2,7 +2,7 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import Svg, {Path} from 'react-native-svg'
 
-import {COLORS} from '../../legacy/styles/config'
+import {COLORS} from '../theme'
 import {Text} from './Text'
 
 type ExternalProps = {

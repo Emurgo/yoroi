@@ -1,7 +1,7 @@
 import React from 'react'
 import Svg, {G, Path} from 'react-native-svg'
 
-import {COLORS} from '../../../legacy/styles/config'
+import {COLORS} from '../../theme'
 
 type Props = {
   width: number

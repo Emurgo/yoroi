@@ -13,7 +13,6 @@ import type {CreateUnsignedTxResponse} from '../../../legacy/crypto/shelley/tran
 import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../../legacy/i18n/global-messages'
 import {SEND_ROUTES, WALLET_ROUTES} from '../../../legacy/RoutesList'
 import {defaultNetworkAssetSelector} from '../../../legacy/selectors'
-import {COLORS} from '../../../legacy/styles/config'
 import {formatTokenWithSymbol, formatTokenWithText} from '../../../legacy/utils/format'
 import {Banner, Boundary, OfflineBanner, Spacer, StatusBar, Text, ValidatedTextInput} from '../../components'
 import {ConfirmTx} from '../../components/ConfirmTx'
@@ -21,6 +20,7 @@ import {useTokenInfo} from '../../hooks'
 import {Instructions as HWInstructions} from '../../HW'
 import {useParams} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
+import {COLORS} from '../../theme'
 import {TokenEntry} from '../../types'
 
 export type Params = {

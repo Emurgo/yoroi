@@ -4,7 +4,6 @@ import {ScrollView, StyleSheet, TextInput as RNTextInput, View} from 'react-nati
 
 import {CONFIG} from '../../legacy/config/config'
 import globalMessages from '../../legacy/i18n/global-messages'
-import {COLORS} from '../../legacy/styles/config'
 import {
   getWalletNameError,
   REQUIRED_PASSWORD_LENGTH,
@@ -13,6 +12,7 @@ import {
 } from '../../legacy/utils/validators'
 import {Button, Checkmark, Spacer, TextInput} from '../components'
 import {useWalletNames} from '../hooks'
+import {COLORS} from '../theme'
 
 type Props = {
   onSubmit: (credentials: {name: string; password: string}) => void

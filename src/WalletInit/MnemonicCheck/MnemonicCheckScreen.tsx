@@ -8,10 +8,10 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useParams} from '../../../legacy/navigation'
 import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../../legacy/RoutesList'
 import {WalletMeta} from '../../../legacy/state'
-import {COLORS} from '../../../legacy/styles/config'
 import {Button, Spacer, StatusBar, Text} from '../../components'
 import {useCreateWallet} from '../../hooks'
 import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
+import {COLORS} from '../../theme'
 import {NetworkId, WalletImplementationId, YoroiProvider} from '../../yoroi-wallets'
 
 export type Params = {

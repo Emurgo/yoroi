@@ -6,10 +6,10 @@ import {useSelector} from 'react-redux'
 
 import {actionMessages} from '../../legacy/i18n/global-messages'
 import {isReadOnlySelector} from '../../legacy/selectors'
-import {COLORS} from '../../legacy/styles/config'
 import {Icon, Spacer} from '../components'
 import features from '../features'
 import {TxHistoryStackRootProps} from '../navigation'
+import {COLORS} from '../theme'
 
 const ACTION_PROPS = {
   height: 36,

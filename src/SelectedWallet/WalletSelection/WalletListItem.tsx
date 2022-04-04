@@ -3,8 +3,8 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {CONFIG, isByron, isHaskellShelley, isJormun, isNightly} from '../../../legacy/config/config'
 import {WalletMeta} from '../../../legacy/state'
-import stylesConfig, {COLORS} from '../../../legacy/styles/config'
 import {Icon} from '../../components'
+import {brand, COLORS} from '../../theme'
 type Props = {
   wallet: WalletMeta
   onPress: (walletMeta: WalletMeta) => void
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   walletName: {
-    fontFamily: stylesConfig.defaultFont,
+    fontFamily: brand.defaultFont,
     fontSize: 16,
     color: COLORS.WHITE,
   },

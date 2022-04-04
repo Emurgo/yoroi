@@ -7,10 +7,10 @@ import QRCodeScanner from 'react-native-qrcode-scanner'
 import {showErrorDialog} from '../../../legacy/actions'
 import {errorMessages} from '../../../legacy/i18n/global-messages'
 import {WALLET_INIT_ROUTES} from '../../../legacy/RoutesList'
-import {theme} from '../../../legacy/styles/config'
 import {isCIP1852AccountPath, isValidPublicKey} from '../../../legacy/utils/bip44Validators'
 import {Logger} from '../../../legacy/utils/logging'
 import {BulletPointItem, Spacer, Text} from '../../components'
+import {theme} from '../../theme'
 
 export type Params = {
   networkId: string

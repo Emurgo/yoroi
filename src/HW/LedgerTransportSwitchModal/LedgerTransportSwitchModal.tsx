@@ -4,8 +4,8 @@ import {Platform, ScrollView, StyleSheet, View} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
 import {CONFIG} from '../../../legacy/config/config'
-import {spacing} from '../../../legacy/styles/config'
 import {Button, Modal, Text} from '../../components'
+import {spacing} from '../../theme'
 
 type Props = {
   onSelectUSB: () => void

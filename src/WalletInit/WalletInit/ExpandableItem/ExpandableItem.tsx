@@ -4,8 +4,8 @@ import {StyleSheet} from 'react-native'
 
 import chevronDown from '../../../../legacy/assets/img/chevron_down.png'
 import chevronUp from '../../../../legacy/assets/img/chevron_up.png'
-import {COLORS} from '../../../../legacy/styles/config'
 import {Text} from '../../../components'
+import {COLORS} from '../../../theme'
 
 type Props = {
   label: string

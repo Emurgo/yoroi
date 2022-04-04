@@ -8,11 +8,11 @@ import {CONFIG} from '../../../../../legacy/config/config'
 import {getNetworkConfigById} from '../../../../../legacy/config/networks'
 import {confirmationMessages, txLabels} from '../../../../../legacy/i18n/global-messages'
 import {defaultNetworkAssetSelector} from '../../../../../legacy/selectors'
-import {COLORS} from '../../../../../legacy/styles/config'
 import {formatTokenWithText} from '../../../../../legacy/utils/format'
 import {Text, TextInput, TwoActionView} from '../../../../components'
 import {Instructions as HWInstructions} from '../../../../HW'
 import {useSelectedWallet} from '../../../../SelectedWallet'
+import {COLORS} from '../../../../theme'
 import {MultiToken, TxDeregistration, TxWithdrawal} from '../../../../yoroi-wallets'
 
 type Props = {

@@ -501,9 +501,6 @@ import Screen from '../../components/Screen'
 import AdaIcon from '../../assets/AdaIcon'
 import {confirmationsToAssuranceLevel, printAda} from '../../helpers/utils'
 
-// styles
-import styles from './TxDetails.style'
-
 // types
 import type {TransactionType} from '../../types/HistoryTransaction'
 ```

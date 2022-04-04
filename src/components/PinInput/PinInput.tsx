@@ -4,8 +4,8 @@ import {Image, TouchableHighlight, View} from 'react-native'
 import {StyleSheet} from 'react-native'
 
 import backspaceIcon from '../../../legacy/assets/img/backspace.png'
-import {COLORS} from '../../../legacy/styles/config'
 import utfSymbols from '../../../legacy/utils/utfSymbols'
+import {COLORS} from '../../theme'
 import {Text} from '../Text'
 
 export type PinInputLabels = {

@@ -5,8 +5,8 @@ import DeviceInfo from 'react-native-device-info'
 
 import chevronLeft from '../../../legacy/assets/img/chevron_left.png'
 import fingerprintImage from '../../../legacy/assets/img/fingerprint.png'
-import {COLORS} from '../../../legacy/styles/config'
 import {ScreenBackground, StatusBar, Text} from '../../components'
+import {COLORS} from '../../theme'
 
 type Props = {
   headings: Array<string>

@@ -12,8 +12,8 @@ import {
   isUsedAddressIndexSelector,
   receiveAddressesSelector,
 } from '../../legacy/selectors'
-import {COLORS} from '../../legacy/styles/config'
 import {Banner, Button, OfflineBanner, Spacer, StatusBar} from '../components'
+import {COLORS} from '../theme'
 import {AddressDetail} from './AddressDetail'
 import {UnusedAddresses, UsedAddresses} from './Addresses'
 

@@ -4,8 +4,6 @@
 // https://github.com/elderfo/react-native-storybook-loader.git
 
 function loadStories() {
-	require('../legacy/components/Delegation/FlawedWalletScreen.stories');
-	require('../legacy/components/MaintenanceScreen.stories');
 	require('../src/BiometricAuth/BiometricAuthScreen.stories');
 	require('../src/BiometricAuth/FingerprintScreenBase/FingerprintScreenBase.stories');
 	require('../src/Catalyst/Catalyst.stories');
@@ -21,6 +19,7 @@ function loadStories() {
 	require('../src/HW/LedgerConnect/LedgerConnect.stories');
 	require('../src/HW/LedgerTransportSwitchModal/LedgerTransportSwitchModal.stories');
 	require('../src/Login/CustomPinLoginScreen.stories');
+	require('../src/MaintenanceScreen.stories');
 	require('../src/Menu/Menu.stories');
 	require('../src/Receive/AddressModal.stories');
 	require('../src/Receive/AddressVerifyModal.stories');
@@ -89,8 +88,6 @@ function loadStories() {
 }
 
 const stories = [
-	'../legacy/components/Delegation/FlawedWalletScreen.stories',
-	'../legacy/components/MaintenanceScreen.stories',
 	'../src/BiometricAuth/BiometricAuthScreen.stories',
 	'../src/BiometricAuth/FingerprintScreenBase/FingerprintScreenBase.stories',
 	'../src/Catalyst/Catalyst.stories',
@@ -106,6 +103,7 @@ const stories = [
 	'../src/HW/LedgerConnect/LedgerConnect.stories',
 	'../src/HW/LedgerTransportSwitchModal/LedgerTransportSwitchModal.stories',
 	'../src/Login/CustomPinLoginScreen.stories',
+	'../src/MaintenanceScreen.stories',
 	'../src/Menu/Menu.stories',
 	'../src/Receive/AddressModal.stories',
 	'../src/Receive/AddressVerifyModal.stories',

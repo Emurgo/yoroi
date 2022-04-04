@@ -7,9 +7,9 @@ import {useDispatch} from 'react-redux'
 import {updateVersion} from '../../../legacy/actions'
 import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../../legacy/RoutesList'
 import type {WalletMeta} from '../../../legacy/state'
-import {COLORS} from '../../../legacy/styles/config'
 import {useCreateWallet} from '../../hooks'
 import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
+import {COLORS} from '../../theme'
 import {WalletForm} from '../WalletForm'
 
 export const WalletCredentialsScreen = () => {
