@@ -6,7 +6,8 @@ import type {ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
 import Blockies from 'react-native-blockies-svg'
 import tinycolor from 'tinycolor2'
 
-import {COLORS as APP_COLORS} from '../../styles/config'
+// $FlowExpectedError
+import {COLORS as APP_COLORS} from '../../../src/theme'
 
 const mkcolor = (primary, secondary, spots) => ({primary, secondary, spots})
 const COLORS = [

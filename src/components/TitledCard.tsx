@@ -1,7 +1,7 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {COLORS} from '../../legacy/styles/config'
+import {COLORS} from '../theme'
 import {Text} from './Text'
 
 type ExternalProps = {

@@ -6,7 +6,7 @@ import chevronLeft from '../../../legacy/assets/img/chevron_left.png'
 import chevronRight from '../../../legacy/assets/img/chevron_right.png'
 import image from '../../../legacy/assets/img/error.png'
 import globalMessages, {errorMessages} from '../../../legacy/i18n/global-messages'
-import stylesConfig, {COLORS, spacing} from '../../../legacy/styles/config'
+import {brand, COLORS, spacing} from '../../theme'
 import {Button, Modal} from '..'
 
 type ErrorViewProps = {
@@ -73,7 +73,7 @@ export const ErrorModal = ({visible, title, errorMessage, errorLogs, onRequestCl
 )
 
 const text = {
-  fontFamily: stylesConfig.defaultFont,
+  fontFamily: brand.defaultFont,
   color: COLORS.BLACK,
   lineHeight: 18,
   fontSize: 14,

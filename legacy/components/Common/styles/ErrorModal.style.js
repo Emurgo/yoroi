@@ -2,10 +2,11 @@
 
 import {StyleSheet} from 'react-native'
 
-import stylesConfig, {COLORS, spacing} from '../../../styles/config'
+// $FlowExpectedError
+import {brand, COLORS, spacing} from '../../../../../src/theme'
 
 const text = {
-  fontFamily: stylesConfig.defaultFont,
+  fontFamily: brand.defaultFont,
   color: COLORS.BLACK,
   lineHeight: 18,
   fontSize: 14,

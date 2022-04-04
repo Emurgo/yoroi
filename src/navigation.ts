@@ -2,7 +2,7 @@ import {useRoute} from '@react-navigation/native'
 import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/stack'
 import React from 'react'
 
-import {COLORS} from '../legacy/styles/config'
+import {COLORS} from './theme'
 
 export const useParams = <Params>(guard: Guard<Params>): Params => {
   const params = useRoute().params

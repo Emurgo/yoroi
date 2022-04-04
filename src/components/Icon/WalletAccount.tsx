@@ -3,7 +3,7 @@ import {StyleSheet, View, ViewStyle} from 'react-native'
 import Blockies from 'react-native-blockies-svg'
 import tinycolor from 'tinycolor2'
 
-import {COLORS as APP_COLORS} from '../../../legacy/styles/config'
+import {COLORS as APP_COLORS} from '../../theme'
 
 const mkcolor = (primary, secondary, spots) => ({primary, secondary, spots})
 const COLORS = [

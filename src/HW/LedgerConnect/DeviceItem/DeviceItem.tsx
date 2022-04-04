@@ -1,7 +1,7 @@
 import React from 'react'
 import {ActivityIndicator, StyleSheet, Text, TouchableOpacity} from 'react-native'
 
-import {COLORS} from '../../../../legacy/styles/config'
+import {COLORS} from '../../../theme'
 import {Device} from '../../../types'
 
 type Props = {

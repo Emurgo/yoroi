@@ -1,17 +1,15 @@
-// @flow
-
 import {StyleSheet} from 'react-native'
 
-import stylesConfig, {COLORS} from '../../../../styles/config'
+import {brand, COLORS} from '../../theme'
 
 export default StyleSheet.create({
   assetHeading: {
-    color: COLORS.BLACK,
+    color: COLORS.WHITE,
     opacity: 0.5,
-    fontSize: 12,
+    fontSize: 10,
   },
   assetMeta: {
-    color: COLORS.TEXT_GRAY2,
+    color: COLORS.WHITE,
     opacity: 0.5,
     fontSize: 14,
   },
@@ -24,21 +22,21 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 10,
   },
-  assetName: {
-    fontFamily: stylesConfig.defaultFont,
-    fontSize: 14,
-    color: COLORS.TEXT_GRAY,
-    marginBottom: 2,
-  },
   assetBalanceView: {
     flex: 1,
     alignItems: 'flex-end',
     justifyContent: 'flex-start',
   },
-  assetBalance: {
-    fontFamily: stylesConfig.defaultFont,
+  assetName: {
+    fontFamily: brand.defaultFont,
     fontSize: 14,
-    color: COLORS.BLACK,
+    color: COLORS.WHITE,
+    marginBottom: 2,
+  },
+  assetBalance: {
+    fontFamily: brand.defaultFont,
+    fontSize: 14,
+    color: COLORS.WHITE,
   },
   py5: {
     paddingVertical: 10,

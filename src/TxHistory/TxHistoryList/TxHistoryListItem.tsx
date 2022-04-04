@@ -12,7 +12,6 @@ import {
   externalAddressIndexSelector,
   internalAddressIndexSelector,
 } from '../../../legacy/selectors'
-import {COLORS} from '../../../legacy/styles/config'
 import {
   ASSET_DENOMINATION,
   formatTimeToSeconds,
@@ -24,6 +23,7 @@ import utfSymbols from '../../../legacy/utils/utfSymbols'
 import {Text} from '../../components'
 import {Icon} from '../../components/Icon'
 import {TxHistoryStackRootProps} from '../../navigation'
+import {COLORS} from '../../theme'
 import {DefaultAsset, IOData, TransactionAssurance, TransactionDirection, TransactionInfo} from '../../types'
 import {MultiToken} from '../../yoroi-wallets'
 

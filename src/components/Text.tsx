@@ -1,7 +1,7 @@
 import React from 'react'
 import {Platform, StyleProp, StyleSheet, Text as RNText, TextProps, TextStyle} from 'react-native'
 
-import stylesConfig, {COLORS} from '../../legacy/styles/config'
+import {brand, COLORS} from '../theme'
 
 type Props = TextProps & {
   small?: boolean
@@ -81,7 +81,7 @@ export class Text extends React.Component<Props, State> {
 }
 const styles = StyleSheet.create({
   text: {
-    fontFamily: stylesConfig.defaultFont,
+    fontFamily: brand.defaultFont,
     color: COLORS.BLACK,
     lineHeight: 18,
     fontSize: 14,
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     color: '#FF1351',
   },
   bold: {
-    fontFamily: stylesConfig.bold,
+    fontFamily: brand.bold,
   },
   monospace: {
     ...Platform.select({

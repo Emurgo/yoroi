@@ -5,11 +5,11 @@ import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import globalMessages from '../../../legacy/i18n/global-messages'
-import {COLORS} from '../../../legacy/styles/config'
 import {getWalletNameError, validateWalletName} from '../../../legacy/utils/validators'
 import {Button, TextInput} from '../../components'
 import {useChangeWalletName, useWalletName, useWalletNames} from '../../hooks'
 import {useSelectedWallet} from '../../SelectedWallet'
+import {COLORS} from '../../theme'
 
 export const ChangeWalletName = () => {
   const strings = useStrings()

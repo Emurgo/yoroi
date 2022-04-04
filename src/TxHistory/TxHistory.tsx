@@ -17,9 +17,9 @@ import {
   lastHistorySyncErrorSelector,
   walletIsInitializedSelector,
 } from '../../legacy/selectors'
-import {COLORS} from '../../legacy/styles/config'
 import {OfflineBanner, StatusBar, Text} from '../components'
 import {useSelectedWallet} from '../SelectedWallet'
+import {COLORS} from '../theme'
 import {ActionsBanner} from './ActionsBanner'
 import {AssetList} from './AssetList'
 import {BalanceBanner} from './BalanceBanner'

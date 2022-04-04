@@ -1,7 +1,7 @@
 import React from 'react'
 import {StyleSheet, View, ViewProps} from 'react-native'
 
-import {COLORS} from '../../legacy/styles/config'
+import {COLORS} from '../theme'
 
 export const ScreenBackground = ({children, style}: ViewProps) => (
   <View style={[styles.container, style]}>{children}</View>

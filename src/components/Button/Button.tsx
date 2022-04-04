@@ -1,7 +1,7 @@
 import React from 'react'
 import {Image, StyleSheet, TouchableOpacity, TouchableOpacityProps, View, ViewStyle} from 'react-native'
 
-import {colors} from '../../../legacy/styles/config'
+import {colors} from '../../theme'
 import {Text} from '../Text'
 
 export type ButtonProps = TouchableOpacityProps & {

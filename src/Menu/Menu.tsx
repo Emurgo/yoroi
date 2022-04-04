@@ -8,11 +8,11 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useSelector} from 'react-redux'
 
 import {CONFIG} from '../../legacy/config/config'
-import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../legacy/navigationOptions'
 import {tokenBalanceSelector} from '../../legacy/selectors'
 import {CatalystNavigator} from '../Catalyst/CatalystNavigator'
 import {Icon, Spacer, Text} from '../components'
 import {useWalletMetas} from '../hooks'
+import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../navigationOptions'
 import {InsufficientFundsModal} from './InsufficientFundsModal'
 
 const MenuStack = createStackNavigator()
@@ -23,7 +23,7 @@ export const MenuNavigator = () => {
   return (
     <MenuStack.Navigator
       initialRouteName="menu"
-      screenOptions={{...defaultNavigationOptions, ...defaultStackNavigatorOptions, headerLeft: null}}
+      screenOptions={{...defaultNavigationOptions, ...defaultStackNavigatorOptions, headerLeft: () => null}}
     >
       <MenuStack.Screen name="menu" component={Menu} options={{title: strings.menu}} />
       <MenuStack.Screen name="catalyst-voting" component={CatalystNavigator} />

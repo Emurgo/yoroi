@@ -6,10 +6,10 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {MutationOptions, useMutation} from 'react-query'
 
 import {errorMessages} from '../../../legacy/i18n/global-messages'
-import {COLORS} from '../../../legacy/styles/config'
 import {REQUIRED_PASSWORD_LENGTH, validatePassword} from '../../../legacy/utils/validators'
 import {Button, Checkmark, Spacer, TextInput} from '../../components'
 import {useSelectedWallet} from '../../SelectedWallet'
+import {COLORS} from '../../theme'
 import {YoroiWallet} from '../../yoroi-wallets'
 
 export const ChangePasswordScreen = () => {

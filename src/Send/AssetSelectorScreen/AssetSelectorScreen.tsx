@@ -8,7 +8,6 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import AdaImage from '../../../legacy/assets/img/asset_ada.png'
 import NoImage from '../../../legacy/assets/img/asset_no_image.png'
 import globalMessages, {txLabels} from '../../../legacy/i18n/global-messages'
-import {COLORS} from '../../../legacy/styles/config'
 import {
   decodeHexAscii,
   formatTokenAmount,
@@ -18,6 +17,7 @@ import {
 import {Boundary, Button, Spacer, Text, TextInput} from '../../components'
 import {useTokenInfo} from '../../hooks'
 import {useSelectedWallet} from '../../SelectedWallet'
+import {COLORS} from '../../theme'
 import {Token, TokenEntry} from '../../types'
 
 type Props = {
