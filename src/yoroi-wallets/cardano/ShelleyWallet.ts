@@ -51,7 +51,6 @@ import type {BackendConfig} from '../../../legacy/config/types'
 import {NETWORK_REGISTRY} from '../../../legacy/config/types'
 import {ADDRESS_TYPE_TO_CHANGE, generateWalletRootKey} from '../../../legacy/crypto/commonUtils'
 import {CardanoError, InvalidState} from '../../../legacy/crypto/errors'
-import * as catalystUtils from '../../../legacy/crypto/shelley/catalystUtils'
 import {
   createDelegationTx,
   createWithdrawalTx,
@@ -78,6 +77,7 @@ import assert from '../../../legacy/utils/assert'
 import {Logger} from '../../../legacy/utils/logging'
 import {genTimeToSlot} from '../../../legacy/utils/timeUtils'
 import {versionCompare} from '../../../legacy/utils/versioning'
+import * as catalystUtils from '../../Catalyst/catalystUtils'
 import {DefaultTokenEntry} from '../../types'
 import Wallet, {WalletJSON} from '../Wallet'
 import {AddressChain, AddressGenerator} from './chain'
@@ -609,7 +609,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
       const changeAddr = await this._getAddressedChangeAddress()
       const addressedUtxos = this.asAddressedUtxo(utxos)
 
-      let signer: (Uint8Array) => Promise<string> | void
+      let signer: (arg: Uint8Array) => Promise<string>
       if (decryptedKey !== undefined) {
         assert.assert(typeof decryptedKey === 'string', 'ShelleyWallet:createVotingRegTx: decryptedKey')
         const masterKey = await Bip32PrivateKey.from_bytes(Buffer.from(decryptedKey, 'hex'))

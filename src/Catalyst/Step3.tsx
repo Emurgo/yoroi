@@ -6,10 +6,10 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {showErrorDialog} from '../../legacy/actions'
 import {errorMessages} from '../../legacy/i18n/global-messages'
-import {CATALYST_ROUTES} from '../../legacy/RoutesList'
 import {ProgressStep, Spacer} from '../components'
 import {PinInputKeyboard} from '../components'
 import {useSelectedWallet} from '../SelectedWallet'
+import {CATALYST_ROUTES} from './CatalystNavigator'
 import {Description, PinBox, Row, Title} from './components'
 import {useCreateVotingRegTx, VotingRegTxData} from './hooks'
 

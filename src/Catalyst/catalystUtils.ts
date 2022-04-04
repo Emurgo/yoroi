@@ -1,8 +1,3 @@
-// properties must have quotes for bindings
-/* eslint-disable quote-props */
-/* eslint-disable camelcase */
-// // @flow
-
 import {
   Address,
   AuxiliaryData,
@@ -18,21 +13,21 @@ import {
 import {mnemonicToEntropy} from 'bip39'
 import blake2b from 'blake2b'
 
-import {CONFIG} from '../../config/config'
-import {Logger} from '../../utils/logging'
-import {generateAdaMnemonic} from '../commonUtils'
+import {CONFIG} from '../../legacy/config/config'
+import {generateAdaMnemonic} from '../../legacy/crypto/commonUtils'
+import {Logger} from '../../legacy/utils/logging'
 
 export const CatalystLabels = Object.freeze({
   DATA: 61284,
   SIG: 61285,
 })
-export async function auxiliaryDataWithRegistrationMetadata(request: {|
-  stakePublicKey: PublicKey,
-  catalystPublicKey: PublicKey,
-  rewardAddress: Address,
-  absSlotNumber: number,
-  signer: (Uint8Array) => Promise<string>,
-|}): Promise<AuxiliaryData> {
+export async function auxiliaryDataWithRegistrationMetadata(request: {
+  stakePublicKey: PublicKey
+  catalystPublicKey: PublicKey
+  rewardAddress: Address
+  absSlotNumber: number
+  signer: (arg: Uint8Array) => Promise<string>
+}) {
   /**
    * Catalyst follows a certain standard to prove the voting power
    * A transaction is submitted with following metadata format for the registration process
@@ -50,10 +45,10 @@ export async function auxiliaryDataWithRegistrationMetadata(request: {|
    */
 
   const jsonMeta = JSON.stringify({
-    '1': `0x${Buffer.from(await request.catalystPublicKey.as_bytes()).toString('hex')}`,
-    '2': `0x${Buffer.from(await request.stakePublicKey.as_bytes()).toString('hex')}`,
-    '3': `0x${Buffer.from(await request.rewardAddress.to_bytes()).toString('hex')}`,
-    '4': request.absSlotNumber,
+    1: `0x${Buffer.from(await request.catalystPublicKey.as_bytes()).toString('hex')}`,
+    2: `0x${Buffer.from(await request.stakePublicKey.as_bytes()).toString('hex')}`,
+    3: `0x${Buffer.from(await request.rewardAddress.to_bytes()).toString('hex')}`,
+    4: request.absSlotNumber,
   })
   const registrationData = await encode_json_str_to_metadatum(jsonMeta, MetadataJsonSchema.BasicConversions)
   Logger.debug(jsonMeta)
@@ -70,7 +65,7 @@ export async function auxiliaryDataWithRegistrationMetadata(request: {|
     await BigNum.from_str(CatalystLabels.SIG.toString()),
     await encode_json_str_to_metadatum(
       JSON.stringify({
-        '1': `0x${catalystSignature}`,
+        1: `0x${catalystSignature}`,
       }),
       MetadataJsonSchema.BasicConversions,
     ),
@@ -83,7 +78,7 @@ export async function auxiliaryDataWithRegistrationMetadata(request: {|
   return auxiliary
 }
 
-export async function generatePrivateKeyForCatalyst(): Promise<Bip32PrivateKey> {
+export async function generatePrivateKeyForCatalyst() {
   let mnemonic
   if (CONFIG.DEBUG.PREFILL_FORMS) {
     if (!__DEV__) throw new Error('using debug data in non-dev env')
@@ -98,12 +93,7 @@ export async function generatePrivateKeyForCatalyst(): Promise<Bip32PrivateKey> 
   return rootKey
 }
 
-export const isRegistrationOpen = (
-  fundInfo: ?{|
-    +registrationStart: string,
-    +registrationEnd: string,
-  |},
-) => {
+export const isRegistrationOpen = (fundInfo?: null | {registrationStart: string; registrationEnd: string}) => {
   const now = new Date()
 
   if (fundInfo != null) {
