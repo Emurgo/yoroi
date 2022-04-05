@@ -119,9 +119,9 @@ export const WithdrawalDialog = ({
           />
         )
       case WITHDRAWAL_DIALOG_STEPS.WAITING_HW_RESPONSE:
-        return <PleaseWaitView title={''} spinnerText={strings.followSteps} />
+        return <PleaseWaitView title="" spinnerText={strings.followSteps} />
       case WITHDRAWAL_DIALOG_STEPS.WAITING:
-        return <PleaseWaitView title={''} spinnerText={strings.pleaseWait} />
+        return <PleaseWaitView title="" spinnerText={strings.pleaseWait} />
       case WITHDRAWAL_DIALOG_STEPS.ERROR:
         return <ErrorView errorMessage={error.errorMessage} errorLogs={error.errorLogs} onDismiss={onRequestClose} />
       default:

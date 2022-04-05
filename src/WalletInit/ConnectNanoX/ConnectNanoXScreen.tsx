@@ -1,4 +1,4 @@
-import {useNavigation, useRoute} from '@react-navigation/native'
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet} from 'react-native'
@@ -11,15 +11,9 @@ import type {DeviceId, DeviceObj} from '../../../legacy/crypto/shelley/ledgerUti
 import {getHWDeviceInfo} from '../../../legacy/crypto/shelley/ledgerUtils'
 import {errorMessages} from '../../../legacy/i18n/global-messages'
 import LocalizableError from '../../../legacy/i18n/LocalizableError'
-import {WALLET_INIT_ROUTES} from '../../../legacy/RoutesList'
 import {Logger} from '../../../legacy/utils/logging'
-import {Device, NetworkId, WalletImplementationId} from '../../types'
-
-export type Params = {
-  useUSB?: boolean
-  walletImplementationId: WalletImplementationId
-  networkId: NetworkId
-}
+import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
+import {Device} from '../../types'
 
 type Props = {
   defaultDevices?: Array<Device> // for storybook
@@ -28,12 +22,12 @@ type Props = {
 export const ConnectNanoXScreen = ({defaultDevices}: Props) => {
   const intl = useIntl()
   const strings = useStrings()
-  const navigation = useNavigation()
-  const route = useRoute()
-  const {walletImplementationId, useUSB, networkId} = route.params as Params
+  const navigation = useNavigation<WalletInitRouteNavigation>()
+  const route = useRoute<RouteProp<WalletInitRoutes, 'connect-nano-x'>>()
+  const {walletImplementationId, useUSB, networkId} = route.params
 
   const onSuccess = (hwDeviceInfo) =>
-    navigation.navigate(WALLET_INIT_ROUTES.SAVE_NANO_X, {
+    navigation.navigate('save-nano-x', {
       hwDeviceInfo,
       networkId,
       walletImplementationId,

@@ -88,10 +88,10 @@ const AssetItem = ({assetToken, onPress}: AssetItemProps) => {
         </View>
 
         <View style={styles.tokenData}>
-          <Text numberOfLines={1} ellipsizeMode={'middle'} style={styles.tokenInfo}>
+          <Text numberOfLines={1} ellipsizeMode="middle" style={styles.tokenInfo}>
             {getAssetDenominationOrId(tokenInfo) || strings.unknown}
           </Text>
-          <Text numberOfLines={1} ellipsizeMode={'middle'} style={styles.tokenName}>
+          <Text numberOfLines={1} ellipsizeMode="middle" style={styles.tokenName}>
             {tokenInfo.isDefault ? '' : getTokenFingerprint(tokenInfo)}
           </Text>
         </View>

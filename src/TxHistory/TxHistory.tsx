@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {LayoutAnimation, StyleSheet, TouchableOpacity, View} from 'react-native'
-import SafeAreaView from 'react-native-safe-area-view'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {checkForFlawedWallets} from '../../legacy/actions'
@@ -60,7 +59,7 @@ export const TxHistory = () => {
   }
 
   return (
-    <SafeAreaView style={styles.scrollView}>
+    <View style={styles.scrollView}>
       <StatusBar type={UI_V2 ? 'light' : 'dark'} />
 
       <View style={styles.container}>
@@ -124,7 +123,7 @@ export const TxHistory = () => {
           </TabPanel>
         </TabPanels>
       </View>
-    </SafeAreaView>
+    </View>
   )
 }
 

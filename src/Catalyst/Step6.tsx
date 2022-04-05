@@ -1,5 +1,5 @@
 import Clipboard from '@react-native-community/clipboard'
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import {useFocusEffect} from '@react-navigation/native'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {
@@ -19,10 +19,10 @@ import {useSelector} from 'react-redux'
 import copyImage from '../../legacy/assets/img/copyd.png'
 import {Button, ProgressStep, Text} from '../../legacy/components/UiKit'
 import {confirmationMessages} from '../../legacy/i18n/global-messages'
-import {WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
 import {encryptedKeySelector} from '../../legacy/selectors'
 import {COLORS} from '../../legacy/styles/config'
 import {Spacer} from '../components'
+import {useWalletNavigation} from '../navigation'
 import {CatalystBackupCheckModal} from './CatalystBackupCheckModal'
 import {Actions, Description, Title} from './components'
 
@@ -31,7 +31,7 @@ const {FlagSecure} = NativeModules
 export const Step6 = () => {
   const strings = useStrings()
   const encryptedKey = useSelector(encryptedKeySelector)
-  const navigation = useNavigation()
+  const {resetToTxHistory} = useWalletNavigation()
   const [countDown, setCountDown] = useState<number>(5)
 
   useEffect(() => {
@@ -82,7 +82,7 @@ export const Step6 = () => {
 
         <Spacer height={32} />
 
-        {encryptedKey ? <QRCode text={encryptedKey} /> : <ActivityIndicator size={'large'} color={'black'} />}
+        {encryptedKey ? <QRCode text={encryptedKey} /> : <ActivityIndicator size="large" color="black" />}
 
         <Spacer height={32} />
 
@@ -106,7 +106,9 @@ export const Step6 = () => {
       <CatalystBackupCheckModal
         visible={showBackupWarningModal}
         onRequestClose={() => setShowBackupWarningModal(false)}
-        onConfirm={() => navigation.navigate(WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES)}
+        onConfirm={() => {
+          resetToTxHistory()
+        }}
       />
     </SafeAreaView>
   )

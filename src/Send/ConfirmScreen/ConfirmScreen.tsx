@@ -1,11 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {useNavigation} from '@react-navigation/native'
-import {CommonActions} from '@react-navigation/routers'
 import {BigNumber} from 'bignumber.js'
 import React from 'react'
 import {useIntl} from 'react-intl'
 import {Platform, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
-import SafeAreaView from 'react-native-safe-area-view'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {
@@ -31,7 +28,7 @@ import {
   Text,
   ValidatedTextInput,
 } from '../../../legacy/components/UiKit'
-import {CONFIG, UI_V2} from '../../../legacy/config/config'
+import {CONFIG} from '../../../legacy/config/config'
 import {WrongPassword} from '../../../legacy/crypto/errors'
 import {ISignRequest} from '../../../legacy/crypto/ISignRequest'
 import KeyStore from '../../../legacy/crypto/KeyStore'
@@ -39,7 +36,6 @@ import type {CreateUnsignedTxResponse} from '../../../legacy/crypto/shelley/tran
 import walletManager, {SystemAuthDisabled} from '../../../legacy/crypto/walletManager'
 import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../../legacy/i18n/global-messages'
 import LocalizableError from '../../../legacy/i18n/LocalizableError'
-import {SEND_ROUTES, WALLET_ROOT_ROUTES, WALLET_ROUTES} from '../../../legacy/RoutesList'
 import {
   defaultNetworkAssetSelector,
   easyConfirmationSelector,
@@ -50,7 +46,7 @@ import {COLORS} from '../../../legacy/styles/config'
 import {formatTokenWithSymbol, formatTokenWithText} from '../../../legacy/utils/format'
 import {Boundary, Spacer} from '../../components'
 import {useTokenInfo} from '../../hooks'
-import {useParams} from '../../navigation'
+import {useParams, useWalletNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {TokenEntry} from '../../types/cardano'
 
@@ -168,7 +164,7 @@ export const ConfirmScreen = () => {
     closeLedgerDialog()
   }
 
-  const navigation = useNavigation()
+  const {navigation, resetToTxHistory} = useWalletNavigation()
   const onConfirm = async () => {
     const submitTx = async (tx: string | ISignRequest, decryptedKey?: string) => {
       await withPleaseWaitModal(async () => {
@@ -177,16 +173,7 @@ export const ConfirmScreen = () => {
         } else {
           await submitSignedTx(tx)
         }
-        navigation.dispatch(
-          CommonActions.reset({
-            key: null,
-            index: 0,
-            routes: [{name: UI_V2 ? 'history' : SEND_ROUTES.MAIN}],
-          } as any),
-        )
-        if (!UI_V2) {
-          navigation.navigate(WALLET_ROUTES.TX_HISTORY)
-        }
+        resetToTxHistory()
       })
     }
 
@@ -202,10 +189,10 @@ export const ConfirmScreen = () => {
       if (isEasyConfirmationEnabled) {
         try {
           await walletManager.ensureKeysValidity()
-          navigation.navigate(SEND_ROUTES.BIOMETRICS_SIGNING, {
+          navigation.navigate('biometrics', {
             keyId: walletManager._id,
             onSuccess: async (decryptedKey) => {
-              navigation.navigate(UI_V2 ? 'send-confirm' : SEND_ROUTES.CONFIRM)
+              navigation.goBack()
 
               await submitTx(signRequest, decryptedKey)
             },
@@ -215,8 +202,9 @@ export const ConfirmScreen = () => {
           if (e instanceof SystemAuthDisabled) {
             await walletManager.closeWallet()
             await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
-            navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
-
+            navigation.navigate('app-root', {
+              screen: 'wallet-selection',
+            })
             return
           } else {
             throw e
@@ -256,8 +244,8 @@ export const ConfirmScreen = () => {
   const isConfirmationDisabled = !isEasyConfirmationEnabled && !password && !isHW
 
   return (
-    <SafeAreaView style={styles.safeAreaView}>
-      <View style={styles.root}>
+    <View style={styles.root}>
+      <View style={{flex: 1}}>
         <StatusBar type="dark" />
 
         <OfflineBanner />
@@ -338,7 +326,7 @@ export const ConfirmScreen = () => {
       />
 
       <PleaseWaitModal title={strings.submittingTx} spinnerText={strings.pleaseWait} visible={sendingTransaction} />
-    </SafeAreaView>
+    </View>
   )
 }
 
@@ -352,11 +340,8 @@ const Entry = ({tokenEntry}: {tokenEntry: TokenEntry}) => {
 const Actions = (props: ViewProps) => <View {...props} style={{padding: 16}} />
 
 const styles = StyleSheet.create({
-  safeAreaView: {
-    backgroundColor: COLORS.WHITE,
-    flex: 1,
-  },
   root: {
+    backgroundColor: COLORS.WHITE,
     flex: 1,
   },
   container: {

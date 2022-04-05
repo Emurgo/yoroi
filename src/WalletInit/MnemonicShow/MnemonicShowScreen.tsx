@@ -1,4 +1,4 @@
-import {useNavigation, useRoute} from '@react-navigation/native'
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Dimensions, Image, ScrollView, StyleSheet, View} from 'react-native'
@@ -6,20 +6,20 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import recoveryPhrase from '../../../legacy/assets/img/recovery_phrase.png'
 import {Button, StatusBar, Text} from '../../../legacy/components/UiKit'
-import {WALLET_INIT_ROUTES} from '../../../legacy/RoutesList'
 import assert from '../../../legacy/utils/assert'
+import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
 import {MnemonicBackupImportanceModal} from '../MnemonicBackupModal'
 
 export const MnemonicShowScreen = () => {
-  const navigation = useNavigation()
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const route: any = useRoute()
+  const navigation = useNavigation<WalletInitRouteNavigation>()
+  const route = useRoute<RouteProp<WalletInitRoutes, 'mnemoinc-show'>>()
   const strings = useStrings()
   const mnemonic = route.params.mnemonic
   const provider = route.params.provider
   const [modal, setModal] = React.useState(false)
   const showModal = () => setModal(true)
   const hideModal = () => setModal(false)
+
   const navigateToMnemonicCheck = () => {
     const {name, password, networkId, walletImplementationId} = route.params
     assert.assert(!!mnemonic, 'navigateToMnemonicCheck:: mnemonic')
@@ -28,7 +28,7 @@ export const MnemonicShowScreen = () => {
     assert.assert(networkId != null, 'navigateToMnemonicCheck:: networkId')
     assert.assert(!!walletImplementationId, 'walletImplementationId')
 
-    navigation.navigate(WALLET_INIT_ROUTES.MNEMONIC_CHECK, {
+    navigation.navigate('mnemonic-check', {
       mnemonic,
       password,
       name,

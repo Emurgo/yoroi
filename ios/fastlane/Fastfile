@@ -31,7 +31,7 @@ platform :ios do
 
     # increment_build_number(xcodeproj: "emurgo.xcodeproj")
     build_app(workspace: "emurgo.xcworkspace", scheme: "emurgo-staging")
-    upload_to_testflight(skip_submission: true, skip_waiting_for_build_processing: true)
+    # upload_to_testflight(skip_submission: true, skip_waiting_for_build_processing: true)
   end
 
   desc "Push a new nightly build to TestFlight"
@@ -45,7 +45,7 @@ platform :ios do
 
     # increment_build_number(xcodeproj: "emurgo.xcodeproj")
     build_app(workspace: "emurgo.xcworkspace", scheme: "emurgo-nightly")
-    upload_to_testflight(skip_submission: true, skip_waiting_for_build_processing: true)
+    # upload_to_testflight(skip_submission: true, skip_waiting_for_build_processing: true)
   end
 
   desc "Push a new mainnet build to TestFlight"
@@ -59,7 +59,7 @@ platform :ios do
 
     # increment_build_number(xcodeproj: "emurgo.xcodeproj")
     build_app(workspace: "emurgo.xcworkspace", scheme: "emurgo")
-    upload_to_testflight(skip_submission: true, skip_waiting_for_build_processing: true)
+    # upload_to_testflight(skip_submission: true, skip_waiting_for_build_processing: true)
   end
 
   desc "Builds the project. Useful to verify a succesful compilation."

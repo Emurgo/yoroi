@@ -4,13 +4,12 @@ import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {SafeAreaView, ScrollView, StyleSheet, TouchableOpacity} from 'react-native'
 
-import {ROOT_ROUTES} from '../RoutesList'
 import storage from '../utils/storage'
 import {Button, StatusBar, Text} from './UiKit'
 
 const routes = [
-  {label: 'Storybook', path: ROOT_ROUTES.STORYBOOK},
-  {label: 'Skip to wallet list', path: ROOT_ROUTES.WALLET},
+  {label: 'Storybook', path: 'storybook'},
+  {label: 'Skip to wallet list', path: 'app-root'},
 ]
 
 const styles = StyleSheet.create({

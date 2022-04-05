@@ -8,7 +8,7 @@ import type {State, WalletMeta} from './state'
 export var availableAssetsSelector: (state: State) => Record<string, Token | DefaultAsset>
 export var customPinHashSelector: (state: State) => string | undefined
 export var hasAnyTransaction: (state: State) => boolean
-export var installationIdSelector: (state: State) => boolean
+export var installationIdSelector: (state: State) => string
 export var isAppSetupCompleteSelector: (state: State) => boolean
 export var isAuthenticatedSelector: (state: State) => boolean
 export var isMaintenanceSelector: (state: State) => boolean

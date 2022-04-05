@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native'
+import {RouteProp, useRoute} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, TouchableOpacity, View} from 'react-native'
@@ -6,28 +6,18 @@ import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, StatusBar, Text} from '../../../legacy/components/UiKit'
-import {useParams} from '../../../legacy/navigation'
-import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../../legacy/RoutesList'
 import {WalletMeta} from '../../../legacy/state'
 import {COLORS} from '../../../legacy/styles/config'
 import {Spacer} from '../../components'
 import {useCreateWallet} from '../../hooks'
+import {useWalletNavigation, WalletInitRoutes} from '../../navigation'
 import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
-import {NetworkId, WalletImplementationId, YoroiProvider} from '../../types'
-
-export type Params = {
-  mnemonic: string
-  password: string
-  name: string
-  networkId: NetworkId
-  walletImplementationId: WalletImplementationId
-  provider: YoroiProvider
-}
 
 export const MnemonicCheckScreen = () => {
   const strings = useStrings()
-  const navigation = useNavigation()
-  const {mnemonic, password, name, networkId, walletImplementationId, provider} = useParams<Params>()
+  const {navigateToTxHistory} = useWalletNavigation()
+  const route = useRoute<RouteProp<WalletInitRoutes, 'mnemonic-check'>>()
+  const {mnemonic, password, name, networkId, walletImplementationId, provider} = route.params
 
   const mnemonicEntries: Array<Entry> = mnemonic
     .split(' ')
@@ -59,14 +49,7 @@ export const MnemonicCheckScreen = () => {
       setSelectedWalletMeta(walletMeta)
       setSelectedWallet(wallet)
 
-      navigation.navigate(ROOT_ROUTES.WALLET, {
-        screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES,
-        mnemonic,
-        password,
-        name,
-        networkId,
-        walletImplementationId,
-      })
+      navigateToTxHistory()
     },
   })
 

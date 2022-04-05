@@ -1,39 +1,36 @@
-import {useNavigation, useRoute} from '@react-navigation/native'
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
+import assert from 'assert'
 import React from 'react'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {generateAdaMnemonic} from '../../../legacy/crypto/commonUtils'
-import {WALLET_INIT_ROUTES} from '../../../legacy/RoutesList'
+import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
 import {MnemonicExplanationModal} from '../MnemonicExplanationModal'
 import {WalletForm} from '../WalletForm'
 
+type WalletFormData = null | {name: string; password: string}
 export const CreateWalletScreen = () => {
-  const navigation = useNavigation()
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const route: any = useRoute()
+  const navigation = useNavigation<WalletInitRouteNavigation>()
+  const route = useRoute<RouteProp<WalletInitRoutes, 'create-wallet-form'>>()
   const [visibleMnemonicExplanation, setVisibleMnemonicExplanation] = React.useState(false)
-  const [formData, _setFormData] = React.useState<null | {name: string; password: string}>(null)
+  const [formData, _setFormData] = React.useState<WalletFormData>(null)
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const setFormData = (formData: any) => {
+  const setFormData = (formData: WalletFormData) => {
     _setFormData(formData)
     setVisibleMnemonicExplanation(true)
   }
 
   const hideMnemonicExplanation = () => setVisibleMnemonicExplanation(false)
 
-  const clear = () => {
-    setVisibleMnemonicExplanation(false)
-    _setFormData(null)
-  }
-
   const navigateToMnemonicScreen = () => {
-    clear()
-    // TODO(v-almonacid): we need to generate mnemonics according to the
-    // target network.
+    hideMnemonicExplanation()
     const mnemonic = generateAdaMnemonic()
     const {networkId, walletImplementationId, provider} = route.params
-    navigation.navigate(WALLET_INIT_ROUTES.MNEMONIC_SHOW, {
+
+    assert(!!formData?.name, 'Wallet name is required')
+    assert(!!formData?.password, 'Password is required')
+
+    navigation.navigate('mnemoinc-show', {
       mnemonic,
       networkId,
       walletImplementationId,

@@ -19,7 +19,6 @@ import type {DeviceId, DeviceObj} from '../../legacy/crypto/shelley/ledgerUtils'
 import walletManager, {SystemAuthDisabled} from '../../legacy/crypto/walletManager'
 import {confirmationMessages, errorMessages, txLabels} from '../../legacy/i18n/global-messages'
 import LocalizableError from '../../legacy/i18n/LocalizableError'
-import {CATALYST_ROUTES, WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
 import {
   defaultNetworkAssetSelector,
   easyConfirmationSelector,
@@ -121,7 +120,12 @@ export const Step5 = () => {
         setDialogStep(DIALOG_STEPS.SUBMITTING)
         await dispatch(submitSignedTx(Buffer.from(signedTx.encodedTx).toString('base64')))
       }
-      navigation.navigate(CATALYST_ROUTES.STEP6)
+      navigation.navigate('app-root', {
+        screen: 'catalyst-router',
+        params: {
+          screen: 'catalyst-qr-code',
+        },
+      })
     } finally {
       setDialogStep(DIALOG_STEPS.CLOSED)
     }
@@ -137,20 +141,20 @@ export const Step5 = () => {
       if (isEasyConfirmationEnabled) {
         try {
           await walletManager.ensureKeysValidity()
-          navigation.navigate(CATALYST_ROUTES.BIOMETRICS_SIGNING, {
+          navigation.navigate('biometrics', {
             keyId: walletManager._id,
             onSuccess: async (decryptedKey) => {
+              navigation.goBack()
+
               await submitTx(decryptedKey)
             },
-            addWelcomeMessage: false,
             onFail: () => navigation.goBack(),
           })
         } catch (error) {
           if (error instanceof SystemAuthDisabled) {
             await walletManager.closeWallet()
             await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
-            navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
-
+            navigation.navigate('app-root', {screen: 'wallet-selection'})
             return
           } else {
             throw error

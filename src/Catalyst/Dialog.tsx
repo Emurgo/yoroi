@@ -63,7 +63,7 @@ export const Dialog = ({
       case DIALOG_STEPS.LEDGER_CONNECT:
         return <LedgerConnect onConnectBLE={onConnectBLE} onConnectUSB={onConnectUSB} useUSB={useUSB} />
       case DIALOG_STEPS.WAITING_HW_RESPONSE:
-        return <PleaseWaitView title={''} spinnerText={strings.followSteps} />
+        return <PleaseWaitView title="" spinnerText={strings.followSteps} />
       case DIALOG_STEPS.SUBMITTING:
         return <PleaseWaitView title={strings.submittingTx} spinnerText={strings.pleaseWait} />
       case DIALOG_STEPS.ERROR:

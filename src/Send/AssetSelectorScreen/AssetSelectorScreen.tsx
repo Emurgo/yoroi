@@ -98,10 +98,10 @@ const AssetSelectorItem = ({assetToken, onPress, matcher}: AssetSelectorItemProp
         </View>
 
         <View style={{flex: 1, padding: 4}}>
-          <Text numberOfLines={1} ellipsizeMode={'middle'} style={{color: COLORS.BLUE_LIGHTER}}>
+          <Text numberOfLines={1} ellipsizeMode="middle" style={{color: COLORS.BLUE_LIGHTER}}>
             {getAssetDenominationOrId(tokenInfo) || strings.unknownAsset}
           </Text>
-          <Text numberOfLines={1} ellipsizeMode={'middle'} style={{color: COLORS.TEXT_INPUT}}>
+          <Text numberOfLines={1} ellipsizeMode="middle" style={{color: COLORS.TEXT_INPUT}}>
             {tokenInfo.isDefault ? '' : getTokenFingerprint(tokenInfo)}
           </Text>
         </View>
