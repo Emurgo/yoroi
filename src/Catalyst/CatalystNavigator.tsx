@@ -4,7 +4,6 @@ import {useIntl} from 'react-intl'
 
 import globalMessages from '../../legacy/i18n/global-messages'
 import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../legacy/navigationOptions'
-import {CATALYST_ROUTES} from '../../legacy/RoutesList'
 import {BiometricAuthScreen} from '../BiometricAuth'
 import {VotingRegTxData} from './hooks'
 import {Step1} from './Step1'
@@ -13,6 +12,17 @@ import {Step3} from './Step3'
 import {Step4} from './Step4'
 import {Step5} from './Step5'
 import {Step6} from './Step6'
+
+export const CATALYST_ROUTES = {
+  ROOT: 'catalyst-router',
+  STEP1: 'catalyst-landing',
+  STEP2: 'catalyst-generate-pin',
+  STEP3: 'catalyst-confirm-pin',
+  STEP4: 'catalyst-generate-trx',
+  STEP5: 'catalyst-transaction',
+  STEP6: 'catalyst-qr-code',
+  BIOMETRICS_SIGNING: 'catalyst-biometrics-signing',
+} as const
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 type CatalystNavigatorRoutes = {

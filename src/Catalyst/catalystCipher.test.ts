@@ -1,6 +1,4 @@
-// @flow
-
-import jestSetup from '../jestSetup'
+import jestSetup from '../../legacy/jestSetup'
 import {decryptWithPassword, encryptWithPassword} from './catalystCipher'
 
 jestSetup.setup()

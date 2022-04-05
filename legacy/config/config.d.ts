@@ -87,6 +87,7 @@ export var CONFIG: {
   CATALYST: {
     MIN_ADA: any,
     DISPLAYED_MIN_ADA: any,
+    VOTING_ROUNDS: Array< { START_DATE: string, END_DATE: string} >
   },
   HARDWARE_WALLETS: {
     LEDGER_NANO: {

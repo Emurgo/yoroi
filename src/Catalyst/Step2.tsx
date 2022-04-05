@@ -5,8 +5,8 @@ import {ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {confirmationMessages} from '../../legacy/i18n/global-messages'
-import {CATALYST_ROUTES} from '../../legacy/RoutesList'
 import {Button, ProgressStep, Spacer} from '../components'
+import {CATALYST_ROUTES} from './CatalystNavigator'
 import {Actions, Description, PinBox, Row, Title} from './components'
 
 type Props = {

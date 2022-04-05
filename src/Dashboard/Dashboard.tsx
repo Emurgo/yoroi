@@ -16,7 +16,7 @@ import {getCardanoBaseConfig, UI_V2} from '../../legacy/config/config'
 import {getDefaultAssetByNetworkId} from '../../legacy/config/config'
 import {getCardanoNetworkConfigById} from '../../legacy/config/networks'
 import globalMessages from '../../legacy/i18n/global-messages'
-import {CATALYST_ROUTES, DELEGATION_ROUTES} from '../../legacy/RoutesList'
+import {DELEGATION_ROUTES} from '../../legacy/RoutesList'
 import {
   hwDeviceInfoSelector,
   isFetchingAccountStateSelector,
@@ -33,6 +33,7 @@ import {
   genTimeToSlot,
   genToRelativeSlotNumber,
 } from '../../legacy/utils/timeUtils'
+import {CATALYST_ROUTES} from '../Catalyst'
 import {VotingBanner} from '../Catalyst/VotingBanner'
 import {Banner, Button, OfflineBanner, StatusBar} from '../components'
 import {useSelectedWallet} from '../SelectedWallet'

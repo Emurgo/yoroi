@@ -5,7 +5,6 @@ import {useSelector} from 'react-redux'
 
 import CatalystLogo from '../../legacy/assets/img/voting.png'
 import {CONFIG, isHaskellShelley, isNightly} from '../../legacy/config/config'
-import {isRegistrationOpen} from '../../legacy/crypto/shelley/catalystUtils'
 import globalMessages, {confirmationMessages} from '../../legacy/i18n/global-messages'
 import {availableAssetsSelector, tokenBalanceSelector} from '../../legacy/selectors'
 import {COLORS} from '../../legacy/styles/config'
@@ -14,6 +13,7 @@ import {Logger} from '../../legacy/utils/logging'
 import {useSelectedWallet} from '../../src/SelectedWallet'
 import {StandardModal, Text} from '../components'
 import {walletManager} from '../yoroi-wallets'
+import {isRegistrationOpen} from './catalystUtils'
 type Props = {onPress: () => void; disabled?: boolean}
 
 export const VotingBanner = ({onPress, disabled}: Props) => {

@@ -11,10 +11,10 @@ import playstoreBadge from '../../legacy/assets/img/google-play-badge.png'
 import AppDownload from '../../legacy/assets/img/pic-catalyst-step1.png'
 import {CONFIG} from '../../legacy/config/config'
 import globalMessages, {confirmationMessages} from '../../legacy/i18n/global-messages'
-import {CATALYST_ROUTES} from '../../legacy/RoutesList'
 import {isDelegatingSelector} from '../../legacy/selectors'
 import {Logger} from '../../legacy/utils/logging'
 import {Button, ProgressStep, Spacer, StandardModal, Text} from '../components'
+import {CATALYST_ROUTES} from './CatalystNavigator'
 import {Actions, Row} from './components'
 
 type Props = {
