@@ -11,7 +11,7 @@ import {ProgressStep} from '../../legacy/components/UiKit'
 import {errorMessages} from '../../legacy/i18n/global-messages'
 import {isHWSelector, pinSelector} from '../../legacy/selectors'
 import {Spacer} from '../components'
-import {CatalystRouteParams} from '../navigation'
+import {CatalystRouteNavigation} from '../navigation'
 import {Description, PinBox, Row, Title} from './components'
 
 const PIN_LENGTH = 4
@@ -19,7 +19,7 @@ const PIN_LENGTH = 4
 export const Step3 = () => {
   const intl = useIntl()
   const strings = useStrings()
-  const navigation = useNavigation<CatalystRouteParams>()
+  const navigation = useNavigation<CatalystRouteNavigation>()
   const pin = useSelector(pinSelector)
   const isHW = useSelector(isHWSelector)
   const [confirmPin, setPin] = useState('')

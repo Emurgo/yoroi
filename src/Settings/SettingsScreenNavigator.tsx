@@ -4,12 +4,7 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
 import {COLORS} from '../../legacy/styles/config'
-import {
-  defaultBaseNavigationOptions,
-  defaultNavigationOptions,
-  SettingsStackRoutes,
-  SettingsTabRoutes,
-} from '../navigation'
+import {defaultStackNavigationOptions, SettingsStackRoutes, SettingsTabRoutes} from '../navigation'
 import {ApplicationSettingsScreen} from './ApplicationSettings'
 import {BiometricsLinkScreen} from './BiometricsLink/'
 import {ChangeLanguageScreen} from './ChangeLanguage'
@@ -27,7 +22,7 @@ const Stack = createStackNavigator<SettingsStackRoutes>()
 export const SettingsScreenNavigator = () => {
   const strings = useStrings()
   return (
-    <Stack.Navigator screenOptions={defaultBaseNavigationOptions} initialRouteName="settings-main">
+    <Stack.Navigator screenOptions={defaultStackNavigationOptions} initialRouteName="settings-main">
       <Stack.Screen //
         name="settings-main"
         component={SettingsTabNavigator}
@@ -87,7 +82,7 @@ export const SettingsScreenNavigator = () => {
         component={ChangePinScreen}
         options={{
           title: strings.changeCustomPinTitle,
-          headerStyle: defaultNavigationOptions.headerStyle,
+          headerStyle: defaultStackNavigationOptions.headerStyle,
         }}
       />
 

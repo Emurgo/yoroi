@@ -12,12 +12,12 @@ import {generateByronPlateFromMnemonics} from '../../../legacy/crypto/byron/plat
 import {generateShelleyPlateFromMnemonics} from '../../../legacy/crypto/shelley/plate'
 import {COLORS} from '../../../legacy/styles/config'
 import {Icon, Spacer} from '../../components'
-import {WalletInitRouteParams, WalletInitRoutes} from '../../navigation'
+import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
 import {WalletAddress} from '../WalletAddress'
 
 export const VerifyRestoredWalletScreen = () => {
   const strings = useStrings()
-  const navigation = useNavigation<WalletInitRouteParams>()
+  const navigation = useNavigation<WalletInitRouteNavigation>()
   const route = useRoute<RouteProp<WalletInitRoutes, 'wallet-credentials'>>()
   const {phrase, networkId, walletImplementationId, provider} = route.params
   const [plate, addresses] = usePlateFromMnemonic({mnemonic: phrase, networkId, walletImplementationId})
@@ -52,7 +52,7 @@ export const VerifyRestoredWalletScreen = () => {
               </Text>
             </>
           ) : (
-            <ActivityIndicator style={{flex: 1}} size={'large'} color={'black'} />
+            <ActivityIndicator style={{flex: 1}} size="large" color="black" />
           )}
         </Plate>
 
@@ -74,7 +74,7 @@ export const VerifyRestoredWalletScreen = () => {
           {addresses ? (
             <WalletAddress addressHash={addresses[0]} networkId={networkId} />
           ) : (
-            <ActivityIndicator size={'small'} color={'black'} />
+            <ActivityIndicator size="small" color="black" />
           )}
         </Addresses>
       </ScrollView>

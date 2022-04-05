@@ -5,7 +5,7 @@ import {useSelector} from 'react-redux'
 
 import {tokenBalanceSelector} from '../../legacy/selectors'
 import {Boundary} from '../components'
-import {defaultBaseNavigationOptions, defaultNavigationOptions, SendRouteParams, SendRoutes} from '../navigation'
+import {defaultStackNavigationOptions, SendRouteNavigation, SendRoutes} from '../navigation'
 import {AddressReaderQR} from './AddressReaderQR'
 import {AssetSelectorScreen} from './AssetSelectorScreen'
 import {ConfirmScreen} from './ConfirmScreen'
@@ -24,14 +24,19 @@ export const SendScreenNavigator = () => {
   const [receiver, setReceiver] = React.useState('')
   const [amount, setAmount] = React.useState('')
 
+  // when the selected asset is no longer available
+  const selectedAsset = tokenBalance.values.find(({identifier}) => identifier === selectedTokenIdentifier)
+  if (!selectedAsset) {
+    setSelectedTokenIdentifier(tokenBalance.getDefaultEntry().identifier)
+  }
+
   return (
-    <Stack.Navigator initialRouteName="send-ada-main" screenOptions={defaultBaseNavigationOptions}>
+    <Stack.Navigator initialRouteName="send-ada-main" screenOptions={defaultStackNavigationOptions}>
       <Stack.Screen
         name="send-ada-main"
         options={{
           title: strings.sendTitle,
           headerRight: () => <ScannerButton />,
-          ...defaultNavigationOptions,
         }}
       >
         {() => (
@@ -50,7 +55,7 @@ export const SendScreenNavigator = () => {
       </Stack.Screen>
 
       <Stack.Screen name="select-asset" options={{title: strings.selectAssetTitle}}>
-        {({navigation}: {navigation: SendRouteParams}) => (
+        {({navigation}: {navigation: SendRouteNavigation}) => (
           <AssetSelectorScreen
             assetTokens={tokenBalance.values}
             onSelect={(token) => {

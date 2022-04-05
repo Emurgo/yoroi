@@ -4,7 +4,7 @@ import {defineMessages, useIntl} from 'react-intl'
 
 import DelegationConfirmation from '../../legacy/components/Delegation/DelegationConfirmation'
 import {SettingsButton} from '../components/Button'
-import {AppRouteParams, defaultBaseNavigationOptions, StakingCenterRoutes} from '../navigation'
+import {defaultStackNavigationOptions, StakingCenterRoutes, useWalletNavigation} from '../navigation'
 import {StakingCenter} from './StakingCenter/StakingCenter'
 
 const Stack = createStackNavigator<StakingCenterRoutes>()
@@ -12,26 +12,15 @@ export const StakingCenterNavigator = () => {
   const strings = useStrings()
 
   return (
-    <Stack.Navigator screenOptions={defaultBaseNavigationOptions}>
+    <Stack.Navigator screenOptions={defaultStackNavigationOptions}>
       <Stack.Screen
         name="staking-center-main"
         component={StakingCenter}
-        options={({navigation}: {navigation: AppRouteParams}) => ({
+        options={{
           title: strings.title,
-          headerRight: () => (
-            <SettingsButton
-              onPress={() =>
-                navigation.navigate('app-root', {
-                  screen: 'settings',
-                  params: {
-                    screen: 'settings-main',
-                  },
-                })
-              }
-            />
-          ),
+          headerRight: () => <HeaderRight />,
           headerRightContainerStyle: {paddingRight: 16},
-        })}
+        }}
       />
 
       <Stack.Screen
@@ -62,3 +51,9 @@ const messages = defineMessages({
     defaultMessage: '!!!Confirm delegation',
   },
 })
+
+const HeaderRight = () => {
+  const {navigateToSettings} = useWalletNavigation()
+
+  return <SettingsButton onPress={() => navigateToSettings()} />
+}

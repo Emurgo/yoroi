@@ -2,7 +2,7 @@ import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import {defaultBaseNavigationOptions, WalletInitRoutes} from '../navigation'
+import {defaultStackNavigationOptions, WalletInitRoutes} from '../navigation'
 import {CheckNanoXScreen} from './CheckNanoX'
 import {ConnectNanoXScreen} from './ConnectNanoX/ConnectNanoXScreen'
 import {CreateWalletScreen} from './CreateWallet'
@@ -26,7 +26,7 @@ export const WalletInitNavigator = () => {
       initialRouteName="initial-choose-create-restore"
       screenOptions={{
         cardStyle: {backgroundColor: 'transparent'},
-        ...defaultBaseNavigationOptions,
+        ...defaultStackNavigationOptions,
       }}
     >
       <Stack.Screen

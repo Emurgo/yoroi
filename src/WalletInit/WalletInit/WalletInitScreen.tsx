@@ -11,7 +11,7 @@ import {isJormungandr} from '../../../legacy/config/networks'
 import type {NetworkId, WalletImplementationId, YoroiProvider} from '../../../legacy/config/types'
 import globalMessages from '../../../legacy/i18n/global-messages'
 import {COLORS} from '../../../legacy/styles/config'
-import {WalletInitRouteParams} from '../../navigation'
+import {WalletInitRouteNavigation} from '../../navigation'
 import {WalletDescription} from '../WalletDescription'
 import {ExpandableItem} from './ExpandableItem'
 
@@ -199,7 +199,7 @@ const useStrings = () => {
 }
 
 const useNavigateTo = ({networkId}: {networkId: NetworkId}) => {
-  const navigation = useNavigation<WalletInitRouteParams>()
+  const navigation = useNavigation<WalletInitRouteNavigation>()
 
   return {
     restoreWallet: (walletImplementationId: WalletImplementationId, provider?: YoroiProvider) =>

@@ -9,7 +9,7 @@ import {isReadOnlySelector} from '../../legacy/selectors'
 import {COLORS} from '../../legacy/styles/config'
 import {Icon, Spacer} from '../components'
 import features from '../features'
-import {TxHistoryRouteParams} from '../navigation'
+import {TxHistoryRouteNavigation} from '../navigation'
 
 const ACTION_PROPS = {
   height: 36,
@@ -116,7 +116,7 @@ const useStrings = () => {
 }
 
 const useNavigateTo = () => {
-  const navigation = useNavigation<TxHistoryRouteParams>()
+  const navigation = useNavigation<TxHistoryRouteNavigation>()
   const strings = useStrings()
 
   return {

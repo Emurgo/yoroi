@@ -32,7 +32,7 @@ import {
   genToRelativeSlotNumber,
 } from '../../legacy/utils/timeUtils'
 import {VotingBanner} from '../Catalyst/VotingBanner'
-import {AppRouteParams} from '../navigation'
+import {AppRouteNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
 import {WalletInterface} from '../types'
 import {EpochProgress} from './EpochProgress'
@@ -60,7 +60,7 @@ export const Dashboard = () => {
   const [showWithdrawalDialog, setShowWithdrawalDialog] = React.useState(false)
 
   return (
-    <View style={styles.safeAreaView}>
+    <View style={styles.root}>
       <StatusBar type="dark" />
       <UtxoAutoRefresher />
       <AccountAutoRefresher />
@@ -93,7 +93,7 @@ export const Dashboard = () => {
 
           <Row>
             {!stakingInfo ? (
-              <ActivityIndicator size={'large'} />
+              <ActivityIndicator size="large" />
             ) : stakingInfo?.isRegistered ? (
               <UserSummary
                 totalAdaSum={balances['ADA'] ? new BigNumber(balances['ADA']) : null}
@@ -172,7 +172,7 @@ export const Dashboard = () => {
       {showWithdrawalDialog && (
         <WithdrawStakingRewards
           intl={intl}
-          navigation={navigation as AppRouteParams}
+          navigation={navigation as AppRouteNavigation}
           utxos={utxos}
           isEasyConfirmationEnabled={wallet.isEasyConfirmationEnabled}
           isHW={wallet.isHW}
@@ -270,7 +270,7 @@ const messages = defineMessages({
 })
 
 const styles = StyleSheet.create({
-  safeAreaView: {
+  root: {
     flex: 1,
   },
   container: {

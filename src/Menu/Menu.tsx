@@ -1,5 +1,4 @@
 import {defineMessage} from '@formatjs/intl'
-import {useNavigation} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {useIntl} from 'react-intl'
@@ -13,7 +12,7 @@ import {tokenBalanceSelector} from '../../legacy/selectors'
 import {CatalystNavigator} from '../Catalyst/CatalystNavigator'
 import {Icon, Spacer} from '../components'
 import {useWalletMetas} from '../hooks'
-import {defaultBaseNavigationOptions, MenuRoutes} from '../navigation'
+import {defaultStackNavigationOptions, MenuRoutes, useWalletNavigation} from '../navigation'
 import {InsufficientFundsModal} from './InsufficientFundsModal'
 
 const MenuStack = createStackNavigator<MenuRoutes>()
@@ -23,7 +22,7 @@ export const MenuNavigator = () => {
   return (
     <MenuStack.Navigator
       initialRouteName="menu"
-      screenOptions={{...defaultBaseNavigationOptions, headerLeft: () => null}}
+      screenOptions={{...defaultStackNavigationOptions, headerLeft: () => null}}
     >
       <MenuStack.Screen name="menu" component={Menu} options={{title: strings.menu}} />
       <MenuStack.Screen name="catalyst-voting" component={CatalystNavigator} />
@@ -43,7 +42,7 @@ export const Menu = () => {
         <AllWallets
           label={`${strings.allWallets} (${walletCount})`}
           onPress={navigateTo.allWallets}
-          left={<Icon.Wallets size={24} color={'#6B7384'} />}
+          left={<Icon.Wallets size={24} color="#6B7384" />}
         />
         <HR />
 
@@ -52,7 +51,7 @@ export const Menu = () => {
         <Catalyst //
           label={strings.catalystVoting}
           onPress={navigateTo.catalystVoting}
-          left={<Icon.Catalyst size={24} color={'#6B7384'} />}
+          left={<Icon.Catalyst size={24} color="#6B7384" />}
         />
 
         <HR />
@@ -60,14 +59,14 @@ export const Menu = () => {
         <Settings //
           label={strings.settings}
           onPress={navigateTo.settings}
-          left={<Icon.Gear size={24} color={'#6B7384'} />}
+          left={<Icon.Gear size={24} color="#6B7384" />}
         />
         <HR />
 
         <FAQ //
           label={strings.faq}
           onPress={navigateTo.faq}
-          left={<Icon.QuestionMark size={24} color={'#6B7384'} />}
+          left={<Icon.QuestionMark size={24} color="#6B7384" />}
         />
         <HR />
       </ScrollView>
@@ -82,7 +81,7 @@ const Item = ({label, left, onPress}: {label: string; left: React.ReactElement; 
       <Spacer width={12} />
       <Text style={{color: '#242838'}}>{label}</Text>
       <Spacer fill />
-      <Icon.Chevron direction={'right'} size={16} color={'#6B7384'} />
+      <Icon.Chevron direction="right" size={16} color="#6B7384" />
     </TouchableOpacity>
   )
 }
@@ -117,7 +116,7 @@ const Catalyst = ({label, left, onPress}: {label: string; left: React.ReactEleme
 }
 
 const useNavigateTo = () => {
-  const navigation = useNavigation()
+  const {navigation, navigateToSettings} = useWalletNavigation()
 
   return {
     allWallets: () => navigation.navigate('app-root', {screen: 'wallet-selection'}),
@@ -128,13 +127,7 @@ const useNavigateTo = () => {
           screen: 'catalyst-landing',
         },
       }),
-    settings: () =>
-      navigation.navigate('app-root', {
-        screen: 'settings',
-        params: {
-          screen: 'settings-main',
-        },
-      }),
+    settings: () => navigateToSettings(),
     faq: () => Linking.openURL('https://yoroi-wallet.com/faq/'),
   }
 }

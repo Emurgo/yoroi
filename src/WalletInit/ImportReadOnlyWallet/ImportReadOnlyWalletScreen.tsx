@@ -11,12 +11,12 @@ import {theme} from '../../../legacy/styles/config'
 import {isCIP1852AccountPath, isValidPublicKey} from '../../../legacy/utils/bip44Validators'
 import {Logger} from '../../../legacy/utils/logging'
 import {Spacer} from '../../components'
-import {WalletInitRouteParams, WalletInitRoutes} from '../../navigation'
+import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
 
 export const ImportReadOnlyWalletScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
-  const navigation = useNavigation<WalletInitRouteParams>()
+  const navigation = useNavigation<WalletInitRouteNavigation>()
   const route = useRoute<RouteProp<WalletInitRoutes, 'import-read-only'>>()
   const {networkId, walletImplementationId} = route.params
   const scannerRef = React.useRef<QRCodeScanner | null>(null)
@@ -41,7 +41,7 @@ export const ImportReadOnlyWalletScreen = () => {
 
   return (
     <View style={styles.container}>
-      <StatusBar translucent backgroundColor={'transparent'} />
+      <StatusBar translucent backgroundColor="transparent" />
 
       <View style={styles.cameraContainer}>
         <QRCodeScanner ref={scannerRef} fadeIn onRead={onRead} showMarker customMarker={<CameraOverlay />} />

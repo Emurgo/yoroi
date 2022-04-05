@@ -5,13 +5,13 @@ import {Image, TouchableOpacity, TouchableOpacityProps, View} from 'react-native
 import chevronRight from '../../legacy/assets/img/chevron_right.png'
 import styles from '../../legacy/components/Settings/styles/SettingsItems.style'
 import {Text} from '../../legacy/components/UiKit'
-import {SettingsStackRouteParams, SettingsStackRoutes} from '../navigation'
+import {SettingsRouteNavigation, SettingsStackRoutes} from '../navigation'
 
 const Touchable = (props: TouchableOpacityProps) => <TouchableOpacity {...props} activeOpacity={0.5} />
 
 type NavigateToProps = {
   to: keyof SettingsStackRoutes
-  navigation: SettingsStackRouteParams
+  navigation: SettingsRouteNavigation
   children: React.ReactNode
   disabled?: boolean
 }
@@ -69,7 +69,7 @@ type NavigatedSettingsItemProps = {
 }
 
 export const NavigatedSettingsItem = ({label, navigateTo, disabled}: NavigatedSettingsItemProps) => {
-  const navigation = useNavigation<SettingsStackRouteParams>()
+  const navigation = useNavigation<SettingsRouteNavigation>()
   return (
     <NavigateTo to={navigateTo} navigation={navigation} disabled={disabled}>
       <SettingsItem label={label} disabled={disabled}>

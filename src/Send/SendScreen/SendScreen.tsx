@@ -241,7 +241,7 @@ export const SendScreen = ({
         <Spacer height={16} />
 
         <TextInput
-          value={receiver ?? ''}
+          value={receiver}
           multiline
           errorOnMount
           onChangeText={setReceiver}

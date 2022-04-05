@@ -12,7 +12,7 @@ import {getHWDeviceInfo} from '../../../legacy/crypto/shelley/ledgerUtils'
 import {errorMessages} from '../../../legacy/i18n/global-messages'
 import LocalizableError from '../../../legacy/i18n/LocalizableError'
 import {Logger} from '../../../legacy/utils/logging'
-import {WalletInitRouteParams, WalletInitRoutes} from '../../navigation'
+import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
 import {Device} from '../../types'
 
 type Props = {
@@ -22,7 +22,7 @@ type Props = {
 export const ConnectNanoXScreen = ({defaultDevices}: Props) => {
   const intl = useIntl()
   const strings = useStrings()
-  const navigation = useNavigation<WalletInitRouteParams>()
+  const navigation = useNavigation<WalletInitRouteNavigation>()
   const route = useRoute<RouteProp<WalletInitRoutes, 'connect-nano-x'>>()
   const {walletImplementationId, useUSB, networkId} = route.params
 

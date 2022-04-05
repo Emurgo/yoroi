@@ -11,12 +11,12 @@ import {CONFIG} from '../../../legacy/config/config'
 import {canBiometricEncryptionBeEnabled} from '../../../legacy/helpers/deviceSettings'
 import globalMessages from '../../../legacy/i18n/global-messages'
 import {Spacer} from '../../components'
-import {FirstRunRouteParams} from '../../navigation'
+import {FirstRunRouteNavigation} from '../../navigation'
 import {TermsOfService} from './TermsOfService'
 
 export const TermsOfServiceScreen = () => {
   const strings = useStrings()
-  const navigation = useNavigation<FirstRunRouteParams>()
+  const navigation = useNavigation<FirstRunRouteNavigation>()
   const [acceptedTos, setAcceptedTos] = React.useState(false)
   const [savingConsent, setSavingConsent] = React.useState(false)
 

@@ -39,7 +39,7 @@ const FingerprintScreenBase = ({headings, subHeadings, buttons, onGoBack, error,
 
   return (
     <ScreenBackground style={styles.container}>
-      <SafeAreaView style={styles.main}>
+      <SafeAreaView style={{flex: 1}}>
         <StatusBar type="dark" />
 
         <View style={[styles.main, onGoBack ? null : styles.mainPadded]}>

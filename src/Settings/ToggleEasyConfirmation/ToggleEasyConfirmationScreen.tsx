@@ -67,18 +67,14 @@ export const ToggleEasyConfirmationScreen = () => {
       <StatusBar type="dark" />
 
       {!isEasyConfirmationEnabled ? (
-        <ScrollView
-          // bounces={false}
-          keyboardShouldPersistTaps={'always'}
-          contentContainerStyle={styles.contentContainer}
-        >
+        <ScrollView keyboardShouldPersistTaps="always" contentContainerStyle={styles.contentContainer}>
           <Text style={styles.heading}>{strings.enableHeading}</Text>
           <Text style={styles.warning}>{strings.enableWarning}</Text>
 
           <TextInput
             autoFocus
             enablesReturnKeyAutomatically
-            returnKeyType={'done'}
+            returnKeyType="done"
             secureTextEntry
             label={strings.enableMasterPassword}
             onChangeText={setMasterPassword}

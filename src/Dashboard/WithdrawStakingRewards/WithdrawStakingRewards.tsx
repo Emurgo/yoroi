@@ -20,12 +20,12 @@ import {errorMessages} from '../../../legacy/i18n/global-messages'
 import LocalizableError from '../../../legacy/i18n/LocalizableError'
 import type {ServerStatusCache} from '../../../legacy/state'
 import type {DefaultAsset} from '../../../legacy/types/HistoryTransaction'
-import {AppRouteParams} from '../../navigation'
+import {AppRouteNavigation} from '../../navigation'
 import {WithdrawalDialog} from './WithdrawalDialog'
 
 type Props = {
   intl: IntlShape
-  navigation: AppRouteParams
+  navigation: AppRouteNavigation
   utxos: Array<RawUtxo> | null
   setLedgerDeviceId: (deviceID: DeviceId) => Promise<void>
   setLedgerDeviceObj: (deviceObj: DeviceObj) => Promise<void>

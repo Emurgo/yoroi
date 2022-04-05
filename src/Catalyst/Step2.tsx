@@ -9,12 +9,12 @@ import {Button, ProgressStep} from '../../legacy/components/UiKit'
 import {confirmationMessages} from '../../legacy/i18n/global-messages'
 import type {State} from '../../legacy/state'
 import {Spacer} from '../components'
-import {CatalystRouteParams} from '../navigation'
+import {CatalystRouteNavigation} from '../navigation'
 import {Actions, Description, PinBox, Row, Title} from './components'
 
 export const Step2 = () => {
   const strings = useStrings()
-  const navigation = useNavigation<CatalystRouteParams>()
+  const navigation = useNavigation<CatalystRouteNavigation>()
   const pin = useSelector((state: State) => state.voting.pin)
   const [countDown, setCountDown] = useState(5)
 

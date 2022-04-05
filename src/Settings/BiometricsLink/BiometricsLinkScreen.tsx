@@ -1,4 +1,3 @@
-import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet} from 'react-native'
@@ -9,35 +8,23 @@ import FingerprintScreenBase from '../../../legacy/components/Common/Fingerprint
 import {Button} from '../../../legacy/components/UiKit'
 import {canBiometricEncryptionBeEnabled} from '../../../legacy/helpers/deviceSettings'
 import {errorMessages} from '../../../legacy/i18n/global-messages'
+import {useWalletNavigation} from '../../navigation'
 
 export const BiometricsLinkScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
-  const navigation = useNavigation()
+  const {navigateToSettings} = useWalletNavigation()
   const dispatch = useDispatch()
   const linkBiometricsSignIn = async () => {
     if (await canBiometricEncryptionBeEnabled()) {
       dispatch(setSystemAuth(true))
-        .then(() =>
-          navigation.navigate('app-root', {
-            screen: 'settings',
-            params: {
-              screen: 'settings-main',
-            },
-          }),
-        )
+        .then(() => navigateToSettings())
         .catch(() => showErrorDialog(errorMessages.disableEasyConfirmationFirst, intl))
     } else {
       await showErrorDialog(errorMessages.enableFingerprintsFirst, intl)
     }
   }
-  const cancelLinking = () =>
-    navigation.navigate('app-root', {
-      screen: 'settings',
-      params: {
-        screen: 'settings-main',
-      },
-    })
+  const cancelLinking = () => navigateToSettings()
 
   return (
     <FingerprintScreenBase
@@ -45,13 +32,13 @@ export const BiometricsLinkScreen = () => {
       subHeadings={[strings.subHeading1, strings.subHeading2]}
       buttons={[
         <Button
-          key={'cancel'}
+          key="cancel"
           outline
           title={strings.notNowButton}
           onPress={cancelLinking}
           containerStyle={styles.cancel}
         />,
-        <Button key={'link'} title={strings.linkButton} onPress={linkBiometricsSignIn} containerStyle={styles.link} />,
+        <Button key="link" title={strings.linkButton} onPress={linkBiometricsSignIn} containerStyle={styles.link} />,
       ]}
     />
   )

@@ -2,7 +2,7 @@ import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import {defaultBaseNavigationOptions, FirstRunRoutes} from '../navigation'
+import {defaultStackNavigationOptions, FirstRunRoutes} from '../navigation'
 import {CustomPinScreen} from './CustomPinScreen'
 import {LanguagePickerScreen} from './LanguagePickerScreen'
 import {TermsOfServiceScreen} from './TermsOfServiceScreen'
@@ -18,7 +18,7 @@ export const FirstRunNavigator = () => {
         cardStyle: {
           backgroundColor: 'transparent',
         },
-        ...defaultBaseNavigationOptions,
+        ...defaultStackNavigationOptions,
       }}
     >
       <Stack.Screen //

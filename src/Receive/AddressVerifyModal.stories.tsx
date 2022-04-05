@@ -16,7 +16,7 @@ storiesOf('AddressVerifyModal', module)
           useUSB={false}
           address={address}
           isWaiting={false}
-          path={'this is the path'}
+          path="this is the path"
           onConfirm={action('onConfirm')}
           visible={visible}
           onRequestClose={onRequestClose}
@@ -31,7 +31,7 @@ storiesOf('AddressVerifyModal', module)
           useUSB={false}
           address={address}
           isWaiting
-          path={'this is the path'}
+          path="this is the path"
           onConfirm={action('onConfirm')}
           visible={visible}
           onRequestClose={onRequestClose}
@@ -46,7 +46,7 @@ storiesOf('AddressVerifyModal', module)
           useUSB
           address={address}
           isWaiting={false}
-          path={'this is the path'}
+          path="this is the path"
           onConfirm={action('onConfirm')}
           visible={visible}
           onRequestClose={onRequestClose}

@@ -1,4 +1,4 @@
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
+import {RouteProp, useRoute} from '@react-navigation/native'
 import React from 'react'
 import {useDispatch} from 'react-redux'
 
@@ -7,12 +7,12 @@ import image from '../../../legacy/assets/img/ledger_2.png'
 import {CONFIG} from '../../../legacy/config/config'
 import type {WalletMeta} from '../../../legacy/state'
 import {useCreateBip44Wallet} from '../../hooks'
-import {WalletInitRoutes} from '../../navigation'
+import {useWalletNavigation, WalletInitRoutes} from '../../navigation'
 import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
 import {WalletNameForm} from '../WalletNameForm'
 
 export const SaveNanoXScreen = () => {
-  const navigation = useNavigation()
+  const {navigateToTxHistory} = useWalletNavigation()
   const route = useRoute<RouteProp<WalletInitRoutes, 'save-nano-x'>>()
   const {networkId, walletImplementationId, hwDeviceInfo} = route.params
   const dispatch = useDispatch()
@@ -35,15 +35,7 @@ export const SaveNanoXScreen = () => {
       setSelectedWallet(wallet)
       dispatch(saveHW(hwDeviceInfo))
 
-      navigation.navigate('app-root', {
-        screen: 'main-wallet-routes',
-        params: {
-          screen: 'history',
-          params: {
-            screen: 'history-list',
-          },
-        },
-      })
+      navigateToTxHistory()
     },
   })
 

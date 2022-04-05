@@ -69,10 +69,10 @@ const NavigatorSwitch = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    if (hasAnyWallet && !isAuthenticated && isSystemAuthEnabled && !canEnableBiometrics) {
+    if (hasAnyWallet && !isAuthenticated && isSystemAuthEnabled && !canEnableBiometrics && !isMaintenance) {
       Alert.alert(strings.biometricsChangeTitle, strings.biometricsChangeMessage)
     }
-  }, [hasAnyWallet, isAuthenticated, isSystemAuthEnabled, canEnableBiometrics, strings])
+  }, [hasAnyWallet, isAuthenticated, isSystemAuthEnabled, canEnableBiometrics, isMaintenance, strings])
 
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>

@@ -9,7 +9,7 @@ import {CONFIG, isNightly} from '../../../legacy/config/config'
 import type {NetworkId, WalletImplementationId} from '../../../legacy/config/types'
 import {COLORS} from '../../../legacy/styles/config'
 import {Spacer} from '../../components'
-import {WalletInitRouteParams} from '../../navigation'
+import {WalletInitRouteNavigation} from '../../navigation'
 import {WalletDescription} from '../WalletDescription'
 
 export const WalletFreshInitScreen = () => {
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
 })
 
 const useNavigateTo = () => {
-  const navigation = useNavigation<WalletInitRouteParams>()
+  const navigation = useNavigation<WalletInitRouteNavigation>()
 
   const navigateInitWallet = (networkId: NetworkId, walletImplementationId: WalletImplementationId) =>
     navigation.navigate('choose-create-restore', {

@@ -6,7 +6,7 @@ import DelegationConfirmation from '../../legacy/components/Delegation/Delegatio
 import {UI_V2} from '../../legacy/config/config'
 import {SettingsButton} from '../components/Button'
 import {useWalletName} from '../hooks'
-import {AppRouteParams, DashboardRoutes, defaultBaseNavigationOptions} from '../navigation'
+import {DashboardRoutes, defaultStackNavigationOptions, useWalletNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
 import {StakingCenter} from '../Staking/StakingCenter'
 import {Dashboard} from './Dashboard'
@@ -20,32 +20,21 @@ export const DashboardNavigator = () => {
   return (
     <Stack.Navigator
       screenOptions={{
+        ...defaultStackNavigationOptions,
         cardStyle: {
           backgroundColor: 'transparent',
         },
-        ...defaultBaseNavigationOptions,
       }}
       initialRouteName="staking-dashboard-main"
     >
       <Stack.Screen
         name="staking-dashboard-main"
         component={Dashboard}
-        options={({navigation}: {navigation: AppRouteParams}) => ({
+        options={{
           title: walletName,
-          headerRight: () => (
-            <SettingsButton
-              onPress={() =>
-                navigation.navigate('app-root', {
-                  screen: 'settings',
-                  params: {
-                    screen: 'settings-main',
-                  },
-                })
-              }
-            />
-          ),
+          headerRight: () => <HeaderRight />,
           headerRightContainerStyle: {paddingRight: 16},
-        })}
+        }}
       />
       {UI_V2 && (
         <Stack.Screen //
@@ -79,3 +68,9 @@ const messages = defineMessages({
     defaultMessage: '!!!Staking Center',
   },
 })
+
+const HeaderRight = () => {
+  const {navigateToSettings} = useWalletNavigation()
+
+  return <SettingsButton onPress={() => navigateToSettings()} />
+}

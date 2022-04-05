@@ -37,7 +37,7 @@ export const ReceiveScreen = () => {
   }, [dispatch, isUsedAddressIndex])
 
   return (
-    <View style={styles.safeAreaView}>
+    <View style={styles.root}>
       <StatusBar type={UI_V2 ? 'light' : 'dark'} />
       <OfflineBanner />
 
@@ -50,7 +50,7 @@ export const ReceiveScreen = () => {
             {currentAddress ? (
               <AddressDetail address={currentAddress} />
             ) : (
-              <ActivityIndicator size={'large'} color={'black'} />
+              <ActivityIndicator size="large" color="black" />
             )}
           </View>
 
@@ -105,7 +105,7 @@ const useStrings = () => {
 }
 
 const styles = StyleSheet.create({
-  safeAreaView: {
+  root: {
     flex: 1,
     backgroundColor: COLORS.WHITE,
   },

@@ -1,4 +1,3 @@
-import {useNavigation} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -14,12 +13,11 @@ import iconGear from '../assets/img/icon/gear.png'
 import {Boundary, Icon} from '../components'
 import {useWalletName} from '../hooks'
 import {
-  AppRouteParams,
-  defaultNavigationOptions,
-  defaultOptionsV2,
-  defaultStackNavigatorOptions,
-  TxHistoryRouteParams,
+  defaultStackNavigationOptions,
+  defaultStackNavigationOptionsV2,
+  TxHistoryRouteNavigation,
   TxHistoryRoutes,
+  useWalletNavigation,
 } from '../navigation'
 import {ReceiveScreen} from '../Receive/ReceiveScreen'
 import {useSelectedWallet} from '../SelectedWallet'
@@ -51,38 +49,22 @@ export const TxHistoryNavigator = () => {
 
   return (
     <>
-      <Stack.Navigator screenOptions={defaultStackNavigatorOptions} initialRouteName="history-list">
+      <Stack.Navigator screenOptions={defaultStackNavigationOptions} initialRouteName="history-list">
         <Stack.Screen
           name="history-list"
           component={TxHistory}
-          options={({navigation}: {navigation: AppRouteParams}) => {
-            if (UI_V2) {
-              return {
-                ...defaultOptionsV2,
-                title: walletName,
-                headerRight: () => <HeaderRightHistory />,
-              }
-            }
-            return {
-              ...defaultNavigationOptions,
-              headerRight: () => (
-                <Button
-                  onPress={() =>
-                    navigation.navigate('app-root', {
-                      screen: 'settings',
-                      params: {
-                        screen: 'settings-main',
-                      },
-                    })
-                  }
-                  iconImage={iconGear}
-                  title=""
-                  withoutBackground
-                />
-              ),
-              title: walletName,
-            }
-          }}
+          options={
+            UI_V2
+              ? {
+                  ...defaultStackNavigationOptionsV2,
+                  title: walletName,
+                  headerRight: () => <HeaderRightHistoryV2 />,
+                }
+              : {
+                  title: walletName,
+                  headerRight: () => <HeaderRightHistory />,
+                }
+          }
         />
 
         <Stack.Screen
@@ -90,7 +72,6 @@ export const TxHistoryNavigator = () => {
           component={TxDetails}
           options={({route}) => ({
             title: formatDateToSeconds(transactionInfos[route.params.id].submittedAt),
-            ...defaultNavigationOptions,
           })}
         />
 
@@ -98,7 +79,7 @@ export const TxHistoryNavigator = () => {
           name="receive"
           component={ReceiveScreen}
           options={{
-            ...defaultOptionsV2,
+            ...defaultStackNavigationOptionsV2,
             title: strings.receiveTitle,
             headerRight: () => <ModalInfoIconButton onPress={showModalInfo} />,
             headerStyle: {
@@ -113,7 +94,6 @@ export const TxHistoryNavigator = () => {
           options={{
             title: strings.sendTitle,
             headerRight: () => <ScannerButton />,
-            ...defaultNavigationOptions,
           }}
         >
           {() => (
@@ -132,7 +112,7 @@ export const TxHistoryNavigator = () => {
         </Stack.Screen>
 
         <Stack.Screen name="select-asset" options={{title: strings.selectAssetTitle}}>
-          {({navigation}: {navigation: TxHistoryRouteParams}) => (
+          {({navigation}: {navigation: TxHistoryRouteNavigation}) => (
             <AssetSelectorScreen
               assetTokens={tokenBalance.values}
               onSelect={(token) => {
@@ -229,21 +209,16 @@ const SettingsIconButton = (props: TouchableOpacityProps) => {
   )
 }
 
-const HeaderRightHistory = () => {
-  const navigation = useNavigation()
+const HeaderRightHistoryV2 = () => {
+  const {navigateToSettings} = useWalletNavigation()
 
-  return (
-    <SettingsIconButton
-      onPress={() =>
-        navigation.navigate('app-root', {
-          screen: 'settings',
-          params: {
-            screen: 'settings-main',
-          },
-        })
-      }
-    />
-  )
+  return <SettingsIconButton onPress={() => navigateToSettings()} />
+}
+
+const HeaderRightHistory = () => {
+  const {navigateToSettings} = useWalletNavigation()
+
+  return <Button onPress={() => navigateToSettings()} iconImage={iconGear} title="" withoutBackground />
 }
 
 const styles = StyleSheet.create({

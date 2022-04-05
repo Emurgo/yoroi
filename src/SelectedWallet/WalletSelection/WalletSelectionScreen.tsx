@@ -16,13 +16,14 @@ import globalMessages, {errorMessages} from '../../../legacy/i18n/global-message
 import {WalletMeta} from '../../../legacy/state'
 import {COLORS} from '../../../legacy/styles/config'
 import {useWalletMetas} from '../../hooks'
+import {useWalletNavigation} from '../../navigation'
 import {useSetSelectedWallet, useSetSelectedWalletMeta} from '..'
 import {WalletListItem} from './WalletListItem'
 
 export const WalletSelectionScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
-  const navigation = useNavigation()
+  const {navigation, navigateToTxHistory} = useWalletNavigation()
   const walletMetas = useWalletMetas()
   const selectWalletMeta = useSetSelectedWalletMeta()
   const selectWallet = useSetSelectedWallet()
@@ -48,16 +49,7 @@ export const WalletSelectionScreen = () => {
       const [wallet, newWalletMeta] = await walletManager.openWallet(walletMeta)
       selectWalletMeta(newWalletMeta)
       selectWallet(wallet)
-
-      navigation.navigate('app-root', {
-        screen: 'main-wallet-routes',
-        params: {
-          screen: 'history',
-          params: {
-            screen: 'history-list',
-          },
-        },
-      })
+      navigateToTxHistory()
     } catch (e) {
       if (e instanceof SystemAuthDisabled) {
         await walletManager.closeWallet()

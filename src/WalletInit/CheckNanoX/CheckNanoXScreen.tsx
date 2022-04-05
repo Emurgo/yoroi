@@ -8,14 +8,14 @@ import image from '../../../legacy/assets/img/ledger_1.png'
 import {BulletPointItem, Button, ProgressStep, Text} from '../../../legacy/components/UiKit'
 import {confirmationMessages, ledgerMessages} from '../../../legacy/i18n/global-messages'
 import {Spacer} from '../../components'
-import {WalletInitRouteParams, WalletInitRoutes} from '../../navigation'
+import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
 
 export const CheckNanoXScreen = () => {
   const strings = useStrings()
   const route = useRoute<RouteProp<WalletInitRoutes, 'connect-nano-x'>>()
   const {networkId, walletImplementationId, useUSB} = route.params
 
-  const navigation = useNavigation<WalletInitRouteParams>()
+  const navigation = useNavigation<WalletInitRouteNavigation>()
   const onContinue = () => navigation.navigate('connect-nano-x', {networkId, walletImplementationId, useUSB})
 
   const commonRequirements = [strings.appInstalled, strings.appOpened]

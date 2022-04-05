@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {useNavigation} from '@react-navigation/native'
 import {BigNumber} from 'bignumber.js'
 import React from 'react'
 import {useIntl} from 'react-intl'
@@ -47,7 +46,7 @@ import {COLORS} from '../../../legacy/styles/config'
 import {formatTokenWithSymbol, formatTokenWithText} from '../../../legacy/utils/format'
 import {Boundary, Spacer} from '../../components'
 import {useTokenInfo} from '../../hooks'
-import {useParams} from '../../navigation'
+import {useParams, useWalletNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {TokenEntry} from '../../types/cardano'
 
@@ -165,7 +164,7 @@ export const ConfirmScreen = () => {
     closeLedgerDialog()
   }
 
-  const navigation = useNavigation()
+  const {navigation, resetToTxHistory} = useWalletNavigation()
   const onConfirm = async () => {
     const submitTx = async (tx: string | ISignRequest, decryptedKey?: string) => {
       await withPleaseWaitModal(async () => {
@@ -174,32 +173,7 @@ export const ConfirmScreen = () => {
         } else {
           await submitSignedTx(tx)
         }
-        navigation.reset({
-          index: 0,
-          routes: [
-            {
-              name: 'app-root',
-              state: {
-                routes: [
-                  {name: 'wallet-selection'},
-                  {
-                    name: 'main-wallet-routes',
-                    state: {
-                      routes: [
-                        {
-                          name: 'history',
-                          state: {
-                            routes: [{name: 'history-list'}],
-                          },
-                        },
-                      ],
-                    },
-                  },
-                ],
-              },
-            },
-          ],
-        })
+        resetToTxHistory()
       })
     }
 
@@ -270,8 +244,8 @@ export const ConfirmScreen = () => {
   const isConfirmationDisabled = !isEasyConfirmationEnabled && !password && !isHW
 
   return (
-    <View style={styles.safeAreaView}>
-      <View style={styles.root}>
+    <View style={styles.root}>
+      <View style={{flex: 1}}>
         <StatusBar type="dark" />
 
         <OfflineBanner />
@@ -366,11 +340,8 @@ const Entry = ({tokenEntry}: {tokenEntry: TokenEntry}) => {
 const Actions = (props: ViewProps) => <View {...props} style={{padding: 16}} />
 
 const styles = StyleSheet.create({
-  safeAreaView: {
-    backgroundColor: COLORS.WHITE,
-    flex: 1,
-  },
   root: {
+    backgroundColor: COLORS.WHITE,
     flex: 1,
   },
   container: {

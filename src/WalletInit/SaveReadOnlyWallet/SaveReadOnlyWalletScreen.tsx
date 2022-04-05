@@ -1,4 +1,4 @@
-import {useNavigation, useRoute} from '@react-navigation/native'
+import {useRoute} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {FlatList, ScrollView, View} from 'react-native'
@@ -15,6 +15,7 @@ import {theme} from '../../../legacy/styles/config'
 import {Logger} from '../../../legacy/utils/logging'
 import {Boundary, Icon} from '../../components'
 import {useCreateBip44Wallet, usePlate} from '../../hooks'
+import {useWalletNavigation} from '../../navigation'
 import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
 import {WalletAddress} from '../WalletAddress'
 import {WalletNameForm} from '../WalletNameForm'
@@ -22,7 +23,7 @@ import {WalletNameForm} from '../WalletNameForm'
 export const SaveReadOnlyWalletScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
-  const navigation = useNavigation()
+  const {navigateToTxHistory} = useWalletNavigation()
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const route: any = useRoute()
   const dispatch = useDispatch()
@@ -65,15 +66,7 @@ export const SaveReadOnlyWalletScreen = () => {
       setSelectedWalletMeta(walletMeta)
       setSelectedWallet(wallet)
 
-      navigation.navigate('app-root', {
-        screen: 'main-wallet-routes',
-        params: {
-          screen: 'history',
-          params: {
-            screen: 'history-list',
-          },
-        },
-      })
+      navigateToTxHistory()
     },
   })
 

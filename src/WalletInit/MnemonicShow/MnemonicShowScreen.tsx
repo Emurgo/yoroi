@@ -7,11 +7,11 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import recoveryPhrase from '../../../legacy/assets/img/recovery_phrase.png'
 import {Button, StatusBar, Text} from '../../../legacy/components/UiKit'
 import assert from '../../../legacy/utils/assert'
-import {WalletInitRouteParams, WalletInitRoutes} from '../../navigation'
+import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
 import {MnemonicBackupImportanceModal} from '../MnemonicBackupModal'
 
 export const MnemonicShowScreen = () => {
-  const navigation = useNavigation<WalletInitRouteParams>()
+  const navigation = useNavigation<WalletInitRouteNavigation>()
   const route = useRoute<RouteProp<WalletInitRoutes, 'mnemoinc-show'>>()
   const strings = useStrings()
   const mnemonic = route.params.mnemonic

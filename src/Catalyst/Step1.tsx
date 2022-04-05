@@ -16,12 +16,12 @@ import globalMessages, {confirmationMessages} from '../../legacy/i18n/global-mes
 import {isDelegatingSelector} from '../../legacy/selectors'
 import {Logger} from '../../legacy/utils/logging'
 import {Spacer} from '../components'
-import {CatalystRouteParams} from '../navigation'
+import {CatalystRouteNavigation} from '../navigation'
 import {Actions, Row} from './components'
 
 export const Step1 = () => {
   const strings = useStrings()
-  const navigation = useNavigation<CatalystRouteParams>()
+  const navigation = useNavigation<CatalystRouteNavigation>()
   const isDelegating = useSelector(isDelegatingSelector)
   const [showModal, setShowModal] = useState<boolean>(!isDelegating)
 

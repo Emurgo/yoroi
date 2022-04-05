@@ -20,7 +20,7 @@ import {CatalystNavigator} from './Catalyst'
 import {Icon} from './components'
 import {DashboardNavigator} from './Dashboard'
 import {MenuNavigator} from './Menu'
-import {defaultNavigationOptions, WalletStackRoutes, WalletTabRoutes} from './navigation'
+import {WalletStackRoutes, WalletTabRoutes} from './navigation'
 import {ReceiveScreenNavigator} from './Receive'
 import {useSelectedWallet, WalletSelectionScreen} from './SelectedWallet'
 import {SendScreenNavigator} from './Send'
@@ -144,7 +144,7 @@ export const WalletNavigator = () => (
     <Stack.Screen name="wallet-selection" component={WalletSelectionScreen} />
     <Stack.Screen name="main-wallet-routes" component={WalletTabNavigator} />
     <Stack.Screen name="settings" component={SettingsScreenNavigator} />
-    <Stack.Screen name="catalyst-router" component={CatalystNavigator} options={defaultNavigationOptions} />
+    <Stack.Screen name="catalyst-router" component={CatalystNavigator} />
   </Stack.Navigator>
 )
 

@@ -19,7 +19,7 @@ export const StakePoolInfos = () => {
     </View>
   ) : isLoading ? (
     <View style={styles.activityIndicator}>
-      <ActivityIndicator size={'large'} color={'black'} />
+      <ActivityIndicator size="large" color="black" />
     </View>
   ) : null
 }

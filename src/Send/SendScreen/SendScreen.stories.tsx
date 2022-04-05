@@ -22,9 +22,9 @@ storiesOf('SendScreen', module)
         sendAll={false}
         onSendAll={action('onSendAll')}
         selectedTokenIdentifier={selectedAsset.identifier}
-        amount={''}
+        amount=""
         setAmount={action('setAmount')}
-        receiver={''}
+        receiver=""
         setReceiver={action('setReceiver')}
       />
     )
@@ -41,9 +41,9 @@ storiesOf('SendScreen', module)
         sendAll={true}
         onSendAll={action('onSendAll')}
         selectedTokenIdentifier={selectedAsset.identifier}
-        amount={''}
+        amount=""
         setAmount={action('setAmount')}
-        receiver={''}
+        receiver=""
         setReceiver={action('setReceiver')}
       />
     )

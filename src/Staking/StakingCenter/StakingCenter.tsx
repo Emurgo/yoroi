@@ -32,13 +32,13 @@ import type {DefaultAsset} from '../../../legacy/types/HistoryTransaction'
 import {ObjectValues} from '../../../legacy/utils/flow'
 import {normalizeTokenAmount} from '../../../legacy/utils/format'
 import {Logger} from '../../../legacy/utils/logging'
-import {StakingCenterRouteParams} from '../../navigation'
+import {StakingCenterRouteNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {PoolDetailScreen} from '../PoolDetails'
 
 export const StakingCenter = () => {
   const intl = useIntl()
-  const navigation = useNavigation<StakingCenterRouteParams>()
+  const navigation = useNavigation<StakingCenterRouteNavigation>()
   const [amountToDelegate, setAmountToDelegate] = useState<string | null>(null)
   const [selectedPools, setSelectedPools] = useState<Array<SelectedPool>>([])
   const [reputationInfo, setReputationInfo] = useState({})
@@ -154,7 +154,7 @@ export const StakingCenter = () => {
             onRequestClose={() => setShowPoolWarning(false)}
             reputationInfo={reputationInfo}
           />
-          <PleaseWaitModal title={''} spinnerText={intl.formatMessage(globalMessages.pleaseWait)} visible={busy} />
+          <PleaseWaitModal title="" spinnerText={intl.formatMessage(globalMessages.pleaseWait)} visible={busy} />
         </>
       )}
     </>
@@ -205,7 +205,7 @@ const navigateToDelegationConfirm = async (
   selectedPools: Array<SelectedPool>,
   defaultAsset: DefaultAsset,
   intl: IntlShape,
-  navigation: StakingCenterRouteParams,
+  navigation: StakingCenterRouteNavigation,
   serverStatus: ServerStatusCache,
 ) => {
   try {

@@ -1,4 +1,3 @@
-import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Platform, ScrollView, StyleSheet, Switch} from 'react-native'
@@ -21,6 +20,7 @@ import {
   isSystemAuthEnabledSelector,
   sendCrashReportsSelector,
 } from '../../../legacy/selectors'
+import {useWalletNavigation} from '../../navigation'
 import {useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../SelectedWallet'
 import {NavigatedSettingsItem, SettingsBuildItem, SettingsItem, SettingsSection} from '../SettingsItems'
 
@@ -28,7 +28,7 @@ const version = DeviceInfo.getVersion()
 
 export const ApplicationSettingsScreen = () => {
   const strings = useStrings()
-  const navigation = useNavigation()
+  const {navigation, navigateToSettings} = useWalletNavigation()
   const isBiometricHardwareSupported = useSelector(biometricHwSupportSelector)
   const sendCrashReports = useSelector(sendCrashReportsSelector)
   const isSystemAuthEnabled = useSelector(isSystemAuthEnabledSelector)
@@ -59,24 +59,14 @@ export const ApplicationSettingsScreen = () => {
                     ...walletMeta,
                     isEasyConfirmationEnabled: false,
                   })
-                  navigation.navigate('app-root', {
-                    screen: 'settings',
-                    params: {
-                      screen: 'settings-main',
-                    },
-                  })
+                  navigateToSettings()
                 },
               },
             },
           }),
         onFail: (reason) => {
           if (reason === KeyStore.REJECTIONS.CANCELED) {
-            navigation.navigate('app-root', {
-              screen: 'settings',
-              params: {
-                screen: 'settings-main',
-              },
-            })
+            navigateToSettings()
           } else {
             throw new Error(`Could not authenticate user: ${reason}`)
           }

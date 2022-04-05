@@ -1,4 +1,4 @@
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
+import {RouteProp, useRoute} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, TouchableOpacity, View} from 'react-native'
@@ -10,12 +10,12 @@ import {WalletMeta} from '../../../legacy/state'
 import {COLORS} from '../../../legacy/styles/config'
 import {Spacer} from '../../components'
 import {useCreateWallet} from '../../hooks'
-import {WalletInitRoutes} from '../../navigation'
+import {useWalletNavigation, WalletInitRoutes} from '../../navigation'
 import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
 
 export const MnemonicCheckScreen = () => {
   const strings = useStrings()
-  const navigation = useNavigation()
+  const {navigateToTxHistory} = useWalletNavigation()
   const route = useRoute<RouteProp<WalletInitRoutes, 'mnemonic-check'>>()
   const {mnemonic, password, name, networkId, walletImplementationId, provider} = route.params
 
@@ -49,15 +49,7 @@ export const MnemonicCheckScreen = () => {
       setSelectedWalletMeta(walletMeta)
       setSelectedWallet(wallet)
 
-      navigation.navigate('app-root', {
-        screen: 'main-wallet-routes',
-        params: {
-          screen: 'history',
-          params: {
-            screen: 'history-list',
-          },
-        },
-      })
+      navigateToTxHistory()
     },
   })
 

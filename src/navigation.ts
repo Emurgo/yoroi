@@ -1,5 +1,4 @@
-import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs'
-import {NavigatorScreenParams, useRoute} from '@react-navigation/native'
+import {NavigatorScreenParams, useNavigation, useRoute} from '@react-navigation/native'
 import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/stack'
 import BigNumber from 'bignumber.js'
 import {IntlShape} from 'react-intl'
@@ -23,7 +22,7 @@ export const useParams = <Params, >(guard: Guard<Params>): Params => {
 type Guard<Params> = (params: Params | object) => params is Params
 
 // OPTIONS
-export const defaultOptionsV2: StackNavigationOptions = {
+export const defaultStackNavigationOptionsV2: StackNavigationOptions = {
   headerTintColor: COLORS.ERROR_TEXT_COLOR_DARK,
   headerTitleStyle: {
     fontSize: 16,
@@ -39,26 +38,18 @@ export const defaultOptionsV2: StackNavigationOptions = {
   },
 }
 
-export const defaultNavigationOptions: StackNavigationOptions = {
+export const defaultStackNavigationOptions: StackNavigationOptions = {
   headerStyle: {
     backgroundColor: COLORS.BACKGROUND_BLUE,
     elevation: 0,
     shadowOpacity: 0,
   },
   headerTintColor: '#fff',
-}
-
-export const defaultStackNavigatorOptions: StackNavigationOptions = {
   headerTitleAlign: 'center',
   headerBackTitleVisible: false,
   headerLeftContainerStyle: {
     paddingLeft: Platform.OS === 'ios' ? 8 : undefined,
   },
-}
-
-export const defaultBaseNavigationOptions: StackNavigationOptions = {
-  ...defaultNavigationOptions,
-  ...defaultStackNavigatorOptions,
 }
 
 // ROUTES
@@ -78,7 +69,6 @@ export type WalletTabRoutes = {
   'staking-center': NavigatorScreenParams<StakingCenterRoutes>
   menu: NavigatorScreenParams<MenuRoutes>
 }
-export type WalletTabRouteParams = BottomTabNavigationProp<WalletTabRoutes>
 
 export type WalletStackRoutes = {
   'wallet-selection': undefined
@@ -86,7 +76,6 @@ export type WalletStackRoutes = {
   settings: NavigatorScreenParams<SettingsStackRoutes>
   'catalyst-router': NavigatorScreenParams<CatalystRoutes>
 }
-export type WalletStackRouteParams = StackNavigationProp<WalletStackRoutes>
 
 export type WalletInitRoutes = {
   'choose-create-restore': {
@@ -158,12 +147,11 @@ export type WalletInitRoutes = {
     phrase: string
   }
 }
-export type WalletInitRouteParams = StackNavigationProp<WalletInitRoutes>
+export type WalletInitRouteNavigation = StackNavigationProp<WalletInitRoutes>
 
 export type ReceiveRoutes = {
   'receive-ada-main': undefined
 }
-export type ReceiveRouteParams = StackNavigationProp<ReceiveRoutes>
 
 export type TxHistoryRoutes = {
   'history-list': undefined
@@ -176,7 +164,7 @@ export type TxHistoryRoutes = {
   'address-reader-qr': undefined
   'send-confirm': SendConfirmParams
 }
-export type TxHistoryRouteParams = StackNavigationProp<TxHistoryRoutes>
+export type TxHistoryRouteNavigation = StackNavigationProp<TxHistoryRoutes>
 
 export type StakingCenterRoutes = {
   'staking-center-main': undefined
@@ -187,7 +175,7 @@ export type StakingCenterRoutes = {
     transactionFee: unknown
   }
 }
-export type StakingCenterRouteParams = StackNavigationProp<StakingCenterRoutes>
+export type StakingCenterRouteNavigation = StackNavigationProp<StakingCenterRoutes>
 
 export type SettingsTabRoutes = {
   'wallet-settings': undefined
@@ -209,7 +197,7 @@ export type SettingsStackRoutes = {
     onSuccess: () => void | Promise<void>
   }
 }
-export type SettingsStackRouteParams = StackNavigationProp<SettingsStackRoutes>
+export type SettingsRouteNavigation = StackNavigationProp<SettingsStackRoutes>
 
 export type SendConfirmParams = {
   transactionData: unknown
@@ -227,7 +215,7 @@ export type SendRoutes = {
   'address-reader-qr': undefined
   'send-ada-confirm': SendConfirmParams
 }
-export type SendRouteParams = StackNavigationProp<SendRoutes>
+export type SendRouteNavigation = StackNavigationProp<SendRoutes>
 
 export type DashboardRoutes = {
   'staking-dashboard-main': undefined
@@ -243,20 +231,19 @@ export type CatalystRoutes = {
   'catalyst-transaction': undefined
   'catalyst-qr-code': undefined
 }
-export type CatalystRouteParams = StackNavigationProp<CatalystRoutes>
+export type CatalystRouteNavigation = StackNavigationProp<CatalystRoutes>
 
 export type FirstRunRoutes = {
   'language-pick': undefined
   'accept-terms-of-service': undefined
   'custom-pin': undefined
 }
-export type FirstRunRouteParams = StackNavigationProp<FirstRunRoutes>
+export type FirstRunRouteNavigation = StackNavigationProp<FirstRunRoutes>
 
 export type MenuRoutes = {
   menu: undefined
   'catalyst-voting': undefined
 }
-export type MenuRouteParams = StackNavigationProp<MenuRoutes>
 
 export type AppRoutes = {
   maintenance: undefined
@@ -270,12 +257,88 @@ export type AppRoutes = {
   biometrics: BiometricParams
   'setup-custom-pin': undefined
 }
-export type AppRouteParams = StackNavigationProp<AppRoutes>
+export type AppRouteNavigation = StackNavigationProp<AppRoutes>
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace ReactNavigation {
     // eslint-disable-next-line @typescript-eslint/no-empty-interface
     interface RootParamList extends AppRoutes {}
+  }
+}
+
+export const useWalletNavigation = () => {
+  const navigation = useNavigation()
+
+  const resetToTxHistory = () => {
+    navigation.reset({
+      index: 0,
+      routes: [
+        {
+          name: 'app-root',
+          state: {
+            routes: [
+              {name: 'wallet-selection'},
+              {
+                name: 'main-wallet-routes',
+                state: {
+                  routes: [
+                    {
+                      name: 'history',
+                      state: {
+                        routes: [{name: 'history-list'}],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      ],
+    })
+  }
+
+  const resetToWalletSelection = () => {
+    navigation.reset({
+      index: 0,
+      routes: [
+        {
+          name: 'app-root',
+          state: {
+            routes: [{name: 'wallet-selection'}],
+          },
+        },
+      ],
+    })
+  }
+
+  const navigateToSettings = () => {
+    navigation.navigate('app-root', {
+      screen: 'settings',
+      params: {
+        screen: 'settings-main',
+      },
+    })
+  }
+
+  const navigateToTxHistory = () => {
+    navigation.navigate('app-root', {
+      screen: 'main-wallet-routes',
+      params: {
+        screen: 'history',
+        params: {
+          screen: 'history-list',
+        },
+      },
+    })
+  }
+
+  return {
+    navigation,
+    resetToTxHistory,
+    resetToWalletSelection,
+    navigateToSettings,
+    navigateToTxHistory,
   }
 }

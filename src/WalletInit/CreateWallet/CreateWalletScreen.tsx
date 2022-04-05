@@ -4,13 +4,13 @@ import React from 'react'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {generateAdaMnemonic} from '../../../legacy/crypto/commonUtils'
-import {WalletInitRouteParams, WalletInitRoutes} from '../../navigation'
+import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
 import {MnemonicExplanationModal} from '../MnemonicExplanationModal'
 import {WalletForm} from '../WalletForm'
 
 type WalletFormData = null | {name: string; password: string}
 export const CreateWalletScreen = () => {
-  const navigation = useNavigation<WalletInitRouteParams>()
+  const navigation = useNavigation<WalletInitRouteNavigation>()
   const route = useRoute<RouteProp<WalletInitRoutes, 'create-wallet-form'>>()
   const [visibleMnemonicExplanation, setVisibleMnemonicExplanation] = React.useState(false)
   const [formData, _setFormData] = React.useState<WalletFormData>(null)
