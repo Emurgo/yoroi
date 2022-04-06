@@ -1,5 +1,5 @@
 import Clipboard from '@react-native-community/clipboard'
-import {EventArg, useFocusEffect} from '@react-navigation/native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {
@@ -29,40 +29,16 @@ import {Actions, Description, Title} from './components'
 const {FlagSecure} = NativeModules
 
 export const Step6 = () => {
+  useBlockGoBack()
   const strings = useStrings()
   const encryptedKey = useSelector(encryptedKeySelector)
-  const {resetToTxHistory, navigation} = useWalletNavigation()
+  const {resetToTxHistory} = useWalletNavigation()
   const [countDown, setCountDown] = useState(5)
   const [showBackupWarningModal, setShowBackupWarningModal] = useState(false)
 
   useEffect(() => {
     countDown > 0 && setTimeout(() => setCountDown(countDown - 1), 1000)
   }, [countDown])
-
-  useEffect(() => {
-    const handleBeforeRemove = (
-      e: EventArg<
-        'beforeRemove',
-        true,
-        {
-          action: Readonly<{
-            type: string
-            payload?: object | undefined
-            source?: string | undefined
-            target?: string | undefined
-          }>
-        }
-      >,
-    ) => {
-      if (e.data.action.type !== 'RESET') {
-        e.preventDefault()
-      }
-    }
-    navigation.addListener('beforeRemove', handleBeforeRemove)
-    return () => {
-      navigation.removeListener('beforeRemove', handleBeforeRemove)
-    }
-  }, [navigation])
 
   useFocusEffect(
     // eslint-disable-next-line consistent-return
@@ -150,6 +126,19 @@ const CopyButton = ({text}: {text: string}) => (
     <Image source={copyImage} />
   </TouchableOpacity>
 )
+
+const useBlockGoBack = () => {
+  const navigation = useNavigation()
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+      if (e.data.action.type !== 'RESET') {
+        e.preventDefault()
+      }
+    })
+    return () => unsubscribe()
+  }, [navigation])
+}
 
 const messages = defineMessages({
   subTitle: {
