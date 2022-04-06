@@ -1,5 +1,5 @@
 import Clipboard from '@react-native-community/clipboard'
-import {useFocusEffect} from '@react-navigation/native'
+import {EventArg, useFocusEffect} from '@react-navigation/native'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {
@@ -31,14 +31,38 @@ const {FlagSecure} = NativeModules
 export const Step6 = () => {
   const strings = useStrings()
   const encryptedKey = useSelector(encryptedKeySelector)
-  const {resetToTxHistory} = useWalletNavigation()
-  const [countDown, setCountDown] = useState<number>(5)
+  const {resetToTxHistory, navigation} = useWalletNavigation()
+  const [countDown, setCountDown] = useState(5)
+  const [showBackupWarningModal, setShowBackupWarningModal] = useState(false)
 
   useEffect(() => {
     countDown > 0 && setTimeout(() => setCountDown(countDown - 1), 1000)
   }, [countDown])
 
-  const [showBackupWarningModal, setShowBackupWarningModal] = useState<boolean>(false)
+  useEffect(() => {
+    const handleBeforeRemove = (
+      e: EventArg<
+        'beforeRemove',
+        true,
+        {
+          action: Readonly<{
+            type: string
+            payload?: object | undefined
+            source?: string | undefined
+            target?: string | undefined
+          }>
+        }
+      >,
+    ) => {
+      if (e.data.action.type !== 'RESET') {
+        e.preventDefault()
+      }
+    }
+    navigation.addListener('beforeRemove', handleBeforeRemove)
+    return () => {
+      navigation.removeListener('beforeRemove', handleBeforeRemove)
+    }
+  }, [navigation])
 
   useFocusEffect(
     // eslint-disable-next-line consistent-return
