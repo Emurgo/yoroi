@@ -83,7 +83,7 @@ const NavigatorSwitch = () => {
       </Stack.Group>
 
       {/* Not Authenticated */}
-      {!isAuthenticated && (
+      {!isAuthenticated && hasAnyWallet && (
         <Stack.Group>
           {!isSystemAuthEnabled && (
             <Stack.Screen
@@ -126,7 +126,7 @@ const NavigatorSwitch = () => {
       )}
 
       {/* Authenticated */}
-      {isAuthenticated && (
+      {(isAuthenticated || !hasAnyWallet) && (
         <Stack.Group>
           <Stack.Screen name="app-root" component={WalletNavigator} />
           <Stack.Screen name="new-wallet" component={WalletInitNavigator} />
@@ -135,10 +135,12 @@ const NavigatorSwitch = () => {
       )}
 
       {/* Development */}
-      <Stack.Group>
-        <Stack.Screen name="screens-index" component={IndexScreen} options={{headerShown: false}} />
-        <Stack.Screen name="storybook" component={StorybookScreen} />
-      </Stack.Group>
+      {__DEV__ && (
+        <Stack.Group>
+          <Stack.Screen name="screens-index" component={IndexScreen} options={{headerShown: false}} />
+          <Stack.Screen name="storybook" component={StorybookScreen} />
+        </Stack.Group>
+      )}
     </Stack.Navigator>
   )
 }
