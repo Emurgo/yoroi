@@ -9,13 +9,11 @@ import {useDispatch, useSelector} from 'react-redux'
 
 import {showErrorDialog, signin} from '../legacy/actions'
 import IndexScreen from '../legacy/components/IndexScreen'
-import MaintenanceScreen from '../legacy/components/MaintenanceScreen'
 import {CONFIG} from '../legacy/config/config'
 import KeyStore from '../legacy/crypto/KeyStore'
 import env from '../legacy/env'
 import {canBiometricEncryptionBeEnabled, recreateAppSignInKeys} from '../legacy/helpers/deviceSettings'
 import {errorMessages} from '../legacy/i18n/global-messages'
-import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../legacy/navigationOptions'
 import {
   canEnableBiometricSelector,
   installationIdSelector,
@@ -30,6 +28,8 @@ import {Boundary} from './components'
 import {CustomPinScreen} from './FirstRun/CustomPinScreen'
 import {FirstRunNavigator} from './FirstRun/FirstRunNavigator'
 import {CustomPinLoginScreen} from './Login'
+import MaintenanceScreen from './MaintenanceScreen'
+import {defaultNavigationOptions, defaultStackNavigatorOptions} from './navigationOptions'
 import StorybookScreen from './StorybookScreen'
 import {WalletInitNavigator} from './WalletInit/WalletInitNavigator'
 import {WalletNavigator} from './WalletNavigator'

@@ -5,15 +5,11 @@ import {defineMessages, useIntl} from 'react-intl'
 
 import {UI_V2} from '../../legacy/config/config'
 import {isJormungandr} from '../../legacy/config/networks'
-import {
-  defaultNavigationOptions,
-  defaultStackNavigatorOptions,
-  jormunNavigationOptions,
-} from '../../legacy/navigationOptions'
 import {SEND_ROUTES, STAKING_CENTER_ROUTES, STAKING_DASHBOARD_ROUTES, WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
 import {BiometricAuthScreen} from '../BiometricAuth'
 import {SettingsButton} from '../components/Button'
 import {useWalletName} from '../hooks'
+import {defaultNavigationOptions, defaultStackNavigatorOptions, jormunNavigationOptions} from '../navigationOptions'
 import {useSelectedWallet} from '../SelectedWallet'
 import {DelegationConfirmation} from '../Staking'
 import {StakingCenter} from '../Staking/StakingCenter'

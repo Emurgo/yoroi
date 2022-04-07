@@ -2,11 +2,11 @@ import {createStackNavigator} from '@react-navigation/stack'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {defaultStackNavigatorOptions} from '../../legacy/navigationOptions'
-import {COLORS} from '../../legacy/styles/config'
 import {MockAppStateWrapper, mockV2NavigatorOptions} from '../../legacy/utils/mocks'
 import {mockWallet} from '../../storybook'
+import {defaultStackNavigatorOptions} from '../navigationOptions'
 import {SelectedWalletProvider} from '../SelectedWallet'
+import {COLORS} from '../theme'
 import {TxHistory as TxHistoryScreen} from './TxHistory'
 
 storiesOf('V2/TxHistory', module)

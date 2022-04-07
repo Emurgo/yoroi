@@ -1,8 +1,6 @@
-// @flow
-
 import {StyleSheet} from 'react-native'
 
-import stylesConfig, {COLORS} from '../../../../styles/config'
+import {brand, COLORS} from '../../theme'
 
 export default StyleSheet.create({
   assetHeading: {
@@ -12,28 +10,20 @@ export default StyleSheet.create({
   },
   assetMeta: {
     color: COLORS.TEXT_GRAY2,
-    opacity: 1,
+    opacity: 0.5,
     fontSize: 14,
   },
   assetRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    borderBottomWidth: 1,
-    borderColor: 'rgba(173, 174, 182, 0.3)',
   },
   assetTitle: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 10,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    backgroundColor: '#fff',
-    borderTopWidth: 1,
-    borderBottomWidth: 2,
-    borderColor: 'rgba(173, 174, 182, 0.3)',
   },
   assetName: {
-    fontFamily: stylesConfig.defaultFont,
+    fontFamily: brand.defaultFont,
     fontSize: 14,
     color: COLORS.TEXT_GRAY,
     marginBottom: 2,
@@ -44,7 +34,7 @@ export default StyleSheet.create({
     justifyContent: 'flex-start',
   },
   assetBalance: {
-    fontFamily: stylesConfig.defaultFont,
+    fontFamily: brand.defaultFont,
     fontSize: 14,
     color: COLORS.BLACK,
   },
@@ -52,13 +42,13 @@ export default StyleSheet.create({
     paddingVertical: 10,
   },
   px5: {
-    paddingHorizontal: 16,
+    paddingHorizontal: 0,
   },
   rowColor1: {
     backgroundColor: 'transparent',
   },
   rowColor2: {
-    backgroundColor: '#FAFAFC',
+    backgroundColor: 'transparent',
   },
   tokenMetaView: {
     flex: 2,

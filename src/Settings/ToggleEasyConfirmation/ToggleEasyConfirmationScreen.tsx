@@ -8,9 +8,9 @@ import {setEasyConfirmation, showErrorDialog} from '../../../legacy/actions'
 import {WrongPassword} from '../../../legacy/crypto/errors'
 import {errorMessages} from '../../../legacy/i18n/global-messages'
 import {easyConfirmationSelector} from '../../../legacy/selectors'
-import {COLORS} from '../../../legacy/styles/config'
 import {Button, StatusBar, Text, TextInput} from '../../components'
 import {useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../SelectedWallet'
+import {COLORS} from '../../theme'
 import {walletManager} from '../../yoroi-wallets'
 
 export const ToggleEasyConfirmationScreen = () => {

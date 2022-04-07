@@ -3,8 +3,8 @@ import React from 'react'
 import {Image, StyleSheet, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 
 import chevronRight from '../../legacy/assets/img/chevron_right.png'
-import {COLORS} from '../../legacy/styles/config'
 import {Text} from '../components'
+import {COLORS} from '../theme'
 
 const Touchable = (props: TouchableOpacityProps) => <TouchableOpacity {...props} activeOpacity={0.5} />
 

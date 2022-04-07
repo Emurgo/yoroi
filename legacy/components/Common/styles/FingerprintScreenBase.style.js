@@ -2,7 +2,8 @@
 
 import {StyleSheet} from 'react-native'
 
-import {COLORS} from '../../../styles/config'
+// $FlowExpectedError
+import {COLORS} from '../../../../../src/theme'
 
 const headingTextStyle = {
   color: COLORS.WHITE,

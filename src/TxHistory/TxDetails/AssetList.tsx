@@ -2,15 +2,15 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {FlatList, Text, TouchableOpacity, View} from 'react-native'
 
-import assetListSendStyle from '../../../legacy/components/Common/MultiAsset/styles/AssetListSend.style'
-import assetListTransactionStyle from '../../../legacy/components/Common/MultiAsset/styles/AssetListTransaction.style'
-import baseStyle from '../../../legacy/components/Common/MultiAsset/styles/Base.style'
 import globalMessages, {txLabels} from '../../../legacy/i18n/global-messages'
 import {formatTokenAmount, getName, getTicker, getTokenFingerprint} from '../../../legacy/utils/format'
 import {Boundary} from '../../components'
 import {useTokenInfo} from '../../hooks'
 import {useSelectedWallet} from '../../SelectedWallet'
 import type {TokenEntry} from '../../types'
+import assetListSendStyle from './AssetListSend.style'
+import assetListTransactionStyle from './AssetListTransaction.style'
+import baseStyle from './Base.style'
 
 type AssetListProps = {
   assets: Array<TokenEntry>

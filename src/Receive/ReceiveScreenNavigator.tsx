@@ -2,9 +2,9 @@ import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../legacy/navigationOptions'
 import {RECEIVE_ROUTES, WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
 import {SettingsButton} from '../components/Button'
+import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../navigationOptions'
 import {ReceiveScreen} from './ReceiveScreen'
 
 const Stack = createStackNavigator<{

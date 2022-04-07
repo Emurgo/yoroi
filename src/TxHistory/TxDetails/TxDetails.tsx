@@ -6,8 +6,6 @@ import {defineMessages, IntlShape, useIntl} from 'react-intl'
 import {Image, LayoutAnimation, Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
-import assetListStyle from '../../../legacy/components/Common/MultiAsset/styles/AssetListTransaction.style'
-import Screen from '../../../legacy/components/Screen'
 import {getNetworkConfigById} from '../../../legacy/config/networks'
 import globalMessages from '../../../legacy/i18n/global-messages'
 import {
@@ -15,17 +13,19 @@ import {
   internalAddressIndexSelector,
   transactionsInfoSelector,
 } from '../../../legacy/selectors'
-import stylesConfig, {COLORS} from '../../../legacy/styles/config'
 import {formatTokenWithSymbol} from '../../../legacy/utils/format'
 import arrowDown from '../../assets/img/icon/chevron_down.png'
 import arrowUp from '../../assets/img/icon/chevron_up.png'
 import {Banner, Boundary, Button, CopyButton, OfflineBanner, StatusBar, Text} from '../../components'
 import {useTokenInfo} from '../../hooks'
 import AddressModal from '../../Receive/AddressModal'
+import Screen from '../../Screen'
 import {useSelectedWallet} from '../../SelectedWallet'
+import {brand, COLORS} from '../../theme'
 import {TokenEntry, TransactionInfo} from '../../types'
 import {MultiToken} from '../../yoroi-wallets'
 import {AssetList} from './AssetList'
+import assetListStyle from './AssetListTransaction.style'
 
 export type Params = {
   id: string
@@ -379,7 +379,7 @@ const styles = StyleSheet.create({
   },
   assetsTitle: {
     fontSize: 14,
-    fontFamily: stylesConfig.defaultFont,
+    fontFamily: brand.defaultFont,
     color: COLORS.TEXT_GRAY,
   },
   borderTop: {

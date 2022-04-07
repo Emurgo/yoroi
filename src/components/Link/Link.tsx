@@ -1,7 +1,7 @@
 import React from 'react'
 import {Linking, StyleSheet, Text, TextStyle, TouchableOpacity} from 'react-native'
 
-import {COLORS} from '../../../legacy/styles/config'
+import {COLORS} from '../../theme'
 
 type Props = {
   url: string

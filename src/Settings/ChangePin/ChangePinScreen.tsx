@@ -1,11 +1,11 @@
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
+import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {encryptAndStoreCustomPin, showErrorDialog} from '../../../legacy/actions'
-import styles from '../../../legacy/components/Settings/styles/ChangeCustomPinScreen.style'
 import {CONFIG} from '../../../legacy/config/config'
 import {authenticateByCustomPin} from '../../../legacy/crypto/customPin'
 import {errorMessages} from '../../../legacy/i18n/global-messages'
@@ -99,5 +99,11 @@ const messages = defineMessages({
   pinConfirmationTitle: {
     id: 'components.settings.changecustompinscreen.PinRegistrationForm.PinConfirmationInput.title',
     defaultMessage: '!!!Repeat PIN',
+  },
+})
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
   },
 })

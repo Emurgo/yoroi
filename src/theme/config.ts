@@ -1,5 +1,3 @@
-// @flow
-
 import {Platform} from 'react-native'
 
 // TODO: need to homogenise the code style here. Only use upper case for color
@@ -96,7 +94,7 @@ export const colors = {
 }
 
 // TODO: remove, use theme instead.
-const brand = {
+export const brand = {
   defaultFont: Platform.select({
     ios: 'Rubik-Regular',
     android: 'Rubik-Regular',
@@ -106,5 +104,3 @@ const brand = {
     android: 'Rubik-Medium',
   }),
 }
-
-export default brand

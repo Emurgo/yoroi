@@ -13,7 +13,7 @@ import {HelperText, TextInput as RNPTextInput} from 'react-native-paper'
 
 import closedEyeIcon from '../../../legacy/assets/img/icon/visibility-closed.png'
 import openedEyeIcon from '../../../legacy/assets/img/icon/visibility-opened.png'
-import {COLORS} from '../../../legacy/styles/config'
+import {COLORS} from '../../theme'
 import {Icon} from '../Icon'
 
 type Props = TextInputProps &

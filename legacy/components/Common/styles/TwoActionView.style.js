@@ -2,7 +2,8 @@
 
 import {StyleSheet} from 'react-native'
 
-import {spacing} from '../../../styles/config'
+// $FlowExpectedError
+import {spacing} from '../../../../../src/theme'
 
 export default StyleSheet.create({
   scrollView: {

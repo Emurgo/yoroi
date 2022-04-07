@@ -2,8 +2,8 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet} from 'react-native'
 
-import {spacing} from '../../../legacy/styles/config'
 import {Button, Checkbox, Modal, Text} from '../../components'
+import {spacing} from '../../theme'
 
 type Props = {
   onConfirm: () => void

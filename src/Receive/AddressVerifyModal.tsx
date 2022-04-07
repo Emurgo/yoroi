@@ -4,9 +4,9 @@ import {ActivityIndicator, ScrollView, View} from 'react-native'
 import {StyleSheet} from 'react-native'
 
 import {confirmationMessages} from '../../legacy/i18n/global-messages'
-import {COLORS, spacing} from '../../legacy/styles/config'
 import {Button, Modal, Text} from '../components'
 import {Instructions as HWInstructions} from '../HW'
+import {COLORS, spacing} from '../theme'
 
 type Props = {
   visible: boolean

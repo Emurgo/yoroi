@@ -2,8 +2,8 @@ import React from 'react'
 import {Image, ImageSourcePropType, StyleSheet, TouchableOpacity, View, ViewStyle} from 'react-native'
 
 import closeIcon from '../../legacy/assets/img/close.png'
-import {COLORS} from '../../legacy/styles/config'
 import {Button, Text} from '../components'
+import {COLORS} from '../theme'
 type Props = {
   title: string
   icon?: ImageSourcePropType

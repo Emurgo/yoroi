@@ -5,11 +5,11 @@ import {ActivityIndicator, Image, SafeAreaView, View} from 'react-native'
 
 import {CONFIG} from '../../../legacy/config/config'
 import globalMessages from '../../../legacy/i18n/global-messages'
-import {spacing} from '../../../legacy/styles/config'
 import {ignoreConcurrentAsyncHandler} from '../../../legacy/utils/utils'
 import {getWalletNameError, validateWalletName} from '../../../legacy/utils/validators'
 import {Button, ProgressStep, TextInput} from '../../components'
 import {useWalletNames} from '../../hooks'
+import {spacing} from '../../theme'
 
 type Props = {
   onSubmit: ({name: string}) => void

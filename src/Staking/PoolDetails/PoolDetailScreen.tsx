@@ -2,8 +2,8 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 
-import {COLORS, spacing} from '../../../legacy/styles/config'
 import {Button, Text, TextInput} from '../../components'
+import {COLORS, spacing} from '../../theme'
 
 type Props = {
   onPressDelegate: (poolHash?: string) => void

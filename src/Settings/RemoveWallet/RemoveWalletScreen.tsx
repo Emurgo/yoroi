@@ -9,10 +9,10 @@ import {useDispatch, useSelector} from 'react-redux'
 import {updateWallets} from '../../../legacy/actions'
 import {WALLET_ROOT_ROUTES} from '../../../legacy/RoutesList'
 import {isHWSelector} from '../../../legacy/selectors'
-import {COLORS} from '../../../legacy/styles/config'
 import {Button, Checkbox, Checkmark, Spacer, StatusBar, Text, TextInput} from '../../components'
 import {useRemoveWallet, useWalletName} from '../../hooks'
 import {useSelectedWallet} from '../../SelectedWallet'
+import {COLORS} from '../../theme'
 
 export const RemoveWalletScreen = () => {
   const strings = useStrings()

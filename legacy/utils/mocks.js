@@ -7,9 +7,10 @@ import {Provider} from 'react-redux'
 
 // $FlowExpectedError
 import {Button} from '../../src/components'
+// $FlowExpectedError
+import {defaultNavigationOptions} from '../../src/navigationOptions'
 import iconGear from '../assets/img/gear.png'
 import configureStore from '../helpers/configureStore'
-import {defaultNavigationOptions} from '../navigationOptions'
 import type {State} from '../state'
 
 type Props = {|

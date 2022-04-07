@@ -1,10 +1,9 @@
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {useIntl} from 'react-intl'
-import {View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 
 import {showErrorDialog} from '../../../legacy/actions'
-import styles from '../../../legacy/components/Common/styles/PinRegistrationForm.style'
 import {CONFIG} from '../../../legacy/config/config'
 import {errorMessages} from '../../../legacy/i18n/global-messages'
 import {PinInput, PinInputLabels} from '../../components/'
@@ -72,3 +71,9 @@ export const PinRegistrationForm = ({labels, onPinEntered}: Props) => {
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+})
