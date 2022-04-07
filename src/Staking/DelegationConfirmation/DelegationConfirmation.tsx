@@ -9,8 +9,6 @@ import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {useSelector} from 'react-redux'
 
 import {CONFIG, UI_V2} from '../../../legacy/config/config'
-import type {CreateDelegationTxResponse} from '../../../legacy/crypto/shelley/delegationUtils'
-import type {CreateUnsignedTxResponse} from '../../../legacy/crypto/shelley/transactionUtils'
 import globalMessages, {txLabels} from '../../../legacy/i18n/global-messages'
 import {useParams} from '../../../legacy/navigation'
 import {SEND_ROUTES, STAKING_CENTER_ROUTES, STAKING_DASHBOARD_ROUTES, WALLET_ROUTES} from '../../../legacy/RoutesList'
@@ -23,6 +21,8 @@ import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {DefaultAsset} from '../../types'
 import {MultiToken} from '../../yoroi-wallets'
+import type {CreateDelegationTxResponse} from '../../yoroi-wallets/cardano/shelley/delegationUtils'
+import type {CreateUnsignedTxResponse} from '../../yoroi-wallets/cardano/shelley/transactionUtils'
 
 export type Params = {
   poolHash: string

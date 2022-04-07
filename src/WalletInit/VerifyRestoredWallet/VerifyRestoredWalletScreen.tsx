@@ -6,12 +6,12 @@ import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {WALLET_IMPLEMENTATION_REGISTRY} from '../../../legacy/config/types'
-import {generateByronPlateFromMnemonics} from '../../../legacy/crypto/byron/plate'
-import {generateShelleyPlateFromMnemonics} from '../../../legacy/crypto/shelley/plate'
 import {WALLET_INIT_ROUTES} from '../../../legacy/RoutesList'
 import {BulletPointItem, Button, Icon, Spacer, StatusBar, Text} from '../../components'
 import {COLORS} from '../../theme'
 import {NetworkId, WalletImplementationId} from '../../yoroi-wallets'
+import {generateByronPlateFromMnemonics} from '../../yoroi-wallets/cardano/byron/plate'
+import {generateShelleyPlateFromMnemonics} from '../../yoroi-wallets/cardano/shelley/plate'
 import {WalletAddress} from '../WalletAddress'
 
 export const VerifyRestoredWalletScreen = () => {

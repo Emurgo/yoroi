@@ -8,9 +8,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useSelector} from 'react-redux'
 
-import UtxoAutoRefresher from '../../../legacy/components/Send/UtxoAutoRefresher'
 import {CONFIG, UI_V2} from '../../../legacy/config/config'
-import type {CreateUnsignedTxResponse} from '../../../legacy/crypto/shelley/transactionUtils'
 import {SEND_ROUTES} from '../../../legacy/RoutesList'
 import {
   defaultNetworkAssetSelector,
@@ -23,17 +21,19 @@ import {
   walletMetaSelector,
 } from '../../../legacy/selectors'
 import {formatTokenAmount, getAssetDenominationOrId, truncateWithEllipsis} from '../../../legacy/utils/format'
-import {parseAmountDecimal} from '../../../legacy/utils/parsing'
-import type {
-  AddressValidationErrors,
-  AmountValidationErrors,
-  BalanceValidationErrors,
-} from '../../../legacy/utils/validators'
 import {Button, Checkbox, Spacer, StatusBar, Text, TextInput} from '../../components'
 import {useTokenInfo} from '../../hooks'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import type {TokenEntry} from '../../types'
+import {UtxoAutoRefresher} from '../../UtxoAutoRefresher'
+import type {CreateUnsignedTxResponse} from '../../yoroi-wallets/cardano/shelley/transactionUtils'
+import {parseAmountDecimal} from '../../yoroi-wallets/utils/parsing'
+import type {
+  AddressValidationErrors,
+  AmountValidationErrors,
+  BalanceValidationErrors,
+} from '../../yoroi-wallets/utils/validators'
 import {AmountField} from './../AmountField'
 import {AvailableAmountBanner} from './AvailableAmountBanner'
 import {BalanceAfterTransaction} from './BalanceAfterTransaction'
@@ -75,7 +75,7 @@ export const SendScreen = ({selectedTokenIdentifier, sendAll, onSendAll}: Props)
   const [amountErrors, setAmountErrors] = React.useState<AmountValidationErrors>({amountIsRequired: true})
   const [balanceErrors, setBalanceErrors] = React.useState<BalanceValidationErrors>({})
   const [balanceAfter, setBalanceAfter] = React.useState<BigNumber | null>(null)
-  const [unsignedTx, setUnsignedTx] = React.useState<CreateUnsignedTxResponse>(null)
+  const [unsignedTx, setUnsignedTx] = React.useState<null | CreateUnsignedTxResponse>(null)
   const [fee, setFee] = React.useState<BigNumber | null>(null)
   const [recomputing, setRecomputing] = React.useState(false)
   const [showSendAllWarning, setShowSendAllWarning] = React.useState(false)

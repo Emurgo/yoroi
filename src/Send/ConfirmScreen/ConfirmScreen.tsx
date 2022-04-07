@@ -9,7 +9,6 @@ import SafeAreaView from 'react-native-safe-area-view'
 import {useSelector} from 'react-redux'
 
 import {CONFIG, UI_V2} from '../../../legacy/config/config'
-import type {CreateUnsignedTxResponse} from '../../../legacy/crypto/shelley/transactionUtils'
 import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../../legacy/i18n/global-messages'
 import {SEND_ROUTES, WALLET_ROUTES} from '../../../legacy/RoutesList'
 import {defaultNetworkAssetSelector} from '../../../legacy/selectors'
@@ -22,6 +21,7 @@ import {useParams} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {TokenEntry} from '../../types'
+import type {CreateUnsignedTxResponse} from '../../yoroi-wallets/cardano/shelley/transactionUtils'
 
 export type Params = {
   transactionData: CreateUnsignedTxResponse

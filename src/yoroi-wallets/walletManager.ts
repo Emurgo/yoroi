@@ -22,7 +22,6 @@ import {NETWORK_REGISTRY, WALLET_IMPLEMENTATION_REGISTRY} from '../../legacy/con
 import {ISignRequest} from '../../legacy/crypto/ISignRequest'
 import KeyStore from '../../legacy/crypto/KeyStore'
 import type {HWDeviceInfo} from '../../legacy/crypto/shelley/ledgerUtils'
-import type {JSONMetadata} from '../../legacy/crypto/shelley/metadataUtils'
 import type {EncryptionMethod, SendTokenList} from '../../legacy/crypto/types'
 import {APP_SETTINGS_KEYS, readAppSettings} from '../../legacy/helpers/appSettings'
 import {ensureKeysValidity, isSystemAuthSupported} from '../../legacy/helpers/deviceSettings'
@@ -43,6 +42,7 @@ import {
   YoroiProvider,
   YoroiWallet,
 } from './cardano'
+import type {JSONMetadata} from './cardano/metadataUtils'
 
 export class WalletClosed extends ExtendableError {}
 export class SystemAuthDisabled extends ExtendableError {}

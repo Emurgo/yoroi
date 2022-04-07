@@ -3,7 +3,7 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
 import {CONFIG} from '../../../legacy/config/config'
-import {cleanMnemonic} from '../../../legacy/utils/validators'
+import {cleanMnemonic} from '../../yoroi-wallets/utils/validators'
 import {VerifyRestoredWalletScreen} from './VerifyRestoredWalletScreen'
 
 const route = {

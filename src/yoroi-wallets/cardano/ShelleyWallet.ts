@@ -51,23 +51,12 @@ import type {BackendConfig} from '../../../legacy/config/types'
 import {NETWORK_REGISTRY} from '../../../legacy/config/types'
 import {ADDRESS_TYPE_TO_CHANGE, generateWalletRootKey} from '../../../legacy/crypto/commonUtils'
 import {CardanoError, InvalidState} from '../../../legacy/crypto/errors'
-import {
-  createDelegationTx,
-  createWithdrawalTx,
-  filterAddressesByStakingKey,
-  getDelegationStatus,
-} from '../../../legacy/crypto/shelley/delegationUtils'
 import type {HWDeviceInfo} from '../../../legacy/crypto/shelley/ledgerUtils'
 import {
   buildSignedTransaction,
   createLedgerSignTxPayload,
   signTxWithLedger,
 } from '../../../legacy/crypto/shelley/ledgerUtils'
-import type {JSONMetadata} from '../../../legacy/crypto/shelley/metadataUtils'
-import {createAuxiliaryData} from '../../../legacy/crypto/shelley/metadataUtils'
-import {TransactionCache} from '../../../legacy/crypto/shelley/transactionCache'
-import {newAdaUnsignedTx, signTransaction} from '../../../legacy/crypto/shelley/transactions'
-import {createUnsignedTx as utilsCreateUnsignedTx} from '../../../legacy/crypto/shelley/transactionUtils'
 import {deriveRewardAddressHex, normalizeToAddress, toHexOrBase58} from '../../../legacy/crypto/shelley/utils'
 import type {AddressedUtxo, Addressing, SendTokenList, SignedTx} from '../../../legacy/crypto/types'
 import LocalizableError from '../../../legacy/i18n/LocalizableError'
@@ -75,14 +64,25 @@ import type {WalletMeta} from '../../../legacy/state'
 import type {DefaultAsset} from '../../../legacy/types/HistoryTransaction'
 import assert from '../../../legacy/utils/assert'
 import {Logger} from '../../../legacy/utils/logging'
-import {genTimeToSlot} from '../../../legacy/utils/timeUtils'
-import {versionCompare} from '../../../legacy/utils/versioning'
-import * as catalystUtils from '../../Catalyst/catalystUtils'
 import {DefaultTokenEntry} from '../../types'
+import {genTimeToSlot} from '../utils/timeUtils'
+import {versionCompare} from '../utils/versioning'
 import Wallet, {WalletJSON} from '../Wallet'
+import * as catalystUtils from './catalyst/catalystUtils'
 import {AddressChain, AddressGenerator} from './chain'
 import {HaskellShelleyTxSignRequest} from './HaskellShelleyTxSignRequest'
+import type {JSONMetadata} from './metadataUtils'
+import {createAuxiliaryData} from './metadataUtils'
 import {MultiToken} from './MultiToken'
+import {
+  createDelegationTx,
+  createWithdrawalTx,
+  filterAddressesByStakingKey,
+  getDelegationStatus,
+} from './shelley/delegationUtils'
+import {TransactionCache} from './shelley/transactionCache'
+import {newAdaUnsignedTx, signTransaction} from './shelley/transactions'
+import {createUnsignedTx as utilsCreateUnsignedTx} from './shelley/transactionUtils'
 import {NetworkId, WalletImplementationId, WalletInterface, YoroiProvider} from './types'
 
 export default ShelleyWallet
@@ -479,6 +479,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
   }
 
   getDelegationStatus() {
+    if (!this.transactionCache) throw new Error('invalid wallet state')
     if (this.rewardAddressHex == null) throw new Error('reward address is null')
     const certsForKey = this.transactionCache.perRewardAddressCertificates[this.rewardAddressHex]
     return Promise.resolve(getDelegationStatus(this.rewardAddressHex, certsForKey))
@@ -518,7 +519,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     const accountPvrKey: Bip32PrivateKey = await (
       await (await masterKey.derive(this._getPurpose())).derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO)
     ).derive(0 + CONFIG.NUMBERS.HARD_DERIVATION_START)
-    const wits = new Set()
+    const wits = new Set<string>()
 
     if (!(signRequest instanceof HaskellShelleyTxSignRequest)) {
       throw new Error('expected instance of HaskellShelleyTxSignRequest')

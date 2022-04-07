@@ -5,7 +5,6 @@ import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {generateNewReceiveAddress, generateNewReceiveAddressIfNeeded} from '../../legacy/actions'
 import {UI_V2} from '../../legacy/config/config'
 import {
   canGenerateNewReceiveAddressSelector,
@@ -13,6 +12,7 @@ import {
   receiveAddressesSelector,
 } from '../../legacy/selectors'
 import {Banner, Button, OfflineBanner, Spacer, StatusBar} from '../components'
+import {generateNewReceiveAddress, generateNewReceiveAddressIfNeeded} from '../legacy/actions'
 import {COLORS} from '../theme'
 import {AddressDetail} from './AddressDetail'
 import {UnusedAddresses, UsedAddresses} from './Addresses'

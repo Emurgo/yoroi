@@ -30,15 +30,18 @@ const styles = StyleSheet.create({
   },
 })
 
-type StakingInfo = Registered | NotRegistered
+type StakingInfo = Registered | Staked | NotRegistered
+type NotRegistered = {
+  status: 'not-registered'
+}
 type Registered = {
-  isRegistered: true
+  status: 'registered'
+}
+type Staked = {
+  status: 'staked'
   poolId: string
   amount: string
   rewards: string
-}
-type NotRegistered = {
-  isRegistered: false
 }
 
 export const useStakingInfo = (wallet: YoroiWallet) => {
@@ -47,7 +50,10 @@ export const useStakingInfo = (wallet: YoroiWallet) => {
     queryKey: [wallet.id, 'stakingInfo'],
     queryFn: async () => {
       const stakingStatus = await wallet.getDelegationStatus()
-      if (!stakingStatus.isRegistered) return {isRegistered: false}
+      if (!stakingStatus.isRegistered || !('poolKeyHash' in stakingStatus))
+        return {
+          status: stakingStatus.isRegistered ? 'registered' : 'not-registered',
+        }
 
       const accountStates = await wallet.fetchAccountState()
       const accountState = accountStates[wallet.rewardAddressHex]
@@ -58,7 +64,7 @@ export const useStakingInfo = (wallet: YoroiWallet) => {
       const amount = sum([...stakingUtxos.map((utxo) => utxo.amount), accountState.remainingAmount])
 
       return {
-        isRegistered: true,
+        status: 'staked',
         poolId: stakingStatus.poolKeyHash,
         amount,
         rewards: accountState.remainingAmount,
@@ -85,7 +91,7 @@ export const useStakePoolIds = (wallet: YoroiWallet) => {
 
   return {
     ...stakingInfoQuery,
-    stakePoolIds: !stakingInfo ? undefined : stakingInfo.isRegistered ? [stakingInfo.poolId] : [],
+    stakePoolIds: !stakingInfo ? undefined : stakingInfo.status === 'staked' ? [stakingInfo.poolId] : [],
   }
 }
 

@@ -13,7 +13,7 @@ import {useSelectedWallet} from '../../src/SelectedWallet'
 import {StandardModal, Text} from '../components'
 import {COLORS} from '../theme'
 import {walletManager} from '../yoroi-wallets'
-import {isRegistrationOpen} from './catalystUtils'
+import {isRegistrationOpen} from '../yoroi-wallets'
 type Props = {onPress: () => void; disabled?: boolean}
 
 export const VotingBanner = ({onPress, disabled}: Props) => {

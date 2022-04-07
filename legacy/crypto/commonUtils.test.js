@@ -1,11 +1,8 @@
 // @flow
 
 import {WALLET_IMPLEMENTATION_REGISTRY} from '../config/types'
-import jestSetup from '../jestSetup'
 import {decryptData, encryptData, formatPath, generateAdaMnemonic, generateWalletRootKey} from './commonUtils'
 import {WrongPassword} from './errors'
-
-jestSetup.setup()
 
 const mnemonic = [
   'dry balcony arctic what garbage sort',

@@ -6,11 +6,6 @@ import {useIntl} from 'react-intl'
 import {Platform, StyleSheet, View} from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {showErrorDialog} from '../../../legacy/actions'
-import {
-  setLedgerDeviceId as _setLedgerDeviceId,
-  setLedgerDeviceObj as _setLedgerDeviceObj,
-} from '../../../legacy/actions/hwWallet'
 import {CONFIG} from '../../../legacy/config/config'
 import {WrongPassword} from '../../../legacy/crypto/errors'
 import KeyStore from '../../../legacy/crypto/KeyStore'
@@ -20,6 +15,8 @@ import LocalizableError from '../../../legacy/i18n/LocalizableError'
 import {WALLET_ROOT_ROUTES} from '../../../legacy/RoutesList'
 import {hwDeviceInfoSelector} from '../../../legacy/selectors'
 import {useCloseWallet, useSubmitTx} from '../../hooks'
+import {showErrorDialog} from '../../legacy/actions'
+import {setLedgerDeviceId as _setLedgerDeviceId, setLedgerDeviceObj as _setLedgerDeviceObj} from '../../legacy/hwWallet'
 import {useSelectedWallet, useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {HaskellShelleyTxSignRequest, SignedTx, SystemAuthDisabled, walletManager} from '../../yoroi-wallets'

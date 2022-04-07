@@ -1,9 +1,6 @@
 // @flow
 
-import jestSetup from '../../jestSetup'
 import {checkISO8601Date, checkNonNegativeInt} from './facade'
-
-jestSetup.setup()
 
 describe('checkNonNegativeInt', () => {
   it('can validate positive integers', () => {

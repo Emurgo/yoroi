@@ -8,15 +8,15 @@ import {CONFIG} from '../../legacy/config/config'
 import {getCardanoNetworkConfigById, isJormungandr} from '../../legacy/config/networks'
 import KeyStore from '../../legacy/crypto/KeyStore'
 import type {HWDeviceInfo} from '../../legacy/crypto/shelley/ledgerUtils'
-import {TransactionCache, TransactionCacheJSON} from '../../legacy/crypto/shelley/transactionCache'
 import type {EncryptionMethod} from '../../legacy/crypto/types'
 import assert from '../../legacy/utils/assert'
 import {Logger} from '../../legacy/utils/logging'
 import type {Mutex} from '../../legacy/utils/promise'
 import {IsLockedError, nonblockingSynchronize, synchronize} from '../../legacy/utils/promise'
-import {validatePassword} from '../../legacy/utils/validators'
 import {NetworkId, WalletImplementationId, YoroiProvider} from './cardano'
 import {AddressChain, AddressChainJSON} from './cardano/chain'
+import {TransactionCache, TransactionCacheJSON} from './cardano/shelley/transactionCache'
+import {validatePassword} from './utils/validators'
 
 type WalletState = {
   lastGeneratedAddressIndex: number
@@ -83,7 +83,7 @@ export class Wallet {
 
   isInitialized = false
 
-  transactionCache: TransactionCache = null
+  transactionCache: null | TransactionCache = null
 
   _doFullSyncMutex: Mutex = {name: 'doFullSyncMutex', lock: null}
 
@@ -113,6 +113,7 @@ export class Wallet {
   }
 
   get isUsedAddressIndex() {
+    if (!this.transactionCache) throw new Error('invalid wallet state')
     return this._isUsedAddressIndexSelector(this.transactionCache.perAddressTxs)
   }
 
@@ -121,10 +122,12 @@ export class Wallet {
   }
 
   get transactions() {
+    if (!this.transactionCache) throw new Error('invalid wallet state')
     return this.transactionCache.transactions
   }
 
   get confirmationCounts() {
+    if (!this.transactionCache) throw new Error('invalid wallet state')
     return this.transactionCache.confirmationCounts
   }
 
@@ -181,6 +184,7 @@ export class Wallet {
   setupSubscriptions() {
     if (!this.internalChain) throw new Error('invalid wallet state')
     if (!this.externalChain) throw new Error('invalid wallet state')
+    if (!this.transactionCache) throw new Error('invalid wallet state')
 
     this.transactionCache.subscribe(this.notify)
     this.transactionCache.subscribeOnTxHistoryUpdate(this.notifyOnTxHistoryUpdate)
@@ -207,6 +211,7 @@ export class Wallet {
   }
 
   isUsedAddress(address: string) {
+    if (!this.transactionCache) throw new Error('invalid wallet state')
     return !!this.transactionCache.perAddressTxs[address] && this.transactionCache.perAddressTxs[address].length > 0
   }
 
@@ -220,6 +225,7 @@ export class Wallet {
   }
 
   async _doFullSync() {
+    if (!this.transactionCache) throw new Error('invalid wallet state')
     Logger.info(`Do full sync provider =`, this.provider)
     assert.assert(this.isInitialized, 'doFullSync: isInitialized')
     // TODO: multi-network support
@@ -250,6 +256,7 @@ export class Wallet {
   }
 
   resync() {
+    if (!this.transactionCache) throw new Error('invalid wallet state')
     this.transactionCache.resetState()
   }
 
@@ -309,6 +316,7 @@ export class Wallet {
     if (this.internalAddresses == null) throw new Error('invalid WalletJSON: internalAddresses')
     if (this.externalChain == null) throw new Error('invalid WalletJSON: externalChain')
     if (this.internalChain == null) throw new Error('invalid WalletJSON: internalChain')
+    if (this.transactionCache == null) throw new Error('invalid WalletJSON: transactionCache')
 
     return {
       lastGeneratedAddressIndex: this.state.lastGeneratedAddressIndex,

@@ -4,13 +4,13 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StatusBar, StyleSheet, View} from 'react-native'
 import QRCodeScanner from 'react-native-qrcode-scanner'
 
-import {showErrorDialog} from '../../../legacy/actions'
 import {errorMessages} from '../../../legacy/i18n/global-messages'
 import {WALLET_INIT_ROUTES} from '../../../legacy/RoutesList'
-import {isCIP1852AccountPath, isValidPublicKey} from '../../../legacy/utils/bip44Validators'
 import {Logger} from '../../../legacy/utils/logging'
 import {BulletPointItem, Spacer, Text} from '../../components'
+import {showErrorDialog} from '../../legacy/actions'
 import {theme} from '../../theme'
+import {isCIP1852AccountPath, isValidPublicKey} from '../../yoroi-wallets/cardano/bip44Validators'
 
 export type Params = {
   networkId: string

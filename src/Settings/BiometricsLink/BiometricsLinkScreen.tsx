@@ -4,12 +4,12 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet} from 'react-native'
 import {useDispatch} from 'react-redux'
 
-import {setSystemAuth, showErrorDialog} from '../../../legacy/actions'
 import {canBiometricEncryptionBeEnabled} from '../../../legacy/helpers/deviceSettings'
 import {errorMessages} from '../../../legacy/i18n/global-messages'
 import {SETTINGS_ROUTES} from '../../../legacy/RoutesList'
 import {FingerprintScreenBase} from '../../BiometricAuth'
 import {Button} from '../../components'
+import {setSystemAuth, showErrorDialog} from '../../legacy/actions'
 
 export const BiometricsLinkScreen = () => {
   const intl = useIntl()
@@ -18,7 +18,8 @@ export const BiometricsLinkScreen = () => {
   const dispatch = useDispatch()
   const linkBiometricsSignIn = async () => {
     if (await canBiometricEncryptionBeEnabled()) {
-      dispatch(setSystemAuth(true))
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ;(dispatch(setSystemAuth(true)) as any)
         .then(() => navigation.navigate(SETTINGS_ROUTES.MAIN))
         .catch(() => showErrorDialog(errorMessages.disableEasyConfirmationFirst, intl))
     } else {

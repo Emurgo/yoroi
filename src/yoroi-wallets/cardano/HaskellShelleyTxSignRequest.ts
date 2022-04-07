@@ -55,7 +55,7 @@ export type CreateUnsignedTxRequest = {
   addressedUtxos: Array<AddressedUtxo>
   defaultToken: DefaultTokenEntry
   tokens: SendTokenList
-  auxiliaryData: AuxiliaryData | void
+  auxiliaryData: undefined | AuxiliaryData
   networkConfig: CardanoHaskellShelleyNetwork
 }
 export class HaskellShelleyTxSignRequest implements ISignRequest<TransactionBuilder> {

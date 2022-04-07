@@ -6,6 +6,7 @@ import type {DefaultAsset} from '../../src/types'
 export var isHaskellShelley: (walletImplementationId: string) => boolean
 export var isByron: (walletImplementationId: string) => boolean
 export var getDefaultAssets: () => Array<DefaultAsset>
+export var getCardanoDefaultAsset: () => DefaultAsset
 
 export var DISABLE_BACKGROUND_SYNC: boolean
 // prettier-ignore
@@ -26,6 +27,7 @@ export var WALLETS: {
 
 // prettier-ignore
 export var CONFIG: {
+  MAX_CONCURRENT_REQUESTS: number,
   PRIMARY_ASSET_CONSTANTS: {
     CARDANO: ""
   },
@@ -124,6 +126,7 @@ export var isJormun: (id: WalletImplementationId) => boolean
 
 // prettier-ignore
 type NetworkConfig = {
+  MINIMUM_UTXO_VAL: string,
   NETWORK_ID: number,
   CHAIN_NETWORK_ID: string,
   ENABLED: boolean,

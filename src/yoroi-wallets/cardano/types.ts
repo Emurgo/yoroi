@@ -10,8 +10,6 @@ import type {
   TxStatusResponse,
 } from '../../../legacy/api/types'
 import type {HWDeviceInfo} from '../../../legacy/crypto/shelley/ledgerUtils'
-import type {JSONMetadata} from '../../../legacy/crypto/shelley/metadataUtils'
-import {TransactionCache} from '../../../legacy/crypto/shelley/transactionCache'
 import type {EncryptionMethod, SignedTx, WalletState} from '../../../legacy/crypto/types'
 import {WalletMeta} from '../../../legacy/state'
 import type {Transaction} from '../../../legacy/types/HistoryTransaction'
@@ -31,7 +29,9 @@ import Wallet from '../Wallet'
 import type {Addresses} from './chain'
 import {AddressChain} from './chain'
 import {HaskellShelleyTxSignRequest} from './HaskellShelleyTxSignRequest'
+import type {JSONMetadata} from './metadataUtils'
 import {MultiToken} from './MultiToken'
+import {TransactionCache} from './shelley/transactionCache'
 
 export interface WalletInterface {
   id: null | string
@@ -72,7 +72,7 @@ export interface WalletInterface {
 
   isInitialized: boolean
 
-  transactionCache: TransactionCache
+  transactionCache: null | TransactionCache
 
   checksum: undefined | WalletChecksum
 
@@ -88,7 +88,7 @@ export interface WalletInterface {
 
   get transactions(): Record<string, Transaction>
 
-  get confirmationCounts(): Record<string, number>
+  get confirmationCounts(): Record<string, null | number>
 
   // =================== create =================== //
 
