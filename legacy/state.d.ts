@@ -6,6 +6,8 @@ import {BigNumber} from 'bignumber.js'
 import {ISignRequest, RawUtxo, RemotePoolMetaSuccess, ServerStatus, Token, WalletInterface} from '../src/types'
 import type {NetworkId, WalletImplementationId, YoroiProvider} from './config/types'
 
+export var mockState = () => State
+
 // prettier-ignore
 export type WalletMeta = {
   id: string,
@@ -13,7 +15,7 @@ export type WalletMeta = {
   networkId: NetworkId,
   walletImplementationId: WalletImplementationId,
   isHW: boolean,
-  isShelley?: boolean | void | null, // legacy jormungandr
+  isShelley?: boolean | undefined | null, // legacy jormungandr
   isEasyConfirmationEnabled: boolean,
   checksum: WalletChecksum,
   provider?: YoroiProvider,
@@ -22,6 +24,7 @@ export type WalletMeta = {
 // prettier-ignore
 export type ReduxWallet = Pick<
   WalletInterface,
+  | 'id'
   | 'isEasyConfirmationEnabled'
   | 'networkId'
   | 'walletImplementationId'
@@ -80,14 +83,14 @@ export type State = {
   isKeyboardOpen: boolean,
   appSettings: {
     acceptedTos: boolean,
-    installationId: string | void | null,
+    installationId: string | undefined | null,
     languageCode: string,
-    customPinHash: string | void | null,
+    customPinHash: string | undefined | null,
     isSystemAuthEnabled: boolean,
     isBiometricHardwareSupported: boolean,
     sendCrashReports: boolean,
     canEnableBiometricEncryption: boolean,
-    currentVersion: string | void | null,
+    currentVersion: string | undefined | null,
   },
   // need to add as a non-wallet-specific property to avoid conflict with other
   // actions that may override this property (otherwise more refactoring is needed)
@@ -96,7 +99,7 @@ export type State = {
   isMaintenance: boolean,
   voting: {
     pin: Array<number>,
-    encryptedKey: string | void | null,
+    encryptedKey: string | undefined | null,
     catalystPrivateKey?: string,
     // TODO: it's in general not recommended to use non-plain objects in store
     unsignedTx?: ISignRequest<unknown>,

@@ -10,14 +10,14 @@ import infoIcon from '../../legacy/assets/img/icon/info-light-green.png'
 import {UI_V2} from '../../legacy/config/config'
 import {isByron} from '../../legacy/config/config'
 import {assetMessages, txLabels} from '../../legacy/i18n/global-messages'
+import {OfflineBanner, StatusBar, Text} from '../components'
+import {checkForFlawedWallets} from '../legacy/actions'
 import {
   isOnlineSelector,
   isSynchronizingHistorySelector,
   lastHistorySyncErrorSelector,
   walletIsInitializedSelector,
-} from '../../legacy/selectors'
-import {OfflineBanner, StatusBar, Text} from '../components'
-import {checkForFlawedWallets} from '../legacy/actions'
+} from '../legacy/selectors'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
 import {ActionsBanner} from './ActionsBanner'

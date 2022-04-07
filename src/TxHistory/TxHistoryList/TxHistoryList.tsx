@@ -5,10 +5,10 @@ import {Alert, SectionList, SectionListProps, StyleSheet, View} from 'react-nati
 import {useSelector} from 'react-redux'
 
 import {actionMessages} from '../../../legacy/i18n/global-messages'
-import {transactionsInfoSelector} from '../../../legacy/selectors'
 import {formatDateRelative} from '../../../legacy/utils/format'
 import {Text} from '../../components'
 import features from '../../features'
+import {transactionsInfoSelector} from '../../legacy/selectors'
 import {TransactionInfo} from '../../types'
 import {useOnScroll} from '../useOnScroll'
 import {ActionsBanner} from './ActionsBanner'

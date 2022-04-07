@@ -8,10 +8,10 @@ import {useDispatch, useSelector} from 'react-redux'
 import {CONFIG} from '../../../legacy/config/config'
 import {authenticateByCustomPin} from '../../../legacy/crypto/customPin'
 import {errorMessages} from '../../../legacy/i18n/global-messages'
-import {customPinHashSelector} from '../../../legacy/selectors'
 import {PinRegistrationForm} from '../../auth'
 import {PinInput, StatusBar} from '../../components'
 import {encryptAndStoreCustomPin, showErrorDialog} from '../../legacy/actions'
+import {customPinHashSelector} from '../../legacy/selectors'
 
 export const ChangePinScreen = () => {
   const intl = useIntl()

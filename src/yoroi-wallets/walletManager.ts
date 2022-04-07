@@ -24,13 +24,13 @@ import KeyStore from '../../legacy/crypto/KeyStore'
 import type {HWDeviceInfo} from '../../legacy/crypto/shelley/ledgerUtils'
 import type {EncryptionMethod, SendTokenList} from '../../legacy/crypto/types'
 import {APP_SETTINGS_KEYS, readAppSettings} from '../../legacy/helpers/appSettings'
-import {ensureKeysValidity, isSystemAuthSupported} from '../../legacy/helpers/deviceSettings'
 import type {WalletMeta} from '../../legacy/state'
 import type {DefaultAsset} from '../../legacy/types/HistoryTransaction'
 import assert from '../../legacy/utils/assert'
 import {ObjectValues} from '../../legacy/utils/flow'
 import {Logger} from '../../legacy/utils/logging'
 import storage from '../../legacy/utils/storage'
+import {ensureKeysValidity, isSystemAuthSupported} from '../legacy/deviceSettings'
 import {
   DefaultTokenEntry,
   isYoroiWallet,

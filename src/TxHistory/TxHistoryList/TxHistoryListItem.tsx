@@ -7,12 +7,6 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
 import {
-  availableAssetsSelector,
-  defaultNetworkAssetSelector,
-  externalAddressIndexSelector,
-  internalAddressIndexSelector,
-} from '../../../legacy/selectors'
-import {
   ASSET_DENOMINATION,
   formatTimeToSeconds,
   formatTokenFractional,
@@ -22,6 +16,12 @@ import {
 import utfSymbols from '../../../legacy/utils/utfSymbols'
 import {Text} from '../../components'
 import {Icon} from '../../components/Icon'
+import {
+  availableAssetsSelector,
+  defaultNetworkAssetSelector,
+  externalAddressIndexSelector,
+  internalAddressIndexSelector,
+} from '../../legacy/selectors'
 import {TxHistoryStackRootProps} from '../../navigation'
 import {COLORS} from '../../theme'
 import {DefaultAsset, IOData, TransactionAssurance, TransactionDirection, TransactionInfo} from '../../types'

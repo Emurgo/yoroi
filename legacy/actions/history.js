@@ -80,12 +80,14 @@ export const mirrorTxHistory = () => (dispatch: Dispatch<any>) => {
     isEasyConfirmationEnabled,
     checksum,
     provider,
+    id,
   } = walletManager
 
   dispatch({
     type: 'Mirror walletManager TxHistory',
     path: ['wallet'],
     payload: {
+      id,
       isEasyConfirmationEnabled,
       isInitialized,
       networkId,

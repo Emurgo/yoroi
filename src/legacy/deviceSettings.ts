@@ -1,9 +1,8 @@
-// @flow
-/* eslint-disable-next-line */
-import {Platform, NativeModules} from 'react-native'
 import ExtendableError from 'es6-error'
+import {NativeModules, Platform} from 'react-native'
 import * as Keychain from 'react-native-keychain'
-import KeyStore from '../crypto/KeyStore'
+
+import KeyStore from '../../legacy/crypto/KeyStore'
 
 const {KeyStoreBridge} = NativeModules
 

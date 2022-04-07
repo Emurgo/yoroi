@@ -1,11 +1,9 @@
-// @flow
-
 import {fromPairs} from 'lodash'
 
-import {checkAndFacadeTransactionAsync} from './api/shelley/facade'
-import type {RawTransaction} from './api/types'
+import {checkAndFacadeTransactionAsync} from '../../legacy/api/shelley/facade'
+import type {RawTransaction} from '../../legacy/api/types'
+import {mockState} from '../../legacy/state'
 import {availableAssetsSelector, tokenBalanceSelector} from './selectors'
-import {mockState} from './state'
 
 const txs: Array<RawTransaction> = [
   {

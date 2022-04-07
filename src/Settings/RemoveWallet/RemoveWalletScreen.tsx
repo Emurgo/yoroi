@@ -7,10 +7,10 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {WALLET_ROOT_ROUTES} from '../../../legacy/RoutesList'
-import {isHWSelector} from '../../../legacy/selectors'
 import {Button, Checkbox, Checkmark, Spacer, StatusBar, Text, TextInput} from '../../components'
 import {useRemoveWallet, useWalletName} from '../../hooks'
 import {updateWallets} from '../../legacy/actions'
+import {isHWSelector} from '../../legacy/selectors'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 

@@ -1,10 +1,10 @@
 import React from 'react'
 import {useSelector} from 'react-redux'
 
-import {isFetchingUtxosSelector, tokenBalanceSelector} from '../../../legacy/selectors'
 import {formatTokenWithText} from '../../../legacy/utils/format'
 import {Banner} from '../../components'
 import {useTokenInfo} from '../../hooks'
+import {isFetchingUtxosSelector, tokenBalanceSelector} from '../../legacy/selectors'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {useStrings} from './strings'
 

@@ -11,8 +11,14 @@ import IndexScreen from '../legacy/components/IndexScreen'
 import {CONFIG} from '../legacy/config/config'
 import KeyStore from '../legacy/crypto/KeyStore'
 import env from '../legacy/env'
-import {canBiometricEncryptionBeEnabled, recreateAppSignInKeys} from '../legacy/helpers/deviceSettings'
 import {errorMessages} from '../legacy/i18n/global-messages'
+import type {State} from '../legacy/state'
+import {BiometricAuthScreen} from './BiometricAuth'
+import {Boundary} from './components'
+import {CustomPinScreen} from './FirstRun/CustomPinScreen'
+import {FirstRunNavigator} from './FirstRun/FirstRunNavigator'
+import {showErrorDialog, signin} from './legacy/actions'
+import {canBiometricEncryptionBeEnabled, recreateAppSignInKeys} from './legacy/deviceSettings'
 import {
   canEnableBiometricSelector,
   installationIdSelector,
@@ -20,13 +26,7 @@ import {
   isAuthenticatedSelector,
   isMaintenanceSelector,
   isSystemAuthEnabledSelector,
-} from '../legacy/selectors'
-import type {State} from '../legacy/state'
-import {BiometricAuthScreen} from './BiometricAuth'
-import {Boundary} from './components'
-import {CustomPinScreen} from './FirstRun/CustomPinScreen'
-import {FirstRunNavigator} from './FirstRun/FirstRunNavigator'
-import {showErrorDialog, signin} from './legacy/actions'
+} from './legacy/selectors'
 import {CustomPinLoginScreen} from './Login'
 import MaintenanceScreen from './MaintenanceScreen'
 import {defaultNavigationOptions, defaultStackNavigatorOptions} from './navigationOptions'
