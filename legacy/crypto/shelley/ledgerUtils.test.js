@@ -2,10 +2,7 @@
 
 import type {GetVersionResponse} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 
-import jestSetup from '../../jestSetup'
 import {checkDeviceVersion, DeprecatedAdaAppError} from './ledgerUtils'
-
-jestSetup.setup()
 
 describe('encryption/decryption', () => {
   it('should throw on outdated ledger Ada app', () => {

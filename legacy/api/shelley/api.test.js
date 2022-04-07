@@ -2,11 +2,9 @@
 
 /* eslint-env jest */
 import {getCardanoNetworkConfigById, NETWORKS} from '../../config/networks'
-import jestSetup from '../../jestSetup'
 import {ApiError, ApiHistoryError} from '../errors'
 import * as api from './api'
 
-jestSetup.setup()
 jest.setTimeout(30 * 1000)
 
 const networkConfig = getCardanoNetworkConfigById(NETWORKS.HASKELL_SHELLEY.NETWORK_ID)

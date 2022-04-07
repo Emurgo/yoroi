@@ -4,10 +4,10 @@ import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {encryptAndStoreCustomPin, setSystemAuth, signin} from '../../../legacy/actions'
 import {isAuthenticatedSelector} from '../../../legacy/selectors'
 import {PinRegistrationForm} from '../../auth'
 import {StatusBar} from '../../components'
+import {encryptAndStoreCustomPin, setSystemAuth, signin} from '../../legacy/actions'
 
 export const CustomPinScreen = () => {
   const strings = useStrings()

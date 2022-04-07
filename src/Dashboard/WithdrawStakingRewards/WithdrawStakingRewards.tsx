@@ -5,7 +5,6 @@ import React from 'react'
 import {IntlShape} from 'react-intl'
 import {Platform} from 'react-native'
 
-import {showErrorDialog} from '../../../legacy/actions'
 import type {WithdrawalDialogSteps} from '../../../legacy/components/Delegation/types'
 import {WITHDRAWAL_DIALOG_STEPS} from '../../../legacy/components/Delegation/types'
 import {CONFIG} from '../../../legacy/config/config'
@@ -17,6 +16,7 @@ import {ensureKeysValidity} from '../../../legacy/helpers/deviceSettings'
 import {errorMessages} from '../../../legacy/i18n/global-messages'
 import LocalizableError from '../../../legacy/i18n/LocalizableError'
 import {DELEGATION_ROUTES, SEND_ROUTES, WALLET_ROOT_ROUTES, WALLET_ROUTES} from '../../../legacy/RoutesList'
+import {showErrorDialog} from '../../legacy/actions'
 import {DefaultAsset, RawUtxo} from '../../types'
 import {
   HaskellShelleyTxSignRequest,

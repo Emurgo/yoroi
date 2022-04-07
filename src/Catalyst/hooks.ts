@@ -1,8 +1,7 @@
 import {useMutation, UseMutationOptions} from 'react-query'
 
-import {HaskellShelleyTxSignRequest, YoroiWallet} from '../yoroi-wallets'
+import {generatePrivateKeyForCatalyst, HaskellShelleyTxSignRequest, YoroiWallet} from '../yoroi-wallets'
 import {encryptWithPassword} from './catalystCipher'
-import {generatePrivateKeyForCatalyst} from './catalystUtils'
 
 export type VotingRegTxVariables = {
   pin: string

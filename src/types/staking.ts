@@ -1,11 +1,13 @@
-export type StakingStatus = Registered | NotRegistered
+export type StakingStatus = Registered | Staked | NotRegistered
 type Registered = {
+  isRegistered: true
+}
+type Staked = {
   isRegistered: true
   poolKeyHash: string
 }
 type NotRegistered = {
   isRegistered: false
-  poolKeyHash: null
 }
 
 export type StakePoolInfoRequest = {

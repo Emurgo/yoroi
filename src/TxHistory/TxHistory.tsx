@@ -4,7 +4,6 @@ import {LayoutAnimation, StyleSheet, TouchableOpacity, View} from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {checkForFlawedWallets} from '../../legacy/actions'
 import {fetchAccountState} from '../../legacy/actions/account'
 import {updateHistory} from '../../legacy/actions/history'
 import infoIcon from '../../legacy/assets/img/icon/info-light-green.png'
@@ -18,6 +17,7 @@ import {
   walletIsInitializedSelector,
 } from '../../legacy/selectors'
 import {OfflineBanner, StatusBar, Text} from '../components'
+import {checkForFlawedWallets} from '../legacy/actions'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
 import {ActionsBanner} from './ActionsBanner'

@@ -4,7 +4,6 @@ import {createIntl, createIntlCache, IntlProvider} from 'react-intl'
 import {AppRegistry, Text} from 'react-native'
 import {Provider, useSelector} from 'react-redux'
 
-import {handleGeneralError, setupHooks} from '../legacy/actions'
 import {CONFIG} from '../legacy/config/config'
 import getConfiguredStore from '../legacy/helpers/configureStore'
 import translations from '../legacy/i18n/translations'
@@ -12,6 +11,7 @@ import {languageSelector} from '../legacy/selectors'
 import {setLogLevel} from '../legacy/utils/logging'
 import App from './App'
 import {name as appName} from './app.json'
+import {handleGeneralError, setupHooks} from './legacy/actions'
 
 setLogLevel(CONFIG.LOG_LEVEL)
 

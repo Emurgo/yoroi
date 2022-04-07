@@ -3,7 +3,6 @@
 import {BigNumber} from 'bignumber.js'
 
 import {getCardanoDefaultAsset} from '../config/config'
-import jestSetup from '../jestSetup'
 import {
   ASSET_DENOMINATION,
   formatTokenAmount,
@@ -11,8 +10,6 @@ import {
   formatTokenInteger,
   getAssetDenomination,
 } from './format'
-
-jestSetup.setup()
 
 const defaultCardanoAsset = getCardanoDefaultAsset()
 

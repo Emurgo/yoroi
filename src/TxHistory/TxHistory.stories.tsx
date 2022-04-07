@@ -2,11 +2,11 @@ import {createStackNavigator} from '@react-navigation/stack'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {MockAppStateWrapper, mockV2NavigatorOptions} from '../../legacy/utils/mocks'
 import {mockWallet} from '../../storybook'
 import {defaultStackNavigatorOptions} from '../navigationOptions'
 import {SelectedWalletProvider} from '../SelectedWallet'
 import {COLORS} from '../theme'
+import {MockAppStateWrapper, mockV2NavigatorOptions} from '../yoroi-wallets/utils/mocks'
 import {TxHistory as TxHistoryScreen} from './TxHistory'
 
 storiesOf('V2/TxHistory', module)

@@ -5,11 +5,8 @@ import {MultiToken} from '../../src/yoroi-wallets'
 import {checkAndFacadeTransactionAsync} from '../api/shelley/facade'
 import type {RawTransaction} from '../api/types'
 import {CONFIG} from '../config/config'
-import jestSetup from '../jestSetup'
 import {TRANSACTION_DIRECTION} from '../types/HistoryTransaction'
 import {processTxHistoryData} from './processTransactions'
-
-jestSetup.setup()
 
 //
 // addresses from:

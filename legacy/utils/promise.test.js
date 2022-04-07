@@ -1,9 +1,6 @@
 // @flow
 
-import jestSetup from '../jestSetup'
 import {delay, synchronize} from './promise'
-
-jestSetup.setup()
 
 it('can delay', async () => {
   expect.assertions(1)

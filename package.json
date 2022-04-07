@@ -73,8 +73,7 @@
     ],
     "preset": "react-native",
     "setupFiles": [
-      "./legacy/jestSetup.js",
-      "./node_modules/react-native-gesture-handler/jestSetup.js"
+      "<rootDir>/jestSetup.ts"
     ],
     "testPathIgnorePatterns": [
       "legacy/"

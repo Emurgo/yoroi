@@ -4,10 +4,10 @@ import React from 'react'
 import {StyleSheet} from 'react-native'
 
 import iconQR from '../../legacy/assets/img/qr_code.png'
-import {pastedFormatter} from '../../legacy/components/Send/amountUtils'
 import {UI_V2} from '../../legacy/config/config'
 import {SEND_ROUTES} from '../../legacy/RoutesList'
 import {Button} from '../components'
+import {pastedFormatter} from '../yoroi-wallets/utils/amountUtils'
 
 export const ScannerButton = () => {
   const navigation = useNavigation()

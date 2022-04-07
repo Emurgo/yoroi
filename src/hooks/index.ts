@@ -9,7 +9,6 @@ import {
   UseQueryOptions,
 } from 'react-query'
 
-import {generateShelleyPlateFromKey} from '../../legacy/crypto/shelley/plate'
 import {WalletMeta} from '../../legacy/state'
 import storage from '../../legacy/utils/storage'
 import {Token} from '../types'
@@ -22,6 +21,7 @@ import {
   YoroiProvider,
   YoroiWallet,
 } from '../yoroi-wallets'
+import {generateShelleyPlateFromKey} from '../yoroi-wallets/cardano/shelley/plate'
 
 // WALLET
 export const useCloseWallet = (options?: UseMutationOptions<void, Error>) => {
