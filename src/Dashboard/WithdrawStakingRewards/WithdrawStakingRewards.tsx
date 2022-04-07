@@ -12,11 +12,11 @@ import {WrongPassword} from '../../../legacy/crypto/errors'
 import {ISignRequest} from '../../../legacy/crypto/ISignRequest'
 import KeyStore from '../../../legacy/crypto/KeyStore'
 import type {DeviceId, DeviceObj, HWDeviceInfo} from '../../../legacy/crypto/shelley/ledgerUtils'
-import {ensureKeysValidity} from '../../../legacy/helpers/deviceSettings'
 import {errorMessages} from '../../../legacy/i18n/global-messages'
 import LocalizableError from '../../../legacy/i18n/LocalizableError'
 import {DELEGATION_ROUTES, SEND_ROUTES, WALLET_ROOT_ROUTES, WALLET_ROUTES} from '../../../legacy/RoutesList'
 import {showErrorDialog} from '../../legacy/actions'
+import {ensureKeysValidity} from '../../legacy/deviceSettings'
 import {DefaultAsset, RawUtxo} from '../../types'
 import {
   HaskellShelleyTxSignRequest,
@@ -30,7 +30,7 @@ import {WithdrawalDialog} from './WithdrawalDialog'
 type Props = {
   intl: IntlShape
   navigation: NavigationProp<any>
-  utxos: Array<RawUtxo> | null
+  utxos: Array<RawUtxo> | undefined | null
   setLedgerDeviceId: (deviceID: DeviceId) => Promise<void>
   setLedgerDeviceObj: (deviceObj: DeviceObj) => Promise<void>
   isHW: boolean

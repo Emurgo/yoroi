@@ -12,7 +12,6 @@ import uuid from 'uuid'
 import {clearAccountState} from '../../legacy/actions/account'
 import {mirrorTxHistory, setBackgroundSyncError, updateHistory} from '../../legacy/actions/history'
 import {changeAndSaveLanguage} from '../../legacy/actions/language'
-import {fetchTokenInfo} from '../../legacy/actions/tokenInfo'
 import {clearUTXOs} from '../../legacy/actions/utxo'
 import * as api from '../../legacy/api/shelley/api'
 import {CONFIG} from '../../legacy/config/config'
@@ -30,24 +29,21 @@ import {
 } from '../../legacy/helpers/appSettings'
 import {backgroundLockListener} from '../../legacy/helpers/backgroundLockHelper'
 import crashReporting from '../../legacy/helpers/crashReporting'
-import {
-  canBiometricEncryptionBeEnabled,
-  recreateAppSignInKeys,
-  removeAppSignInKeys,
-} from '../../legacy/helpers/deviceSettings'
 import globalMessages, {errorMessages} from '../../legacy/i18n/global-messages'
+import type {State} from '../../legacy/state'
+import assert from '../../legacy/utils/assert'
+import {Logger} from '../../legacy/utils/logging'
+import networkInfo from '../../legacy/utils/networkInfo'
+import {ServerStatus, walletManager} from '../yoroi-wallets'
+import {canBiometricEncryptionBeEnabled, recreateAppSignInKeys, removeAppSignInKeys} from './deviceSettings'
 import {
   currentVersionSelector,
   installationIdSelector,
   isAppSetupCompleteSelector,
   isSystemAuthEnabledSelector,
   sendCrashReportsSelector,
-} from '../../legacy/selectors'
-import type {State} from '../../legacy/state'
-import assert from '../../legacy/utils/assert'
-import {Logger} from '../../legacy/utils/logging'
-import networkInfo from '../../legacy/utils/networkInfo'
-import {ServerStatus, walletManager} from '../yoroi-wallets'
+} from './selectors'
+import {fetchTokenInfo} from './tokenInfo'
 
 const updateCrashlytics = (fieldName: AppSettingsKey, value: any) => {
   const handlers = {
@@ -140,15 +136,15 @@ export const acceptAndSaveTos = () => async (dispatch: Dispatch<any>) => {
 const initInstallationId =
   () =>
   async (dispatch: Dispatch<any>, getState: any): Promise<string> => {
-    let installationId = installationIdSelector(getState())
+    const installationId = installationIdSelector(getState())
 
     if (installationId != null) {
       return installationId
     }
 
-    installationId = uuid.v4()
-    await dispatch(setAppSettingField(APP_SETTINGS_KEYS.INSTALLATION_ID, installationId))
-    return installationId
+    const newInstallationId = uuid.v4()
+    await dispatch(setAppSettingField(APP_SETTINGS_KEYS.INSTALLATION_ID, newInstallationId))
+    return newInstallationId
   }
 
 export const updateVersion =
@@ -222,7 +218,7 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
   }
 
   await dispatch(reloadAppSettings())
-  const installationId = await dispatch(initInstallationId())
+  const installationId = (await dispatch(initInstallationId())) as unknown as string
   const state = getState()
 
   if (sendCrashReportsSelector(getState())) {

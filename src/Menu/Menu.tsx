@@ -8,10 +8,10 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useSelector} from 'react-redux'
 
 import {CONFIG} from '../../legacy/config/config'
-import {tokenBalanceSelector} from '../../legacy/selectors'
 import {CatalystNavigator} from '../Catalyst/CatalystNavigator'
 import {Icon, Spacer, Text} from '../components'
 import {useWalletMetas} from '../hooks'
+import {tokenBalanceSelector} from '../legacy/selectors'
 import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../navigationOptions'
 import {InsufficientFundsModal} from './InsufficientFundsModal'
 

@@ -3,7 +3,7 @@ import {ActivityIndicator} from 'react-native'
 import Markdown from 'react-native-easy-markdown'
 import {useSelector} from 'react-redux'
 
-import {languageSelector} from '../../../../legacy/selectors'
+import {languageSelector} from '../../../legacy/selectors'
 import {loadTOS} from './loadTos'
 
 export const TermsOfService = () => {

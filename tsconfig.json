@@ -24,6 +24,6 @@
     "resolveJsonModule": true,
     "skipLibCheck": true
   },
-  "include": ["./.d.ts", "./src"],
+  "include": ["./.d.ts", "./src", "legacy/actions/tokenInfo.js"],
   "exclude": ["node_modules", "babel.config.js", "metro.config.js", "jest.config.js"]
 }

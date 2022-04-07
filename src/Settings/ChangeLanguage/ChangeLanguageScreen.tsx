@@ -5,8 +5,8 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {changeAndSaveLanguage, changeLanguage} from '../../../legacy/actions/language'
-import {languageSelector} from '../../../legacy/selectors'
 import {LanguagePicker} from '../../components'
+import {languageSelector} from '../../legacy/selectors'
 
 export const ChangeLanguageScreen = () => {
   const navigation = useNavigation()

@@ -10,7 +10,7 @@ import {
   isFetchingAccountStateSelector,
   isOnlineSelector,
   utxosSelector,
-} from '../legacy/selectors'
+} from './legacy/selectors'
 
 // eslint-disable-next-line react-prefer-function-component/react-prefer-function-component
 class AccountAutoRefresherClass extends React.Component<{
@@ -18,7 +18,7 @@ class AccountAutoRefresherClass extends React.Component<{
   isOnline: boolean
   fetchAccountState: () => void
   hasPendingTx: boolean
-  utxo: null | Array<RawUtxo>
+  utxo: undefined | null | Array<RawUtxo>
   navigation: any
 }> {
   _firstFocus = true

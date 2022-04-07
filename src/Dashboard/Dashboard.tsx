@@ -14,6 +14,12 @@ import {getDefaultAssetByNetworkId} from '../../legacy/config/config'
 import {getCardanoNetworkConfigById} from '../../legacy/config/networks'
 import globalMessages from '../../legacy/i18n/global-messages'
 import {DELEGATION_ROUTES} from '../../legacy/RoutesList'
+import {AccountAutoRefresher} from '../AccountAutoRefresher'
+import {CATALYST_ROUTES} from '../Catalyst'
+import {VotingBanner} from '../Catalyst/VotingBanner'
+import {Banner, Button, OfflineBanner, StatusBar} from '../components'
+import {submitSignedTx, submitTransaction} from '../legacy/actions'
+import {setLedgerDeviceId, setLedgerDeviceObj} from '../legacy/hwWallet'
 import {
   hwDeviceInfoSelector,
   isFetchingAccountStateSelector,
@@ -23,13 +29,7 @@ import {
   serverStatusSelector,
   tokenBalanceSelector,
   utxosSelector,
-} from '../../legacy/selectors'
-import {AccountAutoRefresher} from '../AccountAutoRefresher'
-import {CATALYST_ROUTES} from '../Catalyst'
-import {VotingBanner} from '../Catalyst/VotingBanner'
-import {Banner, Button, OfflineBanner, StatusBar} from '../components'
-import {submitSignedTx, submitTransaction} from '../legacy/actions'
-import {setLedgerDeviceId, setLedgerDeviceObj} from '../legacy/hwWallet'
+} from '../legacy/selectors'
 import {useSelectedWallet} from '../SelectedWallet'
 import {UtxoAutoRefresher} from '../UtxoAutoRefresher'
 import {YoroiWallet} from '../yoroi-wallets'

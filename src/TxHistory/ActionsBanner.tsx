@@ -5,9 +5,9 @@ import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
 import {actionMessages} from '../../legacy/i18n/global-messages'
-import {isReadOnlySelector} from '../../legacy/selectors'
 import {Icon, Spacer} from '../components'
 import features from '../features'
+import {isReadOnlySelector} from '../legacy/selectors'
 import {TxHistoryStackRootProps} from '../navigation'
 import {COLORS} from '../theme'
 

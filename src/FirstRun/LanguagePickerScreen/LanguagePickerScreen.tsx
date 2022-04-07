@@ -6,8 +6,8 @@ import {useDispatch, useSelector} from 'react-redux'
 
 import {changeAndSaveLanguage, changeLanguage} from '../../../legacy/actions/language'
 import {FIRST_RUN_ROUTES} from '../../../legacy/RoutesList'
-import {languageSelector} from '../../../legacy/selectors'
 import {LanguagePicker} from '../../components'
+import {languageSelector} from '../../legacy/selectors'
 
 export const LanguagePickerScreen = () => {
   const navigation = useNavigation()

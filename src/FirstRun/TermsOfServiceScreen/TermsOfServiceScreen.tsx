@@ -6,11 +6,11 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch} from 'react-redux'
 
 import {CONFIG} from '../../../legacy/config/config'
-import {canBiometricEncryptionBeEnabled} from '../../../legacy/helpers/deviceSettings'
 import globalMessages from '../../../legacy/i18n/global-messages'
 import {FIRST_RUN_ROUTES} from '../../../legacy/RoutesList'
 import {Button, Checkbox, PleaseWaitModal, Spacer, StatusBar} from '../../components'
 import {acceptAndSaveTos, setSystemAuth, signin} from '../../legacy/actions'
+import {canBiometricEncryptionBeEnabled} from '../../legacy/deviceSettings'
 import {TermsOfService} from './TermsOfService'
 
 export const TermsOfServiceScreen = () => {

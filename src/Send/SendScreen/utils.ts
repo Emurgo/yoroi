@@ -94,7 +94,7 @@ export const recomputeAll = async ({
   addressInput: string
   walletMetadata: WalletMeta
   amount: string
-  utxos: Array<RawUtxo> | null
+  utxos: Array<RawUtxo> | undefined | null
   sendAll: boolean
   defaultAsset: DefaultAsset
   selectedTokenInfo: Token

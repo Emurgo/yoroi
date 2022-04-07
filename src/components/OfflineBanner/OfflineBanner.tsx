@@ -2,7 +2,7 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {useSelector} from 'react-redux'
 
-import {isOnlineSelector} from '../../../legacy/selectors'
+import {isOnlineSelector} from '../../legacy/selectors'
 import {Banner} from '../Banner'
 
 export const OfflineBanner = () => {

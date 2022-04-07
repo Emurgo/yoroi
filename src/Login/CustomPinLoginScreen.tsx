@@ -7,9 +7,9 @@ import {useDispatch, useSelector} from 'react-redux'
 import {CONFIG} from '../../legacy/config/config'
 import {authenticateByCustomPin} from '../../legacy/crypto/customPin'
 import {errorMessages} from '../../legacy/i18n/global-messages'
-import {customPinHashSelector} from '../../legacy/selectors'
 import {PinInput, StatusBar} from '../components'
 import {showErrorDialog, signin} from '../legacy/actions'
+import {customPinHashSelector} from '../legacy/selectors'
 
 export const CustomPinLoginScreen = () => {
   const intl = useIntl()

@@ -1,15 +1,12 @@
-// @flow
-
 import type {Dispatch} from 'redux'
 
-// $FlowExpectedError
-import {MultiToken, walletManager} from '../../src/yoroi-wallets'
-import type {TokenInfoRequest, TokenInfoResponse} from '../api/types'
-import {availableAssetsSelector, tokenBalanceSelector} from '../selectors'
-import type {State} from '../state'
-import type {Token} from '../types/HistoryTransaction'
-import {ObjectValues} from '../utils/flow'
-import {Logger} from '../utils/logging'
+import type {TokenInfoRequest, TokenInfoResponse} from '../../legacy/api/types'
+import type {State} from '../../legacy/state'
+import type {Token} from '../../legacy/types/HistoryTransaction'
+import {ObjectValues} from '../../legacy/utils/flow'
+import {Logger} from '../../legacy/utils/logging'
+import {availableAssetsSelector, tokenBalanceSelector} from '../legacy/selectors'
+import {MultiToken, walletManager} from '../yoroi-wallets'
 
 const _startFetching = () => ({
   type: 'START_FETCHING_TOKEN_INFO',
@@ -39,37 +36,37 @@ const _setLastError = (error) => ({
   reducer: (state, error) => error,
 })
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const fetchTokenInfo = () => async (dispatch: Dispatch<any>, getState: () => State) => {
   const state = getState()
+
   if (state.tokenInfo.isFetching) {
     return
   }
+
   dispatch(_setTokenInfo(availableAssetsSelector(state)))
   dispatch(_startFetching())
-  try {
-    const availableAssets: Dict<Token> = availableAssetsSelector(state)
-    const assetsBalance: MultiToken = tokenBalanceSelector(state)
 
+  try {
+    const availableAssets: Record<string, Token> = availableAssetsSelector(state)
+    const assetsBalance: MultiToken = tokenBalanceSelector(state)
     // subject -> identifier
     const subjectDict = ObjectValues(availableAssets)
       .filter((asset) => {
         const assetValue = assetsBalance.get(asset.identifier)
         return assetValue && assetValue.gt(0)
       })
-      .reduce((acc, curr: Token): Dict<string> => {
+      .reduce((acc, curr: Token): Record<string, string> => {
         if (curr.identifier === '') return acc
         acc[`${curr.metadata.policyId}${curr.metadata.assetName}`] = curr.identifier
         return acc
-      }, ({}: Dict<string>))
-
+      }, {} as Record<string, string>)
     const tokenIds = Object.keys(subjectDict)
-    const tokenInfo: TokenInfoResponse = await walletManager.fetchTokenInfo(
-      ({
-        tokenIds,
-      }: TokenInfoRequest),
-    )
-
+    const tokenInfo: TokenInfoResponse = await walletManager.fetchTokenInfo({
+      tokenIds,
+    } as TokenInfoRequest)
     const tokens = {...availableAssets}
+
     for (const key of Object.keys(tokenInfo)) {
       const _token = tokens[subjectDict[key]]
       const newInfo = tokenInfo[key]
@@ -83,6 +80,7 @@ export const fetchTokenInfo = () => async (dispatch: Dispatch<any>, getState: ()
         },
       }
     }
+
     Logger.info('saving token info in state....', tokens)
     dispatch(_setTokenInfo(tokens))
     dispatch(_setLastError(null))

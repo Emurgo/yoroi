@@ -8,19 +8,16 @@ import {useDispatch, useSelector} from 'react-redux'
 import {CONFIG, isNightly} from '../../../legacy/config/config'
 import KeyStore from '../../../legacy/crypto/KeyStore'
 import {APP_SETTINGS_KEYS} from '../../../legacy/helpers/appSettings'
-import {
-  canBiometricEncryptionBeEnabled,
-  isBiometricEncryptionHardwareSupported,
-} from '../../../legacy/helpers/deviceSettings'
 import {SETTINGS_ROUTES} from '../../../legacy/RoutesList'
+import {StatusBar} from '../../components'
+import {setAppSettingField, setEasyConfirmation, setSystemAuth} from '../../legacy/actions'
+import {canBiometricEncryptionBeEnabled, isBiometricEncryptionHardwareSupported} from '../../legacy/deviceSettings'
 import {
   biometricHwSupportSelector,
   installationIdSelector,
   isSystemAuthEnabledSelector,
   sendCrashReportsSelector,
-} from '../../../legacy/selectors'
-import {StatusBar} from '../../components'
-import {setAppSettingField, setEasyConfirmation, setSystemAuth} from '../../legacy/actions'
+} from '../../legacy/selectors'
 import {useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../SelectedWallet'
 import {walletManager} from '../../yoroi-wallets'
 import {NavigatedSettingsItem, SettingsBuildItem, SettingsItem, SettingsSection} from '../SettingsItems'

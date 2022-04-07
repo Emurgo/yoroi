@@ -3,10 +3,10 @@ import type {Dispatch} from 'redux'
 
 import type {DeviceId, DeviceObj, HWDeviceInfo} from '../../legacy/crypto/shelley/ledgerUtils'
 import {NoDeviceInfoError} from '../../legacy/crypto/shelley/ledgerUtils'
-import {hwDeviceInfoSelector} from '../../legacy/selectors'
 import type {State} from '../../legacy/state'
 import {Logger} from '../../legacy/utils/logging'
 import {walletManager} from '../yoroi-wallets'
+import {hwDeviceInfoSelector} from './selectors'
 
 const _saveHW = (hwDeviceInfo) => ({
   path: ['wallet', 'hwDeviceInfo'],
