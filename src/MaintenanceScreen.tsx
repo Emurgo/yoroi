@@ -72,7 +72,7 @@ export const MaintenanceScreen = () => {
       visible
       onRequestClose={() => BackHandler.exitApp()}
       intl={intl}
-      initApp={(...args) => dispatch(initApp(...args))}
+      initApp={() => dispatch(initApp())}
     />
   )
 }
