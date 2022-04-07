@@ -1,13 +1,15 @@
 import {useNavigation} from '@react-navigation/native'
+import {delay} from 'bluebird'
 import React, {useEffect} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, ScrollView, StyleSheet, Text} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
+import {useMutation, UseMutationOptions} from 'react-query'
 import {useDispatch} from 'react-redux'
 
 import {setEasyConfirmation, showErrorDialog} from '../../../legacy/actions'
 import Screen from '../../../legacy/components/Screen'
-import {Button, ScreenBackground, StatusBar} from '../../../legacy/components/UiKit'
+import {Button, PleaseWaitModal, ScreenBackground, StatusBar} from '../../../legacy/components/UiKit'
 import {CONFIG, isNightly} from '../../../legacy/config/config'
 import {isJormungandr} from '../../../legacy/config/networks'
 import {InvalidState} from '../../../legacy/crypto/errors'
@@ -18,16 +20,14 @@ import {COLORS} from '../../../legacy/styles/config'
 import {useWalletMetas} from '../../hooks'
 import {useWalletNavigation} from '../../navigation'
 import {useSetSelectedWallet, useSetSelectedWalletMeta} from '..'
+import {useSelectedWalletContext} from '../Context'
 import {WalletListItem} from './WalletListItem'
 
 export const WalletSelectionScreen = () => {
-  const intl = useIntl()
   const strings = useStrings()
-  const {navigation, navigateToTxHistory} = useWalletNavigation()
+  const {navigation} = useWalletNavigation()
   const walletMetas = useWalletMetas()
-  const selectWalletMeta = useSetSelectedWalletMeta()
-  const selectWallet = useSetSelectedWallet()
-  const dispatch = useDispatch()
+  const {openWallet, isLoading} = useOpenWallet()
 
   useEffect(() => {
     if (walletMetas && !walletMetas.length)
@@ -39,43 +39,6 @@ export const WalletSelectionScreen = () => {
         },
       })
   }, [navigation, walletMetas])
-
-  const openWallet = async (walletMeta: WalletMeta, isRetry?: boolean) => {
-    try {
-      if (walletMeta.isShelley || isJormungandr(walletMeta.networkId)) {
-        await showErrorDialog(errorMessages.itnNotSupported, intl)
-        return
-      }
-      const [wallet, newWalletMeta] = await walletManager.openWallet(walletMeta)
-      selectWalletMeta(newWalletMeta)
-      selectWallet(wallet)
-      navigateToTxHistory()
-    } catch (e) {
-      if (e instanceof SystemAuthDisabled) {
-        await walletManager.closeWallet()
-        await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
-        navigation.navigate('app-root', {
-          screen: 'wallet-selection',
-        })
-      } else if (e instanceof InvalidState) {
-        await walletManager.closeWallet()
-        await showErrorDialog(errorMessages.walletStateInvalid, intl)
-        navigation.navigate('app-root', {
-          screen: 'wallet-selection',
-        })
-      } else if (e instanceof KeysAreInvalid) {
-        await walletManager.cleanupInvalidKeys()
-        await walletManager.disableEasyConfirmation()
-        await dispatch(setEasyConfirmation(false))
-        await showErrorDialog(errorMessages.walletKeysInvalidated, intl)
-        if (!isRetry) {
-          await openWallet(walletMeta, true)
-        }
-      } else {
-        throw e
-      }
-    }
-  }
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
@@ -101,6 +64,7 @@ export const WalletSelectionScreen = () => {
           <OnlyDevButton />
         </ScreenBackground>
       </Screen>
+      <PleaseWaitModal title={strings.loadingWallet} spinnerText={strings.pleaseWait} visible={isLoading} />
     </SafeAreaView>
   )
 }
@@ -118,6 +82,10 @@ const messages = defineMessages({
     id: 'components.walletselection.walletselectionscreen.addWalletOnShelleyButton',
     defaultMessage: '!!!Add wallet (Jormungandr ITN)',
   },
+  loadingWallet: {
+    id: 'components.walletselection.walletselectionscreen.loadingWallet',
+    defaultMessage: '!!!Loading wallet',
+  },
 })
 
 const useStrings = () => {
@@ -128,6 +96,8 @@ const useStrings = () => {
     addWalletButton: intl.formatMessage(messages.addWalletButton),
     addWalletOnShelleyButton: intl.formatMessage(messages.addWalletOnShelleyButton),
     deprecated: intl.formatMessage(globalMessages.deprecated),
+    pleaseWait: intl.formatMessage(globalMessages.pleaseWait),
+    loadingWallet: intl.formatMessage(messages.loadingWallet),
   }
 }
 
@@ -207,6 +177,67 @@ const OnlyDevButton = () => {
   if (!__DEV__) return null
 
   return <Button onPress={() => navigation.navigate('screens-index')} title="Dev options" style={styles.button} />
+}
+
+const useOpenWallet = (options?: UseMutationOptions<void, Error, WalletMeta>) => {
+  const intl = useIntl()
+  const {navigation, navigateToTxHistory} = useWalletNavigation()
+  const selectWalletMeta = useSetSelectedWalletMeta()
+  const selectWallet = useSetSelectedWallet()
+  const dispatch = useDispatch()
+  const [wallet] = useSelectedWalletContext()
+  const mutation = useMutation({
+    ...options,
+    mutationFn: async (walletMeta: WalletMeta) => {
+      if (wallet?.id === walletMeta.id) {
+        return navigateToTxHistory()
+      }
+      if (wallet) {
+        await walletManager.closeWallet()
+        await delay(500)
+      }
+      return _openWallet(walletMeta)
+    },
+  })
+
+  const _openWallet = async (walletMeta: WalletMeta, isRetry?: boolean) => {
+    try {
+      if (walletMeta.isShelley || isJormungandr(walletMeta.networkId)) {
+        await showErrorDialog(errorMessages.itnNotSupported, intl)
+        return
+      }
+      const [wallet, newWalletMeta] = await walletManager.openWallet(walletMeta)
+      selectWalletMeta(newWalletMeta)
+      selectWallet(wallet)
+      navigateToTxHistory()
+    } catch (e) {
+      if (e instanceof SystemAuthDisabled) {
+        await walletManager.closeWallet()
+        await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
+        navigation.navigate('app-root', {
+          screen: 'wallet-selection',
+        })
+      } else if (e instanceof InvalidState) {
+        await walletManager.closeWallet()
+        await showErrorDialog(errorMessages.walletStateInvalid, intl)
+        navigation.navigate('app-root', {
+          screen: 'wallet-selection',
+        })
+      } else if (e instanceof KeysAreInvalid) {
+        await walletManager.cleanupInvalidKeys()
+        await walletManager.disableEasyConfirmation()
+        await dispatch(setEasyConfirmation(false))
+        await showErrorDialog(errorMessages.walletKeysInvalidated, intl)
+        if (!isRetry) {
+          await _openWallet(walletMeta, true)
+        }
+      } else {
+        throw e
+      }
+    }
+  }
+
+  return {openWallet: mutation.mutate, ...mutation}
 }
 
 const styles = StyleSheet.create({
