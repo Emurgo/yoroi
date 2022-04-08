@@ -3,7 +3,7 @@ import {BigNumber} from 'bignumber.js'
 import React, {useEffect, useState} from 'react'
 import type {IntlShape} from 'react-intl'
 import {defineMessages, useIntl} from 'react-intl'
-import {View} from 'react-native'
+import {ActivityIndicator, View} from 'react-native'
 import {WebView} from 'react-native-webview'
 import {useSelector} from 'react-redux'
 
@@ -22,6 +22,7 @@ import globalMessages, {errorMessages} from '../../../legacy/i18n/global-message
 import {
   accountBalanceSelector,
   defaultNetworkAssetSelector,
+  isFetchingUtxosSelector,
   languageSelector,
   poolOperatorSelector,
   serverStatusSelector,
@@ -45,6 +46,7 @@ export const StakingCenter = () => {
   const [showPoolWarning, setShowPoolWarning] = useState(false)
   const [busy, setBusy] = useState(false)
 
+  const isFetchingUtxos = useSelector(isFetchingUtxosSelector)
   const utxos = useSelector(utxosSelector)
   const accountBalance = useSelector(accountBalanceSelector)
   const defaultAsset = useSelector(defaultNetworkAssetSelector)
@@ -121,7 +123,7 @@ export const StakingCenter = () => {
         <View style={styles.container}>
           <PoolDetailScreen
             onPressDelegate={(poolHash) => handleOnPress(poolHash)}
-            disabled={!nightlyAndDevPoolHashes.length}
+            disabled={!nightlyAndDevPoolHashes.length || isFetchingUtxos}
           />
         </View>
       )}
@@ -130,12 +132,16 @@ export const StakingCenter = () => {
           <View style={styles.container}>
             <UtxoAutoRefresher />
             <AccountAutoRefresher />
-            <WebView
-              source={{
-                uri: prepareStakingURL(poolList, amountToDelegate, languageCode),
-              }}
-              onMessage={(event) => handleOnMessage(event)}
-            />
+            {isFetchingUtxos ? (
+              <ActivityIndicator size="large" color="black" />
+            ) : (
+              <WebView
+                source={{
+                  uri: prepareStakingURL(poolList, amountToDelegate, languageCode),
+                }}
+                onMessage={(event) => handleOnMessage(event)}
+              />
+            )}
           </View>
           <PoolWarningModal
             visible={showPoolWarning}
