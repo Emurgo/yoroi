@@ -5,10 +5,10 @@ import {ScrollView, StatusBar, StyleSheet, View} from 'react-native'
 import QRCodeScanner from 'react-native-qrcode-scanner'
 
 import {errorMessages} from '../../../legacy/i18n/global-messages'
-import {WALLET_INIT_ROUTES} from '../../../legacy/RoutesList'
 import {Logger} from '../../../legacy/utils/logging'
 import {BulletPointItem, Spacer, Text} from '../../components'
 import {showErrorDialog} from '../../legacy/actions'
+import {WALLET_INIT_ROUTES} from '../../legacy/RoutesList'
 import {theme} from '../../theme'
 import {isCIP1852AccountPath, isValidPublicKey} from '../../yoroi-wallets/cardano/bip44Validators'
 

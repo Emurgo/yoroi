@@ -7,7 +7,6 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Alert} from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
 
-import IndexScreen from '../legacy/components/IndexScreen'
 import {CONFIG} from '../legacy/config/config'
 import KeyStore from '../legacy/crypto/KeyStore'
 import env from '../legacy/env'
@@ -19,6 +18,7 @@ import {CustomPinScreen} from './FirstRun/CustomPinScreen'
 import {FirstRunNavigator} from './FirstRun/FirstRunNavigator'
 import {showErrorDialog, signin} from './legacy/actions'
 import {canBiometricEncryptionBeEnabled, recreateAppSignInKeys} from './legacy/deviceSettings'
+import IndexScreen from './legacy/IndexScreen'
 import {
   canEnableBiometricSelector,
   installationIdSelector,

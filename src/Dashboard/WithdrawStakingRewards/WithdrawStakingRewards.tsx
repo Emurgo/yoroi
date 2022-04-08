@@ -13,10 +13,10 @@ import {ISignRequest} from '../../../legacy/crypto/ISignRequest'
 import KeyStore from '../../../legacy/crypto/KeyStore'
 import {errorMessages} from '../../../legacy/i18n/global-messages'
 import LocalizableError from '../../../legacy/i18n/LocalizableError'
-import {DELEGATION_ROUTES, SEND_ROUTES, WALLET_ROOT_ROUTES, WALLET_ROUTES} from '../../../legacy/RoutesList'
 import {showErrorDialog} from '../../legacy/actions'
 import {ensureKeysValidity} from '../../legacy/deviceSettings'
 import type {DeviceId, DeviceObj, HWDeviceInfo} from '../../legacy/ledgerUtils'
+import {DELEGATION_ROUTES, SEND_ROUTES, WALLET_ROOT_ROUTES, WALLET_ROUTES} from '../../legacy/RoutesList'
 import {DefaultAsset, RawUtxo} from '../../types'
 import {
   HaskellShelleyTxSignRequest,

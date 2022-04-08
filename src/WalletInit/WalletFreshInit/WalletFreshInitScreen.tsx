@@ -5,9 +5,9 @@ import {StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {CONFIG, isNightly} from '../../../legacy/config/config'
-// uses same styles as WalletInitScreen
-import {WALLET_INIT_ROUTES} from '../../../legacy/RoutesList'
 import {Button, Spacer, StatusBar} from '../../components'
+// uses same styles as WalletInitScreen
+import {WALLET_INIT_ROUTES} from '../../legacy/RoutesList'
 import {COLORS} from '../../theme'
 import {NetworkId, WalletImplementationId} from '../../yoroi-wallets'
 import {WalletDescription} from '../WalletDescription'

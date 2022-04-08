@@ -3,7 +3,7 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
 import {isJormungandr} from '../../legacy/config/networks'
-import {WALLET_INIT_ROUTES} from '../../legacy/RoutesList'
+import {WALLET_INIT_ROUTES} from '../legacy/RoutesList'
 import {defaultNavigationOptions, defaultStackNavigatorOptions, jormunNavigationOptions} from '../navigationOptions'
 import {CheckNanoXScreen} from './CheckNanoX'
 import {ConnectNanoXScreen} from './ConnectNanoX/ConnectNanoXScreen'

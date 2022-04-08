@@ -5,11 +5,11 @@ import {StyleSheet} from 'react-native'
 import {useDispatch} from 'react-redux'
 
 import {errorMessages} from '../../../legacy/i18n/global-messages'
-import {SETTINGS_ROUTES} from '../../../legacy/RoutesList'
 import {FingerprintScreenBase} from '../../BiometricAuth'
 import {Button} from '../../components'
 import {setSystemAuth, showErrorDialog} from '../../legacy/actions'
 import {canBiometricEncryptionBeEnabled} from '../../legacy/deviceSettings'
+import {SETTINGS_ROUTES} from '../../legacy/RoutesList'
 
 export const BiometricsLinkScreen = () => {
   const intl = useIntl()

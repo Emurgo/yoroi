@@ -3,7 +3,7 @@ import React from 'react'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {generateAdaMnemonic} from '../../../legacy/crypto/commonUtils'
-import {WALLET_INIT_ROUTES} from '../../../legacy/RoutesList'
+import {WALLET_INIT_ROUTES} from '../../legacy/RoutesList'
 import {MnemonicExplanationModal} from '../MnemonicExplanationModal'
 import {WalletForm} from '../WalletForm'
 
