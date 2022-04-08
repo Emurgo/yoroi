@@ -9,9 +9,9 @@ import type {
   TxStatusRequest,
   TxStatusResponse,
 } from '../../../legacy/api/types'
-import {WalletMeta} from '../../../legacy/state'
 import type {Transaction} from '../../../legacy/types/HistoryTransaction'
 import type {HWDeviceInfo} from '../../legacy/ledgerUtils'
+import {WalletMeta} from '../../legacy/state'
 import type {EncryptionMethod, WalletState} from '../../legacy/types'
 import {
   AccountStates,

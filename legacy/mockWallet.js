@@ -1,6 +1,7 @@
 // @flow
 
-import {type ReduxWallet} from './state'
+// $FlowExpectedError
+import {type ReduxWallet} from '../src/legacy/state'
 
 export const mockReduxWallet: ReduxWallet = {
   name: 'q',

@@ -2,10 +2,10 @@
 import {BigNumber} from 'bignumber.js'
 import type {Dispatch} from 'redux'
 
-import type {State} from '../../legacy/state'
 import {ObjectValues} from '../../legacy/utils/flow'
 import {Logger} from '../../legacy/utils/logging'
 import {walletManager} from '../yoroi-wallets'
+import type {State} from './state'
 
 // start fetching account balance
 const _startFetching = () => ({

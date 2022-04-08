@@ -4,9 +4,9 @@ import {TouchableOpacity} from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import {Provider} from 'react-redux'
 
-import type {State} from '../../../legacy/state'
 import {Button} from '../../components'
 import configureStore from '../../legacy/configureStore'
+import type {State} from '../../legacy/state'
 import {defaultNavigationOptions} from '../../navigationOptions'
 import iconGear from '../assets/img/gear.png'
 

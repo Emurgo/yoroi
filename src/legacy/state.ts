@@ -1,120 +1,115 @@
-// @flow
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type {WalletChecksum} from '@emurgo/cip4-js'
 import {BigNumber} from 'bignumber.js'
 
-// $FlowExpectedError
-import {ISignRequest} from '../src/legacy/ISignRequest'
-// $FlowExpectedError
-import type {WalletInterface} from '../src/yoroi-wallets'
-import type {RawUtxo, RemotePoolMetaSuccess} from './api/types'
-import type {NetworkId, WalletImplementationId, YoroiProvider} from './config/types'
-import {NETWORK_REGISTRY} from './config/types'
-import {mockReduxWallet} from './mockWallet'
-import type {Token} from './types/HistoryTransaction'
-
-export type ServerStatusCache = {|
-  +isServerOk: boolean,
-  +isMaintenance: boolean,
-  +serverTime: Date | void,
-  +isQueueOnline?: boolean,
-|}
-
-export type WalletMeta = {
-  id: string,
-  name: string,
-  networkId: NetworkId,
-  walletImplementationId: WalletImplementationId,
-  isHW: boolean,
-  isShelley?: ?boolean, // legacy jormungandr
-  isEasyConfirmationEnabled: boolean,
-  checksum: WalletChecksum,
-  provider?: ?YoroiProvider,
+import type {RawUtxo, RemotePoolMetaSuccess} from '../../legacy/api/types'
+import type {NetworkId, WalletImplementationId, YoroiProvider} from '../../legacy/config/types'
+import {NETWORK_REGISTRY} from '../../legacy/config/types'
+import {mockReduxWallet} from '../../legacy/mockWallet'
+import type {Token} from '../../legacy/types/HistoryTransaction'
+import type {ServerStatus, WalletInterface} from '../yoroi-wallets'
+import {ISignRequest} from './ISignRequest'
+export type ServerStatusCache = {
+  readonly isServerOk: boolean
+  readonly isMaintenance: boolean
+  readonly serverTime: Date | void
+  readonly isQueueOnline?: boolean
 }
-
+export type WalletMeta = {
+  id: string
+  name: string
+  networkId: NetworkId
+  walletImplementationId: WalletImplementationId
+  isHW: boolean
+  isShelley?: boolean | null | undefined
+  // legacy jormungandr
+  isEasyConfirmationEnabled: boolean
+  checksum: WalletChecksum
+  provider?: YoroiProvider | null | undefined
+}
 export type ReduxWallet = {
-  isEasyConfirmationEnabled: $PropertyType<WalletInterface, 'isEasyConfirmationEnabled'>,
-  networkId: $PropertyType<WalletInterface, 'networkId'>,
-  walletImplementationId: $PropertyType<WalletInterface, 'walletImplementationId'>,
-  isHW: $PropertyType<WalletInterface, 'isHW'>,
-  hwDeviceInfo: $PropertyType<WalletInterface, 'hwDeviceInfo'>,
-  isReadOnly: $PropertyType<WalletInterface, 'isReadOnly'>,
-  transactions: $PropertyType<WalletInterface, 'transactions'>,
-  internalAddresses: $PropertyType<WalletInterface, 'internalAddresses'>,
-  externalAddresses: $PropertyType<WalletInterface, 'externalAddresses'>,
-  rewardAddressHex: $PropertyType<WalletInterface, 'rewardAddressHex'>,
-  confirmationCounts: $PropertyType<WalletInterface, 'confirmationCounts'>,
-  isUsedAddressIndex: $PropertyType<WalletInterface, 'isUsedAddressIndex'>,
-  numReceiveAddresses: $PropertyType<WalletInterface, 'numReceiveAddresses'>,
-  checksum: $PropertyType<WalletInterface, 'checksum'>,
-  provider?: $PropertyType<WalletInterface, 'provider'>,
-  isInitialized: $PropertyType<WalletInterface, 'isInitialized'>,
-
-  name: string,
-  canGenerateNewReceiveAddress: boolean,
+  id: WalletInterface['id']
+  isEasyConfirmationEnabled: WalletInterface['isEasyConfirmationEnabled']
+  networkId: WalletInterface['networkId']
+  walletImplementationId: WalletInterface['walletImplementationId']
+  isHW: WalletInterface['isHW']
+  hwDeviceInfo: WalletInterface['hwDeviceInfo']
+  isReadOnly: WalletInterface['isReadOnly']
+  transactions: WalletInterface['transactions']
+  internalAddresses: WalletInterface['internalAddresses']
+  externalAddresses: WalletInterface['externalAddresses']
+  rewardAddressHex: WalletInterface['rewardAddressHex']
+  confirmationCounts: WalletInterface['confirmationCounts']
+  isUsedAddressIndex: WalletInterface['isUsedAddressIndex']
+  numReceiveAddresses: WalletInterface['numReceiveAddresses']
+  checksum: WalletInterface['checksum']
+  provider?: WalletInterface['provider']
+  isInitialized: WalletInterface['isInitialized']
+  name: string
+  canGenerateNewReceiveAddress: boolean
 }
 export type State = {
-  wallets: Dict<WalletMeta>,
-  wallet: ReduxWallet,
+  wallets: Record<string, WalletMeta>
+  wallet: ReduxWallet
   txHistory: {
-    isSynchronizing: boolean,
-    lastSyncError: any, // TODO(ppershing): type me
-  },
+    isSynchronizing: boolean
+    lastSyncError: any // TODO(ppershing): type me
+  }
   balance: {
-    isFetching: boolean,
-    lastFetchingError: any,
-    utxos: ?Array<RawUtxo>,
-  },
+    isFetching: boolean
+    lastFetchingError: any
+    utxos: Array<RawUtxo> | null | undefined
+  }
   accountState: {
-    isFetching: boolean,
-    isDelegating: boolean,
-    lastFetchingError: any,
-    totalDelegated: BigNumber,
-    value: BigNumber,
-    poolOperator: string | null,
-  },
+    isFetching: boolean
+    isDelegating: boolean
+    lastFetchingError: any
+    totalDelegated: BigNumber
+    value: BigNumber
+    poolOperator: string | null
+  }
   poolInfo: {
-    isFetching: boolean,
-    lastFetchingError: any,
-    meta: ?RemotePoolMetaSuccess,
-  },
+    isFetching: boolean
+    lastFetchingError: any
+    meta: RemotePoolMetaSuccess | null | undefined
+  }
   tokenInfo: {
-    isFetching: boolean,
-    lastFetchingError: any,
-    tokens: Dict<Token>,
-  },
-  isOnline: boolean,
-  isAppInitialized: boolean,
-  isAuthenticated: boolean,
-  isKeyboardOpen: boolean,
+    isFetching: boolean
+    lastFetchingError: any
+    tokens: Record<string, Token>
+  }
+  isOnline: boolean
+  isAppInitialized: boolean
+  isAuthenticated: boolean
+  isKeyboardOpen: boolean
   appSettings: {
-    acceptedTos: boolean,
-    installationId: ?string,
-    languageCode: string,
-    customPinHash: ?string,
-    isSystemAuthEnabled: boolean,
-    isBiometricHardwareSupported: boolean,
-    sendCrashReports: boolean,
-    canEnableBiometricEncryption: boolean,
-    currentVersion: ?string,
-  },
+    acceptedTos: boolean
+    installationId: string | null | undefined
+    languageCode: string
+    customPinHash: string | null | undefined
+    isSystemAuthEnabled: boolean
+    isBiometricHardwareSupported: boolean
+    sendCrashReports: boolean
+    canEnableBiometricEncryption: boolean
+    currentVersion: string | null | undefined
+  }
   // need to add as a non-wallet-specific property to avoid conflict with other
   // actions that may override this property (otherwise more refactoring is needed)
-  isFlawedWallet: boolean,
-  serverStatus: ServerStatusCache,
-  isMaintenance: boolean,
+  isFlawedWallet: boolean
+  serverStatus: ServerStatus
+  isMaintenance: boolean
   voting: {
-    pin: Array<number>,
-    encryptedKey: ?string,
-    catalystPrivateKey: ?string,
+    pin: Array<number>
+    encryptedKey: string | null | undefined
+    catalystPrivateKey: string | null | undefined
     // TODO: it's in general not recommended to use non-plain objects in store
-    unsignedTx: ?ISignRequest<mixed>,
-  },
+    unsignedTx: ISignRequest<unknown> | null | undefined
+  }
 }
-
 export const getInitialState = (): State => ({
   wallets: {},
   wallet: {
+    id: '',
     name: '',
     isInitialized: false,
     networkId: NETWORK_REGISTRY.UNDEFINED,
@@ -132,7 +127,10 @@ export const getInitialState = (): State => ({
     isUsedAddressIndex: {},
     numReceiveAddresses: 0,
     canGenerateNewReceiveAddress: false,
-    checksum: {ImagePart: '', TextPart: ''},
+    checksum: {
+      ImagePart: '',
+      TextPart: '',
+    },
   },
   txHistory: {
     isSynchronizing: false,
@@ -161,7 +159,8 @@ export const getInitialState = (): State => ({
     lastFetchingError: null,
     tokens: {},
   },
-  isOnline: true, // we are online by default
+  isOnline: true,
+  // we are online by default
   isAppInitialized: false,
   isAuthenticated: false,
   isKeyboardOpen: false,
@@ -191,11 +190,11 @@ export const getInitialState = (): State => ({
     unsignedTx: null,
   },
 })
-
-export const mockState = (mockedState: ?State): State => {
+export const mockState = (mockedState?: State | null | undefined): State => {
   if (!__DEV__) {
     throw new Error('calling mockState in a production build')
   }
+
   return {
     ...getInitialState(),
     voting: {
@@ -234,10 +233,8 @@ export const mockState = (mockedState: ?State): State => {
     ...mockedState,
   }
 }
-
 export default getInitialState
-
-const assetTokenInfos: Dict<Token> = {
+const assetTokenInfos: Record<string, Token> = {
   ['']: {
     networkId: 300,
     isDefault: false,

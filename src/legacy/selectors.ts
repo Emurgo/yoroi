@@ -6,10 +6,10 @@ import type {RawUtxo} from '../../legacy/api/types'
 import {getCardanoDefaultAsset, getDefaultAssetByNetworkId, getDefaultAssets} from '../../legacy/config/config'
 import type {NetworkId} from '../../legacy/config/types'
 import {NETWORK_REGISTRY} from '../../legacy/config/types'
-import type {State, WalletMeta} from '../../legacy/state'
 import type {DefaultAsset, Token, Transaction, TransactionInfo} from '../../legacy/types/HistoryTransaction'
 import {TRANSACTION_DIRECTION, TRANSACTION_STATUS} from '../../legacy/types/HistoryTransaction'
 import {ObjectValues} from '../../legacy/utils/flow'
+import type {State, WalletMeta} from '../legacy/state'
 import {getDefaultNetworkTokenEntry, MultiToken} from '../yoroi-wallets'
 import type {HWDeviceInfo} from './ledgerUtils'
 import {processTxHistoryData} from './processTransactions'
@@ -93,17 +93,18 @@ export const externalAddressIndexSelector: (state: State) => Record<string, numb
 export const isUsedAddressIndexSelector = (state: State) => state.wallet.isUsedAddressIndex
 export const isHWSelector = (state: State): boolean => state.wallet.isHW
 export const hwDeviceInfoSelector = (state: State): HWDeviceInfo | null | undefined => state.wallet.hwDeviceInfo
-export const isReadOnlySelector = (state: State): boolean => state.wallet.isReadOnly
-export const walletMetaSelector = (state: State): WalletMeta => ({
-  id: state.wallet.id,
-  name: state.wallet.name,
-  networkId: state.wallet.networkId,
-  walletImplementationId: state.wallet.walletImplementationId,
-  provider: state.wallet.provider,
-  isHW: state.wallet.isHW,
-  isEasyConfirmationEnabled: state.wallet.isEasyConfirmationEnabled,
-  checksum: state.wallet.checksum,
-})
+export const isReadOnlySelector = (state: State) => state.wallet.isReadOnly
+export const walletMetaSelector = (state: State): WalletMeta =>
+  ({
+    id: state.wallet.id,
+    name: state.wallet.name,
+    networkId: state.wallet.networkId,
+    walletImplementationId: state.wallet.walletImplementationId,
+    provider: state.wallet.provider,
+    isHW: state.wallet.isHW,
+    isEasyConfirmationEnabled: state.wallet.isEasyConfirmationEnabled,
+    checksum: state.wallet.checksum,
+  } as unknown as WalletMeta)
 
 const BigNumberSum = (data: Array<BigNumber | string>): BigNumber =>
   data.reduce((x: BigNumber, y) => x.plus(y), new BigNumber(0))
