@@ -1,8 +1,8 @@
 import React from 'react'
 import {Image, StyleSheet, TouchableOpacity, ViewStyle} from 'react-native'
 
-import checkIcon from '../../../legacy/assets/img/check.png'
-import checkEmptyIcon from '../../../legacy/assets/img/check-empty.png'
+import checkIcon from '../../assets//img/check.png'
+import checkEmptyIcon from '../../assets//img/check-empty.png'
 import {Text} from '../Text'
 
 type Props = {

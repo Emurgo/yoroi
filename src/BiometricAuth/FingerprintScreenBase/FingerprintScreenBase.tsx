@@ -3,8 +3,8 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Image, Platform, StyleSheet, TouchableOpacity, View} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
-import chevronLeft from '../../../legacy/assets/img/chevron_left.png'
-import fingerprintImage from '../../../legacy/assets/img/fingerprint.png'
+import chevronLeft from '../../assets/img/chevron_left.png'
+import fingerprintImage from '../../assets/img/fingerprint.png'
 import {ScreenBackground, StatusBar, Text} from '../../components'
 import {COLORS} from '../../theme'
 

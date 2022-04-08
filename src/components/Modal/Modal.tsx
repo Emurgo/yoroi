@@ -15,7 +15,7 @@ import {NavigationProp, useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {Image, Modal as RNModal, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
-import closeIcon from '../../../legacy/assets/img/close.png'
+import closeIcon from '../../assets//img/close.png'
 import {COLORS} from '../../theme'
 
 type Props = {

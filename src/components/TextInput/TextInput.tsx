@@ -11,8 +11,8 @@ import {
 } from 'react-native'
 import {HelperText, TextInput as RNPTextInput} from 'react-native-paper'
 
-import closedEyeIcon from '../../../legacy/assets/img/icon/visibility-closed.png'
-import openedEyeIcon from '../../../legacy/assets/img/icon/visibility-opened.png'
+import closedEyeIcon from '../../assets//img/icon/visibility-closed.png'
+import openedEyeIcon from '../../assets//img/icon/visibility-opened.png'
 import {COLORS} from '../../theme'
 import {Icon} from '../Icon'
 
