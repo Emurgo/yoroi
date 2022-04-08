@@ -2,8 +2,6 @@
 import {fromPairs, mapValues, max, sum, uniq} from 'lodash'
 import {defaultMemoize} from 'reselect'
 
-import {ApiHistoryError} from '../../../../legacy/api/errors'
-import * as api from '../../../../legacy/api/shelley/api'
 import type {RemoteCertificateMeta, TxHistoryRequest} from '../../../../legacy/api/types'
 import {CERTIFICATE_KIND} from '../../../../legacy/api/types'
 import {CONFIG} from '../../../../legacy/config/config'
@@ -15,6 +13,8 @@ import assert from '../../../../legacy/utils/assert'
 import {ObjectValues} from '../../../../legacy/utils/flow'
 import {Logger} from '../../../../legacy/utils/logging'
 import {limitConcurrency} from '../../../../legacy/utils/promise'
+import * as api from '../../../legacy/api'
+import {ApiHistoryError} from '../../../legacy/errors'
 
 type SyncMetadata = {
   bestBlockNum: number

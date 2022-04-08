@@ -3,16 +3,16 @@ import _ from 'lodash'
 import type {IntlShape} from 'react-intl'
 import {defaultMemoize} from 'reselect'
 
-import * as api from '../../legacy/api/shelley/api'
 import {CONFIG} from '../../legacy/config/config'
 import {getCardanoNetworkConfigById, isJormungandr} from '../../legacy/config/networks'
-import KeyStore from '../../legacy/crypto/KeyStore'
-import type {EncryptionMethod} from '../../legacy/crypto/types'
 import assert from '../../legacy/utils/assert'
 import {Logger} from '../../legacy/utils/logging'
 import type {Mutex} from '../../legacy/utils/promise'
 import {IsLockedError, nonblockingSynchronize, synchronize} from '../../legacy/utils/promise'
+import * as api from '../legacy/api'
+import KeyStore from '../legacy/KeyStore'
 import type {HWDeviceInfo} from '../legacy/ledgerUtils'
+import type {EncryptionMethod} from '../legacy/types'
 import {NetworkId, WalletImplementationId, YoroiProvider} from './cardano'
 import {AddressChain, AddressChainJSON} from './cardano/chain'
 import {TransactionCache, TransactionCacheJSON} from './cardano/shelley/transactionCache'
@@ -133,11 +133,25 @@ export class Wallet {
 
   // ============ security & key management ============ //
 
+  encryptAndSaveMasterKey(encryptionMethod: 'BIOMETRICS', masterKey: string): Promise<void>
+  encryptAndSaveMasterKey(encryptionMethod: 'SYSTEM_PIN', masterKey: string): Promise<void>
+  encryptAndSaveMasterKey(encryptionMethod: 'MASTER_PASSWORD', masterKey: string, password: string): Promise<void>
   async encryptAndSaveMasterKey(encryptionMethod: EncryptionMethod, masterKey: string, password?: string) {
-    await KeyStore.storeData(this.id, encryptionMethod, masterKey, password)
+    if (!this.id) throw new Error('invalid wallet state')
+    if (encryptionMethod === 'MASTER_PASSWORD') {
+      if (!password) throw new Error('password is required')
+      await KeyStore.storeData(this.id, 'MASTER_PASSWORD', masterKey, password)
+    }
+    if (encryptionMethod === 'BIOMETRICS') {
+      await KeyStore.storeData(this.id, encryptionMethod, masterKey)
+    }
+    if (encryptionMethod === 'SYSTEM_PIN') {
+      await KeyStore.storeData(this.id, encryptionMethod, masterKey)
+    }
   }
 
   async getDecryptedMasterKey(masterPassword: string, intl: IntlShape) {
+    if (!this.id) throw new Error('invalid wallet state')
     return await KeyStore.getData(this.id, 'MASTER_PASSWORD', '', masterPassword, intl)
   }
 

@@ -27,6 +27,7 @@ export var WALLETS: {
 
 // prettier-ignore
 export var CONFIG: {
+  MNEMONIC_STRENGTH: number,
   ASSURANCE_LEVELS: {
       LOW: number,
       MEDIUM: number,

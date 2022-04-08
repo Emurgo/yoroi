@@ -6,11 +6,11 @@ import DeviceInfo from 'react-native-device-info'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {CONFIG, isNightly} from '../../../legacy/config/config'
-import KeyStore from '../../../legacy/crypto/KeyStore'
 import {StatusBar} from '../../components'
 import {setAppSettingField, setEasyConfirmation, setSystemAuth} from '../../legacy/actions'
 import {APP_SETTINGS_KEYS} from '../../legacy/appSettings'
 import {canBiometricEncryptionBeEnabled, isBiometricEncryptionHardwareSupported} from '../../legacy/deviceSettings'
+import KeyStore from '../../legacy/KeyStore'
 import {SETTINGS_ROUTES} from '../../legacy/RoutesList'
 import {
   biometricHwSupportSelector,

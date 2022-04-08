@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable camelcase */
 import {
   Address,
@@ -23,14 +24,14 @@ import {sortBy} from 'lodash'
 import type {AccountStateRequest, AccountStateResponse} from '../../../../legacy/api/types'
 import type {CardanoHaskellShelleyNetwork} from '../../../../legacy/config/networks'
 import type {BackendConfig} from '../../../../legacy/config/types'
-import {CardanoError, InsufficientFunds, RewardAddressEmptyError} from '../../../../legacy/crypto/errors'
-import {normalizeToAddress} from '../../../../legacy/crypto/shelley/utils'
-import type {AddressedUtxo, Addressing, V4UnsignedTxAddressedUtxoResponse} from '../../../../legacy/crypto/types'
 import LocalizableError from '../../../../legacy/i18n/LocalizableError'
 import type {DefaultAsset} from '../../../../legacy/types/HistoryTransaction'
 import assert from '../../../../legacy/utils/assert'
 import {ObjectValues} from '../../../../legacy/utils/flow'
 import {Logger} from '../../../../legacy/utils/logging'
+import {CardanoError, InsufficientFunds, RewardAddressEmptyError} from '../../../legacy/errors'
+import type {AddressedUtxo, Addressing, V4UnsignedTxAddressedUtxoResponse} from '../../../legacy/types'
+import {normalizeToAddress} from '../../../legacy/utils'
 import {StakingStatus} from '../../../types'
 // $FlowExpectedError
 import {HaskellShelleyTxSignRequest, MultiToken} from '../..'
@@ -473,8 +474,8 @@ export const createWithdrawalTx = async (request: CreateWithdrawalTxRequest): Pr
       const body = await unsignedTxResponse.txBuilder.build()
 
       for (const withdrawal of request.withdrawals) {
-        if (withdrawal.privateKey != null) {
-          const {privateKey} = withdrawal
+        if ((withdrawal as any).privateKey != null) {
+          const {privateKey} = withdrawal as any
           neededKeys.wits.add(
             Buffer.from(await (await make_vkey_witness(await hash_transaction(body), privateKey)).to_bytes()).toString(
               'hex',

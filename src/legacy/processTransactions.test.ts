@@ -1,8 +1,8 @@
-import {checkAndFacadeTransactionAsync} from '../../legacy/api/shelley/facade'
 import type {RawTransaction} from '../../legacy/api/types'
 import {CONFIG} from '../../legacy/config/config'
 import {TRANSACTION_DIRECTION} from '../../legacy/types/HistoryTransaction'
 import {MultiToken} from '../yoroi-wallets'
+import {checkAndFacadeTransactionAsync} from './facade'
 import {processTxHistoryData} from './processTransactions'
 
 //

@@ -1,12 +1,7 @@
-// @flow
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {BigNumber} from 'bignumber.js'
 import _ from 'lodash'
 
-import type {BackendConfig} from '../../config/types'
-import type {Transaction} from '../../types/HistoryTransaction'
-import assert from '../../utils/assert'
-import fetchDefault, {checkedFetch} from '../fetch'
 import type {
   AccountStateRequest,
   AccountStateResponse,
@@ -23,8 +18,12 @@ import type {
   TxHistoryRequest,
   TxStatusRequest,
   TxStatusResponse,
-} from '../types'
+} from '../../legacy/api/types'
+import type {BackendConfig} from '../../legacy/config/types'
+import type {Transaction} from '../../legacy/types/HistoryTransaction'
+import assert from '../../legacy/utils/assert'
 import {checkAndFacadeTransactionAsync} from './facade'
+import fetchDefault, {checkedFetch} from './fetch'
 
 type Addresses = Array<string>
 
@@ -37,12 +36,12 @@ export const getBestBlock = (config: BackendConfig): Promise<BestblockResponse> 
 export const fetchNewTxHistory = async (
   request: TxHistoryRequest,
   config: BackendConfig,
-): Promise<{isLast: boolean, transactions: Array<Transaction>}> => {
+): Promise<{isLast: boolean; transactions: Array<Transaction>}> => {
   assert.preconditionCheck(
     request.addresses.length <= config.TX_HISTORY_MAX_ADDRESSES,
     'fetchNewTxHistory: too many addresses',
   )
-  const response = await fetchDefault('v2/txs/history', request, config)
+  const response: any = await fetchDefault('v2/txs/history', request, config)
   const transactions = await Promise.all(response.map(checkAndFacadeTransactionAsync))
   return {
     transactions,
@@ -57,7 +56,7 @@ export const filterUsedAddresses = async (addresses: Addresses, config: BackendC
   )
   // Take a copy in case underlying data mutates during await
   const copy = [...addresses]
-  const used = await fetchDefault('v2/addresses/filterUsed', {addresses: copy}, config)
+  const used: any = await fetchDefault('v2/addresses/filterUsed', {addresses: copy}, config)
   // We need to do this so that we keep original order of addresses
   return copy.filter((addr) => used.includes(addr))
 }
@@ -89,13 +88,13 @@ export const fetchUTXOSumForAddresses = (addresses: Addresses, config: BackendCo
     addresses.length <= config.FETCH_UTXOS_MAX_ADDRESSES,
     'fetchUTXOSumForAddresses: too many addresses',
   )
-  return fetchDefault('txs/utxoSumForAddresses', {addresses}, config)
+  return fetchDefault('txs/utxoSumForAddresses', {addresses}, config) as any
 }
 
 export const bulkFetchUTXOSumForAddresses = async (
   addresses: Addresses,
   config: BackendConfig,
-): Promise<{fundedAddresses: Array<string>, sum: BigNumber}> => {
+): Promise<{fundedAddresses: Array<string>; sum: BigNumber}> => {
   const chunks = _.chunk(addresses, config.FETCH_UTXOS_MAX_ADDRESSES)
 
   const responses = await Promise.all(chunks.map((addrs) => fetchUTXOSumForAddresses(addrs, config)))
@@ -158,13 +157,13 @@ export const getTokenInfo = async (request: TokenInfoRequest, config: BackendCon
   return responses.reduce((res, resp) => {
     if (resp && resp.subject) {
       const v: {
-        policyId: string,
-        assetName: string,
+        policyId: string
+        assetName: string
       } & {
-        name?: string,
-        decimals?: string,
-        longName?: string,
-        ticker?: string,
+        name?: string
+        decimals?: string
+        longName?: string
+        ticker?: string
       } = {
         policyId: resp.subject.slice(0, 56),
         assetName: resp.subject.slice(56),

@@ -2,7 +2,7 @@ import {useNavigation, useRoute} from '@react-navigation/native'
 import React from 'react'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {generateAdaMnemonic} from '../../../legacy/crypto/commonUtils'
+import {generateAdaMnemonic} from '../../legacy/commonUtils'
 import {WALLET_INIT_ROUTES} from '../../legacy/RoutesList'
 import {MnemonicExplanationModal} from '../MnemonicExplanationModal'
 import {WalletForm} from '../WalletForm'

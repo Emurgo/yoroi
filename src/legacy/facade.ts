@@ -1,12 +1,10 @@
-// @flow
-
 import moment from 'moment'
 
-import type {RawTransaction} from '../../api/types'
-import {normalizeToAddress} from '../../crypto/shelley/utils'
-import type {Transaction, TransactionStatus} from '../../types/HistoryTransaction'
-import {TRANSACTION_STATUS} from '../../types/HistoryTransaction'
-import assert from '../../utils/assert'
+import type {RawTransaction} from '../../legacy/api/types'
+import type {Transaction, TransactionStatus} from '../../legacy/types/HistoryTransaction'
+import {TRANSACTION_STATUS} from '../../legacy/types/HistoryTransaction'
+import assert from '../../legacy/utils/assert'
+import {normalizeToAddress} from './utils'
 
 const checkAndFacadeStatus = (status: string): TransactionStatus => {
   const mapping = {
@@ -22,12 +20,10 @@ export const checkNonNegativeInt = (data: string) => {
   // rest of the code does not catch negative values
   const regex = /^\d+/
   if (!regex.test(data)) return false
-
   const parsed = parseInt(data, 10)
   return data === parsed.toString()
 }
-
-export const checkISO8601Date = (data: ?string) => {
+export const checkISO8601Date = (data: null | undefined | string) => {
   if (data == null) return false
   // ISO8601 format we want to check is exactly following
   // "2018-11-07T17:10:21.774Z"
@@ -36,53 +32,42 @@ export const checkISO8601Date = (data: ?string) => {
   if (!moment(data).isValid()) return false
   return data === moment(data).toISOString()
 }
-
-export const checkValidHash = (data: ?string) => {
+export const checkValidHash = (data: string | null | undefined) => {
   if (data == null) return false
   const regex = /^[0-9a-f]{64}$/
   return regex.test(data)
 }
-
 export const checkAndFacadeTransactionAsync = async (tx: RawTransaction): Promise<Transaction> => {
   tx.inputs.forEach((i) => {
     assert.assert(checkNonNegativeInt(i.amount), 'Invalid input amount', i.amount)
   })
-
   tx.outputs.forEach((o) => {
     assert.assert(checkNonNegativeInt(o.amount), 'Invalid output amount', o.amount)
   })
-
   await Promise.all(
     tx.inputs.map(async (input) => {
       assert.assert((await normalizeToAddress(input.address)) != null, 'Invalid input address', input.address)
     }),
   )
-
   await Promise.all(
     tx.outputs.map(async (output) => {
       assert.assert((await normalizeToAddress(output.address)) != null, 'Invalid output address', output.address)
     }),
   )
-
   assert.assert(checkISO8601Date(tx.last_update), 'Invalid last_update', tx.last_update)
-
   assert.assert(checkValidHash(tx.hash), 'Invalid hash', tx.hash)
 
   /**
    * all of the following parameters must exist if the tx was successful
    */
-
   assert.assert(tx.tx_state !== 'Successful' || checkISO8601Date(tx.time), 'Invalid time', tx.time)
-
   assert.assert(tx.tx_state !== 'Successful' || checkValidHash(tx.block_hash), 'Invalid block_hash', tx.block_hash)
-
   assert.assert(
     tx.tx_state !== 'Successful' ||
       (tx.block_num != null && tx.tx_ordinal != null && tx.epoch != null && tx.slot != null),
     'Successful tx must include full metadata',
     tx.time,
   )
-
   return {
     id: tx.hash,
     type: tx.type,

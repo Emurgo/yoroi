@@ -1,6 +1,4 @@
-// @flow
-
-import {WALLET_IMPLEMENTATION_REGISTRY} from '../config/types'
+import {WALLET_IMPLEMENTATION_REGISTRY} from '../../legacy/config/types'
 import {decryptData, encryptData, formatPath, generateAdaMnemonic, generateWalletRootKey} from './commonUtils'
 import {WrongPassword} from './errors'
 

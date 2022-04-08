@@ -3,12 +3,12 @@ import {BigNumber} from 'bignumber.js'
 import {CERTIFICATE_KIND} from '../../legacy/api/types'
 import {CONFIG} from '../../legacy/config/config'
 import type {NetworkId} from '../../legacy/config/types'
-import {multiTokenFromRemote} from '../../legacy/crypto/shelley/utils'
 import type {BaseAsset, Token, Transaction, TransactionInfo} from '../../legacy/types/HistoryTransaction'
 import {TRANSACTION_DIRECTION, TRANSACTION_STATUS, TRANSACTION_TYPE} from '../../legacy/types/HistoryTransaction'
 import assert from '../../legacy/utils/assert'
 import {Logger} from '../../legacy/utils/logging'
 import {getDefaultNetworkTokenEntry, MultiToken, strToDefaultMultiAsset} from '../yoroi-wallets'
+import {multiTokenFromRemote} from './utils'
 type TransactionAssurance = 'PENDING' | 'FAILED' | 'LOW' | 'MEDIUM' | 'HIGH'
 export const getTransactionAssurance = (
   status: typeof TRANSACTION_STATUS[keyof typeof TRANSACTION_STATUS],
