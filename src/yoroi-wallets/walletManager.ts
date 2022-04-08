@@ -21,16 +21,16 @@ import {isJormungandr} from '../../legacy/config/networks'
 import {NETWORK_REGISTRY, WALLET_IMPLEMENTATION_REGISTRY} from '../../legacy/config/types'
 import {ISignRequest} from '../../legacy/crypto/ISignRequest'
 import KeyStore from '../../legacy/crypto/KeyStore'
-import type {HWDeviceInfo} from '../../legacy/crypto/shelley/ledgerUtils'
 import type {EncryptionMethod, SendTokenList} from '../../legacy/crypto/types'
-import {APP_SETTINGS_KEYS, readAppSettings} from '../../legacy/helpers/appSettings'
 import type {WalletMeta} from '../../legacy/state'
 import type {DefaultAsset} from '../../legacy/types/HistoryTransaction'
 import assert from '../../legacy/utils/assert'
 import {ObjectValues} from '../../legacy/utils/flow'
 import {Logger} from '../../legacy/utils/logging'
 import storage from '../../legacy/utils/storage'
+import {APP_SETTINGS_KEYS, readAppSettings} from '../legacy/appSettings'
 import {ensureKeysValidity, isSystemAuthSupported} from '../legacy/deviceSettings'
+import type {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {
   DefaultTokenEntry,
   isYoroiWallet,
@@ -235,6 +235,10 @@ class WalletManager {
    * these properties are passed on to redux's State in
    * actions/history.js::mirrorTxHistory
    */
+
+  get id() {
+    return this.getWallet().id
+  }
 
   get isInitialized() {
     if (!this._wallet) return false

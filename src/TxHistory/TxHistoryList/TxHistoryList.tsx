@@ -5,9 +5,9 @@ import {Alert, SectionList, SectionListProps, StyleSheet, View} from 'react-nati
 import {useSelector} from 'react-redux'
 
 import {actionMessages} from '../../../legacy/i18n/global-messages'
-import {formatDateRelative} from '../../../legacy/utils/format'
 import {Text} from '../../components'
 import features from '../../features'
+import {formatDateRelative} from '../../legacy/format'
 import {transactionsInfoSelector} from '../../legacy/selectors'
 import {TransactionInfo} from '../../types'
 import {useOnScroll} from '../useOnScroll'

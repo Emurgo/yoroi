@@ -7,12 +7,12 @@ import * as api from '../../legacy/api/shelley/api'
 import {CONFIG} from '../../legacy/config/config'
 import {getCardanoNetworkConfigById, isJormungandr} from '../../legacy/config/networks'
 import KeyStore from '../../legacy/crypto/KeyStore'
-import type {HWDeviceInfo} from '../../legacy/crypto/shelley/ledgerUtils'
 import type {EncryptionMethod} from '../../legacy/crypto/types'
 import assert from '../../legacy/utils/assert'
 import {Logger} from '../../legacy/utils/logging'
 import type {Mutex} from '../../legacy/utils/promise'
 import {IsLockedError, nonblockingSynchronize, synchronize} from '../../legacy/utils/promise'
+import type {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {NetworkId, WalletImplementationId, YoroiProvider} from './cardano'
 import {AddressChain, AddressChainJSON} from './cardano/chain'
 import {TransactionCache, TransactionCacheJSON} from './cardano/shelley/transactionCache'
@@ -56,7 +56,7 @@ export class Wallet {
 
   isHW = false
 
-  hwDeviceInfo: null | HWDeviceInfo
+  hwDeviceInfo: null | HWDeviceInfo = null
 
   isReadOnly: undefined | boolean
 

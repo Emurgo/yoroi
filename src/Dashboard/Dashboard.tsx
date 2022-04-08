@@ -7,8 +7,6 @@ import {ActivityIndicator, RefreshControl, ScrollView, StyleSheet, View} from 'r
 import SafeAreaView from 'react-native-safe-area-view'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {fetchAccountState} from '../../legacy/actions/account'
-import {fetchUTXOs} from '../../legacy/actions/utxo'
 import {getCardanoBaseConfig, UI_V2} from '../../legacy/config/config'
 import {getDefaultAssetByNetworkId} from '../../legacy/config/config'
 import {getCardanoNetworkConfigById} from '../../legacy/config/networks'
@@ -18,6 +16,7 @@ import {AccountAutoRefresher} from '../AccountAutoRefresher'
 import {CATALYST_ROUTES} from '../Catalyst'
 import {VotingBanner} from '../Catalyst/VotingBanner'
 import {Banner, Button, OfflineBanner, StatusBar} from '../components'
+import {fetchAccountState} from '../legacy/account'
 import {submitSignedTx, submitTransaction} from '../legacy/actions'
 import {setLedgerDeviceId, setLedgerDeviceObj} from '../legacy/hwWallet'
 import {
@@ -30,6 +29,7 @@ import {
   tokenBalanceSelector,
   utxosSelector,
 } from '../legacy/selectors'
+import {fetchUTXOs} from '../legacy/utxo'
 import {useSelectedWallet} from '../SelectedWallet'
 import {UtxoAutoRefresher} from '../UtxoAutoRefresher'
 import {YoroiWallet} from '../yoroi-wallets'
@@ -145,7 +145,7 @@ export const Dashboard = () => {
           utxos={utxos}
           isEasyConfirmationEnabled={wallet.isEasyConfirmationEnabled}
           isHW={wallet.isHW}
-          hwDeviceInfo={hwDeviceInfo}
+          hwDeviceInfo={hwDeviceInfo as any}
           defaultAsset={getDefaultAssetByNetworkId(wallet.networkId)}
           serverStatus={serverStatus}
           setLedgerDeviceId={(...args) => dispatch(setLedgerDeviceId(...args)) as any}

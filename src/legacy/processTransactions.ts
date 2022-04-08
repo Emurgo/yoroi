@@ -1,43 +1,37 @@
-// @flow
-
 import {BigNumber} from 'bignumber.js'
 
-// $FlowExpectedError
-import {getDefaultNetworkTokenEntry, MultiToken, strToDefaultMultiAsset} from '../../src/yoroi-wallets'
-import {CERTIFICATE_KIND} from '../api/types'
-import {CONFIG} from '../config/config'
-import type {NetworkId} from '../config/types'
-import type {BaseAsset, Token, Transaction, TransactionInfo} from '../types/HistoryTransaction'
-import {TRANSACTION_DIRECTION, TRANSACTION_STATUS, TRANSACTION_TYPE} from '../types/HistoryTransaction'
-import assert from '../utils/assert'
-import {Logger} from '../utils/logging'
-import {multiTokenFromRemote} from './shelley/utils'
-
+import {CERTIFICATE_KIND} from '../../legacy/api/types'
+import {CONFIG} from '../../legacy/config/config'
+import type {NetworkId} from '../../legacy/config/types'
+import {multiTokenFromRemote} from '../../legacy/crypto/shelley/utils'
+import type {BaseAsset, Token, Transaction, TransactionInfo} from '../../legacy/types/HistoryTransaction'
+import {TRANSACTION_DIRECTION, TRANSACTION_STATUS, TRANSACTION_TYPE} from '../../legacy/types/HistoryTransaction'
+import assert from '../../legacy/utils/assert'
+import {Logger} from '../../legacy/utils/logging'
+import {getDefaultNetworkTokenEntry, MultiToken, strToDefaultMultiAsset} from '../yoroi-wallets'
 type TransactionAssurance = 'PENDING' | 'FAILED' | 'LOW' | 'MEDIUM' | 'HIGH'
-
 export const getTransactionAssurance = (
-  status: $Values<typeof TRANSACTION_STATUS>,
+  status: typeof TRANSACTION_STATUS[keyof typeof TRANSACTION_STATUS],
   confirmations: number,
 ): TransactionAssurance => {
   if (status === TRANSACTION_STATUS.PENDING) return 'PENDING'
   if (status === TRANSACTION_STATUS.FAILED) return 'FAILED'
+
   if (status !== TRANSACTION_STATUS.SUCCESSFUL) {
     throw new Error('Internal error - unknown transaction status')
   }
 
   const assuranceLevelCutoffs = CONFIG.ASSURANCE_LEVELS
-
   if (confirmations < assuranceLevelCutoffs.LOW) return 'LOW'
   if (confirmations < assuranceLevelCutoffs.MEDIUM) return 'MEDIUM'
   return 'HIGH'
 }
 
-const getTxTokens = (tx: Transaction, networkId: NetworkId): Dict<Token> => {
-  const tokens: Dict<Token> = {}
+const getTxTokens = (tx: Transaction, networkId: NetworkId): Record<string, Token> => {
+  const tokens: Record<string, Token> = {}
   const rawTokens: Array<BaseAsset> = []
   tx.inputs.forEach((i) => rawTokens.push(...i.assets))
   tx.outputs.forEach((o) => rawTokens.push(...o.assets))
-
   rawTokens.forEach((t) => {
     if (tokens[t.assetId] == null) {
       tokens[t.assetId] = {
@@ -57,12 +51,15 @@ const getTxTokens = (tx: Transaction, networkId: NetworkId): Dict<Token> => {
       }
     }
   })
-
   return tokens
 }
 
 const _sum = (
-  a: Array<{address: string, amount: string, assets: Array<BaseAsset>}>,
+  a: Array<{
+    address: string
+    amount: string
+    assets: Array<BaseAsset>
+  }>,
   networkId: NetworkId,
 ): MultiToken =>
   a.reduce(
@@ -71,7 +68,6 @@ const _sum = (
   )
 
 const _multiPartyWarningCache = {}
-
 export const processTxHistoryData = (
   tx: Transaction,
   ownAddresses: Array<string>,
@@ -89,7 +85,6 @@ export const processTxHistoryData = (
   const ownUtxoCollateralInputs = isInvalidScriptExecution
     ? collateral.filter(({address}) => ownAddresses.includes(address))
     : []
-
   // NOTE: will ignore the inputs and outputs if the tx script execution failed
   const utxoInputs = isInvalidScriptExecution ? [] : tx.inputs
   const utxoOutputs = isInvalidScriptExecution ? [] : tx.outputs
@@ -100,48 +95,53 @@ export const processTxHistoryData = (
         amount: w.amount,
         assets: [],
       }))
-
   const ownUtxoInputs = utxoInputs.filter(({address}) => ownAddresses.includes(address))
   const ownUtxoOutputs = utxoOutputs.filter(({address}) => ownAddresses.includes(address))
 
   const ownImplicitInput: MultiToken = _strToDefaultMultiAsset('0')
+
   const ownImplicitOutput: MultiToken = (() => {
     if (tx.type === TRANSACTION_TYPE.SHELLEY) {
       let implicitOutputSum = new BigNumber(0)
+
       for (const cert of tx.certificates) {
         if (cert.kind !== CERTIFICATE_KIND.MOVE_INSTANTANEOUS_REWARDS) {
           continue
         }
+
         const {rewards} = cert
         if (rewards == null) continue // shouldn't happen
+
         for (const rewardAddr in rewards) {
           if (ownAddresses.includes(rewardAddr)) {
             implicitOutputSum = implicitOutputSum.plus(rewards[rewardAddr])
           }
         }
       }
+
       return _strToDefaultMultiAsset(implicitOutputSum.toString())
     }
+
     return _strToDefaultMultiAsset('0')
   })()
 
   const unifiedInputs = [...utxoInputs, ...accountingInputs, ...ownUtxoCollateralInputs]
   const unifiedOutputs = [
-    ...utxoOutputs,
-    // ...accountingOutpus,
+    ...utxoOutputs, // ...accountingOutpus,
   ]
   const ownInputs = unifiedInputs.filter(({address}) => ownAddresses.includes(address))
-
   const ownOutputs = unifiedOutputs.filter(({address}) => ownAddresses.includes(address))
 
   const totalIn = _sum(unifiedInputs, networkId)
+
   const totalOut = _sum(unifiedOutputs, networkId)
+
   const ownIn = _sum(ownInputs, networkId).joinAddMutable(ownImplicitInput)
+
   const ownOut = _sum(ownOutputs, networkId).joinAddMutable(ownImplicitOutput)
 
   const hasOnlyOwnInputs = ownInputs.length === unifiedInputs.length
   const hasOnlyOwnOutputs = ownOutputs.length === unifiedOutputs.length
-
   const isIntraWallet = hasOnlyOwnInputs && hasOnlyOwnOutputs
   const isMultiParty = ownInputs.length > 0 && ownInputs.length !== unifiedInputs.length
 
@@ -159,25 +159,20 @@ export const processTxHistoryData = (
   transaction, i.e.:
   * positive amounts = incoming, negative amounts = outgoing
   * by the same logic, fees are represented by negative numbers
-
-  Then our main goal is to maintain the following two invariants:
+   Then our main goal is to maintain the following two invariants:
   * brutto amount = sum of our outputs - sum of our inputs
   * brutto amount = netto (shown) amount + (our) fee  (Note the plus here)
   * fee is either zero (no cost) or negative (transaction costed us something)
-
-  1) If all inputs and outputs are our addresses, this is clearly an intrawallet
+   1) If all inputs and outputs are our addresses, this is clearly an intrawallet
     transaction. There is no point in calculating the amount,
     only the transaction
     fee.
-
-  2) If we do not have our address in the inputs, this is clearly an incoming
+   2) If we do not have our address in the inputs, this is clearly an incoming
     transaction. Fee does not apply as we are just receiving money.
-
-  3) If all inputs are ours (and at least one output is not), this is an
+   3) If all inputs are ours (and at least one output is not), this is an
     outgoing transaction. Fee is the difference between total
     inputs and total outputs.
-
-  4) if only some of the inputs are ours we are handling a special
+   4) if only some of the inputs are ours we are handling a special
     multi-party transaction.
     Such transactions could be constructed by hand but in reality it is probable
     that our wallet just failed to discover one of its own addresses.
@@ -199,6 +194,7 @@ export const processTxHistoryData = (
   let fee
   const remoteFee = tx.fee != null ? _strToDefaultMultiAsset(new BigNumber(tx.fee).times(-1).toString()) : null
   let direction
+
   if (isInvalidScriptExecution) {
     direction = TRANSACTION_DIRECTION.SELF
     amount = brutto
@@ -224,7 +220,6 @@ export const processTxHistoryData = (
   }
 
   const assurance = getTransactionAssurance(tx.status, confirmations)
-
   const tokens = getTxTokens(tx, networkId)
 
   const _remoteAssetAsTokenEntry = (asset: BaseAsset) => ({

@@ -1,7 +1,6 @@
 import React from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {fetchUTXOs} from '../../../legacy/actions/utxo'
 import {Banner, ClickableBanner, OfflineBanner} from '../../components'
 import {
   hasPendingOutgoingTransactionSelector,
@@ -9,6 +8,7 @@ import {
   isOnlineSelector,
   lastUtxosFetchErrorSelector,
 } from '../../legacy/selectors'
+import {fetchUTXOs} from '../../legacy/utxo'
 import {useStrings} from './strings'
 
 export const ErrorBanners = () => {

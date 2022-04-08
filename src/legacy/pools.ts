@@ -1,12 +1,10 @@
-// @flow
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type {Dispatch} from 'redux'
 
-// $FlowExpectedError
-import {walletManager} from '../../src/yoroi-wallets'
-import type {PoolInfoRequest, PoolInfoResponse} from '../api/types'
-import type {State} from '../state'
-import {Logger} from '../utils/logging'
+import type {PoolInfoRequest, PoolInfoResponse} from '../../legacy/api/types'
+import type {State} from '../../legacy/state'
+import {Logger} from '../../legacy/utils/logging'
+import {walletManager} from '../yoroi-wallets'
 
 const _startFetching = () => ({
   type: 'START_FETCHING_POOL_INFO',
@@ -56,18 +54,20 @@ export const fetchPoolInfo = () => async (dispatch: Dispatch<any>, getState: () 
     dispatch(_clearPoolInfo())
     return
   }
+
   dispatch(_clearPoolInfo())
   dispatch(_startFetching())
+
   try {
     const poolOperator = getState().accountState.poolOperator
+
     if (poolOperator == null) {
       throw new Error('fetchPoolInfo::poolOperator is null, should never happen')
     }
-    const poolInfoResp: PoolInfoResponse = await walletManager.fetchPoolInfo(
-      ({
-        poolIds: [poolOperator],
-      }: PoolInfoRequest),
-    )
+
+    const poolInfoResp: PoolInfoResponse = await walletManager.fetchPoolInfo({
+      poolIds: [poolOperator],
+    } as PoolInfoRequest)
     const poolInfo = Object.keys(poolInfoResp).map((key) => poolInfoResp[key])[0]
     if (poolInfo.error != null) throw new Error(poolInfo.error)
     dispatch(_setPoolInfo(poolInfo))

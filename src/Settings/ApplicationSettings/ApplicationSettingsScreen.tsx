@@ -7,10 +7,10 @@ import {useDispatch, useSelector} from 'react-redux'
 
 import {CONFIG, isNightly} from '../../../legacy/config/config'
 import KeyStore from '../../../legacy/crypto/KeyStore'
-import {APP_SETTINGS_KEYS} from '../../../legacy/helpers/appSettings'
 import {SETTINGS_ROUTES} from '../../../legacy/RoutesList'
 import {StatusBar} from '../../components'
 import {setAppSettingField, setEasyConfirmation, setSystemAuth} from '../../legacy/actions'
+import {APP_SETTINGS_KEYS} from '../../legacy/appSettings'
 import {canBiometricEncryptionBeEnabled, isBiometricEncryptionHardwareSupported} from '../../legacy/deviceSettings'
 import {
   biometricHwSupportSelector,

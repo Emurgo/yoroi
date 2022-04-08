@@ -3,8 +3,8 @@ import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {fetchAccountState} from '../legacy/actions/account'
 import type {RawUtxo} from '../legacy/api/types'
+import {fetchAccountState} from './legacy/account'
 import {
   hasPendingOutgoingTransactionSelector,
   isFetchingAccountStateSelector,

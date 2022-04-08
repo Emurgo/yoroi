@@ -10,9 +10,9 @@ import {useSelector} from 'react-redux'
 
 import {CONFIG, UI_V2} from '../../../legacy/config/config'
 import {SEND_ROUTES} from '../../../legacy/RoutesList'
-import {formatTokenAmount, getAssetDenominationOrId, truncateWithEllipsis} from '../../../legacy/utils/format'
 import {Button, Checkbox, Spacer, StatusBar, Text, TextInput} from '../../components'
 import {useTokenInfo} from '../../hooks'
+import {formatTokenAmount, getAssetDenominationOrId, truncateWithEllipsis} from '../../legacy/format'
 import {
   defaultNetworkAssetSelector,
   hasPendingOutgoingTransactionSelector,

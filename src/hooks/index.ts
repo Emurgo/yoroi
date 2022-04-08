@@ -11,6 +11,7 @@ import {
 
 import {WalletMeta} from '../../legacy/state'
 import storage from '../../legacy/utils/storage'
+import {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {Token} from '../types'
 import {
   NetworkId,
@@ -226,7 +227,7 @@ type CreateBip44WalletInfo = {
   bip44AccountPublic: string
   networkId: number
   implementationId: WalletImplementationId
-  hwDeviceInfo?: Record<string, unknown>
+  hwDeviceInfo?: null | HWDeviceInfo
   readOnly: boolean
 }
 
@@ -238,7 +239,7 @@ export const useCreateBip44Wallet = (options?: UseMutationOptions<YoroiWallet, E
         bip44AccountPublic,
         networkId,
         implementationId,
-        hwDeviceInfo,
+        hwDeviceInfo || null,
         readOnly,
       ),
     invalidateQueries: [['walletMetas']],

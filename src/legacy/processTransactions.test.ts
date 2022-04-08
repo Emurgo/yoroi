@@ -1,11 +1,8 @@
-// @flow
-
-// $FlowExpectedError
-import {MultiToken} from '../../src/yoroi-wallets'
-import {checkAndFacadeTransactionAsync} from '../api/shelley/facade'
-import type {RawTransaction} from '../api/types'
-import {CONFIG} from '../config/config'
-import {TRANSACTION_DIRECTION} from '../types/HistoryTransaction'
+import {checkAndFacadeTransactionAsync} from '../../legacy/api/shelley/facade'
+import type {RawTransaction} from '../../legacy/api/types'
+import {CONFIG} from '../../legacy/config/config'
+import {TRANSACTION_DIRECTION} from '../../legacy/types/HistoryTransaction'
+import {MultiToken} from '../yoroi-wallets'
 import {processTxHistoryData} from './processTransactions'
 
 //

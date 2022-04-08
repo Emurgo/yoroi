@@ -3,8 +3,8 @@ import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {fetchUTXOs} from '../legacy/actions/utxo'
 import {hasPendingOutgoingTransactionSelector, isFetchingUtxosSelector, isOnlineSelector} from './legacy/selectors'
+import {fetchUTXOs} from './legacy/utxo'
 
 // eslint-disable-next-line react-prefer-function-component/react-prefer-function-component
 class UtxoAutoRefresherClass extends React.Component<{

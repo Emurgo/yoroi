@@ -7,10 +7,10 @@
 import React from 'react'
 import {useIntl} from 'react-intl'
 
-import type {DeviceId, DeviceObj} from '../../legacy/crypto/shelley/ledgerUtils'
 import globalMessages, {ledgerMessages, txLabels} from '../../legacy/i18n/global-messages'
 import {ErrorView, Modal, PleaseWaitView} from '../components'
 import {LedgerConnect, LedgerTransportSwitch} from '../HW'
+import type {DeviceId, DeviceObj} from '../legacy/ledgerUtils'
 
 type ErrorData = {
   errorMessage: string

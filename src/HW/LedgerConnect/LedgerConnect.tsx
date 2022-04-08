@@ -18,12 +18,12 @@ import {
 
 import bleImage from '../../../legacy/assets/img/bluetooth.png'
 import usbImage from '../../../legacy/assets/img/ledger-nano-usb.png'
-import type {DeviceId, DeviceObj} from '../../../legacy/crypto/shelley/ledgerUtils'
-import {BluetoothDisabledError, RejectedByUserError} from '../../../legacy/crypto/shelley/ledgerUtils'
 import {confirmationMessages, ledgerMessages} from '../../../legacy/i18n/global-messages'
 import LocalizableError from '../../../legacy/i18n/LocalizableError'
 import {Logger} from '../../../legacy/utils/logging'
 import {BulletPointItem, Button, Text} from '../../components'
+import type {DeviceId, DeviceObj} from '../../legacy/ledgerUtils'
+import {BluetoothDisabledError, RejectedByUserError} from '../../legacy/ledgerUtils'
 import {COLORS, spacing} from '../../theme'
 import {Device} from '../../types'
 import {DeviceItem} from './DeviceItem'
@@ -40,8 +40,8 @@ type Props = {
 
 type State = {
   devices: Array<Device>
-  deviceId?: DeviceId
-  deviceObj?: DeviceObj
+  deviceId?: null | DeviceId
+  deviceObj?: null | DeviceObj
   error?: any
   refreshing: boolean
   waiting: boolean

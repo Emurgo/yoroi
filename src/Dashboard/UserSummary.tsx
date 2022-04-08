@@ -7,8 +7,8 @@ import TotalAdaIcon from '../../legacy/assets/staking/TotalAdaIcon'
 import TotalDelegatedIcon from '../../legacy/assets/staking/TotalDelegatedIcon'
 import TotalRewardIcon from '../../legacy/assets/staking/TotalRewardIcon'
 import globalMessages from '../../legacy/i18n/global-messages'
-import {formatAdaWithText} from '../../legacy/utils/format'
 import {Button, Text, TitledCard} from '../components'
+import {formatAdaWithText} from '../legacy/format'
 import {COLORS} from '../theme'
 
 const ICON_DIM = 44
