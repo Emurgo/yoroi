@@ -51,12 +51,6 @@ import type {BackendConfig} from '../../../legacy/config/types'
 import {NETWORK_REGISTRY} from '../../../legacy/config/types'
 import {ADDRESS_TYPE_TO_CHANGE, generateWalletRootKey} from '../../../legacy/crypto/commonUtils'
 import {CardanoError, InvalidState} from '../../../legacy/crypto/errors'
-import type {HWDeviceInfo} from '../../../legacy/crypto/shelley/ledgerUtils'
-import {
-  buildSignedTransaction,
-  createLedgerSignTxPayload,
-  signTxWithLedger,
-} from '../../../legacy/crypto/shelley/ledgerUtils'
 import {deriveRewardAddressHex, normalizeToAddress, toHexOrBase58} from '../../../legacy/crypto/shelley/utils'
 import type {AddressedUtxo, Addressing, SendTokenList, SignedTx} from '../../../legacy/crypto/types'
 import LocalizableError from '../../../legacy/i18n/LocalizableError'
@@ -64,6 +58,8 @@ import type {WalletMeta} from '../../../legacy/state'
 import type {DefaultAsset} from '../../../legacy/types/HistoryTransaction'
 import assert from '../../../legacy/utils/assert'
 import {Logger} from '../../../legacy/utils/logging'
+import type {HWDeviceInfo} from '../../legacy/ledgerUtils'
+import {buildSignedTransaction, createLedgerSignTxPayload, signTxWithLedger} from '../../legacy/ledgerUtils'
 import {DefaultTokenEntry} from '../../types'
 import {genTimeToSlot} from '../utils/timeUtils'
 import {versionCompare} from '../utils/versioning'

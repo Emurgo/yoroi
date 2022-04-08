@@ -27,6 +27,11 @@ export var WALLETS: {
 
 // prettier-ignore
 export var CONFIG: {
+  ASSURANCE_LEVELS: {
+      LOW: number,
+      MEDIUM: number,
+  },
+  APP_LOCK_TIMEOUT: number,
   MAX_CONCURRENT_REQUESTS: number,
   PRIMARY_ASSET_CONSTANTS: {
     CARDANO: ""
@@ -93,10 +98,13 @@ export var CONFIG: {
   },
   HARDWARE_WALLETS: {
     LEDGER_NANO: {
-      USB_MIN_SDK: number,
-      ENABLE_USB_TRANSPORT: boolean,
-      ENABLED: boolean,
+      ENABLED: true,
       DEFAULT_WALLET_NAME: string,
+      VENDOR: string,
+      MODEL: string,
+      ENABLE_USB_TRANSPORT: boolean,
+      USB_MIN_SDK: number, // USB transport officially supported for Android SDK >= 24
+      MIN_ADA_APP_VERSION: string,
     },
   },
   LOG_LEVEL: string,

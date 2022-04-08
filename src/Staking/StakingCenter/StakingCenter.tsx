@@ -14,11 +14,11 @@ import {InsufficientFunds} from '../../../legacy/crypto/errors'
 import globalMessages, {errorMessages} from '../../../legacy/i18n/global-messages'
 import {STAKING_CENTER_ROUTES} from '../../../legacy/RoutesList'
 import {ObjectValues} from '../../../legacy/utils/flow'
-import {normalizeTokenAmount} from '../../../legacy/utils/format'
 import {Logger} from '../../../legacy/utils/logging'
 import {AccountAutoRefresher} from '../../AccountAutoRefresher'
 import {PleaseWaitModal} from '../../components'
 import {showErrorDialog} from '../../legacy/actions'
+import {normalizeTokenAmount} from '../../legacy/format'
 import {
   accountBalanceSelector,
   defaultNetworkAssetSelector,

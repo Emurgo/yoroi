@@ -1,9 +1,8 @@
-// @flow
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import type {Dispatch} from 'redux'
 
-import {type Dispatch} from 'redux'
-
-import {APP_SETTINGS_KEYS, writeAppSettings} from '../helpers/appSettings'
-import {setLanguage} from '../i18n'
+import {setLanguage} from '../../legacy/i18n'
+import {APP_SETTINGS_KEYS, writeAppSettings} from './appSettings'
 
 export const changeLanguage = (languageCode: string) => (dispatch: Dispatch<any>) => {
   setLanguage(languageCode)

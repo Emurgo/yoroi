@@ -9,33 +9,26 @@ import DeviceInfo from 'react-native-device-info'
 import type {Dispatch} from 'redux'
 import uuid from 'uuid'
 
-import {clearAccountState} from '../../legacy/actions/account'
-import {mirrorTxHistory, setBackgroundSyncError, updateHistory} from '../../legacy/actions/history'
-import {changeAndSaveLanguage} from '../../legacy/actions/language'
-import {clearUTXOs} from '../../legacy/actions/utxo'
 import * as api from '../../legacy/api/shelley/api'
 import {CONFIG} from '../../legacy/config/config'
 import {getCardanoNetworkConfigById} from '../../legacy/config/networks'
 import {encryptCustomPin} from '../../legacy/crypto/customPin'
 import {ISignRequest} from '../../legacy/crypto/ISignRequest'
 import KeyStore from '../../legacy/crypto/KeyStore'
-import type {AppSettingsKey} from '../../legacy/helpers/appSettings'
-import {
-  APP_SETTINGS_KEYS,
-  AppSettingsError,
-  readAppSettings,
-  removeAppSettings,
-  writeAppSettings,
-} from '../../legacy/helpers/appSettings'
-import {backgroundLockListener} from '../../legacy/helpers/backgroundLockHelper'
-import crashReporting from '../../legacy/helpers/crashReporting'
 import globalMessages, {errorMessages} from '../../legacy/i18n/global-messages'
 import type {State} from '../../legacy/state'
 import assert from '../../legacy/utils/assert'
 import {Logger} from '../../legacy/utils/logging'
 import networkInfo from '../../legacy/utils/networkInfo'
 import {ServerStatus, walletManager} from '../yoroi-wallets'
+import {clearAccountState} from './account'
+import type {AppSettingsKey} from './appSettings'
+import {APP_SETTINGS_KEYS, AppSettingsError, readAppSettings, removeAppSettings, writeAppSettings} from './appSettings'
+import {backgroundLockListener} from './backgroundLockHelper'
+import crashReporting from './crashReporting'
 import {canBiometricEncryptionBeEnabled, recreateAppSignInKeys, removeAppSignInKeys} from './deviceSettings'
+import {mirrorTxHistory, setBackgroundSyncError, updateHistory} from './history'
+import {changeAndSaveLanguage} from './language'
 import {
   currentVersionSelector,
   installationIdSelector,
@@ -44,6 +37,7 @@ import {
   sendCrashReportsSelector,
 } from './selectors'
 import {fetchTokenInfo} from './tokenInfo'
+import {clearUTXOs} from './utxo'
 
 const updateCrashlytics = (fieldName: AppSettingsKey, value: any) => {
   const handlers = {
@@ -303,7 +297,7 @@ export const setupHooks = () => (dispatch: Dispatch<any>) => {
   dispatch(_setOnline(networkInfo.getConnectionInfo().isOnline))
   Logger.debug('setting wallet manager hook')
   walletManager.subscribe(() => dispatch(mirrorTxHistory()))
-  walletManager.subscribeBackgroundSyncError((err) => dispatch(setBackgroundSyncError(err)))
+  walletManager.subscribeBackgroundSyncError((err: any) => dispatch(setBackgroundSyncError(err)))
   walletManager.subscribeServerSync((status) => dispatch(_setServerStatus(status)))
   walletManager.subscribeOnOpen(() => dispatch(fetchTokenInfo()))
   walletManager.subscribeOnClose(() => dispatch(clearUTXOs()))

@@ -4,14 +4,14 @@ import {LayoutAnimation, StyleSheet, TouchableOpacity, View} from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {fetchAccountState} from '../../legacy/actions/account'
-import {updateHistory} from '../../legacy/actions/history'
 import infoIcon from '../../legacy/assets/img/icon/info-light-green.png'
 import {UI_V2} from '../../legacy/config/config'
 import {isByron} from '../../legacy/config/config'
 import {assetMessages, txLabels} from '../../legacy/i18n/global-messages'
 import {OfflineBanner, StatusBar, Text} from '../components'
+import {fetchAccountState} from '../legacy/account'
 import {checkForFlawedWallets} from '../legacy/actions'
+import {updateHistory} from '../legacy/history'
 import {
   isOnlineSelector,
   isSynchronizingHistorySelector,

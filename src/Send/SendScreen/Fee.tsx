@@ -3,8 +3,8 @@ import React from 'react'
 import {StyleSheet} from 'react-native'
 import {useSelector} from 'react-redux'
 
-import {formatTokenWithSymbol} from '../../../legacy/utils/format'
 import {Text} from '../../components'
+import {formatTokenWithSymbol} from '../../legacy/format'
 import {defaultNetworkAssetSelector} from '../../legacy/selectors'
 import {useStrings} from './strings'
 

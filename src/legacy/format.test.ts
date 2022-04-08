@@ -1,8 +1,6 @@
-// @flow
-
 import {BigNumber} from 'bignumber.js'
 
-import {getCardanoDefaultAsset} from '../config/config'
+import {getCardanoDefaultAsset} from '../../legacy/config/config'
 import {
   ASSET_DENOMINATION,
   formatTokenAmount,

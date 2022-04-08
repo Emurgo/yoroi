@@ -1,9 +1,7 @@
-// @flow
-
 import {AppState} from 'react-native'
 import BackgroundTimer from 'react-native-background-timer'
 
-import {CONFIG} from '../config/config'
+import {CONFIG} from '../../legacy/config/config'
 
 let timeout
 

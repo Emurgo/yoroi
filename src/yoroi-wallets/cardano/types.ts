@@ -9,10 +9,10 @@ import type {
   TxStatusRequest,
   TxStatusResponse,
 } from '../../../legacy/api/types'
-import type {HWDeviceInfo} from '../../../legacy/crypto/shelley/ledgerUtils'
 import type {EncryptionMethod, SignedTx, WalletState} from '../../../legacy/crypto/types'
 import {WalletMeta} from '../../../legacy/state'
 import type {Transaction} from '../../../legacy/types/HistoryTransaction'
+import type {HWDeviceInfo} from '../../legacy/ledgerUtils'
 import {
   AccountStates,
   AddressedUtxo,

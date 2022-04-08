@@ -1,9 +1,9 @@
-// @flow
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import ExtendableError from 'es6-error'
 import _ from 'lodash'
 
-import storage from '../utils/storage'
+import storage from '../../legacy/utils/storage'
 
 // Note(ppershing): following values have to be in sync with
 // keys in redux state
@@ -19,7 +19,7 @@ export const APP_SETTINGS_KEYS = {
   CURRENT_VERSION: 'currentVersion',
 }
 
-export type AppSettingsKey = $Values<typeof APP_SETTINGS_KEYS>
+export type AppSettingsKey = typeof APP_SETTINGS_KEYS[keyof typeof APP_SETTINGS_KEYS]
 
 // thrown when app settings is missing
 export class AppSettingsError extends ExtendableError {
@@ -45,6 +45,10 @@ export const readAppSettings = async () => {
   const appSettings = await storage.readMany(appSettingsKeys)
   return appSettings.reduce((acc, [key, value]) => {
     const setting = _.last(key.split('/'))
-    return {...acc, [setting]: value}
+
+    return {
+      ...acc,
+      [setting as string]: value,
+    }
   }, {})
 }

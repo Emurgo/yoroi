@@ -1,10 +1,8 @@
-// @flow
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type {Dispatch} from 'redux'
 
-// $FlowExpectedError
-import {walletManager} from '../../src/yoroi-wallets'
-import type {State} from '../state'
+import type {State} from '../../legacy/state'
+import {walletManager} from '../yoroi-wallets'
 
 // start fetching utxo
 const _startFetching = () => ({
@@ -49,6 +47,7 @@ export const fetchUTXOs = () => async (dispatch: Dispatch<any>, getState: () => 
 
   dispatch(_startFetching())
   dispatch(_clearUTXOs())
+
   try {
     const utxos = await walletManager.fetchUTXOs()
     dispatch(_setUTXOs(utxos))
@@ -59,7 +58,6 @@ export const fetchUTXOs = () => async (dispatch: Dispatch<any>, getState: () => 
     dispatch(_endFetching())
   }
 }
-
 export const clearUTXOs = () => (dispatch: Dispatch<any>) => {
   dispatch(_clearUTXOs())
 }

@@ -6,7 +6,7 @@ import {getCardanoNetworkConfigById, isHaskellShelleyNetwork} from '../../../leg
 import {AssetOverflowError, InsufficientFunds} from '../../../legacy/crypto/errors'
 import {cardanoValueFromMultiToken} from '../../../legacy/crypto/shelley/utils'
 import {WalletMeta} from '../../../legacy/state'
-import {formatTokenAmount, formatTokenInteger, normalizeTokenAmount} from '../../../legacy/utils/format'
+import {formatTokenAmount, formatTokenInteger, normalizeTokenAmount} from '../../legacy/format'
 import type {DefaultAsset, RawUtxo, SendTokenList, Token} from '../../types'
 import {HaskellShelleyTxSignRequest, MultiToken, walletManager} from '../../yoroi-wallets'
 import {BigNum, minAdaRequired} from '../../yoroi-wallets'

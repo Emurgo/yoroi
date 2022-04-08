@@ -8,11 +8,11 @@ import {useSelector} from 'react-redux'
 
 import {getNetworkConfigById} from '../../../legacy/config/networks'
 import globalMessages from '../../../legacy/i18n/global-messages'
-import {formatTokenWithSymbol} from '../../../legacy/utils/format'
 import arrowDown from '../../assets/img/icon/chevron_down.png'
 import arrowUp from '../../assets/img/icon/chevron_up.png'
 import {Banner, Boundary, Button, CopyButton, OfflineBanner, StatusBar, Text} from '../../components'
 import {useTokenInfo} from '../../hooks'
+import {formatTokenWithSymbol} from '../../legacy/format'
 import {
   externalAddressIndexSelector,
   internalAddressIndexSelector,

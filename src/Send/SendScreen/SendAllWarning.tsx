@@ -1,8 +1,8 @@
 import React from 'react'
 
-import {getAssetDenominationOrId, truncateWithEllipsis} from '../../../legacy/utils/format'
 import {DangerousActionModal, Text} from '../../components'
 import {useTokenInfo} from '../../hooks'
+import {getAssetDenominationOrId, truncateWithEllipsis} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {useStrings} from './strings'
 

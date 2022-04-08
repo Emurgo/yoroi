@@ -6,16 +6,16 @@ import {defineMessages, MessageDescriptor, useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
+import utfSymbols from '../../../legacy/utils/utfSymbols'
+import {Text} from '../../components'
+import {Icon} from '../../components/Icon'
 import {
   ASSET_DENOMINATION,
   formatTimeToSeconds,
   formatTokenFractional,
   formatTokenInteger,
   getAssetDenominationOrId,
-} from '../../../legacy/utils/format'
-import utfSymbols from '../../../legacy/utils/utfSymbols'
-import {Text} from '../../components'
-import {Icon} from '../../components/Icon'
+} from '../../legacy/format'
 import {
   availableAssetsSelector,
   defaultNetworkAssetSelector,

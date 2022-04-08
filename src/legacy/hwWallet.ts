@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type {Dispatch} from 'redux'
 
-import type {DeviceId, DeviceObj, HWDeviceInfo} from '../../legacy/crypto/shelley/ledgerUtils'
-import {NoDeviceInfoError} from '../../legacy/crypto/shelley/ledgerUtils'
 import type {State} from '../../legacy/state'
 import {Logger} from '../../legacy/utils/logging'
 import {walletManager} from '../yoroi-wallets'
+import type {DeviceId, DeviceObj, HWDeviceInfo} from './ledgerUtils'
+import {NoDeviceInfoError} from './ledgerUtils'
 import {hwDeviceInfoSelector} from './selectors'
 
 const _saveHW = (hwDeviceInfo) => ({

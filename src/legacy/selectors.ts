@@ -6,13 +6,13 @@ import type {RawUtxo} from '../../legacy/api/types'
 import {getCardanoDefaultAsset, getDefaultAssetByNetworkId, getDefaultAssets} from '../../legacy/config/config'
 import type {NetworkId} from '../../legacy/config/types'
 import {NETWORK_REGISTRY} from '../../legacy/config/types'
-import {processTxHistoryData} from '../../legacy/crypto/processTransactions'
-import type {HWDeviceInfo} from '../../legacy/crypto/shelley/ledgerUtils'
 import type {State, WalletMeta} from '../../legacy/state'
 import type {DefaultAsset, Token, Transaction, TransactionInfo} from '../../legacy/types/HistoryTransaction'
 import {TRANSACTION_DIRECTION, TRANSACTION_STATUS} from '../../legacy/types/HistoryTransaction'
 import {ObjectValues} from '../../legacy/utils/flow'
 import {getDefaultNetworkTokenEntry, MultiToken} from '../yoroi-wallets'
+import type {HWDeviceInfo} from './ledgerUtils'
+import {processTxHistoryData} from './processTransactions'
 
 export const transactionsInfoSelector: (arg0: State) => Record<string, TransactionInfo> = createSelector(
   (state) => state.wallet.transactions,

@@ -1,11 +1,10 @@
-// @flow
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
-import {type Dispatch} from 'redux'
+import type {Dispatch} from 'redux'
 
-// $FlowExpectedError
-import {WalletClosed, walletManager} from '../../src/yoroi-wallets'
-import {ApiHistoryError} from '../api/errors'
-import {Logger} from '../utils/logging'
+import {ApiHistoryError} from '../../legacy/api/errors'
+import {Logger} from '../../legacy/utils/logging'
+import {WalletClosed, walletManager} from '../yoroi-wallets'
 
 const _startFetch = () => ({
   type: 'Fetch transaction history',
@@ -21,7 +20,7 @@ const _endFetch = () => ({
   reducer: (_state, _payload) => false,
 })
 
-const _setSyncError = (message: ?string): any => ({
+const _setSyncError = (message: null | undefined | string) => ({
   type: 'Set history sync error',
   path: ['txHistory', 'lastSyncError'],
   payload: message,
@@ -46,7 +45,7 @@ export const updateHistory = () => async (dispatch: Dispatch<any>) => {
         dispatch(_setSyncError(null))
       } catch (e) {
         Logger.error('Sync error', e)
-        dispatch(_setSyncError(e.message))
+        dispatch(_setSyncError((e as Error).message))
       }
     } else if (e instanceof WalletClosed) {
       // do nothing
@@ -54,7 +53,7 @@ export const updateHistory = () => async (dispatch: Dispatch<any>) => {
       // TODO(ppershing): should we set error object or just
       // some message code?
       Logger.error('Sync error', e)
-      dispatch(_setSyncError(e.message))
+      dispatch(_setSyncError((e as Error).message))
     }
   } finally {
     dispatch(_endFetch())

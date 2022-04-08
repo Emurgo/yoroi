@@ -1,5 +1,3 @@
-// @flow
-
 import type {GetVersionResponse} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 
 import {checkDeviceVersion, DeprecatedAdaAppError} from './ledgerUtils'
@@ -15,8 +13,8 @@ describe('encryption/decryption', () => {
     }
     const mockResponse: GetVersionResponse = {
       version,
-      // $FlowFixMe this is just a mock
-      compatibility: {},
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      compatibility: {} as any,
     }
     expect(() => checkDeviceVersion(mockResponse)).toThrow(DeprecatedAdaAppError)
   })

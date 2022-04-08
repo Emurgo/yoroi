@@ -9,6 +9,7 @@ import {WITHDRAWAL_DIALOG_STEPS} from '../../../../legacy/components/Delegation/
 import globalMessages, {ledgerMessages} from '../../../../legacy/i18n/global-messages'
 import {DangerousAction, ErrorView, Modal, PleaseWaitView, Spacer} from '../../../components'
 import {LedgerConnect, LedgerTransportSwitch} from '../../../HW'
+import {DeviceObj} from '../../../legacy/ledgerUtils'
 import {theme} from '../../../theme'
 import {TxDeregistration, TxWithdrawal} from '../../../yoroi-wallets'
 import {TransferSummary} from './TransferSummary'
@@ -18,8 +19,8 @@ type Props = {
   onKeepKey: () => void
   onDeregisterKey: () => void
   onChooseTransport: (bool: boolean) => void
-  onConnectBLE: (...args: unknown[]) => void
-  onConnectUSB: (...args: unknown[]) => void
+  onConnectBLE: (deviceId: string) => void
+  onConnectUSB: (deviceObj: DeviceObj) => void
   withdrawals: null | Array<TxWithdrawal>
   deregistrations: null | Array<TxDeregistration>
   balance: BigNumber
