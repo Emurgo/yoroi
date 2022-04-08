@@ -2,10 +2,10 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Image, LayoutAnimation, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
-import chevronLeft from '../../../legacy/assets/img/chevron_left.png'
-import chevronRight from '../../../legacy/assets/img/chevron_right.png'
-import image from '../../../legacy/assets/img/error.png'
 import globalMessages, {errorMessages} from '../../../legacy/i18n/global-messages'
+import chevronLeft from '../../assets//img/chevron_left.png'
+import chevronRight from '../../assets//img/chevron_right.png'
+import image from '../../assets//img/error.png'
 import {brand, COLORS, spacing} from '../../theme'
 import {Button, Modal} from '..'
 

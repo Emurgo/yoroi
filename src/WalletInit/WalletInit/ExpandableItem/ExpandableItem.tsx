@@ -2,8 +2,8 @@ import React from 'react'
 import {Image, LayoutAnimation, TouchableOpacity, View} from 'react-native'
 import {StyleSheet} from 'react-native'
 
-import chevronDown from '../../../../legacy/assets/img/chevron_down.png'
-import chevronUp from '../../../../legacy/assets/img/chevron_up.png'
+import chevronDown from '../../../assets/img/chevron_down.png'
+import chevronUp from '../../../assets/img/chevron_up.png'
 import {Text} from '../../../components'
 import {COLORS} from '../../../theme'
 

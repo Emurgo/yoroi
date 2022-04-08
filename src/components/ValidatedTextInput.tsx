@@ -1,8 +1,8 @@
 import React from 'react'
 import {Image, Platform, StyleSheet, TextInput, TextInputProps, TouchableOpacity, View, ViewStyle} from 'react-native'
 
-import closedEyeIcon from '../../legacy/assets/img/icon/visibility-closed.png'
-import openedEyeIcon from '../../legacy/assets/img/icon/visibility-opened.png'
+import closedEyeIcon from '../assets/img/icon/visibility-closed.png'
+import openedEyeIcon from '../assets/img/icon/visibility-opened.png'
 import {Text} from './Text'
 
 type Props = TextInputProps & {

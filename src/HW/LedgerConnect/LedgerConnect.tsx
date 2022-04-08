@@ -16,11 +16,11 @@ import {
   View,
 } from 'react-native'
 
-import bleImage from '../../../legacy/assets/img/bluetooth.png'
-import usbImage from '../../../legacy/assets/img/ledger-nano-usb.png'
 import {confirmationMessages, ledgerMessages} from '../../../legacy/i18n/global-messages'
 import LocalizableError from '../../../legacy/i18n/LocalizableError'
 import {Logger} from '../../../legacy/utils/logging'
+import bleImage from '../../assets/img/bluetooth.png'
+import usbImage from '../../assets/img/ledger-nano-usb.png'
 import {BulletPointItem, Button, Text} from '../../components'
 import type {DeviceId, DeviceObj} from '../../legacy/ledgerUtils'
 import {BluetoothDisabledError, RejectedByUserError} from '../../legacy/ledgerUtils'

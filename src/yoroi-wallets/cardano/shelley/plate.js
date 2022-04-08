@@ -3,11 +3,10 @@ import {Bip32PrivateKey} from '@emurgo/react-native-haskell-shelley'
 
 import {CONFIG} from '../../../../legacy/config/config'
 import type {NetworkId} from '../../../../legacy/config/types'
-import {getMasterKeyFromMnemonic} from '../../../../legacy/crypto/byron/util'
 import type {AddressType} from '../../../../legacy/crypto/commonUtils'
 import type {PlateResponse} from '../../../../legacy/crypto/types'
-// $FlowExpectedError
 import {AddressGenerator} from '../..'
+import {getMasterKeyFromMnemonic} from '../byron/util'
 
 export const generateShelleyPlateFromKey = async (
   key: string,
