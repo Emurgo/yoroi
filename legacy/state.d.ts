@@ -6,7 +6,9 @@ import {BigNumber} from 'bignumber.js'
 import {ISignRequest, RawUtxo, RemotePoolMetaSuccess, ServerStatus, Token, WalletInterface} from '../src/types'
 import type {NetworkId, WalletImplementationId, YoroiProvider} from './config/types'
 
-export var mockState = () => State
+export var mockState: (state?: null | Partial<State>) => State
+
+export var getInitialState: () => State
 
 // prettier-ignore
 export type WalletMeta = {

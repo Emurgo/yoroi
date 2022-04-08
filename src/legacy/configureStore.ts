@@ -1,18 +1,17 @@
-// @flow
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {action as storybookAction} from '@storybook/addon-actions'
 import {applyMiddleware, compose, createStore} from 'redux'
 import {createLogger} from 'redux-logger'
 import thunk from 'redux-thunk'
 
-import type {State} from '../state'
-import getInitialState, {mockState} from '../state'
-import type {Dispatch, GenericAction} from '../types/reduxTypes'
+import type {State} from '../../legacy/state'
+import {getInitialState, mockState} from '../../legacy/state'
+import type {Dispatch, GenericAction} from '../../legacy/types/reduxTypes'
 import rootReducer from './rootReducer'
 
-export const getConfiguredStore = (useMockState: boolean = false, storybook: boolean = false, mockedState: ?State) => {
+export const getConfiguredStore = (useMockState = false, storybook = false, mockedState?: null | any) => {
   const logger = {
-    log: (_message: string, _payload: Object) => null,
+    log: (_message: string, _payload: Record<string, unknown>) => null,
   }
 
   const loggerMiddleware = createLogger({
@@ -33,16 +32,16 @@ export const getConfiguredStore = (useMockState: boolean = false, storybook: boo
   }
 
   // When not running devtools, use regular compose
-  const composeEnhancers = (window.__DEV__ && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose
+  const composeEnhancers = ((window as any).__DEV__ && (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose
 
-  const store = createStore<State, GenericAction<State, any>, Dispatch>(
+  const store = createStore<State, GenericAction<State, any>, Dispatch, unknown>(
     rootReducer,
     __DEV__ && useMockState ? mockState(mockedState) : getInitialState(),
     composeEnhancers(applyMiddleware(...middlewares)),
   )
 
   if (process.env.NODE_ENV === 'development') {
-    logger.log = (message: string, payload: Object) =>
+    logger.log = (message: string, payload: Record<string, unknown>) =>
       store.dispatch({
         type: message,
         payload,
