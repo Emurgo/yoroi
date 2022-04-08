@@ -17,7 +17,6 @@ import type {
   TokenInfoResponse,
   TxBodiesRequest,
 } from '../../legacy/api/types'
-import {CONFIG, DISABLE_BACKGROUND_SYNC, WALLETS} from '../../legacy/config/config'
 import {isJormungandr} from '../../legacy/config/networks'
 import {NETWORK_REGISTRY, WALLET_IMPLEMENTATION_REGISTRY} from '../../legacy/config/types'
 import type {DefaultAsset} from '../../legacy/types/HistoryTransaction'
@@ -26,6 +25,7 @@ import {ObjectValues} from '../../legacy/utils/flow'
 import {Logger} from '../../legacy/utils/logging'
 import storage from '../../legacy/utils/storage'
 import {APP_SETTINGS_KEYS, readAppSettings} from '../legacy/appSettings'
+import {CONFIG, DISABLE_BACKGROUND_SYNC, WALLETS} from '../legacy/config'
 import {ensureKeysValidity, isSystemAuthSupported} from '../legacy/deviceSettings'
 import {ISignRequest} from '../legacy/ISignRequest'
 import KeyStore from '../legacy/KeyStore'

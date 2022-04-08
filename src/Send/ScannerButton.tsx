@@ -3,9 +3,9 @@ import {useNavigation, useRoute} from '@react-navigation/native'
 import React from 'react'
 import {StyleSheet} from 'react-native'
 
-import {UI_V2} from '../../legacy/config/config'
 import iconQR from '../assets/img/qr_code.png'
 import {Button} from '../components'
+import {UI_V2} from '../legacy/config'
 import {SEND_ROUTES} from '../legacy/RoutesList'
 import {pastedFormatter} from '../yoroi-wallets/utils/amountUtils'
 

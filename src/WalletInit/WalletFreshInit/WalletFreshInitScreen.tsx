@@ -4,8 +4,8 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {CONFIG, isNightly} from '../../../legacy/config/config'
 import {Button, Spacer, StatusBar} from '../../components'
+import {CONFIG, isNightly} from '../../legacy/config'
 // uses same styles as WalletInitScreen
 import {WALLET_INIT_ROUTES} from '../../legacy/RoutesList'
 import {COLORS} from '../../theme'

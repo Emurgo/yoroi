@@ -1,6 +1,6 @@
 import {BigNumber} from 'bignumber.js'
 
-import {getCardanoDefaultAsset} from '../../legacy/config/config'
+import {getCardanoDefaultAsset} from './config'
 import {
   ASSET_DENOMINATION,
   formatTokenAmount,

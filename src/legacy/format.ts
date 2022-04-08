@@ -5,9 +5,9 @@ import moment from 'moment'
 import type {IntlShape} from 'react-intl'
 import {defineMessages} from 'react-intl'
 
-import {getCardanoDefaultAsset} from '../../legacy/config/config'
 import type {DefaultAsset, Token} from '../../legacy/types/HistoryTransaction'
 import utfSymbols from '../../legacy/utils/utfSymbols'
+import {getCardanoDefaultAsset} from './config'
 const messages = defineMessages({
   today: {
     id: 'utils.format.today',

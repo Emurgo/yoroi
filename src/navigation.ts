@@ -4,6 +4,12 @@ import React from 'react'
 
 import {COLORS} from './theme'
 
+export const useUnsafeParams = <Params>() => {
+  const route = useRoute()
+
+  return route?.params as unknown as Params
+}
+
 export const useParams = <Params>(guard: Guard<Params>): Params => {
   const params = useRoute().params
 

@@ -1,19 +1,17 @@
-// @flow
-
-import env from '../env'
-import type {DefaultAsset} from '../types/HistoryTransaction'
-import {LogLevel} from '../utils/logging'
-import type {CardanoHaskellShelleyNetwork} from './networks'
+import type {CardanoHaskellShelleyNetwork} from '../../legacy/config/networks'
 import {
   DEFAULT_ASSETS,
   getNetworkConfigById,
   isHaskellShelleyNetwork,
   NETWORKS,
   PRIMARY_ASSET_CONSTANTS,
-} from './networks'
-import {NUMBERS} from './numbers'
-import type {NetworkId, WalletImplementation, WalletImplementationId, YoroiProvider} from './types'
-import {DERIVATION_TYPES, WALLET_IMPLEMENTATION_REGISTRY} from './types'
+} from '../../legacy/config/networks'
+import {NUMBERS} from '../../legacy/config/numbers'
+import type {NetworkId, WalletImplementation, WalletImplementationId, YoroiProvider} from '../../legacy/config/types'
+import {DERIVATION_TYPES, WALLET_IMPLEMENTATION_REGISTRY} from '../../legacy/config/types'
+import type {DefaultAsset} from '../../legacy/types/HistoryTransaction'
+import {LogLevel} from '../../legacy/utils/logging'
+import env from './env'
 
 const IS_DEBUG = __DEV__
 
@@ -58,30 +56,30 @@ const _DEFAULT_DISCOVERY_SETTINGS = {
 }
 
 export const WALLETS = {
-  HASKELL_BYRON: ({
+  HASKELL_BYRON: {
     WALLET_IMPLEMENTATION_ID: WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON,
     TYPE: DERIVATION_TYPES.BIP44,
     MNEMONIC_LEN: 15,
     ..._DEFAULT_DISCOVERY_SETTINGS,
-  }: WalletImplementation),
-  HASKELL_SHELLEY: ({
+  } as WalletImplementation,
+  HASKELL_SHELLEY: {
     WALLET_IMPLEMENTATION_ID: WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY,
     TYPE: DERIVATION_TYPES.CIP1852,
     MNEMONIC_LEN: 15,
     ..._DEFAULT_DISCOVERY_SETTINGS,
-  }: WalletImplementation),
-  HASKELL_SHELLEY_24: ({
+  } as WalletImplementation,
+  HASKELL_SHELLEY_24: {
     WALLET_IMPLEMENTATION_ID: WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY_24,
     TYPE: DERIVATION_TYPES.CIP1852,
     MNEMONIC_LEN: 24,
     ..._DEFAULT_DISCOVERY_SETTINGS,
-  }: WalletImplementation),
-  JORMUNGANDR_ITN: ({
+  } as WalletImplementation,
+  JORMUNGANDR_ITN: {
     WALLET_IMPLEMENTATION_ID: WALLET_IMPLEMENTATION_REGISTRY.JORMUNGANDR_ITN,
     TYPE: DERIVATION_TYPES.CIP1852,
     MNEMONIC_LEN: 15,
     ..._DEFAULT_DISCOVERY_SETTINGS,
-  }: WalletImplementation),
+  } as WalletImplementation,
 }
 
 const HARDWARE_WALLETS = {
@@ -209,10 +207,10 @@ export const isNightly = () => CONFIG.BUILD_VARIANT === 'NIGHTLY'
 export const getCardanoBaseConfig = (
   networkConfig: CardanoHaskellShelleyNetwork,
 ): Array<{
-  StartAt?: number,
-  GenesisDate?: string,
-  SlotsPerEpoch?: number,
-  SlotDuration?: number,
+  StartAt?: number
+  GenesisDate?: string
+  SlotsPerEpoch?: number
+  SlotDuration?: number
 }> => [
   {
     StartAt: networkConfig.BASE_CONFIG[0].START_AT,
@@ -274,7 +272,7 @@ export const getDefaultAssetByNetworkId = (networkId: NetworkId): DefaultAsset =
  * @param  {YoroiProvider} provider
  * @returns  Array<string>
  */
-export const getTestStakingPool = (networkId: NetworkId, provider: ?YoroiProvider): Array<string> => {
+export const getTestStakingPool = (networkId: NetworkId, provider: null | undefined | YoroiProvider): Array<string> => {
   if (isHaskellShelleyNetwork(networkId)) {
     if (provider) {
       return TESTNET_STAKING_POOLS_BY_PROVIDER.get(provider) || []

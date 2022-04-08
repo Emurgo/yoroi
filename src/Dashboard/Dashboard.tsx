@@ -7,8 +7,6 @@ import {ActivityIndicator, RefreshControl, ScrollView, StyleSheet, View} from 'r
 import SafeAreaView from 'react-native-safe-area-view'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {getCardanoBaseConfig, UI_V2} from '../../legacy/config/config'
-import {getDefaultAssetByNetworkId} from '../../legacy/config/config'
 import {getCardanoNetworkConfigById} from '../../legacy/config/networks'
 import globalMessages from '../../legacy/i18n/global-messages'
 import {AccountAutoRefresher} from '../AccountAutoRefresher'
@@ -17,6 +15,8 @@ import {VotingBanner} from '../Catalyst/VotingBanner'
 import {Banner, Button, OfflineBanner, StatusBar} from '../components'
 import {fetchAccountState} from '../legacy/account'
 import {submitSignedTx, submitTransaction} from '../legacy/actions'
+import {getCardanoBaseConfig, UI_V2} from '../legacy/config'
+import {getDefaultAssetByNetworkId} from '../legacy/config'
 import {setLedgerDeviceId, setLedgerDeviceObj} from '../legacy/hwWallet'
 import {DELEGATION_ROUTES} from '../legacy/RoutesList'
 import {

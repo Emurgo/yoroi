@@ -3,7 +3,6 @@ import {fromPairs, isEmpty, mapValues} from 'lodash'
 import {createSelector} from 'reselect'
 
 import type {RawUtxo} from '../../legacy/api/types'
-import {getCardanoDefaultAsset, getDefaultAssetByNetworkId, getDefaultAssets} from '../../legacy/config/config'
 import type {NetworkId} from '../../legacy/config/types'
 import {NETWORK_REGISTRY} from '../../legacy/config/types'
 import type {DefaultAsset, Token, Transaction, TransactionInfo} from '../../legacy/types/HistoryTransaction'
@@ -11,6 +10,7 @@ import {TRANSACTION_DIRECTION, TRANSACTION_STATUS} from '../../legacy/types/Hist
 import {ObjectValues} from '../../legacy/utils/flow'
 import type {State, WalletMeta} from '../legacy/state'
 import {getDefaultNetworkTokenEntry, MultiToken} from '../yoroi-wallets'
+import {getCardanoDefaultAsset, getDefaultAssetByNetworkId, getDefaultAssets} from './config'
 import type {HWDeviceInfo} from './ledgerUtils'
 import {processTxHistoryData} from './processTransactions'
 

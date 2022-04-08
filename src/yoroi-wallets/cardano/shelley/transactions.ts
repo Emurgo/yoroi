@@ -33,9 +33,9 @@ import {
 import {BigNumber} from 'bignumber.js'
 
 import type {RawUtxo} from '../../../../legacy/api/types'
-/* eslint-enable camelcase */
-import {CONFIG} from '../../../../legacy/config/config'
 import {MAX_TX_BYTES, MAX_VALUE_BYTES} from '../../../../legacy/config/networks'
+/* eslint-enable camelcase */
+import {CONFIG} from '../../../legacy/config'
 import {AssetOverflowError, InsufficientFunds, NoOutputsError} from '../../../legacy/errors'
 import type {
   Address,

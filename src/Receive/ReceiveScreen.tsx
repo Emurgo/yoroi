@@ -5,9 +5,9 @@ import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {UI_V2} from '../../legacy/config/config'
 import {Banner, Button, OfflineBanner, Spacer, StatusBar} from '../components'
 import {generateNewReceiveAddress, generateNewReceiveAddressIfNeeded} from '../legacy/actions'
+import {UI_V2} from '../legacy/config'
 import {
   canGenerateNewReceiveAddressSelector,
   isUsedAddressIndexSelector,

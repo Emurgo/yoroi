@@ -5,11 +5,11 @@ import {ScrollView, TouchableOpacity, View} from 'react-native'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useParams} from '../../../legacy/navigation'
 import {Button, Spacer, StatusBar, Text} from '../../components'
 import {useCreateWallet} from '../../hooks'
 import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
 import {WalletMeta} from '../../legacy/state'
+import {useUnsafeParams} from '../../navigation'
 import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {NetworkId, WalletImplementationId, YoroiProvider} from '../../yoroi-wallets'
@@ -26,7 +26,7 @@ export type Params = {
 export const MnemonicCheckScreen = () => {
   const strings = useStrings()
   const navigation = useNavigation()
-  const {mnemonic, password, name, networkId, walletImplementationId, provider} = useParams<Params>()
+  const {mnemonic, password, name, networkId, walletImplementationId, provider} = useUnsafeParams<Params>()
 
   const mnemonicEntries: Array<Entry> = mnemonic
     .split(' ')

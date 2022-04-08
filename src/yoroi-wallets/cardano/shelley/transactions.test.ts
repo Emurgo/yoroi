@@ -26,8 +26,8 @@ import {
 import {BigNumber} from 'bignumber.js'
 
 import type {RawUtxo} from '../../../../legacy/api/types'
-import {CONFIG, getDefaultAssets} from '../../../../legacy/config/config'
 import {NETWORKS} from '../../../../legacy/config/networks'
+import {CONFIG, getDefaultAssets} from '../../../legacy/config'
 import {AssetOverflowError, InsufficientFunds, NoOutputsError} from '../../../legacy/errors'
 import type {Addressing} from '../../../legacy/types'
 import {byronAddrToHex, identifierToCardanoAsset} from '../../../legacy/utils'

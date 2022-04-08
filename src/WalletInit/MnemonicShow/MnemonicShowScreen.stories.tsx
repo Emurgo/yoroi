@@ -2,7 +2,7 @@ import {NavigationRouteContext} from '@react-navigation/core'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {CONFIG} from '../../../legacy/config/config'
+import {CONFIG} from '../../legacy/config'
 import {MnemonicShowScreen} from './MnemonicShowScreen'
 
 storiesOf('MnemonicShowScreen', module).add('Default', () => {

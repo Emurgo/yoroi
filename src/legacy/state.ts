@@ -5,10 +5,10 @@ import {BigNumber} from 'bignumber.js'
 import type {RawUtxo, RemotePoolMetaSuccess} from '../../legacy/api/types'
 import type {NetworkId, WalletImplementationId, YoroiProvider} from '../../legacy/config/types'
 import {NETWORK_REGISTRY} from '../../legacy/config/types'
-import {mockReduxWallet} from '../../legacy/mockWallet'
 import type {Token} from '../../legacy/types/HistoryTransaction'
 import type {ServerStatus, WalletInterface} from '../yoroi-wallets'
 import {ISignRequest} from './ISignRequest'
+import {mockReduxWallet} from './mockWallet'
 export type ServerStatusCache = {
   readonly isServerOk: boolean
   readonly isMaintenance: boolean

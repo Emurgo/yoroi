@@ -1,9 +1,7 @@
-// @flow
-
-// $FlowExpectedError
-import {type ReduxWallet} from '../src/legacy/state'
+import type {ReduxWallet} from './state'
 
 export const mockReduxWallet: ReduxWallet = {
+  id: 'id',
   name: 'q',
   isEasyConfirmationEnabled: false,
   isInitialized: true,
