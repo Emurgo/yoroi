@@ -71,12 +71,12 @@ import {
 import {BigNumber} from 'bignumber.js'
 
 import type {RawUtxo} from '../../legacy/api/types'
-import {CONFIG} from '../../legacy/config/config'
 import {getNetworkConfigById} from '../../legacy/config/networks'
 import type {NetworkId} from '../../legacy/config/types'
 import type {BaseAsset} from '../../legacy/types/HistoryTransaction'
 // $FlowExpectedError
 import {DefaultTokenEntry, MultiToken} from '../yoroi-wallets'
+import {CONFIG} from './config'
 import type {Addressing} from './types'
 const PRIMARY_ASSET_CONSTANTS = CONFIG.PRIMARY_ASSET_CONSTANTS
 export const getCardanoAddrKeyHash = async (

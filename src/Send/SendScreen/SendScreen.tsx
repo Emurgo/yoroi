@@ -8,9 +8,9 @@ import {TouchableOpacity} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useSelector} from 'react-redux'
 
-import {CONFIG, UI_V2} from '../../../legacy/config/config'
 import {Button, Checkbox, Spacer, StatusBar, Text, TextInput} from '../../components'
 import {useTokenInfo} from '../../hooks'
+import {CONFIG, UI_V2} from '../../legacy/config'
 import {formatTokenAmount, getAssetDenominationOrId, truncateWithEllipsis} from '../../legacy/format'
 import {SEND_ROUTES} from '../../legacy/RoutesList'
 import {

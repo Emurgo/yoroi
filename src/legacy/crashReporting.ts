@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as Sentry from '@sentry/react-native'
 
-import {CONFIG} from '../../legacy/config/config'
 import {Logger} from '../../legacy/utils/logging'
+import {CONFIG} from './config'
 let _enabled = false
 
 const addLog = (message: string, level: Sentry.Severity = Sentry.Severity.Error) => {

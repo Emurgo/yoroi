@@ -7,8 +7,8 @@ import {
 } from '@emurgo/react-native-haskell-shelley'
 import {BigNumber} from 'bignumber.js'
 
-import {CONFIG} from '../../../legacy/config/config'
 import type {CardanoHaskellShelleyNetwork} from '../../../legacy/config/networks'
+import {CONFIG} from '../../legacy/config'
 import {ISignRequest} from '../../legacy/ISignRequest'
 import type {Address, Value} from '../../legacy/types'
 import {multiTokenFromCardanoValue, toHexOrBase58} from '../../legacy/utils'

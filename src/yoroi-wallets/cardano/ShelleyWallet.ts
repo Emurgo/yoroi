@@ -38,13 +38,6 @@ import type {
   TxStatusRequest,
   TxStatusResponse,
 } from '../../../legacy/api/types'
-import {
-  CONFIG,
-  getCardanoBaseConfig,
-  getWalletConfigById,
-  isByron,
-  isHaskellShelley,
-} from '../../../legacy/config/config'
 import type {CardanoHaskellShelleyNetwork} from '../../../legacy/config/networks'
 import {isHaskellShelleyNetwork, PROVIDERS} from '../../../legacy/config/networks'
 import type {BackendConfig} from '../../../legacy/config/types'
@@ -55,6 +48,7 @@ import assert from '../../../legacy/utils/assert'
 import {Logger} from '../../../legacy/utils/logging'
 import * as api from '../../legacy/api'
 import {ADDRESS_TYPE_TO_CHANGE, generateWalletRootKey} from '../../legacy/commonUtils'
+import {CONFIG, getCardanoBaseConfig, getWalletConfigById, isByron, isHaskellShelley} from '../../legacy/config'
 import {CardanoError, InvalidState} from '../../legacy/errors'
 import type {HWDeviceInfo} from '../../legacy/ledgerUtils'
 import {buildSignedTransaction, createLedgerSignTxPayload, signTxWithLedger} from '../../legacy/ledgerUtils'

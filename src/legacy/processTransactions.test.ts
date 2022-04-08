@@ -1,7 +1,7 @@
 import type {RawTransaction} from '../../legacy/api/types'
-import {CONFIG} from '../../legacy/config/config'
 import {TRANSACTION_DIRECTION} from '../../legacy/types/HistoryTransaction'
 import {MultiToken} from '../yoroi-wallets'
+import {CONFIG} from './config'
 import {checkAndFacadeTransactionAsync} from './facade'
 import {processTxHistoryData} from './processTransactions'
 

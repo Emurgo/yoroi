@@ -3,9 +3,9 @@ import {useIntl} from 'react-intl'
 import {Text, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
-import {CONFIG} from '../../legacy/config/config'
 import globalMessages, {confirmationMessages} from '../../legacy/i18n/global-messages'
 import {StandardModal} from '../components'
+import {CONFIG} from '../legacy/config'
 import {formatTokenWithText} from '../legacy/format'
 import {availableAssetsSelector, tokenBalanceSelector} from '../legacy/selectors'
 

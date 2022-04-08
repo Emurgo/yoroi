@@ -1,8 +1,8 @@
 import React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
-import {CONFIG, isByron, isHaskellShelley, isJormun, isNightly} from '../../../legacy/config/config'
 import {Icon} from '../../components'
+import {CONFIG, isByron, isHaskellShelley, isJormun, isNightly} from '../../legacy/config'
 import {WalletMeta} from '../../legacy/state'
 import {brand, COLORS} from '../../theme'
 type Props = {

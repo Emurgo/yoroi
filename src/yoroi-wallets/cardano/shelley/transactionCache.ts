@@ -4,7 +4,6 @@ import {defaultMemoize} from 'reselect'
 
 import type {RemoteCertificateMeta, TxHistoryRequest} from '../../../../legacy/api/types'
 import {CERTIFICATE_KIND} from '../../../../legacy/api/types'
-import {CONFIG} from '../../../../legacy/config/config'
 import {getCardanoNetworkConfigById} from '../../../../legacy/config/networks'
 import type {NetworkId, YoroiProvider} from '../../../../legacy/config/types'
 import type {Transaction} from '../../../../legacy/types/HistoryTransaction'
@@ -14,6 +13,7 @@ import {ObjectValues} from '../../../../legacy/utils/flow'
 import {Logger} from '../../../../legacy/utils/logging'
 import {limitConcurrency} from '../../../../legacy/utils/promise'
 import * as api from '../../../legacy/api'
+import {CONFIG} from '../../../legacy/config'
 import {ApiHistoryError} from '../../../legacy/errors'
 
 type SyncMetadata = {

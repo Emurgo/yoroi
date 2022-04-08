@@ -3,11 +3,11 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ImageSourcePropType, StyleSheet, ViewStyle} from 'react-native'
 import {ActivityIndicator, Image, SafeAreaView, View} from 'react-native'
 
-import {CONFIG} from '../../../legacy/config/config'
 import globalMessages from '../../../legacy/i18n/global-messages'
 import {ignoreConcurrentAsyncHandler} from '../../../legacy/utils/utils'
 import {Button, ProgressStep, TextInput} from '../../components'
 import {useWalletNames} from '../../hooks'
+import {CONFIG} from '../../legacy/config'
 import {spacing} from '../../theme'
 import {getWalletNameError, validateWalletName} from '../../yoroi-wallets/utils/validators'
 

@@ -4,10 +4,10 @@ import {defineMessages, useIntl} from 'react-intl'
 import {View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {getWalletConfigById} from '../../../legacy/config/config'
-import {useParams} from '../../../legacy/navigation'
 import {Button, KeyboardSpacer, ScrollableView, Spacer, StatusBar, Text} from '../../components'
+import {getWalletConfigById} from '../../legacy/config'
 import {WALLET_INIT_ROUTES} from '../../legacy/RoutesList'
+import {useUnsafeParams} from '../../navigation'
 import {NetworkId, WalletImplementationId} from '../../yoroi-wallets'
 import {MnemonicInput} from '../MnemonicInput'
 
@@ -20,7 +20,7 @@ type Params = {
 export const RestoreWalletScreen = () => {
   const strings = useStrings()
   const navigation = useNavigation()
-  const {networkId, walletImplementationId, provider} = useParams<Params>()
+  const {networkId, walletImplementationId, provider} = useUnsafeParams<Params>()
   const {MNEMONIC_LEN: mnemonicLength} = getWalletConfigById(walletImplementationId)
   const navigateToWalletCredentials = () =>
     navigation.navigate(WALLET_INIT_ROUTES.VERIFY_RESTORED_WALLET, {

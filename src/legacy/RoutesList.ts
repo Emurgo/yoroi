@@ -1,4 +1,4 @@
-import {CONFIG} from '../../legacy/config/config'
+import {CONFIG} from './config'
 
 export const TX_HISTORY_ROUTES = {
   MAIN: 'tx-history-list',
