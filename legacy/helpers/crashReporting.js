@@ -37,10 +37,6 @@ const enable = () => {
   })
 }
 
-// Warning(ppershing): ALWAYS use _enabled in the next methods
-// because before crashlytics is enabled all
-// firebase.crashlytics() calls would crash the app :-(
-
 const setUserId = (userId: ?string) => {
   _enabled &&
     Sentry.setUserContext({

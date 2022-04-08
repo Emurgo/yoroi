@@ -152,7 +152,6 @@
     "safe-buffer": "^5.2.1",
     "stream-browserify": "3.0.0",
     "tinycolor2": "1.4.2",
-    "ts-node": "^10.4.0",
     "url": "^0.11.0",
     "util": "0.12.4",
     "uuid": "^3.3.2",
@@ -222,6 +221,7 @@
     "react-native-schemes-manager": "^1.0.5",
     "react-native-storybook-loader": "^1.8.1",
     "react-test-renderer": "17.0.2",
+    "ts-node": "^10.7.0",
     "typescript": "^4.5.3",
     "typescript-coverage-report": "^0.6.0"
   },
