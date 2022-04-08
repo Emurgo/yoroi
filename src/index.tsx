@@ -36,7 +36,7 @@ const intl = createIntl({locale: 'en-US', messages: translations['en-US']}, cach
 global.onunhandledrejection = (e) => handleGeneralError((e as any).message, e as any, intl)
 
 const store = getConfiguredStore()
-store.dispatch(setupHooks())
+store.dispatch(setupHooks() as any)
 
 const AppWithProviders = () => {
   return (
