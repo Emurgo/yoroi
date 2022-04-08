@@ -1,15 +1,16 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import {BigNum, min_ada_required} from '@emurgo/react-native-haskell-shelley'
 import {BigNumber} from 'bignumber.js'
 import _ from 'lodash'
 import {IntlShape} from 'react-intl'
 
 import {getCardanoNetworkConfigById, isHaskellShelleyNetwork} from '../../../legacy/config/networks'
-import {AssetOverflowError, InsufficientFunds} from '../../../legacy/crypto/errors'
-import {cardanoValueFromMultiToken} from '../../../legacy/crypto/shelley/utils'
 import {WalletMeta} from '../../../legacy/state'
+import {AssetOverflowError, InsufficientFunds} from '../../legacy/errors'
 import {formatTokenAmount, formatTokenInteger, normalizeTokenAmount} from '../../legacy/format'
+import {cardanoValueFromMultiToken} from '../../legacy/utils'
 import type {DefaultAsset, RawUtxo, SendTokenList, Token} from '../../types'
 import {HaskellShelleyTxSignRequest, MultiToken, walletManager} from '../../yoroi-wallets'
-import {BigNum, minAdaRequired} from '../../yoroi-wallets'
 import {InvalidAssetAmount, parseAmountDecimal} from '../../yoroi-wallets/utils/parsing'
 import type {AddressValidationErrors} from '../../yoroi-wallets/utils/validators'
 import {getUnstoppableDomainAddress, isReceiverAddressValid, validateAmount} from '../../yoroi-wallets/utils/validators'
@@ -36,13 +37,13 @@ export const getMinAda = async (selectedToken: Token, defaultAsset: DefaultAsset
       defaultIdentifier: defaultAsset.identifier,
     },
   )
-  const minAmount = await minAdaRequired(
+  const minAmount = await min_ada_required(
     await cardanoValueFromMultiToken(fakeMultitoken),
-    await BigNum.fromStr(networkConfig.MINIMUM_UTXO_VAL),
+    await BigNum.from_str(networkConfig.MINIMUM_UTXO_VAL),
   )
   // if the user is sending a token, we need to make sure the resulting utxo
   // has at least the minimum amount of ADA in it
-  return minAmount.toStr()
+  return minAmount.to_str()
 }
 
 export const getTransactionData = async (
@@ -78,7 +79,7 @@ export const getTransactionData = async (
       amount: await getMinAda(selectedToken, defaultAsset),
     })
   }
-  return await walletManager.createUnsignedTx(utxos, address, sendTokenList, defaultTokenEntry, serverTime)
+  return await walletManager.createUnsignedTx(utxos, address, sendTokenList as any, defaultTokenEntry, serverTime)
 }
 
 export const recomputeAll = async ({

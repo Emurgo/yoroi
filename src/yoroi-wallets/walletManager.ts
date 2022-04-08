@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type {WalletChecksum} from '@emurgo/cip4-js'
 import {legacyWalletChecksum, walletChecksum} from '@emurgo/cip4-js'
 import {BigNumber} from 'bignumber.js'
@@ -19,9 +20,6 @@ import type {
 import {CONFIG, DISABLE_BACKGROUND_SYNC, WALLETS} from '../../legacy/config/config'
 import {isJormungandr} from '../../legacy/config/networks'
 import {NETWORK_REGISTRY, WALLET_IMPLEMENTATION_REGISTRY} from '../../legacy/config/types'
-import {ISignRequest} from '../../legacy/crypto/ISignRequest'
-import KeyStore from '../../legacy/crypto/KeyStore'
-import type {EncryptionMethod, SendTokenList} from '../../legacy/crypto/types'
 import type {WalletMeta} from '../../legacy/state'
 import type {DefaultAsset} from '../../legacy/types/HistoryTransaction'
 import assert from '../../legacy/utils/assert'
@@ -30,7 +28,11 @@ import {Logger} from '../../legacy/utils/logging'
 import storage from '../../legacy/utils/storage'
 import {APP_SETTINGS_KEYS, readAppSettings} from '../legacy/appSettings'
 import {ensureKeysValidity, isSystemAuthSupported} from '../legacy/deviceSettings'
+import {ISignRequest} from '../legacy/ISignRequest'
+import KeyStore from '../legacy/KeyStore'
 import type {HWDeviceInfo} from '../legacy/ledgerUtils'
+import type {EncryptionMethod} from '../legacy/types'
+import {SendTokenList} from '../types'
 import {
   DefaultTokenEntry,
   isYoroiWallet,
@@ -164,6 +166,10 @@ class WalletManager {
   getWallet() {
     if (!this._wallet) {
       throw new WalletClosed()
+    }
+
+    if (!isYoroiWallet(this._wallet)) {
+      throw new Error('invalid wallet')
     }
 
     return this._wallet
@@ -730,13 +736,13 @@ class WalletManager {
     const wallet = this.getWallet()
     return await this.abortWhenWalletCloses(
       // TODO(v-almonacid): maybe there is a better way instead of unknown
-      wallet.createUnsignedTx(utxos, receiver, tokens, defaultToken, serverTime, metadata),
+      wallet.createUnsignedTx(utxos, receiver, tokens as any, defaultToken, serverTime, metadata),
     )
   }
 
   async signTx<T>(signRequest: ISignRequest<T>, decryptedKey: string) {
     const wallet = this.getWallet()
-    return await this.abortWhenWalletCloses(wallet.signTx(signRequest, decryptedKey))
+    return await this.abortWhenWalletCloses(wallet.signTx(signRequest as any, decryptedKey))
   }
 
   async createDelegationTx(
@@ -759,7 +765,7 @@ class WalletManager {
 
   async signTxWithLedger(request: ISignRequest, useUSB: boolean) {
     const wallet = this.getWallet()
-    return await this.abortWhenWalletCloses(wallet.signTxWithLedger(request, useUSB))
+    return await this.abortWhenWalletCloses(wallet.signTxWithLedger(request as any, useUSB))
   }
 
   // =================== backend API =================== //

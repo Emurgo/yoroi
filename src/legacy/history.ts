@@ -2,9 +2,9 @@
 
 import type {Dispatch} from 'redux'
 
-import {ApiHistoryError} from '../../legacy/api/errors'
 import {Logger} from '../../legacy/utils/logging'
 import {WalletClosed, walletManager} from '../yoroi-wallets'
+import {ApiHistoryError} from './errors'
 
 const _startFetch = () => ({
   type: 'Fetch transaction history',

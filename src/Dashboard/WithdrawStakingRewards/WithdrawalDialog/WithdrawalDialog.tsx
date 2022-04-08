@@ -26,7 +26,7 @@ type Props = {
   balance: BigNumber
   finalBalance: BigNumber
   fees: BigNumber
-  onConfirm: (password?: string | void) => void
+  onConfirm: (password?: string | undefined) => void
   onRequestClose: () => void
   useUSB: boolean
   showCloseIcon?: boolean

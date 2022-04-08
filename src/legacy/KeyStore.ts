@@ -1,13 +1,12 @@
-// @flow
-
 import ExtendableError from 'es6-error'
-import {type IntlShape, defineMessages} from 'react-intl'
+import type {IntlShape} from 'react-intl'
+import {defineMessages} from 'react-intl'
 import {NativeModules, Platform} from 'react-native'
 import * as Keychain from 'react-native-keychain'
 
-import {decryptData, encryptData} from '../crypto/commonUtils'
-import assert from '../utils/assert'
-import storage from '../utils/storage'
+import assert from '../../legacy/utils/assert'
+import storage from '../../legacy/utils/storage'
+import {decryptData, encryptData} from './commonUtils'
 import type {EncryptionMethod} from './types'
 
 const {KeyStoreBridge} = NativeModules
@@ -34,9 +33,33 @@ class KeyStore {
 
   static async getData(
     keyId: string,
+    encryptionMethod: 'BIOMETRICS',
+    message: string,
+    password: undefined | null,
+    intl: IntlShape,
+  ): Promise<string>
+
+  static async getData(
+    keyId: string,
+    encryptionMethod: 'SYSTEM_PIN',
+    message: string,
+    password: undefined | null,
+    intl: IntlShape,
+  ): Promise<string>
+
+  static async getData(
+    keyId: string,
+    encryptionMethod: 'MASTER_PASSWORD',
+    message: string,
+    password: undefined | null | string,
+    intl: IntlShape,
+  ): Promise<string>
+
+  static async getData(
+    keyId: string,
     encryptionMethod: EncryptionMethod,
     message: string,
-    password?: string,
+    password: undefined | null | string,
     intl: IntlShape,
   ) {
     const dataKey = KeyStore.getDataKey(keyId, encryptionMethod)
@@ -85,8 +108,7 @@ class KeyStore {
 
       case 'MASTER_PASSWORD': {
         assert.assert(password, 'Password is provided')
-
-        // $FlowFixMe
+        if (!password) throw new Error('Password is not provided')
         return await decryptData(data, password)
       }
 
@@ -101,6 +123,15 @@ class KeyStore {
     }
     return false
   }
+
+  static async storeData(keyId: string, encryptionMethod: 'BIOMETRICS', data: string): Promise<void>
+  static async storeData(keyId: string, encryptionMethod: 'SYSTEM_PIN', data: string): Promise<void>
+  static async storeData(
+    keyId: string,
+    encryptionMethod: 'MASTER_PASSWORD',
+    data: string,
+    password: string,
+  ): Promise<void>
 
   static async storeData(keyId: string, encryptionMethod: EncryptionMethod, data: string, password?: string) {
     const dataKey = KeyStore.getDataKey(keyId, encryptionMethod)
@@ -118,13 +149,9 @@ class KeyStore {
       }
 
       case 'MASTER_PASSWORD': {
+        if (!password) throw new Error('Password is not provided')
         assert.assert(password, 'Password is provided')
-        encryptedData = await KeyStore.encryptByMasterPassword(
-          dataKey,
-          data,
-          // $FlowFixMe
-          password,
-        )
+        encryptedData = await KeyStore.encryptByMasterPassword(dataKey, data, password)
         break
       }
 

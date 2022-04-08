@@ -1,11 +1,11 @@
 import {BigNum, LinearFee} from '@emurgo/react-native-haskell-shelley'
 import {BigNumber} from 'bignumber.js'
 
-import {builtSendTokenList, hasSendAllDefault} from '../../../../legacy/crypto/commonUtils'
-import {CardanoError, InsufficientFunds, NoOutputsError} from '../../../../legacy/crypto/errors'
-import {multiTokenFromRemote} from '../../../../legacy/crypto/shelley/utils'
 import assert from '../../../../legacy/utils/assert'
 import {Logger} from '../../../../legacy/utils/logging'
+import {builtSendTokenList, hasSendAllDefault} from '../../../legacy/commonUtils'
+import {CardanoError, InsufficientFunds, NoOutputsError} from '../../../legacy/errors'
+import {multiTokenFromRemote} from '../../../legacy/utils'
 import {CreateUnsignedTxRequest, HaskellShelleyTxSignRequest} from '../..'
 import {newAdaUnsignedTx, sendAllUnsignedTx} from './transactions'
 

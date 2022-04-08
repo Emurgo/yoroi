@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react'
 import {useIntl} from 'react-intl'
 import {Platform} from 'react-native'
@@ -5,7 +6,6 @@ import {useDispatch, useSelector} from 'react-redux'
 
 import {CONFIG} from '../../legacy/config/config'
 import {getCardanoByronConfig} from '../../legacy/config/networks'
-import {formatPath} from '../../legacy/crypto/commonUtils'
 import {errorMessages} from '../../legacy/i18n/global-messages'
 import LocalizableError from '../../legacy/i18n/LocalizableError'
 import {Logger} from '../../legacy/utils/logging'
@@ -13,6 +13,7 @@ import {Modal} from '../components'
 import {LedgerTransportSwitchModal} from '../HW'
 import {LedgerConnect} from '../HW'
 import {showErrorDialog} from '../legacy/actions'
+import {formatPath} from '../legacy/commonUtils'
 import {setLedgerDeviceId, setLedgerDeviceObj} from '../legacy/hwWallet'
 import {verifyAddress} from '../legacy/ledgerUtils'
 import {externalAddressIndexSelector, hwDeviceInfoSelector} from '../legacy/selectors'
@@ -43,7 +44,7 @@ export const Modals = ({address, onDone}: {address: string; onDone: () => void})
       wallet.networkId,
       getCardanoByronConfig().PROTOCOL_MAGIC,
       address,
-      walletManager.getAddressingInfo(address),
+      walletManager.getAddressingInfo(address) as any,
       hwDeviceInfo,
       useUSB,
     )
@@ -111,7 +112,8 @@ export const Modals = ({address, onDone}: {address: string; onDone: () => void})
         onRequestClose={onDone}
         onConfirm={() => onVerifyAddress(address)}
         address={address}
-        path={formatPath(0, 'External', index, wallet.walletImplementationId)}
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        path={formatPath(0, 'External', index as any, wallet.walletImplementationId)}
         isWaiting={isWaiting}
         useUSB={useUSB}
       />

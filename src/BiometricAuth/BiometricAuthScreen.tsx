@@ -4,12 +4,12 @@ import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Alert, AppState, Platform, StyleSheet} from 'react-native'
 
-import KeyStore, {CredentialsNotFound} from '../../legacy/crypto/KeyStore'
 import {errorMessages as globalErrorMessages} from '../../legacy/i18n/global-messages'
 import {Logger} from '../../legacy/utils/logging'
 import {Button, Spacer} from '../components'
 import {showErrorDialog} from '../legacy/actions'
 import {canBiometricEncryptionBeEnabled, recreateAppSignInKeys} from '../legacy/deviceSettings'
+import KeyStore, {CredentialsNotFound} from '../legacy/KeyStore'
 import {FingerprintScreenBase} from './FingerprintScreenBase'
 
 export const BiometricAuthScreen = () => {
@@ -37,7 +37,7 @@ export const BiometricAuthScreen = () => {
   const [error, setError] = React.useState('')
   const clearError = () => setError('')
 
-  React.useEffect(() => () => KeyStore.cancelFingerprintScanning(KeyStore.REJECTIONS.CANCELED), [])
+  React.useEffect(() => () => void KeyStore.cancelFingerprintScanning(KeyStore.REJECTIONS.CANCELED), [])
 
   useFocusEffect(
     React.useCallback(() => {
@@ -170,13 +170,9 @@ const handleOnConfirm = async (route, setError, clearError, isFallback = false, 
   const {keyId, onSuccess, onFail} = route.params
 
   try {
-    const decryptedData = await KeyStore.getData(
-      keyId,
-      isFallback ? 'SYSTEM_PIN' : 'BIOMETRICS',
-      intl.formatMessage(messages.authorizeOperation),
-      '',
-      intl,
-    )
+    const decryptedData = isFallback
+      ? await KeyStore.getData(keyId, 'SYSTEM_PIN', intl.formatMessage(messages.authorizeOperation), null, intl)
+      : await KeyStore.getData(keyId, 'BIOMETRICS', intl.formatMessage(messages.authorizeOperation), null, intl)
     onSuccess(decryptedData)
   } catch (error) {
     if ((error as any).code === KeyStore.REJECTIONS.SWAPPED_TO_FALLBACK && Platform.OS === 'android') {

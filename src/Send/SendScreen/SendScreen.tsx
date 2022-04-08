@@ -25,7 +25,6 @@ import {
 } from '../../legacy/selectors'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
-import type {TokenEntry} from '../../types'
 import {UtxoAutoRefresher} from '../../UtxoAutoRefresher'
 import type {CreateUnsignedTxResponse} from '../../yoroi-wallets/cardano/shelley/transactionUtils'
 import {parseAmountDecimal} from '../../yoroi-wallets/utils/parsing'
@@ -155,7 +154,7 @@ export const SendScreen = ({selectedTokenIdentifier, sendAll, onSendAll}: Props)
       : // note: inside this if balanceAfter shouldn't be null
         tokenBalance.getDefault().minus(balanceAfter ?? 0)
 
-    const tokens: Array<TokenEntry> = await (async () => {
+    const tokens = await (async () => {
       if (tokenInfo.isDefault) {
         return sendAll ? (await unsignedTx.totalOutput()).nonDefaultEntries() : []
       }

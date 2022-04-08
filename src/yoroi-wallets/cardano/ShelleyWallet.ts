@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type {SignTransactionResponse} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import {TxAuxiliaryDataSupplementType} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import {legacyWalletChecksum, walletChecksum} from '@emurgo/cip4-js'
@@ -24,7 +25,6 @@ import _ from 'lodash'
 import DeviceInfo from 'react-native-device-info'
 import uuid from 'uuid'
 
-import * as api from '../../../legacy/api/shelley/api'
 import type {
   AccountStateResponse,
   FundInfoResponse,
@@ -49,18 +49,19 @@ import type {CardanoHaskellShelleyNetwork} from '../../../legacy/config/networks
 import {isHaskellShelleyNetwork, PROVIDERS} from '../../../legacy/config/networks'
 import type {BackendConfig} from '../../../legacy/config/types'
 import {NETWORK_REGISTRY} from '../../../legacy/config/types'
-import {ADDRESS_TYPE_TO_CHANGE, generateWalletRootKey} from '../../../legacy/crypto/commonUtils'
-import {CardanoError, InvalidState} from '../../../legacy/crypto/errors'
-import {deriveRewardAddressHex, normalizeToAddress, toHexOrBase58} from '../../../legacy/crypto/shelley/utils'
-import type {AddressedUtxo, Addressing, SendTokenList, SignedTx} from '../../../legacy/crypto/types'
 import LocalizableError from '../../../legacy/i18n/LocalizableError'
 import type {WalletMeta} from '../../../legacy/state'
 import type {DefaultAsset} from '../../../legacy/types/HistoryTransaction'
 import assert from '../../../legacy/utils/assert'
 import {Logger} from '../../../legacy/utils/logging'
+import * as api from '../../legacy/api'
+import {ADDRESS_TYPE_TO_CHANGE, generateWalletRootKey} from '../../legacy/commonUtils'
+import {CardanoError, InvalidState} from '../../legacy/errors'
 import type {HWDeviceInfo} from '../../legacy/ledgerUtils'
 import {buildSignedTransaction, createLedgerSignTxPayload, signTxWithLedger} from '../../legacy/ledgerUtils'
-import {DefaultTokenEntry} from '../../types'
+import type {AddressedUtxo, Addressing} from '../../legacy/types'
+import {deriveRewardAddressHex, normalizeToAddress, toHexOrBase58} from '../../legacy/utils'
+import {DefaultTokenEntry, SendTokenList} from '../../types'
 import {genTimeToSlot} from '../utils/timeUtils'
 import {versionCompare} from '../utils/versioning'
 import Wallet, {WalletJSON} from '../Wallet'
@@ -79,7 +80,7 @@ import {
 import {TransactionCache} from './shelley/transactionCache'
 import {newAdaUnsignedTx, signTransaction} from './shelley/transactions'
 import {createUnsignedTx as utilsCreateUnsignedTx} from './shelley/transactionUtils'
-import {NetworkId, WalletImplementationId, WalletInterface, YoroiProvider} from './types'
+import {NetworkId, SignedTx, WalletImplementationId, WalletInterface, YoroiProvider} from './types'
 
 export default ShelleyWallet
 export class ShelleyWallet extends Wallet implements WalletInterface {
@@ -373,8 +374,8 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     }
     const normAddr = await normalizeToAddress(changeAddr)
     return {
-      address: await toHexOrBase58(normAddr),
-      addressing: addressInfo,
+      address: await toHexOrBase58(normAddr as any),
+      addressing: addressInfo as any,
     }
   }
 
@@ -504,7 +505,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
       receiver,
       addressedUtxos,
       defaultToken,
-      tokens,
+      tokens: tokens as any,
       auxiliaryData: auxiliary,
       networkConfig: this._getNetworkConfig(),
     })
@@ -876,7 +877,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
   async submitTransaction(signedTx: string) {
     const response = await api.submitTransaction(signedTx, this._getBackendConfig())
     Logger.info(response)
-    return response
+    return response as any
   }
 
   async getTxsBodiesForUTXOs(request: TxBodiesRequest): Promise<TxBodiesResponse> {

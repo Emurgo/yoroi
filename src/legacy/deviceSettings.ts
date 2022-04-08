@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import ExtendableError from 'es6-error'
 import {NativeModules, Platform} from 'react-native'
 import * as Keychain from 'react-native-keychain'
 
-import KeyStore from '../../legacy/crypto/KeyStore'
+import KeyStore from './KeyStore'
 
 const {KeyStoreBridge} = NativeModules
 
@@ -59,8 +60,8 @@ export const isBiometricPromptSupported = async () => {
 }
 
 export const recreateAppSignInKeys = async (installationId: string) => {
-  await KeyStore.storeData(installationId, 'BIOMETRICS', installationId, '')
-  await KeyStore.storeData(installationId, 'SYSTEM_PIN', installationId, '')
+  await (KeyStore.storeData as any)(installationId, 'BIOMETRICS', installationId, '')
+  await (KeyStore.storeData as any)(installationId, 'SYSTEM_PIN', installationId, '')
 }
 
 export const removeAppSignInKeys = async (installationId: string) => {

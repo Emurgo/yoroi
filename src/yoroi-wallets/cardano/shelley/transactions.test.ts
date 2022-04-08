@@ -28,9 +28,9 @@ import {BigNumber} from 'bignumber.js'
 import type {RawUtxo} from '../../../../legacy/api/types'
 import {CONFIG, getDefaultAssets} from '../../../../legacy/config/config'
 import {NETWORKS} from '../../../../legacy/config/networks'
-import {AssetOverflowError, InsufficientFunds, NoOutputsError} from '../../../../legacy/crypto/errors'
-import {byronAddrToHex, identifierToCardanoAsset} from '../../../../legacy/crypto/shelley/utils'
-import type {Addressing} from '../../../../legacy/crypto/types'
+import {AssetOverflowError, InsufficientFunds, NoOutputsError} from '../../../legacy/errors'
+import type {Addressing} from '../../../legacy/types'
+import {byronAddrToHex, identifierToCardanoAsset} from '../../../legacy/utils'
 import {MultiToken} from '../..'
 import {newAdaUnsignedTx, newAdaUnsignedTxFromUtxo, sendAllUnsignedTxFromUtxo, signTransaction} from './transactions'
 
@@ -216,7 +216,7 @@ describe('Create unsigned TX from UTXO', () => {
       undefined,
       utxos,
       new BigNumber(0),
-      await getProtocolParams(),
+      (await getProtocolParams()) as any,
       [],
       [],
       true,
@@ -249,7 +249,7 @@ describe('Create unsigned TX from UTXO', () => {
       undefined,
       [], // no utxos
       new BigNumber(0),
-      await getProtocolParams(),
+      (await getProtocolParams()) as any,
       [],
       [],
       true,
@@ -284,7 +284,7 @@ describe('Create unsigned TX from UTXO', () => {
       undefined,
       utxos,
       new BigNumber(0),
-      await getProtocolParams(),
+      (await getProtocolParams()) as any,
       [],
       [],
       true,
@@ -306,7 +306,7 @@ describe('Create unsigned TX from UTXO', () => {
           utxos,
           new BigNumber(0),
           {
-            ...(await getProtocolParams()),
+            ...((await getProtocolParams()) as any),
             // high enough that we can't send the remaining amount as change
             minimumUtxoVal: BigNum.from_str('999100'),
           },
@@ -324,7 +324,7 @@ describe('Create unsigned TX from UTXO', () => {
           [sampleUtxos[1], sampleUtxos[0]],
           new BigNumber(0),
           {
-            ...(await getProtocolParams()),
+            ...((await getProtocolParams()) as any),
             minimumUtxoVal: await BigNum.from_str('999000'),
           },
           [],
@@ -341,7 +341,7 @@ describe('Create unsigned TX from UTXO', () => {
           utxos,
           new BigNumber(0),
           {
-            ...(await getProtocolParams()),
+            ...((await getProtocolParams()) as any),
             minimumUtxoVal: await BigNum.from_str('998500'),
           },
           [],
@@ -356,7 +356,16 @@ describe('Create unsigned TX from UTXO', () => {
     const utxos: Array<RawUtxo> = [sampleUtxos[1]]
     await expect(
       (async () =>
-        newAdaUnsignedTxFromUtxo([], undefined, utxos, new BigNumber(0), await getProtocolParams(), [], [], false))(),
+        newAdaUnsignedTxFromUtxo(
+          [],
+          undefined,
+          utxos,
+          new BigNumber(0),
+          (await getProtocolParams()) as any,
+          [],
+          [],
+          false,
+        ))(),
     ).rejects.toThrow(NoOutputsError)
   })
 
@@ -389,7 +398,7 @@ describe('Create unsigned TX from UTXO', () => {
       sampleAdaAddresses[0],
       [utxos[0], utxos[1], utxos[2], utxos[3]],
       new BigNumber(0),
-      await getProtocolParams(),
+      (await getProtocolParams()) as any,
       [],
       [],
       true,
@@ -438,9 +447,9 @@ describe('Create unsigned TX from UTXO', () => {
           await BigNum.from_str(new BigNumber(utxos[0].amount).plus(1).toString()),
           await BigNum.from_str('500'),
         ),
-        minimumUtxoVal: await BigNum.from_str('1'),
-        poolDeposit: await BigNum.from_str('500'),
-        keyDeposit: await BigNum.from_str('500'),
+        minimumUtxoVal: (await BigNum.from_str('1')) as any,
+        poolDeposit: (await BigNum.from_str('500')) as any,
+        keyDeposit: (await BigNum.from_str('500')) as any,
         networkId: NETWORK.NETWORK_ID,
       },
       [],
@@ -490,7 +499,7 @@ describe('Create unsigned TX from UTXO', () => {
       sampleAdaAddresses[0],
       [utxos[0], utxos[1], utxos[2], utxos[3], utxos[4]],
       new BigNumber(0),
-      await getProtocolParams(),
+      (await getProtocolParams()) as any,
       [],
       [],
       true,
@@ -517,8 +526,8 @@ describe('Create unsigned TX from UTXO', () => {
     let _assetAmountStr =
       _multiAsset != null
         ? (await _multiAsset.get(assetInfo.policyId)) != null
-          ? (await (await _multiAsset.get(assetInfo.policyId)).get(assetInfo.name)) != null
-            ? await (await (await _multiAsset.get(assetInfo.policyId)).get(assetInfo.name)).to_str()
+          ? (await ((await _multiAsset.get(assetInfo.policyId)) as any).get(assetInfo.name)) != null
+            ? await (await ((await _multiAsset.get(assetInfo.policyId)) as any).get(assetInfo.name)).to_str()
             : null
           : null
         : null
@@ -530,8 +539,8 @@ describe('Create unsigned TX from UTXO', () => {
     _assetAmountStr =
       _multiAsset != null
         ? (await _multiAsset.get(assetInfo.policyId)) != null
-          ? (await (await _multiAsset.get(assetInfo.policyId)).get(assetInfo.name)) != null
-            ? await (await (await _multiAsset.get(assetInfo.policyId)).get(assetInfo.name)).to_str()
+          ? (await ((await _multiAsset.get(assetInfo.policyId)) as any).get(assetInfo.name)) != null
+            ? await (await ((await _multiAsset.get(assetInfo.policyId)) as any).get(assetInfo.name)).to_str()
             : null
           : null
         : null
@@ -576,7 +585,7 @@ describe('Create unsigned TX from UTXO', () => {
         [utxos[4]],
         new BigNumber(0),
         {
-          ...(await getProtocolParams()),
+          ...((await getProtocolParams()) as any),
           // high enough that we can't send the remaining amount as change
           minimumUtxoVal: await BigNum.from_str('500000'),
         },
@@ -597,7 +606,7 @@ describe('Create unsigned TX from UTXO', () => {
         [utxos[4]],
         new BigNumber(0),
         {
-          ...(await getProtocolParams()),
+          ...((await getProtocolParams()) as any),
           // high enough that we can't send the remaining amount as change
           minimumUtxoVal: await BigNum.from_str('500000'),
         },
@@ -635,7 +644,7 @@ describe('Create unsigned TX from UTXO', () => {
         sampleAdaAddresses[0],
         [sampleUtxos[4]],
         new BigNumber(0),
-        await getProtocolParams(),
+        (await getProtocolParams()) as any,
         [],
         [],
         true,
@@ -653,7 +662,7 @@ describe('Create unsigned TX from UTXO', () => {
         },
         [sampleUtxos[4], sampleUtxos[5]],
         new BigNumber(0),
-        await getProtocolParams(),
+        (await getProtocolParams()) as any,
         undefined,
       ),
     ).rejects.toThrow(AssetOverflowError)
@@ -686,7 +695,7 @@ describe('Create unsigned TX from UTXO', () => {
       sampleAdaAddresses[0],
       [sampleUtxos[4], sampleUtxos[5]],
       new BigNumber(0),
-      await getProtocolParams(),
+      (await getProtocolParams()) as any,
       [],
       [],
       true,
@@ -723,7 +732,7 @@ describe('Create unsigned TX from addresses', () => {
       undefined,
       [addressedUtxos[0], addressedUtxos[1]],
       new BigNumber(0),
-      await getProtocolParams(),
+      (await getProtocolParams()) as any,
       [],
       [],
       true,
@@ -731,7 +740,7 @@ describe('Create unsigned TX from addresses', () => {
     expect(unsignedTxResponse.senderUtxos).toEqual([addressedUtxos[0], addressedUtxos[1]])
 
     expect(await (await (await unsignedTxResponse.txBuilder.get_explicit_input()).coin()).to_str()).toEqual('1000702')
-    expect(await (await unsignedTxResponse.txBuilder.get_explicit_output()).coin().to_str()).toEqual('5001')
+    expect(await ((await unsignedTxResponse.txBuilder.get_explicit_output()).coin() as any).to_str()).toEqual('5001')
     expect(await (await unsignedTxResponse.txBuilder.min_fee()).to_str()).toEqual('1064')
     // burns remaining amount
     expect(
@@ -774,7 +783,7 @@ describe('Create signed transactions', () => {
       undefined,
       [addressedUtxos[0], addressedUtxos[1]],
       new BigNumber(0),
-      await getProtocolParams(),
+      (await getProtocolParams()) as any,
       [],
       [],
       true,
@@ -1084,7 +1093,7 @@ describe('Create sendAll unsigned TX from UTXO', () => {
       },
       utxos,
       new BigNumber(0),
-      await getProtocolParams(),
+      (await getProtocolParams()) as any,
     )
     const expectedFee = new BigNumber('1342')
     const expectedInput = new BigNumber('11000002')
@@ -1116,7 +1125,7 @@ describe('Create sendAll unsigned TX from UTXO', () => {
       },
       [],
       new BigNumber(0),
-      await getProtocolParams(),
+      (await getProtocolParams()) as any,
     )
     await expect(promise).rejects.toThrow(InsufficientFunds)
   })
@@ -1130,7 +1139,7 @@ describe('Create sendAll unsigned TX from UTXO', () => {
       },
       utxos,
       new BigNumber(0),
-      await getProtocolParams(),
+      (await getProtocolParams()) as any,
     )
     await expect(promise).rejects.toThrow(InsufficientFunds)
   })

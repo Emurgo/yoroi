@@ -8,7 +8,6 @@ import {Alert} from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {CONFIG} from '../legacy/config/config'
-import KeyStore from '../legacy/crypto/KeyStore'
 import env from '../legacy/env'
 import {errorMessages} from '../legacy/i18n/global-messages'
 import type {State} from '../legacy/state'
@@ -19,6 +18,7 @@ import {FirstRunNavigator} from './FirstRun/FirstRunNavigator'
 import {showErrorDialog, signin} from './legacy/actions'
 import {canBiometricEncryptionBeEnabled, recreateAppSignInKeys} from './legacy/deviceSettings'
 import IndexScreen from './legacy/IndexScreen'
+import KeyStore from './legacy/KeyStore'
 import {
   canEnableBiometricSelector,
   installationIdSelector,

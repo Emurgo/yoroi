@@ -1,5 +1,3 @@
-// @flow
-
 import {checkISO8601Date, checkNonNegativeInt} from './facade'
 
 describe('checkNonNegativeInt', () => {

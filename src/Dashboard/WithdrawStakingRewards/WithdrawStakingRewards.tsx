@@ -8,13 +8,13 @@ import {Platform} from 'react-native'
 import type {WithdrawalDialogSteps} from '../../../legacy/components/Delegation/types'
 import {WITHDRAWAL_DIALOG_STEPS} from '../../../legacy/components/Delegation/types'
 import {CONFIG} from '../../../legacy/config/config'
-import {WrongPassword} from '../../../legacy/crypto/errors'
-import {ISignRequest} from '../../../legacy/crypto/ISignRequest'
-import KeyStore from '../../../legacy/crypto/KeyStore'
 import {errorMessages} from '../../../legacy/i18n/global-messages'
 import LocalizableError from '../../../legacy/i18n/LocalizableError'
 import {showErrorDialog} from '../../legacy/actions'
 import {ensureKeysValidity} from '../../legacy/deviceSettings'
+import {WrongPassword} from '../../legacy/errors'
+import {ISignRequest} from '../../legacy/ISignRequest'
+import KeyStore from '../../legacy/KeyStore'
 import type {DeviceId, DeviceObj, HWDeviceInfo} from '../../legacy/ledgerUtils'
 import {DELEGATION_ROUTES, SEND_ROUTES, WALLET_ROOT_ROUTES, WALLET_ROUTES} from '../../legacy/RoutesList'
 import {DefaultAsset, RawUtxo} from '../../types'
@@ -199,7 +199,7 @@ export class WithdrawStakingRewards extends React.Component<Props, State> {
   // TODO: this code has been copy-pasted from the tx confirmation page.
   // Ideally, all this logic should be moved away and perhaps written as a
   // redux action that can be reused in all components with tx signing and sending
-  onConfirm = async (password: string | void): Promise<void> => {
+  onConfirm = async (password: string | undefined): Promise<void> => {
     const {signTxRequest, useUSB} = this.state
     const {intl, navigation, isHW, isEasyConfirmationEnabled, submitTransaction, submitSignedTx} = this.props
     if (signTxRequest == null) throw new Error('no tx data')

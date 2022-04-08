@@ -60,18 +60,13 @@ import {CONFIG, isByron, isHaskellShelley} from '../../legacy/config/config'
 import {getNetworkConfigById} from '../../legacy/config/networks'
 import {NUMBERS} from '../../legacy/config/numbers'
 import type {NetworkId, WalletImplementationId} from '../../legacy/config/types'
-import {
-  derivePublicByAddressing,
-  normalizeToAddress,
-  toHexOrBase58,
-  verifyFromBip44Root,
-} from '../../legacy/crypto/shelley/utils'
-import type {Address as JsAddress, AddressedUtxo, Addressing, Value} from '../../legacy/crypto/types'
 import {ledgerMessages} from '../../legacy/i18n/global-messages'
 import LocalizableError from '../../legacy/i18n/LocalizableError'
 import {Logger} from '../../legacy/utils/logging'
 // $FlowExpectedError
 import type {HaskellShelleyTxSignRequest} from '../yoroi-wallets'
+import type {Address as JsAddress, AddressedUtxo, Addressing, Value} from './types'
+import {derivePublicByAddressing, normalizeToAddress, toHexOrBase58, verifyFromBip44Root} from './utils'
 //
 // ============== Errors ==================
 //
@@ -411,7 +406,7 @@ export const verifyAddress = async (
     const stakingKeyAddressing = {}
 
     if (isHaskellShelley(walletImplementationId)) {
-      const baseAddr = await BaseAddress.from_address(addressPtr)
+      const baseAddr = await BaseAddress.from_address(addressPtr as any)
 
       if (baseAddr) {
         const rewardAddr = await RewardAddress.new(Number.parseInt(chainNetworkId, 10), await baseAddr.stake_cred())
@@ -433,7 +428,7 @@ export const verifyAddress = async (
 
     const addressParams = await toLedgerAddressParameters({
       networkId: Number.parseInt(chainNetworkId, 10),
-      address: await normalizeToAddress(address),
+      address: (await normalizeToAddress(address)) as any,
       path: addressing.path,
       addressingMap,
     })

@@ -4,9 +4,9 @@ import {validateMnemonic, wordlists} from 'bip39'
 import _ from 'lodash'
 
 import {getNetworkConfigById} from '../../../legacy/config/networks'
-import {normalizeToAddress} from '../../../legacy/crypto/shelley/utils'
 import type {Token} from '../../../legacy/types/HistoryTransaction'
 import assert from '../../../legacy/utils/assert'
+import {normalizeToAddress} from '../../legacy/utils'
 import {InvalidAssetAmount, parseAmountDecimal} from './parsing'
 
 export type PasswordValidationErrors = {

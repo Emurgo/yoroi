@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // Handles interfacing w/ cardano-serialization-lib to create transaction
 // Note: All this code was taken from the Yoroi Extension and adapted for
 // compatibility with Yoroi mobile's types and async operation
@@ -35,15 +36,7 @@ import type {RawUtxo} from '../../../../legacy/api/types'
 /* eslint-enable camelcase */
 import {CONFIG} from '../../../../legacy/config/config'
 import {MAX_TX_BYTES, MAX_VALUE_BYTES} from '../../../../legacy/config/networks'
-import {AssetOverflowError, InsufficientFunds, NoOutputsError} from '../../../../legacy/crypto/errors'
-import {
-  cardanoValueFromMultiToken,
-  cardanoValueFromRemoteFormat,
-  derivePrivateByAddressing,
-  getCardanoAddrKeyHash,
-  multiTokenFromCardanoValue,
-  normalizeToAddress,
-} from '../../../../legacy/crypto/shelley/utils'
+import {AssetOverflowError, InsufficientFunds, NoOutputsError} from '../../../legacy/errors'
 import type {
   Address,
   AddressedUtxo,
@@ -52,7 +45,15 @@ import type {
   TxOutput,
   V4UnsignedTxAddressedUtxoResponse,
   V4UnsignedTxUtxoResponse,
-} from '../../../../legacy/crypto/types'
+} from '../../../legacy/types'
+import {
+  cardanoValueFromMultiToken,
+  cardanoValueFromRemoteFormat,
+  derivePrivateByAddressing,
+  getCardanoAddrKeyHash,
+  multiTokenFromCardanoValue,
+  normalizeToAddress,
+} from '../../../legacy/utils'
 const AddInputResult = Object.freeze({
   VALID: 0,
   // not worth the fee of adding it to input
@@ -86,10 +87,10 @@ export const sendAllUnsignedTxFromUtxo = async (
 
   const txBuilder = await TransactionBuilder.new(
     protocolParams.linearFee,
-    protocolParams.minimumUtxoVal,
-    protocolParams.poolDeposit,
-    protocolParams.keyDeposit, // $FlowFixMe sketchy-null-number
-    protocolParams.maxValueBytes || MAX_VALUE_BYTES, // $FlowFixMe sketchy-null-number
+    (protocolParams as any).minimumUtxoVal,
+    (protocolParams as any).poolDeposit,
+    (protocolParams as any).keyDeposit,
+    protocolParams.maxValueBytes || MAX_VALUE_BYTES,
     protocolParams.maxTxBytes || MAX_TX_BYTES,
   )
   await txBuilder.set_ttl(absSlotNumber.plus(defaultTtlOffset).toNumber())
@@ -187,7 +188,7 @@ export const sendAllUnsignedTx = async (
     receiver,
     Array.from(addressingMap.keys()),
     absSlotNumber,
-    protocolParams,
+    protocolParams as any,
     auxiliaryData,
   )
   const addressedUtxos = unsignedTxResponse.senderUtxos.map((utxo) => {
@@ -351,10 +352,10 @@ export const newAdaUnsignedTxFromUtxo = async (
   await shouldForceChange(undefined)
   const txBuilder = await TransactionBuilder.new(
     protocolParams.linearFee,
-    protocolParams.minimumUtxoVal,
-    protocolParams.poolDeposit,
-    protocolParams.keyDeposit, // $FlowFixMe sketchy-null-number
-    protocolParams.maxValueBytes || MAX_VALUE_BYTES, // $FlowFixMe sketchy-null-number
+    (protocolParams as any).minimumUtxoVal,
+    (protocolParams as any).poolDeposit,
+    (protocolParams as any).keyDeposit,
+    protocolParams.maxValueBytes || MAX_VALUE_BYTES,
     protocolParams.maxTxBytes || MAX_TX_BYTES,
   )
 
@@ -589,7 +590,7 @@ export const newAdaUnsignedTx = async (
     changeAdaAddr,
     Array.from(addressingMap.keys()),
     absSlotNumber,
-    protocolParams,
+    protocolParams as any,
     certificates,
     withdrawals,
     allowNoOutputs,
@@ -626,7 +627,7 @@ async function minRequiredForChange(
     throw new Error('transactions::minRequiredForChange: change not a valid Shelley address')
   }
 
-  const minimumAda = await min_ada_required(value, protocolParams.minimumUtxoVal)
+  const minimumAda = await min_ada_required(value, protocolParams.minimumUtxoVal as any)
   // we may have to increase the value used up to the minimum ADA required
   const baseValue = await (async () => {
     if ((await (await value.coin()).compare(minimumAda)) < 0) {
