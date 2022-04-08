@@ -20,7 +20,6 @@ import type {
 import {CONFIG, DISABLE_BACKGROUND_SYNC, WALLETS} from '../../legacy/config/config'
 import {isJormungandr} from '../../legacy/config/networks'
 import {NETWORK_REGISTRY, WALLET_IMPLEMENTATION_REGISTRY} from '../../legacy/config/types'
-import type {WalletMeta} from '../../legacy/state'
 import type {DefaultAsset} from '../../legacy/types/HistoryTransaction'
 import assert from '../../legacy/utils/assert'
 import {ObjectValues} from '../../legacy/utils/flow'
@@ -31,6 +30,7 @@ import {ensureKeysValidity, isSystemAuthSupported} from '../legacy/deviceSetting
 import {ISignRequest} from '../legacy/ISignRequest'
 import KeyStore from '../legacy/KeyStore'
 import type {HWDeviceInfo} from '../legacy/ledgerUtils'
+import type {WalletMeta} from '../legacy/state'
 import type {EncryptionMethod} from '../legacy/types'
 import {SendTokenList} from '../types'
 import {

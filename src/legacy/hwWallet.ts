@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type {Dispatch} from 'redux'
 
-import type {State} from '../../legacy/state'
 import {Logger} from '../../legacy/utils/logging'
 import {walletManager} from '../yoroi-wallets'
 import type {DeviceId, DeviceObj, HWDeviceInfo} from './ledgerUtils'
 import {NoDeviceInfoError} from './ledgerUtils'
 import {hwDeviceInfoSelector} from './selectors'
+import type {State} from './state'
 
 const _saveHW = (hwDeviceInfo) => ({
   path: ['wallet', 'hwDeviceInfo'],

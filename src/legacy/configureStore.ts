@@ -4,10 +4,10 @@ import {applyMiddleware, compose, createStore} from 'redux'
 import {createLogger} from 'redux-logger'
 import thunk from 'redux-thunk'
 
-import type {State} from '../../legacy/state'
-import {getInitialState, mockState} from '../../legacy/state'
 import type {Dispatch, GenericAction} from '../../legacy/types/reduxTypes'
 import rootReducer from './rootReducer'
+import type {State} from './state'
+import {getInitialState, mockState} from './state'
 
 export const getConfiguredStore = (useMockState = false, storybook = false, mockedState?: null | any) => {
   const logger = {

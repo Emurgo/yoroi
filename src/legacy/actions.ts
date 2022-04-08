@@ -12,7 +12,6 @@ import uuid from 'uuid'
 import {CONFIG} from '../../legacy/config/config'
 import {getCardanoNetworkConfigById} from '../../legacy/config/networks'
 import globalMessages, {errorMessages} from '../../legacy/i18n/global-messages'
-import type {State} from '../../legacy/state'
 import assert from '../../legacy/utils/assert'
 import {Logger} from '../../legacy/utils/logging'
 import networkInfo from '../../legacy/utils/networkInfo'
@@ -36,6 +35,7 @@ import {
   isSystemAuthEnabledSelector,
   sendCrashReportsSelector,
 } from './selectors'
+import type {State} from './state'
 import {fetchTokenInfo} from './tokenInfo'
 import {clearUTXOs} from './utxo'
 

@@ -10,7 +10,6 @@ import {useDispatch, useSelector} from 'react-redux'
 import {CONFIG} from '../legacy/config/config'
 import env from '../legacy/env'
 import {errorMessages} from '../legacy/i18n/global-messages'
-import type {State} from '../legacy/state'
 import {BiometricAuthScreen} from './BiometricAuth'
 import {Boundary} from './components'
 import {CustomPinScreen} from './FirstRun/CustomPinScreen'
@@ -27,6 +26,7 @@ import {
   isMaintenanceSelector,
   isSystemAuthEnabledSelector,
 } from './legacy/selectors'
+import type {State} from './legacy/state'
 import {CustomPinLoginScreen} from './Login'
 import MaintenanceScreen from './MaintenanceScreen'
 import {defaultNavigationOptions, defaultStackNavigatorOptions} from './navigationOptions'

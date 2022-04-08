@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type {Dispatch} from 'redux'
 
-import type {State} from '../../legacy/state'
+import type {State} from '../legacy/state'
 import {walletManager} from '../yoroi-wallets'
 
 // start fetching utxo

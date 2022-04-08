@@ -2,9 +2,9 @@
 import type {Dispatch} from 'redux'
 
 import type {PoolInfoRequest, PoolInfoResponse} from '../../legacy/api/types'
-import type {State} from '../../legacy/state'
 import {Logger} from '../../legacy/utils/logging'
 import {walletManager} from '../yoroi-wallets'
+import type {State} from './state'
 
 const _startFetching = () => ({
   type: 'START_FETCHING_POOL_INFO',

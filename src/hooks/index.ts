@@ -9,9 +9,9 @@ import {
   UseQueryOptions,
 } from 'react-query'
 
-import {WalletMeta} from '../../legacy/state'
 import storage from '../../legacy/utils/storage'
 import {HWDeviceInfo} from '../legacy/ledgerUtils'
+import {WalletMeta} from '../legacy/state'
 import {Token} from '../types'
 import {
   NetworkId,

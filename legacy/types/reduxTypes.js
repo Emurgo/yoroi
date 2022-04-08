@@ -1,6 +1,7 @@
 // @flow
 
-import type {State} from '../state'
+// $FlowExpectedError
+import type {State} from '../../src/legacy/state'
 
 export type Path = Array<string>
 

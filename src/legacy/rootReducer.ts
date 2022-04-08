@@ -1,6 +1,5 @@
-import type {State} from '../../legacy/state'
-import {getInitialState} from '../../legacy/state'
 import type {GenericAction} from '../../legacy/types/reduxTypes'
+import getInitialState, {State} from './state'
 import {forwardReducerTo} from './utils'
 
 const rootReducer = <Payload>(state: State = getInitialState(), action: GenericAction<State, Payload>) => {
