@@ -4,7 +4,7 @@
 import produce from 'immer'
 import {get, set} from 'lodash'
 
-import type {Path, SegmentReducer} from '../../legacy/types/reduxTypes'
+import type {Path, SegmentReducer} from './reduxTypes'
 
 const normalizeObjBeforeMap = (data: Array<Record<string, any>> | Record<string, any>): Array<Record<string, any>> =>
   Array.isArray(data) ? data : [data]
@@ -40,7 +40,7 @@ export const immutableSet = <S extends {}>(obj: S, path: Path | null | undefined
  * Does not create new state if the value did not change
  */
 export function forwardReducerTo<S extends {}, T>(
-  reducer: SegmentReducer<S, T | void>,
+  reducer: SegmentReducer<S, T | undefined>,
   path: Path | null | undefined,
 ): (state: S, payload: T | void) => S {
   return (state: S, payload: T | void) => {
