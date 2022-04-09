@@ -7,7 +7,6 @@ import {ActivityIndicator, RefreshControl, ScrollView, StyleSheet, View} from 'r
 import SafeAreaView from 'react-native-safe-area-view'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {getCardanoNetworkConfigById} from '../../legacy/config/networks'
 import globalMessages from '../../legacy/i18n/global-messages'
 import {AccountAutoRefresher} from '../AccountAutoRefresher'
 import {CATALYST_ROUTES} from '../Catalyst'
@@ -18,6 +17,7 @@ import {submitSignedTx, submitTransaction} from '../legacy/actions'
 import {getCardanoBaseConfig, UI_V2} from '../legacy/config'
 import {getDefaultAssetByNetworkId} from '../legacy/config'
 import {setLedgerDeviceId, setLedgerDeviceObj} from '../legacy/hwWallet'
+import {getCardanoNetworkConfigById} from '../legacy/networks'
 import {DELEGATION_ROUTES} from '../legacy/RoutesList'
 import {
   hwDeviceInfoSelector,

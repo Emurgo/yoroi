@@ -14,9 +14,7 @@ export type StakePoolInfoRequest = {
   poolIds: Array<string>
 }
 
-export type StakePoolInfosAndHistories = {
-  [key: string]: StakePoolInfoAndHistory | RemotePoolMetaFailure
-}
+export type StakePoolInfosAndHistories = Record<string, StakePoolInfoAndHistory | RemotePoolMetaFailure>
 
 export type StakePoolInfo = {
   name?: string

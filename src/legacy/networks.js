@@ -1,11 +1,9 @@
-// @flow
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {flatten} from 'lodash'
 
-import {NUMBERS} from './numbers'
-import type {NetworkId, YoroiProvider} from './types'
-import {NETWORK_REGISTRY, YOROI_PROVIDER_IDS} from './types'
-
+import {NUMBERS} from '../../legacy/config/numbers'
+import type {NetworkId, YoroiProvider} from '../../legacy/config/types'
+import {NETWORK_REGISTRY, YOROI_PROVIDER_IDS} from '../../legacy/config/types'
 const _DEFAULT_BACKEND_RULES = {
   FETCH_UTXOS_MAX_ADDRESSES: 50,
   TX_HISTORY_MAX_ADDRESSES: 50,
@@ -41,7 +39,6 @@ const BYRON_MAINNET = {
   SLOT_DURATION: 20,
   COIN_TYPE: NUMBERS.COIN_TYPES.CARDANO,
 }
-
 const HASKELL_SHELLEY = {
   PROVIDER_ID: YOROI_PROVIDER_IDS.HASKELL_SHELLEY,
   NETWORK_ID: NETWORK_REGISTRY.HASKELL_SHELLEY,
@@ -60,7 +57,8 @@ const HASKELL_SHELLEY = {
   BASE_CONFIG: [
     {
       // byron-era
-      PROTOCOL_MAGIC: 764824073, // aka byron network id
+      PROTOCOL_MAGIC: 764824073,
+      // aka byron network id
       START_AT: 0,
       GENESIS_DATE: '1506203091000',
       SLOTS_PER_EPOCH: 21600,
@@ -83,7 +81,6 @@ const HASKELL_SHELLEY = {
   POOL_DEPOSIT: '500000000',
   KEY_DEPOSIT: '2000000',
 }
-
 const HASKELL_SHELLEY_TESTNET = {
   PROVIDER_ID: YOROI_PROVIDER_IDS.HASKELL_SHELLEY_TESTNET,
   NETWORK_ID: NETWORK_REGISTRY.HASKELL_SHELLEY_TESTNET,
@@ -102,7 +99,8 @@ const HASKELL_SHELLEY_TESTNET = {
   },
   BASE_CONFIG: [
     {
-      PROTOCOL_MAGIC: 1097911063, // aka byron network id
+      PROTOCOL_MAGIC: 1097911063,
+      // aka byron network id
       START_AT: 0,
       GENESIS_DATE: '1563999616000',
       SLOTS_PER_EPOCH: 21600,
@@ -125,7 +123,6 @@ const HASKELL_SHELLEY_TESTNET = {
   POOL_DEPOSIT: '500000000',
   KEY_DEPOSIT: '2000000',
 }
-
 const JORMUNGANDR = {
   PROVIDER_ID: YOROI_PROVIDER_IDS.JORMUNGANDR,
   NETWORK_ID: NETWORK_REGISTRY.JORMUNGANDR,
@@ -165,14 +162,12 @@ const JORMUNGANDR = {
     ADDRESS: 'addr',
   },
 }
-
 // ALONZO
 const ALONZO_MAINNET = {
   PROVIDER_ID: YOROI_PROVIDER_IDS.ALONZO_MAINNET,
   ...HASKELL_SHELLEY,
   MARKETING_NAME: 'Alonzo Main Net',
 }
-
 const ALONZO_TESTNET = {
   PROVIDER_ID: YOROI_PROVIDER_IDS.ALONZO_TESTNET,
   ...HASKELL_SHELLEY_TESTNET,
@@ -185,7 +180,6 @@ const ALONZO_TESTNET = {
     `https://explorer.alonzo-purple.dev.cardano.org/address?address=${address}`,
   EXPLORER_URL_FOR_TX: (tx: string) => `https://explorer.alonzo-purple.dev.cardano.org/tx/${tx}`,
 }
-
 export const NETWORKS = {
   // Deprecated
   BYRON_MAINNET,
@@ -194,13 +188,11 @@ export const NETWORKS = {
   // Deprecated. Consider removing
   JORMUNGANDR,
 }
-
 type NetworkConfig =
   | typeof NETWORKS.BYRON_MAINNET
   | typeof NETWORKS.HASKELL_SHELLEY
   | typeof NETWORKS.HASKELL_SHELLEY_TESTNET
   | typeof NETWORKS.JORMUNGANDR
-
 // PROVIDER
 // NOTE: For now we are using the same obj, later we will decouple network/protocol/connection
 export const PROVIDERS = {
@@ -211,7 +203,6 @@ export const PROVIDERS = {
   ALONZO_TESTNET,
   JORMUNGANDR,
 }
-
 export type YoroiProviderConfig =
   | typeof BYRON_MAINNET
   | typeof HASKELL_SHELLEY
@@ -219,8 +210,10 @@ export type YoroiProviderConfig =
   | typeof ALONZO_MAINNET
   | typeof ALONZO_TESTNET
   | typeof JORMUNGANDR
-
-export const getYoroiProvider = (networkConfig: NetworkConfig, provider: ?YoroiProvider): YoroiProviderConfig => {
+export const getYoroiProvider = (
+  networkConfig: NetworkConfig,
+  provider: YoroiProvider | null | undefined,
+): YoroiProviderConfig => {
   if (provider === 'emurgo-alonzo') {
     if (networkConfig.NETWORK_ID === NETWORK_REGISTRY.HASKELL_SHELLEY) {
       return PROVIDERS.ALONZO_MAINNET
@@ -228,59 +221,57 @@ export const getYoroiProvider = (networkConfig: NetworkConfig, provider: ?YoroiP
       return PROVIDERS.ALONZO_TESTNET
     }
   }
+
   return networkConfig
 }
 
 /**
  * queries related to blockchain/network parameters
  */
-
 // TODO: perhaps rename as isJormungandrNetwork for better naming consistency
 export const isJormungandr = (networkId: NetworkId): boolean => networkId === NETWORK_REGISTRY.JORMUNGANDR
-
 export const isHaskellShelleyNetwork = (networkId: NetworkId): boolean =>
   networkId === NETWORK_REGISTRY.HASKELL_SHELLEY || networkId === NETWORK_REGISTRY.HASKELL_SHELLEY_TESTNET
-
 export const getCardanoByronConfig = () => NETWORKS.BYRON_MAINNET
-
-export const getNetworkConfigById = (id: NetworkId, provider: ?YoroiProvider): NetworkConfig => {
+export const getNetworkConfigById = (id: NetworkId, provider: YoroiProvider | null | undefined): NetworkConfig => {
   const idx = Object.values(NETWORK_REGISTRY).indexOf(id)
   const network = Object.keys(NETWORK_REGISTRY)[idx]
+
   if (network != null && network !== 'UNDEFINED' && NETWORKS[network] != null) {
     return getYoroiProvider(NETWORKS[network], provider)
   }
+
   throw new Error('invalid networkId')
 }
-
 export type CardanoHaskellShelleyNetwork = typeof NETWORKS.HASKELL_SHELLEY | typeof NETWORKS.HASKELL_SHELLEY_TESTNET
-
-export const getCardanoNetworkConfigById: (NetworkId, ?YoroiProvider) => CardanoHaskellShelleyNetwork = (
-  networkId,
-  provider,
-) => {
+export const getCardanoNetworkConfigById: (
+  arg0: NetworkId,
+  arg1: YoroiProvider | null | undefined,
+) => CardanoHaskellShelleyNetwork = (networkId, provider) => {
   switch (networkId) {
     case NETWORKS.HASKELL_SHELLEY.NETWORK_ID:
       if (provider === 'emurgo-alonzo') {
         return PROVIDERS.ALONZO_MAINNET
       }
+
       return NETWORKS.HASKELL_SHELLEY
+
     case NETWORKS.HASKELL_SHELLEY_TESTNET.NETWORK_ID:
       if (provider === 'emurgo-alonzo') {
         return PROVIDERS.ALONZO_TESTNET
       }
+
       return NETWORKS.HASKELL_SHELLEY_TESTNET
+
     default:
       throw new Error('network id is not a valid Haskell Shelley id')
   }
 }
-
 export const PRIMARY_ASSET_CONSTANTS = {
-  CARDANO: '',
-  // ERGO: '',
+  CARDANO: '', // ERGO: '',
   // JORMUNGANDR: '',
 }
-
-export const DEFAULT_ASSETS: Array<Object> = flatten(
+export const DEFAULT_ASSETS: Array<Record<string, any>> = flatten(
   Object.keys(NETWORKS)
     .map((key) => NETWORKS[key])
     .filter((network) => network.ENABLED)
@@ -303,9 +294,9 @@ export const DEFAULT_ASSETS: Array<Object> = flatten(
           },
         ]
       }
+
       throw new Error(`Missing default asset for network type ${JSON.stringify(network)}`)
     }),
 )
-
 export const MAX_VALUE_BYTES = 5000
 export const MAX_TX_BYTES = 16 * 1024

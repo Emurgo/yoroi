@@ -2,25 +2,25 @@ import {BigNumber} from 'bignumber.js'
 import {fromPairs, isEmpty, mapValues} from 'lodash'
 import {createSelector} from 'reselect'
 
-import type {RawUtxo} from '../../legacy/api/types'
 import type {NetworkId} from '../../legacy/config/types'
 import {NETWORK_REGISTRY} from '../../legacy/config/types'
-import type {DefaultAsset, Token, Transaction, TransactionInfo} from '../../legacy/types/HistoryTransaction'
-import {TRANSACTION_DIRECTION, TRANSACTION_STATUS} from '../../legacy/types/HistoryTransaction'
 import {ObjectValues} from '../../legacy/utils/flow'
 import type {State, WalletMeta} from '../legacy/state'
 import {getDefaultNetworkTokenEntry, MultiToken} from '../yoroi-wallets'
 import {getCardanoDefaultAsset, getDefaultAssetByNetworkId, getDefaultAssets} from './config'
+import type {DefaultAsset, Token, Transaction, TransactionInfo} from './HistoryTransaction'
+import {TRANSACTION_DIRECTION, TRANSACTION_STATUS} from './HistoryTransaction'
 import type {HWDeviceInfo} from './ledgerUtils'
 import {processTxHistoryData} from './processTransactions'
+import type {RawUtxo} from './types'
 
 export const transactionsInfoSelector: (arg0: State) => Record<string, TransactionInfo> = createSelector(
-  (state) => state.wallet.transactions,
-  (state) => state.wallet.internalAddresses,
-  (state) => state.wallet.externalAddresses,
-  (state) => state.wallet.rewardAddressHex,
-  (state) => state.wallet.confirmationCounts,
-  (state) => state.wallet.networkId,
+  (state: State) => state.wallet.transactions,
+  (state: State) => state.wallet.internalAddresses,
+  (state: State) => state.wallet.externalAddresses,
+  (state: State) => state.wallet.rewardAddressHex,
+  (state: State) => state.wallet.confirmationCounts,
+  (state: State) => state.wallet.networkId,
   (transactions, internalAddresses, externalAddresses, rewardAddressHex, confirmationCounts, networkId) =>
     mapValues(transactions, (tx: Transaction) =>
       processTxHistoryData(

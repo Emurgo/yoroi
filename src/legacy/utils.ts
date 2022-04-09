@@ -70,13 +70,13 @@ import {
 } from '@emurgo/react-native-haskell-shelley'
 import {BigNumber} from 'bignumber.js'
 
-import type {RawUtxo} from '../../legacy/api/types'
-import {getNetworkConfigById} from '../../legacy/config/networks'
 import type {NetworkId} from '../../legacy/config/types'
-import type {BaseAsset} from '../../legacy/types/HistoryTransaction'
 // $FlowExpectedError
 import {DefaultTokenEntry, MultiToken} from '../yoroi-wallets'
 import {CONFIG} from './config'
+import type {BaseAsset} from './HistoryTransaction'
+import {getNetworkConfigById} from './networks'
+import type {RawUtxo} from './types'
 import type {Addressing} from './types'
 const PRIMARY_ASSET_CONSTANTS = CONFIG.PRIMARY_ASSET_CONSTANTS
 export const getCardanoAddrKeyHash = async (

@@ -21,15 +21,15 @@ import {BigNumber} from 'bignumber.js'
 import ExtendableError from 'es6-error'
 import {sortBy} from 'lodash'
 
-import type {AccountStateRequest, AccountStateResponse} from '../../../../legacy/api/types'
-import type {CardanoHaskellShelleyNetwork} from '../../../../legacy/config/networks'
 import type {BackendConfig} from '../../../../legacy/config/types'
 import LocalizableError from '../../../../legacy/i18n/LocalizableError'
-import type {DefaultAsset} from '../../../../legacy/types/HistoryTransaction'
 import assert from '../../../../legacy/utils/assert'
 import {ObjectValues} from '../../../../legacy/utils/flow'
 import {Logger} from '../../../../legacy/utils/logging'
 import {CardanoError, InsufficientFunds, RewardAddressEmptyError} from '../../../legacy/errors'
+import type {DefaultAsset} from '../../../legacy/HistoryTransaction'
+import type {CardanoHaskellShelleyNetwork} from '../../../legacy/networks'
+import type {AccountStateRequest, AccountStateResponse} from '../../../legacy/types'
 import type {AddressedUtxo, Addressing, V4UnsignedTxAddressedUtxoResponse} from '../../../legacy/types'
 import {normalizeToAddress} from '../../../legacy/utils'
 import {StakingStatus} from '../../../types'
@@ -101,7 +101,7 @@ export const filterAddressesByStakingKey = async (
   utxos: ReadonlyArray<AddressedUtxo>,
   acceptTypeMismatch: boolean,
 ) => {
-  const result: AddressedUtxo = []
+  const result: Array<AddressedUtxo> = []
 
   for (const utxo of utxos) {
     if (await addrContainsAccountKey(utxo.receiver, stakingKey, acceptTypeMismatch)) {

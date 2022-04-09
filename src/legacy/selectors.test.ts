@@ -1,9 +1,9 @@
 import {fromPairs} from 'lodash'
 
-import type {RawTransaction} from '../../legacy/api/types'
 import {checkAndFacadeTransactionAsync} from './facade'
 import {availableAssetsSelector, tokenBalanceSelector} from './selectors'
 import {mockState} from './state'
+import type {RawTransaction} from './types'
 
 const txs: Array<RawTransaction> = [
   {

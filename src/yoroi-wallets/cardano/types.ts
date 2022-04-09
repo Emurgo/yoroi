@@ -2,23 +2,23 @@ import type {WalletChecksum} from '@emurgo/cip4-js'
 import {BigNumber} from 'bignumber.js'
 import type {IntlShape} from 'react-intl'
 
+import type {Transaction} from '../../legacy/HistoryTransaction'
+import type {HWDeviceInfo} from '../../legacy/ledgerUtils'
+import {WalletMeta} from '../../legacy/state'
 import type {
   FundInfoResponse,
+  RawUtxo,
   TxBodiesRequest,
   TxBodiesResponse,
   TxStatusRequest,
   TxStatusResponse,
-} from '../../../legacy/api/types'
-import type {Transaction} from '../../../legacy/types/HistoryTransaction'
-import type {HWDeviceInfo} from '../../legacy/ledgerUtils'
-import {WalletMeta} from '../../legacy/state'
+} from '../../legacy/types'
 import type {EncryptionMethod, WalletState} from '../../legacy/types'
 import {
   AccountStates,
   AddressedUtxo,
   DefaultAsset,
   DefaultTokenEntry,
-  RawUtxo,
   SendTokenList,
   StakePoolInfoRequest,
   StakePoolInfosAndHistories,
@@ -249,13 +249,6 @@ export type Block = {
 export type TxSubmissionStatus = {
   status: 'WAITING' | 'FAILED' | 'MAX_RETRY_REACHED' | 'SUCCESS'
   reason?: string | null
-}
-
-export type TxStatusRequest = {txHashes: Array<string>}
-
-export type TxStatusResponse = {
-  depth: {[txId: string]: number}
-  submissionStatus?: {[txId: string]: TxSubmissionStatus}
 }
 
 export type SignedTx = {

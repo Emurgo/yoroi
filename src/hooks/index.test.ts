@@ -2,7 +2,7 @@ import {expect} from 'chai'
 import * as sinon from 'ts-sinon'
 
 import {walletFactory} from '../../storybook/mocks/wallet'
-import {TxStatusRequest, TxStatusResponse} from '../yoroi-wallets'
+import {TxStatusRequest, TxStatusResponse} from '../legacy/types'
 import {fetchTxStatus} from '.'
 
 describe('fetchTxStatus', () => {
@@ -40,8 +40,10 @@ describe('fetchTxStatus', () => {
     const wallet = sinon.stubObject(walletFactory({}), {
       fetchTxStatus: Promise.resolve({
         depth: {},
-        submissionStatus: {'12366dd454b4793d83d554329245d4bc67659f6f0468bb0e0d41f1ac6f496999': {status: 'FAILED'}},
-      } as TxStatusResponse),
+        submissionStatus: {
+          '12366dd454b4793d83d554329245d4bc67659f6f0468bb0e0d41f1ac6f496999': {status: 'FAILED'},
+        },
+      } as unknown as TxStatusResponse),
     })
 
     // act
@@ -68,7 +70,7 @@ describe('fetchTxStatus', () => {
         submissionStatus: {
           '12366dd454b4793d83d554329245d4bc67659f6f0468bb0e0d41f1ac6f496999': {status: 'MAX_RETRY_REACHED'},
         },
-      } as TxStatusResponse),
+      } as unknown as TxStatusResponse),
     })
 
     // act
@@ -92,7 +94,7 @@ describe('fetchTxStatus', () => {
       fetchTxStatus: Promise.resolve({
         depth: {},
         submissionStatus: {'12366dd454b4793d83d554329245d4bc67659f6f0468bb0e0d41f1ac6f496999': {status: 'WAITING'}},
-      } as TxStatusResponse),
+      } as unknown as TxStatusResponse),
     })
 
     // act
@@ -144,7 +146,7 @@ describe('fetchTxStatus', () => {
         fetchTxStatus: Promise.resolve({
           depth: {},
           submissionStatus: {'12366dd454b4793d83d554329245d4bc67659f6f0468bb0e0d41f1ac6f496999': {status: 'WAITING'}},
-        } as TxStatusResponse),
+        } as unknown as TxStatusResponse),
       })
 
       // act
@@ -171,12 +173,12 @@ describe('fetchTxStatus', () => {
         .resolves({
           depth: {},
           submissionStatus: {'12366dd454b4793d83d554329245d4bc67659f6f0468bb0e0d41f1ac6f496999': {status: 'WAITING'}},
-        })
+        } as unknown as TxStatusResponse)
         .onSecondCall()
         .resolves({
           depth: {},
           submissionStatus: {'12366dd454b4793d83d554329245d4bc67659f6f0468bb0e0d41f1ac6f496999': {status: 'SUCCESS'}},
-        })
+        } as unknown as TxStatusResponse)
 
       // act
       const result = await fetchTxStatus(wallet, txId, waitProcessing)
@@ -201,12 +203,12 @@ describe('fetchTxStatus', () => {
         .resolves({
           depth: {},
           submissionStatus: {'12366dd454b4793d83d554329245d4bc67659f6f0468bb0e0d41f1ac6f496999': {status: 'WAITING'}},
-        })
+        } as unknown as TxStatusResponse)
         .onSecondCall()
         .resolves({
           depth: {},
           submissionStatus: {'12366dd454b4793d83d554329245d4bc67659f6f0468bb0e0d41f1ac6f496999': {status: 'FAILED'}},
-        })
+        } as unknown as TxStatusResponse)
 
       // act
       const result = await fetchTxStatus(wallet, txId, waitProcessing)
@@ -231,14 +233,14 @@ describe('fetchTxStatus', () => {
         .resolves({
           depth: {},
           submissionStatus: {'12366dd454b4793d83d554329245d4bc67659f6f0468bb0e0d41f1ac6f496999': {status: 'WAITING'}},
-        })
+        } as unknown as TxStatusResponse)
         .onSecondCall()
         .resolves({
           depth: {},
           submissionStatus: {
             '12366dd454b4793d83d554329245d4bc67659f6f0468bb0e0d41f1ac6f496999': {status: 'MAX_RETRY_REACHED'},
           },
-        })
+        } as unknown as TxStatusResponse)
 
       // act
       const result = await fetchTxStatus(wallet, txId, waitProcessing)

@@ -2,15 +2,20 @@
 import {BigNumber} from 'bignumber.js'
 import _ from 'lodash'
 
+import type {BackendConfig} from '../../legacy/config/types'
+import assert from '../../legacy/utils/assert'
+import {StakePoolInfosAndHistories} from '../types'
+import {ServerStatus} from '../yoroi-wallets'
+import {checkAndFacadeTransactionAsync} from './facade'
+import fetchDefault, {checkedFetch} from './fetch'
+import type {Transaction} from './HistoryTransaction'
 import type {
   AccountStateRequest,
   AccountStateResponse,
   BestblockResponse,
   FundInfoResponse,
   PoolInfoRequest,
-  PoolInfoResponse,
   RawUtxo,
-  ServerStatusResponse,
   TokenInfoRequest,
   TokenInfoResponse,
   TxBodiesRequest,
@@ -18,20 +23,15 @@ import type {
   TxHistoryRequest,
   TxStatusRequest,
   TxStatusResponse,
-} from '../../legacy/api/types'
-import type {BackendConfig} from '../../legacy/config/types'
-import type {Transaction} from '../../legacy/types/HistoryTransaction'
-import assert from '../../legacy/utils/assert'
-import {checkAndFacadeTransactionAsync} from './facade'
-import fetchDefault, {checkedFetch} from './fetch'
+} from './types'
 
 type Addresses = Array<string>
 
-export const checkServerStatus = (config: BackendConfig): Promise<ServerStatusResponse> =>
-  fetchDefault('status', null, config, 'GET')
+export const checkServerStatus = (config: BackendConfig): Promise<ServerStatus> =>
+  fetchDefault('status', null, config, 'GET') as any
 
 export const getBestBlock = (config: BackendConfig): Promise<BestblockResponse> =>
-  fetchDefault('v2/bestblock', null, config, 'GET')
+  fetchDefault('v2/bestblock', null, config, 'GET') as any
 
 export const fetchNewTxHistory = async (
   request: TxHistoryRequest,
@@ -76,7 +76,7 @@ export const bulkFetchUTXOsForAddresses = async (
   const chunks = _.chunk(addresses, config.FETCH_UTXOS_MAX_ADDRESSES)
 
   const responses = await Promise.all(chunks.map((addrs) => fetchUTXOsForAddresses(addrs, config)))
-  return _.flatten(responses)
+  return _.flatten(responses) as any
 }
 
 export const submitTransaction = (signedTx: string, config: BackendConfig) => {
@@ -131,7 +131,7 @@ export const bulkGetAccountState = async (
   return Object.assign({}, ...responses)
 }
 
-export const getPoolInfo = (request: PoolInfoRequest, config: BackendConfig): Promise<PoolInfoResponse> => {
+export const getPoolInfo = (request: PoolInfoRequest, config: BackendConfig): Promise<StakePoolInfosAndHistories> => {
   return fetchDefault('getPoolInfo', request, config)
 }
 
@@ -141,7 +141,7 @@ export const getTokenInfo = async (request: TokenInfoRequest, config: BackendCon
     throw new Error('Cardano wallets should have a Token metadata provider')
   }
   const endpointRoot = `${config.TOKEN_INFO_SERVICE}/metadata`
-  const responses = await Promise.all(
+  const responses: Array<any> = await Promise.all(
     tokenIds.map(async (tokenId) => {
       try {
         return await checkedFetch({
@@ -196,7 +196,7 @@ export const getTokenInfo = async (request: TokenInfoRequest, config: BackendCon
 
 export const getFundInfo = (config: BackendConfig, isMainnet: boolean): Promise<FundInfoResponse> => {
   const prefix = isMainnet ? '' : 'api/'
-  return fetchDefault(`${prefix}v0/catalyst/fundInfo/`, null, config, 'GET')
+  return fetchDefault(`${prefix}v0/catalyst/fundInfo/`, null, config, 'GET') as any
 }
 
 export const fetchTxStatus = (request: TxStatusRequest, config: BackendConfig): Promise<TxStatusResponse> => {

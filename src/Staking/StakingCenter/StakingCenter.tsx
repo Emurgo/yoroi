@@ -7,7 +7,6 @@ import {StyleSheet, View} from 'react-native'
 import {WebView} from 'react-native-webview'
 import {useSelector} from 'react-redux'
 
-import {getNetworkConfigById} from '../../../legacy/config/networks'
 import globalMessages, {errorMessages} from '../../../legacy/i18n/global-messages'
 import {ObjectValues} from '../../../legacy/utils/flow'
 import {Logger} from '../../../legacy/utils/logging'
@@ -18,6 +17,7 @@ import {CONFIG, getTestStakingPool, isNightly, SHOW_PROD_POOLS_IN_DEV} from '../
 import {InsufficientFunds} from '../../legacy/errors'
 import {ApiError, NetworkError} from '../../legacy/errors'
 import {normalizeTokenAmount} from '../../legacy/format'
+import {getNetworkConfigById} from '../../legacy/networks'
 import {STAKING_CENTER_ROUTES} from '../../legacy/RoutesList'
 import {
   accountBalanceSelector,
@@ -27,8 +27,9 @@ import {
   serverStatusSelector,
   utxosSelector,
 } from '../../legacy/selectors'
+import {RawUtxo} from '../../legacy/types'
 import {useSelectedWallet} from '../../SelectedWallet'
-import {DefaultAsset, RawUtxo} from '../../types'
+import {DefaultAsset} from '../../types'
 import {UtxoAutoRefresher} from '../../UtxoAutoRefresher'
 import {ServerStatus, walletManager} from '../../yoroi-wallets'
 import {PoolDetailScreen} from '../PoolDetails'

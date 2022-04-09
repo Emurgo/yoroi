@@ -25,34 +25,32 @@ import _ from 'lodash'
 import DeviceInfo from 'react-native-device-info'
 import uuid from 'uuid'
 
-import type {
-  AccountStateResponse,
-  FundInfoResponse,
-  PoolInfoRequest,
-  PoolInfoResponse,
-  RawUtxo,
-  TokenInfoRequest,
-  TokenInfoResponse,
-  TxBodiesRequest,
-  TxBodiesResponse,
-  TxStatusRequest,
-  TxStatusResponse,
-} from '../../../legacy/api/types'
-import type {CardanoHaskellShelleyNetwork} from '../../../legacy/config/networks'
-import {isHaskellShelleyNetwork, PROVIDERS} from '../../../legacy/config/networks'
 import type {BackendConfig} from '../../../legacy/config/types'
 import {NETWORK_REGISTRY} from '../../../legacy/config/types'
 import LocalizableError from '../../../legacy/i18n/LocalizableError'
-import type {DefaultAsset} from '../../../legacy/types/HistoryTransaction'
 import assert from '../../../legacy/utils/assert'
 import {Logger} from '../../../legacy/utils/logging'
 import * as api from '../../legacy/api'
 import {ADDRESS_TYPE_TO_CHANGE, generateWalletRootKey} from '../../legacy/commonUtils'
 import {CONFIG, getCardanoBaseConfig, getWalletConfigById, isByron, isHaskellShelley} from '../../legacy/config'
 import {CardanoError, InvalidState} from '../../legacy/errors'
+import type {DefaultAsset} from '../../legacy/HistoryTransaction'
 import type {HWDeviceInfo} from '../../legacy/ledgerUtils'
 import {buildSignedTransaction, createLedgerSignTxPayload, signTxWithLedger} from '../../legacy/ledgerUtils'
+import type {CardanoHaskellShelleyNetwork} from '../../legacy/networks'
+import {isHaskellShelleyNetwork, PROVIDERS} from '../../legacy/networks'
 import type {WalletMeta} from '../../legacy/state'
+import type {
+  AccountStateResponse,
+  FundInfoResponse,
+  PoolInfoRequest,
+  RawUtxo,
+  TokenInfoRequest,
+  TxBodiesRequest,
+  TxBodiesResponse,
+  TxStatusRequest,
+  TxStatusResponse,
+} from '../../legacy/types'
 import type {AddressedUtxo, Addressing} from '../../legacy/types'
 import {deriveRewardAddressHex, normalizeToAddress, toHexOrBase58} from '../../legacy/utils'
 import {DefaultTokenEntry, SendTokenList} from '../../types'
@@ -463,7 +461,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
       }
       return {
         ...utxo,
-        addressing: addressInfo,
+        addressing: addressInfo as any,
       }
     })
     return addressedUtxos
@@ -890,11 +888,11 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     return await api.bulkGetAccountState([this.rewardAddressHex], this._getBackendConfig())
   }
 
-  async fetchPoolInfo(request: PoolInfoRequest): Promise<PoolInfoResponse> {
+  async fetchPoolInfo(request: PoolInfoRequest) {
     return await api.getPoolInfo(request, this._getBackendConfig())
   }
 
-  fetchTokenInfo(request: TokenInfoRequest): Promise<TokenInfoResponse> {
+  fetchTokenInfo(request: TokenInfoRequest) {
     return api.getTokenInfo(request, this._getBackendConfig())
   }
 

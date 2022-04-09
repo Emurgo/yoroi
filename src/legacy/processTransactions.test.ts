@@ -1,9 +1,9 @@
-import type {RawTransaction} from '../../legacy/api/types'
-import {TRANSACTION_DIRECTION} from '../../legacy/types/HistoryTransaction'
 import {MultiToken} from '../yoroi-wallets'
 import {CONFIG} from './config'
 import {checkAndFacadeTransactionAsync} from './facade'
+import {TRANSACTION_DIRECTION} from './HistoryTransaction'
 import {processTxHistoryData} from './processTransactions'
+import type {RawTransaction} from './types'
 
 //
 // addresses from:

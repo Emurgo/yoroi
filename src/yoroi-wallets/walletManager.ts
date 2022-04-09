@@ -6,20 +6,7 @@ import ExtendableError from 'es6-error'
 import _ from 'lodash'
 import type {IntlShape} from 'react-intl'
 
-import type {
-  AccountStateResponse,
-  FundInfoResponse,
-  PoolInfoRequest,
-  PoolInfoResponse,
-  RawUtxo,
-  ServerStatusResponse,
-  TokenInfoRequest,
-  TokenInfoResponse,
-  TxBodiesRequest,
-} from '../../legacy/api/types'
-import {isJormungandr} from '../../legacy/config/networks'
 import {NETWORK_REGISTRY, WALLET_IMPLEMENTATION_REGISTRY} from '../../legacy/config/types'
-import type {DefaultAsset} from '../../legacy/types/HistoryTransaction'
 import assert from '../../legacy/utils/assert'
 import {ObjectValues} from '../../legacy/utils/flow'
 import {Logger} from '../../legacy/utils/logging'
@@ -27,12 +14,22 @@ import storage from '../../legacy/utils/storage'
 import {APP_SETTINGS_KEYS, readAppSettings} from '../legacy/appSettings'
 import {CONFIG, DISABLE_BACKGROUND_SYNC, WALLETS} from '../legacy/config'
 import {ensureKeysValidity, isSystemAuthSupported} from '../legacy/deviceSettings'
+import type {DefaultAsset} from '../legacy/HistoryTransaction'
 import {ISignRequest} from '../legacy/ISignRequest'
 import KeyStore from '../legacy/KeyStore'
 import type {HWDeviceInfo} from '../legacy/ledgerUtils'
+import {isJormungandr} from '../legacy/networks'
 import type {WalletMeta} from '../legacy/state'
+import type {
+  FundInfoResponse,
+  PoolInfoRequest,
+  RawUtxo,
+  TokenInfoRequest,
+  TokenInfoResponse,
+  TxBodiesRequest,
+} from '../legacy/types'
 import type {EncryptionMethod} from '../legacy/types'
-import {SendTokenList} from '../types'
+import {SendTokenList, StakePoolInfosAndHistories} from '../types'
 import {
   DefaultTokenEntry,
   isYoroiWallet,
@@ -191,12 +188,12 @@ class WalletManager {
     this._syncErrorSubscribers.forEach((handler) => handler(error))
   }
 
-  _notifyServerSync = (status: ServerStatusResponse) => {
+  _notifyServerSync = (status: ServerStatus) => {
     this._serverSyncSubscribers.forEach((handler) =>
       handler({
         isServerOk: status.isServerOk,
         isMaintenance: status.isMaintenance,
-        serverTime: new Date(status.serverTime),
+        serverTime: new Date(status.serverTime || Date.now()),
       }),
     )
   }
@@ -785,12 +782,12 @@ class WalletManager {
     return await this.abortWhenWalletCloses(wallet.fetchUTXOs())
   }
 
-  async fetchAccountState(): Promise<AccountStateResponse> {
+  async fetchAccountState() {
     const wallet = this.getWallet()
     return await this.abortWhenWalletCloses(wallet.fetchAccountState())
   }
 
-  async fetchPoolInfo(request: PoolInfoRequest): Promise<PoolInfoResponse> {
+  async fetchPoolInfo(request: PoolInfoRequest): Promise<StakePoolInfosAndHistories> {
     const wallet = this.getWallet()
     return await wallet.fetchPoolInfo(request)
   }

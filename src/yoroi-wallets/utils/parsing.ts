@@ -2,9 +2,9 @@
 import {BigNumber} from 'bignumber.js'
 import ExtendableError from 'es6-error'
 
-import {isHaskellShelleyNetwork} from '../../../legacy/config/networks'
-import type {Token} from '../../../legacy/types/HistoryTransaction'
 import {CONFIG, getCardanoDefaultAsset} from '../../legacy/config'
+import type {Token} from '../../legacy/HistoryTransaction'
+import {isHaskellShelleyNetwork} from '../../legacy/networks'
 
 export class InvalidAssetAmount extends ExtendableError {
   static ERROR_CODES = {

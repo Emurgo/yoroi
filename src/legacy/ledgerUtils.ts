@@ -56,7 +56,6 @@ import TransportHID from '@v-almonacid/react-native-hid'
 import {PermissionsAndroid, Platform} from 'react-native'
 import {BleError} from 'react-native-ble-plx'
 
-import {getNetworkConfigById} from '../../legacy/config/networks'
 import {NUMBERS} from '../../legacy/config/numbers'
 import type {NetworkId, WalletImplementationId} from '../../legacy/config/types'
 import {ledgerMessages} from '../../legacy/i18n/global-messages'
@@ -65,6 +64,7 @@ import {Logger} from '../../legacy/utils/logging'
 // $FlowExpectedError
 import type {HaskellShelleyTxSignRequest} from '../yoroi-wallets'
 import {CONFIG, isByron, isHaskellShelley} from './config'
+import {getNetworkConfigById} from './networks'
 import type {Address as JsAddress, AddressedUtxo, Addressing, Value} from './types'
 import {derivePublicByAddressing, normalizeToAddress, toHexOrBase58, verifyFromBip44Root} from './utils'
 //
