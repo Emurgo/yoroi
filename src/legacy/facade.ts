@@ -1,9 +1,9 @@
 import moment from 'moment'
 
-import type {RawTransaction} from '../../legacy/api/types'
-import type {Transaction, TransactionStatus} from '../../legacy/types/HistoryTransaction'
-import {TRANSACTION_STATUS} from '../../legacy/types/HistoryTransaction'
 import assert from '../../legacy/utils/assert'
+import type {Transaction, TransactionStatus} from './HistoryTransaction'
+import {TRANSACTION_STATUS} from './HistoryTransaction'
+import type {RawTransaction} from './types'
 import {normalizeToAddress} from './utils'
 
 const checkAndFacadeStatus = (status: string): TransactionStatus => {

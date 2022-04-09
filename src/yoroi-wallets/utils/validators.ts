@@ -3,9 +3,9 @@ import {Resolution} from '@unstoppabledomains/resolution'
 import {validateMnemonic, wordlists} from 'bip39'
 import _ from 'lodash'
 
-import {getNetworkConfigById} from '../../../legacy/config/networks'
-import type {Token} from '../../../legacy/types/HistoryTransaction'
 import assert from '../../../legacy/utils/assert'
+import type {Token} from '../../legacy/HistoryTransaction'
+import {getNetworkConfigById} from '../../legacy/networks'
 import {normalizeToAddress} from '../../legacy/utils'
 import {InvalidAssetAmount, parseAmountDecimal} from './parsing'
 

@@ -1,13 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {BigNumber} from 'bignumber.js'
 
-import {CERTIFICATE_KIND} from '../../legacy/api/types'
 import type {NetworkId} from '../../legacy/config/types'
-import type {BaseAsset, Token, Transaction, TransactionInfo} from '../../legacy/types/HistoryTransaction'
-import {TRANSACTION_DIRECTION, TRANSACTION_STATUS, TRANSACTION_TYPE} from '../../legacy/types/HistoryTransaction'
 import assert from '../../legacy/utils/assert'
 import {Logger} from '../../legacy/utils/logging'
 import {getDefaultNetworkTokenEntry, MultiToken, strToDefaultMultiAsset} from '../yoroi-wallets'
 import {CONFIG} from './config'
+import type {BaseAsset, Token, Transaction, TransactionInfo} from './HistoryTransaction'
+import {TRANSACTION_DIRECTION, TRANSACTION_STATUS, TRANSACTION_TYPE} from './HistoryTransaction'
+import {CERTIFICATE_KIND} from './types'
 import {multiTokenFromRemote} from './utils'
 type TransactionAssurance = 'PENDING' | 'FAILED' | 'LOW' | 'MEDIUM' | 'HIGH'
 export const getTransactionAssurance = (
@@ -109,7 +110,7 @@ export const processTxHistoryData = (
           continue
         }
 
-        const {rewards} = cert
+        const {rewards} = cert as any
         if (rewards == null) continue // shouldn't happen
 
         for (const rewardAddr in rewards) {

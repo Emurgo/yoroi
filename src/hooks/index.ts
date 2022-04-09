@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {delay} from 'bluebird'
 import {
   QueryKey,
@@ -315,7 +316,7 @@ export const fetchTxStatus = async (
     })
 
     const confirmations = txStatus.depth?.[txHash] || 0
-    const submission = txStatus.submissionStatus?.[txHash]
+    const submission: any = txStatus.submissionStatus?.[txHash]
 
     // processed
     if (confirmations > 0) {

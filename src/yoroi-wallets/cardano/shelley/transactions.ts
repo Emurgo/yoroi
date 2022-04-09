@@ -32,11 +32,11 @@ import {
 } from '@emurgo/react-native-haskell-shelley'
 import {BigNumber} from 'bignumber.js'
 
-import type {RawUtxo} from '../../../../legacy/api/types'
-import {MAX_TX_BYTES, MAX_VALUE_BYTES} from '../../../../legacy/config/networks'
 /* eslint-enable camelcase */
 import {CONFIG} from '../../../legacy/config'
 import {AssetOverflowError, InsufficientFunds, NoOutputsError} from '../../../legacy/errors'
+import {MAX_TX_BYTES, MAX_VALUE_BYTES} from '../../../legacy/networks'
+import type {RawUtxo} from '../../../legacy/types'
 import type {
   Address,
   AddressedUtxo,

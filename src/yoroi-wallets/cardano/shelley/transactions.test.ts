@@ -25,10 +25,10 @@ import {
 } from '@emurgo/react-native-haskell-shelley'
 import {BigNumber} from 'bignumber.js'
 
-import type {RawUtxo} from '../../../../legacy/api/types'
-import {NETWORKS} from '../../../../legacy/config/networks'
 import {CONFIG, getDefaultAssets} from '../../../legacy/config'
 import {AssetOverflowError, InsufficientFunds, NoOutputsError} from '../../../legacy/errors'
+import {NETWORKS} from '../../../legacy/networks'
+import type {RawUtxo} from '../../../legacy/types'
 import type {Addressing} from '../../../legacy/types'
 import {byronAddrToHex, identifierToCardanoAsset} from '../../../legacy/utils'
 import {MultiToken} from '../..'

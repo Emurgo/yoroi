@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type {Dispatch} from 'redux'
 
-import type {PoolInfoRequest, PoolInfoResponse} from '../../legacy/api/types'
 import {Logger} from '../../legacy/utils/logging'
 import {walletManager} from '../yoroi-wallets'
 import type {State} from './state'
+import type {PoolInfoRequest} from './types'
 
 const _startFetching = () => ({
   type: 'START_FETCHING_POOL_INFO',
@@ -65,11 +65,11 @@ export const fetchPoolInfo = () => async (dispatch: Dispatch<any>, getState: () 
       throw new Error('fetchPoolInfo::poolOperator is null, should never happen')
     }
 
-    const poolInfoResp: PoolInfoResponse = await walletManager.fetchPoolInfo({
+    const poolInfoResp = await walletManager.fetchPoolInfo({
       poolIds: [poolOperator],
     } as PoolInfoRequest)
     const poolInfo = Object.keys(poolInfoResp).map((key) => poolInfoResp[key])[0]
-    if (poolInfo.error != null) throw new Error(poolInfo.error)
+    if ((poolInfo as any).error != null) throw new Error((poolInfo as any).error)
     dispatch(_setPoolInfo(poolInfo))
     dispatch(_setLastError(null))
   } catch (err) {

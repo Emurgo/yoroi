@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js'
-import {TransactionInfo} from '../../src/types'
+import {TransactionInfo} from '../../src/legacy/HistoryTransaction'
 
 export const mockTransaction = (transaction?: Partial<TransactionInfo>): TransactionInfo => {
   return {

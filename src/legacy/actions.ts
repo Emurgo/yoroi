@@ -9,7 +9,6 @@ import DeviceInfo from 'react-native-device-info'
 import type {Dispatch} from 'redux'
 import uuid from 'uuid'
 
-import {getCardanoNetworkConfigById} from '../../legacy/config/networks'
 import globalMessages, {errorMessages} from '../../legacy/i18n/global-messages'
 import assert from '../../legacy/utils/assert'
 import {Logger} from '../../legacy/utils/logging'
@@ -28,6 +27,7 @@ import {mirrorTxHistory, setBackgroundSyncError, updateHistory} from './history'
 import {ISignRequest} from './ISignRequest'
 import KeyStore from './KeyStore'
 import {changeAndSaveLanguage} from './language'
+import {getCardanoNetworkConfigById} from './networks'
 import {
   currentVersionSelector,
   installationIdSelector,
@@ -200,7 +200,7 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
       _setServerStatus({
         isServerOk: status.isServerOk,
         isMaintenance: status.isMaintenance,
-        serverTime: new Date(status.serverTime),
+        serverTime: new Date(status.serverTime as any),
       }),
     )
   } catch (e) {

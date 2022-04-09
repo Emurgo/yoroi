@@ -17,7 +17,8 @@ import {ISignRequest} from '../../legacy/ISignRequest'
 import KeyStore from '../../legacy/KeyStore'
 import type {DeviceId, DeviceObj, HWDeviceInfo} from '../../legacy/ledgerUtils'
 import {DELEGATION_ROUTES, SEND_ROUTES, WALLET_ROOT_ROUTES, WALLET_ROUTES} from '../../legacy/RoutesList'
-import {DefaultAsset, RawUtxo} from '../../types'
+import {RawUtxo} from '../../legacy/types'
+import {DefaultAsset} from '../../types'
 import {
   HaskellShelleyTxSignRequest,
   MultiToken,

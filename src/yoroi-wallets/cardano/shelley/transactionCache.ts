@@ -2,12 +2,7 @@
 import {fromPairs, mapValues, max, sum, uniq} from 'lodash'
 import {defaultMemoize} from 'reselect'
 
-import type {RemoteCertificateMeta, TxHistoryRequest} from '../../../../legacy/api/types'
-import {CERTIFICATE_KIND} from '../../../../legacy/api/types'
-import {getCardanoNetworkConfigById} from '../../../../legacy/config/networks'
 import type {NetworkId, YoroiProvider} from '../../../../legacy/config/types'
-import type {Transaction} from '../../../../legacy/types/HistoryTransaction'
-import {TRANSACTION_STATUS} from '../../../../legacy/types/HistoryTransaction'
 import assert from '../../../../legacy/utils/assert'
 import {ObjectValues} from '../../../../legacy/utils/flow'
 import {Logger} from '../../../../legacy/utils/logging'
@@ -15,6 +10,11 @@ import {limitConcurrency} from '../../../../legacy/utils/promise'
 import * as api from '../../../legacy/api'
 import {CONFIG} from '../../../legacy/config'
 import {ApiHistoryError} from '../../../legacy/errors'
+import type {Transaction} from '../../../legacy/HistoryTransaction'
+import {TRANSACTION_STATUS} from '../../../legacy/HistoryTransaction'
+import {getCardanoNetworkConfigById} from '../../../legacy/networks'
+import type {RemoteCertificateMeta, TxHistoryRequest} from '../../../legacy/types'
+import {CERTIFICATE_KIND} from '../../../legacy/types'
 
 type SyncMetadata = {
   bestBlockNum: number
@@ -147,11 +147,14 @@ const confirmationCountsSelector = (state: TransactionCacheState) => {
     const getBlockNum = ({address}) =>
       perAddressSyncMetadata[address] ? perAddressSyncMetadata[address].bestBlockNum : 0
 
-    const bestBlockNum = max([state.bestBlockNum || 0, ...tx.inputs.map(getBlockNum), ...tx.outputs.map(getBlockNum)])
+    const bestBlockNum: any = max([
+      state.bestBlockNum || 0,
+      ...tx.inputs.map(getBlockNum),
+      ...tx.outputs.map(getBlockNum),
+    ])
     assert.assert(tx.blockNum, 'Successfull tx should have blockNum')
 
-    /* :: if (tx.blockNum == null) throw 'assert' */
-    return bestBlockNum - tx.blockNum
+    return bestBlockNum - (tx as any).blockNum
   })
 }
 
@@ -263,10 +266,10 @@ export class TransactionCache {
           block: metadata.bestBlockHash,
           tx: metadata.bestTxHash,
         },
-      }
+      } as any
     }
 
-    return request
+    return request as any
   }
 
   _isUpdatedTransaction(tx: Transaction): boolean {
@@ -354,11 +357,11 @@ export class TransactionCache {
           transactions: {
             ...this._state.transactions,
             ...transactionsUpdate,
-          },
+          } as any,
           perAddressSyncMetadata: {
             ...this._state.perAddressSyncMetadata,
             ...metadataUpdate,
-          },
+          } as any,
           bestBlockNum: currentBestBlock.height,
         })
       } catch (e) {

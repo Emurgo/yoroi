@@ -1,12 +1,12 @@
 import type {Dispatch} from 'redux'
 
-import type {TokenInfoRequest, TokenInfoResponse} from '../../legacy/api/types'
-import type {Token} from '../../legacy/types/HistoryTransaction'
 import {ObjectValues} from '../../legacy/utils/flow'
 import {Logger} from '../../legacy/utils/logging'
 import {availableAssetsSelector, tokenBalanceSelector} from '../legacy/selectors'
 import type {State} from '../legacy/state'
 import {MultiToken, walletManager} from '../yoroi-wallets'
+import type {Token} from './HistoryTransaction'
+import type {TokenInfoRequest, TokenInfoResponse} from './types'
 
 const _startFetching = () => ({
   type: 'START_FETCHING_TOKEN_INFO',

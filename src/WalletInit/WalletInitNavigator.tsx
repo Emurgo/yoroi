@@ -2,7 +2,7 @@ import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import {isJormungandr} from '../../legacy/config/networks'
+import {isJormungandr} from '../legacy/networks'
 import {WALLET_INIT_ROUTES} from '../legacy/RoutesList'
 import {defaultNavigationOptions, defaultStackNavigatorOptions, jormunNavigationOptions} from '../navigationOptions'
 import {CheckNanoXScreen} from './CheckNanoX'

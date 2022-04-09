@@ -3,9 +3,9 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Image, Linking, StyleSheet, TouchableOpacity, View, ViewStyle} from 'react-native'
 
-import {getNetworkConfigById} from '../../../legacy/config/networks'
 import copyIcon from '../../assets/img/icon/copy.png'
 import {Text} from '../../components'
+import {getNetworkConfigById} from '../../legacy/networks'
 import {NetworkId} from '../../yoroi-wallets'
 import {FadeOutView} from './FadeOutView'
 

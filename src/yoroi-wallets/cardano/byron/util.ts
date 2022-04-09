@@ -1,11 +1,11 @@
 import {Bip32PrivateKey, Bip32PublicKey, ByronAddress} from '@emurgo/react-native-haskell-shelley'
 import bs58 from 'bs58'
 
-import {getCardanoByronConfig} from '../../../../legacy/config/networks'
 import type {AddressType} from '../../../legacy/commonUtils'
 import {ADDRESS_TYPE_TO_CHANGE, generateWalletRootKey} from '../../../legacy/commonUtils'
 import {CONFIG} from '../../../legacy/config'
 import {CardanoError} from '../../../legacy/errors'
+import {getCardanoByronConfig} from '../../../legacy/networks'
 
 const BYRON_PROTOCOL_MAGIC = getCardanoByronConfig().PROTOCOL_MAGIC
 

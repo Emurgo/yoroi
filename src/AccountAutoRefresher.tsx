@@ -3,7 +3,6 @@ import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 
-import type {RawUtxo} from '../legacy/api/types'
 import {fetchAccountState} from './legacy/account'
 import {
   hasPendingOutgoingTransactionSelector,
@@ -11,6 +10,7 @@ import {
   isOnlineSelector,
   utxosSelector,
 } from './legacy/selectors'
+import type {RawUtxo} from './legacy/types'
 
 // eslint-disable-next-line react-prefer-function-component/react-prefer-function-component
 class AccountAutoRefresherClass extends React.Component<{
