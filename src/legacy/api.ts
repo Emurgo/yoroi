@@ -2,13 +2,13 @@
 import {BigNumber} from 'bignumber.js'
 import _ from 'lodash'
 
-import type {BackendConfig} from '../../legacy/config/types'
 import assert from '../../legacy/utils/assert'
 import {StakePoolInfosAndHistories} from '../types'
 import {ServerStatus} from '../yoroi-wallets'
 import {checkAndFacadeTransactionAsync} from './facade'
 import fetchDefault, {checkedFetch} from './fetch'
 import type {Transaction} from './HistoryTransaction'
+import type {BackendConfig} from './types'
 import type {
   AccountStateRequest,
   AccountStateResponse,

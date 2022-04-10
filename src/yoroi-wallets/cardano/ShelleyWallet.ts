@@ -25,8 +25,6 @@ import _ from 'lodash'
 import DeviceInfo from 'react-native-device-info'
 import uuid from 'uuid'
 
-import type {BackendConfig} from '../../../legacy/config/types'
-import {NETWORK_REGISTRY} from '../../../legacy/config/types'
 import LocalizableError from '../../../legacy/i18n/LocalizableError'
 import assert from '../../../legacy/utils/assert'
 import {Logger} from '../../../legacy/utils/logging'
@@ -40,6 +38,7 @@ import {buildSignedTransaction, createLedgerSignTxPayload, signTxWithLedger} fro
 import type {CardanoHaskellShelleyNetwork} from '../../legacy/networks'
 import {isHaskellShelleyNetwork, PROVIDERS} from '../../legacy/networks'
 import type {WalletMeta} from '../../legacy/state'
+import type {BackendConfig} from '../../legacy/types'
 import type {
   AccountStateResponse,
   FundInfoResponse,
@@ -52,6 +51,7 @@ import type {
   TxStatusResponse,
 } from '../../legacy/types'
 import type {AddressedUtxo, Addressing} from '../../legacy/types'
+import {NETWORK_REGISTRY} from '../../legacy/types'
 import {deriveRewardAddressHex, normalizeToAddress, toHexOrBase58} from '../../legacy/utils'
 import {DefaultTokenEntry, SendTokenList} from '../../types'
 import {genTimeToSlot} from '../utils/timeUtils'
@@ -269,6 +269,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
       if (this.networkId === NETWORK_REGISTRY.BYRON_MAINNET) {
         this.networkId = NETWORK_REGISTRY.HASKELL_SHELLEY
       }
+      if (!this.networkId) throw new Error('invalid state')
       assert.assert(isHaskellShelleyNetwork(this.networkId), 'invalid networkId')
       if (this.walletImplementationId == null) throw new Error('Invalid wallet: walletImplementationId')
       assert.assert(
@@ -762,7 +763,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
 
     const ledgerSignTxPayload = await createLedgerSignTxPayload({
       signRequest: request,
-      byronNetworkMagic: this._getBaseNetworkConfig().PROTOCOL_MAGIC,
+      byronNetworkMagic: (this._getBaseNetworkConfig() as any).PROTOCOL_MAGIC,
       // to not confuse with wallet's network id
       chainNetworkId: Number.parseInt(this._getChainNetworkId(), 10),
       addressingMap,

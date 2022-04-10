@@ -240,6 +240,7 @@ export class Wallet {
 
   async _doFullSync() {
     if (!this.transactionCache) throw new Error('invalid wallet state')
+    if (!this.networkId) throw new Error('invalid wallet state')
     Logger.info(`Do full sync provider =`, this.provider)
     assert.assert(this.isInitialized, 'doFullSync: isInitialized')
     // TODO: multi-network support

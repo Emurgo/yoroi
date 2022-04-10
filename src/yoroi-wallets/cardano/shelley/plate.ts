@@ -1,9 +1,9 @@
 import {legacyWalletChecksum, walletChecksum} from '@emurgo/cip4-js'
 import {Bip32PrivateKey} from '@emurgo/react-native-haskell-shelley'
 
-import type {NetworkId} from '../../../../legacy/config/types'
 import {AddressType} from '../../../legacy/commonUtils'
 import {CONFIG} from '../../../legacy/config'
+import type {NetworkId} from '../../../legacy/types'
 import {PlateResponse} from '../../../legacy/types'
 import {AddressGenerator} from '../..'
 import {getMasterKeyFromMnemonic} from '../byron/util'

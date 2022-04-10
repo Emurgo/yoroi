@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {BigNumber} from 'bignumber.js'
 
-import type {NetworkId} from '../../legacy/config/types'
 import assert from '../../legacy/utils/assert'
 import {Logger} from '../../legacy/utils/logging'
 import {getDefaultNetworkTokenEntry, MultiToken, strToDefaultMultiAsset} from '../yoroi-wallets'
 import {CONFIG} from './config'
 import type {BaseAsset, Token, Transaction, TransactionInfo} from './HistoryTransaction'
 import {TRANSACTION_DIRECTION, TRANSACTION_STATUS, TRANSACTION_TYPE} from './HistoryTransaction'
+import type {NetworkId} from './types'
 import {CERTIFICATE_KIND} from './types'
 import {multiTokenFromRemote} from './utils'
 type TransactionAssurance = 'PENDING' | 'FAILED' | 'LOW' | 'MEDIUM' | 'HIGH'

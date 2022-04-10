@@ -70,12 +70,12 @@ import {
 } from '@emurgo/react-native-haskell-shelley'
 import {BigNumber} from 'bignumber.js'
 
-import type {NetworkId} from '../../legacy/config/types'
 // $FlowExpectedError
 import {DefaultTokenEntry, MultiToken} from '../yoroi-wallets'
 import {CONFIG} from './config'
 import type {BaseAsset} from './HistoryTransaction'
 import {getNetworkConfigById} from './networks'
+import type {NetworkId} from './types'
 import type {RawUtxo} from './types'
 import type {Addressing} from './types'
 const PRIMARY_ASSET_CONSTANTS = CONFIG.PRIMARY_ASSET_CONSTANTS
@@ -212,7 +212,7 @@ export const deriveRewardAddressHex = async (accountPubKeyHex: string, networkId
   ).to_raw_key()
   const credential = await StakeCredential.from_keyhash(await stakingKey.hash())
   let chainNetworkId = CONFIG.NETWORKS.HASKELL_SHELLEY.CHAIN_NETWORK_ID
-  const config = getNetworkConfigById(networkId)
+  const config: any = getNetworkConfigById(networkId)
 
   if (config.CHAIN_NETWORK_ID != null) {
     chainNetworkId = config.CHAIN_NETWORK_ID

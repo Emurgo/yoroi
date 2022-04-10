@@ -11,14 +11,14 @@ import {generateMnemonic, mnemonicToEntropy} from 'bip39'
 import cryptoRandomString from 'crypto-random-string'
 import {randomBytes} from 'react-native-randombytes'
 
-import type {WalletImplementationId} from '../../legacy/config/types'
-import {DERIVATION_TYPES} from '../../legacy/config/types'
 import assert from '../../legacy/utils/assert'
 import {SendTokenList} from '../types'
 import type {DefaultTokenEntry} from '../yoroi-wallets'
 import {MultiToken} from '../yoroi-wallets'
 import {CONFIG, getWalletConfigById} from './config'
 import {CardanoError, WrongPassword} from './errors'
+import type {WalletImplementationId} from './types'
+import {DERIVATION_TYPES} from './types'
 export type AddressType = 'Internal' | 'External'
 export const ADDRESS_TYPE_TO_CHANGE: Record<AddressType, number> = {
   External: 0,

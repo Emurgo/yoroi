@@ -6,7 +6,6 @@ import ExtendableError from 'es6-error'
 import _ from 'lodash'
 import type {IntlShape} from 'react-intl'
 
-import {NETWORK_REGISTRY, WALLET_IMPLEMENTATION_REGISTRY} from '../../legacy/config/types'
 import assert from '../../legacy/utils/assert'
 import {ObjectValues} from '../../legacy/utils/flow'
 import {Logger} from '../../legacy/utils/logging'
@@ -18,7 +17,6 @@ import type {DefaultAsset} from '../legacy/HistoryTransaction'
 import {ISignRequest} from '../legacy/ISignRequest'
 import KeyStore from '../legacy/KeyStore'
 import type {HWDeviceInfo} from '../legacy/ledgerUtils'
-import {isJormungandr} from '../legacy/networks'
 import type {WalletMeta} from '../legacy/state'
 import type {
   FundInfoResponse,
@@ -29,6 +27,7 @@ import type {
   TxBodiesRequest,
 } from '../legacy/types'
 import type {EncryptionMethod} from '../legacy/types'
+import {NETWORK_REGISTRY, WALLET_IMPLEMENTATION_REGISTRY} from '../legacy/types'
 import {SendTokenList, StakePoolInfosAndHistories} from '../types'
 import {
   DefaultTokenEntry,
@@ -303,11 +302,6 @@ class WalletManager {
   get walletImplementationId() {
     if (!this._wallet) return ''
     return this._wallet.walletImplementationId
-  }
-
-  get isJormungandr() {
-    if (!this._wallet) return false
-    return isJormungandr(this._wallet.networkId)
   }
 
   get isHW() {

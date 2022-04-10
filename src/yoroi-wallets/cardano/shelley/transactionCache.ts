@@ -2,7 +2,6 @@
 import {fromPairs, mapValues, max, sum, uniq} from 'lodash'
 import {defaultMemoize} from 'reselect'
 
-import type {NetworkId, YoroiProvider} from '../../../../legacy/config/types'
 import assert from '../../../../legacy/utils/assert'
 import {ObjectValues} from '../../../../legacy/utils/flow'
 import {Logger} from '../../../../legacy/utils/logging'
@@ -13,6 +12,7 @@ import {ApiHistoryError} from '../../../legacy/errors'
 import type {Transaction} from '../../../legacy/HistoryTransaction'
 import {TRANSACTION_STATUS} from '../../../legacy/HistoryTransaction'
 import {getCardanoNetworkConfigById} from '../../../legacy/networks'
+import type {NetworkId, YoroiProvider} from '../../../legacy/types'
 import type {RemoteCertificateMeta, TxHistoryRequest} from '../../../legacy/types'
 import {CERTIFICATE_KIND} from '../../../legacy/types'
 

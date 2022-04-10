@@ -56,8 +56,6 @@ import TransportHID from '@v-almonacid/react-native-hid'
 import {PermissionsAndroid, Platform} from 'react-native'
 import {BleError} from 'react-native-ble-plx'
 
-import {NUMBERS} from '../../legacy/config/numbers'
-import type {NetworkId, WalletImplementationId} from '../../legacy/config/types'
 import {ledgerMessages} from '../../legacy/i18n/global-messages'
 import LocalizableError from '../../legacy/i18n/LocalizableError'
 import {Logger} from '../../legacy/utils/logging'
@@ -65,6 +63,8 @@ import {Logger} from '../../legacy/utils/logging'
 import type {HaskellShelleyTxSignRequest} from '../yoroi-wallets'
 import {CONFIG, isByron, isHaskellShelley} from './config'
 import {getNetworkConfigById} from './networks'
+import {NUMBERS} from './numbers'
+import type {NetworkId, WalletImplementationId} from './types'
 import type {Address as JsAddress, AddressedUtxo, Addressing, Value} from './types'
 import {derivePublicByAddressing, normalizeToAddress, toHexOrBase58, verifyFromBip44Root} from './utils'
 //
@@ -399,7 +399,7 @@ export const verifyAddress = async (
     let chainNetworkId = CONFIG.NETWORKS.HASKELL_SHELLEY.CHAIN_NETWORK_ID
     const networkConfig = getNetworkConfigById(networkId)
 
-    if (networkConfig.CHAIN_NETWORK_ID != null) {
+    if ('CHAIN_NETWORK_ID' in networkConfig && networkConfig.CHAIN_NETWORK_ID != null) {
       chainNetworkId = networkConfig.CHAIN_NETWORK_ID
     }
 

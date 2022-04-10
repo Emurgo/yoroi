@@ -1,6 +1,3 @@
-import {NUMBERS} from '../../legacy/config/numbers'
-import type {NetworkId, WalletImplementation, WalletImplementationId, YoroiProvider} from '../../legacy/config/types'
-import {DERIVATION_TYPES, WALLET_IMPLEMENTATION_REGISTRY} from '../../legacy/config/types'
 import {LogLevel} from '../../legacy/utils/logging'
 import env from './env'
 import type {DefaultAsset} from './HistoryTransaction'
@@ -12,6 +9,9 @@ import {
   NETWORKS,
   PRIMARY_ASSET_CONSTANTS,
 } from './networks'
+import {NUMBERS} from './numbers'
+import type {NetworkId, WalletImplementation, WalletImplementationId, YoroiProvider} from './types'
+import {DERIVATION_TYPES, WALLET_IMPLEMENTATION_REGISTRY} from './types'
 
 const IS_DEBUG = __DEV__
 

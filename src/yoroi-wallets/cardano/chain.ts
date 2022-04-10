@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {BaseAddress, Bip32PublicKey, RewardAddress, StakeCredential} from '@emurgo/react-native-haskell-shelley'
 import _ from 'lodash'
 import type {Moment} from 'moment'
@@ -62,7 +63,7 @@ export class AddressGenerator {
       return null
     }
     let chainNetworkId = CONFIG.NETWORKS.HASKELL_SHELLEY.CHAIN_NETWORK_ID
-    const config = getNetworkConfigById(this.networkId)
+    const config: any = getNetworkConfigById(this.networkId)
     if (config.CHAIN_NETWORK_ID != null) {
       chainNetworkId = config.CHAIN_NETWORK_ID
     }
@@ -90,7 +91,7 @@ export class AddressGenerator {
     if (isHaskellShelley(this.walletImplementationId)) {
       // assume mainnet by default
       let chainNetworkId = CONFIG.NETWORKS.HASKELL_SHELLEY.CHAIN_NETWORK_ID
-      const config = getNetworkConfigById(this.networkId)
+      const config: any = getNetworkConfigById(this.networkId)
       if (config.CHAIN_NETWORK_ID != null) {
         chainNetworkId = config.CHAIN_NETWORK_ID
       }

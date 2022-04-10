@@ -2,13 +2,13 @@
 import type {WalletChecksum} from '@emurgo/cip4-js'
 import {BigNumber} from 'bignumber.js'
 
-import type {NetworkId, WalletImplementationId, YoroiProvider} from '../../legacy/config/types'
-import {NETWORK_REGISTRY} from '../../legacy/config/types'
 import type {ServerStatus, WalletInterface} from '../yoroi-wallets'
 import type {Token} from './HistoryTransaction'
 import {ISignRequest} from './ISignRequest'
 import {mockReduxWallet} from './mockWallet'
+import type {NetworkId, WalletImplementationId, YoroiProvider} from './types'
 import type {RawUtxo, RemotePoolMetaSuccess} from './types'
+import {NETWORK_REGISTRY} from './types'
 export type ServerStatusCache = {
   readonly isServerOk: boolean
   readonly isMaintenance: boolean

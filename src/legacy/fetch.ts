@@ -2,9 +2,9 @@
 import {Platform} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
-import type {BackendConfig} from '../../legacy/config/types'
 import {Logger} from '../../legacy/utils/logging'
 import {ApiError, ApiHistoryError, NetworkError} from './errors'
+import type {BackendConfig} from './types'
 type RequestMethod = 'POST' | 'GET'
 
 const _checkResponse = async (rawResponse: Record<string, any>, requestPayload: Record<string, any>) => {

@@ -2,8 +2,6 @@ import {BigNumber} from 'bignumber.js'
 import {fromPairs, isEmpty, mapValues} from 'lodash'
 import {createSelector} from 'reselect'
 
-import type {NetworkId} from '../../legacy/config/types'
-import {NETWORK_REGISTRY} from '../../legacy/config/types'
 import {ObjectValues} from '../../legacy/utils/flow'
 import type {State, WalletMeta} from '../legacy/state'
 import {getDefaultNetworkTokenEntry, MultiToken} from '../yoroi-wallets'
@@ -12,7 +10,9 @@ import type {DefaultAsset, Token, Transaction, TransactionInfo} from './HistoryT
 import {TRANSACTION_DIRECTION, TRANSACTION_STATUS} from './HistoryTransaction'
 import type {HWDeviceInfo} from './ledgerUtils'
 import {processTxHistoryData} from './processTransactions'
+import type {NetworkId} from './types'
 import type {RawUtxo} from './types'
+import {NETWORK_REGISTRY} from './types'
 
 export const transactionsInfoSelector: (arg0: State) => Record<string, TransactionInfo> = createSelector(
   (state: State) => state.wallet.transactions,
@@ -20,7 +20,8 @@ export const transactionsInfoSelector: (arg0: State) => Record<string, Transacti
   (state: State) => state.wallet.externalAddresses,
   (state: State) => state.wallet.rewardAddressHex,
   (state: State) => state.wallet.confirmationCounts,
-  (state: State) => state.wallet.networkId,
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  (state: State) => state.wallet.networkId!,
   (transactions, internalAddresses, externalAddresses, rewardAddressHex, confirmationCounts, networkId) =>
     mapValues(transactions, (tx: Transaction) =>
       processTxHistoryData(

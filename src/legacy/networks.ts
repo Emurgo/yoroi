@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {flatten} from 'lodash'
 
-import {NUMBERS} from '../../legacy/config/numbers'
-import type {NetworkId, YoroiProvider} from '../../legacy/config/types'
-import {NETWORK_REGISTRY, YOROI_PROVIDER_IDS} from '../../legacy/config/types'
+import {NUMBERS} from './numbers'
+import type {NetworkId, YoroiProvider} from './types'
+import {NETWORK_REGISTRY, YOROI_PROVIDER_IDS} from './types'
 const _DEFAULT_BACKEND_RULES = {
   FETCH_UTXOS_MAX_ADDRESSES: 50,
   TX_HISTORY_MAX_ADDRESSES: 50,
@@ -165,12 +165,12 @@ const JORMUNGANDR = {
 // ALONZO
 const ALONZO_MAINNET = {
   PROVIDER_ID: YOROI_PROVIDER_IDS.ALONZO_MAINNET,
-  ...HASKELL_SHELLEY,
+  ...(HASKELL_SHELLEY as any),
   MARKETING_NAME: 'Alonzo Main Net',
 }
 const ALONZO_TESTNET = {
   PROVIDER_ID: YOROI_PROVIDER_IDS.ALONZO_TESTNET,
-  ...HASKELL_SHELLEY_TESTNET,
+  ...(HASKELL_SHELLEY_TESTNET as any),
   BACKEND: {
     ...HASKELL_SHELLEY_TESTNET.BACKEND,
     API_ROOT: 'https://alonzo-backend.yoroiwallet.com',
@@ -233,7 +233,7 @@ export const isJormungandr = (networkId: NetworkId): boolean => networkId === NE
 export const isHaskellShelleyNetwork = (networkId: NetworkId): boolean =>
   networkId === NETWORK_REGISTRY.HASKELL_SHELLEY || networkId === NETWORK_REGISTRY.HASKELL_SHELLEY_TESTNET
 export const getCardanoByronConfig = () => NETWORKS.BYRON_MAINNET
-export const getNetworkConfigById = (id: NetworkId, provider: YoroiProvider | null | undefined): NetworkConfig => {
+export const getNetworkConfigById = (id: NetworkId, provider?: YoroiProvider | null | undefined): NetworkConfig => {
   const idx = Object.values(NETWORK_REGISTRY).indexOf(id)
   const network = Object.keys(NETWORK_REGISTRY)[idx]
 
@@ -244,10 +244,10 @@ export const getNetworkConfigById = (id: NetworkId, provider: YoroiProvider | nu
   throw new Error('invalid networkId')
 }
 export type CardanoHaskellShelleyNetwork = typeof NETWORKS.HASKELL_SHELLEY | typeof NETWORKS.HASKELL_SHELLEY_TESTNET
-export const getCardanoNetworkConfigById: (
-  arg0: NetworkId,
-  arg1: YoroiProvider | null | undefined,
-) => CardanoHaskellShelleyNetwork = (networkId, provider) => {
+export const getCardanoNetworkConfigById = (
+  networkId: NetworkId,
+  provider?: YoroiProvider | null | undefined,
+): CardanoHaskellShelleyNetwork => {
   switch (networkId) {
     case NETWORKS.HASKELL_SHELLEY.NETWORK_ID:
       if (provider === 'emurgo-alonzo') {
