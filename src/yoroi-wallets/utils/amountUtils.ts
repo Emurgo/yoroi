@@ -1,6 +1,6 @@
 import {compose} from 'lodash/fp'
 
-import {insertAt} from '../../../legacy/utils/string'
+import {insertAt} from '../../legacy/string'
 
 export const stripExcessiveDecimals = (number: string) => {
   const separatorIndex = number.indexOf('.')

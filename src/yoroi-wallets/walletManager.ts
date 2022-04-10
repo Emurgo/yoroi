@@ -7,12 +7,12 @@ import _ from 'lodash'
 import type {IntlShape} from 'react-intl'
 
 import assert from '../../legacy/utils/assert'
-import {ObjectValues} from '../../legacy/utils/flow'
 import {Logger} from '../../legacy/utils/logging'
 import storage from '../../legacy/utils/storage'
 import {APP_SETTINGS_KEYS, readAppSettings} from '../legacy/appSettings'
 import {CONFIG, DISABLE_BACKGROUND_SYNC, WALLETS} from '../legacy/config'
 import {ensureKeysValidity, isSystemAuthSupported} from '../legacy/deviceSettings'
+import {ObjectValues} from '../legacy/flow'
 import type {DefaultAsset} from '../legacy/HistoryTransaction'
 import {ISignRequest} from '../legacy/ISignRequest'
 import KeyStore from '../legacy/KeyStore'
@@ -406,7 +406,7 @@ class WalletManager {
       throw new Error('Wallet list is not initialized')
     }
 
-    return ObjectValues(this._wallets).every((wallet) => !wallet.isEasyConfirmationEnabled)
+    return ObjectValues(this._wallets).every((wallet: any) => !wallet.isEasyConfirmationEnabled)
   }
 
   // =================== synch =================== //

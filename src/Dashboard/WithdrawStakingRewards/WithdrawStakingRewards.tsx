@@ -5,8 +5,6 @@ import React from 'react'
 import {IntlShape} from 'react-intl'
 import {Platform} from 'react-native'
 
-import type {WithdrawalDialogSteps} from '../../../legacy/components/Delegation/types'
-import {WITHDRAWAL_DIALOG_STEPS} from '../../../legacy/components/Delegation/types'
 import {errorMessages} from '../../../legacy/i18n/global-messages'
 import LocalizableError from '../../../legacy/i18n/LocalizableError'
 import {showErrorDialog} from '../../legacy/actions'
@@ -27,6 +25,17 @@ import {
   walletManager,
 } from '../../yoroi-wallets'
 import {WithdrawalDialog} from './WithdrawalDialog'
+
+export enum WithdrawalDialogSteps {
+  CLOSED = 'CLOSED',
+  WARNING = 'WARNING',
+  CHOOSE_TRANSPORT = 'CHOOSE_TRANSPORT',
+  LEDGER_CONNECT = 'LEDGER_CONNECT',
+  CONFIRM = 'CONFIRM',
+  WAITING_HW_RESPONSE = 'WAITING_HW_RESPONSE',
+  WAITING = 'WAITING',
+  ERROR = 'ERROR',
+}
 
 type Props = {
   intl: IntlShape
@@ -70,7 +79,7 @@ type State = {
 // eslint-disable-next-line react-prefer-function-component/react-prefer-function-component
 export class WithdrawStakingRewards extends React.Component<Props, State> {
   state = {
-    withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.WARNING,
+    withdrawalDialogStep: WithdrawalDialogSteps.WARNING,
     useUSB: false,
     signTxRequest: null,
     withdrawals: null,
@@ -87,7 +96,7 @@ export class WithdrawStakingRewards extends React.Component<Props, State> {
 
   openWithdrawalDialog = () =>
     this.setState({
-      withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.WARNING,
+      withdrawalDialogStep: WithdrawalDialogSteps.WARNING,
     })
 
   onKeepOrDeregisterKey = async (shouldDeregister: boolean): Promise<void> => {
@@ -95,7 +104,7 @@ export class WithdrawStakingRewards extends React.Component<Props, State> {
     if (this.props.isHW && Platform.OS === 'android' && CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT) {
       // toggle ledger transport switch modal
       this.setState({
-        withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.CHOOSE_TRANSPORT,
+        withdrawalDialogStep: WithdrawalDialogSteps.CHOOSE_TRANSPORT,
       })
     } else {
       await this.createWithdrawalTx()
@@ -107,7 +116,7 @@ export class WithdrawStakingRewards extends React.Component<Props, State> {
     const {intl, utxos, defaultAsset, serverStatus} = this.props
     try {
       if (utxos == null) throw new Error('cannot get utxos') // should never happen
-      this.setState({withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.WAITING})
+      this.setState({withdrawalDialogStep: WithdrawalDialogSteps.WAITING})
       const signTxRequest = await walletManager.createWithdrawalTx(
         utxos,
         this._shouldDeregister,
@@ -142,7 +151,7 @@ export class WithdrawStakingRewards extends React.Component<Props, State> {
           balance: balance.getDefault(),
           finalBalance: finalBalance.getDefault(),
           fees: fees.getDefault(),
-          withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.CONFIRM,
+          withdrawalDialogStep: WithdrawalDialogSteps.CONFIRM,
         })
       } else {
         throw new Error('unexpected withdrawal tx type')
@@ -150,7 +159,7 @@ export class WithdrawStakingRewards extends React.Component<Props, State> {
     } catch (e) {
       if (e instanceof LocalizableError) {
         this.setState({
-          withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.ERROR,
+          withdrawalDialogStep: WithdrawalDialogSteps.ERROR,
           error: {
             errorMessage: intl.formatMessage({
               id: (e as any).id,
@@ -160,7 +169,7 @@ export class WithdrawStakingRewards extends React.Component<Props, State> {
         })
       } else {
         this.setState({
-          withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.ERROR,
+          withdrawalDialogStep: WithdrawalDialogSteps.ERROR,
           error: {
             errorMessage: intl.formatMessage(errorMessages.generalError.message, {message: (e as any).message}),
           },
@@ -171,7 +180,7 @@ export class WithdrawStakingRewards extends React.Component<Props, State> {
 
   openLedgerConnect = () =>
     this.setState({
-      withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.LEDGER_CONNECT,
+      withdrawalDialogStep: WithdrawalDialogSteps.LEDGER_CONNECT,
     })
 
   onChooseTransport = async (useUSB: boolean): Promise<void> => {
@@ -217,11 +226,11 @@ export class WithdrawStakingRewards extends React.Component<Props, State> {
     try {
       if (isHW) {
         this.setState({
-          withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.WAITING_HW_RESPONSE,
+          withdrawalDialogStep: WithdrawalDialogSteps.WAITING_HW_RESPONSE,
         })
         if (signTxRequest == null) throw new Error('no tx data')
         const signedTx = await walletManager.signTxWithLedger(signTxRequest, useUSB)
-        this.setState({withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.WAITING})
+        this.setState({withdrawalDialogStep: WithdrawalDialogSteps.WAITING})
         await submitTx(Buffer.from(signedTx.encodedTx).toString('base64'))
         this.closeWithdrawalDialog()
         return
@@ -255,7 +264,7 @@ export class WithdrawStakingRewards extends React.Component<Props, State> {
       }
 
       try {
-        this.setState({withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.WAITING})
+        this.setState({withdrawalDialogStep: WithdrawalDialogSteps.WAITING})
         const decryptedData = await KeyStore.getData(walletManager._id, 'MASTER_PASSWORD', '', password, intl)
 
         await submitTx(signTxRequest, decryptedData)
@@ -263,7 +272,7 @@ export class WithdrawStakingRewards extends React.Component<Props, State> {
       } catch (e) {
         if (e instanceof WrongPassword) {
           this.setState({
-            withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.ERROR,
+            withdrawalDialogStep: WithdrawalDialogSteps.ERROR,
             error: {
               errorMessage: intl.formatMessage(errorMessages.incorrectPassword.message),
               errorLogs: null,
@@ -276,7 +285,7 @@ export class WithdrawStakingRewards extends React.Component<Props, State> {
     } catch (e) {
       if (e instanceof LocalizableError) {
         this.setState({
-          withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.ERROR,
+          withdrawalDialogStep: WithdrawalDialogSteps.ERROR,
           error: {
             errorMessage: intl.formatMessage(
               {id: (e as any).id, defaultMessage: (e as any).defaultMessage},
@@ -287,7 +296,7 @@ export class WithdrawStakingRewards extends React.Component<Props, State> {
         })
       } else {
         this.setState({
-          withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.ERROR,
+          withdrawalDialogStep: WithdrawalDialogSteps.ERROR,
           error: {
             errorMessage: intl.formatMessage(errorMessages.generalTxError.message),
             errorLogs: (e as any).message || null,
@@ -297,7 +306,7 @@ export class WithdrawStakingRewards extends React.Component<Props, State> {
     }
   }
 
-  closeWithdrawalDialog = () => this.setState({withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.CLOSED}, this.props.onDone)
+  closeWithdrawalDialog = () => this.setState({withdrawalDialogStep: WithdrawalDialogSteps.CLOSED}, this.props.onDone)
 
   render() {
     return (

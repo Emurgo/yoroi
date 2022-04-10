@@ -1,11 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {BigNumber} from 'bignumber.js'
 import {fromPairs, isEmpty, mapValues} from 'lodash'
 import {createSelector} from 'reselect'
 
-import {ObjectValues} from '../../legacy/utils/flow'
 import type {State, WalletMeta} from '../legacy/state'
 import {getDefaultNetworkTokenEntry, MultiToken} from '../yoroi-wallets'
 import {getCardanoDefaultAsset, getDefaultAssetByNetworkId, getDefaultAssets} from './config'
+import {ObjectValues} from './flow'
 import type {DefaultAsset, Token, Transaction, TransactionInfo} from './HistoryTransaction'
 import {TRANSACTION_DIRECTION, TRANSACTION_STATUS} from './HistoryTransaction'
 import type {HWDeviceInfo} from './ledgerUtils'
@@ -63,8 +64,8 @@ export const availableAssetsSelector: (state: State) => Record<string, Token> = 
         },
       ]),
     )
-    ObjectValues(txs).forEach((tx) => {
-      ObjectValues(tx.tokens).forEach((token) => {
+    ObjectValues(txs).forEach((tx: any) => {
+      ObjectValues(tx.tokens).forEach((token: any) => {
         if (tokens[token.identifier] == null) {
           tokens[token.identifier] = token
         }

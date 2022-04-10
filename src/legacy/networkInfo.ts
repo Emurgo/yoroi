@@ -1,11 +1,11 @@
-// @flow
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import NetInfo from '@react-native-community/netinfo'
 
-import {SubscriptionManager} from './subscription'
+import {SubscriptionManager} from '../../legacy/utils/subscription'
 
 export type ConnectionInfo = {
-  isOnline: boolean,
+  isOnline: boolean
 }
 
 const _fetchConnectionInfo = (): Promise<any> => NetInfo.fetch()

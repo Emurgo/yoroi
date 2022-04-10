@@ -1,5 +1,3 @@
-// @flow
-
 import Clipboard from '@react-native-community/clipboard'
 import {useEffect, useState} from 'react'
 
@@ -20,5 +18,5 @@ export const useCopy = () => {
     return () => clearTimeout(timeout)
   }, [text])
 
-  return [!!text, setText, text]
+  return [!!text, setText, text] as const
 }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {useNavigation} from '@react-navigation/native'
 import {BigNumber} from 'bignumber.js'
 import React, {useEffect, useState} from 'react'
@@ -8,7 +9,6 @@ import {WebView} from 'react-native-webview'
 import {useSelector} from 'react-redux'
 
 import globalMessages, {errorMessages} from '../../../legacy/i18n/global-messages'
-import {ObjectValues} from '../../../legacy/utils/flow'
 import {Logger} from '../../../legacy/utils/logging'
 import {AccountAutoRefresher} from '../../AccountAutoRefresher'
 import {PleaseWaitModal} from '../../components'
@@ -16,6 +16,7 @@ import {showErrorDialog} from '../../legacy/actions'
 import {CONFIG, getTestStakingPool, isNightly, SHOW_PROD_POOLS_IN_DEV} from '../../legacy/config'
 import {InsufficientFunds} from '../../legacy/errors'
 import {ApiError, NetworkError} from '../../legacy/errors'
+import {ObjectValues} from '../../legacy/flow'
 import {normalizeTokenAmount} from '../../legacy/format'
 import {getNetworkConfigById} from '../../legacy/networks'
 import {STAKING_CENTER_ROUTES} from '../../legacy/RoutesList'
@@ -249,7 +250,7 @@ const _handleSelectedPoolHashes = async (
     const poolInfoResponse = await walletManager.fetchPoolInfo({
       poolIds: selectedPoolHashes,
     })
-    const poolInfo = ObjectValues(poolInfoResponse)[0]
+    const poolInfo: any = ObjectValues(poolInfoResponse)[0]
     Logger.debug('StakingCenter::poolInfo', poolInfo)
 
     // TODO: fetch reputation info once an endpoint is implemented

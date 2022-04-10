@@ -23,9 +23,9 @@ import {sortBy} from 'lodash'
 
 import LocalizableError from '../../../../legacy/i18n/LocalizableError'
 import assert from '../../../../legacy/utils/assert'
-import {ObjectValues} from '../../../../legacy/utils/flow'
 import {Logger} from '../../../../legacy/utils/logging'
 import {CardanoError, InsufficientFunds, RewardAddressEmptyError} from '../../../legacy/errors'
+import {ObjectValues} from '../../../legacy/flow'
 import type {DefaultAsset} from '../../../legacy/HistoryTransaction'
 import type {CardanoHaskellShelleyNetwork} from '../../../legacy/networks'
 import type {BackendConfig} from '../../../legacy/types'
@@ -191,12 +191,12 @@ export const getDelegationStatus = (
   txCertificatesForKey: Record<string, TimestampedCertMeta>, // key is txId
 ): StakingStatus => {
   // start with older certificate
-  const sortedCerts = sortBy(txCertificatesForKey, (txCerts) => txCerts.submittedAt)
+  const sortedCerts: any = sortBy(txCertificatesForKey, (txCerts) => txCerts.submittedAt)
   Logger.debug('txCertificatesForKey', sortedCerts)
   let status: StakingStatus = {isRegistered: false}
 
   for (const certData of ObjectValues(sortedCerts)) {
-    const certificates = certData.certificates
+    const certificates = (certData as any).certificates
 
     for (const cert of certificates) {
       if (cert.rewardAddress !== rewardAddress) continue

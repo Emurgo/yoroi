@@ -3,12 +3,12 @@ import {fromPairs, mapValues, max, sum, uniq} from 'lodash'
 import {defaultMemoize} from 'reselect'
 
 import assert from '../../../../legacy/utils/assert'
-import {ObjectValues} from '../../../../legacy/utils/flow'
 import {Logger} from '../../../../legacy/utils/logging'
 import {limitConcurrency} from '../../../../legacy/utils/promise'
 import * as api from '../../../legacy/api'
 import {CONFIG} from '../../../legacy/config'
 import {ApiHistoryError} from '../../../legacy/errors'
+import {ObjectValues} from '../../../legacy/flow'
 import type {Transaction} from '../../../legacy/HistoryTransaction'
 import {TRANSACTION_STATUS} from '../../../legacy/HistoryTransaction'
 import {getCardanoNetworkConfigById} from '../../../legacy/networks'
@@ -128,7 +128,7 @@ const perAddressCertificatesSelector = (state: TransactionCacheState): PerAddres
         cert.kind === CERTIFICATE_KIND.STAKE_DEREGISTRATION ||
         cert.kind === CERTIFICATE_KIND.STAKE_DELEGATION
       ) {
-        const {rewardAddress} = cert
+        const {rewardAddress} = cert as any
         addTxTo(tx.id, tx.certificates, tx.submittedAt, tx.epoch, rewardAddress)
       }
     })
@@ -393,7 +393,9 @@ export class TransactionCache {
     // if cache is deprecated it means it was obtained when the old history
     // endpoint was still being used (in versions <= 2.2.1)
     // in this case, we do not load the data and start from a fresh object.
-    const isDeprecatedCache = ObjectValues(data.perAddressSyncMetadata).some((metadata) => metadata.lastUpdated != null)
+    const isDeprecatedCache = ObjectValues(data.perAddressSyncMetadata).some(
+      (metadata: any) => metadata.lastUpdated != null,
+    )
     // similarly, the haskell shelley endpoint introduces withdrawals & certs.
     // versions < 3.0.1 need resync
     const txs = ObjectValues(data.transactions)
