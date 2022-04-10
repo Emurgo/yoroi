@@ -148,7 +148,7 @@ const usePlateFromMnemonic = ({
   networkId: number
   walletImplementationId: WalletImplementationId
 }) => {
-  const [addresses, setAddresses] = useState()
+  const [addresses, setAddresses] = useState<undefined | Array<string>>(undefined)
   const [plate, setPlate] = useState<undefined | WalletChecksum>(undefined)
 
   useEffect(() => {
@@ -179,7 +179,7 @@ const usePlateFromMnemonic = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  return [plate, addresses]
+  return [plate, addresses] as const
 }
 
 const styles = StyleSheet.create({

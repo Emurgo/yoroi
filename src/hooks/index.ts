@@ -185,6 +185,8 @@ export const usePlate = ({networkId, publicKeyHex}: {networkId: NetworkId; publi
     queryFn: () => generateShelleyPlateFromKey(publicKeyHex, 1, networkId),
   })
 
+  if (!query.data) throw new Error('invalid state')
+
   return query.data
 }
 

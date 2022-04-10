@@ -1,15 +1,13 @@
-// @flow
-
 import React from 'react'
 import Svg, {Circle, G, Path} from 'react-native-svg'
 
 type Props = {
-  width: number,
-  height: number,
+  width: number
+  height: number
 }
 
-const TotalDelegatedIcon = ({width, height}: Props) => (
-  <Svg version="1.1" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" {...{width, height}}>
+export const TotalDelegatedIcon = ({width, height}: Props) => (
+  <Svg viewBox="0 0 44 44" {...{width, height}}>
     <G id="icon/total-delegated.inline" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
       <G id="icon/bg-for-icon" fill="#F0F3F5">
         <Circle id="Oval-Copy-4" cx="22" cy="22" r="22" />
@@ -45,5 +43,3 @@ const TotalDelegatedIcon = ({width, height}: Props) => (
     </G>
   </Svg>
 )
-
-export default TotalDelegatedIcon

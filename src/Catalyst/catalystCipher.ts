@@ -1,5 +1,3 @@
-// @flow
-
 import chacha from 'chacha'
 import cryptoRandomString from 'crypto-random-string'
 import pbkdf2 from 'pbkdf2'
