@@ -3,7 +3,7 @@ import React from 'react'
 import {Image, TouchableHighlight, View} from 'react-native'
 import {StyleSheet} from 'react-native'
 
-import backspaceIcon from '../../assets//img/backspace.png'
+import backspaceIcon from '../../assets/img/backspace.png'
 import utfSymbols from '../../legacy/utfSymbols'
 import {COLORS} from '../../theme'
 import {Text} from '../Text'

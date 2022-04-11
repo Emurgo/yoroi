@@ -363,3 +363,57 @@ export const multiTokenFromRemote = (remoteValue: RemoteValue, networkId: number
 
   return result
 }
+
+import {delay} from '../../legacy/utils/promise'
+
+// Ignores any concurrent calls to this function
+// and instead instantly resolves with null
+export const ignoreConcurrentAsync = <T, R>(
+  handler: (t: T) => Promise<R>,
+  additionalDelay?: number,
+): ((t: T) => Promise<R | void>) => {
+  let _inProgress = false
+
+  return async (...args) => {
+    if (_inProgress) return null
+    _inProgress = true
+
+    try {
+      return (await handler(...args)) as any
+    } finally {
+      // note: don't await on purpose
+      delay(additionalDelay || 0).then(() => {
+        _inProgress = false
+      })
+    }
+  }
+}
+
+// Turns handler working like this: handler = (props) => (...args) => result
+// Into  handler working like this: handler = (props, ...args) => result
+const curry =
+  (fn) =>
+  (arg, ...rest) =>
+    // $FlowFixMe
+    fn(arg)(...rest)
+
+// Turns handler working like this: handler = (props, ...args) => result
+// Into  handler working like this: handler = (props) => (...args) => result
+const uncurry =
+  (fn) =>
+  (arg) =>
+  (...rest) =>
+    // $FlowFixMe
+    fn(arg, ...rest)
+
+// For use in withHandlers.
+// Warning: This keeps one concurrent instance
+// *per component declaration* (e.g. multiple
+// component instances share the limit)
+export const ignoreConcurrentAsyncHandler = <Props, T, R>(
+  handler: (props: Props) => (t: T) => Promise<R>,
+  additionalDelay?: number,
+): ((props: Props) => (t: T) => Promise<R | void>) => {
+  // $FlowFixMe
+  return uncurry(ignoreConcurrentAsync(curry(handler), additionalDelay))
+}

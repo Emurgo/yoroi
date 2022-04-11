@@ -59,7 +59,6 @@ import {BleError} from 'react-native-ble-plx'
 import {ledgerMessages} from '../../legacy/i18n/global-messages'
 import LocalizableError from '../../legacy/i18n/LocalizableError'
 import {Logger} from '../../legacy/utils/logging'
-// $FlowExpectedError
 import type {HaskellShelleyTxSignRequest} from '../yoroi-wallets'
 import {CONFIG, isByron, isHaskellShelley} from './config'
 import {getNetworkConfigById} from './networks'
@@ -74,7 +73,6 @@ export class BluetoothDisabledError extends LocalizableError {
   constructor() {
     super({
       id: ledgerMessages.bluetoothDisabledError.id,
-      // $FlowFixMe undefined is not compatible with string
       defaultMessage: ledgerMessages.bluetoothDisabledError.defaultMessage,
     })
   }
@@ -83,7 +81,6 @@ export class GeneralConnectionError extends LocalizableError {
   constructor() {
     super({
       id: ledgerMessages.connectionError.id,
-      // $FlowFixMe undefined is not compatible with string
       defaultMessage: ledgerMessages.connectionError.defaultMessage,
     })
   }
@@ -93,7 +90,6 @@ export class LedgerUserError extends LocalizableError {
   constructor() {
     super({
       id: ledgerMessages.connectionError.id,
-      // $FlowFixMe undefined is not compatible with string
       defaultMessage: ledgerMessages.connectionError.defaultMessage,
     })
   }
@@ -102,7 +98,6 @@ export class RejectedByUserError extends LocalizableError {
   constructor() {
     super({
       id: ledgerMessages.rejectedByUserError.id,
-      // $FlowFixMe undefined is not compatible with string
       defaultMessage: ledgerMessages.rejectedByUserError.defaultMessage,
     })
   }
@@ -111,7 +106,6 @@ export class DeprecatedAdaAppError extends LocalizableError {
   constructor() {
     super({
       id: ledgerMessages.deprecatedAdaAppError.id,
-      // $FlowFixMe undefined is not compatible with string
       defaultMessage: ledgerMessages.deprecatedAdaAppError.defaultMessage,
       values: {
         version: `${CONFIG.HARDWARE_WALLETS.LEDGER_NANO.MIN_ADA_APP_VERSION}`,
@@ -123,7 +117,6 @@ export class NoDeviceInfoError extends LocalizableError {
   constructor() {
     super({
       id: ledgerMessages.noDeviceInfoError.id,
-      // $FlowFixMe undefined is not compatible with string
       defaultMessage: ledgerMessages.noDeviceInfoError.defaultMessage,
     })
   }
@@ -322,7 +315,6 @@ const connectionHandler = async (
       throw new Error('ledgerUtils::connectionHandler deviceObj is null')
     }
 
-    // $FlowFixMe not sure why flow fails to get the return type
     transport = await TransportHID.open(deviceObj)
   } else {
     if (deviceId == null) {

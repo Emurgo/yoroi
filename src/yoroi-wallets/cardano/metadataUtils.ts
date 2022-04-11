@@ -25,15 +25,15 @@ export async function createAuxiliaryData(auxiliary: Array<JSONMetadata>) {
 }
 
 export async function parseMetadata(hex: string) {
-  const metadatum = TransactionMetadatum.from_bytes(Buffer.from(hex, 'hex'))
-  const metadataString = decode_metadatum_to_json_str(await metadatum, MetadataJsonSchema.BasicConversions)
+  const metadatum = await TransactionMetadatum.from_bytes(Buffer.from(hex, 'hex'))
+  const metadataString = decode_metadatum_to_json_str(metadatum, MetadataJsonSchema.BasicConversions)
 
   return metadataString
 }
 
 export async function parseMetadataDetailed(hex: string) {
-  const metadatum = TransactionMetadatum.from_bytes(Buffer.from(hex, 'hex'))
-  const metadataString = decode_metadatum_to_json_str(await metadatum, MetadataJsonSchema.DetailedSchema)
+  const metadatum = await TransactionMetadatum.from_bytes(Buffer.from(hex, 'hex'))
+  const metadataString = decode_metadatum_to_json_str(metadatum, MetadataJsonSchema.DetailedSchema)
 
   return metadataString
 }

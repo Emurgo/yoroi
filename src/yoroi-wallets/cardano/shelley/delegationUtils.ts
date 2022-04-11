@@ -33,7 +33,6 @@ import type {AccountStateRequest, AccountStateResponse} from '../../../legacy/ty
 import type {AddressedUtxo, Addressing, V4UnsignedTxAddressedUtxoResponse} from '../../../legacy/types'
 import {normalizeToAddress} from '../../../legacy/utils'
 import {StakingStatus} from '../../../types'
-// $FlowExpectedError
 import {HaskellShelleyTxSignRequest, MultiToken} from '../..'
 import type {TimestampedCertMeta} from './transactionCache'
 import {newAdaUnsignedTx} from './transactions'
