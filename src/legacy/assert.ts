@@ -1,5 +1,4 @@
-// @flow
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import ExtendableError from 'es6-error'
 
 import {Logger} from './logging'

@@ -1,9 +1,9 @@
 import React from 'react'
 import {useIntl} from 'react-intl'
 
-import globalMessages, {ledgerMessages, txLabels} from '../../../legacy/i18n/global-messages'
 import {ErrorView, Modal, PleaseWaitView} from '../../components'
 import {LedgerConnect, LedgerTransportSwitchView} from '../../HW'
+import globalMessages, {ledgerMessages, txLabels} from '../../i18n/global-messages'
 import type {DeviceId, DeviceObj} from '../../legacy/ledgerUtils'
 
 type ErrorData = {

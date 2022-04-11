@@ -2,9 +2,9 @@
 import {BigNumber} from 'bignumber.js'
 import _ from 'lodash'
 
-import assert from '../../legacy/utils/assert'
 import {StakePoolInfosAndHistories} from '../types'
 import {ServerStatus} from '../yoroi-wallets'
+import assert from './assert'
 import {checkAndFacadeTransactionAsync} from './facade'
 import fetchDefault, {checkedFetch} from './fetch'
 import type {Transaction} from './HistoryTransaction'

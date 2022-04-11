@@ -4,14 +4,14 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {errorMessages} from '../../../legacy/i18n/global-messages'
-import LocalizableError from '../../../legacy/i18n/LocalizableError'
-import {Logger} from '../../../legacy/utils/logging'
 import {ProgressStep} from '../../components'
 import {LedgerConnect} from '../../HW'
+import {errorMessages} from '../../i18n/global-messages'
+import LocalizableError from '../../i18n/LocalizableError'
 import {showErrorDialog} from '../../legacy/actions'
 import type {DeviceId, DeviceObj} from '../../legacy/ledgerUtils'
 import {getHWDeviceInfo} from '../../legacy/ledgerUtils'
+import {Logger} from '../../legacy/logging'
 import {WALLET_INIT_ROUTES} from '../../legacy/RoutesList'
 import {Device} from '../../types'
 import {NetworkId, WalletImplementationId} from '../../yoroi-wallets'
@@ -43,7 +43,8 @@ export const ConnectNanoXScreen = ({defaultDevices}: Props) => {
   const onError = (error) => {
     if (error instanceof LocalizableError) {
       showErrorDialog(errorMessages.generalLocalizableError, intl, {
-        message: intl.formatMessage({id: error.id, defaultMessage: error.defaultMessage}, error.values),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        message: intl.formatMessage({id: error.id, defaultMessage: error.defaultMessage}, error.values as any),
       })
     } else {
       showErrorDialog(errorMessages.hwConnectionError, intl, {message: String(error.message)})

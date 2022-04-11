@@ -2,16 +2,16 @@
 import {fromPairs, mapValues, max, sum, uniq} from 'lodash'
 import {defaultMemoize} from 'reselect'
 
-import assert from '../../../../legacy/utils/assert'
-import {Logger} from '../../../../legacy/utils/logging'
-import {limitConcurrency} from '../../../../legacy/utils/promise'
 import * as api from '../../../legacy/api'
+import assert from '../../../legacy/assert'
 import {CONFIG} from '../../../legacy/config'
 import {ApiHistoryError} from '../../../legacy/errors'
 import {ObjectValues} from '../../../legacy/flow'
 import type {Transaction} from '../../../legacy/HistoryTransaction'
 import {TRANSACTION_STATUS} from '../../../legacy/HistoryTransaction'
+import {Logger} from '../../../legacy/logging'
 import {getCardanoNetworkConfigById} from '../../../legacy/networks'
+import {limitConcurrency} from '../../../legacy/promise'
 import type {NetworkId, YoroiProvider} from '../../../legacy/types'
 import type {RemoteCertificateMeta, TxHistoryRequest} from '../../../legacy/types'
 import {CERTIFICATE_KIND} from '../../../legacy/types'
@@ -320,7 +320,7 @@ export class TransactionCache {
       return () =>
         api
           .fetchNewTxHistory(historyRequest, getCardanoNetworkConfigById(networkId, provider).BACKEND)
-          .then((response) => [addrs, response])
+          .then((response) => [addrs, response] as const)
     })
     const limit = limitConcurrency(CONFIG.MAX_CONCURRENT_REQUESTS)
     const promises = tasks.map((t) => limit(t))
@@ -345,7 +345,7 @@ export class TransactionCache {
           bestTxHash: bestTx?.txHash,
         }
         const transactionsUpdate = fromPairs(response.transactions.map((tx) => [tx.id, tx]))
-        const metadataUpdate: Record<string, Transaction> = fromPairs(addrs.map((addr) => [addr, newMetadata]))
+        const metadataUpdate = fromPairs(addrs.map((addr) => [addr, newMetadata]))
         count += this._checkUpdatedTransactions(response.transactions)
 
         if (count > 0) {

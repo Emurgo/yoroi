@@ -1,5 +1,3 @@
-// @flow
-
 export const AUSTRAL = '₳'
 export const ERASE_TO_LEFT = '⌫'
 export const GEAR = '⚙'
@@ -11,7 +9,7 @@ export const BOX_CHECKED = '☑'
 export const ADA = AUSTRAL
 
 // key should be asset ticker
-const CURRENCIES: {[string]: string} = {
+const CURRENCIES: {[id: string]: string} = {
   ADA: AUSTRAL,
 }
 

@@ -1,5 +1,4 @@
-// @flow
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export const LogLevel = {
   Debug: 0,
   Info: 1,
@@ -25,7 +24,7 @@ export const setLogger = (logger: any) => {
   _logger = logger
 }
 
-export const setLogLevel = (level: $Values<typeof LogLevel>) => {
+export const setLogLevel = (level: typeof LogLevel[keyof typeof LogLevel]) => {
   _logLevel = level
 }
 

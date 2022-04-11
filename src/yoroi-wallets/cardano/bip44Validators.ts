@@ -1,6 +1,6 @@
 import {Bip32PublicKey} from '@emurgo/react-native-haskell-shelley'
 
-import assert from '../../../legacy/utils/assert'
+import assert from '../../legacy/assert'
 import {NUMBERS} from '../../legacy/numbers'
 
 const isString = (s) => typeof s === 'string' || s instanceof String

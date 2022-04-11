@@ -1,4 +1,4 @@
-import {LogLevel} from '../../legacy/utils/logging'
+import {LogLevel} from '../legacy/logging'
 import env from './env'
 import type {DefaultAsset} from './HistoryTransaction'
 import type {CardanoHaskellShelleyNetwork} from './networks'

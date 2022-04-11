@@ -2,7 +2,7 @@
 import {Platform} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
-import {Logger} from '../../legacy/utils/logging'
+import {Logger} from '../legacy/logging'
 import {ApiError, ApiHistoryError, NetworkError} from './errors'
 import type {BackendConfig} from './types'
 type RequestMethod = 'POST' | 'GET'

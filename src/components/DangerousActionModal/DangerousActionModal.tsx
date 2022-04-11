@@ -2,8 +2,8 @@ import React from 'react'
 import {useIntl} from 'react-intl'
 import {Image, ScrollView, StyleSheet, View} from 'react-native'
 
-import globalMessages, {confirmationMessages} from '../../../legacy/i18n/global-messages'
 import alertCircle from '../../assets//img/alert-circle.png'
+import globalMessages, {confirmationMessages} from '../../i18n/global-messages'
 import {COLORS} from '../../theme'
 import {Button, Checkbox, Modal, Spacer, Text} from '..'
 

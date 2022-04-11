@@ -2,8 +2,8 @@ import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {SafeAreaView, ScrollView, StyleSheet, TouchableOpacity} from 'react-native'
 
-import storage from '../../legacy/utils/storage'
 import {Button, StatusBar, Text} from '../components'
+import storage from '../legacy/storage'
 import {ROOT_ROUTES} from './RoutesList'
 
 const routes = [

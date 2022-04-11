@@ -1,5 +1,3 @@
-// @flow
-
 import 'intl'
 import '@formatjs/intl-locale/polyfill'
 import '@formatjs/intl-getcanonicallocales/polyfill'

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type {Dispatch} from 'redux'
 
-import {Logger} from '../../legacy/utils/logging'
+import {Logger} from '../legacy/logging'
 import {walletManager} from '../yoroi-wallets'
 import type {DeviceId, DeviceObj, HWDeviceInfo} from './ledgerUtils'
 import {NoDeviceInfoError} from './ledgerUtils'

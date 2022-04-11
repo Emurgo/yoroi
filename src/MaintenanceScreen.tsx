@@ -3,9 +3,9 @@ import {defineMessages, IntlShape, useIntl} from 'react-intl'
 import {AppState, BackHandler, Image, StyleSheet, View} from 'react-native'
 import {useDispatch} from 'react-redux'
 
-import globalMessages from '../legacy/i18n/global-messages'
 import image from './assets/img/error.png'
 import {Button, Link, Modal, Text} from './components'
+import globalMessages from './i18n/global-messages'
 import {initApp} from './legacy/actions'
 import {COLORS, spacing} from './theme'
 

@@ -3,7 +3,7 @@
 import ExtendableError from 'es6-error'
 import _ from 'lodash'
 
-import storage from '../../legacy/utils/storage'
+import storage from '../legacy/storage'
 
 // Note(ppershing): following values have to be in sync with
 // keys in redux state
@@ -39,7 +39,7 @@ export const removeAppSettings = async (setting: AppSettingsKey) => {
   await storage.remove(getAppSettingsStoragePath(setting))
 }
 
-export const readAppSettings = async () => {
+export const readAppSettings = async (): Promise<AppSettings> => {
   const appSettingsKeys = Object.keys(APP_SETTINGS_KEYS).map((key) => getAppSettingsStoragePath(APP_SETTINGS_KEYS[key]))
 
   const appSettings = await storage.readMany(appSettingsKeys)
@@ -50,5 +50,9 @@ export const readAppSettings = async () => {
       ...acc,
       [setting as string]: value,
     }
-  }, {})
+  }, {}) as AppSettings
+}
+
+type AppSettings = {
+  languageCode: string
 }

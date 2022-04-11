@@ -1,23 +1,21 @@
-// @flow
-
 // TODO: Add when chinese traditional is available
 // import zhHant from './locales/zh-Hant'
 import {LANGUAGES} from './languages'
-import csCZ from './locales/cs-CZ'
-import deDE from './locales/de-DE'
-import enUS from './locales/en-US'
-import esES from './locales/es-ES'
-import frFR from './locales/fr-FR'
-import huHU from './locales/hu-HU'
-import idID from './locales/id-ID'
-import itIT from './locales/it-IT'
-import jaJP from './locales/ja-JP'
-import koKR from './locales/ko-KR'
-import nlNL from './locales/nl-NL'
-import ptBR from './locales/pt-BR'
-import ruRU from './locales/ru-RU'
-import skSK from './locales/sk-SK'
-import zhHans from './locales/zh-Hans'
+import csCZ from './locales/cs-CZ.json'
+import deDE from './locales/de-DE.json'
+import enUS from './locales/en-US.json'
+import esES from './locales/es-ES.json'
+import frFR from './locales/fr-FR.json'
+import huHU from './locales/hu-HU.json'
+import idID from './locales/id-ID.json'
+import itIT from './locales/it-IT.json'
+import jaJP from './locales/ja-JP.json'
+import koKR from './locales/ko-KR.json'
+import nlNL from './locales/nl-NL.json'
+import ptBR from './locales/pt-BR.json'
+import ruRU from './locales/ru-RU.json'
+import skSK from './locales/sk-SK.json'
+import zhHans from './locales/zh-Hans.json'
 
 const defaultLocale = enUS
 

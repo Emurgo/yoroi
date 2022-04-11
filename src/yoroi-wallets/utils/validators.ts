@@ -3,7 +3,7 @@ import {Resolution} from '@unstoppabledomains/resolution'
 import {validateMnemonic, wordlists} from 'bip39'
 import _ from 'lodash'
 
-import assert from '../../../legacy/utils/assert'
+import assert from '../../legacy/assert'
 import type {Token} from '../../legacy/HistoryTransaction'
 import {getNetworkConfigById} from '../../legacy/networks'
 import {normalizeToAddress} from '../../legacy/utils'

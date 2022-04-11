@@ -2,7 +2,7 @@
 
 import type {Dispatch} from 'redux'
 
-import {Logger} from '../../legacy/utils/logging'
+import {Logger} from '../legacy/logging'
 import {WalletClosed, walletManager} from '../yoroi-wallets'
 import {ApiHistoryError} from './errors'
 

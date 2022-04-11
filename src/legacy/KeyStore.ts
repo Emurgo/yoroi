@@ -1,11 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import ExtendableError from 'es6-error'
 import type {IntlShape} from 'react-intl'
 import {defineMessages} from 'react-intl'
 import {NativeModules, Platform} from 'react-native'
 import * as Keychain from 'react-native-keychain'
 
-import assert from '../../legacy/utils/assert'
-import storage from '../../legacy/utils/storage'
+import storage from '../legacy/storage'
+import assert from './assert'
 import {decryptData, encryptData} from './commonUtils'
 import type {EncryptionMethod} from './types'
 
@@ -75,7 +76,7 @@ class KeyStore {
       return credentials.password
     }
 
-    const data = await storage.read(`${KeyStore.storagePrefix}/${dataKey}`)
+    const data = await storage.read<any>(`${KeyStore.storagePrefix}/${dataKey}`)
     if (data == null) {
       throw new Error('KeyStore::getData:: data is null, should never happen')
     }

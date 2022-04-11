@@ -1,17 +1,17 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type {WalletChecksum} from '@emurgo/cip4-js'
 import _ from 'lodash'
 import type {IntlShape} from 'react-intl'
 import {defaultMemoize} from 'reselect'
 
-import assert from '../../legacy/utils/assert'
-import {Logger} from '../../legacy/utils/logging'
-import type {Mutex} from '../../legacy/utils/promise'
-import {IsLockedError, nonblockingSynchronize, synchronize} from '../../legacy/utils/promise'
 import * as api from '../legacy/api'
+import assert from '../legacy/assert'
 import {CONFIG} from '../legacy/config'
 import KeyStore from '../legacy/KeyStore'
 import type {HWDeviceInfo} from '../legacy/ledgerUtils'
+import {Logger} from '../legacy/logging'
 import {getCardanoNetworkConfigById, isJormungandr} from '../legacy/networks'
+import {IsLockedError, nonblockingSynchronize, synchronize} from '../legacy/promise'
 import type {EncryptionMethod} from '../legacy/types'
 import {NetworkId, WalletImplementationId, YoroiProvider} from './cardano'
 import {AddressChain, AddressChainJSON} from './cardano/chain'
@@ -85,7 +85,7 @@ export class Wallet {
 
   transactionCache: null | TransactionCache = null
 
-  _doFullSyncMutex: Mutex = {name: 'doFullSyncMutex', lock: null}
+  _doFullSyncMutex: any = {name: 'doFullSyncMutex', lock: null}
 
   _subscriptions: Array<(Wallet) => void> = []
 

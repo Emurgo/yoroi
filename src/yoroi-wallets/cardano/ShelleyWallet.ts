@@ -25,16 +25,16 @@ import _ from 'lodash'
 import DeviceInfo from 'react-native-device-info'
 import uuid from 'uuid'
 
-import LocalizableError from '../../../legacy/i18n/LocalizableError'
-import assert from '../../../legacy/utils/assert'
-import {Logger} from '../../../legacy/utils/logging'
+import LocalizableError from '../../i18n/LocalizableError'
 import * as api from '../../legacy/api'
+import assert from '../../legacy/assert'
 import {ADDRESS_TYPE_TO_CHANGE, generateWalletRootKey} from '../../legacy/commonUtils'
 import {CONFIG, getCardanoBaseConfig, getWalletConfigById, isByron, isHaskellShelley} from '../../legacy/config'
 import {CardanoError, InvalidState} from '../../legacy/errors'
 import type {DefaultAsset} from '../../legacy/HistoryTransaction'
 import type {HWDeviceInfo} from '../../legacy/ledgerUtils'
 import {buildSignedTransaction, createLedgerSignTxPayload, signTxWithLedger} from '../../legacy/ledgerUtils'
+import {Logger} from '../../legacy/logging'
 import type {CardanoHaskellShelleyNetwork} from '../../legacy/networks'
 import {isHaskellShelleyNetwork, PROVIDERS} from '../../legacy/networks'
 import type {WalletMeta} from '../../legacy/state'
@@ -868,7 +868,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
   }
 
   async submitTransaction(signedTx: string) {
-    const response = await api.submitTransaction(signedTx, this._getBackendConfig())
+    const response: any = await api.submitTransaction(signedTx, this._getBackendConfig())
     Logger.info(response)
     return response as any
   }

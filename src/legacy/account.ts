@@ -2,7 +2,7 @@
 import {BigNumber} from 'bignumber.js'
 import type {Dispatch} from 'redux'
 
-import {Logger} from '../../legacy/utils/logging'
+import {Logger} from '../legacy/logging'
 import {walletManager} from '../yoroi-wallets'
 import {ObjectValues} from './flow'
 import type {State} from './state'
@@ -104,7 +104,7 @@ export const fetchAccountState = () => async (dispatch: Dispatch<any>, getState:
     dispatch(_setAccountValue(new BigNumber(value)))
     dispatch(_setLastError(null))
   } catch (err) {
-    Logger.warn(err)
+    Logger.warn(err as any)
     dispatch(_setLastError(err))
   } finally {
     dispatch(_endFetching())

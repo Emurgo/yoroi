@@ -8,16 +8,16 @@ import {StyleSheet, View} from 'react-native'
 import {WebView} from 'react-native-webview'
 import {useSelector} from 'react-redux'
 
-import globalMessages, {errorMessages} from '../../../legacy/i18n/global-messages'
-import {Logger} from '../../../legacy/utils/logging'
 import {AccountAutoRefresher} from '../../AccountAutoRefresher'
 import {PleaseWaitModal} from '../../components'
+import globalMessages, {errorMessages} from '../../i18n/global-messages'
 import {showErrorDialog} from '../../legacy/actions'
 import {CONFIG, getTestStakingPool, isNightly, SHOW_PROD_POOLS_IN_DEV} from '../../legacy/config'
 import {InsufficientFunds} from '../../legacy/errors'
 import {ApiError, NetworkError} from '../../legacy/errors'
 import {ObjectValues} from '../../legacy/flow'
 import {normalizeTokenAmount} from '../../legacy/format'
+import {Logger} from '../../legacy/logging'
 import {getNetworkConfigById} from '../../legacy/networks'
 import {STAKING_CENTER_ROUTES} from '../../legacy/RoutesList'
 import {
@@ -226,7 +226,7 @@ const navigateToDelegationConfirm = async (
     if (e instanceof InsufficientFunds) {
       await showErrorDialog(errorMessages.insufficientBalance, intl)
     } else {
-      Logger.error(e)
+      Logger.error(e as any)
       await showErrorDialog(errorMessages.generalError, intl, {
         message: (e as Error).message,
       })
@@ -295,7 +295,7 @@ const _handleSelectedPoolHashes = async (
     } else if (e instanceof ApiError) {
       await showErrorDialog(noPoolDataDialog, intl)
     } else {
-      Logger.error(e)
+      Logger.error(e as any)
       await showErrorDialog(errorMessages.generalError, intl, {
         message: (e as Error).message,
       })

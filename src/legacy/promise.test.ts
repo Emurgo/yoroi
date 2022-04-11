@@ -1,5 +1,3 @@
-// @flow
-
 import {delay, synchronize} from './promise'
 
 it('can delay', async () => {

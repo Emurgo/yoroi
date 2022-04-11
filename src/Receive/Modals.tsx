@@ -4,17 +4,17 @@ import {useIntl} from 'react-intl'
 import {Platform} from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {errorMessages} from '../../legacy/i18n/global-messages'
-import LocalizableError from '../../legacy/i18n/LocalizableError'
-import {Logger} from '../../legacy/utils/logging'
 import {Modal} from '../components'
 import {LedgerTransportSwitchModal} from '../HW'
 import {LedgerConnect} from '../HW'
+import {errorMessages} from '../i18n/global-messages'
+import LocalizableError from '../i18n/LocalizableError'
 import {showErrorDialog} from '../legacy/actions'
 import {formatPath} from '../legacy/commonUtils'
 import {CONFIG} from '../legacy/config'
 import {setLedgerDeviceId, setLedgerDeviceObj} from '../legacy/hwWallet'
 import {verifyAddress} from '../legacy/ledgerUtils'
+import {Logger} from '../legacy/logging'
 import {getCardanoByronConfig} from '../legacy/networks'
 import {externalAddressIndexSelector, hwDeviceInfoSelector} from '../legacy/selectors'
 import {useSelectedWallet} from '../SelectedWallet'
@@ -51,7 +51,7 @@ export const Modals = ({address, onDone}: {address: string; onDone: () => void})
       .catch((error) => {
         if (error instanceof LocalizableError) {
           showErrorDialog(errorMessages.generalLocalizableError, intl, {
-            message: intl.formatMessage({id: error.id, defaultMessage: error.defaultMessage}, error.values),
+            message: intl.formatMessage({id: error.id, defaultMessage: error.defaultMessage}, (error as any).values),
           })
         } else {
           Logger.error(error)

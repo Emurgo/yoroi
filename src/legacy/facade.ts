@@ -1,6 +1,6 @@
 import moment from 'moment'
 
-import assert from '../../legacy/utils/assert'
+import assert from './assert'
 import type {Transaction, TransactionStatus} from './HistoryTransaction'
 import {TRANSACTION_STATUS} from './HistoryTransaction'
 import type {RawTransaction} from './types'

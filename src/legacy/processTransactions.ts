@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {BigNumber} from 'bignumber.js'
 
-import assert from '../../legacy/utils/assert'
-import {Logger} from '../../legacy/utils/logging'
+import {Logger} from '../legacy/logging'
 import {getDefaultNetworkTokenEntry, MultiToken, strToDefaultMultiAsset} from '../yoroi-wallets'
+import assert from './assert'
 import {CONFIG} from './config'
 import type {BaseAsset, Token, Transaction, TransactionInfo} from './HistoryTransaction'
 import {TRANSACTION_DIRECTION, TRANSACTION_STATUS, TRANSACTION_TYPE} from './HistoryTransaction'

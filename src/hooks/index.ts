@@ -10,9 +10,9 @@ import {
   UseQueryOptions,
 } from 'react-query'
 
-import storage from '../../legacy/utils/storage'
 import {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {WalletMeta} from '../legacy/state'
+import storage from '../legacy/storage'
 import {Token} from '../types'
 import {
   NetworkId,
@@ -42,7 +42,7 @@ export const useWalletName = (wallet: YoroiWallet, options?: UseQueryOptions<str
   const query = useQuery({
     queryKey: [wallet.id, 'name'],
     queryFn: async () => {
-      const walletMeta: WalletMeta = await storage.read<WalletMeta>(`/wallet/${wallet.id}`)
+      const walletMeta = await storage.read<WalletMeta>(`/wallet/${wallet.id}`)
       if (!walletMeta) throw new Error('Invalid wallet id')
 
       return walletMeta.name
@@ -56,7 +56,7 @@ export const useWalletName = (wallet: YoroiWallet, options?: UseQueryOptions<str
 export const useChangeWalletName = (wallet: YoroiWallet, options: UseMutationOptions<void, Error, string> = {}) => {
   const mutation = useMutationWithInvalidations<void, Error, string>({
     mutationFn: async (newName) => {
-      const walletMeta = await storage.read(`/wallets/${wallet.id}`)
+      const walletMeta = await storage.read<WalletMeta>(`/wallets/${wallet.id}`)
       if (!walletMeta) throw new Error('Invalid wallet id')
 
       return storage.write(`/wallets/${wallet.id}`, {...walletMeta, name: newName})
@@ -201,8 +201,8 @@ export const useWalletMetas = <T = Array<WalletMeta>>(options?: UseQueryOptions<
   const query = useQuery({
     queryKey: ['walletMetas'],
     queryFn: async () => {
-      const keys: Array<string> = await storage.keys<Array<string>>('/wallet/')
-      const walletMetas = await Promise.all(keys.map((key) => storage.read(`/wallet/${key}`)))
+      const keys = await storage.keys('/wallet/')
+      const walletMetas = await Promise.all(keys.map((key) => storage.read<WalletMeta>(`/wallet/${key}`)))
 
       return walletMetas
     },

@@ -4,12 +4,12 @@ import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Alert, AppState, Platform, StyleSheet} from 'react-native'
 
-import {errorMessages as globalErrorMessages} from '../../legacy/i18n/global-messages'
-import {Logger} from '../../legacy/utils/logging'
 import {Button, Spacer} from '../components'
+import {errorMessages as globalErrorMessages} from '../i18n/global-messages'
 import {showErrorDialog} from '../legacy/actions'
 import {canBiometricEncryptionBeEnabled, recreateAppSignInKeys} from '../legacy/deviceSettings'
 import KeyStore, {CredentialsNotFound} from '../legacy/KeyStore'
+import {Logger} from '../legacy/logging'
 import {FingerprintScreenBase} from './FingerprintScreenBase'
 
 export const BiometricAuthScreen = () => {

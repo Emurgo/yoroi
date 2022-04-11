@@ -488,8 +488,6 @@ The imports should be in this order:
 Example:
 
 ```js
-// @flow
-
 // external libraries
 import React from 'react'
 import {compose} from 'redux'

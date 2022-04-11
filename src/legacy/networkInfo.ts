@@ -2,7 +2,7 @@
 
 import NetInfo from '@react-native-community/netinfo'
 
-import {SubscriptionManager} from '../../legacy/utils/subscription'
+import {SubscriptionManager} from '../legacy/subscription'
 
 export type ConnectionInfo = {
   isOnline: boolean

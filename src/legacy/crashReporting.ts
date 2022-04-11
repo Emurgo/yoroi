@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as Sentry from '@sentry/react-native'
 
-import {Logger} from '../../legacy/utils/logging'
+import {Logger} from '../legacy/logging'
 import {CONFIG} from './config'
 let _enabled = false
 

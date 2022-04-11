@@ -1,6 +1,6 @@
 import type {Dispatch} from 'redux'
 
-import {Logger} from '../../legacy/utils/logging'
+import {Logger} from '../legacy/logging'
 import {availableAssetsSelector, tokenBalanceSelector} from '../legacy/selectors'
 import type {State} from '../legacy/state'
 import {MultiToken, walletManager} from '../yoroi-wallets'

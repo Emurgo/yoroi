@@ -1,5 +1,3 @@
-// @flow
-
 import {defineMessages} from 'react-intl'
 
 /*

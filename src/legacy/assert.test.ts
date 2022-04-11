@@ -1,5 +1,3 @@
-// @flow
-
 import assert from './assert'
 import {Logger, LogLevel} from './logging'
 
@@ -14,6 +12,6 @@ test('assert shows correct message', () => {
   try {
     tryAssert()
   } catch (e) {
-    expect(e.message).toMatch(/tryAssert/)
+    expect((e as Error).message).toMatch(/tryAssert/)
   }
 })

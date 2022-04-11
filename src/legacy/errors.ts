@@ -1,5 +1,5 @@
-import {errorMessages} from '../../legacy/i18n/global-messages'
-import LocalizableError from '../../legacy/i18n/LocalizableError'
+import {errorMessages} from '../i18n/global-messages'
+import LocalizableError from '../i18n/LocalizableError'
 
 // thrown when the request did go through but
 // backend returned an unexpected result

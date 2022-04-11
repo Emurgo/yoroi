@@ -1,5 +1,3 @@
-// @flow
-
 import 'moment/locale/ko'
 import 'moment/locale/ja'
 import 'moment/locale/zh-cn'
@@ -18,7 +16,7 @@ import 'moment/locale/sk'
 import BigNumber from 'bignumber.js'
 import moment from 'moment'
 
-import assert from '../utils/assert'
+import assert from '../legacy/assert'
 import {LANGUAGES} from './languages'
 
 // note(v-almonacid): there is no distinction between trad vs simplified

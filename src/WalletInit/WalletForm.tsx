@@ -2,9 +2,9 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, TextInput as RNTextInput, View} from 'react-native'
 
-import globalMessages from '../../legacy/i18n/global-messages'
 import {Button, Checkmark, Spacer, TextInput} from '../components'
 import {useWalletNames} from '../hooks'
+import globalMessages from '../i18n/global-messages'
 import {CONFIG} from '../legacy/config'
 import {COLORS} from '../theme'
 import {

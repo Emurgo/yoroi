@@ -6,10 +6,8 @@ import ExtendableError from 'es6-error'
 import _ from 'lodash'
 import type {IntlShape} from 'react-intl'
 
-import assert from '../../legacy/utils/assert'
-import {Logger} from '../../legacy/utils/logging'
-import storage from '../../legacy/utils/storage'
 import {APP_SETTINGS_KEYS, readAppSettings} from '../legacy/appSettings'
+import assert from '../legacy/assert'
 import {CONFIG, DISABLE_BACKGROUND_SYNC, WALLETS} from '../legacy/config'
 import {ensureKeysValidity, isSystemAuthSupported} from '../legacy/deviceSettings'
 import {ObjectValues} from '../legacy/flow'
@@ -17,7 +15,9 @@ import type {DefaultAsset} from '../legacy/HistoryTransaction'
 import {ISignRequest} from '../legacy/ISignRequest'
 import KeyStore from '../legacy/KeyStore'
 import type {HWDeviceInfo} from '../legacy/ledgerUtils'
+import {Logger} from '../legacy/logging'
 import type {WalletMeta} from '../legacy/state'
+import storage from '../legacy/storage'
 import type {
   FundInfoResponse,
   PoolInfoRequest,
@@ -41,6 +41,7 @@ import {
   YoroiWallet,
 } from './cardano'
 import type {JSONMetadata} from './cardano/metadataUtils'
+import {WalletJSON} from './Wallet'
 
 export class WalletClosed extends ExtendableError {}
 export class SystemAuthDisabled extends ExtendableError {}
@@ -68,7 +69,7 @@ class WalletManager {
 
   async _listWallets() {
     const keys = await storage.keys('/wallet/')
-    const result = await Promise.all(keys.map((key) => storage.read(`/wallet/${key}`)))
+    const result = await Promise.all(keys.map((key) => storage.read<WalletMeta>(`/wallet/${key}`)))
 
     Logger.debug('result::_listWallets', result)
 
@@ -107,10 +108,10 @@ class WalletManager {
         }
 
         let checksum: WalletChecksum
-        const data = await storage.read(`/wallet/${w.id}/data`)
+        const data = await storage.read<WalletJSON>(`/wallet/${w.id}/data`)
         if (w.checksum == null) {
           if (data != null && data.externalChain.addressGenerator != null) {
-            const {account, accountPubKeyHex} = data.externalChain.addressGenerator
+            const {account, accountPubKeyHex} = data.externalChain.addressGenerator as any
             switch (walletImplementationId) {
               case WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID:
                 checksum = legacyWalletChecksum(accountPubKeyHex || account.root_cached_key)

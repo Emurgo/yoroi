@@ -13,9 +13,9 @@ import {
 import {mnemonicToEntropy} from 'bip39'
 import blake2b from 'blake2b'
 
-import {Logger} from '../../../../legacy/utils/logging'
 import {generateAdaMnemonic} from '../../../legacy/commonUtils'
 import {CONFIG} from '../../../legacy/config'
+import {Logger} from '../../../legacy/logging'
 
 export const CatalystLabels = Object.freeze({
   DATA: 61284,

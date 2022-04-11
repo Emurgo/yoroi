@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type {Dispatch} from 'redux'
 
-import {Logger} from '../../legacy/utils/logging'
+import {Logger} from '../legacy/logging'
 import {walletManager} from '../yoroi-wallets'
 import type {State} from './state'
 import type {PoolInfoRequest} from './types'
@@ -73,7 +73,7 @@ export const fetchPoolInfo = () => async (dispatch: Dispatch<any>, getState: () 
     dispatch(_setPoolInfo(poolInfo))
     dispatch(_setLastError(null))
   } catch (err) {
-    Logger.warn(err)
+    Logger.warn(err as any)
     dispatch(_setLastError(err))
   } finally {
     dispatch(_endFetching())

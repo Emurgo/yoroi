@@ -3,8 +3,8 @@ import {defineMessages, useIntl} from 'react-intl'
 import {View} from 'react-native'
 import {StyleSheet} from 'react-native'
 
-import globalMessages from '../../legacy/i18n/global-messages'
 import {ProgressCircle, Text, TitledCard} from '../components'
+import globalMessages from '../i18n/global-messages'
 import {COLORS} from '../theme'
 
 type Props = {

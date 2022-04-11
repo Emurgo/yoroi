@@ -1,5 +1,4 @@
-// @flow
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import ExtendableError from 'es6-error'
 import {defineMessages} from 'react-intl'
 
@@ -9,9 +8,9 @@ const messages = defineMessages({})
 class LocalizableError extends ExtendableError {
   id: string
   defaultMessage: string
-  values: Object
+  values: Record<string, unknown>
 
-  constructor({id, defaultMessage, values = {}}: {id: string, defaultMessage: string, values?: Object}) {
+  constructor({id, defaultMessage, values = {}}: {id: string, defaultMessage: string, values?: Record<string, unknown>}) {
     if (!id) throw new Error('id:string is required.')
     if (!defaultMessage) throw new Error('defaultMessage:string is required.')
     super(`${id}: ${JSON.stringify(values)}`)
@@ -26,8 +25,8 @@ class LocalizableError extends ExtendableError {
 class UnknowError extends LocalizableError {
   constructor() {
     super({
-      id: messages.unknowError.id,
-      defaultMessage: messages.unknowError.defaultMessage,
+      id: (messages as any).unknowError.id,
+      defaultMessage: (messages as any).unknowError.defaultMessage,
     })
   }
 }
@@ -35,8 +34,8 @@ class UnknowError extends LocalizableError {
 export class UnexpectedError extends LocalizableError {
   constructor() {
     super({
-      id: messages.unexpectedError.id,
-      defaultMessage: messages.unexpectedError.defaultMessage,
+      id: (messages as any).unexpectedError.id,
+      defaultMessage: (messages as any).unexpectedError.defaultMessage,
     })
   }
 }

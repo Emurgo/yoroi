@@ -6,9 +6,9 @@ import {useIntl} from 'react-intl'
 import {Platform, StyleSheet, View} from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {confirmationMessages, errorMessages, txLabels} from '../../../legacy/i18n/global-messages'
-import LocalizableError from '../../../legacy/i18n/LocalizableError'
 import {useCloseWallet, useSubmitTx} from '../../hooks'
+import {confirmationMessages, errorMessages, txLabels} from '../../i18n/global-messages'
+import LocalizableError from '../../i18n/LocalizableError'
 import {showErrorDialog} from '../../legacy/actions'
 import {CONFIG} from '../../legacy/config'
 import {ensureKeysValidity} from '../../legacy/deviceSettings'
@@ -428,7 +428,7 @@ const useStrings = () => {
 
   return {
     errorMessage: (error: LocalizableError) =>
-      intl.formatMessage({id: error.id, defaultMessage: error.defaultMessage}, error.values),
+      intl.formatMessage({id: error.id, defaultMessage: error.defaultMessage}, (error as any).values),
     password: intl.formatMessage(txLabels.password),
     confirmButton: intl.formatMessage(confirmationMessages.commonButtons.confirmButton),
     generalTxErrorMessage: intl.formatMessage(errorMessages.generalTxError.message),

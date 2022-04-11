@@ -4,6 +4,7 @@
 import produce from 'immer'
 import {get, set} from 'lodash'
 
+import {delay} from '../legacy/promise'
 import type {Path, SegmentReducer} from './reduxTypes'
 
 const normalizeObjBeforeMap = (data: Array<Record<string, any>> | Record<string, any>): Array<Record<string, any>> =>
@@ -363,8 +364,6 @@ export const multiTokenFromRemote = (remoteValue: RemoteValue, networkId: number
 
   return result
 }
-
-import {delay} from '../../legacy/utils/promise'
 
 // Ignores any concurrent calls to this function
 // and instead instantly resolves with null

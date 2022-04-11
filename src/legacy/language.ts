@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type {Dispatch} from 'redux'
 
-import {setLanguage} from '../../legacy/i18n'
+import {setLanguage} from '../i18n'
 import {APP_SETTINGS_KEYS, writeAppSettings} from './appSettings'
 
 export const changeLanguage = (languageCode: string) => (dispatch: Dispatch<any>) => {
