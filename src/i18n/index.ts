@@ -113,7 +113,7 @@ const numberLocales = {
 export const setLanguage = (code: string) => {
   assert.assert(Object.values(LANGUAGES).includes(code), 'Unknown language', code)
   moment.locale(momentLocales[code])
-  // $FlowFixMe
+  
   BigNumber.config({
     FORMAT: numberLocales[code],
   })

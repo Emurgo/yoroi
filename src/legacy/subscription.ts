@@ -12,11 +12,10 @@ export class SubscriptionManager<T> {
   // https://stackoverflow.com/questions/49170385/flow-generics-incompatible-types
 
   constructor() {
-    // $FlowFixMe
     this.subscribe = this.subscribe.bind(this)
-    // $FlowFixMe
+
     this.unsubscribe = this.unsubscribe.bind(this)
-    // $FlowFixMe
+
     this.notify = this.notify.bind(this)
   }
 

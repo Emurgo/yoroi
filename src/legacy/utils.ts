@@ -71,7 +71,6 @@ import {
 } from '@emurgo/react-native-haskell-shelley'
 import {BigNumber} from 'bignumber.js'
 
-// $FlowExpectedError
 import {DefaultTokenEntry, MultiToken} from '../yoroi-wallets'
 import {CONFIG} from './config'
 import type {BaseAsset} from './HistoryTransaction'
@@ -393,7 +392,6 @@ export const ignoreConcurrentAsync = <T, R>(
 const curry =
   (fn) =>
   (arg, ...rest) =>
-    // $FlowFixMe
     fn(arg)(...rest)
 
 // Turns handler working like this: handler = (props, ...args) => result
@@ -402,7 +400,6 @@ const uncurry =
   (fn) =>
   (arg) =>
   (...rest) =>
-    // $FlowFixMe
     fn(arg, ...rest)
 
 // For use in withHandlers.
@@ -413,6 +410,5 @@ export const ignoreConcurrentAsyncHandler = <Props, T, R>(
   handler: (props: Props) => (t: T) => Promise<R>,
   additionalDelay?: number,
 ): ((props: Props) => (t: T) => Promise<R | void>) => {
-  // $FlowFixMe
   return uncurry(ignoreConcurrentAsync(curry(handler), additionalDelay))
 }

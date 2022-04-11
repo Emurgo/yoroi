@@ -46,7 +46,6 @@ const updateCrashlytics = (fieldName: AppSettingsKey, value: any) => {
     [APP_SETTINGS_KEYS.CAN_ENABLE_BIOMETRIC_ENCRYPTION]: () =>
       crashReporting.setBoolValue('can_enable_biometric_encryption', value),
   }
-  // $FlowFixMe flow does not like undefined access but we are dealing with it
   const handler = handlers[fieldName] || null
   handler && handler()
 }
