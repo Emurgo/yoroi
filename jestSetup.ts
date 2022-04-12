@@ -3,8 +3,8 @@
 import 'react-native-gesture-handler/jestSetup'
 
 import fetch from 'node-fetch'
+import {Logger, LogLevel} from './src/legacy/logging'
 
-import {Logger, LogLevel} from './legacy/utils/logging'
 global.fetch = fetch
 Logger.setLogLevel(LogLevel.Warn)
 
