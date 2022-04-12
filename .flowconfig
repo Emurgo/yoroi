@@ -14,6 +14,9 @@ node_modules/react-native/Libraries/polyfills/.*
 ; Ignore findup (storybook dependency)
 .*/node_modules/findup/test/.*
 
+; Ignore package jest-resolve/resolve tests
+.*/node_modules/jest-resolve/node_modules/resolve/test/resolver/malformed_package_json/package.json
+
 [untyped]
 .*/node_modules/@react-native-community/cli/.*/.*
 

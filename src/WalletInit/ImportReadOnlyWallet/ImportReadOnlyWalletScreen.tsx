@@ -34,6 +34,7 @@ export const ImportReadOnlyWalletScreen = () => {
       .catch((error: Error) => {
         Logger.debug('ImportReadOnlyWalletScreen::onRead::error', error)
         showErrorDialog(errorMessages.invalidQRCode, intl)
+        scannerRef.current?.reactivate()
       })
   }
 
