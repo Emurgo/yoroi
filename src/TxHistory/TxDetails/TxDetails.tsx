@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {useRoute} from '@react-navigation/native'
 import {BigNumber} from 'bignumber.js'
 import _ from 'lodash'
@@ -6,23 +7,24 @@ import {defineMessages, IntlShape, useIntl} from 'react-intl'
 import {Image, LayoutAnimation, Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
-import {getNetworkConfigById} from '../../../legacy/config/networks'
-import globalMessages from '../../../legacy/i18n/global-messages'
+import arrowDown from '../../assets/img/chevron_down.png'
+import arrowUp from '../../assets/img/chevron_up.png'
+import {Banner, Boundary, Button, CopyButton, OfflineBanner, StatusBar, Text} from '../../components'
+import {useTokenInfo} from '../../hooks'
+import globalMessages from '../../i18n/global-messages'
+import {formatTokenWithSymbol} from '../../legacy/format'
+import {TransactionInfo} from '../../legacy/HistoryTransaction'
+import {getNetworkConfigById} from '../../legacy/networks'
 import {
   externalAddressIndexSelector,
   internalAddressIndexSelector,
   transactionsInfoSelector,
-} from '../../../legacy/selectors'
-import {formatTokenWithSymbol} from '../../../legacy/utils/format'
-import arrowDown from '../../assets/img/icon/chevron_down.png'
-import arrowUp from '../../assets/img/icon/chevron_up.png'
-import {Banner, Boundary, Button, CopyButton, OfflineBanner, StatusBar, Text} from '../../components'
-import {useTokenInfo} from '../../hooks'
+} from '../../legacy/selectors'
 import AddressModal from '../../Receive/AddressModal'
 import Screen from '../../Screen'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {brand, COLORS} from '../../theme'
-import {TokenEntry, TransactionInfo} from '../../types'
+import {TokenEntry} from '../../types'
 import {MultiToken} from '../../yoroi-wallets'
 import {AssetList} from './AssetList'
 import assetListStyle from './AssetListTransaction.style'
@@ -239,7 +241,7 @@ const getShownAddresses = (
       isHighlightedTo: (address) => isMyAddress(address),
       filterTo: null,
     },
-  }[transaction.direction]
+  }[transaction.direction] as any
 
   // TODO(ppershing): decide on importance based on Tx direction
   const fromAddresses = _.uniq(transaction.inputs).map(({address, assets}) => ({

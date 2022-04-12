@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {useNavigation} from '@react-navigation/native'
 import {BigNumber} from 'bignumber.js'
 import React, {useEffect, useState} from 'react'
@@ -7,15 +8,18 @@ import {StyleSheet, View} from 'react-native'
 import {WebView} from 'react-native-webview'
 import {useSelector} from 'react-redux'
 
-import {showErrorDialog} from '../../../legacy/actions'
-import {ApiError, NetworkError} from '../../../legacy/api/errors'
-import AccountAutoRefresher from '../../../legacy/components/Delegation/AccountAutoRefresher'
-import UtxoAutoRefresher from '../../../legacy/components/Send/UtxoAutoRefresher'
-import {CONFIG, getTestStakingPool, isNightly, SHOW_PROD_POOLS_IN_DEV} from '../../../legacy/config/config'
-import {getNetworkConfigById} from '../../../legacy/config/networks'
-import {InsufficientFunds} from '../../../legacy/crypto/errors'
-import globalMessages, {errorMessages} from '../../../legacy/i18n/global-messages'
-import {STAKING_CENTER_ROUTES} from '../../../legacy/RoutesList'
+import {AccountAutoRefresher} from '../../AccountAutoRefresher'
+import {PleaseWaitModal} from '../../components'
+import globalMessages, {errorMessages} from '../../i18n/global-messages'
+import {showErrorDialog} from '../../legacy/actions'
+import {CONFIG, getTestStakingPool, isNightly, SHOW_PROD_POOLS_IN_DEV} from '../../legacy/config'
+import {InsufficientFunds} from '../../legacy/errors'
+import {ApiError, NetworkError} from '../../legacy/errors'
+import {ObjectValues} from '../../legacy/flow'
+import {normalizeTokenAmount} from '../../legacy/format'
+import {Logger} from '../../legacy/logging'
+import {getNetworkConfigById} from '../../legacy/networks'
+import {STAKING_CENTER_ROUTES} from '../../legacy/RoutesList'
 import {
   accountBalanceSelector,
   defaultNetworkAssetSelector,
@@ -23,13 +27,11 @@ import {
   poolOperatorSelector,
   serverStatusSelector,
   utxosSelector,
-} from '../../../legacy/selectors'
-import {ObjectValues} from '../../../legacy/utils/flow'
-import {normalizeTokenAmount} from '../../../legacy/utils/format'
-import {Logger} from '../../../legacy/utils/logging'
-import {PleaseWaitModal} from '../../components'
+} from '../../legacy/selectors'
+import {RawUtxo} from '../../legacy/types'
 import {useSelectedWallet} from '../../SelectedWallet'
-import {DefaultAsset, RawUtxo} from '../../types'
+import {DefaultAsset} from '../../types'
+import {UtxoAutoRefresher} from '../../UtxoAutoRefresher'
 import {ServerStatus, walletManager} from '../../yoroi-wallets'
 import {PoolDetailScreen} from '../PoolDetails'
 import {PoolWarningModal} from '../PoolWarningModal'
@@ -224,7 +226,7 @@ const navigateToDelegationConfirm = async (
     if (e instanceof InsufficientFunds) {
       await showErrorDialog(errorMessages.insufficientBalance, intl)
     } else {
-      Logger.error(e)
+      Logger.error(e as any)
       await showErrorDialog(errorMessages.generalError, intl, {
         message: (e as Error).message,
       })
@@ -248,7 +250,7 @@ const _handleSelectedPoolHashes = async (
     const poolInfoResponse = await walletManager.fetchPoolInfo({
       poolIds: selectedPoolHashes,
     })
-    const poolInfo = ObjectValues(poolInfoResponse)[0]
+    const poolInfo: any = ObjectValues(poolInfoResponse)[0]
     Logger.debug('StakingCenter::poolInfo', poolInfo)
 
     // TODO: fetch reputation info once an endpoint is implemented
@@ -293,7 +295,7 @@ const _handleSelectedPoolHashes = async (
     } else if (e instanceof ApiError) {
       await showErrorDialog(noPoolDataDialog, intl)
     } else {
-      Logger.error(e)
+      Logger.error(e as any)
       await showErrorDialog(errorMessages.generalError, intl, {
         message: (e as Error).message,
       })

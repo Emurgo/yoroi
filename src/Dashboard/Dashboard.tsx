@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {useNavigation} from '@react-navigation/native'
 import BigNumber from 'bignumber.js'
 import React from 'react'
@@ -6,17 +7,18 @@ import {ActivityIndicator, RefreshControl, ScrollView, StyleSheet, View} from 'r
 import SafeAreaView from 'react-native-safe-area-view'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {submitSignedTx, submitTransaction} from '../../legacy/actions'
-import {fetchAccountState} from '../../legacy/actions/account'
-import {setLedgerDeviceId, setLedgerDeviceObj} from '../../legacy/actions/hwWallet'
-import {fetchUTXOs} from '../../legacy/actions/utxo'
-import AccountAutoRefresher from '../../legacy/components/Delegation/AccountAutoRefresher'
-import UtxoAutoRefresher from '../../legacy/components/Send/UtxoAutoRefresher'
-import {getCardanoBaseConfig, UI_V2} from '../../legacy/config/config'
-import {getDefaultAssetByNetworkId} from '../../legacy/config/config'
-import {getCardanoNetworkConfigById} from '../../legacy/config/networks'
-import globalMessages from '../../legacy/i18n/global-messages'
-import {DELEGATION_ROUTES} from '../../legacy/RoutesList'
+import {AccountAutoRefresher} from '../AccountAutoRefresher'
+import {CATALYST_ROUTES} from '../Catalyst'
+import {VotingBanner} from '../Catalyst/VotingBanner'
+import {Banner, Button, OfflineBanner, StatusBar} from '../components'
+import globalMessages from '../i18n/global-messages'
+import {fetchAccountState} from '../legacy/account'
+import {submitSignedTx, submitTransaction} from '../legacy/actions'
+import {getCardanoBaseConfig, UI_V2} from '../legacy/config'
+import {getDefaultAssetByNetworkId} from '../legacy/config'
+import {setLedgerDeviceId, setLedgerDeviceObj} from '../legacy/hwWallet'
+import {getCardanoNetworkConfigById} from '../legacy/networks'
+import {DELEGATION_ROUTES} from '../legacy/RoutesList'
 import {
   hwDeviceInfoSelector,
   isFetchingAccountStateSelector,
@@ -26,18 +28,17 @@ import {
   serverStatusSelector,
   tokenBalanceSelector,
   utxosSelector,
-} from '../../legacy/selectors'
+} from '../legacy/selectors'
+import {fetchUTXOs} from '../legacy/utxo'
+import {useSelectedWallet} from '../SelectedWallet'
+import {UtxoAutoRefresher} from '../UtxoAutoRefresher'
+import {YoroiWallet} from '../yoroi-wallets'
 import {
   genCurrentEpochLength,
   genCurrentSlotLength,
   genTimeToSlot,
   genToRelativeSlotNumber,
-} from '../../legacy/utils/timeUtils'
-import {CATALYST_ROUTES} from '../Catalyst'
-import {VotingBanner} from '../Catalyst/VotingBanner'
-import {Banner, Button, OfflineBanner, StatusBar} from '../components'
-import {useSelectedWallet} from '../SelectedWallet'
-import {YoroiWallet} from '../yoroi-wallets'
+} from '../yoroi-wallets/utils/timeUtils'
 import {EpochProgress} from './EpochProgress'
 import {NotDelegatedInfo} from './NotDelegatedInfo'
 import {StakePoolInfos, useStakingInfo} from './StakePoolInfos'
@@ -89,7 +90,7 @@ export const Dashboard = () => {
             />
           }
         >
-          {stakingInfo && !stakingInfo.isRegistered && <NotDelegatedInfo />}
+          {stakingInfo?.status !== 'staked' && <NotDelegatedInfo />}
 
           <Row>
             <EpochInfo />
@@ -98,7 +99,7 @@ export const Dashboard = () => {
           <Row>
             {!stakingInfo ? (
               <ActivityIndicator size={'large'} color={'black'} />
-            ) : stakingInfo?.isRegistered ? (
+            ) : stakingInfo.status === 'staked' ? (
               <UserSummary
                 totalAdaSum={balances['ADA'] ? new BigNumber(balances['ADA']) : null}
                 totalRewards={new BigNumber(stakingInfo.rewards)}
@@ -119,7 +120,7 @@ export const Dashboard = () => {
 
           {!UI_V2 && <VotingBanner onPress={() => navigation.navigate(CATALYST_ROUTES.ROOT)} />}
 
-          {stakingInfo?.isRegistered && (
+          {stakingInfo?.status === 'registered' && (
             <Row>
               <StakePoolInfos />
             </Row>
@@ -144,13 +145,13 @@ export const Dashboard = () => {
           utxos={utxos}
           isEasyConfirmationEnabled={wallet.isEasyConfirmationEnabled}
           isHW={wallet.isHW}
-          hwDeviceInfo={hwDeviceInfo}
+          hwDeviceInfo={hwDeviceInfo as any}
           defaultAsset={getDefaultAssetByNetworkId(wallet.networkId)}
           serverStatus={serverStatus}
-          setLedgerDeviceId={(...args) => dispatch(setLedgerDeviceId(...args))}
-          setLedgerDeviceObj={(...args) => dispatch(setLedgerDeviceObj(...args))}
-          submitTransaction={(...args) => dispatch(submitTransaction(...args))}
-          submitSignedTx={(...args) => dispatch(submitSignedTx(...args))}
+          setLedgerDeviceId={(...args) => dispatch(setLedgerDeviceId(...args)) as any}
+          setLedgerDeviceObj={(...args) => dispatch(setLedgerDeviceObj(...args)) as any}
+          submitTransaction={(...args) => dispatch(submitTransaction(...args)) as any}
+          submitSignedTx={(...args) => dispatch(submitSignedTx(...args)) as any}
           onDone={() => setShowWithdrawalDialog(false)}
         />
       )}

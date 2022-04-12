@@ -1,18 +1,20 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {BigNum, min_ada_required} from '@emurgo/react-native-haskell-shelley'
 import {BigNumber} from 'bignumber.js'
 import _ from 'lodash'
 import {IntlShape} from 'react-intl'
 
-import {getCardanoNetworkConfigById, isHaskellShelleyNetwork} from '../../../legacy/config/networks'
-import {AssetOverflowError, InsufficientFunds} from '../../../legacy/crypto/errors'
-import {cardanoValueFromMultiToken} from '../../../legacy/crypto/shelley/utils'
-import {WalletMeta} from '../../../legacy/state'
-import {formatTokenAmount, formatTokenInteger, normalizeTokenAmount} from '../../../legacy/utils/format'
-import {InvalidAssetAmount, parseAmountDecimal} from '../../../legacy/utils/parsing'
-import type {AddressValidationErrors} from '../../../legacy/utils/validators'
-import {getUnstoppableDomainAddress, isReceiverAddressValid, validateAmount} from '../../../legacy/utils/validators'
-import type {DefaultAsset, RawUtxo, SendTokenList, Token} from '../../types'
+import {AssetOverflowError, InsufficientFunds} from '../../legacy/errors'
+import {formatTokenAmount, formatTokenInteger, normalizeTokenAmount} from '../../legacy/format'
+import {getCardanoNetworkConfigById, isHaskellShelleyNetwork} from '../../legacy/networks'
+import {WalletMeta} from '../../legacy/state'
+import {RawUtxo} from '../../legacy/types'
+import {cardanoValueFromMultiToken} from '../../legacy/utils'
+import type {DefaultAsset, SendTokenList, Token} from '../../types'
 import {HaskellShelleyTxSignRequest, MultiToken, walletManager} from '../../yoroi-wallets'
+import {InvalidAssetAmount, parseAmountDecimal} from '../../yoroi-wallets/utils/parsing'
+import type {AddressValidationErrors} from '../../yoroi-wallets/utils/validators'
+import {getUnstoppableDomainAddress, isReceiverAddressValid, validateAmount} from '../../yoroi-wallets/utils/validators'
 import {amountInputErrorMessages, messages} from './strings'
 
 export const getMinAda = async (selectedToken: Token, defaultAsset: DefaultAsset) => {
@@ -78,7 +80,7 @@ export const getTransactionData = async (
       amount: await getMinAda(selectedToken, defaultAsset),
     })
   }
-  return await walletManager.createUnsignedTx(utxos, address, sendTokenList, defaultTokenEntry, serverTime)
+  return await walletManager.createUnsignedTx(utxos, address, sendTokenList as any, defaultTokenEntry, serverTime)
 }
 
 export const recomputeAll = async ({
@@ -94,7 +96,7 @@ export const recomputeAll = async ({
   addressInput: string
   walletMetadata: WalletMeta
   amount: string
-  utxos: Array<RawUtxo> | null
+  utxos: Array<RawUtxo> | undefined | null
   sendAll: boolean
   defaultAsset: DefaultAsset
   selectedTokenInfo: Token
@@ -204,8 +206,8 @@ export const getAddressErrorText = (intl: IntlShape, addressErrors: AddressValid
 
 export const getAmountErrorText = (
   intl: IntlShape,
-  amountErrors: {invalidAmount: string | number | null},
-  balanceErrors: {insufficientBalance: boolean; assetOverflow: boolean},
+  amountErrors: {invalidAmount?: string | number | null},
+  balanceErrors: {insufficientBalance?: boolean; assetOverflow?: boolean},
   defaultAsset: DefaultAsset,
 ) => {
   if (amountErrors.invalidAmount != null) {

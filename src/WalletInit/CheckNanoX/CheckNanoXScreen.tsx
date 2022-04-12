@@ -4,10 +4,10 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Image, Platform, ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import image from '../../../legacy/assets/img/ledger_1.png'
-import {confirmationMessages, ledgerMessages} from '../../../legacy/i18n/global-messages'
-import {WALLET_INIT_ROUTES} from '../../../legacy/RoutesList'
+import image from '../../assets/img/ledger_1.png'
 import {BulletPointItem, Button, ProgressStep, Spacer, Text} from '../../components'
+import {confirmationMessages, ledgerMessages} from '../../i18n/global-messages'
+import {WALLET_INIT_ROUTES} from '../../legacy/RoutesList'
 import {NetworkId, WalletImplementationId} from '../../yoroi-wallets'
 
 export type Params = {

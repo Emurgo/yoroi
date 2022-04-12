@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {useNavigation} from '@react-navigation/native'
 import {BigNumber} from 'bignumber.js'
 import _ from 'lodash'
@@ -6,25 +7,26 @@ import {defineMessages, MessageDescriptor, useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
-import {
-  availableAssetsSelector,
-  defaultNetworkAssetSelector,
-  externalAddressIndexSelector,
-  internalAddressIndexSelector,
-} from '../../../legacy/selectors'
+import {Text} from '../../components'
+import {Icon} from '../../components/Icon'
 import {
   ASSET_DENOMINATION,
   formatTimeToSeconds,
   formatTokenFractional,
   formatTokenInteger,
   getAssetDenominationOrId,
-} from '../../../legacy/utils/format'
-import utfSymbols from '../../../legacy/utils/utfSymbols'
-import {Text} from '../../components'
-import {Icon} from '../../components/Icon'
+} from '../../legacy/format'
+import {TransactionInfo} from '../../legacy/HistoryTransaction'
+import {
+  availableAssetsSelector,
+  defaultNetworkAssetSelector,
+  externalAddressIndexSelector,
+  internalAddressIndexSelector,
+} from '../../legacy/selectors'
+import utfSymbols from '../../legacy/utfSymbols'
 import {TxHistoryStackRootProps} from '../../navigation'
 import {COLORS} from '../../theme'
-import {DefaultAsset, IOData, TransactionAssurance, TransactionDirection, TransactionInfo} from '../../types'
+import {DefaultAsset, IOData, TransactionAssurance, TransactionDirection} from '../../types'
 import {MultiToken} from '../../yoroi-wallets'
 
 const filtersTxIO = (address: string) => {
@@ -100,7 +102,7 @@ export const TxHistoryListItem = ({transaction}: Props) => {
         <View style={styles.transactionRoot}>
           <View style={styles.row}>
             <Text small secondary={isPending}>
-              {strings.direction(transaction.direction)}
+              {strings.direction(transaction.direction as any)}
             </Text>
             {transaction.amount ? (
               <View style={styles.amount}>

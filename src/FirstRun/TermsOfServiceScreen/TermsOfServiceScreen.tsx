@@ -5,12 +5,12 @@ import {Platform, ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch} from 'react-redux'
 
-import {acceptAndSaveTos, setSystemAuth, signin} from '../../../legacy/actions'
-import {CONFIG} from '../../../legacy/config/config'
-import {canBiometricEncryptionBeEnabled} from '../../../legacy/helpers/deviceSettings'
-import globalMessages from '../../../legacy/i18n/global-messages'
-import {FIRST_RUN_ROUTES} from '../../../legacy/RoutesList'
 import {Button, Checkbox, PleaseWaitModal, Spacer, StatusBar} from '../../components'
+import globalMessages from '../../i18n/global-messages'
+import {acceptAndSaveTos, setSystemAuth, signin} from '../../legacy/actions'
+import {CONFIG} from '../../legacy/config'
+import {canBiometricEncryptionBeEnabled} from '../../legacy/deviceSettings'
+import {FIRST_RUN_ROUTES} from '../../legacy/RoutesList'
 import {TermsOfService} from './TermsOfService'
 
 export const TermsOfServiceScreen = () => {

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {delay} from 'bluebird'
 import {
   QueryKey,
@@ -9,9 +10,9 @@ import {
   UseQueryOptions,
 } from 'react-query'
 
-import {generateShelleyPlateFromKey} from '../../legacy/crypto/shelley/plate'
-import {WalletMeta} from '../../legacy/state'
-import storage from '../../legacy/utils/storage'
+import {HWDeviceInfo} from '../legacy/ledgerUtils'
+import {WalletMeta} from '../legacy/state'
+import storage from '../legacy/storage'
 import {Token} from '../types'
 import {
   NetworkId,
@@ -22,6 +23,7 @@ import {
   YoroiProvider,
   YoroiWallet,
 } from '../yoroi-wallets'
+import {generateShelleyPlateFromKey} from '../yoroi-wallets/cardano/shelley/plate'
 
 // WALLET
 export const useCloseWallet = (options?: UseMutationOptions<void, Error>) => {
@@ -40,7 +42,7 @@ export const useWalletName = (wallet: YoroiWallet, options?: UseQueryOptions<str
   const query = useQuery({
     queryKey: [wallet.id, 'name'],
     queryFn: async () => {
-      const walletMeta: WalletMeta = await storage.read<WalletMeta>(`/wallet/${wallet.id}`)
+      const walletMeta = await storage.read<WalletMeta>(`/wallet/${wallet.id}`)
       if (!walletMeta) throw new Error('Invalid wallet id')
 
       return walletMeta.name
@@ -54,7 +56,7 @@ export const useWalletName = (wallet: YoroiWallet, options?: UseQueryOptions<str
 export const useChangeWalletName = (wallet: YoroiWallet, options: UseMutationOptions<void, Error, string> = {}) => {
   const mutation = useMutationWithInvalidations<void, Error, string>({
     mutationFn: async (newName) => {
-      const walletMeta = await storage.read(`/wallets/${wallet.id}`)
+      const walletMeta = await storage.read<WalletMeta>(`/wallets/${wallet.id}`)
       if (!walletMeta) throw new Error('Invalid wallet id')
 
       return storage.write(`/wallets/${wallet.id}`, {...walletMeta, name: newName})
@@ -183,6 +185,8 @@ export const usePlate = ({networkId, publicKeyHex}: {networkId: NetworkId; publi
     queryFn: () => generateShelleyPlateFromKey(publicKeyHex, 1, networkId),
   })
 
+  if (!query.data) throw new Error('invalid state')
+
   return query.data
 }
 
@@ -197,8 +201,8 @@ export const useWalletMetas = <T = Array<WalletMeta>>(options?: UseQueryOptions<
   const query = useQuery({
     queryKey: ['walletMetas'],
     queryFn: async () => {
-      const keys: Array<string> = await storage.keys<Array<string>>('/wallet/')
-      const walletMetas = await Promise.all(keys.map((key) => storage.read(`/wallet/${key}`)))
+      const keys = await storage.keys('/wallet/')
+      const walletMetas = await Promise.all(keys.map((key) => storage.read<WalletMeta>(`/wallet/${key}`)))
 
       return walletMetas
     },
@@ -226,7 +230,7 @@ type CreateBip44WalletInfo = {
   bip44AccountPublic: string
   networkId: number
   implementationId: WalletImplementationId
-  hwDeviceInfo?: Record<string, unknown>
+  hwDeviceInfo?: null | HWDeviceInfo
   readOnly: boolean
 }
 
@@ -238,7 +242,7 @@ export const useCreateBip44Wallet = (options?: UseMutationOptions<YoroiWallet, E
         bip44AccountPublic,
         networkId,
         implementationId,
-        hwDeviceInfo,
+        hwDeviceInfo || null,
         readOnly,
       ),
     invalidateQueries: [['walletMetas']],
@@ -314,7 +318,7 @@ export const fetchTxStatus = async (
     })
 
     const confirmations = txStatus.depth?.[txHash] || 0
-    const submission = txStatus.submissionStatus?.[txHash]
+    const submission: any = txStatus.submissionStatus?.[txHash]
 
     // processed
     if (confirmations > 0) {

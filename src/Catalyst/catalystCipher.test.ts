@@ -1,7 +1,4 @@
-import jestSetup from '../../legacy/jestSetup'
 import {decryptWithPassword, encryptWithPassword} from './catalystCipher'
-
-jestSetup.setup()
 
 test('valid encryption and decryption', async () => {
   const data =

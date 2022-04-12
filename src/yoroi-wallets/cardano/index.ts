@@ -1,3 +1,4 @@
+export * from './catalyst'
 export * from './chain'
 export * from './HaskellShelleyTxSignRequest'
 export * from './MultiToken'

@@ -6,11 +6,11 @@ import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {updateWallets} from '../../../legacy/actions'
-import {WALLET_ROOT_ROUTES} from '../../../legacy/RoutesList'
-import {isHWSelector} from '../../../legacy/selectors'
 import {Button, Checkbox, Checkmark, Spacer, StatusBar, Text, TextInput} from '../../components'
 import {useRemoveWallet, useWalletName} from '../../hooks'
+import {updateWallets} from '../../legacy/actions'
+import {WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
+import {isHWSelector} from '../../legacy/selectors'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 
@@ -24,7 +24,9 @@ export const RemoveWalletScreen = () => {
   const dispatch = useDispatch()
   const {removeWallet, isLoading} = useRemoveWallet({
     onMutate: () => navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION),
-    onSuccess: () => dispatch(updateWallets()),
+    onSuccess: () => {
+      dispatch(updateWallets())
+    },
   })
 
   const [hasMnemonicWrittenDown, setHasMnemonicWrittenDown] = React.useState(false)

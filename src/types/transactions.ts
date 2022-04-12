@@ -1,26 +1,11 @@
 import {Addressing} from '@emurgo/yoroi-lib-core'
 
+import {RawUtxo} from '../legacy/types'
 import {RemoteCertificateMeta, Withdrawal} from './staking'
-import {Token, TokenEntry, TokenEntryPlain} from './tokens'
+import {TokenEntry} from './tokens'
 export type TransactionDirection = 'SENT' | 'RECEIVED' | 'SELF' | 'MULTI'
 export type TransactionStatus = 'SUCCESSFUL' | 'PENDING' | 'FAILED'
 export type TransactionAssurance = 'PENDING' | 'FAILED' | 'LOW' | 'MEDIUM' | 'HIGH'
-
-export type TransactionInfo = {
-  id: string
-  inputs: Array<IOData>
-  outputs: Array<IOData>
-  amount: Array<TokenEntryPlain>
-  fee?: Array<TokenEntryPlain>
-  delta: Array<TokenEntryPlain>
-  direction: TransactionDirection
-  confirmations: number
-  submittedAt?: string
-  lastUpdatedAt: string
-  status: TransactionStatus
-  assurance: TransactionAssurance
-  tokens: Record<string, Token>
-}
 
 export type Era = 'byron' | 'shelley'
 
@@ -54,15 +39,6 @@ export type RemoteAsset = {
   assetId: string
   policyId: string
   name: string
-}
-
-export type RawUtxo = {
-  amount: string
-  receiver: string
-  tx_hash: string
-  tx_index: number
-  utxo_id: string
-  assets: Array<RemoteAsset>
 }
 
 export type AddressedUtxo = RawUtxo & Addressing

@@ -15,10 +15,10 @@ import {
 import QRCodeSVG from 'react-native-qrcode-svg'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import copyImage from '../../legacy/assets/img/copyd.png'
-import {confirmationMessages} from '../../legacy/i18n/global-messages'
-import {WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
+import copyImage from '../assets/img/copyd.png'
 import {Button, ProgressStep, Spacer, Text} from '../components'
+import {confirmationMessages} from '../i18n/global-messages'
+import {WALLET_ROOT_ROUTES} from '../legacy/RoutesList'
 import {COLORS} from '../theme'
 import {CatalystBackupCheckModal} from './CatalystBackupCheckModal'
 import {Actions, Description, Title} from './components'

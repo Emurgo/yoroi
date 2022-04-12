@@ -1,7 +1,7 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {TransactionInfo} from '../types'
+import {TransactionInfo} from '../legacy/HistoryTransaction'
 import {Icon} from './Icon'
 
 const ICON = {

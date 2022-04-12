@@ -1,15 +1,16 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ImageSourcePropType, StyleSheet, ViewStyle} from 'react-native'
 import {ActivityIndicator, Image, SafeAreaView, View} from 'react-native'
 
-import {CONFIG} from '../../../legacy/config/config'
-import globalMessages from '../../../legacy/i18n/global-messages'
-import {ignoreConcurrentAsyncHandler} from '../../../legacy/utils/utils'
-import {getWalletNameError, validateWalletName} from '../../../legacy/utils/validators'
 import {Button, ProgressStep, TextInput} from '../../components'
 import {useWalletNames} from '../../hooks'
+import globalMessages from '../../i18n/global-messages'
+import {CONFIG} from '../../legacy/config'
+import {ignoreConcurrentAsyncHandler} from '../../legacy/utils'
 import {spacing} from '../../theme'
+import {getWalletNameError, validateWalletName} from '../../yoroi-wallets/utils/validators'
 
 type Props = {
   onSubmit: ({name: string}) => void
@@ -49,7 +50,10 @@ export const WalletNameForm = ({
   const walletNameErrorText = getWalletNameError(errorMessages, validationErrors) || undefined
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const submit = React.useCallback(ignoreConcurrentAsyncHandler(() => () => onSubmit({name}), 1000)(), [onSubmit, name])
+  const submit = React.useCallback((ignoreConcurrentAsyncHandler as any)(() => () => onSubmit({name}), 1000)(), [
+    onSubmit,
+    name,
+  ])
 
   return (
     <SafeAreaView style={styles.safeAreaView}>

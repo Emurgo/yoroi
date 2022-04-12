@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import cryptoRandomString from 'crypto-random-string'
 import React, {useState} from 'react'
@@ -6,14 +7,14 @@ import {Image, Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 're
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useSelector} from 'react-redux'
 
-import appstoreBadge from '../../legacy/assets/img/app-store-badge.png'
-import playstoreBadge from '../../legacy/assets/img/google-play-badge.png'
-import AppDownload from '../../legacy/assets/img/pic-catalyst-step1.png'
-import {CONFIG} from '../../legacy/config/config'
-import globalMessages, {confirmationMessages} from '../../legacy/i18n/global-messages'
-import {isDelegatingSelector} from '../../legacy/selectors'
-import {Logger} from '../../legacy/utils/logging'
+import appstoreBadge from '../assets/img/app-store-badge.png'
+import playstoreBadge from '../assets/img/google-play-badge.png'
+import AppDownload from '../assets/img/pic-catalyst-step1.png'
 import {Button, ProgressStep, Spacer, StandardModal, Text} from '../components'
+import globalMessages, {confirmationMessages} from '../i18n/global-messages'
+import {CONFIG} from '../legacy/config'
+import {Logger} from '../legacy/logging'
+import {isDelegatingSelector} from '../legacy/selectors'
 import {CATALYST_ROUTES} from './CatalystNavigator'
 import {Actions, Row} from './components'
 
@@ -92,7 +93,7 @@ const PlayStoreButton = () => {
     try {
       await Linking.openURL('https://play.google.com/store/apps/details?id=io.iohk.vitvoting')
     } catch (e) {
-      Logger.error(e)
+      Logger.error(e as any)
     }
   }
 
@@ -108,7 +109,7 @@ const AppStoreButton = () => {
     try {
       await Linking.openURL('https://apps.apple.com/kg/app/catalyst-voting/id1517473397')
     } catch (e) {
-      Logger.error(e)
+      Logger.error(e as any)
     }
   }
 

@@ -5,22 +5,19 @@ import {Platform, ScrollView, StyleSheet, Switch} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {setAppSettingField, setEasyConfirmation, setSystemAuth} from '../../../legacy/actions'
-import {CONFIG, isNightly} from '../../../legacy/config/config'
-import KeyStore from '../../../legacy/crypto/KeyStore'
-import {APP_SETTINGS_KEYS} from '../../../legacy/helpers/appSettings'
-import {
-  canBiometricEncryptionBeEnabled,
-  isBiometricEncryptionHardwareSupported,
-} from '../../../legacy/helpers/deviceSettings'
-import {SETTINGS_ROUTES} from '../../../legacy/RoutesList'
+import {StatusBar} from '../../components'
+import {setAppSettingField, setEasyConfirmation, setSystemAuth} from '../../legacy/actions'
+import {APP_SETTINGS_KEYS} from '../../legacy/appSettings'
+import {CONFIG, isNightly} from '../../legacy/config'
+import {canBiometricEncryptionBeEnabled, isBiometricEncryptionHardwareSupported} from '../../legacy/deviceSettings'
+import KeyStore from '../../legacy/KeyStore'
+import {SETTINGS_ROUTES} from '../../legacy/RoutesList'
 import {
   biometricHwSupportSelector,
   installationIdSelector,
   isSystemAuthEnabledSelector,
   sendCrashReportsSelector,
-} from '../../../legacy/selectors'
-import {StatusBar} from '../../components'
+} from '../../legacy/selectors'
 import {useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../SelectedWallet'
 import {walletManager} from '../../yoroi-wallets'
 import {NavigatedSettingsItem, SettingsBuildItem, SettingsItem, SettingsSection} from '../SettingsItems'
@@ -38,8 +35,9 @@ export const ApplicationSettingsScreen = () => {
   const walletMeta = useSelectedWalletMeta()
   const setSelectedWalletMeta = useSetSelectedWalletMeta()
 
-  const setCrashReporting = (value: boolean) =>
+  const setCrashReporting = (value: boolean) => {
     dispatch(setAppSettingField(APP_SETTINGS_KEYS.SEND_CRASH_REPORTS, value))
+  }
 
   const onToggleBiometricsAuthIn = async () => {
     if (isSystemAuthEnabled) {

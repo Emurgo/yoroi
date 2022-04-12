@@ -4,12 +4,12 @@ import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {showErrorDialog, signin} from '../../legacy/actions'
-import {CONFIG} from '../../legacy/config/config'
-import {authenticateByCustomPin} from '../../legacy/crypto/customPin'
-import {errorMessages} from '../../legacy/i18n/global-messages'
-import {customPinHashSelector} from '../../legacy/selectors'
 import {PinInput, StatusBar} from '../components'
+import {errorMessages} from '../i18n/global-messages'
+import {showErrorDialog, signin} from '../legacy/actions'
+import {CONFIG} from '../legacy/config'
+import {authenticateByCustomPin} from '../legacy/customPin'
+import {customPinHashSelector} from '../legacy/selectors'
 
 export const CustomPinLoginScreen = () => {
   const intl = useIntl()

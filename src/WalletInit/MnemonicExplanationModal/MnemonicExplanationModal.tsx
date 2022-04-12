@@ -3,7 +3,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Image, StyleSheet, View} from 'react-native'
 import Markdown from 'react-native-easy-markdown'
 
-import image from '../../../legacy/assets/img/mnemonic_explanation.png'
+import image from '../../assets/img/mnemonic_explanation.png'
 import {Button, Modal} from '../../components'
 import {spacing} from '../../theme'
 

@@ -7,13 +7,17 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Alert} from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {showErrorDialog, signin} from '../legacy/actions'
-import IndexScreen from '../legacy/components/IndexScreen'
-import {CONFIG} from '../legacy/config/config'
-import KeyStore from '../legacy/crypto/KeyStore'
-import env from '../legacy/env'
-import {canBiometricEncryptionBeEnabled, recreateAppSignInKeys} from '../legacy/helpers/deviceSettings'
-import {errorMessages} from '../legacy/i18n/global-messages'
+import {BiometricAuthScreen} from './BiometricAuth'
+import {Boundary} from './components'
+import {CustomPinScreen} from './FirstRun/CustomPinScreen'
+import {FirstRunNavigator} from './FirstRun/FirstRunNavigator'
+import {errorMessages} from './i18n/global-messages'
+import {showErrorDialog, signin} from './legacy/actions'
+import {CONFIG} from './legacy/config'
+import {canBiometricEncryptionBeEnabled, recreateAppSignInKeys} from './legacy/deviceSettings'
+import env from './legacy/env'
+import IndexScreen from './legacy/IndexScreen'
+import KeyStore from './legacy/KeyStore'
 import {
   canEnableBiometricSelector,
   installationIdSelector,
@@ -21,12 +25,8 @@ import {
   isAuthenticatedSelector,
   isMaintenanceSelector,
   isSystemAuthEnabledSelector,
-} from '../legacy/selectors'
-import type {State} from '../legacy/state'
-import {BiometricAuthScreen} from './BiometricAuth'
-import {Boundary} from './components'
-import {CustomPinScreen} from './FirstRun/CustomPinScreen'
-import {FirstRunNavigator} from './FirstRun/FirstRunNavigator'
+} from './legacy/selectors'
+import type {State} from './legacy/state'
 import {CustomPinLoginScreen} from './Login'
 import MaintenanceScreen from './MaintenanceScreen'
 import {defaultNavigationOptions, defaultStackNavigatorOptions} from './navigationOptions'

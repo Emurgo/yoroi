@@ -6,20 +6,17 @@ import {useIntl} from 'react-intl'
 import {Platform, StyleSheet, View} from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {showErrorDialog} from '../../../legacy/actions'
-import {
-  setLedgerDeviceId as _setLedgerDeviceId,
-  setLedgerDeviceObj as _setLedgerDeviceObj,
-} from '../../../legacy/actions/hwWallet'
-import {CONFIG} from '../../../legacy/config/config'
-import {WrongPassword} from '../../../legacy/crypto/errors'
-import KeyStore from '../../../legacy/crypto/KeyStore'
-import {ensureKeysValidity} from '../../../legacy/helpers/deviceSettings'
-import {confirmationMessages, errorMessages, txLabels} from '../../../legacy/i18n/global-messages'
-import LocalizableError from '../../../legacy/i18n/LocalizableError'
-import {WALLET_ROOT_ROUTES} from '../../../legacy/RoutesList'
-import {hwDeviceInfoSelector} from '../../../legacy/selectors'
 import {useCloseWallet, useSubmitTx} from '../../hooks'
+import {confirmationMessages, errorMessages, txLabels} from '../../i18n/global-messages'
+import LocalizableError from '../../i18n/LocalizableError'
+import {showErrorDialog} from '../../legacy/actions'
+import {CONFIG} from '../../legacy/config'
+import {ensureKeysValidity} from '../../legacy/deviceSettings'
+import {WrongPassword} from '../../legacy/errors'
+import {setLedgerDeviceId as _setLedgerDeviceId, setLedgerDeviceObj as _setLedgerDeviceObj} from '../../legacy/hwWallet'
+import KeyStore from '../../legacy/KeyStore'
+import {WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
+import {hwDeviceInfoSelector} from '../../legacy/selectors'
 import {useSelectedWallet, useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {HaskellShelleyTxSignRequest, SignedTx, SystemAuthDisabled, walletManager} from '../../yoroi-wallets'
@@ -431,7 +428,7 @@ const useStrings = () => {
 
   return {
     errorMessage: (error: LocalizableError) =>
-      intl.formatMessage({id: error.id, defaultMessage: error.defaultMessage}, error.values),
+      intl.formatMessage({id: error.id, defaultMessage: error.defaultMessage}, (error as any).values),
     password: intl.formatMessage(txLabels.password),
     confirmButton: intl.formatMessage(confirmationMessages.commonButtons.confirmButton),
     generalTxErrorMessage: intl.formatMessage(errorMessages.generalTxError.message),

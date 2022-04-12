@@ -5,17 +5,12 @@ import {FlatList, LayoutAnimation, TouchableOpacity, View} from 'react-native'
 import {Avatar} from 'react-native-paper'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import AdaImage from '../../../legacy/assets/img/asset_ada.png'
-import NoImage from '../../../legacy/assets/img/asset_no_image.png'
-import globalMessages, {txLabels} from '../../../legacy/i18n/global-messages'
-import {
-  decodeHexAscii,
-  formatTokenAmount,
-  getAssetDenominationOrId,
-  getTokenFingerprint,
-} from '../../../legacy/utils/format'
+import AdaImage from '../../assets/img/asset_ada.png'
+import NoImage from '../../assets/img/asset_no_image.png'
 import {Boundary, Button, Spacer, Text, TextInput} from '../../components'
 import {useTokenInfo} from '../../hooks'
+import globalMessages, {txLabels} from '../../i18n/global-messages'
+import {decodeHexAscii, formatTokenAmount, getAssetDenominationOrId, getTokenFingerprint} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {Token, TokenEntry} from '../../types'

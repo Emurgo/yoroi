@@ -5,13 +5,13 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {WALLET_IMPLEMENTATION_REGISTRY} from '../../../legacy/config/types'
-import {generateByronPlateFromMnemonics} from '../../../legacy/crypto/byron/plate'
-import {generateShelleyPlateFromMnemonics} from '../../../legacy/crypto/shelley/plate'
-import {WALLET_INIT_ROUTES} from '../../../legacy/RoutesList'
 import {BulletPointItem, Button, Icon, Spacer, StatusBar, Text} from '../../components'
+import {WALLET_INIT_ROUTES} from '../../legacy/RoutesList'
+import {WALLET_IMPLEMENTATION_REGISTRY} from '../../legacy/types'
 import {COLORS} from '../../theme'
 import {NetworkId, WalletImplementationId} from '../../yoroi-wallets'
+import {generateByronPlateFromMnemonics} from '../../yoroi-wallets/cardano/byron/plate'
+import {generateShelleyPlateFromMnemonics} from '../../yoroi-wallets/cardano/shelley/plate'
 import {WalletAddress} from '../WalletAddress'
 
 export const VerifyRestoredWalletScreen = () => {
@@ -148,7 +148,7 @@ const usePlateFromMnemonic = ({
   networkId: number
   walletImplementationId: WalletImplementationId
 }) => {
-  const [addresses, setAddresses] = useState()
+  const [addresses, setAddresses] = useState<undefined | Array<string>>(undefined)
   const [plate, setPlate] = useState<undefined | WalletChecksum>(undefined)
 
   useEffect(() => {
@@ -179,7 +179,7 @@ const usePlateFromMnemonic = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  return [plate, addresses]
+  return [plate, addresses] as const
 }
 
 const styles = StyleSheet.create({

@@ -2,7 +2,7 @@ import {NavigationProp, useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {Image, StyleSheet, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 
-import chevronRight from '../../legacy/assets/img/chevron_right.png'
+import chevronRight from '../assets/img/chevron_right.png'
 import {Text} from '../components'
 import {COLORS} from '../theme'
 

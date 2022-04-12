@@ -1,7 +1,8 @@
 import React from 'react'
 import {View} from 'react-native'
 
-import {TransactionDirection, TransactionInfo} from '../../types'
+import {TransactionInfo} from '../../legacy/HistoryTransaction'
+import {TransactionDirection} from '../../types'
 import {Received} from '../Icon/Received'
 import {Sent} from '../Icon/Sent'
 import {Transaction} from '../Icon/Transaction'

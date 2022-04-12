@@ -1,8 +1,8 @@
 import React, {useState} from 'react'
 import {Image, StyleSheet, TouchableHighlight, View} from 'react-native'
 
-import backspaceIcon from '../../../legacy/assets/img/backspace.png'
-import utfSymbols from '../../../legacy/utils/utfSymbols'
+import backspaceIcon from '../../assets/img/backspace.png'
+import utfSymbols from '../../legacy/utfSymbols'
 import {Text} from '../Text'
 
 const BACKSPACE = utfSymbols.ERASE_TO_LEFT

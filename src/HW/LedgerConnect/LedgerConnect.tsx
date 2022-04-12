@@ -16,14 +16,14 @@ import {
   View,
 } from 'react-native'
 
-import bleImage from '../../../legacy/assets/img/bluetooth.png'
-import usbImage from '../../../legacy/assets/img/ledger-nano-usb.png'
-import type {DeviceId, DeviceObj} from '../../../legacy/crypto/shelley/ledgerUtils'
-import {BluetoothDisabledError, RejectedByUserError} from '../../../legacy/crypto/shelley/ledgerUtils'
-import {confirmationMessages, ledgerMessages} from '../../../legacy/i18n/global-messages'
-import LocalizableError from '../../../legacy/i18n/LocalizableError'
-import {Logger} from '../../../legacy/utils/logging'
+import bleImage from '../../assets/img/bluetooth.png'
+import usbImage from '../../assets/img/ledger-nano-usb.png'
 import {BulletPointItem, Button, Text} from '../../components'
+import {confirmationMessages, ledgerMessages} from '../../i18n/global-messages'
+import LocalizableError from '../../i18n/LocalizableError'
+import type {DeviceId, DeviceObj} from '../../legacy/ledgerUtils'
+import {BluetoothDisabledError, RejectedByUserError} from '../../legacy/ledgerUtils'
+import {Logger} from '../../legacy/logging'
 import {COLORS, spacing} from '../../theme'
 import {Device} from '../../types'
 import {DeviceItem} from './DeviceItem'
@@ -40,8 +40,8 @@ type Props = {
 
 type State = {
   devices: Array<Device>
-  deviceId?: DeviceId
-  deviceObj?: DeviceObj
+  deviceId?: null | DeviceId
+  deviceObj?: null | DeviceObj
   error?: any
   refreshing: boolean
   waiting: boolean
@@ -180,7 +180,7 @@ class _LedgerConnect extends React.Component<Props, State> {
       })
       await onConnectBLE(device.id.toString())
     } catch (e) {
-      Logger.debug(e)
+      Logger.debug(e as any)
       if (e instanceof RejectedByUserError) {
         this.reload()
         return
@@ -203,7 +203,7 @@ class _LedgerConnect extends React.Component<Props, State> {
       })
       await this.props.onConnectUSB(deviceObj)
     } catch (e) {
-      Logger.debug(e)
+      Logger.debug(e as any)
       if (e instanceof RejectedByUserError) {
         this.reload()
         return

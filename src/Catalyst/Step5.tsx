@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {useNavigation} from '@react-navigation/native'
 import BigNumber from 'bignumber.js'
 import React, {useEffect, useState} from 'react'
@@ -6,14 +7,14 @@ import {ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useSelector} from 'react-redux'
 
-import {CONFIG} from '../../legacy/config/config'
-import {txLabels} from '../../legacy/i18n/global-messages'
-import LocalizableError from '../../legacy/i18n/LocalizableError'
-import {defaultNetworkAssetSelector} from '../../legacy/selectors'
-import {formatTokenWithSymbol} from '../../legacy/utils/format'
 import {OfflineBanner, ProgressStep, Spacer, TextInput} from '../components'
 import {ConfirmTx} from '../components/ConfirmTx'
 import {Instructions as HWInstructions} from '../HW'
+import {txLabels} from '../i18n/global-messages'
+import LocalizableError from '../i18n/LocalizableError'
+import {CONFIG} from '../legacy/config'
+import {formatTokenWithSymbol} from '../legacy/format'
+import {defaultNetworkAssetSelector} from '../legacy/selectors'
 import {useSelectedWallet} from '../SelectedWallet'
 import {CATALYST_ROUTES} from './CatalystNavigator'
 import {Actions, Description, Title} from './components'
@@ -133,7 +134,7 @@ const useStrings = () => {
 
   return {
     errorMessage: (error: LocalizableError) =>
-      intl.formatMessage({id: error.id, defaultMessage: error.defaultMessage}, error.values),
+      intl.formatMessage({id: error.id, defaultMessage: error.defaultMessage}, (error as any).values),
     fees: intl.formatMessage(txLabels.fees),
     subTitle: intl.formatMessage(messages.subTitle),
     description: intl.formatMessage(messages.description),

@@ -1,8 +1,5 @@
-import type {CryptoAccount} from '../../../legacy/crypto/byron/util'
-import jestSetup from '../../../legacy/jestSetup'
+import type {CryptoAccount} from './byron/util'
 import {AddressChain, AddressGenerator} from './chain'
-
-jestSetup.setup()
 
 const getAddr = (i) => `Addr${i}`
 

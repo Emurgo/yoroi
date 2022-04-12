@@ -7,11 +7,11 @@ import {
 } from '@emurgo/react-native-haskell-shelley'
 import {BigNumber} from 'bignumber.js'
 
-import {CONFIG} from '../../../legacy/config/config'
-import type {CardanoHaskellShelleyNetwork} from '../../../legacy/config/networks'
-import {ISignRequest} from '../../../legacy/crypto/ISignRequest'
-import {multiTokenFromCardanoValue, toHexOrBase58} from '../../../legacy/crypto/shelley/utils'
-import type {Address, Value} from '../../../legacy/crypto/types'
+import {CONFIG} from '../../legacy/config'
+import {ISignRequest} from '../../legacy/ISignRequest'
+import type {CardanoHaskellShelleyNetwork} from '../../legacy/networks'
+import type {Address, Value} from '../../legacy/types'
+import {multiTokenFromCardanoValue, toHexOrBase58} from '../../legacy/utils'
 import {AddressedUtxo, Addressing, SendTokenList} from '../../types'
 import type {DefaultTokenEntry} from './MultiToken'
 import {MultiToken} from './MultiToken'
@@ -55,7 +55,7 @@ export type CreateUnsignedTxRequest = {
   addressedUtxos: Array<AddressedUtxo>
   defaultToken: DefaultTokenEntry
   tokens: SendTokenList
-  auxiliaryData: AuxiliaryData | void
+  auxiliaryData: undefined | AuxiliaryData
   networkConfig: CardanoHaskellShelleyNetwork
 }
 export class HaskellShelleyTxSignRequest implements ISignRequest<TransactionBuilder> {

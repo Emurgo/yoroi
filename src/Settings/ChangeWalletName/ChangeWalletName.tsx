@@ -4,12 +4,12 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import globalMessages from '../../../legacy/i18n/global-messages'
-import {getWalletNameError, validateWalletName} from '../../../legacy/utils/validators'
 import {Button, TextInput} from '../../components'
 import {useChangeWalletName, useWalletName, useWalletNames} from '../../hooks'
+import globalMessages from '../../i18n/global-messages'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
+import {getWalletNameError, validateWalletName} from '../../yoroi-wallets/utils/validators'
 
 export const ChangeWalletName = () => {
   const strings = useStrings()
@@ -21,7 +21,7 @@ export const ChangeWalletName = () => {
 
   const walletNames = useWalletNames()
   const [newWalletName, setNewWalletName] = React.useState(walletName || '')
-  const validationErrors = validateWalletName(newWalletName, walletName, walletNames || [])
+  const validationErrors = validateWalletName(newWalletName, walletName || null, walletNames || [])
   const hasErrors = Object.keys(validationErrors).length > 0
   const errorText =
     getWalletNameError(

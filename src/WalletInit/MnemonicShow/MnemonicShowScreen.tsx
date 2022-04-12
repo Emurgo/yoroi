@@ -4,10 +4,10 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Dimensions, Image, ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import recoveryPhrase from '../../../legacy/assets/img/recovery_phrase.png'
-import {WALLET_INIT_ROUTES} from '../../../legacy/RoutesList'
-import assert from '../../../legacy/utils/assert'
+import recoveryPhrase from '../../assets/img/recovery_phrase.png'
 import {Button, StatusBar, Text} from '../../components'
+import assert from '../../legacy/assert'
+import {WALLET_INIT_ROUTES} from '../../legacy/RoutesList'
 import {MnemonicBackupImportanceModal} from '../MnemonicBackupModal'
 
 export const MnemonicShowScreen = () => {

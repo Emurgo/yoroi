@@ -1,17 +1,18 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import bluebird from 'bluebird'
 import React from 'react'
 import {createIntl, createIntlCache, IntlProvider} from 'react-intl'
 import {AppRegistry, Text} from 'react-native'
 import {Provider, useSelector} from 'react-redux'
 
-import {handleGeneralError, setupHooks} from '../legacy/actions'
-import {CONFIG} from '../legacy/config/config'
-import getConfiguredStore from '../legacy/helpers/configureStore'
-import translations from '../legacy/i18n/translations'
-import {languageSelector} from '../legacy/selectors'
-import {setLogLevel} from '../legacy/utils/logging'
 import App from './App'
 import {name as appName} from './app.json'
+import translations from './i18n/translations'
+import {handleGeneralError, setupHooks} from './legacy/actions'
+import {CONFIG} from './legacy/config'
+import getConfiguredStore from './legacy/configureStore'
+import {setLogLevel} from './legacy/logging'
+import {languageSelector} from './legacy/selectors'
 
 setLogLevel(CONFIG.LOG_LEVEL)
 
@@ -32,10 +33,10 @@ global.Promise = bluebird as any
 
 const cache = createIntlCache()
 const intl = createIntl({locale: 'en-US', messages: translations['en-US']}, cache)
-global.onunhandledrejection = (e) => handleGeneralError(e.message, e, intl)
+global.onunhandledrejection = (e) => handleGeneralError((e as any).message, e as any, intl)
 
 const store = getConfiguredStore()
-store.dispatch(setupHooks())
+store.dispatch(setupHooks() as any)
 
 const AppWithProviders = () => {
   return (

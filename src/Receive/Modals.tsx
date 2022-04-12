@@ -1,21 +1,22 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react'
 import {useIntl} from 'react-intl'
 import {Platform} from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {showErrorDialog} from '../../legacy/actions'
-import {setLedgerDeviceId, setLedgerDeviceObj} from '../../legacy/actions/hwWallet'
-import {CONFIG} from '../../legacy/config/config'
-import {getCardanoByronConfig} from '../../legacy/config/networks'
-import {formatPath} from '../../legacy/crypto/commonUtils'
-import {verifyAddress} from '../../legacy/crypto/shelley/ledgerUtils'
-import {errorMessages} from '../../legacy/i18n/global-messages'
-import LocalizableError from '../../legacy/i18n/LocalizableError'
-import {externalAddressIndexSelector, hwDeviceInfoSelector} from '../../legacy/selectors'
-import {Logger} from '../../legacy/utils/logging'
 import {Modal} from '../components'
 import {LedgerTransportSwitchModal} from '../HW'
 import {LedgerConnect} from '../HW'
+import {errorMessages} from '../i18n/global-messages'
+import LocalizableError from '../i18n/LocalizableError'
+import {showErrorDialog} from '../legacy/actions'
+import {formatPath} from '../legacy/commonUtils'
+import {CONFIG} from '../legacy/config'
+import {setLedgerDeviceId, setLedgerDeviceObj} from '../legacy/hwWallet'
+import {verifyAddress} from '../legacy/ledgerUtils'
+import {Logger} from '../legacy/logging'
+import {getCardanoByronConfig} from '../legacy/networks'
+import {externalAddressIndexSelector, hwDeviceInfoSelector} from '../legacy/selectors'
 import {useSelectedWallet} from '../SelectedWallet'
 import {walletManager} from '../yoroi-wallets'
 import AddressModal from './AddressModal'
@@ -43,14 +44,14 @@ export const Modals = ({address, onDone}: {address: string; onDone: () => void})
       wallet.networkId,
       getCardanoByronConfig().PROTOCOL_MAGIC,
       address,
-      walletManager.getAddressingInfo(address),
+      walletManager.getAddressingInfo(address) as any,
       hwDeviceInfo,
       useUSB,
     )
       .catch((error) => {
         if (error instanceof LocalizableError) {
           showErrorDialog(errorMessages.generalLocalizableError, intl, {
-            message: intl.formatMessage({id: error.id, defaultMessage: error.defaultMessage}, error.values),
+            message: intl.formatMessage({id: error.id, defaultMessage: error.defaultMessage}, (error as any).values),
           })
         } else {
           Logger.error(error)
@@ -111,7 +112,8 @@ export const Modals = ({address, onDone}: {address: string; onDone: () => void})
         onRequestClose={onDone}
         onConfirm={() => onVerifyAddress(address)}
         address={address}
-        path={formatPath(0, 'External', index, wallet.walletImplementationId)}
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        path={formatPath(0, 'External', index as any, wallet.walletImplementationId)}
         isWaiting={isWaiting}
         useUSB={useUSB}
       />

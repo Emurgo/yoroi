@@ -3,12 +3,12 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 
-import TotalAdaIcon from '../../legacy/assets/staking/TotalAdaIcon'
-import TotalDelegatedIcon from '../../legacy/assets/staking/TotalDelegatedIcon'
-import TotalRewardIcon from '../../legacy/assets/staking/TotalRewardIcon'
-import globalMessages from '../../legacy/i18n/global-messages'
-import {formatAdaWithText} from '../../legacy/utils/format'
+import {TotalAdaIcon} from '../assets/staking/TotalAdaIcon'
+import {TotalDelegatedIcon} from '../assets/staking/TotalDelegatedIcon'
+import {TotalRewardIcon} from '../assets/staking/TotalRewardIcon'
 import {Button, Text, TitledCard} from '../components'
+import globalMessages from '../i18n/global-messages'
+import {formatAdaWithText} from '../legacy/format'
 import {COLORS} from '../theme'
 
 const ICON_DIM = 44

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {useNavigation} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
@@ -5,14 +6,14 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps} from 'react-native'
 import {useSelector} from 'react-redux'
 
-import {UI_V2} from '../../legacy/config/config'
-import {TX_HISTORY_ROUTES, WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
-import {tokenBalanceSelector, transactionsInfoSelector} from '../../legacy/selectors'
-import {formatDateToSeconds} from '../../legacy/utils/format'
 import iconGear from '../assets/img/icon/gear.png'
 import {BiometricAuthScreen} from '../BiometricAuth'
 import {Boundary, Button, Icon} from '../components'
 import {useWalletName} from '../hooks'
+import {UI_V2} from '../legacy/config'
+import {formatDateToSeconds} from '../legacy/format'
+import {TX_HISTORY_ROUTES, WALLET_ROOT_ROUTES} from '../legacy/RoutesList'
+import {tokenBalanceSelector, transactionsInfoSelector} from '../legacy/selectors'
 import {buildOptionsWithDefault, TxHistoryStackParamList, TxHistoryStackRootProps} from '../navigation'
 import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../navigationOptions'
 import {ReceiveScreen} from '../Receive/ReceiveScreen'
@@ -45,7 +46,7 @@ export const TxHistoryNavigator = () => {
 
   return (
     <>
-      <Stack.Navigator screenOptions={defaultStackNavigatorOptions} initialRouteName={TX_HISTORY_ROUTES.MAIN}>
+      <Stack.Navigator screenOptions={defaultStackNavigatorOptions} initialRouteName={TX_HISTORY_ROUTES.MAIN as any}>
         <Stack.Screen
           name="history-list"
           component={TxHistory}

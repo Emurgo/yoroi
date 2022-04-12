@@ -2,8 +2,8 @@ import {storiesOf} from '@storybook/react-native'
 import {BigNumber} from 'bignumber.js'
 import React from 'react'
 
-import {getDefaultAssets} from '../../../legacy/config/config'
 import {RouteProvider} from '../../../storybook'
+import {getDefaultAssets} from '../../legacy/config'
 import {getDefaultNetworkTokenEntry, MultiToken} from '../../yoroi-wallets'
 import {DelegationConfirmation} from './DelegationConfirmation'
 

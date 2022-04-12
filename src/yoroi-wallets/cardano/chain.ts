@@ -1,16 +1,17 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {BaseAddress, Bip32PublicKey, RewardAddress, StakeCredential} from '@emurgo/react-native-haskell-shelley'
 import _ from 'lodash'
 import type {Moment} from 'moment'
 import {defaultMemoize} from 'reselect'
 
-import {CONFIG, isByron, isHaskellShelley} from '../../../legacy/config/config'
-import {getNetworkConfigById} from '../../../legacy/config/networks'
-import type {CryptoAccount} from '../../../legacy/crypto/byron/util'
-import * as util from '../../../legacy/crypto/byron/util'
-import type {AddressType} from '../../../legacy/crypto/commonUtils'
-import {ADDRESS_TYPE_TO_CHANGE} from '../../../legacy/crypto/commonUtils'
-import assert from '../../../legacy/utils/assert'
-import {Logger} from '../../../legacy/utils/logging'
+import assert from '../../legacy/assert'
+import type {AddressType} from '../../legacy/commonUtils'
+import {ADDRESS_TYPE_TO_CHANGE} from '../../legacy/commonUtils'
+import {CONFIG, isByron, isHaskellShelley} from '../../legacy/config'
+import {Logger} from '../../legacy/logging'
+import {getNetworkConfigById} from '../../legacy/networks'
+import type {CryptoAccount} from './byron/util'
+import * as util from './byron/util'
 import {NetworkId, WalletImplementationId} from './types'
 
 export type AddressBlock = [number, Moment, Array<string>]
@@ -62,7 +63,7 @@ export class AddressGenerator {
       return null
     }
     let chainNetworkId = CONFIG.NETWORKS.HASKELL_SHELLEY.CHAIN_NETWORK_ID
-    const config = getNetworkConfigById(this.networkId)
+    const config: any = getNetworkConfigById(this.networkId)
     if (config.CHAIN_NETWORK_ID != null) {
       chainNetworkId = config.CHAIN_NETWORK_ID
     }
@@ -90,7 +91,7 @@ export class AddressGenerator {
     if (isHaskellShelley(this.walletImplementationId)) {
       // assume mainnet by default
       let chainNetworkId = CONFIG.NETWORKS.HASKELL_SHELLEY.CHAIN_NETWORK_ID
-      const config = getNetworkConfigById(this.networkId)
+      const config: any = getNetworkConfigById(this.networkId)
       if (config.CHAIN_NETWORK_ID != null) {
         chainNetworkId = config.CHAIN_NETWORK_ID
       }
@@ -310,7 +311,6 @@ export class AddressChain {
   }
 
   getBlocks() {
-    // $FlowFixMe missing type annotation
     return _.chunk(this.addresses, this._blockSize)
   }
 

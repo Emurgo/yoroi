@@ -3,10 +3,10 @@ import React from 'react'
 import {StyleSheet} from 'react-native'
 import {useSelector} from 'react-redux'
 
-import {tokenBalanceSelector} from '../../../legacy/selectors'
-import {formatTokenWithSymbol} from '../../../legacy/utils/format'
 import {Text} from '../../components'
 import {useTokenInfo} from '../../hooks'
+import {formatTokenWithSymbol} from '../../legacy/format'
+import {tokenBalanceSelector} from '../../legacy/selectors'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {useStrings} from './strings'
 

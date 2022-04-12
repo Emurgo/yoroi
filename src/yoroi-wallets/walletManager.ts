@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type {WalletChecksum} from '@emurgo/cip4-js'
 import {legacyWalletChecksum, walletChecksum} from '@emurgo/cip4-js'
 import {BigNumber} from 'bignumber.js'
@@ -5,33 +6,29 @@ import ExtendableError from 'es6-error'
 import _ from 'lodash'
 import type {IntlShape} from 'react-intl'
 
+import {APP_SETTINGS_KEYS, readAppSettings} from '../legacy/appSettings'
+import assert from '../legacy/assert'
+import {CONFIG, DISABLE_BACKGROUND_SYNC, WALLETS} from '../legacy/config'
+import {ensureKeysValidity, isSystemAuthSupported} from '../legacy/deviceSettings'
+import {ObjectValues} from '../legacy/flow'
+import type {DefaultAsset} from '../legacy/HistoryTransaction'
+import {ISignRequest} from '../legacy/ISignRequest'
+import KeyStore from '../legacy/KeyStore'
+import type {HWDeviceInfo} from '../legacy/ledgerUtils'
+import {Logger} from '../legacy/logging'
+import type {WalletMeta} from '../legacy/state'
+import storage from '../legacy/storage'
 import type {
-  AccountStateResponse,
   FundInfoResponse,
   PoolInfoRequest,
-  PoolInfoResponse,
   RawUtxo,
-  ServerStatusResponse,
   TokenInfoRequest,
   TokenInfoResponse,
   TxBodiesRequest,
-} from '../../legacy/api/types'
-import {CONFIG, DISABLE_BACKGROUND_SYNC, WALLETS} from '../../legacy/config/config'
-import {isJormungandr} from '../../legacy/config/networks'
-import {NETWORK_REGISTRY, WALLET_IMPLEMENTATION_REGISTRY} from '../../legacy/config/types'
-import {ISignRequest} from '../../legacy/crypto/ISignRequest'
-import KeyStore from '../../legacy/crypto/KeyStore'
-import type {HWDeviceInfo} from '../../legacy/crypto/shelley/ledgerUtils'
-import type {JSONMetadata} from '../../legacy/crypto/shelley/metadataUtils'
-import type {EncryptionMethod, SendTokenList} from '../../legacy/crypto/types'
-import {APP_SETTINGS_KEYS, readAppSettings} from '../../legacy/helpers/appSettings'
-import {ensureKeysValidity, isSystemAuthSupported} from '../../legacy/helpers/deviceSettings'
-import type {WalletMeta} from '../../legacy/state'
-import type {DefaultAsset} from '../../legacy/types/HistoryTransaction'
-import assert from '../../legacy/utils/assert'
-import {ObjectValues} from '../../legacy/utils/flow'
-import {Logger} from '../../legacy/utils/logging'
-import storage from '../../legacy/utils/storage'
+} from '../legacy/types'
+import type {EncryptionMethod} from '../legacy/types'
+import {NETWORK_REGISTRY, WALLET_IMPLEMENTATION_REGISTRY} from '../legacy/types'
+import {SendTokenList, StakePoolInfosAndHistories} from '../types'
 import {
   DefaultTokenEntry,
   isYoroiWallet,
@@ -43,6 +40,8 @@ import {
   YoroiProvider,
   YoroiWallet,
 } from './cardano'
+import type {JSONMetadata} from './cardano/metadataUtils'
+import {WalletJSON} from './Wallet'
 
 export class WalletClosed extends ExtendableError {}
 export class SystemAuthDisabled extends ExtendableError {}
@@ -70,7 +69,7 @@ class WalletManager {
 
   async _listWallets() {
     const keys = await storage.keys('/wallet/')
-    const result = await Promise.all(keys.map((key) => storage.read(`/wallet/${key}`)))
+    const result = await Promise.all(keys.map((key) => storage.read<WalletMeta>(`/wallet/${key}`)))
 
     Logger.debug('result::_listWallets', result)
 
@@ -109,10 +108,10 @@ class WalletManager {
         }
 
         let checksum: WalletChecksum
-        const data = await storage.read(`/wallet/${w.id}/data`)
+        const data = await storage.read<WalletJSON>(`/wallet/${w.id}/data`)
         if (w.checksum == null) {
           if (data != null && data.externalChain.addressGenerator != null) {
-            const {account, accountPubKeyHex} = data.externalChain.addressGenerator
+            const {account, accountPubKeyHex} = data.externalChain.addressGenerator as any
             switch (walletImplementationId) {
               case WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID:
                 checksum = legacyWalletChecksum(accountPubKeyHex || account.root_cached_key)
@@ -152,7 +151,7 @@ class WalletManager {
         'invalid walletImplementationId',
       )
     })
-    // $FlowFixMe missing type annotation
+
     this._wallets = _.fromPairs(wallets.map((w) => [w.id, w]))
     Logger.debug('WalletManager::initialize::wallets()', this._wallets)
   }
@@ -164,6 +163,10 @@ class WalletManager {
   getWallet() {
     if (!this._wallet) {
       throw new WalletClosed()
+    }
+
+    if (!isYoroiWallet(this._wallet)) {
+      throw new Error('invalid wallet')
     }
 
     return this._wallet
@@ -185,12 +188,12 @@ class WalletManager {
     this._syncErrorSubscribers.forEach((handler) => handler(error))
   }
 
-  _notifyServerSync = (status: ServerStatusResponse) => {
+  _notifyServerSync = (status: ServerStatus) => {
     this._serverSyncSubscribers.forEach((handler) =>
       handler({
         isServerOk: status.isServerOk,
         isMaintenance: status.isMaintenance,
-        serverTime: new Date(status.serverTime),
+        serverTime: new Date(status.serverTime || Date.now()),
       }),
     )
   }
@@ -235,6 +238,10 @@ class WalletManager {
    * these properties are passed on to redux's State in
    * actions/history.js::mirrorTxHistory
    */
+
+  get id() {
+    return this.getWallet().id
+  }
 
   get isInitialized() {
     if (!this._wallet) return false
@@ -296,11 +303,6 @@ class WalletManager {
   get walletImplementationId() {
     if (!this._wallet) return ''
     return this._wallet.walletImplementationId
-  }
-
-  get isJormungandr() {
-    if (!this._wallet) return false
-    return isJormungandr(this._wallet.networkId)
   }
 
   get isHW() {
@@ -405,7 +407,7 @@ class WalletManager {
       throw new Error('Wallet list is not initialized')
     }
 
-    return ObjectValues(this._wallets).every((wallet) => !wallet.isEasyConfirmationEnabled)
+    return ObjectValues(this._wallets).every((wallet: any) => !wallet.isEasyConfirmationEnabled)
   }
 
   // =================== synch =================== //
@@ -726,13 +728,13 @@ class WalletManager {
     const wallet = this.getWallet()
     return await this.abortWhenWalletCloses(
       // TODO(v-almonacid): maybe there is a better way instead of unknown
-      wallet.createUnsignedTx(utxos, receiver, tokens, defaultToken, serverTime, metadata),
+      wallet.createUnsignedTx(utxos, receiver, tokens as any, defaultToken, serverTime, metadata),
     )
   }
 
   async signTx<T>(signRequest: ISignRequest<T>, decryptedKey: string) {
     const wallet = this.getWallet()
-    return await this.abortWhenWalletCloses(wallet.signTx(signRequest, decryptedKey))
+    return await this.abortWhenWalletCloses(wallet.signTx(signRequest as any, decryptedKey))
   }
 
   async createDelegationTx(
@@ -755,7 +757,7 @@ class WalletManager {
 
   async signTxWithLedger(request: ISignRequest, useUSB: boolean) {
     const wallet = this.getWallet()
-    return await this.abortWhenWalletCloses(wallet.signTxWithLedger(request, useUSB))
+    return await this.abortWhenWalletCloses(wallet.signTxWithLedger(request as any, useUSB))
   }
 
   // =================== backend API =================== //
@@ -775,12 +777,12 @@ class WalletManager {
     return await this.abortWhenWalletCloses(wallet.fetchUTXOs())
   }
 
-  async fetchAccountState(): Promise<AccountStateResponse> {
+  async fetchAccountState() {
     const wallet = this.getWallet()
     return await this.abortWhenWalletCloses(wallet.fetchAccountState())
   }
 
-  async fetchPoolInfo(request: PoolInfoRequest): Promise<PoolInfoResponse> {
+  async fetchPoolInfo(request: PoolInfoRequest): Promise<StakePoolInfosAndHistories> {
     const wallet = this.getWallet()
     return await wallet.fetchPoolInfo(request)
   }

@@ -2,7 +2,7 @@ import React from 'react'
 import {useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View} from 'react-native'
 
-import {confirmationMessages} from '../../../legacy/i18n/global-messages'
+import {confirmationMessages} from '../../i18n/global-messages'
 import {spacing} from '../../theme'
 import {Button} from '../Button'
 import {Text} from '../Text'

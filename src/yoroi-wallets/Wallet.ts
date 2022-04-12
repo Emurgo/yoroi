@@ -1,22 +1,22 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type {WalletChecksum} from '@emurgo/cip4-js'
 import _ from 'lodash'
 import type {IntlShape} from 'react-intl'
 import {defaultMemoize} from 'reselect'
 
-import * as api from '../../legacy/api/shelley/api'
-import {CONFIG} from '../../legacy/config/config'
-import {getCardanoNetworkConfigById, isJormungandr} from '../../legacy/config/networks'
-import KeyStore from '../../legacy/crypto/KeyStore'
-import type {HWDeviceInfo} from '../../legacy/crypto/shelley/ledgerUtils'
-import {TransactionCache, TransactionCacheJSON} from '../../legacy/crypto/shelley/transactionCache'
-import type {EncryptionMethod} from '../../legacy/crypto/types'
-import assert from '../../legacy/utils/assert'
-import {Logger} from '../../legacy/utils/logging'
-import type {Mutex} from '../../legacy/utils/promise'
-import {IsLockedError, nonblockingSynchronize, synchronize} from '../../legacy/utils/promise'
-import {validatePassword} from '../../legacy/utils/validators'
+import * as api from '../legacy/api'
+import assert from '../legacy/assert'
+import {CONFIG} from '../legacy/config'
+import KeyStore from '../legacy/KeyStore'
+import type {HWDeviceInfo} from '../legacy/ledgerUtils'
+import {Logger} from '../legacy/logging'
+import {getCardanoNetworkConfigById, isJormungandr} from '../legacy/networks'
+import {IsLockedError, nonblockingSynchronize, synchronize} from '../legacy/promise'
+import type {EncryptionMethod} from '../legacy/types'
 import {NetworkId, WalletImplementationId, YoroiProvider} from './cardano'
 import {AddressChain, AddressChainJSON} from './cardano/chain'
+import {TransactionCache, TransactionCacheJSON} from './cardano/shelley/transactionCache'
+import {validatePassword} from './utils/validators'
 
 type WalletState = {
   lastGeneratedAddressIndex: number
@@ -56,7 +56,7 @@ export class Wallet {
 
   isHW = false
 
-  hwDeviceInfo: null | HWDeviceInfo
+  hwDeviceInfo: null | HWDeviceInfo = null
 
   isReadOnly: undefined | boolean
 
@@ -83,9 +83,9 @@ export class Wallet {
 
   isInitialized = false
 
-  transactionCache: TransactionCache = null
+  transactionCache: null | TransactionCache = null
 
-  _doFullSyncMutex: Mutex = {name: 'doFullSyncMutex', lock: null}
+  _doFullSyncMutex: any = {name: 'doFullSyncMutex', lock: null}
 
   _subscriptions: Array<(Wallet) => void> = []
 
@@ -113,6 +113,7 @@ export class Wallet {
   }
 
   get isUsedAddressIndex() {
+    if (!this.transactionCache) throw new Error('invalid wallet state')
     return this._isUsedAddressIndexSelector(this.transactionCache.perAddressTxs)
   }
 
@@ -121,20 +122,36 @@ export class Wallet {
   }
 
   get transactions() {
+    if (!this.transactionCache) throw new Error('invalid wallet state')
     return this.transactionCache.transactions
   }
 
   get confirmationCounts() {
+    if (!this.transactionCache) throw new Error('invalid wallet state')
     return this.transactionCache.confirmationCounts
   }
 
   // ============ security & key management ============ //
 
+  encryptAndSaveMasterKey(encryptionMethod: 'BIOMETRICS', masterKey: string): Promise<void>
+  encryptAndSaveMasterKey(encryptionMethod: 'SYSTEM_PIN', masterKey: string): Promise<void>
+  encryptAndSaveMasterKey(encryptionMethod: 'MASTER_PASSWORD', masterKey: string, password: string): Promise<void>
   async encryptAndSaveMasterKey(encryptionMethod: EncryptionMethod, masterKey: string, password?: string) {
-    await KeyStore.storeData(this.id, encryptionMethod, masterKey, password)
+    if (!this.id) throw new Error('invalid wallet state')
+    if (encryptionMethod === 'MASTER_PASSWORD') {
+      if (!password) throw new Error('password is required')
+      await KeyStore.storeData(this.id, 'MASTER_PASSWORD', masterKey, password)
+    }
+    if (encryptionMethod === 'BIOMETRICS') {
+      await KeyStore.storeData(this.id, encryptionMethod, masterKey)
+    }
+    if (encryptionMethod === 'SYSTEM_PIN') {
+      await KeyStore.storeData(this.id, encryptionMethod, masterKey)
+    }
   }
 
   async getDecryptedMasterKey(masterPassword: string, intl: IntlShape) {
+    if (!this.id) throw new Error('invalid wallet state')
     return await KeyStore.getData(this.id, 'MASTER_PASSWORD', '', masterPassword, intl)
   }
 
@@ -181,6 +198,7 @@ export class Wallet {
   setupSubscriptions() {
     if (!this.internalChain) throw new Error('invalid wallet state')
     if (!this.externalChain) throw new Error('invalid wallet state')
+    if (!this.transactionCache) throw new Error('invalid wallet state')
 
     this.transactionCache.subscribe(this.notify)
     this.transactionCache.subscribeOnTxHistoryUpdate(this.notifyOnTxHistoryUpdate)
@@ -207,6 +225,7 @@ export class Wallet {
   }
 
   isUsedAddress(address: string) {
+    if (!this.transactionCache) throw new Error('invalid wallet state')
     return !!this.transactionCache.perAddressTxs[address] && this.transactionCache.perAddressTxs[address].length > 0
   }
 
@@ -220,6 +239,8 @@ export class Wallet {
   }
 
   async _doFullSync() {
+    if (!this.transactionCache) throw new Error('invalid wallet state')
+    if (!this.networkId) throw new Error('invalid wallet state')
     Logger.info(`Do full sync provider =`, this.provider)
     assert.assert(this.isInitialized, 'doFullSync: isInitialized')
     // TODO: multi-network support
@@ -250,6 +271,7 @@ export class Wallet {
   }
 
   resync() {
+    if (!this.transactionCache) throw new Error('invalid wallet state')
     this.transactionCache.resetState()
   }
 
@@ -309,6 +331,7 @@ export class Wallet {
     if (this.internalAddresses == null) throw new Error('invalid WalletJSON: internalAddresses')
     if (this.externalChain == null) throw new Error('invalid WalletJSON: externalChain')
     if (this.internalChain == null) throw new Error('invalid WalletJSON: internalChain')
+    if (this.transactionCache == null) throw new Error('invalid WalletJSON: transactionCache')
 
     return {
       lastGeneratedAddressIndex: this.state.lastGeneratedAddressIndex,

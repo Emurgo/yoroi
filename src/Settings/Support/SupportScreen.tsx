@@ -2,7 +2,7 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Image, Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 
-import chevronRight from '../../../legacy/assets/img/chevron_right.png'
+import chevronRight from '../../assets/img/chevron_right.png'
 import {StatusBar, Text} from '../../components'
 
 export const SupportScreen = () => {

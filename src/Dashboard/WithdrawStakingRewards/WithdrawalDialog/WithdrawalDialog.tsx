@@ -4,13 +4,13 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet} from 'react-native'
 import Markdown from 'react-native-easy-markdown'
 
-import type {WithdrawalDialogSteps} from '../../../../legacy/components/Delegation/types'
-import {WITHDRAWAL_DIALOG_STEPS} from '../../../../legacy/components/Delegation/types'
-import globalMessages, {ledgerMessages} from '../../../../legacy/i18n/global-messages'
 import {DangerousAction, ErrorView, Modal, PleaseWaitView, Spacer} from '../../../components'
 import {LedgerConnect, LedgerTransportSwitch} from '../../../HW'
+import globalMessages, {ledgerMessages} from '../../../i18n/global-messages'
+import {DeviceObj} from '../../../legacy/ledgerUtils'
 import {theme} from '../../../theme'
 import {TxDeregistration, TxWithdrawal} from '../../../yoroi-wallets'
+import {WithdrawalDialogSteps} from '../WithdrawStakingRewards'
 import {TransferSummary} from './TransferSummary'
 
 type Props = {
@@ -18,14 +18,14 @@ type Props = {
   onKeepKey: () => void
   onDeregisterKey: () => void
   onChooseTransport: (bool: boolean) => void
-  onConnectBLE: (...args: unknown[]) => void
-  onConnectUSB: (...args: unknown[]) => void
+  onConnectBLE: (deviceId: string) => void
+  onConnectUSB: (deviceObj: DeviceObj) => void
   withdrawals: null | Array<TxWithdrawal>
   deregistrations: null | Array<TxDeregistration>
   balance: BigNumber
   finalBalance: BigNumber
   fees: BigNumber
-  onConfirm: (password?: string | void) => void
+  onConfirm: (password?: string | undefined) => void
   onRequestClose: () => void
   useUSB: boolean
   showCloseIcon?: boolean
@@ -58,9 +58,9 @@ export const WithdrawalDialog = ({
 
   const getModalBody = () => {
     switch (step) {
-      case WITHDRAWAL_DIALOG_STEPS.CLOSED:
+      case WithdrawalDialogSteps.CLOSED:
         return null
-      case WITHDRAWAL_DIALOG_STEPS.WARNING:
+      case WithdrawalDialogSteps.WARNING:
         return (
           <DangerousAction
             title={strings.warningModalTitle}
@@ -83,16 +83,16 @@ export const WithdrawalDialog = ({
             <Markdown style={styles.paragraph}>{strings.explanation3}</Markdown>
           </DangerousAction>
         )
-      case WITHDRAWAL_DIALOG_STEPS.CHOOSE_TRANSPORT:
+      case WithdrawalDialogSteps.CHOOSE_TRANSPORT:
         return (
           <LedgerTransportSwitch
             onSelectUSB={() => onChooseTransport(true)}
             onSelectBLE={() => onChooseTransport(false)}
           />
         )
-      case WITHDRAWAL_DIALOG_STEPS.LEDGER_CONNECT:
+      case WithdrawalDialogSteps.LEDGER_CONNECT:
         return <LedgerConnect onConnectBLE={onConnectBLE} onConnectUSB={onConnectUSB} useUSB={useUSB} />
-      case WITHDRAWAL_DIALOG_STEPS.CONFIRM:
+      case WithdrawalDialogSteps.CONFIRM:
         return (
           <TransferSummary
             withdrawals={withdrawals}
@@ -105,23 +105,23 @@ export const WithdrawalDialog = ({
             useUSB={useUSB}
           />
         )
-      case WITHDRAWAL_DIALOG_STEPS.WAITING_HW_RESPONSE:
+      case WithdrawalDialogSteps.WAITING_HW_RESPONSE:
         return <PleaseWaitView title={''} spinnerText={strings.followSteps} />
-      case WITHDRAWAL_DIALOG_STEPS.WAITING:
+      case WithdrawalDialogSteps.WAITING:
         return <PleaseWaitView title={''} spinnerText={strings.pleaseWait} />
-      case WITHDRAWAL_DIALOG_STEPS.ERROR:
+      case WithdrawalDialogSteps.ERROR:
         if (!error) throw new Error("Invalid state: 'error' is undefined")
         return <ErrorView errorMessage={error.errorMessage} errorLogs={error.errorLogs} onDismiss={onRequestClose} />
       default:
         return null
     }
   }
-  if (step === WITHDRAWAL_DIALOG_STEPS.CLOSED) return null
+  if (step === WithdrawalDialogSteps.CLOSED) return null
   return (
     <Modal
       visible
       onRequestClose={onRequestClose}
-      showCloseIcon={step !== WITHDRAWAL_DIALOG_STEPS.WAITING_HW_RESPONSE && step !== WITHDRAWAL_DIALOG_STEPS.WAITING}
+      showCloseIcon={step !== WithdrawalDialogSteps.WAITING_HW_RESPONSE && step !== WithdrawalDialogSteps.WAITING}
     >
       {getModalBody()}
     </Modal>

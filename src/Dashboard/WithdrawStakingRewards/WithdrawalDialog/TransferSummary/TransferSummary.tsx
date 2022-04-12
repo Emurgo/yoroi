@@ -4,13 +4,13 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
-import {CONFIG} from '../../../../../legacy/config/config'
-import {getNetworkConfigById} from '../../../../../legacy/config/networks'
-import {confirmationMessages, txLabels} from '../../../../../legacy/i18n/global-messages'
-import {defaultNetworkAssetSelector} from '../../../../../legacy/selectors'
-import {formatTokenWithText} from '../../../../../legacy/utils/format'
 import {Text, TextInput, TwoActionView} from '../../../../components'
 import {Instructions as HWInstructions} from '../../../../HW'
+import {confirmationMessages, txLabels} from '../../../../i18n/global-messages'
+import {CONFIG} from '../../../../legacy/config'
+import {formatTokenWithText} from '../../../../legacy/format'
+import {getNetworkConfigById} from '../../../../legacy/networks'
+import {defaultNetworkAssetSelector} from '../../../../legacy/selectors'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {MultiToken, TxDeregistration, TxWithdrawal} from '../../../../yoroi-wallets'
@@ -21,7 +21,7 @@ type Props = {
   balance: BigNumber
   finalBalance: BigNumber
   fees: BigNumber
-  onConfirm: (password?: string | void) => void
+  onConfirm: (password?: string | undefined) => void
   onCancel: () => void
   useUSB?: boolean
 }
