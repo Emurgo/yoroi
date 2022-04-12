@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native'
 import {delay} from 'bluebird'
-import React, {useEffect} from 'react'
+import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, ScrollView, StyleSheet, Text} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -67,17 +67,6 @@ export const WalletSelectionScreen = () => {
       }
     },
   })
-
-  useEffect(() => {
-    if (walletMetas && !walletMetas.length)
-      navigation.navigate('new-wallet', {
-        screen: 'choose-create-restore',
-        params: {
-          networkId: CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
-          walletImplementationId: CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
-        },
-      })
-  }, [navigation, walletMetas])
 
   const onSelect = async (walletMeta: WalletMeta) => {
     if (walletMeta.isShelley || isJormungandr(walletMeta.networkId)) {
