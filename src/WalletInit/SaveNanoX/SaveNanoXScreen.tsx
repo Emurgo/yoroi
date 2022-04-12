@@ -1,41 +1,20 @@
 import {RouteProp, useRoute} from '@react-navigation/native'
 import React from 'react'
-import {useDispatch} from 'react-redux'
 
-import {saveHW} from '../../../legacy/actions/hwWallet'
 import image from '../../../legacy/assets/img/ledger_2.png'
 import {CONFIG} from '../../../legacy/config/config'
-import type {WalletMeta} from '../../../legacy/state'
 import {useCreateBip44Wallet} from '../../hooks'
 import {useWalletNavigation, WalletInitRoutes} from '../../navigation'
-import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
 import {WalletNameForm} from '../WalletNameForm'
 
 export const SaveNanoXScreen = () => {
-  const {navigateToTxHistory} = useWalletNavigation()
+  const {resetToWalletSelection} = useWalletNavigation()
   const route = useRoute<RouteProp<WalletInitRoutes, 'save-nano-x'>>()
   const {networkId, walletImplementationId, hwDeviceInfo} = route.params
-  const dispatch = useDispatch()
-  const setSelectedWalletMeta = useSetSelectedWalletMeta()
-  const setSelectedWallet = useSetSelectedWallet()
+
   const {createWallet, isLoading} = useCreateBip44Wallet({
-    onSuccess: (wallet, {name}) => {
-      const walletMeta: WalletMeta = {
-        name,
-
-        id: wallet.id,
-        networkId: wallet.networkId,
-        walletImplementationId: wallet.walletImplementationId,
-        isHW: wallet.isHW,
-        checksum: wallet.checksum,
-        isEasyConfirmationEnabled: wallet.isEasyConfirmationEnabled,
-        provider: wallet.provider,
-      }
-      setSelectedWalletMeta(walletMeta)
-      setSelectedWallet(wallet)
-      dispatch(saveHW(hwDeviceInfo))
-
-      navigateToTxHistory()
+    onSuccess: () => {
+      resetToWalletSelection()
     },
   })
 

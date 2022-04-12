@@ -4,29 +4,25 @@ import {defineMessages, useIntl} from 'react-intl'
 import {FlatList, ScrollView, View} from 'react-native'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useDispatch} from 'react-redux'
 
-import {handleGeneralError, updateWallets} from '../../../legacy/actions'
+import {handleGeneralError} from '../../../legacy/actions'
 import {Line, StatusBar, Text} from '../../../legacy/components/UiKit'
 import {CONFIG} from '../../../legacy/config/config'
 import type {NetworkId} from '../../../legacy/config/types'
-import {WalletMeta} from '../../../legacy/state'
 import {theme} from '../../../legacy/styles/config'
 import {Logger} from '../../../legacy/utils/logging'
 import {Boundary, Icon} from '../../components'
 import {useCreateBip44Wallet, usePlate} from '../../hooks'
 import {useWalletNavigation} from '../../navigation'
-import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
 import {WalletAddress} from '../WalletAddress'
 import {WalletNameForm} from '../WalletNameForm'
 
 export const SaveReadOnlyWalletScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
-  const {navigateToTxHistory} = useWalletNavigation()
+  const {resetToWalletSelection} = useWalletNavigation()
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const route: any = useRoute()
-  const dispatch = useDispatch()
 
   const {publicKeyHex, path, networkId, walletImplementationId} = route.params
 
@@ -37,9 +33,6 @@ export const SaveReadOnlyWalletScreen = () => {
     return i
   })
 
-  const setSelectedWalletMeta = useSetSelectedWalletMeta()
-  const setSelectedWallet = useSetSelectedWallet()
-
   const {createWallet, isLoading} = useCreateBip44Wallet({
     onError: async (error) => {
       Logger.error('SaveReadOnlyWalletScreen::onSubmit', error)
@@ -49,24 +42,8 @@ export const SaveReadOnlyWalletScreen = () => {
 
       throw error
     },
-    onSuccess: (wallet, {name}) => {
-      dispatch(updateWallets())
-
-      const walletMeta: WalletMeta = {
-        name,
-
-        id: wallet.id,
-        networkId: wallet.networkId,
-        walletImplementationId: wallet.walletImplementationId,
-        isHW: wallet.isHW,
-        checksum: wallet.checksum,
-        isEasyConfirmationEnabled: wallet.isEasyConfirmationEnabled,
-        provider: wallet.provider,
-      }
-      setSelectedWalletMeta(walletMeta)
-      setSelectedWallet(wallet)
-
-      navigateToTxHistory()
+    onSuccess: () => {
+      resetToWalletSelection()
     },
   })
 

@@ -6,16 +6,14 @@ import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, StatusBar, Text} from '../../../legacy/components/UiKit'
-import {WalletMeta} from '../../../legacy/state'
 import {COLORS} from '../../../legacy/styles/config'
 import {Spacer} from '../../components'
 import {useCreateWallet} from '../../hooks'
 import {useWalletNavigation, WalletInitRoutes} from '../../navigation'
-import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
 
 export const MnemonicCheckScreen = () => {
   const strings = useStrings()
-  const {navigateToTxHistory} = useWalletNavigation()
+  const {resetToWalletSelection} = useWalletNavigation()
   const route = useRoute<RouteProp<WalletInitRoutes, 'mnemonic-check'>>()
   const {mnemonic, password, name, networkId, walletImplementationId, provider} = route.params
 
@@ -31,25 +29,9 @@ export const MnemonicCheckScreen = () => {
   const isPhraseComplete = userEntries.length === mnemonicEntries.length
   const isPhraseValid = userEntries.map((entry) => entry.word).join(' ') === mnemonic
 
-  const setSelectedWalletMeta = useSetSelectedWalletMeta()
-  const setSelectedWallet = useSetSelectedWallet()
   const {createWallet, isLoading, isSuccess} = useCreateWallet({
-    onSuccess: (wallet) => {
-      const walletMeta: WalletMeta = {
-        name,
-
-        id: wallet.id,
-        networkId: wallet.networkId,
-        walletImplementationId: wallet.walletImplementationId,
-        isHW: wallet.isHW,
-        checksum: wallet.checksum,
-        isEasyConfirmationEnabled: wallet.isEasyConfirmationEnabled,
-        provider: wallet.provider,
-      }
-      setSelectedWalletMeta(walletMeta)
-      setSelectedWallet(wallet)
-
-      navigateToTxHistory()
+    onSuccess: () => {
+      resetToWalletSelection()
     },
   })
 
