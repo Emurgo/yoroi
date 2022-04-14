@@ -21,21 +21,20 @@ export const ImportReadOnlyWalletScreen = () => {
   const {networkId, walletImplementationId} = route.params
   const scannerRef = React.useRef<QRCodeScanner | null>(null)
 
-  const onRead = (event: {data: string}) => {
-    parseReadOnlyWalletKey(event.data)
-      .then(({publicKeyHex, path}: {publicKeyHex: string; path: string}) =>
-        navigation.navigate('save-read-only', {
-          publicKeyHex,
-          path,
-          networkId,
-          walletImplementationId,
-        }),
-      )
-      .catch((error: Error) => {
-        Logger.debug('ImportReadOnlyWalletScreen::onRead::error', error)
-        showErrorDialog(errorMessages.invalidQRCode, intl)
-        scannerRef.current?.reactivate()
+  const onRead = async (event: {data: string}) => {
+    try {
+      const {publicKeyHex, path}: {publicKeyHex: string; path: string} = await parseReadOnlyWalletKey(event.data)
+      navigation.navigate('save-read-only', {
+        publicKeyHex,
+        path,
+        networkId,
+        walletImplementationId,
       })
+    } catch (error) {
+      Logger.debug('ImportReadOnlyWalletScreen::onRead::error', error)
+      await showErrorDialog(errorMessages.invalidQRCode, intl)
+      scannerRef.current?.reactivate()
+    }
   }
 
   useFocusEffect(React.useCallback(() => scannerRef.current?.reactivate(), []))
