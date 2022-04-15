@@ -1,28 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {
-  Address as ShelleyAddress,
-  BigNum,
-  Bip32PrivateKey,
-  Certificate,
-  Ed25519KeyHash,
-  /* eslint-disable-next-line camelcase */
-  hash_transaction,
-  LinearFee,
-  /* eslint-disable-next-line camelcase */
-  make_vkey_witness,
-  RewardAddress,
-  StakeCredential,
-  StakeDelegation,
-  StakeDeregistration,
-  StakeRegistration,
-  TransactionBody,
-  TransactionHash,
-  TransactionInput,
-  TransactionInputs,
-  TransactionOutput,
-  TransactionOutputs,
-  Value,
-} from '@emurgo/react-native-haskell-shelley'
+
 import {BigNumber} from 'bignumber.js'
 
 import {CONFIG, getDefaultAssets} from '../../../legacy/config'
@@ -31,7 +8,26 @@ import {NETWORKS} from '../../../legacy/networks'
 import type {RawUtxo} from '../../../legacy/types'
 import type {Addressing} from '../../../legacy/types'
 import {byronAddrToHex, identifierToCardanoAsset} from '../../../legacy/utils'
-import {MultiToken} from '../..'
+import {
+  Address,
+  BigNum,
+  Bip32PrivateKey,
+  Certificate,
+  Ed25519KeyHash,
+  LinearFee,
+  MultiToken,
+  StakeCredential,
+  StakeDelegation,
+  StakeRegistration,
+  TransactionBody,
+  TransactionHash,
+  TransactionInput,
+  TransactionInputs,
+  TransactionOutput,
+  TransactionOutputs,
+  Value,
+} from '../..'
+import {hashTransaction, makeVkeyWitness, RewardAddress, StakeDeregistration} from '..'
 import {newAdaUnsignedTx, newAdaUnsignedTxFromUtxo, sendAllUnsignedTxFromUtxo, signTransaction} from './transactions'
 
 const NUMBERS = CONFIG.NUMBERS
@@ -71,10 +67,10 @@ const genSampleUtxos = async () => [
     // external addr 0, staking key 0
     receiver: Buffer.from(
       await (
-        await ShelleyAddress.from_bech32(
+        await Address.fromBech32(
           'addr1q8gpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqphf76y',
         )
-      ).to_bytes(),
+      ).toBytes(),
     ).toString('hex'),
     tx_hash: '86e36b6a65d82c9dcc0370b0ee3953aee579db0b837753306405c28a74de5550',
     tx_index: 0,
@@ -85,11 +81,11 @@ const genSampleUtxos = async () => [
     amount: '1000001',
     receiver: Buffer.from(
       await (
-        await ShelleyAddress.from_bech32(
+        await Address.fromBech32(
           // external addr 0, staking key 0
           'addr1q8gpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqphf76y',
         )
-      ).to_bytes(),
+      ).toBytes(),
     ).toString('hex'),
     tx_hash: '86e36b6a65d82c9dcc0370b0ee3953aee579db0b837753306405c28a74de5550',
     tx_index: 0,
@@ -107,11 +103,11 @@ const genSampleUtxos = async () => [
     amount: '10000001',
     receiver: Buffer.from(
       await (
-        await ShelleyAddress.from_bech32(
+        await Address.fromBech32(
           // external addr 0, staking key 0
           'addr1q8gpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqphf76y',
         )
-      ).to_bytes(),
+      ).toBytes(),
     ).toString('hex'),
     tx_hash: '86e36b6a65d82c9dcc0370b0ee3953aee579db0b837753306405c28a74de5550',
     tx_index: 0,
@@ -152,10 +148,10 @@ const genSampleAdaAddresses = async () => [
   {
     address: Buffer.from(
       await (
-        await ShelleyAddress.from_bech32(
+        await Address.fromBech32(
           'addr1q8gpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqphf76y',
         )
-      ).to_bytes(),
+      ).toBytes(),
     ).toString('hex'),
     addressing: {
       path: [0, 0],
@@ -180,10 +176,10 @@ const genAddressedUtxos = async () => {
 
 const getProtocolParams = async () => {
   return {
-    linearFee: await LinearFee.new(await BigNum.from_str('2'), await BigNum.from_str('500')),
-    minimumUtxoVal: await BigNum.from_str('1'),
-    poolDeposit: await BigNum.from_str('500'),
-    keyDeposit: await BigNum.from_str('500'),
+    linearFee: await LinearFee.new(await BigNum.fromStr('2'), await BigNum.fromStr('500')),
+    minimumUtxoVal: await BigNum.fromStr('1'),
+    poolDeposit: await BigNum.fromStr('500'),
+    keyDeposit: await BigNum.fromStr('500'),
     networkId: NETWORK.NETWORK_ID,
   }
 }
@@ -308,7 +304,7 @@ describe('Create unsigned TX from UTXO', () => {
           {
             ...((await getProtocolParams()) as any),
             // high enough that we can't send the remaining amount as change
-            minimumUtxoVal: BigNum.from_str('999100'),
+            minimumUtxoVal: BigNum.fromStr('999100'),
           },
           [],
           [],
@@ -325,7 +321,7 @@ describe('Create unsigned TX from UTXO', () => {
           new BigNumber(0),
           {
             ...((await getProtocolParams()) as any),
-            minimumUtxoVal: await BigNum.from_str('999000'),
+            minimumUtxoVal: await BigNum.fromStr('999000'),
           },
           [],
           [],
@@ -342,7 +338,7 @@ describe('Create unsigned TX from UTXO', () => {
           new BigNumber(0),
           {
             ...((await getProtocolParams()) as any),
-            minimumUtxoVal: await BigNum.from_str('998500'),
+            minimumUtxoVal: await BigNum.fromStr('998500'),
           },
           [],
           [],
@@ -407,9 +403,9 @@ describe('Create unsigned TX from UTXO', () => {
     // it takes 2 inputs because input selection algorithm
     const expectedFee = new BigNumber('1166')
     expect(unsignedTxResponse.senderUtxos).toEqual([utxos[0], utxos[1]])
-    expect(await (await (await unsignedTxResponse.txBuilder.get_explicit_input()).coin()).to_str()).toEqual('1000702')
-    expect(await (await (await unsignedTxResponse.txBuilder.get_explicit_output()).coin()).to_str()).toEqual('999536')
-    expect(await (await unsignedTxResponse.txBuilder.min_fee()).to_str()).toEqual(expectedFee.toString())
+    expect(await (await (await unsignedTxResponse.txBuilder.getExplicitInput()).coin()).toStr()).toEqual('1000702')
+    expect(await (await (await unsignedTxResponse.txBuilder.getExplicitOutput()).coin()).toStr()).toEqual('999536')
+    expect(await (await unsignedTxResponse.txBuilder.minFee()).toStr()).toEqual(expectedFee.toString())
   })
 
   it('Should exclude ada-only inputs smaller than fee to include them', async () => {
@@ -444,12 +440,12 @@ describe('Create unsigned TX from UTXO', () => {
       {
         linearFee: await LinearFee.new(
           // make sure the 1st utxo is excluded since it's too small
-          await BigNum.from_str(new BigNumber(utxos[0].amount).plus(1).toString()),
-          await BigNum.from_str('500'),
+          await BigNum.fromStr(new BigNumber(utxos[0].amount).plus(1).toString()),
+          await BigNum.fromStr('500'),
         ),
-        minimumUtxoVal: (await BigNum.from_str('1')) as any,
-        poolDeposit: (await BigNum.from_str('500')) as any,
-        keyDeposit: (await BigNum.from_str('500')) as any,
+        minimumUtxoVal: (await BigNum.fromStr('1')) as any,
+        poolDeposit: (await BigNum.fromStr('500')) as any,
+        keyDeposit: (await BigNum.fromStr('500')) as any,
         networkId: NETWORK.NETWORK_ID,
       },
       [],
@@ -460,9 +456,9 @@ describe('Create unsigned TX from UTXO', () => {
     // it takes 2 inputs because input selection algorithm
     const expectedFee = new BigNumber('208994')
     expect(unsignedTxResponse.senderUtxos).toEqual([utxos[1]])
-    expect(await (await (await unsignedTxResponse.txBuilder.get_explicit_input()).coin()).to_str()).toEqual('1000001')
-    expect(await (await (await unsignedTxResponse.txBuilder.get_explicit_output()).coin()).to_str()).toEqual('791007')
-    expect(await (await unsignedTxResponse.txBuilder.min_fee()).to_str()).toEqual(expectedFee.toString())
+    expect(await (await (await unsignedTxResponse.txBuilder.getExplicitInput()).coin()).toStr()).toEqual('1000001')
+    expect(await (await (await unsignedTxResponse.txBuilder.getExplicitOutput()).coin()).toStr()).toEqual('791007')
+    expect(await (await unsignedTxResponse.txBuilder.minFee()).toStr()).toEqual(expectedFee.toString())
   })
 
   it('Should pick inputs with tokens when using input selection', async () => {
@@ -509,25 +505,25 @@ describe('Create unsigned TX from UTXO', () => {
     // then it skips inputs until it found an input  containing the desired token
     const expectedFee = new BigNumber('1614')
     expect(unsignedTxResponse.senderUtxos).toEqual([utxos[0], utxos[1], utxos[4]])
-    expect(await (await (await unsignedTxResponse.txBuilder.get_explicit_input()).coin()).to_str()).toEqual('2000703')
-    expect(await (await (await unsignedTxResponse.txBuilder.get_explicit_output()).coin()).to_str()).toEqual('1999089')
-    expect(await (await unsignedTxResponse.txBuilder.min_fee()).to_str()).toEqual(expectedFee.toString())
+    expect(await (await (await unsignedTxResponse.txBuilder.getExplicitInput()).coin()).toStr()).toEqual('2000703')
+    expect(await (await (await unsignedTxResponse.txBuilder.getExplicitOutput()).coin()).toStr()).toEqual('1999089')
+    expect(await (await unsignedTxResponse.txBuilder.minFee()).toStr()).toEqual(expectedFee.toString())
 
     const assetInfo = await identifierToCardanoAsset(testAssetId)
 
     // current version of flow does not allow method calls in optional chains
-    // expect(await (await ((await (await unsignedTxResponse.txBuilder.get_explicit_input()).multiasset())
+    // expect(await (await ((await (await unsignedTxResponse.txBuilder.getExplicitInput()).multiasset())
     //   ?.get(assetInfo.policyId))
     //   ?.get(assetInfo.name))
-    //   ?.to_str()
+    //   ?.toStr()
     // ).toEqual('1234')
-    let _multiAsset = await (await unsignedTxResponse.txBuilder.get_explicit_input()).multiasset()
+    let _multiAsset = await (await unsignedTxResponse.txBuilder.getExplicitInput()).multiasset()
 
     let _assetAmountStr =
       _multiAsset != null
         ? (await _multiAsset.get(assetInfo.policyId)) != null
           ? (await ((await _multiAsset.get(assetInfo.policyId)) as any).get(assetInfo.name)) != null
-            ? await (await ((await _multiAsset.get(assetInfo.policyId)) as any).get(assetInfo.name)).to_str()
+            ? await (await ((await _multiAsset.get(assetInfo.policyId)) as any).get(assetInfo.name)).toStr()
             : null
           : null
         : null
@@ -540,7 +536,7 @@ describe('Create unsigned TX from UTXO', () => {
       _multiAsset != null
         ? (await _multiAsset.get(assetInfo.policyId)) != null
           ? (await ((await _multiAsset.get(assetInfo.policyId)) as any).get(assetInfo.name)) != null
-            ? await (await ((await _multiAsset.get(assetInfo.policyId)) as any).get(assetInfo.name)).to_str()
+            ? await (await ((await _multiAsset.get(assetInfo.policyId)) as any).get(assetInfo.name)).toStr()
             : null
           : null
         : null
@@ -587,7 +583,7 @@ describe('Create unsigned TX from UTXO', () => {
         {
           ...((await getProtocolParams()) as any),
           // high enough that we can't send the remaining amount as change
-          minimumUtxoVal: await BigNum.from_str('500000'),
+          minimumUtxoVal: await BigNum.fromStr('500000'),
         },
         [],
         [],
@@ -608,7 +604,7 @@ describe('Create unsigned TX from UTXO', () => {
         {
           ...((await getProtocolParams()) as any),
           // high enough that we can't send the remaining amount as change
-          minimumUtxoVal: await BigNum.from_str('500000'),
+          minimumUtxoVal: await BigNum.fromStr('500000'),
         },
         undefined,
       ),
@@ -739,19 +735,19 @@ describe('Create unsigned TX from addresses', () => {
     )
     expect(unsignedTxResponse.senderUtxos).toEqual([addressedUtxos[0], addressedUtxos[1]])
 
-    expect(await (await (await unsignedTxResponse.txBuilder.get_explicit_input()).coin()).to_str()).toEqual('1000702')
-    expect(await ((await unsignedTxResponse.txBuilder.get_explicit_output()).coin() as any).to_str()).toEqual('5001')
-    expect(await (await unsignedTxResponse.txBuilder.min_fee()).to_str()).toEqual('1064')
+    expect(await (await (await unsignedTxResponse.txBuilder.getExplicitInput()).coin()).toStr()).toEqual('1000702')
+    expect(await ((await unsignedTxResponse.txBuilder.getExplicitOutput()).coin() as any).toStr()).toEqual('5001')
+    expect(await (await unsignedTxResponse.txBuilder.minFee()).toStr()).toEqual('1064')
     // burns remaining amount
     expect(
       await (
         await (
           await (
-            await unsignedTxResponse.txBuilder.get_explicit_input()
-          ).checked_sub(await unsignedTxResponse.txBuilder.get_explicit_output())
+            await unsignedTxResponse.txBuilder.getExplicitInput()
+          ).checkedSub(await unsignedTxResponse.txBuilder.getExplicitOutput())
         ).coin()
-      ).to_str(),
-    ).toEqual(await (await (await unsignedTxResponse.txBuilder.build()).fee()).to_str())
+      ).toStr(),
+    ).toEqual(await (await (await unsignedTxResponse.txBuilder.build()).fee()).toStr())
   })
 })
 
@@ -789,7 +785,7 @@ describe('Create signed transactions', () => {
       true,
     )
 
-    const accountPrivateKey = await Bip32PrivateKey.from_bytes(
+    const accountPrivateKey = await Bip32PrivateKey.fromBytes(
       Buffer.from(
         '70afd5ff1f7f551c481b7e3f3541f7c63f5f6bcb293af92565af3deea0bcd6481a6e7b8acbe38f3906c63ccbe8b2d9b876572651ac5d2afc0aca284d9412bb1b4839bf02e1d990056d0f06af22ce4bcca52ac00f1074324aab96bbaaaccf290d',
         'hex',
@@ -813,13 +809,13 @@ describe('Create signed transactions', () => {
     }
     expect(await bootstrapWits.len()).toEqual(1)
 
-    expect(Buffer.from(await (await bootstrapWits.get(0)).to_bytes()).toString('hex')).toEqual(
+    expect(Buffer.from(await (await bootstrapWits.get(0)).toBytes()).toString('hex')).toEqual(
       '8458208fb03c3aa052f51c086c54bd4059ead2d2e426ac89fa4b3ce41cbfd8800b51c05840d4da0fe3615f90581926281be0510df5f6616ebed5a6d6831cceab4dd9935f7f5b6150d43b918d79e8db7cd3e17b9de91fdfbaed7cdab18818331942852fd10b58202623fceb96b07408531a5cb259f53845a38d6b68928e7c0c7e390f07545d0e6241a0',
     )
   })
 
   it('Witness should match with addressing from root', async () => {
-    const accountPrivateKey = await Bip32PrivateKey.from_bytes(
+    const accountPrivateKey = await Bip32PrivateKey.fromBytes(
       Buffer.from(
         '70afd5ff1f7f551c481b7e3f3541f7c63f5f6bcb293af92565af3deea0bcd6481a6e7b8acbe38f3906c63ccbe8b2d9b876572651ac5d2afc0aca284d9412bb1b4839bf02e1d990056d0f06af22ce4bcca52ac00f1074324aab96bbaaaccf290d',
         'hex',
@@ -828,7 +824,7 @@ describe('Create signed transactions', () => {
     const inputs = await (TransactionInputs as any).new()
     await inputs.add(
       await TransactionInput.new(
-        await TransactionHash.from_bytes(
+        await TransactionHash.fromBytes(
           Buffer.from('05ec4a4a7f4645fa66886cef2e34706907a3a7f9d88e0d48b313ad2cdf76fb5f', 'hex'),
         ),
         0,
@@ -836,7 +832,7 @@ describe('Create signed transactions', () => {
     )
     await inputs.add(
       await TransactionInput.new(
-        await TransactionHash.from_bytes(
+        await TransactionHash.fromBytes(
           Buffer.from('6930f123df83e4178b0324ae617b2028c0b38c6ff4660583a2abf1f7b08195fe', 'hex'),
         ),
         0,
@@ -845,13 +841,13 @@ describe('Create signed transactions', () => {
     const outputs = await (TransactionOutputs as any).new()
     await outputs.add(
       await TransactionOutput.new(
-        await ShelleyAddress.from_bytes(
+        await Address.fromBytes(
           Buffer.from(await byronAddrToHex('Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4'), 'hex'),
         ),
-        await Value.new(await BigNum.from_str('5001')),
+        await Value.new(await BigNum.fromStr('5001')),
       ),
     )
-    const txBody = await (TransactionBody as any).new(inputs, outputs, await BigNum.from_str('1000'), 0)
+    const txBody = await (TransactionBody as any).new(inputs, outputs, await BigNum.fromStr('1000'), 0)
     const signedTx = await signTransaction(
       [
         {
@@ -909,19 +905,19 @@ describe('Create signed transactions', () => {
     // note: only one witness since we got rid of duplicates
     expect(await bootstrapWits.len()).toEqual(1)
 
-    expect(Buffer.from(await (await bootstrapWits.get(0)).to_bytes()).toString('hex')).toEqual(
+    expect(Buffer.from(await (await bootstrapWits.get(0)).toBytes()).toString('hex')).toEqual(
       '8458208fb03c3aa052f51c086c54bd4059ead2d2e426ac89fa4b3ce41cbfd8800b51c058401edebb108c74a991bef5b28458778fc0713499349d77fb98acc63e4219cfcd1b51321ccaccdf2ce2e80d7c2687f3d79feea32daedcfbc19792dff0358af5950358202623fceb96b07408531a5cb259f53845a38d6b68928e7c0c7e390f07545d0e6241a0',
     )
   })
 
   it('Transaction should support certificates', async () => {
-    const accountPrivateKey = await Bip32PrivateKey.from_bytes(
+    const accountPrivateKey = await Bip32PrivateKey.fromBytes(
       Buffer.from(
         '408a1cb637d615c49e8696c30dd54883302a20a7b9b8a9d1c307d2ed3cd50758c9402acd000461a8fc0f25728666e6d3b86d031b8eea8d2f69b21e8aa6ba2b153e3ec212cc8a36ed9860579dfe1e3ef4d6de778c5dbdd981623b48727cd96247',
         'hex',
       ),
     )
-    const stakingKey = await (await (await accountPrivateKey.derive(2)).derive(NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
+    const stakingKey = await (await (await accountPrivateKey.derive(2)).derive(NUMBERS.STAKING_KEY_INDEX)).toRawKey()
 
     const addressedUtxos = await genAddressedUtxos()
 
@@ -951,13 +947,13 @@ describe('Create signed transactions', () => {
       new BigNumber(0),
       await getProtocolParams(),
       [
-        await Certificate.new_stake_registration(
-          await StakeRegistration.new(await StakeCredential.from_keyhash(await (await stakingKey.to_public()).hash())),
+        await Certificate.newStakeRegistration(
+          await StakeRegistration.new(await StakeCredential.fromKeyhash(await (await stakingKey.toPublic()).hash())),
         ),
-        await Certificate.new_stake_delegation(
+        await Certificate.newStakeDelegation(
           await StakeDelegation.new(
-            await StakeCredential.from_keyhash(await (await stakingKey.to_public()).hash()),
-            await Ed25519KeyHash.from_bytes(
+            await StakeCredential.fromKeyhash(await (await stakingKey.toPublic()).hash()),
+            await Ed25519KeyHash.fromBytes(
               Buffer.from('1b268f4cba3faa7e36d8a0cc4adca2096fb856119412ee7330f692b5', 'hex'),
             ),
           ),
@@ -974,8 +970,8 @@ describe('Create signed transactions', () => {
       new Set([
         Buffer.from(
           await (
-            await make_vkey_witness(await hash_transaction(await unsignedTxResponse.txBuilder.build()), stakingKey)
-          ).to_bytes(),
+            await makeVkeyWitness(await hashTransaction(await unsignedTxResponse.txBuilder.build()), stakingKey)
+          ).toBytes(),
         ).toString('hex'),
       ]),
       undefined,
@@ -990,8 +986,8 @@ describe('Create signed transactions', () => {
 
     // set is used so order not defined so we sort the list
     const witArray = [
-      Buffer.from(await (await vKeyWits.get(0)).to_bytes()).toString('hex'),
-      Buffer.from(await (await vKeyWits.get(1)).to_bytes()).toString('hex'),
+      Buffer.from(await (await vKeyWits.get(0)).toBytes()).toString('hex'),
+      Buffer.from(await (await vKeyWits.get(1)).toBytes()).toString('hex'),
     ].sort()
 
     expect(witArray).toEqual([
@@ -1001,14 +997,14 @@ describe('Create signed transactions', () => {
   })
 
   it('Transaction should support withdrawals', async () => {
-    const accountPrivateKey = await Bip32PrivateKey.from_bytes(
+    const accountPrivateKey = await Bip32PrivateKey.fromBytes(
       Buffer.from(
         '408a1cb637d615c49e8696c30dd54883302a20a7b9b8a9d1c307d2ed3cd50758c9402acd000461a8fc0f25728666e6d3b86d031b8eea8d2f69b21e8aa6ba2b153e3ec212cc8a36ed9860579dfe1e3ef4d6de778c5dbdd981623b48727cd96247',
         'hex',
       ),
     )
-    const stakingKey = await (await (await accountPrivateKey.derive(2)).derive(NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
-    const stakingKeyCredential = await StakeCredential.from_keyhash(await (await stakingKey.to_public()).hash())
+    const stakingKey = await (await (await accountPrivateKey.derive(2)).derive(NUMBERS.STAKING_KEY_INDEX)).toRawKey()
+    const stakingKeyCredential = await StakeCredential.fromKeyhash(await (await stakingKey.toPublic()).hash())
 
     if (NETWORK.CHAIN_NETWORK_ID == null) {
       throw new Error('missing network id')
@@ -1024,11 +1020,11 @@ describe('Create signed transactions', () => {
       [addressedUtxos[3]],
       new BigNumber(0),
       protocolParams,
-      [await Certificate.new_stake_deregistration(await StakeDeregistration.new(stakingKeyCredential))],
+      [await Certificate.newStakeDeregistration(await StakeDeregistration.new(stakingKeyCredential))],
       [
         {
           address: await RewardAddress.new(Number.parseInt(NETWORK.CHAIN_NETWORK_ID, 10), stakingKeyCredential),
-          amount: await BigNum.from_str(withdrawAmount),
+          amount: await BigNum.fromStr(withdrawAmount),
         },
       ],
       true,
@@ -1041,8 +1037,8 @@ describe('Create signed transactions', () => {
       new Set([
         Buffer.from(
           await (
-            await make_vkey_witness(await hash_transaction(await unsignedTxResponse.txBuilder.build()), stakingKey)
-          ).to_bytes(),
+            await makeVkeyWitness(await hashTransaction(await unsignedTxResponse.txBuilder.build()), stakingKey)
+          ).toBytes(),
         ).toString('hex'),
       ]),
       undefined,
@@ -1059,21 +1055,21 @@ describe('Create signed transactions', () => {
     const withdrawals = await txBody.withdrawals()
     if (withdrawals == null) throw new Error('Withdrawals should not be null')
     expect(await withdrawals.len()).toEqual(1)
-    const fee = await (await txBody.fee()).to_str()
+    const fee = await (await txBody.fee()).toStr()
     expect(fee).toEqual('1302')
     expect(await (await txBody.outputs()).len()).toEqual(1)
-    expect(await (await (await (await (await txBody.outputs()).get(0)).amount()).coin()).to_str()).toEqual(
+    expect(await (await (await (await (await txBody.outputs()).get(0)).amount()).coin()).toStr()).toEqual(
       new BigNumber(addressedUtxos[3].amount)
         .minus(fee)
         .plus(withdrawAmount)
-        .plus(await protocolParams.keyDeposit.to_str())
+        .plus(await protocolParams.keyDeposit.toStr())
         .toString(),
     )
 
     // set is used so order not defined so we sort the list
     const witArray = [
-      Buffer.from(await (await vKeyWits.get(0)).to_bytes()).toString('hex'),
-      Buffer.from(await (await vKeyWits.get(1)).to_bytes()).toString('hex'),
+      Buffer.from(await (await vKeyWits.get(0)).toBytes()).toString('hex'),
+      Buffer.from(await (await vKeyWits.get(1)).toBytes()).toString('hex'),
     ].sort()
 
     expect(witArray).toEqual([
@@ -1099,22 +1095,22 @@ describe('Create sendAll unsigned TX from UTXO', () => {
     const expectedInput = new BigNumber('11000002')
 
     expect(sendAllResponse.senderUtxos).toEqual([utxos[0], utxos[1]])
-    expect(await (await (await sendAllResponse.txBuilder.get_explicit_input()).coin()).to_str()).toEqual(
+    expect(await (await (await sendAllResponse.txBuilder.getExplicitInput()).coin()).toStr()).toEqual(
       expectedInput.toString(),
     )
-    expect(await (await (await sendAllResponse.txBuilder.get_explicit_output()).coin()).to_str()).toEqual(
+    expect(await (await (await sendAllResponse.txBuilder.getExplicitOutput()).coin()).toStr()).toEqual(
       expectedInput.minus(expectedFee).toString(),
     )
-    expect(await (await sendAllResponse.txBuilder.min_fee()).to_str()).toEqual(expectedFee.toString())
+    expect(await (await sendAllResponse.txBuilder.minFee()).toStr()).toEqual(expectedFee.toString())
     // make sure we don't accidentally burn a lot of coins
     expect(
       await (
         await (
           await (
-            await sendAllResponse.txBuilder.get_explicit_input()
-          ).checked_sub(await sendAllResponse.txBuilder.get_explicit_output())
+            await sendAllResponse.txBuilder.getExplicitInput()
+          ).checkedSub(await sendAllResponse.txBuilder.getExplicitOutput())
         ).coin()
-      ).to_str(),
+      ).toStr(),
     ).toEqual(expectedFee.toString())
   })
 

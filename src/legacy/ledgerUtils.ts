@@ -25,33 +25,7 @@ import AppAda, {
   TxAuxiliaryDataType,
   TxOutputDestinationType,
 } from '@cardano-foundation/ledgerjs-hw-app-cardano'
-import {
-  Address,
-  AuxiliaryData,
-  BaseAddress,
-  Bip32PublicKey,
-  BootstrapWitness,
-  BootstrapWitnesses,
-  ByronAddress,
-  Certificates,
-  Ed25519Signature,
-  MultiAsset,
-  RewardAddress,
-  StakeCredential,
-  Transaction,
-  TransactionBody,
-  TransactionOutputs,
-  TransactionWitnessSet,
-  Vkey,
-  Vkeywitness,
-  Vkeywitnesses,
-  Withdrawals,
-} from '@emurgo/react-native-haskell-shelley'
-// import {TransportStatusError} from '@ledgerhq/hw-transport'
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
-// note(v-almonacid) we'll be using a fork of @ledgerhq/react-native-hid
-// so that we can keep minSdkVersion = 21
-// import TransportHID from '@ledgerhq/react-native-hid'
 import TransportHID from '@v-almonacid/react-native-hid'
 import {PermissionsAndroid, Platform} from 'react-native'
 import {BleError} from 'react-native-ble-plx'
@@ -59,13 +33,28 @@ import {BleError} from 'react-native-ble-plx'
 import {ledgerMessages} from '../i18n/global-messages'
 import LocalizableError from '../i18n/LocalizableError'
 import {Logger} from '../legacy/logging'
-import type {HaskellShelleyTxSignRequest} from '../yoroi-wallets'
+import {
+  BaseAddress,
+  BootstrapWitness,
+  BootstrapWitnesses,
+  ByronAddress,
+  CardanoTypes,
+  Ed25519Signature,
+  HaskellShelleyTxSignRequest,
+  RewardAddress,
+  Transaction,
+  TransactionWitnessSet,
+  Vkey,
+  Vkeywitness,
+  Vkeywitnesses,
+} from '../yoroi-wallets'
 import {CONFIG, isByron, isHaskellShelley} from './config'
 import {getNetworkConfigById} from './networks'
 import {NUMBERS} from './numbers'
 import type {NetworkId, WalletImplementationId} from './types'
 import type {Address as JsAddress, AddressedUtxo, Addressing, Value} from './types'
 import {derivePublicByAddressing, normalizeToAddress, toHexOrBase58, verifyFromBip44Root} from './utils'
+
 //
 // ============== Errors ==================
 //
@@ -398,11 +387,11 @@ export const verifyAddress = async (
     const stakingKeyAddressing = {}
 
     if (isHaskellShelley(walletImplementationId)) {
-      const baseAddr = await BaseAddress.from_address(addressPtr as any)
+      const baseAddr = await BaseAddress.fromAddress(addressPtr as any)
 
       if (baseAddr) {
-        const rewardAddr = await RewardAddress.new(Number.parseInt(chainNetworkId, 10), await baseAddr.stake_cred())
-        const addressPayload = Buffer.from(await (await rewardAddr.to_address()).to_bytes()).toString('hex')
+        const rewardAddr = await RewardAddress.new(Number.parseInt(chainNetworkId, 10), await baseAddr.stakeCred())
+        const addressPayload = Buffer.from(await (await rewardAddr.toAddress()).toBytes()).toString('hex')
         stakingKeyAddressing[addressPayload] = {
           path: [
             CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852,
@@ -510,7 +499,7 @@ export const createLedgerSignTxPayload = async (request: {
       network,
       inputs: ledgerInputs,
       outputs: ledgerOutputs,
-      fee: await (await txBody.fee()).to_str(),
+      fee: await (await txBody.fee()).toStr(),
       ttl: ttl === undefined ? ttl : ttl.toString(),
       certificates: ledgerCertificates,
       withdrawals: ledgerWithdrawal,
@@ -533,7 +522,7 @@ function _transformToLedgerInputs(inputs: Array<AddressedUtxo>): Array<TxInput> 
   }))
 }
 
-async function toLedgerTokenBundle(assets: MultiAsset | null | undefined): Promise<Array<AssetGroup>> {
+async function toLedgerTokenBundle(assets: CardanoTypes.MultiAsset | null | undefined): Promise<Array<AssetGroup>> {
   const assetGroup: Array<AssetGroup> = []
   if (assets == null) return assetGroup
   const policyHashes = await assets.keys()
@@ -550,13 +539,13 @@ async function toLedgerTokenBundle(assets: MultiAsset | null | undefined): Promi
       const amount = await assetsForPolicy.get(assetName)
       if (amount == null) continue
       tokens.push({
-        amount: await amount.to_str(),
+        amount: await amount.toStr(),
         assetNameHex: Buffer.from(await assetName.name()).toString('hex'),
       })
     }
 
     assetGroup.push({
-      policyIdHex: Buffer.from(await policyId.to_bytes()).toString('hex'),
+      policyIdHex: Buffer.from(await policyId.toBytes()).toString('hex'),
       tokens,
     })
   }
@@ -566,7 +555,7 @@ async function toLedgerTokenBundle(assets: MultiAsset | null | undefined): Promi
 
 async function _transformToLedgerOutputs(request: {
   networkId: number
-  txOutputs: TransactionOutputs
+  txOutputs: CardanoTypes.TransactionOutputs
   changeAddrs: Array<JsAddress & Value & Addressing>
   addressingMap: (arg0: string) => void | Addressing['addressing']
 }): Promise<Array<TxOutput>> {
@@ -588,7 +577,7 @@ async function _transformToLedgerOutputs(request: {
         addressingMap: request.addressingMap,
       })
       result.push({
-        amount: await (await (await output.amount()).coin()).to_str(),
+        amount: await (await (await output.amount()).coin()).toStr(),
         tokenBundle: await toLedgerTokenBundle(await (await output.amount()).multiasset()),
         destination: {
           type: TxOutputDestinationType.DEVICE_OWNED,
@@ -597,12 +586,12 @@ async function _transformToLedgerOutputs(request: {
       })
     } else {
       result.push({
-        amount: await (await (await output.amount()).coin()).to_str(),
+        amount: await (await (await output.amount()).coin()).toStr(),
         tokenBundle: await toLedgerTokenBundle(await (await output.amount()).multiasset()),
         destination: {
           type: TxOutputDestinationType.THIRD_PARTY,
           params: {
-            addressHex: Buffer.from(await address.to_bytes()).toString('hex'),
+            addressHex: Buffer.from(await address.toBytes()).toString('hex'),
           },
         },
       })
@@ -613,7 +602,7 @@ async function _transformToLedgerOutputs(request: {
 }
 
 async function formatLedgerWithdrawals(
-  withdrawals: Withdrawals,
+  withdrawals: CardanoTypes.Withdrawals,
   addressingMap: (arg0: string) => void | Addressing['addressing'],
 ): Promise<Array<Withdrawal>> {
   const result: Array<Withdrawal> = []
@@ -628,7 +617,7 @@ async function formatLedgerWithdrawals(
       throw new Error('formatLedgerWithdrawals: null withdrawal amount, should never happen')
     }
 
-    const rewardAddressPayload = Buffer.from(await (await rewardAddress.to_address()).to_bytes()).toString('hex')
+    const rewardAddressPayload = Buffer.from(await (await rewardAddress.toAddress()).toBytes()).toString('hex')
     const addressing = addressingMap(rewardAddressPayload)
 
     if (addressing == null) {
@@ -636,7 +625,7 @@ async function formatLedgerWithdrawals(
     }
 
     result.push({
-      amount: await withdrawalAmount.to_str(),
+      amount: await withdrawalAmount.toStr(),
       stakeCredential: {
         type: StakeCredentialParamsType.KEY_PATH,
         keyPath: addressing.path,
@@ -649,12 +638,12 @@ async function formatLedgerWithdrawals(
 
 async function formatLedgerCertificates(
   networkId: number,
-  certificates: Certificates,
+  certificates: CardanoTypes.Certificates,
   addressingMap: (arg0: string) => void | Addressing['addressing'],
 ): Promise<Array<Certificate>> {
-  const getPath = async (stakeCredential: StakeCredential): Promise<BIP32Path> => {
+  const getPath = async (stakeCredential: CardanoTypes.StakeCredential): Promise<BIP32Path> => {
     const rewardAddr = await RewardAddress.new(networkId, stakeCredential)
-    const addressPayload = Buffer.from(await (await rewardAddr.to_address()).to_bytes()).toString('hex')
+    const addressPayload = Buffer.from(await (await rewardAddr.toAddress()).toBytes()).toString('hex')
     const addressing = addressingMap(addressPayload)
 
     if (addressing == null) {
@@ -668,7 +657,7 @@ async function formatLedgerCertificates(
 
   for (let i = 0; i < (await certificates.len()); i++) {
     const cert = await certificates.get(i)
-    const registrationCert = await cert.as_stake_registration()
+    const registrationCert = await cert.asStakeRegistration()
 
     if (registrationCert != null) {
       result.push({
@@ -676,14 +665,14 @@ async function formatLedgerCertificates(
         params: {
           stakeCredential: {
             type: StakeCredentialParamsType.KEY_PATH,
-            keyPath: await getPath(await registrationCert.stake_credential()),
+            keyPath: await getPath(await registrationCert.stakeCredential()),
           },
         },
       })
       continue
     }
 
-    const deregistrationCert = await cert.as_stake_deregistration()
+    const deregistrationCert = await cert.asStakeDeregistration()
 
     if (deregistrationCert != null) {
       result.push({
@@ -691,14 +680,14 @@ async function formatLedgerCertificates(
         params: {
           stakeCredential: {
             type: StakeCredentialParamsType.KEY_PATH,
-            keyPath: await getPath(await deregistrationCert.stake_credential()),
+            keyPath: await getPath(await deregistrationCert.stakeCredential()),
           },
         },
       })
       continue
     }
 
-    const delegationCert = await cert.as_stake_delegation()
+    const delegationCert = await cert.asStakeDelegation()
 
     if (delegationCert != null) {
       result.push({
@@ -706,9 +695,9 @@ async function formatLedgerCertificates(
         params: {
           stakeCredential: {
             type: StakeCredentialParamsType.KEY_PATH,
-            keyPath: await getPath(await delegationCert.stake_credential()),
+            keyPath: await getPath(await delegationCert.stakeCredential()),
           },
-          poolKeyHashHex: Buffer.from(await (await delegationCert.pool_keyhash()).to_bytes()).toString('hex'),
+          poolKeyHashHex: Buffer.from(await (await delegationCert.poolKeyhash()).toBytes()).toString('hex'),
         },
       })
       continue
@@ -722,12 +711,12 @@ async function formatLedgerCertificates(
 
 export async function toLedgerAddressParameters(request: {
   networkId: number
-  address: Address
+  address: CardanoTypes.Address
   path: Array<number>
   addressingMap: (arg0: string) => void | Addressing['addressing']
 }): Promise<DeviceOwnedAddress> {
   {
-    const byronAddr = await ByronAddress.from_address(request.address)
+    const byronAddr = await ByronAddress.fromAddress(request.address)
 
     if (byronAddr) {
       return {
@@ -739,22 +728,22 @@ export async function toLedgerAddressParameters(request: {
     }
   }
   {
-    const baseAddr = await BaseAddress.from_address(request.address)
+    const baseAddr = await BaseAddress.fromAddress(request.address)
 
     if (baseAddr) {
-      const rewardAddr = await RewardAddress.new(request.networkId, await baseAddr.stake_cred())
-      const addressPayload = Buffer.from(await (await rewardAddr.to_address()).to_bytes()).toString('hex')
+      const rewardAddr = await RewardAddress.new(request.networkId, await baseAddr.stakeCred())
+      const addressPayload = Buffer.from(await (await rewardAddr.toAddress()).toBytes()).toString('hex')
       const addressing = request.addressingMap(addressPayload)
 
       if (addressing == null) {
-        const stakeCred = await baseAddr.stake_cred()
-        const wasmHash = (await stakeCred.to_keyhash()) ?? (await stakeCred.to_scripthash())
+        const stakeCred = await baseAddr.stakeCred()
+        const wasmHash = (await stakeCred.toKeyhash()) ?? (await stakeCred.toScripthash())
 
         if (wasmHash == null) {
           throw new Error('toLedgerAddressParameters unknown hash type')
         }
 
-        const hashInAddress = Buffer.from(await wasmHash.to_bytes()).toString('hex')
+        const hashInAddress = Buffer.from(await wasmHash.toBytes()).toString('hex')
         return {
           type: AddressType.BASE_PAYMENT_KEY_STAKE_KEY,
           params: {
@@ -780,7 +769,7 @@ export async function toLedgerAddressParameters(request: {
   // TODO(v-almonacid): PointerAddress not yet implemented (bindings missing)
   // TODO(v-almonacid): EnterpriseAddress not yet implemented (bindings missing)
   {
-    const rewardAddr = await RewardAddress.from_address(request.address)
+    const rewardAddr = await RewardAddress.fromAddress(request.address)
 
     if (rewardAddr) {
       return {
@@ -817,14 +806,14 @@ export const signTxWithLedger = async (
   }
 }
 export const buildSignedTransaction = async (
-  txBody: TransactionBody,
+  txBody: CardanoTypes.TransactionBody,
   senderUtxos: Array<AddressedUtxo>,
   witnesses: Array<Witness>,
   publicKey: Addressing & {
-    key: Bip32PublicKey
+    key: CardanoTypes.Bip32PublicKey
   },
-  auxiliaryData: AuxiliaryData | undefined,
-): Promise<Transaction> => {
+  auxiliaryData?: CardanoTypes.AuxiliaryData,
+) => {
   const isSameArray = (array1: Array<number>, array2: Array<number>) =>
     array1.length === array2.length && array1.every((value, index) => value === array2[index])
 
@@ -840,8 +829,8 @@ export const buildSignedTransaction = async (
 
   const keyLevel = publicKey.addressing.startLevel + publicKey.addressing.path.length - 1
   const witSet = await TransactionWitnessSet.new()
-  const bootstrapWitnesses: Array<BootstrapWitness> = []
-  const vkeys: Array<Vkeywitness> = []
+  const bootstrapWitnesses: Array<CardanoTypes.BootstrapWitness> = []
+  const vkeys: Array<CardanoTypes.Vkeywitness> = []
 
   // Note: Ledger removes duplicate witnesses
   // but there may be a one-to-many relationship
@@ -859,15 +848,15 @@ export const buildSignedTransaction = async (
       },
     })
 
-    if (await ByronAddress.is_valid(utxo.receiver)) {
-      const byronAddr = await ByronAddress.from_base58(utxo.receiver)
+    if (await ByronAddress.isValid(utxo.receiver)) {
+      const byronAddr = await ByronAddress.fromBase58(utxo.receiver)
       const bootstrapWit = await BootstrapWitness.new(
-        await Vkey.new(await addressKey.to_raw_key()),
-        await Ed25519Signature.from_bytes(Buffer.from(witness, 'hex')),
+        await Vkey.new(await addressKey.toRawKey()),
+        await Ed25519Signature.fromBytes(Buffer.from(witness, 'hex')),
         await addressKey.chaincode(),
         await byronAddr.attributes(),
       )
-      const asString = Buffer.from(await bootstrapWit.to_bytes()).toString('hex')
+      const asString = Buffer.from(await bootstrapWit.toBytes()).toString('hex')
 
       if (seenBootstrapWit.has(asString)) {
         continue
@@ -879,10 +868,10 @@ export const buildSignedTransaction = async (
     }
 
     const vkeyWit = await Vkeywitness.new(
-      await Vkey.new(await addressKey.to_raw_key()),
-      await Ed25519Signature.from_bytes(Buffer.from(witness, 'hex')),
+      await Vkey.new(await addressKey.toRawKey()),
+      await Ed25519Signature.fromBytes(Buffer.from(witness, 'hex')),
     )
-    const asString = Buffer.from(await vkeyWit.to_bytes()).toString('hex')
+    const asString = Buffer.from(await vkeyWit.toBytes()).toString('hex')
 
     if (seenVKeyWit.has(asString)) {
       continue
@@ -909,10 +898,10 @@ export const buildSignedTransaction = async (
         },
       })
       const vkeyWit = await Vkeywitness.new(
-        await Vkey.new(await stakingKey.to_raw_key()),
-        await Ed25519Signature.from_bytes(Buffer.from(witness.witnessSignatureHex, 'hex')),
+        await Vkey.new(await stakingKey.toRawKey()),
+        await Ed25519Signature.fromBytes(Buffer.from(witness.witnessSignatureHex, 'hex')),
       )
-      const asString = Buffer.from(await vkeyWit.to_bytes()).toString('hex')
+      const asString = Buffer.from(await vkeyWit.toBytes()).toString('hex')
 
       if (seenVKeyWit.has(asString)) {
         continue
@@ -930,7 +919,7 @@ export const buildSignedTransaction = async (
       await bootstrapWitWasm.add(bootstrapWit)
     }
 
-    await witSet.set_bootstraps(bootstrapWitWasm)
+    await witSet.setBootstraps(bootstrapWitWasm)
   }
 
   if (vkeys.length > 0) {
@@ -940,9 +929,9 @@ export const buildSignedTransaction = async (
       await vkeyWitWasm.add(vkey)
     }
 
-    await witSet.set_vkeys(vkeyWitWasm)
+    await witSet.setVkeys(vkeyWitWasm)
   }
 
   // TODO: handle script witnesses
-  return await Transaction.new(txBody, witSet, auxiliaryData)
+  return await Transaction.new(txBody, witSet, auxiliaryData as any)
 }

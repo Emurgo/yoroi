@@ -158,7 +158,7 @@ export const isReceiverAddressValid = async (
     try {
       const networkConfig: any = getNetworkConfigById(walletNetworkId)
       const configNetworkId = networkConfig.CHAIN_NETWORK_ID && Number(networkConfig.CHAIN_NETWORK_ID)
-      const addressNetworkId = await address.network_id()
+      const addressNetworkId = await address.networkId()
       if (addressNetworkId !== configNetworkId && !isNaN(configNetworkId)) {
         return {invalidAddress: true}
       }

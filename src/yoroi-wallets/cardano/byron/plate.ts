@@ -7,7 +7,7 @@ import {getAccountFromMasterKey, getAddresses} from './util'
 
 export const generateByronPlateFromMnemonics = async (phrase: string, count: number): Promise<PlateResponse> => {
   const masterKeyPtr = await generateWalletRootKey(phrase)
-  const masterKey = Buffer.from(await masterKeyPtr.as_bytes()).toString('hex')
+  const masterKey = Buffer.from(await masterKeyPtr.asBytes()).toString('hex')
   const account = await getAccountFromMasterKey(masterKey)
   const displayAddrType: AddressType = 'External'
 

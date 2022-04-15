@@ -1,4 +1,3 @@
-import {BigNum, LinearFee} from '@emurgo/react-native-haskell-shelley'
 import {BigNumber} from 'bignumber.js'
 
 import assert from '../../../legacy/assert'
@@ -6,7 +5,7 @@ import {builtSendTokenList, hasSendAllDefault} from '../../../legacy/commonUtils
 import {CardanoError, InsufficientFunds, NoOutputsError} from '../../../legacy/errors'
 import {Logger} from '../../../legacy/logging'
 import {multiTokenFromRemote} from '../../../legacy/utils'
-import {CreateUnsignedTxRequest, HaskellShelleyTxSignRequest} from '../..'
+import {BigNum, CreateUnsignedTxRequest, HaskellShelleyTxSignRequest, LinearFee} from '../..'
 import {newAdaUnsignedTx, sendAllUnsignedTx} from './transactions'
 
 export type CreateUnsignedTxResponse = HaskellShelleyTxSignRequest
@@ -23,13 +22,13 @@ export const createUnsignedTx = async (request: CreateUnsignedTxRequest): Promis
     const CHAIN_NETWORK_ID = networkConfig.CHAIN_NETWORK_ID
 
     const protocolParams = {
-      keyDeposit: await BigNum.from_str(KEY_DEPOSIT),
+      keyDeposit: await BigNum.fromStr(KEY_DEPOSIT),
       linearFee: await LinearFee.new(
-        await BigNum.from_str(LINEAR_FEE.COEFFICIENT),
-        await BigNum.from_str(LINEAR_FEE.CONSTANT),
+        await BigNum.fromStr(LINEAR_FEE.COEFFICIENT),
+        await BigNum.fromStr(LINEAR_FEE.CONSTANT),
       ),
-      minimumUtxoVal: await BigNum.from_str(MINIMUM_UTXO_VAL),
-      poolDeposit: await BigNum.from_str(POOL_DEPOSIT),
+      minimumUtxoVal: await BigNum.fromStr(MINIMUM_UTXO_VAL),
+      poolDeposit: await BigNum.fromStr(POOL_DEPOSIT),
       networkId: NETWORK_ID,
     }
 

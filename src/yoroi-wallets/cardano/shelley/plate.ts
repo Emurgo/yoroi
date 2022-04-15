@@ -1,11 +1,10 @@
 import {legacyWalletChecksum, walletChecksum} from '@emurgo/cip4-js'
-import {Bip32PrivateKey} from '@emurgo/react-native-haskell-shelley'
 
 import {AddressType} from '../../../legacy/commonUtils'
 import {CONFIG} from '../../../legacy/config'
 import type {NetworkId} from '../../../legacy/types'
 import {PlateResponse} from '../../../legacy/types'
-import {AddressGenerator} from '../..'
+import {AddressGenerator, Bip32PrivateKey} from '../..'
 import {getMasterKeyFromMnemonic} from '../byron/util'
 
 export const generateShelleyPlateFromKey = async (
@@ -33,14 +32,14 @@ export const generateShelleyPlateFromMnemonics = async (
   isJormungandr = false,
 ): Promise<PlateResponse> => {
   const masterKey = await getMasterKeyFromMnemonic(phrase)
-  const masterKeyPtr = await Bip32PrivateKey.from_bytes(Buffer.from(masterKey, 'hex'))
+  const masterKeyPtr = await Bip32PrivateKey.fromBytes(Buffer.from(masterKey, 'hex'))
   const accountKey = await (
     await (
       await masterKeyPtr.derive(CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852)
     ).derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO)
   ).derive(0 + CONFIG.NUMBERS.HARD_DERIVATION_START)
-  const accountPubKey = await accountKey.to_public()
-  const accountPubKeyHex = Buffer.from(await accountPubKey.as_bytes()).toString('hex')
+  const accountPubKey = await accountKey.toPublic()
+  const accountPubKeyHex = Buffer.from(await accountPubKey.asBytes()).toString('hex')
 
   return await generateShelleyPlateFromKey(accountPubKeyHex, count, networkId, isJormungandr)
 }
