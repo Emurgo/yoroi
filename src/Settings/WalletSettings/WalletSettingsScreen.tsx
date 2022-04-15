@@ -1,4 +1,3 @@
-import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import type {MessageDescriptor} from 'react-intl'
 import {defineMessages, useIntl} from 'react-intl'
@@ -6,7 +5,7 @@ import {ScrollView, StyleSheet, Switch} from 'react-native'
 import {useMutation, UseMutationOptions} from 'react-query'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {DIALOG_BUTTONS, showConfirmationDialog, signout, updateWallets} from '../../../legacy/actions'
+import {DIALOG_BUTTONS, showConfirmationDialog, signout} from '../../../legacy/actions'
 import {StatusBar} from '../../../legacy/components/UiKit'
 import {isByron, isHaskellShelley} from '../../../legacy/config/config'
 import {getNetworkConfigById} from '../../../legacy/config/networks'
@@ -28,20 +27,14 @@ import {
 export const WalletSettingsScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
-  const navigation = useNavigation()
+  const {navigation, resetToWalletSelection} = useWalletNavigation()
   const isSystemAuthEnabled = useSelector(isSystemAuthEnabledSelector)
   const isEasyConfirmationEnabled = useSelector(easyConfirmationSelector)
   const wallet = useSelectedWallet()
   const walletName = useWalletName(wallet)
 
-  const dispatch = useDispatch()
-
-  const [pending, setPending] = React.useState(false)
-  const onSwitchWallet = async () => {
-    setPending(true)
-    navigation.navigate('app-root', {screen: 'wallet-selection'})
-    await walletManager.closeWallet()
-    dispatch(updateWallets())
+  const onSwitchWallet = () => {
+    resetToWalletSelection()
   }
 
   const onToggleEasyConfirmation = () => {
@@ -58,7 +51,7 @@ export const WalletSettingsScreen = () => {
       <StatusBar type="dark" />
 
       <SettingsSection>
-        <PressableSettingsItem label={strings.switchWallet} onPress={onSwitchWallet} disabled={pending} />
+        <PressableSettingsItem label={strings.switchWallet} onPress={onSwitchWallet} />
         <LogoutButton />
       </SettingsSection>
 
