@@ -514,7 +514,8 @@ class WalletManager {
     this._wallet = wallet
     this._id = walletMeta.id
 
-    const shouldDisableEasyConfirmation = walletMeta.isEasyConfirmationEnabled && !isSystemAuthEnabled
+    const shouldDisableEasyConfirmation =
+      walletMeta.isEasyConfirmationEnabled && (!isSystemAuthEnabled || (await !canBiometricEncryptionBeEnabled()))
     if (shouldDisableEasyConfirmation) {
       wallet.isEasyConfirmationEnabled = false
 
