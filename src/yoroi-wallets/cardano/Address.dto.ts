@@ -1,12 +1,4 @@
-import {
-  Address,
-  BaseAddress,
-  ByronAddress,
-  // PointerAddress,
-  // EnterpriseAddress,
-  RewardAddress,
-} from '@emurgo/react-native-haskell-shelley'
-
+import {Address, BaseAddress, ByronAddress, RewardAddress} from '.'
 import type {YoroiAddressInfoInterface} from './AddressInterface'
 
 // NOTE: ** IMPORTANT ** The order matters
@@ -34,10 +26,10 @@ export const getKeyHashesCardano = async (wasmAddress: any): Promise<KeyHashesCa
   for (const [i, addressType] of ADDRESS_TYPES.entries()) {
     // First = Byron
     if (!i) {
-      addr = await addressType.from_address(wasmAddress)
+      addr = await addressType.fromAddress(wasmAddress)
       if (addr) return null
     } else {
-      addr = await addressType.from_address(wasmAddress)
+      addr = await addressType.fromAddress(wasmAddress)
       if (addr) {
         pay = await addr.payment_cred()
         stake = await addr.stake_cred()
@@ -73,7 +65,7 @@ export class AddressDTOCardano implements YoroiAddressInfoInterface<KeyHashesCar
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async getWasmAddress(): Promise<any> {
     if (!this._wasmAddress) {
-      this._wasmAddress = await Address.from_bech32(this._address)
+      this._wasmAddress = await Address.fromBech32(this._address)
     }
     return this._wasmAddress
   }

@@ -28,8 +28,8 @@ export const useCreateVotingRegTx = (
       const password = Buffer.from(pin.split('').map(Number))
       const rootKey = await generatePrivateKeyForCatalyst()
       const [catalystSKHexEncrypted, catalystSKHex] = await rootKey
-        .to_raw_key()
-        .then((x) => x.as_bytes())
+        .toRawKey()
+        .then((x) => x.asBytes())
         .then((x) => Promise.all([encryptWithPassword(password, x), Buffer.from(x).toString('hex')]))
 
       const signRequest = await wallet.createVotingRegTx(utxos, catalystSKHex, decryptedKey, time)

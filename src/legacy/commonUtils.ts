@@ -5,14 +5,13 @@
  * TODO: migrate here common utilities from Byron/util.js
  */
 
-import {Bip32PrivateKey, decrypt_with_password, encrypt_with_password} from '@emurgo/react-native-haskell-shelley'
 import {BigNumber} from 'bignumber.js'
 import {generateMnemonic, mnemonicToEntropy} from 'bip39'
 import cryptoRandomString from 'crypto-random-string'
 import {randomBytes} from 'react-native-randombytes'
 
 import {SendTokenList} from '../types'
-import type {DefaultTokenEntry} from '../yoroi-wallets'
+import {Bip32PrivateKey, decryptWithPassword, DefaultTokenEntry, encryptWithPassword} from '../yoroi-wallets'
 import {MultiToken} from '../yoroi-wallets'
 import assert from './assert'
 import {CONFIG, getWalletConfigById} from './config'
@@ -29,10 +28,11 @@ export const ADDRESS_TYPE_TO_CHANGE: Record<AddressType, number> = {
  * wallet key generation
  */
 export const generateAdaMnemonic = () => generateMnemonic(CONFIG.MNEMONIC_STRENGTH, randomBytes)
-export const generateWalletRootKey: (mnemonic: string) => Promise<Bip32PrivateKey> = async (mnemonic: string) => {
+export const generateWalletRootKey = async (mnemonic: string) => {
   const bip39entropy = mnemonicToEntropy(mnemonic)
   const EMPTY_PASSWORD = Buffer.from('')
-  const rootKey = await Bip32PrivateKey.from_bip39_entropy(Buffer.from(bip39entropy, 'hex'), EMPTY_PASSWORD)
+  const rootKey = await Bip32PrivateKey.fromBip39Entropy(Buffer.from(bip39entropy, 'hex'), EMPTY_PASSWORD)
+
   return rootKey
 }
 
@@ -49,7 +49,7 @@ export const encryptData = async (plaintextHex: string, secretKey: string): Prom
   const nonceHex = cryptoRandomString({
     length: 2 * 12,
   })
-  return await encrypt_with_password(secretKeyHex, saltHex, nonceHex, plaintextHex)
+  return await encryptWithPassword(secretKeyHex, saltHex, nonceHex, plaintextHex)
 }
 export const decryptData = async (ciphertext: string, secretKey: string): Promise<string> => {
   assert.assert(!!ciphertext, 'decrypt:: !!cyphertext')
@@ -57,7 +57,7 @@ export const decryptData = async (ciphertext: string, secretKey: string): Promis
   const secretKeyHex = Buffer.from(secretKey, 'utf8').toString('hex')
 
   try {
-    return await decrypt_with_password(secretKeyHex, ciphertext)
+    return await decryptWithPassword(secretKeyHex, ciphertext)
   } catch (error) {
     if ((error as Error).message === 'Decryption error') {
       throw new WrongPassword()

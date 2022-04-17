@@ -326,3 +326,8 @@ const yoroiWalletKeys: Array<YoroiWalletKeys> = [
   'signTxWithLedger',
   'fetchPoolInfo',
 ]
+
+export * from '@emurgo/yoroi-lib-core/dist/internals/wasm-contract'
+import * as CardanoTypes from '@emurgo/yoroi-lib-core/dist/internals/wasm-contract'
+
+export type TransactionBuilderCore = CardanoTypes.TransactionBuilder

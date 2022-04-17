@@ -1,14 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type {WalletChecksum} from '@emurgo/cip4-js'
-import {
-  Certificate as V4Certificate,
-  TransactionBuilder as V4TransactionBuilder,
-} from '@emurgo/react-native-haskell-shelley'
-import {LinearFee} from '@emurgo/react-native-haskell-shelley'
 import {BigNumber} from 'bignumber.js'
 
 import {TokenInfo} from '../types'
-import {MultiToken} from '../yoroi-wallets'
+import {CardanoTypes, MultiToken} from '../yoroi-wallets'
 export type Address = {
   readonly address: string
 }
@@ -94,14 +89,14 @@ export type TxOutput = Address & {
 }
 export type V4UnsignedTxUtxoResponse = {
   senderUtxos: Array<RawUtxo>
-  txBuilder: V4TransactionBuilder
+  txBuilder: CardanoTypes.TransactionBuilder
   changeAddr: Array<Address & Value & Addressing>
 }
 export type V4UnsignedTxAddressedUtxoResponse = {
   senderUtxos: Array<AddressedUtxo>
-  txBuilder: V4TransactionBuilder
+  txBuilder: CardanoTypes.TransactionBuilder
   changeAddr: Array<Address & Value & Addressing>
-  certificates: ReadonlyArray<V4Certificate>
+  certificates: ReadonlyArray<CardanoTypes.Certificate>
 }
 
 /**
@@ -116,10 +111,10 @@ export type PlateResponse = {
   accountPlate: WalletChecksum
 }
 export type ProtocolParameters = {
-  readonly linearFee: LinearFee
-  readonly minimumUtxoVal: BigNumber
-  readonly poolDeposit: BigNumber
-  readonly keyDeposit: BigNumber
+  readonly linearFee: CardanoTypes.LinearFee
+  readonly minimumUtxoVal: CardanoTypes.BigNum
+  readonly poolDeposit: CardanoTypes.BigNum
+  readonly keyDeposit: CardanoTypes.BigNum
   readonly networkId: number
   readonly maxValueBytes?: number
   readonly maxTxBytes?: number

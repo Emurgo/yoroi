@@ -1,30 +1,29 @@
-import {
-  Address,
-  AuxiliaryData,
-  BigNum,
-  Bip32PrivateKey,
-  encode_json_str_to_metadatum,
-  GeneralTransactionMetadata,
-  MetadataJsonSchema,
-  MetadataList,
-  PublicKey,
-  TransactionMetadatum,
-} from '@emurgo/react-native-haskell-shelley'
 import {mnemonicToEntropy} from 'bip39'
 import blake2b from 'blake2b'
 
 import {generateAdaMnemonic} from '../../../legacy/commonUtils'
 import {CONFIG} from '../../../legacy/config'
 import {Logger} from '../../../legacy/logging'
+import {
+  AuxiliaryData,
+  BigNum,
+  Bip32PrivateKey,
+  CardanoTypes,
+  encodeJsonStrToMetadatum,
+  GeneralTransactionMetadata,
+  MetadataJsonSchema,
+  MetadataList,
+  TransactionMetadatum,
+} from '..'
 
 export const CatalystLabels = Object.freeze({
   DATA: 61284,
   SIG: 61285,
 })
 export async function auxiliaryDataWithRegistrationMetadata(request: {
-  stakePublicKey: PublicKey
-  catalystPublicKey: PublicKey
-  rewardAddress: Address
+  stakePublicKey: CardanoTypes.PublicKey
+  catalystPublicKey: CardanoTypes.PublicKey
+  rewardAddress: CardanoTypes.Address
   absSlotNumber: number
   signer: (arg: Uint8Array) => Promise<string>
 }) {
@@ -45,25 +44,25 @@ export async function auxiliaryDataWithRegistrationMetadata(request: {
    */
 
   const jsonMeta = JSON.stringify({
-    1: `0x${Buffer.from(await request.catalystPublicKey.as_bytes()).toString('hex')}`,
-    2: `0x${Buffer.from(await request.stakePublicKey.as_bytes()).toString('hex')}`,
-    3: `0x${Buffer.from(await request.rewardAddress.to_bytes()).toString('hex')}`,
+    1: `0x${Buffer.from(await request.catalystPublicKey.asBytes()).toString('hex')}`,
+    2: `0x${Buffer.from(await request.stakePublicKey.asBytes()).toString('hex')}`,
+    3: `0x${Buffer.from(await request.rewardAddress.toBytes()).toString('hex')}`,
     4: request.absSlotNumber,
   })
-  const registrationData = await encode_json_str_to_metadatum(jsonMeta, MetadataJsonSchema.BasicConversions)
+  const registrationData = await encodeJsonStrToMetadatum(jsonMeta, MetadataJsonSchema.BasicConversions)
   Logger.debug(jsonMeta)
   const metadata = await GeneralTransactionMetadata.new()
-  await metadata.insert(await BigNum.from_str(CatalystLabels.DATA.toString()), registrationData)
+  await metadata.insert(await BigNum.fromStr(CatalystLabels.DATA.toString()), registrationData)
 
   const hashedMetadata = blake2b(256 / 8)
-    .update(await metadata.to_bytes())
+    .update(await metadata.toBytes())
     .digest('binary')
 
   const catalystSignature = await request.signer(hashedMetadata)
 
   await metadata.insert(
-    await BigNum.from_str(CatalystLabels.SIG.toString()),
-    await encode_json_str_to_metadatum(
+    await BigNum.fromStr(CatalystLabels.SIG.toString()),
+    await encodeJsonStrToMetadatum(
       JSON.stringify({
         1: `0x${catalystSignature}`,
       }),
@@ -72,9 +71,9 @@ export async function auxiliaryDataWithRegistrationMetadata(request: {
   )
   // This is how Ledger constructs the metadata. We must be consistent with it.
   const metadataList = await MetadataList.new()
-  await metadataList.add(await TransactionMetadatum.from_bytes(await metadata.to_bytes()))
-  await metadataList.add(await TransactionMetadatum.new_list(await MetadataList.new()))
-  const auxiliary = await AuxiliaryData.from_bytes(await metadataList.to_bytes())
+  await metadataList.add(await TransactionMetadatum.fromBytes(await metadata.toBytes()))
+  await metadataList.add(await TransactionMetadatum.newList(await MetadataList.new()))
+  const auxiliary = await AuxiliaryData.fromBytes(await metadataList.toBytes())
   return auxiliary
 }
 
@@ -88,7 +87,7 @@ export async function generatePrivateKeyForCatalyst() {
   }
   const bip39entropy = mnemonicToEntropy(mnemonic)
   const EMPTY_PASSWORD = Buffer.from('')
-  const rootKey = await Bip32PrivateKey.from_bip39_entropy(Buffer.from(bip39entropy, 'hex'), EMPTY_PASSWORD)
+  const rootKey = await Bip32PrivateKey.fromBip39Entropy(Buffer.from(bip39entropy, 'hex'), EMPTY_PASSWORD)
 
   return rootKey
 }

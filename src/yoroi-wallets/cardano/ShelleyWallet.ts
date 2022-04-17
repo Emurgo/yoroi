@@ -2,23 +2,6 @@
 import type {SignTransactionResponse} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import {TxAuxiliaryDataSupplementType} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import {legacyWalletChecksum, walletChecksum} from '@emurgo/cip4-js'
-import {
-  Address,
-  AuxiliaryData,
-  BigNum,
-  Bip32PrivateKey,
-  Bip32PublicKey,
-  /* eslint-disable camelcase */
-  hash_transaction,
-  LinearFee,
-  make_vkey_witness,
-  PrivateKey,
-  /* eslint-enable camelcase */
-  PublicKey,
-  RewardAddress,
-  StakeCredential,
-  Transaction,
-} from '@emurgo/react-native-haskell-shelley'
 import {BigNumber} from 'bignumber.js'
 import ExtendableError from 'es6-error'
 import _ from 'lodash'
@@ -57,6 +40,19 @@ import {DefaultTokenEntry, SendTokenList} from '../../types'
 import {genTimeToSlot} from '../utils/timeUtils'
 import {versionCompare} from '../utils/versioning'
 import Wallet, {WalletJSON} from '../Wallet'
+import {
+  Address,
+  BigNum,
+  Bip32PrivateKey,
+  Bip32PublicKey,
+  hashTransaction,
+  LinearFee,
+  makeVkeyWitness,
+  PrivateKey,
+  PublicKey,
+  RewardAddress,
+  StakeCredential,
+} from '.'
 import * as catalystUtils from './catalyst/catalystUtils'
 import {AddressChain, AddressGenerator} from './chain'
 import {HaskellShelleyTxSignRequest} from './HaskellShelleyTxSignRequest'
@@ -154,7 +150,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
       'ShelleyWallet::create: invalid walletImplementationId',
     )
     const masterKeyPtr = await generateWalletRootKey(mnemonic)
-    const masterKey: string = Buffer.from(await masterKeyPtr.as_bytes()).toString('hex')
+    const masterKey: string = Buffer.from(await masterKeyPtr.asBytes()).toString('hex')
     await this.encryptAndSaveMasterKey('MASTER_PASSWORD', masterKey, newPassword)
     const purpose = isByron(implementationId)
       ? CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.BIP44
@@ -163,8 +159,8 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     const accountKey = await (
       await (await masterKeyPtr.derive(purpose)).derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO)
     ).derive(CONFIG.NUMBERS.ACCOUNT_INDEX + CONFIG.NUMBERS.HARD_DERIVATION_START)
-    const accountPubKey = await accountKey.to_public()
-    const accountPubKeyHex: string = Buffer.from(await accountPubKey.as_bytes()).toString('hex')
+    const accountPubKey = await accountKey.toPublic()
+    const accountPubKeyHex: string = Buffer.from(await accountPubKey.asBytes()).toString('hex')
 
     return await this._initialize(
       networkId,
@@ -372,18 +368,18 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     }
   }
 
-  async getStakingKey(): Promise<PublicKey> {
+  async getStakingKey() {
     if (this.walletImplementationId == null) throw new Error('Invalid wallet: walletImplementationId')
 
     assert.assert(isHaskellShelley(this.walletImplementationId), 'cannot get staking key from a byron-era wallet')
     if (!this.publicKeyHex) throw new Error('invalid wallet state')
-    const accountPubKey = await Bip32PublicKey.from_bytes(Buffer.from(this.publicKeyHex, 'hex'))
+    const accountPubKey = await Bip32PublicKey.fromBytes(Buffer.from(this.publicKeyHex, 'hex'))
     const stakingKey = await (
       await (
         await accountPubKey.derive(CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT)
       ).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)
-    ).to_raw_key()
-    Logger.info(`getStakingKey: ${Buffer.from(await stakingKey.as_bytes()).toString('hex')}`)
+    ).toRawKey()
+    Logger.info(`getStakingKey: ${Buffer.from(await stakingKey.asBytes()).toString('hex')}`)
     return stakingKey
   }
 
@@ -400,14 +396,14 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     ]
   }
 
-  async getRewardAddress(): Promise<Address> {
+  async getRewardAddress() {
     if (this.walletImplementationId == null) throw new Error('Invalid wallet: walletImplementationId')
 
     assert.assert(isHaskellShelley(this.walletImplementationId), 'cannot get reward address from a byron-era wallet')
     const stakingKey = await this.getStakingKey()
-    const credential = await StakeCredential.from_keyhash(await stakingKey.hash())
+    const credential = await StakeCredential.fromKeyhash(await stakingKey.hash())
     const rewardAddr = await RewardAddress.new(Number.parseInt(this._getChainNetworkId(), 10), credential)
-    return await rewardAddr.to_address()
+    return await rewardAddr.toAddress()
   }
 
   _getRewardAddressAddressing() {
@@ -425,7 +421,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
 
   async getAllUtxosForKey(utxos: Array<RawUtxo>) {
     return await filterAddressesByStakingKey(
-      await StakeCredential.from_keyhash(await (await this.getStakingKey()).hash()),
+      await StakeCredential.fromKeyhash(await (await this.getStakingKey()).hash()),
       this.asAddressedUtxo(utxos),
       false,
     )
@@ -505,8 +501,8 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
   }
 
   async signTx(signRequest: HaskellShelleyTxSignRequest, decryptedMasterKey: string): Promise<SignedTx> {
-    const masterKey = await Bip32PrivateKey.from_bytes(Buffer.from(decryptedMasterKey, 'hex'))
-    const accountPvrKey: Bip32PrivateKey = await (
+    const masterKey = await Bip32PrivateKey.fromBytes(Buffer.from(decryptedMasterKey, 'hex'))
+    const accountPvrKey = await (
       await (await masterKey.derive(this._getPurpose())).derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO)
     ).derive(0 + CONFIG.NUMBERS.HARD_DERIVATION_START)
     const wits = new Set<string>()
@@ -526,16 +522,16 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
         await (
           await accountPvrKey.derive(CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT)
         ).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)
-      ).to_raw_key()
+      ).toRawKey()
 
       wits.add(
         Buffer.from(
-          await (await make_vkey_witness(await hash_transaction(await txBuilder.build()), stakingKey)).to_bytes(),
+          await (await makeVkeyWitness(await hashTransaction(await txBuilder.build()), stakingKey)).toBytes(),
         ).toString('hex'),
       )
     }
 
-    const signedTx: Transaction = await signTransaction(
+    const signedTx = await signTransaction(
       signRequest.senderUtxos,
       signRequest.unsignedTx,
       CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.ACCOUNT,
@@ -543,8 +539,8 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
       wits,
       signRequest.auxiliary(),
     )
-    const id = Buffer.from(await (await hash_transaction(await signedTx.body())).to_bytes()).toString('hex')
-    const encodedTx = await signedTx.to_bytes()
+    const id = Buffer.from(await (await hashTransaction(await signedTx.body())).toBytes()).toString('hex')
+    const encodedTx = await signedTx.toBytes()
     const base64 = Buffer.from(encodedTx).toString('base64')
     return {
       id,
@@ -603,30 +599,28 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
       let signer: (arg: Uint8Array) => Promise<string>
       if (decryptedKey !== undefined) {
         assert.assert(typeof decryptedKey === 'string', 'ShelleyWallet:createVotingRegTx: decryptedKey')
-        const masterKey = await Bip32PrivateKey.from_bytes(Buffer.from(decryptedKey, 'hex'))
+        const masterKey = await Bip32PrivateKey.fromBytes(Buffer.from(decryptedKey, 'hex'))
 
-        const accountPvrKey: Bip32PrivateKey = await (
+        const accountPvrKey = await (
           await (await masterKey.derive(this._getPurpose())).derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO)
         ).derive(0 + CONFIG.NUMBERS.HARD_DERIVATION_START)
 
-        const stakePrivateKey: PrivateKey = await (
+        const stakePrivateKey = await (
           await (
             await accountPvrKey.derive(CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT)
           ).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)
-        ).to_raw_key()
+        ).toRawKey()
 
         signer = async (hashedMetadata) => {
-          return await (await stakePrivateKey.sign(hashedMetadata)).to_hex()
+          return await (await stakePrivateKey.sign(hashedMetadata)).toHex()
         }
       } else {
         assert.assert(this.isHW, 'ShelleyWallet::createVotingRegTx: should be a HW wallet')
         signer = (_hashedMetadata) => Promise.resolve('0'.repeat(64 * 2))
       }
 
-      const catalystPublicKey = await (
-        await PrivateKey.from_extended_bytes(Buffer.from(catalystKey, 'hex'))
-      ).to_public()
-      const votingPublicKey = Buffer.from(await catalystPublicKey.as_bytes()).toString('hex')
+      const catalystPublicKey = await (await PrivateKey.fromExtendedBytes(Buffer.from(catalystKey, 'hex'))).toPublic()
+      const votingPublicKey = Buffer.from(await catalystPublicKey.asBytes()).toString('hex')
 
       const stakePublicKey = await this.getStakingKey()
       const rewardAddress = await this.getRewardAddress()
@@ -649,13 +643,13 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
 
       const config = this._getNetworkConfig()
       const protocolParams = {
-        keyDeposit: await BigNum.from_str(config.KEY_DEPOSIT),
+        keyDeposit: await BigNum.fromStr(config.KEY_DEPOSIT),
         linearFee: await LinearFee.new(
-          await BigNum.from_str(config.LINEAR_FEE.COEFFICIENT),
-          await BigNum.from_str(config.LINEAR_FEE.CONSTANT),
+          await BigNum.fromStr(config.LINEAR_FEE.COEFFICIENT),
+          await BigNum.fromStr(config.LINEAR_FEE.CONSTANT),
         ),
-        minimumUtxoVal: await BigNum.from_str(config.MINIMUM_UTXO_VAL),
-        poolDeposit: await BigNum.from_str(config.POOL_DEPOSIT),
+        minimumUtxoVal: await BigNum.fromStr(config.MINIMUM_UTXO_VAL),
+        poolDeposit: await BigNum.fromStr(config.POOL_DEPOSIT),
         networkId: config.NETWORK_ID,
       }
 
@@ -693,8 +687,8 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
           ? {
               votingPublicKey,
               stakingKeyPath: this.getStakingKeyPath(),
-              stakingKey: Buffer.from(await stakePublicKey.as_bytes()).toString('hex'),
-              rewardAddress: Buffer.from(await rewardAddress.to_bytes()).toString('hex'),
+              stakingKey: Buffer.from(await stakePublicKey.asBytes()).toString('hex'),
+              rewardAddress: Buffer.from(await rewardAddress.toBytes()).toString('hex'),
               nonce,
             }
           : undefined,
@@ -749,7 +743,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
 
       const addressing = isByron(this.walletImplementationId)
         ? this.getAddressingInfo(change.address)
-        : this.getAddressingInfo(await (await Address.from_bytes(Buffer.from(change.address, 'hex'))).to_bech32())
+        : this.getAddressingInfo(await (await Address.fromBytes(Buffer.from(change.address, 'hex'))).toBech32())
       if (addressing != null) addressingInfo[change.address] = addressing
     }
 
@@ -779,7 +773,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
       useUSB,
     )
 
-    let auxiliaryData: undefined | AuxiliaryData
+    let auxiliaryData
     if (request.ledgerNanoCatalystRegistrationTxSignData) {
       const {votingPublicKey, nonce} = request.ledgerNanoCatalystRegistrationTxSignData
 
@@ -803,7 +797,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
 
       auxiliaryData = await catalystUtils.auxiliaryDataWithRegistrationMetadata({
         stakePublicKey: await this.getStakingKey(),
-        catalystPublicKey: await PublicKey.from_bytes(Buffer.from(votingPublicKey, 'hex')),
+        catalystPublicKey: await PublicKey.fromBytes(Buffer.from(votingPublicKey, 'hex')),
         rewardAddress: await this.getRewardAddress(),
         absSlotNumber: nonce,
         signer: (_hashedMetadata) => {
@@ -812,7 +806,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
       })
       // We can verify that
       //  Buffer.from(
-      //    blake2b(256 / 8).update(metadata.to_bytes()).digest('binary')
+      //    blake2b(256 / 8).update(metadata.toBytes()).digest('binary')
       //  ).toString('hex') ===
       // ledgerSignTxResp.auxiliaryDataSupplement.auxiliaryDataHashaHex
     } else {
@@ -820,13 +814,13 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     }
 
     if (auxiliaryData) {
-      await request.self().set_auxiliary_data(auxiliaryData)
+      await request.self().setAuxiliaryData(auxiliaryData)
     }
 
     const txBody = await request.self().build()
 
     if (!this.publicKeyHex) throw new Error('invalid wallet state')
-    const key = await Bip32PublicKey.from_bytes(Buffer.from(this.publicKeyHex, 'hex'))
+    const key = await Bip32PublicKey.fromBytes(Buffer.from(this.publicKeyHex, 'hex'))
     const addressing = {
       path: [
         this._getPurpose(),
@@ -846,8 +840,8 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
       },
       auxiliaryData,
     )
-    const id = Buffer.from(await (await hash_transaction(await signedTx.body())).to_bytes()).toString('hex')
-    const encodedTx = await signedTx.to_bytes()
+    const id = Buffer.from(await (await hashTransaction(await signedTx.body())).toBytes()).toString('hex')
+    const encodedTx = await signedTx.toBytes()
     const base64 = Buffer.from(encodedTx).toString('base64')
     Logger.debug('ShelleyWallet::signTxWithLedger::encodedTx', Buffer.from(encodedTx).toString('hex'))
     return {

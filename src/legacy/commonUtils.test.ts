@@ -21,7 +21,7 @@ describe('BIP39', () => {
 
   it('correctly derives wallet root key', async () => {
     const rootKey = await generateWalletRootKey(mnemonic)
-    expect(Buffer.from(await rootKey.as_bytes()).toString('hex')).toEqual(expectedKey)
+    expect(Buffer.from(await rootKey.asBytes()).toString('hex')).toEqual(expectedKey)
   })
 })
 
@@ -29,7 +29,7 @@ describe('encryption/decryption', () => {
   it('Can encrypt / decrypt masterKey', async () => {
     expect.assertions(1)
     const masterKeyPtr = await generateWalletRootKey(mnemonic)
-    const masterKey = Buffer.from(await masterKeyPtr.as_bytes()).toString('hex')
+    const masterKey = Buffer.from(await masterKeyPtr.asBytes()).toString('hex')
     const encryptedKey = await encryptData(masterKey, 'password')
     const decryptedKey = await decryptData(encryptedKey, 'password')
     expect(masterKey).toEqual(decryptedKey)

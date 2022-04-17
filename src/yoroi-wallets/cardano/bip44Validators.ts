@@ -1,7 +1,6 @@
-import {Bip32PublicKey} from '@emurgo/react-native-haskell-shelley'
-
 import assert from '../../legacy/assert'
 import {NUMBERS} from '../../legacy/numbers'
+import {Bip32PublicKey} from '.'
 
 const isString = (s) => typeof s === 'string' || s instanceof String
 
@@ -31,7 +30,7 @@ export const isCIP1852AccountPath = (path: Array<number>): boolean => {
 
 export const canParsePublicKey = async (publicKeyHex: string): Promise<boolean> => {
   try {
-    await Bip32PublicKey.from_bytes(Buffer.from(publicKeyHex, 'hex'))
+    await Bip32PublicKey.fromBytes(Buffer.from(publicKeyHex, 'hex'))
     return true
   } catch (_e) {
     return false

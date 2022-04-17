@@ -1,10 +1,3 @@
-/* eslint-disable camelcase */
-import {
-  AuxiliaryData, // TODO: rust bindings not yet available
-  hash_transaction,
-  RewardAddress,
-  TransactionBuilder,
-} from '@emurgo/react-native-haskell-shelley'
 import {BigNumber} from 'bignumber.js'
 
 import {CONFIG} from '../../legacy/config'
@@ -13,12 +6,17 @@ import type {CardanoHaskellShelleyNetwork} from '../../legacy/networks'
 import type {Address, Value} from '../../legacy/types'
 import {multiTokenFromCardanoValue, toHexOrBase58} from '../../legacy/utils'
 import {AddressedUtxo, Addressing, SendTokenList} from '../../types'
+import {CardanoTypes, hashTransaction, RewardAddress} from '../index'
 import type {DefaultTokenEntry} from './MultiToken'
 import {MultiToken} from './MultiToken'
+
 const PRIMARY_ASSET_CONSTANTS = CONFIG.PRIMARY_ASSET_CONSTANTS
-export const shelleyTxEqual = async (req1: TransactionBuilder, req2: TransactionBuilder): Promise<boolean> => {
-  const tx1Hex = Buffer.from(await (await req1.build()).to_bytes()).toString('hex')
-  const tx2Hex = Buffer.from(await (await req2.build()).to_bytes()).toString('hex')
+export const shelleyTxEqual = async (
+  req1: CardanoTypes.TransactionBuilder,
+  req2: CardanoTypes.TransactionBuilder,
+): Promise<boolean> => {
+  const tx1Hex = Buffer.from(await (await req1.build()).toBytes()).toString('hex')
+  const tx2Hex = Buffer.from(await (await req2.build()).toBytes()).toString('hex')
   return tx1Hex === tx2Hex
 }
 
@@ -55,14 +53,14 @@ export type CreateUnsignedTxRequest = {
   addressedUtxos: Array<AddressedUtxo>
   defaultToken: DefaultTokenEntry
   tokens: SendTokenList
-  auxiliaryData: undefined | AuxiliaryData
+  auxiliaryData?: CardanoTypes.AuxiliaryData
   networkConfig: CardanoHaskellShelleyNetwork
 }
-export class HaskellShelleyTxSignRequest implements ISignRequest<TransactionBuilder> {
+export class HaskellShelleyTxSignRequest implements ISignRequest<CardanoTypes.TransactionBuilder> {
   senderUtxos: Array<AddressedUtxo>
-  unsignedTx: TransactionBuilder
+  unsignedTx: CardanoTypes.TransactionBuilder
   changeAddr: Array<Address & Value & Addressing>
-  auxiliaryData: undefined | AuxiliaryData
+  auxiliaryData: undefined | CardanoTypes.AuxiliaryData
   networkSettingSnapshot: NetworkSettingSnapshot
   // TODO: this should be provided by WASM in some SignedTxBuilder interface of some kind
   neededStakingKeyHashes: {
@@ -75,9 +73,9 @@ export class HaskellShelleyTxSignRequest implements ISignRequest<TransactionBuil
 
   constructor(data: {
     senderUtxos: Array<AddressedUtxo>
-    unsignedTx: TransactionBuilder
+    unsignedTx: CardanoTypes.TransactionBuilder
     changeAddr: Array<Address & Value & Addressing>
-    auxiliaryData: undefined | AuxiliaryData
+    auxiliaryData: undefined | CardanoTypes.AuxiliaryData
     networkSettingSnapshot: NetworkSettingSnapshot
     neededStakingKeyHashes: {
       neededHashes: Set<string>
@@ -96,7 +94,7 @@ export class HaskellShelleyTxSignRequest implements ISignRequest<TransactionBuil
   }
 
   async txId() {
-    return Buffer.from(await (await hash_transaction(await this.unsignedTx.build())).to_bytes()).toString('hex')
+    return Buffer.from(await (await hashTransaction(await this.unsignedTx.build())).toBytes()).toString('hex')
   }
 
   auxiliary() {
@@ -105,7 +103,7 @@ export class HaskellShelleyTxSignRequest implements ISignRequest<TransactionBuil
 
   async totalInput() {
     const values = await multiTokenFromCardanoValue(
-      await (await this.unsignedTx.get_implicit_input()).checked_add(await this.unsignedTx.get_explicit_input()),
+      await (await this.unsignedTx.getImplicitInput()).checkedAdd(await this.unsignedTx.getExplicitInput()),
       {
         defaultIdentifier: PRIMARY_ASSET_CONSTANTS.CARDANO,
         defaultNetworkId: this.networkSettingSnapshot.NetworkId,
@@ -116,7 +114,7 @@ export class HaskellShelleyTxSignRequest implements ISignRequest<TransactionBuil
   }
 
   async totalOutput() {
-    return multiTokenFromCardanoValue(await this.unsignedTx.get_explicit_output(), {
+    return multiTokenFromCardanoValue(await this.unsignedTx.getExplicitOutput(), {
       defaultIdentifier: PRIMARY_ASSET_CONSTANTS.CARDANO,
       defaultNetworkId: this.networkSettingSnapshot.NetworkId,
     })
@@ -128,10 +126,10 @@ export class HaskellShelleyTxSignRequest implements ISignRequest<TransactionBuil
       defaultIdentifier: PRIMARY_ASSET_CONSTANTS.CARDANO,
     })
 
-    const _fee = await this.unsignedTx.get_fee_if_set()
+    const _fee = await this.unsignedTx.getFeeIfSet()
 
-    const fee = new BigNumber(_fee != null ? await _fee.to_str() : '0').plus(
-      await (await this.unsignedTx.get_deposit()).to_str(),
+    const fee = new BigNumber(_fee != null ? await _fee.toStr() : '0').plus(
+      await (await this.unsignedTx.getDeposit()).toStr(),
     )
     values.add({
       identifier: PRIMARY_ASSET_CONSTANTS.CARDANO,
@@ -151,7 +149,7 @@ export class HaskellShelleyTxSignRequest implements ISignRequest<TransactionBuil
       const rewardAddress = await withdrawalKeys.get(i)
       const withdrawalAmountPtr = await withdrawals.get(rewardAddress)
       if (withdrawalAmountPtr == null) continue
-      const withdrawalAmount = await withdrawalAmountPtr.to_str()
+      const withdrawalAmount = await withdrawalAmountPtr.toStr()
       const amount = new MultiToken(
         [
           {
@@ -166,7 +164,7 @@ export class HaskellShelleyTxSignRequest implements ISignRequest<TransactionBuil
         },
       )
       result.push({
-        address: Buffer.from(await (await rewardAddress.to_address()).to_bytes()).toString('hex'),
+        address: Buffer.from(await (await rewardAddress.toAddress()).toBytes()).toString('hex'),
         amount,
       })
     }
@@ -180,11 +178,11 @@ export class HaskellShelleyTxSignRequest implements ISignRequest<TransactionBuil
     const result: Array<TxDeregistration> = []
 
     for (let i = 0; i < (await certs.len()); i++) {
-      const cert = await (await certs.get(i)).as_stake_deregistration()
+      const cert = await (await certs.get(i)).asStakeDeregistration()
       if (cert == null) continue
-      const address = await RewardAddress.new(this.networkSettingSnapshot.ChainNetworkId, await cert.stake_credential())
+      const address = await RewardAddress.new(this.networkSettingSnapshot.ChainNetworkId, await cert.stakeCredential())
       result.push({
-        rewardAddress: Buffer.from(await (await address.to_address()).to_bytes()).toString('hex'),
+        rewardAddress: Buffer.from(await (await address.toAddress()).toBytes()).toString('hex'),
         // recall: for now you get the full deposit back. May change in the future
         refund: new MultiToken(
           [
@@ -225,10 +223,10 @@ export class HaskellShelleyTxSignRequest implements ISignRequest<TransactionBuil
     return Array.from(new Set(this.senderUtxos.map((utxo) => utxo.receiver)))
   }
 
-  async isEqual(tx: (unknown | TransactionBuilder) | null | undefined) {
+  async isEqual(tx: (unknown | CardanoTypes.TransactionBuilder) | null | undefined) {
     if (tx == null) return false
 
-    if (!(tx instanceof TransactionBuilder)) {
+    if (!(tx instanceof CardanoTypes.TransactionBuilder)) {
       return false
     }
 

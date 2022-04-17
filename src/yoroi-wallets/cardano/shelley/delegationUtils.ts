@@ -1,22 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable camelcase */
-import {
-  Address,
-  BaseAddress,
-  BigNum,
-  Certificate,
-  Ed25519KeyHash,
-  hash_transaction,
-  LinearFee,
-  make_vkey_witness,
-  PrivateKey,
-  PublicKey,
-  RewardAddress,
-  StakeCredential,
-  StakeDelegation,
-  StakeDeregistration,
-  StakeRegistration,
-} from '@emurgo/react-native-haskell-shelley'
+
 import {BigNumber} from 'bignumber.js'
 import ExtendableError from 'es6-error'
 import {sortBy} from 'lodash'
@@ -33,35 +16,49 @@ import type {AccountStateRequest, AccountStateResponse} from '../../../legacy/ty
 import type {AddressedUtxo, Addressing, V4UnsignedTxAddressedUtxoResponse} from '../../../legacy/types'
 import {normalizeToAddress} from '../../../legacy/utils'
 import {StakingStatus} from '../../../types'
-import {HaskellShelleyTxSignRequest, MultiToken} from '../..'
+import {
+  Address,
+  BaseAddress,
+  BigNum,
+  Ed25519KeyHash,
+  HaskellShelleyTxSignRequest,
+  LinearFee,
+  MultiToken,
+  RewardAddress,
+  StakeCredential,
+  StakeDelegation,
+  StakeDeregistration,
+  StakeRegistration,
+} from '../..'
+import {CardanoTypes, Certificate, hashTransaction, makeVkeyWitness} from '..'
 import type {TimestampedCertMeta} from './transactionCache'
 import {newAdaUnsignedTx} from './transactions'
 
 const createCertificate = async (
-  stakingKey: PublicKey,
+  stakingKey: CardanoTypes.PublicKey,
   isRegistered: boolean,
   poolRequest: void | string,
-): Promise<Array<Certificate>> => {
-  const credential = await StakeCredential.from_keyhash(await stakingKey.hash())
+): Promise<Array<CardanoTypes.Certificate>> => {
+  const credential = await StakeCredential.fromKeyhash(await stakingKey.hash())
 
   if (poolRequest == null) {
     if (isRegistered) {
-      return [await Certificate.new_stake_deregistration(await StakeDeregistration.new(credential))]
+      return [await Certificate.newStakeDeregistration(await StakeDeregistration.new(credential))]
     }
 
     return [] // no need to undelegate if no staking key registered
   }
 
-  const result: Array<Certificate> = []
+  const result: Array<CardanoTypes.Certificate> = []
 
   if (!isRegistered) {
     // if unregistered, need to register first
-    result.push(await Certificate.new_stake_registration(await StakeRegistration.new(credential)))
+    result.push(await Certificate.newStakeRegistration(await StakeRegistration.new(credential)))
   }
 
   result.push(
-    await Certificate.new_stake_delegation(
-      await StakeDelegation.new(credential, await Ed25519KeyHash.from_bytes(Buffer.from(poolRequest, 'hex'))),
+    await Certificate.newStakeDelegation(
+      await StakeDelegation.new(credential, await Ed25519KeyHash.fromBytes(Buffer.from(poolRequest, 'hex'))),
     ),
   )
   return result
@@ -69,26 +66,26 @@ const createCertificate = async (
 
 const addrContainsAccountKey = async (
   address: string,
-  targetAccountKey: StakeCredential,
+  targetAccountKey: CardanoTypes.StakeCredential,
   acceptTypeMismatch: boolean,
-): Promise<boolean> => {
+) => {
   const wasmAddr = await normalizeToAddress(address)
 
   if (wasmAddr == null) {
     throw new Error(`addrContainsAccountKey: invalid address ${address}`)
   }
 
-  const accountKeyString = Buffer.from(await targetAccountKey.to_bytes()).toString('hex')
-  const asBase = await BaseAddress.from_address(wasmAddr)
+  const accountKeyString = Buffer.from(await targetAccountKey.toBytes()).toString('hex')
+  const asBase = await BaseAddress.fromAddress(wasmAddr)
 
   if (asBase != null) {
-    if (Buffer.from(await (await asBase.stake_cred()).to_bytes()).toString('hex') === accountKeyString) {
+    if (Buffer.from(await (await asBase.stakeCred()).toBytes()).toString('hex') === accountKeyString) {
       return true
     }
   }
 
   // TODO(v-almonacid): PointerAddress not yet implemented
-  // const asPointer = await PointerAddress.from_address(wasmAddr);
+  // const asPointer = await PointerAddress.fromAddress(wasmAddr);
   // if (asPointer != null) {
   //   // TODO
   // }
@@ -96,7 +93,7 @@ const addrContainsAccountKey = async (
 }
 
 export const filterAddressesByStakingKey = async (
-  stakingKey: StakeCredential,
+  stakingKey: CardanoTypes.StakeCredential,
   utxos: ReadonlyArray<AddressedUtxo>,
   acceptTypeMismatch: boolean,
 ) => {
@@ -121,9 +118,9 @@ export const filterAddressesByStakingKey = async (
 const getDifferenceAfterTx = async (
   utxoResponse: V4UnsignedTxAddressedUtxoResponse,
   allUtxos: Array<AddressedUtxo>,
-  stakingKey: PublicKey,
+  stakingKey: CardanoTypes.PublicKey,
 ): Promise<BigNumber> => {
-  const stakeCredential = await StakeCredential.from_keyhash(await stakingKey.hash())
+  const stakeCredential = await StakeCredential.fromKeyhash(await stakingKey.hash())
   let sumInForKey = new BigNumber(0)
   {
     // note senderUtxos.length is approximately 1
@@ -152,10 +149,10 @@ const getDifferenceAfterTx = async (
 
     for (let i = 0; i < (await outputs.len()); i++) {
       const output = await outputs.get(i)
-      const address = Buffer.from(await (await output.address()).to_bytes()).toString('hex')
+      const address = Buffer.from(await (await output.address()).toBytes()).toString('hex')
 
       if (await addrContainsAccountKey(address, stakeCredential, true)) {
-        const value = new BigNumber(await (await (await output.amount()).coin()).to_str())
+        const value = new BigNumber(await (await (await output.amount()).coin()).toStr())
         sumOutForKey = sumOutForKey.plus(value)
       }
     }
@@ -163,14 +160,14 @@ const getDifferenceAfterTx = async (
   return sumOutForKey.minus(sumInForKey)
 }
 
-export const unwrapStakingKey = async (stakingAddress: string): Promise<StakeCredential> => {
-  const accountAddress = await RewardAddress.from_address(await Address.from_bytes(Buffer.from(stakingAddress, 'hex')))
+export const unwrapStakingKey = async (stakingAddress: string) => {
+  const accountAddress = await RewardAddress.fromAddress(await Address.fromBytes(Buffer.from(stakingAddress, 'hex')))
 
   if (accountAddress == null) {
     throw new Error('unwrapStakingKe: staking key invalid')
   }
 
-  const stakingKey = await accountAddress.payment_cred()
+  const stakingKey = await accountAddress.paymentCred()
   return stakingKey
 }
 export const getUtxoDelegatedBalance = async (
@@ -222,7 +219,7 @@ export type CreateDelegationTxRequest = {
   poolRequest: void | string
   valueInAccount: BigNumber
   addressedUtxos: Array<AddressedUtxo>
-  stakingKey: PublicKey
+  stakingKey: CardanoTypes.PublicKey
   changeAddr: Addressing & {
     address: string
   }
@@ -249,13 +246,13 @@ export const createDelegationTx = async (request: CreateDelegationTxRequest): Pr
 
   try {
     const protocolParams = {
-      keyDeposit: await BigNum.from_str(networkConfig.KEY_DEPOSIT),
+      keyDeposit: await BigNum.fromStr(networkConfig.KEY_DEPOSIT),
       linearFee: await LinearFee.new(
-        await BigNum.from_str(networkConfig.LINEAR_FEE.COEFFICIENT),
-        await BigNum.from_str(networkConfig.LINEAR_FEE.CONSTANT),
+        await BigNum.fromStr(networkConfig.LINEAR_FEE.COEFFICIENT),
+        await BigNum.fromStr(networkConfig.LINEAR_FEE.CONSTANT),
       ),
-      minimumUtxoVal: await BigNum.from_str(networkConfig.MINIMUM_UTXO_VAL),
-      poolDeposit: await BigNum.from_str(networkConfig.POOL_DEPOSIT),
+      minimumUtxoVal: await BigNum.fromStr(networkConfig.MINIMUM_UTXO_VAL),
+      poolDeposit: await BigNum.fromStr(networkConfig.POOL_DEPOSIT),
       networkId: networkConfig.NETWORK_ID,
     }
     const stakeDelegationCert = await createCertificate(stakingKey, registrationStatus, poolRequest)
@@ -273,7 +270,7 @@ export const createDelegationTx = async (request: CreateDelegationTxRequest): Pr
       false, // no auxiliaryData
     )
     const allUtxosForKey = await filterAddressesByStakingKey(
-      await StakeCredential.from_keyhash(await stakingKey.hash()),
+      await StakeCredential.fromKeyhash(await stakingKey.hash()),
       addressedUtxos,
       false,
     )
@@ -309,7 +306,7 @@ export const createDelegationTx = async (request: CreateDelegationTxRequest): Pr
       },
       neededStakingKeyHashes: {
         neededHashes: new Set([
-          Buffer.from(await (await StakeCredential.from_keyhash(await stakingKey.hash())).to_bytes()).toString('hex'),
+          Buffer.from(await (await StakeCredential.fromKeyhash(await stakingKey.hash())).toBytes()).toString('hex'),
         ]),
         wits: new Set(),
       },
@@ -331,7 +328,7 @@ export type CreateWithdrawalTxRequest = {
   withdrawals: Array<
     (
       | {
-          privateKey: PrivateKey
+          privateKey: CardanoTypes.PrivateKey
         }
       | Addressing
     ) & {
@@ -359,33 +356,33 @@ export const createWithdrawalTx = async (request: CreateWithdrawalTxRequest): Pr
 
   try {
     const protocolParams = {
-      keyDeposit: await BigNum.from_str(networkConfig.KEY_DEPOSIT),
+      keyDeposit: await BigNum.fromStr(networkConfig.KEY_DEPOSIT),
       linearFee: await LinearFee.new(
-        await BigNum.from_str(networkConfig.LINEAR_FEE.COEFFICIENT),
-        await BigNum.from_str(networkConfig.LINEAR_FEE.CONSTANT),
+        await BigNum.fromStr(networkConfig.LINEAR_FEE.COEFFICIENT),
+        await BigNum.fromStr(networkConfig.LINEAR_FEE.CONSTANT),
       ),
-      minimumUtxoVal: await BigNum.from_str(networkConfig.MINIMUM_UTXO_VAL),
-      poolDeposit: await BigNum.from_str(networkConfig.POOL_DEPOSIT),
+      minimumUtxoVal: await BigNum.fromStr(networkConfig.MINIMUM_UTXO_VAL),
+      poolDeposit: await BigNum.fromStr(networkConfig.POOL_DEPOSIT),
       networkId: networkConfig.NETWORK_ID,
     }
-    const certificates: Array<Certificate> = []
+    const certificates: Array<CardanoTypes.Certificate> = []
     const neededKeys = {
       neededHashes: new Set<string>(),
       wits: new Set<string>(),
     }
-    const requiredWits: Array<Ed25519KeyHash> = []
+    const requiredWits: Array<CardanoTypes.Ed25519KeyHash> = []
 
     for (const withdrawal of request.withdrawals) {
-      const wasmAddr = await RewardAddress.from_address(
-        await Address.from_bytes(Buffer.from(withdrawal.rewardAddress, 'hex')),
+      const wasmAddr = await RewardAddress.fromAddress(
+        await Address.fromBytes(Buffer.from(withdrawal.rewardAddress, 'hex')),
       )
 
       if (wasmAddr == null) {
         throw new Error('delegationUtils::createWithdrawalTx withdrawal not a reward address')
       }
 
-      const paymentCred = await wasmAddr.payment_cred()
-      const keyHash = await paymentCred.to_keyhash()
+      const paymentCred = await wasmAddr.paymentCred()
+      const keyHash = await paymentCred.toKeyhash()
 
       if (keyHash == null) {
         throw new Error('Unexpected: withdrawal from a script hash')
@@ -394,8 +391,8 @@ export const createWithdrawalTx = async (request: CreateWithdrawalTxRequest): Pr
       requiredWits.push(keyHash)
 
       if (withdrawal.shouldDeregister) {
-        certificates.push(await Certificate.new_stake_deregistration(await StakeDeregistration.new(paymentCred)))
-        neededKeys.neededHashes.add(Buffer.from(await paymentCred.to_bytes()).toString('hex'))
+        certificates.push(await Certificate.newStakeDeregistration(await StakeDeregistration.new(paymentCred)))
+        neededKeys.neededHashes.add(Buffer.from(await paymentCred.toBytes()).toString('hex'))
       }
     }
 
@@ -406,8 +403,8 @@ export const createWithdrawalTx = async (request: CreateWithdrawalTxRequest): Pr
       networkConfig.BACKEND,
     )
     const finalWithdrawals: Array<{
-      address: RewardAddress
-      amount: BigNum
+      address: CardanoTypes.RewardAddress
+      amount: CardanoTypes.BigNum
     }> = []
 
     for (const address of Object.keys(accountStates)) {
@@ -428,19 +425,19 @@ export const createWithdrawalTx = async (request: CreateWithdrawalTxRequest): Pr
         continue
       }
 
-      const rewardAddress = await RewardAddress.from_address(await Address.from_bytes(Buffer.from(address, 'hex')))
+      const rewardAddress = await RewardAddress.fromAddress(await Address.fromBytes(Buffer.from(address, 'hex')))
 
       if (rewardAddress == null) {
         throw new Error('withdrawal not a reward address')
       }
 
       {
-        const stakeCredential = await rewardAddress.payment_cred()
-        neededKeys.neededHashes.add(Buffer.from(await stakeCredential.to_bytes()).toString('hex'))
+        const stakeCredential = await rewardAddress.paymentCred()
+        neededKeys.neededHashes.add(Buffer.from(await stakeCredential.toBytes()).toString('hex'))
       }
       finalWithdrawals.push({
         address: rewardAddress,
-        amount: await BigNum.from_str(rewardForAddress.remainingAmount),
+        amount: await BigNum.fromStr(rewardForAddress.remainingAmount),
       })
     }
 
@@ -476,7 +473,7 @@ export const createWithdrawalTx = async (request: CreateWithdrawalTxRequest): Pr
         if ((withdrawal as any).privateKey != null) {
           const {privateKey} = withdrawal as any
           neededKeys.wits.add(
-            Buffer.from(await (await make_vkey_witness(await hash_transaction(body), privateKey)).to_bytes()).toString(
+            Buffer.from(await (await makeVkeyWitness(await hashTransaction(body), privateKey)).toBytes()).toString(
               'hex',
             ),
           )

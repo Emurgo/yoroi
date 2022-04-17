@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {BaseAddress, Bip32PublicKey, RewardAddress, StakeCredential} from '@emurgo/react-native-haskell-shelley'
 import _ from 'lodash'
 import type {Moment} from 'moment'
 import {defaultMemoize} from 'reselect'
@@ -10,6 +9,7 @@ import {ADDRESS_TYPE_TO_CHANGE} from '../../legacy/commonUtils'
 import {CONFIG, isByron, isHaskellShelley} from '../../legacy/config'
 import {Logger} from '../../legacy/logging'
 import {getNetworkConfigById} from '../../legacy/networks'
+import {BaseAddress, Bip32PublicKey, CardanoTypes, RewardAddress, StakeCredential} from '.'
 import type {CryptoAccount} from './byron/util'
 import * as util from './byron/util'
 import {NetworkId, WalletImplementationId} from './types'
@@ -35,7 +35,7 @@ export class AddressGenerator {
   walletImplementationId: WalletImplementationId
   networkId: NetworkId
 
-  _accountPubKeyPtr: undefined | Bip32PublicKey
+  _accountPubKeyPtr: undefined | CardanoTypes.Bip32PublicKey
   _rewardAddressHex: undefined | string
 
   constructor(
@@ -70,20 +70,20 @@ export class AddressGenerator {
     if (this._rewardAddressHex != null) return this._rewardAddressHex
     // cache account public key
     if (this._accountPubKeyPtr == null) {
-      this._accountPubKeyPtr = await Bip32PublicKey.from_bytes(Buffer.from(this.accountPubKeyHex, 'hex'))
+      this._accountPubKeyPtr = await Bip32PublicKey.fromBytes(Buffer.from(this.accountPubKeyHex, 'hex'))
     }
     const stakingKey = await (
       await (
         await this._accountPubKeyPtr.derive(CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT)
       ).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)
-    ).to_raw_key()
+    ).toRawKey()
 
     // cache reward address
-    const credential = await StakeCredential.from_keyhash(await stakingKey.hash())
+    const credential = await StakeCredential.fromKeyhash(await stakingKey.hash())
     const rewardAddr = await RewardAddress.new(parseInt(chainNetworkId, 10), credential)
-    const rewardAddrAsAddr = await rewardAddr.to_address()
+    const rewardAddrAsAddr = await rewardAddr.toAddress()
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    this._rewardAddressHex = Buffer.from((await rewardAddrAsAddr.to_bytes()) as any, 'hex').toString('hex')
+    this._rewardAddressHex = Buffer.from((await rewardAddrAsAddr.toBytes()) as any, 'hex').toString('hex')
     return this._rewardAddressHex
   }
 
@@ -97,24 +97,24 @@ export class AddressGenerator {
       }
       // cache account public key
       if (this._accountPubKeyPtr == null) {
-        this._accountPubKeyPtr = await Bip32PublicKey.from_bytes(Buffer.from(this.accountPubKeyHex, 'hex'))
+        this._accountPubKeyPtr = await Bip32PublicKey.fromBytes(Buffer.from(this.accountPubKeyHex, 'hex'))
       }
       const chainKey = await this._accountPubKeyPtr.derive(ADDRESS_TYPE_TO_CHANGE[this.type])
       const stakingKey = await (
         await (
           await this._accountPubKeyPtr.derive(CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT)
         ).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)
-      ).to_raw_key()
+      ).toRawKey()
 
       return await Promise.all(
         idxs.map(async (idx) => {
-          const addrKey = await (await chainKey.derive(idx)).to_raw_key()
+          const addrKey = await (await chainKey.derive(idx)).toRawKey()
           const addr = await BaseAddress.new(
             parseInt(chainNetworkId, 10),
-            await StakeCredential.from_keyhash(await addrKey.hash()),
-            await StakeCredential.from_keyhash(await stakingKey.hash()),
+            await StakeCredential.fromKeyhash(await addrKey.hash()),
+            await StakeCredential.fromKeyhash(await stakingKey.hash()),
           )
-          return await (await addr.to_address()).to_bech32()
+          return await (await addr.toAddress()).toBech32()
         }),
       )
     }
