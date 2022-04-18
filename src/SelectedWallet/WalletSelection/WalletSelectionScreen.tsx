@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native'
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
 import {delay} from 'bluebird'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -18,7 +18,7 @@ import globalMessages, {errorMessages} from '../../../legacy/i18n/global-message
 import {WalletMeta} from '../../../legacy/state'
 import {COLORS} from '../../../legacy/styles/config'
 import {useWalletMetas} from '../../hooks'
-import {useWalletNavigation} from '../../navigation'
+import {useWalletNavigation, WalletStackRouteNavigation, WalletStackRoutes} from '../../navigation'
 import {WalletInterface} from '../../types'
 import {useSetSelectedWallet, useSetSelectedWalletMeta} from '..'
 import {useSelectedWalletContext} from '../Context'
@@ -26,13 +26,15 @@ import {WalletListItem} from './WalletListItem'
 
 export const WalletSelectionScreen = () => {
   const strings = useStrings()
-  const {navigation, navigateToTxHistory} = useWalletNavigation()
+  const {resetToWalletSelection, navigateToTxHistory} = useWalletNavigation()
+  const navigation = useNavigation<WalletStackRouteNavigation>()
   const walletMetas = useWalletMetas()
   const dispatch = useDispatch()
   const selectWalletMeta = useSetSelectedWalletMeta()
   const selectWallet = useSetSelectedWallet()
   const intl = useIntl()
   const [wallet] = useSelectedWalletContext()
+  const params = useRoute<RouteProp<WalletStackRoutes, 'wallet-selection'>>().params
 
   const {openWallet, isLoading} = useOpenWallet({
     onSuccess: ({wallet, walletMeta}) => {
@@ -48,15 +50,11 @@ export const WalletSelectionScreen = () => {
       if (error instanceof SystemAuthDisabled) {
         await walletManager.closeWallet()
         await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
-        navigation.navigate('app-root', {
-          screen: 'wallet-selection',
-        })
+        resetToWalletSelection()
       } else if (error instanceof InvalidState) {
         await walletManager.closeWallet()
         await showErrorDialog(errorMessages.walletStateInvalid, intl)
-        navigation.navigate('app-root', {
-          screen: 'wallet-selection',
-        })
+        resetToWalletSelection()
       } else if (error instanceof KeysAreInvalid) {
         await walletManager.cleanupInvalidKeys()
         await walletManager.disableEasyConfirmation()
@@ -73,10 +71,11 @@ export const WalletSelectionScreen = () => {
       await showErrorDialog(errorMessages.itnNotSupported, intl)
       return
     }
-    if (wallet?.id === walletMeta.id) {
-      return navigateToTxHistory()
+    if (params?.reopen || wallet?.id !== walletMeta.id) {
+      navigation.setParams({reopen: false})
+      return openWallet(walletMeta)
     }
-    return openWallet(walletMeta)
+    return navigateToTxHistory()
   }
 
   return (
