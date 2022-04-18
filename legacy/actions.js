@@ -32,6 +32,7 @@ import {backgroundLockListener} from './helpers/backgroundLockHelper'
 import crashReporting from './helpers/crashReporting'
 import {canBiometricEncryptionBeEnabled, recreateAppSignInKeys, removeAppSignInKeys} from './helpers/deviceSettings'
 import globalMessages, {errorMessages} from './i18n/global-messages'
+import {canEnableBiometricSelector} from './selectors'
 import {
   installationIdSelector,
   isAppSetupCompleteSelector,
@@ -269,6 +270,22 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
   })
 
   RNBootSplash.hide({fade: true})
+}
+
+export const checkBiometricStatus = () => async (dispatch: Dispatch<any>, getState: any) => {
+  const state = getState()
+  const shouldNotEnableBiometricAuth =
+    !isAppSetupCompleteSelector(state) &&
+    Platform.OS === 'android' &&
+    CONFIG.ANDROID_BIO_AUTH_EXCLUDED_SDK.includes(Platform.Version)
+  const currentCanEnableBiometricEncryption = canEnableBiometricSelector(state)
+  const canEnableBiometricEncryption = (await canBiometricEncryptionBeEnabled()) && !shouldNotEnableBiometricAuth
+
+  const biometricWasTurnedOff = !canEnableBiometricEncryption && currentCanEnableBiometricEncryption
+  Logger.debug('willResetBiometric:', biometricWasTurnedOff)
+  if (biometricWasTurnedOff) {
+    await dispatch(setAppSettingField(APP_SETTINGS_KEYS.CAN_ENABLE_BIOMETRIC_ENCRYPTION, canEnableBiometricEncryption))
+  }
 }
 
 const _setOnline = (isOnline: boolean) => (dispatch, getState) => {

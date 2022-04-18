@@ -79,7 +79,7 @@ const NavigatorSwitch = () => {
       {/* Initial Route */}
       <Stack.Group>
         {isMaintenance && <Stack.Screen name="maintenance" component={MaintenanceScreen} />}
-        {!isAppSetupComplete && <Stack.Screen name="first-run" component={FirstRunNavigator} />}
+        {!isAppSetupComplete && !hasAnyWallet && <Stack.Screen name="first-run" component={FirstRunNavigator} />}
       </Stack.Group>
 
       {/* Not Authenticated */}

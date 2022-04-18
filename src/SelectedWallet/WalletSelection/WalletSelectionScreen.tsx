@@ -7,7 +7,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useMutation, UseMutationOptions} from 'react-query'
 import {useDispatch} from 'react-redux'
 
-import {setEasyConfirmation, showErrorDialog} from '../../../legacy/actions'
+import {checkBiometricStatus, logout, showErrorDialog} from '../../../legacy/actions'
 import Screen from '../../../legacy/components/Screen'
 import {Button, PleaseWaitModal, ScreenBackground, StatusBar} from '../../../legacy/components/UiKit'
 import {CONFIG, isNightly} from '../../../legacy/config/config'
@@ -42,11 +42,8 @@ export const WalletSelectionScreen = () => {
       selectWallet(wallet)
       navigateToTxHistory()
     },
-    retry: (counter, error) => {
-      const shouldRetry = error instanceof KeysAreInvalid && counter === 0
-      return shouldRetry
-    },
     onError: async (error) => {
+      navigation.setParams({reopen: true})
       if (error instanceof SystemAuthDisabled) {
         await walletManager.closeWallet()
         await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
@@ -56,10 +53,9 @@ export const WalletSelectionScreen = () => {
         await showErrorDialog(errorMessages.walletStateInvalid, intl)
         resetToWalletSelection()
       } else if (error instanceof KeysAreInvalid) {
-        await walletManager.cleanupInvalidKeys()
-        await walletManager.disableEasyConfirmation()
-        await dispatch(setEasyConfirmation(false))
         await showErrorDialog(errorMessages.walletKeysInvalidated, intl)
+        await dispatch(checkBiometricStatus())
+        await dispatch(logout())
       } else {
         throw error
       }
