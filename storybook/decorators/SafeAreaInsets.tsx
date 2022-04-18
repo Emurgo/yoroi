@@ -4,7 +4,13 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 type Side = 'top' | 'left' | 'right' | 'bottom'
 
-export const SafeAreaInsets = ({sides, children}: {sides: Array<Side>; children: React.ReactNode}) => (
+export const SafeAreaInsets = ({
+  sides = ['top', 'left', 'right', 'bottom'],
+  children,
+}: {
+  sides?: Array<Side>
+  children: React.ReactNode
+}) => (
   <>
     {children}
 

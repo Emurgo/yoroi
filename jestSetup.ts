@@ -21,15 +21,7 @@ jest.mock('@react-native-async-storage/async-storage', () =>
 jest.mock('react-native-keychain', () => {})
 jest.mock('react-native-vector-icons/MaterialCommunityIcons', () => ({loadFont: jest.fn()}))
 jest.mock('react-native-blockies-svg', () => {})
-jest.mock('react-intl', () => {
-  const reactIntl = jest.requireActual('react-intl')
-  const intl = reactIntl.createIntl({locale: 'en'})
 
-  return {
-    ...reactIntl,
-    useIntl: () => intl,
-  }
-})
 jest.mock('react-native-reanimated', () => {
   const Reanimated = require('react-native-reanimated/mock')
 

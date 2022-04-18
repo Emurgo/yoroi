@@ -113,10 +113,12 @@ const numberLocales = {
 export const setLanguage = (code: string) => {
   assert.assert(Object.values(LANGUAGES).includes(code), 'Unknown language', code)
   moment.locale(momentLocales[code])
-  
+
   BigNumber.config({
     FORMAT: numberLocales[code],
   })
 }
 
 setLanguage(LANGUAGES.ENGLISH)
+
+export * from './LanguageProvider'

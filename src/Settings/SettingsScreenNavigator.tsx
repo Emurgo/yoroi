@@ -80,7 +80,7 @@ export const SettingsScreenNavigator = () => {
       <Stack.Screen
         name={SETTINGS_ROUTES.CHANGE_LANGUAGE}
         component={ChangeLanguageScreen}
-        options={{headerShown: false}}
+        options={{title: strings.languageTitle}}
       />
       <Stack.Screen
         name={SETTINGS_ROUTES.EASY_CONFIRMATION}
@@ -189,6 +189,10 @@ const messages = defineMessages({
     id: 'components.settings.applicationsettingsscreen.title',
     defaultMessage: '!!!Settings',
   },
+  languageTitle: {
+    id: 'components.common.languagepicker.continueButton',
+    defaultMessage: '!!!Choose language',
+  },
 })
 
 const useStrings = () => {
@@ -206,5 +210,6 @@ const useStrings = () => {
     toggleEachConfirmationTitle: intl.formatMessage(messages.toggleEachConfirmationTitle),
     customPinTitle: intl.formatMessage(messages.customPinTitle),
     settingsTitle: intl.formatMessage(messages.settingsTitle),
+    languageTitle: intl.formatMessage(messages.languageTitle),
   }
 }
