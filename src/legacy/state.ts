@@ -85,7 +85,6 @@ export type State = {
   appSettings: {
     acceptedTos: boolean
     installationId: string | null | undefined
-    languageCode: string
     customPinHash: string | null | undefined
     isSystemAuthEnabled: boolean
     isBiometricHardwareSupported: boolean
@@ -166,7 +165,6 @@ export const getInitialState = (): State => ({
   isKeyboardOpen: false,
   appSettings: {
     acceptedTos: false,
-    languageCode: 'en-US',
     installationId: null,
     customPinHash: null,
     isSystemAuthEnabled: false,

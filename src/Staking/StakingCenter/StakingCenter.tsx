@@ -10,6 +10,7 @@ import {useSelector} from 'react-redux'
 
 import {AccountAutoRefresher} from '../../AccountAutoRefresher'
 import {PleaseWaitModal} from '../../components'
+import {useLanguage} from '../../i18n'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
 import {showErrorDialog} from '../../legacy/actions'
 import {CONFIG, getTestStakingPool, isNightly, SHOW_PROD_POOLS_IN_DEV} from '../../legacy/config'
@@ -23,7 +24,6 @@ import {STAKING_CENTER_ROUTES} from '../../legacy/RoutesList'
 import {
   accountBalanceSelector,
   defaultNetworkAssetSelector,
-  languageSelector,
   poolOperatorSelector,
   serverStatusSelector,
   utxosSelector,
@@ -49,7 +49,7 @@ export const StakingCenter = () => {
   const accountBalance = useSelector(accountBalanceSelector)
   const defaultAsset = useSelector(defaultNetworkAssetSelector)
   const poolOperator = useSelector(poolOperatorSelector)
-  const languageCode = useSelector(languageSelector)
+  const {languageCode} = useLanguage()
   const serverStatus = useSelector(serverStatusSelector)
   const wallet = useSelectedWallet()
   const config = getNetworkConfigById(wallet.networkId)

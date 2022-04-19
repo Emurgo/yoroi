@@ -192,7 +192,6 @@ export const isAppInitializedSelector = (state: State): boolean => state.isAppIn
 export const isAuthenticatedSelector = (state: State): boolean => state.isAuthenticated
 export const installationIdSelector = (state: State) => state.appSettings.installationId
 export const tosSelector = (state: State): boolean => state.appSettings.acceptedTos
-export const languageSelector = (state: State): string => state.appSettings.languageCode || ''
 export const currentVersionSelector = (state: State) => state.appSettings.currentVersion
 export const isKeyboardOpenSelector = (state: State): boolean => state.isKeyboardOpen
 export const isFlawedWalletSelector = (state: State): boolean => state.isFlawedWallet

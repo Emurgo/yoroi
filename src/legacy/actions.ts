@@ -25,7 +25,6 @@ import {canBiometricEncryptionBeEnabled, recreateAppSignInKeys, removeAppSignInK
 import {mirrorTxHistory, setBackgroundSyncError, updateHistory} from './history'
 import {ISignRequest} from './ISignRequest'
 import KeyStore from './KeyStore'
-import {changeAndSaveLanguage} from './language'
 import networkInfo from './networkInfo'
 import {getCardanoNetworkConfigById} from './networks'
 import {
@@ -102,10 +101,6 @@ const reloadAppSettings = () => async (dispatch: Dispatch<any>) => {
     updateCrashlytics(key, value)
   })
   dispatch(_setAppSettings(appSettings))
-
-  if (appSettings.languageCode) {
-    dispatch(changeAndSaveLanguage(appSettings.languageCode))
-  }
 }
 
 export const encryptAndStoreCustomPin = (pin: string) => async (dispatch: Dispatch<any>, getState: () => State) => {
