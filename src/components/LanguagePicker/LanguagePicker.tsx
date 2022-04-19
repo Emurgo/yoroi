@@ -31,7 +31,7 @@ export const LanguagePicker = () => {
         )}
       />
 
-      {!INCLUDED_LANGUAGE_CODES.includes(languageCode) && !INCLUDED_LANGUAGE_CODES.includes(languageCode) && (
+      {!INCLUDED_LANGUAGE_CODES.includes(languageCode) && (
         <View style={styles.warning}>
           <Markdown>
             {strings.contributors !== '_' ? `${strings.warning}: **${strings.contributors}**` : `${strings.warning}.`}
