@@ -1,14 +1,13 @@
 import React from 'react'
 import {ActivityIndicator} from 'react-native'
 import Markdown from 'react-native-easy-markdown'
-import {useSelector} from 'react-redux'
 
-import {languageSelector} from '../../../legacy/selectors'
+import {useLanguage} from '../../../i18n'
 import {loadTOS} from './loadTos'
 
 export const TermsOfService = () => {
   const [tos, setTos] = React.useState()
-  const languageCode = useSelector(languageSelector)
+  const {languageCode} = useLanguage()
 
   React.useEffect(() => {
     loadTOS(languageCode).then(setTos)
