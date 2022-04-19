@@ -12,7 +12,6 @@ import {ApiError, NetworkError} from '../../../legacy/api/errors'
 import type {RawUtxo} from '../../../legacy/api/types'
 import AccountAutoRefresher from '../../../legacy/components/Delegation/AccountAutoRefresher'
 import PoolWarningModal from '../../../legacy/components/Delegation/PoolWarningModal'
-import styles from '../../../legacy/components/Delegation/styles/DelegationCenter.style'
 import UtxoAutoRefresher from '../../../legacy/components/Send/UtxoAutoRefresher'
 import {PleaseWaitModal} from '../../../legacy/components/UiKit'
 import {CONFIG, getTestStakingPool, isNightly, SHOW_PROD_POOLS_IN_DEV} from '../../../legacy/config/config'
@@ -34,6 +33,7 @@ import type {DefaultAsset} from '../../../legacy/types/HistoryTransaction'
 import {ObjectValues} from '../../../legacy/utils/flow'
 import {normalizeTokenAmount} from '../../../legacy/utils/format'
 import {Logger} from '../../../legacy/utils/logging'
+import {Spacer} from '../../components'
 import {StakingCenterRouteNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {PoolDetailScreen} from '../PoolDetails'
@@ -70,6 +70,9 @@ export const StakingCenter = () => {
   }
 
   const handleOnMessage = async (event) => {
+    if (isFetchingUtxos) {
+      return showErrorDialog(waitSyncDialog, intl)
+    }
     if (event) {
       const selectedPoolHashes: Array<string> = JSON.parse(decodeURI(event.nativeEvent.data))
       Logger.debug('selected pools from explorer:', selectedPoolHashes)
@@ -123,7 +126,7 @@ export const StakingCenter = () => {
   return (
     <>
       {(__DEV__ || (isNightly() && !isMainnet)) && (
-        <View style={styles.container}>
+        <View style={{flex: 1}}>
           <PoolDetailScreen
             onPressDelegate={(poolHash) => handleOnPress(poolHash)}
             disabled={!nightlyAndDevPoolHashes.length || isFetchingUtxos || !utxos}
@@ -132,19 +135,17 @@ export const StakingCenter = () => {
       )}
       {(isMainnet || SHOW_PROD_POOLS_IN_DEV) && (
         <>
-          <View style={styles.container}>
+          <View style={{flex: 1, backgroundColor: '#fff'}}>
+            <Spacer height={8} />
             <UtxoAutoRefresher />
             <AccountAutoRefresher />
-            {isFetchingUtxos ? (
-              <ActivityIndicator size="large" color="black" />
-            ) : (
-              <WebView
-                source={{
-                  uri: prepareStakingURL(poolList, amountToDelegate, languageCode),
-                }}
-                onMessage={(event) => handleOnMessage(event)}
-              />
-            )}
+            {isFetchingUtxos && <ActivityIndicator color="black" />}
+            <WebView
+              source={{
+                uri: prepareStakingURL(poolList, amountToDelegate, languageCode),
+              }}
+              onMessage={(event) => handleOnMessage(event)}
+            />
           </View>
           <PoolWarningModal
             visible={showPoolWarning}
@@ -178,6 +179,17 @@ const noPoolDataDialog = defineMessages({
   message: {
     id: 'components.stakingcenter.noPoolDataDialog.message',
     defaultMessage: '!!!The data from the stake pool(s) you selected is invalid. Please try again',
+  },
+})
+
+const waitSyncDialog = defineMessages({
+  title: {
+    id: 'global.tryAgain',
+    defaultMessage: '!!!Try again',
+  },
+  message: {
+    id: 'global.actions.dialogs.walletSynchronizing',
+    defaultMessage: '!!!Wallet is syncronizing',
   },
 })
 
