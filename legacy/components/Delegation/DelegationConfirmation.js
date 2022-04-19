@@ -1,6 +1,5 @@
 // @flow
 
-import {CommonActions} from '@react-navigation/routers'
 import {BigNumber} from 'bignumber.js'
 import type {ComponentType} from 'react'
 import React from 'react'
@@ -13,7 +12,7 @@ import {compose} from 'redux'
 
 import {showErrorDialog, submitSignedTx, submitTransaction} from '../../actions'
 import {setLedgerDeviceId, setLedgerDeviceObj} from '../../actions/hwWallet'
-import {CONFIG, UI_V2} from '../../config/config'
+import {CONFIG} from '../../config/config'
 import {WrongPassword} from '../../crypto/errors'
 import {ISignRequest} from '../../crypto/ISignRequest'
 import KeyStore from '../../crypto/KeyStore'
@@ -23,13 +22,6 @@ import walletManager, {SystemAuthDisabled} from '../../crypto/walletManager'
 import globalMessages, {errorMessages, txLabels} from '../../i18n/global-messages'
 import LocalizableError from '../../i18n/LocalizableError'
 import {useParams} from '../../navigation'
-import {
-  SEND_ROUTES,
-  STAKING_CENTER_ROUTES,
-  STAKING_DASHBOARD_ROUTES,
-  WALLET_ROOT_ROUTES,
-  WALLET_ROUTES,
-} from '../../RoutesList'
 import {
   defaultNetworkAssetSelector,
   easyConfirmationSelector,
@@ -102,23 +94,32 @@ const handleOnConfirm = async (
       } else {
         await submitSignedTx(tx)
       }
-      navigation.dispatch(
-        CommonActions.reset({
-          key: null,
-          index: 0,
-          routes: [{name: STAKING_CENTER_ROUTES.MAIN}],
-        }),
-      )
-      if (UI_V2) {
-        navigation.dispatch(
-          CommonActions.reset({
-            key: null,
-            index: 0,
-            routes: [{name: STAKING_DASHBOARD_ROUTES.MAIN}],
-          }),
-        )
-      }
-      navigation.navigate(WALLET_ROUTES.TX_HISTORY)
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: 'app-root',
+            state: {
+              routes: [
+                {name: 'wallet-selection'},
+                {
+                  name: 'main-wallet-routes',
+                  state: {
+                    routes: [
+                      {
+                        name: 'history',
+                        state: {
+                          routes: [{name: 'history-list'}],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      })
     } finally {
       setSendingTransaction(false)
     }
@@ -139,11 +140,10 @@ const handleOnConfirm = async (
     if (isEasyConfirmationEnabled) {
       try {
         await walletManager.ensureKeysValidity()
-        navigation.navigate(SEND_ROUTES.BIOMETRICS_SIGNING, {
+        navigation.navigate('biometrics', {
           keyId: walletManager._id,
           onSuccess: async (decryptedKey) => {
-            navigation.navigate(STAKING_CENTER_ROUTES.DELEGATION_CONFIRM)
-
+            navigation.goBack()
             await submitTx(signRequest, decryptedKey)
           },
           onFail: () => navigation.goBack(),
@@ -152,7 +152,9 @@ const handleOnConfirm = async (
         if (e instanceof SystemAuthDisabled) {
           await walletManager.closeWallet()
           await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
-          navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
+          navigation.navigate('app-root', {
+            screen: 'wallet-selection',
+          })
 
           return
         } else {

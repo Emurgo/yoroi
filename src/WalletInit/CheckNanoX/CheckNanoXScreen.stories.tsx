@@ -1,13 +1,15 @@
-import {NavigationRouteContext} from '@react-navigation/native'
+import {NavigationRouteContext, RouteProp} from '@react-navigation/native'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
 import {CONFIG} from '../../../legacy/config/config'
-import {CheckNanoXScreen, Params} from './CheckNanoXScreen'
+import {WalletInitRoutes} from '../../navigation'
+import {CheckNanoXScreen} from './CheckNanoXScreen'
 
 storiesOf('CheckNanoXScreen', module)
   .add('ble', () => {
-    const params: Params = {
+    const params: RouteProp<WalletInitRoutes, 'connect-nano-x'>['params'] = {
+      useUSB: false,
       networkId: CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
       walletImplementationId: CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
     }
@@ -19,7 +21,7 @@ storiesOf('CheckNanoXScreen', module)
     )
   })
   .add('usb', () => {
-    const params: Params = {
+    const params: RouteProp<WalletInitRoutes, 'connect-nano-x'>['params'] = {
       useUSB: true,
       networkId: CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
       walletImplementationId: CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,

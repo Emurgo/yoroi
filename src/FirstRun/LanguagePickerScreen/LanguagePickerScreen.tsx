@@ -5,19 +5,18 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {changeAndSaveLanguage, changeLanguage} from '../../../legacy/actions/language'
-import {FIRST_RUN_ROUTES} from '../../../legacy/RoutesList'
 import {languageSelector} from '../../../legacy/selectors'
 import {LanguagePicker} from '../../components'
+import {FirstRunRouteNavigation} from '../../navigation'
 
 export const LanguagePickerScreen = () => {
-  const navigation = useNavigation()
+  const navigation = useNavigation<FirstRunRouteNavigation>()
   const languageCode = useSelector(languageSelector) || 'en-US'
   const dispatch = useDispatch()
 
   const handleContinue = async () => {
     await dispatch(changeAndSaveLanguage(languageCode))
-
-    navigation.navigate(FIRST_RUN_ROUTES.ACCEPT_TERMS_OF_SERVICE)
+    navigation.navigate('accept-terms-of-service')
   }
 
   return (

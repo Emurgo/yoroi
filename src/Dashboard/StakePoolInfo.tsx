@@ -15,12 +15,12 @@ export const StakePoolInfo = ({stakePoolId}: {stakePoolId: string}) => {
   const {stakePoolInfo, isLoading} = useStakePoolInfo(wallet, stakePoolId)
 
   if (isLoading) {
-    return <ActivityIndicator size={'large'} />
+    return <ActivityIndicator size="large" />
   }
 
   return stakePoolInfo ? (
     <View>
-      <TitledCard title={strings.title} variant={'poolInfo'}>
+      <TitledCard title={strings.title} variant="poolInfo">
         <View style={styles.topBlock}>
           <Text bold style={styles.poolName}>
             {formatStakepoolNameWithTicker(stakePoolInfo.ticker, stakePoolInfo.name) || strings.unknownPool}

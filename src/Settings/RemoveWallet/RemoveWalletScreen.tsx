@@ -1,4 +1,3 @@
-import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, View} from 'react-native'
@@ -9,11 +8,11 @@ import {useDispatch, useSelector} from 'react-redux'
 import {updateWallets} from '../../../legacy/actions'
 import {Button, Checkbox, StatusBar, Text, TextInput} from '../../../legacy/components/UiKit'
 import {Checkmark} from '../../../legacy/components/UiKit/TextInput'
-import {WALLET_ROOT_ROUTES} from '../../../legacy/RoutesList'
 import {isHWSelector} from '../../../legacy/selectors'
 import {COLORS} from '../../../legacy/styles/config'
 import {Spacer} from '../../components'
 import {useRemoveWallet, useWalletName} from '../../hooks'
+import {useWalletNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 
 export const RemoveWalletScreen = () => {
@@ -22,10 +21,10 @@ export const RemoveWalletScreen = () => {
   const walletName = useWalletName(wallet)
   const isHW = useSelector(isHWSelector)
 
-  const navigation = useNavigation()
+  const {resetToWalletSelection} = useWalletNavigation()
   const dispatch = useDispatch()
   const {removeWallet, isLoading} = useRemoveWallet({
-    onMutate: () => navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION),
+    onMutate: () => resetToWalletSelection(),
     onSuccess: () => dispatch(updateWallets()),
   })
 
@@ -36,7 +35,7 @@ export const RemoveWalletScreen = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
-      <StatusBar type={'dark'} />
+      <StatusBar type="dark" />
 
       <ScrollView bounces={false} contentContainerStyle={styles.contentContainer}>
         <Description>
@@ -87,7 +86,7 @@ const WalletInfo = (props) => {
   return <View {...props} style={styles.descriptionContainer} />
 }
 const WalletNameInput = (props) => {
-  return <TextInput {...props} autoFocus enablesReturnKeyAutomatically returnKeyType={'done'} />
+  return <TextInput {...props} autoFocus enablesReturnKeyAutomatically returnKeyType="done" />
 }
 const Actions = (props) => {
   return <View {...props} style={styles.actions} />

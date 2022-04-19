@@ -3,7 +3,6 @@
 import {type IntlShape} from 'react-intl'
 import {Alert, AppState, Keyboard, Platform} from 'react-native'
 import RNBootSplash from 'react-native-bootsplash'
-import DeviceInfo from 'react-native-device-info'
 import {type Dispatch} from 'redux'
 import uuid from 'uuid'
 
@@ -33,8 +32,8 @@ import {backgroundLockListener} from './helpers/backgroundLockHelper'
 import crashReporting from './helpers/crashReporting'
 import {canBiometricEncryptionBeEnabled, recreateAppSignInKeys, removeAppSignInKeys} from './helpers/deviceSettings'
 import globalMessages, {errorMessages} from './i18n/global-messages'
+import {canEnableBiometricSelector} from './selectors'
 import {
-  currentVersionSelector,
   installationIdSelector,
   isAppSetupCompleteSelector,
   isSystemAuthEnabledSelector,
@@ -151,22 +150,6 @@ const initInstallationId =
     await dispatch(setAppSettingField(APP_SETTINGS_KEYS.INSTALLATION_ID, installationId))
 
     return installationId
-  }
-
-export const updateVersion =
-  () =>
-  async (dispatch: Dispatch<any>, getState: any): Promise<string> => {
-    let currentVersion = currentVersionSelector(getState())
-    Logger.debug('current version from state', currentVersion)
-    if (currentVersion != null && currentVersion === DeviceInfo.getVersion()) {
-      return currentVersion
-    }
-
-    currentVersion = DeviceInfo.getVersion()
-
-    await dispatch(setAppSettingField(APP_SETTINGS_KEYS.CURRENT_VERSION, currentVersion))
-    Logger.debug('updated version', currentVersion)
-    return currentVersion
   }
 
 export const closeWallet = () => async (_dispatch: Dispatch<any>) => {
@@ -287,6 +270,22 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
   })
 
   RNBootSplash.hide({fade: true})
+}
+
+export const checkBiometricStatus = () => async (dispatch: Dispatch<any>, getState: any) => {
+  const state = getState()
+  const shouldNotEnableBiometricAuth =
+    !isAppSetupCompleteSelector(state) &&
+    Platform.OS === 'android' &&
+    CONFIG.ANDROID_BIO_AUTH_EXCLUDED_SDK.includes(Platform.Version)
+  const currentCanEnableBiometricEncryption = canEnableBiometricSelector(state)
+  const canEnableBiometricEncryption = (await canBiometricEncryptionBeEnabled()) && !shouldNotEnableBiometricAuth
+
+  const biometricWasTurnedOff = !canEnableBiometricEncryption && currentCanEnableBiometricEncryption
+  Logger.debug('willResetBiometric:', biometricWasTurnedOff)
+  if (biometricWasTurnedOff) {
+    await dispatch(setAppSettingField(APP_SETTINGS_KEYS.CAN_ENABLE_BIOMETRIC_ENCRYPTION, canEnableBiometricEncryption))
+  }
 }
 
 const _setOnline = (isOnline: boolean) => (dispatch, getState) => {

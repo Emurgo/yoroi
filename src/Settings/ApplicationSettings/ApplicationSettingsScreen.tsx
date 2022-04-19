@@ -1,4 +1,3 @@
-import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Platform, ScrollView, StyleSheet, Switch} from 'react-native'
@@ -15,13 +14,13 @@ import {
   canBiometricEncryptionBeEnabled,
   isBiometricEncryptionHardwareSupported,
 } from '../../../legacy/helpers/deviceSettings'
-import {SETTINGS_ROUTES} from '../../../legacy/RoutesList'
 import {
   biometricHwSupportSelector,
   installationIdSelector,
   isSystemAuthEnabledSelector,
   sendCrashReportsSelector,
 } from '../../../legacy/selectors'
+import {useWalletNavigation} from '../../navigation'
 import {useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../SelectedWallet'
 import {NavigatedSettingsItem, SettingsBuildItem, SettingsItem, SettingsSection} from '../SettingsItems'
 
@@ -29,7 +28,7 @@ const version = DeviceInfo.getVersion()
 
 export const ApplicationSettingsScreen = () => {
   const strings = useStrings()
-  const navigation = useNavigation()
+  const {navigation, navigateToSettings} = useWalletNavigation()
   const isBiometricHardwareSupported = useSelector(biometricHwSupportSelector)
   const sendCrashReports = useSelector(sendCrashReportsSelector)
   const isSystemAuthEnabled = useSelector(isSystemAuthEnabledSelector)
@@ -43,32 +42,43 @@ export const ApplicationSettingsScreen = () => {
 
   const onToggleBiometricsAuthIn = async () => {
     if (isSystemAuthEnabled) {
-      navigation.navigate(SETTINGS_ROUTES.BIO_AUTHENTICATE, {
+      navigation.navigate('biometrics', {
         keyId: installationId,
         onSuccess: () =>
-          navigation.navigate(SETTINGS_ROUTES.SETUP_CUSTOM_PIN, {
-            onSuccess: async () => {
-              await dispatch(setSystemAuth(false))
-              await walletManager.disableEasyConfirmation()
-              dispatch(setEasyConfirmation(false))
-              if (!walletMeta) throw new Error('No wallet meta')
-              setSelectedWalletMeta({
-                ...walletMeta,
-                isEasyConfirmationEnabled: false,
-              })
-              navigation.navigate(SETTINGS_ROUTES.MAIN)
+          navigation.navigate('app-root', {
+            screen: 'settings',
+            params: {
+              screen: 'setup-custom-pin',
+              params: {
+                onSuccess: async () => {
+                  await dispatch(setSystemAuth(false))
+                  await walletManager.disableEasyConfirmation()
+                  dispatch(setEasyConfirmation(false))
+                  if (!walletMeta) throw new Error('No wallet meta')
+                  setSelectedWalletMeta({
+                    ...walletMeta,
+                    isEasyConfirmationEnabled: false,
+                  })
+                  navigateToSettings()
+                },
+              },
             },
           }),
         onFail: (reason) => {
           if (reason === KeyStore.REJECTIONS.CANCELED) {
-            navigation.navigate(SETTINGS_ROUTES.MAIN)
+            navigateToSettings()
           } else {
             throw new Error(`Could not authenticate user: ${reason}`)
           }
         },
       })
     } else {
-      navigation.navigate(SETTINGS_ROUTES.FINGERPRINT_LINK)
+      navigation.navigate('app-root', {
+        screen: 'settings',
+        params: {
+          screen: 'fingerprint-link',
+        },
+      })
     }
   }
 
@@ -101,13 +111,13 @@ export const ApplicationSettingsScreen = () => {
       <StatusBar type="dark" />
 
       <SettingsSection title={strings.language}>
-        <NavigatedSettingsItem label={strings.currentLanguage} navigateTo={SETTINGS_ROUTES.CHANGE_LANGUAGE} />
+        <NavigatedSettingsItem label={strings.currentLanguage} navigateTo="change-language" />
       </SettingsSection>
 
       <SettingsSection title={strings.security}>
         <NavigatedSettingsItem
           label={strings.changePin}
-          navigateTo={SETTINGS_ROUTES.CHANGE_CUSTOM_PIN}
+          navigateTo="change-custom-pin"
           disabled={isSystemAuthEnabled}
         />
 
@@ -130,9 +140,9 @@ export const ApplicationSettingsScreen = () => {
       </SettingsSection>
 
       <SettingsSection>
-        <NavigatedSettingsItem label={strings.termsOfUse} navigateTo={SETTINGS_ROUTES.TERMS_OF_USE} />
+        <NavigatedSettingsItem label={strings.termsOfUse} navigateTo="terms-of-use" />
 
-        <NavigatedSettingsItem label={strings.support} navigateTo={SETTINGS_ROUTES.SUPPORT} />
+        <NavigatedSettingsItem label={strings.support} navigateTo="support" />
       </SettingsSection>
 
       <SettingsSection title="About">

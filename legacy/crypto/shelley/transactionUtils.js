@@ -6,6 +6,7 @@ import {BigNumber} from 'bignumber.js'
 import type {CardanoHaskellShelleyNetwork} from '../../config/networks'
 import assert from '../../utils/assert'
 import {Logger} from '../../utils/logging'
+import {InvalidAssetAmount} from '../../utils/parsing'
 import {builtSendTokenList, hasSendAllDefault} from '../commonUtils'
 import {CardanoError, InsufficientFunds, NoOutputsError} from '../errors'
 import type {DefaultTokenEntry} from '../MultiToken'
@@ -111,6 +112,7 @@ export const createUnsignedTx = async (request: CreateUnsignedTxRequest): Promis
     })
   } catch (e) {
     if (e instanceof InsufficientFunds || e instanceof NoOutputsError) throw e
+    if (e.message?.match(/ParseIntError/)) throw new InvalidAssetAmount(InvalidAssetAmount.ERROR_CODES.TOO_LARGE)
     Logger.error(`shelley::createUnsignedTx:: ${e.message}`, e)
     throw new CardanoError(e.message)
   }

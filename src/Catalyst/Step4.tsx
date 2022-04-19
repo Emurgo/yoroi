@@ -14,7 +14,6 @@ import {WrongPassword} from '../../legacy/crypto/errors'
 import KeyStore from '../../legacy/crypto/KeyStore'
 import walletManager, {SystemAuthDisabled} from '../../legacy/crypto/walletManager'
 import {confirmationMessages, errorMessages, txLabels} from '../../legacy/i18n/global-messages'
-import {CATALYST_ROUTES, WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
 import {easyConfirmationSelector, isHWSelector} from '../../legacy/selectors'
 import {Spacer} from '../components'
 import {Actions, Description, Title} from './components'
@@ -51,28 +50,32 @@ export const Step4 = () => {
       } finally {
         setGeneratingTransaction(false)
       }
-      navigation.navigate(CATALYST_ROUTES.STEP5)
+      navigation.navigate('app-root', {
+        screen: 'catalyst-router',
+        params: {
+          screen: 'catalyst-transaction',
+        },
+      })
     }
 
     if (isEasyConfirmationEnabled) {
       try {
         await walletManager.ensureKeysValidity()
-        navigation.navigate(CATALYST_ROUTES.BIOMETRICS_SIGNING, {
+        navigation.navigate('biometrics', {
           keyId: walletManager._id,
           onSuccess: async (decryptedKey) => {
             navigation.goBack() // goback to unmount biometrics screen
+
             await generateTransaction(decryptedKey)
           },
           onFail: () => navigation.goBack(),
-          addWelcomeMessage: false,
           instructions: [strings.bioAuthInstructions],
         })
       } catch (error) {
         if (error instanceof SystemAuthDisabled) {
           await walletManager.closeWallet()
           await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
-          navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
-
+          navigation.navigate('app-root', {screen: 'wallet-selection'})
           return
         } else if (error instanceof Error) {
           setErrorData({
@@ -122,7 +125,7 @@ export const Step4 = () => {
       <ProgressStep currentStep={4} totalSteps={6} />
       <OfflineBanner />
 
-      <ScrollView bounces={false} contentContainerStyle={styles.contentContainer} keyboardShouldPersistTaps={'always'}>
+      <ScrollView bounces={false} contentContainerStyle={styles.contentContainer} keyboardShouldPersistTaps="always">
         <Spacer height={48} />
 
         <Title>{strings.subTitle}</Title>

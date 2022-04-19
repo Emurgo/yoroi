@@ -68,7 +68,7 @@ export const primaryTokenInfo: Token = {
     ticker: 'ADA',
     longName: null,
     numberOfDecimals: 6,
-    maxSupply: String(45000000000),
+    maxSupply: String(45000000000000000),
   },
 } as const
 
@@ -83,7 +83,7 @@ export const primaryTokenInfoTestnet: Token = {
     ticker: 'TADA',
     longName: null,
     numberOfDecimals: 6,
-    maxSupply: String(45000000000),
+    maxSupply: String(45000000000000000),
   },
 } as const
 

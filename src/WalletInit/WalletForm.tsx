@@ -49,9 +49,9 @@ export const WalletForm = ({onSubmit}: Props) => {
   return (
     <View style={styles.safeAreaView}>
       <ScrollView
-        keyboardShouldPersistTaps={'always'}
+        keyboardShouldPersistTaps="always"
         contentContainerStyle={styles.scrollContentContainer}
-        testID={'credentialsView'}
+        testID="credentialsView"
         bounces={false}
       >
         <WalletNameInput
@@ -62,7 +62,7 @@ export const WalletForm = ({onSubmit}: Props) => {
           onChangeText={setName}
           errorText={walletNameErrorText}
           errorDelay={0}
-          returnKeyType={'next'}
+          returnKeyType="next"
           onSubmitEditing={() => passwordRef.current?.focus()}
           testID="walletNameInput"
         />
@@ -77,7 +77,7 @@ export const WalletForm = ({onSubmit}: Props) => {
           value={password}
           onChangeText={setPassword}
           errorText={passwordErrorText}
-          returnKeyType={'next'}
+          returnKeyType="next"
           helperText={strings.passwordStrengthRequirement({
             requiredPasswordLength: REQUIRED_PASSWORD_LENGTH,
           })}
@@ -92,7 +92,7 @@ export const WalletForm = ({onSubmit}: Props) => {
           enablesReturnKeyAutomatically
           ref={passwordConfirmationRef}
           secureTextEntry
-          returnKeyType={'done'}
+          returnKeyType="done"
           label={strings.repeatPasswordInputLabel}
           value={passwordConfirmation}
           onChangeText={setPasswordConfirmation}

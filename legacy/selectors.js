@@ -240,8 +240,6 @@ export const tosSelector = (state: State): boolean => state.appSettings.accepted
 
 export const languageSelector = (state: State): string => state.appSettings.languageCode || ''
 
-export const currentVersionSelector = (state: State): ?string => state.appSettings.currentVersion
-
 export const isKeyboardOpenSelector = (state: State): boolean => state.isKeyboardOpen
 
 export const isFlawedWalletSelector = (state: State): boolean => state.isFlawedWallet

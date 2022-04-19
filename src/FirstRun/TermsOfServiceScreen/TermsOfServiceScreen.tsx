@@ -10,13 +10,13 @@ import {Button, Checkbox, PleaseWaitModal, StatusBar} from '../../../legacy/comp
 import {CONFIG} from '../../../legacy/config/config'
 import {canBiometricEncryptionBeEnabled} from '../../../legacy/helpers/deviceSettings'
 import globalMessages from '../../../legacy/i18n/global-messages'
-import {FIRST_RUN_ROUTES} from '../../../legacy/RoutesList'
 import {Spacer} from '../../components'
+import {FirstRunRouteNavigation} from '../../navigation'
 import {TermsOfService} from './TermsOfService'
 
 export const TermsOfServiceScreen = () => {
   const strings = useStrings()
-  const navigation = useNavigation()
+  const navigation = useNavigation<FirstRunRouteNavigation>()
   const [acceptedTos, setAcceptedTos] = React.useState(false)
   const [savingConsent, setSavingConsent] = React.useState(false)
 
@@ -41,7 +41,7 @@ export const TermsOfServiceScreen = () => {
       dispatch(signin())
     } else {
       setSavingConsent(false)
-      navigation.navigate(FIRST_RUN_ROUTES.CUSTOM_PIN)
+      navigation.navigate('custom-pin')
     }
   }
 

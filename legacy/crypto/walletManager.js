@@ -490,15 +490,8 @@ class WalletManager {
       }: WalletMeta),
     }
 
-    this._wallet = wallet
     await this._saveState(wallet)
-    wallet.subscribe(this._notify)
-    wallet.subscribeOnTxHistoryUpdate(this._notifyOnTxHistoryUpdate)
     await storage.write(`/wallet/${id}`, this._wallets[id])
-    this._closePromise = new Promise((resolve, reject) => {
-      this._closeReject = reject
-    })
-    this._notify()
 
     Logger.debug('WalletManager::saveWallet::wallet', wallet)
 
@@ -521,7 +514,8 @@ class WalletManager {
     this._wallet = wallet
     this._id = walletMeta.id
 
-    const shouldDisableEasyConfirmation = walletMeta.isEasyConfirmationEnabled && !isSystemAuthEnabled
+    const shouldDisableEasyConfirmation =
+      walletMeta.isEasyConfirmationEnabled && (!isSystemAuthEnabled || (await !canBiometricEncryptionBeEnabled()))
     if (shouldDisableEasyConfirmation) {
       wallet.isEasyConfirmationEnabled = false
 

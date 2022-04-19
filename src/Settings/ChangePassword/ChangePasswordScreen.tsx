@@ -49,7 +49,7 @@ export const ChangePasswordScreen = () => {
           value={currentPassword}
           onChange={reset}
           onChangeText={setCurrentPassword}
-          returnKeyType={'next'}
+          returnKeyType="next"
           onSubmitEditing={() => newPasswordRef.current?.focus()}
           errorText={isError ? strings.incorrectPassword : undefined}
         />
@@ -65,7 +65,7 @@ export const ChangePasswordScreen = () => {
           onChangeText={setNewPassword}
           errorText={newPasswordErrors.passwordIsWeak ? strings.passwordStrengthRequirement : undefined}
           helperText={strings.passwordStrengthRequirement}
-          returnKeyType={'next'}
+          returnKeyType="next"
           onSubmitEditing={() => newPasswordConfirmationRef.current?.focus()}
           right={!newPasswordErrors.passwordIsWeak ? <Checkmark /> : undefined}
         />
@@ -80,7 +80,7 @@ export const ChangePasswordScreen = () => {
           value={newPasswordConfirmation}
           onChangeText={setNewPasswordConfirmation}
           errorText={newPasswordErrors.matchesConfirmation ? strings.repeatPasswordInputNotMatchError : undefined}
-          returnKeyType={'done'}
+          returnKeyType="done"
           right={
             !newPasswordErrors.matchesConfirmation && !newPasswordErrors.passwordConfirmationReq ? (
               <Checkmark />

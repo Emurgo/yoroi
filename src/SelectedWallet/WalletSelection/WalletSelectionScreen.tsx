@@ -1,72 +1,78 @@
-import {useNavigation} from '@react-navigation/native'
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
+import {delay} from 'bluebird'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, ScrollView, StyleSheet, Text} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
+import {useMutation, UseMutationOptions} from 'react-query'
 import {useDispatch} from 'react-redux'
 
-import {setEasyConfirmation, showErrorDialog, updateVersion} from '../../../legacy/actions'
+import {checkBiometricStatus, logout, showErrorDialog} from '../../../legacy/actions'
 import Screen from '../../../legacy/components/Screen'
-import {Button, ScreenBackground, StatusBar} from '../../../legacy/components/UiKit'
+import {Button, PleaseWaitModal, ScreenBackground, StatusBar} from '../../../legacy/components/UiKit'
 import {CONFIG, isNightly} from '../../../legacy/config/config'
 import {isJormungandr} from '../../../legacy/config/networks'
 import {InvalidState} from '../../../legacy/crypto/errors'
 import walletManager, {KeysAreInvalid, SystemAuthDisabled} from '../../../legacy/crypto/walletManager'
 import globalMessages, {errorMessages} from '../../../legacy/i18n/global-messages'
-import {ROOT_ROUTES, WALLET_INIT_ROUTES, WALLET_ROOT_ROUTES} from '../../../legacy/RoutesList'
 import {WalletMeta} from '../../../legacy/state'
 import {COLORS} from '../../../legacy/styles/config'
 import {useWalletMetas} from '../../hooks'
+import {useWalletNavigation, WalletStackRouteNavigation, WalletStackRoutes} from '../../navigation'
+import {WalletInterface} from '../../types'
 import {useSetSelectedWallet, useSetSelectedWalletMeta} from '..'
+import {useSelectedWalletContext} from '../Context'
 import {WalletListItem} from './WalletListItem'
 
 export const WalletSelectionScreen = () => {
-  const intl = useIntl()
   const strings = useStrings()
-  const navigation = useNavigation()
+  const {resetToWalletSelection, navigateToTxHistory} = useWalletNavigation()
+  const navigation = useNavigation<WalletStackRouteNavigation>()
   const walletMetas = useWalletMetas()
+  const dispatch = useDispatch()
   const selectWalletMeta = useSetSelectedWalletMeta()
   const selectWallet = useSetSelectedWallet()
-  const dispatch = useDispatch()
+  const intl = useIntl()
+  const [wallet] = useSelectedWalletContext()
+  const params = useRoute<RouteProp<WalletStackRoutes, 'wallet-selection'>>().params
 
-  const openWallet = async (walletMeta: WalletMeta, isRetry?: boolean) => {
-    try {
-      if (walletMeta.isShelley || isJormungandr(walletMeta.networkId)) {
-        await showErrorDialog(errorMessages.itnNotSupported, intl)
-        return
-      }
-      const [wallet, newWalletMeta] = await walletManager.openWallet(walletMeta)
-      selectWalletMeta(newWalletMeta)
+  const {openWallet, isLoading} = useOpenWallet({
+    onSuccess: ({wallet, walletMeta}) => {
+      selectWalletMeta(walletMeta)
       selectWallet(wallet)
-
-      const route = WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES
-      navigation.navigate(route)
-    } catch (e) {
-      if (e instanceof SystemAuthDisabled) {
+      navigateToTxHistory()
+    },
+    onError: async (error) => {
+      navigation.setParams({reopen: true})
+      if (error instanceof SystemAuthDisabled) {
         await walletManager.closeWallet()
         await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
-        navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
-      } else if (e instanceof InvalidState) {
+        resetToWalletSelection()
+      } else if (error instanceof InvalidState) {
         await walletManager.closeWallet()
         await showErrorDialog(errorMessages.walletStateInvalid, intl)
-        navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
-      } else if (e instanceof KeysAreInvalid) {
-        await walletManager.cleanupInvalidKeys()
-        await walletManager.disableEasyConfirmation()
-        await dispatch(setEasyConfirmation(false))
+        resetToWalletSelection()
+      } else if (error instanceof KeysAreInvalid) {
         await showErrorDialog(errorMessages.walletKeysInvalidated, intl)
-        if (!isRetry) {
-          await openWallet(walletMeta, true)
-        }
+        await dispatch(checkBiometricStatus())
+        await dispatch(logout())
       } else {
-        throw e
+        throw error
       }
-    }
-  }
+    },
+  })
 
-  React.useEffect(() => {
-    dispatch(updateVersion())
-  }, [dispatch])
+  const onSelect = async (walletMeta: WalletMeta) => {
+    if (walletMeta.isShelley || isJormungandr(walletMeta.networkId)) {
+      await showErrorDialog(errorMessages.itnNotSupported, intl)
+      return
+    }
+    if (params?.reopen || wallet?.id !== walletMeta.id) {
+      navigation.setParams({reopen: false})
+      return openWallet(walletMeta)
+    }
+    return navigateToTxHistory()
+  }
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
@@ -80,21 +86,19 @@ export const WalletSelectionScreen = () => {
             {walletMetas ? (
               walletMetas
                 .sort(byName)
-                .map((walletMeta) => <WalletListItem key={walletMeta.id} wallet={walletMeta} onPress={openWallet} />)
+                .map((walletMeta) => <WalletListItem key={walletMeta.id} wallet={walletMeta} onPress={onSelect} />)
             ) : (
               <ActivityIndicator />
             )}
           </ScrollView>
 
           <ShelleyButton />
-
-          {isNightly() && <ShelleyTestnetButton />}
-
+          <OnlyNightlyShelleyTestnetButton />
           <ByronButton />
-
-          {CONFIG.NETWORKS.JORMUNGANDR.ENABLED && <JormungandrButton />}
+          <OnlyDevButton />
         </ScreenBackground>
       </Screen>
+      <PleaseWaitModal title={strings.loadingWallet} spinnerText={strings.pleaseWait} visible={isLoading} />
     </SafeAreaView>
   )
 }
@@ -112,6 +116,10 @@ const messages = defineMessages({
     id: 'components.walletselection.walletselectionscreen.addWalletOnShelleyButton',
     defaultMessage: '!!!Add wallet (Jormungandr ITN)',
   },
+  loadingWallet: {
+    id: 'components.walletselection.walletselectionscreen.loadingWallet',
+    defaultMessage: '!!!Loading wallet',
+  },
 })
 
 const useStrings = () => {
@@ -122,6 +130,8 @@ const useStrings = () => {
     addWalletButton: intl.formatMessage(messages.addWalletButton),
     addWalletOnShelleyButton: intl.formatMessage(messages.addWalletOnShelleyButton),
     deprecated: intl.formatMessage(globalMessages.deprecated),
+    pleaseWait: intl.formatMessage(globalMessages.pleaseWait),
+    loadingWallet: intl.formatMessage(messages.loadingWallet),
   }
 }
 
@@ -134,8 +144,8 @@ const ShelleyButton = () => {
       onPress={() =>
         // note: assume wallet implementation = yoroi haskell shelley
         // (15 words), but user may choose 24 words in next screen
-        navigation.navigate(ROOT_ROUTES.NEW_WALLET, {
-          screen: WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH,
+        navigation.navigate('new-wallet', {
+          screen: 'choose-create-restore',
           params: {
             networkId: CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
             walletImplementationId: CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
@@ -148,17 +158,19 @@ const ShelleyButton = () => {
   )
 }
 
-const ShelleyTestnetButton = () => {
+const OnlyNightlyShelleyTestnetButton = () => {
   const navigation = useNavigation()
   const strings = useStrings()
+
+  if (!isNightly()) return null
 
   return (
     <Button
       onPress={() =>
         // note: assume wallet implementation = yoroi haskell shelley
         // (15 words), but user may choose 24 words in next screen
-        navigation.navigate(ROOT_ROUTES.NEW_WALLET, {
-          screen: WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH,
+        navigation.navigate('new-wallet', {
+          screen: 'choose-create-restore',
           params: {
             networkId: CONFIG.NETWORKS.HASKELL_SHELLEY_TESTNET.NETWORK_ID,
             walletImplementationId: CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
@@ -179,8 +191,8 @@ const ByronButton = () => {
     <Button
       outline
       onPress={() =>
-        navigation.navigate(ROOT_ROUTES.NEW_WALLET, {
-          screen: WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH,
+        navigation.navigate('new-wallet', {
+          screen: 'choose-create-restore',
           params: {
             networkId: CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
             walletImplementationId: CONFIG.WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID,
@@ -193,26 +205,38 @@ const ByronButton = () => {
   )
 }
 
-const JormungandrButton = () => {
+const OnlyDevButton = () => {
   const navigation = useNavigation()
-  const strings = useStrings()
 
-  return (
-    <Button
-      outline
-      onPress={() =>
-        navigation.navigate(ROOT_ROUTES.NEW_WALLET, {
-          screen: WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH,
-          params: {
-            networkId: CONFIG.NETWORKS.JORMUNGANDR.NETWORK_ID,
-            walletImplementationId: CONFIG.WALLETS.JORMUNGANDR_ITN.WALLET_IMPLEMENTATION_ID,
-          },
-        })
+  if (!__DEV__) return null
+
+  return <Button onPress={() => navigation.navigate('screens-index')} title="Dev options" style={styles.button} />
+}
+
+const useOpenWallet = (
+  options?: UseMutationOptions<
+    {
+      wallet: WalletInterface
+      walletMeta: WalletMeta
+    },
+    Error,
+    WalletMeta
+  >,
+) => {
+  const mutation = useMutation({
+    ...options,
+    mutationFn: async (walletMeta) => {
+      await walletManager.closeWallet()
+      await delay(500)
+      const [newWallet, newWalletMeta] = await walletManager.openWallet(walletMeta)
+      return {
+        wallet: newWallet,
+        walletMeta: newWalletMeta,
       }
-      title={strings.addWalletOnShelleyButton}
-      style={styles.button}
-    />
-  )
+    },
+  })
+
+  return {openWallet: mutation.mutate, ...mutation}
 }
 
 const styles = StyleSheet.create({

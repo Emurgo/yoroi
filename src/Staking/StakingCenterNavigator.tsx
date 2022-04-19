@@ -1,53 +1,32 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
 import DelegationConfirmation from '../../legacy/components/Delegation/DelegationConfirmation'
-import BiometricAuthScreen from '../../legacy/components/Send/BiometricAuthScreen'
-import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../legacy/navigationOptions'
-import {SEND_ROUTES, STAKING_CENTER_ROUTES, WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
 import {SettingsButton} from '../components/Button'
+import {defaultStackNavigationOptions, StakingCenterRoutes, useWalletNavigation} from '../navigation'
 import {StakingCenter} from './StakingCenter/StakingCenter'
 
-type StakingCenterRoutes = {
-  'staking-center': any
-  'delegation-confirmation': any
-  'biometrics-signing': any
-}
-
 const Stack = createStackNavigator<StakingCenterRoutes>()
-
 export const StakingCenterNavigator = () => {
   const strings = useStrings()
 
   return (
-    <Stack.Navigator
-      screenOptions={{
-        ...defaultNavigationOptions,
-        ...defaultStackNavigatorOptions,
-      }}
-    >
+    <Stack.Navigator screenOptions={defaultStackNavigationOptions}>
       <Stack.Screen
-        name={STAKING_CENTER_ROUTES.MAIN}
+        name="staking-center-main"
         component={StakingCenter}
-        options={({navigation}) => ({
+        options={{
           title: strings.title,
-          headerRight: () => <SettingsButton onPress={() => navigation.navigate(WALLET_ROOT_ROUTES.SETTINGS)} />,
+          headerRight: () => <HeaderRight />,
           headerRightContainerStyle: {paddingRight: 16},
-        })}
+        }}
       />
 
       <Stack.Screen
-        name={STAKING_CENTER_ROUTES.DELEGATION_CONFIRM}
+        name="delegation-confirmation"
         component={DelegationConfirmation}
         options={{title: strings.title}}
-      />
-
-      <Stack.Screen
-        name={SEND_ROUTES.BIOMETRICS_SIGNING}
-        component={BiometricAuthScreen}
-        options={{headerShown: false}}
       />
     </Stack.Navigator>
   )
@@ -72,3 +51,9 @@ const messages = defineMessages({
     defaultMessage: '!!!Confirm delegation',
   },
 })
+
+const HeaderRight = () => {
+  const {navigateToSettings} = useWalletNavigation()
+
+  return <SettingsButton onPress={() => navigateToSettings()} />
+}

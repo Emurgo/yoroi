@@ -63,7 +63,7 @@ const MnemonicWordsInput = ({onSelect, words}: MnemonicWordsInputProps) => {
   return (
     <View
       style={{padding: 4, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-around'}}
-      testID={'mnemonicInputsView'}
+      testID="mnemonicInputsView"
     >
       {words.map((word, index) => (
         <View
@@ -125,7 +125,7 @@ const MnemonicWordInput = React.forwardRef(({id, onSelect, onFocus}: MnemonicWor
           blurOnSubmit={false}
           onSubmitEditing={() => matchingWords[0] && selectWord(matchingWords[0])}
           dense
-          textAlign={'center'}
+          textAlign="center"
           noErrors
           errorDelay={0}
           errorText={matchingWords.length <= 0 ? 'No matching words' : ''}
@@ -137,7 +137,7 @@ const MnemonicWordInput = React.forwardRef(({id, onSelect, onFocus}: MnemonicWor
         setWord('')
       }}
     >
-      <ScrollView style={styles.menuScrollView} keyboardShouldPersistTaps={'always'}>
+      <ScrollView style={styles.menuScrollView} keyboardShouldPersistTaps="always">
         {matchingWords.map((word) => (
           <Menu.Item titleStyle={styles.menuItemText} key={word} title={word} onPress={() => selectWord(word)} />
         ))}

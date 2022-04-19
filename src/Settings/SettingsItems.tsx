@@ -1,17 +1,17 @@
-import {NavigationProp, useNavigation} from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {Image, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 
 import chevronRight from '../../legacy/assets/img/chevron_right.png'
 import styles from '../../legacy/components/Settings/styles/SettingsItems.style'
 import {Text} from '../../legacy/components/UiKit'
+import {SettingsRouteNavigation, SettingsStackRoutes} from '../navigation'
 
 const Touchable = (props: TouchableOpacityProps) => <TouchableOpacity {...props} activeOpacity={0.5} />
 
 type NavigateToProps = {
-  to: string
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  navigation: NavigationProp<any>
+  to: keyof SettingsStackRoutes
+  navigation: SettingsRouteNavigation
   children: React.ReactNode
   disabled?: boolean
 }
@@ -64,12 +64,12 @@ export const SettingsBuildItem = ({label, value}: SettingsBuildItemProps) => (
 
 type NavigatedSettingsItemProps = {
   label: string
-  navigateTo: string
+  navigateTo: keyof SettingsStackRoutes
   disabled?: boolean
 }
 
 export const NavigatedSettingsItem = ({label, navigateTo, disabled}: NavigatedSettingsItemProps) => {
-  const navigation = useNavigation()
+  const navigation = useNavigation<SettingsRouteNavigation>()
   return (
     <NavigateTo to={navigateTo} navigation={navigation} disabled={disabled}>
       <SettingsItem label={label} disabled={disabled}>

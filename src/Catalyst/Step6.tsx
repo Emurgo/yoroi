@@ -19,26 +19,26 @@ import {useSelector} from 'react-redux'
 import copyImage from '../../legacy/assets/img/copyd.png'
 import {Button, ProgressStep, Text} from '../../legacy/components/UiKit'
 import {confirmationMessages} from '../../legacy/i18n/global-messages'
-import {WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
 import {encryptedKeySelector} from '../../legacy/selectors'
 import {COLORS} from '../../legacy/styles/config'
 import {Spacer} from '../components'
+import {useWalletNavigation} from '../navigation'
 import {CatalystBackupCheckModal} from './CatalystBackupCheckModal'
 import {Actions, Description, Title} from './components'
 
 const {FlagSecure} = NativeModules
 
 export const Step6 = () => {
+  useBlockGoBack()
   const strings = useStrings()
   const encryptedKey = useSelector(encryptedKeySelector)
-  const navigation = useNavigation()
-  const [countDown, setCountDown] = useState<number>(5)
+  const {resetToTxHistory} = useWalletNavigation()
+  const [countDown, setCountDown] = useState(5)
+  const [showBackupWarningModal, setShowBackupWarningModal] = useState(false)
 
   useEffect(() => {
     countDown > 0 && setTimeout(() => setCountDown(countDown - 1), 1000)
   }, [countDown])
-
-  const [showBackupWarningModal, setShowBackupWarningModal] = useState<boolean>(false)
 
   useFocusEffect(
     // eslint-disable-next-line consistent-return
@@ -82,7 +82,7 @@ export const Step6 = () => {
 
         <Spacer height={32} />
 
-        {encryptedKey ? <QRCode text={encryptedKey} /> : <ActivityIndicator size={'large'} color={'black'} />}
+        {encryptedKey ? <QRCode text={encryptedKey} /> : <ActivityIndicator size="large" color="black" />}
 
         <Spacer height={32} />
 
@@ -106,7 +106,9 @@ export const Step6 = () => {
       <CatalystBackupCheckModal
         visible={showBackupWarningModal}
         onRequestClose={() => setShowBackupWarningModal(false)}
-        onConfirm={() => navigation.navigate(WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES)}
+        onConfirm={() => {
+          resetToTxHistory()
+        }}
       />
     </SafeAreaView>
   )
@@ -124,6 +126,19 @@ const CopyButton = ({text}: {text: string}) => (
     <Image source={copyImage} />
   </TouchableOpacity>
 )
+
+const useBlockGoBack = () => {
+  const navigation = useNavigation()
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+      if (e.data.action.type !== 'RESET') {
+        e.preventDefault()
+      }
+    })
+    return () => unsubscribe()
+  }, [navigation])
+}
 
 const messages = defineMessages({
   subTitle: {
