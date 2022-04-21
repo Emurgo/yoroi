@@ -12,7 +12,7 @@ storiesOf('ErrorModal', module)
           visible={visible}
           onRequestClose={onRequestClose}
           title="Attention"
-          errorMessage={'This is the error message'}
+          errorMessage="This is the error message"
         />
       )}
     </WithModalProps>
@@ -24,8 +24,8 @@ storiesOf('ErrorModal', module)
           visible={visible}
           onRequestClose={onRequestClose}
           title="Attention"
-          errorMessage={'This is the error message'}
-          errorLogs={'This is the error logs'}
+          errorMessage="This is the error message"
+          errorLogs="This is the error logs"
         />
       )}
     </WithModalProps>

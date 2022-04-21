@@ -24,7 +24,7 @@ export const TwoActionView = ({title, children, primaryButton, secondaryButton}:
   const intl = useIntl()
 
   return (
-    <ScrollView style={styles.scrollView} keyboardShouldPersistTaps={'always'}>
+    <ScrollView style={styles.scrollView} keyboardShouldPersistTaps="always">
       <View style={styles.content}>
         <View style={styles.heading}>
           <Text style={styles.titleText}>{title}</Text>

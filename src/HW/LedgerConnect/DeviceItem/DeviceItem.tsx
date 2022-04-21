@@ -23,7 +23,7 @@ export const DeviceItem = ({device, onSelect}: Props) => {
   return (
     <TouchableOpacity style={styles.deviceItem} onPress={onPress} disabled={pending}>
       <Text style={styles.deviceName}>{device.name}</Text>
-      {pending && <ActivityIndicator color={'black'} />}
+      {pending && <ActivityIndicator color="black" />}
     </TouchableOpacity>
   )
 }
