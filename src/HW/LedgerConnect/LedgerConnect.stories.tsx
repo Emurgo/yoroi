@@ -22,7 +22,7 @@ storiesOf('Ledger connect', module)
             onConnectBLE={onPress('onConnectBLE')}
             onConnectUSB={onPress('onConnectUSB')}
             useUSB={false}
-            onWaitingMessage={''}
+            onWaitingMessage=""
             defaultDevices={devices}
           />
         </Modal>
@@ -37,7 +37,7 @@ storiesOf('Ledger connect', module)
             onConnectBLE={onPress('onConnectBLE')}
             onConnectUSB={onPress('onConnectUSB')}
             useUSB
-            onWaitingMessage={''}
+            onWaitingMessage=""
             defaultDevices={devices}
           />
         </Modal>
@@ -52,7 +52,7 @@ storiesOf('Ledger connect', module)
             onConnectBLE={onPress('onConnectBLE')}
             onConnectUSB={onPress('onConnectUSB')}
             useUSB={false}
-            onWaitingMessage={''}
+            onWaitingMessage=""
             defaultDevices={devices}
           />
         </Modal>
