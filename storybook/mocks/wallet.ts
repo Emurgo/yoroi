@@ -52,6 +52,9 @@ export const mockWallet: YoroiWallet = {
   checkServerStatus: () => {
     throw new Error('Not implemented')
   },
+  subscribe: () => {
+    throw new Error('Not implemented')
+  },
 
   // enableEasyConfirmation: () => {
   //   throw new Error('not implemented: enableEasyConfirmation')
@@ -80,13 +83,6 @@ export const mockWallet: YoroiWallet = {
   // fetchFundInfo: () => {
   //   throw new Error('not implemented: fetchFundInfo')
   // },
-}
-
-export function walletFactory(walletOveride: Partial<YoroiWallet>): YoroiWallet {
-  return {
-    ...mockWallet,
-    ...walletOveride,
-  }
 }
 
 export const tokenEntries: Array<TokenEntry> = [

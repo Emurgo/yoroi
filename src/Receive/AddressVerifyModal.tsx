@@ -44,7 +44,7 @@ export const AddressVerifyModal = ({visible, onConfirm, onRequestClose, address,
 
         <Button onPress={onConfirm} title={strings.confirmButton} style={styles.button} disabled={isWaiting} />
 
-        {isWaiting && <ActivityIndicator color={'black'} />}
+        {isWaiting && <ActivityIndicator color="black" />}
       </ScrollView>
     </Modal>
   )

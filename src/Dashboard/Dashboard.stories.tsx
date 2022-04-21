@@ -1,4 +1,5 @@
 import {storiesOf} from '@storybook/react-native'
+import BigNumber from 'bignumber.js'
 import React from 'react'
 import {QueryClient, QueryClientProvider} from 'react-query'
 import {Provider} from 'react-redux'
@@ -10,9 +11,18 @@ import {StakePoolInfosAndHistories} from '../types'
 import {YoroiWallet} from '../yoroi-wallets'
 import {Dashboard} from './Dashboard'
 
+const mockedAccountState = {
+  isDelegating: false,
+  isFetching: false,
+  lastFetchingError: '',
+  poolOperator: null,
+  totalDelegated: new BigNumber(0),
+  value: new BigNumber(0),
+}
+
 storiesOf('Dashboard', module)
   .add('not delegating', () => {
-    const store = getConfiguredStore(true, true, {accountState: {isDelegating: false}})
+    const store = getConfiguredStore(true, true, {accountState: mockedAccountState})
 
     const notDelegatingWallet: YoroiWallet = {
       ...mockWallet,
@@ -30,7 +40,9 @@ storiesOf('Dashboard', module)
     )
   })
   .add('Loading ids', () => {
-    const store = getConfiguredStore(true, true, {accountState: {isDelegating: true, poolOperator: stakePoolId}})
+    const store = getConfiguredStore(true, true, {
+      accountState: {...mockedAccountState, isDelegating: true, poolOperator: stakePoolId},
+    })
 
     const loadingWallet: YoroiWallet = {
       ...mockWallet,
@@ -48,7 +60,9 @@ storiesOf('Dashboard', module)
     )
   })
   .add('Loading StakePoolInfo', () => {
-    const store = getConfiguredStore(true, true, {accountState: {isDelegating: true, poolOperator: stakePoolId}})
+    const store = getConfiguredStore(true, true, {
+      accountState: {...mockedAccountState, isDelegating: true, poolOperator: stakePoolId},
+    })
 
     const loadingWallet: YoroiWallet = {
       ...mockWallet,
@@ -67,7 +81,9 @@ storiesOf('Dashboard', module)
     )
   })
   .add('Loaded, StakePoolInfo success', () => {
-    const store = getConfiguredStore(true, true, {accountState: {isDelegating: true, poolOperator: stakePoolId}})
+    const store = getConfiguredStore(true, true, {
+      accountState: {...mockedAccountState, isDelegating: true, poolOperator: stakePoolId},
+    })
 
     const loadedWallet: YoroiWallet = {
       ...mockWallet,
@@ -86,7 +102,9 @@ storiesOf('Dashboard', module)
     )
   })
   .add('Loaded, StakePoolInfo error', () => {
-    const store = getConfiguredStore(true, true, {accountState: {isDelegating: true, poolOperator: stakePoolId}})
+    const store = getConfiguredStore(true, true, {
+      accountState: {...mockedAccountState, isDelegating: true, poolOperator: stakePoolId},
+    })
 
     const loadedWallet: YoroiWallet = {
       ...mockWallet,

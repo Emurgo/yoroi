@@ -73,7 +73,13 @@ export const TransferSummary = ({
 
       {!wallet.isEasyConfirmationEnabled && !wallet.isHW && (
         <View style={styles.input}>
-          <PasswordInput secureTextEntry value={password} label={strings.password} onChangeText={setPassword} />
+          <PasswordInput
+            secureTextEntry
+            value={password}
+            label={strings.password}
+            onChangeText={setPassword}
+            autoComplete={false}
+          />
         </View>
       )}
     </TwoActionView>

@@ -2,6 +2,7 @@ import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {Button, StatusBar, Text, TextInput} from '../../components'
@@ -62,26 +63,23 @@ export const ToggleEasyConfirmationScreen = () => {
   }, [navigation])
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView edges={['bottom']} style={styles.container}>
       <StatusBar type="dark" />
 
       {!isEasyConfirmationEnabled ? (
-        <ScrollView
-          // bounces={false}
-          keyboardShouldPersistTaps={'always'}
-          contentContainerStyle={styles.contentContainer}
-        >
+        <ScrollView keyboardShouldPersistTaps="always" contentContainerStyle={styles.contentContainer}>
           <Text style={styles.heading}>{strings.enableHeading}</Text>
           <Text style={styles.warning}>{strings.enableWarning}</Text>
 
           <TextInput
             autoFocus
             enablesReturnKeyAutomatically
-            returnKeyType={'done'}
+            returnKeyType="done"
             secureTextEntry
             label={strings.enableMasterPassword}
             onChangeText={setMasterPassword}
             value={masterPassword}
+            autoComplete={false}
           />
         </ScrollView>
       ) : (
@@ -97,7 +95,7 @@ export const ToggleEasyConfirmationScreen = () => {
           disabled={!masterPassword && !isEasyConfirmationEnabled}
         />
       </View>
-    </View>
+    </SafeAreaView>
   )
 }
 

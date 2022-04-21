@@ -10,12 +10,12 @@ import globalMessages from '../../i18n/global-messages'
 import {acceptAndSaveTos, setSystemAuth, signin} from '../../legacy/actions'
 import {CONFIG} from '../../legacy/config'
 import {canBiometricEncryptionBeEnabled} from '../../legacy/deviceSettings'
-import {FIRST_RUN_ROUTES} from '../../legacy/RoutesList'
+import {FirstRunRouteNavigation} from '../../navigation'
 import {TermsOfService} from './TermsOfService'
 
 export const TermsOfServiceScreen = () => {
   const strings = useStrings()
-  const navigation = useNavigation()
+  const navigation = useNavigation<FirstRunRouteNavigation>()
   const [acceptedTos, setAcceptedTos] = React.useState(false)
   const [savingConsent, setSavingConsent] = React.useState(false)
 
@@ -40,7 +40,7 @@ export const TermsOfServiceScreen = () => {
       dispatch(signin())
     } else {
       setSavingConsent(false)
-      navigation.navigate(FIRST_RUN_ROUTES.CUSTOM_PIN)
+      navigation.navigate('custom-pin')
     }
   }
 

@@ -1,4 +1,4 @@
-import {useNavigation, useRoute} from '@react-navigation/native'
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
@@ -9,7 +9,7 @@ import {LedgerTransportSwitchModal} from '../../HW'
 import globalMessages from '../../i18n/global-messages'
 import {CONFIG, isByron, isHaskellShelley} from '../../legacy/config'
 import {isJormungandr} from '../../legacy/networks'
-import {WALLET_INIT_ROUTES} from '../../legacy/RoutesList'
+import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
 import {COLORS} from '../../theme'
 import {NetworkId, WalletImplementationId, YoroiProvider} from '../../yoroi-wallets'
 import {WalletDescription} from '../WalletDescription'
@@ -17,14 +17,10 @@ import {ExpandableItem} from './ExpandableItem'
 
 export const WalletInitScreen = () => {
   const strings = useStrings()
-  /* eslint-disable @typescript-eslint/no-explicit-any */
-  const route: any = useRoute()
-  /* eslint-enable @typescript-eslint/no-explicit-any */
+  const route = useRoute<RouteProp<WalletInitRoutes, 'choose-create-restore'>>()
   const [modalState, setModalState] = React.useState<ModalState>(MODAL_STATES.CLOSED)
 
-  const networkId: NetworkId = route.params.networkId
-  const provider = route.params.provider
-  const implementationId: WalletImplementationId = route.params.walletImplementationId
+  const {networkId, provider, walletImplementationId: implementationId} = route.params
   const navigateTo = useNavigateTo({networkId})
 
   return (
@@ -199,32 +195,32 @@ const useStrings = () => {
 }
 
 const useNavigateTo = ({networkId}: {networkId: NetworkId}) => {
-  const navigation = useNavigation()
+  const navigation = useNavigation<WalletInitRouteNavigation>()
 
   return {
-    restoreWallet: (walletImplementationId: WalletImplementationId, provider?: YoroiProvider) =>
-      navigation.navigate(WALLET_INIT_ROUTES.RESTORE_WALLET, {
+    restoreWallet: (walletImplementationId: WalletImplementationId, provider: YoroiProvider) =>
+      navigation.navigate('restore-wallet-form', {
         networkId,
         walletImplementationId,
         provider,
       }),
 
-    createWallet: (walletImplementationId: WalletImplementationId, provider?: YoroiProvider) =>
-      navigation.navigate(WALLET_INIT_ROUTES.CREATE_WALLET, {
+    createWallet: (walletImplementationId: WalletImplementationId, provider: YoroiProvider) =>
+      navigation.navigate('create-wallet-form', {
         networkId,
         walletImplementationId,
         provider,
       }),
 
     checkNanoX: (walletImplementationId: WalletImplementationId, useUSB: boolean) =>
-      navigation.navigate(WALLET_INIT_ROUTES.CHECK_NANO_X, {
+      navigation.navigate('check-nano-x', {
         networkId,
         walletImplementationId,
         useUSB,
       }),
 
     importReadOnlyWallet: (walletImplementationId: WalletImplementationId) =>
-      navigation.navigate(WALLET_INIT_ROUTES.IMPORT_READ_ONLY_WALLET, {
+      navigation.navigate('import-read-only', {
         networkId,
         walletImplementationId,
       }),

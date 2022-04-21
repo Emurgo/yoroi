@@ -44,9 +44,7 @@ const useHideScreenInAppSwitcher = () => {
       appStateRef.current = nextAppState
     })
 
-    return () => {
-      subscription.remove()
-    }
+    return () => subscription?.remove()
   }, [])
 }
 

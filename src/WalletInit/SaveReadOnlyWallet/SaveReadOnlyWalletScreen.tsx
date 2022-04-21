@@ -1,19 +1,16 @@
-import {useNavigation, useRoute} from '@react-navigation/native'
+import {RouteProp, useRoute} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {FlatList, ScrollView, View} from 'react-native'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useDispatch} from 'react-redux'
 
 import {Boundary, Icon, Line, StatusBar, Text} from '../../components'
 import {useCreateBip44Wallet, usePlate} from '../../hooks'
-import {handleGeneralError, updateWallets} from '../../legacy/actions'
+import {handleGeneralError} from '../../legacy/actions'
 import {CONFIG} from '../../legacy/config'
 import {Logger} from '../../legacy/logging'
-import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
-import {WalletMeta} from '../../legacy/state'
-import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
+import {useWalletNavigation, WalletInitRoutes} from '../../navigation'
 import {theme} from '../../theme'
 import {NetworkId} from '../../yoroi-wallets'
 import {WalletAddress} from '../WalletAddress'
@@ -22,10 +19,8 @@ import {WalletNameForm} from '../WalletNameForm'
 export const SaveReadOnlyWalletScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
-  const navigation = useNavigation()
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const route: any = useRoute()
-  const dispatch = useDispatch()
+  const {resetToWalletSelection} = useWalletNavigation()
+  const route = useRoute<RouteProp<WalletInitRoutes, 'save-read-only'>>()
 
   const {publicKeyHex, path, networkId, walletImplementationId} = route.params
 
@@ -36,9 +31,6 @@ export const SaveReadOnlyWalletScreen = () => {
     return i
   })
 
-  const setSelectedWalletMeta = useSetSelectedWalletMeta()
-  const setSelectedWallet = useSetSelectedWallet()
-
   const {createWallet, isLoading} = useCreateBip44Wallet({
     onError: async (error) => {
       Logger.error('SaveReadOnlyWalletScreen::onSubmit', error)
@@ -48,24 +40,8 @@ export const SaveReadOnlyWalletScreen = () => {
 
       throw error
     },
-    onSuccess: (wallet, {name}) => {
-      dispatch(updateWallets())
-
-      const walletMeta: WalletMeta = {
-        name,
-
-        id: wallet.id,
-        networkId: wallet.networkId,
-        walletImplementationId: wallet.walletImplementationId,
-        isHW: wallet.isHW,
-        checksum: wallet.checksum,
-        isEasyConfirmationEnabled: wallet.isEasyConfirmationEnabled,
-        provider: wallet.provider,
-      }
-      setSelectedWalletMeta(walletMeta)
-      setSelectedWallet(wallet)
-
-      navigation.navigate(ROOT_ROUTES.WALLET, {screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES})
+    onSuccess: () => {
+      resetToWalletSelection()
     },
   })
 
@@ -82,7 +58,6 @@ export const SaveReadOnlyWalletScreen = () => {
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container} testID="saveReadOnlyWalletContainer">
       <StatusBar type="dark" />
-
       <WalletNameForm
         onSubmit={onSubmit}
         defaultWalletName={strings.defaultWalletName}

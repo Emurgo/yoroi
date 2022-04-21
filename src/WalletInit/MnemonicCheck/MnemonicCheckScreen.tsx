@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native'
+import {RouteProp, useRoute} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, TouchableOpacity, View} from 'react-native'
@@ -7,10 +7,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Spacer, StatusBar, Text} from '../../components'
 import {useCreateWallet} from '../../hooks'
-import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
-import {WalletMeta} from '../../legacy/state'
-import {useUnsafeParams} from '../../navigation'
-import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
+import {useWalletNavigation, WalletInitRoutes} from '../../navigation'
 import {COLORS} from '../../theme'
 import {NetworkId, WalletImplementationId, YoroiProvider} from '../../yoroi-wallets'
 
@@ -25,8 +22,9 @@ export type Params = {
 
 export const MnemonicCheckScreen = () => {
   const strings = useStrings()
-  const navigation = useNavigation()
-  const {mnemonic, password, name, networkId, walletImplementationId, provider} = useUnsafeParams<Params>()
+  const {resetToWalletSelection} = useWalletNavigation()
+  const route = useRoute<RouteProp<WalletInitRoutes, 'mnemonic-check'>>()
+  const {mnemonic, password, name, networkId, walletImplementationId, provider} = route.params
 
   const mnemonicEntries: Array<Entry> = mnemonic
     .split(' ')
@@ -40,32 +38,9 @@ export const MnemonicCheckScreen = () => {
   const isPhraseComplete = userEntries.length === mnemonicEntries.length
   const isPhraseValid = userEntries.map((entry) => entry.word).join(' ') === mnemonic
 
-  const setSelectedWalletMeta = useSetSelectedWalletMeta()
-  const setSelectedWallet = useSetSelectedWallet()
   const {createWallet, isLoading, isSuccess} = useCreateWallet({
-    onSuccess: (wallet) => {
-      const walletMeta: WalletMeta = {
-        name,
-
-        id: wallet.id,
-        networkId: wallet.networkId,
-        walletImplementationId: wallet.walletImplementationId,
-        isHW: wallet.isHW,
-        checksum: wallet.checksum,
-        isEasyConfirmationEnabled: wallet.isEasyConfirmationEnabled,
-        provider: wallet.provider,
-      }
-      setSelectedWalletMeta(walletMeta)
-      setSelectedWallet(wallet)
-
-      navigation.navigate(ROOT_ROUTES.WALLET, {
-        screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES,
-        mnemonic,
-        password,
-        name,
-        networkId,
-        walletImplementationId,
-      })
+    onSuccess: () => {
+      resetToWalletSelection()
     },
   })
 

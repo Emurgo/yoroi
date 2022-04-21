@@ -5,7 +5,6 @@ import 'redux'
 import type {IntlShape} from 'react-intl'
 import {Alert, AppState, Keyboard, Platform} from 'react-native'
 import RNBootSplash from 'react-native-bootsplash'
-import DeviceInfo from 'react-native-device-info'
 import type {Dispatch} from 'redux'
 import uuid from 'uuid'
 
@@ -18,7 +17,7 @@ import type {AppSettingsKey} from './appSettings'
 import {APP_SETTINGS_KEYS, AppSettingsError, readAppSettings, removeAppSettings, writeAppSettings} from './appSettings'
 import assert from './assert'
 import {backgroundLockListener} from './backgroundLockHelper'
-import {CONFIG} from './config'
+import {CONFIG, isNightly} from './config'
 import crashReporting from './crashReporting'
 import {encryptCustomPin} from './customPin'
 import {canBiometricEncryptionBeEnabled, recreateAppSignInKeys, removeAppSignInKeys} from './deviceSettings'
@@ -28,7 +27,7 @@ import KeyStore from './KeyStore'
 import networkInfo from './networkInfo'
 import {getCardanoNetworkConfigById} from './networks'
 import {
-  currentVersionSelector,
+  canEnableBiometricSelector,
   installationIdSelector,
   isAppSetupCompleteSelector,
   isSystemAuthEnabledSelector,
@@ -135,21 +134,6 @@ const initInstallationId =
     return newInstallationId
   }
 
-export const updateVersion =
-  () =>
-  async (dispatch: Dispatch<any>, getState: any): Promise<string> => {
-    let currentVersion = currentVersionSelector(getState())
-    Logger.debug('current version from state', currentVersion)
-
-    if (currentVersion != null && currentVersion === DeviceInfo.getVersion()) {
-      return currentVersion
-    }
-
-    currentVersion = DeviceInfo.getVersion()
-    await dispatch(setAppSettingField(APP_SETTINGS_KEYS.CURRENT_VERSION, currentVersion))
-    Logger.debug('updated version', currentVersion)
-    return currentVersion
-  }
 export const closeWallet = () => async (_dispatch: Dispatch<any>) => {
   await walletManager.closeWallet()
 }
@@ -201,9 +185,11 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
     Logger.warn('actions::initApp could not retrieve server status', e)
   }
 
-  if (CONFIG.SENTRY.ENABLE) {
+  if (isNightly()) {
     dispatch(setAppSettingField(APP_SETTINGS_KEYS.SEND_CRASH_REPORTS, true))
   }
+
+  await dispatch(reloadAppSettings())
 
   await dispatch(reloadAppSettings())
   const installationId = (await dispatch(initInstallationId())) as unknown as string
@@ -266,6 +252,22 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
   })
 }
 
+export const checkBiometricStatus = () => async (dispatch: Dispatch<any>, getState: any) => {
+  const state = getState()
+  const shouldNotEnableBiometricAuth =
+    !isAppSetupCompleteSelector(state) &&
+    Platform.OS === 'android' &&
+    CONFIG.ANDROID_BIO_AUTH_EXCLUDED_SDK.includes(Platform.Version)
+  const currentCanEnableBiometricEncryption = canEnableBiometricSelector(state)
+  const canEnableBiometricEncryption = (await canBiometricEncryptionBeEnabled()) && !shouldNotEnableBiometricAuth
+
+  const biometricWasTurnedOff = !canEnableBiometricEncryption && currentCanEnableBiometricEncryption
+  Logger.debug('willResetBiometric:', biometricWasTurnedOff)
+  if (biometricWasTurnedOff) {
+    await dispatch(setAppSettingField(APP_SETTINGS_KEYS.CAN_ENABLE_BIOMETRIC_ENCRYPTION, canEnableBiometricEncryption))
+  }
+}
+
 const _setOnline = (isOnline: boolean) => (dispatch, getState) => {
   const state = getState()
   if (state.isOnline === isOnline) return // avoid useless state updates
@@ -322,10 +324,10 @@ type DialogOptions = {
   yesButton?: string
   noButton?: string
 }
-export const DIALOG_BUTTONS = Object.freeze({
+export const DIALOG_BUTTONS = {
   YES: 'Yes',
   NO: 'No',
-})
+}
 type DialogButton = typeof DIALOG_BUTTONS[keyof typeof DIALOG_BUTTONS]
 
 const showDialog = (translations: DialogOptions): Promise<DialogButton> =>

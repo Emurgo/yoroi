@@ -47,9 +47,9 @@ export const WalletForm = ({onSubmit}: Props) => {
   return (
     <View style={styles.safeAreaView}>
       <ScrollView
-        keyboardShouldPersistTaps={'always'}
+        keyboardShouldPersistTaps="always"
         contentContainerStyle={styles.scrollContentContainer}
-        testID={'credentialsView'}
+        testID="credentialsView"
         bounces={false}
       >
         <WalletNameInput
@@ -60,9 +60,10 @@ export const WalletForm = ({onSubmit}: Props) => {
           onChangeText={setName}
           errorText={walletNameErrorText}
           errorDelay={0}
-          returnKeyType={'next'}
+          returnKeyType="next"
           onSubmitEditing={() => passwordRef.current?.focus()}
           testID="walletNameInput"
+          autoComplete={false}
         />
 
         <Spacer />
@@ -75,13 +76,14 @@ export const WalletForm = ({onSubmit}: Props) => {
           value={password}
           onChangeText={setPassword}
           errorText={passwordErrorText}
-          returnKeyType={'next'}
+          returnKeyType="next"
           helperText={strings.passwordStrengthRequirement({
             requiredPasswordLength: REQUIRED_PASSWORD_LENGTH,
           })}
           right={!passwordErrors.passwordIsWeak ? <Checkmark /> : undefined}
           onSubmitEditing={() => passwordConfirmationRef.current?.focus()}
           testID="walletPasswordInput"
+          autoComplete={false}
         />
 
         <Spacer />
@@ -90,7 +92,7 @@ export const WalletForm = ({onSubmit}: Props) => {
           enablesReturnKeyAutomatically
           ref={passwordConfirmationRef}
           secureTextEntry
-          returnKeyType={'done'}
+          returnKeyType="done"
           label={strings.repeatPasswordInputLabel}
           value={passwordConfirmation}
           onChangeText={setPasswordConfirmation}
@@ -99,6 +101,7 @@ export const WalletForm = ({onSubmit}: Props) => {
             !passwordErrors.matchesConfirmation && !passwordErrors.passwordConfirmationReq ? <Checkmark /> : undefined
           }
           testID="walletRepeatPasswordInput"
+          autoComplete={false}
         />
       </ScrollView>
 

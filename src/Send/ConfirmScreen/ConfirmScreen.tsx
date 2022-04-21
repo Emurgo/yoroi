@@ -1,11 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {useNavigation} from '@react-navigation/native'
-import {CommonActions} from '@react-navigation/routers'
 import {BigNumber} from 'bignumber.js'
 import React, {useEffect} from 'react'
 import {useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
-import SafeAreaView from 'react-native-safe-area-view'
 import {useSelector} from 'react-redux'
 
 import {Banner, Boundary, OfflineBanner, Spacer, StatusBar, Text, ValidatedTextInput} from '../../components'
@@ -13,11 +10,10 @@ import {ConfirmTx} from '../../components/ConfirmTx'
 import {useTokenInfo} from '../../hooks'
 import {Instructions as HWInstructions} from '../../HW'
 import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../i18n/global-messages'
-import {CONFIG, UI_V2} from '../../legacy/config'
+import {CONFIG} from '../../legacy/config'
 import {formatTokenWithSymbol, formatTokenWithText} from '../../legacy/format'
-import {SEND_ROUTES, WALLET_ROUTES} from '../../legacy/RoutesList'
 import {defaultNetworkAssetSelector} from '../../legacy/selectors'
-import {useParams} from '../../navigation'
+import {useParams, useWalletNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {TokenEntry} from '../../types'
@@ -65,7 +61,7 @@ export const ConfirmScreen = () => {
     tokens: tokenEntries,
     transactionData: signRequest,
   } = useParams(isParams)
-  const navigation = useNavigation()
+  const {resetToTxHistory} = useWalletNavigation()
   const wallet = useSelectedWallet()
   const {isHW, isEasyConfirmationEnabled} = wallet
   const defaultAsset = useSelector(defaultNetworkAssetSelector)
@@ -79,19 +75,12 @@ export const ConfirmScreen = () => {
   }, [])
 
   const onSuccess = () => {
-    navigation.dispatch(
-      CommonActions.reset({
-        key: null,
-        index: 0,
-        routes: [{name: UI_V2 ? 'history' : SEND_ROUTES.MAIN}],
-      } as any),
-    )
-    navigation.navigate(WALLET_ROUTES.TX_HISTORY)
+    resetToTxHistory()
   }
 
   return (
-    <SafeAreaView style={styles.safeAreaView}>
-      <View style={styles.root}>
+    <View style={styles.root}>
+      <View style={{flex: 1}}>
         <StatusBar type="dark" />
 
         <OfflineBanner />
@@ -147,11 +136,10 @@ export const ConfirmScreen = () => {
             setUseUSB={setUseUSB}
             isProvidingPassword
             providedPassword={password}
-            biometricRoute={SEND_ROUTES.BIOMETRICS_SIGNING}
           />
         </Actions>
       </View>
-    </SafeAreaView>
+    </View>
   )
 }
 
@@ -165,11 +153,8 @@ const Entry = ({tokenEntry}: {tokenEntry: TokenEntry}) => {
 const Actions = (props: ViewProps) => <View {...props} style={{padding: 16}} />
 
 const styles = StyleSheet.create({
-  safeAreaView: {
-    backgroundColor: COLORS.WHITE,
-    flex: 1,
-  },
   root: {
+    backgroundColor: COLORS.WHITE,
     flex: 1,
   },
   container: {

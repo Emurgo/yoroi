@@ -24,7 +24,7 @@ import {
   internalAddressIndexSelector,
 } from '../../legacy/selectors'
 import utfSymbols from '../../legacy/utfSymbols'
-import {TxHistoryStackRootProps} from '../../navigation'
+import {TxHistoryRouteNavigation} from '../../navigation'
 import {COLORS} from '../../theme'
 import {DefaultAsset, IOData, TransactionAssurance, TransactionDirection} from '../../types'
 import {MultiToken} from '../../yoroi-wallets'
@@ -55,7 +55,7 @@ type Props = {
 
 export const TxHistoryListItem = ({transaction}: Props) => {
   const strings = useStrings()
-  const navigation = useNavigation<TxHistoryStackRootProps>()
+  const navigation = useNavigation<TxHistoryRouteNavigation>()
 
   const showDetails = () => navigation.navigate('history-details', {id: transaction.id})
   const submittedAt = formatTimeToSeconds(transaction.submittedAt)

@@ -1,4 +1,4 @@
-import {useFocusEffect, useNavigation, useRoute} from '@react-navigation/native'
+import {RouteProp, useFocusEffect, useNavigation, useRoute} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StatusBar, StyleSheet, View} from 'react-native'
@@ -8,44 +8,39 @@ import {BulletPointItem, Spacer, Text} from '../../components'
 import {errorMessages} from '../../i18n/global-messages'
 import {showErrorDialog} from '../../legacy/actions'
 import {Logger} from '../../legacy/logging'
-import {WALLET_INIT_ROUTES} from '../../legacy/RoutesList'
+import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
 import {theme} from '../../theme'
 import {isCIP1852AccountPath, isValidPublicKey} from '../../yoroi-wallets/cardano/bip44Validators'
-
-export type Params = {
-  networkId: string
-  walletImplementationId: string
-}
 
 export const ImportReadOnlyWalletScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
-  const navigation = useNavigation()
-  const route = useRoute()
-  const {networkId, walletImplementationId}: Params = route.params as any // eslint-disable-line @typescript-eslint/no-explicit-any
+  const navigation = useNavigation<WalletInitRouteNavigation>()
+  const route = useRoute<RouteProp<WalletInitRoutes, 'import-read-only'>>()
+  const {networkId, walletImplementationId} = route.params
   const scannerRef = React.useRef<QRCodeScanner | null>(null)
 
-  const onRead = (event: {data: string}) => {
-    parseReadOnlyWalletKey(event.data)
-      .then(({publicKeyHex, path}: {publicKeyHex: string; path: string}) =>
-        navigation.navigate(WALLET_INIT_ROUTES.SAVE_READ_ONLY_WALLET, {
-          publicKeyHex,
-          path,
-          networkId,
-          walletImplementationId,
-        }),
-      )
-      .catch((error: Error) => {
-        Logger.debug('ImportReadOnlyWalletScreen::onRead::error', error)
-        showErrorDialog(errorMessages.invalidQRCode, intl)
+  const onRead = async (event: {data: string}) => {
+    try {
+      const {publicKeyHex, path} = await parseReadOnlyWalletKey(event.data)
+      navigation.navigate('save-read-only', {
+        publicKeyHex,
+        path,
+        networkId,
+        walletImplementationId,
       })
+    } catch (error) {
+      Logger.debug('ImportReadOnlyWalletScreen::onRead::error', error)
+      await showErrorDialog(errorMessages.invalidQRCode, intl)
+      scannerRef.current?.reactivate()
+    }
   }
 
   useFocusEffect(React.useCallback(() => scannerRef.current?.reactivate(), []))
 
   return (
     <View style={styles.container}>
-      <StatusBar translucent backgroundColor={'transparent'} />
+      <StatusBar translucent backgroundColor="transparent" />
 
       <View style={styles.cameraContainer}>
         <QRCodeScanner ref={scannerRef} fadeIn onRead={onRead} showMarker customMarker={<CameraOverlay />} />
@@ -124,7 +119,7 @@ const styles = StyleSheet.create({
   },
 })
 
-const parseReadOnlyWalletKey = async (text: string) => {
+const parseReadOnlyWalletKey = async (text: string): Promise<{publicKeyHex: string; path: number[]}> => {
   Logger.debug('ImportReadOnlyWalletScreen::handleOnRead::data', text)
   const dataObj = JSON.parse(text)
   const {publicKeyHex, path} = dataObj

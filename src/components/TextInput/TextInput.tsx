@@ -76,8 +76,8 @@ export const TextInput = React.forwardRef((props: Props, ref: ForwardedRef<RNTex
         value={value}
         onChange={() => setErrorTextEnabled(false)}
         autoCorrect={false}
-        autoCompleteType={'off'}
-        autoCapitalize={'none'}
+        autoCompleteType="off"
+        autoCapitalize="none"
         theme={{
           roundness: 8,
           colors: {
@@ -88,7 +88,7 @@ export const TextInput = React.forwardRef((props: Props, ref: ForwardedRef<RNTex
           },
         }}
         secureTextEntry={secureTextEntry && !showPassword}
-        mode={'outlined'}
+        mode="outlined"
         error={errorTextEnabled && !!errorText}
         render={({style, ...inputProps}) => (
           <InputContainer>

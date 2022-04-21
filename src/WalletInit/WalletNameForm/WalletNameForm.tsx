@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ImageSourcePropType, StyleSheet, ViewStyle} from 'react-native'
-import {ActivityIndicator, Image, SafeAreaView, View} from 'react-native'
+import {ActivityIndicator, Image, ImageSourcePropType, StyleSheet, View, ViewStyle} from 'react-native'
 
 import {Button, ProgressStep, TextInput} from '../../components'
 import {useWalletNames} from '../../hooks'
@@ -56,7 +55,7 @@ export const WalletNameForm = ({
   ])
 
   return (
-    <SafeAreaView style={styles.safeAreaView}>
+    <View style={styles.root}>
       {progress != null && (
         <ProgressStep currentStep={progress.currentStep} totalSteps={progress.totalSteps} displayStepNumber />
       )}
@@ -73,6 +72,7 @@ export const WalletNameForm = ({
           onChangeText={setName}
           errorText={walletNameErrorText}
           disabled={isWaiting}
+          autoComplete={false}
         />
 
         {bottomContent}
@@ -89,13 +89,13 @@ export const WalletNameForm = ({
         />
       </View>
 
-      {isWaiting && <ActivityIndicator color={'black'} />}
-    </SafeAreaView>
+      {isWaiting && <ActivityIndicator color="black" />}
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
-  safeAreaView: {
+  root: {
     flex: 1,
     backgroundColor: '#fff',
   },

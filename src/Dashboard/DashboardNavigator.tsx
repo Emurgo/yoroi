@@ -3,24 +3,16 @@ import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import {BiometricAuthScreen} from '../BiometricAuth'
 import {SettingsButton} from '../components/Button'
 import {useWalletName} from '../hooks'
 import {UI_V2} from '../legacy/config'
-import {isJormungandr} from '../legacy/networks'
-import {SEND_ROUTES, STAKING_CENTER_ROUTES, STAKING_DASHBOARD_ROUTES, WALLET_ROOT_ROUTES} from '../legacy/RoutesList'
-import {defaultNavigationOptions, defaultStackNavigatorOptions, jormunNavigationOptions} from '../navigationOptions'
+import {DashboardRoutes, defaultStackNavigationOptions, useWalletNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
 import {DelegationConfirmation} from '../Staking'
 import {StakingCenter} from '../Staking/StakingCenter'
 import {Dashboard} from './Dashboard'
 
-const Stack = createStackNavigator<{
-  'staking-dashboard': any
-  'staking-center': any
-  'biometrics-signing': any
-}>()
-
+const Stack = createStackNavigator<DashboardRoutes>()
 export const DashboardNavigator = () => {
   const wallet = useSelectedWallet()
   const walletName = useWalletName(wallet)
@@ -28,40 +20,33 @@ export const DashboardNavigator = () => {
 
   return (
     <Stack.Navigator
-      screenOptions={({route}) => {
-        const extraOptions = isJormungandr(route.params?.networkId) ? jormunNavigationOptions : {}
-        return {
-          cardStyle: {
-            backgroundColor: 'transparent',
-          },
-          title: route.params?.title ?? undefined,
-          ...defaultNavigationOptions,
-          ...defaultStackNavigatorOptions,
-          ...extraOptions,
-        }
+      screenOptions={{
+        ...defaultStackNavigationOptions,
+        cardStyle: {
+          backgroundColor: 'transparent',
+        },
       }}
-      initialRouteName={STAKING_DASHBOARD_ROUTES.MAIN}
+      initialRouteName="staking-dashboard-main"
     >
       <Stack.Screen
-        name={STAKING_DASHBOARD_ROUTES.MAIN}
+        name="staking-dashboard-main"
         component={Dashboard}
-        options={({navigation}) => ({
+        options={{
           title: walletName,
-          headerRight: () => <SettingsButton onPress={() => navigation.navigate(WALLET_ROOT_ROUTES.SETTINGS)} />,
+          headerRight: () => <HeaderRight />,
           headerRightContainerStyle: {paddingRight: 16},
-        })}
-      />
-      <Stack.Screen
-        name={SEND_ROUTES.BIOMETRICS_SIGNING}
-        component={BiometricAuthScreen}
-        options={{headerShown: false}}
+        }}
       />
       {UI_V2 && (
-        <Stack.Screen name={STAKING_CENTER_ROUTES.MAIN} component={StakingCenter} options={{title: strings.title}} />
+        <Stack.Screen //
+          name="staking-center"
+          component={StakingCenter}
+          options={{title: strings.title}}
+        />
       )}
       {UI_V2 && (
         <Stack.Screen
-          name={STAKING_CENTER_ROUTES.DELEGATION_CONFIRM as any}
+          name="delegation-confirmation"
           component={DelegationConfirmation}
           options={{title: strings.title}}
         />
@@ -84,3 +69,9 @@ const messages = defineMessages({
     defaultMessage: '!!!Staking Center',
   },
 })
+
+const HeaderRight = () => {
+  const {navigateToSettings} = useWalletNavigation()
+
+  return <SettingsButton onPress={() => navigateToSettings()} />
+}

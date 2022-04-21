@@ -18,7 +18,15 @@ storiesOf('SendScreen', module)
     }
 
     return (
-      <SendScreen sendAll={false} onSendAll={action('onSendAll')} selectedTokenIdentifier={selectedAsset.identifier} />
+      <SendScreen
+        sendAll={false}
+        onSendAll={action('onSendAll')}
+        selectedTokenIdentifier={selectedAsset.identifier}
+        amount=""
+        setAmount={action('setAmount')}
+        receiver=""
+        setReceiver={action('setReceiver')}
+      />
     )
   })
   .add('sendAll', () => {
@@ -29,6 +37,14 @@ storiesOf('SendScreen', module)
     }
 
     return (
-      <SendScreen sendAll={true} onSendAll={action('onSendAll')} selectedTokenIdentifier={selectedAsset.identifier} />
+      <SendScreen
+        sendAll={true}
+        onSendAll={action('onSendAll')}
+        selectedTokenIdentifier={selectedAsset.identifier}
+        amount=""
+        setAmount={action('setAmount')}
+        receiver=""
+        setReceiver={action('setReceiver')}
+      />
     )
   })

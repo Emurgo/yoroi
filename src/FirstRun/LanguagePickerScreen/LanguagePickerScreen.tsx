@@ -5,10 +5,10 @@ import {StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, LanguagePicker} from '../../components'
-import {FIRST_RUN_ROUTES} from '../../legacy/RoutesList'
+import {FirstRunRouteNavigation} from '../../navigation'
 
 export const LanguagePickerScreen = () => {
-  const navigation = useNavigation()
+  const navigation = useNavigation<FirstRunRouteNavigation>()
   const intl = useIntl()
 
   return (
@@ -17,7 +17,7 @@ export const LanguagePickerScreen = () => {
 
       <Actions>
         <Button
-          onPress={() => navigation.navigate(FIRST_RUN_ROUTES.ACCEPT_TERMS_OF_SERVICE)}
+          onPress={() => navigation.navigate('accept-terms-of-service')}
           title={intl.formatMessage(messages.continueButton)}
           testID="chooseLangButton"
         />

@@ -9,7 +9,12 @@ def pods()
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
   permissions_path = '../node_modules/react-native-permissions/ios'
-  pod 'Permission-Camera', :path => "#{permissions_path}/Camera.podspec"
+  pod 'Permission-Camera', :path => "#{permissions_path}/Camera"
+  pod 'Permission-BluetoothPeripheral', :path => "#{permissions_path}/BluetoothPeripheral"
+  pod 'Permission-FaceID', :path => "#{permissions_path}/FaceID"
+  pod 'Permission-LocationAccuracy', :path => "#{permissions_path}/LocationAccuracy"
+  pod 'Permission-LocationAlways', :path => "#{permissions_path}/LocationAlways"
+  pod 'Permission-LocationWhenInUse', :path => "#{permissions_path}/LocationWhenInUse"
 
 end
 
@@ -17,6 +22,7 @@ target 'emurgo' do
   config = use_native_modules!
 
   use_react_native!(:path => config["reactNativePath"])
+  platform :ios, '11.0'
 
   # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
   # use_frameworks!

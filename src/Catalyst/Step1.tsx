@@ -15,7 +15,7 @@ import globalMessages, {confirmationMessages} from '../i18n/global-messages'
 import {CONFIG} from '../legacy/config'
 import {Logger} from '../legacy/logging'
 import {isDelegatingSelector} from '../legacy/selectors'
-import {CATALYST_ROUTES} from './CatalystNavigator'
+import {CatalystRouteNavigation} from '../navigation'
 import {Actions, Row} from './components'
 
 type Props = {
@@ -23,7 +23,7 @@ type Props = {
 }
 export const Step1 = ({setPin}: Props) => {
   const strings = useStrings()
-  const navigation = useNavigation()
+  const navigation = useNavigation<CatalystRouteNavigation>()
   const isDelegating = useSelector(isDelegatingSelector)
   const [showModal, setShowModal] = useState<boolean>(!isDelegating)
 
@@ -67,7 +67,7 @@ export const Step1 = ({setPin}: Props) => {
       </ScrollView>
 
       <Actions>
-        <Button onPress={() => navigation.navigate(CATALYST_ROUTES.STEP2)} title={strings.continueButton} />
+        <Button onPress={() => navigation.navigate('catalyst-generate-pin')} title={strings.continueButton} />
       </Actions>
 
       <StandardModal

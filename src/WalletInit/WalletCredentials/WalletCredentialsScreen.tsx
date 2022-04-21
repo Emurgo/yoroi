@@ -1,45 +1,21 @@
-import {useNavigation, useRoute} from '@react-navigation/native'
+import {RouteProp, useRoute} from '@react-navigation/native'
 import React from 'react'
 import {ActivityIndicator, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useDispatch} from 'react-redux'
 
 import {useCreateWallet} from '../../hooks'
-import {updateVersion} from '../../legacy/actions'
-import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
-import type {WalletMeta} from '../../legacy/state'
-import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
+import {useWalletNavigation, WalletInitRoutes} from '../../navigation'
 import {COLORS} from '../../theme'
 import {WalletForm} from '../WalletForm'
 
 export const WalletCredentialsScreen = () => {
-  const navigation = useNavigation()
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const route: any = useRoute()
+  const {resetToWalletSelection} = useWalletNavigation()
+  const route = useRoute<RouteProp<WalletInitRoutes, 'wallet-credentials'>>()
   const {phrase, networkId, walletImplementationId, provider} = route.params
 
-  const dispatch = useDispatch()
-  const setSelectedWalletMeta = useSetSelectedWalletMeta()
-  const setSelectedWallet = useSetSelectedWallet()
-
   const {createWallet, isLoading, isSuccess} = useCreateWallet({
-    onSuccess: async (wallet, {name}) => {
-      const walletMeta: WalletMeta = {
-        name,
-
-        id: wallet.id,
-        networkId: wallet.networkId,
-        walletImplementationId: wallet.walletImplementationId,
-        isHW: wallet.isHW,
-        checksum: wallet.checksum,
-        isEasyConfirmationEnabled: wallet.isEasyConfirmationEnabled,
-        provider: wallet.provider,
-      }
-      setSelectedWalletMeta(walletMeta)
-      setSelectedWallet(wallet)
-      await dispatch(updateVersion())
-
-      navigation.navigate(ROOT_ROUTES.WALLET, {screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES})
+    onSuccess: async () => {
+      resetToWalletSelection()
     },
   })
 
@@ -53,7 +29,7 @@ export const WalletCredentialsScreen = () => {
                 createWallet({name, password, mnemonicPhrase: phrase, networkId, walletImplementationId, provider})
         }
       />
-      {isLoading && <ActivityIndicator color={'black'} />}
+      {isLoading && <ActivityIndicator color="black" />}
     </SafeAreaView>
   )
 }

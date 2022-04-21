@@ -6,8 +6,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Spacer, StatusBar} from '../../components'
 import {CONFIG, isNightly} from '../../legacy/config'
-// uses same styles as WalletInitScreen
-import {WALLET_INIT_ROUTES} from '../../legacy/RoutesList'
+import {WalletInitRouteNavigation} from '../../navigation'
 import {COLORS} from '../../theme'
 import {NetworkId, WalletImplementationId} from '../../yoroi-wallets'
 import {WalletDescription} from '../WalletDescription'
@@ -31,11 +30,6 @@ export const WalletFreshInitScreen = () => {
 
         <ByronButton title={`${strings.addWalletButton} (Byron-era - deprecated)`} onPress={navigateTo.byron} />
 
-        <JormungandrOnly>
-          <Spacer height={16} />
-          <JormungandrButton title={strings.addWalletOnShelleyButton} onPress={navigateTo.jormungandr} />
-        </JormungandrOnly>
-
         <NightlyOnly>
           <Spacer height={16} />
           <ShelleyTestnetButton
@@ -53,10 +47,7 @@ const Actions = (props) => <View {...props} style={styles.actions} />
 const ShelleyButton = (props) => <Button {...props} testID="addWalletOnHaskellShelleyButton" />
 const ShelleyTestnetButton = (props) => <Button {...props} testID="addWalletTestnetShelleyButton" />
 const ByronButton = (props) => <Button {...props} outline testID="addWalletOnByronButton" />
-const JormungandrButton = (props) => <Button {...props} outline testID="addWalletOnShelleyButton" />
-
 const NightlyOnly = ({children}) => (isNightly() ? children : null)
-const JormungandrOnly = ({children}) => (CONFIG.NETWORKS.JORMUNGANDR.ENABLED ? children : null)
 
 const messages = defineMessages({
   addWalletButton: {
@@ -93,12 +84,13 @@ const styles = StyleSheet.create({
 })
 
 const useNavigateTo = () => {
-  const navigation = useNavigation()
+  const navigation = useNavigation<WalletInitRouteNavigation>()
 
   const navigateInitWallet = (networkId: NetworkId, walletImplementationId: WalletImplementationId) =>
-    navigation.navigate(WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH, {
+    navigation.navigate('choose-create-restore', {
       networkId,
       walletImplementationId,
+      provider: '',
     })
 
   return {
@@ -111,11 +103,6 @@ const useNavigateTo = () => {
       navigateInitWallet(
         CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
         CONFIG.WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID,
-      ),
-    jormungandr: () =>
-      navigateInitWallet(
-        CONFIG.NETWORKS.JORMUNGANDR.NETWORK_ID,
-        CONFIG.WALLETS.JORMUNGANDR_ITN.WALLET_IMPLEMENTATION_ID,
       ),
     shelleyTestnet: () =>
       navigateInitWallet(

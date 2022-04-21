@@ -76,14 +76,14 @@ export const BiometricAuthScreen = () => {
       subHeadings={route.params?.instructions || undefined}
       buttons={[
         <Button
-          key={'try-again'}
+          key="try-again"
           outline
           title={strings.tryAgainButton}
           onPress={() => handleOnConfirm(route, setError, clearError, false, intl)}
         />,
-        <Spacer key={'spacer'} width={4} />,
+        <Spacer key="spacer" width={4} />,
         <Button
-          key={'use-fallback'}
+          key="use-fallback"
           outline
           title={strings.fallbackButton}
           onPress={fallback}

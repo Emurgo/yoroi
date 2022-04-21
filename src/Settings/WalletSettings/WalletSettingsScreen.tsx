@@ -1,5 +1,3 @@
-import {useNavigation} from '@react-navigation/native'
-import {CommonActions} from '@react-navigation/routers'
 import React from 'react'
 import type {MessageDescriptor} from 'react-intl'
 import {defineMessages, useIntl} from 'react-intl'
@@ -10,11 +8,11 @@ import {useDispatch, useSelector} from 'react-redux'
 import {StatusBar} from '../../components'
 import {useCloseWallet, useWalletName} from '../../hooks'
 import {confirmationMessages} from '../../i18n/global-messages'
-import {DIALOG_BUTTONS, showConfirmationDialog, signout, updateWallets} from '../../legacy/actions'
-import {CONFIG, isByron, isHaskellShelley} from '../../legacy/config'
+import {DIALOG_BUTTONS, showConfirmationDialog, signout} from '../../legacy/actions'
+import {isByron, isHaskellShelley} from '../../legacy/config'
 import {getNetworkConfigById} from '../../legacy/networks'
-import {SETTINGS_ROUTES, WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
 import {easyConfirmationSelector, isSystemAuthEnabledSelector} from '../../legacy/selectors'
+import {useWalletNavigation} from '../../navigation'
 import {useSelectedWallet, useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
 import {NetworkId, WalletImplementationId, walletManager} from '../../yoroi-wallets'
 import {
@@ -28,24 +26,23 @@ import {
 export const WalletSettingsScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
-  const navigation = useNavigation()
+  const {navigation, resetToWalletSelection} = useWalletNavigation()
   const isSystemAuthEnabled = useSelector(isSystemAuthEnabledSelector)
   const isEasyConfirmationEnabled = useSelector(easyConfirmationSelector)
   const wallet = useSelectedWallet()
   const walletName = useWalletName(wallet)
 
-  const dispatch = useDispatch()
-
-  const [pending, setPending] = React.useState(false)
-  const onSwitchWallet = async () => {
-    setPending(true)
-    navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
-    await walletManager.closeWallet()
-    dispatch(updateWallets())
+  const onSwitchWallet = () => {
+    resetToWalletSelection()
   }
 
   const onToggleEasyConfirmation = () => {
-    navigation.navigate(SETTINGS_ROUTES.EASY_CONFIRMATION)
+    navigation.navigate('app-root', {
+      screen: 'settings',
+      params: {
+        screen: 'easy-confirmation',
+      },
+    })
   }
 
   return (
@@ -53,18 +50,18 @@ export const WalletSettingsScreen = () => {
       <StatusBar type="dark" />
 
       <SettingsSection>
-        <PressableSettingsItem label={strings.switchWallet} onPress={onSwitchWallet} disabled={pending} />
+        <PressableSettingsItem label={strings.switchWallet} onPress={onSwitchWallet} />
         <LogoutButton />
       </SettingsSection>
 
       <SettingsSection title={strings.walletName}>
-        <NavigatedSettingsItem label={walletName || ''} navigateTo={SETTINGS_ROUTES.CHANGE_WALLET_NAME} />
+        <NavigatedSettingsItem label={walletName || ''} navigateTo="change-wallet-name" />
       </SettingsSection>
 
       <SettingsSection title={strings.security}>
         <NavigatedSettingsItem
           label={strings.changePassword}
-          navigateTo={SETTINGS_ROUTES.CHANGE_PASSWORD}
+          navigateTo="change-password"
           disabled={wallet.isHW || wallet.isReadOnly}
         />
 
@@ -81,7 +78,7 @@ export const WalletSettingsScreen = () => {
       </SettingsSection>
 
       <SettingsSection>
-        <NavigatedSettingsItem label={strings.removeWallet} navigateTo={SETTINGS_ROUTES.REMOVE_WALLET} />
+        <NavigatedSettingsItem label={strings.removeWallet} navigateTo="remove-wallet" />
         <ResyncButton />
       </SettingsSection>
 
@@ -237,11 +234,9 @@ const LogoutButton = () => {
   return <PressableSettingsItem label={strings.logout} onPress={logoutWithConfirmation} disabled={isLoading} />
 }
 
-const rootRoute = __DEV__ && CONFIG.DEBUG.START_WITH_INDEX_SCREEN ? 'screens-index' : 'app-root'
-
 const useResync = (options?: UseMutationOptions<void, Error>) => {
   const intl = useIntl()
-  const navigation = useNavigation()
+  const {resetToWalletSelection} = useWalletNavigation()
   const mutation = useMutation({
     mutationFn: () => walletManager.resyncWallet(),
     ...options,
@@ -251,14 +246,10 @@ const useResync = (options?: UseMutationOptions<void, Error>) => {
     resyncWithConfirmation: async () => {
       const selection = await showConfirmationDialog(confirmationMessages.resync, intl)
       if (selection === DIALOG_BUTTONS.YES) {
-        navigation.dispatch(
-          CommonActions.reset({
-            index: 0,
-            routes: [{name: rootRoute}],
-          }),
-        )
-        navigation.navigate(rootRoute)
-        setTimeout(() => mutation.mutate(), 1000) // wait for navigation to finish
+        resetToWalletSelection({reopen: true})
+        setTimeout(() => {
+          mutation.mutate()
+        }, 200) // wait for navigation to finish
       }
     },
     ...mutation,

@@ -1,28 +1,18 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {useSelector} from 'react-redux'
 
-import {BiometricAuthScreen} from '../BiometricAuth'
 import {Boundary} from '../components'
-import {SEND_ROUTES} from '../legacy/RoutesList'
 import {tokenBalanceSelector} from '../legacy/selectors'
-import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../navigationOptions'
+import {defaultStackNavigationOptions, SendRouteNavigation, SendRoutes} from '../navigation'
 import {AddressReaderQR} from './AddressReaderQR'
 import {AssetSelectorScreen} from './AssetSelectorScreen'
 import {ConfirmScreen} from './ConfirmScreen'
 import {ScannerButton} from './ScannerButton'
 import {SendScreen} from './SendScreen'
 
-const Stack = createStackNavigator<{
-  'send-ada': any
-  'select-asset': any
-  'address-reader-qr': any
-  'send-ada-confirm': any
-  'biometrics-signing': any
-}>()
-
+const Stack = createStackNavigator<SendRoutes>()
 export const SendScreenNavigator = () => {
   const strings = useStrings()
 
@@ -31,64 +21,68 @@ export const SendScreenNavigator = () => {
     tokenBalance.getDefaultEntry().identifier,
   )
   const [sendAll, setSendAll] = React.useState(false)
+  const [receiver, setReceiver] = React.useState('')
+  const [amount, setAmount] = React.useState('')
+
+  // when the selected asset is no longer available
+  const selectedAsset = tokenBalance.values.find(({identifier}) => identifier === selectedTokenIdentifier)
+  if (!selectedAsset) {
+    setSelectedTokenIdentifier(tokenBalance.getDefaultEntry().identifier)
+  }
 
   return (
-    <Stack.Navigator
-      initialRouteName={SEND_ROUTES.MAIN}
-      screenOptions={{
-        ...defaultNavigationOptions,
-        ...defaultStackNavigatorOptions,
-      }}
-    >
+    <Stack.Navigator initialRouteName="send-ada-main" screenOptions={defaultStackNavigationOptions}>
       <Stack.Screen
-        name={SEND_ROUTES.MAIN}
+        name="send-ada-main"
         options={{
           title: strings.sendTitle,
           headerRight: () => <ScannerButton />,
-          ...defaultNavigationOptions,
         }}
       >
         {() => (
           <Boundary>
-            <SendScreen selectedTokenIdentifier={selectedTokenIdentifier} onSendAll={setSendAll} sendAll={sendAll} />
+            <SendScreen
+              selectedTokenIdentifier={selectedTokenIdentifier}
+              onSendAll={setSendAll}
+              sendAll={sendAll}
+              receiver={receiver}
+              setReceiver={setReceiver}
+              amount={amount}
+              setAmount={setAmount}
+            />
           </Boundary>
         )}
       </Stack.Screen>
 
-      <Stack.Screen name={'select-asset'} options={{title: strings.selectAssetTitle}}>
-        {({navigation}) => (
+      <Stack.Screen name="select-asset" options={{title: strings.selectAssetTitle}}>
+        {({navigation}: {navigation: SendRouteNavigation}) => (
           <AssetSelectorScreen
             assetTokens={tokenBalance.values}
             onSelect={(token) => {
               setSendAll(false)
               setSelectedTokenIdentifier(token.identifier)
-              navigation.navigate('send-ada')
+              navigation.navigate('send-ada-main')
             }}
             onSelectAll={() => {
               setSendAll(true)
               setSelectedTokenIdentifier(tokenBalance.getDefaultEntry().identifier)
-              navigation.navigate('send-ada')
+              navigation.navigate('send-ada-main')
             }}
           />
         )}
       </Stack.Screen>
 
-      <Stack.Screen
-        name={SEND_ROUTES.ADDRESS_READER_QR}
-        component={AddressReaderQR}
+      <Stack.Screen //
+        name="address-reader-qr"
         options={{title: strings.qrScannerTitle}}
-      />
+      >
+        {() => <AddressReaderQR setQrReceiver={setReceiver} setQrAmount={setAmount} />}
+      </Stack.Screen>
 
       <Stack.Screen //
-        name={SEND_ROUTES.CONFIRM}
+        name="send-ada-confirm"
         component={ConfirmScreen}
         options={{title: strings.confirmTitle}}
-      />
-
-      <Stack.Screen
-        name={SEND_ROUTES.BIOMETRICS_SIGNING}
-        component={BiometricAuthScreen}
-        options={{headerShown: false}}
       />
     </Stack.Navigator>
   )

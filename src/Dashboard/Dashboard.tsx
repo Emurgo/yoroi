@@ -4,11 +4,9 @@ import BigNumber from 'bignumber.js'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, RefreshControl, ScrollView, StyleSheet, View} from 'react-native'
-import SafeAreaView from 'react-native-safe-area-view'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {AccountAutoRefresher} from '../AccountAutoRefresher'
-import {CATALYST_ROUTES} from '../Catalyst'
 import {VotingBanner} from '../Catalyst/VotingBanner'
 import {Banner, Button, OfflineBanner, StatusBar} from '../components'
 import globalMessages from '../i18n/global-messages'
@@ -18,7 +16,6 @@ import {getCardanoBaseConfig, UI_V2} from '../legacy/config'
 import {getDefaultAssetByNetworkId} from '../legacy/config'
 import {setLedgerDeviceId, setLedgerDeviceObj} from '../legacy/hwWallet'
 import {getCardanoNetworkConfigById} from '../legacy/networks'
-import {DELEGATION_ROUTES} from '../legacy/RoutesList'
 import {
   hwDeviceInfoSelector,
   isFetchingAccountStateSelector,
@@ -65,7 +62,7 @@ export const Dashboard = () => {
   const [showWithdrawalDialog, setShowWithdrawalDialog] = React.useState(false)
 
   return (
-    <SafeAreaView style={styles.safeAreaView}>
+    <View style={styles.root}>
       <StatusBar type="dark" />
       <UtxoAutoRefresher />
       <AccountAutoRefresher />
@@ -98,7 +95,7 @@ export const Dashboard = () => {
 
           <Row>
             {!stakingInfo ? (
-              <ActivityIndicator size={'large'} color={'black'} />
+              <ActivityIndicator size="large" color="black" />
             ) : stakingInfo.status === 'staked' ? (
               <UserSummary
                 totalAdaSum={balances['ADA'] ? new BigNumber(balances['ADA']) : null}
@@ -118,7 +115,18 @@ export const Dashboard = () => {
             )}
           </Row>
 
-          {!UI_V2 && <VotingBanner onPress={() => navigation.navigate(CATALYST_ROUTES.ROOT)} />}
+          {!UI_V2 && (
+            <VotingBanner
+              onPress={() =>
+                navigation.navigate('app-root', {
+                  screen: 'catalyst-router',
+                  params: {
+                    screen: 'catalyst-landing',
+                  },
+                })
+              }
+            />
+          )}
 
           {stakingInfo?.status === 'registered' && (
             <Row>
@@ -129,7 +137,32 @@ export const Dashboard = () => {
 
         <Actions>
           <Button
-            onPress={() => navigation.navigate(DELEGATION_ROUTES.STAKING_CENTER)}
+            onPress={() => {
+              if (UI_V2) {
+                navigation.navigate('app-root', {
+                  screen: 'main-wallet-routes',
+                  params: {
+                    screen: 'staking-dashboard',
+                    params: {
+                      screen: 'staking-center',
+                      params: {
+                        screen: 'staking-center-main',
+                      },
+                    },
+                  },
+                })
+              } else {
+                navigation.navigate('app-root', {
+                  screen: 'main-wallet-routes',
+                  params: {
+                    screen: 'staking-center',
+                    params: {
+                      screen: 'staking-center-main',
+                    },
+                  },
+                })
+              }
+            }}
             title={intl.formatMessage(messages.stakingCenterButton)}
             disabled={wallet.isReadOnly}
             shelleyTheme
@@ -155,7 +188,7 @@ export const Dashboard = () => {
           onDone={() => setShowWithdrawalDialog(false)}
         />
       )}
-    </SafeAreaView>
+    </View>
   )
 }
 
@@ -239,7 +272,7 @@ const messages = defineMessages({
 })
 
 const styles = StyleSheet.create({
-  safeAreaView: {
+  root: {
     flex: 1,
   },
   container: {

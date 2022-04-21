@@ -1,12 +1,12 @@
-import {NavigationRouteContext} from '@react-navigation/native'
+import {NavigationRouteContext, RouteProp} from '@react-navigation/native'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
 import {CONFIG} from '../../legacy/config'
-import type {Params} from './SaveNanoXScreen'
+import {WalletInitRoutes} from '../../navigation'
 import {SaveNanoXScreen} from './SaveNanoXScreen'
 
-const params: Params = {
+const params: RouteProp<WalletInitRoutes, 'save-nano-x'>['params'] = {
   networkId: CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
   walletImplementationId: CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
   hwDeviceInfo: {

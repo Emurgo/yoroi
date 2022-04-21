@@ -6,7 +6,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, ProgressStep, Spacer} from '../components'
 import {confirmationMessages} from '../i18n/global-messages'
-import {CATALYST_ROUTES} from './CatalystNavigator'
+import {CatalystRouteNavigation} from '../navigation'
 import {Actions, Description, PinBox, Row, Title} from './components'
 
 type Props = {
@@ -14,7 +14,7 @@ type Props = {
 }
 export const Step2 = ({pin}: Props) => {
   const strings = useStrings()
-  const navigation = useNavigation()
+  const navigation = useNavigation<CatalystRouteNavigation>()
   const [countDown, setCountDown] = useState(5)
 
   useEffect(() => {
@@ -56,7 +56,7 @@ export const Step2 = ({pin}: Props) => {
 
       <Actions>
         <Button
-          onPress={() => navigation.navigate(CATALYST_ROUTES.STEP3)}
+          onPress={() => navigation.navigate('catalyst-confirm-pin')}
           title={countDown !== 0 ? countDown.toString() : strings.continueButton}
           disabled={countDown !== 0}
         />

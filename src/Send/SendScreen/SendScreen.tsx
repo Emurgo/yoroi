@@ -12,7 +12,6 @@ import {Button, Checkbox, Spacer, StatusBar, Text, TextInput} from '../../compon
 import {useTokenInfo} from '../../hooks'
 import {CONFIG, UI_V2} from '../../legacy/config'
 import {formatTokenAmount, getAssetDenominationOrId, truncateWithEllipsis} from '../../legacy/format'
-import {SEND_ROUTES} from '../../legacy/RoutesList'
 import {
   defaultNetworkAssetSelector,
   hasPendingOutgoingTransactionSelector,
@@ -25,6 +24,7 @@ import {
 } from '../../legacy/selectors'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
+import {TokenEntry} from '../../types'
 import {UtxoAutoRefresher} from '../../UtxoAutoRefresher'
 import type {CreateUnsignedTxResponse} from '../../yoroi-wallets/cardano/shelley/transactionUtils'
 import {parseAmountDecimal} from '../../yoroi-wallets/utils/parsing'
@@ -46,9 +46,21 @@ type Props = {
   selectedTokenIdentifier: string
   sendAll: boolean
   onSendAll: (sendAll: boolean) => void
+  receiver: string
+  setReceiver: (receiver: string) => void
+  amount: string
+  setAmount: (amount: string) => void
 }
 
-export const SendScreen = ({selectedTokenIdentifier, sendAll, onSendAll}: Props) => {
+export const SendScreen = ({
+  selectedTokenIdentifier,
+  sendAll,
+  onSendAll,
+  receiver,
+  amount,
+  setReceiver,
+  setAmount,
+}: Props) => {
   const intl = useIntl()
   const strings = useStrings()
   const navigation = useNavigation()
@@ -68,9 +80,7 @@ export const SendScreen = ({selectedTokenIdentifier, sendAll, onSendAll}: Props)
   }
 
   const [address, setAddress] = React.useState('')
-  const [addressInput, setAddressInput] = React.useState('')
   const [addressErrors, setAddressErrors] = React.useState<AddressValidationErrors>({addressIsRequired: true})
-  const [amount, setAmount] = React.useState('')
   const [amountErrors, setAmountErrors] = React.useState<AmountValidationErrors>({amountIsRequired: true})
   const [balanceErrors, setBalanceErrors] = React.useState<BalanceValidationErrors>({})
   const [balanceAfter, setBalanceAfter] = React.useState<BigNumber | null>(null)
@@ -96,12 +106,11 @@ export const SendScreen = ({selectedTokenIdentifier, sendAll, onSendAll}: Props)
   React.useEffect(() => {
     if (CONFIG.DEBUG.PREFILL_FORMS) {
       if (!__DEV__) throw new Error('using debug data in non-dev env')
-      setAddressInput(CONFIG.DEBUG.SEND_ADDRESS)
+      setReceiver(CONFIG.DEBUG.SEND_ADDRESS)
       setAmount(CONFIG.DEBUG.SEND_AMOUNT)
     }
-    navigation.setParams({onScanAddress: setAddressInput})
-    navigation.setParams({onScanAmount: setAmount})
-  }, [navigation])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const promiseRef = React.useRef<undefined | Promise<unknown>>()
   React.useEffect(() => {
@@ -111,7 +120,7 @@ export const SendScreen = ({selectedTokenIdentifier, sendAll, onSendAll}: Props)
 
     const promise = recomputeAll({
       utxos,
-      addressInput,
+      addressInput: receiver,
       amount,
       sendAll,
       defaultAsset,
@@ -136,7 +145,7 @@ export const SendScreen = ({selectedTokenIdentifier, sendAll, onSendAll}: Props)
       setRecomputing(false)
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [addressInput, amount, selectedTokenIdentifier, sendAll])
+  }, [receiver, amount, selectedTokenIdentifier, sendAll])
 
   const onConfirm = () => {
     if (sendAll) {
@@ -154,34 +163,61 @@ export const SendScreen = ({selectedTokenIdentifier, sendAll, onSendAll}: Props)
       : // note: inside this if balanceAfter shouldn't be null
         tokenBalance.getDefault().minus(balanceAfter ?? 0)
 
-    const tokens = await (async () => {
-      if (tokenInfo.isDefault) {
-        return sendAll ? (await unsignedTx.totalOutput()).nonDefaultEntries() : []
-      }
-
-      if (!tokenInfo.isDefault) {
-        return [
+    const tokens: Array<TokenEntry> = tokenInfo.isDefault
+      ? sendAll
+        ? (await unsignedTx.totalOutput()).nonDefaultEntries()
+        : []
+      : [
           {
             identifier: tokenInfo.identifier,
             networkId: tokenInfo.networkId,
             amount: parseAmountDecimal(amount, tokenInfo),
           },
         ]
-      }
-    })()
 
     setShowSendAllWarning(false)
 
-    navigation.navigate(UI_V2 ? 'send-confirm' : SEND_ROUTES.CONFIRM, {
-      availableAmount: tokenBalance.getDefault(),
-      address,
-      defaultAssetAmount,
-      transactionData: unsignedTx,
-      balanceAfterTx: balanceAfter,
-      utxos,
-      fee,
-      tokens,
-    })
+    if (UI_V2) {
+      navigation.navigate('app-root', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {
+            screen: 'send-confirm',
+            params: {
+              availableAmount: tokenBalance.getDefault(),
+              address,
+              defaultAssetAmount,
+              transactionData: unsignedTx,
+              balanceAfterTx: balanceAfter,
+              utxos,
+              fee,
+              tokens,
+            },
+          },
+        },
+      })
+    } else {
+      navigation.navigate('app-root', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'send-ada',
+          params: {
+            screen: 'send-ada-confirm',
+            params: {
+              availableAmount: tokenBalance.getDefault(),
+              address,
+              defaultAssetAmount,
+              transactionData: unsignedTx,
+              balanceAfterTx: balanceAfter,
+              utxos,
+              fee,
+              tokens,
+            },
+          },
+        },
+      })
+    }
   }
 
   return (
@@ -199,18 +235,19 @@ export const SendScreen = ({selectedTokenIdentifier, sendAll, onSendAll}: Props)
         <Spacer height={16} />
 
         <TextInput
-          value={addressInput || ''}
+          value={receiver}
           multiline
           errorOnMount
-          onChangeText={setAddressInput}
+          onChangeText={setReceiver}
           label={strings.addressInputLabel}
           errorText={getAddressErrorText(intl, addressErrors)}
+          autoComplete={false}
         />
 
         {!recomputing &&
-          isDomain(addressInput) &&
+          isDomain(receiver) &&
           !hasDomainErrors(addressErrors) &&
-          !addressInput.includes(address) /* HACK */ && (
+          !receiver.includes(address) /* HACK */ && (
             <Text ellipsizeMode="middle" numberOfLines={1}>
               {`Resolves to: ${address}`}
             </Text>
@@ -218,7 +255,31 @@ export const SendScreen = ({selectedTokenIdentifier, sendAll, onSendAll}: Props)
 
         <AmountField amount={amount} setAmount={setAmount} error={amountErrorText} editable={!sendAll} />
 
-        <TouchableOpacity onPress={() => navigation.navigate('select-asset')}>
+        <TouchableOpacity
+          onPress={() => {
+            if (UI_V2) {
+              navigation.navigate('app-root', {
+                screen: 'main-wallet-routes',
+                params: {
+                  screen: 'history',
+                  params: {
+                    screen: 'select-asset',
+                  },
+                },
+              })
+            } else {
+              navigation.navigate('app-root', {
+                screen: 'main-wallet-routes',
+                params: {
+                  screen: 'send-ada',
+                  params: {
+                    screen: 'select-asset',
+                  },
+                },
+              })
+            }
+          }}
+        >
           <TextInput
             right={<Image source={require('../../assets/img/arrow_down_fill.png')} />}
             editable={false}
@@ -228,6 +289,7 @@ export const SendScreen = ({selectedTokenIdentifier, sendAll, onSendAll}: Props)
               tokenInfo,
               15,
             )}`}
+            autoComplete={false}
           />
         </TouchableOpacity>
 
@@ -241,7 +303,7 @@ export const SendScreen = ({selectedTokenIdentifier, sendAll, onSendAll}: Props)
 
         {recomputing && (
           <View style={styles.indicator}>
-            <ActivityIndicator size="large" color={'black'} />
+            <ActivityIndicator size="large" color="black" />
           </View>
         )}
       </ScrollView>

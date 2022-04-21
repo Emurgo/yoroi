@@ -8,7 +8,7 @@ import {Icon, Spacer} from '../components'
 import features from '../features'
 import {actionMessages} from '../i18n/global-messages'
 import {isReadOnlySelector} from '../legacy/selectors'
-import {TxHistoryStackRootProps} from '../navigation'
+import {TxHistoryRouteNavigation} from '../navigation'
 import {COLORS} from '../theme'
 
 const ACTION_PROPS = {
@@ -116,7 +116,7 @@ const useStrings = () => {
 }
 
 const useNavigateTo = () => {
-  const navigation = useNavigation<TxHistoryStackRootProps>()
+  const navigation = useNavigation<TxHistoryRouteNavigation>()
   const strings = useStrings()
 
   return {

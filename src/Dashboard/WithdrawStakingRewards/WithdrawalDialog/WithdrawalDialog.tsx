@@ -106,9 +106,9 @@ export const WithdrawalDialog = ({
           />
         )
       case WithdrawalDialogSteps.WAITING_HW_RESPONSE:
-        return <PleaseWaitView title={''} spinnerText={strings.followSteps} />
+        return <PleaseWaitView title="" spinnerText={strings.followSteps} />
       case WithdrawalDialogSteps.WAITING:
-        return <PleaseWaitView title={''} spinnerText={strings.pleaseWait} />
+        return <PleaseWaitView title="" spinnerText={strings.pleaseWait} />
       case WithdrawalDialogSteps.ERROR:
         if (!error) throw new Error("Invalid state: 'error' is undefined")
         return <ErrorView errorMessage={error.errorMessage} errorLogs={error.errorLogs} onDismiss={onRequestClose} />

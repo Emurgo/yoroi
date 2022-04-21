@@ -37,11 +37,11 @@ export const ChangeWalletName = () => {
     <SafeAreaView style={styles.safeAreaView} edges={['left', 'right', 'bottom']}>
       <ScrollView
         keyboardDismissMode="on-drag"
-        keyboardShouldPersistTaps={'always'}
+        keyboardShouldPersistTaps="always"
         contentContainerStyle={styles.scrollContentContainer}
       >
         <WalletNameInput
-          returnKeyType={'done'}
+          returnKeyType="done"
           errorDelay={0}
           enablesReturnKeyAutomatically
           autoFocus
@@ -49,6 +49,7 @@ export const ChangeWalletName = () => {
           value={newWalletName}
           onChangeText={setNewWalletName}
           errorText={errorText}
+          autoComplete={false}
         />
       </ScrollView>
 

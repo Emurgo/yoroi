@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native'
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {View} from 'react-native'
@@ -6,24 +6,17 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, KeyboardSpacer, ScrollableView, Spacer, StatusBar, Text} from '../../components'
 import {getWalletConfigById} from '../../legacy/config'
-import {WALLET_INIT_ROUTES} from '../../legacy/RoutesList'
-import {useUnsafeParams} from '../../navigation'
-import {NetworkId, WalletImplementationId} from '../../yoroi-wallets'
+import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
 import {MnemonicInput} from '../MnemonicInput'
-
-type Params = {
-  networkId: NetworkId
-  walletImplementationId: WalletImplementationId
-  provider: string
-}
 
 export const RestoreWalletScreen = () => {
   const strings = useStrings()
-  const navigation = useNavigation()
-  const {networkId, walletImplementationId, provider} = useUnsafeParams<Params>()
+  const navigation = useNavigation<WalletInitRouteNavigation>()
+  const route = useRoute<RouteProp<WalletInitRoutes, 'restore-wallet-form'>>()
+  const {networkId, walletImplementationId, provider} = route.params
   const {MNEMONIC_LEN: mnemonicLength} = getWalletConfigById(walletImplementationId)
   const navigateToWalletCredentials = () =>
-    navigation.navigate(WALLET_INIT_ROUTES.VERIFY_RESTORED_WALLET, {
+    navigation.navigate('wallet-account-checksum', {
       phrase,
       networkId,
       walletImplementationId,
@@ -36,7 +29,7 @@ export const RestoreWalletScreen = () => {
     <SafeAreaView edges={['left', 'right', 'bottom']} style={{flex: 1, backgroundColor: 'white', borderWidth: 1}}>
       <StatusBar type="dark" />
 
-      <ScrollableView bounces={false} style={{paddingHorizontal: 16}} keyboardShouldPersistTaps={'always'}>
+      <ScrollableView bounces={false} style={{paddingHorizontal: 16}} keyboardShouldPersistTaps="always">
         <Spacer height={24} />
 
         <Instructions>{strings.instructions({mnemonicLength})}</Instructions>

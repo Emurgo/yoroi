@@ -18,7 +18,7 @@ storiesOf('Catalyst', module)
   .add('Step 3', () => <Step3 pin="1234" setVotingRegTxData={action('setVotingRegTxData')} />)
   .add('Step 4', () => <Step4 pin="1234" setVotingRegTxData={action('setVotingRegTxData')} />)
   .add('Step 5', () => <Step5 votingRegTxData={{} as unknown as VotingRegTxData} />)
-  .add('Step 6', () => <Step6 />)
+  .add('Step 6', () => <Step6 votingRegTxData={{} as unknown as VotingRegTxData} />)
   .add('CatalystBackupCheckModal', () => (
     <WithModalProps>
       {(modalProps) => <CatalystBackupCheckModal {...modalProps} onConfirm={action('onConfirm')} />}

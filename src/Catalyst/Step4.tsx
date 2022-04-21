@@ -12,10 +12,8 @@ import {CONFIG} from '../legacy/config'
 import {ensureKeysValidity} from '../legacy/deviceSettings'
 import {WrongPassword} from '../legacy/errors'
 import KeyStore from '../legacy/KeyStore'
-import {WALLET_ROOT_ROUTES} from '../legacy/RoutesList'
 import {useSelectedWallet} from '../SelectedWallet'
 import {SystemAuthDisabled, walletManager} from '../yoroi-wallets'
-import {CATALYST_ROUTES} from './CatalystNavigator'
 import {Actions, Description, Title} from './components'
 import {useCreateVotingRegTx, VotingRegTxData} from './hooks'
 
@@ -55,7 +53,12 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
         {
           onSuccess: (votingRegTxData) => {
             setVotingRegTxData(votingRegTxData)
-            navigation.navigate(CATALYST_ROUTES.STEP5)
+            navigation.navigate('app-root', {
+              screen: 'catalyst-router',
+              params: {
+                screen: 'catalyst-transaction',
+              },
+            })
           },
         },
       )
@@ -64,22 +67,20 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
     if (wallet.isEasyConfirmationEnabled) {
       try {
         await ensureKeysValidity(wallet.id)
-        navigation.navigate(CATALYST_ROUTES.BIOMETRICS_SIGNING, {
+        navigation.navigate('biometrics', {
           keyId: walletManager._id,
           onSuccess: async (decryptedKey) => {
             navigation.goBack()
             createTransaction(decryptedKey)
           },
           onFail: () => navigation.goBack(),
-          addWelcomeMessage: false,
           instructions: [strings.bioAuthInstructions],
         })
       } catch (error) {
         if (error instanceof SystemAuthDisabled) {
           await walletManager.closeWallet()
           await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
-          navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
-
+          navigation.navigate('app-root', {screen: 'wallet-selection'})
           return
         } else if (error instanceof Error) {
           setErrorData({
@@ -142,7 +143,7 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
       <ProgressStep currentStep={4} totalSteps={6} />
       <OfflineBanner />
 
-      <ScrollView bounces={false} contentContainerStyle={styles.contentContainer} keyboardShouldPersistTaps={'always'}>
+      <ScrollView bounces={false} contentContainerStyle={styles.contentContainer} keyboardShouldPersistTaps="always">
         <Spacer height={48} />
 
         <Title>{strings.subTitle}</Title>
@@ -154,7 +155,14 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
         {!wallet.isEasyConfirmationEnabled && (
           <>
             <Spacer height={48} />
-            <TextInput autoFocus secureTextEntry label={strings.password} value={password} onChangeText={setPassword} />
+            <TextInput
+              autoFocus
+              secureTextEntry
+              label={strings.password}
+              value={password}
+              onChangeText={setPassword}
+              autoComplete={false}
+            />
           </>
         )}
       </ScrollView>

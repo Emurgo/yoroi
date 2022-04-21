@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {useNavigation} from '@react-navigation/native'
-import {CommonActions} from '@react-navigation/routers'
 import {BigNumber} from 'bignumber.js'
 import React, {useEffect, useState} from 'react'
 import {useIntl} from 'react-intl'
@@ -12,11 +10,10 @@ import {OfflineBanner, Text, ValidatedTextInput} from '../../components'
 import {ConfirmTx} from '../../components/ConfirmTx'
 import {Instructions as HWInstructions} from '../../HW'
 import globalMessages, {txLabels} from '../../i18n/global-messages'
-import {CONFIG, UI_V2} from '../../legacy/config'
+import {CONFIG} from '../../legacy/config'
 import {formatTokenAmount, formatTokenWithText} from '../../legacy/format'
-import {SEND_ROUTES, STAKING_CENTER_ROUTES, STAKING_DASHBOARD_ROUTES, WALLET_ROUTES} from '../../legacy/RoutesList'
 import {defaultNetworkAssetSelector} from '../../legacy/selectors'
-import {useParams} from '../../navigation'
+import {useParams, useWalletNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {DefaultAsset} from '../../types'
@@ -43,7 +40,7 @@ const isParams = (params?: Params | object | undefined): params is Params => {
 }
 
 export const DelegationConfirmation = ({mockDefaultAsset}: {mockDefaultAsset?: DefaultAsset}) => {
-  const navigation = useNavigation()
+  const {resetToTxHistory} = useWalletNavigation()
   const wallet = useSelectedWallet()
   const {isHW, isEasyConfirmationEnabled} = wallet
   const defaultNetworkAsset = useSelector(defaultNetworkAssetSelector)
@@ -51,12 +48,18 @@ export const DelegationConfirmation = ({mockDefaultAsset}: {mockDefaultAsset?: D
   const {poolHash, poolName, transactionData: delegationTxData} = useParams<Params>(isParams)
   const [transactionFee, setTransactionFee] = useState<MultiToken>()
   const strings = useStrings()
-  const [password, setPassword] = useState(CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '')
+  const [password, setPassword] = useState('')
   const [useUSB, setUseUSB] = useState(false)
 
   const signRequest: CreateUnsignedTxResponse = delegationTxData.signRequest
   const amountToDelegate: MultiToken = delegationTxData.totalAmountToDelegate
   const reward = approximateReward(amountToDelegate.getDefault())
+
+  useEffect(() => {
+    if (CONFIG.DEBUG.PREFILL_FORMS && __DEV__) {
+      setPassword(CONFIG.DEBUG.PASSWORD)
+    }
+  }, [])
 
   useEffect(() => {
     void (async () => {
@@ -65,23 +68,7 @@ export const DelegationConfirmation = ({mockDefaultAsset}: {mockDefaultAsset?: D
   }, [delegationTxData])
 
   const onSuccess = () => {
-    navigation.dispatch(
-      CommonActions.reset({
-        key: null as any,
-        index: 0,
-        routes: [{name: STAKING_CENTER_ROUTES.MAIN}],
-      }),
-    )
-    if (UI_V2) {
-      navigation.dispatch(
-        CommonActions.reset({
-          key: null as any,
-          index: 0,
-          routes: [{name: STAKING_DASHBOARD_ROUTES.MAIN}],
-        }),
-      )
-    }
-    navigation.navigate(WALLET_ROUTES.TX_HISTORY)
+    resetToTxHistory()
   }
 
   return (
@@ -142,7 +129,6 @@ export const DelegationConfirmation = ({mockDefaultAsset}: {mockDefaultAsset?: D
           setUseUSB={setUseUSB}
           useUSB={useUSB}
           txDataSignRequest={signRequest}
-          biometricRoute={SEND_ROUTES.BIOMETRICS_SIGNING}
         />
       </Actions>
     </View>

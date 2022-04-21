@@ -9,7 +9,7 @@ import type {IntlShape} from 'react-intl'
 import {APP_SETTINGS_KEYS, readAppSettings} from '../legacy/appSettings'
 import assert from '../legacy/assert'
 import {CONFIG, DISABLE_BACKGROUND_SYNC, WALLETS} from '../legacy/config'
-import {ensureKeysValidity, isSystemAuthSupported} from '../legacy/deviceSettings'
+import {canBiometricEncryptionBeEnabled, ensureKeysValidity, isSystemAuthSupported} from '../legacy/deviceSettings'
 import {ObjectValues} from '../legacy/flow'
 import type {DefaultAsset} from '../legacy/HistoryTransaction'
 import {ISignRequest} from '../legacy/ISignRequest'
@@ -489,15 +489,8 @@ class WalletManager {
       } as WalletMeta,
     }
 
-    this._wallet = wallet
     await this._saveState(wallet)
-    wallet.subscribe(this._notify)
-    wallet.subscribeOnTxHistoryUpdate(this._notifyOnTxHistoryUpdate)
     await storage.write(`/wallet/${id}`, this._wallets[id])
-    this._closePromise = new Promise((resolve, reject) => {
-      this._closeReject = reject
-    })
-    this._notify()
 
     Logger.debug('WalletManager::saveWallet::wallet', wallet)
 
@@ -524,7 +517,8 @@ class WalletManager {
     this._wallet = wallet
     this._id = walletMeta.id
 
-    const shouldDisableEasyConfirmation = walletMeta.isEasyConfirmationEnabled && !isSystemAuthEnabled
+    const shouldDisableEasyConfirmation =
+      walletMeta.isEasyConfirmationEnabled && (!isSystemAuthEnabled || (await !canBiometricEncryptionBeEnabled()))
     if (shouldDisableEasyConfirmation) {
       wallet.isEasyConfirmationEnabled = false
 

@@ -297,6 +297,7 @@ type YoroiWalletKeys =
   | 'signTxWithLedger'
   | 'fetchPoolInfo'
   | 'publicKeyHex'
+  | 'subscribe'
 
 const yoroiWalletKeys: Array<YoroiWalletKeys> = [
   'id',

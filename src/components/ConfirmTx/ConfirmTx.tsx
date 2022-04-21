@@ -6,7 +6,7 @@ import {useIntl} from 'react-intl'
 import {Platform, StyleSheet, View} from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {useCloseWallet, useSubmitTx} from '../../hooks'
+import {useSubmitTx} from '../../hooks'
 import {confirmationMessages, errorMessages, txLabels} from '../../i18n/global-messages'
 import LocalizableError from '../../i18n/LocalizableError'
 import {showErrorDialog} from '../../legacy/actions'
@@ -15,9 +15,8 @@ import {ensureKeysValidity} from '../../legacy/deviceSettings'
 import {WrongPassword} from '../../legacy/errors'
 import {setLedgerDeviceId as _setLedgerDeviceId, setLedgerDeviceObj as _setLedgerDeviceObj} from '../../legacy/hwWallet'
 import KeyStore from '../../legacy/KeyStore'
-import {WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
 import {hwDeviceInfoSelector} from '../../legacy/selectors'
-import {useSelectedWallet, useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
+import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {HaskellShelleyTxSignRequest, SignedTx, SystemAuthDisabled, walletManager} from '../../yoroi-wallets'
 import {Button, ButtonProps, ValidatedTextInput} from '..'
@@ -45,7 +44,6 @@ type SignAndSubmitProps = {
   autoSignIfEasyConfirmation?: boolean
   chooseTransportOnConfirmation?: boolean
   biometricInstructions?: Array<string>
-  biometricRoute: string
 } & ConfirmTxProps
 
 type OnlySignProps = {
@@ -53,7 +51,6 @@ type OnlySignProps = {
   autoSignIfEasyConfirmation?: boolean
   chooseTransportOnConfirmation?: boolean
   biometricInstructions?: Array<string>
-  biometricRoute: string
 } & ConfirmTxProps
 
 type OnlySubmitProps = {
@@ -150,7 +147,6 @@ export const ConfirmWithSignature: React.FC<SignAndSubmitProps | OnlySignProps> 
   autoSignIfEasyConfirmation,
   chooseTransportOnConfirmation,
   biometricInstructions,
-  biometricRoute,
 }) => {
   const intl = useIntl()
   const strings = useStrings()
@@ -159,14 +155,6 @@ export const ConfirmWithSignature: React.FC<SignAndSubmitProps | OnlySignProps> 
 
   const hwDeviceInfo = useSelector(hwDeviceInfoSelector)
 
-  const setSelectedWallet = useSetSelectedWallet()
-  const setSelectedWalletMeta = useSetSelectedWalletMeta()
-  const {closeWallet} = useCloseWallet({
-    onSuccess: () => {
-      setSelectedWallet(undefined)
-      setSelectedWalletMeta(undefined)
-    },
-  })
   const wallet = useSelectedWallet()
 
   const {mutateAsync: submitTx} = useSubmitTx({wallet})
@@ -319,7 +307,7 @@ export const ConfirmWithSignature: React.FC<SignAndSubmitProps | OnlySignProps> 
     } else if (wallet.isEasyConfirmationEnabled) {
       try {
         await ensureKeysValidity(wallet.id)
-        navigation.navigate(biometricRoute, {
+        navigation.navigate('biometrics', {
           keyId: wallet.id,
           onSuccess: (decryptedKey) => {
             navigation.goBack()
@@ -332,8 +320,7 @@ export const ConfirmWithSignature: React.FC<SignAndSubmitProps | OnlySignProps> 
       } catch (err) {
         if (err instanceof SystemAuthDisabled) {
           await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
-          navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
-          setTimeout(() => closeWallet(), 1000)
+          navigation.goBack()
           return
         } else {
           throw err
@@ -344,7 +331,6 @@ export const ConfirmWithSignature: React.FC<SignAndSubmitProps | OnlySignProps> 
       return onConfirm()
     }
   }, [
-    closeWallet,
     intl,
     wallet.isHW,
     navigation,
@@ -353,7 +339,6 @@ export const ConfirmWithSignature: React.FC<SignAndSubmitProps | OnlySignProps> 
     wallet.isEasyConfirmationEnabled,
     chooseTransportOnConfirmation,
     biometricInstructions,
-    biometricRoute,
   ])
 
   const isConfirmationDisabled = !wallet.isEasyConfirmationEnabled && !password && !wallet.isHW

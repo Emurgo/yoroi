@@ -94,7 +94,7 @@ const HASKELL_SHELLEY_TESTNET = {
   POOL_EXPLORER: 'https://adapools.yoroiwallet.com/?source=mobile',
   BACKEND: {
     API_ROOT: 'https://testnet-backend.yoroiwallet.com/api',
-    TOKEN_INFO_SERVICE: 'https://stage-cdn.yoroiwallet.com',
+    TOKEN_INFO_SERVICE: 'https://metadata.cardano-testnet.iohkdev.io',
     ..._DEFAULT_BACKEND_RULES,
   },
   BASE_CONFIG: [

@@ -4,12 +4,11 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {ProgressStep, Spacer} from '../components'
-import {PinInputKeyboard} from '../components'
+import {PinInputKeyboard, ProgressStep, Spacer} from '../components'
 import {errorMessages} from '../i18n/global-messages'
 import {showErrorDialog} from '../legacy/actions'
+import {CatalystRouteNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
-import {CATALYST_ROUTES} from './CatalystNavigator'
 import {Description, PinBox, Row, Title} from './components'
 import {useCreateVotingRegTx, VotingRegTxData} from './hooks'
 
@@ -22,7 +21,7 @@ type Props = {
 export const Step3 = ({pin, setVotingRegTxData}: Props) => {
   const intl = useIntl()
   const strings = useStrings()
-  const navigation = useNavigation()
+  const navigation = useNavigation<CatalystRouteNavigation>()
   const wallet = useSelectedWallet()
   const {createVotingRegTx} = useCreateVotingRegTx({wallet})
   const [confirmPin, setConfirmPin] = useState('')
@@ -37,12 +36,12 @@ export const Step3 = ({pin, setVotingRegTxData}: Props) => {
             {
               onSuccess: (votingRegTxData) => {
                 setVotingRegTxData(votingRegTxData)
-                navigation.navigate(CATALYST_ROUTES.STEP5)
+                navigation.navigate('catalyst-transaction')
               },
             },
           )
         } else {
-          navigation.navigate(CATALYST_ROUTES.STEP4)
+          navigation.navigate('catalyst-generate-trx')
         }
       } else {
         showErrorDialog(errorMessages.incorrectPin, intl)
@@ -51,7 +50,7 @@ export const Step3 = ({pin, setVotingRegTxData}: Props) => {
   }
 
   return (
-    <SafeAreaView edges={['left', 'right']} style={styles.safeAreaView}>
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
       <ProgressStep currentStep={3} totalSteps={6} />
 
       <ScrollView bounces={false} contentContainerStyle={styles.contentContainer}>

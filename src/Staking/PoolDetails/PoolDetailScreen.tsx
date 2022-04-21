@@ -20,7 +20,7 @@ export const PoolDetailScreen = ({onPressDelegate, disabled = false}: Props) => 
         <Text style={styles.title}>{strings.title}</Text>
       </View>
 
-      <TextInput label={strings.poolHash} value={poolHash} onChangeText={setPoolHash} />
+      <TextInput label={strings.poolHash} value={poolHash} onChangeText={setPoolHash} autoComplete={false} />
 
       <Button
         outlineOnLight

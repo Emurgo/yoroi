@@ -27,8 +27,6 @@ export class InvalidAssetAmount extends ExtendableError {
 // expects an amount in regular currency units (eg ADA, not Lovelace)
 export const parseAmountDecimal = (amount: string, token: Token): BigNumber => {
   const assetMeta = token ?? getCardanoDefaultAsset()
-  // note: maxSupply can be null
-  const maxSupply = assetMeta.metadata.maxSupply != null ? new BigNumber(assetMeta.metadata.maxSupply, 10) : null
   const numberOfDecimals: number = assetMeta.metadata.numberOfDecimals
   const normalizationFactor = Math.pow(10, numberOfDecimals)
   const parsed = new BigNumber(amount, 10)
@@ -42,10 +40,6 @@ export const parseAmountDecimal = (amount: string, token: Token): BigNumber => {
   }
 
   const value = parsed.times(normalizationFactor)
-
-  if (maxSupply != null && value.gte(maxSupply)) {
-    throw new InvalidAssetAmount(InvalidAssetAmount.ERROR_CODES.TOO_LARGE)
-  }
 
   if (isHaskellShelleyNetwork(assetMeta.networkId) && assetMeta.isDefault) {
     // ...this is ADA or tADA

@@ -15,8 +15,8 @@ import LocalizableError from '../i18n/LocalizableError'
 import {CONFIG} from '../legacy/config'
 import {formatTokenWithSymbol} from '../legacy/format'
 import {defaultNetworkAssetSelector} from '../legacy/selectors'
+import {CatalystRouteNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
-import {CATALYST_ROUTES} from './CatalystNavigator'
 import {Actions, Description, Title} from './components'
 import {VotingRegTxData} from './hooks'
 
@@ -25,7 +25,7 @@ type Props = {
 }
 export const Step5 = ({votingRegTxData}: Props) => {
   const strings = useStrings()
-  const navigation = useNavigation()
+  const navigation = useNavigation<CatalystRouteNavigation>()
   const wallet = useSelectedWallet()
   const defaultAsset = useSelector(defaultNetworkAssetSelector)
   const [password, setPassword] = useState('')
@@ -72,10 +72,17 @@ export const Step5 = ({votingRegTxData}: Props) => {
           value={fees ? formatTokenWithSymbol(fees, defaultAsset) : ''}
           label={strings.fees}
           editable={false}
+          autoComplete={false}
         />
 
         {!wallet.isEasyConfirmationEnabled && !wallet.isHW && (
-          <TextInput secureTextEntry value={password} label={strings.password} onChangeText={setPassword} />
+          <TextInput
+            secureTextEntry
+            value={password}
+            label={strings.password}
+            onChangeText={setPassword}
+            autoComplete={false}
+          />
         )}
       </ScrollView>
 
@@ -84,14 +91,13 @@ export const Step5 = ({votingRegTxData}: Props) => {
       <Actions>
         <ConfirmTx
           process="signAndSubmit"
-          onSuccess={() => navigation.navigate(CATALYST_ROUTES.STEP6)}
+          onSuccess={() => navigation.navigate('catalyst-qr-code')}
           isProvidingPassword
           providedPassword={password}
           setUseUSB={setUseUSB}
           useUSB={useUSB}
           txDataSignRequest={votingRegTxData?.signRequest}
           biometricInstructions={[strings.bioAuthDescription]}
-          biometricRoute={CATALYST_ROUTES.BIOMETRICS_SIGNING}
         />
       </Actions>
     </SafeAreaView>

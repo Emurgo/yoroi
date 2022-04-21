@@ -13,7 +13,6 @@ import {CustomPinScreen} from './FirstRun/CustomPinScreen'
 import {FirstRunNavigator} from './FirstRun/FirstRunNavigator'
 import {errorMessages} from './i18n/global-messages'
 import {showErrorDialog, signin} from './legacy/actions'
-import {CONFIG} from './legacy/config'
 import {canBiometricEncryptionBeEnabled, recreateAppSignInKeys} from './legacy/deviceSettings'
 import env from './legacy/env'
 import IndexScreen from './legacy/IndexScreen'
@@ -29,7 +28,7 @@ import {
 import type {State} from './legacy/state'
 import {CustomPinLoginScreen} from './Login'
 import MaintenanceScreen from './MaintenanceScreen'
-import {defaultNavigationOptions, defaultStackNavigatorOptions} from './navigationOptions'
+import {AppRoutes} from './navigation'
 import StorybookScreen from './StorybookScreen'
 import {WalletInitNavigator} from './WalletInit/WalletInitNavigator'
 import {WalletNavigator} from './WalletNavigator'
@@ -57,129 +56,100 @@ const messages = defineMessages({
   },
 })
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-type AppNavigatorRoutes = {
-  maintenance: any
-  'screens-index': any
-  storybook: any
-  'new-wallet': any
-  'app-root': any
-  'custom-pin-auth': any
-  'bio-auth': any
-  'setup-custom-pin': any
-}
-/* eslint-enable @typescript-eslint/no-explicit-any */
-
-const Stack = createStackNavigator<AppNavigatorRoutes>()
-
+const Stack = createStackNavigator<AppRoutes>()
 const NavigatorSwitch = () => {
   const strings = useStrings()
   const isMaintenance = useSelector(isMaintenanceSelector)
   const isSystemAuthEnabled = useSelector(isSystemAuthEnabledSelector)
   const isAuthenticated = useSelector(isAuthenticatedSelector)
   const hasAnyWallet = useSelector(hasAnyWalletSelector)
-  const installationId = useSelector(installationIdSelector)
   const isAppSetupComplete = useSelector(isAppSetupCompleteSelector)
   const canEnableBiometrics = useSelector(canEnableBiometricSelector)
+  const installationId = useSelector(installationIdSelector)
   const dispatch = useDispatch()
 
+  if (!installationId) throw new Error('invalid state')
+
   useEffect(() => {
-    if (hasAnyWallet && !isAuthenticated && isSystemAuthEnabled && !canEnableBiometrics) {
+    if (hasAnyWallet && !isAuthenticated && isSystemAuthEnabled && !canEnableBiometrics && !isMaintenance) {
       Alert.alert(strings.biometricsChangeTitle, strings.biometricsChangeMessage)
     }
-  }, [hasAnyWallet, isAuthenticated, isSystemAuthEnabled, canEnableBiometrics, strings])
+  }, [hasAnyWallet, isAuthenticated, isSystemAuthEnabled, canEnableBiometrics, isMaintenance, strings])
 
-  if (isMaintenance) {
-    return (
-      <Stack.Navigator screenOptions={{headerShown: false}}>
-        <Stack.Screen name={'maintenance'} component={MaintenanceScreen} />
-      </Stack.Navigator>
-    )
-  }
-  if (!isAppSetupComplete) {
-    return <FirstRunNavigator />
-  }
-  if (CONFIG.DEBUG.START_WITH_INDEX_SCREEN) {
-    return (
-      <Stack.Navigator initialRouteName={'screens-index'} screenOptions={{headerShown: false}}>
-        <Stack.Screen name={'screens-index'} component={IndexScreen} options={{headerShown: false}} />
-        <Stack.Screen name={'storybook'} component={StorybookScreen} />
-        <Stack.Screen name={'new-wallet'} component={WalletInitNavigator} />
-        <Stack.Screen name={'app-root'} component={WalletNavigator} />
-      </Stack.Navigator>
-    )
-  }
-  if (hasAnyWallet && !isAuthenticated) {
-    return (
-      <Stack.Navigator
-        screenOptions={({route}) => ({
-          title: route.params?.title ?? undefined,
-          ...defaultNavigationOptions,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          ...(defaultStackNavigatorOptions as any),
-        })}
-      >
-        {!isSystemAuthEnabled && (
-          <Stack.Screen
-            name={'custom-pin-auth'}
-            component={CustomPinLoginScreen}
-            options={{title: strings.loginPinTitle}}
-          />
-        )}
-        {isSystemAuthEnabled && canEnableBiometrics && (
-          <Stack.Screen
-            name={'bio-auth'}
-            component={BiometricAuthScreen}
-            options={{headerShown: false}}
-            initialParams={{
-              keyId: installationId,
-              onSuccess: () => {
-                dispatch(signin())
-              },
-              onFail: async (reason, intl: IntlShape) => {
-                if (reason === KeyStore.REJECTIONS.INVALID_KEY) {
-                  if ((await canBiometricEncryptionBeEnabled()) && installationId) {
-                    await recreateAppSignInKeys(installationId)
-                  } else {
-                    await showErrorDialog(errorMessages.biometricsIsTurnedOff, intl)
-                  }
-                }
-              },
-              addWelcomeMessage: true,
-            }}
-          />
-        )}
-        {isSystemAuthEnabled && !canEnableBiometrics && (
-          <Stack.Screen
-            name={'setup-custom-pin'}
-            component={CustomPinScreen}
-            options={{title: strings.customPinTitle}}
-          />
-        )}
-      </Stack.Navigator>
-    )
-  }
-  // note: it makes much more sense to only change the initialRouteName in the
-  // following two cases, but that didn't work (probably bug in react-navigation)
-  if (!hasAnyWallet) {
-    return (
-      <Stack.Navigator screenOptions={{headerShown: false}}>
-        <Stack.Screen name={'new-wallet'} component={WalletInitNavigator} />
-        <Stack.Screen name={'app-root'} component={WalletNavigator} />
-      </Stack.Navigator>
-    )
-  }
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
-      <Stack.Screen name={'app-root'} component={WalletNavigator} />
-      <Stack.Screen name={'new-wallet'} component={WalletInitNavigator} />
+      {/* Initial Route */}
+      <Stack.Group>
+        {isMaintenance && <Stack.Screen name="maintenance" component={MaintenanceScreen} />}
+        {!isAppSetupComplete && !hasAnyWallet && <Stack.Screen name="first-run" component={FirstRunNavigator} />}
+      </Stack.Group>
+
+      {/* Not Authenticated */}
+      {!isAuthenticated && hasAnyWallet && (
+        <Stack.Group>
+          {!isSystemAuthEnabled && (
+            <Stack.Screen
+              name="custom-pin-auth"
+              component={CustomPinLoginScreen}
+              options={{title: strings.loginPinTitle}}
+            />
+          )}
+          {isSystemAuthEnabled && canEnableBiometrics && (
+            <Stack.Screen
+              name="bio-auth-initial"
+              component={BiometricAuthScreen}
+              options={{headerShown: false}}
+              initialParams={{
+                keyId: installationId,
+                onSuccess: () => {
+                  dispatch(signin())
+                },
+                onFail: async (reason: string, intl: IntlShape) => {
+                  if (reason === KeyStore.REJECTIONS.INVALID_KEY) {
+                    if ((await canBiometricEncryptionBeEnabled()) && installationId) {
+                      await recreateAppSignInKeys(installationId)
+                    } else {
+                      await showErrorDialog(errorMessages.biometricsIsTurnedOff, intl)
+                    }
+                  }
+                },
+                addWelcomeMessage: true,
+              }}
+            />
+          )}
+          {isSystemAuthEnabled && !canEnableBiometrics && (
+            <Stack.Screen //
+              name="setup-custom-pin"
+              component={CustomPinScreen}
+              options={{title: strings.customPinTitle}}
+            />
+          )}
+        </Stack.Group>
+      )}
+
+      {/* Authenticated */}
+      {(isAuthenticated || !hasAnyWallet) && (
+        <Stack.Group>
+          <Stack.Screen name="app-root" component={WalletNavigator} />
+          <Stack.Screen name="new-wallet" component={WalletInitNavigator} />
+          <Stack.Screen name="biometrics" component={BiometricAuthScreen} options={{headerShown: false}} />
+        </Stack.Group>
+      )}
+
+      {/* Development */}
+      {__DEV__ && (
+        <Stack.Group>
+          <Stack.Screen name="screens-index" component={IndexScreen} options={{headerShown: false}} />
+          <Stack.Screen name="storybook" component={StorybookScreen} />
+        </Stack.Group>
+      )}
     </Stack.Navigator>
   )
 }
 
 const StoryBook = () => (
   <Stack.Navigator>
-    <Stack.Screen name={'storybook'} component={StorybookScreen} />
+    <Stack.Screen name="storybook" component={StorybookScreen} />
   </Stack.Navigator>
 )
 

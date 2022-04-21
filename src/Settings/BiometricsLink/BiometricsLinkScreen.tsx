@@ -1,4 +1,3 @@
-import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet} from 'react-native'
@@ -9,24 +8,25 @@ import {Button} from '../../components'
 import {errorMessages} from '../../i18n/global-messages'
 import {setSystemAuth, showErrorDialog} from '../../legacy/actions'
 import {canBiometricEncryptionBeEnabled} from '../../legacy/deviceSettings'
-import {SETTINGS_ROUTES} from '../../legacy/RoutesList'
+import {useWalletNavigation} from '../../navigation'
 
 export const BiometricsLinkScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
-  const navigation = useNavigation()
+  const {navigateToSettings} = useWalletNavigation()
   const dispatch = useDispatch()
+
   const linkBiometricsSignIn = async () => {
     if (await canBiometricEncryptionBeEnabled()) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ;(dispatch(setSystemAuth(true)) as any)
-        .then(() => navigation.navigate(SETTINGS_ROUTES.MAIN))
+        .then(() => navigateToSettings())
         .catch(() => showErrorDialog(errorMessages.disableEasyConfirmationFirst, intl))
     } else {
       await showErrorDialog(errorMessages.enableFingerprintsFirst, intl)
     }
   }
-  const cancelLinking = () => navigation.navigate(SETTINGS_ROUTES.MAIN)
+  const cancelLinking = () => navigateToSettings()
 
   return (
     <FingerprintScreenBase
@@ -34,13 +34,13 @@ export const BiometricsLinkScreen = () => {
       subHeadings={[strings.subHeading1, strings.subHeading2]}
       buttons={[
         <Button
-          key={'cancel'}
+          key="cancel"
           outline
           title={strings.notNowButton}
           onPress={cancelLinking}
           containerStyle={styles.cancel}
         />,
-        <Button key={'link'} title={strings.linkButton} onPress={linkBiometricsSignIn} containerStyle={styles.link} />,
+        <Button key="link" title={strings.linkButton} onPress={linkBiometricsSignIn} containerStyle={styles.link} />,
       ]}
     />
   )

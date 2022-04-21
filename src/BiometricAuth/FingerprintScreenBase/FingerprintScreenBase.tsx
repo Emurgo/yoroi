@@ -2,6 +2,7 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Image, Platform, StyleSheet, TouchableOpacity, View} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
+import {SafeAreaView} from 'react-native-safe-area-context'
 
 import chevronLeft from '../../assets/img/chevron_left.png'
 import fingerprintImage from '../../assets/img/fingerprint.png'
@@ -30,47 +31,49 @@ export const FingerprintScreenBase = ({headings, subHeadings, buttons, onGoBack,
 
   return (
     <ScreenBackground style={styles.container}>
-      <StatusBar type="dark" />
+      <SafeAreaView style={{flex: 1}}>
+        <StatusBar type="dark" />
 
-      <View style={[styles.main, onGoBack ? null : styles.mainPadded]}>
-        {onGoBack && (
-          <TouchableOpacity onPress={onGoBack} style={styles.goBack}>
-            <Image source={chevronLeft} style={styles.chevron} />
-          </TouchableOpacity>
-        )}
+        <View style={[styles.main, onGoBack ? null : styles.mainPadded]}>
+          {onGoBack && (
+            <TouchableOpacity onPress={onGoBack} style={styles.goBack}>
+              <Image source={chevronLeft} style={styles.chevron} />
+            </TouchableOpacity>
+          )}
 
-        {headings.map((txt) => (
-          <Text key={txt} style={styles.heading}>
-            {txt}
-          </Text>
-        ))}
+          {headings.map((txt) => (
+            <Text key={txt} style={styles.heading}>
+              {txt}
+            </Text>
+          ))}
 
-        {subHeadings && subHeadings.length > 0 ? (
-          <View style={styles.subHeadingContainer}>
-            {subHeadings.map((txt) => (
-              <Text key={txt} style={styles.subHeading}>
-                {txt}
-              </Text>
-            ))}
-          </View>
-        ) : null}
+          {subHeadings && subHeadings.length > 0 ? (
+            <View style={styles.subHeadingContainer}>
+              {subHeadings.map((txt) => (
+                <Text key={txt} style={styles.subHeading}>
+                  {txt}
+                </Text>
+              ))}
+            </View>
+          ) : null}
 
-        {addWelcomeMessage === true && intl != null && (
-          <View style={styles.welcomeMessageContainer}>
-            <Text style={styles.welcomeMessageText}>{intl.formatMessage(messages.welcomeMessage)}</Text>
-          </View>
-        )}
+          {addWelcomeMessage === true && intl != null && (
+            <View style={styles.welcomeMessageContainer}>
+              <Text style={styles.welcomeMessageText}>{intl.formatMessage(messages.welcomeMessage)}</Text>
+            </View>
+          )}
 
-        {showImage === true && (
-          <View style={styles.imageContainer}>
-            <Image source={fingerprintImage} style={styles.image} />
-          </View>
-        )}
-      </View>
+          {showImage === true && (
+            <View style={styles.imageContainer}>
+              <Image source={fingerprintImage} style={styles.image} />
+            </View>
+          )}
+        </View>
 
-      {error != null && error !== false ? <Text style={styles.error}>{error}</Text> : null}
+        {error != null && error !== false ? <Text style={styles.error}>{error}</Text> : null}
 
-      <View style={styles.controls}>{buttons}</View>
+        <View style={styles.controls}>{buttons}</View>
+      </SafeAreaView>
     </ScreenBackground>
   )
 }

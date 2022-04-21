@@ -22,7 +22,6 @@ describe('ConfirmTx', () => {
       <Provider store={store}>
         <NavigationContainer>
           <ConfirmTx
-            biometricRoute=""
             onSuccess={handleOnSuccess}
             process="signAndSubmit"
             setUseUSB={handleSetUseUSB}

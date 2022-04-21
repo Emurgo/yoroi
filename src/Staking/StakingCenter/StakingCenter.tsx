@@ -4,12 +4,12 @@ import {BigNumber} from 'bignumber.js'
 import React, {useEffect, useState} from 'react'
 import type {IntlShape} from 'react-intl'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet, View} from 'react-native'
+import {ActivityIndicator, View} from 'react-native'
 import {WebView} from 'react-native-webview'
 import {useSelector} from 'react-redux'
 
 import {AccountAutoRefresher} from '../../AccountAutoRefresher'
-import {PleaseWaitModal} from '../../components'
+import {PleaseWaitModal, Spacer} from '../../components'
 import {useLanguage} from '../../i18n'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
 import {showErrorDialog} from '../../legacy/actions'
@@ -20,15 +20,16 @@ import {ObjectValues} from '../../legacy/flow'
 import {normalizeTokenAmount} from '../../legacy/format'
 import {Logger} from '../../legacy/logging'
 import {getNetworkConfigById} from '../../legacy/networks'
-import {STAKING_CENTER_ROUTES} from '../../legacy/RoutesList'
 import {
   accountBalanceSelector,
   defaultNetworkAssetSelector,
+  isFetchingUtxosSelector,
   poolOperatorSelector,
   serverStatusSelector,
   utxosSelector,
 } from '../../legacy/selectors'
 import {RawUtxo} from '../../legacy/types'
+import {StakingCenterRouteNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {DefaultAsset} from '../../types'
 import {UtxoAutoRefresher} from '../../UtxoAutoRefresher'
@@ -38,13 +39,14 @@ import {PoolWarningModal} from '../PoolWarningModal'
 
 export const StakingCenter = () => {
   const intl = useIntl()
-  const navigation = useNavigation()
+  const navigation = useNavigation<StakingCenterRouteNavigation>()
   const [amountToDelegate, setAmountToDelegate] = useState<string | null>(null)
   const [selectedPools, setSelectedPools] = useState<Array<SelectedPool>>([])
   const [reputationInfo, setReputationInfo] = useState({})
   const [showPoolWarning, setShowPoolWarning] = useState(false)
   const [busy, setBusy] = useState(false)
 
+  const isFetchingUtxos = useSelector(isFetchingUtxosSelector)
   const utxos = useSelector(utxosSelector)
   const accountBalance = useSelector(accountBalanceSelector)
   const defaultAsset = useSelector(defaultNetworkAssetSelector)
@@ -54,6 +56,7 @@ export const StakingCenter = () => {
   const wallet = useSelectedWallet()
   const config = getNetworkConfigById(wallet.networkId)
   const isMainnet = config.IS_MAINNET
+
   const nightlyAndDevPoolHashes = getTestStakingPool(wallet.networkId, wallet.provider)
 
   // pools user is currently delegating to
@@ -66,6 +69,9 @@ export const StakingCenter = () => {
   }
 
   const handleOnMessage = async (event) => {
+    if (isFetchingUtxos) {
+      return showErrorDialog(waitSyncDialog, intl)
+    }
     if (event) {
       const selectedPoolHashes: Array<string> = JSON.parse(decodeURI(event.nativeEvent.data))
       Logger.debug('selected pools from explorer:', selectedPoolHashes)
@@ -119,18 +125,20 @@ export const StakingCenter = () => {
   return (
     <>
       {(__DEV__ || (isNightly() && !isMainnet)) && (
-        <View style={styles.container}>
+        <View style={{flex: 1}}>
           <PoolDetailScreen
             onPressDelegate={(poolHash) => handleOnPress(poolHash)}
-            disabled={!nightlyAndDevPoolHashes.length}
+            disabled={!nightlyAndDevPoolHashes.length || isFetchingUtxos || !utxos}
           />
         </View>
       )}
       {(isMainnet || SHOW_PROD_POOLS_IN_DEV) && (
         <>
-          <View style={styles.container}>
+          <View style={{flex: 1, backgroundColor: '#fff'}}>
+            <Spacer height={8} />
             <UtxoAutoRefresher />
             <AccountAutoRefresher />
+            {isFetchingUtxos && <ActivityIndicator color="black" />}
             <WebView
               source={{
                 uri: prepareStakingURL(poolList, amountToDelegate, languageCode),
@@ -155,7 +163,7 @@ export const StakingCenter = () => {
             onRequestClose={() => setShowPoolWarning(false)}
             reputationInfo={reputationInfo}
           />
-          <PleaseWaitModal title={''} spinnerText={intl.formatMessage(globalMessages.pleaseWait)} visible={busy} />
+          <PleaseWaitModal title="" spinnerText={intl.formatMessage(globalMessages.pleaseWait)} visible={busy} />
         </>
       )}
     </>
@@ -170,6 +178,17 @@ const noPoolDataDialog = defineMessages({
   message: {
     id: 'components.stakingcenter.noPoolDataDialog.message',
     defaultMessage: '!!!The data from the stake pool(s) you selected is invalid. Please try again',
+  },
+})
+
+const waitSyncDialog = defineMessages({
+  title: {
+    id: 'global.tryAgain',
+    defaultMessage: '!!!Try again',
+  },
+  message: {
+    id: 'global.actions.dialogs.walletSynchronizing',
+    defaultMessage: '!!!Wallet is syncronizing',
   },
 })
 
@@ -204,7 +223,7 @@ const navigateToDelegationConfirm = async (
   selectedPools: Array<SelectedPool>,
   defaultAsset: DefaultAsset,
   intl: IntlShape,
-  navigation,
+  navigation: StakingCenterRouteNavigation,
   serverStatus: ServerStatus,
 ) => {
   try {
@@ -217,8 +236,8 @@ const navigateToDelegationConfirm = async (
       defaultAsset,
       serverStatus.serverTime,
     )
-    navigation.navigate(STAKING_CENTER_ROUTES.DELEGATION_CONFIRM, {
-      poolName: selectedPool.poolName,
+    navigation.navigate('delegation-confirmation', {
+      poolName: selectedPool?.poolName ?? '',
       poolHash: selectedPool.poolHash,
       transactionData,
     })
@@ -302,9 +321,3 @@ const _handleSelectedPoolHashes = async (
     }
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-})

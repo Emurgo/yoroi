@@ -2,7 +2,6 @@ import _ from 'lodash'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {Banner, Button, OfflineBanner, Spacer, StatusBar} from '../components'
@@ -37,7 +36,7 @@ export const ReceiveScreen = () => {
   }, [dispatch, isUsedAddressIndex])
 
   return (
-    <SafeAreaView edges={['left', 'right']} style={styles.safeAreaView}>
+    <View style={styles.root}>
       <StatusBar type={UI_V2 ? 'light' : 'dark'} />
       <OfflineBanner />
 
@@ -50,7 +49,7 @@ export const ReceiveScreen = () => {
             {currentAddress ? (
               <AddressDetail address={currentAddress} />
             ) : (
-              <ActivityIndicator size={'large'} color={'black'} />
+              <ActivityIndicator size="large" color="black" />
             )}
           </View>
 
@@ -70,7 +69,7 @@ export const ReceiveScreen = () => {
           <UsedAddresses />
         </Content>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   )
 }
 
@@ -105,7 +104,7 @@ const useStrings = () => {
 }
 
 const styles = StyleSheet.create({
-  safeAreaView: {
+  root: {
     flex: 1,
     backgroundColor: COLORS.WHITE,
   },

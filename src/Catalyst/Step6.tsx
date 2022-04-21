@@ -2,23 +2,14 @@ import Clipboard from '@react-native-community/clipboard'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {
-  ActivityIndicator,
-  Image,
-  NativeModules,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import {Image, NativeModules, Platform, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 import QRCodeSVG from 'react-native-qrcode-svg'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import copyImage from '../assets/img/copyd.png'
 import {Button, ProgressStep, Spacer, Text} from '../components'
 import {confirmationMessages} from '../i18n/global-messages'
-import {WALLET_ROOT_ROUTES} from '../legacy/RoutesList'
+import {useWalletNavigation} from '../navigation'
 import {COLORS} from '../theme'
 import {CatalystBackupCheckModal} from './CatalystBackupCheckModal'
 import {Actions, Description, Title} from './components'
@@ -27,18 +18,18 @@ import {VotingRegTxData} from './hooks'
 const {FlagSecure} = NativeModules
 
 type Props = {
-  votingRegTxData?: VotingRegTxData
+  votingRegTxData: VotingRegTxData
 }
 export const Step6 = ({votingRegTxData}: Props) => {
+  useBlockGoBack()
   const strings = useStrings()
-  const navigation = useNavigation()
+  const {resetToTxHistory} = useWalletNavigation()
   const [countDown, setCountDown] = useState<number>(5)
+  const [showBackupWarningModal, setShowBackupWarningModal] = useState(false)
 
   useEffect(() => {
     countDown > 0 && setTimeout(() => setCountDown(countDown - 1), 1000)
   }, [countDown])
-
-  const [showBackupWarningModal, setShowBackupWarningModal] = useState<boolean>(false)
 
   useFocusEffect(
     // eslint-disable-next-line consistent-return
@@ -82,20 +73,16 @@ export const Step6 = ({votingRegTxData}: Props) => {
 
         <Spacer height={32} />
 
-        {votingRegTxData?.catalystSKHexEncrypted ? (
-          <QRCode text={votingRegTxData?.catalystSKHexEncrypted} />
-        ) : (
-          <ActivityIndicator size={'large'} color={'black'} />
-        )}
+        <QRCode text={votingRegTxData.catalystSKHexEncrypted} />
 
         <Spacer height={32} />
 
         <Text>{strings.secretCode}</Text>
 
         <SecretCodeBox>
-          <Text style={{flex: 1}}>{votingRegTxData?.catalystSKHexEncrypted}</Text>
+          <Text style={{flex: 1}}>{votingRegTxData.catalystSKHexEncrypted}</Text>
           <Spacer width={16} />
-          <CopyButton text={votingRegTxData?.catalystSKHexEncrypted || ''} />
+          <CopyButton text={votingRegTxData.catalystSKHexEncrypted} />
         </SecretCodeBox>
       </ScrollView>
 
@@ -110,7 +97,9 @@ export const Step6 = ({votingRegTxData}: Props) => {
       <CatalystBackupCheckModal
         visible={showBackupWarningModal}
         onRequestClose={() => setShowBackupWarningModal(false)}
-        onConfirm={() => navigation.navigate(WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES)}
+        onConfirm={() => {
+          resetToTxHistory()
+        }}
       />
     </SafeAreaView>
   )
@@ -128,6 +117,19 @@ const CopyButton = ({text}: {text: string}) => (
     <Image source={copyImage} />
   </TouchableOpacity>
 )
+
+const useBlockGoBack = () => {
+  const navigation = useNavigation()
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+      if (e.data.action.type !== 'RESET') {
+        e.preventDefault()
+      }
+    })
+    return () => unsubscribe()
+  }, [navigation])
+}
 
 const messages = defineMessages({
   subTitle: {

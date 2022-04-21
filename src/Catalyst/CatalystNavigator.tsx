@@ -2,9 +2,8 @@ import {createStackNavigator} from '@react-navigation/stack'
 import React, {useState} from 'react'
 import {useIntl} from 'react-intl'
 
-import {BiometricAuthScreen} from '../BiometricAuth'
 import globalMessages from '../i18n/global-messages'
-import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../navigationOptions'
+import {CatalystRoutes, defaultStackNavigationOptions} from '../navigation'
 import {VotingRegTxData} from './hooks'
 import {Step1} from './Step1'
 import {Step2} from './Step2'
@@ -13,32 +12,7 @@ import {Step4} from './Step4'
 import {Step5} from './Step5'
 import {Step6} from './Step6'
 
-export const CATALYST_ROUTES = {
-  ROOT: 'catalyst-router',
-  STEP1: 'catalyst-landing',
-  STEP2: 'catalyst-generate-pin',
-  STEP3: 'catalyst-confirm-pin',
-  STEP4: 'catalyst-generate-trx',
-  STEP5: 'catalyst-transaction',
-  STEP6: 'catalyst-qr-code',
-  BIOMETRICS_SIGNING: 'catalyst-biometrics-signing',
-} as const
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-type CatalystNavigatorRoutes = {
-  'catalyst-router': any
-  'catalyst-landing': any
-  'catalyst-generate-pin': any
-  'catalyst-confirm-pin': any
-  'catalyst-generate-trx': any
-  'catalyst-transaction': any
-  'catalyst-qr-code': any
-  'catalyst-biometrics-signing': any
-}
-/* eslint-enable @typescript-eslint/no-explicit-any */
-
-const Stack = createStackNavigator<CatalystNavigatorRoutes>()
-
+const Stack = createStackNavigator<CatalystRoutes>()
 export const CatalystNavigator = () => {
   const strings = useStrings()
   const [pin, setPin] = useState('')
@@ -47,38 +21,33 @@ export const CatalystNavigator = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-        ...defaultStackNavigatorOptions,
+        ...defaultStackNavigationOptions,
         title: strings.title,
       }}
-      initialRouteName={CATALYST_ROUTES.STEP1}
+      initialRouteName="catalyst-landing"
     >
-      <Stack.Screen name={CATALYST_ROUTES.STEP1} options={defaultNavigationOptions}>
-        {() => <Step1 setPin={setPin} />}
-      </Stack.Screen>
-      <Stack.Screen name={CATALYST_ROUTES.STEP2} options={defaultNavigationOptions}>
-        {() => <Step2 pin={pin} />}
-      </Stack.Screen>
-      <Stack.Screen name={CATALYST_ROUTES.STEP3} options={defaultNavigationOptions}>
+      <Stack.Screen name="catalyst-landing">{() => <Step1 setPin={setPin} />}</Stack.Screen>
+      <Stack.Screen name="catalyst-generate-pin">{() => <Step2 pin={pin} />}</Stack.Screen>
+      <Stack.Screen name="catalyst-confirm-pin">
         {() => <Step3 pin={pin} setVotingRegTxData={setVotingRegTxData} />}
       </Stack.Screen>
-      <Stack.Screen name={CATALYST_ROUTES.STEP4} options={defaultNavigationOptions}>
+      <Stack.Screen name="catalyst-generate-trx">
         {() => <Step4 pin={pin} setVotingRegTxData={setVotingRegTxData} />}
       </Stack.Screen>
-      <Stack.Screen name={CATALYST_ROUTES.STEP5} options={defaultNavigationOptions}>
+      <Stack.Screen name="catalyst-transaction">
         {() => {
           if (!votingRegTxData) throw new Error('invalid state')
 
           return <Step5 votingRegTxData={votingRegTxData} />
         }}
       </Stack.Screen>
-      <Stack.Screen name={CATALYST_ROUTES.STEP6} options={defaultNavigationOptions}>
-        {() => <Step6 votingRegTxData={votingRegTxData} />}
+      <Stack.Screen name="catalyst-qr-code" options={{...defaultStackNavigationOptions, headerLeft: () => null}}>
+        {() => {
+          if (!votingRegTxData) throw new Error('invalid state')
+
+          return <Step6 votingRegTxData={votingRegTxData} />
+        }}
       </Stack.Screen>
-      <Stack.Screen
-        name={CATALYST_ROUTES.BIOMETRICS_SIGNING}
-        component={BiometricAuthScreen}
-        options={{headerShown: false}}
-      />
     </Stack.Navigator>
   )
 }

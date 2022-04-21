@@ -4,11 +4,11 @@ import {SafeAreaView, ScrollView, StyleSheet, TouchableOpacity} from 'react-nati
 
 import {Button, StatusBar, Text} from '../components'
 import storage from '../legacy/storage'
-import {ROOT_ROUTES} from './RoutesList'
+import {AppRoutes} from '../navigation'
 
-const routes = [
-  {label: 'Storybook', path: ROOT_ROUTES.STORYBOOK},
-  {label: 'Skip to wallet list', path: ROOT_ROUTES.WALLET},
+const routes: Array<{label: string; path: keyof AppRoutes}> = [
+  {label: 'Storybook', path: 'storybook'},
+  {label: 'Skip to wallet list', path: 'app-root'},
 ]
 
 const styles = StyleSheet.create({
