@@ -6,7 +6,7 @@ import DeviceInfo from 'react-native-device-info'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {StatusBar} from '../../components'
-import {setAppSettingField, setEasyConfirmation, setSystemAuth} from '../../legacy/actions'
+import {setAppSettingField} from '../../legacy/actions'
 import {APP_SETTINGS_KEYS} from '../../legacy/appSettings'
 import {CONFIG, isNightly} from '../../legacy/config'
 import {canBiometricEncryptionBeEnabled, isBiometricEncryptionHardwareSupported} from '../../legacy/deviceSettings'
@@ -18,8 +18,6 @@ import {
   isSystemAuthEnabledSelector,
   sendCrashReportsSelector,
 } from '../../legacy/selectors'
-import {useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../SelectedWallet'
-import {walletManager} from '../../yoroi-wallets'
 import {NavigatedSettingsItem, SettingsBuildItem, SettingsItem, SettingsSection} from '../SettingsItems'
 
 const version = DeviceInfo.getVersion()
@@ -32,8 +30,6 @@ export const ApplicationSettingsScreen = () => {
   const isSystemAuthEnabled = useSelector(isSystemAuthEnabledSelector)
   const installationId = useSelector(installationIdSelector)
   const dispatch = useDispatch()
-  const walletMeta = useSelectedWalletMeta()
-  const setSelectedWalletMeta = useSetSelectedWalletMeta()
 
   const setCrashReporting = (value: boolean) => {
     dispatch(setAppSettingField(APP_SETTINGS_KEYS.SEND_CRASH_REPORTS, value))
@@ -43,20 +39,7 @@ export const ApplicationSettingsScreen = () => {
     if (isSystemAuthEnabled) {
       navigation.navigate(SETTINGS_ROUTES.BIO_AUTHENTICATE, {
         keyId: installationId,
-        onSuccess: () =>
-          navigation.navigate(SETTINGS_ROUTES.SETUP_CUSTOM_PIN, {
-            onSuccess: async () => {
-              await dispatch(setSystemAuth(false))
-              await walletManager.disableEasyConfirmation()
-              dispatch(setEasyConfirmation(false))
-              if (!walletMeta) throw new Error('No wallet meta')
-              setSelectedWalletMeta({
-                ...walletMeta,
-                isEasyConfirmationEnabled: false,
-              })
-              navigation.navigate(SETTINGS_ROUTES.MAIN)
-            },
-          }),
+        onSuccess: () => navigation.navigate(SETTINGS_ROUTES.SETUP_CUSTOM_PIN),
         onFail: (reason) => {
           if (reason === KeyStore.REJECTIONS.CANCELED) {
             navigation.navigate(SETTINGS_ROUTES.MAIN)

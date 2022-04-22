@@ -1,19 +1,23 @@
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs'
+import {useNavigation} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
+import {useDispatch} from 'react-redux'
 
+import {ChangePinScreen, CreatePinScreen} from '../auth'
 import {BiometricAuthScreen} from '../BiometricAuth'
+import {setEasyConfirmation, setSystemAuth} from '../legacy/actions'
 import {SETTINGS_ROUTES, SETTINGS_TABS} from '../legacy/RoutesList'
 import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../navigationOptions'
+import {useSelectedWalletMeta, useSetSelectedWalletMeta} from '../SelectedWallet'
 import {COLORS} from '../theme'
+import {walletManager} from '../yoroi-wallets'
 import {ApplicationSettingsScreen} from './ApplicationSettings'
 import {BiometricsLinkScreen} from './BiometricsLink/'
 import {ChangeLanguageScreen} from './ChangeLanguage'
 import {ChangePasswordScreen} from './ChangePassword'
-import {ChangePinScreen} from './ChangePin'
 import {ChangeWalletName} from './ChangeWalletName'
-import {CustomPinScreen} from './CustomPin'
 import {RemoveWalletScreen} from './RemoveWallet'
 import {SupportScreen} from './Support'
 import {TermsOfServiceScreen} from './TermsOfService'
@@ -38,6 +42,10 @@ const Stack = createStackNavigator<{
 /* eslint-enable @typescript-eslint/no-explicit-any */
 export const SettingsScreenNavigator = () => {
   const strings = useStrings()
+  const navigation = useNavigation()
+  const dispatch = useDispatch()
+  const setSelectedWalletMeta = useSetSelectedWalletMeta()
+  const walletMeta = useSelectedWalletMeta()
 
   return (
     <Stack.Navigator
@@ -94,7 +102,6 @@ export const SettingsScreenNavigator = () => {
       />
       <Stack.Screen
         name={SETTINGS_ROUTES.CHANGE_CUSTOM_PIN}
-        component={ChangePinScreen}
         options={{
           title: strings.changeCustomPinTitle,
           headerStyle: {
@@ -102,17 +109,31 @@ export const SettingsScreenNavigator = () => {
             elevation: 0, // turn off header shadows on Android
           },
         }}
-      />
+      >
+        {() => <ChangePinScreen onDone={() => navigation.goBack()} />}
+      </Stack.Screen>
       <Stack.Screen
         name={SETTINGS_ROUTES.BIO_AUTHENTICATE}
         component={BiometricAuthScreen}
         options={{headerShown: false}}
       />
-      <Stack.Screen
-        name={SETTINGS_ROUTES.SETUP_CUSTOM_PIN}
-        component={CustomPinScreen}
-        options={{title: strings.customPinTitle}}
-      />
+      <Stack.Screen name={SETTINGS_ROUTES.SETUP_CUSTOM_PIN} options={{title: strings.customPinTitle}}>
+        {() => (
+          <CreatePinScreen
+            onDone={async () => {
+              await dispatch(setSystemAuth(false))
+              await walletManager.disableEasyConfirmation()
+              dispatch(setEasyConfirmation(false))
+              if (!walletMeta) throw new Error('No wallet meta')
+              setSelectedWalletMeta({
+                ...walletMeta,
+                isEasyConfirmationEnabled: false,
+              })
+              navigation.navigate(SETTINGS_ROUTES.MAIN)
+            }}
+          />
+        )}
+      </Stack.Screen>
     </Stack.Navigator>
   )
 }

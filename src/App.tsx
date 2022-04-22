@@ -9,7 +9,7 @@ import {enableScreens} from 'react-native-screens'
 import {QueryClient, QueryClientProvider} from 'react-query'
 import {useDispatch, useSelector} from 'react-redux'
 
-import AppNavigator from './AppNavigator'
+import {AppNavigator} from './AppNavigator'
 import {initApp} from './legacy/actions'
 import {isAppInitializedSelector} from './legacy/selectors'
 import {SelectedWalletMetaProvider, SelectedWalletProvider} from './SelectedWallet'
