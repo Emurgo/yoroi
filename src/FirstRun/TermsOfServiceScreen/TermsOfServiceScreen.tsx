@@ -6,16 +6,18 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch} from 'react-redux'
 
 import {Button, Checkbox, PleaseWaitModal, Spacer, StatusBar} from '../../components'
+import {useLanguage} from '../../i18n'
 import globalMessages from '../../i18n/global-messages'
 import {acceptAndSaveTos, setSystemAuth, signin} from '../../legacy/actions'
 import {CONFIG} from '../../legacy/config'
 import {canBiometricEncryptionBeEnabled} from '../../legacy/deviceSettings'
+import {TermsOfService} from '../../Legal'
 import {FirstRunRouteNavigation} from '../../navigation'
-import {TermsOfService} from './TermsOfService'
 
 export const TermsOfServiceScreen = () => {
   const strings = useStrings()
   const navigation = useNavigation<FirstRunRouteNavigation>()
+  const {languageCode} = useLanguage()
   const [acceptedTos, setAcceptedTos] = React.useState(false)
   const [savingConsent, setSavingConsent] = React.useState(false)
 
@@ -49,7 +51,7 @@ export const TermsOfServiceScreen = () => {
       <StatusBar type="dark" />
 
       <ScrollView contentContainerStyle={styles.contentContainer}>
-        <TermsOfService />
+        <TermsOfService languageCode={languageCode} />
       </ScrollView>
 
       <Footer>
