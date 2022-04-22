@@ -130,7 +130,7 @@
     "react-markdown": "4.3.1",
     "react-native": "0.64.2",
     "react-native-background-timer": "2.4.1",
-    "react-native-ble-plx": "2.0.2",
+    "react-native-ble-plx": "^2.0.2",
     "react-native-blockies-svg": "git+https://github.com/Emurgo/react-native-blockies-svg",
     "react-native-bootsplash": "3.2.3",
     "react-native-camera": "^4.2.1",

@@ -21,10 +21,10 @@ export const UnusedAddresses = () => {
       </Header>
 
       {addresses.map((address, index) => (
-        <>
-          <UnusedAddress key={address} address={address} onPress={() => setAddress(address)} />
+        <React.Fragment key={address}>
+          <UnusedAddress address={address} onPress={() => setAddress(address)} />
           {index !== addresses.length - 1 && <Spacer height={16} />}
-        </>
+        </React.Fragment>
       ))}
 
       {address && <Modals address={address} onDone={() => setAddress()} />}
@@ -44,10 +44,10 @@ export const UsedAddresses = () => {
       </Header>
 
       {addresses.map((address, index) => (
-        <>
-          <UsedAddress key={address} address={address} onPress={() => setAddress(address)} />
+        <React.Fragment key={address}>
+          <UsedAddress address={address} onPress={() => setAddress(address)} />
           {index !== addresses.length - 1 && <Spacer height={16} />}
-        </>
+        </React.Fragment>
       ))}
 
       {address && <Modals address={address} onDone={() => setAddress()} />}
