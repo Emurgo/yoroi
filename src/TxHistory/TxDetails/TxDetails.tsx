@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useRoute} from '@react-navigation/native'
 import {BigNumber} from 'bignumber.js'
-import _ from 'lodash'
 import React, {useState} from 'react'
 import {defineMessages, IntlShape, useIntl} from 'react-intl'
 import {Image, LayoutAnimation, Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
@@ -43,22 +42,18 @@ export const TxDetails = () => {
   const transactions = useSelector(transactionsInfoSelector)
   const [expandedIn, setExpandedIn] = useState(false)
   const [expandedOut, setExpandedOut] = useState(false)
-  const [addressDetail, setAddressDetail] = React.useState(null)
+  const [addressDetail, setAddressDetail] = React.useState<null | string>(null)
   const transaction = transactions[id]
 
-  const showModalForAddress = (address) => {
-    setAddressDetail(address)
-  }
-
-  const hideAddressModal = () => {
-    setAddressDetail(null)
-  }
-
-  const {fromFiltered, toFiltered, cntOmittedTo} =
-    transaction && getShownAddresses(intl, transaction, internalAddressIndex, externalAddressIndex)
-  const txFee: null | BigNumber = transaction.fee ? MultiToken.fromArray(transaction.fee).getDefault() : null
+  const {fromFiltered, toFiltered, cntOmittedTo} = getShownAddresses(
+    intl,
+    transaction,
+    internalAddressIndex,
+    externalAddressIndex,
+  )
+  const txFee = transaction.fee ? MultiToken.fromArray(transaction.fee).getDefault() : null
   const amountAsMT = MultiToken.fromArray(transaction.amount)
-  const amount: BigNumber = amountAsMT.getDefault()
+  const amount = amountAsMT.getDefault()
 
   const toggleExpandIn = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
@@ -86,8 +81,8 @@ export const TxDetails = () => {
         <View style={styles.content}>
           <Label>{strings.fromAddresses}</Label>
           {fromFiltered.map((item) => (
-            <View key={item.address}>
-              <AddressEntry {...item} showModalForAddress={showModalForAddress} />
+            <View key={item.id}>
+              <AddressEntry {...item} showModalForAddress={setAddressDetail} />
               {item.assets.length > 0 && (
                 <TouchableOpacity style={styles.assetsExpandable} activeOpacity={0.5} onPress={() => toggleExpandIn()}>
                   <Text style={styles.assetsTitle}>{` -${item.assets.length} ${strings.assetsLabel} `}</Text>
@@ -102,8 +97,8 @@ export const TxDetails = () => {
             <Label>{strings.toAddresses}</Label>
           </View>
           {toFiltered.map((item) => (
-            <View key={item.address}>
-              <AddressEntry {...item} showModalForAddress={showModalForAddress} />
+            <View key={item.id}>
+              <AddressEntry {...item} showModalForAddress={setAddressDetail} />
               {item.assets.length > 0 && (
                 <TouchableOpacity style={styles.assetsExpandable} activeOpacity={0.5} onPress={() => toggleExpandOut()}>
                   <Text style={styles.assetsTitle}>{` +${item.assets.length} ${strings.assetsLabel} `}</Text>
@@ -135,9 +130,9 @@ export const TxDetails = () => {
       {addressDetail && (
         <AddressModal
           visible
-          onRequestClose={hideAddressModal}
+          onRequestClose={() => setAddressDetail(null)}
           address={addressDetail}
-          onAddressVerify={hideAddressModal}
+          onAddressVerify={() => setAddressDetail(null)}
         />
       )}
     </View>
@@ -244,14 +239,16 @@ const getShownAddresses = (
   }[transaction.direction] as any
 
   // TODO(ppershing): decide on importance based on Tx direction
-  const fromAddresses = _.uniq(transaction.inputs).map(({address, assets}) => ({
+  const fromAddresses = transaction.inputs.map(({address, assets}, index) => ({
+    id: index,
     address,
     assets,
     path: getPath(address),
     isHighlighted: isHighlightedFrom(address),
   }))
 
-  const toAddresses = _.uniq(transaction.outputs).map(({address, assets}) => ({
+  const toAddresses = transaction.outputs.map(({address, assets}, index) => ({
+    id: index,
     address,
     assets,
     path: getPath(address),
