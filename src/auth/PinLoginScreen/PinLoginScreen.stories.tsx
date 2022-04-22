@@ -5,7 +5,7 @@ import React from 'react'
 import {StorageProvider} from '../../Storage'
 import {PinLoginScreen} from './PinLoginScreen'
 
-storiesOf('CustomPinLoginScreen', module).add('Default', () => (
+storiesOf('PinLoginScreen', module).add('Default', () => (
   <StorageProvider
     storage={{
       ...AsyncStorage,
