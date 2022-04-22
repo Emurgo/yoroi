@@ -138,7 +138,7 @@ export const byronAddrToHex = async (base58Addr: string) => {
 export const toHexOrBase58 = async (address: CardanoTypes.Address) => {
   const asByron = await ByronAddress.fromAddress(address)
 
-  if (asByron == null) {
+  if (!asByron.hasValue()) {
     return Buffer.from(await address.toBytes()).toString('hex')
   }
 

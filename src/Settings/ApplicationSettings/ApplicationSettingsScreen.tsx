@@ -5,7 +5,7 @@ import DeviceInfo from 'react-native-device-info'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {StatusBar} from '../../components'
-import {setAppSettingField, setEasyConfirmation, setSystemAuth} from '../../legacy/actions'
+import {setAppSettingField} from '../../legacy/actions'
 import {APP_SETTINGS_KEYS} from '../../legacy/appSettings'
 import {CONFIG, isNightly} from '../../legacy/config'
 import {canBiometricEncryptionBeEnabled, isBiometricEncryptionHardwareSupported} from '../../legacy/deviceSettings'
@@ -17,8 +17,6 @@ import {
   sendCrashReportsSelector,
 } from '../../legacy/selectors'
 import {useWalletNavigation} from '../../navigation'
-import {useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../SelectedWallet'
-import {walletManager} from '../../yoroi-wallets'
 import {NavigatedSettingsItem, SettingsBuildItem, SettingsItem, SettingsSection} from '../SettingsItems'
 
 const version = DeviceInfo.getVersion()
@@ -31,8 +29,6 @@ export const ApplicationSettingsScreen = () => {
   const isSystemAuthEnabled = useSelector(isSystemAuthEnabledSelector)
   const installationId = useSelector(installationIdSelector)
   const dispatch = useDispatch()
-  const walletMeta = useSelectedWalletMeta()
-  const setSelectedWalletMeta = useSetSelectedWalletMeta()
 
   const setCrashReporting = (value: boolean) => {
     dispatch(setAppSettingField(APP_SETTINGS_KEYS.SEND_CRASH_REPORTS, value))
@@ -44,26 +40,7 @@ export const ApplicationSettingsScreen = () => {
     if (isSystemAuthEnabled) {
       navigation.navigate('biometrics', {
         keyId: installationId,
-        onSuccess: () =>
-          navigation.navigate('app-root', {
-            screen: 'settings',
-            params: {
-              screen: 'setup-custom-pin',
-              params: {
-                onSuccess: async () => {
-                  await dispatch(setSystemAuth(false))
-                  await walletManager.disableEasyConfirmation()
-                  dispatch(setEasyConfirmation(false))
-                  if (!walletMeta) throw new Error('No wallet meta')
-                  setSelectedWalletMeta({
-                    ...walletMeta,
-                    isEasyConfirmationEnabled: false,
-                  })
-                  navigateToSettings()
-                },
-              },
-            },
-          }),
+        onSuccess: () => navigation.navigate('setup-custom-pin'),
         onFail: (reason) => {
           if (reason === KeyStore.REJECTIONS.CANCELED) {
             navigateToSettings()

@@ -11,14 +11,12 @@ function loadStories() {
 	require('../src/Dashboard/Dashboard.stories');
 	require('../src/Dashboard/StakePoolInfos.stories');
 	require('../src/Dashboard/WithdrawStakingRewards/WithdrawalDialog/TransferSummary/TransferSummary.stories');
-	require('../src/FirstRun/CustomPinScreen/CustomPinScreen.stories');
 	require('../src/FirstRun/LanguagePickerScreen/LanguagePickerScreen.stories');
 	require('../src/FirstRun/TermsOfServiceScreen/TermsOfServiceScreen.stories');
 	require('../src/HW/Instructions/Instructions.stories');
 	require('../src/HW/LedgerConnect/DeviceItem/DeviceItem.stories');
 	require('../src/HW/LedgerConnect/LedgerConnect.stories');
 	require('../src/HW/LedgerTransportSwitchModal/LedgerTransportSwitchModal.stories');
-	require('../src/Login/CustomPinLoginScreen.stories');
 	require('../src/MaintenanceScreen.stories');
 	require('../src/Menu/Menu.stories');
 	require('../src/Receive/AddressModal.stories');
@@ -35,7 +33,6 @@ function loadStories() {
 	require('../src/Settings/ChangeLanguage/ChangeLanguageScreen.stories');
 	require('../src/Settings/ChangePassword/ChangePasswordScreen.stories');
 	require('../src/Settings/ChangeWalletName/ChangeWalletName.stories');
-	require('../src/Settings/CustomPin/CustomPinScreen.stories');
 	require('../src/Settings/RemoveWallet/RemoveWalletScreen.stories');
 	require('../src/Settings/Support/SupportScreen.stories');
 	require('../src/Settings/TermsOfService/TermsOfServiceScreen.stories');
@@ -71,7 +68,11 @@ function loadStories() {
 	require('../src/WalletInit/WalletInit/ExpandableItem/ExpandableItem.stories');
 	require('../src/WalletInit/WalletInit/WalletInitScreen.stories');
 	require('../src/WalletInit/WalletNameForm/WalletNameForm.stories');
-	require('../src/auth/PinRegistration/PinRegistrationForm.stories');
+	require('../src/auth/ChangePinScreen/ChangePinScreen.stories');
+	require('../src/auth/CheckPinInput/CheckPinInput.stories');
+	require('../src/auth/CreatePinInput/CreatePinInput.stories');
+	require('../src/auth/CreatePinScreen/CreatePinScreen.stories');
+	require('../src/auth/PinLoginScreen/PinLoginScreen.stories');
 	require('../src/components/Boundary/Boundary.stories');
 	require('../src/components/Button/Button.stories');
 	require('../src/components/Checkbox/Checkbox.stories');
@@ -95,14 +96,12 @@ const stories = [
 	'../src/Dashboard/Dashboard.stories',
 	'../src/Dashboard/StakePoolInfos.stories',
 	'../src/Dashboard/WithdrawStakingRewards/WithdrawalDialog/TransferSummary/TransferSummary.stories',
-	'../src/FirstRun/CustomPinScreen/CustomPinScreen.stories',
 	'../src/FirstRun/LanguagePickerScreen/LanguagePickerScreen.stories',
 	'../src/FirstRun/TermsOfServiceScreen/TermsOfServiceScreen.stories',
 	'../src/HW/Instructions/Instructions.stories',
 	'../src/HW/LedgerConnect/DeviceItem/DeviceItem.stories',
 	'../src/HW/LedgerConnect/LedgerConnect.stories',
 	'../src/HW/LedgerTransportSwitchModal/LedgerTransportSwitchModal.stories',
-	'../src/Login/CustomPinLoginScreen.stories',
 	'../src/MaintenanceScreen.stories',
 	'../src/Menu/Menu.stories',
 	'../src/Receive/AddressModal.stories',
@@ -119,7 +118,6 @@ const stories = [
 	'../src/Settings/ChangeLanguage/ChangeLanguageScreen.stories',
 	'../src/Settings/ChangePassword/ChangePasswordScreen.stories',
 	'../src/Settings/ChangeWalletName/ChangeWalletName.stories',
-	'../src/Settings/CustomPin/CustomPinScreen.stories',
 	'../src/Settings/RemoveWallet/RemoveWalletScreen.stories',
 	'../src/Settings/Support/SupportScreen.stories',
 	'../src/Settings/TermsOfService/TermsOfServiceScreen.stories',
@@ -155,7 +153,11 @@ const stories = [
 	'../src/WalletInit/WalletInit/ExpandableItem/ExpandableItem.stories',
 	'../src/WalletInit/WalletInit/WalletInitScreen.stories',
 	'../src/WalletInit/WalletNameForm/WalletNameForm.stories',
-	'../src/auth/PinRegistration/PinRegistrationForm.stories',
+	'../src/auth/ChangePinScreen/ChangePinScreen.stories',
+	'../src/auth/CheckPinInput/CheckPinInput.stories',
+	'../src/auth/CreatePinInput/CreatePinInput.stories',
+	'../src/auth/CreatePinScreen/CreatePinScreen.stories',
+	'../src/auth/PinLoginScreen/PinLoginScreen.stories',
 	'../src/components/Boundary/Boundary.stories',
 	'../src/components/Button/Button.stories',
 	'../src/components/Checkbox/Checkbox.stories',
