@@ -34,7 +34,7 @@ const tosByCode = {
   'sk-SK': SK_SK_TOS,
 }
 
-export const loadTOS = async (languageCode: string) => {
+export const loadTOS = async (languageCode: string): Promise<string> => {
   const tosFile = tosByCode[languageCode]
   const tos = await loadLocalResource(tosFile)
   return tos
