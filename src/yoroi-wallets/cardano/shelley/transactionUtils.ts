@@ -11,7 +11,6 @@ import {newAdaUnsignedTx, sendAllUnsignedTx} from './transactions'
 export type CreateUnsignedTxResponse = HaskellShelleyTxSignRequest
 
 export const createUnsignedTx = async (request: CreateUnsignedTxRequest): Promise<CreateUnsignedTxResponse> => {
-  console.log('QWE', 'createUnsignedTs')
   Logger.debug('createUnsignedTx called', request)
   const {changeAddr, receiver, addressedUtxos, absSlotNumber, auxiliaryData, networkConfig} = request
   try {
