@@ -32,7 +32,7 @@ import StorybookScreen from './StorybookScreen'
 import {WalletInitNavigator} from './WalletInit/WalletInitNavigator'
 import {WalletNavigator} from './WalletNavigator'
 
-const IS_STORYBOOK = !env.getBoolean('IS_STORYBOOK', false)
+const IS_STORYBOOK = env.getBoolean('IS_STORYBOOK', false)
 
 export const AppNavigator = () => {
   return (
