@@ -11,10 +11,6 @@ storiesOf('CreatePinScreen', module).add('Default', () => {
     <StorageProvider
       storage={{
         ...AsyncStorage,
-        // setItem: (key, data) => {
-        //   action('setItem')(key, data)
-        //   return Promise.resolve()
-        // },
       }}
     >
       <CreatePinScreen onDone={() => action('onDone')} />
