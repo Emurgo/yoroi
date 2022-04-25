@@ -387,8 +387,6 @@ export const newAdaUnsignedTxFromUtxo = async (
   {
     // recall: we might have some implicit input to start with from deposit refunds
     const implicitSum = await txBuilder.getImplicitInput()
-    const foo = (await implicitSum.multiasset()).hasValue()
-    console.log('QWE', foo)
 
     // add utxos until we have enough to send the transaction
     for (const utxo of utxos) {
