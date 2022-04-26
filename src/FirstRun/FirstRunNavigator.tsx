@@ -1,15 +1,18 @@
 import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
+import {useDispatch} from 'react-redux'
 
+import {ChangePinScreen} from '../auth/ChangePinScreen/ChangePinScreen'
+import {setSystemAuth, signin} from '../legacy/actions'
 import {defaultStackNavigationOptions, FirstRunRoutes} from '../navigation'
-import {CustomPinScreen} from './CustomPinScreen'
 import {LanguagePickerScreen} from './LanguagePickerScreen'
 import {TermsOfServiceScreen} from './TermsOfServiceScreen'
 
 const Stack = createStackNavigator<FirstRunRoutes>()
 export const FirstRunNavigator = () => {
   const strings = useStrings()
+  const dispatch = useDispatch()
 
   return (
     <Stack.Navigator
@@ -33,11 +36,19 @@ export const FirstRunNavigator = () => {
         options={{title: strings.acceptTermsTitle}}
       />
 
-      <Stack.Screen //
+      <Stack.Screen // formatting
         name="custom-pin"
-        component={CustomPinScreen}
         options={{headerShown: false}}
-      />
+      >
+        {() => (
+          <ChangePinScreen
+            onDone={async () => {
+              await dispatch(setSystemAuth(false))
+              dispatch(signin())
+            }}
+          />
+        )}
+      </Stack.Screen>
     </Stack.Navigator>
   )
 }

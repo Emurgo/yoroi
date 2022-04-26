@@ -1,17 +1,21 @@
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs'
+import {useNavigation} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
+import {useDispatch} from 'react-redux'
 
-import {defaultStackNavigationOptions, SettingsStackRoutes, SettingsTabRoutes} from '../navigation'
+import {ChangePinScreen, CreatePinScreen} from '../auth'
+import {setEasyConfirmation, setSystemAuth} from '../legacy/actions'
+import {defaultStackNavigationOptions, SettingsStackRoutes, SettingsTabRoutes, useWalletNavigation} from '../navigation'
+import {useSelectedWalletMeta, useSetSelectedWalletMeta} from '../SelectedWallet'
 import {COLORS} from '../theme'
+import {walletManager} from '../yoroi-wallets'
 import {ApplicationSettingsScreen} from './ApplicationSettings'
 import {BiometricsLinkScreen} from './BiometricsLink/'
 import {ChangeLanguageScreen} from './ChangeLanguage'
 import {ChangePasswordScreen} from './ChangePassword'
-import {ChangePinScreen} from './ChangePin'
 import {ChangeWalletName} from './ChangeWalletName'
-import {CustomPinScreen} from './CustomPin'
 import {RemoveWalletScreen} from './RemoveWallet'
 import {SupportScreen} from './Support'
 import {TermsOfServiceScreen} from './TermsOfService'
@@ -21,6 +25,12 @@ import {WalletSettingsScreen} from './WalletSettings'
 const Stack = createStackNavigator<SettingsStackRoutes>()
 export const SettingsScreenNavigator = () => {
   const strings = useStrings()
+  const navigation = useNavigation()
+  const {navigateToSettings} = useWalletNavigation()
+  const dispatch = useDispatch()
+  const setSelectedWalletMeta = useSetSelectedWalletMeta()
+  const walletMeta = useSelectedWalletMeta()
+
   return (
     <Stack.Navigator screenOptions={defaultStackNavigationOptions} initialRouteName="settings-main">
       <Stack.Screen //
@@ -79,18 +89,34 @@ export const SettingsScreenNavigator = () => {
 
       <Stack.Screen //
         name="change-custom-pin"
-        component={ChangePinScreen}
         options={{
           title: strings.changeCustomPinTitle,
           headerStyle: defaultStackNavigationOptions.headerStyle,
         }}
-      />
+      >
+        {() => <ChangePinScreen onDone={() => navigation.goBack()} />}
+      </Stack.Screen>
 
       <Stack.Screen //
         name="setup-custom-pin"
-        component={CustomPinScreen}
         options={{title: strings.customPinTitle}}
-      />
+      >
+        {() => (
+          <CreatePinScreen
+            onDone={async () => {
+              await dispatch(setSystemAuth(false))
+              await walletManager.disableEasyConfirmation()
+              dispatch(setEasyConfirmation(false))
+              if (!walletMeta) throw new Error('No wallet meta')
+              setSelectedWalletMeta({
+                ...walletMeta,
+                isEasyConfirmationEnabled: false,
+              })
+              navigateToSettings()
+            }}
+          />
+        )}
+      </Stack.Screen>
     </Stack.Navigator>
   )
 }

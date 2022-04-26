@@ -7,9 +7,9 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Alert} from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
 
+import {CreatePinScreen, PinLoginScreen} from './auth'
 import {BiometricAuthScreen} from './BiometricAuth'
 import {Boundary} from './components'
-import {CustomPinScreen} from './FirstRun/CustomPinScreen'
 import {FirstRunNavigator} from './FirstRun/FirstRunNavigator'
 import {errorMessages} from './i18n/global-messages'
 import {showErrorDialog, signin} from './legacy/actions'
@@ -26,7 +26,6 @@ import {
   isSystemAuthEnabledSelector,
 } from './legacy/selectors'
 import type {State} from './legacy/state'
-import {CustomPinLoginScreen} from './Login'
 import MaintenanceScreen from './MaintenanceScreen'
 import {AppRoutes} from './navigation'
 import StorybookScreen from './StorybookScreen'
@@ -35,26 +34,15 @@ import {WalletNavigator} from './WalletNavigator'
 
 const IS_STORYBOOK = env.getBoolean('IS_STORYBOOK', false)
 
-const hasAnyWalletSelector = (state: State): boolean => !isEmpty(state.wallets)
+export const AppNavigator = () => {
+  return (
+    <NavigationContainer>
+      <Boundary>{IS_STORYBOOK ? <StoryBook /> : <NavigatorSwitch />}</Boundary>
+    </NavigationContainer>
+  )
+}
 
-const messages = defineMessages({
-  pinLoginTitle: {
-    id: 'components.login.custompinlogin.title',
-    defaultMessage: '!!!Enter PIN',
-  },
-  customPinTitle: {
-    id: 'components.firstrun.custompinscreen.title',
-    defaultMessage: '!!!Set PIN',
-  },
-  biometricsChangeTitle: {
-    id: 'global.actions.dialogs.walletKeysInvalidated.title',
-    defaultMessage: '!!!Biometrics changes',
-  },
-  biometricsChangeMessage: {
-    id: 'global.actions.dialogs.biometricsChange.message',
-    defaultMessage: '!!!Biometrics changed detected ',
-  },
-})
+export default AppNavigator
 
 const Stack = createStackNavigator<AppRoutes>()
 const NavigatorSwitch = () => {
@@ -88,11 +76,7 @@ const NavigatorSwitch = () => {
       {!isAuthenticated && hasAnyWallet && (
         <Stack.Group>
           {!isSystemAuthEnabled && (
-            <Stack.Screen
-              name="custom-pin-auth"
-              component={CustomPinLoginScreen}
-              options={{title: strings.loginPinTitle}}
-            />
+            <Stack.Screen name="custom-pin-auth" component={PinLoginScreen} options={{title: strings.loginPinTitle}} />
           )}
           {isSystemAuthEnabled && canEnableBiometrics && (
             <Stack.Screen
@@ -120,7 +104,7 @@ const NavigatorSwitch = () => {
           {isSystemAuthEnabled && !canEnableBiometrics && (
             <Stack.Screen //
               name="setup-custom-pin"
-              component={CustomPinScreen}
+              component={CreatePinScreen}
               options={{title: strings.customPinTitle}}
             />
           )}
@@ -153,13 +137,7 @@ const StoryBook = () => (
   </Stack.Navigator>
 )
 
-const AppNavigator = () => {
-  return (
-    <NavigationContainer>
-      <Boundary>{IS_STORYBOOK ? <StoryBook /> : <NavigatorSwitch />}</Boundary>
-    </NavigationContainer>
-  )
-}
+const hasAnyWalletSelector = (state: State): boolean => !isEmpty(state.wallets)
 
 const useStrings = () => {
   const intl = useIntl()
@@ -172,4 +150,21 @@ const useStrings = () => {
   }
 }
 
-export default AppNavigator
+const messages = defineMessages({
+  pinLoginTitle: {
+    id: 'components.login.custompinlogin.title',
+    defaultMessage: '!!!Enter PIN',
+  },
+  customPinTitle: {
+    id: 'components.firstrun.custompinscreen.title',
+    defaultMessage: '!!!Set PIN',
+  },
+  biometricsChangeTitle: {
+    id: 'global.actions.dialogs.walletKeysInvalidated.title',
+    defaultMessage: '!!!Biometrics changes',
+  },
+  biometricsChangeMessage: {
+    id: 'global.actions.dialogs.biometricsChange.message',
+    defaultMessage: '!!!Biometrics changed detected ',
+  },
+})
