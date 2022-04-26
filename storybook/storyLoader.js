@@ -78,6 +78,7 @@ function loadStories() {
 	require('../src/WalletInit/WalletNameForm/WalletNameForm.stories');
 	require('../src/auth/PinRegistration/PinRegistrationForm.stories');
 	require('../src/components/Boundary/Boundary.stories');
+	require('../src/components/ErrorBoundary/ErrorBoundary.stories');
 	require('../src/components/Icon/Icon.stories');
 	require('./Example/Example.stories');
 }
@@ -157,6 +158,7 @@ const stories = [
 	'../src/WalletInit/WalletNameForm/WalletNameForm.stories',
 	'../src/auth/PinRegistration/PinRegistrationForm.stories',
 	'../src/components/Boundary/Boundary.stories',
+	'../src/components/ErrorBoundary/ErrorBoundary.stories',
 	'../src/components/Icon/Icon.stories',
 	'./Example/Example.stories'
 ];

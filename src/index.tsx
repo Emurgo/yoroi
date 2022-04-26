@@ -12,6 +12,7 @@ import {languageSelector} from '../legacy/selectors'
 import {setLogLevel} from '../legacy/utils/logging'
 import App from './App'
 import {name as appName} from './app.json'
+import {ErrorBoundary} from './components/ErrorBoundary'
 
 setLogLevel(CONFIG.LOG_LEVEL)
 
@@ -48,11 +49,13 @@ store.dispatch(setupHooks())
 
 const AppWithProviders = () => {
   return (
-    <Provider store={store}>
-      <IntlProviderWrapper>
-        <App />
-      </IntlProviderWrapper>
-    </Provider>
+    <ErrorBoundary>
+      <Provider store={store}>
+        <IntlProviderWrapper>
+          <App />
+        </IntlProviderWrapper>
+      </Provider>
+    </ErrorBoundary>
   )
 }
 
