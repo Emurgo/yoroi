@@ -128,6 +128,27 @@ class WalletManager {
           checksum = w.checksum
         }
         const isHW = data != null && data.isHW != null ? data.isHW : false
+
+        // migration - missing checksum
+        const metadataUpdate: WalletMeta = {...w}
+        if (!w.checksum && checksum) {
+          metadataUpdate.checksum = checksum
+          Logger.warn(`walletManager::initialize() [migrated checksum] ${w.id}`)
+          await storage.write(`/wallet/${w.id}`, metadataUpdate)
+        }
+        // migration - missing implementation id
+        if (!w.walletImplementationId && walletImplementationId) {
+          metadataUpdate.walletImplementationId = walletImplementationId
+          Logger.warn(`walletManager::initialize() [migrated implementationId] ${w.id}`)
+          await storage.write(`/wallet/${w.id}`, metadataUpdate)
+        }
+        // migration - resolving to a different network
+        if (w.networkId !== networkId) {
+          metadataUpdate.networkId = networkId
+          Logger.warn(`walletManager::initialize() [migrated networkId] ${w.id}`)
+          await storage.write(`/wallet/${w.id}`, metadataUpdate)
+        }
+
         return {
           ...w,
           isHW,
