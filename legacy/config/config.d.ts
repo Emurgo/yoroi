@@ -86,3 +86,11 @@ export var UI_V2: boolean
 export var SHOW_PROD_POOLS_IN_DEV: boolean
 
 export var getTestStakingPool: (networkId: NetworkId, provider: ?YoroiProvider) => Array<string>
+
+// NOTE: dead code
+export var WALLETS: {
+  JORMUNGANDR_ITN: WalletImplementation,
+  HASKELL_BYRON: WalletImplementation,
+  HASKELL_SHELLEY_24: WalletImplementation,
+  HASKELL_SHELLEY: WalletImplementation,
+}
