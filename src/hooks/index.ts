@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {SignedTx} from '@emurgo/yoroi-lib-core'
 import {delay} from 'bluebird'
 import cryptoRandomString from 'crypto-random-string'
 import {
@@ -20,7 +21,6 @@ import {
   decryptWithPassword,
   encryptWithPassword,
   NetworkId,
-  SignedTx,
   TxSubmissionStatus,
   WalletImplementationId,
   walletManager,
@@ -341,7 +341,8 @@ export const useSubmitTx = (
   const mutation = useMutationWithInvalidations({
     mutationFn: async (signedTx) => {
       const serverStatus = await wallet.checkServerStatus()
-      await wallet.submitTransaction(signedTx.base64)
+      const base64 = Buffer.from(signedTx.encodedTx).toString('base64')
+      await wallet.submitTransaction(base64)
 
       if (serverStatus.isQueueOnline) {
         return fetchTxStatus(wallet, signedTx.id, false)

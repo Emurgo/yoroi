@@ -7,6 +7,10 @@ export * from './types'
 
 import {init} from '@emurgo/yoroi-lib-mobile'
 
+const cardano = init()
+
+export {cardano}
+
 export const {
   encryptWithPassword,
   decryptWithPassword,
@@ -61,7 +65,7 @@ export const {
   Vkeywitness,
   Vkeywitnesses,
   Withdrawals,
-} = init().Wasm
+} = cardano.Wasm
 
 export {MetadataJsonSchema} from '@emurgo/yoroi-lib-core/dist/internals/models'
 export * as CardanoTypes from '@emurgo/yoroi-lib-core/dist/internals/wasm-contract'

@@ -37,6 +37,9 @@ export const mockWallet: YoroiWallet = {
   signTx: () => {
     throw new Error('Not implemented')
   },
+  signTxLegacy: () => {
+    throw new Error('Not implemented')
+  },
   signTxWithLedger: () => {
     throw new Error('Not implemented')
   },

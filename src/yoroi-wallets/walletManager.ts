@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type {WalletChecksum} from '@emurgo/cip4-js'
 import {legacyWalletChecksum, walletChecksum} from '@emurgo/cip4-js'
+import {TxMetadata} from '@emurgo/yoroi-lib-core'
 import {BigNumber} from 'bignumber.js'
 import ExtendableError from 'es6-error'
 import _ from 'lodash'
@@ -28,9 +29,8 @@ import type {
 } from '../legacy/types'
 import type {EncryptionMethod} from '../legacy/types'
 import {NETWORK_REGISTRY, WALLET_IMPLEMENTATION_REGISTRY} from '../legacy/types'
-import {SendTokenList, StakePoolInfosAndHistories} from '../types'
+import {SendTokenList, StakePoolInfosAndHistories, Token} from '../types'
 import {
-  DefaultTokenEntry,
   isYoroiWallet,
   NetworkId,
   ServerStatus,
@@ -40,7 +40,6 @@ import {
   YoroiProvider,
   YoroiWallet,
 } from './cardano'
-import type {JSONMetadata} from './cardano/metadataUtils'
 import {WalletJSON} from './Wallet'
 
 export class WalletClosed extends ExtendableError {}
@@ -698,7 +697,7 @@ class WalletManager {
 
   getAddressingInfo(address: string) {
     const wallet = this.getWallet()
-    return wallet.getAddressingInfo(address)
+    return wallet.getAddressing(address)
   }
 
   asAddressedUtxo(utxos: Array<RawUtxo>) {
@@ -715,9 +714,9 @@ class WalletManager {
     utxos: Array<RawUtxo>,
     receiver: string,
     tokens: SendTokenList,
-    defaultToken: DefaultTokenEntry,
-    serverTime: Date | null | void,
-    metadata: Array<JSONMetadata> | void,
+    defaultToken: Token,
+    serverTime: Date | null | undefined,
+    metadata?: Array<TxMetadata>,
   ) {
     const wallet = this.getWallet()
     return await this.abortWhenWalletCloses(

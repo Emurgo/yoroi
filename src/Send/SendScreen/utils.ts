@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {UnsignedTx} from '@emurgo/yoroi-lib-core'
 import {BigNumber} from 'bignumber.js'
 import _ from 'lodash'
 import {IntlShape} from 'react-intl'
@@ -10,7 +11,7 @@ import {WalletMeta} from '../../legacy/state'
 import {RawUtxo} from '../../legacy/types'
 import {cardanoValueFromMultiToken} from '../../legacy/utils'
 import type {DefaultAsset, SendTokenList, Token} from '../../types'
-import {BigNum, HaskellShelleyTxSignRequest, minAdaRequired, MultiToken, walletManager} from '../../yoroi-wallets'
+import {BigNum, minAdaRequired, MultiToken, walletManager} from '../../yoroi-wallets'
 import {InvalidAssetAmount, parseAmountDecimal} from '../../yoroi-wallets/utils/parsing'
 import type {AddressValidationErrors} from '../../yoroi-wallets/utils/validators'
 import {getUnstoppableDomainAddress, isReceiverAddressValid, validateAmount} from '../../yoroi-wallets/utils/validators'
@@ -55,10 +56,6 @@ export const getTransactionData = async (
   selectedToken: Token,
   serverTime?: Date | null,
 ) => {
-  const defaultTokenEntry = {
-    defaultNetworkId: defaultAsset.networkId,
-    defaultIdentifier: defaultAsset.identifier,
-  }
   const sendTokenList: SendTokenList = []
 
   if (sendAll) {
@@ -79,7 +76,7 @@ export const getTransactionData = async (
       amount: await getMinAda(selectedToken, defaultAsset),
     })
   }
-  return await walletManager.createUnsignedTx(utxos, address, sendTokenList as any, defaultTokenEntry, serverTime)
+  return await walletManager.createUnsignedTx(utxos, address, sendTokenList, defaultAsset, serverTime)
 }
 
 export const recomputeAll = async ({
@@ -123,7 +120,7 @@ export const recomputeAll = async ({
   let balanceAfter: null | BigNumber = null
   let recomputedAmount = amount
 
-  let unsignedTx: HaskellShelleyTxSignRequest | null = null
+  let unsignedTx: UnsignedTx | null = null
 
   if (_.isEmpty(addressErrors) && utxos) {
     try {
@@ -137,7 +134,10 @@ export const recomputeAll = async ({
 
       if (sendAll) {
         unsignedTx = await getTransactionData(utxos, address, amount, sendAll, defaultAsset, selectedTokenInfo)
-        _fee = await unsignedTx.fee()
+        _fee = new MultiToken(unsignedTx.fee.values, {
+          defaultNetworkId: unsignedTx.fee.defaults.networkId,
+          defaultIdentifier: unsignedTx.fee.defaults.identifier,
+        })
 
         if (selectedTokenInfo.isDefault) {
           recomputedAmount = normalizeTokenAmount(
@@ -161,7 +161,10 @@ export const recomputeAll = async ({
           ? parseAmountDecimal(amount, selectedTokenInfo)
           : new BigNumber('0')
         unsignedTx = await getTransactionData(utxos, address, amount, false, defaultAsset, selectedTokenInfo)
-        _fee = await unsignedTx.fee()
+        _fee = new MultiToken(unsignedTx.fee.values, {
+          defaultNetworkId: unsignedTx.fee.defaults.networkId,
+          defaultIdentifier: unsignedTx.fee.defaults.identifier,
+        })
         balanceAfter = tokenBalance.getDefault().minus(parsedAmount).minus(minAda).minus(_fee.getDefault())
       }
       // now we can update fee as well

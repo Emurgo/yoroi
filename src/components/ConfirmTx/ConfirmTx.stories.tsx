@@ -77,7 +77,6 @@ storiesOf('ConfirmTx', module)
           process="onlySubmit"
           onSuccess={action('onSuccess')}
           signedTx={{
-            base64: '',
             encodedTx: Buffer.from(''),
             id: '',
           }}
