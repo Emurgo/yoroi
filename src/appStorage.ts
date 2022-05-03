@@ -41,7 +41,7 @@ async function toShelleyWalletMeta(currentWalletMeta: Partial<WalletMeta>): Prom
 
   // migrate checksum
   if (!currentWalletMeta?.checksum) {
-    if (walletData != null && walletData.externalChain?.addressGenerator != null) {
+    if (walletData != null && walletData?.externalChain?.addressGenerator != null) {
       const {accountPubKeyHex} = walletData.externalChain.addressGenerator
       switch (walletImplementationId) {
         case WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID:
@@ -59,8 +59,8 @@ async function toShelleyWalletMeta(currentWalletMeta: Partial<WalletMeta>): Prom
     await migrateAttribute('checksum', walletMetaUpdate)
   }
 
-  // missing implementation id
-  if (!currentWalletMeta?.walletImplementationId && walletImplementationId) {
+  // resolving to a different implementation id
+  if (currentWalletMeta?.walletImplementationId !== walletImplementationId) {
     walletMetaUpdate.walletImplementationId = walletImplementationId
     await migrateAttribute('walletImplementationId', walletMetaUpdate)
   }
@@ -100,7 +100,7 @@ function migrateAttribute(attr: keyof WalletMeta, walletMetaUpdated: Partial<Wal
   return storage.write(`/wallet/${id}`, walletMetaUpdated)
 }
 
-function isWalletMeta(walletMeta?: WalletMeta | object | undefined): walletMeta is WalletMeta {
+function isWalletMeta(walletMeta: WalletMeta | object | undefined): walletMeta is WalletMeta {
   return (
     // prettier-ignore
     !!walletMeta &&
@@ -121,7 +121,7 @@ function isWalletMeta(walletMeta?: WalletMeta | object | undefined): walletMeta 
       || !('provider' in walletMeta)) &&
     'walletImplementationId' in walletMeta 
       && typeof walletMeta.walletImplementationId === 'string' 
-      && Object.values(WALLET_IMPLEMENTATION_REGISTRY).indexOf(walletMeta.walletImplementationId) > -1 &&
+      && Object.values(WALLET_IMPLEMENTATION_REGISTRY).includes(walletMeta?.walletImplementationId) &&
     ('isShelley' in walletMeta 
       && typeof walletMeta.isShelley === 'boolean'
       || !('isShelley' in walletMeta))

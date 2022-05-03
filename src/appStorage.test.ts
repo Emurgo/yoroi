@@ -52,7 +52,13 @@ describe('migrateWalletMetas()', () => {
         await storage.write(`/wallet/${meta.id}`, meta)
         await storage.write(`/wallet/${meta.id}/data`, mockedWalletData)
         const walletMetas = [meta]
-        const expected = [{...mockedWalletMeta, networkId: NETWORK_REGISTRY.JORMUNGANDR}]
+        const expected = [
+          {
+            ...mockedWalletMeta,
+            networkId: NETWORK_REGISTRY.JORMUNGANDR,
+            walletImplementationId: WALLETS.JORMUNGANDR_ITN.WALLET_IMPLEMENTATION_ID,
+          },
+        ]
 
         const result = await migrateWalletMetas(walletMetas)
 
@@ -64,7 +70,14 @@ describe('migrateWalletMetas()', () => {
         await storage.write(`/wallet/${meta.id}`, meta)
         await storage.write(`/wallet/${meta.id}/data`, mockedWalletData)
         const walletMetas = [meta]
-        const expected = [{...mockedWalletMeta, isShelley: false, networkId: NETWORK_REGISTRY.HASKELL_SHELLEY}]
+        const expected = [
+          {
+            ...mockedWalletMeta,
+            isShelley: false,
+            networkId: NETWORK_REGISTRY.HASKELL_SHELLEY,
+            walletImplementationId: WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID,
+          },
+        ]
 
         const result = await migrateWalletMetas(walletMetas)
 
@@ -198,7 +211,7 @@ describe('migrateWalletMetas()', () => {
       })
       it('should set checksum with empty data when there is no addressGenerator in the wallet/data ', async () => {
         const meta = {...mockedWalletMeta}
-        const data = {...mockedWalletData, externalChain: null}
+        const data = {...mockedWalletData, externalChain: {}}
         delete meta.checksum
         await storage.write(`/wallet/${meta.id}`, meta)
         await storage.write(`/wallet/${meta.id}/data`, data)
