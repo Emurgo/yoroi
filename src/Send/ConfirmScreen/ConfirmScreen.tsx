@@ -17,7 +17,7 @@ import {useParams, useWalletNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {TokenEntry} from '../../types'
-import type {CreateUnsignedTxResponse} from '../../yoroi-wallets/cardano/shelley/transactionUtils'
+import {CreateUnsignedTxResponse} from '../../yoroi-wallets'
 
 export type Params = {
   transactionData: CreateUnsignedTxResponse
