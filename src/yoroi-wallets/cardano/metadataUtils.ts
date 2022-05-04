@@ -1,3 +1,5 @@
+import {TxMetadata} from '@emurgo/yoroi-lib-core'
+
 import {
   AuxiliaryData,
   BigNum,
@@ -8,12 +10,7 @@ import {
   TransactionMetadatum,
 } from '.'
 
-export type JSONMetadata = {
-  label: string
-  data: Record<string, unknown>
-}
-
-export async function createAuxiliaryData(auxiliary: Array<JSONMetadata>) {
+export async function createAuxiliaryData(auxiliary: Array<TxMetadata>) {
   const metadata = await GeneralTransactionMetadata.new()
 
   for (const meta of auxiliary) {

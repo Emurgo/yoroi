@@ -532,7 +532,7 @@ export const newAdaUnsignedTxFromUtxo = async (
  */
 export const newAdaUnsignedTx = async (
   outputs: Array<TxOutput>,
-  changeAdaAddr: void | (Address & Addressing),
+  changeAdaAddr: undefined | (Address & Addressing),
   allUtxos: Array<AddressedUtxo>,
   absSlotNumber: BigNumber,
   protocolParams: {

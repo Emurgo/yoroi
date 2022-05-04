@@ -1,6 +1,4 @@
-import {Addressing} from '@emurgo/yoroi-lib-core'
-
-import {RawUtxo} from '../legacy/types'
+import {Addressing, RawUtxo} from '../legacy/types'
 import {RemoteCertificateMeta, Withdrawal} from './staking'
 import {TokenEntry} from './tokens'
 export type TransactionDirection = 'SENT' | 'RECEIVED' | 'SELF' | 'MULTI'
@@ -32,8 +30,6 @@ export type RawTransaction = {
 
 // UTXOs
 
-export type {Addressing} from '@emurgo/yoroi-lib-core'
-
 export type RemoteAsset = {
   amount: string
   assetId: string
@@ -42,6 +38,8 @@ export type RemoteAsset = {
 }
 
 export type AddressedUtxo = RawUtxo & Addressing
+
+export type {Addressing} from '../legacy/types'
 
 export type IOData = {
   address: string
