@@ -71,7 +71,7 @@ export const TxHistoryNavigator = () => {
           name="history-details"
           component={TxDetails}
           options={({route}) => ({
-            title: formatDateToSeconds(transactionInfos[route.params.id].submittedAt),
+            title: formatDateToSeconds(transactionInfos[route.params.id]?.submittedAt),
           })}
         />
 

@@ -1,12 +1,12 @@
 // @flow
 
-import type {WalletChecksum} from '@emurgo/cip4-js'
-import {legacyWalletChecksum, walletChecksum} from '@emurgo/cip4-js'
 import {BigNumber} from 'bignumber.js'
 import ExtendableError from 'es6-error'
 import _ from 'lodash'
 import {type IntlShape} from 'react-intl'
 
+// $FlowExpectedError
+import {migrateWalletMetas} from '../../src/appStorage'
 import type {
   AccountStateResponse,
   FundInfoResponse,
@@ -18,7 +18,7 @@ import type {
   TokenInfoResponse,
   TxBodiesRequest,
 } from '../api/types'
-import {CONFIG, WALLETS} from '../config/config'
+import {CONFIG} from '../config/config'
 import {isJormungandr} from '../config/networks'
 import type {NetworkId, WalletImplementationId, YoroiProvider} from '../config/types'
 import {NETWORK_REGISTRY, WALLET_IMPLEMENTATION_REGISTRY} from '../config/types'
@@ -78,76 +78,12 @@ class WalletManager {
   // The responsibility to check data consistency is left to the each wallet
   // implementation.
   async initialize() {
-    const _wallets = await this._listWallets()
+    const _storedWalletMetas = await this._listWallets()
     // need to migrate wallet list to new format after (haskell) shelley
     // integration. Prior to v3.0, w.isShelley denoted an ITN wallet
-    const wallets = await Promise.all(
-      _wallets.map(async (w) => {
-        let networkId
-        let walletImplementationId
-        if (w.networkId == null && w.isShelley != null) {
-          networkId = w.isShelley ? NETWORK_REGISTRY.JORMUNGANDR : NETWORK_REGISTRY.HASKELL_SHELLEY
-          walletImplementationId = w.isShelley
-            ? WALLETS.JORMUNGANDR_ITN.WALLET_IMPLEMENTATION_ID
-            : WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID
-        } else {
-          // if wallet implementation/network is not defined, assume Byron
-          walletImplementationId =
-            w.walletImplementationId != null ? w.walletImplementationId : WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID
-          networkId =
-            w.networkId != null
-              ? w.networkId === NETWORK_REGISTRY.BYRON_MAINNET
-                ? NETWORK_REGISTRY.HASKELL_SHELLEY
-                : w.networkId
-              : NETWORK_REGISTRY.HASKELL_SHELLEY
-        }
-
-        let checksum: WalletChecksum
-        const data = await storage.read(`/wallet/${w.id}/data`)
-        if (w.checksum == null) {
-          if (data != null && data.externalChain.addressGenerator != null) {
-            const {account, accountPubKeyHex} = data.externalChain.addressGenerator
-            switch (walletImplementationId) {
-              case WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID:
-                checksum = legacyWalletChecksum(accountPubKeyHex || account.root_cached_key)
-                break
-              case WALLETS.HASKELL_SHELLEY_24.WALLET_IMPLEMENTATION_ID:
-              case WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID:
-                checksum = walletChecksum(accountPubKeyHex)
-                break
-              case WALLETS.JORMUNGANDR_ITN.WALLET_IMPLEMENTATION_ID:
-                checksum = legacyWalletChecksum(account)
-                break
-              default:
-                checksum = {ImagePart: '', TextPart: ''}
-            }
-          } else {
-            checksum = {ImagePart: '', TextPart: ''}
-          }
-        } else {
-          checksum = w.checksum
-        }
-        const isHW = data != null && data.isHW != null ? data.isHW : false
-        return {
-          ...w,
-          isHW,
-          networkId,
-          walletImplementationId,
-          checksum,
-        }
-      }),
-    )
-    // integrity check
-    wallets.forEach((w) => {
-      assert.assert(w.networkId != null, 'wallet should have networkId')
-      assert.assert(!!w.walletImplementationId, 'wallet should have walletImplementationId')
-      assert.assert(
-        Object.values(WALLET_IMPLEMENTATION_REGISTRY).indexOf(w.walletImplementationId) > -1,
-        'invalid walletImplementationId',
-      )
-    })
+    const migratedWalletMetas = await migrateWalletMetas(_storedWalletMetas)
     // $FlowFixMe missing type annotation
-    this._wallets = _.fromPairs(wallets.map((w) => [w.id, w]))
+    this._wallets = _.fromPairs(migratedWalletMetas.map((w) => [w.id, w]))
     Logger.debug('WalletManager::initialize::wallets()', this._wallets)
   }
 
