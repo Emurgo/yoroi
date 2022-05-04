@@ -90,6 +90,8 @@ function loadStories() {
 	require('../src/components/Modal/Modal.stories');
 	require('../src/components/StandardModal/StandardModal.stories');
 	require('../src/components/TextInput/TextInput.stories');
+	require('../src/theme/Palette.stories');
+	require('../src/theme/Theme.stories');
 	require('./Example/Example.stories');
 }
 
@@ -180,6 +182,8 @@ const stories = [
 	'../src/components/Modal/Modal.stories',
 	'../src/components/StandardModal/StandardModal.stories',
 	'../src/components/TextInput/TextInput.stories',
+	'../src/theme/Palette.stories',
+	'../src/theme/Theme.stories',
 	'./Example/Example.stories'
 ];
 
