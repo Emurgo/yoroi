@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {SignedTx, UnsignedTx} from '@emurgo/yoroi-lib-core'
 import {useNavigation} from '@react-navigation/native'
 import {delay} from 'bluebird'
 import React, {useEffect, useState} from 'react'
@@ -18,7 +19,7 @@ import KeyStore from '../../legacy/KeyStore'
 import {hwDeviceInfoSelector} from '../../legacy/selectors'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
-import {HaskellShelleyTxSignRequest, SignedTx, SystemAuthDisabled, walletManager} from '../../yoroi-wallets'
+import {HaskellShelleyTxSignRequest, SystemAuthDisabled, walletManager} from '../../yoroi-wallets'
 import {Button, ButtonProps, ValidatedTextInput} from '..'
 import {Dialog, Step as DialogStep} from './Dialog'
 
@@ -31,7 +32,7 @@ type ConfirmTxProps = {
   buttonProps?: Omit<Partial<ButtonProps>, 'disabled' | 'onPress'>
   onSuccess: (signedTx: SignedTx) => void
   onError?: (err: Error) => void
-  txDataSignRequest: HaskellShelleyTxSignRequest
+  txDataSignRequest: HaskellShelleyTxSignRequest | UnsignedTx
   useUSB: boolean
   setUseUSB: (useUSB: boolean) => void
   isProvidingPassword?: boolean
@@ -229,8 +230,8 @@ export const ConfirmWithSignature: React.FC<SignAndSubmitProps | OnlySignProps> 
     }
   }
 
-  const onConfirm = React.useCallback(
-    async (easyConfirmDecryptKey?: string) => {
+  const onConfirmNew = React.useCallback(
+    async (unsignedTx: UnsignedTx, easyConfirmDecryptKey?: string) => {
       try {
         setIsProcessing(true)
 
@@ -238,7 +239,69 @@ export const ConfirmWithSignature: React.FC<SignAndSubmitProps | OnlySignProps> 
         if (wallet.isEasyConfirmationEnabled) {
           if (easyConfirmDecryptKey) {
             setDialogStep(DialogStep.Signing)
-            signedTx = await smoothModalNotification(wallet.signTx(txDataSignRequest, easyConfirmDecryptKey))
+            signedTx = await smoothModalNotification(wallet.signTx(unsignedTx, easyConfirmDecryptKey))
+          }
+        } else {
+          const decryptedKey = await KeyStore.getData(walletManager._id, 'MASTER_PASSWORD', '', password, intl)
+          setDialogStep(DialogStep.Signing)
+          signedTx = await smoothModalNotification(wallet.signTx(unsignedTx, decryptedKey))
+        }
+
+        if (process === 'onlySign') {
+          onSuccess(signedTx)
+        } else {
+          setDialogStep(DialogStep.Submitting)
+          try {
+            await smoothModalNotification(submitTx(signedTx))
+            setDialogStep(DialogStep.Closed)
+            onSuccess(signedTx)
+          } catch (err) {
+            if (err instanceof LocalizableError) {
+              showError({
+                errorMessage: strings.errorMessage(err),
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                errorLogs: (err as any).values.response || null,
+              })
+            } else {
+              showError({
+                errorMessage: strings.generalTxErrorMessage,
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                errorLogs: (err as any).message || null,
+              })
+            }
+            onError?.(err as Error)
+          }
+        }
+      } catch (err) {
+        if (err instanceof WrongPassword) {
+          showError({
+            errorMessage: strings.incorrectPasswordTitle,
+            errorLogs: strings.incorrectPasswordMessage,
+          })
+        } else {
+          showError({
+            errorMessage: strings.generalTxErrorMessage,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            errorLogs: (err as any).message || null,
+          })
+        }
+      } finally {
+        setIsProcessing(false)
+      }
+    },
+    [intl, onError, onSuccess, password, process, submitTx, strings, wallet],
+  )
+
+  const onConfirmLegacy = React.useCallback(
+    async (txDataSignRequest: HaskellShelleyTxSignRequest, easyConfirmDecryptKey?: string) => {
+      try {
+        setIsProcessing(true)
+
+        let signedTx
+        if (wallet.isEasyConfirmationEnabled) {
+          if (easyConfirmDecryptKey) {
+            setDialogStep(DialogStep.Signing)
+            signedTx = await smoothModalNotification(wallet.signTxLegacy(txDataSignRequest, easyConfirmDecryptKey))
           }
         } else {
           if (wallet.isHW) {
@@ -247,7 +310,7 @@ export const ConfirmWithSignature: React.FC<SignAndSubmitProps | OnlySignProps> 
           } else {
             const decryptedKey = await KeyStore.getData(walletManager._id, 'MASTER_PASSWORD', '', password, intl)
             setDialogStep(DialogStep.Signing)
-            signedTx = await smoothModalNotification(wallet.signTx(txDataSignRequest, decryptedKey))
+            signedTx = await smoothModalNotification(wallet.signTxLegacy(txDataSignRequest, decryptedKey))
           }
         }
 
@@ -293,7 +356,16 @@ export const ConfirmWithSignature: React.FC<SignAndSubmitProps | OnlySignProps> 
         setIsProcessing(false)
       }
     },
-    [intl, onError, onSuccess, password, process, submitTx, strings, txDataSignRequest, useUSB, wallet],
+    [intl, onError, onSuccess, password, process, strings, submitTx, useUSB, wallet],
+  )
+
+  const onConfirm = React.useCallback(
+    (decryptedKey?: string) => {
+      return txDataSignRequest instanceof HaskellShelleyTxSignRequest
+        ? onConfirmLegacy(txDataSignRequest, decryptedKey)
+        : onConfirmNew(txDataSignRequest, decryptedKey)
+    },
+    [onConfirmLegacy, onConfirmNew, txDataSignRequest],
   )
 
   const _onConfirm = React.useCallback(async () => {

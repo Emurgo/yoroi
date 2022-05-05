@@ -17,9 +17,8 @@ import {useParams, useWalletNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {DefaultAsset} from '../../types'
+import type {CreateDelegationTxResponse, CreateUnsignedTxResponse} from '../../yoroi-wallets'
 import {MultiToken} from '../../yoroi-wallets'
-import type {CreateDelegationTxResponse} from '../../yoroi-wallets/cardano/shelley/delegationUtils'
-import type {CreateUnsignedTxResponse} from '../../yoroi-wallets/cardano/shelley/transactionUtils'
 
 export type Params = {
   poolHash: string

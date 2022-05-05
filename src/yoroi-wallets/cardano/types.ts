@@ -1,4 +1,5 @@
 import type {WalletChecksum} from '@emurgo/cip4-js'
+import {CardanoAddressedUtxo, SignedTx, TxMetadata, UnsignedTx} from '@emurgo/yoroi-lib-core'
 import {BigNumber} from 'bignumber.js'
 import type {IntlShape} from 'react-intl'
 
@@ -18,18 +19,17 @@ import {
   AccountStates,
   AddressedUtxo,
   DefaultAsset,
-  DefaultTokenEntry,
   SendTokenList,
   StakePoolInfoRequest,
   StakePoolInfosAndHistories,
   StakingStatus,
+  Token,
   TokenInfo,
 } from '../../types'
 import Wallet from '../Wallet'
 import type {Addresses} from './chain'
 import {AddressChain} from './chain'
 import {HaskellShelleyTxSignRequest} from './HaskellShelleyTxSignRequest'
-import type {JSONMetadata} from './metadataUtils'
 import {MultiToken} from './MultiToken'
 import {TransactionCache} from './shelley/transactionCache'
 
@@ -151,9 +151,10 @@ export interface WalletInterface {
 
   getAllUtxosForKey(utxos: Array<RawUtxo>): Promise<Array<AddressedUtxo>>
 
-  getAddressingInfo(address: string): unknown
+  getAddressing(address: string): unknown
 
-  asAddressedUtxo(utxos: Array<RawUtxo>): Array<AddressedUtxo>
+  asAddressedUtxo(utxos: Array<RawUtxo>): Array<CardanoAddressedUtxo>
+  asLegacyAddressedUtxo(utxos: Array<RawUtxo>): Array<AddressedUtxo>
 
   getDelegationStatus(): Promise<StakingStatus>
 
@@ -161,12 +162,13 @@ export interface WalletInterface {
     utxos: Array<RawUtxo>,
     receiver: string,
     tokens: SendTokenList,
-    defaultToken: DefaultTokenEntry,
+    defaultToken: Token,
     serverTime: Date | null | void,
-    metadata: Array<JSONMetadata> | void,
-  ): Promise<HaskellShelleyTxSignRequest>
+    metadata: Array<TxMetadata> | void,
+  ): Promise<UnsignedTx>
 
-  signTx(signRequest: HaskellShelleyTxSignRequest, decryptedMasterKey: string): Promise<SignedTx>
+  signTx(signRequest: UnsignedTx, decryptedMasterKey: string): Promise<SignedTx>
+  signTxLegacy(signRequest: HaskellShelleyTxSignRequest, decryptedMasterKey: string): Promise<SignedTxLegacy>
 
   createDelegationTx(
     poolRequest: void | string,
@@ -192,7 +194,7 @@ export interface WalletInterface {
     serverTime: Date | void,
   ): Promise<HaskellShelleyTxSignRequest>
 
-  signTxWithLedger(request: HaskellShelleyTxSignRequest, useUSB: boolean): Promise<SignedTx>
+  signTxWithLedger(request: HaskellShelleyTxSignRequest, useUSB: boolean): Promise<SignedTxLegacy>
 
   // =================== backend API =================== //
 
@@ -251,7 +253,7 @@ export type TxSubmissionStatus = {
   reason?: string | null
 }
 
-export type SignedTx = {
+export type SignedTxLegacy = {
   id: string
   encodedTx: Uint8Array
   base64: string
@@ -294,6 +296,7 @@ type YoroiWalletKeys =
   | 'createVotingRegTx'
   | 'submitTransaction'
   | 'signTx'
+  | 'signTxLegacy'
   | 'signTxWithLedger'
   | 'fetchPoolInfo'
   | 'publicKeyHex'
@@ -324,11 +327,9 @@ const yoroiWalletKeys: Array<YoroiWalletKeys> = [
   'createVotingRegTx',
   'submitTransaction',
   'signTx',
+  'signTxLegacy',
   'signTxWithLedger',
   'fetchPoolInfo',
 ]
 
 export * from '@emurgo/yoroi-lib-core/dist/internals/wasm-contract'
-import * as CardanoTypes from '@emurgo/yoroi-lib-core/dist/internals/wasm-contract'
-
-export type TransactionBuilderCore = CardanoTypes.TransactionBuilder
