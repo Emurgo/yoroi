@@ -60,10 +60,10 @@ export const useWalletName = (wallet: YoroiWallet, options?: UseQueryOptions<str
 export const useChangeWalletName = (wallet: YoroiWallet, options: UseMutationOptions<void, Error, string> = {}) => {
   const mutation = useMutationWithInvalidations<void, Error, string>({
     mutationFn: async (newName) => {
-      const walletMeta = await storage.read<WalletMeta>(`/wallets/${wallet.id}`)
+      const walletMeta = await storage.read<WalletMeta>(`/wallet/${wallet.id}`)
       if (!walletMeta) throw new Error('Invalid wallet id')
 
-      return storage.write(`/wallets/${wallet.id}`, {...walletMeta, name: newName})
+      return storage.write(`/wallet/${wallet.id}`, {...walletMeta, name: newName})
     },
     invalidateQueries: [[wallet.id, 'name'], ['walletMetas']],
     ...options,
