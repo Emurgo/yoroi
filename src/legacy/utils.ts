@@ -292,7 +292,9 @@ export const cardanoValueFromMultiToken = async (tokens: MultiToken) => {
 
   for (const entry of tokens.nonDefaultEntries()) {
     const {policyId, name} = await identifierToCardanoAsset(entry.identifier)
-    const policyContent = (await assets.get(policyId)) ?? (await Assets.new())
+    const asset = await assets.get(policyId)
+    const policyContent = asset.hasValue() ? asset : await Assets.new()
+
     await policyContent.insert(name, await BigNum.fromStr(entry.amount.toString()))
     // recall: we always have to insert since WASM returns copies of objects
     await assets.insert(policyId, policyContent)
