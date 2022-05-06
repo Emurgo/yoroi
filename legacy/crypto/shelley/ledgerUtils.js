@@ -206,7 +206,7 @@ type LedgerConnectionResponse = {|
   extendedPublicKeyResp: GetExtendedPublicKeyResponse,
   deviceId: ?DeviceId,
   deviceObj: ?DeviceObj,
-  serial: string,
+  serialHex: string,
 |}
 
 // Hardware wallet device Features object
@@ -216,7 +216,7 @@ export type HWFeatures = {|
   model: string,
   deviceId: ?DeviceId, // for establishing a connection through BLE
   deviceObj: ?DeviceObj, // for establishing a connection through USB
-  serial?: string,
+  serialHex?: string,
 |}
 
 export type HWDeviceInfo = {|
@@ -253,14 +253,16 @@ const makeCardanoAccountBIP44Path: (walletType: WalletType, account: number) => 
 })
 
 const validateHWResponse = (resp: LedgerConnectionResponse): boolean => {
-  const {extendedPublicKeyResp, deviceId, deviceObj, serial} = resp
+  const {extendedPublicKeyResp, deviceId, deviceObj, serialHex} = resp
+
   if (deviceId == null && deviceObj == null) {
     throw new Error('LedgerUtils::validateHWResponse: a non-null descriptor is required')
   }
   if (extendedPublicKeyResp == null) {
     throw new Error('LedgerUtils::validateHWResponse: extended public key is undefined')
   }
-  if (serial == null) {
+
+  if (serialHex == null) {
     throw new Error('LedgerUtils::validateHWResponse: device serial number is undefined')
   }
   return true
@@ -268,7 +270,7 @@ const validateHWResponse = (resp: LedgerConnectionResponse): boolean => {
 
 const normalizeHWResponse = (resp: LedgerConnectionResponse): HWDeviceInfo => {
   validateHWResponse(resp)
-  const {extendedPublicKeyResp, deviceId, deviceObj, serial} = resp
+  const {extendedPublicKeyResp, deviceId, deviceObj, serialHex} = resp
   return {
     bip44AccountPublic: extendedPublicKeyResp.publicKeyHex + extendedPublicKeyResp.chainCodeHex,
     hwFeatures: {
@@ -276,7 +278,7 @@ const normalizeHWResponse = (resp: LedgerConnectionResponse): HWDeviceInfo => {
       model: MODEL,
       deviceId,
       deviceObj,
-      serial,
+      serialHex,
     },
   }
 }

@@ -23,6 +23,8 @@ DerivedData
 *.hmap
 *.ipa
 *.xcuserstate
+*.d
+*.dia
 
 # Android/IntelliJ
 #
