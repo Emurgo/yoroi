@@ -243,8 +243,8 @@ export const cardanoValueFromMultiToken = async (tokens: MultiToken): Promise<Va
   const assets = await MultiAsset.new()
   for (const entry of tokens.nonDefaultEntries()) {
     const {policyId, name} = await identifierToCardanoAsset(entry.identifier)
-
-    const policyContent = (await assets.get(policyId)) ?? (await Assets.new())
+    const asset = await assets.get(policyId)
+    const policyContent = asset.hasValue() ? asset : await Assets.new()
 
     await policyContent.insert(name, await BigNum.from_str(entry.amount.toString()))
     // recall: we always have to insert since WASM returns copies of objects
@@ -280,8 +280,8 @@ export const cardanoValueFromRemoteFormat = async (utxo: RawUtxo): Promise<Value
   const assets = await MultiAsset.new()
   for (const entry of utxo.assets) {
     const {policyId, name} = await identifierToCardanoAsset(entry.assetId)
-
-    const policyContent = (await assets.get(policyId)) ?? (await Assets.new())
+    const asset = await assets.get(policyId)
+    const policyContent = asset.hasValue() ? asset : await Assets.new()
 
     await policyContent.insert(name, await BigNum.from_str(entry.amount))
     // recall: we always have to insert since WASM returns copies of objects
