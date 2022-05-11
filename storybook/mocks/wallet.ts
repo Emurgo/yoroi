@@ -9,6 +9,7 @@ export const mockWallet: YoroiWallet = {
   networkId: 300,
   checksum: {TextPart: 'text-part', ImagePart: 'image-part'},
   isHW: false,
+  hwDeviceInfo: null,
   isReadOnly: false,
   isEasyConfirmationEnabled: false,
   rewardAddressHex: 'reward-address-hex',

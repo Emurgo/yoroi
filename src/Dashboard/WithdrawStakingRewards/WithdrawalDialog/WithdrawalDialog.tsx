@@ -1,4 +1,3 @@
-import {BigNumber} from 'bignumber.js'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet} from 'react-native'
@@ -9,22 +8,18 @@ import {LedgerConnect, LedgerTransportSwitch} from '../../../HW'
 import globalMessages, {ledgerMessages} from '../../../i18n/global-messages'
 import {DeviceObj} from '../../../legacy/ledgerUtils'
 import {theme} from '../../../theme'
-import {TxDeregistration, TxWithdrawal} from '../../../yoroi-wallets'
+import {YoroiUnsignedTx} from '../../../yoroi-wallets'
 import {WithdrawalDialogSteps} from '../WithdrawStakingRewards'
 import {TransferSummary} from './TransferSummary'
 
 type Props = {
   step: WithdrawalDialogSteps
+  unsignedTx: YoroiUnsignedTx | null
   onKeepKey: () => void
   onDeregisterKey: () => void
   onChooseTransport: (bool: boolean) => void
   onConnectBLE: (deviceId: string) => void
   onConnectUSB: (deviceObj: DeviceObj) => void
-  withdrawals: null | Array<TxWithdrawal>
-  deregistrations: null | Array<TxDeregistration>
-  balance: BigNumber
-  finalBalance: BigNumber
-  fees: BigNumber
   onConfirm: (password?: string | undefined) => void
   onRequestClose: () => void
   useUSB: boolean
@@ -45,14 +40,10 @@ export const WithdrawalDialog = ({
   useUSB,
   onConnectBLE,
   onConnectUSB,
-  withdrawals,
-  deregistrations,
-  balance,
-  finalBalance,
-  fees,
   onConfirm,
   onRequestClose,
   error,
+  unsignedTx,
 }: Props) => {
   const strings = useStrings()
 
@@ -93,17 +84,9 @@ export const WithdrawalDialog = ({
       case WithdrawalDialogSteps.LEDGER_CONNECT:
         return <LedgerConnect onConnectBLE={onConnectBLE} onConnectUSB={onConnectUSB} useUSB={useUSB} />
       case WithdrawalDialogSteps.CONFIRM:
+        if (!unsignedTx) throw new Error("Invalid state: 'error' is undefined")
         return (
-          <TransferSummary
-            withdrawals={withdrawals}
-            deregistrations={deregistrations}
-            balance={balance}
-            finalBalance={finalBalance}
-            fees={fees}
-            onConfirm={onConfirm}
-            onCancel={onRequestClose}
-            useUSB={useUSB}
-          />
+          <TransferSummary unsignedTx={unsignedTx} onConfirm={onConfirm} onCancel={onRequestClose} useUSB={useUSB} />
         )
       case WithdrawalDialogSteps.WAITING_HW_RESPONSE:
         return <PleaseWaitView title="" spinnerText={strings.followSteps} />

@@ -2,7 +2,7 @@
 import type {SignTransactionResponse} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import {TxAuxiliaryDataSupplementType} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import {legacyWalletChecksum, walletChecksum} from '@emurgo/cip4-js'
-import {Addressing, CardanoAddressedUtxo, TxMetadata, UnsignedTx} from '@emurgo/yoroi-lib-core'
+import {Addressing, CardanoAddressedUtxo, TokenEntry, TxMetadata, UnsignedTx} from '@emurgo/yoroi-lib-core'
 import {BigNumber} from 'bignumber.js'
 import ExtendableError from 'es6-error'
 import _ from 'lodash'
@@ -39,6 +39,8 @@ import {NETWORK_REGISTRY} from '../../legacy/types'
 import {deriveRewardAddressHex, normalizeToAddress, toHexOrBase58} from '../../legacy/utils'
 import {SendTokenList, Token} from '../../types'
 import * as YoroiLib from '../cardano'
+import {sumEntries} from '../entries'
+import {YoroiAuxiliary, YoroiEntries, YoroiEntry, YoroiUnsignedTx} from '../types'
 import {genTimeToSlot} from '../utils/timeUtils'
 import {versionCompare} from '../utils/versioning'
 import Wallet, {WalletJSON} from '../Wallet'
@@ -59,12 +61,7 @@ import * as catalystUtils from './catalyst/catalystUtils'
 import {AddressChain, AddressGenerator} from './chain'
 import {HaskellShelleyTxSignRequest} from './HaskellShelleyTxSignRequest'
 import {MultiToken} from './MultiToken'
-import {
-  createDelegationTx,
-  createWithdrawalTx,
-  filterAddressesByStakingKey,
-  getDelegationStatus,
-} from './shelley/delegationUtils'
+import {createDelegationTx, filterAddressesByStakingKey, getDelegationStatus} from './shelley/delegationUtils'
 import {TransactionCache} from './shelley/transactionCache'
 import {newAdaUnsignedTx, signTransaction} from './shelley/transactions'
 import {NetworkId, SignedTxLegacy, WalletImplementationId, WalletInterface, YoroiProvider} from './types'
@@ -755,33 +752,42 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     }
   }
 
-  async createWithdrawalTx(
-    utxos: Array<RawUtxo>,
-    shouldDeregister: boolean,
-    serverTime: Date | void,
-  ): Promise<HaskellShelleyTxSignRequest> {
-    const {rewardAddressHex} = this
-    if (rewardAddressHex == null) throw new Error('reward address is null')
+  async createWithdrawalTx(utxos: Array<RawUtxo>, shouldDeregister: boolean, serverTime: Date | void) {
+    if (this.rewardAddressHex == null) throw new Error('reward address is null')
     const timeToSlotFn = genTimeToSlot(getCardanoBaseConfig(this._getNetworkConfig()))
     const time = serverTime !== undefined ? serverTime : new Date()
-    const absSlotNumber = new BigNumber(timeToSlotFn({time}).slot)
-    const changeAddr = await this._getAddressedChangeAddress()
-    const addressedUtxos = this.asLegacyAddressedUtxo(utxos)
-    const resp = await createWithdrawalTx({
-      absSlotNumber,
-      getAccountState: api.getAccountState,
-      addressedUtxos,
-      withdrawals: [
-        {
-          addressing: this._getRewardAddressAddressing(),
-          rewardAddress: rewardAddressHex,
-          shouldDeregister,
+    const withdrawalRequests = [
+      {
+        addressing: this._getRewardAddressAddressing(),
+        rewardAddress: this.rewardAddressHex,
+        shouldDeregister,
+      },
+    ]
+    const accountState = await api.getAccountState(
+      {addresses: withdrawalRequests.map((withdrawal) => withdrawal.rewardAddress)},
+      this._getNetworkConfig().BACKEND,
+    )
+
+    const unsignedWithdrawalTx = await YoroiLib.cardano.createUnsignedWithdrawalTx(
+      accountState,
+      new BigNumber(timeToSlotFn({time}).slot),
+      this.asAddressedUtxo(utxos),
+      withdrawalRequests,
+      await this._getAddressedChangeAddress(),
+      {
+        keyDeposit: this._getNetworkConfig().KEY_DEPOSIT,
+        linearFee: {
+          coefficient: this._getNetworkConfig().LINEAR_FEE.COEFFICIENT,
+          constant: this._getNetworkConfig().LINEAR_FEE.CONSTANT,
         },
-      ],
-      changeAddr,
-      networkConfig: this._getNetworkConfig(),
-    })
-    return resp
+        minimumUtxoVal: this._getNetworkConfig().MINIMUM_UTXO_VAL,
+        poolDeposit: this._getNetworkConfig().POOL_DEPOSIT,
+        networkId: this._getNetworkConfig().NETWORK_ID,
+      },
+      {},
+    )
+
+    return yoroiUnsignedTx({unsignedTx: unsignedWithdrawalTx, networkConfig: this._getNetworkConfig()})
   }
 
   async signTxWithLedger(request: HaskellShelleyTxSignRequest, useUSB: boolean): Promise<SignedTxLegacy> {
@@ -955,3 +961,128 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
 }
 
 const toHex = (bytes: Uint8Array) => Buffer.from(bytes).toString('hex')
+
+const yoroiUnsignedTx = async ({
+  unsignedTx,
+  networkConfig,
+}: {
+  unsignedTx: UnsignedTx
+  networkConfig: CardanoHaskellShelleyNetwork
+}): Promise<YoroiUnsignedTx> => ({
+  amounts: amounts({unsignedTx}),
+  fee: fee({unsignedTx}),
+  auxiliary: auxiliary({unsignedTx}),
+  entries: entries({unsignedTx}),
+  change: change({unsignedTx}),
+  staking: {
+    deregistrations: await deregistrations({unsignedTx, networkConfig}),
+    withdrawals: await withdrawals({unsignedTx}),
+  },
+
+  unsignedTx,
+})
+
+const amounts = ({unsignedTx}: {unsignedTx: UnsignedTx}): YoroiEntry =>
+  sumEntries(
+    unsignedTx.outputs
+      .map((output) => output.value.values)
+      .flat()
+      .map((tokenEntry) => entry([tokenEntry])),
+  )
+
+const fee = ({unsignedTx}: {unsignedTx: UnsignedTx}) =>
+  unsignedTx.fee.values.reduce(
+    (result, current) => ({
+      ...result,
+      [current.identifier]: current.amount.toString(),
+    }),
+    {} as YoroiEntry,
+  )
+
+const auxiliary = ({unsignedTx}: {unsignedTx: UnsignedTx}) =>
+  unsignedTx.metadata.reduce(
+    (result, current) => ({
+      ...result,
+      [current.label]: current.data,
+    }),
+    {} as YoroiAuxiliary,
+  )
+
+const entries = ({unsignedTx}: {unsignedTx: UnsignedTx}) =>
+  unsignedTx.outputs.reduce(
+    (result, current) => ({
+      ...result,
+      [current.address]: entry(current.value.values),
+    }),
+    {} as YoroiEntries,
+  )
+
+const entry = (values: Array<TokenEntry>) =>
+  values.reduce(
+    (result, current) => ({
+      ...result,
+      [current.identifier]: current.amount.toString(),
+    }),
+    {} as YoroiEntry,
+  )
+
+const change = ({unsignedTx}: {unsignedTx: UnsignedTx}) =>
+  unsignedTx.change.reduce(
+    (result, current) => ({
+      ...result,
+      [current.address]: entry(current.values.values),
+    }),
+    {} as YoroiEntries,
+  )
+
+const deregistrations = async ({
+  unsignedTx,
+  networkConfig: {NETWORK_ID, KEY_DEPOSIT},
+}: {
+  unsignedTx: UnsignedTx
+  networkConfig: CardanoHaskellShelleyNetwork
+}) => {
+  if (!unsignedTx.certificates.hasValue()) return {} // no certificates
+
+  const deregistrations: YoroiEntries = {}
+  const length = await unsignedTx.certificates.len()
+  for (let i = 0; i < length; i++) {
+    const address = await unsignedTx.certificates
+      .get(i)
+      .then((certificate) => certificate.asStakeDeregistration())
+      .then((stakeDeregistration) => stakeDeregistration.stakeCredential())
+      .then((stakeCredential) => RewardAddress.new(NETWORK_ID, stakeCredential))
+      .then((rewardAddress) => rewardAddress.toAddress())
+      .then((address) => address.toBytes())
+      .then((bytes) => Buffer.from(bytes).toString('hex'))
+
+    const refund = {
+      identifier: '',
+      amount: KEY_DEPOSIT,
+    }
+
+    deregistrations[address] = refund
+  }
+
+  return deregistrations
+}
+
+const withdrawals = async ({unsignedTx}: {unsignedTx: UnsignedTx}) => {
+  if (!unsignedTx.certificates.hasValue()) return {} // no withdrawals
+
+  const withdrawalKeys = await unsignedTx.withdrawals.keys()
+  const result: YoroiEntries = {}
+  const length = await unsignedTx.certificates.len()
+  for (let i = 0; i < length; i++) {
+    const rewardAddress = await withdrawalKeys.get(i)
+    const amount = await unsignedTx.withdrawals.get(rewardAddress).then((x) => x.toStr())
+    const address = await rewardAddress
+      .toAddress()
+      .then((address) => address.toBytes())
+      .then((bytes) => Buffer.from(bytes).toString('hex'))
+
+    result[address] = {'': amount}
+  }
+
+  return result
+}

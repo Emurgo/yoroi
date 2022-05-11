@@ -6,13 +6,11 @@ import {sortBy} from 'lodash'
 
 import LocalizableError from '../../../i18n/LocalizableError'
 import assert from '../../../legacy/assert'
-import {CardanoError, InsufficientFunds, RewardAddressEmptyError} from '../../../legacy/errors'
+import {CardanoError} from '../../../legacy/errors'
 import {ObjectValues} from '../../../legacy/flow'
 import type {DefaultAsset} from '../../../legacy/HistoryTransaction'
 import {Logger} from '../../../legacy/logging'
 import type {CardanoHaskellShelleyNetwork} from '../../../legacy/networks'
-import type {BackendConfig} from '../../../legacy/types'
-import type {AccountStateRequest, AccountStateResponse} from '../../../legacy/types'
 import type {AddressedUtxo, Addressing, V4UnsignedTxAddressedUtxoResponse} from '../../../legacy/types'
 import {normalizeToAddress} from '../../../legacy/utils'
 import {StakingStatus} from '../../../types'
@@ -30,7 +28,7 @@ import {
   StakeDeregistration,
   StakeRegistration,
 } from '../..'
-import {CardanoTypes, Certificate, hashTransaction, makeVkeyWitness} from '..'
+import {CardanoTypes, Certificate} from '..'
 import type {TimestampedCertMeta} from './transactionCache'
 import {newAdaUnsignedTx} from './transactions'
 
@@ -319,183 +317,5 @@ export const createDelegationTx = async (request: CreateDelegationTxRequest): Pr
     if (e instanceof LocalizableError || e instanceof ExtendableError) throw e
     Logger.error(`shelley::createDelegationTx:: ${(e as Error).message}`, e)
     throw new CardanoError((e as Error).message)
-  }
-}
-export type CreateWithdrawalTxRequest = {
-  absSlotNumber: BigNumber
-  getAccountState: (arg0: AccountStateRequest, arg1: BackendConfig) => Promise<AccountStateResponse>
-  addressedUtxos: Array<AddressedUtxo>
-  withdrawals: Array<
-    (
-      | {
-          privateKey: CardanoTypes.PrivateKey
-        }
-      | Addressing
-    ) & {
-      rewardAddress: string
-      // address you're withdrawing from (hex)
-
-      /**
-       * you need to withdraw all ADA before deregistering
-       * but you don't need to deregister in order to withdraw
-       * deregistering gives you back the key deposit
-       * so it makes sense if you don't intend to stake on the wallet anymore
-       */
-      shouldDeregister: boolean
-    }
-  >
-  changeAddr: Addressing & {
-    address: string
-  }
-  networkConfig: CardanoHaskellShelleyNetwork
-}
-export type CreateWithdrawalTxResponse = HaskellShelleyTxSignRequest
-export const createWithdrawalTx = async (request: CreateWithdrawalTxRequest): Promise<CreateWithdrawalTxResponse> => {
-  Logger.debug('delegationUtils::createWithdrawalTx called', request)
-  const {changeAddr, addressedUtxos, networkConfig} = request
-
-  try {
-    const protocolParams = {
-      keyDeposit: await BigNum.fromStr(networkConfig.KEY_DEPOSIT),
-      linearFee: await LinearFee.new(
-        await BigNum.fromStr(networkConfig.LINEAR_FEE.COEFFICIENT),
-        await BigNum.fromStr(networkConfig.LINEAR_FEE.CONSTANT),
-      ),
-      minimumUtxoVal: await BigNum.fromStr(networkConfig.MINIMUM_UTXO_VAL),
-      poolDeposit: await BigNum.fromStr(networkConfig.POOL_DEPOSIT),
-      networkId: networkConfig.NETWORK_ID,
-    }
-    const certificates: Array<CardanoTypes.Certificate> = []
-    const neededKeys = {
-      neededHashes: new Set<string>(),
-      wits: new Set<string>(),
-    }
-    const requiredWits: Array<CardanoTypes.Ed25519KeyHash> = []
-
-    for (const withdrawal of request.withdrawals) {
-      const wasmAddr = await RewardAddress.fromAddress(
-        await Address.fromBytes(Buffer.from(withdrawal.rewardAddress, 'hex')),
-      )
-
-      if (wasmAddr == null) {
-        throw new Error('delegationUtils::createWithdrawalTx withdrawal not a reward address')
-      }
-
-      const paymentCred = await wasmAddr.paymentCred()
-      const keyHash = await paymentCred.toKeyhash()
-
-      if (keyHash == null) {
-        throw new Error('Unexpected: withdrawal from a script hash')
-      }
-
-      requiredWits.push(keyHash)
-
-      if (withdrawal.shouldDeregister) {
-        certificates.push(await Certificate.newStakeDeregistration(await StakeDeregistration.new(paymentCred)))
-        neededKeys.neededHashes.add(Buffer.from(await paymentCred.toBytes()).toString('hex'))
-      }
-    }
-
-    const accountStates = await request.getAccountState(
-      {
-        addresses: request.withdrawals.map((withdrawal) => withdrawal.rewardAddress),
-      },
-      networkConfig.BACKEND,
-    )
-    const finalWithdrawals: Array<{
-      address: CardanoTypes.RewardAddress
-      amount: CardanoTypes.BigNum
-    }> = []
-
-    for (const address of Object.keys(accountStates)) {
-      const rewardForAddress = accountStates[address]
-
-      // if key is not registered, we just skip this withdrawal
-      if (rewardForAddress == null) {
-        continue
-      }
-
-      const rewardBalance = new BigNumber(rewardForAddress.remainingAmount)
-
-      // if the reward address is empty, we filter it out of the withdrawal list
-      // although the protocol allows withdrawals of 0 ADA, it's pointless to do
-      // recall: you may want to undelegate the ADA even if there is 0 ADA in the reward address
-      // since you may want to get back your deposit
-      if (rewardBalance.eq(0)) {
-        continue
-      }
-
-      const rewardAddress = await RewardAddress.fromAddress(await Address.fromBytes(Buffer.from(address, 'hex')))
-
-      if (rewardAddress == null) {
-        throw new Error('withdrawal not a reward address')
-      }
-
-      {
-        const stakeCredential = await rewardAddress.paymentCred()
-        neededKeys.neededHashes.add(Buffer.from(await stakeCredential.toBytes()).toString('hex'))
-      }
-      finalWithdrawals.push({
-        address: rewardAddress,
-        amount: await BigNum.fromStr(rewardForAddress.remainingAmount),
-      })
-    }
-
-    // if the end result is no withdrawals and no deregistrations, throw an error
-    if (finalWithdrawals.length === 0 && certificates.length === 0) {
-      throw new RewardAddressEmptyError()
-    }
-
-    const unsignedTxResponse = await newAdaUnsignedTx(
-      [],
-      {
-        address: changeAddr.address,
-        addressing: changeAddr.addressing,
-      },
-      addressedUtxos,
-      request.absSlotNumber,
-      protocolParams,
-      certificates,
-      finalWithdrawals,
-      false,
-    )
-
-    // there wasn't enough in the withdrawal to send anything to us
-    if (unsignedTxResponse.changeAddr.length === 0) {
-      throw new InsufficientFunds()
-    }
-
-    Logger.debug('delegationUtils::createWithdrawalTx success', JSON.stringify(unsignedTxResponse))
-    {
-      const body = await unsignedTxResponse.txBuilder.build()
-
-      for (const withdrawal of request.withdrawals) {
-        if ((withdrawal as any).privateKey != null) {
-          const {privateKey} = withdrawal as any
-          neededKeys.wits.add(
-            Buffer.from(await (await makeVkeyWitness(await hashTransaction(body), privateKey)).toBytes()).toString(
-              'hex',
-            ),
-          )
-        }
-      }
-    }
-    return new HaskellShelleyTxSignRequest({
-      senderUtxos: unsignedTxResponse.senderUtxos,
-      unsignedTx: unsignedTxResponse.txBuilder,
-      changeAddr: unsignedTxResponse.changeAddr,
-      auxiliaryData: undefined,
-      networkSettingSnapshot: {
-        NetworkId: networkConfig.NETWORK_ID,
-        ChainNetworkId: Number.parseInt(networkConfig.CHAIN_NETWORK_ID, 10),
-        KeyDeposit: new BigNumber(networkConfig.KEY_DEPOSIT),
-        PoolDeposit: new BigNumber(networkConfig.POOL_DEPOSIT),
-      },
-      neededStakingKeyHashes: neededKeys,
-    })
-  } catch (e) {
-    if (e instanceof LocalizableError || e instanceof ExtendableError) throw e
-    Logger.error('delegationUtils::createWithdrawalTx error:', JSON.stringify(e))
-    throw e
   }
 }

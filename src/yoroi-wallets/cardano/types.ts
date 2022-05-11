@@ -26,6 +26,7 @@ import {
   Token,
   TokenInfo,
 } from '../../types'
+import {YoroiUnsignedTx} from '../types'
 import Wallet from '../Wallet'
 import type {Addresses} from './chain'
 import {AddressChain} from './chain'
@@ -192,7 +193,7 @@ export interface WalletInterface {
     utxos: Array<RawUtxo>,
     shouldDeregister: boolean,
     serverTime: Date | void,
-  ): Promise<HaskellShelleyTxSignRequest>
+  ): Promise<YoroiUnsignedTx>
 
   signTxWithLedger(request: HaskellShelleyTxSignRequest, useUSB: boolean): Promise<SignedTxLegacy>
 
@@ -266,6 +267,7 @@ export type YoroiWallet = Pick<WalletInterface, YoroiWalletKeys> & {
   checksum: NonNullable<WalletInterface['checksum']>
   isReadOnly: NonNullable<WalletInterface['isReadOnly']>
   rewardAddressHex: NonNullable<WalletInterface['rewardAddressHex']>
+  hwDeviceInfo: WalletInterface['hwDeviceInfo']
 }
 
 export const isYoroiWallet = (wallet: unknown): wallet is YoroiWallet => {
@@ -278,6 +280,7 @@ type YoroiWalletKeys =
   | 'checksum'
   | 'provider'
   | 'isHW'
+  | 'hwDeviceInfo'
   | 'isEasyConfirmationEnabled'
   | 'walletImplementationId'
   | 'isReadOnly'
@@ -309,6 +312,7 @@ const yoroiWalletKeys: Array<YoroiWalletKeys> = [
   'provider',
   'publicKeyHex',
   'isHW',
+  'hwDeviceInfo',
   'isEasyConfirmationEnabled',
   'walletImplementationId',
   'isReadOnly',

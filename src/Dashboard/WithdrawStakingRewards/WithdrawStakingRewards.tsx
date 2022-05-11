@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {NavigationProp} from '@react-navigation/native'
-import {BigNumber} from 'bignumber.js'
 import React from 'react'
 import {IntlShape} from 'react-intl'
 import {Platform} from 'react-native'
@@ -13,16 +12,10 @@ import {ensureKeysValidity} from '../../legacy/deviceSettings'
 import {WrongPassword} from '../../legacy/errors'
 import {ISignRequest} from '../../legacy/ISignRequest'
 import KeyStore from '../../legacy/KeyStore'
-import type {DeviceId, DeviceObj, HWDeviceInfo} from '../../legacy/ledgerUtils'
+import type {DeviceId, DeviceObj} from '../../legacy/ledgerUtils'
 import {RawUtxo} from '../../legacy/types'
 import {DefaultAsset} from '../../types'
-import {
-  HaskellShelleyTxSignRequest,
-  MultiToken,
-  ServerStatus,
-  SystemAuthDisabled,
-  walletManager,
-} from '../../yoroi-wallets'
+import {ServerStatus, SystemAuthDisabled, walletManager, YoroiUnsignedTx, YoroiWallet} from '../../yoroi-wallets'
 import {WithdrawalDialog} from './WithdrawalDialog'
 
 export enum WithdrawalDialogSteps {
@@ -39,12 +32,10 @@ export enum WithdrawalDialogSteps {
 type Props = {
   intl: IntlShape
   navigation: NavigationProp<any>
+  wallet: YoroiWallet
   utxos: Array<RawUtxo> | undefined | null
   setLedgerDeviceId: (deviceID: DeviceId) => Promise<void>
   setLedgerDeviceObj: (deviceObj: DeviceObj) => Promise<void>
-  isHW: boolean
-  isEasyConfirmationEnabled: boolean
-  hwDeviceInfo: HWDeviceInfo
   submitTransaction: (request: ISignRequest, text: string) => Promise<void>
   submitSignedTx: (text: string) => Promise<void>
   defaultAsset: DefaultAsset
@@ -55,18 +46,7 @@ type Props = {
 type State = {
   withdrawalDialogStep: WithdrawalDialogSteps
   useUSB: boolean
-  signTxRequest: HaskellShelleyTxSignRequest | null
-  withdrawals: Array<{
-    address: string
-    amount: MultiToken
-  }> | null
-  deregistrations: Array<{
-    rewardAddress: string
-    refund: MultiToken
-  }> | null
-  balance: BigNumber
-  finalBalance: BigNumber
-  fees: BigNumber
+  unsignedTx: YoroiUnsignedTx | null
   error:
     | undefined
     | {
@@ -80,12 +60,7 @@ export class WithdrawStakingRewards extends React.Component<Props, State> {
   state = {
     withdrawalDialogStep: WithdrawalDialogSteps.WARNING,
     useUSB: false,
-    signTxRequest: null,
-    withdrawals: null,
-    deregistrations: null,
-    balance: new BigNumber(0),
-    finalBalance: new BigNumber(0),
-    fees: new BigNumber(0),
+    unsignedTx: null,
     error: undefined,
   }
 
@@ -100,7 +75,11 @@ export class WithdrawStakingRewards extends React.Component<Props, State> {
 
   onKeepOrDeregisterKey = async (shouldDeregister: boolean): Promise<void> => {
     this._shouldDeregister = shouldDeregister
-    if (this.props.isHW && Platform.OS === 'android' && CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT) {
+    if (
+      this.props.wallet.isHW &&
+      Platform.OS === 'android' &&
+      CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT
+    ) {
       // toggle ledger transport switch modal
       this.setState({
         withdrawalDialogStep: WithdrawalDialogSteps.CHOOSE_TRANSPORT,
@@ -111,50 +90,17 @@ export class WithdrawStakingRewards extends React.Component<Props, State> {
   }
 
   /* create withdrawal tx and move to confirm */
-  createWithdrawalTx = async (): Promise<void> => {
-    const {intl, utxos, defaultAsset, serverStatus} = this.props
+  createWithdrawalTx = async () => {
+    const {intl, utxos, serverStatus, wallet} = this.props
     try {
       if (utxos == null) throw new Error('cannot get utxos') // should never happen
       this.setState({withdrawalDialogStep: WithdrawalDialogSteps.WAITING})
-      const signTxRequest = await walletManager.createWithdrawalTx(
-        utxos,
-        this._shouldDeregister,
-        serverStatus.serverTime,
-      )
-      if (signTxRequest instanceof HaskellShelleyTxSignRequest) {
-        const withdrawals = await signTxRequest.withdrawals()
-        const deregistrations = await signTxRequest.keyDeregistrations()
-        const balance = withdrawals.reduce(
-          (sum, curr) => (curr.amount == null ? sum : sum.joinAddCopy(curr.amount)),
-          new MultiToken([], {
-            defaultNetworkId: defaultAsset.networkId,
-            defaultIdentifier: defaultAsset.identifier,
-          }),
-        )
-        const fees = await signTxRequest.fee()
-        const finalBalance = balance
-          .joinAddMutable(
-            deregistrations.reduce(
-              (sum, curr) => (curr.refund == null ? sum : sum.joinAddCopy(curr.refund)),
-              new MultiToken([], {
-                defaultNetworkId: defaultAsset.networkId,
-                defaultIdentifier: defaultAsset.identifier,
-              }),
-            ),
-          )
-          .joinSubtractMutable(fees)
-        this.setState({
-          signTxRequest,
-          withdrawals,
-          deregistrations,
-          balance: balance.getDefault(),
-          finalBalance: finalBalance.getDefault(),
-          fees: fees.getDefault(),
-          withdrawalDialogStep: WithdrawalDialogSteps.CONFIRM,
-        })
-      } else {
-        throw new Error('unexpected withdrawal tx type')
-      }
+      const unsignedTx = await wallet.createWithdrawalTx(utxos, this._shouldDeregister, serverStatus.serverTime)
+
+      this.setState({
+        unsignedTx,
+        withdrawalDialogStep: WithdrawalDialogSteps.CONFIRM,
+      })
     } catch (e) {
       if (e instanceof LocalizableError) {
         this.setState({
@@ -183,11 +129,12 @@ export class WithdrawStakingRewards extends React.Component<Props, State> {
     })
 
   onChooseTransport = async (useUSB: boolean): Promise<void> => {
-    const {hwDeviceInfo} = this.props
+    const {wallet} = this.props
+    if (!wallet.hwDeviceInfo) throw new Error('Invalid wallet state')
     this.setState({useUSB})
     if (
-      (useUSB && hwDeviceInfo.hwFeatures.deviceObj == null) ||
-      (!useUSB && hwDeviceInfo.hwFeatures.deviceId == null)
+      (useUSB && wallet.hwDeviceInfo.hwFeatures.deviceObj == null) ||
+      (!useUSB && wallet.hwDeviceInfo.hwFeatures.deviceId == null)
     ) {
       this.openLedgerConnect()
     } else {
@@ -209,9 +156,9 @@ export class WithdrawStakingRewards extends React.Component<Props, State> {
   // Ideally, all this logic should be moved away and perhaps written as a
   // redux action that can be reused in all components with tx signing and sending
   onConfirm = async (password: string | undefined): Promise<void> => {
-    const {signTxRequest, useUSB} = this.state
-    const {intl, navigation, isHW, isEasyConfirmationEnabled, submitTransaction, submitSignedTx} = this.props
-    if (signTxRequest == null) throw new Error('no tx data')
+    const {unsignedTx, useUSB} = this.state
+    const {intl, navigation, wallet, submitTransaction, submitSignedTx} = this.props
+    if (unsignedTx == null) throw new Error('no tx data')
 
     const submitTx = async (tx: string | ISignRequest, decryptedKey?: string) => {
       if (decryptedKey == null && typeof tx === 'string') {
@@ -248,25 +195,25 @@ export class WithdrawStakingRewards extends React.Component<Props, State> {
     }
 
     try {
-      if (isHW) {
+      if (wallet.isHW) {
         this.setState({
           withdrawalDialogStep: WithdrawalDialogSteps.WAITING_HW_RESPONSE,
         })
-        if (signTxRequest == null) throw new Error('no tx data')
-        const signedTx = await walletManager.signTxWithLedger(signTxRequest, useUSB)
+        if (unsignedTx == null) throw new Error('no tx data')
+        const signedTx = await wallet.signTxWithLedger(unsignedTx, useUSB)
         this.setState({withdrawalDialogStep: WithdrawalDialogSteps.WAITING})
         await submitTx(Buffer.from(signedTx.encodedTx).toString('base64'))
         this.closeWithdrawalDialog()
         return
       }
 
-      if (isEasyConfirmationEnabled) {
+      if (wallet.isEasyConfirmationEnabled) {
         try {
-          await ensureKeysValidity(walletManager._id)
+          await ensureKeysValidity(wallet.id)
           navigation.navigate('', {
-            keyId: walletManager._id,
+            keyId: wallet.id,
             onSuccess: async (decryptedKey) => {
-              await submitTx(signTxRequest, decryptedKey)
+              await submitTx(unsignedTx, decryptedKey)
             },
             onFail: () => navigation.goBack(),
           })
@@ -289,9 +236,9 @@ export class WithdrawStakingRewards extends React.Component<Props, State> {
 
       try {
         this.setState({withdrawalDialogStep: WithdrawalDialogSteps.WAITING})
-        const decryptedData = await KeyStore.getData(walletManager._id, 'MASTER_PASSWORD', '', password, intl)
+        const decryptedData = await KeyStore.getData(wallet.id, 'MASTER_PASSWORD', '', password, intl)
 
-        await submitTx(signTxRequest, decryptedData)
+        await submitTx(unsignedTx, decryptedData)
         this.closeWithdrawalDialog()
       } catch (e) {
         if (e instanceof WrongPassword) {
@@ -342,14 +289,10 @@ export class WithdrawStakingRewards extends React.Component<Props, State> {
         useUSB={this.state.useUSB}
         onConnectBLE={this.onConnectBLE}
         onConnectUSB={this.onConnectUSB}
-        withdrawals={this.state.withdrawals}
-        deregistrations={this.state.deregistrations}
-        balance={this.state.balance}
-        finalBalance={this.state.finalBalance}
-        fees={this.state.fees}
         onConfirm={this.onConfirm}
         onRequestClose={this.closeWithdrawalDialog}
         error={this.state.error}
+        unsignedTx={this.state.unsignedTx}
       />
     )
   }

@@ -2,44 +2,35 @@ import {BigNumber} from 'bignumber.js'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
-import {useSelector} from 'react-redux'
 
 import {Text, TextInput, TwoActionView} from '../../../../components'
+import {useTokenInfo} from '../../../../hooks'
 import {Instructions as HWInstructions} from '../../../../HW'
 import {confirmationMessages, txLabels} from '../../../../i18n/global-messages'
 import {CONFIG} from '../../../../legacy/config'
 import {formatTokenWithText} from '../../../../legacy/format'
 import {getNetworkConfigById} from '../../../../legacy/networks'
-import {defaultNetworkAssetSelector} from '../../../../legacy/selectors'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
-import {MultiToken, TxDeregistration, TxWithdrawal} from '../../../../yoroi-wallets'
+import {diffEntries, sumEntries, YoroiEntries, YoroiUnsignedTx} from '../../../../yoroi-wallets'
 
 type Props = {
-  withdrawals: Array<TxWithdrawal> | null
-  deregistrations: Array<TxDeregistration> | null
-  balance: BigNumber
-  finalBalance: BigNumber
-  fees: BigNumber
+  unsignedTx: YoroiUnsignedTx
   onConfirm: (password?: string | undefined) => void
   onCancel: () => void
   useUSB?: boolean
 }
 
-export const TransferSummary = ({
-  withdrawals,
-  deregistrations,
-  balance,
-  finalBalance,
-  fees,
-  onConfirm,
-  onCancel,
-  useUSB,
-}: Props) => {
+export const TransferSummary = ({unsignedTx, onConfirm, onCancel, useUSB}: Props) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
-  const defaultAsset = useSelector(defaultNetworkAssetSelector)
   const [password, setPassword] = React.useState(CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '')
+
+  const rewards = sumEntries(Object.values(unsignedTx.staking.withdrawals))
+  const deregistrations = sumEntries(Object.values(unsignedTx.staking.deregistrations))
+  // withdraws + deregistrations - fee
+  const total = diffEntries(sumEntries([rewards, deregistrations]), unsignedTx.fee)
+  const tokenInfo = useTokenInfo({wallet, tokenId: ''})
 
   return (
     <TwoActionView
@@ -52,22 +43,28 @@ export const TransferSummary = ({
     >
       <Item>
         <Text>{strings.balanceLabel}</Text>
-        <Text style={styles.balanceAmount}>{formatTokenWithText(balance, defaultAsset)}</Text>
+        <Text style={styles.balanceAmount}>{formatTokenWithText(new BigNumber(rewards[''] || '0'), tokenInfo)}</Text>
       </Item>
 
       <Item>
         <Text>{strings.fees}</Text>
-        <Text style={styles.balanceAmount}>{formatTokenWithText(fees, defaultAsset)}</Text>
+        <Text style={styles.balanceAmount}>
+          {formatTokenWithText(new BigNumber(unsignedTx.fee[''] || '0'), tokenInfo)}
+        </Text>
       </Item>
 
       <Item>
         <Text>{strings.finalBalanceLabel}</Text>
-        <Text style={styles.balanceAmount}>{formatTokenWithText(finalBalance, defaultAsset)}</Text>
+        <Text style={styles.balanceAmount}>{formatTokenWithText(new BigNumber(total[''] || '0'), tokenInfo)}</Text>
       </Item>
 
-      {withdrawals && withdrawals.length > 0 && <Withdrawals withdrawals={withdrawals} />}
+      {Object.keys(unsignedTx.staking.withdrawals).length > 0 && (
+        <Withdrawals withdrawals={unsignedTx.staking.withdrawals} />
+      )}
 
-      {deregistrations && deregistrations.length > 0 && <Deregistrations deregistrations={deregistrations} />}
+      {Object.keys(unsignedTx.staking.deregistrations).length > 0 && (
+        <Deregistrations deregistrations={unsignedTx.staking.deregistrations} />
+      )}
 
       {wallet.isHW && <HWInstructions useUSB={useUSB} addMargin />}
 
@@ -86,60 +83,44 @@ export const TransferSummary = ({
   )
 }
 
-const Withdrawals: React.FC<{withdrawals: Array<TxWithdrawal>}> = ({withdrawals}) => {
+const Withdrawals: React.FC<{withdrawals: YoroiEntries}> = ({withdrawals}) => {
   const wallet = useSelectedWallet()
   const strings = useStrings()
 
   return (
     <Item>
       <Text>{strings.withdrawals}</Text>
-      {withdrawals.map((withdrawal) => (
+      {Object.keys(withdrawals).map((address) => (
         <TouchableOpacity
-          key={withdrawal.address}
+          key={address}
           activeOpacity={0.5}
-          onPress={() =>
-            Linking.openURL(getNetworkConfigById(wallet.networkId).EXPLORER_URL_FOR_ADDRESS(withdrawal.address))
-          }
+          onPress={() => Linking.openURL(getNetworkConfigById(wallet.networkId).EXPLORER_URL_FOR_ADDRESS(address))}
         >
-          <Text secondary>{withdrawal.address}</Text>
+          <Text secondary>{address}</Text>
         </TouchableOpacity>
       ))}
     </Item>
   )
 }
 
-const Deregistrations: React.FC<{deregistrations: Array<TxDeregistration>}> = ({deregistrations}) => {
+const Deregistrations: React.FC<{deregistrations: YoroiEntries}> = ({deregistrations}) => {
   const wallet = useSelectedWallet()
-  const defaultAsset = useSelector(defaultNetworkAssetSelector)
   const strings = useStrings()
-  const refundAmount = formatTokenWithText(
-    deregistrations
-      .reduce(
-        (sum, curr) => (curr.refund == null ? sum : sum.joinAddCopy(curr.refund)),
-        new MultiToken([], {
-          defaultNetworkId: defaultAsset.networkId,
-          defaultIdentifier: defaultAsset.identifier,
-        }),
-      )
-      .getDefault(),
-    defaultAsset,
-  ).toString()
+  const tokenInfo = useTokenInfo({wallet, tokenId: ''})
+  const totalRefund = sumEntries(Object.values(deregistrations).flat())
+  const refundAmount = formatTokenWithText(new BigNumber(totalRefund[''] || '0'), tokenInfo)
 
   return (
     <>
       <Item>
         <Text>{strings.stakeDeregistration}</Text>
-        {deregistrations.map((deregistration) => (
+        {Object.keys(deregistrations).map((address) => (
           <TouchableOpacity
-            key={deregistration.rewardAddress}
+            key={address}
             activeOpacity={0.5}
-            onPress={() =>
-              Linking.openURL(
-                getNetworkConfigById(wallet.networkId).EXPLORER_URL_FOR_ADDRESS(deregistration.rewardAddress),
-              )
-            }
+            onPress={() => Linking.openURL(getNetworkConfigById(wallet.networkId).EXPLORER_URL_FOR_ADDRESS(address))}
           >
-            <Text secondary>{deregistration.rewardAddress}</Text>
+            <Text secondary>{address}</Text>
           </TouchableOpacity>
         ))}
       </Item>

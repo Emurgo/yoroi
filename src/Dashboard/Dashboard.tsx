@@ -17,7 +17,6 @@ import {getDefaultAssetByNetworkId} from '../legacy/config'
 import {setLedgerDeviceId, setLedgerDeviceObj} from '../legacy/hwWallet'
 import {getCardanoNetworkConfigById} from '../legacy/networks'
 import {
-  hwDeviceInfoSelector,
   isFetchingAccountStateSelector,
   isFetchingUtxosSelector,
   isOnlineSelector,
@@ -51,7 +50,6 @@ export const Dashboard = () => {
   const isFetchingAccountState = useSelector(isFetchingAccountStateSelector)
   const lastAccountStateSyncError = useSelector(lastAccountStateFetchErrorSelector)
   const isOnline = useSelector(isOnlineSelector)
-  const hwDeviceInfo = useSelector(hwDeviceInfoSelector)
   const serverStatus = useSelector(serverStatusSelector)
 
   const wallet = useSelectedWallet()
@@ -175,10 +173,8 @@ export const Dashboard = () => {
         <WithdrawStakingRewards
           intl={intl}
           navigation={navigation}
+          wallet={wallet}
           utxos={utxos}
-          isEasyConfirmationEnabled={wallet.isEasyConfirmationEnabled}
-          isHW={wallet.isHW}
-          hwDeviceInfo={hwDeviceInfo as any}
           defaultAsset={getDefaultAssetByNetworkId(wallet.networkId)}
           serverStatus={serverStatus}
           setLedgerDeviceId={(...args) => dispatch(setLedgerDeviceId(...args)) as any}

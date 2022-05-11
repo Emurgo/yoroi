@@ -1,3 +1,5 @@
 export * from './cardano'
+export * from './entries'
+export * from './types'
 export * from './Wallet'
 export * from './walletManager'
