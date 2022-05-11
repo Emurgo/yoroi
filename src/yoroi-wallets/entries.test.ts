@@ -1,4 +1,4 @@
-import {diffEntries, sumEntries} from './entries'
+import {diffEntries, negated, sumEntries} from './entries'
 import {YoroiEntry} from './types'
 
 describe('entries', () => {
@@ -48,6 +48,14 @@ describe('entries', () => {
         c: '2',
         d: '-1',
       })
+    })
+  })
+
+  describe('negated', () => {
+    it('should negate amount', () => {
+      const amount = '1'
+      const result = negated(amount)
+      expect(result).toEqual('-1')
     })
   })
 })
