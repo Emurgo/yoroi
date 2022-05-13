@@ -9,8 +9,7 @@ import {Logger} from '../legacy/utils/logging'
 import storage from '../legacy/utils/storage'
 
 async function toShelleyWalletMeta(currentWalletMeta: Partial<WalletMeta>): Promise<WalletMeta> {
-  if (!currentWalletMeta?.id) throw new Error(`Wallet meta stored is corrupted. ${JSON.stringify(currentWalletMeta)}`)
-
+  if (!currentWalletMeta.id) throw new Error(`Wallet meta stored is corrupted. ${JSON.stringify(currentWalletMeta)}`)
   const walletData = await storage.read(`/wallet/${currentWalletMeta.id}/data`)
   const walletMetaUpdate: Partial<WalletMeta> = {...currentWalletMeta}
 
@@ -40,16 +39,22 @@ async function toShelleyWalletMeta(currentWalletMeta: Partial<WalletMeta>): Prom
   }
 
   // migrate checksum
-  if (!currentWalletMeta?.checksum) {
+  if (!currentWalletMeta.checksum || !currentWalletMeta.checksum?.ImagePart) {
     if (walletData != null && walletData?.externalChain?.addressGenerator != null) {
-      const {accountPubKeyHex} = walletData.externalChain.addressGenerator
+      const {accountPubKeyHex, account} = walletData.externalChain.addressGenerator
       switch (walletImplementationId) {
         case WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID:
+          checksum = legacyWalletChecksum(accountPubKeyHex || account.root_cached_key)
+          break
+        case WALLETS.HASKELL_SHELLEY_24.WALLET_IMPLEMENTATION_ID:
+        case WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID:
+          checksum = walletChecksum(accountPubKeyHex)
+          break
         case WALLETS.JORMUNGANDR_ITN.WALLET_IMPLEMENTATION_ID:
-          checksum = legacyWalletChecksum(accountPubKeyHex)
+          checksum = legacyWalletChecksum(account?.root_cached_key || '')
           break
         default:
-          checksum = walletChecksum(accountPubKeyHex)
+          checksum = {ImagePart: '', TextPart: ''}
       }
     } else {
       checksum = {ImagePart: '', TextPart: ''}
@@ -104,25 +109,25 @@ function isWalletMeta(walletMeta: WalletMeta | object | undefined): walletMeta i
   return (
     // prettier-ignore
     !!walletMeta &&
-    'id' in walletMeta 
+    'id' in walletMeta
       && typeof walletMeta.id === 'string' &&
-    'name' in walletMeta 
+    'name' in walletMeta
       && typeof walletMeta.name === 'string' &&
-    'networkId' in walletMeta 
+    'networkId' in walletMeta
       && typeof walletMeta.networkId === 'number' &&
-    'isHW' in walletMeta 
+    'isHW' in walletMeta
       && typeof walletMeta.isHW === 'boolean' &&
-    'isEasyConfirmationEnabled' in walletMeta 
+    'isEasyConfirmationEnabled' in walletMeta
       && typeof walletMeta.isEasyConfirmationEnabled === 'boolean' &&
-    'checksum' in walletMeta 
+    'checksum' in walletMeta
       && typeof walletMeta.checksum === 'object' &&
-    ('provider' in walletMeta 
+    ('provider' in walletMeta
       && typeof walletMeta.provider === 'string'
       || !('provider' in walletMeta)) &&
-    'walletImplementationId' in walletMeta 
-      && typeof walletMeta.walletImplementationId === 'string' 
+    'walletImplementationId' in walletMeta
+      && typeof walletMeta.walletImplementationId === 'string'
       && Object.values(WALLET_IMPLEMENTATION_REGISTRY).includes(walletMeta?.walletImplementationId) &&
-    ('isShelley' in walletMeta 
+    ('isShelley' in walletMeta
       && typeof walletMeta.isShelley === 'boolean'
       || !('isShelley' in walletMeta))
   )

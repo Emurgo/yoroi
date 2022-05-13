@@ -33,6 +33,12 @@ const mockedWalletData = Object.freeze({
   id: 'wallet-id',
   externalChain: {
     addressGenerator: {
+      account: {
+        derivation_scheme: 'V2',
+        root_cached_key:
+          '7f53efa3c08093db3824235769079e96ef96b6680fc254f6c021ec420e4d1555' +
+          'b5bafb0b1fc6c8040cc8f69f7c1948dfb4dcadec4acd09730c0efb39c6159362',
+      },
       accountPubKeyHex:
         '8e4e2f11b6ac2a269913286e26339779ab8767579d18d173cdd324929d94e2c43e3ec212cc8a36ed9860579dfe1e3ef4d6de778c5dbdd981623b48727cd96247',
     },
@@ -197,9 +203,9 @@ describe('migrateWalletMetas()', () => {
           ...mockedWalletMeta,
           walletImplementationId: WALLETS.JORMUNGANDR_ITN.WALLET_IMPLEMENTATION_ID,
           checksum: {
-            TextPart: 'ATPE-6458',
+            TextPart: 'SKBE-5478',
             ImagePart:
-              '1dda96f3e8a39341da9549bef4be416c173eeb940f092cfc98d5c63a06c6007d326c77a599b1fd36ddf57507b8ea52537f129dac7bceb18c674bc3baab90411f',
+              '61942e0a01bd7eccff636a468e4d04bd05fe2169c2d26f83236ade661860d93e22c07ff007117555c6a15a92ac43f88e453d31c3b7a240dcd11ca3a7eba29321',
           },
         }
 
