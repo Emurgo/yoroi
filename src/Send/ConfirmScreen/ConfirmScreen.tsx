@@ -17,50 +17,33 @@ import {useParams, useWalletNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {TokenEntry} from '../../types'
-import {CreateUnsignedTxResponse} from '../../yoroi-wallets'
+import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
+import {Entries} from '../../yoroi-wallets/yoroiUnsignedTx'
 
 export type Params = {
-  transactionData: CreateUnsignedTxResponse
-  defaultAssetAmount: BigNumber
-  address: string
+  unsignedTx: YoroiUnsignedTx
   balanceAfterTx: BigNumber
   availableAmount: BigNumber
-  fee: BigNumber
-  tokens: TokenEntry[]
   easyConfirmDecryptKey: string
 }
 
 const isParams = (params?: Params | object | undefined): params is Params => {
   return (
     !!params &&
-    'transactionData' in params &&
-    typeof params.transactionData === 'object' &&
-    'defaultAssetAmount' in params &&
-    params.defaultAssetAmount instanceof BigNumber &&
-    'address' in params &&
-    typeof params.address === 'string' &&
+    'unsignedTx' in params &&
+    typeof params.unsignedTx === 'object' &&
     'balanceAfterTx' in params &&
     params.balanceAfterTx instanceof BigNumber &&
     'availableAmount' in params &&
     params.availableAmount instanceof BigNumber &&
-    'fee' in params &&
-    params.fee instanceof BigNumber &&
-    'tokens' in params &&
-    Array.isArray(params.tokens)
+    'easyConfirmDecryptKey' in params &&
+    typeof params.easyConfirmDecryptKey === 'string'
   )
 }
 
 export const ConfirmScreen = () => {
   const strings = useStrings()
-  const {
-    defaultAssetAmount,
-    address,
-    balanceAfterTx,
-    availableAmount,
-    fee,
-    tokens: tokenEntries,
-    transactionData: signRequest,
-  } = useParams(isParams)
+  const {balanceAfterTx, availableAmount, unsignedTx} = useParams(isParams)
   const {resetToTxHistory} = useWalletNavigation()
   const wallet = useSelectedWallet()
   const {isHW, isEasyConfirmationEnabled} = wallet
@@ -78,6 +61,9 @@ export const ConfirmScreen = () => {
     resetToTxHistory()
   }
 
+  const entry = Entries.first(unsignedTx.entries)
+  const secondaryAmounts = Object.entries(unsignedTx.amounts).filter(([tokenId]) => tokenId !== '')
+
   return (
     <View style={styles.root}>
       <View style={{flex: 1}}>
@@ -89,7 +75,7 @@ export const ConfirmScreen = () => {
 
         <ScrollView style={styles.container} contentContainerStyle={{padding: 16}}>
           <Text small>
-            {strings.fees}: {formatTokenWithSymbol(fee, defaultAsset)}
+            {strings.fees}: {formatTokenWithSymbol(new BigNumber(unsignedTx.fee['']), defaultAsset)}
           </Text>
 
           <Text small>
@@ -99,16 +85,16 @@ export const ConfirmScreen = () => {
           <Spacer height={16} />
 
           <Text>{strings.receiver}</Text>
-          <Text>{address}</Text>
+          <Text>{entry.address}</Text>
 
           <Spacer height={16} />
 
           <Text>{strings.total}</Text>
-          <Text style={styles.amount}>{formatTokenWithSymbol(defaultAssetAmount, defaultAsset)}</Text>
+          <Text style={styles.amount}>{formatTokenWithSymbol(new BigNumber(entry.amounts['']), defaultAsset)}</Text>
 
-          {tokenEntries.map((entry) => (
-            <Boundary key={entry.identifier}>
-              <Entry tokenEntry={entry} />
+          {secondaryAmounts.map(([tokenId, amount]) => (
+            <Boundary key={tokenId}>
+              <Entry tokenEntry={{identifier: tokenId, amount: new BigNumber(amount), networkId: 1}} />
             </Boundary>
           ))}
 
@@ -130,7 +116,7 @@ export const ConfirmScreen = () => {
         <Actions>
           <ConfirmTx
             onSuccess={onSuccess}
-            txDataSignRequest={signRequest}
+            unsignedTx={unsignedTx}
             useUSB={useUSB}
             setUseUSB={setUseUSB}
             isProvidingPassword

@@ -1,4 +1,3 @@
-import {UnsignedTx} from '@emurgo/yoroi-lib-core'
 import {useNavigation} from '@react-navigation/native'
 import {BigNumber} from 'bignumber.js'
 import _ from 'lodash'
@@ -28,6 +27,7 @@ import {COLORS} from '../../theme'
 import {TokenEntry} from '../../types'
 import {UtxoAutoRefresher} from '../../UtxoAutoRefresher'
 import {MultiToken} from '../../yoroi-wallets'
+import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
 import {parseAmountDecimal} from '../../yoroi-wallets/utils/parsing'
 import type {
   AddressValidationErrors,
@@ -85,7 +85,7 @@ export const SendScreen = ({
   const [amountErrors, setAmountErrors] = React.useState<AmountValidationErrors>({amountIsRequired: true})
   const [balanceErrors, setBalanceErrors] = React.useState<BalanceValidationErrors>({})
   const [balanceAfter, setBalanceAfter] = React.useState<BigNumber | null>(null)
-  const [unsignedTx, setUnsignedTx] = React.useState<null | UnsignedTx>(null)
+  const [unsignedTx, setUnsignedTx] = React.useState<null | YoroiUnsignedTx>(null)
   const [fee, setFee] = React.useState<BigNumber | null>(null)
   const [recomputing, setRecomputing] = React.useState(false)
   const [showSendAllWarning, setShowSendAllWarning] = React.useState(false)
@@ -166,9 +166,9 @@ export const SendScreen = ({
 
     const tokens: Array<TokenEntry> = tokenInfo.isDefault
       ? sendAll
-        ? new MultiToken(unsignedTx.totalOutput.values, {
-            defaultNetworkId: unsignedTx.totalOutput.defaults.networkId,
-            defaultIdentifier: unsignedTx.totalOutput.defaults.identifier,
+        ? new MultiToken(unsignedTx.unsignedTx.totalOutput.values, {
+            defaultNetworkId: unsignedTx.unsignedTx.totalOutput.defaults.networkId,
+            defaultIdentifier: unsignedTx.unsignedTx.totalOutput.defaults.identifier,
           }).nonDefaultEntries()
         : []
       : [

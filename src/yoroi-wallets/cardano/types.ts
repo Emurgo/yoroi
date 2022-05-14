@@ -26,6 +26,7 @@ import {
   Token,
   TokenInfo,
 } from '../../types'
+import {YoroiUnsignedTx} from '../types'
 import Wallet from '../Wallet'
 import type {Addresses} from './chain'
 import {AddressChain} from './chain'
@@ -165,7 +166,7 @@ export interface WalletInterface {
     defaultToken: Token,
     serverTime: Date | null | void,
     metadata: Array<TxMetadata> | void,
-  ): Promise<UnsignedTx>
+  ): Promise<YoroiUnsignedTx>
 
   signTx(signRequest: UnsignedTx, decryptedMasterKey: string): Promise<SignedTx>
   signTxLegacy(signRequest: HaskellShelleyTxSignRequest, decryptedMasterKey: string): Promise<SignedTxLegacy>

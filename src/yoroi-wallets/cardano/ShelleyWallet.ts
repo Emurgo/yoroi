@@ -42,6 +42,7 @@ import * as YoroiLib from '../cardano'
 import {genTimeToSlot} from '../utils/timeUtils'
 import {versionCompare} from '../utils/versioning'
 import Wallet, {WalletJSON} from '../Wallet'
+import {yoroiUnsignedTx} from '../yoroiUnsignedTx'
 import {
   Address,
   BigNum,
@@ -533,7 +534,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
         {metadata: auxiliaryData},
       )
 
-      return unsignedTx
+      return yoroiUnsignedTx({unsignedTx, networkConfig: this._getNetworkConfig()})
     } catch (e) {
       if (e instanceof InsufficientFunds || e instanceof NoOutputsError) throw e
       Logger.error(`shelley::createUnsignedTx:: ${(e as Error).message}`, e)
