@@ -1,15 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type {WalletChecksum} from '@emurgo/cip4-js'
-import {legacyWalletChecksum, walletChecksum} from '@emurgo/cip4-js'
 import {TxMetadata} from '@emurgo/yoroi-lib-core'
 import {BigNumber} from 'bignumber.js'
 import ExtendableError from 'es6-error'
 import _ from 'lodash'
 import type {IntlShape} from 'react-intl'
 
+import {migrateWalletMetas} from '../appStorage'
 import {APP_SETTINGS_KEYS, readAppSettings} from '../legacy/appSettings'
 import assert from '../legacy/assert'
-import {CONFIG, DISABLE_BACKGROUND_SYNC, WALLETS} from '../legacy/config'
+import {CONFIG, DISABLE_BACKGROUND_SYNC} from '../legacy/config'
 import {canBiometricEncryptionBeEnabled, ensureKeysValidity, isSystemAuthSupported} from '../legacy/deviceSettings'
 import {ObjectValues} from '../legacy/flow'
 import type {DefaultAsset} from '../legacy/HistoryTransaction'
@@ -40,7 +39,6 @@ import {
   YoroiProvider,
   YoroiWallet,
 } from './cardano'
-import {WalletJSON} from './Wallet'
 
 export class WalletClosed extends ExtendableError {}
 export class SystemAuthDisabled extends ExtendableError {}
@@ -82,76 +80,12 @@ class WalletManager {
   // The responsibility to check data consistency is left to the each wallet
   // implementation.
   async initialize() {
-    const _wallets = await this._listWallets()
+    const _storedWalletMetas = await this._listWallets()
     // need to migrate wallet list to new format after (haskell) shelley
     // integration. Prior to v3.0, w.isShelley denoted an ITN wallet
-    const wallets = await Promise.all(
-      _wallets.map(async (w) => {
-        let networkId
-        let walletImplementationId
-        if (w.networkId == null && w.isShelley != null) {
-          networkId = w.isShelley ? NETWORK_REGISTRY.JORMUNGANDR : NETWORK_REGISTRY.HASKELL_SHELLEY
-          walletImplementationId = w.isShelley
-            ? WALLETS.JORMUNGANDR_ITN.WALLET_IMPLEMENTATION_ID
-            : WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID
-        } else {
-          // if wallet implementation/network is not defined, assume Byron
-          walletImplementationId =
-            w.walletImplementationId != null ? w.walletImplementationId : WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID
-          networkId =
-            w.networkId != null
-              ? w.networkId === NETWORK_REGISTRY.BYRON_MAINNET
-                ? NETWORK_REGISTRY.HASKELL_SHELLEY
-                : w.networkId
-              : NETWORK_REGISTRY.HASKELL_SHELLEY
-        }
+    const migratedWalletMetas = await migrateWalletMetas(_storedWalletMetas)
 
-        let checksum: WalletChecksum
-        const data = await storage.read<WalletJSON>(`/wallet/${w.id}/data`)
-        if (w.checksum == null) {
-          if (data != null && data.externalChain.addressGenerator != null) {
-            const {account, accountPubKeyHex} = data.externalChain.addressGenerator as any
-            switch (walletImplementationId) {
-              case WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID:
-                checksum = legacyWalletChecksum(accountPubKeyHex || account.root_cached_key)
-                break
-              case WALLETS.HASKELL_SHELLEY_24.WALLET_IMPLEMENTATION_ID:
-              case WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID:
-                checksum = walletChecksum(accountPubKeyHex)
-                break
-              case WALLETS.JORMUNGANDR_ITN.WALLET_IMPLEMENTATION_ID:
-                checksum = legacyWalletChecksum(account)
-                break
-              default:
-                checksum = {ImagePart: '', TextPart: ''}
-            }
-          } else {
-            checksum = {ImagePart: '', TextPart: ''}
-          }
-        } else {
-          checksum = w.checksum
-        }
-        const isHW = data != null && data.isHW != null ? data.isHW : false
-        return {
-          ...w,
-          isHW,
-          networkId,
-          walletImplementationId,
-          checksum,
-        }
-      }),
-    )
-    // integrity check
-    wallets.forEach((w) => {
-      assert.assert(w.networkId != null, 'wallet should have networkId')
-      assert.assert(!!w.walletImplementationId, 'wallet should have walletImplementationId')
-      assert.assert(
-        Object.values(WALLET_IMPLEMENTATION_REGISTRY).indexOf(w.walletImplementationId) > -1,
-        'invalid walletImplementationId',
-      )
-    })
-
-    this._wallets = _.fromPairs(wallets.map((w) => [w.id, w]))
+    this._wallets = _.fromPairs(migratedWalletMetas.map((w) => [w.id, w]))
     Logger.debug('WalletManager::initialize::wallets()', this._wallets)
   }
 
@@ -516,8 +450,10 @@ class WalletManager {
     this._wallet = wallet
     this._id = walletMeta.id
 
+    const canBiometricsBeUsed = await canBiometricEncryptionBeEnabled()
+
     const shouldDisableEasyConfirmation =
-      walletMeta.isEasyConfirmationEnabled && (!isSystemAuthEnabled || (await !canBiometricEncryptionBeEnabled()))
+      walletMeta.isEasyConfirmationEnabled && (!isSystemAuthEnabled || !canBiometricsBeUsed)
     if (shouldDisableEasyConfirmation) {
       wallet.isEasyConfirmationEnabled = false
 

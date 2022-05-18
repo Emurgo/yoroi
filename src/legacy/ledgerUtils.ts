@@ -178,7 +178,7 @@ type LedgerConnectionResponse = {
   extendedPublicKeyResp: GetExtendedPublicKeyResponse
   deviceId: DeviceId | null | undefined
   deviceObj: DeviceObj | null | undefined
-  serial: string
+  serialHex: string
 }
 // Hardware wallet device Features object
 // borrowed from HWConnectStoreTypes.js in yoroi-frontend
@@ -189,7 +189,7 @@ export type HWFeatures = {
   // for establishing a connection through BLE
   deviceObj: DeviceObj | null | undefined
   // for establishing a connection through USB
-  serial?: string
+  serialHex?: string
 }
 export type HWDeviceInfo = {
   bip44AccountPublic: string
@@ -222,7 +222,7 @@ const makeCardanoAccountBIP44Path: (walletType: WalletType, account: number) => 
 })
 
 const validateHWResponse = (resp: LedgerConnectionResponse): boolean => {
-  const {extendedPublicKeyResp, deviceId, deviceObj, serial} = resp
+  const {extendedPublicKeyResp, deviceId, deviceObj, serialHex} = resp
 
   if (deviceId == null && deviceObj == null) {
     throw new Error('LedgerUtils::validateHWResponse: a non-null descriptor is required')
@@ -232,7 +232,7 @@ const validateHWResponse = (resp: LedgerConnectionResponse): boolean => {
     throw new Error('LedgerUtils::validateHWResponse: extended public key is undefined')
   }
 
-  if (serial == null) {
+  if (serialHex == null) {
     throw new Error('LedgerUtils::validateHWResponse: device serial number is undefined')
   }
 
@@ -241,7 +241,7 @@ const validateHWResponse = (resp: LedgerConnectionResponse): boolean => {
 
 const normalizeHWResponse = (resp: LedgerConnectionResponse): HWDeviceInfo => {
   validateHWResponse(resp)
-  const {extendedPublicKeyResp, deviceId, deviceObj, serial} = resp
+  const {extendedPublicKeyResp, deviceId, deviceObj, serialHex} = resp
   return {
     bip44AccountPublic: extendedPublicKeyResp.publicKeyHex + extendedPublicKeyResp.chainCodeHex,
     hwFeatures: {
@@ -249,7 +249,7 @@ const normalizeHWResponse = (resp: LedgerConnectionResponse): HWDeviceInfo => {
       model: MODEL,
       deviceId,
       deviceObj,
-      serial,
+      serialHex,
     },
   }
 }

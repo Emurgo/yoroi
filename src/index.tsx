@@ -9,6 +9,7 @@ import {Provider} from 'react-redux'
 import App from './App'
 import {name as appName} from './app.json'
 import {Boundary} from './components'
+import {ErrorBoundary} from './components/ErrorBoundary'
 import {LanguageProvider} from './i18n'
 import translations from './i18n/translations'
 import {handleGeneralError, setupHooks} from './legacy/actions'
@@ -53,15 +54,17 @@ const queryClient = new QueryClient()
 
 const AppWithProviders = () => {
   return (
-    <Provider store={store}>
-      <QueryClientProvider client={queryClient}>
-        <Boundary>
-          <LanguageProvider>
-            <App />
-          </LanguageProvider>
-        </Boundary>
-      </QueryClientProvider>
-    </Provider>
+    <ErrorBoundary>
+      <Provider store={store}>
+        <QueryClientProvider client={queryClient}>
+          <Boundary>
+            <LanguageProvider>
+              <App />
+            </LanguageProvider>
+          </Boundary>
+        </QueryClientProvider>
+      </Provider>
+    </ErrorBoundary>
   )
 }
 
