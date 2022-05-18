@@ -1,356 +1,158 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import {NavigationProp} from '@react-navigation/native'
-import {BigNumber} from 'bignumber.js'
 import React from 'react'
-import {IntlShape} from 'react-intl'
-import {Platform} from 'react-native'
+import {defineMessages, useIntl} from 'react-intl'
+import {StyleSheet} from 'react-native'
+import Markdown from 'react-native-easy-markdown'
 
-import {errorMessages} from '../../i18n/global-messages'
+import {Boundary, DangerousAction, ErrorView, Modal, PleaseWaitView, Spacer} from '../../components'
+import globalMessages, {ledgerMessages} from '../../i18n/global-messages'
 import LocalizableError from '../../i18n/LocalizableError'
-import {showErrorDialog} from '../../legacy/actions'
-import {CONFIG} from '../../legacy/config'
-import {ensureKeysValidity} from '../../legacy/deviceSettings'
-import {WrongPassword} from '../../legacy/errors'
-import {ISignRequest} from '../../legacy/ISignRequest'
-import KeyStore from '../../legacy/KeyStore'
-import type {DeviceId, DeviceObj, HWDeviceInfo} from '../../legacy/ledgerUtils'
-import {RawUtxo} from '../../legacy/types'
-import {DefaultAsset} from '../../types'
-import {
-  HaskellShelleyTxSignRequest,
-  MultiToken,
-  ServerStatus,
-  SystemAuthDisabled,
-  walletManager,
-} from '../../yoroi-wallets'
-import {WithdrawalDialog} from './WithdrawalDialog'
-
-export enum WithdrawalDialogSteps {
-  CLOSED = 'CLOSED',
-  WARNING = 'WARNING',
-  CHOOSE_TRANSPORT = 'CHOOSE_TRANSPORT',
-  LEDGER_CONNECT = 'LEDGER_CONNECT',
-  CONFIRM = 'CONFIRM',
-  WAITING_HW_RESPONSE = 'WAITING_HW_RESPONSE',
-  WAITING = 'WAITING',
-  ERROR = 'ERROR',
-}
+import {theme} from '../../theme'
+import {Staked} from '../StakePoolInfos'
+import {ConfirmTx} from './ConfirmTx'
 
 type Props = {
-  intl: IntlShape
-  navigation: NavigationProp<any>
-  utxos: Array<RawUtxo> | undefined | null
-  setLedgerDeviceId: (deviceID: DeviceId) => Promise<void>
-  setLedgerDeviceObj: (deviceObj: DeviceObj) => Promise<void>
-  isHW: boolean
-  isEasyConfirmationEnabled: boolean
-  hwDeviceInfo: HWDeviceInfo
-  submitTransaction: (request: ISignRequest, text: string) => Promise<void>
-  submitSignedTx: (text: string) => Promise<void>
-  defaultAsset: DefaultAsset
-  serverStatus: ServerStatus
-  onDone: () => void
+  onCancel: () => void
+  onSuccess: () => void
+  stakingInfo: Staked
 }
 
-type State = {
-  withdrawalDialogStep: WithdrawalDialogSteps
-  useUSB: boolean
-  signTxRequest: HaskellShelleyTxSignRequest | null
-  withdrawals: Array<{
-    address: string
-    amount: MultiToken
-  }> | null
-  deregistrations: Array<{
-    rewardAddress: string
-    refund: MultiToken
-  }> | null
-  balance: BigNumber
-  finalBalance: BigNumber
-  fees: BigNumber
-  error:
-    | undefined
-    | {
-        errorMessage: string
-        errorLogs?: string | null
-      }
+export const WithdrawStakingRewards = ({onSuccess, onCancel, stakingInfo}: Props) => {
+  const strings = useStrings()
+  const intl = useIntl()
+
+  const [step, setStep] = React.useState<'warning' | 'confirm'>('warning')
+  const [shouldDeregister, setShouldDeregister] = React.useState(false)
+
+  const onKeepOrDeregisterKey = async (shouldDeregister: boolean) => {
+    setShouldDeregister(shouldDeregister)
+    setStep('confirm')
+  }
+
+  return (
+    <Modal visible onRequestClose={() => onCancel()} showCloseIcon>
+      <Route active={step === 'warning'}>
+        <DangerousAction
+          title={strings.warningModalTitle}
+          alertBox={{content: [strings.warning1, strings.warning2, strings.warning3]}}
+          primaryButton={{
+            // disabled: stakingInfo.rewards === '0',
+            label: strings.keepButton,
+            onPress: () => onKeepOrDeregisterKey(false),
+          }}
+          secondaryButton={{
+            label: strings.deregisterButton,
+            onPress: () => onKeepOrDeregisterKey(true),
+          }}
+        >
+          <Markdown style={styles.paragraph}>{strings.explanation1}</Markdown>
+          <Spacer height={8} />
+          <Markdown style={styles.paragraph}>{strings.explanation2}</Markdown>
+          <Spacer height={8} />
+          <Markdown style={styles.paragraph}>{strings.explanation3}</Markdown>
+        </DangerousAction>
+      </Route>
+
+      <Route active={step === 'confirm'}>
+        <Boundary
+          loadingFallback={<PleaseWaitView title="" spinnerText={strings.pleaseWait} />}
+          errorFallbackRender={({error}) => {
+            if (error instanceof LocalizableError) {
+              const errorMessage = intl.formatMessage({id: error.id, defaultMessage: error.defaultMessage})
+              return (
+                <ErrorView
+                  errorMessage={errorMessage}
+                  errorLogs={(error.values as any).response}
+                  onDismiss={onCancel}
+                />
+              )
+            }
+
+            return <ErrorView errorMessage={error.message} onDismiss={onCancel} />
+          }}
+        >
+          <ConfirmTx
+            shouldDeregister={shouldDeregister}
+            onSuccess={() => onSuccess()}
+            onCancel={() => onCancel()}
+            stakingInfo={stakingInfo}
+          />
+        </Boundary>
+      </Route>
+    </Modal>
+  )
 }
 
-// eslint-disable-next-line react-prefer-function-component/react-prefer-function-component
-export class WithdrawStakingRewards extends React.Component<Props, State> {
-  state = {
-    withdrawalDialogStep: WithdrawalDialogSteps.WARNING,
-    useUSB: false,
-    signTxRequest: null,
-    withdrawals: null,
-    deregistrations: null,
-    balance: new BigNumber(0),
-    finalBalance: new BigNumber(0),
-    fees: new BigNumber(0),
-    error: undefined,
-  }
+const Route: React.FC<{active: boolean}> = ({active, children}) => <>{active ? children : null}</>
 
-  _shouldDeregister = false
+const styles = StyleSheet.create({
+  paragraph: {
+    ...theme.text,
+  },
+})
 
-  /* withdrawal logic */
+const useStrings = () => {
+  const intl = useIntl()
 
-  openWithdrawalDialog = () =>
-    this.setState({
-      withdrawalDialogStep: WithdrawalDialogSteps.WARNING,
-    })
-
-  onKeepOrDeregisterKey = async (shouldDeregister: boolean): Promise<void> => {
-    this._shouldDeregister = shouldDeregister
-    if (this.props.isHW && Platform.OS === 'android' && CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT) {
-      // toggle ledger transport switch modal
-      this.setState({
-        withdrawalDialogStep: WithdrawalDialogSteps.CHOOSE_TRANSPORT,
-      })
-    } else {
-      await this.createWithdrawalTx()
-    }
-  }
-
-  /* create withdrawal tx and move to confirm */
-  createWithdrawalTx = async (): Promise<void> => {
-    const {intl, utxos, defaultAsset, serverStatus} = this.props
-    try {
-      if (utxos == null) throw new Error('cannot get utxos') // should never happen
-      this.setState({withdrawalDialogStep: WithdrawalDialogSteps.WAITING})
-      const signTxRequest = await walletManager.createWithdrawalTx(
-        utxos,
-        this._shouldDeregister,
-        serverStatus.serverTime,
-      )
-      if (signTxRequest instanceof HaskellShelleyTxSignRequest) {
-        const withdrawals = await signTxRequest.withdrawals()
-        const deregistrations = await signTxRequest.keyDeregistrations()
-        const balance = withdrawals.reduce(
-          (sum, curr) => (curr.amount == null ? sum : sum.joinAddCopy(curr.amount)),
-          new MultiToken([], {
-            defaultNetworkId: defaultAsset.networkId,
-            defaultIdentifier: defaultAsset.identifier,
-          }),
-        )
-        const fees = await signTxRequest.fee()
-        const finalBalance = balance
-          .joinAddMutable(
-            deregistrations.reduce(
-              (sum, curr) => (curr.refund == null ? sum : sum.joinAddCopy(curr.refund)),
-              new MultiToken([], {
-                defaultNetworkId: defaultAsset.networkId,
-                defaultIdentifier: defaultAsset.identifier,
-              }),
-            ),
-          )
-          .joinSubtractMutable(fees)
-        this.setState({
-          signTxRequest,
-          withdrawals,
-          deregistrations,
-          balance: balance.getDefault(),
-          finalBalance: finalBalance.getDefault(),
-          fees: fees.getDefault(),
-          withdrawalDialogStep: WithdrawalDialogSteps.CONFIRM,
-        })
-      } else {
-        throw new Error('unexpected withdrawal tx type')
-      }
-    } catch (e) {
-      if (e instanceof LocalizableError) {
-        this.setState({
-          withdrawalDialogStep: WithdrawalDialogSteps.ERROR,
-          error: {
-            errorMessage: intl.formatMessage({
-              id: (e as any).id,
-              defaultMessage: (e as any).defaultMessage,
-            }),
-          },
-        })
-      } else {
-        this.setState({
-          withdrawalDialogStep: WithdrawalDialogSteps.ERROR,
-          error: {
-            errorMessage: intl.formatMessage(errorMessages.generalError.message, {message: (e as any).message}),
-          },
-        })
-      }
-    }
-  }
-
-  openLedgerConnect = () =>
-    this.setState({
-      withdrawalDialogStep: WithdrawalDialogSteps.LEDGER_CONNECT,
-    })
-
-  onChooseTransport = async (useUSB: boolean): Promise<void> => {
-    const {hwDeviceInfo} = this.props
-    this.setState({useUSB})
-    if (
-      (useUSB && hwDeviceInfo.hwFeatures.deviceObj == null) ||
-      (!useUSB && hwDeviceInfo.hwFeatures.deviceId == null)
-    ) {
-      this.openLedgerConnect()
-    } else {
-      await this.createWithdrawalTx()
-    }
-  }
-
-  onConnectUSB = async (deviceObj: DeviceObj): Promise<void> => {
-    await this.props.setLedgerDeviceObj(deviceObj)
-    await this.createWithdrawalTx()
-  }
-
-  onConnectBLE = async (deviceId: DeviceId): Promise<void> => {
-    await this.props.setLedgerDeviceId(deviceId)
-    await this.createWithdrawalTx()
-  }
-
-  // TODO: this code has been copy-pasted from the tx confirmation page.
-  // Ideally, all this logic should be moved away and perhaps written as a
-  // redux action that can be reused in all components with tx signing and sending
-  onConfirm = async (password: string | undefined): Promise<void> => {
-    const {signTxRequest, useUSB} = this.state
-    const {intl, navigation, isHW, isEasyConfirmationEnabled, submitTransaction, submitSignedTx} = this.props
-    if (signTxRequest == null) throw new Error('no tx data')
-
-    const submitTx = async (tx: string | ISignRequest, decryptedKey?: string) => {
-      if (decryptedKey == null && typeof tx === 'string') {
-        await submitSignedTx(tx)
-      } else if (decryptedKey != null && !(typeof tx === 'string' || tx instanceof String)) {
-        await submitTransaction(tx, decryptedKey)
-      }
-      navigation.reset({
-        index: 0,
-        routes: [
-          {
-            name: 'app-root',
-            state: {
-              routes: [
-                {name: 'wallet-selection'},
-                {
-                  name: 'main-wallet-routes',
-                  state: {
-                    routes: [
-                      {
-                        name: 'history',
-                        state: {
-                          routes: [{name: 'history-list'}],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      })
-    }
-
-    try {
-      if (isHW) {
-        this.setState({
-          withdrawalDialogStep: WithdrawalDialogSteps.WAITING_HW_RESPONSE,
-        })
-        if (signTxRequest == null) throw new Error('no tx data')
-        const signedTx = await walletManager.signTxWithLedger(signTxRequest, useUSB)
-        this.setState({withdrawalDialogStep: WithdrawalDialogSteps.WAITING})
-        await submitTx(Buffer.from(signedTx.encodedTx).toString('base64'))
-        this.closeWithdrawalDialog()
-        return
-      }
-
-      if (isEasyConfirmationEnabled) {
-        try {
-          await ensureKeysValidity(walletManager._id)
-          navigation.navigate('', {
-            keyId: walletManager._id,
-            onSuccess: async (decryptedKey) => {
-              await submitTx(signTxRequest, decryptedKey)
-            },
-            onFail: () => navigation.goBack(),
-          })
-        } catch (e) {
-          if (e instanceof SystemAuthDisabled) {
-            this.closeWithdrawalDialog()
-            await walletManager.closeWallet()
-            await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
-            navigation.navigate('app-root', {
-              screen: 'wallet-selection',
-            })
-
-            return
-          } else {
-            throw e
-          }
-        }
-        return
-      }
-
-      try {
-        this.setState({withdrawalDialogStep: WithdrawalDialogSteps.WAITING})
-        const decryptedData = await KeyStore.getData(walletManager._id, 'MASTER_PASSWORD', '', password, intl)
-
-        await submitTx(signTxRequest, decryptedData)
-        this.closeWithdrawalDialog()
-      } catch (e) {
-        if (e instanceof WrongPassword) {
-          this.setState({
-            withdrawalDialogStep: WithdrawalDialogSteps.ERROR,
-            error: {
-              errorMessage: intl.formatMessage(errorMessages.incorrectPassword.message),
-              errorLogs: null,
-            },
-          })
-        } else {
-          throw e
-        }
-      }
-    } catch (e) {
-      if (e instanceof LocalizableError) {
-        this.setState({
-          withdrawalDialogStep: WithdrawalDialogSteps.ERROR,
-          error: {
-            errorMessage: intl.formatMessage(
-              {id: (e as any).id, defaultMessage: (e as any).defaultMessage},
-              (e as any).values,
-            ),
-            errorLogs: (e as any).values.response || null,
-          },
-        })
-      } else {
-        this.setState({
-          withdrawalDialogStep: WithdrawalDialogSteps.ERROR,
-          error: {
-            errorMessage: intl.formatMessage(errorMessages.generalTxError.message),
-            errorLogs: (e as any).message || null,
-          },
-        })
-      }
-    }
-  }
-
-  closeWithdrawalDialog = () => this.setState({withdrawalDialogStep: WithdrawalDialogSteps.CLOSED}, this.props.onDone)
-
-  render() {
-    return (
-      <WithdrawalDialog
-        step={this.state.withdrawalDialogStep}
-        onKeepKey={() => this.onKeepOrDeregisterKey(false)}
-        onDeregisterKey={() => this.onKeepOrDeregisterKey(true)}
-        onChooseTransport={this.onChooseTransport}
-        useUSB={this.state.useUSB}
-        onConnectBLE={this.onConnectBLE}
-        onConnectUSB={this.onConnectUSB}
-        withdrawals={this.state.withdrawals}
-        deregistrations={this.state.deregistrations}
-        balance={this.state.balance}
-        finalBalance={this.state.finalBalance}
-        fees={this.state.fees}
-        onConfirm={this.onConfirm}
-        onRequestClose={this.closeWithdrawalDialog}
-        error={this.state.error}
-      />
-    )
+  return {
+    warningModalTitle: intl.formatMessage(messages.warningModalTitle),
+    warning1: intl.formatMessage(messages.warning1),
+    warning2: intl.formatMessage(messages.warning2),
+    warning3: intl.formatMessage(messages.warning3),
+    keepButton: intl.formatMessage(messages.keepButton),
+    deregisterButton: intl.formatMessage(messages.deregisterButton),
+    explanation1: intl.formatMessage(messages.explanation1),
+    explanation2: intl.formatMessage(messages.explanation2),
+    explanation3: intl.formatMessage(messages.explanation3),
+    followSteps: intl.formatMessage(ledgerMessages.followSteps),
+    pleaseWait: intl.formatMessage(globalMessages.pleaseWait),
   }
 }
+
+const messages = defineMessages({
+  warningModalTitle: {
+    id: 'components.delegation.withdrawaldialog.warningModalTitle',
+    defaultMessage: '!!!Also deregister staking key?',
+  },
+  explanation1: {
+    id: 'components.delegation.withdrawaldialog.explanation1',
+    defaultMessage: '!!!When **withdrawing rewards**, you also have the option to deregister the staking key.',
+  },
+  explanation2: {
+    id: 'components.delegation.withdrawaldialog.explanation2',
+    defaultMessage:
+      '!!!**Keeping the staking key** will allow you to withdraw the rewards, ' +
+      'but continue delegating to the same pool.',
+  },
+  explanation3: {
+    id: 'components.delegation.withdrawaldialog.explanation3',
+    defaultMessage:
+      '!!!**Deregistering the staking key** will give you back your deposit and undelegate the key from any pool.',
+  },
+  warning1: {
+    id: 'components.delegation.withdrawaldialog.warning1',
+    defaultMessage:
+      '!!!You do NOT need to deregister to delegate to a different stake ' +
+      'pool. You can change your delegation preference at any time.',
+  },
+  warning2: {
+    id: 'components.delegation.withdrawaldialog.warning2',
+    defaultMessage:
+      '!!!You should NOT deregister if this staking key is used as a stake ' +
+      "pool's reward account, as this will cause all pool operator rewards " +
+      'to be sent back to the reserve.',
+  },
+  warning3: {
+    id: 'components.delegation.withdrawaldialog.warning3',
+    defaultMessage:
+      '!!!Deregistering means this key will no longer receive rewards until ' +
+      'you re-register the staking key (usually by delegating to a pool again)',
+  },
+  keepButton: {
+    id: 'components.delegation.withdrawaldialog.keepButton',
+    defaultMessage: '!!!Keep registered',
+  },
+  deregisterButton: {
+    id: 'components.delegation.withdrawaldialog.deregisterButton',
+    defaultMessage: '!!!Deregister',
+  },
+})

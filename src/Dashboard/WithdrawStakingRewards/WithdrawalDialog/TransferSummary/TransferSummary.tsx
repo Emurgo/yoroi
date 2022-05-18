@@ -1,158 +1,123 @@
 import {BigNumber} from 'bignumber.js'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
-import {useSelector} from 'react-redux'
+import {Linking, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 
-import {Text, TextInput, TwoActionView} from '../../../../components'
-import {Instructions as HWInstructions} from '../../../../HW'
+import {Text} from '../../../../components'
+import {useTokenInfo} from '../../../../hooks'
 import {confirmationMessages, txLabels} from '../../../../i18n/global-messages'
-import {CONFIG} from '../../../../legacy/config'
 import {formatTokenWithText} from '../../../../legacy/format'
 import {getNetworkConfigById} from '../../../../legacy/networks'
-import {defaultNetworkAssetSelector} from '../../../../legacy/selectors'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
-import {MultiToken, TxDeregistration, TxWithdrawal} from '../../../../yoroi-wallets'
+import {YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
+import {Amounts, Entries} from '../../../../yoroi-wallets/yoroiUnsignedTx'
 
-type Props = {
-  withdrawals: Array<TxWithdrawal> | null
-  deregistrations: Array<TxDeregistration> | null
-  balance: BigNumber
-  finalBalance: BigNumber
-  fees: BigNumber
-  onConfirm: (password?: string | undefined) => void
-  onCancel: () => void
-  useUSB?: boolean
-}
-
-export const TransferSummary = ({
-  withdrawals,
-  deregistrations,
-  balance,
-  finalBalance,
-  fees,
-  onConfirm,
-  onCancel,
-  useUSB,
-}: Props) => {
+export const TransferSummary: React.FC<{
+  withdrawalTx: YoroiUnsignedTx
+}> = ({withdrawalTx}) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
-  const defaultAsset = useSelector(defaultNetworkAssetSelector)
-  const [password, setPassword] = React.useState(CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '')
+  const tokenInfo = useTokenInfo({wallet, tokenId: ''})
+
+  const withdrawalAmounts = Entries.toAmounts(withdrawalTx.staking.withdrawals)
+  const deregistrationAmounts = Entries.toAmounts(withdrawalTx.staking.deregistrations)
+
+  const refundAmounts = Amounts.sum([withdrawalAmounts, deregistrationAmounts])
+  const refundAmount = Amounts.getAmount(Amounts.sum([withdrawalAmounts, deregistrationAmounts]), '')
+  const feeAmount = Amounts.getAmount(withdrawalTx.fee, '')
+  const totalAmount = Amounts.getAmount(Amounts.diff(refundAmounts, withdrawalTx.fee), '')
 
   return (
-    <TwoActionView
-      title={strings.confirmTx}
-      primaryButton={{
-        label: strings.confirmButton,
-        onPress: () => onConfirm(password),
-      }}
-      secondaryButton={{onPress: () => onCancel()}}
-    >
+    <>
       <Item>
         <Text>{strings.balanceLabel}</Text>
-        <Text style={styles.balanceAmount}>{formatTokenWithText(balance, defaultAsset)}</Text>
+        <Text style={styles.balanceAmount}>{formatTokenWithText(new BigNumber(refundAmount.quantity), tokenInfo)}</Text>
       </Item>
 
       <Item>
         <Text>{strings.fees}</Text>
-        <Text style={styles.balanceAmount}>{formatTokenWithText(fees, defaultAsset)}</Text>
+        <Text style={styles.balanceAmount}>{formatTokenWithText(new BigNumber(feeAmount.quantity), tokenInfo)}</Text>
       </Item>
 
       <Item>
         <Text>{strings.finalBalanceLabel}</Text>
-        <Text style={styles.balanceAmount}>{formatTokenWithText(finalBalance, defaultAsset)}</Text>
+        <Text style={styles.balanceAmount}>{formatTokenWithText(new BigNumber(totalAmount.quantity), tokenInfo)}</Text>
       </Item>
 
-      {withdrawals && withdrawals.length > 0 && <Withdrawals withdrawals={withdrawals} />}
+      <Withdrawals withdrawals={withdrawalTx.staking.withdrawals} />
 
-      {deregistrations && deregistrations.length > 0 && <Deregistrations deregistrations={deregistrations} />}
-
-      {wallet.isHW && <HWInstructions useUSB={useUSB} addMargin />}
-
-      {!wallet.isEasyConfirmationEnabled && !wallet.isHW && (
-        <View style={styles.input}>
-          <PasswordInput
-            secureTextEntry
-            value={password}
-            label={strings.password}
-            onChangeText={setPassword}
-            autoComplete={false}
-          />
-        </View>
-      )}
-    </TwoActionView>
+      <Deregistrations deregistrations={withdrawalTx.staking.deregistrations} />
+    </>
   )
 }
 
-const Withdrawals: React.FC<{withdrawals: Array<TxWithdrawal>}> = ({withdrawals}) => {
+const Withdrawals: React.FC<{withdrawals: YoroiUnsignedTx['staking']['withdrawals']}> = ({withdrawals}) => {
   const wallet = useSelectedWallet()
   const strings = useStrings()
+
+  const addresses = Object.keys(withdrawals)
+  if (addresses.length < 1) return null
 
   return (
     <Item>
       <Text>{strings.withdrawals}</Text>
-      {withdrawals.map((withdrawal) => (
+      {Object.keys(withdrawals).map((address) => (
         <TouchableOpacity
-          key={withdrawal.address}
+          key={address}
           activeOpacity={0.5}
-          onPress={() =>
-            Linking.openURL(getNetworkConfigById(wallet.networkId).EXPLORER_URL_FOR_ADDRESS(withdrawal.address))
-          }
+          onPress={() => Linking.openURL(getNetworkConfigById(wallet.networkId).EXPLORER_URL_FOR_ADDRESS(address))}
         >
-          <Text secondary>{withdrawal.address}</Text>
+          <Text numberOfLines={1} ellipsizeMode="middle" secondary>
+            {address}
+          </Text>
         </TouchableOpacity>
       ))}
     </Item>
   )
 }
 
-const Deregistrations: React.FC<{deregistrations: Array<TxDeregistration>}> = ({deregistrations}) => {
+const Deregistrations: React.FC<{deregistrations: YoroiUnsignedTx['staking']['deregistrations']}> = ({
+  deregistrations,
+}) => {
   const wallet = useSelectedWallet()
-  const defaultAsset = useSelector(defaultNetworkAssetSelector)
   const strings = useStrings()
-  const refundAmount = formatTokenWithText(
-    deregistrations
-      .reduce(
-        (sum, curr) => (curr.refund == null ? sum : sum.joinAddCopy(curr.refund)),
-        new MultiToken([], {
-          defaultNetworkId: defaultAsset.networkId,
-          defaultIdentifier: defaultAsset.identifier,
-        }),
-      )
-      .getDefault(),
-    defaultAsset,
-  ).toString()
+  const tokenInfo = useTokenInfo({wallet, tokenId: ''})
+  const refundAmounts = Entries.toAmounts(deregistrations)
+  const primaryAmount = Amounts.getAmount(refundAmounts, '')
+
+  const addresses = Object.keys(deregistrations)
+  if (addresses.length < 1) return null
 
   return (
     <>
       <Item>
         <Text>{strings.stakeDeregistration}</Text>
-        {deregistrations.map((deregistration) => (
+        {addresses.map((address) => (
           <TouchableOpacity
-            key={deregistration.rewardAddress}
+            key={address}
             activeOpacity={0.5}
-            onPress={() =>
-              Linking.openURL(
-                getNetworkConfigById(wallet.networkId).EXPLORER_URL_FOR_ADDRESS(deregistration.rewardAddress),
-              )
-            }
+            onPress={() => Linking.openURL(getNetworkConfigById(wallet.networkId).EXPLORER_URL_FOR_ADDRESS(address))}
           >
-            <Text secondary>{deregistration.rewardAddress}</Text>
+            <Text numberOfLines={1} ellipsizeMode="middle" secondary>
+              {address}
+            </Text>
           </TouchableOpacity>
         ))}
       </Item>
 
       <Item>
-        <Text>{strings.unregisterExplanation({refundAmount})}</Text>
+        <Text>
+          {strings.unregisterExplanation({
+            refundAmount: formatTokenWithText(new BigNumber(primaryAmount.quantity), tokenInfo),
+          })}
+        </Text>
       </Item>
     </>
   )
 }
 
-const Item = (props) => <View {...props} style={styles.item} />
-const PasswordInput = TextInput
+const Item = (props: ViewProps) => <View {...props} style={styles.item} />
 
 const useStrings = () => {
   const intl = useIntl()
@@ -196,9 +161,6 @@ const messages = defineMessages({
 const styles = StyleSheet.create({
   item: {
     paddingBottom: 5,
-  },
-  input: {
-    paddingTop: 16,
   },
   balanceAmount: {
     color: COLORS.POSITIVE_AMOUNT,

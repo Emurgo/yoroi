@@ -21,7 +21,7 @@ export const saveHW = (hwDeviceInfo: HWDeviceInfo) => (dispatch: Dispatch<any>) 
 
 export const setLedgerDeviceId =
   (deviceId: DeviceId): any =>
-  async (dispatch: Dispatch<any>, getState: () => State) => {
+  async (_, getState: () => State) => {
     Logger.debug('setting deviceId', deviceId)
     const state = getState()
     const hwDeviceInfo = hwDeviceInfoSelector(state)
@@ -42,7 +42,7 @@ export const setLedgerDeviceId =
 
 export const setLedgerDeviceObj =
   (deviceObj: DeviceObj): any =>
-  async (dispatch: Dispatch<any>, getState: () => State) => {
+  async (_, getState: () => State) => {
     Logger.debug('setting deviceObj', deviceObj)
     const state = getState()
     const hwDeviceInfo = hwDeviceInfoSelector(state)

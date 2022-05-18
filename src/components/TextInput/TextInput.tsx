@@ -17,7 +17,7 @@ import {COLORS} from '../../theme'
 import {Icon} from '../Icon'
 
 type Props = TextInputProps &
-  Omit<React.ComponentProps<typeof RNPTextInput>, 'theme'> & {
+  Omit<React.ComponentProps<typeof RNPTextInput>, 'theme' | 'autoComplete'> & {
     containerStyle?: ViewStyle
     helperText?: string
     errorText?: string
@@ -27,6 +27,7 @@ type Props = TextInputProps &
     noErrors?: boolean
     dense?: boolean
     faded?: boolean
+    autoComplete?: boolean
   }
 
 const useDebounced = (callback, value, delay = 1000) => {
@@ -77,6 +78,7 @@ export const TextInput = React.forwardRef((props: Props, ref: ForwardedRef<RNTex
         onChange={() => setErrorTextEnabled(false)}
         autoCorrect={false}
         autoCompleteType="off"
+        autoComplete={false}
         autoCapitalize="none"
         theme={{
           roundness: 8,

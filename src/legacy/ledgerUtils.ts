@@ -185,8 +185,12 @@ type LedgerConnectionResponse = {
 export type HWFeatures = {
   vendor: string
   model: string
+  serial?: string
+} & (HWFeaturesBLE | HWFeaturesUSB)
+export type HWFeaturesBLE = {
   deviceId: DeviceId | null | undefined
-  // for establishing a connection through BLE
+}
+export type HWFeaturesUSB = {
   deviceObj: DeviceObj | null | undefined
   // for establishing a connection through USB
   serialHex?: string
@@ -413,7 +417,9 @@ export const verifyAddress = async (
       path: addressing.path,
       addressingMap,
     })
-    const appAda = await connectionHandler(hwDeviceInfo.hwFeatures.deviceId, hwDeviceInfo.hwFeatures.deviceObj, useUSB)
+    const deviceId = (hwDeviceInfo.hwFeatures as HWFeaturesBLE).deviceId
+    const deviceObj = (hwDeviceInfo.hwFeatures as HWFeaturesUSB).deviceObj
+    const appAda = await connectionHandler(deviceId, deviceObj, useUSB)
     await appAda.showAddress({
       network: {
         protocolMagic: byronNetworkMagic,
@@ -794,7 +800,9 @@ export const signTxWithLedger = async (
       throw new Error('ledgerUtils::signTxWithLedger: hwDeviceInfo is null')
     }
 
-    const appAda = await connectionHandler(hwDeviceInfo.hwFeatures.deviceId, hwDeviceInfo.hwFeatures.deviceObj, useUSB)
+    const deviceId = (hwDeviceInfo.hwFeatures as HWFeaturesBLE).deviceId
+    const deviceObj = (hwDeviceInfo.hwFeatures as HWFeaturesUSB).deviceObj
+    const appAda = await connectionHandler(deviceId, deviceObj, useUSB)
     Logger.debug('ledgerUtils::signTxWithLedger inputs', signRequest.tx.inputs)
     Logger.debug('ledgerUtils::signTxWithLedger outputs', signRequest.tx.outputs)
     const ledgerSignature: SignTransactionResponse = await appAda.signTransaction(signRequest)

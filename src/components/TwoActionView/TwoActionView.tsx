@@ -13,10 +13,12 @@ type Props = {
   primaryButton: {
     label: string
     onPress: () => Promise<void> | void
+    disabled?: boolean
   }
   secondaryButton?: {
     label?: string
     onPress: () => void
+    disabled?: boolean
   }
 }
 
@@ -39,9 +41,16 @@ export const TwoActionView = ({title, children, primaryButton, secondaryButton}:
             onPress={secondaryButton.onPress}
             title={secondaryButton.label ?? intl.formatMessage(confirmationMessages.commonButtons.cancelButton)}
             style={styles.secondaryButton}
+            disabled={secondaryButton.disabled}
           />
         )}
-        <Button block onPress={primaryButton.onPress} title={primaryButton.label} style={styles.primaryButton} />
+        <Button
+          block
+          onPress={primaryButton.onPress}
+          title={primaryButton.label}
+          style={styles.primaryButton}
+          disabled={primaryButton.disabled}
+        />
       </View>
     </ScrollView>
   )

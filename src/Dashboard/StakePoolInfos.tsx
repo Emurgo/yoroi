@@ -30,14 +30,14 @@ const styles = StyleSheet.create({
   },
 })
 
-type StakingInfo = Registered | Staked | NotRegistered
-type NotRegistered = {
+export type StakingInfo = Registered | Staked | NotRegistered
+export type NotRegistered = {
   status: 'not-registered'
 }
-type Registered = {
+export type Registered = {
   status: 'registered'
 }
-type Staked = {
+export type Staked = {
   status: 'staked'
   poolId: string
   amount: string

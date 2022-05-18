@@ -8,8 +8,7 @@ import {CONFIG} from '../../legacy/config'
 import {spacing} from '../../theme'
 
 type Props = {
-  onSelectUSB: () => void
-  onSelectBLE: () => void
+  onSelectTransport: (transport: 'BLE' | 'USB') => void
 }
 
 const useIsUsbSupported = () => {
@@ -23,7 +22,7 @@ const useIsUsbSupported = () => {
   return isUSBSupported
 }
 
-export const LedgerTransportSwitchView = ({onSelectUSB, onSelectBLE}: Props) => {
+export const LedgerTransportSwitchView = ({onSelectTransport}: Props) => {
   const intl = useIntl()
   const isUSBSupported = useIsUsbSupported()
 
@@ -46,7 +45,7 @@ export const LedgerTransportSwitchView = ({onSelectUSB, onSelectBLE}: Props) => 
         <Text style={styles.paragraph}>{intl.formatMessage(messages.usbExplanation)}</Text>
         <Button
           block
-          onPress={onSelectUSB}
+          onPress={() => onSelectTransport('USB')}
           title={getUsbButtonTitle()}
           disabled={!isUSBSupported || !CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT}
           style={styles.button}
@@ -54,7 +53,7 @@ export const LedgerTransportSwitchView = ({onSelectUSB, onSelectBLE}: Props) => 
         <Text style={styles.paragraph}>{intl.formatMessage(messages.bluetoothExplanation)}</Text>
         <Button
           block
-          onPress={onSelectBLE}
+          onPress={() => onSelectTransport('BLE')}
           title={intl.formatMessage(messages.bluetoothButton)}
           style={styles.button}
         />
@@ -71,15 +70,9 @@ type ModalProps = {
   showCloseIcon?: boolean
 } & Props
 
-export const LedgerTransportSwitchModal = ({
-  visible,
-  onSelectUSB,
-  onSelectBLE,
-  onRequestClose,
-  showCloseIcon,
-}: ModalProps) => (
+export const LedgerTransportSwitchModal = ({visible, onSelectTransport, onRequestClose, showCloseIcon}: ModalProps) => (
   <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon={showCloseIcon}>
-    <LedgerTransportSwitch onSelectUSB={onSelectUSB} onSelectBLE={onSelectBLE} />
+    <LedgerTransportSwitch onSelectTransport={onSelectTransport} />
   </Modal>
 )
 

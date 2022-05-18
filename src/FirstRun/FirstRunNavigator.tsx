@@ -3,7 +3,7 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {useDispatch} from 'react-redux'
 
-import {ChangePinScreen} from '../auth/ChangePinScreen/ChangePinScreen'
+import {CreatePinScreen} from '../auth'
 import {setSystemAuth, signin} from '../legacy/actions'
 import {defaultStackNavigationOptions, FirstRunRoutes} from '../navigation'
 import {LanguagePickerScreen} from './LanguagePickerScreen'
@@ -36,12 +36,12 @@ export const FirstRunNavigator = () => {
         options={{title: strings.acceptTermsTitle}}
       />
 
-      <Stack.Screen // formatting
+      <Stack.Screen //
         name="custom-pin"
         options={{headerShown: false}}
       >
         {() => (
-          <ChangePinScreen
+          <CreatePinScreen
             onDone={async () => {
               await dispatch(setSystemAuth(false))
               dispatch(signin())

@@ -33,9 +33,9 @@ const useLanguageCode = ({onSuccess, ...options}: UseQueryOptions<string> = {}) 
     queryKey: ['languageCode'],
     queryFn: async () => {
       const languageCode = await AsyncStorage.getItem('/appSettings/languageCode')
-      if (!languageCode) throw new Error('Missing Language Code')
+      // if (!languageCode) throw new Error('Missing Language Code')
 
-      return JSON.parse(languageCode)
+      return languageCode ? JSON.parse(languageCode) : "en-US"
     },
     onSuccess: (languageCode) => {
       setLanguage(languageCode)

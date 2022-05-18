@@ -1,5 +1,5 @@
 import type {WalletChecksum} from '@emurgo/cip4-js'
-import {CardanoAddressedUtxo, SignedTx, TxMetadata, UnsignedTx} from '@emurgo/yoroi-lib-core'
+import {CardanoAddressedUtxo, MultiTokenValue, SignedTx, TxMetadata, UnsignedTx} from '@emurgo/yoroi-lib-core'
 import {BigNumber} from 'bignumber.js'
 import type {IntlShape} from 'react-intl'
 
@@ -27,11 +27,9 @@ import {
   TokenInfo,
 } from '../../types'
 import {YoroiUnsignedTx} from '../types'
-import Wallet from '../Wallet'
+import Wallet, {WalletJSON} from '../Wallet'
 import type {Addresses} from './chain'
 import {AddressChain} from './chain'
-import {HaskellShelleyTxSignRequest} from './HaskellShelleyTxSignRequest'
-import {MultiToken} from './MultiToken'
 import {TransactionCache} from './shelley/transactionCache'
 
 export interface WalletInterface {
@@ -141,7 +139,7 @@ export interface WalletInterface {
   // =================== persistence =================== //
 
   // TODO: type
-  toJSON(): unknown
+  toJSON(): WalletJSON
 
   restore(data: unknown, walletMeta: WalletMeta): Promise<void>
 
@@ -155,7 +153,6 @@ export interface WalletInterface {
   getAddressing(address: string): unknown
 
   asAddressedUtxo(utxos: Array<RawUtxo>): Array<CardanoAddressedUtxo>
-  asLegacyAddressedUtxo(utxos: Array<RawUtxo>): Array<AddressedUtxo>
 
   getDelegationStatus(): Promise<StakingStatus>
 
@@ -169,7 +166,6 @@ export interface WalletInterface {
   ): Promise<YoroiUnsignedTx>
 
   signTx(signRequest: UnsignedTx, decryptedMasterKey: string): Promise<SignedTx>
-  signTxLegacy(signRequest: HaskellShelleyTxSignRequest, decryptedMasterKey: string): Promise<SignedTxLegacy>
 
   createDelegationTx(
     poolRequest: void | string,
@@ -178,8 +174,8 @@ export interface WalletInterface {
     defaultAsset: DefaultAsset,
     serverTime: Date | void,
   ): Promise<{
-    signRequest: HaskellShelleyTxSignRequest
-    totalAmountToDelegate: MultiToken
+    unsignedTx: YoroiUnsignedTx
+    totalAmountToDelegate: MultiTokenValue
   }>
 
   createVotingRegTx(
@@ -187,15 +183,15 @@ export interface WalletInterface {
     catalystPrivateKey: string,
     decryptedKey: string | void,
     serverTime: Date | void,
-  ): Promise<HaskellShelleyTxSignRequest>
+  ): Promise<YoroiUnsignedTx>
 
   createWithdrawalTx(
     utxos: Array<RawUtxo>,
     shouldDeregister: boolean,
     serverTime: Date | void,
-  ): Promise<HaskellShelleyTxSignRequest>
+  ): Promise<YoroiUnsignedTx>
 
-  signTxWithLedger(request: HaskellShelleyTxSignRequest, useUSB: boolean): Promise<SignedTxLegacy>
+  signTxWithLedger(request: YoroiUnsignedTx, useUSB: boolean): Promise<SignedTxLegacy>
 
   // =================== backend API =================== //
 
@@ -267,6 +263,8 @@ export type YoroiWallet = Pick<WalletInterface, YoroiWalletKeys> & {
   checksum: NonNullable<WalletInterface['checksum']>
   isReadOnly: NonNullable<WalletInterface['isReadOnly']>
   rewardAddressHex: NonNullable<WalletInterface['rewardAddressHex']>
+  hwDeviceInfo: WalletInterface['hwDeviceInfo']
+  toJSON: WalletInterface['toJSON']
 }
 
 export const isYoroiWallet = (wallet: unknown): wallet is YoroiWallet => {
@@ -297,7 +295,6 @@ type YoroiWalletKeys =
   | 'createVotingRegTx'
   | 'submitTransaction'
   | 'signTx'
-  | 'signTxLegacy'
   | 'signTxWithLedger'
   | 'fetchPoolInfo'
   | 'publicKeyHex'
@@ -328,7 +325,6 @@ const yoroiWalletKeys: Array<YoroiWalletKeys> = [
   'createVotingRegTx',
   'submitTransaction',
   'signTx',
-  'signTxLegacy',
   'signTxWithLedger',
   'fetchPoolInfo',
 ]

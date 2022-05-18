@@ -11,9 +11,11 @@ const PRIMARY_TOKEN_ID = ''
 export const yoroiUnsignedTx = async ({
   unsignedTx,
   networkConfig,
+  other,
 }: {
   unsignedTx: UnsignedTx
   networkConfig: CardanoHaskellShelleyNetwork
+  other?: Record<string, unknown>
 }) => {
   const fee = toAmounts(unsignedTx.fee.values)
   const change = toEntries(
@@ -40,9 +42,11 @@ export const yoroiUnsignedTx = async ({
     staking: {
       withdrawals: await toWithdrawals(unsignedTx.withdrawals),
       deregistrations: await toDeregistrations({deregistrations: unsignedTx.deregistrations, networkConfig}),
+      // delegations: await toDelegations(unsignedTx.delegations),
     },
     auxiliary: toAuxiliary(unsignedTx.metadata),
     unsignedTx,
+    other,
   }
 
   return yoroiTx
@@ -77,6 +81,10 @@ export const Amounts = {
   diff: (amounts1: YoroiAmounts, amounts2: YoroiAmounts) => Amounts.sum([amounts1, Amounts.negated(amounts2)]),
   negated: (amounts: YoroiAmounts) =>
     Object.fromEntries(Object.entries(amounts).map(([tokenId, amount]) => [tokenId, Quantities.negated(amount)])),
+  getAmount: (amounts: YoroiAmounts, tokenId: string): YoroiAmount => ({
+    tokenId,
+    quantity: amounts[tokenId] || '0',
+  }),
 }
 
 export const Entries = {
@@ -98,10 +106,8 @@ export const Entries = {
       amounts: firstEntry[1],
     }
   },
-  getAmount: (entry: YoroiEntry, tokenId: string): YoroiAmount => ({
-    tokenId,
-    quantity: entry.amounts[tokenId] || '0',
-  }),
+  getAmount: (entry: YoroiEntry, tokenId: string): YoroiAmount => Amounts.getAmount(entry.amounts, tokenId),
+  toAmounts: (entries: YoroiEntries): YoroiAmounts => Amounts.sum(Object.values(entries)),
 }
 
 export const toAmounts = (values: Array<TokenEntry>) =>
@@ -160,6 +166,27 @@ const toDeregistrations = async ({
   networkConfig: CardanoHaskellShelleyNetwork
 }) =>
   deregistrations.reduce(async (result, current) => {
+    const address = await current
+      .stakeCredential()
+      .then((stakeCredential) => RewardAddress.new(NETWORK_ID, stakeCredential))
+      .then((rewardAddress) => rewardAddress.toAddress())
+      .then((address) => address.toBytes())
+      .then((bytes) => Buffer.from(bytes).toString('hex'))
+
+    return {
+      ...(await result),
+      [address]: {'': KEY_DEPOSIT as Quantity},
+    }
+  }, Promise.resolve({} as YoroiEntries))
+
+const toDelegations = async ({
+  delegations,
+  networkConfig: {NETWORK_ID, KEY_DEPOSIT},
+}: {
+  delegations: UnsignedTx['delegations']
+  networkConfig: CardanoHaskellShelleyNetwork
+}) =>
+  delegations.reduce(async (result, current) => {
     const address = await current
       .stakeCredential()
       .then((stakeCredential) => RewardAddress.new(NETWORK_ID, stakeCredential))

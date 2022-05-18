@@ -417,12 +417,13 @@ export const handleGeneralError = async (message: string, e: Error, intl: IntlSh
     message,
   })
 }
+
 export const submitSignedTx = (signedTx: string) => async (dispatch: Dispatch<any>) => {
   Logger.info('submitting tx...')
   await walletManager.submitTransaction(signedTx)
   dispatch(updateHistory())
 }
-// note: eslint doesn't like polymorphic types
+
 export const submitTransaction =
   <T>(signRequest: ISignRequest<T>, decryptedKey: string) =>
   async (dispatch: Dispatch<any>) => {
@@ -431,6 +432,7 @@ export const submitTransaction =
     const signedTxBase64 = Buffer.from(encodedTx).toString('base64')
     await dispatch(submitSignedTx(signedTxBase64))
   }
+
 export const checkForFlawedWallets = () => (dispatch: Dispatch<any>) => {
   let isFlawed = false
   Logger.debug('actions::checkForFlawedWallets:: checking wallet...')

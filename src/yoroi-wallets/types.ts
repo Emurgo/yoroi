@@ -8,9 +8,11 @@ export type YoroiUnsignedTx = {
   change: YoroiEntries
   staking: {
     deregistrations: YoroiEntries
+    // delegations: YoroiEntries
     withdrawals: YoroiEntries
   }
   unsignedTx: UnsignedTx
+  other?: Record<string, unknown>
 }
 
 export type Address = string
@@ -19,6 +21,11 @@ export type TokenId = string
 
 export type YoroiEntries = {
   [address: Address]: YoroiAmounts
+}
+
+export type YoroiPrimaryEntry = {
+  address: Address
+  amount: YoroiAmount
 }
 
 export type YoroiEntry = {

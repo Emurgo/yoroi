@@ -1,97 +1,69 @@
 import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
-import {BigNumber} from 'bignumber.js'
 import React from 'react'
 
-import {WithModalProps} from '../../../../../storybook'
-import {Modal} from '../../../../components'
-import {NETWORKS, PRIMARY_ASSET_CONSTANTS} from '../../../../legacy/networks'
+import {mockWallet, mockYoroiTx, WithModalProps} from '../../../../../storybook'
+import {Boundary, Modal} from '../../../../components'
 import {SelectedWalletProvider} from '../../../../SelectedWallet'
-import {MultiToken, YoroiWallet} from '../../../../yoroi-wallets'
 import {TransferSummary} from './TransferSummary'
 
 const other = {
-  // arbitrary values controlled by parent
-  balance: new BigNumber(9827635),
-  finalBalance: new BigNumber(1923745),
-  fees: new BigNumber(28934756),
-
   onCancel: action('onCancel'),
   onConfirm: action('onConfirm'),
+  onConfirmBiometrics: action('onConfirmBiometrics'),
+  onConfirmHW: action('onConfirmHW'),
+  utxos: [],
 }
 
-const wallet = {
-  networkId: 1,
-  isEasyConfirmationEnabled: true,
-  isHW: false,
-} as YoroiWallet
-
 storiesOf('TransferSummary', module)
-  .add('withdrawals, no registrations', () => {
-    const withdrawals = [
-      {
-        address: 'withdrawal address 1',
-        amount: new MultiToken(
-          [
-            {
-              amount: new BigNumber(1900001),
-              identifier: PRIMARY_ASSET_CONSTANTS.CARDANO,
-              networkId: NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
-            },
-          ],
-          {
-            defaultIdentifier: PRIMARY_ASSET_CONSTANTS.CARDANO,
-            defaultNetworkId: NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
-          },
-        ),
-      },
-    ]
-    const deregistrations = null
-
+  .add('withdrawals, no deregistrations', () => {
     return (
-      <WithModalProps>
-        {(modalProps) => (
-          <SelectedWalletProvider wallet={wallet}>
-            <Modal {...modalProps} showCloseIcon>
-              <TransferSummary withdrawals={withdrawals} deregistrations={deregistrations} {...other} />
-            </Modal>
-          </SelectedWalletProvider>
-        )}
-      </WithModalProps>
+      <Boundary>
+        <WithModalProps>
+          {(modalProps) => (
+            <SelectedWalletProvider
+              wallet={{
+                ...mockWallet,
+                createWithdrawalTx: async () => ({
+                  ...mockYoroiTx,
+                  staking: {
+                    ...mockYoroiTx.staking,
+                    withdrawals: {
+                      'reward-address': {'': '12356789'},
+                    },
+                  },
+                }),
+              }}
+            >
+              <Modal {...modalProps} showCloseIcon>
+                <TransferSummary shouldDeregister={false} {...other} />
+              </Modal>
+            </SelectedWalletProvider>
+          )}
+        </WithModalProps>
+      </Boundary>
     )
   })
   .add('deregistrations, no withdrawals', () => {
-    const withdrawals = null
-    const deregistrations = [
-      {
-        rewardAddress: 'deregistration address',
-        refund: new MultiToken(
-          [
-            {
-              identifier: '',
-              networkId: 300,
-              amount: new BigNumber(1000),
-            },
-            {
-              identifier: '',
-              networkId: 300,
-              amount: new BigNumber(1000),
-            },
-          ],
-          {
-            defaultIdentifier: '',
-            defaultNetworkId: 300,
-          },
-        ),
-      },
-    ]
-
     return (
       <WithModalProps>
         {(modalProps) => (
-          <SelectedWalletProvider wallet={wallet}>
+          <SelectedWalletProvider
+            wallet={{
+              ...mockWallet,
+              createWithdrawalTx: async () => ({
+                ...mockYoroiTx,
+                staking: {
+                  ...mockYoroiTx.staking,
+                  deregistrations: {
+                    'reward-address': {'': '2000000'},
+                  },
+                },
+              }),
+            }}
+          >
             <Modal {...modalProps} showCloseIcon>
-              <TransferSummary withdrawals={withdrawals} deregistrations={deregistrations} {...other} />
+              <TransferSummary shouldDeregister={true} useUSB={true} {...other} />
             </Modal>
           </SelectedWalletProvider>
         )}
@@ -99,45 +71,28 @@ storiesOf('TransferSummary', module)
     )
   })
   .add('deregistrations, withdrawals', () => {
-    const withdrawals = [
-      {
-        address: 'withdrawal address 1',
-        amount: new MultiToken([], {
-          defaultIdentifier: '',
-          defaultNetworkId: 300,
-        }),
-      },
-    ]
-    const deregistrations = [
-      {
-        rewardAddress: 'deregistration address',
-        refund: new MultiToken(
-          [
-            {
-              identifier: '',
-              networkId: 300,
-              amount: new BigNumber(1000),
-            },
-            {
-              identifier: '',
-              networkId: 300,
-              amount: new BigNumber(1000),
-            },
-          ],
-          {
-            defaultIdentifier: '',
-            defaultNetworkId: 300,
-          },
-        ),
-      },
-    ]
-
     return (
       <WithModalProps>
         {(modalProps) => (
-          <SelectedWalletProvider wallet={wallet}>
+          <SelectedWalletProvider
+            wallet={{
+              ...mockWallet,
+              createWithdrawalTx: async () => ({
+                ...mockYoroiTx,
+                staking: {
+                  ...mockYoroiTx.staking,
+                  withdrawals: {
+                    'reward-address': {'': '123456789'},
+                  },
+                  deregistrations: {
+                    'reward-address': {'': '2000000'},
+                  },
+                },
+              }),
+            }}
+          >
             <Modal {...modalProps} showCloseIcon>
-              <TransferSummary withdrawals={withdrawals} deregistrations={deregistrations} {...other} />
+              <TransferSummary shouldDeregister={true} useUSB={true} {...other} />
             </Modal>
           </SelectedWalletProvider>
         )}
@@ -145,15 +100,19 @@ storiesOf('TransferSummary', module)
     )
   })
   .add('no withdrawals, no deregistrations', () => {
-    const withdrawals = null
-    const deregistrations = null
-
     return (
       <WithModalProps>
         {(modalProps) => (
-          <SelectedWalletProvider wallet={wallet}>
+          <SelectedWalletProvider
+            wallet={{
+              ...mockWallet,
+              createWithdrawalTx: async () => ({
+                ...mockYoroiTx,
+              }),
+            }}
+          >
             <Modal {...modalProps} showCloseIcon>
-              <TransferSummary withdrawals={withdrawals} deregistrations={deregistrations} {...other} />
+              <TransferSummary shouldDeregister={true} useUSB={true} {...other} />
             </Modal>
           </SelectedWalletProvider>
         )}

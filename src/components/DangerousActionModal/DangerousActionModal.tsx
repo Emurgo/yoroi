@@ -15,6 +15,7 @@ type DangerousActionProps = {
     content: Array<string>
   }
   primaryButton: {
+    disabled?: boolean
     label: string
     onPress: () => Promise<void> | void
   }
@@ -66,7 +67,13 @@ export const DangerousAction = ({
       <Spacer height={24} />
 
       <View style={styles.actions}>
-        <Button block onPress={primaryButton.onPress} title={primaryButton.label} style={styles.primaryButton} />
+        <Button
+          block
+          onPress={primaryButton.onPress}
+          title={primaryButton.label}
+          style={styles.primaryButton}
+          disabled={primaryButton.disabled}
+        />
 
         <Spacer height={16} />
 

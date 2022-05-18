@@ -4,9 +4,8 @@ import {CONFIG} from '../../legacy/config'
 import {ISignRequest} from '../../legacy/ISignRequest'
 import type {CardanoHaskellShelleyNetwork} from '../../legacy/networks'
 import type {Address, Value} from '../../legacy/types'
-import {multiTokenFromCardanoValue, toHexOrBase58} from '../../legacy/utils'
 import {AddressedUtxo, Addressing, SendTokenList} from '../../types'
-import {CardanoTypes, hashTransaction, RewardAddress} from '../index'
+import {CardanoTypes, RewardAddress} from '../index'
 import type {DefaultTokenEntry} from './MultiToken'
 import {MultiToken} from './MultiToken'
 
@@ -96,31 +95,8 @@ export class HaskellShelleyTxSignRequest implements ISignRequest<CardanoTypes.Tr
     this.ledgerNanoCatalystRegistrationTxSignData = data.ledgerNanoCatalystRegistrationTxSignData
   }
 
-  async txId() {
-    return Buffer.from(await (await hashTransaction(await this.unsignedTx.build())).toBytes()).toString('hex')
-  }
-
   auxiliary() {
     return this.auxiliaryData
-  }
-
-  async totalInput() {
-    const values = await multiTokenFromCardanoValue(
-      await (await this.unsignedTx.getImplicitInput()).checkedAdd(await this.unsignedTx.getExplicitInput()),
-      {
-        defaultIdentifier: PRIMARY_ASSET_CONSTANTS.CARDANO,
-        defaultNetworkId: this.networkSettingSnapshot.NetworkId,
-      },
-    )
-    this.changeAddr.forEach((change) => values.joinSubtractMutable(change.values))
-    return values
-  }
-
-  async totalOutput() {
-    return multiTokenFromCardanoValue(await this.unsignedTx.getExplicitOutput(), {
-      defaultIdentifier: PRIMARY_ASSET_CONSTANTS.CARDANO,
-      defaultNetworkId: this.networkSettingSnapshot.NetworkId,
-    })
   }
 
   async fee() {
@@ -204,36 +180,6 @@ export class HaskellShelleyTxSignRequest implements ISignRequest<CardanoTypes.Tr
     }
 
     return result
-  }
-
-  async receivers(includeChange: boolean) {
-    const outputs = await (await this.unsignedTx.build()).outputs()
-    const outputStrings: Array<string> = []
-
-    for (let i = 0; i < (await outputs.len()); i++) {
-      outputStrings.push(await toHexOrBase58(await (await outputs.get(i)).address()))
-    }
-
-    if (!includeChange) {
-      const changeAddrs = this.changeAddr.map((change) => change.address)
-      return outputStrings.filter((addr) => !changeAddrs.includes(addr))
-    }
-
-    return outputStrings
-  }
-
-  uniqueSenderAddresses() {
-    return Array.from(new Set(this.senderUtxos.map((utxo) => utxo.receiver)))
-  }
-
-  async isEqual(tx: (unknown | CardanoTypes.TransactionBuilder) | null | undefined) {
-    if (tx == null) return false
-
-    if (!(tx instanceof CardanoTypes.TransactionBuilder)) {
-      return false
-    }
-
-    return await shelleyTxEqual(this.unsignedTx, tx)
   }
 
   self() {

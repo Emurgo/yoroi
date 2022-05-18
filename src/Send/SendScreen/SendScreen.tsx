@@ -85,7 +85,7 @@ export const SendScreen = ({
   const [amountErrors, setAmountErrors] = React.useState<AmountValidationErrors>({amountIsRequired: true})
   const [balanceErrors, setBalanceErrors] = React.useState<BalanceValidationErrors>({})
   const [balanceAfter, setBalanceAfter] = React.useState<BigNumber | null>(null)
-  const [unsignedTx, setUnsignedTx] = React.useState<null | YoroiUnsignedTx>(null)
+  const [yoroiUnsignedTx, setUnsignedTx] = React.useState<null | YoroiUnsignedTx>(null)
   const [fee, setFee] = React.useState<BigNumber | null>(null)
   const [recomputing, setRecomputing] = React.useState(false)
   const [showSendAllWarning, setShowSendAllWarning] = React.useState(false)
@@ -157,7 +157,7 @@ export const SendScreen = ({
   }
 
   const handleConfirm = async () => {
-    if (!isValid || recomputing || !unsignedTx) return
+    if (!isValid || recomputing || !yoroiUnsignedTx) return
 
     const defaultAssetAmount = tokenInfo.isDefault
       ? parseAmountDecimal(amount, tokenInfo)
@@ -166,9 +166,9 @@ export const SendScreen = ({
 
     const tokens: Array<TokenEntry> = tokenInfo.isDefault
       ? sendAll
-        ? new MultiToken(unsignedTx.unsignedTx.totalOutput.values, {
-            defaultNetworkId: unsignedTx.unsignedTx.totalOutput.defaults.networkId,
-            defaultIdentifier: unsignedTx.unsignedTx.totalOutput.defaults.identifier,
+        ? new MultiToken(yoroiUnsignedTx.unsignedTx.totalOutput.values, {
+            defaultNetworkId: yoroiUnsignedTx.unsignedTx.totalOutput.defaults.networkId,
+            defaultIdentifier: yoroiUnsignedTx.unsignedTx.totalOutput.defaults.identifier,
           }).nonDefaultEntries()
         : []
       : [
@@ -192,7 +192,7 @@ export const SendScreen = ({
               availableAmount: tokenBalance.getDefault(),
               address,
               defaultAssetAmount,
-              transactionData: unsignedTx,
+              transactionData: yoroiUnsignedTx,
               balanceAfterTx: balanceAfter,
               utxos,
               fee,
@@ -212,7 +212,7 @@ export const SendScreen = ({
               availableAmount: tokenBalance.getDefault(),
               address,
               defaultAssetAmount,
-              transactionData: unsignedTx,
+              transactionData: yoroiUnsignedTx,
               balanceAfterTx: balanceAfter,
               utxos,
               fee,

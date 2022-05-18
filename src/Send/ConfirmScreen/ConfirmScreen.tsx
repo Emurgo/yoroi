@@ -21,7 +21,7 @@ import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
 import {Entries} from '../../yoroi-wallets/yoroiUnsignedTx'
 
 export type Params = {
-  unsignedTx: YoroiUnsignedTx
+  yoroiUnsignedTx: YoroiUnsignedTx
   balanceAfterTx: BigNumber
   availableAmount: BigNumber
   easyConfirmDecryptKey: string
@@ -30,8 +30,8 @@ export type Params = {
 const isParams = (params?: Params | object | undefined): params is Params => {
   return (
     !!params &&
-    'unsignedTx' in params &&
-    typeof params.unsignedTx === 'object' &&
+    'yoroiUnsignedTx' in params &&
+    typeof params.yoroiUnsignedTx === 'object' &&
     'balanceAfterTx' in params &&
     params.balanceAfterTx instanceof BigNumber &&
     'availableAmount' in params &&
@@ -43,7 +43,7 @@ const isParams = (params?: Params | object | undefined): params is Params => {
 
 export const ConfirmScreen = () => {
   const strings = useStrings()
-  const {balanceAfterTx, availableAmount, unsignedTx} = useParams(isParams)
+  const {balanceAfterTx, availableAmount, yoroiUnsignedTx} = useParams(isParams)
   const {resetToTxHistory} = useWalletNavigation()
   const wallet = useSelectedWallet()
   const {isHW, isEasyConfirmationEnabled} = wallet
@@ -61,8 +61,8 @@ export const ConfirmScreen = () => {
     resetToTxHistory()
   }
 
-  const entry = Entries.first(unsignedTx.entries)
-  const secondaryAmounts = Object.entries(unsignedTx.amounts).filter(([tokenId]) => tokenId !== '')
+  const entry = Entries.first(yoroiUnsignedTx.entries)
+  const secondaryAmounts = Object.entries(yoroiUnsignedTx.amounts).filter(([tokenId]) => tokenId !== '')
 
   return (
     <View style={styles.root}>
@@ -75,7 +75,7 @@ export const ConfirmScreen = () => {
 
         <ScrollView style={styles.container} contentContainerStyle={{padding: 16}}>
           <Text small>
-            {strings.fees}: {formatTokenWithSymbol(new BigNumber(unsignedTx.fee['']), defaultAsset)}
+            {strings.fees}: {formatTokenWithSymbol(new BigNumber(yoroiUnsignedTx.fee['']), defaultAsset)}
           </Text>
 
           <Text small>
@@ -116,7 +116,7 @@ export const ConfirmScreen = () => {
         <Actions>
           <ConfirmTx
             onSuccess={onSuccess}
-            unsignedTx={unsignedTx}
+            yoroiUnsignedTx={yoroiUnsignedTx}
             useUSB={useUSB}
             setUseUSB={setUseUSB}
             isProvidingPassword

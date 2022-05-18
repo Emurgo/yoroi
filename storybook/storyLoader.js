@@ -10,6 +10,9 @@ function loadStories() {
 	require('../src/Catalyst/VotingBanner.stories');
 	require('../src/Dashboard/Dashboard.stories');
 	require('../src/Dashboard/StakePoolInfos.stories');
+	require('../src/Dashboard/WithdrawStakingRewards/ConfirmTx/ConfirmTxWithHW.stories');
+	require('../src/Dashboard/WithdrawStakingRewards/ConfirmTx/ConfirmTxWithOS.stories');
+	require('../src/Dashboard/WithdrawStakingRewards/ConfirmTx/ConfirmTxWithPassword.stories');
 	require('../src/Dashboard/WithdrawStakingRewards/WithdrawalDialog/TransferSummary/TransferSummary.stories');
 	require('../src/FirstRun/LanguagePickerScreen/LanguagePickerScreen.stories');
 	require('../src/FirstRun/TermsOfServiceScreen/TermsOfServiceScreen.stories');
@@ -96,6 +99,9 @@ const stories = [
 	'../src/Catalyst/VotingBanner.stories',
 	'../src/Dashboard/Dashboard.stories',
 	'../src/Dashboard/StakePoolInfos.stories',
+	'../src/Dashboard/WithdrawStakingRewards/ConfirmTx/ConfirmTxWithHW.stories',
+	'../src/Dashboard/WithdrawStakingRewards/ConfirmTx/ConfirmTxWithOS.stories',
+	'../src/Dashboard/WithdrawStakingRewards/ConfirmTx/ConfirmTxWithPassword.stories',
 	'../src/Dashboard/WithdrawStakingRewards/WithdrawalDialog/TransferSummary/TransferSummary.stories',
 	'../src/FirstRun/LanguagePickerScreen/LanguagePickerScreen.stories',
 	'../src/FirstRun/TermsOfServiceScreen/TermsOfServiceScreen.stories',

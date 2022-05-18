@@ -3,7 +3,7 @@ import {useNavigation} from '@react-navigation/native'
 import BigNumber from 'bignumber.js'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ActivityIndicator, RefreshControl, ScrollView, StyleSheet, View} from 'react-native'
+import {ActivityIndicator, RefreshControl, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {AccountAutoRefresher} from '../AccountAutoRefresher'
@@ -11,20 +11,14 @@ import {VotingBanner} from '../Catalyst/VotingBanner'
 import {Banner, Button, OfflineBanner, StatusBar} from '../components'
 import globalMessages from '../i18n/global-messages'
 import {fetchAccountState} from '../legacy/account'
-import {submitSignedTx, submitTransaction} from '../legacy/actions'
 import {getCardanoBaseConfig, UI_V2} from '../legacy/config'
-import {getDefaultAssetByNetworkId} from '../legacy/config'
-import {setLedgerDeviceId, setLedgerDeviceObj} from '../legacy/hwWallet'
 import {getCardanoNetworkConfigById} from '../legacy/networks'
 import {
-  hwDeviceInfoSelector,
   isFetchingAccountStateSelector,
   isFetchingUtxosSelector,
   isOnlineSelector,
   lastAccountStateFetchErrorSelector,
-  serverStatusSelector,
   tokenBalanceSelector,
-  utxosSelector,
 } from '../legacy/selectors'
 import {fetchUTXOs} from '../legacy/utxo'
 import {useSelectedWallet} from '../SelectedWallet'
@@ -51,12 +45,9 @@ export const Dashboard = () => {
   const isFetchingAccountState = useSelector(isFetchingAccountStateSelector)
   const lastAccountStateSyncError = useSelector(lastAccountStateFetchErrorSelector)
   const isOnline = useSelector(isOnlineSelector)
-  const hwDeviceInfo = useSelector(hwDeviceInfoSelector)
-  const serverStatus = useSelector(serverStatusSelector)
 
   const wallet = useSelectedWallet()
   const balances = useBalances(wallet)
-  const utxos = useSelector(utxosSelector)
   const {stakingInfo, refetch: refetchStakingInfo, error} = useStakingInfo(wallet)
 
   const [showWithdrawalDialog, setShowWithdrawalDialog] = React.useState(false)
@@ -87,7 +78,7 @@ export const Dashboard = () => {
             />
           }
         >
-          {stakingInfo?.status !== 'staked' && <NotDelegatedInfo />}
+          {stakingInfo?.status === 'not-registered' && <NotDelegatedInfo />}
 
           <Row>
             <EpochInfo />
@@ -101,7 +92,7 @@ export const Dashboard = () => {
                 totalAdaSum={balances['ADA'] ? new BigNumber(balances['ADA']) : null}
                 totalRewards={new BigNumber(stakingInfo.rewards)}
                 totalDelegated={new BigNumber(stakingInfo.amount)}
-                onWithdraw={() => setShowWithdrawalDialog(true)}
+                onWithdraw={() => setShowWithdrawalDialog(!showWithdrawalDialog)}
                 disableWithdraw={wallet.isReadOnly}
               />
             ) : (
@@ -109,7 +100,7 @@ export const Dashboard = () => {
                 totalAdaSum={balances['ADA'] ? new BigNumber(balances['ADA']) : null}
                 totalRewards={null}
                 totalDelegated={null}
-                onWithdraw={() => setShowWithdrawalDialog(true)}
+                onWithdraw={() => setShowWithdrawalDialog(!showWithdrawalDialog)}
                 disableWithdraw
               />
             )}
@@ -171,28 +162,18 @@ export const Dashboard = () => {
         </Actions>
       </View>
 
-      {showWithdrawalDialog && (
+      {stakingInfo?.status === 'staked' && showWithdrawalDialog && (
         <WithdrawStakingRewards
-          intl={intl}
-          navigation={navigation}
-          utxos={utxos}
-          isEasyConfirmationEnabled={wallet.isEasyConfirmationEnabled}
-          isHW={wallet.isHW}
-          hwDeviceInfo={hwDeviceInfo as any}
-          defaultAsset={getDefaultAssetByNetworkId(wallet.networkId)}
-          serverStatus={serverStatus}
-          setLedgerDeviceId={(...args) => dispatch(setLedgerDeviceId(...args)) as any}
-          setLedgerDeviceObj={(...args) => dispatch(setLedgerDeviceObj(...args)) as any}
-          submitTransaction={(...args) => dispatch(submitTransaction(...args)) as any}
-          submitSignedTx={(...args) => dispatch(submitSignedTx(...args)) as any}
-          onDone={() => setShowWithdrawalDialog(false)}
+          stakingInfo={stakingInfo}
+          onCancel={() => setShowWithdrawalDialog(false)}
+          onSuccess={() => navigation.reset(txHistoryRoute as any)}
         />
       )}
     </View>
   )
 }
 
-const Row = (props) => <View {...props} style={styles.row} />
+const Row = ({style, ...props}: ViewProps) => <View {...props} style={[style, styles.row]} />
 
 const SyncErrorBanner = ({showRefresh}: Record<string, unknown> /* TODO: type */) => {
   const intl = useIntl()
@@ -315,4 +296,31 @@ const useBalances = (_wallet: YoroiWallet) => {
     }),
     {},
   )
+}
+
+const txHistoryRoute = {
+  index: 0,
+  routes: [
+    {
+      name: 'app-root',
+      state: {
+        routes: [
+          {name: 'wallet-selection'},
+          {
+            name: 'main-wallet-routes',
+            state: {
+              routes: [
+                {
+                  name: 'history',
+                  state: {
+                    routes: [{name: 'history-list'}],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
 }

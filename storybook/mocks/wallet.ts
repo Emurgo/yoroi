@@ -2,6 +2,7 @@ import BigNumber from 'bignumber.js'
 
 import {RemotePoolMetaSuccess, StakePoolInfosAndHistories, TokenEntry, TokenInfo} from '../../src/types'
 import {YoroiWallet} from '../../src/yoroi-wallets'
+import {YoroiUnsignedTx} from '../../src/yoroi-wallets/types'
 
 export const mockWallet: YoroiWallet = {
   id: 'wallet-id',
@@ -9,6 +10,7 @@ export const mockWallet: YoroiWallet = {
   networkId: 300,
   checksum: {TextPart: 'text-part', ImagePart: 'image-part'},
   isHW: false,
+  hwDeviceInfo: null as any,
   isReadOnly: false,
   isEasyConfirmationEnabled: false,
   rewardAddressHex: 'reward-address-hex',
@@ -37,9 +39,6 @@ export const mockWallet: YoroiWallet = {
   signTx: () => {
     throw new Error('Not implemented')
   },
-  signTxLegacy: () => {
-    throw new Error('Not implemented')
-  },
   signTxWithLedger: () => {
     throw new Error('Not implemented')
   },
@@ -58,6 +57,7 @@ export const mockWallet: YoroiWallet = {
   subscribe: () => {
     throw new Error('Not implemented')
   },
+  toJSON: () => null as any,
 
   // enableEasyConfirmation: () => {
   //   throw new Error('not implemented: enableEasyConfirmation')
@@ -154,4 +154,17 @@ export const poolInfoAndHistory: RemotePoolMetaSuccess = {
       },
     },
   ],
+}
+
+export const mockYoroiTx: YoroiUnsignedTx = {
+  entries: {},
+  amounts: {},
+  fee: {'': '12345'},
+  auxiliary: {},
+  change: {},
+  staking: {
+    deregistrations: {},
+    withdrawals: {},
+  },
+  unsignedTx: {} as any,
 }
