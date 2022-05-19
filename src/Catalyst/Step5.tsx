@@ -90,7 +90,6 @@ export const Step5 = ({votingRegTxData}: Props) => {
 
       <Actions>
         <ConfirmTx
-          process="signAndSubmit"
           onSuccess={() => navigation.navigate('catalyst-qr-code')}
           isProvidingPassword
           providedPassword={password}
