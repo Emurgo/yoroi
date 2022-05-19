@@ -4,8 +4,9 @@ import {StyleSheet} from 'react-native'
 import Markdown from 'react-native-easy-markdown'
 
 import {Boundary, DangerousAction, ErrorView, Modal, PleaseWaitView, Spacer} from '../../components'
-import globalMessages, {ledgerMessages} from '../../i18n/global-messages'
+import globalMessages, {errorMessages, ledgerMessages} from '../../i18n/global-messages'
 import LocalizableError from '../../i18n/LocalizableError'
+import {WrongPassword} from '../../legacy/errors'
 import {theme} from '../../theme'
 import {Staked} from '../StakePoolInfos'
 import {ConfirmTx} from './ConfirmTx'
@@ -18,7 +19,6 @@ type Props = {
 
 export const WithdrawStakingRewards = ({onSuccess, onCancel, stakingInfo}: Props) => {
   const strings = useStrings()
-  const intl = useIntl()
 
   const [step, setStep] = React.useState<'warning' | 'confirm'>('warning')
   const [shouldDeregister, setShouldDeregister] = React.useState(false)
@@ -35,7 +35,7 @@ export const WithdrawStakingRewards = ({onSuccess, onCancel, stakingInfo}: Props
           title={strings.warningModalTitle}
           alertBox={{content: [strings.warning1, strings.warning2, strings.warning3]}}
           primaryButton={{
-            // disabled: stakingInfo.rewards === '0',
+            disabled: stakingInfo.rewards === '0',
             label: strings.keepButton,
             onPress: () => onKeepOrDeregisterKey(false),
           }}
@@ -55,20 +55,7 @@ export const WithdrawStakingRewards = ({onSuccess, onCancel, stakingInfo}: Props
       <Route active={step === 'confirm'}>
         <Boundary
           loadingFallback={<PleaseWaitView title="" spinnerText={strings.pleaseWait} />}
-          errorFallbackRender={({error}) => {
-            if (error instanceof LocalizableError) {
-              const errorMessage = intl.formatMessage({id: error.id, defaultMessage: error.defaultMessage})
-              return (
-                <ErrorView
-                  errorMessage={errorMessage}
-                  errorLogs={(error.values as any).response}
-                  onDismiss={onCancel}
-                />
-              )
-            }
-
-            return <ErrorView errorMessage={error.message} onDismiss={onCancel} />
-          }}
+          errorFallbackRender={({error}) => <ErrorFallback error={error} onCancel={onCancel} />}
         >
           <ConfirmTx
             shouldDeregister={shouldDeregister}
@@ -80,6 +67,26 @@ export const WithdrawStakingRewards = ({onSuccess, onCancel, stakingInfo}: Props
       </Route>
     </Modal>
   )
+}
+
+const ErrorFallback: React.FC<{error: Error; onCancel: () => void}> = ({error, onCancel}) => {
+  const intl = useIntl()
+
+  if (error instanceof LocalizableError) {
+    return (
+      <ErrorView
+        errorMessage={intl.formatMessage({id: error.id, defaultMessage: error.defaultMessage})}
+        errorLogs={error?.values?.response as string}
+        onDismiss={onCancel}
+      />
+    )
+  }
+
+  if (error instanceof WrongPassword) {
+    return <ErrorView errorMessage={intl.formatMessage(errorMessages.incorrectPassword.message)} onDismiss={onCancel} />
+  }
+
+  return <ErrorView errorMessage={error.message} onDismiss={onCancel} />
 }
 
 const Route: React.FC<{active: boolean}> = ({active, children}) => <>{active ? children : null}</>
