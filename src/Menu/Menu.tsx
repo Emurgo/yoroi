@@ -2,7 +2,7 @@ import {defineMessage} from '@formatjs/intl'
 import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {useIntl} from 'react-intl'
-import {Image, Linking, ScrollView, TouchableOpacity, View} from 'react-native'
+import {Image, Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useSelector} from 'react-redux'
 
@@ -40,9 +40,9 @@ export const Menu = () => {
   const walletCount = walletMetas?.length || ''
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={{flex: 1}}>
-      <ScrollView contentContainerStyle={{padding: 16, flex: 1}} bounces={false}>
-        <View style={{flex: 1}}>
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
+      <ScrollView contentContainerStyle={styles.scrollViewContent} bounces={false}>
+        <View style={styles.listContainer}>
           <AllWallets
             label={`${strings.allWallets} (${walletCount})`}
             onPress={navigateTo.allWallets}
@@ -67,22 +67,14 @@ export const Menu = () => {
           <HR />
         </View>
 
-        <View style={{alignItems: 'center', flex: 1, justifyContent: 'flex-end'}}>
-          <View style={{height: 16, justifyContent: 'center'}}>
-            <Text style={{color: '#6B7384'}}>{strings.faqTitle}</Text>
+        <View style={styles.faqContainer}>
+          <View style={styles.faqTitle}>
+            <Text style={styles.faqTitleText}>{strings.faqTitle}</Text>
           </View>
 
-          <View
-            style={{
-              height: 50,
-              width: 195,
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              flexDirection: 'row',
-            }}
-          >
-            <Image source={FaqImage} style={{width: 20, height: 20}} />
-            <Text bold style={{color: '#4B6DDE'}} onPress={navigateTo.faq}>
+          <View style={styles.faqLink}>
+            <Image source={FaqImage} style={styles.faqLinkImage} />
+            <Text bold style={styles.faqLinkText} onPress={navigateTo.faq}>
               {strings.faqLink}
             </Text>
           </View>
@@ -94,10 +86,10 @@ export const Menu = () => {
 
 const Item = ({label, left, onPress}: {label: string; left: React.ReactElement; onPress: () => void}) => {
   return (
-    <TouchableOpacity onPress={onPress} style={{flexDirection: 'row', alignItems: 'center', paddingVertical: 16}}>
+    <TouchableOpacity onPress={onPress} style={styles.itemTouchableOpacity}>
       {left}
       <Spacer width={12} />
-      <Text style={{color: '#242838'}}>{label}</Text>
+      <Text style={styles.itemText}>{label}</Text>
       <Spacer fill />
       <Icon.Chevron direction="right" size={16} color="#6B7384" />
     </TouchableOpacity>
@@ -105,7 +97,7 @@ const Item = ({label, left, onPress}: {label: string; left: React.ReactElement; 
 }
 
 const HR = () => {
-  return <View style={{height: 1, backgroundColor: 'lightgrey'}} />
+  return <View style={styles.hr} />
 }
 
 const AllWallets = Item
@@ -186,5 +178,56 @@ const messages = defineMessage({
   menu: {
     id: 'menu',
     defaultMessage: '!!!Menu',
+  },
+})
+
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+  },
+  hr: {
+    height: 1,
+    backgroundColor: 'lightgrey',
+  },
+  itemTouchableOpacity: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 16,
+  },
+  itemText: {
+    color: '#242838',
+  },
+  scrollViewContent: {
+    flex: 1,
+    padding: 16,
+  },
+  listContainer: {
+    flex: 1,
+  },
+  faqContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+  },
+  faqTitle: {
+    height: 16,
+    justifyContent: 'center',
+  },
+  faqTitleText: {
+    color: '#6B7384',
+  },
+  faqLink: {
+    height: 50,
+    width: 195,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  faqLinkImage: {
+    width: 20,
+    height: 20,
+  },
+  faqLinkText: {
+    color: '#4B6DDE',
   },
 })
