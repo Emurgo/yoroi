@@ -2,18 +2,21 @@ import {defineMessage} from '@formatjs/intl'
 import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {useIntl} from 'react-intl'
-import {Linking, ScrollView, TouchableOpacity, View} from 'react-native'
+import {Image, Linking, ScrollView, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useSelector} from 'react-redux'
 
 import {Text} from '../../legacy/components/UiKit'
 import {CONFIG} from '../../legacy/config/config'
 import {tokenBalanceSelector} from '../../legacy/selectors'
+import FaqImage from '../assets/img/icon/shape.png'
 import {CatalystNavigator} from '../Catalyst/CatalystNavigator'
 import {Icon, Spacer} from '../components'
 import {useWalletMetas} from '../hooks'
 import {defaultStackNavigationOptions, MenuRoutes, useWalletNavigation} from '../navigation'
 import {InsufficientFundsModal} from './InsufficientFundsModal'
+
+const FAQ_LINK = 'https://emurgohelpdesk.zendesk.com/hc/en-us/categories/4412619927695-Yoroi'
 
 const MenuStack = createStackNavigator<MenuRoutes>()
 export const MenuNavigator = () => {
@@ -38,37 +41,52 @@ export const Menu = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={{flex: 1}}>
-      <ScrollView style={{flex: 1}} contentContainerStyle={{padding: 16}} bounces={false}>
-        <AllWallets
-          label={`${strings.allWallets} (${walletCount})`}
-          onPress={navigateTo.allWallets}
-          left={<Icon.Wallets size={24} color="#6B7384" />}
-        />
-        <HR />
+      <ScrollView contentContainerStyle={{padding: 16, flex: 1}} bounces={false}>
+        <View style={{flex: 1}}>
+          <AllWallets
+            label={`${strings.allWallets} (${walletCount})`}
+            onPress={navigateTo.allWallets}
+            left={<Icon.Wallets size={24} color="#6B7384" />}
+          />
+          <HR />
 
-        <Spacer height={24} />
+          <Spacer height={24} />
 
-        <Catalyst //
-          label={strings.catalystVoting}
-          onPress={navigateTo.catalystVoting}
-          left={<Icon.Catalyst size={24} color="#6B7384" />}
-        />
+          <Catalyst //
+            label={strings.catalystVoting}
+            onPress={navigateTo.catalystVoting}
+            left={<Icon.Catalyst size={24} color="#6B7384" />}
+          />
+          <HR />
 
-        <HR />
+          <Settings //
+            label={strings.settings}
+            onPress={navigateTo.settings}
+            left={<Icon.Gear size={24} color="#6B7384" />}
+          />
+          <HR />
+        </View>
 
-        <Settings //
-          label={strings.settings}
-          onPress={navigateTo.settings}
-          left={<Icon.Gear size={24} color="#6B7384" />}
-        />
-        <HR />
+        <View style={{alignItems: 'center', flex: 1, justifyContent: 'flex-end'}}>
+          <View style={{height: 16, justifyContent: 'center'}}>
+            <Text style={{color: '#6B7384'}}>{strings.faqTitle}</Text>
+          </View>
 
-        <FAQ //
-          label={strings.faq}
-          onPress={navigateTo.faq}
-          left={<Icon.QuestionMark size={24} color="#6B7384" />}
-        />
-        <HR />
+          <View
+            style={{
+              height: 50,
+              width: 195,
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexDirection: 'row',
+            }}
+          >
+            <Image source={FaqImage} style={{width: 20, height: 20}} />
+            <Text bold style={{color: '#4B6DDE'}} onPress={navigateTo.faq}>
+              {strings.faqLink}
+            </Text>
+          </View>
+        </View>
       </ScrollView>
     </SafeAreaView>
   )
@@ -92,7 +110,6 @@ const HR = () => {
 
 const AllWallets = Item
 const Settings = Item
-const FAQ = Item
 const Catalyst = ({label, left, onPress}: {label: string; left: React.ReactElement; onPress: () => void}) => {
   const tokenBalance = useSelector(tokenBalanceSelector)
   const sufficientFunds = tokenBalance.getDefault().gte(CONFIG.CATALYST.MIN_ADA)
@@ -128,7 +145,7 @@ const useNavigateTo = () => {
         },
       }),
     settings: () => navigateToSettings(),
-    faq: () => Linking.openURL('https://yoroi-wallet.com/faq/'),
+    faq: () => Linking.openURL(FAQ_LINK),
   }
 }
 
@@ -139,7 +156,8 @@ const useStrings = () => {
     allWallets: intl.formatMessage(messages.allWallets),
     catalystVoting: intl.formatMessage(messages.catalystVoting),
     settings: intl.formatMessage(messages.settings),
-    faq: intl.formatMessage(messages.faq),
+    faqTitle: intl.formatMessage(messages.faqTitle),
+    faqLink: intl.formatMessage(messages.faqLink),
     menu: intl.formatMessage(messages.menu),
   }
 }
@@ -157,9 +175,13 @@ const messages = defineMessage({
     id: 'menu.settings',
     defaultMessage: '!!!Settings',
   },
-  faq: {
-    id: 'menu.faq',
-    defaultMessage: '!!!FAQ',
+  faqTitle: {
+    id: 'menu.faqTitle',
+    defaultMessage: '!!!Any Questions',
+  },
+  faqLink: {
+    id: 'menu.faqLink',
+    defaultMessage: '!!!ASK OUR SUPPORT TEAM',
   },
   menu: {
     id: 'menu',
