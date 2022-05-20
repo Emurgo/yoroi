@@ -2,12 +2,17 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet} from 'react-native'
 import Markdown from 'react-native-easy-markdown'
+import {useSelector} from 'react-redux'
 
 import {Boundary, DangerousAction, ErrorView, Modal, PleaseWaitView, Spacer} from '../../components'
+import {useWithdrawalTx} from '../../hooks'
 import globalMessages, {errorMessages, ledgerMessages} from '../../i18n/global-messages'
 import LocalizableError from '../../i18n/LocalizableError'
 import {WrongPassword} from '../../legacy/errors'
+import {serverStatusSelector, utxosSelector} from '../../legacy/selectors'
+import {useSelectedWallet} from '../../SelectedWallet'
 import {theme} from '../../theme'
+import {YoroiWallet} from '../../yoroi-wallets'
 import {Staked} from '../StakePoolInfos'
 import {ConfirmTx} from './ConfirmTx'
 
@@ -19,6 +24,7 @@ type Props = {
 
 export const WithdrawStakingRewards = ({onSuccess, onCancel, stakingInfo}: Props) => {
   const strings = useStrings()
+  const wallet = useSelectedWallet()
 
   const [step, setStep] = React.useState<'warning' | 'confirm'>('warning')
   const [shouldDeregister, setShouldDeregister] = React.useState(false)
@@ -57,11 +63,11 @@ export const WithdrawStakingRewards = ({onSuccess, onCancel, stakingInfo}: Props
           loadingFallback={<PleaseWaitView title="" spinnerText={strings.pleaseWait} />}
           errorFallbackRender={({error}) => <ErrorFallback error={error} onCancel={onCancel} />}
         >
-          <ConfirmTx
+          <ConfirmWithdrawalTx
+            wallet={wallet}
             shouldDeregister={shouldDeregister}
-            onSuccess={() => onSuccess()}
-            onCancel={() => onCancel()}
-            stakingInfo={stakingInfo}
+            onSuccess={onSuccess}
+            onCancel={onCancel}
           />
         </Boundary>
       </Route>
@@ -163,3 +169,27 @@ const messages = defineMessages({
     defaultMessage: '!!!Deregister',
   },
 })
+
+const ConfirmWithdrawalTx = ({
+  wallet,
+  shouldDeregister,
+  onSuccess,
+  onCancel,
+}: {
+  wallet: YoroiWallet
+  shouldDeregister: boolean
+  onSuccess: () => void
+  onCancel: () => void
+}) => {
+  const utxos = useSelector(utxosSelector) || []
+  const serverStatus = useSelector(serverStatusSelector)
+
+  const {withdrawalTx} = useWithdrawalTx({
+    wallet,
+    utxos,
+    shouldDeregister,
+    serverTime: serverStatus?.serverTime,
+  })
+
+  return <ConfirmTx yoroiUnsignedTx={withdrawalTx} onSuccess={onSuccess} onCancel={onCancel} />
+}

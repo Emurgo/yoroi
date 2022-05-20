@@ -343,6 +343,7 @@ export const ConfirmTx: React.FC<Props> = ({
             onChangeText={setPassword}
           />
         )}
+
         <Button
           onPress={_onConfirm}
           title={strings.confirmButton}

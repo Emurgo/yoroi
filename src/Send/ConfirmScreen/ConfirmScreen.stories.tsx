@@ -3,7 +3,7 @@ import {storiesOf} from '@storybook/react-native'
 import BigNumber from 'bignumber.js'
 import React from 'react'
 
-import {mockWallet} from '../../../storybook'
+import {mockWallet, mockYoroiTx} from '../../../storybook'
 import {SelectedWalletProvider} from '../../SelectedWallet'
 import type {Params} from './ConfirmScreen'
 import {ConfirmScreen} from './ConfirmScreen'
@@ -17,7 +17,13 @@ storiesOf('ConfirmScreen', module).add('Default', () => {
       balanceAfterTx: new BigNumber('10'),
       availableAmount: new BigNumber('1111111100'),
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      unsignedTx: null as any,
+      yoroiUnsignedTx: {
+        ...mockYoroiTx,
+        entries: {
+          ...mockYoroiTx.entries,
+          'receiver-address': {'': '12345'},
+        },
+      },
       easyConfirmDecryptKey: '',
     } as Params,
   }

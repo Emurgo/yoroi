@@ -2,6 +2,7 @@
 import {SignedTx} from '@emurgo/yoroi-lib-core'
 import {delay} from 'bluebird'
 import cryptoRandomString from 'crypto-random-string'
+import {IntlShape} from 'react-intl'
 import {
   QueryKey,
   useMutation,
@@ -397,6 +398,108 @@ export const useUpdateHWDeviceInfo = ({wallet}: {wallet: YoroiWallet}) => {
   return {
     updateHWDeviceInfo: mutation.mutate,
     ...mutation,
+  }
+}
+
+export const useSignWithPasswordAndSubmitTx = (
+  {wallet}: {wallet: YoroiWallet},
+  options?: {
+    signTx?: UseMutationOptions<SignedTx, Error, {yoroiUnsignedTx: YoroiUnsignedTx; password: string; intl: IntlShape}>
+    submitTx?: UseMutationOptions<TxSubmissionStatus, Error, SignedTx>
+  },
+) => {
+  const signTx = useSignTxWithPassword(
+    {wallet},
+    {
+      useErrorBoundary: true,
+      retry: false,
+      ...options?.signTx,
+      onSuccess: (signedTx, args, context) => {
+        options?.signTx?.onSuccess?.(signedTx, args, context)
+        submitTx.mutate(signedTx)
+      },
+    },
+  )
+  const submitTx = useSubmitTx(
+    {wallet}, //
+    {useErrorBoundary: true, ...options?.submitTx},
+  )
+
+  return {
+    signAndSubmitTx: signTx.mutate,
+    isLoading: signTx.isLoading || submitTx.isLoading,
+    error: signTx.error || submitTx.error,
+
+    signTx,
+    submitTx,
+  }
+}
+
+export const useSignWithHwAndSubmitTx = (
+  {wallet}: {wallet: YoroiWallet},
+  options?: {
+    signTx?: UseMutationOptions<SignedTx, Error, {yoroiUnsignedTx: YoroiUnsignedTx; useUSB: boolean}>
+    submitTx?: UseMutationOptions<TxSubmissionStatus, Error, SignedTx>
+  },
+) => {
+  const signTx = useSignTxWithHW(
+    {wallet},
+    {
+      useErrorBoundary: true,
+      retry: false,
+      ...options?.signTx,
+      onSuccess: (signedTx, args, context) => {
+        options?.signTx?.onSuccess?.(signedTx, args, context)
+        submitTx.mutate(signedTx)
+      },
+    },
+  )
+  const submitTx = useSubmitTx(
+    {wallet}, //
+    {useErrorBoundary: true, ...options?.submitTx},
+  )
+
+  return {
+    signAndSubmitTx: signTx.mutate,
+    isLoading: signTx.isLoading || submitTx.isLoading,
+    error: signTx.error || submitTx.error,
+
+    signTx,
+    submitTx,
+  }
+}
+
+export const useSignAndSubmitTx = (
+  {wallet}: {wallet: YoroiWallet},
+  options?: {
+    signTx?: UseMutationOptions<SignedTx, Error, {yoroiUnsignedTx: YoroiUnsignedTx; masterKey: string}>
+    submitTx?: UseMutationOptions<TxSubmissionStatus, Error, SignedTx>
+  },
+) => {
+  const signTx = useSignTx(
+    {wallet},
+    {
+      useErrorBoundary: true,
+      retry: false,
+      ...options?.signTx,
+      onSuccess: (signedTx, args, context) => {
+        options?.signTx?.onSuccess?.(signedTx, args, context)
+        submitTx.mutate(signedTx)
+      },
+    },
+  )
+  const submitTx = useSubmitTx(
+    {wallet}, //
+    {useErrorBoundary: true, ...options?.submitTx},
+  )
+
+  return {
+    signAndSubmitTx: signTx.mutate,
+    isLoading: signTx.isLoading || submitTx.isLoading,
+    error: signTx.error || submitTx.error,
+
+    signTx,
+    submitTx,
   }
 }
 

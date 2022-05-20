@@ -1,7 +1,7 @@
 import React from 'react'
 
 import {useSelectedWallet} from '../../../SelectedWallet'
-import {Staked} from '../../StakePoolInfos'
+import {YoroiUnsignedTx} from '../../../yoroi-wallets/types'
 import {ConfirmTxWithHW} from './ConfirmTxWithHW'
 import {ConfirmTxWithOS} from './ConfirmTxWithOS'
 import {ConfirmTxWithPassword} from './ConfirmTxWithPassword'
@@ -9,31 +9,27 @@ import {ConfirmTxWithPassword} from './ConfirmTxWithPassword'
 type Props = {
   onCancel: () => void
   onSuccess: () => void
-  stakingInfo: Staked
-  shouldDeregister: boolean
+  yoroiUnsignedTx: YoroiUnsignedTx
 }
 
-export const ConfirmTx: React.FC<Props> = ({onSuccess, onCancel, shouldDeregister, stakingInfo}) => {
+export const ConfirmTx: React.FC<Props> = ({onSuccess, onCancel, yoroiUnsignedTx}) => {
   const wallet = useSelectedWallet()
 
   return wallet.isHW ? (
-    <ConfirmTxWithHW
-      stakingInfo={stakingInfo}
-      shouldDeregister={shouldDeregister}
+    <ConfirmTxWithHW //
+      yoroiUnsignedTx={yoroiUnsignedTx}
       onSuccess={onSuccess}
       onCancel={onCancel}
     />
   ) : wallet.isEasyConfirmationEnabled ? (
-    <ConfirmTxWithOS
-      stakingInfo={stakingInfo}
-      shouldDeregister={shouldDeregister}
+    <ConfirmTxWithOS //
+      yoroiUnsignedTx={yoroiUnsignedTx}
       onSuccess={onSuccess}
       onCancel={onCancel}
     />
   ) : (
-    <ConfirmTxWithPassword
-      stakingInfo={stakingInfo}
-      shouldDeregister={shouldDeregister}
+    <ConfirmTxWithPassword //
+      yoroiUnsignedTx={yoroiUnsignedTx}
       onSuccess={onSuccess}
       onCancel={onCancel}
     />

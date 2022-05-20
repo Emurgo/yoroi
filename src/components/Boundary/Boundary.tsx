@@ -1,8 +1,10 @@
 import React, {SuspenseProps} from 'react'
-import {ErrorBoundary, ErrorBoundaryProps} from 'react-error-boundary'
+import {ErrorBoundary, ErrorBoundaryProps, FallbackProps} from 'react-error-boundary'
 import {ActivityIndicator, ActivityIndicatorProps, Image, StyleSheet, View, ViewStyle} from 'react-native'
 
 import image from '../../assets/img/error.png'
+import {Button} from '../Button'
+import {Text} from '../Text'
 
 type BoundaryProps = LoadingBoundaryProps & CatchBoundaryProps
 
@@ -28,9 +30,8 @@ const LoadingBoundary: React.FC<LoadingBoundaryProps> = ({children, suspend = tr
   return <>{children}</>
 }
 
-type FallbackProps = {debug?: boolean; style?: ViewStyle} & Omit<ActivityIndicatorProps, 'style'>
-
-export const LoadingFallback: React.FC<FallbackProps> = ({debug, size = 'large', color = 'black', style}) => (
+type LoadingFallbackProps = {debug?: boolean; style?: ViewStyle} & Omit<ActivityIndicatorProps, 'style'>
+export const LoadingFallback: React.FC<LoadingFallbackProps> = ({debug, size = 'large', color = 'black', style}) => (
   <View style={[styles.container, debug && styles.debug, style]}>
     <ActivityIndicator size={size} color={color} />
   </View>
@@ -38,36 +39,30 @@ export const LoadingFallback: React.FC<FallbackProps> = ({debug, size = 'large',
 
 type CatchBoundaryProps = {
   error?: boolean
-  errorFallback?: ErrorBoundaryProps['fallback']
-  errorFallbackRender?: ErrorBoundaryProps['fallbackRender']
+  errorFallback?: ErrorBoundaryProps['fallbackRender']
   debug?: boolean
 }
 
-const CatchBoundary: React.FC<CatchBoundaryProps> = ({
-  children,
-  error = true,
-  errorFallbackRender,
-  errorFallback,
-  debug,
-}) => {
+const CatchBoundary: React.FC<CatchBoundaryProps> = ({children, error = true, errorFallback, debug}) => {
   if (!error) {
     return <>{children}</>
   }
 
-  if (errorFallbackRender) {
-    return <ErrorBoundary fallbackRender={errorFallbackRender}>{children}</ErrorBoundary>
-  }
-
   if (errorFallback) {
-    return <ErrorBoundary fallback={errorFallback}>{children}</ErrorBoundary>
+    return <ErrorBoundary fallbackRender={errorFallback}>{children}</ErrorBoundary>
   }
 
-  return <ErrorBoundary fallback={<ErrorFallback debug={debug} />}>{children}</ErrorBoundary>
+  return (
+    <ErrorBoundary fallbackRender={(props) => <ErrorFallback debug={debug} {...props} />}>{children}</ErrorBoundary>
+  )
 }
 
-export const ErrorFallback: React.FC<{debug?: boolean}> = ({debug}) => (
+type ErrorFallbackProps = FallbackProps & {debug?: boolean; reset?: boolean}
+export const ErrorFallback: React.FC<ErrorFallbackProps> = ({error, resetErrorBoundary, debug, reset = true}) => (
   <View style={[styles.container, debug && styles.debug]}>
+    <Text>{error.message}</Text>
     <Image source={image} />
+    {reset && <Button title="Try again" onPress={resetErrorBoundary} />}
   </View>
 )
 

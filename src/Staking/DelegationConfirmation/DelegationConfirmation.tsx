@@ -133,7 +133,7 @@ export const DelegationConfirmation = ({mockDefaultAsset}: {mockDefaultAsset?: D
   )
 }
 
-const Actions = (props: ViewProps) => <View {...props} style={{padding: 16}} />
+const Actions = (props: ViewProps) => <View {...props} style={{borderWidth: 1, padding: 16}} />
 
 const useStrings = () => {
   const intl = useIntl()

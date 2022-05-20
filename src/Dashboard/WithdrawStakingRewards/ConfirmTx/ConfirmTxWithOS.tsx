@@ -1,40 +1,28 @@
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {useIntl} from 'react-intl'
-import {useSelector} from 'react-redux'
 
 import {TwoActionView} from '../../../components'
-import {useSignTx, useSubmitTx, useWithdrawalTx} from '../../../hooks'
+import {useSignTx, useSubmitTx} from '../../../hooks'
 import {confirmationMessages, errorMessages, txLabels} from '../../../i18n/global-messages'
 import {showErrorDialog} from '../../../legacy/actions'
 import {ensureKeysValidity} from '../../../legacy/deviceSettings'
-import {serverStatusSelector, utxosSelector} from '../../../legacy/selectors'
 import {useSelectedWallet} from '../../../SelectedWallet'
 import {SystemAuthDisabled, walletManager} from '../../../yoroi-wallets'
-import {Staked} from '../../StakePoolInfos'
+import {YoroiUnsignedTx} from '../../../yoroi-wallets/types'
 import {TransferSummary} from '../WithdrawalDialog/TransferSummary'
 
 type Props = {
   onCancel: () => void
   onSuccess: () => void
-  stakingInfo: Staked
-  shouldDeregister: boolean
+  yoroiUnsignedTx: YoroiUnsignedTx
 }
 
-export const ConfirmTxWithOS: React.FC<Props> = ({onSuccess, onCancel, shouldDeregister}) => {
+export const ConfirmTxWithOS: React.FC<Props> = ({yoroiUnsignedTx, onSuccess, onCancel}) => {
   const wallet = useSelectedWallet()
   const intl = useIntl()
   const strings = useStrings()
   const navigation = useNavigation()
-  const utxos = useSelector(utxosSelector) || []
-  const serverStatus = useSelector(serverStatusSelector)
-
-  const {withdrawalTx} = useWithdrawalTx({
-    wallet,
-    utxos,
-    shouldDeregister,
-    serverTime: serverStatus.serverTime,
-  })
 
   const {signTx} = useSignTx(
     {wallet},
@@ -62,7 +50,7 @@ export const ConfirmTxWithOS: React.FC<Props> = ({onSuccess, onCancel, shouldDer
           await ensureKeysValidity(wallet.id)
           navigation.navigate('biometrics', {
             keyId: wallet.id,
-            onSuccess: async (masterKey) => signTx({yoroiUnsignedTx: withdrawalTx, masterKey}),
+            onSuccess: async (masterKey) => signTx({yoroiUnsignedTx, masterKey}),
             onFail: () => navigation.goBack(),
           })
         },
@@ -71,7 +59,7 @@ export const ConfirmTxWithOS: React.FC<Props> = ({onSuccess, onCancel, shouldDer
         onPress: () => onCancel(),
       }}
     >
-      <TransferSummary withdrawalTx={withdrawalTx} />
+      <TransferSummary yoroiUnsignedTx={yoroiUnsignedTx} />
     </TwoActionView>
   )
 }

@@ -14,19 +14,19 @@ import {YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
 import {Amounts, Entries} from '../../../../yoroi-wallets/yoroiUnsignedTx'
 
 export const TransferSummary: React.FC<{
-  withdrawalTx: YoroiUnsignedTx
-}> = ({withdrawalTx}) => {
+  yoroiUnsignedTx: YoroiUnsignedTx
+}> = ({yoroiUnsignedTx}) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const tokenInfo = useTokenInfo({wallet, tokenId: ''})
 
-  const withdrawalAmounts = Entries.toAmounts(withdrawalTx.staking.withdrawals)
-  const deregistrationAmounts = Entries.toAmounts(withdrawalTx.staking.deregistrations)
+  const withdrawalAmounts = Entries.toAmounts(yoroiUnsignedTx.staking.withdrawals)
+  const deregistrationAmounts = Entries.toAmounts(yoroiUnsignedTx.staking.deregistrations)
 
   const refundAmounts = Amounts.sum([withdrawalAmounts, deregistrationAmounts])
   const refundAmount = Amounts.getAmount(Amounts.sum([withdrawalAmounts, deregistrationAmounts]), '')
-  const feeAmount = Amounts.getAmount(withdrawalTx.fee, '')
-  const totalAmount = Amounts.getAmount(Amounts.diff(refundAmounts, withdrawalTx.fee), '')
+  const feeAmount = Amounts.getAmount(yoroiUnsignedTx.fee, '')
+  const totalAmount = Amounts.getAmount(Amounts.diff(refundAmounts, yoroiUnsignedTx.fee), '')
 
   return (
     <>
@@ -45,9 +45,9 @@ export const TransferSummary: React.FC<{
         <Text style={styles.balanceAmount}>{formatTokenWithText(new BigNumber(totalAmount.quantity), tokenInfo)}</Text>
       </Item>
 
-      <Withdrawals withdrawals={withdrawalTx.staking.withdrawals} />
+      <Withdrawals withdrawals={yoroiUnsignedTx.staking.withdrawals} />
 
-      <Deregistrations deregistrations={withdrawalTx.staking.deregistrations} />
+      <Deregistrations deregistrations={yoroiUnsignedTx.staking.deregistrations} />
     </>
   )
 }

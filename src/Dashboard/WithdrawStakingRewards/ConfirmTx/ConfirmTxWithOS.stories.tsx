@@ -6,10 +6,9 @@ import {mockWallet, mockYoroiTx, WithModalProps} from '../../../../storybook'
 import {Boundary, Modal} from '../../../components'
 import {SelectedWalletProvider} from '../../../SelectedWallet'
 import {YoroiAmount} from '../../../yoroi-wallets/types'
-import {Staked} from '../../StakePoolInfos'
 import {ConfirmTxWithOS} from './ConfirmTxWithOS'
 
-storiesOf('ConfirmWithdrawalTx/os', module)
+storiesOf('ConfirmWithdrawalTx/OS', module)
   .add('withdrawals, no deregistrations', () => {
     const rewardAmount: YoroiAmount = {
       tokenId: '',
@@ -17,16 +16,21 @@ storiesOf('ConfirmWithdrawalTx/os', module)
     }
 
     return (
-      <Boundary>
+      <SelectedWalletProvider
+        wallet={{
+          ...mockWallet,
+          submitTransaction: async (yoroiSignedTx) => {
+            action('onSubmit')(yoroiSignedTx)
+            return []
+          },
+        }}
+      >
         <WithModalProps>
           {(modalProps) => (
-            <SelectedWalletProvider
-              wallet={{
-                ...mockWallet,
-                createWithdrawalTx: async () => {
-                  action('createWithdrawalTx')
-
-                  return {
+            <Modal {...modalProps} showCloseIcon>
+              <Boundary>
+                <ConfirmTxWithOS
+                  yoroiUnsignedTx={{
                     ...mockYoroiTx,
                     staking: {
                       ...mockYoroiTx.staking,
@@ -34,29 +38,15 @@ storiesOf('ConfirmWithdrawalTx/os', module)
                         'reward-address': {[rewardAmount.tokenId]: rewardAmount.quantity},
                       },
                     },
-                  }
-                },
-              }}
-            >
-              <Modal {...modalProps} showCloseIcon>
-                <ConfirmTxWithOS
-                  shouldDeregister={false}
+                  }}
                   onSuccess={action('onSuccess')}
                   onCancel={action('onCancel')}
-                  stakingInfo={
-                    {
-                      status: 'staked',
-                      poolId: 'pool-id',
-                      amount: '1234567890',
-                      rewards: rewardAmount.quantity,
-                    } as Staked
-                  }
                 />
-              </Modal>
-            </SelectedWalletProvider>
+              </Boundary>
+            </Modal>
           )}
         </WithModalProps>
-      </Boundary>
+      </SelectedWalletProvider>
     )
   })
   .add('withdrawals, deregistrations', () => {
@@ -66,48 +56,37 @@ storiesOf('ConfirmWithdrawalTx/os', module)
     }
 
     return (
-      <Boundary>
+      <SelectedWalletProvider
+        wallet={{
+          ...mockWallet,
+          submitTransaction: async (yoroiSignedTx) => {
+            action('onSubmit')(yoroiSignedTx)
+            return []
+          },
+        }}
+      >
         <WithModalProps>
           {(modalProps) => (
-            <SelectedWalletProvider
-              wallet={{
-                ...mockWallet,
-                createWithdrawalTx: async () => {
-                  action('createWithdrawalTx')
-
-                  return {
+            <Modal {...modalProps} showCloseIcon>
+              <Boundary>
+                <ConfirmTxWithOS
+                  yoroiUnsignedTx={{
                     ...mockYoroiTx,
                     staking: {
                       ...mockYoroiTx.staking,
-                      withdrawals: {
+                      deregistrations: {
+                        ...mockYoroiTx.staking.deregistrations,
                         'reward-address': {[rewardAmount.tokenId]: rewardAmount.quantity},
                       },
-                      deregistrations: {
-                        'reward-address': {[rewardAmount.tokenId]: '2000000'},
-                      },
                     },
-                  }
-                },
-              }}
-            >
-              <Modal {...modalProps} showCloseIcon>
-                <ConfirmTxWithOS
-                  shouldDeregister={false}
+                  }}
                   onSuccess={action('onSuccess')}
                   onCancel={action('onCancel')}
-                  stakingInfo={
-                    {
-                      status: 'staked',
-                      poolId: 'pool-id',
-                      amount: '1234567890',
-                      rewards: rewardAmount.quantity,
-                    } as Staked
-                  }
                 />
-              </Modal>
-            </SelectedWalletProvider>
+              </Boundary>
+            </Modal>
           )}
         </WithModalProps>
-      </Boundary>
+      </SelectedWalletProvider>
     )
   })

@@ -1,31 +1,27 @@
 import React from 'react'
 import {useIntl} from 'react-intl'
-import {useDispatch, useSelector} from 'react-redux'
+import {useDispatch} from 'react-redux'
 
 import {TwoActionView} from '../../../components'
-import {useSignTxWithHW, useSubmitTx, useWithdrawalTx} from '../../../hooks'
+import {useSignTxWithHW, useSubmitTx} from '../../../hooks'
 import {LedgerConnect, LedgerTransportSwitch} from '../../../HW'
 import {confirmationMessages, txLabels} from '../../../i18n/global-messages'
 import {setLedgerDeviceId, setLedgerDeviceObj} from '../../../legacy/hwWallet'
 import type {DeviceId, DeviceObj} from '../../../legacy/ledgerUtils'
-import {serverStatusSelector, utxosSelector} from '../../../legacy/selectors'
 import {useSelectedWallet} from '../../../SelectedWallet'
-import {Staked} from '../../StakePoolInfos'
+import {YoroiUnsignedTx} from '../../../yoroi-wallets/types'
 import {TransferSummary} from '../WithdrawalDialog/TransferSummary'
 
 type Props = {
   onCancel: () => void
   onSuccess: () => void
-  stakingInfo: Staked
-  shouldDeregister: boolean
+  yoroiUnsignedTx: YoroiUnsignedTx
 }
 
-export const ConfirmTxWithHW: React.FC<Props> = ({onSuccess, onCancel, shouldDeregister}) => {
+export const ConfirmTxWithHW: React.FC<Props> = ({yoroiUnsignedTx, onSuccess, onCancel}) => {
   const wallet = useSelectedWallet()
   const strings = useStrings()
   const [transport, setTransport] = React.useState<'USB' | 'BLE'>('USB')
-  const utxos = useSelector(utxosSelector) || []
-  const serverStatus = useSelector(serverStatusSelector)
   const [step, setStep] = React.useState<'select-transport' | 'connect-transport' | 'confirm'>('select-transport')
 
   const onSelectTransport = async (transport: 'USB' | 'BLE') => {
@@ -42,13 +38,6 @@ export const ConfirmTxWithHW: React.FC<Props> = ({onSuccess, onCancel, shouldDer
     await dispatch(setLedgerDeviceObj(deviceObj))
     setStep('confirm')
   }
-
-  const {withdrawalTx} = useWithdrawalTx({
-    wallet,
-    utxos,
-    shouldDeregister,
-    serverTime: serverStatus.serverTime,
-  })
 
   const {signTx, isLoading: isLoadingSignTx} = useSignTxWithHW(
     {wallet}, //
@@ -78,14 +67,14 @@ export const ConfirmTxWithHW: React.FC<Props> = ({onSuccess, onCancel, shouldDer
           primaryButton={{
             disabled: isLoading,
             label: strings.confirmButton,
-            onPress: () => signTx({yoroiUnsignedTx: withdrawalTx, useUSB: transport === 'USB'}),
+            onPress: () => signTx({yoroiUnsignedTx, useUSB: transport === 'USB'}),
           }}
           secondaryButton={{
             disabled: isLoading,
             onPress: () => onCancel(),
           }}
         >
-          <TransferSummary withdrawalTx={withdrawalTx} />
+          <TransferSummary yoroiUnsignedTx={yoroiUnsignedTx} />
         </TwoActionView>
       </Route>
     </>
