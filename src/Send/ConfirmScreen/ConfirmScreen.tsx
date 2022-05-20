@@ -129,7 +129,6 @@ export const ConfirmScreen = () => {
 
         <Actions>
           <ConfirmTx
-            process="signAndSubmit"
             onSuccess={onSuccess}
             txDataSignRequest={signRequest}
             useUSB={useUSB}
