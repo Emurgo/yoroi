@@ -2,13 +2,14 @@ import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
 import {delay} from 'bluebird'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ActivityIndicator, ScrollView, StyleSheet, Text} from 'react-native'
+import {ActivityIndicator, Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useMutation, UseMutationOptions} from 'react-query'
 import {useDispatch} from 'react-redux'
 
 import {checkBiometricStatus, logout, showErrorDialog} from '../../../legacy/actions'
 import Screen from '../../../legacy/components/Screen'
+import {Text} from '../../../legacy/components/UiKit'
 import {Button, PleaseWaitModal, ScreenBackground, StatusBar} from '../../../legacy/components/UiKit'
 import {CONFIG, isNightly} from '../../../legacy/config/config'
 import {isJormungandr} from '../../../legacy/config/networks'
@@ -17,12 +18,15 @@ import walletManager, {KeysAreInvalid, SystemAuthDisabled} from '../../../legacy
 import globalMessages, {errorMessages} from '../../../legacy/i18n/global-messages'
 import {WalletMeta} from '../../../legacy/state'
 import {COLORS} from '../../../legacy/styles/config'
+import {Icon} from '../../components'
 import {useWalletMetas} from '../../hooks'
 import {useWalletNavigation, WalletStackRouteNavigation, WalletStackRoutes} from '../../navigation'
 import {WalletInterface} from '../../types'
 import {useSetSelectedWallet, useSetSelectedWalletMeta} from '..'
 import {useSelectedWalletContext} from '../Context'
 import {WalletListItem} from './WalletListItem'
+
+const SUPPORT_TICKET_LINK = 'https://emurgohelpdesk.zendesk.com/hc/en-us/requests/new?ticket_form_id=360013330335'
 
 export const WalletSelectionScreen = () => {
   const strings = useStrings()
@@ -80,7 +84,9 @@ export const WalletSelectionScreen = () => {
 
       <Screen style={styles.container}>
         <ScreenBackground>
-          <Text style={styles.title}>{strings.header}</Text>
+          <Text bold style={styles.title}>
+            {strings.header}
+          </Text>
 
           <ScrollView style={styles.wallets}>
             {walletMetas ? (
@@ -92,6 +98,7 @@ export const WalletSelectionScreen = () => {
             )}
           </ScrollView>
 
+          <SupportTicketLink />
           <ShelleyButton />
           <OnlyNightlyShelleyTestnetButton />
           <ByronButton />
@@ -120,6 +127,10 @@ const messages = defineMessages({
     id: 'components.walletselection.walletselectionscreen.loadingWallet',
     defaultMessage: '!!!Loading wallet',
   },
+  supportTicketLink: {
+    id: 'components.walletselection.walletselectionscreen.supportTicketLink',
+    defaultMessage: '!!!GET HELP ON YOROI HELPDESK',
+  },
 })
 
 const useStrings = () => {
@@ -132,7 +143,22 @@ const useStrings = () => {
     deprecated: intl.formatMessage(globalMessages.deprecated),
     pleaseWait: intl.formatMessage(globalMessages.pleaseWait),
     loadingWallet: intl.formatMessage(messages.loadingWallet),
+    supportTicketLink: intl.formatMessage(messages.supportTicketLink),
   }
+}
+
+const SupportTicketLink = () => {
+  const onPress = () => Linking.openURL(SUPPORT_TICKET_LINK)
+  const strings = useStrings()
+
+  return (
+    <View style={styles.linkContainer}>
+      <TouchableOpacity style={styles.linkTouchableOpacity} onPress={() => onPress()}>
+        <Icon.QuestionMark size={24} color="#fff" />
+        <Text style={styles.linkText}>{strings.supportTicketLink}</Text>
+      </TouchableOpacity>
+    </View>
+  )
 }
 
 const ShelleyButton = () => {
@@ -265,6 +291,19 @@ const styles = StyleSheet.create({
   button: {
     marginHorizontal: 16,
     marginBottom: 10,
+  },
+  linkContainer: {
+    width: '100%',
+    alignItems: 'center',
+  },
+  linkText: {
+    color: '#fff',
+  },
+  linkTouchableOpacity: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: 235,
   },
 })
 
