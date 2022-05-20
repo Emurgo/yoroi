@@ -2,14 +2,13 @@ import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
 import {delay} from 'bluebird'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ActivityIndicator, Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {ActivityIndicator, Linking, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useMutation, UseMutationOptions} from 'react-query'
 import {useDispatch} from 'react-redux'
 
 import {checkBiometricStatus, logout, showErrorDialog} from '../../../legacy/actions'
 import Screen from '../../../legacy/components/Screen'
-import {Text} from '../../../legacy/components/UiKit'
 import {Button, PleaseWaitModal, ScreenBackground, StatusBar} from '../../../legacy/components/UiKit'
 import {CONFIG, isNightly} from '../../../legacy/config/config'
 import {isJormungandr} from '../../../legacy/config/networks'
@@ -84,9 +83,7 @@ export const WalletSelectionScreen = () => {
 
       <Screen style={styles.container}>
         <ScreenBackground>
-          <Text bold style={styles.title}>
-            {strings.header}
-          </Text>
+          <Text style={styles.title}>{strings.header}</Text>
 
           <ScrollView style={styles.wallets}>
             {walletMetas ? (
