@@ -67,20 +67,29 @@ export const Menu = () => {
           <HR />
         </View>
 
-        <View style={styles.faqContainer}>
-          <View style={styles.faqTitle}>
-            <Text style={styles.faqTitleText}>{strings.faqTitle}</Text>
-          </View>
-
-          <View style={styles.faqLink}>
-            <Image source={FaqImage} style={styles.faqLinkImage} />
-            <Text bold style={styles.faqLinkText} onPress={navigateTo.faq}>
-              {strings.faqLink}
-            </Text>
-          </View>
-        </View>
+        <FAQ />
       </ScrollView>
     </SafeAreaView>
+  )
+}
+
+const FAQ = () => {
+  const strings = useStrings()
+  const navigateTo = useNavigateTo()
+
+  return (
+    <View style={styles.faqContainer}>
+      <View style={styles.faqTitle}>
+        <Text style={styles.faqTitleText}>{strings.faqTitle}</Text>
+      </View>
+
+      <TouchableOpacity onPress={navigateTo.faq} style={styles.faqLink}>
+        <Image source={FaqImage} style={styles.faqLinkImage} />
+        <Text bold style={styles.faqLinkText}>
+          {strings.faqLink}
+        </Text>
+      </TouchableOpacity>
+    </View>
   )
 }
 
