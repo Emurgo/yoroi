@@ -90,7 +90,6 @@ const styles = StyleSheet.create({
     fontFamily: stylesConfig.defaultFont,
     fontSize: 16,
     color: COLORS.WHITE,
-    overflow: 'hidden',
     width: 290,
   },
   walletMeta: {
