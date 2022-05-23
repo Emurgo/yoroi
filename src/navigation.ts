@@ -27,6 +27,8 @@ export const defaultStackNavigationOptionsV2: StackNavigationOptions = {
   headerTitleStyle: {
     fontSize: 16,
     fontFamily: 'Rubik-Medium',
+    width: 280,
+    overflow: 'hidden',
   },
   headerRightContainerStyle: {
     paddingRight: 12,
