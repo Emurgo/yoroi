@@ -372,6 +372,7 @@
   "components.walletselection.walletselectionscreen.header": "My wallets",
   "components.walletselection.walletselectionscreen.stakeDashboardButton": "Stake Dashboard",
   "components.walletselection.walletselectionscreen.loadingWallet": "Loading wallet",
+  "components.walletselection.walletselectionscreen.supportTicketLink": "GET HELP ON YOROI HELPDESK",
   "components.catalyst.banner.name": "Catalyst Voting Registration",
   "components.catalyst.catalystbackupcheckmodal.consequencesCheckbox": "I understand that if I did not save my Catalyst PIN and QR code (or secret code) I will not be able to register and vote for Catalyst proposals.",
   "components.catalyst.catalystbackupcheckmodal.qrCodeCheckbox": "I have taken a screenshot of my QR code and saved my Catalyst secret code as a fallback.",
