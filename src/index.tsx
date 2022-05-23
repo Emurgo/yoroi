@@ -15,6 +15,7 @@ import {Logger} from '../legacy/utils/logging'
 import App from './App'
 import {name as appName} from './app.json'
 import {ErrorBoundary} from './components/ErrorBoundary'
+
 setLogLevel(CONFIG.LOG_LEVEL)
 
 bluebird.config({
