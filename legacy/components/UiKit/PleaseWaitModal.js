@@ -13,7 +13,7 @@ export const PleaseWaitView = ({title, spinnerText}: PleaseWaitViewProps) => (
   <View style={styles.container}>
     <Text style={styles.title}>{title}</Text>
 
-    <ActivityIndicator size="large" />
+    <ActivityIndicator size="large" color="black" />
 
     <Text style={styles.wait}>{spinnerText}</Text>
   </View>
