@@ -11,6 +11,7 @@ import getConfiguredStore from '../legacy/helpers/configureStore'
 import translations from '../legacy/i18n/translations'
 import {languageSelector} from '../legacy/selectors'
 import {setLogLevel} from '../legacy/utils/logging'
+import {Logger} from '../legacy/utils/logging'
 import App from './App'
 import {name as appName} from './app.json'
 import {ErrorBoundary} from './components/ErrorBoundary'
@@ -43,8 +44,10 @@ global.Promise = bluebird as any
 const cache = createIntlCache()
 const intl = createIntl({locale: 'en-US', messages: translations['en-US']}, cache)
 global.onunhandledrejection = (error) => {
+  Logger.error(`${error}`)
   if (error instanceof NetworkError) return
   if (error instanceof ApiError) return
+  if (!error.message) return
   handleGeneralError(error.message, error, intl)
 }
 

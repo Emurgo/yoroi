@@ -477,7 +477,6 @@ export const setSystemAuth = (enable: boolean) => async (dispatch: Dispatch<any>
 }
 
 export const handleGeneralError = async (message: string, e: Error, intl: ?IntlShape) => {
-  Logger.error(`${message}: ${e.message}`, e)
   await showErrorDialog(errorMessages.generalError, intl, {message})
 }
 
