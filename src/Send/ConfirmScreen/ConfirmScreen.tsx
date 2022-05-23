@@ -196,7 +196,16 @@ export const ConfirmScreen = () => {
 
               await submitTx(signRequest, decryptedKey)
             },
-            onFail: () => navigation.goBack(),
+            onFail: () =>
+              navigation.navigate('app-root', {
+                screen: 'main-wallet-routes',
+                params: {
+                  screen: 'send-ada',
+                  params: {
+                    screen: 'send-ada-main',
+                  },
+                },
+              }),
           })
         } catch (e) {
           if (e instanceof SystemAuthDisabled) {
