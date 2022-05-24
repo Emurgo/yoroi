@@ -126,7 +126,7 @@ const messages = defineMessages({
   },
   supportTicketLink: {
     id: 'components.walletselection.walletselectionscreen.supportTicketLink',
-    defaultMessage: '!!!GET HELP ON YOROI HELPDESK',
+    defaultMessage: '!!!Get help on Yoroi helpdesk',
   },
 })
 
@@ -151,8 +151,8 @@ const SupportTicketLink = () => {
   return (
     <View style={styles.linkContainer}>
       <TouchableOpacity style={styles.linkTouchableOpacity} onPress={() => onPress()}>
-        <Icon.QuestionMark size={24} color="#fff" />
-        <Text style={styles.linkText}>{strings.supportTicketLink}</Text>
+        <Icon.QuestionMark size={22} color="#fff" />
+        <Text style={styles.linkText}>{strings.supportTicketLink.toLocaleUpperCase()}</Text>
       </TouchableOpacity>
     </View>
   )
