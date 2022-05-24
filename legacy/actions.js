@@ -3,7 +3,6 @@
 import {type IntlShape} from 'react-intl'
 import {Alert, AppState, Keyboard, Platform} from 'react-native'
 import RNBootSplash from 'react-native-bootsplash'
-import {QueryClient} from 'react-query'
 import {type Dispatch} from 'redux'
 import uuid from 'uuid'
 
@@ -273,15 +272,14 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
   RNBootSplash.hide({fade: true})
 }
 
-export const checkBiometricStatus = (queryClient: QueryClient) => async (dispatch: Dispatch<any>, getState: any) => {
+export const checkBiometricStatus = () => async (dispatch: Dispatch<any>, getState: any) => {
   const bioShouldBeDisabled =
     Platform.OS === 'android' && CONFIG.ANDROID_BIO_AUTH_EXCLUDED_SDK.includes(Platform.Version)
-
   if (bioShouldBeDisabled) return
 
   const state = getState()
-  const canEnableBioFromCurrentState = canEnableBiometricSelector(state)
 
+  const canEnableBioFromCurrentState = canEnableBiometricSelector(state)
   if (!canEnableBioFromCurrentState) return
 
   const canEnableBioFromDevice = await canBiometricEncryptionBeEnabled()
@@ -290,11 +288,10 @@ export const checkBiometricStatus = (queryClient: QueryClient) => async (dispatc
   if (bioWasTurnedOff) {
     Logger.debug('Biometric was turned off')
     await dispatch(setAppSettingField(APP_SETTINGS_KEYS.CAN_ENABLE_BIOMETRIC_ENCRYPTION, false))
-    queryClient.invalidateQueries(['walletMetas'])
     try {
       await walletManager.disableEasyConfirmation()
     } catch (_e) {
-      Logger.debug('Ignore if no wallet is selected.')
+      Logger.debug('Ignore if no wallet is selected')
     }
     await dispatch(logout())
   }

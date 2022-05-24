@@ -72,7 +72,8 @@ const NavigatorSwitch = () => {
 
   useEffect(() => {
     const appStateSubscription = AppState.addEventListener('change', async () => {
-      await dispatch(checkBiometricStatus(queryClient))
+      await dispatch(checkBiometricStatus())
+      queryClient.invalidateQueries(['walletMetas'])
     })
     return () => appStateSubscription?.remove()
   }, [dispatch, queryClient])
