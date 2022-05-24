@@ -85,11 +85,13 @@ const styles = StyleSheet.create({
   },
   walletDetails: {
     justifyContent: 'space-between',
+    flex: 1,
   },
   walletName: {
     fontFamily: stylesConfig.defaultFont,
     fontSize: 16,
     color: COLORS.WHITE,
+    flex: 1,
   },
   walletMeta: {
     color: COLORS.WHITE,
