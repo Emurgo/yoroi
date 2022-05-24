@@ -203,7 +203,7 @@ const ModalInfoIconButton = (props: TouchableOpacityProps) => {
 
 const SettingsIconButton = (props: TouchableOpacityProps) => {
   return (
-    <TouchableOpacity {...props} style={{width: 40}}>
+    <TouchableOpacity {...props}>
       <Icon.Settings size={30} color={COLORS.ACTION_GRAY} />
     </TouchableOpacity>
   )
@@ -212,7 +212,7 @@ const SettingsIconButton = (props: TouchableOpacityProps) => {
 const HeaderRightHistoryV2 = () => {
   const {navigateToSettings} = useWalletNavigation()
 
-  return <SettingsIconButton onPress={() => navigateToSettings()} />
+  return <SettingsIconButton style={styles.settingIconButton} onPress={() => navigateToSettings()} />
 }
 
 const HeaderRightHistory = () => {
@@ -225,5 +225,8 @@ const styles = StyleSheet.create({
   receiveInfoText: {
     lineHeight: 24,
     fontSize: 16,
+  },
+  settingIconButton: {
+    width: 40,
   },
 })
