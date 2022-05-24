@@ -178,7 +178,7 @@ const messages = defineMessage({
   },
   faqTitle: {
     id: 'menu.faqTitle',
-    defaultMessage: '!!!Any Questions',
+    defaultMessage: '!!!Any questions',
   },
   faqLink: {
     id: 'menu.faqLink',
