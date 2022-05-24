@@ -27,10 +27,10 @@ export const defaultStackNavigationOptionsV2: StackNavigationOptions = {
   headerTitleStyle: {
     fontSize: 16,
     fontFamily: 'Rubik-Medium',
-    width: 290,
   },
-  headerRightContainerStyle: {
-    paddingRight: 12,
+  headerTitleContainerStyle: {
+    marginRight: 45,
+    marginLeft: 45,
   },
   headerStyle: {
     elevation: 0,

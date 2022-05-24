@@ -203,7 +203,7 @@ const ModalInfoIconButton = (props: TouchableOpacityProps) => {
 
 const SettingsIconButton = (props: TouchableOpacityProps) => {
   return (
-    <TouchableOpacity {...props}>
+    <TouchableOpacity {...props} style={{width: 40}}>
       <Icon.Settings size={30} color={COLORS.ACTION_GRAY} />
     </TouchableOpacity>
   )
