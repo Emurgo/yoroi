@@ -42,30 +42,30 @@ export const Menu = () => {
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
       <ScrollView contentContainerStyle={styles.scrollViewContent} bounces={false}>
-        <View style={styles.listContainer}>
-          <AllWallets
-            label={`${strings.allWallets} (${walletCount})`}
-            onPress={navigateTo.allWallets}
-            left={<Icon.Wallets size={24} color="#6B7384" />}
-          />
-          <HR />
+        <AllWallets
+          label={`${strings.allWallets} (${walletCount})`}
+          onPress={navigateTo.allWallets}
+          left={<Icon.Wallets size={24} color="#6B7384" />}
+        />
+        <HR />
 
-          <Spacer height={24} />
+        <Spacer height={24} />
 
-          <Catalyst //
-            label={strings.catalystVoting}
-            onPress={navigateTo.catalystVoting}
-            left={<Icon.Catalyst size={24} color="#6B7384" />}
-          />
-          <HR />
+        <Catalyst //
+          label={strings.catalystVoting}
+          onPress={navigateTo.catalystVoting}
+          left={<Icon.Catalyst size={24} color="#6B7384" />}
+        />
+        <HR />
 
-          <Settings //
-            label={strings.settings}
-            onPress={navigateTo.settings}
-            left={<Icon.Gear size={24} color="#6B7384" />}
-          />
-          <HR />
-        </View>
+        <Settings //
+          label={strings.settings}
+          onPress={navigateTo.settings}
+          left={<Icon.Gear size={24} color="#6B7384" />}
+        />
+        <HR />
+
+        <Spacer fill />
 
         <FAQ />
       </ScrollView>
@@ -210,13 +210,8 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
   },
-  listContainer: {
-    flex: 1,
-  },
   faqContainer: {
-    flex: 1,
     alignItems: 'center',
-    justifyContent: 'flex-end',
   },
   faqTitle: {
     height: 16,
