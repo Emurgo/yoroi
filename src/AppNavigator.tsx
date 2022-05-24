@@ -4,10 +4,11 @@ import {isEmpty} from 'lodash'
 import React, {useEffect} from 'react'
 import type {IntlShape} from 'react-intl'
 import {defineMessages, useIntl} from 'react-intl'
-import {Alert} from 'react-native'
+import {Alert, AppState} from 'react-native'
+import {useQueryClient} from 'react-query'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {showErrorDialog, signin} from '../legacy/actions'
+import {checkBiometricStatus, showErrorDialog, signin} from '../legacy/actions'
 import IndexScreen from '../legacy/components/IndexScreen'
 import MaintenanceScreen from '../legacy/components/MaintenanceScreen'
 import BiometricAuthScreen from '../legacy/components/Send/BiometricAuthScreen'
@@ -66,7 +67,15 @@ const NavigatorSwitch = () => {
   const isAppSetupComplete = useSelector(isAppSetupCompleteSelector)
   const canEnableBiometrics = useSelector(canEnableBiometricSelector)
   const installationId = useSelector(installationIdSelector)
+  const queryClient = useQueryClient()
   const dispatch = useDispatch()
+
+  useEffect(() => {
+    const appStateSubscription = AppState.addEventListener('change', async () => {
+      await dispatch(checkBiometricStatus(queryClient))
+    })
+    return () => appStateSubscription?.remove()
+  }, [dispatch, queryClient])
 
   useEffect(() => {
     if (hasAnyWallet && !isAuthenticated && isSystemAuthEnabled && !canEnableBiometrics && !isMaintenance) {
