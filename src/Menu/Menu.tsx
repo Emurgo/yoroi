@@ -86,7 +86,7 @@ const FAQ = () => {
       <TouchableOpacity onPress={navigateTo.faq} style={styles.faqLink}>
         <Image source={FaqImage} style={styles.faqLinkImage} />
         <Text bold style={styles.faqLinkText}>
-          {strings.faqLink}
+          {strings.faqLink.toLocaleUpperCase()}
         </Text>
       </TouchableOpacity>
     </View>
@@ -182,7 +182,7 @@ const messages = defineMessage({
   },
   faqLink: {
     id: 'menu.faqLink',
-    defaultMessage: '!!!ASK OUR SUPPORT TEAM',
+    defaultMessage: '!!!Ask our support team',
   },
   menu: {
     id: 'menu',
