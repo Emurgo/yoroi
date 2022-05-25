@@ -29,7 +29,7 @@ export const WalletCredentialsScreen = () => {
                 createWallet({name, password, mnemonicPhrase: phrase, networkId, walletImplementationId, provider})
         }
       />
-      {isLoading && <ActivityIndicator />}
+      {isLoading && <ActivityIndicator color="black" />}
     </SafeAreaView>
   )
 }

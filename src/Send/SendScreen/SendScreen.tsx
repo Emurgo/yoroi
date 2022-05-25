@@ -307,7 +307,7 @@ export const SendScreen = ({
 
         {recomputing && (
           <View style={styles.indicator}>
-            <ActivityIndicator size="large" />
+            <ActivityIndicator size="large" color="black" />
           </View>
         )}
       </ScrollView>
