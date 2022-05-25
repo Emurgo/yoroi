@@ -288,7 +288,7 @@ const styles = StyleSheet.create({
   },
   linkText: {
     color: '#fff',
-    marginLeft: 8,
+    marginLeft: 10,
   },
   link: {
     flexDirection: 'row',
