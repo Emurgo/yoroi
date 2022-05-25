@@ -30,7 +30,6 @@ export const defaultStackNavigationOptionsV2: StackNavigationOptions = {
   },
   headerTitleContainerStyle: {
     width: '70%',
-    alignItems: 'center',
   },
   headerStyle: {
     elevation: 0,
