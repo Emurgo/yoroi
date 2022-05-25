@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {BigNumber} from 'bignumber.js'
 import React from 'react'
-import {useIntl} from 'react-intl'
+import {IntlShape, useIntl} from 'react-intl'
 import {Platform, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
 
@@ -14,6 +14,7 @@ import {
   setLedgerDeviceId as _setLedgerDeviceId,
   setLedgerDeviceObj as _setLedgerDeviceObj,
 } from '../../../legacy/actions/hwWallet'
+import {ApiError, NetworkError} from '../../../legacy/api/errors'
 import ErrorModal from '../../../legacy/components/Common/ErrorModal'
 import HWInstructions from '../../../legacy/components/Ledger/HWInstructions'
 import LedgerConnect from '../../../legacy/components/Ledger/LedgerConnect'
@@ -168,10 +169,14 @@ export const ConfirmScreen = () => {
   const onConfirm = async () => {
     const submitTx = async (tx: string | ISignRequest, decryptedKey?: string) => {
       await withPleaseWaitModal(async () => {
-        if (decryptedKey != null) {
-          await submitTransaction(tx, decryptedKey)
-        } else {
-          await submitSignedTx(tx)
+        try {
+          if (decryptedKey != null) {
+            await submitTransaction(tx, decryptedKey)
+          } else {
+            await submitSignedTx(tx)
+          }
+        } catch (e) {
+          await handleSubmitTxError(e, intl)
         }
         resetToTxHistory()
       })
@@ -196,7 +201,16 @@ export const ConfirmScreen = () => {
 
               await submitTx(signRequest, decryptedKey)
             },
-            onFail: () => navigation.goBack(),
+            onFail: () =>
+              navigation.navigate('app-root', {
+                screen: 'main-wallet-routes',
+                params: {
+                  screen: 'send-ada',
+                  params: {
+                    screen: 'send-ada-main',
+                  },
+                },
+              }),
           })
         } catch (e) {
           if (e instanceof SystemAuthDisabled) {
@@ -377,4 +391,14 @@ const useStrings = () => {
       message: intl.formatMessage(errorMessages.generalTxError.message),
     },
   }
+}
+
+export async function handleSubmitTxError(error: any, intl: IntlShape) {
+  if (error instanceof ApiError) {
+    return await showErrorDialog(errorMessages.apiError, intl)
+  }
+  if (error instanceof NetworkError) {
+    return await showErrorDialog(errorMessages.networkError, intl)
+  }
+  throw error
 }
