@@ -2,7 +2,7 @@ import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
 import {delay} from 'bluebird'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ActivityIndicator, Linking, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {ActivityIndicator, Linking, ScrollView, StyleSheet, Text, TouchableOpacity} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useMutation, UseMutationOptions} from 'react-query'
 import {useDispatch} from 'react-redux'
@@ -24,8 +24,6 @@ import {WalletInterface} from '../../types'
 import {useSetSelectedWallet, useSetSelectedWalletMeta} from '..'
 import {useSelectedWalletContext} from '../Context'
 import {WalletListItem} from './WalletListItem'
-
-const SUPPORT_TICKET_LINK = 'https://emurgohelpdesk.zendesk.com/hc/en-us/requests/new?ticket_form_id=360013330335'
 
 export const WalletSelectionScreen = () => {
   const strings = useStrings()
@@ -125,7 +123,7 @@ const messages = defineMessages({
   },
   supportTicketLink: {
     id: 'components.walletselection.walletselectionscreen.supportTicketLink',
-    defaultMessage: '!!!Get help on Yoroi helpdesk',
+    defaultMessage: '!!!Ask our support team',
   },
 })
 
@@ -143,17 +141,17 @@ const useStrings = () => {
   }
 }
 
+const SUPPORT_TICKET_LINK = 'https://emurgohelpdesk.zendesk.com/hc/en-us/requests/new?ticket_form_id=360013330335'
+
 const SupportTicketLink = () => {
   const onPress = () => Linking.openURL(SUPPORT_TICKET_LINK)
   const strings = useStrings()
 
   return (
-    <View style={styles.linkContainer}>
-      <TouchableOpacity style={styles.linkTouchableOpacity} onPress={() => onPress()}>
-        <Icon.QuestionMark size={22} color="#fff" />
-        <Text style={styles.linkText}>{strings.supportTicketLink.toLocaleUpperCase()}</Text>
-      </TouchableOpacity>
-    </View>
+    <TouchableOpacity style={styles.link} onPress={() => onPress()}>
+      <Icon.QuestionMark size={22} color="#fff" />
+      <Text style={styles.linkText}>{strings.supportTicketLink.toLocaleUpperCase()}</Text>
+    </TouchableOpacity>
   )
 }
 
@@ -288,18 +286,13 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginBottom: 10,
   },
-  linkContainer: {
-    width: '100%',
-    alignItems: 'center',
-  },
   linkText: {
     color: '#fff',
+    marginLeft: 10,
   },
-  linkTouchableOpacity: {
+  link: {
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: 235,
+    justifyContent: 'center',
   },
 })
 
