@@ -7,7 +7,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useMutation, UseMutationOptions} from 'react-query'
 import {useDispatch} from 'react-redux'
 
-import {checkBiometricStatus, logout, showErrorDialog} from '../../../legacy/actions'
+import {logout, showErrorDialog} from '../../../legacy/actions'
 import Screen from '../../../legacy/components/Screen'
 import {Button, PleaseWaitModal, ScreenBackground, StatusBar} from '../../../legacy/components/UiKit'
 import {CONFIG, isNightly} from '../../../legacy/config/config'
@@ -57,7 +57,6 @@ export const WalletSelectionScreen = () => {
         resetToWalletSelection()
       } else if (error instanceof KeysAreInvalid) {
         await showErrorDialog(errorMessages.walletKeysInvalidated, intl)
-        await dispatch(checkBiometricStatus())
         await dispatch(logout())
       } else {
         throw error
