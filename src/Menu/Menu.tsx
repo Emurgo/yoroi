@@ -9,14 +9,12 @@ import {useSelector} from 'react-redux'
 import {Text} from '../../legacy/components/UiKit'
 import {CONFIG} from '../../legacy/config/config'
 import {tokenBalanceSelector} from '../../legacy/selectors'
-import FaqImage from '../assets/img/icon/shape.png'
+import SupportImage from '../assets/img/icon/shape.png'
 import {CatalystNavigator} from '../Catalyst/CatalystNavigator'
 import {Icon, Spacer} from '../components'
 import {useWalletMetas} from '../hooks'
 import {defaultStackNavigationOptions, MenuRoutes, useWalletNavigation} from '../navigation'
 import {InsufficientFundsModal} from './InsufficientFundsModal'
-
-const FAQ_LINK = 'https://emurgohelpdesk.zendesk.com/hc/en-us/categories/4412619927695-Yoroi'
 
 const MenuStack = createStackNavigator<MenuRoutes>()
 export const MenuNavigator = () => {
@@ -67,26 +65,26 @@ export const Menu = () => {
 
         <Spacer fill />
 
-        <FAQ />
+        <SupportLink />
       </ScrollView>
     </SafeAreaView>
   )
 }
 
-const FAQ = () => {
+const SupportLink = () => {
   const strings = useStrings()
   const navigateTo = useNavigateTo()
 
   return (
-    <View style={styles.faqContainer}>
-      <View style={styles.faqTitle}>
-        <Text style={styles.faqTitleText}>{strings.faqTitle}</Text>
+    <View style={styles.support}>
+      <View style={styles.supportTitle}>
+        <Text style={styles.supportTitleText}>{strings.supportTitle}</Text>
       </View>
 
-      <TouchableOpacity onPress={navigateTo.faq} style={styles.faqLink}>
-        <Image source={FaqImage} style={styles.faqLinkImage} />
-        <Text bold style={styles.faqLinkText}>
-          {strings.faqLink.toLocaleUpperCase()}
+      <TouchableOpacity onPress={navigateTo.support} style={styles.suppportLink}>
+        <Image source={SupportImage} style={styles.supportImage} />
+        <Text bold style={styles.supportLinkText}>
+          {strings.suppportLink.toLocaleUpperCase()}
         </Text>
       </TouchableOpacity>
     </View>
@@ -133,6 +131,8 @@ const Catalyst = ({label, left, onPress}: {label: string; left: React.ReactEleme
   )
 }
 
+const SUPPORT_TICKET_LINK = 'https://emurgohelpdesk.zendesk.com/hc/en-us/requests/new?ticket_form_id=360013330335'
+
 const useNavigateTo = () => {
   const {navigation, navigateToSettings} = useWalletNavigation()
 
@@ -146,7 +146,7 @@ const useNavigateTo = () => {
         },
       }),
     settings: () => navigateToSettings(),
-    faq: () => Linking.openURL(FAQ_LINK),
+    support: () => Linking.openURL(SUPPORT_TICKET_LINK),
   }
 }
 
@@ -157,8 +157,8 @@ const useStrings = () => {
     allWallets: intl.formatMessage(messages.allWallets),
     catalystVoting: intl.formatMessage(messages.catalystVoting),
     settings: intl.formatMessage(messages.settings),
-    faqTitle: intl.formatMessage(messages.faqTitle),
-    faqLink: intl.formatMessage(messages.faqLink),
+    supportTitle: intl.formatMessage(messages.supportTitle),
+    suppportLink: intl.formatMessage(messages.suppportLink),
     menu: intl.formatMessage(messages.menu),
   }
 }
@@ -176,12 +176,12 @@ const messages = defineMessage({
     id: 'menu.settings',
     defaultMessage: '!!!Settings',
   },
-  faqTitle: {
-    id: 'menu.faqTitle',
+  supportTitle: {
+    id: 'menu.supportTitle',
     defaultMessage: '!!!Any questions',
   },
-  faqLink: {
-    id: 'menu.faqLink',
+  suppportLink: {
+    id: 'menu.suppportLink',
     defaultMessage: '!!!Ask our support team',
   },
   menu: {
@@ -210,28 +210,28 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
   },
-  faqContainer: {
+  support: {
     alignItems: 'center',
   },
-  faqTitle: {
+  supportTitle: {
     height: 16,
     justifyContent: 'center',
   },
-  faqTitleText: {
+  supportTitleText: {
     color: '#6B7384',
   },
-  faqLink: {
+  suppportLink: {
     height: 50,
     width: 195,
     justifyContent: 'space-between',
     alignItems: 'center',
     flexDirection: 'row',
   },
-  faqLinkImage: {
+  supportImage: {
     width: 20,
     height: 20,
   },
-  faqLinkText: {
+  supportLinkText: {
     color: '#4B6DDE',
   },
 })
