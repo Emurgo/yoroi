@@ -28,8 +28,8 @@ export const defaultStackNavigationOptionsV2: StackNavigationOptions = {
     fontSize: 16,
     fontFamily: 'Rubik-Medium',
   },
-  headerRightContainerStyle: {
-    paddingRight: 12,
+  headerTitleContainerStyle: {
+    width: '70%',
   },
   headerStyle: {
     elevation: 0,
