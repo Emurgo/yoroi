@@ -2,18 +2,21 @@ import {defineMessage} from '@formatjs/intl'
 import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {useIntl} from 'react-intl'
-import {Linking, ScrollView, TouchableOpacity, View} from 'react-native'
+import {Image, Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useSelector} from 'react-redux'
 
 import {Text} from '../../legacy/components/UiKit'
 import {CONFIG} from '../../legacy/config/config'
 import {tokenBalanceSelector} from '../../legacy/selectors'
+import FaqImage from '../assets/img/icon/shape.png'
 import {CatalystNavigator} from '../Catalyst/CatalystNavigator'
 import {Icon, Spacer} from '../components'
 import {useWalletMetas} from '../hooks'
 import {defaultStackNavigationOptions, MenuRoutes, useWalletNavigation} from '../navigation'
 import {InsufficientFundsModal} from './InsufficientFundsModal'
+
+const FAQ_LINK = 'https://emurgohelpdesk.zendesk.com/hc/en-us/categories/4412619927695-Yoroi'
 
 const MenuStack = createStackNavigator<MenuRoutes>()
 export const MenuNavigator = () => {
@@ -37,8 +40,8 @@ export const Menu = () => {
   const walletCount = walletMetas?.length || ''
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={{flex: 1}}>
-      <ScrollView style={{flex: 1}} contentContainerStyle={{padding: 16}} bounces={false}>
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
+      <ScrollView contentContainerStyle={styles.scrollViewContent} bounces={false}>
         <AllWallets
           label={`${strings.allWallets} (${walletCount})`}
           onPress={navigateTo.allWallets}
@@ -53,7 +56,6 @@ export const Menu = () => {
           onPress={navigateTo.catalystVoting}
           left={<Icon.Catalyst size={24} color="#6B7384" />}
         />
-
         <HR />
 
         <Settings //
@@ -63,23 +65,40 @@ export const Menu = () => {
         />
         <HR />
 
-        <FAQ //
-          label={strings.faq}
-          onPress={navigateTo.faq}
-          left={<Icon.QuestionMark size={24} color="#6B7384" />}
-        />
-        <HR />
+        <Spacer fill />
+
+        <FAQ />
       </ScrollView>
     </SafeAreaView>
   )
 }
 
+const FAQ = () => {
+  const strings = useStrings()
+  const navigateTo = useNavigateTo()
+
+  return (
+    <View style={styles.faqContainer}>
+      <View style={styles.faqTitle}>
+        <Text style={styles.faqTitleText}>{strings.faqTitle}</Text>
+      </View>
+
+      <TouchableOpacity onPress={navigateTo.faq} style={styles.faqLink}>
+        <Image source={FaqImage} style={styles.faqLinkImage} />
+        <Text bold style={styles.faqLinkText}>
+          {strings.faqLink.toLocaleUpperCase()}
+        </Text>
+      </TouchableOpacity>
+    </View>
+  )
+}
+
 const Item = ({label, left, onPress}: {label: string; left: React.ReactElement; onPress: () => void}) => {
   return (
-    <TouchableOpacity onPress={onPress} style={{flexDirection: 'row', alignItems: 'center', paddingVertical: 16}}>
+    <TouchableOpacity onPress={onPress} style={styles.itemTouchableOpacity}>
       {left}
       <Spacer width={12} />
-      <Text style={{color: '#242838'}}>{label}</Text>
+      <Text style={styles.itemText}>{label}</Text>
       <Spacer fill />
       <Icon.Chevron direction="right" size={16} color="#6B7384" />
     </TouchableOpacity>
@@ -87,12 +106,11 @@ const Item = ({label, left, onPress}: {label: string; left: React.ReactElement; 
 }
 
 const HR = () => {
-  return <View style={{height: 1, backgroundColor: 'lightgrey'}} />
+  return <View style={styles.hr} />
 }
 
 const AllWallets = Item
 const Settings = Item
-const FAQ = Item
 const Catalyst = ({label, left, onPress}: {label: string; left: React.ReactElement; onPress: () => void}) => {
   const tokenBalance = useSelector(tokenBalanceSelector)
   const sufficientFunds = tokenBalance.getDefault().gte(CONFIG.CATALYST.MIN_ADA)
@@ -128,7 +146,7 @@ const useNavigateTo = () => {
         },
       }),
     settings: () => navigateToSettings(),
-    faq: () => Linking.openURL('https://yoroi-wallet.com/faq/'),
+    faq: () => Linking.openURL(FAQ_LINK),
   }
 }
 
@@ -139,7 +157,8 @@ const useStrings = () => {
     allWallets: intl.formatMessage(messages.allWallets),
     catalystVoting: intl.formatMessage(messages.catalystVoting),
     settings: intl.formatMessage(messages.settings),
-    faq: intl.formatMessage(messages.faq),
+    faqTitle: intl.formatMessage(messages.faqTitle),
+    faqLink: intl.formatMessage(messages.faqLink),
     menu: intl.formatMessage(messages.menu),
   }
 }
@@ -157,12 +176,62 @@ const messages = defineMessage({
     id: 'menu.settings',
     defaultMessage: '!!!Settings',
   },
-  faq: {
-    id: 'menu.faq',
-    defaultMessage: '!!!FAQ',
+  faqTitle: {
+    id: 'menu.faqTitle',
+    defaultMessage: '!!!Any questions',
+  },
+  faqLink: {
+    id: 'menu.faqLink',
+    defaultMessage: '!!!Ask our support team',
   },
   menu: {
     id: 'menu',
     defaultMessage: '!!!Menu',
+  },
+})
+
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+  },
+  hr: {
+    height: 1,
+    backgroundColor: 'lightgrey',
+  },
+  itemTouchableOpacity: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 16,
+  },
+  itemText: {
+    color: '#242838',
+  },
+  scrollViewContent: {
+    flex: 1,
+    padding: 16,
+  },
+  faqContainer: {
+    alignItems: 'center',
+  },
+  faqTitle: {
+    height: 16,
+    justifyContent: 'center',
+  },
+  faqTitleText: {
+    color: '#6B7384',
+  },
+  faqLink: {
+    height: 50,
+    width: 195,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  faqLinkImage: {
+    width: 20,
+    height: 20,
+  },
+  faqLinkText: {
+    color: '#4B6DDE',
   },
 })
