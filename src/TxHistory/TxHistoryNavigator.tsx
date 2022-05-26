@@ -81,7 +81,7 @@ export const TxHistoryNavigator = () => {
           options={{
             ...defaultStackNavigationOptionsV2,
             title: strings.receiveTitle,
-            headerRight: () => <ModalInfoIconButton onPress={showModalInfo} style={styles.modalInfoIconButton} />,
+            headerRight: () => <ModalInfoIconButton onPress={showModalInfo} style={styles.modalInfo} />,
             headerStyle: {
               elevation: 0,
               shadowOpacity: 0,
@@ -229,7 +229,7 @@ const styles = StyleSheet.create({
   settingIconButton: {
     width: 40,
   },
-  modalInfoIconButton: {
+  modalInfo: {
     paddingRight: 12,
   },
 })

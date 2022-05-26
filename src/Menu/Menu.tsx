@@ -80,7 +80,8 @@ const SupportLink = () => {
       </View>
 
       <TouchableOpacity onPress={navigateTo.support} style={styles.suppportLink}>
-        <Image source={SupportImage} style={styles.supportImage} />
+        <Image source={SupportImage} />
+        <Spacer width={10} />
         <Text bold style={styles.supportLinkText}>
           {strings.suppportLink.toLocaleUpperCase()}
         </Text>
@@ -91,7 +92,7 @@ const SupportLink = () => {
 
 const Item = ({label, left, onPress}: {label: string; left: React.ReactElement; onPress: () => void}) => {
   return (
-    <TouchableOpacity onPress={onPress} style={styles.itemTouchableOpacity}>
+    <TouchableOpacity onPress={onPress} style={styles.item}>
       {left}
       <Spacer width={12} />
       <Text style={styles.itemText}>{label}</Text>
@@ -196,7 +197,7 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: 'lightgrey',
   },
-  itemTouchableOpacity: {
+  item: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 16,
@@ -220,14 +221,9 @@ const styles = StyleSheet.create({
   },
   suppportLink: {
     height: 50,
-    width: 195,
     justifyContent: 'space-between',
     alignItems: 'center',
     flexDirection: 'row',
-  },
-  supportImage: {
-    width: 20,
-    height: 20,
   },
   supportLinkText: {
     color: '#4B6DDE',
