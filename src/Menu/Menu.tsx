@@ -47,8 +47,6 @@ export const Menu = () => {
         />
         <HR />
 
-        <Spacer height={24} />
-
         <Catalyst //
           label={strings.catalystVoting}
           onPress={navigateTo.catalystVoting}
