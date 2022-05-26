@@ -81,6 +81,7 @@ const SupportLink = () => {
 
       <TouchableOpacity onPress={navigateTo.support} style={styles.suppportLink}>
         <Image source={SupportImage} />
+        <Spacer width={10} />
         <Text bold style={styles.supportLinkText}>
           {strings.suppportLink.toLocaleUpperCase()}
         </Text>
@@ -226,6 +227,5 @@ const styles = StyleSheet.create({
   },
   supportLinkText: {
     color: '#4B6DDE',
-    paddingLeft: 10,
   },
 })
