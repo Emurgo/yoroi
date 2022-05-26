@@ -78,12 +78,12 @@ const SupportLink = () => {
       <View style={styles.supportTitle}>
         <Text style={styles.supportTitleText}>{strings.supportTitle}</Text>
       </View>
-
-      <TouchableOpacity onPress={navigateTo.support} style={styles.suppportLink}>
+      <Spacer height={10} />
+      <TouchableOpacity onPress={navigateTo.support} style={styles.supportLink}>
         <Image source={SupportImage} />
         <Spacer width={10} />
         <Text bold style={styles.supportLinkText}>
-          {strings.suppportLink.toLocaleUpperCase()}
+          {strings.supportLink.toLocaleUpperCase()}
         </Text>
       </TouchableOpacity>
     </View>
@@ -157,7 +157,7 @@ const useStrings = () => {
     catalystVoting: intl.formatMessage(messages.catalystVoting),
     settings: intl.formatMessage(messages.settings),
     supportTitle: intl.formatMessage(messages.supportTitle),
-    suppportLink: intl.formatMessage(messages.suppportLink),
+    supportLink: intl.formatMessage(messages.supportLink),
     menu: intl.formatMessage(messages.menu),
   }
 }
@@ -179,8 +179,8 @@ const messages = defineMessage({
     id: 'menu.supportTitle',
     defaultMessage: '!!!Any questions',
   },
-  suppportLink: {
-    id: 'menu.suppportLink',
+  supportLink: {
+    id: 'menu.supportLink',
     defaultMessage: '!!!Ask our support team',
   },
   menu: {
@@ -213,14 +213,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   supportTitle: {
-    height: 16,
     justifyContent: 'center',
   },
   supportTitleText: {
     color: '#6B7384',
   },
-  suppportLink: {
-    height: 50,
+  supportLink: {
     justifyContent: 'space-between',
     alignItems: 'center',
     flexDirection: 'row',
