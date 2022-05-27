@@ -61,6 +61,13 @@ export const Menu = () => {
         />
         <HR />
 
+        <KnowledgeBase //
+          label={strings.knowledgeBase}
+          onPress={navigateTo.knowledgeBase}
+          left={<Icon.QuestionMark size={24} color="#6B7384" />}
+        />
+        <HR />
+
         <Spacer fill />
 
         <SupportLink />
@@ -108,6 +115,7 @@ const HR = () => {
 
 const AllWallets = Item
 const Settings = Item
+const KnowledgeBase = Item
 const Catalyst = ({label, left, onPress}: {label: string; left: React.ReactElement; onPress: () => void}) => {
   const tokenBalance = useSelector(tokenBalanceSelector)
   const sufficientFunds = tokenBalance.getDefault().gte(CONFIG.CATALYST.MIN_ADA)
@@ -131,6 +139,7 @@ const Catalyst = ({label, left, onPress}: {label: string; left: React.ReactEleme
 }
 
 const SUPPORT_TICKET_LINK = 'https://emurgohelpdesk.zendesk.com/hc/en-us/requests/new?ticket_form_id=360013330335'
+const KNOWLEDGE_BASE = 'https://emurgohelpdesk.zendesk.com/hc/en-us/categories/4412619927695-Yoroi'
 
 const useNavigateTo = () => {
   const {navigation, navigateToSettings} = useWalletNavigation()
@@ -146,6 +155,7 @@ const useNavigateTo = () => {
       }),
     settings: () => navigateToSettings(),
     support: () => Linking.openURL(SUPPORT_TICKET_LINK),
+    knowledgeBase: () => Linking.openURL(KNOWLEDGE_BASE),
   }
 }
 
@@ -158,6 +168,7 @@ const useStrings = () => {
     settings: intl.formatMessage(messages.settings),
     supportTitle: intl.formatMessage(messages.supportTitle),
     supportLink: intl.formatMessage(messages.supportLink),
+    knowledgeBase: intl.formatMessage(messages.knowledgeBase),
     menu: intl.formatMessage(messages.menu),
   }
 }
@@ -182,6 +193,10 @@ const messages = defineMessage({
   supportLink: {
     id: 'menu.supportLink',
     defaultMessage: '!!!Ask our support team',
+  },
+  knowledgeBase: {
+    id: 'menu.knowledgeBase',
+    defaultMessage: '!!!Knowledge base',
   },
   menu: {
     id: 'menu',
