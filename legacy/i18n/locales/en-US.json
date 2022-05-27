@@ -5,6 +5,7 @@
   "menu.settings": "Settings",
   "menu.supportTitle": "Any questions?",
   "menu.supportLink": "Ask our support team",
+  "menu.knowledgeBase": "Knowledge base",
   "components.common.errormodal.hideError": "Hide error message",
   "components.common.errormodal.showError": "Show error message",
   "components.common.fingerprintscreenbase.welcomeMessage": "Welcome Back",
