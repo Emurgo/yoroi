@@ -139,7 +139,7 @@ const Catalyst = ({label, left, onPress}: {label: string; left: React.ReactEleme
 }
 
 const SUPPORT_TICKET_LINK = 'https://emurgohelpdesk.zendesk.com/hc/en-us/requests/new?ticket_form_id=360013330335'
-const KNOWLEDGE_BASE = 'https://emurgohelpdesk.zendesk.com/hc/en-us/categories/4412619927695-Yoroi'
+const KNOWLEDGE_BASE_LINK = 'https://emurgohelpdesk.zendesk.com/hc/en-us/categories/4412619927695-Yoroi'
 
 const useNavigateTo = () => {
   const {navigation, navigateToSettings} = useWalletNavigation()
@@ -155,7 +155,7 @@ const useNavigateTo = () => {
       }),
     settings: () => navigateToSettings(),
     support: () => Linking.openURL(SUPPORT_TICKET_LINK),
-    knowledgeBase: () => Linking.openURL(KNOWLEDGE_BASE),
+    knowledgeBase: () => Linking.openURL(KNOWLEDGE_BASE_LINK),
   }
 }
 
