@@ -64,7 +64,7 @@ export const Menu = () => {
         <KnowledgeBase //
           label={strings.knowledgeBase}
           onPress={navigateTo.knowledgeBase}
-          left={<Icon.QuestionMark size={24} color="#6B7384" />}
+          left={<Icon.Info size={24} color="#6B7384" />}
         />
         <HR />
 
