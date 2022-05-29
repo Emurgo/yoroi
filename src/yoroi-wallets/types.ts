@@ -1,18 +1,44 @@
-import {UnsignedTx} from '@emurgo/yoroi-lib-core'
+import {SignedTx, UnsignedTx} from '@emurgo/yoroi-lib-core'
 
-export type YoroiUnsignedTx = {
+export type YoroiTxRequest = {
+  entries: YoroiEntries
+  staking: {
+    registrations: YoroiEntries
+    deregistrations: YoroiEntries
+    delegations: YoroiEntries
+    withdrawals: YoroiEntries
+  }
+  voting: {
+    registrations: YoroiEntries
+  }
+  auxiliary: YoroiAuxiliary
+  other?: Record<string, unknown>
+}
+
+export type YoroiTx = {
   entries: YoroiEntries
   amounts: YoroiAmounts
   fee: YoroiAmounts
   auxiliary: YoroiAuxiliary
   change: YoroiEntries
   staking: {
+    registrations: YoroiEntries
     deregistrations: YoroiEntries
-    // delegations: YoroiEntries
+    delegations: YoroiEntries
     withdrawals: YoroiEntries
   }
-  unsignedTx: UnsignedTx
+  voting: {
+    registrations: YoroiEntries
+  }
   other?: Record<string, unknown>
+}
+
+export type YoroiUnsignedTx = YoroiTx & {
+  unsignedTx: UnsignedTx
+}
+
+export type YoroiSignedTx = YoroiTx & {
+  signedTx: SignedTx
 }
 
 export type Address = string
@@ -25,7 +51,7 @@ export type YoroiEntries = {
 
 export type YoroiPrimaryEntry = {
   address: Address
-  amount: YoroiAmount
+  amounts: YoroiAmounts
 }
 
 export type YoroiEntry = {

@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import {SignedTx} from '@emurgo/yoroi-lib-core'
+import {SignedTx, TxMetadata} from '@emurgo/yoroi-lib-core'
+import BigNumber from 'bignumber.js'
 import {delay} from 'bluebird'
 import cryptoRandomString from 'crypto-random-string'
 import {IntlShape} from 'react-intl'
@@ -19,7 +19,7 @@ import {WalletMeta} from '../legacy/state'
 import storage from '../legacy/storage'
 import {RawUtxo} from '../legacy/types'
 import {Storage} from '../Storage'
-import {Token} from '../types'
+import {SendTokenList, Token} from '../types'
 import {
   decryptWithPassword,
   encryptWithPassword,
@@ -198,35 +198,96 @@ export const usePlate = ({networkId, publicKeyHex}: {networkId: NetworkId; publi
   return query.data
 }
 
-export const useWithdrawalTx = (
+export const useUnsignedTx = (
   {
     wallet,
+    receiver,
+    tokens,
+    auxiliary,
+
     utxos,
-    shouldDeregister,
-    serverTime,
+    defaultToken,
   }: {
     wallet: YoroiWallet
+    receiver: string
+    tokens: SendTokenList
+    auxiliary: Array<TxMetadata>
+
     utxos: Array<RawUtxo>
-    shouldDeregister: boolean
-    serverTime?: Date
+    defaultToken: Token
   },
   options?: UseQueryOptions<YoroiUnsignedTx>,
 ) => {
   const query = useQuery({
-    queryKey: [wallet.id, 'withdrawalTx', {shouldDeregister}],
-    queryFn: () => wallet.createWithdrawalTx(utxos, shouldDeregister, serverTime),
-    suspense: true,
+    queryKey: [wallet.id, 'unsignedTx', tokens],
+    queryFn: () => wallet.createUnsignedTx(utxos, receiver, tokens, defaultToken, auxiliary),
     retry: false,
     cacheTime: 0,
     ...options,
   })
 
-  console.log('QWE', {query, utxos})
+  return {
+    unsignedTx: query.data,
+    ...query,
+  }
+}
 
-  if (!query.data) throw new Error('invalid state')
+export const useWithdrawalTx = (
+  {
+    wallet,
+    utxos,
+    deregister = false,
+    serverTime,
+  }: {
+    wallet: YoroiWallet
+    utxos: Array<RawUtxo>
+    deregister?: boolean
+    serverTime?: Date
+  },
+  options?: UseQueryOptions<YoroiUnsignedTx>,
+) => {
+  const query = useQuery({
+    queryKey: [wallet.id, 'withdrawalTx', {deregister}],
+    queryFn: () => wallet.createWithdrawalTx(utxos, deregister, serverTime),
+    retry: false,
+    cacheTime: 0,
+    ...options,
+  })
 
   return {
     withdrawalTx: query.data,
+    ...query,
+  }
+}
+
+export const useStakingTx = (
+  {
+    wallet,
+    poolId,
+    accountValue,
+    utxos,
+    defaultAsset,
+    serverTime,
+  }: {
+    wallet: YoroiWallet
+    poolId: string
+    accountValue: string
+    utxos: Array<RawUtxo>
+    defaultAsset: Token
+    serverTime?: Date
+  },
+  options?: UseQueryOptions<YoroiUnsignedTx>,
+) => {
+  const query = useQuery({
+    queryKey: [wallet.id, 'stakingTx', {poolId}],
+    queryFn: () => wallet.createDelegationTx(poolId, new BigNumber(accountValue), utxos, defaultAsset, serverTime),
+    retry: false,
+    cacheTime: 0,
+    ...options,
+  })
+
+  return {
+    stakingTx: query.data,
     ...query,
   }
 }

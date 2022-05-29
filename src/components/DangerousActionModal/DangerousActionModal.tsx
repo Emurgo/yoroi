@@ -20,6 +20,7 @@ type DangerousActionProps = {
     onPress: () => Promise<void> | void
   }
   secondaryButton?: {
+    disabled?: boolean
     label?: string
     onPress: () => Promise<void> | void
     primary?: boolean
@@ -80,7 +81,7 @@ export const DangerousAction = ({
         {secondaryButton ? (
           <Button
             block
-            disabled={!isChecked}
+            disabled={!isChecked || secondaryButton.disabled}
             onPress={secondaryButton.onPress}
             title={secondaryButton.label || intl.formatMessage(confirmationMessages.commonButtons.cancelButton)}
             style={styles.secondaryButton}

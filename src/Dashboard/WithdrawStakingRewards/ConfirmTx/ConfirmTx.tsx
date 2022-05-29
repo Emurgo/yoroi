@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {useSelectedWallet} from '../../../SelectedWallet'
+import {YoroiWallet} from '../../../yoroi-wallets'
 import {YoroiUnsignedTx} from '../../../yoroi-wallets/types'
 import {ConfirmTxWithHW} from './ConfirmTxWithHW'
 import {ConfirmTxWithOS} from './ConfirmTxWithOS'
@@ -10,11 +10,10 @@ type Props = {
   onCancel: () => void
   onSuccess: () => void
   yoroiUnsignedTx: YoroiUnsignedTx
+  wallet: YoroiWallet
 }
 
-export const ConfirmTx: React.FC<Props> = ({onSuccess, onCancel, yoroiUnsignedTx}) => {
-  const wallet = useSelectedWallet()
-
+export const ConfirmTx: React.FC<Props> = ({wallet, onSuccess, onCancel, yoroiUnsignedTx}) => {
   return wallet.isHW ? (
     <ConfirmTxWithHW //
       yoroiUnsignedTx={yoroiUnsignedTx}

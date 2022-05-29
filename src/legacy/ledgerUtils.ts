@@ -25,6 +25,7 @@ import AppAda, {
   TxAuxiliaryDataType,
   TxOutputDestinationType,
 } from '@cardano-foundation/ledgerjs-hw-app-cardano'
+import {CardanoAddressedUtxo, UnsignedTx} from '@emurgo/yoroi-lib-core'
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
 import TransportHID from '@v-almonacid/react-native-hid'
 import {PermissionsAndroid, Platform} from 'react-native'
@@ -438,7 +439,7 @@ export const verifyAddress = async (
 
 /** Generate a payload for Ledger SignTx */
 export const createLedgerSignTxPayload = async (request: {
-  signRequest: HaskellShelleyTxSignRequest
+  signRequest: UnsignedTx
   byronNetworkMagic: number
   chainNetworkId: number
   addressingMap: (arg0: string) => void | Addressing['addressing']
@@ -449,7 +450,7 @@ export const createLedgerSignTxPayload = async (request: {
     protocolMagic: request.byronNetworkMagic,
     networkId: request.chainNetworkId,
   }
-  const txBody = await request.signRequest.self().build()
+  // const txBody = await request.signRequest.self().build()
 
   // Inputs
   const ledgerInputs = _transformToLedgerInputs(request.signRequest.senderUtxos)
@@ -457,7 +458,7 @@ export const createLedgerSignTxPayload = async (request: {
   // Outputs
   const ledgerOutputs = await _transformToLedgerOutputs({
     networkId: request.chainNetworkId,
-    txOutputs: await txBody.outputs(),
+    txOutputs: request.signRequest.outputs,
     changeAddrs: request.signRequest.changeAddr,
     addressingMap: request.addressingMap,
   })
@@ -516,14 +517,14 @@ export const createLedgerSignTxPayload = async (request: {
   }
 }
 
-function _transformToLedgerInputs(inputs: Array<AddressedUtxo>): Array<TxInput> {
+function _transformToLedgerInputs(inputs: Array<CardanoAddressedUtxo>): Array<TxInput> {
   for (const input of inputs) {
     verifyFromBip44Root(input.addressing)
   }
 
   return inputs.map((input) => ({
-    txHashHex: input.tx_hash,
-    outputIndex: input.tx_index,
+    txHashHex: input.txHash,
+    outputIndex: input.txIndex,
     path: input.addressing.path,
   }))
 }
@@ -561,14 +562,14 @@ async function toLedgerTokenBundle(assets: CardanoTypes.MultiAsset | null | unde
 
 async function _transformToLedgerOutputs(request: {
   networkId: number
-  txOutputs: CardanoTypes.TransactionOutputs
+  txOutputs: UnsignedTx['outputs']
   changeAddrs: Array<JsAddress & Value & Addressing>
   addressingMap: (arg0: string) => void | Addressing['addressing']
 }): Promise<Array<TxOutput>> {
   const result: Array<TxOutput> = []
 
-  for (let i = 0; i < (await request.txOutputs.len()); i++) {
-    const output = await request.txOutputs.get(i)
+  for (let i = 0; i < request.txOutputs.length; i++) {
+    const output = request.txOutputs[i]
     const address = await output.address()
     const jsAddr = await toHexOrBase58(address)
     const changeAddr = request.changeAddrs.find((change) => jsAddr === change.address)

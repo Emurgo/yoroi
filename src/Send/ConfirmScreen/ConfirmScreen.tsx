@@ -1,16 +1,13 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {BigNumber} from 'bignumber.js'
-import React, {useEffect} from 'react'
+import React from 'react'
 import {useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {useSelector} from 'react-redux'
 
-import {Banner, Boundary, OfflineBanner, Spacer, StatusBar, Text, ValidatedTextInput} from '../../components'
-import {ConfirmTx} from '../../components/ConfirmTx'
+import {Banner, Boundary, OfflineBanner, Spacer, StatusBar, Text} from '../../components'
+import {ConfirmTx} from '../../Dashboard/WithdrawStakingRewards/ConfirmTx'
 import {useTokenInfo} from '../../hooks'
-import {Instructions as HWInstructions} from '../../HW'
 import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../i18n/global-messages'
-import {CONFIG} from '../../legacy/config'
 import {formatTokenWithSymbol, formatTokenWithText} from '../../legacy/format'
 import {defaultNetworkAssetSelector} from '../../legacy/selectors'
 import {useParams, useWalletNavigation} from '../../navigation'
@@ -46,16 +43,7 @@ export const ConfirmScreen = () => {
   const {balanceAfterTx, availableAmount, yoroiUnsignedTx} = useParams(isParams)
   const {resetToTxHistory} = useWalletNavigation()
   const wallet = useSelectedWallet()
-  const {isHW, isEasyConfirmationEnabled} = wallet
   const defaultAsset = useSelector(defaultNetworkAssetSelector)
-  const [password, setPassword] = React.useState('')
-  const [useUSB, setUseUSB] = React.useState(false)
-
-  useEffect(() => {
-    if (CONFIG.DEBUG.PREFILL_FORMS && __DEV__) {
-      setPassword(CONFIG.DEBUG.PASSWORD)
-    }
-  }, [])
 
   const onSuccess = () => {
     resetToTxHistory()
@@ -97,30 +85,16 @@ export const ConfirmScreen = () => {
               <Entry tokenEntry={{identifier: tokenId, amount: new BigNumber(amount), networkId: 1}} />
             </Boundary>
           ))}
-
-          {!isEasyConfirmationEnabled && !isHW && (
-            <>
-              <Spacer height={16} />
-              <ValidatedTextInput
-                secureTextEntry
-                value={password}
-                label={strings.password}
-                onChangeText={setPassword}
-              />
-            </>
-          )}
-
-          {isHW && <HWInstructions useUSB={useUSB} addMargin />}
         </ScrollView>
 
         <Actions>
           <ConfirmTx
+            onCancel={function (): void {
+              throw new Error('Function not implemented.')
+            }}
             onSuccess={onSuccess}
             yoroiUnsignedTx={yoroiUnsignedTx}
-            useUSB={useUSB}
-            setUseUSB={setUseUSB}
-            isProvidingPassword
-            providedPassword={password}
+            wallet={wallet}
           />
         </Actions>
       </View>

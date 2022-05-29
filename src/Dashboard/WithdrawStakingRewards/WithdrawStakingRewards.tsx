@@ -13,65 +13,80 @@ import {serverStatusSelector, utxosSelector} from '../../legacy/selectors'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {theme} from '../../theme'
 import {YoroiWallet} from '../../yoroi-wallets'
-import {Staked} from '../StakePoolInfos'
+import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
 import {ConfirmTx} from './ConfirmTx'
 
 type Props = {
   onCancel: () => void
   onSuccess: () => void
-  stakingInfo: Staked
 }
 
-export const WithdrawStakingRewards = ({onSuccess, onCancel, stakingInfo}: Props) => {
-  const strings = useStrings()
+export const WithdrawStakingRewards = ({onSuccess, onCancel}: Props) => {
   const wallet = useSelectedWallet()
 
   const [step, setStep] = React.useState<'warning' | 'confirm'>('warning')
-  const [shouldDeregister, setShouldDeregister] = React.useState(false)
-
-  const onKeepOrDeregisterKey = async (shouldDeregister: boolean) => {
-    setShouldDeregister(shouldDeregister)
-    setStep('confirm')
-  }
+  const [withdrawalTx, setWithdrawalTx] = React.useState<YoroiUnsignedTx>()
 
   return (
     <Modal visible onRequestClose={() => onCancel()} showCloseIcon>
-      <Route active={step === 'warning'}>
-        <DangerousAction
-          title={strings.warningModalTitle}
-          alertBox={{content: [strings.warning1, strings.warning2, strings.warning3]}}
-          primaryButton={{
-            disabled: stakingInfo.rewards === '0',
-            label: strings.keepButton,
-            onPress: () => onKeepOrDeregisterKey(false),
-          }}
-          secondaryButton={{
-            label: strings.deregisterButton,
-            onPress: () => onKeepOrDeregisterKey(true),
-          }}
-        >
-          <Markdown style={styles.paragraph}>{strings.explanation1}</Markdown>
-          <Spacer height={8} />
-          <Markdown style={styles.paragraph}>{strings.explanation2}</Markdown>
-          <Spacer height={8} />
-          <Markdown style={styles.paragraph}>{strings.explanation3}</Markdown>
-        </DangerousAction>
-      </Route>
-
-      <Route active={step === 'confirm'}>
-        <Boundary
-          loadingFallback={<PleaseWaitView title="" spinnerText={strings.pleaseWait} />}
-          errorFallbackRender={({error}) => <ErrorFallback error={error} onCancel={onCancel} />}
-        >
-          <ConfirmWithdrawalTx
+      <Boundary errorFallback={({error}) => <ErrorFallback error={error} onCancel={onCancel} />}>
+        <Route active={step === 'warning'}>
+          <WithdrawalTxForm
             wallet={wallet}
-            shouldDeregister={shouldDeregister}
-            onSuccess={onSuccess}
-            onCancel={onCancel}
+            onDone={(unsignedTx) => {
+              setWithdrawalTx(unsignedTx)
+              setStep('confirm')
+            }}
           />
-        </Boundary>
-      </Route>
+        </Route>
+
+        {withdrawalTx && (
+          <Route active={step === 'confirm'}>
+            <ConfirmTx wallet={wallet} yoroiUnsignedTx={withdrawalTx} onSuccess={onSuccess} onCancel={onCancel} />
+          </Route>
+        )}
+      </Boundary>
     </Modal>
+  )
+}
+export const WithdrawalTxForm: React.FC<{
+  wallet: YoroiWallet
+  onDone: (unsignedTx: YoroiUnsignedTx) => void
+}> = ({wallet, onDone}) => {
+  const strings = useStrings()
+  const [deregister, setDeregister] = React.useState<boolean>()
+  const utxos = useSelector(utxosSelector) || []
+  const serverStatus = useSelector(serverStatusSelector)
+  const {isLoading} = useWithdrawalTx(
+    {wallet, deregister, utxos, serverTime: serverStatus.serverTime},
+    {
+      onSuccess: (unsignedTx) => onDone(unsignedTx),
+      enabled: deregister != null,
+      useErrorBoundary: true,
+    },
+  )
+
+  return (
+    <DangerousAction
+      title={strings.warningModalTitle}
+      alertBox={{content: [strings.warning1, strings.warning2, strings.warning3]}}
+      primaryButton={{
+        disabled: isLoading,
+        label: strings.keepButton,
+        onPress: () => setDeregister(false),
+      }}
+      secondaryButton={{
+        disabled: isLoading,
+        label: strings.deregisterButton,
+        onPress: () => setDeregister(true),
+      }}
+    >
+      <Markdown style={styles.paragraph}>{strings.explanation1}</Markdown>
+      <Spacer height={8} />
+      <Markdown style={styles.paragraph}>{strings.explanation2}</Markdown>
+      <Spacer height={8} />
+      <Markdown style={styles.paragraph}>{strings.explanation3}</Markdown>
+    </DangerousAction>
   )
 }
 
@@ -92,7 +107,7 @@ const ErrorFallback: React.FC<{error: Error; onCancel: () => void}> = ({error, o
     return <ErrorView errorMessage={intl.formatMessage(errorMessages.incorrectPassword.message)} onDismiss={onCancel} />
   }
 
-  return <ErrorView errorMessage={error.message} onDismiss={onCancel} />
+  return <ErrorView title={error.message} errorMessage={error.message} onDismiss={onCancel} />
 }
 
 const Route: React.FC<{active: boolean}> = ({active, children}) => <>{active ? children : null}</>
@@ -169,27 +184,3 @@ const messages = defineMessages({
     defaultMessage: '!!!Deregister',
   },
 })
-
-const ConfirmWithdrawalTx = ({
-  wallet,
-  shouldDeregister,
-  onSuccess,
-  onCancel,
-}: {
-  wallet: YoroiWallet
-  shouldDeregister: boolean
-  onSuccess: () => void
-  onCancel: () => void
-}) => {
-  const utxos = useSelector(utxosSelector) || []
-  const serverStatus = useSelector(serverStatusSelector)
-
-  const {withdrawalTx} = useWithdrawalTx({
-    wallet,
-    utxos,
-    shouldDeregister,
-    serverTime: serverStatus?.serverTime,
-  })
-
-  return <ConfirmTx yoroiUnsignedTx={withdrawalTx} onSuccess={onSuccess} onCancel={onCancel} />
-}

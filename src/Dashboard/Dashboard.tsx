@@ -52,6 +52,8 @@ export const Dashboard = () => {
 
   const [showWithdrawalDialog, setShowWithdrawalDialog] = React.useState(false)
 
+  console.log('QWE', stakingInfo)
+
   return (
     <View style={styles.root}>
       <StatusBar type="dark" />
@@ -164,7 +166,6 @@ export const Dashboard = () => {
 
       {stakingInfo?.status === 'staked' && showWithdrawalDialog && (
         <WithdrawStakingRewards
-          stakingInfo={stakingInfo}
           onCancel={() => setShowWithdrawalDialog(false)}
           onSuccess={() => navigation.reset(txHistoryRoute as any)}
         />

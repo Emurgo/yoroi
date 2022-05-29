@@ -36,7 +36,7 @@ describe('YoroiUnsignedTx', () => {
     } as YoroiAuxiliary)
   })
 
-  it('toEntries', () => {
+  it('toEntries converts change/outputs to YoroiEntries', () => {
     const defaults = {identifier: '', networkId: 1, isDefault: true}
     const addressedValues = [
       {
@@ -62,8 +62,14 @@ describe('YoroiUnsignedTx', () => {
     ]
 
     expect(toEntries(addressedValues)).toEqual({
-      address1: {'': '1', token123: '2'},
-      address2: {'': '1', token123: '2'},
+      address1: {
+        '': '1',
+        token123: '2',
+      },
+      address2: {
+        '': '1',
+        token123: '2',
+      },
     } as YoroiEntries)
   })
 })
@@ -152,7 +158,7 @@ describe('Entries', () => {
         token123: '2',
         token567: '-2',
       },
-    })
+    } as YoroiEntry)
   })
 
   it('first throws error if multiple addresses', () => {
@@ -172,23 +178,24 @@ describe('Entries', () => {
     }
     const entry: YoroiEntry = {
       address: 'address',
-      amounts: amounts,
+      amounts,
     }
 
-    expect(Entries.getAmount(entry, '')).toEqual({
-      tokenId: '',
-      quantity: '1',
-    })
+    Object.entries(amounts).forEach(([tokenId, quantity]) =>
+      expect(Entries.getAmount(entry, tokenId)).toEqual({
+        tokenId,
+        quantity,
+      }),
+    )
   })
 
   it('getPrimaryAmount', () => {
-    const amounts: YoroiAmounts = {
-      '': '1',
-      token123: '2',
-      token567: '-2',
-    }
     const entries: YoroiEntries = {
-      address1: amounts,
+      address1: {
+        '': '1',
+        token123: '2',
+        token567: '-2',
+      },
     }
 
     expect(Entries.getPrimaryAmount(entries)).toEqual({
@@ -198,13 +205,12 @@ describe('Entries', () => {
   })
 
   it('getSecondaryAmounts', () => {
-    const amounts: YoroiAmounts = {
-      '': '1',
-      token123: '2',
-      token567: '-2',
-    }
     const entries: YoroiEntries = {
-      address1: amounts,
+      address1: {
+        '': '1',
+        token123: '2',
+        token567: '-2',
+      },
     }
 
     expect(Entries.getSecondaryAmounts(entries)).toEqual({
@@ -213,106 +219,3 @@ describe('Entries', () => {
     })
   })
 })
-
-// const address = 'address'
-// const addressing = {
-//   path: [],
-//   startLevel: 1,
-// }
-// const change = [
-//   {
-//     address,
-//     addressing,
-//     values: multiToken({
-//       '': '1',
-//       token123: '1',
-//     }),
-//   },
-// ]
-
-// const totalOutput = {
-//   defaults,
-//   values: [
-//     {
-//       amount: new BigNumber('1'),
-//       identifier: '',
-//       networkId: 1,
-//     },
-//     {
-//       amount: new BigNumber('1'),
-//       identifier: '',
-//       networkId: 1,
-//     },
-//     {
-//       amount: new BigNumber('1'),
-//       identifier: '',
-//       networkId: 1,
-//     },
-//     {
-//       amount: new BigNumber('1'),
-//       identifier: '',
-//       networkId: 1,
-//     },
-
-//     {
-//       amount: new BigNumber('1'),
-//       identifier: 'token123',
-//       networkId: 1,
-//     },
-//     {
-//       amount: new BigNumber('1'),
-//       identifier: 'token123',
-//       networkId: 1,
-//     },
-
-//     {
-//       amount: new BigNumber('1'),
-//       identifier: 'token456',
-//       networkId: 1,
-//     },
-//     {
-//       amount: new BigNumber('1'),
-//       identifier: 'token456',
-//       networkId: 1,
-//     },
-//   ],
-// }
-
-// const outputs = [
-//   {
-//     address: 'address1',
-//     value: multiToken({'': '1', token123: '1'}),
-//   },
-//   {
-//     address: 'address1',
-//     value: multiToken({'': '1', token123: '1'}),
-//   },
-//   {
-//     address: 'address1',
-//     value: multiToken({'': '1', token456: '1'}),
-//   },
-//   {
-//     address: 'address2',
-//     value: multiToken({'': '1', token456: '1'}),
-//   },
-// ]
-
-// const mockUnsignedTx: UnsignedTx = {
-//   senderUtxos: [],
-//   outputs,
-//   totalOutput,
-//   fee: multiToken({'': '1', token123: '1'}),
-//   change,
-//   metadata: [{label: 'label', data: 'data '}],
-//   withdrawals: null as unknown as UnsignedTx['withdrawals'],
-//   deregistrations: null as unknown as UnsignedTx['deregistrations'],
-//   certificates: null as unknown as UnsignedTx['certificates'],
-
-//   inputs: null as any,
-//   totalInput: null as any,
-//   ttl: null as any,
-//   neededStakingKeyHashes: null as any,
-//   encodedTx: null as any,
-//   hash: null as any,
-//   sign: null as any,
-// }

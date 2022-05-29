@@ -1,5 +1,5 @@
 import type {WalletChecksum} from '@emurgo/cip4-js'
-import {CardanoAddressedUtxo, MultiTokenValue, SignedTx, TxMetadata, UnsignedTx} from '@emurgo/yoroi-lib-core'
+import {CardanoAddressedUtxo, SignedTx, TxMetadata, UnsignedTx} from '@emurgo/yoroi-lib-core'
 import {BigNumber} from 'bignumber.js'
 import type {IntlShape} from 'react-intl'
 
@@ -18,7 +18,6 @@ import type {EncryptionMethod, WalletState} from '../../legacy/types'
 import {
   AccountStates,
   AddressedUtxo,
-  DefaultAsset,
   SendTokenList,
   StakePoolInfoRequest,
   StakePoolInfosAndHistories,
@@ -168,15 +167,12 @@ export interface WalletInterface {
   signTx(signRequest: UnsignedTx, decryptedMasterKey: string): Promise<SignedTx>
 
   createDelegationTx(
-    poolRequest: void | string,
+    poolRequest: string,
     valueInAccount: BigNumber,
     utxos: Array<RawUtxo>,
-    defaultAsset: DefaultAsset,
+    defaultAsset: Token,
     serverTime: Date | void,
-  ): Promise<{
-    unsignedTx: YoroiUnsignedTx
-    totalAmountToDelegate: MultiTokenValue
-  }>
+  ): Promise<YoroiUnsignedTx>
 
   createVotingRegTx(
     utxos: Array<RawUtxo>,
@@ -191,7 +187,7 @@ export interface WalletInterface {
     serverTime: Date | void,
   ): Promise<YoroiUnsignedTx>
 
-  signTxWithLedger(request: YoroiUnsignedTx, useUSB: boolean): Promise<SignedTxLegacy>
+  signTxWithLedger(request: YoroiUnsignedTx, useUSB: boolean): Promise<SignedTx>
 
   // =================== backend API =================== //
 
@@ -290,6 +286,7 @@ type YoroiWalletKeys =
   | 'fetchAccountState'
   | 'getDelegationStatus'
   | 'rewardAddressHex'
+  | 'createUnsignedTx'
   | 'createDelegationTx'
   | 'createWithdrawalTx'
   | 'createVotingRegTx'
@@ -320,6 +317,7 @@ const yoroiWalletKeys: Array<YoroiWalletKeys> = [
   'fetchAccountState',
   'getDelegationStatus',
   'rewardAddressHex',
+  'createUnsignedTx',
   'createDelegationTx',
   'createWithdrawalTx',
   'createVotingRegTx',

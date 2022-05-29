@@ -652,12 +652,12 @@ class WalletManager {
     tokens: SendTokenList,
     defaultToken: Token,
     serverTime: Date | null | undefined,
-    metadata?: Array<TxMetadata>,
+    auxiliary?: Array<TxMetadata>,
   ) {
     const wallet = this.getWallet()
     return await this.abortWhenWalletCloses(
       // TODO(v-almonacid): maybe there is a better way instead of unknown
-      wallet.createUnsignedTx(utxos, receiver, tokens as any, defaultToken, serverTime, metadata),
+      wallet.createUnsignedTx(utxos, receiver, tokens as any, defaultToken, serverTime, auxiliary),
     )
   }
 
@@ -667,7 +667,7 @@ class WalletManager {
   }
 
   async createDelegationTx(
-    poolRequest: void | string,
+    poolRequest: string,
     valueInAccount: BigNumber,
     utxos: Array<RawUtxo>,
     defaultAsset: DefaultAsset,

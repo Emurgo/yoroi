@@ -3,7 +3,7 @@ import React from 'react'
 import {useIntl} from 'react-intl'
 
 import {TwoActionView} from '../../../components'
-import {useSignTx, useSubmitTx} from '../../../hooks'
+import {useSignAndSubmitTx} from '../../../hooks'
 import {confirmationMessages, errorMessages, txLabels} from '../../../i18n/global-messages'
 import {showErrorDialog} from '../../../legacy/actions'
 import {ensureKeysValidity} from '../../../legacy/deviceSettings'
@@ -24,22 +24,22 @@ export const ConfirmTxWithOS: React.FC<Props> = ({yoroiUnsignedTx, onSuccess, on
   const strings = useStrings()
   const navigation = useNavigation()
 
-  const {signTx} = useSignTx(
+  const {signAndSubmitTx} = useSignAndSubmitTx(
     {wallet},
     {
-      onSuccess: (signedTx) => submitTx(signedTx),
-      onError: async (error) => {
-        if (error instanceof SystemAuthDisabled) {
-          onCancel()
-          await walletManager.closeWallet()
-          await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
-          navigation.navigate('app-root', {screen: 'wallet-selection'})
-        }
+      signTx: {
+        onError: async (error) => {
+          if (error instanceof SystemAuthDisabled) {
+            onCancel()
+            await walletManager.closeWallet()
+            await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
+            navigation.navigate('app-root', {screen: 'wallet-selection'})
+          }
+        },
       },
+      submitTx: {onSuccess},
     },
   )
-
-  const {submitTx} = useSubmitTx({wallet}, {onSuccess})
 
   return (
     <TwoActionView
@@ -50,7 +50,7 @@ export const ConfirmTxWithOS: React.FC<Props> = ({yoroiUnsignedTx, onSuccess, on
           await ensureKeysValidity(wallet.id)
           navigation.navigate('biometrics', {
             keyId: wallet.id,
-            onSuccess: async (masterKey) => signTx({yoroiUnsignedTx, masterKey}),
+            onSuccess: async (masterKey) => signAndSubmitTx({yoroiUnsignedTx, masterKey}),
             onFail: () => navigation.goBack(),
           })
         },
