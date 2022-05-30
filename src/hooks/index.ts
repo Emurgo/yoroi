@@ -205,6 +205,7 @@ export const useUnsignedTx = (
     tokens,
     auxiliary,
 
+    serverTime,
     utxos,
     defaultToken,
   }: {
@@ -213,6 +214,7 @@ export const useUnsignedTx = (
     tokens: SendTokenList
     auxiliary: Array<TxMetadata>
 
+    serverTime: Date | null
     utxos: Array<RawUtxo>
     defaultToken: Token
   },
@@ -220,7 +222,7 @@ export const useUnsignedTx = (
 ) => {
   const query = useQuery({
     queryKey: [wallet.id, 'unsignedTx', tokens],
-    queryFn: () => wallet.createUnsignedTx(utxos, receiver, tokens, defaultToken, auxiliary),
+    queryFn: () => wallet.createUnsignedTx(utxos, receiver, tokens, defaultToken, serverTime, auxiliary),
     retry: false,
     cacheTime: 0,
     ...options,
@@ -463,14 +465,14 @@ export const useUpdateHWDeviceInfo = ({wallet}: {wallet: YoroiWallet}) => {
 }
 
 export const useSignWithPasswordAndSubmitTx = (
-  {wallet}: {wallet: YoroiWallet},
+  {wallet, storage}: {wallet: YoroiWallet; storage: typeof KeyStore},
   options?: {
-    signTx?: UseMutationOptions<SignedTx, Error, {yoroiUnsignedTx: YoroiUnsignedTx; password: string; intl: IntlShape}>
+    signTx?: UseMutationOptions<SignedTx, Error, {unsignedTx: YoroiUnsignedTx; password: string; intl: IntlShape}>
     submitTx?: UseMutationOptions<TxSubmissionStatus, Error, SignedTx>
   },
 ) => {
   const signTx = useSignTxWithPassword(
-    {wallet},
+    {wallet, storage},
     {
       useErrorBoundary: true,
       retry: false,
@@ -499,7 +501,7 @@ export const useSignWithPasswordAndSubmitTx = (
 export const useSignWithHwAndSubmitTx = (
   {wallet}: {wallet: YoroiWallet},
   options?: {
-    signTx?: UseMutationOptions<SignedTx, Error, {yoroiUnsignedTx: YoroiUnsignedTx; useUSB: boolean}>
+    signTx?: UseMutationOptions<SignedTx, Error, {unsignedTx: YoroiUnsignedTx; useUSB: boolean}>
     submitTx?: UseMutationOptions<TxSubmissionStatus, Error, SignedTx>
   },
 ) => {
@@ -533,7 +535,7 @@ export const useSignWithHwAndSubmitTx = (
 export const useSignAndSubmitTx = (
   {wallet}: {wallet: YoroiWallet},
   options?: {
-    signTx?: UseMutationOptions<SignedTx, Error, {yoroiUnsignedTx: YoroiUnsignedTx; masterKey: string}>
+    signTx?: UseMutationOptions<SignedTx, Error, {unsignedTx: YoroiUnsignedTx; masterKey: string}>
     submitTx?: UseMutationOptions<TxSubmissionStatus, Error, SignedTx>
   },
 ) => {
@@ -566,10 +568,10 @@ export const useSignAndSubmitTx = (
 
 export const useSignTx = (
   {wallet}: {wallet: YoroiWallet},
-  options: UseMutationOptions<SignedTx, Error, {yoroiUnsignedTx: YoroiUnsignedTx; masterKey: string}> = {},
+  options: UseMutationOptions<SignedTx, Error, {unsignedTx: YoroiUnsignedTx; masterKey: string}> = {},
 ) => {
   const mutation = useMutation({
-    mutationFn: ({yoroiUnsignedTx, masterKey}) => wallet.signTx(yoroiUnsignedTx.unsignedTx, masterKey),
+    mutationFn: ({unsignedTx, masterKey}) => wallet.signTx(unsignedTx.unsignedTx, masterKey),
     retry: false,
     ...options,
   })
@@ -581,14 +583,14 @@ export const useSignTx = (
 }
 
 export const useSignTxWithPassword = (
-  {wallet}: {wallet: YoroiWallet},
-  options: UseMutationOptions<SignedTx, Error, {yoroiUnsignedTx: YoroiUnsignedTx; password: string; intl: any}> = {},
+  {wallet, storage}: {wallet: YoroiWallet; storage: typeof KeyStore},
+  options: UseMutationOptions<SignedTx, Error, {unsignedTx: YoroiUnsignedTx; password: string; intl: any}> = {},
 ) => {
   const mutation = useMutation({
-    mutationFn: async ({yoroiUnsignedTx, password, intl}) => {
-      const masterKey = await KeyStore.getData(wallet.id, 'MASTER_PASSWORD', '', password, intl)
+    mutationFn: async ({unsignedTx, password, intl}) => {
+      const masterKey = await storage.getData(wallet.id, 'MASTER_PASSWORD', '', password, intl)
 
-      return wallet.signTx(yoroiUnsignedTx.unsignedTx, masterKey)
+      return wallet.signTx(unsignedTx.unsignedTx, masterKey)
     },
     retry: false,
     ...options,
@@ -602,10 +604,10 @@ export const useSignTxWithPassword = (
 
 export const useSignTxWithHW = (
   {wallet}: {wallet: YoroiWallet},
-  options: UseMutationOptions<SignedTx, Error, {yoroiUnsignedTx: YoroiUnsignedTx; useUSB: boolean}> = {},
+  options: UseMutationOptions<SignedTx, Error, {unsignedTx: YoroiUnsignedTx; useUSB: boolean}> = {},
 ) => {
   const mutation = useMutation({
-    mutationFn: async ({yoroiUnsignedTx, useUSB}) => wallet.signTxWithLedger(yoroiUnsignedTx, useUSB),
+    mutationFn: async ({unsignedTx, useUSB}) => wallet.signTxWithLedger(unsignedTx, useUSB),
     retry: false,
     ...options,
   })

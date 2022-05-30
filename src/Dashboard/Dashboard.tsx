@@ -8,10 +8,11 @@ import {useDispatch, useSelector} from 'react-redux'
 
 import {AccountAutoRefresher} from '../AccountAutoRefresher'
 import {VotingBanner} from '../Catalyst/VotingBanner'
-import {Banner, Button, OfflineBanner, StatusBar} from '../components'
+import {Banner, Button, Modal, OfflineBanner, StatusBar} from '../components'
 import globalMessages from '../i18n/global-messages'
 import {fetchAccountState} from '../legacy/account'
 import {getCardanoBaseConfig, UI_V2} from '../legacy/config'
+import KeyStore from '../legacy/KeyStore'
 import {getCardanoNetworkConfigById} from '../legacy/networks'
 import {
   isFetchingAccountStateSelector,
@@ -52,8 +53,6 @@ export const Dashboard = () => {
 
   const [showWithdrawalDialog, setShowWithdrawalDialog] = React.useState(false)
 
-  console.log('QWE', stakingInfo)
-
   return (
     <View style={styles.root}>
       <StatusBar type="dark" />
@@ -91,18 +90,18 @@ export const Dashboard = () => {
               <ActivityIndicator size="large" color="black" />
             ) : stakingInfo.status === 'staked' ? (
               <UserSummary
-                totalAdaSum={balances['ADA'] ? new BigNumber(balances['ADA']) : null}
+                totalAdaSum={new BigNumber(balances['ADA'])}
                 totalRewards={new BigNumber(stakingInfo.rewards)}
                 totalDelegated={new BigNumber(stakingInfo.amount)}
-                onWithdraw={() => setShowWithdrawalDialog(!showWithdrawalDialog)}
+                onWithdraw={() => setShowWithdrawalDialog(true)}
                 disableWithdraw={wallet.isReadOnly}
               />
             ) : (
               <UserSummary
-                totalAdaSum={balances['ADA'] ? new BigNumber(balances['ADA']) : null}
+                totalAdaSum={new BigNumber(balances['ADA'])}
                 totalRewards={null}
                 totalDelegated={null}
-                onWithdraw={() => setShowWithdrawalDialog(!showWithdrawalDialog)}
+                onWithdraw={() => setShowWithdrawalDialog(true)}
                 disableWithdraw
               />
             )}
@@ -164,11 +163,15 @@ export const Dashboard = () => {
         </Actions>
       </View>
 
-      {stakingInfo?.status === 'staked' && showWithdrawalDialog && (
-        <WithdrawStakingRewards
-          onCancel={() => setShowWithdrawalDialog(false)}
-          onSuccess={() => navigation.reset(txHistoryRoute as any)}
-        />
+      {stakingInfo?.status === 'staked' && (
+        <Modal visible={showWithdrawalDialog} onRequestClose={() => setShowWithdrawalDialog(false)} showCloseIcon>
+          <WithdrawStakingRewards
+            wallet={wallet}
+            storage={KeyStore}
+            onSuccess={() => navigation.reset(txHistoryRoute as any)}
+            onCancel={() => setShowWithdrawalDialog(false)}
+          />
+        </Modal>
       )}
     </View>
   )

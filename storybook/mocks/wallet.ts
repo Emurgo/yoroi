@@ -1,4 +1,6 @@
+import {SignedTx} from '@emurgo/yoroi-lib-core'
 import BigNumber from 'bignumber.js'
+import KeyStore from '../../src/legacy/KeyStore'
 
 import {RemotePoolMetaSuccess, StakePoolInfosAndHistories, TokenEntry, TokenInfo} from '../../src/types'
 import {YoroiWallet} from '../../src/yoroi-wallets'
@@ -42,16 +44,18 @@ export const mockWallet: YoroiWallet = {
   signTxWithLedger: () => {
     throw new Error('Not implemented')
   },
-  fetchTxStatus: () => {
-    throw new Error('Not implemented')
-  },
+  checkServerStatus: () =>
+    Promise.resolve({
+      isServerOk: true,
+      isMaintenance: false,
+      serverTime: new Date(),
+      isQueueOnline: true,
+    }),
+  fetchTxStatus: async () => ({}),
   submitTransaction: () => {
     throw new Error('Not implemented')
   },
   createVotingRegTx: () => {
-    throw new Error('Not implemented')
-  },
-  checkServerStatus: () => {
     throw new Error('Not implemented')
   },
   subscribe: () => {
@@ -171,3 +175,25 @@ export const mockYoroiTx: YoroiUnsignedTx & {mock: true} = {
   unsignedTx: {} as any,
   mock: true,
 }
+
+export const mockYoroiSignedTx: SignedTx & {mock: true} = {
+  id: 'tx-id',
+  encodedTx: new Uint8Array([1, 2, 3]),
+  mock: true,
+}
+
+export const mockKeyStore = (overrides?: {
+  getData?: typeof KeyStore.getData
+  storeData?: typeof KeyStore.storeData
+  deleteData?: typeof KeyStore.deleteData
+}) =>
+  ({
+    getData: async (_keyId, _encrpytionMethod, _message, password, _intl) => {
+      if (password !== 'password') throw new Error('Invalid Password')
+
+      return 'masterkey'
+    },
+    storeData: async () => undefined,
+    deleteData: async () => undefined,
+    ...(overrides as any),
+  } as unknown as typeof KeyStore)

@@ -570,21 +570,19 @@ async function _transformToLedgerOutputs(request: {
 
   for (let i = 0; i < request.txOutputs.length; i++) {
     const output = request.txOutputs[i]
-    const address = await output.address()
-    const jsAddr = await toHexOrBase58(address)
-    const changeAddr = request.changeAddrs.find((change) => jsAddr === change.address)
+    const changeAddr = request.changeAddrs.find((change) => output.address === change.address)
 
     if (changeAddr != null) {
       // in this case the address belongs to us
       verifyFromBip44Root(changeAddr.addressing)
       const addressParams = await toLedgerAddressParameters({
         networkId: request.networkId,
-        address,
+        address: output.address,
         path: changeAddr.addressing.path,
         addressingMap: request.addressingMap,
       })
       result.push({
-        amount: await (await (await output.amount()).coin()).toStr(),
+        amount: output.value,
         tokenBundle: await toLedgerTokenBundle(await (await output.amount()).multiasset()),
         destination: {
           type: TxOutputDestinationType.DEVICE_OWNED,
@@ -718,7 +716,7 @@ async function formatLedgerCertificates(
 
 export async function toLedgerAddressParameters(request: {
   networkId: number
-  address: CardanoTypes.Address
+  address: string
   path: Array<number>
   addressingMap: (arg0: string) => void | Addressing['addressing']
 }): Promise<DeviceOwnedAddress> {
@@ -787,8 +785,10 @@ export async function toLedgerAddressParameters(request: {
       }
     }
   }
+
   throw new Error('toLedgerAddressParameters: unknown address type')
 }
+
 export const signTxWithLedger = async (
   signRequest: SignTransactionRequest,
   hwDeviceInfo: HWDeviceInfo,

@@ -2,91 +2,104 @@ import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {mockWallet, mockYoroiTx, WithModalProps} from '../../../../storybook'
-import {Boundary, Modal} from '../../../components'
-import {SelectedWalletProvider} from '../../../SelectedWallet'
-import {YoroiAmount} from '../../../yoroi-wallets/types'
+import {mockKeyStore, mockWallet, mockYoroiTx, WithModal} from '../../../../storybook'
+import {Boundary} from '../../../components'
+import KeyStore from '../../../legacy/KeyStore'
+import {YoroiWallet} from '../../../yoroi-wallets'
+import {YoroiUnsignedTx} from '../../../yoroi-wallets/types'
 import {ConfirmTxWithPassword} from './ConfirmTxWithPassword'
 
 storiesOf('ConfirmWithdrawalTx/Password', module)
   .add('withdrawals, no deregistrations', () => {
-    const rewardAmount: YoroiAmount = {
-      tokenId: '',
-      quantity: '12356789',
+    const wallet: YoroiWallet = {
+      ...mockWallet,
+      signTx: async (unsignedTx, masterKey) => {
+        action('onSign')(unsignedTx, masterKey)
+
+        return {
+          id: 'id',
+          encodedTx: new Uint8Array([1, 2, 3]),
+        }
+      },
+      submitTransaction: async (unsignedTx) => {
+        action('onSubmit')(unsignedTx)
+        return []
+      },
+    }
+    const storage: typeof KeyStore = mockKeyStore({
+      getData: async (_keyId, _encryptionMethod, _message, _password, _intl) => {
+        action('getData')(_keyId, _encryptionMethod, _message, _password, _intl)
+        return 'masterkey'
+      },
+    })
+    const unsignedTx: YoroiUnsignedTx = {
+      ...mockYoroiTx,
+      staking: {
+        ...mockYoroiTx.staking,
+        withdrawals: {
+          'reward-address': {'': '12356789'},
+        },
+      },
     }
 
     return (
-      <SelectedWalletProvider
-        wallet={{
-          ...mockWallet,
-          submitTransaction: async (yoroiSignedTx) => {
-            action('onSubmit')(yoroiSignedTx)
-            return []
-          },
-        }}
-      >
-        <WithModalProps>
-          {(modalProps) => (
-            <Modal {...modalProps} showCloseIcon>
-              <Boundary>
-                <ConfirmTxWithPassword
-                  yoroiUnsignedTx={{
-                    ...mockYoroiTx,
-                    staking: {
-                      ...mockYoroiTx.staking,
-                      withdrawals: {
-                        'reward-address': {[rewardAmount.tokenId]: rewardAmount.quantity},
-                      },
-                    },
-                  }}
-                  onSuccess={action('onSuccess')}
-                  onCancel={action('onCancel')}
-                />
-              </Boundary>
-            </Modal>
-          )}
-        </WithModalProps>
-      </SelectedWalletProvider>
+      <WithModal>
+        <Boundary>
+          <ConfirmTxWithPassword
+            wallet={wallet}
+            storage={storage}
+            unsignedTx={unsignedTx}
+            onSuccess={action('onSuccess')}
+            onCancel={action('onCancel')}
+          />
+        </Boundary>
+      </WithModal>
     )
   })
   .add('withdrawals, deregistrations', () => {
-    const rewardAmount: YoroiAmount = {
-      tokenId: '',
-      quantity: '12356789',
+    const wallet: YoroiWallet = {
+      ...mockWallet,
+      signTx: async (unsignedTx, masterKey) => {
+        action('onSign')(unsignedTx, masterKey)
+
+        return {
+          id: 'id',
+          encodedTx: new Uint8Array([1, 2, 3]),
+        }
+      },
+      submitTransaction: async (unsignedTx) => {
+        action('onSubmit')(unsignedTx)
+        return []
+      },
+    }
+    const storage: typeof KeyStore = mockKeyStore({
+      getData: async (_keyId, _encryptionMethod, _message, _password, _intl) => {
+        action('getData')(_keyId, _encryptionMethod, _message, _password, _intl)
+        return 'masterkey'
+      },
+    })
+    const unsignedTx: YoroiUnsignedTx = {
+      ...mockYoroiTx,
+      staking: {
+        ...mockYoroiTx.staking,
+        deregistrations: {
+          ...mockYoroiTx.staking.deregistrations,
+          'reward-address': {'': '12356789'},
+        },
+      },
     }
 
     return (
-      <SelectedWalletProvider
-        wallet={{
-          ...mockWallet,
-          submitTransaction: async (yoroiSignedTx) => {
-            action('onSubmit')(yoroiSignedTx)
-            return []
-          },
-        }}
-      >
-        <WithModalProps>
-          {(modalProps) => (
-            <Modal {...modalProps} showCloseIcon>
-              <Boundary>
-                <ConfirmTxWithPassword
-                  yoroiUnsignedTx={{
-                    ...mockYoroiTx,
-                    staking: {
-                      ...mockYoroiTx.staking,
-                      deregistrations: {
-                        ...mockYoroiTx.staking.deregistrations,
-                        'reward-address': {[rewardAmount.tokenId]: rewardAmount.quantity},
-                      },
-                    },
-                  }}
-                  onSuccess={action('onSuccess')}
-                  onCancel={action('onCancel')}
-                />
-              </Boundary>
-            </Modal>
-          )}
-        </WithModalProps>
-      </SelectedWalletProvider>
+      <WithModal>
+        <Boundary>
+          <ConfirmTxWithPassword
+            wallet={wallet}
+            storage={storage}
+            unsignedTx={unsignedTx}
+            onSuccess={action('onSuccess')}
+            onCancel={action('onCancel')}
+          />
+        </Boundary>
+      </WithModal>
     )
   })

@@ -7,37 +7,27 @@ import {useSignAndSubmitTx} from '../../../hooks'
 import {confirmationMessages, errorMessages, txLabels} from '../../../i18n/global-messages'
 import {showErrorDialog} from '../../../legacy/actions'
 import {ensureKeysValidity} from '../../../legacy/deviceSettings'
-import {useSelectedWallet} from '../../../SelectedWallet'
-import {SystemAuthDisabled, walletManager} from '../../../yoroi-wallets'
+import {SystemAuthDisabled, walletManager, YoroiWallet} from '../../../yoroi-wallets'
 import {YoroiUnsignedTx} from '../../../yoroi-wallets/types'
 import {TransferSummary} from '../WithdrawalDialog/TransferSummary'
 
 type Props = {
+  wallet: YoroiWallet
+  unsignedTx: YoroiUnsignedTx
   onCancel: () => void
   onSuccess: () => void
-  yoroiUnsignedTx: YoroiUnsignedTx
 }
 
-export const ConfirmTxWithOS: React.FC<Props> = ({yoroiUnsignedTx, onSuccess, onCancel}) => {
-  const wallet = useSelectedWallet()
+export const ConfirmTxWithOS: React.FC<Props> = ({wallet, unsignedTx, onSuccess, onCancel}) => {
   const intl = useIntl()
   const strings = useStrings()
   const navigation = useNavigation()
 
-  const {signAndSubmitTx} = useSignAndSubmitTx(
+  const {signAndSubmitTx, isLoading} = useSignAndSubmitTx(
     {wallet},
     {
-      signTx: {
-        onError: async (error) => {
-          if (error instanceof SystemAuthDisabled) {
-            onCancel()
-            await walletManager.closeWallet()
-            await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
-            navigation.navigate('app-root', {screen: 'wallet-selection'})
-          }
-        },
-      },
-      submitTx: {onSuccess},
+      signTx: {useErrorBoundary: true},
+      submitTx: {onSuccess, useErrorBoundary: true},
     },
   )
 
@@ -45,21 +35,32 @@ export const ConfirmTxWithOS: React.FC<Props> = ({yoroiUnsignedTx, onSuccess, on
     <TwoActionView
       title={strings.confirmTx}
       primaryButton={{
+        disabled: isLoading,
         label: strings.confirmButton,
-        onPress: async () => {
-          await ensureKeysValidity(wallet.id)
-          navigation.navigate('biometrics', {
-            keyId: wallet.id,
-            onSuccess: async (masterKey) => signAndSubmitTx({yoroiUnsignedTx, masterKey}),
-            onFail: () => navigation.goBack(),
-          })
-        },
+        onPress: async () =>
+          ensureKeysValidity(wallet.id)
+            .then(() =>
+              navigation.navigate('biometrics', {
+                keyId: wallet.id,
+                onSuccess: async (masterKey) => signAndSubmitTx({unsignedTx, masterKey}),
+                onFail: () => navigation.goBack(),
+              }),
+            )
+            .catch(async (error) => {
+              if (error instanceof SystemAuthDisabled) {
+                onCancel()
+                await walletManager.closeWallet()
+                await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
+                navigation.navigate('app-root', {screen: 'wallet-selection'})
+              }
+            }),
       }}
       secondaryButton={{
+        disabled: isLoading,
         onPress: () => onCancel(),
       }}
     >
-      <TransferSummary yoroiUnsignedTx={yoroiUnsignedTx} />
+      <TransferSummary wallet={wallet} unsignedTx={unsignedTx} />
     </TwoActionView>
   )
 }

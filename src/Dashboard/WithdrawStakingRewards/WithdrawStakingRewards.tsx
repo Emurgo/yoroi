@@ -4,54 +4,58 @@ import {StyleSheet} from 'react-native'
 import Markdown from 'react-native-easy-markdown'
 import {useSelector} from 'react-redux'
 
-import {Boundary, DangerousAction, ErrorView, Modal, PleaseWaitView, Spacer} from '../../components'
+import {Boundary, DangerousAction, ErrorView, PleaseWaitView, Spacer} from '../../components'
 import {useWithdrawalTx} from '../../hooks'
 import globalMessages, {errorMessages, ledgerMessages} from '../../i18n/global-messages'
 import LocalizableError from '../../i18n/LocalizableError'
 import {WrongPassword} from '../../legacy/errors'
+import KeyStore from '../../legacy/KeyStore'
 import {serverStatusSelector, utxosSelector} from '../../legacy/selectors'
-import {useSelectedWallet} from '../../SelectedWallet'
 import {theme} from '../../theme'
 import {YoroiWallet} from '../../yoroi-wallets'
 import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
 import {ConfirmTx} from './ConfirmTx'
 
 type Props = {
+  wallet: YoroiWallet
+  storage: typeof KeyStore
   onCancel: () => void
   onSuccess: () => void
 }
 
-export const WithdrawStakingRewards = ({onSuccess, onCancel}: Props) => {
-  const wallet = useSelectedWallet()
-
-  const [step, setStep] = React.useState<'warning' | 'confirm'>('warning')
-  const [withdrawalTx, setWithdrawalTx] = React.useState<YoroiUnsignedTx>()
+export const WithdrawStakingRewards = ({wallet, storage, onSuccess, onCancel}: Props) => {
+  const strings = useStrings()
+  const [state, setState] = React.useState<
+    {step: 'form'; withdrawalTx: undefined} | {step: 'confirm'; withdrawalTx: YoroiUnsignedTx}
+  >({step: 'form', withdrawalTx: undefined})
 
   return (
-    <Modal visible onRequestClose={() => onCancel()} showCloseIcon>
-      <Boundary errorFallback={({error}) => <ErrorFallback error={error} onCancel={onCancel} />}>
-        <Route active={step === 'warning'}>
-          <WithdrawalTxForm
+    <Boundary
+      loading={{fallback: <PleaseWaitView title="" spinnerText={strings.pleaseWait} />}}
+      error={{fallback: ({error}) => <ErrorFallback error={error} onCancel={onCancel} />}}
+    >
+      <Route active={state.step === 'form'}>
+        <WithdrawalTxForm wallet={wallet} onDone={(withdrawalTx) => setState({step: 'confirm', withdrawalTx})} />
+      </Route>
+
+      {state.step === 'confirm' && (
+        <Route active={true}>
+          <ConfirmTx
             wallet={wallet}
-            onDone={(unsignedTx) => {
-              setWithdrawalTx(unsignedTx)
-              setStep('confirm')
-            }}
+            storage={storage}
+            unsignedTx={state.withdrawalTx}
+            onSuccess={onSuccess}
+            onCancel={onCancel}
           />
         </Route>
-
-        {withdrawalTx && (
-          <Route active={step === 'confirm'}>
-            <ConfirmTx wallet={wallet} yoroiUnsignedTx={withdrawalTx} onSuccess={onSuccess} onCancel={onCancel} />
-          </Route>
-        )}
-      </Boundary>
-    </Modal>
+      )}
+    </Boundary>
   )
 }
+
 export const WithdrawalTxForm: React.FC<{
   wallet: YoroiWallet
-  onDone: (unsignedTx: YoroiUnsignedTx) => void
+  onDone: (withdrawalTx: YoroiUnsignedTx) => void
 }> = ({wallet, onDone}) => {
   const strings = useStrings()
   const [deregister, setDeregister] = React.useState<boolean>()
@@ -60,9 +64,10 @@ export const WithdrawalTxForm: React.FC<{
   const {isLoading} = useWithdrawalTx(
     {wallet, deregister, utxos, serverTime: serverStatus.serverTime},
     {
-      onSuccess: (unsignedTx) => onDone(unsignedTx),
+      onSuccess: (withdrawalTx) => onDone(withdrawalTx),
       enabled: deregister != null,
       useErrorBoundary: true,
+      suspense: true,
     },
   )
 
