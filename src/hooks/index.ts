@@ -475,7 +475,6 @@ export const useSignWithPasswordAndSubmitTx = (
     {wallet, storage},
     {
       useErrorBoundary: true,
-      retry: false,
       ...options?.signTx,
       onSuccess: (signedTx, args, context) => {
         options?.signTx?.onSuccess?.(signedTx, args, context)

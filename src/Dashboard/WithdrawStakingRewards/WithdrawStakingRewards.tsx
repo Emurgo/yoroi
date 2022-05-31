@@ -30,10 +30,7 @@ export const WithdrawStakingRewards = ({wallet, storage, onSuccess, onCancel}: P
   >({step: 'form', withdrawalTx: undefined})
 
   return (
-    <Boundary
-      loading={{fallback: <PleaseWaitView title="" spinnerText={strings.pleaseWait} />}}
-      error={{fallback: ({error}) => <ErrorFallback error={error} onCancel={onCancel} />}}
-    >
+    <Boundary loading={{fallback: <PleaseWaitView title="" spinnerText={strings.pleaseWait} />}}>
       <Route active={state.step === 'form'}>
         <WithdrawalTxForm wallet={wallet} onDone={(withdrawalTx) => setState({step: 'confirm', withdrawalTx})} />
       </Route>
