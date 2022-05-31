@@ -12,20 +12,91 @@ Looking for the Yoroi Extension? See [here](https://github.com/Emurgo/yoroi-fron
 
 ### Common instalation IOS/Android
 
+- Install [nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+
+- Install node `16.5.0`
+
+```
+nvm install 16.5.0
+nvm nvm alias default 16.5.0
+```
+
 - Install yarn:
 
 ```
-$ npm install -g yarn
-$ yarn --version
+npm install -g yarn
 ```
-
-- Install node `16.5.0`:
 
 - Install python `2.7.18`:
 
 ```
 $ brew install pyenv
 $ pyenv install 2.7.18
+```
+
+### Android Instalation
+
+- Install last version [Android Studio](https://developer.android.com/studio)
+
+- Add this to your .bashrc/.zshrc file:
+
+```
+export ANDROID_SDK_ROOT=$HOME/Library/Android/sdk
+export PATH=$PATH:$ANDROID_SDK_ROOT/emulator
+export PATH=$PATH:$ANDROID_SDK_ROOT/platform-tools
+export PATH=$PATH:$ANDROID_SDK_ROOT/tools/bin
+```
+
+- Update the Android SDK:
+
+```
+sdkmanager "tools"
+sdkmanager --update
+sdkmanager --list
+sdkmanager "build-tools;28.0.3" "platform-tools" "platforms;android-28" "tools"
+sdkmanager --licenses
+```
+
+- Install the Android NDK:
+
+```
+sdkmanager --install "ndk;20.0.5594570"
+```
+
+- Install java 8:
+
+```
+brew tap adoptopenjdk/openjdk
+brew install --cask adoptopenjdk8
+```
+
+Existing users of Homebrew may encounter Error: Cask adoptopenjdk8 exists in multiple taps due to prior workarounds with different instructions. This can be solved by fully specifying the location with:
+
+```
+brew install --cask adoptopenjdk/openjdk/adoptopenjdk8
+```
+
+- Install Rust:
+
+```
+curl https://sh.rustup.rs -sSf | sh
+rustup toolchain install 1.41.0
+rustup install 1.41.0
+rustup target add wasm32-unknown-unknown --toolchain 1.41.0
+rustup default 1.41.0
+rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
+```
+
+- Install wasm-prkg:
+
+```
+$ curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+```
+
+- Install gradle:
+
+```
+brew install gradle
 ```
 
 - Clone project:
@@ -39,76 +110,6 @@ $ cd yoroi-mobile
 
 ```
 $ yarn install
-```
-
-### Android Instalation
-
-- [set up react native environment and test default react native ios android app](https://reactnative.dev/docs/environment-setup)
-
-- Add this to your .bashrc/.zshrc file:
-
-```
-export ANDROID_SDK_ROOT=$HOME/Library/Android/sdk
-export PATH=$PATH:$ANDROID_SDK_ROOT/emulator
-export PATH=$PATH:$ANDROID_SDK_ROOT/platform-tools
-export PATH=$PATH:$ANDROID_SDK_ROOT/tools/bin
-```
-
-- Check `sdkmanager`:
-
-```
-sdkmanager --version
-```
-
-- Install java 8:
-
-```
-$ brew tap adoptopenjdk/openjdk
-$ brew install --cask adoptopenjdk8
-```
-
-Existing users of Homebrew may encounter Error: Cask adoptopenjdk8 exists in multiple taps due to prior workarounds with different instructions. This can be solved by fully specifying the location with:
-
-```
-$ brew install --cask adoptopenjdk/openjdk/adoptopenjdk8
-```
-
-- Install Rust:
-
-```
-$ curl https://sh.rustup.rs -sSf | sh
-$ rustup toolchain install 1.41.0
-$ rustup install 1.41.0
-$ rustup target add wasm32-unknown-unknown --toolchain 1.41.0
-$ rustup default 1.41.0
-$ rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
-```
-
-- Install wasm-prkg:
-
-```
-$ curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
-```
-
-- Update the Android SDK (if there are errors try with sudo):
-
-```
-$ sdkmanager --update
-$ sdkmanager --list
-$ sdkmanager "build-tools;28.0.3" "platform-tools" "platforms;android-28" "tools"
-$ sdkmanager --licenses
-```
-
-- Install the Android NDK:
-
-```
-sdkmanager --install "ndk;20.0.5594570"
-```
-
-- Install gradle:
-
-```
-brew install gradle
 ```
 
 #### Optional
