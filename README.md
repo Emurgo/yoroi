@@ -18,7 +18,7 @@ Looking for the Yoroi Extension? See [here](https://github.com/Emurgo/yoroi-fron
 
 ```
 nvm install 16.5.0
-nvm nvm alias default 16.5.0
+nvm alias default 16.5.0
 ```
 
 - Install yarn:
@@ -30,8 +30,8 @@ npm install -g yarn
 - Install python `2.7.18`:
 
 ```
-$ brew install pyenv
-$ pyenv install 2.7.18
+brew install pyenv
+pyenv install 2.7.18
 ```
 
 ### Android Instalation
@@ -102,14 +102,14 @@ brew install gradle
 - Clone project:
 
 ```
-$ git clone https://github.com/Emurgo/yoroi-mobile.git
-$ cd yoroi-mobile
+git clone https://github.com/Emurgo/yoroi-mobile.git
+cd yoroi-mobile
 ```
 
 - Install project dependencies:
 
 ```
-$ yarn install
+yarn install
 ```
 
 #### Optional
