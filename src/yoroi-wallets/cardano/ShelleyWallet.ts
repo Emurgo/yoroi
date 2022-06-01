@@ -39,11 +39,11 @@ import {NETWORK_REGISTRY} from '../../legacy/types'
 import {deriveRewardAddressHex, normalizeToAddress, toHexOrBase58} from '../../legacy/utils'
 import {SendTokenList, Token} from '../../types'
 import * as YoroiLib from '../cardano'
+import {yoroiUnsignedTx} from '../CardanoUnsignedTx'
 import {YoroiUnsignedTx} from '../types'
 import {genTimeToSlot, genToAbsoluteSlotNumber} from '../utils/timeUtils'
 import {versionCompare} from '../utils/versioning'
 import Wallet, {WalletJSON} from '../Wallet'
-import {yoroiUnsignedTx} from '../yoroiUnsignedTx'
 import {
   Address,
   Bip32PrivateKey,

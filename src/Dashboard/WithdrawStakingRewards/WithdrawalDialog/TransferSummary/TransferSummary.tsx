@@ -10,8 +10,8 @@ import {formatTokenWithText} from '../../../../legacy/format'
 import {getNetworkConfigById} from '../../../../legacy/networks'
 import {COLORS} from '../../../../theme'
 import {YoroiWallet} from '../../../../yoroi-wallets'
+import {Amounts, Entries} from '../../../../yoroi-wallets/CardanoUnsignedTx'
 import {YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
-import {Amounts, Entries} from '../../../../yoroi-wallets/yoroiUnsignedTx'
 
 export const TransferSummary: React.FC<{
   wallet: YoroiWallet

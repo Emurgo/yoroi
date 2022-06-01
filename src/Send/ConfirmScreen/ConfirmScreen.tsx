@@ -15,7 +15,7 @@ import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {TokenEntry} from '../../types'
 import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
-import {Entries} from '../../yoroi-wallets/yoroiUnsignedTx'
+import {Entries} from '../../yoroi-wallets/utils'
 
 export type Params = {
   yoroiUnsignedTx: YoroiUnsignedTx
@@ -93,7 +93,7 @@ export const ConfirmScreen = () => {
               throw new Error('Function not implemented.')
             }}
             onSuccess={onSuccess}
-            yoroiUnsignedTx={yoroiUnsignedTx}
+            unsignedTx={unsignedTx}
             wallet={wallet}
           />
         </Actions>
