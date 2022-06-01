@@ -11,7 +11,7 @@ export type YoroiTxRequest = {
   voting: {
     registrations: YoroiEntries
   }
-  auxiliary: YoroiAuxiliary
+  metadata: YoroiMetadata
   other?: Record<string, unknown>
 }
 
@@ -19,16 +19,24 @@ export type YoroiTx = {
   entries: YoroiEntries
   amounts: YoroiAmounts
   fee: YoroiAmounts
-  auxiliary: YoroiAuxiliary
+  metadata?: YoroiMetadata
   change: YoroiEntries
-  staking: {
+  staking?: {
     registrations: YoroiEntries
     deregistrations: YoroiEntries
     delegations: YoroiEntries
     withdrawals: YoroiEntries
   }
-  voting: {
+  voting?: {
     registrations: YoroiEntries
+  }
+  mint?: {
+    nfts?: YoroiAmounts
+    tokens?: YoroiAmounts
+  }
+  scripts?: {
+    plutus?: unknown
+    native?: unknown
   }
   other?: Record<string, unknown>
 }
@@ -68,6 +76,6 @@ export type YoroiAmount = {
   quantity: Quantity
 }
 
-export type YoroiAuxiliary = {
+export type YoroiMetadata = {
   [label: string]: string
 }

@@ -4,9 +4,16 @@ import BigNumber from 'bignumber.js'
 import {CardanoHaskellShelleyNetwork} from '../legacy/networks'
 import {TokenEntry} from '../types'
 import {RewardAddress} from './cardano'
-import {Quantity, YoroiAmount, YoroiAmounts, YoroiAuxiliary, YoroiEntries, YoroiEntry, YoroiUnsignedTx} from './types'
-
-const PRIMARY_TOKEN_ID = ''
+import {
+  Quantity,
+  TokenId,
+  YoroiAmount,
+  YoroiAmounts,
+  YoroiEntries,
+  YoroiEntry,
+  YoroiMetadata,
+  YoroiUnsignedTx,
+} from './types'
 
 export const yoroiUnsignedTx = async ({
   unsignedTx,
@@ -24,15 +31,11 @@ export const yoroiUnsignedTx = async ({
       value: change.values,
     })),
   )
-  const entries = (() => {
-    // entries === (outputs - change)
-    const outputs = toEntries(unsignedTx.outputs)
-    Object.keys(change).forEach((address) => delete outputs[address])
-
-    return outputs
-  })()
-
-  const amounts = Object.values(entries).reduce((result, current) => Amounts.sum([result, current]), {} as YoroiAmounts)
+  const outputEntries = toEntries(unsignedTx.outputs)
+  const changeAddresses = Entries.toAddresses(change)
+  // entries === (outputs - change)
+  const entries = Entries.remove(outputEntries, changeAddresses)
+  const amounts = Entries.toAmounts(entries)
 
   const yoroiTx: YoroiUnsignedTx = {
     amounts,
@@ -51,7 +54,7 @@ export const yoroiUnsignedTx = async ({
         networkConfig,
       }),
     },
-    auxiliary: toAuxiliary(unsignedTx.metadata),
+    metadata: toMetadata(unsignedTx.metadata),
 
     unsignedTx,
     other,
@@ -69,18 +72,21 @@ export const toAmounts = (values: Array<TokenEntry>) =>
   values.reduce(
     (result, current) => ({
       ...result,
-      [current.identifier]: Quantities.sum([result[current.identifier] || '0', current.amount.toString() as Quantity]),
+      [current.identifier]: Quantities.sum([
+        Amounts.getAmount(result, current.identifier).quantity || '0',
+        current.amount.toString() as Quantity,
+      ]),
     }),
     {} as YoroiAmounts,
   )
 
-export const toAuxiliary = (metadata: ReadonlyArray<TxMetadata>) =>
+export const toMetadata = (metadata: ReadonlyArray<TxMetadata>) =>
   metadata.reduce(
     (result, current) => ({
       ...result,
       [current.label]: current.data,
     }),
-    {} as YoroiAuxiliary,
+    {} as YoroiMetadata,
   )
 
 export const toEntries = (addressedValues: ReadonlyArray<AddressedValue>) =>
@@ -203,44 +209,7 @@ const Voting = {
       }, Promise.resolve({} as YoroiEntries)),
 }
 
-export const Quantities = {
-  sum: (quantities: Array<Quantity>) =>
-    quantities.reduce((result, current) => result.plus(current), new BigNumber(0)).toString() as Quantity,
-  diff: (quantity1: Quantity, quantity2: Quantity) =>
-    new BigNumber(quantity1).minus(new BigNumber(quantity2)).toString() as Quantity,
-  negated: (quantity: Quantity) => new BigNumber(quantity).negated().toString() as Quantity,
-}
-
-export const Amounts = {
-  sum: (amounts: Array<YoroiAmounts>) =>
-    amounts
-      .map((amounts) => Object.entries(amounts))
-      .flat()
-      .reduce(
-        (result, [tokenId, quantity]) => ({
-          ...result,
-          [tokenId]: Quantities.sum([result[tokenId] || '0', quantity]),
-        }),
-        {} as YoroiAmounts,
-      ),
-
-  diff: (amounts1: YoroiAmounts, amounts2: YoroiAmounts) => Amounts.sum([amounts1, Amounts.negated(amounts2)]),
-  negated: (amounts: YoroiAmounts) =>
-    Object.fromEntries(Object.entries(amounts).map(([tokenId, amount]) => [tokenId, Quantities.negated(amount)])),
-  getAmount: (amounts: YoroiAmounts, tokenId: string): YoroiAmount => ({
-    tokenId,
-    quantity: amounts[tokenId] || '0',
-  }),
-}
-
 export const Entries = {
-  getPrimaryAmount: (entries: YoroiEntries): YoroiAmount => Entries.getAmount(Entries.first(entries), PRIMARY_TOKEN_ID),
-  getSecondaryAmounts: (entries: YoroiEntries): YoroiAmounts => {
-    const amounts = Entries.first(entries).amounts
-    const secondaryAmountsTuples = Object.entries(amounts).filter(([tokenId]) => tokenId !== PRIMARY_TOKEN_ID)
-
-    return Object.fromEntries(secondaryAmountsTuples)
-  },
   first: (entries: YoroiEntries): YoroiEntry => {
     const addresses = Object.keys(entries)
     if (addresses.length > 1) throw new Error('multiple addresses not supported')
@@ -252,6 +221,64 @@ export const Entries = {
       amounts: firstEntry[1],
     }
   },
-  getAmount: (entry: YoroiEntry, tokenId: string): YoroiAmount => Amounts.getAmount(entry.amounts, tokenId),
-  toAmounts: (entries: YoroiEntries): YoroiAmounts => Amounts.sum(Object.values(entries)),
+  remove: (entries: YoroiEntries, removeAddresses: Array<string>): YoroiEntries => {
+    const _entries = Object.entries(entries)
+    const filteredEntries = _entries.filter(([address]) => !removeAddresses.includes(address))
+
+    return Object.fromEntries(filteredEntries)
+  },
+  toAddresses: (entries: YoroiEntries): Array<string> => {
+    return Object.keys(entries)
+  },
+  toAmounts: (entries: YoroiEntries): YoroiAmounts => {
+    const amounts = Object.values(entries)
+
+    return Amounts.sum(amounts)
+  },
+}
+
+export const Amounts = {
+  sum: (amounts: Array<YoroiAmounts>): YoroiAmounts => {
+    const entries = amounts.map((amounts) => Object.entries(amounts)).flat()
+
+    return entries.reduce(
+      (result, [tokenId, quantity]) => ({
+        ...result,
+        [tokenId]: result[tokenId] ? Quantities.sum([result[tokenId], quantity]) : quantity,
+      }),
+      {} as YoroiAmounts,
+    )
+  },
+  diff: (amounts1: YoroiAmounts, amounts2: YoroiAmounts): YoroiAmounts => {
+    return Amounts.sum([amounts1, Amounts.negated(amounts2)])
+  },
+  negated: (amounts: YoroiAmounts): YoroiAmounts => {
+    const entries = Object.entries(amounts)
+    const negatedEntries = entries.map(([tokenId, amount]) => [tokenId, Quantities.negated(amount)])
+
+    return Object.fromEntries(negatedEntries)
+  },
+  remove: (amounts: YoroiAmounts, removeTokenIds: Array<TokenId>): YoroiAmounts => {
+    const filteredEntries = Object.entries(amounts).filter(([tokenId]) => !removeTokenIds.includes(tokenId))
+
+    return Object.fromEntries(filteredEntries)
+  },
+  getAmount: (amounts: YoroiAmounts, tokenId: string): YoroiAmount => {
+    return {
+      tokenId,
+      quantity: amounts[tokenId] || '0',
+    }
+  },
+}
+
+export const Quantities = {
+  sum: (quantities: Array<Quantity>) => {
+    return quantities.reduce((result, current) => result.plus(current), new BigNumber(0)).toString() as Quantity
+  },
+  diff: (quantity1: Quantity, quantity2: Quantity) => {
+    return new BigNumber(quantity1).minus(new BigNumber(quantity2)).toString() as Quantity
+  },
+  negated: (quantity: Quantity) => {
+    return new BigNumber(quantity).negated().toString() as Quantity
+  },
 }
