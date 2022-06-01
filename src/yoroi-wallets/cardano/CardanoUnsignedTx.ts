@@ -1,10 +1,9 @@
-import {MultiTokenValue, TxMetadata, UnsignedTx} from '@emurgo/yoroi-lib-core'
+import {MultiTokenValue, TokenEntry, TxMetadata, UnsignedTx} from '@emurgo/yoroi-lib-core'
 
-import {CardanoHaskellShelleyNetwork} from '../legacy/networks'
-import {TokenEntry} from '../types'
-import {RewardAddress} from './cardano'
-import {Quantity, YoroiAmounts, YoroiEntries, YoroiMetadata, YoroiUnsignedTx} from './types'
-import {Amounts, Entries, Quantities} from './utils'
+import {CardanoHaskellShelleyNetwork} from '../../legacy/networks'
+import {Quantity, YoroiAmounts, YoroiEntries, YoroiMetadata, YoroiUnsignedTx} from '../types'
+import {Amounts, Entries, Quantities} from '../utils'
+import {RewardAddress} from '.'
 
 export const yoroiUnsignedTx = async ({
   unsignedTx,
