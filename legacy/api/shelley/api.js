@@ -29,8 +29,10 @@ type Addresses = Array<string>
 export const checkServerStatus = (config: BackendConfig): Promise<ServerStatusResponse> =>
   fetchDefault('status', null, config, 'GET')
 
-export const getBestBlock = (config: BackendConfig): Promise<BestblockResponse> =>
-  fetchDefault('v2/bestblock', null, config, 'GET')
+export const getBestBlock = async (config: BackendConfig): Promise<BestblockResponse> => {
+  const response = await fetchDefault('v2/tipStatus', null, config, 'GET')
+  return response.safeBlock
+}
 
 export const fetchNewTxHistory = async (
   request: TxHistoryRequest,
