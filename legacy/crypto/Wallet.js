@@ -228,7 +228,7 @@ export default class Wallet {
     const backendConfig = getCardanoNetworkConfigById(this.networkId, this.provider).BACKEND
     const filterFn = (addrs) => api.filterUsedAddresses(addrs, backendConfig)
     await Promise.all([this.internalChain.sync(filterFn), this.externalChain.sync(filterFn)])
-
+    const currentBestBlock = await api.getBestBlock(backendConfig)
     const addresses =
       this.rewardAddressHex != null
         ? [...this.internalChain.getBlocks(), ...this.externalChain.getBlocks(), ...[[this.rewardAddressHex]]]
@@ -242,6 +242,7 @@ export default class Wallet {
           addresses,
           this.networkId,
           this.provider,
+          currentBestBlock,
         )
       }
     }

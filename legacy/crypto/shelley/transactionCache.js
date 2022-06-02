@@ -5,7 +5,7 @@ import {defaultMemoize} from 'reselect'
 
 import {ApiHistoryError} from '../../api/errors'
 import * as api from '../../api/shelley/api'
-import type {RemoteCertificateMeta, TxHistoryRequest} from '../../api/types'
+import type {BestblockResponse, RemoteCertificateMeta, TxHistoryRequest} from '../../api/types'
 import {CERTIFICATE_KIND} from '../../api/types'
 import {CONFIG} from '../../config/config'
 import {getCardanoNetworkConfigById} from '../../config/networks'
@@ -294,11 +294,15 @@ export class TransactionCache {
     return sum(updated, (x) => (x ? 1 : 0))
   }
 
-  async doSyncStep(blocks: Array<Array<string>>, networkId: NetworkId, provider: ?YoroiProvider): Promise<boolean> {
+  async doSyncStep(
+    blocks: Array<Array<string>>,
+    networkId: NetworkId,
+    provider: ?YoroiProvider,
+    currentBestBlock: BestblockResponse,
+  ): Promise<boolean> {
     let count = 0
     let wasPaginated = false
     const errors = []
-    const currentBestBlock = await api.getBestBlock(getCardanoNetworkConfigById(networkId, provider).BACKEND)
 
     const tasks = blocks.map((addrs) => {
       const metadata = this._getBlockMetadata(addrs)
