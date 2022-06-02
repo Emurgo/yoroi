@@ -2,6 +2,9 @@ import BigNumber from 'bignumber.js'
 
 import {Quantity, TokenId, YoroiAmount, YoroiAmounts, YoroiEntries, YoroiEntry} from './types'
 
+const polyfill = (arr: Array<any>) => arr.reduce((acc, [k, v]) => ((acc[k] = v), acc), {})
+Object.fromEntries = Object.fromEntries || polyfill
+
 export const Entries = {
   first: (entries: YoroiEntries): YoroiEntry => {
     const addresses = Object.keys(entries)

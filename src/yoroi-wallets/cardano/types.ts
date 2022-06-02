@@ -25,7 +25,7 @@ import {
   Token,
   TokenInfo,
 } from '../../types'
-import {YoroiUnsignedTx} from '../types'
+import {CardanoSignedTx, YoroiUnsignedTx} from '../types'
 import Wallet, {WalletJSON} from '../Wallet'
 import type {Addresses} from './chain'
 import {AddressChain} from './chain'
@@ -187,7 +187,7 @@ export interface WalletInterface {
     serverTime: Date | void,
   ): Promise<YoroiUnsignedTx>
 
-  signTxWithLedger(request: YoroiUnsignedTx, useUSB: boolean): Promise<SignedTx>
+  signTxWithLedger(request: YoroiUnsignedTx, useUSB: boolean): Promise<CardanoSignedTx>
 
   // =================== backend API =================== //
 

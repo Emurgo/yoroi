@@ -1,6 +1,7 @@
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {useIntl} from 'react-intl'
+import {ActivityIndicator, StyleSheet, View} from 'react-native'
 
 import {TwoActionView} from '../../../components'
 import {useSignAndSubmitTx} from '../../../hooks'
@@ -32,37 +33,56 @@ export const ConfirmTxWithOS: React.FC<Props> = ({wallet, unsignedTx, onSuccess,
   )
 
   return (
-    <TwoActionView
-      title={strings.confirmTx}
-      primaryButton={{
-        disabled: isLoading,
-        label: strings.confirmButton,
-        onPress: async () =>
-          ensureKeysValidity(wallet.id)
-            .then(() =>
-              navigation.navigate('biometrics', {
-                keyId: wallet.id,
-                onSuccess: async (masterKey) => signAndSubmitTx({unsignedTx, masterKey}),
-                onFail: () => navigation.goBack(),
+    <>
+      <TwoActionView
+        title={strings.confirmTx}
+        primaryButton={{
+          disabled: isLoading,
+          label: strings.confirmButton,
+          onPress: async () =>
+            ensureKeysValidity(wallet.id)
+              .then(() =>
+                navigation.navigate('biometrics', {
+                  keyId: wallet.id,
+                  onSuccess: async (masterKey) => {
+                    console.log('QWE', 'on auth success')
+                    return signAndSubmitTx({unsignedTx, masterKey})
+                  },
+                  onFail: () => navigation.goBack(),
+                }),
+              )
+              .catch(async (error) => {
+                if (error instanceof SystemAuthDisabled) {
+                  onCancel()
+                  await walletManager.closeWallet()
+                  await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
+                  navigation.navigate('app-root', {screen: 'wallet-selection'})
+                }
               }),
-            )
-            .catch(async (error) => {
-              if (error instanceof SystemAuthDisabled) {
-                onCancel()
-                await walletManager.closeWallet()
-                await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
-                navigation.navigate('app-root', {screen: 'wallet-selection'})
-              }
-            }),
-      }}
-      secondaryButton={{
-        disabled: isLoading,
-        onPress: () => onCancel(),
-      }}
-    >
-      <TransferSummary wallet={wallet} unsignedTx={unsignedTx} />
-    </TwoActionView>
+        }}
+        secondaryButton={{
+          disabled: isLoading,
+          onPress: () => onCancel(),
+        }}
+      >
+        <TransferSummary wallet={wallet} unsignedTx={unsignedTx} />
+      </TwoActionView>
+
+      <LoadingOverlay loading={isLoading} />
+    </>
   )
+}
+
+const LoadingOverlay: React.FC<{loading: boolean}> = ({loading}) => {
+  return loading ? (
+    <View style={StyleSheet.absoluteFill}>
+      <View style={[StyleSheet.absoluteFill, {opacity: 0.5, backgroundColor: 'pink'}]} />
+
+      <View style={[StyleSheet.absoluteFill, {alignItems: 'center', justifyContent: 'center'}]}>
+        <ActivityIndicator animating size="large" color="black" />
+      </View>
+    </View>
+  ) : null
 }
 
 const useStrings = () => {

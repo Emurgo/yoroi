@@ -1,33 +1,36 @@
 import {MultiTokenValue, TokenEntry, TxMetadata, UnsignedTx} from '@emurgo/yoroi-lib-core'
 
 import {CardanoHaskellShelleyNetwork} from '../../legacy/networks'
-import {Quantity, YoroiAmounts, YoroiEntries, YoroiMetadata, YoroiUnsignedTx} from '../types'
+import {CardanoSignedTx, CardanoUnsignedTx, Quantity, YoroiAmounts, YoroiEntries, YoroiMetadata} from '../types'
 import {Amounts, Entries, Quantities} from '../utils'
-import {RewardAddress} from '.'
+import {hashTransaction, RewardAddress} from '.'
+import {Transaction} from './types'
 
 export const yoroiUnsignedTx = async ({
   unsignedTx,
-  networkConfig,
-  other,
+  other: {networkConfig},
 }: {
   unsignedTx: UnsignedTx
-  networkConfig: CardanoHaskellShelleyNetwork
-  other?: Record<string, unknown>
+  other: {
+    networkConfig: CardanoHaskellShelleyNetwork
+    ledgerNanoCatalystRegistrationTxSignData?: {
+      votingPublicKey: string
+      stakingKeyPath: Array<number>
+      stakingKey: string
+      rewardAddress: string
+      nonce: number
+    }
+  }
 }) => {
   const fee = toAmounts(unsignedTx.fee.values)
-  const change = toEntries(
-    unsignedTx.change.map((change) => ({
-      address: change.address,
-      value: change.values,
-    })),
-  )
+  const change = toEntries(unsignedTx.change.map((change) => ({address: change.address, value: change.values})))
   const outputEntries = toEntries(unsignedTx.outputs)
   const changeAddresses = Entries.toAddresses(change)
   // entries === (outputs - change)
   const entries = Entries.remove(outputEntries, changeAddresses)
   const amounts = Entries.toAmounts(entries)
 
-  const yoroiTx: YoroiUnsignedTx = {
+  const yoroiTx: CardanoUnsignedTx = {
     amounts,
     entries,
     fee,
@@ -41,16 +44,24 @@ export const yoroiUnsignedTx = async ({
     voting: {
       registrations: await Voting.toRegistrations({
         metadata: unsignedTx.metadata,
-        networkConfig,
+        networkConfig: networkConfig,
       }),
     },
     metadata: toMetadata(unsignedTx.metadata),
-
     unsignedTx,
-    other,
   }
 
   return yoroiTx
+}
+
+export const yoroiSignedTx = async (unsignedTx: CardanoUnsignedTx, signedTx: Transaction): Promise<CardanoSignedTx> => {
+  const id = Buffer.from(await (await hashTransaction(await signedTx.body())).toBytes()).toString('hex')
+  const encodedTx = await signedTx.toBytes()
+
+  return {
+    ...unsignedTx,
+    signedTx: {id, encodedTx},
+  }
 }
 
 type AddressedValue = {

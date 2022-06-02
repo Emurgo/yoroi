@@ -10,8 +10,8 @@ import {formatTokenWithText} from '../../../../legacy/format'
 import {getNetworkConfigById} from '../../../../legacy/networks'
 import {COLORS} from '../../../../theme'
 import {YoroiWallet} from '../../../../yoroi-wallets'
-import {Amounts, Entries} from '../../../../yoroi-wallets/CardanoUnsignedTx'
-import {YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
+import {YoroiStaking, YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
+import {Amounts, Entries} from '../../../../yoroi-wallets/utils'
 
 export const TransferSummary: React.FC<{
   wallet: YoroiWallet
@@ -19,14 +19,7 @@ export const TransferSummary: React.FC<{
 }> = ({wallet, unsignedTx}) => {
   const strings = useStrings()
   const tokenInfo = useTokenInfo({wallet, tokenId: ''})
-
-  const withdrawalAmounts = Entries.toAmounts(unsignedTx.staking.withdrawals)
-  const deregistrationAmounts = Entries.toAmounts(unsignedTx.staking.deregistrations)
-
-  const refundAmounts = Amounts.sum([withdrawalAmounts, deregistrationAmounts])
-  const refundAmount = Amounts.getAmount(Amounts.sum([withdrawalAmounts, deregistrationAmounts]), '')
-  const feeAmount = Amounts.getAmount(unsignedTx.fee, '')
-  const totalAmount = Amounts.getAmount(Amounts.diff(refundAmounts, unsignedTx.fee), '')
+  const {deregistrations, withdrawals, refundAmount, feeAmount, totalAmount} = withdrawalInfo(unsignedTx)
 
   return (
     <>
@@ -45,14 +38,33 @@ export const TransferSummary: React.FC<{
         <Text style={styles.balanceAmount}>{formatTokenWithText(new BigNumber(totalAmount.quantity), tokenInfo)}</Text>
       </Item>
 
-      <Withdrawals wallet={wallet} withdrawals={unsignedTx.staking.withdrawals} />
-
-      <Deregistrations wallet={wallet} deregistrations={unsignedTx.staking.deregistrations} />
+      {withdrawals && <Withdrawals wallet={wallet} withdrawals={withdrawals} />}
+      {deregistrations && <Deregistrations wallet={wallet} deregistrations={deregistrations} />}
     </>
   )
 }
 
-const Withdrawals: React.FC<{wallet: YoroiWallet; withdrawals: YoroiUnsignedTx['staking']['withdrawals']}> = ({
+const withdrawalInfo = (unsignedTx: YoroiUnsignedTx) => {
+  const withdrawalAmounts = Entries.toAmounts(unsignedTx.staking?.withdrawals || {})
+  const deregistrationAmounts = Entries.toAmounts(unsignedTx.staking?.deregistrations || {})
+  const refundAmounts = Amounts.sum([withdrawalAmounts, deregistrationAmounts])
+  const refundAmount = Amounts.getAmount(Amounts.sum([withdrawalAmounts, deregistrationAmounts]), '')
+  const feeAmount = Amounts.getAmount(unsignedTx.fee, '')
+  const totalAmount = Amounts.getAmount(Amounts.diff(refundAmounts, unsignedTx.fee), '')
+
+  const deregistrations = unsignedTx.staking?.deregistrations
+  const withdrawals = unsignedTx.staking?.withdrawals
+
+  return {
+    deregistrations,
+    withdrawals,
+    refundAmount,
+    feeAmount,
+    totalAmount,
+  }
+}
+
+const Withdrawals: React.FC<{wallet: YoroiWallet; withdrawals: YoroiStaking['withdrawals']}> = ({
   wallet,
   withdrawals,
 }) => {
@@ -79,43 +91,45 @@ const Withdrawals: React.FC<{wallet: YoroiWallet; withdrawals: YoroiUnsignedTx['
   )
 }
 
-const Deregistrations: React.FC<{wallet: YoroiWallet; deregistrations: YoroiUnsignedTx['staking']['deregistrations']}> =
-  ({wallet, deregistrations}) => {
-    const strings = useStrings()
-    const tokenInfo = useTokenInfo({wallet, tokenId: ''})
-    const refundAmounts = Entries.toAmounts(deregistrations)
-    const primaryAmount = Amounts.getAmount(refundAmounts, '')
+const Deregistrations: React.FC<{
+  wallet: YoroiWallet
+  deregistrations: YoroiStaking['deregistrations']
+}> = ({wallet, deregistrations}) => {
+  const strings = useStrings()
+  const tokenInfo = useTokenInfo({wallet, tokenId: ''})
+  const refundAmounts = Entries.toAmounts(deregistrations)
+  const primaryAmount = Amounts.getAmount(refundAmounts, '')
 
-    const addresses = Object.keys(deregistrations)
-    if (addresses.length < 1) return null
+  const addresses = Object.keys(deregistrations)
+  if (addresses.length < 1) return null
 
-    return (
-      <>
-        <Item>
-          <Text>{strings.stakeDeregistration}</Text>
-          {addresses.map((address) => (
-            <TouchableOpacity
-              key={address}
-              activeOpacity={0.5}
-              onPress={() => Linking.openURL(getNetworkConfigById(wallet.networkId).EXPLORER_URL_FOR_ADDRESS(address))}
-            >
-              <Text numberOfLines={1} ellipsizeMode="middle" secondary>
-                {address}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </Item>
+  return (
+    <>
+      <Item>
+        <Text>{strings.stakeDeregistration}</Text>
+        {addresses.map((address) => (
+          <TouchableOpacity
+            key={address}
+            activeOpacity={0.5}
+            onPress={() => Linking.openURL(getNetworkConfigById(wallet.networkId).EXPLORER_URL_FOR_ADDRESS(address))}
+          >
+            <Text numberOfLines={1} ellipsizeMode="middle" secondary>
+              {address}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </Item>
 
-        <Item>
-          <Text>
-            {strings.unregisterExplanation({
-              refundAmount: formatTokenWithText(new BigNumber(primaryAmount.quantity), tokenInfo),
-            })}
-          </Text>
-        </Item>
-      </>
-    )
-  }
+      <Item>
+        <Text>
+          {strings.unregisterExplanation({
+            refundAmount: formatTokenWithText(new BigNumber(primaryAmount.quantity), tokenInfo),
+          })}
+        </Text>
+      </Item>
+    </>
+  )
+}
 
 const Item = (props: ViewProps) => <View {...props} style={styles.item} />
 

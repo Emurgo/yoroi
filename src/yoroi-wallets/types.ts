@@ -15,39 +15,49 @@ export type YoroiTxRequest = {
   other?: Record<string, unknown>
 }
 
-export type YoroiTx = {
+export type YoroiUnsignedTx = {
   entries: YoroiEntries
   amounts: YoroiAmounts
   fee: YoroiAmounts
   metadata?: YoroiMetadata
   change: YoroiEntries
-  staking?: {
-    registrations: YoroiEntries
-    deregistrations: YoroiEntries
-    delegations: YoroiEntries
-    withdrawals: YoroiEntries
-  }
-  voting?: {
-    registrations: YoroiEntries
-  }
-  mint?: {
-    nfts?: YoroiAmounts
-    tokens?: YoroiAmounts
-  }
-  scripts?: {
-    plutus?: unknown
-    native?: unknown
-  }
+  staking?: YoroiStaking
+  voting?: YoroiVoting
+  mint?: YoroiMint
+  scripts?: YoroiScripts
   other?: Record<string, unknown>
 }
 
-export type YoroiUnsignedTx = YoroiTx & {
+export type YoroiStaking = {
+  registrations: YoroiEntries
+  deregistrations: YoroiEntries
+  delegations: YoroiEntries
+  withdrawals: YoroiEntries
+}
+
+export type YoroiVoting = {
+  registrations: YoroiEntries
+}
+
+export type YoroiMint = {
+  nfts: YoroiAmounts
+  tokens: YoroiAmounts
+}
+
+export type YoroiScripts = {
+  plutus: unknown
+  native: unknown
+}
+
+export type CardanoUnsignedTx = YoroiUnsignedTx & {
   unsignedTx: UnsignedTx
 }
 
-export type YoroiSignedTx = YoroiTx & {
+export type CardanoSignedTx = YoroiUnsignedTx & {
   signedTx: SignedTx
 }
+
+export type YoroiSignedTx = CardanoSignedTx
 
 export type Address = string
 export type Quantity = `${number}`
