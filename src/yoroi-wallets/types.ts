@@ -1,3 +1,4 @@
+import {SignTransactionRequest} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import {SignedTx, UnsignedTx} from '@emurgo/yoroi-lib-core'
 
 export type YoroiTxRequest = {
@@ -25,7 +26,10 @@ export type YoroiUnsignedTx = {
   voting?: YoroiVoting
   mint?: YoroiMint
   scripts?: YoroiScripts
-  other?: Record<string, unknown>
+  hw?: {
+    ledgerPayload?: SignTransactionRequest
+  }
+  other: Record<string, unknown>
 }
 
 export type YoroiStaking = {

@@ -1,3 +1,4 @@
+import {SignTransactionRequest} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import {MultiTokenValue, TokenEntry, TxMetadata, UnsignedTx} from '@emurgo/yoroi-lib-core'
 
 import {CardanoHaskellShelleyNetwork} from '../../legacy/networks'
@@ -8,11 +9,12 @@ import {Transaction} from './types'
 
 export const yoroiUnsignedTx = async ({
   unsignedTx,
-  other: {networkConfig},
+  other: {networkConfig, ledgerPayload, ledgerNanoCatalystRegistrationTxSignData},
 }: {
   unsignedTx: UnsignedTx
   other: {
     networkConfig: CardanoHaskellShelleyNetwork
+    ledgerPayload?: SignTransactionRequest
     ledgerNanoCatalystRegistrationTxSignData?: {
       votingPublicKey: string
       stakingKeyPath: Array<number>
@@ -48,14 +50,23 @@ export const yoroiUnsignedTx = async ({
       }),
     },
     metadata: toMetadata(unsignedTx.metadata),
+
     unsignedTx,
+    other: {
+      ledgerNanoCatalystRegistrationTxSignData,
+      ledgerPayload,
+    },
   }
 
   return yoroiTx
 }
 
 export const yoroiSignedTx = async (unsignedTx: CardanoUnsignedTx, signedTx: Transaction): Promise<CardanoSignedTx> => {
-  const id = Buffer.from(await (await hashTransaction(await signedTx.body())).toBytes()).toString('hex')
+  const id = await signedTx
+    .body()
+    .then((txBody) => hashTransaction(txBody))
+    .then((hash) => hash.toBytes())
+    .then((bytes) => Buffer.from(bytes).toString('hex'))
   const encodedTx = await signedTx.toBytes()
 
   return {

@@ -782,7 +782,8 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
 
   async signTxWithLedger(unsignedTx: CardanoUnsignedTx, useUSB: boolean): Promise<CardanoSignedTx> {
     if (!this.hwDeviceInfo) throw new Error('Invalid wallet state')
-    if (!this.publicKeyHex) throw new Error('invalid wallet state')
+    if (!this.publicKeyHex) throw new Error('Invalid wallet state')
+    if (!unsignedTx.hw?.ledgerPayload) throw new Error('Invalid transaction type')
 
     const addressingInfo = {
       ...Entries.toAddresses(unsignedTx.change).reduce(
