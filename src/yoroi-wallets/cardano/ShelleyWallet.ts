@@ -50,7 +50,7 @@ import {
   RewardAddress,
   StakeCredential,
 } from '.'
-import {yoroiSignedTx, yoroiUnsignedTx} from './CardanoUnsignedTx'
+import {yoroiUnsignedTx} from './CardanoUnsignedTx'
 import {AddressChain, AddressGenerator} from './chain'
 import {HaskellShelleyTxSignRequest} from './HaskellShelleyTxSignRequest'
 import {filterAddressesByStakingKey, getDelegationStatus} from './shelley/delegationUtils'
@@ -544,11 +544,11 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
       .then((key) => key.derive(0 + CONFIG.NUMBERS.HARD_DERIVATION_START))
       .then((key) => key.asBytes())
       .then((bytes) => toHex(bytes))
-    const wits = new Set<string>()
+
     const signedTx = await unsignedTx.unsignedTx.sign(
       CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.ACCOUNT,
       accountPvrKey,
-      wits,
+      new Set<string>(),
       [],
     )
 
@@ -812,7 +812,10 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     const signedLedgerTx = await signTxWithLedger(ledgerPayload, this.hwDeviceInfo, useUSB)
     const signedTx = await buildSignedTransaction(unsignedTx, signedLedgerTx, this._getPurpose(), this.publicKeyHex)
 
-    return yoroiSignedTx(unsignedTx, signedTx)
+    return {
+      ...unsignedTx,
+      signedTx,
+    }
   }
 
   // =================== backend API =================== //

@@ -25,6 +25,7 @@ import {
   ByronAddress,
   CardanoTypes,
   Ed25519Signature,
+  hashTransaction,
   RewardAddress,
   Transaction,
   TransactionWitnessSet,
@@ -192,7 +193,19 @@ export const buildSignedTransaction = async (
   }
 
   // TODO: handle script witnesses
-  return await Transaction.new(tx.unsignedTx.txBody, witSet, tx.unsignedTx.auxiliaryData as any)
+  const signedTx = await Transaction.new(tx.unsignedTx.txBody, witSet, tx.unsignedTx.auxiliaryData as any)
+
+  const id = await signedTx
+    .body()
+    .then((txBody) => hashTransaction(txBody))
+    .then((hash) => hash.toBytes())
+    .then((bytes) => Buffer.from(bytes).toString('hex'))
+  const encodedTx = await signedTx.toBytes()
+
+  return {
+    id,
+    encodedTx,
+  }
 }
 
 const connectionHandler = async (

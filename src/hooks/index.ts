@@ -31,7 +31,7 @@ import {
   YoroiWallet,
 } from '../yoroi-wallets'
 import {generateShelleyPlateFromKey} from '../yoroi-wallets/cardano/shelley/plate'
-import {CardanoSignedTx, CardanoUnsignedTx, YoroiUnsignedTx} from '../yoroi-wallets/types'
+import {CardanoSignedTx, CardanoUnsignedTx, YoroiSignedTx, YoroiUnsignedTx} from '../yoroi-wallets/types'
 
 // WALLET
 export const useCloseWallet = (options?: UseMutationOptions<void, Error>) => {
@@ -467,12 +467,8 @@ export const useUpdateHWDeviceInfo = ({wallet}: {wallet: YoroiWallet}) => {
 export const useSignWithPasswordAndSubmitTx = (
   {wallet, storage}: {wallet: YoroiWallet; storage: typeof KeyStore},
   options?: {
-    signTx?: UseMutationOptions<
-      CardanoSignedTx,
-      Error,
-      {unsignedTx: YoroiUnsignedTx; password: string; intl: IntlShape}
-    >
-    submitTx?: UseMutationOptions<TxSubmissionStatus, Error, CardanoSignedTx>
+    signTx?: UseMutationOptions<YoroiSignedTx, Error, {unsignedTx: YoroiUnsignedTx; password: string; intl: IntlShape}>
+    submitTx?: UseMutationOptions<TxSubmissionStatus, Error, YoroiSignedTx>
   },
 ) => {
   const signTx = useSignTxWithPassword(
@@ -588,13 +584,14 @@ export const useSignTx = (
 export const useSignTxWithPassword = (
   {wallet, storage}: {wallet: YoroiWallet; storage: typeof KeyStore},
   options: UseMutationOptions<
-    CardanoSignedTx,
+    YoroiSignedTx,
     Error,
-    {unsignedTx: CardanoUnsignedTx; password: string; intl: IntlShape}
+    {unsignedTx: YoroiUnsignedTx; password: string; intl: IntlShape}
   > = {},
 ) => {
   const mutation = useMutation({
     mutationFn: async ({unsignedTx, password, intl}) => {
+      if (unsignedTx.type !== 'cardano') throw new Error('Invalid transaction')
       const masterKey = await storage.getData(wallet.id, 'MASTER_PASSWORD', '', password, intl)
 
       return wallet.signTx(unsignedTx, masterKey)
