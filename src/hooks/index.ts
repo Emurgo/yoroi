@@ -1,4 +1,4 @@
-import {SignedTx, TxMetadata} from '@emurgo/yoroi-lib-core'
+import {TxMetadata} from '@emurgo/yoroi-lib-core'
 import BigNumber from 'bignumber.js'
 import {delay} from 'bluebird'
 import cryptoRandomString from 'crypto-random-string'
@@ -31,7 +31,7 @@ import {
   YoroiWallet,
 } from '../yoroi-wallets'
 import {generateShelleyPlateFromKey} from '../yoroi-wallets/cardano/shelley/plate'
-import {YoroiUnsignedTx} from '../yoroi-wallets/types'
+import {CardanoSignedTx, CardanoUnsignedTx, YoroiUnsignedTx} from '../yoroi-wallets/types'
 
 // WALLET
 export const useCloseWallet = (options?: UseMutationOptions<void, Error>) => {
@@ -467,8 +467,12 @@ export const useUpdateHWDeviceInfo = ({wallet}: {wallet: YoroiWallet}) => {
 export const useSignWithPasswordAndSubmitTx = (
   {wallet, storage}: {wallet: YoroiWallet; storage: typeof KeyStore},
   options?: {
-    signTx?: UseMutationOptions<SignedTx, Error, {unsignedTx: YoroiUnsignedTx; password: string; intl: IntlShape}>
-    submitTx?: UseMutationOptions<TxSubmissionStatus, Error, SignedTx>
+    signTx?: UseMutationOptions<
+      CardanoSignedTx,
+      Error,
+      {unsignedTx: YoroiUnsignedTx; password: string; intl: IntlShape}
+    >
+    submitTx?: UseMutationOptions<TxSubmissionStatus, Error, CardanoSignedTx>
   },
 ) => {
   const signTx = useSignTxWithPassword(
@@ -500,8 +504,8 @@ export const useSignWithPasswordAndSubmitTx = (
 export const useSignWithHwAndSubmitTx = (
   {wallet}: {wallet: YoroiWallet},
   options?: {
-    signTx?: UseMutationOptions<SignedTx, Error, {unsignedTx: YoroiUnsignedTx; useUSB: boolean}>
-    submitTx?: UseMutationOptions<TxSubmissionStatus, Error, SignedTx>
+    signTx?: UseMutationOptions<CardanoSignedTx, Error, {unsignedTx: CardanoUnsignedTx; useUSB: boolean}>
+    submitTx?: UseMutationOptions<TxSubmissionStatus, Error, CardanoSignedTx>
   },
 ) => {
   const signTx = useSignTxWithHW(
@@ -534,8 +538,8 @@ export const useSignWithHwAndSubmitTx = (
 export const useSignAndSubmitTx = (
   {wallet}: {wallet: YoroiWallet},
   options?: {
-    signTx?: UseMutationOptions<SignedTx, Error, {unsignedTx: YoroiUnsignedTx; masterKey: string}>
-    submitTx?: UseMutationOptions<TxSubmissionStatus, Error, SignedTx>
+    signTx?: UseMutationOptions<CardanoSignedTx, Error, {unsignedTx: CardanoUnsignedTx; masterKey: string}>
+    submitTx?: UseMutationOptions<TxSubmissionStatus, Error, CardanoSignedTx>
   },
 ) => {
   const signTx = useSignTx(
@@ -567,10 +571,10 @@ export const useSignAndSubmitTx = (
 
 export const useSignTx = (
   {wallet}: {wallet: YoroiWallet},
-  options: UseMutationOptions<SignedTx, Error, {unsignedTx: YoroiUnsignedTx; masterKey: string}> = {},
+  options: UseMutationOptions<CardanoSignedTx, Error, {unsignedTx: CardanoUnsignedTx; masterKey: string}> = {},
 ) => {
   const mutation = useMutation({
-    mutationFn: ({unsignedTx, masterKey}) => wallet.signTx(unsignedTx.unsignedTx, masterKey),
+    mutationFn: ({unsignedTx, masterKey}) => wallet.signTx(unsignedTx, masterKey),
     retry: false,
     ...options,
   })
@@ -583,13 +587,17 @@ export const useSignTx = (
 
 export const useSignTxWithPassword = (
   {wallet, storage}: {wallet: YoroiWallet; storage: typeof KeyStore},
-  options: UseMutationOptions<SignedTx, Error, {unsignedTx: YoroiUnsignedTx; password: string; intl: any}> = {},
+  options: UseMutationOptions<
+    CardanoSignedTx,
+    Error,
+    {unsignedTx: CardanoUnsignedTx; password: string; intl: IntlShape}
+  > = {},
 ) => {
   const mutation = useMutation({
     mutationFn: async ({unsignedTx, password, intl}) => {
       const masterKey = await storage.getData(wallet.id, 'MASTER_PASSWORD', '', password, intl)
 
-      return wallet.signTx(unsignedTx.unsignedTx, masterKey)
+      return wallet.signTx(unsignedTx, masterKey)
     },
     retry: false,
     ...options,
@@ -603,7 +611,7 @@ export const useSignTxWithPassword = (
 
 export const useSignTxWithHW = (
   {wallet}: {wallet: YoroiWallet},
-  options: UseMutationOptions<SignedTx, Error, {unsignedTx: YoroiUnsignedTx; useUSB: boolean}> = {},
+  options: UseMutationOptions<CardanoSignedTx, Error, {unsignedTx: CardanoUnsignedTx; useUSB: boolean}> = {},
 ) => {
   const mutation = useMutation({
     mutationFn: async ({unsignedTx, useUSB}) => wallet.signTxWithLedger(unsignedTx, useUSB),
@@ -619,16 +627,16 @@ export const useSignTxWithHW = (
 
 export const useSubmitTx = (
   {wallet}: {wallet: YoroiWallet},
-  options: UseMutationOptions<TxSubmissionStatus, Error, SignedTx> = {},
+  options: UseMutationOptions<TxSubmissionStatus, Error, CardanoSignedTx> = {},
 ) => {
   const mutation = useMutationWithInvalidations({
     mutationFn: async (signedTx) => {
       const serverStatus = await wallet.checkServerStatus()
-      const base64 = Buffer.from(signedTx.encodedTx).toString('base64')
+      const base64 = Buffer.from(signedTx.signedTx.encodedTx).toString('base64')
       await wallet.submitTransaction(base64)
 
       if (serverStatus.isQueueOnline) {
-        return fetchTxStatus(wallet, signedTx.id, false)
+        return fetchTxStatus(wallet, signedTx.signedTx.id, false)
       }
 
       return {

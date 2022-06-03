@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {legacyWalletChecksum, walletChecksum} from '@emurgo/cip4-js'
-import {Addressing, CardanoAddressedUtxo, TxMetadata, UnsignedTx} from '@emurgo/yoroi-lib-core'
+import {Addressing, CardanoAddressedUtxo, TxMetadata} from '@emurgo/yoroi-lib-core'
 import {BigNumber} from 'bignumber.js'
 import ExtendableError from 'es6-error'
 import _ from 'lodash'
@@ -35,7 +35,7 @@ import {NETWORK_REGISTRY} from '../../legacy/types'
 import {deriveRewardAddressHex, normalizeToAddress, toHexOrBase58} from '../../legacy/utils'
 import {SendTokenList, Token} from '../../types'
 import * as YoroiLib from '../cardano'
-import {CardanoSignedTx, CardanoUnsignedTx} from '../types'
+import {CardanoSignedTx, CardanoUnsignedTx, YoroiSignedTx} from '../types'
 import {Entries} from '../utils'
 import {genTimeToSlot} from '../utils/timeUtils'
 import {versionCompare} from '../utils/versioning'
@@ -536,7 +536,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
       })
   }
 
-  async signTx(signRequest: UnsignedTx, decryptedMasterKey: string) {
+  async signTx(unsignedTx: CardanoUnsignedTx, decryptedMasterKey: string): Promise<YoroiSignedTx> {
     const masterKey = await Bip32PrivateKey.fromBytes(Buffer.from(decryptedMasterKey, 'hex'))
     const accountPvrKey = await masterKey
       .derive(this._getPurpose())
@@ -545,8 +545,17 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
       .then((key) => key.asBytes())
       .then((bytes) => toHex(bytes))
     const wits = new Set<string>()
+    const signedTx = await unsignedTx.unsignedTx.sign(
+      CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.ACCOUNT,
+      accountPvrKey,
+      wits,
+      [],
+    )
 
-    return signRequest.sign(CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.ACCOUNT, accountPvrKey, wits, [])
+    return {
+      ...unsignedTx,
+      signedTx,
+    }
   }
 
   async signTxLegacy(signRequest: HaskellShelleyTxSignRequest, decryptedMasterKey: string): Promise<SignedTxLegacy> {

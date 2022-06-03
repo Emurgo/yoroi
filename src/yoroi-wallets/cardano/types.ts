@@ -25,7 +25,7 @@ import {
   Token,
   TokenInfo,
 } from '../../types'
-import {CardanoSignedTx, YoroiUnsignedTx} from '../types'
+import {CardanoSignedTx, CardanoUnsignedTx, YoroiUnsignedTx} from '../types'
 import Wallet, {WalletJSON} from '../Wallet'
 import type {Addresses} from './chain'
 import {AddressChain} from './chain'
@@ -164,7 +164,7 @@ export interface WalletInterface {
     metadata: Array<TxMetadata> | void,
   ): Promise<YoroiUnsignedTx>
 
-  signTx(signRequest: UnsignedTx, decryptedMasterKey: string): Promise<SignedTx>
+  signTx(signRequest: CardanoUnsignedTx, decryptedMasterKey: string): Promise<CardanoSignedTx>
 
   createDelegationTx(
     poolRequest: string,
@@ -187,7 +187,7 @@ export interface WalletInterface {
     serverTime: Date | void,
   ): Promise<YoroiUnsignedTx>
 
-  signTxWithLedger(request: YoroiUnsignedTx, useUSB: boolean): Promise<CardanoSignedTx>
+  signTxWithLedger(request: CardanoUnsignedTx, useUSB: boolean): Promise<CardanoSignedTx>
 
   // =================== backend API =================== //
 
