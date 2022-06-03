@@ -46,6 +46,7 @@ export const ConfirmTxWithPassword: React.FC<Props> = ({wallet, storage, onSucce
         <TransferSummary wallet={wallet} unsignedTx={unsignedTx} />
 
         <PasswordInput
+          autoFocus
           onChangeText={setPassword}
           secureTextEntry
           value={password}

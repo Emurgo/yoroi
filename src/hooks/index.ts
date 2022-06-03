@@ -591,7 +591,6 @@ export const useSignTxWithPassword = (
 ) => {
   const mutation = useMutation({
     mutationFn: async ({unsignedTx, password, intl}) => {
-      if (unsignedTx.type !== 'cardano') throw new Error('Invalid transaction')
       const masterKey = await storage.getData(wallet.id, 'MASTER_PASSWORD', '', password, intl)
 
       return wallet.signTx(unsignedTx, masterKey)
