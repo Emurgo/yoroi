@@ -31,7 +31,7 @@ export const ActionsBanner = () => {
           {!isReadOnly && (
             <View style={styles.centralized}>
               <TouchableOpacity style={styles.actionIcon} onPress={navigateTo.send}>
-                <Icon.Sent {...ACTION_PROPS} />
+                <Icon.Send {...ACTION_PROPS} />
               </TouchableOpacity>
               <Text style={styles.actionLabel}>{strings.sendLabel}</Text>
             </View>

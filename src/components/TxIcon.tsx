@@ -5,7 +5,7 @@ import {TransactionInfo} from '../legacy/HistoryTransaction'
 import {Icon} from './Icon'
 
 const ICON = {
-  SENT: Icon.Sent,
+  SENT: Icon.Send,
   RECEIVED: Icon.Received,
   SELF: Icon.Transaction,
   MULTI: Icon.Transaction,

@@ -1,12 +1,10 @@
 import React, {useState} from 'react'
 import {useIntl} from 'react-intl'
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
-import closedEyeIcon from '../assets/img/icon/visibility-closed.png'
-import openedEyeIcon from '../assets/img/icon/visibility-opened.png'
 import {Spacer} from '../components'
-import {Icon} from '../components/Icon'
+import {Icon} from '../components'
 import features from '../features'
 import globalMessages from '../i18n/global-messages'
 import {UI_V2} from '../legacy/config'
@@ -77,7 +75,7 @@ const Balance = ({privacyMode}: {privacyMode: boolean}) => {
 }
 
 const PrivacyIndicator = ({privacyMode}: {privacyMode: boolean}) =>
-  !privacyMode ? <Image source={closedEyeIcon} /> : <Image source={openedEyeIcon} />
+  !privacyMode ? <Icon.EyeOff size={28} color={COLORS.GRAY} /> : <Icon.EyeOn size={28} color={COLORS.GRAY} />
 
 const styles = StyleSheet.create({
   banner: {

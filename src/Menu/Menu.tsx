@@ -42,7 +42,7 @@ export const Menu = () => {
         <AllWallets
           label={`${strings.allWallets} (${walletCount})`}
           onPress={navigateTo.allWallets}
-          left={<Icon.Wallets size={24} color="#6B7384" />}
+          left={<Icon.Wallets size={26} color="#6B7384" />}
         />
         <HR />
 
@@ -51,7 +51,7 @@ export const Menu = () => {
         <Catalyst //
           label={strings.catalystVoting}
           onPress={navigateTo.catalystVoting}
-          left={<Icon.Catalyst size={24} color="#6B7384" />}
+          left={<Icon.Catalyst size={26} color="#6B7384" />}
         />
 
         <HR />
@@ -59,14 +59,14 @@ export const Menu = () => {
         <Settings //
           label={strings.settings}
           onPress={navigateTo.settings}
-          left={<Icon.Gear size={24} color="#6B7384" />}
+          left={<Icon.Gear size={26} color="#6B7384" />}
         />
         <HR />
 
         <FAQ //
           label={strings.faq}
           onPress={navigateTo.faq}
-          left={<Icon.QuestionMark size={24} color="#6B7384" />}
+          left={<Icon.QuestionMark size={26} color="#6B7384" />}
         />
         <HR />
       </ScrollView>
