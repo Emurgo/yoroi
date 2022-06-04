@@ -2,6 +2,7 @@ import {action} from '@storybook/addon-actions'
 
 import React from 'react'
 import {Button, View} from 'react-native'
+import {Modal} from '../../src/components'
 
 type childrenFn = (modalProps: {
   visible: boolean
@@ -9,7 +10,7 @@ type childrenFn = (modalProps: {
   onPress: typeof action
 }) => React.ReactNode
 
-export const WithModalProps = ({children, autoClose}: {children: childrenFn, autoClose?: boolean}) => {
+export const WithModalProps = ({children, autoClose}: {children: childrenFn; autoClose?: boolean}) => {
   const [visible, setVisible] = React.useState(false) // weird behavior when starting with visible: true
 
   React.useEffect(() => {
@@ -34,3 +35,15 @@ export const WithModalProps = ({children, autoClose}: {children: childrenFn, aut
 }
 
 export const withModalProps = (Story: any) => <WithModalProps>{(props) => <Story {...props} />}</WithModalProps>
+
+export const WithModal: React.FC = ({children}) => {
+  return (
+    <WithModalProps>
+      {(modalProps) => (
+        <Modal {...modalProps} showCloseIcon>
+          {children}
+        </Modal>
+      )}
+    </WithModalProps>
+  )
+}

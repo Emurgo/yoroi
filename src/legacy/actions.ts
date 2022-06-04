@@ -21,8 +21,7 @@ import {CONFIG, isNightly} from './config'
 import crashReporting from './crashReporting'
 import {encryptCustomPin} from './customPin'
 import {canBiometricEncryptionBeEnabled, recreateAppSignInKeys, removeAppSignInKeys} from './deviceSettings'
-import {mirrorTxHistory, setBackgroundSyncError, updateHistory} from './history'
-import {ISignRequest} from './ISignRequest'
+import {mirrorTxHistory, setBackgroundSyncError} from './history'
 import KeyStore from './KeyStore'
 import networkInfo from './networkInfo'
 import {getCardanoNetworkConfigById} from './networks'
@@ -425,20 +424,6 @@ export const handleGeneralError = async (message: string, intl: IntlShape) => {
   await showErrorDialog(errorMessages.generalError, intl, {message})
 }
 
-export const submitSignedTx = (signedTx: string) => async (dispatch: Dispatch<any>) => {
-  Logger.info('submitting tx...')
-  await walletManager.submitTransaction(signedTx)
-  dispatch(updateHistory())
-}
-// note: eslint doesn't like polymorphic types
-export const submitTransaction =
-  <T>(signRequest: ISignRequest<T>, decryptedKey: string) =>
-  async (dispatch: Dispatch<any>) => {
-    const {encodedTx} = await walletManager.signTx(signRequest, decryptedKey)
-    Logger.info('submitTransaction::encodedTx', Buffer.from(encodedTx).toString('hex'))
-    const signedTxBase64 = Buffer.from(encodedTx).toString('base64')
-    await dispatch(submitSignedTx(signedTxBase64))
-  }
 export const checkForFlawedWallets = () => (dispatch: Dispatch<any>) => {
   let isFlawed = false
   Logger.debug('actions::checkForFlawedWallets:: checking wallet...')
