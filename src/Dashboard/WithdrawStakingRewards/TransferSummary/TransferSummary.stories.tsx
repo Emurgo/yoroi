@@ -18,7 +18,7 @@ storiesOf('TransferSummary', module)
               staking: {
                 ...mockYoroiTx.staking,
                 withdrawals: {
-                  'reward-address': {'': '12356789'},
+                  'withdrawal-address': {'': '12356789'},
                 },
               },
             } as YoroiUnsignedTx
@@ -38,7 +38,7 @@ storiesOf('TransferSummary', module)
               staking: {
                 ...mockYoroiTx.staking,
                 deregistrations: {
-                  'reward-address': {'': '2000000'},
+                  'deregistration-address': {'': '2000000'},
                 },
               },
             } as YoroiUnsignedTx
@@ -47,7 +47,7 @@ storiesOf('TransferSummary', module)
       </Boundary>
     </WithModal>
   ))
-  .add('deregistrations, no withdrawals', () => (
+  .add('deregistrations, withdrawals', () => (
     <WithModal>
       <Boundary>
         <TransferSummary
@@ -58,22 +58,15 @@ storiesOf('TransferSummary', module)
               staking: {
                 ...mockYoroiTx.staking,
                 deregistrations: {
-                  'reward-address': {'': '2000000'},
+                  'deregistration-address': {'': '2000000'},
                 },
                 withdrawals: {
-                  'reward-address': {'': '12356789'},
+                  'withdrawal-address': {'': '12356789'},
                 },
               },
             } as YoroiUnsignedTx
           }
         />
-      </Boundary>
-    </WithModal>
-  ))
-  .add('deregistrations, no withdrawals', () => (
-    <WithModal>
-      <Boundary>
-        <TransferSummary wallet={mockWallet} unsignedTx={mockYoroiTx} />
       </Boundary>
     </WithModal>
   ))

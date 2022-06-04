@@ -33,7 +33,7 @@ storiesOf('ConfirmWithdrawalTx/Password', module)
       staking: {
         ...mockYoroiTx.staking,
         withdrawals: {
-          'reward-address': {'': '12356789'},
+          'withdrawal-address': {'': '12356789'},
         },
       },
     }
@@ -76,7 +76,10 @@ storiesOf('ConfirmWithdrawalTx/Password', module)
         ...mockYoroiTx.staking,
         deregistrations: {
           ...mockYoroiTx.staking.deregistrations,
-          'reward-address': {'': '12356789'},
+          'deregistration-address': {'': '12356789'},
+        },
+        withdrawals: {
+          'withdrawal-address': {['']: '12356789'},
         },
       },
     }

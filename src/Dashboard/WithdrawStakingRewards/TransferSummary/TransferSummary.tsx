@@ -45,15 +45,14 @@ export const TransferSummary: React.FC<{
 }
 
 const withdrawalInfo = (unsignedTx: YoroiUnsignedTx) => {
-  const withdrawalAmounts = Entries.toAmounts(unsignedTx.staking?.withdrawals || {})
-  const deregistrationAmounts = Entries.toAmounts(unsignedTx.staking?.deregistrations || {})
+  const deregistrations = unsignedTx.staking?.deregistrations
+  const withdrawals = unsignedTx.staking?.withdrawals
+  const withdrawalAmounts = Entries.toAmounts(withdrawals || {})
+  const deregistrationAmounts = Entries.toAmounts(deregistrations || {})
   const refundAmounts = Amounts.sum([withdrawalAmounts, deregistrationAmounts])
   const refundAmount = Amounts.getAmount(Amounts.sum([withdrawalAmounts, deregistrationAmounts]), '')
   const feeAmount = Amounts.getAmount(unsignedTx.fee, '')
   const totalAmount = Amounts.getAmount(Amounts.diff(refundAmounts, unsignedTx.fee), '')
-
-  const deregistrations = unsignedTx.staking?.deregistrations
-  const withdrawals = unsignedTx.staking?.withdrawals
 
   return {
     deregistrations,
@@ -70,7 +69,7 @@ const Withdrawals: React.FC<{wallet: YoroiWallet; withdrawals: YoroiStaking['wit
 }) => {
   const strings = useStrings()
 
-  const addresses = Object.keys(withdrawals)
+  const addresses = Entries.toAddresses(withdrawals)
   if (addresses.length < 1) return null
 
   return (
@@ -100,7 +99,7 @@ const Deregistrations: React.FC<{
   const refundAmounts = Entries.toAmounts(deregistrations)
   const primaryAmount = Amounts.getAmount(refundAmounts, '')
 
-  const addresses = Object.keys(deregistrations)
+  const addresses = Entries.toAddresses(deregistrations)
   if (addresses.length < 1) return null
 
   return (
