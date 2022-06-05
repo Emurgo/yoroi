@@ -1,10 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import React from 'react'
 import {IntlProvider} from 'react-intl'
-import {Text} from 'react-native'
+import {NativeModules, Platform, Text} from 'react-native'
 import {useMutation, UseMutationOptions, useQuery, useQueryClient, UseQueryOptions} from 'react-query'
 
-import {setLanguage} from '.'
+import {updateLanguageSettings} from '.'
 import {supportedLanguages} from './languages'
 import translations from './translations'
 
@@ -30,15 +30,15 @@ const missingProvider = () => {
 
 const useLanguageCode = ({onSuccess, ...options}: UseQueryOptions<string> = {}) => {
   const query = useQuery({
+    initialData: systemLanguageCode,
     queryKey: ['languageCode'],
     queryFn: async () => {
       const languageCode = await AsyncStorage.getItem('/appSettings/languageCode')
-      if (!languageCode) throw new Error('Missing Language Code')
 
-      return JSON.parse(languageCode)
+      return languageCode ? JSON.parse(languageCode) : systemLanguageCode
     },
     onSuccess: (languageCode) => {
-      setLanguage(languageCode)
+      updateLanguageSettings(languageCode)
       onSuccess?.(languageCode)
     },
     suspense: true,
@@ -55,10 +55,10 @@ const useSaveLanguageCode = ({onSuccess, ...options}: UseMutationOptions<void, E
 
   const mutation = useMutation({
     mutationFn: async (languageCode) => AsyncStorage.setItem('/appSettings/languageCode', JSON.stringify(languageCode)),
-    onSuccess: (data, variables, context) => {
-      setLanguage(variables)
+    onSuccess: (data, languageCode, context) => {
+      updateLanguageSettings(languageCode)
       queryClient.invalidateQueries('languageCode')
-      onSuccess?.(data, variables, context)
+      onSuccess?.(data, languageCode, context)
     },
     ...options,
   })
@@ -74,3 +74,10 @@ type LanguageContext = {
   selectLanguageCode: SaveLanguageCode
   supportedLanguages: SupportedLanguages
 }
+
+const systemLanguageCode = Platform.select({
+  ios: () =>
+    NativeModules.SettingsManager.settings.AppleLocale || NativeModules.SettingsManager.settings.AppleLanguages[0],
+  android: () => NativeModules.I18nManager.localeIdentifier,
+  default: () => 'en-US',
+})()
