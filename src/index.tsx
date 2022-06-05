@@ -5,15 +5,16 @@ import {AppRegistry, LogBox, Text} from 'react-native'
 import {Provider, useSelector} from 'react-redux'
 
 import {handleGeneralError, setupHooks} from '../legacy/actions'
+import {ApiError, NetworkError} from '../legacy/api/errors'
 import {CONFIG} from '../legacy/config/config'
 import getConfiguredStore from '../legacy/helpers/configureStore'
 import translations from '../legacy/i18n/translations'
 import {languageSelector} from '../legacy/selectors'
 import {setLogLevel} from '../legacy/utils/logging'
+import {Logger} from '../legacy/utils/logging'
 import App from './App'
 import {name as appName} from './app.json'
 import {ErrorBoundary} from './components/ErrorBoundary'
-
 setLogLevel(CONFIG.LOG_LEVEL)
 
 bluebird.config({
@@ -42,7 +43,13 @@ global.Promise = bluebird as any
 
 const cache = createIntlCache()
 const intl = createIntl({locale: 'en-US', messages: translations['en-US']}, cache)
-global.onunhandledrejection = (e) => handleGeneralError(e.message, e, intl)
+global.onunhandledrejection = (error) => {
+  Logger.error(`${error}`)
+  if (error instanceof NetworkError) return
+  if (error instanceof ApiError) return
+  if (!error.message) return
+  handleGeneralError(error.message, error, intl)
+}
 
 const store = getConfiguredStore()
 store.dispatch(setupHooks())

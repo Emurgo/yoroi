@@ -81,7 +81,7 @@ export const TxHistoryNavigator = () => {
           options={{
             ...defaultStackNavigationOptionsV2,
             title: strings.receiveTitle,
-            headerRight: () => <ModalInfoIconButton onPress={showModalInfo} />,
+            headerRight: () => <ModalInfoIconButton onPress={showModalInfo} style={styles.modalInfo} />,
             headerStyle: {
               elevation: 0,
               shadowOpacity: 0,
@@ -212,7 +212,7 @@ const SettingsIconButton = (props: TouchableOpacityProps) => {
 const HeaderRightHistoryV2 = () => {
   const {navigateToSettings} = useWalletNavigation()
 
-  return <SettingsIconButton onPress={() => navigateToSettings()} />
+  return <SettingsIconButton style={styles.settingIconButton} onPress={() => navigateToSettings()} />
 }
 
 const HeaderRightHistory = () => {
@@ -225,5 +225,11 @@ const styles = StyleSheet.create({
   receiveInfoText: {
     lineHeight: 24,
     fontSize: 16,
+  },
+  settingIconButton: {
+    width: 40,
+  },
+  modalInfo: {
+    paddingRight: 12,
   },
 })

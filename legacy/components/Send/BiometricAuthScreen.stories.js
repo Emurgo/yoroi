@@ -1,5 +1,6 @@
 // @flow
 
+import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
@@ -9,6 +10,7 @@ storiesOf('BiometricAuthScreen', module)
   .add('Default', ({route, navigation}) => {
     route.params = {
       onSuccess: () => ({}),
+      onFail: action('onFail'),
     }
     return <BiometricAuthScreen navigation={navigation} route={route} />
   })

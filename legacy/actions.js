@@ -273,18 +273,27 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
 }
 
 export const checkBiometricStatus = () => async (dispatch: Dispatch<any>, getState: any) => {
-  const state = getState()
-  const shouldNotEnableBiometricAuth =
-    !isAppSetupCompleteSelector(state) &&
-    Platform.OS === 'android' &&
-    CONFIG.ANDROID_BIO_AUTH_EXCLUDED_SDK.includes(Platform.Version)
-  const currentCanEnableBiometricEncryption = canEnableBiometricSelector(state)
-  const canEnableBiometricEncryption = (await canBiometricEncryptionBeEnabled()) && !shouldNotEnableBiometricAuth
+  const bioShouldBeDisabled =
+    Platform.OS === 'android' && CONFIG.ANDROID_BIO_AUTH_EXCLUDED_SDK.includes(Platform.Version)
+  if (bioShouldBeDisabled) return
 
-  const biometricWasTurnedOff = !canEnableBiometricEncryption && currentCanEnableBiometricEncryption
-  Logger.debug('willResetBiometric:', biometricWasTurnedOff)
-  if (biometricWasTurnedOff) {
-    await dispatch(setAppSettingField(APP_SETTINGS_KEYS.CAN_ENABLE_BIOMETRIC_ENCRYPTION, canEnableBiometricEncryption))
+  const state = getState()
+
+  const canEnableBioFromCurrentState = canEnableBiometricSelector(state)
+  if (!canEnableBioFromCurrentState) return
+
+  const canEnableBioFromDevice = await canBiometricEncryptionBeEnabled()
+
+  const bioWasTurnedOff = !canEnableBioFromDevice && canEnableBioFromCurrentState
+  if (bioWasTurnedOff) {
+    Logger.debug('Biometric was turned off')
+    await dispatch(setAppSettingField(APP_SETTINGS_KEYS.CAN_ENABLE_BIOMETRIC_ENCRYPTION, false))
+    try {
+      await walletManager.disableEasyConfirmation()
+    } catch (_e) {
+      Logger.debug('Ignore if no wallet is selected')
+    }
+    await dispatch(logout())
   }
 }
 
@@ -477,7 +486,6 @@ export const setSystemAuth = (enable: boolean) => async (dispatch: Dispatch<any>
 }
 
 export const handleGeneralError = async (message: string, e: Error, intl: ?IntlShape) => {
-  Logger.error(`${message}: ${e.message}`, e)
   await showErrorDialog(errorMessages.generalError, intl, {message})
 }
 
