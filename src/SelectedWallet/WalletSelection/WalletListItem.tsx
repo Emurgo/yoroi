@@ -19,7 +19,9 @@ export const WalletListItem = ({wallet, onPress}: Props) => {
         <TouchableOpacity activeOpacity={0.5} onPress={() => onPress(wallet)} style={styles.leftSide}>
           <Icon.WalletAccount iconSeed={wallet.checksum.ImagePart} style={styles.walletAvatar} />
           <View style={styles.walletDetails}>
-            <Text style={styles.walletName}>{wallet.name}</Text>
+            <Text style={styles.walletName} numberOfLines={1}>
+              {wallet.name}
+            </Text>
             <Text style={styles.walletMeta}>{wallet.checksum ? `${wallet.checksum.TextPart} | ${type}` : type}</Text>
           </View>
 
@@ -83,11 +85,13 @@ const styles = StyleSheet.create({
   },
   walletDetails: {
     justifyContent: 'space-between',
+    flex: 1,
   },
   walletName: {
     fontFamily: brand.defaultFont,
     fontSize: 16,
     color: COLORS.WHITE,
+    flex: 1,
   },
   walletMeta: {
     color: COLORS.WHITE,

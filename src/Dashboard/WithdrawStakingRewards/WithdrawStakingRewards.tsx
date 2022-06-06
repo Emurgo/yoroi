@@ -133,7 +133,7 @@ export class WithdrawStakingRewards extends React.Component<Props, State> {
         )
         const fees = await signTxRequest.fee()
         const finalBalance = balance
-          .joinAddMutable(
+          .joinAddCopy(
             deregistrations.reduce(
               (sum, curr) => (curr.refund == null ? sum : sum.joinAddCopy(curr.refund)),
               new MultiToken([], {
@@ -142,7 +142,7 @@ export class WithdrawStakingRewards extends React.Component<Props, State> {
               }),
             ),
           )
-          .joinSubtractMutable(fees)
+          .joinSubtractCopy(fees)
         this.setState({
           signTxRequest,
           withdrawals,

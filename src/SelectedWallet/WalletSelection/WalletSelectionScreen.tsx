@@ -2,15 +2,15 @@ import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
 import {delay} from 'bluebird'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ActivityIndicator, ScrollView, StyleSheet, Text} from 'react-native'
+import {ActivityIndicator, Linking, ScrollView, StyleSheet, Text, TouchableOpacity} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useMutation, UseMutationOptions} from 'react-query'
 import {useDispatch} from 'react-redux'
 
-import {Button, PleaseWaitModal, ScreenBackground, StatusBar} from '../../components'
+import {Button, Icon, PleaseWaitModal, ScreenBackground, StatusBar} from '../../components'
 import {useWalletMetas} from '../../hooks'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
-import {checkBiometricStatus, logout, showErrorDialog} from '../../legacy/actions'
+import {logout, showErrorDialog} from '../../legacy/actions'
 import {CONFIG, isNightly} from '../../legacy/config'
 import {InvalidState} from '../../legacy/errors'
 import {isJormungandr} from '../../legacy/networks'
@@ -53,7 +53,6 @@ export const WalletSelectionScreen = () => {
         resetToWalletSelection()
       } else if (error instanceof KeysAreInvalid) {
         await showErrorDialog(errorMessages.walletKeysInvalidated, intl)
-        await dispatch(checkBiometricStatus())
         await dispatch(logout())
       } else {
         throw error
@@ -90,6 +89,7 @@ export const WalletSelectionScreen = () => {
             )}
           </ScrollView>
 
+          <SupportTicketLink />
           <ShelleyButton />
           <OnlyNightlyShelleyTestnetButton />
           <ByronButton />
@@ -118,6 +118,10 @@ const messages = defineMessages({
     id: 'components.walletselection.walletselectionscreen.loadingWallet',
     defaultMessage: '!!!Loading wallet',
   },
+  supportTicketLink: {
+    id: 'components.walletselection.walletselectionscreen.supportTicketLink',
+    defaultMessage: '!!!Ask our support team',
+  },
 })
 
 const useStrings = () => {
@@ -130,7 +134,22 @@ const useStrings = () => {
     deprecated: intl.formatMessage(globalMessages.deprecated),
     pleaseWait: intl.formatMessage(globalMessages.pleaseWait),
     loadingWallet: intl.formatMessage(messages.loadingWallet),
+    supportTicketLink: intl.formatMessage(messages.supportTicketLink),
   }
+}
+
+const SUPPORT_TICKET_LINK = 'https://emurgohelpdesk.zendesk.com/hc/en-us/requests/new?ticket_form_id=360013330335'
+
+const SupportTicketLink = () => {
+  const onPress = () => Linking.openURL(SUPPORT_TICKET_LINK)
+  const strings = useStrings()
+
+  return (
+    <TouchableOpacity style={styles.link} onPress={() => onPress()}>
+      <Icon.QuestionMark size={22} color="#fff" />
+      <Text style={styles.linkText}>{strings.supportTicketLink.toLocaleUpperCase()}</Text>
+    </TouchableOpacity>
+  )
 }
 
 const ShelleyButton = () => {
@@ -270,6 +289,14 @@ const styles = StyleSheet.create({
   button: {
     marginHorizontal: 16,
     marginBottom: 10,
+  },
+  linkText: {
+    color: '#fff',
+    marginLeft: 8,
+  },
+  link: {
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
 })
 
