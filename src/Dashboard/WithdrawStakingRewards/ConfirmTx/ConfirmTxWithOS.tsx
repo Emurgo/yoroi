@@ -39,7 +39,7 @@ export const ConfirmTxWithOS: React.FC<Props> = ({wallet, unsignedTx, onSuccess,
         primaryButton={{
           disabled: isLoading,
           label: strings.confirmButton,
-          onPress: async () =>
+          onPress: () =>
             ensureKeysValidity(wallet.id)
               .then(() =>
                 navigation.navigate('biometrics', {
