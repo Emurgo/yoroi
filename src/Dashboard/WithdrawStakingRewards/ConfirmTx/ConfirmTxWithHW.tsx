@@ -24,7 +24,7 @@ export const ConfirmTxWithHW: React.FC<Props> = ({wallet, unsignedTx, onSuccess,
   const [transport, setTransport] = React.useState<'USB' | 'BLE'>('USB')
   const [step, setStep] = React.useState<'select-transport' | 'connect-transport' | 'confirm'>('select-transport')
 
-  const onSelectTransport = async (transport: 'USB' | 'BLE') => {
+  const onSelectTransport = (transport: 'USB' | 'BLE') => {
     setTransport(transport)
     setStep('connect-transport')
   }
