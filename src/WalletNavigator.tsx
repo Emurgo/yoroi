@@ -2,18 +2,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Image} from 'react-native'
 
-import iconDashboard from './assets/img/icon/dashboard.png'
-import iconDashboardActive from './assets/img/icon/dashboard-active.png'
-import iconDelegate from './assets/img/icon/delegation.png'
-import iconDelegateActive from './assets/img/icon/delegation-active.png'
-import iconReceive from './assets/img/icon/receive.png'
-import iconReceiveActive from './assets/img/icon/receive-active.png'
-import iconSend from './assets/img/icon/send.png'
-import iconSendActive from './assets/img/icon/send-active.png'
-import iconHistory from './assets/img/icon/txhistory.png'
-import iconHistoryActive from './assets/img/icon/txhistory-active.png'
 import {CatalystNavigator} from './Catalyst'
 import {Icon} from './components'
 import {DashboardNavigator} from './Dashboard'
@@ -68,7 +57,10 @@ const WalletTabNavigator = () => {
           options={{
             tabBarIcon: ({focused}) =>
               !UI_V2 ? (
-                <Image source={focused ? iconDashboardActive : iconDashboard} />
+                <Icon.Categories
+                  size={30}
+                  color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
+                />
               ) : (
                 <Icon.TabStaking
                   size={24}
@@ -85,7 +77,12 @@ const WalletTabNavigator = () => {
           name="history"
           component={TxHistoryNavigator}
           options={{
-            tabBarIcon: ({focused}) => <Image source={focused ? iconHistoryActive : iconHistory} />,
+            tabBarIcon: ({focused}) => (
+              <Icon.Transaction
+                size={38}
+                color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
+              />
+            ),
             tabBarLabel: strings.txHistoryTabBarLabel,
           }}
         />
@@ -96,7 +93,12 @@ const WalletTabNavigator = () => {
           name="send-ada"
           component={SendScreenNavigator}
           options={{
-            tabBarIcon: ({focused}) => <Image source={focused ? iconSendActive : iconSend} />,
+            tabBarIcon: ({focused}) => (
+              <Icon.Send
+                size={24}
+                color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
+              />
+            ),
             tabBarLabel: strings.sendTabBarLabel,
           }}
         />
@@ -107,7 +109,12 @@ const WalletTabNavigator = () => {
           name="receive-ada"
           component={ReceiveScreenNavigator}
           options={{
-            tabBarIcon: ({focused}) => <Image source={focused ? iconReceiveActive : iconReceive} />,
+            tabBarIcon: ({focused}) => (
+              <Icon.Received
+                size={24}
+                color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
+              />
+            ),
             tabBarLabel: strings.receiveTabBarLabel,
           }}
         />
@@ -118,7 +125,9 @@ const WalletTabNavigator = () => {
           name="staking-center"
           component={StakingCenterNavigator}
           options={{
-            tabBarIcon: ({focused}) => <Image source={focused ? iconDelegateActive : iconDelegate} />,
+            tabBarIcon: ({focused}) => (
+              <Icon.Ada size={18} color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE} />
+            ),
             tabBarLabel: strings.delegateTabBarLabel,
           }}
         />
@@ -129,7 +138,12 @@ const WalletTabNavigator = () => {
           name="menu"
           component={MenuNavigator}
           options={{
-            tabBarIcon: ({focused}) => <Icon.Menu size={20} color={focused ? '#17d1aa' : '#A7AFC0'} />,
+            tabBarIcon: ({focused}) => (
+              <Icon.Menu
+                size={20}
+                color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
+              />
+            ),
             tabBarLabel: strings.menuTabBarLabel,
           }}
         />

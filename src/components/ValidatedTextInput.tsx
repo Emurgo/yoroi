@@ -1,8 +1,8 @@
 import React from 'react'
-import {Image, Platform, StyleSheet, TextInput, TextInputProps, TouchableOpacity, View, ViewStyle} from 'react-native'
+import {Platform, StyleSheet, TextInput, TextInputProps, TouchableOpacity, View, ViewStyle} from 'react-native'
 
-import closedEyeIcon from '../assets/img/icon/visibility-closed.png'
-import openedEyeIcon from '../assets/img/icon/visibility-opened.png'
+import {COLORS} from '../theme'
+import {Icon} from './Icon'
 import {Text} from './Text'
 
 type Props = TextInputProps & {
@@ -45,7 +45,7 @@ export const ValidatedTextInput = ({label, error, style, secureTextEntry, keyboa
 
       {secureTextEntry === true && (
         <TouchableOpacity style={styles.showPasswordContainer} onPress={toggleShowPassword}>
-          <Image style={styles.showPassword} source={showPassword ? openedEyeIcon : closedEyeIcon} />
+          {showPassword ? <Icon.EyeOn size={40} color={COLORS.GRAY} /> : <Icon.EyeOff size={40} color={COLORS.GRAY} />}
         </TouchableOpacity>
       )}
 
@@ -97,9 +97,5 @@ const styles = StyleSheet.create({
     top: 20,
     right: 10,
     justifyContent: 'center',
-  },
-  showPassword: {
-    height: 32,
-    width: 32,
   },
 })

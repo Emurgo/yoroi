@@ -43,7 +43,7 @@ export const TxIcon = ({transaction}: Props) => {
 
   return (
     <View style={[styles.container, {backgroundColor: color.background}]}>
-      <IconComponent color={color.icon} width={SIZE} height={SIZE} />
+      <IconComponent color={color.icon} size={SIZE} />
     </View>
   )
 }

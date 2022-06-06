@@ -1,6 +1,5 @@
 import React, {ForwardedRef} from 'react'
 import {
-  Image,
   StyleSheet,
   TextInput as RNTextInput,
   TextInputProps,
@@ -11,8 +10,6 @@ import {
 } from 'react-native'
 import {HelperText, TextInput as RNPTextInput} from 'react-native-paper'
 
-import closedEyeIcon from '../../assets//img/icon/visibility-closed.png'
-import openedEyeIcon from '../../assets//img/icon/visibility-opened.png'
 import {COLORS} from '../../theme'
 import {Icon} from '../Icon'
 
@@ -117,7 +114,11 @@ export const Checkmark = () => <Icon.Check height={24} width={24} color={COLORS.
 const SecureTextEntryToggle = ({showPassword, onPress}: {showPassword: boolean; onPress: () => void}) => (
   <AdornmentContainer style={styles.secureTextEntryToggleContainer}>
     <TouchableOpacity onPress={onPress}>
-      {showPassword ? <Image source={closedEyeIcon} /> : <Image source={openedEyeIcon} />}
+      {showPassword ? (
+        <Icon.EyeOff color={COLORS.ACTION_GRAY} size={30} />
+      ) : (
+        <Icon.EyeOn color={COLORS.ACTION_GRAY} size={30} />
+      )}
     </TouchableOpacity>
   </AdornmentContainer>
 )

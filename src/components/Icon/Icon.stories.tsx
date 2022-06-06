@@ -18,12 +18,12 @@ storiesOf('Icon', module).add('Gallery', () => {
         <Item icon={<Icon.Check height={40} width={40} />} title="Check" />
         <Item mode="dark" icon={<Icon.YoroiWallet height={40} width={40} />} title="YoroiWallet" />
         <Item icon={<Icon.Cardano height={40} width={40} />} title="Cardano" />
-        <Item icon={<Icon.Ada height={40} width={40} />} title="AdaIcon" />
+        <Item icon={<Icon.Ada size={40} />} title="AdaIcon" />
         <Item icon={<Icon.RewardManuallyPayout height={40} width={40} />} title="RewardManuallyPayout" />
         <Item icon={<Icon.RewardWithdrawn height={40} width={40} />} title="RewardWithdrawn" />
         <Item icon={<Icon.StakingKeyDeregistered height={40} width={40} />} title="StakingKeyDeregistered" />
         <Item icon={<Icon.StakingKeyRegistered height={40} width={40} />} title="StakingKeyRegistered" />
-        <Item icon={<Icon.Transaction height={40} width={40} />} title="Transaction" />
+        <Item icon={<Icon.Transaction size={40} />} title="Transaction" />
         <Item icon={<Icon.TotalAda height={40} width={40} />} title="TotalAdaIcon" />
         <Item icon={<Icon.TotalDelegated height={40} width={40} />} title="TotalDelegated" />
         <Item icon={<Icon.TotalReward height={40} width={40} />} title="TotalReward" />
@@ -59,7 +59,6 @@ storiesOf('Icon', module).add('Gallery', () => {
         />
         <Item icon={<Icon.NoAssetImage />} title="No Asset Image" />
         <Item icon={<Icon.Settings size={40} />} title="Settings" />
-        <Item icon={<Icon.Info size={40} />} title="Info" />
         <Item icon={<Icon.TabWallet size={40} />} title="Tab Wallet" />
         <Item icon={<Icon.TabStaking size={40} />} title="Tab Stake" />
         <Item icon={<Icon.CrossCircle size={40} />} title="Cross Circle" />

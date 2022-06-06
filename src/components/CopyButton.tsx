@@ -1,9 +1,9 @@
 import React from 'react'
-import {Image, TouchableOpacity} from 'react-native'
+import {TouchableOpacity} from 'react-native'
 
-import copiedIcon from '../assets/img/icon/copied.png'
-import copyIcon from '../assets/img/icon/copy-ext.png'
+import {Icon} from '../components'
 import {useCopy} from '../legacy/useCopy'
+import {COLORS} from '../theme'
 
 export type CopyButtonProps = {
   value: string
@@ -21,7 +21,7 @@ export const CopyButton = ({value, onCopy}: CopyButtonProps) => {
       }}
       disabled={isCopying}
     >
-      <Image source={isCopying ? copiedIcon : copyIcon} />
+      {isCopying ? <Icon.CopySuccess size={26} color={COLORS.GRAY} /> : <Icon.Copy size={26} color={COLORS.GRAY} />}
     </TouchableOpacity>
   )
 }

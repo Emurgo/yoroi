@@ -2,13 +2,12 @@ import React from 'react'
 import Svg, {Path} from 'react-native-svg'
 
 type Props = {
-  width?: number
-  height?: number
+  size?: number
   color?: string
 }
 
-export const Send = ({width = 36, height = 36, color = '#6B7384'}: Props) => (
-  <Svg width={width} height={height} viewBox="-2 -2 28 28">
+export const Send = ({size = 36, color = '#6B7384'}: Props) => (
+  <Svg width={size} height={size} viewBox="-2 -2 28 28">
     <Path
       d="M7.29289 11.2929L11.2929 7.29289C11.6834 6.90237 12.3166 6.90237 12.7071 7.29289L16.7071 11.2929C17.0976 11.6834 17.0976 12.3166 16.7071 12.7071C16.3166 13.0976 15.6834 13.0976 15.2929 12.7071L13 10.4142V16C13 16.5523 12.5523 17 12 17C11.4477 17 11 16.5523 11 16V10.4142L8.70711 12.7071C8.31658 13.0976 7.68342 13.0976 7.29289 12.7071C6.90237 12.3166 6.90237 11.6834 7.29289 11.2929Z"
       fill={color}
