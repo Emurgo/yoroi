@@ -44,7 +44,7 @@ export const ConfirmTxWithOS: React.FC<Props> = ({wallet, unsignedTx, onSuccess,
               .then(() =>
                 navigation.navigate('biometrics', {
                   keyId: wallet.id,
-                  onSuccess: async (masterKey) => {
+                  onSuccess: (masterKey) => {
                     return signAndSubmitTx({unsignedTx, masterKey})
                   },
                   onFail: () => navigation.goBack(),
