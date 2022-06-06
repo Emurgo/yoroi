@@ -22,6 +22,7 @@ import {
   tokenBalanceSelector,
 } from '../legacy/selectors'
 import {fetchUTXOs} from '../legacy/utxo'
+import {useWalletNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
 import {UtxoAutoRefresher} from '../UtxoAutoRefresher'
 import {YoroiWallet} from '../yoroi-wallets'
@@ -52,6 +53,8 @@ export const Dashboard = () => {
   const {stakingInfo, refetch: refetchStakingInfo, error} = useStakingInfo(wallet)
 
   const [showWithdrawalDialog, setShowWithdrawalDialog] = React.useState(false)
+
+  const {resetToTxHistory} = useWalletNavigation()
 
   return (
     <View style={styles.root}>
@@ -168,7 +171,7 @@ export const Dashboard = () => {
           <WithdrawStakingRewards
             wallet={wallet}
             storage={KeyStore}
-            onSuccess={() => navigation.reset(txHistoryRoute as any)}
+            onSuccess={() => resetToTxHistory()}
             onCancel={() => setShowWithdrawalDialog(false)}
           />
         </Modal>
@@ -300,31 +303,4 @@ const useBalances = (_wallet: YoroiWallet) => {
     }),
     {},
   )
-}
-
-const txHistoryRoute = {
-  index: 0,
-  routes: [
-    {
-      name: 'app-root',
-      state: {
-        routes: [
-          {name: 'wallet-selection'},
-          {
-            name: 'main-wallet-routes',
-            state: {
-              routes: [
-                {
-                  name: 'history',
-                  state: {
-                    routes: [{name: 'history-list'}],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
 }
