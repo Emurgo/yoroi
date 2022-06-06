@@ -807,13 +807,22 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     if (!this.publicKeyHex) throw new Error('Invalid wallet state')
     if (!unsignedTx.hw?.ledgerPayload) throw new Error('Invalid transaction type')
 
-    const addressingInfo = {
-      ...Entries.toAddresses(unsignedTx.change).reduce(
-        (result, current) => ({...result, [current]: this.getAddressing(current)}),
-        {},
-      ),
-      ...(this.rewardAddressHex ? {[this.rewardAddressHex]: this._getRewardAddressAddressing()} : {}),
+    const addressingInfo = {}
+    for (const address of Entries.toAddresses(unsignedTx.change)) {
+      if (this.walletImplementationId == null) throw new Error('Invalid wallet: walletImplementationId')
+
+      const addressing = isByron(this.walletImplementationId)
+        ? this.getAddressing(address)
+        : this.getAddressing(await (await YoroiLib.Address.fromBytes(Buffer.from(address, 'hex'))).toBech32())
+      if (addressing != null) addressingInfo[address] = addressing
     }
+
+    const {rewardAddressHex} = this
+    // add reward address to addressingMap
+    if (rewardAddressHex != null) {
+      addressingInfo[rewardAddressHex] = this._getRewardAddressAddressing()
+    }
+
     const addressingMap = (address: string) => addressingInfo[address]
     const ledgerPayload = await YoroiLib.cardano.buildLedgerPayload(
       unsignedTx.unsignedTx,
