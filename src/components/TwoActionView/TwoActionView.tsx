@@ -11,10 +11,12 @@ type Props = {
   title: string
   children: React.ReactNode
   primaryButton: {
+    disabled?: boolean
     label: string
     onPress: () => Promise<void> | void
   }
   secondaryButton?: {
+    disabled?: boolean
     label?: string
     onPress: () => void
   }
