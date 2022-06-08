@@ -28,11 +28,17 @@ export const Boundary: React.FC<BoundaryProps> = (props) => {
   )
 }
 
-type LoadingBoundaryProps = {loading?: {fallback?: SuspenseProps['fallback']; enabled?: boolean}}
+type LoadingBoundaryProps = {
+  loading?: {fallback?: SuspenseProps['fallback']; fallbackProps?: LoadingFallbackProps; enabled?: boolean}
+}
 const LoadingBoundary: React.FC<LoadingBoundaryProps> = ({children, ...props}) => {
   if (props.loading?.enabled === false) return <>{children}</>
 
-  return <React.Suspense fallback={props.loading?.fallback || <LoadingFallback />}>{children}</React.Suspense>
+  return (
+    <React.Suspense fallback={props.loading?.fallback || <LoadingFallback {...props.loading?.fallbackProps} />}>
+      {children}
+    </React.Suspense>
+  )
 }
 
 type LoadingFallbackProps = {style?: ViewStyle} & Omit<ActivityIndicatorProps, 'style'>

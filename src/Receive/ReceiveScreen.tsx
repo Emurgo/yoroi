@@ -4,9 +4,8 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {Banner, Button, OfflineBanner, Spacer, StatusBar} from '../components'
+import {Button, OfflineBanner, Spacer, StatusBar} from '../components'
 import {generateNewReceiveAddress, generateNewReceiveAddressIfNeeded} from '../legacy/actions'
-import {UI_V2} from '../legacy/config'
 import {
   canGenerateNewReceiveAddressSelector,
   isUsedAddressIndexSelector,
@@ -37,12 +36,11 @@ export const ReceiveScreen = () => {
 
   return (
     <View style={styles.root}>
-      <StatusBar type={UI_V2 ? 'light' : 'dark'} />
+      <StatusBar type="light" />
       <OfflineBanner />
 
       <ScrollView>
-        {!UI_V2 && <Banner text={strings.infoText} />}
-        {UI_V2 && <Spacer height={24} />}
+        <Spacer height={24} />
 
         <Content>
           <View style={styles.address}>

@@ -147,11 +147,13 @@ export const ConfirmTx: React.FC<Props> = ({
         if (wallet.isEasyConfirmationEnabled) {
           if (easyConfirmDecryptKey) {
             setDialogStep(DialogStep.Signing)
+            // @ts-expect-error lib-adoption
             signedTx = await smoothModalNotification(wallet.signTx(unsignedTx, easyConfirmDecryptKey))
           }
         } else {
           const decryptedKey = await KeyStore.getData(walletManager._id, 'MASTER_PASSWORD', '', password, intl)
           setDialogStep(DialogStep.Signing)
+          // @ts-expect-error lib-adoption
           signedTx = await smoothModalNotification(wallet.signTx(unsignedTx, decryptedKey))
         }
 
@@ -205,15 +207,18 @@ export const ConfirmTx: React.FC<Props> = ({
         if (wallet.isEasyConfirmationEnabled) {
           if (easyConfirmDecryptKey) {
             setDialogStep(DialogStep.Signing)
+            // @ts-expect-error lib-adoption
             signedTx = await smoothModalNotification(wallet.signTxLegacy(txDataSignRequest, easyConfirmDecryptKey))
           }
         } else {
           if (wallet.isHW) {
             setDialogStep(DialogStep.WaitingHwResponse)
+            // @ts-expect-error lib-adoption
             signedTx = await wallet.signTxWithLedger(txDataSignRequest, useUSB)
           } else {
             const decryptedKey = await KeyStore.getData(walletManager._id, 'MASTER_PASSWORD', '', password, intl)
             setDialogStep(DialogStep.Signing)
+            // @ts-expect-error lib-adoption
             signedTx = await smoothModalNotification(wallet.signTxLegacy(txDataSignRequest, decryptedKey))
           }
         }

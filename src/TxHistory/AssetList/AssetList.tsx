@@ -57,7 +57,7 @@ export const AssetList = ({onScrollUp, onScrollDown, ...props}: Props) => {
         {...onScroll}
         data={orderedTokens}
         renderItem={({item: assetToken}) => (
-          <Boundary fallbackProps={{size: 'small'}}>
+          <Boundary loading={{fallbackProps: {size: 'small'}}}>
             <AssetItem key={assetToken.identifier} assetToken={assetToken} />
           </Boundary>
         )}

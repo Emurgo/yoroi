@@ -11,7 +11,7 @@ import {useSelector} from 'react-redux'
 
 import {Button, Checkbox, Spacer, StatusBar, Text, TextInput} from '../../components'
 import {useTokenInfo} from '../../hooks'
-import {CONFIG, UI_V2} from '../../legacy/config'
+import {CONFIG} from '../../legacy/config'
 import {formatTokenAmount, getAssetDenominationOrId, truncateWithEllipsis} from '../../legacy/format'
 import {
   defaultNetworkAssetSelector,
@@ -181,47 +181,25 @@ export const SendScreen = ({
 
     setShowSendAllWarning(false)
 
-    if (UI_V2) {
-      navigation.navigate('app-root', {
-        screen: 'main-wallet-routes',
+    navigation.navigate('app-root', {
+      screen: 'main-wallet-routes',
+      params: {
+        screen: 'history',
         params: {
-          screen: 'history',
+          screen: 'send-confirm',
           params: {
-            screen: 'send-confirm',
-            params: {
-              availableAmount: tokenBalance.getDefault(),
-              address,
-              defaultAssetAmount,
-              transactionData: unsignedTx,
-              balanceAfterTx: balanceAfter,
-              utxos,
-              fee,
-              tokens,
-            },
+            availableAmount: tokenBalance.getDefault(),
+            address,
+            defaultAssetAmount,
+            transactionData: unsignedTx,
+            balanceAfterTx: balanceAfter,
+            utxos,
+            fee,
+            tokens,
           },
         },
-      })
-    } else {
-      navigation.navigate('app-root', {
-        screen: 'main-wallet-routes',
-        params: {
-          screen: 'send-ada',
-          params: {
-            screen: 'send-ada-confirm',
-            params: {
-              availableAmount: tokenBalance.getDefault(),
-              address,
-              defaultAssetAmount,
-              transactionData: unsignedTx,
-              balanceAfterTx: balanceAfter,
-              utxos,
-              fee,
-              tokens,
-            },
-          },
-        },
-      })
-    }
+      },
+    })
   }
 
   return (
@@ -261,27 +239,15 @@ export const SendScreen = ({
 
         <TouchableOpacity
           onPress={() => {
-            if (UI_V2) {
-              navigation.navigate('app-root', {
-                screen: 'main-wallet-routes',
+            navigation.navigate('app-root', {
+              screen: 'main-wallet-routes',
+              params: {
+                screen: 'history',
                 params: {
-                  screen: 'history',
-                  params: {
-                    screen: 'select-asset',
-                  },
+                  screen: 'select-asset',
                 },
-              })
-            } else {
-              navigation.navigate('app-root', {
-                screen: 'main-wallet-routes',
-                params: {
-                  screen: 'send-ada',
-                  params: {
-                    screen: 'select-asset',
-                  },
-                },
-              })
-            }
+              },
+            })
           }}
         >
           <TextInput

@@ -1,5 +1,4 @@
 import React, {useState} from 'react'
-import {useIntl} from 'react-intl'
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
@@ -8,8 +7,6 @@ import openedEyeIcon from '../assets/img/icon/visibility-opened.png'
 import {Spacer} from '../components'
 import {Icon} from '../components/Icon'
 import features from '../features'
-import globalMessages from '../i18n/global-messages'
-import {UI_V2} from '../legacy/config'
 import {formatTokenWithText, formatTokenWithTextWhenHidden} from '../legacy/format'
 import {availableAssetsSelector, tokenBalanceSelector} from '../legacy/selectors'
 import {useSelectedWallet} from '../SelectedWallet'
@@ -28,11 +25,9 @@ export const BalanceBanner = () => {
     <View style={styles.banner}>
       <Spacer height={14} />
 
-      {UI_V2 && (
-        <View style={styles.centered}>
-          <Icon.WalletAccount style={styles.walletIcon} iconSeed={wallet.checksum.ImagePart} />
-        </View>
-      )}
+      <View style={styles.centered}>
+        <Icon.WalletAccount style={styles.walletIcon} iconSeed={wallet.checksum.ImagePart} />
+      </View>
 
       <Spacer height={10} />
 
@@ -52,15 +47,12 @@ export const BalanceBanner = () => {
 }
 
 const Balance = ({privacyMode}: {privacyMode: boolean}) => {
-  const intl = useIntl()
-
   const availableAssets = useSelector(availableAssetsSelector)
   const tokenBalance = useSelector(tokenBalanceSelector)
   const token = availableAssets[tokenBalance.getDefaultId()]
 
   return (
     <View style={styles.centered}>
-      {!UI_V2 && <Text>{intl.formatMessage(globalMessages.availableFunds)}</Text>}
       <Text style={styles.balanceText}>
         {privacyMode
           ? formatTokenWithTextWhenHidden(BALANCE_WHEN_HIDDEN, token)
