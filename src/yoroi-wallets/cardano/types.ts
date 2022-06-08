@@ -302,6 +302,7 @@ type YoroiWalletKeys =
   | 'publicKeyHex'
   | 'subscribe'
   | 'toJSON'
+  | 'asAddressedUtxo'
 
 const yoroiWalletKeys: Array<YoroiWalletKeys> = [
   'id',
@@ -332,6 +333,7 @@ const yoroiWalletKeys: Array<YoroiWalletKeys> = [
   'signTxWithLedger',
   'fetchPoolInfo',
   'toJSON',
+  'asAddressedUtxo',
 ]
 
 export * from '@emurgo/yoroi-lib-core/dist/internals/wasm-contract'

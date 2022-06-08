@@ -1,6 +1,6 @@
-import {SignedTx} from '@emurgo/yoroi-lib-core'
 import BigNumber from 'bignumber.js'
 import KeyStore from '../../src/legacy/KeyStore'
+import {RawUtxo} from '../../src/legacy/types'
 
 import {RemotePoolMetaSuccess, StakePoolInfosAndHistories, TokenEntry, TokenInfo} from '../../src/types'
 import {YoroiWallet} from '../../src/yoroi-wallets'
@@ -62,6 +62,9 @@ export const mockWallet: YoroiWallet = {
     throw new Error('Not implemented')
   },
   toJSON: () => null as any,
+  asAddressedUtxo: (_utxos: RawUtxo[]) => {
+    throw new Error('Not implemented')
+  }
 
   // enableEasyConfirmation: () => {
   //   throw new Error('not implemented: enableEasyConfirmation')
