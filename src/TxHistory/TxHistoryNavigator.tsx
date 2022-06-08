@@ -4,10 +4,8 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps} from 'react-native'
 import {useSelector} from 'react-redux'
 
-import iconGear from '../assets/img/icon/gear.png'
-import {Boundary, Button, Icon} from '../components'
+import {Boundary, Icon} from '../components'
 import {useWalletName} from '../hooks'
-import {UI_V2} from '../legacy/config'
 import {formatDateToSeconds} from '../legacy/format'
 import {tokenBalanceSelector, transactionsInfoSelector} from '../legacy/selectors'
 import {
@@ -52,18 +50,11 @@ export const TxHistoryNavigator = () => {
         <Stack.Screen
           name="history-list"
           component={TxHistory}
-          options={
-            UI_V2
-              ? {
-                  ...defaultStackNavigationOptionsV2,
-                  title: walletName,
-                  headerRight: () => <HeaderRightHistoryV2 />,
-                }
-              : {
-                  title: walletName,
-                  headerRight: () => <HeaderRightHistory />,
-                }
-          }
+          options={{
+            ...defaultStackNavigationOptionsV2,
+            title: walletName,
+            headerRight: () => <HeaderRightHistory />,
+          }}
         />
 
         <Stack.Screen
@@ -208,16 +199,10 @@ const SettingsIconButton = (props: TouchableOpacityProps) => {
   )
 }
 
-const HeaderRightHistoryV2 = () => {
-  const {navigateToSettings} = useWalletNavigation()
-
-  return <SettingsIconButton style={styles.settingIconButton} onPress={() => navigateToSettings()} />
-}
-
 const HeaderRightHistory = () => {
   const {navigateToSettings} = useWalletNavigation()
 
-  return <Button onPress={() => navigateToSettings()} iconImage={iconGear} title="" withoutBackground />
+  return <SettingsIconButton style={styles.settingIconButton} onPress={() => navigateToSettings()} />
 }
 
 const styles = StyleSheet.create({

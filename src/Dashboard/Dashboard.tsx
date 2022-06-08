@@ -7,11 +7,10 @@ import {ActivityIndicator, RefreshControl, ScrollView, StyleSheet, View, ViewPro
 import {useDispatch, useSelector} from 'react-redux'
 
 import {AccountAutoRefresher} from '../AccountAutoRefresher'
-import {VotingBanner} from '../Catalyst/VotingBanner'
 import {Banner, Button, Modal, OfflineBanner, StatusBar} from '../components'
 import globalMessages from '../i18n/global-messages'
 import {fetchAccountState} from '../legacy/account'
-import {getCardanoBaseConfig, UI_V2} from '../legacy/config'
+import {getCardanoBaseConfig} from '../legacy/config'
 import KeyStore from '../legacy/KeyStore'
 import {getCardanoNetworkConfigById} from '../legacy/networks'
 import {
@@ -110,19 +109,6 @@ export const Dashboard = () => {
             )}
           </Row>
 
-          {!UI_V2 && (
-            <VotingBanner
-              onPress={() =>
-                navigation.navigate('app-root', {
-                  screen: 'catalyst-router',
-                  params: {
-                    screen: 'catalyst-landing',
-                  },
-                })
-              }
-            />
-          )}
-
           {stakingInfo?.status === 'registered' && (
             <Row>
               <StakePoolInfos />
@@ -133,30 +119,18 @@ export const Dashboard = () => {
         <Actions>
           <Button
             onPress={() => {
-              if (UI_V2) {
-                navigation.navigate('app-root', {
-                  screen: 'main-wallet-routes',
-                  params: {
-                    screen: 'staking-dashboard',
-                    params: {
-                      screen: 'staking-center',
-                      params: {
-                        screen: 'staking-center-main',
-                      },
-                    },
-                  },
-                })
-              } else {
-                navigation.navigate('app-root', {
-                  screen: 'main-wallet-routes',
+              navigation.navigate('app-root', {
+                screen: 'main-wallet-routes',
+                params: {
+                  screen: 'staking-dashboard',
                   params: {
                     screen: 'staking-center',
                     params: {
                       screen: 'staking-center-main',
                     },
                   },
-                })
-              }
+                },
+              })
             }}
             title={intl.formatMessage(messages.stakingCenterButton)}
             disabled={wallet.isReadOnly}

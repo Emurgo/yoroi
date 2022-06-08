@@ -8,7 +8,6 @@ import {OfflineBanner, StatusBar, Text} from '../components'
 import {assetMessages, txLabels} from '../i18n/global-messages'
 import {fetchAccountState} from '../legacy/account'
 import {checkForFlawedWallets} from '../legacy/actions'
-import {UI_V2} from '../legacy/config'
 import {isByron} from '../legacy/config'
 import {updateHistory} from '../legacy/history'
 import {
@@ -60,7 +59,7 @@ export const TxHistory = () => {
 
   return (
     <View style={styles.scrollView}>
-      <StatusBar type={UI_V2 ? 'light' : 'dark'} />
+      <StatusBar type="light" />
 
       <View style={styles.container}>
         <OfflineBanner />
@@ -68,7 +67,7 @@ export const TxHistory = () => {
 
         <CollapsibleHeader expanded={expanded}>
           <BalanceBanner />
-          {UI_V2 && <ActionsBanner />}
+          <ActionsBanner />
         </CollapsibleHeader>
 
         <Tabs>
