@@ -50,13 +50,12 @@ const WalletTabNavigator = () => {
           name="staking-dashboard"
           component={DashboardNavigator}
           options={{
-            tabBarIcon: ({focused}) =>
-              (
-                <Icon.TabStaking
-                  size={24}
-                  color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
-                />
-              ),
+            tabBarIcon: ({focused}) => (
+              <Icon.TabStaking
+                size={24}
+                color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
+              />
+            ),
             tabBarLabel: strings.dashboardTabBarLabel,
           }}
         />
