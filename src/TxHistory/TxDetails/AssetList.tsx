@@ -33,7 +33,7 @@ export const AssetList = ({assets, styles, onSelect}: AssetListProps) => {
           data={assets.sort((asset) => (asset.identifier === '' ? -1 : 1))}
           keyExtractor={(item) => item.identifier}
           renderItem={({item: entry, index}) => (
-            <Boundary fallbackProps={{size: 'small', style: {padding: 16}}}>
+            <Boundary loading={{fallbackProps: {size: 'small', style: {padding: 16}}}}>
               <AssetRow entry={entry} styles={styles} backColor={colors[index % colors.length]} onSelect={onSelect} />
             </Boundary>
           )}
