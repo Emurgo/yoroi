@@ -9,7 +9,7 @@ import {useSelector} from 'react-redux'
 import arrowDown from '../../assets/img/chevron_down.png'
 import arrowUp from '../../assets/img/chevron_up.png'
 import {Banner, Boundary, Button, CopyButton, OfflineBanner, StatusBar, Text} from '../../components'
-import {useTokenInfo} from '../../hooks'
+import {useTipStatus, useTokenInfo} from '../../hooks'
 import globalMessages from '../../i18n/global-messages'
 import {formatTokenWithSymbol} from '../../legacy/format'
 import {TransactionInfo} from '../../legacy/HistoryTransaction'
@@ -44,6 +44,12 @@ export const TxDetails = () => {
   const [expandedOut, setExpandedOut] = useState(false)
   const [addressDetail, setAddressDetail] = React.useState<null | string>(null)
   const transaction = transactions[id]
+  const tipStatus = useTipStatus({
+    wallet,
+    options: {
+      refetchInterval: 5000,
+    },
+  })
 
   const {fromFiltered, toFiltered, cntOmittedTo} = getShownAddresses(
     intl,
@@ -114,7 +120,13 @@ export const TxDetails = () => {
             <Label>{strings.txAssuranceLevel}</Label>
           </View>
           <View>
-            <Text secondary>{strings.confirmations(transaction.confirmations)}</Text>
+            <Boundary>
+              <Text secondary>
+                {strings.confirmations(
+                  transaction.blockNumber === 0 ? 0 : tipStatus.bestBlock.height - transaction.blockNumber,
+                )}
+              </Text>
+            </Boundary>
             <Label>{strings.transactionId}</Label>
             <View style={styles.dataContainer}>
               <Text secondary monospace numberOfLines={1} ellipsizeMode="middle">

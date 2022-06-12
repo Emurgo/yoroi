@@ -12,7 +12,7 @@ import type {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {Logger} from '../legacy/logging'
 import {getCardanoNetworkConfigById, isJormungandr} from '../legacy/networks'
 import {IsLockedError, nonblockingSynchronize, synchronize} from '../legacy/promise'
-import type {EncryptionMethod} from '../legacy/types'
+import type {BackendConfig, EncryptionMethod} from '../legacy/types'
 import {NetworkId, WalletImplementationId, YoroiProvider} from './cardano'
 import {AddressChain, AddressChainJSON} from './cardano/chain'
 import {TransactionCache, TransactionCacheJSON} from './cardano/shelley/transactionCache'
@@ -238,28 +238,36 @@ export class Wallet {
     return -1
   }
 
-  async _doFullSync() {
-    if (!this.transactionCache) throw new Error('invalid wallet state')
-    if (!this.networkId) throw new Error('invalid wallet state')
-    Logger.info(`Do full sync provider =`, this.provider)
-    assert.assert(this.isInitialized, 'doFullSync: isInitialized')
-    // TODO: multi-network support
-    const backendConfig = getCardanoNetworkConfigById(this.networkId, this.provider).BACKEND
-    const filterFn = (addrs) => api.filterUsedAddresses(addrs, backendConfig)
+  async _getAddressesInChunks(backendConfig: BackendConfig) {
     if (!this.internalChain) throw new Error('invalid wallet state')
     if (!this.externalChain) throw new Error('invalid wallet state')
+
+    const filterFn = (addrs) => api.filterUsedAddresses(addrs, backendConfig)
     await Promise.all([this.internalChain.sync(filterFn), this.externalChain.sync(filterFn)])
+
+    const internalAddresses = this.internalChain.getBlocks()
+    const externalAddresses = this.externalChain.getBlocks()
 
     const addresses =
       this.rewardAddressHex != null
-        ? [...this.internalChain.getBlocks(), ...this.externalChain.getBlocks(), ...[[this.rewardAddressHex]]]
-        : [...this.internalChain.getBlocks(), ...this.externalChain.getBlocks()]
+        ? [...internalAddresses, ...externalAddresses, [this.rewardAddressHex]]
+        : [...internalAddresses, ...externalAddresses]
+
+    return addresses
+  }
+
+  async _doFullSync() {
+    if (!this.transactionCache) throw new Error('invalid wallet state')
+    if (!this.networkId) throw new Error('invalid wallet state')
+    if (!this.externalChain) throw new Error('invalid wallet state')
+    assert.assert(this.isInitialized, 'doFullSync: isInitialized')
+
+    const backendConfig: BackendConfig = getCardanoNetworkConfigById(this.networkId, this.provider).BACKEND
+    const addressChunks = await this._getAddressesInChunks(backendConfig)
+
     if (!isJormungandr(this.networkId)) {
       Logger.info('Discovery done, now syncing transactions')
-      let keepGoing = true
-      while (keepGoing) {
-        keepGoing = await this.transactionCache.doSyncStep(addresses, this.networkId, this.provider)
-      }
+      await this.transactionCache.doSync(addressChunks, backendConfig)
     }
 
     // update receive screen to include any new addresses found

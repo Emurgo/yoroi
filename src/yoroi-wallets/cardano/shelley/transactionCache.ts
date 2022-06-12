@@ -1,18 +1,16 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {fromPairs, mapValues, max, sum, uniq} from 'lodash'
+import {fromPairs, mapValues, max} from 'lodash'
 import {defaultMemoize} from 'reselect'
 
 import * as api from '../../../legacy/api'
 import assert from '../../../legacy/assert'
-import {CONFIG} from '../../../legacy/config'
 import {ApiHistoryError} from '../../../legacy/errors'
 import {ObjectValues} from '../../../legacy/flow'
 import type {Transaction} from '../../../legacy/HistoryTransaction'
 import {TRANSACTION_STATUS} from '../../../legacy/HistoryTransaction'
 import {Logger} from '../../../legacy/logging'
-import {getCardanoNetworkConfigById} from '../../../legacy/networks'
-import {limitConcurrency} from '../../../legacy/promise'
-import type {NetworkId, YoroiProvider} from '../../../legacy/types'
+import type {BackendConfig, RawTransaction} from '../../../legacy/types'
 import type {RemoteCertificateMeta, TxHistoryRequest} from '../../../legacy/types'
 import {CERTIFICATE_KIND} from '../../../legacy/types'
 
@@ -23,7 +21,9 @@ type SyncMetadata = {
 }
 type TransactionCacheState = {
   transactions: Record<string, Transaction>
+  // @deprecated
   perAddressSyncMetadata: Record<string, SyncMetadata>
+  // @deprecated
   bestBlockNum: number | null | undefined // global best block, not per address
 }
 export type TimeForTx = {
@@ -31,43 +31,6 @@ export type TimeForTx = {
   blockNum: number
   txHash: string
   txOrdinal: number
-}
-
-const getLatestTransaction: (arg0: Array<Transaction>) => void | TimeForTx = (txs) => {
-  const blockInfo: Array<TimeForTx> = []
-
-  for (const tx of txs) {
-    if (tx.blockHash != null && tx.txOrdinal != null && tx.blockNum != null) {
-      blockInfo.push({
-        blockHash: tx.blockHash,
-        txHash: tx.id,
-        txOrdinal: tx.txOrdinal,
-        blockNum: tx.blockNum,
-      })
-    }
-  }
-
-  if (blockInfo.length === 0) {
-    return undefined
-  }
-
-  let best = blockInfo[0]
-
-  for (let i = 1; i < blockInfo.length; i++) {
-    if (blockInfo[i].blockNum > best.blockNum) {
-      best = blockInfo[i]
-      continue
-    }
-
-    if (blockInfo[i].blockNum === best.blockNum) {
-      if (blockInfo[i].txOrdinal > best.txOrdinal) {
-        best = blockInfo[i]
-        continue
-      }
-    }
-  }
-
-  return best
 }
 
 const perAddressTxsSelector = (state: TransactionCacheState) => {
@@ -246,142 +209,25 @@ export class TransactionCache {
     }
   }
 
-  _buildTxHistoryRequest(
-    addresses: Array<string>,
-    metadata: SyncMetadata,
-    currentBestBlockHash: string | null | undefined,
-  ): TxHistoryRequest {
-    assert.assert(currentBestBlockHash != null, 'buildTxHistoryRequest: bestBlock not null')
-
-    /* :: if (currentBestBlockHash == null) throw 'assert' */
-    const request = {
-      addresses,
-      untilBlock: currentBestBlockHash,
-    }
-
-    if (metadata.bestBlockHash != null && metadata.bestTxHash != null) {
-      return {
-        ...request,
-        after: {
-          block: metadata.bestBlockHash,
-          tx: metadata.bestTxHash,
-        },
-      } as any
-    }
-
-    return request as any
-  }
-
-  _isUpdatedTransaction(tx: Transaction): boolean {
-    const id = tx.id
-
-    // We have this transaction and it did not change
-    if (this._state.transactions[id] && this._state.transactions[id].lastUpdatedAt === tx.lastUpdatedAt) {
-      return false
-    }
-
-    if (this._state.transactions[id]) {
-      // Do things that matter if the transaction changed!
-      Logger.info('Tx changed', tx)
-    }
-
-    return true
-  }
-
-  // Returns number of updated transactions
-  _checkUpdatedTransactions(transactions: Array<Transaction>): number {
-    // Currently we do not support two updates inside a same batch
-    // (and backend shouldn't support it either)
-    assert.assert(
-      transactions.length === uniq(transactions.map((tx) => tx.id)).length,
-      'Got the same transaction twice in one batch',
-      transactions,
-    )
-    const updated = transactions.map((tx) => this._isUpdatedTransaction(tx))
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return (sum as any)(updated, (x) => (x ? 1 : 0))
-  }
-
-  async doSyncStep(
-    blocks: Array<Array<string>>,
-    networkId: NetworkId,
-    provider: YoroiProvider | null | undefined,
-  ): Promise<boolean> {
-    let count = 0
-    let wasPaginated = false
-    const errors: Array<Error> = []
-    const currentBestBlock = await api.getBestBlock(getCardanoNetworkConfigById(networkId, provider).BACKEND)
-    const tasks = blocks.map((addrs) => {
-      const metadata = this._getBlockMetadata(addrs)
-
-      const historyRequest = this._buildTxHistoryRequest(addrs, metadata, currentBestBlock.hash)
-
-      return () =>
-        api
-          .fetchNewTxHistory(historyRequest, getCardanoNetworkConfigById(networkId, provider).BACKEND)
-          .then((response) => [addrs, response] as const)
+  async doSync(addressesByChunks: Array<Array<string>>, backendConfig: BackendConfig) {
+    const txUpdate = await syncTxs({
+      addressesByChunks,
+      backendConfig,
+      transactions: this._state.transactions,
     })
-    const limit = limitConcurrency(CONFIG.MAX_CONCURRENT_REQUESTS)
-    const promises = tasks.map((t) => limit(t))
 
-    // Note(ppershing): This serializes the response order
-    // but still allows for concurrent requests
-    for (const promise of promises) {
-      try {
-        const [addrs, response] = await promise
-        wasPaginated = wasPaginated || !response.isLast
+    if (txUpdate) {
+      this.updateState({
+        transactions: txUpdate,
+        // @deprecated
+        bestBlockNum: this._state.bestBlockNum,
+        // @deprecated
+        perAddressSyncMetadata: this._state.perAddressSyncMetadata,
+      })
 
-        const metadata = this._getBlockMetadata(addrs)
-
-        const bestTx = getLatestTransaction(response.transactions)
-        // Note: we can update best block number only if we are processing
-        // the last page of the history request, see design doc for details
-        const newBestBlockNum =
-          response.isLast && response.transactions.length ? currentBestBlock.height : metadata.bestBlockNum
-        const newMetadata = {
-          bestBlockNum: newBestBlockNum,
-          bestBlockHash: bestTx?.blockHash,
-          bestTxHash: bestTx?.txHash,
-        }
-        const transactionsUpdate = fromPairs(response.transactions.map((tx) => [tx.id, tx]))
-        const metadataUpdate = fromPairs(addrs.map((addr) => [addr, newMetadata]))
-        count += this._checkUpdatedTransactions(response.transactions)
-
-        if (count > 0) {
-          Logger.info('TransactionCache: notifying subscribers on txs update')
-          this.notifyOnTxHistoryUpdate()
-        }
-
-        this.updateState({
-          transactions: {
-            ...this._state.transactions,
-            ...transactionsUpdate,
-          } as any,
-          perAddressSyncMetadata: {
-            ...this._state.perAddressSyncMetadata,
-            ...metadataUpdate,
-          } as any,
-          bestBlockNum: currentBestBlock.height,
-        })
-      } catch (e) {
-        if (e instanceof ApiHistoryError) {
-          // flush cache to resync
-          // (consider only removing cache for current address block)
-          this.resetState()
-          throw e
-        }
-
-        errors.push(e as Error)
-      }
+      Logger.info('TransactionCache: notifying subscribers on txs update')
+      this.notifyOnTxHistoryUpdate()
     }
-
-    if (errors.length) {
-      Logger.error('Sync errors', errors)
-      throw errors
-    }
-
-    return wasPaginated || count > 0
   }
 
   toJSON(): TransactionCacheJSON {
@@ -408,5 +254,253 @@ export class TransactionCache {
     }
 
     return cache
+  }
+}
+
+async function syncTxs({
+  addressesByChunks,
+  backendConfig,
+  transactions,
+}: Readonly<{
+  addressesByChunks: Array<Array<string>>
+  backendConfig: BackendConfig
+  transactions: Record<string, Transaction>
+}>): Promise<Record<string, Transaction> | undefined> {
+  const {bestBlock} = await api.getTipStatus(backendConfig)
+  if (!bestBlock.hash) return
+
+  // this should change when backend stop throwing when no tx_hash is passed
+  // so the last will become the tip and not the last tx submitted which would be faster
+  const lastTx = getLatestYoroiTransaction(Object.values(transactions))
+
+  // the way the addresses are arranged are make it slower (getting the same tx twice)
+  const tasks = addressesByChunks.map(async (addrs) => {
+    const taskResult: Array<Array<RawTransaction>> = []
+    let bestTx: TimeForTx | undefined
+    let isPaginating = false
+    let historyPayload = txHistoryPayloadFactory(
+      addrs,
+      {
+        // tip
+        bestBlockNum: bestBlock.height,
+        // current - from state txs saved
+        bestBlockHash: lastTx?.blockHash,
+        bestTxHash: lastTx?.txHash,
+      },
+      bestBlock.hash!,
+    )
+
+    do {
+      const response = await api.fetchNewTxHistory(historyPayload, backendConfig)
+      taskResult.push(response.transactions)
+
+      // next payload
+      isPaginating = !response.isLast
+      if (isPaginating) {
+        bestTx = getLatestApiTransaction(response.transactions)
+        historyPayload = txHistoryPayloadFactory(
+          addrs,
+          {
+            // tip
+            bestBlockNum: bestBlock.height,
+            // current - from api txs just received
+            bestBlockHash: bestTx?.blockHash,
+            bestTxHash: bestTx?.txHash,
+          },
+          bestBlock.hash!,
+        )
+      }
+    } while (isPaginating)
+
+    return taskResult
+  })
+
+  try {
+    const result = await Promise.all(tasks)
+    const newTxs = result.flat(2).map((tx) => [tx.hash, toCachedTx(tx)])
+    // .map((tx) => processTxHistoryData(tx, addressesByChunks.flat(), 0, networkId))
+
+    if (newTxs.length) {
+      return {...transactions, ...fromPairs(newTxs)}
+    }
+
+    return
+  } catch (e) {
+    if (e instanceof ApiHistoryError) {
+      switch ((e as ApiHistoryError).values?.response) {
+        // REFERENCE_BEST_BLOCK_MISTMATCH ignore and wait for the next iteration
+        // tip forked, but last_tx is still valid
+        case ApiHistoryError.errors.REFERENCE_BEST_BLOCK_MISMATCH:
+          return
+
+        // REFERENCE_BLOCK_MISTMATCH / REFERENCE_TX_NOT_FOUND tip forked last_tx no longer valid
+        // drop everything after last_tx (inclusive) and txs that were not included in any block yet
+        // it will cascade back till success
+        case ApiHistoryError.errors.REFERENCE_BLOCK_MISMATCH:
+        case ApiHistoryError.errors.REFERENCE_TX_NOT_FOUND:
+          if (lastTx) {
+            const newTxs = fromPairs(
+              Object.values(transactions)
+                .filter((t) => t.blockNum && t.blockNum < lastTx?.blockNum)
+                .map((t) => [t.id, t]),
+            )
+            return newTxs
+          } else {
+            Logger.error(`API returned an unexpected error response`)
+          }
+          break
+
+        // UNKNOWN
+        default:
+          Logger.error(`API returned an unknown error response: ${e}`)
+          return
+      }
+    }
+    Logger.error(`Unknown error: ${e}`)
+    return
+  }
+}
+
+function txHistoryPayloadFactory(addresses: Array<string>, metadata: SyncMetadata, currentBestBlockHash: string) {
+  const request: TxHistoryRequest = {
+    addresses,
+    untilBlock: currentBestBlockHash,
+  }
+
+  if (metadata.bestBlockHash != null && metadata.bestTxHash != null) {
+    return {
+      ...request,
+      after: {
+        block: metadata.bestBlockHash,
+        tx: metadata.bestTxHash,
+      },
+    }
+  }
+
+  return request
+}
+
+function getLatestYoroiTransaction(txs: Array<Transaction>): undefined | TimeForTx {
+  const blockInfo: Array<TimeForTx> = []
+
+  for (const tx of txs) {
+    if (tx.blockHash != null && tx.txOrdinal != null && tx.blockNum != null) {
+      blockInfo.push({
+        blockHash: tx.blockHash,
+        txHash: tx.id,
+        txOrdinal: tx.txOrdinal,
+        blockNum: tx.blockNum,
+      })
+    }
+  }
+
+  if (blockInfo.length === 0) {
+    return undefined
+  }
+
+  let best = blockInfo[0]
+
+  for (let i = 1; i < blockInfo.length; i++) {
+    if (blockInfo[i].blockNum > best.blockNum) {
+      best = blockInfo[i]
+      continue
+    }
+
+    if (blockInfo[i].blockNum === best.blockNum) {
+      if (blockInfo[i].txOrdinal > best.txOrdinal) {
+        best = blockInfo[i]
+        continue
+      }
+    }
+  }
+
+  return best
+}
+
+function getLatestApiTransaction(txs: Array<RawTransaction>): undefined | TimeForTx {
+  const blockInfo: Array<TimeForTx> = []
+
+  for (const tx of txs) {
+    if (tx.block_hash != null && tx.tx_ordinal != null && tx.block_num != null) {
+      blockInfo.push({
+        blockHash: tx.block_hash,
+        txHash: tx.hash,
+        txOrdinal: tx.tx_ordinal,
+        blockNum: tx.block_num,
+      })
+    }
+  }
+
+  if (blockInfo.length === 0) {
+    return undefined
+  }
+
+  let best = blockInfo[0]
+
+  for (let i = 1; i < blockInfo.length; i++) {
+    if (blockInfo[i].blockNum > best.blockNum) {
+      best = blockInfo[i]
+      continue
+    }
+
+    if (blockInfo[i].blockNum === best.blockNum) {
+      if (blockInfo[i].txOrdinal > best.txOrdinal) {
+        best = blockInfo[i]
+        continue
+      }
+    }
+  }
+
+  return best
+}
+
+export function toCachedTx(tx: RawTransaction): Transaction {
+  return {
+    id: tx.hash,
+    type: tx.type,
+    fee: tx.fee ?? undefined,
+    status: tx.tx_state,
+    inputs: tx.inputs.map((i) => ({
+      address: i.address,
+      amount: i.amount,
+      assets: (i.assets ?? []).map((a) => ({
+        amount: a.amount,
+        assetId: a.assetId,
+        policyId: a.policyId,
+        name: a.name,
+      })),
+    })),
+    outputs: tx.outputs.map((o) => ({
+      address: o.address,
+      amount: o.amount,
+      assets: (o.assets ?? []).map((a) => ({
+        amount: a.amount,
+        assetId: a.assetId,
+        policyId: a.policyId,
+        name: a.name,
+      })),
+    })),
+    lastUpdatedAt: tx.last_update,
+    // all of these can be null
+    submittedAt: tx.time,
+    blockNum: tx.block_num,
+    blockHash: tx.block_hash,
+    txOrdinal: tx.tx_ordinal,
+    epoch: tx.epoch,
+    slot: tx.slot,
+    withdrawals: tx.withdrawals,
+    certificates: tx.certificates,
+    validContract: tx.valid_contract,
+    scriptSize: tx.script_size,
+    collateralInputs: (tx.collateral_inputs ?? []).map((i) => ({
+      address: i.address,
+      amount: i.amount,
+      assets: (i.assets ?? []).map((a) => ({
+        amount: a.amount,
+        assetId: a.assetId,
+        policyId: a.policyId,
+        name: a.name,
+      })),
+    })),
   }
 }

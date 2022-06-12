@@ -27,6 +27,7 @@ import type {
   FundInfoResponse,
   PoolInfoRequest,
   RawUtxo,
+  TipStatusResponse,
   TokenInfoRequest,
   TxBodiesRequest,
   TxBodiesResponse,
@@ -886,6 +887,10 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
 
   async fetchTxStatus(request: TxStatusRequest): Promise<TxStatusResponse> {
     return api.fetchTxStatus(request, this._getBackendConfig())
+  }
+
+  async fetchTipStatus(): Promise<TipStatusResponse> {
+    return api.getTipStatus(this._getBackendConfig())
   }
 }
 
