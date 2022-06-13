@@ -1,5 +1,4 @@
 import React, {useState} from 'react'
-import {useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
