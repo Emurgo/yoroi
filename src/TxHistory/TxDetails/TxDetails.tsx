@@ -9,7 +9,7 @@ import {useSelector} from 'react-redux'
 import arrowDown from '../../assets/img/chevron_down.png'
 import arrowUp from '../../assets/img/chevron_up.png'
 import {Banner, Boundary, Button, CopyButton, OfflineBanner, StatusBar, Text} from '../../components'
-import {useTokenInfo} from '../../hooks'
+import {useTipStatus, useTokenInfo} from '../../hooks'
 import globalMessages from '../../i18n/global-messages'
 import {formatTokenWithSymbol} from '../../legacy/format'
 import {TransactionInfo} from '../../legacy/HistoryTransaction'
@@ -24,7 +24,7 @@ import Screen from '../../Screen'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {brand, COLORS} from '../../theme'
 import {TokenEntry} from '../../types'
-import {MultiToken} from '../../yoroi-wallets'
+import {MultiToken, YoroiWallet} from '../../yoroi-wallets'
 import {AssetList} from './AssetList'
 import assetListStyle from './AssetListTransaction.style'
 
@@ -114,7 +114,9 @@ export const TxDetails = () => {
             <Label>{strings.txAssuranceLevel}</Label>
           </View>
           <View>
-            <Text secondary>{strings.confirmations(transaction.confirmations)}</Text>
+            <Boundary loading={{fallbackProps: {size: 'small'}}}>
+              <Confirmations transaction={transaction} wallet={wallet} />
+            </Boundary>
             <Label>{strings.transactionId}</Label>
             <View style={styles.dataContainer}>
               <Text secondary monospace numberOfLines={1} ellipsizeMode="middle">
@@ -136,6 +138,22 @@ export const TxDetails = () => {
         />
       )}
     </View>
+  )
+}
+
+const Confirmations = ({transaction, wallet}: {transaction: TransactionInfo; wallet: YoroiWallet}) => {
+  const strings = useStrings()
+  const tipStatus = useTipStatus({
+    wallet,
+    options: {
+      refetchInterval: 5000,
+    },
+  })
+
+  return (
+    <Text secondary>
+      {strings.confirmations(transaction.blockNumber === 0 ? 0 : tipStatus.bestBlock.height - transaction.blockNumber)}
+    </Text>
   )
 }
 

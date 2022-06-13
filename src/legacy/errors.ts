@@ -26,7 +26,13 @@ export class NetworkError extends LocalizableError {
 }
 
 // thrown by the backend after a rollback
-export class ApiHistoryError extends ApiError {}
+export class ApiHistoryError extends ApiError {
+  public static readonly errors = {
+    REFERENCE_TX_NOT_FOUND: 'REFERENCE_TX_NOT_FOUND',
+    REFERENCE_BLOCK_MISMATCH: 'REFERENCE_BLOCK_MISMATCH',
+    REFERENCE_BEST_BLOCK_MISMATCH: 'REFERENCE_BEST_BLOCK_MISMATCH',
+  }
+}
 
 // TODO(v-almonacid): redefine errors as instances of LocalizableError
 import ExtendableError from 'es6-error'

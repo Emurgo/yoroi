@@ -637,7 +637,7 @@ SPEC CHECKSUMS:
   Flipper-PeerTalk: 116d8f857dc6ef55c7a5a75ea3ceaafe878aadc9
   Flipper-RSocket: 127954abe8b162fcaf68d2134d34dc2bd7076154
   FlipperKit: 651f50a42eb95c01b3e89a60996dd6aded529eeb
-  glog: 73c2498ac6884b13ede40eda8228cb1eee9d9d62
+  glog: 7a8788d88d2a384c05df45e95c5e763e4d81f3ad
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   MultiplatformBleAdapter: 5a6a897b006764392f9cef785e4360f54fb9477d
   OpenSSL-Universal: 1aa4f6a6ee7256b83db99ec1ccdaa80d10f9af9b
@@ -647,7 +647,7 @@ SPEC CHECKSUMS:
   Permission-LocationAccuracy: 43d7a6b3d736a90168e9fc7117a721ca44722f83
   Permission-LocationAlways: fbf36cbdcabc3101f1168ad1ec45cfc5a6448cc4
   Permission-LocationWhenInUse: 006c85c8de0c05b5d8be8e8029e4f6b813270293
-  RCT-Folly: ec7a233ccc97cc556cf7237f0db1ff65b986f27c
+  RCT-Folly: 91521e05ace43e89980cabd1fb54685f7827ddb9
   RCTRequired: 6d3e854f0e7260a648badd0d44fc364bc9da9728
   RCTTypeSafety: c1f31d19349c6b53085766359caac425926fafaa
   React: bda6b6d7ae912de97d7a61aa5c160db24aa2ad69

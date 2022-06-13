@@ -5,17 +5,17 @@ import _ from 'lodash'
 import {StakePoolInfosAndHistories} from '../types'
 import {ServerStatus} from '../yoroi-wallets'
 import assert from './assert'
-import {checkAndFacadeTransactionAsync} from './facade'
 import fetchDefault, {checkedFetch} from './fetch'
-import type {Transaction} from './HistoryTransaction'
-import type {BackendConfig} from './types'
 import type {
   AccountStateRequest,
   AccountStateResponse,
+  BackendConfig,
   BestblockResponse,
   FundInfoResponse,
   PoolInfoRequest,
+  RawTransaction,
   RawUtxo,
+  TipStatusResponse,
   TokenInfoRequest,
   TokenInfoResponse,
   TxBodiesRequest,
@@ -33,18 +33,20 @@ export const checkServerStatus = (config: BackendConfig): Promise<ServerStatus> 
 export const getBestBlock = (config: BackendConfig): Promise<BestblockResponse> =>
   fetchDefault('v2/bestblock', null, config, 'GET') as any
 
+export const getTipStatus = async (config: BackendConfig): Promise<TipStatusResponse> =>
+  fetchDefault('v2/tipStatus', null, config, 'GET') as unknown as TipStatusResponse
+
 export const fetchNewTxHistory = async (
   request: TxHistoryRequest,
   config: BackendConfig,
-): Promise<{isLast: boolean; transactions: Array<Transaction>}> => {
+): Promise<{isLast: boolean; transactions: Array<RawTransaction>}> => {
   assert.preconditionCheck(
     request.addresses.length <= config.TX_HISTORY_MAX_ADDRESSES,
     'fetchNewTxHistory: too many addresses',
   )
-  const response: any = await fetchDefault('v2/txs/history', request, config)
-  const transactions = await Promise.all(response.map(checkAndFacadeTransactionAsync))
+  const response = (await fetchDefault('v2/txs/history', request, config)) as Array<RawTransaction>
   return {
-    transactions,
+    transactions: response,
     isLast: response.length < config.TX_HISTORY_RESPONSE_LIMIT,
   }
 }

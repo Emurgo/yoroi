@@ -1,6 +1,6 @@
 import {MultiToken} from '../yoroi-wallets'
+import {toCachedTx} from '../yoroi-wallets/cardano/shelley/transactionCache'
 import {CONFIG} from './config'
-import {checkAndFacadeTransactionAsync} from './facade'
 import {TRANSACTION_DIRECTION} from './HistoryTransaction'
 import {processTxHistoryData} from './processTransactions'
 import type {RawTransaction} from './types'
@@ -275,7 +275,7 @@ const txs: Array<RawTransaction> = [
 describe('processTxHistoryData', () => {
   it('regular, point-to-point ADA tx (received)', async () => {
     const tx = processTxHistoryData(
-      await checkAndFacadeTransactionAsync(txs[0]),
+      await toCachedTx(txs[0]),
       myAddresses,
       100, // confirmations
       NETWORK_ID,
@@ -290,7 +290,7 @@ describe('processTxHistoryData', () => {
 
   it('regular, point-to-point ADA tx (sent)', async () => {
     const tx = processTxHistoryData(
-      await checkAndFacadeTransactionAsync(txs[1]),
+      await toCachedTx(txs[1]),
       myAddresses,
       100, // confirmations
       NETWORK_ID,
@@ -305,7 +305,7 @@ describe('processTxHistoryData', () => {
 
   it('point-to-point ADA tx with tokens (received)', async () => {
     const tx = processTxHistoryData(
-      await checkAndFacadeTransactionAsync(txs[2]),
+      await toCachedTx(txs[2]),
       myAddresses,
       100, // confirmations
       NETWORK_ID,
@@ -325,7 +325,7 @@ describe('processTxHistoryData', () => {
 
   it('intrawallet ADA tx with tokens', async () => {
     const tx = processTxHistoryData(
-      await checkAndFacadeTransactionAsync(txs[3]),
+      await toCachedTx(txs[3]),
       myAddresses,
       100, // confirmations
       NETWORK_ID,

@@ -9,6 +9,7 @@ import {WalletMeta} from '../../legacy/state'
 import type {
   FundInfoResponse,
   RawUtxo,
+  TipStatusResponse,
   TxBodiesRequest,
   TxBodiesResponse,
   TxStatusRequest,
@@ -216,6 +217,8 @@ export interface WalletInterface {
 
   fetchTxStatus(request: TxStatusRequest): Promise<TxStatusResponse>
 
+  fetchTipStatus(): Promise<TipStatusResponse>
+
   resync(): void
 }
 
@@ -290,6 +293,7 @@ type YoroiWalletKeys =
   | 'getAllUtxosForKey'
   | 'fetchUTXOs'
   | 'fetchAccountState'
+  | 'fetchTipStatus'
   | 'getDelegationStatus'
   | 'rewardAddressHex'
   | 'createDelegationTx'
@@ -322,6 +326,7 @@ const yoroiWalletKeys: Array<YoroiWalletKeys> = [
   'getAllUtxosForKey',
   'fetchUTXOs',
   'fetchAccountState',
+  'fetchTipStatus',
   'getDelegationStatus',
   'rewardAddressHex',
   'createDelegationTx',

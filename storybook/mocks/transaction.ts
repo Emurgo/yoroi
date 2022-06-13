@@ -74,6 +74,7 @@ export const mockTransaction = (transaction?: Partial<TransactionInfo>): Transac
       },
     ],
     confirmations: 100,
+    blockNumber: 50000,
     direction: 'RECEIVED',
     submittedAt: '2021-02-19T15:53:36.000Z',
     lastUpdatedAt: '2021-02-19T15:53:36.000Z',
