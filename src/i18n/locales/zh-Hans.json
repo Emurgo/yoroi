@@ -488,6 +488,8 @@
   "global.ledgerMessages.rejectedByUserError": "操作被用户取消。",
   "global.ledgerMessages.usbAlwaysConnected": "在此过程完成之前，您的Ledger设备将通过USB保持连接。",
   "global.ledgerMessages.continueOnLedger": "Continue on Ledger",
+  "global.lockedDeposit": "Locked deposit",
+  "global.lockedDepositHint": "This amount cannot be transferred or delegated while you hold assets like tokens or NFTs",
   "global.network.syncErrorBannerTextWithoutRefresh": "我们遇到同步问题。",
   "global.network.syncErrorBannerTextWithRefresh": "我们遇到同步问题，下拉刷新。",
   "global.nfts": "{qty, plural, one {NFT} other {NFTs}}",
