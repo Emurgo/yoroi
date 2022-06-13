@@ -6,7 +6,7 @@ import {Icon} from '../Icon'
 export const SettingsButton = (props) => {
   return (
     <TouchableOpacity {...props}>
-      <Icon.Gear color="white" />
+      <Icon.Gear size={32} color="white" />
     </TouchableOpacity>
   )
 }

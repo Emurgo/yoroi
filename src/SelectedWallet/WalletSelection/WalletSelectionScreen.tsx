@@ -297,6 +297,7 @@ const styles = StyleSheet.create({
   link: {
     flexDirection: 'row',
     justifyContent: 'center',
+    alignItems: 'center',
   },
 })
 

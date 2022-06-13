@@ -12,7 +12,7 @@ import {TxHistoryRouteNavigation} from '../navigation'
 import {COLORS} from '../theme'
 
 const ACTION_PROPS = {
-  size: 36,
+  size: 32,
   color: COLORS.WHITE,
 }
 
