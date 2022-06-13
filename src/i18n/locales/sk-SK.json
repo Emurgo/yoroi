@@ -488,6 +488,8 @@
   "global.ledgerMessages.rejectedByUserError": "Operácia zrušená užívateľom",
   "global.ledgerMessages.usbAlwaysConnected": "Vaše Ledger zariadenie zostáva pripojené pomocou USB dokiaľ nebude proces dokončený.",
   "global.ledgerMessages.continueOnLedger": "Continue on Ledger",
+  "global.lockedDeposit": "Locked deposit",
+  "global.lockedDepositHint": "This amount cannot be transferred or delegated while you hold assets like tokens or NFTs",
   "global.network.syncErrorBannerTextWithoutRefresh": "Evidujeme problémy pri synchronizácií.",
   "global.network.syncErrorBannerTextWithRefresh": "Evidujeme problémy pri synchronizácií. Potiahnutím dole skúste znovu obnoviť",
   "global.nfts": "{qty, plural, one {NFT} other {NFTs}}",
