@@ -2,10 +2,11 @@ import {defineMessage} from '@formatjs/intl'
 import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {useIntl} from 'react-intl'
-import {Linking, ScrollView, TouchableOpacity, View} from 'react-native'
+import {Image, Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useSelector} from 'react-redux'
 
+import SupportImage from '../assets/img/icon/shape.png'
 import {CatalystNavigator} from '../Catalyst/CatalystNavigator'
 import {Icon, Spacer, Text} from '../components'
 import {useWalletMetas} from '../hooks'
@@ -37,8 +38,8 @@ export const Menu = () => {
   const walletCount = walletMetas?.length || ''
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={{flex: 1}}>
-      <ScrollView style={{flex: 1}} contentContainerStyle={{padding: 16}} bounces={false}>
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
+      <ScrollView contentContainerStyle={styles.scrollViewContent} bounces={false}>
         <AllWallets
           label={`${strings.allWallets} (${walletCount})`}
           onPress={navigateTo.allWallets}
@@ -46,14 +47,11 @@ export const Menu = () => {
         />
         <HR />
 
-        <Spacer height={24} />
-
         <Catalyst //
           label={strings.catalystVoting}
           onPress={navigateTo.catalystVoting}
           left={<Icon.Catalyst size={26} color="#6B7384" />}
         />
-
         <HR />
 
         <Settings //
@@ -63,23 +61,48 @@ export const Menu = () => {
         />
         <HR />
 
-        <FAQ //
-          label={strings.faq}
-          onPress={navigateTo.faq}
-          left={<Icon.QuestionMark size={26} color="#6B7384" />}
+        <KnowledgeBase //
+          label={strings.knowledgeBase}
+          onPress={navigateTo.knowledgeBase}
+          left={<Icon.Info size={24} color="#6B7384" />}
         />
         <HR />
+
+        <Spacer fill />
+
+        <SupportLink />
       </ScrollView>
     </SafeAreaView>
   )
 }
 
+const SupportLink = () => {
+  const strings = useStrings()
+  const navigateTo = useNavigateTo()
+
+  return (
+    <View style={styles.support}>
+      <View style={styles.supportTitle}>
+        <Text style={styles.supportTitleText}>{strings.supportTitle}</Text>
+      </View>
+      <Spacer height={10} />
+      <TouchableOpacity onPress={navigateTo.support} style={styles.supportLink}>
+        <Image source={SupportImage} />
+        <Spacer width={10} />
+        <Text bold style={styles.supportLinkText}>
+          {strings.supportLink.toLocaleUpperCase()}
+        </Text>
+      </TouchableOpacity>
+    </View>
+  )
+}
+
 const Item = ({label, left, onPress}: {label: string; left: React.ReactElement; onPress: () => void}) => {
   return (
-    <TouchableOpacity onPress={onPress} style={{flexDirection: 'row', alignItems: 'center', paddingVertical: 16}}>
+    <TouchableOpacity onPress={onPress} style={styles.item}>
       {left}
       <Spacer width={12} />
-      <Text style={{color: '#242838'}}>{label}</Text>
+      <Text style={styles.itemText}>{label}</Text>
       <Spacer fill />
       <Icon.Chevron direction="right" size={16} color="#6B7384" />
     </TouchableOpacity>
@@ -87,12 +110,12 @@ const Item = ({label, left, onPress}: {label: string; left: React.ReactElement; 
 }
 
 const HR = () => {
-  return <View style={{height: 1, backgroundColor: 'lightgrey'}} />
+  return <View style={styles.hr} />
 }
 
 const AllWallets = Item
 const Settings = Item
-const FAQ = Item
+const KnowledgeBase = Item
 const Catalyst = ({label, left, onPress}: {label: string; left: React.ReactElement; onPress: () => void}) => {
   const tokenBalance = useSelector(tokenBalanceSelector)
   const sufficientFunds = tokenBalance.getDefault().gte(CONFIG.CATALYST.MIN_ADA)
@@ -115,6 +138,9 @@ const Catalyst = ({label, left, onPress}: {label: string; left: React.ReactEleme
   )
 }
 
+const SUPPORT_TICKET_LINK = 'https://emurgohelpdesk.zendesk.com/hc/en-us/requests/new?ticket_form_id=360013330335'
+const KNOWLEDGE_BASE_LINK = 'https://emurgohelpdesk.zendesk.com/hc/en-us/categories/4412619927695-Yoroi'
+
 const useNavigateTo = () => {
   const {navigation, navigateToSettings} = useWalletNavigation()
 
@@ -128,7 +154,8 @@ const useNavigateTo = () => {
         },
       }),
     settings: () => navigateToSettings(),
-    faq: () => Linking.openURL('https://yoroi-wallet.com/faq/'),
+    support: () => Linking.openURL(SUPPORT_TICKET_LINK),
+    knowledgeBase: () => Linking.openURL(KNOWLEDGE_BASE_LINK),
   }
 }
 
@@ -139,7 +166,9 @@ const useStrings = () => {
     allWallets: intl.formatMessage(messages.allWallets),
     catalystVoting: intl.formatMessage(messages.catalystVoting),
     settings: intl.formatMessage(messages.settings),
-    faq: intl.formatMessage(messages.faq),
+    supportTitle: intl.formatMessage(messages.supportTitle),
+    supportLink: intl.formatMessage(messages.supportLink),
+    knowledgeBase: intl.formatMessage(messages.knowledgeBase),
     menu: intl.formatMessage(messages.menu),
   }
 }
@@ -157,12 +186,59 @@ const messages = defineMessage({
     id: 'menu.settings',
     defaultMessage: '!!!Settings',
   },
-  faq: {
-    id: 'menu.faq',
-    defaultMessage: '!!!FAQ',
+  supportTitle: {
+    id: 'menu.supportTitle',
+    defaultMessage: '!!!Any questions',
+  },
+  supportLink: {
+    id: 'menu.supportLink',
+    defaultMessage: '!!!Ask our support team',
+  },
+  knowledgeBase: {
+    id: 'menu.knowledgeBase',
+    defaultMessage: '!!!Knowledge base',
   },
   menu: {
     id: 'menu',
     defaultMessage: '!!!Menu',
+  },
+})
+
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+  },
+  hr: {
+    height: 1,
+    backgroundColor: 'lightgrey',
+  },
+  item: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 16,
+  },
+  itemText: {
+    color: '#242838',
+  },
+  scrollViewContent: {
+    flex: 1,
+    padding: 16,
+  },
+  support: {
+    alignItems: 'center',
+  },
+  supportTitle: {
+    justifyContent: 'center',
+  },
+  supportTitleText: {
+    color: '#6B7384',
+  },
+  supportLink: {
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  supportLinkText: {
+    color: '#4B6DDE',
   },
 })

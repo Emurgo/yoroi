@@ -4,7 +4,8 @@ import {isEmpty} from 'lodash'
 import React, {useEffect} from 'react'
 import type {IntlShape} from 'react-intl'
 import {defineMessages, useIntl} from 'react-intl'
-import {Alert} from 'react-native'
+import {Alert, AppState} from 'react-native'
+import {useQueryClient} from 'react-query'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {CreatePinScreen, PinLoginScreen} from './auth'
@@ -12,7 +13,7 @@ import {BiometricAuthScreen} from './BiometricAuth'
 import {Boundary} from './components'
 import {FirstRunNavigator} from './FirstRun/FirstRunNavigator'
 import {errorMessages} from './i18n/global-messages'
-import {showErrorDialog, signin} from './legacy/actions'
+import {checkBiometricStatus, showErrorDialog, signin} from './legacy/actions'
 import {canBiometricEncryptionBeEnabled, recreateAppSignInKeys} from './legacy/deviceSettings'
 import env from './legacy/env'
 import IndexScreen from './legacy/IndexScreen'
@@ -54,9 +55,18 @@ const NavigatorSwitch = () => {
   const isAppSetupComplete = useSelector(isAppSetupCompleteSelector)
   const canEnableBiometrics = useSelector(canEnableBiometricSelector)
   const installationId = useSelector(installationIdSelector)
+  const queryClient = useQueryClient()
   const dispatch = useDispatch()
 
   if (!installationId) throw new Error('invalid state')
+
+  useEffect(() => {
+    const appStateSubscription = AppState.addEventListener('change', async () => {
+      await dispatch(checkBiometricStatus())
+      queryClient.invalidateQueries(['walletMetas'])
+    })
+    return () => appStateSubscription?.remove()
+  }, [dispatch, queryClient])
 
   useEffect(() => {
     if (hasAnyWallet && !isAuthenticated && isSystemAuthEnabled && !canEnableBiometrics && !isMaintenance) {

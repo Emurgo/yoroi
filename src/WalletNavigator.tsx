@@ -6,14 +6,11 @@ import {defineMessages, useIntl} from 'react-intl'
 import {CatalystNavigator} from './Catalyst'
 import {Icon} from './components'
 import {DashboardNavigator} from './Dashboard'
-import {isHaskellShelley, UI_V2} from './legacy/config'
+import {isHaskellShelley} from './legacy/config'
 import {MenuNavigator} from './Menu'
 import {WalletStackRoutes, WalletTabRoutes} from './navigation'
-import {ReceiveScreenNavigator} from './Receive'
 import {useSelectedWallet, WalletSelectionScreen} from './SelectedWallet'
-import {SendScreenNavigator} from './Send'
 import {SettingsScreenNavigator} from './Settings'
-import {StakingCenterNavigator} from './Staking'
 import {theme} from './theme'
 import {TxHistoryNavigator} from './TxHistory'
 
@@ -34,120 +31,44 @@ const WalletTabNavigator = () => {
       initialRouteName={initialRoute}
       backBehavior="initialRoute"
     >
-      {UI_V2 && (
-        <Tab.Screen
-          name="history"
-          component={TxHistoryNavigator}
-          options={{
-            tabBarIcon: ({focused}) => (
-              <Icon.TabWallet
-                size={24}
-                color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
-              />
-            ),
-            tabBarLabel: strings.walletTabBarLabel,
-          }}
-        />
-      )}
+      <Tab.Screen
+        name="history"
+        component={TxHistoryNavigator}
+        options={{
+          tabBarIcon: ({focused}) => (
+            <Icon.TabWallet
+              size={24}
+              color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
+            />
+          ),
+          tabBarLabel: strings.walletTabBarLabel,
+        }}
+      />
 
       {isHaskellShelley(wallet.walletImplementationId) && (
         <Tab.Screen
           name="staking-dashboard"
           component={DashboardNavigator}
           options={{
-            tabBarIcon: ({focused}) =>
-              !UI_V2 ? (
-                <Icon.Categories
-                  size={30}
-                  color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
-                />
-              ) : (
-                <Icon.TabStaking
-                  size={24}
-                  color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
-                />
-              ),
+            tabBarIcon: ({focused}) => (
+              <Icon.TabStaking
+                size={24}
+                color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
+              />
+            ),
             tabBarLabel: strings.dashboardTabBarLabel,
           }}
         />
       )}
 
-      {!UI_V2 && (
-        <Tab.Screen
-          name="history"
-          component={TxHistoryNavigator}
-          options={{
-            tabBarIcon: ({focused}) => (
-              <Icon.Transaction
-                size={38}
-                color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
-              />
-            ),
-            tabBarLabel: strings.txHistoryTabBarLabel,
-          }}
-        />
-      )}
-
-      {!wallet.isReadOnly && !UI_V2 && (
-        <Tab.Screen
-          name="send-ada"
-          component={SendScreenNavigator}
-          options={{
-            tabBarIcon: ({focused}) => (
-              <Icon.Send
-                size={24}
-                color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
-              />
-            ),
-            tabBarLabel: strings.sendTabBarLabel,
-          }}
-        />
-      )}
-
-      {!UI_V2 && (
-        <Tab.Screen
-          name="receive-ada"
-          component={ReceiveScreenNavigator}
-          options={{
-            tabBarIcon: ({focused}) => (
-              <Icon.Received
-                size={24}
-                color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
-              />
-            ),
-            tabBarLabel: strings.receiveTabBarLabel,
-          }}
-        />
-      )}
-
-      {!UI_V2 && isHaskellShelley(wallet.walletImplementationId) && !wallet.isReadOnly && (
-        <Tab.Screen
-          name="staking-center"
-          component={StakingCenterNavigator}
-          options={{
-            tabBarIcon: ({focused}) => (
-              <Icon.Ada size={18} color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE} />
-            ),
-            tabBarLabel: strings.delegateTabBarLabel,
-          }}
-        />
-      )}
-
-      {UI_V2 && (
-        <Tab.Screen
-          name="menu"
-          component={MenuNavigator}
-          options={{
-            tabBarIcon: ({focused}) => (
-              <Icon.Menu
-                size={20}
-                color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
-              />
-            ),
-            tabBarLabel: strings.menuTabBarLabel,
-          }}
-        />
-      )}
+      <Tab.Screen
+        name="menu"
+        component={MenuNavigator}
+        options={{
+          tabBarIcon: ({focused}) => <Icon.Menu size={20} color={focused ? '#17d1aa' : '#A7AFC0'} />,
+          tabBarLabel: strings.menuTabBarLabel,
+        }}
+      />
     </Tab.Navigator>
   )
 }

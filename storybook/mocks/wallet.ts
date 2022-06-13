@@ -1,7 +1,10 @@
+import {SignedTx} from '@emurgo/yoroi-lib-core'
 import BigNumber from 'bignumber.js'
+import KeyStore from '../../src/legacy/KeyStore'
 
 import {RemotePoolMetaSuccess, StakePoolInfosAndHistories, TokenEntry, TokenInfo} from '../../src/types'
 import {YoroiWallet} from '../../src/yoroi-wallets'
+import {YoroiSignedTx, YoroiUnsignedTx} from '../../src/yoroi-wallets/types'
 
 export const mockWallet: YoroiWallet = {
   id: 'wallet-id',
@@ -9,6 +12,7 @@ export const mockWallet: YoroiWallet = {
   networkId: 300,
   checksum: {TextPart: 'text-part', ImagePart: 'image-part'},
   isHW: false,
+  hwDeviceInfo: null as any,
   isReadOnly: false,
   isEasyConfirmationEnabled: false,
   rewardAddressHex: 'reward-address-hex',
@@ -37,27 +41,27 @@ export const mockWallet: YoroiWallet = {
   signTx: () => {
     throw new Error('Not implemented')
   },
-  signTxLegacy: () => {
-    throw new Error('Not implemented')
-  },
   signTxWithLedger: () => {
     throw new Error('Not implemented')
   },
-  fetchTxStatus: () => {
-    throw new Error('Not implemented')
-  },
+  checkServerStatus: () =>
+    Promise.resolve({
+      isServerOk: true,
+      isMaintenance: false,
+      serverTime: new Date(),
+      isQueueOnline: true,
+    }),
+  fetchTxStatus: async () => ({}),
   submitTransaction: () => {
     throw new Error('Not implemented')
   },
   createVotingRegTx: () => {
     throw new Error('Not implemented')
   },
-  checkServerStatus: () => {
-    throw new Error('Not implemented')
-  },
   subscribe: () => {
     throw new Error('Not implemented')
   },
+  toJSON: () => null as any,
 
   // enableEasyConfirmation: () => {
   //   throw new Error('not implemented: enableEasyConfirmation')
@@ -155,3 +159,51 @@ export const poolInfoAndHistory: RemotePoolMetaSuccess = {
     },
   ],
 }
+
+export const mockYoroiTx = {
+  entries: {},
+  amounts: {},
+  fee: {'': '12345'},
+  metadata: {},
+  change: {},
+  staking: {
+    registrations: {},
+    deregistrations: {},
+    delegations: {},
+    withdrawals: {},
+  },
+  unsignedTx: {} as any,
+  mock: true,
+} as const
+
+export const mockYoroiSignedTx: YoroiSignedTx & {mock: true} = {
+  entries: {},
+  amounts: {},
+  fee: {'': '12345'},
+  metadata: {},
+  change: {},
+  staking: {
+    registrations: {},
+    deregistrations: {},
+    delegations: {},
+    withdrawals: {},
+  },
+  signedTx: {id: 'tx-id', encodedTx: new Uint8Array([1, 2, 3])},
+  mock: true,
+}
+
+export const mockKeyStore = (overrides?: {
+  getData?: typeof KeyStore.getData
+  storeData?: typeof KeyStore.storeData
+  deleteData?: typeof KeyStore.deleteData
+}) =>
+  ({
+    getData: async (_keyId, _encrpytionMethod, _message, password, _intl) => {
+      if (password !== 'password') throw new Error('Invalid Password')
+
+      return 'masterkey'
+    },
+    storeData: async () => undefined,
+    deleteData: async () => undefined,
+    ...(overrides as any),
+  } as unknown as typeof KeyStore)

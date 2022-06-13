@@ -15,10 +15,12 @@ type DangerousActionProps = {
     content: Array<string>
   }
   primaryButton: {
+    disabled?: boolean
     label: string
     onPress: () => Promise<void> | void
   }
   secondaryButton?: {
+    disabled?: boolean
     label?: string
     onPress: () => Promise<void> | void
     primary?: boolean

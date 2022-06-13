@@ -5,7 +5,6 @@ import {defineMessages, useIntl} from 'react-intl'
 
 import {SettingsButton} from '../components/Button'
 import {useWalletName} from '../hooks'
-import {UI_V2} from '../legacy/config'
 import {DashboardRoutes, defaultStackNavigationOptions, useWalletNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
 import {DelegationConfirmation} from '../Staking'
@@ -37,20 +36,16 @@ export const DashboardNavigator = () => {
           headerRightContainerStyle: {paddingRight: 16},
         }}
       />
-      {UI_V2 && (
-        <Stack.Screen //
-          name="staking-center"
-          component={StakingCenter}
-          options={{title: strings.title}}
-        />
-      )}
-      {UI_V2 && (
-        <Stack.Screen
-          name="delegation-confirmation"
-          component={DelegationConfirmation}
-          options={{title: strings.title}}
-        />
-      )}
+      <Stack.Screen //
+        name="staking-center"
+        component={StakingCenter}
+        options={{title: strings.title}}
+      />
+      <Stack.Screen
+        name="delegation-confirmation"
+        component={DelegationConfirmation}
+        options={{title: strings.title}}
+      />
     </Stack.Navigator>
   )
 }
