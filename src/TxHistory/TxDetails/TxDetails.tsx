@@ -24,7 +24,7 @@ import Screen from '../../Screen'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {brand, COLORS} from '../../theme'
 import {TokenEntry} from '../../types'
-import {MultiToken} from '../../yoroi-wallets'
+import {MultiToken, YoroiWallet} from '../../yoroi-wallets'
 import {AssetList} from './AssetList'
 import assetListStyle from './AssetListTransaction.style'
 
@@ -44,12 +44,6 @@ export const TxDetails = () => {
   const [expandedOut, setExpandedOut] = useState(false)
   const [addressDetail, setAddressDetail] = React.useState<null | string>(null)
   const transaction = transactions[id]
-  const tipStatus = useTipStatus({
-    wallet,
-    options: {
-      refetchInterval: 5000,
-    },
-  })
 
   const {fromFiltered, toFiltered, cntOmittedTo} = getShownAddresses(
     intl,
@@ -120,12 +114,8 @@ export const TxDetails = () => {
             <Label>{strings.txAssuranceLevel}</Label>
           </View>
           <View>
-            <Boundary>
-              <Text secondary>
-                {strings.confirmations(
-                  transaction.blockNumber === 0 ? 0 : tipStatus.bestBlock.height - transaction.blockNumber,
-                )}
-              </Text>
+            <Boundary loading={{fallbackProps: {size: 'small'}}}>
+              <Confirmations transaction={transaction} wallet={wallet} />
             </Boundary>
             <Label>{strings.transactionId}</Label>
             <View style={styles.dataContainer}>
@@ -148,6 +138,22 @@ export const TxDetails = () => {
         />
       )}
     </View>
+  )
+}
+
+const Confirmations = ({transaction, wallet}: {transaction: TransactionInfo; wallet: YoroiWallet}) => {
+  const strings = useStrings()
+  const tipStatus = useTipStatus({
+    wallet,
+    options: {
+      refetchInterval: 5000,
+    },
+  })
+
+  return (
+    <Text secondary>
+      {strings.confirmations(transaction.blockNumber === 0 ? 0 : tipStatus.bestBlock.height - transaction.blockNumber)}
+    </Text>
   )
 }
 

@@ -3,7 +3,7 @@
 import {fromPairs, mapValues, max} from 'lodash'
 import {defaultMemoize} from 'reselect'
 
-import * as api from '../../../legacy/api'
+import * as yoroiApi from '../../../legacy/api'
 import assert from '../../../legacy/assert'
 import {ApiHistoryError} from '../../../legacy/errors'
 import {ObjectValues} from '../../../legacy/flow'
@@ -214,6 +214,7 @@ export class TransactionCache {
       addressesByChunks,
       backendConfig,
       transactions: this._state.transactions,
+      api: yoroiApi,
     })
 
     if (txUpdate) {
@@ -257,14 +258,16 @@ export class TransactionCache {
   }
 }
 
-async function syncTxs({
+export async function syncTxs({
   addressesByChunks,
   backendConfig,
   transactions,
+  api,
 }: Readonly<{
   addressesByChunks: Array<Array<string>>
   backendConfig: BackendConfig
   transactions: Record<string, Transaction>
+  api: Pick<typeof yoroiApi, 'getTipStatus' | 'fetchNewTxHistory'>
 }>): Promise<Record<string, Transaction> | undefined> {
   const {bestBlock} = await api.getTipStatus(backendConfig)
   if (!bestBlock.hash) return
