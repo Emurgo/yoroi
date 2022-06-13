@@ -1,4 +1,3 @@
-import {SignedTx} from '@emurgo/yoroi-lib-core'
 import BigNumber from 'bignumber.js'
 import KeyStore from '../../src/legacy/KeyStore'
 

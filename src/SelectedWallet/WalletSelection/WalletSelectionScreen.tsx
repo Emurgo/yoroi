@@ -4,7 +4,7 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, Linking, ScrollView, StyleSheet, Text, TouchableOpacity} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useMutation, UseMutationOptions} from 'react-query'
+import {useMutation, UseMutationOptions, useQueryClient} from 'react-query'
 import {useDispatch} from 'react-redux'
 
 import {Button, Icon, PleaseWaitModal, ScreenBackground, StatusBar} from '../../components'
@@ -34,11 +34,13 @@ export const WalletSelectionScreen = () => {
   const intl = useIntl()
   const [wallet] = useSelectedWalletContext()
   const params = useRoute<RouteProp<WalletStackRoutes, 'wallet-selection'>>().params
+  const queryClient = useQueryClient()
 
   const {openWallet, isLoading} = useOpenWallet({
     onSuccess: ({wallet, walletMeta}) => {
       selectWalletMeta(walletMeta)
       selectWallet(wallet)
+      wallet.subscribeOnTxHistoryUpdate(() => queryClient.invalidateQueries([wallet.id, 'lockedAmount']))
       navigateToTxHistory()
     },
     onError: async (error) => {
