@@ -16,7 +16,7 @@ import KeyStore from '../legacy/KeyStore'
 import {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {WalletMeta} from '../legacy/state'
 import storage from '../legacy/storage'
-import {RawUtxo} from '../legacy/types'
+import {RawUtxo, TipStatusResponse} from '../legacy/types'
 import {Storage} from '../Storage'
 import {Token} from '../types'
 import {
@@ -610,4 +610,26 @@ export const useMutationWithInvalidations = <TData = unknown, TError = unknown, 
       return options?.onSuccess?.(data, variables, context)
     },
   })
+}
+
+export const useTipStatus = ({
+  wallet,
+  options,
+}: {
+  wallet: YoroiWallet
+  options?: UseQueryOptions<TipStatusResponse, Error>
+}) => {
+  const query = useQuery<TipStatusResponse, Error>({
+    suspense: true,
+    staleTime: 10000,
+    retry: 3,
+    retryDelay: 1000,
+    queryKey: [wallet.networkId, 'tipStatus'],
+    queryFn: () => wallet.fetchTipStatus(),
+    ...options,
+  })
+
+  if (!query.data) throw new Error('Failed to retrive tipStatus')
+
+  return query.data
 }

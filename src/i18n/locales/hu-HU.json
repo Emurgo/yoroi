@@ -488,6 +488,8 @@
   "global.ledgerMessages.rejectedByUserError": "A műveletet a felhasználó elutasította. ",
   "global.ledgerMessages.usbAlwaysConnected": "A folyamat befejezéséig a Ledger eszköz USB-n keresztül csatlakozik.",
   "global.ledgerMessages.continueOnLedger": "Continue on Ledger",
+  "global.lockedDeposit": "Locked deposit",
+  "global.lockedDepositHint": "This amount cannot be transferred or delegated while you hold assets like tokens or NFTs",
   "global.network.syncErrorBannerTextWithoutRefresh": "Szinkronizálási probléma.",
   "global.network.syncErrorBannerTextWithRefresh": "Szinkronizálási probléma. Húzd le a oldalt a frissítéshez ",
   "global.nfts": "{qty, plural, one {NFT} other {NFTs}}",

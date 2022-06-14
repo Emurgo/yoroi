@@ -222,6 +222,12 @@ export type BestblockResponse = {
   epoch: number | null | undefined
   slot: number | null | undefined
   hash: string | null | undefined
+  globalSlot: number | null | undefined
+}
+// tip status
+export type TipStatusResponse = {
+  safeBlock: BestblockResponse
+  bestBlock: BestblockResponse
 }
 // tx history
 export type TxHistoryRequest = {

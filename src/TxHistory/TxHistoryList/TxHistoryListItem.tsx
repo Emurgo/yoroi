@@ -130,9 +130,6 @@ export const TxHistoryListItem = ({transaction}: Props) => {
             <Text secondary small>
               {!totalAssets && submittedAt}
             </Text>
-            <Text secondary small style={styles.assuranceText}>
-              {strings.assurance(transaction.assurance)}
-            </Text>
           </View>
         </View>
       </View>
@@ -181,9 +178,6 @@ const styles = StyleSheet.create({
   neutralAmount: {
     color: COLORS.BLACK,
   },
-  assuranceText: {
-    fontSize: 12,
-  },
   iconRoot: {
     paddingRight: 8,
   },
@@ -213,43 +207,11 @@ const messages = defineMessages({
     id: 'components.txhistory.txhistorylistitem.transactionTypeMulti',
     defaultMessage: '!!!Multiparty',
   },
-  assuranceLevelHeader: {
-    id: 'components.txhistory.txhistorylistitem.assuranceLevelHeader',
-    defaultMessage: '!!!Assurance level:',
-  },
-  assuranceLevelLow: {
-    id: 'components.txhistory.txhistorylistitem.assuranceLevelLow',
-    defaultMessage: '!!!Low',
-  },
-  assuranceLevelMedium: {
-    id: 'components.txhistory.txhistorylistitem.assuranceLevelMedium',
-    defaultMessage: '!!!Medium',
-  },
-  assuranceLevelHigh: {
-    id: 'components.txhistory.txhistorylistitem.assuranceLevelHigh',
-    defaultMessage: '!!!High',
-  },
-  assuranceLevelPending: {
-    id: 'components.txhistory.txhistorylistitem.assuranceLevelPending',
-    defaultMessage: '!!!Pending',
-  },
-  assuranceLevelFailed: {
-    id: 'components.txhistory.txhistorylistitem.assuranceLevelFailed',
-    defaultMessage: '!!!Failed',
-  },
   assets: {
     id: 'global.txLabels.assets',
     defaultMessage: '!!!{cnt} assets',
     description: 'The number of assets different assets, not the amount',
   },
-})
-
-const assuranceMessages: Record<TransactionAssurance, MessageDescriptor> = Object.freeze({
-  LOW: messages.assuranceLevelLow,
-  MEDIUM: messages.assuranceLevelMedium,
-  HIGH: messages.assuranceLevelHigh,
-  PENDING: messages.assuranceLevelPending,
-  FAILED: messages.assuranceLevelFailed,
 })
 
 const directionMessages: Record<TransactionDirection, MessageDescriptor> = Object.freeze({
@@ -263,7 +225,6 @@ const useStrings = () => {
   const intl = useIntl()
 
   return {
-    assurance: (level: TransactionAssurance) => intl.formatMessage(assuranceMessages[level]),
     direction: (direction: TransactionDirection) => intl.formatMessage(directionMessages[direction]),
     assets: (qty: number) => intl.formatMessage(messages.assets, {cnt: qty}),
   }

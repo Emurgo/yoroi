@@ -488,6 +488,8 @@
   "global.ledgerMessages.rejectedByUserError": "Operation rejected by user.",
   "global.ledgerMessages.usbAlwaysConnected": "Your Ledger device remains connected through USB until the process is completed.",
   "global.ledgerMessages.continueOnLedger": "Continue on Ledger",
+  "global.lockedDeposit": "Locked deposit",
+  "global.lockedDepositHint": "This amount cannot be transferred or delegated while you hold assets like tokens or NFTs",
   "global.network.syncErrorBannerTextWithoutRefresh": "同期エラーが発生しています。",
   "global.network.syncErrorBannerTextWithRefresh": "同期エラーが発生しています。 再読み込みをしてください",
   "global.nfts": "{qty, plural, one {NFT} other {NFTs}}",

@@ -608,4 +608,12 @@ export default defineMessages({
     id: 'global.tokens',
     defaultMessage: '!!! Tokens',
   },
+  lockedDeposit: {
+    id: 'global.lockedDeposit',
+    defaultMessage: '!!!Locked deposit',
+  },
+  lockedDepositHint: {
+    id: 'global.lockedDepositHint',
+    defaultMessage: '!!!Locked deposit hint',
+  }
 })
