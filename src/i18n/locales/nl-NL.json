@@ -489,7 +489,7 @@
   "global.ledgerMessages.usbAlwaysConnected": "Uw Ledger-apparaat blijft via USB aangesloten totdat het proces is voltooid.",
   "global.ledgerMessages.continueOnLedger": "Ga door op de Ledger",
   "global.lockedDeposit": "Geblokkeerde storting",
-  "global.lockedDepositHint": "This amount cannot be transferred or delegated while you hold assets like tokens or NFTs",
+  "global.lockedDepositHint": "Dit bedrag kan niet verstuurd of gedelegeerd worden zolang je tokens of NFT's bezit",
   "global.network.syncErrorBannerTextWithoutRefresh": "We ondervinden synchronisatieproblemen.",
   "global.network.syncErrorBannerTextWithRefresh": "We ondervinden synchronisatieproblemen. Annuleer om te verversen",
   "global.nfts": "{qty, plural, one {NFT} other {NFTs}}",
