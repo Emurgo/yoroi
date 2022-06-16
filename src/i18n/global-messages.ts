@@ -615,5 +615,5 @@ export default defineMessages({
   lockedDepositHint: {
     id: 'global.lockedDepositHint',
     defaultMessage: '!!!Locked deposit hint',
-  }
+  },
 })
