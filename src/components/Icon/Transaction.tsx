@@ -2,13 +2,12 @@ import React from 'react'
 import Svg, {G, Path, Rect} from 'react-native-svg'
 
 type Props = {
-  width?: number
-  height?: number
+  size?: number
   color?: string
 }
 
-export const Transaction = ({width = 36, height = 36, color = '#6B7384'}: Props) => (
-  <Svg viewBox="0 0 30 30" {...{width, height}}>
+export const Transaction = ({size = 36, color = '#6B7384'}: Props) => (
+  <Svg viewBox="0 0 30 30" width={size} height={size}>
     <G stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
       <G transform="translate(6.000000, 6.000000)">
         <Rect x="0" y="0" width="18" height="18" />

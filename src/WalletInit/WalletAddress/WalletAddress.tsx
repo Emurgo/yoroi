@@ -1,11 +1,11 @@
 import Clipboard from '@react-native-community/clipboard'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Image, Linking, StyleSheet, TouchableOpacity, View, ViewStyle} from 'react-native'
+import {Linking, StyleSheet, TouchableOpacity, View, ViewStyle} from 'react-native'
 
-import copyIcon from '../../assets/img/icon/copy.png'
-import {Text} from '../../components'
+import {Icon, Text} from '../../components'
 import {getNetworkConfigById} from '../../legacy/networks'
+import {COLORS} from '../../theme'
 import {NetworkId} from '../../yoroi-wallets'
 import {FadeOutView} from './FadeOutView'
 
@@ -45,7 +45,7 @@ export const WalletAddress = ({
         disabled={showCopyNotification}
         style={styles.copyButton}
       >
-        <Image source={copyIcon} style={styles.copyIcon} />
+        <Icon.Copy size={30} color={COLORS.GRAY} />
       </TouchableOpacity>
 
       <FadeOutView visible={showCopyNotification} onEnd={() => setShowCopyNotification(false)}>
@@ -78,10 +78,6 @@ const styles = StyleSheet.create({
   },
   copyButton: {
     padding: 4,
-  },
-  copyIcon: {
-    width: 22,
-    height: 22,
   },
   notifView: {
     paddingLeft: 4,

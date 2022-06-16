@@ -56,7 +56,7 @@ const WalletTabNavigator = () => {
                 color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
               />
             ),
-            tabBarLabel: strings.dashboardTabBarLabel,
+            tabBarLabel: strings.stakingButton,
           }}
         />
       )}
@@ -65,7 +65,7 @@ const WalletTabNavigator = () => {
         name="menu"
         component={MenuNavigator}
         options={{
-          tabBarIcon: ({focused}) => <Icon.Menu size={20} color={focused ? '#17d1aa' : '#A7AFC0'} />,
+          tabBarIcon: ({focused}) => <Icon.Menu size={28} color={focused ? '#17d1aa' : '#A7AFC0'} />,
           tabBarLabel: strings.menuTabBarLabel,
         }}
       />
@@ -122,7 +122,7 @@ const useStrings = () => {
   const intl = useIntl()
 
   return {
-    dashboardTabBarLabel: intl.formatMessage(messages.dashboardButton),
+    stakingButton: intl.formatMessage(messages.stakingButton),
     txHistoryTabBarLabel: intl.formatMessage(messages.transactionsButton),
     sendTabBarLabel: intl.formatMessage(messages.sendButton),
     receiveTabBarLabel: intl.formatMessage(messages.receiveButton),

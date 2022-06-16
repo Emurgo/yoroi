@@ -13,10 +13,10 @@
  */
 import {NavigationProp, useNavigation} from '@react-navigation/native'
 import React from 'react'
-import {Image, Modal as RNModal, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {Modal as RNModal, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
-import closeIcon from '../../assets//img/close.png'
 import {COLORS} from '../../theme'
+import {Icon} from '../Icon'
 
 type Props = {
   onRequestClose: () => void
@@ -74,7 +74,7 @@ class ModalClassComponent extends React.Component<Props & NavigationHookProp, St
             {title && <Text style={styles.title}>{title}</Text>}
             {showCloseIcon && (
               <TouchableOpacity style={styles.close} onPress={onRequestClose}>
-                <Image source={closeIcon} />
+                <Icon.Cross size={26} color={COLORS.TEXT_GRAY3} />
               </TouchableOpacity>
             )}
             <View style={[styles.content, noPadding === true && styles.noPadding]}>{children}</View>

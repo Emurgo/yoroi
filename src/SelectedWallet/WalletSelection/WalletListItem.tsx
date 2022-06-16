@@ -44,19 +44,19 @@ const getWalletItemMeta = (walletMeta: WalletMeta): WalletItemMeta => {
   if (isByron(walletMeta.walletImplementationId)) {
     return {
       type: 'Byron',
-      icon: <Icon.Ada height={18} width={18} color={COLORS.WHITE} />,
+      icon: <Icon.Ada size={18} color={COLORS.WHITE} />,
     }
   }
   if (isHaskellShelley(walletMeta.walletImplementationId)) {
     return {
       type: 'Shelley',
-      icon: <Icon.Ada height={18} width={18} color={COLORS.WHITE} />,
+      icon: <Icon.Ada size={18} color={COLORS.WHITE} />,
     }
   }
   if (isJormun(walletMeta.walletImplementationId)) {
     return {
       type: 'Jormungandr',
-      icon: <Icon.Ada height={18} width={18} color={COLORS.WHITE} />,
+      icon: <Icon.Ada size={18} color={COLORS.WHITE} />,
     }
   }
   throw new Error('getWalletItemMeta:: invalid wallet implementation id')

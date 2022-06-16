@@ -1,11 +1,10 @@
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
 import {useSelectedWallet} from '../../src/SelectedWallet'
-import CatalystLogo from '../assets/img/voting.png'
-import {StandardModal, Text} from '../components'
+import {Icon, StandardModal, Text} from '../components'
 import globalMessages, {confirmationMessages} from '../i18n/global-messages'
 import {CONFIG, isHaskellShelley, isNightly} from '../legacy/config'
 import {formatTokenWithText} from '../legacy/format'
@@ -71,7 +70,7 @@ export const VotingBanner = ({onPress, disabled}: Props) => {
     <View style={styles.container}>
       <TouchableOpacity onPress={handleOnPress} disabled={disabled}>
         <View style={styles.button}>
-          <Image source={CatalystLogo} />
+          <Icon.Catalyst size={26} color={COLORS.LIGHT_POSITIVE_GREEN} />
           <Text style={styles.text}>{strings.name.toLocaleUpperCase()}</Text>
         </View>
       </TouchableOpacity>
@@ -113,6 +112,7 @@ const styles = StyleSheet.create({
   },
   button: {
     flexDirection: 'row',
+    alignItems: 'center',
     borderRadius: 8,
     borderWidth: 1,
     borderColor: COLORS.LIGHT_POSITIVE_GREEN,

@@ -12,8 +12,7 @@ import {TxHistoryRouteNavigation} from '../navigation'
 import {COLORS} from '../theme'
 
 const ACTION_PROPS = {
-  height: 36,
-  width: 36,
+  size: 32,
   color: COLORS.WHITE,
 }
 
@@ -31,7 +30,7 @@ export const ActionsBanner = () => {
           {!isReadOnly && (
             <View style={styles.centralized}>
               <TouchableOpacity style={styles.actionIcon} onPress={navigateTo.send}>
-                <Icon.Sent {...ACTION_PROPS} />
+                <Icon.Send {...ACTION_PROPS} />
               </TouchableOpacity>
               <Text style={styles.actionLabel}>{strings.sendLabel}</Text>
             </View>
