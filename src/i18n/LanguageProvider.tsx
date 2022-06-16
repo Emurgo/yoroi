@@ -30,12 +30,18 @@ const missingProvider = () => {
 
 const useLanguageCode = ({onSuccess, ...options}: UseQueryOptions<string> = {}) => {
   const query = useQuery({
-    initialData: systemLanguageCode,
+    initialData: defaultLanguageCode,
     queryKey: ['languageCode'],
     queryFn: async () => {
       const languageCode = await AsyncStorage.getItem('/appSettings/languageCode')
 
-      return languageCode ? JSON.parse(languageCode) : systemLanguageCode
+      if (languageCode) {
+        const parsedLanguageCode = JSON.parse(languageCode)
+        const stillSupported = supportedLanguages.some((v) => v.code === parsedLanguageCode)
+        if (stillSupported) return parsedLanguageCode
+      }
+
+      return defaultLanguageCode
     },
     onSuccess: (languageCode) => {
       updateLanguageSettings(languageCode)
@@ -81,3 +87,5 @@ const systemLanguageCode = Platform.select({
   android: () => NativeModules.I18nManager.localeIdentifier,
   default: () => 'en-US',
 })()
+
+const defaultLanguageCode = supportedLanguages.some((v) => v.code === systemLanguageCode) ? systemLanguageCode : 'en-US'
