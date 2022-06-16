@@ -1,75 +1,27 @@
 import React from 'react'
-import {defineMessages, useIntl} from 'react-intl'
-import {FlatList, StyleSheet, View} from 'react-native'
-import Markdown from 'react-native-easy-markdown'
+import {View} from 'react-native'
 
 import {useLanguage} from '../../i18n'
-import {LanguageListItem} from './LanguageListItem'
-
-const INCLUDED_LANGUAGE_CODES = ['en-US', 'ja-JP']
+import {Button} from '../Button'
+import {List} from '../List'
 
 export const LanguagePicker = () => {
   const languageContext = useLanguage()
 
-  const {languageCode, selectLanguageCode, supportedLanguages} = languageContext
-  const strings = useStrings()
+  const {languageCode, /*  selectLanguageCode,  */ supportedLanguages} = languageContext
+  const [languageCodeSelected, setLanguageCodeSelected] = React.useState<string>(languageCode)
 
   return (
-    <>
-      <FlatList
-        contentContainerStyle={styles.contentContainer}
-        data={supportedLanguages}
-        keyExtractor={({code}) => code}
-        renderItem={({item: {label, code, icon}}) => (
-          <LanguageListItem
-            label={label}
-            iconSource={icon}
-            selectLanguage={selectLanguageCode}
-            isSelected={languageCode === code}
-            languageCode={code}
-          />
-        )}
+    <View style={{position: 'relative', flex: 1}}>
+      <List
+        data={supportedLanguages.map((l) => ({id: l.code, text: l.label}))}
+        idSelected={languageCodeSelected}
+        setIdSelected={setLanguageCodeSelected}
+        withSearch={false}
       />
-
-      {!INCLUDED_LANGUAGE_CODES.includes(languageCode) && (
-        <View style={styles.warning}>
-          <Markdown>
-            {strings.contributors !== '_' ? `${strings.warning}: **${strings.contributors}**` : `${strings.warning}.`}
-          </Markdown>
-        </View>
-      )}
-    </>
+      <View style={{position: 'absolute', bottom: 0, alignItems: 'center', width: '100%'}}>
+        <Button title="TEST" />
+      </View>
+    </View>
   )
 }
-
-const styles = StyleSheet.create({
-  contentContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  warning: {
-    padding: 16,
-  },
-})
-
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    contributors: intl.formatMessage(messages.contributors),
-    warning: intl.formatMessage(messages.warning),
-  }
-}
-
-const messages = defineMessages({
-  warning: {
-    id: 'components.common.languagepicker.acknowledgement',
-    defaultMessage:
-      '!!!**The selected language translation is fully provided by the community**. ' +
-      'EMURGO is grateful to all those who have contributed',
-  },
-  contributors: {
-    id: 'components.common.languagepicker.contributors',
-    defaultMessage: '_',
-  },
-})

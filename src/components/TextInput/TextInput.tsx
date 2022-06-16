@@ -112,7 +112,7 @@ export const TextInput = React.forwardRef((props: Props, ref: ForwardedRef<RNTex
   )
 })
 
-export const Checkmark = () => <Icon.Check height={24} width={24} color={COLORS.LIGHT_POSITIVE_GREEN} />
+export const Checkmark = () => <Icon.Check size={24} color={COLORS.LIGHT_POSITIVE_GREEN} />
 
 const SecureTextEntryToggle = ({showPassword, onPress}: {showPassword: boolean; onPress: () => void}) => (
   <AdornmentContainer style={styles.secureTextEntryToggleContainer}>

@@ -3,6 +3,7 @@ import {Cardano} from './Cardano'
 import {Catalyst} from './Catalyst'
 import {Check} from './Check'
 import {Chevron} from './Chevron'
+import {Cross} from './Cross'
 import {Direction} from './Direction'
 import {Document} from './Document'
 import {Emurgo} from './Emurgo'
@@ -36,6 +37,7 @@ export const Icon = {
   Catalyst,
   Check,
   Chevron,
+  Cross,
   Direction,
   Document,
   Emurgo,

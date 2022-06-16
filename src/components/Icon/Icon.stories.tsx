@@ -15,7 +15,7 @@ storiesOf('Icon', module).add('Gallery', () => {
         <Item icon={<Icon.Sent />} title="Sent" />
         <Item icon={<Icon.WalletAccount iconSeed="" />} title="WalletAccount" />
         <Item icon={<Icon.Emurgo width={40} height={40} />} title="Emurgo" />
-        <Item icon={<Icon.Check height={40} width={40} />} title="Check" />
+        <Item icon={<Icon.Check size={40} />} title="Check" />
         <Item mode="dark" icon={<Icon.YoroiWallet height={40} width={40} />} title="YoroiWallet" />
         <Item icon={<Icon.Cardano height={40} width={40} />} title="Cardano" />
         <Item icon={<Icon.Ada height={40} width={40} />} title="AdaIcon" />
