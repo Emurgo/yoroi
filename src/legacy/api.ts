@@ -5,14 +5,17 @@ import _ from 'lodash'
 import {StakePoolInfosAndHistories} from '../types'
 import {ServerStatus} from '../yoroi-wallets'
 import assert from './assert'
+import {ApiError} from './errors'
 import fetchDefault, {checkedFetch} from './fetch'
 import type {
   AccountStateRequest,
   AccountStateResponse,
   BackendConfig,
   BestblockResponse,
+  CurrencySymbol,
   FundInfoResponse,
   PoolInfoRequest,
+  PriceResponse,
   RawTransaction,
   RawUtxo,
   TipStatusResponse,
@@ -203,4 +206,12 @@ export const getFundInfo = (config: BackendConfig, isMainnet: boolean): Promise<
 
 export const fetchTxStatus = (request: TxStatusRequest, config: BackendConfig): Promise<TxStatusResponse> => {
   return fetchDefault('tx/status', request, config)
+}
+
+export const fetchCurrentPrice = async (currency: CurrencySymbol, config: BackendConfig): Promise<number> => {
+  const response = (await fetchDefault('price/ADA/current', null, config, 'GET')) as unknown as PriceResponse
+
+  if (response.error) throw new ApiError(response.error)
+
+  return response.ticker.prices[currency]
 }

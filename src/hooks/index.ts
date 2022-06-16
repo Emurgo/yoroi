@@ -16,7 +16,7 @@ import KeyStore from '../legacy/KeyStore'
 import {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {WalletMeta} from '../legacy/state'
 import storage from '../legacy/storage'
-import {RawUtxo, TipStatusResponse} from '../legacy/types'
+import {CurrencySymbol, RawUtxo, TipStatusResponse} from '../legacy/types'
 import {Storage} from '../Storage'
 import {Token} from '../types'
 import {
@@ -630,6 +630,28 @@ export const useTipStatus = ({
   })
 
   if (!query.data) throw new Error('Failed to retrive tipStatus')
+
+  return query.data
+}
+
+export const useExchangeRate = ({
+  wallet,
+  to,
+  options,
+}: {
+  wallet: YoroiWallet
+  to: CurrencySymbol
+  options?: UseQueryOptions<number, Error>
+}) => {
+  const query = useQuery<number, Error>({
+    suspense: true,
+    staleTime: 60000,
+    retry: 3,
+    retryDelay: 1000,
+    queryKey: [to],
+    queryFn: () => (to === 'ADA' ? 1 : wallet.fetchCurrentPrice(to)),
+    ...options,
+  })
 
   return query.data
 }
