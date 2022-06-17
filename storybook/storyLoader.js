@@ -85,8 +85,8 @@ function loadStories() {
 	require('../src/components/ErrorBoundary/ErrorBoundary.stories');
 	require('../src/components/ErrorModal/ErrorModal.stories');
 	require('../src/components/Icon/Icon.stories');
+	require('../src/components/LanguagePicker/LanguagePickerList.stories');
 	require('../src/components/Link/Link.stories');
-	require('../src/components/List/List.stories');
 	require('../src/components/Modal/Modal.stories');
 	require('../src/components/StandardModal/StandardModal.stories');
 	require('../src/components/TextInput/TextInput.stories');
@@ -175,8 +175,8 @@ const stories = [
 	'../src/components/ErrorBoundary/ErrorBoundary.stories',
 	'../src/components/ErrorModal/ErrorModal.stories',
 	'../src/components/Icon/Icon.stories',
+	'../src/components/LanguagePicker/LanguagePickerList.stories',
 	'../src/components/Link/Link.stories',
-	'../src/components/List/List.stories',
 	'../src/components/Modal/Modal.stories',
 	'../src/components/StandardModal/StandardModal.stories',
 	'../src/components/TextInput/TextInput.stories',

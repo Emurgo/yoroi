@@ -4,22 +4,7 @@ import {FlatList, StyleSheet, TextInput, TouchableOpacity, View} from 'react-nat
 import {Icon} from '../Icon'
 import {Text} from '../Text'
 
-export type DataElement = {
-  id: string
-  text: string
-}
-
-type Props = {
-  data: Array<DataElement>
-  withSearch?: boolean
-  placeholderText?: string
-  EmptyListComponent?: React.FunctionComponent
-  idSelected: string | null
-  setIdSelected: (string) => void
-  defaultId?: string | null
-}
-
-export function List({
+export function LanguagePickerList({
   data,
   idSelected,
   setIdSelected,
@@ -169,4 +154,19 @@ type ItemProps = {
   text: string
   onItemPressed: () => void
   selected: boolean
+}
+
+export type DataElement = {
+  id: string
+  text: string
+}
+
+type Props = {
+  data: Array<DataElement>
+  withSearch?: boolean
+  placeholderText?: string
+  EmptyListComponent?: React.FunctionComponent
+  idSelected: string | null
+  setIdSelected: (string) => void
+  defaultId?: string | null
 }

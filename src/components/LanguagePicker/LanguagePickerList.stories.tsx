@@ -5,7 +5,7 @@ import {Image, StyleSheet, View} from 'react-native'
 import emptyListImage from '../../assets/img/no_transactions.png'
 import {Spacer} from '../Spacer'
 import {Text} from '../Text'
-import {DataElement, List} from './List'
+import {DataElement, LanguagePickerList} from './LanguagePickerList'
 
 const data = [
   {text: 'aaaa', id: 'aaaaa'},
@@ -47,7 +47,7 @@ function TestComponent({withSearch, data, placeholderText, EmptyListComponent}: 
   const [idSelected, setIdSelected] = React.useState<string>('')
 
   return (
-    <List
+    <LanguagePickerList
       idSelected={idSelected}
       setIdSelected={setIdSelected}
       withSearch={withSearch}
