@@ -67,7 +67,7 @@ function Input({setItemToSearch, text, placeholderText}: InputProps) {
         <TextInput
           value={text}
           onChangeText={setItemToSearch}
-          style={focused ? styles.inputFocused : styles.inputNotFocused}
+          style={[styles.input, focused ? styles.inputFocused : styles.inputNotFocused]}
           placeholder={placeholderText}
           placeholderTextColor="#6B7384"
           onFocus={() => setFocused(true)}
@@ -82,17 +82,6 @@ function Input({setItemToSearch, text, placeholderText}: InputProps) {
       </View>
     </View>
   )
-}
-
-const input = {
-  borderWidth: 1,
-  borderColor: '#DCE0E9',
-  borderRadius: 10,
-  color: 'black',
-  paddingRight: 8,
-  paddingLeft: 45,
-  paddingVertical: 15,
-  fontSize: 17,
 }
 
 const styles = StyleSheet.create({
@@ -112,11 +101,20 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
   },
+  input: {
+    borderWidth: 1,
+    borderColor: '#DCE0E9',
+    borderRadius: 10,
+    color: 'black',
+    paddingRight: 8,
+    paddingLeft: 45,
+    paddingVertical: 15,
+    fontSize: 17,
+  },
   inputNotFocused: {
-    ...input,
+    borderColor: '#DCE0E9',
   },
   inputFocused: {
-    ...input,
     borderColor: 'black',
   },
   search: {
