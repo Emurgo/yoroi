@@ -1,8 +1,8 @@
 import React from 'react'
 import {useIntl} from 'react-intl'
-import {Image, ScrollView, StyleSheet, View} from 'react-native'
+import {ScrollView, StyleSheet, View} from 'react-native'
 
-import alertCircle from '../../assets//img/alert-circle.png'
+import {Icon} from '../../components'
 import globalMessages, {confirmationMessages} from '../../i18n/global-messages'
 import {COLORS} from '../../theme'
 import {Button, Checkbox, Modal, Spacer, Text} from '..'
@@ -138,7 +138,7 @@ const AlertBox = ({title, content}: {title?: string; content: string[]}) => {
   return (
     <View style={alertStyles.container}>
       <View style={alertStyles.header}>
-        <Image source={alertCircle} style={alertStyles.image} />
+        <Icon.Info size={26} color={COLORS.ALERT_TEXT_COLOR} />
 
         <Spacer width={8} />
 
@@ -196,7 +196,6 @@ const alertStyles = StyleSheet.create({
     lineHeight: 22,
     fontWeight: 'bold',
   },
-  image: {},
   paragraph: {
     fontSize: 14,
     lineHeight: 22,

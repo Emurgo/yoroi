@@ -110,7 +110,7 @@ const numberLocales = {
   [LANGUAGES.SLOVAK]: defaultCommaDecimalSeparatorFmt,
 }
 
-export const setLanguage = (code: string) => {
+export const updateLanguageSettings = (code: string) => {
   assert.assert(Object.values(LANGUAGES).includes(code), 'Unknown language', code)
   moment.locale(momentLocales[code])
 
@@ -119,6 +119,6 @@ export const setLanguage = (code: string) => {
   })
 }
 
-setLanguage(LANGUAGES.ENGLISH)
+updateLanguageSettings(LANGUAGES.ENGLISH)
 
 export * from './LanguageProvider'

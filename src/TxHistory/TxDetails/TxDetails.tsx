@@ -3,12 +3,10 @@ import {useRoute} from '@react-navigation/native'
 import {BigNumber} from 'bignumber.js'
 import React, {useState} from 'react'
 import {defineMessages, IntlShape, useIntl} from 'react-intl'
-import {Image, LayoutAnimation, Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {LayoutAnimation, Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
-import arrowDown from '../../assets/img/chevron_down.png'
-import arrowUp from '../../assets/img/chevron_up.png'
-import {Banner, Boundary, Button, CopyButton, OfflineBanner, StatusBar, Text} from '../../components'
+import {Banner, Boundary, Button, CopyButton, Icon, OfflineBanner, StatusBar, Text} from '../../components'
 import {useTipStatus, useTokenInfo} from '../../hooks'
 import globalMessages from '../../i18n/global-messages'
 import {formatTokenWithSymbol} from '../../legacy/format'
@@ -86,7 +84,7 @@ export const TxDetails = () => {
               {item.assets.length > 0 && (
                 <TouchableOpacity style={styles.assetsExpandable} activeOpacity={0.5} onPress={() => toggleExpandIn()}>
                   <Text style={styles.assetsTitle}>{` -${item.assets.length} ${strings.assetsLabel} `}</Text>
-                  <Image source={expandedIn ? arrowUp : arrowDown} />
+                  <Icon.Chevron direction={expandedIn ? 'up' : 'down'} color={COLORS.ACTION_GRAY} size={23} />
                 </TouchableOpacity>
               )}
               <ExpandableAssetList expanded={expandedIn} assets={item.assets} />
@@ -102,7 +100,7 @@ export const TxDetails = () => {
               {item.assets.length > 0 && (
                 <TouchableOpacity style={styles.assetsExpandable} activeOpacity={0.5} onPress={() => toggleExpandOut()}>
                   <Text style={styles.assetsTitle}>{` +${item.assets.length} ${strings.assetsLabel} `}</Text>
-                  <Image source={expandedOut ? arrowUp : arrowDown} />
+                  <Icon.Chevron direction={expandedOut ? 'up' : 'down'} color={COLORS.ACTION_GRAY} size={23} />
                 </TouchableOpacity>
               )}
               <ExpandableAssetList expanded={expandedOut} assets={item.assets} />

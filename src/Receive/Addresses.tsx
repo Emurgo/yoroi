@@ -1,11 +1,11 @@
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
-import verifyIcon from '../assets/img/icon/verify-address.png'
-import {CopyButton, Spacer, Text} from '../components'
+import {CopyButton, Icon, Spacer, Text} from '../components'
 import {externalAddressIndexSelector, isUsedAddressIndexSelector, receiveAddressesSelector} from '../legacy/selectors'
+import {COLORS} from '../theme'
 import {Modals} from './Modals'
 
 export const UnusedAddresses = () => {
@@ -107,7 +107,7 @@ const Address = (props) => <View {...props} style={styles.address} />
 const Actions = (props) => <View {...props} style={styles.actions} />
 const VerifyButton = (props) => (
   <TouchableOpacity {...props}>
-    <Image source={verifyIcon} />
+    <Icon.Verify size={20} color={COLORS.GRAY} />
   </TouchableOpacity>
 )
 
