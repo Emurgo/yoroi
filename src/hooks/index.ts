@@ -170,16 +170,16 @@ export const fetchTokenInfo = async ({wallet, tokenId}: {wallet: YoroiWallet; to
   }
 
   return {
-    networkId: 300,
+    networkId: wallet.networkId,
     identifier: tokenId,
     isDefault: false,
     metadata: {
       type: 'Cardano',
       policyId: tokenId.split('.')[0],
       assetName: tokenId.split('.')[1],
-      ticker: null,
-      longName: null,
-      numberOfDecimals: tokenMetadata.decimals || 0,
+      ticker: tokenMetadata.ticker ?? null,
+      longName: tokenMetadata.longName ?? null,
+      numberOfDecimals: tokenMetadata.decimals ?? 0,
       maxSupply: null,
     },
   }
