@@ -202,6 +202,7 @@ export type SettingsStackRoutes = {
   'fingerprint-link': undefined
   'remove-wallet': undefined
   'change-language': undefined
+  'change-currency': undefined
   'easy-confirmation': undefined
   'change-password': undefined
   'change-custom-pin': undefined

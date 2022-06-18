@@ -24,6 +24,7 @@ import type {
   AccountStateResponse,
   AddressedUtxo,
   BackendConfig,
+  CurrencySymbol,
   FundInfoResponse,
   PoolInfoRequest,
   RawUtxo,
@@ -891,6 +892,10 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
 
   async fetchTipStatus(): Promise<TipStatusResponse> {
     return api.getTipStatus(this._getBackendConfig())
+  }
+
+  async fetchCurrentPrice(symbol: CurrencySymbol): Promise<number> {
+    return api.fetchCurrentPrice(symbol, this._getBackendConfig())
   }
 }
 
