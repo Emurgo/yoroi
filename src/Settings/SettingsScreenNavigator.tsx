@@ -186,7 +186,7 @@ const messages = defineMessages({
     defaultMessage: '!!!Settings',
   },
   languageTitle: {
-    id: 'components.settings.applicationsettingsscreen.language.title',
+    id: 'components.settings.changelanguagescreen.title',
     defaultMessage: '!!!Language',
   },
 })

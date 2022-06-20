@@ -1,8 +1,8 @@
 import React, {useState} from 'react'
-import {FlatList, StyleSheet, TextInput, TouchableOpacity, View} from 'react-native'
+import {FlatList, StyleSheet, View} from 'react-native'
 
-import {Icon} from '../Icon'
-import {Text} from '../Text'
+import {LanguagePickerListItem} from './LanguagePickerListItem'
+import {LanguagePickerListSearchInput} from './LanguagePickerListSearchInput'
 
 export function LanguagePickerList({
   data,
@@ -22,14 +22,24 @@ export function LanguagePickerList({
   const onItemPressed = (item) => (item.id === idSelected ? setIdSelected(defaultId) : setIdSelected(item.id))
 
   return (
-    <View style={{flex: 1}}>
-      {withSearch && <Input setItemToSearch={setItemToSearch} text={itemToSearch} placeholderText={placeholderText} />}
+    <View style={styles.container}>
+      {withSearch && (
+        <LanguagePickerListSearchInput
+          setItemToSearch={setItemToSearch}
+          text={itemToSearch}
+          placeholderText={placeholderText}
+        />
+      )}
 
       <FlatList
         data={dataFiltered}
         contentContainerStyle={styles.list}
         renderItem={({item}) => (
-          <Item text={item.text} onItemPressed={() => onItemPressed(item)} selected={idSelected === item.id} />
+          <LanguagePickerListItem
+            text={item.text}
+            onItemPressed={() => onItemPressed(item)}
+            selected={idSelected === item.id}
+          />
         )}
         ItemSeparatorComponent={() => <HR />}
         ListEmptyComponent={emptyList}
@@ -43,48 +53,15 @@ function normalize(text: string) {
   return text.trim().toLowerCase()
 }
 
-function Item({text, onItemPressed, selected}: ItemProps) {
-  return (
-    <TouchableOpacity style={styles.item} onPress={onItemPressed}>
-      <Text style={styles.title}>{text}</Text>
-      {selected && <Icon.Check size={24} color="blue" />}
-    </TouchableOpacity>
-  )
-}
-
 function HR(props) {
   return <View {...props} style={styles.hr} />
 }
 
-function Input({setItemToSearch, text, placeholderText}: InputProps) {
-  const [focused, setFocused] = useState<boolean>(false)
-
-  return (
-    <View style={styles.search}>
-      <View style={styles.innerSearch}>
-        <Icon.Magnify style={styles.searchIcon} size={30} color="#6B7384" />
-
-        <TextInput
-          value={text}
-          onChangeText={setItemToSearch}
-          style={[styles.input, focused ? styles.inputFocused : styles.inputNotFocused]}
-          placeholder={placeholderText}
-          placeholderTextColor="#6B7384"
-          onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
-        />
-
-        {text !== '' && (
-          <TouchableOpacity onPress={() => setItemToSearch('')} style={styles.crossIcon}>
-            <Icon.Cross size={30} color="#6B7384" />
-          </TouchableOpacity>
-        )}
-      </View>
-    </View>
-  )
-}
-
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    width: '100%',
+  },
   list: {
     paddingHorizontal: 16,
   },
@@ -92,67 +69,7 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: '#DCE0E9',
   },
-  item: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    height: 50,
-  },
-  title: {
-    fontSize: 16,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#DCE0E9',
-    borderRadius: 10,
-    color: 'black',
-    paddingRight: 8,
-    paddingLeft: 45,
-    paddingVertical: 15,
-    fontSize: 17,
-  },
-  inputNotFocused: {
-    borderColor: '#DCE0E9',
-  },
-  inputFocused: {
-    borderColor: 'black',
-  },
-  search: {
-    top: 0,
-    width: '100%',
-    alignItems: 'center',
-    zIndex: 1,
-  },
-  innerSearch: {
-    width: '100%',
-    position: 'relative',
-    padding: 8,
-  },
-  searchIcon: {
-    position: 'absolute',
-    top: 25,
-    left: 18,
-    zIndex: 1,
-  },
-  crossIcon: {
-    position: 'absolute',
-    top: 22,
-    right: 18,
-    zIndex: 1,
-  },
 })
-
-type InputProps = {
-  setItemToSearch: (string) => void
-  text: string
-  placeholderText: string
-}
-
-type ItemProps = {
-  text: string
-  onItemPressed: () => void
-  selected: boolean
-}
 
 export type DataElement = {
   id: string

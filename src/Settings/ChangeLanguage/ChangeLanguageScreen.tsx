@@ -31,7 +31,7 @@ const useStrings = () => {
 
 const messages = defineMessages({
   buttonLabel: {
-    id: 'components.common.languagepicker.settings.buttonLabel',
+    id: 'components.settings.languagepicker.buttonLabel',
     defaultMessage: '!!!Apply',
   },
 })

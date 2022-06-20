@@ -16,6 +16,7 @@ export const LanguagePickerScreen = () => {
       <LanguagePicker
         buttonLabel={strings.buttonLabel}
         onPressConfirmButtonCallback={() => navigation.navigate('accept-terms-of-service')}
+        noWarningMessage
       />
     </SafeAreaView>
   )
@@ -38,7 +39,7 @@ const useStrings = () => {
 
 const messages = defineMessages({
   buttonLabel: {
-    id: 'components.common.languagepicker.firstRun.buttonLabel',
+    id: 'components.firstRun.languagepicker.buttonLabel',
     defaultMessage: '!!!Next',
   },
 })
