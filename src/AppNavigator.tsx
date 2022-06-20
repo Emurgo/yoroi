@@ -1,4 +1,5 @@
-import {NavigationContainer} from '@react-navigation/native'
+import {useReduxDevToolsExtension} from '@react-navigation/devtools'
+import {NavigationContainer, useNavigationContainerRef} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import {isEmpty} from 'lodash'
 import React, {useEffect} from 'react'
@@ -36,8 +37,12 @@ import {WalletNavigator} from './WalletNavigator'
 const IS_STORYBOOK = env.getBoolean('IS_STORYBOOK', false)
 
 export const AppNavigator = () => {
+  const navRef = useNavigationContainerRef()
+
+  useReduxDevToolsExtension(navRef)
+
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navRef}>
       <Boundary>{IS_STORYBOOK ? <StoryBook /> : <NavigatorSwitch />}</Boundary>
     </NavigationContainer>
   )
