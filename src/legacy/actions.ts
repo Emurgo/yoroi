@@ -93,7 +93,7 @@ const _setAppSettings = (appSettings) => ({
   reducer: (state, payload) => payload,
 })
 
-const reloadAppSettings = () => async (dispatch: Dispatch<any>) => {
+export const reloadAppSettings = () => async (dispatch: Dispatch<any>) => {
   const appSettings = await readAppSettings()
   Object.entries(appSettings).forEach(([key, value]) => {
     updateCrashlytics(key, value)
@@ -187,8 +187,6 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
   if (isNightly()) {
     dispatch(setAppSettingField(APP_SETTINGS_KEYS.SEND_CRASH_REPORTS, true))
   }
-
-  await dispatch(reloadAppSettings())
 
   await dispatch(reloadAppSettings())
   const installationId = (await dispatch(initInstallationId())) as unknown as string

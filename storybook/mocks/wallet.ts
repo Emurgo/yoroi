@@ -3,7 +3,7 @@ import KeyStore from '../../src/legacy/KeyStore'
 
 import {RemotePoolMetaSuccess, StakePoolInfosAndHistories, TokenEntry, TokenInfo} from '../../src/types'
 import {YoroiWallet} from '../../src/yoroi-wallets'
-import {YoroiSignedTx, YoroiUnsignedTx} from '../../src/yoroi-wallets/types'
+import {YoroiSignedTx} from '../../src/yoroi-wallets/types'
 
 export const mockWallet: YoroiWallet = {
   id: 'wallet-id',
@@ -77,6 +77,7 @@ export const mockWallet: YoroiWallet = {
   subscribe: () => {
     throw new Error('Not implemented')
   },
+  fetchCurrentPrice: async () => Promise.resolve(1.9938153154314795),
   toJSON: () => null as any,
 
   // enableEasyConfirmation: () => {

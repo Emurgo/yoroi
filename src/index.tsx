@@ -16,6 +16,7 @@ import {CONFIG} from './legacy/config'
 import getConfiguredStore from './legacy/configureStore'
 import {ApiError, NetworkError} from './legacy/errors'
 import {Logger, setLogLevel} from './legacy/logging'
+import {CurrencyProvider} from './Settings/Currency/CurrencyContext'
 
 setLogLevel(CONFIG.LOG_LEVEL)
 
@@ -64,7 +65,9 @@ const AppWithProviders = () => {
       <Provider store={store}>
         <QueryClientProvider client={queryClient}>
           <LanguageProvider>
-            <App />
+            <CurrencyProvider>
+              <App />
+            </CurrencyProvider>
           </LanguageProvider>
         </QueryClientProvider>
       </Provider>

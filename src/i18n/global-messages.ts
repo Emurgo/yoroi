@@ -1,5 +1,7 @@
 import {defineMessages} from 'react-intl'
 
+import {supportedCurrencies} from '../legacy/types'
+
 /*
  * Some messages need to be used in multiple components
  * In order to avoid components depending on each other just to reuse translation messages
@@ -491,6 +493,45 @@ export const actionMessages = defineMessages({
   },
 })
 
+export const currencyNames = defineMessages({
+  [supportedCurrencies.ADA]: {
+    id: 'global.currency.ADA',
+    defaultMessage: `!!!ADA`,
+  },
+  [supportedCurrencies.BRL]: {
+    id: 'global.currency.BRL',
+    defaultMessage: `!!!BRL`,
+  },
+  [supportedCurrencies.BTC]: {
+    id: 'global.currency.BTC',
+    defaultMessage: `!!!BTC`,
+  },
+  [supportedCurrencies.CNY]: {
+    id: 'global.currency.CNY',
+    defaultMessage: `!!!CNY`,
+  },
+  [supportedCurrencies.ETH]: {
+    id: 'global.currency.ETH',
+    defaultMessage: `!!!ETH`,
+  },
+  [supportedCurrencies.EUR]: {
+    id: 'global.currency.EUR',
+    defaultMessage: `!!!EUR`,
+  },
+  [supportedCurrencies.JPY]: {
+    id: 'global.currency.JPY',
+    defaultMessage: `!!!JPY`,
+  },
+  [supportedCurrencies.KRW]: {
+    id: 'global.currency.KRW',
+    defaultMessage: `!!!KRW`,
+  },
+  [supportedCurrencies.USD]: {
+    id: 'global.currency.USD',
+    defaultMessage: `!!!USD`,
+  },
+})
+
 export default defineMessages({
   allDone: {
     id: 'components.walletinit.restorewallet.upgradeconfirmmodal.noUpgradeLabel',
@@ -615,5 +656,9 @@ export default defineMessages({
   lockedDepositHint: {
     id: 'global.lockedDepositHint',
     defaultMessage: '!!!Locked deposit hint',
+  },
+  currency: {
+    id: 'global.currency',
+    defaultMessage: '!!!Currency',
   },
 })
