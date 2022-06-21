@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {FlatList, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 import Markdown from 'react-native-easy-markdown'
@@ -12,14 +12,6 @@ const INCLUDED_LANGUAGE_CODES = ['en-US', 'ja-JP']
 export const LanguagePicker = () => {
   const languageContext = useLanguage()
   const {languageCode, selectLanguageCode, supportedLanguages} = languageContext
-
-  const [showDialog, setShowDialog] = useState(true)
-
-  const strings = useStrings()
-
-  useEffect(() => {
-    if (!INCLUDED_LANGUAGE_CODES.includes(languageCode)) setShowDialog(true)
-  }, [languageCode])
 
   return (
     <>
@@ -37,26 +29,36 @@ export const LanguagePicker = () => {
           keyExtractor={(item) => item.code}
         />
 
-        {showDialog && (
-          <View style={styles.dialog}>
-            <Row style={styles.closeButton}>
-              <TouchableOpacity onPress={() => setShowDialog(false)}>
-                <Icon.Cross size={26} />
-              </TouchableOpacity>
-            </Row>
-
-            <Markdown markdownStyles={{text: styles.markdownText}}>
-              {strings.contributors !== '_' ? `${strings.warning}: **${strings.contributors}**` : `${strings.warning}.`}
-            </Markdown>
-          </View>
-        )}
+        <Warning enabled={!INCLUDED_LANGUAGE_CODES.includes(languageCode)} key={languageCode} />
       </View>
     </>
   )
 }
 
 const Row = ({style, ...props}: ViewProps) => <View {...props} style={[styles.row, style]} />
-const HR = (props) => <View {...props} style={styles.hr} />
+const HR = (props: ViewProps) => <View {...props} style={styles.hr} />
+
+const Warning = ({enabled}: {enabled: boolean}) => {
+  const [dismissed, setDismissed] = useState(false)
+  const strings = useStrings()
+
+  if (!enabled) return null
+  if (dismissed) return null
+
+  return (
+    <View style={styles.dialog}>
+      <Row style={styles.closeButtonRow}>
+        <TouchableOpacity onPress={() => setDismissed(true)}>
+          <Icon.Cross size={26} />
+        </TouchableOpacity>
+      </Row>
+
+      <Markdown markdownStyles={{text: styles.markdownText}}>
+        {strings.contributors !== '_' ? `${strings.warning}: **${strings.contributors}**` : `${strings.warning}.`}
+      </Markdown>
+    </View>
+  )
+}
 
 const styles = StyleSheet.create({
   languagePicker: {
@@ -75,7 +77,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 14,
   },
-  closeButton: {
+  closeButtonRow: {
     justifyContent: 'flex-end',
   },
   markdownText: {
