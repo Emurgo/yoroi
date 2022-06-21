@@ -37,7 +37,7 @@ export const LanguagePicker = () => {
           keyExtractor={(item) => item.code}
         />
 
-        {!INCLUDED_LANGUAGE_CODES.includes(languageCode) && showDialog && (
+        {showDialog && (
           <View style={styles.dialog}>
             <Row style={styles.closeButton}>
               <TouchableOpacity onPress={() => setShowDialog(false)}>
