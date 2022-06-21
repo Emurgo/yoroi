@@ -1,10 +1,10 @@
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet} from 'react-native'
+import {StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {LanguagePicker} from '../../components'
+import {Button, LanguagePicker} from '../../components'
 import {FirstRunRouteNavigation} from '../../navigation'
 
 export const LanguagePickerScreen = () => {
@@ -13,14 +13,19 @@ export const LanguagePickerScreen = () => {
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      <LanguagePicker
-        buttonLabel={strings.buttonLabel}
-        onPressConfirmButtonCallback={() => navigation.navigate('accept-terms-of-service')}
-        noWarningMessage
-      />
+      <LanguagePicker />
+      <Actions>
+        <Button
+          onPress={() => navigation.navigate('accept-terms-of-service')}
+          title={strings.continueButton}
+          testID="chooseLangButton"
+        />
+      </Actions>
     </SafeAreaView>
   )
 }
+
+const Actions: React.FC = (props: ViewProps) => <View {...props} style={{padding: 16}} />
 
 const styles = StyleSheet.create({
   safeAreaView: {
@@ -33,13 +38,13 @@ const useStrings = () => {
   const intl = useIntl()
 
   return {
-    buttonLabel: intl.formatMessage(messages.buttonLabel),
+    continueButton: intl.formatMessage(messages.continueButton),
   }
 }
 
 const messages = defineMessages({
-  buttonLabel: {
-    id: 'components.firstRun.languagepicker.buttonLabel',
+  continueButton: {
+    id: 'components.firstRun.languagepicker.continueButton',
     defaultMessage: '!!!Next',
   },
 })

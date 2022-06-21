@@ -1,68 +1,53 @@
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
+import {FlatList, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 import Markdown from 'react-native-easy-markdown'
 
 import {useLanguage} from '../../i18n'
-import {Button} from '../Button'
 import {Icon} from '../Icon'
-import {LanguagePickerList} from './LanguagePickerList'
+import {Text} from '../Text'
 
 const INCLUDED_LANGUAGE_CODES = ['en-US', 'ja-JP']
 
-export const Row = ({style, ...props}: ViewProps) => <View {...props} style={[styles.row, style]} />
-
-export const LanguagePicker = ({onPressConfirmButtonCallback, buttonLabel, noWarningMessage = false}: Props) => {
+export const LanguagePicker = () => {
   const languageContext = useLanguage()
   const {languageCode, selectLanguageCode, supportedLanguages} = languageContext
 
-  const [languageCodeSelected, setLanguageCodeSelected] = useState<string>(languageCode)
-  const [showDialog, setShowDialog] = useState<boolean>(false)
+  const [showDialog, setShowDialog] = useState(true)
 
   const strings = useStrings()
 
   useEffect(() => {
-    if (!INCLUDED_LANGUAGE_CODES.includes(languageCode) && !noWarningMessage) setShowDialog(true)
-  }, [languageCode, noWarningMessage])
+    if (!INCLUDED_LANGUAGE_CODES.includes(languageCode)) setShowDialog(true)
+  }, [languageCode])
 
   return (
     <>
-      <View style={styles.container}>
-        <LanguagePickerList
-          data={supportedLanguages.map((l) => ({id: l.code, text: l.label}))}
-          idSelected={languageCodeSelected}
-          setIdSelected={setLanguageCodeSelected}
-          withSearch={false}
+      <View style={styles.languagePicker}>
+        <FlatList
+          data={supportedLanguages}
+          contentContainerStyle={styles.languageList}
+          renderItem={({item: {label, code}}) => (
+            <TouchableOpacity style={styles.item} onPress={() => selectLanguageCode(code)}>
+              <Text style={styles.itemText}>{label}</Text>
+              {languageCode === code && <Icon.Check size={24} color="blue" />}
+            </TouchableOpacity>
+          )}
+          ItemSeparatorComponent={() => <HR />}
+          keyExtractor={(item) => item.code}
         />
 
-        <Row style={styles.buttonRow}>
-          <Button
-            title={buttonLabel.toLocaleUpperCase()}
-            shelleyTheme
-            block
-            disabled={!languageCodeSelected}
-            style={styles.button}
-            onPress={() => {
-              selectLanguageCode(languageCodeSelected)
-              if (onPressConfirmButtonCallback) onPressConfirmButtonCallback()
-            }}
-          />
-        </Row>
+        {!INCLUDED_LANGUAGE_CODES.includes(languageCode) && showDialog && (
+          <View style={styles.dialog}>
+            <Row style={styles.closeButton}>
+              <TouchableOpacity onPress={() => setShowDialog(false)}>
+                <Icon.Cross size={26} />
+              </TouchableOpacity>
+            </Row>
 
-        {showDialog && (
-          <View style={styles.warningContainer}>
-            <View style={styles.warning}>
-              <Row style={styles.closeButtonContainer}>
-                <TouchableOpacity onPress={() => setShowDialog(false)}>
-                  <Icon.Cross size={26} />
-                </TouchableOpacity>
-              </Row>
-              <Markdown markdownStyles={{text: {fontSize: 18}}}>
-                {strings.contributors !== '_'
-                  ? `${strings.warning}: **${strings.contributors}**`
-                  : `${strings.warning}.`}
-              </Markdown>
-            </View>
+            <Markdown markdownStyles={{text: styles.markdownText}}>
+              {strings.contributors !== '_' ? `${strings.warning}: **${strings.contributors}**` : `${strings.warning}.`}
+            </Markdown>
           </View>
         )}
       </View>
@@ -70,39 +55,47 @@ export const LanguagePicker = ({onPressConfirmButtonCallback, buttonLabel, noWar
   )
 }
 
+const Row = ({style, ...props}: ViewProps) => <View {...props} style={[styles.row, style]} />
+const HR = (props) => <View {...props} style={styles.hr} />
+
 const styles = StyleSheet.create({
+  languagePicker: {
+    flex: 1,
+    position: 'relative',
+    alignItems: 'stretch',
+    paddingHorizontal: 14,
+    paddingBottom: 14,
+  },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  container: {
-    position: 'relative',
-    flex: 1,
-    alignItems: 'center',
-  },
-  buttonRow: {
-    position: 'absolute',
-    bottom: 0,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-  },
-  warningContainer: {
-    width: '100%',
-    paddingHorizontal: 16,
-    position: 'absolute',
-    bottom: 5,
-  },
-  warning: {
+  dialog: {
     backgroundColor: '#EAEDF2',
-    bottom: 72,
     borderRadius: 8,
     padding: 14,
   },
-  closeButtonContainer: {
+  closeButton: {
     justifyContent: 'flex-end',
   },
-  button: {
-    height: 56,
+  markdownText: {
+    fontSize: 18,
+  },
+  languageList: {
+    alignItems: 'stretch',
+  },
+  hr: {
+    height: 1,
+    backgroundColor: '#DCE0E9',
+  },
+  item: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    height: 50,
+  },
+  itemText: {
+    fontSize: 16,
   },
 })
 
@@ -127,9 +120,3 @@ const messages = defineMessages({
     defaultMessage: '_',
   },
 })
-
-type Props = {
-  onPressConfirmButtonCallback?: () => void
-  buttonLabel: string
-  noWarningMessage?: boolean
-}
