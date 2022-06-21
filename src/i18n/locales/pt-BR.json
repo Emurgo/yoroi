@@ -511,7 +511,7 @@
   "global.pleaseWait": "por favor aguarde ...",
   "global.receive": "Receber",
   "global.send": "Enviar",
-  "global.staking": "Staking",
+  "global.staking": "Promovendo",
   "global.staking.epochLabel": "Época",
   "global.staking.stakePoolName": "Nome do stake pool",
   "global.staking.stakePoolHash": "Stake pool hash",
