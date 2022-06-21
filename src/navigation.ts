@@ -261,7 +261,7 @@ export type MenuRoutes = {
 export type AppRoutes = {
   maintenance: undefined
   'first-run': NavigatorScreenParams<FirstRunRoutes>
-  'screens-index': undefined
+  developer: undefined
   storybook: undefined
   'new-wallet': NavigatorScreenParams<WalletInitRoutes>
   'app-root': NavigatorScreenParams<WalletStackRoutes>
