@@ -31,7 +31,7 @@ export const LanguagePickerWarning = ({enabled}: {enabled: boolean}) => {
 
 const styles = StyleSheet.create({
   dialog: {
-    padding: 14,
+    padding: 16,
   },
   dialogSquare: {
     backgroundColor: '#EAEDF2',

@@ -19,6 +19,7 @@ export const LanguagePickerScreen = () => {
           onPress={() => navigation.navigate('accept-terms-of-service')}
           title={strings.continueButton}
           testID="chooseLangButton"
+          shelleyTheme
         />
       </Actions>
     </SafeAreaView>
@@ -44,7 +45,7 @@ const useStrings = () => {
 
 const messages = defineMessages({
   continueButton: {
-    id: 'components.firstRun.languagepicker.continueButton',
+    id: 'components.firstrun.languagepicker.continueButton',
     defaultMessage: '!!!Next',
   },
 })

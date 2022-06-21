@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
   },
   languageList: {
     alignItems: 'stretch',
-    paddingHorizontal: 14,
+    paddingHorizontal: 16,
   },
   hr: {
     height: 1,
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    height: 50,
+    paddingVertical: 16,
   },
   itemText: {
     fontSize: 16,
