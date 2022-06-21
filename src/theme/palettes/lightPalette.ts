@@ -1,6 +1,6 @@
-import {Gradient} from '../types'
+import {Palette} from '../types'
 
-export const lightPalette = {
+export const lightPalette: Palette = {
   'black-static': '#000000',
   'white-static': '#FFFFFF',
   gray: {
@@ -53,9 +53,9 @@ export const lightPalette = {
     100: '#FDF8E2',
   },
   gradients: {
-    'blue-green': ['#E4E8F7', '#C6F7F7'] as Gradient,
-    green: ['#93F5E1', '#C6F7F7'] as Gradient,
-    blue: ['#244ABF', '#4B6DDE'] as Gradient,
+    'blue-green': ['#E4E8F7', '#C6F7F7'],
+    green: ['#93F5E1', '#C6F7F7'],
+    blue: ['#244ABF', '#4B6DDE'],
   },
   overlay: {hex: '#000000', opacity: 0.1},
 }

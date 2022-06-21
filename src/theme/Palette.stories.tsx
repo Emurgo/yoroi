@@ -96,7 +96,7 @@ const Section: React.FC<{title: string}> = ({title, children}) => {
       ]}
     >
       <Text style={{fontWeight: 'bold'}}>{title}</Text>
-      <View style={{padding: 4, flexDirection: 'row', flexWrap: 'wrap'}}>{children}</View>
+      <View style={{padding: 4, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center'}}>{children}</View>
     </View>
   )
 }

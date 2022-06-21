@@ -1,4 +1,9 @@
-export type Theme = Record<string, string>
+import {TextStyle} from 'react-native'
+
+export type Theme = {
+  color: Palette
+  typography: Typography
+}
 
 export type HexColor = `#${string}`
 
@@ -63,3 +68,33 @@ export type Palette = {
   }
   overlay: {hex: HexColor; opacity: number}
 }
+
+type TypographyKeys =
+  | 'heading-1-medium'
+  | 'heading-1-regular'
+  | 'heading-2-medium'
+  | 'heading-2-regular'
+  | 'heading-3-medium'
+  | 'heading-3-regular'
+  | 'heading-4-medium'
+  | 'heading-4-regular'
+  | 'heading-5-medium'
+  | 'heading-5-regular'
+  | 'body-1-medium'
+  | 'body-1-regular'
+  | 'body-2-medium'
+  | 'body-2-regular'
+  | 'body-3-medium'
+  | 'body-3-regular'
+  | 'button-1'
+  | 'button-2'
+  | 'button-3'
+  | 'link-1'
+  | 'link-1-underline'
+  | 'link-2'
+  | 'link-2-underline'
+  | 'overline'
+  | 'caption-medium'
+  | 'caption-regular'
+
+export type Typography = Record<TypographyKeys, TextStyle>
