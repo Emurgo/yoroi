@@ -232,7 +232,7 @@ const OnlyDevButton = () => {
 
   if (!__DEV__) return null
 
-  return <Button onPress={() => navigation.navigate('screens-index')} title="Dev options" style={styles.button} />
+  return <Button onPress={() => navigation.navigate('developer')} title="Dev options" style={styles.button} />
 }
 
 const useOpenWallet = (

@@ -1,4 +1,5 @@
-import {NavigationContainer} from '@react-navigation/native'
+import {useReduxDevToolsExtension} from '@react-navigation/devtools'
+import {NavigationContainer, useNavigationContainerRef} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import {isEmpty} from 'lodash'
 import React, {useEffect} from 'react'
@@ -13,10 +14,10 @@ import {BiometricAuthScreen} from './BiometricAuth'
 import {Boundary} from './components'
 import {FirstRunNavigator} from './FirstRun/FirstRunNavigator'
 import {errorMessages} from './i18n/global-messages'
-import {checkBiometricStatus, showErrorDialog, signin} from './legacy/actions'
+import {checkBiometricStatus, reloadAppSettings, setSystemAuth, showErrorDialog, signin} from './legacy/actions'
+import {DeveloperScreen} from './legacy/DeveloperScreen'
 import {canBiometricEncryptionBeEnabled, recreateAppSignInKeys} from './legacy/deviceSettings'
 import env from './legacy/env'
-import IndexScreen from './legacy/IndexScreen'
 import KeyStore from './legacy/KeyStore'
 import {
   canEnableBiometricSelector,
@@ -36,8 +37,12 @@ import {WalletNavigator} from './WalletNavigator'
 const IS_STORYBOOK = env.getBoolean('IS_STORYBOOK', false)
 
 export const AppNavigator = () => {
+  const navRef = useNavigationContainerRef()
+
+  useReduxDevToolsExtension(navRef)
+
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navRef}>
       <Boundary>{IS_STORYBOOK ? <StoryBook /> : <NavigatorSwitch />}</Boundary>
     </NavigationContainer>
   )
@@ -114,7 +119,7 @@ const NavigatorSwitch = () => {
           {isSystemAuthEnabled && !canEnableBiometrics && (
             <Stack.Screen //
               name="setup-custom-pin"
-              component={CreatePinScreen}
+              component={CreatePinScreenWrapper}
               options={{title: strings.customPinTitle}}
             />
           )}
@@ -133,11 +138,25 @@ const NavigatorSwitch = () => {
       {/* Development */}
       {__DEV__ && (
         <Stack.Group>
-          <Stack.Screen name="screens-index" component={IndexScreen} options={{headerShown: false}} />
+          <Stack.Screen name="developer" component={DeveloperScreen} options={{headerShown: false}} />
           <Stack.Screen name="storybook" component={StorybookScreen} />
         </Stack.Group>
       )}
     </Stack.Navigator>
+  )
+}
+
+const CreatePinScreenWrapper = () => {
+  const dispatch = useDispatch()
+
+  return (
+    <CreatePinScreen
+      onDone={async () => {
+        await dispatch(reloadAppSettings())
+        await dispatch(setSystemAuth(false))
+        dispatch(signin())
+      }}
+    />
   )
 }
 

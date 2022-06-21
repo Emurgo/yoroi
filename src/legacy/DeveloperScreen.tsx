@@ -1,10 +1,12 @@
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {SafeAreaView, ScrollView, StyleSheet, TouchableOpacity} from 'react-native'
+import config from 'react-native-config'
 
 import {Button, StatusBar, Text} from '../components'
-import storage from '../legacy/storage'
-import {AppRoutes} from '../navigation'
+import {useCreateWallet} from '../hooks'
+import {AppRoutes, useWalletNavigation} from '../navigation'
+import storage from './storage'
 
 const routes: Array<{label: string; path: keyof AppRoutes}> = [
   {label: 'Storybook', path: 'storybook'},
@@ -36,8 +38,14 @@ const crash = () => {
   return Promise.reject(new Error('Forced crash'))
 }
 
-const IndexScreen = () => {
+export const DeveloperScreen = () => {
   const navigation = useNavigation()
+  const {resetToWalletSelection} = useWalletNavigation()
+  const {createWallet, isLoading} = useCreateWallet({
+    onSuccess: async () => {
+      resetToWalletSelection()
+    },
+  })
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
@@ -58,9 +66,37 @@ const IndexScreen = () => {
         <TouchableOpacity onPress={crash}>
           <Text style={styles.link}>Crash</Text>
         </TouchableOpacity>
+        <Button
+          disabled={isLoading}
+          style={styles.button}
+          onPress={() =>
+            createWallet({
+              mnemonicPhrase: config['WALLET_1_MNEMONIC'],
+              name: 'Wallet 1',
+              networkId: Number(config['WALLET_1_NETWORK_ID'] ?? 300),
+              password: '1234567890',
+              walletImplementationId: 'haskell-shelley',
+              provider: '',
+            })
+          }
+          title="Restore Wallet 1"
+        />
+        <Button
+          disabled={isLoading}
+          style={styles.button}
+          onPress={() =>
+            createWallet({
+              mnemonicPhrase: config['WALLET_2_MNEMONIC'],
+              name: 'Wallet 2',
+              networkId: Number(config['WALLET_1_NETWORK_ID'] ?? 300),
+              password: '1234567890',
+              walletImplementationId: 'haskell-shelley',
+              provider: '',
+            })
+          }
+          title="Restore Wallet 2"
+        />
       </ScrollView>
     </SafeAreaView>
   )
 }
-
-export default IndexScreen

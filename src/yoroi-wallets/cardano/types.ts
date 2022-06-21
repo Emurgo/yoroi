@@ -7,6 +7,7 @@ import type {Transaction} from '../../legacy/HistoryTransaction'
 import type {HWDeviceInfo} from '../../legacy/ledgerUtils'
 import {WalletMeta} from '../../legacy/state'
 import type {
+  CurrencySymbol,
   FundInfoResponse,
   RawUtxo,
   TipStatusResponse,
@@ -219,6 +220,8 @@ export interface WalletInterface {
 
   fetchTipStatus(): Promise<TipStatusResponse>
 
+  fetchCurrentPrice(symbol: CurrencySymbol): Promise<number>
+
   resync(): void
 }
 
@@ -306,6 +309,7 @@ type YoroiWalletKeys =
   | 'publicKeyHex'
   | 'subscribe'
   | 'toJSON'
+  | 'fetchCurrentPrice'
 
 const yoroiWalletKeys: Array<YoroiWalletKeys> = [
   'id',
@@ -337,6 +341,7 @@ const yoroiWalletKeys: Array<YoroiWalletKeys> = [
   'signTxWithLedger',
   'fetchPoolInfo',
   'toJSON',
+  'fetchCurrentPrice',
 ]
 
 export * from '@emurgo/yoroi-lib-core/dist/internals/wasm-contract'

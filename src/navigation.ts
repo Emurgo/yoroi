@@ -202,6 +202,7 @@ export type SettingsStackRoutes = {
   'fingerprint-link': undefined
   'remove-wallet': undefined
   'change-language': undefined
+  'change-currency': undefined
   'easy-confirmation': undefined
   'change-password': undefined
   'change-custom-pin': undefined
@@ -260,7 +261,7 @@ export type MenuRoutes = {
 export type AppRoutes = {
   maintenance: undefined
   'first-run': NavigatorScreenParams<FirstRunRoutes>
-  'screens-index': undefined
+  developer: undefined
   storybook: undefined
   'new-wallet': NavigatorScreenParams<WalletInitRoutes>
   'app-root': NavigatorScreenParams<WalletStackRoutes>

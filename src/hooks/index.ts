@@ -16,7 +16,7 @@ import KeyStore from '../legacy/KeyStore'
 import {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {WalletMeta} from '../legacy/state'
 import storage from '../legacy/storage'
-import {RawUtxo, TipStatusResponse} from '../legacy/types'
+import {CurrencySymbol, RawUtxo, TipStatusResponse} from '../legacy/types'
 import {Storage} from '../Storage'
 import {Token} from '../types'
 import {
@@ -170,16 +170,16 @@ export const fetchTokenInfo = async ({wallet, tokenId}: {wallet: YoroiWallet; to
   }
 
   return {
-    networkId: 300,
+    networkId: wallet.networkId,
     identifier: tokenId,
     isDefault: false,
     metadata: {
       type: 'Cardano',
       policyId: tokenId.split('.')[0],
       assetName: tokenId.split('.')[1],
-      ticker: null,
-      longName: null,
-      numberOfDecimals: tokenMetadata.decimals || 0,
+      ticker: tokenMetadata.ticker ?? null,
+      longName: tokenMetadata.longName ?? null,
+      numberOfDecimals: tokenMetadata.decimals ?? 0,
       maxSupply: null,
     },
   }
@@ -388,8 +388,8 @@ export const useCreatePin = (storage: Storage, options: UseMutationOptions<void,
     mutationFn: async (pin) => {
       const installationId = await storage.getItem('/appSettings/installationId')
       if (!installationId) throw new Error('Invalid installation id')
-      const installationIdHex = Buffer.from(installationId, 'utf-8').toString('hex')
-      const pinHex = Buffer.from(pin, 'utf-8').toString('hex')
+      const installationIdHex = toHex(installationId)
+      const pinHex = toHex(pin)
       const saltHex = cryptoRandomString({length: 2 * 32})
       const nonceHex = cryptoRandomString({length: 2 * 12})
       const encryptedPinHash = await encryptWithPassword(pinHex, saltHex, nonceHex, installationIdHex)
@@ -630,6 +630,28 @@ export const useTipStatus = ({
   })
 
   if (!query.data) throw new Error('Failed to retrive tipStatus')
+
+  return query.data
+}
+
+export const useExchangeRate = ({
+  wallet,
+  to,
+  options,
+}: {
+  wallet: YoroiWallet
+  to: CurrencySymbol
+  options?: UseQueryOptions<number, Error>
+}) => {
+  const query = useQuery<number, Error>({
+    suspense: true,
+    staleTime: 60000,
+    retry: 3,
+    retryDelay: 1000,
+    queryKey: [to],
+    queryFn: () => (to === 'ADA' ? 1 : wallet.fetchCurrentPrice(to)),
+    ...options,
+  })
 
   return query.data
 }
