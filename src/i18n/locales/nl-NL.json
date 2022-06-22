@@ -71,6 +71,7 @@
   "components.firstrun.custompinscreen.pinInputSubtitle": "Kies een nieuwe PIN code om snel toegang tot uw portemonnee te krijgen.",
   "components.firstrun.custompinscreen.pinInputTitle": "Voer de pincode in",
   "components.firstrun.custompinscreen.title": "Bepaal de pincode",
+  "components.firstrun.languagepicker.title": "Select Language",
   "components.ledger.ledgerconnect.usbDeviceReady": "USB apparaat is klaar, druk op \"Bevestigen\" om door te gaan",
   "components.ledger.ledgertransportswitchmodal.bluetoothButton": "Verbindt met Bluetooth",
   "components.ledger.ledgertransportswitchmodal.bluetoothExplanation": "Kies deze optie als je wilt verbinden met een Ledger Nano Model X via Bluetooth:",
@@ -232,6 +233,7 @@
   "components.settings.walletsettingscreen.walletName": "Portemonnee naam",
   "components.settings.walletsettingscreen.walletType": "Type portemonnee:",
   "components.settings.walletsettingscreen.about": "Over",
+  "components.settings.changelanguagescreen.title": "Language",
   "components.stakingcenter.confirmDelegation.delegateButtonLabel": "Delegeren",
   "components.stakingcenter.confirmDelegation.ofFees": " vergoedingen",
   "components.stakingcenter.confirmDelegation.rewardsExplanation": "\nDe beloningen die u, bij benadering,  per periode,  zult ontvangen:",
@@ -532,6 +534,7 @@
   "global.txLabels.signingTx": "Ondertekenen van een transactie",
   "global.txLabels.transactions": "Transacties",
   "global.txLabels.withdrawals": "Opnames",
+  "global.next": "Next",
   "utils.format.today": "Vandaag",
   "utils.format.unknownAssetName": "[Onbekende bezittingennaam]",
   "utils.format.yesterday": "Gisteren"
