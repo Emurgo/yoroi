@@ -19,7 +19,7 @@ export const LanguagePicker = () => {
         data={supportedLanguages}
         contentContainerStyle={styles.languageList}
         renderItem={({item: {label, code}}) => (
-          <TouchableOpacity style={styles.item} onPress={() => selectLanguageCode(code)}>
+          <TouchableOpacity style={styles.item} onPress={() => selectLanguageCode(code)} testID="languageSelectButton">
             <Text style={styles.itemText}>{label}</Text>
             {languageCode === code && <Icon.Check size={24} color={COLORS.SHELLEY_BLUE} />}
           </TouchableOpacity>
