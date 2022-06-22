@@ -47,6 +47,12 @@ export const TxHistoryNavigator = () => {
   const [receiver, setReceiver] = React.useState('')
   const [amount, setAmount] = React.useState('')
 
+  // when the selected asset is no longer available
+  const selectedAsset = tokenBalance.values.find(({identifier}) => identifier === selectedTokenIdentifier)
+  if (!selectedAsset) {
+    setSelectedTokenIdentifier(tokenBalance.getDefaultEntry().identifier)
+  }
+
   return (
     <>
       <Stack.Navigator screenOptions={defaultStackNavigationOptions} initialRouteName="history-list">
@@ -89,6 +95,7 @@ export const TxHistoryNavigator = () => {
             },
           }}
         />
+
         <Stack.Screen
           name="send"
           options={{
