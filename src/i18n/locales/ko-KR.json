@@ -71,6 +71,7 @@
   "components.firstrun.custompinscreen.pinInputSubtitle": "Choose a new PIN to quickly access your wallet.",
   "components.firstrun.custompinscreen.pinInputTitle": "PIN 입력",
   "components.firstrun.custompinscreen.title": "PIN 변경",
+  "components.firstrun.languagepicker.title": "Select Language",
   "components.ledger.ledgerconnect.usbDeviceReady": "USB device is ready, please tap on Confirm to continue.",
   "components.ledger.ledgertransportswitchmodal.bluetoothButton": "블루투스로 연결하기",
   "components.ledger.ledgertransportswitchmodal.bluetoothExplanation": "Choose this option if you want to connect to a Ledger Nano model X through Bluetooth:",
@@ -232,6 +233,7 @@
   "components.settings.walletsettingscreen.walletName": "지갑명",
   "components.settings.walletsettingscreen.walletType": "Wallet type:",
   "components.settings.walletsettingscreen.about": "About",
+  "components.settings.changelanguagescreen.title": "Language",
   "components.stakingcenter.confirmDelegation.delegateButtonLabel": "위임",
   "components.stakingcenter.confirmDelegation.ofFees": "의 수수료",
   "components.stakingcenter.confirmDelegation.rewardsExplanation": "에포크마다 받을 것으로 예상되는 보상의 양:",
@@ -532,6 +534,7 @@
   "global.txLabels.signingTx": "Signing transaction",
   "global.txLabels.transactions": "Transactions",
   "global.txLabels.withdrawals": "Withdrawals",
+  "global.next": "Next",
   "utils.format.today": "오늘",
   "utils.format.unknownAssetName": "[Unknown asset name]",
   "utils.format.yesterday": "어제"
