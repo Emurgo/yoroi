@@ -12,7 +12,7 @@ export const LanguagePickerScreen = () => {
   const strings = useStrings()
 
   return (
-    <SafeAreaView style={styles.safeAreaView}>
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
       <LanguagePicker />
       <Actions>
         <Button
