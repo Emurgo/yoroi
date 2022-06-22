@@ -71,6 +71,7 @@
   "components.firstrun.custompinscreen.pinInputSubtitle": "A gyors tárcaeléréshez adj megy egy új PIN kódot.",
   "components.firstrun.custompinscreen.pinInputTitle": "PIN megadása",
   "components.firstrun.custompinscreen.title": "PIN beállítás",
+  "components.firstrun.languagepicker.title": "Select Language",
   "components.ledger.ledgerconnect.usbDeviceReady": "Az USB eszköz készen áll, a folytatáshoz éritsd meg a Megerősítés gombot. ",
   "components.ledger.ledgertransportswitchmodal.bluetoothButton": "Bluetooth-csatlakozás",
   "components.ledger.ledgertransportswitchmodal.bluetoothExplanation": "Choose this option if you want to connect to a Ledger Nano model X through Bluetooth:",
@@ -232,6 +233,7 @@
   "components.settings.walletsettingscreen.walletName": "Tárca neve",
   "components.settings.walletsettingscreen.walletType": "Tárca típusa:",
   "components.settings.walletsettingscreen.about": "About",
+  "components.settings.changelanguagescreen.title": "Language",
   "components.stakingcenter.confirmDelegation.delegateButtonLabel": "Delegálás",
   "components.stakingcenter.confirmDelegation.ofFees": "díja",
   "components.stakingcenter.confirmDelegation.rewardsExplanation": "A várható becsült jutalom értéke epoch-onként:",
@@ -532,6 +534,7 @@
   "global.txLabels.signingTx": "Signing transaction",
   "global.txLabels.transactions": "Transactions",
   "global.txLabels.withdrawals": "Jutalom felvételek",
+  "global.next": "Next",
   "utils.format.today": "Ma",
   "utils.format.unknownAssetName": "[Ismeretlen]",
   "utils.format.yesterday": "Tegnap"
