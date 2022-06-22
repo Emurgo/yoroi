@@ -71,7 +71,6 @@
   "components.firstrun.custompinscreen.pinInputSubtitle": "Choose a new PIN to quickly access your wallet.",
   "components.firstrun.custompinscreen.pinInputTitle": "Enter the PIN",
   "components.firstrun.custompinscreen.title": "Set PIN",
-  "components.firstrun.languagepicker.continueButton": "Next",
   "components.firstrun.languagepicker.title": "Select Language",
   "components.ledger.ledgerconnect.usbDeviceReady": "USB device is ready, please tap on Confirm to continue.",
   "components.ledger.ledgertransportswitchmodal.bluetoothButton": "Connect with Bluetooth",
