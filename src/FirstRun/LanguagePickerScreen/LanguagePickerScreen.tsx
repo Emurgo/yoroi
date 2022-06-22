@@ -1,10 +1,11 @@
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
-import {defineMessages, useIntl} from 'react-intl'
+import {useIntl} from 'react-intl'
 import {StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, LanguagePicker} from '../../components'
+import messages from '../../i18n/global-messages'
 import {FirstRunRouteNavigation} from '../../navigation'
 
 export const LanguagePickerScreen = () => {
@@ -17,7 +18,7 @@ export const LanguagePickerScreen = () => {
       <Actions>
         <Button
           onPress={() => navigation.navigate('accept-terms-of-service')}
-          title={strings.continueButton}
+          title={strings.next}
           testID="chooseLangButton"
           shelleyTheme
         />
@@ -39,13 +40,6 @@ const useStrings = () => {
   const intl = useIntl()
 
   return {
-    continueButton: intl.formatMessage(messages.continueButton),
+    next: intl.formatMessage(messages.next),
   }
 }
-
-const messages = defineMessages({
-  continueButton: {
-    id: 'components.firstrun.languagepicker.continueButton',
-    defaultMessage: '!!!Next',
-  },
-})

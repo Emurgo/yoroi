@@ -535,6 +535,7 @@
   "global.txLabels.signingTx": "Signing transaction",
   "global.txLabels.transactions": "Transactions",
   "global.txLabels.withdrawals": "Withdrawals",
+  "global.next": "Next",
   "utils.format.today": "Today",
   "utils.format.unknownAssetName": "[Unknown asset name]",
   "utils.format.yesterday": "Yesterday"
