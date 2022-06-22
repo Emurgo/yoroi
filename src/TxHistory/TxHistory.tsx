@@ -7,7 +7,6 @@ import infoIcon from '../assets/img/icon/info-light-green.png'
 import {OfflineBanner, Spacer, StatusBar, Text} from '../components'
 import {assetMessages, txLabels} from '../i18n/global-messages'
 import {fetchAccountState} from '../legacy/account'
-import {checkForFlawedWallets} from '../legacy/actions'
 import {isByron} from '../legacy/config'
 import {updateHistory} from '../legacy/history'
 import {
@@ -41,7 +40,6 @@ export const TxHistory = () => {
   const [showWarning, setShowWarning] = useState(isByron(wallet.walletImplementationId))
 
   useEffect(() => {
-    dispatch(checkForFlawedWallets())
     dispatch(updateHistory())
     dispatch(fetchAccountState())
   }, [dispatch])

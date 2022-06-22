@@ -421,21 +421,3 @@ export const setSystemAuth = (enable: boolean) => async (dispatch: Dispatch<any>
 export const handleGeneralError = async (message: string, intl: IntlShape) => {
   await showErrorDialog(errorMessages.generalError, intl, {message})
 }
-
-export const checkForFlawedWallets = () => (dispatch: Dispatch<any>) => {
-  let isFlawed = false
-  Logger.debug('actions::checkForFlawedWallets:: checking wallet...')
-
-  try {
-    isFlawed = walletManager.checkForFlawedWallets()
-    Logger.debug('actions::checkForFlawedWallets::isFlawed', isFlawed)
-    dispatch({
-      path: ['isFlawedWallet'],
-      payload: isFlawed,
-      reducer: (state, isFlawed) => isFlawed,
-      type: 'SET_FLAWED_WALLET',
-    })
-  } catch (e) {
-    Logger.warn('actions::checkForFlawedWallets error', e)
-  }
-}

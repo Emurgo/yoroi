@@ -720,28 +720,6 @@ class WalletManager {
     const wallet = this.getWallet()
     return await wallet.fetchFundInfo()
   }
-
-  // =================== misc =================== //
-
-  checkForFlawedWallets(): boolean {
-    if (CONFIG.IS_TESTNET_BUILD) return false
-    const wallet = this.getWallet()
-    const addrs = [
-      'Ae2tdPwUPEZKAx4zt8YLTGxrhX9L6R8QPWNeefZsPgwaigWab4mEw1ECUZ7',
-      'Ae2tdPwUPEZAghGCdQykbGxc991wdoA8bXmSn7eCGuUKXF4EsRhWj4PJitn',
-      'addr1qynqc23tpx4dqps6xgqy9s2l3xz5fxu734wwmzj9uddn0h2z6epfcukqmswgwwfruxh7gaddv9x0d5awccwahnhwleqqc4zkh4',
-      'addr1q9tr0a0feutyhdj34gxnasv8vef699fcry5avyrt6hn4n540f7le3laqc6cgpcds86z06psxczmnuk7txsajs4jdt4nqlhj8aa',
-    ]
-    if (!wallet.externalChain) throw new Error('invalid wallet')
-
-    const address = wallet.externalChain.addresses[0]
-    if (addrs.includes(address)) {
-      Logger.debug('WalletManager::checkForFlawedWallets: address match', address)
-      return true
-    }
-    Logger.debug('WalletManager::checkForFlawedWallets:: no match')
-    return false
-  }
 }
 
 export const walletManager = new WalletManager()
