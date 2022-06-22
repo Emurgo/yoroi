@@ -71,6 +71,7 @@
   "components.firstrun.custompinscreen.pinInputSubtitle": "Vybrat nový PIN pro rychlý přístup do peněženky.",
   "components.firstrun.custompinscreen.pinInputTitle": "Zadejte PIN",
   "components.firstrun.custompinscreen.title": "Nastavit PIN",
+  "components.firstrun.languagepicker.title": "Select Language",
   "components.ledger.ledgerconnect.usbDeviceReady": "USB zařízení je připraveno, klikněte na Potvrdit k pokračování.",
   "components.ledger.ledgertransportswitchmodal.bluetoothButton": "Připojit přes Bluetooth",
   "components.ledger.ledgertransportswitchmodal.bluetoothExplanation": "Vyberte tuto možnost pokud chcete připojit Ledger Nano X pomocí Bluetooth:",
@@ -232,6 +233,7 @@
   "components.settings.walletsettingscreen.walletName": "Název peněženky",
   "components.settings.walletsettingscreen.walletType": "Typ peněženky:",
   "components.settings.walletsettingscreen.about": "O nás",
+  "components.settings.changelanguagescreen.title": "Language",
   "components.stakingcenter.confirmDelegation.delegateButtonLabel": "Delegovat",
   "components.stakingcenter.confirmDelegation.ofFees": "poplatků",
   "components.stakingcenter.confirmDelegation.rewardsExplanation": "Aktuální odhad odměn za epochu:",
@@ -532,6 +534,7 @@
   "global.txLabels.signingTx": "Signing transaction",
   "global.txLabels.transactions": "Transactions",
   "global.txLabels.withdrawals": "Výběry",
+  "global.next": "Next",
   "utils.format.today": "Dnes",
   "utils.format.unknownAssetName": "[Neznámý název prostředku]",
   "utils.format.yesterday": "Včera"
