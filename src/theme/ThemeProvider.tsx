@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import React from 'react'
 import {useColorScheme} from 'react-native'
-import {useMutation, UseMutationOptions, useQuery, useQueryClient, UseQueryOptions} from 'react-query'
+import {useMutation, UseMutationOptions, useQuery, useQueryClient} from 'react-query'
 
 import {darkTheme} from './darkTheme'
 import {lightTheme} from './lightTheme'
@@ -9,10 +9,11 @@ import {Theme} from './types'
 
 const ThemeContext = React.createContext<undefined | ThemeContext>(undefined)
 export const ThemeProvider: React.FC = ({children}) => {
+  const defaultColorScheme = useColorScheme() || 'light'
   const savedColorScheme = useSavedColorScheme()
-  const osColorScheme = useColorScheme() || 'light'
+
   const selectColorScheme = useSaveColorScheme()
-  const colorScheme = savedColorScheme || osColorScheme || 'light'
+  const colorScheme = savedColorScheme || defaultColorScheme
   const theme = themes[colorScheme]
 
   return <ThemeContext.Provider value={{theme, colorScheme, selectColorScheme}}>{children}</ThemeContext.Provider>
@@ -24,8 +25,8 @@ const missingProvider = () => {
   throw new Error('ThemeProvider is missing')
 }
 
-const useSavedColorScheme = (options: UseQueryOptions<ColorScheme | null> = {}) => {
-  const query = useQuery({
+const useSavedColorScheme = () => {
+  const query = useQuery<ColorScheme | null>({
     queryKey: ['theme'],
     queryFn: async () => {
       const savedTheme = await AsyncStorage.getItem('/appSettings/theme')
@@ -33,10 +34,7 @@ const useSavedColorScheme = (options: UseQueryOptions<ColorScheme | null> = {}) 
       return savedTheme ? JSON.parse(savedTheme) : null
     },
     suspense: true,
-    ...options,
   })
-
-  if (!query.isSuccess) throw new Error('Invalid state')
 
   return query.data
 }

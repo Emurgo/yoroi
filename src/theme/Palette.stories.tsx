@@ -76,8 +76,8 @@ const Palette = () => {
 
       <Section title="Gradients">
         <Gradient title="blue-green" colors={palette.gradients['blue-green']} />
-        <Gradient title="green" colors={palette.gradients['blue']} />
-        <Gradient title="blue" colors={palette.gradients['green']} />
+        <Gradient title="blue" colors={palette.gradients['blue']} />
+        <Gradient title="green" colors={palette.gradients['green']} />
       </Section>
     </ScrollView>
   )
@@ -96,7 +96,7 @@ const Section: React.FC<{title: string}> = ({title, children}) => {
       ]}
     >
       <Text style={{fontWeight: 'bold'}}>{title}</Text>
-      <View style={{padding: 4, flexDirection: 'row', flexWrap: 'wrap'}}>{children}</View>
+      <View style={{padding: 4, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center'}}>{children}</View>
     </View>
   )
 }

@@ -1,7 +1,8 @@
 import {storiesOf} from '@storybook/react-native'
 import * as React from 'react'
-import {Switch, Text, View} from 'react-native'
+import {ScrollView, Switch, Text, View} from 'react-native'
 
+import {Spacer} from '../components'
 import {useTheme} from './ThemeProvider'
 
 storiesOf('ThemeProvider', module).add('ThemeProvider', () => <ThemeGallery />)
@@ -10,35 +11,25 @@ const ThemeGallery = () => {
   const {theme, colorScheme, selectColorScheme} = useTheme()
 
   return (
-    <View>
-      <Switch
-        value={colorScheme === 'light'}
-        onChange={() => selectColorScheme(colorScheme === 'light' ? 'dark' : 'light')}
-      />
-      <Text>colorScheme: {colorScheme}</Text>
-      <Text>theme: {JSON.stringify(theme, null, 2)}</Text>
+    <>
+      <View style={{justifyContent: 'space-between', flexDirection: 'row', paddingVertical: 8, paddingHorizontal: 16}}>
+        <Text>colorScheme: {colorScheme}</Text>
 
-      <Section title="Grayscale">
-        <Item title="gray-max" color={theme.gray.max} />
-      </Section>
-    </View>
-  )
-}
+        <Switch
+          value={colorScheme === 'light'}
+          onChange={() => selectColorScheme(colorScheme === 'light' ? 'dark' : 'light')}
+        />
+      </View>
 
-const Section: React.FC<{title: string}> = ({title, children}) => {
-  return (
-    <View>
-      <Text>{title}</Text>
-      {children}
-    </View>
-  )
-}
+      <ScrollView contentContainerStyle={{padding: 16}}>
+        <Text>Palette: {JSON.stringify(theme.color, null, 2)}</Text>
 
-const Item: React.FC<{title: string; color: string}> = ({title, color}) => {
-  return (
-    <View>
-      <Text>{title}</Text>
-      <View style={{backgroundColor: color}} />
-    </View>
+        <Spacer height={16} />
+        <View style={{height: 1, backgroundColor: 'black'}} />
+        <Spacer height={16} />
+
+        <Text>Typography: {JSON.stringify(theme.typography, null, 2)}</Text>
+      </ScrollView>
+    </>
   )
 }
