@@ -2,6 +2,7 @@ import React from 'react'
 import {FlatList, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 
 import {useLanguage} from '../../i18n'
+import {COLORS} from '../../theme'
 import {Icon} from '../Icon'
 import {Text} from '../Text'
 import {LanguagePickerWarning} from './LanguagePickerWarning'
@@ -13,22 +14,22 @@ export const LanguagePicker = () => {
   const {languageCode, selectLanguageCode, supportedLanguages} = language
 
   return (
-      <View style={styles.languagePicker}>
-        <FlatList
-          data={supportedLanguages}
-          contentContainerStyle={styles.languageList}
-          renderItem={({item: {label, code}}) => (
-            <TouchableOpacity style={styles.item} onPress={() => selectLanguageCode(code)}>
-              <Text style={styles.itemText}>{label}</Text>
-              {languageCode === code && <Icon.Check size={24} color="blue" />}
-            </TouchableOpacity>
-          )}
-          ItemSeparatorComponent={() => <HR />}
-          keyExtractor={(item) => item.code}
-        />
+    <View style={styles.languagePicker}>
+      <FlatList
+        data={supportedLanguages}
+        contentContainerStyle={styles.languageList}
+        renderItem={({item: {label, code}}) => (
+          <TouchableOpacity style={styles.item} onPress={() => selectLanguageCode(code)}>
+            <Text style={styles.itemText}>{label}</Text>
+            {languageCode === code && <Icon.Check size={24} color={COLORS.SHELLEY_BLUE} />}
+          </TouchableOpacity>
+        )}
+        ItemSeparatorComponent={() => <HR />}
+        keyExtractor={(item) => item.code}
+      />
 
-        <LanguagePickerWarning enabled={!INCLUDED_LANGUAGE_CODES.includes(languageCode)} key={languageCode} />
-      </View>
+      <LanguagePickerWarning enabled={!INCLUDED_LANGUAGE_CODES.includes(languageCode)} key={languageCode} />
+    </View>
   )
 }
 
@@ -55,5 +56,6 @@ const styles = StyleSheet.create({
   },
   itemText: {
     fontSize: 16,
+    lineHeight: 24,
   },
 })
