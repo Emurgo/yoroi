@@ -29,7 +29,6 @@ export const LanguagePicker = () => {
 
         <LanguagePickerWarning enabled={!INCLUDED_LANGUAGE_CODES.includes(languageCode)} key={languageCode} />
       </View>
-    </>
   )
 }
 
