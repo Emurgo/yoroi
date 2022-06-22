@@ -13,7 +13,6 @@ export const LanguagePicker = () => {
   const {languageCode, selectLanguageCode, supportedLanguages} = language
 
   return (
-    <>
       <View style={styles.languagePicker}>
         <FlatList
           data={supportedLanguages}
