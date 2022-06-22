@@ -10,7 +10,7 @@ import {Theme} from './types'
 const ThemeContext = React.createContext<undefined | ThemeContext>(undefined)
 export const ThemeProvider: React.FC = ({children}) => {
   const defaultColorScheme = useColorScheme() || 'light'
-  const savedColorScheme = useSavedColorScheme({initialData: defaultColorScheme})
+  const savedColorScheme = useSavedColorScheme()
 
   const selectColorScheme = useSaveColorScheme()
   const colorScheme = savedColorScheme || defaultColorScheme
@@ -25,9 +25,8 @@ const missingProvider = () => {
   throw new Error('ThemeProvider is missing')
 }
 
-const useSavedColorScheme = ({initialData}: {initialData?: ColorScheme}) => {
+const useSavedColorScheme = () => {
   const query = useQuery<ColorScheme | null>({
-    initialData,
     queryKey: ['theme'],
     queryFn: async () => {
       const savedTheme = await AsyncStorage.getItem('/appSettings/theme')
