@@ -10,7 +10,7 @@ const INCLUDED_LANGUAGE_CODES = ['en-US', 'ja-JP']
 
 export const LanguagePicker = () => {
   const language = useLanguage()
-  const {languageCode, selectLanguageCode, supportedLanguages} = languageContext
+  const {languageCode, selectLanguageCode, supportedLanguages} = language
 
   return (
     <>
