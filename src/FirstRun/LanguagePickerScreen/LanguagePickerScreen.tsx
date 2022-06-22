@@ -5,7 +5,7 @@ import {StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, LanguagePicker} from '../../components'
-import messages from '../../i18n/global-messages'
+import globalMessages from '../../i18n/global-messages'
 import {FirstRunRouteNavigation} from '../../navigation'
 
 export const LanguagePickerScreen = () => {
@@ -40,6 +40,6 @@ const useStrings = () => {
   const intl = useIntl()
 
   return {
-    next: intl.formatMessage(messages.next),
+    next: intl.formatMessage(globalMessages.next),
   }
 }
