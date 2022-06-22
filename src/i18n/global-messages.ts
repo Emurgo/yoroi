@@ -661,4 +661,8 @@ export default defineMessages({
     id: 'global.currency',
     defaultMessage: '!!!Currency',
   },
+  next: {
+    id: 'global.next',
+    defaultMessage: '!!!Next',
+  },
 })

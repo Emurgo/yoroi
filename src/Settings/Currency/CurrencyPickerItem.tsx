@@ -32,7 +32,7 @@ export const CurrencyPickerItem = ({nativeName, symbol, selectCurrency, isSelect
           <Subtitle>{subtitle}</Subtitle>
         </Description>
 
-        <Selected>{isSelected && <Icon.Check height={24} width={24} color="#3154CB" />}</Selected>
+        <Selected>{isSelected && <Icon.Check size={24} color="#3154CB" />}</Selected>
       </Row>
     </TouchableOpacity>
   )

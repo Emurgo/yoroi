@@ -1,75 +1,61 @@
 import React from 'react'
-import {defineMessages, useIntl} from 'react-intl'
-import {FlatList, StyleSheet, View} from 'react-native'
-import Markdown from 'react-native-easy-markdown'
+import {FlatList, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 
 import {useLanguage} from '../../i18n'
-import {LanguageListItem} from './LanguageListItem'
+import {COLORS} from '../../theme'
+import {Icon} from '../Icon'
+import {Text} from '../Text'
+import {LanguagePickerWarning} from './LanguagePickerWarning'
 
 const INCLUDED_LANGUAGE_CODES = ['en-US', 'ja-JP']
 
 export const LanguagePicker = () => {
-  const languageContext = useLanguage()
-
-  const {languageCode, selectLanguageCode, supportedLanguages} = languageContext
-  const strings = useStrings()
+  const language = useLanguage()
+  const {languageCode, selectLanguageCode, supportedLanguages} = language
 
   return (
-    <>
+    <View style={styles.languagePicker}>
       <FlatList
-        contentContainerStyle={styles.contentContainer}
         data={supportedLanguages}
-        keyExtractor={({code}) => code}
-        renderItem={({item: {label, code, icon}}) => (
-          <LanguageListItem
-            label={label}
-            iconSource={icon}
-            selectLanguage={selectLanguageCode}
-            isSelected={languageCode === code}
-            languageCode={code}
-          />
+        contentContainerStyle={styles.languageList}
+        renderItem={({item: {label, code}}) => (
+          <TouchableOpacity style={styles.item} onPress={() => selectLanguageCode(code)} testID="pickLangButton">
+            <Text style={styles.itemText}>{label}</Text>
+            {languageCode === code && <Icon.Check size={24} color={COLORS.SHELLEY_BLUE} />}
+          </TouchableOpacity>
         )}
+        ItemSeparatorComponent={() => <HR />}
+        keyExtractor={(item) => item.code}
       />
 
-      {!INCLUDED_LANGUAGE_CODES.includes(languageCode) && (
-        <View style={styles.warning}>
-          <Markdown>
-            {strings.contributors !== '_' ? `${strings.warning}: **${strings.contributors}**` : `${strings.warning}.`}
-          </Markdown>
-        </View>
-      )}
-    </>
+      <LanguagePickerWarning enabled={!INCLUDED_LANGUAGE_CODES.includes(languageCode)} key={languageCode} />
+    </View>
   )
 }
 
+const HR = (props: ViewProps) => <View {...props} style={styles.hr} />
+
 const styles = StyleSheet.create({
-  contentContainer: {
-    justifyContent: 'center',
+  languagePicker: {
+    flex: 1,
+    alignItems: 'stretch',
+  },
+  languageList: {
+    alignItems: 'stretch',
+    paddingHorizontal: 16,
+  },
+  hr: {
+    height: 1,
+    backgroundColor: '#DCE0E9',
+  },
+  item: {
+    flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 16,
   },
-  warning: {
-    padding: 16,
-  },
-})
-
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    contributors: intl.formatMessage(messages.contributors),
-    warning: intl.formatMessage(messages.warning),
-  }
-}
-
-const messages = defineMessages({
-  warning: {
-    id: 'components.common.languagepicker.acknowledgement',
-    defaultMessage:
-      '!!!**The selected language translation is fully provided by the community**. ' +
-      'EMURGO is grateful to all those who have contributed',
-  },
-  contributors: {
-    id: 'components.common.languagepicker.contributors',
-    defaultMessage: '_',
+  itemText: {
+    fontSize: 16,
+    lineHeight: 24,
   },
 })

@@ -25,7 +25,7 @@
     "purge-translations": "rimraf ./translations/messages",
     "setup_configs": "react-native-schemes-manager all",
     "stag-android": "react-native run-android --variant=devDebug --appIdSuffix=staging",
-    "stag-ios": "react-native run-ios --scheme=emurgo-staging --configuration=Staging.Debug",
+    "stag-ios": "react-native run-ios --scheme=emurgo-staging --configuration=Debug",
     "start": "react-native start",
     "prestorybook": "rnstl  --searchDir ./src ./legacy/components ./storybook --pattern '**/*.stories.{js,tsx}'",
     "storybook": "start-storybook",

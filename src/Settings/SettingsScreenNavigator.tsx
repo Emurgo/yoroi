@@ -80,7 +80,7 @@ export const SettingsScreenNavigator = () => {
       <Stack.Screen //
         name="change-language"
         component={ChangeLanguageScreen}
-        options={{headerShown: false}}
+        options={{title: strings.languageTitle}}
       />
 
       <Stack.Screen //
@@ -202,6 +202,10 @@ const messages = defineMessages({
     id: 'components.settings.applicationsettingsscreen.title',
     defaultMessage: '!!!Settings',
   },
+  languageTitle: {
+    id: 'components.settings.changelanguagescreen.title',
+    defaultMessage: '!!!Language',
+  },
 })
 
 const useStrings = () => {
@@ -219,6 +223,7 @@ const useStrings = () => {
     toggleEachConfirmationTitle: intl.formatMessage(messages.toggleEachConfirmationTitle),
     customPinTitle: intl.formatMessage(messages.customPinTitle),
     settingsTitle: intl.formatMessage(messages.settingsTitle),
+    languageTitle: intl.formatMessage(messages.languageTitle),
     currency: intl.formatMessage(globalMessages.currency),
   }
 }
