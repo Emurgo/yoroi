@@ -76,8 +76,8 @@ const Palette = () => {
 
       <Section title="Gradients">
         <Gradient title="blue-green" colors={palette.gradients['blue-green']} />
-        <Gradient title="green" colors={palette.gradients['blue']} />
-        <Gradient title="blue" colors={palette.gradients['green']} />
+        <Gradient title="blue" colors={palette.gradients['blue']} />
+        <Gradient title="green" colors={palette.gradients['green']} />
       </Section>
     </ScrollView>
   )
