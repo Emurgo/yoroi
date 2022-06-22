@@ -71,6 +71,7 @@
   "components.firstrun.custompinscreen.pinInputSubtitle": "Scegli un nuovo PIN per l'accesso rapido al portafoglio.",
   "components.firstrun.custompinscreen.pinInputTitle": "Inserisci il PIN",
   "components.firstrun.custompinscreen.title": "Imposta il PIN",
+  "components.firstrun.languagepicker.title": "Select Language",
   "components.ledger.ledgerconnect.usbDeviceReady": "Il dispositivo USB è pronto, cliccare su Conferma per continuare.",
   "components.ledger.ledgertransportswitchmodal.bluetoothButton": "Connettiti con Bluetooth",
   "components.ledger.ledgertransportswitchmodal.bluetoothExplanation": "Scegliere questa opzione se si desidera connettere ad un Ledger Nano modello X tramite Bluetooth:",
@@ -232,6 +233,7 @@
   "components.settings.walletsettingscreen.walletName": "Nome portafoglio",
   "components.settings.walletsettingscreen.walletType": "Tipo di portafoglio:",
   "components.settings.walletsettingscreen.about": "Info",
+  "components.settings.changelanguagescreen.title": "Language",
   "components.stakingcenter.confirmDelegation.delegateButtonLabel": "Delegare",
   "components.stakingcenter.confirmDelegation.ofFees": "di commissioni",
   "components.stakingcenter.confirmDelegation.rewardsExplanation": "Approssimazione attuale delle ricompense che riceverai per epoca:",
@@ -532,6 +534,7 @@
   "global.txLabels.signingTx": "Signing transaction",
   "global.txLabels.transactions": "Transactions",
   "global.txLabels.withdrawals": "Prelievi",
+  "global.next": "Next",
   "utils.format.today": "Oggi",
   "utils.format.unknownAssetName": "[nome asset sconosciuto]",
   "utils.format.yesterday": "Ieri"
