@@ -9,7 +9,7 @@ import {LanguagePickerWarning} from './LanguagePickerWarning'
 const INCLUDED_LANGUAGE_CODES = ['en-US', 'ja-JP']
 
 export const LanguagePicker = () => {
-  const languageContext = useLanguage()
+  const language = useLanguage()
   const {languageCode, selectLanguageCode, supportedLanguages} = languageContext
 
   return (
