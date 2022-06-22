@@ -26,7 +26,7 @@ export const FirstRunNavigator = () => {
       <Stack.Screen //
         name="language-pick"
         component={LanguagePickerScreen}
-        options={{headerShown: false}}
+        options={{title: strings.languagePickerTitle}}
       />
 
       <Stack.Screen
@@ -63,6 +63,10 @@ const messages = defineMessages({
     id: 'components.firstrun.acepttermsofservicescreen.title',
     defaultMessage: '!!!Terms of Service Agreement',
   },
+  languagePickerTitle: {
+    id: 'components.firstrun.languagepicker.title',
+    defaultMessage: '!!!Select Language',
+  },
 })
 
 const useStrings = () => {
@@ -70,5 +74,6 @@ const useStrings = () => {
 
   return {
     acceptTermsTitle: intl.formatMessage(messages.acceptTermsTitle),
+    languagePickerTitle: intl.formatMessage(messages.languagePickerTitle),
   }
 }

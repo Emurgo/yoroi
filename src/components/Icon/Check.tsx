@@ -1,16 +1,17 @@
 import React from 'react'
+import {ImageStyle} from 'react-native'
 import Svg, {Path} from 'react-native-svg'
 
 import {COLORS} from '../../theme'
 
 type Props = {
-  width: number
-  height: number
+  size?: number
   color?: string
+  style?: ImageStyle
 }
 
-export const Check = ({width, height, color}: Props) => (
-  <Svg width={width} height={height} viewBox="-2 -2 28 28">
+export const Check = ({size = 40, color}: Props) => (
+  <Svg width={size} height={size} viewBox="-2 -2 28 28">
     <Path
       fillRule="evenodd"
       clipRule="evenodd"
