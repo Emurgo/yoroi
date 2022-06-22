@@ -70,10 +70,6 @@ export const confirmationMessages = {
       id: 'global.actions.dialogs.commonbuttons.completeButton',
       defaultMessage: '!!!Complete',
     },
-    nextButton: {
-      id: 'global.actions.dialogs.commonbuttons.nextButton',
-      defaultMessage: '!!!Next',
-    },
   }),
 }
 
