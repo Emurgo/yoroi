@@ -51,6 +51,9 @@ export const TxHistoryNavigator = () => {
   const selectedAsset = tokenBalance.values.find(({identifier}) => identifier === selectedTokenIdentifier)
   if (!selectedAsset) {
     setSelectedTokenIdentifier(tokenBalance.getDefaultEntry().identifier)
+    setSendAll(false)
+    setReceiver('')
+    setAmount('')
   }
 
   return (
