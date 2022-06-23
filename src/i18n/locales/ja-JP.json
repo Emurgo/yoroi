@@ -71,6 +71,7 @@
   "components.firstrun.custompinscreen.pinInputSubtitle": "Choose a new PIN to quickly access your wallet.",
   "components.firstrun.custompinscreen.pinInputTitle": "PINを入力する",
   "components.firstrun.custompinscreen.title": "PINを設定する",
+  "components.firstrun.languagepicker.title": "Select Language",
   "components.ledger.ledgerconnect.usbDeviceReady": "USB device is ready, please tap on Confirm to continue.",
   "components.ledger.ledgertransportswitchmodal.bluetoothButton": "Bluetoothで接続",
   "components.ledger.ledgertransportswitchmodal.bluetoothExplanation": "Choose this option if you want to connect to a Ledger Nano model X through Bluetooth:",
@@ -232,6 +233,7 @@
   "components.settings.walletsettingscreen.walletName": "ウォレット名",
   "components.settings.walletsettingscreen.walletType": "Wallet type:",
   "components.settings.walletsettingscreen.about": "About",
+  "components.settings.changelanguagescreen.title": "Language",
   "components.stakingcenter.confirmDelegation.delegateButtonLabel": "委任",
   "components.stakingcenter.confirmDelegation.ofFees": "手数料",
   "components.stakingcenter.confirmDelegation.rewardsExplanation": "エポックごとの獲得報酬額（現時点での見積額とします）:",
@@ -532,6 +534,7 @@
   "global.txLabels.signingTx": "Signing transaction",
   "global.txLabels.transactions": "Transactions",
   "global.txLabels.withdrawals": "Withdrawals",
+  "global.next": "Next",
   "utils.format.today": "今日",
   "utils.format.unknownAssetName": "[Unknown asset name]",
   "utils.format.yesterday": "昨日"

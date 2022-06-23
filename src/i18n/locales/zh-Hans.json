@@ -71,6 +71,7 @@
   "components.firstrun.custompinscreen.pinInputSubtitle": "选择新的PIN码以快速访问您的钱包。",
   "components.firstrun.custompinscreen.pinInputTitle": "输入PIN码",
   "components.firstrun.custompinscreen.title": "设置PIN码",
+  "components.firstrun.languagepicker.title": "Select Language",
   "components.ledger.ledgerconnect.usbDeviceReady": "USB设备已准备就绪，请点击“确认”以继续。",
   "components.ledger.ledgertransportswitchmodal.bluetoothButton": "蓝牙连接",
   "components.ledger.ledgertransportswitchmodal.bluetoothExplanation": "如果你想通过蓝牙连接Ledger Nano model X，请选择该选项",
@@ -232,6 +233,7 @@
   "components.settings.walletsettingscreen.walletName": "钱包名称",
   "components.settings.walletsettingscreen.walletType": "钱包类型：",
   "components.settings.walletsettingscreen.about": "关于",
+  "components.settings.changelanguagescreen.title": "Language",
   "components.stakingcenter.confirmDelegation.delegateButtonLabel": "委托",
   "components.stakingcenter.confirmDelegation.ofFees": "手续费",
   "components.stakingcenter.confirmDelegation.rewardsExplanation": "当前每个时代预计可获得奖励：",
@@ -532,6 +534,7 @@
   "global.txLabels.signingTx": "提交交易",
   "global.txLabels.transactions": "交易",
   "global.txLabels.withdrawals": "提取",
+  "global.next": "Next",
   "utils.format.today": "今天",
   "utils.format.unknownAssetName": "[未知的资产名称]",
   "utils.format.yesterday": "昨天"
