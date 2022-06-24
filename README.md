@@ -10,7 +10,11 @@ Looking for the Yoroi Extension? See [here](https://github.com/Emurgo/yoroi-fron
 
 ## Installation Mac
 
+---
+
 ### Common instalation IOS/Android
+
+---
 
 - Install [nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 
@@ -34,9 +38,55 @@ brew install pyenv
 pyenv install 2.7.18
 ```
 
-### Android Instalation
+- Install Rust:
 
-- Install last version [Android Studio](https://developer.android.com/studio)
+```
+curl https://sh.rustup.rs -sSf | sh
+rustup toolchain install 1.41.0
+rustup install 1.41.0
+rustup target add wasm32-unknown-unknown --toolchain 1.41.0
+rustup default 1.41.0
+```
+
+---
+
+### iOS preparation
+
+---
+
+- Recommended MacOS version: Catalina
+- Recommended xcode version: `12.4`
+- Recommended xcode command-line version: `12.4`
+
+- Install cocoapods version `1.11.3` and download ios dependencies:
+
+```
+brew install cocoapods@1.11.3
+```
+
+- Install rust build targets:
+
+```
+rustup target add aarch64-apple-ios armv7-apple-ios armv7s-apple-ios x86_64-apple-ios i386-apple-ios
+```
+
+- Install cargo-lipo version `3.1.1` for building:
+
+```
+cargo install --version 3.1.1 cargo-lipo
+```
+
+#### Additional configuration for MacOS Big Sur users
+
+MacOS Big Sur changed the default path of the system C linker, which breaks `cargo lipo`. Some approaches to fix this are detailed here https://github.com/TimNN/cargo-lipo/issues/41.
+
+---
+
+### Android Preparation
+
+---
+
+- Install last version of [Android Studio](https://developer.android.com/studio) and install the latest version of Android SDK Command-line tools and Android SDK Platform-Tools. It can be done from `Android Studio -> Appareance & Behavior -> System Settings -> Android SDK -> "SDK Tools" tab` after activating in this section `Show Package Details`
 
 - Add this to your .bashrc/.zshrc file:
 
@@ -44,7 +94,7 @@ pyenv install 2.7.18
 export ANDROID_SDK_ROOT=$HOME/Library/Android/sdk
 export PATH=$PATH:$ANDROID_SDK_ROOT/emulator
 export PATH=$PATH:$ANDROID_SDK_ROOT/platform-tools
-export PATH=$PATH:$ANDROID_SDK_ROOT/tools/bin
+export PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin
 ```
 
 - Update the Android SDK:
@@ -76,40 +126,22 @@ Existing users of Homebrew may encounter Error: Cask adoptopenjdk8 exists in mul
 brew install --cask adoptopenjdk/openjdk/adoptopenjdk8
 ```
 
-- Install Rust:
+- Install Rust packages:
 
 ```
-curl https://sh.rustup.rs -sSf | sh
-rustup toolchain install 1.41.0
-rustup install 1.41.0
-rustup target add wasm32-unknown-unknown --toolchain 1.41.0
-rustup default 1.41.0
 rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
 ```
 
 - Install wasm-prkg:
 
 ```
-$ curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
 ```
 
 - Install gradle:
 
 ```
 brew install gradle
-```
-
-- Clone project:
-
-```
-git clone https://github.com/Emurgo/yoroi-mobile.git
-cd yoroi-mobile
-```
-
-- Install project dependencies:
-
-```
-yarn install
 ```
 
 #### Optional
@@ -123,6 +155,8 @@ yarn install
     - ABI: x86_64
     - Target: Android 11 (Google APIs)
 
+---
+
 ## Installation Windows + WSL2 Ubuntu / Ubuntu
 
 ---
@@ -130,42 +164,6 @@ yarn install
 **NOTE**
 
 The **Windows + WSL2 Ubuntu** is used in the instruction for building project for android devices.<br/>The instruction is checked.<br/>It should work for the Ubuntu also, but it is not checked.
-
----
-
-### iOS preparation
-
----
-
-- Install cocoapods and download ios dependencies:
-
-```shell
-gem install cocoapods
-```
-
-- Install Rust:
-
-```shell
-curl https://sh.rustup.rs -sSf | sh
-rustup toolchain install 1.41.0
-rustup install 1.41.0
-rustup target add wasm32-unknown-unknown --toolchain 1.41.0
-rustup default 1.41.0
-```
-
-- Make sure your Node.js version matches `v16.5.0`.<br/>If you have `nvm` installed, you can just `nvm use`.
-- Install rust build targets:
-  </br>`rustup target add aarch64-apple-ios armv7-apple-ios armv7s-apple-ios x86_64-apple-ios i386-apple-ios`
-- Install cargo-lipo for building:
-  </br>`cargo install cargo-lipo`
-- Install dependencies:
-  </br>`yarn install`
-
-#### Additional configuration for MacOS Big Sur users
-
-MacOS Big Sur changed the default path of the system C linker, which breaks `cargo lipo`. Some approaches to fix this are detailed here https://github.com/TimNN/cargo-lipo/issues/41.
-
----
 
 ### Android preparation
 
