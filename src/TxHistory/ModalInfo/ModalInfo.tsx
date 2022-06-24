@@ -17,7 +17,7 @@ export const ModalInfo: React.FC<Props> = ({visible, hideModalInfo, children}) =
     <Modal visible={visible} showCloseIcon onRequestClose={hideModalInfo} title={strings.infoTitle}>
       <Spacer height={16} />
 
-      <Icon.Info size={45} color={COLORS.ACTION_GRAY} style={styles.infoIcon} />
+      <Icon.Info style={styles.infoIcon} size={45} color={COLORS.ACTION_GRAY} />
 
       <Spacer height={32} />
       {children}
@@ -32,6 +32,13 @@ const messages = defineMessages({
   },
 })
 
+const styles = StyleSheet.create({
+  infoIcon: {
+    alignSelf: 'center',
+    padding: 2,
+  },
+})
+
 const useStrings = () => {
   const intl = useIntl()
 
@@ -39,10 +46,3 @@ const useStrings = () => {
     infoTitle: intl.formatMessage(messages.infoTitle),
   }
 }
-
-const styles = StyleSheet.create({
-  infoIcon: {
-    alignSelf: 'center',
-    padding: 2,
-  },
-})

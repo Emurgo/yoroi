@@ -333,7 +333,8 @@ export const cardanoValueFromRemoteFormat = async (utxo: RawUtxo) => {
 
   for (const entry of utxo.assets) {
     const {policyId, name} = await identifierToCardanoAsset(entry.assetId)
-    const policyContent = (await assets.get(policyId)) ?? (await Assets.new())
+    let policyContent = await assets.get(policyId)
+    policyContent = policyContent.hasValue() ? policyContent : await Assets.new()
     await policyContent.insert(name, await BigNum.fromStr(entry.amount))
     // recall: we always have to insert since WASM returns copies of objects
     await assets.insert(policyId, policyContent)

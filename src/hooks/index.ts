@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {SignedTx} from '@emurgo/yoroi-lib-core'
 import {delay} from 'bluebird'
 import cryptoRandomString from 'crypto-random-string'
+import {IntlShape} from 'react-intl'
 import {
   QueryKey,
   useMutation,
@@ -12,9 +12,11 @@ import {
   UseQueryOptions,
 } from 'react-query'
 
+import KeyStore from '../legacy/KeyStore'
 import {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {WalletMeta} from '../legacy/state'
 import storage from '../legacy/storage'
+import {CurrencySymbol, RawUtxo, TipStatusResponse} from '../legacy/types'
 import {Storage} from '../Storage'
 import {Token} from '../types'
 import {
@@ -28,6 +30,7 @@ import {
   YoroiWallet,
 } from '../yoroi-wallets'
 import {generateShelleyPlateFromKey} from '../yoroi-wallets/cardano/shelley/plate'
+import {YoroiSignedTx, YoroiUnsignedTx} from '../yoroi-wallets/types'
 
 // WALLET
 export const useCloseWallet = (options?: UseMutationOptions<void, Error>) => {
@@ -167,16 +170,16 @@ export const fetchTokenInfo = async ({wallet, tokenId}: {wallet: YoroiWallet; to
   }
 
   return {
-    networkId: 300,
+    networkId: wallet.networkId,
     identifier: tokenId,
     isDefault: false,
     metadata: {
       type: 'Cardano',
       policyId: tokenId.split('.')[0],
       assetName: tokenId.split('.')[1],
-      ticker: null,
-      longName: null,
-      numberOfDecimals: tokenMetadata.decimals || 0,
+      ticker: tokenMetadata.ticker ?? null,
+      longName: tokenMetadata.longName ?? null,
+      numberOfDecimals: tokenMetadata.decimals ?? 0,
       maxSupply: null,
     },
   }
@@ -194,14 +197,199 @@ export const usePlate = ({networkId, publicKeyHex}: {networkId: NetworkId; publi
   return query.data
 }
 
+export const useWithdrawalTx = (
+  {
+    wallet,
+    utxos,
+    deregister = false,
+    serverTime,
+  }: {
+    wallet: YoroiWallet
+    utxos: Array<RawUtxo>
+    deregister?: boolean
+    serverTime?: Date
+  },
+  options?: UseQueryOptions<YoroiUnsignedTx>,
+) => {
+  const query = useQuery({
+    queryKey: [wallet.id, 'withdrawalTx', {deregister}],
+    queryFn: () => wallet.createWithdrawalTx(utxos, deregister, serverTime),
+    retry: false,
+    cacheTime: 0,
+    ...options,
+  })
+
+  return {
+    withdrawalTx: query.data,
+    ...query,
+  }
+}
+
+export const useSignWithPasswordAndSubmitTx = (
+  {wallet, storage}: {wallet: YoroiWallet; storage: typeof KeyStore},
+  options?: {
+    signTx?: UseMutationOptions<YoroiSignedTx, Error, {unsignedTx: YoroiUnsignedTx; password: string; intl: IntlShape}>
+    submitTx?: UseMutationOptions<TxSubmissionStatus, Error, YoroiSignedTx>
+  },
+) => {
+  const signTx = useSignTxWithPassword(
+    {wallet, storage},
+    {
+      useErrorBoundary: true,
+      ...options?.signTx,
+      onSuccess: (signedTx, args, context) => {
+        options?.signTx?.onSuccess?.(signedTx, args, context)
+        submitTx.mutate(signedTx)
+      },
+    },
+  )
+  const submitTx = useSubmitTx(
+    {wallet}, //
+    {useErrorBoundary: true, ...options?.submitTx},
+  )
+
+  return {
+    signAndSubmitTx: signTx.mutate,
+    isLoading: signTx.isLoading || submitTx.isLoading,
+    error: signTx.error || submitTx.error,
+
+    signTx,
+    submitTx,
+  }
+}
+
+export const useSignWithHwAndSubmitTx = (
+  {wallet}: {wallet: YoroiWallet},
+  options?: {
+    signTx?: UseMutationOptions<YoroiSignedTx, Error, {unsignedTx: YoroiUnsignedTx; useUSB: boolean}>
+    submitTx?: UseMutationOptions<TxSubmissionStatus, Error, YoroiSignedTx>
+  },
+) => {
+  const signTx = useSignTxWithHW(
+    {wallet},
+    {
+      useErrorBoundary: true,
+      retry: false,
+      ...options?.signTx,
+      onSuccess: (signedTx, args, context) => {
+        options?.signTx?.onSuccess?.(signedTx, args, context)
+        submitTx.mutate(signedTx)
+      },
+    },
+  )
+  const submitTx = useSubmitTx(
+    {wallet}, //
+    {useErrorBoundary: true, ...options?.submitTx},
+  )
+
+  return {
+    signAndSubmitTx: signTx.mutate,
+    isLoading: signTx.isLoading || submitTx.isLoading,
+    error: signTx.error || submitTx.error,
+
+    signTx,
+    submitTx,
+  }
+}
+
+export const useSignAndSubmitTx = (
+  {wallet}: {wallet: YoroiWallet},
+  options?: {
+    signTx?: UseMutationOptions<YoroiSignedTx, Error, {unsignedTx: YoroiUnsignedTx; masterKey: string}>
+    submitTx?: UseMutationOptions<TxSubmissionStatus, Error, YoroiSignedTx>
+  },
+) => {
+  const signTx = useSignTx(
+    {wallet},
+    {
+      useErrorBoundary: true,
+      retry: false,
+      ...options?.signTx,
+      onSuccess: (signedTx, args, context) => {
+        options?.signTx?.onSuccess?.(signedTx, args, context)
+        submitTx.mutate(signedTx)
+      },
+    },
+  )
+  const submitTx = useSubmitTx(
+    {wallet}, //
+    {useErrorBoundary: true, ...options?.submitTx},
+  )
+
+  return {
+    signAndSubmitTx: signTx.mutate,
+    isLoading: signTx.isLoading || submitTx.isLoading,
+    error: signTx.error || submitTx.error,
+
+    signTx,
+    submitTx,
+  }
+}
+
+export const useSignTx = (
+  {wallet}: {wallet: YoroiWallet},
+  options: UseMutationOptions<YoroiSignedTx, Error, {unsignedTx: YoroiUnsignedTx; masterKey: string}> = {},
+) => {
+  const mutation = useMutation({
+    mutationFn: ({unsignedTx, masterKey}) => wallet.signTx(unsignedTx, masterKey),
+    retry: false,
+    ...options,
+  })
+
+  return {
+    signTx: mutation.mutate,
+    ...mutation,
+  }
+}
+
+export const useSignTxWithPassword = (
+  {wallet, storage}: {wallet: YoroiWallet; storage: typeof KeyStore},
+  options: UseMutationOptions<
+    YoroiSignedTx,
+    Error,
+    {unsignedTx: YoroiUnsignedTx; password: string; intl: IntlShape}
+  > = {},
+) => {
+  const mutation = useMutation({
+    mutationFn: async ({unsignedTx, password, intl}) => {
+      const masterKey = await storage.getData(wallet.id, 'MASTER_PASSWORD', '', password, intl)
+
+      return wallet.signTx(unsignedTx, masterKey)
+    },
+    retry: false,
+    ...options,
+  })
+
+  return {
+    signTx: mutation.mutate,
+    ...mutation,
+  }
+}
+
+export const useSignTxWithHW = (
+  {wallet}: {wallet: YoroiWallet},
+  options: UseMutationOptions<YoroiSignedTx, Error, {unsignedTx: YoroiUnsignedTx; useUSB: boolean}> = {},
+) => {
+  const mutation = useMutation({
+    mutationFn: async ({unsignedTx, useUSB}) => wallet.signTxWithLedger(unsignedTx, useUSB),
+    retry: false,
+    ...options,
+  })
+
+  return {
+    signTx: mutation.mutate,
+    ...mutation,
+  }
+}
+
 // WALLET MANAGER
 export const useCreatePin = (storage: Storage, options: UseMutationOptions<void, Error, string>) => {
   const mutation = useMutation({
     mutationFn: async (pin) => {
       const installationId = await storage.getItem('/appSettings/installationId')
       if (!installationId) throw new Error('Invalid installation id')
-      const installationIdHex = Buffer.from(installationId, 'utf-8').toString('hex')
-      const pinHex = Buffer.from(pin, 'utf-8').toString('hex')
+      const installationIdHex = toHex(installationId)
+      const pinHex = toHex(pin)
       const saltHex = cryptoRandomString({length: 2 * 32})
       const nonceHex = cryptoRandomString({length: 2 * 12})
       const encryptedPinHash = await encryptWithPassword(pinHex, saltHex, nonceHex, installationIdHex)
@@ -336,16 +524,16 @@ export const useCreateWallet = (options?: UseMutationOptions<YoroiWallet, Error,
 
 export const useSubmitTx = (
   {wallet}: {wallet: YoroiWallet},
-  options: UseMutationOptions<TxSubmissionStatus, Error, SignedTx> = {},
+  options: UseMutationOptions<TxSubmissionStatus, Error, YoroiSignedTx> = {},
 ) => {
   const mutation = useMutationWithInvalidations({
     mutationFn: async (signedTx) => {
       const serverStatus = await wallet.checkServerStatus()
-      const base64 = Buffer.from(signedTx.encodedTx).toString('base64')
+      const base64 = Buffer.from(signedTx.signedTx.encodedTx).toString('base64')
       await wallet.submitTransaction(base64)
 
       if (serverStatus.isQueueOnline) {
-        return fetchTxStatus(wallet, signedTx.id, false)
+        return fetchTxStatus(wallet, signedTx.signedTx.id, false)
       }
 
       return {
@@ -422,4 +610,48 @@ export const useMutationWithInvalidations = <TData = unknown, TError = unknown, 
       return options?.onSuccess?.(data, variables, context)
     },
   })
+}
+
+export const useTipStatus = ({
+  wallet,
+  options,
+}: {
+  wallet: YoroiWallet
+  options?: UseQueryOptions<TipStatusResponse, Error>
+}) => {
+  const query = useQuery<TipStatusResponse, Error>({
+    suspense: true,
+    staleTime: 10000,
+    retry: 3,
+    retryDelay: 1000,
+    queryKey: [wallet.networkId, 'tipStatus'],
+    queryFn: () => wallet.fetchTipStatus(),
+    ...options,
+  })
+
+  if (!query.data) throw new Error('Failed to retrive tipStatus')
+
+  return query.data
+}
+
+export const useExchangeRate = ({
+  wallet,
+  to,
+  options,
+}: {
+  wallet: YoroiWallet
+  to: CurrencySymbol
+  options?: UseQueryOptions<number, Error>
+}) => {
+  const query = useQuery<number, Error>({
+    suspense: true,
+    staleTime: 60000,
+    retry: 3,
+    retryDelay: 1000,
+    queryKey: [to],
+    queryFn: () => (to === 'ADA' ? 1 : wallet.fetchCurrentPrice(to)),
+    ...options,
+  })
+
+  return query.data
 }

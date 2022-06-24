@@ -8,14 +8,15 @@ import {Provider} from 'react-redux'
 
 import App from './App'
 import {name as appName} from './app.json'
-import {Boundary} from './components'
 import {ErrorBoundary} from './components/ErrorBoundary'
 import {LanguageProvider} from './i18n'
 import translations from './i18n/translations'
 import {handleGeneralError, setupHooks} from './legacy/actions'
 import {CONFIG} from './legacy/config'
 import getConfiguredStore from './legacy/configureStore'
-import {setLogLevel} from './legacy/logging'
+import {ApiError, NetworkError} from './legacy/errors'
+import {Logger, setLogLevel} from './legacy/logging'
+import {CurrencyProvider} from './Settings/Currency/CurrencyContext'
 
 setLogLevel(CONFIG.LOG_LEVEL)
 
@@ -45,7 +46,13 @@ global.Promise = bluebird as any
 
 const cache = createIntlCache()
 const intl = createIntl({locale: 'en-US', messages: translations['en-US']}, cache)
-global.onunhandledrejection = (e) => handleGeneralError((e as any).message, e as any, intl)
+global.onunhandledrejection = (error: any) => {
+  Logger.error(`${error}`)
+  if (error instanceof NetworkError) return
+  if (error instanceof ApiError) return
+  if (!error?.message) return
+  handleGeneralError(error.message, intl)
+}
 
 const store = getConfiguredStore()
 store.dispatch(setupHooks() as any)
@@ -57,11 +64,11 @@ const AppWithProviders = () => {
     <ErrorBoundary>
       <Provider store={store}>
         <QueryClientProvider client={queryClient}>
-          <Boundary>
-            <LanguageProvider>
+          <LanguageProvider>
+            <CurrencyProvider>
               <App />
-            </LanguageProvider>
-          </Boundary>
+            </CurrencyProvider>
+          </LanguageProvider>
         </QueryClientProvider>
       </Provider>
     </ErrorBoundary>

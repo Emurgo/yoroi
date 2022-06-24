@@ -35,7 +35,7 @@ export const SaveReadOnlyWalletScreen = () => {
     onError: async (error) => {
       Logger.error('SaveReadOnlyWalletScreen::onSubmit', error)
       if (error instanceof Error) {
-        await handleGeneralError(error.message, error, intl)
+        await handleGeneralError(error.message, intl)
       }
 
       throw error

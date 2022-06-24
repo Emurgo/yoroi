@@ -21,11 +21,7 @@ const _checkResponse = async (rawResponse: Record<string, any>, requestPayload: 
   if (status !== 200) {
     const resp = (responseBody as any).error?.response
 
-    if (
-      resp === 'REFERENCE_TX_NOT_FOUND' ||
-      resp === 'REFERENCE_BLOCK_MISMATCH' ||
-      resp === 'REFERENCE_BEST_BLOCK_MISMATCH'
-    ) {
+    if (Object.values(ApiHistoryError.errors).includes(resp)) {
       throw new ApiHistoryError((responseBody as any).error.response)
     }
 
@@ -85,7 +81,6 @@ export const fetchDefault = (
   const headers = {
     'Content-Type': 'application/json; charset=utf-8',
     'yoroi-version': yoroiVersion,
-    'tangata-manu': 'yoroi',
   }
   const request = {
     endpoint: fullPath,

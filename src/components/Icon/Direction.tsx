@@ -4,7 +4,7 @@ import {View} from 'react-native'
 import {TransactionInfo} from '../../legacy/HistoryTransaction'
 import {TransactionDirection} from '../../types'
 import {Received} from '../Icon/Received'
-import {Sent} from '../Icon/Sent'
+import {Send} from '../Icon/Send'
 import {Transaction} from '../Icon/Transaction'
 
 type Props = {
@@ -34,7 +34,7 @@ const iconMap: Record<
   TransactionDirection,
   ({width, height, color}: {width: number; height: number; color: string}) => JSX.Element
 > = {
-  SENT: Sent,
+  SENT: Send,
   RECEIVED: Received,
   SELF: Transaction,
   MULTI: Transaction,

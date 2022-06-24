@@ -4,11 +4,10 @@ import {LayoutAnimation, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
 
 import infoIcon from '../assets/img/icon/info-light-green.png'
-import {OfflineBanner, StatusBar, Text} from '../components'
+import {OfflineBanner, Spacer, StatusBar, Text} from '../components'
 import {assetMessages, txLabels} from '../i18n/global-messages'
 import {fetchAccountState} from '../legacy/account'
 import {checkForFlawedWallets} from '../legacy/actions'
-import {UI_V2} from '../legacy/config'
 import {isByron} from '../legacy/config'
 import {updateHistory} from '../legacy/history'
 import {
@@ -23,6 +22,7 @@ import {ActionsBanner} from './ActionsBanner'
 import {AssetList} from './AssetList'
 import {BalanceBanner} from './BalanceBanner'
 import {CollapsibleHeader} from './CollapsibleHeader'
+import {LockedDeposit} from './LockedDeposit'
 import {SyncErrorBanner} from './SyncErrorBanner'
 import {TxHistoryList} from './TxHistoryList'
 import {WarningBanner} from './WarningBanner'
@@ -60,7 +60,7 @@ export const TxHistory = () => {
 
   return (
     <View style={styles.scrollView}>
-      <StatusBar type={UI_V2 ? 'light' : 'dark'} />
+      <StatusBar type="light" />
 
       <View style={styles.container}>
         <OfflineBanner />
@@ -68,7 +68,7 @@ export const TxHistory = () => {
 
         <CollapsibleHeader expanded={expanded}>
           <BalanceBanner />
-          {UI_V2 && <ActionsBanner />}
+          <ActionsBanner />
         </CollapsibleHeader>
 
         <Tabs>
@@ -91,6 +91,10 @@ export const TxHistory = () => {
         </Tabs>
 
         <TabPanels>
+          <Spacer height={4} />
+          <LockedDeposit />
+          <Spacer height={8} />
+
           <TabPanel active={activeTab === 'transactions'}>
             {isByron(wallet.walletImplementationId) && showWarning && (
               <WarningBanner

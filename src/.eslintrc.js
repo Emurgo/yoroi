@@ -36,7 +36,7 @@ module.exports = {
     'spaced-comment': 1,
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': ['error', {argsIgnorePattern: '^_'}],
-    'react/jsx-curly-brace-presence': ['warn', {props: 'never', children: 'never'}]
+    'react/jsx-curly-brace-presence': ['warn', {props: 'never', children: 'never'}],
   },
   globals: {
     Buffer: false,

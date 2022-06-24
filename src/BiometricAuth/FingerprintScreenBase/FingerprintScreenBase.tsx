@@ -4,9 +4,8 @@ import {Image, Platform, StyleSheet, TouchableOpacity, View} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import chevronLeft from '../../assets/img/chevron_left.png'
 import fingerprintImage from '../../assets/img/fingerprint.png'
-import {ScreenBackground, StatusBar, Text} from '../../components'
+import {Icon, ScreenBackground, StatusBar, Text} from '../../components'
 import {COLORS} from '../../theme'
 
 type Props = {
@@ -36,8 +35,8 @@ export const FingerprintScreenBase = ({headings, subHeadings, buttons, onGoBack,
 
         <View style={[styles.main, onGoBack ? null : styles.mainPadded]}>
           {onGoBack && (
-            <TouchableOpacity onPress={onGoBack} style={styles.goBack}>
-              <Image source={chevronLeft} style={styles.chevron} />
+            <TouchableOpacity onPress={onGoBack}>
+              <Icon.Chevron direction="left" size={28} color={COLORS.WHITE} />
             </TouchableOpacity>
           )}
 
@@ -100,13 +99,6 @@ const styles = StyleSheet.create({
   },
   mainPadded: {
     paddingTop: 25,
-  },
-  goBack: {
-    width: 30,
-  },
-  chevron: {
-    tintColor: COLORS.WHITE,
-    marginVertical: 10,
   },
   heading: {
     ...headingTextStyle,

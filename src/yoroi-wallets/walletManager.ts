@@ -679,11 +679,6 @@ class WalletManager {
     )
   }
 
-  async createWithdrawalTx(utxos: Array<RawUtxo>, shouldDeregister: boolean, serverTime: Date | void) {
-    const wallet = this.getWallet()
-    return await this.abortWhenWalletCloses(wallet.createWithdrawalTx(utxos, shouldDeregister, serverTime))
-  }
-
   async signTxWithLedger(request: ISignRequest, useUSB: boolean) {
     const wallet = this.getWallet()
     return await this.abortWhenWalletCloses(wallet.signTxWithLedger(request as any, useUSB))

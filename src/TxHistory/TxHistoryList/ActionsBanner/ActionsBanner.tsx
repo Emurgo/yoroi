@@ -1,7 +1,7 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 
+import {Icon} from '../../../components'
 import features from '../../../features'
 
 type Props = {
@@ -15,13 +15,13 @@ export const ActionsBanner = (props: Props) => {
     <View style={styles.actionsRoot}>
       {features.txHistory.export && (
         <TouchableOpacity onPress={onExport}>
-          <Icon name="export" size={24} color="#6B7384" />
+          <Icon.Export size={24} color="#6B7384" />
         </TouchableOpacity>
       )}
 
       {features.txHistory.search && (
         <TouchableOpacity onPress={onSearch}>
-          <Icon name="magnify" size={24} color="#6B7384" />
+          <Icon.Magnify size={24} color="#6B7384" />
         </TouchableOpacity>
       )}
     </View>

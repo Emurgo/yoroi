@@ -3,8 +3,8 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {useDispatch} from 'react-redux'
 
-import {ChangePinScreen} from '../auth/ChangePinScreen/ChangePinScreen'
-import {setSystemAuth, signin} from '../legacy/actions'
+import {CreatePinScreen} from '../auth/CreatePinScreen/CreatePinScreen'
+import {reloadAppSettings, setSystemAuth, signin} from '../legacy/actions'
 import {defaultStackNavigationOptions, FirstRunRoutes} from '../navigation'
 import {LanguagePickerScreen} from './LanguagePickerScreen'
 import {TermsOfServiceScreen} from './TermsOfServiceScreen'
@@ -12,7 +12,6 @@ import {TermsOfServiceScreen} from './TermsOfServiceScreen'
 const Stack = createStackNavigator<FirstRunRoutes>()
 export const FirstRunNavigator = () => {
   const strings = useStrings()
-  const dispatch = useDispatch()
 
   return (
     <Stack.Navigator
@@ -27,7 +26,7 @@ export const FirstRunNavigator = () => {
       <Stack.Screen //
         name="language-pick"
         component={LanguagePickerScreen}
-        options={{headerShown: false}}
+        options={{title: strings.languagePickerTitle}}
       />
 
       <Stack.Screen
@@ -36,20 +35,26 @@ export const FirstRunNavigator = () => {
         options={{title: strings.acceptTermsTitle}}
       />
 
-      <Stack.Screen // formatting
+      <Stack.Screen //
         name="custom-pin"
         options={{headerShown: false}}
-      >
-        {() => (
-          <ChangePinScreen
-            onDone={async () => {
-              await dispatch(setSystemAuth(false))
-              dispatch(signin())
-            }}
-          />
-        )}
-      </Stack.Screen>
+        component={CreatePinScreenWrapper}
+      />
     </Stack.Navigator>
+  )
+}
+
+const CreatePinScreenWrapper = () => {
+  const dispatch = useDispatch()
+
+  return (
+    <CreatePinScreen
+      onDone={async () => {
+        await dispatch(reloadAppSettings())
+        await dispatch(setSystemAuth(false))
+        dispatch(signin())
+      }}
+    />
   )
 }
 
@@ -58,6 +63,10 @@ const messages = defineMessages({
     id: 'components.firstrun.acepttermsofservicescreen.title',
     defaultMessage: '!!!Terms of Service Agreement',
   },
+  languagePickerTitle: {
+    id: 'components.firstrun.languagepicker.title',
+    defaultMessage: '!!!Select Language',
+  },
 })
 
 const useStrings = () => {
@@ -65,5 +74,6 @@ const useStrings = () => {
 
   return {
     acceptTermsTitle: intl.formatMessage(messages.acceptTermsTitle),
+    languagePickerTitle: intl.formatMessage(messages.languagePickerTitle),
   }
 }

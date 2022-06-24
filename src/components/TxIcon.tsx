@@ -5,7 +5,7 @@ import {TransactionInfo} from '../legacy/HistoryTransaction'
 import {Icon} from './Icon'
 
 const ICON = {
-  SENT: Icon.Sent,
+  SENT: Icon.Send,
   RECEIVED: Icon.Received,
   SELF: Icon.Transaction,
   MULTI: Icon.Transaction,
@@ -43,7 +43,7 @@ export const TxIcon = ({transaction}: Props) => {
 
   return (
     <View style={[styles.container, {backgroundColor: color.background}]}>
-      <IconComponent color={color.icon} width={SIZE} height={SIZE} />
+      <IconComponent color={color.icon} size={SIZE} />
     </View>
   )
 }
