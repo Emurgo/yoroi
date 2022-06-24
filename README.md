@@ -14,8 +14,6 @@ Looking for the Yoroi Extension? See [here](https://github.com/Emurgo/yoroi-fron
 
 ### Common instalation IOS/Android
 
----
-
 - Install [nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 
 - Install node `16.5.0`
@@ -52,8 +50,6 @@ rustup default 1.41.0
 
 ### iOS preparation
 
----
-
 - Recommended MacOS version: Catalina
 - Recommended xcode version: `12.4`
 - Recommended xcode command-line version: `12.4`
@@ -83,8 +79,6 @@ MacOS Big Sur changed the default path of the system C linker, which breaks `car
 ---
 
 ### Android Preparation
-
----
 
 - Install last version of [Android Studio](https://developer.android.com/studio) and install the latest version of Android SDK Command-line tools and Android SDK Platform-Tools. It can be done from `Android Studio -> Appareance & Behavior -> System Settings -> Android SDK -> "SDK Tools" tab` after activating in this section `Show Package Details`
 
@@ -262,33 +256,6 @@ sdkmanager --install "ndk;20.0.5594570"
 sudo apt install gradle -y
 ```
 
-- Clone the project
-
-```shell
-cd ~ && mkdir Emurgo && cd Emurgo
-git clone https://github.com/Emurgo/yoroi-mobile.git
-cd yoroi-mobile
-```
-
-- Run the `nvm use` command
-- Install `yarn`:
-
-```shell
-npm install -g yarn
-```
-
-- Check that Yarn is installed:
-
-```shell
-yarn --version
-```
-
-- Install dependencies:
-
-```shell
-yarn install
-```
-
 ---
 
 #### Windows preparation
@@ -384,8 +351,18 @@ yarn start
 
 Make sure the rust targets for the platform you will work on (android/iOS) have been correctly installed with `rustup show`. Then:
 
-1. `yarn setup_configs` - links libraries to ios testnet build configurations
-1. When building on iOS: `cd ios && pod install`
+1. Clone the project
+
+```shell
+cd ~ && mkdir Emurgo && cd Emurgo
+git clone https://github.com/Emurgo/yoroi-mobile.git
+cd yoroi-mobile
+```
+
+2. Run the `nvm use` command
+3. `yarn install`
+4. `yarn setup_configs` - links libraries to ios testnet build configurations
+5. When building on iOS: `cd ios && pod install`
 
 If these steps fail, try looking at the [android CLI](https://github.com/Emurgo/yoroi-mobile/blob/develop/.circleci/config.yml#L68)
 
