@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {TxMetadata} from '@emurgo/yoroi-lib-core'
-import {BigNumber} from 'bignumber.js'
 import ExtendableError from 'es6-error'
 import _ from 'lodash'
 import type {IntlShape} from 'react-intl'
@@ -11,7 +10,6 @@ import assert from '../legacy/assert'
 import {CONFIG, DISABLE_BACKGROUND_SYNC} from '../legacy/config'
 import {canBiometricEncryptionBeEnabled, ensureKeysValidity, isSystemAuthSupported} from '../legacy/deviceSettings'
 import {ObjectValues} from '../legacy/flow'
-import type {DefaultAsset} from '../legacy/HistoryTransaction'
 import {ISignRequest} from '../legacy/ISignRequest'
 import KeyStore from '../legacy/KeyStore'
 import type {HWDeviceInfo} from '../legacy/ledgerUtils'
@@ -664,19 +662,6 @@ class WalletManager {
   async signTx<T>(signRequest: ISignRequest<T>, decryptedKey: string) {
     const wallet = this.getWallet()
     return await this.abortWhenWalletCloses(wallet.signTx(signRequest as any, decryptedKey))
-  }
-
-  async createDelegationTx(
-    poolRequest: void | string,
-    valueInAccount: BigNumber,
-    utxos: Array<RawUtxo>,
-    defaultAsset: DefaultAsset,
-    serverTime: Date | void,
-  ) {
-    const wallet = this.getWallet()
-    return await this.abortWhenWalletCloses(
-      wallet.createDelegationTx(poolRequest, valueInAccount, utxos, defaultAsset, serverTime),
-    )
   }
 
   async signTxWithLedger(request: ISignRequest, useUSB: boolean) {

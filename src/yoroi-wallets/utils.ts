@@ -74,4 +74,14 @@ export const Quantities = {
   negated: (quantity: Quantity) => {
     return new BigNumber(quantity).negated().toString() as Quantity
   },
+  product: (quantities: Array<Quantity>) => {
+    return quantities.reduce((result, quantity) => {
+      const x = new BigNumber(result).times(new BigNumber(quantity))
+
+      return x.toString() as Quantity
+    }, '1' as Quantity)
+  },
+  quotient: (quantity1: Quantity, quantity2: Quantity) => {
+    return new BigNumber(quantity1).dividedBy(new BigNumber(quantity2)).toString() as Quantity
+  },
 }

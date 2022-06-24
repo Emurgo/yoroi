@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {legacyWalletChecksum, walletChecksum} from '@emurgo/cip4-js'
-import {Addressing, CardanoAddressedUtxo, TxMetadata} from '@emurgo/yoroi-lib-core'
+import {Addressing, CardanoAddressedUtxo, RegistrationStatus, TxMetadata} from '@emurgo/yoroi-lib-core'
 import {BigNumber} from 'bignumber.js'
 import ExtendableError from 'es6-error'
 import _ from 'lodash'
@@ -58,8 +58,7 @@ import {
 import * as catalystUtils from './catalyst/catalystUtils'
 import {AddressChain, AddressGenerator} from './chain'
 import {HaskellShelleyTxSignRequest} from './HaskellShelleyTxSignRequest'
-import {MultiToken} from './MultiToken'
-import {createDelegationTx, filterAddressesByStakingKey, getDelegationStatus} from './shelley/delegationUtils'
+import {filterAddressesByStakingKey, getDelegationStatus} from './shelley/delegationUtils'
 import {TransactionCache} from './shelley/transactionCache'
 import {newAdaUnsignedTx, signTransaction} from './shelley/transactions'
 import {NetworkId, SignedTxLegacy, WalletImplementationId, WalletInterface, YoroiProvider} from './types'
@@ -609,46 +608,63 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
   }
 
   async createDelegationTx(
-    poolRequest: void | string,
-    valueInAccount: BigNumber,
+    poolId: string | undefined,
+    delegatedAmount: BigNumber,
     utxos: Array<RawUtxo>,
     defaultAsset: DefaultAsset,
-    serverTime: Date | void,
-  ): Promise<{
-    signRequest: HaskellShelleyTxSignRequest
-    totalAmountToDelegate: MultiToken
-  }> {
+    serverTime: Date | undefined,
+  ) {
     const timeToSlotFn = genTimeToSlot(getCardanoBaseConfig(this._getNetworkConfig()))
     const time = serverTime !== undefined ? serverTime : new Date()
     const absSlotNumber = new BigNumber(timeToSlotFn({time}).slot)
     const changeAddr = await this._getAddressedChangeAddress()
-    const addressedUtxos = this.asLegacyAddressedUtxo(utxos)
+    const addressedUtxos = this.asAddressedUtxo(utxos)
     const registrationStatus = (await this.getDelegationStatus()).isRegistered
     const stakingKey = await this.getStakingKey()
+    const delegationType = registrationStatus ? RegistrationStatus.DelegateOnly : RegistrationStatus.RegisterAndDelegate
     const networkConfig = this._getNetworkConfig()
-    const resp = await createDelegationTx({
+    const delegatedAmountMT = {
+      values: [{identifier: '', amount: delegatedAmount, networkId: networkConfig.NETWORK_ID}],
+      defaults: defaultAsset,
+    }
+
+    const unsignedTx = await YoroiLib.cardano.createUnsignedDelegationTx(
       absSlotNumber,
-      registrationStatus,
-      poolRequest,
-      valueInAccount,
       addressedUtxos,
       stakingKey,
+      delegationType,
+      poolId || null,
       changeAddr,
+      delegatedAmountMT,
       defaultAsset,
+      {},
+      {
+        keyDeposit: networkConfig.KEY_DEPOSIT,
+        linearFee: {
+          constant: networkConfig.LINEAR_FEE.CONSTANT,
+          coefficient: networkConfig.LINEAR_FEE.COEFFICIENT,
+        },
+        minimumUtxoVal: networkConfig.MINIMUM_UTXO_VAL,
+        poolDeposit: networkConfig.POOL_DEPOSIT,
+        networkId: networkConfig.NETWORK_ID,
+      },
+    )
+
+    return yoroiUnsignedTx({
+      unsignedTx,
       networkConfig,
     })
-    return resp
   }
 
   async createVotingRegTx(
     utxos: Array<RawUtxo>,
     catalystKey: string,
-    decryptedKey: string | void,
-    serverTime: Date | void,
+    decryptedKey: string | undefined,
+    serverTime: Date | undefined,
   ) {
     Logger.debug('ShelleyWallet::createVotingRegTx called')
     try {
-      const timeToSlotFn = await genTimeToSlot(getCardanoBaseConfig(this._getNetworkConfig()))
+      const timeToSlotFn = genTimeToSlot(getCardanoBaseConfig(this._getNetworkConfig()))
       const time = serverTime !== undefined ? serverTime : new Date()
       const absSlotNumber = new BigNumber(timeToSlotFn({time}).slot)
 
@@ -762,8 +778,9 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
 
   async createWithdrawalTx(
     utxos: Array<RawUtxo>,
+    defaultAsset: DefaultAsset,
     shouldDeregister: boolean,
-    serverTime: Date | void,
+    serverTime: Date | undefined,
   ): Promise<YoroiUnsignedTx> {
     const {rewardAddressHex} = this
     if (rewardAddressHex == null) throw new Error('reward address is null')
@@ -775,6 +792,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     const accountState = await api.getAccountState({addresses: [rewardAddressHex]}, this._getNetworkConfig().BACKEND)
     const withdrawalTx = await YoroiLib.cardano.createUnsignedWithdrawalTx(
       accountState,
+      defaultAsset,
       absSlotNumber,
       addressedUtxos,
       [

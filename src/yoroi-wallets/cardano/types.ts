@@ -33,7 +33,6 @@ import Wallet from '../Wallet'
 import type {Addresses} from './chain'
 import {AddressChain} from './chain'
 import {HaskellShelleyTxSignRequest} from './HaskellShelleyTxSignRequest'
-import {MultiToken} from './MultiToken'
 import {TransactionCache} from './shelley/transactionCache'
 
 export interface WalletInterface {
@@ -166,34 +165,32 @@ export interface WalletInterface {
     receiver: string,
     tokens: SendTokenList,
     defaultToken: Token,
-    serverTime: Date | null | void,
-    metadata: Array<TxMetadata> | void,
+    serverTime: Date | null | undefined,
+    metadata: Array<TxMetadata> | undefined,
   ): Promise<UnsignedTx>
 
   signTx(signRequest: YoroiUnsignedTx, decryptedMasterKey: string): Promise<YoroiSignedTx>
 
   createDelegationTx(
-    poolRequest: void | string,
+    poolRequest: string,
     valueInAccount: BigNumber,
     utxos: Array<RawUtxo>,
     defaultAsset: DefaultAsset,
-    serverTime: Date | void,
-  ): Promise<{
-    signRequest: HaskellShelleyTxSignRequest
-    totalAmountToDelegate: MultiToken
-  }>
+    serverTime: Date | undefined,
+  ): Promise<YoroiUnsignedTx>
 
   createVotingRegTx(
     utxos: Array<RawUtxo>,
     catalystPrivateKey: string,
-    decryptedKey: string | void,
-    serverTime: Date | void,
+    decryptedKey: string | undefined,
+    serverTime: Date | undefined,
   ): Promise<HaskellShelleyTxSignRequest>
 
   createWithdrawalTx(
     utxos: Array<RawUtxo>,
+    defaultAsset: DefaultAsset,
     shouldDeregister: boolean,
-    serverTime: Date | void,
+    serverTime: Date | undefined,
   ): Promise<YoroiUnsignedTx>
 
   signTxWithLedger(request: YoroiUnsignedTx, useUSB: boolean): Promise<YoroiSignedTx>

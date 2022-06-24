@@ -1572,23 +1572,23 @@
   dependencies:
     base-64 "0.1.0"
 
-"@emurgo/yoroi-lib-core@0.5.0-alpha.31", "@emurgo/yoroi-lib-core@^0.5.0-alpha.31":
-  version "0.5.0-alpha.31"
-  resolved "https://registry.yarnpkg.com/@emurgo/yoroi-lib-core/-/yoroi-lib-core-0.5.0-alpha.31.tgz#a6bdc3b2a55754897ecbd37a665d73b721ca7807"
-  integrity sha512-xv2lF51lvPQedGiauKOV4ibEYXOBBxep+9VKD9y6pbqNmO4/xzpttoOOIsfjQxVSdja/nVcA/ibZUl9R+oLr3g==
+"@emurgo/yoroi-lib-core@0.7.0-alpha.35", "@emurgo/yoroi-lib-core@^0.7.0-alpha.35":
+  version "0.7.0-alpha.35"
+  resolved "https://registry.yarnpkg.com/@emurgo/yoroi-lib-core/-/yoroi-lib-core-0.7.0-alpha.35.tgz#2c9f8866aa61cba2ec7e52404336c1f918aa629f"
+  integrity sha512-u81U53H2BAhb5g/tNg+n8pgLEs8Ol2MpHKDI5Du9JhWVZQruny2mvJjWjk7T3hU4AMlR9rz1A+XP2IPP/0xh0g==
   dependencies:
     "@cardano-foundation/ledgerjs-hw-app-cardano" "^5.0.0"
     axios "^0.24.0"
     bignumber.js "^9.0.1"
     hash-wasm "^4.9.0"
 
-"@emurgo/yoroi-lib-mobile@^0.5.0-alpha.31":
-  version "0.5.0-alpha.31"
-  resolved "https://registry.yarnpkg.com/@emurgo/yoroi-lib-mobile/-/yoroi-lib-mobile-0.5.0-alpha.31.tgz#08c251c7041ff34adb3cbd3beccde9981d8e47bf"
-  integrity sha512-/rEhGpkER37UX90mO/mJEslQiFEniZXUSqcyyVdGoz+wMtNzsdDfruqlo0GDqTm4wi3YM3Q2PUdNX4kPcrLphg==
+"@emurgo/yoroi-lib-mobile@^0.7.0-alpha.35":
+  version "0.7.0-alpha.35"
+  resolved "https://registry.yarnpkg.com/@emurgo/yoroi-lib-mobile/-/yoroi-lib-mobile-0.7.0-alpha.35.tgz#812724f3cf934b21a60c14db9ca9cff975d692fe"
+  integrity sha512-M4L2x5qPfuLJWWDtPDOy59Lrjf5c9RRBrrTz5a9K/yN6LYEO6dRFfZbdh+sAZZ50dM9FsbZl6lNtcKTRu1vU3A==
   dependencies:
     "@emurgo/react-native-haskell-shelley" "3.1.3"
-    "@emurgo/yoroi-lib-core" "0.5.0-alpha.31"
+    "@emurgo/yoroi-lib-core" "0.7.0-alpha.35"
 
 "@eslint/eslintrc@^0.4.3":
   version "0.4.3"

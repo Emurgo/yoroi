@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {BigNumber} from 'bignumber.js'
 import React, {useEffect, useState} from 'react'
-import {useIntl} from 'react-intl'
-import {defineMessages} from 'react-intl'
+import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {useSelector} from 'react-redux'
 
@@ -17,20 +16,20 @@ import {useParams, useWalletNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {DefaultAsset} from '../../types'
-import type {CreateDelegationTxResponse, CreateUnsignedTxResponse} from '../../yoroi-wallets'
-import {MultiToken} from '../../yoroi-wallets'
+import {Quantity, YoroiUnsignedTx} from '../../yoroi-wallets/types'
+import {Amounts, Entries, Quantities} from '../../yoroi-wallets/utils'
 
 export type Params = {
   poolHash: string
   poolName: string
-  transactionData: CreateDelegationTxResponse
+  unsignedTx: YoroiUnsignedTx
 }
 
 const isParams = (params?: Params | object | undefined): params is Params => {
   return (
     !!params &&
-    'transactionData' in params &&
-    typeof params.transactionData === 'object' &&
+    'unsignedTx' in params &&
+    typeof params.unsignedTx === 'object' &&
     'poolHash' in params &&
     typeof params.poolHash === 'string' &&
     'poolName' in params &&
@@ -41,30 +40,21 @@ const isParams = (params?: Params | object | undefined): params is Params => {
 export const DelegationConfirmation = ({mockDefaultAsset}: {mockDefaultAsset?: DefaultAsset}) => {
   const {resetToTxHistory} = useWalletNavigation()
   const wallet = useSelectedWallet()
-  const {isHW, isEasyConfirmationEnabled} = wallet
   const defaultNetworkAsset = useSelector(defaultNetworkAssetSelector)
   const defaultAsset = mockDefaultAsset || defaultNetworkAsset
-  const {poolHash, poolName, transactionData: delegationTxData} = useParams<Params>(isParams)
-  const [transactionFee, setTransactionFee] = useState<MultiToken>()
   const strings = useStrings()
+
+  const {poolHash, poolName, unsignedTx: yoroiTx} = useParams<Params>(isParams)
+  if (!yoroiTx.staking) throw new Error('invalid transaction')
+  const stakingAmount = Amounts.getAmount(Entries.toAmounts(yoroiTx.staking.delegations), '')
+  const reward = approximateReward(stakingAmount.quantity)
+
   const [password, setPassword] = useState('')
   const [useUSB, setUseUSB] = useState(false)
 
-  const signRequest: CreateUnsignedTxResponse = delegationTxData.signRequest
-  const amountToDelegate: MultiToken = delegationTxData.totalAmountToDelegate
-  const reward = approximateReward(amountToDelegate.getDefault())
-
   useEffect(() => {
-    if (CONFIG.DEBUG.PREFILL_FORMS && __DEV__) {
-      setPassword(CONFIG.DEBUG.PASSWORD)
-    }
+    if (CONFIG.DEBUG.PREFILL_FORMS && __DEV__) setPassword(CONFIG.DEBUG.PASSWORD)
   }, [])
-
-  useEffect(() => {
-    void (async () => {
-      setTransactionFee(await delegationTxData.signRequest.fee())
-    })()
-  }, [delegationTxData])
 
   const onSuccess = () => {
     resetToTxHistory()
@@ -87,21 +77,19 @@ export const DelegationConfirmation = ({mockDefaultAsset}: {mockDefaultAsset?: D
 
         <View style={styles.input}>
           <Text small style={styles.fees}>
-            {`+ ${transactionFee ? formatTokenAmount(transactionFee.getDefault(), defaultAsset) : ''} ${
-              strings.ofFees
-            }`}
+            {`+ ${formatTokenAmount(new BigNumber(yoroiTx.fee['']), defaultAsset)} ${strings.ofFees}`}
           </Text>
 
           {/* requires a handler so we pass on a dummy function */}
           <ValidatedTextInput
             onChangeText={() => undefined}
             editable={false}
-            value={formatTokenAmount(amountToDelegate.getDefault(), defaultAsset)}
+            value={formatTokenAmount(new BigNumber(stakingAmount.quantity), defaultAsset)}
             label={strings.amount}
           />
         </View>
 
-        {!isEasyConfirmationEnabled && !isHW && (
+        {!wallet.isEasyConfirmationEnabled && !wallet.isHW && (
           <View style={styles.input}>
             <ValidatedTextInput secureTextEntry value={password} label={strings.password} onChangeText={setPassword} />
           </View>
@@ -109,10 +97,10 @@ export const DelegationConfirmation = ({mockDefaultAsset}: {mockDefaultAsset?: D
 
         <View style={styles.itemBlock}>
           <Text style={styles.itemTitle}>{strings.rewardsExplanation}</Text>
-          <Text style={styles.rewards}>{formatTokenWithText(reward, defaultAsset)}</Text>
+          <Text style={styles.rewards}>{formatTokenWithText(new BigNumber(reward), defaultAsset)}</Text>
         </View>
 
-        {isHW && <HWInstructions useUSB={useUSB} addMargin />}
+        {wallet.isHW && <HWInstructions useUSB={useUSB} addMargin />}
       </ScrollView>
 
       <Actions>
@@ -126,7 +114,7 @@ export const DelegationConfirmation = ({mockDefaultAsset}: {mockDefaultAsset?: D
           onSuccess={onSuccess}
           setUseUSB={setUseUSB}
           useUSB={useUSB}
-          txDataSignRequest={signRequest}
+          txDataSignRequest={yoroiTx.unsignedTx}
         />
       </Actions>
     </View>
@@ -169,10 +157,11 @@ const messages = defineMessages({
  * TODO: based on https://staking.cardano.org/en/calculator/
  *  needs to be update per-network
  */
-const approximateReward = (amount: BigNumber): BigNumber => {
-  return amount
-    .times(CONFIG.NETWORKS.HASKELL_SHELLEY.PER_EPOCH_PERCENTAGE_REWARD)
-    .div(CONFIG.NUMBERS.EPOCH_REWARD_DENOMINATOR)
+const approximateReward = (stakedQuantity: Quantity): Quantity => {
+  return Quantities.quotient(
+    Quantities.product([stakedQuantity, `${CONFIG.NETWORKS.HASKELL_SHELLEY.PER_EPOCH_PERCENTAGE_REWARD}`]),
+    CONFIG.NUMBERS.EPOCH_REWARD_DENOMINATOR.toString() as Quantity,
+  )
 }
 
 const styles = StyleSheet.create({

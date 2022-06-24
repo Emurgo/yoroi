@@ -16,6 +16,14 @@ describe('Quantities', () => {
     expect(Quantities.negated('1')).toEqual('-1' as Quantity)
     expect(Quantities.negated('-1')).toEqual('1' as Quantity)
   })
+  it('product', () => {
+    expect(Quantities.product(['1', '2'])).toEqual('2' as Quantity)
+    expect(Quantities.product(['2', '3'])).toEqual('6' as Quantity)
+  })
+  it('quotient', () => {
+    expect(Quantities.quotient('1', '2')).toEqual('0.5' as Quantity)
+    expect(Quantities.quotient('2', '1')).toEqual('2' as Quantity)
+  })
 })
 
 describe('Amounts', () => {

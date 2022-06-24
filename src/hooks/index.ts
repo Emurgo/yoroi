@@ -18,7 +18,7 @@ import {WalletMeta} from '../legacy/state'
 import storage from '../legacy/storage'
 import {CurrencySymbol, RawUtxo, TipStatusResponse} from '../legacy/types'
 import {Storage} from '../Storage'
-import {Token} from '../types'
+import {DefaultAsset, Token} from '../types'
 import {
   decryptWithPassword,
   encryptWithPassword,
@@ -201,11 +201,13 @@ export const useWithdrawalTx = (
   {
     wallet,
     utxos,
+    defaultAsset,
     deregister = false,
     serverTime,
   }: {
     wallet: YoroiWallet
     utxos: Array<RawUtxo>
+    defaultAsset: DefaultAsset
     deregister?: boolean
     serverTime?: Date
   },
@@ -213,7 +215,7 @@ export const useWithdrawalTx = (
 ) => {
   const query = useQuery({
     queryKey: [wallet.id, 'withdrawalTx', {deregister}],
-    queryFn: () => wallet.createWithdrawalTx(utxos, deregister, serverTime),
+    queryFn: () => wallet.createWithdrawalTx(utxos, defaultAsset, deregister, serverTime),
     retry: false,
     cacheTime: 0,
     ...options,

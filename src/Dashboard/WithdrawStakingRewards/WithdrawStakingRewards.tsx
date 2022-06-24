@@ -8,7 +8,7 @@ import {Boundary, DangerousAction, PleaseWaitView, Spacer} from '../../component
 import {useWithdrawalTx} from '../../hooks'
 import globalMessages, {ledgerMessages} from '../../i18n/global-messages'
 import KeyStore from '../../legacy/KeyStore'
-import {serverStatusSelector, utxosSelector} from '../../legacy/selectors'
+import {defaultNetworkAssetSelector, serverStatusSelector, utxosSelector} from '../../legacy/selectors'
 import {theme} from '../../theme'
 import {YoroiWallet} from '../../yoroi-wallets'
 import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
@@ -56,8 +56,9 @@ export const WithdrawalTxForm: React.FC<{
   const [deregister, setDeregister] = React.useState<boolean>()
   const utxos = useSelector(utxosSelector) || []
   const serverStatus = useSelector(serverStatusSelector)
+  const defaultAsset = useSelector(defaultNetworkAssetSelector)
   const {isLoading} = useWithdrawalTx(
-    {wallet, deregister, utxos, serverTime: serverStatus.serverTime},
+    {wallet, deregister, defaultAsset, utxos, serverTime: serverStatus.serverTime},
     {
       onSuccess: (withdrawalTx) => onDone(withdrawalTx),
       enabled: deregister != null,

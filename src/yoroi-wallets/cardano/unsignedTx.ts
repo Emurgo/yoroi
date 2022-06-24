@@ -40,7 +40,10 @@ export const yoroiUnsignedTx = async ({
       withdrawals: await Staking.toWithdrawals(unsignedTx.withdrawals),
       registrations: await Staking.toRegistrations({registrations: unsignedTx.registrations, networkConfig}),
       deregistrations: await Staking.toDeregistrations({deregistrations: unsignedTx.deregistrations, networkConfig}),
-      delegations: await Staking.toDelegations({delegations: unsignedTx.delegations, networkConfig}),
+      delegations: await Staking.toDelegations({
+        delegations: unsignedTx.delegations,
+        amount: unsignedTx.totalAmountToDelegate,
+      }),
     },
     voting: {
       registrations: await Voting.toRegistrations({
@@ -160,24 +163,21 @@ const Staking = {
 
   toDelegations: async ({
     delegations,
-    networkConfig: {NETWORK_ID, KEY_DEPOSIT},
+    amount,
   }: {
     delegations: UnsignedTx['delegations']
-    networkConfig: CardanoHaskellShelleyNetwork
-  }) =>
-    delegations.reduce(async (result, current) => {
-      const address = await current
-        .stakeCredential()
-        .then((stakeCredential) => RewardAddress.new(NETWORK_ID, stakeCredential))
-        .then((rewardAddress) => rewardAddress.toAddress())
-        .then((address) => address.toBytes())
-        .then((bytes) => Buffer.from(bytes).toString('hex'))
+    amount: UnsignedTx['totalAmountToDelegate']
+  }) => {
+    if (delegations.length > 1) throw new Error('Multiple delegations not supported')
+    if (!amount || delegations.length <= 0) return {}
 
-      return {
-        ...(await result),
-        [address]: {'': KEY_DEPOSIT as Quantity},
-      }
-    }, Promise.resolve({} as YoroiEntries)),
+    const poolId = await delegations[0]
+      .poolKeyhash()
+      .then((poolKeyhash) => poolKeyhash.toBytes())
+      .then((bytes) => Buffer.from(bytes).toString('hex'))
+
+    return {[poolId]: toAmounts(amount.values)}
+  },
 }
 
 const REGISTRATION_LABEL = '61284'
