@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {SignedTx, UnsignedTx} from '@emurgo/yoroi-lib-core'
+import {SignedTx} from '@emurgo/yoroi-lib-core'
 import {useNavigation} from '@react-navigation/native'
 import {delay} from 'bluebird'
 import React, {useEffect, useState} from 'react'
@@ -20,6 +20,7 @@ import {hwDeviceInfoSelector} from '../../legacy/selectors'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {HaskellShelleyTxSignRequest, SystemAuthDisabled, walletManager} from '../../yoroi-wallets'
+import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
 import {Button, ButtonProps, ValidatedTextInput} from '..'
 import {Dialog, Step as DialogStep} from './Dialog'
 
@@ -32,7 +33,7 @@ type Props = {
   buttonProps?: Omit<Partial<ButtonProps>, 'disabled' | 'onPress'>
   onSuccess: (signedTx: SignedTx) => void
   onError?: (err: Error) => void
-  txDataSignRequest: HaskellShelleyTxSignRequest | UnsignedTx
+  txDataSignRequest: YoroiUnsignedTx | HaskellShelleyTxSignRequest
   useUSB: boolean
   setUseUSB: (useUSB: boolean) => void
   isProvidingPassword?: boolean
@@ -139,7 +140,7 @@ export const ConfirmTx: React.FC<Props> = ({
   }
 
   const onConfirmNew = React.useCallback(
-    async (unsignedTx: UnsignedTx, easyConfirmDecryptKey?: string) => {
+    async (unsignedTx: YoroiUnsignedTx, easyConfirmDecryptKey?: string) => {
       try {
         setIsProcessing(true)
 
@@ -147,13 +148,11 @@ export const ConfirmTx: React.FC<Props> = ({
         if (wallet.isEasyConfirmationEnabled) {
           if (easyConfirmDecryptKey) {
             setDialogStep(DialogStep.Signing)
-            // @ts-expect-error lib-adoption
             signedTx = await smoothModalNotification(wallet.signTx(unsignedTx, easyConfirmDecryptKey))
           }
         } else {
           const decryptedKey = await KeyStore.getData(walletManager._id, 'MASTER_PASSWORD', '', password, intl)
           setDialogStep(DialogStep.Signing)
-          // @ts-expect-error lib-adoption
           signedTx = await smoothModalNotification(wallet.signTx(unsignedTx, decryptedKey))
         }
 

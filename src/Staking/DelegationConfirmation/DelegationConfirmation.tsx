@@ -22,14 +22,14 @@ import {Amounts, Entries, Quantities} from '../../yoroi-wallets/utils'
 export type Params = {
   poolHash: string
   poolName: string
-  unsignedTx: YoroiUnsignedTx
+  yoroiTx: YoroiUnsignedTx
 }
 
 const isParams = (params?: Params | object | undefined): params is Params => {
   return (
     !!params &&
-    'unsignedTx' in params &&
-    typeof params.unsignedTx === 'object' &&
+    'yoroiTx' in params &&
+    typeof params.yoroiTx === 'object' &&
     'poolHash' in params &&
     typeof params.poolHash === 'string' &&
     'poolName' in params &&
@@ -44,7 +44,7 @@ export const DelegationConfirmation = ({mockDefaultAsset}: {mockDefaultAsset?: D
   const defaultAsset = mockDefaultAsset || defaultNetworkAsset
   const strings = useStrings()
 
-  const {poolHash, poolName, unsignedTx: yoroiTx} = useParams<Params>(isParams)
+  const {poolHash, poolName, yoroiTx} = useParams<Params>(isParams)
   if (!yoroiTx.staking) throw new Error('invalid transaction')
   const stakingAmount = Amounts.getAmount(Entries.toAmounts(yoroiTx.staking.delegations), '')
   const reward = approximateReward(stakingAmount.quantity)
@@ -114,7 +114,7 @@ export const DelegationConfirmation = ({mockDefaultAsset}: {mockDefaultAsset?: D
           onSuccess={onSuccess}
           setUseUSB={setUseUSB}
           useUSB={useUSB}
-          txDataSignRequest={yoroiTx.unsignedTx}
+          txDataSignRequest={yoroiTx}
         />
       </Actions>
     </View>
