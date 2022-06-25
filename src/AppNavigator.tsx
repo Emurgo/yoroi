@@ -11,7 +11,6 @@ import {useDispatch, useSelector} from 'react-redux'
 
 import {CreatePinScreen, PinLoginScreen} from './auth'
 import {BiometricAuthScreen} from './BiometricAuth'
-import {Boundary} from './components'
 import {FirstRunNavigator} from './FirstRun/FirstRunNavigator'
 import {errorMessages} from './i18n/global-messages'
 import {checkBiometricStatus, reloadAppSettings, setSystemAuth, showErrorDialog, signin} from './legacy/actions'
@@ -41,11 +40,7 @@ export const AppNavigator = () => {
 
   useReduxDevToolsExtension(navRef)
 
-  return (
-    <NavigationContainer ref={navRef}>
-      <Boundary>{IS_STORYBOOK ? <StoryBook /> : <NavigatorSwitch />}</Boundary>
-    </NavigationContainer>
-  )
+  return <NavigationContainer ref={navRef}>{IS_STORYBOOK ? <StoryBook /> : <NavigatorSwitch />}</NavigationContainer>
 }
 
 export default AppNavigator
