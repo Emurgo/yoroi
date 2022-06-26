@@ -1,10 +1,10 @@
 import {SignTransactionRequest} from '@cardano-foundation/ledgerjs-hw-app-cardano'
-import {MultiTokenValue, TokenEntry, TxMetadata, UnsignedTx} from '@emurgo/yoroi-lib-core'
+import {MultiTokenValue, StakingKeyBalances, TokenEntry, TxMetadata, UnsignedTx} from '@emurgo/yoroi-lib-core'
 
 import {CardanoHaskellShelleyNetwork} from '../../legacy/networks'
 import {Quantity, YoroiAmounts, YoroiEntries, YoroiMetadata, YoroiUnsignedTx} from '../types'
 import {Amounts, Entries, Quantities} from '../utils'
-import {RewardAddress} from '.'
+import {cardano, RewardAddress} from '.'
 
 export const yoroiUnsignedTx = async ({
   unsignedTx,
@@ -41,8 +41,7 @@ export const yoroiUnsignedTx = async ({
       registrations: await Staking.toRegistrations({registrations: unsignedTx.registrations, networkConfig}),
       deregistrations: await Staking.toDeregistrations({deregistrations: unsignedTx.deregistrations, networkConfig}),
       delegations: await Staking.toDelegations({
-        delegations: unsignedTx.delegations,
-        amount: unsignedTx.totalAmountToDelegate,
+        balances: await cardano.getBalanceForStakingCredentials([...unsignedTx.senderUtxos]),
       }),
     },
     voting: {
@@ -161,23 +160,14 @@ const Staking = {
       }
     }, Promise.resolve({} as YoroiEntries)),
 
-  toDelegations: async ({
-    delegations,
-    amount,
-  }: {
-    delegations: UnsignedTx['delegations']
-    amount: UnsignedTx['totalAmountToDelegate']
-  }) => {
-    if (delegations.length > 1) throw new Error('Multiple delegations not supported')
-    if (!amount || delegations.length <= 0) return {}
-
-    const poolId = await delegations[0]
-      .poolKeyhash()
-      .then((poolKeyhash) => poolKeyhash.toBytes())
-      .then((bytes) => Buffer.from(bytes).toString('hex'))
-
-    return {[poolId]: toAmounts(amount.values)}
-  },
+  toDelegations: async ({balances}: {balances: StakingKeyBalances}): Promise<{[poolId: string]: YoroiAmounts}> =>
+    Object.entries(balances).reduce(
+      (result, [poolId, quantity]) => ({
+        ...result,
+        [poolId]: {'': quantity},
+      }),
+      {},
+    ),
 }
 
 const REGISTRATION_LABEL = '61284'
