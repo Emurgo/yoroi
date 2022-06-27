@@ -2,12 +2,11 @@ import Clipboard from '@react-native-community/clipboard'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Image, NativeModules, Platform, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {NativeModules, Platform, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 import QRCodeSVG from 'react-native-qrcode-svg'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import copyImage from '../assets/img/copyd.png'
-import {Button, ProgressStep, Spacer, Text} from '../components'
+import {Button, Icon, ProgressStep, Spacer, Text} from '../components'
 import {confirmationMessages} from '../i18n/global-messages'
 import {useWalletNavigation} from '../navigation'
 import {COLORS} from '../theme'
@@ -114,7 +113,7 @@ const QRCode = ({text}: {text: string}) => (
 const SecretCodeBox = (props) => <View {...props} style={styles.secretCodeBox} />
 const CopyButton = ({text}: {text: string}) => (
   <TouchableOpacity style={{justifyContent: 'center', alignItems: 'center'}} onPress={() => Clipboard.setString(text)}>
-    <Image source={copyImage} />
+    <Icon.Copy size={26} color={COLORS.DARK_GRAY} />
   </TouchableOpacity>
 )
 

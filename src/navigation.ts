@@ -8,7 +8,7 @@ import {HWDeviceInfo} from './legacy/ledgerUtils'
 import type {RawUtxo} from './legacy/types'
 import {COLORS} from './theme'
 import {NetworkId, TokenEntry, WalletImplementationId, YoroiProvider} from './yoroi-wallets'
-import {CreateDelegationTxResponse} from './yoroi-wallets/cardano/shelley/delegationUtils'
+import {YoroiUnsignedTx} from './yoroi-wallets/types'
 
 // prettier-ignore
 export const useUnsafeParams = <Params, >() => {
@@ -37,8 +37,9 @@ export const defaultStackNavigationOptionsV2: StackNavigationOptions = {
     fontSize: 16,
     fontFamily: 'Rubik-Medium',
   },
-  headerRightContainerStyle: {
-    paddingRight: 12,
+  headerTitleContainerStyle: {
+    width: '70%',
+    alignItems: 'center',
   },
   headerStyle: {
     elevation: 0,
@@ -183,7 +184,7 @@ export type StakingCenterRoutes = {
   'delegation-confirmation': {
     poolName: string
     poolHash: string
-    transactionData: CreateDelegationTxResponse
+    yoroiTx: YoroiUnsignedTx
   }
 }
 export type StakingCenterRouteNavigation = StackNavigationProp<StakingCenterRoutes>
@@ -201,6 +202,7 @@ export type SettingsStackRoutes = {
   'fingerprint-link': undefined
   'remove-wallet': undefined
   'change-language': undefined
+  'change-currency': undefined
   'easy-confirmation': undefined
   'change-password': undefined
   'change-custom-pin': undefined
@@ -259,7 +261,7 @@ export type MenuRoutes = {
 export type AppRoutes = {
   maintenance: undefined
   'first-run': NavigatorScreenParams<FirstRunRoutes>
-  'screens-index': undefined
+  developer: undefined
   storybook: undefined
   'new-wallet': NavigatorScreenParams<WalletInitRoutes>
   'app-root': NavigatorScreenParams<WalletStackRoutes>

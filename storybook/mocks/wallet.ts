@@ -1,7 +1,9 @@
 import BigNumber from 'bignumber.js'
+import KeyStore from '../../src/legacy/KeyStore'
 
 import {RemotePoolMetaSuccess, StakePoolInfosAndHistories, TokenEntry, TokenInfo} from '../../src/types'
 import {YoroiWallet} from '../../src/yoroi-wallets'
+import {YoroiSignedTx} from '../../src/yoroi-wallets/types'
 
 export const mockWallet: YoroiWallet = {
   id: 'wallet-id',
@@ -9,6 +11,7 @@ export const mockWallet: YoroiWallet = {
   networkId: 300,
   checksum: {TextPart: 'text-part', ImagePart: 'image-part'},
   isHW: false,
+  hwDeviceInfo: null as any,
   isReadOnly: false,
   isEasyConfirmationEnabled: false,
   rewardAddressHex: 'reward-address-hex',
@@ -37,27 +40,45 @@ export const mockWallet: YoroiWallet = {
   signTx: () => {
     throw new Error('Not implemented')
   },
-  signTxLegacy: () => {
-    throw new Error('Not implemented')
-  },
   signTxWithLedger: () => {
     throw new Error('Not implemented')
   },
-  fetchTxStatus: () => {
-    throw new Error('Not implemented')
-  },
+  checkServerStatus: () =>
+    Promise.resolve({
+      isServerOk: true,
+      isMaintenance: false,
+      serverTime: new Date(),
+      isQueueOnline: true,
+    }),
+  fetchTxStatus: async () => ({}),
+  fetchTipStatus: async () =>
+    Promise.resolve({
+      bestBlock: {
+        epoch: 210,
+        slot: 76027,
+        globalSlot: 60426427,
+        hash: '2cf5a471a0c58cbc22534a0d437fbd91576ef10b98eea7ead5887e28f7a4fed8',
+        height: 3617708,
+      },
+      safeBlock: {
+        epoch: 210,
+        slot: 75415,
+        globalSlot: 60425815,
+        hash: 'ca18a2b607411dd18fbb2c1c0e653ec8a6a3f794f46ce050b4a07cf8ba4ab916',
+        height: 3617698,
+      },
+    }),
   submitTransaction: () => {
     throw new Error('Not implemented')
   },
   createVotingRegTx: () => {
     throw new Error('Not implemented')
   },
-  checkServerStatus: () => {
-    throw new Error('Not implemented')
-  },
   subscribe: () => {
     throw new Error('Not implemented')
   },
+  fetchCurrentPrice: async () => Promise.resolve(1.9938153154314795),
+  toJSON: () => null as any,
 
   // enableEasyConfirmation: () => {
   //   throw new Error('not implemented: enableEasyConfirmation')
@@ -155,3 +176,51 @@ export const poolInfoAndHistory: RemotePoolMetaSuccess = {
     },
   ],
 }
+
+export const mockYoroiTx = {
+  entries: {},
+  amounts: {},
+  fee: {'': '12345'},
+  metadata: {},
+  change: {},
+  staking: {
+    registrations: {},
+    deregistrations: {},
+    delegations: {},
+    withdrawals: {},
+  },
+  unsignedTx: {} as any,
+  mock: true,
+} as const
+
+export const mockYoroiSignedTx: YoroiSignedTx & {mock: true} = {
+  entries: {},
+  amounts: {},
+  fee: {'': '12345'},
+  metadata: {},
+  change: {},
+  staking: {
+    registrations: {},
+    deregistrations: {},
+    delegations: {},
+    withdrawals: {},
+  },
+  signedTx: {id: 'tx-id', encodedTx: new Uint8Array([1, 2, 3])},
+  mock: true,
+}
+
+export const mockKeyStore = (overrides?: {
+  getData?: typeof KeyStore.getData
+  storeData?: typeof KeyStore.storeData
+  deleteData?: typeof KeyStore.deleteData
+}) =>
+  ({
+    getData: async (_keyId, _encrpytionMethod, _message, password, _intl) => {
+      if (password !== 'password') throw new Error('Invalid Password')
+
+      return 'masterkey'
+    },
+    storeData: async () => undefined,
+    deleteData: async () => undefined,
+    ...(overrides as any),
+  } as unknown as typeof KeyStore)

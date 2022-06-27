@@ -1,6 +1,6 @@
 import {fromPairs} from 'lodash'
 
-import {checkAndFacadeTransactionAsync} from './facade'
+import {toCachedTx} from '../yoroi-wallets/cardano/shelley/transactionCache'
 import {availableAssetsSelector, tokenBalanceSelector} from './selectors'
 import {mockState} from './state'
 import type {RawTransaction} from './types'
@@ -374,9 +374,7 @@ beforeEach(async () => {
     ...mockState(),
     wallet: {
       ...mockState().wallet,
-      transactions: fromPairs(
-        await Promise.all(txs.map(async (tx) => [tx.hash, await checkAndFacadeTransactionAsync(tx)])),
-      ),
+      transactions: fromPairs(await Promise.all(txs.map(async (tx) => [tx.hash, toCachedTx(tx)]))),
       internalAddresses,
       externalAddresses,
       rewardAddressHex,

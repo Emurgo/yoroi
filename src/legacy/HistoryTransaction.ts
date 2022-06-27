@@ -79,6 +79,7 @@ export type TransactionInfo = {
   status: TransactionStatus
   assurance: TransactionAssurance
   tokens: Record<string, Token>
+  blockNumber: number
 }
 export const TRANSACTION_TYPE = {
   BYRON: 'byron',

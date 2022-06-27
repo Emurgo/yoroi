@@ -5,6 +5,7 @@ import DeviceInfo from 'react-native-device-info'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {StatusBar} from '../../components'
+import globalMessages from '../../i18n/global-messages'
 import {setAppSettingField} from '../../legacy/actions'
 import {APP_SETTINGS_KEYS} from '../../legacy/appSettings'
 import {CONFIG, isNightly} from '../../legacy/config'
@@ -17,6 +18,7 @@ import {
   sendCrashReportsSelector,
 } from '../../legacy/selectors'
 import {useWalletNavigation} from '../../navigation'
+import {useCurrencyContext} from '../Currency'
 import {NavigatedSettingsItem, SettingsBuildItem, SettingsItem, SettingsSection} from '../SettingsItems'
 
 const version = DeviceInfo.getVersion()
@@ -29,6 +31,7 @@ export const ApplicationSettingsScreen = () => {
   const isSystemAuthEnabled = useSelector(isSystemAuthEnabledSelector)
   const installationId = useSelector(installationIdSelector)
   const dispatch = useDispatch()
+  const {currency} = useCurrencyContext()
 
   const setCrashReporting = (value: boolean) => {
     dispatch(setAppSettingField(APP_SETTINGS_KEYS.SEND_CRASH_REPORTS, value))
@@ -89,6 +92,8 @@ export const ApplicationSettingsScreen = () => {
 
       <SettingsSection title={strings.language}>
         <NavigatedSettingsItem label={strings.currentLanguage} navigateTo="change-language" />
+
+        <NavigatedSettingsItem label={`${strings.currency} (${currency})`} navigateTo="change-currency" />
       </SettingsSection>
 
       <SettingsSection title={strings.security}>
@@ -146,6 +151,7 @@ const useStrings = () => {
     commit: intl.formatMessage(messages.commit),
     crashReporting: intl.formatMessage(messages.crashReporting),
     crashReportingText: intl.formatMessage(messages.crashReportingText),
+    currency: intl.formatMessage(globalMessages.currency),
   }
 }
 

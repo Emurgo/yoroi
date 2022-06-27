@@ -19,7 +19,9 @@ export const WalletListItem = ({wallet, onPress}: Props) => {
         <TouchableOpacity activeOpacity={0.5} onPress={() => onPress(wallet)} style={styles.leftSide}>
           <Icon.WalletAccount iconSeed={wallet.checksum.ImagePart} style={styles.walletAvatar} />
           <View style={styles.walletDetails}>
-            <Text style={styles.walletName}>{wallet.name}</Text>
+            <Text style={styles.walletName} numberOfLines={1}>
+              {wallet.name}
+            </Text>
             <Text style={styles.walletMeta}>{wallet.checksum ? `${wallet.checksum.TextPart} | ${type}` : type}</Text>
           </View>
 
@@ -42,19 +44,19 @@ const getWalletItemMeta = (walletMeta: WalletMeta): WalletItemMeta => {
   if (isByron(walletMeta.walletImplementationId)) {
     return {
       type: 'Byron',
-      icon: <Icon.Ada height={18} width={18} color={COLORS.WHITE} />,
+      icon: <Icon.Ada size={18} color={COLORS.WHITE} />,
     }
   }
   if (isHaskellShelley(walletMeta.walletImplementationId)) {
     return {
       type: 'Shelley',
-      icon: <Icon.Ada height={18} width={18} color={COLORS.WHITE} />,
+      icon: <Icon.Ada size={18} color={COLORS.WHITE} />,
     }
   }
   if (isJormun(walletMeta.walletImplementationId)) {
     return {
       type: 'Jormungandr',
-      icon: <Icon.Ada height={18} width={18} color={COLORS.WHITE} />,
+      icon: <Icon.Ada size={18} color={COLORS.WHITE} />,
     }
   }
   throw new Error('getWalletItemMeta:: invalid wallet implementation id')
@@ -83,11 +85,13 @@ const styles = StyleSheet.create({
   },
   walletDetails: {
     justifyContent: 'space-between',
+    flex: 1,
   },
   walletName: {
     fontFamily: brand.defaultFont,
     fontSize: 16,
     color: COLORS.WHITE,
+    flex: 1,
   },
   walletMeta: {
     color: COLORS.WHITE,

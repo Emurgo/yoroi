@@ -6,8 +6,15 @@ import {defineMessages, useIntl} from 'react-intl'
 import {useDispatch} from 'react-redux'
 
 import {ChangePinScreen, CreatePinScreen} from '../auth'
+import globalMessages from '../i18n/global-messages'
 import {setEasyConfirmation, setSystemAuth} from '../legacy/actions'
-import {defaultStackNavigationOptions, SettingsStackRoutes, SettingsTabRoutes, useWalletNavigation} from '../navigation'
+import {
+  defaultStackNavigationOptions,
+  defaultStackNavigationOptionsV2,
+  SettingsStackRoutes,
+  SettingsTabRoutes,
+  useWalletNavigation,
+} from '../navigation'
 import {useSelectedWalletMeta, useSetSelectedWalletMeta} from '../SelectedWallet'
 import {COLORS} from '../theme'
 import {walletManager} from '../yoroi-wallets'
@@ -16,6 +23,7 @@ import {BiometricsLinkScreen} from './BiometricsLink/'
 import {ChangeLanguageScreen} from './ChangeLanguage'
 import {ChangePasswordScreen} from './ChangePassword'
 import {ChangeWalletName} from './ChangeWalletName'
+import {ChangeCurrencyScreen} from './Currency/ChangeCurrencyScreen'
 import {RemoveWalletScreen} from './RemoveWallet'
 import {SupportScreen} from './Support'
 import {TermsOfServiceScreen} from './TermsOfService'
@@ -72,7 +80,16 @@ export const SettingsScreenNavigator = () => {
       <Stack.Screen //
         name="change-language"
         component={ChangeLanguageScreen}
-        options={{headerShown: false}}
+        options={{title: strings.languageTitle}}
+      />
+
+      <Stack.Screen //
+        name="change-currency"
+        component={ChangeCurrencyScreen}
+        options={{
+          ...defaultStackNavigationOptionsV2,
+          title: strings.currency,
+        }}
       />
 
       <Stack.Screen //
@@ -185,6 +202,10 @@ const messages = defineMessages({
     id: 'components.settings.applicationsettingsscreen.title',
     defaultMessage: '!!!Settings',
   },
+  languageTitle: {
+    id: 'components.settings.changelanguagescreen.title',
+    defaultMessage: '!!!Language',
+  },
 })
 
 const useStrings = () => {
@@ -202,5 +223,7 @@ const useStrings = () => {
     toggleEachConfirmationTitle: intl.formatMessage(messages.toggleEachConfirmationTitle),
     customPinTitle: intl.formatMessage(messages.customPinTitle),
     settingsTitle: intl.formatMessage(messages.settingsTitle),
+    languageTitle: intl.formatMessage(messages.languageTitle),
+    currency: intl.formatMessage(globalMessages.currency),
   }
 }

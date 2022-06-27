@@ -21,8 +21,7 @@ import {CONFIG, isNightly} from './config'
 import crashReporting from './crashReporting'
 import {encryptCustomPin} from './customPin'
 import {canBiometricEncryptionBeEnabled, recreateAppSignInKeys, removeAppSignInKeys} from './deviceSettings'
-import {mirrorTxHistory, setBackgroundSyncError, updateHistory} from './history'
-import {ISignRequest} from './ISignRequest'
+import {mirrorTxHistory, setBackgroundSyncError} from './history'
 import KeyStore from './KeyStore'
 import networkInfo from './networkInfo'
 import {getCardanoNetworkConfigById} from './networks'
@@ -94,7 +93,7 @@ const _setAppSettings = (appSettings) => ({
   reducer: (state, payload) => payload,
 })
 
-const reloadAppSettings = () => async (dispatch: Dispatch<any>) => {
+export const reloadAppSettings = () => async (dispatch: Dispatch<any>) => {
   const appSettings = await readAppSettings()
   Object.entries(appSettings).forEach(([key, value]) => {
     updateCrashlytics(key, value)
@@ -190,8 +189,6 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
   }
 
   await dispatch(reloadAppSettings())
-
-  await dispatch(reloadAppSettings())
   const installationId = (await dispatch(initInstallationId())) as unknown as string
   const state = getState()
 
@@ -253,18 +250,27 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
 }
 
 export const checkBiometricStatus = () => async (dispatch: Dispatch<any>, getState: any) => {
-  const state = getState()
-  const shouldNotEnableBiometricAuth =
-    !isAppSetupCompleteSelector(state) &&
-    Platform.OS === 'android' &&
-    CONFIG.ANDROID_BIO_AUTH_EXCLUDED_SDK.includes(Platform.Version)
-  const currentCanEnableBiometricEncryption = canEnableBiometricSelector(state)
-  const canEnableBiometricEncryption = (await canBiometricEncryptionBeEnabled()) && !shouldNotEnableBiometricAuth
+  const bioShouldBeDisabled =
+    Platform.OS === 'android' && CONFIG.ANDROID_BIO_AUTH_EXCLUDED_SDK.includes(Platform.Version)
+  if (bioShouldBeDisabled) return
 
-  const biometricWasTurnedOff = !canEnableBiometricEncryption && currentCanEnableBiometricEncryption
-  Logger.debug('willResetBiometric:', biometricWasTurnedOff)
-  if (biometricWasTurnedOff) {
-    await dispatch(setAppSettingField(APP_SETTINGS_KEYS.CAN_ENABLE_BIOMETRIC_ENCRYPTION, canEnableBiometricEncryption))
+  const state = getState()
+
+  const canEnableBioFromCurrentState = canEnableBiometricSelector(state)
+  if (!canEnableBioFromCurrentState) return
+
+  const canEnableBioFromDevice = await canBiometricEncryptionBeEnabled()
+
+  const bioWasTurnedOff = !canEnableBioFromDevice && canEnableBioFromCurrentState
+  if (bioWasTurnedOff) {
+    Logger.debug('Biometric was turned off')
+    await dispatch(setAppSettingField(APP_SETTINGS_KEYS.CAN_ENABLE_BIOMETRIC_ENCRYPTION, false))
+    try {
+      await walletManager.disableEasyConfirmation()
+    } catch (_e) {
+      Logger.debug('Ignore if no wallet is selected')
+    }
+    await dispatch(logout())
   }
 }
 
@@ -411,40 +417,7 @@ export const setSystemAuth = (enable: boolean) => async (dispatch: Dispatch<any>
     await removeAppSignInKeys(installationId)
   }
 }
-export const handleGeneralError = async (message: string, e: Error, intl: IntlShape | null | undefined) => {
-  Logger.error(`${message}: ${e.message}`, e)
-  await showErrorDialog(errorMessages.generalError, intl, {
-    message,
-  })
-}
-export const submitSignedTx = (signedTx: string) => async (dispatch: Dispatch<any>) => {
-  Logger.info('submitting tx...')
-  await walletManager.submitTransaction(signedTx)
-  dispatch(updateHistory())
-}
-// note: eslint doesn't like polymorphic types
-export const submitTransaction =
-  <T>(signRequest: ISignRequest<T>, decryptedKey: string) =>
-  async (dispatch: Dispatch<any>) => {
-    const {encodedTx} = await walletManager.signTx(signRequest, decryptedKey)
-    Logger.info('submitTransaction::encodedTx', Buffer.from(encodedTx).toString('hex'))
-    const signedTxBase64 = Buffer.from(encodedTx).toString('base64')
-    await dispatch(submitSignedTx(signedTxBase64))
-  }
-export const checkForFlawedWallets = () => (dispatch: Dispatch<any>) => {
-  let isFlawed = false
-  Logger.debug('actions::checkForFlawedWallets:: checking wallet...')
 
-  try {
-    isFlawed = walletManager.checkForFlawedWallets()
-    Logger.debug('actions::checkForFlawedWallets::isFlawed', isFlawed)
-    dispatch({
-      path: ['isFlawedWallet'],
-      payload: isFlawed,
-      reducer: (state, isFlawed) => isFlawed,
-      type: 'SET_FLAWED_WALLET',
-    })
-  } catch (e) {
-    Logger.warn('actions::checkForFlawedWallets error', e)
-  }
+export const handleGeneralError = async (message: string, intl: IntlShape) => {
+  await showErrorDialog(errorMessages.generalError, intl, {message})
 }

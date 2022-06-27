@@ -6,7 +6,7 @@ import {Button, Text, TextInput} from '../../components'
 import {COLORS, spacing} from '../../theme'
 
 type Props = {
-  onPressDelegate: (poolHash?: string) => void
+  onPressDelegate: (poolHash: string) => void
   disabled?: boolean
 }
 

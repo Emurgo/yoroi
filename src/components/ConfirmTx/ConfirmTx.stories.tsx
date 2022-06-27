@@ -8,11 +8,10 @@ import {HaskellShelleyTxSignRequest} from '../../yoroi-wallets'
 import {ConfirmTx} from './ConfirmTx'
 
 storiesOf('ConfirmTx', module)
-  .add('Not providing password (signAndSubmit)', () => {
+  .add('Not providing password', () => {
     return (
       <SelectedWalletProvider wallet={mockWallet}>
         <ConfirmTx
-          process="signAndSubmit"
           onSuccess={action('onSuccess')}
           txDataSignRequest={{} as unknown as HaskellShelleyTxSignRequest}
           setUseUSB={action('setUseUSB')}
@@ -22,25 +21,10 @@ storiesOf('ConfirmTx', module)
       </SelectedWalletProvider>
     )
   })
-  .add('Not providing password (onlySign)', () => {
+  .add('Providing password', () => {
     return (
       <SelectedWalletProvider wallet={mockWallet}>
         <ConfirmTx
-          process="onlySign"
-          onSuccess={action('onSuccess')}
-          txDataSignRequest={{} as unknown as HaskellShelleyTxSignRequest}
-          setUseUSB={action('setUseUSB')}
-          isProvidingPassword={false}
-          useUSB={false}
-        />
-      </SelectedWalletProvider>
-    )
-  })
-  .add('Providing password (signAndSubmit)', () => {
-    return (
-      <SelectedWalletProvider wallet={mockWallet}>
-        <ConfirmTx
-          process="signAndSubmit"
           onSuccess={action('onSuccess')}
           txDataSignRequest={{} as unknown as HaskellShelleyTxSignRequest}
           setUseUSB={action('setUseUSB')}
@@ -51,11 +35,10 @@ storiesOf('ConfirmTx', module)
       </SelectedWalletProvider>
     )
   })
-  .add('With customized button (signAndSubmit)', () => {
+  .add('With customized button', () => {
     return (
       <SelectedWalletProvider wallet={mockWallet}>
         <ConfirmTx
-          process="signAndSubmit"
           onSuccess={action('onSuccess')}
           txDataSignRequest={{} as unknown as HaskellShelleyTxSignRequest}
           setUseUSB={action('setUseUSB')}
@@ -66,21 +49,6 @@ storiesOf('ConfirmTx', module)
             title: 'DELEGATE',
             shelleyTheme: true,
           }}
-        />
-      </SelectedWalletProvider>
-    )
-  })
-  .add('Only submit', () => {
-    return (
-      <SelectedWalletProvider wallet={mockWallet}>
-        <ConfirmTx
-          process="onlySubmit"
-          onSuccess={action('onSuccess')}
-          signedTx={{
-            encodedTx: Buffer.from(''),
-            id: '',
-          }}
-          onError={(_err) => action('')}
         />
       </SelectedWalletProvider>
     )

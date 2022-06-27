@@ -4,10 +4,8 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps} from 'react-native'
 import {useSelector} from 'react-redux'
 
-import iconGear from '../assets/img/icon/gear.png'
-import {Boundary, Button, Icon} from '../components'
+import {Boundary, Icon} from '../components'
 import {useWalletName} from '../hooks'
-import {UI_V2} from '../legacy/config'
 import {formatDateToSeconds} from '../legacy/format'
 import {tokenBalanceSelector, transactionsInfoSelector} from '../legacy/selectors'
 import {
@@ -46,31 +44,33 @@ export const TxHistoryNavigator = () => {
   const [receiver, setReceiver] = React.useState('')
   const [amount, setAmount] = React.useState('')
 
+  // when the selected asset is no longer available
+  const selectedAsset = tokenBalance.values.find(({identifier}) => identifier === selectedTokenIdentifier)
+  if (!selectedAsset) {
+    setSelectedTokenIdentifier(tokenBalance.getDefaultEntry().identifier)
+    setSendAll(false)
+    setReceiver('')
+    setAmount('')
+  }
+
   return (
     <>
       <Stack.Navigator screenOptions={defaultStackNavigationOptions} initialRouteName="history-list">
         <Stack.Screen
           name="history-list"
           component={TxHistory}
-          options={
-            UI_V2
-              ? {
-                  ...defaultStackNavigationOptionsV2,
-                  title: walletName,
-                  headerRight: () => <HeaderRightHistoryV2 />,
-                }
-              : {
-                  title: walletName,
-                  headerRight: () => <HeaderRightHistory />,
-                }
-          }
+          options={{
+            ...defaultStackNavigationOptionsV2,
+            title: walletName,
+            headerRight: () => <HeaderRightHistory />,
+          }}
         />
 
         <Stack.Screen
           name="history-details"
           component={TxDetails}
           options={({route}) => ({
-            title: formatDateToSeconds(transactionInfos[route.params.id].submittedAt),
+            title: formatDateToSeconds(transactionInfos[route.params.id]?.submittedAt),
           })}
         />
 
@@ -80,7 +80,7 @@ export const TxHistoryNavigator = () => {
           options={{
             ...defaultStackNavigationOptionsV2,
             title: strings.receiveTitle,
-            headerRight: () => <ModalInfoIconButton onPress={showModalInfo} />,
+            headerRight: () => <ModalInfoIconButton onPress={showModalInfo} style={styles.modalInfo} />,
             headerStyle: {
               elevation: 0,
               shadowOpacity: 0,
@@ -88,6 +88,7 @@ export const TxHistoryNavigator = () => {
             },
           }}
         />
+
         <Stack.Screen
           name="send"
           options={{
@@ -208,21 +209,21 @@ const SettingsIconButton = (props: TouchableOpacityProps) => {
   )
 }
 
-const HeaderRightHistoryV2 = () => {
-  const {navigateToSettings} = useWalletNavigation()
-
-  return <SettingsIconButton onPress={() => navigateToSettings()} />
-}
-
 const HeaderRightHistory = () => {
   const {navigateToSettings} = useWalletNavigation()
 
-  return <Button onPress={() => navigateToSettings()} iconImage={iconGear} title="" withoutBackground />
+  return <SettingsIconButton style={styles.settingIconButton} onPress={() => navigateToSettings()} />
 }
 
 const styles = StyleSheet.create({
   receiveInfoText: {
     lineHeight: 24,
     fontSize: 16,
+  },
+  settingIconButton: {
+    width: 40,
+  },
+  modalInfo: {
+    paddingRight: 12,
   },
 })

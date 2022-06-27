@@ -1,5 +1,5 @@
 import type {WalletChecksum} from '@emurgo/cip4-js'
-import {CardanoAddressedUtxo, SignedTx, TxMetadata, UnsignedTx} from '@emurgo/yoroi-lib-core'
+import {CardanoAddressedUtxo, TxMetadata, UnsignedTx} from '@emurgo/yoroi-lib-core'
 import {BigNumber} from 'bignumber.js'
 import type {IntlShape} from 'react-intl'
 
@@ -7,8 +7,10 @@ import type {Transaction} from '../../legacy/HistoryTransaction'
 import type {HWDeviceInfo} from '../../legacy/ledgerUtils'
 import {WalletMeta} from '../../legacy/state'
 import type {
+  CurrencySymbol,
   FundInfoResponse,
   RawUtxo,
+  TipStatusResponse,
   TxBodiesRequest,
   TxBodiesResponse,
   TxStatusRequest,
@@ -26,11 +28,11 @@ import {
   Token,
   TokenInfo,
 } from '../../types'
+import {YoroiSignedTx, YoroiUnsignedTx} from '../types'
 import Wallet from '../Wallet'
 import type {Addresses} from './chain'
 import {AddressChain} from './chain'
 import {HaskellShelleyTxSignRequest} from './HaskellShelleyTxSignRequest'
-import {MultiToken} from './MultiToken'
 import {TransactionCache} from './shelley/transactionCache'
 
 export interface WalletInterface {
@@ -163,38 +165,35 @@ export interface WalletInterface {
     receiver: string,
     tokens: SendTokenList,
     defaultToken: Token,
-    serverTime: Date | null | void,
-    metadata: Array<TxMetadata> | void,
+    serverTime: Date | null | undefined,
+    metadata: Array<TxMetadata> | undefined,
   ): Promise<UnsignedTx>
 
-  signTx(signRequest: UnsignedTx, decryptedMasterKey: string): Promise<SignedTx>
-  signTxLegacy(signRequest: HaskellShelleyTxSignRequest, decryptedMasterKey: string): Promise<SignedTxLegacy>
+  signTx(signRequest: YoroiUnsignedTx, decryptedMasterKey: string): Promise<YoroiSignedTx>
 
   createDelegationTx(
-    poolRequest: void | string,
+    poolRequest: string,
     valueInAccount: BigNumber,
     utxos: Array<RawUtxo>,
     defaultAsset: DefaultAsset,
-    serverTime: Date | void,
-  ): Promise<{
-    signRequest: HaskellShelleyTxSignRequest
-    totalAmountToDelegate: MultiToken
-  }>
+    serverTime: Date | undefined,
+  ): Promise<YoroiUnsignedTx>
 
   createVotingRegTx(
     utxos: Array<RawUtxo>,
     catalystPrivateKey: string,
-    decryptedKey: string | void,
-    serverTime: Date | void,
+    decryptedKey: string | undefined,
+    serverTime: Date | undefined,
   ): Promise<HaskellShelleyTxSignRequest>
 
   createWithdrawalTx(
     utxos: Array<RawUtxo>,
+    defaultAsset: DefaultAsset,
     shouldDeregister: boolean,
-    serverTime: Date | void,
-  ): Promise<HaskellShelleyTxSignRequest>
+    serverTime: Date | undefined,
+  ): Promise<YoroiUnsignedTx>
 
-  signTxWithLedger(request: HaskellShelleyTxSignRequest, useUSB: boolean): Promise<SignedTxLegacy>
+  signTxWithLedger(request: YoroiUnsignedTx, useUSB: boolean): Promise<YoroiSignedTx>
 
   // =================== backend API =================== //
 
@@ -215,6 +214,10 @@ export interface WalletInterface {
   fetchFundInfo(): Promise<FundInfoResponse>
 
   fetchTxStatus(request: TxStatusRequest): Promise<TxStatusResponse>
+
+  fetchTipStatus(): Promise<TipStatusResponse>
+
+  fetchCurrentPrice(symbol: CurrencySymbol): Promise<number>
 
   resync(): void
 }
@@ -278,6 +281,7 @@ type YoroiWalletKeys =
   | 'checksum'
   | 'provider'
   | 'isHW'
+  | 'hwDeviceInfo'
   | 'isEasyConfirmationEnabled'
   | 'walletImplementationId'
   | 'isReadOnly'
@@ -289,6 +293,7 @@ type YoroiWalletKeys =
   | 'getAllUtxosForKey'
   | 'fetchUTXOs'
   | 'fetchAccountState'
+  | 'fetchTipStatus'
   | 'getDelegationStatus'
   | 'rewardAddressHex'
   | 'createDelegationTx'
@@ -296,11 +301,12 @@ type YoroiWalletKeys =
   | 'createVotingRegTx'
   | 'submitTransaction'
   | 'signTx'
-  | 'signTxLegacy'
   | 'signTxWithLedger'
   | 'fetchPoolInfo'
   | 'publicKeyHex'
   | 'subscribe'
+  | 'toJSON'
+  | 'fetchCurrentPrice'
 
 const yoroiWalletKeys: Array<YoroiWalletKeys> = [
   'id',
@@ -309,6 +315,7 @@ const yoroiWalletKeys: Array<YoroiWalletKeys> = [
   'provider',
   'publicKeyHex',
   'isHW',
+  'hwDeviceInfo',
   'isEasyConfirmationEnabled',
   'walletImplementationId',
   'isReadOnly',
@@ -320,6 +327,7 @@ const yoroiWalletKeys: Array<YoroiWalletKeys> = [
   'getAllUtxosForKey',
   'fetchUTXOs',
   'fetchAccountState',
+  'fetchTipStatus',
   'getDelegationStatus',
   'rewardAddressHex',
   'createDelegationTx',
@@ -327,9 +335,10 @@ const yoroiWalletKeys: Array<YoroiWalletKeys> = [
   'createVotingRegTx',
   'submitTransaction',
   'signTx',
-  'signTxLegacy',
   'signTxWithLedger',
   'fetchPoolInfo',
+  'toJSON',
+  'fetchCurrentPrice',
 ]
 
 export * from '@emurgo/yoroi-lib-core/dist/internals/wasm-contract'

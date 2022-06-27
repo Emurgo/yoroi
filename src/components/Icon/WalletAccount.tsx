@@ -45,7 +45,7 @@ type Props = {
 }
 
 export const WalletAccount = ({iconSeed, scalePx = 5, saturationFactor = 0, style}: Props) => {
-  const colorIdx = Buffer.from(iconSeed, 'hex')[0] % COLORS.length
+  const colorIdx = !iconSeed || iconSeed.length < 2 ? 0 : Buffer.from(iconSeed, 'hex')[0] % COLORS.length
   const color = COLORS[colorIdx]
   return (
     <View style={[styles.defaultStyle, style]}>

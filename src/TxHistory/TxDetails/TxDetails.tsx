@@ -3,13 +3,11 @@ import {useRoute} from '@react-navigation/native'
 import {BigNumber} from 'bignumber.js'
 import React, {useState} from 'react'
 import {defineMessages, IntlShape, useIntl} from 'react-intl'
-import {Image, LayoutAnimation, Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {LayoutAnimation, Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
-import arrowDown from '../../assets/img/chevron_down.png'
-import arrowUp from '../../assets/img/chevron_up.png'
-import {Banner, Boundary, Button, CopyButton, OfflineBanner, StatusBar, Text} from '../../components'
-import {useTokenInfo} from '../../hooks'
+import {Banner, Boundary, Button, CopyButton, Icon, OfflineBanner, StatusBar, Text} from '../../components'
+import {useTipStatus, useTokenInfo} from '../../hooks'
 import globalMessages from '../../i18n/global-messages'
 import {formatTokenWithSymbol} from '../../legacy/format'
 import {TransactionInfo} from '../../legacy/HistoryTransaction'
@@ -24,7 +22,7 @@ import Screen from '../../Screen'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {brand, COLORS} from '../../theme'
 import {TokenEntry} from '../../types'
-import {MultiToken} from '../../yoroi-wallets'
+import {MultiToken, YoroiWallet} from '../../yoroi-wallets'
 import {AssetList} from './AssetList'
 import assetListStyle from './AssetListTransaction.style'
 
@@ -86,7 +84,7 @@ export const TxDetails = () => {
               {item.assets.length > 0 && (
                 <TouchableOpacity style={styles.assetsExpandable} activeOpacity={0.5} onPress={() => toggleExpandIn()}>
                   <Text style={styles.assetsTitle}>{` -${item.assets.length} ${strings.assetsLabel} `}</Text>
-                  <Image source={expandedIn ? arrowUp : arrowDown} />
+                  <Icon.Chevron direction={expandedIn ? 'up' : 'down'} color={COLORS.ACTION_GRAY} size={23} />
                 </TouchableOpacity>
               )}
               <ExpandableAssetList expanded={expandedIn} assets={item.assets} />
@@ -102,7 +100,7 @@ export const TxDetails = () => {
               {item.assets.length > 0 && (
                 <TouchableOpacity style={styles.assetsExpandable} activeOpacity={0.5} onPress={() => toggleExpandOut()}>
                   <Text style={styles.assetsTitle}>{` +${item.assets.length} ${strings.assetsLabel} `}</Text>
-                  <Image source={expandedOut ? arrowUp : arrowDown} />
+                  <Icon.Chevron direction={expandedOut ? 'up' : 'down'} color={COLORS.ACTION_GRAY} size={23} />
                 </TouchableOpacity>
               )}
               <ExpandableAssetList expanded={expandedOut} assets={item.assets} />
@@ -114,7 +112,9 @@ export const TxDetails = () => {
             <Label>{strings.txAssuranceLevel}</Label>
           </View>
           <View>
-            <Text secondary>{strings.confirmations(transaction.confirmations)}</Text>
+            <Boundary loading={{fallbackProps: {size: 'small'}}}>
+              <Confirmations transaction={transaction} wallet={wallet} />
+            </Boundary>
             <Label>{strings.transactionId}</Label>
             <View style={styles.dataContainer}>
               <Text secondary monospace numberOfLines={1} ellipsizeMode="middle">
@@ -136,6 +136,22 @@ export const TxDetails = () => {
         />
       )}
     </View>
+  )
+}
+
+const Confirmations = ({transaction, wallet}: {transaction: TransactionInfo; wallet: YoroiWallet}) => {
+  const strings = useStrings()
+  const tipStatus = useTipStatus({
+    wallet,
+    options: {
+      refetchInterval: 5000,
+    },
+  })
+
+  return (
+    <Text secondary>
+      {strings.confirmations(transaction.blockNumber === 0 ? 0 : tipStatus.bestBlock.height - transaction.blockNumber)}
+    </Text>
   )
 }
 

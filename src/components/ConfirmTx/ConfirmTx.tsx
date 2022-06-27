@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {SignedTx, UnsignedTx} from '@emurgo/yoroi-lib-core'
+import {SignedTx} from '@emurgo/yoroi-lib-core'
 import {useNavigation} from '@react-navigation/native'
 import {delay} from 'bluebird'
 import React, {useEffect, useState} from 'react'
@@ -20,6 +20,7 @@ import {hwDeviceInfoSelector} from '../../legacy/selectors'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {HaskellShelleyTxSignRequest, SystemAuthDisabled, walletManager} from '../../yoroi-wallets'
+import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
 import {Button, ButtonProps, ValidatedTextInput} from '..'
 import {Dialog, Step as DialogStep} from './Dialog'
 
@@ -28,113 +29,22 @@ type ErrorData = {
   errorLogs?: string
 }
 
-type ConfirmTxProps = {
+type Props = {
   buttonProps?: Omit<Partial<ButtonProps>, 'disabled' | 'onPress'>
   onSuccess: (signedTx: SignedTx) => void
   onError?: (err: Error) => void
-  txDataSignRequest: HaskellShelleyTxSignRequest | UnsignedTx
+  txDataSignRequest: YoroiUnsignedTx | HaskellShelleyTxSignRequest
   useUSB: boolean
   setUseUSB: (useUSB: boolean) => void
   isProvidingPassword?: boolean
   providedPassword?: string
   disabled?: boolean
-}
-
-type SignAndSubmitProps = {
-  process: 'signAndSubmit'
   autoSignIfEasyConfirmation?: boolean
   chooseTransportOnConfirmation?: boolean
   biometricInstructions?: Array<string>
-} & ConfirmTxProps
-
-type OnlySignProps = {
-  process: 'onlySign'
-  autoSignIfEasyConfirmation?: boolean
-  chooseTransportOnConfirmation?: boolean
-  biometricInstructions?: Array<string>
-} & ConfirmTxProps
-
-type OnlySubmitProps = {
-  process: 'onlySubmit'
-  signedTx: SignedTx
-  onError: (err: Error) => void
-} & Pick<ConfirmTxProps, 'onSuccess' | 'buttonProps' | 'disabled'>
-
-export const ConfirmTx: React.FC<SignAndSubmitProps | OnlySignProps | OnlySubmitProps> = (props) => {
-  if (props.process === 'onlySign' || props.process === 'signAndSubmit') {
-    return <ConfirmWithSignature {...props} />
-  } else {
-    return <ConfirmSubmit {...props} />
-  }
 }
 
-export const ConfirmSubmit: React.FC<OnlySubmitProps> = ({signedTx, onError, onSuccess, buttonProps, disabled}) => {
-  const strings = useStrings()
-  const wallet = useSelectedWallet()
-
-  const [dialogStep, setDialogStep] = useState<DialogStep.Closed | DialogStep.Error | DialogStep.Submitting>(
-    DialogStep.Closed,
-  )
-
-  const [errorData, setErrorData] = useState<ErrorData>({
-    errorMessage: '',
-    errorLogs: '',
-  })
-  const showError = ({errorMessage, errorLogs}: ErrorData) => {
-    setErrorData({
-      errorMessage,
-      errorLogs,
-    })
-    setDialogStep(DialogStep.Error)
-  }
-
-  const {submitTx, isLoading: sendingTransaction} = useSubmitTx({wallet})
-
-  const onConfirm = () => {
-    setDialogStep(DialogStep.Submitting)
-    submitTx(signedTx, {
-      onSuccess: () => onSuccess(signedTx),
-      onError: (err) => {
-        if (err instanceof LocalizableError) {
-          showError({
-            errorMessage: strings.errorMessage(err),
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            errorLogs: (err as any).values.response || null,
-          })
-        } else {
-          showError({
-            errorMessage: strings.generalTxErrorMessage,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            errorLogs: (err as any).message || null,
-          })
-        }
-        onError?.(err)
-      },
-    })
-  }
-
-  return (
-    <View style={styles.root}>
-      <View style={styles.actionContainer}>
-        <Button
-          onPress={onConfirm}
-          title={strings.confirmButton}
-          {...buttonProps}
-          disabled={sendingTransaction || disabled}
-        />
-      </View>
-
-      <Dialog
-        process="withoutLedger"
-        step={dialogStep}
-        onRequestClose={() => setDialogStep(DialogStep.Closed)}
-        errorData={errorData}
-      />
-    </View>
-  )
-}
-
-export const ConfirmWithSignature: React.FC<SignAndSubmitProps | OnlySignProps> = ({
+export const ConfirmTx: React.FC<Props> = ({
   txDataSignRequest,
   onError,
   onSuccess,
@@ -143,7 +53,6 @@ export const ConfirmWithSignature: React.FC<SignAndSubmitProps | OnlySignProps> 
   useUSB,
   isProvidingPassword,
   providedPassword = '',
-  process,
   disabled,
   autoSignIfEasyConfirmation,
   chooseTransportOnConfirmation,
@@ -231,7 +140,7 @@ export const ConfirmWithSignature: React.FC<SignAndSubmitProps | OnlySignProps> 
   }
 
   const onConfirmNew = React.useCallback(
-    async (unsignedTx: UnsignedTx, easyConfirmDecryptKey?: string) => {
+    async (unsignedTx: YoroiUnsignedTx, easyConfirmDecryptKey?: string) => {
       try {
         setIsProcessing(true)
 
@@ -247,30 +156,26 @@ export const ConfirmWithSignature: React.FC<SignAndSubmitProps | OnlySignProps> 
           signedTx = await smoothModalNotification(wallet.signTx(unsignedTx, decryptedKey))
         }
 
-        if (process === 'onlySign') {
+        setDialogStep(DialogStep.Submitting)
+        try {
+          await smoothModalNotification(submitTx(signedTx))
+          setDialogStep(DialogStep.Closed)
           onSuccess(signedTx)
-        } else {
-          setDialogStep(DialogStep.Submitting)
-          try {
-            await smoothModalNotification(submitTx(signedTx))
-            setDialogStep(DialogStep.Closed)
-            onSuccess(signedTx)
-          } catch (err) {
-            if (err instanceof LocalizableError) {
-              showError({
-                errorMessage: strings.errorMessage(err),
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                errorLogs: (err as any).values.response || null,
-              })
-            } else {
-              showError({
-                errorMessage: strings.generalTxErrorMessage,
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                errorLogs: (err as any).message || null,
-              })
-            }
-            onError?.(err as Error)
+        } catch (err) {
+          if (err instanceof LocalizableError) {
+            showError({
+              errorMessage: strings.errorMessage(err),
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              errorLogs: (err as any).values.response || null,
+            })
+          } else {
+            showError({
+              errorMessage: strings.generalTxErrorMessage,
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              errorLogs: (err as any).message || null,
+            })
           }
+          onError?.(err as Error)
         }
       } catch (err) {
         if (err instanceof WrongPassword) {
@@ -289,7 +194,7 @@ export const ConfirmWithSignature: React.FC<SignAndSubmitProps | OnlySignProps> 
         setIsProcessing(false)
       }
     },
-    [intl, onError, onSuccess, password, process, submitTx, strings, wallet],
+    [intl, onError, onSuccess, password, strings, submitTx, wallet],
   )
 
   const onConfirmLegacy = React.useCallback(
@@ -301,43 +206,42 @@ export const ConfirmWithSignature: React.FC<SignAndSubmitProps | OnlySignProps> 
         if (wallet.isEasyConfirmationEnabled) {
           if (easyConfirmDecryptKey) {
             setDialogStep(DialogStep.Signing)
+            // @ts-expect-error lib-adoption
             signedTx = await smoothModalNotification(wallet.signTxLegacy(txDataSignRequest, easyConfirmDecryptKey))
           }
         } else {
           if (wallet.isHW) {
             setDialogStep(DialogStep.WaitingHwResponse)
+            // @ts-expect-error lib-adoption
             signedTx = await wallet.signTxWithLedger(txDataSignRequest, useUSB)
           } else {
             const decryptedKey = await KeyStore.getData(walletManager._id, 'MASTER_PASSWORD', '', password, intl)
             setDialogStep(DialogStep.Signing)
+            // @ts-expect-error lib-adoption
             signedTx = await smoothModalNotification(wallet.signTxLegacy(txDataSignRequest, decryptedKey))
           }
         }
 
-        if (process === 'onlySign') {
+        setDialogStep(DialogStep.Submitting)
+        try {
+          await smoothModalNotification(submitTx(signedTx))
+          setDialogStep(DialogStep.Closed)
           onSuccess(signedTx)
-        } else {
-          setDialogStep(DialogStep.Submitting)
-          try {
-            await smoothModalNotification(submitTx(signedTx))
-            setDialogStep(DialogStep.Closed)
-            onSuccess(signedTx)
-          } catch (err) {
-            if (err instanceof LocalizableError) {
-              showError({
-                errorMessage: strings.errorMessage(err),
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                errorLogs: (err as any).values.response || null,
-              })
-            } else {
-              showError({
-                errorMessage: strings.generalTxErrorMessage,
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                errorLogs: (err as any).message || null,
-              })
-            }
-            onError?.(err as Error)
+        } catch (err) {
+          if (err instanceof LocalizableError) {
+            showError({
+              errorMessage: strings.errorMessage(err),
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              errorLogs: (err as any).values.response || null,
+            })
+          } else {
+            showError({
+              errorMessage: strings.generalTxErrorMessage,
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              errorLogs: (err as any).message || null,
+            })
           }
+          onError?.(err as Error)
         }
       } catch (err) {
         if (err instanceof WrongPassword) {
@@ -356,7 +260,7 @@ export const ConfirmWithSignature: React.FC<SignAndSubmitProps | OnlySignProps> 
         setIsProcessing(false)
       }
     },
-    [intl, onError, onSuccess, password, process, strings, submitTx, useUSB, wallet],
+    [intl, onError, onSuccess, password, strings, submitTx, useUSB, wallet],
   )
 
   const onConfirm = React.useCallback(
