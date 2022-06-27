@@ -8,6 +8,7 @@ import {Provider} from 'react-redux'
 
 import App from './App'
 import {name as appName} from './app.json'
+import {Boundary} from './components'
 import {ErrorBoundary} from './components/ErrorBoundary'
 import {LanguageProvider} from './i18n'
 import translations from './i18n/translations'
@@ -17,6 +18,7 @@ import getConfiguredStore from './legacy/configureStore'
 import {ApiError, NetworkError} from './legacy/errors'
 import {Logger, setLogLevel} from './legacy/logging'
 import {CurrencyProvider} from './Settings/Currency/CurrencyContext'
+import {ThemeProvider} from './theme'
 
 setLogLevel(CONFIG.LOG_LEVEL)
 
@@ -64,11 +66,15 @@ const AppWithProviders = () => {
     <ErrorBoundary>
       <Provider store={store}>
         <QueryClientProvider client={queryClient}>
-          <LanguageProvider>
-            <CurrencyProvider>
-              <App />
-            </CurrencyProvider>
-          </LanguageProvider>
+          <Boundary>
+            <ThemeProvider>
+              <LanguageProvider>
+                <CurrencyProvider>
+                  <App />
+                </CurrencyProvider>
+              </LanguageProvider>
+            </ThemeProvider>
+          </Boundary>
         </QueryClientProvider>
       </Provider>
     </ErrorBoundary>
