@@ -8,7 +8,7 @@ import {HWDeviceInfo} from './legacy/ledgerUtils'
 import type {RawUtxo} from './legacy/types'
 import {COLORS} from './theme'
 import {NetworkId, TokenEntry, WalletImplementationId, YoroiProvider} from './yoroi-wallets'
-import {CreateDelegationTxResponse} from './yoroi-wallets/cardano/shelley/delegationUtils'
+import {YoroiUnsignedTx} from './yoroi-wallets/types'
 
 // prettier-ignore
 export const useUnsafeParams = <Params, >() => {
@@ -184,7 +184,7 @@ export type StakingCenterRoutes = {
   'delegation-confirmation': {
     poolName: string
     poolHash: string
-    transactionData: CreateDelegationTxResponse
+    yoroiTx: YoroiUnsignedTx
   }
 }
 export type StakingCenterRouteNavigation = StackNavigationProp<StakingCenterRoutes>

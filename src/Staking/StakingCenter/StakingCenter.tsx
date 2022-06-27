@@ -5,7 +5,7 @@ import React, {useEffect, useState} from 'react'
 import type {IntlShape} from 'react-intl'
 import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, View} from 'react-native'
-import {WebView} from 'react-native-webview'
+import {WebView, WebViewMessageEvent} from 'react-native-webview'
 import {useSelector} from 'react-redux'
 
 import {AccountAutoRefresher} from '../../AccountAutoRefresher'
@@ -16,7 +16,6 @@ import {showErrorDialog} from '../../legacy/actions'
 import {CONFIG, getTestStakingPool, isNightly, SHOW_PROD_POOLS_IN_DEV} from '../../legacy/config'
 import {InsufficientFunds} from '../../legacy/errors'
 import {ApiError, NetworkError} from '../../legacy/errors'
-import {ObjectValues} from '../../legacy/flow'
 import {normalizeTokenAmount} from '../../legacy/format'
 import {Logger} from '../../legacy/logging'
 import {getNetworkConfigById} from '../../legacy/networks'
@@ -33,7 +32,7 @@ import {StakingCenterRouteNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {DefaultAsset} from '../../types'
 import {UtxoAutoRefresher} from '../../UtxoAutoRefresher'
-import {ServerStatus, walletManager} from '../../yoroi-wallets'
+import {ServerStatus, YoroiWallet} from '../../yoroi-wallets'
 import {PoolDetailScreen} from '../PoolDetails'
 import {PoolWarningModal} from '../PoolWarningModal'
 
@@ -62,29 +61,30 @@ export const StakingCenter = () => {
   // pools user is currently delegating to
   const poolList = poolOperator != null ? [poolOperator] : null
 
-  const handleOnPress = (poolHash?: string) => {
+  const handleOnPress = (poolHash: string) => {
     const selectedPoolHashes = poolHash ? [poolHash] : nightlyAndDevPoolHashes
     Logger.debug('manual inputted or config pool:', selectedPoolHashes)
-    _delegate(selectedPoolHashes)
+    delegate(selectedPoolHashes)
   }
 
-  const handleOnMessage = async (event) => {
+  const handleOnMessage = async (event: WebViewMessageEvent) => {
     if (isFetchingUtxos) {
       return showErrorDialog(waitSyncDialog, intl)
     }
-    if (event) {
-      const selectedPoolHashes: Array<string> = JSON.parse(decodeURI(event.nativeEvent.data))
-      Logger.debug('selected pools from explorer:', selectedPoolHashes)
-      _delegate(selectedPoolHashes)
+    const selectedPoolHashes = JSON.parse(decodeURI(event.nativeEvent.data))
+    if (!Array.isArray(selectedPoolHashes) || selectedPoolHashes.length < 1) {
+      await showErrorDialog(noPoolDataDialog, intl)
     }
+    Logger.debug('selected pools from explorer:', selectedPoolHashes)
+    delegate(selectedPoolHashes)
   }
 
-  const _delegate = async (selectedPoolHashes: Array<string> = []) => {
+  const delegate = async (selectedPoolHashes: Array<string>) => {
     try {
       setBusy(true)
 
       if (selectedPoolHashes.length) {
-        await _handleSelectedPoolHashes(
+        await handleSelectedPoolHashes(
           selectedPoolHashes,
           setSelectedPools,
           setReputationInfo,
@@ -95,9 +95,8 @@ export const StakingCenter = () => {
           intl,
           navigation,
           serverStatus,
+          wallet,
         )
-      } else {
-        await showErrorDialog(noPoolDataDialog, intl)
       }
     } finally {
       setBusy(false)
@@ -108,7 +107,7 @@ export const StakingCenter = () => {
     () => {
       const getAmountToDelegate: () => Promise<void> = async () => {
         if (utxos != null) {
-          const utxosForKey = await walletManager.getAllUtxosForKey(utxos)
+          const utxosForKey = await wallet.getAllUtxosForKey(utxos)
           const _amountToDelegate = utxosForKey
             .map((utxo) => utxo.amount)
             .reduce((x: BigNumber, y) => x.plus(new BigNumber(y || 0)), new BigNumber(0))
@@ -158,6 +157,7 @@ export const StakingCenter = () => {
                 intl,
                 navigation,
                 serverStatus,
+                wallet,
               )
             }}
             onRequestClose={() => setShowPoolWarning(false)}
@@ -225,11 +225,12 @@ const navigateToDelegationConfirm = async (
   intl: IntlShape,
   navigation: StakingCenterRouteNavigation,
   serverStatus: ServerStatus,
+  wallet: YoroiWallet,
 ) => {
   try {
     const selectedPool = selectedPools[0]
     if (accountBalance == null) return
-    const transactionData = await walletManager.createDelegationTx(
+    const yoroiTx = await wallet.createDelegationTx(
       selectedPool.poolHash,
       accountBalance,
       utxos,
@@ -239,7 +240,7 @@ const navigateToDelegationConfirm = async (
     navigation.navigate('delegation-confirmation', {
       poolName: selectedPool?.poolName ?? '',
       poolHash: selectedPool.poolHash,
-      transactionData,
+      yoroiTx,
     })
   } catch (e) {
     if (e instanceof InsufficientFunds) {
@@ -253,7 +254,7 @@ const navigateToDelegationConfirm = async (
   }
 }
 
-const _handleSelectedPoolHashes = async (
+const handleSelectedPoolHashes = async (
   selectedPoolHashes: Array<string>,
   setSelectedPools: (selectedPools: Array<SelectedPool>) => void,
   setReputationInfo: (reputationInfo: Record<string, unknown>) => void,
@@ -264,18 +265,19 @@ const _handleSelectedPoolHashes = async (
   intl: IntlShape,
   navigation,
   serverStatus: ServerStatus,
+  wallet: YoroiWallet,
 ) => {
   try {
-    const poolInfoResponse = await walletManager.fetchPoolInfo({
+    const poolInfoResponse = await wallet.fetchPoolInfo({
       poolIds: selectedPoolHashes,
     })
-    const poolInfo: any = ObjectValues(poolInfoResponse)[0]
+    const poolInfo = Object.values(poolInfoResponse)[0]
     Logger.debug('StakingCenter::poolInfo', poolInfo)
 
     // TODO: fetch reputation info once an endpoint is implemented
     const poolsReputation: {[key: string]: SelectedPool} = {}
 
-    if (poolInfo && poolInfo.info != null) {
+    if ('info' in poolInfo) {
       const selectedPools: Array<SelectedPool> = [
         {
           poolName: poolInfo.info.name,
@@ -303,6 +305,7 @@ const _handleSelectedPoolHashes = async (
           intl,
           navigation,
           serverStatus,
+          wallet,
         )
       }
     } else {

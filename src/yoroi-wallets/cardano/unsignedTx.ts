@@ -1,10 +1,10 @@
 import {SignTransactionRequest} from '@cardano-foundation/ledgerjs-hw-app-cardano'
-import {MultiTokenValue, TokenEntry, TxMetadata, UnsignedTx} from '@emurgo/yoroi-lib-core'
+import {MultiTokenValue, StakingKeyBalances, TokenEntry, TxMetadata, UnsignedTx} from '@emurgo/yoroi-lib-core'
 
 import {CardanoHaskellShelleyNetwork} from '../../legacy/networks'
 import {Quantity, YoroiAmounts, YoroiEntries, YoroiMetadata, YoroiUnsignedTx} from '../types'
 import {Amounts, Entries, Quantities} from '../utils'
-import {RewardAddress} from '.'
+import {cardano, RewardAddress} from '.'
 
 export const yoroiUnsignedTx = async ({
   unsignedTx,
@@ -40,7 +40,9 @@ export const yoroiUnsignedTx = async ({
       withdrawals: await Staking.toWithdrawals(unsignedTx.withdrawals),
       registrations: await Staking.toRegistrations({registrations: unsignedTx.registrations, networkConfig}),
       deregistrations: await Staking.toDeregistrations({deregistrations: unsignedTx.deregistrations, networkConfig}),
-      delegations: await Staking.toDelegations({delegations: unsignedTx.delegations, networkConfig}),
+      delegations: await Staking.toDelegations({
+        balances: await cardano.getBalanceForStakingCredentials([...unsignedTx.senderUtxos]),
+      }),
     },
     voting: {
       registrations: await Voting.toRegistrations({
@@ -158,26 +160,14 @@ const Staking = {
       }
     }, Promise.resolve({} as YoroiEntries)),
 
-  toDelegations: async ({
-    delegations,
-    networkConfig: {NETWORK_ID, KEY_DEPOSIT},
-  }: {
-    delegations: UnsignedTx['delegations']
-    networkConfig: CardanoHaskellShelleyNetwork
-  }) =>
-    delegations.reduce(async (result, current) => {
-      const address = await current
-        .stakeCredential()
-        .then((stakeCredential) => RewardAddress.new(NETWORK_ID, stakeCredential))
-        .then((rewardAddress) => rewardAddress.toAddress())
-        .then((address) => address.toBytes())
-        .then((bytes) => Buffer.from(bytes).toString('hex'))
-
-      return {
-        ...(await result),
-        [address]: {'': KEY_DEPOSIT as Quantity},
-      }
-    }, Promise.resolve({} as YoroiEntries)),
+  toDelegations: async ({balances}: {balances: StakingKeyBalances}): Promise<{[poolId: string]: YoroiAmounts}> =>
+    Object.entries(balances).reduce(
+      (result, [poolId, quantity]) => ({
+        ...result,
+        [poolId]: {'': quantity},
+      }),
+      {},
+    ),
 }
 
 const REGISTRATION_LABEL = '61284'

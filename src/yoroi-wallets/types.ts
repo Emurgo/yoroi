@@ -42,9 +42,7 @@ export type Address = string
 export type Quantity = `${number}`
 export type TokenId = string
 
-export type YoroiEntries = {
-  [address: Address]: YoroiAmounts
-}
+export type YoroiEntries = Record<string, YoroiAmounts>
 
 export type YoroiPrimaryEntry = {
   address: Address
