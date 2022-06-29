@@ -4,7 +4,7 @@ import {View} from 'react-native'
 import {StyleSheet} from 'react-native'
 
 import {Spacer} from '../../components/Spacer'
-import {Text} from '../../components/Text'
+import {Text} from '../../legacy/Text'
 import {COLORS} from '../../theme'
 import {BACKSPACE, Keyboard} from './Keyboard'
 
