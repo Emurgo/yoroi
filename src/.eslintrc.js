@@ -35,7 +35,7 @@ module.exports = {
     'simple-import-sort/imports': 'error',
     'spaced-comment': 1,
     'no-unused-vars': 'off',
-    '@typescript-eslint/no-unused-vars': ['error', {argsIgnorePattern: '^_'}],
+    '@typescript-eslint/no-unused-vars': ['error', {argsIgnorePattern: '^_', varsIgnorePattern: '^_'}],
     'react/jsx-curly-brace-presence': ['warn', {props: 'never', children: 'never'}],
   },
   globals: {
