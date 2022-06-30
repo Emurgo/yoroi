@@ -17,14 +17,11 @@ import {formatTokenWithSymbol} from '../legacy/format'
 import {defaultNetworkAssetSelector} from '../legacy/selectors'
 import {CatalystRouteNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
+import {YoroiUnsignedTx} from '../yoroi-wallets/types'
 import {Amounts} from '../yoroi-wallets/utils'
 import {Actions, Description, Title} from './components'
-import {VotingRegTxData} from './hooks'
 
-type Props = {
-  votingRegTxData: VotingRegTxData
-}
-export const Step5 = ({votingRegTxData: {yoroiTx}}: Props) => {
+export const Step5 = ({yoroiTx}: {yoroiTx: YoroiUnsignedTx}) => {
   const strings = useStrings()
   const navigation = useNavigation<CatalystRouteNavigation>()
   const wallet = useSelectedWallet()

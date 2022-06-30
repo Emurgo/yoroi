@@ -12,14 +12,10 @@ import {useWalletNavigation} from '../navigation'
 import {COLORS} from '../theme'
 import {CatalystBackupCheckModal} from './CatalystBackupCheckModal'
 import {Actions, Description, Title} from './components'
-import {VotingRegTxData} from './hooks'
 
 const {FlagSecure} = NativeModules
 
-type Props = {
-  votingRegTxData: VotingRegTxData
-}
-export const Step6 = ({votingRegTxData: {catalystSKHexEncrypted}}: Props) => {
+export const Step6 = ({catalystSKHexEncrypted}: {catalystSKHexEncrypted: string}) => {
   useBlockGoBack()
   const strings = useStrings()
   const {resetToTxHistory} = useWalletNavigation()
