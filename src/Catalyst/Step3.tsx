@@ -7,7 +7,6 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {PinInputKeyboard, ProgressStep, Spacer} from '../components'
 import {errorMessages} from '../i18n/global-messages'
 import {showErrorDialog} from '../legacy/actions'
-import {getDefaultAssetByNetworkId} from '../legacy/config'
 import {CatalystRouteNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
 import {Description, PinBox, Row, Title} from './components'
@@ -24,8 +23,7 @@ export const Step3 = ({pin, setVotingRegTxData}: Props) => {
   const strings = useStrings()
   const navigation = useNavigation<CatalystRouteNavigation>()
   const wallet = useSelectedWallet()
-  const defaultAsset = getDefaultAssetByNetworkId(wallet.networkId)
-  const {createVotingRegTx} = useCreateVotingRegTx({wallet, defaultAsset})
+  const {createVotingRegTx} = useCreateVotingRegTx({wallet})
   const [confirmPin, setConfirmPin] = useState('')
 
   const pinChange = (enteredPin: string) => {

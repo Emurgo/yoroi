@@ -8,7 +8,7 @@ import {Button, OfflineBanner, ProgressStep, Spacer, TextInput} from '../compone
 import {ErrorModal} from '../components'
 import {confirmationMessages, errorMessages, txLabels} from '../i18n/global-messages'
 import {showErrorDialog} from '../legacy/actions'
-import {CONFIG, getDefaultAssetByNetworkId} from '../legacy/config'
+import {CONFIG} from '../legacy/config'
 import {ensureKeysValidity} from '../legacy/deviceSettings'
 import {WrongPassword} from '../legacy/errors'
 import KeyStore from '../legacy/KeyStore'
@@ -31,8 +31,7 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
   const intl = useIntl()
   const strings = useStrings()
   const wallet = useSelectedWallet()
-  const defaultAsset = getDefaultAssetByNetworkId(wallet.networkId)
-  const {createVotingRegTx, isLoading: generatingTransaction} = useCreateVotingRegTx({wallet, defaultAsset})
+  const {createVotingRegTx, isLoading: generatingTransaction} = useCreateVotingRegTx({wallet})
   const navigation = useNavigation()
   const [password, setPassword] = useState('')
 
