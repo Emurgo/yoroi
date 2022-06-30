@@ -45,7 +45,7 @@ export const DelegationConfirmation = ({mockDefaultAsset}: {mockDefaultAsset?: D
   const strings = useStrings()
 
   const {poolHash, poolName, yoroiTx} = useParams<Params>(isParams)
-  if (!yoroiTx.staking) throw new Error('invalid transaction')
+  if (!yoroiTx.staking?.delegations) throw new Error('invalid transaction')
   const stakingAmount = Amounts.getAmount(Entries.toAmounts(yoroiTx.staking.delegations), '')
   const reward = approximateReward(stakingAmount.quantity)
 

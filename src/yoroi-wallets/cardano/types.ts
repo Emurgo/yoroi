@@ -32,7 +32,6 @@ import {YoroiSignedTx, YoroiUnsignedTx} from '../types'
 import Wallet from '../Wallet'
 import type {Addresses} from './chain'
 import {AddressChain} from './chain'
-import {HaskellShelleyTxSignRequest} from './HaskellShelleyTxSignRequest'
 import {TransactionCache} from './shelley/transactionCache'
 
 export interface WalletInterface {
@@ -182,9 +181,10 @@ export interface WalletInterface {
   createVotingRegTx(
     utxos: Array<RawUtxo>,
     catalystPrivateKey: string,
+    defaultAsset: DefaultAsset,
     decryptedKey: string | undefined,
     serverTime: Date | undefined,
-  ): Promise<HaskellShelleyTxSignRequest>
+  ): Promise<YoroiUnsignedTx>
 
   createWithdrawalTx(
     utxos: Array<RawUtxo>,

@@ -12,14 +12,10 @@ import {useWalletNavigation} from '../navigation'
 import {COLORS} from '../theme'
 import {CatalystBackupCheckModal} from './CatalystBackupCheckModal'
 import {Actions, Description, Title} from './components'
-import {VotingRegTxData} from './hooks'
 
 const {FlagSecure} = NativeModules
 
-type Props = {
-  votingRegTxData: VotingRegTxData
-}
-export const Step6 = ({votingRegTxData}: Props) => {
+export const Step6 = ({catalystSKHexEncrypted}: {catalystSKHexEncrypted: string}) => {
   useBlockGoBack()
   const strings = useStrings()
   const {resetToTxHistory} = useWalletNavigation()
@@ -72,16 +68,16 @@ export const Step6 = ({votingRegTxData}: Props) => {
 
         <Spacer height={32} />
 
-        <QRCode text={votingRegTxData.catalystSKHexEncrypted} />
+        <QRCode text={catalystSKHexEncrypted} />
 
         <Spacer height={32} />
 
         <Text>{strings.secretCode}</Text>
 
         <SecretCodeBox>
-          <Text style={{flex: 1}}>{votingRegTxData.catalystSKHexEncrypted}</Text>
+          <Text style={{flex: 1}}>{catalystSKHexEncrypted}</Text>
           <Spacer width={16} />
-          <CopyButton text={votingRegTxData.catalystSKHexEncrypted} />
+          <CopyButton text={catalystSKHexEncrypted} />
         </SecretCodeBox>
       </ScrollView>
 
