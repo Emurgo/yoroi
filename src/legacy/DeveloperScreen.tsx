@@ -4,12 +4,13 @@ import React from 'react'
 import {Alert, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity} from 'react-native'
 import config from 'react-native-config'
 
-import {Button, StatusBar, Text, TextInput} from '../components'
+import {Button, StatusBar, TextInput} from '../components'
 import {useCreateWallet} from '../hooks'
 import {AppRoutes, useWalletNavigation} from '../navigation'
 import {useSelectedWalletContext} from '../SelectedWallet'
 import {generateAdaMnemonic} from './commonUtils'
 import storage from './storage'
+import {Text} from './Text'
 
 const routes: Array<{label: string; path: keyof AppRoutes}> = [
   {label: 'Storybook', path: 'storybook'},

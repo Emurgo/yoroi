@@ -1,7 +1,7 @@
 import React from 'react'
 import {TextStyle, View} from 'react-native'
 
-import {Text} from './Text'
+import {Text} from '../legacy/Text'
 
 type Props = {
   textRow: string

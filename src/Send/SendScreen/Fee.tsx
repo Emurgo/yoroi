@@ -3,9 +3,9 @@ import React from 'react'
 import {StyleSheet} from 'react-native'
 import {useSelector} from 'react-redux'
 
-import {Text} from '../../components'
 import {formatTokenWithSymbol} from '../../legacy/format'
 import {defaultNetworkAssetSelector} from '../../legacy/selectors'
+import {Text} from '../../legacy/Text'
 import {useStrings} from './strings'
 
 export const Fee = ({fee}: {fee: BigNumber | null}) => {

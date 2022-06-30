@@ -1,5 +1,6 @@
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
+import {View} from 'react-native'
 
 import {Text} from './Text'
 
@@ -51,4 +52,19 @@ storiesOf('Text', module)
       consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
       Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
     </Text>
+  ))
+  .add('adjustFontSizeToFit', () => (
+    // TODO: https://emurgo.atlassian.net/browse/YOMO-271
+    <View
+      style={{
+        height: 50,
+        width: 50,
+        justifyContent: 'center',
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: 'red',
+      }}
+    >
+      <Text adjustsFontSizeToFit={true}>Lorem ipsum dolor sit amet, consectetur</Text>
+    </View>
   ))

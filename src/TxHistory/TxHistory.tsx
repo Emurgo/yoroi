@@ -4,7 +4,7 @@ import {LayoutAnimation, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
 
 import infoIcon from '../assets/img/icon/info-light-green.png'
-import {OfflineBanner, Spacer, StatusBar, Text} from '../components'
+import {OfflineBanner, Spacer, StatusBar} from '../components'
 import {assetMessages, txLabels} from '../i18n/global-messages'
 import {fetchAccountState} from '../legacy/account'
 import {isByron} from '../legacy/config'
@@ -15,6 +15,7 @@ import {
   lastHistorySyncErrorSelector,
   walletIsInitializedSelector,
 } from '../legacy/selectors'
+import {Text} from '../legacy/Text'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
 import {ActionsBanner} from './ActionsBanner'

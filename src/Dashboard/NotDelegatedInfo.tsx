@@ -3,7 +3,8 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Image, StyleSheet, View} from 'react-native'
 
 import NotDelegatedImage from '../assets/img/testnet/no-transactions-yet.png'
-import {Line, Text} from '../components'
+import {Line} from '../components'
+import {Text} from '../legacy/Text'
 import {COLORS} from '../theme'
 
 export const NotDelegatedInfo = () => {

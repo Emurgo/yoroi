@@ -3,9 +3,10 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, ScrollView, View} from 'react-native'
 import {StyleSheet} from 'react-native'
 
-import {Button, Modal, Text} from '../components'
+import {Button, Modal} from '../components'
 import {Instructions as HWInstructions} from '../HW'
 import {confirmationMessages} from '../i18n/global-messages'
+import {Text} from '../legacy/Text'
 import {COLORS, spacing} from '../theme'
 
 type Props = {

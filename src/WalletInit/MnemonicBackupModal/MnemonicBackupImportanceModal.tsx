@@ -2,7 +2,8 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet} from 'react-native'
 
-import {Button, Checkbox, Modal, Text} from '../../components'
+import {Button, Checkbox, Modal} from '../../components'
+import {Text} from '../../legacy/Text'
 import {spacing} from '../../theme'
 
 type Props = {

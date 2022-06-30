@@ -3,7 +3,7 @@ import React from 'react'
 import {Image, StyleSheet, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 
 import chevronRight from '../assets/img/chevron_right.png'
-import {Text} from '../components'
+import {Text} from '../legacy/Text'
 import {SettingsRouteNavigation, SettingsStackRoutes} from '../navigation'
 import {COLORS} from '../theme'
 

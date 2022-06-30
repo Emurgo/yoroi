@@ -2,9 +2,9 @@ import React from 'react'
 import {FlatList, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 
 import {useLanguage} from '../../i18n'
+import {Text} from '../../legacy/Text'
 import {COLORS} from '../../theme'
 import {Icon} from '../Icon'
-import {Text} from '../Text'
 import {LanguagePickerWarning} from './LanguagePickerWarning'
 
 const INCLUDED_LANGUAGE_CODES = ['en-US', 'ja-JP']

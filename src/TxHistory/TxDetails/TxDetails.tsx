@@ -6,7 +6,7 @@ import {defineMessages, IntlShape, useIntl} from 'react-intl'
 import {LayoutAnimation, Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
-import {Banner, Boundary, Button, CopyButton, Icon, OfflineBanner, StatusBar, Text} from '../../components'
+import {Banner, Boundary, Button, CopyButton, Icon, OfflineBanner, StatusBar} from '../../components'
 import {useTipStatus, useTokenInfo} from '../../hooks'
 import globalMessages from '../../i18n/global-messages'
 import {formatTokenWithSymbol} from '../../legacy/format'
@@ -17,6 +17,7 @@ import {
   internalAddressIndexSelector,
   transactionsInfoSelector,
 } from '../../legacy/selectors'
+import {Text} from '../../legacy/Text'
 import AddressModal from '../../Receive/AddressModal'
 import Screen from '../../Screen'
 import {useSelectedWallet} from '../../SelectedWallet'

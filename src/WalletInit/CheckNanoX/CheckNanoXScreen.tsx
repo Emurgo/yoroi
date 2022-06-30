@@ -5,8 +5,9 @@ import {Image, Platform, ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import image from '../../assets/img/ledger_1.png'
-import {BulletPointItem, Button, ProgressStep, Spacer, Text} from '../../components'
+import {BulletPointItem, Button, ProgressStep, Spacer} from '../../components'
 import {confirmationMessages, ledgerMessages} from '../../i18n/global-messages'
+import {Text} from '../../legacy/Text'
 import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
 
 export const CheckNanoXScreen = () => {

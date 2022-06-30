@@ -1,9 +1,9 @@
 import React from 'react'
 import {Platform, StyleSheet, TextInput, TextInputProps, TouchableOpacity, View, ViewStyle} from 'react-native'
 
+import {Text} from '../legacy/Text'
 import {COLORS} from '../theme'
 import {Icon} from './Icon'
-import {Text} from './Text'
 
 type Props = TextInputProps & {
   label?: string

@@ -2,7 +2,8 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 
-import {Icon, Text} from '../components'
+import {Icon} from '../components'
+import {Text} from '../legacy/Text'
 import {COLORS} from '../theme'
 
 export const WalletDescription = () => {

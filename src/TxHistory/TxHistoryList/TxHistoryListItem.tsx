@@ -7,7 +7,6 @@ import {defineMessages, MessageDescriptor, useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
-import {Text} from '../../components'
 import {Icon} from '../../components/Icon'
 import {
   ASSET_DENOMINATION,
@@ -23,6 +22,7 @@ import {
   externalAddressIndexSelector,
   internalAddressIndexSelector,
 } from '../../legacy/selectors'
+import {Text} from '../../legacy/Text'
 import utfSymbols from '../../legacy/utfSymbols'
 import {TxHistoryRouteNavigation} from '../../navigation'
 import {COLORS} from '../../theme'

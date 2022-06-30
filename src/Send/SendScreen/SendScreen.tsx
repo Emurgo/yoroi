@@ -9,7 +9,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useSelector} from 'react-redux'
 
-import {Button, Checkbox, Spacer, StatusBar, Text, TextInput} from '../../components'
+import {Button, Checkbox, Spacer, StatusBar, TextInput} from '../../components'
 import {useTokenInfo} from '../../hooks'
 import {CONFIG} from '../../legacy/config'
 import {formatTokenAmount, getAssetDenominationOrId, truncateWithEllipsis} from '../../legacy/format'
@@ -23,6 +23,7 @@ import {
   utxosSelector,
   walletMetaSelector,
 } from '../../legacy/selectors'
+import {Text} from '../../legacy/Text'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {TokenEntry} from '../../types'

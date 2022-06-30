@@ -3,8 +3,8 @@ import {useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {Icon} from '../../components/Icon'
-import {Text} from '../../components/Text'
 import {currencyNames} from '../../i18n/global-messages'
+import {Text} from '../../legacy/Text'
 import {CurrencySymbol} from '../../legacy/types'
 
 type Props = {

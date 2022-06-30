@@ -4,9 +4,10 @@ import {AppState, BackHandler, Image, StyleSheet, View} from 'react-native'
 import {useDispatch} from 'react-redux'
 
 import image from './assets/img/error.png'
-import {Button, Link, Modal, Text} from './components'
+import {Button, Link, Modal} from './components'
 import globalMessages from './i18n/global-messages'
 import {initApp} from './legacy/actions'
+import {Text} from './legacy/Text'
 import {COLORS, spacing} from './theme'
 
 const URL = 'https://twitter.com/YoroiWallet'

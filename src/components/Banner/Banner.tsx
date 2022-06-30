@@ -1,8 +1,8 @@
 import * as React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
+import {Text} from '../../legacy/Text'
 import {COLORS} from '../../theme'
-import {Text} from '../Text'
 
 type Props = {
   text?: string

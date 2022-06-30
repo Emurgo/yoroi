@@ -5,7 +5,8 @@ import DeviceInfo from 'react-native-device-info'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import fingerprintImage from '../../assets/img/fingerprint.png'
-import {Icon, ScreenBackground, StatusBar, Text} from '../../components'
+import {Icon, ScreenBackground, StatusBar} from '../../components'
+import {Text} from '../../legacy/Text'
 import {COLORS} from '../../theme'
 
 type Props = {

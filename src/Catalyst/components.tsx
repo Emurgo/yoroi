@@ -1,7 +1,7 @@
 import React from 'react'
 import {StyleSheet, TextProps, View, ViewProps} from 'react-native'
 
-import {Text} from '../components'
+import {Text} from '../legacy/Text'
 
 export const Title = ({style, ...props}: TextProps) => <Text {...props} style={[styles.title, style]} />
 export const Description = ({style, ...props}: TextProps) => <Text {...props} style={[styles.description, style]} />

@@ -3,7 +3,7 @@ import {Image, TouchableHighlight, View} from 'react-native'
 import {StyleSheet} from 'react-native'
 
 import backspaceIcon from '../../assets/img/backspace.png'
-import {Text} from '../../components/Text'
+import {Text} from '../../legacy/Text'
 import utfSymbols from '../../legacy/utfSymbols'
 
 export const Keyboard = ({onKeyDown}: {onKeyDown: (key: string) => void}) => {

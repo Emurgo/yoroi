@@ -2,7 +2,8 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 
-import {Button, Text, TextInput} from '../../components'
+import {Button, TextInput} from '../../components'
+import {Text} from '../../legacy/Text'
 import {COLORS, spacing} from '../../theme'
 
 type Props = {

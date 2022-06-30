@@ -15,8 +15,8 @@ import {
 } from 'react-native'
 
 import image from '../../assets/img/error.png'
+import {Text} from '../../legacy/Text'
 import {Button} from '../Button'
-import {Text} from '../Text'
 
 type BoundaryProps = LoadingBoundaryProps & ErrorBoundaryProps
 

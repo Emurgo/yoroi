@@ -6,9 +6,10 @@ import {StyleSheet, View} from 'react-native'
 import {TotalAdaIcon} from '../assets/staking/TotalAdaIcon'
 import {TotalDelegatedIcon} from '../assets/staking/TotalDelegatedIcon'
 import {TotalRewardIcon} from '../assets/staking/TotalRewardIcon'
-import {Button, Text, TitledCard} from '../components'
+import {Button, TitledCard} from '../components'
 import globalMessages from '../i18n/global-messages'
 import {formatAdaWithText} from '../legacy/format'
+import {Text} from '../legacy/Text'
 import {COLORS} from '../theme'
 
 const ICON_DIM = 44

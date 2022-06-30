@@ -2,7 +2,8 @@ import React from 'react'
 import {LayoutAnimation, TouchableOpacity, View} from 'react-native'
 import {StyleSheet} from 'react-native'
 
-import {Icon, Text} from '../../../components'
+import {Icon} from '../../../components'
+import {Text} from '../../../legacy/Text'
 import {COLORS} from '../../../theme'
 
 type Props = {

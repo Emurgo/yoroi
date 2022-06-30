@@ -3,8 +3,9 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Platform, ScrollView, StyleSheet, View} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
-import {Button, Modal, Text} from '../../components'
+import {Button, Modal} from '../../components'
 import {CONFIG} from '../../legacy/config'
+import {Text} from '../../legacy/Text'
 import {spacing} from '../../theme'
 
 type Props = {

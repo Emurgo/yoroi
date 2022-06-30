@@ -3,7 +3,7 @@ import {Image, StyleSheet, TouchableOpacity, ViewStyle} from 'react-native'
 
 import checkIcon from '../../assets//img/check.png'
 import checkEmptyIcon from '../../assets//img/check-empty.png'
-import {Text} from '../Text'
+import {Text} from '../../legacy/Text'
 
 type Props = {
   checked: boolean

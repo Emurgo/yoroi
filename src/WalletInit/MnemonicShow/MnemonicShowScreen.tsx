@@ -5,8 +5,9 @@ import {Dimensions, Image, ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import recoveryPhrase from '../../assets/img/recovery_phrase.png'
-import {Button, StatusBar, Text} from '../../components'
+import {Button, StatusBar} from '../../components'
 import assert from '../../legacy/assert'
+import {Text} from '../../legacy/Text'
 import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
 import {MnemonicBackupImportanceModal} from '../MnemonicBackupModal'
 

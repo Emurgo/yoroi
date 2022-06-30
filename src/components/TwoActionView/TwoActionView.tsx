@@ -3,9 +3,9 @@ import {useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View} from 'react-native'
 
 import {confirmationMessages} from '../../i18n/global-messages'
+import {Text} from '../../legacy/Text'
 import {spacing} from '../../theme'
 import {Button} from '../Button'
-import {Text} from '../Text'
 
 type Props = {
   title: string

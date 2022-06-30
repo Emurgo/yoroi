@@ -3,8 +3,9 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
-import {CopyButton, Icon, Spacer, Text} from '../components'
+import {CopyButton, Icon, Spacer} from '../components'
 import {externalAddressIndexSelector, isUsedAddressIndexSelector, receiveAddressesSelector} from '../legacy/selectors'
+import {Text} from '../legacy/Text'
 import {COLORS} from '../theme'
 import {Modals} from './Modals'
 

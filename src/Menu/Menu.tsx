@@ -8,10 +8,11 @@ import {useSelector} from 'react-redux'
 
 import SupportImage from '../assets/img/icon/shape.png'
 import {CatalystNavigator} from '../Catalyst/CatalystNavigator'
-import {Icon, Spacer, Text} from '../components'
+import {Icon, Spacer} from '../components'
 import {useWalletMetas} from '../hooks'
 import {CONFIG} from '../legacy/config'
 import {tokenBalanceSelector} from '../legacy/selectors'
+import {Text} from '../legacy/Text'
 import {defaultStackNavigationOptions, useWalletNavigation} from '../navigation'
 import {InsufficientFundsModal} from './InsufficientFundsModal'
 

@@ -4,8 +4,9 @@ import {defineMessages, useIntl} from 'react-intl'
 import {View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, KeyboardSpacer, ScrollableView, Spacer, StatusBar, Text} from '../../components'
+import {Button, KeyboardSpacer, ScrollableView, Spacer, StatusBar} from '../../components'
 import {getWalletConfigById} from '../../legacy/config'
+import {Text} from '../../legacy/Text'
 import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
 import {MnemonicInput} from '../MnemonicInput'
 

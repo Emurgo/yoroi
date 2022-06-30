@@ -1,8 +1,8 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
+import {Text} from '../legacy/Text'
 import {COLORS} from '../theme'
-import {Text} from './Text'
 
 type StepProps = {
   currentStep: number

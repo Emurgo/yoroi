@@ -3,7 +3,8 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Image, Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import chevronRight from '../../assets/img/chevron_right.png'
-import {StatusBar, Text} from '../../components'
+import {StatusBar} from '../../components'
+import {Text} from '../../legacy/Text'
 
 export const SupportScreen = () => {
   const intl = useIntl()

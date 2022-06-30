@@ -1,7 +1,8 @@
 import React from 'react'
 import {Image, ImageSourcePropType, StyleSheet, TouchableOpacity, View, ViewStyle} from 'react-native'
 
-import {Button, Icon, Text} from '../components'
+import {Button, Icon} from '../components'
+import {Text} from '../legacy/Text'
 import {COLORS} from '../theme'
 type Props = {
   title: string

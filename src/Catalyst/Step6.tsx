@@ -6,8 +6,9 @@ import {NativeModules, Platform, ScrollView, StyleSheet, TouchableOpacity, View}
 import QRCodeSVG from 'react-native-qrcode-svg'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, Icon, ProgressStep, Spacer, Text} from '../components'
+import {Button, Icon, ProgressStep, Spacer} from '../components'
 import {confirmationMessages} from '../i18n/global-messages'
+import {Text} from '../legacy/Text'
 import {useWalletNavigation} from '../navigation'
 import {COLORS} from '../theme'
 import {CatalystBackupCheckModal} from './CatalystBackupCheckModal'
