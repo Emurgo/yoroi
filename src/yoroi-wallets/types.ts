@@ -14,8 +14,8 @@ export type YoroiTxInfo = {
   fee: YoroiAmounts
   change: YoroiEntries
   metadata: YoroiMetadata
-  staking: YoroiStaking
-  voting: YoroiVoting
+  staking?: YoroiStaking
+  voting?: YoroiVoting
 }
 
 export type YoroiStaking = {
