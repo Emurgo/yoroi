@@ -36,8 +36,8 @@ const useHideScreenInAppSwitcher = () => {
     const subscription = AppState.addEventListener('change', (nextAppState: AppStateStatus) => {
       if (Platform.OS !== 'ios') return
 
-      const isFocused = (appState: string | void) => appState?.match(/active/)
-      const isBlurred = (appState: string | void) => appState?.match(/inactive|background/)
+      const isFocused = (appState: AppStateStatus) => appState === 'active'
+      const isBlurred = (appState: AppStateStatus) => appState === 'inactive' || appState === 'background'
 
       if (isBlurred(appStateRef.current) && isFocused(nextAppState)) RNBootSplash.hide({fade: true})
       if (isFocused(appStateRef.current) && isBlurred(nextAppState)) RNBootSplash.show({fade: true})
