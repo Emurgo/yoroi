@@ -203,6 +203,7 @@
     "@types/react-native-vector-icons": "^6.4.10",
     "@types/react-redux": "^7.1.18",
     "@types/react-test-renderer": "^17.0.1",
+    "@types/uuid": "^8.3.4",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
     "@wdio/appium-service": "^7.16.6",
