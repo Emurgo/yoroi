@@ -165,7 +165,7 @@ export interface WalletInterface {
     tokens: SendTokenList,
     defaultToken: Token,
     serverTime: Date | null | undefined,
-    metadata: Array<TxMetadata> | undefined,
+    metadata?: Array<TxMetadata>,
   ): Promise<UnsignedTx>
 
   signTx(signRequest: YoroiUnsignedTx, decryptedMasterKey: string): Promise<YoroiSignedTx>
@@ -296,6 +296,7 @@ type YoroiWalletKeys =
   | 'fetchTipStatus'
   | 'getDelegationStatus'
   | 'rewardAddressHex'
+  | 'createUnsignedTx'
   | 'createDelegationTx'
   | 'createWithdrawalTx'
   | 'createVotingRegTx'
@@ -330,6 +331,7 @@ const yoroiWalletKeys: Array<YoroiWalletKeys> = [
   'fetchTipStatus',
   'getDelegationStatus',
   'rewardAddressHex',
+  'createUnsignedTx',
   'createDelegationTx',
   'createWithdrawalTx',
   'createVotingRegTx',

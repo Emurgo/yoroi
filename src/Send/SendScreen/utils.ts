@@ -7,11 +7,10 @@ import {IntlShape} from 'react-intl'
 import {AssetOverflowError, InsufficientFunds} from '../../legacy/errors'
 import {formatTokenAmount, formatTokenInteger, normalizeTokenAmount} from '../../legacy/format'
 import {getCardanoNetworkConfigById, isHaskellShelleyNetwork} from '../../legacy/networks'
-import {WalletMeta} from '../../legacy/state'
 import {RawUtxo} from '../../legacy/types'
 import {cardanoValueFromMultiToken} from '../../legacy/utils'
 import type {DefaultAsset, SendTokenList, Token} from '../../types'
-import {BigNum, minAdaRequired, MultiToken, walletManager} from '../../yoroi-wallets'
+import {BigNum, minAdaRequired, MultiToken, YoroiWallet} from '../../yoroi-wallets'
 import {InvalidAssetAmount, parseAmountDecimal} from '../../yoroi-wallets/utils/parsing'
 import type {AddressValidationErrors} from '../../yoroi-wallets/utils/validators'
 import {getUnstoppableDomainAddress, isReceiverAddressValid, validateAmount} from '../../yoroi-wallets/utils/validators'
@@ -48,6 +47,7 @@ export const getMinAda = async (selectedToken: Token, defaultAsset: DefaultAsset
 }
 
 export const getTransactionData = async (
+  wallet: YoroiWallet,
   utxos: Array<RawUtxo>,
   address: string,
   amount: string,
@@ -76,10 +76,11 @@ export const getTransactionData = async (
       amount: await getMinAda(selectedToken, defaultAsset),
     })
   }
-  return await walletManager.createUnsignedTx(utxos, address, sendTokenList, defaultAsset, serverTime)
+  return await wallet.createUnsignedTx(utxos, address, sendTokenList, defaultAsset, serverTime)
 }
 
 export const recomputeAll = async ({
+  wallet,
   amount,
   addressInput,
   utxos,
@@ -87,10 +88,9 @@ export const recomputeAll = async ({
   defaultAsset,
   selectedTokenInfo,
   tokenBalance,
-  walletMetadata,
 }: {
+  wallet: YoroiWallet
   addressInput: string
-  walletMetadata: WalletMeta
   amount: string
   utxos: Array<RawUtxo> | undefined | null
   sendAll: boolean
@@ -100,7 +100,6 @@ export const recomputeAll = async ({
 }) => {
   let addressErrors: AddressValidationErrors = {}
   let address = addressInput
-  const {networkId} = walletMetadata
   let amountErrors = validateAmount(amount, selectedTokenInfo)
 
   if (isDomain(addressInput)) {
@@ -112,7 +111,7 @@ export const recomputeAll = async ({
   }
 
   if (_.isEmpty(addressErrors)) {
-    addressErrors = (await isReceiverAddressValid(address, networkId)) || Object.freeze({})
+    addressErrors = (await isReceiverAddressValid(address, wallet.networkId)) || Object.freeze({})
   }
 
   let balanceErrors = Object.freeze({})
@@ -133,7 +132,7 @@ export const recomputeAll = async ({
           : new BigNumber('0')
 
       if (sendAll) {
-        unsignedTx = await getTransactionData(utxos, address, amount, sendAll, defaultAsset, selectedTokenInfo)
+        unsignedTx = await getTransactionData(wallet, utxos, address, amount, sendAll, defaultAsset, selectedTokenInfo)
         _fee = new MultiToken(unsignedTx.fee.values, {
           defaultNetworkId: unsignedTx.fee.defaults.networkId,
           defaultIdentifier: unsignedTx.fee.defaults.identifier,
@@ -160,7 +159,7 @@ export const recomputeAll = async ({
         const parsedAmount = selectedTokenInfo.isDefault
           ? parseAmountDecimal(amount, selectedTokenInfo)
           : new BigNumber('0')
-        unsignedTx = await getTransactionData(utxos, address, amount, false, defaultAsset, selectedTokenInfo)
+        unsignedTx = await getTransactionData(wallet, utxos, address, amount, false, defaultAsset, selectedTokenInfo)
         _fee = new MultiToken(unsignedTx.fee.values, {
           defaultNetworkId: unsignedTx.fee.defaults.networkId,
           defaultIdentifier: unsignedTx.fee.defaults.identifier,

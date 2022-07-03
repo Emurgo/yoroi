@@ -21,7 +21,6 @@ import {
   lastUtxosFetchErrorSelector,
   tokenBalanceSelector,
   utxosSelector,
-  walletMetaSelector,
 } from '../../legacy/selectors'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
@@ -73,7 +72,6 @@ export const SendScreen = ({
   const utxos = useSelector(utxosSelector)
   const hasPendingOutgoingTransaction = useSelector(hasPendingOutgoingTransactionSelector)
   const isOnline = useSelector(isOnlineSelector)
-  const walletMetadata = useSelector(walletMetaSelector)
   const selectedAsset = tokenBalance.values.find(({identifier}) => identifier === selectedTokenIdentifier)
 
   if (!selectedAsset) {
@@ -120,6 +118,7 @@ export const SendScreen = ({
     setRecomputing(true)
 
     const promise = recomputeAll({
+      wallet,
       utxos,
       addressInput: receiver,
       amount,
@@ -127,7 +126,6 @@ export const SendScreen = ({
       defaultAsset,
       selectedTokenInfo: tokenInfo,
       tokenBalance,
-      walletMetadata,
     })
 
     promiseRef.current = promise
