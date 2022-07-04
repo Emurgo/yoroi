@@ -139,8 +139,8 @@ export const ConfirmTx: React.FC<Props> = ({
     }
   }
 
-  const onConfirmNew = React.useCallback(
-    async (unsignedTx: YoroiUnsignedTx, easyConfirmDecryptKey?: string) => {
+  const onConfirm = React.useCallback(
+    async (easyConfirmDecryptKey?: string) => {
       try {
         setIsProcessing(true)
 
@@ -148,12 +148,12 @@ export const ConfirmTx: React.FC<Props> = ({
         if (wallet.isEasyConfirmationEnabled) {
           if (easyConfirmDecryptKey) {
             setDialogStep(DialogStep.Signing)
-            signedTx = await smoothModalNotification(wallet.signTx(unsignedTx, easyConfirmDecryptKey))
+            signedTx = await smoothModalNotification(wallet.signTx(yoroiUnsignedTx, easyConfirmDecryptKey))
           }
         } else {
           const decryptedKey = await KeyStore.getData(walletManager._id, 'MASTER_PASSWORD', '', password, intl)
           setDialogStep(DialogStep.Signing)
-          signedTx = await smoothModalNotification(wallet.signTx(unsignedTx, decryptedKey))
+          signedTx = await smoothModalNotification(wallet.signTx(yoroiUnsignedTx, decryptedKey))
         }
 
         setDialogStep(DialogStep.Submitting)
@@ -194,14 +194,7 @@ export const ConfirmTx: React.FC<Props> = ({
         setIsProcessing(false)
       }
     },
-    [intl, onError, onSuccess, password, strings, submitTx, wallet],
-  )
-
-  const onConfirm = React.useCallback(
-    (decryptedKey?: string) => {
-      return onConfirmNew(yoroiUnsignedTx, decryptedKey)
-    },
-    [onConfirmNew, yoroiUnsignedTx],
+    [intl, onError, onSuccess, password, strings, submitTx, wallet, yoroiUnsignedTx],
   )
 
   const _onConfirm = React.useCallback(async () => {
