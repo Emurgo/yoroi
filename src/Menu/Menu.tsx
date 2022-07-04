@@ -42,7 +42,7 @@ export const Menu = () => {
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
       <ScrollView contentContainerStyle={styles.scrollViewContent} bounces={false}>
         <AppSettings //
-          label={strings.settings}
+          label={strings.appSettings}
           onPress={navigateTo.appSettings}
           left={<Icon.Gear size={26} color="#6B7384" />}
         />
@@ -170,7 +170,7 @@ const useStrings = () => {
   return {
     allWallets: intl.formatMessage(messages.allWallets),
     catalystVoting: intl.formatMessage(messages.catalystVoting),
-    settings: intl.formatMessage(messages.settings),
+    appSettings: intl.formatMessage(messages.appSettings),
     supportTitle: intl.formatMessage(messages.supportTitle),
     supportLink: intl.formatMessage(messages.supportLink),
     knowledgeBase: intl.formatMessage(messages.knowledgeBase),
@@ -187,8 +187,8 @@ const messages = defineMessage({
     id: 'menu.catalystVoting',
     defaultMessage: '!!!Catalyst voting',
   },
-  settings: {
-    id: 'menu.settings',
+  appSettings: {
+    id: 'menu.appSettings',
     defaultMessage: '!!!App Settings',
   },
   supportTitle: {
