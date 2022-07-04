@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {Resolution} from '@unstoppabledomains/resolution'
-import {validateMnemonic, wordlists} from 'bip39'
+import {wordlists} from 'bip39'
 import _ from 'lodash'
 
 import assert from '../../legacy/assert'
@@ -198,46 +198,4 @@ export const cleanMnemonic = (mnemonic: string) => {
   mnemonic = mnemonic.toLowerCase()
   // remove leading/trailing whitespace
   return mnemonic.trim()
-}
-
-export const validateRecoveryPhrase = (mnemonic: string, mnemonicLength: number) => {
-  const cleaned = cleanMnemonic(mnemonic)
-  // Deal with edge case ''.split(' ') -> ['']
-  const words = cleaned ? cleaned.split(' ') : []
-
-  const tooShort = words.length < mnemonicLength
-  const tooLong = words.length > mnemonicLength
-  const invalidPhraseErrors: Array<any> = []
-
-  if (tooLong) {
-    invalidPhraseErrors.push({code: INVALID_PHRASE_ERROR_CODES.TOO_LONG})
-  }
-
-  if (tooShort) {
-    invalidPhraseErrors.push({code: INVALID_PHRASE_ERROR_CODES.TOO_SHORT})
-  }
-
-  const isUnknown = (word) => !wordlists.EN.includes(word)
-
-  const unknownWords: Array<string> = words.filter(isUnknown)
-
-  if (unknownWords.length > 0) {
-    invalidPhraseErrors.push({
-      code: INVALID_PHRASE_ERROR_CODES.UNKNOWN_WORDS,
-      words: unknownWords,
-      lastMightBeUnfinished: isUnknown(_.last(words)) && !mnemonic.endsWith(' '),
-    })
-  }
-
-  if (invalidPhraseErrors.length > 0) {
-    return {
-      invalidPhrase: invalidPhraseErrors,
-    }
-  } else if (!validateMnemonic(cleaned)) {
-    return {
-      invalidPhrase: [{code: INVALID_PHRASE_ERROR_CODES.INVALID_CHECKSUM}],
-    }
-  } else {
-    return {}
-  }
 }
