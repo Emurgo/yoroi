@@ -1,11 +1,11 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Platform, ScrollView, StyleSheet, Switch} from 'react-native'
-import DeviceInfo from 'react-native-device-info'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {StatusBar} from '../../components'
-import globalMessages from '../../i18n/global-messages'
+import {Icon, Spacer, StatusBar} from '../../components'
+import {useLanguage} from '../../i18n'
 import {setAppSettingField} from '../../legacy/actions'
 import {APP_SETTINGS_KEYS} from '../../legacy/appSettings'
 import {CONFIG, isNightly} from '../../legacy/config'
@@ -18,10 +18,9 @@ import {
   sendCrashReportsSelector,
 } from '../../legacy/selectors'
 import {useWalletNavigation} from '../../navigation'
+import {useTheme} from '../../theme'
 import {useCurrencyContext} from '../Currency'
-import {NavigatedSettingsItem, SettingsBuildItem, SettingsItem, SettingsSection} from '../SettingsItems'
-
-const version = DeviceInfo.getVersion()
+import {NavigatedSettingsItem, SettingsItem, SettingsSection} from '../SettingsItems'
 
 export const ApplicationSettingsScreen = () => {
   const strings = useStrings()
@@ -32,6 +31,20 @@ export const ApplicationSettingsScreen = () => {
   const installationId = useSelector(installationIdSelector)
   const dispatch = useDispatch()
   const {currency} = useCurrencyContext()
+  const {
+    theme: {color},
+  } = useTheme()
+  const language = useLanguage()
+
+  const [isBalanceHidden, setIsBalanceHidden] = useState(false) // TODO: temporary functionality before adding the real feature
+
+  const iconProps = {
+    color: color.gray['600'],
+    size: 23,
+  }
+
+  const {languageCode, supportedLanguages} = language
+  const languageSelectedLabel = supportedLanguages.find((element) => element.code === languageCode)?.label
 
   const setCrashReporting = (value: boolean) => {
     dispatch(setAppSettingField(APP_SETTINGS_KEYS.SEND_CRASH_REPORTS, value))
@@ -87,52 +100,80 @@ export const ApplicationSettingsScreen = () => {
     Platform.OS === 'android' && CONFIG.ANDROID_BIO_AUTH_EXCLUDED_SDK.includes(Platform.Version) && !isSystemAuthEnabled
 
   return (
-    <ScrollView style={styles.scrollView}>
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.settings}>
       <StatusBar type="dark" />
-
-      <SettingsSection title={strings.language}>
-        <NavigatedSettingsItem label={strings.currentLanguage} navigateTo="change-language" />
-
-        <NavigatedSettingsItem label={`${strings.currency} (${currency})`} navigateTo="change-currency" />
-      </SettingsSection>
-
-      <SettingsSection title={strings.security}>
-        <NavigatedSettingsItem
-          label={strings.changePin}
-          navigateTo="change-custom-pin"
-          disabled={isSystemAuthEnabled}
-        />
-
-        <SettingsItem
-          label={strings.biometricsSignIn}
-          disabled={!isBiometricHardwareSupported || shouldNotEnableBiometricAuth}
-        >
-          <Switch
-            value={isSystemAuthEnabled}
-            onValueChange={onToggleBiometricsAuthIn}
-            disabled={!isBiometricHardwareSupported || shouldNotEnableBiometricAuth}
+      <ScrollView bounces={false}>
+        <SettingsSection title={strings.general}>
+          <NavigatedSettingsItem
+            icon={<Icon.Globe {...iconProps} />}
+            label={strings.selectLanguage}
+            navigateTo="change-language"
+            selected={languageSelectedLabel}
           />
-        </SettingsItem>
-      </SettingsSection>
 
-      <SettingsSection title={strings.crashReporting}>
-        <SettingsItem label={strings.crashReportingText}>
-          <Switch value={sendCrashReports} onValueChange={setCrashReporting} disabled={isNightly()} />
-        </SettingsItem>
-      </SettingsSection>
+          <NavigatedSettingsItem
+            icon={<Icon.Coins {...iconProps} />}
+            label={strings.selectFiatCurrency}
+            selected={currency}
+            navigateTo="change-currency"
+          />
 
-      <SettingsSection>
-        <NavigatedSettingsItem label={strings.termsOfUse} navigateTo="terms-of-use" />
+          <NavigatedSettingsItem
+            icon={<Icon.Info {...iconProps} />}
+            label={strings.about}
+            navigateTo="change-about" /* TODO: https://emurgo.atlassian.net/browse/YOMO-181 */
+          />
 
-        <NavigatedSettingsItem label={strings.support} navigateTo="support" />
-      </SettingsSection>
+          <NavigatedSettingsItem
+            icon={<Icon.TermsOfUse {...iconProps} />}
+            label={strings.termsOfUse}
+            navigateTo="terms-of-use"
+          />
+        </SettingsSection>
 
-      <SettingsSection title="About">
-        <SettingsBuildItem label={strings.version} value={version} />
+        <Spacer height={24} />
 
-        <SettingsBuildItem label={strings.commit} value={CONFIG.COMMIT} />
-      </SettingsSection>
-    </ScrollView>
+        <SettingsSection title={strings.securityReporting}>
+          <NavigatedSettingsItem
+            icon={<Icon.Pin {...iconProps} />}
+            label={strings.changePin}
+            navigateTo="change-custom-pin"
+          />
+
+          <SettingsItem icon={<Icon.EyeOff {...iconProps} />} label={strings.balance} info={strings.balanceInfo}>
+            <Switch
+              value={isBalanceHidden}
+              onValueChange={() => {
+                /* TODO: add the real action to enable/disable balance hiding */
+                setIsBalanceHidden(!isBalanceHidden)
+                console.log('balance hiding switch click!')
+              }}
+            />
+          </SettingsItem>
+
+          <SettingsItem
+            icon={<Icon.Bio {...iconProps} />}
+            label={strings.biometricsSignIn}
+            info={strings.biometricsSignInInfo}
+            disabled={!isBiometricHardwareSupported || shouldNotEnableBiometricAuth}
+          >
+            <Switch
+              value={isSystemAuthEnabled}
+              onValueChange={onToggleBiometricsAuthIn}
+              disabled={!isBiometricHardwareSupported || shouldNotEnableBiometricAuth}
+            />
+          </SettingsItem>
+
+          <SettingsItem
+            icon={<Icon.Export {...iconProps} />}
+            label={strings.crashReporting}
+            info={strings.crashReportingInfo}
+          >
+            <Switch value={sendCrashReports} onValueChange={setCrashReporting} disabled={isNightly()} />
+          </SettingsItem>
+        </SettingsSection>
+      </ScrollView>
+    </SafeAreaView>
   )
 }
 
@@ -140,71 +181,81 @@ const useStrings = () => {
   const intl = useIntl()
 
   return {
-    language: intl.formatMessage(messages.language),
-    currentLanguage: intl.formatMessage(messages.currentLanguage),
-    security: intl.formatMessage(messages.security),
+    general: intl.formatMessage(messages.general),
+    securityReporting: intl.formatMessage(messages.securityReporting),
+    selectLanguage: intl.formatMessage(messages.selectLanguage),
+    selectFiatCurrency: intl.formatMessage(messages.selectFiatCurrency),
+    about: intl.formatMessage(messages.about),
     changePin: intl.formatMessage(messages.changePin),
+    balance: intl.formatMessage(messages.balance),
+    balanceInfo: intl.formatMessage(messages.balanceInfo),
     biometricsSignIn: intl.formatMessage(messages.biometricsSignIn),
+    biometricsSignInInfo: intl.formatMessage(messages.biometricsSignInInfo),
     termsOfUse: intl.formatMessage(messages.termsOfUse),
-    support: intl.formatMessage(messages.support),
-    version: intl.formatMessage(messages.version),
-    commit: intl.formatMessage(messages.commit),
     crashReporting: intl.formatMessage(messages.crashReporting),
-    crashReportingText: intl.formatMessage(messages.crashReportingText),
-    currency: intl.formatMessage(globalMessages.currency),
+    crashReportingInfo: intl.formatMessage(messages.crashReportingInfo),
   }
 }
 
 const messages = defineMessages({
-  language: {
-    id: 'components.settings.applicationsettingsscreen.language',
-    defaultMessage: '!!!Your language',
+  general: {
+    id: 'components.settings.applicationsettingsscreen.label.general',
+    defaultMessage: '!!!General',
   },
-  currentLanguage: {
-    id: 'components.settings.applicationsettingsscreen.currentLanguage',
-    defaultMessage: '!!!English',
+  securityReporting: {
+    id: 'components.settings.applicationsettingsscreen.label.securityReporting',
+    defaultMessage: '!!!Security & Reporting',
   },
-  security: {
-    id: 'components.settings.applicationsettingsscreen.security',
-    defaultMessage: '!!!Security',
+  selectLanguage: {
+    id: 'components.settings.applicationsettingsscreen.selectLanguage',
+    defaultMessage: '!!!Language',
   },
-  changePin: {
-    id: 'components.settings.applicationsettingsscreen.changePin',
-    defaultMessage: '!!!Change PIN',
+  selectFiatCurrency: {
+    id: 'components.settings.applicationsettingsscreen.selectFiatCurrency',
+    defaultMessage: '!!!Fiat Currency',
   },
-  biometricsSignIn: {
-    id: 'components.settings.applicationsettingsscreen.biometricsSignIn',
-    defaultMessage: '!!!Sign in with your biometrics',
-  },
-  crashReporting: {
-    id: 'components.settings.applicationsettingsscreen.crashReporting',
-    defaultMessage: '!!!Crash reporting',
-  },
-  crashReportingText: {
-    id: 'components.settings.applicationsettingsscreen.crashReportingText',
-    defaultMessage:
-      '!!!Send crash reports to Emurgo. Changes to this option will be reflected after restarting the application.',
+  about: {
+    id: 'components.settings.applicationsettingsscreen.about',
+    defaultMessage: '!!!About',
   },
   termsOfUse: {
     id: 'components.settings.applicationsettingsscreen.termsOfUse',
     defaultMessage: '!!!Terms of Use',
   },
-  support: {
-    id: 'components.settings.applicationsettingsscreen.support',
-    defaultMessage: '!!!Support',
+  changePin: {
+    id: 'components.settings.applicationsettingsscreen.changePin',
+    defaultMessage: '!!!Change PIN',
   },
-  version: {
-    id: 'components.settings.applicationsettingsscreen.version',
-    defaultMessage: '!!!Current version:',
+  balance: {
+    id: 'components.settings.applicationsettingsscreen.balance',
+    defaultMessage: '!!!Hide balance',
   },
-  commit: {
-    id: 'components.settings.applicationsettingsscreen.commit',
-    defaultMessage: '!!!Commit:',
+  balanceInfo: {
+    id: 'components.settings.applicationsettingsscreen.balanceInfo',
+    defaultMessage: '!!!This function will be applied to all wallets in your app',
+  },
+  biometricsSignIn: {
+    id: 'components.settings.applicationsettingsscreen.biometricsSignIn',
+    defaultMessage: '!!!Sign in with your biometrics',
+  },
+  biometricsSignInInfo: {
+    id: 'components.settings.applicationsettingsscreen.biometricsSignInInfo',
+    defaultMessage: '!!!Changes to this option will be reflected after restarting the application',
+  },
+  crashReporting: {
+    id: 'components.settings.applicationsettingsscreen.crashReporting',
+    defaultMessage: '!!!Send crash report to Emurgo',
+  },
+  crashReportingInfo: {
+    id: 'components.settings.applicationsettingsscreen.crashReportingInfo',
+    defaultMessage: '!!!Changes to this option will be reflected after restarting the application',
   },
 })
 
 const styles = StyleSheet.create({
-  scrollView: {
+  settings: {
+    flex: 1,
+    paddingTop: 16,
     backgroundColor: '#fff',
   },
 })

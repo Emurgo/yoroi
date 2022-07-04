@@ -196,6 +196,7 @@ export type SettingsTabRoutes = {
 
 export type SettingsStackRoutes = {
   'settings-main': undefined
+  'app-settings': undefined
   'change-wallet-name': undefined
   'terms-of-use': undefined
   support: undefined
@@ -206,6 +207,7 @@ export type SettingsStackRoutes = {
   'easy-confirmation': undefined
   'change-password': undefined
   'change-custom-pin': undefined
+  'change-about': undefined
   'setup-custom-pin': {
     onSuccess: () => void | Promise<void>
   }
@@ -335,6 +337,15 @@ export const useWalletNavigation = () => {
     })
   }
 
+  const navigateToAppSettings = () => {
+    navigation.navigate('app-root', {
+      screen: 'settings',
+      params: {
+        screen: 'app-settings',
+      },
+    })
+  }
+
   const navigateToTxHistory = () => {
     navigation.navigate('app-root', {
       screen: 'main-wallet-routes',
@@ -352,6 +363,7 @@ export const useWalletNavigation = () => {
     resetToTxHistory,
     resetToWalletSelection,
     navigateToSettings,
+    navigateToAppSettings,
     navigateToTxHistory,
   }
 }

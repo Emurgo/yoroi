@@ -47,6 +47,12 @@ export const SettingsScreenNavigator = () => {
         options={{title: strings.settingsTitle}}
       />
 
+      <Stack.Screen //
+        name="app-settings"
+        component={ApplicationSettingsScreen}
+        options={{title: strings.appSettingsTitle}}
+      />
+
       <Stack.Screen
         name="change-wallet-name"
         component={ChangeWalletName}
@@ -202,6 +208,10 @@ const messages = defineMessages({
     id: 'components.settings.applicationsettingsscreen.title',
     defaultMessage: '!!!Settings',
   },
+  appSettingsTitle: {
+    id: 'components.settings.applicationsettingsscreen.appSettingsTitle',
+    defaultMessage: '!!!App settings',
+  },
   languageTitle: {
     id: 'components.settings.changelanguagescreen.title',
     defaultMessage: '!!!Language',
@@ -223,6 +233,7 @@ const useStrings = () => {
     toggleEachConfirmationTitle: intl.formatMessage(messages.toggleEachConfirmationTitle),
     customPinTitle: intl.formatMessage(messages.customPinTitle),
     settingsTitle: intl.formatMessage(messages.settingsTitle),
+    appSettingsTitle: intl.formatMessage(messages.appSettingsTitle),
     languageTitle: intl.formatMessage(messages.languageTitle),
     currency: intl.formatMessage(globalMessages.currency),
   }

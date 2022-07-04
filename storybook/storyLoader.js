@@ -91,7 +91,7 @@ function loadStories() {
 	require('../src/components/Link/Link.stories');
 	require('../src/components/Modal/Modal.stories');
 	require('../src/components/StandardModal/StandardModal.stories');
-	require('../src/components/Text.stories');
+	require('../src/components/Text/Text.stories');
 	require('../src/components/TextInput/TextInput.stories');
 	require('../src/theme/Palette.stories');
 	require('../src/theme/Theme.stories');
@@ -187,7 +187,7 @@ const stories = [
 	'../src/components/Link/Link.stories',
 	'../src/components/Modal/Modal.stories',
 	'../src/components/StandardModal/StandardModal.stories',
-	'../src/components/Text.stories',
+	'../src/components/Text/Text.stories',
 	'../src/components/TextInput/TextInput.stories',
 	'../src/theme/Palette.stories',
 	'../src/theme/Theme.stories',
