@@ -18,6 +18,9 @@ export const mockWallet: YoroiWallet = {
   provider: null,
   publicKeyHex: 'publicKeyHex',
 
+  createUnsignedTx: () => {
+    throw new Error('not implemented: createUnsignedTx')
+  },
   createDelegationTx: () => {
     throw new Error('not implemented: createDelegationTx')
   },
