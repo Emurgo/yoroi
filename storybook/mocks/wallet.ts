@@ -18,6 +18,9 @@ export const mockWallet: YoroiWallet = {
   provider: null,
   publicKeyHex: 'publicKeyHex',
 
+  createUnsignedTx: () => {
+    throw new Error('not implemented: createUnsignedTx')
+  },
   createDelegationTx: () => {
     throw new Error('not implemented: createDelegationTx')
   },
@@ -189,6 +192,7 @@ export const mockYoroiTx = {
     delegations: {},
     withdrawals: {},
   },
+  voting: {},
   unsignedTx: {} as any,
   mock: true,
 } as const
@@ -205,6 +209,7 @@ export const mockYoroiSignedTx: YoroiSignedTx & {mock: true} = {
     delegations: {},
     withdrawals: {},
   },
+  voting: {},
   signedTx: {id: 'tx-id', encodedTx: new Uint8Array([1, 2, 3])},
   mock: true,
 }

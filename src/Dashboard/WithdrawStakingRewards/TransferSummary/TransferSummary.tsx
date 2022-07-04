@@ -63,7 +63,7 @@ const withdrawalInfo = (unsignedTx: YoroiUnsignedTx) => {
   }
 }
 
-const Withdrawals: React.FC<{wallet: YoroiWallet; withdrawals: YoroiStaking['withdrawals']}> = ({
+const Withdrawals: React.FC<{wallet: YoroiWallet; withdrawals: NonNullable<YoroiStaking['withdrawals']>}> = ({
   wallet,
   withdrawals,
 }) => {
@@ -92,7 +92,7 @@ const Withdrawals: React.FC<{wallet: YoroiWallet; withdrawals: YoroiStaking['wit
 
 const Deregistrations: React.FC<{
   wallet: YoroiWallet
-  deregistrations: YoroiStaking['deregistrations']
+  deregistrations: NonNullable<YoroiStaking['deregistrations']>
 }> = ({wallet, deregistrations}) => {
   const strings = useStrings()
   const tokenInfo = useTokenInfo({wallet, tokenId: ''})

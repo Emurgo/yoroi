@@ -1,27 +1,18 @@
-import {SignTransactionRequest} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import {MultiTokenValue, StakingKeyBalances, TokenEntry, TxMetadata, UnsignedTx} from '@emurgo/yoroi-lib-core'
 
 import {CardanoHaskellShelleyNetwork} from '../../legacy/networks'
-import {Quantity, YoroiAmounts, YoroiEntries, YoroiMetadata, YoroiUnsignedTx} from '../types'
+import {Quantity, YoroiAmounts, YoroiEntries, YoroiMetadata, YoroiUnsignedTx, YoroiVoting} from '../types'
 import {Amounts, Entries, Quantities} from '../utils'
 import {cardano, RewardAddress} from '.'
 
 export const yoroiUnsignedTx = async ({
   unsignedTx,
   networkConfig,
-  ledgerPayload,
-  ledgerNanoCatalystRegistrationTxSignData,
+  votingRegistration,
 }: {
   unsignedTx: UnsignedTx
   networkConfig: CardanoHaskellShelleyNetwork
-  ledgerPayload?: SignTransactionRequest
-  ledgerNanoCatalystRegistrationTxSignData?: {
-    votingPublicKey: string
-    stakingKeyPath: Array<number>
-    stakingKey: string
-    rewardAddress: string
-    nonce: number
-  }
+  votingRegistration?: VotingRegistration
 }) => {
   const fee = toAmounts(unsignedTx.fee.values)
   const change = toEntries(unsignedTx.change.map((change) => ({address: change.address, value: change.values})))
@@ -30,6 +21,7 @@ export const yoroiUnsignedTx = async ({
   // entries === (outputs - change)
   const entries = Entries.remove(outputEntries, changeAddresses)
   const amounts = Entries.toAmounts(entries)
+  const stakingBalances = await cardano.getBalanceForStakingCredentials([...unsignedTx.senderUtxos])
 
   const yoroiTx: YoroiUnsignedTx = {
     amounts,
@@ -37,25 +29,33 @@ export const yoroiUnsignedTx = async ({
     fee,
     change,
     staking: {
-      withdrawals: await Staking.toWithdrawals(unsignedTx.withdrawals),
-      registrations: await Staking.toRegistrations({registrations: unsignedTx.registrations, networkConfig}),
-      deregistrations: await Staking.toDeregistrations({deregistrations: unsignedTx.deregistrations, networkConfig}),
-      delegations: await Staking.toDelegations({
-        balances: await cardano.getBalanceForStakingCredentials([...unsignedTx.senderUtxos]),
-      }),
+      withdrawals:
+        (unsignedTx.withdrawals.hasValue() && (await unsignedTx.withdrawals.len())) > 0
+          ? await Staking.toWithdrawals(unsignedTx.withdrawals)
+          : undefined,
+      registrations:
+        unsignedTx.registrations.length > 0
+          ? await Staking.toRegistrations({registrations: unsignedTx.registrations, networkConfig})
+          : undefined,
+      deregistrations:
+        unsignedTx.deregistrations.length > 0
+          ? await Staking.toDeregistrations({deregistrations: unsignedTx.deregistrations, networkConfig})
+          : undefined,
+      delegations:
+        unsignedTx.delegations.length > 0
+          ? await Staking.toDelegations({
+              delegations: unsignedTx.delegations,
+              balances: stakingBalances,
+            })
+          : undefined,
     },
     voting: {
-      registrations: await Voting.toRegistrations({
-        metadata: unsignedTx.metadata,
-        networkConfig: networkConfig,
+      registration: await Voting.toRegistration({
+        votingRegistration,
       }),
     },
     metadata: toMetadata(unsignedTx.metadata),
     unsignedTx,
-    hw: {
-      ledgerNanoCatalystRegistrationTxSignData,
-      ledgerPayload,
-    },
   }
 
   return yoroiTx
@@ -160,38 +160,35 @@ const Staking = {
       }
     }, Promise.resolve({} as YoroiEntries)),
 
-  toDelegations: async ({balances}: {balances: StakingKeyBalances}): Promise<{[poolId: string]: YoroiAmounts}> =>
-    Object.entries(balances).reduce(
+  toDelegations: async ({
+    delegations,
+    balances,
+  }: {
+    delegations: UnsignedTx['delegations']
+    balances: StakingKeyBalances
+  }): Promise<{[poolId: string]: YoroiAmounts}> => {
+    if (delegations.length <= 0) return {}
+
+    return Object.entries(balances).reduce(
       (result, [poolId, quantity]) => ({
         ...result,
         [poolId]: {'': quantity},
       }),
       {},
-    ),
+    )
+  },
 }
 
-const REGISTRATION_LABEL = '61284'
-
+type VotingRegistration = {
+  votingPublicKey: string
+  stakingPublicKey: string
+  rewardAddress: string
+  nonce: number
+}
 const Voting = {
-  toRegistrations: async ({
-    metadata,
-    networkConfig: {NETWORK_ID},
+  toRegistration: async ({
+    votingRegistration,
   }: {
-    metadata: UnsignedTx['metadata']
-    networkConfig: CardanoHaskellShelleyNetwork
-  }) => {
-    const votingMetadata = metadata.filter((metadatum) => metadatum.label === REGISTRATION_LABEL)
-
-    return votingMetadata.reduce(async (result, current) => {
-      const address = await RewardAddress.new(NETWORK_ID, current.data[2])
-        .then((rewardAddress) => rewardAddress.toAddress())
-        .then((address) => address.toBytes())
-        .then((bytes) => Buffer.from(bytes).toString('hex'))
-
-      return {
-        ...(await result),
-        [address]: {}, // staked amounts unknown
-      }
-    }, Promise.resolve({} as YoroiEntries))
-  },
+    votingRegistration?: VotingRegistration
+  }): Promise<YoroiVoting['registration']> => votingRegistration,
 }

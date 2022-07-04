@@ -32,7 +32,6 @@ import {YoroiSignedTx, YoroiUnsignedTx} from '../types'
 import Wallet from '../Wallet'
 import type {Addresses} from './chain'
 import {AddressChain} from './chain'
-import {HaskellShelleyTxSignRequest} from './HaskellShelleyTxSignRequest'
 import {TransactionCache} from './shelley/transactionCache'
 
 export interface WalletInterface {
@@ -166,7 +165,7 @@ export interface WalletInterface {
     tokens: SendTokenList,
     defaultToken: Token,
     serverTime: Date | null | undefined,
-    metadata: Array<TxMetadata> | undefined,
+    metadata?: Array<TxMetadata>,
   ): Promise<UnsignedTx>
 
   signTx(signRequest: YoroiUnsignedTx, decryptedMasterKey: string): Promise<YoroiSignedTx>
@@ -182,9 +181,10 @@ export interface WalletInterface {
   createVotingRegTx(
     utxos: Array<RawUtxo>,
     catalystPrivateKey: string,
+    defaultAsset: DefaultAsset,
     decryptedKey: string | undefined,
     serverTime: Date | undefined,
-  ): Promise<HaskellShelleyTxSignRequest>
+  ): Promise<YoroiUnsignedTx>
 
   createWithdrawalTx(
     utxos: Array<RawUtxo>,
@@ -296,6 +296,7 @@ type YoroiWalletKeys =
   | 'fetchTipStatus'
   | 'getDelegationStatus'
   | 'rewardAddressHex'
+  | 'createUnsignedTx'
   | 'createDelegationTx'
   | 'createWithdrawalTx'
   | 'createVotingRegTx'
@@ -330,6 +331,7 @@ const yoroiWalletKeys: Array<YoroiWalletKeys> = [
   'fetchTipStatus',
   'getDelegationStatus',
   'rewardAddressHex',
+  'createUnsignedTx',
   'createDelegationTx',
   'createWithdrawalTx',
   'createVotingRegTx',
