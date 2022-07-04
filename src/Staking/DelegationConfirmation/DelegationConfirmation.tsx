@@ -22,14 +22,14 @@ import {Amounts, Entries, Quantities} from '../../yoroi-wallets/utils'
 export type Params = {
   poolHash: string
   poolName: string
-  yoroiTx: YoroiUnsignedTx
+  yoroiUnsignedTx: YoroiUnsignedTx
 }
 
 const isParams = (params?: Params | object | undefined): params is Params => {
   return (
     !!params &&
-    'yoroiTx' in params &&
-    typeof params.yoroiTx === 'object' &&
+    'yoroiUnsignedTx' in params &&
+    typeof params.yoroiUnsignedTx === 'object' &&
     'poolHash' in params &&
     typeof params.poolHash === 'string' &&
     'poolName' in params &&
@@ -44,9 +44,9 @@ export const DelegationConfirmation = ({mockDefaultAsset}: {mockDefaultAsset?: D
   const defaultAsset = mockDefaultAsset || defaultNetworkAsset
   const strings = useStrings()
 
-  const {poolHash, poolName, yoroiTx} = useParams<Params>(isParams)
-  if (!yoroiTx.staking?.delegations) throw new Error('invalid transaction')
-  const stakingAmount = Amounts.getAmount(Entries.toAmounts(yoroiTx.staking.delegations), '')
+  const {poolHash, poolName, yoroiUnsignedTx} = useParams<Params>(isParams)
+  if (!yoroiUnsignedTx.staking?.delegations) throw new Error('invalid transaction')
+  const stakingAmount = Amounts.getAmount(Entries.toAmounts(yoroiUnsignedTx.staking.delegations), '')
   const reward = approximateReward(stakingAmount.quantity)
 
   const [password, setPassword] = useState('')
@@ -77,7 +77,7 @@ export const DelegationConfirmation = ({mockDefaultAsset}: {mockDefaultAsset?: D
 
         <View style={styles.input}>
           <Text small style={styles.fees}>
-            {`+ ${formatTokenAmount(new BigNumber(yoroiTx.fee['']), defaultAsset)} ${strings.ofFees}`}
+            {`+ ${formatTokenAmount(new BigNumber(yoroiUnsignedTx.fee['']), defaultAsset)} ${strings.ofFees}`}
           </Text>
 
           {/* requires a handler so we pass on a dummy function */}
@@ -114,7 +114,7 @@ export const DelegationConfirmation = ({mockDefaultAsset}: {mockDefaultAsset?: D
           onSuccess={onSuccess}
           setUseUSB={setUseUSB}
           useUSB={useUSB}
-          txDataSignRequest={yoroiTx}
+          yoroiUnsignedTx={yoroiUnsignedTx}
         />
       </Actions>
     </View>

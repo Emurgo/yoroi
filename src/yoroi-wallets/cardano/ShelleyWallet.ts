@@ -516,7 +516,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
         {metadata: auxiliaryData},
       )
 
-      return unsignedTx
+      return yoroiUnsignedTx({unsignedTx, networkConfig: this._getNetworkConfig()})
     } catch (e) {
       if (e instanceof InsufficientFunds || e instanceof NoOutputsError) throw e
       Logger.error(`shelley::createUnsignedTx:: ${(e as Error).message}`, e)

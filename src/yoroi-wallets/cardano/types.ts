@@ -1,5 +1,5 @@
 import type {WalletChecksum} from '@emurgo/cip4-js'
-import {CardanoAddressedUtxo, TxMetadata, UnsignedTx} from '@emurgo/yoroi-lib-core'
+import {CardanoAddressedUtxo, TxMetadata} from '@emurgo/yoroi-lib-core'
 import {BigNumber} from 'bignumber.js'
 import type {IntlShape} from 'react-intl'
 
@@ -166,7 +166,7 @@ export interface WalletInterface {
     defaultToken: Token,
     serverTime: Date | null | undefined,
     metadata?: Array<TxMetadata>,
-  ): Promise<UnsignedTx>
+  ): Promise<YoroiUnsignedTx>
 
   signTx(signRequest: YoroiUnsignedTx, decryptedMasterKey: string): Promise<YoroiSignedTx>
 

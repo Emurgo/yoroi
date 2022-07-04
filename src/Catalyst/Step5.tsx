@@ -21,7 +21,7 @@ import {YoroiUnsignedTx} from '../yoroi-wallets/types'
 import {Amounts} from '../yoroi-wallets/utils'
 import {Actions, Description, Title} from './components'
 
-export const Step5 = ({yoroiTx}: {yoroiTx: YoroiUnsignedTx}) => {
+export const Step5 = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx}) => {
   const strings = useStrings()
   const navigation = useNavigation<CatalystRouteNavigation>()
   const wallet = useSelectedWallet()
@@ -58,7 +58,10 @@ export const Step5 = ({yoroiTx}: {yoroiTx: YoroiUnsignedTx}) => {
         <Spacer height={48} />
 
         <TextInput
-          value={formatTokenWithSymbol(new BigNumber(Amounts.getAmount(yoroiTx.fee, '').quantity), defaultAsset)}
+          value={formatTokenWithSymbol(
+            new BigNumber(Amounts.getAmount(yoroiUnsignedTx.fee, '').quantity),
+            defaultAsset,
+          )}
           label={strings.fees}
           editable={false}
           autoComplete={false}
@@ -84,7 +87,7 @@ export const Step5 = ({yoroiTx}: {yoroiTx: YoroiUnsignedTx}) => {
           providedPassword={password}
           setUseUSB={setUseUSB}
           useUSB={useUSB}
-          txDataSignRequest={yoroiTx}
+          yoroiUnsignedTx={yoroiUnsignedTx}
           biometricInstructions={[strings.bioAuthDescription]}
         />
       </Actions>

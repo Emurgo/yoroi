@@ -17,10 +17,10 @@ import {useParams, useWalletNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {TokenEntry} from '../../types'
-import {CreateUnsignedTxResponse} from '../../yoroi-wallets'
+import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
 
 export type Params = {
-  transactionData: CreateUnsignedTxResponse
+  yoroiUnsignedTx: YoroiUnsignedTx
   defaultAssetAmount: BigNumber
   address: string
   balanceAfterTx: BigNumber
@@ -33,8 +33,8 @@ export type Params = {
 const isParams = (params?: Params | object | undefined): params is Params => {
   return (
     !!params &&
-    'transactionData' in params &&
-    typeof params.transactionData === 'object' &&
+    'yoroiUnsignedTx' in params &&
+    typeof params.yoroiUnsignedTx === 'object' &&
     'defaultAssetAmount' in params &&
     params.defaultAssetAmount instanceof BigNumber &&
     'address' in params &&
@@ -59,7 +59,7 @@ export const ConfirmScreen = () => {
     availableAmount,
     fee,
     tokens: tokenEntries,
-    transactionData: signRequest,
+    yoroiUnsignedTx,
   } = useParams(isParams)
   const {resetToTxHistory} = useWalletNavigation()
   const wallet = useSelectedWallet()
@@ -130,7 +130,7 @@ export const ConfirmScreen = () => {
         <Actions>
           <ConfirmTx
             onSuccess={onSuccess}
-            txDataSignRequest={signRequest}
+            yoroiUnsignedTx={yoroiUnsignedTx}
             useUSB={useUSB}
             setUseUSB={setUseUSB}
             isProvidingPassword

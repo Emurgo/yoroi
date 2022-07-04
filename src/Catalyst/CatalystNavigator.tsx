@@ -38,7 +38,7 @@ export const CatalystNavigator = () => {
         {() => {
           if (!votingRegTxData) throw new Error('invalid state')
 
-          return <Step5 yoroiTx={votingRegTxData.yoroiTx} />
+          return <Step5 yoroiUnsignedTx={votingRegTxData.yoroiUnsignedTx} />
         }}
       </Stack.Screen>
       <Stack.Screen name="catalyst-qr-code" options={{...defaultStackNavigationOptions, headerLeft: () => null}}>
