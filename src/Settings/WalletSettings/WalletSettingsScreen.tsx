@@ -12,16 +12,16 @@ import {DIALOG_BUTTONS, showConfirmationDialog, signout} from '../../legacy/acti
 import {isByron, isHaskellShelley} from '../../legacy/config'
 import {getNetworkConfigById} from '../../legacy/networks'
 import {easyConfirmationSelector, isSystemAuthEnabledSelector} from '../../legacy/selectors'
-import {useWalletNavigation} from '../../navigation'
-import {useSelectedWallet, useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
-import {NetworkId, WalletImplementationId, walletManager} from '../../yoroi-wallets'
 import {
   NavigatedSettingsItem,
   PressableSettingsItem,
   SettingsBuildItem,
   SettingsItem,
   SettingsSection,
-} from '../SettingsItems'
+} from '../../legacy/SettingsItems'
+import {useWalletNavigation} from '../../navigation'
+import {useSelectedWallet, useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
+import {NetworkId, WalletImplementationId, walletManager} from '../../yoroi-wallets'
 
 export const WalletSettingsScreen = () => {
   const intl = useIntl()

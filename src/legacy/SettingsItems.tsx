@@ -1,11 +1,11 @@
 import {useNavigation} from '@react-navigation/native'
-import React, {ReactElement} from 'react'
+import React from 'react'
 import {Image, StyleSheet, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 
 import chevronRight from '../assets/img/chevron_right.png'
-import {Hr, Icon, Spacer, Text} from '../components'
 import {SettingsRouteNavigation, SettingsStackRoutes} from '../navigation'
-import {useTheme} from '../theme'
+import {COLORS} from '../theme'
+import {Text} from './Text'
 
 const Touchable = (props: TouchableOpacityProps) => <TouchableOpacity {...props} activeOpacity={0.5} />
 
@@ -28,14 +28,11 @@ type SettingsSectionProps = {
 export const SettingsSection = ({title, children}: SettingsSectionProps) => (
   <View style={styles.section}>
     {title != null && (
-      <React.Fragment>
-        <Text typography="body-2-regular" gray={600} style={styles.sectionTitle}>
-          {title}
-        </Text>
-        <Hr />
-      </React.Fragment>
+      <Text small secondary style={styles.sectionTitle}>
+        {title}
+      </Text>
     )}
-    <View>{children}</View>
+    <View style={styles.sectionContent}>{children}</View>
   </View>
 )
 
@@ -43,32 +40,12 @@ type SettingsItemProps = {
   label: string
   children: React.ReactNode
   disabled?: boolean
-  icon?: ReactElement
-  info?: string
 }
 
-export const SettingsItem = ({label, children, disabled, icon, info}: SettingsItemProps) => (
-  <View>
-    <View style={styles.itemInner}>
-      <View style={styles.itemMainContent}>
-        {icon}
-        {icon && <Spacer width={10} />}
-        <Text style={styles.label} disabled={disabled}>
-          {label}
-        </Text>
-        <View>{children}</View>
-      </View>
-
-      {info && (
-        <React.Fragment>
-          <Spacer height={12} />
-          <Text typography="body-3-regular" gray={600}>
-            {info}
-          </Text>
-        </React.Fragment>
-      )}
-    </View>
-    <Hr />
+export const SettingsItem = ({label, children, disabled}: SettingsItemProps) => (
+  <View style={styles.item}>
+    <Text style={[styles.label, disabled === true && styles.disabled]}>{label}</Text>
+    <View>{children}</View>
   </View>
 )
 
@@ -79,32 +56,24 @@ type SettingsBuildItemProps = {
 
 export const SettingsBuildItem = ({label, value}: SettingsBuildItemProps) => (
   <SettingsItem label={label}>
-    <Text>{value}</Text>
+    <Text small secondary>
+      {value}
+    </Text>
   </SettingsItem>
 )
 
 type NavigatedSettingsItemProps = {
   label: string
   navigateTo: keyof SettingsStackRoutes
-  icon?: ReactElement
   disabled?: boolean
-  selected?: string
 }
 
-export const NavigatedSettingsItem = ({label, navigateTo, icon, disabled, selected}: NavigatedSettingsItemProps) => {
+export const NavigatedSettingsItem = ({label, navigateTo, disabled}: NavigatedSettingsItemProps) => {
   const navigation = useNavigation<SettingsRouteNavigation>()
-  const {
-    theme: {color},
-  } = useTheme()
-
   return (
     <NavigateTo to={navigateTo} navigation={navigation} disabled={disabled}>
-      <SettingsItem icon={icon} label={label} disabled={disabled}>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          {selected && <Text gray={500}>{selected}</Text>}
-          <Spacer width={16} />
-          <Icon.Chevron direction="right" size={28} color={color.gray['600']} />
-        </View>
+      <SettingsItem label={label} disabled={disabled}>
+        <Image source={chevronRight} />
       </SettingsItem>
     </NavigateTo>
   )
@@ -125,21 +94,33 @@ export const PressableSettingsItem = ({label, onPress, disabled}: PressableSetti
 )
 
 const styles = StyleSheet.create({
-  itemInner: {
-    paddingVertical: 16,
-  },
-  itemMainContent: {
+  item: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    padding: 12,
   },
   label: {
     flex: 1,
   },
+  disabled: {
+    color: COLORS.DISABLED,
+  },
   section: {
-    paddingHorizontal: 16,
+    marginTop: 16,
+  },
+  sectionContent: {
+    marginHorizontal: 16,
+    elevation: 1,
+    shadowOffset: {width: 0, height: 2},
+    shadowRadius: 12,
+    shadowOpacity: 0.06,
+    shadowColor: 'black',
+    backgroundColor: '#fff',
+    borderRadius: 8,
   },
   sectionTitle: {
-    paddingBottom: 5,
+    marginBottom: 5,
+    paddingHorizontal: 28,
   },
 })

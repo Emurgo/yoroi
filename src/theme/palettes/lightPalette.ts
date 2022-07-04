@@ -1,4 +1,4 @@
-import {Palette} from '../types'
+import {Palette} from '.'
 
 export const lightPalette: Palette = {
   'black-static': '#000000',
