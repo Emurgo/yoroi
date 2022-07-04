@@ -9,9 +9,10 @@ type Props = TextProps & {
   disabled?: boolean
   typography?: keyof Theme['typography']
   gray?: keyof Theme['color']['gray']
+  secondary?: keyof Theme['color']['secondary']
 }
 
-export const Text: React.FC<Props> = ({gray, light, error, style, disabled, children, ...restProps}) => {
+export const Text: React.FC<Props> = ({gray, secondary, light, error, style, disabled, children, ...restProps}) => {
   const {
     theme: {color, typography},
   } = useTheme()
@@ -24,6 +25,7 @@ export const Text: React.FC<Props> = ({gray, light, error, style, disabled, chil
   const textStyle: Array<StyleProp<TextStyle>> = [
     defaultStyle,
     gray && {color: color.gray[gray]},
+    secondary && {color: color.secondary[secondary]},
     light === true && {color: color['white-static']},
     error === true && {color: color.magenta['500']},
     disabled === true && {color: COLORS.DISABLED}, // TODO: ask the design team what the color of the palette will be

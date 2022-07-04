@@ -79,7 +79,9 @@ type SettingsBuildItemProps = {
 
 export const SettingsBuildItem = ({label, value}: SettingsBuildItemProps) => (
   <SettingsItem label={label}>
-    <Text>{value}</Text>
+    <Text typography="body-3-regular" secondary={400}>
+      {value}
+    </Text>
   </SettingsItem>
 )
 
