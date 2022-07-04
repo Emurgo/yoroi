@@ -137,7 +137,7 @@ export const bulkGetAccountState = async (
 }
 
 export const getPoolInfo = (request: PoolInfoRequest, config: BackendConfig): Promise<StakePoolInfosAndHistories> => {
-  return fetchDefault('getPoolInfo', request, config)
+  return fetchDefault('pool/info', request, config)
 }
 
 export const getTokenInfo = async (request: TokenInfoRequest, config: BackendConfig): Promise<TokenInfoResponse> => {
