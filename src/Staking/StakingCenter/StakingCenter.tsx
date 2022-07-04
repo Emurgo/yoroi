@@ -139,6 +139,7 @@ export const StakingCenter = () => {
             <AccountAutoRefresher />
             {isFetchingUtxos && <ActivityIndicator color="black" />}
             <WebView
+              androidLayerType="software"
               source={{
                 uri: prepareStakingURL(poolList, amountToDelegate, languageCode),
               }}
