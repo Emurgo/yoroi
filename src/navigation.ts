@@ -207,7 +207,7 @@ export type SettingsStackRoutes = {
   'easy-confirmation': undefined
   'change-password': undefined
   'change-custom-pin': undefined
-  'change-about': undefined
+  about: undefined
   'setup-custom-pin': {
     onSuccess: () => void | Promise<void>
   }

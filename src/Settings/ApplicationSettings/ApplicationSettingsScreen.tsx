@@ -121,7 +121,7 @@ export const ApplicationSettingsScreen = () => {
           <NavigatedSettingsItem
             icon={<Icon.Info {...iconProps} />}
             label={strings.about}
-            navigateTo="change-about" /* TODO: https://emurgo.atlassian.net/browse/YOMO-181 */
+            navigateTo="about" /* TODO: https://emurgo.atlassian.net/browse/YOMO-181 */
           />
 
           <NavigatedSettingsItem
