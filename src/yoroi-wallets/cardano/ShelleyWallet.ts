@@ -44,22 +44,12 @@ import {Entries} from '../utils'
 import {genTimeToSlot} from '../utils/timeUtils'
 import {versionCompare} from '../utils/versioning'
 import Wallet, {WalletJSON} from '../Wallet'
-import {
-  Bip32PrivateKey,
-  Bip32PublicKey,
-  hashTransaction,
-  makeVkeyWitness,
-  PrivateKey,
-  RewardAddress,
-  StakeCredential,
-} from '.'
+import {Bip32PrivateKey, Bip32PublicKey, PrivateKey, RewardAddress, StakeCredential} from '.'
 import {AddressChain, AddressGenerator} from './chain'
-import {HaskellShelleyTxSignRequest} from './HaskellShelleyTxSignRequest'
 import {filterAddressesByStakingKey, getDelegationStatus} from './shelley/delegationUtils'
 import {TransactionCache} from './shelley/transactionCache'
-import {signTransaction} from './shelley/transactions'
 import {yoroiSignedTx} from './signedTx'
-import {NetworkId, SignedTxLegacy, WalletImplementationId, WalletInterface, YoroiProvider} from './types'
+import {NetworkId, WalletImplementationId, WalletInterface, YoroiProvider} from './types'
 import {yoroiUnsignedTx} from './unsignedTx'
 
 export default ShelleyWallet
@@ -554,55 +544,6 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
       unsignedTx,
       signedTx,
     })
-  }
-
-  async signTxLegacy(signRequest: HaskellShelleyTxSignRequest, decryptedMasterKey: string): Promise<SignedTxLegacy> {
-    const masterKey = await Bip32PrivateKey.fromBytes(Buffer.from(decryptedMasterKey, 'hex'))
-    const accountPvrKey = await (
-      await (await masterKey.derive(this._getPurpose())).derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO)
-    ).derive(0 + CONFIG.NUMBERS.HARD_DERIVATION_START)
-    const wits = new Set<string>()
-
-    if (!(signRequest instanceof HaskellShelleyTxSignRequest)) {
-      throw new Error('expected instance of HaskellShelleyTxSignRequest')
-    }
-
-    if (signRequest.neededStakingKeyHashes.neededHashes.size !== 0) {
-      if (this.walletImplementationId == null) throw new Error('Invalid wallet: walletImplementationId')
-
-      // this is a delegation tx and we need to provide the staking key
-      assert.assert(isHaskellShelley(this.walletImplementationId), 'cannot get reward address from a byron-era wallet')
-      const txBuilder = signRequest.unsignedTx
-
-      const stakingKey = await (
-        await (
-          await accountPvrKey.derive(CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT)
-        ).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)
-      ).toRawKey()
-
-      wits.add(
-        Buffer.from(
-          await (await makeVkeyWitness(await hashTransaction(await txBuilder.build()), stakingKey)).toBytes(),
-        ).toString('hex'),
-      )
-    }
-
-    const signedTx = await signTransaction(
-      signRequest.senderUtxos,
-      signRequest.unsignedTx,
-      CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.ACCOUNT,
-      accountPvrKey,
-      wits,
-      signRequest.auxiliary(),
-    )
-    const id = Buffer.from(await (await hashTransaction(await signedTx.body())).toBytes()).toString('hex')
-    const encodedTx = await signedTx.toBytes()
-    const base64 = Buffer.from(encodedTx).toString('base64')
-    return {
-      id,
-      encodedTx,
-      base64,
-    }
   }
 
   async createDelegationTx(

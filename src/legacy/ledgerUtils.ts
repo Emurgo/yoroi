@@ -1,8 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type {
-  AssetGroup,
-  BIP32Path,
-  Certificate, // new types
   DeviceOwnedAddress,
   GetExtendedPublicKeyRequest,
   GetExtendedPublicKeyResponse,
@@ -10,20 +7,8 @@ import type {
   GetVersionResponse,
   SignTransactionRequest,
   SignTransactionResponse,
-  Token as LedgerToken,
-  TxInput,
-  TxOutput,
-  Withdrawal,
 } from '@cardano-foundation/ledgerjs-hw-app-cardano'
-import AppAda, {
-  AddressType,
-  CertificateType,
-  DeviceStatusCodes,
-  StakeCredentialParamsType,
-  TransactionSigningMode,
-  TxAuxiliaryDataType,
-  TxOutputDestinationType,
-} from '@cardano-foundation/ledgerjs-hw-app-cardano'
+import AppAda, {AddressType, DeviceStatusCodes} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
 import TransportHID from '@v-almonacid/react-native-hid'
 import {PermissionsAndroid, Platform} from 'react-native'
@@ -41,7 +26,6 @@ import {
   CardanoTypes,
   Ed25519Signature,
   hashTransaction,
-  HaskellShelleyTxSignRequest,
   RewardAddress,
   Transaction,
   TransactionWitnessSet,
@@ -53,9 +37,8 @@ import {YoroiUnsignedTx} from '../yoroi-wallets/types'
 import {CONFIG, isByron, isHaskellShelley} from './config'
 import {getNetworkConfigById} from './networks'
 import {NUMBERS} from './numbers'
-import type {NetworkId, WalletImplementationId} from './types'
-import type {Address as JsAddress, AddressedUtxo, Addressing, Value} from './types'
-import {derivePublicByAddressing, normalizeToAddress, toHexOrBase58, verifyFromBip44Root} from './utils'
+import type {Addressing, NetworkId, WalletImplementationId} from './types'
+import {derivePublicByAddressing, normalizeToAddress, verifyFromBip44Root} from './utils'
 
 //
 // ============== Errors ==================
@@ -145,7 +128,7 @@ const _isRejectedError = (e: Error | any): boolean => {
   return false
 }
 
-export const mapLedgerError = (e: Error | any): Error | LocalizableError => {
+const mapLedgerError = (e: Error | any): Error | LocalizableError => {
   if (_isUserError(e)) {
     Logger.info('ledgerUtils::mapLedgerError: User-side error', e)
     return new LedgerUserError()
@@ -166,7 +149,7 @@ export const mapLedgerError = (e: Error | any): Error | LocalizableError => {
 //
 // ============== Types ==================
 //
-export type WalletType = 'BIP44' | 'CIP1852'
+type WalletType = 'BIP44' | 'CIP1852'
 // this type is used by @ledgerhq/react-native-hid and it's not exposed
 // so we redefine it here
 export type DeviceObj = {
@@ -432,286 +415,7 @@ export const verifyAddress = async (
 // ============== transaction logic ==================
 //
 
-/** Generate a payload for Ledger SignTx */
-export const createLedgerSignTxPayload = async (request: {
-  signRequest: HaskellShelleyTxSignRequest
-  byronNetworkMagic: number
-  chainNetworkId: number
-  addressingMap: (arg0: string) => void | Addressing['addressing']
-}): Promise<SignTransactionRequest> => {
-  Logger.debug('ledgerUtils::createLedgerSignTxPayload called')
-  Logger.debug('signRequest', JSON.stringify(request.signRequest))
-  const network = {
-    protocolMagic: request.byronNetworkMagic,
-    networkId: request.chainNetworkId,
-  }
-  const txBody = await request.signRequest.self().build()
-
-  // Inputs
-  const ledgerInputs = _transformToLedgerInputs(request.signRequest.senderUtxos)
-
-  // Outputs
-  const ledgerOutputs = await _transformToLedgerOutputs({
-    networkId: request.chainNetworkId,
-    txOutputs: await txBody.outputs(),
-    changeAddrs: request.signRequest.changeAddr,
-    addressingMap: request.addressingMap,
-  })
-  // withdrawals
-  const withdrawals = await txBody.withdrawals()
-  const certificates = await txBody.certs()
-  const ledgerWithdrawal: Array<Withdrawal> = []
-
-  if (withdrawals != null && (await withdrawals.len()) > 0) {
-    ledgerWithdrawal.push(...(await formatLedgerWithdrawals(withdrawals, request.addressingMap)))
-  }
-
-  const ledgerCertificates: Array<Certificate> = []
-
-  if (certificates != null && (await certificates.len()) > 0) {
-    ledgerCertificates.push(
-      ...(await formatLedgerCertificates(request.chainNetworkId, certificates, request.addressingMap)),
-    )
-  }
-
-  const ttl = await txBody.ttl()
-  let auxiliaryData
-
-  if (request.signRequest.ledgerNanoCatalystRegistrationTxSignData) {
-    const {votingPublicKey, stakingKeyPath, nonce} = request.signRequest.ledgerNanoCatalystRegistrationTxSignData
-    auxiliaryData = {
-      type: TxAuxiliaryDataType.CATALYST_REGISTRATION,
-      params: {
-        votingPublicKeyHex: votingPublicKey,
-        stakingPath: stakingKeyPath,
-        rewardsDestination: {
-          type: AddressType.REWARD_KEY,
-          params: {
-            stakingPath: stakingKeyPath,
-          },
-        },
-        nonce,
-      },
-    }
-  }
-
-  return {
-    signingMode: TransactionSigningMode.ORDINARY_TRANSACTION,
-    tx: {
-      network,
-      inputs: ledgerInputs,
-      outputs: ledgerOutputs,
-      fee: await (await txBody.fee()).toStr(),
-      ttl: ttl === undefined ? ttl : ttl.toString(),
-      certificates: ledgerCertificates,
-      withdrawals: ledgerWithdrawal,
-      auxiliaryData,
-      validityIntervalStart: undefined,
-    },
-    additionalWitnessPaths: [],
-  }
-}
-
-function _transformToLedgerInputs(inputs: Array<AddressedUtxo>): Array<TxInput> {
-  for (const input of inputs) {
-    verifyFromBip44Root(input.addressing)
-  }
-
-  return inputs.map((input) => ({
-    txHashHex: input.tx_hash,
-    outputIndex: input.tx_index,
-    path: input.addressing.path,
-  }))
-}
-
-async function toLedgerTokenBundle(assets: CardanoTypes.MultiAsset | null | undefined): Promise<Array<AssetGroup>> {
-  const assetGroup: Array<AssetGroup> = []
-  if (assets == null) return assetGroup
-  const policyHashes = await assets.keys()
-
-  for (let i = 0; i < (await policyHashes.len()); i++) {
-    const policyId = await policyHashes.get(i)
-    const assetsForPolicy = await assets.get(policyId)
-    if (assetsForPolicy == null) continue
-    const tokens: Array<LedgerToken> = []
-    const assetNames = await assetsForPolicy.keys()
-
-    for (let j = 0; j < (await assetNames.len()); j++) {
-      const assetName = await assetNames.get(j)
-      const amount = await assetsForPolicy.get(assetName)
-      if (amount == null) continue
-      tokens.push({
-        amount: await amount.toStr(),
-        assetNameHex: Buffer.from(await assetName.name()).toString('hex'),
-      })
-    }
-
-    assetGroup.push({
-      policyIdHex: Buffer.from(await policyId.toBytes()).toString('hex'),
-      tokens,
-    })
-  }
-
-  return assetGroup
-}
-
-async function _transformToLedgerOutputs(request: {
-  networkId: number
-  txOutputs: CardanoTypes.TransactionOutputs
-  changeAddrs: Array<JsAddress & Value & Addressing>
-  addressingMap: (arg0: string) => void | Addressing['addressing']
-}): Promise<Array<TxOutput>> {
-  const result: Array<TxOutput> = []
-
-  for (let i = 0; i < (await request.txOutputs.len()); i++) {
-    const output = await request.txOutputs.get(i)
-    const address = await output.address()
-    const jsAddr = await toHexOrBase58(address)
-    const changeAddr = request.changeAddrs.find((change) => jsAddr === change.address)
-
-    if (changeAddr != null) {
-      // in this case the address belongs to us
-      verifyFromBip44Root(changeAddr.addressing)
-      const addressParams = await toLedgerAddressParameters({
-        networkId: request.networkId,
-        address,
-        path: changeAddr.addressing.path,
-        addressingMap: request.addressingMap,
-      })
-      result.push({
-        amount: await (await (await output.amount()).coin()).toStr(),
-        tokenBundle: await toLedgerTokenBundle(await (await output.amount()).multiasset()),
-        destination: {
-          type: TxOutputDestinationType.DEVICE_OWNED,
-          params: addressParams,
-        },
-      })
-    } else {
-      result.push({
-        amount: await (await (await output.amount()).coin()).toStr(),
-        tokenBundle: await toLedgerTokenBundle(await (await output.amount()).multiasset()),
-        destination: {
-          type: TxOutputDestinationType.THIRD_PARTY,
-          params: {
-            addressHex: Buffer.from(await address.toBytes()).toString('hex'),
-          },
-        },
-      })
-    }
-  }
-
-  return result
-}
-
-async function formatLedgerWithdrawals(
-  withdrawals: CardanoTypes.Withdrawals,
-  addressingMap: (arg0: string) => void | Addressing['addressing'],
-): Promise<Array<Withdrawal>> {
-  const result: Array<Withdrawal> = []
-  const withdrawalKeys = await withdrawals.keys()
-
-  for (let i = 0; i < (await withdrawalKeys.len()); i++) {
-    const rewardAddress = await withdrawalKeys.get(i) // RewardAddresses
-
-    const withdrawalAmount = await withdrawals.get(rewardAddress) // BigNum
-
-    if (withdrawalAmount == null) {
-      throw new Error('formatLedgerWithdrawals: null withdrawal amount, should never happen')
-    }
-
-    const rewardAddressPayload = Buffer.from(await (await rewardAddress.toAddress()).toBytes()).toString('hex')
-    const addressing = addressingMap(rewardAddressPayload)
-
-    if (addressing == null) {
-      throw new Error(`formatLedgerWithdrawals Ledger can only withdraw from own address ${rewardAddressPayload}`)
-    }
-
-    result.push({
-      amount: await withdrawalAmount.toStr(),
-      stakeCredential: {
-        type: StakeCredentialParamsType.KEY_PATH,
-        keyPath: addressing.path,
-      },
-    })
-  }
-
-  return result
-}
-
-async function formatLedgerCertificates(
-  networkId: number,
-  certificates: CardanoTypes.Certificates,
-  addressingMap: (arg0: string) => void | Addressing['addressing'],
-): Promise<Array<Certificate>> {
-  const getPath = async (stakeCredential: CardanoTypes.StakeCredential): Promise<BIP32Path> => {
-    const rewardAddr = await RewardAddress.new(networkId, stakeCredential)
-    const addressPayload = Buffer.from(await (await rewardAddr.toAddress()).toBytes()).toString('hex')
-    const addressing = addressingMap(addressPayload)
-
-    if (addressing == null) {
-      throw new Error(`getPath: Ledger only supports certificates from own address ${addressPayload}`)
-    }
-
-    return addressing.path
-  }
-
-  const result: Array<Certificate> = []
-
-  for (let i = 0; i < (await certificates.len()); i++) {
-    const cert = await certificates.get(i)
-    const registrationCert = await cert.asStakeRegistration()
-
-    if (registrationCert != null) {
-      result.push({
-        type: CertificateType.STAKE_REGISTRATION,
-        params: {
-          stakeCredential: {
-            type: StakeCredentialParamsType.KEY_PATH,
-            keyPath: await getPath(await registrationCert.stakeCredential()),
-          },
-        },
-      })
-      continue
-    }
-
-    const deregistrationCert = await cert.asStakeDeregistration()
-
-    if (deregistrationCert != null) {
-      result.push({
-        type: CertificateType.STAKE_DEREGISTRATION,
-        params: {
-          stakeCredential: {
-            type: StakeCredentialParamsType.KEY_PATH,
-            keyPath: await getPath(await deregistrationCert.stakeCredential()),
-          },
-        },
-      })
-      continue
-    }
-
-    const delegationCert = await cert.asStakeDelegation()
-
-    if (delegationCert != null) {
-      result.push({
-        type: CertificateType.STAKE_DELEGATION,
-        params: {
-          stakeCredential: {
-            type: StakeCredentialParamsType.KEY_PATH,
-            keyPath: await getPath(await delegationCert.stakeCredential()),
-          },
-          poolKeyHashHex: Buffer.from(await (await delegationCert.poolKeyhash()).toBytes()).toString('hex'),
-        },
-      })
-      continue
-    }
-
-    throw new Error("formatLedgerCertificates: Ledger doesn't support this certificate type")
-  }
-
-  return result
-}
-
-export async function toLedgerAddressParameters(request: {
+async function toLedgerAddressParameters(request: {
   networkId: number
   address: CardanoTypes.Address
   path: Array<number>
