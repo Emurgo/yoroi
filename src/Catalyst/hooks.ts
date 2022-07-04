@@ -11,7 +11,7 @@ export type VotingRegTxVariables = {
 }
 export type VotingRegTxData = {
   catalystSKHexEncrypted: string
-  yoroiTx: YoroiUnsignedTx
+  yoroiUnsignedTx: YoroiUnsignedTx
 }
 export const useCreateVotingRegTx = (
   {wallet}: {wallet: YoroiWallet},
@@ -34,11 +34,11 @@ export const useCreateVotingRegTx = (
         .then((x) => Promise.all([encryptWithPassword(password, x), Buffer.from(x).toString('hex')]))
 
       const defaultAsset = getDefaultAssetByNetworkId(wallet.networkId)
-      const yoroiTx = await wallet.createVotingRegTx(utxos, catalystSKHex, defaultAsset, decryptedKey, time)
+      const yoroiUnsignedTx = await wallet.createVotingRegTx(utxos, catalystSKHex, defaultAsset, decryptedKey, time)
 
       return {
         catalystSKHexEncrypted,
-        yoroiTx,
+        yoroiUnsignedTx,
       }
     },
     ...options,

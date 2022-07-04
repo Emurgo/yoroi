@@ -20,7 +20,7 @@ storiesOf('ConfirmScreen', module).add('Default', () => {
       fee: new BigNumber('1'),
       tokens: tokenEntries,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      transactionData: null as any,
+      yoroiUnsignedTx: null as any,
     } as Params,
   }
 

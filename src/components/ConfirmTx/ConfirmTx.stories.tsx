@@ -4,7 +4,7 @@ import React from 'react'
 
 import {mockWallet} from '../../../storybook'
 import {SelectedWalletProvider} from '../../SelectedWallet'
-import {HaskellShelleyTxSignRequest} from '../../yoroi-wallets'
+import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
 import {ConfirmTx} from './ConfirmTx'
 
 storiesOf('ConfirmTx', module)
@@ -13,7 +13,7 @@ storiesOf('ConfirmTx', module)
       <SelectedWalletProvider wallet={mockWallet}>
         <ConfirmTx
           onSuccess={action('onSuccess')}
-          txDataSignRequest={{} as unknown as HaskellShelleyTxSignRequest}
+          yoroiUnsignedTx={{} as unknown as YoroiUnsignedTx}
           setUseUSB={action('setUseUSB')}
           isProvidingPassword={false}
           useUSB={false}
@@ -26,7 +26,7 @@ storiesOf('ConfirmTx', module)
       <SelectedWalletProvider wallet={mockWallet}>
         <ConfirmTx
           onSuccess={action('onSuccess')}
-          txDataSignRequest={{} as unknown as HaskellShelleyTxSignRequest}
+          yoroiUnsignedTx={{} as unknown as YoroiUnsignedTx}
           setUseUSB={action('setUseUSB')}
           isProvidingPassword
           providedPassword="1234567890"
@@ -40,7 +40,7 @@ storiesOf('ConfirmTx', module)
       <SelectedWalletProvider wallet={mockWallet}>
         <ConfirmTx
           onSuccess={action('onSuccess')}
-          txDataSignRequest={{} as unknown as HaskellShelleyTxSignRequest}
+          yoroiUnsignedTx={{} as unknown as YoroiUnsignedTx}
           setUseUSB={action('setUseUSB')}
           isProvidingPassword
           providedPassword="1234567890"

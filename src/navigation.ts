@@ -213,7 +213,7 @@ export type SettingsStackRoutes = {
 export type SettingsRouteNavigation = StackNavigationProp<SettingsStackRoutes>
 
 export type SendConfirmParams = {
-  transactionData: unknown
+  yoroiUnsignedTx: YoroiUnsignedTx
   defaultAssetAmount: BigNumber
   address: string
   balanceAfterTx: BigNumber | null

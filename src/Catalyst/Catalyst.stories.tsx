@@ -16,7 +16,7 @@ storiesOf('Catalyst', module)
   .add('Step 2', () => <Step2 pin="1234" />)
   .add('Step 3', () => <Step3 pin="1234" setVotingRegTxData={action('setVotingRegTxData')} />)
   .add('Step 4', () => <Step4 pin="1234" setVotingRegTxData={action('setVotingRegTxData')} />)
-  .add('Step 5', () => <Step5 yoroiTx={mockYoroiTx} />)
+  .add('Step 5', () => <Step5 yoroiUnsignedTx={mockYoroiTx} />)
   .add('Step 6', () => <Step6 catalystSKHexEncrypted="catalystSKHexEncrypted" />)
   .add('CatalystBackupCheckModal', () => (
     <WithModalProps>
