@@ -16,10 +16,10 @@ import {
   TransactionMetadatum,
 } from '..'
 
-export const CatalystLabels = Object.freeze({
+export const CatalystLabels = {
   DATA: 61284,
   SIG: 61285,
-})
+} as const
 export async function auxiliaryDataWithRegistrationMetadata(request: {
   stakePublicKey: CardanoTypes.PublicKey
   catalystPublicKey: CardanoTypes.PublicKey

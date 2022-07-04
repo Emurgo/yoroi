@@ -17,29 +17,18 @@ import {formatTokenWithSymbol} from '../legacy/format'
 import {defaultNetworkAssetSelector} from '../legacy/selectors'
 import {CatalystRouteNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
+import {YoroiUnsignedTx} from '../yoroi-wallets/types'
+import {Amounts} from '../yoroi-wallets/utils'
 import {Actions, Description, Title} from './components'
-import {VotingRegTxData} from './hooks'
 
-type Props = {
-  votingRegTxData: VotingRegTxData
-}
-export const Step5 = ({votingRegTxData}: Props) => {
+export const Step5 = ({yoroiTx}: {yoroiTx: YoroiUnsignedTx}) => {
   const strings = useStrings()
   const navigation = useNavigation<CatalystRouteNavigation>()
   const wallet = useSelectedWallet()
   const defaultAsset = useSelector(defaultNetworkAssetSelector)
   const [password, setPassword] = useState('')
 
-  const [fees, setFees] = useState<null | BigNumber>(null)
   const [useUSB, setUseUSB] = useState<boolean>(false)
-
-  useEffect(() => {
-    if (votingRegTxData?.signRequest != null) {
-      votingRegTxData.signRequest.fee().then((o) => {
-        setFees(o.getDefault())
-      })
-    }
-  }, [votingRegTxData, wallet.isHW])
 
   useEffect(() => {
     setPassword(CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '')
@@ -69,7 +58,7 @@ export const Step5 = ({votingRegTxData}: Props) => {
         <Spacer height={48} />
 
         <TextInput
-          value={fees ? formatTokenWithSymbol(fees, defaultAsset) : ''}
+          value={formatTokenWithSymbol(new BigNumber(Amounts.getAmount(yoroiTx.fee, '').quantity), defaultAsset)}
           label={strings.fees}
           editable={false}
           autoComplete={false}
@@ -95,7 +84,7 @@ export const Step5 = ({votingRegTxData}: Props) => {
           providedPassword={password}
           setUseUSB={setUseUSB}
           useUSB={useUSB}
-          txDataSignRequest={votingRegTxData?.signRequest}
+          txDataSignRequest={yoroiTx}
           biometricInstructions={[strings.bioAuthDescription]}
         />
       </Actions>

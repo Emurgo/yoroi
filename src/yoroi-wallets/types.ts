@@ -1,4 +1,3 @@
-import {SignTransactionRequest} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import {SignedTx, UnsignedTx} from '@emurgo/yoroi-lib-core'
 
 export type YoroiUnsignedTx = YoroiTxInfo & {
@@ -14,28 +13,25 @@ export type YoroiTxInfo = {
   amounts: YoroiAmounts
   fee: YoroiAmounts
   change: YoroiEntries
-  metadata?: YoroiMetadata
+  metadata: YoroiMetadata
   staking?: YoroiStaking
-  voting?: {
-    registrations: YoroiEntries
-  }
-  hw?: {
-    ledgerPayload?: SignTransactionRequest
-    ledgerNanoCatalystRegistrationTxSignData?: {
-      votingPublicKey: string
-      stakingKeyPath: Array<number>
-      stakingKey: string
-      rewardAddress: string
-      nonce: number
-    }
-  }
+  voting?: YoroiVoting
 }
 
 export type YoroiStaking = {
-  registrations: YoroiEntries
-  deregistrations: YoroiEntries
-  delegations: YoroiEntries
-  withdrawals: YoroiEntries
+  registrations?: YoroiEntries
+  deregistrations?: YoroiEntries
+  delegations?: YoroiEntries
+  withdrawals?: YoroiEntries
+}
+
+export type YoroiVoting = {
+  registration?: {
+    votingPublicKey: string
+    stakingPublicKey: string
+    rewardAddress: string
+    nonce: number
+  }
 }
 
 export type Address = string
@@ -43,11 +39,6 @@ export type Quantity = `${number}`
 export type TokenId = string
 
 export type YoroiEntries = Record<string, YoroiAmounts>
-
-export type YoroiPrimaryEntry = {
-  address: Address
-  amounts: YoroiAmounts
-}
 
 export type YoroiEntry = {
   address: Address

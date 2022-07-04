@@ -1572,23 +1572,24 @@
   dependencies:
     base-64 "0.1.0"
 
-"@emurgo/yoroi-lib-core@0.7.1-alpha.36", "@emurgo/yoroi-lib-core@^0.7.1-alpha.36":
-  version "0.7.1-alpha.36"
-  resolved "https://registry.yarnpkg.com/@emurgo/yoroi-lib-core/-/yoroi-lib-core-0.7.1-alpha.36.tgz#b577ebaa6372a50ed1d2e2d12d2914312b94b427"
-  integrity sha512-beaejVtzCNgezuxU4mXqBiwO4A/1tCzLoMe6VnqbvQZJn4D+WTA31gQ84wcUGfy87A2LaadVz6nEPeyvojJK9g==
+"@emurgo/yoroi-lib-core@0.7.4-alpha.39", "@emurgo/yoroi-lib-core@^0.7.4-alpha.39":
+  version "0.7.4-alpha.39"
+  resolved "https://registry.yarnpkg.com/@emurgo/yoroi-lib-core/-/yoroi-lib-core-0.7.4-alpha.39.tgz#ee923aeea6d782f6122149f6c3144d64642b80b6"
+  integrity sha512-bxOM1nO9NcBoUfyMk74MngDcSVbv85cNjuMiKAN7bME69bAPSJLcYi51MCtYWHMNeP2I8TvAZmzB6Z68XMZg7g==
   dependencies:
     "@cardano-foundation/ledgerjs-hw-app-cardano" "^5.0.0"
     axios "^0.24.0"
+    bech32 "^2.0.0"
     bignumber.js "^9.0.1"
     hash-wasm "^4.9.0"
 
-"@emurgo/yoroi-lib-mobile@^0.7.1-alpha.36":
-  version "0.7.1-alpha.36"
-  resolved "https://registry.yarnpkg.com/@emurgo/yoroi-lib-mobile/-/yoroi-lib-mobile-0.7.1-alpha.36.tgz#2f3b507bca775820544fc7d1c13e246c535ed0f9"
-  integrity sha512-cC5FK7slA1McVaW8V06lXltljar8k/umLQsO3mKbOtDrAaNHRGi5oSLAZ5kz7TWcoGbMjKs/+fII+9SmVR9Y9A==
+"@emurgo/yoroi-lib-mobile@^0.7.4-alpha.39":
+  version "0.7.4-alpha.39"
+  resolved "https://registry.yarnpkg.com/@emurgo/yoroi-lib-mobile/-/yoroi-lib-mobile-0.7.4-alpha.39.tgz#4bd521c2d4557664a6e0a53b4697a7a1ad61fc28"
+  integrity sha512-uFZgMbRJOP8YPtuhquQQEIM2b50S7xmv6SkD/nU0pm/iW45NAeS9Ho1hCihU1eSMHpR65WpP0iZPD4rIZC2brg==
   dependencies:
     "@emurgo/react-native-haskell-shelley" "3.1.3"
-    "@emurgo/yoroi-lib-core" "0.7.1-alpha.36"
+    "@emurgo/yoroi-lib-core" "0.7.4-alpha.39"
 
 "@eslint/eslintrc@^0.4.3":
   version "0.4.3"
@@ -4306,6 +4307,11 @@
   dependencies:
     source-map "^0.6.1"
 
+"@types/uuid@^8.3.4":
+  version "8.3.4"
+  resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-8.3.4.tgz#bd86a43617df0594787d38b735f55c805becf1bc"
+  integrity sha512-c/I8ZRb51j+pYGAu5CrFMRxqZ2ke4y2grEBO5AUjgSkSk+qT2Ea+OdWElz/OiMf5MNpn2b17kuVBwZLQJXzihw==
+
 "@types/webpack-env@^1.15.0":
   version "1.16.3"
   resolved "https://registry.yarnpkg.com/@types/webpack-env/-/webpack-env-1.16.3.tgz#b776327a73e561b71e7881d0cd6d34a1424db86a"
@@ -5904,7 +5910,7 @@ batch-processor@1.0.0:
   resolved "https://registry.yarnpkg.com/batch-processor/-/batch-processor-1.0.0.tgz#75c95c32b748e0850d10c2b168f6bdbe9891ace8"
   integrity sha1-dclcMrdI4IUNEMKxaPa9vpiRrOg=
 
-bech32@2.0.0:
+bech32@2.0.0, bech32@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/bech32/-/bech32-2.0.0.tgz#078d3686535075c8c79709f054b1b226a133b355"
   integrity sha512-LcknSilhIGatDAsY1ak2I8VtGaHNhgMSYVxFrGLXv+xLHytaKZKcaUJJUE7qmBr7h33o5YQwP55pMI0xmkpJwg==
