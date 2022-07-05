@@ -6,7 +6,7 @@ import {LanguagePicker} from '../../components'
 
 export const ChangeLanguageScreen = () => {
   return (
-    <SafeAreaView style={styles.safeAreaView}>
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
       <LanguagePicker />
     </SafeAreaView>
   )
