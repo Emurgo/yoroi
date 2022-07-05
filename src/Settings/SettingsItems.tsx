@@ -29,7 +29,7 @@ type SettingsSectionProps = {
 export const SettingsSection = ({title, children}: SettingsSectionProps) => (
   <View style={styles.section}>
     {title != null && (
-      <React.Fragment>
+      <>
         <Text
           style={[
             styles.sectionTitle,
@@ -39,7 +39,7 @@ export const SettingsSection = ({title, children}: SettingsSectionProps) => (
           {title}
         </Text>
         <Hr />
-      </React.Fragment>
+      </>
     )}
     <View>{children}</View>
   </View>
@@ -72,7 +72,7 @@ export const SettingsItem = ({label, children, disabled, icon, info}: SettingsIt
       </View>
 
       {info && (
-        <React.Fragment>
+        <>
           <Spacer height={12} />
           <Text
             style={{
@@ -85,7 +85,7 @@ export const SettingsItem = ({label, children, disabled, icon, info}: SettingsIt
           >
             {info}
           </Text>
-        </React.Fragment>
+        </>
       )}
     </View>
     <Hr />
