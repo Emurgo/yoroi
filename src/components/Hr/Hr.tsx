@@ -3,8 +3,8 @@ import {StyleSheet, View, ViewProps} from 'react-native'
 
 import {lightPalette} from '../../theme'
 
-export const Hr = (props: ViewProps) => {
-  return <View {...props} style={[styles.hr, {backgroundColor: lightPalette.gray['200']}]} />
+export const Hr = ({style, ...rest}: ViewProps) => {
+  return <View {...rest} style={[styles.hr, {backgroundColor: lightPalette.gray['200']}, style]} />
 }
 
 const styles = StyleSheet.create({
