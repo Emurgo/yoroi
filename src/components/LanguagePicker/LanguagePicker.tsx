@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
   },
   languageList: {
     alignItems: 'stretch',
-    paddingHorizontal: 16,
+    padding: 16,
   },
   hr: {
     height: 1,
