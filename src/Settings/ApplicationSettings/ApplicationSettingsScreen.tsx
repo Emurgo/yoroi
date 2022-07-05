@@ -22,6 +22,11 @@ import {lightPalette} from '../../theme'
 import {useCurrencyContext} from '../Currency'
 import {NavigatedSettingsItem, SettingsItem, SettingsSection} from '../SettingsItems'
 
+const iconProps = {
+  color: lightPalette.gray['600'],
+  size: 23,
+}
+
 export const ApplicationSettingsScreen = () => {
   const strings = useStrings()
   const {navigation, navigateToSettings} = useWalletNavigation()
@@ -34,11 +39,6 @@ export const ApplicationSettingsScreen = () => {
   const language = useLanguage()
 
   const [isBalanceHidden, setIsBalanceHidden] = useState(false) // TODO: https://emurgo.atlassian.net/browse/YOMO-276
-
-  const iconProps = {
-    color: lightPalette.gray['600'],
-    size: 23,
-  }
 
   const setCrashReporting = (value: boolean) => {
     dispatch(setAppSettingField(APP_SETTINGS_KEYS.SEND_CRASH_REPORTS, value))
