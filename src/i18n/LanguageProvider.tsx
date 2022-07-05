@@ -8,13 +8,17 @@ import {updateLanguageSettings} from '.'
 import {supportedLanguages} from './languages'
 import translations from './translations'
 
+const getLanguageLabel = (languageCode: LanguageCode): LanguageLabel =>
+  supportedLanguages.find((language) => language.code === languageCode)?.label
+
 const LanguageContext = React.createContext<undefined | LanguageContext>(undefined)
 export const LanguageProvider: React.FC = ({children}) => {
   const languageCode = useLanguageCode()
+  const languageLabel = getLanguageLabel(languageCode)
   const selectLanguageCode = useSaveLanguageCode()
 
   return (
-    <LanguageContext.Provider value={{languageCode, selectLanguageCode, supportedLanguages}}>
+    <LanguageContext.Provider value={{languageCode, languageLabel, selectLanguageCode, supportedLanguages}}>
       <IntlProvider locale={languageCode} messages={translations[languageCode]} textComponent={Text}>
         {children}
       </IntlProvider>
@@ -38,7 +42,9 @@ const useLanguageCode = ({onSuccess, ...options}: UseQueryOptions<string> = {}) 
       if (languageCode) {
         const parsedLanguageCode = JSON.parse(languageCode)
         const stillSupported = supportedLanguages.some((v) => v.code === parsedLanguageCode)
-        if (stillSupported) return parsedLanguageCode
+        if (stillSupported) {
+          return parsedLanguageCode
+        }
       }
 
       return defaultLanguageCode
@@ -73,10 +79,12 @@ const useSaveLanguageCode = ({onSuccess, ...options}: UseMutationOptions<void, E
 }
 
 type LanguageCode = string
+type LanguageLabel = string | undefined
 type SaveLanguageCode = ReturnType<typeof useSaveLanguageCode>
 type SupportedLanguages = typeof supportedLanguages
 type LanguageContext = {
   languageCode: LanguageCode
+  languageLabel: LanguageLabel
   selectLanguageCode: SaveLanguageCode
   supportedLanguages: SupportedLanguages
 }

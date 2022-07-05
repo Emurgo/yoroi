@@ -40,9 +40,6 @@ export const ApplicationSettingsScreen = () => {
     size: 23,
   }
 
-  const {languageCode, supportedLanguages} = language
-  const languageSelectedLabel = supportedLanguages.find((element) => element.code === languageCode)?.label
-
   const setCrashReporting = (value: boolean) => {
     dispatch(setAppSettingField(APP_SETTINGS_KEYS.SEND_CRASH_REPORTS, value))
   }
@@ -105,7 +102,7 @@ export const ApplicationSettingsScreen = () => {
             icon={<Icon.Globe {...iconProps} />}
             label={strings.selectLanguage}
             navigateTo="change-language"
-            selected={languageSelectedLabel}
+            selected={language.languageLabel}
           />
 
           <NavigatedSettingsItem
