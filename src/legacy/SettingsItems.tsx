@@ -3,7 +3,7 @@ import React from 'react'
 import {Image, StyleSheet, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 
 import chevronRight from '../assets/img/chevron_right.png'
-import {Text} from '../components'
+import {Spacer, Text} from '../components'
 import {SettingsRouteNavigation, SettingsStackRoutes} from '../navigation'
 import {COLORS} from '../theme'
 
@@ -26,14 +26,20 @@ type SettingsSectionProps = {
 }
 
 export const SettingsSection = ({title, children}: SettingsSectionProps) => (
-  <View style={styles.section}>
-    {title != null && (
-      <Text small secondary style={styles.sectionTitle}>
-        {title}
-      </Text>
-    )}
-    <View style={styles.sectionContent}>{children}</View>
-  </View>
+  <>
+    <Spacer height={16} />
+    <View>
+      {title != null && (
+        <>
+          <Text small secondary style={styles.sectionTitle}>
+            {title}
+          </Text>
+          <Spacer height={5} />
+        </>
+      )}
+      <View style={styles.sectionContent}>{children}</View>
+    </View>
+  </>
 )
 
 type SettingsItemProps = {
@@ -106,9 +112,6 @@ const styles = StyleSheet.create({
   disabled: {
     color: COLORS.DISABLED,
   },
-  section: {
-    marginTop: 16,
-  },
   sectionContent: {
     marginHorizontal: 16,
     elevation: 1,
@@ -120,7 +123,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   sectionTitle: {
-    marginBottom: 5,
     paddingHorizontal: 28,
   },
 })
