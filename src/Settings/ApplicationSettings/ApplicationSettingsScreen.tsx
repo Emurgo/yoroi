@@ -191,6 +191,14 @@ const useStrings = () => {
   }
 }
 
+const styles = StyleSheet.create({
+  settings: {
+    flex: 1,
+    paddingTop: 16,
+    backgroundColor: '#fff',
+  },
+})
+
 const messages = defineMessages({
   general: {
     id: 'components.settings.applicationsettingsscreen.label.general',
@@ -243,13 +251,5 @@ const messages = defineMessages({
   crashReportingInfo: {
     id: 'components.settings.applicationsettingsscreen.crashReportingInfo',
     defaultMessage: '!!!Changes to this option will be reflected after restarting the application',
-  },
-})
-
-const styles = StyleSheet.create({
-  settings: {
-    flex: 1,
-    paddingTop: 16,
-    backgroundColor: '#fff',
   },
 })
