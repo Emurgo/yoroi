@@ -63,7 +63,7 @@ export const SettingsItem = ({label, children, disabled, icon, info}: SettingsIt
           style={[
             styles.label,
             disabled && styles.disabled,
-            {fontFamily: 'Rubik-Regular', color: lightPalette['black-static'], fontSize: 16, lineHeight: 24},
+            {fontFamily: 'Rubik-Medium', color: lightPalette.gray['900'], fontSize: 16, lineHeight: 24},
           ]}
         >
           {label}
