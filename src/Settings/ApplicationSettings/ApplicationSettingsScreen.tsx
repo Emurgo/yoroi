@@ -140,7 +140,6 @@ export const ApplicationSettingsScreen = () => {
               onValueChange={() => {
                 // TODO: https://emurgo.atlassian.net/browse/YOMO-276
                 setIsBalanceHidden(!isBalanceHidden)
-                console.log('balance hiding switch click!')
               }}
             />
           </SettingsItem>
