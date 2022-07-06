@@ -176,7 +176,7 @@ const messages = defineMessages({
     defaultMessage: '!!!Application',
   },
   aboutTitle: {
-    id: 'components.settings.applicationsettingsscreen.aboutTitle',
+    id: 'components.settings.applicationsettingsscreen.about',
     defaultMessage: '!!!About',
   },
   changeCustomPinTitle: {
