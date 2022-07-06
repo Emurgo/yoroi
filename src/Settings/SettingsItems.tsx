@@ -33,7 +33,7 @@ export const SettingsSection = ({title, children}: SettingsSectionProps) => (
         <Text
           style={[
             styles.sectionTitle,
-            {fontFamily: 'Rubik', fontWeight: '400', color: lightPalette.gray['600'], fontSize: 14, lineHeight: 22},
+            {fontFamily: 'Rubik-Regular', color: lightPalette.gray['600'], fontSize: 14, lineHeight: 22},
           ]}
         >
           {title}
@@ -63,7 +63,7 @@ export const SettingsItem = ({label, children, disabled, icon, info}: SettingsIt
           style={[
             styles.label,
             disabled && styles.disabled,
-            {fontFamily: 'Rubik', fontWeight: '400', color: lightPalette['black-static'], fontSize: 16, lineHeight: 24},
+            {fontFamily: 'Rubik-Regular', color: lightPalette['black-static'], fontSize: 16, lineHeight: 24},
           ]}
         >
           {label}
@@ -76,8 +76,7 @@ export const SettingsItem = ({label, children, disabled, icon, info}: SettingsIt
           <Spacer height={12} />
           <Text
             style={{
-              fontFamily: 'Rubik',
-              fontWeight: '400',
+              fontFamily: 'Rubik-Regular',
               color: lightPalette.gray['600'],
               fontSize: 12,
               lineHeight: 18,
@@ -101,8 +100,7 @@ export const SettingsBuildItem = ({label, value}: SettingsBuildItemProps) => (
   <SettingsItem label={label}>
     <Text
       style={{
-        fontFamily: 'Rubik',
-        fontWeight: '400',
+        fontFamily: 'Rubik-Regular',
         color: lightPalette.secondary['400'],
         fontSize: 12,
         lineHeight: 18,
@@ -131,8 +129,7 @@ export const NavigatedSettingsItem = ({label, navigateTo, icon, disabled, select
           {selected && (
             <Text
               style={{
-                fontFamily: 'Rubik',
-                fontWeight: '400',
+                fontFamily: 'Rubik-Regular',
                 color: lightPalette.gray['500'],
                 fontSize: 16,
                 lineHeight: 24,
