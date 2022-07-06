@@ -8,13 +8,10 @@ import {updateLanguageSettings} from '.'
 import {supportedLanguages} from './languages'
 import translations from './translations'
 
-const getLanguageLabel = (languageCode: LanguageCode): LanguageLabel =>
-  supportedLanguages.find((language) => language.code === languageCode)?.label
-
 const LanguageContext = React.createContext<undefined | LanguageContext>(undefined)
 export const LanguageProvider: React.FC = ({children}) => {
   const languageCode = useLanguageCode()
-  const languageLabel = getLanguageLabel(languageCode)
+  const languageLabel = supportedLanguages.find((language) => language.code === languageCode)?.label
   const selectLanguageCode = useSaveLanguageCode()
 
   const language = {
