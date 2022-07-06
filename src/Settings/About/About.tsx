@@ -25,14 +25,17 @@ export const About = () => {
         <LabelText>{strings.currentVersion}</LabelText>
         <ValueText>{version}</ValueText>
       </Row>
+
       <Row>
         <LabelText>{strings.commit}</LabelText>
         <ValueText>{CONFIG.COMMIT}</ValueText>
       </Row>
+
       <Row>
         <LabelText>{strings.network}</LabelText>
         <ValueText>{network}</ValueText>
       </Row>
+
       <Row>
         <LabelText>{strings.walletType}</LabelText>
         <ValueText>{walletType}</ValueText>
