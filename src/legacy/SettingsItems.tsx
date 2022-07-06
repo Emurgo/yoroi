@@ -7,19 +7,6 @@ import {Spacer, Text} from '../components'
 import {SettingsRouteNavigation, SettingsStackRoutes} from '../navigation'
 import {COLORS} from '../theme'
 
-const Touchable = (props: TouchableOpacityProps) => <TouchableOpacity {...props} activeOpacity={0.5} />
-
-type NavigateToProps = {
-  to: keyof SettingsStackRoutes
-  navigation: SettingsRouteNavigation
-  children: React.ReactNode
-  disabled?: boolean
-}
-
-const NavigateTo = ({navigation, to, ...props}: NavigateToProps) => {
-  return <Touchable onPress={() => navigation.navigate(to)} {...props} />
-}
-
 type SettingsSectionProps = {
   title?: string
   children: React.ReactNode
@@ -98,6 +85,19 @@ export const PressableSettingsItem = ({label, onPress, disabled}: PressableSetti
     </SettingsItem>
   </Touchable>
 )
+
+const Touchable = (props: TouchableOpacityProps) => <TouchableOpacity {...props} activeOpacity={0.5} />
+
+type NavigateToProps = {
+  to: keyof SettingsStackRoutes
+  navigation: SettingsRouteNavigation
+  children: React.ReactNode
+  disabled?: boolean
+}
+
+const NavigateTo = ({navigation, to, ...props}: NavigateToProps) => {
+  return <Touchable onPress={() => navigation.navigate(to)} {...props} />
+}
 
 const styles = StyleSheet.create({
   item: {
