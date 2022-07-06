@@ -108,31 +108,31 @@ const useStrings = () => {
 
 const messages = defineMessages({
   currentVersion: {
-    id: 'components.settings.about.currentVersion',
+    id: 'components.settings.applicationsettingsscreen.version',
     defaultMessage: '!!!Current Version',
   },
   commit: {
-    id: 'components.settings.about.commit',
+    id: 'components.settings.applicationsettingsscreen.commit',
     defaultMessage: '!!!Commit',
   },
   network: {
-    id: 'components.settings.about.network',
+    id: 'global.network',
     defaultMessage: '!!!Netwok',
   },
   walletType: {
-    id: 'components.settings.about.walletType',
+    id: 'components.settings.applicationsettingsscreen.walletType',
     defaultMessage: '!!!Wallet type',
   },
   byronWallet: {
-    id: 'components.settings.about.byronWallet',
+    id: 'components.settings.applicationsettingsscreen.byronWallet',
     defaultMessage: '!!!Byron-era wallet',
   },
   shelleyWallet: {
-    id: 'components.settings.about.shelleyWallet',
+    id: 'components.settings.applicationsettingsscreen.shelleyWallet',
     defaultMessage: '!!!Shelley-era wallet',
   },
   unknownWalletType: {
-    id: 'components.settings.about.unknownWalletType',
+    id: 'components.settings.applicationsettingsscreen.unknownWalletType',
     defaultMessage: '!!!Unknown Wallet Type',
   },
 })
