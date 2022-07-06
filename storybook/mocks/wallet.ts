@@ -9,7 +9,11 @@ export const mockWallet: YoroiWallet = {
   id: 'wallet-id',
   walletImplementationId: 'haskell-shelley',
   networkId: 300,
-  checksum: {TextPart: 'text-part', ImagePart: 'image-part'},
+  checksum: {
+    TextPart: 'HTAO-3194',
+    ImagePart:
+      '2d9f9d67bf76d004b925174725170d68135e49eb00ab0dd28e602999be4e548838cfbbf892d738cebd0c2e34db0649999cde3e58dbef3c129f02f7c5dc2139fc',
+  },
   isHW: false,
   hwDeviceInfo: null as any,
   isReadOnly: false,
