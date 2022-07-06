@@ -47,7 +47,10 @@ export const About = () => {
 const Row = ({style, ...props}: ViewProps) => <View {...props} style={[styles.row, style]} />
 
 const LabelText = ({style, children, ...props}: TextProps) => (
-  <Text {...props} style={[{fontFamily: 'Rubik-Medium', fontSize: 16, lineHeight: 24}, style]}>
+  <Text
+    {...props}
+    style={[{fontFamily: 'Rubik-Medium', color: lightPalette.gray['900'], fontSize: 16, lineHeight: 24}, style]}
+  >
     {children}
   </Text>
 )
