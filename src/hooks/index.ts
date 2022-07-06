@@ -648,9 +648,8 @@ export const useExchangeRate = ({
   const query = useQuery<number, Error>({
     suspense: true,
     staleTime: 60000,
-    retry: 3,
     retryDelay: 1000,
-    queryKey: [to],
+    queryKey: [wallet.id, 'exchangeRate', {to}],
     queryFn: () => (to === 'ADA' ? 1 : wallet.fetchCurrentPrice(to)),
     ...options,
   })
