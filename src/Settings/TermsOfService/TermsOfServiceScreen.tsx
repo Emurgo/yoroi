@@ -7,14 +7,14 @@ import {useLanguage} from '../../i18n'
 import {TermsOfService} from '../../Legal/TermsOfService'
 
 export const TermsOfServiceScreen = () => {
-  const {languageCode} = useLanguage()
+  const {language} = useLanguage()
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
       <StatusBar type="dark" />
 
       <ScrollView contentContainerStyle={styles.contentContainer}>
-        <TermsOfService languageCode={languageCode} />
+        <TermsOfService languageCode={language.code} />
       </ScrollView>
     </SafeAreaView>
   )

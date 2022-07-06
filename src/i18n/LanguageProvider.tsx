@@ -17,8 +17,13 @@ export const LanguageProvider: React.FC = ({children}) => {
   const languageLabel = getLanguageLabel(languageCode)
   const selectLanguageCode = useSaveLanguageCode()
 
+  const language = {
+    label: languageLabel,
+    code: languageCode,
+  }
+
   return (
-    <LanguageContext.Provider value={{languageCode, languageLabel, selectLanguageCode, supportedLanguages}}>
+    <LanguageContext.Provider value={{language, selectLanguageCode, supportedLanguages}}>
       <IntlProvider locale={languageCode} messages={translations[languageCode]} textComponent={Text}>
         {children}
       </IntlProvider>
@@ -80,11 +85,15 @@ const useSaveLanguageCode = ({onSuccess, ...options}: UseMutationOptions<void, E
 
 type LanguageCode = string
 type LanguageLabel = string | undefined
+type Language = {
+  code: LanguageCode
+  label: LanguageLabel
+}
+
 type SaveLanguageCode = ReturnType<typeof useSaveLanguageCode>
 type SupportedLanguages = typeof supportedLanguages
 type LanguageContext = {
-  languageCode: LanguageCode
-  languageLabel: LanguageLabel
+  language: Language
   selectLanguageCode: SaveLanguageCode
   supportedLanguages: SupportedLanguages
 }

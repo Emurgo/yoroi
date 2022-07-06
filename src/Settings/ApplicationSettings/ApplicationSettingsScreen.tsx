@@ -36,7 +36,7 @@ export const ApplicationSettingsScreen = () => {
   const installationId = useSelector(installationIdSelector)
   const dispatch = useDispatch()
   const {currency} = useCurrencyContext()
-  const language = useLanguage()
+  const {language} = useLanguage()
 
   const [isBalanceHidden, setIsBalanceHidden] = useState(false) // TODO: https://emurgo.atlassian.net/browse/YOMO-276
 
@@ -102,7 +102,7 @@ export const ApplicationSettingsScreen = () => {
             icon={<Icon.Globe {...iconProps} />}
             label={strings.selectLanguage}
             navigateTo="change-language"
-            selected={language.languageLabel}
+            selected={language.label}
           />
 
           <NavigatedSettingsItem

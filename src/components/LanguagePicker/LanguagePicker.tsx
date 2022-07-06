@@ -10,8 +10,7 @@ import {LanguagePickerWarning} from './LanguagePickerWarning'
 const INCLUDED_LANGUAGE_CODES = ['en-US', 'ja-JP']
 
 export const LanguagePicker = () => {
-  const language = useLanguage()
-  const {languageCode, selectLanguageCode, supportedLanguages} = language
+  const {language, selectLanguageCode, supportedLanguages} = useLanguage()
 
   return (
     <View style={styles.languagePicker}>
@@ -21,14 +20,14 @@ export const LanguagePicker = () => {
         renderItem={({item: {label, code}}) => (
           <TouchableOpacity style={styles.item} onPress={() => selectLanguageCode(code)} testID="pickLangButton">
             <Text style={styles.itemText}>{label}</Text>
-            {languageCode === code && <Icon.Check size={24} color={COLORS.SHELLEY_BLUE} />}
+            {language.code === code && <Icon.Check size={24} color={COLORS.SHELLEY_BLUE} />}
           </TouchableOpacity>
         )}
         ItemSeparatorComponent={() => <HR />}
         keyExtractor={(item) => item.code}
       />
 
-      <LanguagePickerWarning enabled={!INCLUDED_LANGUAGE_CODES.includes(languageCode)} key={languageCode} />
+      <LanguagePickerWarning enabled={!INCLUDED_LANGUAGE_CODES.includes(language.code)} key={language.code} />
     </View>
   )
 }

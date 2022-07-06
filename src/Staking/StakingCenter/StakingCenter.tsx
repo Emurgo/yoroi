@@ -50,7 +50,7 @@ export const StakingCenter = () => {
   const accountBalance = useSelector(accountBalanceSelector)
   const defaultAsset = useSelector(defaultNetworkAssetSelector)
   const poolOperator = useSelector(poolOperatorSelector)
-  const {languageCode} = useLanguage()
+  const {language} = useLanguage()
   const serverStatus = useSelector(serverStatusSelector)
   const wallet = useSelectedWallet()
   const config = getNetworkConfigById(wallet.networkId)
@@ -141,7 +141,7 @@ export const StakingCenter = () => {
             <WebView
               androidLayerType="software"
               source={{
-                uri: prepareStakingURL(poolList, amountToDelegate, languageCode),
+                uri: prepareStakingURL(poolList, amountToDelegate, language.code),
               }}
               onMessage={(event) => handleOnMessage(event)}
             />
