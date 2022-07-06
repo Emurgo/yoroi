@@ -31,6 +31,7 @@ function loadStories() {
 	require('../src/Send/AssetSelectorScreen/AssetSelectorScreen.stories');
 	require('../src/Send/ConfirmScreen/ConfirmScreen.stories');
 	require('../src/Send/SendScreen/SendScreen.stories');
+	require('../src/Settings/About/About.stories');
 	require('../src/Settings/ApplicationSettings/ApplicationSettingsScreen.stories');
 	require('../src/Settings/BiometricsLink/BiometricsLinkScreen.stories');
 	require('../src/Settings/ChangeLanguage/ChangeLanguageScreen.stories');
@@ -127,6 +128,7 @@ const stories = [
 	'../src/Send/AssetSelectorScreen/AssetSelectorScreen.stories',
 	'../src/Send/ConfirmScreen/ConfirmScreen.stories',
 	'../src/Send/SendScreen/SendScreen.stories',
+	'../src/Settings/About/About.stories',
 	'../src/Settings/ApplicationSettings/ApplicationSettingsScreen.stories',
 	'../src/Settings/BiometricsLink/BiometricsLinkScreen.stories',
 	'../src/Settings/ChangeLanguage/ChangeLanguageScreen.stories',

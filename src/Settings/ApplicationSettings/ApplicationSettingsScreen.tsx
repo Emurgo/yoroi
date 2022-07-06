@@ -38,7 +38,7 @@ export const ApplicationSettingsScreen = () => {
   const {currency} = useCurrencyContext()
   const {language} = useLanguage()
 
-  const [isBalanceHidden, setIsBalanceHidden] = useState(false) // TODO: https://emurgo.atlassian.net/browse/YOMO-276
+  const [isBalanceHidden, setIsBalanceHidden] = useState(true) // TODO: https://emurgo.atlassian.net/browse/YOMO-276
 
   const setCrashReporting = (value: boolean) => {
     dispatch(setAppSettingField(APP_SETTINGS_KEYS.SEND_CRASH_REPORTS, value))
@@ -112,11 +112,7 @@ export const ApplicationSettingsScreen = () => {
             navigateTo="change-currency"
           />
 
-          <NavigatedSettingsItem
-            icon={<Icon.Info {...iconProps} />}
-            label={strings.about}
-            navigateTo="about" /* TODO: https://emurgo.atlassian.net/browse/YOMO-181 */
-          />
+          <NavigatedSettingsItem icon={<Icon.Info {...iconProps} />} label={strings.about} navigateTo="about" />
 
           <NavigatedSettingsItem
             icon={<Icon.TermsOfUse {...iconProps} />}
