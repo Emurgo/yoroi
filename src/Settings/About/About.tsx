@@ -117,7 +117,7 @@ const messages = defineMessages({
   },
   network: {
     id: 'global.network',
-    defaultMessage: '!!!Netwok',
+    defaultMessage: '!!!Network',
   },
   walletType: {
     id: 'components.settings.applicationsettingsscreen.walletType',
