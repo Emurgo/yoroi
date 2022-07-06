@@ -47,7 +47,7 @@ export const About = () => {
 const Row = ({style, ...props}: ViewProps) => <View {...props} style={[styles.row, style]} />
 
 const LabelText = ({style, children, ...props}: TextProps) => (
-  <Text {...props} style={[{fontFamily: 'Rubik', fontWeight: '500', fontSize: 16, lineHeight: 24}, style]}>
+  <Text {...props} style={[{fontFamily: 'Rubik-Medium', fontSize: 16, lineHeight: 24}, style]}>
     {children}
   </Text>
 )
@@ -55,10 +55,7 @@ const LabelText = ({style, children, ...props}: TextProps) => (
 const ValueText = ({style, children, ...props}: TextProps) => (
   <Text
     {...props}
-    style={[
-      {fontFamily: 'Rubik', fontWeight: '400', fontSize: 16, lineHeight: 24, color: lightPalette.gray['500']},
-      style,
-    ]}
+    style={[{fontFamily: 'Rubik-Regular', fontSize: 16, lineHeight: 24, color: lightPalette.gray['500']}, style]}
   >
     {children}
   </Text>
