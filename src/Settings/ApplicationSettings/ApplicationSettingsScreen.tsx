@@ -96,7 +96,7 @@ export const ApplicationSettingsScreen = () => {
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.settings}>
       <ScrollView bounces={false}>
-        <StatusBar type="dark" />
+        <StatusBar type="light" />
         <SettingsSection title={strings.general}>
           <NavigatedSettingsItem
             icon={<Icon.Globe {...iconProps} />}
