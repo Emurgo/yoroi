@@ -55,7 +55,7 @@ export const PinInput = ({enabled = true, pinMaxLength, title, subtitles = [], o
 
         <Spacer height={24} />
 
-        <View style={styles.pins}>
+        <View style={styles.pin}>
           {_.range(0, pinMaxLength).map((index) => (
             <PinPlaceholder key={index} isActive={index < pin.length} />
           ))}
@@ -72,7 +72,7 @@ type PinPlaceholderProps = {
 }
 
 const PinPlaceholder = ({isActive}: PinPlaceholderProps) => (
-  <View style={styles.pin}>
+  <View style={styles.pinElement}>
     <View style={[styles.pinCircle, isActive ? styles.pinCircleActive : styles.pinCircleInactive]} />
   </View>
 )
@@ -87,12 +87,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  pins: {
+  pin: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  pin: {
+  pinElement: {
     paddingHorizontal: 8,
   },
   pinCircle: {
