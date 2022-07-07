@@ -108,11 +108,11 @@ const useStrings = () => {
 
 const messages = defineMessages({
   currentVersion: {
-    id: 'components.settings.applicationsettingsscreen.version',
+    id: 'global.currentVersion',
     defaultMessage: '!!!Current Version',
   },
   commit: {
-    id: 'components.settings.applicationsettingsscreen.commit',
+    id: 'global.commit',
     defaultMessage: '!!!Commit',
   },
   network: {
