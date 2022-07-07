@@ -516,7 +516,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
         {metadata: auxiliaryData},
       )
 
-      return yoroiUnsignedTx({unsignedTx, networkConfig: this._getNetworkConfig()})
+      return yoroiUnsignedTx({unsignedTx, networkConfig: this._getNetworkConfig(), addressedUtxos})
     } catch (e) {
       if (e instanceof InsufficientFunds || e instanceof NoOutputsError) throw e
       Logger.error(`shelley::createUnsignedTx:: ${(e as Error).message}`, e)
@@ -592,6 +592,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     return yoroiUnsignedTx({
       unsignedTx,
       networkConfig,
+      addressedUtxos,
     })
   }
 
@@ -688,6 +689,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
         unsignedTx,
         networkConfig,
         votingRegistration,
+        addressedUtxos,
       })
     } catch (e) {
       if (e instanceof LocalizableError || e instanceof ExtendableError) throw e
@@ -739,6 +741,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     return yoroiUnsignedTx({
       unsignedTx: withdrawalTx,
       networkConfig: this._getNetworkConfig(),
+      addressedUtxos,
     })
   }
 
@@ -837,40 +840,3 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
 }
 
 const toHex = (bytes: Uint8Array) => Buffer.from(bytes).toString('hex')
-
-export const toKeys = async (masterKey: string) => {
-  const yoroiMasterKey = await Bip32PrivateKey.fromBytes(Buffer.from(masterKey, 'hex'))
-
-  const privateKeys = {
-    account: await yoroiMasterKey
-      .derive(CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852)
-      .then((key) => key.derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO))
-      .then((key) => key.derive(0 + CONFIG.NUMBERS.HARD_DERIVATION_START)),
-    staking: await yoroiMasterKey
-      .derive(CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT)
-      .then((key) => key.derive(CONFIG.NUMBERS.STAKING_KEY_INDEX))
-      .then((key) => key.toRawKey()),
-  }
-
-  const publicKeys = {
-    account: {
-      private: privateKeys.account,
-      public: await privateKeys.account.toPublic(),
-    },
-    staking: {
-      private: privateKeys.staking,
-      public: await privateKeys.staking.toPublic(),
-    },
-  }
-
-  return {
-    account: {
-      private: privateKeys.account,
-      public: publicKeys.account,
-    },
-    staking: {
-      private: privateKeys.staking,
-      public: publicKeys.staking,
-    },
-  }
-}

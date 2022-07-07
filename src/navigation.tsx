@@ -185,7 +185,7 @@ export type StakingCenterRoutes = {
   'delegation-confirmation': {
     poolName: string
     poolHash: string
-    yoroiTx: YoroiUnsignedTx
+    yoroiUnsignedTx: YoroiUnsignedTx
   }
 }
 export type StakingCenterRouteNavigation = StackNavigationProp<StakingCenterRoutes>

@@ -231,7 +231,7 @@ const navigateToDelegationConfirm = async (
   try {
     const selectedPool = selectedPools[0]
     if (accountBalance == null) return
-    const yoroiTx = await wallet.createDelegationTx(
+    const yoroiUnsignedTx = await wallet.createDelegationTx(
       selectedPool.poolHash,
       accountBalance,
       utxos,
@@ -241,7 +241,7 @@ const navigateToDelegationConfirm = async (
     navigation.navigate('delegation-confirmation', {
       poolName: selectedPool?.poolName ?? '',
       poolHash: selectedPool.poolHash,
-      yoroiTx,
+      yoroiUnsignedTx,
     })
   } catch (e) {
     if (e instanceof InsufficientFunds) {

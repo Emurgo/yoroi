@@ -1,4 +1,11 @@
-import {MultiTokenValue, StakingKeyBalances, TokenEntry, TxMetadata, UnsignedTx} from '@emurgo/yoroi-lib-core'
+import {
+  CardanoAddressedUtxo,
+  MultiTokenValue,
+  StakingKeyBalances,
+  TokenEntry,
+  TxMetadata,
+  UnsignedTx,
+} from '@emurgo/yoroi-lib-core'
 
 import {CardanoHaskellShelleyNetwork} from '../../legacy/networks'
 import {Quantity, YoroiAmounts, YoroiEntries, YoroiMetadata, YoroiUnsignedTx, YoroiVoting} from '../types'
@@ -9,10 +16,12 @@ export const yoroiUnsignedTx = async ({
   unsignedTx,
   networkConfig,
   votingRegistration,
+  addressedUtxos,
 }: {
   unsignedTx: UnsignedTx
   networkConfig: CardanoHaskellShelleyNetwork
   votingRegistration?: VotingRegistration
+  addressedUtxos: CardanoAddressedUtxo[]
 }) => {
   const fee = toAmounts(unsignedTx.fee.values)
   const change = toEntries(unsignedTx.change.map((change) => ({address: change.address, value: change.values})))
@@ -21,7 +30,7 @@ export const yoroiUnsignedTx = async ({
   // entries === (outputs - change)
   const entries = Entries.remove(outputEntries, changeAddresses)
   const amounts = Entries.toAmounts(entries)
-  const stakingBalances = await cardano.getBalanceForStakingCredentials([...unsignedTx.senderUtxos])
+  const stakingBalances = await cardano.getBalanceForStakingCredentials(addressedUtxos)
 
   const yoroiTx: YoroiUnsignedTx = {
     amounts,
@@ -44,8 +53,8 @@ export const yoroiUnsignedTx = async ({
       delegations:
         unsignedTx.delegations.length > 0
           ? await Staking.toDelegations({
-              delegations: unsignedTx.delegations,
               balances: stakingBalances,
+              fee,
             })
           : undefined,
     },
@@ -161,22 +170,19 @@ const Staking = {
     }, Promise.resolve({} as YoroiEntries)),
 
   toDelegations: async ({
-    delegations,
     balances,
+    fee,
   }: {
-    delegations: UnsignedTx['delegations']
     balances: StakingKeyBalances
-  }): Promise<{[poolId: string]: YoroiAmounts}> => {
-    if (delegations.length <= 0) return {}
-
-    return Object.entries(balances).reduce(
+    fee: YoroiUnsignedTx['fee']
+  }): Promise<{[poolId: string]: YoroiAmounts}> =>
+    Object.entries(balances).reduce(
       (result, [poolId, quantity]) => ({
         ...result,
-        [poolId]: {'': quantity},
+        [poolId]: Amounts.diff({'': quantity} as YoroiAmounts, fee),
       }),
       {},
-    )
-  },
+    ),
 }
 
 type VotingRegistration = {

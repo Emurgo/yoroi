@@ -13,17 +13,14 @@ import {CONFIG} from '../../legacy/config'
 import {formatTokenAmount, formatTokenWithText} from '../../legacy/format'
 import {defaultNetworkAssetSelector} from '../../legacy/selectors'
 import {useParams, useWalletNavigation} from '../../navigation'
+import {StakingCenterRoutes} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {DefaultAsset} from '../../types'
-import {Quantity, YoroiUnsignedTx} from '../../yoroi-wallets/types'
+import {Quantity} from '../../yoroi-wallets/types'
 import {Amounts, Entries, Quantities} from '../../yoroi-wallets/utils'
 
-export type Params = {
-  poolHash: string
-  poolName: string
-  yoroiUnsignedTx: YoroiUnsignedTx
-}
+type Params = StakingCenterRoutes['delegation-confirmation']
 
 const isParams = (params?: Params | object | undefined): params is Params => {
   return (
