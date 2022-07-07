@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {BigNumber} from 'bignumber.js'
-import {fromPairs, isEmpty, mapValues} from 'lodash'
+import {fromPairs, mapValues} from 'lodash'
 import {createSelector} from 'reselect'
 
 import type {State, WalletMeta} from '../legacy/state'
@@ -35,7 +35,6 @@ export const transactionsInfoSelector: (arg0: State) => Record<string, Transacti
       ),
     ),
 )
-export const hasAnyTransaction = (state: State): boolean => !isEmpty(state.wallet.transactions)
 
 const _initAssetsRegistry = (networkId: NetworkId): Record<string, DefaultAsset> =>
   fromPairs(
@@ -108,9 +107,6 @@ export const walletMetaSelector = (state: State): WalletMeta =>
     checksum: state.wallet.checksum,
   } as unknown as WalletMeta)
 
-const BigNumberSum = (data: Array<BigNumber | string>): BigNumber =>
-  data.reduce((x: BigNumber, y) => x.plus(y), new BigNumber(0))
-
 export const tokenBalanceSelector: (state: State) => MultiToken = createSelector(
   transactionsInfoSelector,
   walletMetaSelector,
@@ -147,29 +143,15 @@ export const canGenerateNewReceiveAddressSelector = (state: State) => state.wall
 export const isOnlineSelector = (state: State): boolean => state.isOnline
 export const isSynchronizingHistorySelector = (state: State): boolean => state.txHistory.isSynchronizing
 export const lastHistorySyncErrorSelector = (state: State) => state.txHistory.lastSyncError
-export const getUtxoBalance = (utxos: Array<RawUtxo>): BigNumber => BigNumberSum(utxos.map(({amount}) => amount))
-export const utxoBalanceSelector = (state: State): BigNumber | null | undefined =>
-  state.balance.isFetching || !state.balance.utxos ? null : getUtxoBalance(state.balance.utxos)
 // accountState
 export const isFetchingAccountStateSelector = (state: State): boolean => state.accountState.isFetching
 export const isDelegatingSelector = (state: State): boolean => state.accountState.isDelegating
 export const lastAccountStateFetchErrorSelector = (state: State) => state.accountState.lastFetchingError
-export const accountValueSelector = (state: State): BigNumber => state.accountState.value
 export const accountBalanceSelector = (state: State): BigNumber | null | undefined =>
   state.accountState.isFetching ? null : state.accountState.value
-export const totalDelegatedSelector = (state: State): BigNumber | null | undefined =>
-  state.accountState.isFetching ? null : state.accountState.totalDelegated
 export const poolOperatorSelector = (state: State) =>
   state.accountState.isFetching ? null : state.accountState.poolOperator
-// PoolInfo
-export const isFetchingPoolInfoSelector = (state: State): boolean => state.poolInfo.isFetching
-export const lastPoolInfoErrorSelector = (state: State) => state.poolInfo.lastFetchingError
-export const poolInfoSelector = (state: State) => (state.poolInfo.isFetching ? null : state.poolInfo.meta)
 // TokenInfo
-export const isFetchingTokenInfoSelector = (state: State): boolean => state.tokenInfo.isFetching
-export const lastTokenInfoErrorSelector = (state: State) => state.tokenInfo.lastFetchingError
-export const tokenInfoSelector = (state: State): Record<string, Token> =>
-  state.tokenInfo.isFetching ? availableAssetsSelector(state) : state.tokenInfo.tokens
 export const walletIsInitializedSelector = (state: State): boolean => state.wallet.isInitialized
 export const isFetchingUtxosSelector = (state: State): boolean => state.balance.isFetching
 export const lastUtxosFetchErrorSelector = (state: State) => state.balance.lastFetchingError
@@ -192,8 +174,6 @@ export const isAppInitializedSelector = (state: State): boolean => state.isAppIn
 export const isAuthenticatedSelector = (state: State): boolean => state.isAuthenticated
 export const installationIdSelector = (state: State) => state.appSettings.installationId
 export const tosSelector = (state: State): boolean => state.appSettings.acceptedTos
-export const isKeyboardOpenSelector = (state: State): boolean => state.isKeyboardOpen
-export const isFlawedWalletSelector = (state: State): boolean => state.isFlawedWallet
 export const isMaintenanceSelector = (state: State): boolean => state.serverStatus.isMaintenance
 export const serverStatusSelector = (state: State) => state.serverStatus
 
@@ -209,8 +189,3 @@ export const isAppSetupCompleteSelector: (state: State) => boolean = createSelec
   customPinHashSelector,
   (acceptedTos, isSystemAuthEnabled, customPinHash) => acceptedTos && (isSystemAuthEnabled || customPinHash != null),
 )
-export const walletsListSelector = (state: State) =>
-  Object.keys(state.wallets).map((key) => state.wallets[key]) as Array<WalletMeta>
-export const unsignedTxSelector = (state: State) => state.voting.unsignedTx
-export const encryptedKeySelector = (state: State) => state.voting.encryptedKey
-export const pinSelector = (state: State) => state.voting.pin
