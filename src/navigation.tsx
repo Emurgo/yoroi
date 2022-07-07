@@ -1,12 +1,14 @@
 import {NavigatorScreenParams, useNavigation, useRoute} from '@react-navigation/native'
 import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/stack'
 import BigNumber from 'bignumber.js'
+import React from 'react'
 import {IntlShape} from 'react-intl'
 import {Platform} from 'react-native'
 
+import {Icon} from './components'
 import {HWDeviceInfo} from './legacy/ledgerUtils'
 import type {RawUtxo} from './legacy/types'
-import {COLORS} from './theme'
+import {COLORS, lightPalette} from './theme'
 import {NetworkId, TokenEntry, WalletImplementationId, YoroiProvider} from './yoroi-wallets'
 import {YoroiUnsignedTx} from './yoroi-wallets/types'
 
@@ -32,19 +34,18 @@ type Guard<Params> = (params: Params | object) => params is Params
 
 // OPTIONS
 export const defaultStackNavigationOptionsV2: StackNavigationOptions = {
-  headerTintColor: COLORS.ERROR_TEXT_COLOR_DARK,
+  headerBackImage: () => <Icon.Chevron direction="left" size={28} color={lightPalette.gray['max']} />,
+  headerBackTitleVisible: false,
+  headerTintColor: lightPalette.gray['max'],
   headerTitleStyle: {
     fontSize: 16,
     fontFamily: 'Rubik-Medium',
   },
-  headerTitleContainerStyle: {
-    width: '70%',
-    alignItems: 'center',
-  },
+  headerTitleAlign: 'center',
   headerStyle: {
     elevation: 0,
     shadowOpacity: 0,
-    backgroundColor: COLORS.BACKGROUND_GRAY,
+    backgroundColor: lightPalette.gray['min'],
   },
 }
 
