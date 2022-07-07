@@ -56,17 +56,9 @@ export const PinInput = ({enabled = true, pinMaxLength, title, subtitles = [], o
         <Spacer height={24} />
 
         <View style={styles.pins}>
-          {_.range(0, pinMaxLength).map((index) => {
-            if (index !== pinMaxLength) {
-              return <PinPlaceholder key={index} isActive={index < pin.length} />
-            }
-            return (
-              <>
-                <PinPlaceholder key={index} isActive={index < pin.length} />
-                <Spacer width={16} />
-              </>
-            )
-          })}
+          {_.range(0, pinMaxLength).map((index) => (
+            <PinPlaceholder key={index} isActive={index < pin.length} />
+          ))}
         </View>
       </View>
 
@@ -80,7 +72,9 @@ type PinPlaceholderProps = {
 }
 
 const PinPlaceholder = ({isActive}: PinPlaceholderProps) => (
-  <View style={[styles.pin, isActive ? styles.pinActive : styles.pinInactive]} />
+  <View style={styles.pin}>
+    <View style={[styles.pinCircle, isActive ? styles.pinCircleActive : styles.pinCircleInactive]} />
+  </View>
 )
 
 const styles = StyleSheet.create({
@@ -99,16 +93,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   pin: {
+    paddingHorizontal: 8,
+  },
+  pinCircle: {
     width: 16,
     height: 16,
     borderRadius: 10,
-    marginHorizontal: 8,
   },
-  pinInactive: {
+  pinCircleInactive: {
     borderWidth: 2,
     borderColor: '#3154CB',
   },
-  pinActive: {
+  pinCircleActive: {
     backgroundColor: '#3154CB',
   },
 })
