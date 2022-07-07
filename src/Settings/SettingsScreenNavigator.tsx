@@ -16,7 +16,7 @@ import {
   useWalletNavigation,
 } from '../navigation'
 import {useSelectedWalletMeta, useSetSelectedWalletMeta} from '../SelectedWallet'
-import {COLORS} from '../theme'
+import {lightPalette} from '../theme'
 import {walletManager} from '../yoroi-wallets'
 import {About} from './About'
 import {ApplicationSettingsScreen} from './ApplicationSettings'
@@ -155,9 +155,9 @@ const SettingsTabNavigator = () => {
     <Tab.Navigator
       screenOptions={({route}) => ({
         tabBarLabel: route.name === 'wallet-settings' ? strings.walletTabTitle : strings.appTabTitle,
-        tabBarStyle: {backgroundColor: COLORS.BACKGROUND_BLUE, elevation: 0, shadowOpacity: 0},
-        tabBarIndicatorStyle: {backgroundColor: '#fff', height: 2},
-        tabBarLabelStyle: {color: COLORS.WHITE},
+        tabBarStyle: {backgroundColor: '#fff', elevation: 0, shadowOpacity: 0},
+        tabBarIndicatorStyle: {backgroundColor: lightPalette.gray['max'], height: 2},
+        tabBarLabelStyle: {color: lightPalette.gray['max']},
       })}
     >
       <Tab.Screen name="wallet-settings" component={WalletSettingsScreen} />

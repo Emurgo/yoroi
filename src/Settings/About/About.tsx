@@ -83,6 +83,8 @@ const getWalletType = (implementationId: WalletImplementationId, strings): strin
 
 const styles = StyleSheet.create({
   about: {
+    flex: 1,
+    backgroundColor: 'white',
     padding: 16,
   },
   row: {

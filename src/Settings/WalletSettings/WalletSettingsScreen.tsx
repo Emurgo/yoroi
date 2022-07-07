@@ -83,7 +83,7 @@ export const WalletSettingsScreen = () => {
       </SettingsSection>
 
       <SettingsSection title={strings.about}>
-        <SettingsBuildItem label={strings.network} value={getNetworkName(wallet.networkId)} />
+        <SettingsBuildItem label={`${strings.network}:`} value={getNetworkName(wallet.networkId)} />
 
         <SettingsBuildItem
           label={strings.walletType}
@@ -125,7 +125,7 @@ const messages = defineMessages({
   },
   // note: moved here from application settings
   network: {
-    id: 'components.settings.applicationsettingsscreen.network',
+    id: 'global.network',
     defaultMessage: '!!!Network:',
   },
   walletType: {
