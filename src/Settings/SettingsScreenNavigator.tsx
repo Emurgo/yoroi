@@ -41,7 +41,7 @@ export const SettingsScreenNavigator = () => {
   const walletMeta = useSelectedWalletMeta()
 
   return (
-    <Stack.Navigator screenOptions={defaultStackNavigationOptions} initialRouteName="settings-main">
+    <Stack.Navigator screenOptions={defaultStackNavigationOptionsV2} initialRouteName="settings-main">
       <Stack.Screen //
         name="settings-main"
         component={SettingsTabNavigator}
