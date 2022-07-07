@@ -516,7 +516,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
         {metadata: auxiliaryData},
       )
 
-      return yoroiUnsignedTx({unsignedTx, networkConfig: this._getNetworkConfig()})
+      return yoroiUnsignedTx({unsignedTx, networkConfig: this._getNetworkConfig(), addressedUtxos})
     } catch (e) {
       if (e instanceof InsufficientFunds || e instanceof NoOutputsError) throw e
       Logger.error(`shelley::createUnsignedTx:: ${(e as Error).message}`, e)
@@ -592,6 +592,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     return yoroiUnsignedTx({
       unsignedTx,
       networkConfig,
+      addressedUtxos,
     })
   }
 
@@ -688,6 +689,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
         unsignedTx,
         networkConfig,
         votingRegistration,
+        addressedUtxos,
       })
     } catch (e) {
       if (e instanceof LocalizableError || e instanceof ExtendableError) throw e
@@ -739,6 +741,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     return yoroiUnsignedTx({
       unsignedTx: withdrawalTx,
       networkConfig: this._getNetworkConfig(),
+      addressedUtxos,
     })
   }
 
