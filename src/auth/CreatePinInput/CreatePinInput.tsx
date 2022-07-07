@@ -46,6 +46,7 @@ export const CreatePinInput: React.FC<{onDone: () => void}> = ({onDone}) => {
       key="pinConfirmationInput"
       enabled={!isLoading}
       title={strings.pinInputConfirmationTitle}
+      subtitles={[strings.pinInputConfirmationSubTitle]}
       pinMaxLength={CONFIG.PIN_LENGTH}
       onDone={onPinConfirmation}
     />
@@ -59,20 +60,25 @@ const useStrings = () => {
     pinInputTitle: intl.formatMessage(messages.pinInputTitle),
     pinInputSubtitle: intl.formatMessage(messages.pinInputSubtitle),
     pinInputConfirmationTitle: intl.formatMessage(messages.pinInputConfirmationTitle),
+    pinInputConfirmationSubTitle: intl.formatMessage(messages.pinInputConfirmationSubTitle),
   }
 }
 
 const messages = defineMessages({
   pinInputTitle: {
     id: 'components.firstrun.custompinscreen.pinInputTitle',
-    defaultMessage: '!!!Enter the PIN',
+    defaultMessage: '!!!Enter PIN',
   },
   pinInputSubtitle: {
     id: 'components.firstrun.custompinscreen.pinInputSubtitle',
-    defaultMessage: '!!!Choose new PIN for quick access to wallet.',
+    defaultMessage: '!!!Choose a new PIN to quickly access your wallet',
   },
   pinInputConfirmationTitle: {
     id: 'components.firstrun.custompinscreen.pinConfirmationTitle',
     defaultMessage: '!!!Repeat PIN',
+  },
+  pinInputConfirmationSubTitle: {
+    id: 'components.firstrun.custompinscreen.pinInputConfirmationSubTitle',
+    defaultMessage: '!!!Repeat a new PIN to quickly access your wallet',
   },
 })

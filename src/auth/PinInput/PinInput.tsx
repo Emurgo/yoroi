@@ -5,7 +5,7 @@ import {StyleSheet} from 'react-native'
 
 import {Spacer} from '../../components/Spacer'
 import {Text} from '../../components/Text'
-import {COLORS} from '../../theme'
+import {lightPalette} from '../../theme'
 import {BACKSPACE, Keyboard} from './Keyboard'
 
 type Props = {
@@ -36,22 +36,37 @@ export const PinInput = ({enabled = true, pinMaxLength, title, subtitles = [], o
   }
 
   return (
-    <View style={styles.root}>
-      <View style={styles.infoContainer}>
-        <Text style={styles.title}>{title}</Text>
+    <View style={styles.pinInput}>
+      <View style={styles.info}>
+        <Text style={{fontFamily: 'Rubik-Medium', fontSize: 20, lineHeight: 30, color: lightPalette.gray['max']}}>
+          {title}
+        </Text>
+
+        <Spacer height={4} />
 
         {subtitles.map((subtitle) => (
-          <Text key={subtitle} style={styles.subtitle}>
+          <Text
+            key={subtitle}
+            style={{fontFamily: 'Rubik-Regular', fontSize: 14, lineHeight: 22, color: lightPalette.gray['600']}}
+          >
             {subtitle == null ? null : subtitle}
           </Text>
         ))}
 
-        <Spacer height={16} />
+        <Spacer height={24} />
 
-        <View style={styles.pinContainer}>
-          {_.range(0, pinMaxLength).map((index) => (
-            <PinPlaceholder key={index} isActive={index < pin.length} />
-          ))}
+        <View style={styles.pins}>
+          {_.range(0, pinMaxLength).map((index) => {
+            if (index !== pinMaxLength) {
+              return <PinPlaceholder key={index} isActive={index < pin.length} />
+            }
+            return (
+              <>
+                <PinPlaceholder key={index} isActive={index < pin.length} />
+                <Spacer width={16} />
+              </>
+            )
+          })}
         </View>
       </View>
 
@@ -60,50 +75,40 @@ export const PinInput = ({enabled = true, pinMaxLength, title, subtitles = [], o
   )
 }
 
+type PinPlaceholderProps = {
+  isActive: boolean
+}
+
+const PinPlaceholder = ({isActive}: PinPlaceholderProps) => (
+  <View style={[styles.pin, isActive ? styles.pinActive : styles.pinInactive]} />
+)
+
 const styles = StyleSheet.create({
-  root: {
+  pinInput: {
     flex: 1,
-    backgroundColor: COLORS.BACKGROUND_BLUE,
+    backgroundColor: 'white',
   },
-  infoContainer: {
+  info: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  title: {
-    color: 'white',
-    fontSize: 23,
-    lineHeight: 25,
-  },
-  subtitle: {
-    color: 'white',
-    fontSize: 14,
-    marginVertical: 5,
-    maxWidth: '60%',
-    minHeight: 30,
-    flexWrap: 'wrap',
-    textAlign: 'center',
-  },
-  pinContainer: {
+  pins: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
   },
   pin: {
-    width: 12,
-    height: 12,
+    width: 16,
+    height: 16,
     borderRadius: 10,
-    marginHorizontal: 15,
-    backgroundColor: 'white',
+    marginHorizontal: 8,
   },
   pinInactive: {
-    opacity: 0.5,
+    borderWidth: 2,
+    borderColor: '#3154CB',
+  },
+  pinActive: {
+    backgroundColor: '#3154CB',
   },
 })
-
-type PinPlaceholderProps = {
-  isActive: boolean
-}
-const PinPlaceholder = ({isActive}: PinPlaceholderProps) => (
-  <View style={[styles.pin, !isActive && styles.pinInactive]} />
-)
