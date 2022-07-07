@@ -46,9 +46,11 @@ export const FirstRunNavigator = () => {
 
 const CreatePinScreenWrapper = () => {
   const dispatch = useDispatch()
+  const strings = useStrings()
 
   return (
     <CreatePinScreen
+      createPinStrings={strings.createPinStrings}
       onDone={async () => {
         await dispatch(reloadAppSettings())
         await dispatch(setSystemAuth(false))
@@ -67,6 +69,18 @@ const messages = defineMessages({
     id: 'components.firstrun.languagepicker.title',
     defaultMessage: '!!!Select Language',
   },
+  pinInputConfirmationTitle: {
+    id: 'components.firstrun.custompinscreen.pinConfirmationTitle',
+    defaultMessage: '!!!Repeat PIN',
+  },
+  currentPinInputTitle: {
+    id: 'components.settings.changecustompinscreen.CurrentPinInput.title',
+    defaultMessage: '!!!Enter PIN',
+  },
+  currentPinInputSubtitle: {
+    id: 'components.settings.changecustompinscreen.CurrentPinInput.subtitle',
+    defaultMessage: '!!!Enter your current PIN',
+  },
 })
 
 const useStrings = () => {
@@ -75,5 +89,10 @@ const useStrings = () => {
   return {
     acceptTermsTitle: intl.formatMessage(messages.acceptTermsTitle),
     languagePickerTitle: intl.formatMessage(messages.languagePickerTitle),
+    createPinStrings: {
+      title: intl.formatMessage(messages.pinInputConfirmationTitle),
+      subtitle: intl.formatMessage(messages.currentPinInputTitle),
+      confirmationTitle: intl.formatMessage(messages.pinInputConfirmationTitle),
+    },
   }
 }

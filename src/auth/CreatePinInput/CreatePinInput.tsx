@@ -1,5 +1,5 @@
 import React from 'react'
-import {defineMessages, useIntl} from 'react-intl'
+import {useIntl} from 'react-intl'
 
 import {useCreatePin} from '../../hooks'
 import {errorMessages} from '../../i18n/global-messages'
@@ -8,9 +8,17 @@ import {CONFIG} from '../../legacy/config'
 import {useStorage} from '../../Storage'
 import {PinInput} from '../PinInput'
 
-export const CreatePinInput: React.FC<{onDone: () => void}> = ({onDone}) => {
+export type CreatePinStrings = {
+  title: string
+  subtitle: string
+  confirmationTitle: string
+}
+
+export const CreatePinInput: React.FC<{onDone: () => void; createPinStrings: CreatePinStrings}> = ({
+  onDone,
+  createPinStrings,
+}) => {
   const intl = useIntl()
-  const strings = useStrings()
   const storage = useStorage()
   const {createPin, isLoading} = useCreatePin(storage, {
     onSuccess: () => onDone(),
@@ -36,8 +44,8 @@ export const CreatePinInput: React.FC<{onDone: () => void}> = ({onDone}) => {
   return step === 'pin' ? (
     <PinInput
       key="pinInput"
-      title={strings.pinInputTitle}
-      subtitles={[strings.pinInputSubtitle]}
+      title={createPinStrings.title}
+      subtitles={[createPinStrings.subtitle]}
       pinMaxLength={CONFIG.PIN_LENGTH}
       onDone={onPinInput}
     />
@@ -45,34 +53,9 @@ export const CreatePinInput: React.FC<{onDone: () => void}> = ({onDone}) => {
     <PinInput
       key="pinConfirmationInput"
       enabled={!isLoading}
-      title={strings.pinInputConfirmationTitle}
+      title={createPinStrings.confirmationTitle}
       pinMaxLength={CONFIG.PIN_LENGTH}
       onDone={onPinConfirmation}
     />
   )
 }
-
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    pinInputTitle: intl.formatMessage(messages.pinInputTitle),
-    pinInputSubtitle: intl.formatMessage(messages.pinInputSubtitle),
-    pinInputConfirmationTitle: intl.formatMessage(messages.pinInputConfirmationTitle),
-  }
-}
-
-const messages = defineMessages({
-  pinInputTitle: {
-    id: 'components.firstrun.custompinscreen.pinInputTitle',
-    defaultMessage: '!!!Enter the PIN',
-  },
-  pinInputSubtitle: {
-    id: 'components.firstrun.custompinscreen.pinInputSubtitle',
-    defaultMessage: '!!!Choose new PIN for quick access to wallet.',
-  },
-  pinInputConfirmationTitle: {
-    id: 'components.firstrun.custompinscreen.pinConfirmationTitle',
-    defaultMessage: '!!!Repeat PIN',
-  },
-})
