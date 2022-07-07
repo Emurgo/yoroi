@@ -117,7 +117,13 @@ export const SettingsScreenNavigator = () => {
           headerStyle: defaultStackNavigationOptions.headerStyle,
         }}
       >
-        {() => <ChangePinScreen onDone={() => navigation.goBack()} />}
+        {() => (
+          <ChangePinScreen
+            checkPinStrings={strings.checkPinStrings}
+            createPinStrings={strings.createPinStrings}
+            onDone={() => navigation.goBack()}
+          />
+        )}
       </Stack.Screen>
 
       <Stack.Screen //
@@ -126,6 +132,7 @@ export const SettingsScreenNavigator = () => {
       >
         {() => (
           <CreatePinScreen
+            createPinStrings={strings.createPinStrings}
             onDone={async () => {
               await dispatch(setSystemAuth(false))
               await walletManager.disableEasyConfirmation()
@@ -216,6 +223,26 @@ const messages = defineMessages({
     id: 'components.settings.changelanguagescreen.title',
     defaultMessage: '!!!Language',
   },
+  pinInputTitle: {
+    id: 'components.firstrun.custompinscreen.pinInputTitle',
+    defaultMessage: '!!!Enter the PIN',
+  },
+  pinInputSubtitle: {
+    id: 'components.firstrun.custompinscreen.pinInputSubtitle',
+    defaultMessage: '!!!Choose new PIN for quick access to wallet.',
+  },
+  pinInputConfirmationTitle: {
+    id: 'components.firstrun.custompinscreen.pinConfirmationTitle',
+    defaultMessage: '!!!Repeat PIN',
+  },
+  currentPinInputTitle: {
+    id: 'components.settings.changecustompinscreen.CurrentPinInput.title',
+    defaultMessage: '!!!Enter PIN',
+  },
+  currentPinInputSubtitle: {
+    id: 'components.settings.changecustompinscreen.CurrentPinInput.subtitle',
+    defaultMessage: '!!!Enter your current PIN',
+  },
 })
 
 const useStrings = () => {
@@ -236,5 +263,14 @@ const useStrings = () => {
     appSettingsTitle: intl.formatMessage(messages.appSettingsTitle),
     languageTitle: intl.formatMessage(messages.languageTitle),
     currency: intl.formatMessage(globalMessages.currency),
+    createPinStrings: {
+      title: intl.formatMessage(messages.pinInputTitle),
+      subtitle: intl.formatMessage(messages.pinInputSubtitle),
+      confirmationTitle: intl.formatMessage(messages.pinInputConfirmationTitle),
+    },
+    checkPinStrings: {
+      title: intl.formatMessage(messages.currentPinInputTitle),
+      subtitle: intl.formatMessage(messages.currentPinInputSubtitle),
+    },
   }
 }

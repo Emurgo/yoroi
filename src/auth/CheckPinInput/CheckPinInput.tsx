@@ -1,5 +1,5 @@
 import React from 'react'
-import {defineMessages, useIntl} from 'react-intl'
+import {useIntl} from 'react-intl'
 
 import {useCheckPin} from '../../hooks'
 import {errorMessages} from '../../i18n/global-messages'
@@ -8,9 +8,13 @@ import {CONFIG} from '../../legacy/config'
 import {useStorage} from '../../Storage'
 import {PinInput} from '../PinInput'
 
-export const CheckPinInput = ({onValid}: {onValid: () => void}) => {
+export type CheckPinStrings = {
+  title: string
+  subtitle: string
+}
+
+export const CheckPinInput = ({onValid, checkPinStrings}: {onValid: () => void; checkPinStrings: CheckPinStrings}) => {
   const intl = useIntl()
-  const strings = useStrings()
   const storage = useStorage()
   const {checkPin, isLoading} = useCheckPin(storage, {
     onSuccess: (isValid) => {
@@ -27,30 +31,11 @@ export const CheckPinInput = ({onValid}: {onValid: () => void}) => {
 
   return (
     <PinInput
-      title={strings.title}
-      subtitles={[strings.subtitle]}
+      title={checkPinStrings.title}
+      subtitles={[checkPinStrings.subtitle]}
       enabled={!isLoading}
       onDone={checkPin}
       pinMaxLength={CONFIG.PIN_LENGTH}
     />
   )
 }
-
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    title: intl.formatMessage(messages.title),
-    subtitle: intl.formatMessage(messages.subtitle),
-  }
-}
-const messages = defineMessages({
-  title: {
-    id: 'components.settings.changecustompinscreen.CurrentPinInput.title',
-    defaultMessage: '!!!Enter PIN',
-  },
-  subtitle: {
-    id: 'components.settings.changecustompinscreen.CurrentPinInput.subtitle',
-    defaultMessage: '!!!Enter your current PIN',
-  },
-})
