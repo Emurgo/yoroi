@@ -18,6 +18,7 @@ import {
 import {useSelectedWalletMeta, useSetSelectedWalletMeta} from '../SelectedWallet'
 import {COLORS} from '../theme'
 import {walletManager} from '../yoroi-wallets'
+import {About} from './About'
 import {ApplicationSettingsScreen} from './ApplicationSettings'
 import {BiometricsLinkScreen} from './BiometricsLink/'
 import {ChangeLanguageScreen} from './ChangeLanguage'
@@ -52,6 +53,8 @@ export const SettingsScreenNavigator = () => {
         component={ApplicationSettingsScreen}
         options={{title: strings.appSettingsTitle}}
       />
+
+      <Stack.Screen name="about" component={About} options={{title: strings.aboutTitle}} />
 
       <Stack.Screen
         name="change-wallet-name"
@@ -172,6 +175,10 @@ const messages = defineMessages({
     id: 'components.settings.applicationsettingsscreen.tabTitle',
     defaultMessage: '!!!Application',
   },
+  aboutTitle: {
+    id: 'components.settings.applicationsettingsscreen.about',
+    defaultMessage: '!!!About',
+  },
   changeCustomPinTitle: {
     id: 'components.settings.applicationsettingsscreen.changePin',
     defaultMessage: '!!!Change PIN',
@@ -224,6 +231,7 @@ const useStrings = () => {
   return {
     walletTabTitle: intl.formatMessage(messages.walletTabTitle),
     appTabTitle: intl.formatMessage(messages.appTabTitle),
+    aboutTitle: intl.formatMessage(messages.aboutTitle),
     changeCustomPinTitle: intl.formatMessage(messages.changeCustomPinTitle),
     changePasswordTitle: intl.formatMessage(messages.changePasswordTitle),
     removeWalletTitle: intl.formatMessage(messages.removeWalletTitle),
