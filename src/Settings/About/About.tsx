@@ -124,15 +124,15 @@ const messages = defineMessages({
     defaultMessage: '!!!Wallet type',
   },
   byronWallet: {
-    id: 'components.settings.applicationsettingsscreen.byronWallet',
+    id: 'components.settings.walletsettingscreen.byronWallet',
     defaultMessage: '!!!Byron-era wallet',
   },
   shelleyWallet: {
-    id: 'components.settings.applicationsettingsscreen.shelleyWallet',
+    id: 'components.settings.walletsettingscreen.shelleyWallet',
     defaultMessage: '!!!Shelley-era wallet',
   },
   unknownWalletType: {
-    id: 'components.settings.applicationsettingsscreen.unknownWalletType',
+    id: 'components.settings.walletsettingscreen.unknownWalletType',
     defaultMessage: '!!!Unknown Wallet Type',
   },
 })
