@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React /* , {useState} */ from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Platform, ScrollView, StyleSheet, Switch} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -38,7 +38,7 @@ export const ApplicationSettingsScreen = () => {
   const {currency} = useCurrencyContext()
   const {language} = useLanguage()
 
-  const [isBalanceHidden, setIsBalanceHidden] = useState(true) // TODO: https://emurgo.atlassian.net/browse/YOMO-276
+  // const [isBalanceHidden, setIsBalanceHidden] = useState(true) // TODO: https://emurgo.atlassian.net/browse/YOMO-276
 
   const setCrashReporting = (value: boolean) => {
     dispatch(setAppSettingField(APP_SETTINGS_KEYS.SEND_CRASH_REPORTS, value))
@@ -116,7 +116,7 @@ export const ApplicationSettingsScreen = () => {
 
           <NavigatedSettingsItem
             icon={<Icon.TermsOfUse {...iconProps} />}
-            label={strings.termsOfUse}
+            label={strings.termsOfservice}
             navigateTo="terms-of-use"
           />
         </SettingsSection>
@@ -130,6 +130,8 @@ export const ApplicationSettingsScreen = () => {
             navigateTo="change-custom-pin"
           />
 
+          {/* 
+         
           <SettingsItem icon={<Icon.EyeOff {...iconProps} />} label={strings.balance} info={strings.balanceInfo}>
             <Switch
               value={isBalanceHidden}
@@ -139,6 +141,8 @@ export const ApplicationSettingsScreen = () => {
               }}
             />
           </SettingsItem>
+          
+          */}
 
           <SettingsItem
             icon={<Icon.Bio {...iconProps} />}
@@ -180,7 +184,7 @@ const useStrings = () => {
     balanceInfo: intl.formatMessage(messages.balanceInfo),
     biometricsSignIn: intl.formatMessage(messages.biometricsSignIn),
     biometricsSignInInfo: intl.formatMessage(messages.biometricsSignInInfo),
-    termsOfUse: intl.formatMessage(messages.termsOfUse),
+    termsOfservice: intl.formatMessage(messages.termsOfservice),
     crashReporting: intl.formatMessage(messages.crashReporting),
     crashReportingInfo: intl.formatMessage(messages.crashReportingInfo),
   }
@@ -215,9 +219,9 @@ const messages = defineMessages({
     id: 'components.settings.applicationsettingsscreen.about',
     defaultMessage: '!!!About',
   },
-  termsOfUse: {
-    id: 'components.settings.applicationsettingsscreen.termsOfUse',
-    defaultMessage: '!!!Terms of Use',
+  termsOfservice: {
+    id: 'components.firstrun.acepttermsofservicescreen.title',
+    defaultMessage: '!!!Terms of Service Agreement',
   },
   changePin: {
     id: 'components.settings.applicationsettingsscreen.changePin',
