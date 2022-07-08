@@ -1,4 +1,4 @@
-import React /* , {useState} */ from 'react'
+import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Platform, ScrollView, StyleSheet, Switch} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -37,8 +37,6 @@ export const ApplicationSettingsScreen = () => {
   const dispatch = useDispatch()
   const {currency} = useCurrencyContext()
   const {language} = useLanguage()
-
-  // const [isBalanceHidden, setIsBalanceHidden] = useState(true) // TODO: https://emurgo.atlassian.net/browse/YOMO-276
 
   const setCrashReporting = (value: boolean) => {
     dispatch(setAppSettingField(APP_SETTINGS_KEYS.SEND_CRASH_REPORTS, value))
@@ -130,20 +128,6 @@ export const ApplicationSettingsScreen = () => {
             navigateTo="change-custom-pin"
           />
 
-          {/* 
-         
-          <SettingsItem icon={<Icon.EyeOff {...iconProps} />} label={strings.balance} info={strings.balanceInfo}>
-            <Switch
-              value={isBalanceHidden}
-              onValueChange={() => {
-                // TODO: https://emurgo.atlassian.net/browse/YOMO-276
-                setIsBalanceHidden(!isBalanceHidden)
-              }}
-            />
-          </SettingsItem>
-          
-          */}
-
           <SettingsItem
             icon={<Icon.Bio {...iconProps} />}
             label={strings.biometricsSignIn}
@@ -180,8 +164,6 @@ const useStrings = () => {
     selectFiatCurrency: intl.formatMessage(messages.selectFiatCurrency),
     about: intl.formatMessage(messages.about),
     changePin: intl.formatMessage(messages.changePin),
-    balance: intl.formatMessage(messages.balance),
-    balanceInfo: intl.formatMessage(messages.balanceInfo),
     biometricsSignIn: intl.formatMessage(messages.biometricsSignIn),
     biometricsSignInInfo: intl.formatMessage(messages.biometricsSignInInfo),
     termsOfservice: intl.formatMessage(messages.termsOfservice),
@@ -226,14 +208,6 @@ const messages = defineMessages({
   changePin: {
     id: 'components.settings.applicationsettingsscreen.changePin',
     defaultMessage: '!!!Change PIN',
-  },
-  balance: {
-    id: 'components.settings.applicationsettingsscreen.balance',
-    defaultMessage: '!!!Hide balance',
-  },
-  balanceInfo: {
-    id: 'components.settings.applicationsettingsscreen.balanceInfo',
-    defaultMessage: '!!!This function will be applied to all wallets in your app',
   },
   biometricsSignIn: {
     id: 'components.settings.applicationsettingsscreen.biometricsSignIn',

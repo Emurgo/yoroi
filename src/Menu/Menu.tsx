@@ -46,26 +46,6 @@ export const Menu = () => {
 
         <Hr />
 
-        {/* <Releases //
-          label={strings.releases}
-          onPress={navigateTo.appSettings}
-          left={<Icon.Megaphone size={24} color={lightPalette.gray['600']} />}
-          right={
-            <Text
-              style={{
-                fontFamily: 'Rubik-Regular',
-                fontSize: 16,
-                lineHeight: 24,
-                color: lightPalette.secondary['600'],
-              }}
-            >
-              1 Update
-            </Text>
-          }
-        />
-
-        <Hr /> */}
-
         <Catalyst //
           label={strings.catalystVoting}
           onPress={navigateTo.catalystVoting}
@@ -138,7 +118,6 @@ const Item = ({
 }
 
 const AppSettings = Item
-// const Releases = Item
 const KnowledgeBase = Item
 const Catalyst = ({label, left, onPress}: {label: string; left: React.ReactElement; onPress: () => void}) => {
   const tokenBalance = useSelector(tokenBalanceSelector)
