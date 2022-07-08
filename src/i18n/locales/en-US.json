@@ -175,7 +175,7 @@
   "components.settings.applicationsettingsscreen.crashReporting": "Send crash report to Emurgo",
   "components.settings.applicationsettingsscreen.crashReportingInfo": "Changes to this option will be reflected after restarting the application",
   "components.settings.applicationsettingsscreen.tabTitle": "Application",
-  "components.settings.applicationsettingsscreen.termsOfUse": "Terms of Service Agreement",
+  "components.settings.applicationsettingsscreen.termsOfUse": "Terms of Use",
   "components.settings.applicationsettingsscreen.title": "Settings",
   "components.settings.applicationsettingsscreen.appSettingsTitle": "App settings",
   "components.settings.applicationsettingsscreen.walletType": "Wallet type",
