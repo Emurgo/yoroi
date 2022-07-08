@@ -2,7 +2,7 @@ import React from 'react'
 import {FlatList, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 
 import {useLanguage} from '../../i18n'
-import {COLORS} from '../../theme'
+import {COLORS, lightPalette} from '../../theme'
 import {Icon} from '../Icon'
 import {Text} from '../Text'
 import {LanguagePickerWarning} from './LanguagePickerWarning'
@@ -19,7 +19,9 @@ export const LanguagePicker = () => {
         contentContainerStyle={styles.languageList}
         renderItem={({item: {label, code}}) => (
           <TouchableOpacity style={styles.item} onPress={() => selectLanguageCode(code)} testID="pickLangButton">
-            <Text style={styles.itemText}>{label}</Text>
+            <Text style={{fontFamily: 'Rubik-Medium', fontSize: 16, lineHeight: 24, color: lightPalette.gray['900']}}>
+              {label}
+            </Text>
             {language.code === code && <Icon.Check size={24} color={COLORS.SHELLEY_BLUE} />}
           </TouchableOpacity>
         )}
@@ -52,9 +54,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingVertical: 16,
-  },
-  itemText: {
-    fontSize: 16,
-    lineHeight: 24,
   },
 })
