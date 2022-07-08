@@ -5,7 +5,7 @@ import {createSelector} from 'reselect'
 
 import type {State, WalletMeta} from '../legacy/state'
 import {getDefaultNetworkTokenEntry, MultiToken} from '../yoroi-wallets'
-import {getCardanoDefaultAsset, getDefaultAssetByNetworkId, getDefaultAssets} from './config'
+import {getCardanoDefaultAsset, getDefaultAssets} from './config'
 import {ObjectValues} from './flow'
 import type {DefaultAsset, Token, Transaction, TransactionInfo} from './HistoryTransaction'
 import {TRANSACTION_DIRECTION, TRANSACTION_STATUS} from './HistoryTransaction'
@@ -73,16 +73,7 @@ export const availableAssetsSelector: (state: State) => Record<string, Token> = 
     return tokens
   },
 )
-export const defaultNetworkAssetSelector: (state: State) => DefaultAsset = createSelector(
-  (state) => state.wallet.networkId,
-  (networkId) => {
-    if (networkId === NETWORK_REGISTRY.UNDEFINED) {
-      return getCardanoDefaultAsset()
-    }
 
-    return getDefaultAssetByNetworkId(networkId)
-  },
-)
 export const internalAddressIndexSelector: (state: State) => Record<string, number> = createSelector(
   (state: State) => state.wallet.internalAddresses,
   (addresses) => fromPairs(addresses.map((addr, i) => [addr, i])),

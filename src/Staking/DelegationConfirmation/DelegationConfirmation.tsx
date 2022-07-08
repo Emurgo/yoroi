@@ -3,15 +3,13 @@ import {BigNumber} from 'bignumber.js'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
-import {useSelector} from 'react-redux'
 
 import {OfflineBanner, Text, ValidatedTextInput} from '../../components'
 import {ConfirmTx} from '../../components/ConfirmTx'
 import {Instructions as HWInstructions} from '../../HW'
 import globalMessages, {txLabels} from '../../i18n/global-messages'
-import {CONFIG} from '../../legacy/config'
+import {CONFIG, getDefaultAssetByNetworkId} from '../../legacy/config'
 import {formatTokenAmount, formatTokenWithText} from '../../legacy/format'
-import {defaultNetworkAssetSelector} from '../../legacy/selectors'
 import {useParams, useWalletNavigation} from '../../navigation'
 import {StakingCenterRoutes} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
@@ -37,8 +35,7 @@ const isParams = (params?: Params | object | undefined): params is Params => {
 export const DelegationConfirmation = ({mockDefaultAsset}: {mockDefaultAsset?: DefaultAsset}) => {
   const {resetToTxHistory} = useWalletNavigation()
   const wallet = useSelectedWallet()
-  const defaultNetworkAsset = useSelector(defaultNetworkAssetSelector)
-  const defaultAsset = mockDefaultAsset || defaultNetworkAsset
+  const defaultAsset = mockDefaultAsset || getDefaultAssetByNetworkId(wallet.networkId)
   const strings = useStrings()
 
   const {poolHash, poolName, yoroiUnsignedTx} = useParams<Params>(isParams)
