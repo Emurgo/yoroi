@@ -8,11 +8,11 @@ import {useSelector} from 'react-redux'
 
 import SupportImage from '../assets/img/icon/shape.png'
 import {CatalystNavigator} from '../Catalyst/CatalystNavigator'
-import {Icon, Spacer, Text} from '../components'
-import {useWalletMetas} from '../hooks'
+import {Hr, Icon, Spacer, Text} from '../components'
 import {CONFIG} from '../legacy/config'
 import {tokenBalanceSelector} from '../legacy/selectors'
-import {defaultStackNavigationOptions, useWalletNavigation} from '../navigation'
+import {defaultStackNavigationOptionsV2, useWalletNavigation} from '../navigation'
+import {lightPalette} from '../theme'
 import {InsufficientFundsModal} from './InsufficientFundsModal'
 
 const MenuStack = createStackNavigator()
@@ -23,7 +23,7 @@ export const MenuNavigator = () => {
   return (
     <MenuStack.Navigator
       initialRouteName="menu"
-      screenOptions={{...defaultStackNavigationOptions, headerLeft: () => null}}
+      screenOptions={{...defaultStackNavigationOptionsV2, headerLeft: () => null}}
     >
       <MenuStack.Screen name="menu" component={Menu} options={{title: strings.menu}} />
       <MenuStack.Screen name="catalyst-voting" component={CatalystNavigator} />
@@ -34,8 +34,6 @@ export const MenuNavigator = () => {
 export const Menu = () => {
   const strings = useStrings()
   const navigateTo = useNavigateTo()
-  const walletMetas = useWalletMetas()
-  const walletCount = walletMetas?.length || ''
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
@@ -43,34 +41,26 @@ export const Menu = () => {
         <AppSettings //
           label={strings.appSettings}
           onPress={navigateTo.appSettings}
-          left={<Icon.Gear size={24} color="#6B7384" />}
+          left={<Icon.Gear size={24} color={lightPalette.gray['600']} />}
         />
 
-        <HR />
-
-        <AllWallets
-          label={`${strings.allWallets} (${walletCount})`}
-          onPress={navigateTo.allWallets}
-          left={<Icon.Wallets size={24} color="#6B7384" />}
-        />
-
-        <HR />
+        <Hr />
 
         <Catalyst //
           label={strings.catalystVoting}
           onPress={navigateTo.catalystVoting}
-          left={<Icon.Catalyst size={26} color="#6B7384" />}
+          left={<Icon.Catalyst size={24} color={lightPalette.gray['600']} />}
         />
 
-        <HR />
+        <Hr />
 
         <KnowledgeBase //
           label={strings.knowledgeBase}
           onPress={navigateTo.knowledgeBase}
-          left={<Icon.Info size={24} color="#6B7384" />}
+          left={<Icon.Info size={24} color={lightPalette.gray['600']} />}
         />
 
-        <HR />
+        <Hr />
 
         <Spacer fill />
 
@@ -101,23 +91,32 @@ const SupportLink = () => {
   )
 }
 
-const Item = ({label, left, onPress}: {label: string; left: React.ReactElement; onPress: () => void}) => {
+const Item = ({
+  label,
+  left,
+  right = null,
+  onPress,
+}: {
+  label: string
+  left: React.ReactElement
+  right?: React.ReactElement | null
+  onPress: () => void
+}) => {
   return (
     <TouchableOpacity onPress={onPress} style={styles.item}>
       {left}
       <Spacer width={12} />
-      <Text style={styles.itemText}>{label}</Text>
+      <Text style={{fontFamily: 'Rubik-Medium', fontSize: 16, lineHeight: 24, color: lightPalette.gray['900']}}>
+        {label}
+      </Text>
       <Spacer fill />
-      <Icon.Chevron direction="right" size={16} color="#6B7384" />
+      {right}
+      <Spacer width={8} />
+      <Icon.Chevron direction="right" size={28} color={lightPalette.gray['600']} />
     </TouchableOpacity>
   )
 }
 
-const HR = () => {
-  return <View style={styles.hr} />
-}
-
-const AllWallets = Item
 const AppSettings = Item
 const KnowledgeBase = Item
 const Catalyst = ({label, left, onPress}: {label: string; left: React.ReactElement; onPress: () => void}) => {
@@ -149,7 +148,6 @@ const useNavigateTo = () => {
   const {navigation, navigateToAppSettings} = useWalletNavigation()
 
   return {
-    allWallets: () => navigation.navigate('app-root', {screen: 'wallet-selection'}),
     catalystVoting: () =>
       navigation.navigate('app-root', {
         screen: 'catalyst-router',
@@ -163,66 +161,16 @@ const useNavigateTo = () => {
   }
 }
 
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    allWallets: intl.formatMessage(messages.allWallets),
-    catalystVoting: intl.formatMessage(messages.catalystVoting),
-    appSettings: intl.formatMessage(messages.appSettings),
-    supportTitle: intl.formatMessage(messages.supportTitle),
-    supportLink: intl.formatMessage(messages.supportLink),
-    knowledgeBase: intl.formatMessage(messages.knowledgeBase),
-    menu: intl.formatMessage(messages.menu),
-  }
-}
-
-const messages = defineMessage({
-  allWallets: {
-    id: 'menu.allWallets',
-    defaultMessage: '!!!All wallets',
-  },
-  catalystVoting: {
-    id: 'menu.catalystVoting',
-    defaultMessage: '!!!Catalyst voting',
-  },
-  appSettings: {
-    id: 'menu.appSettings',
-    defaultMessage: '!!!App Settings',
-  },
-  supportTitle: {
-    id: 'menu.supportTitle',
-    defaultMessage: '!!!Any questions',
-  },
-  supportLink: {
-    id: 'menu.supportLink',
-    defaultMessage: '!!!Ask our support team',
-  },
-  knowledgeBase: {
-    id: 'menu.knowledgeBase',
-    defaultMessage: '!!!Knowledge base',
-  },
-  menu: {
-    id: 'menu',
-    defaultMessage: '!!!Menu',
-  },
-})
-
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-  },
-  hr: {
-    height: 1,
-    backgroundColor: 'lightgrey',
+    backgroundColor: 'white',
   },
   item: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     paddingVertical: 16,
-  },
-  itemText: {
-    color: '#242838',
   },
   scrollViewContent: {
     flex: 1,
@@ -244,5 +192,50 @@ const styles = StyleSheet.create({
   },
   supportLinkText: {
     color: '#4B6DDE',
+  },
+})
+
+const useStrings = () => {
+  const intl = useIntl()
+
+  return {
+    catalystVoting: intl.formatMessage(messages.catalystVoting),
+    appSettings: intl.formatMessage(messages.appSettings),
+    releases: intl.formatMessage(messages.releases),
+    supportTitle: intl.formatMessage(messages.supportTitle),
+    supportLink: intl.formatMessage(messages.supportLink),
+    knowledgeBase: intl.formatMessage(messages.knowledgeBase),
+    menu: intl.formatMessage(messages.menu),
+  }
+}
+
+const messages = defineMessage({
+  catalystVoting: {
+    id: 'menu.catalystVoting',
+    defaultMessage: '!!!Catalyst voting',
+  },
+  appSettings: {
+    id: 'menu.appSettings',
+    defaultMessage: '!!!App Settings',
+  },
+  releases: {
+    id: 'menu.releases',
+    defaultMessage: '!!!Releases',
+  },
+  supportTitle: {
+    id: 'menu.supportTitle',
+    defaultMessage: '!!!Any questions',
+  },
+  supportLink: {
+    id: 'menu.supportLink',
+    defaultMessage: '!!!Ask our support team',
+  },
+  knowledgeBase: {
+    id: 'menu.knowledgeBase',
+    defaultMessage: '!!!Knowledge base',
+  },
+  menu: {
+    id: 'menu',
+    defaultMessage: '!!!Menu',
   },
 })

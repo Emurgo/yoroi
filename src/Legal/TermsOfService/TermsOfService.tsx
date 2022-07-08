@@ -21,8 +21,8 @@ export const TermsOfService = ({languageCode}: {languageCode: string}) => {
         h2: {fontFamily: 'Rubik-Medium', lineHeight: 24, color: lightPalette.gray['900'], paddingVertical: 8},
         h1: {
           fontFamily: 'Rubik-Medium',
-          fontSize: 32,
-          lineHeight: 45,
+          fontSize: 20,
+          lineHeight: 20,
           color: lightPalette.gray['900'],
           paddingVertical: 10,
         },
