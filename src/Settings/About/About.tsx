@@ -8,7 +8,6 @@ import {CONFIG, isByron, isHaskellShelley} from '../../legacy/config'
 import {getNetworkConfigById} from '../../legacy/networks'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {lightPalette} from '../../theme'
-import {NetworkId, WalletImplementationId} from '../../yoroi-wallets'
 
 const version = DeviceInfo.getVersion()
 
@@ -16,8 +15,12 @@ export const About = () => {
   const strings = useStrings()
 
   const wallet = useSelectedWallet()
-  const network = getNetworkName(wallet.networkId)
-  const walletType = getWalletType(wallet.walletImplementationId, strings)
+  const network = getNetworkConfigById(wallet.networkId).MARKETING_NAME
+  const walletType = isByron(wallet.walletImplementationId)
+    ? strings.byronWallet
+    : isHaskellShelley(wallet.walletImplementationId)
+    ? strings.shelleyWallet
+    : strings.unknownWalletType
 
   return (
     <View style={styles.about}>
@@ -63,23 +66,6 @@ const ValueText = ({style, children, ...props}: TextProps) => (
     {children}
   </Text>
 )
-
-const getNetworkName = (networkId: NetworkId) => {
-  // note(v-almonacid): this throws when switching wallet
-  try {
-    const config = getNetworkConfigById(networkId)
-    return config.MARKETING_NAME
-  } catch (_e) {
-    return '-'
-  }
-}
-
-const getWalletType = (implementationId: WalletImplementationId, strings): string => {
-  if (isByron(implementationId)) return strings.byronWallet
-  if (isHaskellShelley(implementationId)) return strings.shelleyWallet
-
-  return strings.unknownWalletType
-}
 
 const styles = StyleSheet.create({
   about: {

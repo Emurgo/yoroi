@@ -15,7 +15,7 @@ export const LanguagePicker = () => {
   return (
     <View style={styles.languagePicker}>
       <FlatList
-        data={supportedLanguages}
+        data={Object.values(supportedLanguages)}
         contentContainerStyle={styles.languageList}
         renderItem={({item: {label, code}}) => (
           <TouchableOpacity style={styles.item} onPress={() => selectLanguageCode(code)} testID="pickLangButton">
