@@ -9,6 +9,6 @@ export const Hr = ({style, ...rest}: ViewProps) => {
 
 const styles = StyleSheet.create({
   hr: {
-    height: 1,
+    height: StyleSheet.hairlineWidth,
   },
 })
