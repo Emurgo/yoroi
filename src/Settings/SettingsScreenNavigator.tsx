@@ -9,7 +9,6 @@ import {ChangePinScreen, CreatePinScreen} from '../auth'
 import globalMessages from '../i18n/global-messages'
 import {setEasyConfirmation, setSystemAuth} from '../legacy/actions'
 import {
-  defaultStackNavigationOptions,
   defaultStackNavigationOptionsV2,
   SettingsStackRoutes,
   SettingsTabRoutes,
@@ -115,10 +114,7 @@ export const SettingsScreenNavigator = () => {
 
       <Stack.Screen //
         name="change-custom-pin"
-        options={{
-          title: strings.changeCustomPinTitle,
-          headerStyle: defaultStackNavigationOptions.headerStyle,
-        }}
+        options={{title: strings.changeCustomPinTitle}}
       >
         {() => <ChangePinScreen onDone={() => navigation.goBack()} />}
       </Stack.Screen>
