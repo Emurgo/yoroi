@@ -9,7 +9,7 @@ import {useWithdrawalTx} from '../../hooks'
 import globalMessages, {ledgerMessages} from '../../i18n/global-messages'
 import {getDefaultAssetByNetworkId} from '../../legacy/config'
 import KeyStore from '../../legacy/KeyStore'
-import {serverStatusSelector, utxosSelector} from '../../legacy/selectors'
+import {utxosSelector} from '../../legacy/selectors'
 import {theme} from '../../theme'
 import {YoroiWallet} from '../../yoroi-wallets'
 import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
@@ -31,7 +31,9 @@ export const WithdrawStakingRewards = ({wallet, storage, onSuccess, onCancel}: P
   return (
     <Boundary loading={{fallback: <PleaseWaitView title="" spinnerText={strings.pleaseWait} />}}>
       <Route active={state.step === 'form'}>
-        <WithdrawalTxForm wallet={wallet} onDone={(withdrawalTx) => setState({step: 'confirm', withdrawalTx})} />
+        <Boundary>
+          <WithdrawalTxForm wallet={wallet} onDone={(withdrawalTx) => setState({step: 'confirm', withdrawalTx})} />
+        </Boundary>
       </Route>
 
       {state.step === 'confirm' && (
@@ -56,14 +58,12 @@ export const WithdrawalTxForm: React.FC<{
   const strings = useStrings()
   const [deregister, setDeregister] = React.useState<boolean>()
   const utxos = useSelector(utxosSelector) || []
-  const serverStatus = useSelector(serverStatusSelector)
   const {isLoading} = useWithdrawalTx(
     {
       wallet,
       deregister,
       defaultAsset: getDefaultAssetByNetworkId(wallet.networkId),
       utxos,
-      serverTime: serverStatus.serverTime,
     },
     {
       onSuccess: (withdrawalTx) => onDone(withdrawalTx),

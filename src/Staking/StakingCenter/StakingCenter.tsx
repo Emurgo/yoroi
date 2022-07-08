@@ -29,7 +29,6 @@ import {
   accountBalanceSelector,
   isFetchingUtxosSelector,
   poolOperatorSelector,
-  serverStatusSelector,
   utxosSelector,
 } from '../../legacy/selectors'
 import {RawUtxo} from '../../legacy/types'
@@ -37,7 +36,7 @@ import {StakingCenterRouteNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {DefaultAsset} from '../../types'
 import {UtxoAutoRefresher} from '../../UtxoAutoRefresher'
-import {ServerStatus, YoroiWallet} from '../../yoroi-wallets'
+import {YoroiWallet} from '../../yoroi-wallets'
 import {PoolDetailScreen} from '../PoolDetails'
 import {PoolWarningModal} from '../PoolWarningModal'
 
@@ -55,7 +54,6 @@ export const StakingCenter = () => {
   const accountBalance = useSelector(accountBalanceSelector)
   const poolOperator = useSelector(poolOperatorSelector)
   const {languageCode} = useLanguage()
-  const serverStatus = useSelector(serverStatusSelector)
   const wallet = useSelectedWallet()
   const config = getNetworkConfigById(wallet.networkId)
   const isMainnet = config.IS_MAINNET
@@ -98,7 +96,6 @@ export const StakingCenter = () => {
           getDefaultAssetByNetworkId(wallet.networkId),
           intl,
           navigation,
-          serverStatus,
           wallet,
         )
       }
@@ -163,7 +160,6 @@ export const StakingCenter = () => {
                 getDefaultAssetByNetworkId(wallet.networkId),
                 intl,
                 navigation,
-                serverStatus,
                 wallet,
               )
             }}
@@ -231,19 +227,14 @@ const navigateToDelegationConfirm = async (
   defaultAsset: DefaultAsset,
   intl: IntlShape,
   navigation: StakingCenterRouteNavigation,
-  serverStatus: ServerStatus,
   wallet: YoroiWallet,
 ) => {
   try {
     const selectedPool = selectedPools[0]
     if (accountBalance == null) return
-    const yoroiUnsignedTx = await wallet.createDelegationTx(
-      selectedPool.poolHash,
-      accountBalance,
-      utxos,
-      defaultAsset,
-      serverStatus.serverTime,
-    )
+
+    const yoroiUnsignedTx = await wallet.createDelegationTx(selectedPool.poolHash, accountBalance, utxos, defaultAsset)
+
     navigation.navigate('delegation-confirmation', {
       poolName: selectedPool?.poolName ?? '',
       poolHash: selectedPool.poolHash,
@@ -271,7 +262,6 @@ const handleSelectedPoolHashes = async (
   defaultAsset,
   intl: IntlShape,
   navigation,
-  serverStatus: ServerStatus,
   wallet: YoroiWallet,
 ) => {
   try {
@@ -304,16 +294,7 @@ const handleSelectedPoolHashes = async (
         setReputationInfo(poolsReputation[poolsInBlackList[0]])
         setShowPoolWarning(true)
       } else {
-        await navigateToDelegationConfirm(
-          accountBalance,
-          utxos,
-          selectedPools,
-          defaultAsset,
-          intl,
-          navigation,
-          serverStatus,
-          wallet,
-        )
+        await navigateToDelegationConfirm(accountBalance, utxos, selectedPools, defaultAsset, intl, navigation, wallet)
       }
     } else {
       await showErrorDialog(noPoolDataDialog, intl)

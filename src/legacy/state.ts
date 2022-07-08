@@ -6,12 +6,7 @@ import type {ServerStatus, WalletInterface} from '../yoroi-wallets'
 import {mockReduxWallet} from './mockWallet'
 import type {NetworkId, RawUtxo, WalletImplementationId, YoroiProvider} from './types'
 import {NETWORK_REGISTRY} from './types'
-export type ServerStatusCache = {
-  readonly isServerOk: boolean
-  readonly isMaintenance: boolean
-  readonly serverTime: Date | void
-  readonly isQueueOnline?: boolean
-}
+
 export type WalletMeta = {
   id: string
   name: string

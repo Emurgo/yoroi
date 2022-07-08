@@ -149,7 +149,6 @@ export const isAppInitializedSelector = (state: State): boolean => state.isAppIn
 export const isAuthenticatedSelector = (state: State): boolean => state.isAuthenticated
 export const installationIdSelector = (state: State) => state.appSettings.installationId
 export const isMaintenanceSelector = (state: State): boolean => state.serverStatus.isMaintenance
-export const serverStatusSelector = (state: State) => state.serverStatus
 
 /**
  * Before users can actually create a wallet, 3 steps must be completed:
