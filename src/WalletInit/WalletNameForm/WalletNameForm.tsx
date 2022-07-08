@@ -69,7 +69,7 @@ export const WalletNameForm = ({
           autoFocus
           label={strings.walletNameInputLabel}
           value={name}
-          onChangeText={setName}
+          onChangeText={(walletName: string) => setName(walletName.trim())}
           errorText={walletNameErrorText}
           disabled={isWaiting}
           autoComplete={false}
