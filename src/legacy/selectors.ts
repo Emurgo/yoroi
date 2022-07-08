@@ -3,7 +3,7 @@ import {BigNumber} from 'bignumber.js'
 import {fromPairs, mapValues} from 'lodash'
 import {createSelector} from 'reselect'
 
-import type {State, WalletMeta} from '../legacy/state'
+import type {State} from '../legacy/state'
 import {getDefaultNetworkTokenEntry, MultiToken} from '../yoroi-wallets'
 import {getCardanoDefaultAsset, getDefaultAssets} from './config'
 import {ObjectValues} from './flow'
@@ -15,25 +15,20 @@ import type {NetworkId} from './types'
 import type {RawUtxo} from './types'
 import {NETWORK_REGISTRY} from './types'
 
-export const transactionsInfoSelector: (arg0: State) => Record<string, TransactionInfo> = createSelector(
-  (state: State) => state.wallet.transactions,
-  (state: State) => state.wallet.internalAddresses,
-  (state: State) => state.wallet.externalAddresses,
-  (state: State) => state.wallet.rewardAddressHex,
-  (state: State) => state.wallet.confirmationCounts,
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  (state: State) => state.wallet.networkId!,
-  (transactions, internalAddresses, externalAddresses, rewardAddressHex, confirmationCounts, networkId) =>
-    mapValues(transactions, (tx: Transaction) =>
-      processTxHistoryData(
+export const transactionsInfoSelector: (state: State) => Record<string, TransactionInfo> = createSelector(
+  (state: State) => state.wallet,
+  (wallet) =>
+    mapValues(wallet.transactions, (tx: Transaction) => {
+      if (!wallet.networkId) throw new Error('invalid state')
+      return processTxHistoryData(
         tx,
-        rewardAddressHex != null
-          ? [...internalAddresses, ...externalAddresses, ...[rewardAddressHex]]
-          : [...internalAddresses, ...externalAddresses],
-        confirmationCounts[tx.id] || 0,
-        networkId,
-      ),
-    ),
+        wallet.rewardAddressHex != null
+          ? [...wallet.internalAddresses, ...wallet.externalAddresses, ...[wallet.rewardAddressHex]]
+          : [...wallet.internalAddresses, ...wallet.externalAddresses],
+        wallet.confirmationCounts[tx.id] || 0,
+        wallet.networkId,
+      )
+    }),
 )
 
 const _initAssetsRegistry = (networkId: NetworkId): Record<string, DefaultAsset> =>
@@ -45,7 +40,7 @@ const _initAssetsRegistry = (networkId: NetworkId): Record<string, DefaultAsset>
 
 export const availableAssetsSelector: (state: State) => Record<string, Token> = createSelector(
   transactionsInfoSelector,
-  (state) => state.wallet.networkId,
+  (state: State) => state.wallet.networkId,
   (txs, networkId) => {
     if (networkId === NETWORK_REGISTRY.UNDEFINED) {
       const defaultAsset = getCardanoDefaultAsset()
@@ -53,6 +48,8 @@ export const availableAssetsSelector: (state: State) => Record<string, Token> = 
         [defaultAsset.identifier]: defaultAsset,
       }
     }
+
+    if (!networkId) throw new Error('invalid state')
 
     const tokens: Record<string, Token> = fromPairs(
       ObjectValues(_initAssetsRegistry(networkId)).map((asset) => [
@@ -84,23 +81,12 @@ export const externalAddressIndexSelector: (state: State) => Record<string, numb
 )
 export const isUsedAddressIndexSelector = (state: State) => state.wallet.isUsedAddressIndex
 export const hwDeviceInfoSelector = (state: State): HWDeviceInfo | null | undefined => state.wallet.hwDeviceInfo
-export const walletMetaSelector = (state: State): WalletMeta =>
-  ({
-    id: state.wallet.id,
-    name: state.wallet.name,
-    networkId: state.wallet.networkId,
-    walletImplementationId: state.wallet.walletImplementationId,
-    provider: state.wallet.provider,
-    isHW: state.wallet.isHW,
-    isEasyConfirmationEnabled: state.wallet.isEasyConfirmationEnabled,
-    checksum: state.wallet.checksum,
-  } as unknown as WalletMeta)
 
 export const tokenBalanceSelector: (state: State) => MultiToken = createSelector(
   transactionsInfoSelector,
-  walletMetaSelector,
-  (transactions, walletMeta) => {
-    if (walletMeta.networkId === NETWORK_REGISTRY.UNDEFINED) {
+  (state: State) => state.wallet,
+  (transactions, wallet) => {
+    if (wallet.networkId === NETWORK_REGISTRY.UNDEFINED) {
       const defaultAsset = getCardanoDefaultAsset()
       return new MultiToken([], {
         defaultNetworkId: defaultAsset.networkId,
@@ -108,12 +94,14 @@ export const tokenBalanceSelector: (state: State) => MultiToken = createSelector
       })
     }
 
+    if (!wallet.networkId) throw new Error('invalid state')
+
     const processed = ObjectValues(transactions).filter((tx) => tx.status === TRANSACTION_STATUS.SUCCESSFUL)
     const rawBalance = processed
       .map((tx) => MultiToken.fromArray(tx.delta))
       .reduce(
         (acc, curr) => acc.joinAddMutable(curr),
-        new MultiToken([], getDefaultNetworkTokenEntry(walletMeta.networkId)),
+        new MultiToken([], getDefaultNetworkTokenEntry(wallet.networkId)),
       )
     const positiveBalance = rawBalance.asArray().filter((value) => {
       if (value.isDefault) return true // keep ADA or any other default asset
@@ -124,8 +112,8 @@ export const tokenBalanceSelector: (state: State) => MultiToken = createSelector
   },
 )
 export const receiveAddressesSelector: (state: State) => Array<string> = createSelector(
-  (state) => state.wallet.externalAddresses,
-  (state) => state.wallet.numReceiveAddresses,
+  (state: State) => state.wallet.externalAddresses,
+  (state: State) => state.wallet.numReceiveAddresses,
   (addresses, count) => addresses.slice(0, count),
 )
 export const canGenerateNewReceiveAddressSelector = (state: State) => state.wallet.canGenerateNewReceiveAddress

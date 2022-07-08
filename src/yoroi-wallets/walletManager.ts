@@ -16,16 +16,17 @@ import type {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {Logger} from '../legacy/logging'
 import type {WalletMeta} from '../legacy/state'
 import storage from '../legacy/storage'
-import type {
+import type {EncryptionMethod} from '../legacy/types'
+import {
   FundInfoResponse,
+  NETWORK_REGISTRY,
   PoolInfoRequest,
   RawUtxo,
   TokenInfoRequest,
   TokenInfoResponse,
   TxBodiesRequest,
+  WALLET_IMPLEMENTATION_REGISTRY,
 } from '../legacy/types'
-import type {EncryptionMethod} from '../legacy/types'
-import {NETWORK_REGISTRY, WALLET_IMPLEMENTATION_REGISTRY} from '../legacy/types'
 import {SendTokenList, StakePoolInfosAndHistories, Token} from '../types'
 import {
   isYoroiWallet,

@@ -33,7 +33,6 @@ import {
   sendCrashReportsSelector,
 } from './selectors'
 import type {State} from './state'
-import {fetchTokenInfo} from './tokenInfo'
 import {clearUTXOs} from './utxo'
 
 const updateCrashlytics = (fieldName: AppSettingsKey, value: any) => {
@@ -53,7 +52,7 @@ export const setAppSettingField = (fieldName: AppSettingsKey, value: any) => asy
     path: ['appSettings', fieldName],
     payload: value,
     type: 'SET_APP_SETTING_FIELD',
-    reducer: (state, payload) => payload,
+    reducer: (state: State, payload) => payload,
   })
   updateCrashlytics(fieldName, value)
 }
@@ -64,7 +63,7 @@ export const clearAppSettingField = (fieldName: AppSettingsKey) => async (dispat
     path: ['appSettings', fieldName],
     payload: null,
     type: 'REMOVE_APP_SETTING_FIELD',
-    reducer: (state, payload) => payload,
+    reducer: (state: State, payload) => payload,
   })
 }
 export const setEasyConfirmation = (enable: boolean) => ({
@@ -77,7 +76,7 @@ export const setEasyConfirmation = (enable: boolean) => ({
 const _updateWallets = (wallets) => ({
   path: ['wallets'],
   payload: wallets,
-  reducer: (state, value) => value,
+  reducer: (state: State, value) => value,
   type: 'UPDATE_WALLETS',
 })
 
@@ -90,7 +89,7 @@ const _setAppSettings = (appSettings) => ({
   path: ['appSettings'],
   payload: appSettings,
   type: 'SET_APP_SETTINGS',
-  reducer: (state, payload) => payload,
+  reducer: (state: State, payload) => payload,
 })
 
 export const reloadAppSettings = () => async (dispatch: Dispatch<any>) => {
@@ -143,7 +142,7 @@ export const signin = () => (dispatch: Dispatch<any>) => {
     path: ['isAuthenticated'],
     payload: true,
     type: 'SIGN_IN',
-    reducer: (state, payload) => payload,
+    reducer: (state: State, payload) => payload,
   })
 }
 export const signout = () => (dispatch: Dispatch<any>) => {
@@ -151,7 +150,7 @@ export const signout = () => (dispatch: Dispatch<any>) => {
     path: ['isAuthenticated'],
     payload: false,
     type: 'SIGN_OUT',
-    reducer: (state, payload) => payload,
+    reducer: (state: State, payload) => payload,
   })
 }
 // logout closes the active wallet and signout
@@ -165,7 +164,7 @@ const _setServerStatus = (serverStatus: ServerStatus) => (dispatch: Dispatch<any
     path: ['serverStatus'],
     payload: serverStatus,
     type: 'SET_SERVER_STATUS',
-    reducer: (state, payload) => payload,
+    reducer: (state: State, payload) => payload,
   })
 
 export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
@@ -241,7 +240,7 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
   dispatch({
     path: ['isAppInitialized'],
     payload: true,
-    reducer: (state, value) => value,
+    reducer: (state: State, value) => value,
     type: 'INITIALIZE_APP',
   })
   RNBootSplash.hide({
@@ -282,7 +281,7 @@ const _setOnline = (isOnline: boolean) => (dispatch, getState) => {
     type: 'Set isOnline',
     path: ['isOnline'],
     payload: isOnline,
-    reducer: (state, payload) => payload,
+    reducer: (state: State, payload) => payload,
   })
 }
 
@@ -290,7 +289,7 @@ const setIsKeyboardOpen = (isOpen) => ({
   type: 'Set isKeyboardOpen',
   path: ['isKeyboardOpen'],
   payload: isOpen,
-  reducer: (state, payload) => payload,
+  reducer: (state: State, payload) => payload,
 })
 
 export const setupHooks = () => (dispatch: Dispatch<any>) => {
@@ -301,10 +300,8 @@ export const setupHooks = () => (dispatch: Dispatch<any>) => {
   walletManager.subscribe(() => dispatch(mirrorTxHistory()))
   walletManager.subscribeBackgroundSyncError((err: any) => dispatch(setBackgroundSyncError(err)))
   walletManager.subscribeServerSync((status) => dispatch(_setServerStatus(status)))
-  walletManager.subscribeOnOpen(() => dispatch(fetchTokenInfo()))
   walletManager.subscribeOnClose(() => dispatch(clearUTXOs()))
   walletManager.subscribeOnClose(() => dispatch(clearAccountState()))
-  walletManager.subscribeOnTxHistoryUpdate(() => dispatch(fetchTokenInfo()))
   Logger.debug('setting up app lock')
 
   const onTimeoutAction = () => {
