@@ -57,7 +57,7 @@ export const WalletForm = ({onSubmit}: Props) => {
           autoFocus
           label={strings.walletNameInputLabel}
           value={name}
-          onChangeText={setName}
+          onChangeText={(walletName: string) => setName(walletName.trim())}
           errorText={walletNameErrorText}
           errorDelay={0}
           returnKeyType="next"
