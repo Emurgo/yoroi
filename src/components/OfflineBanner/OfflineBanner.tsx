@@ -1,13 +1,13 @@
+import {useNetInfo} from '@react-native-community/netinfo'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {useSelector} from 'react-redux'
 
-import {isOnlineSelector} from '../../legacy/selectors'
 import {Banner} from '../Banner'
 
 export const OfflineBanner = () => {
   const intl = useIntl()
-  const isOnline = useSelector(isOnlineSelector)
+  const netInfo = useNetInfo()
+  const isOnline = netInfo.type !== 'none' && netInfo.type !== 'unknown'
 
   return isOnline ? null : <Banner error text={intl.formatMessage(messages.offline)} />
 }

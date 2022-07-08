@@ -1,3 +1,4 @@
+import {useNetInfo} from '@react-native-community/netinfo'
 import {useNavigation} from '@react-navigation/native'
 import {BigNumber} from 'bignumber.js'
 import _ from 'lodash'
@@ -15,7 +16,6 @@ import {formatTokenAmount, getAssetDenominationOrId, truncateWithEllipsis} from 
 import {
   hasPendingOutgoingTransactionSelector,
   isFetchingUtxosSelector,
-  isOnlineSelector,
   lastUtxosFetchErrorSelector,
   tokenBalanceSelector,
   utxosSelector,
@@ -71,7 +71,8 @@ export const SendScreen = ({
   const defaultAsset = getDefaultAssetByNetworkId(wallet.networkId)
   const utxos = useSelector(utxosSelector)
   const hasPendingOutgoingTransaction = useSelector(hasPendingOutgoingTransactionSelector)
-  const isOnline = useSelector(isOnlineSelector)
+  const netInfo = useNetInfo()
+  const isOnline = netInfo.type !== 'none' && netInfo.type !== 'unknown'
   const selectedAsset = tokenBalance.values.find(({identifier}) => identifier === selectedTokenIdentifier)
 
   if (!selectedAsset) {

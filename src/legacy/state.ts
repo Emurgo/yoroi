@@ -60,7 +60,6 @@ export type State = {
     value: BigNumber
     poolOperator: string | null
   }
-  isOnline: boolean
   isAppInitialized: boolean
   isAuthenticated: boolean
   isKeyboardOpen: boolean
@@ -122,8 +121,6 @@ export const getInitialState = (): State => ({
     value: new BigNumber(0),
     poolOperator: null,
   },
-  isOnline: true,
-  // we are online by default
   isAppInitialized: false,
   isAuthenticated: false,
   isKeyboardOpen: false,

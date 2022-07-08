@@ -117,7 +117,6 @@ export const receiveAddressesSelector: (state: State) => Array<string> = createS
   (addresses, count) => addresses.slice(0, count),
 )
 export const canGenerateNewReceiveAddressSelector = (state: State) => state.wallet.canGenerateNewReceiveAddress
-export const isOnlineSelector = (state: State): boolean => state.isOnline
 export const isSynchronizingHistorySelector = (state: State): boolean => state.txHistory.isSynchronizing
 export const lastHistorySyncErrorSelector = (state: State) => state.txHistory.lastSyncError
 // accountState
