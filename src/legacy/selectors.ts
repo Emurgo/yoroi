@@ -83,9 +83,7 @@ export const externalAddressIndexSelector: (state: State) => Record<string, numb
   (addresses) => fromPairs(addresses.map((addr, i) => [addr, i])),
 )
 export const isUsedAddressIndexSelector = (state: State) => state.wallet.isUsedAddressIndex
-export const isHWSelector = (state: State): boolean => state.wallet.isHW
 export const hwDeviceInfoSelector = (state: State): HWDeviceInfo | null | undefined => state.wallet.hwDeviceInfo
-export const isReadOnlySelector = (state: State) => state.wallet.isReadOnly
 export const walletMetaSelector = (state: State): WalletMeta =>
   ({
     id: state.wallet.id,
@@ -159,12 +157,9 @@ export const hasPendingOutgoingTransactionSelector: (state: State) => boolean = 
       (tx) => tx.status === TRANSACTION_STATUS.PENDING && tx.direction !== TRANSACTION_DIRECTION.RECEIVED,
     ),
 )
-export const easyConfirmationSelector = (state: State): boolean => state.wallet.isEasyConfirmationEnabled
-export const customPinHashSelector = (state: State) => state.appSettings.customPinHash
 export const isAppInitializedSelector = (state: State): boolean => state.isAppInitialized
 export const isAuthenticatedSelector = (state: State): boolean => state.isAuthenticated
 export const installationIdSelector = (state: State) => state.appSettings.installationId
-export const tosSelector = (state: State): boolean => state.appSettings.acceptedTos
 export const isMaintenanceSelector = (state: State): boolean => state.serverStatus.isMaintenance
 export const serverStatusSelector = (state: State) => state.serverStatus
 
@@ -175,8 +170,8 @@ export const serverStatusSelector = (state: State) => state.serverStatus
  * - Authentication system setup (based on pin or biometrics)
  */
 export const isAppSetupCompleteSelector: (state: State) => boolean = createSelector(
-  tosSelector,
+  (state: State): boolean => state.appSettings.acceptedTos,
   isSystemAuthEnabledSelector,
-  customPinHashSelector,
+  (state: State) => state.appSettings.customPinHash,
   (acceptedTos, isSystemAuthEnabled, customPinHash) => acceptedTos && (isSystemAuthEnabled || customPinHash != null),
 )
