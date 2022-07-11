@@ -18,6 +18,7 @@ import getConfiguredStore from './legacy/configureStore'
 import {ApiError, NetworkError} from './legacy/errors'
 import {Logger, setLogLevel} from './legacy/logging'
 import {CurrencyProvider} from './Settings/Currency/CurrencyContext'
+import {PrivacyModeProvider} from './Settings/PrivacyMode/PrivacyModeContext'
 import {ThemeProvider} from './theme'
 
 setLogLevel(CONFIG.LOG_LEVEL)
@@ -70,7 +71,9 @@ const AppWithProviders = () => {
             <ThemeProvider>
               <LanguageProvider>
                 <CurrencyProvider>
-                  <App />
+                  <PrivacyModeProvider>
+                    <App />
+                  </PrivacyModeProvider>
                 </CurrencyProvider>
               </LanguageProvider>
             </ThemeProvider>

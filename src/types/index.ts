@@ -1,4 +1,5 @@
 export * from './hw'
+export * from './privacy'
 export * from './staking'
 export * from './tokens'
 export * from './transactions'
