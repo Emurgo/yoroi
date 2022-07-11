@@ -7,7 +7,7 @@ import {usePrivacyModeContext} from '../../Settings/PrivacyMode/PrivacyModeConte
 import {Button, Spacer, Text} from '..'
 import {HideableText} from './HideableText'
 
-const TEXT = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit'
+const TEXT = 'Lorem ipsum dolor sit amet'
 
 storiesOf('HideableText', module).add('Default', () => <HideableTextTest />)
 
@@ -16,7 +16,7 @@ const HideableTextTest = () => {
 
   return (
     <SafeAreaView edges={['bottom', 'right', 'left']} style={styles.mainColumn}>
-      <Text>Privacy Mode: {privaceModeStatus}</Text>
+      <Text style={styles.text}>Privacy Mode: {privaceModeStatus}</Text>
       <Spacer height={20} />
       <HideableText>{TEXT}</HideableText>
       <Spacer height={20} />
@@ -31,5 +31,8 @@ const HideableTextTest = () => {
 const styles = StyleSheet.create({
   mainColumn: {
     padding: 16,
+  },
+  text: {
+    lineHeight: 22,
   },
 })

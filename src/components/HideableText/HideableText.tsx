@@ -7,7 +7,7 @@ type Props = {
   children: string
 }
 
-export const HideableText = ({children}: Props) => {
+export const HideableText = ({children, ...props}: Props) => {
   const {privaceModeStatus} = usePrivacyModeContext()
-  return <Text>{privaceModeStatus === 'SHOWN' ? children : children.replaceAll(/./g, '*')}</Text>
+  return <Text {...props}>{privaceModeStatus === 'SHOWN' ? children : children.replaceAll(/./g, '\u25CF')}</Text>
 }
