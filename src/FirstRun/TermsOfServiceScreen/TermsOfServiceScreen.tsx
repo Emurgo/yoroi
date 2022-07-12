@@ -17,7 +17,7 @@ import {FirstRunRouteNavigation} from '../../navigation'
 export const TermsOfServiceScreen = () => {
   const strings = useStrings()
   const navigation = useNavigation<FirstRunRouteNavigation>()
-  const {languageCode} = useLanguage()
+  const {language} = useLanguage()
   const [acceptedTos, setAcceptedTos] = React.useState(false)
   const [savingConsent, setSavingConsent] = React.useState(false)
 
@@ -51,7 +51,7 @@ export const TermsOfServiceScreen = () => {
       <StatusBar type="dark" />
 
       <ScrollView contentContainerStyle={styles.contentContainer}>
-        <TermsOfService languageCode={languageCode} />
+        <TermsOfService languageCode={language.code} />
       </ScrollView>
 
       <Footer>

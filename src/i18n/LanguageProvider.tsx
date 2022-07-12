@@ -11,10 +11,11 @@ import translations from './translations'
 const LanguageContext = React.createContext<undefined | LanguageContext>(undefined)
 export const LanguageProvider: React.FC = ({children}) => {
   const languageCode = useLanguageCode()
+  const language = supportedLanguages[languageCode]
   const selectLanguageCode = useSaveLanguageCode()
 
   return (
-    <LanguageContext.Provider value={{languageCode, selectLanguageCode, supportedLanguages}}>
+    <LanguageContext.Provider value={{language, selectLanguageCode, supportedLanguages}}>
       <IntlProvider locale={languageCode} messages={translations[languageCode]} textComponent={Text}>
         {children}
       </IntlProvider>
@@ -28,7 +29,7 @@ const missingProvider = () => {
   throw new Error('LanguageProvider is missing')
 }
 
-const useLanguageCode = ({onSuccess, ...options}: UseQueryOptions<string> = {}) => {
+const useLanguageCode = ({onSuccess, ...options}: UseQueryOptions<LanguageCode> = {}) => {
   const query = useQuery({
     initialData: defaultLanguageCode,
     queryKey: ['languageCode'],
@@ -36,9 +37,11 @@ const useLanguageCode = ({onSuccess, ...options}: UseQueryOptions<string> = {}) 
       const languageCode = await AsyncStorage.getItem('/appSettings/languageCode')
 
       if (languageCode) {
-        const parsedLanguageCode = JSON.parse(languageCode)
-        const stillSupported = supportedLanguages.some((v) => v.code === parsedLanguageCode)
-        if (stillSupported) return parsedLanguageCode
+        const parsedLanguageCode: LanguageCode = JSON.parse(languageCode)
+        const stillSupported = supportedLanguages[parsedLanguageCode]
+        if (stillSupported) {
+          return parsedLanguageCode
+        }
       }
 
       return defaultLanguageCode
@@ -56,7 +59,7 @@ const useLanguageCode = ({onSuccess, ...options}: UseQueryOptions<string> = {}) 
   return query.data
 }
 
-const useSaveLanguageCode = ({onSuccess, ...options}: UseMutationOptions<void, Error, string> = {}) => {
+const useSaveLanguageCode = ({onSuccess, ...options}: UseMutationOptions<void, Error, LanguageCode> = {}) => {
   const queryClient = useQueryClient()
 
   const mutation = useMutation({
@@ -72,20 +75,21 @@ const useSaveLanguageCode = ({onSuccess, ...options}: UseMutationOptions<void, E
   return mutation.mutate
 }
 
-type LanguageCode = string
+type Language = typeof supportedLanguages[LanguageCode]
+type LanguageCode = keyof typeof supportedLanguages
 type SaveLanguageCode = ReturnType<typeof useSaveLanguageCode>
 type SupportedLanguages = typeof supportedLanguages
 type LanguageContext = {
-  languageCode: LanguageCode
+  language: Language
   selectLanguageCode: SaveLanguageCode
   supportedLanguages: SupportedLanguages
 }
 
-const systemLanguageCode = Platform.select({
+const systemLanguageCode: string = Platform.select({
   ios: () =>
     NativeModules.SettingsManager.settings.AppleLocale || NativeModules.SettingsManager.settings.AppleLanguages[0],
   android: () => NativeModules.I18nManager.localeIdentifier,
   default: () => 'en-US',
 })()
 
-const defaultLanguageCode = supportedLanguages.some((v) => v.code === systemLanguageCode) ? systemLanguageCode : 'en-US'
+const defaultLanguageCode = supportedLanguages[systemLanguageCode] ? (systemLanguageCode as LanguageCode) : 'en-US'

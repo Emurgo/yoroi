@@ -12,16 +12,16 @@ import {DIALOG_BUTTONS, showConfirmationDialog, signout} from '../../legacy/acti
 import {isByron, isHaskellShelley} from '../../legacy/config'
 import {getNetworkConfigById} from '../../legacy/networks'
 import {easyConfirmationSelector, isSystemAuthEnabledSelector} from '../../legacy/selectors'
-import {useWalletNavigation} from '../../navigation'
-import {useSelectedWallet, useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
-import {NetworkId, WalletImplementationId, walletManager} from '../../yoroi-wallets'
 import {
   NavigatedSettingsItem,
   PressableSettingsItem,
   SettingsBuildItem,
   SettingsItem,
   SettingsSection,
-} from '../SettingsItems'
+} from '../../legacy/SettingsItems'
+import {useWalletNavigation} from '../../navigation'
+import {useSelectedWallet, useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
+import {NetworkId, WalletImplementationId, walletManager} from '../../yoroi-wallets'
 
 export const WalletSettingsScreen = () => {
   const intl = useIntl()
@@ -83,7 +83,7 @@ export const WalletSettingsScreen = () => {
       </SettingsSection>
 
       <SettingsSection title={strings.about}>
-        <SettingsBuildItem label={strings.network} value={getNetworkName(wallet.networkId)} />
+        <SettingsBuildItem label={`${strings.network}:`} value={getNetworkName(wallet.networkId)} />
 
         <SettingsBuildItem
           label={strings.walletType}
@@ -125,7 +125,7 @@ const messages = defineMessages({
   },
   // note: moved here from application settings
   network: {
-    id: 'components.settings.applicationsettingsscreen.network',
+    id: 'global.network',
     defaultMessage: '!!!Network:',
   },
   walletType: {

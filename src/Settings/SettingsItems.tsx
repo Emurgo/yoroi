@@ -1,11 +1,12 @@
 import {useNavigation} from '@react-navigation/native'
-import React from 'react'
+import React, {ReactElement} from 'react'
 import {Image, StyleSheet, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 
 import chevronRight from '../assets/img/chevron_right.png'
-import {Text} from '../components'
+import {Hr, Icon, Spacer, Text} from '../components'
 import {SettingsRouteNavigation, SettingsStackRoutes} from '../navigation'
 import {COLORS} from '../theme'
+import {lightPalette} from '../theme'
 
 const Touchable = (props: TouchableOpacityProps) => <TouchableOpacity {...props} activeOpacity={0.5} />
 
@@ -28,11 +29,19 @@ type SettingsSectionProps = {
 export const SettingsSection = ({title, children}: SettingsSectionProps) => (
   <View style={styles.section}>
     {title != null && (
-      <Text small secondary style={styles.sectionTitle}>
-        {title}
-      </Text>
+      <>
+        <Text
+          style={[
+            styles.sectionTitle,
+            {fontFamily: 'Rubik-Regular', color: lightPalette.gray['600'], fontSize: 14, lineHeight: 22},
+          ]}
+        >
+          {title}
+        </Text>
+        <Hr />
+      </>
     )}
-    <View style={styles.sectionContent}>{children}</View>
+    <View>{children}</View>
   </View>
 )
 
@@ -40,12 +49,45 @@ type SettingsItemProps = {
   label: string
   children: React.ReactNode
   disabled?: boolean
+  icon?: ReactElement
+  info?: string
 }
 
-export const SettingsItem = ({label, children, disabled}: SettingsItemProps) => (
-  <View style={styles.item}>
-    <Text style={[styles.label, disabled === true && styles.disabled]}>{label}</Text>
-    <View>{children}</View>
+export const SettingsItem = ({label, children, disabled, icon, info}: SettingsItemProps) => (
+  <View>
+    <View style={styles.itemInner}>
+      <View style={styles.itemMainContent}>
+        {icon}
+        {icon && <Spacer width={10} />}
+        <Text
+          style={[
+            styles.label,
+            disabled && styles.disabled,
+            {fontFamily: 'Rubik-Medium', color: lightPalette.gray['900'], fontSize: 16, lineHeight: 24},
+          ]}
+        >
+          {label}
+        </Text>
+        <View>{children}</View>
+      </View>
+
+      {info && (
+        <>
+          <Spacer height={12} />
+          <Text
+            style={{
+              fontFamily: 'Rubik-Regular',
+              color: lightPalette.gray['600'],
+              fontSize: 12,
+              lineHeight: 18,
+            }}
+          >
+            {info}
+          </Text>
+        </>
+      )}
+    </View>
+    <Hr />
   </View>
 )
 
@@ -56,7 +98,14 @@ type SettingsBuildItemProps = {
 
 export const SettingsBuildItem = ({label, value}: SettingsBuildItemProps) => (
   <SettingsItem label={label}>
-    <Text small secondary>
+    <Text
+      style={{
+        fontFamily: 'Rubik-Regular',
+        color: lightPalette.secondary['400'],
+        fontSize: 12,
+        lineHeight: 18,
+      }}
+    >
       {value}
     </Text>
   </SettingsItem>
@@ -65,15 +114,33 @@ export const SettingsBuildItem = ({label, value}: SettingsBuildItemProps) => (
 type NavigatedSettingsItemProps = {
   label: string
   navigateTo: keyof SettingsStackRoutes
+  icon?: ReactElement
   disabled?: boolean
+  selected?: string
 }
 
-export const NavigatedSettingsItem = ({label, navigateTo, disabled}: NavigatedSettingsItemProps) => {
+export const NavigatedSettingsItem = ({label, navigateTo, icon, disabled, selected}: NavigatedSettingsItemProps) => {
   const navigation = useNavigation<SettingsRouteNavigation>()
+
   return (
     <NavigateTo to={navigateTo} navigation={navigation} disabled={disabled}>
-      <SettingsItem label={label} disabled={disabled}>
-        <Image source={chevronRight} />
+      <SettingsItem icon={icon} label={label} disabled={disabled}>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          {selected && (
+            <Text
+              style={{
+                fontFamily: 'Rubik-Regular',
+                color: lightPalette.gray['500'],
+                fontSize: 16,
+                lineHeight: 24,
+              }}
+            >
+              {selected}
+            </Text>
+          )}
+          <Spacer width={16} />
+          <Icon.Chevron direction="right" size={28} color={lightPalette.gray['600']} />
+        </View>
       </SettingsItem>
     </NavigateTo>
   )
@@ -94,33 +161,24 @@ export const PressableSettingsItem = ({label, onPress, disabled}: PressableSetti
 )
 
 const styles = StyleSheet.create({
-  item: {
+  itemInner: {
+    paddingVertical: 16,
+  },
+  itemMainContent: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: 12,
   },
   label: {
     flex: 1,
   },
-  disabled: {
-    color: COLORS.DISABLED,
-  },
   section: {
-    marginTop: 16,
-  },
-  sectionContent: {
-    marginHorizontal: 16,
-    elevation: 1,
-    shadowOffset: {width: 0, height: 2},
-    shadowRadius: 12,
-    shadowOpacity: 0.06,
-    shadowColor: 'black',
-    backgroundColor: '#fff',
-    borderRadius: 8,
+    paddingHorizontal: 16,
   },
   sectionTitle: {
-    marginBottom: 5,
-    paddingHorizontal: 28,
+    paddingBottom: 5,
+  },
+  disabled: {
+    color: COLORS.DISABLED,
   },
 })

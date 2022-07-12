@@ -40,11 +40,20 @@ export const Menu = () => {
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
       <ScrollView contentContainerStyle={styles.scrollViewContent} bounces={false}>
+        <AppSettings //
+          label={strings.appSettings}
+          onPress={navigateTo.appSettings}
+          left={<Icon.Gear size={24} color="#6B7384" />}
+        />
+
+        <HR />
+
         <AllWallets
           label={`${strings.allWallets} (${walletCount})`}
           onPress={navigateTo.allWallets}
-          left={<Icon.Wallets size={26} color="#6B7384" />}
+          left={<Icon.Wallets size={24} color="#6B7384" />}
         />
+
         <HR />
 
         <Catalyst //
@@ -52,13 +61,7 @@ export const Menu = () => {
           onPress={navigateTo.catalystVoting}
           left={<Icon.Catalyst size={26} color="#6B7384" />}
         />
-        <HR />
 
-        <Settings //
-          label={strings.settings}
-          onPress={navigateTo.settings}
-          left={<Icon.Gear size={26} color="#6B7384" />}
-        />
         <HR />
 
         <KnowledgeBase //
@@ -66,6 +69,7 @@ export const Menu = () => {
           onPress={navigateTo.knowledgeBase}
           left={<Icon.Info size={24} color="#6B7384" />}
         />
+
         <HR />
 
         <Spacer fill />
@@ -114,7 +118,7 @@ const HR = () => {
 }
 
 const AllWallets = Item
-const Settings = Item
+const AppSettings = Item
 const KnowledgeBase = Item
 const Catalyst = ({label, left, onPress}: {label: string; left: React.ReactElement; onPress: () => void}) => {
   const tokenBalance = useSelector(tokenBalanceSelector)
@@ -142,7 +146,7 @@ const SUPPORT_TICKET_LINK = 'https://emurgohelpdesk.zendesk.com/hc/en-us/request
 const KNOWLEDGE_BASE_LINK = 'https://emurgohelpdesk.zendesk.com/hc/en-us/categories/4412619927695-Yoroi'
 
 const useNavigateTo = () => {
-  const {navigation, navigateToSettings} = useWalletNavigation()
+  const {navigation, navigateToAppSettings} = useWalletNavigation()
 
   return {
     allWallets: () => navigation.navigate('app-root', {screen: 'wallet-selection'}),
@@ -153,7 +157,7 @@ const useNavigateTo = () => {
           screen: 'catalyst-landing',
         },
       }),
-    settings: () => navigateToSettings(),
+    appSettings: () => navigateToAppSettings(),
     support: () => Linking.openURL(SUPPORT_TICKET_LINK),
     knowledgeBase: () => Linking.openURL(KNOWLEDGE_BASE_LINK),
   }
@@ -165,7 +169,7 @@ const useStrings = () => {
   return {
     allWallets: intl.formatMessage(messages.allWallets),
     catalystVoting: intl.formatMessage(messages.catalystVoting),
-    settings: intl.formatMessage(messages.settings),
+    appSettings: intl.formatMessage(messages.appSettings),
     supportTitle: intl.formatMessage(messages.supportTitle),
     supportLink: intl.formatMessage(messages.supportLink),
     knowledgeBase: intl.formatMessage(messages.knowledgeBase),
@@ -182,9 +186,9 @@ const messages = defineMessage({
     id: 'menu.catalystVoting',
     defaultMessage: '!!!Catalyst voting',
   },
-  settings: {
-    id: 'menu.settings',
-    defaultMessage: '!!!Settings',
+  appSettings: {
+    id: 'menu.appSettings',
+    defaultMessage: '!!!App Settings',
   },
   supportTitle: {
     id: 'menu.supportTitle',

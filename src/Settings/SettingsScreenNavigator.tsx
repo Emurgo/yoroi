@@ -9,15 +9,15 @@ import {ChangePinScreen, CreatePinScreen} from '../auth'
 import globalMessages from '../i18n/global-messages'
 import {setEasyConfirmation, setSystemAuth} from '../legacy/actions'
 import {
-  defaultStackNavigationOptions,
   defaultStackNavigationOptionsV2,
   SettingsStackRoutes,
   SettingsTabRoutes,
   useWalletNavigation,
 } from '../navigation'
 import {useSelectedWalletMeta, useSetSelectedWalletMeta} from '../SelectedWallet'
-import {COLORS} from '../theme'
+import {lightPalette} from '../theme'
 import {walletManager} from '../yoroi-wallets'
+import {About} from './About'
 import {ApplicationSettingsScreen} from './ApplicationSettings'
 import {BiometricsLinkScreen} from './BiometricsLink/'
 import {ChangeLanguageScreen} from './ChangeLanguage'
@@ -40,12 +40,20 @@ export const SettingsScreenNavigator = () => {
   const walletMeta = useSelectedWalletMeta()
 
   return (
-    <Stack.Navigator screenOptions={defaultStackNavigationOptions} initialRouteName="settings-main">
+    <Stack.Navigator screenOptions={defaultStackNavigationOptionsV2} initialRouteName="settings-main">
       <Stack.Screen //
         name="settings-main"
         component={SettingsTabNavigator}
         options={{title: strings.settingsTitle}}
       />
+
+      <Stack.Screen //
+        name="app-settings"
+        component={ApplicationSettingsScreen}
+        options={{title: strings.appSettingsTitle}}
+      />
+
+      <Stack.Screen name="about" component={About} options={{title: strings.aboutTitle}} />
 
       <Stack.Screen
         name="change-wallet-name"
@@ -106,10 +114,7 @@ export const SettingsScreenNavigator = () => {
 
       <Stack.Screen //
         name="change-custom-pin"
-        options={{
-          title: strings.changeCustomPinTitle,
-          headerStyle: defaultStackNavigationOptions.headerStyle,
-        }}
+        options={{title: strings.changeCustomPinTitle}}
       >
         {() => <ChangePinScreen onDone={() => navigation.goBack()} />}
       </Stack.Screen>
@@ -146,9 +151,9 @@ const SettingsTabNavigator = () => {
     <Tab.Navigator
       screenOptions={({route}) => ({
         tabBarLabel: route.name === 'wallet-settings' ? strings.walletTabTitle : strings.appTabTitle,
-        tabBarStyle: {backgroundColor: COLORS.BACKGROUND_BLUE, elevation: 0, shadowOpacity: 0},
-        tabBarIndicatorStyle: {backgroundColor: '#fff', height: 2},
-        tabBarLabelStyle: {color: COLORS.WHITE},
+        tabBarStyle: {backgroundColor: '#fff', elevation: 0, shadowOpacity: 0},
+        tabBarIndicatorStyle: {backgroundColor: lightPalette.gray['max'], height: 2},
+        tabBarLabelStyle: {color: lightPalette.gray['max']},
       })}
     >
       <Tab.Screen name="wallet-settings" component={WalletSettingsScreen} />
@@ -165,6 +170,10 @@ const messages = defineMessages({
   appTabTitle: {
     id: 'components.settings.applicationsettingsscreen.tabTitle',
     defaultMessage: '!!!Application',
+  },
+  aboutTitle: {
+    id: 'components.settings.applicationsettingsscreen.about',
+    defaultMessage: '!!!About',
   },
   changeCustomPinTitle: {
     id: 'components.settings.applicationsettingsscreen.changePin',
@@ -202,6 +211,10 @@ const messages = defineMessages({
     id: 'components.settings.applicationsettingsscreen.title',
     defaultMessage: '!!!Settings',
   },
+  appSettingsTitle: {
+    id: 'components.settings.applicationsettingsscreen.appSettingsTitle',
+    defaultMessage: '!!!App settings',
+  },
   languageTitle: {
     id: 'components.settings.changelanguagescreen.title',
     defaultMessage: '!!!Language',
@@ -214,6 +227,7 @@ const useStrings = () => {
   return {
     walletTabTitle: intl.formatMessage(messages.walletTabTitle),
     appTabTitle: intl.formatMessage(messages.appTabTitle),
+    aboutTitle: intl.formatMessage(messages.aboutTitle),
     changeCustomPinTitle: intl.formatMessage(messages.changeCustomPinTitle),
     changePasswordTitle: intl.formatMessage(messages.changePasswordTitle),
     removeWalletTitle: intl.formatMessage(messages.removeWalletTitle),
@@ -223,6 +237,7 @@ const useStrings = () => {
     toggleEachConfirmationTitle: intl.formatMessage(messages.toggleEachConfirmationTitle),
     customPinTitle: intl.formatMessage(messages.customPinTitle),
     settingsTitle: intl.formatMessage(messages.settingsTitle),
+    appSettingsTitle: intl.formatMessage(messages.appSettingsTitle),
     languageTitle: intl.formatMessage(messages.languageTitle),
     currency: intl.formatMessage(globalMessages.currency),
   }
