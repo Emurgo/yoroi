@@ -24,7 +24,7 @@ export const usePrivacyMode = () => {
   return query.data
 }
 
-export const useSavePrivacyMode = ({...options}: UseMutationOptions<void, Error, PrivacyMode> = {}) => {
+export const useSetPrivacyMode = ({...options}: UseMutationOptions<void, Error, PrivacyMode> = {}) => {
   const mutation = useMutationWithInvalidations({
     mutationFn: async (privacyMode) => AsyncStorage.setItem('/appSettings/privacyMode', JSON.stringify(privacyMode)),
     invalidateQueries: [['privacyMode']],
