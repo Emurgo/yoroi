@@ -117,7 +117,7 @@ export const ApplicationSettingsScreen = () => {
 
           <NavigatedSettingsItem
             icon={<Icon.TermsOfUse {...iconProps} />}
-            label={strings.termsOfUse}
+            label={strings.termsOfservice}
             navigateTo="terms-of-use"
           />
         </SettingsSection>
@@ -175,7 +175,7 @@ const useStrings = () => {
     balanceInfo: intl.formatMessage(messages.balanceInfo),
     biometricsSignIn: intl.formatMessage(messages.biometricsSignIn),
     biometricsSignInInfo: intl.formatMessage(messages.biometricsSignInInfo),
-    termsOfUse: intl.formatMessage(messages.termsOfUse),
+    termsOfservice: intl.formatMessage(messages.termsOfservice),
     crashReporting: intl.formatMessage(messages.crashReporting),
     crashReportingInfo: intl.formatMessage(messages.crashReportingInfo),
   }
@@ -210,9 +210,9 @@ const messages = defineMessages({
     id: 'components.settings.applicationsettingsscreen.about',
     defaultMessage: '!!!About',
   },
-  termsOfUse: {
-    id: 'components.settings.applicationsettingsscreen.termsOfUse',
-    defaultMessage: '!!!Terms of Use',
+  termsOfservice: {
+    id: 'components.firstrun.acepttermsofservicescreen.title',
+    defaultMessage: '!!!Terms of Service Agreement',
   },
   changePin: {
     id: 'components.settings.applicationsettingsscreen.changePin',
