@@ -1,5 +1,5 @@
-import React, {useState} from 'react'
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import React from 'react'
+import {StyleSheet, Text, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
 import {Boundary, Spacer} from '../components'
@@ -9,12 +9,13 @@ import {formatTokenWithText, formatTokenWithTextWhenHidden} from '../legacy/form
 import {availableAssetsSelector, tokenBalanceSelector} from '../legacy/selectors'
 import {useSelectedWallet} from '../SelectedWallet'
 import {useCurrencyContext} from '../Settings/Currency'
+import {PrivacyMode, usePrivacyMode} from '../Settings/PrivacyMode/PrivacyMode'
 import {COLORS} from '../theme'
 
 export const BalanceBanner = () => {
   const wallet = useSelectedWallet()
 
-  const [privacyMode, setPrivacyMode] = useState(false)
+  const privacyMode = usePrivacyMode()
 
   return (
     <View style={styles.banner}>
@@ -26,29 +27,28 @@ export const BalanceBanner = () => {
 
       <Spacer height={10} />
 
-      <TouchableOpacity onPress={() => setPrivacyMode(!privacyMode)} style={styles.button}>
-        <Row>
-          <Balance privacyMode={privacyMode} />
-        </Row>
-        <Row>
-          <Boundary loading={{fallbackProps: {size: 'small'}}}>
-            <PairedBalance privacyMode={privacyMode} />
-          </Boundary>
-        </Row>
-      </TouchableOpacity>
+      <Row>
+        <Balance privacyMode={privacyMode} />
+      </Row>
+      <Row>
+        <Boundary loading={{fallbackProps: {size: 'small'}}}>
+          <PairedBalance privacyMode={privacyMode} />
+        </Boundary>
+      </Row>
     </View>
   )
 }
 
 const hiddenBalance = '*.******'
-const Balance = ({privacyMode}: {privacyMode: boolean}) => {
+const Balance = ({privacyMode}: {privacyMode: PrivacyMode}) => {
   const availableAssets = useSelector(availableAssetsSelector)
   const tokenBalance = useSelector(tokenBalanceSelector)
   const token = availableAssets[tokenBalance.getDefaultId()]
 
-  const balance = privacyMode
-    ? formatTokenWithTextWhenHidden(hiddenBalance, token)
-    : formatTokenWithText(tokenBalance.getDefault(), token)
+  const balance =
+    privacyMode === 'HIDDEN'
+      ? formatTokenWithTextWhenHidden(hiddenBalance, token)
+      : formatTokenWithText(tokenBalance.getDefault(), token)
 
   return (
     <Row>
@@ -60,7 +60,7 @@ const Balance = ({privacyMode}: {privacyMode: boolean}) => {
 const Row = ({children}: {children: React.ReactNode}) => <View style={styles.centered}>{children}</View>
 
 const hiddenPairedTotal = '*.**'
-const PairedBalance = ({privacyMode}: {privacyMode: boolean}) => {
+const PairedBalance = ({privacyMode}: {privacyMode: PrivacyMode}) => {
   const wallet = useSelectedWallet()
   const tokenBalance = useSelector(tokenBalanceSelector)
   const {currency, config} = useCurrencyContext()
@@ -72,7 +72,7 @@ const PairedBalance = ({privacyMode}: {privacyMode: boolean}) => {
   const balance = tokenBalance?.getDefault().dividedBy(10e5)
   const total = rate && balance ? balance.times(rate).decimalPlaces(config.decimals).toString() : '...'
 
-  const pairedTotal = privacyMode ? hiddenPairedTotal : total
+  const pairedTotal = privacyMode === 'HIDDEN' ? hiddenPairedTotal : total
 
   return (
     <Text style={styles.totalText}>
@@ -89,11 +89,6 @@ const styles = StyleSheet.create({
     height: 40,
     width: 40,
     borderRadius: 20,
-  },
-  button: {
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   balanceText: {
     fontSize: 16,

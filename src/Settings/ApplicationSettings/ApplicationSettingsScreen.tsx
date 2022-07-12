@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Platform, ScrollView, StyleSheet, Switch} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -20,6 +20,7 @@ import {
 import {useWalletNavigation} from '../../navigation'
 import {lightPalette} from '../../theme'
 import {useCurrencyContext} from '../Currency'
+import {useChangePrivacyMode, usePrivacyMode} from '../PrivacyMode/PrivacyMode'
 import {NavigatedSettingsItem, SettingsItem, SettingsSection} from '../SettingsItems'
 
 const iconProps = {
@@ -37,8 +38,8 @@ export const ApplicationSettingsScreen = () => {
   const dispatch = useDispatch()
   const {currency} = useCurrencyContext()
   const {language} = useLanguage()
-
-  const [isBalanceHidden, setIsBalanceHidden] = useState(true) // TODO: https://emurgo.atlassian.net/browse/YOMO-276
+  const privacyMode = usePrivacyMode()
+  const changePrivacyMode = useChangePrivacyMode()
 
   const setCrashReporting = (value: boolean) => {
     dispatch(setAppSettingField(APP_SETTINGS_KEYS.SEND_CRASH_REPORTS, value))
@@ -131,13 +132,7 @@ export const ApplicationSettingsScreen = () => {
           />
 
           <SettingsItem icon={<Icon.EyeOff {...iconProps} />} label={strings.balance} info={strings.balanceInfo}>
-            <Switch
-              value={isBalanceHidden}
-              onValueChange={() => {
-                // TODO: https://emurgo.atlassian.net/browse/YOMO-276
-                setIsBalanceHidden(!isBalanceHidden)
-              }}
-            />
+            <Switch value={privacyMode === 'HIDDEN'} onValueChange={changePrivacyMode} />
           </SettingsItem>
 
           <SettingsItem
