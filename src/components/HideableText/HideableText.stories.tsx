@@ -3,25 +3,23 @@ import React from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {usePrivacyModeContext} from '../../Settings/PrivacyMode/PrivacyModeContext'
+import {usePrivacyModeContext} from '../../Settings/PrivacyMode/PrivacyMode'
 import {Button, Spacer, Text} from '..'
 import {HideableText} from './HideableText'
-
-const TEXT = 'Lorem ipsum dolor sit amet'
 
 storiesOf('HideableText', module).add('Default', () => <HideableTextTest />)
 
 const HideableTextTest = () => {
-  const {privaceModeStatus, selectPrivacyModeStatus} = usePrivacyModeContext()
+  const {privacyMode, selectPrivacyMode} = usePrivacyModeContext()
 
   return (
     <SafeAreaView edges={['bottom', 'right', 'left']} style={styles.mainColumn}>
-      <Text style={styles.text}>Privacy Mode: {privaceModeStatus}</Text>
+      <Text style={styles.text}>Privacy Mode: {privacyMode}</Text>
       <Spacer height={20} />
-      <HideableText>{TEXT}</HideableText>
+      <HideableText text="Lorem ipsum dolor sit amet" />
       <Spacer height={20} />
       <Button
-        onPress={() => selectPrivacyModeStatus(privaceModeStatus === 'SHOWN' ? 'HIDDEN' : 'SHOWN')}
+        onPress={() => selectPrivacyMode(privacyMode === 'SHOWN' ? 'HIDDEN' : 'SHOWN')}
         title="Change Privacy Mode"
       />
     </SafeAreaView>

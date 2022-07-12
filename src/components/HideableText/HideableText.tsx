@@ -1,13 +1,17 @@
 import React from 'react'
+import {TextProps} from 'react-native'
 
-import {usePrivacyModeContext} from '../../Settings/PrivacyMode/PrivacyModeContext'
+import {usePrivacyModeContext} from '../../Settings/PrivacyMode/PrivacyMode'
 import {Text} from '..'
 
-type Props = {
-  children: string
-}
+type Props = TextProps &
+  Text['props'] & {
+    text: string
+  }
 
-export const HideableText = ({children, ...props}: Props) => {
-  const {privaceModeStatus} = usePrivacyModeContext()
-  return <Text {...props}>{privaceModeStatus === 'SHOWN' ? children : children.replaceAll(/./g, '\u25CF')}</Text>
+export const HideableText = ({text, ...props}: Props) => {
+  const {privacyMode} = usePrivacyModeContext()
+  const children = privacyMode === 'SHOWN' ? text : text?.replaceAll(/./g, '\u25CF')
+
+  return <Text {...props}>{children}</Text>
 }

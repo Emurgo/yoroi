@@ -18,7 +18,7 @@ import getConfiguredStore from './legacy/configureStore'
 import {ApiError, NetworkError} from './legacy/errors'
 import {Logger, setLogLevel} from './legacy/logging'
 import {CurrencyProvider} from './Settings/Currency/CurrencyContext'
-import {PrivacyModeProvider} from './Settings/PrivacyMode/PrivacyModeContext'
+import {PrivacyModeProvider} from './Settings/PrivacyMode/PrivacyMode'
 import {ThemeProvider} from './theme'
 
 setLogLevel(CONFIG.LOG_LEVEL)
