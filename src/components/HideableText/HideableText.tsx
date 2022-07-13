@@ -10,7 +10,7 @@ type Props = TextProps &
   }
 
 export const HideableText = ({text, ...props}: Props) => {
-  const privacyMode = usePrivacyMode()
+  const {privacyMode} = usePrivacyMode()
   const children = privacyMode === 'SHOWN' ? text : text?.replaceAll(/./g, '\u25CF')
 
   return <Text {...props}>{children}</Text>

@@ -18,7 +18,7 @@ import {
   sendCrashReportsSelector,
 } from '../../legacy/selectors'
 import {useWalletNavigation} from '../../navigation'
-import {usePrivacyMode, useSetPrivacyMode} from '../../Settings/PrivacyMode/PrivacyMode'
+import {usePrivacyMode} from '../../Settings/PrivacyMode/PrivacyMode'
 import {lightPalette} from '../../theme'
 import {useCurrencyContext} from '../Currency'
 import {NavigatedSettingsItem, SettingsItem, SettingsSection} from '../SettingsItems'
@@ -38,8 +38,7 @@ export const ApplicationSettingsScreen = () => {
   const dispatch = useDispatch()
   const {currency} = useCurrencyContext()
   const {language} = useLanguage()
-  const privacyMode = usePrivacyMode()
-  const setPrivacyMode = useSetPrivacyMode()
+  const {privacyMode, togglePrivacyMode} = usePrivacyMode()
 
   const setCrashReporting = (value: boolean) => {
     dispatch(setAppSettingField(APP_SETTINGS_KEYS.SEND_CRASH_REPORTS, value))
@@ -136,10 +135,7 @@ export const ApplicationSettingsScreen = () => {
             label={strings.privacyMode}
             info={strings.privacyModeInfo}
           >
-            <Switch
-              value={privacyMode === 'HIDDEN'}
-              onValueChange={() => setPrivacyMode(privacyMode === 'SHOWN' ? 'HIDDEN' : 'SHOWN')}
-            />
+            <Switch value={privacyMode === 'HIDDEN'} onValueChange={togglePrivacyMode} />
           </SettingsItem>
 
           <SettingsItem

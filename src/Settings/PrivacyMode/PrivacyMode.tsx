@@ -3,7 +3,7 @@ import {UseMutationOptions, useQuery} from 'react-query'
 
 import {useMutationWithInvalidations} from '../../hooks'
 
-export const usePrivacyMode = () => {
+export const useReadPrivacyMode = () => {
   const query = useQuery<PrivacyMode, Error>({
     queryKey: ['privacyMode'],
     queryFn: async () => {
@@ -24,7 +24,7 @@ export const usePrivacyMode = () => {
   return query.data
 }
 
-export const useSetPrivacyMode = ({...options}: UseMutationOptions<void, Error, PrivacyMode> = {}) => {
+export const useWritePrivacyMode = ({...options}: UseMutationOptions<void, Error, PrivacyMode> = {}) => {
   const mutation = useMutationWithInvalidations({
     mutationFn: async (privacyMode) => AsyncStorage.setItem('/appSettings/privacyMode', JSON.stringify(privacyMode)),
     invalidateQueries: [['privacyMode']],
@@ -34,5 +34,19 @@ export const useSetPrivacyMode = ({...options}: UseMutationOptions<void, Error, 
   return mutation.mutate
 }
 
-export type PrivacyMode = 'SHOWN' | 'HIDDEN'
+export const useTogglePrivacyMode = () => {
+  const privacyMode = useReadPrivacyMode()
+  const writePrivacyMode = useWritePrivacyMode()
+  return () => writePrivacyMode(privacyMode === 'SHOWN' ? 'HIDDEN' : 'SHOWN')
+}
+
+export const usePrivacyMode = () => {
+  return {
+    privacyMode: useReadPrivacyMode(),
+    setPrivacyMode: useWritePrivacyMode(),
+    togglePrivacyMode: useTogglePrivacyMode(),
+  }
+}
+
+type PrivacyMode = 'SHOWN' | 'HIDDEN'
 const defaultPrivacyMode: PrivacyMode = 'SHOWN'

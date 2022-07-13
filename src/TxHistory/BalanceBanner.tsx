@@ -9,13 +9,11 @@ import {formatTokenWithText, formatTokenWithTextWhenHidden} from '../legacy/form
 import {availableAssetsSelector, tokenBalanceSelector} from '../legacy/selectors'
 import {useSelectedWallet} from '../SelectedWallet'
 import {useCurrencyContext} from '../Settings/Currency'
-import {PrivacyMode, usePrivacyMode} from '../Settings/PrivacyMode/PrivacyMode'
+import {usePrivacyMode} from '../Settings/PrivacyMode/PrivacyMode'
 import {COLORS} from '../theme'
 
 export const BalanceBanner = () => {
   const wallet = useSelectedWallet()
-
-  const privacyMode = usePrivacyMode()
 
   return (
     <View style={styles.banner}>
@@ -28,11 +26,11 @@ export const BalanceBanner = () => {
       <Spacer height={10} />
 
       <Row>
-        <Balance privacyMode={privacyMode} />
+        <Balance />
       </Row>
       <Row>
         <Boundary loading={{fallbackProps: {size: 'small'}}}>
-          <PairedBalance privacyMode={privacyMode} />
+          <PairedBalance />
         </Boundary>
       </Row>
     </View>
@@ -40,7 +38,8 @@ export const BalanceBanner = () => {
 }
 
 const hiddenBalance = '*.******'
-const Balance = ({privacyMode}: {privacyMode: PrivacyMode}) => {
+const Balance = () => {
+  const {privacyMode} = usePrivacyMode()
   const availableAssets = useSelector(availableAssetsSelector)
   const tokenBalance = useSelector(tokenBalanceSelector)
   const token = availableAssets[tokenBalance.getDefaultId()]
@@ -60,7 +59,8 @@ const Balance = ({privacyMode}: {privacyMode: PrivacyMode}) => {
 const Row = ({children}: {children: React.ReactNode}) => <View style={styles.centered}>{children}</View>
 
 const hiddenPairedTotal = '*.**'
-const PairedBalance = ({privacyMode}: {privacyMode: PrivacyMode}) => {
+const PairedBalance = () => {
+  const {privacyMode} = usePrivacyMode()
   const wallet = useSelectedWallet()
   const tokenBalance = useSelector(tokenBalanceSelector)
   const {currency, config} = useCurrencyContext()
