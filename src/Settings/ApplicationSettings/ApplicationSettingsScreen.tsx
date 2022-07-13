@@ -131,7 +131,7 @@ export const ApplicationSettingsScreen = () => {
             navigateTo="change-custom-pin"
           />
 
-          <SettingsItem icon={<Icon.EyeOff {...iconProps} />} label={strings.balance} info={strings.balanceInfo}>
+          <SettingsItem icon={<Icon.EyeOff {...iconProps} />} label={strings.privacyMode} info={strings.balanceInfo}>
             <Switch value={privacyMode === 'HIDDEN'} onValueChange={changePrivacyMode} />
           </SettingsItem>
 
@@ -171,7 +171,7 @@ const useStrings = () => {
     selectFiatCurrency: intl.formatMessage(messages.selectFiatCurrency),
     about: intl.formatMessage(messages.about),
     changePin: intl.formatMessage(messages.changePin),
-    balance: intl.formatMessage(messages.balance),
+    privacyMode: intl.formatMessage(messages.privacyMode),
     balanceInfo: intl.formatMessage(messages.balanceInfo),
     biometricsSignIn: intl.formatMessage(messages.biometricsSignIn),
     biometricsSignInInfo: intl.formatMessage(messages.biometricsSignInInfo),
@@ -218,8 +218,8 @@ const messages = defineMessages({
     id: 'components.settings.applicationsettingsscreen.changePin',
     defaultMessage: '!!!Change PIN',
   },
-  balance: {
-    id: 'components.settings.applicationsettingsscreen.balance',
+  privacyMode: {
+    id: 'components.settings.applicationsettingsscreen.privacyMode',
     defaultMessage: '!!!Hide balance',
   },
   balanceInfo: {

@@ -167,7 +167,7 @@
   "components.settings.applicationsettingsscreen.selectLanguage": "Language",
   "components.settings.applicationsettingsscreen.selectFiatCurrency": "Fiat Currency",
   "components.settings.applicationsettingsscreen.about": "About",
-  "components.settings.applicationsettingsscreen.balance": "Hide balance",
+  "components.settings.applicationsettingsscreen.privacyMode": "Hide balance",
   "components.settings.applicationsettingsscreen.balanceInfo": "This function will be applied to all wallets in your app",
   "components.settings.applicationsettingsscreen.biometricsSignIn": "Sign in with your biometrics",
   "components.settings.applicationsettingsscreen.biometricsSignInInfo": "Changes to this option will be reflected after restarting the application",
