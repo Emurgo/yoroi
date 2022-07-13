@@ -19,8 +19,6 @@ export const useCreateVotingRegTx = (
 ) => {
   const mutation = useMutation<VotingRegTxData, Error, VotingRegTxVariables>({
     mutationFn: async ({pin, decryptedKey}) => {
-      const serverTime = (await wallet.checkServerStatus())?.serverTime
-      const time = serverTime ? new Date(serverTime) : new Date()
       const utxos = await wallet.fetchUTXOs()
 
       if (!utxos) throw new Error('Connection issues. Failed to fetch utxos')
@@ -34,7 +32,7 @@ export const useCreateVotingRegTx = (
         .then((x) => Promise.all([encryptWithPassword(password, x), Buffer.from(x).toString('hex')]))
 
       const defaultAsset = getDefaultAssetByNetworkId(wallet.networkId)
-      const yoroiUnsignedTx = await wallet.createVotingRegTx(utxos, catalystSKHex, defaultAsset, decryptedKey, time)
+      const yoroiUnsignedTx = await wallet.createVotingRegTx(utxos, catalystSKHex, defaultAsset, decryptedKey)
 
       return {
         catalystSKHexEncrypted,

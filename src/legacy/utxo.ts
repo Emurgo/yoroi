@@ -9,35 +9,35 @@ const _startFetching = () => ({
   type: 'START_FETCHING_BALANCE',
   path: ['balance', 'isFetching'],
   payload: null,
-  reducer: (_state, _isFetching) => true,
+  reducer: (_state: State, _isFetching) => true,
 })
 
 const _endFetching = () => ({
   type: 'END_FETCHING_BALANCE',
   path: ['balance', 'isFetching'],
   payload: null,
-  reducer: (_state, _isFetching) => false,
+  reducer: (_state: State, _isFetching) => false,
 })
 
 const _setUTXOs = (rawUTXOs) => ({
   type: 'SET_UTXOS',
   path: ['balance', 'utxos'],
   payload: rawUTXOs,
-  reducer: (state, rawUTXOs) => rawUTXOs,
+  reducer: (state: State, rawUTXOs) => rawUTXOs,
 })
 
 const _clearUTXOs = () => ({
   type: 'CLEAR_UTXOS',
   path: ['balance', 'utxos'],
   payload: null,
-  reducer: (_state, _utxos) => null,
+  reducer: (_state: State, _utxos) => null,
 })
 
 const _setLastError = (error) => ({
   type: 'SET_LAST_FETCHING_ERROR',
   path: ['balance', 'lastFetchingError'],
   payload: error,
-  reducer: (state, error) => error,
+  reducer: (state: State, error) => error,
 })
 
 export const fetchUTXOs = () => async (dispatch: Dispatch<any>, getState: () => State) => {

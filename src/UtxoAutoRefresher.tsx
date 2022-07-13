@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {useNetInfo} from '@react-native-community/netinfo'
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {hasPendingOutgoingTransactionSelector, isFetchingUtxosSelector, isOnlineSelector} from './legacy/selectors'
+import {hasPendingOutgoingTransactionSelector, isFetchingUtxosSelector} from './legacy/selectors'
 import {fetchUTXOs} from './legacy/utxo'
 
 // eslint-disable-next-line react-prefer-function-component/react-prefer-function-component
@@ -58,14 +59,14 @@ class UtxoAutoRefresherClass extends React.Component<{
 export const UtxoAutoRefresher = () => {
   const navigation = useNavigation()
   const isFetching = useSelector(isFetchingUtxosSelector)
-  const isOnline = useSelector(isOnlineSelector)
+  const netInfo = useNetInfo()
   const hasPendingTx = useSelector(hasPendingOutgoingTransactionSelector)
   const dispatch = useDispatch()
 
   return (
     <UtxoAutoRefresherClass
       isFetching={isFetching}
-      isOnline={isOnline}
+      isOnline={netInfo.type !== 'none' && netInfo.type !== 'unknown'}
       hasPendingTx={hasPendingTx}
       navigation={navigation}
       fetchUTXOs={() => dispatch(fetchUTXOs())}
