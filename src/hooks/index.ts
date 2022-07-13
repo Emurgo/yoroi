@@ -203,7 +203,6 @@ export const useWithdrawalTx = (
     utxos,
     defaultAsset,
     deregister = false,
-    serverTime,
   }: {
     wallet: YoroiWallet
     utxos: Array<RawUtxo>
@@ -215,7 +214,7 @@ export const useWithdrawalTx = (
 ) => {
   const query = useQuery({
     queryKey: [wallet.id, 'withdrawalTx', {deregister}],
-    queryFn: () => wallet.createWithdrawalTx(utxos, defaultAsset, deregister, serverTime),
+    queryFn: async () => wallet.createWithdrawalTx(utxos, defaultAsset, deregister),
     retry: false,
     cacheTime: 0,
     ...options,

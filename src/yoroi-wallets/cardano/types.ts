@@ -164,7 +164,6 @@ export interface WalletInterface {
     receiver: string,
     tokens: SendTokenList,
     defaultToken: Token,
-    serverTime: Date | null | undefined,
     metadata?: Array<TxMetadata>,
   ): Promise<YoroiUnsignedTx>
 
@@ -175,7 +174,6 @@ export interface WalletInterface {
     valueInAccount: BigNumber,
     utxos: Array<RawUtxo>,
     defaultAsset: DefaultAsset,
-    serverTime: Date | undefined,
   ): Promise<YoroiUnsignedTx>
 
   createVotingRegTx(
@@ -183,14 +181,12 @@ export interface WalletInterface {
     catalystPrivateKey: string,
     defaultAsset: DefaultAsset,
     decryptedKey: string | undefined,
-    serverTime: Date | undefined,
   ): Promise<YoroiUnsignedTx>
 
   createWithdrawalTx(
     utxos: Array<RawUtxo>,
     defaultAsset: DefaultAsset,
     shouldDeregister: boolean,
-    serverTime: Date | undefined,
   ): Promise<YoroiUnsignedTx>
 
   signTxWithLedger(request: YoroiUnsignedTx, useUSB: boolean): Promise<YoroiSignedTx>

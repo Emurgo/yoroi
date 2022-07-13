@@ -11,7 +11,7 @@ import type {State} from './state'
 const _saveHW = (hwDeviceInfo) => ({
   path: ['wallet', 'hwDeviceInfo'],
   payload: hwDeviceInfo,
-  reducer: (state, value) => value,
+  reducer: (state: State, value) => value,
   type: 'SAVE_HW',
 })
 
