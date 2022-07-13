@@ -3,16 +3,14 @@ import {BigNumber} from 'bignumber.js'
 import React, {useEffect} from 'react'
 import {useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
-import {useSelector} from 'react-redux'
 
 import {Banner, Boundary, OfflineBanner, Spacer, StatusBar, Text, ValidatedTextInput} from '../../components'
 import {ConfirmTx} from '../../components/ConfirmTx'
 import {useTokenInfo} from '../../hooks'
 import {Instructions as HWInstructions} from '../../HW'
 import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../i18n/global-messages'
-import {CONFIG} from '../../legacy/config'
+import {CONFIG, getDefaultAssetByNetworkId} from '../../legacy/config'
 import {formatTokenWithSymbol, formatTokenWithText} from '../../legacy/format'
-import {defaultNetworkAssetSelector} from '../../legacy/selectors'
 import {useParams, useWalletNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
@@ -63,8 +61,6 @@ export const ConfirmScreen = () => {
   } = useParams(isParams)
   const {resetToTxHistory} = useWalletNavigation()
   const wallet = useSelectedWallet()
-  const {isHW, isEasyConfirmationEnabled} = wallet
-  const defaultAsset = useSelector(defaultNetworkAssetSelector)
   const [password, setPassword] = React.useState('')
   const [useUSB, setUseUSB] = React.useState(false)
 
@@ -85,15 +81,20 @@ export const ConfirmScreen = () => {
 
         <OfflineBanner />
 
-        <Banner label={strings.availableFunds} text={formatTokenWithText(availableAmount, defaultAsset)} boldText />
+        <Banner
+          label={strings.availableFunds}
+          text={formatTokenWithText(availableAmount, getDefaultAssetByNetworkId(wallet.networkId))}
+          boldText
+        />
 
         <ScrollView style={styles.container} contentContainerStyle={{padding: 16}}>
           <Text small>
-            {strings.fees}: {formatTokenWithSymbol(fee, defaultAsset)}
+            {strings.fees}: {formatTokenWithSymbol(fee, getDefaultAssetByNetworkId(wallet.networkId))}
           </Text>
 
           <Text small>
-            {strings.balanceAfterTx}: {formatTokenWithSymbol(balanceAfterTx, defaultAsset)}
+            {strings.balanceAfterTx}:{' '}
+            {formatTokenWithSymbol(balanceAfterTx, getDefaultAssetByNetworkId(wallet.networkId))}
           </Text>
 
           <Spacer height={16} />
@@ -104,7 +105,9 @@ export const ConfirmScreen = () => {
           <Spacer height={16} />
 
           <Text>{strings.total}</Text>
-          <Text style={styles.amount}>{formatTokenWithSymbol(defaultAssetAmount, defaultAsset)}</Text>
+          <Text style={styles.amount}>
+            {formatTokenWithSymbol(defaultAssetAmount, getDefaultAssetByNetworkId(wallet.networkId))}
+          </Text>
 
           {tokenEntries.map((entry) => (
             <Boundary key={entry.identifier}>
@@ -112,7 +115,7 @@ export const ConfirmScreen = () => {
             </Boundary>
           ))}
 
-          {!isEasyConfirmationEnabled && !isHW && (
+          {!wallet.isEasyConfirmationEnabled && !wallet.isHW && (
             <>
               <Spacer height={16} />
               <ValidatedTextInput
@@ -124,7 +127,7 @@ export const ConfirmScreen = () => {
             </>
           )}
 
-          {isHW && <HWInstructions useUSB={useUSB} addMargin />}
+          {wallet.isHW && <HWInstructions useUSB={useUSB} addMargin />}
         </ScrollView>
 
         <Actions>

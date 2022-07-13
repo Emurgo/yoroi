@@ -1,3 +1,4 @@
+import {useNetInfo} from '@react-native-community/netinfo'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {LayoutAnimation, StyleSheet, TouchableOpacity, View} from 'react-native'
@@ -10,7 +11,6 @@ import {fetchAccountState} from '../legacy/account'
 import {isByron} from '../legacy/config'
 import {updateHistory} from '../legacy/history'
 import {
-  isOnlineSelector,
   isSynchronizingHistorySelector,
   lastHistorySyncErrorSelector,
   walletIsInitializedSelector,
@@ -33,7 +33,8 @@ export const TxHistory = () => {
   const dispatch = useDispatch()
   const isSyncing = useSelector(isSynchronizingHistorySelector)
   const lastSyncError = useSelector(lastHistorySyncErrorSelector)
-  const isOnline = useSelector(isOnlineSelector)
+  const netInfo = useNetInfo()
+  const isOnline = netInfo.type !== 'none' && netInfo.type !== 'unknown'
   const wallet = useSelectedWallet()
   const walletIsInitialized = useSelector(walletIsInitializedSelector)
 

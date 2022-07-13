@@ -1,16 +1,17 @@
 import {BigNumber} from 'bignumber.js'
 import React from 'react'
 import {StyleSheet} from 'react-native'
-import {useSelector} from 'react-redux'
 
 import {Text} from '../../components'
+import {getDefaultAssetByNetworkId} from '../../legacy/config'
 import {formatTokenWithSymbol} from '../../legacy/format'
-import {defaultNetworkAssetSelector} from '../../legacy/selectors'
+import {useSelectedWallet} from '../../SelectedWallet'
 import {useStrings} from './strings'
 
 export const Fee = ({fee}: {fee: BigNumber | null}) => {
   const strings = useStrings()
-  const defaultAsset = useSelector(defaultNetworkAssetSelector)
+  const wallet = useSelectedWallet()
+  const defaultAsset = getDefaultAssetByNetworkId(wallet.networkId)
 
   const value = fee ? formatTokenWithSymbol(fee, defaultAsset) : strings.feeNotAvailable
 

@@ -3,14 +3,13 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useDispatch, useSelector} from 'react-redux'
+import {useDispatch} from 'react-redux'
 
 import {Button, StatusBar, Text, TextInput} from '../../components'
 import {errorMessages} from '../../i18n/global-messages'
 import {setEasyConfirmation, showErrorDialog} from '../../legacy/actions'
 import {WrongPassword} from '../../legacy/errors'
-import {easyConfirmationSelector} from '../../legacy/selectors'
-import {useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../SelectedWallet'
+import {useSelectedWallet, useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {walletManager} from '../../yoroi-wallets'
 
@@ -18,19 +17,19 @@ export const ToggleEasyConfirmationScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
   const navigation = useNavigation()
-  const isEasyConfirmationEnabled = useSelector(easyConfirmationSelector)
   const dispatch = useDispatch()
   const [masterPassword, setMasterPassword] = React.useState('')
   const clearPassword = () => setMasterPassword('')
   const walletMeta = useSelectedWalletMeta()
-  const selectedWalletMeta = useSetSelectedWalletMeta()
+  const setSelectedWalletMeta = useSetSelectedWalletMeta()
+  const wallet = useSelectedWallet()
 
   const enableEasyConfirmation = async () => {
     try {
       await walletManager.enableEasyConfirmation(masterPassword, intl)
       dispatch(setEasyConfirmation(true))
       if (!walletMeta) throw new Error('Missing walletMeta')
-      selectedWalletMeta({
+      setSelectedWalletMeta({
         ...walletMeta,
         isEasyConfirmationEnabled: true,
       })
@@ -48,7 +47,7 @@ export const ToggleEasyConfirmationScreen = () => {
     await walletManager.disableEasyConfirmation()
     dispatch(setEasyConfirmation(false))
     if (!walletMeta) throw new Error('Missing walletMeta')
-    selectedWalletMeta({
+    setSelectedWalletMeta({
       ...walletMeta,
       isEasyConfirmationEnabled: false,
     })
@@ -66,7 +65,7 @@ export const ToggleEasyConfirmationScreen = () => {
     <SafeAreaView edges={['bottom']} style={styles.container}>
       <StatusBar type="dark" />
 
-      {!isEasyConfirmationEnabled ? (
+      {!wallet.isEasyConfirmationEnabled ? (
         <ScrollView keyboardShouldPersistTaps="always" contentContainerStyle={styles.contentContainer}>
           <Text style={styles.heading}>{strings.enableHeading}</Text>
           <Text style={styles.warning}>{strings.enableWarning}</Text>
@@ -90,9 +89,9 @@ export const ToggleEasyConfirmationScreen = () => {
 
       <View style={styles.actions}>
         <Button
-          title={isEasyConfirmationEnabled ? strings.disableButton : strings.enableButton}
-          onPress={isEasyConfirmationEnabled ? disableEasyConfirmation : enableEasyConfirmation}
-          disabled={!masterPassword && !isEasyConfirmationEnabled}
+          title={wallet.isEasyConfirmationEnabled ? strings.disableButton : strings.enableButton}
+          onPress={wallet.isEasyConfirmationEnabled ? disableEasyConfirmation : enableEasyConfirmation}
+          disabled={!masterPassword && !wallet.isEasyConfirmationEnabled}
         />
       </View>
     </SafeAreaView>

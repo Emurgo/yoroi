@@ -6,8 +6,8 @@ import {useSelector} from 'react-redux'
 
 import {Button, CopyButton, Modal, Spacer, Text} from '../components'
 import {formatPath} from '../legacy/commonUtils'
-import {externalAddressIndexSelector, walletMetaSelector} from '../legacy/selectors'
-import type {WalletMeta} from '../legacy/state'
+import {externalAddressIndexSelector} from '../legacy/selectors'
+import {useSelectedWallet} from '../SelectedWallet'
 import {AddressDTOCardano} from '../yoroi-wallets/cardano/Address.dto'
 
 type Props = {
@@ -15,13 +15,13 @@ type Props = {
   onRequestClose: () => void
   visible: boolean
   onAddressVerify: () => void
-  walletMeta: WalletMeta
   index: number
 }
 
-export const AddressModal = ({address, visible, onRequestClose, walletMeta, index, onAddressVerify}: Props) => {
+export const AddressModal = ({address, visible, onRequestClose, index, onAddressVerify}: Props) => {
   const strings = useStrings()
   const keyHashes = useKeyHashes(address)
+  const wallet = useSelectedWallet()
 
   return (
     <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
@@ -54,7 +54,7 @@ export const AddressModal = ({address, visible, onRequestClose, walletMeta, inde
 
         <Text style={styles.subtitle}>{strings.BIP32path}</Text>
         <Text secondary monospace>
-          {index != null && formatPath(0, 'External', index, walletMeta.walletImplementationId)}
+          {index != null && formatPath(0, 'External', index, wallet.walletImplementationId)}
         </Text>
 
         <Spacer width={8} />
@@ -74,7 +74,7 @@ export const AddressModal = ({address, visible, onRequestClose, walletMeta, inde
 
       <Spacer height={16} />
 
-      {walletMeta.isHW && <Button onPress={onAddressVerify} title={strings.verifyLabel} />}
+      {wallet.isHW && <Button onPress={onAddressVerify} title={strings.verifyLabel} />}
     </Modal>
   )
 }
@@ -88,9 +88,8 @@ type ExternalProps = {
 
 export default (props: ExternalProps) => {
   const index = useSelector(externalAddressIndexSelector)[props.address]
-  const walletMeta = useSelector(walletMetaSelector)
 
-  return <AddressModal index={index} walletMeta={walletMeta} {...props} />
+  return <AddressModal index={index} {...props} />
 }
 
 const Info = (props) => <View {...props} style={styles.info} />

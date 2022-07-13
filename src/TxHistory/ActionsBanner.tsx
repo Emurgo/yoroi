@@ -2,13 +2,12 @@ import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {useIntl} from 'react-intl'
 import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
-import {useSelector} from 'react-redux'
 
 import {Icon, Spacer} from '../components'
 import features from '../features'
 import {actionMessages} from '../i18n/global-messages'
-import {isReadOnlySelector} from '../legacy/selectors'
 import {TxHistoryRouteNavigation} from '../navigation'
+import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
 
 const ACTION_PROPS = {
@@ -19,7 +18,7 @@ const ACTION_PROPS = {
 export const ActionsBanner = () => {
   const strings = useStrings()
   const navigateTo = useNavigateTo()
-  const isReadOnly = useSelector(isReadOnlySelector)
+  const wallet = useSelectedWallet()
 
   return (
     <View style={styles.banner}>
@@ -27,7 +26,7 @@ export const ActionsBanner = () => {
 
       <View style={styles.centralized}>
         <View style={styles.row}>
-          {!isReadOnly && (
+          {!wallet.isReadOnly && (
             <View style={styles.centralized}>
               <TouchableOpacity style={styles.actionIcon} onPress={navigateTo.send}>
                 <Icon.Send {...ACTION_PROPS} />
@@ -36,7 +35,7 @@ export const ActionsBanner = () => {
             </View>
           )}
 
-          {!isReadOnly && <Spacer width={32} />}
+          {!wallet.isReadOnly && <Spacer width={32} />}
 
           <View style={styles.centralized}>
             <TouchableOpacity style={styles.actionIcon} onPress={navigateTo.receive}>

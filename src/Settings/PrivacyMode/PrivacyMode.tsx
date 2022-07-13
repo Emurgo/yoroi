@@ -41,4 +41,4 @@ export const useChangePrivacyMode = () => {
 }
 
 export type PrivacyMode = 'SHOWN' | 'HIDDEN'
-const defaultPrivacyMode = 'SHOWN' as PrivacyMode
+const defaultPrivacyMode: PrivacyMode = 'SHOWN'
