@@ -11,7 +11,7 @@ import {confirmationMessages} from '../../i18n/global-messages'
 import {DIALOG_BUTTONS, showConfirmationDialog, signout} from '../../legacy/actions'
 import {isByron, isHaskellShelley} from '../../legacy/config'
 import {getNetworkConfigById} from '../../legacy/networks'
-import {easyConfirmationSelector, isSystemAuthEnabledSelector} from '../../legacy/selectors'
+import {isSystemAuthEnabledSelector} from '../../legacy/selectors'
 import {
   NavigatedSettingsItem,
   PressableSettingsItem,
@@ -28,7 +28,6 @@ export const WalletSettingsScreen = () => {
   const strings = useStrings()
   const {navigation, resetToWalletSelection} = useWalletNavigation()
   const isSystemAuthEnabled = useSelector(isSystemAuthEnabledSelector)
-  const isEasyConfirmationEnabled = useSelector(easyConfirmationSelector)
   const wallet = useSelectedWallet()
   const walletName = useWalletName(wallet)
 
@@ -70,7 +69,7 @@ export const WalletSettingsScreen = () => {
           disabled={!isSystemAuthEnabled || wallet.isHW || wallet.isReadOnly}
         >
           <Switch
-            value={isEasyConfirmationEnabled}
+            value={wallet.isEasyConfirmationEnabled}
             onValueChange={onToggleEasyConfirmation}
             disabled={!isSystemAuthEnabled || wallet.isHW || wallet.isReadOnly}
           />

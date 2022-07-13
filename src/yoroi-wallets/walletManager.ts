@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {TxMetadata} from '@emurgo/yoroi-lib-core'
 import ExtendableError from 'es6-error'
 import _ from 'lodash'
 import type {IntlShape} from 'react-intl'
@@ -16,17 +15,18 @@ import type {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {Logger} from '../legacy/logging'
 import type {WalletMeta} from '../legacy/state'
 import storage from '../legacy/storage'
-import type {
+import type {EncryptionMethod} from '../legacy/types'
+import {
   FundInfoResponse,
+  NETWORK_REGISTRY,
   PoolInfoRequest,
   RawUtxo,
   TokenInfoRequest,
   TokenInfoResponse,
   TxBodiesRequest,
+  WALLET_IMPLEMENTATION_REGISTRY,
 } from '../legacy/types'
-import type {EncryptionMethod} from '../legacy/types'
-import {NETWORK_REGISTRY, WALLET_IMPLEMENTATION_REGISTRY} from '../legacy/types'
-import {SendTokenList, StakePoolInfosAndHistories, Token} from '../types'
+import {StakePoolInfosAndHistories} from '../types'
 import {
   isYoroiWallet,
   NetworkId,
@@ -642,21 +642,6 @@ class WalletManager {
   async getDelegationStatus() {
     const wallet = this.getWallet()
     return await wallet.getDelegationStatus()
-  }
-
-  async createUnsignedTx(
-    utxos: Array<RawUtxo>,
-    receiver: string,
-    tokens: SendTokenList,
-    defaultToken: Token,
-    serverTime: Date | null | undefined,
-    metadata?: Array<TxMetadata>,
-  ) {
-    const wallet = this.getWallet()
-    return await this.abortWhenWalletCloses(
-      // TODO(v-almonacid): maybe there is a better way instead of unknown
-      wallet.createUnsignedTx(utxos, receiver, tokens as any, defaultToken, serverTime, metadata),
-    )
   }
 
   async signTx<T>(signRequest: ISignRequest<T>, decryptedKey: string) {

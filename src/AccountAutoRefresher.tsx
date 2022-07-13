@@ -1,15 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {useNetInfo} from '@react-native-community/netinfo'
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {fetchAccountState} from './legacy/account'
-import {
-  hasPendingOutgoingTransactionSelector,
-  isFetchingAccountStateSelector,
-  isOnlineSelector,
-  utxosSelector,
-} from './legacy/selectors'
+import {hasPendingOutgoingTransactionSelector, isFetchingAccountStateSelector, utxosSelector} from './legacy/selectors'
 import type {RawUtxo} from './legacy/types'
 
 // eslint-disable-next-line react-prefer-function-component/react-prefer-function-component
@@ -67,7 +63,7 @@ class AccountAutoRefresherClass extends React.Component<{
 export const AccountAutoRefresher = () => {
   const navigation = useNavigation()
   const isFetching = useSelector(isFetchingAccountStateSelector)
-  const isOnline = useSelector(isOnlineSelector)
+  const netInfo = useNetInfo()
   const hasPendingTx = useSelector(hasPendingOutgoingTransactionSelector)
   const utxo = useSelector(utxosSelector)
   const dispatch = useDispatch()
@@ -75,7 +71,7 @@ export const AccountAutoRefresher = () => {
   return (
     <AccountAutoRefresherClass
       isFetching={isFetching}
-      isOnline={isOnline}
+      isOnline={netInfo.type !== 'none' && netInfo.type !== 'unknown'}
       hasPendingTx={hasPendingTx}
       utxo={utxo}
       navigation={navigation}

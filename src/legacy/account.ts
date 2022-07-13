@@ -12,49 +12,49 @@ const _startFetching = () => ({
   type: 'START_FETCHING_ACCOUNT_STATE',
   path: ['accountState', 'isFetching'],
   payload: null,
-  reducer: (_state, _isFetching) => true,
+  reducer: (_state: State, _isFetching) => true,
 })
 
 const _endFetching = () => ({
   type: 'END_FETCHING_ACCOUNT_STATE',
   path: ['accountState', 'isFetching'],
   payload: null,
-  reducer: (_state, _isFetching) => false,
+  reducer: (_state: State, _isFetching) => false,
 })
 
 const _setAccountValue = (value) => ({
   type: 'SET_ACCOUNT_VALUE',
   path: ['accountState', 'value'],
   payload: value,
-  reducer: (state, value) => value,
+  reducer: (state: State, value) => value,
 })
 
 const _setAccountPool = (poolOperator) => ({
   type: 'SET_ACCOUNT_POOLS',
   path: ['accountState', 'poolOperator'],
   payload: poolOperator,
-  reducer: (state, poolOperator) => poolOperator,
+  reducer: (state: State, poolOperator) => poolOperator,
 })
 
 const _setAccountDelegationStatus = (isDelegating) => ({
   type: 'SET_ACCOUNT_DELEGATION_STATUS',
   path: ['accountState', 'isDelegating'],
   payload: isDelegating,
-  reducer: (state, isDelegating) => isDelegating,
+  reducer: (state: State, isDelegating) => isDelegating,
 })
 
 const _setAccountTotalDelegated = (value) => ({
   type: 'SET_ACCOUNT_TOTAL_DELEGATED',
   path: ['accountState', 'totalDelegated'],
   payload: value,
-  reducer: (state, value) => value,
+  reducer: (state: State, value) => value,
 })
 
 const _clearAccountState = () => ({
   type: 'CLEAR_ACCOUNT_STATE',
   path: ['accountState'],
   payload: null,
-  reducer: (_state) => {
+  reducer: (_state: State) => {
     return {
       isFetching: false,
       lastFetchingError: null,
@@ -69,7 +69,7 @@ const _setLastError = (error) => ({
   type: 'SET_LAST_FETCHING_ERROR',
   path: ['accountState', 'lastFetchingError'],
   payload: error,
-  reducer: (state, error) => error,
+  reducer: (state: State, error) => error,
 })
 
 export const fetchAccountState = () => async (dispatch: Dispatch<any>, getState: () => State) => {
