@@ -35,4 +35,4 @@ export const useSetPrivacyMode = ({...options}: UseMutationOptions<void, Error, 
 }
 
 type PrivacyMode = 'SHOWN' | 'HIDDEN'
-const defaultPrivacyMode = 'SHOWN' as PrivacyMode
+const defaultPrivacyMode: PrivacyMode = 'SHOWN'
