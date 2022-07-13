@@ -5,26 +5,27 @@ import type {Dispatch} from 'redux'
 import {Logger} from '../legacy/logging'
 import {WalletClosed, walletManager} from '../yoroi-wallets'
 import {ApiHistoryError} from './errors'
+import {State} from './state'
 
 const _startFetch = () => ({
   type: 'Fetch transaction history',
   path: ['txHistory', 'isSynchronizing'],
   payload: null,
-  reducer: (_state, _payload) => true,
+  reducer: (_state: State, _payload) => true,
 })
 
 const _endFetch = () => ({
   type: 'Finished fetching transaction history',
   path: ['txHistory', 'isSynchronizing'],
   payload: null,
-  reducer: (_state, _payload) => false,
+  reducer: (_state: State, _payload) => false,
 })
 
 const _setSyncError = (message: null | undefined | string) => ({
   type: 'Set history sync error',
   path: ['txHistory', 'lastSyncError'],
   payload: message,
-  reducer: (state, message) => message,
+  reducer: (state: State, message) => message,
 })
 
 export const setBackgroundSyncError = _setSyncError

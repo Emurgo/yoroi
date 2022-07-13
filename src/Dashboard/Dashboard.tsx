@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {useNetInfo} from '@react-native-community/netinfo'
 import {useNavigation} from '@react-navigation/native'
 import BigNumber from 'bignumber.js'
 import React from 'react'
@@ -16,7 +17,6 @@ import {getCardanoNetworkConfigById} from '../legacy/networks'
 import {
   isFetchingAccountStateSelector,
   isFetchingUtxosSelector,
-  isOnlineSelector,
   lastAccountStateFetchErrorSelector,
   tokenBalanceSelector,
 } from '../legacy/selectors'
@@ -45,7 +45,8 @@ export const Dashboard = () => {
   const isFetchingUtxos = useSelector(isFetchingUtxosSelector)
   const isFetchingAccountState = useSelector(isFetchingAccountStateSelector)
   const lastAccountStateSyncError = useSelector(lastAccountStateFetchErrorSelector)
-  const isOnline = useSelector(isOnlineSelector)
+  const netInfo = useNetInfo()
+  const isOnline = netInfo.type !== 'none' && netInfo.type !== 'unknown'
 
   const wallet = useSelectedWallet()
   const balances = useBalances(wallet)

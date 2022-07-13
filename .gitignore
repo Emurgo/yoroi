@@ -25,6 +25,7 @@ DerivedData
 *.xcuserstate
 *.d
 *.dia
+.dependencygraph
 
 # Android/IntelliJ
 #

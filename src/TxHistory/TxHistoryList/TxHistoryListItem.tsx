@@ -9,6 +9,7 @@ import {useSelector} from 'react-redux'
 
 import {Text} from '../../components'
 import {Icon} from '../../components/Icon'
+import {getDefaultAssetByNetworkId} from '../../legacy/config'
 import {
   ASSET_DENOMINATION,
   formatTimeToSeconds,
@@ -19,12 +20,12 @@ import {
 import {TransactionInfo} from '../../legacy/HistoryTransaction'
 import {
   availableAssetsSelector,
-  defaultNetworkAssetSelector,
   externalAddressIndexSelector,
   internalAddressIndexSelector,
 } from '../../legacy/selectors'
 import utfSymbols from '../../legacy/utfSymbols'
 import {TxHistoryRouteNavigation} from '../../navigation'
+import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {DefaultAsset, IOData, TransactionAssurance, TransactionDirection} from '../../types'
 import {MultiToken} from '../../yoroi-wallets'
@@ -57,6 +58,8 @@ export const TxHistoryListItem = ({transaction}: Props) => {
   const strings = useStrings()
   const navigation = useNavigation<TxHistoryRouteNavigation>()
 
+  const wallet = useSelectedWallet()
+
   const showDetails = () => navigation.navigate('history-details', {id: transaction.id})
   const submittedAt = formatTimeToSeconds(transaction.submittedAt)
 
@@ -68,14 +71,13 @@ export const TxHistoryListItem = ({transaction}: Props) => {
   const availableAssets = useSelector(availableAssetsSelector)
   const internalAddressIndex = useSelector(internalAddressIndexSelector)
   const externalAddressIndex = useSelector(externalAddressIndexSelector)
-  const defaultNetworkAsset = useSelector(defaultNetworkAssetSelector)
 
   const fee = transaction.fee ? transaction.fee[0] : null
   const amountAsMT = MultiToken.fromArray(transaction.amount)
   const amount: BigNumber = amountAsMT.getDefault()
   const amountDefaultAsset = availableAssets[amountAsMT.getDefaultId()] as DefaultAsset
 
-  const defaultAsset = amountDefaultAsset || defaultNetworkAsset
+  const defaultAsset = amountDefaultAsset || getDefaultAssetByNetworkId(wallet.networkId)
 
   // if we don't have a symbol for this asset, default to ticker first and
   // then to identifier

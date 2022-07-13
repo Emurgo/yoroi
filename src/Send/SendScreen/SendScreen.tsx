@@ -1,3 +1,4 @@
+import {useNetInfo} from '@react-native-community/netinfo'
 import {useNavigation} from '@react-navigation/native'
 import {BigNumber} from 'bignumber.js'
 import _ from 'lodash'
@@ -10,13 +11,11 @@ import {useSelector} from 'react-redux'
 
 import {Button, Checkbox, Spacer, StatusBar, Text, TextInput} from '../../components'
 import {useTokenInfo} from '../../hooks'
-import {CONFIG} from '../../legacy/config'
+import {CONFIG, getDefaultAssetByNetworkId} from '../../legacy/config'
 import {formatTokenAmount, getAssetDenominationOrId, truncateWithEllipsis} from '../../legacy/format'
 import {
-  defaultNetworkAssetSelector,
   hasPendingOutgoingTransactionSelector,
   isFetchingUtxosSelector,
-  isOnlineSelector,
   lastUtxosFetchErrorSelector,
   tokenBalanceSelector,
   utxosSelector,
@@ -64,14 +63,16 @@ export const SendScreen = ({
   const intl = useIntl()
   const strings = useStrings()
   const navigation = useNavigation()
+  const wallet = useSelectedWallet()
 
   const tokenBalance = useSelector(tokenBalanceSelector)
   const isFetchingBalance = useSelector(isFetchingUtxosSelector)
   const lastFetchingError = useSelector(lastUtxosFetchErrorSelector)
-  const defaultAsset = useSelector(defaultNetworkAssetSelector)
+  const defaultAsset = getDefaultAssetByNetworkId(wallet.networkId)
   const utxos = useSelector(utxosSelector)
   const hasPendingOutgoingTransaction = useSelector(hasPendingOutgoingTransactionSelector)
-  const isOnline = useSelector(isOnlineSelector)
+  const netInfo = useNetInfo()
+  const isOnline = netInfo.type !== 'none' && netInfo.type !== 'unknown'
   const selectedAsset = tokenBalance.values.find(({identifier}) => identifier === selectedTokenIdentifier)
 
   if (!selectedAsset) {
@@ -88,7 +89,6 @@ export const SendScreen = ({
   const [recomputing, setRecomputing] = React.useState(false)
   const [showSendAllWarning, setShowSendAllWarning] = React.useState(false)
 
-  const wallet = useSelectedWallet()
   const tokenInfo = useTokenInfo({wallet, tokenId: selectedTokenIdentifier})
   const assetDenomination = truncateWithEllipsis(getAssetDenominationOrId(tokenInfo), 20)
   const amountErrorText = getAmountErrorText(intl, amountErrors, balanceErrors, defaultAsset)

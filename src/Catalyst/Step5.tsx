@@ -5,16 +5,14 @@ import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useSelector} from 'react-redux'
 
 import {OfflineBanner, ProgressStep, Spacer, TextInput} from '../components'
 import {ConfirmTx} from '../components/ConfirmTx'
 import {Instructions as HWInstructions} from '../HW'
 import {txLabels} from '../i18n/global-messages'
 import LocalizableError from '../i18n/LocalizableError'
-import {CONFIG} from '../legacy/config'
+import {CONFIG, getDefaultAssetByNetworkId} from '../legacy/config'
 import {formatTokenWithSymbol} from '../legacy/format'
-import {defaultNetworkAssetSelector} from '../legacy/selectors'
 import {CatalystRouteNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
 import {YoroiUnsignedTx} from '../yoroi-wallets/types'
@@ -25,7 +23,6 @@ export const Step5 = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx}) => 
   const strings = useStrings()
   const navigation = useNavigation<CatalystRouteNavigation>()
   const wallet = useSelectedWallet()
-  const defaultAsset = useSelector(defaultNetworkAssetSelector)
   const [password, setPassword] = useState('')
 
   const [useUSB, setUseUSB] = useState<boolean>(false)
@@ -60,7 +57,7 @@ export const Step5 = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx}) => 
         <TextInput
           value={formatTokenWithSymbol(
             new BigNumber(Amounts.getAmount(yoroiUnsignedTx.fee, '').quantity),
-            defaultAsset,
+            getDefaultAssetByNetworkId(wallet.networkId),
           )}
           label={strings.fees}
           editable={false}
