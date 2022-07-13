@@ -131,7 +131,11 @@ export const ApplicationSettingsScreen = () => {
             navigateTo="change-custom-pin"
           />
 
-          <SettingsItem icon={<Icon.EyeOff {...iconProps} />} label={strings.privacyMode} info={strings.balanceInfo}>
+          <SettingsItem
+            icon={<Icon.EyeOff {...iconProps} />}
+            label={strings.privacyMode}
+            info={strings.privacyModeInfo}
+          >
             <Switch value={privacyMode === 'HIDDEN'} onValueChange={changePrivacyMode} />
           </SettingsItem>
 
@@ -172,7 +176,7 @@ const useStrings = () => {
     about: intl.formatMessage(messages.about),
     changePin: intl.formatMessage(messages.changePin),
     privacyMode: intl.formatMessage(messages.privacyMode),
-    balanceInfo: intl.formatMessage(messages.balanceInfo),
+    privacyModeInfo: intl.formatMessage(messages.privacyModeInfo),
     biometricsSignIn: intl.formatMessage(messages.biometricsSignIn),
     biometricsSignInInfo: intl.formatMessage(messages.biometricsSignInInfo),
     termsOfservice: intl.formatMessage(messages.termsOfservice),
@@ -222,8 +226,8 @@ const messages = defineMessages({
     id: 'components.settings.applicationsettingsscreen.privacyMode',
     defaultMessage: '!!!Hide balance',
   },
-  balanceInfo: {
-    id: 'components.settings.applicationsettingsscreen.balanceInfo',
+  privacyModeInfo: {
+    id: 'components.settings.applicationsettingsscreen.privacyModeInfo',
     defaultMessage: '!!!This function will be applied to all wallets in your app',
   },
   biometricsSignIn: {
