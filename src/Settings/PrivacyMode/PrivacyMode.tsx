@@ -34,11 +34,5 @@ export const useSetPrivacyMode = ({...options}: UseMutationOptions<void, Error, 
   return mutation.mutate
 }
 
-export const useChangePrivacyMode = () => {
-  const privacyMode = usePrivacyMode()
-  const setPrivacyMode = useSetPrivacyMode()
-  return () => setPrivacyMode(privacyMode === 'SHOWN' ? 'HIDDEN' : 'SHOWN')
-}
-
 export type PrivacyMode = 'SHOWN' | 'HIDDEN'
 const defaultPrivacyMode: PrivacyMode = 'SHOWN'
