@@ -18,6 +18,7 @@ import {
   sendCrashReportsSelector,
 } from '../../legacy/selectors'
 import {useWalletNavigation} from '../../navigation'
+import {usePrivacyMode} from '../../Settings/PrivacyMode/PrivacyMode'
 import {lightPalette} from '../../theme'
 import {useCurrencyContext} from '../Currency'
 import {NavigatedSettingsItem, SettingsItem, SettingsSection} from '../SettingsItems'
@@ -37,6 +38,7 @@ export const ApplicationSettingsScreen = () => {
   const dispatch = useDispatch()
   const {currency} = useCurrencyContext()
   const {language} = useLanguage()
+  const {privacyMode, togglePrivacyMode} = usePrivacyMode()
 
   const setCrashReporting = (value: boolean) => {
     dispatch(setAppSettingField(APP_SETTINGS_KEYS.SEND_CRASH_REPORTS, value))
@@ -129,6 +131,14 @@ export const ApplicationSettingsScreen = () => {
           />
 
           <SettingsItem
+            icon={<Icon.EyeOff {...iconProps} />}
+            label={strings.privacyMode}
+            info={strings.privacyModeInfo}
+          >
+            <Switch value={privacyMode === 'HIDDEN'} onValueChange={togglePrivacyMode} />
+          </SettingsItem>
+
+          <SettingsItem
             icon={<Icon.Bio {...iconProps} />}
             label={strings.biometricsSignIn}
             info={strings.biometricsSignInInfo}
@@ -164,6 +174,8 @@ const useStrings = () => {
     selectFiatCurrency: intl.formatMessage(messages.selectFiatCurrency),
     about: intl.formatMessage(messages.about),
     changePin: intl.formatMessage(messages.changePin),
+    privacyMode: intl.formatMessage(messages.privacyMode),
+    privacyModeInfo: intl.formatMessage(messages.privacyModeInfo),
     biometricsSignIn: intl.formatMessage(messages.biometricsSignIn),
     biometricsSignInInfo: intl.formatMessage(messages.biometricsSignInInfo),
     termsOfservice: intl.formatMessage(messages.termsOfservice),
@@ -208,6 +220,14 @@ const messages = defineMessages({
   changePin: {
     id: 'components.settings.applicationsettingsscreen.changePin',
     defaultMessage: '!!!Change PIN',
+  },
+  privacyMode: {
+    id: 'components.settings.applicationsettingsscreen.privacyMode',
+    defaultMessage: '!!!Hide balance',
+  },
+  privacyModeInfo: {
+    id: 'components.settings.applicationsettingsscreen.privacyModeInfo',
+    defaultMessage: '!!!This function will be applied to all wallets in your app',
   },
   biometricsSignIn: {
     id: 'components.settings.applicationsettingsscreen.biometricsSignIn',
