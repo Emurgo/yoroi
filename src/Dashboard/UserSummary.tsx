@@ -3,10 +3,7 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 
-import {TotalAdaIcon} from '../assets/staking/TotalAdaIcon'
-import {TotalDelegatedIcon} from '../assets/staking/TotalDelegatedIcon'
-import {TotalRewardIcon} from '../assets/staking/TotalRewardIcon'
-import {Button, Text, TitledCard} from '../components'
+import {Button, Icon, Text, TitledCard} from '../components'
 import globalMessages from '../i18n/global-messages'
 import {formatAdaWithText} from '../legacy/format'
 import {COLORS} from '../theme'
@@ -30,7 +27,7 @@ export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, onWithdr
         <View style={styles.stats}>
           <View style={styles.row}>
             <View style={styles.icon}>
-              <TotalAdaIcon width={ICON_DIM} height={ICON_DIM} />
+              <Icon.TotalAda width={ICON_DIM} height={ICON_DIM} />
             </View>
 
             <View style={styles.amountBlock}>
@@ -43,7 +40,7 @@ export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, onWithdr
 
           <View style={styles.row}>
             <View style={styles.icon}>
-              <TotalRewardIcon width={ICON_DIM} height={ICON_DIM} />
+              <Icon.TotalReward width={ICON_DIM} height={ICON_DIM} />
             </View>
 
             <View style={styles.amountBlock}>
@@ -67,7 +64,7 @@ export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, onWithdr
 
           <View style={styles.row}>
             <View style={styles.icon}>
-              <TotalDelegatedIcon width={ICON_DIM} height={ICON_DIM} />
+              <Icon.TotalDelegated width={ICON_DIM} height={ICON_DIM} />
             </View>
 
             <View style={styles.amountBlock}>
