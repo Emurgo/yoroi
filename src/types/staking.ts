@@ -48,47 +48,6 @@ export type RemoteCertificate = {
   poolParams: Record<string, unknown> // don't think this is relevant
 }
 
-export type Certificate =
-  | 'StakeRegistration'
-  | 'StakeDeregistration'
-  | 'StakeDelegation'
-  | 'PoolRegistration'
-  | 'PoolRetirement'
-  | 'MoveInstantaneousRewardsCert'
-
-export type Withdrawal = {
-  address: string // hex
-  amount: string
-}
-
-export type RemoteCertificateMeta =
-  | {
-      kind: 'StakeRegistration'
-      rewardAddress: string // hex
-    }
-  | {
-      kind: 'StakeDeregistration'
-      rewardAddress: string // hex
-    }
-  | {
-      kind: 'StakeDelegation'
-      rewardAddress: string // hex
-      poolKeyHash: string // hex
-    }
-  | {
-      kind: 'PoolRegistration'
-      poolParams: unknown // we don't care about this for now
-    }
-  | {
-      kind: 'PoolRetirement'
-      poolKeyHash: string // hex
-    }
-  | {
-      kind: 'MoveInstantaneousRewardsCert'
-      rewards: Record<string, string>
-      pot: 0 | 1
-    }
-
 export type RemoteAccountState = {
   // poolOperator: null, // not implemented yet
   remainingAmount: string // current remaining awards

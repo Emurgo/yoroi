@@ -9,16 +9,6 @@ export type TokenEntry = TokenLookupKey & {
   amount: BigNumber
 }
 
-export type TokenEntryPlain = TokenLookupKey & {
-  amount: string
-  isDefault: boolean
-}
-
-export type DefaultTokenEntry = {
-  defaultNetworkId: number
-  defaultIdentifier: string
-}
-
 export type TokenCommonMetadata = {
   numberOfDecimals: number
   ticker: null | string
@@ -73,16 +63,4 @@ export type TokenInfo = {
   policyId: string
   longName?: string
   ticker?: string
-}
-
-// https://github.com/cardano-foundation/cardano-token-registry#semantic-content-of-registry-entries
-export type TokenRegistryEntry = {
-  subject: string
-  name: string
-  description: string
-  policy?: string
-  ticker?: string
-  url?: string
-  logo?: string
-  decimals?: number
 }

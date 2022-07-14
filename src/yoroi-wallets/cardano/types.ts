@@ -240,22 +240,9 @@ export type ServerStatus = {
   isQueueOnline?: boolean
 }
 
-export type Block = {
-  height: number
-  epoch: number
-  slot: number
-  hash: string
-}
-
 export type TxSubmissionStatus = {
   status: 'WAITING' | 'FAILED' | 'MAX_RETRY_REACHED' | 'SUCCESS'
   reason?: string | null
-}
-
-export type SignedTxLegacy = {
-  id: string
-  encodedTx: Uint8Array
-  base64: string
 }
 
 export type YoroiWallet = Pick<WalletInterface, YoroiWalletKeys> & {

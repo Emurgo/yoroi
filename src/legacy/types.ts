@@ -1,26 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type {WalletChecksum} from '@emurgo/cip4-js'
-import {BigNumber} from 'bignumber.js'
 
 import {TokenInfo} from '../types'
-import {CardanoTypes, MultiToken} from '../yoroi-wallets'
-export type Address = {
-  readonly address: string
-}
-export type Value = {
-  values: MultiToken
-}
-// note(v-almonacid): this is the old addressing format used during the Byron
-// era and the ITN. It was used, for instance, as the tx input format in the
-// rust V1 tx sign function.
-export type LegacyAddressing = {
-  addressing: {
-    account: number
-    change: number
-    index: number
-  }
-}
-export type LegacyAddressedUtxo = RawUtxo & LegacyAddressing
+
 export type Addressing = {
   readonly addressing: {
     readonly path: Array<number>
@@ -30,74 +12,10 @@ export type Addressing = {
 // equivalent to CardanoAddressedUtxo in the Yoroi extension
 export type AddressedUtxo = RawUtxo & Addressing
 // Byron-era Types
-export type TransactionOutput = Address & {
-  value: string
-}
-export type TransactionInput = LegacyAddressing & {
-  ptr: {
-    id: string
-    index: number
-  }
-  value: Address & {
-    value: string
-  }
-}
-export type PreparedTransactionData = {
-  changeAddress: string
-  fee: BigNumber
-  inputs: Array<TransactionInput>
-  outputs: Array<TransactionOutput>
-}
-export type V1SignedTx = {
-  cbor_encoded_tx: string
-  fee: BigNumber
-  changedUsed: boolean
-}
-
-/**
- * Jormungandr-era tx types
- */
-// similar to yoroi-frontend's V3UnsignedTxUtxoResponse
-export type V3UnsignedTxData<T> = {
-  senderUtxos: Array<RawUtxo>
-  IOs: T
-  changeAddr: Array<
-    Addressing & {
-      address: string
-      value: void | BigNumber
-    }
-  >
-}
-// similar to yoroi-frontend's V3UnsignedTxAddressedUtxoResponse
-export type V3UnsignedTxAddressedUtxoData<T> = {
-  senderUtxos: Array<AddressedUtxo>
-  IOs: T
-  changeAddr: Array<
-    Addressing & {
-      address: string
-      value: void | BigNumber
-    }
-  >
-  certificate: void | any
-}
 
 /**
  * Haskell-Shelley-era tx types
  */
-export type TxOutput = Address & {
-  amount: MultiToken
-}
-export type V4UnsignedTxUtxoResponse = {
-  senderUtxos: Array<RawUtxo>
-  txBuilder: CardanoTypes.TransactionBuilder
-  changeAddr: Array<Address & Value & Addressing>
-}
-export type V4UnsignedTxAddressedUtxoResponse = {
-  senderUtxos: Array<AddressedUtxo>
-  txBuilder: CardanoTypes.TransactionBuilder
-  changeAddr: Array<Address & Value & Addressing>
-  certificates: ReadonlyArray<CardanoTypes.Certificate>
-}
 
 /**
  * wallet types
@@ -109,15 +27,6 @@ export type EncryptionMethod = 'BIOMETRICS' | 'SYSTEM_PIN' | 'MASTER_PASSWORD'
 export type PlateResponse = {
   addresses: Array<string>
   accountPlate: WalletChecksum
-}
-export type ProtocolParameters = {
-  readonly linearFee: CardanoTypes.LinearFee
-  readonly minimumUtxoVal: CardanoTypes.BigNum
-  readonly poolDeposit: CardanoTypes.BigNum
-  readonly keyDeposit: CardanoTypes.BigNum
-  readonly networkId: number
-  readonly maxValueBytes?: number
-  readonly maxTxBytes?: number
 }
 
 /**
@@ -147,7 +56,7 @@ export const CERTIFICATE_KIND = {
   POOL_RETIREMENT: 'PoolRetirement',
   MOVE_INSTANTANEOUS_REWARDS: 'MoveInstantaneousRewardsCert',
 }
-export type CertificateKind = typeof CERTIFICATE_KIND[keyof typeof CERTIFICATE_KIND]
+
 // getAccountState
 export type AccountStateRequest = {
   addresses: Array<string>
@@ -162,33 +71,7 @@ export type RemoteAccountState = {
   withdrawals: string // all the withdrawals that have ever happened
 }
 export type AccountStateResponse = Record<string, null | RemoteAccountState>
-// getPoolInfo
-export type RemoteCertificate = {
-  kind: 'PoolRegistration' | 'PoolRetirement'
-  certIndex: number
-  poolParams: Record<string, any> // don't think this is relevant
-}
-export type RemotePoolMetaSuccess = {
-  info:
-    | {
-        name?: string
-        ticker?: string
-        description?: string
-        homepage?: string // other stuff from SMASH.
-      }
-    | null
-    | undefined
-  history: Array<{
-    epoch: number
-    slot: number
-    tx_ordinal: number
-    cert_ordinal: number
-    payload: RemoteCertificate
-  }>
-}
-export type RemotePoolMetaFailure = {
-  error: Record<string, any>
-}
+
 export type PoolInfoRequest = {
   poolIds: Array<string>
 }
@@ -203,19 +86,7 @@ export type TxBodiesRequest = {
   txsHashes: Array<string>
 }
 export type TxBodiesResponse = Record<string, string>
-// reputation
-export type ReputationObject = {
-  node_flags?: number // note: could be more metrics that are not handled
-}
-export type ReputationResponse = Record<string, ReputationObject>
-// serverstatus
-export type ServerStatusResponse = {
-  isServerOk: boolean
-  isMaintenance: boolean
-  serverTime: number
-  // in milliseconds
-  isQueueOnline?: boolean
-}
+
 // bestblock
 export type BestblockResponse = {
   height: number
