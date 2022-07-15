@@ -149,7 +149,8 @@ export const signout = () => (dispatch: Dispatch<any>) => {
     reducer: (state: State, payload) => payload,
   })
 }
-// logout closes the active wallet and signout
+
+// Only used in this file. Use the hook useLogout instead
 export const logout = () => async (dispatch: Dispatch<any>) => {
   await walletManager.closeWallet()
   dispatch(clearUTXOs())
