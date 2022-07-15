@@ -110,7 +110,7 @@ export const Dashboard = () => {
             )}
           </Row>
 
-          {stakingInfo?.status === 'registered' && (
+          {stakingInfo?.status === 'staked' && (
             <Row>
               <StakePoolInfos />
             </Row>
