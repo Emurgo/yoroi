@@ -8,6 +8,7 @@ import RNBootSplash from 'react-native-bootsplash'
 import type {Dispatch} from 'redux'
 import uuid from 'uuid'
 
+import {useCloseWallet} from '../hooks'
 import globalMessages, {errorMessages} from '../i18n/global-messages'
 import {Logger} from '../legacy/logging'
 import {ServerStatus, walletManager} from '../yoroi-wallets'
@@ -131,9 +132,6 @@ const initInstallationId =
     return newInstallationId
   }
 
-export const closeWallet = () => async (_dispatch: Dispatch<any>) => {
-  await walletManager.closeWallet()
-}
 // note(v-almonacid): authentication occurs after entering pin or biometrics,
 // it does not mean we opened a wallet
 export const signin = () => (dispatch: Dispatch<any>) => {
@@ -154,6 +152,7 @@ export const signout = () => (dispatch: Dispatch<any>) => {
 }
 // logout closes the active wallet and signout
 export const logout = () => async (dispatch: Dispatch<any>) => {
+  const {closeWallet} = useCloseWallet()
   await closeWallet()
   dispatch(signout())
 }

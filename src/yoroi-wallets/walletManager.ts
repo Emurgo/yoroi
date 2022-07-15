@@ -509,10 +509,12 @@ class WalletManager {
     const reject = this._closeReject
     this._closePromise = null
     this._closeReject = null
+
+    this._notify()
+
     this._wallet = null
     this._id = ''
-    this._notify()
-    this._notifyOnClose()
+
     // need to reject in next microtask otherwise
     // closeWallet would throw if some rejection
     // handler does not catch

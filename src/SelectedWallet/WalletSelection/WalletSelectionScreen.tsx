@@ -8,7 +8,7 @@ import {useMutation, UseMutationOptions, useQueryClient} from 'react-query'
 import {useDispatch} from 'react-redux'
 
 import {Button, Icon, PleaseWaitModal, ScreenBackground, StatusBar} from '../../components'
-import {useWalletMetas} from '../../hooks'
+import {useCloseWallet, useWalletMetas} from '../../hooks'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
 import {logout, showErrorDialog} from '../../legacy/actions'
 import {CONFIG, isNightly} from '../../legacy/config'
@@ -35,6 +35,7 @@ export const WalletSelectionScreen = () => {
   const [wallet] = useSelectedWalletContext()
   const params = useRoute<RouteProp<WalletStackRoutes, 'wallet-selection'>>().params
   const queryClient = useQueryClient()
+  const {closeWallet} = useCloseWallet()
 
   const {openWallet, isLoading} = useOpenWallet({
     onSuccess: ({wallet, walletMeta}) => {
@@ -46,11 +47,11 @@ export const WalletSelectionScreen = () => {
     onError: async (error) => {
       navigation.setParams({reopen: true})
       if (error instanceof SystemAuthDisabled) {
-        await walletManager.closeWallet()
+        await closeWallet()
         await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
         resetToWalletSelection()
       } else if (error instanceof InvalidState) {
-        await walletManager.closeWallet()
+        await closeWallet()
         await showErrorDialog(errorMessages.walletStateInvalid, intl)
         resetToWalletSelection()
       } else if (error instanceof KeysAreInvalid) {
@@ -245,11 +246,13 @@ const useOpenWallet = (
     WalletMeta
   >,
 ) => {
+  const {closeWallet} = useCloseWallet()
+
   const mutation = useMutation({
     ...options,
     mutationFn: async (walletMeta) => {
       try {
-        await walletManager.closeWallet()
+        await closeWallet()
       } catch (e) {
         // apparently closeWallet is not idempotent
       }
