@@ -50,10 +50,8 @@ export const useStakingInfo = (wallet: YoroiWallet) => {
     queryKey: [wallet.id, 'stakingInfo'],
     queryFn: async () => {
       const stakingStatus = await wallet.getDelegationStatus()
-      if (!stakingStatus.isRegistered || !('poolKeyHash' in stakingStatus))
-        return {
-          status: stakingStatus.isRegistered ? 'registered' : 'not-registered',
-        }
+      if (!stakingStatus.isRegistered) return {status: 'not-registered'}
+      if (!('poolKeyHash' in stakingStatus)) return {status: 'registered'}
 
       const accountStates = await wallet.fetchAccountState()
       const accountState = accountStates[wallet.rewardAddressHex]
