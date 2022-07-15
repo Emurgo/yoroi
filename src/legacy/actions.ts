@@ -131,9 +131,6 @@ const initInstallationId =
     return newInstallationId
   }
 
-export const closeWallet = () => async (_dispatch: Dispatch<any>) => {
-  await walletManager.closeWallet()
-}
 // note(v-almonacid): authentication occurs after entering pin or biometrics,
 // it does not mean we opened a wallet
 export const signin = () => (dispatch: Dispatch<any>) => {
@@ -152,9 +149,12 @@ export const signout = () => (dispatch: Dispatch<any>) => {
     reducer: (state: State, payload) => payload,
   })
 }
+
 // logout closes the active wallet and signout
 export const logout = () => async (dispatch: Dispatch<any>) => {
-  await closeWallet()
+  await walletManager.closeWallet()
+  dispatch(clearUTXOs())
+  dispatch(clearAccountState())
   dispatch(signout())
 }
 
