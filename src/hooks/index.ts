@@ -41,10 +41,10 @@ export const useCloseWallet = ({onSuccess, ...options}: UseMutationOptions<void,
 
   const mutation = useMutation({
     mutationFn: () => walletManager.closeWallet(),
-    onSuccess: (data, languageCode, context) => {
+    onSuccess: (data, variables, context) => {
       dispatch(clearUTXOs())
       dispatch(clearAccountState())
-      onSuccess?.(data, languageCode, context)
+      onSuccess?.(data, variables, context)
     },
     ...options,
   })
