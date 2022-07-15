@@ -8,10 +8,10 @@ import RNBootSplash from 'react-native-bootsplash'
 import type {Dispatch} from 'redux'
 import uuid from 'uuid'
 
+import {useCloseWallet} from '../hooks'
 import globalMessages, {errorMessages} from '../i18n/global-messages'
 import {Logger} from '../legacy/logging'
 import {ServerStatus, walletManager} from '../yoroi-wallets'
-import {clearAccountState} from './account'
 import * as api from './api'
 import type {AppSettingsKey} from './appSettings'
 import {APP_SETTINGS_KEYS, AppSettingsError, readAppSettings, removeAppSettings, writeAppSettings} from './appSettings'
@@ -32,7 +32,6 @@ import {
   sendCrashReportsSelector,
 } from './selectors'
 import type {State} from './state'
-import {clearUTXOs} from './utxo'
 
 const updateCrashlytics = (fieldName: AppSettingsKey, value: any) => {
   const handlers = {
@@ -131,9 +130,6 @@ const initInstallationId =
     return newInstallationId
   }
 
-export const closeWallet = () => async (_dispatch: Dispatch<any>) => {
-  await walletManager.closeWallet()
-}
 // note(v-almonacid): authentication occurs after entering pin or biometrics,
 // it does not mean we opened a wallet
 export const signin = () => (dispatch: Dispatch<any>) => {
@@ -154,6 +150,7 @@ export const signout = () => (dispatch: Dispatch<any>) => {
 }
 // logout closes the active wallet and signout
 export const logout = () => async (dispatch: Dispatch<any>) => {
+  const {closeWallet} = useCloseWallet()
   await closeWallet()
   dispatch(signout())
 }
@@ -297,8 +294,6 @@ export const setupHooks = () => (dispatch: Dispatch<any>) => {
   walletManager.subscribe(() => dispatch(mirrorTxHistory()))
   walletManager.subscribeBackgroundSyncError((err: any) => dispatch(setBackgroundSyncError(err)))
   walletManager.subscribeServerSync((status) => dispatch(_setServerStatus(status)))
-  walletManager.subscribeOnClose(() => dispatch(clearUTXOs()))
-  walletManager.subscribeOnClose(() => dispatch(clearAccountState()))
   Logger.debug('setting up app lock')
 
   const onTimeoutAction = () => {

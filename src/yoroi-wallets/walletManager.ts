@@ -49,7 +49,6 @@ class WalletManager {
   _syncErrorSubscribers: Array<(err: null | Error) => void> = []
   _serverSyncSubscribers: Array<(status: ServerStatus) => void> = []
   _onOpenSubscribers: Array<() => void> = []
-  _onCloseSubscribers: Array<() => void> = []
   _onTxHistoryUpdateSubscribers: Array<() => void> = []
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   _closePromise: null | Promise<any> = null
@@ -133,10 +132,6 @@ class WalletManager {
     this._onOpenSubscribers.forEach((handler) => handler())
   }
 
-  _notifyOnClose = () => {
-    this._onCloseSubscribers.forEach((handler) => handler())
-  }
-
   _notifyOnTxHistoryUpdate = () => {
     this._onTxHistoryUpdateSubscribers.forEach((handler) => handler())
   }
@@ -155,10 +150,6 @@ class WalletManager {
 
   subscribeOnOpen(handler: () => void) {
     this._onOpenSubscribers.push(handler)
-  }
-
-  subscribeOnClose(handler: () => void) {
-    this._onCloseSubscribers.push(handler)
   }
 
   subscribeOnTxHistoryUpdate(handler: () => void) {
@@ -509,10 +500,12 @@ class WalletManager {
     const reject = this._closeReject
     this._closePromise = null
     this._closeReject = null
+
+    this._notify()
+
     this._wallet = null
     this._id = ''
-    this._notify()
-    this._notifyOnClose()
+
     // need to reject in next microtask otherwise
     // closeWallet would throw if some rejection
     // handler does not catch
