@@ -467,14 +467,15 @@ export const useWalletMetas = <T = Array<WalletMeta>>(options?: UseQueryOptions<
   return query.data
 }
 
-export const useRemoveWallet = (options: UseMutationOptions<void, Error, void>) => {
+export const useRemoveWallet = ({onSuccess, ...options}: UseMutationOptions<void, Error, void> = {}) => {
   const dispatch = useDispatch()
 
   const mutation = useMutationWithInvalidations({
     mutationFn: () => walletManager.removeCurrentWallet(),
-    onSuccess: () => {
+    onSuccess: (data, variables, context) => {
       dispatch(clearUTXOs())
       dispatch(clearAccountState())
+      onSuccess?.(data, variables, context)
     },
     invalidateQueries: [['walletMetas']],
     ...options,
@@ -486,14 +487,15 @@ export const useRemoveWallet = (options: UseMutationOptions<void, Error, void>) 
   }
 }
 
-export const useResyncWallet = (options: UseMutationOptions<void, Error, void>) => {
+export const useResyncWallet = ({onSuccess, ...options}: UseMutationOptions<void, Error, void> = {}) => {
   const dispatch = useDispatch()
 
   const mutation = useMutationWithInvalidations({
     mutationFn: () => walletManager.resyncWallet(),
-    onSuccess: () => {
+    onSuccess: (data, variables, context) => {
       dispatch(clearUTXOs())
       dispatch(clearAccountState())
+      onSuccess?.(data, variables, context)
     },
     invalidateQueries: [['walletMetas']],
     ...options,
