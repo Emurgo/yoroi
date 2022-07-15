@@ -12,7 +12,6 @@ import {useCloseWallet} from '../hooks'
 import globalMessages, {errorMessages} from '../i18n/global-messages'
 import {Logger} from '../legacy/logging'
 import {ServerStatus, walletManager} from '../yoroi-wallets'
-import {clearAccountState} from './account'
 import * as api from './api'
 import type {AppSettingsKey} from './appSettings'
 import {APP_SETTINGS_KEYS, AppSettingsError, readAppSettings, removeAppSettings, writeAppSettings} from './appSettings'
@@ -33,7 +32,6 @@ import {
   sendCrashReportsSelector,
 } from './selectors'
 import type {State} from './state'
-import {clearUTXOs} from './utxo'
 
 const updateCrashlytics = (fieldName: AppSettingsKey, value: any) => {
   const handlers = {
@@ -296,8 +294,6 @@ export const setupHooks = () => (dispatch: Dispatch<any>) => {
   walletManager.subscribe(() => dispatch(mirrorTxHistory()))
   walletManager.subscribeBackgroundSyncError((err: any) => dispatch(setBackgroundSyncError(err)))
   walletManager.subscribeServerSync((status) => dispatch(_setServerStatus(status)))
-  walletManager.subscribeOnClose(() => dispatch(clearUTXOs()))
-  walletManager.subscribeOnClose(() => dispatch(clearAccountState()))
   Logger.debug('setting up app lock')
 
   const onTimeoutAction = () => {
