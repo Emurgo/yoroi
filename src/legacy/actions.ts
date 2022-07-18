@@ -8,10 +8,10 @@ import RNBootSplash from 'react-native-bootsplash'
 import type {Dispatch} from 'redux'
 import uuid from 'uuid'
 
-import {useCloseWallet} from '../hooks'
 import globalMessages, {errorMessages} from '../i18n/global-messages'
 import {Logger} from '../legacy/logging'
 import {ServerStatus, walletManager} from '../yoroi-wallets'
+import {clearAccountState} from './account'
 import * as api from './api'
 import type {AppSettingsKey} from './appSettings'
 import {APP_SETTINGS_KEYS, AppSettingsError, readAppSettings, removeAppSettings, writeAppSettings} from './appSettings'
@@ -32,6 +32,7 @@ import {
   sendCrashReportsSelector,
 } from './selectors'
 import type {State} from './state'
+import {clearUTXOs} from './utxo'
 
 const updateCrashlytics = (fieldName: AppSettingsKey, value: any) => {
   const handlers = {
@@ -148,10 +149,12 @@ export const signout = () => (dispatch: Dispatch<any>) => {
     reducer: (state: State, payload) => payload,
   })
 }
-// logout closes the active wallet and signout
+
+// Only used in this file. Use the hook useLogout instead
 export const logout = () => async (dispatch: Dispatch<any>) => {
-  const {closeWallet} = useCloseWallet()
-  await closeWallet()
+  await walletManager.closeWallet()
+  dispatch(clearUTXOs())
+  dispatch(clearAccountState())
   dispatch(signout())
 }
 

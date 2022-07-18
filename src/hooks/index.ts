@@ -14,6 +14,7 @@ import {
 import {useDispatch} from 'react-redux'
 
 import {clearAccountState} from '../legacy/account'
+import {signout} from '../legacy/actions'
 import KeyStore from '../legacy/KeyStore'
 import {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {WalletMeta} from '../legacy/state'
@@ -691,4 +692,14 @@ export const useExchangeRate = ({
   })
 
   return query.data
+}
+
+export const useLogout = () => {
+  const {closeWallet} = useCloseWallet()
+  const dispatch = useDispatch()
+
+  return async () => {
+    await closeWallet()
+    dispatch(signout())
+  }
 }
