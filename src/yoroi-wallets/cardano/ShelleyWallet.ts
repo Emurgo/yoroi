@@ -487,11 +487,10 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     defaultToken: Token,
     auxiliaryData?: Array<TxMetadata>,
   ) {
-    const serverTime = await this.checkServerStatus()
-      .then(({serverTime}) => serverTime)
-      .catch(() => new Date())
     const timeToSlotFn = genTimeToSlot(getCardanoBaseConfig(this._getNetworkConfig()))
-    const time = serverTime !== undefined ? serverTime : new Date()
+    const time = await this.checkServerStatus()
+      .then(({serverTime}) => serverTime || new Date())
+      .catch(() => new Date())
     const absSlotNumber = new BigNumber(timeToSlotFn({time}).slot)
     const changeAddr = await this._getAddressedChangeAddress()
     const addressedUtxos = this.asAddressedUtxo(utxos)
@@ -554,11 +553,10 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     utxos: Array<RawUtxo>,
     defaultAsset: DefaultAsset,
   ) {
-    const serverTime = await this.checkServerStatus()
-      .then(({serverTime}) => serverTime)
-      .catch(() => new Date())
     const timeToSlotFn = genTimeToSlot(getCardanoBaseConfig(this._getNetworkConfig()))
-    const time = serverTime !== undefined ? serverTime : new Date()
+    const time = await this.checkServerStatus()
+      .then(({serverTime}) => serverTime || new Date())
+      .catch(() => new Date())
     const absSlotNumber = new BigNumber(timeToSlotFn({time}).slot)
     const changeAddr = await this._getAddressedChangeAddress()
     const addressedUtxos = this.asAddressedUtxo(utxos)
@@ -607,12 +605,11 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     decryptedKey: string | undefined,
   ) {
     Logger.debug('ShelleyWallet::createVotingRegTx called')
-    const serverTime = await this.checkServerStatus()
-      .then(({serverTime}) => serverTime)
-      .catch(() => new Date())
     try {
       const timeToSlotFn = genTimeToSlot(getCardanoBaseConfig(this._getNetworkConfig()))
-      const time = serverTime !== undefined ? serverTime : new Date()
+      const time = await this.checkServerStatus()
+        .then(({serverTime}) => serverTime || new Date())
+        .catch(() => new Date())
       const absSlotNumber = new BigNumber(timeToSlotFn({time}).slot)
 
       const changeAddr = await this._getAddressedChangeAddress()
@@ -709,12 +706,11 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     defaultAsset: DefaultAsset,
     shouldDeregister: boolean,
   ): Promise<YoroiUnsignedTx> {
-    const serverTime = await this.checkServerStatus()
-      .then(({serverTime}) => serverTime)
-      .catch(() => new Date())
     if (this.rewardAddressHex == null) throw new Error('reward address is null')
     const timeToSlotFn = genTimeToSlot(getCardanoBaseConfig(this._getNetworkConfig()))
-    const time = serverTime !== undefined ? serverTime : new Date()
+    const time = await this.checkServerStatus()
+      .then(({serverTime}) => serverTime || new Date())
+      .catch(() => new Date())
     const absSlotNumber = new BigNumber(timeToSlotFn({time}).slot)
     const changeAddr = await this._getAddressedChangeAddress()
     const addressedUtxos = this.asAddressedUtxo(utxos)
