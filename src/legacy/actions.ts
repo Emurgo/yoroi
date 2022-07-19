@@ -175,7 +175,7 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
       _setServerStatus({
         isServerOk: status.isServerOk,
         isMaintenance: status.isMaintenance,
-        serverTime: new Date(status.serverTime as any),
+        serverTime: status.serverTime || Date.now(),
       }),
     )
   } catch (e) {

@@ -123,7 +123,7 @@ class WalletManager {
       handler({
         isServerOk: status.isServerOk,
         isMaintenance: status.isMaintenance,
-        serverTime: new Date(status.serverTime || Date.now()),
+        serverTime: status.serverTime || Date.now(),
       }),
     )
   }
