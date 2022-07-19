@@ -26,10 +26,6 @@ import {MultiToken, YoroiWallet} from '../../yoroi-wallets'
 import {AssetList} from './AssetList'
 import assetListStyle from './AssetListTransaction.style'
 
-export type Params = {
-  id: string
-}
-
 export const TxDetails = () => {
   const strings = useStrings()
   const intl = useIntl()
@@ -38,8 +34,8 @@ export const TxDetails = () => {
   const externalAddressIndex = useSelector(externalAddressIndexSelector)
   const wallet = useSelectedWallet()
   const transactions = useSelector(transactionsInfoSelector)
-  const [expandedIn, setExpandedIn] = useState(false)
-  const [expandedOut, setExpandedOut] = useState(false)
+  const [expandedInItemId, setExpandedInItemId] = useState<null | ItemId>(null)
+  const [expandedOutItemId, setExpandedOutItemId] = useState<null | ItemId>(null)
   const [addressDetail, setAddressDetail] = React.useState<null | string>(null)
   const transaction = transactions[id]
 
@@ -53,14 +49,14 @@ export const TxDetails = () => {
   const amountAsMT = MultiToken.fromArray(transaction.amount)
   const amount = amountAsMT.getDefault()
 
-  const toggleExpandIn = () => {
+  const toggleExpandIn = (itemId: ItemId) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-    setExpandedIn(!expandedIn)
+    setExpandedInItemId(expandedInItemId !== itemId ? itemId : null)
   }
 
-  const toggleExpandOut = () => {
+  const toggleExpandOut = (itemId: ItemId) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-    setExpandedOut(!expandedOut)
+    setExpandedOutItemId(expandedOutItemId !== itemId ? itemId : null)
   }
 
   return (
@@ -82,12 +78,20 @@ export const TxDetails = () => {
             <View key={item.id}>
               <AddressEntry {...item} showModalForAddress={setAddressDetail} />
               {item.assets.length > 0 && (
-                <TouchableOpacity style={styles.assetsExpandable} activeOpacity={0.5} onPress={() => toggleExpandIn()}>
+                <TouchableOpacity
+                  style={styles.assetsExpandable}
+                  activeOpacity={0.5}
+                  onPress={() => toggleExpandIn(item.id)}
+                >
                   <Text style={styles.assetsTitle}>{` -${item.assets.length} ${strings.assetsLabel} `}</Text>
-                  <Icon.Chevron direction={expandedIn ? 'up' : 'down'} color={COLORS.ACTION_GRAY} size={23} />
+                  <Icon.Chevron
+                    direction={expandedInItemId === item.id ? 'up' : 'down'}
+                    color={COLORS.ACTION_GRAY}
+                    size={23}
+                  />
                 </TouchableOpacity>
               )}
-              <ExpandableAssetList expanded={expandedIn} assets={item.assets} />
+              <ExpandableAssetList expanded={expandedInItemId === item.id} assets={item.assets} />
             </View>
           ))}
 
@@ -98,12 +102,20 @@ export const TxDetails = () => {
             <View key={item.id}>
               <AddressEntry {...item} showModalForAddress={setAddressDetail} />
               {item.assets.length > 0 && (
-                <TouchableOpacity style={styles.assetsExpandable} activeOpacity={0.5} onPress={() => toggleExpandOut()}>
+                <TouchableOpacity
+                  style={styles.assetsExpandable}
+                  activeOpacity={0.5}
+                  onPress={() => toggleExpandOut(item.id)}
+                >
                   <Text style={styles.assetsTitle}>{` +${item.assets.length} ${strings.assetsLabel} `}</Text>
-                  <Icon.Chevron direction={expandedOut ? 'up' : 'down'} color={COLORS.ACTION_GRAY} size={23} />
+                  <Icon.Chevron
+                    direction={expandedOutItemId === item.id ? 'up' : 'down'}
+                    color={COLORS.ACTION_GRAY}
+                    size={23}
+                  />
                 </TouchableOpacity>
               )}
-              <ExpandableAssetList expanded={expandedOut} assets={item.assets} />
+              <ExpandableAssetList expanded={expandedOutItemId === item.id} assets={item.assets} />
             </View>
           ))}
 
@@ -280,6 +292,17 @@ const getShownAddresses = (
   }
 }
 
+const openInExplorer = async (transaction: TransactionInfo, networkId: number) => {
+  const networkConfig = getNetworkConfigById(networkId)
+  await Linking.openURL(networkConfig.EXPLORER_URL_FOR_TX(transaction.id))
+}
+
+export type Params = {
+  id: string
+}
+
+type ItemId = number
+
 const useStrings = () => {
   const intl = useIntl()
 
@@ -407,8 +430,3 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
 })
-
-const openInExplorer = async (transaction: TransactionInfo, networkId: number) => {
-  const networkConfig = getNetworkConfigById(networkId)
-  await Linking.openURL(networkConfig.EXPLORER_URL_FOR_TX(transaction.id))
-}
