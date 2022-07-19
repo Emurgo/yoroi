@@ -38,8 +38,8 @@ export const TxDetails = () => {
   const externalAddressIndex = useSelector(externalAddressIndexSelector)
   const wallet = useSelectedWallet()
   const transactions = useSelector(transactionsInfoSelector)
-  const [expandedIn, setExpandedIn] = useState(false)
-  const [expandedOut, setExpandedOut] = useState(false)
+  const [expandedInItemId, setExpandedInItemId] = useState(null)
+  const [expandedOutItemId, setExpandedOutItemId] = useState(null)
   const [addressDetail, setAddressDetail] = React.useState<null | string>(null)
   const transaction = transactions[id]
 
@@ -53,14 +53,14 @@ export const TxDetails = () => {
   const amountAsMT = MultiToken.fromArray(transaction.amount)
   const amount = amountAsMT.getDefault()
 
-  const toggleExpandIn = () => {
+  const toggleExpandIn = (itemId) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-    setExpandedIn(!expandedIn)
+    setExpandedInItemId(expandedInItemId !== itemId ? itemId : null)
   }
 
-  const toggleExpandOut = () => {
+  const toggleExpandOut = (itemId) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-    setExpandedOut(!expandedOut)
+    setExpandedOutItemId(expandedOutItemId !== itemId ? itemId : null)
   }
 
   return (
@@ -82,12 +82,20 @@ export const TxDetails = () => {
             <View key={item.id}>
               <AddressEntry {...item} showModalForAddress={setAddressDetail} />
               {item.assets.length > 0 && (
-                <TouchableOpacity style={styles.assetsExpandable} activeOpacity={0.5} onPress={() => toggleExpandIn()}>
+                <TouchableOpacity
+                  style={styles.assetsExpandable}
+                  activeOpacity={0.5}
+                  onPress={() => toggleExpandIn(item.id)}
+                >
                   <Text style={styles.assetsTitle}>{` -${item.assets.length} ${strings.assetsLabel} `}</Text>
-                  <Icon.Chevron direction={expandedIn ? 'up' : 'down'} color={COLORS.ACTION_GRAY} size={23} />
+                  <Icon.Chevron
+                    direction={expandedInItemId === item.id ? 'up' : 'down'}
+                    color={COLORS.ACTION_GRAY}
+                    size={23}
+                  />
                 </TouchableOpacity>
               )}
-              <ExpandableAssetList expanded={expandedIn} assets={item.assets} />
+              <ExpandableAssetList expanded={expandedInItemId === item.id} assets={item.assets} />
             </View>
           ))}
 
@@ -98,12 +106,20 @@ export const TxDetails = () => {
             <View key={item.id}>
               <AddressEntry {...item} showModalForAddress={setAddressDetail} />
               {item.assets.length > 0 && (
-                <TouchableOpacity style={styles.assetsExpandable} activeOpacity={0.5} onPress={() => toggleExpandOut()}>
+                <TouchableOpacity
+                  style={styles.assetsExpandable}
+                  activeOpacity={0.5}
+                  onPress={() => toggleExpandOut(item.id)}
+                >
                   <Text style={styles.assetsTitle}>{` +${item.assets.length} ${strings.assetsLabel} `}</Text>
-                  <Icon.Chevron direction={expandedOut ? 'up' : 'down'} color={COLORS.ACTION_GRAY} size={23} />
+                  <Icon.Chevron
+                    direction={expandedOutItemId === item.id ? 'up' : 'down'}
+                    color={COLORS.ACTION_GRAY}
+                    size={23}
+                  />
                 </TouchableOpacity>
               )}
-              <ExpandableAssetList expanded={expandedOut} assets={item.assets} />
+              <ExpandableAssetList expanded={expandedOutItemId === item.id} assets={item.assets} />
             </View>
           ))}
 
