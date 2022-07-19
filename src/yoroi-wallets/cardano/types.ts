@@ -236,7 +236,7 @@ export type YoroiProvider = '' | 'emurgo-alonzo'
 export type ServerStatus = {
   isServerOk: boolean
   isMaintenance: boolean
-  serverTime: Date | undefined
+  serverTime: number | undefined
   isQueueOnline?: boolean
 }
 

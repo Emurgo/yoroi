@@ -489,8 +489,9 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
   ) {
     const timeToSlotFn = genTimeToSlot(getCardanoBaseConfig(this._getNetworkConfig()))
     const time = await this.checkServerStatus()
-      .then(({serverTime}) => serverTime || new Date())
-      .catch(() => new Date())
+      .then(({serverTime}) => serverTime || Date.now())
+      .catch(() => Date.now())
+
     const absSlotNumber = new BigNumber(timeToSlotFn({time}).slot)
     const changeAddr = await this._getAddressedChangeAddress()
     const addressedUtxos = this.asAddressedUtxo(utxos)
@@ -555,8 +556,9 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
   ) {
     const timeToSlotFn = genTimeToSlot(getCardanoBaseConfig(this._getNetworkConfig()))
     const time = await this.checkServerStatus()
-      .then(({serverTime}) => serverTime || new Date())
-      .catch(() => new Date())
+      .then(({serverTime}) => serverTime || Date.now())
+      .catch(() => Date.now())
+
     const absSlotNumber = new BigNumber(timeToSlotFn({time}).slot)
     const changeAddr = await this._getAddressedChangeAddress()
     const addressedUtxos = this.asAddressedUtxo(utxos)
@@ -608,8 +610,9 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     try {
       const timeToSlotFn = genTimeToSlot(getCardanoBaseConfig(this._getNetworkConfig()))
       const time = await this.checkServerStatus()
-        .then(({serverTime}) => serverTime || new Date())
-        .catch(() => new Date())
+        .then(({serverTime}) => serverTime || Date.now())
+        .catch(() => Date.now())
+
       const absSlotNumber = new BigNumber(timeToSlotFn({time}).slot)
 
       const changeAddr = await this._getAddressedChangeAddress()
@@ -708,9 +711,11 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
   ): Promise<YoroiUnsignedTx> {
     if (this.rewardAddressHex == null) throw new Error('reward address is null')
     const timeToSlotFn = genTimeToSlot(getCardanoBaseConfig(this._getNetworkConfig()))
+
     const time = await this.checkServerStatus()
-      .then(({serverTime}) => serverTime || new Date())
-      .catch(() => new Date())
+      .then(({serverTime}) => serverTime || Date.now())
+      .catch(() => Date.now())
+
     const absSlotNumber = new BigNumber(timeToSlotFn({time}).slot)
     const changeAddr = await this._getAddressedChangeAddress()
     const addressedUtxos = this.asAddressedUtxo(utxos)
