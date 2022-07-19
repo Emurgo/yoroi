@@ -26,10 +26,6 @@ import {MultiToken, YoroiWallet} from '../../yoroi-wallets'
 import {AssetList} from './AssetList'
 import assetListStyle from './AssetListTransaction.style'
 
-export type Params = {
-  id: string
-}
-
 export const TxDetails = () => {
   const strings = useStrings()
   const intl = useIntl()
@@ -38,8 +34,8 @@ export const TxDetails = () => {
   const externalAddressIndex = useSelector(externalAddressIndexSelector)
   const wallet = useSelectedWallet()
   const transactions = useSelector(transactionsInfoSelector)
-  const [expandedInItemId, setExpandedInItemId] = useState(null)
-  const [expandedOutItemId, setExpandedOutItemId] = useState(null)
+  const [expandedInItemId, setExpandedInItemId] = useState<ItemId>(null)
+  const [expandedOutItemId, setExpandedOutItemId] = useState<ItemId>(null)
   const [addressDetail, setAddressDetail] = React.useState<null | string>(null)
   const transaction = transactions[id]
 
@@ -53,12 +49,12 @@ export const TxDetails = () => {
   const amountAsMT = MultiToken.fromArray(transaction.amount)
   const amount = amountAsMT.getDefault()
 
-  const toggleExpandIn = (itemId) => {
+  const toggleExpandIn = (itemId: ItemId) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     setExpandedInItemId(expandedInItemId !== itemId ? itemId : null)
   }
 
-  const toggleExpandOut = (itemId) => {
+  const toggleExpandOut = (itemId: ItemId) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     setExpandedOutItemId(expandedOutItemId !== itemId ? itemId : null)
   }
@@ -296,6 +292,17 @@ const getShownAddresses = (
   }
 }
 
+const openInExplorer = async (transaction: TransactionInfo, networkId: number) => {
+  const networkConfig = getNetworkConfigById(networkId)
+  await Linking.openURL(networkConfig.EXPLORER_URL_FOR_TX(transaction.id))
+}
+
+export type Params = {
+  id: string
+}
+
+type ItemId = null | number
+
 const useStrings = () => {
   const intl = useIntl()
 
@@ -423,8 +430,3 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
 })
-
-const openInExplorer = async (transaction: TransactionInfo, networkId: number) => {
-  const networkConfig = getNetworkConfigById(networkId)
-  await Linking.openURL(networkConfig.EXPLORER_URL_FOR_TX(transaction.id))
-}
