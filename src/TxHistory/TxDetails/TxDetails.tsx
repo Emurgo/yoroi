@@ -34,8 +34,8 @@ export const TxDetails = () => {
   const externalAddressIndex = useSelector(externalAddressIndexSelector)
   const wallet = useSelectedWallet()
   const transactions = useSelector(transactionsInfoSelector)
-  const [expandedInItemId, setExpandedInItemId] = useState<ItemId>(null)
-  const [expandedOutItemId, setExpandedOutItemId] = useState<ItemId>(null)
+  const [expandedInItemId, setExpandedInItemId] = useState<ItemId | null>(null)
+  const [expandedOutItemId, setExpandedOutItemId] = useState<ItemId | null>(null)
   const [addressDetail, setAddressDetail] = React.useState<null | string>(null)
   const transaction = transactions[id]
 
@@ -301,7 +301,7 @@ export type Params = {
   id: string
 }
 
-type ItemId = null | number
+type ItemId = number
 
 const useStrings = () => {
   const intl = useIntl()
