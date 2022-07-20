@@ -8,7 +8,12 @@ import {CONFIG} from '../../legacy/config'
 import {useStorage} from '../../Storage'
 import {PinInput} from '../PinInput'
 
+type Ref = {
+  clean: () => void
+}
+
 export const CheckPinInput = ({onValid}: {onValid: () => void}) => {
+  const inputRef = React.useRef<null | Ref>(null)
   const intl = useIntl()
   const strings = useStrings()
   const storage = useStorage()
@@ -17,16 +22,19 @@ export const CheckPinInput = ({onValid}: {onValid: () => void}) => {
       if (isValid) {
         onValid()
       } else {
-        showErrorDialog(errorMessages.incorrectPin, intl)
+        showErrorDialog({...errorMessages.incorrectPin, onPressYesButton: () => inputRef.current?.clean()}, intl)
       }
     },
     onError: (error) => {
-      showErrorDialog(errorMessages.generalError, intl, {message: error.message})
+      showErrorDialog({...errorMessages.generalError, onPressYesButton: () => inputRef.current?.clean()}, intl, {
+        message: error.message,
+      })
     },
   })
 
   return (
     <PinInput
+      ref={inputRef}
       title={strings.title}
       subtitles={[strings.subtitle]}
       enabled={!isLoading}

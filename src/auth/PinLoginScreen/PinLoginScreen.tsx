@@ -11,14 +11,22 @@ import {CONFIG} from '../../legacy/config'
 import {useStorage} from '../../Storage'
 import {PinInput} from '../PinInput'
 
+type Ref = {
+  clean: () => void
+}
+
 export const PinLoginScreen = () => {
+  const inputRef = React.useRef<null | Ref>(null)
   const intl = useIntl()
   const strings = useStrings()
   const dispatch = useDispatch()
   const storage = useStorage()
+
   const {checkPin, isLoading} = useCheckPin(storage, {
     onSuccess: (isValid) => {
-      isValid ? dispatch(signin()) : showErrorDialog(errorMessages.incorrectPin, intl)
+      isValid
+        ? dispatch(signin())
+        : showErrorDialog({...errorMessages.incorrectPin, onPressYesButton: () => inputRef.current?.clean()}, intl)
     },
   })
 
@@ -26,7 +34,13 @@ export const PinLoginScreen = () => {
     <SafeAreaView edges={['left', 'right', 'bottom']} style={{flex: 1}}>
       <StatusBar type="dark" />
 
-      <PinInput enabled={!isLoading} pinMaxLength={CONFIG.PIN_LENGTH} title={strings.title} onDone={checkPin} />
+      <PinInput
+        ref={inputRef}
+        enabled={!isLoading}
+        pinMaxLength={CONFIG.PIN_LENGTH}
+        title={strings.title}
+        onDone={checkPin}
+      />
     </SafeAreaView>
   )
 }

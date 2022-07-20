@@ -8,13 +8,31 @@ import {CONFIG} from '../../legacy/config'
 import {useStorage} from '../../Storage'
 import {PinInput} from '../PinInput'
 
+type Ref = {
+  clean: () => void
+}
+
 export const CreatePinInput: React.FC<{onDone: () => void}> = ({onDone}) => {
+  const inputRefPinInput = React.useRef<null | Ref>(null)
+  const inputRefPinConfirmationInput = React.useRef<null | Ref>(null)
+
   const intl = useIntl()
   const strings = useStrings()
   const storage = useStorage()
+
   const {createPin, isLoading} = useCreatePin(storage, {
     onSuccess: () => onDone(),
-    onError: (error) => showErrorDialog(errorMessages.generalError, intl, {message: error.message}),
+    onError: (error) =>
+      showErrorDialog(
+        {
+          ...errorMessages.generalError,
+          onPressYesButton: () => (step === 'pin' ? inputRefPinInput : inputRefPinConfirmationInput).current?.clean(),
+        },
+        intl,
+        {
+          message: error.message,
+        },
+      ),
   })
   const [pin, setPin] = React.useState('')
   const [step, setStep] = React.useState<'pin' | 'pinConfirmation'>('pin')
@@ -26,7 +44,13 @@ export const CreatePinInput: React.FC<{onDone: () => void}> = ({onDone}) => {
 
   const onPinConfirmation = (pinConfirmation: string) => {
     if (pinConfirmation !== pin) {
-      showErrorDialog(errorMessages.pinMismatch, intl)
+      showErrorDialog(
+        {
+          ...errorMessages.pinMismatch,
+          onPressYesButton: () => (step === 'pin' ? inputRefPinInput : inputRefPinConfirmationInput).current?.clean(),
+        },
+        intl,
+      )
       return
     }
 
@@ -35,6 +59,7 @@ export const CreatePinInput: React.FC<{onDone: () => void}> = ({onDone}) => {
 
   return step === 'pin' ? (
     <PinInput
+      ref={inputRefPinInput}
       key="pinInput"
       title={strings.pinInputTitle}
       subtitles={[strings.pinInputSubtitle]}
@@ -43,6 +68,7 @@ export const CreatePinInput: React.FC<{onDone: () => void}> = ({onDone}) => {
     />
   ) : (
     <PinInput
+      ref={inputRefPinConfirmationInput}
       key="pinConfirmationInput"
       enabled={!isLoading}
       title={strings.pinInputConfirmationTitle}

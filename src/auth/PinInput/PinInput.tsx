@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import React from 'react'
+import React, {ForwardedRef} from 'react'
 import {View} from 'react-native'
 import {StyleSheet} from 'react-native'
 
@@ -16,8 +16,24 @@ type Props = {
   enabled?: boolean
 }
 
-export const PinInput = ({enabled = true, pinMaxLength, title, subtitles = [], onDone}: Props) => {
+type Ref = ForwardedRef<{
+  clean: () => void
+}>
+
+export const PinInput = React.forwardRef((props: Props, ref: Ref) => {
+  const {enabled = true, pinMaxLength, title, subtitles = [], onDone} = props
+
   const [pin, setPin] = React.useState('')
+
+  const clean = () => {
+    setPin('')
+  }
+
+  React.useImperativeHandle(ref, () => ({
+    clean: () => {
+      clean()
+    },
+  }))
 
   const onKeyDown = (value: string) => {
     if (!enabled) return
@@ -58,7 +74,7 @@ export const PinInput = ({enabled = true, pinMaxLength, title, subtitles = [], o
       <Keyboard onKeyDown={onKeyDown} />
     </View>
   )
-}
+})
 
 const styles = StyleSheet.create({
   root: {
@@ -104,6 +120,7 @@ const styles = StyleSheet.create({
 type PinPlaceholderProps = {
   isActive: boolean
 }
+
 const PinPlaceholder = ({isActive}: PinPlaceholderProps) => (
   <View style={[styles.pin, !isActive && styles.pinInactive]} />
 )
