@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {NotEnoughMoneyToSendError} from '@emurgo/yoroi-lib-core/dist/errors'
 import {useNavigation} from '@react-navigation/native'
 import {BigNumber} from 'bignumber.js'
 import React, {useEffect, useState} from 'react'
@@ -20,7 +21,6 @@ import {
   isNightly,
   SHOW_PROD_POOLS_IN_DEV,
 } from '../../legacy/config'
-import {InsufficientFunds} from '../../legacy/errors'
 import {ApiError, NetworkError} from '../../legacy/errors'
 import {normalizeTokenAmount} from '../../legacy/format'
 import {Logger} from '../../legacy/logging'
@@ -241,7 +241,7 @@ const navigateToDelegationConfirm = async (
       yoroiUnsignedTx,
     })
   } catch (e) {
-    if (e instanceof InsufficientFunds) {
+    if (e instanceof NotEnoughMoneyToSendError) {
       await showErrorDialog(errorMessages.insufficientBalance, intl)
     } else {
       Logger.error(e as any)

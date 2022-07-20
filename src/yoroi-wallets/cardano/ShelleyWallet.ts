@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {legacyWalletChecksum, walletChecksum} from '@emurgo/cip4-js'
 import {Addressing, CardanoAddressedUtxo, RegistrationStatus, TxMetadata} from '@emurgo/yoroi-lib-core'
+import {NoOutputsError, NotEnoughMoneyToSendError} from '@emurgo/yoroi-lib-core/dist/errors'
 import {BigNumber} from 'bignumber.js'
 import ExtendableError from 'es6-error'
 import _ from 'lodash'
@@ -12,7 +13,7 @@ import * as api from '../../legacy/api'
 import assert from '../../legacy/assert'
 import {ADDRESS_TYPE_TO_CHANGE, generateWalletRootKey} from '../../legacy/commonUtils'
 import {CONFIG, getCardanoBaseConfig, getWalletConfigById, isByron, isHaskellShelley} from '../../legacy/config'
-import {CardanoError, InsufficientFunds, InvalidState, NoOutputsError} from '../../legacy/errors'
+import {CardanoError, InvalidState} from '../../legacy/errors'
 import type {DefaultAsset} from '../../legacy/HistoryTransaction'
 import type {HWDeviceInfo} from '../../legacy/ledgerUtils'
 import {buildSignedTransaction, signTxWithLedger} from '../../legacy/ledgerUtils'
@@ -520,7 +521,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
 
       return yoroiUnsignedTx({unsignedTx, networkConfig: this._getNetworkConfig(), addressedUtxos})
     } catch (e) {
-      if (e instanceof InsufficientFunds || e instanceof NoOutputsError) throw e
+      if (e instanceof NotEnoughMoneyToSendError || e instanceof NoOutputsError) throw e
       Logger.error(`shelley::createUnsignedTx:: ${(e as Error).message}`, e)
       throw new CardanoError((e as Error).message)
     }
