@@ -110,7 +110,7 @@ class KeyStore {
       case 'MASTER_PASSWORD': {
         assert.assert(password, 'Password is provided')
         if (!password) throw new Error('Password is not provided')
-        return await decryptData(data, password)
+        return decryptData(data, password)
       }
 
       default:
@@ -120,7 +120,7 @@ class KeyStore {
 
   static async cancelFingerprintScanning(reason: string): Promise<boolean> {
     if (Platform.OS === 'android') {
-      return await KeyStoreBridge.cancelFingerprintScanning(reason)
+      return KeyStoreBridge.cancelFingerprintScanning(reason)
     }
     return false
   }
@@ -235,7 +235,7 @@ class KeyStore {
     const dataKey = KeyStore.getDataKey(keyId, encryptionMethod)
 
     if (Platform.OS === 'android') {
-      return await KeyStoreBridge.isKeyValid(dataKey)
+      return KeyStoreBridge.isKeyValid(dataKey)
     } else if (Platform.OS === 'ios') {
       // on ios we set that key cannot be invalidated
       return true

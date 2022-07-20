@@ -619,7 +619,7 @@ class WalletManager {
 
   async getAllUtxosForKey(utxos: Array<RawUtxo>) {
     const wallet = this.getWallet()
-    return await wallet.getAllUtxosForKey(utxos)
+    return wallet.getAllUtxosForKey(utxos)
   }
 
   getAddressingInfo(address: string) {
@@ -634,54 +634,54 @@ class WalletManager {
 
   async getDelegationStatus() {
     const wallet = this.getWallet()
-    return await wallet.getDelegationStatus()
+    return wallet.getDelegationStatus()
   }
 
   async signTx<T>(signRequest: ISignRequest<T>, decryptedKey: string) {
     const wallet = this.getWallet()
-    return await this.abortWhenWalletCloses(wallet.signTx(signRequest as any, decryptedKey))
+    return this.abortWhenWalletCloses(wallet.signTx(signRequest as any, decryptedKey))
   }
 
   async signTxWithLedger(request: ISignRequest, useUSB: boolean) {
     const wallet = this.getWallet()
-    return await this.abortWhenWalletCloses(wallet.signTxWithLedger(request as any, useUSB))
+    return this.abortWhenWalletCloses(wallet.signTxWithLedger(request as any, useUSB))
   }
 
   // =================== backend API =================== //
 
   async submitTransaction(signedTx: string) {
     const wallet = this.getWallet()
-    return await this.abortWhenWalletCloses(wallet.submitTransaction(signedTx))
+    return this.abortWhenWalletCloses(wallet.submitTransaction(signedTx))
   }
 
   async getTxsBodiesForUTXOs(request: TxBodiesRequest) {
     const wallet = this.getWallet()
-    return await this.abortWhenWalletCloses(wallet.getTxsBodiesForUTXOs(request))
+    return this.abortWhenWalletCloses(wallet.getTxsBodiesForUTXOs(request))
   }
 
   async fetchUTXOs() {
     const wallet = this.getWallet()
-    return await this.abortWhenWalletCloses(wallet.fetchUTXOs())
+    return this.abortWhenWalletCloses(wallet.fetchUTXOs())
   }
 
   async fetchAccountState() {
     const wallet = this.getWallet()
-    return await this.abortWhenWalletCloses(wallet.fetchAccountState())
+    return this.abortWhenWalletCloses(wallet.fetchAccountState())
   }
 
   async fetchPoolInfo(request: PoolInfoRequest): Promise<StakePoolInfosAndHistories> {
     const wallet = this.getWallet()
-    return await wallet.fetchPoolInfo(request)
+    return wallet.fetchPoolInfo(request)
   }
 
   async fetchTokenInfo(request: TokenInfoRequest): Promise<TokenInfoResponse> {
     const wallet = this.getWallet()
-    return await wallet.fetchTokenInfo(request)
+    return wallet.fetchTokenInfo(request)
   }
 
   async fetchFundInfo(): Promise<FundInfoResponse> {
     const wallet = this.getWallet()
-    return await wallet.fetchFundInfo()
+    return wallet.fetchFundInfo()
   }
 }
 

@@ -41,5 +41,5 @@ export const generateShelleyPlateFromMnemonics = async (
   const accountPubKey = await accountKey.toPublic()
   const accountPubKeyHex = Buffer.from(await accountPubKey.asBytes()).toString('hex')
 
-  return await generateShelleyPlateFromKey(accountPubKeyHex, count, networkId, isJormungandr)
+  return generateShelleyPlateFromKey(accountPubKeyHex, count, networkId, isJormungandr)
 }

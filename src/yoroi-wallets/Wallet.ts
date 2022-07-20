@@ -152,7 +152,7 @@ export class Wallet {
 
   async getDecryptedMasterKey(masterPassword: string, intl: IntlShape) {
     if (!this.id) throw new Error('invalid wallet state')
-    return await KeyStore.getData(this.id, 'MASTER_PASSWORD', '', masterPassword, intl)
+    return KeyStore.getData(this.id, 'MASTER_PASSWORD', '', masterPassword, intl)
   }
 
   async enableEasyConfirmation(masterPassword: string, intl: IntlShape) {
@@ -209,7 +209,7 @@ export class Wallet {
   // =================== synch =================== //
 
   async doFullSync() {
-    return await synchronize(this._doFullSyncMutex, () => this._doFullSync())
+    return synchronize(this._doFullSyncMutex, () => this._doFullSync())
   }
 
   async tryDoFullSync() {

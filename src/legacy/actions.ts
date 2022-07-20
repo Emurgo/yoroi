@@ -311,10 +311,10 @@ export const setupHooks = () => (dispatch: Dispatch<any>) => {
   Keyboard.addListener('keyboardDidHide', () => dispatch(setIsKeyboardOpen(false)))
 }
 export const generateNewReceiveAddress = () => async (_dispatch: Dispatch<any>) => {
-  return await walletManager.generateNewUiReceiveAddress()
+  return walletManager.generateNewUiReceiveAddress()
 }
 export const generateNewReceiveAddressIfNeeded = () => async (_dispatch: Dispatch<any>) => {
-  return await walletManager.generateNewUiReceiveAddressIfNeeded()
+  return walletManager.generateNewUiReceiveAddressIfNeeded()
 }
 type DialogOptions = {
   title: string
