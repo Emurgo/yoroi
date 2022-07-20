@@ -20,9 +20,12 @@ export const PinLoginScreen = () => {
 
   const {checkPin, isLoading} = useCheckPin(storage, {
     onSuccess: (isValid) => {
-      isValid
-        ? dispatch(signin())
-        : showErrorDialog({...errorMessages.incorrectPin, onPressYes: () => pinInputRef.current?.clean()}, intl)
+      if (isValid) {
+        dispatch(signin())
+      } else {
+        showErrorDialog(errorMessages.incorrectPin, intl)
+        pinInputRef.current?.clear()
+      }
     },
   })
 

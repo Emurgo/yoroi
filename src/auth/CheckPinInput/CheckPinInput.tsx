@@ -18,13 +18,13 @@ export const CheckPinInput = ({onValid}: {onValid: () => void}) => {
       if (isValid) {
         onValid()
       } else {
-        showErrorDialog({...errorMessages.incorrectPin, onPressYes: () => pinInputRef.current?.clean()}, intl)
+        showErrorDialog(errorMessages.incorrectPin, intl)
+        pinInputRef.current?.clear()
       }
     },
     onError: (error) => {
-      showErrorDialog({...errorMessages.generalError, onPressYes: () => pinInputRef.current?.clean()}, intl, {
-        message: error.message,
-      })
+      showErrorDialog(errorMessages.generalError, intl, {message: error.message})
+      pinInputRef.current?.clear()
     },
   })
 

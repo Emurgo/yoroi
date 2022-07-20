@@ -321,7 +321,6 @@ type DialogOptions = {
   message: string
   yesButton?: string
   noButton?: string
-  onPressYes?: () => void
 }
 export const DIALOG_BUTTONS = {
   YES: 'Yes',
@@ -329,7 +328,7 @@ export const DIALOG_BUTTONS = {
 }
 type DialogButton = typeof DIALOG_BUTTONS[keyof typeof DIALOG_BUTTONS]
 
-const showDialog = ({onPressYes, ...translations}: DialogOptions): Promise<DialogButton> =>
+const showDialog = (translations: DialogOptions): Promise<DialogButton> =>
   new Promise((resolve) => {
     const {title, message, yesButton, noButton} = translations
     const buttons: Array<any> = []
@@ -344,10 +343,7 @@ const showDialog = ({onPressYes, ...translations}: DialogOptions): Promise<Dialo
 
     buttons.push({
       text: yesButton,
-      onPress: () => {
-        resolve(DIALOG_BUTTONS.YES)
-        onPressYes?.()
-      },
+      onPress: () => resolve(DIALOG_BUTTONS.YES),
     })
     Alert.alert(title, message, buttons, {
       cancelable: false,
@@ -358,7 +354,6 @@ export const showErrorDialog = (
   dialog: {
     title: Record<string, any>
     message: Record<string, any>
-    onPressYes?: () => void
   },
   intl: IntlShape | null | undefined,
   msgOptions?: {
@@ -366,7 +361,6 @@ export const showErrorDialog = (
   },
 ): Promise<DialogButton> => {
   let title, message, yesButton
-  const onPressYes = dialog.onPressYes || undefined
 
   if (intl != null) {
     title = intl.formatMessage(dialog.title)
@@ -391,7 +385,6 @@ export const showErrorDialog = (
     title,
     message,
     yesButton,
-    onPressYes,
   })
 }
 export const showConfirmationDialog = (dialog: any | DialogOptions, intl: IntlShape): Promise<DialogButton> =>

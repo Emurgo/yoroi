@@ -17,7 +17,7 @@ type Props = {
 }
 
 export type PinInputRef = {
-  clean: () => void
+  clear: () => void
 }
 
 export const PinInput = React.forwardRef<PinInputRef, Props>((props, ref) => {
@@ -26,7 +26,7 @@ export const PinInput = React.forwardRef<PinInputRef, Props>((props, ref) => {
   const [pin, setPin] = React.useState('')
 
   React.useImperativeHandle(ref, () => ({
-    clean: () => {
+    clear: () => {
       setPin('')
     },
   }))

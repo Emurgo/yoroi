@@ -18,17 +18,10 @@ export const CreatePinInput: React.FC<{onDone: () => void}> = ({onDone}) => {
 
   const {createPin, isLoading} = useCreatePin(storage, {
     onSuccess: () => onDone(),
-    onError: (error) =>
-      showErrorDialog(
-        {
-          ...errorMessages.generalError,
-          onPressYes: () => (step === 'pin' ? pinInputRef : pinConfirmationInputRef).current?.clean(),
-        },
-        intl,
-        {
-          message: error.message,
-        },
-      ),
+    onError: (error) => {
+      showErrorDialog(errorMessages.generalError, intl, {message: error.message})
+      step === 'pin' ? pinInputRef.current?.clear() : pinConfirmationInputRef.current?.clear()
+    },
   })
   const [pin, setPin] = React.useState('')
   const [step, setStep] = React.useState<'pin' | 'pinConfirmation'>('pin')
@@ -40,13 +33,8 @@ export const CreatePinInput: React.FC<{onDone: () => void}> = ({onDone}) => {
 
   const onPinConfirmation = (pinConfirmation: string) => {
     if (pinConfirmation !== pin) {
-      showErrorDialog(
-        {
-          ...errorMessages.pinMismatch,
-          onPressYes: () => (step === 'pin' ? pinInputRef : pinConfirmationInputRef).current?.clean(),
-        },
-        intl,
-      )
+      showErrorDialog(errorMessages.pinMismatch, intl)
+      step === 'pin' ? pinInputRef.current?.clear() : pinConfirmationInputRef.current?.clear()
       return
     }
 
