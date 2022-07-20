@@ -144,7 +144,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     const accountPubKey = await accountKey.toPublic()
     const accountPubKeyHex: string = Buffer.from(await accountPubKey.asBytes()).toString('hex')
 
-    return await this._initialize(
+    return this._initialize(
       networkId,
       implementationId,
       accountPubKeyHex,
@@ -165,7 +165,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     Logger.debug('account pub key', accountPublicKey)
     this.id = uuid.v4()
     assert.assert(!this.isInitialized, 'createWallet: !isInitialized')
-    return await this._initialize(networkId, implementationId, accountPublicKey, hwDeviceInfo, readOnly)
+    return this._initialize(networkId, implementationId, accountPublicKey, hwDeviceInfo, readOnly)
   }
 
   // =================== persistence =================== //
@@ -382,7 +382,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     const stakingKey = await this.getStakingKey()
     const credential = await StakeCredential.fromKeyhash(await stakingKey.hash())
     const rewardAddr = await RewardAddress.new(Number.parseInt(this._getChainNetworkId(), 10), credential)
-    return await rewardAddr.toAddress()
+    return rewardAddr.toAddress()
   }
 
   _getRewardAddressAddressing() {
@@ -399,7 +399,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
   }
 
   async getAllUtxosForKey(utxos: Array<RawUtxo>) {
-    return await filterAddressesByStakingKey(
+    return filterAddressesByStakingKey(
       await StakeCredential.fromKeyhash(await (await this.getStakingKey()).hash()),
       this.asLegacyAddressedUtxo(utxos),
       false,
@@ -796,11 +796,11 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
   // =================== backend API =================== //
 
   async checkServerStatus() {
-    return await api.checkServerStatus(this._getBackendConfig())
+    return api.checkServerStatus(this._getBackendConfig())
   }
 
   async getBestBlock() {
-    return await api.getBestBlock(this._getBackendConfig())
+    return api.getBestBlock(this._getBackendConfig())
   }
 
   async submitTransaction(signedTx: string) {
@@ -810,11 +810,11 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
   }
 
   async getTxsBodiesForUTXOs(request: TxBodiesRequest): Promise<TxBodiesResponse> {
-    return await api.getTxsBodiesForUTXOs(request, this._getBackendConfig())
+    return api.getTxsBodiesForUTXOs(request, this._getBackendConfig())
   }
 
   async fetchUTXOs() {
-    return await api.bulkFetchUTXOsForAddresses(
+    return api.bulkFetchUTXOsForAddresses(
       [...this.internalAddresses, ...this.externalAddresses],
       this._getBackendConfig(),
     )
@@ -822,11 +822,11 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
 
   async fetchAccountState(): Promise<AccountStateResponse> {
     if (this.rewardAddressHex == null) throw new Error('reward address is null')
-    return await api.bulkGetAccountState([this.rewardAddressHex], this._getBackendConfig())
+    return api.bulkGetAccountState([this.rewardAddressHex], this._getBackendConfig())
   }
 
   async fetchPoolInfo(request: PoolInfoRequest) {
-    return await api.getPoolInfo(request, this._getBackendConfig())
+    return api.getPoolInfo(request, this._getBackendConfig())
   }
 
   fetchTokenInfo(request: TokenInfoRequest) {
@@ -834,7 +834,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
   }
 
   async fetchFundInfo(): Promise<FundInfoResponse> {
-    return await api.getFundInfo(this._getBackendConfig(), this._getNetworkConfig().IS_MAINNET)
+    return api.getFundInfo(this._getBackendConfig(), this._getNetworkConfig().IS_MAINNET)
   }
 
   async fetchTxStatus(request: TxStatusRequest): Promise<TxStatusResponse> {

@@ -37,6 +37,7 @@ module.exports = {
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': ['error', {argsIgnorePattern: '^_', varsIgnorePattern: '^_'}],
     'react/jsx-curly-brace-presence': ['warn', {props: 'never', children: 'never'}],
+    'no-return-await': 'error',
   },
   globals: {
     Buffer: false,

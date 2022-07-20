@@ -38,4 +38,4 @@ export const canParsePublicKey = async (publicKeyHex: string): Promise<boolean> 
 }
 
 export const isValidPublicKey = async (key: string): Promise<boolean> =>
-  key != null && isString(key) && (await canParsePublicKey(key))
+  key != null && isString(key) && canParsePublicKey(key)

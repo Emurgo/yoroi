@@ -75,7 +75,7 @@ export const getTransactionData = async (
       amount: await getMinAda(selectedToken, defaultAsset),
     })
   }
-  return await wallet.createUnsignedTx(utxos, address, sendTokenList, defaultAsset)
+  return wallet.createUnsignedTx(utxos, address, sendTokenList, defaultAsset)
 }
 
 export const recomputeAll = async ({

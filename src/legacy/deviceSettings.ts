@@ -11,7 +11,7 @@ export class KeysAreInvalid extends ExtendableError {}
 
 export const isBiometricEncryptionHardwareSupported = async () => {
   if (Platform.OS === 'android') {
-    return await KeyStoreBridge.isFingerprintEncryptionHardwareSupported()
+    return KeyStoreBridge.isFingerprintEncryptionHardwareSupported()
   } else if (Platform.OS === 'ios') {
     const supportedBiometrics = await Keychain.getSupportedBiometryType()
     return (
@@ -24,7 +24,7 @@ export const isBiometricEncryptionHardwareSupported = async () => {
 
 export const canBiometricEncryptionBeEnabled = async () => {
   if (Platform.OS === 'android') {
-    return await KeyStoreBridge.canFingerprintEncryptionBeEnabled()
+    return KeyStoreBridge.canFingerprintEncryptionBeEnabled()
   } else if (Platform.OS === 'ios') {
     const hasBiometricHardware = await isBiometricEncryptionHardwareSupported()
     const supportedBiometrics = await Keychain.canImplyAuthentication({
@@ -38,7 +38,7 @@ export const canBiometricEncryptionBeEnabled = async () => {
 
 export const isSystemAuthSupported = async () => {
   if (Platform.OS === 'android') {
-    return await KeyStoreBridge.isSystemAuthSupported()
+    return KeyStoreBridge.isSystemAuthSupported()
   } else if (Platform.OS === 'ios') {
     const supportedSystemAuth = await Keychain.canImplyAuthentication({
       authenticationType: Keychain.AUTHENTICATION_TYPE.DEVICE_PASSCODE_OR_BIOMETRICS,
@@ -51,7 +51,7 @@ export const isSystemAuthSupported = async () => {
 
 export const isBiometricPromptSupported = async () => {
   if (Platform.OS === 'android') {
-    return await KeyStoreBridge.isBiometricPromptSupported()
+    return KeyStoreBridge.isBiometricPromptSupported()
   } else if (Platform.OS === 'ios') {
     return false
   }

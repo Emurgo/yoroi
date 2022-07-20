@@ -160,7 +160,7 @@ const usePlateFromMnemonic = ({
       switch (walletImplId) {
         case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY:
         case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY_24:
-          return await generateShelleyPlateFromMnemonics(mnemonic, count, networkId)
+          return generateShelleyPlateFromMnemonics(mnemonic, count, networkId)
         case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON:
           return generateByronPlateFromMnemonics(mnemonic, count)
         default:

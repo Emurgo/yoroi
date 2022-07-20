@@ -106,7 +106,7 @@ export class AddressGenerator {
         ).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)
       ).toRawKey()
 
-      return await Promise.all(
+      return Promise.all(
         idxs.map(async (idx) => {
           const addrKey = await (await chainKey.derive(idx)).toRawKey()
           const addr = await BaseAddress.new(
@@ -114,12 +114,12 @@ export class AddressGenerator {
             await StakeCredential.fromKeyhash(await addrKey.hash()),
             await StakeCredential.fromKeyhash(await stakingKey.hash()),
           )
-          return await (await addr.toAddress()).toBech32()
+          return (await addr.toAddress()).toBech32()
         }),
       )
     }
 
-    return await util.getAddresses(this.byronAccount, this.type, idxs)
+    return util.getAddresses(this.byronAccount, this.type, idxs)
   }
 
   toJSON(): AddressGeneratorJSON {
@@ -220,7 +220,7 @@ export class AddressChain {
   }
 
   async getRewardAddressHex() {
-    return await this._addressGenerator.getRewardAddressHex()
+    return this._addressGenerator.getRewardAddressHex()
   }
 
   addSubscriberToNewAddresses(subscriber: (addresses: Addresses) => unknown) {
