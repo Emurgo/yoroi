@@ -8,7 +8,7 @@ import {Button, CopyButton, Modal, Spacer, Text} from '../components'
 import {formatPath} from '../legacy/commonUtils'
 import {externalAddressIndexSelector} from '../legacy/selectors'
 import {useSelectedWallet} from '../SelectedWallet'
-import {AddressDTOCardano} from '../yoroi-wallets/cardano/Address.dto'
+import {getKeyHashes} from '../yoroi-wallets/cardano/addressInfo'
 
 type Props = {
   address: string
@@ -156,11 +156,15 @@ const useStrings = () => {
 }
 
 const useKeyHashes = (address) => {
-  const [keyHashes, setKeyHashes] = React.useState<null | {staking: string; spending: string}>(null)
+  const [keyHashes, setKeyHashes] = React.useState<{staking: string | null; spending: string | null}>({
+    staking: null,
+    spending: null,
+  })
 
   React.useEffect(() => {
-    const addressInfo = new AddressDTOCardano(address)
-    addressInfo.getKeyHashes().then(setKeyHashes)
+    getKeyHashes(address)
+      .then(setKeyHashes)
+      .catch((e) => console.error(e))
   }, [address])
 
   return keyHashes
