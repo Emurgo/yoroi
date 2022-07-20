@@ -16,7 +16,7 @@ type Ref = {
 }
 
 export const PinLoginScreen = () => {
-  const inputRef = React.useRef<null | Ref>(null)
+  const pinInputRef = React.useRef<null | Ref>(null)
   const intl = useIntl()
   const strings = useStrings()
   const dispatch = useDispatch()
@@ -26,7 +26,7 @@ export const PinLoginScreen = () => {
     onSuccess: (isValid) => {
       isValid
         ? dispatch(signin())
-        : showErrorDialog({...errorMessages.incorrectPin, onPressYes: () => inputRef.current?.clean()}, intl)
+        : showErrorDialog({...errorMessages.incorrectPin, onPressYes: () => pinInputRef.current?.clean()}, intl)
     },
   })
 
@@ -35,7 +35,7 @@ export const PinLoginScreen = () => {
       <StatusBar type="dark" />
 
       <PinInput
-        ref={inputRef}
+        ref={pinInputRef}
         enabled={!isLoading}
         pinMaxLength={CONFIG.PIN_LENGTH}
         title={strings.title}

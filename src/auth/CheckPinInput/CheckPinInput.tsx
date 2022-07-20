@@ -13,7 +13,7 @@ type Ref = {
 }
 
 export const CheckPinInput = ({onValid}: {onValid: () => void}) => {
-  const inputRef = React.useRef<null | Ref>(null)
+  const pinInputRef = React.useRef<null | Ref>(null)
   const intl = useIntl()
   const strings = useStrings()
   const storage = useStorage()
@@ -22,11 +22,11 @@ export const CheckPinInput = ({onValid}: {onValid: () => void}) => {
       if (isValid) {
         onValid()
       } else {
-        showErrorDialog({...errorMessages.incorrectPin, onPressYes: () => inputRef.current?.clean()}, intl)
+        showErrorDialog({...errorMessages.incorrectPin, onPressYes: () => pinInputRef.current?.clean()}, intl)
       }
     },
     onError: (error) => {
-      showErrorDialog({...errorMessages.generalError, onPressYes: () => inputRef.current?.clean()}, intl, {
+      showErrorDialog({...errorMessages.generalError, onPressYes: () => pinInputRef.current?.clean()}, intl, {
         message: error.message,
       })
     },
@@ -34,7 +34,7 @@ export const CheckPinInput = ({onValid}: {onValid: () => void}) => {
 
   return (
     <PinInput
-      ref={inputRef}
+      ref={pinInputRef}
       title={strings.title}
       subtitles={[strings.subtitle]}
       enabled={!isLoading}

@@ -13,8 +13,8 @@ type Ref = {
 }
 
 export const CreatePinInput: React.FC<{onDone: () => void}> = ({onDone}) => {
-  const inputRefPinInput = React.useRef<null | Ref>(null)
-  const inputRefPinConfirmationInput = React.useRef<null | Ref>(null)
+  const pinInputRef = React.useRef<null | Ref>(null)
+  const pinConfirmationInputRef = React.useRef<null | Ref>(null)
 
   const intl = useIntl()
   const strings = useStrings()
@@ -26,7 +26,7 @@ export const CreatePinInput: React.FC<{onDone: () => void}> = ({onDone}) => {
       showErrorDialog(
         {
           ...errorMessages.generalError,
-          onPressYes: () => (step === 'pin' ? inputRefPinInput : inputRefPinConfirmationInput).current?.clean(),
+          onPressYes: () => (step === 'pin' ? pinInputRef : pinConfirmationInputRef).current?.clean(),
         },
         intl,
         {
@@ -47,7 +47,7 @@ export const CreatePinInput: React.FC<{onDone: () => void}> = ({onDone}) => {
       showErrorDialog(
         {
           ...errorMessages.pinMismatch,
-          onPressYes: () => (step === 'pin' ? inputRefPinInput : inputRefPinConfirmationInput).current?.clean(),
+          onPressYes: () => (step === 'pin' ? pinInputRef : pinConfirmationInputRef).current?.clean(),
         },
         intl,
       )
@@ -59,7 +59,7 @@ export const CreatePinInput: React.FC<{onDone: () => void}> = ({onDone}) => {
 
   return step === 'pin' ? (
     <PinInput
-      ref={inputRefPinInput}
+      ref={pinInputRef}
       key="pinInput"
       title={strings.pinInputTitle}
       subtitles={[strings.pinInputSubtitle]}
@@ -68,7 +68,7 @@ export const CreatePinInput: React.FC<{onDone: () => void}> = ({onDone}) => {
     />
   ) : (
     <PinInput
-      ref={inputRefPinConfirmationInput}
+      ref={pinConfirmationInputRef}
       key="pinConfirmationInput"
       enabled={!isLoading}
       title={strings.pinInputConfirmationTitle}
