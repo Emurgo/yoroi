@@ -16,14 +16,9 @@ export const PinLoginScreen = () => {
   const strings = useStrings()
   const dispatch = useDispatch()
   const storage = useStorage()
-
-  const [currentPin, setCurrentPin] = React.useState('')
-
   const {checkPin, isLoading} = useCheckPin(storage, {
     onSuccess: (isValid) => {
-      isValid
-        ? dispatch(signin())
-        : showErrorDialog({...errorMessages.incorrectPin, onPressYesButton: () => setCurrentPin('')}, intl)
+      isValid ? dispatch(signin()) : showErrorDialog(errorMessages.incorrectPin, intl)
     },
   })
 
@@ -31,14 +26,7 @@ export const PinLoginScreen = () => {
     <SafeAreaView edges={['left', 'right', 'bottom']} style={{flex: 1}}>
       <StatusBar type="dark" />
 
-      <PinInput
-        enabled={!isLoading}
-        pinMaxLength={CONFIG.PIN_LENGTH}
-        title={strings.title}
-        onDone={checkPin}
-        pin={currentPin}
-        setPin={setCurrentPin}
-      />
+      <PinInput enabled={!isLoading} pinMaxLength={CONFIG.PIN_LENGTH} title={strings.title} onDone={checkPin} />
     </SafeAreaView>
   )
 }

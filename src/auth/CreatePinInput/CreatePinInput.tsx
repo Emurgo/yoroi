@@ -12,33 +12,25 @@ export const CreatePinInput: React.FC<{onDone: () => void}> = ({onDone}) => {
   const intl = useIntl()
   const strings = useStrings()
   const storage = useStorage()
-
-  const [currentPin, setCurrentPin] = React.useState('')
-  const [previousPin, setPreviousPin] = React.useState('')
-
   const {createPin, isLoading} = useCreatePin(storage, {
     onSuccess: () => onDone(),
-    onError: (error) =>
-      showErrorDialog({...errorMessages.generalError, onPressYesButton: () => setCurrentPin('')}, intl, {
-        message: error.message,
-      }),
+    onError: (error) => showErrorDialog(errorMessages.generalError, intl, {message: error.message}),
   })
-
+  const [pin, setPin] = React.useState('')
   const [step, setStep] = React.useState<'pin' | 'pinConfirmation'>('pin')
 
   const onPinInput = (pin: string) => {
-    setPreviousPin(pin)
-    setCurrentPin('')
+    setPin(pin)
     setStep('pinConfirmation')
   }
 
   const onPinConfirmation = (pinConfirmation: string) => {
-    if (pinConfirmation !== previousPin) {
-      showErrorDialog({...errorMessages.pinMismatch, onPressYesButton: () => setCurrentPin('')}, intl)
+    if (pinConfirmation !== pin) {
+      showErrorDialog(errorMessages.pinMismatch, intl)
       return
     }
 
-    createPin(previousPin)
+    createPin(pin)
   }
 
   return step === 'pin' ? (
@@ -48,8 +40,6 @@ export const CreatePinInput: React.FC<{onDone: () => void}> = ({onDone}) => {
       subtitles={[strings.pinInputSubtitle]}
       pinMaxLength={CONFIG.PIN_LENGTH}
       onDone={onPinInput}
-      pin={currentPin}
-      setPin={setCurrentPin}
     />
   ) : (
     <PinInput
@@ -58,8 +48,6 @@ export const CreatePinInput: React.FC<{onDone: () => void}> = ({onDone}) => {
       title={strings.pinInputConfirmationTitle}
       pinMaxLength={CONFIG.PIN_LENGTH}
       onDone={onPinConfirmation}
-      pin={currentPin}
-      setPin={setCurrentPin}
     />
   )
 }
