@@ -6,15 +6,11 @@ import {errorMessages} from '../../i18n/global-messages'
 import {showErrorDialog} from '../../legacy/actions'
 import {CONFIG} from '../../legacy/config'
 import {useStorage} from '../../Storage'
-import {PinInput} from '../PinInput'
-
-type Ref = {
-  clean: () => void
-}
+import {PinInput, PinInputRef} from '../PinInput'
 
 export const CreatePinInput: React.FC<{onDone: () => void}> = ({onDone}) => {
-  const pinInputRef = React.useRef<null | Ref>(null)
-  const pinConfirmationInputRef = React.useRef<null | Ref>(null)
+  const pinInputRef = React.useRef<null | PinInputRef>(null)
+  const pinConfirmationInputRef = React.useRef<null | PinInputRef>(null)
 
   const intl = useIntl()
   const strings = useStrings()

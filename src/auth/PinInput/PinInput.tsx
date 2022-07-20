@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import React, {ForwardedRef} from 'react'
+import React from 'react'
 import {View} from 'react-native'
 import {StyleSheet} from 'react-native'
 
@@ -16,22 +16,18 @@ type Props = {
   enabled?: boolean
 }
 
-type Ref = ForwardedRef<{
+export type PinInputRef = {
   clean: () => void
-}>
+}
 
-export const PinInput = React.forwardRef((props: Props, ref: Ref) => {
+export const PinInput = React.forwardRef<PinInputRef, Props>((props, ref) => {
   const {enabled = true, pinMaxLength, title, subtitles = [], onDone} = props
 
   const [pin, setPin] = React.useState('')
 
-  const clean = () => {
-    setPin('')
-  }
-
   React.useImperativeHandle(ref, () => ({
     clean: () => {
-      clean()
+      setPin('')
     },
   }))
 
