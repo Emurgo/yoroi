@@ -12,16 +12,21 @@ export const CheckPinInput = ({onValid}: {onValid: () => void}) => {
   const intl = useIntl()
   const strings = useStrings()
   const storage = useStorage()
+
+  const [currentPin, setCurrentPin] = React.useState('')
+
   const {checkPin, isLoading} = useCheckPin(storage, {
     onSuccess: (isValid) => {
       if (isValid) {
         onValid()
       } else {
-        showErrorDialog(errorMessages.incorrectPin, intl)
+        showErrorDialog({...errorMessages.incorrectPin, onPressYesButton: () => setCurrentPin('')}, intl)
       }
     },
     onError: (error) => {
-      showErrorDialog(errorMessages.generalError, intl, {message: error.message})
+      showErrorDialog({...errorMessages.generalError, onPressYesButton: () => setCurrentPin('')}, intl, {
+        message: error.message,
+      })
     },
   })
 
@@ -32,6 +37,8 @@ export const CheckPinInput = ({onValid}: {onValid: () => void}) => {
       enabled={!isLoading}
       onDone={checkPin}
       pinMaxLength={CONFIG.PIN_LENGTH}
+      pin={currentPin}
+      setPin={setCurrentPin}
     />
   )
 }

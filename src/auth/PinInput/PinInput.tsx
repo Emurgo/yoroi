@@ -14,11 +14,11 @@ type Props = {
   onDone: (pin: string) => void
   pinMaxLength: number
   enabled?: boolean
+  pin: string
+  setPin: (pin: string) => void
 }
 
-export const PinInput = ({enabled = true, pinMaxLength, title, subtitles = [], onDone}: Props) => {
-  const [pin, setPin] = React.useState('')
-
+export const PinInput = ({enabled = true, pinMaxLength, title, subtitles = [], onDone, pin, setPin}: Props) => {
   const onKeyDown = (value: string) => {
     if (!enabled) return
     if (value === BACKSPACE) {
