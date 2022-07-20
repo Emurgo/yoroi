@@ -26,7 +26,7 @@ export const CreatePinInput: React.FC<{onDone: () => void}> = ({onDone}) => {
       showErrorDialog(
         {
           ...errorMessages.generalError,
-          onPressYesButton: () => (step === 'pin' ? inputRefPinInput : inputRefPinConfirmationInput).current?.clean(),
+          onPressYes: () => (step === 'pin' ? inputRefPinInput : inputRefPinConfirmationInput).current?.clean(),
         },
         intl,
         {
@@ -47,7 +47,7 @@ export const CreatePinInput: React.FC<{onDone: () => void}> = ({onDone}) => {
       showErrorDialog(
         {
           ...errorMessages.pinMismatch,
-          onPressYesButton: () => (step === 'pin' ? inputRefPinInput : inputRefPinConfirmationInput).current?.clean(),
+          onPressYes: () => (step === 'pin' ? inputRefPinInput : inputRefPinConfirmationInput).current?.clean(),
         },
         intl,
       )

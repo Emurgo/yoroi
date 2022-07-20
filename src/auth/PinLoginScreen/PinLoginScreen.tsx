@@ -26,7 +26,7 @@ export const PinLoginScreen = () => {
     onSuccess: (isValid) => {
       isValid
         ? dispatch(signin())
-        : showErrorDialog({...errorMessages.incorrectPin, onPressYesButton: () => inputRef.current?.clean()}, intl)
+        : showErrorDialog({...errorMessages.incorrectPin, onPressYes: () => inputRef.current?.clean()}, intl)
     },
   })
 

@@ -22,11 +22,11 @@ export const CheckPinInput = ({onValid}: {onValid: () => void}) => {
       if (isValid) {
         onValid()
       } else {
-        showErrorDialog({...errorMessages.incorrectPin, onPressYesButton: () => inputRef.current?.clean()}, intl)
+        showErrorDialog({...errorMessages.incorrectPin, onPressYes: () => inputRef.current?.clean()}, intl)
       }
     },
     onError: (error) => {
-      showErrorDialog({...errorMessages.generalError, onPressYesButton: () => inputRef.current?.clean()}, intl, {
+      showErrorDialog({...errorMessages.generalError, onPressYes: () => inputRef.current?.clean()}, intl, {
         message: error.message,
       })
     },
