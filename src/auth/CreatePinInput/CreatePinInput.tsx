@@ -6,15 +6,22 @@ import {errorMessages} from '../../i18n/global-messages'
 import {showErrorDialog} from '../../legacy/actions'
 import {CONFIG} from '../../legacy/config'
 import {useStorage} from '../../Storage'
-import {PinInput} from '../PinInput'
+import {PinInput, PinInputRef} from '../PinInput'
 
 export const CreatePinInput: React.FC<{onDone: () => void}> = ({onDone}) => {
+  const pinInputRef = React.useRef<null | PinInputRef>(null)
+  const pinConfirmationInputRef = React.useRef<null | PinInputRef>(null)
+
   const intl = useIntl()
   const strings = useStrings()
   const storage = useStorage()
+
   const {createPin, isLoading} = useCreatePin(storage, {
     onSuccess: () => onDone(),
-    onError: (error) => showErrorDialog(errorMessages.generalError, intl, {message: error.message}),
+    onError: (error) => {
+      showErrorDialog(errorMessages.generalError, intl, {message: error.message})
+      step === 'pin' ? pinInputRef.current?.clear() : pinConfirmationInputRef.current?.clear()
+    },
   })
   const [pin, setPin] = React.useState('')
   const [step, setStep] = React.useState<'pin' | 'pinConfirmation'>('pin')
@@ -27,6 +34,7 @@ export const CreatePinInput: React.FC<{onDone: () => void}> = ({onDone}) => {
   const onPinConfirmation = (pinConfirmation: string) => {
     if (pinConfirmation !== pin) {
       showErrorDialog(errorMessages.pinMismatch, intl)
+      step === 'pin' ? pinInputRef.current?.clear() : pinConfirmationInputRef.current?.clear()
       return
     }
 
@@ -35,6 +43,7 @@ export const CreatePinInput: React.FC<{onDone: () => void}> = ({onDone}) => {
 
   return step === 'pin' ? (
     <PinInput
+      ref={pinInputRef}
       key="pinInput"
       title={strings.pinInputTitle}
       subtitles={[strings.pinInputSubtitle]}
@@ -43,6 +52,7 @@ export const CreatePinInput: React.FC<{onDone: () => void}> = ({onDone}) => {
     />
   ) : (
     <PinInput
+      ref={pinConfirmationInputRef}
       key="pinConfirmationInput"
       enabled={!isLoading}
       title={strings.pinInputConfirmationTitle}
