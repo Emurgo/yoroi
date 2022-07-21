@@ -540,7 +540,6 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
       CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.ACCOUNT,
       accountPvrKey,
       new Set<string>(),
-      [],
     )
 
     return yoroiSignedTx({
