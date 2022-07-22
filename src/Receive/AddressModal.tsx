@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 import QRCode from 'react-native-qrcode-svg'
@@ -8,7 +8,7 @@ import {Button, CopyButton, Modal, Spacer, Text} from '../components'
 import {AddressType, formatPath} from '../legacy/commonUtils'
 import {externalAddressIndexSelector, internalAddressIndexSelector} from '../legacy/selectors'
 import {useSelectedWallet} from '../SelectedWallet'
-import {AddressDTOCardano} from '../yoroi-wallets/cardano/Address.dto'
+import {getSpendingKey, getStakingKey} from '../yoroi-wallets/cardano/addressInfo'
 
 type Path = {
   account: number
@@ -184,12 +184,16 @@ const useStrings = () => {
 }
 
 const useKeyHashes = (address) => {
-  const [keyHashes, setKeyHashes] = React.useState<null | {staking: string; spending: string}>(null)
+  const [spending, setSpending] = useState<string | null>(null)
+  const [staking, setStaking] = useState<string | null>(null)
 
   React.useEffect(() => {
-    const addressInfo = new AddressDTOCardano(address)
-    addressInfo.getKeyHashes().then(setKeyHashes)
+    getSpendingKey(address).then(setSpending)
+    getStakingKey(address).then(setStaking)
   }, [address])
 
-  return keyHashes
+  return {
+    spending,
+    staking,
+  }
 }
