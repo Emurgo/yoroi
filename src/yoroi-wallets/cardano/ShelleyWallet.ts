@@ -529,17 +529,29 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
 
   async signTx(unsignedTx: YoroiUnsignedTx, decryptedMasterKey: string) {
     const masterKey = await Bip32PrivateKey.fromBytes(Buffer.from(decryptedMasterKey, 'hex'))
-    const accountPvrKey = await masterKey
+    const accountPrivateKey = await masterKey
       .derive(this._getPurpose())
       .then((key) => key.derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO))
       .then((key) => key.derive(0 + CONFIG.NUMBERS.HARD_DERIVATION_START))
-      .then((key) => key.asBytes())
-      .then((bytes) => toHex(bytes))
+    const accountPrivateKeyHex = await accountPrivateKey.asBytes().then((bytes) => toHex(bytes))
+    const stakingPrivateKey = await accountPrivateKey
+      .derive(CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT)
+      .then((key) => key.derive(CONFIG.NUMBERS.STAKING_KEY_INDEX))
+      .then((key) => key.toRawKey())
+    const stakingKeys =
+      unsignedTx.staking.delegations ||
+      unsignedTx.staking.registrations ||
+      unsignedTx.staking.deregistrations ||
+      unsignedTx.staking.withdrawals ||
+      unsignedTx.voting.registration
+        ? [stakingPrivateKey]
+        : undefined
 
     const signedTx = await unsignedTx.unsignedTx.sign(
       CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.ACCOUNT,
-      accountPvrKey,
+      accountPrivateKeyHex,
       new Set<string>(),
+      stakingKeys,
     )
 
     return yoroiSignedTx({
