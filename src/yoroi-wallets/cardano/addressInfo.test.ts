@@ -1,23 +1,23 @@
 import {Address} from '.'
-import {CardanoKeyHashes, getKeyHashes, toWasmAddress} from './addressInfo'
+import {getSpendingKey, getStakingKey, toWasmAddress} from './addressInfo'
 
 // base
 const shelley_mainnet_type0_address =
   'addr1q9ndnrwz52yeex4j04kggp0ul5632qmxqx22ugtukkytjysw86pdygc6zarl2kks6fvg8um447uvv679sfdtzkwf2kuq673wke'
-const shelley_mainnet_type0_addressKeyHashes: CardanoKeyHashes = {
+const shelley_mainnet_type0_addressKeyHashes = {
   spending: '66d98dc2a2899c9ab27d6c8405fcfd351503660194ae217cb588b912',
   staking: '0e3e82d2231a1747f55ad0d25883f375afb8c66bc5825ab159c955b8',
 }
 const shelley_testnet_type0_address =
   'addr_test1qpfn8e903n5eqsplral59lhrvyud9g50mmceqeezhnfpr3aytuevw54ze6zh8cgk8vld0m7cumkttye5wc44ad04s29sm2lmry'
-const shelley_testnet_type0_addressKeyHashes: CardanoKeyHashes = {
+const shelley_testnet_type0_addressKeyHashes = {
   spending: '5333e4af8ce990403f1f7f42fee36138d2a28fdef1906722bcd211c7',
   staking: 'a45f32c752a2ce8573e1163b3ed7efd8e6ecb59334762b5eb5f5828b',
 }
 
 // enterprise
 const shelley_mainnet_type6_address = 'addr1vyht4ja0zcn45qvyx477qlyp6j5ftu5ng0prt9608dxp6lgpnh5ft'
-const shelley_mainnet_type6_addressKeyHashes: CardanoKeyHashes = {
+const shelley_mainnet_type6_addressKeyHashes = {
   spending: '',
   staking: '',
 }
@@ -42,7 +42,7 @@ const byron_mainnet_address = 'Ae2tdPwUPEZ9uHfzhw3vXUrTFLowct5hMMHeNjfsrkQv5XSi5
 const jorgamndur_testnet = 'ta1svy0mwwm7mdwcuj308aapjw6ra4c3e6cygd0f333nvtjzxg8ahdvxlswdf0'
 const jorgamndur_mainnet = '1q5smgquwzdh4eyc77gf6ddxp2atz8ej3rt94nt6l0qes0vexf5g4cw68kdx'
 
-const emptyKeyHashes: CardanoKeyHashes = {
+const emptyKeyHashes = {
   spending: null,
   staking: null,
 }
@@ -83,7 +83,10 @@ describe('getKeyHashes', () => {
     ${'shelley mainnet RewardAddress'} | ${reward_mainnet_address}        | ${reward_mainnet_addressKeyHashes}
     ${'shelley testnet RewardAddress'} | ${reward_testnet_address}        | ${reward_testnet_addressKeyHashes}
   `('$desc', async ({address, expected}) => {
-    const result = await getKeyHashes(address)
+    const result = {
+      spending: await getSpendingKey(address),
+      staking: await getStakingKey(address),
+    }
     expect(result).toEqual(expected)
   })
 })

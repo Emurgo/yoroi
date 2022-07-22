@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 import QRCode from 'react-native-qrcode-svg'
@@ -8,7 +8,7 @@ import {Button, CopyButton, Modal, Spacer, Text} from '../components'
 import {formatPath} from '../legacy/commonUtils'
 import {externalAddressIndexSelector} from '../legacy/selectors'
 import {useSelectedWallet} from '../SelectedWallet'
-import {getKeyHashes} from '../yoroi-wallets/cardano/addressInfo'
+import {getSpendingKey, getStakingKey} from '../yoroi-wallets/cardano/addressInfo'
 
 type Props = {
   address: string
@@ -156,16 +156,16 @@ const useStrings = () => {
 }
 
 const useKeyHashes = (address) => {
-  const [keyHashes, setKeyHashes] = React.useState<{staking: string | null; spending: string | null}>({
-    staking: null,
-    spending: null,
-  })
+  const [spending, setSpending] = useState<string | null>(null)
+  const [staking, setStaking] = useState<string | null>(null)
 
   React.useEffect(() => {
-    getKeyHashes(address)
-      .then(setKeyHashes)
-      .catch((e) => console.error(e))
+    getSpendingKey(address).then(setSpending)
+    getStakingKey(address).then(setStaking)
   }, [address])
 
-  return keyHashes
+  return {
+    spending,
+    staking,
+  }
 }

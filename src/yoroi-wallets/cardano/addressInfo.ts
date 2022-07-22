@@ -2,11 +2,6 @@ import {WasmContract} from '@emurgo/yoroi-lib-core'
 
 import {Address, BaseAddress, RewardAddress} from '.'
 
-export type CardanoKeyHashes = {
-  spending: string | null
-  staking: string | null
-}
-
 /**
  * @description Get the spending keyHash, resolves null for PointerAddress & EnterpriseAddress missing yoroi-lib impl
  *
@@ -48,28 +43,33 @@ async function toHexKeyHash(keyHash: WasmContract.Ed25519KeyHash | null | undefi
 }
 
 /**
- * @description Try to resolve the spending and staking key hashes for a bech32 address
+ * @description Try to resolve the spending key hashes for a bech32 address
  *
  * @param {string} address expects to be a bech32
- * @returns {Promise<CardanoKeyHashes>}
+ * @returns {Promise<string | null>} returns a hex string with the key hash or null if can't extract
  */
-export async function getKeyHashes(address: string): Promise<CardanoKeyHashes> {
+export async function getStakingKey(address: string) {
   const wasmAddress = await toWasmAddress(address)
+  if (wasmAddress?.hasValue())
+    return getStakingKeyHash(wasmAddress)
+      .then(toHexKeyHash)
+      .catch(() => null)
+  return null
+}
 
-  if (wasmAddress?.hasValue()) {
-    const spending = await getSpendingKeyHash(wasmAddress).then(toHexKeyHash)
-    const staking = await getStakingKeyHash(wasmAddress).then(toHexKeyHash)
-
-    return {
-      spending,
-      staking,
-    }
-  }
-
-  return {
-    spending: null,
-    staking: null,
-  }
+/**
+ * @description Try to resolve the staking key hashes for a bech32 address
+ *
+ * @param {string} address expects to be a bech32
+ * @returns {Promise<string | null>} returns a hex string with the key hash or null if can't extract
+ */
+export async function getSpendingKey(address: string) {
+  const wasmAddress = await toWasmAddress(address)
+  if (wasmAddress?.hasValue())
+    return getSpendingKeyHash(wasmAddress)
+      .then(toHexKeyHash)
+      .catch(() => null)
+  return null
 }
 
 /**
