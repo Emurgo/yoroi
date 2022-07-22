@@ -533,7 +533,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
       .derive(this._getPurpose())
       .then((key) => key.derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO))
       .then((key) => key.derive(0 + CONFIG.NUMBERS.HARD_DERIVATION_START))
-    const accountPrivateKeyHex = await accountPrivateKey.asBytes().then((bytes) => toHex(bytes))
+    const accountPrivateKeyHex = await accountPrivateKey.asBytes().then(toHex)
     const stakingPrivateKey = await accountPrivateKey
       .derive(CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT)
       .then((key) => key.derive(CONFIG.NUMBERS.STAKING_KEY_INDEX))
