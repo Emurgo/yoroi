@@ -36,7 +36,7 @@ export const StakePoolInfo = ({stakePoolId}: {stakePoolId: string}) => {
           </View>
         </View>
 
-        {stakePoolInfo.homepage && (
+        {!!stakePoolInfo.homepage && (
           <View style={styles.bottomBlock}>
             <Button
               outlineOnLight
