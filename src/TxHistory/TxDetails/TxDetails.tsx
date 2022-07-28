@@ -127,7 +127,7 @@ export const TxDetails = () => {
         </View>
       </Screen>
 
-      {addressDetail && (
+      {!!addressDetail && (
         <AddressModal
           visible
           onRequestClose={() => setAddressDetail(null)}
