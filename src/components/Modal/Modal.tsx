@@ -71,7 +71,7 @@ class ModalClassComponent extends React.Component<Props & NavigationHookProp, St
       <RNModal transparent animationType="fade" visible={visible && isFocused} onRequestClose={onRequestClose}>
         <View style={styles.backdrop}>
           <View style={[styles.container, noPadding && styles.noPadding, !!title && styles.withTitle]}>
-            {title != null && <Text style={styles.title}>{title}</Text>}
+            {!!title && <Text style={styles.title}>{title}</Text>}
             {showCloseIcon && (
               <TouchableOpacity style={styles.close} onPress={onRequestClose}>
                 <Icon.Cross size={26} color={COLORS.TEXT_GRAY3} />
