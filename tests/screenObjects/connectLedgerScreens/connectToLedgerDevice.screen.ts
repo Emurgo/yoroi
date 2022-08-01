@@ -1,0 +1,1 @@
+export const connectLedgerTitle = () => driver.$('//*[@text="Connect to Ledger Device"]')

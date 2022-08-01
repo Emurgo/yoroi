@@ -46,6 +46,7 @@ export async function enterRecoveryPhrase(recoveryPhrase: string[]): Promise<voi
   for (let index = 0; index < recoveryPhrase.length; index++) {
     await recoveryPhraseScreen.getMnemonicField(index).$('//android.widget.EditText').setValue(recoveryPhrase[index])
     // Using the KEYCODE_ENTER for Android.
+    await driver.pause(200)
     await driver.pressKeyCode(66)
   }
 }
