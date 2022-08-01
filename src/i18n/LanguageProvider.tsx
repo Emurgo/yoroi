@@ -30,14 +30,13 @@ const missingProvider = () => {
 
 const useLanguageCode = ({onSuccess, ...options}: UseQueryOptions<string> = {}) => {
   const query = useQuery({
-    initialData: defaultLanguageCode,
     queryKey: ['languageCode'],
     queryFn: async () => {
       const languageCode = await AsyncStorage.getItem('/appSettings/languageCode')
 
       if (languageCode) {
         const parsedLanguageCode = JSON.parse(languageCode)
-        const stillSupported = supportedLanguages.some((v) => v.code === parsedLanguageCode)
+        const stillSupported = supportedLanguages.some((language) => language.code === parsedLanguageCode)
         if (stillSupported) return parsedLanguageCode
       }
 

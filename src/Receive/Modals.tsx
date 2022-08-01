@@ -24,7 +24,7 @@ import {AddressVerifyModal} from './AddressVerifyModal'
 
 export const Modals = ({address, onDone}: {address: string; onDone: () => void}) => {
   const intl = useIntl()
-  const index = useSelector(externalAddressIndexSelector)
+  const index: number | undefined = useSelector(externalAddressIndexSelector)[address]
   const hwDeviceInfo = useSelector(hwDeviceInfoSelector)
   const wallet = useSelectedWallet()
   const dispatch = useDispatch()
@@ -112,8 +112,7 @@ export const Modals = ({address, onDone}: {address: string; onDone: () => void})
         onRequestClose={onDone}
         onConfirm={() => onVerifyAddress(address)}
         address={address}
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        path={formatPath(0, 'External', index as any, wallet.walletImplementationId)}
+        path={index !== undefined ? formatPath(0, 'External', index, wallet.walletImplementationId) : ''}
         isWaiting={isWaiting}
         useUSB={useUSB}
       />

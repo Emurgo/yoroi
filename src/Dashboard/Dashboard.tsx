@@ -110,7 +110,7 @@ export const Dashboard = () => {
             )}
           </Row>
 
-          {stakingInfo?.status === 'registered' && (
+          {stakingInfo?.status === 'staked' && (
             <Row>
               <StakePoolInfos />
             </Row>
@@ -173,9 +173,9 @@ const SyncErrorBanner = ({showRefresh}: Record<string, unknown> /* TODO: type */
 }
 
 const useCurrentTime = () => {
-  const [currentTime, setCurrentTime] = React.useState(() => new Date())
+  const [currentTime, setCurrentTime] = React.useState(() => Date.now())
   React.useEffect(() => {
-    const id = setInterval(() => setCurrentTime(new Date()), 1000)
+    const id = setInterval(() => setCurrentTime(Date.now()), 1000)
 
     return () => clearInterval(id)
   }, [])
@@ -197,7 +197,7 @@ const EpochInfo = () => {
 
   const currentRelativeTime = toRelativeSlotNumberFn(
     timeToSlotFn({
-      time: new Date(),
+      time: Date.now(),
     }).slot,
   )
   const epochLength = genCurrentEpochLength(config)()

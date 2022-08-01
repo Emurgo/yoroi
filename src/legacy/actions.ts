@@ -131,9 +131,6 @@ const initInstallationId =
     return newInstallationId
   }
 
-export const closeWallet = () => async (_dispatch: Dispatch<any>) => {
-  await walletManager.closeWallet()
-}
 // note(v-almonacid): authentication occurs after entering pin or biometrics,
 // it does not mean we opened a wallet
 export const signin = () => (dispatch: Dispatch<any>) => {
@@ -152,9 +149,12 @@ export const signout = () => (dispatch: Dispatch<any>) => {
     reducer: (state: State, payload) => payload,
   })
 }
-// logout closes the active wallet and signout
+
+// Only used in this file. Use the hook useLogout instead
 export const logout = () => async (dispatch: Dispatch<any>) => {
-  await closeWallet()
+  await walletManager.closeWallet()
+  dispatch(clearUTXOs())
+  dispatch(clearAccountState())
   dispatch(signout())
 }
 
@@ -175,7 +175,7 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
       _setServerStatus({
         isServerOk: status.isServerOk,
         isMaintenance: status.isMaintenance,
-        serverTime: new Date(status.serverTime as any),
+        serverTime: status.serverTime || Date.now(),
       }),
     )
   } catch (e) {
@@ -297,8 +297,6 @@ export const setupHooks = () => (dispatch: Dispatch<any>) => {
   walletManager.subscribe(() => dispatch(mirrorTxHistory()))
   walletManager.subscribeBackgroundSyncError((err: any) => dispatch(setBackgroundSyncError(err)))
   walletManager.subscribeServerSync((status) => dispatch(_setServerStatus(status)))
-  walletManager.subscribeOnClose(() => dispatch(clearUTXOs()))
-  walletManager.subscribeOnClose(() => dispatch(clearAccountState()))
   Logger.debug('setting up app lock')
 
   const onTimeoutAction = () => {
@@ -313,10 +311,10 @@ export const setupHooks = () => (dispatch: Dispatch<any>) => {
   Keyboard.addListener('keyboardDidHide', () => dispatch(setIsKeyboardOpen(false)))
 }
 export const generateNewReceiveAddress = () => async (_dispatch: Dispatch<any>) => {
-  return await walletManager.generateNewUiReceiveAddress()
+  return walletManager.generateNewUiReceiveAddress()
 }
 export const generateNewReceiveAddressIfNeeded = () => async (_dispatch: Dispatch<any>) => {
-  return await walletManager.generateNewUiReceiveAddressIfNeeded()
+  return walletManager.generateNewUiReceiveAddressIfNeeded()
 }
 type DialogOptions = {
   title: string

@@ -49,7 +49,6 @@ class WalletManager {
   _syncErrorSubscribers: Array<(err: null | Error) => void> = []
   _serverSyncSubscribers: Array<(status: ServerStatus) => void> = []
   _onOpenSubscribers: Array<() => void> = []
-  _onCloseSubscribers: Array<() => void> = []
   _onTxHistoryUpdateSubscribers: Array<() => void> = []
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   _closePromise: null | Promise<any> = null
@@ -124,17 +123,13 @@ class WalletManager {
       handler({
         isServerOk: status.isServerOk,
         isMaintenance: status.isMaintenance,
-        serverTime: new Date(status.serverTime || Date.now()),
+        serverTime: status.serverTime || Date.now(),
       }),
     )
   }
 
   _notifyOnOpen = () => {
     this._onOpenSubscribers.forEach((handler) => handler())
-  }
-
-  _notifyOnClose = () => {
-    this._onCloseSubscribers.forEach((handler) => handler())
   }
 
   _notifyOnTxHistoryUpdate = () => {
@@ -155,10 +150,6 @@ class WalletManager {
 
   subscribeOnOpen(handler: () => void) {
     this._onOpenSubscribers.push(handler)
-  }
-
-  subscribeOnClose(handler: () => void) {
-    this._onCloseSubscribers.push(handler)
   }
 
   subscribeOnTxHistoryUpdate(handler: () => void) {
@@ -509,10 +500,12 @@ class WalletManager {
     const reject = this._closeReject
     this._closePromise = null
     this._closeReject = null
+
+    this._notify()
+
     this._wallet = null
     this._id = ''
-    this._notify()
-    this._notifyOnClose()
+
     // need to reject in next microtask otherwise
     // closeWallet would throw if some rejection
     // handler does not catch
@@ -626,7 +619,7 @@ class WalletManager {
 
   async getAllUtxosForKey(utxos: Array<RawUtxo>) {
     const wallet = this.getWallet()
-    return await wallet.getAllUtxosForKey(utxos)
+    return wallet.getAllUtxosForKey(utxos)
   }
 
   getAddressingInfo(address: string) {
@@ -641,54 +634,54 @@ class WalletManager {
 
   async getDelegationStatus() {
     const wallet = this.getWallet()
-    return await wallet.getDelegationStatus()
+    return wallet.getDelegationStatus()
   }
 
   async signTx<T>(signRequest: ISignRequest<T>, decryptedKey: string) {
     const wallet = this.getWallet()
-    return await this.abortWhenWalletCloses(wallet.signTx(signRequest as any, decryptedKey))
+    return this.abortWhenWalletCloses(wallet.signTx(signRequest as any, decryptedKey))
   }
 
   async signTxWithLedger(request: ISignRequest, useUSB: boolean) {
     const wallet = this.getWallet()
-    return await this.abortWhenWalletCloses(wallet.signTxWithLedger(request as any, useUSB))
+    return this.abortWhenWalletCloses(wallet.signTxWithLedger(request as any, useUSB))
   }
 
   // =================== backend API =================== //
 
   async submitTransaction(signedTx: string) {
     const wallet = this.getWallet()
-    return await this.abortWhenWalletCloses(wallet.submitTransaction(signedTx))
+    return this.abortWhenWalletCloses(wallet.submitTransaction(signedTx))
   }
 
   async getTxsBodiesForUTXOs(request: TxBodiesRequest) {
     const wallet = this.getWallet()
-    return await this.abortWhenWalletCloses(wallet.getTxsBodiesForUTXOs(request))
+    return this.abortWhenWalletCloses(wallet.getTxsBodiesForUTXOs(request))
   }
 
   async fetchUTXOs() {
     const wallet = this.getWallet()
-    return await this.abortWhenWalletCloses(wallet.fetchUTXOs())
+    return this.abortWhenWalletCloses(wallet.fetchUTXOs())
   }
 
   async fetchAccountState() {
     const wallet = this.getWallet()
-    return await this.abortWhenWalletCloses(wallet.fetchAccountState())
+    return this.abortWhenWalletCloses(wallet.fetchAccountState())
   }
 
   async fetchPoolInfo(request: PoolInfoRequest): Promise<StakePoolInfosAndHistories> {
     const wallet = this.getWallet()
-    return await wallet.fetchPoolInfo(request)
+    return wallet.fetchPoolInfo(request)
   }
 
   async fetchTokenInfo(request: TokenInfoRequest): Promise<TokenInfoResponse> {
     const wallet = this.getWallet()
-    return await wallet.fetchTokenInfo(request)
+    return wallet.fetchTokenInfo(request)
   }
 
   async fetchFundInfo(): Promise<FundInfoResponse> {
     const wallet = this.getWallet()
-    return await wallet.fetchFundInfo()
+    return wallet.fetchFundInfo()
   }
 }
 

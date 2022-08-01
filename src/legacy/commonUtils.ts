@@ -49,7 +49,7 @@ export const encryptData = async (plaintextHex: string, secretKey: string): Prom
   const nonceHex = cryptoRandomString({
     length: 2 * 12,
   })
-  return await encryptWithPassword(secretKeyHex, saltHex, nonceHex, plaintextHex)
+  return encryptWithPassword(secretKeyHex, saltHex, nonceHex, plaintextHex)
 }
 export const decryptData = async (ciphertext: string, secretKey: string): Promise<string> => {
   assert.assert(!!ciphertext, 'decrypt:: !!cyphertext')

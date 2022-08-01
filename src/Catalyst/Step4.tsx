@@ -6,6 +6,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, OfflineBanner, ProgressStep, Spacer, TextInput} from '../components'
 import {ErrorModal} from '../components'
+import {useCloseWallet} from '../hooks'
 import {confirmationMessages, errorMessages, txLabels} from '../i18n/global-messages'
 import {showErrorDialog} from '../legacy/actions'
 import {CONFIG} from '../legacy/config'
@@ -34,6 +35,7 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
   const {createVotingRegTx, isLoading: generatingTransaction} = useCreateVotingRegTx({wallet})
   const navigation = useNavigation()
   const [password, setPassword] = useState('')
+  const {closeWallet} = useCloseWallet()
 
   const [errorData, setErrorData] = useState<ErrorData>({
     showErrorDialog: false,
@@ -78,7 +80,7 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
         })
       } catch (error) {
         if (error instanceof SystemAuthDisabled) {
-          await walletManager.closeWallet()
+          await closeWallet()
           await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
           navigation.navigate('app-root', {screen: 'wallet-selection'})
           return
@@ -118,6 +120,7 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
     strings.errorMessage,
     intl,
     password,
+    closeWallet,
   ])
 
   useEffect(() => {

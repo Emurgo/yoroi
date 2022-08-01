@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {AssetOverflowError, NotEnoughMoneyToSendError} from '@emurgo/yoroi-lib-core/dist/errors'
 import {BigNumber} from 'bignumber.js'
 import _ from 'lodash'
 import {IntlShape} from 'react-intl'
 
-import {AssetOverflowError, InsufficientFunds} from '../../legacy/errors'
 import {formatTokenAmount, formatTokenInteger, normalizeTokenAmount} from '../../legacy/format'
 import {getCardanoNetworkConfigById, isHaskellShelleyNetwork} from '../../legacy/networks'
 import {RawUtxo} from '../../legacy/types'
@@ -75,7 +75,7 @@ export const getTransactionData = async (
       amount: await getMinAda(selectedToken, defaultAsset),
     })
   }
-  return await wallet.createUnsignedTx(utxos, address, sendTokenList, defaultAsset)
+  return wallet.createUnsignedTx(utxos, address, sendTokenList, defaultAsset)
 }
 
 export const recomputeAll = async ({
@@ -184,7 +184,11 @@ export const recomputeAll = async ({
       // now we can update fee as well
       fee = _fee != null ? _fee.getDefault() : null
     } catch (err) {
-      if (err instanceof InsufficientFunds || err instanceof AssetOverflowError || err instanceof InvalidAssetAmount) {
+      if (
+        err instanceof NotEnoughMoneyToSendError ||
+        err instanceof AssetOverflowError ||
+        err instanceof InvalidAssetAmount
+      ) {
         balanceErrors = {insufficientBalance: true}
       }
     }

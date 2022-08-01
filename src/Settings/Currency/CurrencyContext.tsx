@@ -33,7 +33,6 @@ const missingProvider = () => {
 
 const useCurrency = () => {
   const query = useQuery<CurrencySymbol, Error>({
-    initialData: defaultCurrency,
     queryKey: ['currencySymbol'],
     queryFn: async () => {
       const storedCurrencySymbol = await AsyncStorage.getItem('/appSettings/currencySymbol')

@@ -57,7 +57,6 @@ import {
   Address,
   AssetName,
   Assets,
-  BaseAddress,
   BigNum,
   Bip32PublicKey,
   ByronAddress,
@@ -78,31 +77,6 @@ import type {RawUtxo} from './types'
 import type {Addressing} from './types'
 
 const PRIMARY_ASSET_CONSTANTS = CONFIG.PRIMARY_ASSET_CONSTANTS
-// null -> legacy address (no key hash)
-// undefined -> script hash instead of key hash
-export const getCardanoAddrKeyHash = async (addr: CardanoTypes.Address) => {
-  {
-    const byronAddr = await ByronAddress.fromAddress(addr)
-    if (byronAddr) return null
-  }
-  {
-    const baseAddr = await BaseAddress.fromAddress(addr)
-    if (baseAddr) return await (await baseAddr.paymentCred()).toKeyhash()
-  }
-  // {
-  //   const ptrAddr = await PointerAddress.fromAddress(addr)
-  //   if (ptrAddr) return ptrAddr.paymentCred().toKeyhash()
-  // }
-  // {
-  //   const enterpriseAddr = await EnterpriseAddress.fromAddress(addr)
-  //   if (enterpriseAddr) return enterpriseAddr.paymentCred().toKeyhash()
-  // }
-  {
-    const rewardAddr = await RewardAddress.fromAddress(addr)
-    if (rewardAddr) return await (await rewardAddr.paymentCred()).toKeyhash()
-  }
-  throw new Error('getCardanoAddrKeyHash:: unknown address type')
-}
 
 export const normalizeToAddress = async (addr: string) => {
   // in Shelley, addresses can be base16, bech32 or base58
@@ -142,7 +116,7 @@ export const toHexOrBase58 = async (address: CardanoTypes.Address) => {
     return Buffer.from(await address.toBytes()).toString('hex')
   }
 
-  return await asByron.toBase58()
+  return asByron.toBase58()
 }
 
 export const derivePublicByAddressing = async (request: {

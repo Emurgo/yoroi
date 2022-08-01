@@ -9,16 +9,23 @@ import {errorMessages} from '../../i18n/global-messages'
 import {showErrorDialog, signin} from '../../legacy/actions'
 import {CONFIG} from '../../legacy/config'
 import {useStorage} from '../../Storage'
-import {PinInput} from '../PinInput'
+import {PinInput, PinInputRef} from '../PinInput'
 
 export const PinLoginScreen = () => {
+  const pinInputRef = React.useRef<null | PinInputRef>(null)
   const intl = useIntl()
   const strings = useStrings()
   const dispatch = useDispatch()
   const storage = useStorage()
+
   const {checkPin, isLoading} = useCheckPin(storage, {
     onSuccess: (isValid) => {
-      isValid ? dispatch(signin()) : showErrorDialog(errorMessages.incorrectPin, intl)
+      if (isValid) {
+        dispatch(signin())
+      } else {
+        showErrorDialog(errorMessages.incorrectPin, intl)
+        pinInputRef.current?.clear()
+      }
     },
   })
 
@@ -26,7 +33,13 @@ export const PinLoginScreen = () => {
     <SafeAreaView edges={['left', 'right', 'bottom']} style={{flex: 1}}>
       <StatusBar type="dark" />
 
-      <PinInput enabled={!isLoading} pinMaxLength={CONFIG.PIN_LENGTH} title={strings.title} onDone={checkPin} />
+      <PinInput
+        ref={pinInputRef}
+        enabled={!isLoading}
+        pinMaxLength={CONFIG.PIN_LENGTH}
+        title={strings.title}
+        onDone={checkPin}
+      />
     </SafeAreaView>
   )
 }

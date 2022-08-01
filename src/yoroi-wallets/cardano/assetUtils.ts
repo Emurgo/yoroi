@@ -11,7 +11,7 @@ export async function calcLockedDeposit(utxos: RawUtxo[], networkId: NetworkId) 
   const utxosWithAssets = utxos.filter((u) => u.assets.length > 0)
 
   const promises = utxosWithAssets.map(async (u) => {
-    return await cardanoValueFromRemoteFormat(u)
+    return cardanoValueFromRemoteFormat(u)
       .then((v) => minAdaRequired(v, minUtxoValue))
       .then((v) => v.toStr())
   })

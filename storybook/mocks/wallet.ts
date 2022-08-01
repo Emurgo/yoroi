@@ -54,7 +54,7 @@ export const mockWallet: YoroiWallet = {
     Promise.resolve({
       isServerOk: true,
       isMaintenance: false,
-      serverTime: new Date(),
+      serverTime: Date.now(),
       isQueueOnline: true,
     }),
   fetchTxStatus: async () => ({}),

@@ -15,7 +15,11 @@ storiesOf('AddressModal', module)
       <WithModalProps>
         {({visible, onRequestClose}) => (
           <AddressModal
-            index={1}
+            path={{
+              account: 0,
+              index: 1,
+              role: 0,
+            }}
             onAddressVerify={action('onAddressVerify')}
             address={address}
             visible={visible}
@@ -30,7 +34,25 @@ storiesOf('AddressModal', module)
       <WithModalProps>
         {({visible, onRequestClose}) => (
           <AddressModal
-            index={1}
+            path={{
+              account: 0,
+              index: 1,
+              role: 0,
+            }}
+            onAddressVerify={action('onAddressVerify')}
+            address={address}
+            visible={visible}
+            onRequestClose={onRequestClose}
+          />
+        )}
+      </WithModalProps>
+    </SelectedWalletProvider>
+  ))
+  .add('without Path', () => (
+    <SelectedWalletProvider wallet={{...mockWallet, isHW: true}}>
+      <WithModalProps>
+        {({visible, onRequestClose}) => (
+          <AddressModal
             onAddressVerify={action('onAddressVerify')}
             address={address}
             visible={visible}
