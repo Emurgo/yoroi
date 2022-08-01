@@ -321,7 +321,7 @@ export const cardanoValueFromRemoteFormat = async (utxo: RawUtxo) => {
   return value
 }
 // matches RawUtxo and a tx input/output
-type RemoteValue = {
+export type RemoteValue = {
   readonly amount: string
   readonly assets?: ReadonlyArray<BaseAsset>
 }

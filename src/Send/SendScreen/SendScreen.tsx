@@ -17,7 +17,6 @@ import {
   hasPendingOutgoingTransactionSelector,
   isFetchingUtxosSelector,
   lastUtxosFetchErrorSelector,
-  tokenBalanceSelector,
   utxosSelector,
 } from '../../legacy/selectors'
 import {useSelectedWallet} from '../../SelectedWallet'
@@ -32,6 +31,7 @@ import type {
   AmountValidationErrors,
   BalanceValidationErrors,
 } from '../../yoroi-wallets/utils/validators'
+import {TokenBalanceProvider, useTokenBalanceContext} from '../Context/TokenBalanceContext'
 import {AmountField} from './../AmountField'
 import {AvailableAmountBanner} from './AvailableAmountBanner'
 import {BalanceAfterTransaction} from './BalanceAfterTransaction'
@@ -51,7 +51,13 @@ type Props = {
   setAmount: (amount: string) => void
 }
 
-export const SendScreen = ({
+export const SendScreen = (props: Props) => (
+  <TokenBalanceProvider>
+    <SendScreenCore {...props} />
+  </TokenBalanceProvider>
+)
+
+export const SendScreenCore = ({
   selectedTokenIdentifier,
   sendAll,
   onSendAll,
@@ -65,7 +71,7 @@ export const SendScreen = ({
   const navigation = useNavigation()
   const wallet = useSelectedWallet()
 
-  const tokenBalance = useSelector(tokenBalanceSelector)
+  const {tokenBalance} = useTokenBalanceContext()
   const isFetchingBalance = useSelector(isFetchingUtxosSelector)
   const lastFetchingError = useSelector(lastUtxosFetchErrorSelector)
   const defaultAsset = getDefaultAssetByNetworkId(wallet.networkId)

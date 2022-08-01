@@ -702,3 +702,15 @@ export const useLogout = () => {
     dispatch(signout())
   }
 }
+
+export const useFetchUTXOs = (wallet: YoroiWallet): RawUtxo[] | undefined => {
+  const query = useQuery({
+    queryKey: ['utxos'],
+    queryFn: async () => {
+      const utxos = await wallet.fetchUTXOs()
+      return utxos
+    },
+  })
+
+  return query.data
+}

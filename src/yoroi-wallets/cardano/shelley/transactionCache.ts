@@ -383,7 +383,9 @@ function txHistoryPayloadFactory(addresses: Array<string>, metadata: SyncMetadat
   return request
 }
 
-function getLatestYoroiTransaction(txs: Array<Transaction>): undefined | TimeForTx {
+export type LastYoroiTransaction = undefined | TimeForTx
+
+export function getLatestYoroiTransaction(txs: Array<Transaction>): LastYoroiTransaction {
   const blockInfo: Array<TimeForTx> = []
 
   for (const tx of txs) {
