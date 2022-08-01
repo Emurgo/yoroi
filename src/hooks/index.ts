@@ -703,13 +703,10 @@ export const useLogout = () => {
   }
 }
 
-export const useFetchUTXOs = (wallet: YoroiWallet): RawUtxo[] | undefined => {
+export const useUTXOs = (wallet: YoroiWallet): RawUtxo[] | undefined => {
   const query = useQuery({
-    queryKey: ['utxos'],
-    queryFn: async () => {
-      const utxos = await wallet.fetchUTXOs()
-      return utxos
-    },
+    queryKey: ['utxos', wallet.id],
+    queryFn: async () => wallet.fetchUTXOs(),
   })
 
   return query.data
