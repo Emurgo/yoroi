@@ -5,6 +5,8 @@ import * as nobodyLookingScreen from '../screenObjects/createWalletScreens/nobod
 import * as recoveryPhraseRememberScreen from '../screenObjects/createWalletScreens/recoveryPhraseRemember.screen'
 import * as recoveryPhraseNotificationScreen from '../screenObjects/createWalletScreens/recoveryPhraseNotification.screen'
 import * as recoveryPhraseEnterScreen from '../screenObjects/createWalletScreens/recoveryPhraseEnter.screen'
+import * as chooseConnectionMethod from '../screenObjects/connectLedgerScreens/chooseConnectionMethod.screen'
+import * as connectToLedgerDevice from '../screenObjects/connectLedgerScreens/connectToLedgerDevice.screen'
 import {
   enterPinCodeIfNecessary,
   enterRecoveryPhrase,
@@ -110,6 +112,17 @@ describe('Happy paths', () => {
           `The text ${walletName} wasn't found`,
         ).to.be.true
       })
+    })
+  })
+
+  describe('HW wallet', () => {
+    it('Connect a wallet', async () => {
+      await enterPinCodeIfNecessary(VALID_PIN)
+      await addWalletsScreen.addWalletTestnetButton().click()
+      await addWalletScreen.connectLedgerWalletButton().click()
+      await chooseConnectionMethod.connectWithBLEButton().click()
+
+      await driver.waitUntil(async () => await connectToLedgerDevice.connectLedgerTitle().isDisplayed())
     })
   })
 })
