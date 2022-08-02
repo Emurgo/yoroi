@@ -23,6 +23,7 @@ export const DEFAULT_INTERVAL = 200
 export const VALID_PIN = '123456'
 export const WALLET_NAME = 'Testnet Wallet'
 export const WALLET_NAME_RESTORED = `Restored ${WALLET_NAME}`
+export const LEDGER_WALLET_NAME = 'Test Ledger'
 export const SPENDING_PASSWORD = '1234567890'
 export const APP_ID = 'com.emurgo.nightly'
 export const APP_ID_PARENT = 'com.emurgo.*'

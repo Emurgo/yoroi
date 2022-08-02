@@ -64,3 +64,9 @@ export async function enterWalletCredentials(
   await createNewWalletCredentialsScreen.repeatSpendingPasswordEdit().addValue(repeatPassword)
   await hideKeyboard()
 }
+
+export async function enterNewValue(screenElement: any, newValue: string): Promise<void> {
+  await screenElement().clearValue()
+  await screenElement().addValue(newValue)
+  await hideKeyboard()
+}
