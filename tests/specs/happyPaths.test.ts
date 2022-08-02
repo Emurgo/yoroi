@@ -7,7 +7,14 @@ import * as recoveryPhraseNotificationScreen from '../screenObjects/createWallet
 import * as recoveryPhraseEnterScreen from '../screenObjects/createWalletScreens/recoveryPhraseEnter.screen'
 import * as chooseConnectionMethod from '../screenObjects/connectLedgerScreens/chooseConnectionMethod.screen'
 import * as connectToLedgerDevice from '../screenObjects/connectLedgerScreens/connectToLedgerDevice.screen'
+import * as myWalletsScreen from '../screenObjects/myWallets.screen'
+import * as walletBottomPanel from '../screenObjects/walletBottomPanel.screen'
+import * as walletHistoryScreen from '../screenObjects/walletHistory.screen'
+import * as receiveScreen from '../screenObjects/receive.screen'
+import * as sendScreen from '../screenObjects/send.screen'
+import * as errorModal from '../screenObjects/errorModal.screen'
 import {
+  enterNewValue,
   enterPinCodeIfNecessary,
   enterRecoveryPhrase,
   enterWalletCredentials,
@@ -22,10 +29,12 @@ import {
   RESTORED_WALLETS,
   WALLET_NAME_RESTORED,
   WalletType,
+  LEDGER_WALLET_NAME, LEDGER_CONFIRM_TIMEOUT,
 } from '../constants'
 import * as selectWalletToRestoreScreen from '../screenObjects/selectWalletToRestore.screen'
 import * as recoveryPhraseInputScreen from '../screenObjects/restoreWalletsScreens/recoveryPhraseEnterManually.screen'
 import * as verifyRestoredWalletScreen from '../screenObjects/restoreWalletsScreens/verifyRestoredWallet.screen'
+import {getWalletButton} from "../screenObjects/myWallets.screen";
 
 const expect = require('chai').expect
 
@@ -123,6 +132,63 @@ describe('Happy paths', () => {
       await chooseConnectionMethod.connectWithBLEButton().click()
 
       await driver.waitUntil(async () => await connectToLedgerDevice.connectLedgerTitle().isDisplayed())
+      await driver.waitUntil(async () => await connectToLedgerDevice.continueButton().isDisplayed())
+      await connectToLedgerDevice.continueButton().click();
+      await connectToLedgerDevice.allowUsingLocation().click();
+      await driver.waitUntil(async () => await connectToLedgerDevice.scanningTitle().isDisplayed())
+      await driver.pause(500)
+      const allScrollViews = await connectToLedgerDevice.getDevices()
+      await allScrollViews[allScrollViews.length - 1].$('android.view.ViewGroup').click()
+
+      await driver.waitUntil(async () => await connectToLedgerDevice.saveWalletButton().isDisplayed())
+      await enterNewValue(connectToLedgerDevice.walletNameInput, LEDGER_WALLET_NAME)
+      await connectToLedgerDevice.saveWalletButton().click()
+
+      expect(
+          await driver.$(`[text="${LEDGER_WALLET_NAME}"]`).waitForExist({timeout: DEFAULT_TIMEOUT, interval: DEFAULT_INTERVAL}),
+          `The text ${LEDGER_WALLET_NAME} wasn't found`,
+      ).to.be.true
+    })
+
+    it('Send intrawallet transaction', async () => {
+      await enterPinCodeIfNecessary(VALID_PIN)
+      await driver.waitUntil(async () => await myWalletsScreen.pageTitle().isDisplayed())
+      const walletButton = await getWalletButton(LEDGER_WALLET_NAME);
+      await walletButton.click()
+      await driver.waitUntil(async () => await walletBottomPanel.isDisplayed())
+      await driver.pause(5 * 1000) // sleep for 5 seconds till the wallet is synced
+      // find the Receive button, press receive
+      await walletHistoryScreen.receiveButton().click()
+      await driver.waitUntil(async () => await receiveScreen.generateNewAddressButton().isDisplayed())
+      // copy address
+      const receiverAddress = await receiveScreen.copyFirstUnusedAddress()
+      // go back to the transactions screen
+      await driver.back()
+      // find the send button, press send button
+      await walletHistoryScreen.sendButton().click()
+      // input receiver address
+      await enterNewValue(sendScreen.receiverAddressInput, receiverAddress)
+      // input amount
+      await enterNewValue(sendScreen.amountInput, '1')
+      // wait till the Continue button is available
+      await driver.pause(2000)
+      // press the Continue button
+      await sendScreen.continueButton().click()
+      // choose connection method
+      await driver.waitUntil(async () => await chooseConnectionMethod.isDisplayed())
+      await chooseConnectionMethod.connectWithBLEButton().click()
+      await driver.waitUntil(async () => await sendScreen.confirmTxButton().isDisplayed())
+      await sendScreen.confirmTxButton().click()
+      // checking there is no errors after pressing the Confirm TX button
+      const isErrorDisplayed = await errorModal.errorView().waitForExist({timeout: DEFAULT_TIMEOUT, interval: DEFAULT_INTERVAL})
+      if (isErrorDisplayed) {
+        await errorModal.showErrorMessageButton().click()
+        expect(isErrorDisplayed, 'An error appeared').to.be.false
+      }
+      expect(
+          await walletHistoryScreen.sendButton().waitForDisplayed({timeout: LEDGER_CONFIRM_TIMEOUT, interval: DEFAULT_INTERVAL}),
+          `The text ${LEDGER_WALLET_NAME} wasn't found`,
+      ).to.be.true
     })
   })
 })
