@@ -66,7 +66,7 @@ export const TextInput = React.forwardRef((props: Props, ref: ForwardedRef<RNTex
   )
 
   return (
-    <View style={containerStyle}>
+    <View style={containerStyle} testID={restProps.testID}>
       <RNPTextInput
         ref={ref}
         style={{textAlign}}

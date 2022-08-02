@@ -52,7 +52,9 @@ const Balance = ({privacyMode}: {privacyMode: boolean}) => {
 
   return (
     <Row>
-      <Text style={styles.balanceText}>{balance}</Text>
+      <Text style={styles.balanceText} testID="balanceText">
+        {balance}
+      </Text>
     </Row>
   )
 }
@@ -75,7 +77,7 @@ const PairedBalance = ({privacyMode}: {privacyMode: boolean}) => {
   const pairedTotal = privacyMode ? hiddenPairedTotal : total
 
   return (
-    <Text style={styles.totalText}>
+    <Text style={styles.totalText} testID="fiatConvertedBalanceText">
       {pairedTotal} {currency}
     </Text>
   )

@@ -277,6 +277,7 @@ export const ConfirmTx: React.FC<Props> = ({
           title={strings.confirmButton}
           {...buttonProps}
           disabled={isConfirmationDisabled || isProcessing || disabled}
+          testID="confirmTxButton"
         />
       </View>
 

@@ -42,6 +42,7 @@ const WalletTabNavigator = () => {
             />
           ),
           tabBarLabel: strings.walletTabBarLabel,
+          tabBarTestID: 'walletTabBarButton',
         }}
       />
 
@@ -57,6 +58,7 @@ const WalletTabNavigator = () => {
               />
             ),
             tabBarLabel: strings.stakingButton,
+            tabBarTestID: 'stakingButton',
           }}
         />
       )}
@@ -67,6 +69,7 @@ const WalletTabNavigator = () => {
         options={{
           tabBarIcon: ({focused}) => <Icon.Menu size={28} color={focused ? '#17d1aa' : '#A7AFC0'} />,
           tabBarLabel: strings.menuTabBarLabel,
+          tabBarTestID: 'menuTabBarButton',
         }}
       />
     </Tab.Navigator>
