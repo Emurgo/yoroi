@@ -8,6 +8,14 @@ export const config: WebdriverIO.Config = {
   // Specs
   // ============
   specs: ['./tests/specs/*.test.ts'],
+  suites: {
+    happyPathTx: [
+        './tests/specs/happyPaths.shelley.15.test.ts'
+    ],
+    ledger: [
+        './tests/specs/local.ledger.test.ts'
+    ],
+  },
   capabilities: [
     {
       platformName: 'Android',
