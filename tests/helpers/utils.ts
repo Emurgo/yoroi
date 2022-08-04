@@ -44,6 +44,15 @@ export async function firstAppLaunch(appPIN: string = VALID_PIN): Promise<void> 
   await driver.pause(500)
 }
 
+export async function prepareAppIfNecessary(appPIN: string = VALID_PIN): Promise<void> {
+  try {
+    await chooseLanguageScreen.chooseLanguageButton().waitForExist({timeout: DEFAULT_TIMEOUT * 2, interval: DEFAULT_INTERVAL})
+    await firstAppLaunch(appPIN)
+  } catch (e) {
+    // There is no "Choose language" button, nothing to do
+  }
+}
+
 export async function hideKeyboard(): Promise<void> {
   await driver.hideKeyboard('pressKey', 'Done')
 }
