@@ -14,7 +14,6 @@ import {
   enterPinCodeIfNecessary,
   enterRecoveryPhrase,
   enterWalletCredentials,
-  firstAppLaunch,
   hideKeyboard,
   prepareIntrawalletTx,
 } from '../helpers/utils'
@@ -34,18 +33,6 @@ import * as verifyRestoredWalletScreen from '../screenObjects/restoreWalletsScre
 const expect = require('chai').expect
 
 describe('Happy paths', () => {
-  // Execute a block of code before every tests
-  beforeEach(() => {
-    driver.launchApp()
-  })
-  // Execute a block of code after every tests
-  afterEach(() => {
-    driver.closeApp()
-  })
-
-  it('Prepare the app', async () => {
-    await firstAppLaunch(VALID_PIN)
-  })
 
   describe('Creating a wallet', () => {
     it('Shelley era', async () => {

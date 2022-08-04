@@ -1,6 +1,7 @@
 import fs, {promises as fsAsync} from 'fs'
 import {appiumLogsPath, screenshotsDir} from './testPaths'
 import {APP_ID, APP_ID_PARENT, APP_PATH} from '../constants'
+import {prepareAppIfNecessary} from "../helpers/utils";
 
 export const config: WebdriverIO.Config = {
   runner: 'local',
@@ -124,8 +125,10 @@ export const config: WebdriverIO.Config = {
   /**
    * Function to be executed before a tests (in Mocha/Jasmine) starts.
    */
-  // beforeTest: function (tests, context) {
-  // },
+  beforeTest: function (tests, context) {
+    driver.launchApp()
+    prepareAppIfNecessary().then().catch()
+  },
   /**
    * Hook that gets executed _before_ a hook within the suite starts (e.g. runs before calling
    * beforeEach in Mocha)
@@ -159,6 +162,7 @@ export const config: WebdriverIO.Config = {
       const screenshot = await driver.takeScreenshot()
       await fsAsync.writeFile(screenshotPath, screenshot, 'base64')
     }
+    driver.closeApp()
   },
   /**
    * Hook that gets executed after the suite has ended
