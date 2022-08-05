@@ -10,7 +10,7 @@ import {RawUtxo} from '../../legacy/types'
 import {cardanoValueFromMultiToken} from '../../legacy/utils'
 import type {DefaultAsset, SendTokenList, Token} from '../../types'
 import {BigNum, minAdaRequired, MultiToken, YoroiWallet} from '../../yoroi-wallets'
-import {YoroiAmounts, YoroiUnsignedTx} from '../../yoroi-wallets/types'
+import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
 import {InvalidAssetAmount, parseAmountDecimal} from '../../yoroi-wallets/utils/parsing'
 import type {AddressValidationErrors} from '../../yoroi-wallets/utils/validators'
 import {getUnstoppableDomainAddress, isReceiverAddressValid, validateAmount} from '../../yoroi-wallets/utils/validators'
@@ -86,7 +86,6 @@ export const recomputeAll = async ({
   sendAll,
   defaultAsset,
   selectedTokenInfo,
-  balance,
   defaultAssetAvaliableAmount,
   selectedAssetAmount,
 }: {
@@ -97,7 +96,6 @@ export const recomputeAll = async ({
   sendAll: boolean
   defaultAsset: DefaultAsset
   selectedTokenInfo: Token
-  balance: YoroiAmounts
   defaultAssetAvaliableAmount: BigNumber
   selectedAssetAmount: BigNumber
 }) => {
@@ -156,10 +154,6 @@ export const recomputeAll = async ({
           ).toString()
           balanceAfter = new BigNumber('0')
         } else {
-          const selectedTokenBalance = balance[selectedTokenInfo.identifier]
-          if (!selectedTokenBalance) {
-            throw new Error('selectedTokenBalance is nullish, shouldnt happen')
-          }
           recomputedAmount = normalizeTokenAmount(selectedAssetAmount, selectedTokenInfo).toString()
           balanceAfter = defaultAssetAvaliableAmount.minus(_fee.getDefault()).minus(minAda)
         }

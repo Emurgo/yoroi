@@ -124,7 +124,6 @@ export const SendScreen = ({
       sendAll,
       defaultAsset,
       selectedTokenInfo: tokenInfo,
-      balance,
       defaultAssetAvaliableAmount,
       selectedAssetAmount,
     })
