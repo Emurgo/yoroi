@@ -11,6 +11,7 @@ import NoImage from '../../assets/img/asset_no_image.png'
 import {Boundary, Button, Spacer, Text, TextInput} from '../../components'
 import {useTokenInfo} from '../../hooks'
 import globalMessages, {txLabels} from '../../i18n/global-messages'
+import {getDefaultAssetByNetworkId} from '../../legacy/config'
 import {decodeHexAscii, formatTokenAmount, getAssetDenominationOrId, getTokenFingerprint} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
@@ -27,6 +28,7 @@ type Props = {
 export const AssetSelectorScreen = ({balance, onSelect, onSelectAll}: Props) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
+  const defaultAsset = getDefaultAssetByNetworkId(wallet.networkId)
   const [matcher, setMatcher] = React.useState('')
   const onChangeMatcher = (matcher: string) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
@@ -39,12 +41,12 @@ export const AssetSelectorScreen = ({balance, onSelect, onSelectAll}: Props) => 
         .sort(
           ([, amountA]: [TokenId, Quantity], [, amountB]: [TokenId, Quantity]) => parseInt(amountB) - parseInt(amountA),
         )
-        .sort((tokenEntry) => (tokenEntry[0] === '' ? -1 : 1)) // default first
+        .sort((tokenEntry) => (tokenEntry[0] === defaultAsset.identifier ? -1 : 1)) // default first
         .reduce(
           (amounts: YoroiAmounts, [tokenId, quantity]: [TokenId, Quantity]) => ({...amounts, [tokenId]: quantity}),
           {},
         ),
-    [balance],
+    [balance, defaultAsset.identifier],
   )
 
   return (
