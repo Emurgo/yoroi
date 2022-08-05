@@ -86,8 +86,8 @@ export const recomputeAll = async ({
   sendAll,
   defaultAsset,
   selectedTokenInfo,
-  defaultAssetAvaliableAmount,
-  selectedAssetAmount,
+  defaultAssetAvailableAmount,
+  selectedAssetAvailableAmount,
 }: {
   wallet: YoroiWallet
   addressInput: string
@@ -96,8 +96,8 @@ export const recomputeAll = async ({
   sendAll: boolean
   defaultAsset: DefaultAsset
   selectedTokenInfo: Token
-  defaultAssetAvaliableAmount: BigNumber
-  selectedAssetAmount: BigNumber
+  defaultAssetAvailableAmount: BigNumber
+  selectedAssetAvailableAmount: BigNumber
 }) => {
   let addressErrors: AddressValidationErrors = {}
   let address = addressInput
@@ -149,13 +149,13 @@ export const recomputeAll = async ({
 
         if (selectedTokenInfo.isDefault) {
           recomputedAmount = normalizeTokenAmount(
-            defaultAssetAvaliableAmount.minus(_fee.getDefault()),
+            defaultAssetAvailableAmount.minus(_fee.getDefault()),
             selectedTokenInfo,
           ).toString()
           balanceAfter = new BigNumber('0')
         } else {
-          recomputedAmount = normalizeTokenAmount(selectedAssetAmount, selectedTokenInfo).toString()
-          balanceAfter = defaultAssetAvaliableAmount.minus(_fee.getDefault()).minus(minAda)
+          recomputedAmount = normalizeTokenAmount(selectedAssetAvailableAmount, selectedTokenInfo).toString()
+          balanceAfter = defaultAssetAvailableAmount.minus(_fee.getDefault()).minus(minAda)
         }
 
         // for sendAll we set the amount so the format is error-free
@@ -177,7 +177,7 @@ export const recomputeAll = async ({
           defaultNetworkId: yoroiUnsignedTx.unsignedTx.fee.defaults.networkId,
           defaultIdentifier: yoroiUnsignedTx.unsignedTx.fee.defaults.identifier,
         })
-        balanceAfter = defaultAssetAvaliableAmount.minus(parsedAmount).minus(minAda).minus(_fee.getDefault())
+        balanceAfter = defaultAssetAvailableAmount.minus(parsedAmount).minus(minAda).minus(_fee.getDefault())
       }
       // now we can update fee as well
       fee = _fee != null ? _fee.getDefault() : null

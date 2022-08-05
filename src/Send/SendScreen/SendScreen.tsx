@@ -74,8 +74,8 @@ export const SendScreen = ({
     throw new Error('Invalid token')
   }
 
-  const defaultAssetAvaliableAmount = new BigNumber(balance[defaultAsset.identifier])
-  const selectedAssetAmount = new BigNumber(balance[selectedTokenIdentifier])
+  const defaultAssetAvailableAmount = new BigNumber(balance[defaultAsset.identifier])
+  const selectedAssetAvailableAmount = new BigNumber(balance[selectedTokenIdentifier])
 
   const [address, setAddress] = React.useState('')
   const [addressErrors, setAddressErrors] = React.useState<AddressValidationErrors>({addressIsRequired: true})
@@ -124,8 +124,8 @@ export const SendScreen = ({
       sendAll,
       defaultAsset,
       selectedTokenInfo: tokenInfo,
-      defaultAssetAvaliableAmount,
-      selectedAssetAmount,
+      defaultAssetAvailableAmount,
+      selectedAssetAvailableAmount,
     })
 
     promiseRef.current = promise
@@ -160,7 +160,7 @@ export const SendScreen = ({
     const defaultAssetAmount = tokenInfo.isDefault
       ? parseAmountDecimal(amount, tokenInfo)
       : // note: inside this if balanceAfter shouldn't be null
-        defaultAssetAvaliableAmount.minus(balanceAfter ?? 0)
+        defaultAssetAvailableAmount.minus(balanceAfter ?? 0)
 
     const tokens: YoroiAmounts = tokenInfo.isDefault
       ? sendAll
@@ -179,7 +179,7 @@ export const SendScreen = ({
         params: {
           screen: 'send-confirm',
           params: {
-            availableAmount: defaultAssetAvaliableAmount,
+            availableAmount: defaultAssetAvailableAmount,
             address,
             defaultAssetAmount,
             yoroiUnsignedTx,
@@ -245,7 +245,7 @@ export const SendScreen = ({
             right={<Image source={require('../../assets/img/arrow_down_fill.png')} />}
             editable={false}
             label={strings.asset}
-            value={`${assetDenomination}: ${formatTokenAmount(selectedAssetAmount, tokenInfo, 15)}`}
+            value={`${assetDenomination}: ${formatTokenAmount(selectedAssetAvailableAmount, tokenInfo, 15)}`}
             autoComplete={false}
           />
         </TouchableOpacity>
