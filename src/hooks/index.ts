@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// import {useNetInfo} from '@react-native-community/netinfo'
-// import {useFocusEffect} from '@react-navigation/native'
 import {useNetInfo} from '@react-native-community/netinfo'
 import {delay} from 'bluebird'
 import cryptoRandomString from 'crypto-random-string'
