@@ -35,17 +35,13 @@ export const AssetSelectorScreen = ({balance, onSelect, onSelectAll}: Props) => 
     setMatcher(matcher)
   }
 
-  const sortedBalance: YoroiAmounts = useMemo(
+  const sortedBalance: Array<Array<TokenId | Quantity>> = useMemo(
     () =>
       Object.entries(balance)
         .sort(
           ([, amountA]: [TokenId, Quantity], [, amountB]: [TokenId, Quantity]) => parseInt(amountB) - parseInt(amountA),
         )
-        .sort(([tokenId]: [TokenId, Quantity]) => (tokenId === defaultAsset.identifier ? -1 : 1)) // default first
-        .reduce(
-          (amounts: YoroiAmounts, [tokenId, quantity]: [TokenId, Quantity]) => ({...amounts, [tokenId]: quantity}),
-          {},
-        ),
+        .sort(([tokenId]: [TokenId, Quantity]) => (tokenId === defaultAsset.identifier ? -1 : 1)), // default first
     [balance, defaultAsset.identifier],
   )
 
@@ -65,7 +61,7 @@ export const AssetSelectorScreen = ({balance, onSelect, onSelectAll}: Props) => 
       </View>
 
       <FlatList
-        data={Object.entries(sortedBalance)}
+        data={sortedBalance}
         renderItem={({item: [tokenId, quantity]}) => (
           <Boundary>
             <AssetSelectorItem
