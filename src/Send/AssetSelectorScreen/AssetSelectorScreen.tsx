@@ -41,7 +41,7 @@ export const AssetSelectorScreen = ({balance, onSelect, onSelectAll}: Props) => 
         .sort(
           ([, amountA]: [TokenId, Quantity], [, amountB]: [TokenId, Quantity]) => parseInt(amountB) - parseInt(amountA),
         )
-        .sort((tokenEntry) => (tokenEntry[0] === defaultAsset.identifier ? -1 : 1)) // default first
+        .sort(([tokenId]: [TokenId, Quantity]) => (tokenId === defaultAsset.identifier ? -1 : 1)) // default first
         .reduce(
           (amounts: YoroiAmounts, [tokenId, quantity]: [TokenId, Quantity]) => ({...amounts, [tokenId]: quantity}),
           {},
