@@ -1,5 +1,7 @@
 import BigNumber from 'bignumber.js'
 
+import {RawUtxo} from '../legacy/types'
+import {RemoteAsset} from '../types'
 import {Quantity, TokenId, YoroiAmount, YoroiAmounts, YoroiEntries, YoroiEntry} from './types'
 
 export const Entries = {
@@ -84,4 +86,23 @@ export const Quantities = {
   quotient: (quantity1: Quantity, quantity2: Quantity) => {
     return new BigNumber(quantity1).dividedBy(new BigNumber(quantity2)).toString() as Quantity
   },
+}
+
+export const formatUTXOsIntoYoroiAmounts = (utxos: RawUtxo[], defaultAssetId: TokenId): YoroiAmounts => {
+  const addQuantity = (total: Quantity, amount: RemoteAsset['amount'] | RawUtxo['amount']): Quantity =>
+    `${(parseInt(total) || 0) + parseInt(amount)}`
+
+  const balance = utxos.reduce((amounts: YoroiAmounts, current: RawUtxo) => {
+    amounts[defaultAssetId] = addQuantity(amounts[defaultAssetId], current.amount)
+
+    if (current.assets) {
+      for (const asset of current.assets) {
+        amounts[asset.assetId] = addQuantity(amounts[asset.assetId], asset.amount)
+      }
+    }
+
+    return amounts
+  }, {})
+
+  return balance
 }

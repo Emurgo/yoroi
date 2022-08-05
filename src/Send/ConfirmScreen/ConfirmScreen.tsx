@@ -14,8 +14,7 @@ import {formatTokenWithSymbol, formatTokenWithText} from '../../legacy/format'
 import {useParams, useWalletNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
-import {TokenEntry} from '../../types'
-import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
+import {Quantity, TokenId, YoroiAmounts, YoroiUnsignedTx} from '../../yoroi-wallets/types'
 
 export type Params = {
   yoroiUnsignedTx: YoroiUnsignedTx
@@ -24,7 +23,7 @@ export type Params = {
   balanceAfterTx: BigNumber
   availableAmount: BigNumber
   fee: BigNumber
-  tokens: TokenEntry[]
+  tokens: YoroiAmounts
   easyConfirmDecryptKey: string
 }
 
@@ -44,21 +43,14 @@ const isParams = (params?: Params | object | undefined): params is Params => {
     'fee' in params &&
     params.fee instanceof BigNumber &&
     'tokens' in params &&
-    Array.isArray(params.tokens)
+    typeof params.tokens === 'object'
   )
 }
 
 export const ConfirmScreen = () => {
   const strings = useStrings()
-  const {
-    defaultAssetAmount,
-    address,
-    balanceAfterTx,
-    availableAmount,
-    fee,
-    tokens: tokenEntries,
-    yoroiUnsignedTx,
-  } = useParams(isParams)
+  const {defaultAssetAmount, address, balanceAfterTx, availableAmount, fee, tokens, yoroiUnsignedTx} =
+    useParams(isParams)
   const {resetToTxHistory} = useWalletNavigation()
   const wallet = useSelectedWallet()
   const [password, setPassword] = React.useState('')
@@ -109,8 +101,8 @@ export const ConfirmScreen = () => {
             {formatTokenWithSymbol(defaultAssetAmount, getDefaultAssetByNetworkId(wallet.networkId))}
           </Text>
 
-          {tokenEntries.map((entry) => (
-            <Boundary key={entry.identifier}>
+          {Object.entries(tokens).map((entry) => (
+            <Boundary key={entry[0]}>
               <Entry tokenEntry={entry} />
             </Boundary>
           ))}
@@ -145,11 +137,12 @@ export const ConfirmScreen = () => {
   )
 }
 
-const Entry = ({tokenEntry}: {tokenEntry: TokenEntry}) => {
+const Entry = ({tokenEntry: [tokenId, quantity]}: {tokenEntry: [TokenId, Quantity]}) => {
   const wallet = useSelectedWallet()
-  const tokenInfo = useTokenInfo({wallet, tokenId: tokenEntry.identifier})
+  const tokenInfo = useTokenInfo({wallet, tokenId})
+  const quantityBN = new BigNumber(quantity)
 
-  return <Text style={styles.amount}>{formatTokenWithText(tokenEntry.amount, tokenInfo)}</Text>
+  return <Text style={styles.amount}>{formatTokenWithText(quantityBN, tokenInfo)}</Text>
 }
 
 const Actions = (props: ViewProps) => <View {...props} style={{padding: 16}} />

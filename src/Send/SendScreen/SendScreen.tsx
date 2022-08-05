@@ -10,22 +10,19 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useSelector} from 'react-redux'
 
 import {Button, Checkbox, Spacer, StatusBar, Text, TextInput} from '../../components'
-import {useTokenInfo} from '../../hooks'
+import {useBalances, useTokenInfo} from '../../hooks'
 import {CONFIG, getDefaultAssetByNetworkId} from '../../legacy/config'
 import {formatTokenAmount, getAssetDenominationOrId, truncateWithEllipsis} from '../../legacy/format'
 import {
   hasPendingOutgoingTransactionSelector,
   isFetchingUtxosSelector,
   lastUtxosFetchErrorSelector,
-  tokenBalanceSelector,
   utxosSelector,
 } from '../../legacy/selectors'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
-import {TokenEntry} from '../../types'
 import {UtxoAutoRefresher} from '../../UtxoAutoRefresher'
-import {MultiToken} from '../../yoroi-wallets'
-import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
+import {YoroiAmounts, YoroiUnsignedTx} from '../../yoroi-wallets/types'
 import {parseAmountDecimal} from '../../yoroi-wallets/utils/parsing'
 import type {
   AddressValidationErrors,
@@ -64,20 +61,21 @@ export const SendScreen = ({
   const strings = useStrings()
   const navigation = useNavigation()
   const wallet = useSelectedWallet()
-
-  const tokenBalance = useSelector(tokenBalanceSelector)
   const isFetchingBalance = useSelector(isFetchingUtxosSelector)
   const lastFetchingError = useSelector(lastUtxosFetchErrorSelector)
   const defaultAsset = getDefaultAssetByNetworkId(wallet.networkId)
+  const balance = useBalances(wallet, defaultAsset.identifier)
   const utxos = useSelector(utxosSelector)
   const hasPendingOutgoingTransaction = useSelector(hasPendingOutgoingTransactionSelector)
   const netInfo = useNetInfo()
   const isOnline = netInfo.type !== 'none' && netInfo.type !== 'unknown'
-  const selectedAsset = tokenBalance.values.find(({identifier}) => identifier === selectedTokenIdentifier)
 
-  if (!selectedAsset) {
+  if (!balance[selectedTokenIdentifier]) {
     throw new Error('Invalid token')
   }
+
+  const defaultAssetAvaliableAmount = new BigNumber(balance[defaultAsset.identifier])
+  const selectedAssetAmount = new BigNumber(balance[selectedTokenIdentifier])
 
   const [address, setAddress] = React.useState('')
   const [addressErrors, setAddressErrors] = React.useState<AddressValidationErrors>({addressIsRequired: true})
@@ -92,6 +90,7 @@ export const SendScreen = ({
   const tokenInfo = useTokenInfo({wallet, tokenId: selectedTokenIdentifier})
   const assetDenomination = truncateWithEllipsis(getAssetDenominationOrId(tokenInfo), 20)
   const amountErrorText = getAmountErrorText(intl, amountErrors, balanceErrors, defaultAsset)
+
   const isValid =
     isOnline &&
     !hasPendingOutgoingTransaction &&
@@ -125,7 +124,9 @@ export const SendScreen = ({
       sendAll,
       defaultAsset,
       selectedTokenInfo: tokenInfo,
-      tokenBalance,
+      balance,
+      defaultAssetAvaliableAmount,
+      selectedAssetAmount,
     })
 
     promiseRef.current = promise
@@ -160,22 +161,15 @@ export const SendScreen = ({
     const defaultAssetAmount = tokenInfo.isDefault
       ? parseAmountDecimal(amount, tokenInfo)
       : // note: inside this if balanceAfter shouldn't be null
-        tokenBalance.getDefault().minus(balanceAfter ?? 0)
+        defaultAssetAvaliableAmount.minus(balanceAfter ?? 0)
 
-    const tokens: Array<TokenEntry> = tokenInfo.isDefault
+    const tokens: YoroiAmounts = tokenInfo.isDefault
       ? sendAll
-        ? new MultiToken(yoroiUnsignedTx.unsignedTx.totalOutput.values, {
-            defaultNetworkId: yoroiUnsignedTx.unsignedTx.totalOutput.defaults.networkId,
-            defaultIdentifier: yoroiUnsignedTx.unsignedTx.totalOutput.defaults.identifier,
-          }).nonDefaultEntries()
-        : []
-      : [
-          {
-            identifier: tokenInfo.identifier,
-            networkId: tokenInfo.networkId,
-            amount: parseAmountDecimal(amount, tokenInfo),
-          },
-        ]
+        ? Object.fromEntries(Object.entries(balance).filter((entry) => entry[0] === defaultAsset.identifier))
+        : {}
+      : {
+          [selectedTokenIdentifier]: balance[selectedTokenIdentifier],
+        }
 
     setShowSendAllWarning(false)
 
@@ -186,7 +180,7 @@ export const SendScreen = ({
         params: {
           screen: 'send-confirm',
           params: {
-            availableAmount: tokenBalance.getDefault(),
+            availableAmount: defaultAssetAvaliableAmount,
             address,
             defaultAssetAmount,
             yoroiUnsignedTx,
@@ -252,11 +246,7 @@ export const SendScreen = ({
             right={<Image source={require('../../assets/img/arrow_down_fill.png')} />}
             editable={false}
             label={strings.asset}
-            value={`${assetDenomination}: ${formatTokenAmount(
-              tokenBalance.get(selectedTokenIdentifier) || new BigNumber('0'),
-              tokenInfo,
-              15,
-            )}`}
+            value={`${assetDenomination}: ${formatTokenAmount(selectedAssetAmount, tokenInfo, 15)}`}
             autoComplete={false}
           />
         </TouchableOpacity>

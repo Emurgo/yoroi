@@ -7,8 +7,8 @@ import {Platform} from 'react-native'
 import {HWDeviceInfo} from './legacy/ledgerUtils'
 import type {RawUtxo} from './legacy/types'
 import {COLORS} from './theme'
-import {NetworkId, TokenEntry, WalletImplementationId, YoroiProvider} from './yoroi-wallets'
-import {YoroiUnsignedTx} from './yoroi-wallets/types'
+import {NetworkId, WalletImplementationId, YoroiProvider} from './yoroi-wallets'
+import {YoroiAmounts, YoroiUnsignedTx} from './yoroi-wallets/types'
 
 // prettier-ignore
 export const useUnsafeParams = <Params, >() => {
@@ -219,7 +219,7 @@ export type SendConfirmParams = {
   balanceAfterTx: BigNumber | null
   availableAmount: BigNumber
   fee: BigNumber | null
-  tokens: TokenEntry[]
+  tokens: YoroiAmounts
   utxos: RawUtxo[]
 }
 export type SendRoutes = {

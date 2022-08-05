@@ -1,6 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+// import {useNetInfo} from '@react-native-community/netinfo'
+// import {useFocusEffect} from '@react-navigation/native'
+import {useNetInfo} from '@react-native-community/netinfo'
 import {delay} from 'bluebird'
 import cryptoRandomString from 'crypto-random-string'
+import {useEffect, useRef} from 'react'
 import {IntlShape} from 'react-intl'
 import {
   QueryKey,
@@ -34,7 +38,8 @@ import {
   YoroiWallet,
 } from '../yoroi-wallets'
 import {generateShelleyPlateFromKey} from '../yoroi-wallets/cardano/shelley/plate'
-import {YoroiSignedTx, YoroiUnsignedTx} from '../yoroi-wallets/types'
+import {TokenId, YoroiAmounts, YoroiSignedTx, YoroiUnsignedTx} from '../yoroi-wallets/types'
+import {formatUTXOsIntoYoroiAmounts} from '../yoroi-wallets/utils'
 
 // WALLET
 export const useCloseWallet = ({onSuccess, ...options}: UseMutationOptions<void, Error> = {}) => {
@@ -701,4 +706,31 @@ export const useLogout = () => {
     await closeWallet()
     dispatch(signout())
   }
+}
+
+export const useBalances = (wallet: YoroiWallet, defaultTokenId: TokenId): YoroiAmounts => {
+  const {refetch, ...query} = useQuery({
+    suspense: true,
+    queryKey: [wallet.id, 'utxos'],
+    queryFn: async () => wallet.fetchUTXOs(),
+    refetchInterval: 20000,
+    select: (utxos: RawUtxo[]) => formatUTXOsIntoYoroiAmounts(utxos, defaultTokenId),
+  })
+
+  const netInfo = useNetInfo()
+  const onlineRef = useRef()
+
+  useEffect(() => {
+    console.log('isOnline')
+    const isOnline = netInfo.type !== 'none' && netInfo.type !== 'unknown'
+    if (onlineRef.current !== isOnline) {
+      refetch()
+    }
+  }, [netInfo, refetch])
+
+  useEffect(() => wallet.subscribe(() => refetch()))
+
+  if (!query.data) throw new Error('invalid state')
+
+  return query.data
 }

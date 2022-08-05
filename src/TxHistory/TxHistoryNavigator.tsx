@@ -5,9 +5,10 @@ import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps} from 'react-n
 import {useSelector} from 'react-redux'
 
 import {Boundary, Icon} from '../components'
-import {useWalletName} from '../hooks'
+import {useBalances, useWalletName} from '../hooks'
+import {getDefaultAssetByNetworkId} from '../legacy/config'
 import {formatDateToSeconds} from '../legacy/format'
-import {tokenBalanceSelector, transactionsInfoSelector} from '../legacy/selectors'
+import {transactionsInfoSelector} from '../legacy/selectors'
 import {
   defaultStackNavigationOptions,
   defaultStackNavigationOptionsV2,
@@ -31,23 +32,23 @@ const Stack = createStackNavigator<TxHistoryRoutes>()
 export const TxHistoryNavigator = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
+
   const walletName = useWalletName(wallet)
   const transactionInfos = useSelector(transactionsInfoSelector)
-  const tokenBalance = useSelector(tokenBalanceSelector)
+  const defaultTokenId = getDefaultAssetByNetworkId(wallet.networkId).identifier
+  const balance = useBalances(wallet, defaultTokenId)
   const [modalInfoState, setModalInfoState] = React.useState(false)
   const showModalInfo = () => setModalInfoState(true)
   const hideModalInfo = () => setModalInfoState(false)
-  const [selectedTokenIdentifier, setSelectedTokenIdentifier] = React.useState(
-    tokenBalance.getDefaultEntry().identifier,
-  )
+
+  const [selectedTokenIdentifier, setSelectedTokenIdentifier] = React.useState(defaultTokenId)
   const [sendAll, setSendAll] = React.useState(false)
   const [receiver, setReceiver] = React.useState('')
   const [amount, setAmount] = React.useState('')
 
-  // when the selected asset is no longer available
-  const selectedAsset = tokenBalance.values.find(({identifier}) => identifier === selectedTokenIdentifier)
+  const selectedAsset = balance[selectedTokenIdentifier]
   if (!selectedAsset) {
-    setSelectedTokenIdentifier(tokenBalance.getDefaultEntry().identifier)
+    setSelectedTokenIdentifier(defaultTokenId)
     setSendAll(false)
     setReceiver('')
     setAmount('')
@@ -114,15 +115,15 @@ export const TxHistoryNavigator = () => {
         <Stack.Screen name="select-asset" options={{title: strings.selectAssetTitle}}>
           {({navigation}: {navigation: TxHistoryRouteNavigation}) => (
             <AssetSelectorScreen
-              assetTokens={tokenBalance.values}
-              onSelect={(token) => {
+              balance={balance}
+              onSelect={(tokenId) => {
                 setSendAll(false)
-                setSelectedTokenIdentifier(token.identifier)
+                setSelectedTokenIdentifier(tokenId)
                 navigation.navigate('send')
               }}
               onSelectAll={() => {
                 setSendAll(true)
-                setSelectedTokenIdentifier(tokenBalance.getDefaultEntry().identifier)
+                setSelectedTokenIdentifier(defaultTokenId)
                 navigation.navigate('send')
               }}
             />

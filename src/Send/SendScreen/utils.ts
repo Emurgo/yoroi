@@ -10,7 +10,7 @@ import {RawUtxo} from '../../legacy/types'
 import {cardanoValueFromMultiToken} from '../../legacy/utils'
 import type {DefaultAsset, SendTokenList, Token} from '../../types'
 import {BigNum, minAdaRequired, MultiToken, YoroiWallet} from '../../yoroi-wallets'
-import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
+import {YoroiAmounts, YoroiUnsignedTx} from '../../yoroi-wallets/types'
 import {InvalidAssetAmount, parseAmountDecimal} from '../../yoroi-wallets/utils/parsing'
 import type {AddressValidationErrors} from '../../yoroi-wallets/utils/validators'
 import {getUnstoppableDomainAddress, isReceiverAddressValid, validateAmount} from '../../yoroi-wallets/utils/validators'
@@ -86,7 +86,9 @@ export const recomputeAll = async ({
   sendAll,
   defaultAsset,
   selectedTokenInfo,
-  tokenBalance,
+  balance,
+  defaultAssetAvaliableAmount,
+  selectedAssetAmount,
 }: {
   wallet: YoroiWallet
   addressInput: string
@@ -95,7 +97,9 @@ export const recomputeAll = async ({
   sendAll: boolean
   defaultAsset: DefaultAsset
   selectedTokenInfo: Token
-  tokenBalance: MultiToken
+  balance: YoroiAmounts
+  defaultAssetAvaliableAmount: BigNumber
+  selectedAssetAmount: BigNumber
 }) => {
   let addressErrors: AddressValidationErrors = {}
   let address = addressInput
@@ -147,17 +151,17 @@ export const recomputeAll = async ({
 
         if (selectedTokenInfo.isDefault) {
           recomputedAmount = normalizeTokenAmount(
-            tokenBalance.getDefault().minus(_fee.getDefault()),
+            defaultAssetAvaliableAmount.minus(_fee.getDefault()),
             selectedTokenInfo,
           ).toString()
           balanceAfter = new BigNumber('0')
         } else {
-          const selectedTokenBalance = tokenBalance.get(selectedTokenInfo.identifier)
-          if (selectedTokenBalance == null) {
-            throw new Error('selectedTokenBalance is null, shouldnt happen')
+          const selectedTokenBalance = balance[selectedTokenInfo.identifier]
+          if (!selectedTokenBalance) {
+            throw new Error('selectedTokenBalance is nullish, shouldnt happen')
           }
-          recomputedAmount = normalizeTokenAmount(selectedTokenBalance, selectedTokenInfo).toString()
-          balanceAfter = tokenBalance.getDefault().minus(_fee.getDefault()).minus(minAda)
+          recomputedAmount = normalizeTokenAmount(selectedAssetAmount, selectedTokenInfo).toString()
+          balanceAfter = defaultAssetAvaliableAmount.minus(_fee.getDefault()).minus(minAda)
         }
 
         // for sendAll we set the amount so the format is error-free
@@ -179,7 +183,7 @@ export const recomputeAll = async ({
           defaultNetworkId: yoroiUnsignedTx.unsignedTx.fee.defaults.networkId,
           defaultIdentifier: yoroiUnsignedTx.unsignedTx.fee.defaults.identifier,
         })
-        balanceAfter = tokenBalance.getDefault().minus(parsedAmount).minus(minAda).minus(_fee.getDefault())
+        balanceAfter = defaultAssetAvaliableAmount.minus(parsedAmount).minus(minAda).minus(_fee.getDefault())
       }
       // now we can update fee as well
       fee = _fee != null ? _fee.getDefault() : null
