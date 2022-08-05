@@ -1,3 +1,4 @@
+import BigNumber from 'bignumber.js'
 import React, {useMemo} from 'react'
 import {defineMessages} from 'react-intl'
 import {useIntl} from 'react-intl'
@@ -10,7 +11,7 @@ import NoImage from '../../assets/img/asset_no_image.png'
 import {Boundary, Button, Spacer, Text, TextInput} from '../../components'
 import {useTokenInfo} from '../../hooks'
 import globalMessages, {txLabels} from '../../i18n/global-messages'
-import {decodeHexAscii, getAssetDenominationOrId, getTokenFingerprint} from '../../legacy/format'
+import {decodeHexAscii, formatTokenAmount, getAssetDenominationOrId, getTokenFingerprint} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {Token} from '../../types'
@@ -69,7 +70,7 @@ export const AssetSelectorScreen = ({balance, onSelect, onSelectAll}: Props) => 
               wallet={wallet}
               key={tokenId}
               tokenId={tokenId}
-              quantity={quantity}
+              amount={new BigNumber(quantity)}
               onPress={onSelect}
               matcher={matcher}
             />
@@ -90,11 +91,11 @@ export const AssetSelectorScreen = ({balance, onSelect, onSelectAll}: Props) => 
 type AssetSelectorItemProps = {
   wallet: YoroiWallet
   tokenId: TokenId
-  quantity: Quantity
+  amount: BigNumber
   onPress: (tokenId: TokenId) => void
   matcher: string
 }
-const AssetSelectorItem = ({wallet, tokenId, quantity, onPress, matcher}: AssetSelectorItemProps) => {
+const AssetSelectorItem = ({wallet, tokenId, amount, onPress, matcher}: AssetSelectorItemProps) => {
   const strings = useStrings()
   const tokenInfo = useTokenInfo({wallet, tokenId})
 
@@ -117,7 +118,7 @@ const AssetSelectorItem = ({wallet, tokenId, quantity, onPress, matcher}: AssetS
         </View>
 
         <View style={{flex: 1, alignItems: 'flex-end', padding: 4}}>
-          <Text style={{color: COLORS.DARK_TEXT}}>{quantity /* formatTokenAmount(quantity, tokenInfo, 15) */}</Text>
+          <Text style={{color: COLORS.DARK_TEXT}}>{formatTokenAmount(amount, tokenInfo, 15)}</Text>
         </View>
       </View>
     </TouchableOpacity>
