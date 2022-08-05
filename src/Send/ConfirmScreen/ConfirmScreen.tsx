@@ -140,9 +140,9 @@ export const ConfirmScreen = () => {
 const Entry = ({tokenEntry: [tokenId, quantity]}: {tokenEntry: [TokenId, Quantity]}) => {
   const wallet = useSelectedWallet()
   const tokenInfo = useTokenInfo({wallet, tokenId})
-  const quantityBN = new BigNumber(quantity)
+  const amount = new BigNumber(quantity)
 
-  return <Text style={styles.amount}>{formatTokenWithText(quantityBN, tokenInfo)}</Text>
+  return <Text style={styles.amount}>{formatTokenWithText(amount, tokenInfo)}</Text>
 }
 
 const Actions = (props: ViewProps) => <View {...props} style={{padding: 16}} />
