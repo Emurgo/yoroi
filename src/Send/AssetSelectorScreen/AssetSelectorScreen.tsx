@@ -78,7 +78,6 @@ type AssetSelectorItemProps = {
   matcher: string
 }
 const AssetSelectorItem = ({assetToken, onPress, matcher}: AssetSelectorItemProps) => {
-  const strings = useStrings()
   const wallet = useSelectedWallet()
   const tokenInfo = useTokenInfo({wallet, tokenId: assetToken.identifier})
 
@@ -93,7 +92,7 @@ const AssetSelectorItem = ({assetToken, onPress, matcher}: AssetSelectorItemProp
 
         <View style={{flex: 1, padding: 4}}>
           <Text numberOfLines={1} ellipsizeMode="middle" style={{color: COLORS.BLUE_LIGHTER}}>
-            {getAssetDenominationOrId(tokenInfo) || strings.unknownAsset}
+            {getAssetDenominationOrId(tokenInfo)}
           </Text>
           <Text numberOfLines={1} ellipsizeMode="middle" style={{color: COLORS.TEXT_INPUT}}>
             {tokenInfo.isDefault ? '' : getTokenFingerprint(tokenInfo)}
@@ -127,10 +126,10 @@ const SearchInput = (props) => {
 }
 
 const matches = (token: Token, matcher: string) =>
-  normalize(decodeHexAscii(token.metadata.assetName) || '').includes(matcher) ||
-  normalize(getTokenFingerprint(token) || '').includes(matcher) ||
-  normalize(token.metadata.ticker || '').includes(matcher) ||
-  normalize(token.metadata.longName || '').includes(matcher) ||
+  normalize(decodeHexAscii(token.metadata.assetName) ?? '').includes(matcher) ||
+  normalize(getTokenFingerprint(token) ?? '').includes(matcher) ||
+  normalize(token.metadata.ticker ?? '').includes(matcher) ||
+  normalize(token.metadata.longName ?? '').includes(matcher) ||
   normalize(token.identifier).includes(matcher) ||
   normalize(token.metadata.assetName).includes(matcher) ||
   normalize(token.metadata.policyId).includes(matcher)

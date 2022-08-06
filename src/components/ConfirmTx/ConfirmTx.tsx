@@ -17,6 +17,7 @@ import {WrongPassword} from '../../legacy/errors'
 import {setLedgerDeviceId as _setLedgerDeviceId, setLedgerDeviceObj as _setLedgerDeviceObj} from '../../legacy/hwWallet'
 import KeyStore from '../../legacy/KeyStore'
 import {hwDeviceInfoSelector} from '../../legacy/selectors'
+import {isEmptyString} from '../../legacy/utils'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {SystemAuthDisabled, walletManager} from '../../yoroi-wallets'
@@ -146,9 +147,11 @@ export const ConfirmTx: React.FC<Props> = ({
 
         let signedTx
         if (wallet.isEasyConfirmationEnabled) {
-          if (easyConfirmDecryptKey) {
+          if (!isEmptyString(easyConfirmDecryptKey)) {
             setDialogStep(DialogStep.Signing)
             signedTx = await smoothModalNotification(wallet.signTx(yoroiUnsignedTx, easyConfirmDecryptKey))
+          } else {
+            throw new Error('Empty decrypt key')
           }
         } else {
           const decryptedKey = await KeyStore.getData(walletManager._id, 'MASTER_PASSWORD', '', password, intl)
@@ -166,13 +169,13 @@ export const ConfirmTx: React.FC<Props> = ({
             showError({
               errorMessage: strings.errorMessage(err),
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              errorLogs: (err as any).values.response || null,
+              errorLogs: (err as any).values?.response,
             })
           } else {
             showError({
               errorMessage: strings.generalTxErrorMessage,
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              errorLogs: (err as any).message || null,
+              errorLogs: (err as any).message,
             })
           }
           onError?.(err as Error)
@@ -187,7 +190,7 @@ export const ConfirmTx: React.FC<Props> = ({
           showError({
             errorMessage: strings.generalTxErrorMessage,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            errorLogs: (err as any).message || null,
+            errorLogs: (err as any).message,
           })
         }
       } finally {
@@ -242,7 +245,7 @@ export const ConfirmTx: React.FC<Props> = ({
     biometricInstructions,
   ])
 
-  const isConfirmationDisabled = !wallet.isEasyConfirmationEnabled && !password && !wallet.isHW
+  const isConfirmationDisabled = !wallet.isEasyConfirmationEnabled && isEmptyString(password) && !wallet.isHW
 
   useEffect(() => {
     if (wallet.isEasyConfirmationEnabled && autoSignIfEasyConfirmation) {
@@ -267,7 +270,7 @@ export const ConfirmTx: React.FC<Props> = ({
         {!wallet.isEasyConfirmationEnabled && !wallet.isHW && !isProvidingPassword && (
           <ValidatedTextInput
             secureTextEntry
-            value={password || ''}
+            value={password ?? ''}
             label={strings.password}
             onChangeText={setPassword}
           />

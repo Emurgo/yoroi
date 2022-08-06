@@ -24,6 +24,7 @@ import {
   internalAddressIndexSelector,
 } from '../../legacy/selectors'
 import utfSymbols from '../../legacy/utfSymbols'
+import {isEmptyString} from '../../legacy/utils'
 import {TxHistoryRouteNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
@@ -47,7 +48,7 @@ const getTxIOMyWallet = (txIO: Array<IOData>, extAddrIdx, intAddrIdx) => {
     assets,
   }))
   const filtered = io.filter(({address}) => filtersTxIO(address).isMyAddress(extAddrIdx, intAddrIdx))
-  return filtered || []
+  return filtered ?? []
 }
 
 type Props = {
@@ -77,23 +78,23 @@ export const TxHistoryListItem = ({transaction}: Props) => {
   const amount: BigNumber = amountAsMT.getDefault()
   const amountDefaultAsset = availableAssets[amountAsMT.getDefaultId()] as DefaultAsset
 
-  const defaultAsset = amountDefaultAsset || getDefaultAssetByNetworkId(wallet.networkId)
+  const defaultAsset = amountDefaultAsset ?? getDefaultAssetByNetworkId(wallet.networkId)
 
   // if we don't have a symbol for this asset, default to ticker first and
   // then to identifier
   const assetSymbol = getAssetDenominationOrId(defaultAsset, ASSET_DENOMINATION.SYMBOL)
 
-  const amountToDisplay = amount.plus(new BigNumber(fee?.amount || 0))
-  const amountStyle = amountToDisplay
-    ? amountToDisplay.gte(0)
-      ? styles.positiveAmount
-      : styles.negativeAmount
-    : styles.neutralAmount
+  const amountToDisplay = isEmptyString(fee?.amount) ? amount : amount.plus(new BigNumber(fee?.amount ?? 0))
+  const amountStyle = amountToDisplay.eq(0)
+    ? styles.neutralAmount
+    : amountToDisplay.gte(0)
+    ? styles.positiveAmount
+    : styles.negativeAmount
 
   const outputsToMyWallet =
     (isReceived && getTxIOMyWallet(transaction.outputs, externalAddressIndex, internalAddressIndex)) || []
 
-  const totalAssets = outputsToMyWallet.reduce((acc, {assets}) => acc + Number(assets.length), 0) || 0
+  const totalAssets = outputsToMyWallet.reduce((acc, {assets}) => acc + Number(assets.length), 0)
 
   return (
     <TouchableOpacity onPress={showDetails} activeOpacity={0.5}>
@@ -106,7 +107,7 @@ export const TxHistoryListItem = ({transaction}: Props) => {
             <Text small secondary={isPending}>
               {strings.direction(transaction.direction as any)}
             </Text>
-            {transaction.amount ? (
+            {transaction.amount.length > 0 ? (
               <View style={styles.amount}>
                 <Text style={amountStyle} secondary={isPending}>
                   {formatTokenInteger(amountToDisplay, defaultAsset)}
@@ -130,7 +131,7 @@ export const TxHistoryListItem = ({transaction}: Props) => {
           )}
           <View style={styles.last}>
             <Text secondary small>
-              {!totalAssets && submittedAt}
+              {totalAssets === 0 && submittedAt}
             </Text>
           </View>
         </View>

@@ -15,6 +15,7 @@ import {NavigationProp, useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {Modal as RNModal, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
+import {isEmptyString} from '../../legacy/utils'
 import {COLORS} from '../../theme'
 import {Icon} from '../Icon'
 
@@ -70,8 +71,8 @@ class ModalClassComponent extends React.Component<Props & NavigationHookProp, St
     return (
       <RNModal transparent animationType="fade" visible={visible && isFocused} onRequestClose={onRequestClose}>
         <View style={styles.backdrop}>
-          <View style={[styles.container, noPadding && styles.noPadding, !!title && styles.withTitle]}>
-            {!!title && <Text style={styles.title}>{title}</Text>}
+          <View style={[styles.container, noPadding && styles.noPadding, !isEmptyString(title) && styles.withTitle]}>
+            {!isEmptyString(title) && <Text style={styles.title}>{title}</Text>}
             {showCloseIcon && (
               <TouchableOpacity style={styles.close} onPress={onRequestClose}>
                 <Icon.Cross size={26} color={COLORS.TEXT_GRAY3} />

@@ -26,7 +26,7 @@ export const WarningBanner = ({
 }: Props) => (
   <View style={[styles.wrapper, style]}>
     <View style={styles.title}>
-      {icon && <Image source={icon} style={styles.icon} />}
+      {icon != null && <Image source={icon} style={styles.icon} />}
       <Text style={styles.titleText}>{title}</Text>
     </View>
     <View style={styles.body}>

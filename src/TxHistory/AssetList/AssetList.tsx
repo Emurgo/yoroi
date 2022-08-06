@@ -75,7 +75,6 @@ type AssetItemProps = {
 }
 
 const AssetItem = ({assetToken, onPress}: AssetItemProps) => {
-  const strings = useStrings()
   const wallet = useSelectedWallet()
   const tokenInfo = useTokenInfo({wallet, tokenId: assetToken.identifier})
 
@@ -88,7 +87,7 @@ const AssetItem = ({assetToken, onPress}: AssetItemProps) => {
 
         <View style={styles.tokenData}>
           <Text numberOfLines={1} ellipsizeMode="middle" style={styles.tokenInfo}>
-            {getAssetDenominationOrId(tokenInfo) || strings.unknown}
+            {getAssetDenominationOrId(tokenInfo)}
           </Text>
           <Text numberOfLines={1} ellipsizeMode="middle" style={styles.tokenName}>
             {tokenInfo.isDefault ? '' : getTokenFingerprint(tokenInfo)}

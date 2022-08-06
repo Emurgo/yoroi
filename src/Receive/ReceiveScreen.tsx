@@ -44,7 +44,7 @@ export const ReceiveScreen = () => {
 
         <Content>
           <View style={styles.address}>
-            {currentAddress ? (
+            {currentAddress != null ? (
               <AddressDetail address={currentAddress} />
             ) : (
               <ActivityIndicator size="large" color="black" />

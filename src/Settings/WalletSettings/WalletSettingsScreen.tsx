@@ -54,7 +54,7 @@ export const WalletSettingsScreen = () => {
       </SettingsSection>
 
       <SettingsSection title={strings.walletName}>
-        <NavigatedSettingsItem label={walletName || ''} navigateTo="change-wallet-name" />
+        <NavigatedSettingsItem label={walletName ?? ''} navigateTo="change-wallet-name" />
       </SettingsSection>
 
       <SettingsSection title={strings.security}>

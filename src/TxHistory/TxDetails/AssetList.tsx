@@ -60,8 +60,8 @@ const AssetRow = ({styles, entry, backColor, onSelect}: AssetRowProps) => {
       <View style={styles.tokenMetaView}>
         <Text style={styles.assetName}>
           {tokenInfo.isDefault
-            ? getTicker(tokenInfo) || intl.formatMessage(messages.unknownAssetName)
-            : getName(tokenInfo) || intl.formatMessage(messages.unknownAssetName)}
+            ? getTicker(tokenInfo)
+            : getName(tokenInfo) ?? intl.formatMessage(messages.unknownAssetName)}
         </Text>
 
         <Text style={styles.assetMeta} ellipsizeMode="middle" numberOfLines={1}>

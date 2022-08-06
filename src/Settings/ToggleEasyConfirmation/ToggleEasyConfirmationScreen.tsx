@@ -9,6 +9,7 @@ import {Button, StatusBar, Text, TextInput} from '../../components'
 import {errorMessages} from '../../i18n/global-messages'
 import {setEasyConfirmation, showErrorDialog} from '../../legacy/actions'
 import {WrongPassword} from '../../legacy/errors'
+import {isEmptyString} from '../../legacy/utils'
 import {useSelectedWallet, useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {walletManager} from '../../yoroi-wallets'
@@ -91,7 +92,7 @@ export const ToggleEasyConfirmationScreen = () => {
         <Button
           title={wallet.isEasyConfirmationEnabled ? strings.disableButton : strings.enableButton}
           onPress={wallet.isEasyConfirmationEnabled ? disableEasyConfirmation : enableEasyConfirmation}
-          disabled={!masterPassword && !wallet.isEasyConfirmationEnabled}
+          disabled={isEmptyString(masterPassword) && !wallet.isEasyConfirmationEnabled}
         />
       </View>
     </SafeAreaView>

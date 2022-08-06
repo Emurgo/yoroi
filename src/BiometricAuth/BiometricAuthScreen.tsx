@@ -73,7 +73,7 @@ export const BiometricAuthScreen = () => {
     <FingerprintScreenBase
       onGoBack={cancelScanning}
       headings={[strings.headings1, strings.headings2]}
-      subHeadings={route.params?.instructions || undefined}
+      subHeadings={route.params?.instructions ?? undefined}
       buttons={[
         <Button
           key="try-again"
@@ -175,11 +175,12 @@ const handleOnConfirm = async (route, setError, clearError, isFallback = false, 
       : await KeyStore.getData(keyId, 'BIOMETRICS', intl.formatMessage(messages.authorizeOperation), null, intl)
     onSuccess(decryptedData)
   } catch (error) {
-    if ((error as any).code === KeyStore.REJECTIONS.SWAPPED_TO_FALLBACK && Platform.OS === 'android') {
+    const errorCode = (error as any).code != null ? `${(error as any).code}` : ''
+    if (errorCode === KeyStore.REJECTIONS.SWAPPED_TO_FALLBACK && Platform.OS === 'android') {
       clearError()
-    } else if ((error as any).code === KeyStore.REJECTIONS.INVALID_KEY && Platform.OS === 'android') {
+    } else if (errorCode === KeyStore.REJECTIONS.INVALID_KEY && Platform.OS === 'android') {
       onFail(KeyStore.REJECTIONS.INVALID_KEY, intl)
-    } else if ((error as any).code === KeyStore.REJECTIONS.CANCELED) {
+    } else if (errorCode === KeyStore.REJECTIONS.CANCELED) {
       clearError()
       onFail(KeyStore.REJECTIONS.CANCELED, intl)
     } else {
@@ -192,10 +193,9 @@ const handleOnConfirm = async (route, setError, clearError, isFallback = false, 
         return
       }
       // on ios most errors will map to FAILED_UNKNOWN_ERROR
-      Alert.alert(intl.formatMessage(messages.actionFailed), `${(error as any).code} : ${(error as any).message}`)
+      Alert.alert(intl.formatMessage(messages.actionFailed), `${errorCode} : ${(error as any).message}`)
       Logger.error('BiometricAuthScreen', error)
-      const errorMessageKey =
-        (error as any).code && errorMessages[(error as any).code] ? (error as any).code : 'UNKNOWN_ERROR'
+      const errorMessageKey = errorMessages[errorCode] != null ? errorCode : 'UNKNOWN_ERROR'
       setError(intl.formatMessage(errorMessages[errorMessageKey]))
     }
   }

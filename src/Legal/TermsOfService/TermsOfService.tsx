@@ -7,5 +7,5 @@ import {useTos} from '..'
 export const TermsOfService = ({languageCode}: {languageCode: string}) => {
   const tos = useTos({languageCode})
 
-  return tos ? <Markdown>{tos}</Markdown> : <ActivityIndicator size="large" color="black" />
+  return tos != null ? <Markdown>{tos}</Markdown> : <ActivityIndicator size="large" color="black" />
 }

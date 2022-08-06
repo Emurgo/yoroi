@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-types */
 import produce from 'immer'
-import {get, set} from 'lodash'
+import {get, isEmpty, set} from 'lodash'
 
 import {delay} from '../legacy/promise'
 import type {Path, SegmentReducer} from './reduxTypes'
@@ -27,7 +27,7 @@ export const mapObjToId = (data: Record<string, any>, id: number | string) => {
   return dict
 }
 export const immutableSet = <S extends {}>(obj: S, path: Path | null | undefined, value: S): S =>
-  path && path.length
+  path && path.length > 0
     ? produce((obj): void => {
         set(obj, path, value)
       })(obj) || value
@@ -397,4 +397,24 @@ export const ignoreConcurrentAsyncHandler = <Props, T, R>(
   additionalDelay?: number,
 ): ((props: Props) => (t: T) => Promise<R | void>) => {
   return uncurry(ignoreConcurrentAsync(curry(handler), additionalDelay))
+}
+
+/**
+ * Wrapper function to lodash.isEmpty that
+ * returns true if the string is empty.
+ * The lodash.isEmpty function doesn't have the typescript's safeguard signature.
+ * It will be fixed in this PR https://github.com/DefinitelyTyped/DefinitelyTyped/pull/60401
+ *
+ * @summary Returns true if the value is empty: length === 0, null or undefined, else false.
+ *
+ * @param value The string to inspect
+ * @return {boolean} Returns true if the string is empty, else false.
+ *
+ * @example isEmptyString('') returns true
+ * @example isEmptyString(' ') returns false
+ * @example isEmptyString(null) returns true
+ * @example isEmptyString(undefined) returns true
+ */
+export function isEmptyString(value: string | null | undefined): value is '' | null | undefined {
+  return isEmpty(value)
 }

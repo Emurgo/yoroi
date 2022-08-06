@@ -7,14 +7,15 @@ import {useDispatch, useSelector} from 'react-redux'
 import {hasPendingOutgoingTransactionSelector, isFetchingUtxosSelector} from './legacy/selectors'
 import {fetchUTXOs} from './legacy/utxo'
 
-// eslint-disable-next-line react-prefer-function-component/react-prefer-function-component
-class UtxoAutoRefresherClass extends React.Component<{
+type Props = {
   isFetching: boolean
   isOnline: boolean
   fetchUTXOs: () => void
   hasPendingTx: boolean
   navigation: any
-}> {
+}
+// eslint-disable-next-line react-prefer-function-component/react-prefer-function-component
+class UtxoAutoRefresherClass extends React.Component<Props> {
   _firstFocus = true
   _unsubscribe: void | (() => unknown) = undefined
 
@@ -23,7 +24,7 @@ class UtxoAutoRefresherClass extends React.Component<{
     this.refetch()
   }
 
-  componentDidUpdate = (prevProps) => {
+  componentDidUpdate = (prevProps: Props) => {
     const wentOnline = !prevProps.isOnline && this.props.isOnline
     const wentFromPending = prevProps.hasPendingTx && !this.props.hasPendingTx
 

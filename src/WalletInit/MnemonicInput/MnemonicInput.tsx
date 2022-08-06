@@ -4,6 +4,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Keyboard, ScrollView, StyleSheet, TextInput as RNTextInput, View} from 'react-native'
 
 import {Menu, TextInput, useScrollView} from '../../components'
+import {isEmptyString} from '../../legacy/utils'
 import {COLORS} from '../../theme'
 
 export const MnemonicInput = ({
@@ -76,8 +77,7 @@ const MnemonicWordsInput = ({onSelect, words}: MnemonicWordsInputProps) => {
             ref={refs[index]}
             onSelect={(word: string) => {
               onSelect(index, word)
-              if (!refs[index + 1]) return
-              refs[index + 1].current?.focus()
+              refs[index + 1]?.current?.focus()
             }}
             id={index + 1}
             onFocus={() => {
@@ -100,7 +100,7 @@ type MnemonicWordInputProps = {
 }
 const MnemonicWordInput = React.forwardRef<RNTextInput, MnemonicWordInputProps>(({id, onSelect, onFocus}, ref) => {
   const [word, setWord] = React.useState('')
-  const matchingWords = React.useMemo(() => (word ? getMatchingWords(word) : []), [word])
+  const matchingWords = React.useMemo(() => (!isEmptyString(word) ? getMatchingWords(word) : []), [word])
   const [menuEnabled, setMenuEnabled] = React.useState(false)
 
   const selectWord = (word: string) => {
@@ -123,7 +123,7 @@ const MnemonicWordInput = React.forwardRef<RNTextInput, MnemonicWordInputProps>(
           onChangeText={(word) => setWord(normalizeText(word))}
           enablesReturnKeyAutomatically
           blurOnSubmit={false}
-          onSubmitEditing={() => matchingWords[0] && selectWord(matchingWords[0])}
+          onSubmitEditing={() => !isEmptyString(matchingWords[0]) && selectWord(matchingWords[0])}
           dense
           textAlign="center"
           noErrors
@@ -132,7 +132,7 @@ const MnemonicWordInput = React.forwardRef<RNTextInput, MnemonicWordInputProps>(
           autoComplete={false}
         />
       }
-      visible={menuEnabled && word.length >= 3 && !!word}
+      visible={menuEnabled && word.length >= 3 && !isEmptyString(word)}
       onDismiss={() => {
         setMenuEnabled(false)
         setWord('')

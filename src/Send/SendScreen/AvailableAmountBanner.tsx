@@ -21,7 +21,7 @@ export const AvailableAmountBanner = () => {
       text={
         isFetchingBalance
           ? strings.availableFundsBannerIsFetching
-          : tokenBalance
+          : tokenBalance != null
           ? formatTokenWithText(tokenBalance.getDefault(), tokenInfo)
           : strings.availableFundsBannerNotAvailable
       }
