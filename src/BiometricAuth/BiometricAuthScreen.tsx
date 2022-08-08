@@ -73,7 +73,7 @@ export const BiometricAuthScreen = () => {
     <FingerprintScreenBase
       onGoBack={cancelScanning}
       headings={[strings.headings1, strings.headings2]}
-      subHeadings={route.params?.instructions ?? undefined}
+      subHeadings={route.params?.instructions}
       buttons={[
         <Button
           key="try-again"
