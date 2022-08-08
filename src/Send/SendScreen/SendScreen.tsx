@@ -71,7 +71,7 @@ export const SendScreen = ({
   const isOnline = netInfo.type !== 'none' && netInfo.type !== 'unknown'
 
   const defaultAssetAvailableAmount = new BigNumber(balance[defaultAsset.identifier] || '0')
-  const selectedAssetAvailableAmount = new BigNumber(balance[selectedTokenIdentifier] || '0')
+  const selectedAssetAvailableAmount = new BigNumber(balance[selectedTokenIdentifier] ?? 0)
 
   const [address, setAddress] = React.useState('')
   const [addressErrors, setAddressErrors] = React.useState<AddressValidationErrors>({addressIsRequired: true})
