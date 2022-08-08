@@ -164,7 +164,7 @@ export const SendScreen = ({
 
     const tokens: YoroiAmounts = tokenInfo.isDefault
       ? sendAll
-        ? Object.fromEntries(Object.entries(balance).filter((entry) => entry[0] === defaultAsset.identifier))
+        ? Object.fromEntries(Object.entries(balance).filter((entry) => entry[0] !== defaultAsset.identifier))
         : {}
       : {
           [selectedTokenIdentifier]: balance[selectedTokenIdentifier],
