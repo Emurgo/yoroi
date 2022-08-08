@@ -17,8 +17,7 @@ import {StorageProvider} from './Storage'
 enableScreens()
 
 if (Platform.OS === 'android') {
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-  if (UIManager.setLayoutAnimationEnabledExperimental) {
+  if (UIManager.setLayoutAnimationEnabledExperimental != null) {
     UIManager.setLayoutAnimationEnabledExperimental(true)
   }
 }
