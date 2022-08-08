@@ -70,10 +70,6 @@ export const SendScreen = ({
   const netInfo = useNetInfo()
   const isOnline = netInfo.type !== 'none' && netInfo.type !== 'unknown'
 
-  if (!balance[selectedTokenIdentifier]) {
-    throw new Error('Invalid token')
-  }
-
   const defaultAssetAvailableAmount = new BigNumber(balance[defaultAsset.identifier])
   const selectedAssetAvailableAmount = new BigNumber(balance[selectedTokenIdentifier])
 

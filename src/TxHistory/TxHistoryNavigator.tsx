@@ -1,5 +1,5 @@
 import {createStackNavigator} from '@react-navigation/stack'
-import React from 'react'
+import React, {useEffect} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps} from 'react-native'
 import {useSelector} from 'react-redux'
@@ -46,13 +46,14 @@ export const TxHistoryNavigator = () => {
   const [receiver, setReceiver] = React.useState('')
   const [amount, setAmount] = React.useState('')
 
-  const selectedAsset = balance[selectedTokenIdentifier]
-  if (!selectedAsset) {
-    setSelectedTokenIdentifier(defaultTokenId)
-    setSendAll(false)
-    setReceiver('')
-    setAmount('')
-  }
+  useEffect(() => {
+    if (!balance[selectedTokenIdentifier]) {
+      setSelectedTokenIdentifier(defaultTokenId)
+      setSendAll(false)
+      setReceiver('')
+      setAmount('')
+    }
+  }, [balance, defaultTokenId, selectedTokenIdentifier])
 
   return (
     <>
