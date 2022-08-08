@@ -35,7 +35,7 @@ export const AssetSelectorScreen = ({balance, onSelect, onSelectAll}: Props) => 
     setMatcher(matcher)
   }
 
-  const sortedBalance: Array<Array<TokenId | Quantity>> = useMemo(
+  const sortedBalance: Array<[TokenId, Quantity]> = useMemo(
     () =>
       Object.entries(balance)
         .sort(
