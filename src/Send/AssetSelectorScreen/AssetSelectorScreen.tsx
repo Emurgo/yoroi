@@ -39,7 +39,8 @@ export const AssetSelectorScreen = ({balance, onSelect, onSelectAll}: Props) => 
     () =>
       Object.entries(balance)
         .sort(
-          ([, amountA]: [TokenId, Quantity], [, amountB]: [TokenId, Quantity]) => parseInt(amountB) - parseInt(amountA),
+          ([, quatityA]: [TokenId, Quantity], [, quatityB]: [TokenId, Quantity]) =>
+            parseInt(quatityB) - parseInt(quatityA),
         )
         .sort(([tokenId]: [TokenId, Quantity]) => (tokenId === defaultAsset.identifier ? -1 : 1)), // default first
     [balance, defaultAsset.identifier],
@@ -62,7 +63,7 @@ export const AssetSelectorScreen = ({balance, onSelect, onSelectAll}: Props) => 
 
       <FlatList
         data={sortedBalance}
-        renderItem={({item: [tokenId, quantity]}) => (
+        renderItem={({item: [tokenId, quantity]}: {item: [TokenId, Quantity]}) => (
           <Boundary>
             <AssetSelectorItem
               wallet={wallet}
