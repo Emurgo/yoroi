@@ -719,7 +719,6 @@ export const useBalances = (wallet: YoroiWallet, defaultTokenId: TokenId): Yoroi
   const onlineRef = useRef()
 
   useEffect(() => {
-    console.log('isOnline')
     const isOnline = netInfo.type !== 'none' && netInfo.type !== 'unknown'
     if (onlineRef.current !== isOnline) {
       refetch()
