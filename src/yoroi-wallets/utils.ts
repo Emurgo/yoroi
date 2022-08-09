@@ -69,6 +69,15 @@ export const Quantities = {
   sum: (quantities: Array<Quantity>) => {
     return quantities.reduce((result, current) => result.plus(current), new BigNumber(0)).toString() as Quantity
   },
+  subtraction: (quantities: Array<Quantity>) => {
+    const result = new BigNumber(quantities[0])
+
+    for (let i = 1; i < quantities.length; i++) {
+      result.minus(quantities[i])
+    }
+
+    return result.toString() as Quantity
+  },
   diff: (quantity1: Quantity, quantity2: Quantity) => {
     return new BigNumber(quantity1).minus(new BigNumber(quantity2)).toString() as Quantity
   },
@@ -87,16 +96,16 @@ export const Quantities = {
   },
 }
 
-export const toYoroiAmounts = (utxos: RawUtxo[], defaultAssetId: TokenId): YoroiAmounts => {
+export const toYoroiAmounts = (utxos: RawUtxo[], defaultAssetId: TokenId) => {
   return utxos.reduce(
     (amounts: YoroiAmounts, current: RawUtxo) => {
-      amounts[defaultAssetId] = Quantities.sum([amounts[defaultAssetId], `${new BigNumber(current.amount).toNumber()}`])
+      amounts[defaultAssetId] = Quantities.sum([amounts[defaultAssetId], current.amount as Quantity])
 
       if (current.assets) {
         for (const asset of current.assets) {
           amounts[asset.assetId] = Quantities.sum([
-            amounts[asset.assetId] ?? '0',
-            `${new BigNumber(asset.amount).toNumber()}`,
+            amounts[asset.assetId] ?? ('0' as Quantity),
+            asset.amount as Quantity,
           ])
         }
       }

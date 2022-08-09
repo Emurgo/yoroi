@@ -23,6 +23,7 @@ import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {UtxoAutoRefresher} from '../../UtxoAutoRefresher'
 import {Quantity, YoroiAmounts, YoroiUnsignedTx} from '../../yoroi-wallets/types'
+import {Amounts, Quantities} from '../../yoroi-wallets/utils'
 import {parseAmountDecimal} from '../../yoroi-wallets/utils/parsing'
 import type {
   AddressValidationErrors,
@@ -159,13 +160,13 @@ export const SendScreen = ({
     if (!isValid || recomputing || !yoroiUnsignedTx) return
 
     const defaultAssetAmount: Quantity = tokenInfo.isDefault
-      ? `${parseAmountDecimal(amount, tokenInfo).toNumber()}`
+      ? (parseAmountDecimal(amount, tokenInfo).toString() as Quantity)
       : // note: inside this if balanceAfter shouldn't be null
-        `${new BigNumber(defaultAssetAvailableAmount).minus(balanceAfter ?? 0).toNumber()}`
+        Quantities.diff(defaultAssetAvailableAmount, balanceAfter ?? '0')
 
     const selectedTokens: YoroiAmounts = tokenInfo.isDefault
       ? sendAll
-        ? Object.fromEntries(Object.entries(balance).filter((entry) => entry[0] !== defaultAsset.identifier))
+        ? Amounts.remove(balance, [defaultAsset.identifier])
         : {}
       : {
           [selectedTokenIdentifier]: balance[selectedTokenIdentifier],
