@@ -38,9 +38,8 @@ export const AssetSelectorScreen = ({balance, onSelect, onSelectAll}: Props) => 
   const sortedBalance: Array<[TokenId, Quantity]> = useMemo(
     () =>
       Object.entries(balance)
-        .sort(
-          ([, quantityA]: [TokenId, Quantity], [, quantityB]: [TokenId, Quantity]) =>
-            parseInt(quantityB) - parseInt(quantityA),
+        .sort(([, quantityA]: [TokenId, Quantity], [, quantityB]: [TokenId, Quantity]) =>
+          new BigNumber(quantityA).isGreaterThan(new BigNumber(quantityB)) ? -1 : 1,
         )
         .sort(([tokenId]: [TokenId, Quantity]) => (tokenId === defaultAsset.identifier ? -1 : 1)), // default first
     [balance, defaultAsset.identifier],
