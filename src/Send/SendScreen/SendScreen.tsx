@@ -29,6 +29,7 @@ import type {
   AmountValidationErrors,
   BalanceValidationErrors,
 } from '../../yoroi-wallets/utils/validators'
+import {useSendContext} from '../Context/SendContext'
 import {AmountField} from './../AmountField'
 import {AvailableAmountBanner} from './AvailableAmountBanner'
 import {BalanceAfterTransaction} from './BalanceAfterTransaction'
@@ -38,25 +39,7 @@ import {SendAllWarning} from './SendAllWarning'
 import {useStrings} from './strings'
 import {getAddressErrorText, getAmountErrorText, hasDomainErrors, isDomain, recomputeAll} from './utils'
 
-type Props = {
-  selectedTokenIdentifier: string
-  sendAll: boolean
-  onSendAll: (sendAll: boolean) => void
-  receiver: string
-  setReceiver: (receiver: string) => void
-  amount: string
-  setAmount: (amount: string) => void
-}
-
-export const SendScreen = ({
-  selectedTokenIdentifier,
-  sendAll,
-  onSendAll,
-  receiver,
-  amount,
-  setReceiver,
-  setAmount,
-}: Props) => {
+export const SendScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
   const navigation = useNavigation()
@@ -69,6 +52,8 @@ export const SendScreen = ({
   const hasPendingOutgoingTransaction = useSelector(hasPendingOutgoingTransactionSelector)
   const netInfo = useNetInfo()
   const isOnline = netInfo.type !== 'none' && netInfo.type !== 'unknown'
+
+  const {selectedTokenIdentifier, sendAll, setSendAll, receivers, amount, addReceiver, setAmount} = useSendContext()
 
   const defaultAssetAvailableAmount = new BigNumber(balance[defaultAsset.identifier] || '0')
   const selectedAssetAvailableAmount = new BigNumber(balance[selectedTokenIdentifier] || '0')
@@ -100,7 +85,7 @@ export const SendScreen = ({
   React.useEffect(() => {
     if (CONFIG.DEBUG.PREFILL_FORMS) {
       if (!__DEV__) throw new Error('using debug data in non-dev env')
-      setReceiver(CONFIG.DEBUG.SEND_ADDRESS)
+      addReceiver(CONFIG.DEBUG.SEND_ADDRESS)
       setAmount(CONFIG.DEBUG.SEND_AMOUNT)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -115,7 +100,7 @@ export const SendScreen = ({
     const promise = recomputeAll({
       wallet,
       utxos,
-      addressInput: receiver,
+      addressInput: receivers[0],
       amount,
       sendAll,
       defaultAsset,
@@ -140,7 +125,7 @@ export const SendScreen = ({
       setRecomputing(false)
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [receiver, amount, selectedTokenIdentifier, sendAll])
+  }, [receivers, amount, selectedTokenIdentifier, sendAll])
 
   const onConfirm = () => {
     if (sendAll) {
@@ -204,19 +189,19 @@ export const SendScreen = ({
         <Spacer height={16} />
 
         <TextInput
-          value={receiver}
+          value={receivers[0]}
           multiline
           errorOnMount
-          onChangeText={setReceiver}
+          onChangeText={addReceiver}
           label={strings.addressInputLabel}
           errorText={getAddressErrorText(intl, addressErrors)}
           autoComplete={false}
         />
 
         {!recomputing &&
-          isDomain(receiver) &&
+          isDomain(receivers[0]) &&
           !hasDomainErrors(addressErrors) &&
-          !receiver.includes(address) /* HACK */ && (
+          !receivers[0].includes(address) /* HACK */ && (
             <Text ellipsizeMode="middle" numberOfLines={1}>
               {`Resolves to: ${address}`}
             </Text>
@@ -248,7 +233,7 @@ export const SendScreen = ({
 
         <Checkbox
           checked={sendAll}
-          onChange={onSendAll}
+          onChange={setSendAll}
           text={
             tokenInfo.isDefault ? strings.checkboxSendAllAssets : strings.checkboxSendAll({assetId: assetDenomination})
           }

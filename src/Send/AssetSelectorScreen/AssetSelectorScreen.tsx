@@ -1,3 +1,4 @@
+import {useNavigation} from '@react-navigation/native'
 import BigNumber from 'bignumber.js'
 import React, {useMemo} from 'react'
 import {defineMessages} from 'react-intl'
@@ -13,23 +14,26 @@ import {useTokenInfo} from '../../hooks'
 import globalMessages, {txLabels} from '../../i18n/global-messages'
 import {getDefaultAssetByNetworkId} from '../../legacy/config'
 import {decodeHexAscii, formatTokenAmount, getAssetDenominationOrId, getTokenFingerprint} from '../../legacy/format'
+import {TxHistoryRouteNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {Token} from '../../types'
 import {YoroiWallet} from '../../yoroi-wallets'
 import {Quantity, TokenId, YoroiAmounts} from '../../yoroi-wallets/types'
+import {useSendContext} from '../Context/SendContext'
 
 type Props = {
   balance: YoroiAmounts
-  onSelect: (tokenId: TokenId) => void
-  onSelectAll: () => void
 }
 
-export const AssetSelectorScreen = ({balance, onSelect, onSelectAll}: Props) => {
+export const AssetSelectorScreen = ({balance}: Props) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const defaultAsset = getDefaultAssetByNetworkId(wallet.networkId)
   const [matcher, setMatcher] = React.useState('')
+  const navigation = useNavigation<TxHistoryRouteNavigation>()
+  const {setSendAll, setSelectedTokenIdentifier} = useSendContext()
+
   const onChangeMatcher = (matcher: string) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     setMatcher(matcher)
@@ -70,7 +74,11 @@ export const AssetSelectorScreen = ({balance, onSelect, onSelectAll}: Props) => 
               key={tokenId}
               tokenId={tokenId}
               amount={new BigNumber(quantity)}
-              onPress={onSelect}
+              onPress={(tokenId) => {
+                setSendAll(false)
+                setSelectedTokenIdentifier(tokenId)
+                navigation.navigate('send')
+              }}
               matcher={matcher}
             />
           </Boundary>
@@ -81,7 +89,15 @@ export const AssetSelectorScreen = ({balance, onSelect, onSelectAll}: Props) => 
       />
 
       <Actions>
-        <Button outlineOnLight title={strings.sendAllAssets} onPress={() => onSelectAll()} />
+        <Button
+          outlineOnLight
+          title={strings.sendAllAssets}
+          onPress={() => {
+            setSendAll(true)
+            setSelectedTokenIdentifier(defaultAsset.identifier)
+            navigation.navigate('send')
+          }}
+        />
       </Actions>
     </SafeAreaView>
   )

@@ -12,7 +12,6 @@ import {transactionsInfoSelector} from '../legacy/selectors'
 import {
   defaultStackNavigationOptions,
   defaultStackNavigationOptionsV2,
-  TxHistoryRouteNavigation,
   TxHistoryRoutes,
   useWalletNavigation,
 } from '../navigation'
@@ -21,6 +20,7 @@ import {useSelectedWallet} from '../SelectedWallet'
 import {AddressReaderQR} from '../Send/AddressReaderQR'
 import {AssetSelectorScreen} from '../Send/AssetSelectorScreen'
 import {ConfirmScreen} from '../Send/ConfirmScreen'
+import {useSendContext} from '../Send/Context/SendContext'
 import {ScannerButton} from '../Send/ScannerButton'
 import {SendScreen} from '../Send/SendScreen'
 import {COLORS} from '../theme'
@@ -40,20 +40,14 @@ export const TxHistoryNavigator = () => {
   const [modalInfoState, setModalInfoState] = React.useState(false)
   const showModalInfo = () => setModalInfoState(true)
   const hideModalInfo = () => setModalInfoState(false)
-
-  const [selectedTokenIdentifier, setSelectedTokenIdentifier] = React.useState(defaultTokenId)
-  const [sendAll, setSendAll] = React.useState(false)
-  const [receiver, setReceiver] = React.useState('')
-  const [amount, setAmount] = React.useState('')
+  const {setSelectedTokenIdentifier, selectedTokenIdentifier, clear} = useSendContext()
 
   useEffect(() => {
     if (!balance[selectedTokenIdentifier]) {
       setSelectedTokenIdentifier(defaultTokenId)
-      setSendAll(false)
-      setReceiver('')
-      setAmount('')
+      clear()
     }
-  }, [balance, defaultTokenId, selectedTokenIdentifier])
+  }, [balance, defaultTokenId, selectedTokenIdentifier, setSelectedTokenIdentifier, clear])
 
   return (
     <>
@@ -100,42 +94,20 @@ export const TxHistoryNavigator = () => {
         >
           {() => (
             <Boundary>
-              <SendScreen
-                selectedTokenIdentifier={selectedTokenIdentifier}
-                onSendAll={setSendAll}
-                sendAll={sendAll}
-                amount={amount}
-                setAmount={setAmount}
-                receiver={receiver}
-                setReceiver={setReceiver}
-              />
+              <SendScreen />
             </Boundary>
           )}
         </Stack.Screen>
 
         <Stack.Screen name="select-asset" options={{title: strings.selectAssetTitle}}>
-          {({navigation}: {navigation: TxHistoryRouteNavigation}) => (
-            <AssetSelectorScreen
-              balance={balance}
-              onSelect={(tokenId) => {
-                setSendAll(false)
-                setSelectedTokenIdentifier(tokenId)
-                navigation.navigate('send')
-              }}
-              onSelectAll={() => {
-                setSendAll(true)
-                setSelectedTokenIdentifier(defaultTokenId)
-                navigation.navigate('send')
-              }}
-            />
-          )}
+          {() => <AssetSelectorScreen balance={balance} />}
         </Stack.Screen>
 
         <Stack.Screen //
           name="address-reader-qr"
           options={{title: strings.qrScannerTitle}}
         >
-          {() => <AddressReaderQR setQrAmount={setAmount} setQrReceiver={setReceiver} />}
+          {() => <AddressReaderQR />}
         </Stack.Screen>
 
         <Stack.Screen //
