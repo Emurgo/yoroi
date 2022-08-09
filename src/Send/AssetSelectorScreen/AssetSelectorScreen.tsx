@@ -68,7 +68,7 @@ export const AssetSelectorScreen = ({balance, onSelect, onSelectAll}: Props) => 
               wallet={wallet}
               key={tokenId}
               tokenId={tokenId}
-              amount={new BigNumber(quantity)}
+              quantity={quantity}
               onPress={onSelect}
               matcher={matcher}
             />
@@ -89,11 +89,11 @@ export const AssetSelectorScreen = ({balance, onSelect, onSelectAll}: Props) => 
 type AssetSelectorItemProps = {
   wallet: YoroiWallet
   tokenId: TokenId
-  amount: BigNumber
+  quantity: Quantity
   onPress: (tokenId: TokenId) => void
   matcher: string
 }
-const AssetSelectorItem = ({wallet, tokenId, amount, onPress, matcher}: AssetSelectorItemProps) => {
+const AssetSelectorItem = ({wallet, tokenId, quantity, onPress, matcher}: AssetSelectorItemProps) => {
   const strings = useStrings()
   const tokenInfo = useTokenInfo({wallet, tokenId})
 
@@ -116,7 +116,7 @@ const AssetSelectorItem = ({wallet, tokenId, amount, onPress, matcher}: AssetSel
         </View>
 
         <View style={{flex: 1, alignItems: 'flex-end', padding: 4}}>
-          <Text style={{color: COLORS.DARK_TEXT}}>{formatTokenAmount(amount, tokenInfo, 15)}</Text>
+          <Text style={{color: COLORS.DARK_TEXT}}>{formatTokenAmount(new BigNumber(quantity), tokenInfo, 15)}</Text>
         </View>
       </View>
     </TouchableOpacity>
