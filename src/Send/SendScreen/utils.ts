@@ -152,11 +152,18 @@ export const recomputeAll = async ({
             new BigNumber(defaultAssetAvailableAmount).minus(_fee.getDefault()),
             selectedTokenInfo,
           ).toString()
+
           balanceAfter = '0'
         } else {
-          const selectedAssetAvailableAmountBN = new BigNumber(selectedAssetAvailableAmount)
-          recomputedAmount = normalizeTokenAmount(selectedAssetAvailableAmountBN, selectedTokenInfo).toString()
-          balanceAfter = `${selectedAssetAvailableAmountBN.minus(_fee.getDefault()).minus(minAda).toNumber()}`
+          recomputedAmount = normalizeTokenAmount(
+            new BigNumber(selectedAssetAvailableAmount),
+            selectedTokenInfo,
+          ).toString()
+
+          balanceAfter = `${new BigNumber(defaultAssetAvailableAmount)
+            .minus(_fee.getDefault())
+            .minus(minAda)
+            .toNumber()}`
         }
 
         // for sendAll we set the amount so the format is error-free
@@ -165,6 +172,7 @@ export const recomputeAll = async ({
         const parsedAmount = selectedTokenInfo.isDefault
           ? parseAmountDecimal(amount, selectedTokenInfo)
           : new BigNumber('0')
+
         yoroiUnsignedTx = await getTransactionData(
           wallet,
           utxos,
@@ -174,10 +182,12 @@ export const recomputeAll = async ({
           defaultAsset,
           selectedTokenInfo,
         )
+
         _fee = new MultiToken(yoroiUnsignedTx.unsignedTx.fee.values, {
           defaultNetworkId: yoroiUnsignedTx.unsignedTx.fee.defaults.networkId,
           defaultIdentifier: yoroiUnsignedTx.unsignedTx.fee.defaults.identifier,
         })
+
         balanceAfter = `${new BigNumber(defaultAssetAvailableAmount)
           .minus(parsedAmount)
           .minus(minAda)

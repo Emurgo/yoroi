@@ -1,5 +1,5 @@
 import {createStackNavigator} from '@react-navigation/stack'
-import React, {useEffect} from 'react'
+import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps} from 'react-native'
 import {useSelector} from 'react-redux'
@@ -37,23 +37,21 @@ export const TxHistoryNavigator = () => {
   const transactionInfos = useSelector(transactionsInfoSelector)
   const defaultTokenId = getDefaultAssetByNetworkId(wallet.networkId).identifier
   const balance = useBalances(wallet, defaultTokenId)
-  const [modalInfoState, setModalInfoState] = React.useState(false)
+  const [modalInfoState, setModalInfoState] = useState(false)
   const showModalInfo = () => setModalInfoState(true)
   const hideModalInfo = () => setModalInfoState(false)
 
-  const [selectedTokenIdentifier, setSelectedTokenIdentifier] = React.useState(defaultTokenId)
-  const [sendAll, setSendAll] = React.useState(false)
-  const [receiver, setReceiver] = React.useState('')
-  const [amount, setAmount] = React.useState('')
+  const [selectedTokenIdentifier, setSelectedTokenIdentifier] = useState(defaultTokenId)
+  const [sendAll, setSendAll] = useState(false)
+  const [receiver, setReceiver] = useState('')
+  const [amount, setAmount] = useState('')
 
-  useEffect(() => {
-    if (!balance[selectedTokenIdentifier]) {
-      setSelectedTokenIdentifier(defaultTokenId)
-      setSendAll(false)
-      setReceiver('')
-      setAmount('')
-    }
-  }, [balance, defaultTokenId, selectedTokenIdentifier])
+  if (!balance[selectedTokenIdentifier]) {
+    setSelectedTokenIdentifier(defaultTokenId)
+    setSendAll(false)
+    setReceiver('')
+    setAmount('')
+  }
 
   return (
     <>
