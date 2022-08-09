@@ -10,7 +10,7 @@ import {RawUtxo} from '../../legacy/types'
 import {cardanoValueFromMultiToken} from '../../legacy/utils'
 import type {DefaultAsset, SendTokenList, Token} from '../../types'
 import {BigNum, minAdaRequired, MultiToken, YoroiWallet} from '../../yoroi-wallets'
-import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
+import {Quantity, YoroiUnsignedTx} from '../../yoroi-wallets/types'
 import {InvalidAssetAmount, parseAmountDecimal} from '../../yoroi-wallets/utils/parsing'
 import type {AddressValidationErrors} from '../../yoroi-wallets/utils/validators'
 import {getUnstoppableDomainAddress, isReceiverAddressValid, validateAmount} from '../../yoroi-wallets/utils/validators'
@@ -96,8 +96,8 @@ export const recomputeAll = async ({
   sendAll: boolean
   defaultAsset: DefaultAsset
   selectedTokenInfo: Token
-  defaultAssetAvailableAmount: BigNumber
-  selectedAssetAvailableAmount: BigNumber
+  defaultAssetAvailableAmount: Quantity
+  selectedAssetAvailableAmount: Quantity
 }) => {
   let addressErrors: AddressValidationErrors = {}
   let address = addressInput
@@ -116,8 +116,8 @@ export const recomputeAll = async ({
   }
 
   let balanceErrors = Object.freeze({})
-  let fee: BigNumber | null = null
-  let balanceAfter: null | BigNumber = null
+  let fee: Quantity | null = null
+  let balanceAfter: null | Quantity = null
   let recomputedAmount = amount
 
   let yoroiUnsignedTx: YoroiUnsignedTx | null = null
@@ -149,13 +149,14 @@ export const recomputeAll = async ({
 
         if (selectedTokenInfo.isDefault) {
           recomputedAmount = normalizeTokenAmount(
-            defaultAssetAvailableAmount.minus(_fee.getDefault()),
+            new BigNumber(defaultAssetAvailableAmount).minus(_fee.getDefault()),
             selectedTokenInfo,
           ).toString()
-          balanceAfter = new BigNumber('0')
+          balanceAfter = '0'
         } else {
-          recomputedAmount = normalizeTokenAmount(selectedAssetAvailableAmount, selectedTokenInfo).toString()
-          balanceAfter = defaultAssetAvailableAmount.minus(_fee.getDefault()).minus(minAda)
+          const selectedAssetAvailableAmountBN = new BigNumber(selectedAssetAvailableAmount)
+          recomputedAmount = normalizeTokenAmount(selectedAssetAvailableAmountBN, selectedTokenInfo).toString()
+          balanceAfter = `${selectedAssetAvailableAmountBN.minus(_fee.getDefault()).minus(minAda).toNumber()}`
         }
 
         // for sendAll we set the amount so the format is error-free
@@ -177,10 +178,14 @@ export const recomputeAll = async ({
           defaultNetworkId: yoroiUnsignedTx.unsignedTx.fee.defaults.networkId,
           defaultIdentifier: yoroiUnsignedTx.unsignedTx.fee.defaults.identifier,
         })
-        balanceAfter = defaultAssetAvailableAmount.minus(parsedAmount).minus(minAda).minus(_fee.getDefault())
+        balanceAfter = `${new BigNumber(defaultAssetAvailableAmount)
+          .minus(parsedAmount)
+          .minus(minAda)
+          .minus(_fee.getDefault())
+          .toNumber()}`
       }
       // now we can update fee as well
-      fee = _fee != null ? _fee.getDefault() : null
+      fee = _fee != null ? `${_fee.getDefault().toNumber()}` : null
     } catch (err) {
       if (
         err instanceof NotEnoughMoneyToSendError ||

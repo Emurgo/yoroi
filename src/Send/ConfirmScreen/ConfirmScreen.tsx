@@ -18,11 +18,11 @@ import {Quantity, TokenId, YoroiAmounts, YoroiUnsignedTx} from '../../yoroi-wall
 
 export type Params = {
   yoroiUnsignedTx: YoroiUnsignedTx
-  defaultAssetAmount: BigNumber
+  defaultAssetAmount: Quantity
   address: string
-  balanceAfterTx: BigNumber
-  availableAmount: BigNumber
-  fee: BigNumber
+  balanceAfterTx: Quantity
+  availableAmount: Quantity
+  fee: Quantity
   tokens: YoroiAmounts
   easyConfirmDecryptKey: string
 }
@@ -33,15 +33,15 @@ const isParams = (params?: Params | object | undefined): params is Params => {
     'yoroiUnsignedTx' in params &&
     typeof params.yoroiUnsignedTx === 'object' &&
     'defaultAssetAmount' in params &&
-    params.defaultAssetAmount instanceof BigNumber &&
+    typeof params.defaultAssetAmount === 'string' &&
     'address' in params &&
     typeof params.address === 'string' &&
     'balanceAfterTx' in params &&
-    params.balanceAfterTx instanceof BigNumber &&
+    typeof params.balanceAfterTx === 'string' &&
     'availableAmount' in params &&
-    params.availableAmount instanceof BigNumber &&
+    typeof params.availableAmount === 'string' &&
     'fee' in params &&
-    params.fee instanceof BigNumber &&
+    typeof params.fee === 'string' &&
     'tokens' in params &&
     typeof params.tokens === 'object'
   )
@@ -75,18 +75,18 @@ export const ConfirmScreen = () => {
 
         <Banner
           label={strings.availableFunds}
-          text={formatTokenWithText(availableAmount, getDefaultAssetByNetworkId(wallet.networkId))}
+          text={formatTokenWithText(new BigNumber(availableAmount), getDefaultAssetByNetworkId(wallet.networkId))}
           boldText
         />
 
         <ScrollView style={styles.container} contentContainerStyle={{padding: 16}}>
           <Text small>
-            {strings.fees}: {formatTokenWithSymbol(fee, getDefaultAssetByNetworkId(wallet.networkId))}
+            {strings.fees}: {formatTokenWithSymbol(new BigNumber(fee), getDefaultAssetByNetworkId(wallet.networkId))}
           </Text>
 
           <Text small>
             {strings.balanceAfterTx}:{' '}
-            {formatTokenWithSymbol(balanceAfterTx, getDefaultAssetByNetworkId(wallet.networkId))}
+            {formatTokenWithSymbol(new BigNumber(balanceAfterTx), getDefaultAssetByNetworkId(wallet.networkId))}
           </Text>
 
           <Spacer height={16} />
@@ -98,7 +98,7 @@ export const ConfirmScreen = () => {
 
           <Text>{strings.total}</Text>
           <Text style={styles.amount}>
-            {formatTokenWithSymbol(defaultAssetAmount, getDefaultAssetByNetworkId(wallet.networkId))}
+            {formatTokenWithSymbol(new BigNumber(defaultAssetAmount), getDefaultAssetByNetworkId(wallet.networkId))}
           </Text>
 
           {Object.entries(tokens).map((entry) => (
@@ -140,9 +140,8 @@ export const ConfirmScreen = () => {
 const Entry = ({tokenEntry: [tokenId, quantity]}: {tokenEntry: [TokenId, Quantity]}) => {
   const wallet = useSelectedWallet()
   const tokenInfo = useTokenInfo({wallet, tokenId})
-  const amount = new BigNumber(quantity)
 
-  return <Text style={styles.amount}>{formatTokenWithText(amount, tokenInfo)}</Text>
+  return <Text style={styles.amount}>{formatTokenWithText(new BigNumber(quantity), tokenInfo)}</Text>
 }
 
 const Actions = (props: ViewProps) => <View {...props} style={{padding: 16}} />
