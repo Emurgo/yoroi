@@ -23,7 +23,7 @@ export type Params = {
   balanceAfterTx: Quantity
   availableAmount: Quantity
   fee: Quantity
-  tokens: YoroiAmounts
+  selectedTokens: YoroiAmounts
   easyConfirmDecryptKey: string
 }
 
@@ -42,14 +42,14 @@ const isParams = (params?: Params | object | undefined): params is Params => {
     typeof params.availableAmount === 'string' &&
     'fee' in params &&
     typeof params.fee === 'string' &&
-    'tokens' in params &&
-    typeof params.tokens === 'object'
+    'selectedTokens' in params &&
+    typeof params.selectedTokens === 'object'
   )
 }
 
 export const ConfirmScreen = () => {
   const strings = useStrings()
-  const {defaultAssetAmount, address, balanceAfterTx, availableAmount, fee, tokens, yoroiUnsignedTx} =
+  const {defaultAssetAmount, address, balanceAfterTx, availableAmount, fee, selectedTokens, yoroiUnsignedTx} =
     useParams(isParams)
   const {resetToTxHistory} = useWalletNavigation()
   const wallet = useSelectedWallet()
@@ -101,7 +101,7 @@ export const ConfirmScreen = () => {
             {formatTokenWithSymbol(new BigNumber(defaultAssetAmount), getDefaultAssetByNetworkId(wallet.networkId))}
           </Text>
 
-          {Object.entries(tokens).map((entry) => (
+          {Object.entries(selectedTokens).map((entry) => (
             <Boundary key={entry[0]}>
               <Entry tokenEntry={entry} />
             </Boundary>

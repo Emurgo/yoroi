@@ -17,7 +17,7 @@ storiesOf('ConfirmScreen', module).add('Default', () => {
       address: 'address_123123123',
       availableAmount: '1111111100',
       fee: '1',
-      tokens: balance,
+      selectedTokens: balance,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       yoroiUnsignedTx: null as any,
       easyConfirmDecryptKey: '1234567',

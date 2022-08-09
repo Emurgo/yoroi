@@ -218,7 +218,7 @@ export type SendConfirmParams = {
   balanceAfterTx: Quantity | null
   availableAmount: Quantity
   fee: Quantity | null
-  tokens: YoroiAmounts
+  selectedTokens: YoroiAmounts
   utxos: RawUtxo[]
 }
 export type SendRoutes = {

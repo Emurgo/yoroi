@@ -158,7 +158,7 @@ export const SendScreen = ({
       : // note: inside this if balanceAfter shouldn't be null
         `${new BigNumber(defaultAssetAvailableAmount).minus(balanceAfter ?? 0).toNumber()}`
 
-    const tokens: YoroiAmounts = tokenInfo.isDefault
+    const selectedTokens: YoroiAmounts = tokenInfo.isDefault
       ? sendAll
         ? Object.fromEntries(Object.entries(balance).filter((entry) => entry[0] !== defaultAsset.identifier))
         : {}
@@ -182,7 +182,7 @@ export const SendScreen = ({
             balanceAfterTx: balanceAfter,
             utxos,
             fee,
-            tokens,
+            selectedTokens,
           },
         },
       },
