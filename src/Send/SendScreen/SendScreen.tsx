@@ -198,7 +198,7 @@ export const SendScreen = () => {
           value={receiver}
           multiline
           errorOnMount
-          onChangeText={(receiver) => setReceiver(receiver)}
+          onChangeText={setReceiver}
           label={strings.addressInputLabel}
           errorText={getAddressErrorText(intl, addressErrors)}
           autoComplete={false}
