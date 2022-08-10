@@ -61,7 +61,7 @@ export const WalletInitScreen = () => {
                 onPress={() => setModalState(MODAL_STATES.LEDGER_TRANSPORT_SWITCH)}
                 title={strings.createWalletWithLedgerButton({networkId})}
                 style={styles.createButton}
-                testID="connectLedgerWalletButton"
+                testID="createLedgerWalletButton"
               />
               <LedgerTransportSwitchModal
                 visible={modalState === MODAL_STATES.LEDGER_TRANSPORT_SWITCH}

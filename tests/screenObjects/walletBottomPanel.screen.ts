@@ -1,5 +1,5 @@
 export const walletHistoryButton = () => driver.$('//*[@resource-id="walletTabBarButton"]')
-export const stakingButton = () => driver.$('//*[@resource-id="stakingButton"]')
+export const stakingButton = () => driver.$('//*[@resource-id="stakingTabBarButton"]')
 export const menuButton = () => driver.$('//*[@resource-id="menuTabBarButton"]')
 
 export const isDisplayed = async () => {
