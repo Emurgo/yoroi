@@ -1,5 +1,6 @@
 import BigNumber from 'bignumber.js'
 import KeyStore from '../../src/legacy/KeyStore'
+import {PRIMARY_ASSET_CONSTANTS} from '../../src/legacy/networks'
 
 import {RemotePoolMetaSuccess, StakePoolInfosAndHistories, TokenEntry, TokenInfo} from '../../src/types'
 import {YoroiWallet} from '../../src/yoroi-wallets'
@@ -150,6 +151,7 @@ export const tokenEntries: Array<TokenEntry> = [
 ]
 
 export const balance: YoroiAmounts = {
+  [PRIMARY_ASSET_CONSTANTS.CARDANO]: '2727363743849',
   '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950': '12344',
   '29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6.4d494e': '215410',
   '1d129dc9c03f95a863489883914f05a52e13135994a32f0cbeacc65f.74484f444c52': '5',
