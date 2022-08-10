@@ -194,7 +194,6 @@ export const SendScreen = () => {
         <Spacer height={16} />
 
         <TextInput
-          id="address"
           value={receiver}
           multiline
           errorOnMount

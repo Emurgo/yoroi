@@ -24,7 +24,6 @@ type Props = TextInputProps &
     noErrors?: boolean
     dense?: boolean
     faded?: boolean
-    id?: string
   }
 
 const useDebounced = (callback, value, delay = 1000) => {

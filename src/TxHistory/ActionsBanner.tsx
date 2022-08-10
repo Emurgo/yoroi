@@ -8,6 +8,7 @@ import features from '../features'
 import {actionMessages} from '../i18n/global-messages'
 import {TxHistoryRouteNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
+import {useSendContext} from '../Send/Context/SendContext'
 import {COLORS} from '../theme'
 
 const ACTION_PROPS = {
@@ -19,6 +20,12 @@ export const ActionsBanner = () => {
   const strings = useStrings()
   const navigateTo = useNavigateTo()
   const wallet = useSelectedWallet()
+  const {clear} = useSendContext()
+
+  const toSend = () => {
+    navigateTo.send()
+    clear()
+  }
 
   return (
     <View style={styles.banner}>
@@ -28,7 +35,7 @@ export const ActionsBanner = () => {
         <View style={styles.row}>
           {!wallet.isReadOnly && (
             <View style={styles.centralized}>
-              <TouchableOpacity style={styles.actionIcon} onPress={navigateTo.send}>
+              <TouchableOpacity style={styles.actionIcon} onPress={toSend}>
                 <Icon.Send {...ACTION_PROPS} />
               </TouchableOpacity>
               <Text style={styles.actionLabel}>{strings.sendLabel}</Text>
