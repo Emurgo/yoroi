@@ -2,7 +2,7 @@ import {useNetInfo} from '@react-native-community/netinfo'
 import {useNavigation} from '@react-navigation/native'
 import {BigNumber} from 'bignumber.js'
 import _ from 'lodash'
-import React from 'react'
+import React, {useState} from 'react'
 import {useIntl} from 'react-intl'
 import {ActivityIndicator, Image, ScrollView, StyleSheet, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
@@ -22,7 +22,8 @@ import {
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {UtxoAutoRefresher} from '../../UtxoAutoRefresher'
-import {YoroiAmounts, YoroiUnsignedTx} from '../../yoroi-wallets/types'
+import {Quantity, YoroiAmounts, YoroiUnsignedTx} from '../../yoroi-wallets/types'
+import {Amounts, Quantities} from '../../yoroi-wallets/utils'
 import {parseAmountDecimal} from '../../yoroi-wallets/utils/parsing'
 import type {
   AddressValidationErrors,
@@ -55,18 +56,22 @@ export const SendScreen = () => {
 
   const {selectedTokenIdentifier, sendAll, setSendAll, receivers, amount, addReceiver, setAmount} = useSendContext()
 
-  const defaultAssetAvailableAmount = new BigNumber(balance[defaultAsset.identifier] || '0')
-  const selectedAssetAvailableAmount = new BigNumber(balance[selectedTokenIdentifier] || '0')
+  const defaultAssetAvailableAmount = balance[defaultAsset.identifier]
+  const selectedAssetAvailableAmount = balance[selectedTokenIdentifier]
 
-  const [address, setAddress] = React.useState('')
-  const [addressErrors, setAddressErrors] = React.useState<AddressValidationErrors>({addressIsRequired: true})
-  const [amountErrors, setAmountErrors] = React.useState<AmountValidationErrors>({amountIsRequired: true})
-  const [balanceErrors, setBalanceErrors] = React.useState<BalanceValidationErrors>({})
-  const [balanceAfter, setBalanceAfter] = React.useState<BigNumber | null>(null)
-  const [yoroiUnsignedTx, setYoroiUnsignedTx] = React.useState<null | YoroiUnsignedTx>(null)
-  const [fee, setFee] = React.useState<BigNumber | null>(null)
-  const [recomputing, setRecomputing] = React.useState(false)
-  const [showSendAllWarning, setShowSendAllWarning] = React.useState(false)
+  if (!selectedAssetAvailableAmount) {
+    throw new Error('Invalid token')
+  }
+
+  const [address, setAddress] = useState('')
+  const [addressErrors, setAddressErrors] = useState<AddressValidationErrors>({addressIsRequired: true})
+  const [amountErrors, setAmountErrors] = useState<AmountValidationErrors>({amountIsRequired: true})
+  const [balanceErrors, setBalanceErrors] = useState<BalanceValidationErrors>({})
+  const [balanceAfter, setBalanceAfter] = useState<Quantity | null>(null)
+  const [yoroiUnsignedTx, setYoroiUnsignedTx] = useState<null | YoroiUnsignedTx>(null)
+  const [fee, setFee] = useState<Quantity | null>(null)
+  const [recomputing, setRecomputing] = useState(false)
+  const [showSendAllWarning, setShowSendAllWarning] = useState(false)
 
   const tokenInfo = useTokenInfo({wallet, tokenId: selectedTokenIdentifier})
   const assetDenomination = truncateWithEllipsis(getAssetDenominationOrId(tokenInfo), 20)
@@ -138,14 +143,14 @@ export const SendScreen = () => {
   const handleConfirm = async () => {
     if (!isValid || recomputing || !yoroiUnsignedTx) return
 
-    const defaultAssetAmount = tokenInfo.isDefault
-      ? parseAmountDecimal(amount, tokenInfo)
+    const defaultAssetAmount: Quantity = tokenInfo.isDefault
+      ? (parseAmountDecimal(amount, tokenInfo).toString() as Quantity)
       : // note: inside this if balanceAfter shouldn't be null
-        defaultAssetAvailableAmount.minus(balanceAfter ?? 0)
+        Quantities.diff(defaultAssetAvailableAmount, balanceAfter ?? '0')
 
-    const tokens: YoroiAmounts = tokenInfo.isDefault
+    const selectedTokens: YoroiAmounts = tokenInfo.isDefault
       ? sendAll
-        ? Object.fromEntries(Object.entries(balance).filter((entry) => entry[0] !== defaultAsset.identifier))
+        ? Amounts.remove(balance, [defaultAsset.identifier])
         : {}
       : {
           [selectedTokenIdentifier]: balance[selectedTokenIdentifier],
@@ -167,7 +172,7 @@ export const SendScreen = () => {
             balanceAfterTx: balanceAfter,
             utxos,
             fee,
-            tokens,
+            selectedTokens,
           },
         },
       },
@@ -226,7 +231,11 @@ export const SendScreen = () => {
             right={<Image source={require('../../assets/img/arrow_down_fill.png')} />}
             editable={false}
             label={strings.asset}
-            value={`${assetDenomination}: ${formatTokenAmount(selectedAssetAvailableAmount, tokenInfo, 15)}`}
+            value={`${assetDenomination}: ${formatTokenAmount(
+              new BigNumber(selectedAssetAvailableAmount),
+              tokenInfo,
+              15,
+            )}`}
             autoComplete={false}
           />
         </TouchableOpacity>

@@ -1,14 +1,20 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {createContext, useContext} from 'react'
 
-import {TokenId} from '../../yoroi-wallets/types'
+import {getDefaultAssetByNetworkId} from '../../legacy/config'
+import {YoroiWallet} from '../../yoroi-wallets'
+import {TokenId, YoroiAmounts} from '../../yoroi-wallets/types'
 
 const SendContext = createContext<undefined | SendContext>(undefined)
-export const SendProvider: React.FC = ({children}) => {
-  const [selectedTokenIdentifier, setSelectedTokenIdentifier] = useState<TokenId>('default')
+export const SendProvider: React.FC<SendContextProvider> = ({children, balance, wallet}) => {
+  const defaultTokenId = getDefaultAssetByNetworkId(wallet.networkId).identifier
+
+  const [selectedTokenIdentifier, setSelectedTokenIdentifier] = useState<TokenId>(defaultTokenId)
   const [sendAll, setSendAll] = useState(false)
   const [receivers, setReceivers] = useState<Array<string>>([])
   const [amount, setAmount] = useState('')
+
+  const addReceiver = (receiver) => setReceivers([...receivers, receiver])
 
   const clear = () => {
     setSendAll(false)
@@ -16,7 +22,14 @@ export const SendProvider: React.FC = ({children}) => {
     setAmount('')
   }
 
-  const addReceiver = (receiver) => [...receivers, receiver]
+  if (!balance[selectedTokenIdentifier]) {
+    setSelectedTokenIdentifier(defaultTokenId)
+    clear()
+  }
+
+  useEffect(() => {
+    clear()
+  }, [wallet])
 
   return (
     <SendContext.Provider
@@ -54,5 +67,10 @@ type SendContext = {
   amount: string
   setAmount: (amount: string) => void
   clear: () => void
-  addReceiver: (receiver: string) => Array<string>
+  addReceiver: (receiver: string) => void
+}
+
+type SendContextProvider = {
+  balance: YoroiAmounts
+  wallet: YoroiWallet
 }

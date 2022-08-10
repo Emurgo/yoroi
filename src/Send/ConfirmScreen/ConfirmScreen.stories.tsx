@@ -1,6 +1,5 @@
 import {NavigationRouteContext} from '@react-navigation/native'
 import {storiesOf} from '@storybook/react-native'
-import BigNumber from 'bignumber.js'
 import React from 'react'
 
 import {balance, mockWallet} from '../../../storybook'
@@ -13,14 +12,15 @@ storiesOf('ConfirmScreen', module).add('Default', () => {
     key: 'key',
     name: 'name',
     params: {
-      defaultAssetAmount: new BigNumber('1111111111'),
-      balanceAfterTx: new BigNumber('10'),
+      defaultAssetAmount: '1111111111',
+      balanceAfterTx: '10',
       address: 'address_123123123',
-      availableAmount: new BigNumber('1111111100'),
-      fee: new BigNumber('1'),
-      tokens: balance,
+      availableAmount: '1111111100',
+      fee: '1',
+      selectedTokens: balance,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       yoroiUnsignedTx: null as any,
+      easyConfirmDecryptKey: '1234567',
     } as Params,
   }
 

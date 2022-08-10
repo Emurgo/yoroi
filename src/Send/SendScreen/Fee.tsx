@@ -6,14 +6,15 @@ import {Text} from '../../components'
 import {getDefaultAssetByNetworkId} from '../../legacy/config'
 import {formatTokenWithSymbol} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
+import {Quantity} from '../../yoroi-wallets/types'
 import {useStrings} from './strings'
 
-export const Fee = ({fee}: {fee: BigNumber | null}) => {
+export const Fee = ({fee}: {fee: Quantity | null}) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const defaultAsset = getDefaultAssetByNetworkId(wallet.networkId)
 
-  const value = fee ? formatTokenWithSymbol(fee, defaultAsset) : strings.feeNotAvailable
+  const value = fee ? formatTokenWithSymbol(new BigNumber(fee), defaultAsset) : strings.feeNotAvailable
 
   return (
     <Text style={styles.info}>

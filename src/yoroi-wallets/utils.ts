@@ -1,7 +1,6 @@
 import BigNumber from 'bignumber.js'
 
 import {RawUtxo} from '../legacy/types'
-import {RemoteAsset} from '../types'
 import {Quantity, TokenId, YoroiAmount, YoroiAmounts, YoroiEntries, YoroiEntry} from './types'
 
 export const Entries = {
@@ -88,21 +87,22 @@ export const Quantities = {
   },
 }
 
-export const formatUTXOsIntoYoroiAmounts = (utxos: RawUtxo[], defaultAssetId: TokenId): YoroiAmounts => {
-  const addQuantity = (total: Quantity, amount: RemoteAsset['amount'] | RawUtxo['amount']): Quantity =>
-    `${(parseInt(total) || 0) + parseInt(amount)}`
+export const toYoroiAmounts = (utxos: RawUtxo[], defaultAssetId: TokenId) => {
+  return utxos.reduce(
+    (amounts: YoroiAmounts, current: RawUtxo) => {
+      amounts[defaultAssetId] = Quantities.sum([amounts[defaultAssetId], current.amount as Quantity])
 
-  const balance = utxos.reduce((amounts: YoroiAmounts, current: RawUtxo) => {
-    amounts[defaultAssetId] = addQuantity(amounts[defaultAssetId], current.amount)
-
-    if (current.assets) {
-      for (const asset of current.assets) {
-        amounts[asset.assetId] = addQuantity(amounts[asset.assetId], asset.amount)
+      if (current.assets) {
+        for (const asset of current.assets) {
+          amounts[asset.assetId] = Quantities.sum([
+            amounts[asset.assetId] ?? ('0' as Quantity),
+            asset.amount as Quantity,
+          ])
+        }
       }
-    }
 
-    return amounts
-  }, {})
-
-  return balance
+      return amounts
+    },
+    {[defaultAssetId]: '0'},
+  )
 }

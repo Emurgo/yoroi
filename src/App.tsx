@@ -12,7 +12,6 @@ import AppNavigator from './AppNavigator'
 import {initApp} from './legacy/actions'
 import {isAppInitializedSelector} from './legacy/selectors'
 import {SelectedWalletMetaProvider, SelectedWalletProvider} from './SelectedWallet'
-import {SendProvider} from './Send/Context/SendContext'
 import {StorageProvider} from './Storage'
 
 enableScreens()
@@ -63,9 +62,7 @@ const App = () => {
         <StorageProvider>
           <SelectedWalletMetaProvider>
             <SelectedWalletProvider>
-              <SendProvider>
-                <AppNavigator />
-              </SendProvider>
+              <AppNavigator />
             </SelectedWalletProvider>
           </SelectedWalletMetaProvider>
         </StorageProvider>

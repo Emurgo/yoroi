@@ -1,5 +1,5 @@
 import {createStackNavigator} from '@react-navigation/stack'
-import React, {useEffect} from 'react'
+import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps} from 'react-native'
 import {useSelector} from 'react-redux'
@@ -20,7 +20,7 @@ import {useSelectedWallet} from '../SelectedWallet'
 import {AddressReaderQR} from '../Send/AddressReaderQR'
 import {AssetSelectorScreen} from '../Send/AssetSelectorScreen'
 import {ConfirmScreen} from '../Send/ConfirmScreen'
-import {useSendContext} from '../Send/Context/SendContext'
+import {SendProvider} from '../Send/Context/SendContext'
 import {ScannerButton} from '../Send/ScannerButton'
 import {SendScreen} from '../Send/SendScreen'
 import {COLORS} from '../theme'
@@ -37,17 +37,9 @@ export const TxHistoryNavigator = () => {
   const transactionInfos = useSelector(transactionsInfoSelector)
   const defaultTokenId = getDefaultAssetByNetworkId(wallet.networkId).identifier
   const balance = useBalances(wallet, defaultTokenId)
-  const [modalInfoState, setModalInfoState] = React.useState(false)
+  const [modalInfoState, setModalInfoState] = useState(false)
   const showModalInfo = () => setModalInfoState(true)
   const hideModalInfo = () => setModalInfoState(false)
-  const {setSelectedTokenIdentifier, selectedTokenIdentifier, clear} = useSendContext()
-
-  useEffect(() => {
-    if (!balance[selectedTokenIdentifier]) {
-      setSelectedTokenIdentifier(defaultTokenId)
-      clear()
-    }
-  }, [balance, defaultTokenId, selectedTokenIdentifier, setSelectedTokenIdentifier, clear])
 
   return (
     <>
@@ -94,7 +86,9 @@ export const TxHistoryNavigator = () => {
         >
           {() => (
             <Boundary>
-              <SendScreen />
+              <SendProvider balance={balance} wallet={wallet}>
+                <SendScreen />
+              </SendProvider>
             </Boundary>
           )}
         </Stack.Screen>

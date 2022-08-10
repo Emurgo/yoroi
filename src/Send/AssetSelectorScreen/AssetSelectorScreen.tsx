@@ -42,9 +42,8 @@ export const AssetSelectorScreen = ({balance}: Props) => {
   const sortedBalance: Array<[TokenId, Quantity]> = useMemo(
     () =>
       Object.entries(balance)
-        .sort(
-          ([, quantityA]: [TokenId, Quantity], [, quantityB]: [TokenId, Quantity]) =>
-            parseInt(quantityB) - parseInt(quantityA),
+        .sort(([, quantityA]: [TokenId, Quantity], [, quantityB]: [TokenId, Quantity]) =>
+          new BigNumber(quantityA).isGreaterThan(new BigNumber(quantityB)) ? -1 : 1,
         )
         .sort(([tokenId]: [TokenId, Quantity]) => (tokenId === defaultAsset.identifier ? -1 : 1)), // default first
     [balance, defaultAsset.identifier],
@@ -73,7 +72,7 @@ export const AssetSelectorScreen = ({balance}: Props) => {
               wallet={wallet}
               key={tokenId}
               tokenId={tokenId}
-              amount={new BigNumber(quantity)}
+              quantity={quantity}
               onPress={(tokenId) => {
                 setSendAll(false)
                 setSelectedTokenIdentifier(tokenId)
@@ -106,11 +105,12 @@ export const AssetSelectorScreen = ({balance}: Props) => {
 type AssetSelectorItemProps = {
   wallet: YoroiWallet
   tokenId: TokenId
-  amount: BigNumber
+  quantity: Quantity
   onPress: (tokenId: TokenId) => void
   matcher: string
 }
-const AssetSelectorItem = ({wallet, tokenId, amount, onPress, matcher}: AssetSelectorItemProps) => {
+
+const AssetSelectorItem = ({wallet, tokenId, quantity, onPress, matcher}: AssetSelectorItemProps) => {
   const strings = useStrings()
   const tokenInfo = useTokenInfo({wallet, tokenId})
 
@@ -133,7 +133,7 @@ const AssetSelectorItem = ({wallet, tokenId, amount, onPress, matcher}: AssetSel
         </View>
 
         <View style={{flex: 1, alignItems: 'flex-end', padding: 4}}>
-          <Text style={{color: COLORS.DARK_TEXT}}>{formatTokenAmount(amount, tokenInfo, 15)}</Text>
+          <Text style={{color: COLORS.DARK_TEXT}}>{formatTokenAmount(new BigNumber(quantity), tokenInfo, 15)}</Text>
         </View>
       </View>
     </TouchableOpacity>
