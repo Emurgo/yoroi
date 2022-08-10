@@ -161,11 +161,12 @@ export const recomputeAll = async ({
             selectedTokenInfo,
           ).toString()
 
-          balanceAfter = Quantities.subtraction([
+          balanceAfter = Quantities.diff(
             defaultAssetAvailableAmount,
-            _fee.getDefault().toString() as Quantity,
-            minAda,
-          ])
+            Quantities.sum(
+              [defaultAssetAvailableAmount, _fee.getDefault().toString() as Quantity, minAda].map(Quantities.negated),
+            ),
+          )
         }
 
         // for sendAll we set the amount so the format is error-free
@@ -190,12 +191,10 @@ export const recomputeAll = async ({
           defaultIdentifier: yoroiUnsignedTx.unsignedTx.fee.defaults.identifier,
         })
 
-        balanceAfter = Quantities.subtraction([
+        balanceAfter = Quantities.diff(
           defaultAssetAvailableAmount,
-          parsedAmount,
-          minAda,
-          _fee.getDefault().toString() as Quantity,
-        ])
+          Quantities.sum([parsedAmount, minAda, _fee.getDefault().toString() as Quantity].map(Quantities.negated)),
+        )
       }
       // now we can update fee as well
       fee = _fee != null ? (_fee.getDefault().toString() as Quantity) : null

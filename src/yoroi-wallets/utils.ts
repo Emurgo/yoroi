@@ -69,15 +69,6 @@ export const Quantities = {
   sum: (quantities: Array<Quantity>) => {
     return quantities.reduce((result, current) => result.plus(current), new BigNumber(0)).toString() as Quantity
   },
-  subtraction: (quantities: Array<Quantity>) => {
-    const result = new BigNumber(quantities[0])
-
-    for (let i = 1; i < quantities.length; i++) {
-      result.minus(quantities[i])
-    }
-
-    return result.toString() as Quantity
-  },
   diff: (quantity1: Quantity, quantity2: Quantity) => {
     return new BigNumber(quantity1).minus(new BigNumber(quantity2)).toString() as Quantity
   },
