@@ -42,7 +42,7 @@ export const TxHistoryNavigator = () => {
   const hideModalInfo = () => setModalInfoState(false)
 
   return (
-    <>
+    <SendProvider balance={balance} wallet={wallet}>
       <Stack.Navigator screenOptions={defaultStackNavigationOptions} initialRouteName="history-list">
         <Stack.Screen
           name="history-list"
@@ -86,9 +86,7 @@ export const TxHistoryNavigator = () => {
         >
           {() => (
             <Boundary>
-              <SendProvider balance={balance} wallet={wallet}>
-                <SendScreen />
-              </SendProvider>
+              <SendScreen />
             </Boundary>
           )}
         </Stack.Screen>
@@ -114,7 +112,7 @@ export const TxHistoryNavigator = () => {
       <ModalInfo hideModalInfo={hideModalInfo} visible={modalInfoState}>
         <Text style={styles.receiveInfoText}>{strings.receiveInfoText}</Text>
       </ModalInfo>
-    </>
+    </SendProvider>
   )
 }
 

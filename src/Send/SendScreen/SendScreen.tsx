@@ -54,7 +54,7 @@ export const SendScreen = () => {
   const netInfo = useNetInfo()
   const isOnline = netInfo.type !== 'none' && netInfo.type !== 'unknown'
 
-  const {selectedTokenIdentifier, sendAll, setSendAll, receivers, amount, addReceiver, setAmount} = useSendContext()
+  const {selectedTokenIdentifier, sendAll, setSendAll, receiver, setReceiver, amount, setAmount} = useSendContext()
 
   const defaultAssetAvailableAmount = balance[defaultAsset.identifier]
   const selectedAssetAvailableAmount = balance[selectedTokenIdentifier]
@@ -90,7 +90,7 @@ export const SendScreen = () => {
   React.useEffect(() => {
     if (CONFIG.DEBUG.PREFILL_FORMS) {
       if (!__DEV__) throw new Error('using debug data in non-dev env')
-      addReceiver(CONFIG.DEBUG.SEND_ADDRESS)
+      setReceiver(CONFIG.DEBUG.SEND_ADDRESS)
       setAmount(CONFIG.DEBUG.SEND_AMOUNT)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -105,7 +105,7 @@ export const SendScreen = () => {
     const promise = recomputeAll({
       wallet,
       utxos,
-      addressInput: receivers[0],
+      addressInput: receiver,
       amount,
       sendAll,
       defaultAsset,
@@ -130,7 +130,7 @@ export const SendScreen = () => {
       setRecomputing(false)
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [receivers, amount, selectedTokenIdentifier, sendAll])
+  }, [receiver, amount, selectedTokenIdentifier, sendAll])
 
   const onConfirm = () => {
     if (sendAll) {
@@ -194,19 +194,20 @@ export const SendScreen = () => {
         <Spacer height={16} />
 
         <TextInput
-          value={receivers[0]}
+          id="address"
+          value={receiver}
           multiline
           errorOnMount
-          onChangeText={addReceiver}
+          onChangeText={(receiver) => setReceiver(receiver)}
           label={strings.addressInputLabel}
           errorText={getAddressErrorText(intl, addressErrors)}
           autoComplete={false}
         />
 
         {!recomputing &&
-          isDomain(receivers[0]) &&
+          isDomain(receiver) &&
           !hasDomainErrors(addressErrors) &&
-          !receivers[0].includes(address) /* HACK */ && (
+          !receiver.includes(address) /* HACK */ && (
             <Text ellipsizeMode="middle" numberOfLines={1}>
               {`Resolves to: ${address}`}
             </Text>

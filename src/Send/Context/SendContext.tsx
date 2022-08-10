@@ -11,14 +11,12 @@ export const SendProvider: React.FC<SendContextProvider> = ({children, balance, 
 
   const [selectedTokenIdentifier, setSelectedTokenIdentifier] = useState<TokenId>(defaultTokenId)
   const [sendAll, setSendAll] = useState(false)
-  const [receivers, setReceivers] = useState<Array<string>>([])
+  const [receiver, setReceiver] = useState('')
   const [amount, setAmount] = useState('')
-
-  const addReceiver = (receiver) => setReceivers([...receivers, receiver])
 
   const clear = () => {
     setSendAll(false)
-    setReceivers([])
+    setReceiver('')
     setAmount('')
   }
 
@@ -38,12 +36,11 @@ export const SendProvider: React.FC<SendContextProvider> = ({children, balance, 
         setSelectedTokenIdentifier,
         sendAll,
         setSendAll,
-        receivers,
-        setReceivers,
+        receiver,
+        setReceiver,
         amount,
         setAmount,
         clear,
-        addReceiver,
       }}
     >
       {children}
@@ -62,12 +59,11 @@ type SendContext = {
   setSelectedTokenIdentifier: (tokenId: TokenId) => void
   sendAll: boolean
   setSendAll: (sendAll: boolean) => void
-  receivers: Array<string>
-  setReceivers: (receivers: Array<string>) => void
+  receiver: string
+  setReceiver: (receiver: string) => void
   amount: string
   setAmount: (amount: string) => void
   clear: () => void
-  addReceiver: (receiver: string) => void
 }
 
 type SendContextProvider = {
