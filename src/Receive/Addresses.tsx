@@ -60,13 +60,13 @@ const UsedAddress = ({address, onPress}: {address: string; onPress: () => void})
   const index = useAddressIndex(address)
 
   return (
-    <Row>
+    <Row testID="usedAddress">
       <Address>
         <Text secondary small bold>{`/${index}`}</Text>
 
         <Spacer width={8} />
 
-        <Text style={{flex: 1}} secondary small numberOfLines={1} ellipsizeMode="middle" monospace>
+        <Text style={{flex: 1}} secondary small numberOfLines={1} ellipsizeMode="middle" monospace testID="addressText">
           {address}
         </Text>
       </Address>
@@ -83,13 +83,13 @@ const UnusedAddress = ({address, onPress}: {address: string; onPress: () => void
   const index = useAddressIndex(address)
 
   return (
-    <Row>
+    <Row testID="unusedAddress">
       <Address>
         <Text small bold>{`/${index}`}</Text>
 
         <Spacer width={8} />
 
-        <Text style={{flex: 1}} small numberOfLines={1} ellipsizeMode="middle" monospace>
+        <Text style={{flex: 1}} small numberOfLines={1} ellipsizeMode="middle" monospace testID="addressText">
           {address}
         </Text>
       </Address>
@@ -107,7 +107,7 @@ const Row = (props) => <View {...props} style={styles.row} />
 const Address = (props) => <View {...props} style={styles.address} />
 const Actions = (props) => <View {...props} style={styles.actions} />
 const VerifyButton = (props) => (
-  <TouchableOpacity {...props}>
+  <TouchableOpacity {...props} testID="verifyAddressButton">
     <Icon.Verify size={20} color={COLORS.GRAY} />
   </TouchableOpacity>
 )

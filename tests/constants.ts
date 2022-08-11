@@ -19,66 +19,69 @@ type RestoredWallet = {
 }
 
 export const DEFAULT_TIMEOUT = 5000
+export const LEDGER_CONFIRM_TIMEOUT = 2 * 60 * 1000 // 2 minutes
 export const DEFAULT_INTERVAL = 200
 export const VALID_PIN = '123456'
 export const WALLET_NAME = 'Testnet Wallet'
-export const WALLET_NAME_RESTORED = `Restored ${WALLET_NAME}`
+export const LEDGER_WALLET_NAME = 'Test Ledger'
 export const SPENDING_PASSWORD = '1234567890'
 export const APP_ID = 'com.emurgo.nightly'
 export const APP_ID_PARENT = 'com.emurgo.*'
 export const APP_PATH = join(process.cwd(), '/tests/app/Yoroi-Nightly.apk')
+export const NORMAL_15_WORD_WALLET: RestoredWallet = {
+  checksum: 'CONL-2085',
+  name: 'RTW-15-word',
+  phrase: [
+    'ritual',
+    'nerve',
+    'sweet',
+    'social',
+    'level',
+    'pioneer',
+    'cream',
+    'artwork',
+    'material',
+    'three',
+    'thumb',
+    'melody',
+    'zoo',
+    'fence',
+    'east',
+  ],
+  type: WalletType.NormalWallet,
+}
+export const NORMAL_24_WORD_WALLET: RestoredWallet = {
+  name: 'RTW-24-word',
+  checksum: 'CCPL-3231',
+  phrase: [
+    'like',
+    'project',
+    'body',
+    'tribe',
+    'track',
+    'wheat',
+    'noble',
+    'blur',
+    'reflect',
+    'tomorrow',
+    'beach',
+    'document',
+    'market',
+    'enforce',
+    'clever',
+    'submit',
+    'gorilla',
+    'hockey',
+    'can',
+    'surge',
+    'fossil',
+    'asthma',
+    'salmon',
+    'cry',
+  ],
+  type: WalletType.DaedalusWallet,
+}
 export const RESTORED_WALLETS: RestoredWallet[] = [
-  {
-    checksum: 'CONL-2085',
-    name: '15-word',
-    phrase: [
-      'ritual',
-      'nerve',
-      'sweet',
-      'social',
-      'level',
-      'pioneer',
-      'cream',
-      'artwork',
-      'material',
-      'three',
-      'thumb',
-      'melody',
-      'zoo',
-      'fence',
-      'east',
-    ],
-    type: WalletType.NormalWallet,
-  },
-  {
-    name: '24-word',
-    checksum: 'CCPL-3231',
-    phrase: [
-      'like',
-      'project',
-      'body',
-      'tribe',
-      'track',
-      'wheat',
-      'noble',
-      'blur',
-      'reflect',
-      'tomorrow',
-      'beach',
-      'document',
-      'market',
-      'enforce',
-      'clever',
-      'submit',
-      'gorilla',
-      'hockey',
-      'can',
-      'surge',
-      'fossil',
-      'asthma',
-      'salmon',
-      'cry',
-    ],
-    type: WalletType.DaedalusWallet,
-  },
+  NORMAL_15_WORD_WALLET,
+  NORMAL_24_WORD_WALLET,
 ]

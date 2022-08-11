@@ -222,6 +222,7 @@ export const SendScreen = ({
           label={strings.addressInputLabel}
           errorText={getAddressErrorText(intl, addressErrors)}
           autoComplete={false}
+          testID="addressInput"
         />
 
         {!recomputing &&
@@ -266,6 +267,7 @@ export const SendScreen = ({
           text={
             tokenInfo.isDefault ? strings.checkboxSendAllAssets : strings.checkboxSendAll({assetId: assetDenomination})
           }
+          testID="sendAllCheckbox"
         />
 
         {recomputing && (
@@ -276,7 +278,12 @@ export const SendScreen = ({
       </ScrollView>
 
       <View style={styles.actions}>
-        <Button onPress={onConfirm} title={strings.continueButton} disabled={!isValid || fee == null} />
+        <Button
+          onPress={onConfirm}
+          title={strings.continueButton}
+          disabled={!isValid || fee == null}
+          testID="continueButton"
+        />
       </View>
 
       <SendAllWarning

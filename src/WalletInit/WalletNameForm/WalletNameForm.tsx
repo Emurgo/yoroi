@@ -74,6 +74,7 @@ export const WalletNameForm = ({
           errorText={walletNameErrorText}
           disabled={isWaiting}
           autoComplete={false}
+          testID="walletNameInput"
         />
 
         {bottomContent}

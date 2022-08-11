@@ -36,6 +36,7 @@ export const AmountField = ({amount, error, editable, setAmount}: Props) => {
       editable={editable != null ? editable : true}
       faded={editable != null ? !editable : false}
       autoComplete={false}
+      testID="amountFieldInput"
     />
   )
 }
