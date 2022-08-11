@@ -131,3 +131,18 @@ export async function checkForErrors(): Promise<void> {
     expect(isErrorDisplayed, 'An error appeared').to.be.false
   }
 }
+
+export const getAllAssets = async (assetItemSelector: string) => {
+  return await driver.$$(assetItemSelector)
+}
+
+export const getAssetByName = async (assetName: string, assetItemSelector: string, tokenNameSelector: string) => {
+  const allAssetsComponents = await getAllAssets(assetItemSelector)
+  for (const assetComponent of allAssetsComponents) {
+    const assetComponentName = await assetComponent.$(tokenNameSelector).getText()
+    if (assetComponentName == assetName) {
+      return {success: true, component: assetComponent}
+    }
+  }
+  return {success: false, component: null}
+}
