@@ -225,7 +225,6 @@ describe('Utxos', () => {
   describe('toAmounts', () => {
     it('Empty Utxos', () => {
       const utxos: RawUtxo[] = []
-
       const primaryTokenId = 'primaryTokenId'
 
       expect(Utxos.toAmounts(utxos, primaryTokenId)).toEqual({
