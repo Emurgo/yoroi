@@ -58,7 +58,7 @@ const WalletTabNavigator = () => {
               />
             ),
             tabBarLabel: strings.stakingButton,
-            tabBarTestID: 'stakingButton',
+            tabBarTestID: 'stakingTabBarButton',
           }}
         />
       )}
