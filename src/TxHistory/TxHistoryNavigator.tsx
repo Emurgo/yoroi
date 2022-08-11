@@ -98,9 +98,8 @@ export const TxHistoryNavigator = () => {
         <Stack.Screen //
           name="address-reader-qr"
           options={{title: strings.qrScannerTitle}}
-        >
-          {() => <AddressReaderQR />}
-        </Stack.Screen>
+          component={AddressReaderQR}
+        />
 
         <Stack.Screen //
           name="send-confirm"
