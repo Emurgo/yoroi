@@ -104,9 +104,9 @@ export const ConfirmScreen = () => {
             {formatTokenWithSymbol(new BigNumber(defaultAssetAmount), getDefaultAssetByNetworkId(wallet.networkId))}
           </Text>
 
-          {Object.entries(selectedTokens).map((entry) => (
-            <Boundary key={entry[0]}>
-              <Entry tokenEntry={entry} />
+          {Object.entries(selectedTokens).map(([tokenId, quantity]) => (
+            <Boundary key={tokenId}>
+              <Entry tokenEntry={[tokenId, quantity]} />
             </Boundary>
           ))}
 
