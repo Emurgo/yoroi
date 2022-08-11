@@ -71,7 +71,6 @@ export const AssetSelectorScreen = ({balances}: Props) => {
           <Boundary>
             <AssetSelectorItem
               wallet={wallet}
-              key={tokenId}
               tokenId={tokenId}
               quantity={quantity}
               onPress={(tokenId) => {
