@@ -20,7 +20,7 @@ export const SendProvider: React.FC<SendContextProvider> = ({children, balances,
     setAmount('')
   }
 
-  if (defaultTokenId !== selectedTokenIdentifier && !balances[selectedTokenIdentifier]) {
+  if (defaultTokenId !== selectedTokenIdentifier && typeof balances[selectedTokenIdentifier] !== 'string') {
     setSelectedTokenIdentifier(defaultTokenId)
     clear()
   }

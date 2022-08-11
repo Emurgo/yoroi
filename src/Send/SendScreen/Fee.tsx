@@ -14,7 +14,7 @@ export const Fee = ({fee}: {fee: Quantity | null}) => {
   const wallet = useSelectedWallet()
   const defaultAsset = getDefaultAssetByNetworkId(wallet.networkId)
 
-  const value = fee ? formatTokenWithSymbol(new BigNumber(fee), defaultAsset) : strings.feeNotAvailable
+  const value = fee !== null ? formatTokenWithSymbol(new BigNumber(fee), defaultAsset) : strings.feeNotAvailable
 
   return (
     <Text style={styles.info}>

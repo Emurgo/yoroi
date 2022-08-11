@@ -46,7 +46,7 @@ export const TxHistoryNavigator = () => {
   const [receiver, setReceiver] = useState('')
   const [amount, setAmount] = useState('')
 
-  if (!balances[selectedTokenIdentifier]) {
+  if (typeof balances[selectedTokenIdentifier] !== 'string') {
     setSelectedTokenIdentifier(defaultTokenId)
     setSendAll(false)
     setReceiver('')
