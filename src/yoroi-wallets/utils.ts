@@ -89,10 +89,10 @@ export const Quantities = {
     new BigNumber(quantity1).isGreaterThan(new BigNumber(quantity2)),
 }
 
-export const toYoroiAmounts = (utxos: RawUtxo[], defaultAssetId: TokenId) => {
+export const toYoroiAmounts = (utxos: RawUtxo[], primaryTokenId: TokenId) => {
   return utxos.reduce(
-    (amounts: YoroiAmounts, current: RawUtxo) => {
-      amounts[defaultAssetId] = Quantities.sum([amounts[defaultAssetId], current.amount as Quantity])
+    (amounts, current) => {
+      amounts[primaryTokenId] = Quantities.sum([amounts[primaryTokenId], current.amount as Quantity])
 
       if (current.assets) {
         for (const asset of current.assets) {
@@ -105,6 +105,6 @@ export const toYoroiAmounts = (utxos: RawUtxo[], defaultAssetId: TokenId) => {
 
       return amounts
     },
-    {[defaultAssetId]: '0'},
+    {[primaryTokenId]: '0'} as YoroiAmounts,
   )
 }
