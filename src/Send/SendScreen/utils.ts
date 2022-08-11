@@ -131,7 +131,7 @@ export const recomputeAll = async ({
       const minAda =
         !selectedTokenInfo.isDefault && isHaskellShelleyNetwork(selectedTokenInfo.networkId)
           ? (new BigNumber(await getMinAda(selectedTokenInfo, defaultAsset)).toString() as Quantity)
-          : (new BigNumber('0').toString() as Quantity)
+          : '0'
 
       if (sendAll) {
         yoroiUnsignedTx = await getTransactionData(
