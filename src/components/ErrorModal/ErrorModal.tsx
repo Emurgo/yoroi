@@ -23,7 +23,7 @@ export const ErrorView = ({title, errorMessage, errorLogs, onDismiss}: ErrorView
   }
 
   return (
-    <ScrollView style={styles.scrollView}>
+    <ScrollView style={styles.scrollView} testID="errorView">
       <View style={styles.headerView}>
         <Text style={styles.title}>{title ?? intl.formatMessage(errorMessages.generalLocalizableError.title)}</Text>
         <Image source={image} style={styles.image} />
@@ -33,7 +33,12 @@ export const ErrorView = ({title, errorMessage, errorLogs, onDismiss}: ErrorView
 
       {errorLogs != null && (
         <View style={styles.errorSection}>
-          <TouchableOpacity accessibilityRole="button" onPress={toggleShowErrorlogs} activeOpacity={0.5}>
+          <TouchableOpacity
+            accessibilityRole="button"
+            onPress={toggleShowErrorlogs}
+            activeOpacity={0.5}
+            testID="showErrorLogsButton"
+          >
             <View style={styles.errorSectionHeader}>
               <Text style={styles.showErrorTrigger}>
                 {showErrorLogs ? intl.formatMessage(messages.hideError) : intl.formatMessage(messages.showError)}
@@ -51,7 +56,12 @@ export const ErrorView = ({title, errorMessage, errorLogs, onDismiss}: ErrorView
           )}
         </View>
       )}
-      <Button block onPress={onDismiss} title={intl.formatMessage(globalMessages.close)} />
+      <Button
+        block
+        onPress={onDismiss}
+        title={intl.formatMessage(globalMessages.close)}
+        testID="closeErrorModalButton"
+      />
     </ScrollView>
   )
 }

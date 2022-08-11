@@ -48,7 +48,7 @@ export const CheckNanoXScreen = () => {
       </ScrollView>
 
       <Actions>
-        <Button onPress={onContinue} title={strings.continueButton} />
+        <Button onPress={onContinue} title={strings.continueButton} testID="continueButton" />
       </Actions>
     </SafeAreaView>
   )
