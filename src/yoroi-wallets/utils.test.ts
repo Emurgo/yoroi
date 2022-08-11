@@ -1,5 +1,6 @@
+import {RawUtxo} from '../legacy/types'
 import {Quantity, YoroiAmount, YoroiAmounts, YoroiEntries, YoroiEntry} from './types'
-import {Amounts, Entries, Quantities} from './utils'
+import {Amounts, Entries, Quantities, Utxos} from './utils'
 
 describe('Quantities', () => {
   it('sum', () => {
@@ -23,6 +24,11 @@ describe('Quantities', () => {
   it('quotient', () => {
     expect(Quantities.quotient('1', '2')).toEqual('0.5' as Quantity)
     expect(Quantities.quotient('2', '1')).toEqual('2' as Quantity)
+  })
+  it('isGreaterThan', () => {
+    expect(Quantities.isGreaterThan('1', '2')).toBe(false)
+    expect(Quantities.isGreaterThan('2', '2')).toBe(false)
+    expect(Quantities.isGreaterThan('2', '1')).toBe(true)
   })
 })
 
@@ -211,6 +217,56 @@ describe('Entries', () => {
       '': '3',
       token123: '6',
       token567: '-6',
+    } as YoroiAmounts)
+  })
+})
+
+describe('Utxos', () => {
+  it('toAmounts', () => {
+    const utxos: RawUtxo[] = [
+      {
+        amount: '10',
+        assets: [
+          {assetId: 'token123', amount: '10', policyId: '', name: ''},
+          {assetId: 'token567', amount: '6', policyId: '', name: ''},
+        ],
+        receiver: '',
+        tx_hash: '',
+        tx_index: 12,
+        utxo_id: '',
+      },
+      {
+        amount: '6',
+        assets: [{assetId: 'token123', amount: '5', policyId: '', name: ''}],
+        receiver: '',
+        tx_hash: '',
+        tx_index: 13,
+        utxo_id: '',
+      },
+      {
+        amount: '3',
+        assets: [{assetId: 'token567', amount: '2', policyId: '', name: ''}],
+        receiver: '',
+        tx_hash: '',
+        tx_index: 15,
+        utxo_id: '',
+      },
+      {
+        amount: '4',
+        receiver: '',
+        tx_hash: '',
+        tx_index: 14,
+        utxo_id: '',
+        assets: [],
+      },
+    ]
+
+    const primaryTokenId = 'primaryTokenId'
+
+    expect(Utxos.toAmounts(utxos, primaryTokenId)).toEqual({
+      primaryTokenId: '23',
+      token123: '15',
+      token567: '8',
     } as YoroiAmounts)
   })
 })
