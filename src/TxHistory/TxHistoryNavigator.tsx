@@ -36,7 +36,7 @@ export const TxHistoryNavigator = () => {
   const walletName = useWalletName(wallet)
   const transactionInfos = useSelector(transactionsInfoSelector)
   const defaultTokenId = getDefaultAssetByNetworkId(wallet.networkId).identifier
-  const balance = useBalances(wallet, defaultTokenId)
+  const balances = useBalances(wallet, defaultTokenId)
   const [modalInfoState, setModalInfoState] = useState(false)
   const showModalInfo = () => setModalInfoState(true)
   const hideModalInfo = () => setModalInfoState(false)
@@ -46,7 +46,7 @@ export const TxHistoryNavigator = () => {
   const [receiver, setReceiver] = useState('')
   const [amount, setAmount] = useState('')
 
-  if (!balance[selectedTokenIdentifier]) {
+  if (!balances[selectedTokenIdentifier]) {
     setSelectedTokenIdentifier(defaultTokenId)
     setSendAll(false)
     setReceiver('')
@@ -114,7 +114,7 @@ export const TxHistoryNavigator = () => {
         <Stack.Screen name="select-asset" options={{title: strings.selectAssetTitle}}>
           {({navigation}: {navigation: TxHistoryRouteNavigation}) => (
             <AssetSelectorScreen
-              balance={balance}
+              balances={balances}
               onSelect={(tokenId) => {
                 setSendAll(false)
                 setSelectedTokenIdentifier(tokenId)

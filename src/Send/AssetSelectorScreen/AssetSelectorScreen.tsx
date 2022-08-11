@@ -20,12 +20,12 @@ import {YoroiWallet} from '../../yoroi-wallets'
 import {Quantity, TokenId, YoroiAmounts} from '../../yoroi-wallets/types'
 
 type Props = {
-  balance: YoroiAmounts
+  balances: YoroiAmounts
   onSelect: (tokenId: TokenId) => void
   onSelectAll: () => void
 }
 
-export const AssetSelectorScreen = ({balance, onSelect, onSelectAll}: Props) => {
+export const AssetSelectorScreen = ({balances, onSelect, onSelectAll}: Props) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const defaultAsset = getDefaultAssetByNetworkId(wallet.networkId)
@@ -37,12 +37,12 @@ export const AssetSelectorScreen = ({balance, onSelect, onSelectAll}: Props) => 
 
   const sortedBalance: Array<[TokenId, Quantity]> = useMemo(
     () =>
-      Object.entries(balance)
+      Object.entries(balances)
         .sort(([, quantityA]: [TokenId, Quantity], [, quantityB]: [TokenId, Quantity]) =>
           new BigNumber(quantityA).isGreaterThan(new BigNumber(quantityB)) ? -1 : 1,
         )
         .sort(([tokenId]: [TokenId, Quantity]) => (tokenId === defaultAsset.identifier ? -1 : 1)), // default first
-    [balance, defaultAsset.identifier],
+    [balances, defaultAsset.identifier],
   )
 
   return (
