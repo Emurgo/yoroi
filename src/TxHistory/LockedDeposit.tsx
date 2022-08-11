@@ -9,6 +9,7 @@ import {Boundary, Spacer, Text} from '../components'
 import globalMessages from '../i18n/global-messages'
 import {formatTokenWithText, formatTokenWithTextWhenHidden} from '../legacy/format'
 import {availableAssetsSelector, tokenBalanceSelector} from '../legacy/selectors'
+import {isEmptyString} from '../legacy/utils'
 import {useSelectedWallet} from '../SelectedWallet'
 import {Token} from '../types'
 import {YoroiWallet} from '../yoroi-wallets'
@@ -43,7 +44,7 @@ function LockedAmount({token}: {token: Token}) {
   const lockedAmount = useLockedAmount({
     wallet,
   })
-  const amount = formatTokenWithText(new BigNumber(lockedAmount || 0), token)
+  const amount = formatTokenWithText(new BigNumber(!isEmptyString(lockedAmount) ? lockedAmount : 0), token)
 
   return <FormattedAmount amount={amount} />
 }

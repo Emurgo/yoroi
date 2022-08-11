@@ -12,7 +12,7 @@ import {spacing} from '../../theme'
 import {getWalletNameError, validateWalletName} from '../../yoroi-wallets/utils/validators'
 
 type Props = {
-  onSubmit: ({name: string}) => void
+  onSubmit: ({name}: {name: string}) => void
   defaultWalletName?: string
   image?: ImageSourcePropType
   progress?: {
@@ -37,7 +37,7 @@ export const WalletNameForm = ({
   isWaiting = false,
 }: Props) => {
   const strings = useStrings()
-  const [name, setName] = React.useState(CONFIG.HARDWARE_WALLETS.LEDGER_NANO.DEFAULT_WALLET_NAME || '')
+  const [name, setName] = React.useState(CONFIG.HARDWARE_WALLETS.LEDGER_NANO.DEFAULT_WALLET_NAME ?? '')
   const walletNames = useWalletNames()
   const validationErrors = validateWalletName(name, null, walletNames || [])
   const hasErrors = Object.keys(validationErrors).length > 0
@@ -46,7 +46,7 @@ export const WalletNameForm = ({
     nameAlreadyTaken: strings.walletNameErrorNameAlreadyTaken,
     mustBeFilled: strings.walletNameErrorMustBeFilled,
   }
-  const walletNameErrorText = getWalletNameError(errorMessages, validationErrors) || undefined
+  const walletNameErrorText = getWalletNameError(errorMessages, validationErrors) ?? undefined
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const submit = React.useCallback((ignoreConcurrentAsyncHandler as any)(() => () => onSubmit({name}), 1000)(), [

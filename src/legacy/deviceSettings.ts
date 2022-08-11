@@ -9,7 +9,7 @@ const {KeyStoreBridge} = NativeModules
 
 export class KeysAreInvalid extends ExtendableError {}
 
-export const isBiometricEncryptionHardwareSupported = async () => {
+export const isBiometricEncryptionHardwareSupported = async (): Promise<boolean> => {
   if (Platform.OS === 'android') {
     return KeyStoreBridge.isFingerprintEncryptionHardwareSupported()
   } else if (Platform.OS === 'ios') {
@@ -22,7 +22,7 @@ export const isBiometricEncryptionHardwareSupported = async () => {
   throw new Error('Unsupported platform')
 }
 
-export const canBiometricEncryptionBeEnabled = async () => {
+export const canBiometricEncryptionBeEnabled = async (): Promise<boolean> => {
   if (Platform.OS === 'android') {
     return KeyStoreBridge.canFingerprintEncryptionBeEnabled()
   } else if (Platform.OS === 'ios') {
@@ -36,7 +36,7 @@ export const canBiometricEncryptionBeEnabled = async () => {
   throw new Error('Unsupported platform')
 }
 
-export const isSystemAuthSupported = async () => {
+export const isSystemAuthSupported = async (): Promise<boolean> => {
   if (Platform.OS === 'android') {
     return KeyStoreBridge.isSystemAuthSupported()
   } else if (Platform.OS === 'ios') {
@@ -49,7 +49,7 @@ export const isSystemAuthSupported = async () => {
   throw new Error('Unsupported platform')
 }
 
-export const isBiometricPromptSupported = async () => {
+export const isBiometricPromptSupported = async (): Promise<boolean> => {
   if (Platform.OS === 'android') {
     return KeyStoreBridge.isBiometricPromptSupported()
   } else if (Platform.OS === 'ios') {

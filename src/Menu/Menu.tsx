@@ -35,7 +35,7 @@ export const Menu = () => {
   const strings = useStrings()
   const navigateTo = useNavigateTo()
   const walletMetas = useWalletMetas()
-  const walletCount = walletMetas?.length || ''
+  const walletCount = walletMetas?.length ?? ''
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>

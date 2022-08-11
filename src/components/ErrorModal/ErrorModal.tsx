@@ -2,15 +2,16 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Image, LayoutAnimation, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
-import image from '../../assets//img/error.png'
+import image from '../../assets/img/error.png'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
+import {isEmptyString} from '../../legacy/utils'
 import {brand, COLORS, spacing} from '../../theme'
 import {Button, Icon, Modal} from '..'
 
 type ErrorViewProps = {
   title?: string
   errorMessage: string
-  errorLogs?: string | null
+  errorLogs: string | undefined | null
   onDismiss: () => void
 }
 
@@ -31,7 +32,7 @@ export const ErrorView = ({title, errorMessage, errorLogs, onDismiss}: ErrorView
 
       <Text style={styles.paragraph}>{errorMessage}</Text>
 
-      {errorLogs != null && (
+      {!isEmptyString(errorLogs) && (
         <View style={styles.errorSection}>
           <TouchableOpacity accessibilityRole="button" onPress={toggleShowErrorlogs} activeOpacity={0.5}>
             <View style={styles.errorSectionHeader}>
@@ -60,7 +61,7 @@ type Props = {
   visible: boolean
   title?: string
   errorMessage: string
-  errorLogs?: string | null
+  errorLogs: string | null
   onRequestClose: () => void
 }
 

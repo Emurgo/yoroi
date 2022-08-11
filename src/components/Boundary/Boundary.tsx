@@ -35,7 +35,7 @@ const LoadingBoundary: React.FC<LoadingBoundaryProps> = ({children, ...props}) =
   if (props.loading?.enabled === false) return <>{children}</>
 
   return (
-    <React.Suspense fallback={props.loading?.fallback || <LoadingFallback {...props.loading?.fallbackProps} />}>
+    <React.Suspense fallback={props.loading?.fallback ?? <LoadingFallback {...props.loading?.fallbackProps} />}>
       {children}
     </React.Suspense>
   )

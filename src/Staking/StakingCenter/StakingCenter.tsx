@@ -32,6 +32,7 @@ import {
   utxosSelector,
 } from '../../legacy/selectors'
 import {RawUtxo} from '../../legacy/types'
+import {isEmptyString} from '../../legacy/utils'
 import {StakingCenterRouteNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {DefaultAsset} from '../../types'
@@ -64,7 +65,7 @@ export const StakingCenter = () => {
   const poolList = poolOperator != null ? [poolOperator] : null
 
   const handleOnPress = (poolHash: string) => {
-    const selectedPoolHashes = poolHash ? [poolHash] : nightlyAndDevPoolHashes
+    const selectedPoolHashes = !isEmptyString(poolHash) ? [poolHash] : nightlyAndDevPoolHashes
     Logger.debug('manual inputted or config pool:', selectedPoolHashes)
     delegate(selectedPoolHashes)
   }
@@ -85,7 +86,7 @@ export const StakingCenter = () => {
     try {
       setBusy(true)
 
-      if (selectedPoolHashes.length) {
+      if (selectedPoolHashes.length > 0) {
         await handleSelectedPoolHashes(
           selectedPoolHashes,
           setSelectedPools,
@@ -111,7 +112,7 @@ export const StakingCenter = () => {
           const utxosForKey = await wallet.getAllUtxosForKey(utxos)
           const _amountToDelegate = utxosForKey
             .map((utxo) => utxo.amount)
-            .reduce((x: BigNumber, y) => x.plus(new BigNumber(y || 0)), new BigNumber(0))
+            .reduce((x: BigNumber, y) => x.plus(new BigNumber(isEmptyString(y) ? 0 : y)), new BigNumber(0))
           setAmountToDelegate(
             normalizeTokenAmount(_amountToDelegate, getDefaultAssetByNetworkId(wallet.networkId)).toString(),
           )
@@ -130,7 +131,7 @@ export const StakingCenter = () => {
         <View style={{flex: 1}}>
           <PoolDetailScreen
             onPressDelegate={(poolHash) => handleOnPress(poolHash)}
-            disabled={!nightlyAndDevPoolHashes.length || isFetchingUtxos || !utxos}
+            disabled={nightlyAndDevPoolHashes.length === 0 || isFetchingUtxos || !utxos}
           />
         </View>
       )}
