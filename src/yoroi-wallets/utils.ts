@@ -96,12 +96,14 @@ export const Utxos = {
         amounts[primaryTokenId] = Quantities.sum([amounts[primaryTokenId], current.amount as Quantity])
 
         if (current.assets) {
-          for (const asset of current.assets) {
-            amounts[asset.assetId] = Quantities.sum([
-              amounts[asset.assetId] ?? ('0' as Quantity),
-              asset.amount as Quantity,
+          current.assets.reduce((amounts, current) => {
+            amounts[current.assetId] = Quantities.sum([
+              amounts[current.assetId] ?? ('0' as Quantity),
+              current.amount as Quantity,
             ])
-          }
+
+            return amounts
+          }, amounts)
         }
 
         return amounts
