@@ -54,10 +54,10 @@ export const SendScreen = () => {
   const netInfo = useNetInfo()
   const isOnline = netInfo.type !== 'none' && netInfo.type !== 'unknown'
 
-  const {selectedTokenIdentifier, sendAll, setSendAll, receiver, setReceiver, amount, setAmount} = useSendContext()
 
-  const defaultAssetAvailableAmount = balances[defaultAsset.identifier]
+  const {selectedTokenIdentifier, sendAll, setSendAll, receiver, setReceiver, amount, setAmount} = useSendContext()
   const selectedAssetAvailableAmount = balances[selectedTokenIdentifier]
+  const defaultAssetAvailableAmount = balances[defaultAsset.identifier]
 
   if (!selectedAssetAvailableAmount) {
     throw new Error('Invalid token')
