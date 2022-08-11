@@ -6,7 +6,6 @@ import {useSelector} from 'react-redux'
 
 import {Boundary, Icon} from '../components'
 import {useBalances, useWalletName} from '../hooks'
-import {getDefaultAssetByNetworkId} from '../legacy/config'
 import {formatDateToSeconds} from '../legacy/format'
 import {transactionsInfoSelector} from '../legacy/selectors'
 import {
@@ -35,7 +34,6 @@ export const TxHistoryNavigator = () => {
 
   const walletName = useWalletName(wallet)
   const transactionInfos = useSelector(transactionsInfoSelector)
-  const defaultTokenId = getDefaultAssetByNetworkId(wallet.networkId).identifier
   const balances = useBalances(wallet)
   const [modalInfoState, setModalInfoState] = useState(false)
   const showModalInfo = () => setModalInfoState(true)
