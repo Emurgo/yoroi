@@ -97,8 +97,8 @@ export const TxHistoryNavigator = () => {
 
         <Stack.Screen //
           name="address-reader-qr"
-          options={{title: strings.qrScannerTitle}}
           component={AddressReaderQR}
+          options={{title: strings.qrScannerTitle}}
         />
 
         <Stack.Screen //
