@@ -1,7 +1,8 @@
 import fs, {promises as fsAsync} from 'fs'
-import {appiumLogsPath, screenshotsDir} from './testPaths'
+import {appiumLogsPath, artifactsDir, screenshotsDir} from './testPaths'
 import {APP_ID, APP_ID_PARENT, APP_PATH} from '../constants'
 import {prepareAppIfNecessary} from "../helpers/utils";
+import rimraf from 'rimraf'
 
 export const config: WebdriverIO.Config = {
   runner: 'local',
@@ -74,8 +75,10 @@ export const config: WebdriverIO.Config = {
    * @param {Object} config wdio configuration object
    * @param {Array.<Object>} capabilities list of capabilities details
    */
-  // onPrepare: function (config, capabilities) {
-  // },
+  onPrepare: function (config, capabilities) {
+    rimraf.sync(artifactsDir)
+    fs.mkdirSync(artifactsDir)
+  },
   /**
    * Gets executed before a worker process is spawned and can be used to initialise specific service
    * for that worker as well as modify runtime environments in an async fashion.
