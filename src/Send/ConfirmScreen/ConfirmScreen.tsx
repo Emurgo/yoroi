@@ -103,7 +103,7 @@ export const ConfirmScreen = () => {
 
           {Object.entries(selectedTokens).map(([tokenId, quantity]) => (
             <Boundary key={tokenId}>
-              <Entry tokenEntry={[tokenId, quantity]} />
+              <Entry tokenId={tokenId} quantity={quantity} />
             </Boundary>
           ))}
 
@@ -137,7 +137,7 @@ export const ConfirmScreen = () => {
   )
 }
 
-const Entry = ({tokenEntry: [tokenId, quantity]}: {tokenEntry: [TokenId, Quantity]}) => {
+const Entry = ({tokenId, quantity}: {tokenId: TokenId; quantity: Quantity}) => {
   const wallet = useSelectedWallet()
   const tokenInfo = useTokenInfo({wallet, tokenId})
 
