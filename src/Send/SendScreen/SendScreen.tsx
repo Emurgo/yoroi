@@ -48,7 +48,7 @@ export const SendScreen = () => {
   const isFetchingBalance = useSelector(isFetchingUtxosSelector)
   const lastFetchingError = useSelector(lastUtxosFetchErrorSelector)
   const defaultAsset = getDefaultAssetByNetworkId(wallet.networkId)
-  const balances = useBalances(wallet, defaultAsset.identifier)
+  const balances = useBalances(wallet)
   const utxos = useSelector(utxosSelector)
   const hasPendingOutgoingTransaction = useSelector(hasPendingOutgoingTransactionSelector)
   const netInfo = useNetInfo()

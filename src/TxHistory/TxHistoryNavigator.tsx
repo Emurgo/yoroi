@@ -36,7 +36,7 @@ export const TxHistoryNavigator = () => {
   const walletName = useWalletName(wallet)
   const transactionInfos = useSelector(transactionsInfoSelector)
   const defaultTokenId = getDefaultAssetByNetworkId(wallet.networkId).identifier
-  const balances = useBalances(wallet, defaultTokenId)
+  const balances = useBalances(wallet)
   const [modalInfoState, setModalInfoState] = useState(false)
   const showModalInfo = () => setModalInfoState(true)
   const hideModalInfo = () => setModalInfoState(false)
