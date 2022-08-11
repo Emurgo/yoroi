@@ -125,12 +125,10 @@ export const recomputeAll = async ({
 
   if (_.isEmpty(addressErrors) && utxos) {
     try {
-      let _fee: MultiToken | null = null
-
       // we'll substract minAda from ADA balance if we are sending a token
       const minAda =
         !selectedTokenInfo.isDefault && isHaskellShelleyNetwork(selectedTokenInfo.networkId)
-          ? (new BigNumber(await getMinAda(selectedTokenInfo, defaultAsset)).toString() as Quantity)
+          ? ((await getMinAda(selectedTokenInfo, defaultAsset)) as Quantity)
           : '0'
 
       if (sendAll) {
@@ -143,14 +141,12 @@ export const recomputeAll = async ({
           defaultAsset,
           selectedTokenInfo,
         )
-        _fee = new MultiToken(yoroiUnsignedTx.unsignedTx.fee.values, {
-          defaultNetworkId: yoroiUnsignedTx.unsignedTx.fee.defaults.networkId,
-          defaultIdentifier: yoroiUnsignedTx.unsignedTx.fee.defaults.identifier,
-        })
+
+        fee = yoroiUnsignedTx.fee[defaultAsset.identifier]
 
         if (selectedTokenInfo.isDefault) {
           recomputedAmount = normalizeTokenAmount(
-            new BigNumber(defaultAssetAvailableAmount).minus(_fee.getDefault()),
+            new BigNumber(Quantities.diff(defaultAssetAvailableAmount, fee)),
             selectedTokenInfo,
           ).toString()
 
@@ -161,10 +157,7 @@ export const recomputeAll = async ({
             selectedTokenInfo,
           ).toString()
 
-          balanceAfter = Quantities.sum([
-            defaultAssetAvailableAmount,
-            Quantities.sum([_fee.getDefault().toString() as Quantity, minAda].map(Quantities.negated)),
-          ])
+          balanceAfter = Quantities.diff(defaultAssetAvailableAmount, Quantities.sum([fee, minAda]))
         }
 
         // for sendAll we set the amount so the format is error-free
@@ -184,18 +177,10 @@ export const recomputeAll = async ({
           selectedTokenInfo,
         )
 
-        _fee = new MultiToken(yoroiUnsignedTx.unsignedTx.fee.values, {
-          defaultNetworkId: yoroiUnsignedTx.unsignedTx.fee.defaults.networkId,
-          defaultIdentifier: yoroiUnsignedTx.unsignedTx.fee.defaults.identifier,
-        })
+        fee = yoroiUnsignedTx.fee[defaultAsset.identifier]
 
-        balanceAfter = Quantities.sum([
-          defaultAssetAvailableAmount,
-          Quantities.sum([parsedAmount, minAda, _fee.getDefault().toString() as Quantity].map(Quantities.negated)),
-        ])
+        balanceAfter = Quantities.diff(defaultAssetAvailableAmount, Quantities.sum([parsedAmount, minAda, fee]))
       }
-      // now we can update fee as well
-      fee = _fee != null ? (_fee.getDefault().toString() as Quantity) : null
     } catch (err) {
       if (
         err instanceof NotEnoughMoneyToSendError ||
