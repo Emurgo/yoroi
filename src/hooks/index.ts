@@ -17,6 +17,7 @@ import {useDispatch} from 'react-redux'
 
 import {clearAccountState} from '../legacy/account'
 import {signout} from '../legacy/actions'
+import {getDefaultAssetByNetworkId} from '../legacy/config'
 import KeyStore from '../legacy/KeyStore'
 import {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {WalletMeta} from '../legacy/state'
@@ -36,7 +37,7 @@ import {
   YoroiWallet,
 } from '../yoroi-wallets'
 import {generateShelleyPlateFromKey} from '../yoroi-wallets/cardano/shelley/plate'
-import {TokenId, YoroiAmounts, YoroiSignedTx, YoroiUnsignedTx} from '../yoroi-wallets/types'
+import {YoroiAmounts, YoroiSignedTx, YoroiUnsignedTx} from '../yoroi-wallets/types'
 import {toYoroiAmounts} from '../yoroi-wallets/utils'
 
 // WALLET
@@ -706,13 +707,16 @@ export const useLogout = () => {
   }
 }
 
-export const useBalances = (wallet: YoroiWallet, defaultTokenId: TokenId): YoroiAmounts => {
+export const useBalances = (wallet: YoroiWallet): YoroiAmounts => {
   const {refetch, ...query} = useQuery({
     suspense: true,
     queryKey: [wallet.id, 'utxos'],
-    queryFn: async () => wallet.fetchUTXOs(),
     refetchInterval: 20000,
-    select: (utxos: RawUtxo[]) => toYoroiAmounts(utxos, defaultTokenId),
+    queryFn: () => {
+      const primaryTokenId = getDefaultAssetByNetworkId(wallet.networkId).identifier
+
+      return wallet.fetchUTXOs().then((utxos) => toYoroiAmounts(utxos, primaryTokenId))
+    },
   })
 
   const netInfo = useNetInfo()
