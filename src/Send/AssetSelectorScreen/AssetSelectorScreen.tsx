@@ -20,6 +20,7 @@ import {COLORS} from '../../theme'
 import {Token} from '../../types'
 import {YoroiWallet} from '../../yoroi-wallets'
 import {Quantity, TokenId, YoroiAmounts} from '../../yoroi-wallets/types'
+import {Quantities} from '../../yoroi-wallets/utils'
 import {useSendContext} from '../Context/SendContext'
 
 type Props = {
@@ -43,7 +44,7 @@ export const AssetSelectorScreen = ({balances}: Props) => {
     () =>
       Object.entries(balances)
         .sort(([, quantityA]: [TokenId, Quantity], [, quantityB]: [TokenId, Quantity]) =>
-          new BigNumber(quantityA).isGreaterThan(new BigNumber(quantityB)) ? -1 : 1,
+          Quantities.isGreaterThan(quantityA, quantityB) ? -1 : 1,
         )
         .sort(([tokenId]: [TokenId, Quantity]) => (tokenId === defaultAsset.identifier ? -1 : 1)), // default first
     [balances, defaultAsset.identifier],

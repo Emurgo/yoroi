@@ -85,6 +85,8 @@ export const Quantities = {
   quotient: (quantity1: Quantity, quantity2: Quantity) => {
     return new BigNumber(quantity1).dividedBy(new BigNumber(quantity2)).toString() as Quantity
   },
+  isGreaterThan: (quantity1: Quantity, quantity2: Quantity) =>
+    new BigNumber(quantity1).isGreaterThan(new BigNumber(quantity2)),
 }
 
 export const toYoroiAmounts = (utxos: RawUtxo[], defaultAssetId: TokenId) => {
