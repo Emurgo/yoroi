@@ -96,7 +96,7 @@ export const Utxos = {
         const amounts = {
           ...previousAmounts,
           [primaryTokenId]: Quantities.sum([previousAmounts[primaryTokenId], currentUtxo.amount as Quantity]),
-        } as YoroiAmounts
+        }
 
         if (currentUtxo.assets) {
           return currentUtxo.assets.reduce((previousAmountsWithAssets, currentAsset) => {
