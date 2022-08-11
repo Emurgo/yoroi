@@ -92,17 +92,21 @@ export const Quantities = {
 export const Utxos = {
   toAmounts: (utxos: RawUtxo[], primaryTokenId: TokenId) => {
     return utxos.reduce(
-      (amounts, current) => {
-        amounts[primaryTokenId] = Quantities.sum([amounts[primaryTokenId], current.amount as Quantity])
+      (previousAmounts, currentUtxo) => {
+        const amounts = {
+          ...previousAmounts,
+          [primaryTokenId]: Quantities.sum([previousAmounts[primaryTokenId], currentUtxo.amount as Quantity]),
+        } as YoroiAmounts
 
-        if (current.assets) {
-          current.assets.reduce((amounts, current) => {
-            amounts[current.assetId] = Quantities.sum([
-              amounts[current.assetId] ?? ('0' as Quantity),
-              current.amount as Quantity,
-            ])
-
-            return amounts
+        if (currentUtxo.assets) {
+          return currentUtxo.assets.reduce((previousAmountsWithAssets, currentAsset) => {
+            return {
+              ...previousAmountsWithAssets,
+              [currentAsset.assetId]: Quantities.sum([
+                previousAmountsWithAssets[currentAsset.assetId] ?? ('0' as Quantity),
+                currentAsset.amount as Quantity,
+              ]),
+            }
           }, amounts)
         }
 
