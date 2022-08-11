@@ -222,51 +222,106 @@ describe('Entries', () => {
 })
 
 describe('Utxos', () => {
-  it('toAmounts', () => {
-    const utxos: RawUtxo[] = [
-      {
-        amount: '10',
-        assets: [
-          {assetId: 'token123', amount: '10', policyId: '', name: ''},
-          {assetId: 'token567', amount: '6', policyId: '', name: ''},
-        ],
-        receiver: '',
-        tx_hash: '',
-        tx_index: 12,
-        utxo_id: '',
-      },
-      {
-        amount: '6',
-        assets: [{assetId: 'token123', amount: '5', policyId: '', name: ''}],
-        receiver: '',
-        tx_hash: '',
-        tx_index: 13,
-        utxo_id: '',
-      },
-      {
-        amount: '3',
-        assets: [{assetId: 'token567', amount: '2', policyId: '', name: ''}],
-        receiver: '',
-        tx_hash: '',
-        tx_index: 15,
-        utxo_id: '',
-      },
-      {
-        amount: '4',
-        receiver: '',
-        tx_hash: '',
-        tx_index: 14,
-        utxo_id: '',
-        assets: [],
-      },
-    ]
+  describe('toAmounts', () => {
+    it('Empty Utxos', () => {
+      const utxos: RawUtxo[] = []
 
-    const primaryTokenId = 'primaryTokenId'
+      const primaryTokenId = 'primaryTokenId'
 
-    expect(Utxos.toAmounts(utxos, primaryTokenId)).toEqual({
-      primaryTokenId: '23',
-      token123: '15',
-      token567: '8',
-    } as YoroiAmounts)
+      expect(Utxos.toAmounts(utxos, primaryTokenId)).toEqual({
+        primaryTokenId: '0',
+      } as YoroiAmounts)
+    })
+
+    it('Utxos without tokens', () => {
+      const utxos: RawUtxo[] = [
+        {
+          amount: '10',
+          assets: [],
+          receiver: '',
+          tx_hash: '',
+          tx_index: 12,
+          utxo_id: '',
+        },
+        {
+          amount: '6',
+          assets: [],
+          receiver: '',
+          tx_hash: '',
+          tx_index: 13,
+          utxo_id: '',
+        },
+        {
+          amount: '3',
+          assets: [],
+          receiver: '',
+          tx_hash: '',
+          tx_index: 15,
+          utxo_id: '',
+        },
+        {
+          amount: '19',
+          receiver: '',
+          tx_hash: '',
+          tx_index: 14,
+          utxo_id: '',
+          assets: [],
+        },
+      ]
+
+      const primaryTokenId = 'primaryTokenId'
+
+      expect(Utxos.toAmounts(utxos, primaryTokenId)).toEqual({
+        primaryTokenId: '38',
+      } as YoroiAmounts)
+    })
+
+    it('Regular Utxos', () => {
+      const utxos: RawUtxo[] = [
+        {
+          amount: '10',
+          assets: [
+            {assetId: 'token123', amount: '10', policyId: '', name: ''},
+            {assetId: 'token567', amount: '6', policyId: '', name: ''},
+          ],
+          receiver: '',
+          tx_hash: '',
+          tx_index: 12,
+          utxo_id: '',
+        },
+        {
+          amount: '6',
+          assets: [{assetId: 'token123', amount: '5', policyId: '', name: ''}],
+          receiver: '',
+          tx_hash: '',
+          tx_index: 13,
+          utxo_id: '',
+        },
+        {
+          amount: '3',
+          assets: [{assetId: 'token567', amount: '2', policyId: '', name: ''}],
+          receiver: '',
+          tx_hash: '',
+          tx_index: 15,
+          utxo_id: '',
+        },
+        {
+          amount: '4',
+          receiver: '',
+          tx_hash: '',
+          tx_index: 14,
+          utxo_id: '',
+          assets: [],
+        },
+      ]
+
+      const primaryTokenId = 'primaryTokenId'
+
+      expect(Utxos.toAmounts(utxos, primaryTokenId)).toEqual({
+        primaryTokenId: '23',
+        token123: '15',
+        token567: '8',
+      } as YoroiAmounts)
+    })
   })
 })
