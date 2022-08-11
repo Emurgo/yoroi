@@ -38,7 +38,7 @@ import {
 } from '../yoroi-wallets'
 import {generateShelleyPlateFromKey} from '../yoroi-wallets/cardano/shelley/plate'
 import {YoroiAmounts, YoroiSignedTx, YoroiUnsignedTx} from '../yoroi-wallets/types'
-import {toYoroiAmounts} from '../yoroi-wallets/utils'
+import {Utxos} from '../yoroi-wallets/utils'
 
 // WALLET
 export const useCloseWallet = ({onSuccess, ...options}: UseMutationOptions<void, Error> = {}) => {
@@ -715,7 +715,7 @@ export const useBalances = (wallet: YoroiWallet): YoroiAmounts => {
     queryFn: () => {
       const primaryTokenId = getDefaultAssetByNetworkId(wallet.networkId).identifier
 
-      return wallet.fetchUTXOs().then((utxos) => toYoroiAmounts(utxos, primaryTokenId))
+      return wallet.fetchUTXOs().then((utxos) => Utxos.toAmounts(utxos, primaryTokenId))
     },
   })
 
