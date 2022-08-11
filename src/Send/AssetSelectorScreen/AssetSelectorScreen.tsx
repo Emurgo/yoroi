@@ -84,7 +84,7 @@ export const AssetSelectorScreen = ({balances}: Props) => {
         )}
         bounces={false}
         contentContainerStyle={{paddingHorizontal: 16}}
-        keyExtractor={(entry) => entry[0]}
+        keyExtractor={([tokenId]) => tokenId}
       />
 
       <Actions>
