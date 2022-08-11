@@ -1,7 +1,7 @@
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {balance, mockWallet} from '../../../storybook'
+import {balances, mockWallet} from '../../../storybook'
 import {SelectedWalletProvider} from '../../SelectedWallet'
 import {SendProvider, useSendContext} from '../Context/SendContext'
 import {SendScreen} from './SendScreen'
@@ -15,7 +15,7 @@ const SendScreenTest = ({isSendAll}: Props) => {
   mockWallet.subscribe = () => undefined
 
   return (
-    <SendProvider wallet={mockWallet} balance={balance}>
+    <SendProvider wallet={mockWallet} balances={balances}>
       <SendScreenWapper isSendAll={isSendAll} />
     </SendProvider>
   )
@@ -24,7 +24,7 @@ const SendScreenTest = ({isSendAll}: Props) => {
 const SendScreenWapper = ({isSendAll}: Props) => {
   const {setSendAll, setSelectedTokenIdentifier} = useSendContext()
 
-  setSelectedTokenIdentifier(Object.keys(balance)[0])
+  setSelectedTokenIdentifier(Object.keys(balances)[0])
 
   if (isSendAll) {
     setSendAll(true)

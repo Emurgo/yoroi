@@ -36,13 +36,13 @@ export const TxHistoryNavigator = () => {
   const walletName = useWalletName(wallet)
   const transactionInfos = useSelector(transactionsInfoSelector)
   const defaultTokenId = getDefaultAssetByNetworkId(wallet.networkId).identifier
-  const balance = useBalances(wallet, defaultTokenId)
+  const balances = useBalances(wallet, defaultTokenId)
   const [modalInfoState, setModalInfoState] = useState(false)
   const showModalInfo = () => setModalInfoState(true)
   const hideModalInfo = () => setModalInfoState(false)
 
   return (
-    <SendProvider balance={balance} wallet={wallet}>
+    <SendProvider balances={balances} wallet={wallet}>
       <Stack.Navigator screenOptions={defaultStackNavigationOptions} initialRouteName="history-list">
         <Stack.Screen
           name="history-list"
@@ -92,7 +92,7 @@ export const TxHistoryNavigator = () => {
         </Stack.Screen>
 
         <Stack.Screen name="select-asset" options={{title: strings.selectAssetTitle}}>
-          {() => <AssetSelectorScreen balance={balance} />}
+          {() => <AssetSelectorScreen balances={balances} />}
         </Stack.Screen>
 
         <Stack.Screen //

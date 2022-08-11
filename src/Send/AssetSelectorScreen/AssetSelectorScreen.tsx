@@ -23,10 +23,10 @@ import {Quantity, TokenId, YoroiAmounts} from '../../yoroi-wallets/types'
 import {useSendContext} from '../Context/SendContext'
 
 type Props = {
-  balance: YoroiAmounts
+  balances: YoroiAmounts
 }
 
-export const AssetSelectorScreen = ({balance}: Props) => {
+export const AssetSelectorScreen = ({balances}: Props) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const defaultAsset = getDefaultAssetByNetworkId(wallet.networkId)
@@ -41,12 +41,12 @@ export const AssetSelectorScreen = ({balance}: Props) => {
 
   const sortedBalance: Array<[TokenId, Quantity]> = useMemo(
     () =>
-      Object.entries(balance)
+      Object.entries(balances)
         .sort(([, quantityA]: [TokenId, Quantity], [, quantityB]: [TokenId, Quantity]) =>
           new BigNumber(quantityA).isGreaterThan(new BigNumber(quantityB)) ? -1 : 1,
         )
         .sort(([tokenId]: [TokenId, Quantity]) => (tokenId === defaultAsset.identifier ? -1 : 1)), // default first
-    [balance, defaultAsset.identifier],
+    [balances, defaultAsset.identifier],
   )
 
   return (

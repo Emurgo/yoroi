@@ -48,7 +48,7 @@ export const SendScreen = () => {
   const isFetchingBalance = useSelector(isFetchingUtxosSelector)
   const lastFetchingError = useSelector(lastUtxosFetchErrorSelector)
   const defaultAsset = getDefaultAssetByNetworkId(wallet.networkId)
-  const balance = useBalances(wallet, defaultAsset.identifier)
+  const balances = useBalances(wallet, defaultAsset.identifier)
   const utxos = useSelector(utxosSelector)
   const hasPendingOutgoingTransaction = useSelector(hasPendingOutgoingTransactionSelector)
   const netInfo = useNetInfo()
@@ -56,8 +56,8 @@ export const SendScreen = () => {
 
   const {selectedTokenIdentifier, sendAll, setSendAll, receiver, setReceiver, amount, setAmount} = useSendContext()
 
-  const defaultAssetAvailableAmount = balance[defaultAsset.identifier]
-  const selectedAssetAvailableAmount = balance[selectedTokenIdentifier]
+  const defaultAssetAvailableAmount = balances[defaultAsset.identifier]
+  const selectedAssetAvailableAmount = balances[selectedTokenIdentifier]
 
   if (!selectedAssetAvailableAmount) {
     throw new Error('Invalid token')
@@ -150,10 +150,10 @@ export const SendScreen = () => {
 
     const selectedTokens: YoroiAmounts = tokenInfo.isDefault
       ? sendAll
-        ? Amounts.remove(balance, [defaultAsset.identifier])
+        ? Amounts.remove(balances, [defaultAsset.identifier])
         : {}
       : {
-          [selectedTokenIdentifier]: balance[selectedTokenIdentifier],
+          [selectedTokenIdentifier]: balances[selectedTokenIdentifier],
         }
 
     setShowSendAllWarning(false)

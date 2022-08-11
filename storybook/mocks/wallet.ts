@@ -150,7 +150,7 @@ export const tokenEntries: Array<TokenEntry> = [
   },
 ]
 
-export const balance: YoroiAmounts = {
+export const balances: YoroiAmounts = {
   [PRIMARY_ASSET_CONSTANTS.CARDANO]: '2727363743849',
   '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950': '12344',
   '29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6.4d494e': '215410',
