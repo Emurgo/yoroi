@@ -1,10 +1,9 @@
 import {
   checkForErrors,
   enterNewValue,
-  enterPinCodeIfNecessary,
   prepareIntrawalletTx,
 } from '../helpers/utils'
-import {DEFAULT_INTERVAL, DEFAULT_TIMEOUT, LEDGER_CONFIRM_TIMEOUT, LEDGER_WALLET_NAME, VALID_PIN} from '../constants'
+import {DEFAULT_INTERVAL, DEFAULT_TIMEOUT, LEDGER_CONFIRM_TIMEOUT, LEDGER_WALLET_NAME} from '../constants'
 import * as addWalletsScreen from '../screenObjects/addWallets.screen'
 import * as addWalletScreen from '../screenObjects/addWallet.screen'
 import * as chooseConnectionMethod from '../screenObjects/connectLedgerScreens/chooseConnectionMethod.screen'
@@ -16,7 +15,6 @@ import * as walletHistoryScreen from '../screenObjects/walletHistory.screen'
 
 describe('HW Ledger wallet', () => {
   it('Connect a wallet', async () => {
-    await enterPinCodeIfNecessary(VALID_PIN)
     await addWalletsScreen.addWalletTestnetButton().click()
     await addWalletScreen.connectLedgerWalletButton().click()
     await chooseConnectionMethod.connectWithBLEButton().click()
@@ -44,8 +42,6 @@ describe('HW Ledger wallet', () => {
   })
 
   it('Send intrawallet transaction', async () => {
-    await enterPinCodeIfNecessary(VALID_PIN)
-    await driver.waitUntil(async () => await myWalletsScreen.pageTitle().isDisplayed())
     await prepareIntrawalletTx(LEDGER_WALLET_NAME)
     // choose connection method
     await driver.waitUntil(async () => await chooseConnectionMethod.isDisplayed())

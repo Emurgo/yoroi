@@ -33,10 +33,8 @@ import * as verifyRestoredWalletScreen from '../screenObjects/restoreWalletsScre
 const expect = require('chai').expect
 
 describe('Happy paths', () => {
-
   describe('Creating a wallet', () => {
     it('Shelley era', async () => {
-      await enterPinCodeIfNecessary(VALID_PIN)
       await addWalletsScreen.addWalletTestnetButton().click()
       await addWalletScreen.createWalletButton().click()
 
@@ -68,7 +66,6 @@ describe('Happy paths', () => {
 
   describe('Restored wallet', () => {
     it(`Restoring ${NORMAL_15_WORD_WALLET.name} wallet`, async () => {
-      await enterPinCodeIfNecessary(VALID_PIN)
       await addWalletsScreen.addWalletTestnetButton().click()
       await addWalletScreen.restoreWalletButton().click()
 

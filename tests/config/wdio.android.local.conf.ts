@@ -1,8 +1,9 @@
 import fs, {promises as fsAsync} from 'fs'
 import {appiumLogsPath, artifactsDir, screenshotsDir} from './testPaths'
-import {APP_ID, APP_ID_PARENT, APP_PATH} from '../constants'
-import {prepareAppIfNecessary} from "../helpers/utils";
+import {APP_ID, APP_ID_PARENT, APP_PATH, VALID_PIN} from '../constants'
+import {enterPinCodeIfNecessary, prepareAppIfNecessary} from "../helpers/utils";
 import rimraf from 'rimraf'
+import * as myWalletsScreen from "../screenObjects/myWallets.screen";
 
 export const config: WebdriverIO.Config = {
   runner: 'local',
@@ -128,9 +129,11 @@ export const config: WebdriverIO.Config = {
   /**
    * Function to be executed before a tests (in Mocha/Jasmine) starts.
    */
-  beforeTest: function (tests, context) {
+  beforeTest: async function (tests, context) {
     driver.launchApp()
-    prepareAppIfNecessary().then().catch()
+    await prepareAppIfNecessary()
+    await enterPinCodeIfNecessary(VALID_PIN)
+    await driver.waitUntil(async () => await myWalletsScreen.pageTitle().isDisplayed())
   },
   /**
    * Hook that gets executed _before_ a hook within the suite starts (e.g. runs before calling
