@@ -17,6 +17,7 @@ import {
   isSystemAuthEnabledSelector,
   sendCrashReportsSelector,
 } from '../../legacy/selectors'
+import {isEmptyString} from '../../legacy/utils'
 import {useWalletNavigation} from '../../navigation'
 import {useCurrencyContext} from '../Currency'
 import {NavigatedSettingsItem, SettingsBuildItem, SettingsItem, SettingsSection} from '../SettingsItems'
@@ -38,7 +39,7 @@ export const ApplicationSettingsScreen = () => {
   }
 
   const onToggleBiometricsAuthIn = async () => {
-    if (!installationId) throw new Error('invalid state')
+    if (isEmptyString(installationId)) throw new Error('invalid state')
 
     if (isSystemAuthEnabled) {
       navigation.navigate('biometrics', {

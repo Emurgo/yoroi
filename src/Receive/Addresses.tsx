@@ -5,13 +5,14 @@ import {useSelector} from 'react-redux'
 
 import {CopyButton, Icon, Spacer, Text} from '../components'
 import {externalAddressIndexSelector, isUsedAddressIndexSelector, receiveAddressesSelector} from '../legacy/selectors'
+import {isEmptyString} from '../legacy/utils'
 import {COLORS} from '../theme'
 import {Modals} from './Modals'
 
 export const UnusedAddresses = () => {
   const strings = useStrings()
   const addresses = useUnusedAddresses()
-  const [address, setAddress] = React.useState<string | void>()
+  const [address, setAddress] = React.useState<string | null>(null)
 
   return (
     <View>
@@ -27,7 +28,7 @@ export const UnusedAddresses = () => {
         </React.Fragment>
       ))}
 
-      {address && <Modals address={address} onDone={() => setAddress()} />}
+      {!isEmptyString(address) && <Modals address={address} onDone={() => setAddress(null)} />}
     </View>
   )
 }
@@ -35,7 +36,7 @@ export const UnusedAddresses = () => {
 export const UsedAddresses = () => {
   const strings = useStrings()
   const addresses = useUsedAddresses()
-  const [address, setAddress] = React.useState<string | void>()
+  const [address, setAddress] = React.useState<string | null>(null)
 
   return (
     <View>
@@ -50,7 +51,7 @@ export const UsedAddresses = () => {
         </React.Fragment>
       ))}
 
-      {address && <Modals address={address} onDone={() => setAddress()} />}
+      {!isEmptyString(address) && <Modals address={address} onDone={() => setAddress(null)} />}
     </View>
   )
 }

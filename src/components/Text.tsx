@@ -43,7 +43,7 @@ export class Text extends React.Component<Props, State> {
       error === true && styles.error,
       style,
     ]
-    if (this.state.fontSize) {
+    if (this.state.fontSize > 0) {
       textStyle.push({fontSize: this.state.fontSize})
     }
 
@@ -66,8 +66,8 @@ export class Text extends React.Component<Props, State> {
             }
             const {width} = event.nativeEvent.layout
             const fixedFontSize = androidAdjustsFontSizeToFitFix(width, children.length)
-            const styleFontSize = !!style && 'fontSize' in style && style.fontSize != null && style.fontSize
-            const fontSize = styleFontSize ? Math.min(styleFontSize, fixedFontSize) : fixedFontSize
+            const styleFontSize = (style as TextStyle)?.fontSize
+            const fontSize = typeof styleFontSize === 'number' ? Math.min(styleFontSize, fixedFontSize) : fixedFontSize
 
             this.setState({fontSize})
           }}

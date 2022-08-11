@@ -96,7 +96,7 @@ export const SendScreen = ({
     isOnline &&
     !hasPendingOutgoingTransaction &&
     !isFetchingBalance &&
-    !lastFetchingError &&
+    lastFetchingError == null &&
     utxos &&
     _.isEmpty(addressErrors) &&
     _.isEmpty(amountErrors) &&

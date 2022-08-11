@@ -27,6 +27,7 @@ import {
   isSystemAuthEnabledSelector,
 } from './legacy/selectors'
 import type {State} from './legacy/state'
+import {isEmptyString} from './legacy/utils'
 import MaintenanceScreen from './MaintenanceScreen'
 import {AppRoutes} from './navigation'
 import StorybookScreen from './StorybookScreen'
@@ -58,7 +59,7 @@ const NavigatorSwitch = () => {
   const queryClient = useQueryClient()
   const dispatch = useDispatch()
 
-  if (!installationId) throw new Error('invalid state')
+  if (isEmptyString(installationId)) throw new Error('invalid state')
 
   useEffect(() => {
     const appStateSubscription = AppState.addEventListener('change', async () => {
@@ -100,7 +101,7 @@ const NavigatorSwitch = () => {
                 },
                 onFail: async (reason: string, intl: IntlShape) => {
                   if (reason === KeyStore.REJECTIONS.INVALID_KEY) {
-                    if ((await canBiometricEncryptionBeEnabled()) && installationId) {
+                    if (await canBiometricEncryptionBeEnabled()) {
                       await recreateAppSignInKeys(installationId)
                     } else {
                       await showErrorDialog(errorMessages.biometricsIsTurnedOff, intl)

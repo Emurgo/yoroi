@@ -20,6 +20,7 @@ import {
   lastAccountStateFetchErrorSelector,
   tokenBalanceSelector,
 } from '../legacy/selectors'
+import {isEmptyString} from '../legacy/utils'
 import {fetchUTXOs} from '../legacy/utxo'
 import {useWalletNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
@@ -64,7 +65,7 @@ export const Dashboard = () => {
 
       <View style={styles.container}>
         <OfflineBanner />
-        {isOnline && (lastAccountStateSyncError || error) && (
+        {isOnline && (lastAccountStateSyncError != null || error) && (
           <SyncErrorBanner showRefresh={!(isFetchingAccountState || isFetchingUtxos)} />
         )}
 
@@ -93,7 +94,7 @@ export const Dashboard = () => {
               <ActivityIndicator size="large" color="black" />
             ) : stakingInfo.status === 'staked' ? (
               <UserSummary
-                totalAdaSum={balances['ADA'] ? new BigNumber(balances['ADA']) : null}
+                totalAdaSum={!isEmptyString(balances['ADA']) ? new BigNumber(balances['ADA']) : null}
                 totalRewards={new BigNumber(stakingInfo.rewards)}
                 totalDelegated={new BigNumber(stakingInfo.amount)}
                 onWithdraw={() => setShowWithdrawalDialog(true)}
@@ -101,7 +102,7 @@ export const Dashboard = () => {
               />
             ) : (
               <UserSummary
-                totalAdaSum={balances['ADA'] ? new BigNumber(balances['ADA']) : null}
+                totalAdaSum={!isEmptyString(balances['ADA']) ? new BigNumber(balances['ADA']) : null}
                 totalRewards={null}
                 totalDelegated={null}
                 onWithdraw={() => setShowWithdrawalDialog(true)}
@@ -157,7 +158,7 @@ export const Dashboard = () => {
 
 const Row = ({style, ...props}: ViewProps) => <View {...props} style={[style, styles.row]} />
 
-const SyncErrorBanner = ({showRefresh}: Record<string, unknown> /* TODO: type */) => {
+const SyncErrorBanner = ({showRefresh}: {showRefresh: boolean}) => {
   const intl = useIntl()
 
   return (

@@ -10,6 +10,7 @@ import {AppRoutes, useWalletNavigation} from '../navigation'
 import {useSelectedWalletContext} from '../SelectedWallet'
 import {generateAdaMnemonic} from './commonUtils'
 import storage from './storage'
+import {isEmptyString} from './utils'
 
 const routes: Array<{label: string; path: keyof AppRoutes}> = [
   {label: 'Storybook', path: 'storybook'},
@@ -141,7 +142,7 @@ export const DeveloperScreen = () => {
                   .then((keys) => storage.readMany(keys.map((k) => `/wallet/${k}`)))
                   .then((wallets) => {
                     const id = wallets.flat().find((k) => (k as any)?.name === 'RO-Mainnet')?.id
-                    if (id) {
+                    if (!isEmptyString(id)) {
                       return Promise.resolve(id)
                     }
                     return Promise.reject('Missing wallet RO-Mainnet')

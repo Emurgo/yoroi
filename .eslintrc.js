@@ -1,5 +1,18 @@
 module.exports = {
   parser: '@typescript-eslint/parser',
+  parserOptions: {
+    ecmaVersion: 'latest',
+    sourceType: 'module',
+    project: ['tsconfig.json'],
+  },
+  overrides: [
+    {
+      files: ['*.tsx'],
+      rules: {
+        '@typescript-eslint/strict-boolean-expressions': ['error', {allowString: false, allowNumber: false, allowNullableBoolean: true}],
+      },
+    },
+  ],
   extends: [
     'eslint:recommended',
     'plugin:react/recommended',

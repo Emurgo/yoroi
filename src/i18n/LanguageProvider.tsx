@@ -4,6 +4,7 @@ import {IntlProvider} from 'react-intl'
 import {NativeModules, Platform, Text} from 'react-native'
 import {useMutation, UseMutationOptions, useQuery, useQueryClient, UseQueryOptions} from 'react-query'
 
+import {isEmptyString} from '../legacy/utils'
 import {updateLanguageSettings} from '.'
 import {supportedLanguages} from './languages'
 import translations from './translations'
@@ -34,7 +35,7 @@ const useLanguageCode = ({onSuccess, ...options}: UseQueryOptions<string> = {}) 
     queryFn: async () => {
       const languageCode = await AsyncStorage.getItem('/appSettings/languageCode')
 
-      if (languageCode) {
+      if (!isEmptyString(languageCode)) {
         const parsedLanguageCode = JSON.parse(languageCode)
         const stillSupported = supportedLanguages.some((language) => language.code === parsedLanguageCode)
         if (stillSupported) return parsedLanguageCode
@@ -50,7 +51,7 @@ const useLanguageCode = ({onSuccess, ...options}: UseQueryOptions<string> = {}) 
     ...options,
   })
 
-  if (!query.data) throw new Error('Invalid state')
+  if (isEmptyString(query.data)) throw new Error('Invalid state')
 
   return query.data
 }
@@ -82,7 +83,7 @@ type LanguageContext = {
 
 const systemLanguageCode = Platform.select({
   ios: () =>
-    NativeModules.SettingsManager.settings.AppleLocale || NativeModules.SettingsManager.settings.AppleLanguages[0],
+    NativeModules.SettingsManager.settings.AppleLocale ?? NativeModules.SettingsManager.settings.AppleLanguages[0],
   android: () => NativeModules.I18nManager.localeIdentifier,
   default: () => 'en-US',
 })()

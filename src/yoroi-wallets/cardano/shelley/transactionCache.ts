@@ -323,7 +323,7 @@ export async function syncTxs({
     const newTxs = result.flat(2).map((tx) => [tx.hash, toCachedTx(tx)])
     // .map((tx) => processTxHistoryData(tx, addressesByChunks.flat(), 0, networkId))
 
-    if (newTxs.length) {
+    if (newTxs.length > 0) {
       return {...transactions, ...fromPairs(newTxs)}
     }
 

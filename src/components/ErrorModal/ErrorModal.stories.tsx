@@ -13,6 +13,7 @@ storiesOf('ErrorModal', module)
           onRequestClose={onRequestClose}
           title="Attention"
           errorMessage="This is the error message"
+          errorLogs={null}
         />
       )}
     </WithModalProps>
