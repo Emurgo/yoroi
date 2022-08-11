@@ -5,6 +5,7 @@ import {StyleSheet} from 'react-native'
 import {useQuery} from 'react-query'
 
 import {Button, CopyButton, Text, TitledCard} from '../components'
+import {isEmptyString} from '../legacy/utils'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
 import {RemotePoolMetaFailure, StakePoolInfoAndHistory} from '../types'
@@ -14,6 +15,7 @@ export const StakePoolInfo = ({stakePoolId}: {stakePoolId: string}) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const {stakePoolInfo, isLoading} = useStakePoolInfo(wallet, stakePoolId)
+  const homepage = stakePoolInfo?.homepage
 
   if (isLoading) {
     return <ActivityIndicator size="large" color="black" />
@@ -24,7 +26,7 @@ export const StakePoolInfo = ({stakePoolId}: {stakePoolId: string}) => {
       <TitledCard title={strings.title} variant="poolInfo">
         <View style={styles.topBlock}>
           <Text bold style={styles.poolName}>
-            {formatStakepoolNameWithTicker(stakePoolInfo.ticker, stakePoolInfo.name) || strings.unknownPool}
+            {formatStakepoolNameWithTicker(stakePoolInfo.ticker, stakePoolInfo.name) ?? strings.unknownPool}
           </Text>
 
           <View style={styles.poolIdBlock}>
@@ -36,12 +38,12 @@ export const StakePoolInfo = ({stakePoolId}: {stakePoolId: string}) => {
           </View>
         </View>
 
-        {!!stakePoolInfo.homepage && (
+        {!isEmptyString(homepage) && (
           <View style={styles.bottomBlock}>
             <Button
               outlineOnLight
               shelleyTheme
-              onPress={() => stakePoolInfo.homepage && Linking.openURL(stakePoolInfo.homepage)}
+              onPress={() => Linking.openURL(homepage)}
               title={strings.goToWebsiteButtonLabel}
             />
           </View>
@@ -142,13 +144,10 @@ const useStrings = () => {
 }
 
 const formatStakepoolNameWithTicker = (ticker?: string, name?: string) => {
-  return ticker && name //
-    ? `(${ticker})  ${name}`
-    : ticker && !name
-    ? ticker
-    : !ticker && name
-    ? name
-    : undefined
+  const nameWithTicker = [!isEmptyString(ticker) && !isEmptyString(name) ? `(${ticker})` : ticker, name]
+    .join(' ')
+    .trim()
+  if (nameWithTicker.length > 0) return nameWithTicker
 }
 
 const isRemotePoolMetaFailure = (

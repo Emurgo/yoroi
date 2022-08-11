@@ -8,15 +8,16 @@ import {fetchAccountState} from './legacy/account'
 import {hasPendingOutgoingTransactionSelector, isFetchingAccountStateSelector, utxosSelector} from './legacy/selectors'
 import type {RawUtxo} from './legacy/types'
 
-// eslint-disable-next-line react-prefer-function-component/react-prefer-function-component
-class AccountAutoRefresherClass extends React.Component<{
+type Props = {
   isFetching: boolean
   isOnline: boolean
   fetchAccountState: () => void
   hasPendingTx: boolean
   utxo: undefined | null | Array<RawUtxo>
   navigation: any
-}> {
+}
+// eslint-disable-next-line react-prefer-function-component/react-prefer-function-component
+class AccountAutoRefresherClass extends React.Component<Props> {
   _firstFocus = true
   _unsubscribe: void | (() => unknown) = undefined
 
@@ -26,7 +27,7 @@ class AccountAutoRefresherClass extends React.Component<{
   }
 
   // TODO: this ideally should only track the state of a delegation tx
-  componentDidUpdate = (prevProps) => {
+  componentDidUpdate = (prevProps: Props) => {
     const wentOnline = !prevProps.isOnline && this.props.isOnline
     const wentFromPending = prevProps.hasPendingTx && !this.props.hasPendingTx
     const gotUtxo = prevProps.utxo !== this.props.utxo

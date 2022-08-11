@@ -13,6 +13,7 @@ import {CONFIG} from '../legacy/config'
 import {ensureKeysValidity} from '../legacy/deviceSettings'
 import {WrongPassword} from '../legacy/errors'
 import KeyStore from '../legacy/KeyStore'
+import {isEmptyString} from '../legacy/utils'
 import {useSelectedWallet} from '../SelectedWallet'
 import {SystemAuthDisabled, walletManager} from '../yoroi-wallets'
 import {Actions, Description, Title} from './components'
@@ -43,7 +44,7 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
     errorLogs: null,
   })
 
-  const isConfirmationDisabled = !wallet.isHW && !wallet.isEasyConfirmationEnabled && !password
+  const isConfirmationDisabled = !wallet.isHW && !wallet.isEasyConfirmationEnabled && isEmptyString(password)
 
   const onContinue = React.useCallback(async () => {
     const createTransaction = (decryptedKey: string) => {

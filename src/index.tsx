@@ -17,6 +17,7 @@ import {CONFIG} from './legacy/config'
 import getConfiguredStore from './legacy/configureStore'
 import {ApiError, NetworkError} from './legacy/errors'
 import {Logger, setLogLevel} from './legacy/logging'
+import {isEmptyString} from './legacy/utils'
 import {CurrencyProvider} from './Settings/Currency/CurrencyContext'
 import {ThemeProvider} from './theme'
 
@@ -52,7 +53,7 @@ global.onunhandledrejection = (error: any) => {
   Logger.error(`${error}`)
   if (error instanceof NetworkError) return
   if (error instanceof ApiError) return
-  if (!error?.message) return
+  if (isEmptyString(error?.message)) return
   handleGeneralError(error.message, intl)
 }
 

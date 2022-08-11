@@ -17,6 +17,7 @@ import {
   internalAddressIndexSelector,
   transactionsInfoSelector,
 } from '../../legacy/selectors'
+import {isEmptyString} from '../../legacy/utils'
 import AddressModal from '../../Receive/AddressModal'
 import Screen from '../../Screen'
 import {useSelectedWallet} from '../../SelectedWallet'
@@ -139,7 +140,7 @@ export const TxDetails = () => {
         </View>
       </Screen>
 
-      {!!addressDetail && (
+      {!isEmptyString(addressDetail) && (
         <AddressModal
           visible
           onRequestClose={() => setAddressDetail(null)}
@@ -282,7 +283,7 @@ const getShownAddresses = (
     path: getPath(address),
     isHighlighted: isHighlightedTo(address),
   }))
-  const toFiltered = toAddresses.filter(({address}) => (filterTo ? filterTo(address) : true))
+  const toFiltered = toAddresses.filter(({address}) => (filterTo != null ? filterTo(address) : true))
   const cntOmittedTo = toAddresses.length - toFiltered.length
 
   return {

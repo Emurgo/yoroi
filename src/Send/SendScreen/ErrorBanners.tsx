@@ -22,7 +22,7 @@ export const ErrorBanners = () => {
 
   if (!isOnline) {
     return <OfflineBanner />
-  } else if (lastFetchingError && !isFetchingBalance) {
+  } else if (lastFetchingError != null && !isFetchingBalance) {
     return <ClickableBanner error onPress={() => dispatch(fetchUTXOs())} text={strings.errorBannerNetworkError} />
   } else if (hasPendingOutgoingTransaction) {
     return <Banner error text={strings.errorBannerPendingOutgoingTransaction} />

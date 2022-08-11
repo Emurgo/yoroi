@@ -61,7 +61,7 @@ export const DangerousAction = ({
       <Checkbox
         onChange={() => setIsChecked(!isChecked)}
         checked={isChecked}
-        text={checkboxLabel || intl.formatMessage(confirmationMessages.commonButtons.iUnderstandButton)}
+        text={checkboxLabel ?? intl.formatMessage(confirmationMessages.commonButtons.iUnderstandButton)}
         style={styles.checkbox}
       />
 
@@ -77,7 +77,7 @@ export const DangerousAction = ({
             block
             disabled={!isChecked}
             onPress={secondaryButton.onPress}
-            title={secondaryButton.label || intl.formatMessage(confirmationMessages.commonButtons.cancelButton)}
+            title={secondaryButton.label ?? intl.formatMessage(confirmationMessages.commonButtons.cancelButton)}
             style={styles.secondaryButton}
           />
         ) : null}

@@ -17,7 +17,7 @@ import {StorageProvider} from './Storage'
 enableScreens()
 
 if (Platform.OS === 'android') {
-  if (UIManager.setLayoutAnimationEnabledExperimental) {
+  if (UIManager.setLayoutAnimationEnabledExperimental != null) {
     UIManager.setLayoutAnimationEnabledExperimental(true)
   }
 }

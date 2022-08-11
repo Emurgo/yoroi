@@ -22,7 +22,9 @@ export const WalletListItem = ({wallet, onPress}: Props) => {
             <Text style={styles.walletName} numberOfLines={1}>
               {wallet.name}
             </Text>
-            <Text style={styles.walletMeta}>{wallet.checksum ? `${wallet.checksum.TextPart} | ${type}` : type}</Text>
+            <Text style={styles.walletMeta}>
+              {wallet.checksum != null ? `${wallet.checksum.TextPart} | ${type}` : type}
+            </Text>
           </View>
 
           {(isNightly() || CONFIG.IS_TESTNET_BUILD) && (

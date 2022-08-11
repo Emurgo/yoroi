@@ -3,6 +3,7 @@ import React from 'react'
 import {useMutation, UseMutationOptions, useQuery, useQueryClient} from 'react-query'
 
 import {ConfigCurrencies, configCurrencies, CurrencySymbol, supportedCurrencies} from '../../legacy/types'
+import {isEmptyString} from '../../legacy/utils'
 
 const CurrencyContext = React.createContext<undefined | CurrencyContext>(undefined)
 export const CurrencyProvider: React.FC = ({children}) => {
@@ -37,7 +38,7 @@ const useCurrency = () => {
     queryFn: async () => {
       const storedCurrencySymbol = await AsyncStorage.getItem('/appSettings/currencySymbol')
 
-      if (storedCurrencySymbol) {
+      if (!isEmptyString(storedCurrencySymbol)) {
         const parsedCurrencySymbol = JSON.parse(storedCurrencySymbol)
         const stillSupported = Object.values(supportedCurrencies).includes(parsedCurrencySymbol)
         if (stillSupported) return parsedCurrencySymbol
@@ -48,7 +49,7 @@ const useCurrency = () => {
     suspense: true,
   })
 
-  if (!query.data) throw new Error('Invalid state')
+  if (isEmptyString(query.data)) throw new Error('Invalid state')
 
   return query.data
 }

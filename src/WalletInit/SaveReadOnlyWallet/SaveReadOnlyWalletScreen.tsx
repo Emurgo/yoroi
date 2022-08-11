@@ -10,6 +10,7 @@ import {useCreateBip44Wallet, usePlate} from '../../hooks'
 import {handleGeneralError} from '../../legacy/actions'
 import {CONFIG} from '../../legacy/config'
 import {Logger} from '../../legacy/logging'
+import {isEmptyString} from '../../legacy/utils'
 import {useWalletNavigation, WalletInitRoutes} from '../../navigation'
 import {theme} from '../../theme'
 import {NetworkId} from '../../yoroi-wallets'
@@ -184,7 +185,7 @@ const WalletInfoView = ({normalizedPath, publicKeyHex, networkId}: WalletInfoPro
       <ScrollView style={styles.scrollView}>
         <View style={styles.checksumContainer}>
           <Text>{strings.checksumLabel}</Text>
-          {!!plate.accountPlate.ImagePart && (
+          {!isEmptyString(plate.accountPlate.ImagePart) && (
             <CheckSumView icon={plate.accountPlate.ImagePart} checksum={plate.accountPlate.TextPart} />
           )}
         </View>

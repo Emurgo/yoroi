@@ -70,7 +70,7 @@ const PairedBalance = ({privacyMode}: {privacyMode: boolean}) => {
   if (currency === 'ADA') return null
 
   const balance = tokenBalance?.getDefault().dividedBy(10e5)
-  const total = rate && balance ? balance.times(rate).decimalPlaces(config.decimals).toString() : '...'
+  const total = rate != null ? balance?.times(rate).decimalPlaces(config.decimals).toString() : '...'
 
   const pairedTotal = privacyMode ? hiddenPairedTotal : total
 

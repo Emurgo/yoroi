@@ -58,7 +58,7 @@ export const SendScreen = () => {
   const selectedAssetAvailableAmount = balances[selectedTokenIdentifier]
   const defaultAssetAvailableAmount = balances[defaultAsset.identifier]
 
-  if (!selectedAssetAvailableAmount) {
+  if (typeof selectedAssetAvailableAmount !== 'string') {
     throw new Error('Invalid token')
   }
 
@@ -80,7 +80,7 @@ export const SendScreen = () => {
     isOnline &&
     !hasPendingOutgoingTransaction &&
     !isFetchingBalance &&
-    !lastFetchingError &&
+    lastFetchingError == null &&
     utxos &&
     _.isEmpty(addressErrors) &&
     _.isEmpty(amountErrors) &&
