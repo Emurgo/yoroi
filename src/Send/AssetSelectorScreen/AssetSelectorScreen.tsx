@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js'
-import React, {useMemo} from 'react'
+import React from 'react'
 import {defineMessages} from 'react-intl'
 import {useIntl} from 'react-intl'
 import {FlatList, LayoutAnimation, TouchableOpacity, View} from 'react-native'
@@ -36,15 +36,11 @@ export const AssetSelectorScreen = ({balances, onSelect, onSelectAll}: Props) =>
     setMatcher(matcher)
   }
 
-  const sortedBalance: Array<[TokenId, Quantity]> = useMemo(
-    () =>
-      Object.entries(balances)
-        .sort(([, quantityA]: [TokenId, Quantity], [, quantityB]: [TokenId, Quantity]) =>
-          Quantities.isGreaterThan(quantityA, quantityB) ? -1 : 1,
-        )
-        .sort(([tokenId]: [TokenId, Quantity]) => (tokenId === defaultAsset.identifier ? -1 : 1)), // default first
-    [balances, defaultAsset.identifier],
-  )
+  const sortedBalance: Array<[TokenId, Quantity]> = Object.entries(balances)
+    .sort(([, quantityA]: [TokenId, Quantity], [, quantityB]: [TokenId, Quantity]) =>
+      Quantities.isGreaterThan(quantityA, quantityB) ? -1 : 1,
+    )
+    .sort(([tokenId]: [TokenId, Quantity]) => (tokenId === defaultAsset.identifier ? -1 : 1)) // default first
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={{flex: 1, backgroundColor: 'white'}}>
