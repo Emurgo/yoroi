@@ -148,8 +148,6 @@ export const SendScreen = () => {
       : // note: inside this if balanceAfter shouldn't be null
         Quantities.diff(defaultAssetAvailableAmount, balanceAfter ?? '0')
 
-    console.log('defaultAssetAmount', defaultAssetAmount, defaultAssetAvailableAmount, balanceAfter)
-
     const selectedTokens: YoroiAmounts = tokenInfo.isDefault
       ? sendAll
         ? Amounts.remove(balance, [defaultAsset.identifier])
