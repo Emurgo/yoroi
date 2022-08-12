@@ -50,6 +50,7 @@ export const TxHistoryList = ({onScrollUp, onScrollDown, ...props}: Props) => {
         removeClippedSubviews={true}
         maxToRenderPerBatch={20}
         initialNumToRender={20}
+        testID="txHistoryList"
       />
     </View>
   )
