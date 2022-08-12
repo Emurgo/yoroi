@@ -16,7 +16,7 @@ storiesOf('SendScreen', module)
 const SendScreenTest = ({isSendAll}: Props) => {
   const wallet: YoroiWallet = {
     ...mockWallet,
-    subscribe: async () => action('subscribe'),
+    subscribe: () => action('subscribe'),
   }
 
   return (
