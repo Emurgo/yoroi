@@ -10,7 +10,7 @@ import {
 import {CardanoHaskellShelleyNetwork} from '../../legacy/networks'
 import {Quantity, YoroiAmounts, YoroiEntries, YoroiMetadata, YoroiUnsignedTx, YoroiVoting} from '../types'
 import {Amounts, Entries, Quantities} from '../utils'
-import {cardano, RewardAddress} from '.'
+import {Address, ByronAddress, cardano, RewardAddress} from '.'
 
 export const yoroiUnsignedTx = async ({
   unsignedTx,
@@ -24,11 +24,21 @@ export const yoroiUnsignedTx = async ({
   addressedUtxos: CardanoAddressedUtxo[]
 }) => {
   const fee = toAmounts(unsignedTx.fee.values)
-  const change = toEntries(unsignedTx.change.map((change) => ({address: change.address, value: change.values})))
-  const outputEntries = toEntries(unsignedTx.outputs)
+  const change = toEntries(
+    await Promise.all(
+      unsignedTx.change.map((change) =>
+        toDisplayAddress(change.address).then((address) => ({...change, address, value: change.values})),
+      ),
+    ),
+  )
+  const outputsEntries = toEntries(
+    await Promise.all(
+      unsignedTx.outputs.map((output) => toDisplayAddress(output.address).then((address) => ({...output, address}))),
+    ),
+  )
   const changeAddresses = Entries.toAddresses(change)
   // entries === (outputs - change)
-  const entries = Entries.remove(outputEntries, changeAddresses)
+  const entries = Entries.remove(outputsEntries, changeAddresses)
   const amounts = Entries.toAmounts(entries)
   const stakingBalances = await cardano.getBalanceForStakingCredentials(addressedUtxos)
 
@@ -59,9 +69,11 @@ export const yoroiUnsignedTx = async ({
           : undefined,
     },
     voting: {
-      registration: await Voting.toRegistration({
-        votingRegistration,
-      }),
+      registration: votingRegistration
+        ? await Voting.toRegistration({
+            votingRegistration,
+          })
+        : undefined,
     },
     metadata: toMetadata(unsignedTx.metadata),
     unsignedTx,
@@ -197,4 +209,35 @@ const Voting = {
   }: {
     votingRegistration?: VotingRegistration
   }): Promise<YoroiVoting['registration']> => votingRegistration,
+}
+
+export const toDisplayAddress = async (address: string) => {
+  if ((await isByronAddress(address)) || (await isBech32Address(address))) {
+    return address
+  }
+
+  if (isBaseAddress(address) || isRewardAddress(address)) {
+    return Address.fromBytes(Buffer.from(address, 'hex')).then((address) => address.toBech32())
+  }
+
+  throw new Error('Invalid address')
+}
+
+const isByronAddress = (address: string) => ByronAddress.isValid(address)
+
+const isBech32Address = (address: string) =>
+  Address.fromBech32(address)
+    .then(() => true)
+    .catch(() => false)
+
+const isBaseAddress = (address: string) => {
+  const baseAddressRegExp = /^[0-3][0-9a-f]+$/i
+
+  return baseAddressRegExp.test(address)
+}
+
+const isRewardAddress = (address: string) => {
+  const rewardAddressRegExp = /^[ef][0-9a-f]+$/i
+
+  return rewardAddressRegExp.test(address)
 }

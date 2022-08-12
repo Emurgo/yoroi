@@ -16,7 +16,7 @@ import {CONFIG, getCardanoBaseConfig, getWalletConfigById, isByron, isHaskellShe
 import {CardanoError, InvalidState} from '../../legacy/errors'
 import type {DefaultAsset} from '../../legacy/HistoryTransaction'
 import type {HWDeviceInfo} from '../../legacy/ledgerUtils'
-import {buildSignedTransaction, signTxWithLedger} from '../../legacy/ledgerUtils'
+import {signTxWithLedger} from '../../legacy/ledgerUtils'
 import {Logger} from '../../legacy/logging'
 import type {CardanoHaskellShelleyNetwork} from '../../legacy/networks'
 import {isHaskellShelleyNetwork, PROVIDERS} from '../../legacy/networks'
@@ -37,11 +37,10 @@ import type {
   TxStatusResponse,
 } from '../../legacy/types'
 import {NETWORK_REGISTRY} from '../../legacy/types'
-import {deriveRewardAddressHex, normalizeToAddress, toHexOrBase58} from '../../legacy/utils'
+import {deriveRewardAddressHex} from '../../legacy/utils'
 import {SendTokenList, Token} from '../../types'
 import * as YoroiLib from '../cardano'
 import {YoroiSignedTx, YoroiUnsignedTx} from '../types'
-import {Entries} from '../utils'
 import {genTimeToSlot} from '../utils/timeUtils'
 import {versionCompare} from '../utils/versioning'
 import Wallet, {WalletJSON} from '../Wallet'
@@ -177,7 +176,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
      * store the wallet state. Hence, we need to check whether data migrations
      * are needed every time we open a wallet.
      * In some cases, we can determine that some data field needs to be
-     * re-accomodated to a new format just by inspecting the data structure in
+     * re-accommodated to a new format just by inspecting the data structure in
      * storage. In other cases, we may use the explicit version number, though
      * it should only be available for versions >= 4.1.0
      */
@@ -337,13 +336,12 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     return changeAddress
   }
 
-  // returns the address in hex (Shelley) or base58 (Byron) format
   async _getAddressedChangeAddress(): Promise<{address: string; addressing: Addressing}> {
     const changeAddr = this.getChangeAddress()
     const addressing = this.getAddressing(changeAddr)
-    const normAddr = await normalizeToAddress(changeAddr)
+
     return {
-      address: await toHexOrBase58(normAddr as any),
+      address: changeAddr,
       addressing,
     }
   }
@@ -542,8 +540,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
       unsignedTx.staking.delegations ||
       unsignedTx.staking.registrations ||
       unsignedTx.staking.deregistrations ||
-      unsignedTx.staking.withdrawals ||
-      unsignedTx.voting.registration
+      unsignedTx.staking.withdrawals
         ? [stakingPrivateKey]
         : undefined
 
@@ -688,6 +685,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
         config,
         {},
         nonce,
+        Number.parseInt(this._getChainNetworkId(), 10),
         signer,
       )
 
@@ -771,33 +769,22 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
   async signTxWithLedger(unsignedTx: YoroiUnsignedTx, useUSB: boolean): Promise<YoroiSignedTx> {
     if (!this.hwDeviceInfo) throw new Error('Invalid wallet state')
     if (!this.publicKeyHex) throw new Error('Invalid wallet state')
+    if (!this.walletImplementationId) throw new Error('Invalid wallet state')
 
-    const addressingInfo = {}
-    for (const address of Entries.toAddresses(unsignedTx.change)) {
-      if (this.walletImplementationId == null) throw new Error('Invalid wallet: walletImplementationId')
-
-      const addressing = isByron(this.walletImplementationId)
-        ? this.getAddressing(address)
-        : this.getAddressing(await (await YoroiLib.Address.fromBytes(Buffer.from(address, 'hex'))).toBech32())
-      if (addressing != null) addressingInfo[address] = addressing
-    }
-
-    const {rewardAddressHex} = this
-    // add reward address to addressingMap
-    if (rewardAddressHex != null) {
-      addressingInfo[rewardAddressHex] = this._getRewardAddressAddressing()
-    }
-
-    const addressingMap = (address: string) => addressingInfo[address]
     const ledgerPayload = await YoroiLib.cardano.buildLedgerPayload(
       unsignedTx.unsignedTx,
-      (this._getBaseNetworkConfig() as any).PROTOCOL_MAGIC,
       Number.parseInt(this._getChainNetworkId(), 10),
-      addressingMap,
+      (this._getBaseNetworkConfig() as any).PROTOCOL_MAGIC,
+      this.getStakingKeyPath(),
     )
 
     const signedLedgerTx = await signTxWithLedger(ledgerPayload, this.hwDeviceInfo, useUSB)
-    const signedTx = await buildSignedTransaction(unsignedTx, signedLedgerTx, this._getPurpose(), this.publicKeyHex)
+    const signedTx = await YoroiLib.cardano.buildLedgerSignedTx(
+      unsignedTx.unsignedTx,
+      signedLedgerTx,
+      this._getPurpose(),
+      this.publicKeyHex,
+    )
 
     return yoroiSignedTx({
       unsignedTx,
