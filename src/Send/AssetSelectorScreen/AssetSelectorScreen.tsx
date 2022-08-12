@@ -100,7 +100,7 @@ const AssetSelectorItem = ({assetToken, onPress, matcher}: AssetSelectorItemProp
         </View>
 
         <View style={{flex: 1, alignItems: 'flex-end', padding: 4}}>
-          <Text style={{color: COLORS.DARK_TEXT}}>{formatTokenAmount(assetToken.amount, tokenInfo, 15)}</Text>
+          <Text style={{color: COLORS.DARK_TEXT}}>{formatTokenAmount(assetToken.amount, tokenInfo)}</Text>
         </View>
       </View>
     </TouchableOpacity>

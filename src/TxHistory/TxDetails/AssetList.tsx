@@ -70,7 +70,7 @@ const AssetRow = ({styles, entry, backColor, onSelect}: AssetRowProps) => {
       </View>
 
       <View style={styles.assetBalanceView}>
-        <Text style={styles.assetBalance}>{formatTokenAmount(entry.amount, tokenInfo, 15)}</Text>
+        <Text style={styles.assetBalance}>{formatTokenAmount(entry.amount, tokenInfo)}</Text>
       </View>
     </>
   )
