@@ -1,7 +1,7 @@
 import fs, {promises as fsAsync} from 'fs'
 import {appiumLogsPath, artifactsDir, screenshotsDir} from './testPaths'
 import {APP_ID, APP_ID_PARENT, APP_PATH, VALID_PIN} from '../constants'
-import {enterPinCodeIfNecessary, prepareAppIfNecessary} from "../helpers/utils";
+import {enterPinCodeIfNecessary, prepareAppIfNecessary} from '../screenFunctions/prepare.screenFunctions';
 import rimraf from 'rimraf'
 import * as myWalletsScreen from "../screenObjects/myWallets.screen";
 

@@ -19,12 +19,15 @@ type RestoredWallet = {
 }
 
 export const DEFAULT_TIMEOUT = 5000
+export const APP_LOADING_TIMEOUT = 7000
 export const LEDGER_CONFIRM_TIMEOUT = 2 * 60 * 1000 // 2 minutes
 export const DEFAULT_INTERVAL = 200
 export const VALID_PIN = '123456'
 export const WALLET_NAME = 'Testnet Wallet'
 export const LEDGER_WALLET_NAME = 'Test Ledger'
 export const SPENDING_PASSWORD = '1234567890'
+export const ADA_TOKEN = 'ADA'
+export const TADA_TOKEN = 'TADA'
 export const APP_ID = 'com.emurgo.nightly'
 export const APP_ID_PARENT = 'com.emurgo.*'
 export const APP_PATH = join(process.cwd(), '/tests/app/Yoroi-Nightly.apk')

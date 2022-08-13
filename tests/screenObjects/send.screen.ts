@@ -5,6 +5,7 @@ export const continueButton = () => driver.$('//*[@resource-id="continueButton"]
 
 export const feesText = () => driver.$('//*[@resource-id="feesText"]')
 export const balanceAfterText = () => driver.$('//*[@resource-id="balanceAfterTxText"]')
+
 export const receiverAddressText = () => driver.$('//*[@resource-id="receiverAddressText"]')
 export const totalAmountText = () => driver.$('//*[@resource-id="totalAmountText"]')
 export const selectAssetButton = () => driver.$('//*[@resource-id="selectAssetButton"]')

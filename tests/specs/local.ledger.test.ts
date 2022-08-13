@@ -1,10 +1,4 @@
-import {
-  checkForErrors,
-  enterNewValue,
-  prepareIntrawalletTx,
-} from '../helpers/utils'
-import {DEFAULT_INTERVAL, DEFAULT_TIMEOUT, LEDGER_CONFIRM_TIMEOUT, LEDGER_WALLET_NAME} from '../constants'
-import * as addWalletsScreen from '../screenObjects/addWallets.screen'
+import {DEFAULT_INTERVAL, DEFAULT_TIMEOUT, LEDGER_CONFIRM_TIMEOUT, LEDGER_WALLET_NAME, TADA_TOKEN} from '../constants'
 import * as addWalletScreen from '../screenObjects/addWallet.screen'
 import * as chooseConnectionMethod from '../screenObjects/connectLedgerScreens/chooseConnectionMethod.screen'
 import * as connectToLedgerDevice from '../screenObjects/connectLedgerScreens/connectToLedgerDevice.screen'
@@ -12,10 +6,14 @@ import * as myWalletsScreen from '../screenObjects/myWallets.screen'
 import {expect} from 'chai'
 import * as sendScreen from '../screenObjects/send.screen'
 import * as walletHistoryScreen from '../screenObjects/walletHistory.screen'
+import {checkForErrors, enterNewValue} from '../screenFunctions/common.screenFunctions'
+import {openWallet} from '../screenFunctions/myWallet.screenFunctions'
+import {getReceiveAddress} from '../screenFunctions/walletHistory.screenFunctions'
+import {balanceAndFeeIsCalculated, prepareTransaction} from '../screenFunctions/send.screenFunctions'
 
 describe('HW Ledger wallet', () => {
   it('Connect a wallet', async () => {
-    await addWalletsScreen.addWalletTestnetButton().click()
+    await myWalletsScreen.addWalletTestnetButton().click()
     await addWalletScreen.connectLedgerWalletButton().click()
     await chooseConnectionMethod.connectWithBLEButton().click()
 
@@ -42,7 +40,12 @@ describe('HW Ledger wallet', () => {
   })
 
   it('Send intrawallet transaction', async () => {
-    await prepareIntrawalletTx(LEDGER_WALLET_NAME)
+    await openWallet(LEDGER_WALLET_NAME)
+    const receiverAddress = await getReceiveAddress()
+    await walletHistoryScreen.sendButton().click()
+    await prepareTransaction(receiverAddress, TADA_TOKEN, '1')
+    await driver.waitUntil(async () => await balanceAndFeeIsCalculated())
+    await sendScreen.continueButton().click()
     // choose connection method
     await driver.waitUntil(async () => await chooseConnectionMethod.isDisplayed())
     await chooseConnectionMethod.connectWithBLEButton().click()

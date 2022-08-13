@@ -1,4 +1,3 @@
-import * as addWalletsScreen from '../screenObjects/addWallets.screen'
 import * as addWalletScreen from '../screenObjects/addWallet.screen'
 import * as createNewWalletCredentialsScreen from '../screenObjects/createWalletScreens/createWalletCredentials.screen'
 import * as nobodyLookingScreen from '../screenObjects/createWalletScreens/nobodyLookingNotification.screen'
@@ -8,15 +7,9 @@ import * as recoveryPhraseEnterScreen from '../screenObjects/createWalletScreens
 import * as myWalletsScreen from '../screenObjects/myWallets.screen'
 import * as walletHistoryScreen from '../screenObjects/walletHistory.screen'
 import * as sendScreen from '../screenObjects/send.screen'
-import {
-  checkForErrors,
-  enterNewValue,
-  enterPinCodeIfNecessary,
-  enterRecoveryPhrase,
-  enterWalletCredentials,
-  hideKeyboard,
-  prepareIntrawalletTx,
-} from '../helpers/utils'
+import * as selectWalletToRestoreScreen from '../screenObjects/selectWalletToRestore.screen'
+import * as recoveryPhraseInputScreen from '../screenObjects/restoreWalletsScreens/recoveryPhraseEnterManually.screen'
+import * as verifyRestoredWalletScreen from '../screenObjects/restoreWalletsScreens/verifyRestoredWallet.screen'
 import {
   WALLET_NAME,
   DEFAULT_TIMEOUT,
@@ -25,17 +18,25 @@ import {
   NORMAL_15_WORD_WALLET,
   WalletType,
   SPENDING_PASSWORD,
+  TADA_TOKEN,
 } from '../constants'
-import * as selectWalletToRestoreScreen from '../screenObjects/selectWalletToRestore.screen'
-import * as recoveryPhraseInputScreen from '../screenObjects/restoreWalletsScreens/recoveryPhraseEnterManually.screen'
-import * as verifyRestoredWalletScreen from '../screenObjects/restoreWalletsScreens/verifyRestoredWallet.screen'
+import {checkForErrors, enterNewValue, hideKeyboard} from '../screenFunctions/common.screenFunctions'
+import {
+  enterRecoveryPhrase,
+  enterWalletCredentials,
+  openWallet,
+  repeatRecoveryPhrase,
+} from '../screenFunctions/myWallet.screenFunctions'
+import {checkTokenInAssets, getReceiveAddress} from '../screenFunctions/walletHistory.screenFunctions'
+import {prepareTransaction, balanceAndFeeIsCalculated} from '../screenFunctions/send.screenFunctions'
+import {enterPinCodeIfNecessary} from '../screenFunctions/prepare.screenFunctions'
 
 const expect = require('chai').expect
 
 describe('Happy paths', () => {
   describe('Creating a wallet', () => {
     it('Shelley era', async () => {
-      await addWalletsScreen.addWalletTestnetButton().click()
+      await myWalletsScreen.addWalletTestnetButton().click()
       await addWalletScreen.createWalletButton().click()
 
       await driver.waitUntil(async () => await createNewWalletCredentialsScreen.credentialsView().isDisplayed())
@@ -52,7 +53,7 @@ describe('Happy paths', () => {
       await recoveryPhraseNotificationScreen.recoveringOnlyByPhraseCheckbox().click()
       await recoveryPhraseNotificationScreen.understandButton().click()
 
-      await recoveryPhraseEnterScreen.enterRecoveryPhrase(allWords)
+      await repeatRecoveryPhrase(allWords)
       await recoveryPhraseEnterScreen.confirmButton().click()
 
       await enterPinCodeIfNecessary(VALID_PIN)
@@ -66,7 +67,7 @@ describe('Happy paths', () => {
 
   describe('Restored wallet', () => {
     it(`Restoring ${NORMAL_15_WORD_WALLET.name} wallet`, async () => {
-      await addWalletsScreen.addWalletTestnetButton().click()
+      await myWalletsScreen.addWalletTestnetButton().click()
       await addWalletScreen.restoreWalletButton().click()
 
       if (NORMAL_15_WORD_WALLET.type == WalletType.NormalWallet) {
@@ -90,9 +91,6 @@ describe('Happy paths', () => {
       await enterWalletCredentials(NORMAL_15_WORD_WALLET.name)
       await createNewWalletCredentialsScreen.continueButton().click()
 
-      // It is necessary step, till the revamp will be done.
-      // After that the Dashboard screen will be created and wallet name (or other component) will be used from there
-      await enterPinCodeIfNecessary(VALID_PIN)
       await driver.waitUntil(async () => await myWalletsScreen.pageTitle().isDisplayed())
 
       expect(
@@ -104,9 +102,33 @@ describe('Happy paths', () => {
     })
 
     it(`Intrawallet transaction, ${NORMAL_15_WORD_WALLET.name} wallet`, async () => {
-      await enterPinCodeIfNecessary(VALID_PIN)
-      await driver.waitUntil(async () => await myWalletsScreen.pageTitle().isDisplayed())
-      await prepareIntrawalletTx(NORMAL_15_WORD_WALLET.name)
+      await openWallet(NORMAL_15_WORD_WALLET.name)
+      const receiverAddress = await getReceiveAddress()
+      await walletHistoryScreen.sendButton().click()
+      await prepareTransaction(receiverAddress, TADA_TOKEN, '1')
+      await driver.waitUntil(async () => await balanceAndFeeIsCalculated())
+      await sendScreen.continueButton().click()
+      await driver.waitUntil(async () => await sendScreen.confirmTxButton().isDisplayed())
+      await enterNewValue(sendScreen.confirmSpendingPasswordInput, SPENDING_PASSWORD)
+      await sendScreen.confirmTxButton().click()
+
+      await checkForErrors()
+
+      expect(
+        await walletHistoryScreen.sendButton().waitForDisplayed({timeout: DEFAULT_TIMEOUT, interval: DEFAULT_INTERVAL}),
+        `Wallet transactions screen is not displayed`,
+      ).to.be.true
+    })
+
+    it(`Intrawallet transaction, ${NORMAL_15_WORD_WALLET.name} wallet, token`, async () => {
+      const tokenName = 'tSUNDAE'
+      await openWallet(NORMAL_15_WORD_WALLET.name)
+      await checkTokenInAssets(tokenName)
+      const receiverAddress = await getReceiveAddress()
+      await walletHistoryScreen.sendButton().click()
+      await prepareTransaction(receiverAddress, tokenName, '1')
+      await driver.waitUntil(async () => await balanceAndFeeIsCalculated())
+      await sendScreen.continueButton().click()
       await driver.waitUntil(async () => await sendScreen.confirmTxButton().isDisplayed())
       await enterNewValue(sendScreen.confirmSpendingPasswordInput, SPENDING_PASSWORD)
       await sendScreen.confirmTxButton().click()
