@@ -1,14 +1,18 @@
-import {DEFAULT_INTERVAL, DEFAULT_TIMEOUT, LEDGER_CONFIRM_TIMEOUT, LEDGER_WALLET_NAME, TADA_TOKEN} from '../constants'
+import {DEFAULT_INTERVAL, DEFAULT_TIMEOUT, TWO_MINUTES_TIMEOUT, LEDGER_WALLET_NAME, TADA_TOKEN} from '../constants'
 import * as addWalletScreen from '../screenObjects/addWallet.screen'
 import * as chooseConnectionMethod from '../screenObjects/connectLedgerScreens/chooseConnectionMethod.screen'
 import * as connectToLedgerDevice from '../screenObjects/connectLedgerScreens/connectToLedgerDevice.screen'
 import * as myWalletsScreen from '../screenObjects/myWallets.screen'
-import {expect} from 'chai'
+import {AssertionError, expect} from 'chai'
 import * as sendScreen from '../screenObjects/send.screen'
 import * as walletHistoryScreen from '../screenObjects/walletHistory.screen'
 import {checkForErrors, enterNewValue} from '../screenFunctions/common.screenFunctions'
 import {openWallet} from '../screenFunctions/myWallet.screenFunctions'
-import {getReceiveAddress} from '../screenFunctions/walletHistory.screenFunctions'
+import {
+  getLatestTxTime,
+  getReceiveAddress,
+  waitForNewTransaction
+} from '../screenFunctions/walletHistory.screenFunctions'
 import {balanceAndFeeIsCalculated, prepareTransaction} from '../screenFunctions/send.screenFunctions'
 
 describe('HW Ledger wallet', () => {
@@ -41,6 +45,7 @@ describe('HW Ledger wallet', () => {
 
   it('Send intrawallet transaction', async () => {
     await openWallet(LEDGER_WALLET_NAME)
+    const latestTxTime = await getLatestTxTime()
     const receiverAddress = await getReceiveAddress()
     await walletHistoryScreen.sendButton().click()
     await prepareTransaction(receiverAddress, TADA_TOKEN, '1')
@@ -58,8 +63,14 @@ describe('HW Ledger wallet', () => {
     expect(
       await walletHistoryScreen
         .sendButton()
-        .waitForDisplayed({timeout: LEDGER_CONFIRM_TIMEOUT, interval: DEFAULT_INTERVAL}),
+        .waitForDisplayed({timeout: TWO_MINUTES_TIMEOUT, interval: DEFAULT_INTERVAL}),
       `Wallet transactions screen is not displayed`,
     ).to.be.true
+
+    try {
+      await driver.waitUntil(async () => await waitForNewTransaction(latestTxTime, TWO_MINUTES_TIMEOUT))
+    } catch (e) {
+      throw new AssertionError('There is no new transaction')
+    }
   })
 })

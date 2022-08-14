@@ -20,7 +20,7 @@ type RestoredWallet = {
 
 export const DEFAULT_TIMEOUT = 5000
 export const APP_LOADING_TIMEOUT = 7000
-export const LEDGER_CONFIRM_TIMEOUT = 2 * 60 * 1000 // 2 minutes
+export const TWO_MINUTES_TIMEOUT = 2 * 60 * 1000 // 2 minutes
 export const DEFAULT_INTERVAL = 200
 export const VALID_PIN = '123456'
 export const WALLET_NAME = 'Testnet Wallet'

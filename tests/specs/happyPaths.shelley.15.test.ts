@@ -18,7 +18,7 @@ import {
   NORMAL_15_WORD_WALLET,
   WalletType,
   SPENDING_PASSWORD,
-  TADA_TOKEN,
+  TADA_TOKEN, TWO_MINUTES_TIMEOUT,
 } from '../constants'
 import {checkForErrors, enterNewValue, hideKeyboard} from '../screenFunctions/common.screenFunctions'
 import {
@@ -27,9 +27,15 @@ import {
   openWallet,
   repeatRecoveryPhrase,
 } from '../screenFunctions/myWallet.screenFunctions'
-import {checkTokenInAssets, getReceiveAddress} from '../screenFunctions/walletHistory.screenFunctions'
+import {
+  checkTokenInAssets,
+  getLatestTxTime,
+  getReceiveAddress,
+  waitForNewTransaction
+} from '../screenFunctions/walletHistory.screenFunctions'
 import {prepareTransaction, balanceAndFeeIsCalculated} from '../screenFunctions/send.screenFunctions'
 import {enterPinCodeIfNecessary} from '../screenFunctions/prepare.screenFunctions'
+import {AssertionError} from "chai";
 
 const expect = require('chai').expect
 
@@ -103,6 +109,7 @@ describe('Happy paths', () => {
 
     it(`Intrawallet transaction, ${NORMAL_15_WORD_WALLET.name} wallet`, async () => {
       await openWallet(NORMAL_15_WORD_WALLET.name)
+      const latestTxTime = await getLatestTxTime()
       const receiverAddress = await getReceiveAddress()
       await walletHistoryScreen.sendButton().click()
       await prepareTransaction(receiverAddress, TADA_TOKEN, '1')
@@ -118,11 +125,18 @@ describe('Happy paths', () => {
         await walletHistoryScreen.sendButton().waitForDisplayed({timeout: DEFAULT_TIMEOUT, interval: DEFAULT_INTERVAL}),
         `Wallet transactions screen is not displayed`,
       ).to.be.true
+
+      try {
+        await driver.waitUntil(async () => await waitForNewTransaction(latestTxTime, TWO_MINUTES_TIMEOUT))
+      } catch (e) {
+        throw new AssertionError('There is no new transaction')
+      }
     })
 
     it(`Intrawallet transaction, ${NORMAL_15_WORD_WALLET.name} wallet, token`, async () => {
       const tokenName = 'tSUNDAE'
       await openWallet(NORMAL_15_WORD_WALLET.name)
+      const latestTxTime = await getLatestTxTime()
       await checkTokenInAssets(tokenName)
       const receiverAddress = await getReceiveAddress()
       await walletHistoryScreen.sendButton().click()
@@ -139,6 +153,12 @@ describe('Happy paths', () => {
         await walletHistoryScreen.sendButton().waitForDisplayed({timeout: DEFAULT_TIMEOUT, interval: DEFAULT_INTERVAL}),
         `Wallet transactions screen is not displayed`,
       ).to.be.true
+
+      try {
+        await driver.waitUntil(async () => await waitForNewTransaction(latestTxTime, TWO_MINUTES_TIMEOUT))
+      } catch (e) {
+        throw new AssertionError('There is no new transaction')
+      }
     })
   })
 })

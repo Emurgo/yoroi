@@ -9,3 +9,35 @@ export async function isElementChecked(element: WebdriverIO.Element): Promise<bo
 export const getAmountFromString = (inputAmount: string): string => {
   return inputAmount.split(':')[1].trim().split(' ')[0]
 }
+
+export function getPrettyDate(dateObject: Date = new Date(), dateTimeFormat: string = 'ISO') {
+  const options: Intl.DateTimeFormatOptions = {year: 'numeric', month: 'short', day: 'numeric'}
+  switch (dateTimeFormat) {
+    case 'US':
+      return dateObject.toLocaleDateString('en-US', options)
+    default:
+      // ISO format
+      return dateObject.toISOString().split('T')[0]
+  }
+}
+
+export const amPmTo24 = (inputStringTime) => {
+  const ampmPart = inputStringTime.split(' ')[1]
+  const timePart = inputStringTime.split(' ')[0]
+  const hours = parseInt(timePart.split(':')[0])
+  const minutes = timePart.split(':')[1]
+  const seconds = timePart.split(':')[2]
+  let newHours = ''
+
+  if (ampmPart == 'AM') {
+    if (hours == 12) {
+      newHours = '00'
+    } else {
+      newHours = hours < 10 ? `0${hours}` : `${hours}`
+    }
+  } else if (ampmPart == 'PM' && hours != 12) {
+    newHours = (12 + hours).toString()
+  }
+
+  return `${newHours}:${minutes}:${seconds}`
+}
