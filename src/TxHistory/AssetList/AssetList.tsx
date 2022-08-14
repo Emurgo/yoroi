@@ -95,7 +95,7 @@ const AssetItem = ({assetToken, onPress}: AssetItemProps) => {
         </View>
 
         <View>
-          <Text style={styles.tokenAmount}>{formatTokenAmount(assetToken.amount, tokenInfo, 15)}</Text>
+          <Text style={styles.tokenAmount}>{formatTokenAmount(assetToken.amount, tokenInfo)}</Text>
         </View>
       </View>
     </TouchableOpacity>
