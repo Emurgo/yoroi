@@ -12,7 +12,7 @@ import NoImage from '../../assets/img/asset_no_image.png'
 import {Boundary, Button, Spacer, Text, TextInput} from '../../components'
 import {useTokenInfo} from '../../hooks'
 import globalMessages, {txLabels} from '../../i18n/global-messages'
-import {getDefaultAssetByNetworkId} from '../../legacy/config'
+import {getPrimaryAssetByNetworkId} from '../../legacy/config'
 import {decodeHexAscii, formatTokenAmount, getAssetDenominationOrId, getTokenFingerprint} from '../../legacy/format'
 import {TxHistoryRouteNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
@@ -30,7 +30,7 @@ type Props = {
 export const AssetSelectorScreen = ({balances}: Props) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
-  const defaultAsset = getDefaultAssetByNetworkId(wallet.networkId)
+  const primaryAsset = getPrimaryAssetByNetworkId(wallet.networkId)
   const [matcher, setMatcher] = React.useState('')
   const navigation = useNavigation<TxHistoryRouteNavigation>()
   const {setSendAll, setSelectedTokenIdentifier} = useSendContext()
@@ -44,7 +44,7 @@ export const AssetSelectorScreen = ({balances}: Props) => {
     .sort(([, quantityA]: [TokenId, Quantity], [, quantityB]: [TokenId, Quantity]) =>
       Quantities.isGreaterThan(quantityA, quantityB) ? -1 : 1,
     )
-    .sort(([tokenId]: [TokenId, Quantity]) => (tokenId === defaultAsset.identifier ? -1 : 1)) // default first
+    .sort(([tokenId]: [TokenId, Quantity]) => (tokenId === primaryAsset.identifier ? -1 : 1)) // default first
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={{flex: 1, backgroundColor: 'white'}}>
@@ -89,7 +89,7 @@ export const AssetSelectorScreen = ({balances}: Props) => {
           title={strings.sendAllAssets}
           onPress={() => {
             setSendAll(true)
-            setSelectedTokenIdentifier(defaultAsset.identifier)
+            setSelectedTokenIdentifier(primaryAsset.identifier)
             navigation.navigate('send')
           }}
         />

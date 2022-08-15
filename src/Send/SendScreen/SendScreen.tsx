@@ -11,7 +11,7 @@ import {useSelector} from 'react-redux'
 
 import {Button, Checkbox, Spacer, StatusBar, Text, TextInput} from '../../components'
 import {useBalances, useTokenInfo} from '../../hooks'
-import {CONFIG, getDefaultAssetByNetworkId} from '../../legacy/config'
+import {CONFIG, getPrimaryAssetByNetworkId} from '../../legacy/config'
 import {formatTokenAmount, getAssetDenominationOrId, truncateWithEllipsis} from '../../legacy/format'
 import {
   hasPendingOutgoingTransactionSelector,
@@ -47,7 +47,7 @@ export const SendScreen = () => {
   const wallet = useSelectedWallet()
   const isFetchingBalance = useSelector(isFetchingUtxosSelector)
   const lastFetchingError = useSelector(lastUtxosFetchErrorSelector)
-  const defaultAsset = getDefaultAssetByNetworkId(wallet.networkId)
+  const primaryAsset = getPrimaryAssetByNetworkId(wallet.networkId)
   const balances = useBalances(wallet)
   const utxos = useSelector(utxosSelector)
   const hasPendingOutgoingTransaction = useSelector(hasPendingOutgoingTransactionSelector)
@@ -56,7 +56,7 @@ export const SendScreen = () => {
 
   const {selectedTokenIdentifier, sendAll, setSendAll, receiver, setReceiver, amount, setAmount} = useSendContext()
   const selectedAssetAvailableAmount = balances[selectedTokenIdentifier]
-  const defaultAssetAvailableAmount = balances[defaultAsset.identifier]
+  const defaultAssetAvailableAmount = balances[primaryAsset.identifier]
 
   if (typeof selectedAssetAvailableAmount !== 'string') {
     throw new Error('Invalid token')
@@ -74,7 +74,7 @@ export const SendScreen = () => {
 
   const tokenInfo = useTokenInfo({wallet, tokenId: selectedTokenIdentifier})
   const assetDenomination = truncateWithEllipsis(getAssetDenominationOrId(tokenInfo), 20)
-  const amountErrorText = getAmountErrorText(intl, amountErrors, balanceErrors, defaultAsset)
+  const amountErrorText = getAmountErrorText(intl, amountErrors, balanceErrors, primaryAsset)
 
   const isValid =
     isOnline &&
@@ -107,7 +107,7 @@ export const SendScreen = () => {
       addressInput: receiver,
       amount,
       sendAll,
-      defaultAsset,
+      primaryAsset,
       selectedTokenInfo: tokenInfo,
       defaultAssetAvailableAmount,
       selectedAssetAvailableAmount,
@@ -149,7 +149,7 @@ export const SendScreen = () => {
 
     const selectedTokens: YoroiAmounts = tokenInfo.isDefault
       ? sendAll
-        ? Amounts.remove(balances, [defaultAsset.identifier])
+        ? Amounts.remove(balances, [primaryAsset.identifier])
         : {}
       : {
           [selectedTokenIdentifier]: balances[selectedTokenIdentifier],

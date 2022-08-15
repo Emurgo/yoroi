@@ -7,7 +7,7 @@ import {useSelector} from 'react-redux'
 import {Boundary, DangerousAction, PleaseWaitView, Spacer} from '../../components'
 import {useWithdrawalTx} from '../../hooks'
 import globalMessages, {ledgerMessages} from '../../i18n/global-messages'
-import {getDefaultAssetByNetworkId} from '../../legacy/config'
+import {getPrimaryAssetByNetworkId} from '../../legacy/config'
 import KeyStore from '../../legacy/KeyStore'
 import {utxosSelector} from '../../legacy/selectors'
 import {theme} from '../../theme'
@@ -62,7 +62,7 @@ export const WithdrawalTxForm: React.FC<{
     {
       wallet,
       deregister,
-      defaultAsset: getDefaultAssetByNetworkId(wallet.networkId),
+      primaryAsset: getPrimaryAssetByNetworkId(wallet.networkId),
       utxos,
     },
     {

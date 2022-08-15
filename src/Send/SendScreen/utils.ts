@@ -17,14 +17,14 @@ import type {AddressValidationErrors} from '../../yoroi-wallets/utils/validators
 import {getUnstoppableDomainAddress, isReceiverAddressValid, validateAmount} from '../../yoroi-wallets/utils/validators'
 import {amountInputErrorMessages, messages} from './strings'
 
-export const getMinAda = async (selectedToken: Token, defaultAsset: DefaultAsset) => {
-  const networkConfig = getCardanoNetworkConfigById(defaultAsset.networkId)
+export const getMinAda = async (selectedToken: Token, primaryAsset: DefaultAsset) => {
+  const networkConfig = getCardanoNetworkConfigById(primaryAsset.networkId)
   const fakeAmount = new BigNumber('0') // amount doesn't matter for calculating min UTXO amount
   const fakeMultitoken = new MultiToken(
     [
       {
-        identifier: defaultAsset.identifier,
-        networkId: defaultAsset.networkId,
+        identifier: primaryAsset.identifier,
+        networkId: primaryAsset.networkId,
         amount: fakeAmount,
       },
       {
@@ -34,8 +34,8 @@ export const getMinAda = async (selectedToken: Token, defaultAsset: DefaultAsset
       },
     ],
     {
-      defaultNetworkId: defaultAsset.networkId,
-      defaultIdentifier: defaultAsset.identifier,
+      defaultNetworkId: primaryAsset.networkId,
+      defaultIdentifier: primaryAsset.identifier,
     },
   )
   const minAmount = await minAdaRequired(
@@ -53,7 +53,7 @@ export const getTransactionData = async (
   address: string,
   amount: string,
   sendAll: boolean,
-  defaultAsset: DefaultAsset,
+  primaryAsset: DefaultAsset,
   selectedToken: Token,
 ) => {
   const sendTokenList: SendTokenList = []
@@ -72,11 +72,11 @@ export const getTransactionData = async (
   }
   if (!selectedToken.isDefault && isHaskellShelleyNetwork(selectedToken.networkId)) {
     sendTokenList.push({
-      token: defaultAsset,
-      amount: await getMinAda(selectedToken, defaultAsset),
+      token: primaryAsset,
+      amount: await getMinAda(selectedToken, primaryAsset),
     })
   }
-  return wallet.createUnsignedTx(utxos, address, sendTokenList, defaultAsset)
+  return wallet.createUnsignedTx(utxos, address, sendTokenList, primaryAsset)
 }
 
 export const recomputeAll = async ({
@@ -85,7 +85,7 @@ export const recomputeAll = async ({
   addressInput,
   utxos,
   sendAll,
-  defaultAsset,
+  primaryAsset,
   selectedTokenInfo,
   defaultAssetAvailableAmount,
   selectedAssetAvailableAmount,
@@ -95,7 +95,7 @@ export const recomputeAll = async ({
   amount: string
   utxos: Array<RawUtxo> | undefined | null
   sendAll: boolean
-  defaultAsset: DefaultAsset
+  primaryAsset: DefaultAsset
   selectedTokenInfo: Token
   defaultAssetAvailableAmount: Quantity
   selectedAssetAvailableAmount: Quantity
@@ -128,7 +128,7 @@ export const recomputeAll = async ({
       // we'll substract minAda from ADA balance if we are sending a token
       const minAda =
         !selectedTokenInfo.isDefault && isHaskellShelleyNetwork(selectedTokenInfo.networkId)
-          ? ((await getMinAda(selectedTokenInfo, defaultAsset)) as Quantity)
+          ? ((await getMinAda(selectedTokenInfo, primaryAsset)) as Quantity)
           : '0'
 
       if (sendAll) {
@@ -138,11 +138,11 @@ export const recomputeAll = async ({
           address,
           amount,
           sendAll,
-          defaultAsset,
+          primaryAsset,
           selectedTokenInfo,
         )
 
-        fee = yoroiUnsignedTx.fee[defaultAsset.identifier]
+        fee = yoroiUnsignedTx.fee[primaryAsset.identifier]
 
         if (selectedTokenInfo.isDefault) {
           recomputedAmount = normalizeTokenAmount(
@@ -173,11 +173,11 @@ export const recomputeAll = async ({
           address,
           amount,
           false,
-          defaultAsset,
+          primaryAsset,
           selectedTokenInfo,
         )
 
-        fee = yoroiUnsignedTx.fee[defaultAsset.identifier]
+        fee = yoroiUnsignedTx.fee[primaryAsset.identifier]
 
         balanceAfter = Quantities.diff(defaultAssetAvailableAmount, Quantities.sum([parsedAmount, minAda, fee]))
       }
@@ -224,19 +224,19 @@ export const getAmountErrorText = (
   intl: IntlShape,
   amountErrors: {invalidAmount?: string | number | null},
   balanceErrors: {insufficientBalance?: boolean; assetOverflow?: boolean},
-  defaultAsset: DefaultAsset,
+  primaryAsset: DefaultAsset,
 ) => {
   if (amountErrors.invalidAmount != null) {
     const msgOptions = {}
     if (amountErrors.invalidAmount === InvalidAssetAmount.ERROR_CODES.LT_MIN_UTXO) {
-      const networkConfig = getCardanoNetworkConfigById(defaultAsset.networkId)
+      const networkConfig = getCardanoNetworkConfigById(primaryAsset.networkId)
       const amount = new BigNumber(networkConfig.MINIMUM_UTXO_VAL)
       // remove decimal part if it's equal to 0
-      const decimalPart = amount.modulo(Math.pow(10, defaultAsset.metadata.numberOfDecimals))
+      const decimalPart = amount.modulo(Math.pow(10, primaryAsset.metadata.numberOfDecimals))
       const minUtxo = decimalPart.eq('0')
-        ? formatTokenInteger(amount, defaultAsset)
-        : formatTokenAmount(amount, defaultAsset)
-      const ticker = defaultAsset.metadata.ticker
+        ? formatTokenInteger(amount, primaryAsset)
+        : formatTokenAmount(amount, primaryAsset)
+      const ticker = primaryAsset.metadata.ticker
       Object.assign(msgOptions, {minUtxo, ticker})
     }
     return intl.formatMessage(amountInputErrorMessages[amountErrors.invalidAmount], msgOptions)

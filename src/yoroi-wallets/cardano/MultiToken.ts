@@ -1,7 +1,7 @@
 // taken from Yoroi Frontend's MultiToken class
 import {BigNumber} from 'bignumber.js'
 
-import {getDefaultAssetByNetworkId} from '../../legacy/config'
+import {getPrimaryAssetByNetworkId} from '../../legacy/config'
 import type {NetworkId} from '../../legacy/types'
 export type TokenLookupKey = {
   identifier: string
@@ -196,10 +196,10 @@ export class MultiToken {
  * Utility functions
  */
 export const getDefaultNetworkTokenEntry = (networkId: NetworkId): DefaultTokenEntry => {
-  const defaultAsset = getDefaultAssetByNetworkId(networkId)
+  const primaryAsset = getPrimaryAssetByNetworkId(networkId)
   return {
-    defaultNetworkId: defaultAsset.networkId,
-    defaultIdentifier: defaultAsset.identifier,
+    defaultNetworkId: primaryAsset.networkId,
+    defaultIdentifier: primaryAsset.identifier,
   }
 }
 export const strToDefaultMultiAsset = (amount: string, networkId: NetworkId) => {

@@ -11,7 +11,7 @@ import {ConfirmTx} from '../components/ConfirmTx'
 import {Instructions as HWInstructions} from '../HW'
 import {txLabels} from '../i18n/global-messages'
 import LocalizableError from '../i18n/LocalizableError'
-import {CONFIG, getDefaultAssetByNetworkId} from '../legacy/config'
+import {CONFIG, getPrimaryAssetByNetworkId} from '../legacy/config'
 import {formatTokenWithSymbol} from '../legacy/format'
 import {CatalystRouteNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
@@ -57,7 +57,7 @@ export const Step5 = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx}) => 
         <TextInput
           value={formatTokenWithSymbol(
             new BigNumber(Amounts.getAmount(yoroiUnsignedTx.fee, '').quantity),
-            getDefaultAssetByNetworkId(wallet.networkId),
+            getPrimaryAssetByNetworkId(wallet.networkId),
           )}
           label={strings.fees}
           editable={false}

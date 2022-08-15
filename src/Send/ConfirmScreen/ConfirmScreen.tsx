@@ -9,7 +9,7 @@ import {ConfirmTx} from '../../components/ConfirmTx'
 import {useTokenInfo} from '../../hooks'
 import {Instructions as HWInstructions} from '../../HW'
 import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../i18n/global-messages'
-import {CONFIG, getDefaultAssetByNetworkId} from '../../legacy/config'
+import {CONFIG, getPrimaryAssetByNetworkId} from '../../legacy/config'
 import {formatTokenWithSymbol, formatTokenWithText} from '../../legacy/format'
 import {useParams, useWalletNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
@@ -78,18 +78,18 @@ export const ConfirmScreen = () => {
 
         <Banner
           label={strings.availableFunds}
-          text={formatTokenWithText(new BigNumber(availableAmount), getDefaultAssetByNetworkId(wallet.networkId))}
+          text={formatTokenWithText(new BigNumber(availableAmount), getPrimaryAssetByNetworkId(wallet.networkId))}
           boldText
         />
 
         <ScrollView style={styles.container} contentContainerStyle={{padding: 16}}>
           <Text small>
-            {strings.fees}: {formatTokenWithSymbol(new BigNumber(fee), getDefaultAssetByNetworkId(wallet.networkId))}
+            {strings.fees}: {formatTokenWithSymbol(new BigNumber(fee), getPrimaryAssetByNetworkId(wallet.networkId))}
           </Text>
 
           <Text small>
             {strings.balanceAfterTx}:{' '}
-            {formatTokenWithSymbol(new BigNumber(balanceAfterTx), getDefaultAssetByNetworkId(wallet.networkId))}
+            {formatTokenWithSymbol(new BigNumber(balanceAfterTx), getPrimaryAssetByNetworkId(wallet.networkId))}
           </Text>
 
           <Spacer height={16} />
@@ -101,7 +101,7 @@ export const ConfirmScreen = () => {
 
           <Text>{strings.total}</Text>
           <Text style={styles.amount}>
-            {formatTokenWithSymbol(new BigNumber(defaultAssetAmount), getDefaultAssetByNetworkId(wallet.networkId))}
+            {formatTokenWithSymbol(new BigNumber(defaultAssetAmount), getPrimaryAssetByNetworkId(wallet.networkId))}
           </Text>
 
           {Object.entries(selectedTokens).map(([tokenId, quantity]) => (
