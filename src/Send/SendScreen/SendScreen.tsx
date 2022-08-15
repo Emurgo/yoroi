@@ -2,7 +2,7 @@ import {useNetInfo} from '@react-native-community/netinfo'
 import {useNavigation} from '@react-navigation/native'
 import {BigNumber} from 'bignumber.js'
 import _ from 'lodash'
-import React, {useState} from 'react'
+import React from 'react'
 import {useIntl} from 'react-intl'
 import {ActivityIndicator, Image, ScrollView, StyleSheet, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
@@ -62,15 +62,15 @@ export const SendScreen = () => {
     throw new Error('Invalid token')
   }
 
-  const [address, setAddress] = useState('')
-  const [addressErrors, setAddressErrors] = useState<AddressValidationErrors>({addressIsRequired: true})
-  const [amountErrors, setAmountErrors] = useState<AmountValidationErrors>({amountIsRequired: true})
-  const [balanceErrors, setBalanceErrors] = useState<BalanceValidationErrors>({})
-  const [balanceAfter, setBalanceAfter] = useState<Quantity | null>(null)
-  const [yoroiUnsignedTx, setYoroiUnsignedTx] = useState<null | YoroiUnsignedTx>(null)
-  const [fee, setFee] = useState<Quantity | null>(null)
-  const [recomputing, setRecomputing] = useState(false)
-  const [showSendAllWarning, setShowSendAllWarning] = useState(false)
+  const [address, setAddress] = React.useState('')
+  const [addressErrors, setAddressErrors] = React.useState<AddressValidationErrors>({addressIsRequired: true})
+  const [amountErrors, setAmountErrors] = React.useState<AmountValidationErrors>({amountIsRequired: true})
+  const [balanceErrors, setBalanceErrors] = React.useState<BalanceValidationErrors>({})
+  const [balanceAfter, setBalanceAfter] = React.useState<Quantity | null>(null)
+  const [yoroiUnsignedTx, setYoroiUnsignedTx] = React.useState<null | YoroiUnsignedTx>(null)
+  const [fee, setFee] = React.useState<Quantity | null>(null)
+  const [recomputing, setRecomputing] = React.useState(false)
+  const [showSendAllWarning, setShowSendAllWarning] = React.useState(false)
 
   const tokenInfo = useTokenInfo({wallet, tokenId: selectedTokenIdentifier})
   const assetDenomination = truncateWithEllipsis(getAssetDenominationOrId(tokenInfo), 20)

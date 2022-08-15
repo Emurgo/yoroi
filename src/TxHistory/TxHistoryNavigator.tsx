@@ -1,5 +1,5 @@
 import {createStackNavigator} from '@react-navigation/stack'
-import React, {useState} from 'react'
+import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps} from 'react-native'
 import {useSelector} from 'react-redux'
@@ -35,7 +35,7 @@ export const TxHistoryNavigator = () => {
   const walletName = useWalletName(wallet)
   const transactionInfos = useSelector(transactionsInfoSelector)
   const balances = useBalances(wallet)
-  const [modalInfoState, setModalInfoState] = useState(false)
+  const [modalInfoState, setModalInfoState] = React.useState(false)
   const showModalInfo = () => setModalInfoState(true)
   const hideModalInfo = () => setModalInfoState(false)
 
