@@ -18,7 +18,7 @@ export const BalanceAfterTransaction = ({balanceAfter}: {balanceAfter: Quantity 
   const tokenInfo = useTokenInfo({wallet, tokenId: tokenBalance.getDefaultId()})
 
   const value =
-    balanceAfter !== null
+      !isEmptyString(balanceAfter)
       ? formatTokenWithSymbol(new BigNumber(balanceAfter), tokenInfo)
       : strings.balanceAfterNotAvailable
 
