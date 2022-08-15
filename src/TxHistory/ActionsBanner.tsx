@@ -8,7 +8,7 @@ import features from '../features'
 import {actionMessages} from '../i18n/global-messages'
 import {TxHistoryRouteNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
-import {useSendContext} from '../Send/Context/SendContext'
+import {useSend} from '../Send/Context/SendContext'
 import {COLORS} from '../theme'
 
 const ACTION_PROPS = {
@@ -20,7 +20,7 @@ export const ActionsBanner = () => {
   const strings = useStrings()
   const navigateTo = useNavigateTo()
   const wallet = useSelectedWallet()
-  const {clear} = useSendContext()
+  const {clear} = useSend()
 
   const onSend = () => {
     navigateTo.send()

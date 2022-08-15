@@ -30,7 +30,7 @@ import type {
   AmountValidationErrors,
   BalanceValidationErrors,
 } from '../../yoroi-wallets/utils/validators'
-import {useSendContext} from '../Context/SendContext'
+import {useSend} from '../Context/SendContext'
 import {AmountField} from './../AmountField'
 import {AvailableAmountBanner} from './AvailableAmountBanner'
 import {BalanceAfterTransaction} from './BalanceAfterTransaction'
@@ -54,7 +54,7 @@ export const SendScreen = () => {
   const netInfo = useNetInfo()
   const isOnline = netInfo.type !== 'none' && netInfo.type !== 'unknown'
 
-  const {selectedTokenIdentifier, sendAll, setSendAll, receiver, setReceiver, amount, setAmount} = useSendContext()
+  const {selectedTokenIdentifier, sendAll, setSendAll, receiver, setReceiver, amount, setAmount} = useSend()
   const selectedAssetAvailableAmount = balances[selectedTokenIdentifier]
   const defaultAssetAvailableAmount = balances[primaryAsset.identifier]
 

@@ -21,7 +21,7 @@ import {Token} from '../../types'
 import {YoroiWallet} from '../../yoroi-wallets'
 import {Quantity, TokenId, YoroiAmounts} from '../../yoroi-wallets/types'
 import {Quantities} from '../../yoroi-wallets/utils'
-import {useSendContext} from '../Context/SendContext'
+import {useSend} from '../Context/SendContext'
 
 type Props = {
   balances: YoroiAmounts
@@ -33,7 +33,7 @@ export const AssetSelectorScreen = ({balances}: Props) => {
   const primaryAsset = getPrimaryAssetByNetworkId(wallet.networkId)
   const [matcher, setMatcher] = React.useState('')
   const navigation = useNavigation<TxHistoryRouteNavigation>()
-  const {setSendAll, setSelectedTokenIdentifier} = useSendContext()
+  const {setSendAll, setSelectedTokenIdentifier} = useSend()
 
   const onChangeMatcher = (matcher: string) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)

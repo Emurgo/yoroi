@@ -3,11 +3,11 @@ import React from 'react'
 import QRCodeScanner from 'react-native-qrcode-scanner'
 
 import {pastedFormatter} from '../../yoroi-wallets/utils/amountUtils'
-import {useSendContext} from '../Context/SendContext'
+import {useSend} from '../Context/SendContext'
 
 export const AddressReaderQR: React.FC = () => {
   const navigation = useNavigation()
-  const {setAmount, setReceiver} = useSendContext()
+  const {setAmount, setReceiver} = useSend()
 
   const handleOnRead = ({data}) => {
     const regex = /(cardano):([a-zA-Z1-9]\w+)\??/

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import * as React from 'react'
 import {createContext, useContext} from 'react'
 
 import {getPrimaryAssetByNetworkId} from '../../legacy/config'
@@ -9,10 +9,10 @@ const SendContext = createContext<undefined | SendContext>(undefined)
 export const SendProvider: React.FC<SendContextProvider> = ({children, balances, wallet}) => {
   const primaryTokenId = getPrimaryAssetByNetworkId(wallet.networkId).identifier
 
-  const [selectedTokenIdentifier, setSelectedTokenIdentifier] = useState<TokenId>(primaryTokenId)
-  const [sendAll, setSendAll] = useState(false)
-  const [receiver, setReceiver] = useState('')
-  const [amount, setAmount] = useState('')
+  const [selectedTokenIdentifier, setSelectedTokenIdentifier] = React.useState<TokenId>(primaryTokenId)
+  const [sendAll, setSendAll] = React.useState(false)
+  const [receiver, setReceiver] = React.useState('')
+  const [amount, setAmount] = React.useState('')
 
   const clear = () => {
     setSendAll(false)
@@ -28,10 +28,6 @@ export const SendProvider: React.FC<SendContextProvider> = ({children, balances,
     setSelectedTokenIdentifier(primaryTokenId)
     clear()
   }
-
-  useEffect(() => {
-    clear()
-  }, [wallet])
 
   return (
     <SendContext.Provider
@@ -52,7 +48,7 @@ export const SendProvider: React.FC<SendContextProvider> = ({children, balances,
   )
 }
 
-export const useSendContext = () => useContext(SendContext) || missingProvider()
+export const useSend = () => useContext(SendContext) || missingProvider()
 
 const missingProvider = () => {
   throw new Error('SendProvider is missing')

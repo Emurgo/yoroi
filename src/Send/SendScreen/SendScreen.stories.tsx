@@ -5,7 +5,7 @@ import React from 'react'
 import {balances, mockWallet} from '../../../storybook'
 import {SelectedWalletProvider} from '../../SelectedWallet'
 import {YoroiWallet} from '../../yoroi-wallets'
-import {SendProvider, useSendContext} from '../Context/SendContext'
+import {SendProvider, useSend} from '../Context/SendContext'
 import {SendScreen} from './SendScreen'
 
 storiesOf('SendScreen', module)
@@ -20,14 +20,14 @@ const SendScreenTest = ({isSendAll}: Props) => {
   }
 
   return (
-    <SendProvider wallet={wallet} balances={balances}>
+    <SendProvider key={wallet.id} wallet={wallet} balances={balances}>
       <SendScreenWapper isSendAll={isSendAll} />
     </SendProvider>
   )
 }
 
 const SendScreenWapper = ({isSendAll}: Props) => {
-  const {setSendAll, setSelectedTokenIdentifier} = useSendContext()
+  const {setSendAll, setSelectedTokenIdentifier} = useSend()
 
   setSelectedTokenIdentifier(Object.keys(balances)[0])
 
