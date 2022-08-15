@@ -66,7 +66,7 @@ export const DelegationConfirmation = ({mockDefaultAsset}: {mockDefaultAsset?: D
 
         <View style={styles.itemBlock}>
           <Text style={styles.itemTitle}>{strings.stakePoolHash}</Text>
-          <Text>{poolHash}</Text>
+          <Text testID="stakePoolHashText">{poolHash}</Text>
         </View>
 
         <View style={styles.input}>
