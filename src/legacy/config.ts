@@ -84,7 +84,6 @@ export const WALLETS = {
 const HARDWARE_WALLETS = {
   LEDGER_NANO: {
     ENABLED: true,
-    DEFAULT_WALLET_NAME: 'My Ledger Wallet',
     VENDOR: 'ledger.com',
     MODEL: 'Nano',
     ENABLE_USB_TRANSPORT: true,

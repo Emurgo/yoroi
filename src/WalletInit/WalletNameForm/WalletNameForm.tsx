@@ -6,7 +6,6 @@ import {ActivityIndicator, Image, ImageSourcePropType, StyleSheet, View, ViewSty
 import {Button, ProgressStep, TextInput} from '../../components'
 import {useWalletNames} from '../../hooks'
 import globalMessages from '../../i18n/global-messages'
-import {CONFIG} from '../../legacy/config'
 import {ignoreConcurrentAsyncHandler} from '../../legacy/utils'
 import {spacing} from '../../theme'
 import {getWalletNameError, validateWalletName} from '../../yoroi-wallets/utils/validators'
@@ -34,10 +33,11 @@ export const WalletNameForm = ({
   buttonStyle,
   topContent,
   bottomContent,
+  defaultWalletName,
   isWaiting = false,
 }: Props) => {
   const strings = useStrings()
-  const [name, setName] = React.useState(CONFIG.HARDWARE_WALLETS.LEDGER_NANO.DEFAULT_WALLET_NAME ?? '')
+  const [name, setName] = React.useState(defaultWalletName ?? '')
   const walletNames = useWalletNames()
   const validationErrors = validateWalletName(name, null, walletNames || [])
   const hasErrors = Object.keys(validationErrors).length > 0
@@ -66,6 +66,7 @@ export const WalletNameForm = ({
         {topContent}
 
         <TextInput
+          errorOnMount
           autoFocus
           label={strings.walletNameInputLabel}
           value={name}
