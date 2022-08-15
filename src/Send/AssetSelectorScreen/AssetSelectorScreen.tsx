@@ -112,7 +112,7 @@ const AssetSelectorItem = ({wallet, tokenId, quantity, onPress, matcher}: AssetS
         </View>
 
         <View style={{flex: 1, alignItems: 'flex-end', padding: 4}}>
-          <Text style={{color: COLORS.DARK_TEXT}}>{formatTokenAmount(new BigNumber(quantity), tokenInfo, 15)}</Text>
+          <Text style={{color: COLORS.DARK_TEXT}}>{formatTokenAmount(assetToken.amount, tokenInfo)}</Text>
         </View>
       </View>
     </TouchableOpacity>

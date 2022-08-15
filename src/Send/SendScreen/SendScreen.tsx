@@ -250,7 +250,6 @@ export const SendScreen = ({
             value={`${assetDenomination}: ${formatTokenAmount(
               new BigNumber(selectedAssetAvailableAmount),
               tokenInfo,
-              15,
             )}`}
             autoComplete={false}
           />
