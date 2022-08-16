@@ -3,6 +3,7 @@ import {storiesOf} from '@storybook/react-native'
 import * as React from 'react'
 
 import {balances, mockWallet} from '../../../storybook'
+import {PRIMARY_ASSET_CONSTANTS} from '../../legacy/networks'
 import {SelectedWalletProvider} from '../../SelectedWallet'
 import {YoroiWallet} from '../../yoroi-wallets'
 import {SendProvider, useSend} from '../Context/SendContext'
@@ -38,7 +39,7 @@ const SendScreenWapper = ({isSendAll}: {isSendAll?: boolean}) => {
   }, [isSendAll, setSendAll])
 
   React.useEffect(() => {
-    setSelectedTokenIdentifier(Object.keys(balances)[0])
+    setSelectedTokenIdentifier(PRIMARY_ASSET_CONSTANTS.CARDANO)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
