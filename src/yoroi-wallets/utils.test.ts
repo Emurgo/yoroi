@@ -275,7 +275,7 @@ describe('Utxos', () => {
       } as YoroiAmounts)
     })
 
-    it('Regular Utxos', () => {
+    it('Utxos with tokens', () => {
       const utxos: RawUtxo[] = [
         {
           amount: '1024',
