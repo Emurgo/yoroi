@@ -37,7 +37,10 @@ const SendScreenWapper = ({isSendAll}: {isSendAll?: boolean}) => {
     }
   }, [isSendAll, setSendAll])
 
-  setSelectedTokenIdentifier(Object.keys(balances)[0])
+  React.useEffect(() => {
+    setSelectedTokenIdentifier(Object.keys(balances)[0])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return <SendScreen />
 }
