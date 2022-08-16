@@ -22,11 +22,9 @@ export function getPrettyDate(dateObject: Date = new Date(), dateTimeFormat: str
 }
 
 export const amPmTo24 = (inputStringTime) => {
-  const ampmPart = inputStringTime.split(' ')[1]
-  const timePart = inputStringTime.split(' ')[0]
-  const hours = parseInt(timePart.split(':')[0])
-  const minutes = timePart.split(':')[1]
-  const seconds = timePart.split(':')[2]
+  const [timePart, ampmPart] = inputStringTime.split(' ')
+  const [hoursStr, minutes, seconds] = timePart.split(':')
+  const hours = parseInt(hoursStr, 10)
   let newHours = ''
 
   if (ampmPart == 'AM') {
