@@ -230,11 +230,7 @@ export const SendScreen = () => {
             right={<Image source={require('../../assets/img/arrow_down_fill.png')} />}
             editable={false}
             label={strings.asset}
-            value={`${assetDenomination}: ${formatTokenAmount(
-              new BigNumber(selectedAssetAvailableAmount),
-              tokenInfo,
-              15,
-            )}`}
+            value={`${assetDenomination}: ${formatTokenAmount(new BigNumber(selectedAssetAvailableAmount), tokenInfo)}`}
             autoComplete={false}
           />
         </TouchableOpacity>
