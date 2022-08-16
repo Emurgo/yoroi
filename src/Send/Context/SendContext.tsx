@@ -20,18 +20,18 @@ export const SendProvider: React.FC<SendContextProvider> = ({children, balances,
   const [receiver, setReceiver] = React.useState('')
   const [amount, setAmount] = React.useState('')
 
-  const clear = React.useCallback(() => {
-    setSendAll(false)
-    setReceiver('')
-    setAmount('')
-  }, [setSendAll, setReceiver, setAmount])
-
   React.useEffect(() => {
     if (defaultTokenId !== selectedTokenIdentifier && isEmptyString(typeof balances[selectedTokenIdentifier])) {
       setSelectedTokenIdentifier(defaultTokenId)
       clear()
     }
-  }, [setSelectedTokenIdentifier, clear, defaultTokenId, selectedTokenIdentifier, balances])
+  }, [setSelectedTokenIdentifier, defaultTokenId, selectedTokenIdentifier, balances])
+
+  const clear = () => {
+    setSendAll(false)
+    setReceiver('')
+    setAmount('')
+  }
 
   return (
     <SendContext.Provider
