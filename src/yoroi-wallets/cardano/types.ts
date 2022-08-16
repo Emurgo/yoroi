@@ -173,19 +173,19 @@ export interface WalletInterface {
     poolRequest: string,
     valueInAccount: BigNumber,
     utxos: Array<RawUtxo>,
-    primaryAsset: DefaultAsset,
+    defaultAsset: DefaultAsset,
   ): Promise<YoroiUnsignedTx>
 
   createVotingRegTx(
     utxos: Array<RawUtxo>,
     catalystPrivateKey: string,
-    primaryAsset: DefaultAsset,
+    defaultAsset: DefaultAsset,
     decryptedKey: string | undefined,
   ): Promise<YoroiUnsignedTx>
 
   createWithdrawalTx(
     utxos: Array<RawUtxo>,
-    primaryAsset: DefaultAsset,
+    defaultAsset: DefaultAsset,
     shouldDeregister: boolean,
   ): Promise<YoroiUnsignedTx>
 

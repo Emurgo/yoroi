@@ -254,7 +254,7 @@ export const getCardanoDefaultAsset = (): DefaultAsset => {
   return _asToken(assetData)
 }
 
-export const getPrimaryAssetByNetworkId = (networkId: NetworkId): DefaultAsset => {
+export const getDefaultAssetByNetworkId = (networkId: NetworkId): DefaultAsset => {
   const defaultAssets = DEFAULT_ASSETS.filter((asset) => asset.NETWORK_ID === networkId)
   if (defaultAssets.length === 0) {
     throw new Error(`No default assset found for network id ${networkId}`)

@@ -1,6 +1,6 @@
 import {useMutation, UseMutationOptions} from 'react-query'
 
-import {getPrimaryAssetByNetworkId} from '../legacy/config'
+import {getDefaultAssetByNetworkId} from '../legacy/config'
 import {generatePrivateKeyForCatalyst, YoroiWallet} from '../yoroi-wallets'
 import {YoroiUnsignedTx} from '../yoroi-wallets/types'
 import {encryptWithPassword} from './catalystCipher'
@@ -31,8 +31,8 @@ export const useCreateVotingRegTx = (
         .then((x) => x.asBytes())
         .then((x) => Promise.all([encryptWithPassword(password, x), Buffer.from(x).toString('hex')]))
 
-      const primaryAsset = getPrimaryAssetByNetworkId(wallet.networkId)
-      const yoroiUnsignedTx = await wallet.createVotingRegTx(utxos, catalystSKHex, primaryAsset, decryptedKey)
+      const defaultAsset = getDefaultAssetByNetworkId(wallet.networkId)
+      const yoroiUnsignedTx = await wallet.createVotingRegTx(utxos, catalystSKHex, defaultAsset, decryptedKey)
 
       return {
         catalystSKHexEncrypted,

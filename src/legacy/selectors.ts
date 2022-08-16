@@ -43,9 +43,9 @@ export const availableAssetsSelector: (state: State) => Record<string, Token> = 
   (state: State) => state.wallet.networkId,
   (txs, networkId) => {
     if (networkId === NETWORK_REGISTRY.UNDEFINED) {
-      const primaryAsset = getCardanoDefaultAsset()
+      const defaultAsset = getCardanoDefaultAsset()
       return {
-        [primaryAsset.identifier]: primaryAsset,
+        [defaultAsset.identifier]: defaultAsset,
       }
     }
 
@@ -87,10 +87,10 @@ export const tokenBalanceSelector: (state: State) => MultiToken = createSelector
   (state: State) => state.wallet,
   (transactions, wallet) => {
     if (wallet.networkId === NETWORK_REGISTRY.UNDEFINED) {
-      const primaryAsset = getCardanoDefaultAsset()
+      const defaultAsset = getCardanoDefaultAsset()
       return new MultiToken([], {
-        defaultNetworkId: primaryAsset.networkId,
-        defaultIdentifier: primaryAsset.identifier,
+        defaultNetworkId: defaultAsset.networkId,
+        defaultIdentifier: defaultAsset.identifier,
       })
     }
 

@@ -22,7 +22,7 @@ export const ActionsBanner = () => {
   const wallet = useSelectedWallet()
   const {clear} = useSend()
 
-  const onSend = () => {
+  const toSend = () => {
     navigateTo.send()
     clear()
   }
@@ -35,7 +35,7 @@ export const ActionsBanner = () => {
         <View style={styles.row}>
           {!wallet.isReadOnly && (
             <View style={styles.centralized}>
-              <TouchableOpacity style={styles.actionIcon} onPress={onSend}>
+              <TouchableOpacity style={styles.actionIcon} onPress={toSend}>
                 <Icon.Send {...ACTION_PROPS} />
               </TouchableOpacity>
               <Text style={styles.actionLabel}>{strings.sendLabel}</Text>

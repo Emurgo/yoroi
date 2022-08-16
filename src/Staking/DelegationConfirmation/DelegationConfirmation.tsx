@@ -8,7 +8,7 @@ import {OfflineBanner, Text, ValidatedTextInput} from '../../components'
 import {ConfirmTx} from '../../components/ConfirmTx'
 import {Instructions as HWInstructions} from '../../HW'
 import globalMessages, {txLabels} from '../../i18n/global-messages'
-import {CONFIG, getPrimaryAssetByNetworkId} from '../../legacy/config'
+import {CONFIG, getDefaultAssetByNetworkId} from '../../legacy/config'
 import {formatTokenAmount, formatTokenWithText} from '../../legacy/format'
 import {useParams, useWalletNavigation} from '../../navigation'
 import {StakingCenterRoutes} from '../../navigation'
@@ -35,7 +35,7 @@ const isParams = (params?: Params | object | undefined): params is Params => {
 export const DelegationConfirmation = ({mockDefaultAsset}: {mockDefaultAsset?: DefaultAsset}) => {
   const {resetToTxHistory} = useWalletNavigation()
   const wallet = useSelectedWallet()
-  const primaryAsset = mockDefaultAsset || getPrimaryAssetByNetworkId(wallet.networkId)
+  const defaultAsset = mockDefaultAsset || getDefaultAssetByNetworkId(wallet.networkId)
   const strings = useStrings()
 
   const {poolHash, poolName, yoroiUnsignedTx} = useParams<Params>(isParams)
@@ -71,14 +71,14 @@ export const DelegationConfirmation = ({mockDefaultAsset}: {mockDefaultAsset?: D
 
         <View style={styles.input}>
           <Text small style={styles.fees}>
-            {`+ ${formatTokenAmount(new BigNumber(yoroiUnsignedTx.fee['']), primaryAsset)} ${strings.ofFees}`}
+            {`+ ${formatTokenAmount(new BigNumber(yoroiUnsignedTx.fee['']), defaultAsset)} ${strings.ofFees}`}
           </Text>
 
           {/* requires a handler so we pass on a dummy function */}
           <ValidatedTextInput
             onChangeText={() => undefined}
             editable={false}
-            value={formatTokenAmount(new BigNumber(stakingAmount.quantity), primaryAsset)}
+            value={formatTokenAmount(new BigNumber(stakingAmount.quantity), defaultAsset)}
             label={strings.amount}
           />
         </View>
@@ -91,7 +91,7 @@ export const DelegationConfirmation = ({mockDefaultAsset}: {mockDefaultAsset?: D
 
         <View style={styles.itemBlock}>
           <Text style={styles.itemTitle}>{strings.rewardsExplanation}</Text>
-          <Text style={styles.rewards}>{formatTokenWithText(new BigNumber(reward), primaryAsset)}</Text>
+          <Text style={styles.rewards}>{formatTokenWithText(new BigNumber(reward), defaultAsset)}</Text>
         </View>
 
         {wallet.isHW && <HWInstructions useUSB={useUSB} addMargin />}

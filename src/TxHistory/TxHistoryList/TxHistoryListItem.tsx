@@ -9,7 +9,7 @@ import {useSelector} from 'react-redux'
 
 import {Text} from '../../components'
 import {Icon} from '../../components/Icon'
-import {getPrimaryAssetByNetworkId} from '../../legacy/config'
+import {getDefaultAssetByNetworkId} from '../../legacy/config'
 import {
   ASSET_DENOMINATION,
   formatTimeToSeconds,
@@ -78,11 +78,11 @@ export const TxHistoryListItem = ({transaction}: Props) => {
   const amount: BigNumber = amountAsMT.getDefault()
   const amountDefaultAsset = availableAssets[amountAsMT.getDefaultId()] as DefaultAsset
 
-  const primaryAsset = amountDefaultAsset ?? getPrimaryAssetByNetworkId(wallet.networkId)
+  const defaultAsset = amountDefaultAsset ?? getDefaultAssetByNetworkId(wallet.networkId)
 
   // if we don't have a symbol for this asset, default to ticker first and
   // then to identifier
-  const assetSymbol = getAssetDenominationOrId(primaryAsset, ASSET_DENOMINATION.SYMBOL)
+  const assetSymbol = getAssetDenominationOrId(defaultAsset, ASSET_DENOMINATION.SYMBOL)
 
   const amountToDisplay = isEmptyString(fee?.amount) ? amount : amount.plus(new BigNumber(fee?.amount ?? 0))
   const amountStyle = amountToDisplay.eq(0)
@@ -110,10 +110,10 @@ export const TxHistoryListItem = ({transaction}: Props) => {
             {transaction.amount.length > 0 ? (
               <View style={styles.amount}>
                 <Text style={amountStyle} secondary={isPending}>
-                  {formatTokenInteger(amountToDisplay, primaryAsset)}
+                  {formatTokenInteger(amountToDisplay, defaultAsset)}
                 </Text>
                 <Text small style={amountStyle} secondary={isPending}>
-                  {formatTokenFractional(amountToDisplay, primaryAsset)}
+                  {formatTokenFractional(amountToDisplay, defaultAsset)}
                 </Text>
                 <Text style={amountStyle}>{`${utfSymbols.NBSP}${assetSymbol}`}</Text>
               </View>

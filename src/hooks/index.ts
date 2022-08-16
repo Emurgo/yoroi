@@ -17,7 +17,7 @@ import {useDispatch} from 'react-redux'
 
 import {clearAccountState} from '../legacy/account'
 import {signout} from '../legacy/actions'
-import {getPrimaryAssetByNetworkId} from '../legacy/config'
+import {getDefaultAssetByNetworkId} from '../legacy/config'
 import KeyStore from '../legacy/KeyStore'
 import {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {WalletMeta} from '../legacy/state'
@@ -216,19 +216,19 @@ export const useWithdrawalTx = (
   {
     wallet,
     utxos,
-    primaryAsset,
+    defaultAsset,
     deregister = false,
   }: {
     wallet: YoroiWallet
     utxos: Array<RawUtxo>
-    primaryAsset: DefaultAsset
+    defaultAsset: DefaultAsset
     deregister?: boolean
   },
   options?: UseQueryOptions<YoroiUnsignedTx>,
 ) => {
   const query = useQuery({
     queryKey: [wallet.id, 'withdrawalTx', {deregister}],
-    queryFn: () => wallet.createWithdrawalTx(utxos, primaryAsset, deregister),
+    queryFn: () => wallet.createWithdrawalTx(utxos, defaultAsset, deregister),
     retry: false,
     cacheTime: 0,
     ...options,
@@ -713,7 +713,7 @@ export const useBalances = (wallet: YoroiWallet): YoroiAmounts => {
     queryKey: [wallet.id, 'utxos'],
     refetchInterval: 20000,
     queryFn: () => {
-      const primaryTokenId = getPrimaryAssetByNetworkId(wallet.networkId).identifier
+      const primaryTokenId = getDefaultAssetByNetworkId(wallet.networkId).identifier
 
       return wallet.fetchUTXOs().then((utxos) => Utxos.toAmounts(utxos, primaryTokenId))
     },
