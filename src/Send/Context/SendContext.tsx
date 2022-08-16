@@ -21,7 +21,7 @@ export const SendProvider: React.FC<SendContextProvider> = ({children, balances,
   const [amount, setAmount] = React.useState('')
 
   React.useEffect(() => {
-    if (primaryTokenId !== selectedTokenIdentifier && isEmptyString(typeof balances[selectedTokenIdentifier])) {
+    if (primaryTokenId !== selectedTokenIdentifier && isEmptyString(balances[selectedTokenIdentifier])) {
       setSelectedTokenIdentifier(primaryTokenId)
       clear()
     }
