@@ -57,13 +57,14 @@ export const WalletForm = ({onSubmit}: Props) => {
           autoFocus
           label={strings.walletNameInputLabel}
           value={name}
-          onChangeText={(walletName: string) => setName(walletName.trim())}
+          onChangeText={(walletName: string) => setName(walletName)}
           errorText={!isEmptyString(walletNameErrorText) ? walletNameErrorText : undefined}
           errorDelay={0}
           returnKeyType="next"
           onSubmitEditing={() => passwordRef.current?.focus()}
           testID="walletNameInput"
           autoComplete={false}
+          showErrorOnBlur
         />
 
         <Spacer />
@@ -84,6 +85,7 @@ export const WalletForm = ({onSubmit}: Props) => {
           onSubmitEditing={() => passwordConfirmationRef.current?.focus()}
           testID="walletPasswordInput"
           autoComplete={false}
+          showErrorOnBlur
         />
 
         <Spacer />
@@ -102,6 +104,7 @@ export const WalletForm = ({onSubmit}: Props) => {
           }
           testID="walletRepeatPasswordInput"
           autoComplete={false}
+          showErrorOnBlur
         />
       </ScrollView>
 
