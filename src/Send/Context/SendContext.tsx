@@ -2,6 +2,7 @@ import * as React from 'react'
 import {createContext, useContext} from 'react'
 
 import {getDefaultAssetByNetworkId} from '../../legacy/config'
+import {isEmptyString} from '../../legacy/utils'
 import {YoroiWallet} from '../../yoroi-wallets'
 import {TokenId, YoroiAmounts} from '../../yoroi-wallets/types'
 
@@ -26,11 +27,7 @@ export const SendProvider: React.FC<SendContextProvider> = ({children, balances,
   }, [setSendAll, setReceiver, setAmount])
 
   React.useEffect(() => {
-    if (
-      defaultTokenId !== selectedTokenIdentifier &&
-      typeof balances[selectedTokenIdentifier] !== 'string' &&
-      balances[selectedTokenIdentifier] !== undefined
-    ) {
+    if (defaultTokenId !== selectedTokenIdentifier && isEmptyString(typeof balances[selectedTokenIdentifier])) {
       setSelectedTokenIdentifier(defaultTokenId)
       clear()
     }
