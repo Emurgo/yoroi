@@ -8,3 +8,7 @@ export const stakePoolInfoTitleCard = () => driver.$('//*[@resource-id="stakePoo
 export const stakePoolInfoPoolIdText = () => driver.$('//*[@resource-id="stakePoolInfoPoolIdText"]')
 export const stakePoolInfoPoolIdCopyButton = () => driver.$('//*[@resource-id="copyButton"]')
 export const goToStakingCenterButton = () => driver.$('//*[@resource-id="stakingCenterButton"]')
+
+export const isDisplayed = async () => {
+  return (await epochProgressTitleCard().isDisplayed()) && (await userSummaryTitleCard().isDisplayed())
+}

@@ -1,3 +1,3 @@
 // nightly
-export const nightlyPoolHashInput = () => driver.$('//*[@resource-id="nightlyPoolHashInput"]')
+export const nightlyPoolHashInput = () => driver.$('//*[@resource-id="nightlyPoolHashInput"]').$('android.widget.EditText')
 export const nightlyDelegateButton = () => driver.$('//*[@resource-id="nightlyDelegateButton"]')

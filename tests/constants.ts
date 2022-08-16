@@ -28,6 +28,7 @@ export const LEDGER_WALLET_NAME = 'Test Ledger'
 export const SPENDING_PASSWORD = '1234567890'
 export const ADA_TOKEN = 'ADA'
 export const TADA_TOKEN = 'TADA'
+export const STAKE_POOL_ID = '3921f4441153e5936910de57cb1982dfbaa781a57ba1ff97b3fd869e'
 export const APP_ID = 'com.emurgo.nightly'
 export const APP_ID_PARENT = 'com.emurgo.*'
 export const APP_PATH = join(process.cwd(), '/tests/app/Yoroi-Nightly.apk')
