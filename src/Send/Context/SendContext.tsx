@@ -13,19 +13,19 @@ type SendContextProvider = {
 
 const SendContext = createContext<undefined | SendContext>(undefined)
 export const SendProvider: React.FC<SendContextProvider> = ({children, balances, wallet}) => {
-  const defaultTokenId = getDefaultAssetByNetworkId(wallet.networkId).identifier
+  const primaryTokenId = getDefaultAssetByNetworkId(wallet.networkId).identifier
 
-  const [selectedTokenIdentifier, setSelectedTokenIdentifier] = React.useState<TokenId>(defaultTokenId)
+  const [selectedTokenIdentifier, setSelectedTokenIdentifier] = React.useState<TokenId>(primaryTokenId)
   const [sendAll, setSendAll] = React.useState(false)
   const [receiver, setReceiver] = React.useState('')
   const [amount, setAmount] = React.useState('')
 
   React.useEffect(() => {
-    if (defaultTokenId !== selectedTokenIdentifier && isEmptyString(typeof balances[selectedTokenIdentifier])) {
-      setSelectedTokenIdentifier(defaultTokenId)
+    if (primaryTokenId !== selectedTokenIdentifier && isEmptyString(typeof balances[selectedTokenIdentifier])) {
+      setSelectedTokenIdentifier(primaryTokenId)
       clear()
     }
-  }, [setSelectedTokenIdentifier, defaultTokenId, selectedTokenIdentifier, balances])
+  }, [setSelectedTokenIdentifier, primaryTokenId, selectedTokenIdentifier, balances])
 
   const clear = () => {
     setSendAll(false)
