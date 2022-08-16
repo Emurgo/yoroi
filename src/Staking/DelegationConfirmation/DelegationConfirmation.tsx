@@ -69,7 +69,7 @@ export const DelegationConfirmation = ({mockDefaultAsset}: {mockDefaultAsset?: D
           <Text testID="stakePoolHashText">{poolHash}</Text>
         </View>
 
-        <View style={styles.input}>
+        <View style={styles.input} testID="stakingAmount">
           <Text small style={styles.fees}>
             {`+ ${formatTokenAmount(new BigNumber(yoroiUnsignedTx.fee['']), defaultAsset)} ${strings.ofFees}`}
           </Text>
@@ -84,7 +84,7 @@ export const DelegationConfirmation = ({mockDefaultAsset}: {mockDefaultAsset?: D
         </View>
 
         {!wallet.isEasyConfirmationEnabled && !wallet.isHW && (
-          <View style={styles.input}>
+          <View style={styles.input} testID="spendingPassword">
             <ValidatedTextInput secureTextEntry value={password} label={strings.password} onChangeText={setPassword} />
           </View>
         )}
