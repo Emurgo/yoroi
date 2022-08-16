@@ -5,6 +5,11 @@ import {getPrimaryAssetByNetworkId} from '../../legacy/config'
 import {YoroiWallet} from '../../yoroi-wallets'
 import {TokenId, YoroiAmounts} from '../../yoroi-wallets/types'
 
+type SendContextProvider = {
+  balances: YoroiAmounts
+  wallet: YoroiWallet
+}
+
 const SendContext = createContext<undefined | SendContext>(undefined)
 export const SendProvider: React.FC<SendContextProvider> = ({children, balances, wallet}) => {
   const primaryTokenId = getPrimaryAssetByNetworkId(wallet.networkId).identifier
@@ -14,20 +19,22 @@ export const SendProvider: React.FC<SendContextProvider> = ({children, balances,
   const [receiver, setReceiver] = React.useState('')
   const [amount, setAmount] = React.useState('')
 
-  const clear = () => {
+  const clear = React.useCallback(() => {
     setSendAll(false)
     setReceiver('')
     setAmount('')
-  }
+  }, [setSendAll, setReceiver, setAmount])
 
-  if (
-    primaryTokenId !== selectedTokenIdentifier &&
-    typeof balances[selectedTokenIdentifier] !== 'string' &&
-    balances[selectedTokenIdentifier] !== undefined
-  ) {
-    setSelectedTokenIdentifier(primaryTokenId)
-    clear()
-  }
+  React.useEffect(() => {
+    if (
+      primaryTokenId !== selectedTokenIdentifier &&
+      typeof balances[selectedTokenIdentifier] !== 'string' &&
+      balances[selectedTokenIdentifier] !== undefined
+    ) {
+      setSelectedTokenIdentifier(primaryTokenId)
+      clear()
+    }
+  }, [setSelectedTokenIdentifier, clear, primaryTokenId, selectedTokenIdentifier, balances])
 
   return (
     <SendContext.Provider
@@ -48,12 +55,6 @@ export const SendProvider: React.FC<SendContextProvider> = ({children, balances,
   )
 }
 
-export const useSend = () => useContext(SendContext) || missingProvider()
-
-const missingProvider = () => {
-  throw new Error('SendProvider is missing')
-}
-
 type SendContext = {
   selectedTokenIdentifier: TokenId
   setSelectedTokenIdentifier: (tokenId: TokenId) => void
@@ -66,7 +67,8 @@ type SendContext = {
   clear: () => void
 }
 
-type SendContextProvider = {
-  balances: YoroiAmounts
-  wallet: YoroiWallet
+export const useSend = () => useContext(SendContext) || missingProvider()
+
+const missingProvider = () => {
+  throw new Error('SendProvider is missing')
 }
