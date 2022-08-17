@@ -40,9 +40,7 @@ export const getReceiveAddress = async (): Promise<string> => {
   return receiverAddress
 }
 
-export const copyFirstUnusedAddress = async (): Promise<string> => {
-  return await unusedAddressRows().$(addressTextSelector).getText()
-}
+export const copyFirstUnusedAddress = async (): Promise<string> => unusedAddressRows().$(addressTextSelector).getText()
 
 export const getLatestTx = async (): Promise<WebdriverIO.Element> => {
   const allTxs = await walletHistoryScreen.getAllTransactions()

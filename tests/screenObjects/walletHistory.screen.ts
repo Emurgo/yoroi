@@ -8,7 +8,7 @@ export const pairedTotalText = () => driver.$('//*[@resource-id="pairedTotalText
 // transactions list
 export const txsHistoryListComponent = () => driver.$('//*[@resource-id="txHistoryList"]')
 export const txsEmptyHistoryComponent = () => driver.$('//*[@resource-id="emptyHistoryComponent"]')
-export const txsDayHeaderTextSelector = () => '//*[@resource-id="dayHeaderText"]'
+export const txsDayHeaderTextSelector = '//*[@resource-id="dayHeaderText"]'
 export const txHistoryListItemSelector = '//*[@resource-id="txHistoryListItem"]'
 export const transactionDirectionTextSelector = '//*[@resource-id="transactionDirection"]'
 export const transactionAmountComponentSelector = '//*[@resource-id="transactionAmount"]'
@@ -24,20 +24,16 @@ export const tokenAmountSelector = '//*[@resource-id="tokenAmount"]'
 
 export const isDisplayed = async () => {
   return (
-    (await sendButton().isDisplayed) &&
-    (await receiveButton().isDisplayed) &&
+    (await sendButton().isDisplayed()) &&
+    (await receiveButton().isDisplayed()) &&
     (await transactionsTabButton().isDisplayed()) &&
     (await assetsTabButton().isDisplayed())
   )
 }
 
-export const getAllTransactions = async () => {
-  return await driver.$$(txHistoryListItemSelector)
-}
+export const getAllTransactions = async () => driver.$$(txHistoryListItemSelector)
 
-export const getDateHeaders = async () => {
-  return await driver.$$(txsDayHeaderTextSelector())
-}
+export const getDateHeaders = async () => driver.$$(txsDayHeaderTextSelector)
 
 export const isFullyLoaded = async () => {
   return (
