@@ -705,7 +705,7 @@ export const useLogout = () => {
   }
 }
 
-export const useRefreshHack = () => {
+export const useRefreshOnFocusHack = () => {
   const [key, setKey] = React.useState(0)
   const navigation = useNavigation()
 

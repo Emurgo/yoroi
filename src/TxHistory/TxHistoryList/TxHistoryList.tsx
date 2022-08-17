@@ -6,7 +6,7 @@ import {useSelector} from 'react-redux'
 
 import {Text} from '../../components'
 import features from '../../features'
-import {useRefreshHack} from '../../hooks'
+import {useRefreshOnFocusHack} from '../../hooks'
 import {actionMessages} from '../../i18n/global-messages'
 import {formatDateRelative} from '../../legacy/format'
 import {TransactionInfo} from '../../legacy/HistoryTransaction'
@@ -24,7 +24,7 @@ type Props = Partial<ListProps> & {
 }
 export const TxHistoryList = ({onScrollUp, onScrollDown, ...props}: Props) => {
   const strings = useStrings()
-  const key = useRefreshHack() // workaround for https://emurgo.atlassian.net/browse/YOMO-199
+  const key = useRefreshOnFocusHack() // workaround for https://emurgo.atlassian.net/browse/YOMO-199
 
   const transactionsInfo = useSelector(transactionsInfoSelector)
   const groupedTransactions = getTransactionsByDate(transactionsInfo)
