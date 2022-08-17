@@ -33,7 +33,7 @@ export const isDisplayed = async () => {
 
 export const getAllTransactions = async () => driver.$$(txHistoryListItemSelector)
 
-export const getDateHeaders = async () => driver.$$(txsDayHeaderTextSelector())
+export const getDateHeaders = async () => driver.$$(txsDayHeaderTextSelector)
 
 export const isFullyLoaded = async () => {
   return (
