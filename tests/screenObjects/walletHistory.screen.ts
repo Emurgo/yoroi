@@ -8,7 +8,7 @@ export const pairedTotalText = () => driver.$('//*[@resource-id="pairedTotalText
 // transactions list
 export const txsHistoryListComponent = () => driver.$('//*[@resource-id="txHistoryList"]')
 export const txsEmptyHistoryComponent = () => driver.$('//*[@resource-id="emptyHistoryComponent"]')
-export const txsDayHeaderTextSelector = () => '//*[@resource-id="dayHeaderText"]'
+export const txsDayHeaderTextSelector = '//*[@resource-id="dayHeaderText"]'
 export const txHistoryListItemSelector = '//*[@resource-id="txHistoryListItem"]'
 export const transactionDirectionTextSelector = '//*[@resource-id="transactionDirection"]'
 export const transactionAmountComponentSelector = '//*[@resource-id="transactionAmount"]'
