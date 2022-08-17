@@ -42,7 +42,7 @@ export const DangerousAction = ({
   const intl = useIntl()
 
   return (
-    <ScrollView bounces={false}>
+    <ScrollView bounces={false} testID="dangerousActionView">
       <View style={styles.header}>
         <Text style={styles.heading}>{title}</Text>
       </View>

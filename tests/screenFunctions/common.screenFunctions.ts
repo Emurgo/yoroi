@@ -20,12 +20,49 @@ export async function checkForErrors(): Promise<void> {
   }
 }
 
-export const enterNewValue = async (screenElement: any, newValue: string): Promise<void> => {
+export const enterNewValue = async (screenElement: any, newValue: string, hide: boolean = true): Promise<void> => {
   await screenElement().clearValue()
   await screenElement().addValue(newValue)
-  await hideKeyboard()
+  if (hide) {
+    await hideKeyboard()
+  }
 }
 
 export const hideKeyboard = async (): Promise<void> => {
   await driver.hideKeyboard('pressKey', 'Done')
+}
+
+export const scroll = async (
+  scrollViewComponent: WebdriverIO.Element,
+  yStartPoint: number,
+  yEndPoint: number,
+  xPoint: number,
+): Promise<void> => {
+  await scrollViewComponent.touchAction([
+    {
+      action: 'press',
+      x: xPoint,
+      y: yStartPoint,
+    },
+    {
+      action: 'wait',
+      ms: 200,
+    },
+    {
+      action: 'moveTo',
+      x: xPoint,
+      y: yEndPoint,
+    },
+    'release',
+  ])
+}
+
+export const getCoordinateByPercents = async (
+  xPointPercentage: number,
+  yPointPercentage: number,
+): Promise<[number, number]> => {
+  const {width, height} = await driver.getWindowSize()
+  const xPoint = (width * xPointPercentage) / 100
+  const yPoint = (height * yPointPercentage) / 100
+  return [xPoint, yPoint]
 }
