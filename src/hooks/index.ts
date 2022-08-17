@@ -711,7 +711,7 @@ export const useRefreshOnFocusHack = () => {
 
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      setKey(key + 1)
+      setKey((key) => key + 1)
     })
 
     return unsubscribe
