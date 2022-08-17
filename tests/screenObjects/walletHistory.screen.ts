@@ -31,9 +31,7 @@ export const isDisplayed = async () => {
   )
 }
 
-export const getAllTransactions = async () => {
-  return await driver.$$(txHistoryListItemSelector)
-}
+export const getAllTransactions = async () => driver.$$(txHistoryListItemSelector)
 
 export const getDateHeaders = async () => {
   return await driver.$$(txsDayHeaderTextSelector())
