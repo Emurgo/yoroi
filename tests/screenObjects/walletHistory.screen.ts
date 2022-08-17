@@ -25,7 +25,7 @@ export const tokenAmountSelector = '//*[@resource-id="tokenAmount"]'
 export const isDisplayed = async () => {
   return (
     (await sendButton().isDisplayed()) &&
-    (await receiveButton().isDisplayed) &&
+    (await receiveButton().isDisplayed()) &&
     (await transactionsTabButton().isDisplayed()) &&
     (await assetsTabButton().isDisplayed())
   )
