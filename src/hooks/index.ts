@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {useNavigation} from '@react-navigation/native'
 import {delay} from 'bluebird'
 import cryptoRandomString from 'crypto-random-string'
-import * as React from 'react'
 import {IntlShape} from 'react-intl'
 import {
   QueryKey,
@@ -703,19 +701,4 @@ export const useLogout = () => {
     await closeWallet()
     dispatch(signout())
   }
-}
-
-export const useRefreshOnFocusHack = () => {
-  const [key, setKey] = React.useState(0)
-  const navigation = useNavigation()
-
-  React.useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      setKey((key) => key + 1)
-    })
-
-    return unsubscribe
-  }, [key, navigation])
-
-  return key
 }

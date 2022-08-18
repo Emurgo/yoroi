@@ -1,12 +1,12 @@
+import {useNavigation} from '@react-navigation/native'
 import _ from 'lodash'
 import React from 'react'
 import {useIntl} from 'react-intl'
-import {Alert, SectionList, SectionListProps, StyleSheet, View} from 'react-native'
+import {Alert, Platform, SectionList, SectionListProps, StyleSheet, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
 import {Text} from '../../components'
 import features from '../../features'
-import {useRefreshOnFocusHack} from '../../hooks'
 import {actionMessages} from '../../i18n/global-messages'
 import {formatDateRelative} from '../../legacy/format'
 import {TransactionInfo} from '../../legacy/HistoryTransaction'
@@ -24,7 +24,7 @@ type Props = Partial<ListProps> & {
 }
 export const TxHistoryList = ({onScrollUp, onScrollDown, ...props}: Props) => {
   const strings = useStrings()
-  const key = useRefreshOnFocusHack() // workaround for https://emurgo.atlassian.net/browse/YOMO-199
+  const key = useRefreshOnFocusHack()
 
   const transactionsInfo = useSelector(transactionsInfoSelector)
   const groupedTransactions = getTransactionsByDate(transactionsInfo)
@@ -56,6 +56,27 @@ export const TxHistoryList = ({onScrollUp, onScrollDown, ...props}: Props) => {
       />
     </View>
   )
+}
+
+// workaround for https://emurgo.atlassian.net/browse/YOMO-199
+// related to https://github.com/facebook/react-native/issues/15694
+export const useRefreshOnFocusHack = () => {
+  const [key, setKey] = React.useState(0)
+  const navigation = useNavigation()
+
+  React.useEffect(() => {
+    if (Platform.OS !== 'ios') {
+      return
+    }
+
+    const unsubscribe = navigation.addListener('focus', () => {
+      setKey((key) => key + 1)
+    })
+
+    return unsubscribe
+  }, [key, navigation])
+
+  return key
 }
 
 type DayHeaderProps = {
