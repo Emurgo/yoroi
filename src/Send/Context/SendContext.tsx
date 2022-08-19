@@ -46,7 +46,7 @@ const initialState: SendState = {
 
 const sendReducer = (state, action) => {
   switch (action.type) {
-    case SendActionTypes.SET_SELECTED_TOKEN_IDENTIFIER:
+    case SendActionTypes.SET_SELECTED_TOKEN_ID:
       return {
         ...state,
         selectedTokenId: action.payload.selectedTokenId,
@@ -98,7 +98,7 @@ type SendActionMap = {
 const sendActionsMapper = (dispatch: SendDispatch): SendActionMap => ({
   setSelectedTokenId: (selectedTokenId) =>
     dispatch({
-      type: SendActionTypes.SET_SELECTED_TOKEN_IDENTIFIER,
+      type: SendActionTypes.SET_SELECTED_TOKEN_ID,
       payload: {
         selectedTokenId,
       },
@@ -132,7 +132,7 @@ const sendActionsMapper = (dispatch: SendDispatch): SendActionMap => ({
 })
 
 enum SendActionTypes {
-  SET_SELECTED_TOKEN_IDENTIFIER = 'SET_SELECTED_TOKEN_IDENTIFIER',
+  SET_SELECTED_TOKEN_ID = 'SET_SELECTED_TOKEN_ID',
   SET_RECEIVER = 'SET_RECEIVER',
   SET_SEND_ALL = 'SET_SEND_ALL',
   SET_AMOUNT = 'SET_AMOUNT',
