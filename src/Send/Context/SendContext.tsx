@@ -13,15 +13,10 @@ type SendProvider = {
 
 const SendContext = createContext<undefined | SendContext>(undefined)
 export const SendProvider: React.FC<SendProvider> = ({children, balances, wallet}) => {
-  const [state, dispatch] = React.useReducer(sendReducer, initialState)
-  const sendActions = sendActionsMapper(dispatch)
   const primaryTokenId = getDefaultAssetByNetworkId(wallet.networkId).identifier
 
-  React.useEffect(() => {
-    if (state.selectedTokenId === initialState.selectedTokenId) {
-      sendActions.setSelectedTokenId(primaryTokenId)
-    }
-  }, [sendActions, primaryTokenId, state])
+  const [state, dispatch] = React.useReducer(sendReducer, {...initialState, selectedTokenId: primaryTokenId})
+  const sendActions = sendActionsMapper(dispatch)
 
   React.useEffect(() => {
     if (primaryTokenId !== state.selectedTokenId && isEmptyString(balances[state.selectedTokenId])) {
@@ -44,7 +39,7 @@ export const SendProvider: React.FC<SendProvider> = ({children, balances, wallet
 
 const initialState: SendState = {
   sendAll: false,
-  selectedTokenId: 'initial',
+  selectedTokenId: '',
   receiver: '',
   amount: '',
 }

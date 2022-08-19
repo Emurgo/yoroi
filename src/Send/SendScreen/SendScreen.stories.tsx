@@ -10,7 +10,6 @@ import {SendProvider, useSend} from '../Context/SendContext'
 import {SendScreen} from './SendScreen'
 
 storiesOf('SendScreen', module)
-  .addDecorator((story) => <SelectedWalletProvider wallet={mockWallet}>{story()}</SelectedWalletProvider>)
   .add('Default', () => <SendScreenTest />)
   .add('SendAll', () => <SendScreenTest isSendAll />)
 
@@ -33,13 +32,8 @@ const SendScreenWapper = ({isSendAll}: {isSendAll?: boolean}) => {
   const {sendActions} = useSend()
 
   React.useEffect(() => {
-    if (isSendAll) {
-      sendActions.setSendAll(true)
-    }
-  }, [sendActions, isSendAll])
-
-  React.useEffect(() => {
     sendActions.setSelectedTokenId(PRIMARY_ASSET_CONSTANTS.CARDANO)
+    sendActions.setSendAll(isSendAll ?? false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
