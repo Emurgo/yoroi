@@ -169,7 +169,7 @@ export const SendScreen = ({
         ? Amounts.remove(balances, [defaultAsset.identifier])
         : {}
       : {
-          [selectedTokenIdentifier]: balances[selectedTokenIdentifier],
+          [selectedTokenIdentifier]: amount as Quantity,
         }
 
     setShowSendAllWarning(false)
