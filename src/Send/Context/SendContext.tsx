@@ -51,27 +51,27 @@ const initialState: SendState = {
 
 const sendReducer = (state, action) => {
   switch (action.type) {
-    case SendActionKind.SET_SELECTED_TOKEN_IDENTIFIER:
+    case SendActionTypes.SET_SELECTED_TOKEN_IDENTIFIER:
       return {
         ...state,
         selectedTokenId: action.payload.selectedTokenId,
       }
-    case SendActionKind.SET_RECEIVER:
+    case SendActionTypes.SET_RECEIVER:
       return {
         ...state,
         receiver: action.payload.receiver,
       }
-    case SendActionKind.SET_SEND_ALL:
+    case SendActionTypes.SET_SEND_ALL:
       return {
         ...state,
         sendAll: action.payload.sendAll,
       }
-    case SendActionKind.SET_AMOUNT:
+    case SendActionTypes.SET_AMOUNT:
       return {
         ...state,
         amount: action.payload.amount,
       }
-    case SendActionKind.CLEAR:
+    case SendActionTypes.CLEAR:
       return {
         ...initialState,
         selectedTokenId: state.selectedTokenId,
@@ -103,40 +103,40 @@ type SendActionMap = {
 const sendActionsMapper = (dispatch: SendDispatch): SendActionMap => ({
   setSelectedTokenId: (selectedTokenId) =>
     dispatch({
-      type: SendActionKind.SET_SELECTED_TOKEN_IDENTIFIER,
+      type: SendActionTypes.SET_SELECTED_TOKEN_IDENTIFIER,
       payload: {
         selectedTokenId,
       },
     }),
   setReceiver: (receiver) =>
     dispatch({
-      type: SendActionKind.SET_RECEIVER,
+      type: SendActionTypes.SET_RECEIVER,
       payload: {
         receiver,
       },
     }),
   setSendAll: (sendAll) =>
     dispatch({
-      type: SendActionKind.SET_SEND_ALL,
+      type: SendActionTypes.SET_SEND_ALL,
       payload: {
         sendAll,
       },
     }),
   setAmount: (amount) =>
     dispatch({
-      type: SendActionKind.SET_AMOUNT,
+      type: SendActionTypes.SET_AMOUNT,
       payload: {
         amount,
       },
     }),
   clear: () =>
     dispatch({
-      type: SendActionKind.CLEAR,
+      type: SendActionTypes.CLEAR,
       payload: {},
     }),
 })
 
-enum SendActionKind {
+enum SendActionTypes {
   SET_SELECTED_TOKEN_IDENTIFIER = 'SET_SELECTED_TOKEN_IDENTIFIER',
   SET_RECEIVER = 'SET_RECEIVER',
   SET_SEND_ALL = 'SET_SEND_ALL',
@@ -151,7 +151,7 @@ type SendState = {
   amount: string
 }
 type SendAction = {
-  type: SendActionKind
+  type: SendActionTypes
   payload: Partial<SendState>
 }
 type SendDispatch = React.Dispatch<SendAction>
