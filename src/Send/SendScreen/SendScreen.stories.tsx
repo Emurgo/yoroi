@@ -30,16 +30,16 @@ const SendScreenTest = ({isSendAll}: {isSendAll?: boolean}) => {
 }
 
 const SendScreenWapper = ({isSendAll}: {isSendAll?: boolean}) => {
-  const {setSendAll, setSelectedTokenIdentifier} = useSend()
+  const {sendActions} = useSend()
 
   React.useEffect(() => {
     if (isSendAll) {
-      setSendAll(true)
+      sendActions.setSendAll(true)
     }
-  }, [isSendAll, setSendAll])
+  }, [sendActions, isSendAll])
 
   React.useEffect(() => {
-    setSelectedTokenIdentifier(PRIMARY_ASSET_CONSTANTS.CARDANO)
+    sendActions.setSelectedTokenId(PRIMARY_ASSET_CONSTANTS.CARDANO)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
