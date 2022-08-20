@@ -478,11 +478,6 @@ export const signTxWithLedger = async (
 ): Promise<SignTransactionResponse> => {
   try {
     Logger.debug('ledgerUtils::signTxWithLedger called')
-
-    if (hwDeviceInfo == null) {
-      throw new Error('ledgerUtils::signTxWithLedger: hwDeviceInfo is null')
-    }
-
     const appAda = await connectionHandler(hwDeviceInfo.hwFeatures.deviceId, hwDeviceInfo.hwFeatures.deviceObj, useUSB)
     Logger.debug('ledgerUtils::signTxWithLedger inputs', signRequest.tx.inputs)
     Logger.debug('ledgerUtils::signTxWithLedger outputs', signRequest.tx.outputs)
