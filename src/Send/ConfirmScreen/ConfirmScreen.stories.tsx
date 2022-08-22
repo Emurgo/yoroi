@@ -4,6 +4,7 @@ import React from 'react'
 
 import {balances, mockWallet} from '../../../storybook'
 import {SelectedWalletProvider} from '../../SelectedWallet'
+import {SendProvider} from '../Context/SendContext'
 import type {Params} from './ConfirmScreen'
 import {ConfirmScreen} from './ConfirmScreen'
 
@@ -27,7 +28,9 @@ storiesOf('ConfirmScreen', module).add('Default', () => {
   return (
     <SelectedWalletProvider wallet={mockWallet}>
       <NavigationRouteContext.Provider value={route}>
-        <ConfirmScreen />
+        <SendProvider wallet={mockWallet}>
+          <ConfirmScreen />
+        </SendProvider>
       </NavigationRouteContext.Provider>
     </SelectedWalletProvider>
   )
