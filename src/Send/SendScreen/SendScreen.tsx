@@ -58,7 +58,7 @@ export const SendScreen = () => {
     useSend()
 
   React.useEffect(() => {
-    if (defaultAsset.identifier !== selectedTokenId && typeof balances[selectedTokenId] === undefined) {
+    if (defaultAsset.identifier !== selectedTokenId && balances[selectedTokenId] === undefined) {
       resetForm()
     }
   }, [defaultAsset.identifier, selectedTokenId, balances, resetForm])
