@@ -7,25 +7,25 @@ import {useSend} from '../Context/SendContext'
 
 export const AddressReaderQR: React.FC = () => {
   const navigation = useNavigation()
-  const {sendActions} = useSend()
+  const send = useSend()
 
-  const handleOnRead = ({data}) => {
+  const handleOnRead = ({data: qrData}) => {
     const regex = /(cardano):([a-zA-Z1-9]\w+)\??/
-    if (regex.test(data)) {
-      const address = data.match(regex)?.[2]
-      if (data.indexOf('?') !== -1) {
-        const index = data.indexOf('?')
-        const params = getParams(data.substr(index))
+    if (regex.test(qrData)) {
+      const address = qrData.match(regex)?.[2]
+      if (qrData.indexOf('?') !== -1) {
+        const index = qrData.indexOf('?')
+        const params = getParams(qrData.substr(index))
         if ('amount' in params) {
-          sendActions.setReceiver(address ?? '')
+          send.changeReceiver(address ?? '')
           const amount = pastedFormatter(params?.amount ?? '')
-          sendActions.setAmount(amount)
+          send.changeAmount(amount)
         }
       } else {
-        sendActions.setReceiver(address ?? '')
+        send.changeReceiver(address ?? '')
       }
     } else {
-      sendActions.setReceiver(data ?? '')
+      send.changeReceiver(qrData ?? '')
     }
     navigation.goBack()
   }

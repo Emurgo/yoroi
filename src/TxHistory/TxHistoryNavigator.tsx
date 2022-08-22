@@ -40,7 +40,7 @@ export const TxHistoryNavigator = () => {
   const hideModalInfo = () => setModalInfoState(false)
 
   return (
-    <SendProvider key={wallet.id} wallet={wallet} balances={balances}>
+    <SendProvider key={wallet.id} wallet={wallet}>
       <Stack.Navigator screenOptions={defaultStackNavigationOptions} initialRouteName="history-list">
         <Stack.Screen
           name="history-list"

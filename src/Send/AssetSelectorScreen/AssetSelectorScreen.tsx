@@ -33,7 +33,7 @@ export const AssetSelectorScreen = ({balances}: Props) => {
   const defaultAsset = getDefaultAssetByNetworkId(wallet.networkId)
   const [matcher, setMatcher] = React.useState('')
   const navigation = useNavigation<TxHistoryRouteNavigation>()
-  const {sendActions} = useSend()
+  const send = useSend()
 
   const onChangeMatcher = (matcher: string) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
@@ -42,7 +42,7 @@ export const AssetSelectorScreen = ({balances}: Props) => {
 
   const sortedBalance: Array<[TokenId, Quantity]> = Object.entries(balances)
     .sort(([, quantityA]: [TokenId, Quantity], [, quantityB]: [TokenId, Quantity]) =>
-      Quantities.isGreaterThan(quantityA, quantityB) === true ? -1 : 1,
+      parseInt(Quantities.diff(quantityB, quantityA), 10),
     )
     .sort(([tokenId]: [TokenId, Quantity]) => (tokenId === defaultAsset.identifier ? -1 : 1)) // default first
 
@@ -70,8 +70,7 @@ export const AssetSelectorScreen = ({balances}: Props) => {
               tokenId={tokenId}
               quantity={quantity}
               onPress={(tokenId) => {
-                sendActions.setSendAll(false)
-                sendActions.setSelectedTokenId(tokenId)
+                send.onTokenSelected(tokenId)
                 navigation.navigate('send')
               }}
               matcher={matcher}
@@ -88,8 +87,7 @@ export const AssetSelectorScreen = ({balances}: Props) => {
           outlineOnLight
           title={strings.sendAllAssets}
           onPress={() => {
-            sendActions.setSendAll(true)
-            sendActions.setSelectedTokenId(defaultAsset.identifier)
+            send.onSendAllSelected()
             navigation.navigate('send')
           }}
         />

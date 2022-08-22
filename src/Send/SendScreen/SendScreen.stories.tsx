@@ -2,8 +2,7 @@ import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import * as React from 'react'
 
-import {balances, mockWallet} from '../../../storybook'
-import {PRIMARY_ASSET_CONSTANTS} from '../../legacy/networks'
+import {mockWallet} from '../../../storybook'
 import {SelectedWalletProvider} from '../../SelectedWallet'
 import {YoroiWallet} from '../../yoroi-wallets'
 import {SendProvider, useSend} from '../Context/SendContext'
@@ -21,19 +20,19 @@ const SendScreenTest = ({isSendAll}: {isSendAll?: boolean}) => {
 
   return (
     <SelectedWalletProvider wallet={wallet}>
-      <SendProvider key={wallet.id} wallet={wallet} balances={balances}>
+      <SendProvider key={wallet.id} wallet={wallet}>
         <SendScreenWapper isSendAll={isSendAll} />
       </SendProvider>
     </SelectedWalletProvider>
   )
 }
 
-const SendScreenWapper = ({isSendAll}: {isSendAll?: boolean}) => {
-  const {sendActions} = useSend()
+const SendScreenWapper = ({isSendAll = true}: {isSendAll: boolean | undefined}) => {
+  const send = useSend()
 
   React.useEffect(() => {
-    sendActions.setSelectedTokenId(PRIMARY_ASSET_CONSTANTS.CARDANO)
-    sendActions.setSendAll(isSendAll ?? false)
+    if (isSendAll === false) return
+    send.onSendAllSelected()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

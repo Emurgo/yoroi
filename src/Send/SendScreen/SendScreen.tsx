@@ -54,13 +54,16 @@ export const SendScreen = () => {
   const netInfo = useNetInfo()
   const isOnline = netInfo.type !== 'none' && netInfo.type !== 'unknown'
 
-  const {sendActions, sendState} = useSend()
-  const selectedAssetAvailableAmount = balances[sendState.selectedTokenId]
-  const defaultAssetAvailableAmount = balances[defaultAsset.identifier]
+  const send = useSend()
 
-  if (typeof selectedAssetAvailableAmount !== 'string') {
-    throw new Error('Invalid token')
-  }
+  React.useEffect(() => {
+    if (defaultAsset.identifier !== send.selectedTokenId && typeof balances[send.selectedTokenId] === undefined) {
+      send.resetForm()
+    }
+  }, [defaultAsset.identifier, send.selectedTokenId, balances, send])
+
+  const selectedAssetAvailableAmount = balances[send.selectedTokenId]
+  const defaultAssetAvailableAmount = balances[defaultAsset.identifier]
 
   const [address, setAddress] = React.useState('')
   const [addressErrors, setAddressErrors] = React.useState<AddressValidationErrors>({addressIsRequired: true})
@@ -72,7 +75,7 @@ export const SendScreen = () => {
   const [recomputing, setRecomputing] = React.useState(false)
   const [showSendAllWarning, setShowSendAllWarning] = React.useState(false)
 
-  const tokenInfo = useTokenInfo({wallet, tokenId: sendState.selectedTokenId})
+  const tokenInfo = useTokenInfo({wallet, tokenId: send.selectedTokenId})
   const assetDenomination = truncateWithEllipsis(getAssetDenominationOrId(tokenInfo), 20)
   const amountErrorText = getAmountErrorText(intl, amountErrors, balanceErrors, defaultAsset)
 
@@ -89,8 +92,8 @@ export const SendScreen = () => {
   React.useEffect(() => {
     if (CONFIG.DEBUG.PREFILL_FORMS) {
       if (!__DEV__) throw new Error('using debug data in non-dev env')
-      sendActions.setReceiver(CONFIG.DEBUG.SEND_ADDRESS)
-      sendActions.setAmount(CONFIG.DEBUG.SEND_AMOUNT)
+      send.changeReceiver(CONFIG.DEBUG.SEND_ADDRESS)
+      send.changeAmount(CONFIG.DEBUG.SEND_AMOUNT)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -104,9 +107,9 @@ export const SendScreen = () => {
     const promise = recomputeAll({
       wallet,
       utxos,
-      addressInput: sendState.receiver,
-      amount: sendState.amount,
-      sendAll: sendState.sendAll,
+      addressInput: send.receiver,
+      amount: send.amount,
+      sendAll: send.sendAll,
       defaultAsset,
       selectedTokenInfo: tokenInfo,
       defaultAssetAvailableAmount,
@@ -120,7 +123,7 @@ export const SendScreen = () => {
 
       setAddress(newState.address)
       setAddressErrors(newState.addressErrors)
-      sendActions.setAmount(newState.amount)
+      send.changeAmount(newState.amount)
       setAmountErrors(newState.amountErrors)
       setBalanceErrors(newState.balanceErrors)
       setFee(newState.fee)
@@ -129,10 +132,10 @@ export const SendScreen = () => {
       setRecomputing(false)
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sendState.receiver, sendState.amount, sendState.selectedTokenId, sendState.sendAll])
+  }, [send.receiver, send.amount, send.selectedTokenId, send.sendAll])
 
   const onConfirm = () => {
-    if (sendState.sendAll) {
+    if (send.sendAll) {
       setShowSendAllWarning(true)
       return
     }
@@ -143,16 +146,16 @@ export const SendScreen = () => {
     if (!isValid || recomputing || !yoroiUnsignedTx) return
 
     const defaultAssetAmount: Quantity = tokenInfo.isDefault
-      ? (parseAmountDecimal(sendState.amount, tokenInfo).toString() as Quantity)
+      ? (parseAmountDecimal(send.amount, tokenInfo).toString() as Quantity)
       : // note: inside this if balanceAfter shouldn't be null
         Quantities.diff(defaultAssetAvailableAmount, balanceAfter ?? '0')
 
     const selectedTokens: YoroiAmounts = tokenInfo.isDefault
-      ? sendState.sendAll
+      ? send.sendAll
         ? Amounts.remove(balances, [defaultAsset.identifier])
         : {}
       : {
-          [sendState.selectedTokenId]: sendState.amount as Quantity,
+          [send.selectedTokenId]: send.amount as Quantity,
         }
 
     setShowSendAllWarning(false)
@@ -193,29 +196,29 @@ export const SendScreen = () => {
         <Spacer height={16} />
 
         <TextInput
-          value={sendState.receiver}
+          value={send.receiver}
           multiline
           errorOnMount
-          onChangeText={sendActions.setReceiver}
+          onChangeText={send.changeReceiver}
           label={strings.addressInputLabel}
           errorText={getAddressErrorText(intl, addressErrors)}
           autoComplete={false}
         />
 
         {!recomputing &&
-          isDomain(sendState.receiver) &&
+          isDomain(send.receiver) &&
           !hasDomainErrors(addressErrors) &&
-          !sendState.receiver.includes(address) /* HACK */ && (
+          !send.receiver.includes(address) /* HACK */ && (
             <Text ellipsizeMode="middle" numberOfLines={1}>
               {`Resolves to: ${address}`}
             </Text>
           )}
 
         <AmountField
-          amount={sendState.amount}
-          setAmount={sendActions.setAmount}
+          amount={send.amount}
+          setAmount={send.changeAmount}
           error={amountErrorText}
-          editable={!sendState.sendAll}
+          editable={!send.sendAll}
         />
 
         <TouchableOpacity
@@ -241,8 +244,8 @@ export const SendScreen = () => {
         </TouchableOpacity>
 
         <Checkbox
-          checked={sendState.sendAll}
-          onChange={sendActions.setSendAll}
+          checked={send.sendAll}
+          onChange={send.toggleSendAll}
           text={
             tokenInfo.isDefault ? strings.checkboxSendAllAssets : strings.checkboxSendAll({assetId: assetDenomination})
           }
@@ -262,7 +265,7 @@ export const SendScreen = () => {
       <SendAllWarning
         showSendAllWarning={showSendAllWarning}
         onCancel={() => setShowSendAllWarning(false)}
-        selectedTokenIdentifier={sendState.selectedTokenId}
+        selectedTokenIdentifier={send.selectedTokenId}
         onConfirm={handleConfirm}
       />
     </SafeAreaView>

@@ -20,11 +20,11 @@ export const ActionsBanner = () => {
   const strings = useStrings()
   const navigateTo = useNavigateTo()
   const wallet = useSelectedWallet()
-  const {sendActions} = useSend()
+  const send = useSend()
 
   const onSend = () => {
     navigateTo.send()
-    sendActions.clear()
+    send.resetForm()
   }
 
   return (
