@@ -33,7 +33,7 @@ export const AssetSelectorScreen = ({balances}: Props) => {
   const defaultAsset = getDefaultAssetByNetworkId(wallet.networkId)
   const [matcher, setMatcher] = React.useState('')
   const navigation = useNavigation<TxHistoryRouteNavigation>()
-  const send = useSend()
+  const {tokenSelected, allTokensSelected} = useSend()
 
   const onChangeMatcher = (matcher: string) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
@@ -70,7 +70,7 @@ export const AssetSelectorScreen = ({balances}: Props) => {
               tokenId={tokenId}
               quantity={quantity}
               onPress={(tokenId) => {
-                send.onTokenSelected(tokenId)
+                tokenSelected(tokenId)
                 navigation.navigate('send')
               }}
               matcher={matcher}
@@ -87,7 +87,7 @@ export const AssetSelectorScreen = ({balances}: Props) => {
           outlineOnLight
           title={strings.sendAllAssets}
           onPress={() => {
-            send.onSendAllSelected()
+            allTokensSelected()
             navigation.navigate('send')
           }}
         />

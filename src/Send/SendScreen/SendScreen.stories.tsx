@@ -28,11 +28,11 @@ const SendScreenTest = ({isSendAll}: {isSendAll?: boolean}) => {
 }
 
 const SendScreenWapper = ({isSendAll = true}: {isSendAll: boolean | undefined}) => {
-  const send = useSend()
+  const {allTokensSelected} = useSend()
 
   React.useEffect(() => {
     if (isSendAll === false) return
-    send.onSendAllSelected()
+    allTokensSelected()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

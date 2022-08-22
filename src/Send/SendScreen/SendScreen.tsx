@@ -54,15 +54,24 @@ export const SendScreen = () => {
   const netInfo = useNetInfo()
   const isOnline = netInfo.type !== 'none' && netInfo.type !== 'unknown'
 
-  const send = useSend()
+  const {
+    selectedTokenId,
+    resetForm,
+    receiverChanged,
+    amountChanged,
+    receiver,
+    amount,
+    sendAll,
+    sendAllCheckboxSelected,
+  } = useSend()
 
   React.useEffect(() => {
-    if (defaultAsset.identifier !== send.selectedTokenId && typeof balances[send.selectedTokenId] === undefined) {
-      send.resetForm()
+    if (defaultAsset.identifier !== selectedTokenId && typeof balances[selectedTokenId] === undefined) {
+      resetForm()
     }
-  }, [defaultAsset.identifier, send.selectedTokenId, balances, send])
+  }, [defaultAsset.identifier, selectedTokenId, balances, resetForm])
 
-  const selectedAssetAvailableAmount = balances[send.selectedTokenId]
+  const selectedAssetAvailableAmount = balances[selectedTokenId]
   const defaultAssetAvailableAmount = balances[defaultAsset.identifier]
 
   const [address, setAddress] = React.useState('')
@@ -75,7 +84,7 @@ export const SendScreen = () => {
   const [recomputing, setRecomputing] = React.useState(false)
   const [showSendAllWarning, setShowSendAllWarning] = React.useState(false)
 
-  const tokenInfo = useTokenInfo({wallet, tokenId: send.selectedTokenId})
+  const tokenInfo = useTokenInfo({wallet, tokenId: selectedTokenId})
   const assetDenomination = truncateWithEllipsis(getAssetDenominationOrId(tokenInfo), 20)
   const amountErrorText = getAmountErrorText(intl, amountErrors, balanceErrors, defaultAsset)
 
@@ -92,8 +101,8 @@ export const SendScreen = () => {
   React.useEffect(() => {
     if (CONFIG.DEBUG.PREFILL_FORMS) {
       if (!__DEV__) throw new Error('using debug data in non-dev env')
-      send.changeReceiver(CONFIG.DEBUG.SEND_ADDRESS)
-      send.changeAmount(CONFIG.DEBUG.SEND_AMOUNT)
+      receiverChanged(CONFIG.DEBUG.SEND_ADDRESS)
+      amountChanged(CONFIG.DEBUG.SEND_AMOUNT)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -107,9 +116,9 @@ export const SendScreen = () => {
     const promise = recomputeAll({
       wallet,
       utxos,
-      addressInput: send.receiver,
-      amount: send.amount,
-      sendAll: send.sendAll,
+      addressInput: receiver,
+      amount: amount,
+      sendAll: sendAll,
       defaultAsset,
       selectedTokenInfo: tokenInfo,
       defaultAssetAvailableAmount,
@@ -123,7 +132,7 @@ export const SendScreen = () => {
 
       setAddress(newState.address)
       setAddressErrors(newState.addressErrors)
-      send.changeAmount(newState.amount)
+      amountChanged(newState.amount)
       setAmountErrors(newState.amountErrors)
       setBalanceErrors(newState.balanceErrors)
       setFee(newState.fee)
@@ -132,10 +141,10 @@ export const SendScreen = () => {
       setRecomputing(false)
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [send.receiver, send.amount, send.selectedTokenId, send.sendAll])
+  }, [receiver, amount, selectedTokenId, sendAll])
 
   const onConfirm = () => {
-    if (send.sendAll) {
+    if (sendAll) {
       setShowSendAllWarning(true)
       return
     }
@@ -146,16 +155,16 @@ export const SendScreen = () => {
     if (!isValid || recomputing || !yoroiUnsignedTx) return
 
     const defaultAssetAmount: Quantity = tokenInfo.isDefault
-      ? (parseAmountDecimal(send.amount, tokenInfo).toString() as Quantity)
+      ? (parseAmountDecimal(amount, tokenInfo).toString() as Quantity)
       : // note: inside this if balanceAfter shouldn't be null
         Quantities.diff(defaultAssetAvailableAmount, balanceAfter ?? '0')
 
     const selectedTokens: YoroiAmounts = tokenInfo.isDefault
-      ? send.sendAll
+      ? sendAll
         ? Amounts.remove(balances, [defaultAsset.identifier])
         : {}
       : {
-          [send.selectedTokenId]: send.amount as Quantity,
+          [selectedTokenId]: amount as Quantity,
         }
 
     setShowSendAllWarning(false)
@@ -196,30 +205,25 @@ export const SendScreen = () => {
         <Spacer height={16} />
 
         <TextInput
-          value={send.receiver}
+          value={receiver}
           multiline
           errorOnMount
-          onChangeText={send.changeReceiver}
+          onChangeText={receiverChanged}
           label={strings.addressInputLabel}
           errorText={getAddressErrorText(intl, addressErrors)}
           autoComplete={false}
         />
 
         {!recomputing &&
-          isDomain(send.receiver) &&
+          isDomain(receiver) &&
           !hasDomainErrors(addressErrors) &&
-          !send.receiver.includes(address) /* HACK */ && (
+          !receiver.includes(address) /* HACK */ && (
             <Text ellipsizeMode="middle" numberOfLines={1}>
               {`Resolves to: ${address}`}
             </Text>
           )}
 
-        <AmountField
-          amount={send.amount}
-          setAmount={send.changeAmount}
-          error={amountErrorText}
-          editable={!send.sendAll}
-        />
+        <AmountField amount={amount} setAmount={amountChanged} error={amountErrorText} editable={!sendAll} />
 
         <TouchableOpacity
           onPress={() => {
@@ -244,8 +248,8 @@ export const SendScreen = () => {
         </TouchableOpacity>
 
         <Checkbox
-          checked={send.sendAll}
-          onChange={send.toggleSendAll}
+          checked={sendAll}
+          onChange={sendAllCheckboxSelected}
           text={
             tokenInfo.isDefault ? strings.checkboxSendAllAssets : strings.checkboxSendAll({assetId: assetDenomination})
           }
@@ -265,7 +269,7 @@ export const SendScreen = () => {
       <SendAllWarning
         showSendAllWarning={showSendAllWarning}
         onCancel={() => setShowSendAllWarning(false)}
-        selectedTokenIdentifier={send.selectedTokenId}
+        selectedTokenIdentifier={selectedTokenId}
         onConfirm={handleConfirm}
       />
     </SafeAreaView>

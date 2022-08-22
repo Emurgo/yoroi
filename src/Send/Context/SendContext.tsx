@@ -14,7 +14,6 @@ export const SendProvider: React.FC<SendProvider> = ({children, wallet}) => {
 
   const [state, dispatch] = React.useReducer(sendReducer, {
     ...initialState,
-    primaryTokenId,
     selectedTokenId: primaryTokenId,
   })
 
@@ -22,50 +21,34 @@ export const SendProvider: React.FC<SendProvider> = ({children, wallet}) => {
     <SendContext.Provider
       value={{
         ...state,
-        changeSelectedTokenId: (selectedTokenId) =>
+        receiverChanged: (receiver) =>
           dispatch({
-            type: 'changeSelectedTokenId',
-            payload: {
-              selectedTokenId,
-            },
+            type: 'receiverChanged',
+            receiver,
           }),
-        changeReceiver: (receiver) =>
+        amountChanged: (amount) =>
           dispatch({
-            type: 'changeReceiver',
-            payload: {
-              receiver,
-            },
+            type: 'amountChanged',
+            amount,
           }),
-        changeAmount: (amount) =>
+        sendAllCheckboxSelected: () =>
           dispatch({
-            type: 'changeAmount',
-            payload: {
-              amount,
-            },
+            type: 'sendAllCheckboxSelected',
           }),
-        toggleSendAll: () =>
+        tokenSelected: (selectedTokenId) =>
           dispatch({
-            type: 'toggleSendAll',
-            payload: {},
+            type: 'tokenSelected',
+            selectedTokenId,
           }),
-        onTokenSelected: (selectedTokenId) =>
+        allTokensSelected: () =>
           dispatch({
-            type: 'onTokenSelected',
-            payload: {
-              selectedTokenId,
-            },
-          }),
-        onSendAllSelected: () =>
-          dispatch({
-            type: 'onSendAllSelected',
-            payload: {
-              primaryTokenId,
-            },
+            type: 'allTokensSelected',
+            primaryTokenId,
           }),
         resetForm: () =>
           dispatch({
             type: 'resetForm',
-            payload: {},
+            primaryTokenId,
           }),
       }}
     >
@@ -76,7 +59,6 @@ export const SendProvider: React.FC<SendProvider> = ({children, wallet}) => {
 
 const initialState: SendState = {
   sendAll: false,
-  primaryTokenId: '',
   selectedTokenId: '',
   receiver: '',
   amount: '',
@@ -84,42 +66,37 @@ const initialState: SendState = {
 
 const sendReducer = (state, action) => {
   switch (action.type) {
-    case 'changeSelectedTokenId':
+    case 'receiverChanged':
       return {
         ...state,
-        selectedTokenId: action.payload.selectedTokenId,
+        receiver: action.receiver,
       }
-    case 'changeReceiver':
+    case 'amountChanged':
       return {
         ...state,
-        receiver: action.payload.receiver,
+        amount: action.amount,
       }
-    case 'changeAmount':
-      return {
-        ...state,
-        amount: action.payload.amount,
-      }
-    case 'toggleSendAll':
+    case 'sendAllCheckboxSelected':
       return {
         ...state,
         sendAll: state.sendAll === true ? false : true,
       }
-    case 'onTokenSelected':
+    case 'tokenSelected':
       return {
         ...state,
         sendAll: false,
-        selectedTokenId: action.payload.selectedTokenId,
+        selectedTokenId: action.selectedTokenId,
       }
-    case 'onSendAllSelected':
+    case 'allTokensSelected':
       return {
         ...state,
         sendAll: true,
-        selectedTokenId: action.payload.primaryTokenId,
+        selectedTokenId: action.primaryTokenId,
       }
     case 'resetForm':
       return {
         ...initialState,
-        selectedTokenId: state.primaryTokenId,
+        selectedTokenId: action.primaryTokenId,
       }
     default:
       throw new Error(`sendReducer: action type ${action.type} not supported`)
@@ -133,7 +110,6 @@ const missingProvider = () => {
 }
 
 type SendState = {
-  primaryTokenId: TokenId
   sendAll: boolean
   selectedTokenId: TokenId
   receiver: string
@@ -141,12 +117,11 @@ type SendState = {
 }
 
 type SendContext = SendState & {
-  changeSelectedTokenId: (selectedTokenId: SendState['selectedTokenId']) => void
-  changeReceiver: (receiver: SendState['receiver']) => void
+  receiverChanged: (receiver: SendState['receiver']) => void
   changeSendAll: (sendAll: SendState['sendAll']) => void
-  changeAmount: (amount: SendState['amount']) => void
-  toggleSendAll: () => void
-  onTokenSelected: (selectedTokenId: SendState['selectedTokenId']) => void
-  onSendAllSelected: () => void
+  amountChanged: (amount: SendState['amount']) => void
+  sendAllCheckboxSelected: () => void
+  tokenSelected: (selectedTokenId: SendState['selectedTokenId']) => void
+  allTokensSelected: () => void
   resetForm: () => void
 }

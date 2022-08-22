@@ -56,7 +56,7 @@ export const ConfirmScreen = () => {
   const wallet = useSelectedWallet()
   const [password, setPassword] = React.useState('')
   const [useUSB, setUseUSB] = React.useState(false)
-  const send = useSend()
+  const {resetForm} = useSend()
 
   useEffect(() => {
     if (CONFIG.DEBUG.PREFILL_FORMS && __DEV__) {
@@ -66,7 +66,7 @@ export const ConfirmScreen = () => {
 
   const onSuccess = () => {
     resetToTxHistory()
-    send.resetForm()
+    resetForm()
   }
 
   return (
