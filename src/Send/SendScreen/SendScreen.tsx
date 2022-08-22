@@ -73,7 +73,11 @@ export const SendScreen = ({
 
   const selectedAssetAvailableAmount = balances[selectedTokenIdentifier]
 
-  if (typeof selectedAssetAvailableAmount !== 'string') {
+  if (
+    selectedAssetAvailableAmount !== undefined ||
+    selectedAssetAvailableAmount !== null ||
+    selectedAssetAvailableAmount !== ''
+  ) {
     throw new Error('Invalid token')
   }
 
