@@ -14,7 +14,7 @@ export type StakePoolInfoRequest = {
   poolIds: Array<string>
 }
 
-export type StakePoolInfosAndHistories = Record<string, StakePoolInfoAndHistory | RemotePoolMetaFailure>
+export type StakePoolInfosAndHistories = Record<string, StakePoolInfoAndHistory | null>
 
 export type StakePoolInfo = {
   name?: string
@@ -35,11 +35,6 @@ type StakePoolHistory = Array<{
 export type StakePoolInfoAndHistory = {
   info: StakePoolInfo
   history: StakePoolHistory
-}
-
-export type RemotePoolMetaFailure = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  error: any
 }
 
 export type RemoteCertificate = {
