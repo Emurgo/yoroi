@@ -24,7 +24,7 @@ type Props = Partial<ListProps> & {
 }
 export const TxHistoryList = ({onScrollUp, onScrollDown, ...props}: Props) => {
   const strings = useStrings()
-  const key = useRefreshOnFocusHack()
+  const key = useRemountOnFocusHack()
 
   const transactionsInfo = useSelector(transactionsInfoSelector)
   const groupedTransactions = getTransactionsByDate(transactionsInfo)
@@ -60,7 +60,7 @@ export const TxHistoryList = ({onScrollUp, onScrollDown, ...props}: Props) => {
 
 // workaround for https://emurgo.atlassian.net/browse/YOMO-199
 // related to https://github.com/facebook/react-native/issues/15694
-export const useRefreshOnFocusHack = () => {
+export const useRemountOnFocusHack = () => {
   const [key, setKey] = React.useState(0)
   const navigation = useNavigation()
 
