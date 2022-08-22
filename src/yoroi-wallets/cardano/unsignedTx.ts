@@ -10,7 +10,7 @@ import {
 import {CardanoHaskellShelleyNetwork} from '../../legacy/networks'
 import {Quantity, YoroiAmounts, YoroiEntries, YoroiMetadata, YoroiUnsignedTx, YoroiVoting} from '../types'
 import {Amounts, Entries, Quantities} from '../utils'
-import {Address, cardano, RewardAddress} from '.'
+import {Address, ByronAddress, cardano, RewardAddress} from '.'
 
 export const yoroiUnsignedTx = async ({
   unsignedTx,
@@ -211,12 +211,31 @@ const Voting = {
   }): Promise<YoroiVoting['registration']> => votingRegistration,
 }
 
-export const toDisplayAddress = async (address: string) =>
-  isBaseAddress(address) || isRewardAddress(address) || isEnterpriseAddress(address) || isPointerAddress(address)
-    ? Address.fromBytes(Buffer.from(address, 'hex')).then((address) => address.toBech32())
-    : address
+export const toDisplayAddress = async (address: string) => {
+  if (await ByronAddress.isValid(address) /* base58 */) {
+    return address
+  }
 
-const isBaseAddress = (address: string) => ['0', '1', '2', '3'].includes(address.charAt(0))
-const isPointerAddress = (address: string) => ['4', '5'].includes(address.charAt(0))
-const isEnterpriseAddress = (address: string) => ['6', '7'].includes(address.charAt(0))
-const isRewardAddress = (address: string) => ['e', 'E', 'f', 'F'].includes(address.charAt(0))
+  if (
+    isBaseAddressHex(address) ||
+    isRewardAddressHex(address) ||
+    isEnterpriseAddressHex(address) ||
+    isPointerAddressHex(address)
+  ) {
+    return Address.fromBytes(Buffer.from(address, 'hex')).then((address) => address.toBech32())
+  }
+
+  if (isByronAddressHex(address)) {
+    return Address.fromBytes(Buffer.from(address, 'hex'))
+      .then((address) => ByronAddress.fromAddress(address))
+      .then((address) => address.toBase58())
+  }
+
+  return address
+}
+
+const isBaseAddressHex = (address: string) => ['0', '1', '2', '3'].includes(address.charAt(0))
+const isPointerAddressHex = (address: string) => ['4', '5'].includes(address.charAt(0))
+const isEnterpriseAddressHex = (address: string) => ['6', '7'].includes(address.charAt(0))
+const isByronAddressHex = (address: string) => ['8'].includes(address.charAt(0))
+const isRewardAddressHex = (address: string) => ['e', 'E', 'f', 'F'].includes(address.charAt(0))

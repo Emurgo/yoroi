@@ -186,6 +186,7 @@
     "@babel/runtime": "^7.15.4",
     "@emurgo/cardano-serialization-lib-nodejs": "^9.1.0",
     "@emurgo/yoroi-lib-core": "^0.9.3-alpha.55",
+    "@emurgo/yoroi-lib-nodejs": "0.9.3-alpha.55",
     "@storybook/addon-actions": "5.3.14",
     "@storybook/addon-knobs": "5.3.14",
     "@storybook/addon-links": "5.3.14",

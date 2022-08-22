@@ -1562,6 +1562,11 @@
   resolved "https://registry.yarnpkg.com/@emotion/weak-memoize/-/weak-memoize-0.2.5.tgz#8eed982e2ee6f7f4e44c253e12962980791efd46"
   integrity sha512-6U71C2Wp7r5XtFtQzYrW5iKFT67OixrSxjI4MptCHzdSVlgabczzqLe0ZSgnub/5Kp4hSbpDB1tMytZY9pwxxA==
 
+"@emurgo/cardano-serialization-lib-nodejs@9.1.4":
+  version "9.1.4"
+  resolved "https://registry.yarnpkg.com/@emurgo/cardano-serialization-lib-nodejs/-/cardano-serialization-lib-nodejs-9.1.4.tgz#802396562ee35312003713e3a48f0dfef7ee1bd6"
+  integrity sha512-zDYQ4E5CAz89OuXCPV7k3v5kLWkwUS5Jg7QZ5m/4vPkeuZolOXyqo84p6AYf0qZ14xkgxnvHIRY+heJKNs7Ddw==
+
 "@emurgo/cardano-serialization-lib-nodejs@^9.1.0":
   version "9.1.2"
   resolved "https://registry.yarnpkg.com/@emurgo/cardano-serialization-lib-nodejs/-/cardano-serialization-lib-nodejs-9.1.2.tgz#805080727233b169092792d9da275ec86f14d49a"
@@ -1617,6 +1622,14 @@
   dependencies:
     "@emurgo/react-native-haskell-shelley" "3.1.4"
     "@emurgo/yoroi-lib-core" "0.9.3-alpha.55"
+
+"@emurgo/yoroi-lib-nodejs@0.9.3-alpha.55":
+  version "0.9.3-alpha.55"
+  resolved "https://registry.yarnpkg.com/@emurgo/yoroi-lib-nodejs/-/yoroi-lib-nodejs-0.9.3-alpha.55.tgz#58675c58fcc3062f2d968ba603dfd28bc5ef6313"
+  integrity sha512-Y+5Bzxx58pFPdLf0E4KqPqf8nok9VHD3gL1U1wrP0jxw91RQvzxTBwqEc4pntzzpdK1cBo1EFUIRXmX1ltQcFA==
+  dependencies:
+    "@emurgo/cardano-serialization-lib-nodejs" "9.1.4"
+    "@emurgo/yoroi-lib-core" "^0.9.3-alpha.55"
 
 "@eslint/eslintrc@^0.4.3":
   version "0.4.3"
