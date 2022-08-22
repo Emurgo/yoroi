@@ -274,7 +274,7 @@ const handleSelectedPoolHashes = async (
     // TODO: fetch reputation info once an endpoint is implemented
     const poolsReputation: {[key: string]: SelectedPool} = {}
 
-    if ('info' in poolInfo) {
+    if (poolInfo) {
       const selectedPools: Array<SelectedPool> = [
         {
           poolName: poolInfo.info.name,
