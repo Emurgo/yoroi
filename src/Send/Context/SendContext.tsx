@@ -20,7 +20,7 @@ export const SendProvider: React.FC<SendProvider> = ({children, wallet}) => {
   const actions = React.useRef({
     receiverChanged: (receiver) => dispatch({type: 'receiverChanged', receiver}),
     amountChanged: (amount) => dispatch({type: 'amountChanged', amount}),
-    sendAllCanged: () => dispatch({type: 'sendAllCanged'}),
+    sendAllChanged: () => dispatch({type: 'sendAllChanged'}),
     tokenSelected: (selectedTokenId) => dispatch({type: 'tokenSelected', selectedTokenId}),
     allTokensSelected: () => dispatch({type: 'allTokensSelected', primaryTokenId}),
     resetForm: () => dispatch({type: 'resetForm', primaryTokenId}),
@@ -57,7 +57,7 @@ const sendReducer = (state, action) => {
         ...state,
         amount: action.amount,
       }
-    case 'sendAllCanged':
+    case 'sendAllChanged':
       return {
         ...state,
         sendAll: state.sendAll === true ? false : true,
@@ -101,7 +101,7 @@ type SendContext = SendState & {
   receiverChanged: (receiver: SendState['receiver']) => void
   changeSendAll: (sendAll: SendState['sendAll']) => void
   amountChanged: (amount: SendState['amount']) => void
-  sendAllCanged: () => void
+  sendAllChanged: () => void
   tokenSelected: (selectedTokenId: SendState['selectedTokenId']) => void
   allTokensSelected: () => void
   resetForm: () => void

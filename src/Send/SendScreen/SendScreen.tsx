@@ -54,7 +54,7 @@ export const SendScreen = () => {
   const netInfo = useNetInfo()
   const isOnline = netInfo.type !== 'none' && netInfo.type !== 'unknown'
 
-  const {selectedTokenId, resetForm, receiverChanged, amountChanged, receiver, amount, sendAll, sendAllCanged} =
+  const {selectedTokenId, resetForm, receiverChanged, amountChanged, receiver, amount, sendAll, sendAllChanged} =
     useSend()
 
   React.useEffect(() => {
@@ -241,7 +241,7 @@ export const SendScreen = () => {
 
         <Checkbox
           checked={sendAll}
-          onChange={sendAllCanged}
+          onChange={sendAllChanged}
           text={
             tokenInfo.isDefault ? strings.checkboxSendAllAssets : strings.checkboxSendAll({assetId: assetDenomination})
           }
