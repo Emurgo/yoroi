@@ -2,7 +2,7 @@
 import {useNetInfo} from '@react-native-community/netinfo'
 import {delay} from 'bluebird'
 import cryptoRandomString from 'crypto-random-string'
-import {useEffect, useRef} from 'react'
+import * as React from 'react'
 import {IntlShape} from 'react-intl'
 import {
   QueryKey,
@@ -720,16 +720,16 @@ export const useBalances = (wallet: YoroiWallet): YoroiAmounts => {
   })
 
   const netInfo = useNetInfo()
-  const onlineRef = useRef()
+  const onlineRef = React.useRef()
 
-  useEffect(() => {
+  React.useEffect(() => {
     const isOnline = netInfo.type !== 'none' && netInfo.type !== 'unknown'
     if (onlineRef.current !== isOnline) {
       refetch()
     }
   }, [netInfo, refetch])
 
-  useEffect(() => wallet.subscribe(() => refetch()))
+  React.useEffect(() => wallet.subscribe(() => refetch()))
 
   if (!query.data) throw new Error('invalid state')
 
