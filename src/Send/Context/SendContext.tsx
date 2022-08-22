@@ -17,44 +17,25 @@ export const SendProvider: React.FC<SendProvider> = ({children, wallet}) => {
     selectedTokenId: primaryTokenId,
   })
 
-  return (
-    <SendContext.Provider
-      value={{
-        ...state,
-        receiverChanged: (receiver) =>
-          dispatch({
-            type: 'receiverChanged',
-            receiver,
-          }),
-        amountChanged: (amount) =>
-          dispatch({
-            type: 'amountChanged',
-            amount,
-          }),
-        sendAllCheckboxSelected: () =>
-          dispatch({
-            type: 'sendAllCheckboxSelected',
-          }),
-        tokenSelected: (selectedTokenId) =>
-          dispatch({
-            type: 'tokenSelected',
-            selectedTokenId,
-          }),
-        allTokensSelected: () =>
-          dispatch({
-            type: 'allTokensSelected',
-            primaryTokenId,
-          }),
-        resetForm: () =>
-          dispatch({
-            type: 'resetForm',
-            primaryTokenId,
-          }),
-      }}
-    >
-      {children}
-    </SendContext.Provider>
+  const actions = React.useRef({
+    receiverChanged: (receiver) => dispatch({type: 'receiverChanged', receiver}),
+    amountChanged: (amount) => dispatch({type: 'amountChanged', amount}),
+    sendAllCanged: () => dispatch({type: 'sendAllCanged'}),
+    tokenSelected: (selectedTokenId) => dispatch({type: 'tokenSelected', selectedTokenId}),
+    allTokensSelected: () => dispatch({type: 'allTokensSelected', primaryTokenId}),
+    resetForm: () => dispatch({type: 'resetForm', primaryTokenId}),
+  }).current
+
+  const context = React.useMemo(
+    () => ({
+      ...state,
+      ...actions,
+      selectedTokenId: state.selectedTokenId != null ? state.selectedTokenId : primaryTokenId,
+    }),
+    [actions, primaryTokenId, state],
   )
+
+  return <SendContext.Provider value={context}>{children}</SendContext.Provider>
 }
 
 const initialState: SendState = {
@@ -76,7 +57,7 @@ const sendReducer = (state, action) => {
         ...state,
         amount: action.amount,
       }
-    case 'sendAllCheckboxSelected':
+    case 'sendAllCanged':
       return {
         ...state,
         sendAll: state.sendAll === true ? false : true,
@@ -120,7 +101,7 @@ type SendContext = SendState & {
   receiverChanged: (receiver: SendState['receiver']) => void
   changeSendAll: (sendAll: SendState['sendAll']) => void
   amountChanged: (amount: SendState['amount']) => void
-  sendAllCheckboxSelected: () => void
+  sendAllCanged: () => void
   tokenSelected: (selectedTokenId: SendState['selectedTokenId']) => void
   allTokensSelected: () => void
   resetForm: () => void
