@@ -27,7 +27,7 @@ const SendScreenTest = ({isSendAll}: {isSendAll?: boolean}) => {
   )
 }
 
-const SendScreenWapper = ({isSendAll = true}: {isSendAll: boolean | undefined}) => {
+const SendScreenWapper = ({isSendAll = false}: {isSendAll: boolean | undefined}) => {
   const {allTokensSelected} = useSend()
 
   React.useEffect(() => {
