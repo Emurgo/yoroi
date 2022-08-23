@@ -298,6 +298,7 @@
   "components.walletinit.connectnanox.connectnanoxscreen.exportKey": "Ação necessária: exporte a chave pública do seu dispositivo Ledger.",
   "components.walletinit.connectnanox.connectnanoxscreen.introline": "Você precisará:",
   "components.walletinit.connectnanox.connectnanoxscreen.title": "Conecte ao dispositivo Ledger",
+  "components.walletinit.connectnanox.savenanoxscreen.ledgerWalletNameSuggestion": "My Ledger Wallet",
   "components.walletinit.connectnanox.savenanoxscreen.save": "Salvar",
   "components.walletinit.connectnanox.savenanoxscreen.title": "Salvar carteira",
   "components.walletinit.createwallet.createwalletscreen.title": "Criar uma nova carteira",

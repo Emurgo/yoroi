@@ -298,6 +298,7 @@
   "components.walletinit.connectnanox.connectnanoxscreen.exportKey": "Требуется действие: Пожалуйста, экспортируйте открытый ключ с вашего Ledger устройства",
   "components.walletinit.connectnanox.connectnanoxscreen.introline": "Вам необходимо:",
   "components.walletinit.connectnanox.connectnanoxscreen.title": "Подключиться к Ledger",
+  "components.walletinit.connectnanox.savenanoxscreen.ledgerWalletNameSuggestion": "My Ledger Wallet",
   "components.walletinit.connectnanox.savenanoxscreen.save": "Сохранить",
   "components.walletinit.connectnanox.savenanoxscreen.title": "Сохранить кошелек",
   "components.walletinit.createwallet.createwalletscreen.title": "Новый кошелек",

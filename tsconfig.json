@@ -18,6 +18,7 @@
       "jest",
       "node",
       "webdriverio/async",
+      "webdriverio/sync",
       "@wdio/mocha-framework",
       "chai"
     ],

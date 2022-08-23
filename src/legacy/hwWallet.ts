@@ -3,21 +3,10 @@ import type {Dispatch} from 'redux'
 
 import {Logger} from '../legacy/logging'
 import {walletManager} from '../yoroi-wallets'
-import type {DeviceId, DeviceObj, HWDeviceInfo} from './ledgerUtils'
+import type {DeviceId, DeviceObj} from './ledgerUtils'
 import {NoDeviceInfoError} from './ledgerUtils'
 import {hwDeviceInfoSelector} from './selectors'
 import type {State} from './state'
-
-const _saveHW = (hwDeviceInfo) => ({
-  path: ['wallet', 'hwDeviceInfo'],
-  payload: hwDeviceInfo,
-  reducer: (state: State, value) => value,
-  type: 'SAVE_HW',
-})
-
-export const saveHW = (hwDeviceInfo: HWDeviceInfo) => (dispatch: Dispatch<any>) => {
-  dispatch(_saveHW(hwDeviceInfo))
-}
 
 export const setLedgerDeviceId =
   (deviceId: DeviceId): any =>

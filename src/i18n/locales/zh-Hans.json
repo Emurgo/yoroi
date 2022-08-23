@@ -298,6 +298,7 @@
   "components.walletinit.connectnanox.connectnanoxscreen.exportKey": "需要采取的措施：请从您的Ledger设备中导出公钥。",
   "components.walletinit.connectnanox.connectnanoxscreen.introline": "您需要：",
   "components.walletinit.connectnanox.connectnanoxscreen.title": "连接到Ledger设备",
+  "components.walletinit.connectnanox.savenanoxscreen.ledgerWalletNameSuggestion": "My Ledger Wallet",
   "components.walletinit.connectnanox.savenanoxscreen.save": "保存",
   "components.walletinit.connectnanox.savenanoxscreen.title": "保存钱包",
   "components.walletinit.createwallet.createwalletscreen.title": "创建新钱包",

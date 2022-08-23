@@ -80,11 +80,11 @@ export const ConfirmScreen = () => {
         />
 
         <ScrollView style={styles.container} contentContainerStyle={{padding: 16}}>
-          <Text small>
+          <Text small testID="feesText">
             {strings.fees}: {formatTokenWithSymbol(new BigNumber(fee), getDefaultAssetByNetworkId(wallet.networkId))}
           </Text>
 
-          <Text small>
+          <Text small testID="balanceAfterTxText">
             {strings.balanceAfterTx}:{' '}
             {formatTokenWithSymbol(new BigNumber(balanceAfterTx), getDefaultAssetByNetworkId(wallet.networkId))}
           </Text>
@@ -92,12 +92,12 @@ export const ConfirmScreen = () => {
           <Spacer height={16} />
 
           <Text>{strings.receiver}</Text>
-          <Text>{address}</Text>
+          <Text testID="receiverAddressText">{address}</Text>
 
           <Spacer height={16} />
 
           <Text>{strings.total}</Text>
-          <Text style={styles.amount}>
+          <Text style={styles.amount} testID="totalAmountText">
             {formatTokenWithSymbol(new BigNumber(defaultAssetAmount), getDefaultAssetByNetworkId(wallet.networkId))}
           </Text>
 
@@ -115,6 +115,7 @@ export const ConfirmScreen = () => {
                 value={password}
                 label={strings.password}
                 onChangeText={setPassword}
+                testID="spendingPasswordInput"
               />
             </>
           )}
