@@ -42,7 +42,7 @@ export const AssetSelectorScreen = ({balances}: Props) => {
 
   const sortedBalance: Array<[TokenId, Quantity]> = Object.entries(balances)
     .sort(([, quantityA]: [TokenId, Quantity], [, quantityB]: [TokenId, Quantity]) =>
-      parseInt(Quantities.diff(quantityB, quantityA), 10),
+      Quantities.isGreaterThan(quantityA, quantityB) ? -1 : 1,
     )
     .sort(([tokenId]: [TokenId, Quantity]) => (tokenId === defaultAsset.identifier ? -1 : 1)) // default first
 
