@@ -1,50 +1,28 @@
 import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
-import {BigNumber} from 'bignumber.js'
-import React from 'react'
+import * as React from 'react'
 
 import {mockWallet} from '../../../storybook'
 import {SelectedWalletProvider} from '../../SelectedWallet'
-import type {TokenEntry} from '../../types'
+import {YoroiWallet} from '../../yoroi-wallets'
+import {SendProvider} from '../Context/SendContext'
 import {SendScreen} from './SendScreen'
 
 storiesOf('SendScreen', module)
-  .addDecorator((story) => <SelectedWalletProvider wallet={mockWallet}>{story()}</SelectedWalletProvider>)
-  .add('Default', () => {
-    const selectedAsset: TokenEntry = {
-      networkId: 300,
-      identifier: '',
-      amount: new BigNumber(12344.00234523),
-    }
+  .add('Default', () => <SendScreenTest />)
+  .add('SendAll', () => <SendScreenTest isSendAll />)
 
-    return (
-      <SendScreen
-        sendAll={false}
-        onSendAll={action('onSendAll')}
-        selectedTokenIdentifier={selectedAsset.identifier}
-        amount=""
-        setAmount={action('setAmount')}
-        receiver=""
-        setReceiver={action('setReceiver')}
-      />
-    )
-  })
-  .add('sendAll', () => {
-    const selectedAsset: TokenEntry = {
-      networkId: 300,
-      identifier: '',
-      amount: new BigNumber(12344.00234523),
-    }
+const SendScreenTest = ({isSendAll}: {isSendAll?: boolean}) => {
+  const wallet: YoroiWallet = {
+    ...mockWallet,
+    subscribe: () => action('subscribe'),
+  }
 
-    return (
-      <SendScreen
-        sendAll={true}
-        onSendAll={action('onSendAll')}
-        selectedTokenIdentifier={selectedAsset.identifier}
-        amount=""
-        setAmount={action('setAmount')}
-        receiver=""
-        setReceiver={action('setReceiver')}
-      />
-    )
-  })
+  return (
+    <SelectedWalletProvider wallet={wallet}>
+      <SendProvider wallet={wallet} initialState={{sendAll: isSendAll}}>
+        <SendScreen />
+      </SendProvider>
+    </SelectedWalletProvider>
+  )
+}

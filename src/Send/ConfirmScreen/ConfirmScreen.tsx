@@ -15,6 +15,7 @@ import {useParams, useWalletNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {Quantity, TokenId, YoroiAmounts, YoroiUnsignedTx} from '../../yoroi-wallets/types'
+import {useSend} from '../Context/SendContext'
 
 export type Params = {
   yoroiUnsignedTx: YoroiUnsignedTx
@@ -55,6 +56,7 @@ export const ConfirmScreen = () => {
   const wallet = useSelectedWallet()
   const [password, setPassword] = React.useState('')
   const [useUSB, setUseUSB] = React.useState(false)
+  const {resetForm} = useSend()
 
   useEffect(() => {
     if (CONFIG.DEBUG.PREFILL_FORMS && __DEV__) {
@@ -64,6 +66,7 @@ export const ConfirmScreen = () => {
 
   const onSuccess = () => {
     resetToTxHistory()
+    resetForm()
   }
 
   return (

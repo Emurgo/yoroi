@@ -6,13 +6,11 @@ import {useSelector} from 'react-redux'
 
 import {Boundary, Icon} from '../components'
 import {useBalances, useWalletName} from '../hooks'
-import {getDefaultAssetByNetworkId} from '../legacy/config'
 import {formatDateToSeconds} from '../legacy/format'
 import {transactionsInfoSelector} from '../legacy/selectors'
 import {
   defaultStackNavigationOptions,
   defaultStackNavigationOptionsV2,
-  TxHistoryRouteNavigation,
   TxHistoryRoutes,
   useWalletNavigation,
 } from '../navigation'
@@ -21,6 +19,7 @@ import {useSelectedWallet} from '../SelectedWallet'
 import {AddressReaderQR} from '../Send/AddressReaderQR'
 import {AssetSelectorScreen} from '../Send/AssetSelectorScreen'
 import {ConfirmScreen} from '../Send/ConfirmScreen'
+import {SendProvider} from '../Send/Context/SendContext'
 import {ScannerButton} from '../Send/ScannerButton'
 import {SendScreen} from '../Send/SendScreen'
 import {COLORS} from '../theme'
@@ -35,26 +34,13 @@ export const TxHistoryNavigator = () => {
 
   const walletName = useWalletName(wallet)
   const transactionInfos = useSelector(transactionsInfoSelector)
-  const defaultTokenId = getDefaultAssetByNetworkId(wallet.networkId).identifier
   const balances = useBalances(wallet)
   const [modalInfoState, setModalInfoState] = React.useState(false)
   const showModalInfo = () => setModalInfoState(true)
   const hideModalInfo = () => setModalInfoState(false)
 
-  const [selectedTokenIdentifier, setSelectedTokenIdentifier] = React.useState(defaultTokenId)
-  const [sendAll, setSendAll] = React.useState(false)
-  const [receiver, setReceiver] = React.useState('')
-  const [amount, setAmount] = React.useState('')
-
-  if (typeof balances[selectedTokenIdentifier] !== 'string') {
-    setSelectedTokenIdentifier(defaultTokenId)
-    setSendAll(false)
-    setReceiver('')
-    setAmount('')
-  }
-
   return (
-    <>
+    <SendProvider key={wallet.id} wallet={wallet}>
       <Stack.Navigator screenOptions={defaultStackNavigationOptions} initialRouteName="history-list">
         <Stack.Screen
           name="history-list"
@@ -98,43 +84,20 @@ export const TxHistoryNavigator = () => {
         >
           {() => (
             <Boundary>
-              <SendScreen
-                selectedTokenIdentifier={selectedTokenIdentifier}
-                onSendAll={setSendAll}
-                sendAll={sendAll}
-                amount={amount}
-                setAmount={setAmount}
-                receiver={receiver}
-                setReceiver={setReceiver}
-              />
+              <SendScreen />
             </Boundary>
           )}
         </Stack.Screen>
 
         <Stack.Screen name="select-asset" options={{title: strings.selectAssetTitle}}>
-          {({navigation}: {navigation: TxHistoryRouteNavigation}) => (
-            <AssetSelectorScreen
-              balances={balances}
-              onSelect={(tokenId) => {
-                setSendAll(false)
-                setSelectedTokenIdentifier(tokenId)
-                navigation.navigate('send')
-              }}
-              onSelectAll={() => {
-                setSendAll(true)
-                setSelectedTokenIdentifier(defaultTokenId)
-                navigation.navigate('send')
-              }}
-            />
-          )}
+          {() => <AssetSelectorScreen balances={balances} />}
         </Stack.Screen>
 
         <Stack.Screen //
           name="address-reader-qr"
+          component={AddressReaderQR}
           options={{title: strings.qrScannerTitle}}
-        >
-          {() => <AddressReaderQR setQrAmount={setAmount} setQrReceiver={setReceiver} />}
-        </Stack.Screen>
+        />
 
         <Stack.Screen //
           name="send-confirm"
@@ -146,7 +109,7 @@ export const TxHistoryNavigator = () => {
       <ModalInfo hideModalInfo={hideModalInfo} visible={modalInfoState}>
         <Text style={styles.receiveInfoText}>{strings.receiveInfoText}</Text>
       </ModalInfo>
-    </>
+    </SendProvider>
   )
 }
 

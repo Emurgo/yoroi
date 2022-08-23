@@ -1,3 +1,4 @@
+import {useNavigation} from '@react-navigation/native'
 import BigNumber from 'bignumber.js'
 import React from 'react'
 import {defineMessages} from 'react-intl'
@@ -13,24 +14,27 @@ import {useTokenInfo} from '../../hooks'
 import globalMessages, {txLabels} from '../../i18n/global-messages'
 import {getDefaultAssetByNetworkId} from '../../legacy/config'
 import {decodeHexAscii, formatTokenAmount, getAssetDenominationOrId, getTokenFingerprint} from '../../legacy/format'
+import {TxHistoryRouteNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {Token} from '../../types'
 import {YoroiWallet} from '../../yoroi-wallets'
 import {Quantity, TokenId, YoroiAmounts} from '../../yoroi-wallets/types'
 import {Quantities} from '../../yoroi-wallets/utils'
+import {useSend} from '../Context/SendContext'
 
 type Props = {
   balances: YoroiAmounts
-  onSelect: (tokenId: TokenId) => void
-  onSelectAll: () => void
 }
 
-export const AssetSelectorScreen = ({balances, onSelect, onSelectAll}: Props) => {
+export const AssetSelectorScreen = ({balances}: Props) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const defaultAsset = getDefaultAssetByNetworkId(wallet.networkId)
   const [matcher, setMatcher] = React.useState('')
+  const navigation = useNavigation<TxHistoryRouteNavigation>()
+  const {tokenSelected, allTokensSelected} = useSend()
+
   const onChangeMatcher = (matcher: string) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     setMatcher(matcher)
@@ -65,7 +69,10 @@ export const AssetSelectorScreen = ({balances, onSelect, onSelectAll}: Props) =>
               wallet={wallet}
               tokenId={tokenId}
               quantity={quantity}
-              onPress={onSelect}
+              onSelect={() => {
+                tokenSelected(tokenId)
+                navigation.navigate('send')
+              }}
               matcher={matcher}
             />
           </Boundary>
@@ -76,7 +83,14 @@ export const AssetSelectorScreen = ({balances, onSelect, onSelectAll}: Props) =>
       />
 
       <Actions>
-        <Button outlineOnLight title={strings.sendAllAssets} onPress={() => onSelectAll()} />
+        <Button
+          outlineOnLight
+          title={strings.sendAllAssets}
+          onPress={() => {
+            allTokensSelected()
+            navigation.navigate('send')
+          }}
+        />
       </Actions>
     </SafeAreaView>
   )
@@ -86,17 +100,17 @@ type AssetSelectorItemProps = {
   wallet: YoroiWallet
   tokenId: TokenId
   quantity: Quantity
-  onPress: (tokenId: TokenId) => void
+  onSelect: () => void
   matcher: string
 }
 
-const AssetSelectorItem = ({wallet, tokenId, quantity, onPress, matcher}: AssetSelectorItemProps) => {
+const AssetSelectorItem = ({wallet, tokenId, quantity, onSelect, matcher}: AssetSelectorItemProps) => {
   const tokenInfo = useTokenInfo({wallet, tokenId})
 
   if (!matches(tokenInfo, matcher)) return null
 
   return (
-    <TouchableOpacity style={{paddingVertical: 16}} onPress={() => onPress(tokenId)}>
+    <TouchableOpacity style={{paddingVertical: 16}} onPress={onSelect}>
       <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
         <View style={{padding: 4}}>
           <Icon source={tokenInfo.isDefault ? AdaImage : NoImage} />
