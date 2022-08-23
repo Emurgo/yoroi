@@ -8,16 +8,29 @@ type SendProvider = {
   wallet: YoroiWallet
 }
 
-const SendContext = React.createContext<undefined | SendContext>(undefined)
+type SendState = {
+  tokenId: TokenId
+  receiver: string
+  amount: string
+  sendAll: boolean
+}
+
+type SendActions = {
+  receiverChanged: (receiver: SendState['receiver']) => void
+  amountChanged: (amount: SendState['amount']) => void
+  tokenSelected: (tokenId: SendState['tokenId']) => void
+  sendAllChanged: () => void
+  allTokensSelected: () => void
+  resetForm: () => void
+}
+
+const SendContext = React.createContext<undefined | (SendActions & SendState)>(undefined)
 export const SendProvider: React.FC<SendProvider> = ({children, wallet}) => {
   const primaryTokenId = getDefaultAssetByNetworkId(wallet.networkId).identifier
 
-  const [state, dispatch] = React.useReducer(sendReducer, {
-    ...initialState,
-    tokenId: primaryTokenId,
-  })
+  const [state, dispatch] = React.useReducer(sendReducer, initialState(primaryTokenId))
 
-  const actions = React.useRef({
+  const actions = React.useRef<SendActions>({
     receiverChanged: (receiver) => dispatch({type: 'receiverChanged', receiver}),
     amountChanged: (amount) => dispatch({type: 'amountChanged', amount}),
     tokenSelected: (tokenId) => dispatch({type: 'tokenSelected', tokenId}),
@@ -26,23 +39,9 @@ export const SendProvider: React.FC<SendProvider> = ({children, wallet}) => {
     resetForm: () => dispatch({type: 'resetForm', primaryTokenId}),
   }).current
 
-  const context = React.useMemo(
-    () => ({
-      ...state,
-      ...actions,
-      tokenId: state.tokenId !== undefined ? state.tokenId : primaryTokenId,
-    }),
-    [actions, primaryTokenId, state],
-  )
+  const context = React.useMemo(() => ({...state, ...actions}), [actions, state])
 
   return <SendContext.Provider value={context}>{children}</SendContext.Provider>
-}
-
-const initialState: SendState = {
-  sendAll: false,
-  tokenId: '',
-  receiver: '',
-  amount: '',
 }
 
 type SendAction =
@@ -69,7 +68,6 @@ type SendAction =
       type: 'tokenSelected'
       tokenId: SendState['tokenId']
     }
-  | {type: undefined | null}
 
 const sendReducer = (state: SendState, action: SendAction) => {
   switch (action.type) {
@@ -78,35 +76,38 @@ const sendReducer = (state: SendState, action: SendAction) => {
         ...state,
         receiver: action.receiver,
       }
+
     case 'amountChanged':
       return {
         ...state,
         amount: action.amount,
       }
+
     case 'sendAllChanged':
       return {
         ...state,
-        sendAll: state.sendAll === true ? false : true,
+        sendAll: !state.sendAll,
       }
+
     case 'tokenSelected':
       return {
         ...state,
         sendAll: false,
         tokenId: action.tokenId,
       }
+
     case 'allTokensSelected':
       return {
         ...state,
         sendAll: true,
-        tokenId: undefined,
+        tokenId: action.primaryTokenId,
       }
+
     case 'resetForm':
-      return {
-        ...initialState,
-        tokenId: undefined,
-      }
-    default:
-      throw new Error(`sendReducer: action type ${action.type} not supported`)
+      return initialState(action.primaryTokenId)
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      throw new Error(`sendReducer: action type ${(action as any).type} not supported`)
   }
 }
 
@@ -116,19 +117,9 @@ const missingProvider = () => {
   throw new Error('SendProvider is missing')
 }
 
-type SendState = {
-  sendAll: boolean
-  tokenId: TokenId | undefined
-  receiver: string
-  amount: string
-}
-
-type SendContext = Pick<SendState, 'sendAll' | 'receiver' | 'amount'> & {
-  tokenId: TokenId
-  receiverChanged: (receiver: SendState['receiver']) => void
-  amountChanged: (amount: SendState['amount']) => void
-  tokenSelected: (tokenId: SendState['tokenId']) => void
-  sendAllChanged: () => void
-  allTokensSelected: () => void
-  resetForm: () => void
-}
+const initialState = (primaryTokenId: TokenId) => ({
+  tokenId: primaryTokenId,
+  receiver: '',
+  amount: '',
+  sendAll: false,
+})
