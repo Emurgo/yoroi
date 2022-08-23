@@ -5,7 +5,7 @@ import * as React from 'react'
 import {mockWallet} from '../../../storybook'
 import {SelectedWalletProvider} from '../../SelectedWallet'
 import {YoroiWallet} from '../../yoroi-wallets'
-import {SendProvider, useSend} from '../Context/SendContext'
+import {SendProvider} from '../Context/SendContext'
 import {SendScreen} from './SendScreen'
 
 storiesOf('SendScreen', module)
@@ -20,21 +20,9 @@ const SendScreenTest = ({isSendAll}: {isSendAll?: boolean}) => {
 
   return (
     <SelectedWalletProvider wallet={wallet}>
-      <SendProvider wallet={wallet}>
-        <SendScreenWapper isSendAll={isSendAll} />
+      <SendProvider wallet={wallet} initialState={{sendAll: isSendAll}}>
+        <SendScreen />
       </SendProvider>
     </SelectedWalletProvider>
   )
-}
-
-const SendScreenWapper = ({isSendAll = false}: {isSendAll: boolean | undefined}) => {
-  const {allTokensSelected} = useSend()
-
-  React.useEffect(() => {
-    if (isSendAll === false) return
-    allTokensSelected()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  return <SendScreen />
 }

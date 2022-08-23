@@ -6,6 +6,7 @@ import {TokenId} from '../../yoroi-wallets/types'
 
 type SendProvider = {
   wallet: YoroiWallet
+  initialState?: Partial<SendState>
 }
 
 type SendState = {
@@ -25,10 +26,10 @@ type SendActions = {
 }
 
 const SendContext = React.createContext<undefined | (SendActions & SendState)>(undefined)
-export const SendProvider: React.FC<SendProvider> = ({children, wallet}) => {
+export const SendProvider: React.FC<SendProvider> = ({children, wallet, ...props}) => {
   const primaryTokenId = getDefaultAssetByNetworkId(wallet.networkId).identifier
 
-  const [state, dispatch] = React.useReducer(sendReducer, initialState(primaryTokenId))
+  const [state, dispatch] = React.useReducer(sendReducer, {...initialState(primaryTokenId), ...props.initialState})
 
   const actions = React.useRef<SendActions>({
     receiverChanged: (receiver) => dispatch({type: 'receiverChanged', receiver}),
