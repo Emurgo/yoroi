@@ -56,14 +56,14 @@ export const SendScreen = () => {
 
   const {tokenId, resetForm, receiverChanged, amountChanged, receiver, amount, sendAll, sendAllChanged} = useSend()
 
+  const selectedAssetAvailableAmount = Amounts.getAmount(balances, tokenId).quantity
+  const defaultAssetAvailableAmount = Amounts.getAmount(balances, defaultAsset.identifier).quantity
+
   React.useEffect(() => {
-    if (defaultAsset.identifier !== tokenId && balances[tokenId] === undefined) {
+    if (defaultAsset.identifier !== tokenId && !Quantities.isGreaterThan(selectedAssetAvailableAmount, '0')) {
       resetForm()
     }
-  }, [defaultAsset.identifier, tokenId, balances, resetForm])
-
-  const selectedAssetAvailableAmount = balances[tokenId]
-  const defaultAssetAvailableAmount = balances[defaultAsset.identifier]
+  }, [defaultAsset.identifier, tokenId, resetForm, selectedAssetAvailableAmount])
 
   const [address, setAddress] = React.useState('')
   const [addressErrors, setAddressErrors] = React.useState<AddressValidationErrors>({addressIsRequired: true})
