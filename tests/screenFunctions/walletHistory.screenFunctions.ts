@@ -15,9 +15,7 @@ export const checkTokenInAssets = async (tokenName) => {
   ).to.be.true
 }
 
-export const getAllAssets = async (assetItemSelector: string) => {
-  return await driver.$$(assetItemSelector)
-}
+export const getAllAssets = async (assetItemSelector: string) => driver.$$(assetItemSelector)
 
 export const getAssetByName = async (assetName: string, assetItemSelector: string, tokenNameSelector: string) => {
   const allAssetsComponents = await getAllAssets(assetItemSelector)
