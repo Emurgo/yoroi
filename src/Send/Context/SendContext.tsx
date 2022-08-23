@@ -107,6 +107,7 @@ const sendReducer = (state: SendState, action: SendAction) => {
     case 'resetForm':
       return initialState(action.primaryTokenId)
 
+    default:
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       throw new Error(`sendReducer: action type ${(action as any).type} not supported`)
   }
