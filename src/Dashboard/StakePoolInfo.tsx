@@ -7,24 +7,24 @@ import {useQuery} from 'react-query'
 import {Button, CopyButton, Text, TitledCard} from '../components'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
-import {RemotePoolMetaFailure, StakePoolInfoAndHistory} from '../types'
 import {YoroiWallet} from '../yoroi-wallets'
 
 export const StakePoolInfo = ({stakePoolId}: {stakePoolId: string}) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
-  const {stakePoolInfo, isLoading} = useStakePoolInfo(wallet, stakePoolId)
+  const {stakePoolInfoAndHistory, isLoading} = useStakePoolInfoAndHistory(wallet, stakePoolId)
 
   if (isLoading) {
     return <ActivityIndicator size="large" color="black" />
   }
 
-  return stakePoolInfo ? (
+  return stakePoolInfoAndHistory?.info ? (
     <View>
       <TitledCard title={strings.title} variant="poolInfo" testID="stakePoolInfoTitleCard">
         <View style={styles.topBlock}>
           <Text bold style={styles.poolName}>
-            {formatStakepoolNameWithTicker(stakePoolInfo.ticker, stakePoolInfo.name) || strings.unknownPool}
+            {formatStakepoolNameWithTicker(stakePoolInfoAndHistory.info.ticker, stakePoolInfoAndHistory.info.name) ||
+              strings.unknownPool}
           </Text>
 
           <View style={styles.poolIdBlock}>
@@ -38,16 +38,18 @@ export const StakePoolInfo = ({stakePoolId}: {stakePoolId: string}) => {
               {stakePoolInfo.id}
             </Text>
 
-            <CopyButton value={stakePoolInfo.id} />
+            <CopyButton value={stakePoolId} />
           </View>
         </View>
 
-        {!!stakePoolInfo.homepage && (
+        {!!stakePoolInfoAndHistory.info.homepage && (
           <View style={styles.bottomBlock}>
             <Button
               outlineOnLight
               shelleyTheme
-              onPress={() => stakePoolInfo.homepage && Linking.openURL(stakePoolInfo.homepage)}
+              onPress={() =>
+                stakePoolInfoAndHistory.info.homepage && Linking.openURL(stakePoolInfoAndHistory.info.homepage)
+              }
               title={strings.goToWebsiteButtonLabel}
             />
           </View>
@@ -63,19 +65,20 @@ export const StakePoolInfo = ({stakePoolId}: {stakePoolId: string}) => {
   ) : null
 }
 
-const useStakePoolInfo = (wallet: YoroiWallet, stakePoolId: string) => {
+const useStakePoolInfoAndHistory = (wallet: YoroiWallet, stakePoolId: string) => {
   const query = useQuery({
     queryKey: [wallet.id, 'stakePoolInfo', stakePoolId],
     queryFn: async () => {
-      const stakePoolInfos = await wallet.fetchPoolInfo({poolIds: [stakePoolId]})
-      const stakePoolInfo = stakePoolInfos[stakePoolId]
-      if (isRemotePoolMetaFailure(stakePoolInfo)) throw stakePoolInfo.error
+      const stakePoolInfosAndHistories = await wallet.fetchPoolInfo({poolIds: [stakePoolId]})
 
-      return {...stakePoolInfo.info, id: stakePoolId}
+      return stakePoolInfosAndHistories[stakePoolId]
     },
   })
 
-  return {stakePoolInfo: query.data, ...query}
+  return {
+    stakePoolInfoAndHistory: query.data,
+    ...query,
+  }
 }
 
 const styles = StyleSheet.create({
@@ -156,7 +159,3 @@ const formatStakepoolNameWithTicker = (ticker?: string, name?: string) => {
     ? name
     : undefined
 }
-
-const isRemotePoolMetaFailure = (
-  poolResponse: StakePoolInfoAndHistory | RemotePoolMetaFailure,
-): poolResponse is RemotePoolMetaFailure => 'error' in poolResponse

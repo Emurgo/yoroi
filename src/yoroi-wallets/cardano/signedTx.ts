@@ -15,5 +15,3 @@ export const yoroiSignedTx = ({unsignedTx, signedTx}: YoroiSignedTxInfo): YoroiS
     signedTx,
   }
 }
-
-Object.assign({})

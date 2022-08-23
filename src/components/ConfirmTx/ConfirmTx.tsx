@@ -151,9 +151,14 @@ export const ConfirmTx: React.FC<Props> = ({
             signedTx = await smoothModalNotification(wallet.signTx(yoroiUnsignedTx, easyConfirmDecryptKey))
           }
         } else {
-          const decryptedKey = await KeyStore.getData(walletManager._id, 'MASTER_PASSWORD', '', password, intl)
-          setDialogStep(DialogStep.Signing)
-          signedTx = await smoothModalNotification(wallet.signTx(yoroiUnsignedTx, decryptedKey))
+          if (wallet.isHW) {
+            setDialogStep(DialogStep.WaitingHwResponse)
+            signedTx = await wallet.signTxWithLedger(yoroiUnsignedTx, useUSB)
+          } else {
+            const decryptedKey = await KeyStore.getData(walletManager._id, 'MASTER_PASSWORD', '', password, intl)
+            setDialogStep(DialogStep.Signing)
+            signedTx = await smoothModalNotification(wallet.signTx(yoroiUnsignedTx, decryptedKey))
+          }
         }
 
         setDialogStep(DialogStep.Submitting)
@@ -194,7 +199,7 @@ export const ConfirmTx: React.FC<Props> = ({
         setIsProcessing(false)
       }
     },
-    [intl, onError, onSuccess, password, strings, submitTx, wallet, yoroiUnsignedTx],
+    [intl, onError, onSuccess, password, strings, submitTx, useUSB, wallet, yoroiUnsignedTx],
   )
 
   const _onConfirm = React.useCallback(async () => {

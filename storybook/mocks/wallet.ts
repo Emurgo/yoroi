@@ -3,7 +3,7 @@ import KeyStore from '../../src/legacy/KeyStore'
 
 import {RemotePoolMetaSuccess, StakePoolInfosAndHistories, TokenEntry, TokenInfo} from '../../src/types'
 import {YoroiWallet} from '../../src/yoroi-wallets'
-import {YoroiSignedTx} from '../../src/yoroi-wallets/types'
+import {YoroiSignedTx, YoroiUnsignedTx} from '../../src/yoroi-wallets/types'
 
 export const mockWallet: YoroiWallet = {
   id: 'wallet-id',
@@ -42,13 +42,13 @@ export const mockWallet: YoroiWallet = {
   fetchAccountState: () =>
     Promise.resolve({['reward-address-hex']: {remainingAmount: '0', rewards: '0', withdrawals: ''}}),
   changePassword: () => {
-    throw new Error('Not implemented')
+    throw new Error('Not implemented: changePassword')
   },
   signTx: () => {
-    throw new Error('Not implemented')
+    throw new Error('Not implemented: signTx')
   },
   signTxWithLedger: () => {
-    throw new Error('Not implemented')
+    throw new Error('Not implemented: signTxWithLedger')
   },
   checkServerStatus: () =>
     Promise.resolve({
@@ -76,15 +76,15 @@ export const mockWallet: YoroiWallet = {
       },
     }),
   submitTransaction: () => {
-    throw new Error('Not implemented')
+    throw new Error('Not implemented: submitTransaction')
   },
   createVotingRegTx: () => {
-    throw new Error('Not implemented')
+    throw new Error('Not implemented: createVotingRegTx')
   },
   subscribe: () => {
-    throw new Error('Not implemented')
+    throw new Error('Not implemented: subscribe')
   },
-  fetchCurrentPrice: async () => Promise.resolve(1.9938153154314795),
+  fetchCurrentPrice: () => Promise.resolve(1.9938153154314795),
   toJSON: () => null as any,
 
   // enableEasyConfirmation: () => {
@@ -184,7 +184,7 @@ export const poolInfoAndHistory: RemotePoolMetaSuccess = {
   ],
 }
 
-export const mockYoroiTx = {
+export const mockYoroiTx: YoroiUnsignedTx & {mock: true} = {
   entries: {},
   amounts: {},
   fee: {'': '12345'},
