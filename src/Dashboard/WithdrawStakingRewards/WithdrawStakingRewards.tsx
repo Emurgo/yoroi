@@ -81,11 +81,13 @@ export const WithdrawalTxForm: React.FC<{
         disabled: isLoading,
         label: strings.keepButton,
         onPress: () => setDeregister(false),
+        testID: 'keepRegisteredButton',
       }}
       secondaryButton={{
         disabled: isLoading,
         label: strings.deregisterButton,
         onPress: () => setDeregister(true),
+        testID: 'deregisterButton',
       }}
     >
       <Markdown style={styles.paragraph}>{strings.explanation1}</Markdown>

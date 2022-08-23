@@ -10,6 +10,12 @@ import * as sendScreen from '../screenObjects/send.screen'
 import * as selectWalletToRestoreScreen from '../screenObjects/selectWalletToRestore.screen'
 import * as recoveryPhraseInputScreen from '../screenObjects/restoreWalletsScreens/recoveryPhraseEnterManually.screen'
 import * as verifyRestoredWalletScreen from '../screenObjects/restoreWalletsScreens/verifyRestoredWallet.screen'
+import * as walletBottomPanel from '../screenObjects/walletBottomPanel.screen'
+import * as stakingDashboard from '../screenObjects/stakingScreens/stakingDashboard.screen'
+import * as stakingCenter from '../screenObjects/stakingScreens/stakingCenter.screen'
+import * as confirmDelegationScreen from '../screenObjects/stakingScreens/confirmDelegating.screen'
+import * as withdrawWarningScreen from '../screenObjects/stakingScreens/withdrawWarning.screen'
+import * as confirmWithdrawTransactionScreen from '../screenObjects/stakingScreens/confirmWithdrawTransaction.screen'
 import {
   WALLET_NAME,
   DEFAULT_TIMEOUT,
@@ -18,9 +24,17 @@ import {
   NORMAL_15_WORD_WALLET,
   WalletType,
   SPENDING_PASSWORD,
-  TADA_TOKEN, TWO_MINUTES_TIMEOUT,
+  TADA_TOKEN,
+  TWO_MINUTES_TIMEOUT,
+  STAKE_POOL_ID,
 } from '../constants'
-import {checkForErrors, enterNewValue, hideKeyboard} from '../screenFunctions/common.screenFunctions'
+import {
+  checkForErrors,
+  enterNewValue,
+  getCoordinateByPercents,
+  hideKeyboard,
+  scroll,
+} from '../screenFunctions/common.screenFunctions'
 import {
   enterRecoveryPhrase,
   enterWalletCredentials,
@@ -31,11 +45,11 @@ import {
   checkTokenInAssets,
   getLatestTxTime,
   getReceiveAddress,
-  waitForNewTransaction
+  waitForNewTransaction,
 } from '../screenFunctions/walletHistory.screenFunctions'
 import {prepareTransaction, balanceAndFeeIsCalculated} from '../screenFunctions/send.screenFunctions'
 import {enterPinCodeIfNecessary} from '../screenFunctions/prepare.screenFunctions'
-import {AssertionError} from "chai";
+import {AssertionError} from 'chai'
 
 const expect = require('chai').expect
 
@@ -159,6 +173,86 @@ describe('Happy paths', () => {
       } catch (e) {
         throw new AssertionError('There is no new transaction')
       }
+    })
+
+    it(`Delegation, ${NORMAL_15_WORD_WALLET.name} wallet`, async () => {
+      await openWallet(NORMAL_15_WORD_WALLET.name)
+      const latestTxTime = await getLatestTxTime()
+
+      await walletBottomPanel.stakingButton().click()
+      await driver.waitUntil(async () => await stakingDashboard.isDisplayed())
+      await stakingDashboard.goToStakingCenterButton().click()
+      await enterNewValue(stakingCenter.nightlyPoolHashInput, STAKE_POOL_ID)
+      await stakingCenter.nightlyDelegateButton().click()
+      await driver.waitUntil(async () => await confirmDelegationScreen.isDisplayed())
+      const stakePoolHash = await confirmDelegationScreen.stakePoolHashText().getText()
+      expect(stakePoolHash).to.be.equal(STAKE_POOL_ID)
+      await enterNewValue(confirmDelegationScreen.spendingPasswordInput, SPENDING_PASSWORD)
+      await confirmDelegationScreen.confirmDelegationButton().click()
+
+      await checkForErrors()
+
+      try {
+        await driver.waitUntil(async () => await waitForNewTransaction(latestTxTime, TWO_MINUTES_TIMEOUT + 60000))
+      } catch (e) {
+        throw new AssertionError('There is no new transaction')
+      }
+
+      await walletBottomPanel.stakingButton().click()
+      await driver.waitUntil(async () => await stakingDashboard.isDisplayed())
+      const availableFunds = await stakingDashboard.availableFundsText().getText()
+      const totalDelegated = await stakingDashboard.userSummaryDelegatedText().getText()
+
+      expect(availableFunds).to.be.equal(totalDelegated)
+    })
+
+    it(`Deregistering, ${NORMAL_15_WORD_WALLET.name} wallet`, async () => {
+      await openWallet(NORMAL_15_WORD_WALLET.name)
+      const latestTxTime = await getLatestTxTime()
+      await walletBottomPanel.stakingButton().click()
+
+      await driver.waitUntil(async () => await stakingDashboard.isDisplayed())
+      const availableFunds = await stakingDashboard.availableFundsText().getText()
+      const totalDelegated = await stakingDashboard.userSummaryDelegatedText().getText()
+      expect(availableFunds).to.be.equal(totalDelegated)
+      await stakingDashboard.userSummaryWithdrawButton().click()
+
+      await driver.waitUntil(async () => await withdrawWarningScreen.isDisplayed())
+      const [xPoint, yStartPoint] = await getCoordinateByPercents(50, 80)
+      const [, yEndPoint] = await getCoordinateByPercents(50, 30)
+
+      await scroll(await withdrawWarningScreen.warningView(), yStartPoint, yEndPoint, xPoint)
+
+      await withdrawWarningScreen.iUnderstandCheckbox().click()
+      await withdrawWarningScreen.deregisterButton().click()
+
+      await driver.waitUntil(async () => await confirmWithdrawTransactionScreen.isDisplayed())
+      const recoveredBalance = (await confirmWithdrawTransactionScreen.recoveredBalanceText().getText()).split(' ')[0]
+      expect(parseFloat(recoveredBalance)).to.be.equal(2)
+      await enterNewValue(confirmWithdrawTransactionScreen.walletPasswordInput, SPENDING_PASSWORD, false)
+
+      const [, yStartPointTxScreen] = await getCoordinateByPercents(50, 40)
+      const [, yEndPointTxScreen] = await getCoordinateByPercents(50, 10)
+
+      await scroll(
+        await confirmWithdrawTransactionScreen.confirmTxView(),
+        yStartPointTxScreen,
+        yEndPointTxScreen,
+        xPoint,
+      )
+      await confirmWithdrawTransactionScreen.confirmTxButton().click()
+
+      await checkForErrors()
+
+      try {
+        await driver.waitUntil(async () => await waitForNewTransaction(latestTxTime, TWO_MINUTES_TIMEOUT))
+      } catch (e) {
+        throw new AssertionError('There is no new transaction')
+      }
+
+      await walletBottomPanel.stakingButton().click()
+      await driver.waitUntil(async () => await stakingDashboard.isDisplayed())
+      expect(await stakingDashboard.notDelegatedImage().isDisplayed()).to.be.true
     })
   })
 })

@@ -18,12 +18,14 @@ type DangerousActionProps = {
     disabled?: boolean
     label: string
     onPress: () => Promise<void> | void
+    testID?: string
   }
   secondaryButton?: {
     disabled?: boolean
     label?: string
     onPress: () => Promise<void> | void
     primary?: boolean
+    testID?: string
   }
   checkboxLabel?: string
 }
@@ -40,7 +42,7 @@ export const DangerousAction = ({
   const intl = useIntl()
 
   return (
-    <ScrollView bounces={false}>
+    <ScrollView bounces={false} testID="dangerousActionView">
       <View style={styles.header}>
         <Text style={styles.heading}>{title}</Text>
       </View>
@@ -63,12 +65,19 @@ export const DangerousAction = ({
         checked={isChecked}
         text={checkboxLabel || intl.formatMessage(confirmationMessages.commonButtons.iUnderstandButton)}
         style={styles.checkbox}
+        testID="dangerousActionCheckbox"
       />
 
       <Spacer height={24} />
 
       <View style={styles.actions}>
-        <Button block onPress={primaryButton.onPress} title={primaryButton.label} style={styles.primaryButton} />
+        <Button
+          block
+          onPress={primaryButton.onPress}
+          title={primaryButton.label}
+          style={styles.primaryButton}
+          testID={primaryButton.testID}
+        />
 
         <Spacer height={16} />
 
@@ -79,6 +88,7 @@ export const DangerousAction = ({
             onPress={secondaryButton.onPress}
             title={secondaryButton.label || intl.formatMessage(confirmationMessages.commonButtons.cancelButton)}
             style={styles.secondaryButton}
+            testID={secondaryButton.testID}
           />
         ) : null}
       </View>
