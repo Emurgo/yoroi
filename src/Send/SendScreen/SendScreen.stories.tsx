@@ -20,7 +20,7 @@ const SendScreenTest = ({isSendAll}: {isSendAll?: boolean}) => {
 
   return (
     <SelectedWalletProvider wallet={wallet}>
-      <SendProvider key={wallet.id} wallet={wallet}>
+      <SendProvider wallet={wallet}>
         <SendScreenWapper isSendAll={isSendAll} />
       </SendProvider>
     </SelectedWalletProvider>

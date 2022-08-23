@@ -69,7 +69,7 @@ export const AssetSelectorScreen = ({balances}: Props) => {
               wallet={wallet}
               tokenId={tokenId}
               quantity={quantity}
-              onPress={(tokenId) => {
+              onPress={() => {
                 tokenSelected(tokenId)
                 navigation.navigate('send')
               }}
@@ -100,7 +100,7 @@ type AssetSelectorItemProps = {
   wallet: YoroiWallet
   tokenId: TokenId
   quantity: Quantity
-  onPress: (tokenId: TokenId) => void
+  onPress: () => void
   matcher: string
 }
 
@@ -110,7 +110,7 @@ const AssetSelectorItem = ({wallet, tokenId, quantity, onPress, matcher}: AssetS
   if (!matches(tokenInfo, matcher)) return null
 
   return (
-    <TouchableOpacity style={{paddingVertical: 16}} onPress={() => onPress(tokenId)}>
+    <TouchableOpacity style={{paddingVertical: 16}} onPress={onPress}>
       <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
         <View style={{padding: 4}}>
           <Icon source={tokenInfo.isDefault ? AdaImage : NoImage} />

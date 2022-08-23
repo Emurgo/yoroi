@@ -54,16 +54,15 @@ export const SendScreen = () => {
   const netInfo = useNetInfo()
   const isOnline = netInfo.type !== 'none' && netInfo.type !== 'unknown'
 
-  const {selectedTokenId, resetForm, receiverChanged, amountChanged, receiver, amount, sendAll, sendAllChanged} =
-    useSend()
+  const {tokenId, resetForm, receiverChanged, amountChanged, receiver, amount, sendAll, sendAllChanged} = useSend()
 
   React.useEffect(() => {
-    if (defaultAsset.identifier !== selectedTokenId && balances[selectedTokenId] === undefined) {
+    if (defaultAsset.identifier !== tokenId && balances[tokenId] === undefined) {
       resetForm()
     }
-  }, [defaultAsset.identifier, selectedTokenId, balances, resetForm])
+  }, [defaultAsset.identifier, tokenId, balances, resetForm])
 
-  const selectedAssetAvailableAmount = balances[selectedTokenId]
+  const selectedAssetAvailableAmount = balances[tokenId]
   const defaultAssetAvailableAmount = balances[defaultAsset.identifier]
 
   const [address, setAddress] = React.useState('')
@@ -76,7 +75,7 @@ export const SendScreen = () => {
   const [recomputing, setRecomputing] = React.useState(false)
   const [showSendAllWarning, setShowSendAllWarning] = React.useState(false)
 
-  const tokenInfo = useTokenInfo({wallet, tokenId: selectedTokenId})
+  const tokenInfo = useTokenInfo({wallet, tokenId: tokenId})
   const assetDenomination = truncateWithEllipsis(getAssetDenominationOrId(tokenInfo), 20)
   const amountErrorText = getAmountErrorText(intl, amountErrors, balanceErrors, defaultAsset)
 
@@ -109,8 +108,8 @@ export const SendScreen = () => {
       wallet,
       utxos,
       addressInput: receiver,
-      amount: amount,
-      sendAll: sendAll,
+      amount,
+      sendAll,
       defaultAsset,
       selectedTokenInfo: tokenInfo,
       defaultAssetAvailableAmount,
@@ -133,7 +132,7 @@ export const SendScreen = () => {
       setRecomputing(false)
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [receiver, amount, selectedTokenId, sendAll])
+  }, [receiver, amount, tokenId, sendAll])
 
   const onConfirm = () => {
     if (sendAll) {
@@ -156,7 +155,7 @@ export const SendScreen = () => {
         ? Amounts.remove(balances, [defaultAsset.identifier])
         : {}
       : {
-          [selectedTokenId]: amount as Quantity,
+          [tokenId]: amount as Quantity,
         }
 
     setShowSendAllWarning(false)
@@ -261,7 +260,7 @@ export const SendScreen = () => {
       <SendAllWarning
         showSendAllWarning={showSendAllWarning}
         onCancel={() => setShowSendAllWarning(false)}
-        selectedTokenIdentifier={selectedTokenId}
+        selectedTokenIdentifier={tokenId}
         onConfirm={handleConfirm}
       />
     </SafeAreaView>

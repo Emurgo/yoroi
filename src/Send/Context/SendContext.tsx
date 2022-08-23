@@ -14,14 +14,14 @@ export const SendProvider: React.FC<SendProvider> = ({children, wallet}) => {
 
   const [state, dispatch] = React.useReducer(sendReducer, {
     ...initialState,
-    selectedTokenId: primaryTokenId,
+    tokenId: primaryTokenId,
   })
 
   const actions = React.useRef({
     receiverChanged: (receiver) => dispatch({type: 'receiverChanged', receiver}),
     amountChanged: (amount) => dispatch({type: 'amountChanged', amount}),
+    tokenSelected: (tokenId) => dispatch({type: 'tokenSelected', tokenId}),
     sendAllChanged: () => dispatch({type: 'sendAllChanged'}),
-    tokenSelected: (selectedTokenId) => dispatch({type: 'tokenSelected', selectedTokenId}),
     allTokensSelected: () => dispatch({type: 'allTokensSelected', primaryTokenId}),
     resetForm: () => dispatch({type: 'resetForm', primaryTokenId}),
   }).current
@@ -30,7 +30,7 @@ export const SendProvider: React.FC<SendProvider> = ({children, wallet}) => {
     () => ({
       ...state,
       ...actions,
-      selectedTokenId: state.selectedTokenId != null ? state.selectedTokenId : primaryTokenId,
+      tokenId: state.tokenId !== undefined ? state.tokenId : primaryTokenId,
     }),
     [actions, primaryTokenId, state],
   )
@@ -40,12 +40,38 @@ export const SendProvider: React.FC<SendProvider> = ({children, wallet}) => {
 
 const initialState: SendState = {
   sendAll: false,
-  selectedTokenId: '',
+  tokenId: '',
   receiver: '',
   amount: '',
 }
 
-const sendReducer = (state, action) => {
+type SendAction =
+  | {
+      type: 'receiverChanged'
+      receiver: string
+    }
+  | {
+      type: 'amountChanged'
+      amount: string
+    }
+  | {
+      type: 'sendAllChanged'
+    }
+  | {
+      type: 'allTokensSelected'
+      primaryTokenId: TokenId
+    }
+  | {
+      type: 'resetForm'
+      primaryTokenId: TokenId
+    }
+  | {
+      type: 'tokenSelected'
+      tokenId: SendState['tokenId']
+    }
+  | {type: undefined | null}
+
+const sendReducer = (state: SendState, action: SendAction) => {
   switch (action.type) {
     case 'receiverChanged':
       return {
@@ -66,18 +92,18 @@ const sendReducer = (state, action) => {
       return {
         ...state,
         sendAll: false,
-        selectedTokenId: action.selectedTokenId,
+        tokenId: action.tokenId,
       }
     case 'allTokensSelected':
       return {
         ...state,
         sendAll: true,
-        selectedTokenId: action.primaryTokenId,
+        tokenId: undefined,
       }
     case 'resetForm':
       return {
         ...initialState,
-        selectedTokenId: action.primaryTokenId,
+        tokenId: undefined,
       }
     default:
       throw new Error(`sendReducer: action type ${action.type} not supported`)
@@ -92,17 +118,17 @@ const missingProvider = () => {
 
 type SendState = {
   sendAll: boolean
-  selectedTokenId: TokenId
+  tokenId: TokenId | undefined
   receiver: string
   amount: string
 }
 
-type SendContext = SendState & {
+type SendContext = Pick<SendState, 'sendAll' | 'receiver' | 'amount'> & {
+  tokenId: TokenId
   receiverChanged: (receiver: SendState['receiver']) => void
-  changeSendAll: (sendAll: SendState['sendAll']) => void
   amountChanged: (amount: SendState['amount']) => void
+  tokenSelected: (tokenId: SendState['tokenId']) => void
   sendAllChanged: () => void
-  tokenSelected: (selectedTokenId: SendState['selectedTokenId']) => void
   allTokensSelected: () => void
   resetForm: () => void
 }
