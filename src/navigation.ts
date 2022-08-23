@@ -1,14 +1,13 @@
 import {NavigatorScreenParams, useNavigation, useRoute} from '@react-navigation/native'
 import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/stack'
-import BigNumber from 'bignumber.js'
 import {IntlShape} from 'react-intl'
 import {Platform} from 'react-native'
 
 import {HWDeviceInfo} from './legacy/ledgerUtils'
 import type {RawUtxo} from './legacy/types'
 import {COLORS} from './theme'
-import {NetworkId, TokenEntry, WalletImplementationId, YoroiProvider} from './yoroi-wallets'
-import {YoroiUnsignedTx} from './yoroi-wallets/types'
+import {NetworkId, WalletImplementationId, YoroiProvider} from './yoroi-wallets'
+import {Quantity, YoroiAmounts, YoroiUnsignedTx} from './yoroi-wallets/types'
 
 // prettier-ignore
 export const useUnsafeParams = <Params, >() => {
@@ -214,12 +213,12 @@ export type SettingsRouteNavigation = StackNavigationProp<SettingsStackRoutes>
 
 export type SendConfirmParams = {
   yoroiUnsignedTx: YoroiUnsignedTx
-  defaultAssetAmount: BigNumber
+  defaultAssetAmount: Quantity
   address: string
-  balanceAfterTx: BigNumber | null
-  availableAmount: BigNumber
-  fee: BigNumber | null
-  tokens: TokenEntry[]
+  balanceAfterTx: Quantity | null
+  availableAmount: Quantity
+  fee: Quantity | null
+  selectedTokens: YoroiAmounts
   utxos: RawUtxo[]
 }
 export type SendRoutes = {

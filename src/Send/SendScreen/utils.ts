@@ -10,7 +10,8 @@ import {RawUtxo} from '../../legacy/types'
 import {cardanoValueFromMultiToken} from '../../legacy/utils'
 import type {DefaultAsset, SendTokenList, Token} from '../../types'
 import {BigNum, minAdaRequired, MultiToken, YoroiWallet} from '../../yoroi-wallets'
-import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
+import {Quantity, YoroiUnsignedTx} from '../../yoroi-wallets/types'
+import {Amounts, Quantities} from '../../yoroi-wallets/utils'
 import {InvalidAssetAmount, parseAmountDecimal} from '../../yoroi-wallets/utils/parsing'
 import type {AddressValidationErrors} from '../../yoroi-wallets/utils/validators'
 import {getUnstoppableDomainAddress, isReceiverAddressValid, validateAmount} from '../../yoroi-wallets/utils/validators'
@@ -86,7 +87,8 @@ export const recomputeAll = async ({
   sendAll,
   defaultAsset,
   selectedTokenInfo,
-  tokenBalance,
+  defaultAssetAvailableAmount,
+  selectedAssetAvailableAmount,
 }: {
   wallet: YoroiWallet
   addressInput: string
@@ -95,7 +97,8 @@ export const recomputeAll = async ({
   sendAll: boolean
   defaultAsset: DefaultAsset
   selectedTokenInfo: Token
-  tokenBalance: MultiToken
+  defaultAssetAvailableAmount: Quantity
+  selectedAssetAvailableAmount: Quantity
 }) => {
   let addressErrors: AddressValidationErrors = {}
   let address = addressInput
@@ -114,21 +117,19 @@ export const recomputeAll = async ({
   }
 
   let balanceErrors = Object.freeze({})
-  let fee: BigNumber | null = null
-  let balanceAfter: null | BigNumber = null
+  let fee: Quantity | null = null
+  let balanceAfter: null | Quantity = null
   let recomputedAmount = amount
 
   let yoroiUnsignedTx: YoroiUnsignedTx | null = null
 
   if (_.isEmpty(addressErrors) && utxos) {
     try {
-      let _fee: MultiToken | null = null
-
       // we'll substract minAda from ADA balance if we are sending a token
       const minAda =
         !selectedTokenInfo.isDefault && isHaskellShelleyNetwork(selectedTokenInfo.networkId)
-          ? new BigNumber(await getMinAda(selectedTokenInfo, defaultAsset))
-          : new BigNumber('0')
+          ? ((await getMinAda(selectedTokenInfo, defaultAsset)) as Quantity)
+          : '0'
 
       if (sendAll) {
         yoroiUnsignedTx = await getTransactionData(
@@ -140,32 +141,32 @@ export const recomputeAll = async ({
           defaultAsset,
           selectedTokenInfo,
         )
-        _fee = new MultiToken(yoroiUnsignedTx.unsignedTx.fee.values, {
-          defaultNetworkId: yoroiUnsignedTx.unsignedTx.fee.defaults.networkId,
-          defaultIdentifier: yoroiUnsignedTx.unsignedTx.fee.defaults.identifier,
-        })
+
+        fee = Amounts.getAmount(yoroiUnsignedTx.fee, defaultAsset.identifier).quantity
 
         if (selectedTokenInfo.isDefault) {
           recomputedAmount = normalizeTokenAmount(
-            tokenBalance.getDefault().minus(_fee.getDefault()),
+            new BigNumber(Quantities.diff(defaultAssetAvailableAmount, fee)),
             selectedTokenInfo,
           ).toString()
-          balanceAfter = new BigNumber('0')
+
+          balanceAfter = '0'
         } else {
-          const selectedTokenBalance = tokenBalance.get(selectedTokenInfo.identifier)
-          if (selectedTokenBalance == null) {
-            throw new Error('selectedTokenBalance is null, shouldnt happen')
-          }
-          recomputedAmount = normalizeTokenAmount(selectedTokenBalance, selectedTokenInfo).toString()
-          balanceAfter = tokenBalance.getDefault().minus(_fee.getDefault()).minus(minAda)
+          recomputedAmount = normalizeTokenAmount(
+            new BigNumber(selectedAssetAvailableAmount),
+            selectedTokenInfo,
+          ).toString()
+
+          balanceAfter = Quantities.diff(defaultAssetAvailableAmount, Quantities.sum([fee, minAda]))
         }
 
         // for sendAll we set the amount so the format is error-free
         amountErrors = Object.freeze({})
       } else if (_.isEmpty(amountErrors)) {
         const parsedAmount = selectedTokenInfo.isDefault
-          ? parseAmountDecimal(amount, selectedTokenInfo)
-          : new BigNumber('0')
+          ? (parseAmountDecimal(amount, selectedTokenInfo).toString() as Quantity)
+          : '0'
+
         yoroiUnsignedTx = await getTransactionData(
           wallet,
           utxos,
@@ -175,14 +176,10 @@ export const recomputeAll = async ({
           defaultAsset,
           selectedTokenInfo,
         )
-        _fee = new MultiToken(yoroiUnsignedTx.unsignedTx.fee.values, {
-          defaultNetworkId: yoroiUnsignedTx.unsignedTx.fee.defaults.networkId,
-          defaultIdentifier: yoroiUnsignedTx.unsignedTx.fee.defaults.identifier,
-        })
-        balanceAfter = tokenBalance.getDefault().minus(parsedAmount).minus(minAda).minus(_fee.getDefault())
+
+        fee = Amounts.getAmount(yoroiUnsignedTx.fee, defaultAsset.identifier).quantity
+        balanceAfter = Quantities.diff(defaultAssetAvailableAmount, Quantities.sum([parsedAmount, minAda, fee]))
       }
-      // now we can update fee as well
-      fee = _fee != null ? _fee.getDefault() : null
     } catch (err) {
       if (
         err instanceof NotEnoughMoneyToSendError ||

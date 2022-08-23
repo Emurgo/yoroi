@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {useNetInfo} from '@react-native-community/netinfo'
 import {delay} from 'bluebird'
 import cryptoRandomString from 'crypto-random-string'
+import * as React from 'react'
 import {IntlShape} from 'react-intl'
 import {
   QueryKey,
@@ -15,6 +17,7 @@ import {useDispatch} from 'react-redux'
 
 import {clearAccountState} from '../legacy/account'
 import {signout} from '../legacy/actions'
+import {getDefaultAssetByNetworkId} from '../legacy/config'
 import KeyStore from '../legacy/KeyStore'
 import {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {WalletMeta} from '../legacy/state'
@@ -34,7 +37,8 @@ import {
   YoroiWallet,
 } from '../yoroi-wallets'
 import {generateShelleyPlateFromKey} from '../yoroi-wallets/cardano/shelley/plate'
-import {YoroiSignedTx, YoroiUnsignedTx} from '../yoroi-wallets/types'
+import {YoroiAmounts, YoroiSignedTx, YoroiUnsignedTx} from '../yoroi-wallets/types'
+import {Utxos} from '../yoroi-wallets/utils'
 
 // WALLET
 export const useCloseWallet = ({onSuccess, ...options}: UseMutationOptions<void, Error> = {}) => {
@@ -701,4 +705,33 @@ export const useLogout = () => {
     await closeWallet()
     dispatch(signout())
   }
+}
+
+export const useBalances = (wallet: YoroiWallet): YoroiAmounts => {
+  const {refetch, ...query} = useQuery({
+    suspense: true,
+    queryKey: [wallet.id, 'utxos'],
+    refetchInterval: 20000,
+    queryFn: () => {
+      const primaryTokenId = getDefaultAssetByNetworkId(wallet.networkId).identifier
+
+      return wallet.fetchUTXOs().then((utxos) => Utxos.toAmounts(utxos, primaryTokenId))
+    },
+  })
+
+  const netInfo = useNetInfo()
+  const onlineRef = React.useRef()
+
+  React.useEffect(() => {
+    const isOnline = netInfo.type !== 'none' && netInfo.type !== 'unknown'
+    if (onlineRef.current !== isOnline) {
+      refetch()
+    }
+  }, [netInfo, refetch])
+
+  React.useEffect(() => wallet.subscribe(() => refetch()))
+
+  if (!query.data) throw new Error('invalid state')
+
+  return query.data
 }

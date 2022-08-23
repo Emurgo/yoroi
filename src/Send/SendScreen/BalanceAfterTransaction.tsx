@@ -8,15 +8,19 @@ import {useTokenInfo} from '../../hooks'
 import {formatTokenWithSymbol} from '../../legacy/format'
 import {tokenBalanceSelector} from '../../legacy/selectors'
 import {useSelectedWallet} from '../../SelectedWallet'
+import {Quantity} from '../../yoroi-wallets/types'
 import {useStrings} from './strings'
 
-export const BalanceAfterTransaction = ({balanceAfter}: {balanceAfter: BigNumber | null}) => {
+export const BalanceAfterTransaction = ({balanceAfter}: {balanceAfter: Quantity | null}) => {
   const strings = useStrings()
   const tokenBalance = useSelector(tokenBalanceSelector)
   const wallet = useSelectedWallet()
   const tokenInfo = useTokenInfo({wallet, tokenId: tokenBalance.getDefaultId()})
 
-  const value = balanceAfter ? formatTokenWithSymbol(balanceAfter, tokenInfo) : strings.balanceAfterNotAvailable
+  const value =
+    balanceAfter !== null
+      ? formatTokenWithSymbol(new BigNumber(balanceAfter), tokenInfo)
+      : strings.balanceAfterNotAvailable
 
   return (
     <Text style={styles.info}>

@@ -3,32 +3,29 @@ import React from 'react'
 import QRCodeScanner from 'react-native-qrcode-scanner'
 
 import {pastedFormatter} from '../../yoroi-wallets/utils/amountUtils'
+import {useSend} from '../Context/SendContext'
 
-type Props = {
-  setQrReceiver: (qrAddress: string) => void
-  setQrAmount: (qrAmount: string) => void
-}
-
-export const AddressReaderQR: React.FC<Props> = ({setQrReceiver, setQrAmount}) => {
+export const AddressReaderQR: React.FC = () => {
   const navigation = useNavigation()
+  const {receiverChanged, amountChanged} = useSend()
 
-  const handleOnRead = ({data}) => {
+  const handleOnRead = ({data: qrData}) => {
     const regex = /(cardano):([a-zA-Z1-9]\w+)\??/
-    if (regex.test(data)) {
-      const address = data.match(regex)?.[2]
-      if (data.indexOf('?') !== -1) {
-        const index = data.indexOf('?')
-        const params = getParams(data.substr(index))
+    if (regex.test(qrData)) {
+      const address = qrData.match(regex)?.[2]
+      if (qrData.indexOf('?') !== -1) {
+        const index = qrData.indexOf('?')
+        const params = getParams(qrData.substr(index))
         if ('amount' in params) {
-          setQrReceiver(address ?? '')
+          receiverChanged(address ?? '')
           const amount = pastedFormatter(params?.amount ?? '')
-          setQrAmount(amount)
+          amountChanged(amount)
         }
       } else {
-        setQrReceiver(address ?? '')
+        receiverChanged(address ?? '')
       }
     } else {
-      setQrReceiver(data ?? '')
+      receiverChanged(qrData ?? '')
     }
     navigation.goBack()
   }

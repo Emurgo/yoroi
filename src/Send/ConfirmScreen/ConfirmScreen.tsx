@@ -14,17 +14,17 @@ import {formatTokenWithSymbol, formatTokenWithText} from '../../legacy/format'
 import {useParams, useWalletNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
-import {TokenEntry} from '../../types'
-import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
+import {Quantity, TokenId, YoroiAmounts, YoroiUnsignedTx} from '../../yoroi-wallets/types'
+import {useSend} from '../Context/SendContext'
 
 export type Params = {
   yoroiUnsignedTx: YoroiUnsignedTx
-  defaultAssetAmount: BigNumber
+  defaultAssetAmount: Quantity
   address: string
-  balanceAfterTx: BigNumber
-  availableAmount: BigNumber
-  fee: BigNumber
-  tokens: TokenEntry[]
+  balanceAfterTx: Quantity
+  availableAmount: Quantity
+  fee: Quantity
+  selectedTokens: YoroiAmounts
   easyConfirmDecryptKey: string
 }
 
@@ -34,35 +34,29 @@ const isParams = (params?: Params | object | undefined): params is Params => {
     'yoroiUnsignedTx' in params &&
     typeof params.yoroiUnsignedTx === 'object' &&
     'defaultAssetAmount' in params &&
-    params.defaultAssetAmount instanceof BigNumber &&
+    typeof params.defaultAssetAmount === 'string' &&
     'address' in params &&
     typeof params.address === 'string' &&
     'balanceAfterTx' in params &&
-    params.balanceAfterTx instanceof BigNumber &&
+    typeof params.balanceAfterTx === 'string' &&
     'availableAmount' in params &&
-    params.availableAmount instanceof BigNumber &&
+    typeof params.availableAmount === 'string' &&
     'fee' in params &&
-    params.fee instanceof BigNumber &&
-    'tokens' in params &&
-    Array.isArray(params.tokens)
+    typeof params.fee === 'string' &&
+    'selectedTokens' in params &&
+    typeof params.selectedTokens === 'object'
   )
 }
 
 export const ConfirmScreen = () => {
   const strings = useStrings()
-  const {
-    defaultAssetAmount,
-    address,
-    balanceAfterTx,
-    availableAmount,
-    fee,
-    tokens: tokenEntries,
-    yoroiUnsignedTx,
-  } = useParams(isParams)
+  const {defaultAssetAmount, address, balanceAfterTx, availableAmount, fee, selectedTokens, yoroiUnsignedTx} =
+    useParams(isParams)
   const {resetToTxHistory} = useWalletNavigation()
   const wallet = useSelectedWallet()
   const [password, setPassword] = React.useState('')
   const [useUSB, setUseUSB] = React.useState(false)
+  const {resetForm} = useSend()
 
   useEffect(() => {
     if (CONFIG.DEBUG.PREFILL_FORMS && __DEV__) {
@@ -72,6 +66,7 @@ export const ConfirmScreen = () => {
 
   const onSuccess = () => {
     resetToTxHistory()
+    resetForm()
   }
 
   return (
@@ -83,18 +78,18 @@ export const ConfirmScreen = () => {
 
         <Banner
           label={strings.availableFunds}
-          text={formatTokenWithText(availableAmount, getDefaultAssetByNetworkId(wallet.networkId))}
+          text={formatTokenWithText(new BigNumber(availableAmount), getDefaultAssetByNetworkId(wallet.networkId))}
           boldText
         />
 
         <ScrollView style={styles.container} contentContainerStyle={{padding: 16}}>
           <Text small testID="feesText">
-            {strings.fees}: {formatTokenWithSymbol(fee, getDefaultAssetByNetworkId(wallet.networkId))}
+            {strings.fees}: {formatTokenWithSymbol(new BigNumber(fee), getDefaultAssetByNetworkId(wallet.networkId))}
           </Text>
 
           <Text small testID="balanceAfterTxText">
             {strings.balanceAfterTx}:{' '}
-            {formatTokenWithSymbol(balanceAfterTx, getDefaultAssetByNetworkId(wallet.networkId))}
+            {formatTokenWithSymbol(new BigNumber(balanceAfterTx), getDefaultAssetByNetworkId(wallet.networkId))}
           </Text>
 
           <Spacer height={16} />
@@ -106,12 +101,12 @@ export const ConfirmScreen = () => {
 
           <Text>{strings.total}</Text>
           <Text style={styles.amount} testID="totalAmountText">
-            {formatTokenWithSymbol(defaultAssetAmount, getDefaultAssetByNetworkId(wallet.networkId))}
+            {formatTokenWithSymbol(new BigNumber(defaultAssetAmount), getDefaultAssetByNetworkId(wallet.networkId))}
           </Text>
 
-          {tokenEntries.map((entry) => (
-            <Boundary key={entry.identifier}>
-              <Entry tokenEntry={entry} />
+          {Object.entries(selectedTokens).map(([tokenId, quantity]) => (
+            <Boundary key={tokenId}>
+              <Entry tokenId={tokenId} quantity={quantity} />
             </Boundary>
           ))}
 
@@ -146,11 +141,11 @@ export const ConfirmScreen = () => {
   )
 }
 
-const Entry = ({tokenEntry}: {tokenEntry: TokenEntry}) => {
+const Entry = ({tokenId, quantity}: {tokenId: TokenId; quantity: Quantity}) => {
   const wallet = useSelectedWallet()
-  const tokenInfo = useTokenInfo({wallet, tokenId: tokenEntry.identifier})
+  const tokenInfo = useTokenInfo({wallet, tokenId})
 
-  return <Text style={styles.amount}>{formatTokenWithText(tokenEntry.amount, tokenInfo)}</Text>
+  return <Text style={styles.amount}>{formatTokenWithText(new BigNumber(quantity), tokenInfo)}</Text>
 }
 
 const Actions = (props: ViewProps) => <View {...props} style={{padding: 16}} />

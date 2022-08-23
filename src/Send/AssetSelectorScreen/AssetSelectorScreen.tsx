@@ -1,3 +1,5 @@
+import {useNavigation} from '@react-navigation/native'
+import BigNumber from 'bignumber.js'
 import React from 'react'
 import {defineMessages} from 'react-intl'
 import {useIntl} from 'react-intl'
@@ -10,28 +12,39 @@ import NoImage from '../../assets/img/asset_no_image.png'
 import {Boundary, Button, Spacer, Text, TextInput} from '../../components'
 import {useTokenInfo} from '../../hooks'
 import globalMessages, {txLabels} from '../../i18n/global-messages'
+import {getDefaultAssetByNetworkId} from '../../legacy/config'
 import {decodeHexAscii, formatTokenAmount, getAssetDenominationOrId, getTokenFingerprint} from '../../legacy/format'
+import {TxHistoryRouteNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
-import {Token, TokenEntry} from '../../types'
+import {Token} from '../../types'
+import {YoroiWallet} from '../../yoroi-wallets'
+import {Quantity, TokenId, YoroiAmounts} from '../../yoroi-wallets/types'
+import {Quantities} from '../../yoroi-wallets/utils'
+import {useSend} from '../Context/SendContext'
 
 type Props = {
-  assetTokens: Array<TokenEntry>
-  onSelect: (tokenEntry: TokenEntry) => void
-  onSelectAll: () => void
+  balances: YoroiAmounts
 }
 
-export const AssetSelectorScreen = ({assetTokens, onSelect, onSelectAll}: Props) => {
+export const AssetSelectorScreen = ({balances}: Props) => {
   const strings = useStrings()
-
+  const wallet = useSelectedWallet()
+  const defaultAsset = getDefaultAssetByNetworkId(wallet.networkId)
   const [matcher, setMatcher] = React.useState('')
+  const navigation = useNavigation<TxHistoryRouteNavigation>()
+  const {tokenSelected, allTokensSelected} = useSend()
+
   const onChangeMatcher = (matcher: string) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     setMatcher(matcher)
   }
-  const sortedAssetTokens = assetTokens
-    .sort((a: TokenEntry, b: TokenEntry) => (a.amount.isGreaterThan(b.amount) ? -1 : 1))
-    .sort((assetToken) => (assetToken.identifier === '' ? -1 : 1))
+
+  const sortedBalance: Array<[TokenId, Quantity]> = Object.entries(balances)
+    .sort(([, quantityA]: [TokenId, Quantity], [, quantityB]: [TokenId, Quantity]) =>
+      Quantities.isGreaterThan(quantityA, quantityB) ? -1 : 1,
+    )
+    .sort(([tokenId]: [TokenId, Quantity]) => (tokenId === defaultAsset.identifier ? -1 : 1)) // default first
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={{flex: 1, backgroundColor: 'white'}}>
@@ -49,42 +62,55 @@ export const AssetSelectorScreen = ({assetTokens, onSelect, onSelectAll}: Props)
       </View>
 
       <FlatList
-        data={sortedAssetTokens}
-        renderItem={({item: assetToken}) => (
+        data={sortedBalance}
+        renderItem={({item: [tokenId, quantity]}: {item: [TokenId, Quantity]}) => (
           <Boundary>
             <AssetSelectorItem
-              key={assetToken.identifier}
-              assetToken={assetToken}
-              onPress={onSelect}
+              wallet={wallet}
+              tokenId={tokenId}
+              quantity={quantity}
+              onSelect={() => {
+                tokenSelected(tokenId)
+                navigation.navigate('send')
+              }}
               matcher={matcher}
             />
           </Boundary>
         )}
         bounces={false}
         contentContainerStyle={{paddingHorizontal: 16}}
-        keyExtractor={(item) => item.identifier}
+        keyExtractor={([tokenId]) => tokenId}
       />
 
       <Actions>
-        <Button outlineOnLight title={strings.sendAllAssets} onPress={() => onSelectAll()} />
+        <Button
+          outlineOnLight
+          title={strings.sendAllAssets}
+          onPress={() => {
+            allTokensSelected()
+            navigation.navigate('send')
+          }}
+        />
       </Actions>
     </SafeAreaView>
   )
 }
 
 type AssetSelectorItemProps = {
-  assetToken: TokenEntry
-  onPress: (tokenEntry: TokenEntry) => void
+  wallet: YoroiWallet
+  tokenId: TokenId
+  quantity: Quantity
+  onSelect: () => void
   matcher: string
 }
-const AssetSelectorItem = ({assetToken, onPress, matcher}: AssetSelectorItemProps) => {
-  const wallet = useSelectedWallet()
-  const tokenInfo = useTokenInfo({wallet, tokenId: assetToken.identifier})
+
+const AssetSelectorItem = ({wallet, tokenId, quantity, onSelect, matcher}: AssetSelectorItemProps) => {
+  const tokenInfo = useTokenInfo({wallet, tokenId})
 
   if (!matches(tokenInfo, matcher)) return null
 
   return (
-    <TouchableOpacity style={{paddingVertical: 16}} onPress={() => onPress(assetToken)}>
+    <TouchableOpacity style={{paddingVertical: 16}} onPress={onSelect}>
       <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
         <View style={{padding: 4}}>
           <Icon source={tokenInfo.isDefault ? AdaImage : NoImage} />
@@ -100,7 +126,7 @@ const AssetSelectorItem = ({assetToken, onPress, matcher}: AssetSelectorItemProp
         </View>
 
         <View style={{flex: 1, alignItems: 'flex-end', padding: 4}}>
-          <Text style={{color: COLORS.DARK_TEXT}}>{formatTokenAmount(assetToken.amount, tokenInfo)}</Text>
+          <Text style={{color: COLORS.DARK_TEXT}}>{formatTokenAmount(new BigNumber(quantity), tokenInfo)}</Text>
         </View>
       </View>
     </TouchableOpacity>
