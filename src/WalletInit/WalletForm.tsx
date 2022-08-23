@@ -64,6 +64,7 @@ export const WalletForm = ({onSubmit}: Props) => {
           onSubmitEditing={() => passwordRef.current?.focus()}
           testID="walletNameInput"
           autoComplete={false}
+          showErrorOnBlur
         />
 
         <Spacer />
@@ -84,6 +85,7 @@ export const WalletForm = ({onSubmit}: Props) => {
           onSubmitEditing={() => passwordConfirmationRef.current?.focus()}
           testID="walletPasswordInput"
           autoComplete={false}
+          showErrorOnBlur
         />
 
         <Spacer />
@@ -102,6 +104,7 @@ export const WalletForm = ({onSubmit}: Props) => {
           }
           testID="walletRepeatPasswordInput"
           autoComplete={false}
+          showErrorOnBlur
         />
       </ScrollView>
 

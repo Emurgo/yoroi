@@ -25,6 +25,7 @@ type Props = TextInputProps &
     noErrors?: boolean
     dense?: boolean
     faded?: boolean
+    showErrorOnBlur?: boolean
   }
 
 const useDebounced = (callback, value, delay = 1000) => {
@@ -56,8 +57,10 @@ export const TextInput = React.forwardRef((props: Props, ref: ForwardedRef<RNTex
     noErrors,
     textAlign,
     faded,
+    showErrorOnBlur,
     ...restProps
   } = props
+
   const [showPassword, setShowPassword] = React.useState(false)
   const [errorTextEnabled, setErrorTextEnabled] = React.useState(errorOnMount)
   useDebounced(
@@ -76,6 +79,11 @@ export const TextInput = React.forwardRef((props: Props, ref: ForwardedRef<RNTex
         autoCorrect={false}
         autoCompleteType="off"
         autoCapitalize="none"
+        onBlur={() => {
+          if (showErrorOnBlur && !errorTextEnabled && !isEmptyString(errorText)) {
+            setErrorTextEnabled(true)
+          }
+        }}
         theme={{
           roundness: 8,
           colors: {
