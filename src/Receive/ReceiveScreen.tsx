@@ -58,6 +58,7 @@ export const ReceiveScreen = () => {
             onPress={() => dispatch(generateNewReceiveAddress())}
             disabled={addressLimitReached}
             title={!addressLimitReached ? strings.generateButton : strings.cannotGenerate}
+            testID="generateNewReceiveAddressButton"
           />
 
           <Spacer height={24} />

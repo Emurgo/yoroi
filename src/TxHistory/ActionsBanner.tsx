@@ -35,7 +35,7 @@ export const ActionsBanner = () => {
         <View style={styles.row}>
           {!wallet.isReadOnly && (
             <View style={styles.centralized}>
-              <TouchableOpacity style={styles.actionIcon} onPress={onSend}>
+              <TouchableOpacity style={styles.actionIcon} onPress={onSend} testID="sendButton">
                 <Icon.Send {...ACTION_PROPS} />
               </TouchableOpacity>
               <Text style={styles.actionLabel}>{strings.sendLabel}</Text>
@@ -45,7 +45,7 @@ export const ActionsBanner = () => {
           {!wallet.isReadOnly && <Spacer width={32} />}
 
           <View style={styles.centralized}>
-            <TouchableOpacity style={styles.actionIcon} onPress={navigateTo.receive}>
+            <TouchableOpacity style={styles.actionIcon} onPress={navigateTo.receive} testID="receiveButton">
               <Icon.Received {...ACTION_PROPS} />
             </TouchableOpacity>
             <Text style={styles.actionLabel}>{strings.receiveLabel}</Text>

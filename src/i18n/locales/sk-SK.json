@@ -298,6 +298,7 @@
   "components.walletinit.connectnanox.connectnanoxscreen.exportKey": "Vyžadovaná akcia: Exportujte prosím zo zariadenia Ledger verejný kľúč.",
   "components.walletinit.connectnanox.connectnanoxscreen.introline": "Budete potrebovať:",
   "components.walletinit.connectnanox.connectnanoxscreen.title": "Pripojiť k zariadeniu Ledger",
+  "components.walletinit.connectnanox.savenanoxscreen.ledgerWalletNameSuggestion": "My Ledger Wallet",
   "components.walletinit.connectnanox.savenanoxscreen.save": "Uložiť",
   "components.walletinit.connectnanox.savenanoxscreen.title": "Uložiť peňaženku",
   "components.walletinit.createwallet.createwalletscreen.title": "Vytvoriť novú peňaženku",

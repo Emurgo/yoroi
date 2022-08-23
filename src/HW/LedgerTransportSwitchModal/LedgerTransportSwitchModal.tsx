@@ -50,6 +50,7 @@ export const LedgerTransportSwitchView = ({onSelectUSB, onSelectBLE}: Props) => 
           title={getUsbButtonTitle()}
           disabled={!isUSBSupported || !CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT}
           style={styles.button}
+          testID="connectWithUSBButton"
         />
         <Text style={styles.paragraph}>{intl.formatMessage(messages.bluetoothExplanation)}</Text>
         <Button
@@ -57,6 +58,7 @@ export const LedgerTransportSwitchView = ({onSelectUSB, onSelectBLE}: Props) => 
           onPress={onSelectBLE}
           title={intl.formatMessage(messages.bluetoothButton)}
           style={styles.button}
+          testID="connectWithBLEButton"
         />
       </View>
     </ScrollView>

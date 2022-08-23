@@ -132,7 +132,7 @@ const MnemonicWordInput = React.forwardRef<RNTextInput, MnemonicWordInputProps>(
           autoComplete={false}
         />
       }
-      visible={menuEnabled && word.length >= 3 && !isEmptyString(word)}
+      visible={menuEnabled && word.length > 0 && !isEmptyString(word)}
       onDismiss={() => {
         setMenuEnabled(false)
         setWord('')

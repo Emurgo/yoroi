@@ -298,6 +298,7 @@
   "components.walletinit.connectnanox.connectnanoxscreen.exportKey": "対応してください：Ledgerデバイスから公開鍵をエクスポートしてください。",
   "components.walletinit.connectnanox.connectnanoxscreen.introline": "以下を実行する必要があります。",
   "components.walletinit.connectnanox.connectnanoxscreen.title": "Connect to Ledger Device",
+  "components.walletinit.connectnanox.savenanoxscreen.ledgerWalletNameSuggestion": "My Ledger Wallet",
   "components.walletinit.connectnanox.savenanoxscreen.save": "保存",
   "components.walletinit.connectnanox.savenanoxscreen.title": "ウォレットを保存",
   "components.walletinit.createwallet.createwalletscreen.title": "新しいウォレットを作成してください。",
