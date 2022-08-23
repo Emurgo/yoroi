@@ -4,7 +4,6 @@ import 'react-native-gesture-handler/jestSetup'
 
 import fetch from 'node-fetch'
 import {Logger, LogLevel} from './src/legacy/logging'
-import * as mockYoroiLib from '@emurgo/yoroi-lib-nodejs'
 
 global.fetch = fetch
 Logger.setLogLevel(LogLevel.Warn)
@@ -31,4 +30,3 @@ jest.mock('react-native-reanimated', () => {
   return Reanimated
 })
 jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper')
-jest.mock('@emurgo/yoroi-lib-mobile', () => mockYoroiLib)
