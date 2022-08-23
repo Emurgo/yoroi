@@ -298,6 +298,7 @@
   "components.walletinit.connectnanox.connectnanoxscreen.exportKey": "Actie vereist: Exporteer de openbare sleutel van uw Ledger (grootboek) apparaat.",
   "components.walletinit.connectnanox.connectnanoxscreen.introline": "U moet:",
   "components.walletinit.connectnanox.connectnanoxscreen.title": "Verbinden met Ledger apparaat",
+  "components.walletinit.connectnanox.savenanoxscreen.ledgerWalletNameSuggestion": "My Ledger Wallet",
   "components.walletinit.connectnanox.savenanoxscreen.save": "Bewaren",
   "components.walletinit.connectnanox.savenanoxscreen.title": "Bewaar Portemonnee",
   "components.walletinit.createwallet.createwalletscreen.title": "Maak een nieuwe portemonnee aan",
