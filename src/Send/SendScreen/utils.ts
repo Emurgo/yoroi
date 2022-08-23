@@ -11,7 +11,7 @@ import {cardanoValueFromMultiToken} from '../../legacy/utils'
 import type {DefaultAsset, SendTokenList, Token} from '../../types'
 import {BigNum, minAdaRequired, MultiToken, YoroiWallet} from '../../yoroi-wallets'
 import {Quantity, YoroiUnsignedTx} from '../../yoroi-wallets/types'
-import {Quantities} from '../../yoroi-wallets/utils'
+import {Amounts, Quantities} from '../../yoroi-wallets/utils'
 import {InvalidAssetAmount, parseAmountDecimal} from '../../yoroi-wallets/utils/parsing'
 import type {AddressValidationErrors} from '../../yoroi-wallets/utils/validators'
 import {getUnstoppableDomainAddress, isReceiverAddressValid, validateAmount} from '../../yoroi-wallets/utils/validators'
@@ -142,7 +142,7 @@ export const recomputeAll = async ({
           selectedTokenInfo,
         )
 
-        fee = yoroiUnsignedTx.fee[defaultAsset.identifier]
+        fee = Amounts.getAmount(yoroiUnsignedTx.fee, defaultAsset.identifier).quantity
 
         if (selectedTokenInfo.isDefault) {
           recomputedAmount = normalizeTokenAmount(
@@ -177,8 +177,7 @@ export const recomputeAll = async ({
           selectedTokenInfo,
         )
 
-        fee = yoroiUnsignedTx.fee[defaultAsset.identifier]
-
+        fee = Amounts.getAmount(yoroiUnsignedTx.fee, defaultAsset.identifier).quantity
         balanceAfter = Quantities.diff(defaultAssetAvailableAmount, Quantities.sum([parsedAmount, minAda, fee]))
       }
     } catch (err) {
