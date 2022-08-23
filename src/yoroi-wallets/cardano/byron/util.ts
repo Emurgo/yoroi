@@ -75,8 +75,8 @@ export const getAddresses = async (
   ).derive(ADDRESS_TYPE_TO_CHANGE[type])
   for (const i of indexes) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const byronAddr = await (ByronAddress as any).icarus_from_key(await chainKeyPtr.derive(i), protocolMagic)
-    const byronAddrBs58 = await byronAddr.to_base58()
+    const byronAddr = await ByronAddress.icarusFromKey(await chainKeyPtr.derive(i), protocolMagic)
+    const byronAddrBs58 = await byronAddr.toBase58()
     addrs.push(byronAddrBs58)
   }
   return addrs
