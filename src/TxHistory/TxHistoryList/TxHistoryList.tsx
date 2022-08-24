@@ -50,7 +50,6 @@ export const TxHistoryList = ({onScrollUp, onScrollDown, ...props}: Props) => {
         keyExtractor={(item) => item.id}
         stickySectionHeadersEnabled={false}
         nestedScrollEnabled={true}
-        removeClippedSubviews={true}
         maxToRenderPerBatch={20}
         initialNumToRender={20}
       />
