@@ -96,7 +96,7 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
       return
     }
     try {
-      const decryptedKey = await KeyStore.getData(walletManager.id, 'MASTER_PASSWORD', '', password, intl)
+      const decryptedKey = await KeyStore.getData(wallet.id, 'MASTER_PASSWORD', '', password, intl)
 
       return createTransaction(decryptedKey)
     } catch (error) {
