@@ -158,7 +158,7 @@ export const ConfirmTx: React.FC<Props> = ({
             setDialogStep(DialogStep.WaitingHwResponse)
             signedTx = await wallet.signTxWithLedger(yoroiUnsignedTx, useUSB)
           } else {
-            const decryptedKey = await KeyStore.getData(walletManager.id, 'MASTER_PASSWORD', '', password, intl)
+            const decryptedKey = await KeyStore.getData(wallet.id, 'MASTER_PASSWORD', '', password, intl)
             setDialogStep(DialogStep.Signing)
             signedTx = await smoothModalNotification(wallet.signTx(yoroiUnsignedTx, decryptedKey))
           }
