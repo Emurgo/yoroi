@@ -475,7 +475,7 @@ export const useRemoveWallet = ({onSuccess, ...options}: UseMutationOptions<void
   const dispatch = useDispatch()
 
   const mutation = useMutationWithInvalidations({
-    mutationFn: (walletId) => walletManager.removeCurrentWallet(walletId),
+    mutationFn: (walletId) => walletManager.removeWallet(walletId),
     onSuccess: (data, variables, context) => {
       dispatch(clearUTXOs())
       dispatch(clearAccountState())

@@ -15,7 +15,7 @@ import {WrongPassword} from '../legacy/errors'
 import KeyStore from '../legacy/KeyStore'
 import {isEmptyString} from '../legacy/utils'
 import {useSelectedWallet} from '../SelectedWallet'
-import {SystemAuthDisabled, walletManager} from '../yoroi-wallets'
+import {SystemAuthDisabled} from '../yoroi-wallets'
 import {Actions, Description, Title} from './components'
 import {useCreateVotingRegTx, VotingRegTxData} from './hooks'
 
@@ -71,7 +71,7 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
       try {
         await ensureKeysValidity(wallet.id)
         navigation.navigate('biometrics', {
-          keyId: walled.id,
+          keyId: wallet.id,
           onSuccess: async (decryptedKey) => {
             navigation.goBack()
             createTransaction(decryptedKey)
