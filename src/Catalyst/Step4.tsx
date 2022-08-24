@@ -71,7 +71,7 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
       try {
         await ensureKeysValidity(wallet.id)
         navigation.navigate('biometrics', {
-          keyId: walletManager.id,
+          keyId: walled.id,
           onSuccess: async (decryptedKey) => {
             navigation.goBack()
             createTransaction(decryptedKey)
