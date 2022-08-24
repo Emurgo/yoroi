@@ -25,17 +25,23 @@ export const TransferSummary: React.FC<{
     <>
       <Item>
         <Text>{strings.balanceLabel}</Text>
-        <Text style={styles.balanceAmount}>{formatTokenWithText(new BigNumber(refundAmount.quantity), tokenInfo)}</Text>
+        <Text style={styles.balanceAmount} testID="recoveredBalanceText">
+          {formatTokenWithText(new BigNumber(refundAmount.quantity), tokenInfo)}
+        </Text>
       </Item>
 
       <Item>
         <Text>{strings.fees}</Text>
-        <Text style={styles.balanceAmount}>{formatTokenWithText(new BigNumber(feeAmount.quantity), tokenInfo)}</Text>
+        <Text style={styles.balanceAmount} testID="feeAmountText">
+          {formatTokenWithText(new BigNumber(feeAmount.quantity), tokenInfo)}
+        </Text>
       </Item>
 
       <Item>
         <Text>{strings.finalBalanceLabel}</Text>
-        <Text style={styles.balanceAmount}>{formatTokenWithText(new BigNumber(totalAmount.quantity), tokenInfo)}</Text>
+        <Text style={styles.balanceAmount} testID="totalAmountText">
+          {formatTokenWithText(new BigNumber(totalAmount.quantity), tokenInfo)}
+        </Text>
       </Item>
 
       {withdrawals && <Withdrawals wallet={wallet} withdrawals={withdrawals} />}

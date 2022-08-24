@@ -63,10 +63,16 @@ export const AssetSelectorScreen = ({assetTokens, onSelect, onSelectAll}: Props)
         bounces={false}
         contentContainerStyle={{paddingHorizontal: 16}}
         keyExtractor={(item) => item.identifier}
+        testID="assetsList"
       />
 
       <Actions>
-        <Button outlineOnLight title={strings.sendAllAssets} onPress={() => onSelectAll()} />
+        <Button
+          outlineOnLight
+          title={strings.sendAllAssets}
+          onPress={() => onSelectAll()}
+          testID="sendAllAssetsButton"
+        />
       </Actions>
     </SafeAreaView>
   )
@@ -85,23 +91,30 @@ const AssetSelectorItem = ({assetToken, onPress, matcher}: AssetSelectorItemProp
   if (!matches(tokenInfo, matcher)) return null
 
   return (
-    <TouchableOpacity style={{paddingVertical: 16}} onPress={() => onPress(assetToken)}>
+    <TouchableOpacity style={{paddingVertical: 16}} onPress={() => onPress(assetToken)} testID="assetSelectorItem">
       <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
         <View style={{padding: 4}}>
           <Icon source={tokenInfo.isDefault ? AdaImage : NoImage} />
         </View>
 
         <View style={{flex: 1, padding: 4}}>
-          <Text numberOfLines={1} ellipsizeMode="middle" style={{color: COLORS.BLUE_LIGHTER}}>
+          <Text numberOfLines={1} ellipsizeMode="middle" style={{color: COLORS.BLUE_LIGHTER}} testID="tokenInfoText">
             {getAssetDenominationOrId(tokenInfo) || strings.unknownAsset}
           </Text>
-          <Text numberOfLines={1} ellipsizeMode="middle" style={{color: COLORS.TEXT_INPUT}}>
+          <Text
+            numberOfLines={1}
+            ellipsizeMode="middle"
+            style={{color: COLORS.TEXT_INPUT}}
+            testID="tokenFingerprintText"
+          >
             {tokenInfo.isDefault ? '' : getTokenFingerprint(tokenInfo)}
           </Text>
         </View>
 
         <View style={{flex: 1, alignItems: 'flex-end', padding: 4}}>
-          <Text style={{color: COLORS.DARK_TEXT}}>{formatTokenAmount(assetToken.amount, tokenInfo, 15)}</Text>
+          <Text style={{color: COLORS.DARK_TEXT}} testID="tokenAmountText">
+            {formatTokenAmount(assetToken.amount, tokenInfo, 15)}
+          </Text>
         </View>
       </View>
     </TouchableOpacity>

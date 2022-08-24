@@ -78,6 +78,7 @@ export const TxHistory = () => {
             }}
             label={strings.transactions}
             active={activeTab === 'transactions'}
+            testID="transactionsTabButton"
           />
           <Tab //
             onPress={() => {
@@ -86,6 +87,7 @@ export const TxHistory = () => {
             }}
             label={strings.assets}
             active={activeTab === 'assets'}
+            testID="assetsTabButton"
           />
         </Tabs>
 
@@ -131,8 +133,18 @@ export const TxHistory = () => {
 }
 
 const Tabs: React.FC = ({children}) => <View style={styles.tabs}>{children}</View>
-const Tab = ({onPress, active, label}: {onPress: () => void; active: boolean; label: string}) => (
-  <TouchableOpacity style={styles.tab} onPress={onPress}>
+const Tab = ({
+  onPress,
+  active,
+  label,
+  testID,
+}: {
+  onPress: () => void
+  active: boolean
+  label: string
+  testID: string
+}) => (
+  <TouchableOpacity style={styles.tab} onPress={onPress} testID={testID}>
     <View style={styles.centered}>
       <Text style={[styles.tabText, active ? styles.tabTextActive : styles.tabTextInactive]}>{label}</Text>
     </View>

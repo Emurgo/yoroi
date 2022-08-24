@@ -20,7 +20,7 @@ export const StakePoolInfo = ({stakePoolId}: {stakePoolId: string}) => {
 
   return stakePoolInfoAndHistory?.info ? (
     <View>
-      <TitledCard title={strings.title} variant="poolInfo">
+      <TitledCard title={strings.title} variant="poolInfo" testID="stakePoolInfoTitleCard">
         <View style={styles.topBlock}>
           <Text bold style={styles.poolName}>
             {formatStakepoolNameWithTicker(stakePoolInfoAndHistory.info.ticker, stakePoolInfoAndHistory.info.name) ||
@@ -28,8 +28,14 @@ export const StakePoolInfo = ({stakePoolId}: {stakePoolId: string}) => {
           </Text>
 
           <View style={styles.poolIdBlock}>
-            <Text numberOfLines={1} ellipsizeMode="middle" monospace style={styles.poolId}>
-              {stakePoolId}
+            <Text
+              numberOfLines={1}
+              ellipsizeMode="middle"
+              monospace
+              style={styles.poolId}
+              testID="stakePoolInfoPoolIdText"
+            >
+              {stakePoolInfo.id}
             </Text>
 
             <CopyButton value={stakePoolId} />

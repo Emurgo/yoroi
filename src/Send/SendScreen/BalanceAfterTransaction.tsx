@@ -19,7 +19,7 @@ export const BalanceAfterTransaction = ({balanceAfter}: {balanceAfter: BigNumber
   const value = balanceAfter ? formatTokenWithSymbol(balanceAfter, tokenInfo) : strings.balanceAfterNotAvailable
 
   return (
-    <Text style={styles.info}>
+    <Text style={styles.info} testID="balanceAfterTxText">
       {strings.balanceAfterLabel}
       {': '}
       {value}

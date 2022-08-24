@@ -43,7 +43,7 @@ export const AssetList = ({onScrollUp, onScrollDown, ...props}: Props) => {
   const onScroll = useOnScroll({onScrollUp, onScrollDown})
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.listRoot}>
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.listRoot} testID="assetList">
       <ActionsBanner
         tokensLabel={strings.tokens(orderedTokens.length)}
         nftsLabel={strings.nfts(0)}
@@ -80,23 +80,25 @@ const AssetItem = ({assetToken, onPress}: AssetItemProps) => {
   const tokenInfo = useTokenInfo({wallet, tokenId: assetToken.identifier})
 
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity onPress={onPress} testID="assetItem">
       <View style={styles.tokenRoot}>
         <View style={styles.tokenAvatar}>
           <Icon source={tokenInfo.isDefault ? AdaImage : NoImage} />
         </View>
 
         <View style={styles.tokenData}>
-          <Text numberOfLines={1} ellipsizeMode="middle" style={styles.tokenInfo}>
+          <Text numberOfLines={1} ellipsizeMode="middle" style={styles.tokenInfo} testID="tokenInfoText">
             {getAssetDenominationOrId(tokenInfo) || strings.unknown}
           </Text>
-          <Text numberOfLines={1} ellipsizeMode="middle" style={styles.tokenName}>
+          <Text numberOfLines={1} ellipsizeMode="middle" style={styles.tokenName} testID="tokenFingerprintText">
             {tokenInfo.isDefault ? '' : getTokenFingerprint(tokenInfo)}
           </Text>
         </View>
 
         <View>
-          <Text style={styles.tokenAmount}>{formatTokenAmount(assetToken.amount, tokenInfo, 15)}</Text>
+          <Text style={styles.tokenAmount} testID="tokenAmountText">
+            {formatTokenAmount(assetToken.amount, tokenInfo, 15)}
+          </Text>
         </View>
       </View>
     </TouchableOpacity>

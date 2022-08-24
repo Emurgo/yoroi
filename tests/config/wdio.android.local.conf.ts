@@ -1,6 +1,9 @@
 import fs, {promises as fsAsync} from 'fs'
-import {appiumLogsPath, screenshotsDir} from './testPaths'
-import {APP_ID, APP_ID_PARENT, APP_PATH} from '../constants'
+import {appiumLogsPath, artifactsDir, screenshotsDir} from './testPaths'
+import {APP_ID, APP_ID_PARENT, APP_PATH, VALID_PIN} from '../constants'
+import {enterPinCodeIfNecessary, prepareAppIfNecessary} from '../screenFunctions/prepare.screenFunctions';
+import rimraf from 'rimraf'
+import * as myWalletsScreen from "../screenObjects/myWallets.screen";
 
 export const config: WebdriverIO.Config = {
   runner: 'local',
@@ -73,8 +76,10 @@ export const config: WebdriverIO.Config = {
    * @param {Object} config wdio configuration object
    * @param {Array.<Object>} capabilities list of capabilities details
    */
-  // onPrepare: function (config, capabilities) {
-  // },
+  onPrepare: function (config, capabilities) {
+    rimraf.sync(artifactsDir)
+    fs.mkdirSync(artifactsDir)
+  },
   /**
    * Gets executed before a worker process is spawned and can be used to initialise specific service
    * for that worker as well as modify runtime environments in an async fashion.
@@ -124,8 +129,12 @@ export const config: WebdriverIO.Config = {
   /**
    * Function to be executed before a tests (in Mocha/Jasmine) starts.
    */
-  // beforeTest: function (tests, context) {
-  // },
+  beforeTest: async function (tests, context) {
+    driver.launchApp()
+    await prepareAppIfNecessary()
+    await enterPinCodeIfNecessary(VALID_PIN)
+    await driver.waitUntil(async () => await myWalletsScreen.pageTitle().isDisplayed())
+  },
   /**
    * Hook that gets executed _before_ a hook within the suite starts (e.g. runs before calling
    * beforeEach in Mocha)
@@ -159,6 +168,7 @@ export const config: WebdriverIO.Config = {
       const screenshot = await driver.takeScreenshot()
       await fsAsync.writeFile(screenshotPath, screenshot, 'base64')
     }
+    driver.closeApp()
   },
   /**
    * Hook that gets executed after the suite has ended
