@@ -518,7 +518,7 @@ class WalletManager {
     await this.closeWallet()
   }
 
-  async removeCurrentWallet(walletId: YoroiWallet['id']) {
+  async removeWallet(walletId: YoroiWallet['id']) {
     if (!this._wallet) return
 
     if (this.isEasyConfirmationEnabled) {
