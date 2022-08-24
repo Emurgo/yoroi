@@ -71,7 +71,15 @@ export const RemoveWalletScreen = () => {
 
         <Spacer height={16} />
 
-        <Button onPress={() => removeWallet()} title={strings.remove} style={styles.removeButton} disabled={disabled} />
+        <Button
+          onPress={() => {
+            removeWallet(wallet.id)
+            console.log('test', wallet.id)
+          }}
+          title={strings.remove}
+          style={styles.removeButton}
+          disabled={disabled}
+        />
       </Actions>
     </SafeAreaView>
   )

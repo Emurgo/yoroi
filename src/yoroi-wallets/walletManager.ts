@@ -44,7 +44,6 @@ export class KeysAreInvalid extends ExtendableError {}
 
 class WalletManager {
   _wallet: null | WalletInterface = null
-  _id = ''
   _subscribers: Array<() => void> = []
   _syncErrorSubscribers: Array<(err: null | Error) => void> = []
   _serverSyncSubscribers: Array<(status: ServerStatus) => void> = []
@@ -294,7 +293,7 @@ class WalletManager {
       throw new Error('Empty wallet')
     }
 
-    await KeyStore.deleteData(this._id, encryptionMethod)
+    await KeyStore.deleteData(this.id, encryptionMethod)
   }
 
   async disableEasyConfirmation() {
@@ -396,7 +395,6 @@ class WalletManager {
     walletImplementationId: WalletImplementationId,
     provider?: null | YoroiProvider,
   ) {
-    this._id = id
     this._wallets = {
       ...this._wallets,
       [id]: {
@@ -437,7 +435,6 @@ class WalletManager {
     await wallet.restore(data, walletMeta)
     wallet.id = walletMeta.id
     this._wallet = wallet
-    this._id = walletMeta.id
 
     const canBiometricsBeUsed = await canBiometricEncryptionBeEnabled()
 
@@ -504,7 +501,6 @@ class WalletManager {
     this._notify()
 
     this._wallet = null
-    this._id = ''
 
     // need to reject in next microtask otherwise
     // closeWallet would throw if some rejection
@@ -522,9 +518,8 @@ class WalletManager {
     await this.closeWallet()
   }
 
-  async removeCurrentWallet() {
+  async removeCurrentWallet(walletId: YoroiWallet['id']) {
     if (!this._wallet) return
-    const id = this._id
 
     if (this.isEasyConfirmationEnabled) {
       await this.deleteEncryptedKey('BIOMETRICS')
@@ -533,10 +528,10 @@ class WalletManager {
     await this.deleteEncryptedKey('MASTER_PASSWORD')
 
     await this.closeWallet()
-    await storage.remove(`/wallet/${id}/data`)
-    await storage.remove(`/wallet/${id}`)
+    await storage.remove(`/wallet/${walletId}/data`)
+    await storage.remove(`/wallet/${walletId}`)
 
-    this._wallets = _.omit(this._wallets, id)
+    this._wallets = _.omit(this._wallets, walletId)
   }
 
   // TODO(ppershing): how should we deal with race conditions?
