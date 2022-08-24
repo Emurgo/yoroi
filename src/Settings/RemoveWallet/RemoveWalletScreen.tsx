@@ -74,7 +74,6 @@ export const RemoveWalletScreen = () => {
         <Button
           onPress={() => {
             removeWallet(wallet.id)
-            console.log('test', wallet.id)
           }}
           title={strings.remove}
           style={styles.removeButton}
