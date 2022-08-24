@@ -289,11 +289,9 @@ class WalletManager {
   }
 
   async deleteEncryptedKey(encryptionMethod: EncryptionMethod) {
-    if (!this._wallet) {
-      throw new Error('Empty wallet')
-    }
+    const wallet = this.getWallet()
 
-    await KeyStore.deleteData(this.id, encryptionMethod)
+    await KeyStore.deleteData(wallet.id, encryptionMethod)
   }
 
   async disableEasyConfirmation() {
