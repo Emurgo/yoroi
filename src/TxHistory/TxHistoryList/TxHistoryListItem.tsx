@@ -97,18 +97,18 @@ export const TxHistoryListItem = ({transaction}: Props) => {
   const totalAssets = outputsToMyWallet.reduce((acc, {assets}) => acc + Number(assets.length), 0)
 
   return (
-    <TouchableOpacity onPress={showDetails} activeOpacity={0.5}>
+    <TouchableOpacity onPress={showDetails} activeOpacity={0.5} testID="txHistoryListItem">
       <View style={[styles.root, {backgroundColor: rootBgColor}]}>
         <View style={styles.iconRoot}>
           <Icon.Direction transaction={transaction} />
         </View>
         <View style={styles.transactionRoot}>
           <View style={styles.row}>
-            <Text small secondary={isPending}>
+            <Text small secondary={isPending} testID="transactionDirection">
               {strings.direction(transaction.direction as any)}
             </Text>
             {transaction.amount.length > 0 ? (
-              <View style={styles.amount}>
+              <View style={styles.amount} testID="transactionAmount">
                 <Text style={amountStyle} secondary={isPending}>
                   {formatTokenInteger(amountToDisplay, defaultAsset)}
                 </Text>
@@ -123,14 +123,14 @@ export const TxHistoryListItem = ({transaction}: Props) => {
           </View>
           {totalAssets !== 0 && (
             <View style={styles.row}>
-              <Text secondary small>
+              <Text secondary small testID="submittedAtText">
                 {submittedAt}
               </Text>
-              <Text>{strings.assets(totalAssets)}</Text>
+              <Text testID="totalAssetsText">{strings.assets(totalAssets)}</Text>
             </View>
           )}
           <View style={styles.last}>
-            <Text secondary small>
+            <Text secondary small testID="submittedAtText">
               {totalAssets === 0 && submittedAt}
             </Text>
           </View>

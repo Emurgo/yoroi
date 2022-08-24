@@ -138,6 +138,7 @@ export const Dashboard = () => {
             disabled={wallet.isReadOnly}
             shelleyTheme
             block
+            testID="stakingCenterButton"
           />
         </Actions>
       </View>

@@ -23,7 +23,7 @@ export const BalanceAfterTransaction = ({balanceAfter}: {balanceAfter: Quantity 
       : strings.balanceAfterNotAvailable
 
   return (
-    <Text style={styles.info}>
+    <Text style={styles.info} testID="balanceAfterTxText">
       {strings.balanceAfterLabel}
       {': '}
       {value}
