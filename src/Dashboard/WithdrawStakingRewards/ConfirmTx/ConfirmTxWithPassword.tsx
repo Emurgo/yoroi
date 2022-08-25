@@ -37,10 +37,12 @@ export const ConfirmTxWithPassword: React.FC<Props> = ({wallet, storage, onSucce
           disabled: isLoading,
           label: strings.confirmButton,
           onPress: () => signAndSubmitTx({unsignedTx, password, intl}),
+          testID: 'confirmTxButton',
         }}
         secondaryButton={{
           disabled: isLoading,
           onPress: () => onCancel(),
+          testID: 'cancelTxButton',
         }}
       >
         <TransferSummary wallet={wallet} unsignedTx={unsignedTx} />
@@ -53,6 +55,7 @@ export const ConfirmTxWithPassword: React.FC<Props> = ({wallet, storage, onSucce
           value={password}
           label={strings.password}
           disabled={isLoading}
+          testID="walletPasswordInput"
         />
       </TwoActionView>
 

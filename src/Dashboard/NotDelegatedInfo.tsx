@@ -11,7 +11,7 @@ export const NotDelegatedInfo = () => {
 
   return (
     <View style={styles.wrapper}>
-      <View style={styles.imageWrap}>
+      <View style={styles.imageWrap} testID="notDelegatedInfo">
         <Image source={NotDelegatedImage} />
       </View>
 
