@@ -270,7 +270,7 @@ const useOpenWallet = (
     ...options,
     mutationFn: async (walletMeta) => {
       try {
-        await closeWallet()
+        closeWallet()
       } catch (e) {
         // apparently closeWallet is not idempotent
       }
