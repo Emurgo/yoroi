@@ -53,6 +53,7 @@ export const TxHistoryList = ({onScrollUp, onScrollDown, ...props}: Props) => {
         removeClippedSubviews={true}
         maxToRenderPerBatch={20}
         initialNumToRender={20}
+        testID="txHistoryList"
       />
     </View>
   )
@@ -88,7 +89,7 @@ const DayHeader = ({ts}: DayHeaderProps) => {
 
   return (
     <View style={styles.dayHeaderRoot}>
-      <Text>{formatDateRelative(ts, intl)}</Text>
+      <Text testID="dayHeaderText">{formatDateRelative(ts, intl)}</Text>
     </View>
   )
 }
