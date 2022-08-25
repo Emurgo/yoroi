@@ -751,12 +751,15 @@ export const useExchangeRate = ({
 }
 
 export const useLogout = () => {
-  const {closeWallet} = useCloseWallet()
   const dispatch = useDispatch()
+  const {closeWallet} = useCloseWallet({
+    onSuccess: () => {
+      dispatch(signout())
+    },
+  })
 
   return async () => {
-    await closeWallet()
-    dispatch(signout())
+    closeWallet()
   }
 }
 

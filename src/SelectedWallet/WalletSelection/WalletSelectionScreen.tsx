@@ -1,7 +1,7 @@
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
 import {delay} from 'bluebird'
 import React from 'react'
-import {defineMessages, useIntl} from 'react-intl'
+import {defineMessages, IntlShape, useIntl} from 'react-intl'
 import {ActivityIndicator, Linking, ScrollView, StyleSheet, Text, TouchableOpacity} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useMutation, UseMutationOptions, useQueryClient} from 'react-query'
@@ -33,8 +33,9 @@ export const WalletSelectionScreen = () => {
   const [wallet] = useSelectedWalletContext()
   const params = useRoute<RouteProp<WalletStackRoutes, 'wallet-selection'>>().params
   const queryClient = useQueryClient()
-  const {closeWallet} = useCloseWallet()
   const logout = useLogout()
+  const systemAuthDisabledError = useSystemAuthDisabledError(intl, resetToWalletSelection)
+  const invalidStateError = useInvalidStateError(intl, resetToWalletSelection)
 
   const {openWallet, isLoading} = useOpenWallet({
     onSuccess: ({wallet, walletMeta}) => {
@@ -46,16 +47,12 @@ export const WalletSelectionScreen = () => {
     onError: async (error) => {
       navigation.setParams({reopen: true})
       if (error instanceof SystemAuthDisabled) {
-        await closeWallet()
-        await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
-        resetToWalletSelection()
+        systemAuthDisabledError()
       } else if (error instanceof InvalidState) {
-        await closeWallet()
-        await showErrorDialog(errorMessages.walletStateInvalid, intl)
-        resetToWalletSelection()
+        invalidStateError()
       } else if (error instanceof KeysAreInvalid) {
         await showErrorDialog(errorMessages.walletKeysInvalidated, intl)
-        await logout()
+        logout()
       } else {
         throw error
       }
@@ -101,6 +98,28 @@ export const WalletSelectionScreen = () => {
       <PleaseWaitModal title={strings.loadingWallet} spinnerText={strings.pleaseWait} visible={isLoading} />
     </SafeAreaView>
   )
+}
+
+const useSystemAuthDisabledError = (intl: IntlShape | null | undefined, resetToWalletSelection: () => void) => {
+  const {closeWallet} = useCloseWallet({
+    onSuccess: async () => {
+      await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
+      resetToWalletSelection()
+    },
+  })
+
+  return closeWallet
+}
+
+const useInvalidStateError = (intl: IntlShape | null | undefined, resetToWalletSelection: () => void) => {
+  const {closeWallet} = useCloseWallet({
+    onSuccess: async () => {
+      await showErrorDialog(errorMessages.walletStateInvalid, intl)
+      resetToWalletSelection()
+    },
+  })
+
+  return closeWallet
 }
 
 const messages = defineMessages({
