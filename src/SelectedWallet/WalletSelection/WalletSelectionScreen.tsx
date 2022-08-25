@@ -269,11 +269,7 @@ const useOpenWallet = (
   const mutation = useMutation({
     ...options,
     mutationFn: async (walletMeta) => {
-      try {
-        closeWallet()
-      } catch (e) {
-        // apparently closeWallet is not idempotent
-      }
+      closeWallet()
       await delay(500)
       const [newWallet, newWalletMeta] = await walletManager.openWallet(walletMeta)
       return {
