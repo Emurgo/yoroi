@@ -24,4 +24,11 @@ describe('parseAdaDecimal', () => {
       }).toThrow(InvalidAssetAmount)
     }
   })
+
+  it('throw exception on ADA amount too big', () => {
+    const value = '45 000 000 000 000001'.replace(/ /g, '')
+    expect(() => {
+      parseAmountDecimal(value, defaultAsset)
+    }).toThrow(InvalidAssetAmount)
+  })
 })

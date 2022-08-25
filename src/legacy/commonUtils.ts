@@ -59,7 +59,7 @@ export const decryptData = async (ciphertext: string, secretKey: string): Promis
   try {
     return await decryptWithPassword(secretKeyHex, ciphertext)
   } catch (error) {
-    if ((error as Error).message === 'Decryption error' || error === 'Decryption error') {
+    if ((error as Error).message === 'Decryption error') {
       throw new WrongPassword()
     }
 
