@@ -23,7 +23,7 @@ export const EpochProgress = ({percentage, currentEpoch, endTime}: Props) => {
 
   return (
     <View style={styles.wrapper}>
-      <TitledCard title={intl.formatMessage(messages.epochProgressTitle)}>
+      <TitledCard title={intl.formatMessage(messages.epochProgressTitle)} testID="epochProgressTitleCard">
         <ProgressCircle percentage={percentage} />
 
         <View style={styles.stats}>
