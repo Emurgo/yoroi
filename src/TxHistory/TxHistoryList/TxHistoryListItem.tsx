@@ -97,51 +97,56 @@ export const TxHistoryListItem = ({transaction}: Props) => {
   const totalAssets = outputsToMyWallet.reduce((acc, {assets}) => acc + Number(assets.length), 0)
 
   return (
-    <TouchableOpacity onPress={showDetails} activeOpacity={0.5}>
-      <View style={[styles.root, {backgroundColor: rootBgColor}]}>
-        <View style={styles.iconRoot}>
-          <Icon.Direction transaction={transaction} />
-        </View>
-        <View style={styles.transactionRoot}>
-          <View style={styles.row}>
-            <Text small secondary={isPending}>
-              {strings.direction(transaction.direction as any)}
-            </Text>
-            {transaction.amount.length > 0 ? (
-              <View style={styles.amount}>
-                <Text style={amountStyle} secondary={isPending}>
-                  {formatTokenInteger(amountToDisplay, defaultAsset)}
-                </Text>
-                <Text small style={amountStyle} secondary={isPending}>
-                  {formatTokenFractional(amountToDisplay, defaultAsset)}
-                </Text>
-                <Text style={amountStyle}>{`${utfSymbols.NBSP}${assetSymbol}`}</Text>
-              </View>
-            ) : (
-              <Text style={amountStyle}>- -</Text>
-            )}
+    <View removeClippedSubviews style={styles.wrapper}>
+      <TouchableOpacity onPress={showDetails} activeOpacity={0.5}>
+        <View style={[styles.item, {backgroundColor: rootBgColor}]}>
+          <View style={styles.iconRoot}>
+            <Icon.Direction transaction={transaction} />
           </View>
-          {totalAssets !== 0 && (
+          <View style={styles.transactionRoot}>
             <View style={styles.row}>
-              <Text secondary small>
-                {submittedAt}
+              <Text small secondary={isPending}>
+                {strings.direction(transaction.direction as any)}
               </Text>
-              <Text>{strings.assets(totalAssets)}</Text>
+              {transaction.amount.length > 0 ? (
+                <View style={styles.amount}>
+                  <Text style={amountStyle} secondary={isPending}>
+                    {formatTokenInteger(amountToDisplay, defaultAsset)}
+                  </Text>
+                  <Text small style={amountStyle} secondary={isPending}>
+                    {formatTokenFractional(amountToDisplay, defaultAsset)}
+                  </Text>
+                  <Text style={amountStyle}>{`${utfSymbols.NBSP}${assetSymbol}`}</Text>
+                </View>
+              ) : (
+                <Text style={amountStyle}>- -</Text>
+              )}
             </View>
-          )}
-          <View style={styles.last}>
-            <Text secondary small>
-              {totalAssets === 0 && submittedAt}
-            </Text>
+            {totalAssets !== 0 && (
+              <View style={styles.row}>
+                <Text secondary small>
+                  {submittedAt}
+                </Text>
+                <Text>{strings.assets(totalAssets)}</Text>
+              </View>
+            )}
+            <View style={styles.last}>
+              <Text secondary small>
+                {totalAssets === 0 && submittedAt}
+              </Text>
+            </View>
           </View>
         </View>
-      </View>
-    </TouchableOpacity>
+      </TouchableOpacity>
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
-  root: {
+  wrapper: {
+    overflow: 'hidden',
+  },
+  item: {
     flex: 1,
     flexDirection: 'row',
     borderRadius: 10,
