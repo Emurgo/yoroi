@@ -42,6 +42,7 @@ import {YoroiAmounts, YoroiSignedTx, YoroiUnsignedTx} from '../yoroi-wallets/typ
 import {Utxos} from '../yoroi-wallets/utils'
 
 // WALLET
+
 export const useWallet = (wallet: YoroiWallet, event: WalletEvent['type']) => {
   const [_, rerender] = React.useState({})
 
@@ -94,7 +95,7 @@ export const useEasyConfirmationEnabled = (wallet: YoroiWallet) => {
   return wallet.isEasyConfirmationEnabled
 }
 
-export const useCloseWallet = ({onSuccess, ...options}: UseMutationOptions<void, Error> = {}) => {
+export const useCloseWallet = ({onSuccess, onError, ...options}: UseMutationOptions<void, Error> = {}) => {
   const dispatch = useDispatch()
 
   const mutation = useMutation({
@@ -104,12 +105,37 @@ export const useCloseWallet = ({onSuccess, ...options}: UseMutationOptions<void,
       dispatch(clearAccountState())
       onSuccess?.(data, variables, context)
     },
+    onError: (data, variables, context) => {
+      onError?.(data, variables, context)
+    },
     ...options,
   })
 
   return {
     ...mutation,
     closeWallet: mutation.mutate,
+  }
+}
+
+export const useCloseWalletAsync = ({onSuccess, onError, ...options}: UseMutationOptions<void, Error> = {}) => {
+  const dispatch = useDispatch()
+
+  const mutation = useMutation({
+    mutationFn: () => walletManager.closeWallet(),
+    onSuccess: (data, variables, context) => {
+      dispatch(clearUTXOs())
+      dispatch(clearAccountState())
+      onSuccess?.(data, variables, context)
+    },
+    onError: (data, variables, context) => {
+      onError?.(data, variables, context)
+    },
+    ...options,
+  })
+
+  return {
+    ...mutation,
+    closeWalletAsync: mutation.mutateAsync,
   }
 }
 
