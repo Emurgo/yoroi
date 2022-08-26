@@ -1,6 +1,6 @@
-import {NavigationProp, useFocusEffect, useNavigation} from '@react-navigation/native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import React, {useEffect, useState} from 'react'
-import {defineMessages, IntlShape, useIntl} from 'react-intl'
+import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
@@ -37,7 +37,12 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
   const {createVotingRegTx, isLoading: generatingTransaction} = useCreateVotingRegTx({wallet})
   const navigation = useNavigation()
   const [password, setPassword] = useState('')
-  const systemAuthDisabledError = useSystemAuthDisabledError(intl, navigation)
+  const {closeWallet} = useCloseWallet({
+    onSuccess: async () => {
+      await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
+      navigation.navigate('app-root', {screen: 'wallet-selection'})
+    },
+  })
 
   const [errorData, setErrorData] = useState<ErrorData>({
     showErrorDialog: false,
@@ -82,7 +87,7 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
         })
       } catch (error) {
         if (error instanceof SystemAuthDisabled) {
-          systemAuthDisabledError()
+          closeWallet()
           return
         } else if (error instanceof Error) {
           setErrorData({
@@ -118,9 +123,9 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
     navigation,
     strings.bioAuthInstructions,
     strings.errorMessage,
-    intl,
+    closeWallet,
     password,
-    systemAuthDisabledError,
+    intl,
   ])
 
   useEffect(() => {
@@ -194,20 +199,6 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
       />
     </SafeAreaView>
   )
-}
-
-const useSystemAuthDisabledError = (
-  intl: IntlShape | null | undefined,
-  navigation: NavigationProp<ReactNavigation.RootParamList>,
-) => {
-  const {closeWallet} = useCloseWallet({
-    onSuccess: async () => {
-      await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
-      navigation.navigate('app-root', {screen: 'wallet-selection'})
-    },
-  })
-
-  return closeWallet
 }
 
 const messages = defineMessages({
