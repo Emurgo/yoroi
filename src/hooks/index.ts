@@ -767,7 +767,7 @@ export const useLogout = () => {
     },
   })
 
-  return async () => {
+  return () => {
     closeWallet()
   }
 }
