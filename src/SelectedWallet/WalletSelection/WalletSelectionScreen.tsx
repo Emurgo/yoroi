@@ -6,13 +6,14 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useMutation, UseMutationOptions, useQueryClient} from 'react-query'
 
 import {Button, Icon, PleaseWaitModal, ScreenBackground, StatusBar} from '../../components'
-import {useCloseWallet, useLogout, useWalletMetas} from '../../hooks'
+import {useLogout, useWalletMetas} from '../../hooks'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
 import {showErrorDialog} from '../../legacy/actions'
 import {CONFIG, isNightly} from '../../legacy/config'
 import {InvalidState} from '../../legacy/errors'
 import {isJormungandr} from '../../legacy/networks'
 import {WalletMeta} from '../../legacy/state'
+import {useCloseWallet, useCloseWalletWithWalletMeta} from '../../legacy/useCloseWallet'
 import {useWalletNavigation, WalletStackRouteNavigation, WalletStackRoutes} from '../../navigation'
 import Screen from '../../Screen'
 import {COLORS} from '../../theme'
@@ -58,13 +59,27 @@ export const WalletSelectionScreen = () => {
     },
   })
 
+  const {closeWalletWithWalletMeta} = useCloseWalletWithWalletMeta({
+    onError: async () => {
+      await showErrorDialog(errorMessages.walletStateInvalid, intl)
+    },
+    onSuccess: (walletMeta) => {
+      openWallet(walletMeta)
+    },
+  })
+
   const onSelect = async (walletMeta: WalletMeta) => {
     if (walletMeta.isShelley || isJormungandr(walletMeta.networkId)) {
       await showErrorDialog(errorMessages.itnNotSupported, intl)
       return
     }
+
     if (params?.reopen || wallet?.id !== walletMeta.id) {
       navigation.setParams({reopen: false})
+
+      if (wallet !== undefined) {
+        return closeWalletWithWalletMeta(walletMeta)
+      }
 
       return openWallet(walletMeta)
     }
@@ -269,6 +284,7 @@ const useOpenWallet = (
     ...options,
     mutationFn: async (walletMeta) => {
       const [newWallet, newWalletMeta] = await walletManager.openWallet(walletMeta)
+
       return {
         wallet: newWallet,
         walletMeta: newWalletMeta,

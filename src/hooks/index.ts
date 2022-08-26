@@ -95,19 +95,9 @@ export const useEasyConfirmationEnabled = (wallet: YoroiWallet) => {
   return wallet.isEasyConfirmationEnabled
 }
 
-export const useCloseWallet = ({onSuccess, onError, ...options}: UseMutationOptions<void, Error> = {}) => {
-  const dispatch = useDispatch()
-
+export const useCloseWallet = (options?: UseMutationOptions<void, Error>) => {
   const mutation = useMutation({
     mutationFn: () => walletManager.closeWallet(),
-    onSuccess: (data, variables, context) => {
-      dispatch(clearUTXOs())
-      dispatch(clearAccountState())
-      onSuccess?.(data, variables, context)
-    },
-    onError: (data, variables, context) => {
-      onError?.(data, variables, context)
-    },
     ...options,
   })
 
@@ -117,25 +107,18 @@ export const useCloseWallet = ({onSuccess, onError, ...options}: UseMutationOpti
   }
 }
 
-export const useCloseWalletAsync = ({onSuccess, onError, ...options}: UseMutationOptions<void, Error> = {}) => {
-  const dispatch = useDispatch()
-
+export const useCloseWalletWithWalletMeta = (options?: UseMutationOptions<WalletMeta, Error, WalletMeta>) => {
   const mutation = useMutation({
-    mutationFn: () => walletManager.closeWallet(),
-    onSuccess: (data, variables, context) => {
-      dispatch(clearUTXOs())
-      dispatch(clearAccountState())
-      onSuccess?.(data, variables, context)
-    },
-    onError: (data, variables, context) => {
-      onError?.(data, variables, context)
+    mutationFn: async (walletMeta) => {
+      await walletManager.closeWallet()
+      return walletMeta
     },
     ...options,
   })
 
   return {
     ...mutation,
-    closeWalletAsync: mutation.mutateAsync,
+    closeWalletWithWalletMeta: mutation.mutate,
   }
 }
 
