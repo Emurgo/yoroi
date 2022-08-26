@@ -34,8 +34,8 @@ export const WalletSelectionScreen = () => {
   const params = useRoute<RouteProp<WalletStackRoutes, 'wallet-selection'>>().params
   const queryClient = useQueryClient()
   const logout = useLogout()
-  const systemAuthDisabledError = useSystemAuthDisabledError(intl, resetToWalletSelection)
-  const invalidStateError = useInvalidStateError(intl, resetToWalletSelection)
+  const closeWalletWhenSystemAuthDisabledError = useCloseWalletWhenSystemAuthDisabledError(intl, resetToWalletSelection)
+  const closeWalletWhenInvalidStateError = useCloseWalletWhenInvalidStateError(intl, resetToWalletSelection)
 
   const {openWallet, isLoading} = useOpenWallet({
     onSuccess: ({wallet, walletMeta}) => {
@@ -47,9 +47,9 @@ export const WalletSelectionScreen = () => {
     onError: async (error) => {
       navigation.setParams({reopen: true})
       if (error instanceof SystemAuthDisabled) {
-        systemAuthDisabledError()
+        closeWalletWhenSystemAuthDisabledError()
       } else if (error instanceof InvalidState) {
-        invalidStateError()
+        closeWalletWhenInvalidStateError()
       } else if (error instanceof KeysAreInvalid) {
         await showErrorDialog(errorMessages.walletKeysInvalidated, intl)
         logout()
@@ -116,26 +116,32 @@ export const WalletSelectionScreen = () => {
   )
 }
 
-const useSystemAuthDisabledError = (intl: IntlShape | null | undefined, resetToWalletSelection: () => void) => {
-  const {closeWallet} = useCloseWallet({
+const useCloseWalletWhenSystemAuthDisabledError = (
+  intl: IntlShape | null | undefined,
+  resetToWalletSelection: () => void,
+) => {
+  const {closeWallet: closeWalletWhenSystemAuthDisabledError} = useCloseWallet({
     onSuccess: async () => {
       await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
       resetToWalletSelection()
     },
   })
 
-  return closeWallet
+  return closeWalletWhenSystemAuthDisabledError
 }
 
-const useInvalidStateError = (intl: IntlShape | null | undefined, resetToWalletSelection: () => void) => {
-  const {closeWallet} = useCloseWallet({
+const useCloseWalletWhenInvalidStateError = (
+  intl: IntlShape | null | undefined,
+  resetToWalletSelection: () => void,
+) => {
+  const {closeWallet: closeWalletWhenInvalidStateError} = useCloseWallet({
     onSuccess: async () => {
       await showErrorDialog(errorMessages.walletStateInvalid, intl)
       resetToWalletSelection()
     },
   })
 
-  return closeWallet
+  return closeWalletWhenInvalidStateError
 }
 
 const messages = defineMessages({
