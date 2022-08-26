@@ -95,7 +95,7 @@ export const useEasyConfirmationEnabled = (wallet: YoroiWallet) => {
   return wallet.isEasyConfirmationEnabled
 }
 
-export const useCloseWallet = (options?: UseMutationOptions<void, Error>) => {
+export const useCloseWallet = (options: UseMutationOptions<void, Error> = {}) => {
   const mutation = useMutation({
     mutationFn: () => walletManager.closeWallet(),
     ...options,
@@ -107,7 +107,7 @@ export const useCloseWallet = (options?: UseMutationOptions<void, Error>) => {
   }
 }
 
-export const useCloseWalletWithWalletMeta = (options?: UseMutationOptions<WalletMeta, Error, WalletMeta>) => {
+export const useCloseWalletWithWalletMeta = (options: UseMutationOptions<WalletMeta, Error, WalletMeta> = {}) => {
   const mutation = useMutation({
     mutationFn: async (walletMeta) => {
       await walletManager.closeWallet()

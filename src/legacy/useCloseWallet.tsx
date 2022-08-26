@@ -6,7 +6,7 @@ import {clearAccountState} from './account'
 import {WalletMeta} from './state'
 import {clearUTXOs} from './utxo'
 
-const useCloseWalletWrapper = (options?: UseMutationOptions<void, Error>) => {
+const useCloseWalletWrapper = (options: UseMutationOptions<void, Error> = {}) => {
   const dispatch = useDispatch()
 
   const {closeWallet, ...mutation} = useCloseWallet({
@@ -20,7 +20,7 @@ const useCloseWalletWrapper = (options?: UseMutationOptions<void, Error>) => {
   return {closeWallet, ...mutation}
 }
 
-const useCloseWalletWithWalletMetaWrapper = (options?: UseMutationOptions<WalletMeta, Error, WalletMeta>) => {
+const useCloseWalletWithWalletMetaWrapper = (options: UseMutationOptions<WalletMeta, Error, WalletMeta> = {}) => {
   const dispatch = useDispatch()
 
   const {closeWalletWithWalletMeta, ...mutation} = useCloseWalletWithWalletMeta({
