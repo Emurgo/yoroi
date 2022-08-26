@@ -1,5 +1,4 @@
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
-import {delay} from 'bluebird'
 import React from 'react'
 import {defineMessages, IntlShape, useIntl} from 'react-intl'
 import {ActivityIndicator, Linking, ScrollView, StyleSheet, Text, TouchableOpacity} from 'react-native'
@@ -66,10 +65,12 @@ export const WalletSelectionScreen = () => {
     }
     if (params?.reopen || wallet?.id !== walletMeta.id) {
       navigation.setParams({reopen: false})
+
       return openWallet(walletMeta)
     }
     return navigateToTxHistory()
   }
+
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <StatusBar type="dark" />
@@ -264,13 +265,9 @@ const useOpenWallet = (
     WalletMeta
   >,
 ) => {
-  const {closeWallet} = useCloseWallet()
-
   const mutation = useMutation({
     ...options,
     mutationFn: async (walletMeta) => {
-      closeWallet()
-      await delay(500)
       const [newWallet, newWalletMeta] = await walletManager.openWallet(walletMeta)
       return {
         wallet: newWallet,
