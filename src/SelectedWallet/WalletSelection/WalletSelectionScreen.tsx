@@ -13,7 +13,7 @@ import {CONFIG, isNightly} from '../../legacy/config'
 import {InvalidState} from '../../legacy/errors'
 import {isJormungandr} from '../../legacy/networks'
 import {WalletMeta} from '../../legacy/state'
-import {useCloseWallet, useCloseWalletWithWalletMeta} from '../../legacy/useCloseWallet'
+import {useCloseWallet} from '../../legacy/useCloseWallet'
 import {useWalletNavigation, WalletStackRouteNavigation, WalletStackRoutes} from '../../navigation'
 import Screen from '../../Screen'
 import {COLORS} from '../../theme'
@@ -30,8 +30,8 @@ export const WalletSelectionScreen = () => {
   const selectWalletMeta = useSetSelectedWalletMeta()
   const selectWallet = useSetSelectedWallet()
   const intl = useIntl()
-  const [wallet] = useSelectedWalletContext()
   const params = useRoute<RouteProp<WalletStackRoutes, 'wallet-selection'>>().params
+  const [wallet] = useSelectedWalletContext()
   const queryClient = useQueryClient()
   const logout = useLogout()
   const closeWalletWhenSystemAuthDisabledError = useCloseWalletWhenSystemAuthDisabledError(intl, resetToWalletSelection)
@@ -54,17 +54,8 @@ export const WalletSelectionScreen = () => {
         await showErrorDialog(errorMessages.walletKeysInvalidated, intl)
         logout()
       } else {
-        throw error
+        await showErrorDialog(errorMessages.walletStateInvalid, intl)
       }
-    },
-  })
-
-  const {closeWalletWithWalletMeta} = useCloseWalletWithWalletMeta({
-    onError: async () => {
-      await showErrorDialog(errorMessages.walletStateInvalid, intl)
-    },
-    onSuccess: (walletMeta) => {
-      openWallet(walletMeta)
     },
   })
 
@@ -77,11 +68,7 @@ export const WalletSelectionScreen = () => {
     if (params?.reopen || wallet?.id !== walletMeta.id) {
       navigation.setParams({reopen: false})
 
-      if (wallet !== undefined) {
-        return closeWalletWithWalletMeta(walletMeta)
-      }
-
-      return openWallet(walletMeta)
+      return openWallet({wallet, walletMeta})
     }
     return navigateToTxHistory()
   }
@@ -283,12 +270,16 @@ const useOpenWallet = (
       walletMeta: WalletMeta
     },
     Error,
-    WalletMeta
+    {walletMeta: WalletMeta; wallet: YoroiWallet | undefined}
   >,
 ) => {
   const mutation = useMutation({
     ...options,
-    mutationFn: async (walletMeta) => {
+    mutationFn: async ({wallet, walletMeta}) => {
+      if (wallet !== undefined) {
+        await walletManager.closeWallet()
+      }
+
       const [newWallet, newWalletMeta] = await walletManager.openWallet(walletMeta)
 
       return {
