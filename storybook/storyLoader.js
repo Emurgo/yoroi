@@ -23,7 +23,6 @@ function loadStories() {
 	require('../src/MaintenanceScreen.stories');
 	require('../src/Menu/Menu.stories');
 	require('../src/Receive/AddressModal.stories');
-	require('../src/Receive/AddressVerifyModal.stories');
 	require('../src/Receive/Addresses.stories');
 	require('../src/Receive/ReceiveScreen.stories');
 	require('../src/SelectedWallet/WalletSelection/WalletSelectionScreen.stories');
@@ -121,7 +120,6 @@ const stories = [
 	'../src/MaintenanceScreen.stories',
 	'../src/Menu/Menu.stories',
 	'../src/Receive/AddressModal.stories',
-	'../src/Receive/AddressVerifyModal.stories',
 	'../src/Receive/Addresses.stories',
 	'../src/Receive/ReceiveScreen.stories',
 	'../src/SelectedWallet/WalletSelection/WalletSelectionScreen.stories',

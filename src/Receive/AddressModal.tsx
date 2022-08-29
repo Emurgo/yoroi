@@ -4,7 +4,7 @@ import {StyleSheet, View} from 'react-native'
 import QRCode from 'react-native-qrcode-svg'
 import {useSelector} from 'react-redux'
 
-import {Button, CopyButton, Modal, Spacer, Text} from '../components'
+import {CopyButton, Modal, Spacer, Text} from '../components'
 import {AddressType, formatPath} from '../legacy/commonUtils'
 import {externalAddressIndexSelector, internalAddressIndexSelector} from '../legacy/selectors'
 import {useSelectedWallet} from '../SelectedWallet'
@@ -20,14 +20,12 @@ type Props = {
   address: string
   onRequestClose: () => void
   visible: boolean
-  onAddressVerify: () => void
   path?: Path
 }
 
-export const AddressModal = ({address, visible, onRequestClose, onAddressVerify, path}: Props) => {
+export const AddressModal = ({address, visible, onRequestClose, path}: Props) => {
   const strings = useStrings()
   const keyHashes = useKeyHashes(address)
-  const wallet = useSelectedWallet()
 
   return (
     <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
@@ -77,10 +75,6 @@ export const AddressModal = ({address, visible, onRequestClose, onAddressVerify,
           {keyHashes?.spending}
         </Text>
       </Info>
-
-      <Spacer height={16} />
-
-      {wallet.isHW && <Button onPress={onAddressVerify} title={strings.verifyLabel} />}
     </Modal>
   )
 }
@@ -89,7 +83,6 @@ type ExternalProps = {
   address: string
   onRequestClose: () => void
   visible: boolean
-  onAddressVerify: () => void
 }
 
 export default (props: ExternalProps) => {
