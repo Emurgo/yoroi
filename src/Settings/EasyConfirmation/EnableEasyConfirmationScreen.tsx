@@ -10,7 +10,7 @@ import {errorMessages} from '../../i18n/global-messages'
 import {showErrorDialog} from '../../legacy/actions'
 import {WrongPassword} from '../../legacy/errors'
 import {isEmptyString} from '../../legacy/utils'
-import {useSelectedWallet, useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../SelectedWallet'
+import {useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 
 export const EnableEasyConfirmationScreen = () => {
@@ -19,10 +19,9 @@ export const EnableEasyConfirmationScreen = () => {
   const navigation = useNavigation()
   const [masterPassword, setMasterPassword] = React.useState('')
   const clearPassword = () => setMasterPassword('')
-  const wallet = useSelectedWallet()
   const walletMeta = useSelectedWalletMeta()
   const setSelectedWalletMeta = useSetSelectedWalletMeta()
-  const {enableEasyConfirmation, isLoading} = useEnableEasyConfirmation(wallet, {
+  const {enableEasyConfirmation, isLoading} = useEnableEasyConfirmation({
     onSuccess: () => {
       if (!walletMeta) throw new Error('Missing walletMeta')
       setSelectedWalletMeta({

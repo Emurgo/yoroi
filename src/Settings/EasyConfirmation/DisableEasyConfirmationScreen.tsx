@@ -6,15 +6,14 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, StatusBar, Text} from '../../components'
 import {useDisableEasyConfirmation} from '../../hooks'
-import {useSelectedWallet, useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../SelectedWallet'
+import {useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../SelectedWallet'
 
 export const DisableEasyConfirmationScreen = () => {
   const strings = useStrings()
   const navigation = useNavigation()
-  const wallet = useSelectedWallet()
   const walletMeta = useSelectedWalletMeta()
   const setSelectedWalletMeta = useSetSelectedWalletMeta()
-  const {disableEasyConfirmation, isLoading} = useDisableEasyConfirmation(wallet, {
+  const {disableEasyConfirmation, isLoading} = useDisableEasyConfirmation({
     onSuccess: () => {
       if (!walletMeta) throw new Error('Missing walletMeta')
       setSelectedWalletMeta({

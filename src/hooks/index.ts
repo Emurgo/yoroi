@@ -63,7 +63,6 @@ export const useWallet = (wallet: YoroiWallet, event: WalletEvent['type']) => {
 }
 
 export const useEnableEasyConfirmation = (
-  _wallet: YoroiWallet,
   options?: UseMutationOptions<void, Error, {password: string; intl: IntlShape}>,
 ) => {
   const mutation = useMutation({
@@ -77,7 +76,7 @@ export const useEnableEasyConfirmation = (
   }
 }
 
-export const useDisableEasyConfirmation = (_wallet: YoroiWallet, options?: UseMutationOptions) => {
+export const useDisableEasyConfirmation = (options?: UseMutationOptions) => {
   const mutation = useMutation({
     ...options,
     mutationFn: async () => walletManager.disableEasyConfirmation(),
