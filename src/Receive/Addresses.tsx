@@ -7,7 +7,7 @@ import {CopyButton, Icon, Spacer, Text} from '../components'
 import {externalAddressIndexSelector, isUsedAddressIndexSelector, receiveAddressesSelector} from '../legacy/selectors'
 import {isEmptyString} from '../legacy/utils'
 import {COLORS} from '../theme'
-import {Modals} from './Modals'
+import AddressModal from './AddressModal'
 
 export const UnusedAddresses = () => {
   const strings = useStrings()
@@ -28,7 +28,7 @@ export const UnusedAddresses = () => {
         </React.Fragment>
       ))}
 
-      {!isEmptyString(address) && <Modals address={address} onDone={() => setAddress(null)} />}
+      {!isEmptyString(address) && <AddressModal address={address} onRequestClose={() => setAddress(null)} visible />}
     </View>
   )
 }
@@ -51,7 +51,7 @@ export const UsedAddresses = () => {
         </React.Fragment>
       ))}
 
-      {!isEmptyString(address) && <Modals address={address} onDone={() => setAddress(null)} />}
+      {!isEmptyString(address) && <AddressModal address={address} onRequestClose={() => setAddress(null)} visible />}
     </View>
   )
 }
