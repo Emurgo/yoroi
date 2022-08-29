@@ -35,13 +35,6 @@ export const EnableEasyConfirmationScreen = () => {
     },
   })
 
-  React.useEffect(() => {
-    const unsubscribe = navigation.addListener('blur', () => {
-      clearPassword()
-    })
-    return unsubscribe
-  }, [navigation])
-
   return (
     <SafeAreaView edges={['bottom']} style={styles.container}>
       <StatusBar type="dark" />
