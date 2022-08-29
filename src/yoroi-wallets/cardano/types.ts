@@ -29,7 +29,7 @@ import {
   TokenInfo,
 } from '../../types'
 import {YoroiSignedTx, YoroiUnsignedTx} from '../types'
-import Wallet from '../Wallet'
+import {WalletEvent} from '../Wallet'
 import type {Addresses} from './chain'
 import {AddressChain} from './chain'
 import {TransactionCache} from './shelley/transactionCache'
@@ -121,7 +121,7 @@ export interface WalletInterface {
 
   // =================== subscriptions =================== //
 
-  subscribe(handler: (wallet: Wallet) => void): void
+  subscribe(handler: (event: WalletEvent) => void): () => void
   subscribeOnTxHistoryUpdate(handler: () => void): void
 
   // =================== synch =================== //

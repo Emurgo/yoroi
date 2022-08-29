@@ -107,7 +107,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     await this.externalChain.initialize()
 
     this.setupSubscriptions()
-    this.notify()
+    this.notify({type: 'initialize'})
 
     this.isInitialized = true
 

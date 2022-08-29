@@ -42,10 +42,18 @@ export class WalletClosed extends ExtendableError {}
 export class SystemAuthDisabled extends ExtendableError {}
 export class KeysAreInvalid extends ExtendableError {}
 
+export type WalletManagerEvent =
+  | {type: 'easy-confirmation'; enabled: boolean}
+  | {type: 'wallet-opened'; wallet: WalletInterface}
+  | {type: 'wallet-closed'; id: string}
+  | {type: 'hw-device-info'; hwDeviceInfo: HWDeviceInfo}
+
+export type WalletManagerSubscription = (event: WalletManagerEvent) => void
+
 class WalletManager {
   _wallet: null | WalletInterface = null
   _id = ''
-  _subscribers: Array<() => void> = []
+  private subscriptions: Array<WalletManagerSubscription> = []
   _syncErrorSubscribers: Array<(err: null | Error) => void> = []
   _serverSyncSubscribers: Array<(status: ServerStatus) => void> = []
   _onOpenSubscribers: Array<() => void> = []
@@ -109,9 +117,9 @@ class WalletManager {
   }
 
   // Note(ppershing): needs 'this' to be bound
-  _notify = () => {
+  _notify = (event: WalletManagerEvent) => {
     // TODO(ppershing): do this in next tick?
-    this._subscribers.forEach((handler) => handler())
+    this.subscriptions.forEach((handler) => handler(event))
   }
 
   _notifySyncError = (error: null | Error) => {
@@ -136,8 +144,12 @@ class WalletManager {
     this._onTxHistoryUpdateSubscribers.forEach((handler) => handler())
   }
 
-  subscribe(handler: () => void) {
-    this._subscribers.push(handler)
+  subscribe(subscription: (event: WalletManagerEvent) => void) {
+    this.subscriptions.push(subscription)
+
+    return () => {
+      this.subscriptions = this.subscriptions.filter((sub) => sub !== subscription)
+    }
   }
 
   subscribeBackgroundSyncError(handler: (err: null | Error) => void) {
@@ -309,7 +321,7 @@ class WalletManager {
 
     await this.deleteEncryptedKey('BIOMETRICS')
     await this.deleteEncryptedKey('SYSTEM_PIN')
-    this._notify()
+    this._notify({type: 'easy-confirmation', enabled: false})
   }
 
   async enableEasyConfirmation(masterPassword: string, intl: IntlShape) {
@@ -321,7 +333,7 @@ class WalletManager {
       isEasyConfirmationEnabled: true,
     })
     await this._saveState(wallet)
-    this._notify()
+    this._notify({type: 'easy-confirmation', enabled: true})
   }
 
   canBiometricsSignInBeDisabled() {
@@ -459,12 +471,12 @@ class WalletManager {
     // update the data in storage immediately
     await this._saveState(wallet)
 
-    wallet.subscribe(this._notify)
+    wallet.subscribe((event) => this._notify(event as any))
     wallet.subscribeOnTxHistoryUpdate(this._notifyOnTxHistoryUpdate)
     this._closePromise = new Promise((resolve, reject) => {
       this._closeReject = reject
     })
-    this._notify() // update redux store
+    this._notify({type: 'wallet-opened', wallet})
 
     this._notifyOnOpen()
 
@@ -501,7 +513,7 @@ class WalletManager {
     this._closePromise = null
     this._closeReject = null
 
-    this._notify()
+    this._notify({type: 'wallet-closed', id: this._id})
 
     this._wallet = null
     this._id = ''
@@ -558,7 +570,7 @@ class WalletManager {
 
     wallet.hwDeviceInfo = hwDeviceInfo
     await this._saveState(wallet)
-    this._notify() // update redux Store
+    this._notify({type: 'hw-device-info', hwDeviceInfo: wallet.hwDeviceInfo}) // update redux Store
   }
 
   // =================== create =================== //

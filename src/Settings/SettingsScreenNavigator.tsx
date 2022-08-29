@@ -24,10 +24,10 @@ import {ChangeLanguageScreen} from './ChangeLanguage'
 import {ChangePasswordScreen} from './ChangePassword'
 import {ChangeWalletName} from './ChangeWalletName'
 import {ChangeCurrencyScreen} from './Currency/ChangeCurrencyScreen'
+import {DisableEasyConfirmationScreen, EnableEasyConfirmationScreen} from './EasyConfirmation'
 import {RemoveWalletScreen} from './RemoveWallet'
 import {SupportScreen} from './Support'
 import {TermsOfServiceScreen} from './TermsOfService'
-import {ToggleEasyConfirmationScreen} from './ToggleEasyConfirmation'
 import {WalletSettingsScreen} from './WalletSettings'
 
 const Stack = createStackNavigator<SettingsStackRoutes>()
@@ -93,9 +93,15 @@ export const SettingsScreenNavigator = () => {
       />
 
       <Stack.Screen //
-        name="easy-confirmation"
-        component={ToggleEasyConfirmationScreen}
-        options={{title: strings.toggleEachConfirmationTitle}}
+        name="enable-easy-confirmation"
+        component={EnableEasyConfirmationScreen}
+        options={{title: strings.easyConfirmationTitle}}
+      />
+
+      <Stack.Screen //
+        name="disable-easy-confirmation"
+        component={DisableEasyConfirmationScreen}
+        options={{title: strings.easyConfirmationTitle}}
       />
 
       <Stack.Screen //
@@ -190,8 +196,8 @@ const messages = defineMessages({
     id: 'components.settings.settingsscreen.title',
     defaultMessage: '!!!Support',
   },
-  toggleEachConfirmationTitle: {
-    id: 'components.settings.toggleeasyconfirmationscreen.title',
+  easyConfirmation: {
+    id: 'components.settings.easyconfirmationscreen.title',
     defaultMessage: '!!!Easy confirmation',
   },
   customPinTitle: {
@@ -220,7 +226,7 @@ const useStrings = () => {
     termsOfServiceTitle: intl.formatMessage(messages.termsOfServiceTitle),
     changeWalletNameTitle: intl.formatMessage(messages.changeWalletNameTitle),
     supportTitle: intl.formatMessage(messages.supportTitle),
-    toggleEachConfirmationTitle: intl.formatMessage(messages.toggleEachConfirmationTitle),
+    easyConfirmationTitle: intl.formatMessage(messages.easyConfirmation),
     customPinTitle: intl.formatMessage(messages.customPinTitle),
     settingsTitle: intl.formatMessage(messages.settingsTitle),
     languageTitle: intl.formatMessage(messages.languageTitle),

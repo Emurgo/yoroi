@@ -31,6 +31,7 @@ import {
   encryptWithPassword,
   NetworkId,
   TxSubmissionStatus,
+  WalletEvent,
   WalletImplementationId,
   walletManager,
   YoroiProvider,
@@ -41,6 +42,58 @@ import {YoroiAmounts, YoroiSignedTx, YoroiUnsignedTx} from '../yoroi-wallets/typ
 import {Utxos} from '../yoroi-wallets/utils'
 
 // WALLET
+export const useWallet = (wallet: YoroiWallet, event: WalletEvent['type']) => {
+  const [_, rerender] = React.useState({})
+
+  React.useEffect(() => {
+    const unsubWallet = wallet.subscribe((subscriptionEvent) => {
+      if (subscriptionEvent.type !== event) return
+      rerender(() => ({}))
+    })
+    const unsubWalletManager = walletManager.subscribe((subscriptionEvent) => {
+      if (subscriptionEvent.type !== event) return
+      rerender(() => ({}))
+    })
+
+    return () => {
+      unsubWallet()
+      unsubWalletManager()
+    }
+  }, [event, wallet])
+}
+
+export const useEnableEasyConfirmation = (
+  options?: UseMutationOptions<void, Error, {password: string; intl: IntlShape}>,
+) => {
+  const mutation = useMutation({
+    ...options,
+    mutationFn: ({password, intl}) => walletManager.enableEasyConfirmation(password, intl),
+  })
+
+  return {
+    ...mutation,
+    enableEasyConfirmation: mutation.mutate,
+  }
+}
+
+export const useDisableEasyConfirmation = (options?: UseMutationOptions) => {
+  const mutation = useMutation({
+    ...options,
+    mutationFn: async () => walletManager.disableEasyConfirmation(),
+  })
+
+  return {
+    ...mutation,
+    disableEasyConfirmation: mutation.mutate,
+  }
+}
+
+export const useEasyConfirmationEnabled = (wallet: YoroiWallet) => {
+  useWallet(wallet, 'easy-confirmation')
+
+  return wallet.isEasyConfirmationEnabled
+}
+
 export const useCloseWallet = ({onSuccess, ...options}: UseMutationOptions<void, Error> = {}) => {
   const dispatch = useDispatch()
 

@@ -6,7 +6,7 @@ import {useMutation, UseMutationOptions} from 'react-query'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {StatusBar} from '../../components'
-import {useCloseWallet, useWalletName} from '../../hooks'
+import {useCloseWallet, useEasyConfirmationEnabled, useWalletName} from '../../hooks'
 import {confirmationMessages} from '../../i18n/global-messages'
 import {DIALOG_BUTTONS, showConfirmationDialog, signout} from '../../legacy/actions'
 import {isByron, isHaskellShelley} from '../../legacy/config'
@@ -30,16 +30,26 @@ export const WalletSettingsScreen = () => {
   const isSystemAuthEnabled = useSelector(isSystemAuthEnabledSelector)
   const wallet = useSelectedWallet()
   const walletName = useWalletName(wallet)
+  const easyConfirmationEnabled = useEasyConfirmationEnabled(wallet)
 
   const onSwitchWallet = () => {
     resetToWalletSelection()
   }
 
-  const onToggleEasyConfirmation = () => {
+  const onEnableEasyConfirmation = () => {
     navigation.navigate('app-root', {
       screen: 'settings',
       params: {
-        screen: 'easy-confirmation',
+        screen: 'enable-easy-confirmation',
+      },
+    })
+  }
+
+  const onDisableEasyConfirmation = () => {
+    navigation.navigate('app-root', {
+      screen: 'settings',
+      params: {
+        screen: 'disable-easy-confirmation',
       },
     })
   }
@@ -69,8 +79,8 @@ export const WalletSettingsScreen = () => {
           disabled={!isSystemAuthEnabled || wallet.isHW || wallet.isReadOnly}
         >
           <Switch
-            value={wallet.isEasyConfirmationEnabled}
-            onValueChange={onToggleEasyConfirmation}
+            value={easyConfirmationEnabled}
+            onValueChange={easyConfirmationEnabled ? onDisableEasyConfirmation : onEnableEasyConfirmation}
             disabled={!isSystemAuthEnabled || wallet.isHW || wallet.isReadOnly}
           />
         </SettingsItem>
