@@ -107,21 +107,6 @@ export const useCloseWallet = (options: UseMutationOptions<void, Error> = {}) =>
   }
 }
 
-export const useCloseWalletWithWalletMeta = (options: UseMutationOptions<WalletMeta, Error, WalletMeta> = {}) => {
-  const mutation = useMutation({
-    mutationFn: async (walletMeta) => {
-      await walletManager.closeWallet()
-      return walletMeta
-    },
-    ...options,
-  })
-
-  return {
-    ...mutation,
-    closeWalletWithWalletMeta: mutation.mutate,
-  }
-}
-
 export const useWalletName = (wallet: YoroiWallet, options?: UseQueryOptions<string, Error>) => {
   const query = useQuery({
     queryKey: [wallet.id, 'name'],
