@@ -3,57 +3,39 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useDispatch} from 'react-redux'
 
 import {Button, StatusBar, Text, TextInput} from '../../components'
+import {useEnableEasyConfirmation} from '../../hooks'
 import {errorMessages} from '../../i18n/global-messages'
-import {setEasyConfirmation, showErrorDialog} from '../../legacy/actions'
+import {showErrorDialog} from '../../legacy/actions'
 import {WrongPassword} from '../../legacy/errors'
 import {isEmptyString} from '../../legacy/utils'
 import {useSelectedWallet, useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
-import {walletManager} from '../../yoroi-wallets'
 
-export const ToggleEasyConfirmationScreen = () => {
+export const EnableEasyConfirmationScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
   const navigation = useNavigation()
-  const dispatch = useDispatch()
   const [masterPassword, setMasterPassword] = React.useState('')
   const clearPassword = () => setMasterPassword('')
+  const wallet = useSelectedWallet()
   const walletMeta = useSelectedWalletMeta()
   const setSelectedWalletMeta = useSetSelectedWalletMeta()
-  const wallet = useSelectedWallet()
-
-  const enableEasyConfirmation = async () => {
-    try {
-      await walletManager.enableEasyConfirmation(masterPassword, intl)
-      dispatch(setEasyConfirmation(true))
+  const {enableEasyConfirmation, isLoading} = useEnableEasyConfirmation(wallet, {
+    onSuccess: () => {
       if (!walletMeta) throw new Error('Missing walletMeta')
       setSelectedWalletMeta({
         ...walletMeta,
         isEasyConfirmationEnabled: true,
       })
       navigation.goBack()
-    } catch (error) {
-      if (error instanceof WrongPassword) {
-        await showErrorDialog(errorMessages.incorrectPassword, intl)
-      } else {
-        throw error
-      }
-    }
-  }
-
-  const disableEasyConfirmation = async () => {
-    await walletManager.disableEasyConfirmation()
-    dispatch(setEasyConfirmation(false))
-    if (!walletMeta) throw new Error('Missing walletMeta')
-    setSelectedWalletMeta({
-      ...walletMeta,
-      isEasyConfirmationEnabled: false,
-    })
-    navigation.goBack()
-  }
+    },
+    onError: (error) => {
+      if (!(error instanceof WrongPassword)) throw error
+      showErrorDialog(errorMessages.incorrectPassword, intl)
+    },
+  })
 
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('blur', () => {
@@ -66,33 +48,27 @@ export const ToggleEasyConfirmationScreen = () => {
     <SafeAreaView edges={['bottom']} style={styles.container}>
       <StatusBar type="dark" />
 
-      {!wallet.isEasyConfirmationEnabled ? (
-        <ScrollView keyboardShouldPersistTaps="always" contentContainerStyle={styles.contentContainer}>
-          <Text style={styles.heading}>{strings.enableHeading}</Text>
-          <Text style={styles.warning}>{strings.enableWarning}</Text>
+      <ScrollView keyboardShouldPersistTaps="always" contentContainerStyle={styles.contentContainer}>
+        <Text style={styles.heading}>{strings.enableHeading}</Text>
+        <Text style={styles.warning}>{strings.enableWarning}</Text>
 
-          <TextInput
-            autoFocus
-            enablesReturnKeyAutomatically
-            returnKeyType="done"
-            secureTextEntry
-            label={strings.enableMasterPassword}
-            onChangeText={setMasterPassword}
-            value={masterPassword}
-            autoComplete={false}
-          />
-        </ScrollView>
-      ) : (
-        <View style={[styles.disableSection]}>
-          <Text style={styles.heading}>{strings.disableHeading}</Text>
-        </View>
-      )}
+        <TextInput
+          autoFocus
+          enablesReturnKeyAutomatically
+          returnKeyType="done"
+          secureTextEntry
+          label={strings.enableMasterPassword}
+          onChangeText={setMasterPassword}
+          value={masterPassword}
+          autoComplete={false}
+        />
+      </ScrollView>
 
       <View style={styles.actions}>
         <Button
-          title={wallet.isEasyConfirmationEnabled ? strings.disableButton : strings.enableButton}
-          onPress={wallet.isEasyConfirmationEnabled ? disableEasyConfirmation : enableEasyConfirmation}
-          disabled={isEmptyString(masterPassword) && !wallet.isEasyConfirmationEnabled}
+          title={strings.enableButton}
+          onPress={() => enableEasyConfirmation({password: masterPassword, intl})}
+          disabled={isEmptyString(masterPassword) || isLoading}
         />
       </View>
     </SafeAreaView>
@@ -164,10 +140,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 20,
     paddingBottom: 20,
-  },
-  disableSection: {
-    flex: 1,
-    justifyContent: 'center',
   },
   actions: {
     paddingBottom: 16,

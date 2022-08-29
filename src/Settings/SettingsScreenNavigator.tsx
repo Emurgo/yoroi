@@ -24,10 +24,10 @@ import {ChangeLanguageScreen} from './ChangeLanguage'
 import {ChangePasswordScreen} from './ChangePassword'
 import {ChangeWalletName} from './ChangeWalletName'
 import {ChangeCurrencyScreen} from './Currency/ChangeCurrencyScreen'
+import {DisableEasyConfirmationScreen, EnableEasyConfirmationScreen} from './EasyConfirmation'
 import {RemoveWalletScreen} from './RemoveWallet'
 import {SupportScreen} from './Support'
 import {TermsOfServiceScreen} from './TermsOfService'
-import {ToggleEasyConfirmationScreen} from './ToggleEasyConfirmation'
 import {WalletSettingsScreen} from './WalletSettings'
 
 const Stack = createStackNavigator<SettingsStackRoutes>()
@@ -93,8 +93,14 @@ export const SettingsScreenNavigator = () => {
       />
 
       <Stack.Screen //
-        name="easy-confirmation"
-        component={ToggleEasyConfirmationScreen}
+        name="enable-easy-confirmation"
+        component={EnableEasyConfirmationScreen}
+        options={{title: strings.toggleEachConfirmationTitle}}
+      />
+
+      <Stack.Screen //
+        name="disable-easy-confirmation"
+        component={DisableEasyConfirmationScreen}
         options={{title: strings.toggleEachConfirmationTitle}}
       />
 

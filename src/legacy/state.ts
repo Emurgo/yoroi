@@ -21,7 +21,6 @@ export type WalletMeta = {
 }
 export type ReduxWallet = {
   id: WalletInterface['id']
-  isEasyConfirmationEnabled: WalletInterface['isEasyConfirmationEnabled']
   networkId: WalletInterface['networkId']
   walletImplementationId: WalletInterface['walletImplementationId']
   isHW: WalletInterface['isHW']
@@ -90,7 +89,6 @@ export const getInitialState = (): State => ({
     isHW: false,
     hwDeviceInfo: null,
     isReadOnly: false,
-    isEasyConfirmationEnabled: false,
     transactions: {},
     internalAddresses: [],
     externalAddresses: [],

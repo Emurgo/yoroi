@@ -202,7 +202,8 @@ export type SettingsStackRoutes = {
   'remove-wallet': undefined
   'change-language': undefined
   'change-currency': undefined
-  'easy-confirmation': undefined
+  'enable-easy-confirmation': undefined
+  'disable-easy-confirmation': undefined
   'change-password': undefined
   'change-custom-pin': undefined
   'setup-custom-pin': {
