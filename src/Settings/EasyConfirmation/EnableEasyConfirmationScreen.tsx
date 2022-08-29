@@ -79,7 +79,7 @@ const useStrings = () => {
 
 const messages = defineMessages({
   enableHeading: {
-    id: 'components.settings.easyconfirmationscreen.enableHeading',
+    id: 'components.settings.enableeasyconfirmationscreen.enableHeading',
     defaultMessage:
       '!!!This option will allow you to send transactions ' +
       'from your wallet just by confirming with fingerprint or ' +
@@ -88,17 +88,17 @@ const messages = defineMessages({
       'between UX and security!',
   },
   enableWarning: {
-    id: 'components.settings.easyconfirmationscreen.enableWarning',
+    id: 'components.settings.enableeasyconfirmationscreen.enableWarning',
     defaultMessage:
       '!!!Please remember your master password, as you may need it ' +
       'in case your biometrics data are removed from the device.',
   },
   enableMasterPassword: {
-    id: 'components.settings.easyconfirmationscreen.enableMasterPassword',
+    id: 'components.settings.enableeasyconfirmationscreen.enableMasterPassword',
     defaultMessage: '!!!Master password',
   },
   enableButton: {
-    id: 'components.settings.easyconfirmationscreen.enableButton',
+    id: 'components.settings.enableeasyconfirmationscreen.enableButton',
     defaultMessage: '!!!Enable',
   },
 })
@@ -112,8 +112,8 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   heading: {
-    fontSize: 14,
-    lineHeight: 20,
+    fontSize: 16,
+    lineHeight: 24,
     paddingBottom: 20,
   },
   warning: {

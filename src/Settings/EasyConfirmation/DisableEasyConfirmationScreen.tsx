@@ -50,7 +50,7 @@ const useStrings = () => {
 
 const messages = defineMessages({
   disableHeading: {
-    id: 'components.settings.easyconfirmationscreen.disableHeading',
+    id: 'components.settings.disableeasyconfirmationscreen.disableHeading',
     defaultMessage: '!!!By disabling this option you will be able to spend your assets only with your master password.',
   },
   disableButton: {
@@ -65,13 +65,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   heading: {
-    fontSize: 14,
-    lineHeight: 20,
-    paddingBottom: 20,
+    fontSize: 16,
+    lineHeight: 24,
   },
   disableSection: {
     flex: 1,
     justifyContent: 'center',
+    padding: 20,
   },
   actions: {
     paddingBottom: 16,
