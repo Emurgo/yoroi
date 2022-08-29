@@ -83,14 +83,12 @@ const useStrings = () => {
     enableWarning: intl.formatMessage(messages.enableWarning),
     enableMasterPassword: intl.formatMessage(messages.enableMasterPassword),
     enableButton: intl.formatMessage(messages.enableButton),
-    disableHeading: intl.formatMessage(messages.disableHeading),
-    disableButton: intl.formatMessage(messages.disableButton),
   }
 }
 
 const messages = defineMessages({
   enableHeading: {
-    id: 'components.settings.toggleeasyconfirmationscreen.enableHeading',
+    id: 'components.settings.easyconfirmationscreen.enableHeading',
     defaultMessage:
       '!!!This option will allow you to send transactions ' +
       'from your wallet just by confirming with fingerprint or ' +
@@ -99,26 +97,18 @@ const messages = defineMessages({
       'between UX and security!',
   },
   enableWarning: {
-    id: 'components.settings.toggleeasyconfirmationscreen.enableWarning',
+    id: 'components.settings.easyconfirmationscreen.enableWarning',
     defaultMessage:
       '!!!Please remember your master password, as you may need it ' +
       'in case your biometrics data are removed from the device.',
   },
   enableMasterPassword: {
-    id: 'components.settings.toggleeasyconfirmationscreen.enableMasterPassword',
+    id: 'components.settings.easyconfirmationscreen.enableMasterPassword',
     defaultMessage: '!!!Master password',
   },
   enableButton: {
-    id: 'components.settings.toggleeasyconfirmationscreen.enableButton',
+    id: 'components.settings.easyconfirmationscreen.enableButton',
     defaultMessage: '!!!Enable',
-  },
-  disableHeading: {
-    id: 'components.settings.toggleeasyconfirmationscreen.disableHeading',
-    defaultMessage: '!!!By disabling this option you will be able to spend your assets only with your master password.',
-  },
-  disableButton: {
-    id: 'components.settings.toggleeasyconfirmationscreen.disableButton',
-    defaultMessage: '!!!Disable',
   },
 })
 
