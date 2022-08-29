@@ -6,7 +6,7 @@ import {SelectedWalletProvider} from '../../SelectedWallet'
 import {DisableEasyConfirmationScreen} from './DisableEasyConfirmationScreen'
 import {EnableEasyConfirmationScreen} from './EnableEasyConfirmationScreen'
 
-storiesOf('EasyConfirmatio Screen', module)
+storiesOf('EasyConfirmation Screen', module)
   .add('EnableEasyConfirmation', () => (
     <SelectedWalletProvider
       wallet={{
