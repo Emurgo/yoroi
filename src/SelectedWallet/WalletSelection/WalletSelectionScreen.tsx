@@ -17,7 +17,7 @@ import {useCloseWallet} from '../../legacy/useCloseWallet'
 import {useWalletNavigation, WalletStackRouteNavigation, WalletStackRoutes} from '../../navigation'
 import Screen from '../../Screen'
 import {COLORS} from '../../theme'
-import {KeysAreInvalid, SystemAuthDisabled, walletManager, YoroiWallet} from '../../yoroi-wallets'
+import {KeysAreInvalid, walletManager, YoroiWallet} from '../../yoroi-wallets'
 import {useSetSelectedWallet, useSetSelectedWalletMeta} from '..'
 import {useSelectedWalletContext} from '../Context'
 import {WalletListItem} from './WalletListItem'
@@ -34,7 +34,6 @@ export const WalletSelectionScreen = () => {
   const [wallet] = useSelectedWalletContext()
   const queryClient = useQueryClient()
   const logout = useLogout()
-  const closeWalletWhenSystemAuthDisabledError = useCloseWalletWhenSystemAuthDisabledError(intl, resetToWalletSelection)
   const closeWalletWhenInvalidStateError = useCloseWalletWhenInvalidStateError(intl, resetToWalletSelection)
 
   const {openWallet, isLoading} = useOpenWallet({
@@ -46,9 +45,7 @@ export const WalletSelectionScreen = () => {
     },
     onError: async (error) => {
       navigation.setParams({reopen: true})
-      if (error instanceof SystemAuthDisabled) {
-        closeWalletWhenSystemAuthDisabledError()
-      } else if (error instanceof InvalidState) {
+      if (error instanceof InvalidState) {
         closeWalletWhenInvalidStateError()
       } else if (error instanceof KeysAreInvalid) {
         await showErrorDialog(errorMessages.walletKeysInvalidated, intl)
@@ -101,20 +98,6 @@ export const WalletSelectionScreen = () => {
       <PleaseWaitModal title={strings.loadingWallet} spinnerText={strings.pleaseWait} visible={isLoading} />
     </SafeAreaView>
   )
-}
-
-const useCloseWalletWhenSystemAuthDisabledError = (
-  intl: IntlShape | null | undefined,
-  resetToWalletSelection: () => void,
-) => {
-  const {closeWallet: closeWalletWhenSystemAuthDisabledError} = useCloseWallet({
-    onSuccess: async () => {
-      await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
-      resetToWalletSelection()
-    },
-  })
-
-  return closeWalletWhenSystemAuthDisabledError
 }
 
 const useCloseWalletWhenInvalidStateError = (

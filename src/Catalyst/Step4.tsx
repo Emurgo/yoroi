@@ -12,10 +12,9 @@ import {CONFIG} from '../legacy/config'
 import {ensureKeysValidity} from '../legacy/deviceSettings'
 import {WrongPassword} from '../legacy/errors'
 import KeyStore from '../legacy/KeyStore'
-import {useCloseWallet} from '../legacy/useCloseWallet'
 import {isEmptyString} from '../legacy/utils'
 import {useSelectedWallet} from '../SelectedWallet'
-import {SystemAuthDisabled, walletManager} from '../yoroi-wallets'
+import {walletManager} from '../yoroi-wallets'
 import {Actions, Description, Title} from './components'
 import {useCreateVotingRegTx, VotingRegTxData} from './hooks'
 
@@ -37,12 +36,6 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
   const {createVotingRegTx, isLoading: generatingTransaction} = useCreateVotingRegTx({wallet})
   const navigation = useNavigation()
   const [password, setPassword] = useState('')
-  const {closeWallet} = useCloseWallet({
-    onSuccess: async () => {
-      await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
-      navigation.navigate('app-root', {screen: 'wallet-selection'})
-    },
-  })
 
   const [errorData, setErrorData] = useState<ErrorData>({
     showErrorDialog: false,
@@ -86,10 +79,7 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
           instructions: [strings.bioAuthInstructions],
         })
       } catch (error) {
-        if (error instanceof SystemAuthDisabled) {
-          closeWallet()
-          return
-        } else if (error instanceof Error) {
+        if (error instanceof Error) {
           setErrorData({
             showErrorDialog: true,
             errorMessage: strings.errorMessage,
@@ -123,7 +113,6 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
     navigation,
     strings.bioAuthInstructions,
     strings.errorMessage,
-    closeWallet,
     password,
     intl,
   ])

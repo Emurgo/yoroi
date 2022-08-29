@@ -10,7 +10,6 @@ import {useDispatch, useSelector} from 'react-redux'
 import {useSubmitTx} from '../../hooks'
 import {confirmationMessages, errorMessages, txLabels} from '../../i18n/global-messages'
 import LocalizableError from '../../i18n/LocalizableError'
-import {showErrorDialog} from '../../legacy/actions'
 import {CONFIG} from '../../legacy/config'
 import {ensureKeysValidity} from '../../legacy/deviceSettings'
 import {WrongPassword} from '../../legacy/errors'
@@ -20,7 +19,7 @@ import {hwDeviceInfoSelector} from '../../legacy/selectors'
 import {isEmptyString} from '../../legacy/utils'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
-import {SystemAuthDisabled, walletManager} from '../../yoroi-wallets'
+import {walletManager} from '../../yoroi-wallets'
 import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
 import {Button, ButtonProps, ValidatedTextInput} from '..'
 import {Dialog, Step as DialogStep} from './Dialog'
@@ -214,33 +213,22 @@ export const ConfirmTx: React.FC<Props> = ({
     ) {
       setDialogStep(DialogStep.ChooseTransport)
     } else if (wallet.isEasyConfirmationEnabled) {
-      try {
-        await ensureKeysValidity(wallet.id)
-        navigation.navigate('biometrics', {
-          keyId: wallet.id,
-          onSuccess: (decryptedKey) => {
-            navigation.goBack()
-            onConfirm(decryptedKey)
-          },
-          onFail: () => navigation.goBack(),
-          addWelcomeMessage: false,
-          instructions: biometricInstructions,
-        })
-      } catch (err) {
-        if (err instanceof SystemAuthDisabled) {
-          await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
+      await ensureKeysValidity(wallet.id)
+      navigation.navigate('biometrics', {
+        keyId: wallet.id,
+        onSuccess: (decryptedKey) => {
           navigation.goBack()
-          return
-        } else {
-          throw err
-        }
-      }
+          onConfirm(decryptedKey)
+        },
+        onFail: () => navigation.goBack(),
+        addWelcomeMessage: false,
+        instructions: biometricInstructions,
+      })
       return
     } else {
       return onConfirm()
     }
   }, [
-    intl,
     wallet.isHW,
     navigation,
     onConfirm,
