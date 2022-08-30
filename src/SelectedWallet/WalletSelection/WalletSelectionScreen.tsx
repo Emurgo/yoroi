@@ -5,16 +5,19 @@ import {defineMessages, IntlShape, useIntl} from 'react-intl'
 import {ActivityIndicator, Linking, ScrollView, StyleSheet, Text, TouchableOpacity} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useMutation, UseMutationOptions, useQueryClient} from 'react-query'
+import {useDispatch} from 'react-redux'
 
 import {Button, Icon, PleaseWaitModal, ScreenBackground, StatusBar} from '../../components'
 import {useLogout, useWalletMetas} from '../../hooks'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
+import {clearAccountState} from '../../legacy/account'
 import {showErrorDialog} from '../../legacy/actions'
 import {CONFIG, isNightly} from '../../legacy/config'
 import {InvalidState} from '../../legacy/errors'
 import {isJormungandr} from '../../legacy/networks'
 import {WalletMeta} from '../../legacy/state'
 import {useCloseWallet} from '../../legacy/useCloseWallet'
+import {clearUTXOs} from '../../legacy/utxo'
 import {useWalletNavigation, WalletStackRouteNavigation, WalletStackRoutes} from '../../navigation'
 import Screen from '../../Screen'
 import {COLORS} from '../../theme'
@@ -257,11 +260,15 @@ const useOpenWallet = (
     {walletMeta: WalletMeta; wallet: YoroiWallet | undefined}
   >,
 ) => {
+  const dispatch = useDispatch()
+
   const mutation = useMutation({
     ...options,
     mutationFn: async ({wallet, walletMeta}) => {
       if (wallet !== undefined) {
         await walletManager.closeWallet()
+        dispatch(clearUTXOs())
+        dispatch(clearAccountState())
       }
 
       await delay(500)
