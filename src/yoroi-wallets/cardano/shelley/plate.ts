@@ -1,10 +1,8 @@
-import {legacyWalletChecksum, walletChecksum} from '@emurgo/cip4-js'
-
 import {AddressType} from '../../../legacy/commonUtils'
 import {CONFIG} from '../../../legacy/config'
 import type {NetworkId} from '../../../legacy/types'
 import {PlateResponse} from '../../../legacy/types'
-import {AddressGenerator, Bip32PrivateKey} from '../..'
+import {AddressGenerator, CardanoMobile, legacyWalletChecksum, walletChecksum} from '../..'
 import {getMasterKeyFromMnemonic} from '../byron/util'
 
 export const generateShelleyPlateFromKey = async (
@@ -32,7 +30,7 @@ export const generateShelleyPlateFromMnemonics = async (
   isJormungandr = false,
 ): Promise<PlateResponse> => {
   const masterKey = await getMasterKeyFromMnemonic(phrase)
-  const masterKeyPtr = await Bip32PrivateKey.fromBytes(Buffer.from(masterKey, 'hex'))
+  const masterKeyPtr = await CardanoMobile.Bip32PrivateKey.fromBytes(Buffer.from(masterKey, 'hex'))
   const accountKey = await (
     await (
       await masterKeyPtr.derive(CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852)

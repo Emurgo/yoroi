@@ -97,6 +97,7 @@ function loadStories() {
 	require('../src/theme/Palette.stories');
 	require('../src/theme/Theme.stories');
 	require('../src/theme/Typography.stories');
+	require('../src/yoroi-wallets/cardano/unsignedTx.stories');
 	require('./Example/Example.stories');
 }
 
@@ -194,6 +195,7 @@ const stories = [
 	'../src/theme/Palette.stories',
 	'../src/theme/Theme.stories',
 	'../src/theme/Typography.stories',
+	'../src/yoroi-wallets/cardano/unsignedTx.stories',
 	'./Example/Example.stories'
 ];
 

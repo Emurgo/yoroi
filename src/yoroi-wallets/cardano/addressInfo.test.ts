@@ -1,4 +1,4 @@
-import {Address} from '.'
+import {CardanoMobile} from '.'
 import {getSpendingKey, getStakingKey, toWasmAddress} from './addressInfo'
 
 // base
@@ -50,9 +50,9 @@ const emptyKeyHashes = {
 describe('toWasmAddress', () => {
   it.each`
     desc                             | address                          | expected
-    ${'shelley mainnet BaseAddress'} | ${shelley_mainnet_type0_address} | ${Address}
-    ${'shelley testnet BaseAddress'} | ${shelley_testnet_type0_address} | ${Address}
-    ${'shelley mainnet Enterprise'}  | ${shelley_mainnet_type6_address} | ${Address}
+    ${'shelley mainnet BaseAddress'} | ${shelley_mainnet_type0_address} | ${CardanoMobile.Address}
+    ${'shelley testnet BaseAddress'} | ${shelley_testnet_type0_address} | ${CardanoMobile.Address}
+    ${'shelley mainnet Enterprise'}  | ${shelley_mainnet_type6_address} | ${CardanoMobile.Address}
   `('$desc', async ({address, expected}) => {
     const result = await toWasmAddress(address)
     expect(result).toBeInstanceOf(expected)
