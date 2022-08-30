@@ -1,4 +1,5 @@
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
+import {delay} from 'bluebird'
 import React from 'react'
 import {defineMessages, IntlShape, useIntl} from 'react-intl'
 import {ActivityIndicator, Linking, ScrollView, StyleSheet, Text, TouchableOpacity} from 'react-native'
@@ -262,6 +263,8 @@ const useOpenWallet = (
       if (wallet !== undefined) {
         await walletManager.closeWallet()
       }
+
+      await delay(500)
 
       const [newWallet, newWalletMeta] = await walletManager.openWallet(walletMeta)
 
