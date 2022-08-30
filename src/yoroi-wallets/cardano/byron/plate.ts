@@ -1,8 +1,7 @@
-import {legacyWalletChecksum} from '@emurgo/cip4-js'
-
 import type {AddressType} from '../../../legacy/commonUtils'
 import {generateWalletRootKey} from '../../../legacy/commonUtils'
 import type {PlateResponse} from '../../../legacy/types'
+import {legacyWalletChecksum} from '..'
 import {getAccountFromMasterKey, getAddresses} from './util'
 
 export const generateByronPlateFromMnemonics = async (phrase: string, count: number): Promise<PlateResponse> => {
