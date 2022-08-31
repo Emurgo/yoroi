@@ -43,6 +43,7 @@ export const WalletSelectionScreen = () => {
     onSuccess: () => {
       dispatch(clearUTXOs())
       dispatch(clearAccountState())
+      dispatch(signout())
     },
   })
 
@@ -60,7 +61,6 @@ export const WalletSelectionScreen = () => {
       } else if (error instanceof KeysAreInvalid) {
         await showErrorDialog(errorMessages.walletKeysInvalidated, intl)
         closeWallet()
-        dispatch(signout())
       } else {
         await showErrorDialog(errorMessages.walletStateInvalid, intl)
       }
