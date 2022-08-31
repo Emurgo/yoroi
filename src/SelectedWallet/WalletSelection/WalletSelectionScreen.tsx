@@ -115,10 +115,13 @@ const useCloseWalletWhenInvalidStateError = (
   intl: IntlShape | null | undefined,
   resetToWalletSelection: () => void,
 ) => {
+  const dispatch = useDispatch()
   const {closeWallet: closeWalletWhenInvalidStateError} = useCloseWallet({
     onSuccess: async () => {
       await showErrorDialog(errorMessages.walletStateInvalid, intl)
       resetToWalletSelection()
+      dispatch(clearUTXOs())
+      dispatch(clearAccountState())
     },
   })
 
