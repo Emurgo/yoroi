@@ -15,7 +15,7 @@ import {getNetworkConfigById} from '../../legacy/networks'
 import {isSystemAuthEnabledSelector} from '../../legacy/selectors'
 import {clearUTXOs} from '../../legacy/utxo'
 import {useWalletNavigation} from '../../navigation'
-import {useSelectedWallet, useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
+import {useSelectedWallet} from '../../SelectedWallet'
 import {NetworkId, WalletImplementationId, walletManager} from '../../yoroi-wallets'
 import {
   NavigatedSettingsItem,
@@ -212,12 +212,9 @@ const getWalletType = (implementationId: WalletImplementationId): MessageDescrip
 const useLogout = (options?: UseMutationOptions<void, Error>) => {
   const intl = useIntl()
   const dispatch = useDispatch()
-  const setSelectedWallet = useSetSelectedWallet()
-  const setSelectedWalletMeta = useSetSelectedWalletMeta()
+
   const {closeWallet, ...mutation} = useCloseWallet({
     onSuccess: () => {
-      setSelectedWallet(undefined)
-      setSelectedWalletMeta(undefined)
       dispatch(clearUTXOs())
       dispatch(clearAccountState())
     },
