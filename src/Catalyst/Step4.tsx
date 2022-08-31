@@ -3,12 +3,13 @@ import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
+import {useDispatch} from 'react-redux'
 
 import {Button, OfflineBanner, ProgressStep, Spacer, TextInput} from '../components'
 import {ErrorModal} from '../components'
-import {useLogout} from '../hooks'
+import {useCloseWallet} from '../hooks'
 import {confirmationMessages, errorMessages, txLabels} from '../i18n/global-messages'
-import {showErrorDialog} from '../legacy/actions'
+import {showErrorDialog, signout} from '../legacy/actions'
 import {CONFIG} from '../legacy/config'
 import {ensureKeysValidity} from '../legacy/deviceSettings'
 import {WrongPassword} from '../legacy/errors'
@@ -37,7 +38,13 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
   const {createVotingRegTx, isLoading: generatingTransaction} = useCreateVotingRegTx({wallet})
   const navigation = useNavigation()
   const [password, setPassword] = useState('')
-  const logout = useLogout()
+  const dispatch = useDispatch()
+
+  const {closeWallet} = useCloseWallet({
+    onSuccess: () => {
+      dispatch(signout())
+    },
+  })
 
   const [errorData, setErrorData] = useState<ErrorData>({
     showErrorDialog: false,
@@ -87,7 +94,7 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
             errorMessage: strings.errorMessage,
             errorLogs: String(error.message),
           })
-          logout()
+          closeWallet()
         }
       }
       return
@@ -105,7 +112,7 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
           errorMessage: strings.errorMessage,
           errorLogs: String(error.message),
         })
-        logout()
+        closeWallet()
       }
     }
   }, [
@@ -119,7 +126,7 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
     strings.errorMessage,
     password,
     intl,
-    logout,
+    closeWallet,
   ])
 
   useEffect(() => {

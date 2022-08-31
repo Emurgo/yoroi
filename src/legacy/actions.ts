@@ -150,7 +150,6 @@ export const signout = () => (dispatch: Dispatch<any>) => {
   })
 }
 
-// Only used in this file. Use the hook useLogout instead
 export const logout = () => async (dispatch: Dispatch<any>) => {
   await walletManager.closeWallet()
   dispatch(clearUTXOs())
