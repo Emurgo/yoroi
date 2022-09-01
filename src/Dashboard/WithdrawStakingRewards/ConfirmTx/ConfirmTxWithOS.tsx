@@ -31,10 +31,9 @@ export const ConfirmTxWithOS: React.FC<Props> = ({wallet, unsignedTx, onSuccess,
   const {closeWallet} = useCloseWallet({
     onSuccess: async () => {
       await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
-      dispatch(signout())
       dispatch(clearUTXOs())
       dispatch(clearAccountState())
-      navigation.navigate('app-root', {screen: 'wallet-selection'})
+      dispatch(signout())
     },
   })
 

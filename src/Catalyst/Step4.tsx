@@ -45,10 +45,9 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
   const {closeWallet} = useCloseWallet({
     onSuccess: async () => {
       await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
-      dispatch(signout())
       dispatch(clearUTXOs())
       dispatch(clearAccountState())
-      navigation.navigate('app-root', {screen: 'wallet-selection'})
+      dispatch(signout())
     },
   })
 
@@ -61,6 +60,7 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
   const isConfirmationDisabled = !wallet.isHW && !wallet.isEasyConfirmationEnabled && isEmptyString(password)
 
   const onContinue = React.useCallback(async () => {
+    closeWallet()
     const createTransaction = (decryptedKey: string) => {
       createVotingRegTx(
         {
