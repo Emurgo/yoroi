@@ -60,7 +60,7 @@ export const useWallet = (wallet: YoroiWallet, event: WalletEvent['type']) => {
   }, [event, wallet])
 }
 
-export const useCloseWallet = (options: UseMutationOptions<void, Error> = {}) => {
+export const useCloseWallet = ({onSuccess, ...options}: UseMutationOptions<void, Error> = {}) => {
   const setSelectedWallet = useSetSelectedWallet()
   const setSelectedWalletMeta = useSetSelectedWalletMeta()
 
@@ -69,7 +69,7 @@ export const useCloseWallet = (options: UseMutationOptions<void, Error> = {}) =>
     onSuccess: (data, variables, context) => {
       setSelectedWallet(undefined)
       setSelectedWalletMeta(undefined)
-      options.onSuccess?.(data, variables, context)
+      onSuccess?.(data, variables, context)
     },
     ...options,
   })
