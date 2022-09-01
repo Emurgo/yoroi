@@ -93,12 +93,10 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
         })
       } catch (error) {
         if (error instanceof Error) {
-          setErrorData({
-            showErrorDialog: true,
-            errorMessage: strings.errorMessage,
-            errorLogs: String(error.message),
-          })
           closeWallet()
+          await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
+          navigation.navigate('app-root', {screen: 'wallet-selection'})
+          return
         }
       }
       return
@@ -116,7 +114,6 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
           errorMessage: strings.errorMessage,
           errorLogs: String(error.message),
         })
-        closeWallet()
       }
     }
   }, [
