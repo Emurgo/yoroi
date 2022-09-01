@@ -60,7 +60,6 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
   const isConfirmationDisabled = !wallet.isHW && !wallet.isEasyConfirmationEnabled && isEmptyString(password)
 
   const onContinue = React.useCallback(async () => {
-    closeWallet()
     const createTransaction = (decryptedKey: string) => {
       createVotingRegTx(
         {
