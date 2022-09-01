@@ -7,9 +7,11 @@ import {useIntl} from 'react-intl'
 import {Platform, StyleSheet, View} from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {useSubmitTx} from '../../hooks'
+import {useCloseWallet, useSubmitTx} from '../../hooks'
 import {confirmationMessages, errorMessages, txLabels} from '../../i18n/global-messages'
 import LocalizableError from '../../i18n/LocalizableError'
+import {clearAccountState} from '../../legacy/account'
+import {showErrorDialog, signout} from '../../legacy/actions'
 import {CONFIG} from '../../legacy/config'
 import {ensureKeysValidity} from '../../legacy/deviceSettings'
 import {WrongPassword} from '../../legacy/errors'
@@ -17,6 +19,7 @@ import {setLedgerDeviceId as _setLedgerDeviceId, setLedgerDeviceObj as _setLedge
 import KeyStore from '../../legacy/KeyStore'
 import {hwDeviceInfoSelector} from '../../legacy/selectors'
 import {isEmptyString} from '../../legacy/utils'
+import {clearUTXOs} from '../../legacy/utxo'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {walletManager} from '../../yoroi-wallets'
@@ -76,6 +79,17 @@ export const ConfirmTx: React.FC<Props> = ({
     errorMessage: '',
     errorLogs: '',
   })
+
+  const {closeWallet} = useCloseWallet({
+    onSuccess: async () => {
+      await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
+      dispatch(signout())
+      dispatch(clearUTXOs())
+      dispatch(clearAccountState())
+      navigation.navigate('app-root', {screen: 'wallet-selection'})
+    },
+  })
+
   useEffect(() => {
     if (!isProvidingPassword && __DEV__) {
       CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : ''
@@ -213,29 +227,33 @@ export const ConfirmTx: React.FC<Props> = ({
     ) {
       setDialogStep(DialogStep.ChooseTransport)
     } else if (wallet.isEasyConfirmationEnabled) {
-      await ensureKeysValidity(wallet.id)
-      navigation.navigate('biometrics', {
-        keyId: wallet.id,
-        onSuccess: (decryptedKey) => {
-          navigation.goBack()
-          onConfirm(decryptedKey)
-        },
-        onFail: () => navigation.goBack(),
-        addWelcomeMessage: false,
-        instructions: biometricInstructions,
-      })
+      ensureKeysValidity(wallet.id)
+        .then(() => {
+          navigation.navigate('biometrics', {
+            keyId: wallet.id,
+            onSuccess: (decryptedKey) => {
+              navigation.goBack()
+              onConfirm(decryptedKey)
+            },
+            onFail: () => navigation.goBack(),
+            addWelcomeMessage: false,
+            instructions: biometricInstructions,
+          })
+        })
+        .catch(closeWallet)
       return
     } else {
       return onConfirm()
     }
   }, [
     wallet.isHW,
-    navigation,
-    onConfirm,
-    wallet.id,
     wallet.isEasyConfirmationEnabled,
+    wallet.id,
     chooseTransportOnConfirmation,
+    closeWallet,
+    navigation,
     biometricInstructions,
+    onConfirm,
   ])
 
   const isConfirmationDisabled = !wallet.isEasyConfirmationEnabled && isEmptyString(password) && !wallet.isHW

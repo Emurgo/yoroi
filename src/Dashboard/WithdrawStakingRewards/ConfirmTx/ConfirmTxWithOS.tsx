@@ -2,11 +2,15 @@ import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {useIntl} from 'react-intl'
 import {ActivityIndicator, StyleSheet, View} from 'react-native'
+import {useDispatch} from 'react-redux'
 
 import {TwoActionView} from '../../../components'
-import {useSignAndSubmitTx} from '../../../hooks'
-import {confirmationMessages, txLabels} from '../../../i18n/global-messages'
+import {useCloseWallet, useSignAndSubmitTx} from '../../../hooks'
+import {confirmationMessages, errorMessages, txLabels} from '../../../i18n/global-messages'
+import {clearAccountState} from '../../../legacy/account'
+import {showErrorDialog, signout} from '../../../legacy/actions'
 import {ensureKeysValidity} from '../../../legacy/deviceSettings'
+import {clearUTXOs} from '../../../legacy/utxo'
 import {YoroiWallet} from '../../../yoroi-wallets'
 import {YoroiUnsignedTx} from '../../../yoroi-wallets/types'
 import {TransferSummary} from '../TransferSummary'
@@ -21,6 +25,18 @@ type Props = {
 export const ConfirmTxWithOS: React.FC<Props> = ({wallet, unsignedTx, onSuccess, onCancel}) => {
   const strings = useStrings()
   const navigation = useNavigation()
+  const intl = useIntl()
+  const dispatch = useDispatch()
+
+  const {closeWallet} = useCloseWallet({
+    onSuccess: async () => {
+      await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
+      dispatch(signout())
+      dispatch(clearUTXOs())
+      dispatch(clearAccountState())
+      navigation.navigate('app-root', {screen: 'wallet-selection'})
+    },
+  })
 
   const {signAndSubmitTx, isLoading} = useSignAndSubmitTx(
     {wallet},
@@ -38,15 +54,17 @@ export const ConfirmTxWithOS: React.FC<Props> = ({wallet, unsignedTx, onSuccess,
           disabled: isLoading,
           label: strings.confirmButton,
           onPress: () =>
-            ensureKeysValidity(wallet.id).then(() =>
-              navigation.navigate('biometrics', {
-                keyId: wallet.id,
-                onSuccess: (masterKey) => {
-                  return signAndSubmitTx({unsignedTx, masterKey})
-                },
-                onFail: () => navigation.goBack(),
-              }),
-            ),
+            ensureKeysValidity(wallet.id)
+              .then(() =>
+                navigation.navigate('biometrics', {
+                  keyId: wallet.id,
+                  onSuccess: (masterKey) => {
+                    return signAndSubmitTx({unsignedTx, masterKey})
+                  },
+                  onFail: () => navigation.goBack(),
+                }),
+              )
+              .catch(closeWallet),
         }}
         secondaryButton={{
           disabled: isLoading,

@@ -45,10 +45,10 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
   const {closeWallet} = useCloseWallet({
     onSuccess: async () => {
       await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
-      navigation.navigate('app-root', {screen: 'wallet-selection'})
       dispatch(signout())
       dispatch(clearUTXOs())
       dispatch(clearAccountState())
+      navigation.navigate('app-root', {screen: 'wallet-selection'})
     },
   })
 
@@ -90,7 +90,9 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
             navigation.goBack()
             createTransaction(decryptedKey)
           },
-          onFail: () => navigation.goBack(),
+          onFail: () => {
+            navigation.goBack()
+          },
           instructions: [strings.bioAuthInstructions],
         })
       } catch (error) {
