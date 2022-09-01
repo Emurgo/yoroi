@@ -43,7 +43,9 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
   const dispatch = useDispatch()
 
   const {closeWallet} = useCloseWallet({
-    onSuccess: () => {
+    onSuccess: async () => {
+      await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
+      navigation.navigate('app-root', {screen: 'wallet-selection'})
       dispatch(signout())
       dispatch(clearUTXOs())
       dispatch(clearAccountState())
@@ -94,8 +96,6 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
       } catch (error) {
         if (error instanceof Error) {
           closeWallet()
-          await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
-          navigation.navigate('app-root', {screen: 'wallet-selection'})
           return
         }
       }
