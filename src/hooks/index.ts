@@ -17,7 +17,6 @@ import {
 import {useDispatch} from 'react-redux'
 
 import {clearAccountState} from '../legacy/account'
-import {signout} from '../legacy/actions'
 import {getDefaultAssetByNetworkId} from '../legacy/config'
 import KeyStore from '../legacy/KeyStore'
 import {HWDeviceInfo} from '../legacy/ledgerUtils'
@@ -94,16 +93,9 @@ export const useEasyConfirmationEnabled = (wallet: YoroiWallet) => {
   return wallet.isEasyConfirmationEnabled
 }
 
-export const useCloseWallet = ({onSuccess, ...options}: UseMutationOptions<void, Error> = {}) => {
-  const dispatch = useDispatch()
-
+export const useCloseWallet = (options: UseMutationOptions<void, Error> = {}) => {
   const mutation = useMutation({
     mutationFn: () => walletManager.closeWallet(),
-    onSuccess: (data, variables, context) => {
-      dispatch(clearUTXOs())
-      dispatch(clearAccountState())
-      onSuccess?.(data, variables, context)
-    },
     ...options,
   })
 
@@ -748,16 +740,6 @@ export const useExchangeRate = ({
   })
 
   return query.data
-}
-
-export const useLogout = () => {
-  const {closeWallet} = useCloseWallet()
-  const dispatch = useDispatch()
-
-  return async () => {
-    await closeWallet()
-    dispatch(signout())
-  }
 }
 
 export const useBalances = (wallet: YoroiWallet): YoroiAmounts => {

@@ -1,13 +1,17 @@
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {useIntl} from 'react-intl'
-import {ActivityIndicator, StyleSheet, View} from 'react-native'
+import {ActivityIndicator, InteractionManager, StyleSheet, View} from 'react-native'
+import {useDispatch} from 'react-redux'
 
 import {TwoActionView} from '../../../components'
 import {useCloseWallet, useSignAndSubmitTx} from '../../../hooks'
 import {confirmationMessages, errorMessages, txLabels} from '../../../i18n/global-messages'
+import {clearAccountState} from '../../../legacy/account'
 import {showErrorDialog} from '../../../legacy/actions'
 import {ensureKeysValidity} from '../../../legacy/deviceSettings'
+import {clearUTXOs} from '../../../legacy/utxo'
+import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../../../SelectedWallet'
 import {SystemAuthDisabled, YoroiWallet} from '../../../yoroi-wallets'
 import {YoroiUnsignedTx} from '../../../yoroi-wallets/types'
 import {TransferSummary} from '../TransferSummary'
@@ -23,7 +27,16 @@ export const ConfirmTxWithOS: React.FC<Props> = ({wallet, unsignedTx, onSuccess,
   const intl = useIntl()
   const strings = useStrings()
   const navigation = useNavigation()
-  const {closeWallet} = useCloseWallet()
+  const dispatch = useDispatch()
+  const setSelectedWallet = useSetSelectedWallet()
+  const setSelectedWalletMeta = useSetSelectedWalletMeta()
+
+  const {closeWallet} = useCloseWallet({
+    onSuccess: () => {
+      dispatch(clearUTXOs())
+      dispatch(clearAccountState())
+    },
+  })
 
   const {signAndSubmitTx, isLoading} = useSignAndSubmitTx(
     {wallet},
@@ -54,9 +67,14 @@ export const ConfirmTxWithOS: React.FC<Props> = ({wallet, unsignedTx, onSuccess,
               .catch(async (error) => {
                 if (error instanceof SystemAuthDisabled) {
                   onCancel()
-                  await closeWallet()
+                  closeWallet()
                   await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
                   navigation.navigate('app-root', {screen: 'wallet-selection'})
+
+                  InteractionManager.runAfterInteractions(() => {
+                    setSelectedWallet(undefined)
+                    setSelectedWalletMeta(undefined)
+                  })
                 }
               }),
         }}
