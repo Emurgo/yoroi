@@ -8,8 +8,7 @@ import {Logger} from '../../../legacy/logging'
 import type {AddressedUtxo} from '../../../legacy/types'
 import {normalizeToAddress} from '../../../legacy/utils'
 import {StakingStatus} from '../../../types'
-import {BaseAddress} from '../..'
-import {CardanoTypes} from '..'
+import {CardanoMobile, CardanoTypes} from '..'
 import type {TimestampedCertMeta} from './transactionCache'
 
 const addrContainsAccountKey = async (
@@ -24,7 +23,7 @@ const addrContainsAccountKey = async (
   }
 
   const accountKeyString = Buffer.from(await targetAccountKey.toBytes()).toString('hex')
-  const asBase = await BaseAddress.fromAddress(wasmAddr)
+  const asBase = await CardanoMobile.BaseAddress.fromAddress(wasmAddr)
 
   if (asBase != null) {
     if (Buffer.from(await (await asBase.stakeCred()).toBytes()).toString('hex') === accountKeyString) {
