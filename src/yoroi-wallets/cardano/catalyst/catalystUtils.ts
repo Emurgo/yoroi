@@ -4,17 +4,7 @@ import blake2b from 'blake2b'
 import {generateAdaMnemonic} from '../../../legacy/commonUtils'
 import {CONFIG} from '../../../legacy/config'
 import {Logger} from '../../../legacy/logging'
-import {
-  AuxiliaryData,
-  BigNum,
-  Bip32PrivateKey,
-  CardanoTypes,
-  encodeJsonStrToMetadatum,
-  GeneralTransactionMetadata,
-  MetadataJsonSchema,
-  MetadataList,
-  TransactionMetadatum,
-} from '..'
+import {CardanoMobile, CardanoTypes} from '..'
 
 export const CatalystLabels = {
   DATA: 61284,
@@ -49,10 +39,10 @@ export async function auxiliaryDataWithRegistrationMetadata(request: {
     3: `0x${Buffer.from(await request.rewardAddress.toBytes()).toString('hex')}`,
     4: request.absSlotNumber,
   })
-  const registrationData = await encodeJsonStrToMetadatum(jsonMeta, MetadataJsonSchema.BasicConversions)
+  const registrationData = await CardanoMobile.encodeJsonStrToMetadatum(jsonMeta, 1)
   Logger.debug(jsonMeta)
-  const metadata = await GeneralTransactionMetadata.new()
-  await metadata.insert(await BigNum.fromStr(CatalystLabels.DATA.toString()), registrationData)
+  const metadata = await CardanoMobile.GeneralTransactionMetadata.new()
+  await metadata.insert(await CardanoMobile.BigNum.fromStr(CatalystLabels.DATA.toString()), registrationData)
 
   const hashedMetadata = blake2b(256 / 8)
     .update(await metadata.toBytes())
@@ -61,19 +51,19 @@ export async function auxiliaryDataWithRegistrationMetadata(request: {
   const catalystSignature = await request.signer(hashedMetadata)
 
   await metadata.insert(
-    await BigNum.fromStr(CatalystLabels.SIG.toString()),
-    await encodeJsonStrToMetadatum(
+    await CardanoMobile.BigNum.fromStr(CatalystLabels.SIG.toString()),
+    await CardanoMobile.encodeJsonStrToMetadatum(
       JSON.stringify({
         1: `0x${catalystSignature}`,
       }),
-      MetadataJsonSchema.BasicConversions,
+      1,
     ),
   )
   // This is how Ledger constructs the metadata. We must be consistent with it.
-  const metadataList = await MetadataList.new()
-  await metadataList.add(await TransactionMetadatum.fromBytes(await metadata.toBytes()))
-  await metadataList.add(await TransactionMetadatum.newList(await MetadataList.new()))
-  const auxiliary = await AuxiliaryData.fromBytes(await metadataList.toBytes())
+  const metadataList = await CardanoMobile.MetadataList.new()
+  await metadataList.add(await CardanoMobile.TransactionMetadatum.fromBytes(await metadata.toBytes()))
+  await metadataList.add(await CardanoMobile.TransactionMetadatum.newList(await CardanoMobile.MetadataList.new()))
+  const auxiliary = await CardanoMobile.AuxiliaryData.fromBytes(await metadataList.toBytes())
   return auxiliary
 }
 
@@ -87,7 +77,7 @@ export async function generatePrivateKeyForCatalyst() {
   }
   const bip39entropy = mnemonicToEntropy(mnemonic)
   const EMPTY_PASSWORD = Buffer.from('')
-  const rootKey = await Bip32PrivateKey.fromBip39Entropy(Buffer.from(bip39entropy, 'hex'), EMPTY_PASSWORD)
+  const rootKey = await CardanoMobile.Bip32PrivateKey.fromBip39Entropy(Buffer.from(bip39entropy, 'hex'), EMPTY_PASSWORD)
 
   return rootKey
 }

@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {AssetOverflowError, NotEnoughMoneyToSendError} from '@emurgo/yoroi-lib-core/dist/errors'
 import {BigNumber} from 'bignumber.js'
 import _ from 'lodash'
 import {IntlShape} from 'react-intl'
@@ -9,7 +8,13 @@ import {getCardanoNetworkConfigById, isHaskellShelleyNetwork} from '../../legacy
 import {RawUtxo} from '../../legacy/types'
 import {cardanoValueFromMultiToken} from '../../legacy/utils'
 import type {DefaultAsset, SendTokenList, Token} from '../../types'
-import {BigNum, minAdaRequired, MultiToken, YoroiWallet} from '../../yoroi-wallets'
+import {
+  AssetOverflowError,
+  CardanoMobile,
+  MultiToken,
+  NotEnoughMoneyToSendError,
+  YoroiWallet,
+} from '../../yoroi-wallets'
 import {Quantity, YoroiUnsignedTx} from '../../yoroi-wallets/types'
 import {Amounts, Quantities} from '../../yoroi-wallets/utils'
 import {InvalidAssetAmount, parseAmountDecimal} from '../../yoroi-wallets/utils/parsing'
@@ -38,9 +43,9 @@ export const getMinAda = async (selectedToken: Token, defaultAsset: DefaultAsset
       defaultIdentifier: defaultAsset.identifier,
     },
   )
-  const minAmount = await minAdaRequired(
+  const minAmount = await CardanoMobile.minAdaRequired(
     await cardanoValueFromMultiToken(fakeMultitoken),
-    await BigNum.fromStr(networkConfig.MINIMUM_UTXO_VAL),
+    await CardanoMobile.BigNum.fromStr(networkConfig.MINIMUM_UTXO_VAL),
   )
   // if the user is sending a token, we need to make sure the resulting utxo
   // has at least the minimum amount of ADA in it

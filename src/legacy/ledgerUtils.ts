@@ -17,7 +17,7 @@ import {BleError} from 'react-native-ble-plx'
 import {ledgerMessages} from '../i18n/global-messages'
 import LocalizableError from '../i18n/LocalizableError'
 import {Logger} from '../legacy/logging'
-import {BaseAddress, ByronAddress, CardanoTypes, RewardAddress} from '../yoroi-wallets'
+import {CardanoMobile, CardanoTypes} from '../yoroi-wallets'
 import {CONFIG, isByron, isHaskellShelley} from './config'
 import {getNetworkConfigById} from './networks'
 import type {Addressing, NetworkId, WalletImplementationId} from './types'
@@ -355,10 +355,13 @@ export const verifyAddress = async (
     const stakingKeyAddressing = {}
 
     if (isHaskellShelley(walletImplementationId)) {
-      const baseAddr = await BaseAddress.fromAddress(addressPtr as any)
+      const baseAddr = await CardanoMobile.BaseAddress.fromAddress(addressPtr as any)
 
       if (baseAddr) {
-        const rewardAddr = await RewardAddress.new(Number.parseInt(chainNetworkId, 10), await baseAddr.stakeCred())
+        const rewardAddr = await CardanoMobile.RewardAddress.new(
+          Number.parseInt(chainNetworkId, 10),
+          await baseAddr.stakeCred(),
+        )
         const addressPayload = Buffer.from(await (await rewardAddr.toAddress()).toBytes()).toString('hex')
         stakingKeyAddressing[addressPayload] = {
           path: [
@@ -405,7 +408,7 @@ async function toLedgerAddressParameters(request: {
   addressingMap: (arg0: string) => void | Addressing['addressing']
 }): Promise<DeviceOwnedAddress> {
   {
-    const byronAddr = await ByronAddress.fromAddress(request.address)
+    const byronAddr = await CardanoMobile.ByronAddress.fromAddress(request.address)
 
     if (byronAddr) {
       return {
@@ -417,10 +420,10 @@ async function toLedgerAddressParameters(request: {
     }
   }
   {
-    const baseAddr = await BaseAddress.fromAddress(request.address)
+    const baseAddr = await CardanoMobile.BaseAddress.fromAddress(request.address)
 
     if (baseAddr) {
-      const rewardAddr = await RewardAddress.new(request.networkId, await baseAddr.stakeCred())
+      const rewardAddr = await CardanoMobile.RewardAddress.new(request.networkId, await baseAddr.stakeCred())
       const addressPayload = Buffer.from(await (await rewardAddr.toAddress()).toBytes()).toString('hex')
       const addressing = request.addressingMap(addressPayload)
 
@@ -458,7 +461,7 @@ async function toLedgerAddressParameters(request: {
   // TODO(v-almonacid): PointerAddress not yet implemented (bindings missing)
   // TODO(v-almonacid): EnterpriseAddress not yet implemented (bindings missing)
   {
-    const rewardAddr = await RewardAddress.fromAddress(request.address)
+    const rewardAddr = await CardanoMobile.RewardAddress.fromAddress(request.address)
 
     if (rewardAddr) {
       return {
