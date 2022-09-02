@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import type {WalletChecksum} from '@emurgo/cip4-js'
 import _ from 'lodash'
 import type {IntlShape} from 'react-intl'
 import {defaultMemoize} from 'reselect'
@@ -13,7 +14,7 @@ import {Logger} from '../legacy/logging'
 import {getCardanoNetworkConfigById, isJormungandr} from '../legacy/networks'
 import {IsLockedError, nonblockingSynchronize, synchronize} from '../legacy/promise'
 import type {BackendConfig, EncryptionMethod} from '../legacy/types'
-import {CardanoTypes, NetworkId, WalletImplementationId, YoroiProvider} from './cardano'
+import {NetworkId, WalletImplementationId, YoroiProvider} from './cardano'
 import {AddressChain, AddressChainJSON, Addresses} from './cardano/chain'
 import {TransactionCache, TransactionCacheJSON} from './cardano/shelley/transactionCache'
 import {validatePassword} from './utils/validators'
@@ -84,7 +85,7 @@ export class Wallet {
   // last known version the wallet has been opened on
   version: undefined | string
 
-  checksum: undefined | CardanoTypes.WalletChecksum
+  checksum: undefined | WalletChecksum
 
   state: WalletState = {
     lastGeneratedAddressIndex: 0,

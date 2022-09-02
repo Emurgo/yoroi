@@ -1,3 +1,4 @@
+import {WalletChecksum} from '@emurgo/cip4-js'
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -8,7 +9,7 @@ import {BulletPointItem, Button, Icon, Spacer, StatusBar, Text} from '../../comp
 import {WALLET_IMPLEMENTATION_REGISTRY} from '../../legacy/types'
 import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
 import {COLORS} from '../../theme'
-import {CardanoTypes, NetworkId, WalletImplementationId} from '../../yoroi-wallets'
+import {NetworkId, WalletImplementationId} from '../../yoroi-wallets'
 import {generateByronPlateFromMnemonics} from '../../yoroi-wallets/cardano/byron/plate'
 import {generateShelleyPlateFromMnemonics} from '../../yoroi-wallets/cardano/shelley/plate'
 import {WalletAddress} from '../WalletAddress'
@@ -147,7 +148,7 @@ const usePlateFromMnemonic = ({
   walletImplementationId: WalletImplementationId
 }) => {
   const [addresses, setAddresses] = useState<undefined | Array<string>>(undefined)
-  const [plate, setPlate] = useState<undefined | CardanoTypes.WalletChecksum>(undefined)
+  const [plate, setPlate] = useState<undefined | WalletChecksum>(undefined)
 
   useEffect(() => {
     const getPlate = async (

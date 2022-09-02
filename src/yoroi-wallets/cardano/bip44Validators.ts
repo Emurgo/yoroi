@@ -1,6 +1,6 @@
 import assert from '../../legacy/assert'
 import {NUMBERS} from '../../legacy/numbers'
-import {CardanoMobile} from '.'
+import {Bip32PublicKey} from '.'
 
 const isString = (s) => typeof s === 'string' || s instanceof String
 
@@ -30,7 +30,7 @@ export const isCIP1852AccountPath = (path: Array<number>): boolean => {
 
 export const canParsePublicKey = async (publicKeyHex: string): Promise<boolean> => {
   try {
-    await CardanoMobile.Bip32PublicKey.fromBytes(Buffer.from(publicKeyHex, 'hex'))
+    await Bip32PublicKey.fromBytes(Buffer.from(publicKeyHex, 'hex'))
     return true
   } catch (_e) {
     return false

@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import type {WalletChecksum} from '@emurgo/cip4-js'
 import {BigNumber} from 'bignumber.js'
 
-import type {CardanoTypes, ServerStatus, WalletInterface} from '../yoroi-wallets'
+import type {ServerStatus, WalletInterface} from '../yoroi-wallets'
 import {mockReduxWallet} from './mockWallet'
 import type {NetworkId, RawUtxo, WalletImplementationId, YoroiProvider} from './types'
 import {NETWORK_REGISTRY} from './types'
@@ -15,7 +16,7 @@ export type WalletMeta = {
   isShelley?: boolean | null | undefined
   // legacy jormungandr
   isEasyConfirmationEnabled: boolean
-  checksum: CardanoTypes.WalletChecksum
+  checksum: WalletChecksum
   provider?: YoroiProvider | null | undefined
 }
 export type ReduxWallet = {

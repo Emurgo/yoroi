@@ -11,7 +11,7 @@ import cryptoRandomString from 'crypto-random-string'
 import {randomBytes} from 'react-native-randombytes'
 
 import {SendTokenList} from '../types'
-import {CardanoMobile, decryptWithPassword, DefaultTokenEntry, encryptWithPassword} from '../yoroi-wallets'
+import {Bip32PrivateKey, decryptWithPassword, DefaultTokenEntry, encryptWithPassword} from '../yoroi-wallets'
 import {MultiToken} from '../yoroi-wallets'
 import assert from './assert'
 import {CONFIG, getWalletConfigById} from './config'
@@ -31,7 +31,7 @@ export const generateAdaMnemonic = () => generateMnemonic(CONFIG.MNEMONIC_STRENG
 export const generateWalletRootKey = async (mnemonic: string) => {
   const bip39entropy = mnemonicToEntropy(mnemonic)
   const EMPTY_PASSWORD = Buffer.from('')
-  const rootKey = await CardanoMobile.Bip32PrivateKey.fromBip39Entropy(Buffer.from(bip39entropy, 'hex'), EMPTY_PASSWORD)
+  const rootKey = await Bip32PrivateKey.fromBip39Entropy(Buffer.from(bip39entropy, 'hex'), EMPTY_PASSWORD)
 
   return rootKey
 }

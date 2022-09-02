@@ -1,9 +1,10 @@
+import {SignedTx} from '@emurgo/yoroi-lib-core'
+
 import {YoroiSignedTx, YoroiTxInfo, YoroiUnsignedTx} from '../types'
-import {CardanoTypes} from '.'
 
 type YoroiSignedTxInfo = {
   unsignedTx: YoroiUnsignedTx
-  signedTx: CardanoTypes.SignedTx
+  signedTx: SignedTx
 }
 
 export const yoroiSignedTx = ({unsignedTx, signedTx}: YoroiSignedTxInfo): YoroiSignedTx => {

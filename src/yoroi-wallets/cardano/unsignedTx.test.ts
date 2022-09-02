@@ -1,8 +1,8 @@
+import {TxMetadata} from '@emurgo/yoroi-lib-core'
 import BigNumber from 'bignumber.js'
 
 import {TokenEntry} from '../../types'
 import {YoroiAmounts, YoroiEntries, YoroiMetadata} from '../types'
-import {CardanoTypes} from '.'
 import {toAmounts, toDisplayAddress, toEntries, toMetadata} from './unsignedTx'
 
 describe('YoroiUnsignedTx', () => {
@@ -23,7 +23,7 @@ describe('YoroiUnsignedTx', () => {
   })
 
   it('toMetadata converts UnsignedTx to YoroiMetadata', () => {
-    const txMetadata: Array<CardanoTypes.TxMetadata> = [
+    const txMetadata: Array<TxMetadata> = [
       {label: 'label1', data: 'data1'},
       {label: 'label2', data: 'data2'},
       {label: 'label3', data: 'data3'},

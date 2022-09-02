@@ -53,7 +53,22 @@ export function forwardReducerTo<S extends {}, T>(
 
 import {BigNumber} from 'bignumber.js'
 
-import {CardanoMobile, CardanoTypes, DefaultTokenEntry, MultiToken} from '../yoroi-wallets'
+import {
+  Address,
+  AssetName,
+  Assets,
+  BigNum,
+  Bip32PublicKey,
+  ByronAddress,
+  CardanoTypes,
+  DefaultTokenEntry,
+  MultiAsset,
+  MultiToken,
+  RewardAddress,
+  ScriptHash,
+  StakeCredential,
+  Value,
+} from '../yoroi-wallets'
 import {CONFIG} from './config'
 import type {BaseAsset} from './HistoryTransaction'
 import {getNetworkConfigById} from './networks'
@@ -68,21 +83,21 @@ export const normalizeToAddress = async (addr: string) => {
   // in this function, we try parsing in all encodings possible
   // 1) Try converting from base58
   try {
-    if (await CardanoMobile.ByronAddress.isValid(addr)) {
-      return await (await CardanoMobile.ByronAddress.fromBase58(addr)).toAddress()
+    if (await ByronAddress.isValid(addr)) {
+      return await (await ByronAddress.fromBase58(addr)).toAddress()
     }
   } catch (_e) {}
 
   // eslint-disable-line no-empty
   // 2) If already base16, simply return
   try {
-    return await CardanoMobile.Address.fromBytes(Buffer.from(addr, 'hex'))
+    return await Address.fromBytes(Buffer.from(addr, 'hex'))
   } catch (_e) {}
 
   // eslint-disable-line no-empty
   // 3) Try converting from bech32
   try {
-    return await CardanoMobile.Address.fromBech32(addr)
+    return await Address.fromBech32(addr)
   } catch (_e) {}
 
   // eslint-disable-line no-empty
@@ -90,12 +105,12 @@ export const normalizeToAddress = async (addr: string) => {
 }
 
 export const byronAddrToHex = async (base58Addr: string) => {
-  return Buffer.from(await ((await CardanoMobile.ByronAddress.fromBase58(base58Addr)) as any).toBytes()).toString('hex')
+  return Buffer.from(await ((await ByronAddress.fromBase58(base58Addr)) as any).toBytes()).toString('hex')
 }
 // need to format shelley addresses as base16 but only legacy addresses as base58
 
 export const toHexOrBase58 = async (address: CardanoTypes.Address) => {
-  const asByron = await CardanoMobile.ByronAddress.fromAddress(address)
+  const asByron = await ByronAddress.fromAddress(address)
 
   if (!asByron.hasValue()) {
     return Buffer.from(await address.toBytes()).toString('hex')
@@ -166,13 +181,13 @@ export const verifyFromBip44Root = (request: Addressing['addressing']) => {
 }
 
 export const deriveRewardAddressHex = async (accountPubKeyHex: string, networkId: NetworkId): Promise<string> => {
-  const accountPubKeyPtr = await CardanoMobile.Bip32PublicKey.fromBytes(Buffer.from(accountPubKeyHex, 'hex'))
+  const accountPubKeyPtr = await Bip32PublicKey.fromBytes(Buffer.from(accountPubKeyHex, 'hex'))
   const stakingKey = await (
     await (
       await accountPubKeyPtr.derive(CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT)
     ).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)
   ).toRawKey()
-  const credential = await CardanoMobile.StakeCredential.fromKeyhash(await stakingKey.hash())
+  const credential = await StakeCredential.fromKeyhash(await stakingKey.hash())
   let chainNetworkId = CONFIG.NETWORKS.HASKELL_SHELLEY.CHAIN_NETWORK_ID
   const config: any = getNetworkConfigById(networkId)
 
@@ -180,7 +195,7 @@ export const deriveRewardAddressHex = async (accountPubKeyHex: string, networkId
     chainNetworkId = config.CHAIN_NETWORK_ID
   }
 
-  const rewardAddr = await CardanoMobile.RewardAddress.new(parseInt(chainNetworkId, 10), credential)
+  const rewardAddr = await RewardAddress.new(parseInt(chainNetworkId, 10), credential)
   const rewardAddrAsAddr = await rewardAddr.toAddress()
   return Buffer.from((await rewardAddrAsAddr.toBytes()) as any, 'hex').toString('hex')
 }
@@ -202,8 +217,8 @@ export const identifierToCardanoAsset = async (
   // recall: 'a.'.split() gives ['a', ''] as desired
   const parts = identifier.split('.')
   return {
-    policyId: await CardanoMobile.ScriptHash.fromBytes(Buffer.from(parts[0], 'hex')),
-    name: await CardanoMobile.AssetName.new(Buffer.from(parts[1], 'hex')),
+    policyId: await ScriptHash.fromBytes(Buffer.from(parts[0], 'hex')),
+    name: await AssetName.new(Buffer.from(parts[1], 'hex')),
   }
 }
 
@@ -244,19 +259,17 @@ export const parseTokenList = async (
 }
 
 export const cardanoValueFromMultiToken = async (tokens: MultiToken) => {
-  const value = await CardanoMobile.Value.new(
-    await CardanoMobile.BigNum.fromStr(tokens.getDefaultEntry().amount.toString()),
-  )
+  const value = await Value.new(await BigNum.fromStr(tokens.getDefaultEntry().amount.toString()))
   // recall: primary asset counts towards size
   if (tokens.size() === 1) return value
-  const assets = await CardanoMobile.MultiAsset.new()
+  const assets = await MultiAsset.new()
 
   for (const entry of tokens.nonDefaultEntries()) {
     const {policyId, name} = await identifierToCardanoAsset(entry.identifier)
     const asset = await assets.get(policyId)
-    const policyContent = asset.hasValue() ? asset : await CardanoMobile.Assets.new()
+    const policyContent = asset.hasValue() ? asset : await Assets.new()
 
-    await policyContent.insert(name, await CardanoMobile.BigNum.fromStr(entry.amount.toString()))
+    await policyContent.insert(name, await BigNum.fromStr(entry.amount.toString()))
     // recall: we always have to insert since WASM returns copies of objects
     await assets.insert(policyId, policyContent)
   }
@@ -288,15 +301,15 @@ export const multiTokenFromCardanoValue = async (value: CardanoTypes.Value, defa
 }
 
 export const cardanoValueFromRemoteFormat = async (utxo: RawUtxo) => {
-  const value = await CardanoMobile.Value.new(await CardanoMobile.BigNum.fromStr(utxo.amount))
+  const value = await Value.new(await BigNum.fromStr(utxo.amount))
   if (utxo.assets.length === 0) return value
-  const assets = await CardanoMobile.MultiAsset.new()
+  const assets = await MultiAsset.new()
 
   for (const entry of utxo.assets) {
     const {policyId, name} = await identifierToCardanoAsset(entry.assetId)
     let policyContent = await assets.get(policyId)
-    policyContent = policyContent.hasValue() ? policyContent : await CardanoMobile.Assets.new()
-    await policyContent.insert(name, await CardanoMobile.BigNum.fromStr(entry.amount))
+    policyContent = policyContent.hasValue() ? policyContent : await Assets.new()
+    await policyContent.insert(name, await BigNum.fromStr(entry.amount))
     // recall: we always have to insert since WASM returns copies of objects
     await assets.insert(policyId, policyContent)
   }

@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import type {WalletChecksum} from '@emurgo/cip4-js'
 import {BigNumber} from 'bignumber.js'
 
 import {TokenInfo} from '../types'
@@ -107,7 +108,7 @@ export type WalletState = {
 export type EncryptionMethod = 'BIOMETRICS' | 'SYSTEM_PIN' | 'MASTER_PASSWORD'
 export type PlateResponse = {
   addresses: Array<string>
-  accountPlate: CardanoTypes.WalletChecksum
+  accountPlate: WalletChecksum
 }
 export type ProtocolParameters = {
   readonly linearFee: CardanoTypes.LinearFee

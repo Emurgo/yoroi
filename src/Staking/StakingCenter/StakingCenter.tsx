@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {NotEnoughMoneyToSendError} from '@emurgo/yoroi-lib-core/dist/errors'
 import {useNavigation} from '@react-navigation/native'
 import {BigNumber} from 'bignumber.js'
 import React, {useEffect, useState} from 'react'
@@ -36,7 +37,7 @@ import {StakingCenterRouteNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {DefaultAsset} from '../../types'
 import {UtxoAutoRefresher} from '../../UtxoAutoRefresher'
-import {NotEnoughMoneyToSendError, YoroiWallet} from '../../yoroi-wallets'
+import {YoroiWallet} from '../../yoroi-wallets'
 import {PoolDetailScreen} from '../PoolDetails'
 import {PoolWarningModal} from '../PoolWarningModal'
 

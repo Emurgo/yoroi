@@ -5,7 +5,7 @@ import {ADDRESS_TYPE_TO_CHANGE, generateWalletRootKey} from '../../../legacy/com
 import {CONFIG} from '../../../legacy/config'
 import {CardanoError} from '../../../legacy/errors'
 import {getCardanoByronConfig} from '../../../legacy/networks'
-import {CardanoMobile} from '..'
+import {Bip32PrivateKey, Bip32PublicKey, ByronAddress} from '..'
 
 const BYRON_PROTOCOL_MAGIC = getCardanoByronConfig().PROTOCOL_MAGIC
 
@@ -42,7 +42,7 @@ export const getAccountFromMasterKey = async (
   masterKey: string,
   accountIndex: number = CONFIG.NUMBERS.ACCOUNT_INDEX,
 ): Promise<CryptoAccount> => {
-  const masterKeyPtr = await CardanoMobile.Bip32PrivateKey.fromBytes(Buffer.from(masterKey, 'hex'))
+  const masterKeyPtr = await Bip32PrivateKey.fromBytes(Buffer.from(masterKey, 'hex'))
   const accountKey = await (
     await (
       await masterKeyPtr.derive(CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.BIP44)
@@ -71,11 +71,11 @@ export const getAddresses = async (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const addrs: Array<any> = []
   const chainKeyPtr = await (
-    await CardanoMobile.Bip32PublicKey.fromBytes(Buffer.from(account.root_cached_key, 'hex'))
+    await Bip32PublicKey.fromBytes(Buffer.from(account.root_cached_key, 'hex'))
   ).derive(ADDRESS_TYPE_TO_CHANGE[type])
   for (const i of indexes) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const byronAddr = await CardanoMobile.ByronAddress.icarusFromKey(await chainKeyPtr.derive(i), protocolMagic)
+    const byronAddr = await ByronAddress.icarusFromKey(await chainKeyPtr.derive(i), protocolMagic)
     const byronAddrBs58 = await byronAddr.toBase58()
     addrs.push(byronAddrBs58)
   }

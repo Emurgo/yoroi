@@ -1,3 +1,5 @@
+import type {WalletChecksum} from '@emurgo/cip4-js'
+import {CardanoAddressedUtxo, TxMetadata} from '@emurgo/yoroi-lib-core'
 import {BigNumber} from 'bignumber.js'
 import type {IntlShape} from 'react-intl'
 
@@ -28,7 +30,6 @@ import {
 } from '../../types'
 import {YoroiSignedTx, YoroiUnsignedTx} from '../types'
 import {WalletEvent} from '../Wallet'
-import {CardanoTypes} from '.'
 import type {Addresses} from './chain'
 import {AddressChain} from './chain'
 import {TransactionCache} from './shelley/transactionCache'
@@ -74,7 +75,7 @@ export interface WalletInterface {
 
   transactionCache: null | TransactionCache
 
-  checksum: undefined | CardanoTypes.WalletChecksum
+  checksum: undefined | WalletChecksum
 
   // =================== getters =================== //
 
@@ -153,7 +154,7 @@ export interface WalletInterface {
 
   getAddressing(address: string): unknown
 
-  asAddressedUtxo(utxos: Array<RawUtxo>): Array<CardanoTypes.CardanoAddressedUtxo>
+  asAddressedUtxo(utxos: Array<RawUtxo>): Array<CardanoAddressedUtxo>
   asLegacyAddressedUtxo(utxos: Array<RawUtxo>): Array<AddressedUtxo>
 
   getDelegationStatus(): Promise<StakingStatus>
@@ -163,7 +164,7 @@ export interface WalletInterface {
     receiver: string,
     tokens: SendTokenList,
     defaultToken: Token,
-    metadata?: Array<CardanoTypes.TxMetadata>,
+    metadata?: Array<TxMetadata>,
   ): Promise<YoroiUnsignedTx>
 
   signTx(signRequest: YoroiUnsignedTx, decryptedMasterKey: string): Promise<YoroiSignedTx>
@@ -337,3 +338,5 @@ const yoroiWalletKeys: Array<YoroiWalletKeys> = [
   'toJSON',
   'fetchCurrentPrice',
 ]
+
+export * from '@emurgo/yoroi-lib-core/dist/internals/wasm-contract'
