@@ -1,7 +1,7 @@
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
 import {delay} from 'bluebird'
 import React from 'react'
-import {defineMessages, IntlShape, useIntl} from 'react-intl'
+import {defineMessages, useIntl} from 'react-intl'
 import {
   ActivityIndicator,
   InteractionManager,
@@ -44,7 +44,6 @@ export const WalletSelectionScreen = () => {
   const params = useRoute<RouteProp<WalletStackRoutes, 'wallet-selection'>>().params
   const [wallet] = useSelectedWalletContext()
   const queryClient = useQueryClient()
-  const closeWalletWhenInvalidStateError = useCloseWalletWhenInvalidStateError(intl)
   const dispatch = useDispatch()
 
   const setSelectedWallet = useSetSelectedWallet()
@@ -73,14 +72,13 @@ export const WalletSelectionScreen = () => {
     onError: async (error) => {
       navigation.setParams({reopen: true})
       if (error instanceof InvalidState) {
-        closeWalletWhenInvalidStateError()
+        await showErrorDialog(errorMessages.walletStateInvalid, intl)
       } else if (error instanceof KeysAreInvalid) {
         await showErrorDialog(errorMessages.walletKeysInvalidated, intl)
-        closeWallet()
       } else {
         await showErrorDialog(errorMessages.walletStateInvalid, intl)
-        closeWallet()
       }
+      closeWallet()
     },
   })
 
@@ -126,28 +124,6 @@ export const WalletSelectionScreen = () => {
       <PleaseWaitModal title={strings.loadingWallet} spinnerText={strings.pleaseWait} visible={isLoading} />
     </SafeAreaView>
   )
-}
-
-const useCloseWalletWhenInvalidStateError = (intl: IntlShape | null | undefined) => {
-  const dispatch = useDispatch()
-  const setSelectedWallet = useSetSelectedWallet()
-  const setSelectedWalletMeta = useSetSelectedWalletMeta()
-
-  const {closeWallet: closeWalletWhenInvalidStateError} = useCloseWallet({
-    onSuccess: async () => {
-      await showErrorDialog(errorMessages.walletStateInvalid, intl)
-      dispatch(clearUTXOs())
-      dispatch(clearAccountState())
-      dispatch(signout())
-
-      InteractionManager.runAfterInteractions(() => {
-        setSelectedWallet(undefined)
-        setSelectedWalletMeta(undefined)
-      })
-    },
-  })
-
-  return closeWalletWhenInvalidStateError
 }
 
 const messages = defineMessages({
