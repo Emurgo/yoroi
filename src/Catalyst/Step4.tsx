@@ -1,7 +1,7 @@
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ScrollView, StyleSheet} from 'react-native'
+import {InteractionManager, ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch} from 'react-redux'
 
@@ -17,7 +17,7 @@ import {WrongPassword} from '../legacy/errors'
 import KeyStore from '../legacy/KeyStore'
 import {isEmptyString} from '../legacy/utils'
 import {clearUTXOs} from '../legacy/utxo'
-import {useSelectedWallet} from '../SelectedWallet'
+import {useSelectedWallet, useSetSelectedWallet, useSetSelectedWalletMeta} from '../SelectedWallet'
 import {walletManager} from '../yoroi-wallets'
 import {Actions, Description, Title} from './components'
 import {useCreateVotingRegTx, VotingRegTxData} from './hooks'
@@ -37,10 +37,13 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
   const intl = useIntl()
   const strings = useStrings()
   const wallet = useSelectedWallet()
+
   const {createVotingRegTx, isLoading: generatingTransaction} = useCreateVotingRegTx({wallet})
   const navigation = useNavigation()
   const [password, setPassword] = useState('')
   const dispatch = useDispatch()
+  const setSelectedWallet = useSetSelectedWallet()
+  const setSelectedWalletMeta = useSetSelectedWalletMeta()
 
   const {closeWallet} = useCloseWallet({
     onSuccess: async () => {
@@ -48,6 +51,11 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
       dispatch(clearUTXOs())
       dispatch(clearAccountState())
       dispatch(signout())
+
+      InteractionManager.runAfterInteractions(() => {
+        setSelectedWallet(undefined)
+        setSelectedWalletMeta(undefined)
+      })
     },
   })
 

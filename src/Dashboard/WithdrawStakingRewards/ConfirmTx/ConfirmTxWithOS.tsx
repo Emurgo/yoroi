@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {useIntl} from 'react-intl'
-import {ActivityIndicator, StyleSheet, View} from 'react-native'
+import {ActivityIndicator, InteractionManager, StyleSheet, View} from 'react-native'
 import {useDispatch} from 'react-redux'
 
 import {TwoActionView} from '../../../components'
@@ -11,6 +11,7 @@ import {clearAccountState} from '../../../legacy/account'
 import {showErrorDialog, signout} from '../../../legacy/actions'
 import {ensureKeysValidity} from '../../../legacy/deviceSettings'
 import {clearUTXOs} from '../../../legacy/utxo'
+import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../../../SelectedWallet'
 import {YoroiWallet} from '../../../yoroi-wallets'
 import {YoroiUnsignedTx} from '../../../yoroi-wallets/types'
 import {TransferSummary} from '../TransferSummary'
@@ -28,12 +29,20 @@ export const ConfirmTxWithOS: React.FC<Props> = ({wallet, unsignedTx, onSuccess,
   const intl = useIntl()
   const dispatch = useDispatch()
 
+  const setSelectedWallet = useSetSelectedWallet()
+  const setSelectedWalletMeta = useSetSelectedWalletMeta()
+
   const {closeWallet} = useCloseWallet({
     onSuccess: async () => {
       await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
       dispatch(clearUTXOs())
       dispatch(clearAccountState())
       dispatch(signout())
+
+      InteractionManager.runAfterInteractions(() => {
+        setSelectedWallet(undefined)
+        setSelectedWalletMeta(undefined)
+      })
     },
   })
 

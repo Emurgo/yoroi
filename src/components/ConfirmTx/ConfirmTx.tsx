@@ -4,7 +4,7 @@ import {useNavigation} from '@react-navigation/native'
 import {delay} from 'bluebird'
 import React, {useEffect, useState} from 'react'
 import {useIntl} from 'react-intl'
-import {Platform, StyleSheet, View} from 'react-native'
+import {InteractionManager, Platform, StyleSheet, View} from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {useCloseWallet, useSubmitTx} from '../../hooks'
@@ -20,7 +20,7 @@ import KeyStore from '../../legacy/KeyStore'
 import {hwDeviceInfoSelector} from '../../legacy/selectors'
 import {isEmptyString} from '../../legacy/utils'
 import {clearUTXOs} from '../../legacy/utxo'
-import {useSelectedWallet} from '../../SelectedWallet'
+import {useSelectedWallet, useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {walletManager} from '../../yoroi-wallets'
 import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
@@ -79,6 +79,8 @@ export const ConfirmTx: React.FC<Props> = ({
     errorMessage: '',
     errorLogs: '',
   })
+  const setSelectedWallet = useSetSelectedWallet()
+  const setSelectedWalletMeta = useSetSelectedWalletMeta()
 
   const {closeWallet} = useCloseWallet({
     onSuccess: async () => {
@@ -86,6 +88,11 @@ export const ConfirmTx: React.FC<Props> = ({
       dispatch(clearUTXOs())
       dispatch(clearAccountState())
       dispatch(signout())
+
+      InteractionManager.runAfterInteractions(() => {
+        setSelectedWallet(undefined)
+        setSelectedWalletMeta(undefined)
+      })
     },
   })
 

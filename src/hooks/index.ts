@@ -20,7 +20,6 @@ import {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {WalletMeta} from '../legacy/state'
 import storage from '../legacy/storage'
 import {CurrencySymbol, RawUtxo, TipStatusResponse} from '../legacy/types'
-import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../SelectedWallet'
 import {Storage} from '../Storage'
 import {DefaultAsset, Token} from '../types'
 import {
@@ -60,17 +59,9 @@ export const useWallet = (wallet: YoroiWallet, event: WalletEvent['type']) => {
   }, [event, wallet])
 }
 
-export const useCloseWallet = ({onSuccess, ...options}: UseMutationOptions<void, Error> = {}) => {
-  const setSelectedWallet = useSetSelectedWallet()
-  const setSelectedWalletMeta = useSetSelectedWalletMeta()
-
+export const useCloseWallet = (options: UseMutationOptions<void, Error> = {}) => {
   const mutation = useMutation({
     mutationFn: () => walletManager.closeWallet(),
-    onSuccess: (data, variables, context) => {
-      setSelectedWallet(undefined)
-      setSelectedWalletMeta(undefined)
-      onSuccess?.(data, variables, context)
-    },
     ...options,
   })
 

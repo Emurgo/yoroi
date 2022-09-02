@@ -2,7 +2,15 @@ import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
 import {delay} from 'bluebird'
 import React from 'react'
 import {defineMessages, IntlShape, useIntl} from 'react-intl'
-import {ActivityIndicator, Linking, ScrollView, StyleSheet, Text, TouchableOpacity} from 'react-native'
+import {
+  ActivityIndicator,
+  InteractionManager,
+  Linking,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useMutation, UseMutationOptions, useQueryClient} from 'react-query'
 import {useDispatch} from 'react-redux'
@@ -27,7 +35,7 @@ import {WalletListItem} from './WalletListItem'
 
 export const WalletSelectionScreen = () => {
   const strings = useStrings()
-  const {resetToWalletSelection, navigateToTxHistory} = useWalletNavigation()
+  const {navigateToTxHistory} = useWalletNavigation()
   const navigation = useNavigation<WalletStackRouteNavigation>()
   const walletMetas = useWalletMetas()
   const selectWalletMeta = useSetSelectedWalletMeta()
@@ -36,14 +44,23 @@ export const WalletSelectionScreen = () => {
   const params = useRoute<RouteProp<WalletStackRoutes, 'wallet-selection'>>().params
   const [wallet] = useSelectedWalletContext()
   const queryClient = useQueryClient()
-  const closeWalletWhenInvalidStateError = useCloseWalletWhenInvalidStateError(intl, resetToWalletSelection)
+  const closeWalletWhenInvalidStateError = useCloseWalletWhenInvalidStateError(intl)
   const dispatch = useDispatch()
 
+  const setSelectedWallet = useSetSelectedWallet()
+  const setSelectedWalletMeta = useSetSelectedWalletMeta()
+
   const {closeWallet} = useCloseWallet({
-    onSuccess: () => {
+    onSuccess: async () => {
+      await showErrorDialog(errorMessages.walletKeysInvalidated, intl)
       dispatch(clearUTXOs())
       dispatch(clearAccountState())
       dispatch(signout())
+
+      InteractionManager.runAfterInteractions(() => {
+        setSelectedWallet(undefined)
+        setSelectedWalletMeta(undefined)
+      })
     },
   })
 
@@ -59,7 +76,6 @@ export const WalletSelectionScreen = () => {
       if (error instanceof InvalidState) {
         closeWalletWhenInvalidStateError()
       } else if (error instanceof KeysAreInvalid) {
-        await showErrorDialog(errorMessages.walletKeysInvalidated, intl)
         closeWallet()
       } else {
         await showErrorDialog(errorMessages.walletStateInvalid, intl)
@@ -111,17 +127,22 @@ export const WalletSelectionScreen = () => {
   )
 }
 
-const useCloseWalletWhenInvalidStateError = (
-  intl: IntlShape | null | undefined,
-  resetToWalletSelection: () => void,
-) => {
+const useCloseWalletWhenInvalidStateError = (intl: IntlShape | null | undefined) => {
   const dispatch = useDispatch()
+  const setSelectedWallet = useSetSelectedWallet()
+  const setSelectedWalletMeta = useSetSelectedWalletMeta()
+
   const {closeWallet: closeWalletWhenInvalidStateError} = useCloseWallet({
     onSuccess: async () => {
       await showErrorDialog(errorMessages.walletStateInvalid, intl)
-      resetToWalletSelection()
       dispatch(clearUTXOs())
       dispatch(clearAccountState())
+      dispatch(signout())
+
+      InteractionManager.runAfterInteractions(() => {
+        setSelectedWallet(undefined)
+        setSelectedWalletMeta(undefined)
+      })
     },
   })
 
