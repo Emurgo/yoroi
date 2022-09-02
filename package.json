@@ -211,7 +211,7 @@
     "@wdio/appium-service": "^7.16.6",
     "@wdio/local-runner": "^7.16.8",
     "@wdio/mocha-framework": "^7.16.6",
-    "@wdio/selenium-standalone-service": "^7.16.6",
+    "@wdio/selenium-standalone-service": "^7.24.0",
     "@wdio/spec-reporter": "^7.16.4",
     "babel-jest": "^27.5.1",
     "babel-loader": "8.2.2",
