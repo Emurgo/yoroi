@@ -21,7 +21,6 @@ import globalMessages, {errorMessages} from '../../i18n/global-messages'
 import {clearAccountState} from '../../legacy/account'
 import {showErrorDialog, signout} from '../../legacy/actions'
 import {CONFIG, isNightly} from '../../legacy/config'
-import {InvalidState} from '../../legacy/errors'
 import {isJormungandr} from '../../legacy/networks'
 import {WalletMeta} from '../../legacy/state'
 import {clearUTXOs} from '../../legacy/utxo'
@@ -71,9 +70,7 @@ export const WalletSelectionScreen = () => {
     },
     onError: async (error) => {
       navigation.setParams({reopen: true})
-      if (error instanceof InvalidState) {
-        await showErrorDialog(errorMessages.walletStateInvalid, intl)
-      } else if (error instanceof KeysAreInvalid) {
+      if (error instanceof KeysAreInvalid) {
         await showErrorDialog(errorMessages.walletKeysInvalidated, intl)
       } else {
         await showErrorDialog(errorMessages.walletStateInvalid, intl)
