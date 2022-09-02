@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useNetInfo} from '@react-native-community/netinfo'
+import {useFocusEffect} from '@react-navigation/native'
 import {delay} from 'bluebird'
 import cryptoRandomString from 'crypto-random-string'
 import * as React from 'react'
@@ -736,6 +737,12 @@ export const useBalances = (wallet: YoroiWallet): YoroiAmounts => {
   }, [netInfo, refetch])
 
   React.useEffect(() => wallet.subscribe(() => refetch()))
+
+  useFocusEffect(
+    React.useCallback(() => {
+      refetch()
+    }, [refetch]),
+  )
 
   if (!query.data) throw new Error('invalid state')
 
