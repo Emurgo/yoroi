@@ -54,4 +54,3 @@ export namespace CardanoTypes {
 }
 
 export const Cardano = createYoroiLib(CardanoMobile)
-export const {decryptWithPassword, encryptWithPassword} = Cardano

@@ -27,8 +27,7 @@ import {clearUTXOs} from '../legacy/utxo'
 import {Storage} from '../Storage'
 import {DefaultAsset, Token} from '../types'
 import {
-  decryptWithPassword,
-  encryptWithPassword,
+  Cardano,
   NetworkId,
   TxSubmissionStatus,
   WalletEvent,
@@ -453,7 +452,7 @@ export const useCreatePin = (storage: Storage, options: UseMutationOptions<void,
       const pinHex = toHex(pin)
       const saltHex = cryptoRandomString({length: 2 * 32})
       const nonceHex = cryptoRandomString({length: 2 * 12})
-      const encryptedPinHash = await encryptWithPassword(pinHex, saltHex, nonceHex, installationIdHex)
+      const encryptedPinHash = await Cardano.encryptWithPassword(pinHex, saltHex, nonceHex, installationIdHex)
 
       return storage.setItem(ENCRYPTED_PIN_HASH_KEY, JSON.stringify(encryptedPinHash))
     },
@@ -476,7 +475,7 @@ export const useCheckPin = (storage: Storage, options: UseMutationOptions<boolea
           return data
         })
         .then(JSON.parse)
-        .then((encryptedPinHash: string) => decryptWithPassword(toHex(pin), encryptedPinHash))
+        .then((encryptedPinHash: string) => Cardano.decryptWithPassword(toHex(pin), encryptedPinHash))
         .then(() => true)
         .catch((error) => {
           if (error.message === 'Decryption error') return false
