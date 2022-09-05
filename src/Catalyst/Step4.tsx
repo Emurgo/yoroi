@@ -1,23 +1,20 @@
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {InteractionManager, ScrollView, StyleSheet} from 'react-native'
+import {ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useDispatch} from 'react-redux'
 
 import {Button, OfflineBanner, ProgressStep, Spacer, TextInput} from '../components'
 import {ErrorModal} from '../components'
 import {useCloseWallet} from '../hooks'
 import {confirmationMessages, errorMessages, txLabels} from '../i18n/global-messages'
-import {clearAccountState} from '../legacy/account'
 import {showErrorDialog} from '../legacy/actions'
 import {CONFIG} from '../legacy/config'
 import {ensureKeysValidity} from '../legacy/deviceSettings'
 import {WrongPassword} from '../legacy/errors'
 import KeyStore from '../legacy/KeyStore'
 import {isEmptyString} from '../legacy/utils'
-import {clearUTXOs} from '../legacy/utxo'
-import {useSelectedWallet, useSetSelectedWallet, useSetSelectedWalletMeta} from '../SelectedWallet'
+import {useSelectedWallet} from '../SelectedWallet'
 import {SystemAuthDisabled, walletManager} from '../yoroi-wallets'
 import {Actions, Description, Title} from './components'
 import {useCreateVotingRegTx, VotingRegTxData} from './hooks'
@@ -39,16 +36,7 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
   const {createVotingRegTx, isLoading: generatingTransaction} = useCreateVotingRegTx({wallet})
   const navigation = useNavigation()
   const [password, setPassword] = useState('')
-  const dispatch = useDispatch()
-  const setSelectedWallet = useSetSelectedWallet()
-  const setSelectedWalletMeta = useSetSelectedWalletMeta()
-
-  const {closeWallet} = useCloseWallet({
-    onSuccess: () => {
-      dispatch(clearUTXOs())
-      dispatch(clearAccountState())
-    },
-  })
+  const {closeWallet} = useCloseWallet()
 
   const [errorData, setErrorData] = useState<ErrorData>({
     showErrorDialog: false,
@@ -93,14 +81,9 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
         })
       } catch (error) {
         if (error instanceof SystemAuthDisabled) {
-          closeWallet()
+          await closeWallet()
           await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
           navigation.navigate('app-root', {screen: 'wallet-selection'})
-
-          InteractionManager.runAfterInteractions(() => {
-            setSelectedWallet(undefined)
-            setSelectedWalletMeta(undefined)
-          })
           return
         } else if (error instanceof Error) {
           setErrorData({
@@ -136,11 +119,9 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
     navigation,
     strings.bioAuthInstructions,
     strings.errorMessage,
-    closeWallet,
     intl,
-    setSelectedWallet,
-    setSelectedWalletMeta,
     password,
+    closeWallet,
   ])
 
   useEffect(() => {

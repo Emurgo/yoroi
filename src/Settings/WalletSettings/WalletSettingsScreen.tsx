@@ -8,12 +8,10 @@ import {useDispatch, useSelector} from 'react-redux'
 import {StatusBar} from '../../components'
 import {useCloseWallet, useEasyConfirmationEnabled, useWalletName} from '../../hooks'
 import {confirmationMessages} from '../../i18n/global-messages'
-import {clearAccountState} from '../../legacy/account'
 import {DIALOG_BUTTONS, showConfirmationDialog, signout} from '../../legacy/actions'
 import {isByron, isHaskellShelley} from '../../legacy/config'
 import {getNetworkConfigById} from '../../legacy/networks'
 import {isSystemAuthEnabledSelector} from '../../legacy/selectors'
-import {clearUTXOs} from '../../legacy/utxo'
 import {useWalletNavigation} from '../../navigation'
 import {useSelectedWallet, useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
 import {NetworkId, WalletImplementationId, walletManager} from '../../yoroi-wallets'
@@ -216,8 +214,6 @@ const useLogout = (options?: UseMutationOptions<void, Error>) => {
   const setSelectedWalletMeta = useSetSelectedWalletMeta()
   const {closeWallet, ...mutation} = useCloseWallet({
     onSuccess: () => {
-      dispatch(clearUTXOs())
-      dispatch(clearAccountState())
       setSelectedWallet(undefined)
       setSelectedWalletMeta(undefined)
     },

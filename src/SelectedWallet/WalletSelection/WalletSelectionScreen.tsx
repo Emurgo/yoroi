@@ -2,29 +2,18 @@ import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
 import {delay} from 'bluebird'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {
-  ActivityIndicator,
-  InteractionManager,
-  Linking,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-} from 'react-native'
+import {ActivityIndicator, Linking, ScrollView, StyleSheet, Text, TouchableOpacity} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useMutation, UseMutationOptions, useQueryClient} from 'react-query'
-import {useDispatch} from 'react-redux'
 
 import {Button, Icon, PleaseWaitModal, ScreenBackground, StatusBar} from '../../components'
-import {useCloseWallet, useWalletMetas} from '../../hooks'
+import {useCloseWallet, useLogout, useWalletMetas} from '../../hooks'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
-import {clearAccountState} from '../../legacy/account'
-import {showErrorDialog, signout} from '../../legacy/actions'
+import {showErrorDialog} from '../../legacy/actions'
 import {CONFIG, isNightly} from '../../legacy/config'
 import {InvalidState} from '../../legacy/errors'
 import {isJormungandr} from '../../legacy/networks'
 import {WalletMeta} from '../../legacy/state'
-import {clearUTXOs} from '../../legacy/utxo'
 import {useWalletNavigation, WalletStackRouteNavigation, WalletStackRoutes} from '../../navigation'
 import Screen from '../../Screen'
 import {COLORS} from '../../theme'
@@ -44,19 +33,8 @@ export const WalletSelectionScreen = () => {
   const [wallet] = useSelectedWalletContext()
   const params = useRoute<RouteProp<WalletStackRoutes, 'wallet-selection'>>().params
   const queryClient = useQueryClient()
-  const dispatch = useDispatch()
-
-  const {closeWallet} = useCloseWallet({
-    onSuccess: () => {
-      dispatch(clearUTXOs())
-      dispatch(clearAccountState())
-    },
-  })
-
-  const logout = () => {
-    closeWallet()
-    dispatch(signout())
-  }
+  const {closeWallet} = useCloseWallet()
+  const logout = useLogout()
 
   const {openWallet, isLoading} = useOpenWallet({
     onSuccess: ({wallet, walletMeta}) => {
@@ -68,31 +46,16 @@ export const WalletSelectionScreen = () => {
     onError: async (error) => {
       navigation.setParams({reopen: true})
       if (error instanceof SystemAuthDisabled) {
-        closeWallet()
+        await closeWallet()
         await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
         resetToWalletSelection()
-
-        InteractionManager.runAfterInteractions(() => {
-          selectWallet(undefined)
-          selectWalletMeta(undefined)
-        })
       } else if (error instanceof InvalidState) {
-        closeWallet()
+        await closeWallet()
         await showErrorDialog(errorMessages.walletStateInvalid, intl)
         resetToWalletSelection()
-
-        InteractionManager.runAfterInteractions(() => {
-          selectWallet(undefined)
-          selectWalletMeta(undefined)
-        })
       } else if (error instanceof KeysAreInvalid) {
         await showErrorDialog(errorMessages.walletKeysInvalidated, intl)
-        logout()
-
-        InteractionManager.runAfterInteractions(() => {
-          selectWallet(undefined)
-          selectWalletMeta(undefined)
-        })
+        await logout()
       } else {
         throw error
       }
@@ -282,20 +245,13 @@ const useOpenWallet = (
     WalletMeta
   >,
 ) => {
-  const dispatch = useDispatch()
-
-  const {closeWallet} = useCloseWallet({
-    onSuccess: () => {
-      dispatch(clearUTXOs())
-      dispatch(clearAccountState())
-    },
-  })
+  const {closeWallet} = useCloseWallet()
 
   const mutation = useMutation({
     ...options,
     mutationFn: async (walletMeta) => {
       try {
-        closeWallet()
+        await closeWallet()
       } catch (e) {
         // apparently closeWallet is not idempotent
       }
