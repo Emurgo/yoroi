@@ -81,7 +81,7 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
         })
       } catch (error) {
         if (error instanceof SystemAuthDisabled) {
-          await closeWallet()
+          closeWallet()
           await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
           navigation.navigate('app-root', {screen: 'wallet-selection'})
           return

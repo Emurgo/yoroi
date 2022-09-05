@@ -755,7 +755,7 @@ export const useLogout = () => {
   const dispatch = useDispatch()
 
   return async () => {
-    await closeWallet()
+    closeWallet()
     dispatch(signout())
   }
 }

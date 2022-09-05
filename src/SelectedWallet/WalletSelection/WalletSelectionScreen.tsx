@@ -46,16 +46,16 @@ export const WalletSelectionScreen = () => {
     onError: async (error) => {
       navigation.setParams({reopen: true})
       if (error instanceof SystemAuthDisabled) {
-        await closeWallet()
+        closeWallet()
         await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
         resetToWalletSelection()
       } else if (error instanceof InvalidState) {
-        await closeWallet()
+        closeWallet()
         await showErrorDialog(errorMessages.walletStateInvalid, intl)
         resetToWalletSelection()
       } else if (error instanceof KeysAreInvalid) {
         await showErrorDialog(errorMessages.walletKeysInvalidated, intl)
-        await logout()
+        logout()
       } else {
         throw error
       }
@@ -250,11 +250,7 @@ const useOpenWallet = (
   const mutation = useMutation({
     ...options,
     mutationFn: async (walletMeta) => {
-      try {
-        await closeWallet()
-      } catch (e) {
-        // apparently closeWallet is not idempotent
-      }
+      closeWallet()
       await delay(500)
       const [newWallet, newWalletMeta] = await walletManager.openWallet(walletMeta)
       return {
