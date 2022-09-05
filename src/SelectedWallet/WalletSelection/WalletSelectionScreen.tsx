@@ -52,7 +52,6 @@ export const WalletSelectionScreen = () => {
       } else if (error instanceof InvalidState) {
         closeWallet()
         await showErrorDialog(errorMessages.walletStateInvalid, intl)
-        resetToWalletSelection()
       } else if (error instanceof KeysAreInvalid) {
         await showErrorDialog(errorMessages.walletKeysInvalidated, intl)
         logout()
