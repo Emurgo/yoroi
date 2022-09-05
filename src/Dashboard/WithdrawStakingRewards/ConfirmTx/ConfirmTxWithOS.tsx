@@ -64,7 +64,7 @@ export const ConfirmTxWithOS: React.FC<Props> = ({wallet, unsignedTx, onSuccess,
               .catch(async (error) => {
                 if (error instanceof SystemAuthDisabled) {
                   onCancel()
-                  await closeWallet()
+                  closeWallet()
                   await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
                   navigation.navigate('app-root', {screen: 'wallet-selection'})
                 }
