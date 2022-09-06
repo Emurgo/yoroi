@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type {WalletChecksum} from '@emurgo/cip4-js'
 import _ from 'lodash'
 import type {IntlShape} from 'react-intl'
 import {defaultMemoize} from 'reselect'
@@ -7,14 +6,15 @@ import {defaultMemoize} from 'reselect'
 import * as api from '../legacy/api'
 import assert from '../legacy/assert'
 import {CONFIG} from '../legacy/config'
+import {Transaction} from '../legacy/HistoryTransaction'
 import KeyStore from '../legacy/KeyStore'
 import type {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {Logger} from '../legacy/logging'
 import {getCardanoNetworkConfigById, isJormungandr} from '../legacy/networks'
 import {IsLockedError, nonblockingSynchronize, synchronize} from '../legacy/promise'
 import type {BackendConfig, EncryptionMethod} from '../legacy/types'
-import {NetworkId, WalletImplementationId, YoroiProvider} from './cardano'
-import {AddressChain, AddressChainJSON} from './cardano/chain'
+import {CardanoTypes, NetworkId, WalletImplementationId, YoroiProvider} from './cardano'
+import {AddressChain, AddressChainJSON, Addresses} from './cardano/chain'
 import {TransactionCache, TransactionCacheJSON} from './cardano/shelley/transactionCache'
 import {validatePassword} from './utils/validators'
 
@@ -47,6 +47,15 @@ export type ByronWalletJSON = Omit<ShelleyWalletJSON, 'account'>
 
 export type WalletJSON = ShelleyWalletJSON | ByronWalletJSON
 
+export type WalletEvent =
+  | {type: 'initialize'}
+  | {type: 'easy-confirmation'; enabled: boolean}
+  | {type: 'transactions'; transactions: Record<string, Transaction>}
+  | {type: 'addresses'; addresses: Addresses}
+  | {type: 'state'; state: WalletState}
+
+export type WalletSubscription = (event: WalletEvent) => void
+
 export class Wallet {
   id: null | string = null
 
@@ -75,7 +84,7 @@ export class Wallet {
   // last known version the wallet has been opened on
   version: undefined | string
 
-  checksum: undefined | WalletChecksum
+  checksum: undefined | CardanoTypes.WalletChecksum
 
   state: WalletState = {
     lastGeneratedAddressIndex: 0,
@@ -87,7 +96,7 @@ export class Wallet {
 
   _doFullSyncMutex: any = {name: 'doFullSyncMutex', lock: null}
 
-  _subscriptions: Array<(Wallet) => void> = []
+  private subscriptions: Array<WalletSubscription> = []
 
   _onTxHistoryUpdateSubscriptions: Array<(Wallet) => void> = []
 
@@ -162,6 +171,8 @@ export class Wallet {
     await this.encryptAndSaveMasterKey('SYSTEM_PIN', decryptedMasterKey)
 
     this.isEasyConfirmationEnabled = true
+
+    this.notify({type: 'easy-confirmation', enabled: this.isEasyConfirmationEnabled})
   }
 
   async changePassword(masterPassword: string, newPassword: string, intl: IntlShape) {
@@ -179,12 +190,16 @@ export class Wallet {
   // =================== subscriptions =================== //
 
   // needs to be bound
-  notify = () => {
-    this._subscriptions.forEach((handler) => handler(this))
+  notify = (event: WalletEvent) => {
+    this.subscriptions.forEach((handler) => handler(event))
   }
 
-  subscribe(handler: (Wallet) => void) {
-    this._subscriptions.push(handler)
+  subscribe(subscription: WalletSubscription) {
+    this.subscriptions.push(subscription)
+
+    return () => {
+      this.subscriptions = this.subscriptions.filter((sub) => sub !== subscription)
+    }
   }
 
   notifyOnTxHistoryUpdate = () => {
@@ -200,10 +215,14 @@ export class Wallet {
     if (!this.externalChain) throw new Error('invalid wallet state')
     if (!this.transactionCache) throw new Error('invalid wallet state')
 
-    this.transactionCache.subscribe(this.notify)
+    this.transactionCache.subscribe(() => this.notify({type: 'transactions', transactions: this.transactions}))
     this.transactionCache.subscribeOnTxHistoryUpdate(this.notifyOnTxHistoryUpdate)
-    this.internalChain.addSubscriberToNewAddresses(this.notify)
-    this.externalChain.addSubscriberToNewAddresses(this.notify)
+    this.internalChain.addSubscriberToNewAddresses(() =>
+      this.notify({type: 'addresses', addresses: this.internalAddresses}),
+    )
+    this.externalChain.addSubscriberToNewAddresses(() =>
+      this.notify({type: 'addresses', addresses: this.externalAddresses}),
+    )
   }
 
   // =================== synch =================== //
@@ -293,7 +312,7 @@ export class Wallet {
       ...update,
     }
 
-    this.notify()
+    this.notify({type: 'state', state: this.state})
   }
 
   canGenerateNewReceiveAddress() {

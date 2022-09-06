@@ -1,16 +1,7 @@
-import {
-  CardanoAddressedUtxo,
-  MultiTokenValue,
-  StakingKeyBalances,
-  TokenEntry,
-  TxMetadata,
-  UnsignedTx,
-} from '@emurgo/yoroi-lib-core'
-
 import {CardanoHaskellShelleyNetwork} from '../../legacy/networks'
 import {Quantity, YoroiAmounts, YoroiEntries, YoroiMetadata, YoroiUnsignedTx, YoroiVoting} from '../types'
 import {Amounts, Entries, Quantities} from '../utils'
-import {Address, ByronAddress, cardano, RewardAddress} from '.'
+import {Cardano, CardanoMobile, CardanoTypes} from '.'
 
 export const yoroiUnsignedTx = async ({
   unsignedTx,
@@ -18,10 +9,10 @@ export const yoroiUnsignedTx = async ({
   votingRegistration,
   addressedUtxos,
 }: {
-  unsignedTx: UnsignedTx
+  unsignedTx: CardanoTypes.UnsignedTx
   networkConfig: CardanoHaskellShelleyNetwork
   votingRegistration?: VotingRegistration
-  addressedUtxos: CardanoAddressedUtxo[]
+  addressedUtxos: CardanoTypes.CardanoAddressedUtxo[]
 }) => {
   const fee = toAmounts(unsignedTx.fee.values)
   const change = toEntries(
@@ -40,7 +31,7 @@ export const yoroiUnsignedTx = async ({
   // entries === (outputs - change)
   const entries = Entries.remove(outputsEntries, changeAddresses)
   const amounts = Entries.toAmounts(entries)
-  const stakingBalances = await cardano.getBalanceForStakingCredentials(addressedUtxos)
+  const stakingBalances = await Cardano.getBalanceForStakingCredentials(addressedUtxos)
 
   const yoroiTx: YoroiUnsignedTx = {
     amounts,
@@ -84,10 +75,10 @@ export const yoroiUnsignedTx = async ({
 
 type AddressedValue = {
   address: string
-  value: MultiTokenValue
+  value: CardanoTypes.MultiTokenValue
 }
 
-export const toAmounts = (values: Array<TokenEntry>) =>
+export const toAmounts = (values: Array<CardanoTypes.TokenEntry>) =>
   values.reduce(
     (result, current) => ({
       ...result,
@@ -99,7 +90,7 @@ export const toAmounts = (values: Array<TokenEntry>) =>
     {} as YoroiAmounts,
   )
 
-export const toMetadata = (metadata: ReadonlyArray<TxMetadata>) =>
+export const toMetadata = (metadata: ReadonlyArray<CardanoTypes.TxMetadata>) =>
   metadata.reduce(
     (result, current) => ({
       ...result,
@@ -118,7 +109,7 @@ export const toEntries = (addressedValues: ReadonlyArray<AddressedValue>) =>
   )
 
 const Staking = {
-  toWithdrawals: async (withdrawals: UnsignedTx['withdrawals']) => {
+  toWithdrawals: async (withdrawals: CardanoTypes.UnsignedTx['withdrawals']) => {
     if (!withdrawals.hasValue()) return {} // no withdrawals
 
     const result: YoroiEntries = {}
@@ -143,13 +134,13 @@ const Staking = {
     deregistrations,
     networkConfig: {NETWORK_ID, KEY_DEPOSIT},
   }: {
-    deregistrations: UnsignedTx['deregistrations']
+    deregistrations: CardanoTypes.UnsignedTx['deregistrations']
     networkConfig: CardanoHaskellShelleyNetwork
   }) =>
     deregistrations.reduce(async (result, current) => {
       const address = await current
         .stakeCredential()
-        .then((stakeCredential) => RewardAddress.new(NETWORK_ID, stakeCredential))
+        .then((stakeCredential) => CardanoMobile.RewardAddress.new(NETWORK_ID, stakeCredential))
         .then((rewardAddress) => rewardAddress.toAddress())
         .then((address) => address.toBytes())
         .then((bytes) => Buffer.from(bytes).toString('hex'))
@@ -164,13 +155,13 @@ const Staking = {
     registrations,
     networkConfig: {NETWORK_ID, KEY_DEPOSIT},
   }: {
-    registrations: UnsignedTx['registrations']
+    registrations: CardanoTypes.UnsignedTx['registrations']
     networkConfig: CardanoHaskellShelleyNetwork
   }) =>
     registrations.reduce(async (result, current) => {
       const address = await current
         .stakeCredential()
-        .then((stakeCredential) => RewardAddress.new(NETWORK_ID, stakeCredential))
+        .then((stakeCredential) => CardanoMobile.RewardAddress.new(NETWORK_ID, stakeCredential))
         .then((rewardAddress) => rewardAddress.toAddress())
         .then((address) => address.toBytes())
         .then((bytes) => Buffer.from(bytes).toString('hex'))
@@ -185,7 +176,7 @@ const Staking = {
     balances,
     fee,
   }: {
-    balances: StakingKeyBalances
+    balances: CardanoTypes.StakingKeyBalances
     fee: YoroiUnsignedTx['fee']
   }): Promise<{[poolId: string]: YoroiAmounts}> =>
     Object.entries(balances).reduce(
@@ -212,7 +203,7 @@ const Voting = {
 }
 
 export const toDisplayAddress = async (address: string) => {
-  if (await ByronAddress.isValid(address) /* base58 */) {
+  if (await CardanoMobile.ByronAddress.isValid(address) /* base58 */) {
     return address
   }
 
@@ -222,12 +213,12 @@ export const toDisplayAddress = async (address: string) => {
     isEnterpriseAddressHex(address) ||
     isPointerAddressHex(address)
   ) {
-    return Address.fromBytes(Buffer.from(address, 'hex')).then((address) => address.toBech32())
+    return CardanoMobile.Address.fromBytes(Buffer.from(address, 'hex')).then((address) => address.toBech32())
   }
 
   if (isByronAddressHex(address)) {
-    return Address.fromBytes(Buffer.from(address, 'hex'))
-      .then((address) => ByronAddress.fromAddress(address))
+    return CardanoMobile.Address.fromBytes(Buffer.from(address, 'hex'))
+      .then((address) => CardanoMobile.ByronAddress.fromAddress(address))
       .then((address) => address.toBase58())
   }
 

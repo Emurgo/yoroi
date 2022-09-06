@@ -23,7 +23,6 @@ function loadStories() {
 	require('../src/MaintenanceScreen.stories');
 	require('../src/Menu/Menu.stories');
 	require('../src/Receive/AddressModal.stories');
-	require('../src/Receive/AddressVerifyModal.stories');
 	require('../src/Receive/Addresses.stories');
 	require('../src/Receive/ReceiveScreen.stories');
 	require('../src/SelectedWallet/WalletSelection/WalletSelectionScreen.stories');
@@ -37,10 +36,10 @@ function loadStories() {
 	require('../src/Settings/ChangePassword/ChangePasswordScreen.stories');
 	require('../src/Settings/ChangeWalletName/ChangeWalletName.stories');
 	require('../src/Settings/Currency/ChangeCurrencyScreen.stories');
+	require('../src/Settings/EasyConfirmation/EasyConfirmationScreen.stories');
 	require('../src/Settings/RemoveWallet/RemoveWalletScreen.stories');
 	require('../src/Settings/Support/SupportScreen.stories');
 	require('../src/Settings/TermsOfService/TermsOfServiceScreen.stories');
-	require('../src/Settings/ToggleEasyConfirmation/ToggleEasyConfirmationScreen.stories');
 	require('../src/Settings/WalletSettings/WalletSettingsScreen.stories');
 	require('../src/Staking/DelegationConfirmation/DelegationConfirmation.stories');
 	require('../src/Staking/PoolDetails/PoolDetailScreen.stories');
@@ -121,7 +120,6 @@ const stories = [
 	'../src/MaintenanceScreen.stories',
 	'../src/Menu/Menu.stories',
 	'../src/Receive/AddressModal.stories',
-	'../src/Receive/AddressVerifyModal.stories',
 	'../src/Receive/Addresses.stories',
 	'../src/Receive/ReceiveScreen.stories',
 	'../src/SelectedWallet/WalletSelection/WalletSelectionScreen.stories',
@@ -135,10 +133,10 @@ const stories = [
 	'../src/Settings/ChangePassword/ChangePasswordScreen.stories',
 	'../src/Settings/ChangeWalletName/ChangeWalletName.stories',
 	'../src/Settings/Currency/ChangeCurrencyScreen.stories',
+	'../src/Settings/EasyConfirmation/EasyConfirmationScreen.stories',
 	'../src/Settings/RemoveWallet/RemoveWalletScreen.stories',
 	'../src/Settings/Support/SupportScreen.stories',
 	'../src/Settings/TermsOfService/TermsOfServiceScreen.stories',
-	'../src/Settings/ToggleEasyConfirmation/ToggleEasyConfirmationScreen.stories',
 	'../src/Settings/WalletSettings/WalletSettingsScreen.stories',
 	'../src/Staking/DelegationConfirmation/DelegationConfirmation.stories',
 	'../src/Staking/PoolDetails/PoolDetailScreen.stories',

@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {SignedTx} from '@emurgo/yoroi-lib-core'
 import {useNavigation} from '@react-navigation/native'
 import {delay} from 'bluebird'
 import React, {useEffect, useState} from 'react'
@@ -20,7 +19,7 @@ import {hwDeviceInfoSelector} from '../../legacy/selectors'
 import {isEmptyString} from '../../legacy/utils'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
-import {SystemAuthDisabled, walletManager} from '../../yoroi-wallets'
+import {CardanoTypes, SystemAuthDisabled, walletManager} from '../../yoroi-wallets'
 import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
 import {Button, ButtonProps, ValidatedTextInput} from '..'
 import {Dialog, Step as DialogStep} from './Dialog'
@@ -32,7 +31,7 @@ type ErrorData = {
 
 type Props = {
   buttonProps?: Omit<Partial<ButtonProps>, 'disabled' | 'onPress'>
-  onSuccess: (signedTx: SignedTx) => void
+  onSuccess: (signedTx: CardanoTypes.SignedTx) => void
   onError?: (err: Error) => void
   yoroiUnsignedTx: YoroiUnsignedTx
   useUSB: boolean

@@ -141,12 +141,7 @@ export const TxDetails = () => {
       </Screen>
 
       {!isEmptyString(addressDetail) && (
-        <AddressModal
-          visible
-          onRequestClose={() => setAddressDetail(null)}
-          address={addressDetail}
-          onAddressVerify={() => setAddressDetail(null)}
-        />
+        <AddressModal visible onRequestClose={() => setAddressDetail(null)} address={addressDetail} />
       )}
     </View>
   )

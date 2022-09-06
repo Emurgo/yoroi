@@ -3,7 +3,6 @@ import type {ReduxWallet} from './state'
 export const mockReduxWallet: ReduxWallet = {
   id: 'id',
   name: 'q',
-  isEasyConfirmationEnabled: false,
   isInitialized: true,
   networkId: 300,
   walletImplementationId: 'haskell-shelley',
