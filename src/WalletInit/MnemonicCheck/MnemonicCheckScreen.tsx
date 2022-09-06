@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   recoveryPhrase: {
-    height: 26 * 6,
+    height: 26 * 7,
     paddingHorizontal: 16,
   },
   recoveryPhraseOutline: {
