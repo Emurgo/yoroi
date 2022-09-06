@@ -73,7 +73,6 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
         navigation.navigate('biometrics', {
           keyId: walletManager._id,
           onSuccess: async (decryptedKey) => {
-            navigation.goBack()
             createTransaction(decryptedKey)
           },
           onFail: () => navigation.goBack(),
