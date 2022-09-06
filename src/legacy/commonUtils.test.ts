@@ -1,5 +1,5 @@
 import {decryptData, encryptData, formatPath, generateAdaMnemonic, generateWalletRootKey} from './commonUtils'
-import {WrongPassword} from './errors'
+import {CardanoError} from './errors'
 import {WALLET_IMPLEMENTATION_REGISTRY} from './types'
 
 const mnemonic = [
@@ -38,7 +38,7 @@ describe('encryption/decryption', () => {
   it('Throws on wrong password', async () => {
     expect.assertions(1)
     const encryptedData = await encryptData('308f9977d04e7f3a45abd148905c628e2bb2621360a585f352', 'password')
-    await expect(decryptData(encryptedData, 'wrong-password')).rejects.toThrow(WrongPassword)
+    await expect(decryptData(encryptedData, 'wrong-password')).rejects.toThrow(CardanoError)
   })
 
   it('Can decrypt data encrypted with rust v2 library', async () => {
