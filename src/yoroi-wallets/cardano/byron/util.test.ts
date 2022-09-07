@@ -40,5 +40,5 @@ test('Throws error when converting bad address', () => {
 
 test('Make sure that we are using safe buffers', () => {
   // in response to https://github.com/nodejs/node/issues/4660
-  expect(new Buffer(10).toString('hex')).toBe('00000000000000000000')
+  expect(Buffer.alloc(10).toString('hex')).toBe('00000000000000000000')
 })
