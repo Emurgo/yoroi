@@ -23,7 +23,6 @@ export type ReduxWallet = {
   networkId: WalletInterface['networkId']
   walletImplementationId: WalletInterface['walletImplementationId']
   isHW: WalletInterface['isHW']
-  hwDeviceInfo: WalletInterface['hwDeviceInfo']
   isReadOnly: WalletInterface['isReadOnly']
   transactions: WalletInterface['transactions']
   internalAddresses: WalletInterface['internalAddresses']
@@ -86,7 +85,6 @@ export const getInitialState = (): State => ({
     walletImplementationId: '',
     provider: null,
     isHW: false,
-    hwDeviceInfo: null,
     isReadOnly: false,
     transactions: {},
     internalAddresses: [],

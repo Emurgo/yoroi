@@ -9,7 +9,6 @@ import {getCardanoDefaultAsset, getDefaultAssets} from './config'
 import {ObjectValues} from './flow'
 import type {DefaultAsset, Token, Transaction, TransactionInfo} from './HistoryTransaction'
 import {TRANSACTION_DIRECTION, TRANSACTION_STATUS} from './HistoryTransaction'
-import type {HWDeviceInfo} from './ledgerUtils'
 import {processTxHistoryData} from './processTransactions'
 import type {NetworkId} from './types'
 import type {RawUtxo} from './types'
@@ -80,7 +79,6 @@ export const externalAddressIndexSelector: (state: State) => Record<string, numb
   (addresses) => fromPairs(addresses.map((addr, i) => [addr, i])),
 )
 export const isUsedAddressIndexSelector = (state: State) => state.wallet.isUsedAddressIndex
-export const hwDeviceInfoSelector = (state: State): HWDeviceInfo | null | undefined => state.wallet.hwDeviceInfo
 
 export const tokenBalanceSelector: (state: State) => MultiToken = createSelector(
   transactionsInfoSelector,
