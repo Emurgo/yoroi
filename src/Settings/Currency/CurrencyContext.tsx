@@ -6,7 +6,7 @@ import {ConfigCurrencies, configCurrencies, CurrencySymbol, supportedCurrencies}
 import {isEmptyString} from '../../legacy/utils'
 
 const CurrencyContext = React.createContext<undefined | CurrencyContext>(undefined)
-export const CurrencyProvider: React.FC = ({children}) => {
+export const CurrencyProvider = ({children}: {children: React.ReactNode}) => {
   const currency = useCurrency()
   const selectCurrency = useSaveCurrency()
   const config = configCurrencies[currency]

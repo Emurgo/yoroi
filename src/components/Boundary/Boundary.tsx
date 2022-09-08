@@ -20,7 +20,7 @@ import {Text} from '../Text'
 
 type BoundaryProps = LoadingBoundaryProps & ErrorBoundaryProps
 
-export const Boundary: React.FC<BoundaryProps> = (props) => {
+export const Boundary = (props: BoundaryProps) => {
   return (
     <LoadingBoundary {...props}>
       <ErrorBoundary {...props} />
@@ -29,9 +29,14 @@ export const Boundary: React.FC<BoundaryProps> = (props) => {
 }
 
 type LoadingBoundaryProps = {
-  loading?: {fallback?: SuspenseProps['fallback']; fallbackProps?: LoadingFallbackProps; enabled?: boolean}
+  loading?: {
+    fallback?: SuspenseProps['fallback']
+    fallbackProps?: LoadingFallbackProps
+    enabled?: boolean
+  }
+  children: React.ReactNode
 }
-const LoadingBoundary: React.FC<LoadingBoundaryProps> = ({children, ...props}) => {
+const LoadingBoundary = ({children, ...props}: LoadingBoundaryProps) => {
   if (props.loading?.enabled === false) return <>{children}</>
 
   return (
@@ -42,14 +47,17 @@ const LoadingBoundary: React.FC<LoadingBoundaryProps> = ({children, ...props}) =
 }
 
 type LoadingFallbackProps = {style?: ViewStyle} & Omit<ActivityIndicatorProps, 'style'>
-export const LoadingFallback: React.FC<LoadingFallbackProps> = ({size = 'large', color = 'black', style}) => (
+export const LoadingFallback = ({size = 'large', color = 'black', style}: LoadingFallbackProps) => (
   <View style={[styles.container, style]}>
     <ActivityIndicator size={size} color={color} />
   </View>
 )
 
-type ErrorBoundaryProps = {error?: {fallback?: ReactErrorBoundaryProps['fallbackRender']; enabled?: boolean}}
-const ErrorBoundary: React.FC<ErrorBoundaryProps> = ({children, ...props}) => {
+type ErrorBoundaryProps = {
+  error?: {fallback?: ReactErrorBoundaryProps['fallbackRender']; enabled?: boolean}
+  children: React.ReactNode
+}
+const ErrorBoundary = ({children, ...props}: ErrorBoundaryProps) => {
   if (props.error?.enabled === false) return <>{children}</>
 
   const fallbackRender = (fallbackProps: ErrorFallbackProps) =>
@@ -59,7 +67,7 @@ const ErrorBoundary: React.FC<ErrorBoundaryProps> = ({children, ...props}) => {
 }
 
 type ErrorFallbackProps = FallbackProps & {reset?: boolean}
-export const ErrorFallback: React.FC<ErrorFallbackProps> = ({error, resetErrorBoundary, reset = true}) => (
+export const ErrorFallback = ({error, resetErrorBoundary, reset = true}: ErrorFallbackProps) => (
   <View style={styles.container}>
     <View style={styles.errorHeader}>
       <Text>{error.message}</Text>

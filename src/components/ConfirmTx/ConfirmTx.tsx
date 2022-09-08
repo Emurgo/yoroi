@@ -44,7 +44,7 @@ type Props = {
   biometricInstructions?: Array<string>
 }
 
-export const ConfirmTx: React.FC<Props> = ({
+export const ConfirmTx = ({
   yoroiUnsignedTx,
   onError,
   onSuccess,
@@ -57,7 +57,7 @@ export const ConfirmTx: React.FC<Props> = ({
   autoSignIfEasyConfirmation,
   chooseTransportOnConfirmation,
   biometricInstructions,
-}) => {
+}: Props) => {
   const intl = useIntl()
   const strings = useStrings()
   const navigation = useNavigation()

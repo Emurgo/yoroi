@@ -83,7 +83,7 @@ const Palette = () => {
   )
 }
 
-const Section: React.FC<{title: string}> = ({title, children}) => {
+const Section = ({title, children}: {title: string; children: React.ReactNode}) => {
   const [colorScheme] = useColorScheme()
 
   return (
@@ -101,7 +101,7 @@ const Section: React.FC<{title: string}> = ({title, children}) => {
   )
 }
 
-const Item: React.FC<{title: string; color: string}> = ({title, color}) => {
+const Item = ({title, color}: {title: string; color: string}) => {
   return (
     <View style={{alignItems: 'center'}}>
       <Text>{title}</Text>
@@ -111,7 +111,7 @@ const Item: React.FC<{title: string; color: string}> = ({title, color}) => {
   )
 }
 
-const Gradient: React.FC<{title: string; colors: [string, string]}> = ({title, colors}) => {
+const Gradient = ({title, colors}: {title: string; colors: [string, string]}) => {
   return (
     <View style={{alignItems: 'center'}}>
       <Text>{title}</Text>

@@ -132,7 +132,7 @@ export const TxHistory = () => {
   )
 }
 
-const Tabs: React.FC = ({children}) => <View style={styles.tabs}>{children}</View>
+const Tabs = ({children}: {children: React.ReactNode}) => <View style={styles.tabs}>{children}</View>
 const Tab = ({
   onPress,
   active,
@@ -152,8 +152,8 @@ const Tab = ({
     {active && <View style={styles.indicator} />}
   </TouchableOpacity>
 )
-const TabPanels: React.FC = ({children}) => <View style={styles.tabNavigatorRoot}>{children}</View>
-const TabPanel: React.FC<{active: boolean}> = ({active, children}) => <>{active ? children : null}</>
+const TabPanels = ({children}: {children: React.ReactNode}) => <View style={styles.tabNavigatorRoot}>{children}</View>
+const TabPanel = ({active, children}: {active: boolean; children: React.ReactNode}) => <>{active ? children : null}</>
 
 const useStrings = () => {
   const intl = useIntl()

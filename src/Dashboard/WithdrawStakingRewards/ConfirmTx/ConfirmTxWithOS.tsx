@@ -22,7 +22,7 @@ type Props = {
   onSuccess: () => void
 }
 
-export const ConfirmTxWithOS: React.FC<Props> = ({wallet, unsignedTx, onSuccess, onCancel}) => {
+export const ConfirmTxWithOS = ({wallet, unsignedTx, onSuccess, onCancel}: Props) => {
   const intl = useIntl()
   const strings = useStrings()
   const navigation = useNavigation()
@@ -83,7 +83,7 @@ export const ConfirmTxWithOS: React.FC<Props> = ({wallet, unsignedTx, onSuccess,
   )
 }
 
-const LoadingOverlay: React.FC<{loading: boolean}> = ({loading}) => {
+const LoadingOverlay = ({loading}: {loading: boolean}) => {
   return loading ? (
     <View style={StyleSheet.absoluteFill}>
       <View style={[StyleSheet.absoluteFill, {opacity: 0.5, backgroundColor: 'pink'}]} />

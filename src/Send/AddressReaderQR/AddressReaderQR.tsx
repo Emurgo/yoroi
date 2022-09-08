@@ -5,7 +5,7 @@ import QRCodeScanner from 'react-native-qrcode-scanner'
 import {pastedFormatter} from '../../yoroi-wallets/utils/amountUtils'
 import {useSend} from '../Context/SendContext'
 
-export const AddressReaderQR: React.FC = () => {
+export const AddressReaderQR = () => {
   const navigation = useNavigation()
   const {receiverChanged, amountChanged} = useSend()
 

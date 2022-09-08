@@ -1,14 +1,23 @@
 import React from 'react'
 import {Animated, ViewStyle} from 'react-native'
 
-export const FadeOutView: React.FC<{
+export const FadeOutView = ({
+  displayDuration = 3000,
+  fadeDuration = 2000,
+  onStart,
+  onEnd,
+  visible,
+  style,
+  children,
+}: {
   displayDuration?: number
   fadeDuration?: number
   onStart?: () => void
   onEnd?: () => void
   visible: boolean
   style?: ViewStyle
-}> = ({displayDuration = 3000, fadeDuration = 2000, onStart, onEnd, visible, style, children}) => {
+  children: React.ReactNode
+}) => {
   const opacity = React.useRef(new Animated.Value(1)).current
 
   React.useEffect(() => {

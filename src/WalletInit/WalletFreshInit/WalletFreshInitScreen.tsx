@@ -47,7 +47,7 @@ const Actions = ({style, ...props}: ViewProps) => <View {...props} style={[style
 const ShelleyButton = (props: ButtonProps) => <Button {...props} testID="addWalletOnHaskellShelleyButton" />
 const ShelleyTestnetButton = (props: ButtonProps) => <Button {...props} testID="addWalletTestnetShelleyButton" />
 const ByronButton = (props: ButtonProps) => <Button {...props} outline testID="addWalletOnByronButton" />
-const NightlyOnly: React.FC = ({children}) => <>{isNightly() ? children : null}</>
+const NightlyOnly = ({children}: {children: React.ReactNode}) => <>{isNightly() ? children : null}</>
 
 const messages = defineMessages({
   addWalletButton: {

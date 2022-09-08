@@ -19,7 +19,7 @@ type Props = {
   onSuccess: () => void
 }
 
-export const ConfirmTxWithPassword: React.FC<Props> = ({wallet, storage, onSuccess, onCancel, unsignedTx}) => {
+export const ConfirmTxWithPassword = ({wallet, storage, onSuccess, onCancel, unsignedTx}: Props) => {
   const intl = useIntl()
   const strings = useStrings()
   const [password, setPassword] = React.useState(CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '')
