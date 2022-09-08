@@ -148,7 +148,7 @@ const Item = ({title, icon, mode = 'light'}: {title: string; icon: React.ReactEl
 }
 
 const FilterContext = React.createContext('')
-const FilterProvider: React.FC = ({children}) => {
+const FilterProvider = ({children}: {children: React.ReactNode}) => {
   const [filter, setFilter] = React.useState('')
 
   return (

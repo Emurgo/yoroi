@@ -9,9 +9,10 @@ type Props = {
   boldText?: boolean
   label?: string
   error?: boolean
+  children?: React.ReactNode
 }
 
-export const Banner: React.FC<Props> = ({error, text, boldText, label, children}) => (
+export const Banner = ({error, text, boldText, label, children}: Props) => (
   <View style={[styles.banner, error === true && styles.bannerError]}>
     {label != null && (
       <Text error={error} small style={styles.label}>

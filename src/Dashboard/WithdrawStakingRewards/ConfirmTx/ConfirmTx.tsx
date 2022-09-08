@@ -15,7 +15,7 @@ type Props = {
   onSuccess: () => void
 }
 
-export const ConfirmTx: React.FC<Props> = ({wallet, storage, onSuccess, onCancel, unsignedTx}) => {
+export const ConfirmTx = ({wallet, storage, onSuccess, onCancel, unsignedTx}: Props) => {
   return wallet.isHW ? (
     <ConfirmTxWithHW //
       wallet={wallet}

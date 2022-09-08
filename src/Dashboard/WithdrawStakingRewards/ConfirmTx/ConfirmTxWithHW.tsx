@@ -19,7 +19,7 @@ type Props = {
   onSuccess: () => void
 }
 
-export const ConfirmTxWithHW: React.FC<Props> = ({wallet, unsignedTx, onSuccess, onCancel}) => {
+export const ConfirmTxWithHW = ({wallet, unsignedTx, onSuccess, onCancel}: Props) => {
   const strings = useStrings()
   const [transport, setTransport] = React.useState<'USB' | 'BLE'>('USB')
   const [step, setStep] = React.useState<'select-transport' | 'connect-transport' | 'confirm'>('select-transport')
@@ -77,7 +77,7 @@ export const ConfirmTxWithHW: React.FC<Props> = ({wallet, unsignedTx, onSuccess,
   )
 }
 
-const Route: React.FC<{active: boolean}> = ({active, children}) => <>{active ? children : null}</>
+const Route = ({active, children}: {active: boolean; children: React.ReactNode}) => <>{active ? children : null}</>
 
 const useStrings = () => {
   const intl = useIntl()

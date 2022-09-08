@@ -9,7 +9,7 @@ import {lightTheme} from './lightTheme'
 import {Theme} from './types'
 
 const ThemeContext = React.createContext<undefined | ThemeContext>(undefined)
-export const ThemeProvider: React.FC = ({children}) => {
+export const ThemeProvider = ({children}: {children: React.ReactNode}) => {
   const defaultColorScheme = useColorScheme() ?? 'light'
   const savedColorScheme = useSavedColorScheme()
 
