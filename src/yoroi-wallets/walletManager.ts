@@ -244,11 +244,6 @@ class WalletManager {
     return this._wallet.isHW
   }
 
-  get hwDeviceInfo() {
-    if (!this._wallet) return null
-    return this._wallet.hwDeviceInfo
-  }
-
   get isReadOnly() {
     if (!this._wallet) return false
     return this._wallet.isReadOnly

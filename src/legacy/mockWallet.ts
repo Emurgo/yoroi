@@ -7,7 +7,6 @@ export const mockReduxWallet: ReduxWallet = {
   networkId: 300,
   walletImplementationId: 'haskell-shelley',
   isHW: false,
-  hwDeviceInfo: null,
   isReadOnly: false,
   transactions: {
     e7472d4f2b7b12f6b4626a7fc0caf67f388bdbd5aef02ffa8e2cc8f877bc247f: {
