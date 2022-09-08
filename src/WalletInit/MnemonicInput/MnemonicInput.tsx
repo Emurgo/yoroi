@@ -98,15 +98,21 @@ type MnemonicWordInputProps = {
   onSelect: (word: string) => void
   onFocus: () => void
 }
+
 const MnemonicWordInput = React.forwardRef<RNTextInput, MnemonicWordInputProps>(({id, onSelect, onFocus}, ref) => {
   const [word, setWord] = React.useState('')
   const matchingWords = React.useMemo(() => (!isEmptyString(word) ? getMatchingWords(word) : []), [word])
   const [menuEnabled, setMenuEnabled] = React.useState(false)
+  const dateTime = React.useRef<number>()
 
   const selectWord = (word: string) => {
     setWord(normalizeText(word))
-    setMenuEnabled(false)
     onSelect(normalizeText(word))
+
+    if (dateTime.current == null) throw new Error()
+    setTimeout(() => {
+      setMenuEnabled(false)
+    }, 1000 - (Date.now() - dateTime.current)) // RNP.Menu has a buggy show/hide
   }
 
   return (
@@ -119,7 +125,10 @@ const MnemonicWordInput = React.forwardRef<RNTextInput, MnemonicWordInputProps>(
           value={word}
           placeholder={String(id)}
           onFocus={onFocus}
-          onChange={() => setMenuEnabled(true)}
+          onChange={() => {
+            setMenuEnabled(true)
+            dateTime.current = Date.now()
+          }}
           onChangeText={(word) => setWord(normalizeText(word))}
           enablesReturnKeyAutomatically
           blurOnSubmit={false}
