@@ -164,7 +164,6 @@ export const CONFIG = {
   HARDWARE_WALLETS,
   CATALYST,
   PIN_LENGTH: 6,
-  APP_LOCK_TIMEOUT: 120 * 1000,
   LOG_LEVEL: _LOG_LEVEL,
   COMMIT: _COMMIT,
   // added next SDKs till update bridge, 31 there are installations already
