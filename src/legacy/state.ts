@@ -58,7 +58,6 @@ export type State = {
     poolOperator: string | null
   }
   isAppInitialized: boolean
-  isKeyboardOpen: boolean
   appSettings: {
     acceptedTos: boolean
     installationId: string | null | undefined
@@ -116,7 +115,6 @@ export const getInitialState = (): State => ({
     poolOperator: null,
   },
   isAppInitialized: false,
-  isKeyboardOpen: false,
   appSettings: {
     acceptedTos: false,
     installationId: null,

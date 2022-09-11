@@ -3,7 +3,7 @@ import 'react-intl'
 import 'redux'
 
 import type {IntlShape} from 'react-intl'
-import {Alert, Keyboard, Platform} from 'react-native'
+import {Alert, Platform} from 'react-native'
 import RNBootSplash from 'react-native-bootsplash'
 import type {Dispatch} from 'redux'
 import uuid from 'uuid'
@@ -259,13 +259,6 @@ const _setOnline = (isOnline: boolean) => (dispatch, getState) => {
   })
 }
 
-const setIsKeyboardOpen = (isOpen) => ({
-  type: 'Set isKeyboardOpen',
-  path: ['isKeyboardOpen'],
-  payload: isOpen,
-  reducer: (state: State, payload) => payload,
-})
-
 export const setupHooks = () => (dispatch: Dispatch<any>) => {
   Logger.debug('setting up isOnline callback')
   Logger.debug('setting wallet manager hook')
@@ -275,8 +268,6 @@ export const setupHooks = () => (dispatch: Dispatch<any>) => {
   Logger.debug('setting up app lock')
 
   Logger.debug('setting up keyboard manager')
-  Keyboard.addListener('keyboardDidShow', () => dispatch(setIsKeyboardOpen(true)))
-  Keyboard.addListener('keyboardDidHide', () => dispatch(setIsKeyboardOpen(false)))
 }
 export const generateNewReceiveAddress = () => async (_dispatch: Dispatch<any>) => {
   return walletManager.generateNewUiReceiveAddress()
