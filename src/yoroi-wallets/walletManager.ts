@@ -46,6 +46,7 @@ export type WalletManagerEvent =
   | {type: 'easy-confirmation'; enabled: boolean}
   | {type: 'wallet-opened'; wallet: WalletInterface}
   | {type: 'wallet-closed'; id: string}
+  | {type: 'wallet-removed'; id: string; wallets: {[id: string]: WalletMeta}}
   | {type: 'hw-device-info'; hwDeviceInfo: HWDeviceInfo}
 
 export type WalletManagerSubscription = (event: WalletManagerEvent) => void
@@ -544,6 +545,12 @@ class WalletManager {
     await storage.remove(`/wallet/${id}`)
 
     this._wallets = _.omit(this._wallets, id)
+
+    this._notify({
+      type: 'wallet-removed',
+      id,
+      wallets: this._wallets,
+    })
   }
 
   // TODO(ppershing): how should we deal with race conditions?

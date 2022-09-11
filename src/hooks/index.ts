@@ -503,6 +503,7 @@ export const useWalletNames = () => {
 
 export const useWalletMetas = <T = Array<WalletMeta>>(options?: UseQueryOptions<Array<WalletMeta>, Error, T>) => {
   const query = useQuery({
+    suspense: true,
     queryKey: ['walletMetas'],
     queryFn: async () => {
       const keys = await storage.keys('/wallet/')
@@ -512,6 +513,8 @@ export const useWalletMetas = <T = Array<WalletMeta>>(options?: UseQueryOptions<
     },
     ...options,
   })
+
+  if (!query.data) throw new Error('invalid state')
 
   return query.data
 }

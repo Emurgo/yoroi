@@ -189,7 +189,6 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
   const canEnableBiometricEncryption = (await canBiometricEncryptionBeEnabled()) && !shouldNotEnableBiometricAuth
   await dispatch(setAppSettingField(APP_SETTINGS_KEYS.CAN_ENABLE_BIOMETRIC_ENCRYPTION, canEnableBiometricEncryption))
   await walletManager.initialize()
-  await dispatch(updateWallets())
 
   if (canEnableBiometricEncryption && isSystemAuthEnabledSelector(state)) {
     // On android 6 signin keys can get invalidated
