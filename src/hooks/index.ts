@@ -28,17 +28,19 @@ import {Storage} from '../Storage'
 import {DefaultAsset, Token} from '../types'
 import {
   Cardano,
+  generateShelleyPlateFromKey,
   NetworkId,
   TxSubmissionStatus,
+  Utxos,
   WalletEvent,
   WalletImplementationId,
   walletManager,
+  YoroiAmounts,
   YoroiProvider,
+  YoroiSignedTx,
+  YoroiUnsignedTx,
   YoroiWallet,
 } from '../yoroi-wallets'
-import {generateShelleyPlateFromKey} from '../yoroi-wallets/cardano/shelley/plate'
-import {YoroiAmounts, YoroiSignedTx, YoroiUnsignedTx} from '../yoroi-wallets/types'
-import {Utxos} from '../yoroi-wallets/utils'
 
 // WALLET
 export const useWallet = (wallet: YoroiWallet, event: WalletEvent['type']) => {

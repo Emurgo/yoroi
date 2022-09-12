@@ -1,8 +1,7 @@
 import {useMutation, UseMutationOptions} from 'react-query'
 
 import {getDefaultAssetByNetworkId} from '../legacy/config'
-import {generatePrivateKeyForCatalyst, YoroiWallet} from '../yoroi-wallets'
-import {YoroiUnsignedTx} from '../yoroi-wallets/types'
+import {generatePrivateKeyForCatalyst, YoroiUnsignedTx, YoroiWallet} from '../yoroi-wallets'
 import {encryptWithPassword} from './catalystCipher'
 
 export type VotingRegTxVariables = {

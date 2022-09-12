@@ -9,8 +9,7 @@ import {Button, Checkmark, Spacer, TextInput} from '../../components'
 import {errorMessages} from '../../i18n/global-messages'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
-import {YoroiWallet} from '../../yoroi-wallets'
-import {REQUIRED_PASSWORD_LENGTH, validatePassword} from '../../yoroi-wallets/utils/validators'
+import {REQUIRED_PASSWORD_LENGTH, validatePassword, YoroiWallet} from '../../yoroi-wallets'
 
 export const ChangePasswordScreen = () => {
   const strings = useStrings()

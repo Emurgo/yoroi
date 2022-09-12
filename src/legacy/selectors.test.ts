@@ -1,6 +1,6 @@
 import {fromPairs} from 'lodash'
 
-import {toCachedTx} from '../yoroi-wallets/cardano/shelley/transactionCache'
+import {toCachedTx} from '../yoroi-wallets'
 import {availableAssetsSelector, tokenBalanceSelector} from './selectors'
 import {mockState} from './state'
 import type {RawTransaction} from './types'

@@ -15,8 +15,7 @@ import {CONFIG, getDefaultAssetByNetworkId} from '../legacy/config'
 import {formatTokenWithSymbol} from '../legacy/format'
 import {CatalystRouteNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
-import {YoroiUnsignedTx} from '../yoroi-wallets/types'
-import {Amounts} from '../yoroi-wallets/utils'
+import {Amounts, YoroiUnsignedTx} from '../yoroi-wallets'
 import {Actions, Description, Title} from './components'
 
 export const Step5 = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx}) => {

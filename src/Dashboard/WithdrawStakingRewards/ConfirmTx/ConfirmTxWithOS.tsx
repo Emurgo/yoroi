@@ -11,8 +11,7 @@ import {clearAccountState} from '../../../legacy/account'
 import {showErrorDialog} from '../../../legacy/actions'
 import {ensureKeysValidity} from '../../../legacy/deviceSettings'
 import {clearUTXOs} from '../../../legacy/utxo'
-import {SystemAuthDisabled, YoroiWallet} from '../../../yoroi-wallets'
-import {YoroiUnsignedTx} from '../../../yoroi-wallets/types'
+import {SystemAuthDisabled, YoroiUnsignedTx, YoroiWallet} from '../../../yoroi-wallets'
 import {TransferSummary} from '../TransferSummary'
 
 type Props = {

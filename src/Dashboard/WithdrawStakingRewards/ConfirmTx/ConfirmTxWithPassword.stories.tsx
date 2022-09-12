@@ -5,8 +5,7 @@ import React from 'react'
 import {mockKeyStore, mockWallet, mockYoroiSignedTx, mockYoroiTx, WithModal} from '../../../../storybook'
 import {Boundary} from '../../../components'
 import KeyStore from '../../../legacy/KeyStore'
-import {YoroiWallet} from '../../../yoroi-wallets'
-import {YoroiUnsignedTx} from '../../../yoroi-wallets/types'
+import {YoroiUnsignedTx, YoroiWallet} from '../../../yoroi-wallets'
 import {ConfirmTxWithPassword} from './ConfirmTxWithPassword'
 
 storiesOf('ConfirmWithdrawalTx/Password', module)

@@ -8,7 +8,7 @@ import {useWalletNames} from '../../hooks'
 import globalMessages from '../../i18n/global-messages'
 import {ignoreConcurrentAsyncHandler} from '../../legacy/utils'
 import {spacing} from '../../theme'
-import {getWalletNameError, validateWalletName} from '../../yoroi-wallets/utils/validators'
+import {getWalletNameError, validateWalletName} from '../../yoroi-wallets'
 
 type Props = {
   onSubmit: ({name}: {name: string}) => void

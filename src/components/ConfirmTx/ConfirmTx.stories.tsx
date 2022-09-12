@@ -4,7 +4,7 @@ import React from 'react'
 
 import {mockWallet} from '../../../storybook'
 import {SelectedWalletProvider} from '../../SelectedWallet'
-import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
+import {YoroiUnsignedTx} from '../../yoroi-wallets'
 import {ConfirmTx} from './ConfirmTx'
 
 storiesOf('ConfirmTx', module)

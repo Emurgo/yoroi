@@ -6,9 +6,7 @@ import {useSignWithHwAndSubmitTx} from '../../../hooks'
 import {LedgerConnect, LedgerTransportSwitch} from '../../../HW'
 import {confirmationMessages, txLabels} from '../../../i18n/global-messages'
 import type {DeviceId, DeviceObj} from '../../../legacy/ledgerUtils'
-import {walletManager, YoroiWallet} from '../../../yoroi-wallets'
-import {withBLE, withUSB} from '../../../yoroi-wallets/hwWallet'
-import {YoroiUnsignedTx} from '../../../yoroi-wallets/types'
+import {walletManager, withBLE, withUSB, YoroiUnsignedTx, YoroiWallet} from '../../../yoroi-wallets'
 import {TransferSummary} from '../TransferSummary'
 
 type Props = {

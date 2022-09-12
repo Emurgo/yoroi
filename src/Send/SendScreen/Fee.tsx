@@ -6,7 +6,7 @@ import {Text} from '../../components'
 import {getDefaultAssetByNetworkId} from '../../legacy/config'
 import {formatTokenWithSymbol} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
-import {Quantity} from '../../yoroi-wallets/types'
+import {Quantity} from '../../yoroi-wallets'
 import {useStrings} from './strings'
 
 export const Fee = ({fee}: {fee: Quantity | null}) => {

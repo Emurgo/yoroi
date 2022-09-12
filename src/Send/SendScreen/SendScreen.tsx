@@ -22,14 +22,17 @@ import {
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {UtxoAutoRefresher} from '../../UtxoAutoRefresher'
-import {Quantity, YoroiAmounts, YoroiUnsignedTx} from '../../yoroi-wallets/types'
-import {Amounts, Quantities} from '../../yoroi-wallets/utils'
-import {parseAmountDecimal} from '../../yoroi-wallets/utils/parsing'
-import type {
+import {
   AddressValidationErrors,
+  Amounts,
   AmountValidationErrors,
   BalanceValidationErrors,
-} from '../../yoroi-wallets/utils/validators'
+  parseAmountDecimal,
+  Quantities,
+  Quantity,
+  YoroiAmounts,
+  YoroiUnsignedTx,
+} from '../../yoroi-wallets'
 import {useSend} from '../Context/SendContext'
 import {AmountField} from './../AmountField'
 import {AvailableAmountBanner} from './AvailableAmountBanner'

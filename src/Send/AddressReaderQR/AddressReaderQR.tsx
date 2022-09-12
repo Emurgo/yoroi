@@ -2,7 +2,7 @@ import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import QRCodeScanner from 'react-native-qrcode-scanner'
 
-import {pastedFormatter} from '../../yoroi-wallets/utils/amountUtils'
+import {pastedFormatter} from '../../yoroi-wallets'
 import {useSend} from '../Context/SendContext'
 
 export const AddressReaderQR = () => {

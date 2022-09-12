@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {BigNumber} from 'bignumber.js'
 
-import type {CardanoTypes, ServerStatus, WalletInterface} from '../yoroi-wallets'
+import {CardanoTypes, ServerStatus, WalletInterface} from '../yoroi-wallets'
 import {mockReduxWallet} from './mockWallet'
 import type {NetworkId, RawUtxo, WalletImplementationId, YoroiProvider} from './types'
 import {NETWORK_REGISTRY} from './types'

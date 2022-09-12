@@ -7,8 +7,7 @@ import {useSignWithPasswordAndSubmitTx} from '../../../hooks'
 import {confirmationMessages, txLabels} from '../../../i18n/global-messages'
 import {CONFIG} from '../../../legacy/config'
 import KeyStore from '../../../legacy/KeyStore'
-import {YoroiWallet} from '../../../yoroi-wallets'
-import {YoroiUnsignedTx} from '../../../yoroi-wallets/types'
+import {YoroiUnsignedTx, YoroiWallet} from '../../../yoroi-wallets'
 import {TransferSummary} from '../TransferSummary'
 
 type Props = {

@@ -10,13 +10,11 @@ import {Instructions as HWInstructions} from '../../HW'
 import globalMessages, {txLabels} from '../../i18n/global-messages'
 import {CONFIG, getDefaultAssetByNetworkId} from '../../legacy/config'
 import {formatTokenAmount, formatTokenWithText} from '../../legacy/format'
-import {useParams, useWalletNavigation} from '../../navigation'
-import {StakingCenterRoutes} from '../../navigation'
+import {StakingCenterRoutes, useParams, useWalletNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {DefaultAsset} from '../../types'
-import {Quantity} from '../../yoroi-wallets/types'
-import {Amounts, Entries, Quantities} from '../../yoroi-wallets/utils'
+import {Amounts, Entries, Quantities, Quantity} from '../../yoroi-wallets'
 
 type Params = StakingCenterRoutes['delegation-confirmation']
 

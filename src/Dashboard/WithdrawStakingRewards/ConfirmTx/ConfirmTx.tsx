@@ -1,8 +1,7 @@
 import React from 'react'
 
 import KeyStore from '../../../legacy/KeyStore'
-import {YoroiWallet} from '../../../yoroi-wallets'
-import {YoroiUnsignedTx} from '../../../yoroi-wallets/types'
+import {YoroiUnsignedTx, YoroiWallet} from '../../../yoroi-wallets'
 import {ConfirmTxWithHW} from './ConfirmTxWithHW'
 import {ConfirmTxWithOS} from './ConfirmTxWithOS'
 import {ConfirmTxWithPassword} from './ConfirmTxWithPassword'

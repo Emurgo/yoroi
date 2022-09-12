@@ -1,6 +1,4 @@
-import '../yoroi-wallets'
-
-import type {TokenEntry, TokenEntryPlain} from '../yoroi-wallets'
+import {TokenEntry, TokenEntryPlain} from '../yoroi-wallets'
 import type {RemoteAsset, RemoteCertificateMeta} from './types'
 export const TRANSACTION_DIRECTION = {
   SENT: 'SENT',

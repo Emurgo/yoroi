@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type {
-  DeviceOwnedAddress,
   GetExtendedPublicKeyRequest,
   GetExtendedPublicKeyResponse,
   GetSerialResponse,
@@ -8,7 +7,7 @@ import type {
   SignTransactionRequest,
   SignTransactionResponse,
 } from '@cardano-foundation/ledgerjs-hw-app-cardano'
-import AppAda, {AddressType, DeviceStatusCodes} from '@cardano-foundation/ledgerjs-hw-app-cardano'
+import AppAda, {DeviceStatusCodes} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
 import TransportHID from '@v-almonacid/react-native-hid'
 import {PermissionsAndroid, Platform} from 'react-native'
@@ -17,11 +16,8 @@ import {BleError} from 'react-native-ble-plx'
 import {ledgerMessages} from '../i18n/global-messages'
 import LocalizableError from '../i18n/LocalizableError'
 import {Logger} from '../legacy/logging'
-import {CardanoMobile, CardanoTypes} from '../yoroi-wallets'
 import {CONFIG, isByron, isHaskellShelley} from './config'
-import {getNetworkConfigById} from './networks'
-import type {Addressing, NetworkId, WalletImplementationId} from './types'
-import {normalizeToAddress, verifyFromBip44Root} from './utils'
+import type {WalletImplementationId} from './types'
 
 //
 // ============== Errors ==================
@@ -324,156 +320,10 @@ export const getHWDeviceInfo = async (
     throw mapLedgerError(e)
   }
 }
-export const verifyAddress = async (
-  walletImplementationId: WalletImplementationId,
-  networkId: NetworkId,
-  byronNetworkMagic: number,
-  address: string,
-  addressing: Addressing['addressing'],
-  hwDeviceInfo: HWDeviceInfo,
-  useUSB = false,
-): Promise<void> => {
-  try {
-    Logger.debug('ledgerUtils::verifyAddress called')
-    Logger.debug('hwDeviceInfo', hwDeviceInfo)
-    Logger.debug('path', addressing.path)
-    Logger.debug('useUSB', useUSB)
-
-    if (hwDeviceInfo == null) {
-      throw new Error('ledgerUtils::verifyAddress: hwDeviceInfo is null')
-    }
-
-    verifyFromBip44Root(addressing)
-    const addressPtr = await normalizeToAddress(address)
-    let chainNetworkId = CONFIG.NETWORKS.HASKELL_SHELLEY.CHAIN_NETWORK_ID
-    const networkConfig = getNetworkConfigById(networkId)
-
-    if ('CHAIN_NETWORK_ID' in networkConfig && networkConfig.CHAIN_NETWORK_ID != null) {
-      chainNetworkId = networkConfig.CHAIN_NETWORK_ID
-    }
-
-    const stakingKeyAddressing = {}
-
-    if (isHaskellShelley(walletImplementationId)) {
-      const baseAddr = await CardanoMobile.BaseAddress.fromAddress(addressPtr as any)
-
-      if (baseAddr) {
-        const rewardAddr = await CardanoMobile.RewardAddress.new(
-          Number.parseInt(chainNetworkId, 10),
-          await baseAddr.stakeCred(),
-        )
-        const addressPayload = Buffer.from(await (await rewardAddr.toAddress()).toBytes()).toString('hex')
-        stakingKeyAddressing[addressPayload] = {
-          path: [
-            CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852,
-            CONFIG.NUMBERS.COIN_TYPES.CARDANO,
-            CONFIG.NUMBERS.ACCOUNT_INDEX + CONFIG.NUMBERS.HARD_DERIVATION_START,
-            CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
-            CONFIG.NUMBERS.STAKING_KEY_INDEX,
-          ],
-          startLevel: CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.PURPOSE,
-        }
-      }
-    }
-
-    const addressingMap = (address) => stakingKeyAddressing[address]
-
-    const addressParams = await toLedgerAddressParameters({
-      networkId: Number.parseInt(chainNetworkId, 10),
-      address: (await normalizeToAddress(address)) as any,
-      path: addressing.path,
-      addressingMap,
-    })
-    const appAda = await connectionHandler(hwDeviceInfo.hwFeatures.deviceId, hwDeviceInfo.hwFeatures.deviceObj, useUSB)
-    await appAda.showAddress({
-      network: {
-        protocolMagic: byronNetworkMagic,
-        networkId: Number.parseInt(chainNetworkId, 10),
-      },
-      address: addressParams,
-    })
-    await appAda.transport.close()
-  } catch (e) {
-    throw mapLedgerError(e)
-  }
-}
 //
 // ============== transaction logic ==================
 //
 
-async function toLedgerAddressParameters(request: {
-  networkId: number
-  address: CardanoTypes.Address
-  path: Array<number>
-  addressingMap: (arg0: string) => void | Addressing['addressing']
-}): Promise<DeviceOwnedAddress> {
-  {
-    const byronAddr = await CardanoMobile.ByronAddress.fromAddress(request.address)
-
-    if (byronAddr) {
-      return {
-        type: AddressType.BYRON,
-        params: {
-          spendingPath: request.path,
-        },
-      }
-    }
-  }
-  {
-    const baseAddr = await CardanoMobile.BaseAddress.fromAddress(request.address)
-
-    if (baseAddr) {
-      const rewardAddr = await CardanoMobile.RewardAddress.new(request.networkId, await baseAddr.stakeCred())
-      const addressPayload = Buffer.from(await (await rewardAddr.toAddress()).toBytes()).toString('hex')
-      const addressing = request.addressingMap(addressPayload)
-
-      if (addressing == null) {
-        const stakeCred = await baseAddr.stakeCred()
-        const wasmHash = (await stakeCred.toKeyhash()) ?? (await stakeCred.toScripthash())
-
-        if (wasmHash == null) {
-          throw new Error('toLedgerAddressParameters unknown hash type')
-        }
-
-        const hashInAddress = Buffer.from(await wasmHash.toBytes()).toString('hex')
-        return {
-          type: AddressType.BASE_PAYMENT_KEY_STAKE_KEY,
-          params: {
-            spendingPath: request.path,
-            // can't always know staking key path since address may not belong to the wallet
-            // (mangled address)
-            stakingKeyHashHex: hashInAddress,
-          },
-        }
-      } else {
-        return {
-          type: AddressType.BASE_PAYMENT_KEY_STAKE_KEY,
-          params: {
-            spendingPath: request.path,
-            // can't always know staking key path since address may not belong to the wallet
-            // (mangled address)
-            stakingPath: addressing.path,
-          },
-        }
-      }
-    }
-  }
-  // TODO(v-almonacid): PointerAddress not yet implemented (bindings missing)
-  // TODO(v-almonacid): EnterpriseAddress not yet implemented (bindings missing)
-  {
-    const rewardAddr = await CardanoMobile.RewardAddress.fromAddress(request.address)
-
-    if (rewardAddr) {
-      return {
-        type: AddressType.REWARD_KEY,
-        params: {
-          stakingPath: request.path,
-        },
-      }
-    }
-  }
-  throw new Error('toLedgerAddressParameters: unknown address type')
-}
 export const signTxWithLedger = async (
   signRequest: SignTransactionRequest,
   hwDeviceInfo: HWDeviceInfo,

@@ -14,7 +14,7 @@ import {formatTokenWithSymbol, formatTokenWithText} from '../../legacy/format'
 import {useParams, useWalletNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
-import {Quantity, TokenId, YoroiAmounts, YoroiUnsignedTx} from '../../yoroi-wallets/types'
+import {Quantity, TokenId, YoroiAmounts, YoroiUnsignedTx} from '../../yoroi-wallets'
 import {useSend} from '../Context/SendContext'
 
 export type Params = {

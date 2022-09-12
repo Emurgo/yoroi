@@ -11,8 +11,7 @@ import {formatTokenWithText} from '../legacy/format'
 import {Logger} from '../legacy/logging'
 import {availableAssetsSelector, tokenBalanceSelector} from '../legacy/selectors'
 import {COLORS} from '../theme'
-import {walletManager} from '../yoroi-wallets'
-import {isRegistrationOpen} from '../yoroi-wallets'
+import {isRegistrationOpen, walletManager} from '../yoroi-wallets'
 type Props = {onPress: () => void; disabled?: boolean}
 
 export const VotingBanner = ({onPress, disabled}: Props) => {

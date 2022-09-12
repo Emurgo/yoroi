@@ -25,13 +25,13 @@ import {fetchUTXOs} from '../legacy/utxo'
 import {useWalletNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
 import {UtxoAutoRefresher} from '../UtxoAutoRefresher'
-import {YoroiWallet} from '../yoroi-wallets'
 import {
   genCurrentEpochLength,
   genCurrentSlotLength,
   genTimeToSlot,
   genToRelativeSlotNumber,
-} from '../yoroi-wallets/utils/timeUtils'
+  YoroiWallet,
+} from '../yoroi-wallets'
 import {EpochProgress} from './EpochProgress'
 import {NotDelegatedInfo} from './NotDelegatedInfo'
 import {StakePoolInfos, useStakingInfo} from './StakePoolInfos'

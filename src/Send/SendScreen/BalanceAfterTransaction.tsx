@@ -8,7 +8,7 @@ import {useTokenInfo} from '../../hooks'
 import {formatTokenWithSymbol} from '../../legacy/format'
 import {tokenBalanceSelector} from '../../legacy/selectors'
 import {useSelectedWallet} from '../../SelectedWallet'
-import {Quantity} from '../../yoroi-wallets/types'
+import {Quantity} from '../../yoroi-wallets'
 import {useStrings} from './strings'
 
 export const BalanceAfterTransaction = ({balanceAfter}: {balanceAfter: Quantity | null}) => {

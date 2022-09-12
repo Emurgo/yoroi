@@ -12,8 +12,7 @@ import {availableAssetsSelector, tokenBalanceSelector} from '../legacy/selectors
 import {isEmptyString} from '../legacy/utils'
 import {useSelectedWallet} from '../SelectedWallet'
 import {Token} from '../types'
-import {YoroiWallet} from '../yoroi-wallets'
-import {calcLockedDeposit} from '../yoroi-wallets/cardano/assetUtils'
+import {calcLockedDeposit, YoroiWallet} from '../yoroi-wallets'
 
 type Props = {
   privacyMode?: boolean

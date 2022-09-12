@@ -3,7 +3,7 @@ import React from 'react'
 
 import {mockWallet, mockYoroiTx, WithModal} from '../../../../storybook'
 import {Boundary} from '../../../components'
-import {YoroiUnsignedTx} from '../../../yoroi-wallets/types'
+import {YoroiUnsignedTx} from '../../../yoroi-wallets'
 import {TransferSummary} from './TransferSummary'
 
 storiesOf('TransferSummary', module)

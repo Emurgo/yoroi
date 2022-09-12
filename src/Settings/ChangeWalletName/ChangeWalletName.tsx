@@ -10,7 +10,7 @@ import globalMessages from '../../i18n/global-messages'
 import {isEmptyString} from '../../legacy/utils'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
-import {getWalletNameError, validateWalletName} from '../../yoroi-wallets/utils/validators'
+import {getWalletNameError, validateWalletName} from '../../yoroi-wallets'
 
 export const ChangeWalletName = () => {
   const strings = useStrings()

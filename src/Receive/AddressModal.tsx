@@ -8,7 +8,7 @@ import {CopyButton, Modal, Spacer, Text} from '../components'
 import {AddressType, formatPath} from '../legacy/commonUtils'
 import {externalAddressIndexSelector, internalAddressIndexSelector} from '../legacy/selectors'
 import {useSelectedWallet} from '../SelectedWallet'
-import {getSpendingKey, getStakingKey} from '../yoroi-wallets/cardano/addressInfo'
+import {getSpendingKey, getStakingKey} from '../yoroi-wallets'
 
 type Path = {
   account: number

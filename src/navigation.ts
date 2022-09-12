@@ -6,8 +6,14 @@ import {Platform} from 'react-native'
 import {HWDeviceInfo} from './legacy/ledgerUtils'
 import type {RawUtxo} from './legacy/types'
 import {COLORS} from './theme'
-import {NetworkId, WalletImplementationId, YoroiProvider} from './yoroi-wallets'
-import {Quantity, YoroiAmounts, YoroiUnsignedTx} from './yoroi-wallets/types'
+import {
+  NetworkId,
+  Quantity,
+  WalletImplementationId,
+  YoroiAmounts,
+  YoroiProvider,
+  YoroiUnsignedTx,
+} from './yoroi-wallets'
 
 // prettier-ignore
 export const useUnsafeParams = <Params, >() => {
