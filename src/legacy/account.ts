@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {walletManager} from '@yoroi-wallets'
 import {BigNumber} from 'bignumber.js'
 import type {Dispatch} from 'redux'
 
 import {Logger} from '../legacy/logging'
-import {walletManager} from '../yoroi-wallets'
 import {ObjectValues} from './flow'
 import type {State} from './state'
 

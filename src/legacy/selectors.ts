@@ -1,17 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {getDefaultNetworkTokenEntry, MultiToken} from '@yoroi-wallets'
 import {BigNumber} from 'bignumber.js'
 import {fromPairs, mapValues} from 'lodash'
 import {createSelector} from 'reselect'
 
 import type {State} from '../legacy/state'
-import {getDefaultNetworkTokenEntry, MultiToken} from '../yoroi-wallets'
 import {getCardanoDefaultAsset, getDefaultAssets} from './config'
 import {ObjectValues} from './flow'
 import type {DefaultAsset, Token, Transaction, TransactionInfo} from './HistoryTransaction'
 import {TRANSACTION_DIRECTION, TRANSACTION_STATUS} from './HistoryTransaction'
 import {processTxHistoryData} from './processTransactions'
-import type {NetworkId} from './types'
-import type {RawUtxo} from './types'
+import type {NetworkId, RawUtxo} from './types'
 import {NETWORK_REGISTRY} from './types'
 
 export const transactionsInfoSelector: (state: State) => Record<string, TransactionInfo> = createSelector(

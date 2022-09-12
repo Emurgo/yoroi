@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {CardanoTypes, MultiToken} from '@yoroi-wallets'
 import {BigNumber} from 'bignumber.js'
 
 import {TokenInfo} from '../types'
-import {CardanoTypes, MultiToken} from '../yoroi-wallets'
 export type Address = {
   readonly address: string
 }

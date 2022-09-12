@@ -1,3 +1,4 @@
+import {Quantity} from '@yoroi-wallets'
 import {BigNumber} from 'bignumber.js'
 import React from 'react'
 import {StyleSheet} from 'react-native'
@@ -6,7 +7,6 @@ import {Text} from '../../components'
 import {getDefaultAssetByNetworkId} from '../../legacy/config'
 import {formatTokenWithSymbol} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
-import {Quantity} from '../../yoroi-wallets'
 import {useStrings} from './strings'
 
 export const Fee = ({fee}: {fee: Quantity | null}) => {

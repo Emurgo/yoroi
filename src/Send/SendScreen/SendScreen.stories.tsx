@@ -1,10 +1,10 @@
 import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
+import {YoroiWallet} from '@yoroi-wallets'
 import * as React from 'react'
 
 import {mockWallet} from '../../../storybook'
 import {SelectedWalletProvider} from '../../SelectedWallet'
-import {YoroiWallet} from '../../yoroi-wallets'
 import {SendProvider} from '../Context/SendContext'
 import {SendScreen} from './SendScreen'
 

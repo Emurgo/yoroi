@@ -5,14 +5,13 @@
  * TODO: migrate here common utilities from Byron/util.js
  */
 
+import {Cardano, CardanoMobile, DefaultTokenEntry, MultiToken} from '@yoroi-wallets'
 import {BigNumber} from 'bignumber.js'
 import {generateMnemonic, mnemonicToEntropy} from 'bip39'
 import cryptoRandomString from 'crypto-random-string'
 import {randomBytes} from 'react-native-randombytes'
 
 import {SendTokenList} from '../types'
-import {Cardano, CardanoMobile, DefaultTokenEntry} from '../yoroi-wallets'
-import {MultiToken} from '../yoroi-wallets'
 import assert from './assert'
 import {CONFIG, getWalletConfigById} from './config'
 import {CardanoError, WrongPassword} from './errors'

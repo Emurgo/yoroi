@@ -1,15 +1,14 @@
 import {RouteProp, useRoute} from '@react-navigation/native'
+import {NetworkId, WalletImplementationId, YoroiProvider} from '@yoroi-wallets'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ScrollView, TouchableOpacity, View} from 'react-native'
-import {StyleSheet} from 'react-native'
+import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Spacer, StatusBar, Text} from '../../components'
 import {useCreateWallet} from '../../hooks'
 import {useWalletNavigation, WalletInitRoutes} from '../../navigation'
 import {COLORS} from '../../theme'
-import {NetworkId, WalletImplementationId, YoroiProvider} from '../../yoroi-wallets'
 
 export type Params = {
   mnemonic: string

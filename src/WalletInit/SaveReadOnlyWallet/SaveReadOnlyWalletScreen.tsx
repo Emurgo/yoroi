@@ -1,8 +1,8 @@
 import {RouteProp, useRoute} from '@react-navigation/native'
+import {NetworkId} from '@yoroi-wallets'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {FlatList, ScrollView, View} from 'react-native'
-import {StyleSheet} from 'react-native'
+import {FlatList, ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Boundary, Icon, Line, StatusBar, Text} from '../../components'
@@ -13,7 +13,6 @@ import {Logger} from '../../legacy/logging'
 import {isEmptyString} from '../../legacy/utils'
 import {useWalletNavigation, WalletInitRoutes} from '../../navigation'
 import {theme} from '../../theme'
-import {NetworkId} from '../../yoroi-wallets'
 import {WalletAddress} from '../WalletAddress'
 import {WalletNameForm} from '../WalletNameForm'
 

@@ -1,7 +1,7 @@
+import {TokenId, YoroiWallet} from '@yoroi-wallets'
 import * as React from 'react'
 
 import {getDefaultAssetByNetworkId} from '../../legacy/config'
-import {TokenId, YoroiWallet} from '../../yoroi-wallets'
 
 type SendState = {
   tokenId: TokenId

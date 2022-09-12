@@ -9,5 +9,13 @@ module.exports = {
       },
     ],
     '@babel/plugin-proposal-export-namespace-from',
+    [
+      'module-resolver',
+      {
+        alias: {
+          '@yoroi-wallets': './src/yoroi-wallets',
+        },
+      },
+    ],
   ],
 }

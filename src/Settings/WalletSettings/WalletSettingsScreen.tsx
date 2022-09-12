@@ -1,3 +1,4 @@
+import {NetworkId, WalletImplementationId, walletManager} from '@yoroi-wallets'
 import React from 'react'
 import type {MessageDescriptor} from 'react-intl'
 import {defineMessages, useIntl} from 'react-intl'
@@ -16,7 +17,6 @@ import {isSystemAuthEnabledSelector} from '../../legacy/selectors'
 import {clearUTXOs} from '../../legacy/utxo'
 import {useWalletNavigation} from '../../navigation'
 import {useSelectedWallet, useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
-import {NetworkId, WalletImplementationId, walletManager} from '../../yoroi-wallets'
 import {
   NavigatedSettingsItem,
   PressableSettingsItem,

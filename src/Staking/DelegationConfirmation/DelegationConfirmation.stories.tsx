@@ -1,10 +1,10 @@
 import {storiesOf} from '@storybook/react-native'
+import {getDefaultNetworkTokenEntry, MultiToken} from '@yoroi-wallets'
 import {BigNumber} from 'bignumber.js'
 import React from 'react'
 
 import {RouteProvider} from '../../../storybook'
 import {getDefaultAssets} from '../../legacy/config'
-import {getDefaultNetworkTokenEntry, MultiToken} from '../../yoroi-wallets'
 import {DelegationConfirmation} from './DelegationConfirmation'
 
 const defaultNetworkId = getDefaultAssets()[0].networkId

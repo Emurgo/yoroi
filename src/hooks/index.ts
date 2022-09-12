@@ -1,6 +1,21 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useNetInfo} from '@react-native-community/netinfo'
 import {useFocusEffect} from '@react-navigation/native'
+import {
+  Cardano,
+  generateShelleyPlateFromKey,
+  NetworkId,
+  TxSubmissionStatus,
+  Utxos,
+  WalletEvent,
+  WalletImplementationId,
+  walletManager,
+  YoroiAmounts,
+  YoroiProvider,
+  YoroiSignedTx,
+  YoroiUnsignedTx,
+  YoroiWallet,
+} from '@yoroi-wallets'
 import {delay} from 'bluebird'
 import cryptoRandomString from 'crypto-random-string'
 import * as React from 'react'
@@ -26,21 +41,6 @@ import {CurrencySymbol, RawUtxo, TipStatusResponse} from '../legacy/types'
 import {clearUTXOs} from '../legacy/utxo'
 import {Storage} from '../Storage'
 import {DefaultAsset, Token} from '../types'
-import {
-  Cardano,
-  generateShelleyPlateFromKey,
-  NetworkId,
-  TxSubmissionStatus,
-  Utxos,
-  WalletEvent,
-  WalletImplementationId,
-  walletManager,
-  YoroiAmounts,
-  YoroiProvider,
-  YoroiSignedTx,
-  YoroiUnsignedTx,
-  YoroiWallet,
-} from '../yoroi-wallets'
 
 // WALLET
 export const useWallet = (wallet: YoroiWallet, event: WalletEvent['type']) => {

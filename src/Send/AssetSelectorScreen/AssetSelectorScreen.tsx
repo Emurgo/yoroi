@@ -1,4 +1,5 @@
 import {useNavigation} from '@react-navigation/native'
+import {Quantities, Quantity, TokenId, YoroiAmounts, YoroiWallet} from '@yoroi-wallets'
 import BigNumber from 'bignumber.js'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -17,7 +18,6 @@ import {TxHistoryRouteNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {Token} from '../../types'
-import {Quantities, Quantity, TokenId, YoroiAmounts, YoroiWallet} from '../../yoroi-wallets'
 import {useSend} from '../Context/SendContext'
 
 type Props = {

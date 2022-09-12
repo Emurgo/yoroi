@@ -1,3 +1,4 @@
+import {YoroiUnsignedTx, YoroiWallet} from '@yoroi-wallets'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet} from 'react-native'
@@ -11,7 +12,6 @@ import {getDefaultAssetByNetworkId} from '../../legacy/config'
 import KeyStore from '../../legacy/KeyStore'
 import {utxosSelector} from '../../legacy/selectors'
 import {theme} from '../../theme'
-import {YoroiUnsignedTx, YoroiWallet} from '../../yoroi-wallets'
 import {ConfirmTx} from './ConfirmTx/ConfirmTx'
 
 type Props = {

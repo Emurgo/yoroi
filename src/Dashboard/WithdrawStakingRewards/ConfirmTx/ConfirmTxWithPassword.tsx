@@ -1,3 +1,4 @@
+import {YoroiUnsignedTx, YoroiWallet} from '@yoroi-wallets'
 import React from 'react'
 import {useIntl} from 'react-intl'
 import {ActivityIndicator, View} from 'react-native'
@@ -7,7 +8,6 @@ import {useSignWithPasswordAndSubmitTx} from '../../../hooks'
 import {confirmationMessages, txLabels} from '../../../i18n/global-messages'
 import {CONFIG} from '../../../legacy/config'
 import KeyStore from '../../../legacy/KeyStore'
-import {YoroiUnsignedTx, YoroiWallet} from '../../../yoroi-wallets'
 import {TransferSummary} from '../TransferSummary'
 
 type Props = {

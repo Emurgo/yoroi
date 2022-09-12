@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useNavigation} from '@react-navigation/native'
+import {MultiToken} from '@yoroi-wallets'
 import {BigNumber} from 'bignumber.js'
 import _ from 'lodash'
 import React from 'react'
@@ -29,7 +30,6 @@ import {TxHistoryRouteNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {DefaultAsset, IOData, TransactionAssurance, TransactionDirection} from '../../types'
-import {MultiToken} from '../../yoroi-wallets'
 
 const filtersTxIO = (address: string) => {
   const isMyReceive = (extAddrIdx) => extAddrIdx[address] != null

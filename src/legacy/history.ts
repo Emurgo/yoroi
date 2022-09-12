@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import {WalletClosed, walletManager} from '@yoroi-wallets'
 import type {Dispatch} from 'redux'
 
 import {Logger} from '../legacy/logging'
-import {WalletClosed, walletManager} from '../yoroi-wallets'
 import {ApiHistoryError} from './errors'
 import {State} from './state'
 

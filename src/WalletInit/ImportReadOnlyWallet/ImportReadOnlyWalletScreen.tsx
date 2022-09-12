@@ -1,4 +1,5 @@
 import {RouteProp, useFocusEffect, useNavigation, useRoute} from '@react-navigation/native'
+import {isCIP1852AccountPath, isValidPublicKey} from '@yoroi-wallets'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StatusBar, StyleSheet, View} from 'react-native'
@@ -10,7 +11,6 @@ import {showErrorDialog} from '../../legacy/actions'
 import {Logger} from '../../legacy/logging'
 import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
 import {theme} from '../../theme'
-import {isCIP1852AccountPath, isValidPublicKey} from '../../yoroi-wallets'
 
 export const ImportReadOnlyWalletScreen = () => {
   const intl = useIntl()

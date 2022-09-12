@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {Amounts, Entries, Quantities, Quantity} from '@yoroi-wallets'
 import {BigNumber} from 'bignumber.js'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -14,7 +15,6 @@ import {StakingCenterRoutes, useParams, useWalletNavigation} from '../../navigat
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {DefaultAsset} from '../../types'
-import {Amounts, Entries, Quantities, Quantity} from '../../yoroi-wallets'
 
 type Params = StakingCenterRoutes['delegation-confirmation']
 

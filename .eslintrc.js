@@ -9,7 +9,10 @@ module.exports = {
     {
       files: ['*.tsx'],
       rules: {
-        '@typescript-eslint/strict-boolean-expressions': ['error', {allowString: false, allowNumber: false, allowNullableBoolean: true}],
+        '@typescript-eslint/strict-boolean-expressions': [
+          'error',
+          {allowString: false, allowNumber: false, allowNullableBoolean: true},
+        ],
       },
     },
   ],

@@ -2,6 +2,7 @@
 import 'react-intl'
 import 'redux'
 
+import {ServerStatus, walletManager} from '@yoroi-wallets'
 import type {IntlShape} from 'react-intl'
 import {Alert, AppState, Keyboard, Platform} from 'react-native'
 import RNBootSplash from 'react-native-bootsplash'
@@ -10,7 +11,6 @@ import uuid from 'uuid'
 
 import globalMessages, {errorMessages} from '../i18n/global-messages'
 import {Logger} from '../legacy/logging'
-import {ServerStatus, walletManager} from '../yoroi-wallets'
 import {clearAccountState} from './account'
 import * as api from './api'
 import type {AppSettingsKey} from './appSettings'

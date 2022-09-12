@@ -1,11 +1,11 @@
 import {storiesOf} from '@storybook/react-native'
+import {YoroiWallet} from '@yoroi-wallets'
 import React from 'react'
 import {QueryClient, QueryClientProvider} from 'react-query'
 
 import {mockWallet, poolInfoAndHistory, stakePoolId} from '../../storybook'
 import {SelectedWalletProvider} from '../SelectedWallet'
 import {StakePoolInfosAndHistories} from '../types'
-import {YoroiWallet} from '../yoroi-wallets'
 import {StakePoolInfos} from './StakePoolInfos'
 
 storiesOf('StakePoolInfos', module)

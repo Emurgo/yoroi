@@ -1,13 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {BigNumber} from 'bignumber.js'
-import _ from 'lodash'
-import {IntlShape} from 'react-intl'
-
-import {formatTokenAmount, formatTokenInteger, normalizeTokenAmount} from '../../legacy/format'
-import {getCardanoNetworkConfigById, isHaskellShelleyNetwork} from '../../legacy/networks'
-import {RawUtxo} from '../../legacy/types'
-import {cardanoValueFromMultiToken} from '../../legacy/utils'
-import type {DefaultAsset, SendTokenList, Token} from '../../types'
 import {
   AddressValidationErrors,
   Amounts,
@@ -24,7 +15,16 @@ import {
   validateAmount,
   YoroiUnsignedTx,
   YoroiWallet,
-} from '../../yoroi-wallets'
+} from '@yoroi-wallets'
+import {BigNumber} from 'bignumber.js'
+import _ from 'lodash'
+import {IntlShape} from 'react-intl'
+
+import {formatTokenAmount, formatTokenInteger, normalizeTokenAmount} from '../../legacy/format'
+import {getCardanoNetworkConfigById, isHaskellShelleyNetwork} from '../../legacy/networks'
+import {RawUtxo} from '../../legacy/types'
+import {cardanoValueFromMultiToken} from '../../legacy/utils'
+import type {DefaultAsset, SendTokenList, Token} from '../../types'
 import {amountInputErrorMessages, messages} from './strings'
 
 export const getMinAda = async (selectedToken: Token, defaultAsset: DefaultAsset) => {

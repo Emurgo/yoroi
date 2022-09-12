@@ -1,8 +1,8 @@
+import {editedFormatter, pastedFormatter} from '@yoroi-wallets'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
 import {TextInput} from '../components'
-import {editedFormatter, pastedFormatter} from '../yoroi-wallets'
 
 type Props = {
   amount: string

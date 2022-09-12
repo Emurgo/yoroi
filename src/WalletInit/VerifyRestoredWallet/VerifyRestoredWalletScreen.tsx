@@ -1,4 +1,11 @@
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
+import {
+  CardanoTypes,
+  generateByronPlateFromMnemonics,
+  generateShelleyPlateFromMnemonics,
+  NetworkId,
+  WalletImplementationId,
+} from '@yoroi-wallets'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native'
@@ -8,13 +15,6 @@ import {BulletPointItem, Button, Icon, Spacer, StatusBar, Text} from '../../comp
 import {WALLET_IMPLEMENTATION_REGISTRY} from '../../legacy/types'
 import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
 import {COLORS} from '../../theme'
-import {
-  CardanoTypes,
-  generateByronPlateFromMnemonics,
-  generateShelleyPlateFromMnemonics,
-  NetworkId,
-  WalletImplementationId,
-} from '../../yoroi-wallets'
 import {WalletAddress} from '../WalletAddress'
 
 export const VerifyRestoredWalletScreen = () => {

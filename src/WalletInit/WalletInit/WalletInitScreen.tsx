@@ -1,4 +1,5 @@
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
+import {NetworkId, WalletImplementationId, YoroiProvider} from '@yoroi-wallets'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
@@ -11,7 +12,6 @@ import {CONFIG, isByron, isHaskellShelley} from '../../legacy/config'
 import {isJormungandr} from '../../legacy/networks'
 import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
 import {COLORS} from '../../theme'
-import {NetworkId, WalletImplementationId, YoroiProvider} from '../../yoroi-wallets'
 import {WalletDescription} from '../WalletDescription'
 import {ExpandableItem} from './ExpandableItem'
 

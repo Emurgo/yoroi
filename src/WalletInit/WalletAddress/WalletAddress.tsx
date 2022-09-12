@@ -1,4 +1,5 @@
 import Clipboard from '@react-native-community/clipboard'
+import {NetworkId} from '@yoroi-wallets'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Linking, StyleSheet, TouchableOpacity, View, ViewStyle} from 'react-native'
@@ -6,7 +7,6 @@ import {Linking, StyleSheet, TouchableOpacity, View, ViewStyle} from 'react-nati
 import {Icon, Text} from '../../components'
 import {getNetworkConfigById} from '../../legacy/networks'
 import {COLORS} from '../../theme'
-import {NetworkId} from '../../yoroi-wallets'
 import {FadeOutView} from './FadeOutView'
 
 export const WalletAddress = ({

@@ -1,3 +1,4 @@
+import {getSpendingKey, getStakingKey} from '@yoroi-wallets'
 import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
@@ -8,7 +9,6 @@ import {CopyButton, Modal, Spacer, Text} from '../components'
 import {AddressType, formatPath} from '../legacy/commonUtils'
 import {externalAddressIndexSelector, internalAddressIndexSelector} from '../legacy/selectors'
 import {useSelectedWallet} from '../SelectedWallet'
-import {getSpendingKey, getStakingKey} from '../yoroi-wallets'
 
 type Path = {
   account: number

@@ -1,19 +1,12 @@
 import {NavigatorScreenParams, useNavigation, useRoute} from '@react-navigation/native'
 import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/stack'
+import {NetworkId, Quantity, WalletImplementationId, YoroiAmounts, YoroiProvider, YoroiUnsignedTx} from '@yoroi-wallets'
 import {IntlShape} from 'react-intl'
 import {Platform} from 'react-native'
 
 import {HWDeviceInfo} from './legacy/ledgerUtils'
 import type {RawUtxo} from './legacy/types'
 import {COLORS} from './theme'
-import {
-  NetworkId,
-  Quantity,
-  WalletImplementationId,
-  YoroiAmounts,
-  YoroiProvider,
-  YoroiUnsignedTx,
-} from './yoroi-wallets'
 
 // prettier-ignore
 export const useUnsafeParams = <Params, >() => {

@@ -1,4 +1,5 @@
 import {useNavigation} from '@react-navigation/native'
+import {REQUIRED_PASSWORD_LENGTH, validatePassword, YoroiWallet} from '@yoroi-wallets'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, TextInput as RNTextInput, View} from 'react-native'
@@ -9,7 +10,6 @@ import {Button, Checkmark, Spacer, TextInput} from '../../components'
 import {errorMessages} from '../../i18n/global-messages'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
-import {REQUIRED_PASSWORD_LENGTH, validatePassword, YoroiWallet} from '../../yoroi-wallets'
 
 export const ChangePasswordScreen = () => {
   const strings = useStrings()

@@ -1,6 +1,5 @@
+import {YoroiWallet} from '@yoroi-wallets'
 import * as React from 'react'
-
-import {YoroiWallet} from '../../yoroi-wallets'
 
 type SelectedWallet = YoroiWallet
 type SetSelectedWallet = (selectedWallet?: SelectedWallet) => void

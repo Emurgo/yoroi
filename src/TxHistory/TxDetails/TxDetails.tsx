@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useRoute} from '@react-navigation/native'
+import {MultiToken, YoroiWallet} from '@yoroi-wallets'
 import {BigNumber} from 'bignumber.js'
 import React, {useState} from 'react'
 import {defineMessages, IntlShape, useIntl} from 'react-intl'
@@ -23,7 +24,6 @@ import Screen from '../../Screen'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {brand, COLORS} from '../../theme'
 import {TokenEntry} from '../../types'
-import {MultiToken, YoroiWallet} from '../../yoroi-wallets'
 import {AssetList} from './AssetList'
 import assetListStyle from './AssetListTransaction.style'
 

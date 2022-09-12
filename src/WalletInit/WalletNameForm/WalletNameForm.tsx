@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {getWalletNameError, validateWalletName} from '@yoroi-wallets'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, Image, ImageSourcePropType, StyleSheet, View, ViewStyle} from 'react-native'
@@ -8,7 +9,6 @@ import {useWalletNames} from '../../hooks'
 import globalMessages from '../../i18n/global-messages'
 import {ignoreConcurrentAsyncHandler} from '../../legacy/utils'
 import {spacing} from '../../theme'
-import {getWalletNameError, validateWalletName} from '../../yoroi-wallets'
 
 type Props = {
   onSubmit: ({name}: {name: string}) => void

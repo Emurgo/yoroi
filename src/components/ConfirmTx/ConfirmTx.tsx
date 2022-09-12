@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useNavigation} from '@react-navigation/native'
+import {CardanoTypes, SystemAuthDisabled, walletManager, withBLE, withUSB, YoroiUnsignedTx} from '@yoroi-wallets'
 import {delay} from 'bluebird'
 import React, {useEffect, useState} from 'react'
 import {useIntl} from 'react-intl'
@@ -17,7 +18,6 @@ import {DeviceId, DeviceObj} from '../../legacy/ledgerUtils'
 import {isEmptyString} from '../../legacy/utils'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
-import {CardanoTypes, SystemAuthDisabled, walletManager, withBLE, withUSB, YoroiUnsignedTx} from '../../yoroi-wallets'
 import {Button, ButtonProps, ValidatedTextInput} from '..'
 import {Dialog, Step as DialogStep} from './Dialog'
 

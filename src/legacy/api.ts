@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {ServerStatus} from '@yoroi-wallets'
 import {BigNumber} from 'bignumber.js'
 import _ from 'lodash'
 
 import {StakePoolInfosAndHistories} from '../types'
-import {ServerStatus} from '../yoroi-wallets'
 import assert from './assert'
 import {ApiError} from './errors'
 import fetchDefault, {checkedFetch} from './fetch'

@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {Quantity, TokenId, YoroiAmounts, YoroiUnsignedTx} from '@yoroi-wallets'
 import {BigNumber} from 'bignumber.js'
 import React, {useEffect} from 'react'
 import {useIntl} from 'react-intl'
@@ -14,7 +15,6 @@ import {formatTokenWithSymbol, formatTokenWithText} from '../../legacy/format'
 import {useParams, useWalletNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
-import {Quantity, TokenId, YoroiAmounts, YoroiUnsignedTx} from '../../yoroi-wallets'
 import {useSend} from '../Context/SendContext'
 
 export type Params = {

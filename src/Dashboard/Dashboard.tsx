@@ -1,6 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useNetInfo} from '@react-native-community/netinfo'
 import {useNavigation} from '@react-navigation/native'
+import {
+  genCurrentEpochLength,
+  genCurrentSlotLength,
+  genTimeToSlot,
+  genToRelativeSlotNumber,
+  YoroiWallet,
+} from '@yoroi-wallets'
 import BigNumber from 'bignumber.js'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -25,13 +32,6 @@ import {fetchUTXOs} from '../legacy/utxo'
 import {useWalletNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
 import {UtxoAutoRefresher} from '../UtxoAutoRefresher'
-import {
-  genCurrentEpochLength,
-  genCurrentSlotLength,
-  genTimeToSlot,
-  genToRelativeSlotNumber,
-  YoroiWallet,
-} from '../yoroi-wallets'
 import {EpochProgress} from './EpochProgress'
 import {NotDelegatedInfo} from './NotDelegatedInfo'
 import {StakePoolInfos, useStakingInfo} from './StakePoolInfos'

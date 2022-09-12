@@ -1,4 +1,4 @@
-import {MultiToken} from '../yoroi-wallets'
+import {MultiToken} from '@yoroi-wallets'
 
 export interface ISignRequest<T = unknown> {
   totalInput(shift: boolean): Promise<MultiToken>

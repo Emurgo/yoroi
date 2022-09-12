@@ -1,3 +1,4 @@
+import {isRegistrationOpen, walletManager} from '@yoroi-wallets'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
@@ -11,7 +12,6 @@ import {formatTokenWithText} from '../legacy/format'
 import {Logger} from '../legacy/logging'
 import {availableAssetsSelector, tokenBalanceSelector} from '../legacy/selectors'
 import {COLORS} from '../theme'
-import {isRegistrationOpen, walletManager} from '../yoroi-wallets'
 type Props = {onPress: () => void; disabled?: boolean}
 
 export const VotingBanner = ({onPress, disabled}: Props) => {

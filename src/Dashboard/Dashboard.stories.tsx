@@ -1,4 +1,5 @@
 import {storiesOf} from '@storybook/react-native'
+import {YoroiWallet} from '@yoroi-wallets'
 import BigNumber from 'bignumber.js'
 import React from 'react'
 import {QueryClient, QueryClientProvider} from 'react-query'
@@ -8,7 +9,6 @@ import {mockWallet, poolInfoAndHistory, stakePoolId} from '../../storybook'
 import getConfiguredStore from '../legacy/configureStore'
 import {SelectedWalletProvider} from '../SelectedWallet'
 import {StakePoolInfosAndHistories} from '../types'
-import {YoroiWallet} from '../yoroi-wallets'
 import {Dashboard} from './Dashboard'
 
 const mockedAccountState = {

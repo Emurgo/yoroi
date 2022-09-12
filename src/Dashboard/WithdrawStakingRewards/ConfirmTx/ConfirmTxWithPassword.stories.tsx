@@ -1,11 +1,11 @@
 import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
+import {YoroiUnsignedTx, YoroiWallet} from '@yoroi-wallets'
 import React from 'react'
 
 import {mockKeyStore, mockWallet, mockYoroiSignedTx, mockYoroiTx, WithModal} from '../../../../storybook'
 import {Boundary} from '../../../components'
 import KeyStore from '../../../legacy/KeyStore'
-import {YoroiUnsignedTx, YoroiWallet} from '../../../yoroi-wallets'
 import {ConfirmTxWithPassword} from './ConfirmTxWithPassword'
 
 storiesOf('ConfirmWithdrawalTx/Password', module)

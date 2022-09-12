@@ -1,14 +1,13 @@
+import {YoroiWallet} from '@yoroi-wallets'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ActivityIndicator, Linking, View} from 'react-native'
-import {StyleSheet} from 'react-native'
+import {ActivityIndicator, Linking, StyleSheet, View} from 'react-native'
 import {useQuery} from 'react-query'
 
 import {Button, CopyButton, Text, TitledCard} from '../components'
 import {isEmptyString} from '../legacy/utils'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
-import {YoroiWallet} from '../yoroi-wallets'
 
 export const StakePoolInfo = ({stakePoolId}: {stakePoolId: string}) => {
   const strings = useStrings()

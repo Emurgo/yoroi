@@ -1,3 +1,4 @@
+import {calcLockedDeposit, YoroiWallet} from '@yoroi-wallets'
 import BigNumber from 'bignumber.js'
 import React from 'react'
 import {useIntl} from 'react-intl'
@@ -12,7 +13,6 @@ import {availableAssetsSelector, tokenBalanceSelector} from '../legacy/selectors
 import {isEmptyString} from '../legacy/utils'
 import {useSelectedWallet} from '../SelectedWallet'
 import {Token} from '../types'
-import {calcLockedDeposit, YoroiWallet} from '../yoroi-wallets'
 
 type Props = {
   privacyMode?: boolean

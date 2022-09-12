@@ -1,4 +1,5 @@
 import {useNavigation} from '@react-navigation/native'
+import {SystemAuthDisabled, YoroiUnsignedTx, YoroiWallet} from '@yoroi-wallets'
 import React from 'react'
 import {useIntl} from 'react-intl'
 import {ActivityIndicator, StyleSheet, View} from 'react-native'
@@ -11,7 +12,6 @@ import {clearAccountState} from '../../../legacy/account'
 import {showErrorDialog} from '../../../legacy/actions'
 import {ensureKeysValidity} from '../../../legacy/deviceSettings'
 import {clearUTXOs} from '../../../legacy/utxo'
-import {SystemAuthDisabled, YoroiUnsignedTx, YoroiWallet} from '../../../yoroi-wallets'
 import {TransferSummary} from '../TransferSummary'
 
 type Props = {

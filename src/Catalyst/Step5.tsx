@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useNavigation} from '@react-navigation/native'
+import {Amounts, YoroiUnsignedTx} from '@yoroi-wallets'
 import BigNumber from 'bignumber.js'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -15,7 +16,6 @@ import {CONFIG, getDefaultAssetByNetworkId} from '../legacy/config'
 import {formatTokenWithSymbol} from '../legacy/format'
 import {CatalystRouteNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
-import {Amounts, YoroiUnsignedTx} from '../yoroi-wallets'
 import {Actions, Description, Title} from './components'
 
 export const Step5 = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx}) => {

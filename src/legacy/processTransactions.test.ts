@@ -1,4 +1,5 @@
-import {MultiToken, toCachedTx} from '../yoroi-wallets'
+import {MultiToken, toCachedTx} from '@yoroi-wallets'
+
 import {CONFIG} from './config'
 import {TRANSACTION_DIRECTION} from './HistoryTransaction'
 import {processTxHistoryData} from './processTransactions'

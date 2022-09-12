@@ -1,3 +1,4 @@
+import {getWalletNameError, REQUIRED_PASSWORD_LENGTH, validatePassword, validateWalletName} from '@yoroi-wallets'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, TextInput as RNTextInput, View} from 'react-native'
@@ -8,7 +9,6 @@ import globalMessages from '../i18n/global-messages'
 import {CONFIG} from '../legacy/config'
 import {isEmptyString} from '../legacy/utils'
 import {COLORS} from '../theme'
-import {getWalletNameError, REQUIRED_PASSWORD_LENGTH, validatePassword, validateWalletName} from '../yoroi-wallets'
 
 type Props = {
   onSubmit: (credentials: {name: string; password: string}) => void
