@@ -1,10 +1,9 @@
+import {YoroiAmounts, YoroiSignedTx, YoroiUnsignedTx, YoroiWallet} from '@yoroi-wallets'
 import BigNumber from 'bignumber.js'
 
 import KeyStore from '../../src/legacy/KeyStore'
 import {PRIMARY_ASSET_CONSTANTS} from '../../src/legacy/networks'
 import {RemotePoolMetaSuccess, StakePoolInfosAndHistories, TokenEntry, TokenInfo} from '../../src/types'
-import {YoroiWallet} from '../../src/yoroi-wallets'
-import {YoroiAmounts, YoroiSignedTx, YoroiUnsignedTx} from '../../src/yoroi-wallets/types'
 
 export const mockWallet: YoroiWallet = {
   id: 'wallet-id',

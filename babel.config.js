@@ -13,7 +13,7 @@ module.exports = {
       'module-resolver',
       {
         alias: {
-          '@yoroi-wallets': './src/yoroi-wallets',
+          '@yoroi-wallets': './yoroi-wallets',
         },
       },
     ],
