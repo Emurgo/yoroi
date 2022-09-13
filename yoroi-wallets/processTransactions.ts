@@ -1,15 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {getDefaultNetworkTokenEntry, MultiToken, strToDefaultMultiAsset} from '@yoroi-wallets'
 import {BigNumber} from 'bignumber.js'
+import assert from 'src/legacy/assert'
+import {
+  BaseAsset,
+  Token,
+  Transaction,
+  TRANSACTION_DIRECTION,
+  TRANSACTION_STATUS,
+  TRANSACTION_TYPE,
+  TransactionInfo,
+} from 'src/legacy/HistoryTransaction'
+import {Logger} from 'src/legacy/logging'
+import {CERTIFICATE_KIND} from 'src/legacy/types'
 
-import {Logger} from '../legacy/logging'
-import assert from './assert'
-import {CONFIG} from './config'
-import type {BaseAsset, Token, Transaction, TransactionInfo} from './HistoryTransaction'
-import {TRANSACTION_DIRECTION, TRANSACTION_STATUS, TRANSACTION_TYPE} from './HistoryTransaction'
-import type {NetworkId} from './types'
-import {CERTIFICATE_KIND} from './types'
-import {multiTokenFromRemote} from './utils'
+import {CONFIG, getDefaultNetworkTokenEntry, MultiToken, NetworkId, strToDefaultMultiAsset} from '.'
+
 type TransactionAssurance = 'PENDING' | 'FAILED' | 'LOW' | 'MEDIUM' | 'HIGH'
 export const getTransactionAssurance = (
   status: typeof TRANSACTION_STATUS[keyof typeof TRANSACTION_STATUS],
@@ -253,4 +258,35 @@ export const processTxHistoryData = (
     tokens,
     blockNumber: tx.blockNum ?? 0,
   }
+}
+
+const PRIMARY_ASSET_CONSTANTS = CONFIG.PRIMARY_ASSET_CONSTANTS
+// matches RawUtxo and a tx input/output
+type RemoteValue = {
+  readonly amount: string
+  readonly assets?: ReadonlyArray<BaseAsset>
+}
+
+export const multiTokenFromRemote = (remoteValue: RemoteValue, networkId: number) => {
+  const result = new MultiToken([], {
+    defaultNetworkId: networkId,
+    defaultIdentifier: PRIMARY_ASSET_CONSTANTS.CARDANO,
+  })
+  result.add({
+    identifier: PRIMARY_ASSET_CONSTANTS.CARDANO,
+    amount: new BigNumber(remoteValue.amount),
+    networkId,
+  })
+
+  if (remoteValue.assets != null) {
+    for (const token of remoteValue.assets) {
+      result.add({
+        identifier: token.assetId,
+        amount: new BigNumber(token.amount),
+        networkId,
+      })
+    }
+  }
+
+  return result
 }

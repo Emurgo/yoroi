@@ -1,12 +1,12 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import {createStackNavigator} from '@react-navigation/stack'
+import {isHaskellShelley} from '@yoroi-wallets'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
 import {CatalystNavigator} from './Catalyst'
 import {Icon} from './components'
 import {DashboardNavigator} from './Dashboard'
-import {isHaskellShelley} from './legacy/config'
 import {MenuNavigator} from './Menu'
 import {WalletStackRoutes, WalletTabRoutes} from './navigation'
 import {useSelectedWallet, WalletSelectionScreen} from './SelectedWallet'

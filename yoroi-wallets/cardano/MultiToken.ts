@@ -1,8 +1,8 @@
 // taken from Yoroi Frontend's MultiToken class
 import {BigNumber} from 'bignumber.js'
 
-import {getDefaultAssetByNetworkId} from '../../src/legacy/config'
 import type {NetworkId} from '../../src/legacy/types'
+import {getDefaultAssetByNetworkId} from '../config'
 export type TokenLookupKey = {
   identifier: string
 

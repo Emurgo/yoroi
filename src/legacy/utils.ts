@@ -51,15 +51,11 @@ export function forwardReducerTo<S extends {}, T>(
   }
 }
 
-import {CardanoMobile, CardanoTypes, DefaultTokenEntry, MultiToken} from '@yoroi-wallets'
+import {CardanoMobile, CardanoTypes, CONFIG, DefaultTokenEntry, MultiToken} from '@yoroi-wallets'
 import {BigNumber} from 'bignumber.js'
 
-import {CONFIG} from './config'
-import type {BaseAsset} from './HistoryTransaction'
 import {getNetworkConfigById} from './networks'
 import type {Addressing, NetworkId, RawUtxo} from './types'
-
-const PRIMARY_ASSET_CONSTANTS = CONFIG.PRIMARY_ASSET_CONSTANTS
 
 export const normalizeToAddress = async (addr: string) => {
   // in Shelley, addresses can be base16, bech32 or base58
@@ -304,35 +300,6 @@ export const cardanoValueFromRemoteFormat = async (utxo: RawUtxo) => {
   }
 
   return value
-}
-// matches RawUtxo and a tx input/output
-type RemoteValue = {
-  readonly amount: string
-  readonly assets?: ReadonlyArray<BaseAsset>
-}
-
-export const multiTokenFromRemote = (remoteValue: RemoteValue, networkId: number) => {
-  const result = new MultiToken([], {
-    defaultNetworkId: networkId,
-    defaultIdentifier: PRIMARY_ASSET_CONSTANTS.CARDANO,
-  })
-  result.add({
-    identifier: PRIMARY_ASSET_CONSTANTS.CARDANO,
-    amount: new BigNumber(remoteValue.amount),
-    networkId,
-  })
-
-  if (remoteValue.assets != null) {
-    for (const token of remoteValue.assets) {
-      result.add({
-        identifier: token.assetId,
-        amount: new BigNumber(token.amount),
-        networkId,
-      })
-    }
-  }
-
-  return result
 }
 
 // Ignores any concurrent calls to this function

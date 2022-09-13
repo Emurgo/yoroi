@@ -1,3 +1,4 @@
+import {CONFIG, isNightly} from '@yoroi-wallets'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Platform, ScrollView, StyleSheet, Switch} from 'react-native'
@@ -8,7 +9,6 @@ import {StatusBar} from '../../components'
 import globalMessages from '../../i18n/global-messages'
 import {setAppSettingField} from '../../legacy/actions'
 import {APP_SETTINGS_KEYS} from '../../legacy/appSettings'
-import {CONFIG, isNightly} from '../../legacy/config'
 import {canBiometricEncryptionBeEnabled, isBiometricEncryptionHardwareSupported} from '../../legacy/deviceSettings'
 import KeyStore from '../../legacy/KeyStore'
 import {

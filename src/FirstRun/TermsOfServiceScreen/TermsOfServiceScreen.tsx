@@ -1,4 +1,5 @@
 import {useNavigation} from '@react-navigation/native'
+import {CONFIG} from '@yoroi-wallets'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Platform, ScrollView, StyleSheet, View} from 'react-native'
@@ -9,7 +10,6 @@ import {Button, Checkbox, PleaseWaitModal, Spacer, StatusBar} from '../../compon
 import {useLanguage} from '../../i18n'
 import globalMessages from '../../i18n/global-messages'
 import {acceptAndSaveTos, setSystemAuth, signin} from '../../legacy/actions'
-import {CONFIG} from '../../legacy/config'
 import {canBiometricEncryptionBeEnabled} from '../../legacy/deviceSettings'
 import {TermsOfService} from '../../Legal'
 import {FirstRunRouteNavigation} from '../../navigation'

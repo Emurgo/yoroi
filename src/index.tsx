@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {CONFIG} from '@yoroi-wallets'
 import bluebird from 'bluebird'
 import React from 'react'
 import {createIntl, createIntlCache} from 'react-intl'
@@ -13,7 +14,6 @@ import {ErrorBoundary} from './components/ErrorBoundary'
 import {LanguageProvider} from './i18n'
 import translations from './i18n/translations'
 import {handleGeneralError, setupHooks} from './legacy/actions'
-import {CONFIG} from './legacy/config'
 import getConfiguredStore from './legacy/configureStore'
 import {ApiError, NetworkError} from './legacy/errors'
 import {Logger, setLogLevel} from './legacy/logging'

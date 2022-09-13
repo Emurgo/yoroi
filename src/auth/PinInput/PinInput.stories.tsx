@@ -1,10 +1,10 @@
 import {storiesOf} from '@storybook/react-native'
+import {CONFIG} from '@yoroi-wallets'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 
 import {Button} from '../../components'
-import {CONFIG} from '../../legacy/config'
 import {PinInput, PinInputRef} from './PinInput'
 
 const PinInputWrapper = ({enabled = true}: {enabled?: boolean}) => {

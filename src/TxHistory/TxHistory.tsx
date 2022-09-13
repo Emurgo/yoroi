@@ -1,4 +1,5 @@
 import {useNetInfo} from '@react-native-community/netinfo'
+import {isByron} from '@yoroi-wallets'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {LayoutAnimation, StyleSheet, TouchableOpacity, View} from 'react-native'
@@ -8,7 +9,6 @@ import infoIcon from '../assets/img/icon/info-light-green.png'
 import {OfflineBanner, Spacer, StatusBar, Text} from '../components'
 import {assetMessages, txLabels} from '../i18n/global-messages'
 import {fetchAccountState} from '../legacy/account'
-import {isByron} from '../legacy/config'
 import {updateHistory} from '../legacy/history'
 import {
   isSynchronizingHistorySelector,

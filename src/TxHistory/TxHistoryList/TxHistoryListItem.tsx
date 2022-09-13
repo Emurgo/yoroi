@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useNavigation} from '@react-navigation/native'
 import {MultiToken} from '@yoroi-wallets'
+import {getDefaultAssetByNetworkId} from '@yoroi-wallets'
 import {BigNumber} from 'bignumber.js'
 import _ from 'lodash'
 import React from 'react'
@@ -10,7 +11,6 @@ import {useSelector} from 'react-redux'
 
 import {Text} from '../../components'
 import {Icon} from '../../components/Icon'
-import {getDefaultAssetByNetworkId} from '../../legacy/config'
 import {
   ASSET_DENOMINATION,
   formatTimeToSeconds,

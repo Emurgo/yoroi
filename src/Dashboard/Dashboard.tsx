@@ -8,6 +8,7 @@ import {
   genToRelativeSlotNumber,
   YoroiWallet,
 } from '@yoroi-wallets'
+import {getCardanoBaseConfig} from '@yoroi-wallets'
 import BigNumber from 'bignumber.js'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -18,7 +19,6 @@ import {AccountAutoRefresher} from '../AccountAutoRefresher'
 import {Banner, Button, Modal, OfflineBanner, StatusBar} from '../components'
 import globalMessages from '../i18n/global-messages'
 import {fetchAccountState} from '../legacy/account'
-import {getCardanoBaseConfig} from '../legacy/config'
 import KeyStore from '../legacy/KeyStore'
 import {getCardanoNetworkConfigById} from '../legacy/networks'
 import {

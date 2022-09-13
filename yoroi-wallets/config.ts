@@ -1,17 +1,17 @@
-import {LogLevel} from '../legacy/logging'
-import env from './env'
-import type {DefaultAsset} from './HistoryTransaction'
-import type {CardanoHaskellShelleyNetwork} from './networks'
+import env from '../src/legacy/env'
+import type {DefaultAsset} from '../src/legacy/HistoryTransaction'
+import {LogLevel} from '../src/legacy/logging'
+import type {CardanoHaskellShelleyNetwork} from '../src/legacy/networks'
 import {
   DEFAULT_ASSETS,
   getNetworkConfigById,
   isHaskellShelleyNetwork,
   NETWORKS,
   PRIMARY_ASSET_CONSTANTS,
-} from './networks'
-import {NUMBERS} from './numbers'
-import type {NetworkId, WalletImplementation, WalletImplementationId, YoroiProvider} from './types'
-import {DERIVATION_TYPES, WALLET_IMPLEMENTATION_REGISTRY} from './types'
+} from '../src/legacy/networks'
+import {NUMBERS} from '../src/legacy/numbers'
+import type {NetworkId, WalletImplementation, WalletImplementationId, YoroiProvider} from '../src/legacy/types'
+import {DERIVATION_TYPES, WALLET_IMPLEMENTATION_REGISTRY} from '../src/legacy/types'
 
 const IS_DEBUG = __DEV__
 

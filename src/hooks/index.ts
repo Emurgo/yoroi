@@ -16,6 +16,7 @@ import {
   YoroiUnsignedTx,
   YoroiWallet,
 } from '@yoroi-wallets'
+import {getDefaultAssetByNetworkId} from '@yoroi-wallets'
 import {delay} from 'bluebird'
 import cryptoRandomString from 'crypto-random-string'
 import * as React from 'react'
@@ -32,7 +33,6 @@ import {
 import {useDispatch} from 'react-redux'
 
 import {clearAccountState} from '../legacy/account'
-import {getDefaultAssetByNetworkId} from '../legacy/config'
 import KeyStore from '../legacy/KeyStore'
 import {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {WalletMeta} from '../legacy/state'

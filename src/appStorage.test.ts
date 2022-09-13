@@ -1,9 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import {WALLETS} from '@yoroi-wallets'
 import assert from 'assert'
 import {expect} from 'chai'
 
 import {migrateWalletMetas} from './appStorage'
-import {WALLETS} from './legacy/config'
 import {WalletMeta} from './legacy/state'
 import storage from './legacy/storage'
 import {NETWORK_REGISTRY, WALLET_IMPLEMENTATION_REGISTRY} from './legacy/types'

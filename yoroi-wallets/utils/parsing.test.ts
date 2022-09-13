@@ -1,4 +1,4 @@
-import {CONFIG, getCardanoDefaultAsset} from '../../src/legacy/config'
+import {CONFIG, getCardanoDefaultAsset} from '../config'
 import {InvalidAssetAmount, parseAmountDecimal} from './parsing'
 
 describe('parseAdaDecimal', () => {

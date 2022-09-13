@@ -1,11 +1,11 @@
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
+import {getWalletConfigById} from '@yoroi-wallets'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, KeyboardSpacer, ScrollableView, Spacer, StatusBar, Text} from '../../components'
-import {getWalletConfigById} from '../../legacy/config'
 import {isEmptyString} from '../../legacy/utils'
 import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
 import {MnemonicInput} from '../MnemonicInput'

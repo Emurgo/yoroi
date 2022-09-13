@@ -1,7 +1,6 @@
+import {CONFIG} from '@yoroi-wallets'
 import {AppState} from 'react-native'
 import BackgroundTimer from 'react-native-background-timer'
-
-import {CONFIG} from './config'
 
 let timeout
 

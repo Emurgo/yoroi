@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {getDefaultNetworkTokenEntry, MultiToken} from '@yoroi-wallets'
+import {getCardanoDefaultAsset, getDefaultAssets} from '@yoroi-wallets'
 import {BigNumber} from 'bignumber.js'
 import {fromPairs, mapValues} from 'lodash'
 import {createSelector} from 'reselect'
 
 import type {State} from '../legacy/state'
-import {getCardanoDefaultAsset, getDefaultAssets} from './config'
 import {ObjectValues} from './flow'
 import type {DefaultAsset, Token, Transaction, TransactionInfo} from './HistoryTransaction'
 import {TRANSACTION_DIRECTION, TRANSACTION_STATUS} from './HistoryTransaction'

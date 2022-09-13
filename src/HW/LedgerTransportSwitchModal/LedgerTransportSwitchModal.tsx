@@ -1,10 +1,10 @@
+import {CONFIG} from '@yoroi-wallets'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Platform, ScrollView, StyleSheet, View} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
 import {Button, Modal, Text} from '../../components'
-import {CONFIG} from '../../legacy/config'
 import {spacing} from '../../theme'
 
 type Props = {

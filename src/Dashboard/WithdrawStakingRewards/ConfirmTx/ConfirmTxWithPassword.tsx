@@ -1,4 +1,5 @@
 import {YoroiUnsignedTx, YoroiWallet} from '@yoroi-wallets'
+import {CONFIG} from '@yoroi-wallets'
 import React from 'react'
 import {useIntl} from 'react-intl'
 import {ActivityIndicator, View} from 'react-native'
@@ -6,7 +7,6 @@ import {ActivityIndicator, View} from 'react-native'
 import {TextInput, TwoActionView} from '../../../components'
 import {useSignWithPasswordAndSubmitTx} from '../../../hooks'
 import {confirmationMessages, txLabels} from '../../../i18n/global-messages'
-import {CONFIG} from '../../../legacy/config'
 import KeyStore from '../../../legacy/KeyStore'
 import {TransferSummary} from '../TransferSummary'
 

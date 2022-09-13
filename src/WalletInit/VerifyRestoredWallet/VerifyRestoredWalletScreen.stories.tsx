@@ -1,9 +1,9 @@
 import {NavigationRouteContext} from '@react-navigation/native'
 import {storiesOf} from '@storybook/react-native'
 import {cleanMnemonic} from '@yoroi-wallets'
+import {CONFIG} from '@yoroi-wallets'
 import React from 'react'
 
-import {CONFIG} from '../../legacy/config'
 import {VerifyRestoredWalletScreen} from './VerifyRestoredWalletScreen'
 
 const route = {

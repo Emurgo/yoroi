@@ -1,12 +1,12 @@
 import {useNavigation} from '@react-navigation/native'
 import {NetworkId, WalletImplementationId} from '@yoroi-wallets'
+import {CONFIG, isNightly} from '@yoroi-wallets'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, ButtonProps, Spacer, StatusBar} from '../../components'
-import {CONFIG, isNightly} from '../../legacy/config'
 import {WalletInitRouteNavigation} from '../../navigation'
 import {COLORS} from '../../theme'
 import {WalletDescription} from '../WalletDescription'

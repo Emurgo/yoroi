@@ -10,13 +10,13 @@ import type {
 import AppAda, {DeviceStatusCodes} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
 import TransportHID from '@v-almonacid/react-native-hid'
+import {CONFIG, isByron, isHaskellShelley} from '@yoroi-wallets'
 import {PermissionsAndroid, Platform} from 'react-native'
 import {BleError} from 'react-native-ble-plx'
 
 import {ledgerMessages} from '../i18n/global-messages'
 import LocalizableError from '../i18n/LocalizableError'
 import {Logger} from '../legacy/logging'
-import {CONFIG, isByron, isHaskellShelley} from './config'
 import type {WalletImplementationId} from './types'
 
 //

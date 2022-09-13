@@ -6,6 +6,7 @@
  */
 
 import {Cardano, CardanoMobile, DefaultTokenEntry, MultiToken} from '@yoroi-wallets'
+import {CONFIG, getWalletConfigById} from '@yoroi-wallets'
 import {BigNumber} from 'bignumber.js'
 import {generateMnemonic, mnemonicToEntropy} from 'bip39'
 import cryptoRandomString from 'crypto-random-string'
@@ -13,7 +14,6 @@ import {randomBytes} from 'react-native-randombytes'
 
 import {SendTokenList} from '../types'
 import assert from './assert'
-import {CONFIG, getWalletConfigById} from './config'
 import {CardanoError, WrongPassword} from './errors'
 import type {WalletImplementationId} from './types'
 import {DERIVATION_TYPES} from './types'

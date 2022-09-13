@@ -1,3 +1,4 @@
+import {CONFIG} from '@yoroi-wallets'
 import * as React from 'react'
 import {useIntl} from 'react-intl'
 import {Text, View} from 'react-native'
@@ -5,7 +6,6 @@ import {useSelector} from 'react-redux'
 
 import {StandardModal} from '../components'
 import globalMessages, {confirmationMessages} from '../i18n/global-messages'
-import {CONFIG} from '../legacy/config'
 import {formatTokenWithText} from '../legacy/format'
 import {availableAssetsSelector, tokenBalanceSelector} from '../legacy/selectors'
 

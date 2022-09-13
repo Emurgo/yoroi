@@ -1,4 +1,5 @@
 import {NetworkId, WalletImplementationId, walletManager} from '@yoroi-wallets'
+import {isByron, isHaskellShelley} from '@yoroi-wallets'
 import React from 'react'
 import type {MessageDescriptor} from 'react-intl'
 import {defineMessages, useIntl} from 'react-intl'
@@ -11,7 +12,6 @@ import {useCloseWallet, useEasyConfirmationEnabled, useWalletName} from '../../h
 import {confirmationMessages} from '../../i18n/global-messages'
 import {clearAccountState} from '../../legacy/account'
 import {DIALOG_BUTTONS, showConfirmationDialog, signout} from '../../legacy/actions'
-import {isByron, isHaskellShelley} from '../../legacy/config'
 import {getNetworkConfigById} from '../../legacy/networks'
 import {isSystemAuthEnabledSelector} from '../../legacy/selectors'
 import {clearUTXOs} from '../../legacy/utxo'

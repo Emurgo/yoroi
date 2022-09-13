@@ -11,6 +11,7 @@ import {
   YoroiAmounts,
   YoroiUnsignedTx,
 } from '@yoroi-wallets'
+import {CONFIG, getDefaultAssetByNetworkId} from '@yoroi-wallets'
 import {BigNumber} from 'bignumber.js'
 import _ from 'lodash'
 import React from 'react'
@@ -22,7 +23,6 @@ import {useSelector} from 'react-redux'
 
 import {Button, Checkbox, Spacer, StatusBar, Text, TextInput} from '../../components'
 import {useBalances, useTokenInfo} from '../../hooks'
-import {CONFIG, getDefaultAssetByNetworkId} from '../../legacy/config'
 import {formatTokenAmount, getAssetDenominationOrId, truncateWithEllipsis} from '../../legacy/format'
 import {
   hasPendingOutgoingTransactionSelector,

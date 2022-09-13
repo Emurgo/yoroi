@@ -5,7 +5,6 @@ import {defaultMemoize} from 'reselect'
 
 import * as api from '../src/legacy/api'
 import assert from '../src/legacy/assert'
-import {CONFIG} from '../src/legacy/config'
 import {Transaction} from '../src/legacy/HistoryTransaction'
 import KeyStore from '../src/legacy/KeyStore'
 import type {HWDeviceInfo} from '../src/legacy/ledgerUtils'
@@ -16,6 +15,7 @@ import type {BackendConfig, EncryptionMethod} from '../src/legacy/types'
 import {CardanoTypes, NetworkId, WalletImplementationId, YoroiProvider} from './cardano'
 import {AddressChain, AddressChainJSON, Addresses} from './cardano/chain'
 import {TransactionCache, TransactionCacheJSON} from './cardano/shelley/transactionCache'
+import {CONFIG} from './config'
 import {validatePassword} from './utils/validators'
 
 type WalletState = {

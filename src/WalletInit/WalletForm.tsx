@@ -1,4 +1,5 @@
 import {getWalletNameError, REQUIRED_PASSWORD_LENGTH, validatePassword, validateWalletName} from '@yoroi-wallets'
+import {CONFIG} from '@yoroi-wallets'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, TextInput as RNTextInput, View} from 'react-native'
@@ -6,7 +7,6 @@ import {ScrollView, StyleSheet, TextInput as RNTextInput, View} from 'react-nati
 import {Button, Checkmark, Spacer, TextInput} from '../components'
 import {useWalletNames} from '../hooks'
 import globalMessages from '../i18n/global-messages'
-import {CONFIG} from '../legacy/config'
 import {isEmptyString} from '../legacy/utils'
 import {COLORS} from '../theme'
 

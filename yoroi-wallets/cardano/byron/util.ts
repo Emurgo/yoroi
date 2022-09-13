@@ -2,9 +2,9 @@ import bs58 from 'bs58'
 
 import type {AddressType} from '../../../src/legacy/commonUtils'
 import {ADDRESS_TYPE_TO_CHANGE, generateWalletRootKey} from '../../../src/legacy/commonUtils'
-import {CONFIG} from '../../../src/legacy/config'
 import {CardanoError} from '../../../src/legacy/errors'
 import {getCardanoByronConfig} from '../../../src/legacy/networks'
+import {CONFIG} from '../../config'
 import {CardanoMobile} from '..'
 
 const BYRON_PROTOCOL_MAGIC = getCardanoByronConfig().PROTOCOL_MAGIC

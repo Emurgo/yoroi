@@ -6,7 +6,6 @@ import type {IntlShape} from 'react-intl'
 import {migrateWalletMetas} from '../src/appStorage'
 import {APP_SETTINGS_KEYS, readAppSettings} from '../src/legacy/appSettings'
 import assert from '../src/legacy/assert'
-import {CONFIG, DISABLE_BACKGROUND_SYNC} from '../src/legacy/config'
 import {canBiometricEncryptionBeEnabled, ensureKeysValidity, isSystemAuthSupported} from '../src/legacy/deviceSettings'
 import {ObjectValues} from '../src/legacy/flow'
 import {ISignRequest} from '../src/legacy/ISignRequest'
@@ -37,6 +36,7 @@ import {
   YoroiProvider,
   YoroiWallet,
 } from './cardano'
+import {CONFIG, DISABLE_BACKGROUND_SYNC} from './config'
 
 export class WalletClosed extends ExtendableError {}
 export class SystemAuthDisabled extends ExtendableError {}

@@ -31,6 +31,7 @@
     "prestorybook": "rnstl  --searchDir ./src ./legacy/components ./storybook --pattern '**/*.stories.{js,tsx}'",
     "storybook": "start-storybook",
     "test": "jest src",
+    "test:debug": "node --nolazy --inspect-brk ./node_modules/jest/bin/jest.js --runInBand --colors --verbose",
     "tsc:cover": "yarn typescript-coverage-report -i '**/*.test.*' -i '**/*.stories*' -t html --threshold=100"
   },
   "lint-staged": {
@@ -64,6 +65,9 @@
       "json",
       "node"
     ],
+    "moduleNameMapper": {
+      "^@yoroi//-wallets$": "<rootDir>/yoroi-wallets"
+    },
     "preset": "react-native",
     "setupFiles": [
       "<rootDir>/jestSetup.ts"

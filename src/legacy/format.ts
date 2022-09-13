@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import AssetFingerprint from '@emurgo/cip14-js'
+import {getCardanoDefaultAsset} from '@yoroi-wallets'
 import {BigNumber} from 'bignumber.js'
 import moment from 'moment'
 import type {IntlShape} from 'react-intl'
 import {defineMessages} from 'react-intl'
 
-import {getCardanoDefaultAsset} from './config'
 import type {DefaultAsset, Token} from './HistoryTransaction'
 import utfSymbols from './utfSymbols'
 const messages = defineMessages({

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useNavigation} from '@react-navigation/native'
 import {NotEnoughMoneyToSendError, YoroiWallet} from '@yoroi-wallets'
+import {CONFIG, getDefaultAssetByNetworkId, getTestStakingPool, isNightly, SHOW_PROD_POOLS_IN_DEV} from '@yoroi-wallets'
 import {BigNumber} from 'bignumber.js'
 import React, {useEffect, useState} from 'react'
 import type {IntlShape} from 'react-intl'
@@ -14,13 +15,6 @@ import {PleaseWaitModal, Spacer} from '../../components'
 import {useLanguage} from '../../i18n'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
 import {showErrorDialog} from '../../legacy/actions'
-import {
-  CONFIG,
-  getDefaultAssetByNetworkId,
-  getTestStakingPool,
-  isNightly,
-  SHOW_PROD_POOLS_IN_DEV,
-} from '../../legacy/config'
 import {ApiError, NetworkError} from '../../legacy/errors'
 import {normalizeTokenAmount} from '../../legacy/format'
 import {Logger} from '../../legacy/logging'

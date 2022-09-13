@@ -1,9 +1,9 @@
 import {MultiToken, toCachedTx} from '@yoroi-wallets'
+import {CONFIG} from '@yoroi-wallets'
 
-import {CONFIG} from './config'
-import {TRANSACTION_DIRECTION} from './HistoryTransaction'
+import {TRANSACTION_DIRECTION} from '../src/legacy/HistoryTransaction'
+import type {RawTransaction} from '../src/legacy/types'
 import {processTxHistoryData} from './processTransactions'
-import type {RawTransaction} from './types'
 
 //
 // addresses from:
