@@ -143,7 +143,6 @@ export const hasPendingOutgoingTransactionSelector: (state: State) => boolean = 
     ),
 )
 export const isAppInitializedSelector = (state: State): boolean => state.isAppInitialized
-export const isAuthenticatedSelector = (state: State): boolean => state.isAuthenticated
 export const installationIdSelector = (state: State) => state.appSettings.installationId
 export const isMaintenanceSelector = (state: State): boolean => state.serverStatus.isMaintenance
 

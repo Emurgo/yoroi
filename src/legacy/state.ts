@@ -58,7 +58,6 @@ export type State = {
     poolOperator: string | null
   }
   isAppInitialized: boolean
-  isAuthenticated: boolean
   isKeyboardOpen: boolean
   appSettings: {
     acceptedTos: boolean
@@ -117,7 +116,6 @@ export const getInitialState = (): State => ({
     poolOperator: null,
   },
   isAppInitialized: false,
-  isAuthenticated: false,
   isKeyboardOpen: false,
   appSettings: {
     acceptedTos: false,
