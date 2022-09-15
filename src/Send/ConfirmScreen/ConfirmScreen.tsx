@@ -134,6 +134,7 @@ export const ConfirmScreen = () => {
             setUseUSB={setUseUSB}
             isProvidingPassword
             providedPassword={password}
+            chooseTransportOnConfirmation
           />
         </Actions>
       </View>
