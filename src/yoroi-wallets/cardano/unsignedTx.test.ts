@@ -1,8 +1,7 @@
 import BigNumber from 'bignumber.js'
 
-import {TokenEntry} from '../../types'
 import {YoroiAmounts, YoroiEntries, YoroiMetadata} from '../types'
-import {CardanoTypes} from '.'
+import {CardanoTypes, TokenEntry} from '.'
 import {toAmounts, toDisplayAddress, toEntries, toMetadata} from './unsignedTx'
 
 describe('YoroiUnsignedTx', () => {

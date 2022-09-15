@@ -1,9 +1,8 @@
 import {MultiToken} from '../yoroi-wallets'
 import {toCachedTx} from '../yoroi-wallets/cardano/shelley/transactionCache'
+import {RawTransaction, TRANSACTION_DIRECTION} from '../yoroi-wallets/types/other'
 import {CONFIG} from './config'
-import {TRANSACTION_DIRECTION} from './HistoryTransaction'
 import {processTxHistoryData} from './processTransactions'
-import type {RawTransaction} from './types'
 
 //
 // addresses from:

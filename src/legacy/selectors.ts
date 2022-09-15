@@ -5,14 +5,13 @@ import {createSelector} from 'reselect'
 
 import type {State} from '../legacy/state'
 import {getDefaultNetworkTokenEntry, MultiToken} from '../yoroi-wallets'
+import {DefaultAsset, Token} from '../yoroi-wallets/types'
+import {RawUtxo, Transaction, TRANSACTION_DIRECTION, TransactionInfo} from '../yoroi-wallets/types/other'
+import {NetworkId, TRANSACTION_STATUS} from '../yoroi-wallets/types/other'
+import {NETWORK_REGISTRY} from '../yoroi-wallets/types/other'
 import {getCardanoDefaultAsset, getDefaultAssets} from './config'
 import {ObjectValues} from './flow'
-import type {DefaultAsset, Token, Transaction, TransactionInfo} from './HistoryTransaction'
-import {TRANSACTION_DIRECTION, TRANSACTION_STATUS} from './HistoryTransaction'
 import {processTxHistoryData} from './processTransactions'
-import type {NetworkId} from './types'
-import type {RawUtxo} from './types'
-import {NETWORK_REGISTRY} from './types'
 
 export const transactionsInfoSelector: (state: State) => Record<string, TransactionInfo> = createSelector(
   (state: State) => state.wallet,

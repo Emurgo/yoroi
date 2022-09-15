@@ -1,8 +1,7 @@
 import {fromPairs} from 'lodash'
 
 import {ApiHistoryError} from '../../../legacy/errors'
-import type {Transaction} from '../../../legacy/HistoryTransaction'
-import type {BackendConfig, RawTransaction, TipStatusResponse} from '../../../legacy/types'
+import type {BackendConfig, RawTransaction, TipStatusResponse, Transaction} from '../../types/other'
 import {syncTxs, toCachedTx} from './transactionCache'
 
 describe('transactionCache', () => {

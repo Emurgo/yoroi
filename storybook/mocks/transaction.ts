@@ -1,5 +1,6 @@
 import BigNumber from 'bignumber.js'
-import {TransactionInfo} from '../../src/legacy/HistoryTransaction'
+
+import {TransactionInfo} from '../../src/yoroi-wallets/types'
 
 export const mockTransaction = (transaction?: Partial<TransactionInfo>): TransactionInfo => {
   return {

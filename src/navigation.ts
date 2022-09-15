@@ -4,10 +4,10 @@ import {IntlShape} from 'react-intl'
 import {Platform} from 'react-native'
 
 import {HWDeviceInfo} from './legacy/ledgerUtils'
-import type {RawUtxo} from './legacy/types'
 import {COLORS} from './theme'
 import {NetworkId, WalletImplementationId, YoroiProvider} from './yoroi-wallets'
 import {Quantity, YoroiAmounts, YoroiUnsignedTx} from './yoroi-wallets/types'
+import type {RawUtxo} from './yoroi-wallets/types/other'
 
 // prettier-ignore
 export const useUnsafeParams = <Params, >() => {

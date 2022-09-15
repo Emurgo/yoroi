@@ -1,32 +1,30 @@
 import {BigNumber} from 'bignumber.js'
 import type {IntlShape} from 'react-intl'
 
-import type {Transaction} from '../../legacy/HistoryTransaction'
 import type {HWDeviceInfo} from '../../legacy/ledgerUtils'
 import {WalletMeta} from '../../legacy/state'
+import {
+  AccountStates,
+  StakePoolInfoRequest,
+  StakePoolInfosAndHistories,
+  StakingStatus,
+  YoroiSignedTx,
+  YoroiUnsignedTx,
+} from '../types'
 import type {
+  AddressedUtxo,
   CurrencySymbol,
   FundInfoResponse,
   RawUtxo,
   TipStatusResponse,
+  Transaction,
   TxBodiesRequest,
   TxBodiesResponse,
   TxStatusRequest,
   TxStatusResponse,
-} from '../../legacy/types'
-import type {EncryptionMethod, WalletState} from '../../legacy/types'
-import {
-  AccountStates,
-  AddressedUtxo,
-  DefaultAsset,
-  SendTokenList,
-  StakePoolInfoRequest,
-  StakePoolInfosAndHistories,
-  StakingStatus,
-  Token,
-  TokenInfo,
-} from '../../types'
-import {YoroiSignedTx, YoroiUnsignedTx} from '../types'
+} from '../types/other'
+import type {EncryptionMethod, WalletState} from '../types/other'
+import {DefaultAsset, SendTokenList, Token, TokenInfo} from '../types/tokens'
 import {WalletEvent} from '../Wallet'
 import {CardanoTypes} from '.'
 import type {Addresses} from './chain'

@@ -22,10 +22,8 @@ import KeyStore from '../legacy/KeyStore'
 import {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {WalletMeta} from '../legacy/state'
 import storage from '../legacy/storage'
-import {CurrencySymbol, RawUtxo, TipStatusResponse} from '../legacy/types'
 import {clearUTXOs} from '../legacy/utxo'
 import {Storage} from '../Storage'
-import {DefaultAsset, Token} from '../types'
 import {
   Cardano,
   NetworkId,
@@ -37,7 +35,8 @@ import {
   YoroiWallet,
 } from '../yoroi-wallets'
 import {generateShelleyPlateFromKey} from '../yoroi-wallets/cardano/shelley/plate'
-import {YoroiAmounts, YoroiSignedTx, YoroiUnsignedTx} from '../yoroi-wallets/types'
+import {DefaultAsset, Token, YoroiAmounts, YoroiSignedTx, YoroiUnsignedTx} from '../yoroi-wallets/types'
+import {CurrencySymbol, RawUtxo, TipStatusResponse} from '../yoroi-wallets/types/other'
 import {Utxos} from '../yoroi-wallets/utils'
 
 // WALLET

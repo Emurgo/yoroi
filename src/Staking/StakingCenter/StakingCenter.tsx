@@ -30,13 +30,13 @@ import {
   poolOperatorSelector,
   utxosSelector,
 } from '../../legacy/selectors'
-import {RawUtxo} from '../../legacy/types'
 import {isEmptyString} from '../../legacy/utils'
 import {StakingCenterRouteNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
-import {DefaultAsset} from '../../types'
 import {UtxoAutoRefresher} from '../../UtxoAutoRefresher'
 import {NotEnoughMoneyToSendError, YoroiWallet} from '../../yoroi-wallets'
+import {DefaultAsset} from '../../yoroi-wallets/types'
+import {RawUtxo} from '../../yoroi-wallets/types/other'
 import {PoolDetailScreen} from '../PoolDetails'
 import {PoolWarningModal} from '../PoolWarningModal'
 

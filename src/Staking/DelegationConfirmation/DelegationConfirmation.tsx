@@ -14,8 +14,7 @@ import {useParams, useWalletNavigation} from '../../navigation'
 import {StakingCenterRoutes} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
-import {DefaultAsset} from '../../types'
-import {Quantity} from '../../yoroi-wallets/types'
+import {DefaultAsset, Quantity} from '../../yoroi-wallets/types'
 import {Amounts, Entries, Quantities} from '../../yoroi-wallets/utils'
 
 type Params = StakingCenterRoutes['delegation-confirmation']

@@ -1,6 +1,6 @@
 import type {AddressType} from '../../../legacy/commonUtils'
 import {generateWalletRootKey} from '../../../legacy/commonUtils'
-import type {PlateResponse} from '../../../legacy/types'
+import type {PlateResponse} from '../../types/other'
 import {legacyWalletChecksum} from '..'
 import {getAccountFromMasterKey, getAddresses} from './util'
 

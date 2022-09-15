@@ -17,7 +17,6 @@ import {
   formatTokenInteger,
   getAssetDenominationOrId,
 } from '../../legacy/format'
-import {TransactionInfo} from '../../legacy/HistoryTransaction'
 import {
   availableAssetsSelector,
   externalAddressIndexSelector,
@@ -28,8 +27,14 @@ import {isEmptyString} from '../../legacy/utils'
 import {TxHistoryRouteNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
-import {DefaultAsset, IOData, TransactionAssurance, TransactionDirection} from '../../types'
 import {MultiToken} from '../../yoroi-wallets'
+import {
+  DefaultAsset,
+  IOData,
+  TransactionAssurance,
+  TransactionDirection,
+  TransactionInfo,
+} from '../../yoroi-wallets/types'
 
 const filtersTxIO = (address: string) => {
   const isMyReceive = (extAddrIdx) => extAddrIdx[address] != null
