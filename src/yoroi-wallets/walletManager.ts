@@ -1,16 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import ExtendableError from 'es6-error'
 import _ from 'lodash'
-import type {IntlShape} from 'react-intl'
 
 import {migrateWalletMetas} from '../appStorage'
-import {APP_SETTINGS_KEYS, readAppSettings} from '../legacy/appSettings'
+import MasterKey from '../auth/MasterKey'
 import assert from '../legacy/assert'
 import {CONFIG, DISABLE_BACKGROUND_SYNC} from '../legacy/config'
-import {canBiometricEncryptionBeEnabled, ensureKeysValidity, isSystemAuthSupported} from '../legacy/deviceSettings'
-import {ObjectValues} from '../legacy/flow'
 import {ISignRequest} from '../legacy/ISignRequest'
-import KeyStore from '../legacy/KeyStore'
 import type {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {Logger} from '../legacy/logging'
 import type {WalletMeta} from '../legacy/state'
@@ -26,7 +22,6 @@ import {
   YoroiWallet,
 } from './cardano'
 import {StakePoolInfosAndHistories} from './types'
-import type {EncryptionMethod} from './types/other'
 import {
   FundInfoResponse,
   NETWORK_REGISTRY,
@@ -266,44 +261,6 @@ class WalletManager {
   }
 
   // ============ security & key management ============ //
-
-  async cleanupInvalidKeys() {
-    const wallet = this.getWallet()
-
-    try {
-      await KeyStore.deleteData(wallet.id, 'BIOMETRICS')
-      await KeyStore.deleteData(wallet.id, 'SYSTEM_PIN')
-    } catch (error) {
-      const isDeviceSecure = await isSystemAuthSupported()
-      // On android 8.0 we are able to delete keys
-      // after re-enabling Lock screen
-      if ((error as Error & {code: string}).code === KeyStore.REJECTIONS.KEY_NOT_DELETED && !isDeviceSecure) {
-        throw new SystemAuthDisabled()
-      } else {
-        // We cannot delete keys directly on android 8.1, but it is possible
-        // after we replace them
-        await KeyStore.storeData(wallet.id, 'BIOMETRICS', 'DUMMY_VALUE')
-        await KeyStore.storeData(wallet.id, 'SYSTEM_PIN', 'DUMMY_VALUE')
-
-        await KeyStore.deleteData(wallet.id, 'BIOMETRICS')
-        await KeyStore.deleteData(wallet.id, 'SYSTEM_PIN')
-      }
-    }
-
-    await this._updateMetadata(wallet.id, {
-      isEasyConfirmationEnabled: false,
-    })
-    wallet.isEasyConfirmationEnabled = false
-  }
-
-  async deleteEncryptedKey(encryptionMethod: EncryptionMethod) {
-    if (!this._wallet) {
-      throw new Error('Empty wallet')
-    }
-
-    await KeyStore.deleteData(this._id, encryptionMethod)
-  }
-
   async disableEasyConfirmation() {
     const wallet = this.getWallet()
 
@@ -314,29 +271,20 @@ class WalletManager {
       isEasyConfirmationEnabled: false,
     })
 
-    await this.deleteEncryptedKey('BIOMETRICS')
-    await this.deleteEncryptedKey('SYSTEM_PIN')
     this._notify({type: 'easy-confirmation', enabled: false})
   }
 
-  async enableEasyConfirmation(masterPassword: string, intl: IntlShape) {
+  async enableEasyConfirmation() {
     const wallet = this.getWallet()
 
-    await wallet.enableEasyConfirmation(masterPassword, intl)
+    await wallet.enableEasyConfirmation()
 
     await this._updateMetadata(wallet.id, {
       isEasyConfirmationEnabled: true,
     })
+
     await this._saveState(wallet)
     this._notify({type: 'easy-confirmation', enabled: true})
-  }
-
-  canBiometricsSignInBeDisabled() {
-    if (!this._wallets) {
-      throw new Error('Wallet list is not initialized')
-    }
-
-    return ObjectValues(this._wallets).every((wallet: any) => !wallet.isEasyConfirmationEnabled)
   }
 
   // =================== synch =================== //
@@ -433,8 +381,6 @@ class WalletManager {
   async openWallet(walletMeta: WalletMeta): Promise<[YoroiWallet, WalletMeta]> {
     assert.preconditionCheck(!!walletMeta.id, 'openWallet:: !!id')
     const data = await storage.read(`/wallet/${walletMeta.id}/data`)
-    const appSettings = await readAppSettings()
-    const isSystemAuthEnabled = appSettings[APP_SETTINGS_KEYS.SYSTEM_AUTH_ENABLED]
     Logger.debug('openWallet::data', data)
     if (!data) throw new Error('Cannot read saved data')
 
@@ -445,22 +391,6 @@ class WalletManager {
     wallet.id = walletMeta.id
     this._wallet = wallet
     this._id = walletMeta.id
-
-    const canBiometricsBeUsed = await canBiometricEncryptionBeEnabled()
-
-    const shouldDisableEasyConfirmation =
-      walletMeta.isEasyConfirmationEnabled && (!isSystemAuthEnabled || !canBiometricsBeUsed)
-    if (shouldDisableEasyConfirmation) {
-      wallet.isEasyConfirmationEnabled = false
-
-      await this._updateMetadata(wallet.id, {
-        isEasyConfirmationEnabled: false,
-      })
-      newWalletMeta.isEasyConfirmationEnabled = false
-
-      await this.deleteEncryptedKey('BIOMETRICS')
-      await this.deleteEncryptedKey('SYSTEM_PIN')
-    }
 
     // wallet state might have changed after restore due to migrations, so we
     // update the data in storage immediately
@@ -474,10 +404,6 @@ class WalletManager {
     this._notify({type: 'wallet-opened', wallet})
 
     this._notifyOnOpen()
-
-    if (wallet.isEasyConfirmationEnabled) {
-      await ensureKeysValidity(wallet.id)
-    }
 
     if (isYoroiWallet(wallet)) {
       return [wallet, newWalletMeta]
@@ -530,15 +456,10 @@ class WalletManager {
   }
 
   async removeWallet(id: string) {
-    if (this.isEasyConfirmationEnabled) {
-      await this.deleteEncryptedKey('BIOMETRICS')
-      await this.deleteEncryptedKey('SYSTEM_PIN')
-    }
-    await this.deleteEncryptedKey('MASTER_PASSWORD')
-
     await this.closeWallet()
     await storage.remove(`/wallet/${id}/data`)
     await storage.remove(`/wallet/${id}`)
+    await MasterKey(id).discard()
 
     this._wallets = _.omit(this._wallets, id)
   }

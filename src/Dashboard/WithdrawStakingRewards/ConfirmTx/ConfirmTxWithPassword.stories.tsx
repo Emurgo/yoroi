@@ -2,9 +2,8 @@ import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {mockKeyStore, mockWallet, mockYoroiSignedTx, mockYoroiTx, WithModal} from '../../../../storybook'
+import {mockWallet, mockYoroiSignedTx, mockYoroiTx, WithModal} from '../../../../storybook'
 import {Boundary} from '../../../components'
-import KeyStore from '../../../legacy/KeyStore'
 import {YoroiWallet} from '../../../yoroi-wallets'
 import {YoroiUnsignedTx} from '../../../yoroi-wallets/types'
 import {ConfirmTxWithPassword} from './ConfirmTxWithPassword'
@@ -22,12 +21,6 @@ storiesOf('ConfirmWithdrawalTx/Password', module)
         return []
       },
     }
-    const storage: typeof KeyStore = mockKeyStore({
-      getData: async (_keyId, _encryptionMethod, _message, _password, _intl) => {
-        action('getData')(_keyId, _encryptionMethod, _message, _password, _intl)
-        return 'masterkey'
-      },
-    })
     const unsignedTx: YoroiUnsignedTx = {
       ...mockYoroiTx,
       staking: {
@@ -43,7 +36,6 @@ storiesOf('ConfirmWithdrawalTx/Password', module)
         <Boundary>
           <ConfirmTxWithPassword
             wallet={wallet}
-            storage={storage}
             unsignedTx={unsignedTx}
             onSuccess={action('onSuccess')}
             onCancel={action('onCancel')}
@@ -64,12 +56,6 @@ storiesOf('ConfirmWithdrawalTx/Password', module)
         return []
       },
     }
-    const storage: typeof KeyStore = mockKeyStore({
-      getData: async (_keyId, _encryptionMethod, _message, _password, _intl) => {
-        action('getData')(_keyId, _encryptionMethod, _message, _password, _intl)
-        return 'masterkey'
-      },
-    })
     const unsignedTx: YoroiUnsignedTx = {
       ...mockYoroiTx,
       staking: {
@@ -89,7 +75,6 @@ storiesOf('ConfirmWithdrawalTx/Password', module)
         <Boundary>
           <ConfirmTxWithPassword
             wallet={wallet}
-            storage={storage}
             unsignedTx={unsignedTx}
             onSuccess={action('onSuccess')}
             onCancel={action('onCancel')}

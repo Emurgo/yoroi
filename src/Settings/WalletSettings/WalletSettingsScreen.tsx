@@ -3,8 +3,9 @@ import type {MessageDescriptor} from 'react-intl'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, Switch} from 'react-native'
 import {useMutation, UseMutationOptions} from 'react-query'
-import {useDispatch, useSelector} from 'react-redux'
+import {useDispatch} from 'react-redux'
 
+import {useAuthMethod} from '../../auth'
 import {useAuth} from '../../auth/AuthProvider'
 import {StatusBar} from '../../components'
 import {useCloseWallet, useEasyConfirmationEnabled, useWalletName} from '../../hooks'
@@ -13,10 +14,10 @@ import {clearAccountState} from '../../legacy/account'
 import {DIALOG_BUTTONS, showConfirmationDialog} from '../../legacy/actions'
 import {isByron, isHaskellShelley} from '../../legacy/config'
 import {getNetworkConfigById} from '../../legacy/networks'
-import {isSystemAuthEnabledSelector} from '../../legacy/selectors'
 import {clearUTXOs} from '../../legacy/utxo'
 import {useWalletNavigation} from '../../navigation'
 import {useSelectedWallet, useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
+import {useStorage} from '../../Storage'
 import {NetworkId, WalletImplementationId, walletManager} from '../../yoroi-wallets'
 import {
   NavigatedSettingsItem,
@@ -30,10 +31,11 @@ export const WalletSettingsScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
   const {navigation, resetToWalletSelection} = useWalletNavigation()
-  const isSystemAuthEnabled = useSelector(isSystemAuthEnabledSelector)
   const wallet = useSelectedWallet()
   const walletName = useWalletName(wallet)
   const easyConfirmationEnabled = useEasyConfirmationEnabled(wallet)
+  const storage = useStorage()
+  const {authMethod} = useAuthMethod(storage)
 
   const onSwitchWallet = () => {
     resetToWalletSelection()
@@ -77,14 +79,11 @@ export const WalletSettingsScreen = () => {
           disabled={wallet.isHW || wallet.isReadOnly}
         />
 
-        <SettingsItem
-          label={strings.easyConfirmation}
-          disabled={!isSystemAuthEnabled || wallet.isHW || wallet.isReadOnly}
-        >
+        <SettingsItem label={strings.easyConfirmation} disabled={!authMethod?.isOS || wallet.isHW || wallet.isReadOnly}>
           <Switch
             value={easyConfirmationEnabled}
             onValueChange={easyConfirmationEnabled ? onDisableEasyConfirmation : onEnableEasyConfirmation}
-            disabled={!isSystemAuthEnabled || wallet.isHW || wallet.isReadOnly}
+            disabled={!authMethod?.isOS || wallet.isHW || wallet.isReadOnly}
           />
         </SettingsItem>
       </SettingsSection>

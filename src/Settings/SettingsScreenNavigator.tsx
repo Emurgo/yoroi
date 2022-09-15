@@ -3,28 +3,25 @@ import {useNavigation} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {useDispatch} from 'react-redux'
 
-import {ChangePinScreen, CreatePinScreen} from '../auth'
+import {ChangePinScreen} from '../auth'
+import {LinkAuthWithPin} from '../auth/LinkAuthWithPin'
+import {Boundary} from '../components'
 import globalMessages from '../i18n/global-messages'
-import {setEasyConfirmation, setSystemAuth} from '../legacy/actions'
 import {
   defaultStackNavigationOptions,
   defaultStackNavigationOptionsV2,
   SettingsStackRoutes,
   SettingsTabRoutes,
-  useWalletNavigation,
 } from '../navigation'
-import {useSelectedWalletMeta, useSetSelectedWalletMeta} from '../SelectedWallet'
 import {COLORS} from '../theme'
-import {walletManager} from '../yoroi-wallets'
 import {ApplicationSettingsScreen} from './ApplicationSettings'
-import {BiometricsLinkScreen} from './BiometricsLink/'
 import {ChangeLanguageScreen} from './ChangeLanguage'
 import {ChangePasswordScreen} from './ChangePassword'
 import {ChangeWalletName} from './ChangeWalletName'
 import {ChangeCurrencyScreen} from './Currency/ChangeCurrencyScreen'
 import {DisableEasyConfirmationScreen, EnableEasyConfirmationScreen} from './EasyConfirmation'
+import {LinkAuthWithOsScreen} from './LinkAuthWithOs'
 import {RemoveWalletScreen} from './RemoveWallet'
 import {SupportScreen} from './Support'
 import {TermsOfServiceScreen} from './TermsOfService'
@@ -33,11 +30,6 @@ import {WalletSettingsScreen} from './WalletSettings'
 const Stack = createStackNavigator<SettingsStackRoutes>()
 export const SettingsScreenNavigator = () => {
   const strings = useStrings()
-  const navigation = useNavigation()
-  const {navigateToSettings} = useWalletNavigation()
-  const dispatch = useDispatch()
-  const setSelectedWalletMeta = useSetSelectedWalletMeta()
-  const walletMeta = useSelectedWalletMeta()
 
   return (
     <Stack.Navigator screenOptions={defaultStackNavigationOptions} initialRouteName="settings-main">
@@ -66,8 +58,8 @@ export const SettingsScreenNavigator = () => {
       />
 
       <Stack.Screen //
-        name="fingerprint-link"
-        component={BiometricsLinkScreen}
+        name="link-auth-with-os"
+        component={LinkAuthWithOsScreenWrapper}
         options={{headerShown: false}}
       />
 
@@ -116,30 +108,14 @@ export const SettingsScreenNavigator = () => {
           title: strings.changeCustomPinTitle,
           headerStyle: defaultStackNavigationOptions.headerStyle,
         }}
-      >
-        {() => <ChangePinScreen onDone={() => navigation.goBack()} />}
-      </Stack.Screen>
+        component={ChangePinScreenWrapper}
+      />
 
-      <Stack.Screen //
-        name="setup-custom-pin"
+      <Stack.Screen
+        name="link-auth-with-pin"
         options={{title: strings.customPinTitle}}
-      >
-        {() => (
-          <CreatePinScreen
-            onDone={async () => {
-              await dispatch(setSystemAuth(false))
-              await walletManager.disableEasyConfirmation()
-              dispatch(setEasyConfirmation(false))
-              if (!walletMeta) throw new Error('No wallet meta')
-              setSelectedWalletMeta({
-                ...walletMeta,
-                isEasyConfirmationEnabled: false,
-              })
-              navigateToSettings()
-            }}
-          />
-        )}
-      </Stack.Screen>
+        component={LinkAuthWithPinWrapper}
+      />
     </Stack.Navigator>
   )
 }
@@ -161,6 +137,26 @@ const SettingsTabNavigator = () => {
       <Tab.Screen name="app-settings" component={ApplicationSettingsScreen} />
     </Tab.Navigator>
   )
+}
+
+const LinkAuthWithOsScreenWrapper = () => {
+  return (
+    <Boundary>
+      <LinkAuthWithOsScreen />
+    </Boundary>
+  )
+}
+
+const ChangePinScreenWrapper = () => {
+  const navigation = useNavigation()
+
+  return <ChangePinScreen onDone={navigation.goBack} />
+}
+
+const LinkAuthWithPinWrapper = () => {
+  const navigation = useNavigation()
+
+  return <LinkAuthWithPin onDone={navigation.goBack} />
 }
 
 const messages = defineMessages({

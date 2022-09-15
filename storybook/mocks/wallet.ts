@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js'
 
-import KeyStore from '../../src/legacy/KeyStore'
+import {MasterKey} from '../../src/auth/MasterKey'
 import {PRIMARY_ASSET_CONSTANTS} from '../../src/legacy/networks'
 import {TokenEntry, YoroiWallet} from '../../src/yoroi-wallets'
 import {
@@ -234,18 +234,18 @@ export const mockYoroiSignedTx: YoroiSignedTx & {mock: true} = {
   mock: true,
 }
 
-export const mockKeyStore = (overrides?: {
-  getData?: typeof KeyStore.getData
-  storeData?: typeof KeyStore.storeData
-  deleteData?: typeof KeyStore.deleteData
+export const mockMasterKey = (overrides?: {
+  reveal?: ReturnType<MasterKey>['reveal']
+  keep?: ReturnType<MasterKey>['keep']
+  discard?: ReturnType<MasterKey>['discard']
 }) =>
   ({
-    getData: async (_keyId, _encrpytionMethod, _message, password, _intl) => {
+    reveal: async (password) => {
       if (password !== 'password') throw new Error('Invalid Password')
 
       return 'masterkey'
     },
-    storeData: async () => undefined,
-    deleteData: async () => undefined,
+    keep: async () => undefined,
+    discard: async () => undefined,
     ...(overrides as any),
-  } as unknown as typeof KeyStore)
+  } as unknown as MasterKey)

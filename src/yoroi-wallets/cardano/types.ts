@@ -112,7 +112,7 @@ export interface WalletInterface {
 
   getDecryptedMasterKey(masterPassword: string, intl: IntlShape): Promise<string>
 
-  enableEasyConfirmation(masterPassword: string, intl: IntlShape): Promise<void>
+  enableEasyConfirmation(): Promise<void>
 
   changePassword(masterPassword: string, newPassword: string, intl: IntlShape): Promise<void>
 

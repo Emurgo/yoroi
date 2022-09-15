@@ -59,6 +59,7 @@ export const CreatePinInput = ({onDone}: Props) => {
       title={strings.pinInputConfirmationTitle}
       pinMaxLength={CONFIG.PIN_LENGTH}
       onDone={onPinConfirmation}
+      onGoBack={() => setStep('pin')}
     />
   )
 }

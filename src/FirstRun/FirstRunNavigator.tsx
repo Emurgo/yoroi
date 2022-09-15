@@ -1,11 +1,9 @@
 import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {useDispatch} from 'react-redux'
 
 import {useAuth} from '../auth/AuthProvider'
-import {CreatePinScreen} from '../auth/CreatePinScreen/CreatePinScreen'
-import {reloadAppSettings, setSystemAuth} from '../legacy/actions'
+import {LinkAuthWithPin} from '../auth/LinkAuthWithPin'
 import {defaultStackNavigationOptions, FirstRunRoutes} from '../navigation'
 import {LanguagePickerScreen} from './LanguagePickerScreen'
 import {TermsOfServiceScreen} from './TermsOfServiceScreen'
@@ -37,7 +35,7 @@ export const FirstRunNavigator = () => {
       />
 
       <Stack.Screen //
-        name="custom-pin"
+        name="link-auth-with-pin"
         options={{headerShown: false}}
         component={CreatePinScreenWrapper}
       />
@@ -46,18 +44,9 @@ export const FirstRunNavigator = () => {
 }
 
 const CreatePinScreenWrapper = () => {
-  const dispatch = useDispatch()
   const {login} = useAuth()
 
-  return (
-    <CreatePinScreen
-      onDone={async () => {
-        await dispatch(reloadAppSettings())
-        await dispatch(setSystemAuth(false))
-        login()
-      }}
-    />
-  )
+  return <LinkAuthWithPin onDone={login} />
 }
 
 const messages = defineMessages({

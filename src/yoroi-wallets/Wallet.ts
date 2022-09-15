@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import _ from 'lodash'
-import type {IntlShape} from 'react-intl'
 import {defaultMemoize} from 'reselect'
 
+import MasterKey from '../auth/MasterKey'
 import * as api from '../legacy/api'
 import assert from '../legacy/assert'
 import {CONFIG} from '../legacy/config'
-import KeyStore from '../legacy/KeyStore'
 import type {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {Logger} from '../legacy/logging'
 import {getCardanoNetworkConfigById, isJormungandr} from '../legacy/networks'
@@ -14,7 +13,7 @@ import {IsLockedError, nonblockingSynchronize, synchronize} from '../legacy/prom
 import {CardanoTypes, NetworkId, WalletImplementationId, YoroiProvider} from './cardano'
 import {AddressChain, AddressChainJSON, Addresses} from './cardano/chain'
 import {TransactionCache, TransactionCacheJSON} from './cardano/shelley/transactionCache'
-import type {BackendConfig, EncryptionMethod, Transaction} from './types/other'
+import type {BackendConfig, Transaction} from './types/other'
 import {validatePassword} from './utils/validators'
 
 type WalletState = {
@@ -140,50 +139,31 @@ export class Wallet {
   }
 
   // ============ security & key management ============ //
+  async encryptAndSaveMasterKey(masterKey: string, password: string) {
+    if (this.id != null) return MasterKey(this.id).keep(password, masterKey)
 
-  encryptAndSaveMasterKey(encryptionMethod: 'BIOMETRICS', masterKey: string): Promise<void>
-  encryptAndSaveMasterKey(encryptionMethod: 'SYSTEM_PIN', masterKey: string): Promise<void>
-  encryptAndSaveMasterKey(encryptionMethod: 'MASTER_PASSWORD', masterKey: string, password: string): Promise<void>
-  async encryptAndSaveMasterKey(encryptionMethod: EncryptionMethod, masterKey: string, password?: string) {
-    if (!this.id) throw new Error('invalid wallet state')
-    if (encryptionMethod === 'MASTER_PASSWORD') {
-      if (!password) throw new Error('password is required')
-      await KeyStore.storeData(this.id, 'MASTER_PASSWORD', masterKey, password)
-    }
-    if (encryptionMethod === 'BIOMETRICS') {
-      await KeyStore.storeData(this.id, encryptionMethod, masterKey)
-    }
-    if (encryptionMethod === 'SYSTEM_PIN') {
-      await KeyStore.storeData(this.id, encryptionMethod, masterKey)
-    }
+    throw new Error('invalid wallet state')
   }
 
-  async getDecryptedMasterKey(masterPassword: string, intl: IntlShape) {
-    if (!this.id) throw new Error('invalid wallet state')
-    return KeyStore.getData(this.id, 'MASTER_PASSWORD', '', masterPassword, intl)
+  async getDecryptedMasterKey(masterPassword: string) {
+    if (this.id != null) return MasterKey(this.id).reveal(masterPassword)
+
+    throw new Error('invalid wallet state')
   }
 
-  async enableEasyConfirmation(masterPassword: string, intl: IntlShape) {
-    const decryptedMasterKey = await this.getDecryptedMasterKey(masterPassword, intl)
-
-    await this.encryptAndSaveMasterKey('BIOMETRICS', decryptedMasterKey)
-    await this.encryptAndSaveMasterKey('SYSTEM_PIN', decryptedMasterKey)
-
+  async enableEasyConfirmation() {
     this.isEasyConfirmationEnabled = true
 
     this.notify({type: 'easy-confirmation', enabled: this.isEasyConfirmationEnabled})
   }
 
-  async changePassword(masterPassword: string, newPassword: string, intl: IntlShape) {
-    const isNewPasswordValid = _.isEmpty(validatePassword(newPassword, newPassword))
+  async changePassword(masterPassword: string, newPassword: string) {
+    if (!this.id) throw new Error('invalid wallet state')
 
-    if (!isNewPasswordValid) {
-      throw new Error('New password is not valid')
-    }
+    if (!_.isEmpty(validatePassword(newPassword, newPassword))) throw new Error('New password is not valid')
 
-    const masterKey = await this.getDecryptedMasterKey(masterPassword, intl)
-
-    await this.encryptAndSaveMasterKey('MASTER_PASSWORD', masterKey, newPassword)
+    const {reveal, keep} = MasterKey(this.id)
+    return reveal(masterPassword).then((decrypted) => keep(newPassword, decrypted))
   }
 
   // =================== subscriptions =================== //

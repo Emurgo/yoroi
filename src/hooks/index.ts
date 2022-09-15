@@ -4,7 +4,6 @@ import {useFocusEffect} from '@react-navigation/native'
 import {delay} from 'bluebird'
 import cryptoRandomString from 'crypto-random-string'
 import * as React from 'react'
-import {IntlShape} from 'react-intl'
 import {
   QueryKey,
   useMutation,
@@ -16,9 +15,9 @@ import {
 } from 'react-query'
 import {useDispatch} from 'react-redux'
 
+import {MasterKey} from '../auth/MasterKey'
 import {clearAccountState} from '../legacy/account'
 import {getDefaultAssetByNetworkId} from '../legacy/config'
-import KeyStore from '../legacy/KeyStore'
 import {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {WalletMeta} from '../legacy/state'
 import storage from '../legacy/storage'
@@ -30,6 +29,7 @@ import {
   TxSubmissionStatus,
   WalletEvent,
   WalletImplementationId,
+  WalletJSON,
   walletManager,
   YoroiProvider,
   YoroiWallet,
@@ -60,12 +60,11 @@ export const useWallet = (wallet: YoroiWallet, event: WalletEvent['type']) => {
   }, [event, wallet])
 }
 
-export const useEnableEasyConfirmation = (
-  options?: UseMutationOptions<void, Error, {password: string; intl: IntlShape}>,
-) => {
-  const mutation = useMutation({
+export const useEnableEasyConfirmation = (options?: UseMutationOptions<void, Error>) => {
+  const mutation = useMutationWithInvalidations({
     ...options,
-    mutationFn: ({password, intl}) => walletManager.enableEasyConfirmation(password, intl),
+    mutationFn: () => walletManager.enableEasyConfirmation(),
+    invalidateQueries: [['walletMetas']],
   })
 
   return {
@@ -75,9 +74,10 @@ export const useEnableEasyConfirmation = (
 }
 
 export const useDisableEasyConfirmation = (options?: UseMutationOptions) => {
-  const mutation = useMutation({
+  const mutation = useMutationWithInvalidations({
     ...options,
     mutationFn: async () => walletManager.disableEasyConfirmation(),
+    invalidateQueries: [['walletMetas']],
   })
 
   return {
@@ -285,14 +285,14 @@ export const useWithdrawalTx = (
 }
 
 export const useSignWithPasswordAndSubmitTx = (
-  {wallet, storage}: {wallet: YoroiWallet; storage: typeof KeyStore},
+  {wallet}: {wallet: YoroiWallet},
   options?: {
-    signTx?: UseMutationOptions<YoroiSignedTx, Error, {unsignedTx: YoroiUnsignedTx; password: string; intl: IntlShape}>
+    signTx?: UseMutationOptions<YoroiSignedTx, Error, {unsignedTx: YoroiUnsignedTx; password: string}>
     submitTx?: UseMutationOptions<TxSubmissionStatus, Error, YoroiSignedTx>
   },
 ) => {
   const signTx = useSignTxWithPassword(
-    {wallet, storage},
+    {wallet},
     {
       useErrorBoundary: true,
       ...options?.signTx,
@@ -402,16 +402,12 @@ export const useSignTx = (
 }
 
 export const useSignTxWithPassword = (
-  {wallet, storage}: {wallet: YoroiWallet; storage: typeof KeyStore},
-  options: UseMutationOptions<
-    YoroiSignedTx,
-    Error,
-    {unsignedTx: YoroiUnsignedTx; password: string; intl: IntlShape}
-  > = {},
+  {wallet}: {wallet: YoroiWallet},
+  options: UseMutationOptions<YoroiSignedTx, Error, {unsignedTx: YoroiUnsignedTx; password: string}> = {},
 ) => {
   const mutation = useMutation({
-    mutationFn: async ({unsignedTx, password, intl}) => {
-      const masterKey = await storage.getData(wallet.id, 'MASTER_PASSWORD', '', password, intl)
+    mutationFn: async ({unsignedTx, password}) => {
+      const masterKey = await MasterKey(wallet.id).reveal(password)
 
       return wallet.signTx(unsignedTx, masterKey)
     },
@@ -777,4 +773,68 @@ export const useBalances = (wallet: YoroiWallet): YoroiAmounts => {
   if (!query.data) throw new Error('invalid state')
 
   return query.data
+}
+
+export const useDisableAllEasyConfirmation = (
+  wallet: YoroiWallet | undefined,
+  options?: UseMutationOptions<void, Error>,
+) => {
+  const mutation = useMutationWithInvalidations({
+    mutationFn: async () => {
+      storage
+        .keys('/wallet/', false)
+        .then((keys) =>
+          Promise.all([
+            storage.readMany(keys.map((walletId) => `/wallet/${walletId}`)),
+            storage.readMany(keys.map((walletId) => `/wallet/${walletId}/data`)),
+          ]),
+        )
+        .then(async ([metas, wallets]) => {
+          const metaUpdates: Array<[string, WalletMeta]> = []
+          for (const [walletPath, meta] of metas) {
+            if ((meta as WalletMeta)?.isEasyConfirmationEnabled) {
+              metaUpdates.push([walletPath, {...meta, isEasyConfirmationEnabled: false}])
+            }
+          }
+          const walletUpdates: Array<[string, WalletJSON]> = []
+          for (const [walletPath, wallet] of wallets) {
+            if ((wallet as WalletJSON)?.isEasyConfirmationEnabled) {
+              walletUpdates.push([walletPath, {...wallet, isEasyConfirmationEnabled: false}])
+            }
+          }
+          return [metaUpdates, walletUpdates]
+        })
+        .then(async ([metaUpdates, walletUpdates]) => {
+          for (const [key, value] of metaUpdates) {
+            await storage.write(key, value)
+          }
+          for (const [key, value] of walletUpdates) {
+            await storage.write(key, value)
+          }
+        })
+      // if there is a wallet selected it needs to trigger the event
+      if (wallet !== undefined) await walletManager.disableEasyConfirmation()
+    },
+    invalidateQueries: [['walletMetas']],
+    ...options,
+  })
+
+  return {
+    ...mutation,
+    disableAllEasyConfirmation: mutation.mutate,
+  }
+}
+
+export const useRefetchOnFocus = (refetch: () => unknown, canRefetch = true) => {
+  const [isScreenFocused, setIsScreenFocused] = React.useState(false)
+  useFocusEffect(() => {
+    setIsScreenFocused(true)
+    return () => setIsScreenFocused(false)
+  })
+
+  React.useEffect(() => {
+    if (isScreenFocused && canRefetch) {
+      refetch()
+    }
+  }, [canRefetch, isScreenFocused, refetch])
 }

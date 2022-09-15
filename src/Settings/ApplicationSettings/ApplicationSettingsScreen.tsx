@@ -1,24 +1,20 @@
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Platform, ScrollView, StyleSheet, Switch} from 'react-native'
+import {Alert, ScrollView, StyleSheet, Switch} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 import {useDispatch, useSelector} from 'react-redux'
 
+import {useAuthMethod, useAuthOsAppKey, useAuthOsErrorDecoder, useCanEnableAuthOs, useLoadSecret} from '../../auth'
 import {StatusBar} from '../../components'
+import {useRefetchOnFocus} from '../../hooks'
 import globalMessages from '../../i18n/global-messages'
 import {setAppSettingField} from '../../legacy/actions'
 import {APP_SETTINGS_KEYS} from '../../legacy/appSettings'
 import {CONFIG, isNightly} from '../../legacy/config'
-import {canBiometricEncryptionBeEnabled, isBiometricEncryptionHardwareSupported} from '../../legacy/deviceSettings'
-import KeyStore from '../../legacy/KeyStore'
-import {
-  biometricHwSupportSelector,
-  installationIdSelector,
-  isSystemAuthEnabledSelector,
-  sendCrashReportsSelector,
-} from '../../legacy/selectors'
+import {installationIdSelector, sendCrashReportsSelector} from '../../legacy/selectors'
 import {isEmptyString} from '../../legacy/utils'
 import {useWalletNavigation} from '../../navigation'
+import {useStorage} from '../../Storage'
 import {useCurrencyContext} from '../Currency'
 import {NavigatedSettingsItem, SettingsBuildItem, SettingsItem, SettingsSection} from '../SettingsItems'
 
@@ -26,66 +22,63 @@ const version = DeviceInfo.getVersion()
 
 export const ApplicationSettingsScreen = () => {
   const strings = useStrings()
-  const {navigation, navigateToSettings} = useWalletNavigation()
-  const isBiometricHardwareSupported = useSelector(biometricHwSupportSelector)
+  const {navigation} = useWalletNavigation()
   const sendCrashReports = useSelector(sendCrashReportsSelector)
-  const isSystemAuthEnabled = useSelector(isSystemAuthEnabledSelector)
-  const installationId = useSelector(installationIdSelector)
+
   const dispatch = useDispatch()
   const {currency} = useCurrencyContext()
+  const storage = useStorage()
+  const {authMethod, refetch: refetchAuthMethod} = useAuthMethod(storage)
+
+  const {canEnableOsAuth, refetch: refetchCanEnableOSAuth} = useCanEnableAuthOs({
+    // on emulator
+    refetchInterval: __DEV__ ? 2000 : false,
+  })
+  // react-query useRefetchOnWindowsFocus doesn't work in react-native
+  useRefetchOnFocus(refetchCanEnableOSAuth)
+  useRefetchOnFocus(refetchAuthMethod)
+
+  const secretKey = useAuthOsAppKey(storage)
+  if (isEmptyString(secretKey)) throw new Error('Invalid secret key')
+
+  const decodeAuthOsError = useAuthOsErrorDecoder()
+  const onError = (error) => {
+    const errorMessage = decodeAuthOsError(error)
+    if (!isEmptyString(errorMessage)) Alert.alert(strings.error, errorMessage)
+  }
+  const {loadSecret} = useLoadSecret({
+    onSuccess: () => navigation.navigate('link-auth-with-pin'),
+    onError: onError,
+  })
+  const authenticate = React.useCallback(() => {
+    loadSecret({
+      key: secretKey,
+      authenticationPrompt: {
+        title: strings.authorize,
+        cancel: strings.cancel,
+      },
+    })
+  }, [loadSecret, secretKey, strings.authorize, strings.cancel])
+
+  const installationId = useSelector(installationIdSelector)
+  if (isEmptyString(installationId)) throw new Error('invalid state')
 
   const setCrashReporting = (value: boolean) => {
     dispatch(setAppSettingField(APP_SETTINGS_KEYS.SEND_CRASH_REPORTS, value))
   }
 
   const onToggleBiometricsAuthIn = async () => {
-    if (isEmptyString(installationId)) throw new Error('invalid state')
-
-    if (isSystemAuthEnabled) {
-      navigation.navigate('biometrics', {
-        keyId: installationId,
-        onSuccess: () => navigation.navigate('setup-custom-pin'),
-        onFail: (reason) => {
-          if (reason === KeyStore.REJECTIONS.CANCELED) {
-            navigateToSettings()
-          } else {
-            throw new Error(`Could not authenticate user: ${reason}`)
-          }
-        },
-      })
+    if (authMethod?.isOS) {
+      authenticate()
     } else {
       navigation.navigate('app-root', {
         screen: 'settings',
         params: {
-          screen: 'fingerprint-link',
+          screen: 'link-auth-with-os',
         },
       })
     }
   }
-
-  React.useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      const updateDeviceSettings = async () => {
-        const isHardwareSupported = await isBiometricEncryptionHardwareSupported()
-        const canEnableBiometricEncryption = await canBiometricEncryptionBeEnabled()
-        await dispatch(setAppSettingField(APP_SETTINGS_KEYS.BIOMETRIC_HW_SUPPORT, isHardwareSupported))
-        await dispatch(
-          setAppSettingField(APP_SETTINGS_KEYS.CAN_ENABLE_BIOMETRIC_ENCRYPTION, canEnableBiometricEncryption),
-        )
-      }
-
-      updateDeviceSettings()
-    })
-    return unsubscribe
-  }, [navigation, dispatch])
-
-  // it's better if we prevent users who:
-  //   1. are not using biometric auth yet
-  //   2. are on Android 10+
-  // from enabling this feature since they can encounter issues (and may not be
-  // able to access their wallets eventually, neither rollback this!)
-  const shouldNotEnableBiometricAuth =
-    Platform.OS === 'android' && CONFIG.ANDROID_BIO_AUTH_EXCLUDED_SDK.includes(Platform.Version) && !isSystemAuthEnabled
 
   return (
     <ScrollView style={styles.scrollView}>
@@ -98,21 +91,10 @@ export const ApplicationSettingsScreen = () => {
       </SettingsSection>
 
       <SettingsSection title={strings.security}>
-        <NavigatedSettingsItem
-          label={strings.changePin}
-          navigateTo="change-custom-pin"
-          disabled={isSystemAuthEnabled}
-        />
+        <NavigatedSettingsItem label={strings.changePin} navigateTo="change-custom-pin" disabled={!authMethod?.isPIN} />
 
-        <SettingsItem
-          label={strings.biometricsSignIn}
-          disabled={!isBiometricHardwareSupported || shouldNotEnableBiometricAuth}
-        >
-          <Switch
-            value={isSystemAuthEnabled}
-            onValueChange={onToggleBiometricsAuthIn}
-            disabled={!isBiometricHardwareSupported || shouldNotEnableBiometricAuth}
-          />
+        <SettingsItem label={strings.biometricsSignIn} disabled={!canEnableOsAuth}>
+          <Switch value={authMethod?.isOS} onValueChange={onToggleBiometricsAuthIn} disabled={!canEnableOsAuth} />
         </SettingsItem>
       </SettingsSection>
 
@@ -153,10 +135,17 @@ const useStrings = () => {
     crashReporting: intl.formatMessage(messages.crashReporting),
     crashReportingText: intl.formatMessage(messages.crashReportingText),
     currency: intl.formatMessage(globalMessages.currency),
+    authorize: intl.formatMessage(messages.authorize),
+    cancel: intl.formatMessage(globalMessages.cancel),
+    error: intl.formatMessage(globalMessages.error),
   }
 }
 
 const messages = defineMessages({
+  authorize: {
+    id: 'components.send.biometricauthscreen.authorizeOperation',
+    defaultMessage: '!!!Authorize operation',
+  },
   language: {
     id: 'components.settings.applicationsettingsscreen.language',
     defaultMessage: '!!!Your language',

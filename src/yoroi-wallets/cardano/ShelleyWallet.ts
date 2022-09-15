@@ -136,7 +136,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     )
     const masterKeyPtr = await generateWalletRootKey(mnemonic)
     const masterKey: string = Buffer.from(await masterKeyPtr.asBytes()).toString('hex')
-    await this.encryptAndSaveMasterKey('MASTER_PASSWORD', masterKey, newPassword)
+    await this.encryptAndSaveMasterKey(masterKey, newPassword)
     const purpose = isByron(implementationId)
       ? CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.BIP44
       : CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852

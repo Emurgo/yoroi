@@ -5,6 +5,7 @@ import {StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, StatusBar, Text} from '../../components'
+import {LoadingOverlay} from '../../components/LoadingOverlay'
 import {useDisableEasyConfirmation} from '../../hooks'
 import {useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../SelectedWallet'
 
@@ -35,6 +36,8 @@ export const DisableEasyConfirmationScreen = () => {
       <View style={styles.actions}>
         <Button title={strings.disableButton} onPress={() => disableEasyConfirmation()} disabled={isLoading} />
       </View>
+
+      <LoadingOverlay loading={isLoading} />
     </SafeAreaView>
   )
 }

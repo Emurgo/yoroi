@@ -36,9 +36,7 @@ storiesOf('Boundary', module)
   .add('Loading/overlay', () => {
     return (
       <QueryClientProvider client={new QueryClient()}>
-        <Boundary>
-          <LoadingWithOverlay />
-        </Boundary>
+        <LoadingWithOverlay />
       </QueryClientProvider>
     )
   })

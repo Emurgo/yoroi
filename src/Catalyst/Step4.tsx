@@ -5,16 +5,14 @@ import {ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch} from 'react-redux'
 
-import {Button, OfflineBanner, ProgressStep, Spacer, TextInput} from '../components'
-import {ErrorModal} from '../components'
+import {MasterKey} from '../auth/MasterKey'
+import {Button, ErrorModal, OfflineBanner, ProgressStep, Spacer, TextInput} from '../components'
 import {useCloseWallet} from '../hooks'
 import {confirmationMessages, errorMessages, txLabels} from '../i18n/global-messages'
 import {clearAccountState} from '../legacy/account'
 import {showErrorDialog} from '../legacy/actions'
 import {CONFIG} from '../legacy/config'
-import {ensureKeysValidity} from '../legacy/deviceSettings'
 import {WrongPassword} from '../legacy/errors'
-import KeyStore from '../legacy/KeyStore'
 import {isEmptyString} from '../legacy/utils'
 import {clearUTXOs} from '../legacy/utxo'
 import {useSelectedWallet} from '../SelectedWallet'
@@ -79,7 +77,6 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
 
     if (wallet.isEasyConfirmationEnabled) {
       try {
-        await ensureKeysValidity(wallet.id)
         navigation.navigate('biometrics', {
           keyId: walletManager._id,
           onSuccess: async (decryptedKey) => {
@@ -105,7 +102,7 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
       return
     }
     try {
-      const decryptedKey = await KeyStore.getData(walletManager._id, 'MASTER_PASSWORD', '', password, intl)
+      const decryptedKey = await MasterKey(wallet.id).reveal(password)
 
       return createTransaction(decryptedKey)
     } catch (error) {

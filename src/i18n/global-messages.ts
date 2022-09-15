@@ -665,4 +665,12 @@ export default defineMessages({
     id: 'global.next',
     defaultMessage: '!!!Next',
   },
+  error: {
+    id: 'global.error',
+    defaultMessage: '!!!Error',
+  },
+  cancel: {
+    id: 'global.cancel',
+    defaultMessage: '!!!Cancel',
+  },
 })

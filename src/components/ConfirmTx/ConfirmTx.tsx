@@ -2,22 +2,21 @@
 import {useNavigation} from '@react-navigation/native'
 import {delay} from 'bluebird'
 import React, {useEffect, useState} from 'react'
-import {useIntl} from 'react-intl'
+import {defineMessages, useIntl} from 'react-intl'
 import {Platform, StyleSheet, View} from 'react-native'
 
+import {useAuthOsErrorDecoder, useLoadSecret} from '../../auth'
+import {MasterKey} from '../../auth/MasterKey'
 import {useSubmitTx} from '../../hooks'
-import {confirmationMessages, errorMessages, txLabels} from '../../i18n/global-messages'
+import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../i18n/global-messages'
 import LocalizableError from '../../i18n/LocalizableError'
-import {showErrorDialog} from '../../legacy/actions'
 import {CONFIG} from '../../legacy/config'
-import {ensureKeysValidity} from '../../legacy/deviceSettings'
 import {WrongPassword} from '../../legacy/errors'
-import KeyStore from '../../legacy/KeyStore'
 import {DeviceId, DeviceObj} from '../../legacy/ledgerUtils'
 import {isEmptyString} from '../../legacy/utils'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
-import {CardanoTypes, SystemAuthDisabled, walletManager, withBLE, withUSB} from '../../yoroi-wallets'
+import {CardanoTypes, walletManager, withBLE, withUSB} from '../../yoroi-wallets'
 import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
 import {Button, ButtonProps, ValidatedTextInput} from '..'
 import {Dialog, Step as DialogStep} from './Dialog'
@@ -54,9 +53,7 @@ export const ConfirmTx = ({
   disabled,
   autoSignIfEasyConfirmation,
   chooseTransportOnConfirmation,
-  biometricInstructions,
 }: Props) => {
-  const intl = useIntl()
   const strings = useStrings()
   const navigation = useNavigation()
 
@@ -151,7 +148,7 @@ export const ConfirmTx = ({
             setDialogStep(DialogStep.WaitingHwResponse)
             signedTx = await wallet.signTxWithLedger(yoroiUnsignedTx, useUSB)
           } else {
-            const decryptedKey = await KeyStore.getData(walletManager._id, 'MASTER_PASSWORD', '', password, intl)
+            const decryptedKey = await MasterKey(wallet.id).reveal(password)
             setDialogStep(DialogStep.Signing)
             signedTx = await smoothModalNotification(wallet.signTx(yoroiUnsignedTx, decryptedKey))
           }
@@ -195,8 +192,17 @@ export const ConfirmTx = ({
         setIsProcessing(false)
       }
     },
-    [intl, onError, onSuccess, password, strings, submitTx, useUSB, wallet, yoroiUnsignedTx],
+    [onError, onSuccess, password, strings, submitTx, useUSB, wallet, yoroiUnsignedTx],
   )
+
+  const decodeAuthOsError = useAuthOsErrorDecoder()
+  const {loadSecret} = useLoadSecret({
+    onSuccess: onConfirm,
+    onError: (error) => {
+      const errorMessage = decodeAuthOsError(error)
+      if (!isEmptyString(errorMessage)) showError({errorMessage})
+    },
+  })
 
   const _onConfirm = React.useCallback(async () => {
     if (
@@ -207,40 +213,25 @@ export const ConfirmTx = ({
     ) {
       setDialogStep(DialogStep.ChooseTransport)
     } else if (wallet.isEasyConfirmationEnabled) {
-      try {
-        await ensureKeysValidity(wallet.id)
-        navigation.navigate('biometrics', {
-          keyId: wallet.id,
-          onSuccess: (decryptedKey) => {
-            navigation.goBack()
-            onConfirm(decryptedKey)
-          },
-          onFail: () => navigation.goBack(),
-          addWelcomeMessage: false,
-          instructions: biometricInstructions,
-        })
-      } catch (err) {
-        if (err instanceof SystemAuthDisabled) {
-          await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
-          navigation.goBack()
-          return
-        } else {
-          throw err
-        }
-      }
-      return
+      return loadSecret({
+        key: wallet.id,
+        authenticationPrompt: {
+          title: strings.authorize,
+          cancel: strings.cancel,
+        },
+      })
     } else {
       return onConfirm()
     }
   }, [
-    intl,
     wallet.isHW,
-    navigation,
-    onConfirm,
-    wallet.id,
     wallet.isEasyConfirmationEnabled,
+    wallet.id,
     chooseTransportOnConfirmation,
-    biometricInstructions,
+    loadSecret,
+    strings.authorize,
+    strings.cancel,
+    onConfirm,
   ])
 
   const isConfirmationDisabled = !wallet.isEasyConfirmationEnabled && isEmptyString(password) && !wallet.isHW
@@ -311,6 +302,13 @@ const styles = StyleSheet.create({
   },
 })
 
+const messages = defineMessages({
+  authorize: {
+    id: 'components.send.biometricauthscreen.authorizeOperation',
+    defaultMessage: '!!!Authorize',
+  },
+})
+
 const useStrings = () => {
   const intl = useIntl()
 
@@ -322,6 +320,8 @@ const useStrings = () => {
     generalTxErrorMessage: intl.formatMessage(errorMessages.generalTxError.message),
     incorrectPasswordTitle: intl.formatMessage(errorMessages.incorrectPassword.title),
     incorrectPasswordMessage: intl.formatMessage(errorMessages.incorrectPassword.message),
+    cancel: intl.formatMessage(globalMessages.cancel),
+    authorize: intl.formatMessage(messages.authorize),
   }
 }
 

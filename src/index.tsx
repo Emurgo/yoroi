@@ -10,6 +10,7 @@ import App from './App'
 import {name as appName} from './app.json'
 import {Boundary} from './components'
 import {ErrorBoundary} from './components/ErrorBoundary'
+import {LoadingOverlay} from './components/LoadingOverlay'
 import {LanguageProvider} from './i18n'
 import translations from './i18n/translations'
 import {handleGeneralError, setupHooks} from './legacy/actions'
@@ -67,7 +68,7 @@ const AppWithProviders = () => {
     <ErrorBoundary>
       <Provider store={store}>
         <QueryClientProvider client={queryClient}>
-          <Boundary>
+          <Boundary loading={{fallback: <LoadingOverlay loading />}}>
             <ThemeProvider>
               <LanguageProvider>
                 <CurrencyProvider>

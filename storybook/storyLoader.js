@@ -4,8 +4,6 @@
 // https://github.com/elderfo/react-native-storybook-loader.git
 
 function loadStories() {
-	require('../src/BiometricAuth/BiometricAuthScreen.stories');
-	require('../src/BiometricAuth/FingerprintScreenBase/FingerprintScreenBase.stories');
 	require('../src/Catalyst/Catalyst.stories');
 	require('../src/Catalyst/VotingBanner.stories');
 	require('../src/Dashboard/Dashboard.stories');
@@ -22,6 +20,8 @@ function loadStories() {
 	require('../src/HW/LedgerTransportSwitchModal/LedgerTransportSwitchModal.stories');
 	require('../src/MaintenanceScreen.stories');
 	require('../src/Menu/Menu.stories');
+	require('../src/OsAuth/OsAuthBaseScreen/OsAuthBaseScreen.stories');
+	require('../src/OsAuth/OsLoginScreen/OsLoginScreen.stories');
 	require('../src/Receive/AddressModal.stories');
 	require('../src/Receive/Addresses.stories');
 	require('../src/Receive/ReceiveScreen.stories');
@@ -31,12 +31,12 @@ function loadStories() {
 	require('../src/Send/ConfirmScreen/ConfirmScreen.stories');
 	require('../src/Send/SendScreen/SendScreen.stories');
 	require('../src/Settings/ApplicationSettings/ApplicationSettingsScreen.stories');
-	require('../src/Settings/BiometricsLink/BiometricsLinkScreen.stories');
 	require('../src/Settings/ChangeLanguage/ChangeLanguageScreen.stories');
 	require('../src/Settings/ChangePassword/ChangePasswordScreen.stories');
 	require('../src/Settings/ChangeWalletName/ChangeWalletName.stories');
 	require('../src/Settings/Currency/ChangeCurrencyScreen.stories');
 	require('../src/Settings/EasyConfirmation/EasyConfirmationScreen.stories');
+	require('../src/Settings/LinkAuthWithOs/LinkAuthWithOsScreen.stories');
 	require('../src/Settings/RemoveWallet/RemoveWalletScreen.stories');
 	require('../src/Settings/Support/SupportScreen.stories');
 	require('../src/Settings/TermsOfService/TermsOfServiceScreen.stories');
@@ -92,6 +92,7 @@ function loadStories() {
 	require('../src/components/LanguagePicker/LanguagePicker.stories');
 	require('../src/components/LanguagePicker/LanguagePickerWarning.stories');
 	require('../src/components/Link/Link.stories');
+	require('../src/components/LoadingOverlay/LoadingOverlay.stories');
 	require('../src/components/Modal/Modal.stories');
 	require('../src/components/StandardModal/StandardModal.stories');
 	require('../src/components/TextInput/TextInput.stories');
@@ -102,8 +103,6 @@ function loadStories() {
 }
 
 const stories = [
-	'../src/BiometricAuth/BiometricAuthScreen.stories',
-	'../src/BiometricAuth/FingerprintScreenBase/FingerprintScreenBase.stories',
 	'../src/Catalyst/Catalyst.stories',
 	'../src/Catalyst/VotingBanner.stories',
 	'../src/Dashboard/Dashboard.stories',
@@ -120,6 +119,8 @@ const stories = [
 	'../src/HW/LedgerTransportSwitchModal/LedgerTransportSwitchModal.stories',
 	'../src/MaintenanceScreen.stories',
 	'../src/Menu/Menu.stories',
+	'../src/OsAuth/OsAuthBaseScreen/OsAuthBaseScreen.stories',
+	'../src/OsAuth/OsLoginScreen/OsLoginScreen.stories',
 	'../src/Receive/AddressModal.stories',
 	'../src/Receive/Addresses.stories',
 	'../src/Receive/ReceiveScreen.stories',
@@ -129,12 +130,12 @@ const stories = [
 	'../src/Send/ConfirmScreen/ConfirmScreen.stories',
 	'../src/Send/SendScreen/SendScreen.stories',
 	'../src/Settings/ApplicationSettings/ApplicationSettingsScreen.stories',
-	'../src/Settings/BiometricsLink/BiometricsLinkScreen.stories',
 	'../src/Settings/ChangeLanguage/ChangeLanguageScreen.stories',
 	'../src/Settings/ChangePassword/ChangePasswordScreen.stories',
 	'../src/Settings/ChangeWalletName/ChangeWalletName.stories',
 	'../src/Settings/Currency/ChangeCurrencyScreen.stories',
 	'../src/Settings/EasyConfirmation/EasyConfirmationScreen.stories',
+	'../src/Settings/LinkAuthWithOs/LinkAuthWithOsScreen.stories',
 	'../src/Settings/RemoveWallet/RemoveWalletScreen.stories',
 	'../src/Settings/Support/SupportScreen.stories',
 	'../src/Settings/TermsOfService/TermsOfServiceScreen.stories',
@@ -190,6 +191,7 @@ const stories = [
 	'../src/components/LanguagePicker/LanguagePicker.stories',
 	'../src/components/LanguagePicker/LanguagePickerWarning.stories',
 	'../src/components/Link/Link.stories',
+	'../src/components/LoadingOverlay/LoadingOverlay.stories',
 	'../src/components/Modal/Modal.stories',
 	'../src/components/StandardModal/StandardModal.stories',
 	'../src/components/TextInput/TextInput.stories',

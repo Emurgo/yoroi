@@ -12,7 +12,6 @@ import {Banner, Button, Modal, OfflineBanner, StatusBar} from '../components'
 import globalMessages from '../i18n/global-messages'
 import {fetchAccountState} from '../legacy/account'
 import {getCardanoBaseConfig} from '../legacy/config'
-import KeyStore from '../legacy/KeyStore'
 import {getCardanoNetworkConfigById} from '../legacy/networks'
 import {
   isFetchingAccountStateSelector,
@@ -147,7 +146,6 @@ export const Dashboard = () => {
         <Modal visible={showWithdrawalDialog} onRequestClose={() => setShowWithdrawalDialog(false)} showCloseIcon>
           <WithdrawStakingRewards
             wallet={wallet}
-            storage={KeyStore}
             onSuccess={() => resetToTxHistory()}
             onCancel={() => setShowWithdrawalDialog(false)}
           />

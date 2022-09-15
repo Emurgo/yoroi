@@ -4,13 +4,15 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useRevealMasterKey, useSaveSecret} from '../../auth'
 import {Button, StatusBar, Text, TextInput} from '../../components'
+import {LoadingOverlay} from '../../components/LoadingOverlay'
 import {useEnableEasyConfirmation} from '../../hooks'
 import {errorMessages} from '../../i18n/global-messages'
 import {showErrorDialog} from '../../legacy/actions'
 import {WrongPassword} from '../../legacy/errors'
 import {isEmptyString} from '../../legacy/utils'
-import {useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../SelectedWallet'
+import {useSelectedWallet, useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 
 export const EnableEasyConfirmationScreen = () => {
@@ -20,7 +22,14 @@ export const EnableEasyConfirmationScreen = () => {
   const [masterPassword, setMasterPassword] = React.useState('')
   const walletMeta = useSelectedWalletMeta()
   const setSelectedWalletMeta = useSetSelectedWalletMeta()
-  const {enableEasyConfirmation, isLoading} = useEnableEasyConfirmation({
+  const wallet = useSelectedWallet()
+  const {saveSecret, isLoading: savingSecret} = useSaveSecret({
+    onSuccess: () => enableEasyConfirmation(),
+    onError: (error) => {
+      throw error
+    },
+  })
+  const {enableEasyConfirmation, isLoading: enablingEasyConfirmation} = useEnableEasyConfirmation({
     onSuccess: () => {
       if (!walletMeta) throw new Error('Missing walletMeta')
       setSelectedWalletMeta({
@@ -30,10 +39,25 @@ export const EnableEasyConfirmationScreen = () => {
       navigation.goBack()
     },
     onError: (error) => {
-      if (!(error instanceof WrongPassword)) throw error
-      showErrorDialog(errorMessages.incorrectPassword, intl)
+      throw error
     },
   })
+  const {reveal, isLoading: revealing} = useRevealMasterKey(
+    {id: wallet.id},
+    {
+      onSuccess: (masterKey) =>
+        saveSecret({
+          key: wallet.id,
+          value: masterKey,
+        }),
+      onError: (error) => {
+        if (!(error instanceof WrongPassword)) throw error
+        showErrorDialog(errorMessages.incorrectPassword, intl)
+      },
+    },
+  )
+
+  const isLoading = revealing || enablingEasyConfirmation || savingSecret
 
   return (
     <SafeAreaView edges={['bottom']} style={styles.container}>
@@ -58,10 +82,12 @@ export const EnableEasyConfirmationScreen = () => {
       <View style={styles.actions}>
         <Button
           title={strings.enableButton}
-          onPress={() => enableEasyConfirmation({password: masterPassword, intl})}
+          onPress={() => reveal(masterPassword)}
           disabled={isEmptyString(masterPassword) || isLoading}
         />
       </View>
+
+      <LoadingOverlay loading={isLoading} />
     </SafeAreaView>
   )
 }

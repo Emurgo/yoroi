@@ -3,34 +3,32 @@ import {NavigationContainer, useNavigationContainerRef} from '@react-navigation/
 import {createStackNavigator} from '@react-navigation/stack'
 import {isEmpty} from 'lodash'
 import React, {useEffect} from 'react'
-import type {IntlShape} from 'react-intl'
 import {defineMessages, useIntl} from 'react-intl'
-import {Alert, AppState} from 'react-native'
-import {useQueryClient} from 'react-query'
-import {useDispatch, useSelector} from 'react-redux'
+import {Alert, AppState, AppStateStatus, Platform} from 'react-native'
+import RNBootSplash from 'react-native-bootsplash'
+import {useSelector} from 'react-redux'
 
-import {CreatePinScreen, PinLoginScreen} from './auth'
-import {useBackgroundTimeout} from './auth'
-import {useAuth} from './auth/AuthProvider'
-import {BiometricAuthScreen} from './BiometricAuth'
-import {FirstRunNavigator} from './FirstRun/FirstRunNavigator'
-import {errorMessages} from './i18n/global-messages'
-import {checkBiometricStatus, reloadAppSettings, setSystemAuth, showErrorDialog} from './legacy/actions'
-import {DeveloperScreen} from './legacy/DeveloperScreen'
-import {canBiometricEncryptionBeEnabled, recreateAppSignInKeys} from './legacy/deviceSettings'
-import env from './legacy/env'
-import KeyStore from './legacy/KeyStore'
 import {
-  canEnableBiometricSelector,
-  installationIdSelector,
-  isAppSetupCompleteSelector,
-  isMaintenanceSelector,
-  isSystemAuthEnabledSelector,
-} from './legacy/selectors'
+  PinLoginScreen,
+  useAuthMethod,
+  useAuthOsAppKey,
+  useBackgroundTimeout,
+  useCanEnableAuthOs,
+  useLoadSecret,
+} from './auth'
+import {useAuth} from './auth/AuthProvider'
+import {LinkAuthWithPin} from './auth/LinkAuthWithPin'
+import {FirstRunNavigator} from './FirstRun/FirstRunNavigator'
+import globalMessages from './i18n/global-messages'
+import {DeveloperScreen} from './legacy/DeveloperScreen'
+import env from './legacy/env'
+import {installationIdSelector, isMaintenanceSelector, isTosAcceptedSelector} from './legacy/selectors'
 import type {State} from './legacy/state'
 import {isEmptyString} from './legacy/utils'
 import MaintenanceScreen from './MaintenanceScreen'
 import {AppRoutes} from './navigation'
+import {OsLoginScreen} from './OsAuth'
+import {Storage, useStorage} from './Storage'
 import StorybookScreen from './StorybookScreen'
 import {WalletInitNavigator} from './WalletInit/WalletInitNavigator'
 import {WalletNavigator} from './WalletNavigator'
@@ -38,84 +36,90 @@ import {WalletNavigator} from './WalletNavigator'
 const IS_STORYBOOK = env.getBoolean('IS_STORYBOOK', false)
 
 export const AppNavigator = () => {
+  const strings = useStrings()
+  const [isReady, setIsReady] = React.useState(false)
   useAutoLogout()
+  useHideScreenInAppSwitcher()
+  const storage = useStorage()
+  const authAction = useAuthAction(storage)
+
+  const hasAnyWallet = useSelector(hasAnyWalletSelector)
+  const secretKey = useAuthOsAppKey(storage)
+  const {isLoggedOut, login} = useAuth()
+  const {loadSecret} = useLoadSecret({
+    onSuccess: login,
+    onSettled: () =>
+      RNBootSplash.hide({
+        fade: true,
+      }),
+  })
 
   const navRef = useNavigationContainerRef()
-
   useReduxDevToolsExtension(navRef)
 
-  return <NavigationContainer ref={navRef}>{IS_STORYBOOK ? <StoryBook /> : <NavigatorSwitch />}</NavigationContainer>
+  React.useEffect(() => {
+    if (isReady && (authAction !== 'os' || !hasAnyWallet)) {
+      RNBootSplash.hide({
+        fade: true,
+      })
+    }
+  }, [authAction, hasAnyWallet, isReady])
+
+  React.useEffect(() => {
+    if (authAction === 'os' && !isEmptyString(secretKey) && isLoggedOut && hasAnyWallet) {
+      loadSecret({
+        key: secretKey,
+        authenticationPrompt: {
+          cancel: strings.cancel,
+          title: strings.authorize,
+        },
+      })
+    }
+  }, [authAction, hasAnyWallet, isLoggedOut, loadSecret, secretKey, strings.authorize, strings.cancel])
+
+  if (authAction == null) return null
+  if (isEmptyString(secretKey)) return null
+
+  return (
+    <NavigationContainer onReady={() => setIsReady(true)} ref={navRef}>
+      {IS_STORYBOOK ? <StoryBook /> : <NavigatorSwitch authAction={authAction} />}
+    </NavigationContainer>
+  )
 }
 
 export default AppNavigator
 
 const Stack = createStackNavigator<AppRoutes>()
-const NavigatorSwitch = () => {
+const NavigatorSwitch = ({authAction}: {authAction: 'create-link-pin' | 'check-pin' | 'os'}) => {
   const strings = useStrings()
   const isMaintenance = useSelector(isMaintenanceSelector)
-  const isSystemAuthEnabled = useSelector(isSystemAuthEnabledSelector)
   const hasAnyWallet = useSelector(hasAnyWalletSelector)
-  const isAppSetupComplete = useSelector(isAppSetupCompleteSelector)
-  const canEnableBiometrics = useSelector(canEnableBiometricSelector)
+  const isTosAccepted = useSelector(isTosAcceptedSelector)
   const installationId = useSelector(installationIdSelector)
-  const queryClient = useQueryClient()
-  const dispatch = useDispatch()
-  const {isLoggedIn, isLoggedOut, login, logout} = useAuth()
+  const {isLoggedIn, isLoggedOut} = useAuth()
 
   if (isEmptyString(installationId)) throw new Error('invalid state')
-
-  useEffect(() => {
-    const appStateSubscription = AppState.addEventListener('change', async () => {
-      await dispatch(checkBiometricStatus(logout))
-      queryClient.invalidateQueries(['walletMetas'])
-    })
-    return () => appStateSubscription?.remove()
-  }, [dispatch, logout, queryClient])
-
-  useEffect(() => {
-    if (hasAnyWallet && isLoggedOut && isSystemAuthEnabled && !canEnableBiometrics && !isMaintenance) {
-      Alert.alert(strings.biometricsChangeTitle, strings.biometricsChangeMessage)
-    }
-  }, [hasAnyWallet, isLoggedOut, isSystemAuthEnabled, canEnableBiometrics, isMaintenance, strings])
 
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
       {/* Initial Route */}
       <Stack.Group>
         {isMaintenance && <Stack.Screen name="maintenance" component={MaintenanceScreen} />}
-        {!isAppSetupComplete && !hasAnyWallet && <Stack.Screen name="first-run" component={FirstRunNavigator} />}
+        {!isTosAccepted && <Stack.Screen name="first-run" component={FirstRunNavigator} />}
       </Stack.Group>
 
       {/* Not Authenticated */}
       {isLoggedOut && hasAnyWallet && (
         <Stack.Group>
-          {!isSystemAuthEnabled && (
+          {authAction === 'check-pin' && (
             <Stack.Screen name="custom-pin-auth" component={PinLoginScreen} options={{title: strings.loginPinTitle}} />
           )}
-          {isSystemAuthEnabled && canEnableBiometrics && (
-            <Stack.Screen
-              name="bio-auth-initial"
-              component={BiometricAuthScreen}
-              options={{headerShown: false}}
-              initialParams={{
-                keyId: installationId,
-                onSuccess: login,
-                onFail: async (reason: string, intl: IntlShape) => {
-                  if (reason === KeyStore.REJECTIONS.INVALID_KEY) {
-                    if (await canBiometricEncryptionBeEnabled()) {
-                      await recreateAppSignInKeys(installationId)
-                    } else {
-                      await showErrorDialog(errorMessages.biometricsIsTurnedOff, intl)
-                    }
-                  }
-                },
-                addWelcomeMessage: true,
-              }}
-            />
+          {authAction === 'os' && (
+            <Stack.Screen name="bio-auth-initial" component={OsLoginScreen} options={{headerShown: false}} />
           )}
-          {isSystemAuthEnabled && !canEnableBiometrics && (
+          {authAction === 'create-link-pin' && (
             <Stack.Screen //
-              name="setup-custom-pin"
+              name="link-auth-with-pin"
               component={CreatePinScreenWrapper}
               options={{title: strings.customPinTitle}}
             />
@@ -128,7 +132,7 @@ const NavigatorSwitch = () => {
         <Stack.Group>
           <Stack.Screen name="app-root" component={WalletNavigator} />
           <Stack.Screen name="new-wallet" component={WalletInitNavigator} />
-          <Stack.Screen name="biometrics" component={BiometricAuthScreen} options={{headerShown: false}} />
+          <Stack.Screen name="biometrics" component={OsLoginScreen} options={{headerShown: false}} />
         </Stack.Group>
       )}
 
@@ -144,18 +148,9 @@ const NavigatorSwitch = () => {
 }
 
 const CreatePinScreenWrapper = () => {
-  const dispatch = useDispatch()
   const {login} = useAuth()
 
-  return (
-    <CreatePinScreen
-      onDone={async () => {
-        await dispatch(reloadAppSettings())
-        await dispatch(setSystemAuth(false))
-        login()
-      }}
-    />
-  )
+  return <LinkAuthWithPin onDone={login} />
 }
 
 const StoryBook = () => (
@@ -174,6 +169,8 @@ const useStrings = () => {
     loginPinTitle: intl.formatMessage(messages.pinLoginTitle),
     biometricsChangeTitle: intl.formatMessage(messages.biometricsChangeTitle),
     biometricsChangeMessage: intl.formatMessage(messages.biometricsChangeMessage),
+    cancel: intl.formatMessage(globalMessages.cancel),
+    authorize: intl.formatMessage(messages.authorize),
   }
 }
 
@@ -194,6 +191,10 @@ const messages = defineMessages({
     id: 'global.actions.dialogs.biometricsChange.message',
     defaultMessage: '!!!Biometrics changed detected ',
   },
+  authorize: {
+    id: 'components.send.biometricauthscreen.authorizeOperation',
+    defaultMessage: '!!!Authorize operation',
+  },
 })
 
 const useAutoLogout = () => {
@@ -202,4 +203,54 @@ const useAutoLogout = () => {
     onTimeout: logout,
     duration: 120 * 1000,
   })
+}
+
+export const useAuthAction = (storage: Storage) => {
+  const strings = useStrings()
+  const {logout} = useAuth()
+  const {authMethod, isLoading: loadingAuthMethod} = useAuthMethod(storage)
+  const {canEnableOsAuth, isLoading: loadingCanEnableOsAuth, refetch} = useCanEnableAuthOs()
+
+  const isLoading = loadingAuthMethod || loadingCanEnableOsAuth
+  const hasTurnedOffOSAuth = !isLoading && !canEnableOsAuth && authMethod?.isOS
+
+  React.useEffect(() => {
+    const appStateSubscription = AppState.addEventListener('change', async (appState) => {
+      if (authMethod?.isOS && appState === 'active' && !hasTurnedOffOSAuth) refetch()
+    })
+    return () => appStateSubscription?.remove()
+  }, [authMethod, refetch, hasTurnedOffOSAuth])
+
+  React.useEffect(() => {
+    if (hasTurnedOffOSAuth) {
+      Alert.alert(strings.biometricsChangeTitle, strings.biometricsChangeMessage)
+
+      logout()
+    }
+  }, [hasTurnedOffOSAuth, strings.biometricsChangeTitle, strings.biometricsChangeMessage, logout])
+
+  if (isLoading) return
+  if (authMethod?.isNone || hasTurnedOffOSAuth) return 'create-link-pin'
+  if (authMethod?.isPIN) return 'check-pin'
+  if (authMethod?.isOS) return 'os'
+}
+
+const useHideScreenInAppSwitcher = () => {
+  const appStateRef = React.useRef(AppState.currentState)
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', (nextAppState: AppStateStatus) => {
+      if (Platform.OS !== 'ios') return
+
+      const isFocused = (appState: AppStateStatus) => appState === 'active'
+      const isBlurred = (appState: AppStateStatus) => appState === 'inactive' || appState === 'background'
+
+      if (isBlurred(appStateRef.current) && isFocused(nextAppState)) RNBootSplash.hide({fade: true})
+      if (isFocused(appStateRef.current) && isBlurred(nextAppState)) RNBootSplash.show({fade: true})
+
+      appStateRef.current = nextAppState
+    })
+
+    return () => subscription?.remove()
+  }, [])
 }

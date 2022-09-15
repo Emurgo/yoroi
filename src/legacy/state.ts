@@ -63,10 +63,7 @@ export type State = {
     acceptedTos: boolean
     installationId: string | null | undefined
     customPinHash: string | null | undefined
-    isSystemAuthEnabled: boolean
-    isBiometricHardwareSupported: boolean
     sendCrashReports: boolean
-    canEnableBiometricEncryption: boolean
   }
   // need to add as a non-wallet-specific property to avoid conflict with other
   // actions that may override this property (otherwise more refactoring is needed)
@@ -121,10 +118,7 @@ export const getInitialState = (): State => ({
     acceptedTos: false,
     installationId: null,
     customPinHash: null,
-    isSystemAuthEnabled: false,
-    isBiometricHardwareSupported: false,
     sendCrashReports: false,
-    canEnableBiometricEncryption: false,
   },
   isFlawedWallet: false,
   serverStatus: {
