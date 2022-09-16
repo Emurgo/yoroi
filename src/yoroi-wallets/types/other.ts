@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {BigNumber} from 'bignumber.js'
 
-import {TokenInfo} from '../types'
-import {CardanoTypes, MultiToken} from '../yoroi-wallets'
-export type Address = {
+import {CardanoTypes, MultiToken} from '..'
+import {RemoteAccountState, RemoteCertificateMeta, Token, TokenEntry, TokenEntryPlain, TokenInfo} from '.'
+export type AddressObj = {
   readonly address: string
 }
 export type Value = {
@@ -29,7 +29,7 @@ export type Addressing = {
 // equivalent to CardanoAddressedUtxo in the Yoroi extension
 export type AddressedUtxo = RawUtxo & Addressing
 // Byron-era Types
-export type TransactionOutput = Address & {
+export type TransactionOutput = AddressObj & {
   value: string
 }
 export type TransactionInput = LegacyAddressing & {
@@ -37,7 +37,7 @@ export type TransactionInput = LegacyAddressing & {
     id: string
     index: number
   }
-  value: Address & {
+  value: AddressObj & {
     value: string
   }
 }
@@ -83,18 +83,18 @@ export type V3UnsignedTxAddressedUtxoData<T> = {
 /**
  * Haskell-Shelley-era tx types
  */
-export type TxOutput = Address & {
+export type TxOutput = AddressObj & {
   amount: MultiToken
 }
 export type V4UnsignedTxUtxoResponse = {
   senderUtxos: Array<RawUtxo>
   txBuilder: CardanoTypes.TransactionBuilder
-  changeAddr: Array<Address & Value & Addressing>
+  changeAddr: Array<AddressObj & Value & Addressing>
 }
 export type V4UnsignedTxAddressedUtxoResponse = {
   senderUtxos: Array<AddressedUtxo>
   txBuilder: CardanoTypes.TransactionBuilder
-  changeAddr: Array<Address & Value & Addressing>
+  changeAddr: Array<AddressObj & Value & Addressing>
   certificates: ReadonlyArray<CardanoTypes.Certificate>
 }
 
@@ -122,7 +122,6 @@ export type ProtocolParameters = {
 /**
  * API-related types
  */
-import type {TransactionStatus} from './HistoryTransaction'
 export type RemoteAsset = {
   readonly amount: string
   readonly assetId: string
@@ -151,40 +150,8 @@ export type CertificateKind = typeof CERTIFICATE_KIND[keyof typeof CERTIFICATE_K
 export type AccountStateRequest = {
   addresses: Array<string>
 }
-export type RemoteAccountState = {
-  poolOperator: null
-  // not implemented yet
-  remainingAmount: string
-  // current remaining awards
-  rewards: string
-  // all the rewards every added
-  withdrawals: string // all the withdrawals that have ever happened
-}
 export type AccountStateResponse = Record<string, null | RemoteAccountState>
-// getPoolInfo
-export type RemoteCertificate = {
-  kind: 'PoolRegistration' | 'PoolRetirement'
-  certIndex: number
-  poolParams: Record<string, any> // don't think this is relevant
-}
-export type RemotePoolMetaSuccess = {
-  info:
-    | {
-        name?: string
-        ticker?: string
-        description?: string
-        homepage?: string // other stuff from SMASH.
-      }
-    | null
-    | undefined
-  history: Array<{
-    epoch: number
-    slot: number
-    tx_ordinal: number
-    cert_ordinal: number
-    payload: RemoteCertificate
-  }>
-}
+
 export type RemotePoolMetaFailure = {
   error: Record<string, any>
 }
@@ -268,36 +235,7 @@ export type RemoteTxBlockMeta = {
   readonly epoch: number
   readonly slot: number
 }
-// See complete types in:
-// https://github.com/Emurgo/yoroi-graphql-migration-backend#output-6
-export type RemoteCertificateMeta =
-  | {
-      kind: typeof CERTIFICATE_KIND.STAKE_REGISTRATION
-      rewardAddress: string // hex
-    }
-  | {
-      kind: typeof CERTIFICATE_KIND.STAKE_DEREGISTRATION
-      rewardAddress: string // hex
-    }
-  | {
-      kind: typeof CERTIFICATE_KIND.STAKE_DELEGATION
-      rewardAddress: string
-      // hex
-      poolKeyHash: string // hex
-    }
-  | {
-      kind: typeof CERTIFICATE_KIND.POOL_REGISTRATION
-      poolParams: Record<string, any> // we don't care about this for now
-    }
-  | {
-      kind: typeof CERTIFICATE_KIND.POOL_RETIREMENT
-      poolKeyHash: string // hex
-    }
-  | {
-      kind: typeof CERTIFICATE_KIND.MOVE_INSTANTANEOUS_REWARDS
-      rewards: Record<string, string>
-      pot: 0 | 1
-    }
+
 export type RemoteTxInfo = {
   readonly type: 'byron' | 'shelley'
   readonly fee?: string
@@ -458,4 +396,95 @@ export type BackendConfig = {
   TX_HISTORY_MAX_ADDRESSES: number
   FILTER_USED_MAX_ADDRESSES: number
   TX_HISTORY_RESPONSE_LIMIT: number
+}
+
+export const TRANSACTION_STATUS = {
+  SUCCESSFUL: 'Successful',
+  PENDING: 'Pending',
+  FAILED: 'Failed',
+}
+export type TransactionStatus = typeof TRANSACTION_STATUS[keyof typeof TRANSACTION_STATUS]
+
+export type TransactionInfo = {
+  id: string
+  inputs: Array<IOData>
+  outputs: Array<IOData>
+  amount: Array<TokenEntryPlain>
+  fee: Array<TokenEntryPlain> | null | undefined
+  delta: Array<TokenEntryPlain>
+  direction: TransactionDirection
+  confirmations: number
+  submittedAt: string | null | undefined
+  lastUpdatedAt: string
+  status: TransactionStatus
+  assurance: TransactionAssurance
+  tokens: Record<string, Token>
+  blockNumber: number
+}
+
+export type IOData = {
+  address: string
+  assets: Array<TokenEntry>
+  amount: string
+}
+
+export type TransactionAssurance = 'PENDING' | 'FAILED' | 'LOW' | 'MEDIUM' | 'HIGH'
+
+export const TRANSACTION_DIRECTION = {
+  SENT: 'SENT',
+  RECEIVED: 'RECEIVED',
+  SELF: 'SELF',
+  // intra-wallet
+  MULTI: 'MULTI', // multi-party
+}
+export type TransactionDirection = typeof TRANSACTION_DIRECTION[keyof typeof TRANSACTION_DIRECTION]
+
+export const TRANSACTION_TYPE = {
+  BYRON: 'byron',
+  SHELLEY: 'shelley',
+}
+export type TransactionType = typeof TRANSACTION_TYPE[keyof typeof TRANSACTION_TYPE]
+export type BaseAsset = RemoteAsset
+export type Transaction = {
+  id: string
+  type?: TransactionType
+  fee?: string
+  status: TransactionStatus
+  inputs: Array<{
+    address: string
+    amount: string
+    assets: Array<BaseAsset>
+  }>
+  outputs: Array<{
+    address: string
+    amount: string
+    assets: Array<BaseAsset>
+  }>
+  blockNum: number | null | undefined
+  blockHash: string | null | undefined
+  txOrdinal: number | null | undefined
+  submittedAt: string | null | undefined
+  lastUpdatedAt: string
+  epoch: number | null | undefined
+  slot: number | null | undefined
+  withdrawals: Array<{
+    address: string
+    // hex
+    amount: string
+  }>
+  certificates: Array<RemoteCertificateMeta>
+  readonly validContract?: boolean
+  readonly scriptSize?: number
+  readonly collateralInputs?: Array<{
+    address: string
+    amount: string
+    assets: Array<BaseAsset>
+  }>
+}
+
+export type CommonMetadata = {
+  readonly numberOfDecimals: number
+  readonly ticker: null | string
+  readonly longName: null | string
+  readonly maxSupply: null | string
 }

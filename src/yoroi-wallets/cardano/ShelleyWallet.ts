@@ -11,13 +11,24 @@ import assert from '../../legacy/assert'
 import {ADDRESS_TYPE_TO_CHANGE, generateWalletRootKey} from '../../legacy/commonUtils'
 import {CONFIG, getCardanoBaseConfig, getWalletConfigById, isByron, isHaskellShelley} from '../../legacy/config'
 import {CardanoError, InvalidState} from '../../legacy/errors'
-import type {DefaultAsset} from '../../legacy/HistoryTransaction'
 import type {HWDeviceInfo} from '../../legacy/ledgerUtils'
 import {signTxWithLedger} from '../../legacy/ledgerUtils'
 import {Logger} from '../../legacy/logging'
 import type {CardanoHaskellShelleyNetwork} from '../../legacy/networks'
 import {isHaskellShelleyNetwork, PROVIDERS} from '../../legacy/networks'
 import type {WalletMeta} from '../../legacy/state'
+import {deriveRewardAddressHex} from '../../legacy/utils'
+import {
+  Cardano,
+  CardanoMobile,
+  CardanoTypes,
+  legacyWalletChecksum,
+  NoOutputsError,
+  NotEnoughMoneyToSendError,
+  RegistrationStatus,
+  walletChecksum,
+} from '../cardano'
+import {DefaultAsset, SendTokenList, Token, YoroiSignedTx, YoroiUnsignedTx} from '../types'
 import type {
   AccountStateResponse,
   AddressedUtxo,
@@ -32,21 +43,8 @@ import type {
   TxBodiesResponse,
   TxStatusRequest,
   TxStatusResponse,
-} from '../../legacy/types'
-import {NETWORK_REGISTRY} from '../../legacy/types'
-import {deriveRewardAddressHex} from '../../legacy/utils'
-import {SendTokenList, Token} from '../../types'
-import {
-  Cardano,
-  CardanoMobile,
-  CardanoTypes,
-  legacyWalletChecksum,
-  NoOutputsError,
-  NotEnoughMoneyToSendError,
-  RegistrationStatus,
-  walletChecksum,
-} from '../cardano'
-import {YoroiSignedTx, YoroiUnsignedTx} from '../types'
+} from '../types/other'
+import {NETWORK_REGISTRY} from '../types/other'
 import {genTimeToSlot} from '../utils/timeUtils'
 import {versionCompare} from '../utils/versioning'
 import Wallet, {WalletJSON} from '../Wallet'

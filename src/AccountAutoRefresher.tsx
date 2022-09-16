@@ -6,7 +6,7 @@ import {useDispatch, useSelector} from 'react-redux'
 
 import {fetchAccountState} from './legacy/account'
 import {hasPendingOutgoingTransactionSelector, isFetchingAccountStateSelector, utxosSelector} from './legacy/selectors'
-import type {RawUtxo} from './legacy/types'
+import {RawUtxo} from './yoroi-wallets/types/other'
 
 type Props = {
   isFetching: boolean

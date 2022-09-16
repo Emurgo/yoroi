@@ -54,12 +54,11 @@ export function forwardReducerTo<S extends {}, T>(
 import {BigNumber} from 'bignumber.js'
 
 import {CardanoMobile, CardanoTypes, DefaultTokenEntry, MultiToken} from '../yoroi-wallets'
+import type {BaseAsset, NetworkId} from '../yoroi-wallets/types/other'
+import type {RawUtxo} from '../yoroi-wallets/types/other'
+import type {Addressing} from '../yoroi-wallets/types/other'
 import {CONFIG} from './config'
-import type {BaseAsset} from './HistoryTransaction'
 import {getNetworkConfigById} from './networks'
-import type {NetworkId} from './types'
-import type {RawUtxo} from './types'
-import type {Addressing} from './types'
 
 const PRIMARY_ASSET_CONSTANTS = CONFIG.PRIMARY_ASSET_CONSTANTS
 

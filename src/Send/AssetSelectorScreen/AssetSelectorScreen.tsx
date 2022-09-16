@@ -17,9 +17,8 @@ import {decodeHexAscii, formatTokenAmount, getAssetDenominationOrId, getTokenFin
 import {TxHistoryRouteNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
-import {Token} from '../../types'
 import {YoroiWallet} from '../../yoroi-wallets'
-import {Quantity, TokenId, YoroiAmounts} from '../../yoroi-wallets/types'
+import {Quantity, Token, TokenId, YoroiAmounts} from '../../yoroi-wallets/types'
 import {Quantities} from '../../yoroi-wallets/utils'
 import {useSend} from '../Context/SendContext'
 

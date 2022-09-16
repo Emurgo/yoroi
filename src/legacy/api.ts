@@ -2,11 +2,8 @@
 import {BigNumber} from 'bignumber.js'
 import _ from 'lodash'
 
-import {StakePoolInfosAndHistories} from '../types'
 import {ServerStatus} from '../yoroi-wallets'
-import assert from './assert'
-import {ApiError} from './errors'
-import fetchDefault, {checkedFetch} from './fetch'
+import {StakePoolInfosAndHistories} from '../yoroi-wallets/types'
 import type {
   AccountStateRequest,
   AccountStateResponse,
@@ -26,7 +23,10 @@ import type {
   TxHistoryRequest,
   TxStatusRequest,
   TxStatusResponse,
-} from './types'
+} from '../yoroi-wallets/types/other'
+import assert from './assert'
+import {ApiError} from './errors'
+import fetchDefault, {checkedFetch} from './fetch'
 
 type Addresses = Array<string>
 

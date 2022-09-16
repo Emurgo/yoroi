@@ -72,7 +72,7 @@ export type RemoteCertificateMeta =
     }
   | {
       kind: 'PoolRegistration'
-      poolParams: unknown // we don't care about this for now
+      poolParams: Record<string, unknown> // we don't care about this for now
     }
   | {
       kind: 'PoolRetirement'
@@ -85,7 +85,7 @@ export type RemoteCertificateMeta =
     }
 
 export type RemoteAccountState = {
-  // poolOperator: null, // not implemented yet
+  // poolOperator: null // not implemented yet
   remainingAmount: string // current remaining awards
   rewards: string // all the rewards every added
   withdrawals: string // all the withdrawals that have ever happened

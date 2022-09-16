@@ -1,6 +1,6 @@
+import {WALLET_IMPLEMENTATION_REGISTRY} from '../yoroi-wallets/types/other'
 import {decryptData, encryptData, formatPath, generateAdaMnemonic, generateWalletRootKey} from './commonUtils'
 import {CardanoError} from './errors'
-import {WALLET_IMPLEMENTATION_REGISTRY} from './types'
 
 const mnemonic = [
   'dry balcony arctic what garbage sort',

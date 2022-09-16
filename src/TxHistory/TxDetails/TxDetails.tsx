@@ -10,7 +10,6 @@ import {Banner, Boundary, Button, CopyButton, Icon, OfflineBanner, StatusBar, Te
 import {useTipStatus, useTokenInfo} from '../../hooks'
 import globalMessages from '../../i18n/global-messages'
 import {formatTokenWithSymbol} from '../../legacy/format'
-import {TransactionInfo} from '../../legacy/HistoryTransaction'
 import {getNetworkConfigById} from '../../legacy/networks'
 import {
   externalAddressIndexSelector,
@@ -22,8 +21,8 @@ import AddressModal from '../../Receive/AddressModal'
 import Screen from '../../Screen'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {brand, COLORS} from '../../theme'
-import {TokenEntry} from '../../types'
-import {MultiToken, YoroiWallet} from '../../yoroi-wallets'
+import {MultiToken, TokenEntry, YoroiWallet} from '../../yoroi-wallets'
+import {TransactionInfo} from '../../yoroi-wallets/types'
 import {AssetList} from './AssetList'
 import assetListStyle from './AssetListTransaction.style'
 

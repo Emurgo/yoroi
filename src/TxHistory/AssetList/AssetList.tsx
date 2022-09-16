@@ -16,7 +16,7 @@ import {formatTokenAmount, getAssetDenominationOrId, getTokenFingerprint} from '
 import {tokenBalanceSelector} from '../../legacy/selectors'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
-import {TokenEntry} from '../../types'
+import {TokenEntry} from '../../yoroi-wallets'
 import {useOnScroll} from '../useOnScroll'
 import {ActionsBanner} from './ActionsBanner'
 

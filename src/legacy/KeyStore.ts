@@ -6,9 +6,9 @@ import {NativeModules, Platform} from 'react-native'
 import * as Keychain from 'react-native-keychain'
 
 import storage from '../legacy/storage'
+import type {EncryptionMethod} from '../yoroi-wallets/types/other'
 import assert from './assert'
 import {decryptData, encryptData} from './commonUtils'
-import type {EncryptionMethod} from './types'
 
 const {KeyStoreBridge} = NativeModules
 
