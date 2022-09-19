@@ -534,9 +534,7 @@ class WalletManager {
     await this.closeWallet()
   }
 
-  async removeWallet(walletId) {
-    if (!this._wallet) return
-
+  async removeWallet(id: string) {
     if (this.isEasyConfirmationEnabled) {
       await this.deleteEncryptedKey('BIOMETRICS')
       await this.deleteEncryptedKey('SYSTEM_PIN')
@@ -544,10 +542,10 @@ class WalletManager {
     await this.deleteEncryptedKey('MASTER_PASSWORD')
 
     await this.closeWallet()
-    await storage.remove(`/wallet/${walletId}/data`)
-    await storage.remove(`/wallet/${walletId}`)
+    await storage.remove(`/wallet/${id}/data`)
+    await storage.remove(`/wallet/${id}`)
 
-    this._wallets = _.omit(this._wallets, walletId)
+    this._wallets = _.omit(this._wallets, id)
   }
 
   // TODO(ppershing): how should we deal with race conditions?
