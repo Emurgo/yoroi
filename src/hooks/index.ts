@@ -516,11 +516,14 @@ export const useWalletMetas = <T = Array<WalletMeta>>(options?: UseQueryOptions<
   return query.data
 }
 
-export const useRemoveWallet = ({onSuccess, ...options}: UseMutationOptions<void, Error, void> = {}) => {
+export const useRemoveWallet = (
+  walletId: YoroiWallet['id'],
+  {onSuccess, ...options}: UseMutationOptions<void, Error, void> = {},
+) => {
   const dispatch = useDispatch()
 
   const mutation = useMutationWithInvalidations({
-    mutationFn: () => walletManager.removeCurrentWallet(),
+    mutationFn: () => walletManager.removeWallet(walletId),
     onSuccess: (data, variables, context) => {
       dispatch(clearUTXOs())
       dispatch(clearAccountState())
