@@ -534,10 +534,7 @@ class WalletManager {
     await this.closeWallet()
   }
 
-  async removeCurrentWallet() {
-    if (!this._wallet) return
-    const id = this._id
-
+  async removeWallet(id: string) {
     if (this.isEasyConfirmationEnabled) {
       await this.deleteEncryptedKey('BIOMETRICS')
       await this.deleteEncryptedKey('SYSTEM_PIN')
