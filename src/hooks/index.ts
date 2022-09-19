@@ -14,16 +14,13 @@ import {
   useQueryClient,
   UseQueryOptions,
 } from 'react-query'
-import {useDispatch} from 'react-redux'
 
-import {clearAccountState} from '../legacy/account'
 import {getDefaultAssetByNetworkId} from '../legacy/config'
 import KeyStore from '../legacy/KeyStore'
 import {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {WalletMeta} from '../legacy/state'
 import storage from '../legacy/storage'
 import {CurrencySymbol, RawUtxo, TipStatusResponse} from '../legacy/types'
-import {clearUTXOs} from '../legacy/utxo'
 import {Storage} from '../Storage'
 import {DefaultAsset, Token} from '../types'
 import {
@@ -516,42 +513,15 @@ export const useWalletMetas = <T = Array<WalletMeta>>(options?: UseQueryOptions<
   return query.data
 }
 
-export const useRemoveWallet = ({onSuccess, ...options}: UseMutationOptions<void, Error, void> = {}) => {
-  const dispatch = useDispatch()
-
+export const useRemoveWallet = (options: UseMutationOptions<void, Error, void> = {}) => {
   const mutation = useMutationWithInvalidations({
     mutationFn: () => walletManager.removeCurrentWallet(),
-    onSuccess: (data, variables, context) => {
-      dispatch(clearUTXOs())
-      dispatch(clearAccountState())
-      onSuccess?.(data, variables, context)
-    },
     invalidateQueries: [['walletMetas']],
     ...options,
   })
 
   return {
     removeWallet: mutation.mutate,
-    ...mutation,
-  }
-}
-
-export const useResyncWallet = ({onSuccess, ...options}: UseMutationOptions<void, Error, void> = {}) => {
-  const dispatch = useDispatch()
-
-  const mutation = useMutationWithInvalidations({
-    mutationFn: () => walletManager.resyncWallet(),
-    onSuccess: (data, variables, context) => {
-      dispatch(clearUTXOs())
-      dispatch(clearAccountState())
-      onSuccess?.(data, variables, context)
-    },
-    invalidateQueries: [['walletMetas']],
-    ...options,
-  })
-
-  return {
-    resyncWallet: mutation.mutate,
     ...mutation,
   }
 }

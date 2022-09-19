@@ -7,7 +7,9 @@ import {useDispatch} from 'react-redux'
 
 import {Button, Checkbox, Checkmark, Spacer, StatusBar, Text, TextInput} from '../../components'
 import {useRemoveWallet, useWalletName} from '../../hooks'
+import {clearAccountState} from '../../legacy/account'
 import {updateWallets} from '../../legacy/actions'
+import {clearUTXOs} from '../../legacy/utxo'
 import {useWalletNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
@@ -23,6 +25,8 @@ export const RemoveWalletScreen = () => {
     onMutate: () => resetToWalletSelection(),
     onSuccess: () => {
       dispatch(updateWallets())
+      dispatch(clearUTXOs())
+      dispatch(clearAccountState())
     },
   })
 
