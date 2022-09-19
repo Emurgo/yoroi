@@ -29,11 +29,11 @@ export const ConfirmTxWithHW = ({wallet, unsignedTx, onSuccess, onCancel}: Props
   }
 
   const onConnectBLE = async (deviceId: DeviceId) => {
-    await walletManager.updateHWDeviceInfo(withBLE(wallet, deviceId))
+    await walletManager.updateHWDeviceInfo(wallet, withBLE(wallet, deviceId))
     setStep('confirm')
   }
   const onConnectUSB = async (deviceObj: DeviceObj) => {
-    await walletManager.updateHWDeviceInfo(withUSB(wallet, deviceObj))
+    await walletManager.updateHWDeviceInfo(wallet, withUSB(wallet, deviceObj))
     setStep('confirm')
   }
 

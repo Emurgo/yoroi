@@ -1,6 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import BigNumber from 'bignumber.js'
 
-import KeyStore from '../../src/legacy/KeyStore'
 import {PRIMARY_ASSET_CONSTANTS} from '../../src/legacy/networks'
 import {TokenEntry, YoroiWallet} from '../../src/yoroi-wallets'
 import {
@@ -123,6 +123,20 @@ export const mockWallet: YoroiWallet = {
   // },
 }
 
+export const mockHwWallet = {
+  ...mockWallet,
+  isHW: true,
+  hwDeviceInfo: {
+    bip44AccountPublic: '1234567',
+    hwFeatures: {
+      vendor: 'ledger',
+      model: 'nano x',
+      deviceId: '123456',
+      deviceObj: null,
+    },
+  },
+}
+
 export const tokenEntries: Array<TokenEntry> = [
   {
     networkId: 123,
@@ -233,19 +247,3 @@ export const mockYoroiSignedTx: YoroiSignedTx & {mock: true} = {
   signedTx: {id: 'tx-id', encodedTx: new Uint8Array([1, 2, 3])},
   mock: true,
 }
-
-export const mockKeyStore = (overrides?: {
-  getData?: typeof KeyStore.getData
-  storeData?: typeof KeyStore.storeData
-  deleteData?: typeof KeyStore.deleteData
-}) =>
-  ({
-    getData: async (_keyId, _encrpytionMethod, _message, password, _intl) => {
-      if (password !== 'password') throw new Error('Invalid Password')
-
-      return 'masterkey'
-    },
-    storeData: async () => undefined,
-    deleteData: async () => undefined,
-    ...(overrides as any),
-  } as unknown as typeof KeyStore)
