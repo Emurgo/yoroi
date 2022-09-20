@@ -40,10 +40,17 @@ export const TwoActionView = ({title, children, primaryButton, secondaryButton}:
             block
             onPress={secondaryButton.onPress}
             title={secondaryButton.label ?? intl.formatMessage(confirmationMessages.commonButtons.cancelButton)}
+            disabled={secondaryButton.disabled}
             style={styles.secondaryButton}
           />
         )}
-        <Button block onPress={primaryButton.onPress} title={primaryButton.label} style={styles.primaryButton} />
+        <Button
+          block
+          onPress={primaryButton.onPress}
+          title={primaryButton.label}
+          disabled={primaryButton.disabled}
+          style={styles.primaryButton}
+        />
       </View>
     </ScrollView>
   )

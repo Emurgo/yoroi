@@ -562,12 +562,9 @@ class WalletManager {
     }
   }
 
-  async updateHWDeviceInfo(hwDeviceInfo: HWDeviceInfo) {
-    const wallet = this.getWallet()
-
+  async updateHWDeviceInfo(wallet: YoroiWallet, hwDeviceInfo: HWDeviceInfo) {
     wallet.hwDeviceInfo = hwDeviceInfo
-    await this._saveState(wallet)
-    this._notify({type: 'hw-device-info', hwDeviceInfo: wallet.hwDeviceInfo}) // update redux Store
+    await this._saveState(wallet as unknown as WalletInterface)
   }
 
   // =================== create =================== //
