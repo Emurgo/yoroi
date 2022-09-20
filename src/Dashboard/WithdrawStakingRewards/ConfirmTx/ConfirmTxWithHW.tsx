@@ -1,15 +1,12 @@
 import React from 'react'
 import {useIntl} from 'react-intl'
-import {useDispatch} from 'react-redux'
 
 import {TwoActionView} from '../../../components'
 import {useSignWithHwAndSubmitTx} from '../../../hooks'
 import {LedgerConnect, LedgerTransportSwitch} from '../../../HW'
 import {confirmationMessages, txLabels} from '../../../i18n/global-messages'
-import {setLedgerDeviceId, setLedgerDeviceObj} from '../../../legacy/hwWallet'
 import type {DeviceId, DeviceObj} from '../../../legacy/ledgerUtils'
-import {YoroiWallet} from '../../../yoroi-wallets'
-import {YoroiUnsignedTx} from '../../../yoroi-wallets/types'
+import {walletManager, withBLE, withUSB, YoroiUnsignedTx, YoroiWallet} from '../../../yoroi-wallets'
 import {TransferSummary} from '../TransferSummary'
 
 type Props = {
@@ -29,13 +26,13 @@ export const ConfirmTxWithHW: React.FC<Props> = ({wallet, unsignedTx, onSuccess,
     setStep('connect-transport')
   }
 
-  const dispatch = useDispatch()
-  const onConnectBLE = async (deviceID: DeviceId) => {
-    await dispatch(setLedgerDeviceId(deviceID))
+  const onConnectBLE = async (deviceId: DeviceId) => {
+    await walletManager.updateHWDeviceInfo(wallet, withBLE(wallet, deviceId))
     setStep('confirm')
   }
+
   const onConnectUSB = async (deviceObj: DeviceObj) => {
-    await dispatch(setLedgerDeviceObj(deviceObj))
+    await walletManager.updateHWDeviceInfo(wallet, withUSB(wallet, deviceObj))
     setStep('confirm')
   }
 
