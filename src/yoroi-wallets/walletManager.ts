@@ -50,7 +50,7 @@ export type WalletManagerEvent =
 
 export type WalletManagerSubscription = (event: WalletManagerEvent) => void
 
-class WalletManager {
+export class WalletManager {
   _wallet: null | WalletInterface = null
   _id = ''
   private subscriptions: Array<WalletManagerSubscription> = []
@@ -69,7 +69,7 @@ class WalletManager {
     this._backgroundSync()
   }
 
-  async _listWallets() {
+  async listWallets() {
     const keys = await storage.keys('/wallet/')
     const result = await Promise.all(keys.map((key) => storage.read<WalletMeta>(`/wallet/${key}`)))
 
@@ -85,7 +85,7 @@ class WalletManager {
   // The responsibility to check data consistency is left to the each wallet
   // implementation.
   async initialize() {
-    const _storedWalletMetas = await this._listWallets()
+    const _storedWalletMetas = await this.listWallets()
     // need to migrate wallet list to new format after (haskell) shelley
     // integration. Prior to v3.0, w.isShelley denoted an ITN wallet
     const migratedWalletMetas = await migrateWalletMetas(_storedWalletMetas)
@@ -697,3 +697,5 @@ class WalletManager {
 export const walletManager = new WalletManager()
 
 export default walletManager
+
+export const mockWalletManager = {} as WalletManager

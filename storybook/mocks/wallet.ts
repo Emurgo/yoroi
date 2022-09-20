@@ -2,9 +2,25 @@ import BigNumber from 'bignumber.js'
 
 import KeyStore from '../../src/legacy/KeyStore'
 import {PRIMARY_ASSET_CONSTANTS} from '../../src/legacy/networks'
+import {WalletMeta} from '../../src/legacy/state'
 import {RemotePoolMetaSuccess, StakePoolInfosAndHistories, TokenEntry, TokenInfo} from '../../src/types'
 import {YoroiWallet} from '../../src/yoroi-wallets'
 import {YoroiAmounts, YoroiSignedTx, YoroiUnsignedTx} from '../../src/yoroi-wallets/types'
+
+export const mockedWalletMeta: WalletMeta = {
+  id: 'wallet-id',
+  name: 'my-wallet',
+  networkId: 1,
+  isHW: false,
+  isEasyConfirmationEnabled: true,
+  checksum: {
+    TextPart: 'JHKT-8080',
+    ImagePart:
+      'b04dc22991594170974bbbb5908cc50b48f236d680a9ebfe6c1d00f52f8f4813341943eb66dec48cfe7f3be5beec705b91300a07641e668ff19dfa2fbeccbfba',
+  },
+  provider: '',
+  walletImplementationId: 'haskell-shelley-24',
+}
 
 export const mockWallet: YoroiWallet = {
   id: 'wallet-id',

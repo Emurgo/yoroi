@@ -20,6 +20,8 @@ import {Logger, setLogLevel} from './legacy/logging'
 import {isEmptyString} from './legacy/utils'
 import {CurrencyProvider} from './Settings/Currency/CurrencyContext'
 import {ThemeProvider} from './theme'
+import {WalletManagerProvider} from './WalletManager'
+import {walletManager} from './yoroi-wallets'
 
 setLogLevel(CONFIG.LOG_LEVEL)
 
@@ -64,21 +66,23 @@ const queryClient = new QueryClient()
 
 const AppWithProviders = () => {
   return (
-    <ErrorBoundary>
-      <Provider store={store}>
-        <QueryClientProvider client={queryClient}>
-          <Boundary>
-            <ThemeProvider>
-              <LanguageProvider>
-                <CurrencyProvider>
-                  <App />
-                </CurrencyProvider>
-              </LanguageProvider>
-            </ThemeProvider>
-          </Boundary>
-        </QueryClientProvider>
-      </Provider>
-    </ErrorBoundary>
+    <WalletManagerProvider walletManager={walletManager}>
+      <ErrorBoundary>
+        <Provider store={store}>
+          <QueryClientProvider client={queryClient}>
+            <Boundary>
+              <ThemeProvider>
+                <LanguageProvider>
+                  <CurrencyProvider>
+                    <App />
+                  </CurrencyProvider>
+                </LanguageProvider>
+              </ThemeProvider>
+            </Boundary>
+          </QueryClientProvider>
+        </Provider>
+      </ErrorBoundary>
+    </WalletManagerProvider>
   )
 }
 
