@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useNetInfo} from '@react-native-community/netinfo'
-import {useFocusEffect} from '@react-navigation/native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {delay} from 'bluebird'
 import cryptoRandomString from 'crypto-random-string'
 import * as React from 'react'
-import {IntlShape} from 'react-intl'
+import {IntlShape, useIntl} from 'react-intl'
 import {
   QueryKey,
   useMutation,
@@ -16,17 +16,25 @@ import {
 } from 'react-query'
 import {useDispatch} from 'react-redux'
 
+import {useAuth} from '../auth/AuthProvider'
+import {errorMessages} from '../i18n/global-messages'
 import {clearAccountState} from '../legacy/account'
+import {showErrorDialog} from '../legacy/actions'
 import {getDefaultAssetByNetworkId} from '../legacy/config'
+import {InvalidState} from '../legacy/errors'
 import KeyStore from '../legacy/KeyStore'
 import {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {WalletMeta} from '../legacy/state'
 import storage from '../legacy/storage'
 import {clearUTXOs} from '../legacy/utxo'
+import {useWalletNavigation, WalletStackRouteNavigation} from '../navigation'
+import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../SelectedWallet'
 import {Storage} from '../Storage'
 import {
   Cardano,
+  KeysAreInvalid,
   NetworkId,
+  SystemAuthDisabled,
   TxSubmissionStatus,
   WalletEvent,
   WalletImplementationId,
@@ -90,6 +98,62 @@ export const useEasyConfirmationEnabled = (wallet: YoroiWallet) => {
   useWallet(wallet, 'easy-confirmation')
 
   return wallet.isEasyConfirmationEnabled
+}
+
+export const useOpenWallet = (
+  options?: UseMutationOptions<
+    {
+      wallet: YoroiWallet
+      walletMeta: WalletMeta
+    },
+    Error,
+    WalletMeta
+  >,
+) => {
+  const navigation = useNavigation<WalletStackRouteNavigation>()
+  const {logout} = useAuth()
+  const {resetToWalletSelection, navigateToTxHistory} = useWalletNavigation()
+  const selectWalletMeta = useSetSelectedWalletMeta()
+  const selectWallet = useSetSelectedWallet()
+  const queryClient = useQueryClient()
+  const intl = useIntl()
+
+  const mutation = useMutation({
+    ...options,
+    mutationFn: async (walletMeta) => {
+      const [newWallet, newWalletMeta] = await walletManager.openWallet(walletMeta)
+      return {
+        wallet: newWallet,
+        walletMeta: newWalletMeta,
+      }
+    },
+    onSuccess: ({wallet, walletMeta}, variables, context) => {
+      selectWalletMeta(walletMeta)
+      selectWallet(wallet)
+      wallet.subscribeOnTxHistoryUpdate(() => queryClient.invalidateQueries([wallet.id, 'lockedAmount']))
+      navigateToTxHistory()
+      options?.onSuccess?.({wallet, walletMeta}, variables, context)
+    },
+    onError: async (error, variables, context) => {
+      navigation.setParams({reopen: true})
+
+      if (error instanceof SystemAuthDisabled) {
+        await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
+        resetToWalletSelection()
+      } else if (error instanceof InvalidState) {
+        await showErrorDialog(errorMessages.walletStateInvalid, intl)
+      } else if (error instanceof KeysAreInvalid) {
+        await showErrorDialog(errorMessages.walletKeysInvalidated, intl)
+        logout()
+      } else {
+        await showErrorDialog(errorMessages.generalError, intl, {message: error.message})
+      }
+
+      options?.onError?.(error, variables, context)
+    },
+  })
+
+  return {openWallet: mutation.mutate, ...mutation}
 }
 
 export const useCloseWallet = (options: UseMutationOptions<void, Error> = {}) => {

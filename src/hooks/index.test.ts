@@ -5,6 +5,20 @@ import {mockWallet} from '../../storybook/mocks/wallet'
 import {TxStatusRequest, TxStatusResponse} from '../yoroi-wallets/types/other'
 import {fetchTxStatus} from '.'
 
+// Hack!! The following native modules are breaking the test
+jest.mock('react-native', () => {
+  const RN = jest.requireActual('react-native')
+
+  RN.NativeModules.SettingsManager = {
+    settings: {
+      AppLocale: true,
+      AppleLanguages: ['en-US'],
+    },
+  }
+
+  return RN
+})
+
 describe('fetchTxStatus', () => {
   // it means that the tx was sent to node and processed
   it('should return success when depth > 0', async () => {

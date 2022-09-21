@@ -4,12 +4,16 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, TouchableOpacity, View} from 'react-native'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
+import {useDispatch} from 'react-redux'
 
-import {Button, Spacer, StatusBar, Text} from '../../components'
-import {useCreateWallet} from '../../hooks'
-import {useWalletNavigation, WalletInitRoutes} from '../../navigation'
+import {Button, PleaseWaitModal, Spacer, StatusBar, Text} from '../../components'
+import {useCloseWallet, useCreateWallet, useOpenWallet} from '../../hooks'
+import globalMessages from '../../i18n/global-messages'
+import {clearAccountState} from '../../legacy/account'
+import {clearUTXOs} from '../../legacy/utxo'
+import {WalletInitRoutes} from '../../navigation'
 import {COLORS} from '../../theme'
-import {NetworkId, WalletImplementationId, YoroiProvider} from '../../yoroi-wallets'
+import {NetworkId, WalletImplementationId, walletManager, YoroiProvider} from '../../yoroi-wallets'
 
 export type Params = {
   mnemonic: string
@@ -22,9 +26,9 @@ export type Params = {
 
 export const MnemonicCheckScreen = () => {
   const strings = useStrings()
-  const {resetToWalletSelection} = useWalletNavigation()
   const route = useRoute<RouteProp<WalletInitRoutes, 'mnemonic-check'>>()
   const {mnemonic, password, name, networkId, walletImplementationId, provider} = route.params
+  const dispatch = useDispatch()
 
   const mnemonicEntries: Array<Entry> = mnemonic
     .split(' ')
@@ -38,9 +42,29 @@ export const MnemonicCheckScreen = () => {
   const isPhraseComplete = userEntries.length === mnemonicEntries.length
   const isPhraseValid = userEntries.map((entry) => entry.word).join(' ') === mnemonic
 
-  const {createWallet, isLoading, isSuccess} = useCreateWallet({
+  const {closeWallet} = useCloseWallet({
     onSuccess: () => {
-      resetToWalletSelection()
+      dispatch(clearUTXOs())
+      dispatch(clearAccountState())
+    },
+  })
+
+  const {openWallet, isLoading: isOpenWalletLoading} = useOpenWallet({
+    onError: () => closeWallet(),
+  })
+
+  const {
+    createWallet,
+    isLoading: isCreateWalletLoading,
+    isSuccess,
+  } = useCreateWallet({
+    onSuccess: (wallet) => {
+      const walletMetas = walletManager.getWallets()
+      const walletMeta = walletMetas[wallet.id]
+
+      if (walletMeta !== undefined) {
+        openWallet(walletMeta)
+      }
     },
   })
 
@@ -70,12 +94,13 @@ export const MnemonicCheckScreen = () => {
           onPress={() =>
             createWallet({name, mnemonicPhrase: mnemonic, password, networkId, walletImplementationId, provider})
           }
-          disabled={!isPhraseComplete || !isPhraseValid || isLoading || isSuccess}
+          disabled={!isPhraseComplete || !isPhraseValid || isCreateWalletLoading || isSuccess}
           title={strings.confirmButton}
           style={styles.confirmButton}
           testID="mnemonicCheckScreen::confirm"
         />
       </View>
+      <PleaseWaitModal title={strings.loadingWallet} spinnerText={strings.pleaseWait} visible={isOpenWalletLoading} />
     </SafeAreaView>
   )
 }
@@ -176,6 +201,10 @@ const messages = defineMessages({
     id: 'components.walletinit.createwallet.mnemoniccheckscreen.mnemonicWordsInputInvalidPhrase',
     defaultMessage: '!!!Recovery phrase does not match',
   },
+  loadingWallet: {
+    id: 'components.walletselection.walletselectionscreen.loadingWallet',
+    defaultMessage: '!!!Loading wallet',
+  },
 })
 
 const useStrings = () => {
@@ -185,6 +214,8 @@ const useStrings = () => {
     instructions: intl.formatMessage(messages.instructions),
     confirmButton: intl.formatMessage(messages.confirmButton),
     mnemonicWordsInputInvalidPhrase: intl.formatMessage(messages.mnemonicWordsInputInvalidPhrase),
+    pleaseWait: intl.formatMessage(globalMessages.pleaseWait),
+    loadingWallet: intl.formatMessage(messages.loadingWallet),
   }
 }
 
