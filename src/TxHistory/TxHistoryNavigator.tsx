@@ -5,7 +5,7 @@ import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps} from 'react-n
 import {useSelector} from 'react-redux'
 
 import {Boundary, Icon} from '../components'
-import {useBalances, useWalletName} from '../hooks'
+import {useWalletName} from '../hooks'
 import {formatDateToSeconds} from '../legacy/format'
 import {transactionsInfoSelector} from '../legacy/selectors'
 import {
@@ -34,7 +34,6 @@ export const TxHistoryNavigator = () => {
 
   const walletName = useWalletName(wallet)
   const transactionInfos = useSelector(transactionsInfoSelector)
-  const balances = useBalances(wallet)
   const [modalInfoState, setModalInfoState] = React.useState(false)
   const showModalInfo = () => setModalInfoState(true)
   const hideModalInfo = () => setModalInfoState(false)
@@ -90,7 +89,11 @@ export const TxHistoryNavigator = () => {
         </Stack.Screen>
 
         <Stack.Screen name="select-asset" options={{title: strings.selectAssetTitle}}>
-          {() => <AssetSelectorScreen balances={balances} />}
+          {() => (
+            <Boundary>
+              <AssetSelectorScreen />
+            </Boundary>
+          )}
         </Stack.Screen>
 
         <Stack.Screen //
