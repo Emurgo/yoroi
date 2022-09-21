@@ -13,6 +13,7 @@ import {useWalletMetas} from '../hooks'
 import {CONFIG} from '../legacy/config'
 import {tokenBalanceSelector} from '../legacy/selectors'
 import {defaultStackNavigationOptions, useWalletNavigation} from '../navigation'
+import {useWalletManager} from '../WalletManager'
 import {InsufficientFundsModal} from './InsufficientFundsModal'
 
 const MenuStack = createStackNavigator()
@@ -34,7 +35,8 @@ export const MenuNavigator = () => {
 export const Menu = () => {
   const strings = useStrings()
   const navigateTo = useNavigateTo()
-  const walletMetas = useWalletMetas()
+  const walletManager = useWalletManager()
+  const {walletMetas} = useWalletMetas(walletManager)
   const walletCount = walletMetas?.length ?? ''
 
   return (

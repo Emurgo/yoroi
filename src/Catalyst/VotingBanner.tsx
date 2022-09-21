@@ -11,12 +11,13 @@ import {formatTokenWithText} from '../legacy/format'
 import {Logger} from '../legacy/logging'
 import {availableAssetsSelector, tokenBalanceSelector} from '../legacy/selectors'
 import {COLORS} from '../theme'
-import {walletManager} from '../yoroi-wallets'
+import {useWalletManager} from '../WalletManager'
 import {isRegistrationOpen} from '../yoroi-wallets'
 type Props = {onPress: () => void; disabled?: boolean}
 
 export const VotingBanner = ({onPress, disabled}: Props) => {
   const strings = useStrings()
+  const walletManager = useWalletManager()
   const wallet = useSelectedWallet()
 
   const tokenBalance = useSelector(tokenBalanceSelector)

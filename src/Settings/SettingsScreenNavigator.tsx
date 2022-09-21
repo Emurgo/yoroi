@@ -17,7 +17,7 @@ import {
 } from '../navigation'
 import {useSelectedWalletMeta, useSetSelectedWalletMeta} from '../SelectedWallet'
 import {COLORS} from '../theme'
-import {walletManager} from '../yoroi-wallets'
+import {useWalletManager} from '../WalletManager'
 import {ApplicationSettingsScreen} from './ApplicationSettings'
 import {BiometricsLinkScreen} from './BiometricsLink/'
 import {ChangeLanguageScreen} from './ChangeLanguage'
@@ -33,6 +33,7 @@ import {WalletSettingsScreen} from './WalletSettings'
 const Stack = createStackNavigator<SettingsStackRoutes>()
 export const SettingsScreenNavigator = () => {
   const strings = useStrings()
+  const walletManager = useWalletManager()
   const navigation = useNavigation()
   const {navigateToSettings} = useWalletNavigation()
   const dispatch = useDispatch()
