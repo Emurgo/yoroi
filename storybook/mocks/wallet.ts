@@ -131,6 +131,11 @@ export const mockHwWallet = {
   },
 }
 
+export const mockOsWallet = {
+  ...mockWallet,
+  isEasyConfirmationEnabled: true,
+}
+
 export const tokenEntries: Array<TokenEntry> = [
   {
     networkId: 123,
