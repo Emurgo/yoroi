@@ -79,6 +79,6 @@ export const ErrorFallback: React.FC<ErrorFallbackProps> = ({error, resetErrorBo
 )
 
 const styles = StyleSheet.create({
-  container: {alignItems: 'center', justifyContent: 'center'},
+  container: {flex: 1, alignItems: 'center', justifyContent: 'center'},
   errorHeader: {alignItems: 'center', justifyContent: 'center', padding: 16},
 })
