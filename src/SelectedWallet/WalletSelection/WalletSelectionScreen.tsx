@@ -109,7 +109,6 @@ export const WalletSelectionScreen = () => {
       <OnlyNightlyShelleyTestnetButton />
       <ByronButton />
       <OnlyDevButton />
-
       <PleaseWaitModal title={strings.loadingWallet} spinnerText={strings.pleaseWait} visible={isLoading} />
     </SafeAreaView>
   )

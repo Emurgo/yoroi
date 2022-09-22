@@ -33,8 +33,17 @@ export const WalletSettingsScreen = () => {
   const wallet = useSelectedWallet()
   const walletName = useWalletName(wallet)
   const easyConfirmationEnabled = useEasyConfirmationEnabled(wallet)
+  const dispatch = useDispatch()
+
+  const {closeWallet} = useCloseWallet({
+    onSuccess: () => {
+      dispatch(clearUTXOs())
+      dispatch(clearAccountState())
+    },
+  })
 
   const onSwitchWallet = () => {
+    closeWallet()
     resetToWalletSelection()
   }
 
@@ -254,11 +263,20 @@ const useResync = (options?: UseMutationOptions<void, Error>) => {
     mutationFn: () => walletManager.resyncWallet(),
     ...options,
   })
+  const dispatch = useDispatch()
+
+  const {closeWallet} = useCloseWallet({
+    onSuccess: () => {
+      dispatch(clearUTXOs())
+      dispatch(clearAccountState())
+    },
+  })
 
   return {
     resyncWithConfirmation: async () => {
       const selection = await showConfirmationDialog(confirmationMessages.resync, intl)
       if (selection === DIALOG_BUTTONS.YES) {
+        closeWallet()
         resetToWalletSelection({reopen: true})
         setTimeout(() => {
           mutation.mutate()

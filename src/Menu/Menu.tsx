@@ -4,14 +4,16 @@ import React from 'react'
 import {useIntl} from 'react-intl'
 import {Image, Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useSelector} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 
 import SupportImage from '../assets/img/icon/shape.png'
 import {CatalystNavigator} from '../Catalyst/CatalystNavigator'
 import {Icon, Spacer, Text} from '../components'
-import {useWalletMetas} from '../hooks'
+import {useCloseWallet, useWalletMetas} from '../hooks'
+import {clearAccountState} from '../legacy/account'
 import {CONFIG} from '../legacy/config'
 import {tokenBalanceSelector} from '../legacy/selectors'
+import {clearUTXOs} from '../legacy/utxo'
 import {defaultStackNavigationOptions, useWalletNavigation} from '../navigation'
 import {useWalletManager} from '../WalletManager'
 import {InsufficientFundsModal} from './InsufficientFundsModal'
@@ -38,13 +40,26 @@ export const Menu = () => {
   const walletManager = useWalletManager()
   const {walletMetas} = useWalletMetas(walletManager)
   const walletCount = walletMetas?.length ?? ''
+  const dispatch = useDispatch()
+
+  const {closeWallet} = useCloseWallet({
+    onSuccess: () => {
+      dispatch(clearUTXOs())
+      dispatch(clearAccountState())
+    },
+  })
+
+  const toAllWallets = () => {
+    closeWallet()
+    navigateTo.allWallets()
+  }
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
       <ScrollView contentContainerStyle={styles.scrollViewContent} bounces={false}>
         <AllWallets
           label={`${strings.allWallets} (${walletCount})`}
-          onPress={navigateTo.allWallets}
+          onPress={toAllWallets}
           left={<Icon.Wallets size={26} color="#6B7384" />}
         />
         <HR />

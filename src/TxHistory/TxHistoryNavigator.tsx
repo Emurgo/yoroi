@@ -1,13 +1,16 @@
+import {useNavigation} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps} from 'react-native'
-import {useSelector} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 
 import {Boundary, Icon} from '../components'
-import {useWalletName} from '../hooks'
+import {useCloseWallet, useWalletName} from '../hooks'
+import {clearAccountState} from '../legacy/account'
 import {formatDateToSeconds} from '../legacy/format'
 import {transactionsInfoSelector} from '../legacy/selectors'
+import {clearUTXOs} from '../legacy/utxo'
 import {
   defaultStackNavigationOptions,
   defaultStackNavigationOptionsV2,
@@ -31,12 +34,26 @@ const Stack = createStackNavigator<TxHistoryRoutes>()
 export const TxHistoryNavigator = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
+  const navigation = useNavigation()
 
   const walletName = useWalletName(wallet)
   const transactionInfos = useSelector(transactionsInfoSelector)
   const [modalInfoState, setModalInfoState] = React.useState(false)
   const showModalInfo = () => setModalInfoState(true)
   const hideModalInfo = () => setModalInfoState(false)
+  const dispatch = useDispatch()
+
+  const {closeWallet} = useCloseWallet({
+    onSuccess: () => {
+      dispatch(clearUTXOs())
+      dispatch(clearAccountState())
+    },
+  })
+
+  const goBack = () => {
+    closeWallet()
+    navigation.goBack()
+  }
 
   return (
     <SendProvider key={wallet.id} wallet={wallet}>
@@ -48,6 +65,11 @@ export const TxHistoryNavigator = () => {
             ...defaultStackNavigationOptionsV2,
             title: walletName,
             headerRight: () => <HeaderRightHistory />,
+            headerLeft: () => (
+              <TouchableOpacity onPress={goBack}>
+                <Icon.Chevron direction="left" />
+              </TouchableOpacity>
+            ),
           }}
         />
 
