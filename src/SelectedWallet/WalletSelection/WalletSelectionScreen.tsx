@@ -1,4 +1,4 @@
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
+import {RouteProp, useFocusEffect, useNavigation, useRoute} from '@react-navigation/native'
 import {delay} from 'bluebird'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -48,6 +48,12 @@ export const WalletSelectionScreen = () => {
     },
   })
 
+  useFocusEffect(
+    React.useCallback(() => {
+      closeWallet()
+    }, [closeWallet]),
+  )
+
   const logout = () => {
     closeWallet()
     dispatch(signout())
@@ -89,6 +95,7 @@ export const WalletSelectionScreen = () => {
     }
     return navigateToTxHistory()
   }
+
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <StatusBar type="dark" />
