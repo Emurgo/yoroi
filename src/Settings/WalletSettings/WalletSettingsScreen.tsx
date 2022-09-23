@@ -1,7 +1,7 @@
 import React from 'react'
 import type {MessageDescriptor} from 'react-intl'
 import {defineMessages, useIntl} from 'react-intl'
-import {ScrollView, StyleSheet, Switch} from 'react-native'
+import {InteractionManager, ScrollView, StyleSheet, Switch} from 'react-native'
 import {useMutation, UseMutationOptions} from 'react-query'
 import {useDispatch, useSelector} from 'react-redux'
 
@@ -227,13 +227,17 @@ const useLogout = (options?: UseMutationOptions<void, Error>) => {
   return {
     logout: () => {
       dispatch(signout()) // triggers navigation to login
-      setTimeout(() => closeWallet(), 1000) // wait for navigation to finish
+      InteractionManager.runAfterInteractions(() => {
+        closeWallet()
+      })
     },
     logoutWithConfirmation: async () => {
       const selection = await showConfirmationDialog(confirmationMessages.logout, intl)
       if (selection === DIALOG_BUTTONS.YES) {
         dispatch(signout()) // triggers navigation to login
-        setTimeout(() => closeWallet(), 1000) // wait for navigation to finish
+        InteractionManager.runAfterInteractions(() => {
+          closeWallet()
+        })
       }
     },
     ...mutation,
@@ -260,9 +264,9 @@ const useResync = (options?: UseMutationOptions<void, Error>) => {
       const selection = await showConfirmationDialog(confirmationMessages.resync, intl)
       if (selection === DIALOG_BUTTONS.YES) {
         resetToWalletSelection()
-        setTimeout(() => {
+        InteractionManager.runAfterInteractions(() => {
           mutation.mutate()
-        }, 200) // wait for navigation to finish
+        })
       }
     },
     ...mutation,
