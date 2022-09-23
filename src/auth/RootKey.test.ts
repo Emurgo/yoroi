@@ -1,6 +1,6 @@
-import MK, {CredentialsNotFound} from './MasterKey'
+import MK, {CredentialsNotFound} from './RootKey'
 
-describe('MasterKey()', () => {
+describe('RootKey()', () => {
   const password = '1234567890'
   const data = '65656565494949'
   const key = 'walletId'

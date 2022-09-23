@@ -134,15 +134,15 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
       isByron(implementationId) || isHaskellShelley(implementationId),
       'ShelleyWallet::create: invalid walletImplementationId',
     )
-    const masterKeyPtr = await generateWalletRootKey(mnemonic)
-    const masterKey: string = Buffer.from(await masterKeyPtr.asBytes()).toString('hex')
-    await this.encryptAndSaveMasterKey(masterKey, newPassword)
+    const rootKeyPtr = await generateWalletRootKey(mnemonic)
+    const rootKey: string = Buffer.from(await rootKeyPtr.asBytes()).toString('hex')
+    await this.encryptAndSaveRootKey(rootKey, newPassword)
     const purpose = isByron(implementationId)
       ? CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.BIP44
       : CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852
 
     const accountKey = await (
-      await (await masterKeyPtr.derive(purpose)).derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO)
+      await (await rootKeyPtr.derive(purpose)).derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO)
     ).derive(CONFIG.NUMBERS.ACCOUNT_INDEX + CONFIG.NUMBERS.HARD_DERIVATION_START)
     const accountPubKey = await accountKey.toPublic()
     const accountPubKeyHex: string = Buffer.from(await accountPubKey.asBytes()).toString('hex')
@@ -528,9 +528,9 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     }
   }
 
-  async signTx(unsignedTx: YoroiUnsignedTx, decryptedMasterKey: string) {
-    const masterKey = await CardanoMobile.Bip32PrivateKey.fromBytes(Buffer.from(decryptedMasterKey, 'hex'))
-    const accountPrivateKey = await masterKey
+  async signTx(unsignedTx: YoroiUnsignedTx, decryptedRootKey: string) {
+    const rootKey = await CardanoMobile.Bip32PrivateKey.fromBytes(Buffer.from(decryptedRootKey, 'hex'))
+    const accountPrivateKey = await rootKey
       .derive(this._getPurpose())
       .then((key) => key.derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO))
       .then((key) => key.derive(0 + CONFIG.NUMBERS.HARD_DERIVATION_START))
@@ -633,9 +633,9 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
       let signer: (arg: Uint8Array) => Promise<string>
       if (decryptedKey !== undefined) {
         assert.assert(typeof decryptedKey === 'string', 'ShelleyWallet:createVotingRegTx: decryptedKey')
-        const masterKey = await CardanoMobile.Bip32PrivateKey.fromBytes(Buffer.from(decryptedKey, 'hex'))
+        const rootKey = await CardanoMobile.Bip32PrivateKey.fromBytes(Buffer.from(decryptedKey, 'hex'))
 
-        const accountPvrKey = await masterKey
+        const accountPvrKey = await rootKey
           .derive(this._getPurpose())
           .then((key) => key.derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO))
           .then((key) => key.derive(0 + CONFIG.NUMBERS.HARD_DERIVATION_START))

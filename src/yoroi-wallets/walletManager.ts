@@ -3,7 +3,7 @@ import ExtendableError from 'es6-error'
 import _ from 'lodash'
 
 import {migrateWalletMetas} from '../appStorage'
-import MasterKey from '../auth/MasterKey'
+import {RootKey} from '../auth/RootKey'
 import assert from '../legacy/assert'
 import {CONFIG, DISABLE_BACKGROUND_SYNC} from '../legacy/config'
 import {ISignRequest} from '../legacy/ISignRequest'
@@ -459,7 +459,7 @@ class WalletManager {
     await this.closeWallet()
     await storage.remove(`/wallet/${id}/data`)
     await storage.remove(`/wallet/${id}`)
-    await MasterKey(id).discard()
+    await RootKey(id).discard()
 
     this._wallets = _.omit(this._wallets, id)
   }

@@ -12,8 +12,8 @@ storiesOf('ConfirmWithdrawalTx/Password', module)
   .add('withdrawals, no deregistrations', () => {
     const wallet: YoroiWallet = {
       ...mockWallet,
-      signTx: async (unsignedTx, masterKey) => {
-        action('onSign')(unsignedTx, masterKey)
+      signTx: async (unsignedTx, rootKey) => {
+        action('onSign')(unsignedTx, rootKey)
         return mockYoroiSignedTx
       },
       submitTransaction: async (unsignedTx) => {
@@ -47,8 +47,8 @@ storiesOf('ConfirmWithdrawalTx/Password', module)
   .add('withdrawals, deregistrations', () => {
     const wallet: YoroiWallet = {
       ...mockWallet,
-      signTx: async (unsignedTx, masterKey) => {
-        action('onSign')(unsignedTx, masterKey)
+      signTx: async (unsignedTx, rootKey) => {
+        action('onSign')(unsignedTx, rootKey)
         return mockYoroiSignedTx
       },
       submitTransaction: async (unsignedTx) => {

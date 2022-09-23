@@ -4,7 +4,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useRevealMasterKey, useSaveSecret} from '../../auth'
+import {useRevealRootKey, useSaveSecret} from '../../auth'
 import {Button, StatusBar, Text, TextInput} from '../../components'
 import {LoadingOverlay} from '../../components/LoadingOverlay'
 import {useEnableEasyConfirmation} from '../../hooks'
@@ -19,7 +19,7 @@ export const EnableEasyConfirmationScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
   const navigation = useNavigation()
-  const [masterPassword, setMasterPassword] = React.useState('')
+  const [rootPassword, setMasterPassword] = React.useState('')
   const walletMeta = useSelectedWalletMeta()
   const setSelectedWalletMeta = useSetSelectedWalletMeta()
   const wallet = useSelectedWallet()
@@ -42,13 +42,13 @@ export const EnableEasyConfirmationScreen = () => {
       throw error
     },
   })
-  const {reveal, isLoading: revealing} = useRevealMasterKey(
-    {id: wallet.id},
+  const {reveal, isLoading: revealing} = useRevealRootKey(
+    {id: wallet.id, password: rootPassword},
     {
-      onSuccess: (masterKey) =>
+      onSuccess: (rootKey) =>
         saveSecret({
           key: wallet.id,
-          value: masterKey,
+          value: rootKey,
         }),
       onError: (error) => {
         if (!(error instanceof WrongPassword)) throw error
@@ -74,7 +74,7 @@ export const EnableEasyConfirmationScreen = () => {
           secureTextEntry
           label={strings.enableMasterPassword}
           onChangeText={setMasterPassword}
-          value={masterPassword}
+          value={rootPassword}
           autoComplete={false}
         />
       </ScrollView>
@@ -82,8 +82,8 @@ export const EnableEasyConfirmationScreen = () => {
       <View style={styles.actions}>
         <Button
           title={strings.enableButton}
-          onPress={() => reveal(masterPassword)}
-          disabled={isEmptyString(masterPassword) || isLoading}
+          onPress={() => reveal()}
+          disabled={isEmptyString(rootPassword) || isLoading}
         />
       </View>
 

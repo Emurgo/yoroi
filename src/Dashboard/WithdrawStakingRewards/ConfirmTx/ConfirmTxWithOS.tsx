@@ -39,8 +39,8 @@ export const ConfirmTxWithOS = ({wallet, unsignedTx, onSuccess, onCancel}: Props
           onPress: () =>
             navigation.navigate('biometrics', {
               keyId: wallet.id,
-              onSuccess: (masterKey) => {
-                return signAndSubmitTx({unsignedTx, masterKey})
+              onSuccess: (rootKey) => {
+                return signAndSubmitTx({unsignedTx, rootKey})
               },
               onFail: () => navigation.goBack(),
             }),

@@ -2,7 +2,7 @@
 import _ from 'lodash'
 import {defaultMemoize} from 'reselect'
 
-import MasterKey from '../auth/MasterKey'
+import {RootKey} from '../auth/RootKey'
 import * as api from '../legacy/api'
 import assert from '../legacy/assert'
 import {CONFIG} from '../legacy/config'
@@ -139,14 +139,14 @@ export class Wallet {
   }
 
   // ============ security & key management ============ //
-  async encryptAndSaveMasterKey(masterKey: string, password: string) {
-    if (this.id != null) return MasterKey(this.id).keep(password, masterKey)
+  async encryptAndSaveRootKey(rootKey: string, password: string) {
+    if (this.id != null) return RootKey(this.id).keep(password, rootKey)
 
     throw new Error('invalid wallet state')
   }
 
-  async getDecryptedMasterKey(masterPassword: string) {
-    if (this.id != null) return MasterKey(this.id).reveal(masterPassword)
+  async getDecryptedRootKey(rootPassword: string) {
+    if (this.id != null) return RootKey(this.id).reveal(rootPassword)
 
     throw new Error('invalid wallet state')
   }
@@ -157,13 +157,13 @@ export class Wallet {
     this.notify({type: 'easy-confirmation', enabled: this.isEasyConfirmationEnabled})
   }
 
-  async changePassword(masterPassword: string, newPassword: string) {
+  async changePassword(rootPassword: string, newPassword: string) {
     if (!this.id) throw new Error('invalid wallet state')
 
     if (!_.isEmpty(validatePassword(newPassword, newPassword))) throw new Error('New password is not valid')
 
-    const {reveal, keep} = MasterKey(this.id)
-    return reveal(masterPassword).then((decrypted) => keep(newPassword, decrypted))
+    const {reveal, keep} = RootKey(this.id)
+    return reveal(rootPassword).then((decrypted) => keep(newPassword, decrypted))
   }
 
   // =================== subscriptions =================== //

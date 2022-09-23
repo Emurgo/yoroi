@@ -108,13 +108,13 @@ export interface WalletInterface {
 
   // ============ security & key management ============ //
 
-  encryptAndSaveMasterKey(encryptionMethod: EncryptionMethod, masterKey: string, password?: string): Promise<void>
+  encryptAndSaveRootKey(encryptionMethod: EncryptionMethod, rootKey: string, password?: string): Promise<void>
 
-  getDecryptedMasterKey(masterPassword: string, intl: IntlShape): Promise<string>
+  getDecryptedRootKey(rootPassword: string, intl: IntlShape): Promise<string>
 
   enableEasyConfirmation(): Promise<void>
 
-  changePassword(masterPassword: string, newPassword: string, intl: IntlShape): Promise<void>
+  changePassword(rootPassword: string, newPassword: string, intl: IntlShape): Promise<void>
 
   // =================== subscriptions =================== //
 
@@ -164,7 +164,7 @@ export interface WalletInterface {
     metadata?: Array<CardanoTypes.TxMetadata>,
   ): Promise<YoroiUnsignedTx>
 
-  signTx(signRequest: YoroiUnsignedTx, decryptedMasterKey: string): Promise<YoroiSignedTx>
+  signTx(signRequest: YoroiUnsignedTx, decryptedRootKey: string): Promise<YoroiSignedTx>
 
   createDelegationTx(
     poolRequest: string,

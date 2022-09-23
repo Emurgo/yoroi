@@ -5,7 +5,7 @@ import {ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch} from 'react-redux'
 
-import {MasterKey} from '../auth/MasterKey'
+import {RootKey} from '../auth/RootKey'
 import {Button, ErrorModal, OfflineBanner, ProgressStep, Spacer, TextInput} from '../components'
 import {useCloseWallet} from '../hooks'
 import {confirmationMessages, errorMessages, txLabels} from '../i18n/global-messages'
@@ -102,7 +102,7 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
       return
     }
     try {
-      const decryptedKey = await MasterKey(wallet.id).reveal(password)
+      const decryptedKey = await RootKey(wallet.id).reveal(password)
 
       return createTransaction(decryptedKey)
     } catch (error) {

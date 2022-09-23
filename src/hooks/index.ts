@@ -15,7 +15,7 @@ import {
 } from 'react-query'
 import {useDispatch} from 'react-redux'
 
-import {MasterKey} from '../auth/MasterKey'
+import {RootKey} from '../auth/RootKey'
 import {clearAccountState} from '../legacy/account'
 import {getDefaultAssetByNetworkId} from '../legacy/config'
 import {HWDeviceInfo} from '../legacy/ledgerUtils'
@@ -354,7 +354,7 @@ export const useSignWithHwAndSubmitTx = (
 export const useSignAndSubmitTx = (
   {wallet}: {wallet: YoroiWallet},
   options?: {
-    signTx?: UseMutationOptions<YoroiSignedTx, Error, {unsignedTx: YoroiUnsignedTx; masterKey: string}>
+    signTx?: UseMutationOptions<YoroiSignedTx, Error, {unsignedTx: YoroiUnsignedTx; rootKey: string}>
     submitTx?: UseMutationOptions<TxSubmissionStatus, Error, YoroiSignedTx>
   },
 ) => {
@@ -387,10 +387,10 @@ export const useSignAndSubmitTx = (
 
 export const useSignTx = (
   {wallet}: {wallet: YoroiWallet},
-  options: UseMutationOptions<YoroiSignedTx, Error, {unsignedTx: YoroiUnsignedTx; masterKey: string}> = {},
+  options: UseMutationOptions<YoroiSignedTx, Error, {unsignedTx: YoroiUnsignedTx; rootKey: string}> = {},
 ) => {
   const mutation = useMutation({
-    mutationFn: ({unsignedTx, masterKey}) => wallet.signTx(unsignedTx, masterKey),
+    mutationFn: ({unsignedTx, rootKey}) => wallet.signTx(unsignedTx, rootKey),
     retry: false,
     ...options,
   })
@@ -407,9 +407,9 @@ export const useSignTxWithPassword = (
 ) => {
   const mutation = useMutation({
     mutationFn: async ({unsignedTx, password}) => {
-      const masterKey = await MasterKey(wallet.id).reveal(password)
+      const rootKey = await RootKey(wallet.id).reveal(password)
 
-      return wallet.signTx(unsignedTx, masterKey)
+      return wallet.signTx(unsignedTx, rootKey)
     },
     retry: false,
     ...options,
