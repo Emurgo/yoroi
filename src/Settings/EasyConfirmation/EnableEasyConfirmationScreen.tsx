@@ -19,7 +19,7 @@ export const EnableEasyConfirmationScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
   const navigation = useNavigation()
-  const [rootPassword, setMasterPassword] = React.useState('')
+  const [rootPassword, setRootPassword] = React.useState('')
   const walletMeta = useSelectedWalletMeta()
   const setSelectedWalletMeta = useSetSelectedWalletMeta()
   const wallet = useSelectedWallet()
@@ -72,8 +72,8 @@ export const EnableEasyConfirmationScreen = () => {
           enablesReturnKeyAutomatically
           returnKeyType="done"
           secureTextEntry
-          label={strings.enableMasterPassword}
-          onChangeText={setMasterPassword}
+          label={strings.enableRootPassword}
+          onChangeText={setRootPassword}
           value={rootPassword}
           autoComplete={false}
         />
@@ -98,7 +98,7 @@ const useStrings = () => {
   return {
     enableHeading: intl.formatMessage(messages.enableHeading),
     enableWarning: intl.formatMessage(messages.enableWarning),
-    enableMasterPassword: intl.formatMessage(messages.enableMasterPassword),
+    enableRootPassword: intl.formatMessage(messages.enableRootPassword),
     enableButton: intl.formatMessage(messages.enableButton),
   }
 }
@@ -119,7 +119,7 @@ const messages = defineMessages({
       '!!!Please remember your master password, as you may need it ' +
       'in case your biometrics data are removed from the device.',
   },
-  enableMasterPassword: {
+  enableRootPassword: {
     id: 'components.settings.enableeasyconfirmationscreen.enableMasterPassword',
     defaultMessage: '!!!Master password',
   },

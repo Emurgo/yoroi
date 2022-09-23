@@ -3,7 +3,7 @@ import Keychain from 'react-native-keychain'
 
 import {isOSAuthSupported} from './authOS'
 
-let mockedBioType = 'ios'
+let mockedBioType = Keychain.BIOMETRY_TYPE.FINGERPRINT
 let mockedCanImply = true
 jest.mock('react-native-keychain', () => {
   return {
@@ -27,8 +27,8 @@ describe('isOSAuthSupported()', () => {
     it.each`
       expected | bioType
       ${true}  | ${Keychain.BIOMETRY_TYPE.FINGERPRINT}
-      ${false} | ${Keychain.BIOMETRY_TYPE.IRIS}
-      ${false} | ${Keychain.BIOMETRY_TYPE.FACE}
+      ${true}  | ${Keychain.BIOMETRY_TYPE.IRIS}
+      ${true}  | ${Keychain.BIOMETRY_TYPE.FACE}
     `('should return $expected when type is $bioType', async ({expected, bioType}) => {
       Platform.select = jest.fn((objs) => objs['android'])
       mockedBioType = bioType
