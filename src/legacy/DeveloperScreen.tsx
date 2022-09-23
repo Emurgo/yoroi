@@ -47,9 +47,7 @@ export const DeveloperScreen = () => {
   const {resetToWalletSelection} = useWalletNavigation()
   const {createWallet, isLoading} = useCreateWallet({
     onSuccess: async () => {
-      resetToWalletSelection({
-        reopen: true,
-      })
+      resetToWalletSelection()
     },
   })
   const [wallet] = useSelectedWalletContext()
@@ -164,9 +162,7 @@ export const DeveloperScreen = () => {
                   })
                   .then(() => {
                     Alert.alert('Success', 'Addresses updated')
-                    resetToWalletSelection({
-                      reopen: true,
-                    })
+                    resetToWalletSelection()
                   })
                   .catch((e) => {
                     Alert.alert('Error', e)

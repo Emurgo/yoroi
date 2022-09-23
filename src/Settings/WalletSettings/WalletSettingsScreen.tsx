@@ -259,7 +259,7 @@ const useResync = (options?: UseMutationOptions<void, Error>) => {
     resyncWithConfirmation: async () => {
       const selection = await showConfirmationDialog(confirmationMessages.resync, intl)
       if (selection === DIALOG_BUTTONS.YES) {
-        resetToWalletSelection({reopen: true})
+        resetToWalletSelection()
         setTimeout(() => {
           mutation.mutate()
         }, 200) // wait for navigation to finish
