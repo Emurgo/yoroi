@@ -5,11 +5,12 @@ import {InteractionManager, ScrollView, StyleSheet, Switch} from 'react-native'
 import {useMutation, UseMutationOptions} from 'react-query'
 import {useDispatch, useSelector} from 'react-redux'
 
+import {useAuth} from '../../auth/AuthProvider'
 import {StatusBar} from '../../components'
 import {useCloseWallet, useEasyConfirmationEnabled, useWalletName} from '../../hooks'
 import {confirmationMessages} from '../../i18n/global-messages'
 import {clearAccountState} from '../../legacy/account'
-import {DIALOG_BUTTONS, showConfirmationDialog, signout} from '../../legacy/actions'
+import {DIALOG_BUTTONS, showConfirmationDialog} from '../../legacy/actions'
 import {isByron, isHaskellShelley} from '../../legacy/config'
 import {getNetworkConfigById} from '../../legacy/networks'
 import {isSystemAuthEnabledSelector} from '../../legacy/selectors'
@@ -210,6 +211,7 @@ const getWalletType = (implementationId: WalletImplementationId): MessageDescrip
 }
 
 const useLogout = (options?: UseMutationOptions<void, Error>) => {
+  const {logout} = useAuth()
   const intl = useIntl()
   const dispatch = useDispatch()
   const setSelectedWallet = useSetSelectedWallet()
@@ -226,7 +228,7 @@ const useLogout = (options?: UseMutationOptions<void, Error>) => {
 
   return {
     logout: () => {
-      dispatch(signout()) // triggers navigation to login
+      logout() // triggers navigation to login
       InteractionManager.runAfterInteractions(() => {
         closeWallet()
       })
@@ -234,7 +236,7 @@ const useLogout = (options?: UseMutationOptions<void, Error>) => {
     logoutWithConfirmation: async () => {
       const selection = await showConfirmationDialog(confirmationMessages.logout, intl)
       if (selection === DIALOG_BUTTONS.YES) {
-        dispatch(signout()) // triggers navigation to login
+        logout() // triggers navigation to login
         InteractionManager.runAfterInteractions(() => {
           closeWallet()
         })

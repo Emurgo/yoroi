@@ -17,7 +17,6 @@ import {
   formatTokenInteger,
   getAssetDenominationOrId,
 } from '../../legacy/format'
-import {TransactionInfo} from '../../legacy/HistoryTransaction'
 import {
   availableAssetsSelector,
   externalAddressIndexSelector,
@@ -28,8 +27,14 @@ import {isEmptyString} from '../../legacy/utils'
 import {TxHistoryRouteNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
-import {DefaultAsset, IOData, TransactionAssurance, TransactionDirection} from '../../types'
 import {MultiToken} from '../../yoroi-wallets'
+import {
+  DefaultAsset,
+  IOData,
+  TransactionAssurance,
+  TransactionDirection,
+  TransactionInfo,
+} from '../../yoroi-wallets/types'
 
 const filtersTxIO = (address: string) => {
   const isMyReceive = (extAddrIdx) => extAddrIdx[address] != null
@@ -98,18 +103,18 @@ export const TxHistoryListItem = ({transaction}: Props) => {
 
   return (
     <View removeClippedSubviews style={styles.wrapper}>
-      <TouchableOpacity onPress={showDetails} activeOpacity={0.5}>
+      <TouchableOpacity onPress={showDetails} activeOpacity={0.5} testID="txHistoryListItem">
         <View style={[styles.item, {backgroundColor: rootBgColor}]}>
           <View style={styles.iconRoot}>
             <Icon.Direction transaction={transaction} />
           </View>
           <View style={styles.transactionRoot}>
             <View style={styles.row}>
-              <Text small secondary={isPending}>
+              <Text small secondary={isPending} testID="transactionDirection">
                 {strings.direction(transaction.direction as any)}
               </Text>
               {transaction.amount.length > 0 ? (
-                <View style={styles.amount}>
+                <View style={styles.amount} testID="transactionAmount">
                   <Text style={amountStyle} secondary={isPending}>
                     {formatTokenInteger(amountToDisplay, defaultAsset)}
                   </Text>
@@ -124,14 +129,14 @@ export const TxHistoryListItem = ({transaction}: Props) => {
             </View>
             {totalAssets !== 0 && (
               <View style={styles.row}>
-                <Text secondary small>
+                <Text secondary small testID="submittedAtText">
                   {submittedAt}
                 </Text>
-                <Text>{strings.assets(totalAssets)}</Text>
+                <Text testID="totalAssetsText">{strings.assets(totalAssets)}</Text>
               </View>
             )}
             <View style={styles.last}>
-              <Text secondary small>
+              <Text secondary small testID="submittedAtText">
                 {totalAssets === 0 && submittedAt}
               </Text>
             </View>

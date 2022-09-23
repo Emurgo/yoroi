@@ -7,8 +7,8 @@ import {Provider} from 'react-redux'
 import {mockWallet, poolInfoAndHistory, stakePoolId} from '../../storybook'
 import getConfiguredStore from '../legacy/configureStore'
 import {SelectedWalletProvider} from '../SelectedWallet'
-import {StakePoolInfosAndHistories} from '../types'
 import {YoroiWallet} from '../yoroi-wallets'
+import {StakePoolInfosAndHistories} from '../yoroi-wallets/types'
 import {Dashboard} from './Dashboard'
 
 const mockedAccountState = {

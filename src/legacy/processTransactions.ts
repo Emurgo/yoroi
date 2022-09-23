@@ -3,12 +3,19 @@ import {BigNumber} from 'bignumber.js'
 
 import {Logger} from '../legacy/logging'
 import {getDefaultNetworkTokenEntry, MultiToken, strToDefaultMultiAsset} from '../yoroi-wallets'
+import {Token} from '../yoroi-wallets/types'
+import {
+  BaseAsset,
+  NetworkId,
+  Transaction,
+  TRANSACTION_DIRECTION,
+  TRANSACTION_STATUS,
+  TRANSACTION_TYPE,
+  TransactionInfo,
+} from '../yoroi-wallets/types/other'
+import {CERTIFICATE_KIND} from '../yoroi-wallets/types/other'
 import assert from './assert'
 import {CONFIG} from './config'
-import type {BaseAsset, Token, Transaction, TransactionInfo} from './HistoryTransaction'
-import {TRANSACTION_DIRECTION, TRANSACTION_STATUS, TRANSACTION_TYPE} from './HistoryTransaction'
-import type {NetworkId} from './types'
-import {CERTIFICATE_KIND} from './types'
 import {multiTokenFromRemote} from './utils'
 type TransactionAssurance = 'PENDING' | 'FAILED' | 'LOW' | 'MEDIUM' | 'HIGH'
 export const getTransactionAssurance = (

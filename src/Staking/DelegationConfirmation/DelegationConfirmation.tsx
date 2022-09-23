@@ -14,8 +14,7 @@ import {useParams, useWalletNavigation} from '../../navigation'
 import {StakingCenterRoutes} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
-import {DefaultAsset} from '../../types'
-import {Quantity} from '../../yoroi-wallets/types'
+import {DefaultAsset, Quantity} from '../../yoroi-wallets/types'
 import {Amounts, Entries, Quantities} from '../../yoroi-wallets/utils'
 
 type Params = StakingCenterRoutes['delegation-confirmation']
@@ -66,10 +65,10 @@ export const DelegationConfirmation = ({mockDefaultAsset}: {mockDefaultAsset?: D
 
         <View style={styles.itemBlock}>
           <Text style={styles.itemTitle}>{strings.stakePoolHash}</Text>
-          <Text>{poolHash}</Text>
+          <Text testID="stakePoolHashText">{poolHash}</Text>
         </View>
 
-        <View style={styles.input}>
+        <View style={styles.input} testID="stakingAmount">
           <Text small style={styles.fees}>
             {`+ ${formatTokenAmount(new BigNumber(yoroiUnsignedTx.fee['']), defaultAsset)} ${strings.ofFees}`}
           </Text>
@@ -84,7 +83,7 @@ export const DelegationConfirmation = ({mockDefaultAsset}: {mockDefaultAsset?: D
         </View>
 
         {!wallet.isEasyConfirmationEnabled && !wallet.isHW && (
-          <View style={styles.input}>
+          <View style={styles.input} testID="spendingPassword">
             <ValidatedTextInput secureTextEntry value={password} label={strings.password} onChangeText={setPassword} />
           </View>
         )}

@@ -231,7 +231,7 @@ export const SendScreen = () => {
           }}
         >
           <TextInput
-            right={<Image source={require('../../assets/img/arrow_down_fill.png')} />}
+            right={<Image source={require('../../assets/img/arrow_down_fill.png')} testID="selectAssetButton" />}
             editable={false}
             label={strings.asset}
             value={`${assetDenomination}: ${formatTokenAmount(new BigNumber(selectedAssetAvailableAmount), tokenInfo)}`}

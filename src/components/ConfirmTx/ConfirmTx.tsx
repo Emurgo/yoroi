@@ -4,7 +4,6 @@ import {delay} from 'bluebird'
 import React, {useEffect, useState} from 'react'
 import {useIntl} from 'react-intl'
 import {Platform, StyleSheet, View} from 'react-native'
-import {useSelector} from 'react-redux'
 
 import {useSubmitTx} from '../../hooks'
 import {confirmationMessages, errorMessages, txLabels} from '../../i18n/global-messages'
@@ -15,7 +14,6 @@ import {ensureKeysValidity} from '../../legacy/deviceSettings'
 import {WrongPassword} from '../../legacy/errors'
 import KeyStore from '../../legacy/KeyStore'
 import {DeviceId, DeviceObj} from '../../legacy/ledgerUtils'
-import {hwDeviceInfoSelector} from '../../legacy/selectors'
 import {isEmptyString} from '../../legacy/utils'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
@@ -44,7 +42,7 @@ type Props = {
   biometricInstructions?: Array<string>
 }
 
-export const ConfirmTx: React.FC<Props> = ({
+export const ConfirmTx = ({
   yoroiUnsignedTx,
   onError,
   onSuccess,
@@ -57,12 +55,10 @@ export const ConfirmTx: React.FC<Props> = ({
   autoSignIfEasyConfirmation,
   chooseTransportOnConfirmation,
   biometricInstructions,
-}) => {
+}: Props) => {
   const intl = useIntl()
   const strings = useStrings()
   const navigation = useNavigation()
-
-  const hwDeviceInfo = useSelector(hwDeviceInfoSelector)
 
   const wallet = useSelectedWallet()
 
@@ -97,17 +93,17 @@ export const ConfirmTx: React.FC<Props> = ({
   }
 
   const onConfirmationChooseTransport = (useUSB: boolean) => {
-    if (!hwDeviceInfo) throw new Error('No device info')
+    if (!wallet.hwDeviceInfo) throw new Error('No device info')
     setUseUSB(useUSB)
     setDialogStep(DialogStep.LedgerConnect)
   }
 
   const onMountChooseTransport = (useUSB: boolean) => {
-    if (!hwDeviceInfo) throw new Error('No device info')
+    if (!wallet.hwDeviceInfo) throw new Error('No device info')
     setUseUSB(useUSB)
     if (
-      (useUSB && hwDeviceInfo.hwFeatures.deviceObj == null) ||
-      (!useUSB && hwDeviceInfo.hwFeatures.deviceId == null)
+      (useUSB && wallet.hwDeviceInfo.hwFeatures.deviceObj == null) ||
+      (!useUSB && wallet.hwDeviceInfo.hwFeatures.deviceId == null)
     ) {
       setDialogStep(DialogStep.LedgerConnect)
     } else {

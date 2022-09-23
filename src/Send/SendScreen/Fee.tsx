@@ -17,7 +17,7 @@ export const Fee = ({fee}: {fee: Quantity | null}) => {
   const value = fee !== null ? formatTokenWithSymbol(new BigNumber(fee), defaultAsset) : strings.feeNotAvailable
 
   return (
-    <Text style={styles.info}>
+    <Text style={styles.info} testID="feesText">
       {strings.feeLabel}
       {': '}
       {value}

@@ -2,7 +2,7 @@
 import {BigNumber} from 'bignumber.js'
 
 import {getDefaultAssetByNetworkId} from '../../legacy/config'
-import type {NetworkId} from '../../legacy/types'
+import type {NetworkId} from '../types/other'
 export type TokenLookupKey = {
   identifier: string
 

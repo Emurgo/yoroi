@@ -5,15 +5,13 @@ import {createSelector} from 'reselect'
 
 import type {State} from '../legacy/state'
 import {getDefaultNetworkTokenEntry, MultiToken} from '../yoroi-wallets'
+import {DefaultAsset, Token} from '../yoroi-wallets/types'
+import {RawUtxo, Transaction, TRANSACTION_DIRECTION, TransactionInfo} from '../yoroi-wallets/types/other'
+import {NetworkId, TRANSACTION_STATUS} from '../yoroi-wallets/types/other'
+import {NETWORK_REGISTRY} from '../yoroi-wallets/types/other'
 import {getCardanoDefaultAsset, getDefaultAssets} from './config'
 import {ObjectValues} from './flow'
-import type {DefaultAsset, Token, Transaction, TransactionInfo} from './HistoryTransaction'
-import {TRANSACTION_DIRECTION, TRANSACTION_STATUS} from './HistoryTransaction'
-import type {HWDeviceInfo} from './ledgerUtils'
 import {processTxHistoryData} from './processTransactions'
-import type {NetworkId} from './types'
-import type {RawUtxo} from './types'
-import {NETWORK_REGISTRY} from './types'
 
 export const transactionsInfoSelector: (state: State) => Record<string, TransactionInfo> = createSelector(
   (state: State) => state.wallet,
@@ -80,7 +78,6 @@ export const externalAddressIndexSelector: (state: State) => Record<string, numb
   (addresses) => fromPairs(addresses.map((addr, i) => [addr, i])),
 )
 export const isUsedAddressIndexSelector = (state: State) => state.wallet.isUsedAddressIndex
-export const hwDeviceInfoSelector = (state: State): HWDeviceInfo | null | undefined => state.wallet.hwDeviceInfo
 
 export const tokenBalanceSelector: (state: State) => MultiToken = createSelector(
   transactionsInfoSelector,
@@ -145,7 +142,6 @@ export const hasPendingOutgoingTransactionSelector: (state: State) => boolean = 
     ),
 )
 export const isAppInitializedSelector = (state: State): boolean => state.isAppInitialized
-export const isAuthenticatedSelector = (state: State): boolean => state.isAuthenticated
 export const installationIdSelector = (state: State) => state.appSettings.installationId
 export const isMaintenanceSelector = (state: State): boolean => state.serverStatus.isMaintenance
 

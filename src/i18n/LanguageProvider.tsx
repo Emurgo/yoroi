@@ -10,7 +10,7 @@ import {supportedLanguages} from './languages'
 import translations from './translations'
 
 const LanguageContext = React.createContext<undefined | LanguageContext>(undefined)
-export const LanguageProvider: React.FC = ({children}) => {
+export const LanguageProvider = ({children}: {children: React.ReactNode}) => {
   const languageCode = useLanguageCode()
   const selectLanguageCode = useSaveLanguageCode()
 

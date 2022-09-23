@@ -1,11 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import BigNumber from 'bignumber.js'
 
+import KeyStore from '../../src/legacy/KeyStore'
 import {PRIMARY_ASSET_CONSTANTS} from '../../src/legacy/networks'
 import {WalletMeta} from '../../src/legacy/state'
-import {RemotePoolMetaSuccess, StakePoolInfosAndHistories, TokenEntry, TokenInfo} from '../../src/types'
-import {YoroiWallet} from '../../src/yoroi-wallets'
-import {YoroiAmounts, YoroiSignedTx, YoroiUnsignedTx} from '../../src/yoroi-wallets/types'
+import {TokenEntry, YoroiWallet} from '../../src/yoroi-wallets'
+import {
+  RemotePoolMetaSuccess,
+  StakePoolInfosAndHistories,
+  TokenInfo,
+  YoroiAmounts,
+  YoroiSignedTx,
+  YoroiUnsignedTx,
+} from '../../src/yoroi-wallets/types'
 
 export const mockedWalletMeta: WalletMeta = {
   id: 'wallet-id',

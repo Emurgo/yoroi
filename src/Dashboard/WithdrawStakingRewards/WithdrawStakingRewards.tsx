@@ -51,10 +51,13 @@ export const WithdrawStakingRewards = ({wallet, storage, onSuccess, onCancel}: P
   )
 }
 
-export const WithdrawalTxForm: React.FC<{
+export const WithdrawalTxForm = ({
+  wallet,
+  onDone,
+}: {
   wallet: YoroiWallet
   onDone: (withdrawalTx: YoroiUnsignedTx) => void
-}> = ({wallet, onDone}) => {
+}) => {
   const strings = useStrings()
   const [deregister, setDeregister] = React.useState<boolean>()
   const utxos = useSelector(utxosSelector) || []
@@ -81,11 +84,13 @@ export const WithdrawalTxForm: React.FC<{
         disabled: isLoading,
         label: strings.keepButton,
         onPress: () => setDeregister(false),
+        testID: 'keepRegisteredButton',
       }}
       secondaryButton={{
         disabled: isLoading,
         label: strings.deregisterButton,
         onPress: () => setDeregister(true),
+        testID: 'deregisterButton',
       }}
     >
       <Markdown style={styles.paragraph}>{strings.explanation1}</Markdown>
@@ -97,7 +102,7 @@ export const WithdrawalTxForm: React.FC<{
   )
 }
 
-const Route: React.FC<{active: boolean}> = ({active, children}) => <>{active ? children : null}</>
+const Route = ({active, children}: {active: boolean; children: React.ReactNode}) => <>{active ? children : null}</>
 
 const styles = StyleSheet.create({
   paragraph: {

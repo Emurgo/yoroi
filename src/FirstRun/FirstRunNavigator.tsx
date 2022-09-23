@@ -3,8 +3,9 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {useDispatch} from 'react-redux'
 
+import {useAuth} from '../auth/AuthProvider'
 import {CreatePinScreen} from '../auth/CreatePinScreen/CreatePinScreen'
-import {reloadAppSettings, setSystemAuth, signin} from '../legacy/actions'
+import {reloadAppSettings, setSystemAuth} from '../legacy/actions'
 import {defaultStackNavigationOptions, FirstRunRoutes} from '../navigation'
 import {LanguagePickerScreen} from './LanguagePickerScreen'
 import {TermsOfServiceScreen} from './TermsOfServiceScreen'
@@ -46,13 +47,14 @@ export const FirstRunNavigator = () => {
 
 const CreatePinScreenWrapper = () => {
   const dispatch = useDispatch()
+  const {login} = useAuth()
 
   return (
     <CreatePinScreen
       onDone={async () => {
         await dispatch(reloadAppSettings())
         await dispatch(setSystemAuth(false))
-        dispatch(signin())
+        login()
       }}
     />
   )

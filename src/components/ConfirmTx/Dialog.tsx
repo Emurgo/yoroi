@@ -40,7 +40,7 @@ type DialogSimpleProps = BaseDialogProps & {
   step: Step.Closed | Step.Submitting | Step.Error
 }
 
-export const Dialog: React.FC<DialogSimpleProps | DialogWithLedgerProps> = (props) => {
+export const Dialog = (props: DialogSimpleProps | DialogWithLedgerProps) => {
   if (props.process === 'withLedger') {
     return <DialogWithLedger {...props} />
   } else {

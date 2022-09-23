@@ -13,10 +13,7 @@ import {YoroiWallet} from '../../../yoroi-wallets'
 import {YoroiStaking, YoroiUnsignedTx} from '../../../yoroi-wallets/types'
 import {Amounts, Entries} from '../../../yoroi-wallets/utils'
 
-export const TransferSummary: React.FC<{
-  wallet: YoroiWallet
-  unsignedTx: YoroiUnsignedTx
-}> = ({wallet, unsignedTx}) => {
+export const TransferSummary = ({wallet, unsignedTx}: {wallet: YoroiWallet; unsignedTx: YoroiUnsignedTx}) => {
   const strings = useStrings()
   const tokenInfo = useTokenInfo({wallet, tokenId: ''})
   const {deregistrations, withdrawals, refundAmount, feeAmount, totalAmount} = withdrawalInfo(unsignedTx)
@@ -25,17 +22,23 @@ export const TransferSummary: React.FC<{
     <>
       <Item>
         <Text>{strings.balanceLabel}</Text>
-        <Text style={styles.balanceAmount}>{formatTokenWithText(new BigNumber(refundAmount.quantity), tokenInfo)}</Text>
+        <Text style={styles.balanceAmount} testID="recoveredBalanceText">
+          {formatTokenWithText(new BigNumber(refundAmount.quantity), tokenInfo)}
+        </Text>
       </Item>
 
       <Item>
         <Text>{strings.fees}</Text>
-        <Text style={styles.balanceAmount}>{formatTokenWithText(new BigNumber(feeAmount.quantity), tokenInfo)}</Text>
+        <Text style={styles.balanceAmount} testID="feeAmountText">
+          {formatTokenWithText(new BigNumber(feeAmount.quantity), tokenInfo)}
+        </Text>
       </Item>
 
       <Item>
         <Text>{strings.finalBalanceLabel}</Text>
-        <Text style={styles.balanceAmount}>{formatTokenWithText(new BigNumber(totalAmount.quantity), tokenInfo)}</Text>
+        <Text style={styles.balanceAmount} testID="totalAmountText">
+          {formatTokenWithText(new BigNumber(totalAmount.quantity), tokenInfo)}
+        </Text>
       </Item>
 
       {withdrawals && <Withdrawals wallet={wallet} withdrawals={withdrawals} />}
@@ -63,9 +66,12 @@ const withdrawalInfo = (unsignedTx: YoroiUnsignedTx) => {
   }
 }
 
-const Withdrawals: React.FC<{wallet: YoroiWallet; withdrawals: NonNullable<YoroiStaking['withdrawals']>}> = ({
+const Withdrawals = ({
   wallet,
   withdrawals,
+}: {
+  wallet: YoroiWallet
+  withdrawals: NonNullable<YoroiStaking['withdrawals']>
 }) => {
   const strings = useStrings()
 
@@ -90,10 +96,13 @@ const Withdrawals: React.FC<{wallet: YoroiWallet; withdrawals: NonNullable<Yoroi
   )
 }
 
-const Deregistrations: React.FC<{
+const Deregistrations = ({
+  wallet,
+  deregistrations,
+}: {
   wallet: YoroiWallet
   deregistrations: NonNullable<YoroiStaking['deregistrations']>
-}> = ({wallet, deregistrations}) => {
+}) => {
   const strings = useStrings()
   const tokenInfo = useTokenInfo({wallet, tokenId: ''})
   const refundAmounts = Entries.toAmounts(deregistrations)

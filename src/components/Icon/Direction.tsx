@@ -1,8 +1,7 @@
 import React from 'react'
 import {View} from 'react-native'
 
-import {TransactionInfo} from '../../legacy/HistoryTransaction'
-import {TransactionDirection} from '../../types'
+import {TransactionDirection, TransactionInfo} from '../../yoroi-wallets/types'
 import {Received} from '../Icon/Received'
 import {Send} from '../Icon/Send'
 import {Transaction} from '../Icon/Transaction'

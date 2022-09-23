@@ -3,7 +3,7 @@ import 'react-intl'
 import 'redux'
 
 import type {IntlShape} from 'react-intl'
-import {Alert, AppState, Keyboard, Platform} from 'react-native'
+import {Alert, Keyboard, Platform} from 'react-native'
 import RNBootSplash from 'react-native-bootsplash'
 import type {Dispatch} from 'redux'
 import uuid from 'uuid'
@@ -16,7 +16,6 @@ import * as api from './api'
 import type {AppSettingsKey} from './appSettings'
 import {APP_SETTINGS_KEYS, AppSettingsError, readAppSettings, removeAppSettings, writeAppSettings} from './appSettings'
 import assert from './assert'
-import {backgroundLockListener} from './backgroundLockHelper'
 import {CONFIG, isNightly} from './config'
 import crashReporting from './crashReporting'
 import {encryptCustomPin} from './customPin'
@@ -131,32 +130,6 @@ const initInstallationId =
     return newInstallationId
   }
 
-// note(v-almonacid): authentication occurs after entering pin or biometrics,
-// it does not mean we opened a wallet
-export const signin = () => (dispatch: Dispatch<any>) => {
-  dispatch({
-    path: ['isAuthenticated'],
-    payload: true,
-    type: 'SIGN_IN',
-    reducer: (state: State, payload) => payload,
-  })
-}
-export const signout = () => (dispatch: Dispatch<any>) => {
-  dispatch({
-    path: ['isAuthenticated'],
-    payload: false,
-    type: 'SIGN_OUT',
-    reducer: (state: State, payload) => payload,
-  })
-}
-
-export const logout = () => async (dispatch: Dispatch<any>) => {
-  await walletManager.closeWallet()
-  dispatch(clearUTXOs())
-  dispatch(clearAccountState())
-  dispatch(signout())
-}
-
 const _setServerStatus = (serverStatus: ServerStatus) => (dispatch: Dispatch<any>) =>
   dispatch({
     path: ['serverStatus'],
@@ -246,7 +219,7 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
   })
 }
 
-export const checkBiometricStatus = () => async (dispatch: Dispatch<any>, getState: any) => {
+export const checkBiometricStatus = (logout: () => void) => async (dispatch: Dispatch<any>, getState: any) => {
   const bioShouldBeDisabled =
     Platform.OS === 'android' && CONFIG.ANDROID_BIO_AUTH_EXCLUDED_SDK.includes(Platform.Version)
   if (bioShouldBeDisabled) return
@@ -267,7 +240,10 @@ export const checkBiometricStatus = () => async (dispatch: Dispatch<any>, getSta
     } catch (_e) {
       Logger.debug('Ignore if no wallet is selected')
     }
-    await dispatch(logout())
+    await walletManager.closeWallet()
+    dispatch(clearUTXOs())
+    dispatch(clearAccountState())
+    logout()
   }
 }
 
@@ -298,13 +274,6 @@ export const setupHooks = () => (dispatch: Dispatch<any>) => {
   walletManager.subscribeServerSync((status) => dispatch(_setServerStatus(status)))
   Logger.debug('setting up app lock')
 
-  const onTimeoutAction = () => {
-    dispatch(logout())
-  }
-
-  AppState.addEventListener('change', () => {
-    backgroundLockListener(onTimeoutAction)
-  })
   Logger.debug('setting up keyboard manager')
   Keyboard.addListener('keyboardDidShow', () => dispatch(setIsKeyboardOpen(true)))
   Keyboard.addListener('keyboardDidHide', () => dispatch(setIsKeyboardOpen(false)))

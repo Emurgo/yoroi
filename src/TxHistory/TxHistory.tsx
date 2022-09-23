@@ -78,6 +78,7 @@ export const TxHistory = () => {
             }}
             label={strings.transactions}
             active={activeTab === 'transactions'}
+            testID="transactionsTabButton"
           />
           <Tab //
             onPress={() => {
@@ -86,6 +87,7 @@ export const TxHistory = () => {
             }}
             label={strings.assets}
             active={activeTab === 'assets'}
+            testID="assetsTabButton"
           />
         </Tabs>
 
@@ -130,9 +132,19 @@ export const TxHistory = () => {
   )
 }
 
-const Tabs: React.FC = ({children}) => <View style={styles.tabs}>{children}</View>
-const Tab = ({onPress, active, label}: {onPress: () => void; active: boolean; label: string}) => (
-  <TouchableOpacity style={styles.tab} onPress={onPress}>
+const Tabs = ({children}: {children: React.ReactNode}) => <View style={styles.tabs}>{children}</View>
+const Tab = ({
+  onPress,
+  active,
+  label,
+  testID,
+}: {
+  onPress: () => void
+  active: boolean
+  label: string
+  testID: string
+}) => (
+  <TouchableOpacity style={styles.tab} onPress={onPress} testID={testID}>
     <View style={styles.centered}>
       <Text style={[styles.tabText, active ? styles.tabTextActive : styles.tabTextInactive]}>{label}</Text>
     </View>
@@ -140,8 +152,8 @@ const Tab = ({onPress, active, label}: {onPress: () => void; active: boolean; la
     {active && <View style={styles.indicator} />}
   </TouchableOpacity>
 )
-const TabPanels: React.FC = ({children}) => <View style={styles.tabNavigatorRoot}>{children}</View>
-const TabPanel: React.FC<{active: boolean}> = ({active, children}) => <>{active ? children : null}</>
+const TabPanels = ({children}: {children: React.ReactNode}) => <View style={styles.tabNavigatorRoot}>{children}</View>
+const TabPanel = ({active, children}: {active: boolean; children: React.ReactNode}) => <>{active ? children : null}</>
 
 const useStrings = () => {
   const intl = useIntl()

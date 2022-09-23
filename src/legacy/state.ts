@@ -2,9 +2,9 @@
 import {BigNumber} from 'bignumber.js'
 
 import type {CardanoTypes, ServerStatus, WalletInterface} from '../yoroi-wallets'
+import type {NetworkId, RawUtxo, WalletImplementationId, YoroiProvider} from '../yoroi-wallets/types/other'
+import {NETWORK_REGISTRY} from '../yoroi-wallets/types/other'
 import {mockReduxWallet} from './mockWallet'
-import type {NetworkId, RawUtxo, WalletImplementationId, YoroiProvider} from './types'
-import {NETWORK_REGISTRY} from './types'
 
 export type WalletMeta = {
   id: string
@@ -23,7 +23,6 @@ export type ReduxWallet = {
   networkId: WalletInterface['networkId']
   walletImplementationId: WalletInterface['walletImplementationId']
   isHW: WalletInterface['isHW']
-  hwDeviceInfo: WalletInterface['hwDeviceInfo']
   isReadOnly: WalletInterface['isReadOnly']
   transactions: WalletInterface['transactions']
   internalAddresses: WalletInterface['internalAddresses']
@@ -59,7 +58,6 @@ export type State = {
     poolOperator: string | null
   }
   isAppInitialized: boolean
-  isAuthenticated: boolean
   isKeyboardOpen: boolean
   appSettings: {
     acceptedTos: boolean
@@ -86,7 +84,6 @@ export const getInitialState = (): State => ({
     walletImplementationId: '',
     provider: null,
     isHW: false,
-    hwDeviceInfo: null,
     isReadOnly: false,
     transactions: {},
     internalAddresses: [],
@@ -119,7 +116,6 @@ export const getInitialState = (): State => ({
     poolOperator: null,
   },
   isAppInitialized: false,
-  isAuthenticated: false,
   isKeyboardOpen: false,
   appSettings: {
     acceptedTos: false,

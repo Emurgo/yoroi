@@ -9,8 +9,8 @@ import {Text} from '../../components'
 import features from '../../features'
 import {actionMessages} from '../../i18n/global-messages'
 import {formatDateRelative} from '../../legacy/format'
-import {TransactionInfo} from '../../legacy/HistoryTransaction'
 import {transactionsInfoSelector} from '../../legacy/selectors'
+import {TransactionInfo} from '../../yoroi-wallets/types'
 import {useOnScroll} from '../useOnScroll'
 import {ActionsBanner} from './ActionsBanner'
 import {EmptyHistory} from './EmptyHistory'
@@ -52,6 +52,7 @@ export const TxHistoryList = ({onScrollUp, onScrollDown, ...props}: Props) => {
         nestedScrollEnabled={true}
         maxToRenderPerBatch={20}
         initialNumToRender={20}
+        testID="txHistoryList"
       />
     </View>
   )
@@ -87,7 +88,7 @@ const DayHeader = ({ts}: DayHeaderProps) => {
 
   return (
     <View style={styles.dayHeaderRoot}>
-      <Text>{formatDateRelative(ts, intl)}</Text>
+      <Text testID="dayHeaderText">{formatDateRelative(ts, intl)}</Text>
     </View>
   )
 }

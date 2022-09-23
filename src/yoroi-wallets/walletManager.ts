@@ -15,18 +15,6 @@ import type {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {Logger} from '../legacy/logging'
 import type {WalletMeta} from '../legacy/state'
 import storage from '../legacy/storage'
-import type {EncryptionMethod} from '../legacy/types'
-import {
-  FundInfoResponse,
-  NETWORK_REGISTRY,
-  PoolInfoRequest,
-  RawUtxo,
-  TokenInfoRequest,
-  TokenInfoResponse,
-  TxBodiesRequest,
-  WALLET_IMPLEMENTATION_REGISTRY,
-} from '../legacy/types'
-import {StakePoolInfosAndHistories} from '../types'
 import {
   isYoroiWallet,
   NetworkId,
@@ -37,6 +25,18 @@ import {
   YoroiProvider,
   YoroiWallet,
 } from './cardano'
+import {StakePoolInfosAndHistories} from './types'
+import type {EncryptionMethod} from './types/other'
+import {
+  FundInfoResponse,
+  NETWORK_REGISTRY,
+  PoolInfoRequest,
+  RawUtxo,
+  TokenInfoRequest,
+  TokenInfoResponse,
+  TxBodiesRequest,
+  WALLET_IMPLEMENTATION_REGISTRY,
+} from './types/other'
 
 export class WalletClosed extends ExtendableError {}
 export class SystemAuthDisabled extends ExtendableError {}
@@ -242,11 +242,6 @@ export class WalletManager {
   get isHW() {
     if (!this._wallet) return false
     return this._wallet.isHW
-  }
-
-  get hwDeviceInfo() {
-    if (!this._wallet) return null
-    return this._wallet.hwDeviceInfo
   }
 
   get isReadOnly() {

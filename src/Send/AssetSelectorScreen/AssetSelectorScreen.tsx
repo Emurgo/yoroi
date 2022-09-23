@@ -17,9 +17,8 @@ import {decodeHexAscii, formatTokenAmount, getAssetDenominationOrId, getTokenFin
 import {TxHistoryRouteNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
-import {Token} from '../../types'
 import {YoroiWallet} from '../../yoroi-wallets'
-import {Quantity, TokenId} from '../../yoroi-wallets/types'
+import {Quantity, Token, TokenId} from '../../yoroi-wallets/types'
 import {Quantities} from '../../yoroi-wallets/utils'
 import {useSend} from '../Context/SendContext'
 
@@ -77,6 +76,7 @@ export const AssetSelectorScreen = () => {
         bounces={false}
         contentContainerStyle={{paddingHorizontal: 16}}
         keyExtractor={([tokenId]) => tokenId}
+        testID="assetsList"
       />
 
       <Actions>
@@ -87,6 +87,7 @@ export const AssetSelectorScreen = () => {
             allTokensSelected()
             navigation.navigate('send')
           }}
+          testID="sendAllAssetsButton"
         />
       </Actions>
     </SafeAreaView>
@@ -107,22 +108,27 @@ const AssetSelectorItem = ({wallet, tokenId, quantity, onSelect, matcher}: Asset
   if (!matches(tokenInfo, matcher)) return null
 
   return (
-    <TouchableOpacity style={{paddingVertical: 16}} onPress={onSelect}>
+    <TouchableOpacity style={{paddingVertical: 16}} onPress={onSelect} testID="assetSelectorItem">
       <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
         <View style={{padding: 4}}>
           <Icon source={tokenInfo.isDefault ? AdaImage : NoImage} />
         </View>
 
         <View style={{flex: 1, padding: 4}}>
-          <Text numberOfLines={1} ellipsizeMode="middle" style={{color: COLORS.BLUE_LIGHTER}}>
+          <Text numberOfLines={1} ellipsizeMode="middle" style={{color: COLORS.BLUE_LIGHTER}} testID="tokenInfoText">
             {getAssetDenominationOrId(tokenInfo)}
           </Text>
-          <Text numberOfLines={1} ellipsizeMode="middle" style={{color: COLORS.TEXT_INPUT}}>
+          <Text
+            numberOfLines={1}
+            ellipsizeMode="middle"
+            style={{color: COLORS.TEXT_INPUT}}
+            testID="tokenFingerprintText"
+          >
             {tokenInfo.isDefault ? '' : getTokenFingerprint(tokenInfo)}
           </Text>
         </View>
 
-        <View style={{flex: 1, alignItems: 'flex-end', padding: 4}}>
+        <View style={{flex: 1, alignItems: 'flex-end', padding: 4}} testID="tokenAmountText">
           <Text style={{color: COLORS.DARK_TEXT}}>{formatTokenAmount(new BigNumber(quantity), tokenInfo)}</Text>
         </View>
       </View>

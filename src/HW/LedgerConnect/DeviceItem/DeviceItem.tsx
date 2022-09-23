@@ -2,7 +2,7 @@ import React from 'react'
 import {ActivityIndicator, StyleSheet, Text, TouchableOpacity} from 'react-native'
 
 import {COLORS} from '../../../theme'
-import {Device} from '../../../types'
+import {Device} from '../../../yoroi-wallets/types'
 
 type Props = {
   device: Device

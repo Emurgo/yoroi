@@ -79,6 +79,7 @@ function loadStories() {
 	require('../src/auth/CreatePinScreen/CreatePinScreen.stories');
 	require('../src/auth/PinInput/PinInput.stories');
 	require('../src/auth/PinLoginScreen/PinLoginScreen.stories');
+	require('../src/auth/backgroundTimeout.stories');
 	require('../src/components/Boundary/Boundary.stories');
 	require('../src/components/Button/Button.stories');
 	require('../src/components/Checkbox/Checkbox.stories');
@@ -177,6 +178,7 @@ const stories = [
 	'../src/auth/CreatePinScreen/CreatePinScreen.stories',
 	'../src/auth/PinInput/PinInput.stories',
 	'../src/auth/PinLoginScreen/PinLoginScreen.stories',
+	'../src/auth/backgroundTimeout.stories',
 	'../src/components/Boundary/Boundary.stories',
 	'../src/components/Button/Button.stories',
 	'../src/components/Checkbox/Checkbox.stories',

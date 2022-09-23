@@ -1,4 +1,4 @@
-import {CardanoTypes} from './cardano'
+import {CardanoTypes} from '../cardano'
 
 export type YoroiUnsignedTx = YoroiTxInfo & {
   unsignedTx: CardanoTypes.UnsignedTx

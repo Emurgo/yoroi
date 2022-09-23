@@ -7,11 +7,12 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useMutation, UseMutationOptions, useQueryClient} from 'react-query'
 import {useDispatch} from 'react-redux'
 
+import {useAuth} from '../../auth/AuthProvider'
 import {Button, Icon, PleaseWaitModal, StatusBar} from '../../components'
 import {useCloseWallet, useWalletMetas} from '../../hooks'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
 import {clearAccountState} from '../../legacy/account'
-import {showErrorDialog, signout} from '../../legacy/actions'
+import {showErrorDialog} from '../../legacy/actions'
 import {CONFIG, isNightly} from '../../legacy/config'
 import {InvalidState} from '../../legacy/errors'
 import {isJormungandr} from '../../legacy/networks'
@@ -36,6 +37,7 @@ export const WalletSelectionScreen = () => {
   const intl = useIntl()
   const queryClient = useQueryClient()
   const dispatch = useDispatch()
+  const {logout} = useAuth()
 
   const {closeWallet} = useCloseWallet({
     onSuccess: () => {
@@ -45,11 +47,6 @@ export const WalletSelectionScreen = () => {
   })
 
   useFocusEffect(closeWallet)
-
-  const logout = () => {
-    closeWallet()
-    dispatch(signout())
-  }
 
   const {openWallet, isLoading} = useOpenWallet({
     onSuccess: ({wallet, walletMeta}) => {
@@ -68,6 +65,7 @@ export const WalletSelectionScreen = () => {
         await showErrorDialog(errorMessages.walletStateInvalid, intl)
       } else if (error instanceof KeysAreInvalid) {
         await showErrorDialog(errorMessages.walletKeysInvalidated, intl)
+        closeWallet()
         logout()
       } else {
         throw error

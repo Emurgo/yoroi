@@ -124,7 +124,7 @@ const LoadingWithOverlay = () => {
   )
 }
 
-const LoadingOverlay: React.FC<{loading: boolean}> = ({loading}) => {
+const LoadingOverlay = ({loading}: {loading: boolean}) => {
   return loading ? (
     <View style={StyleSheet.absoluteFill}>
       <View style={[StyleSheet.absoluteFill, {opacity: 0.5, backgroundColor: 'pink'}]} />

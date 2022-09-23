@@ -4,8 +4,8 @@ import {QueryClient, QueryClientProvider} from 'react-query'
 
 import {mockWallet, poolInfoAndHistory, stakePoolId} from '../../storybook'
 import {SelectedWalletProvider} from '../SelectedWallet'
-import {StakePoolInfosAndHistories} from '../types'
 import {YoroiWallet} from '../yoroi-wallets'
+import {StakePoolInfosAndHistories} from '../yoroi-wallets/types'
 import {StakePoolInfos} from './StakePoolInfos'
 
 storiesOf('StakePoolInfos', module)
