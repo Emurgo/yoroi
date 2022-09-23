@@ -1,4 +1,4 @@
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {delay} from 'bluebird'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -17,18 +17,16 @@ import {InvalidState} from '../../legacy/errors'
 import {isJormungandr} from '../../legacy/networks'
 import {WalletMeta} from '../../legacy/state'
 import {clearUTXOs} from '../../legacy/utxo'
-import {useWalletNavigation, WalletStackRouteNavigation, WalletStackRoutes} from '../../navigation'
+import {useWalletNavigation} from '../../navigation'
 import {COLORS} from '../../theme'
 import {useWalletManager} from '../../WalletManager'
 import {KeysAreInvalid, SystemAuthDisabled, walletManager, YoroiWallet} from '../../yoroi-wallets'
 import {useSetSelectedWallet, useSetSelectedWalletMeta} from '..'
-import {useSelectedWalletContext} from '../Context'
 import {WalletListItem} from './WalletListItem'
 
 export const WalletSelectionScreen = () => {
   const strings = useStrings()
   const {resetToWalletSelection, navigateToTxHistory} = useWalletNavigation()
-  const navigation = useNavigation<WalletStackRouteNavigation>()
   const walletManager = useWalletManager()
   const {walletMetas, isFetching, refetch} = useWalletMetas(walletManager, {
     select: (walletMetas) => walletMetas.sort(byName),
@@ -36,8 +34,6 @@ export const WalletSelectionScreen = () => {
   const selectWalletMeta = useSetSelectedWalletMeta()
   const selectWallet = useSetSelectedWallet()
   const intl = useIntl()
-  const [wallet] = useSelectedWalletContext()
-  const params = useRoute<RouteProp<WalletStackRoutes, 'wallet-selection'>>().params
   const queryClient = useQueryClient()
   const dispatch = useDispatch()
 
@@ -47,6 +43,8 @@ export const WalletSelectionScreen = () => {
       dispatch(clearAccountState())
     },
   })
+
+  useFocusEffect(closeWallet)
 
   const logout = () => {
     closeWallet()
@@ -61,7 +59,6 @@ export const WalletSelectionScreen = () => {
       navigateToTxHistory()
     },
     onError: async (error) => {
-      navigation.setParams({reopen: true})
       if (error instanceof SystemAuthDisabled) {
         closeWallet()
         await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
@@ -83,12 +80,10 @@ export const WalletSelectionScreen = () => {
       await showErrorDialog(errorMessages.itnNotSupported, intl)
       return
     }
-    if (params?.reopen || wallet?.id !== walletMeta.id) {
-      navigation.setParams({reopen: false})
-      return openWallet(walletMeta)
-    }
-    return navigateToTxHistory()
+
+    return openWallet(walletMeta)
   }
+
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <StatusBar type="dark" />
