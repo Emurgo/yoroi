@@ -23,7 +23,7 @@ export const RemoveWalletScreen = () => {
   const dispatch = useDispatch()
   const {removeWallet, isLoading} = useRemoveWallet(wallet.id, {
     onMutate: () => resetToWalletSelection(),
-    onSuccess: () => {
+    onSettled: () => {
       dispatch(updateWallets())
       dispatch(clearUTXOs())
       dispatch(clearAccountState())
