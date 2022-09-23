@@ -234,11 +234,7 @@ export const mockYoroiSignedTx: YoroiSignedTx & {mock: true} = {
   mock: true,
 }
 
-export const mockRootKey = (overrides?: {
-  reveal?: ReturnType<RootKey>['reveal']
-  keep?: ReturnType<RootKey>['keep']
-  discard?: ReturnType<RootKey>['discard']
-}) =>
+export const mockRootKey = (overrides?: Partial<RootKey>) =>
   ({
     reveal: async (password) => {
       if (password !== 'password') throw new Error('Invalid Password')

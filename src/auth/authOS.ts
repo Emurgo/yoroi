@@ -185,7 +185,7 @@ export async function isOSAuthSupported() {
   const checker = Platform.select({
     android: () =>
       Keychain.getSupportedBiometryType().then(
-        (supportedBioType) => supportedBioType === Keychain.BIOMETRY_TYPE.FINGERPRINT,
+        (supportedBioType) => supportedBioType != null && androidSupportedBioTypes.includes(supportedBioType),
       ),
     ios: () =>
       Promise.all([
@@ -225,6 +225,11 @@ const messages = defineMessages({
 
 const authMethodKey = '/appSettings/authMethod'
 const iosSupportedBioTypes = [Keychain.BIOMETRY_TYPE.TOUCH_ID, Keychain.BIOMETRY_TYPE.FACE_ID]
+const androidSupportedBioTypes = [
+  Keychain.BIOMETRY_TYPE.FINGERPRINT,
+  Keychain.BIOMETRY_TYPE.FACE,
+  Keychain.BIOMETRY_TYPE.IRIS,
+]
 
 type AuthMethod = 'pin' | 'os'
 
