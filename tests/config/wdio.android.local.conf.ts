@@ -9,12 +9,9 @@ export const config: WebdriverIO.Config = {
   // ============
   specs: ['./tests/specs/*.test.ts'],
   suites: {
-    happyPathTx: [
-        './tests/specs/happyPaths.shelley.15.test.ts'
-    ],
-    ledger: [
-        './tests/specs/local.ledger.test.ts'
-    ],
+    happyPathTx: ['./tests/specs/happyPaths.shelley.15.test.ts'],
+    ledger: ['./tests/specs/local.ledger.test.ts'],
+    invisibleWallets: ['./tests/specs/invisibleWallets.test.ts'],
   },
   capabilities: [
     {
@@ -58,7 +55,7 @@ export const config: WebdriverIO.Config = {
   reporters: ['spec'],
   mochaOpts: {
     ui: 'bdd',
-    timeout: 3 * 60 * 1000, // 3min
+    timeout: 10 * 60 * 1000, // 3min
   },
   //
   // =====

@@ -11,7 +11,7 @@ export enum WalletType {
  * @property {Array<String>} phrase wallet recovery phrase
  * @property {WalletType} type  a 15-word wallet or a 24-word wallet
  */
-type RestoredWallet = {
+export type RestoredWallet = {
   checksum: string
   name: string
   phrase: string[]
@@ -81,7 +81,56 @@ export const NORMAL_24_WORD_WALLET: RestoredWallet = {
   ],
   type: WalletType.DaedalusWallet,
 }
-export const RESTORED_WALLETS: RestoredWallet[] = [
+
+export const TEST_WALLET_ADDRESS: RestoredWallet = {
+  checksum: 'EHKL-5865',
+  name: 'RTW-address',
+  phrase: [
+    'abandon',
+    'abandon',
+    'abandon',
+    'abandon',
+    'abandon',
+    'abandon',
+    'abandon',
+    'abandon',
+    'abandon',
+    'abandon',
+    'abandon',
+    'abandon',
+    'abandon',
+    'abandon',
+    'address',
+  ],
+  type: WalletType.NormalWallet,
+}
+
+export const TEST_WALLET_SHARE: RestoredWallet = {
+  checksum: 'JHKT-8080',
+  name: 'RTW-share',
+  phrase: [
+    'abandon',
+    'abandon',
+    'abandon',
+    'abandon',
+    'abandon',
+    'abandon',
+    'abandon',
+    'abandon',
+    'abandon',
+    'abandon',
+    'abandon',
+    'abandon',
+    'abandon',
+    'abandon',
+    'share',
+  ],
+  type: WalletType.NormalWallet,
+}
+
+export const ALL_TEST_WALLETS: RestoredWallet[] = [
   NORMAL_15_WORD_WALLET,
-  NORMAL_24_WORD_WALLET,
+  // NORMAL_24_WORD_WALLET,
+  TEST_WALLET_ADDRESS,
+  TEST_WALLET_SHARE,
 ]

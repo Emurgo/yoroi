@@ -2,7 +2,15 @@ import * as pinCodeScreen from '../screenObjects/pinCode.screen'
 import * as chooseLanguageScreen from '../screenObjects/chooseLanguage.screen'
 import * as tosScreen from '../screenObjects/tos.screen'
 import * as recoveryPhraseScreen from '../screenObjects/restoreWalletsScreens/recoveryPhraseEnterManually.screen'
-import {DEFAULT_INTERVAL, DEFAULT_TIMEOUT, SPENDING_PASSWORD, VALID_PIN} from '../constants'
+import {
+  DEFAULT_INTERVAL,
+  DEFAULT_TIMEOUT,
+  NORMAL_15_WORD_WALLET,
+  RestoredWallet,
+  SPENDING_PASSWORD,
+  VALID_PIN,
+  WalletType,
+} from '../constants'
 import * as createNewWalletCredentialsScreen from '../screenObjects/createWalletScreens/createWalletCredentials.screen'
 import * as walletBottomPanel from '../screenObjects/walletBottomPanel.screen'
 import * as walletHistoryScreen from '../screenObjects/walletHistory.screen'
@@ -11,6 +19,12 @@ import * as sendScreen from '../screenObjects/send.screen'
 import {getWalletButton} from '../screenObjects/myWallets.screen'
 import * as errorModal from '../screenObjects/errorModal.screen'
 import {expect} from 'chai'
+import * as selectWalletToRestoreScreen from '../screenObjects/selectWalletToRestore.screen'
+import * as recoveryPhraseInputScreen from '../screenObjects/restoreWalletsScreens/recoveryPhraseEnterManually.screen'
+import * as verifyRestoredWalletScreen from '../screenObjects/restoreWalletsScreens/verifyRestoredWallet.screen'
+import * as myWalletsScreen from '../screenObjects/myWallets.screen'
+import * as addWalletsScreen from '../screenObjects/addWallets.screen'
+import * as addWalletScreen from '../screenObjects/addWallet.screen'
 
 export async function enterPinCode(pinCode: string): Promise<void> {
   for (const pinNumber of pinCode) {
@@ -106,11 +120,11 @@ export async function prepareIntrawalletTx(walletName: string): Promise<void> {
 }
 
 export async function checkForErrors(): Promise<void> {
-  let isErrorDisplayed;
+  let isErrorDisplayed
   try {
     isErrorDisplayed = await errorModal
-        .errorView()
-        .waitForDisplayed({timeout: DEFAULT_TIMEOUT, interval: DEFAULT_INTERVAL})
+      .errorView()
+      .waitForDisplayed({timeout: DEFAULT_TIMEOUT, interval: DEFAULT_INTERVAL})
   } catch (e) {
     // nothing to do, an error didn't appear
     isErrorDisplayed = false
@@ -121,4 +135,38 @@ export async function checkForErrors(): Promise<void> {
     await driver.pause(200)
     expect(isErrorDisplayed, 'An error appeared').to.be.false
   }
+}
+
+export async function restoreWallet(wallet: RestoredWallet): Promise<void> {
+  await addWalletsScreen.addWalletTestnetButton().click()
+  await addWalletScreen.restoreWalletButton().click()
+
+  if (wallet.type == WalletType.NormalWallet) {
+    await selectWalletToRestoreScreen.restoreNormalWalletButton().click()
+  } else if (wallet.type == WalletType.DaedalusWallet) {
+    await selectWalletToRestoreScreen.restore24WordWalletButton().click()
+  } else {
+    throw Error(`Unknown wallet type: wallet type is ${wallet.type}`)
+  }
+  await enterRecoveryPhrase(wallet.phrase)
+  await hideKeyboard()
+  await recoveryPhraseInputScreen.restoreWalletButton().click()
+
+  expect(await verifyRestoredWalletScreen.walletChecksumText().isDisplayed()).to.be.true
+  expect(await verifyRestoredWalletScreen.walletChecksumText().getText()).to.be.equal(wallet.checksum)
+  await verifyRestoredWalletScreen.continueButton().click()
+
+  await driver.waitUntil(async () => await createNewWalletCredentialsScreen.credentialsView().isDisplayed())
+  await enterWalletCredentials(wallet.name)
+  await createNewWalletCredentialsScreen.continueButton().click()
+
+  // It is necessary step, till the revamp will be done.
+  // After that the Dashboard screen will be created and wallet name (or other component) will be used from there
+  await enterPinCodeIfNecessary(VALID_PIN)
+  await driver.waitUntil(async () => await myWalletsScreen.pageTitle().isDisplayed())
+
+  expect(
+    await driver.$(`[text="${wallet.name}"]`).waitForExist({timeout: DEFAULT_TIMEOUT, interval: DEFAULT_INTERVAL}),
+    `The "${wallet.name}" wasn't found`,
+  ).to.be.true
 }
