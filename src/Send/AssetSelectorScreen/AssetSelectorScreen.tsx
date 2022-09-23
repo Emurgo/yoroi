@@ -10,7 +10,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import AdaImage from '../../assets/img/asset_ada.png'
 import NoImage from '../../assets/img/asset_no_image.png'
 import {Boundary, Button, Spacer, Text, TextInput} from '../../components'
-import {useTokenInfo} from '../../hooks'
+import {useBalances, useTokenInfo} from '../../hooks'
 import globalMessages, {txLabels} from '../../i18n/global-messages'
 import {getDefaultAssetByNetworkId} from '../../legacy/config'
 import {decodeHexAscii, formatTokenAmount, getAssetDenominationOrId, getTokenFingerprint} from '../../legacy/format'
@@ -19,17 +19,14 @@ import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {Token} from '../../types'
 import {YoroiWallet} from '../../yoroi-wallets'
-import {Quantity, TokenId, YoroiAmounts} from '../../yoroi-wallets/types'
+import {Quantity, TokenId} from '../../yoroi-wallets/types'
 import {Quantities} from '../../yoroi-wallets/utils'
 import {useSend} from '../Context/SendContext'
 
-type Props = {
-  balances: YoroiAmounts
-}
-
-export const AssetSelectorScreen = ({balances}: Props) => {
+export const AssetSelectorScreen = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
+  const balances = useBalances(wallet)
   const defaultAsset = getDefaultAssetByNetworkId(wallet.networkId)
   const [matcher, setMatcher] = React.useState('')
   const navigation = useNavigation<TxHistoryRouteNavigation>()

@@ -29,6 +29,7 @@ import {
   TxSubmissionStatus,
   WalletEvent,
   WalletImplementationId,
+  WalletManager,
   walletManager,
   YoroiProvider,
   YoroiWallet,
@@ -492,30 +493,39 @@ export const useCheckPin = (storage: Storage, options: UseMutationOptions<boolea
 const ENCRYPTED_PIN_HASH_KEY = '/appSettings/customPinHash'
 const toHex = (text: string) => Buffer.from(text, 'utf8').toString('hex')
 
-export const useWalletNames = () => {
-  return useWalletMetas<Array<string>>({
-    select: (walletMetas) => walletMetas.map((walletMeta) => walletMeta.name),
-  })
-}
-
-export const useWalletMetas = <T = Array<WalletMeta>>(options?: UseQueryOptions<Array<WalletMeta>, Error, T>) => {
+export const useWalletNames = (
+  walletManager: WalletManager,
+  options?: UseQueryOptions<Array<WalletMeta>, Error, Array<string>>,
+) => {
   const query = useQuery({
     queryKey: ['walletMetas'],
-    queryFn: async () => {
-      const keys = await storage.keys('/wallet/')
-      const walletMetas = await Promise.all(keys.map((key) => storage.read<WalletMeta>(`/wallet/${key}`)))
-
-      return walletMetas
-    },
+    queryFn: async () => walletManager.listWallets(),
+    select: (walletMetas) => walletMetas.map((walletMeta) => walletMeta.name),
     ...options,
   })
 
-  return query.data
+  return {
+    ...query,
+    walletNames: query.data,
+  }
 }
 
-export const useRemoveWallet = (options: UseMutationOptions<void, Error, void> = {}) => {
+export const useWalletMetas = (walletManager: WalletManager, options?: UseQueryOptions<Array<WalletMeta>, Error>) => {
+  const query = useQuery({
+    queryKey: ['walletMetas'],
+    queryFn: async () => walletManager.listWallets(),
+    ...options,
+  })
+
+  return {
+    ...query,
+    walletMetas: query.data,
+  }
+}
+
+export const useRemoveWallet = (id: YoroiWallet['id'], options: UseMutationOptions<void, Error, void> = {}) => {
   const mutation = useMutationWithInvalidations({
-    mutationFn: () => walletManager.removeCurrentWallet(),
+    mutationFn: () => walletManager.removeWallet(id),
     invalidateQueries: [['walletMetas']],
     ...options,
   })
