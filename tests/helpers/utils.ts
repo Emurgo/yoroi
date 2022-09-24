@@ -5,7 +5,6 @@ import * as recoveryPhraseScreen from '../screenObjects/restoreWalletsScreens/re
 import {
   DEFAULT_INTERVAL,
   DEFAULT_TIMEOUT,
-  NORMAL_15_WORD_WALLET,
   RestoredWallet,
   SPENDING_PASSWORD,
   VALID_PIN,
@@ -137,8 +136,12 @@ export async function checkForErrors(): Promise<void> {
   }
 }
 
-export async function restoreWallet(wallet: RestoredWallet): Promise<void> {
-  await addWalletsScreen.addWalletTestnetButton().click()
+export async function restoreWallet(wallet: RestoredWallet, debug: boolean = false): Promise<void> {
+  if (debug) {
+    await addWalletsScreen.addWalletButton().click()
+  } else {
+    await addWalletsScreen.addWalletTestnetButton().click()
+  }
   await addWalletScreen.restoreWalletButton().click()
 
   if (wallet.type == WalletType.NormalWallet) {

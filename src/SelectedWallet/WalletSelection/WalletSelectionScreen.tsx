@@ -181,6 +181,7 @@ const ShelleyButton = () => {
       }
       title={`${strings.addWalletButton}`}
       style={styles.topButton}
+      testID="addWalletOnHaskellShelleyButton"
     />
   )
 }
@@ -230,6 +231,7 @@ const ByronButton = () => {
       }
       title={`${strings.addWalletButton} (Byron-era - ${strings.deprecated})`}
       style={styles.button}
+      testID="addWalletOnByronButton"
     />
   )
 }
@@ -239,7 +241,14 @@ const OnlyDevButton = () => {
 
   if (!__DEV__) return null
 
-  return <Button onPress={() => navigation.navigate('developer')} title="Dev options" style={styles.button} />
+  return (
+    <Button
+      onPress={() => navigation.navigate('developer')}
+      title="Dev options"
+      style={styles.button}
+      testID="onlyDevButton"
+    />
+  )
 }
 
 const useOpenWallet = (
