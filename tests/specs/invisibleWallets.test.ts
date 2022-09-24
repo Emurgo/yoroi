@@ -23,7 +23,7 @@ describe('Invisible wallets case', function () {
     await enterPinCodeIfNecessary(VALID_PIN)
 
     for (const testWallet of ALL_TEST_WALLETS) {
-      await restoreWallet(testWallet);
+      await restoreWallet(testWallet, true);
     }
 
     for (let i = 0; i < 10; i++) {
@@ -33,7 +33,7 @@ describe('Invisible wallets case', function () {
         await walletButton.click()
 
         // wait for the back button
-        await driver.waitUntil(async () => await walletHistoryScreen.backButton().isDisplayed(), 100)
+        await driver.waitUntil(async () => await walletHistoryScreen.backButton().isDisplayed())
         // Press back
         await walletHistoryScreen.backButton().click()
 
