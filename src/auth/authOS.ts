@@ -1,4 +1,3 @@
-import {defineMessages, useIntl} from 'react-intl'
 import {Platform} from 'react-native'
 import Keychain from 'react-native-keychain'
 import {useMutation, UseMutationOptions, useQuery, UseQueryOptions} from 'react-query'
@@ -10,7 +9,7 @@ import {Storage} from '../Storage'
 export const useCanEnableAuthOs = (options?: UseQueryOptions<boolean, Error>) => {
   const query = useQuery({
     queryKey: ['canEnableOSAuth'],
-    queryFn: isOSAuthSupported,
+    queryFn: isAuthOsEnabled,
     ...options,
   })
 
@@ -159,30 +158,9 @@ export const useAuthOsAppKey = (storage: Storage, options?: UseQueryOptions<stri
   return query.data
 }
 
-export const useChangeAuthMethod = (storage: Storage, options?: UseMutationOptions<void, Error, AuthMethod>) => {
-  const mutation = useMutationWithInvalidations({
-    mutationFn: (authMethod) => storage.setItem(authMethodKey, JSON.stringify(authMethod)),
-    invalidateQueries: [['authMethod']],
-    ...options,
-  })
-
-  return mutation.mutate
-}
-
-export const useAuthOsErrorDecoder = () => {
-  const strings = useStrings()
-
-  const decoder = (error: Error | null | undefined) => {
-    if (!error || /code: 13/.test(error?.message)) return // 13 = Cancelled by user
-    if (/code: 7/.test(error?.message)) return strings.tooManyAttempts
-    return strings.unknownError
-  }
-
-  return decoder
-}
-
-export async function isOSAuthSupported() {
-  const checker = Platform.select({
+// HELPERS
+export async function isAuthOsEnabled() {
+  return Platform.select({
     android: () =>
       Keychain.getSupportedBiometryType().then(
         (supportedBioType) => supportedBioType != null && androidSupportedBioTypes.includes(supportedBioType),
@@ -198,30 +176,8 @@ export async function isOSAuthSupported() {
           supportedBioType != null && iosSupportedBioTypes.includes(supportedBioType) && canAuth,
       ),
     default: () => Promise.reject('OS Authentication is not supported'),
-  })
-
-  return checker()
+  })()
 }
-
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    unknownError: intl.formatMessage(messages.unknownError),
-    tooManyAttempts: intl.formatMessage(messages.tooManyAttempts),
-  }
-}
-
-const messages = defineMessages({
-  tooManyAttempts: {
-    id: 'components.send.biometricauthscreen.SENSOR_LOCKOUT',
-    defaultMessage: '!!!Too many attempts',
-  },
-  unknownError: {
-    id: 'components.send.biometricauthscreen.UNKNOWN_ERROR',
-    defaultMessage: '!!!Unknown error!',
-  },
-})
 
 const authMethodKey = '/appSettings/authMethod'
 const iosSupportedBioTypes = [Keychain.BIOMETRY_TYPE.TOUCH_ID, Keychain.BIOMETRY_TYPE.FACE_ID]

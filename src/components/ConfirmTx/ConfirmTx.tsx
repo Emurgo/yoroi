@@ -109,7 +109,7 @@ export const ConfirmTx = ({
   }
 
   const onConnectUSB = async (deviceObj: DeviceObj) => {
-    await walletManager.updateHWDeviceInfo(withUSB(wallet, deviceObj))
+    await walletManager.updateHWDeviceInfo(wallet, withUSB(wallet, deviceObj))
 
     if (chooseTransportOnConfirmation) {
       await delay(1000)
@@ -120,7 +120,7 @@ export const ConfirmTx = ({
   }
 
   const onConnectBLE = async (deviceId: DeviceId) => {
-    await walletManager.updateHWDeviceInfo(withBLE(wallet, deviceId))
+    await walletManager.updateHWDeviceInfo(wallet, withBLE(wallet, deviceId))
 
     if (chooseTransportOnConfirmation) {
       await delay(1000)

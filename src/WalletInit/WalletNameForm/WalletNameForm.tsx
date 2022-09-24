@@ -8,6 +8,7 @@ import {useWalletNames} from '../../hooks'
 import globalMessages from '../../i18n/global-messages'
 import {ignoreConcurrentAsyncHandler} from '../../legacy/utils'
 import {spacing} from '../../theme'
+import {useWalletManager} from '../../WalletManager'
 import {getWalletNameError, validateWalletName} from '../../yoroi-wallets/utils/validators'
 
 type Props = {
@@ -38,7 +39,8 @@ export const WalletNameForm = ({
 }: Props) => {
   const strings = useStrings()
   const [name, setName] = React.useState(defaultWalletName ?? '')
-  const walletNames = useWalletNames()
+  const walletManager = useWalletManager()
+  const {walletNames} = useWalletNames(walletManager)
   const validationErrors = validateWalletName(name, null, walletNames || [])
   const hasErrors = Object.keys(validationErrors).length > 0
   const errorMessages = {

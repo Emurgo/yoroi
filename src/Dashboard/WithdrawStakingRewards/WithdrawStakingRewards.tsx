@@ -4,6 +4,7 @@ import {StyleSheet} from 'react-native'
 import Markdown from 'react-native-easy-markdown'
 import {useSelector} from 'react-redux'
 
+import {RootKey} from '../../auth'
 import {Boundary, DangerousAction, PleaseWaitView, Spacer} from '../../components'
 import {useWithdrawalTx} from '../../hooks'
 import globalMessages, {ledgerMessages} from '../../i18n/global-messages'
@@ -18,9 +19,10 @@ type Props = {
   wallet: YoroiWallet
   onCancel: () => void
   onSuccess: () => void
+  rootKey: RootKey
 }
 
-export const WithdrawStakingRewards = ({wallet, onSuccess, onCancel}: Props) => {
+export const WithdrawStakingRewards = ({wallet, onSuccess, onCancel, rootKey}: Props) => {
   const strings = useStrings()
   const [state, setState] = React.useState<
     {step: 'form'; withdrawalTx: undefined} | {step: 'confirm'; withdrawalTx: YoroiUnsignedTx}
@@ -36,7 +38,13 @@ export const WithdrawStakingRewards = ({wallet, onSuccess, onCancel}: Props) => 
 
       {state.step === 'confirm' && (
         <Route active={true}>
-          <ConfirmTx wallet={wallet} unsignedTx={state.withdrawalTx} onSuccess={onSuccess} onCancel={onCancel} />
+          <ConfirmTx
+            wallet={wallet}
+            unsignedTx={state.withdrawalTx}
+            onSuccess={onSuccess}
+            onCancel={onCancel}
+            rootKey={rootKey}
+          />
         </Route>
       )}
     </Boundary>

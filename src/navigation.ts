@@ -79,9 +79,8 @@ export type WalletTabRoutes = {
   menu: NavigatorScreenParams<MenuRoutes>
 }
 
-export type WalletSelectionParams = undefined | {reopen: boolean}
 export type WalletStackRoutes = {
-  'wallet-selection': WalletSelectionParams
+  'wallet-selection': undefined
   'main-wallet-routes': NavigatorScreenParams<WalletTabRoutes>
   settings: NavigatorScreenParams<SettingsStackRoutes>
   'catalyst-router': NavigatorScreenParams<CatalystRoutes>
@@ -312,14 +311,14 @@ export const useWalletNavigation = () => {
     })
   }
 
-  const resetToWalletSelection = (params?: WalletSelectionParams) => {
+  const resetToWalletSelection = () => {
     navigation.reset({
       index: 0,
       routes: [
         {
           name: 'app-root',
           state: {
-            routes: [{name: 'wallet-selection', params}],
+            routes: [{name: 'wallet-selection'}],
           },
         },
       ],

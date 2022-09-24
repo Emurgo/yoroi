@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import BigNumber from 'bignumber.js'
 
-import {RootKey} from '../../src/auth/RootKey'
 import {PRIMARY_ASSET_CONSTANTS} from '../../src/legacy/networks'
+import {WalletMeta} from '../../src/legacy/state'
 import {TokenEntry, YoroiWallet} from '../../src/yoroi-wallets'
 import {
   RemotePoolMetaSuccess,
@@ -11,6 +12,21 @@ import {
   YoroiSignedTx,
   YoroiUnsignedTx,
 } from '../../src/yoroi-wallets/types'
+
+export const mockedWalletMeta: WalletMeta = {
+  id: 'wallet-id',
+  name: 'my-wallet',
+  networkId: 1,
+  isHW: false,
+  isEasyConfirmationEnabled: true,
+  checksum: {
+    TextPart: 'JHKT-8080',
+    ImagePart:
+      'b04dc22991594170974bbbb5908cc50b48f236d680a9ebfe6c1d00f52f8f4813341943eb66dec48cfe7f3be5beec705b91300a07641e668ff19dfa2fbeccbfba',
+  },
+  provider: '',
+  walletImplementationId: 'haskell-shelley-24',
+}
 
 export const mockWallet: YoroiWallet = {
   id: 'wallet-id',
@@ -123,6 +139,25 @@ export const mockWallet: YoroiWallet = {
   // },
 }
 
+export const mockHwWallet = {
+  ...mockWallet,
+  isHW: true,
+  hwDeviceInfo: {
+    bip44AccountPublic: '1234567',
+    hwFeatures: {
+      vendor: 'ledger',
+      model: 'nano x',
+      deviceId: '123456',
+      deviceObj: null,
+    },
+  },
+}
+
+export const mockOsWallet = {
+  ...mockWallet,
+  isEasyConfirmationEnabled: true,
+}
+
 export const tokenEntries: Array<TokenEntry> = [
   {
     networkId: 123,
@@ -233,15 +268,3 @@ export const mockYoroiSignedTx: YoroiSignedTx & {mock: true} = {
   signedTx: {id: 'tx-id', encodedTx: new Uint8Array([1, 2, 3])},
   mock: true,
 }
-
-export const mockRootKey = (overrides?: Partial<RootKey>) =>
-  ({
-    reveal: async (password) => {
-      if (password !== 'password') throw new Error('Invalid Password')
-
-      return 'rootKey'
-    },
-    keep: async () => undefined,
-    discard: async () => undefined,
-    ...(overrides as any),
-  } as unknown as RootKey)

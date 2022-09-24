@@ -83,7 +83,7 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
             createTransaction(decryptedKey)
           },
           onFail: () => navigation.goBack(),
-          instructions: [strings.bioAuthInstructions],
+          instructions: [strings.bioAuthDescription],
         })
       } catch (error) {
         if (error instanceof SystemAuthDisabled) {
@@ -123,7 +123,7 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
     pin,
     setVotingRegTxData,
     navigation,
-    strings.bioAuthInstructions,
+    strings.bioAuthDescription,
     strings.errorMessage,
     intl,
     password,
@@ -212,9 +212,12 @@ const messages = defineMessages({
     id: 'components.catalyst.step4.description',
     defaultMessage: '!!!Enter your spending password to be able to generate the required certificate for voting',
   },
-  bioAuthInstructions: {
-    id: 'components.catalyst.step4.bioAuthInstructions',
-    defaultMessage: '!!!Please authenticate so that Yoroi can generate the required certificate for voting',
+  bioAuthDescription: {
+    id: 'components.catalyst.step5.bioAuthDescription',
+    defaultMessage:
+      '!!!Please confirm your voting registration. You will be asked to ' +
+      'authenticate once again to sign and submit the certificate generated ' +
+      'in the previous step.',
   },
 })
 
@@ -238,6 +241,6 @@ const useStrings = () => {
     confirmButton: intl.formatMessage(confirmationMessages.commonButtons.confirmButton),
     errorTitle: intl.formatMessage(errorMessages.generalTxError.title),
     errorMessage: intl.formatMessage(errorMessages.generalTxError.message),
-    bioAuthInstructions: intl.formatMessage(messages.bioAuthInstructions),
+    bioAuthDescription: intl.formatMessage(messages.bioAuthDescription),
   }
 }

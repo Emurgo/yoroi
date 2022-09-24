@@ -42,6 +42,7 @@ export const TwoActionView = ({title, children, primaryButton, secondaryButton}:
             block
             onPress={secondaryButton.onPress}
             title={secondaryButton.label ?? intl.formatMessage(confirmationMessages.commonButtons.cancelButton)}
+            disabled={secondaryButton.disabled}
             style={styles.secondaryButton}
             testID={secondaryButton.testID}
           />
@@ -50,6 +51,7 @@ export const TwoActionView = ({title, children, primaryButton, secondaryButton}:
           block
           onPress={primaryButton.onPress}
           title={primaryButton.label}
+          disabled={primaryButton.disabled}
           style={styles.primaryButton}
           testID={primaryButton.testID}
         />

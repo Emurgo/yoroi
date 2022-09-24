@@ -1,14 +1,14 @@
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {delay} from 'bluebird'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ActivityIndicator, Linking, ScrollView, StyleSheet, Text, TouchableOpacity} from 'react-native'
+import {FlatList, Linking, RefreshControl, StyleSheet, Text, TouchableOpacity} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useMutation, UseMutationOptions, useQueryClient} from 'react-query'
 import {useDispatch} from 'react-redux'
 
 import {useAuth} from '../../auth/AuthProvider'
-import {Button, Icon, PleaseWaitModal, ScreenBackground, StatusBar} from '../../components'
+import {Button, Icon, PleaseWaitModal, StatusBar} from '../../components'
 import {useCloseWallet, useWalletMetas} from '../../hooks'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
 import {clearAccountState} from '../../legacy/account'
@@ -18,24 +18,23 @@ import {InvalidState} from '../../legacy/errors'
 import {isJormungandr} from '../../legacy/networks'
 import {WalletMeta} from '../../legacy/state'
 import {clearUTXOs} from '../../legacy/utxo'
-import {useWalletNavigation, WalletStackRouteNavigation, WalletStackRoutes} from '../../navigation'
-import Screen from '../../Screen'
+import {useWalletNavigation} from '../../navigation'
 import {COLORS} from '../../theme'
+import {useWalletManager} from '../../WalletManager'
 import {KeysAreInvalid, SystemAuthDisabled, walletManager, YoroiWallet} from '../../yoroi-wallets'
 import {useSetSelectedWallet, useSetSelectedWalletMeta} from '..'
-import {useSelectedWalletContext} from '../Context'
 import {WalletListItem} from './WalletListItem'
 
 export const WalletSelectionScreen = () => {
   const strings = useStrings()
   const {resetToWalletSelection, navigateToTxHistory} = useWalletNavigation()
-  const navigation = useNavigation<WalletStackRouteNavigation>()
-  const walletMetas = useWalletMetas()
+  const walletManager = useWalletManager()
+  const {walletMetas, isFetching, refetch} = useWalletMetas(walletManager, {
+    select: (walletMetas) => walletMetas.sort(byName),
+  })
   const selectWalletMeta = useSetSelectedWalletMeta()
   const selectWallet = useSetSelectedWallet()
   const intl = useIntl()
-  const [wallet] = useSelectedWalletContext()
-  const params = useRoute<RouteProp<WalletStackRoutes, 'wallet-selection'>>().params
   const queryClient = useQueryClient()
   const dispatch = useDispatch()
   const {logout} = useAuth()
@@ -47,6 +46,8 @@ export const WalletSelectionScreen = () => {
     },
   })
 
+  useFocusEffect(closeWallet)
+
   const {openWallet, isLoading} = useOpenWallet({
     onSuccess: ({wallet, walletMeta}) => {
       selectWalletMeta(walletMeta)
@@ -55,7 +56,6 @@ export const WalletSelectionScreen = () => {
       navigateToTxHistory()
     },
     onError: async (error) => {
-      navigation.setParams({reopen: true})
       if (error instanceof SystemAuthDisabled) {
         closeWallet()
         await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
@@ -78,37 +78,31 @@ export const WalletSelectionScreen = () => {
       await showErrorDialog(errorMessages.itnNotSupported, intl)
       return
     }
-    if (params?.reopen || wallet?.id !== walletMeta.id) {
-      navigation.setParams({reopen: false})
-      return openWallet(walletMeta)
-    }
-    return navigateToTxHistory()
+
+    return openWallet(walletMeta)
   }
+
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <StatusBar type="dark" />
 
-      <Screen style={styles.container}>
-        <ScreenBackground>
-          <Text style={styles.title}>{strings.header}</Text>
+      <Text style={styles.title}>{strings.header}</Text>
 
-          <ScrollView style={styles.wallets}>
-            {walletMetas ? (
-              walletMetas
-                .sort(byName)
-                .map((walletMeta) => <WalletListItem key={walletMeta.id} wallet={walletMeta} onPress={onSelect} />)
-            ) : (
-              <ActivityIndicator color="black" />
-            )}
-          </ScrollView>
+      <FlatList
+        contentContainerStyle={{padding: 16}}
+        data={walletMetas}
+        keyExtractor={(item) => item.id}
+        renderItem={({item: walletMeta}) => <WalletListItem wallet={walletMeta} onPress={onSelect} />}
+        ListEmptyComponent={null}
+        refreshControl={<RefreshControl refreshing={isFetching} onRefresh={refetch} />}
+      />
 
-          <SupportTicketLink />
-          <ShelleyButton />
-          <OnlyNightlyShelleyTestnetButton />
-          <ByronButton />
-          <OnlyDevButton />
-        </ScreenBackground>
-      </Screen>
+      <SupportTicketLink />
+      <ShelleyButton />
+      <OnlyNightlyShelleyTestnetButton />
+      <ByronButton />
+      <OnlyDevButton />
+
       <PleaseWaitModal title={strings.loadingWallet} spinnerText={strings.pleaseWait} visible={isLoading} />
     </SafeAreaView>
   )
@@ -286,18 +280,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.BACKGROUND_BLUE,
   },
-  container: {
-    flex: 1,
-  },
   title: {
     textAlign: 'center',
     fontSize: 24,
     color: '#fff',
     paddingVertical: 16,
-  },
-  wallets: {
-    margin: 16,
-    flex: 1,
   },
   topButton: {
     marginHorizontal: 16,

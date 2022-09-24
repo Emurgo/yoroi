@@ -6,8 +6,7 @@ import {useSignWithHwAndSubmitTx} from '../../../hooks'
 import {LedgerConnect, LedgerTransportSwitch} from '../../../HW'
 import {confirmationMessages, txLabels} from '../../../i18n/global-messages'
 import type {DeviceId, DeviceObj} from '../../../legacy/ledgerUtils'
-import {walletManager, YoroiWallet} from '../../../yoroi-wallets'
-import {withBLE, withUSB} from '../../../yoroi-wallets/hwWallet'
+import {walletManager, withBLE, withUSB, YoroiWallet} from '../../../yoroi-wallets'
 import {YoroiUnsignedTx} from '../../../yoroi-wallets/types'
 import {TransferSummary} from '../TransferSummary'
 
@@ -29,11 +28,12 @@ export const ConfirmTxWithHW = ({wallet, unsignedTx, onSuccess, onCancel}: Props
   }
 
   const onConnectBLE = async (deviceId: DeviceId) => {
-    await walletManager.updateHWDeviceInfo(withBLE(wallet, deviceId))
+    await walletManager.updateHWDeviceInfo(wallet, withBLE(wallet, deviceId))
     setStep('confirm')
   }
+
   const onConnectUSB = async (deviceObj: DeviceObj) => {
-    await walletManager.updateHWDeviceInfo(withUSB(wallet, deviceObj))
+    await walletManager.updateHWDeviceInfo(wallet, withUSB(wallet, deviceObj))
     setStep('confirm')
   }
 

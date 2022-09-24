@@ -48,7 +48,7 @@ export const Step5 = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx}) => 
           <HWInstructions useUSB={useUSB} />
         ) : (
           <Description>
-            {wallet.isEasyConfirmationEnabled ? strings.bioAuthDescription : strings.description}
+            {wallet.isEasyConfirmationEnabled ? strings.bioAuthInstructions : strings.description}
           </Description>
         )}
 
@@ -85,7 +85,7 @@ export const Step5 = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx}) => 
           setUseUSB={setUseUSB}
           useUSB={useUSB}
           yoroiUnsignedTx={yoroiUnsignedTx}
-          biometricInstructions={[strings.bioAuthDescription]}
+          biometricInstructions={[strings.bioAuthInstructions]}
         />
       </Actions>
     </SafeAreaView>
@@ -104,12 +104,9 @@ const messages = defineMessages({
       'registration and submit the certificate generated in the previous ' +
       'step.',
   },
-  bioAuthDescription: {
-    id: 'components.catalyst.step5.bioAuthDescription',
-    defaultMessage:
-      '!!!Please confirm your voting registration. You will be asked to ' +
-      'authenticate once again to sign and submit the certificate generated ' +
-      'in the previous step.',
+  bioAuthInstructions: {
+    id: 'components.catalyst.step4.bioAuthInstructions',
+    defaultMessage: '!!!Please authenticate so that Yoroi can generate the required certificate for voting',
   },
 })
 
@@ -132,7 +129,7 @@ const useStrings = () => {
     fees: intl.formatMessage(txLabels.fees),
     subTitle: intl.formatMessage(messages.subTitle),
     description: intl.formatMessage(messages.description),
-    bioAuthDescription: intl.formatMessage(messages.bioAuthDescription),
+    bioAuthInstructions: intl.formatMessage(messages.bioAuthInstructions),
     password: intl.formatMessage(txLabels.password),
   }
 }

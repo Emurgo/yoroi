@@ -13,15 +13,12 @@ import {
   useQueryClient,
   UseQueryOptions,
 } from 'react-query'
-import {useDispatch} from 'react-redux'
 
 import {RootKey} from '../auth/RootKey'
-import {clearAccountState} from '../legacy/account'
 import {getDefaultAssetByNetworkId} from '../legacy/config'
 import {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {WalletMeta} from '../legacy/state'
 import storage from '../legacy/storage'
-import {clearUTXOs} from '../legacy/utxo'
 import {Storage} from '../Storage'
 import {
   Cardano,
@@ -30,6 +27,7 @@ import {
   WalletEvent,
   WalletImplementationId,
   WalletJSON,
+  WalletManager,
   walletManager,
   YoroiProvider,
   YoroiWallet,
@@ -285,14 +283,14 @@ export const useWithdrawalTx = (
 }
 
 export const useSignWithPasswordAndSubmitTx = (
-  {wallet}: {wallet: YoroiWallet},
+  {wallet, rootKey}: {wallet: YoroiWallet; rootKey: RootKey},
   options?: {
     signTx?: UseMutationOptions<YoroiSignedTx, Error, {unsignedTx: YoroiUnsignedTx; password: string}>
     submitTx?: UseMutationOptions<TxSubmissionStatus, Error, YoroiSignedTx>
   },
 ) => {
   const signTx = useSignTxWithPassword(
-    {wallet},
+    {wallet, rootKey},
     {
       useErrorBoundary: true,
       ...options?.signTx,
@@ -402,14 +400,14 @@ export const useSignTx = (
 }
 
 export const useSignTxWithPassword = (
-  {wallet}: {wallet: YoroiWallet},
+  {wallet, rootKey}: {wallet: YoroiWallet; rootKey: RootKey},
   options: UseMutationOptions<YoroiSignedTx, Error, {unsignedTx: YoroiUnsignedTx; password: string}> = {},
 ) => {
   const mutation = useMutation({
     mutationFn: async ({unsignedTx, password}) => {
-      const rootKey = await RootKey(wallet.id).reveal(password)
+      const key = await rootKey(wallet.id).reveal(password)
 
-      return wallet.signTx(unsignedTx, rootKey)
+      return wallet.signTx(unsignedTx, key)
     },
     retry: false,
     ...options,
@@ -490,66 +488,45 @@ export const useCheckPin = (storage: Storage, options: UseMutationOptions<boolea
 const ENCRYPTED_PIN_HASH_KEY = '/appSettings/customPinHash'
 const toHex = (text: string) => Buffer.from(text, 'utf8').toString('hex')
 
-export const useWalletNames = () => {
-  return useWalletMetas<Array<string>>({
-    select: (walletMetas) => walletMetas.map((walletMeta) => walletMeta.name),
-  })
-}
-
-export const useWalletMetas = <T = Array<WalletMeta>>(options?: UseQueryOptions<Array<WalletMeta>, Error, T>) => {
+export const useWalletNames = (
+  walletManager: WalletManager,
+  options?: UseQueryOptions<Array<WalletMeta>, Error, Array<string>>,
+) => {
   const query = useQuery({
     queryKey: ['walletMetas'],
-    queryFn: async () => {
-      const keys = await storage.keys('/wallet/')
-      const walletMetas = await Promise.all(keys.map((key) => storage.read<WalletMeta>(`/wallet/${key}`)))
-
-      return walletMetas
-    },
+    queryFn: async () => walletManager.listWallets(),
+    select: (walletMetas) => walletMetas.map((walletMeta) => walletMeta.name),
     ...options,
   })
 
-  return query.data
+  return {
+    ...query,
+    walletNames: query.data,
+  }
 }
 
-export const useRemoveWallet = (
-  id: YoroiWallet['id'],
-  {onSuccess, ...options}: UseMutationOptions<void, Error, void> = {},
-) => {
-  const dispatch = useDispatch()
+export const useWalletMetas = (walletManager: WalletManager, options?: UseQueryOptions<Array<WalletMeta>, Error>) => {
+  const query = useQuery({
+    queryKey: ['walletMetas'],
+    queryFn: async () => walletManager.listWallets(),
+    ...options,
+  })
 
+  return {
+    ...query,
+    walletMetas: query.data,
+  }
+}
+
+export const useRemoveWallet = (id: YoroiWallet['id'], options: UseMutationOptions<void, Error, void> = {}) => {
   const mutation = useMutationWithInvalidations({
     mutationFn: () => walletManager.removeWallet(id),
-    onSuccess: (data, variables, context) => {
-      dispatch(clearUTXOs())
-      dispatch(clearAccountState())
-      onSuccess?.(data, variables, context)
-    },
     invalidateQueries: [['walletMetas']],
     ...options,
   })
 
   return {
     removeWallet: mutation.mutate,
-    ...mutation,
-  }
-}
-
-export const useResyncWallet = ({onSuccess, ...options}: UseMutationOptions<void, Error, void> = {}) => {
-  const dispatch = useDispatch()
-
-  const mutation = useMutationWithInvalidations({
-    mutationFn: () => walletManager.resyncWallet(),
-    onSuccess: (data, variables, context) => {
-      dispatch(clearUTXOs())
-      dispatch(clearAccountState())
-      onSuccess?.(data, variables, context)
-    },
-    invalidateQueries: [['walletMetas']],
-    ...options,
-  })
-
-  return {
-    resyncWallet: mutation.mutate,
     ...mutation,
   }
 }

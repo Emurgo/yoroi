@@ -1,3 +1,4 @@
+export * from './authError'
 export * from './authOS'
 export * from './backgroundTimeout'
 export * from './ChangePinScreen'

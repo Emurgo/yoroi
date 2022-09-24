@@ -8,6 +8,7 @@ import globalMessages from '../i18n/global-messages'
 import {CONFIG} from '../legacy/config'
 import {isEmptyString} from '../legacy/utils'
 import {COLORS} from '../theme'
+import {useWalletManager} from '../WalletManager'
 import {
   getWalletNameError,
   REQUIRED_PASSWORD_LENGTH,
@@ -21,7 +22,8 @@ type Props = {
 
 export const WalletForm = ({onSubmit}: Props) => {
   const strings = useStrings()
-  const walletNames = useWalletNames()
+  const walletManager = useWalletManager()
+  const {walletNames} = useWalletNames(walletManager)
   const [name, setName] = React.useState(CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.WALLET_NAME : '')
   const nameErrors = validateWalletName(name, null, walletNames ?? [])
   const walletNameErrorText = getWalletNameError(

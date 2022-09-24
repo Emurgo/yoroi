@@ -2,7 +2,7 @@ import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {mockWallet, mockYoroiSignedTx, mockYoroiTx, WithModal} from '../../../../storybook'
+import {mockRootKey, mockWallet, mockYoroiSignedTx, mockYoroiTx, WithModal} from '../../../../storybook'
 import {Boundary} from '../../../components'
 import {YoroiWallet} from '../../../yoroi-wallets'
 import {YoroiUnsignedTx} from '../../../yoroi-wallets/types'
@@ -39,6 +39,7 @@ storiesOf('ConfirmWithdrawalTx/Password', module)
             unsignedTx={unsignedTx}
             onSuccess={action('onSuccess')}
             onCancel={action('onCancel')}
+            rootKey={mockRootKey()}
           />
         </Boundary>
       </WithModal>
@@ -78,6 +79,7 @@ storiesOf('ConfirmWithdrawalTx/Password', module)
             unsignedTx={unsignedTx}
             onSuccess={action('onSuccess')}
             onCancel={action('onCancel')}
+            rootKey={mockRootKey()}
           />
         </Boundary>
       </WithModal>

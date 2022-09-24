@@ -1,7 +1,7 @@
 import {Platform} from 'react-native'
 import Keychain from 'react-native-keychain'
 
-import {isOSAuthSupported} from './authOS'
+import {isAuthOsEnabled} from './authOS'
 
 let mockedBioType = Keychain.BIOMETRY_TYPE.FINGERPRINT
 let mockedCanImply = true
@@ -22,7 +22,7 @@ jest.mock('react-native-keychain', () => {
   }
 })
 
-describe('isOSAuthSupported()', () => {
+describe('isAuthOsEnabled()', () => {
   describe('on Android', () => {
     it.each`
       expected | bioType
@@ -33,7 +33,7 @@ describe('isOSAuthSupported()', () => {
       Platform.select = jest.fn((objs) => objs['android'])
       mockedBioType = bioType
 
-      isOSAuthSupported().then((result) => expect(result).toBe(expected))
+      isAuthOsEnabled().then((result) => expect(result).toBe(expected))
     })
   })
   describe('on iOS', () => {
@@ -50,7 +50,7 @@ describe('isOSAuthSupported()', () => {
         mockedBioType = bioType
         mockedCanImply = canImply
 
-        isOSAuthSupported().then((result) => expect(result).toBe(expected))
+        isAuthOsEnabled().then((result) => expect(result).toBe(expected))
       },
     )
   })
@@ -63,7 +63,7 @@ describe('isOSAuthSupported()', () => {
     `('should reject when platform is $platform', async ({expected, platform}) => {
       Platform.select = jest.fn((objs) => objs[platform])
 
-      isOSAuthSupported().catch((error) => expect(error).toBeInstanceOf(expected))
+      isAuthOsEnabled().catch((error) => expect(error).toBeInstanceOf(expected))
     })
   })
 })

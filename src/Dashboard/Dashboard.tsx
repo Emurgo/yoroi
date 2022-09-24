@@ -8,6 +8,7 @@ import {ActivityIndicator, RefreshControl, ScrollView, StyleSheet, View, ViewPro
 import {useDispatch, useSelector} from 'react-redux'
 
 import {AccountAutoRefresher} from '../AccountAutoRefresher'
+import {RootKey} from '../auth'
 import {Banner, Button, Modal, OfflineBanner, StatusBar} from '../components'
 import globalMessages from '../i18n/global-messages'
 import {fetchAccountState} from '../legacy/account'
@@ -148,6 +149,7 @@ export const Dashboard = () => {
             wallet={wallet}
             onSuccess={() => resetToTxHistory()}
             onCancel={() => setShowWithdrawalDialog(false)}
+            rootKey={RootKey}
           />
         </Modal>
       )}
