@@ -1,7 +1,6 @@
 import {useReduxDevToolsExtension} from '@react-navigation/devtools'
 import {NavigationContainer, useNavigationContainerRef} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
-import {isEmpty} from 'lodash'
 import React, {useEffect} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Alert, AppState, AppStateStatus, Platform} from 'react-native'
@@ -23,7 +22,6 @@ import globalMessages from './i18n/global-messages'
 import {DeveloperScreen} from './legacy/DeveloperScreen'
 import env from './legacy/env'
 import {installationIdSelector, isMaintenanceSelector, isTosAcceptedSelector} from './legacy/selectors'
-import type {State} from './legacy/state'
 import {isEmptyString} from './legacy/utils'
 import MaintenanceScreen from './MaintenanceScreen'
 import {AppRoutes} from './navigation'
@@ -43,7 +41,6 @@ export const AppNavigator = () => {
   const storage = useStorage()
   const authAction = useAuthAction(storage)
 
-  const hasAnyWallet = useSelector(hasAnyWalletSelector)
   const secretKey = useAuthOsAppKey(storage)
   const {isLoggedOut, login} = useAuth()
   const {loadSecret} = useLoadSecret({
@@ -58,15 +55,15 @@ export const AppNavigator = () => {
   useReduxDevToolsExtension(navRef)
 
   React.useEffect(() => {
-    if (isReady && (authAction !== 'os' || !hasAnyWallet)) {
+    if (isReady && authAction !== 'os') {
       RNBootSplash.hide({
         fade: true,
       })
     }
-  }, [authAction, hasAnyWallet, isReady])
+  }, [authAction, isReady])
 
   React.useEffect(() => {
-    if (authAction === 'os' && !isEmptyString(secretKey) && isLoggedOut && hasAnyWallet) {
+    if (authAction === 'os' && !isEmptyString(secretKey) && isLoggedOut) {
       loadSecret({
         key: secretKey,
         authenticationPrompt: {
@@ -75,7 +72,7 @@ export const AppNavigator = () => {
         },
       })
     }
-  }, [authAction, hasAnyWallet, isLoggedOut, loadSecret, secretKey, strings.authorize, strings.cancel])
+  }, [authAction, isLoggedOut, loadSecret, secretKey, strings.authorize, strings.cancel])
 
   if (authAction == null) return null
   if (isEmptyString(secretKey)) return null
@@ -93,7 +90,6 @@ const Stack = createStackNavigator<AppRoutes>()
 const NavigatorSwitch = ({authAction}: {authAction: 'create-link-pin' | 'check-pin' | 'os'}) => {
   const strings = useStrings()
   const isMaintenance = useSelector(isMaintenanceSelector)
-  const hasAnyWallet = useSelector(hasAnyWalletSelector)
   const isTosAccepted = useSelector(isTosAcceptedSelector)
   const installationId = useSelector(installationIdSelector)
   const {isLoggedIn, isLoggedOut} = useAuth()
@@ -109,7 +105,7 @@ const NavigatorSwitch = ({authAction}: {authAction: 'create-link-pin' | 'check-p
       </Stack.Group>
 
       {/* Not Authenticated */}
-      {isLoggedOut && hasAnyWallet && (
+      {isLoggedOut && (
         <Stack.Group>
           {authAction === 'check-pin' && (
             <Stack.Screen name="custom-pin-auth" component={PinLoginScreen} options={{title: strings.loginPinTitle}} />
@@ -128,7 +124,7 @@ const NavigatorSwitch = ({authAction}: {authAction: 'create-link-pin' | 'check-p
       )}
 
       {/* Authenticated */}
-      {(isLoggedIn || !hasAnyWallet) && (
+      {isLoggedIn && (
         <Stack.Group>
           <Stack.Screen name="app-root" component={WalletNavigator} />
           <Stack.Screen name="new-wallet" component={WalletInitNavigator} />
@@ -158,8 +154,6 @@ const StoryBook = () => (
     <Stack.Screen name="storybook" component={StorybookScreen} />
   </Stack.Navigator>
 )
-
-const hasAnyWalletSelector = (state: State): boolean => !isEmpty(state.wallets)
 
 const useStrings = () => {
   const intl = useIntl()
