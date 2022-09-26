@@ -8,8 +8,8 @@ import {Storage} from '../Storage'
 
 export const useCanEnableAuthOs = (options?: UseQueryOptions<boolean, Error>) => {
   const query = useQuery({
-    queryKey: ['canEnableOSAuth'],
-    queryFn: isAuthOsEnabled,
+    queryKey: ['canEnableAuthOs'],
+    queryFn: canEnableAuthOs,
     ...options,
   })
 
@@ -159,7 +159,7 @@ export const useAuthOsAppKey = (storage: Storage, options?: UseQueryOptions<stri
 }
 
 // HELPERS
-export async function isAuthOsEnabled() {
+export async function canEnableAuthOs() {
   return Platform.select({
     android: () =>
       Keychain.getSupportedBiometryType().then(
