@@ -17,7 +17,7 @@ import {
   useLoadSecret,
 } from './auth'
 import {useAuth} from './auth/AuthProvider'
-import {LinkAuthWithPin} from './auth/LinkAuthWithPin'
+import {EnableLoginWithPin} from './auth/EnableLoginWithPin'
 import {FirstRunNavigator} from './FirstRun/FirstRunNavigator'
 import globalMessages from './i18n/global-messages'
 import {DeveloperScreen} from './legacy/DeveloperScreen'
@@ -119,7 +119,7 @@ const NavigatorSwitch = ({authAction}: {authAction: 'create-link-pin' | 'check-p
           )}
           {authAction === 'create-link-pin' && (
             <Stack.Screen //
-              name="link-auth-with-pin"
+              name="enable-login-with-pin"
               component={CreatePinScreenWrapper}
               options={{title: strings.customPinTitle}}
             />
@@ -150,7 +150,7 @@ const NavigatorSwitch = ({authAction}: {authAction: 'create-link-pin' | 'check-p
 const CreatePinScreenWrapper = () => {
   const {login} = useAuth()
 
-  return <LinkAuthWithPin onDone={login} />
+  return <EnableLoginWithPin onDone={login} />
 }
 
 const StoryBook = () => (

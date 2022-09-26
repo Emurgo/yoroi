@@ -71,7 +71,7 @@ export const TermsOfServiceScreen = () => {
       onLinkAuthWithOs()
     } else {
       await dispatch(acceptAndSaveTos())
-      navigation.navigate('link-auth-with-pin')
+      navigation.navigate('enable-login-with-pin')
     }
   }
 

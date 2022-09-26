@@ -197,7 +197,7 @@ export type SettingsStackRoutes = {
   'change-wallet-name': undefined
   'terms-of-use': undefined
   support: undefined
-  'link-auth-with-os': undefined
+  'enable-login-with-os': undefined
   'remove-wallet': undefined
   'change-language': undefined
   'change-currency': undefined
@@ -205,7 +205,7 @@ export type SettingsStackRoutes = {
   'disable-easy-confirmation': undefined
   'change-password': undefined
   'change-custom-pin': undefined
-  'link-auth-with-pin': {
+  'enable-login-with-pin': {
     onSuccess: () => void | Promise<void>
   }
 }
@@ -248,7 +248,7 @@ export type CatalystRouteNavigation = StackNavigationProp<CatalystRoutes>
 export type FirstRunRoutes = {
   'language-pick': undefined
   'accept-terms-of-service': undefined
-  'link-auth-with-pin': undefined
+  'enable-login-with-pin': undefined
 }
 export type FirstRunRouteNavigation = StackNavigationProp<FirstRunRoutes>
 
@@ -267,7 +267,7 @@ export type AppRoutes = {
   'custom-pin-auth': undefined
   'bio-auth-initial': BiometricParams
   biometrics: BiometricParams
-  'link-auth-with-pin': undefined
+  'enable-login-with-pin': undefined
 }
 export type AppRouteNavigation = StackNavigationProp<AppRoutes>
 

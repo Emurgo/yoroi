@@ -47,7 +47,7 @@ export const ApplicationSettingsScreen = () => {
     if (!isEmptyString(errorMessage)) Alert.alert(strings.error, errorMessage)
   }
   const {loadSecret} = useLoadSecret({
-    onSuccess: () => navigation.navigate('link-auth-with-pin'),
+    onSuccess: () => navigation.navigate('enable-login-with-pin'),
     onError: onError,
   })
   const authenticate = React.useCallback(() => {
@@ -74,7 +74,7 @@ export const ApplicationSettingsScreen = () => {
       navigation.navigate('app-root', {
         screen: 'settings',
         params: {
-          screen: 'link-auth-with-os',
+          screen: 'enable-login-with-os',
         },
       })
     }

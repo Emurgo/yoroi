@@ -5,7 +5,7 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
 import {ChangePinScreen} from '../auth'
-import {LinkAuthWithPin} from '../auth/LinkAuthWithPin'
+import {EnableLoginWithPin} from '../auth/EnableLoginWithPin'
 import {Boundary} from '../components'
 import globalMessages from '../i18n/global-messages'
 import {
@@ -21,7 +21,7 @@ import {ChangePasswordScreen} from './ChangePassword'
 import {ChangeWalletName} from './ChangeWalletName'
 import {ChangeCurrencyScreen} from './Currency/ChangeCurrencyScreen'
 import {DisableEasyConfirmationScreen, EnableEasyConfirmationScreen} from './EasyConfirmation'
-import {LinkAuthWithOsScreen} from './LinkAuthWithOs'
+import {EnableLoginWithOsScreen} from './EnableLoginWithOs'
 import {RemoveWalletScreen} from './RemoveWallet'
 import {SupportScreen} from './Support'
 import {TermsOfServiceScreen} from './TermsOfService'
@@ -58,8 +58,8 @@ export const SettingsScreenNavigator = () => {
       />
 
       <Stack.Screen //
-        name="link-auth-with-os"
-        component={LinkAuthWithOsScreenWrapper}
+        name="enable-login-with-os"
+        component={EnableLoginWithOsScreenWrapper}
         options={{headerShown: false}}
       />
 
@@ -112,9 +112,9 @@ export const SettingsScreenNavigator = () => {
       />
 
       <Stack.Screen
-        name="link-auth-with-pin"
+        name="enable-login-with-pin"
         options={{title: strings.customPinTitle}}
-        component={LinkAuthWithPinWrapper}
+        component={EnableLoginWithPinWrapper}
       />
     </Stack.Navigator>
   )
@@ -139,10 +139,10 @@ const SettingsTabNavigator = () => {
   )
 }
 
-const LinkAuthWithOsScreenWrapper = () => {
+const EnableLoginWithOsScreenWrapper = () => {
   return (
     <Boundary>
-      <LinkAuthWithOsScreen />
+      <EnableLoginWithOsScreen />
     </Boundary>
   )
 }
@@ -153,10 +153,10 @@ const ChangePinScreenWrapper = () => {
   return <ChangePinScreen onDone={navigation.goBack} />
 }
 
-const LinkAuthWithPinWrapper = () => {
+const EnableLoginWithPinWrapper = () => {
   const navigation = useNavigation()
 
-  return <LinkAuthWithPin onDone={navigation.goBack} />
+  return <EnableLoginWithPin onDone={navigation.goBack} />
 }
 
 const messages = defineMessages({

@@ -7,7 +7,7 @@ import {useStorage} from '../Storage'
 import {useSaveAuthMethod} from './authOS'
 import {CreatePinScreen} from './CreatePinScreen'
 
-export const LinkAuthWithPin = ({onDone}: {onDone: () => void}) => {
+export const EnableLoginWithPin = ({onDone}: {onDone: () => void}) => {
   const storage = useStorage()
   const [wallet] = useSelectedWalletContext()
   const {disableAllEasyConfirmation, isLoading: disablingEasyConfirmation} = useDisableAllEasyConfirmation(wallet, {

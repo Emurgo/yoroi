@@ -10,7 +10,7 @@ import {isEmptyString} from '../../legacy/utils'
 import {OsAuthBaseScreen} from '../../OsAuth'
 import {useStorage} from '../../Storage'
 
-export const LinkAuthWithOsScreen = () => {
+export const EnableLoginWithOsScreen = () => {
   const strings = useStrings()
   const navigation = useNavigation()
 

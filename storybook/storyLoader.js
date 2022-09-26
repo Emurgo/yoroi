@@ -37,7 +37,7 @@ function loadStories() {
 	require('../src/Settings/ChangeWalletName/ChangeWalletName.stories');
 	require('../src/Settings/Currency/ChangeCurrencyScreen.stories');
 	require('../src/Settings/EasyConfirmation/EasyConfirmationScreen.stories');
-	require('../src/Settings/LinkAuthWithOs/LinkAuthWithOsScreen.stories');
+	require('../src/Settings/EnableLoginWithOs/EnableLoginWithOsScreen.stories');
 	require('../src/Settings/RemoveWallet/RemoveWalletScreen.stories');
 	require('../src/Settings/Support/SupportScreen.stories');
 	require('../src/Settings/TermsOfService/TermsOfServiceScreen.stories');
@@ -137,7 +137,7 @@ const stories = [
 	'../src/Settings/ChangeWalletName/ChangeWalletName.stories',
 	'../src/Settings/Currency/ChangeCurrencyScreen.stories',
 	'../src/Settings/EasyConfirmation/EasyConfirmationScreen.stories',
-	'../src/Settings/LinkAuthWithOs/LinkAuthWithOsScreen.stories',
+	'../src/Settings/EnableLoginWithOs/EnableLoginWithOsScreen.stories',
 	'../src/Settings/RemoveWallet/RemoveWalletScreen.stories',
 	'../src/Settings/Support/SupportScreen.stories',
 	'../src/Settings/TermsOfService/TermsOfServiceScreen.stories',

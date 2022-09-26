@@ -3,7 +3,7 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
 import {useAuth} from '../auth/AuthProvider'
-import {LinkAuthWithPin} from '../auth/LinkAuthWithPin'
+import {EnableLoginWithPin} from '../auth/EnableLoginWithPin'
 import {defaultStackNavigationOptions, FirstRunRoutes} from '../navigation'
 import {LanguagePickerScreen} from './LanguagePickerScreen'
 import {TermsOfServiceScreen} from './TermsOfServiceScreen'
@@ -35,7 +35,7 @@ export const FirstRunNavigator = () => {
       />
 
       <Stack.Screen //
-        name="link-auth-with-pin"
+        name="enable-login-with-pin"
         options={{headerShown: false}}
         component={CreatePinScreenWrapper}
       />
@@ -46,7 +46,7 @@ export const FirstRunNavigator = () => {
 const CreatePinScreenWrapper = () => {
   const {login} = useAuth()
 
-  return <LinkAuthWithPin onDone={login} />
+  return <EnableLoginWithPin onDone={login} />
 }
 
 const messages = defineMessages({
