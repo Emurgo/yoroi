@@ -7,14 +7,7 @@ import {Alert, AppState, AppStateStatus, Platform} from 'react-native'
 import RNBootSplash from 'react-native-bootsplash'
 import {useSelector} from 'react-redux'
 
-import {
-  PinLoginScreen,
-  useAuthMethod,
-  useAuthOsAppKey,
-  useBackgroundTimeout,
-  useCanEnableAuthOs,
-  useLoadSecret,
-} from './auth'
+import {PinLoginScreen, useAuthMethod, useAuthWithOs, useBackgroundTimeout, useCanEnableAuthOs} from './auth'
 import {useAuth} from './auth/AuthProvider'
 import {EnableLoginWithPin} from './auth/EnableLoginWithPin'
 import {FirstRunNavigator} from './FirstRun/FirstRunNavigator'
@@ -41,15 +34,23 @@ export const AppNavigator = () => {
   const storage = useStorage()
   const authAction = useAuthAction(storage)
 
-  const secretKey = useAuthOsAppKey(storage)
   const {isLoggedOut, login} = useAuth()
-  const {loadSecret} = useLoadSecret({
-    onSuccess: login,
-    onSettled: () =>
-      RNBootSplash.hide({
-        fade: true,
-      }),
-  })
+  const {authWithOs} = useAuthWithOs(
+    {
+      authenticationPrompt: {
+        cancel: strings.cancel,
+        title: strings.authorize,
+      },
+      storage,
+    },
+    {
+      onSuccess: login,
+      onSettled: () =>
+        RNBootSplash.hide({
+          fade: true,
+        }),
+    },
+  )
 
   const navRef = useNavigationContainerRef()
   useReduxDevToolsExtension(navRef)
@@ -63,19 +64,12 @@ export const AppNavigator = () => {
   }, [authAction, isReady])
 
   React.useEffect(() => {
-    if (authAction === 'os' && !isEmptyString(secretKey) && isLoggedOut) {
-      loadSecret({
-        key: secretKey,
-        authenticationPrompt: {
-          cancel: strings.cancel,
-          title: strings.authorize,
-        },
-      })
+    if (authAction === 'os' && isLoggedOut) {
+      authWithOs()
     }
-  }, [authAction, isLoggedOut, loadSecret, secretKey, strings.authorize, strings.cancel])
+  }, [authAction, authWithOs, isLoggedOut, strings.authorize, strings.cancel])
 
   if (authAction == null) return null
-  if (isEmptyString(secretKey)) return null
 
   return (
     <NavigationContainer onReady={() => setIsReady(true)} ref={navRef}>

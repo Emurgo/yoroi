@@ -1,41 +1,36 @@
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import {useAuthOsAppKey, useAuthOsErrorDecoder, useLoadSecret} from '../../auth'
+import {useAuthOsErrorDecoder, useAuthWithOs} from '../../auth'
 import {useAuth} from '../../auth/AuthProvider'
 import {Button} from '../../components'
 import globalMessages from '../../i18n/global-messages'
-import {isEmptyString} from '../../legacy/utils'
 import {useStorage} from '../../Storage'
 import {OsAuthBaseScreen} from '../OsAuthBaseScreen'
 
 export const OsLoginScreen = () => {
   const strings = useStrings()
   const storage = useStorage()
-  const secretKey = useAuthOsAppKey(storage)
   const {login} = useAuth()
-  const {loadSecret, isLoading, error} = useLoadSecret({
-    onSuccess: login,
-  })
-  const decodeAuthOsError = useAuthOsErrorDecoder()
-  const errorMessage = decodeAuthOsError(error)
-
-  if (isEmptyString(secretKey)) throw new Error('Invalid secret key')
-
-  const authenticate = React.useCallback(() => {
-    loadSecret({
-      key: secretKey,
+  const {authWithOs, isLoading, error} = useAuthWithOs(
+    {
+      storage,
       authenticationPrompt: {
         title: strings.authorize,
         cancel: strings.cancel,
       },
-    })
-  }, [loadSecret, secretKey, strings.authorize, strings.cancel])
+    },
+    {
+      onSuccess: login,
+    },
+  )
+  const decodeAuthOsError = useAuthOsErrorDecoder()
+  const errorMessage = decodeAuthOsError(error)
 
   return (
     <OsAuthBaseScreen
       headings={[strings.headings1, strings.headings2]}
-      buttons={[<Button disabled={isLoading} key="login" title={strings.login} onPress={() => authenticate()} />]}
+      buttons={[<Button disabled={isLoading} key="login" title={strings.login} onPress={() => authWithOs()} />]}
       error={errorMessage}
       addWelcomeMessage
     />

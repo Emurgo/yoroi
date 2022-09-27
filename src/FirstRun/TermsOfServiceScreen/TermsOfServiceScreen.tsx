@@ -5,7 +5,7 @@ import {Alert, ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch} from 'react-redux'
 
-import {useAuthOsAppKey, useAuthOsErrorDecoder, useCanEnableAuthOs, useSaveAuthMethod, useSaveSecret} from '../../auth'
+import {useAuthOsErrorDecoder, useCanEnableAuthOs, useEnableAuthWithOs} from '../../auth'
 import {useAuth} from '../../auth/AuthProvider'
 import {Button, Checkbox, PleaseWaitModal, Spacer, StatusBar} from '../../components'
 import {useLanguage} from '../../i18n'
@@ -26,49 +26,36 @@ export const TermsOfServiceScreen = () => {
   const {login} = useAuth()
   const {canEnableOsAuth} = useCanEnableAuthOs()
   const storage = useStorage()
-  const secretKey = useAuthOsAppKey(storage)
-  if (isEmptyString(secretKey)) throw new Error('Invalid secret key')
-
   const decodeAuthOsError = useAuthOsErrorDecoder()
-  const onError = (error) => {
-    const errorMessage = decodeAuthOsError(error)
-    if (!isEmptyString(errorMessage)) Alert.alert(strings.error, errorMessage)
-  }
-
-  const {saveAuthMethod, isLoading: savingAuthMethod, reset: resetSaveAuthMethod} = useSaveAuthMethod(storage)
-  const {saveSecret, isLoading: savingSecret} = useSaveSecret({
-    onMutate: () => {
-      resetSaveAuthMethod()
-    },
-  })
-
-  const onLinkAuthWithOs = () => {
-    saveSecret(
-      // for the app the value doesn't matter (only auth)
-      {key: secretKey, value: secretKey},
-      {
-        onSuccess: () => {
-          saveAuthMethod('os', {
-            onSuccess: () => {
-              dispatch(acceptAndSaveTos())
-              login()
-            },
-            onError,
-          })
-        },
-        onError,
+  const {enableAuthWithOs, isLoading: enablingAuth} = useEnableAuthWithOs(
+    {
+      storage,
+      authenticationPrompt: {
+        title: strings.authorize,
+        cancel: strings.cancel,
       },
-    )
-  }
+    },
+    {
+      onSuccess: async () => {
+        await dispatch(acceptAndSaveTos())
+        login()
+      },
+      onError: (error) => {
+        const errorMessage = decodeAuthOsError(error)
+        if (!isEmptyString(errorMessage)) Alert.alert(strings.error, errorMessage)
+      },
+      retry: false,
+    },
+  )
 
-  const isLoading = savingSecret || savingAuthMethod || savingConsent
+  const isLoading = enablingAuth || savingConsent
 
   const dispatch = useDispatch()
   const onAccept = async () => {
     setSavingConsent(true)
 
     if (canEnableOsAuth) {
-      onLinkAuthWithOs()
+      enableAuthWithOs()
     } else {
       await dispatch(acceptAndSaveTos())
       navigation.navigate('enable-login-with-pin')
@@ -95,7 +82,7 @@ export const TermsOfServiceScreen = () => {
 
         <Button
           onPress={onAccept}
-          disabled={!acceptedTos || isLoading || savingConsent}
+          disabled={!acceptedTos || isLoading}
           title={strings.continueButton}
           testID="acceptTosButton"
         />
@@ -122,6 +109,10 @@ const styles = StyleSheet.create({
 })
 
 const messages = defineMessages({
+  authorize: {
+    id: 'components.send.biometricauthscreen.authorizeOperation',
+    defaultMessage: '!!!Authorize',
+  },
   aggreeClause: {
     id: 'components.firstrun.acepttermsofservicescreen.aggreeClause',
     defaultMessage: '!!!I agree with terms of service',
@@ -140,6 +131,8 @@ const useStrings = () => {
   const intl = useIntl()
 
   return {
+    authorize: intl.formatMessage(messages.authorize),
+    cancel: intl.formatMessage(globalMessages.cancel),
     error: intl.formatMessage(globalMessages.error),
     aggreeClause: intl.formatMessage(messages.aggreeClause),
     continueButton: intl.formatMessage(messages.continueButton),

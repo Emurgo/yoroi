@@ -5,10 +5,9 @@ import {Alert, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity} from 'rea
 import config from 'react-native-config'
 import * as Keychain from 'react-native-keychain'
 
-import {useLoadSecret, useResetSecret, useSaveSecret} from '../auth'
 import {useAuth} from '../auth/AuthProvider'
 import {Button, StatusBar, Text, TextInput} from '../components'
-import {useCreateWallet, useDisableAllEasyConfirmation} from '../hooks'
+import {useCreateWallet} from '../hooks'
 import {AppRoutes, useWalletNavigation} from '../navigation'
 import {useSelectedWalletContext} from '../SelectedWallet'
 import {generateAdaMnemonic} from './commonUtils'
@@ -55,32 +54,7 @@ export const DeveloperScreen = () => {
     },
   })
   const [wallet] = useSelectedWalletContext()
-  const {disableAllEasyConfirmation, isLoading: isDisablingEasyConfirmation} = useDisableAllEasyConfirmation(wallet)
   const [addresses, setAddresses] = React.useState('')
-  const {saveSecret, isLoading: isSavingSecret} = useSaveSecret({
-    onSuccess: (r) => {
-      Alert.alert('Success', 'it was saved' + JSON.stringify(r))
-    },
-    onError: (error) => {
-      Alert.alert('Error', error.message)
-    },
-  })
-  const {loadSecret, isLoading: isLoadingSecret} = useLoadSecret({
-    onSuccess: (secret) => {
-      Alert.alert('Success', `it was loaded: [${secret}]`)
-    },
-    onError: (error) => {
-      Alert.alert('Error', error.message)
-    },
-  })
-  const {resetSecret, isLoading: isResettingSecret} = useResetSecret({
-    onSuccess: (r) => {
-      Alert.alert('Success', `secret has been reset ${r}`)
-    },
-    onError: (error) => {
-      Alert.alert('Error', error.message)
-    },
-  })
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
@@ -102,44 +76,9 @@ export const DeveloperScreen = () => {
           <Text style={styles.link}>Crash</Text>
         </TouchableOpacity>
         <Button
-          title="All easy"
+          title="All kc"
           style={styles.button}
-          disabled={isDisablingEasyConfirmation}
-          onPress={() => disableAllEasyConfirmation()}
-        />
-        <Button
-          disabled={isSavingSecret}
-          title="Save OS key"
-          style={styles.button}
-          onPress={() => saveSecret({key: 'developer-key-bio', value: 'some random value'})}
-        />
-        <Button
-          disabled={isLoadingSecret}
-          title="Load OS key"
-          style={styles.button}
-          onPress={() =>
-            loadSecret({key: 'developer-key-bio', authenticationPrompt: {title: 'Unlock Yoroi', cancel: 'Cancel'}})
-          }
-        />
-        <Button
-          disabled={isResettingSecret}
-          title="Reset OS key"
-          style={styles.button}
-          onPress={() => resetSecret({key: 'developer-key-bio'})}
-        />
-        <Button
-          disabled={isResettingSecret}
-          title="Auth Supported"
-          style={styles.button}
-          onPress={() =>
-            Promise.all([Keychain.getSupportedBiometryType(), Keychain.canImplyAuthentication()]).then(
-              ([supported, canImply]) =>
-                console.log({
-                  supported,
-                  canImply,
-                }),
-            )
-          }
+          onPress={() => Keychain.getAllGenericPasswordServices().then(console.log)}
         />
         <Button
           title="Logout"

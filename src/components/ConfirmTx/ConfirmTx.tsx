@@ -5,7 +5,7 @@ import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Platform, StyleSheet, View} from 'react-native'
 
-import {useAuthOsErrorDecoder, useLoadSecret} from '../../auth'
+import {useAuthOsErrorDecoder, useAuthOsWithEasyConfirmation} from '../../auth'
 import {RootKey} from '../../auth/RootKey'
 import {useSubmitTx} from '../../hooks'
 import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../i18n/global-messages'
@@ -196,13 +196,22 @@ export const ConfirmTx = ({
   )
 
   const decodeAuthOsError = useAuthOsErrorDecoder()
-  const {loadSecret} = useLoadSecret({
-    onSuccess: onConfirm,
-    onError: (error) => {
-      const errorMessage = decodeAuthOsError(error)
-      if (!isEmptyString(errorMessage)) showError({errorMessage})
+  const {authWithOs} = useAuthOsWithEasyConfirmation(
+    {
+      id: wallet.id,
+      authenticationPrompt: {
+        title: strings.authorize,
+        cancel: strings.cancel,
+      },
     },
-  })
+    {
+      onSuccess: onConfirm,
+      onError: (error) => {
+        const errorMessage = decodeAuthOsError(error)
+        if (!isEmptyString(errorMessage)) showError({errorMessage})
+      },
+    },
+  )
 
   const _onConfirm = React.useCallback(async () => {
     if (
@@ -213,26 +222,11 @@ export const ConfirmTx = ({
     ) {
       setDialogStep(DialogStep.ChooseTransport)
     } else if (wallet.isEasyConfirmationEnabled) {
-      return loadSecret({
-        key: wallet.id,
-        authenticationPrompt: {
-          title: strings.authorize,
-          cancel: strings.cancel,
-        },
-      })
+      return authWithOs()
     } else {
       return onConfirm()
     }
-  }, [
-    wallet.isHW,
-    wallet.isEasyConfirmationEnabled,
-    wallet.id,
-    chooseTransportOnConfirmation,
-    loadSecret,
-    strings.authorize,
-    strings.cancel,
-    onConfirm,
-  ])
+  }, [wallet.isHW, wallet.isEasyConfirmationEnabled, chooseTransportOnConfirmation, authWithOs, onConfirm])
 
   const isConfirmationDisabled = !wallet.isEasyConfirmationEnabled && isEmptyString(password) && !wallet.isHW
 

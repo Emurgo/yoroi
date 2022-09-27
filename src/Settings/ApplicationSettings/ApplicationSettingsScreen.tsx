@@ -4,7 +4,7 @@ import {Alert, ScrollView, StyleSheet, Switch} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {useAuthMethod, useAuthOsAppKey, useAuthOsErrorDecoder, useCanEnableAuthOs, useLoadSecret} from '../../auth'
+import {useAuthMethod, useAuthOsErrorDecoder, useAuthWithOs, useCanEnableAuthOs} from '../../auth'
 import {StatusBar} from '../../components'
 import {useRefetchOnFocus} from '../../hooks'
 import globalMessages from '../../i18n/global-messages'
@@ -38,27 +38,23 @@ export const ApplicationSettingsScreen = () => {
   useRefetchOnFocus(refetchCanEnableOSAuth)
   useRefetchOnFocus(refetchAuthMethod)
 
-  const secretKey = useAuthOsAppKey(storage)
-  if (isEmptyString(secretKey)) throw new Error('Invalid secret key')
-
   const decodeAuthOsError = useAuthOsErrorDecoder()
-  const onError = (error) => {
-    const errorMessage = decodeAuthOsError(error)
-    if (!isEmptyString(errorMessage)) Alert.alert(strings.error, errorMessage)
-  }
-  const {loadSecret} = useLoadSecret({
-    onSuccess: () => navigation.navigate('enable-login-with-pin'),
-    onError: onError,
-  })
-  const authenticate = React.useCallback(() => {
-    loadSecret({
-      key: secretKey,
+  const {authWithOs} = useAuthWithOs(
+    {
       authenticationPrompt: {
         title: strings.authorize,
         cancel: strings.cancel,
       },
-    })
-  }, [loadSecret, secretKey, strings.authorize, strings.cancel])
+      storage,
+    },
+    {
+      onSuccess: () => navigation.navigate('enable-login-with-pin'),
+      onError: (error) => {
+        const errorMessage = decodeAuthOsError(error)
+        if (!isEmptyString(errorMessage)) Alert.alert(strings.error, errorMessage)
+      },
+    },
+  )
 
   const installationId = useSelector(installationIdSelector)
   if (isEmptyString(installationId)) throw new Error('invalid state')
@@ -69,7 +65,7 @@ export const ApplicationSettingsScreen = () => {
 
   const onToggleBiometricsAuthIn = async () => {
     if (authMethod?.isOS) {
-      authenticate()
+      authWithOs()
     } else {
       navigation.navigate('app-root', {
         screen: 'settings',

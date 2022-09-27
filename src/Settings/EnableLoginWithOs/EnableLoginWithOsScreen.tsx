@@ -3,80 +3,37 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet} from 'react-native'
 
-import {useAuthOsAppKey, useAuthOsErrorDecoder, useLoadSecret, useSaveAuthMethod, useSaveSecret} from '../../auth'
+import {useAuthOsErrorDecoder, useEnableAuthWithOs} from '../../auth'
 import {Button} from '../../components'
 import globalMessages from '../../i18n/global-messages'
-import {isEmptyString} from '../../legacy/utils'
 import {OsAuthBaseScreen} from '../../OsAuth'
 import {useStorage} from '../../Storage'
 
 export const EnableLoginWithOsScreen = () => {
   const strings = useStrings()
   const navigation = useNavigation()
-
   const storage = useStorage()
-  const secretKey = useAuthOsAppKey(storage)
-  if (isEmptyString(secretKey)) throw new Error('Invalid secret key')
 
-  const [error, setError] = React.useState<string | undefined>()
   const decodeAuthOsError = useAuthOsErrorDecoder()
-  const onError = (error) => {
-    const errorMessage = decodeAuthOsError(error)
-    if (!isEmptyString(errorMessage)) setError(errorMessage)
-  }
-
-  const {saveAuthMethod, isLoading: savingAuthMethod, reset: resetSaveAuthMethod} = useSaveAuthMethod(storage)
-  const {
-    loadSecret,
-    isLoading: loadingSecret,
-    reset: resetLoadSecret,
-  } = useLoadSecret({
-    retry: false,
-  })
-  const {saveSecret, isLoading: savingSecret} = useSaveSecret({
-    onMutate: () => {
-      resetLoadSecret()
-      resetSaveAuthMethod()
-      setError(() => undefined)
-    },
-  })
-
-  const onLink = () => {
-    saveSecret(
-      // for the app the value doesn't matter (only auth)
-      {key: secretKey, value: secretKey},
-      {
-        onSuccess: ({service: key}) =>
-          loadSecret(
-            {
-              key,
-              authenticationPrompt: {
-                title: strings.authorize,
-                cancel: strings.cancel,
-              },
-            },
-            {
-              onSuccess: () => {
-                saveAuthMethod('os', {
-                  onSuccess: () => navigation.goBack(),
-                  onError,
-                })
-              },
-              onError,
-            },
-          ),
-        onError,
+  const {enableAuthWithOs, isLoading, error} = useEnableAuthWithOs(
+    {
+      storage,
+      authenticationPrompt: {
+        title: strings.authorize,
+        cancel: strings.cancel,
       },
-    )
-  }
-
-  const isLoading = savingSecret || loadingSecret || savingAuthMethod
+    },
+    {
+      onSuccess: () => navigation.goBack(),
+      retry: false,
+    },
+  )
 
   return (
     <OsAuthBaseScreen
       headings={[strings.heading]}
       subHeadings={[strings.subHeading1, strings.subHeading2]}
-      error={error}
+      error={decodeAuthOsError(error)}
       buttons={[
         <Button
           key="cancel"
@@ -90,7 +47,7 @@ export const EnableLoginWithOsScreen = () => {
           disabled={isLoading}
           key="link"
           title={strings.linkButton}
-          onPress={() => onLink()}
+          onPress={() => enableAuthWithOs()}
           containerStyle={styles.link}
         />,
       ]}

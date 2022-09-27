@@ -4,9 +4,9 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useDisableEasyConfirmation} from '../../auth'
 import {Button, StatusBar, Text} from '../../components'
 import {LoadingOverlay} from '../../components/LoadingOverlay'
-import {useDisableEasyConfirmation} from '../../hooks'
 import {useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../SelectedWallet'
 
 export const DisableEasyConfirmationScreen = () => {
@@ -14,16 +14,19 @@ export const DisableEasyConfirmationScreen = () => {
   const navigation = useNavigation()
   const walletMeta = useSelectedWalletMeta()
   const setSelectedWalletMeta = useSetSelectedWalletMeta()
-  const {disableEasyConfirmation, isLoading} = useDisableEasyConfirmation({
-    onSuccess: () => {
-      if (!walletMeta) throw new Error('Missing walletMeta')
-      setSelectedWalletMeta({
-        ...walletMeta,
-        isEasyConfirmationEnabled: false,
-      })
-      navigation.goBack()
+  if (!walletMeta) throw new Error('Missing walletMeta')
+  const {disableEasyConfirmation, isLoading} = useDisableEasyConfirmation(
+    {id: walletMeta.id},
+    {
+      onSuccess: () => {
+        setSelectedWalletMeta({
+          ...walletMeta,
+          isEasyConfirmationEnabled: false,
+        })
+        navigation.goBack()
+      },
     },
-  })
+  )
 
   return (
     <SafeAreaView edges={['bottom']} style={styles.container}>

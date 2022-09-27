@@ -1,22 +1,19 @@
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ScrollView, StyleSheet} from 'react-native'
+import {Alert, ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useDispatch} from 'react-redux'
 
+import {useAuthOsErrorDecoder, useAuthOsWithEasyConfirmation} from '../auth'
 import {RootKey} from '../auth/RootKey'
 import {Button, ErrorModal, OfflineBanner, ProgressStep, Spacer, TextInput} from '../components'
-import {useCloseWallet} from '../hooks'
-import {confirmationMessages, errorMessages, txLabels} from '../i18n/global-messages'
-import {clearAccountState} from '../legacy/account'
+import {LoadingOverlay} from '../components/LoadingOverlay'
+import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../i18n/global-messages'
 import {showErrorDialog} from '../legacy/actions'
 import {CONFIG} from '../legacy/config'
 import {WrongPassword} from '../legacy/errors'
 import {isEmptyString} from '../legacy/utils'
-import {clearUTXOs} from '../legacy/utxo'
 import {useSelectedWallet} from '../SelectedWallet'
-import {SystemAuthDisabled, walletManager} from '../yoroi-wallets'
 import {Actions, Description, Title} from './components'
 import {useCreateVotingRegTx, VotingRegTxData} from './hooks'
 
@@ -37,25 +34,10 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
   const {createVotingRegTx, isLoading: generatingTransaction} = useCreateVotingRegTx({wallet})
   const navigation = useNavigation()
   const [password, setPassword] = useState('')
-  const dispatch = useDispatch()
+  const decodeAuthOsError = useAuthOsErrorDecoder()
 
-  const {closeWallet} = useCloseWallet({
-    onSuccess: () => {
-      dispatch(clearUTXOs())
-      dispatch(clearAccountState())
-    },
-  })
-
-  const [errorData, setErrorData] = useState<ErrorData>({
-    showErrorDialog: false,
-    errorMessage: '',
-    errorLogs: null,
-  })
-
-  const isConfirmationDisabled = !wallet.isHW && !wallet.isEasyConfirmationEnabled && isEmptyString(password)
-
-  const onContinue = React.useCallback(async () => {
-    const createTransaction = (decryptedKey: string) => {
+  const createTransaction = React.useCallback(
+    (decryptedKey: string) => {
       createVotingRegTx(
         {
           decryptedKey,
@@ -73,24 +55,46 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
           },
         },
       )
-    }
+    },
+    [createVotingRegTx, navigation, pin, setVotingRegTxData],
+  )
 
+  const {authWithOs, isLoading: authenticating} = useAuthOsWithEasyConfirmation(
+    {
+      id: wallet.id,
+      authenticationPrompt: {
+        cancel: strings.cancel,
+        title: strings.authorize,
+      },
+    },
+    {
+      retry: false,
+      onSuccess: createTransaction,
+      onError: (error) => {
+        const errorMessage = decodeAuthOsError(error)
+        if (!isEmptyString(errorMessage)) Alert.alert(strings.error, errorMessage)
+      },
+    },
+  )
+
+  const [errorData, setErrorData] = useState<ErrorData>({
+    showErrorDialog: false,
+    errorMessage: '',
+    errorLogs: null,
+  })
+
+  const isLoading = authenticating || generatingTransaction
+  const isConfirmationDisabled = !wallet.isHW && !wallet.isEasyConfirmationEnabled && isEmptyString(password)
+
+  const onContinue = React.useCallback(async () => {
     if (wallet.isEasyConfirmationEnabled) {
+      authWithOs()
+    } else {
       try {
-        navigation.navigate('biometrics', {
-          keyId: walletManager._id,
-          onSuccess: async (decryptedKey) => {
-            createTransaction(decryptedKey)
-          },
-          onFail: () => navigation.goBack(),
-          instructions: [strings.bioAuthDescription],
-        })
+        await RootKey(wallet.id).reveal(password).then(createTransaction)
       } catch (error) {
-        if (error instanceof SystemAuthDisabled) {
-          closeWallet()
-          await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
-          navigation.navigate('app-root', {screen: 'wallet-selection'})
-          return
+        if (error instanceof WrongPassword) {
+          await showErrorDialog(errorMessages.incorrectPassword, intl)
         } else if (error instanceof Error) {
           setErrorData({
             showErrorDialog: true,
@@ -99,36 +103,8 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
           })
         }
       }
-      return
     }
-    try {
-      const decryptedKey = await RootKey(wallet.id).reveal(password)
-
-      return createTransaction(decryptedKey)
-    } catch (error) {
-      if (error instanceof WrongPassword) {
-        await showErrorDialog(errorMessages.incorrectPassword, intl)
-      } else if (error instanceof Error) {
-        setErrorData({
-          showErrorDialog: true,
-          errorMessage: strings.errorMessage,
-          errorLogs: String(error.message),
-        })
-      }
-    }
-  }, [
-    wallet.isEasyConfirmationEnabled,
-    wallet.id,
-    createVotingRegTx,
-    pin,
-    setVotingRegTxData,
-    navigation,
-    strings.bioAuthDescription,
-    strings.errorMessage,
-    intl,
-    password,
-    closeWallet,
-  ])
+  }, [wallet.isEasyConfirmationEnabled, wallet.id, authWithOs, password, createTransaction, intl, strings.errorMessage])
 
   useEffect(() => {
     // if easy confirmation is enabled we go directly to the authentication
@@ -180,11 +156,7 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
       <Spacer fill />
 
       <Actions>
-        <Button
-          onPress={onContinue}
-          title={strings.confirmButton}
-          disabled={isConfirmationDisabled || generatingTransaction}
-        />
+        <Button onPress={onContinue} title={strings.confirmButton} disabled={isConfirmationDisabled || isLoading} />
       </Actions>
 
       <ErrorModal
@@ -199,6 +171,8 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
           }))
         }}
       />
+
+      <LoadingOverlay loading={isLoading} />
     </SafeAreaView>
   )
 }
@@ -219,6 +193,10 @@ const messages = defineMessages({
       'authenticate once again to sign and submit the certificate generated ' +
       'in the previous step.',
   },
+  authorize: {
+    id: 'components.send.biometricauthscreen.authorizeOperation',
+    defaultMessage: '!!!Authorize operation',
+  },
 })
 
 const styles = StyleSheet.create({
@@ -235,6 +213,9 @@ const useStrings = () => {
   const intl = useIntl()
 
   return {
+    error: intl.formatMessage(globalMessages.error),
+    cancel: intl.formatMessage(globalMessages.cancel),
+    authorize: intl.formatMessage(messages.authorize),
     subTitle: intl.formatMessage(messages.subTitle),
     description: intl.formatMessage(messages.description),
     password: intl.formatMessage(txLabels.password),
