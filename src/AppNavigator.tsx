@@ -122,7 +122,6 @@ const NavigatorSwitch = ({authAction}: {authAction: 'create-link-pin' | 'check-p
         <Stack.Group>
           <Stack.Screen name="app-root" component={WalletNavigator} />
           <Stack.Screen name="new-wallet" component={WalletInitNavigator} />
-          <Stack.Screen name="biometrics" component={OsLoginScreen} options={{headerShown: false}} />
         </Stack.Group>
       )}
 

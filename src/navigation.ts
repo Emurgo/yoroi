@@ -1,6 +1,5 @@
 import {NavigatorScreenParams, useNavigation, useRoute} from '@react-navigation/native'
 import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/stack'
-import {IntlShape} from 'react-intl'
 import {Platform} from 'react-native'
 
 import {HWDeviceInfo} from './legacy/ledgerUtils'
@@ -62,14 +61,6 @@ export const defaultStackNavigationOptions: StackNavigationOptions = {
 }
 
 // ROUTES
-export type BiometricParams = {
-  onSuccess: (decryptedKey: string) => void | Promise<void>
-  onFail?: (reason: string, intl: IntlShape) => void | Promise<void>
-  keyId: string
-  addWelcomeMessage?: boolean
-  instructions?: string[]
-}
-
 export type WalletTabRoutes = {
   history: NavigatorScreenParams<TxHistoryRoutes>
   'send-ada': NavigatorScreenParams<SendRoutes>
@@ -265,8 +256,7 @@ export type AppRoutes = {
   'new-wallet': NavigatorScreenParams<WalletInitRoutes>
   'app-root': NavigatorScreenParams<WalletStackRoutes>
   'custom-pin-auth': undefined
-  'bio-auth-initial': BiometricParams
-  biometrics: BiometricParams
+  'bio-auth-initial': undefined
   'enable-login-with-pin': undefined
 }
 export type AppRouteNavigation = StackNavigationProp<AppRoutes>

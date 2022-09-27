@@ -140,7 +140,7 @@ export const useAuthOsWithEasyConfirmation = (
 export const useDisableEasyConfirmation = ({id}: {id: YoroiWallet['id']}, options?: UseMutationOptions) => {
   const mutation = useMutationWithInvalidations({
     ...options,
-    mutationFn: () => Keychain.resetSecret({key: id}).then(walletManager.disableEasyConfirmation),
+    mutationFn: () => Keychain.resetSecret({key: id}).then(() => walletManager.disableEasyConfirmation()),
     invalidateQueries: [['walletMetas']],
   })
 
@@ -157,7 +157,7 @@ export const useEnableEasyConfirmation = (
   const mutation = useMutationWithInvalidations({
     ...options,
     mutationFn: (rootKey: string) =>
-      Keychain.saveSecret({key: id, value: rootKey}).then(walletManager.enableEasyConfirmation),
+      Keychain.saveSecret({key: id, value: rootKey}).then(() => walletManager.enableEasyConfirmation()),
     invalidateQueries: [['walletMetas']],
   })
 
