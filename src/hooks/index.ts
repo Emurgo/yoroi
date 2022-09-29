@@ -19,6 +19,7 @@ import {getDefaultAssetByNetworkId} from '../legacy/config'
 import {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {WalletMeta} from '../legacy/state'
 import storage from '../legacy/storage'
+import {isEmptyString} from '../legacy/utils'
 import {Storage} from '../Storage'
 import {
   Cardano,
@@ -34,7 +35,7 @@ import {
 } from '../yoroi-wallets'
 import {generateShelleyPlateFromKey} from '../yoroi-wallets/cardano/shelley/plate'
 import {DefaultAsset, Token, YoroiAmounts, YoroiSignedTx, YoroiUnsignedTx} from '../yoroi-wallets/types'
-import {CurrencySymbol, RawUtxo, TipStatusResponse} from '../yoroi-wallets/types/other'
+import {AuthMethod, AuthMethodState, CurrencySymbol, RawUtxo, TipStatusResponse} from '../yoroi-wallets/types/other'
 import {Utxos} from '../yoroi-wallets/utils'
 
 // WALLET
@@ -410,6 +411,7 @@ export const useSignTxWithHW = (
 }
 
 // WALLET MANAGER
+export const AUTH_METHOD_PIN: AuthMethod = 'pin'
 export const useCreatePin = (storage: Storage, options: UseMutationOptions<void, Error, string>) => {
   const mutation = useMutation({
     mutationFn: async (pin) => {
@@ -420,7 +422,7 @@ export const useCreatePin = (storage: Storage, options: UseMutationOptions<void,
       const saltHex = cryptoRandomString({length: 2 * 32})
       const nonceHex = cryptoRandomString({length: 2 * 12})
       const encryptedPinHash = await Cardano.encryptWithPassword(pinHex, saltHex, nonceHex, installationIdHex)
-
+      await storage.setItem(AUTH_METHOD_KEY, JSON.stringify(AUTH_METHOD_PIN))
       return storage.setItem(ENCRYPTED_PIN_HASH_KEY, JSON.stringify(encryptedPinHash))
     },
     ...options,
@@ -459,7 +461,7 @@ export const useCheckPin = (storage: Storage, options: UseMutationOptions<boolea
   }
 }
 
-const ENCRYPTED_PIN_HASH_KEY = '/appSettings/customPinHash'
+export const ENCRYPTED_PIN_HASH_KEY = '/appSettings/customPinHash'
 const toHex = (text: string) => Buffer.from(text, 'utf8').toString('hex')
 
 export const useWalletNames = (
@@ -788,4 +790,45 @@ export const useRefetchOnFocus = (refetch: () => unknown, canRefetch = true) => 
       refetch()
     }
   }, [canRefetch, isScreenFocused, refetch])
+}
+
+export const AUTH_METHOD_KEY = '/appSettings/authMethod'
+export const useAuthMethod = (storage: Storage, options?: UseQueryOptions<AuthMethodState, Error>) => {
+  const query = useQuery({
+    suspense: true,
+    queryKey: ['authMethod'],
+    queryFn: () =>
+      Promise.resolve(AUTH_METHOD_KEY)
+        .then(storage.getItem)
+        .then((storedAuthMethod) => (!isEmptyString(storedAuthMethod) ? storedAuthMethod : '""'))
+        .then(JSON.parse)
+        .then((parsedAuthMethod) => {
+          switch (parsedAuthMethod) {
+            case 'pin':
+              return {
+                isPIN: true,
+                isOS: false,
+                isNone: false,
+              } as const
+            case 'os':
+              return {
+                isPIN: false,
+                isOS: true,
+                isNone: false,
+              } as const
+            default:
+              return {
+                isPIN: false,
+                isOS: false,
+                isNone: true,
+              } as const
+          }
+        }),
+    ...options,
+  })
+
+  return {
+    authMethod: query.data,
+    ...query,
+  }
 }

@@ -488,3 +488,21 @@ export type CommonMetadata = {
   readonly longName: null | string
   readonly maxSupply: null | string
 }
+
+export type AuthMethod = 'pin' | 'os'
+export type AuthMethodState =
+  | {
+      isPIN: true
+      isOS: false
+      isNone: false
+    }
+  | {
+      isPIN: false
+      isOS: true
+      isNone: false
+    }
+  | {
+      isPIN: false
+      isOS: false
+      isNone: true
+    }
