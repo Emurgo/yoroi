@@ -31,7 +31,7 @@ export const BalanceBanner = () => {
           <Balance privacyMode={privacyMode} />
         </Row>
         <Row>
-          <Boundary loading={{fallbackProps: {size: 'small'}}}>
+          <Boundary loading={{fallbackProps: {size: 'small'}}} error={{notFill: true}}>
             <PairedBalance privacyMode={privacyMode} />
           </Boundary>
         </Row>

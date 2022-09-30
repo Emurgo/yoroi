@@ -4,6 +4,7 @@ import {
   ErrorBoundaryProps as ReactErrorBoundaryProps,
   FallbackProps,
 } from 'react-error-boundary'
+import {MessageDescriptor, useIntl} from 'react-intl'
 import {
   ActivityIndicator,
   ActivityIndicatorProps,
@@ -15,6 +16,7 @@ import {
 } from 'react-native'
 
 import image from '../../assets/img/error.png'
+import {LanguageProvider} from '../../i18n'
 import {Button} from '../Button'
 import {Text} from '../Text'
 
@@ -54,39 +56,58 @@ export const LoadingFallback = ({size = 'large', color = 'black', style}: Loadin
 )
 
 type ErrorBoundaryProps = {
-  error?: {fallback?: ReactErrorBoundaryProps['fallbackRender']; enabled?: boolean}
+  error?: {
+    fallback?: ReactErrorBoundaryProps['fallbackRender']
+    enabled?: boolean
+    notFill?: ErrorFallbackProps['notFill']
+  }
   children: React.ReactNode
 }
 const ErrorBoundary = ({children, ...props}: ErrorBoundaryProps) => {
   if (props.error?.enabled === false) return <>{children}</>
 
   const fallbackRender = (fallbackProps: ErrorFallbackProps) =>
-    props.error?.fallback?.(fallbackProps) || <ErrorFallback {...fallbackProps} />
+    props.error?.fallback?.(fallbackProps) || <ErrorFallback {...fallbackProps} notFill={props.error?.notFill} />
 
-  return <ReactErrorBoundary fallbackRender={fallbackRender}>{children}</ReactErrorBoundary>
+  return (
+    <LanguageProvider>
+      <ReactErrorBoundary fallbackRender={fallbackRender}>{children}</ReactErrorBoundary>
+    </LanguageProvider>
+  )
 }
 
-type ErrorFallbackProps = FallbackProps & {reset?: boolean}
-export const ErrorFallback = ({error, resetErrorBoundary, reset = true}: ErrorFallbackProps) => (
-  <View style={styles.container}>
-    <View style={styles.errorHeader}>
-      <Text>{error.message}</Text>
-    </View>
+type ErrorFallbackProps = {
+  error: FallbackProps['error'] & MessageDescriptor
+  resetErrorBoundary: FallbackProps['resetErrorBoundary']
+  reset?: boolean
+  notFill?: boolean
+}
 
-    <Image source={image} />
-    {reset && (
-      <Button
-        title="Try again"
-        onPress={() => {
-          LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-          resetErrorBoundary()
-        }}
-      />
-    )}
-  </View>
-)
+export const ErrorFallback = ({error, resetErrorBoundary, reset = true, notFill = false}: ErrorFallbackProps) => {
+  const intl = useIntl()
+  return (
+    <View style={[styles.container, {flex: notFill === false ? 1 : undefined}]}>
+      <View style={styles.errorHeader}>
+        <Text>
+          {error.defaultMessage !== undefined && error.id !== undefined ? intl.formatMessage(error) : error.message}
+        </Text>
+      </View>
+
+      <Image source={image} />
+      {reset && (
+        <Button
+          title="Try again"
+          onPress={() => {
+            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+            resetErrorBoundary()
+          }}
+        />
+      )}
+    </View>
+  )
+}
 
 const styles = StyleSheet.create({
-  container: {flex: 1, alignItems: 'center', justifyContent: 'center'},
-  errorHeader: {alignItems: 'center', justifyContent: 'center', padding: 16},
+  container: {alignItems: 'center', justifyContent: 'center'},
+  errorHeader: {alignItems: 'center', justifyContent: 'center', padding: 20},
 })
