@@ -27,7 +27,6 @@ import {
   TxSubmissionStatus,
   WalletEvent,
   WalletImplementationId,
-  WalletJSON,
   WalletManager,
   walletManager,
   YoroiProvider,
@@ -726,56 +725,6 @@ export const useBalances = (wallet: YoroiWallet): YoroiAmounts => {
   if (!query.data) throw new Error('invalid state')
 
   return query.data
-}
-
-export const useDisableAllEasyConfirmation = (
-  wallet: YoroiWallet | undefined,
-  options?: UseMutationOptions<void, Error>,
-) => {
-  const mutation = useMutationWithInvalidations({
-    mutationFn: async () => {
-      storage
-        .keys('/wallet/', false)
-        .then((keys) =>
-          Promise.all([
-            storage.readMany(keys.map((walletId) => `/wallet/${walletId}`)),
-            storage.readMany(keys.map((walletId) => `/wallet/${walletId}/data`)),
-          ]),
-        )
-        .then(async ([metas, wallets]) => {
-          const metaUpdates: Array<[string, WalletMeta]> = []
-          for (const [walletPath, meta] of metas) {
-            if ((meta as WalletMeta)?.isEasyConfirmationEnabled) {
-              metaUpdates.push([walletPath, {...meta, isEasyConfirmationEnabled: false}])
-            }
-          }
-          const walletUpdates: Array<[string, WalletJSON]> = []
-          for (const [walletPath, wallet] of wallets) {
-            if ((wallet as WalletJSON)?.isEasyConfirmationEnabled) {
-              walletUpdates.push([walletPath, {...wallet, isEasyConfirmationEnabled: false}])
-            }
-          }
-          return [metaUpdates, walletUpdates]
-        })
-        .then(async ([metaUpdates, walletUpdates]) => {
-          for (const [key, value] of metaUpdates) {
-            await storage.write(key, value)
-          }
-          for (const [key, value] of walletUpdates) {
-            await storage.write(key, value)
-          }
-        })
-      // if there is a wallet selected it needs to trigger the event
-      if (wallet !== undefined) await walletManager.disableEasyConfirmation()
-    },
-    invalidateQueries: [['walletMetas']],
-    ...options,
-  })
-
-  return {
-    ...mutation,
-    disableAllEasyConfirmation: mutation.mutate,
-  }
 }
 
 export const useRefetchOnFocus = (refetch: () => unknown, canRefetch = true) => {

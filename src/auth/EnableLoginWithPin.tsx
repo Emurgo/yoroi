@@ -1,8 +1,8 @@
 import React from 'react'
 
 import {LoadingOverlay} from '../components/LoadingOverlay'
-import {useDisableAllEasyConfirmation} from '../hooks'
 import {useSelectedWalletContext} from '../SelectedWallet'
+import {useDisableAllEasyConfirmation} from './authOS'
 import {CreatePinScreen} from './CreatePinScreen'
 
 export const EnableLoginWithPin = ({onDone}: {onDone: () => void}) => {
