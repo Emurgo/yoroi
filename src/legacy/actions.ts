@@ -71,18 +71,6 @@ export const setEasyConfirmation = (enable: boolean) => ({
   type: 'SET_EASY_CONFIRMATION',
 })
 
-const _updateWallets = (wallets) => ({
-  path: ['wallets'],
-  payload: wallets,
-  reducer: (state: State, value) => value,
-  type: 'UPDATE_WALLETS',
-})
-
-export const updateWallets = () => (dispatch: Dispatch<any>) => {
-  const wallets = walletManager.getWallets()
-  dispatch(_updateWallets(wallets))
-}
-
 const _setAppSettings = (appSettings) => ({
   path: ['appSettings'],
   payload: appSettings,
@@ -189,7 +177,6 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
   const canEnableBiometricEncryption = (await canBiometricEncryptionBeEnabled()) && !shouldNotEnableBiometricAuth
   await dispatch(setAppSettingField(APP_SETTINGS_KEYS.CAN_ENABLE_BIOMETRIC_ENCRYPTION, canEnableBiometricEncryption))
   await walletManager.initialize()
-  await dispatch(updateWallets())
 
   if (canEnableBiometricEncryption && isSystemAuthEnabledSelector(state)) {
     // On android 6 signin keys can get invalidated
