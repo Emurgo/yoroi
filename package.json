@@ -81,7 +81,7 @@
     "react-native/@jest/create-cache-key-function": "^27.0.2"
   },
   "dependencies": {
-    "@cardano-foundation/ledgerjs-hw-app-cardano": "^5.0.0",
+    "@cardano-foundation/ledgerjs-hw-app-cardano": "^5.1.0",
     "@emurgo/cip14-js": "2.0.0",
     "@emurgo/cip4-js": "1.0.7",
     "@emurgo/cross-csl-mobile": "^1.0.0",
