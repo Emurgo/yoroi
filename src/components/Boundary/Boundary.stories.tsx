@@ -140,7 +140,7 @@ export class i18Error extends LocalizableError {
 
 const I18nMessageBomb = () => {
   useQuery({
-    queryKey: ['i18nMessagError'],
+    queryKey: ['i18nMessageError'],
     queryFn: () => Promise.reject(new i18Error()),
     suspense: true,
     retry: false,
