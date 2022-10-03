@@ -69,7 +69,7 @@ const ErrorBoundary = ({children, ...props}: ErrorBoundaryProps) => {
 
   const fallbackRender = (fallbackProps: ErrorFallbackProps) => {
     if (props.error?.fallback) {
-      return props.error?.fallback?.(fallbackProps)
+      return props.error?.fallback(fallbackProps)
     } else if (props.error?.size === 'small') {
       return <SmallErrorFallback {...fallbackProps} />
     } else if (props.error?.size === 'inline') {
