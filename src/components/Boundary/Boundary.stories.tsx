@@ -4,7 +4,7 @@ import {Button, StyleSheet, Text, View} from 'react-native'
 import {ActivityIndicator} from 'react-native-paper'
 import {useQuery} from 'react-query'
 
-import {QueryProvider} from '../../../storybook/decorators/query'
+import {QueryProvider} from '../../../storybook/decorators'
 import {errorMessages} from '../../i18n/global-messages'
 import LocalizableError from '../../i18n/LocalizableError'
 import {Boundary} from './Boundary'

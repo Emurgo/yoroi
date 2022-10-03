@@ -2,7 +2,7 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
 import {mockWallet} from '../../storybook'
-import {QueryProvider} from '../../storybook/decorators/query'
+import {QueryProvider} from '../../storybook/decorators'
 import {SelectedWalletProvider} from '../SelectedWallet'
 import {SendProvider} from '../Send/Context/SendContext'
 import {TxHistory as TxHistoryScreen} from './TxHistory'

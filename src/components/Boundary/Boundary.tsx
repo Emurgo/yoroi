@@ -4,7 +4,7 @@ import {
   ErrorBoundaryProps as ReactErrorBoundaryProps,
   FallbackProps,
 } from 'react-error-boundary'
-import {MessageDescriptor, useIntl} from 'react-intl'
+import {useIntl} from 'react-intl'
 import {
   ActivityIndicator,
   ActivityIndicatorProps,
@@ -17,6 +17,7 @@ import {
 } from 'react-native'
 
 import image from '../../assets/img/error.png'
+import LocalizableError from '../../i18n/LocalizableError'
 import {Button} from '../Button'
 import {Text} from '../Text'
 
@@ -82,7 +83,7 @@ const ErrorBoundary = ({children, ...props}: ErrorBoundaryProps) => {
 }
 
 type ErrorFallbackProps = {
-  error: FallbackProps['error'] & MessageDescriptor
+  error: FallbackProps['error'] | LocalizableError
   resetErrorBoundary: FallbackProps['resetErrorBoundary']
   reset?: boolean
 }
@@ -90,11 +91,9 @@ type ErrorFallbackProps = {
 export const LargeErrorFallback = ({error, resetErrorBoundary, reset = true}: ErrorFallbackProps) => {
   const intl = useIntl()
   return (
-    <View style={styles.largeContainer}>
+    <View style={styles.container}>
       <View style={styles.errorHeader}>
-        <Text>
-          {error.defaultMessage !== undefined && error.id !== undefined ? intl.formatMessage(error) : error.message}
-        </Text>
+        <Text>{error instanceof LocalizableError ? intl.formatMessage(error) : error.message}</Text>
       </View>
 
       <Image source={image} />
@@ -116,9 +115,7 @@ export const SmallErrorFallback = ({error, resetErrorBoundary, reset = true}: Er
   return (
     <View style={styles.container}>
       <View style={styles.errorHeader}>
-        <Text>
-          {error.defaultMessage !== undefined && error.id !== undefined ? intl.formatMessage(error) : error.message}
-        </Text>
+        <Text>{error instanceof LocalizableError ? intl.formatMessage(error) : error.message}</Text>
       </View>
 
       {reset && (
@@ -146,16 +143,13 @@ export const InlineErrorFallback = ({error, resetErrorBoundary, reset}: ErrorFal
         style={styles.errorHeader}
         disabled={reset === false}
       >
-        <Text>
-          {error.defaultMessage !== undefined && error.id !== undefined ? intl.formatMessage(error) : error.message}
-        </Text>
+        <Text>{error instanceof LocalizableError ? intl.formatMessage(error) : error.message}</Text>
       </TouchableOpacity>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  largeContainer: {alignItems: 'center', justifyContent: 'center', flex: 1},
   container: {alignItems: 'center', justifyContent: 'center'},
   errorHeader: {alignItems: 'center', justifyContent: 'center', padding: 20},
 })
