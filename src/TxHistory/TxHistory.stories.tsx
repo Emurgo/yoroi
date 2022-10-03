@@ -1,5 +1,6 @@
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
+import {QueryClient, QueryClientProvider} from 'react-query'
 
 import {mockWallet} from '../../storybook'
 import {SelectedWalletProvider} from '../SelectedWallet'
@@ -9,9 +10,11 @@ import {TxHistory as TxHistoryScreen} from './TxHistory'
 storiesOf('V2/TxHistory', module)
   .add('default', () => {
     return (
-      <SelectedWalletProvider wallet={mockWallet}>
-        <TxHistoryScreen />
-      </SelectedWalletProvider>
+      <QueryClientProvider client={new QueryClient()}>
+        <SelectedWalletProvider wallet={mockWallet}>
+          <TxHistoryScreen />
+        </SelectedWalletProvider>
+      </QueryClientProvider>
     )
   })
   .add('default with API errors', () => {
@@ -22,17 +25,21 @@ storiesOf('V2/TxHistory', module)
     }
 
     return (
-      <SelectedWalletProvider wallet={wallet}>
-        <SendProvider wallet={wallet}>
-          <TxHistoryScreen />
-        </SendProvider>
-      </SelectedWalletProvider>
+      <QueryClientProvider client={new QueryClient()}>
+        <SelectedWalletProvider wallet={wallet}>
+          <SendProvider wallet={wallet}>
+            <TxHistoryScreen />
+          </SendProvider>
+        </SelectedWalletProvider>
+      </QueryClientProvider>
     )
   })
   .add('byron', () => {
     return (
-      <SelectedWalletProvider wallet={{...mockWallet, walletImplementationId: 'haskell-byron'}}>
-        <TxHistoryScreen />
-      </SelectedWalletProvider>
+      <QueryClientProvider client={new QueryClient()}>
+        <SelectedWalletProvider wallet={{...mockWallet, walletImplementationId: 'haskell-byron'}}>
+          <TxHistoryScreen />
+        </SelectedWalletProvider>
+      </QueryClientProvider>
     )
   })
