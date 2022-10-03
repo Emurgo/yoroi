@@ -2,8 +2,9 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {Button, StyleSheet, Text, View} from 'react-native'
 import {ActivityIndicator} from 'react-native-paper'
-import {QueryClient, QueryClientProvider, useQuery} from 'react-query'
+import {useQuery} from 'react-query'
 
+import {QueryProvider} from '../../../storybook/decorators/query'
 import {errorMessages} from '../../i18n/global-messages'
 import LocalizableError from '../../i18n/LocalizableError'
 import {Boundary} from './Boundary'
@@ -11,16 +12,16 @@ import {Boundary} from './Boundary'
 storiesOf('Boundary', module)
   .add('Loading default', () => {
     return (
-      <QueryClientProvider client={new QueryClient()}>
+      <QueryProvider>
         <Boundary>
           <IsLoading />
         </Boundary>
-      </QueryClientProvider>
+      </QueryProvider>
     )
   })
   .add('Loading/fallback', () => {
     return (
-      <QueryClientProvider client={new QueryClient()}>
+      <QueryProvider>
         <Boundary
           loading={{
             fallback: (
@@ -32,57 +33,57 @@ storiesOf('Boundary', module)
         >
           <IsLoading />
         </Boundary>
-      </QueryClientProvider>
+      </QueryProvider>
     )
   })
   .add('Loading/overlay', () => {
     return (
-      <QueryClientProvider client={new QueryClient()}>
+      <QueryProvider>
         <Boundary>
           <LoadingWithOverlay />
         </Boundary>
-      </QueryClientProvider>
+      </QueryProvider>
     )
   })
   .add('Error/default large size', () => {
     return (
-      <QueryClientProvider client={new QueryClient()}>
+      <QueryProvider>
         <Boundary>
           <Bomb />
         </Boundary>
-      </QueryClientProvider>
+      </QueryProvider>
     )
   })
   .add('Error/default small size', () => {
     return (
-      <QueryClientProvider client={new QueryClient()}>
+      <QueryProvider>
         <Boundary error={{size: 'small'}}>
           <Bomb />
         </Boundary>
-      </QueryClientProvider>
+      </QueryProvider>
     )
   })
   .add('Error/default inline size', () => {
     return (
-      <QueryClientProvider client={new QueryClient()}>
+      <QueryProvider>
         <Boundary error={{size: 'inline'}}>
           <Bomb />
         </Boundary>
-      </QueryClientProvider>
+      </QueryProvider>
     )
   })
   .add('Error/default i18n error', () => {
     return (
-      <QueryClientProvider client={new QueryClient()}>
+      <QueryProvider>
         <Boundary>
           <I18nMessageBomb />
         </Boundary>
-      </QueryClientProvider>
+      </QueryProvider>
     )
   })
   .add('Error/fallback', () => {
     return (
-      <QueryClientProvider client={new QueryClient()}>
+      <QueryProvider>
         <Boundary
           error={{
             fallback: ({error}) => (
@@ -95,7 +96,7 @@ storiesOf('Boundary', module)
         >
           <Bomb />
         </Boundary>
-      </QueryClientProvider>
+      </QueryProvider>
     )
   })
 
