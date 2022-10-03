@@ -33,7 +33,7 @@ export function LockedDeposit({privacyMode}: Props) {
       loading={{
         fallback: <FormattedAmount amount={loadingAmount} />,
       }}
-      error={{notFill: true}}
+      error={{size: 'small'}}
     >
       <LockedAmount token={token} />
     </Boundary>

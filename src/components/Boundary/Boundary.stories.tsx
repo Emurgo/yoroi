@@ -42,10 +42,19 @@ storiesOf('Boundary', module)
       </QueryClientProvider>
     )
   })
-  .add('Error/default', () => {
+  .add('Error/default large size', () => {
     return (
       <QueryClientProvider client={new QueryClient()}>
         <Boundary>
+          <Bomb />
+        </Boundary>
+      </QueryClientProvider>
+    )
+  })
+  .add('Error/default small size', () => {
+    return (
+      <QueryClientProvider client={new QueryClient()}>
+        <Boundary error={{size: 'small'}}>
           <Bomb />
         </Boundary>
       </QueryClientProvider>

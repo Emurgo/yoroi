@@ -59,7 +59,7 @@ type ErrorBoundaryProps = {
   error?: {
     fallback?: ReactErrorBoundaryProps['fallbackRender']
     enabled?: boolean
-    notFill?: ErrorFallbackProps['notFill']
+    size?: ErrorFallbackProps['size']
   }
   children: React.ReactNode
 }
@@ -67,7 +67,7 @@ const ErrorBoundary = ({children, ...props}: ErrorBoundaryProps) => {
   if (props.error?.enabled === false) return <>{children}</>
 
   const fallbackRender = (fallbackProps: ErrorFallbackProps) =>
-    props.error?.fallback?.(fallbackProps) || <ErrorFallback {...fallbackProps} notFill={props.error?.notFill} />
+    props.error?.fallback?.(fallbackProps) || <ErrorFallback {...fallbackProps} size={props.error?.size} />
 
   return (
     <LanguageProvider>
@@ -80,13 +80,13 @@ type ErrorFallbackProps = {
   error: FallbackProps['error'] & MessageDescriptor
   resetErrorBoundary: FallbackProps['resetErrorBoundary']
   reset?: boolean
-  notFill?: boolean
+  size?: 'small' | 'large' | undefined
 }
 
-export const ErrorFallback = ({error, resetErrorBoundary, reset = true, notFill = false}: ErrorFallbackProps) => {
+export const ErrorFallback = ({error, resetErrorBoundary, reset = true, size = 'large'}: ErrorFallbackProps) => {
   const intl = useIntl()
   return (
-    <View style={[styles.container, {flex: notFill === false ? 1 : undefined}]}>
+    <View style={[styles.container, {flex: size === 'large' ? 1 : undefined}]}>
       <View style={styles.errorHeader}>
         <Text>
           {error.defaultMessage !== undefined && error.id !== undefined ? intl.formatMessage(error) : error.message}
