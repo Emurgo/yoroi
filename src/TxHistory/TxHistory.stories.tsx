@@ -23,7 +23,7 @@ storiesOf('V2/TxHistory', module)
 
     return (
       <SelectedWalletProvider wallet={wallet}>
-        <SendProvider key={wallet.id} wallet={wallet}>
+        <SendProvider wallet={wallet}>
           <TxHistoryScreen />
         </SendProvider>
       </SelectedWalletProvider>
