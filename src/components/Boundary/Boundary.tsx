@@ -16,7 +16,6 @@ import {
 } from 'react-native'
 
 import image from '../../assets/img/error.png'
-import {LanguageProvider} from '../../i18n'
 import {Button} from '../Button'
 import {Text} from '../Text'
 
@@ -69,11 +68,7 @@ const ErrorBoundary = ({children, ...props}: ErrorBoundaryProps) => {
   const fallbackRender = (fallbackProps: ErrorFallbackProps) =>
     props.error?.fallback?.(fallbackProps) || <ErrorFallback {...fallbackProps} size={props.error?.size} />
 
-  return (
-    <LanguageProvider>
-      <ReactErrorBoundary fallbackRender={fallbackRender}>{children}</ReactErrorBoundary>
-    </LanguageProvider>
-  )
+  return <ReactErrorBoundary fallbackRender={fallbackRender}>{children}</ReactErrorBoundary>
 }
 
 type ErrorFallbackProps = {
