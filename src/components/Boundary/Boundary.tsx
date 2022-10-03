@@ -81,7 +81,7 @@ type ErrorFallbackProps = {
 export const ErrorFallback = ({error, resetErrorBoundary, reset = true, size = 'large'}: ErrorFallbackProps) => {
   const intl = useIntl()
   return (
-    <View style={[styles.container, {flex: size === 'large' ? 1 : undefined}]}>
+    <View style={[styles.container, size === 'large' && {flex: 1}]}>
       <View style={styles.errorHeader}>
         <Text>
           {error.defaultMessage !== undefined && error.id !== undefined ? intl.formatMessage(error) : error.message}
