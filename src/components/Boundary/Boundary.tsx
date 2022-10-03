@@ -11,6 +11,7 @@ import {
   Image,
   LayoutAnimation,
   StyleSheet,
+  TouchableOpacity,
   View,
   ViewStyle,
 } from 'react-native'
@@ -58,15 +59,24 @@ type ErrorBoundaryProps = {
   error?: {
     fallback?: ReactErrorBoundaryProps['fallbackRender']
     enabled?: boolean
-    size?: ErrorFallbackProps['size']
+    size?: 'large' | 'small' | 'inline'
   }
   children: React.ReactNode
 }
 const ErrorBoundary = ({children, ...props}: ErrorBoundaryProps) => {
   if (props.error?.enabled === false) return <>{children}</>
 
-  const fallbackRender = (fallbackProps: ErrorFallbackProps) =>
-    props.error?.fallback?.(fallbackProps) || <ErrorFallback {...fallbackProps} size={props.error?.size} />
+  const fallbackRender = (fallbackProps: ErrorFallbackProps) => {
+    if (props.error?.fallback) {
+      return props.error?.fallback?.(fallbackProps)
+    } else if (props.error?.size === 'small') {
+      return <SmallErrorFallback {...fallbackProps} />
+    } else if (props.error?.size === 'inline') {
+      return <InlineErrorFallback {...fallbackProps} />
+    }
+
+    return <LargeErrorFallback {...fallbackProps} />
+  }
 
   return <ReactErrorBoundary fallbackRender={fallbackRender}>{children}</ReactErrorBoundary>
 }
@@ -75,13 +85,12 @@ type ErrorFallbackProps = {
   error: FallbackProps['error'] & MessageDescriptor
   resetErrorBoundary: FallbackProps['resetErrorBoundary']
   reset?: boolean
-  size?: 'small' | 'large' | undefined
 }
 
-export const ErrorFallback = ({error, resetErrorBoundary, reset = true, size = 'large'}: ErrorFallbackProps) => {
+export const LargeErrorFallback = ({error, resetErrorBoundary, reset = true}: ErrorFallbackProps) => {
   const intl = useIntl()
   return (
-    <View style={[styles.container, size === 'large' && {flex: 1}]}>
+    <View style={styles.largeContainer}>
       <View style={styles.errorHeader}>
         <Text>
           {error.defaultMessage !== undefined && error.id !== undefined ? intl.formatMessage(error) : error.message}
@@ -102,7 +111,51 @@ export const ErrorFallback = ({error, resetErrorBoundary, reset = true, size = '
   )
 }
 
+export const SmallErrorFallback = ({error, resetErrorBoundary, reset = true}: ErrorFallbackProps) => {
+  const intl = useIntl()
+  return (
+    <View style={styles.container}>
+      <View style={styles.errorHeader}>
+        <Text>
+          {error.defaultMessage !== undefined && error.id !== undefined ? intl.formatMessage(error) : error.message}
+        </Text>
+      </View>
+
+      {reset && (
+        <Button
+          title="Try again"
+          onPress={() => {
+            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+            resetErrorBoundary()
+          }}
+        />
+      )}
+    </View>
+  )
+}
+
+export const InlineErrorFallback = ({error, resetErrorBoundary, reset}: ErrorFallbackProps) => {
+  const intl = useIntl()
+  return (
+    <View style={styles.container}>
+      <TouchableOpacity
+        onLongPress={() => {
+          LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+          resetErrorBoundary()
+        }}
+        style={styles.errorHeader}
+        disabled={reset === false}
+      >
+        <Text>
+          {error.defaultMessage !== undefined && error.id !== undefined ? intl.formatMessage(error) : error.message}
+        </Text>
+      </TouchableOpacity>
+    </View>
+  )
+}
+
 const styles = StyleSheet.create({
+  largeContainer: {alignItems: 'center', justifyContent: 'center', flex: 1},
   container: {alignItems: 'center', justifyContent: 'center'},
   errorHeader: {alignItems: 'center', justifyContent: 'center', padding: 20},
 })

@@ -4,6 +4,8 @@ import {Button, StyleSheet, Text, View} from 'react-native'
 import {ActivityIndicator} from 'react-native-paper'
 import {QueryClient, QueryClientProvider, useQuery} from 'react-query'
 
+import {errorMessages} from '../../i18n/global-messages'
+import LocalizableError from '../../i18n/LocalizableError'
 import {Boundary} from './Boundary'
 
 storiesOf('Boundary', module)
@@ -60,6 +62,24 @@ storiesOf('Boundary', module)
       </QueryClientProvider>
     )
   })
+  .add('Error/default inline size', () => {
+    return (
+      <QueryClientProvider client={new QueryClient()}>
+        <Boundary error={{size: 'inline'}}>
+          <Bomb />
+        </Boundary>
+      </QueryClientProvider>
+    )
+  })
+  .add('Error/default i18n error', () => {
+    return (
+      <QueryClientProvider client={new QueryClient()}>
+        <Boundary>
+          <I18nMessageBomb />
+        </Boundary>
+      </QueryClientProvider>
+    )
+  })
   .add('Error/fallback', () => {
     return (
       <QueryClientProvider client={new QueryClient()}>
@@ -96,8 +116,32 @@ const IsLoading = () => {
 
 const Bomb = () => {
   useQuery({
-    queryKey: ['loading'],
+    queryKey: ['error'],
     queryFn: () => Promise.reject(new Error('Error message')),
+    suspense: true,
+    retry: false,
+  })
+
+  return (
+    <View>
+      <Text>This should not be visible</Text>
+    </View>
+  )
+}
+
+export class i18Error extends LocalizableError {
+  constructor() {
+    super({
+      id: errorMessages.fetchError.message.id,
+      defaultMessage: errorMessages.fetchError.message.defaultMessage,
+    })
+  }
+}
+
+const I18nMessageBomb = () => {
+  useQuery({
+    queryKey: ['i18nMessagError'],
+    queryFn: () => Promise.reject(new i18Error()),
     suspense: true,
     retry: false,
   })
