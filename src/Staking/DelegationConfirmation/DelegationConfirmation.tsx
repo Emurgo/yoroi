@@ -4,8 +4,10 @@ import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 
+import {stakePoolId} from '../../../storybook'
 import {OfflineBanner, Text, ValidatedTextInput} from '../../components'
 import {ConfirmTx} from '../../components/ConfirmTx'
+import {useStakePoolInfoAndHistory} from '../../Dashboard/StakePoolInfo'
 import {Instructions as HWInstructions} from '../../HW'
 import globalMessages, {txLabels} from '../../i18n/global-messages'
 import {CONFIG, getDefaultAssetByNetworkId} from '../../legacy/config'
@@ -24,10 +26,8 @@ const isParams = (params?: Params | object | undefined): params is Params => {
     !!params &&
     'yoroiUnsignedTx' in params &&
     typeof params.yoroiUnsignedTx === 'object' &&
-    'poolHash' in params &&
-    typeof params.poolHash === 'string' &&
-    'poolName' in params &&
-    typeof params.poolHash === 'string'
+    'poolId' in params &&
+    typeof params.poolId === 'string'
   )
 }
 
@@ -37,7 +37,8 @@ export const DelegationConfirmation = ({mockDefaultAsset}: {mockDefaultAsset?: D
   const defaultAsset = mockDefaultAsset || getDefaultAssetByNetworkId(wallet.networkId)
   const strings = useStrings()
 
-  const {poolHash, poolName, yoroiUnsignedTx} = useParams<Params>(isParams)
+  const {poolId, yoroiUnsignedTx} = useParams<Params>(isParams)
+
   if (!yoroiUnsignedTx.staking?.delegations) throw new Error('invalid transaction')
   const stakingAmount = Amounts.getAmount(Entries.toAmounts(yoroiUnsignedTx.staking.delegations), '')
   const reward = approximateReward(stakingAmount.quantity)
@@ -60,12 +61,12 @@ export const DelegationConfirmation = ({mockDefaultAsset}: {mockDefaultAsset?: D
       <ScrollView style={styles.scrollView}>
         <View style={styles.itemBlock}>
           <Text style={styles.itemTitle}>{strings.stakePoolName}</Text>
-          <Text>{poolName}</Text>
+          <StakePoolName stakePoolId={stakePoolId} />
         </View>
 
         <View style={styles.itemBlock}>
           <Text style={styles.itemTitle}>{strings.stakePoolHash}</Text>
-          <Text testID="stakePoolHashText">{poolHash}</Text>
+          <Text testID="stakePoolHashText">{poolId}</Text>
         </View>
 
         <View style={styles.input} testID="stakingAmount">
@@ -116,6 +117,14 @@ export const DelegationConfirmation = ({mockDefaultAsset}: {mockDefaultAsset?: D
 
 const Actions = (props: ViewProps) => <View {...props} style={{padding: 16}} />
 
+const StakePoolName = ({stakePoolId}: {stakePoolId: string}) => {
+  const strings = useStrings()
+  const wallet = useSelectedWallet()
+  const {stakePoolInfoAndHistory, isLoading, error} = useStakePoolInfoAndHistory({wallet, stakePoolId})
+
+  return <Text>{isLoading ? '...' : error ? strings.unknownPool : stakePoolInfoAndHistory?.info.name}</Text>
+}
+
 const useStrings = () => {
   const intl = useIntl()
 
@@ -127,6 +136,7 @@ const useStrings = () => {
     password: intl.formatMessage(txLabels.password),
     rewardsExplanation: intl.formatMessage(messages.rewardsExplanation),
     delegateButtonLabel: intl.formatMessage(messages.delegateButtonLabel),
+    unknownPool: intl.formatMessage(messages.unknownPool),
   }
 }
 
@@ -142,6 +152,10 @@ const messages = defineMessages({
   rewardsExplanation: {
     id: 'components.stakingcenter.confirmDelegation.rewardsExplanation',
     defaultMessage: '!!!Current approximation of rewards that you will receive per epoch:',
+  },
+  unknownPool: {
+    id: 'components.delegationsummary.delegatedStakepoolInfo.unknownPool',
+    defaultMessage: '!!!Unknown pool',
   },
 })
 
