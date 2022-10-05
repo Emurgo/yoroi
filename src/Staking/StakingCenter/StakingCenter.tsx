@@ -5,7 +5,6 @@ import {defineMessages, useIntl} from 'react-intl'
 import {View} from 'react-native'
 import {WebView, WebViewMessageEvent} from 'react-native-webview'
 
-import {AccountAutoRefresher} from '../../AccountAutoRefresher'
 import {PleaseWaitModal, Spacer} from '../../components'
 import {useStakingTx} from '../../Dashboard/StakePoolInfos'
 import {useLanguage} from '../../i18n'
@@ -75,7 +74,6 @@ export const StakingCenter = () => {
         <>
           <View style={{flex: 1, backgroundColor: '#fff'}}>
             <Spacer height={8} />
-            <AccountAutoRefresher />
 
             <WebView
               androidLayerType="software"
