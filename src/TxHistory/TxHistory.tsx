@@ -7,14 +7,9 @@ import {useDispatch, useSelector} from 'react-redux'
 import infoIcon from '../assets/img/icon/info-light-green.png'
 import {OfflineBanner, Spacer, StatusBar, Text} from '../components'
 import {assetMessages, txLabels} from '../i18n/global-messages'
-import {fetchAccountState} from '../legacy/account'
 import {isByron} from '../legacy/config'
 import {updateHistory} from '../legacy/history'
-import {
-  isSynchronizingHistorySelector,
-  lastHistorySyncErrorSelector,
-  walletIsInitializedSelector,
-} from '../legacy/selectors'
+import {isSynchronizingHistorySelector, lastHistorySyncErrorSelector} from '../legacy/selectors'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
 import {ActionsBanner} from './ActionsBanner'
@@ -36,13 +31,11 @@ export const TxHistory = () => {
   const netInfo = useNetInfo()
   const isOnline = netInfo.type !== 'none' && netInfo.type !== 'unknown'
   const wallet = useSelectedWallet()
-  const walletIsInitialized = useSelector(walletIsInitializedSelector)
 
   const [showWarning, setShowWarning] = useState(isByron(wallet.walletImplementationId))
 
   useEffect(() => {
     dispatch(updateHistory())
-    dispatch(fetchAccountState())
   }, [dispatch])
 
   const [expanded, setExpanded] = useState(true)
@@ -51,10 +44,6 @@ export const TxHistory = () => {
   const onSelectTab = (tab: Tab) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     setActiveTab(tab)
-  }
-
-  if (!walletIsInitialized) {
-    return <Text>l10n Please wait while wallet is initialized...</Text>
   }
 
   return (

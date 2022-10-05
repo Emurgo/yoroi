@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {BigNumber} from 'bignumber.js'
 
 import type {CardanoTypes, ServerStatus, WalletInterface} from '../yoroi-wallets'
 import type {NetworkId, RawUtxo, WalletImplementationId, YoroiProvider} from '../yoroi-wallets/types/other'
@@ -48,14 +47,6 @@ export type State = {
     isFetching: boolean
     lastFetchingError: any
     utxos: Array<RawUtxo> | null | undefined
-  }
-  accountState: {
-    isFetching: boolean
-    isDelegating: boolean
-    lastFetchingError: any
-    totalDelegated: BigNumber
-    value: BigNumber
-    poolOperator: string | null
   }
   isAppInitialized: boolean
   isKeyboardOpen: boolean
@@ -106,14 +97,6 @@ export const getInitialState = (): State => ({
     isFetching: false,
     lastFetchingError: null,
     utxos: null,
-  },
-  accountState: {
-    isFetching: false,
-    isDelegating: false,
-    lastFetchingError: null,
-    totalDelegated: new BigNumber(0),
-    value: new BigNumber(0),
-    poolOperator: null,
   },
   isAppInitialized: false,
   isKeyboardOpen: false,

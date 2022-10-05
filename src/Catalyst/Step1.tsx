@@ -5,17 +5,17 @@ import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Image, Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useSelector} from 'react-redux'
 
 import appstoreBadge from '../assets/img/app-store-badge.png'
 import playstoreBadge from '../assets/img/google-play-badge.png'
 import AppDownload from '../assets/img/pic-catalyst-step1.png'
 import {Button, ProgressStep, Spacer, StandardModal, Text} from '../components'
+import {useStakingInfo} from '../Dashboard/StakePoolInfos'
 import globalMessages, {confirmationMessages} from '../i18n/global-messages'
 import {CONFIG} from '../legacy/config'
 import {Logger} from '../legacy/logging'
-import {isDelegatingSelector} from '../legacy/selectors'
 import {CatalystRouteNavigation} from '../navigation'
+import {useSelectedWallet} from '../SelectedWallet'
 import {Actions, Row} from './components'
 
 type Props = {
@@ -24,8 +24,10 @@ type Props = {
 export const Step1 = ({setPin}: Props) => {
   const strings = useStrings()
   const navigation = useNavigation<CatalystRouteNavigation>()
-  const isDelegating = useSelector(isDelegatingSelector)
-  const [showModal, setShowModal] = useState<boolean>(!isDelegating)
+  const wallet = useSelectedWallet()
+  const {stakingInfo, isLoading} = useStakingInfo(wallet, {suspense: true})
+  const isStaked = stakingInfo?.status === 'staked'
+  const [showModal, setShowModal] = useState<boolean>(!isStaked)
 
   useFocusEffect(
     React.useCallback(() => {
@@ -67,7 +69,11 @@ export const Step1 = ({setPin}: Props) => {
       </ScrollView>
 
       <Actions>
-        <Button onPress={() => navigation.navigate('catalyst-generate-pin')} title={strings.continueButton} />
+        <Button
+          onPress={() => navigation.navigate('catalyst-generate-pin')}
+          title={strings.continueButton}
+          disabled={isLoading}
+        />
       </Actions>
 
       <StandardModal
