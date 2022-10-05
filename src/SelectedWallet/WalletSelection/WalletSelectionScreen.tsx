@@ -11,7 +11,6 @@ import {useAuth} from '../../auth/AuthProvider'
 import {Button, Icon, PleaseWaitModal, StatusBar} from '../../components'
 import {useCloseWallet, useWalletMetas} from '../../hooks'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
-import {clearAccountState} from '../../legacy/account'
 import {showErrorDialog} from '../../legacy/actions'
 import {CONFIG, isNightly} from '../../legacy/config'
 import {InvalidState} from '../../legacy/errors'
@@ -42,7 +41,6 @@ export const WalletSelectionScreen = () => {
   const {closeWallet} = useCloseWallet({
     onSuccess: () => {
       dispatch(clearUTXOs())
-      dispatch(clearAccountState())
     },
   })
 
@@ -255,7 +253,6 @@ const useOpenWallet = (
   const {closeWallet} = useCloseWallet({
     onSuccess: () => {
       dispatch(clearUTXOs())
-      dispatch(clearAccountState())
     },
   })
 

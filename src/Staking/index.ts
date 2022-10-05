@@ -1,2 +1,2 @@
 export * from './DelegationConfirmation'
-export * from './StakingCenterNavigator'
+export * from './StakingCenter'

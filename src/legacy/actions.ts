@@ -11,7 +11,6 @@ import uuid from 'uuid'
 import globalMessages, {errorMessages} from '../i18n/global-messages'
 import {Logger} from '../legacy/logging'
 import {ServerStatus, walletManager} from '../yoroi-wallets'
-import {clearAccountState} from './account'
 import * as api from './api'
 import type {AppSettingsKey} from './appSettings'
 import {APP_SETTINGS_KEYS, AppSettingsError, readAppSettings, removeAppSettings, writeAppSettings} from './appSettings'
@@ -242,7 +241,6 @@ export const checkBiometricStatus = (logout: () => void) => async (dispatch: Dis
     }
     await walletManager.closeWallet()
     dispatch(clearUTXOs())
-    dispatch(clearAccountState())
     logout()
   }
 }
