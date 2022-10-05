@@ -9,7 +9,6 @@ import {Button, OfflineBanner, ProgressStep, Spacer, TextInput} from '../compone
 import {ErrorModal} from '../components'
 import {useCloseWallet} from '../hooks'
 import {confirmationMessages, errorMessages, txLabels} from '../i18n/global-messages'
-import {clearAccountState} from '../legacy/account'
 import {showErrorDialog} from '../legacy/actions'
 import {CONFIG} from '../legacy/config'
 import {ensureKeysValidity} from '../legacy/deviceSettings'
@@ -44,7 +43,6 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
   const {closeWallet} = useCloseWallet({
     onSuccess: () => {
       dispatch(clearUTXOs())
-      dispatch(clearAccountState())
     },
   })
 

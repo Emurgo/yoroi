@@ -9,7 +9,6 @@ import {useDispatch, useSelector} from 'react-redux'
 
 import {Banner, Button, Modal, OfflineBanner, StatusBar} from '../components'
 import globalMessages from '../i18n/global-messages'
-import {fetchAccountState} from '../legacy/account'
 import {getCardanoBaseConfig} from '../legacy/config'
 import KeyStore from '../legacy/KeyStore'
 import {getCardanoNetworkConfigById} from '../legacy/networks'
@@ -65,7 +64,6 @@ export const Dashboard = () => {
             <RefreshControl
               onRefresh={() => {
                 dispatch(fetchUTXOs())
-                dispatch(fetchAccountState())
                 refetchStakingInfo()
               }}
               refreshing={false}
