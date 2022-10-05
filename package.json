@@ -197,7 +197,7 @@
     "@storybook/react-native": "^5.3.25",
     "@storybook/react-native-server": "^5.3.23",
     "@testing-library/react-native": "^9.0.0",
-    "@types/bluebird": "^3.5.36",
+    "@types/bluebird": "^3.5.37",
     "@types/jest": "^27.4.1",
     "@types/lodash": "^4.14.175",
     "@types/node": "^16.11.19",
