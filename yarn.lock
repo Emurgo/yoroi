@@ -8753,10 +8753,10 @@ eslint-plugin-react-native@3.11.0:
     "@babel/traverse" "^7.7.4"
     eslint-plugin-react-native-globals "^0.1.1"
 
-eslint-plugin-react-prefer-function-component@^0.0.7:
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-react-prefer-function-component/-/eslint-plugin-react-prefer-function-component-0.0.7.tgz#0624c90d83b1aca9cd165f5d37f0104745055d5b"
-  integrity sha512-W4npdWHC5xdKFmuQ41wwqlFvqrk8euMp5nbv5obvFbsWit7c9gSmEEwde/nE+yQpHUsP1gObN+JsEtB+4bBrMQ==
+eslint-plugin-react-prefer-function-component@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-react-prefer-function-component/-/eslint-plugin-react-prefer-function-component-3.0.0.tgz#5bbb52b371644b344153fdbaf89d94af3310f0d7"
+  integrity sha512-3sVu9h5rUEHHvCxK0oJ4nnMvy9GGW+jPTNhhaUwRuFLN1YVffzKPOQPmjj56KUllbHZymenymN+QkzCVbyOPtQ==
 
 eslint-plugin-react@^7.26.1:
   version "7.30.1"
