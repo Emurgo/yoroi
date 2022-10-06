@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {action} from '@storybook/addon-actions'
 import BigNumber from 'bignumber.js'
 
 import {PRIMARY_ASSET_CONSTANTS} from '../../src/legacy/networks'
@@ -104,8 +105,9 @@ export const mockWallet: YoroiWallet = {
   createVotingRegTx: () => {
     throw new Error('Not implemented: createVotingRegTx')
   },
-  subscribe: () => {
-    throw new Error('Not implemented: subscribe')
+  subscribe: (...args) => {
+    action('subscribe')(...args)
+    return () => undefined
   },
   fetchCurrentPrice: () => Promise.resolve(1.9938153154314795),
   toJSON: () => null as any,
@@ -134,9 +136,9 @@ export const mockWallet: YoroiWallet = {
   //   throw new Error('not implemented: createUnsignedTx')
   // },
 
-  // fetchFundInfo: () => {
-  //   throw new Error('not implemented: fetchFundInfo')
-  // },
+  fetchFundInfo: () => {
+    throw new Error('not implemented: fetchFundInfo')
+  },
 }
 
 export const mockHwWallet = {

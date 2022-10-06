@@ -301,6 +301,7 @@ type YoroiWalletKeys =
   | 'subscribe'
   | 'toJSON'
   | 'fetchCurrentPrice'
+  | 'fetchFundInfo'
 
 const yoroiWalletKeys: Array<YoroiWalletKeys> = [
   'id',
@@ -334,4 +335,5 @@ const yoroiWalletKeys: Array<YoroiWalletKeys> = [
   'fetchPoolInfo',
   'toJSON',
   'fetchCurrentPrice',
+  'fetchFundInfo',
 ]

@@ -63,6 +63,11 @@ export const Amounts = {
       quantity: amounts[tokenId] || '0',
     }
   },
+  toArray: (amounts: YoroiAmounts) =>
+    Object.keys(amounts).reduce(
+      (result, current) => [...result, Amounts.getAmount(amounts, current)],
+      [] as Array<YoroiAmount>,
+    ),
 }
 
 export const Quantities = {
@@ -85,8 +90,12 @@ export const Quantities = {
   quotient: (quantity1: Quantity, quantity2: Quantity) => {
     return new BigNumber(quantity1).dividedBy(new BigNumber(quantity2)).toString() as Quantity
   },
-  isGreaterThan: (quantity1: Quantity, quantity2: Quantity) =>
-    new BigNumber(quantity1).isGreaterThan(new BigNumber(quantity2)),
+  isGreaterThan: (quantity1: Quantity, quantity2: Quantity) => {
+    return new BigNumber(quantity1).isGreaterThan(new BigNumber(quantity2))
+  },
+  decimalPlaces: (quantity: Quantity, precision: number) => {
+    return new BigNumber(quantity).decimalPlaces(precision).toString() as Quantity
+  },
 }
 
 export const Utxos = {

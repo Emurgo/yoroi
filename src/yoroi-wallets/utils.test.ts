@@ -30,6 +30,12 @@ describe('Quantities', () => {
     expect(Quantities.isGreaterThan('2', '2')).toBe(false)
     expect(Quantities.isGreaterThan('2', '1')).toBe(true)
   })
+  it('toPrecision', () => {
+    expect(Quantities.decimalPlaces('1', 2)).toBe('1')
+    expect(Quantities.decimalPlaces('1.00000', 2)).toBe('1')
+    expect(Quantities.decimalPlaces('1.123456', 2)).toBe('1.12')
+    expect(Quantities.decimalPlaces('1.123456', 10)).toBe('1.123456')
+  })
 })
 
 describe('Amounts', () => {
@@ -111,6 +117,20 @@ describe('Amounts', () => {
       '': '123',
       token567: '-789',
     } as YoroiAmounts)
+  })
+
+  it('toArray', () => {
+    const amounts: YoroiAmounts = {
+      '': '123',
+      token123: '456',
+      token567: '-789',
+    }
+
+    expect(Amounts.toArray(amounts)).toEqual([
+      {tokenId: '', quantity: '123'},
+      {tokenId: 'token123', quantity: '456'},
+      {tokenId: 'token567', quantity: '-789'},
+    ] as Array<YoroiAmount>)
   })
 })
 
