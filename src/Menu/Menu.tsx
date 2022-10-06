@@ -4,17 +4,16 @@ import React from 'react'
 import {useIntl} from 'react-intl'
 import {Image, Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useSelector} from 'react-redux'
 
 import SupportImage from '../assets/img/icon/shape.png'
 import {CatalystNavigator} from '../Catalyst/CatalystNavigator'
+import {useCanVote} from '../Catalyst/hooks'
+import {InsufficientFundsModal} from '../Catalyst/InsufficientFundsModal'
 import {Icon, Spacer, Text} from '../components'
 import {useWalletMetas} from '../hooks'
-import {CONFIG} from '../legacy/config'
-import {tokenBalanceSelector} from '../legacy/selectors'
 import {defaultStackNavigationOptions, useWalletNavigation} from '../navigation'
+import {useSelectedWallet} from '../SelectedWallet'
 import {useWalletManager} from '../WalletManager'
-import {InsufficientFundsModal} from './InsufficientFundsModal'
 
 const MenuStack = createStackNavigator()
 
@@ -119,8 +118,8 @@ const AllWallets = Item
 const Settings = Item
 const KnowledgeBase = Item
 const Catalyst = ({label, left, onPress}: {label: string; left: React.ReactElement; onPress: () => void}) => {
-  const tokenBalance = useSelector(tokenBalanceSelector)
-  const sufficientFunds = tokenBalance.getDefault().gte(CONFIG.CATALYST.MIN_ADA)
+  const wallet = useSelectedWallet()
+  const {sufficientFunds} = useCanVote(wallet)
 
   const [showInsufficientFundsModal, setShowInsufficientFundsModal] = React.useState(false)
 
