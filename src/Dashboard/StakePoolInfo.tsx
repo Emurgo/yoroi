@@ -2,18 +2,19 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, Linking, View} from 'react-native'
 import {StyleSheet} from 'react-native'
-import {useQuery} from 'react-query'
+import {useQuery, UseQueryOptions} from 'react-query'
 
 import {Button, CopyButton, Text, TitledCard} from '../components'
 import {isEmptyString} from '../legacy/utils'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
 import {YoroiWallet} from '../yoroi-wallets'
+import {StakePoolInfoAndHistory} from '../yoroi-wallets/types'
 
 export const StakePoolInfo = ({stakePoolId}: {stakePoolId: string}) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
-  const {stakePoolInfoAndHistory, isLoading} = useStakePoolInfoAndHistory(wallet, stakePoolId)
+  const {stakePoolInfoAndHistory, isLoading} = useStakePoolInfoAndHistory({wallet, stakePoolId})
   const homepage = stakePoolInfoAndHistory?.info?.homepage
 
   if (isLoading) {
@@ -65,8 +66,17 @@ export const StakePoolInfo = ({stakePoolId}: {stakePoolId: string}) => {
   ) : null
 }
 
-const useStakePoolInfoAndHistory = (wallet: YoroiWallet, stakePoolId: string) => {
+export const useStakePoolInfoAndHistory = (
+  {wallet, stakePoolId}: {wallet: YoroiWallet; stakePoolId: string},
+  options?: UseQueryOptions<
+    StakePoolInfoAndHistory | null,
+    Error,
+    StakePoolInfoAndHistory | null,
+    [string, string, string]
+  >,
+) => {
   const query = useQuery({
+    ...options,
     queryKey: [wallet.id, 'stakePoolInfo', stakePoolId],
     queryFn: async () => {
       const stakePoolInfosAndHistories = await wallet.fetchPoolInfo({poolIds: [stakePoolId]})

@@ -1414,6 +1414,18 @@
     blake2 "^4.0.2"
     int64-buffer "^1.0.1"
 
+"@cardano-foundation/ledgerjs-hw-app-cardano@^5.1.0":
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/@cardano-foundation/ledgerjs-hw-app-cardano/-/ledgerjs-hw-app-cardano-5.1.0.tgz#69b94f7c5055bdb19aa719ff277fa5f683d11067"
+  integrity sha512-ucuz/XbS/0ZD0Bal/GI/kiTm9jDIl8J+A7ypEqcAcBDGicFsyWmtPotOTwuDovTsiM8+eA/5OGTFX0oRqzxstQ==
+  dependencies:
+    "@ledgerhq/hw-transport" "^5.12.0"
+    "@types/ledgerhq__hw-transport" "^4.21.3"
+    base-x "^3.0.5"
+    bech32 "^1.1.4"
+    blake2 "^4.0.2"
+    int64-buffer "^1.0.1"
+
 "@cnakazawa/watch@^1.0.3":
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/@cnakazawa/watch/-/watch-1.0.4.tgz#f864ae85004d0fcab6f50be9141c4da368d1656a"
@@ -1633,12 +1645,12 @@
   dependencies:
     base-64 "0.1.0"
 
-"@emurgo/yoroi-lib@^0.0.5-alpha.5":
-  version "0.0.5-alpha.5"
-  resolved "https://registry.yarnpkg.com/@emurgo/yoroi-lib/-/yoroi-lib-0.0.5-alpha.5.tgz#fe40815572255c0b69871bd9a17903bcfcada97f"
-  integrity sha512-yqtsigUzrkWggQxL1Nzf4H64vNB6IB7m9WnOrQYZZ5UUoq4tpdC9sqTL19uLLSz7R272AbOqdvnUvSb/nMRhDQ==
+"@emurgo/yoroi-lib@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@emurgo/yoroi-lib/-/yoroi-lib-0.1.0.tgz#b0786f12734cd0bca32c545b29ceb9813f0c07d0"
+  integrity sha512-NNgzlaYz7ggiAzgSHJuBq7appjrNb15s/6emkJOvsiVPuWcpcQyDdgWDXBN44uNaeWwttoE+vGzwt12mw6lj+w==
   dependencies:
-    "@cardano-foundation/ledgerjs-hw-app-cardano" "^5.0.0"
+    "@cardano-foundation/ledgerjs-hw-app-cardano" "^5.1.0"
     "@emurgo/cross-csl-core" "^1.0.0"
     axios "^0.24.0"
     bech32 "^2.0.0"
@@ -4165,10 +4177,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-14.18.12.tgz#0d4557fd3b94497d793efd4e7d92df2f83b4ef24"
   integrity sha512-q4jlIR71hUpWTnGhXWcakgkZeHa3CCjcQcnuzU8M891BAWA2jHiziiWEPEkdS5pFsz7H9HJiy8BrK7tBRNrY7A==
 
-"@types/node@^16.11.1", "@types/node@^16.11.19":
-  version "16.11.19"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.11.19.tgz#1afa165146997b8286b6eabcb1c2d50729055169"
-  integrity sha512-BPAcfDPoHlRQNKktbsbnpACGdypPFBuX4xQlsWDE7B8XXcfII+SpOLay3/qZmCLb39kV5S1RTYwXdkx2lwLYng==
+"@types/node@^16.11.1", "@types/node@^16.11.64":
+  version "16.11.64"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.11.64.tgz#9171f327298b619e2c52238b120c19056415d820"
+  integrity sha512-z5hPTlVFzNwtJ2LNozTpJcD1Cu44c4LNuzaq1mwxmiHWQh2ULdR6Vjwo1UGldzRpzL0yUEdZddnfqGW2G70z6Q==
 
 "@types/npmlog@^4.1.2":
   version "4.1.3"

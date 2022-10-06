@@ -7,7 +7,6 @@ import {useDispatch} from 'react-redux'
 import {TwoActionView} from '../../../components'
 import {useCloseWallet, useSignAndSubmitTx} from '../../../hooks'
 import {confirmationMessages, errorMessages, txLabels} from '../../../i18n/global-messages'
-import {clearAccountState} from '../../../legacy/account'
 import {showErrorDialog} from '../../../legacy/actions'
 import {ensureKeysValidity} from '../../../legacy/deviceSettings'
 import {clearUTXOs} from '../../../legacy/utxo'
@@ -31,7 +30,6 @@ export const ConfirmTxWithOS = ({wallet, unsignedTx, onSuccess, onCancel}: Props
   const {closeWallet} = useCloseWallet({
     onSuccess: () => {
       dispatch(clearUTXOs())
-      dispatch(clearAccountState())
     },
   })
 
