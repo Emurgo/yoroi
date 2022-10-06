@@ -171,8 +171,7 @@ export type TxHistoryRouteNavigation = StackNavigationProp<TxHistoryRoutes>
 export type StakingCenterRoutes = {
   'staking-center-main': undefined
   'delegation-confirmation': {
-    poolName: string
-    poolHash: string
+    poolId: string
     yoroiUnsignedTx: YoroiUnsignedTx
   }
 }

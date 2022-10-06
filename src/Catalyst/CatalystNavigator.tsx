@@ -2,6 +2,7 @@ import {createStackNavigator} from '@react-navigation/stack'
 import React, {useState} from 'react'
 import {useIntl} from 'react-intl'
 
+import {Boundary} from '../components'
 import globalMessages from '../i18n/global-messages'
 import {CatalystRoutes, defaultStackNavigationOptions} from '../navigation'
 import {VotingRegTxData} from './hooks'
@@ -26,7 +27,13 @@ export const CatalystNavigator = () => {
       }}
       initialRouteName="catalyst-landing"
     >
-      <Stack.Screen name="catalyst-landing">{() => <Step1 setPin={setPin} />}</Stack.Screen>
+      <Stack.Screen name="catalyst-landing">
+        {() => (
+          <Boundary>
+            <Step1 setPin={setPin} />
+          </Boundary>
+        )}
+      </Stack.Screen>
       <Stack.Screen name="catalyst-generate-pin">{() => <Step2 pin={pin} />}</Stack.Screen>
       <Stack.Screen name="catalyst-confirm-pin">
         {() => <Step3 pin={pin} setVotingRegTxData={setVotingRegTxData} />}

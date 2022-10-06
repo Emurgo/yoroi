@@ -7,19 +7,12 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, RefreshControl, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {AccountAutoRefresher} from '../AccountAutoRefresher'
 import {RootKey} from '../auth'
 import {Banner, Button, Modal, OfflineBanner, StatusBar} from '../components'
 import globalMessages from '../i18n/global-messages'
-import {fetchAccountState} from '../legacy/account'
 import {getCardanoBaseConfig} from '../legacy/config'
 import {getCardanoNetworkConfigById} from '../legacy/networks'
-import {
-  isFetchingAccountStateSelector,
-  isFetchingUtxosSelector,
-  lastAccountStateFetchErrorSelector,
-  tokenBalanceSelector,
-} from '../legacy/selectors'
+import {isFetchingUtxosSelector, tokenBalanceSelector} from '../legacy/selectors'
 import {isEmptyString} from '../legacy/utils'
 import {fetchUTXOs} from '../legacy/utxo'
 import {useWalletNavigation} from '../navigation'
@@ -44,14 +37,12 @@ export const Dashboard = () => {
   const dispatch = useDispatch()
 
   const isFetchingUtxos = useSelector(isFetchingUtxosSelector)
-  const isFetchingAccountState = useSelector(isFetchingAccountStateSelector)
-  const lastAccountStateSyncError = useSelector(lastAccountStateFetchErrorSelector)
   const netInfo = useNetInfo()
   const isOnline = netInfo.type !== 'none' && netInfo.type !== 'unknown'
 
   const wallet = useSelectedWallet()
   const balances = useBalances(wallet)
-  const {stakingInfo, refetch: refetchStakingInfo, error} = useStakingInfo(wallet)
+  const {stakingInfo, refetch: refetchStakingInfo, error, isLoading} = useStakingInfo(wallet)
 
   const [showWithdrawalDialog, setShowWithdrawalDialog] = React.useState(false)
 
@@ -61,13 +52,10 @@ export const Dashboard = () => {
     <View style={styles.root}>
       <StatusBar type="dark" />
       <UtxoAutoRefresher />
-      <AccountAutoRefresher />
 
       <View style={styles.container}>
         <OfflineBanner />
-        {isOnline && (lastAccountStateSyncError != null || error) && (
-          <SyncErrorBanner showRefresh={!(isFetchingAccountState || isFetchingUtxos)} />
-        )}
+        {isOnline && error && <SyncErrorBanner showRefresh={!(isLoading || isFetchingUtxos)} />}
 
         <ScrollView
           style={styles.scrollView}
@@ -76,7 +64,6 @@ export const Dashboard = () => {
             <RefreshControl
               onRefresh={() => {
                 dispatch(fetchUTXOs())
-                dispatch(fetchAccountState())
                 refetchStakingInfo()
               }}
               refreshing={false}

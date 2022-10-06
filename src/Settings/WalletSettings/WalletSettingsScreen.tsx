@@ -9,7 +9,6 @@ import {useAuth} from '../../auth/AuthProvider'
 import {StatusBar} from '../../components'
 import {useAuthMethod, useCloseWallet, useEasyConfirmationEnabled, useWalletName} from '../../hooks'
 import {confirmationMessages} from '../../i18n/global-messages'
-import {clearAccountState} from '../../legacy/account'
 import {DIALOG_BUTTONS, showConfirmationDialog} from '../../legacy/actions'
 import {isByron, isHaskellShelley} from '../../legacy/config'
 import {getNetworkConfigById} from '../../legacy/networks'
@@ -219,7 +218,6 @@ const useLogout = (options?: UseMutationOptions<void, Error>) => {
       setSelectedWallet(undefined)
       setSelectedWalletMeta(undefined)
       dispatch(clearUTXOs())
-      dispatch(clearAccountState())
     },
     ...options,
   })

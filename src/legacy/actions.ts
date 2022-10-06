@@ -54,18 +54,6 @@ export const setEasyConfirmation = (enable: boolean) => ({
   type: 'SET_EASY_CONFIRMATION',
 })
 
-const _updateWallets = (wallets) => ({
-  path: ['wallets'],
-  payload: wallets,
-  reducer: (state: State, value) => value,
-  type: 'UPDATE_WALLETS',
-})
-
-export const updateWallets = () => (dispatch: Dispatch<any>) => {
-  const wallets = walletManager.getWallets()
-  dispatch(_updateWallets(wallets))
-}
-
 const _setAppSettings = (appSettings) => ({
   path: ['appSettings'],
   payload: appSettings,
@@ -115,7 +103,6 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
   }
 
   await walletManager.initialize()
-  await dispatch(updateWallets())
 
   dispatch({
     path: ['isAppInitialized'],

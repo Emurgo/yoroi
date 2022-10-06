@@ -116,14 +116,6 @@ export const receiveAddressesSelector: (state: State) => Array<string> = createS
 export const canGenerateNewReceiveAddressSelector = (state: State) => state.wallet.canGenerateNewReceiveAddress
 export const isSynchronizingHistorySelector = (state: State): boolean => state.txHistory.isSynchronizing
 export const lastHistorySyncErrorSelector = (state: State) => state.txHistory.lastSyncError
-// accountState
-export const isFetchingAccountStateSelector = (state: State): boolean => state.accountState.isFetching
-export const isDelegatingSelector = (state: State): boolean => state.accountState.isDelegating
-export const lastAccountStateFetchErrorSelector = (state: State) => state.accountState.lastFetchingError
-export const accountBalanceSelector = (state: State): BigNumber | null | undefined =>
-  state.accountState.isFetching ? null : state.accountState.value
-export const poolOperatorSelector = (state: State) =>
-  state.accountState.isFetching ? null : state.accountState.poolOperator
 // TokenInfo
 export const walletIsInitializedSelector = (state: State): boolean => state.wallet.isInitialized
 export const isFetchingUtxosSelector = (state: State): boolean => state.balance.isFetching
