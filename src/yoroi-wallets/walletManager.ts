@@ -8,7 +8,6 @@ import {APP_SETTINGS_KEYS, readAppSettings} from '../legacy/appSettings'
 import assert from '../legacy/assert'
 import {CONFIG, DISABLE_BACKGROUND_SYNC} from '../legacy/config'
 import {canBiometricEncryptionBeEnabled, ensureKeysValidity, isSystemAuthSupported} from '../legacy/deviceSettings'
-import {ObjectValues} from '../legacy/flow'
 import {ISignRequest} from '../legacy/ISignRequest'
 import KeyStore from '../legacy/KeyStore'
 import type {HWDeviceInfo} from '../legacy/ledgerUtils'
@@ -62,8 +61,6 @@ export class WalletManager {
   _closePromise: null | Promise<any> = null
   _closeReject: null | ((error: Error) => void) = null
 
-  _wallets = {}
-
   constructor() {
     // do not await on purpose
     this._backgroundSync()
@@ -86,16 +83,7 @@ export class WalletManager {
   // implementation.
   async initialize() {
     const _storedWalletMetas = await this.listWallets()
-    // need to migrate wallet list to new format after (haskell) shelley
-    // integration. Prior to v3.0, w.isShelley denoted an ITN wallet
-    const migratedWalletMetas = await migrateWalletMetas(_storedWalletMetas)
-
-    this._wallets = _.fromPairs(migratedWalletMetas.map((w) => [w.id, w]))
-    Logger.debug('WalletManager::initialize::wallets()', this._wallets)
-  }
-
-  getWallets() {
-    return this._wallets
+    return migrateWalletMetas(_storedWalletMetas)
   }
 
   getWallet() {
@@ -331,14 +319,6 @@ export class WalletManager {
     this._notify({type: 'easy-confirmation', enabled: true})
   }
 
-  canBiometricsSignInBeDisabled() {
-    if (!this._wallets) {
-      throw new Error('Wallet list is not initialized')
-    }
-
-    return ObjectValues(this._wallets).every((wallet: any) => !wallet.isEasyConfirmationEnabled)
-  }
-
   // =================== synch =================== //
 
   // Note(ppershing): no need to abortWhenWalletCloses here
@@ -404,22 +384,20 @@ export class WalletManager {
     provider?: null | YoroiProvider,
   ) {
     this._id = id
-    this._wallets = {
-      ...this._wallets,
-      [id]: {
-        id,
-        name,
-        networkId,
-        walletImplementationId,
-        isHW: wallet.isHW,
-        checksum: wallet.checksum,
-        isEasyConfirmationEnabled: false,
-        provider,
-      } as WalletMeta,
-    }
 
     await this._saveState(wallet)
-    await storage.write(`/wallet/${id}`, this._wallets[id])
+    if (!wallet.checksum) throw new Error('invalid wallet')
+    const walletMeta: WalletMeta = {
+      id,
+      name,
+      networkId,
+      walletImplementationId,
+      isHW: wallet.isHW,
+      checksum: wallet.checksum,
+      isEasyConfirmationEnabled: false,
+      provider,
+    }
+    await storage.write(`/wallet/${id}`, walletMeta)
 
     Logger.debug('WalletManager::saveWallet::wallet', wallet)
 
@@ -539,22 +517,13 @@ export class WalletManager {
     await this.closeWallet()
     await storage.remove(`/wallet/${id}/data`)
     await storage.remove(`/wallet/${id}`)
-
-    this._wallets = _.omit(this._wallets, id)
   }
 
   // TODO(ppershing): how should we deal with race conditions?
   async _updateMetadata(id, newMeta) {
-    assert.assert(this._wallets[id], '_updateMetadata id')
-    const merged = {
-      ...this._wallets[id],
-      ...newMeta,
-    }
-    await storage.write(`/wallet/${id}`, merged)
-    this._wallets = {
-      ...this._wallets,
-      [id]: merged,
-    }
+    const walletMeta = await storage.read<WalletMeta>(`/wallet/${id}`)
+    const merged = {...walletMeta, ...newMeta}
+    return storage.write(`/wallet/${id}`, merged)
   }
 
   async updateHWDeviceInfo(wallet: YoroiWallet, hwDeviceInfo: HWDeviceInfo) {

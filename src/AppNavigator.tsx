@@ -1,7 +1,6 @@
 import {useReduxDevToolsExtension} from '@react-navigation/devtools'
 import {NavigationContainer, useNavigationContainerRef} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
-import {isEmpty} from 'lodash'
 import React, {useEffect} from 'react'
 import type {IntlShape} from 'react-intl'
 import {defineMessages, useIntl} from 'react-intl'
@@ -14,6 +13,7 @@ import {useBackgroundTimeout} from './auth'
 import {useAuth} from './auth/AuthProvider'
 import {BiometricAuthScreen} from './BiometricAuth'
 import {FirstRunNavigator} from './FirstRun/FirstRunNavigator'
+import {useHasWallets} from './hooks'
 import {errorMessages} from './i18n/global-messages'
 import {checkBiometricStatus, reloadAppSettings, setSystemAuth, showErrorDialog} from './legacy/actions'
 import {DeveloperScreen} from './legacy/DeveloperScreen'
@@ -27,13 +27,13 @@ import {
   isMaintenanceSelector,
   isSystemAuthEnabledSelector,
 } from './legacy/selectors'
-import type {State} from './legacy/state'
 import {isEmptyString} from './legacy/utils'
 import MaintenanceScreen from './MaintenanceScreen'
 import {AppRoutes} from './navigation'
 import StorybookScreen from './StorybookScreen'
 import {WalletInitNavigator} from './WalletInit/WalletInitNavigator'
 import {WalletNavigator} from './WalletNavigator'
+import {walletManager} from './yoroi-wallets'
 
 const IS_STORYBOOK = env.getBoolean('IS_STORYBOOK', false)
 
@@ -54,7 +54,7 @@ const NavigatorSwitch = () => {
   const strings = useStrings()
   const isMaintenance = useSelector(isMaintenanceSelector)
   const isSystemAuthEnabled = useSelector(isSystemAuthEnabledSelector)
-  const hasAnyWallet = useSelector(hasAnyWalletSelector)
+  const hasAnyWallet = useHasWallets(walletManager)
   const isAppSetupComplete = useSelector(isAppSetupCompleteSelector)
   const canEnableBiometrics = useSelector(canEnableBiometricSelector)
   const installationId = useSelector(installationIdSelector)
@@ -163,8 +163,6 @@ const StoryBook = () => (
     <Stack.Screen name="storybook" component={StorybookScreen} />
   </Stack.Navigator>
 )
-
-const hasAnyWalletSelector = (state: State): boolean => !isEmpty(state.wallets)
 
 const useStrings = () => {
   const intl = useIntl()

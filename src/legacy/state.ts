@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
 import type {CardanoTypes, ServerStatus, WalletInterface} from '../yoroi-wallets'
 import type {NetworkId, RawUtxo, WalletImplementationId, YoroiProvider} from '../yoroi-wallets/types/other'
 import {NETWORK_REGISTRY} from '../yoroi-wallets/types/other'
