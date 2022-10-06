@@ -4,12 +4,13 @@ import {QueryClient, QueryClientProvider} from 'react-query'
 
 import {mockWallet, poolInfoAndHistory, stakePoolId} from '../../storybook'
 import {SelectedWalletProvider} from '../SelectedWallet'
-import {StakePoolInfosAndHistories, WalletInterface} from '../types'
+import {YoroiWallet} from '../yoroi-wallets'
+import {StakePoolInfosAndHistories} from '../yoroi-wallets/types'
 import {StakePoolInfos} from './StakePoolInfos'
 
 storiesOf('StakePoolInfos', module)
   .add('not delegating', () => {
-    const notDelegatingWallet: WalletInterface = {
+    const notDelegatingWallet: YoroiWallet = {
       ...mockWallet,
       getDelegationStatus: () => Promise.resolve({isRegistered: false, poolKeyHash: null}),
     }
@@ -24,7 +25,7 @@ storiesOf('StakePoolInfos', module)
   })
 
   .add('Loading ids', () => {
-    const loadingWallet: WalletInterface = {
+    const loadingWallet: YoroiWallet = {
       ...mockWallet,
       getDelegationStatus: () => new Promise((_resolve, _reject) => undefined), // never resolves
     }
@@ -39,7 +40,7 @@ storiesOf('StakePoolInfos', module)
   })
 
   .add('Loading StakePoolInfo', () => {
-    const loadingWallet: WalletInterface = {
+    const loadingWallet: YoroiWallet = {
       ...mockWallet,
       getDelegationStatus: () => Promise.resolve({isRegistered: true, poolKeyHash: stakePoolId}),
       fetchPoolInfo: () => new Promise((_resolve, _reject) => undefined), // never resolves
@@ -55,7 +56,7 @@ storiesOf('StakePoolInfos', module)
   })
 
   .add('Loaded, StakePoolInfo success', () => {
-    const loadedWallet: WalletInterface = {
+    const loadedWallet: YoroiWallet = {
       ...mockWallet,
       getDelegationStatus: () => Promise.resolve({isRegistered: true, poolKeyHash: stakePoolId}),
       fetchPoolInfo: () => Promise.resolve({[stakePoolId]: poolInfoAndHistory} as StakePoolInfosAndHistories),
@@ -70,14 +71,26 @@ storiesOf('StakePoolInfos', module)
     )
   })
 
-  .add('Loaded, StakePoolInfo error', () => {
-    const loadedWallet: WalletInterface = {
+  .add('Error', () => {
+    const loadedWallet: YoroiWallet = {
       ...mockWallet,
       getDelegationStatus: () => Promise.resolve({isRegistered: true, poolKeyHash: stakePoolId}),
-      fetchPoolInfo: () =>
-        Promise.resolve({
-          [stakePoolId]: {error: new Error('Pool operator not found')},
-        } as StakePoolInfosAndHistories),
+      fetchPoolInfo: () => Promise.reject('unknown error'),
+    }
+
+    return (
+      <QueryClientProvider client={new QueryClient()}>
+        <SelectedWalletProvider wallet={loadedWallet}>
+          <StakePoolInfos />
+        </SelectedWalletProvider>
+      </QueryClientProvider>
+    )
+  })
+  .add('Loaded, StakePoolInfo not found', () => {
+    const loadedWallet: YoroiWallet = {
+      ...mockWallet,
+      getDelegationStatus: () => Promise.resolve({isRegistered: true, poolKeyHash: stakePoolId}),
+      fetchPoolInfo: () => Promise.resolve({[stakePoolId]: null}),
     }
 
     return (

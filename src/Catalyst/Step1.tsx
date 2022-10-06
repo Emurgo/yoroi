@@ -1,36 +1,42 @@
-import {useNavigation} from '@react-navigation/native'
-import React, {useEffect, useState} from 'react'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import cryptoRandomString from 'crypto-random-string'
+import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Image, Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useDispatch, useSelector} from 'react-redux'
+import {useSelector} from 'react-redux'
 
-import StandardModal from '../../legacy//components/Common/StandardModal'
-import {Button, ProgressStep, Text} from '../../legacy//components/UiKit'
-import {fetchUTXOs} from '../../legacy/actions/utxo'
-import {generateVotingKeys} from '../../legacy/actions/voting'
-import appstoreBadge from '../../legacy/assets/img/app-store-badge.png'
-import playstoreBadge from '../../legacy/assets/img/google-play-badge.png'
-import AppDownload from '../../legacy/assets/img/pic-catalyst-step1.png'
-import globalMessages, {confirmationMessages} from '../../legacy/i18n/global-messages'
-import {isDelegatingSelector} from '../../legacy/selectors'
-import {Logger} from '../../legacy/utils/logging'
-import {Spacer} from '../components'
+import appstoreBadge from '../assets/img/app-store-badge.png'
+import playstoreBadge from '../assets/img/google-play-badge.png'
+import AppDownload from '../assets/img/pic-catalyst-step1.png'
+import {Button, ProgressStep, Spacer, StandardModal, Text} from '../components'
+import globalMessages, {confirmationMessages} from '../i18n/global-messages'
+import {CONFIG} from '../legacy/config'
+import {Logger} from '../legacy/logging'
+import {isDelegatingSelector} from '../legacy/selectors'
 import {CatalystRouteNavigation} from '../navigation'
 import {Actions, Row} from './components'
 
-export const Step1 = () => {
+type Props = {
+  setPin: (pin: string) => void
+}
+export const Step1 = ({setPin}: Props) => {
   const strings = useStrings()
   const navigation = useNavigation<CatalystRouteNavigation>()
   const isDelegating = useSelector(isDelegatingSelector)
   const [showModal, setShowModal] = useState<boolean>(!isDelegating)
 
-  const dispatch = useDispatch()
-
-  useEffect(() => {
-    dispatch(fetchUTXOs())
-    dispatch(generateVotingKeys())
-  }, [dispatch])
+  useFocusEffect(
+    React.useCallback(() => {
+      if (CONFIG.DEBUG.PREFILL_FORMS) {
+        if (!__DEV__) throw new Error('using debug data in non-dev env')
+        setPin(CONFIG.DEBUG.CATALYST_PIN)
+      } else {
+        setPin(cryptoRandomString({length: 4, type: 'numeric'}))
+      }
+    }, [setPin]),
+  )
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
@@ -87,7 +93,7 @@ const PlayStoreButton = () => {
     try {
       await Linking.openURL('https://play.google.com/store/apps/details?id=io.iohk.vitvoting')
     } catch (e) {
-      Logger.error(e)
+      Logger.error(e as any)
     }
   }
 
@@ -103,7 +109,7 @@ const AppStoreButton = () => {
     try {
       await Linking.openURL('https://apps.apple.com/kg/app/catalyst-voting/id1517473397')
     } catch (e) {
-      Logger.error(e)
+      Logger.error(e as any)
     }
   }
 

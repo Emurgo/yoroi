@@ -1,18 +1,16 @@
-import {WalletChecksum} from '@emurgo/cip4-js'
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {BulletPointItem, Button, StatusBar, Text} from '../../../legacy/components/UiKit'
-import type {NetworkId, WalletImplementationId} from '../../../legacy/config/types'
-import {WALLET_IMPLEMENTATION_REGISTRY} from '../../../legacy/config/types'
-import {generateByronPlateFromMnemonics} from '../../../legacy/crypto/byron/plate'
-import {generateShelleyPlateFromMnemonics} from '../../../legacy/crypto/shelley/plate'
-import {COLORS} from '../../../legacy/styles/config'
-import {Icon, Spacer} from '../../components'
+import {BulletPointItem, Button, Icon, Spacer, StatusBar, Text} from '../../components'
 import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
+import {COLORS} from '../../theme'
+import {CardanoTypes, NetworkId, WalletImplementationId} from '../../yoroi-wallets'
+import {generateByronPlateFromMnemonics} from '../../yoroi-wallets/cardano/byron/plate'
+import {generateShelleyPlateFromMnemonics} from '../../yoroi-wallets/cardano/shelley/plate'
+import {WALLET_IMPLEMENTATION_REGISTRY} from '../../yoroi-wallets/types/other'
 import {WalletAddress} from '../WalletAddress'
 
 export const VerifyRestoredWalletScreen = () => {
@@ -146,10 +144,10 @@ const usePlateFromMnemonic = ({
 }: {
   mnemonic: string
   networkId: number
-  walletImplementationId: string
+  walletImplementationId: WalletImplementationId
 }) => {
-  const [addresses, setAddresses] = useState()
-  const [plate, setPlate] = useState<undefined | WalletChecksum>(undefined)
+  const [addresses, setAddresses] = useState<undefined | Array<string>>(undefined)
+  const [plate, setPlate] = useState<undefined | CardanoTypes.WalletChecksum>(undefined)
 
   useEffect(() => {
     const getPlate = async (
@@ -161,7 +159,7 @@ const usePlateFromMnemonic = ({
       switch (walletImplId) {
         case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY:
         case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY_24:
-          return await generateShelleyPlateFromMnemonics(mnemonic, count, networkId)
+          return generateShelleyPlateFromMnemonics(mnemonic, count, networkId)
         case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON:
           return generateByronPlateFromMnemonics(mnemonic, count)
         default:
@@ -179,7 +177,7 @@ const usePlateFromMnemonic = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  return [plate, addresses]
+  return [plate, addresses] as const
 }
 
 const styles = StyleSheet.create({

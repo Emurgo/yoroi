@@ -4,14 +4,13 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StatusBar, StyleSheet, View} from 'react-native'
 import QRCodeScanner from 'react-native-qrcode-scanner'
 
-import {showErrorDialog} from '../../../legacy/actions'
-import {BulletPointItem, Text} from '../../../legacy/components/UiKit'
-import {errorMessages} from '../../../legacy/i18n/global-messages'
-import {theme} from '../../../legacy/styles/config'
-import {isCIP1852AccountPath, isValidPublicKey} from '../../../legacy/utils/bip44Validators'
-import {Logger} from '../../../legacy/utils/logging'
-import {Spacer} from '../../components'
+import {BulletPointItem, Spacer, Text} from '../../components'
+import {errorMessages} from '../../i18n/global-messages'
+import {showErrorDialog} from '../../legacy/actions'
+import {Logger} from '../../legacy/logging'
 import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
+import {theme} from '../../theme'
+import {isCIP1852AccountPath, isValidPublicKey} from '../../yoroi-wallets/cardano/bip44Validators'
 
 export const ImportReadOnlyWalletScreen = () => {
   const intl = useIntl()
@@ -23,7 +22,7 @@ export const ImportReadOnlyWalletScreen = () => {
 
   const onRead = async (event: {data: string}) => {
     try {
-      const {publicKeyHex, path}: {publicKeyHex: string; path: string} = await parseReadOnlyWalletKey(event.data)
+      const {publicKeyHex, path} = await parseReadOnlyWalletKey(event.data)
       navigation.navigate('save-read-only', {
         publicKeyHex,
         path,
@@ -120,7 +119,7 @@ const styles = StyleSheet.create({
   },
 })
 
-const parseReadOnlyWalletKey = async (text: string) => {
+const parseReadOnlyWalletKey = async (text: string): Promise<{publicKeyHex: string; path: number[]}> => {
   Logger.debug('ImportReadOnlyWalletScreen::handleOnRead::data', text)
   const dataObj = JSON.parse(text)
   const {publicKeyHex, path} = dataObj

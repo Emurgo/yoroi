@@ -4,7 +4,7 @@ import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {useQuery} from 'react-query'
 
 import {useSelectedWallet} from '../SelectedWallet'
-import {WalletInterface} from '../types'
+import {YoroiWallet} from '../yoroi-wallets'
 import {StakePoolInfo} from './StakePoolInfo'
 
 export const StakePoolInfos = () => {
@@ -30,24 +30,28 @@ const styles = StyleSheet.create({
   },
 })
 
-type StakingInfo = Registered | NotRegistered
+type StakingInfo = Registered | Staked | NotRegistered
+type NotRegistered = {
+  status: 'not-registered'
+}
 type Registered = {
-  isRegistered: true
+  status: 'registered'
+}
+type Staked = {
+  status: 'staked'
   poolId: string
   amount: string
   rewards: string
 }
-type NotRegistered = {
-  isRegistered: false
-}
 
-export const useStakingInfo = (wallet: WalletInterface) => {
+export const useStakingInfo = (wallet: YoroiWallet) => {
   const query = useQuery<StakingInfo>({
     retry: false,
     queryKey: [wallet.id, 'stakingInfo'],
     queryFn: async () => {
       const stakingStatus = await wallet.getDelegationStatus()
-      if (!stakingStatus.isRegistered) return {isRegistered: false}
+      if (!stakingStatus.isRegistered) return {status: 'not-registered'}
+      if (!('poolKeyHash' in stakingStatus)) return {status: 'registered'}
 
       const accountStates = await wallet.fetchAccountState()
       const accountState = accountStates[wallet.rewardAddressHex]
@@ -58,7 +62,7 @@ export const useStakingInfo = (wallet: WalletInterface) => {
       const amount = sum([...stakingUtxos.map((utxo) => utxo.amount), accountState.remainingAmount])
 
       return {
-        isRegistered: true,
+        status: 'staked',
         poolId: stakingStatus.poolKeyHash,
         amount,
         rewards: accountState.remainingAmount,
@@ -80,12 +84,12 @@ export const useStakingInfo = (wallet: WalletInterface) => {
   }
 }
 
-export const useStakePoolIds = (wallet: WalletInterface) => {
+export const useStakePoolIds = (wallet: YoroiWallet) => {
   const {stakingInfo, ...stakingInfoQuery} = useStakingInfo(wallet)
 
   return {
     ...stakingInfoQuery,
-    stakePoolIds: !stakingInfo ? undefined : stakingInfo.isRegistered ? [stakingInfo.poolId] : [],
+    stakePoolIds: !stakingInfo ? undefined : stakingInfo.status === 'staked' ? [stakingInfo.poolId] : [],
   }
 }
 

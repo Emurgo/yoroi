@@ -1,9 +1,12 @@
 import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
+import {useDispatch} from 'react-redux'
 
+import {useAuth} from '../auth/AuthProvider'
+import {CreatePinScreen} from '../auth/CreatePinScreen/CreatePinScreen'
+import {reloadAppSettings, setSystemAuth} from '../legacy/actions'
 import {defaultStackNavigationOptions, FirstRunRoutes} from '../navigation'
-import {CustomPinScreen} from './CustomPinScreen'
 import {LanguagePickerScreen} from './LanguagePickerScreen'
 import {TermsOfServiceScreen} from './TermsOfServiceScreen'
 
@@ -24,7 +27,7 @@ export const FirstRunNavigator = () => {
       <Stack.Screen //
         name="language-pick"
         component={LanguagePickerScreen}
-        options={{headerShown: false}}
+        options={{title: strings.languagePickerTitle}}
       />
 
       <Stack.Screen
@@ -35,10 +38,25 @@ export const FirstRunNavigator = () => {
 
       <Stack.Screen //
         name="custom-pin"
-        component={CustomPinScreen}
         options={{headerShown: false}}
+        component={CreatePinScreenWrapper}
       />
     </Stack.Navigator>
+  )
+}
+
+const CreatePinScreenWrapper = () => {
+  const dispatch = useDispatch()
+  const {login} = useAuth()
+
+  return (
+    <CreatePinScreen
+      onDone={async () => {
+        await dispatch(reloadAppSettings())
+        await dispatch(setSystemAuth(false))
+        login()
+      }}
+    />
   )
 }
 
@@ -47,6 +65,10 @@ const messages = defineMessages({
     id: 'components.firstrun.acepttermsofservicescreen.title',
     defaultMessage: '!!!Terms of Service Agreement',
   },
+  languagePickerTitle: {
+    id: 'components.firstrun.languagepicker.title',
+    defaultMessage: '!!!Select Language',
+  },
 })
 
 const useStrings = () => {
@@ -54,5 +76,6 @@ const useStrings = () => {
 
   return {
     acceptTermsTitle: intl.formatMessage(messages.acceptTermsTitle),
+    languagePickerTitle: intl.formatMessage(messages.languagePickerTitle),
   }
 }

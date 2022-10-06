@@ -1,5 +1,3 @@
-// @flow
-
 module.exports = {
   project: {
     ios: {},

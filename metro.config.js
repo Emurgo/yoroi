@@ -5,8 +5,6 @@
  * @format
  */
 
-// @flow
-
 module.exports = {
   transformer: {
     getTransformOptions: async () => ({

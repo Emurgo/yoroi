@@ -5,7 +5,7 @@ import {action} from '@storybook/addon-actions'
 import {StackNavigationProp} from '@react-navigation/stack'
 import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs'
 
-const navigation = {
+export const navigation = {
   setParams: action('setParams'),
   setOptions: action('setOptions'),
 
@@ -34,7 +34,7 @@ const navigation = {
   removeListener: action('removeListener'),
 }
 
-const stackNavigation: Partial<StackNavigationProp<any>> = {
+export const stackNavigation: Partial<StackNavigationProp<any>> = {
   ...navigation,
   replace: action('replace'),
   push: action('push'),
@@ -42,7 +42,7 @@ const stackNavigation: Partial<StackNavigationProp<any>> = {
   popToTop: action('popToTop'),
 }
 
-const tabNavigation: Partial<BottomTabNavigationProp<any>> = {
+export const tabNavigation: Partial<BottomTabNavigationProp<any>> = {
   ...navigation,
   jumpTo: action('jumpTo'),
 }

@@ -6,20 +6,19 @@ import RNBootSplash from 'react-native-bootsplash'
 import * as RNP from 'react-native-paper'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {enableScreens} from 'react-native-screens'
-import {QueryClient, QueryClientProvider} from 'react-query'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {initApp} from '../legacy/actions'
-import {isAppInitializedSelector} from '../legacy/selectors'
 import AppNavigator from './AppNavigator'
+import {AuthProvider} from './auth/AuthProvider'
+import {initApp} from './legacy/actions'
+import {isAppInitializedSelector} from './legacy/selectors'
 import {SelectedWalletMetaProvider, SelectedWalletProvider} from './SelectedWallet'
-
-const queryClient = new QueryClient()
+import {StorageProvider} from './Storage'
 
 enableScreens()
 
 if (Platform.OS === 'android') {
-  if (UIManager.setLayoutAnimationEnabledExperimental) {
+  if (UIManager.setLayoutAnimationEnabledExperimental != null) {
     UIManager.setLayoutAnimationEnabledExperimental(true)
   }
 }
@@ -38,8 +37,8 @@ const useHideScreenInAppSwitcher = () => {
     const subscription = AppState.addEventListener('change', (nextAppState: AppStateStatus) => {
       if (Platform.OS !== 'ios') return
 
-      const isFocused = (appState: string | void) => appState?.match(/active/)
-      const isBlurred = (appState: string | void) => appState?.match(/inactive|background/)
+      const isFocused = (appState: AppStateStatus) => appState === 'active'
+      const isBlurred = (appState: AppStateStatus) => appState === 'inactive' || appState === 'background'
 
       if (isBlurred(appStateRef.current) && isFocused(nextAppState)) RNBootSplash.hide({fade: true})
       if (isFocused(appStateRef.current) && isBlurred(nextAppState)) RNBootSplash.show({fade: true})
@@ -61,13 +60,15 @@ const App = () => {
   return (
     <SafeAreaProvider>
       <RNP.Provider>
-        <QueryClientProvider client={queryClient}>
-          <SelectedWalletMetaProvider>
-            <SelectedWalletProvider>
-              <AppNavigator />
-            </SelectedWalletProvider>
-          </SelectedWalletMetaProvider>
-        </QueryClientProvider>
+        <AuthProvider>
+          <StorageProvider>
+            <SelectedWalletMetaProvider>
+              <SelectedWalletProvider>
+                <AppNavigator />
+              </SelectedWalletProvider>
+            </SelectedWalletMetaProvider>
+          </StorageProvider>
+        </AuthProvider>
       </RNP.Provider>
     </SafeAreaProvider>
   )

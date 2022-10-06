@@ -1,31 +1,29 @@
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ScrollView, StyleSheet, View} from 'react-native'
+import {ScrollView, StyleSheet, TextInput as RNTextInput, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {MutationOptions, useMutation} from 'react-query'
 
-import {Button, TextInput} from '../../../legacy/components/UiKit'
-import {Checkmark} from '../../../legacy/components/UiKit/TextInput'
-import {errorMessages} from '../../../legacy/i18n/global-messages'
-import {COLORS} from '../../../legacy/styles/config'
-import {REQUIRED_PASSWORD_LENGTH, validatePassword} from '../../../legacy/utils/validators'
-import {Spacer} from '../../components'
+import {Button, Checkmark, Spacer, TextInput} from '../../components'
+import {errorMessages} from '../../i18n/global-messages'
 import {useSelectedWallet} from '../../SelectedWallet'
-import {WalletInterface} from '../../types'
+import {COLORS} from '../../theme'
+import {YoroiWallet} from '../../yoroi-wallets'
+import {REQUIRED_PASSWORD_LENGTH, validatePassword} from '../../yoroi-wallets/utils/validators'
 
 export const ChangePasswordScreen = () => {
   const strings = useStrings()
   const navigation = useNavigation()
 
-  const currentPasswordRef = React.useRef<{focus: () => void} | null>(null)
+  const currentPasswordRef = React.useRef<RNTextInput>(null)
   const [currentPassword, setCurrentPassword] = React.useState('')
   const currentPasswordErrors = currentPassword.length === 0 ? {currentPasswordRequired: true} : {}
 
-  const newPasswordRef = React.useRef<{focus: () => void} | null>(null)
+  const newPasswordRef = React.useRef<RNTextInput>(null)
   const [newPassword, setNewPassword] = React.useState('')
 
-  const newPasswordConfirmationRef = React.useRef<{focus: () => void} | null>(null)
+  const newPasswordConfirmationRef = React.useRef<RNTextInput>(null)
   const [newPasswordConfirmation, setNewPasswordConfirmation] = React.useState('')
   const newPasswordErrors = validatePassword(newPassword, newPasswordConfirmation)
 
@@ -52,6 +50,7 @@ export const ChangePasswordScreen = () => {
           returnKeyType="next"
           onSubmitEditing={() => newPasswordRef.current?.focus()}
           errorText={isError ? strings.incorrectPassword : undefined}
+          autoComplete={false}
         />
 
         <Spacer />
@@ -68,6 +67,7 @@ export const ChangePasswordScreen = () => {
           returnKeyType="next"
           onSubmitEditing={() => newPasswordConfirmationRef.current?.focus()}
           right={!newPasswordErrors.passwordIsWeak ? <Checkmark /> : undefined}
+          autoComplete={false}
         />
 
         <Spacer />
@@ -86,6 +86,7 @@ export const ChangePasswordScreen = () => {
               <Checkmark />
             ) : undefined
           }
+          autoComplete={false}
         />
       </ScrollView>
 
@@ -163,7 +164,7 @@ const styles = StyleSheet.create({
 })
 
 const useChangePassword = (
-  wallet: WalletInterface,
+  wallet: YoroiWallet,
   mutationOptions: MutationOptions<void, Error, {currentPassword: string; newPassword: string}>,
 ) => {
   const intl = useIntl()

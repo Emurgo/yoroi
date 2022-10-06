@@ -1,20 +1,20 @@
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ScrollView, StyleSheet, View} from 'react-native'
+import {ScrollView, StyleSheet, TextInput as RNTextInput, View} from 'react-native'
 
-import {Button, TextInput} from '../../legacy/components/UiKit'
-import {Checkmark} from '../../legacy/components/UiKit/TextInput'
-import {CONFIG} from '../../legacy/config/config'
-import globalMessages from '../../legacy/i18n/global-messages'
-import {COLORS} from '../../legacy/styles/config'
+import {Button, Checkmark, Spacer, TextInput} from '../components'
+import {useWalletNames} from '../hooks'
+import globalMessages from '../i18n/global-messages'
+import {CONFIG} from '../legacy/config'
+import {isEmptyString} from '../legacy/utils'
+import {COLORS} from '../theme'
+import {useWalletManager} from '../WalletManager'
 import {
   getWalletNameError,
   REQUIRED_PASSWORD_LENGTH,
   validatePassword,
   validateWalletName,
-} from '../../legacy/utils/validators'
-import {Spacer} from '../components'
-import {useWalletNames} from '../hooks'
+} from '../yoroi-wallets/utils/validators'
 
 type Props = {
   onSubmit: (credentials: {name: string; password: string}) => void
@@ -22,19 +22,19 @@ type Props = {
 
 export const WalletForm = ({onSubmit}: Props) => {
   const strings = useStrings()
-  const walletNames = useWalletNames()
+  const walletManager = useWalletManager()
+  const {walletNames} = useWalletNames(walletManager)
   const [name, setName] = React.useState(CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.WALLET_NAME : '')
-  const nameErrors = validateWalletName(name, null, walletNames || [])
-  const walletNameErrorText =
-    getWalletNameError(
-      {tooLong: strings.tooLong, nameAlreadyTaken: strings.nameAlreadyTaken, mustBeFilled: strings.mustBeFilled},
-      nameErrors,
-    ) || undefined
+  const nameErrors = validateWalletName(name, null, walletNames ?? [])
+  const walletNameErrorText = getWalletNameError(
+    {tooLong: strings.tooLong, nameAlreadyTaken: strings.nameAlreadyTaken, mustBeFilled: strings.mustBeFilled},
+    nameErrors,
+  )
 
-  const passwordRef = React.useRef<{focus: () => void} | null>(null)
+  const passwordRef = React.useRef<RNTextInput>(null)
   const [password, setPassword] = React.useState(CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '')
 
-  const passwordConfirmationRef = React.useRef<{focus: () => void} | null>(null)
+  const passwordConfirmationRef = React.useRef<RNTextInput>(null)
   const [passwordConfirmation, setPasswordConfirmation] = React.useState(
     CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '',
   )
@@ -59,12 +59,14 @@ export const WalletForm = ({onSubmit}: Props) => {
           autoFocus
           label={strings.walletNameInputLabel}
           value={name}
-          onChangeText={setName}
-          errorText={walletNameErrorText}
+          onChangeText={(walletName: string) => setName(walletName.trim())}
+          errorText={!isEmptyString(walletNameErrorText) ? walletNameErrorText : undefined}
           errorDelay={0}
           returnKeyType="next"
           onSubmitEditing={() => passwordRef.current?.focus()}
           testID="walletNameInput"
+          autoComplete={false}
+          showErrorOnBlur
         />
 
         <Spacer />
@@ -84,6 +86,8 @@ export const WalletForm = ({onSubmit}: Props) => {
           right={!passwordErrors.passwordIsWeak ? <Checkmark /> : undefined}
           onSubmitEditing={() => passwordConfirmationRef.current?.focus()}
           testID="walletPasswordInput"
+          autoComplete={false}
+          showErrorOnBlur
         />
 
         <Spacer />
@@ -101,6 +105,8 @@ export const WalletForm = ({onSubmit}: Props) => {
             !passwordErrors.matchesConfirmation && !passwordErrors.passwordConfirmationReq ? <Checkmark /> : undefined
           }
           testID="walletRepeatPasswordInput"
+          autoComplete={false}
+          showErrorOnBlur
         />
       </ScrollView>
 

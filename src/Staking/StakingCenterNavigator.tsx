@@ -2,12 +2,13 @@ import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import DelegationConfirmation from '../../legacy/components/Delegation/DelegationConfirmation'
 import {SettingsButton} from '../components/Button'
 import {defaultStackNavigationOptions, StakingCenterRoutes, useWalletNavigation} from '../navigation'
+import {DelegationConfirmation} from './DelegationConfirmation'
 import {StakingCenter} from './StakingCenter/StakingCenter'
 
 const Stack = createStackNavigator<StakingCenterRoutes>()
+
 export const StakingCenterNavigator = () => {
   const strings = useStrings()
 

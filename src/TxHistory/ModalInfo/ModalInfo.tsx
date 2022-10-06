@@ -2,23 +2,23 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet} from 'react-native'
 
-import {Modal} from '../../../legacy/components/UiKit'
-import {COLORS} from '../../../legacy/styles/config'
-import {Icon, Spacer} from '../../components'
+import {Icon, Modal, Spacer} from '../../components'
+import {COLORS} from '../../theme'
 
 type Props = {
   visible: boolean
   hideModalInfo: () => void
+  children: React.ReactNode
 }
 
-export const ModalInfo: React.FC<Props> = ({visible, hideModalInfo, children}) => {
+export const ModalInfo = ({visible, hideModalInfo, children}: Props) => {
   const strings = useStrings()
 
   return (
     <Modal visible={visible} showCloseIcon onRequestClose={hideModalInfo} title={strings.infoTitle}>
       <Spacer height={16} />
 
-      <Icon.Info size={45} color={COLORS.ACTION_GRAY} style={styles.infoIcon} />
+      <Icon.Info style={styles.infoIcon} size={45} color={COLORS.ACTION_GRAY} />
 
       <Spacer height={32} />
       {children}
@@ -33,6 +33,13 @@ const messages = defineMessages({
   },
 })
 
+const styles = StyleSheet.create({
+  infoIcon: {
+    alignSelf: 'center',
+    padding: 2,
+  },
+})
+
 const useStrings = () => {
   const intl = useIntl()
 
@@ -40,10 +47,3 @@ const useStrings = () => {
     infoTitle: intl.formatMessage(messages.infoTitle),
   }
 }
-
-const styles = StyleSheet.create({
-  infoIcon: {
-    alignSelf: 'center',
-    padding: 2,
-  },
-})

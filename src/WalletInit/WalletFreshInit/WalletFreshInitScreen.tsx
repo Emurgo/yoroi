@@ -1,15 +1,14 @@
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet, View} from 'react-native'
+import {StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, StatusBar} from '../../../legacy/components/UiKit'
-import {CONFIG, isNightly} from '../../../legacy/config/config'
-import type {NetworkId, WalletImplementationId} from '../../../legacy/config/types'
-import {COLORS} from '../../../legacy/styles/config'
-import {Spacer} from '../../components'
+import {Button, ButtonProps, Spacer, StatusBar} from '../../components'
+import {CONFIG, isNightly} from '../../legacy/config'
 import {WalletInitRouteNavigation} from '../../navigation'
+import {COLORS} from '../../theme'
+import {NetworkId, WalletImplementationId} from '../../yoroi-wallets'
 import {WalletDescription} from '../WalletDescription'
 
 export const WalletFreshInitScreen = () => {
@@ -43,12 +42,12 @@ export const WalletFreshInitScreen = () => {
   )
 }
 
-const Actions = (props) => <View {...props} style={styles.actions} />
+const Actions = ({style, ...props}: ViewProps) => <View {...props} style={[style, styles.actions]} />
 
-const ShelleyButton = (props) => <Button {...props} testID="addWalletOnHaskellShelleyButton" />
-const ShelleyTestnetButton = (props) => <Button {...props} testID="addWalletTestnetShelleyButton" />
-const ByronButton = (props) => <Button {...props} outline testID="addWalletOnByronButton" />
-const NightlyOnly = ({children}) => (isNightly() ? children : null)
+const ShelleyButton = (props: ButtonProps) => <Button {...props} testID="addWalletOnHaskellShelleyButton" />
+const ShelleyTestnetButton = (props: ButtonProps) => <Button {...props} testID="addWalletTestnetShelleyButton" />
+const ByronButton = (props: ButtonProps) => <Button {...props} outline testID="addWalletOnByronButton" />
+const NightlyOnly = ({children}: {children: React.ReactNode}) => <>{isNightly() ? children : null}</>
 
 const messages = defineMessages({
   addWalletButton: {
@@ -91,6 +90,7 @@ const useNavigateTo = () => {
     navigation.navigate('choose-create-restore', {
       networkId,
       walletImplementationId,
+      provider: '',
     })
 
   return {

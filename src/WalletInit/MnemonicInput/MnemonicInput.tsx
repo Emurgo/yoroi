@@ -1,11 +1,11 @@
 import {validateMnemonic, wordlists} from 'bip39'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Keyboard, ScrollView, StyleSheet, View} from 'react-native'
+import {Keyboard, ScrollView, StyleSheet, TextInput as RNTextInput, View} from 'react-native'
 
-import {Menu, TextInput} from '../../../legacy/components/UiKit'
-import {COLORS} from '../../../legacy/styles/config'
-import {useScrollView} from '../../components'
+import {Menu, TextInput, useScrollView} from '../../components'
+import {isEmptyString} from '../../legacy/utils'
+import {COLORS} from '../../theme'
 
 export const MnemonicInput = ({
   length,
@@ -45,6 +45,7 @@ export const MnemonicInput = ({
       render={({ref: _ref, ...inputProps}) => (
         <MnemonicWordsInput onSelect={onSelect} words={mnemonicWords} {...inputProps} />
       )}
+      autoComplete={false}
     />
   )
 }
@@ -54,7 +55,7 @@ type MnemonicWordsInputProps = {
   onSelect: (index: number, word: string) => void
 }
 const MnemonicWordsInput = ({onSelect, words}: MnemonicWordsInputProps) => {
-  const refs = React.useRef(words.map(() => React.createRef<TextInput>())).current
+  const refs = React.useRef(words.map(() => React.createRef<RNTextInput>())).current
   const scrollView = useScrollView()
   const rowHeightRef = React.useRef<number | void>()
 
@@ -76,8 +77,7 @@ const MnemonicWordsInput = ({onSelect, words}: MnemonicWordsInputProps) => {
             ref={refs[index]}
             onSelect={(word: string) => {
               onSelect(index, word)
-              if (!refs[index + 1]) return
-              refs[index + 1].current?.focus()
+              refs[index + 1]?.current?.focus()
             }}
             id={index + 1}
             onFocus={() => {
@@ -98,15 +98,21 @@ type MnemonicWordInputProps = {
   onSelect: (word: string) => void
   onFocus: () => void
 }
-const MnemonicWordInput = React.forwardRef(({id, onSelect, onFocus}: MnemonicWordInputProps, ref) => {
+
+const MnemonicWordInput = React.forwardRef<RNTextInput, MnemonicWordInputProps>(({id, onSelect, onFocus}, ref) => {
   const [word, setWord] = React.useState('')
-  const matchingWords = React.useMemo(() => (word ? getMatchingWords(word) : []), [word])
+  const matchingWords = React.useMemo(() => (!isEmptyString(word) ? getMatchingWords(word) : []), [word])
   const [menuEnabled, setMenuEnabled] = React.useState(false)
+  const dateTime = React.useRef<number>()
 
   const selectWord = (word: string) => {
     setWord(normalizeText(word))
-    setMenuEnabled(false)
     onSelect(normalizeText(word))
+
+    if (dateTime.current == null) throw new Error()
+    setTimeout(() => {
+      setMenuEnabled(false)
+    }, 1000 - (Date.now() - dateTime.current)) // RNP.Menu has a buggy show/hide
   }
 
   return (
@@ -119,19 +125,23 @@ const MnemonicWordInput = React.forwardRef(({id, onSelect, onFocus}: MnemonicWor
           value={word}
           placeholder={String(id)}
           onFocus={onFocus}
-          onChange={() => setMenuEnabled(true)}
+          onChange={() => {
+            setMenuEnabled(true)
+            dateTime.current = Date.now()
+          }}
           onChangeText={(word) => setWord(normalizeText(word))}
           enablesReturnKeyAutomatically
           blurOnSubmit={false}
-          onSubmitEditing={() => matchingWords[0] && selectWord(matchingWords[0])}
+          onSubmitEditing={() => !isEmptyString(matchingWords[0]) && selectWord(matchingWords[0])}
           dense
           textAlign="center"
           noErrors
           errorDelay={0}
           errorText={matchingWords.length <= 0 ? 'No matching words' : ''}
+          autoComplete={false}
         />
       }
-      visible={menuEnabled && word.length >= 3 && !!word}
+      visible={menuEnabled && word.length > 0 && !isEmptyString(word)}
       onDismiss={() => {
         setMenuEnabled(false)
         setWord('')

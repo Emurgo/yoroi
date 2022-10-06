@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import {WalletMeta} from '../../../legacy/state'
+import {WalletMeta} from '../../legacy/state'
 
 type SelectedWalletMeta = WalletMeta
 type SetSelectedWalletMeta = (selectedWalletMeta?: SelectedWalletMeta) => void
@@ -8,7 +8,7 @@ type SelectedWalletMetaContext = readonly [SelectedWalletMeta | undefined, SetSe
 
 const SelectedWalletMetaContext = React.createContext<SelectedWalletMetaContext | undefined>(undefined)
 
-export const SelectedWalletMetaProvider: React.FC = ({children}) => {
+export const SelectedWalletMetaProvider = ({children}: {children: React.ReactNode}) => {
   const [selectedWalletMeta, setSelectedWalletMeta] = React.useState<SelectedWalletMeta | undefined>(undefined)
 
   return (
@@ -30,7 +30,13 @@ export const useSetSelectedWalletMeta = () => {
   return setSelectedWalletMeta
 }
 
-export const SelectedWalletMetaBoundary: React.FC<{fallback?: React.ReactNode}> = ({children, fallback = null}) => {
+export const SelectedWalletMetaBoundary = ({
+  children,
+  fallback = null,
+}: {
+  fallback?: React.ReactNode
+  children: React.ReactNode
+}) => {
   const [walletMeta] = useSelectedWalletMetaContext()
 
   if (!walletMeta) return <>{fallback}</>

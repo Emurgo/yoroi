@@ -1,28 +1,27 @@
+import {useNetInfo} from '@react-native-community/netinfo'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {LayoutAnimation, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {checkForFlawedWallets} from '../../legacy/actions'
-import {fetchAccountState} from '../../legacy/actions/account'
-import {updateHistory} from '../../legacy/actions/history'
-import infoIcon from '../../legacy/assets/img/icon/info-light-green.png'
-import {OfflineBanner, StatusBar, Text} from '../../legacy/components/UiKit'
-import {UI_V2} from '../../legacy/config/config'
-import {isByron} from '../../legacy/config/config'
-import {assetMessages, txLabels} from '../../legacy/i18n/global-messages'
+import infoIcon from '../assets/img/icon/info-light-green.png'
+import {OfflineBanner, Spacer, StatusBar, Text} from '../components'
+import {assetMessages, txLabels} from '../i18n/global-messages'
+import {fetchAccountState} from '../legacy/account'
+import {isByron} from '../legacy/config'
+import {updateHistory} from '../legacy/history'
 import {
-  isOnlineSelector,
   isSynchronizingHistorySelector,
   lastHistorySyncErrorSelector,
   walletIsInitializedSelector,
-} from '../../legacy/selectors'
-import {COLORS} from '../../legacy/styles/config'
+} from '../legacy/selectors'
 import {useSelectedWallet} from '../SelectedWallet'
+import {COLORS} from '../theme'
 import {ActionsBanner} from './ActionsBanner'
 import {AssetList} from './AssetList'
 import {BalanceBanner} from './BalanceBanner'
 import {CollapsibleHeader} from './CollapsibleHeader'
+import {LockedDeposit} from './LockedDeposit'
 import {SyncErrorBanner} from './SyncErrorBanner'
 import {TxHistoryList} from './TxHistoryList'
 import {WarningBanner} from './WarningBanner'
@@ -34,14 +33,14 @@ export const TxHistory = () => {
   const dispatch = useDispatch()
   const isSyncing = useSelector(isSynchronizingHistorySelector)
   const lastSyncError = useSelector(lastHistorySyncErrorSelector)
-  const isOnline = useSelector(isOnlineSelector)
+  const netInfo = useNetInfo()
+  const isOnline = netInfo.type !== 'none' && netInfo.type !== 'unknown'
   const wallet = useSelectedWallet()
   const walletIsInitialized = useSelector(walletIsInitializedSelector)
 
   const [showWarning, setShowWarning] = useState(isByron(wallet.walletImplementationId))
 
   useEffect(() => {
-    dispatch(checkForFlawedWallets())
     dispatch(updateHistory())
     dispatch(fetchAccountState())
   }, [dispatch])
@@ -60,7 +59,7 @@ export const TxHistory = () => {
 
   return (
     <View style={styles.scrollView}>
-      <StatusBar type={UI_V2 ? 'light' : 'dark'} />
+      <StatusBar type="light" />
 
       <View style={styles.container}>
         <OfflineBanner />
@@ -68,7 +67,7 @@ export const TxHistory = () => {
 
         <CollapsibleHeader expanded={expanded}>
           <BalanceBanner />
-          {UI_V2 && <ActionsBanner />}
+          <ActionsBanner />
         </CollapsibleHeader>
 
         <Tabs>
@@ -79,6 +78,7 @@ export const TxHistory = () => {
             }}
             label={strings.transactions}
             active={activeTab === 'transactions'}
+            testID="transactionsTabButton"
           />
           <Tab //
             onPress={() => {
@@ -87,10 +87,15 @@ export const TxHistory = () => {
             }}
             label={strings.assets}
             active={activeTab === 'assets'}
+            testID="assetsTabButton"
           />
         </Tabs>
 
         <TabPanels>
+          <Spacer height={4} />
+          <LockedDeposit />
+          <Spacer height={8} />
+
           <TabPanel active={activeTab === 'transactions'}>
             {isByron(wallet.walletImplementationId) && showWarning && (
               <WarningBanner
@@ -127,9 +132,19 @@ export const TxHistory = () => {
   )
 }
 
-const Tabs: React.FC = ({children}) => <View style={styles.tabs}>{children}</View>
-const Tab = ({onPress, active, label}: {onPress: () => void; active: boolean; label: string}) => (
-  <TouchableOpacity style={styles.tab} onPress={onPress}>
+const Tabs = ({children}: {children: React.ReactNode}) => <View style={styles.tabs}>{children}</View>
+const Tab = ({
+  onPress,
+  active,
+  label,
+  testID,
+}: {
+  onPress: () => void
+  active: boolean
+  label: string
+  testID: string
+}) => (
+  <TouchableOpacity style={styles.tab} onPress={onPress} testID={testID}>
     <View style={styles.centered}>
       <Text style={[styles.tabText, active ? styles.tabTextActive : styles.tabTextInactive]}>{label}</Text>
     </View>
@@ -137,8 +152,8 @@ const Tab = ({onPress, active, label}: {onPress: () => void; active: boolean; la
     {active && <View style={styles.indicator} />}
   </TouchableOpacity>
 )
-const TabPanels: React.FC = ({children}) => <View style={styles.tabNavigatorRoot}>{children}</View>
-const TabPanel: React.FC<{active: boolean}> = ({active, children}) => <>{active ? children : null}</>
+const TabPanels = ({children}: {children: React.ReactNode}) => <View style={styles.tabNavigatorRoot}>{children}</View>
+const TabPanel = ({active, children}: {active: boolean; children: React.ReactNode}) => <>{active ? children : null}</>
 
 const useStrings = () => {
   const intl = useIntl()

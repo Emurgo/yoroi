@@ -2,16 +2,16 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Image, StyleSheet, View} from 'react-native'
 
-import NotDelegatedImage from '../../legacy/assets/img/testnet/no-transactions-yet.png'
-import {Line, Text} from '../../legacy/components/UiKit'
-import {COLORS} from '../../legacy/styles/config'
+import NotDelegatedImage from '../assets/img/testnet/no-transactions-yet.png'
+import {Line, Text} from '../components'
+import {COLORS} from '../theme'
 
 export const NotDelegatedInfo = () => {
   const strings = useStrings()
 
   return (
     <View style={styles.wrapper}>
-      <View style={styles.imageWrap}>
+      <View style={styles.imageWrap} testID="notDelegatedInfo">
         <Image source={NotDelegatedImage} />
       </View>
 

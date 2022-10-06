@@ -1,39 +1,45 @@
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
-import {StyleSheet} from 'react-native'
+import {useIntl} from 'react-intl'
+import {StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useDispatch, useSelector} from 'react-redux'
 
-import {changeAndSaveLanguage, changeLanguage} from '../../../legacy/actions/language'
-import {languageSelector} from '../../../legacy/selectors'
-import {LanguagePicker} from '../../components'
+import {Button, LanguagePicker} from '../../components'
+import globalMessages from '../../i18n/global-messages'
 import {FirstRunRouteNavigation} from '../../navigation'
 
 export const LanguagePickerScreen = () => {
   const navigation = useNavigation<FirstRunRouteNavigation>()
-  const languageCode = useSelector(languageSelector) || 'en-US'
-  const dispatch = useDispatch()
-
-  const handleContinue = async () => {
-    await dispatch(changeAndSaveLanguage(languageCode))
-    navigation.navigate('accept-terms-of-service')
-  }
+  const strings = useStrings()
 
   return (
-    <SafeAreaView style={styles.safeAreaView}>
-      <LanguagePicker
-        languageCode={languageCode}
-        changeLanguage={(languageCode: string) => dispatch(changeLanguage(languageCode))}
-        handleContinue={handleContinue}
-      />
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
+      <LanguagePicker />
+      <Actions>
+        <Button
+          onPress={() => navigation.navigate('accept-terms-of-service')}
+          title={strings.next}
+          testID="chooseLangButton"
+          shelleyTheme
+        />
+      </Actions>
     </SafeAreaView>
   )
 }
+
+const Actions = (props: ViewProps) => <View {...props} style={{padding: 16}} />
 
 const styles = StyleSheet.create({
   safeAreaView: {
     flex: 1,
     backgroundColor: '#fff',
-    padding: 16,
   },
 })
+
+const useStrings = () => {
+  const intl = useIntl()
+
+  return {
+    next: intl.formatMessage(globalMessages.next),
+  }
+}

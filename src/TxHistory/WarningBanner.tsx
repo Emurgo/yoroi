@@ -1,9 +1,8 @@
 import React from 'react'
 import {Image, ImageSourcePropType, StyleSheet, TouchableOpacity, View, ViewStyle} from 'react-native'
 
-import closeIcon from '../../legacy/assets/img/close.png'
-import {Button, Text} from '../../legacy/components/UiKit'
-import {COLORS} from '../../legacy/styles/config'
+import {Button, Icon, Text} from '../components'
+import {COLORS} from '../theme'
 type Props = {
   title: string
   icon?: ImageSourcePropType
@@ -27,7 +26,7 @@ export const WarningBanner = ({
 }: Props) => (
   <View style={[styles.wrapper, style]}>
     <View style={styles.title}>
-      {icon && <Image source={icon} style={styles.icon} />}
+      {icon != null && <Image source={icon} style={styles.icon} />}
       <Text style={styles.titleText}>{title}</Text>
     </View>
     <View style={styles.body}>
@@ -38,7 +37,7 @@ export const WarningBanner = ({
     )}
     {showCloseIcon === true && (
       <TouchableOpacity style={styles.close} onPress={onRequestClose}>
-        <Image source={closeIcon} />
+        <Icon.Cross size={22} color={COLORS.GRAY} />
       </TouchableOpacity>
     )}
   </View>
@@ -79,7 +78,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     right: 0,
-    padding: 16,
+    padding: 10,
   },
   body: {
     marginVertical: 10,

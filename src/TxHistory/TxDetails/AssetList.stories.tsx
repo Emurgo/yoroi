@@ -3,11 +3,11 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {QueryClient, QueryClientProvider} from 'react-query'
 
-import sendStyle from '../../../legacy/components/Common/MultiAsset/styles/AssetListSend.style'
-import baseStyle from '../../../legacy/components/Common/MultiAsset/styles/Base.style'
 import {mockWallet, tokenEntries} from '../../../storybook'
 import {SelectedWalletProvider} from '../../SelectedWallet'
 import {AssetList} from './AssetList'
+import sendStyle from './AssetListSend.style'
+import baseStyle from './Base.style'
 
 storiesOf('AssetList', module)
   .add('baseStyle', () => (

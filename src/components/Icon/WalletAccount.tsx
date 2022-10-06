@@ -1,10 +1,10 @@
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
-import type {ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
+import {StyleSheet, View, ViewStyle} from 'react-native'
 import Blockies from 'react-native-blockies-svg'
 import tinycolor from 'tinycolor2'
 
-import {COLORS as APP_COLORS} from '../../../legacy/styles/config'
+import {isEmptyString} from '../../legacy/utils'
+import {COLORS as APP_COLORS} from '../../theme'
 
 const mkcolor = (primary, secondary, spots) => ({primary, secondary, spots})
 const COLORS = [
@@ -42,11 +42,11 @@ type Props = {
   iconSeed: string
   scalePx?: number
   saturationFactor?: number
-  style?: ViewStyleProp
+  style?: ViewStyle
 }
 
 export const WalletAccount = ({iconSeed, scalePx = 5, saturationFactor = 0, style}: Props) => {
-  const colorIdx = !iconSeed || iconSeed.length < 2 ? 0 : Buffer.from(iconSeed, 'hex')[0] % COLORS.length
+  const colorIdx = isEmptyString(iconSeed) || iconSeed.length < 2 ? 0 : Buffer.from(iconSeed, 'hex')[0] % COLORS.length
   const color = COLORS[colorIdx]
   return (
     <View style={[styles.defaultStyle, style]}>

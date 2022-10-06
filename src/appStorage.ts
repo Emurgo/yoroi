@@ -1,22 +1,22 @@
-import type {WalletChecksum} from '@emurgo/cip4-js'
-import {legacyWalletChecksum, walletChecksum} from '@emurgo/cip4-js'
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
-import {WALLETS} from '../legacy/config/config'
-import type {NetworkId, WalletImplementationId} from '../legacy/config/types'
-import {NETWORK_REGISTRY, WALLET_IMPLEMENTATION_REGISTRY} from '../legacy/config/types'
-import {WalletMeta} from '../legacy/state'
-import {Logger} from '../legacy/utils/logging'
-import storage from '../legacy/utils/storage'
+import {WALLETS} from './legacy/config'
+import {Logger} from './legacy/logging'
+import {WalletMeta} from './legacy/state'
+import storage from './legacy/storage'
+import {CardanoTypes, legacyWalletChecksum, walletChecksum} from './yoroi-wallets'
+import type {NetworkId, WalletImplementationId} from './yoroi-wallets/types/other'
+import {NETWORK_REGISTRY, WALLET_IMPLEMENTATION_REGISTRY} from './yoroi-wallets/types/other'
 
 async function toShelleyWalletMeta(currentWalletMeta: Partial<WalletMeta>): Promise<WalletMeta> {
   if (!currentWalletMeta.id) throw new Error(`Wallet meta stored is corrupted. ${JSON.stringify(currentWalletMeta)}`)
-  const walletData = await storage.read(`/wallet/${currentWalletMeta.id}/data`)
+  const walletData: any = await storage.read(`/wallet/${currentWalletMeta.id}/data`)
   const walletMetaUpdate: Partial<WalletMeta> = {...currentWalletMeta}
 
   // new fields added over time
   let networkId: NetworkId
   let walletImplementationId: WalletImplementationId
-  let checksum: WalletChecksum
+  let checksum: CardanoTypes.WalletChecksum
 
   // migrate networkId and walletImplementationId
   if (currentWalletMeta.networkId == null && currentWalletMeta.isShelley != null) {

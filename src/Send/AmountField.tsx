@@ -1,8 +1,8 @@
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import {editedFormatter, pastedFormatter} from '../../legacy/components/Send/amountUtils'
-import {TextInput} from '../../legacy/components/UiKit'
+import {TextInput} from '../components'
+import {editedFormatter, pastedFormatter} from '../yoroi-wallets/utils/amountUtils'
 
 type Props = {
   amount: string
@@ -32,9 +32,11 @@ export const AmountField = ({amount, error, editable, setAmount}: Props) => {
       label={intl.formatMessage(messages.label)}
       value={amount}
       onChangeText={handleSetAmount}
-      errorText={error || undefined}
+      errorText={error ?? undefined}
       editable={editable != null ? editable : true}
       faded={editable != null ? !editable : false}
+      autoComplete={false}
+      testID="amountFieldInput"
     />
   )
 }

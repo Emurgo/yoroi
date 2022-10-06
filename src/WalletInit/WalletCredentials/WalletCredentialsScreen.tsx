@@ -3,9 +3,9 @@ import React from 'react'
 import {ActivityIndicator, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {COLORS} from '../../../legacy/styles/config'
 import {useCreateWallet} from '../../hooks'
 import {useWalletNavigation, WalletInitRoutes} from '../../navigation'
+import {COLORS} from '../../theme'
 import {WalletForm} from '../WalletForm'
 
 export const WalletCredentialsScreen = () => {

@@ -4,24 +4,22 @@ import {Platform, ScrollView, StyleSheet, Switch} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {setAppSettingField, setEasyConfirmation, setSystemAuth} from '../../../legacy/actions'
-import {StatusBar} from '../../../legacy/components/UiKit'
-import {CONFIG, isNightly} from '../../../legacy/config/config'
-import KeyStore from '../../../legacy/crypto/KeyStore'
-import walletManager from '../../../legacy/crypto/walletManager'
-import {APP_SETTINGS_KEYS} from '../../../legacy/helpers/appSettings'
-import {
-  canBiometricEncryptionBeEnabled,
-  isBiometricEncryptionHardwareSupported,
-} from '../../../legacy/helpers/deviceSettings'
+import {StatusBar} from '../../components'
+import globalMessages from '../../i18n/global-messages'
+import {setAppSettingField} from '../../legacy/actions'
+import {APP_SETTINGS_KEYS} from '../../legacy/appSettings'
+import {CONFIG, isNightly} from '../../legacy/config'
+import {canBiometricEncryptionBeEnabled, isBiometricEncryptionHardwareSupported} from '../../legacy/deviceSettings'
+import KeyStore from '../../legacy/KeyStore'
 import {
   biometricHwSupportSelector,
   installationIdSelector,
   isSystemAuthEnabledSelector,
   sendCrashReportsSelector,
-} from '../../../legacy/selectors'
+} from '../../legacy/selectors'
+import {isEmptyString} from '../../legacy/utils'
 import {useWalletNavigation} from '../../navigation'
-import {useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../SelectedWallet'
+import {useCurrencyContext} from '../Currency'
 import {NavigatedSettingsItem, SettingsBuildItem, SettingsItem, SettingsSection} from '../SettingsItems'
 
 const version = DeviceInfo.getVersion()
@@ -34,36 +32,19 @@ export const ApplicationSettingsScreen = () => {
   const isSystemAuthEnabled = useSelector(isSystemAuthEnabledSelector)
   const installationId = useSelector(installationIdSelector)
   const dispatch = useDispatch()
-  const walletMeta = useSelectedWalletMeta()
-  const setSelectedWalletMeta = useSetSelectedWalletMeta()
+  const {currency} = useCurrencyContext()
 
-  const setCrashReporting = (value: boolean) =>
+  const setCrashReporting = (value: boolean) => {
     dispatch(setAppSettingField(APP_SETTINGS_KEYS.SEND_CRASH_REPORTS, value))
+  }
 
   const onToggleBiometricsAuthIn = async () => {
+    if (isEmptyString(installationId)) throw new Error('invalid state')
+
     if (isSystemAuthEnabled) {
       navigation.navigate('biometrics', {
         keyId: installationId,
-        onSuccess: () =>
-          navigation.navigate('app-root', {
-            screen: 'settings',
-            params: {
-              screen: 'setup-custom-pin',
-              params: {
-                onSuccess: async () => {
-                  await dispatch(setSystemAuth(false))
-                  await walletManager.disableEasyConfirmation()
-                  dispatch(setEasyConfirmation(false))
-                  if (!walletMeta) throw new Error('No wallet meta')
-                  setSelectedWalletMeta({
-                    ...walletMeta,
-                    isEasyConfirmationEnabled: false,
-                  })
-                  navigateToSettings()
-                },
-              },
-            },
-          }),
+        onSuccess: () => navigation.navigate('setup-custom-pin'),
         onFail: (reason) => {
           if (reason === KeyStore.REJECTIONS.CANCELED) {
             navigateToSettings()
@@ -112,6 +93,8 @@ export const ApplicationSettingsScreen = () => {
 
       <SettingsSection title={strings.language}>
         <NavigatedSettingsItem label={strings.currentLanguage} navigateTo="change-language" />
+
+        <NavigatedSettingsItem label={`${strings.currency} (${currency})`} navigateTo="change-currency" />
       </SettingsSection>
 
       <SettingsSection title={strings.security}>
@@ -169,6 +152,7 @@ const useStrings = () => {
     commit: intl.formatMessage(messages.commit),
     crashReporting: intl.formatMessage(messages.crashReporting),
     crashReportingText: intl.formatMessage(messages.crashReportingText),
+    currency: intl.formatMessage(globalMessages.currency),
   }
 }
 

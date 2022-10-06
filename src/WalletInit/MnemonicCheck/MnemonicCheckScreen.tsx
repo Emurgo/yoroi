@@ -5,11 +5,20 @@ import {ScrollView, TouchableOpacity, View} from 'react-native'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, StatusBar, Text} from '../../../legacy/components/UiKit'
-import {COLORS} from '../../../legacy/styles/config'
-import {Spacer} from '../../components'
+import {Button, Spacer, StatusBar, Text} from '../../components'
 import {useCreateWallet} from '../../hooks'
 import {useWalletNavigation, WalletInitRoutes} from '../../navigation'
+import {COLORS} from '../../theme'
+import {NetworkId, WalletImplementationId, YoroiProvider} from '../../yoroi-wallets'
+
+export type Params = {
+  mnemonic: string
+  password: string
+  name: string
+  networkId: NetworkId
+  walletImplementationId: WalletImplementationId
+  provider: YoroiProvider
+}
 
 export const MnemonicCheckScreen = () => {
   const strings = useStrings()
@@ -192,7 +201,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   recoveryPhrase: {
-    height: 26 * 6,
+    height: 26 * 7,
     paddingHorizontal: 16,
   },
   recoveryPhraseOutline: {

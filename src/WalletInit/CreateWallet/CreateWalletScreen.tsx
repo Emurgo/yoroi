@@ -3,7 +3,8 @@ import assert from 'assert'
 import React from 'react'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {generateAdaMnemonic} from '../../../legacy/crypto/commonUtils'
+import {generateAdaMnemonic} from '../../legacy/commonUtils'
+import {isEmptyString} from '../../legacy/utils'
 import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
 import {MnemonicExplanationModal} from '../MnemonicExplanationModal'
 import {WalletForm} from '../WalletForm'
@@ -26,16 +27,19 @@ export const CreateWalletScreen = () => {
     hideMnemonicExplanation()
     const mnemonic = generateAdaMnemonic()
     const {networkId, walletImplementationId, provider} = route.params
+    const name = formData?.name
+    const password = formData?.password
 
-    assert(!!formData?.name, 'Wallet name is required')
-    assert(!!formData?.password, 'Password is required')
+    assert(!isEmptyString(name), 'Wallet name is required')
+    assert(!isEmptyString(password), 'Password is required')
 
     navigation.navigate('mnemoinc-show', {
       mnemonic,
       networkId,
       walletImplementationId,
       provider,
-      ...formData,
+      name,
+      password,
     })
   }
 

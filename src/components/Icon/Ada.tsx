@@ -1,12 +1,12 @@
 import React from 'react'
 import Svg, {Path} from 'react-native-svg'
 
-import {COLORS} from '../../../legacy/styles/config'
+import {COLORS} from '../../theme'
 
-type Props = {width: number; height: number; color?: string}
+type Props = {size: number; color?: string}
 
-export const Ada = ({width, height, color}: Props) => (
-  <Svg viewBox="0 0 36.993 44" {...{width, height}}>
+export const Ada = ({size, color}: Props) => (
+  <Svg viewBox="0 0 36.993 44" width={size} height={size}>
     <Path
       fill={color != null ? color : COLORS.BLACK}
       d="M36.991 26.538c-.053-1.006-.952-1.773-1.984-1.773h-5.61l-1.534-3.89h3.466c1.005 0

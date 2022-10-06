@@ -2,15 +2,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import assert from 'assert'
 import {expect} from 'chai'
 
-import {WALLETS} from '../legacy/config/config'
-import {NETWORK_REGISTRY, WALLET_IMPLEMENTATION_REGISTRY} from '../legacy/config/types'
-import jestSetup from '../legacy/jestSetup'
-import {WalletMeta} from '../legacy/state'
-import storage from '../legacy/utils/storage'
 import {migrateWalletMetas} from './appStorage'
-
-// dead code
-jestSetup.setup()
+import {WALLETS} from './legacy/config'
+import {WalletMeta} from './legacy/state'
+import storage from './legacy/storage'
+import {NETWORK_REGISTRY, WALLET_IMPLEMENTATION_REGISTRY} from './yoroi-wallets/types'
 
 const mockedWalletMeta: Partial<WalletMeta> = Object.freeze({
   id: 'wallet-id',
@@ -315,8 +311,10 @@ describe('migrateWalletMetas()', () => {
       const walletMetas = [meta]
       try {
         // bluebird coverage issue
+        // @ts-expect-error test
         await migrateWalletMetas(walletMetas)
       } catch (_e) {
+        // @ts-expect-error test
         assert.rejects(() => migrateWalletMetas(walletMetas))
       }
     })

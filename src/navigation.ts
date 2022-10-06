@@ -1,12 +1,20 @@
 import {NavigatorScreenParams, useNavigation, useRoute} from '@react-navigation/native'
 import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/stack'
-import BigNumber from 'bignumber.js'
 import {IntlShape} from 'react-intl'
 import {Platform} from 'react-native'
 
-import {COLORS} from '../legacy/styles/config'
-import {HWDeviceInfo, NetworkId, WalletImplementationId, YoroiProvider} from './types'
-import {RawUtxo, TokenEntry} from './types/cardano'
+import {HWDeviceInfo} from './legacy/ledgerUtils'
+import {COLORS} from './theme'
+import {NetworkId, WalletImplementationId, YoroiProvider} from './yoroi-wallets'
+import {Quantity, YoroiAmounts, YoroiUnsignedTx} from './yoroi-wallets/types'
+import type {RawUtxo} from './yoroi-wallets/types/other'
+
+// prettier-ignore
+export const useUnsafeParams = <Params, >() => {
+  const route = useRoute()
+
+  return route?.params as unknown as Params
+}
 
 // prettier-ignore
 export const useParams = <Params, >(guard: Guard<Params>): Params => {
@@ -71,9 +79,8 @@ export type WalletTabRoutes = {
   menu: NavigatorScreenParams<MenuRoutes>
 }
 
-export type WalletSelectionParams = undefined | {reopen: boolean}
 export type WalletStackRoutes = {
-  'wallet-selection': WalletSelectionParams
+  'wallet-selection': undefined
   'main-wallet-routes': NavigatorScreenParams<WalletTabRoutes>
   settings: NavigatorScreenParams<SettingsStackRoutes>
   'catalyst-router': NavigatorScreenParams<CatalystRoutes>
@@ -84,6 +91,7 @@ export type WalletInitRoutes = {
   'choose-create-restore': {
     networkId: NetworkId
     walletImplementationId: WalletImplementationId
+    provider: YoroiProvider
   }
   'initial-choose-create-restore': undefined
   'create-wallet-form': {
@@ -102,7 +110,7 @@ export type WalletInitRoutes = {
   }
   'save-read-only': {
     publicKeyHex: string
-    path: string
+    path: number[]
     networkId: NetworkId
     walletImplementationId: WalletImplementationId
   }
@@ -174,8 +182,7 @@ export type StakingCenterRoutes = {
   'delegation-confirmation': {
     poolName: string
     poolHash: string
-    transactionData: unknown
-    transactionFee: unknown
+    yoroiUnsignedTx: YoroiUnsignedTx
   }
 }
 export type StakingCenterRouteNavigation = StackNavigationProp<StakingCenterRoutes>
@@ -193,7 +200,9 @@ export type SettingsStackRoutes = {
   'fingerprint-link': undefined
   'remove-wallet': undefined
   'change-language': undefined
-  'easy-confirmation': undefined
+  'change-currency': undefined
+  'enable-easy-confirmation': undefined
+  'disable-easy-confirmation': undefined
   'change-password': undefined
   'change-custom-pin': undefined
   'setup-custom-pin': {
@@ -203,13 +212,13 @@ export type SettingsStackRoutes = {
 export type SettingsRouteNavigation = StackNavigationProp<SettingsStackRoutes>
 
 export type SendConfirmParams = {
-  transactionData: unknown
-  defaultAssetAmount: BigNumber
+  yoroiUnsignedTx: YoroiUnsignedTx
+  defaultAssetAmount: Quantity
   address: string
-  balanceAfterTx: BigNumber | null
-  availableAmount: BigNumber
-  fee: BigNumber
-  tokens: TokenEntry[]
+  balanceAfterTx: Quantity | null
+  availableAmount: Quantity
+  fee: Quantity | null
+  selectedTokens: YoroiAmounts
   utxos: RawUtxo[]
 }
 export type SendRoutes = {
@@ -251,7 +260,7 @@ export type MenuRoutes = {
 export type AppRoutes = {
   maintenance: undefined
   'first-run': NavigatorScreenParams<FirstRunRoutes>
-  'screens-index': undefined
+  developer: undefined
   storybook: undefined
   'new-wallet': NavigatorScreenParams<WalletInitRoutes>
   'app-root': NavigatorScreenParams<WalletStackRoutes>
@@ -302,14 +311,14 @@ export const useWalletNavigation = () => {
     })
   }
 
-  const resetToWalletSelection = (params?: WalletSelectionParams) => {
+  const resetToWalletSelection = () => {
     navigation.reset({
       index: 0,
       routes: [
         {
           name: 'app-root',
           state: {
-            routes: [{name: 'wallet-selection', params}],
+            routes: [{name: 'wallet-selection'}],
           },
         },
       ],

@@ -1,24 +1,23 @@
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
-import CatalystLogo from '../../legacy/assets/img/voting.png'
-import StandardModal from '../../legacy/components/Common/StandardModal'
-import {Text} from '../../legacy/components/UiKit'
-import {CONFIG, isHaskellShelley, isNightly} from '../../legacy/config/config'
-import {isRegistrationOpen} from '../../legacy/crypto/shelley/catalystUtils'
-import walletManager from '../../legacy/crypto/walletManager'
-import globalMessages, {confirmationMessages} from '../../legacy/i18n/global-messages'
-import {availableAssetsSelector, tokenBalanceSelector} from '../../legacy/selectors'
-import {COLORS} from '../../legacy/styles/config'
-import {formatTokenWithText} from '../../legacy/utils/format'
-import {Logger} from '../../legacy/utils/logging'
 import {useSelectedWallet} from '../../src/SelectedWallet'
+import {Icon, StandardModal, Text} from '../components'
+import globalMessages, {confirmationMessages} from '../i18n/global-messages'
+import {CONFIG, isHaskellShelley, isNightly} from '../legacy/config'
+import {formatTokenWithText} from '../legacy/format'
+import {Logger} from '../legacy/logging'
+import {availableAssetsSelector, tokenBalanceSelector} from '../legacy/selectors'
+import {COLORS} from '../theme'
+import {useWalletManager} from '../WalletManager'
+import {isRegistrationOpen} from '../yoroi-wallets'
 type Props = {onPress: () => void; disabled?: boolean}
 
 export const VotingBanner = ({onPress, disabled}: Props) => {
   const strings = useStrings()
+  const walletManager = useWalletManager()
   const wallet = useSelectedWallet()
 
   const tokenBalance = useSelector(tokenBalanceSelector)
@@ -72,7 +71,7 @@ export const VotingBanner = ({onPress, disabled}: Props) => {
     <View style={styles.container}>
       <TouchableOpacity onPress={handleOnPress} disabled={disabled}>
         <View style={styles.button}>
-          <Image source={CatalystLogo} />
+          <Icon.Catalyst size={26} color={COLORS.LIGHT_POSITIVE_GREEN} />
           <Text style={styles.text}>{strings.name.toLocaleUpperCase()}</Text>
         </View>
       </TouchableOpacity>
@@ -114,6 +113,7 @@ const styles = StyleSheet.create({
   },
   button: {
     flexDirection: 'row',
+    alignItems: 'center',
     borderRadius: 8,
     borderWidth: 1,
     borderColor: COLORS.LIGHT_POSITIVE_GREEN,

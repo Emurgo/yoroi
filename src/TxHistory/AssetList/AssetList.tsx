@@ -6,18 +6,17 @@ import {Avatar} from 'react-native-paper'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useSelector} from 'react-redux'
 
-import {Text} from '../../../legacy/components/UiKit'
-import globalMessages, {actionMessages} from '../../../legacy/i18n/global-messages'
-import {tokenBalanceSelector} from '../../../legacy/selectors'
-import {COLORS} from '../../../legacy/styles/config'
-import {formatTokenAmount, getAssetDenominationOrId, getTokenFingerprint} from '../../../legacy/utils/format'
-import AdaImage from '../../assets/img/icon/asset_ada.png'
-import NoImage from '../../assets/img/icon/asset_no_image.png'
-import {Boundary} from '../../components'
+import AdaImage from '../../assets/img/asset_ada.png'
+import NoImage from '../../assets/img/asset_no_image.png'
+import {Boundary, Text} from '../../components'
 import {Spacer} from '../../components/Spacer'
 import {useTokenInfo} from '../../hooks'
+import globalMessages, {actionMessages} from '../../i18n/global-messages'
+import {formatTokenAmount, getAssetDenominationOrId, getTokenFingerprint} from '../../legacy/format'
+import {tokenBalanceSelector} from '../../legacy/selectors'
 import {useSelectedWallet} from '../../SelectedWallet'
-import {TokenEntry} from '../../types/cardano'
+import {COLORS} from '../../theme'
+import {TokenEntry} from '../../yoroi-wallets'
 import {useOnScroll} from '../useOnScroll'
 import {ActionsBanner} from './ActionsBanner'
 
@@ -44,7 +43,7 @@ export const AssetList = ({onScrollUp, onScrollDown, ...props}: Props) => {
   const onScroll = useOnScroll({onScrollUp, onScrollDown})
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.listRoot}>
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.listRoot} testID="assetList">
       <ActionsBanner
         tokensLabel={strings.tokens(orderedTokens.length)}
         nftsLabel={strings.nfts(0)}
@@ -58,7 +57,7 @@ export const AssetList = ({onScrollUp, onScrollDown, ...props}: Props) => {
         {...onScroll}
         data={orderedTokens}
         renderItem={({item: assetToken}) => (
-          <Boundary fallbackProps={{size: 'small'}}>
+          <Boundary loading={{fallbackProps: {size: 'small'}}}>
             <AssetItem key={assetToken.identifier} assetToken={assetToken} />
           </Boundary>
         )}
@@ -76,28 +75,29 @@ type AssetItemProps = {
 }
 
 const AssetItem = ({assetToken, onPress}: AssetItemProps) => {
-  const strings = useStrings()
   const wallet = useSelectedWallet()
   const tokenInfo = useTokenInfo({wallet, tokenId: assetToken.identifier})
 
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity onPress={onPress} testID="assetItem">
       <View style={styles.tokenRoot}>
         <View style={styles.tokenAvatar}>
           <Icon source={tokenInfo.isDefault ? AdaImage : NoImage} />
         </View>
 
         <View style={styles.tokenData}>
-          <Text numberOfLines={1} ellipsizeMode="middle" style={styles.tokenInfo}>
-            {getAssetDenominationOrId(tokenInfo) || strings.unknown}
+          <Text numberOfLines={1} ellipsizeMode="middle" style={styles.tokenInfo} testID="tokenInfoText">
+            {getAssetDenominationOrId(tokenInfo)}
           </Text>
-          <Text numberOfLines={1} ellipsizeMode="middle" style={styles.tokenName}>
+          <Text numberOfLines={1} ellipsizeMode="middle" style={styles.tokenName} testID="tokenFingerprintText">
             {tokenInfo.isDefault ? '' : getTokenFingerprint(tokenInfo)}
           </Text>
         </View>
 
         <View>
-          <Text style={styles.tokenAmount}>{formatTokenAmount(assetToken.amount, tokenInfo, 15)}</Text>
+          <Text style={styles.tokenAmount} testID="tokenAmountText">
+            {formatTokenAmount(assetToken.amount, tokenInfo)}
+          </Text>
         </View>
       </View>
     </TouchableOpacity>

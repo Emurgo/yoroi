@@ -3,11 +3,11 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet} from 'react-native'
 import {useDispatch} from 'react-redux'
 
-import {setSystemAuth, showErrorDialog} from '../../../legacy/actions'
-import FingerprintScreenBase from '../../../legacy/components/Common/FingerprintScreenBase'
-import {Button} from '../../../legacy/components/UiKit'
-import {canBiometricEncryptionBeEnabled} from '../../../legacy/helpers/deviceSettings'
-import {errorMessages} from '../../../legacy/i18n/global-messages'
+import {FingerprintScreenBase} from '../../BiometricAuth'
+import {Button} from '../../components'
+import {errorMessages} from '../../i18n/global-messages'
+import {setSystemAuth, showErrorDialog} from '../../legacy/actions'
+import {canBiometricEncryptionBeEnabled} from '../../legacy/deviceSettings'
 import {useWalletNavigation} from '../../navigation'
 
 export const BiometricsLinkScreen = () => {
@@ -15,9 +15,11 @@ export const BiometricsLinkScreen = () => {
   const strings = useStrings()
   const {navigateToSettings} = useWalletNavigation()
   const dispatch = useDispatch()
+
   const linkBiometricsSignIn = async () => {
     if (await canBiometricEncryptionBeEnabled()) {
-      dispatch(setSystemAuth(true))
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ;(dispatch(setSystemAuth(true)) as any)
         .then(() => navigateToSettings())
         .catch(() => showErrorDialog(errorMessages.disableEasyConfirmationFirst, intl))
     } else {

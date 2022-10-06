@@ -293,9 +293,9 @@ PODS:
     - React-Core
   - react-native-config (0.12.0):
     - React
-  - react-native-haskell-shelley (3.1.3):
+  - react-native-haskell-shelley (3.1.4):
     - React
-  - react-native-netinfo (5.9.9):
+  - react-native-netinfo (9.3.0):
     - React-Core
   - react-native-pager-view (5.4.15):
     - React-Core
@@ -389,20 +389,20 @@ PODS:
     - React-Core
   - RNPermissions (3.3.1):
     - React-Core
-  - RNReanimated (1.13.2):
+  - RNReanimated (1.13.4):
     - React-Core
   - RNScreens (3.1.0):
     - React-Core
-  - RNSentry (1.4.5):
-    - React
-    - Sentry (~> 5.1.4)
+  - RNSentry (3.3.2):
+    - React-Core
+    - Sentry (= 7.10.1)
   - RNSVG (7.2.1):
     - React
   - RNVectorIcons (8.1.0):
     - React-Core
-  - Sentry (5.1.10):
-    - Sentry/Core (= 5.1.10)
-  - Sentry/Core (5.1.10)
+  - Sentry (7.10.1):
+    - Sentry/Core (= 7.10.1)
+  - Sentry/Core (7.10.1)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
@@ -662,8 +662,8 @@ SPEC CHECKSUMS:
   react-native-ble-plx: f10240444452dfb2d2a13a0e4f58d7783e92d76e
   react-native-camera: 3eae183c1d111103963f3dd913b65d01aef8110f
   react-native-config: f2c2ae45625a068c35681a16b9bfb1ca58b0adc7
-  react-native-haskell-shelley: d55169b653c4c8de7c30d4c8bc75e92bd89b4ac3
-  react-native-netinfo: 0212ce8604e88edf686f1481b925b17a42a52449
+  react-native-haskell-shelley: 508d0b6f88d14629ae6f28648a4425b202f73764
+  react-native-netinfo: 129bd99f607a2dc5bb096168f3e5c150fd1f1c95
   react-native-pager-view: b1914469643f40042e65d78cbf3d3dfebd6fb0d9
   react-native-randombytes: b6677f7d495c27e9ee0dbd77ebc97b3c59173729
   react-native-safe-area-context: 806f8370bf9fc9db90a3413aaa1aab0d2e22fdf3
@@ -688,12 +688,12 @@ SPEC CHECKSUMS:
   RNGestureHandler: 6e757e487a4834e7280e98e9bac66d2d9c575e9c
   RNKeychain: f75b8c8b2f17d3b2aa1f25b4a0ac5b83d947ff8f
   RNPermissions: 34d678157c800b25b22a488e4d8babb57456e796
-  RNReanimated: e03f7425cb7a38dcf1b644d680d1bfc91c3337ad
+  RNReanimated: c1b56d030d1616239861534d9adb531f8cffab68
   RNScreens: 3ba2198ca3179f77f6158425fc31ba3c90a0d49f
-  RNSentry: 0a70359ddacbfb9b1cbbb0971e54065b9f70ac57
+  RNSentry: f8c14c77e400a93331b38538f735c2538f8108a8
   RNSVG: 6c8e8c6f9e5a0caf910dd25aa6e4216045426e1d
   RNVectorIcons: 31cebfcf94e8cf8686eb5303ae0357da64d7a5a4
-  Sentry: 8715e88b813bde9ad37aead365d5b04ac7302153
+  Sentry: ddcd9fde63cfe7e9e2243da59d98daa382413e49
   Yoga: 575c581c63e0d35c9a83f4b46d01d63abc1100ac
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 

@@ -1,11 +1,9 @@
 import React from 'react'
-import {Image, LayoutAnimation, TouchableOpacity, View} from 'react-native'
+import {LayoutAnimation, TouchableOpacity, View} from 'react-native'
 import {StyleSheet} from 'react-native'
 
-import chevronDown from '../../../../legacy/assets/img/chevron_down.png'
-import chevronUp from '../../../../legacy/assets/img/chevron_up.png'
-import {Text} from '../../../../legacy/components/UiKit'
-import {COLORS} from '../../../../legacy/styles/config'
+import {Icon, Text} from '../../../components'
+import {COLORS} from '../../../theme'
 
 type Props = {
   label: string
@@ -30,7 +28,7 @@ export const ExpandableItem = ({label, content, disabled, style}: Props) => {
           <Text secondary style={[disabled === true && styles.disabled]}>
             {label}
           </Text>
-          <Image style={styles.icon} source={expanded ? chevronUp : chevronDown} />
+          <Icon.Chevron size={23} direction={expanded ? 'up' : 'down'} color={COLORS.SECONDARY_TEXT} />
         </View>
 
         {expanded && (
@@ -49,9 +47,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 12,
-  },
-  icon: {
-    marginLeft: 5,
   },
   disabled: {
     color: COLORS.DISABLED,

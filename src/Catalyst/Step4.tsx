@@ -1,22 +1,26 @@
-import {useNavigation} from '@react-navigation/native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useDispatch, useSelector} from 'react-redux'
+import {useDispatch} from 'react-redux'
 
-import {showErrorDialog} from '../../legacy/actions'
-import {generateVotingTransaction} from '../../legacy/actions/voting'
-import ErrorModal from '../../legacy/components/Common/ErrorModal'
-import {Button, OfflineBanner, ProgressStep, TextInput} from '../../legacy/components/UiKit'
-import {CONFIG} from '../../legacy/config/config'
-import {WrongPassword} from '../../legacy/crypto/errors'
-import KeyStore from '../../legacy/crypto/KeyStore'
-import walletManager, {SystemAuthDisabled} from '../../legacy/crypto/walletManager'
-import {confirmationMessages, errorMessages, txLabels} from '../../legacy/i18n/global-messages'
-import {easyConfirmationSelector, isHWSelector} from '../../legacy/selectors'
-import {Spacer} from '../components'
+import {Button, OfflineBanner, ProgressStep, Spacer, TextInput} from '../components'
+import {ErrorModal} from '../components'
+import {useCloseWallet} from '../hooks'
+import {confirmationMessages, errorMessages, txLabels} from '../i18n/global-messages'
+import {clearAccountState} from '../legacy/account'
+import {showErrorDialog} from '../legacy/actions'
+import {CONFIG} from '../legacy/config'
+import {ensureKeysValidity} from '../legacy/deviceSettings'
+import {WrongPassword} from '../legacy/errors'
+import KeyStore from '../legacy/KeyStore'
+import {isEmptyString} from '../legacy/utils'
+import {clearUTXOs} from '../legacy/utxo'
+import {useSelectedWallet} from '../SelectedWallet'
+import {SystemAuthDisabled, walletManager} from '../yoroi-wallets'
 import {Actions, Description, Title} from './components'
+import {useCreateVotingRegTx, VotingRegTxData} from './hooks'
 
 type ErrorData = {
   showErrorDialog: boolean
@@ -24,56 +28,69 @@ type ErrorData = {
   errorLogs: string | null
 }
 
-export const Step4 = () => {
+type Props = {
+  pin: string
+  setVotingRegTxData: (votingRegTxData?: VotingRegTxData | undefined) => void
+}
+export const Step4 = ({pin, setVotingRegTxData}: Props) => {
   const intl = useIntl()
   const strings = useStrings()
-  const isHW = useSelector(isHWSelector)
-  const isEasyConfirmationEnabled = useSelector(easyConfirmationSelector)
+  const wallet = useSelectedWallet()
+  const {createVotingRegTx, isLoading: generatingTransaction} = useCreateVotingRegTx({wallet})
   const navigation = useNavigation()
+  const [password, setPassword] = useState('')
   const dispatch = useDispatch()
-  const [password, setPassword] = useState(CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '')
 
-  const [generatingTransaction, setGeneratingTransaction] = useState(false)
+  const {closeWallet} = useCloseWallet({
+    onSuccess: () => {
+      dispatch(clearUTXOs())
+      dispatch(clearAccountState())
+    },
+  })
+
   const [errorData, setErrorData] = useState<ErrorData>({
     showErrorDialog: false,
     errorMessage: '',
     errorLogs: null,
   })
 
-  const isConfirmationDisabled = !isHW && !isEasyConfirmationEnabled && !password
+  const isConfirmationDisabled = !wallet.isHW && !wallet.isEasyConfirmationEnabled && isEmptyString(password)
 
   const onContinue = React.useCallback(async () => {
-    const generateTransaction = async (decryptedKey: string) => {
-      setGeneratingTransaction(true)
-      try {
-        await dispatch(generateVotingTransaction(decryptedKey))
-      } finally {
-        setGeneratingTransaction(false)
-      }
-      navigation.navigate('app-root', {
-        screen: 'catalyst-router',
-        params: {
-          screen: 'catalyst-transaction',
+    const createTransaction = (decryptedKey: string) => {
+      createVotingRegTx(
+        {
+          decryptedKey,
+          pin,
         },
-      })
+        {
+          onSuccess: (votingRegTxData) => {
+            setVotingRegTxData(votingRegTxData)
+            navigation.navigate('app-root', {
+              screen: 'catalyst-router',
+              params: {
+                screen: 'catalyst-transaction',
+              },
+            })
+          },
+        },
+      )
     }
 
-    if (isEasyConfirmationEnabled) {
+    if (wallet.isEasyConfirmationEnabled) {
       try {
-        await walletManager.ensureKeysValidity()
+        await ensureKeysValidity(wallet.id)
         navigation.navigate('biometrics', {
           keyId: walletManager._id,
           onSuccess: async (decryptedKey) => {
-            navigation.goBack() // goback to unmount biometrics screen
-
-            await generateTransaction(decryptedKey)
+            createTransaction(decryptedKey)
           },
           onFail: () => navigation.goBack(),
-          instructions: [strings.bioAuthInstructions],
+          instructions: [strings.bioAuthDescription],
         })
       } catch (error) {
         if (error instanceof SystemAuthDisabled) {
-          await walletManager.closeWallet()
+          closeWallet()
           await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
           navigation.navigate('app-root', {screen: 'wallet-selection'})
           return
@@ -90,7 +107,7 @@ export const Step4 = () => {
     try {
       const decryptedKey = await KeyStore.getData(walletManager._id, 'MASTER_PASSWORD', '', password, intl)
 
-      await generateTransaction(decryptedKey)
+      return createTransaction(decryptedKey)
     } catch (error) {
       if (error instanceof WrongPassword) {
         await showErrorDialog(errorMessages.incorrectPassword, intl)
@@ -103,22 +120,36 @@ export const Step4 = () => {
       }
     }
   }, [
-    dispatch,
-    intl,
-    isEasyConfirmationEnabled,
+    wallet.isEasyConfirmationEnabled,
+    wallet.id,
+    createVotingRegTx,
+    pin,
+    setVotingRegTxData,
     navigation,
-    password,
-    strings.bioAuthInstructions,
+    strings.bioAuthDescription,
     strings.errorMessage,
+    intl,
+    password,
+    closeWallet,
   ])
 
   useEffect(() => {
     // if easy confirmation is enabled we go directly to the authentication
     // screen and then build the registration tx
-    if (isEasyConfirmationEnabled) {
+    if (wallet.isEasyConfirmationEnabled) {
       onContinue()
     }
-  }, [onContinue, isEasyConfirmationEnabled])
+  }, [onContinue, wallet.isEasyConfirmationEnabled])
+
+  useEffect(() => {
+    setPassword(CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '')
+  }, [])
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setVotingRegTxData(undefined)
+    }, [setVotingRegTxData]),
+  )
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
@@ -134,10 +165,17 @@ export const Step4 = () => {
 
         <Description>{strings.description}</Description>
 
-        {!isEasyConfirmationEnabled && (
+        {!wallet.isEasyConfirmationEnabled && (
           <>
             <Spacer height={48} />
-            <TextInput autoFocus secureTextEntry label={strings.password} value={password} onChangeText={setPassword} />
+            <TextInput
+              autoFocus
+              secureTextEntry
+              label={strings.password}
+              value={password}
+              onChangeText={setPassword}
+              autoComplete={false}
+            />
           </>
         )}
       </ScrollView>
@@ -177,9 +215,12 @@ const messages = defineMessages({
     id: 'components.catalyst.step4.description',
     defaultMessage: '!!!Enter your spending password to be able to generate the required certificate for voting',
   },
-  bioAuthInstructions: {
-    id: 'components.catalyst.step4.bioAuthInstructions',
-    defaultMessage: '!!!Please authenticate so that Yoroi can generate the required certificate for voting',
+  bioAuthDescription: {
+    id: 'components.catalyst.step5.bioAuthDescription',
+    defaultMessage:
+      '!!!Please confirm your voting registration. You will be asked to ' +
+      'authenticate once again to sign and submit the certificate generated ' +
+      'in the previous step.',
   },
 })
 
@@ -203,6 +244,6 @@ const useStrings = () => {
     confirmButton: intl.formatMessage(confirmationMessages.commonButtons.confirmButton),
     errorTitle: intl.formatMessage(errorMessages.generalTxError.title),
     errorMessage: intl.formatMessage(errorMessages.generalTxError.message),
-    bioAuthInstructions: intl.formatMessage(messages.bioAuthInstructions),
+    bioAuthDescription: intl.formatMessage(messages.bioAuthDescription),
   }
 }

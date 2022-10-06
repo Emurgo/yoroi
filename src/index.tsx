@@ -1,20 +1,28 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import bluebird from 'bluebird'
 import React from 'react'
-import {createIntl, createIntlCache, IntlProvider} from 'react-intl'
-import {AppRegistry, LogBox, Text} from 'react-native'
-import {Provider, useSelector} from 'react-redux'
+import {createIntl, createIntlCache} from 'react-intl'
+import {AppRegistry, LogBox} from 'react-native'
+import {QueryClient, QueryClientProvider} from 'react-query'
+import {Provider} from 'react-redux'
 
-import {handleGeneralError, setupHooks} from '../legacy/actions'
-import {ApiError, NetworkError} from '../legacy/api/errors'
-import {CONFIG} from '../legacy/config/config'
-import getConfiguredStore from '../legacy/helpers/configureStore'
-import translations from '../legacy/i18n/translations'
-import {languageSelector} from '../legacy/selectors'
-import {setLogLevel} from '../legacy/utils/logging'
-import {Logger} from '../legacy/utils/logging'
 import App from './App'
 import {name as appName} from './app.json'
+import {Boundary} from './components'
 import {ErrorBoundary} from './components/ErrorBoundary'
+import {LanguageProvider} from './i18n'
+import translations from './i18n/translations'
+import {handleGeneralError, setupHooks} from './legacy/actions'
+import {CONFIG} from './legacy/config'
+import getConfiguredStore from './legacy/configureStore'
+import {ApiError, NetworkError} from './legacy/errors'
+import {Logger, setLogLevel} from './legacy/logging'
+import {isEmptyString} from './legacy/utils'
+import {CurrencyProvider} from './Settings/Currency/CurrencyContext'
+import {ThemeProvider} from './theme'
+import {WalletManagerProvider} from './WalletManager'
+import {walletManager} from './yoroi-wallets'
+
 setLogLevel(CONFIG.LOG_LEVEL)
 
 bluebird.config({
@@ -43,33 +51,39 @@ global.Promise = bluebird as any
 
 const cache = createIntlCache()
 const intl = createIntl({locale: 'en-US', messages: translations['en-US']}, cache)
-global.onunhandledrejection = (error) => {
+global.onunhandledrejection = (error: any) => {
   Logger.error(`${error}`)
   if (error instanceof NetworkError) return
   if (error instanceof ApiError) return
-  if (!error.message) return
-  handleGeneralError(error.message, error, intl)
+  if (isEmptyString(error?.message)) return
+  handleGeneralError(error.message, intl)
 }
 
 const store = getConfiguredStore()
-store.dispatch(setupHooks())
+store.dispatch(setupHooks() as any)
+
+const queryClient = new QueryClient()
 
 const AppWithProviders = () => {
   return (
-    <ErrorBoundary>
-      <Provider store={store}>
-        <IntlProviderWrapper>
-          <App />
-        </IntlProviderWrapper>
-      </Provider>
-    </ErrorBoundary>
+    <WalletManagerProvider walletManager={walletManager}>
+      <ErrorBoundary>
+        <Provider store={store}>
+          <QueryClientProvider client={queryClient}>
+            <Boundary>
+              <ThemeProvider>
+                <LanguageProvider>
+                  <CurrencyProvider>
+                    <App />
+                  </CurrencyProvider>
+                </LanguageProvider>
+              </ThemeProvider>
+            </Boundary>
+          </QueryClientProvider>
+        </Provider>
+      </ErrorBoundary>
+    </WalletManagerProvider>
   )
 }
 
 AppRegistry.registerComponent(appName, () => AppWithProviders)
-
-const IntlProviderWrapper = (props) => {
-  const locale = useSelector(languageSelector) || 'en-US'
-
-  return <IntlProvider {...props} locale={locale} messages={translations[locale]} textComponent={Text} />
-}

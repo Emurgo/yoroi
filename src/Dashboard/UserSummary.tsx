@@ -3,13 +3,10 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 
-import TotalAdaIcon from '../../legacy/assets/staking/TotalAdaIcon'
-import TotalDelegatedIcon from '../../legacy/assets/staking/TotalDelegatedIcon'
-import TotalRewardIcon from '../../legacy/assets/staking/TotalRewardIcon'
-import {Button, Text, TitledCard} from '../../legacy/components/UiKit'
-import globalMessages from '../../legacy/i18n/global-messages'
-import {COLORS} from '../../legacy/styles/config'
-import {formatAdaWithText} from '../../legacy/utils/format'
+import {Button, Icon, Text, TitledCard} from '../components'
+import globalMessages from '../i18n/global-messages'
+import {formatAdaWithText} from '../legacy/format'
+import {COLORS} from '../theme'
 
 const ICON_DIM = 44
 
@@ -26,16 +23,16 @@ export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, onWithdr
 
   return (
     <View style={styles.wrapper}>
-      <TitledCard title={strings.title}>
+      <TitledCard title={strings.title} testID="userSummaryTitleCard">
         <View style={styles.stats}>
           <View style={styles.row}>
             <View style={styles.icon}>
-              <TotalAdaIcon width={ICON_DIM} height={ICON_DIM} />
+              <Icon.TotalAda width={ICON_DIM} height={ICON_DIM} />
             </View>
 
             <View style={styles.amountBlock}>
               <Text style={styles.label}>{strings.availableFunds}:</Text>
-              <Text bold style={styles.value}>
+              <Text bold style={styles.value} testID="userSummaryAvailableFundsText">
                 {totalAdaSum != null ? formatAdaWithText(totalAdaSum) : '-'}
               </Text>
             </View>
@@ -43,12 +40,12 @@ export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, onWithdr
 
           <View style={styles.row}>
             <View style={styles.icon}>
-              <TotalRewardIcon width={ICON_DIM} height={ICON_DIM} />
+              <Icon.TotalReward width={ICON_DIM} height={ICON_DIM} />
             </View>
 
             <View style={styles.amountBlock}>
               <Text style={styles.label}>{strings.rewardsLabel}:</Text>
-              <Text bold style={styles.value}>
+              <Text bold style={styles.value} testID="userSummaryRewardsText">
                 {totalRewards != null ? formatAdaWithText(totalRewards) : '-'}
               </Text>
             </View>
@@ -61,18 +58,19 @@ export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, onWithdr
                 onPress={onWithdraw}
                 title={strings.withdrawButtonTitle}
                 style={styles.withdrawButton}
+                testID="userSummaryWithdrawButton"
               />
             </View>
           </View>
 
           <View style={styles.row}>
             <View style={styles.icon}>
-              <TotalDelegatedIcon width={ICON_DIM} height={ICON_DIM} />
+              <Icon.TotalDelegated width={ICON_DIM} height={ICON_DIM} />
             </View>
 
             <View style={styles.amountBlock}>
               <Text style={styles.label}>{strings.delegatedLabel}:</Text>
-              <Text bold style={styles.value}>
+              <Text bold style={styles.value} testID="userSummaryDelegatedText">
                 {totalDelegated != null ? formatAdaWithText(totalDelegated) : '-'}
               </Text>
             </View>

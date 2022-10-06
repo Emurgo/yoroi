@@ -6,17 +6,18 @@ import {Image, Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 're
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useSelector} from 'react-redux'
 
-import {Text} from '../../legacy/components/UiKit'
-import {CONFIG} from '../../legacy/config/config'
-import {tokenBalanceSelector} from '../../legacy/selectors'
 import SupportImage from '../assets/img/icon/shape.png'
 import {CatalystNavigator} from '../Catalyst/CatalystNavigator'
-import {Icon, Spacer} from '../components'
+import {Icon, Spacer, Text} from '../components'
 import {useWalletMetas} from '../hooks'
-import {defaultStackNavigationOptions, MenuRoutes, useWalletNavigation} from '../navigation'
+import {CONFIG} from '../legacy/config'
+import {tokenBalanceSelector} from '../legacy/selectors'
+import {defaultStackNavigationOptions, useWalletNavigation} from '../navigation'
+import {useWalletManager} from '../WalletManager'
 import {InsufficientFundsModal} from './InsufficientFundsModal'
 
-const MenuStack = createStackNavigator<MenuRoutes>()
+const MenuStack = createStackNavigator()
+
 export const MenuNavigator = () => {
   const strings = useStrings()
 
@@ -34,8 +35,9 @@ export const MenuNavigator = () => {
 export const Menu = () => {
   const strings = useStrings()
   const navigateTo = useNavigateTo()
-  const walletMetas = useWalletMetas()
-  const walletCount = walletMetas?.length || ''
+  const walletManager = useWalletManager()
+  const {walletMetas} = useWalletMetas(walletManager)
+  const walletCount = walletMetas?.length ?? ''
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
@@ -43,21 +45,21 @@ export const Menu = () => {
         <AllWallets
           label={`${strings.allWallets} (${walletCount})`}
           onPress={navigateTo.allWallets}
-          left={<Icon.Wallets size={24} color="#6B7384" />}
+          left={<Icon.Wallets size={26} color="#6B7384" />}
         />
         <HR />
 
         <Catalyst //
           label={strings.catalystVoting}
           onPress={navigateTo.catalystVoting}
-          left={<Icon.Catalyst size={24} color="#6B7384" />}
+          left={<Icon.Catalyst size={26} color="#6B7384" />}
         />
         <HR />
 
         <Settings //
           label={strings.settings}
           onPress={navigateTo.settings}
-          left={<Icon.Gear size={24} color="#6B7384" />}
+          left={<Icon.Gear size={26} color="#6B7384" />}
         />
         <HR />
 

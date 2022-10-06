@@ -1,31 +1,28 @@
-import type {ReactNode} from 'react'
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet} from 'react-native'
-import {ActivityIndicator, Image, SafeAreaView, View} from 'react-native'
-import type {ImageSource} from 'react-native/Libraries/Image/ImageSource'
-import type {ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
+import {ActivityIndicator, Image, ImageSourcePropType, StyleSheet, View, ViewStyle} from 'react-native'
 
-import {Button, ProgressStep, TextInput} from '../../../legacy/components/UiKit'
-import {CONFIG} from '../../../legacy/config/config'
-import globalMessages from '../../../legacy/i18n/global-messages'
-import {spacing} from '../../../legacy/styles/config'
-import {ignoreConcurrentAsyncHandler} from '../../../legacy/utils/utils'
-import {getWalletNameError, validateWalletName} from '../../../legacy/utils/validators'
+import {Button, ProgressStep, TextInput} from '../../components'
 import {useWalletNames} from '../../hooks'
+import globalMessages from '../../i18n/global-messages'
+import {ignoreConcurrentAsyncHandler} from '../../legacy/utils'
+import {spacing} from '../../theme'
+import {useWalletManager} from '../../WalletManager'
+import {getWalletNameError, validateWalletName} from '../../yoroi-wallets/utils/validators'
 
 type Props = {
-  onSubmit: ({name: string}) => void
+  onSubmit: ({name}: {name: string}) => void
   defaultWalletName?: string
-  image?: ImageSource
+  image?: ImageSourcePropType
   progress?: {
     currentStep: number
     totalSteps: number
   }
-  containerStyle?: ViewStyleProp
-  buttonStyle?: ViewStyleProp
-  topContent?: ReactNode
-  bottomContent?: ReactNode
+  containerStyle?: ViewStyle
+  buttonStyle?: ViewStyle
+  topContent?: React.ReactNode
+  bottomContent?: React.ReactNode
   isWaiting?: boolean
 }
 
@@ -37,11 +34,13 @@ export const WalletNameForm = ({
   buttonStyle,
   topContent,
   bottomContent,
+  defaultWalletName,
   isWaiting = false,
 }: Props) => {
   const strings = useStrings()
-  const [name, setName] = React.useState(CONFIG.HARDWARE_WALLETS.LEDGER_NANO.DEFAULT_WALLET_NAME || '')
-  const walletNames = useWalletNames()
+  const [name, setName] = React.useState(defaultWalletName ?? '')
+  const walletManager = useWalletManager()
+  const {walletNames} = useWalletNames(walletManager)
   const validationErrors = validateWalletName(name, null, walletNames || [])
   const hasErrors = Object.keys(validationErrors).length > 0
   const errorMessages = {
@@ -49,13 +48,16 @@ export const WalletNameForm = ({
     nameAlreadyTaken: strings.walletNameErrorNameAlreadyTaken,
     mustBeFilled: strings.walletNameErrorMustBeFilled,
   }
-  const walletNameErrorText = getWalletNameError(errorMessages, validationErrors) || undefined
+  const walletNameErrorText = getWalletNameError(errorMessages, validationErrors) ?? undefined
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const submit = React.useCallback(ignoreConcurrentAsyncHandler(() => () => onSubmit({name}), 1000)(), [onSubmit, name])
+  const submit = React.useCallback((ignoreConcurrentAsyncHandler as any)(() => () => onSubmit({name}), 1000)(), [
+    onSubmit,
+    name,
+  ])
 
   return (
-    <SafeAreaView style={styles.safeAreaView}>
+    <View style={styles.root}>
       {progress != null && (
         <ProgressStep currentStep={progress.currentStep} totalSteps={progress.totalSteps} displayStepNumber />
       )}
@@ -66,12 +68,15 @@ export const WalletNameForm = ({
         {topContent}
 
         <TextInput
+          errorOnMount
           autoFocus
           label={strings.walletNameInputLabel}
           value={name}
-          onChangeText={setName}
+          onChangeText={(walletName: string) => setName(walletName.trim())}
           errorText={walletNameErrorText}
           disabled={isWaiting}
+          autoComplete={false}
+          testID="walletNameInput"
         />
 
         {bottomContent}
@@ -88,13 +93,13 @@ export const WalletNameForm = ({
         />
       </View>
 
-      {isWaiting ? <ActivityIndicator color="black" /> : null}
-    </SafeAreaView>
+      {isWaiting && <ActivityIndicator color="black" />}
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
-  safeAreaView: {
+  root: {
     flex: 1,
     backgroundColor: '#fff',
   },

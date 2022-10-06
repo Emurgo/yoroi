@@ -2,9 +2,8 @@ import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 
-import {Button, Checkbox, Modal, Text} from '../../legacy/components/UiKit'
-import globalMessages, {confirmationMessages} from '../../legacy/i18n/global-messages'
-import {Spacer} from '../components'
+import {Button, Checkbox, Modal, Spacer, Text} from '../components'
+import globalMessages, {confirmationMessages} from '../i18n/global-messages'
 
 type Props = {
   onConfirm: () => void

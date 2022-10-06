@@ -8,29 +8,37 @@ Looking for the Yoroi Extension? See [here](https://github.com/Emurgo/yoroi-fron
 
 # Development
 
-## Installation
+## Installation Mac
 
 ---
 
-**NOTE**
+### Common instalation IOS/Android
 
-The **Windows + WSL2 Ubuntu** is used in the instruction for building project for android devices.<br/>The instruction is checked.<br/>It should work for the Ubuntu also, but it is not checked.
+- Install [nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 
----
+- Install node `16.5.0`
 
-### iOS preparation
+```
+nvm install 16.5.0
+nvm alias default 16.5.0
+```
 
----
+- Install yarn:
 
-- Install cocoapods and download ios dependencies:
+```
+npm install -g yarn
+```
 
-```shell
-gem install cocoapods
+- Install python `2.7.18`:
+
+```
+brew install pyenv
+pyenv install 2.7.18
 ```
 
 - Install Rust:
 
-```shell
+```
 curl https://sh.rustup.rs -sSf | sh
 rustup toolchain install 1.41.0
 rustup install 1.41.0
@@ -38,19 +46,118 @@ rustup target add wasm32-unknown-unknown --toolchain 1.41.0
 rustup default 1.41.0
 ```
 
-- Make sure your Node.js version matches `v16.5.0`.<br/>If you have `nvm` installed, you can just `nvm use`.
+---
+
+### iOS preparation
+
+- Recommended MacOS version: Catalina
+- Recommended xcode version: `12.4`
+- Recommended xcode command-line version: `12.4`
+
+- Install cocoapods version `1.11.3` and download ios dependencies:
+
+```
+brew install cocoapods@1.11.3
+```
+
 - Install rust build targets:
-  </br>`rustup target add aarch64-apple-ios armv7-apple-ios armv7s-apple-ios x86_64-apple-ios i386-apple-ios`
-- Install cargo-lipo for building:
-  </br>`cargo install cargo-lipo`
-- Install dependencies:
-  </br>`yarn install`
+
+```
+rustup target add aarch64-apple-ios armv7-apple-ios armv7s-apple-ios x86_64-apple-ios i386-apple-ios
+```
+
+- Install cargo-lipo version `3.1.1` for building:
+
+```
+cargo install --version 3.1.1 cargo-lipo
+```
 
 #### Additional configuration for MacOS Big Sur users
 
 MacOS Big Sur changed the default path of the system C linker, which breaks `cargo lipo`. Some approaches to fix this are detailed here https://github.com/TimNN/cargo-lipo/issues/41.
 
 ---
+
+### Android Preparation
+
+- Install last version of [Android Studio](https://developer.android.com/studio) and install the latest version of Android SDK Command-line tools and Android SDK Platform-Tools. It can be done from `Android Studio -> Appareance & Behavior -> System Settings -> Android SDK -> "SDK Tools" tab` after activating in this section `Show Package Details`
+
+- Add this to your .bashrc/.zshrc file:
+
+```
+export ANDROID_SDK_ROOT=$HOME/Library/Android/sdk
+export PATH=$PATH:$ANDROID_SDK_ROOT/emulator
+export PATH=$PATH:$ANDROID_SDK_ROOT/platform-tools
+export PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin
+```
+
+- Update the Android SDK:
+
+```
+sdkmanager "tools"
+sdkmanager --update
+sdkmanager --list
+sdkmanager "build-tools;28.0.3" "platform-tools" "platforms;android-28" "tools"
+sdkmanager --licenses
+```
+
+- Install the Android NDK:
+
+```
+sdkmanager --install "ndk;20.0.5594570"
+```
+
+- Install java 8:
+
+```
+brew tap adoptopenjdk/openjdk
+brew install --cask adoptopenjdk8
+```
+
+Existing users of Homebrew may encounter Error: Cask adoptopenjdk8 exists in multiple taps due to prior workarounds with different instructions. This can be solved by fully specifying the location with:
+
+```
+brew install --cask adoptopenjdk/openjdk/adoptopenjdk8
+```
+
+- Install Rust packages:
+
+```
+rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
+```
+
+- Install wasm-prkg:
+
+```
+curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+```
+
+- Install gradle:
+
+```
+brew install gradle
+```
+
+#### Optional
+
+- Create a virtual device from Android studio with the following specs:
+
+  - Pixel 2 device
+  - System Image:
+    - Release name: R
+    - API level: 30
+    - ABI: x86_64
+    - Target: Android 11 (Google APIs)
+
+---
+
+## Installation Windows + WSL2 Ubuntu / Ubuntu
+
+---
+
+**NOTE**
+
+The **Windows + WSL2 Ubuntu** is used in the instruction for building project for android devices.<br/>The instruction is checked.<br/>It should work for the Ubuntu also, but it is not checked.
 
 ### Android preparation
 
@@ -149,33 +256,6 @@ sdkmanager --install "ndk;20.0.5594570"
 sudo apt install gradle -y
 ```
 
-- Clone the project
-
-```shell
-cd ~ && mkdir Emurgo && cd Emurgo
-git clone https://github.com/Emurgo/yoroi-mobile.git
-cd yoroi-mobile
-```
-
-- Run the `nvm use` command
-- Install `yarn`:
-
-```shell
-npm install -g yarn
-```
-
-- Check that Yarn is installed:
-
-```shell
-yarn --version
-```
-
-- Install dependencies:
-
-```shell
-yarn install
-```
-
 ---
 
 #### Windows preparation
@@ -271,8 +351,18 @@ yarn start
 
 Make sure the rust targets for the platform you will work on (android/iOS) have been correctly installed with `rustup show`. Then:
 
-1. `yarn setup_configs` - links libraries to ios testnet build configurations
-1. When building on iOS: `cd ios && pod install`
+1. Clone the project
+
+```shell
+cd ~ && mkdir Emurgo && cd Emurgo
+git clone https://github.com/Emurgo/yoroi-mobile.git
+cd yoroi-mobile
+```
+
+2. Run the `nvm use` command
+3. `yarn install`
+4. `yarn setup_configs` - links libraries to ios testnet build configurations
+5. When building on iOS: `cd ios && pod install`
 
 If these steps fail, try looking at the [android CLI](https://github.com/Emurgo/yoroi-mobile/blob/develop/.circleci/config.yml#L68)
 
@@ -488,8 +578,6 @@ The imports should be in this order:
 Example:
 
 ```js
-// @flow
-
 // external libraries
 import React from 'react'
 import {compose} from 'redux'
@@ -500,9 +588,6 @@ import {View} from 'react-native'
 import Screen from '../../components/Screen'
 import AdaIcon from '../../assets/AdaIcon'
 import {confirmationsToAssuranceLevel, printAda} from '../../helpers/utils'
-
-// styles
-import styles from './TxDetails.style'
 
 // types
 import type {TransactionType} from '../../types/HistoryTransaction'

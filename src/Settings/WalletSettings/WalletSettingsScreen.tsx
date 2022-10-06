@@ -1,21 +1,23 @@
 import React from 'react'
 import type {MessageDescriptor} from 'react-intl'
 import {defineMessages, useIntl} from 'react-intl'
-import {ScrollView, StyleSheet, Switch} from 'react-native'
+import {InteractionManager, ScrollView, StyleSheet, Switch} from 'react-native'
 import {useMutation, UseMutationOptions} from 'react-query'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {DIALOG_BUTTONS, showConfirmationDialog, signout} from '../../../legacy/actions'
-import {StatusBar} from '../../../legacy/components/UiKit'
-import {isByron, isHaskellShelley} from '../../../legacy/config/config'
-import {getNetworkConfigById} from '../../../legacy/config/networks'
-import type {NetworkId, WalletImplementationId} from '../../../legacy/config/types'
-import walletManager from '../../../legacy/crypto/walletManager'
-import {confirmationMessages} from '../../../legacy/i18n/global-messages'
-import {easyConfirmationSelector, isSystemAuthEnabledSelector} from '../../../legacy/selectors'
-import {useCloseWallet, useWalletName} from '../../hooks'
+import {useAuth} from '../../auth/AuthProvider'
+import {StatusBar} from '../../components'
+import {useCloseWallet, useEasyConfirmationEnabled, useWalletName} from '../../hooks'
+import {confirmationMessages} from '../../i18n/global-messages'
+import {clearAccountState} from '../../legacy/account'
+import {DIALOG_BUTTONS, showConfirmationDialog} from '../../legacy/actions'
+import {isByron, isHaskellShelley} from '../../legacy/config'
+import {getNetworkConfigById} from '../../legacy/networks'
+import {isSystemAuthEnabledSelector} from '../../legacy/selectors'
+import {clearUTXOs} from '../../legacy/utxo'
 import {useWalletNavigation} from '../../navigation'
 import {useSelectedWallet, useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
+import {NetworkId, WalletImplementationId, walletManager} from '../../yoroi-wallets'
 import {
   NavigatedSettingsItem,
   PressableSettingsItem,
@@ -29,19 +31,28 @@ export const WalletSettingsScreen = () => {
   const strings = useStrings()
   const {navigation, resetToWalletSelection} = useWalletNavigation()
   const isSystemAuthEnabled = useSelector(isSystemAuthEnabledSelector)
-  const isEasyConfirmationEnabled = useSelector(easyConfirmationSelector)
   const wallet = useSelectedWallet()
   const walletName = useWalletName(wallet)
+  const easyConfirmationEnabled = useEasyConfirmationEnabled(wallet)
 
   const onSwitchWallet = () => {
     resetToWalletSelection()
   }
 
-  const onToggleEasyConfirmation = () => {
+  const onEnableEasyConfirmation = () => {
     navigation.navigate('app-root', {
       screen: 'settings',
       params: {
-        screen: 'easy-confirmation',
+        screen: 'enable-easy-confirmation',
+      },
+    })
+  }
+
+  const onDisableEasyConfirmation = () => {
+    navigation.navigate('app-root', {
+      screen: 'settings',
+      params: {
+        screen: 'disable-easy-confirmation',
       },
     })
   }
@@ -56,7 +67,7 @@ export const WalletSettingsScreen = () => {
       </SettingsSection>
 
       <SettingsSection title={strings.walletName}>
-        <NavigatedSettingsItem label={walletName || ''} navigateTo="change-wallet-name" />
+        <NavigatedSettingsItem label={walletName ?? ''} navigateTo="change-wallet-name" />
       </SettingsSection>
 
       <SettingsSection title={strings.security}>
@@ -71,8 +82,8 @@ export const WalletSettingsScreen = () => {
           disabled={!isSystemAuthEnabled || wallet.isHW || wallet.isReadOnly}
         >
           <Switch
-            value={isEasyConfirmationEnabled}
-            onValueChange={onToggleEasyConfirmation}
+            value={easyConfirmationEnabled}
+            onValueChange={easyConfirmationEnabled ? onDisableEasyConfirmation : onEnableEasyConfirmation}
             disabled={!isSystemAuthEnabled || wallet.isHW || wallet.isReadOnly}
           />
         </SettingsItem>
@@ -200,6 +211,7 @@ const getWalletType = (implementationId: WalletImplementationId): MessageDescrip
 }
 
 const useLogout = (options?: UseMutationOptions<void, Error>) => {
+  const {logout} = useAuth()
   const intl = useIntl()
   const dispatch = useDispatch()
   const setSelectedWallet = useSetSelectedWallet()
@@ -208,20 +220,26 @@ const useLogout = (options?: UseMutationOptions<void, Error>) => {
     onSuccess: () => {
       setSelectedWallet(undefined)
       setSelectedWalletMeta(undefined)
+      dispatch(clearUTXOs())
+      dispatch(clearAccountState())
     },
     ...options,
   })
 
   return {
     logout: () => {
-      dispatch(signout()) // triggers navigation to login
-      setTimeout(() => closeWallet(), 1000) // wait for navigation to finish
+      logout() // triggers navigation to login
+      InteractionManager.runAfterInteractions(() => {
+        closeWallet()
+      })
     },
     logoutWithConfirmation: async () => {
       const selection = await showConfirmationDialog(confirmationMessages.logout, intl)
       if (selection === DIALOG_BUTTONS.YES) {
-        dispatch(signout()) // triggers navigation to login
-        setTimeout(() => closeWallet(), 1000) // wait for navigation to finish
+        logout() // triggers navigation to login
+        InteractionManager.runAfterInteractions(() => {
+          closeWallet()
+        })
       }
     },
     ...mutation,
@@ -247,10 +265,10 @@ const useResync = (options?: UseMutationOptions<void, Error>) => {
     resyncWithConfirmation: async () => {
       const selection = await showConfirmationDialog(confirmationMessages.resync, intl)
       if (selection === DIALOG_BUTTONS.YES) {
-        resetToWalletSelection({reopen: true})
-        setTimeout(() => {
+        resetToWalletSelection()
+        InteractionManager.runAfterInteractions(() => {
           mutation.mutate()
-        }, 200) // wait for navigation to finish
+        })
       }
     },
     ...mutation,

@@ -3,9 +3,9 @@ import {defineMessages, useIntl} from 'react-intl'
 import {View} from 'react-native'
 import {StyleSheet} from 'react-native'
 
-import {ProgressCircle, Text, TitledCard} from '../../legacy/components/UiKit'
-import globalMessages from '../../legacy/i18n/global-messages'
-import {COLORS} from '../../legacy/styles/config'
+import {ProgressCircle, Text, TitledCard} from '../components'
+import globalMessages from '../i18n/global-messages'
+import {COLORS} from '../theme'
 
 type Props = {
   percentage: number
@@ -23,7 +23,7 @@ export const EpochProgress = ({percentage, currentEpoch, endTime}: Props) => {
 
   return (
     <View style={styles.wrapper}>
-      <TitledCard title={intl.formatMessage(messages.epochProgressTitle)}>
+      <TitledCard title={intl.formatMessage(messages.epochProgressTitle)} testID="epochProgressTitleCard">
         <ProgressCircle percentage={percentage} />
 
         <View style={styles.stats}>
@@ -35,7 +35,7 @@ export const EpochProgress = ({percentage, currentEpoch, endTime}: Props) => {
           <View style={styles.row}>
             <Text style={styles.label}>{intl.formatMessage(messages.endsInLabel)}:</Text>
             <View style={styles.timeWrapper}>
-              {endTime.d && <Text style={styles.timeBlock}>{endTime.d}</Text>}
+              {endTime.d != null && <Text style={styles.timeBlock}>{endTime.d}</Text>}
               <Text style={styles.timeBlock}>{endTime.h}</Text>
               <Text>:</Text>
               <Text style={styles.timeBlock}>{endTime.m}</Text>

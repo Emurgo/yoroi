@@ -1,14 +1,14 @@
 import * as React from 'react'
 
-import {WalletInterface} from '../../types'
+import {YoroiWallet} from '../../yoroi-wallets'
 
-type SelectedWallet = WalletInterface
+type SelectedWallet = YoroiWallet
 type SetSelectedWallet = (selectedWallet?: SelectedWallet) => void
 type SelectedWalletContext = readonly [SelectedWallet | undefined, SetSelectedWallet]
 
 const SelectedWalletContext = React.createContext<SelectedWalletContext | undefined>(undefined)
 
-export const SelectedWalletProvider: React.FC<{wallet?: WalletInterface}> = ({children, wallet}) => {
+export const SelectedWalletProvider = ({children, wallet}: {wallet?: SelectedWallet; children: React.ReactNode}) => {
   const [selectedWallet, selectWallet] = React.useState<SelectedWallet | undefined>(wallet)
 
   return (
@@ -34,7 +34,13 @@ export const useSetSelectedWallet = () => {
   return setSelectedWallet
 }
 
-export const SelectedWalletBoundary: React.FC<{fallback?: React.ReactNode}> = ({children, fallback = null}) => {
+export const SelectedWalletBoundary = ({
+  children,
+  fallback = null,
+}: {
+  fallback?: React.ReactNode
+  children: React.ReactNode
+}) => {
   const [wallet] = useSelectedWalletContext()
 
   if (!wallet) return <>{fallback}</>

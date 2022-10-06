@@ -1,11 +1,11 @@
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
-import {Image, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
+import {Image, StyleSheet, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 
-import chevronRight from '../../legacy/assets/img/chevron_right.png'
-import styles from '../../legacy/components/Settings/styles/SettingsItems.style'
-import {Text} from '../../legacy/components/UiKit'
+import chevronRight from '../assets/img/chevron_right.png'
+import {Text} from '../components'
 import {SettingsRouteNavigation, SettingsStackRoutes} from '../navigation'
+import {COLORS} from '../theme'
 
 const Touchable = (props: TouchableOpacityProps) => <TouchableOpacity {...props} activeOpacity={0.5} />
 
@@ -92,3 +92,35 @@ export const PressableSettingsItem = ({label, onPress, disabled}: PressableSetti
     </SettingsItem>
   </Touchable>
 )
+
+const styles = StyleSheet.create({
+  item: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 12,
+  },
+  label: {
+    flex: 1,
+  },
+  disabled: {
+    color: COLORS.DISABLED,
+  },
+  section: {
+    marginTop: 16,
+  },
+  sectionContent: {
+    marginHorizontal: 16,
+    elevation: 1,
+    shadowOffset: {width: 0, height: 2},
+    shadowRadius: 12,
+    shadowOpacity: 0.06,
+    shadowColor: 'black',
+    backgroundColor: '#fff',
+    borderRadius: 8,
+  },
+  sectionTitle: {
+    marginBottom: 5,
+    paddingHorizontal: 28,
+  },
+})

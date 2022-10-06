@@ -1,26 +1,45 @@
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs'
+import {useNavigation} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
+import {useDispatch} from 'react-redux'
 
-import {COLORS} from '../../legacy/styles/config'
-import {defaultStackNavigationOptions, SettingsStackRoutes, SettingsTabRoutes} from '../navigation'
+import {ChangePinScreen, CreatePinScreen} from '../auth'
+import globalMessages from '../i18n/global-messages'
+import {setEasyConfirmation, setSystemAuth} from '../legacy/actions'
+import {
+  defaultStackNavigationOptions,
+  defaultStackNavigationOptionsV2,
+  SettingsStackRoutes,
+  SettingsTabRoutes,
+  useWalletNavigation,
+} from '../navigation'
+import {useSelectedWalletMeta, useSetSelectedWalletMeta} from '../SelectedWallet'
+import {COLORS} from '../theme'
+import {useWalletManager} from '../WalletManager'
 import {ApplicationSettingsScreen} from './ApplicationSettings'
 import {BiometricsLinkScreen} from './BiometricsLink/'
 import {ChangeLanguageScreen} from './ChangeLanguage'
 import {ChangePasswordScreen} from './ChangePassword'
-import {ChangePinScreen} from './ChangePin'
 import {ChangeWalletName} from './ChangeWalletName'
-import {CustomPinScreen} from './CustomPin'
+import {ChangeCurrencyScreen} from './Currency/ChangeCurrencyScreen'
+import {DisableEasyConfirmationScreen, EnableEasyConfirmationScreen} from './EasyConfirmation'
 import {RemoveWalletScreen} from './RemoveWallet'
 import {SupportScreen} from './Support'
 import {TermsOfServiceScreen} from './TermsOfService'
-import {ToggleEasyConfirmationScreen} from './ToggleEasyConfirmation'
 import {WalletSettingsScreen} from './WalletSettings'
 
 const Stack = createStackNavigator<SettingsStackRoutes>()
 export const SettingsScreenNavigator = () => {
   const strings = useStrings()
+  const walletManager = useWalletManager()
+  const navigation = useNavigation()
+  const {navigateToSettings} = useWalletNavigation()
+  const dispatch = useDispatch()
+  const setSelectedWalletMeta = useSetSelectedWalletMeta()
+  const walletMeta = useSelectedWalletMeta()
+
   return (
     <Stack.Navigator screenOptions={defaultStackNavigationOptions} initialRouteName="settings-main">
       <Stack.Screen //
@@ -62,13 +81,28 @@ export const SettingsScreenNavigator = () => {
       <Stack.Screen //
         name="change-language"
         component={ChangeLanguageScreen}
-        options={{headerShown: false}}
+        options={{title: strings.languageTitle}}
       />
 
       <Stack.Screen //
-        name="easy-confirmation"
-        component={ToggleEasyConfirmationScreen}
-        options={{title: strings.toggleEachConfirmationTitle}}
+        name="change-currency"
+        component={ChangeCurrencyScreen}
+        options={{
+          ...defaultStackNavigationOptionsV2,
+          title: strings.currency,
+        }}
+      />
+
+      <Stack.Screen //
+        name="enable-easy-confirmation"
+        component={EnableEasyConfirmationScreen}
+        options={{title: strings.enableEasyConfirmationTitle}}
+      />
+
+      <Stack.Screen //
+        name="disable-easy-confirmation"
+        component={DisableEasyConfirmationScreen}
+        options={{title: strings.disableEasyConfirmationTitle}}
       />
 
       <Stack.Screen //
@@ -79,18 +113,34 @@ export const SettingsScreenNavigator = () => {
 
       <Stack.Screen //
         name="change-custom-pin"
-        component={ChangePinScreen}
         options={{
           title: strings.changeCustomPinTitle,
           headerStyle: defaultStackNavigationOptions.headerStyle,
         }}
-      />
+      >
+        {() => <ChangePinScreen onDone={() => navigation.goBack()} />}
+      </Stack.Screen>
 
       <Stack.Screen //
         name="setup-custom-pin"
-        component={CustomPinScreen}
         options={{title: strings.customPinTitle}}
-      />
+      >
+        {() => (
+          <CreatePinScreen
+            onDone={async () => {
+              await dispatch(setSystemAuth(false))
+              await walletManager.disableEasyConfirmation()
+              dispatch(setEasyConfirmation(false))
+              if (!walletMeta) throw new Error('No wallet meta')
+              setSelectedWalletMeta({
+                ...walletMeta,
+                isEasyConfirmationEnabled: false,
+              })
+              navigateToSettings()
+            }}
+          />
+        )}
+      </Stack.Screen>
     </Stack.Navigator>
   )
 }
@@ -147,8 +197,12 @@ const messages = defineMessages({
     id: 'components.settings.settingsscreen.title',
     defaultMessage: '!!!Support',
   },
-  toggleEachConfirmationTitle: {
-    id: 'components.settings.toggleeasyconfirmationscreen.title',
+  enableEasyConfirmationTitle: {
+    id: 'components.settings.enableeasyconfirmationscreen.title',
+    defaultMessage: '!!!Easy confirmation',
+  },
+  disableEasyConfirmationTitle: {
+    id: 'components.settings.disableeasyconfirmationscreen.title',
     defaultMessage: '!!!Easy confirmation',
   },
   customPinTitle: {
@@ -158,6 +212,10 @@ const messages = defineMessages({
   settingsTitle: {
     id: 'components.settings.applicationsettingsscreen.title',
     defaultMessage: '!!!Settings',
+  },
+  languageTitle: {
+    id: 'components.settings.changelanguagescreen.title',
+    defaultMessage: '!!!Language',
   },
 })
 
@@ -173,8 +231,11 @@ const useStrings = () => {
     termsOfServiceTitle: intl.formatMessage(messages.termsOfServiceTitle),
     changeWalletNameTitle: intl.formatMessage(messages.changeWalletNameTitle),
     supportTitle: intl.formatMessage(messages.supportTitle),
-    toggleEachConfirmationTitle: intl.formatMessage(messages.toggleEachConfirmationTitle),
+    enableEasyConfirmationTitle: intl.formatMessage(messages.enableEasyConfirmationTitle),
+    disableEasyConfirmationTitle: intl.formatMessage(messages.disableEasyConfirmationTitle),
     customPinTitle: intl.formatMessage(messages.customPinTitle),
     settingsTitle: intl.formatMessage(messages.settingsTitle),
+    languageTitle: intl.formatMessage(messages.languageTitle),
+    currency: intl.formatMessage(globalMessages.currency),
   }
 }

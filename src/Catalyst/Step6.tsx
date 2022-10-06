@@ -2,38 +2,24 @@ import Clipboard from '@react-native-community/clipboard'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {
-  ActivityIndicator,
-  Image,
-  NativeModules,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import {NativeModules, Platform, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 import QRCodeSVG from 'react-native-qrcode-svg'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useSelector} from 'react-redux'
 
-import copyImage from '../../legacy/assets/img/copyd.png'
-import {Button, ProgressStep, Text} from '../../legacy/components/UiKit'
-import {confirmationMessages} from '../../legacy/i18n/global-messages'
-import {encryptedKeySelector} from '../../legacy/selectors'
-import {COLORS} from '../../legacy/styles/config'
-import {Spacer} from '../components'
+import {Button, Icon, ProgressStep, Spacer, Text} from '../components'
+import {confirmationMessages} from '../i18n/global-messages'
 import {useWalletNavigation} from '../navigation'
+import {COLORS} from '../theme'
 import {CatalystBackupCheckModal} from './CatalystBackupCheckModal'
 import {Actions, Description, Title} from './components'
 
 const {FlagSecure} = NativeModules
 
-export const Step6 = () => {
+export const Step6 = ({catalystSKHexEncrypted}: {catalystSKHexEncrypted: string}) => {
   useBlockGoBack()
   const strings = useStrings()
-  const encryptedKey = useSelector(encryptedKeySelector)
   const {resetToTxHistory} = useWalletNavigation()
-  const [countDown, setCountDown] = useState(5)
+  const [countDown, setCountDown] = useState<number>(5)
   const [showBackupWarningModal, setShowBackupWarningModal] = useState(false)
 
   useEffect(() => {
@@ -82,16 +68,16 @@ export const Step6 = () => {
 
         <Spacer height={32} />
 
-        {encryptedKey ? <QRCode text={encryptedKey} /> : <ActivityIndicator size="large" color="black" />}
+        <QRCode text={catalystSKHexEncrypted} />
 
         <Spacer height={32} />
 
         <Text>{strings.secretCode}</Text>
 
         <SecretCodeBox>
-          <Text style={{flex: 1}}>{encryptedKey}</Text>
+          <Text style={{flex: 1}}>{catalystSKHexEncrypted}</Text>
           <Spacer width={16} />
-          <CopyButton text={encryptedKey || ''} />
+          <CopyButton text={catalystSKHexEncrypted} />
         </SecretCodeBox>
       </ScrollView>
 
@@ -123,7 +109,7 @@ const QRCode = ({text}: {text: string}) => (
 const SecretCodeBox = (props) => <View {...props} style={styles.secretCodeBox} />
 const CopyButton = ({text}: {text: string}) => (
   <TouchableOpacity style={{justifyContent: 'center', alignItems: 'center'}} onPress={() => Clipboard.setString(text)}>
-    <Image source={copyImage} />
+    <Icon.Copy size={26} color={COLORS.DARK_GRAY} />
   </TouchableOpacity>
 )
 

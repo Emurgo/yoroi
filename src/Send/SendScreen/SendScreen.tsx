@@ -1,3 +1,4 @@
+import {useNetInfo} from '@react-native-community/netinfo'
 import {useNavigation} from '@react-navigation/native'
 import {BigNumber} from 'bignumber.js'
 import _ from 'lodash'
@@ -8,33 +9,28 @@ import {TouchableOpacity} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useSelector} from 'react-redux'
 
-import UtxoAutoRefresher from '../../../legacy/components/Send/UtxoAutoRefresher'
-import {Button, Checkbox, StatusBar, Text, TextInput} from '../../../legacy/components/UiKit'
-import {CONFIG, UI_V2} from '../../../legacy/config/config'
-import {MultiToken} from '../../../legacy/crypto/MultiToken'
-import type {CreateUnsignedTxResponse} from '../../../legacy/crypto/shelley/transactionUtils'
+import {Button, Checkbox, Spacer, StatusBar, Text, TextInput} from '../../components'
+import {useBalances, useTokenInfo} from '../../hooks'
+import {CONFIG, getDefaultAssetByNetworkId} from '../../legacy/config'
+import {formatTokenAmount, getAssetDenominationOrId, truncateWithEllipsis} from '../../legacy/format'
 import {
-  defaultNetworkAssetSelector,
   hasPendingOutgoingTransactionSelector,
   isFetchingUtxosSelector,
-  isOnlineSelector,
   lastUtxosFetchErrorSelector,
-  tokenBalanceSelector,
   utxosSelector,
-  walletMetaSelector,
-} from '../../../legacy/selectors'
-import {COLORS} from '../../../legacy/styles/config'
-import {formatTokenAmount, getAssetDenominationOrId, truncateWithEllipsis} from '../../../legacy/utils/format'
-import {parseAmountDecimal} from '../../../legacy/utils/parsing'
+} from '../../legacy/selectors'
+import {useSelectedWallet} from '../../SelectedWallet'
+import {COLORS} from '../../theme'
+import {UtxoAutoRefresher} from '../../UtxoAutoRefresher'
+import {Quantity, YoroiAmounts, YoroiUnsignedTx} from '../../yoroi-wallets/types'
+import {Amounts, Quantities} from '../../yoroi-wallets/utils'
+import {parseAmountDecimal} from '../../yoroi-wallets/utils/parsing'
 import type {
   AddressValidationErrors,
   AmountValidationErrors,
   BalanceValidationErrors,
-} from '../../../legacy/utils/validators'
-import {Spacer} from '../../components'
-import {useTokenInfo} from '../../hooks'
-import {useSelectedWallet} from '../../SelectedWallet'
-import type {TokenEntry} from '../../types/cardano'
+} from '../../yoroi-wallets/utils/validators'
+import {useSend} from '../Context/SendContext'
 import {AmountField} from './../AmountField'
 import {AvailableAmountBanner} from './AvailableAmountBanner'
 import {BalanceAfterTransaction} from './BalanceAfterTransaction'
@@ -44,62 +40,50 @@ import {SendAllWarning} from './SendAllWarning'
 import {useStrings} from './strings'
 import {getAddressErrorText, getAmountErrorText, hasDomainErrors, isDomain, recomputeAll} from './utils'
 
-type Props = {
-  selectedTokenIdentifier: string
-  sendAll: boolean
-  onSendAll: (sendAll: boolean) => void
-  receiver: string
-  setReceiver: (receiver: string) => void
-  amount: string
-  setAmount: (amount: string) => void
-}
-
-export const SendScreen = ({
-  selectedTokenIdentifier,
-  sendAll,
-  onSendAll,
-  receiver,
-  amount,
-  setReceiver,
-  setAmount,
-}: Props) => {
+export const SendScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
   const navigation = useNavigation()
-
-  const tokenBalance = useSelector(tokenBalanceSelector)
+  const wallet = useSelectedWallet()
   const isFetchingBalance = useSelector(isFetchingUtxosSelector)
   const lastFetchingError = useSelector(lastUtxosFetchErrorSelector)
-  const defaultAsset = useSelector(defaultNetworkAssetSelector)
+  const defaultAsset = getDefaultAssetByNetworkId(wallet.networkId)
+  const balances = useBalances(wallet)
   const utxos = useSelector(utxosSelector)
   const hasPendingOutgoingTransaction = useSelector(hasPendingOutgoingTransactionSelector)
-  const isOnline = useSelector(isOnlineSelector)
-  const walletMetadata = useSelector(walletMetaSelector)
-  const selectedAsset = tokenBalance.values.find(({identifier}) => identifier === selectedTokenIdentifier)
+  const netInfo = useNetInfo()
+  const isOnline = netInfo.type !== 'none' && netInfo.type !== 'unknown'
 
-  if (!selectedAsset) {
-    throw new Error('Invalid token')
-  }
+  const {tokenId, resetForm, receiverChanged, amountChanged, receiver, amount, sendAll, sendAllChanged} = useSend()
+
+  const selectedAssetAvailableAmount = Amounts.getAmount(balances, tokenId).quantity
+  const defaultAssetAvailableAmount = Amounts.getAmount(balances, defaultAsset.identifier).quantity
+
+  React.useEffect(() => {
+    if (defaultAsset.identifier !== tokenId && !Quantities.isGreaterThan(selectedAssetAvailableAmount, '0')) {
+      resetForm()
+    }
+  }, [defaultAsset.identifier, tokenId, resetForm, selectedAssetAvailableAmount])
 
   const [address, setAddress] = React.useState('')
   const [addressErrors, setAddressErrors] = React.useState<AddressValidationErrors>({addressIsRequired: true})
   const [amountErrors, setAmountErrors] = React.useState<AmountValidationErrors>({amountIsRequired: true})
   const [balanceErrors, setBalanceErrors] = React.useState<BalanceValidationErrors>({})
-  const [balanceAfter, setBalanceAfter] = React.useState<BigNumber | null>(null)
-  const [unsignedTx, setUnsignedTx] = React.useState<CreateUnsignedTxResponse>(null)
-  const [fee, setFee] = React.useState<MultiToken | null>(null)
+  const [balanceAfter, setBalanceAfter] = React.useState<Quantity | null>(null)
+  const [yoroiUnsignedTx, setYoroiUnsignedTx] = React.useState<null | YoroiUnsignedTx>(null)
+  const [fee, setFee] = React.useState<Quantity | null>(null)
   const [recomputing, setRecomputing] = React.useState(false)
   const [showSendAllWarning, setShowSendAllWarning] = React.useState(false)
 
-  const wallet = useSelectedWallet()
-  const tokenInfo = useTokenInfo({wallet, tokenId: selectedTokenIdentifier})
+  const tokenInfo = useTokenInfo({wallet, tokenId})
   const assetDenomination = truncateWithEllipsis(getAssetDenominationOrId(tokenInfo), 20)
   const amountErrorText = getAmountErrorText(intl, amountErrors, balanceErrors, defaultAsset)
+
   const isValid =
     isOnline &&
     !hasPendingOutgoingTransaction &&
     !isFetchingBalance &&
-    !lastFetchingError &&
+    lastFetchingError == null &&
     utxos &&
     _.isEmpty(addressErrors) &&
     _.isEmpty(amountErrors) &&
@@ -108,8 +92,8 @@ export const SendScreen = ({
   React.useEffect(() => {
     if (CONFIG.DEBUG.PREFILL_FORMS) {
       if (!__DEV__) throw new Error('using debug data in non-dev env')
-      setReceiver(CONFIG.DEBUG.SEND_ADDRESS)
-      setAmount(CONFIG.DEBUG.SEND_AMOUNT)
+      receiverChanged(CONFIG.DEBUG.SEND_ADDRESS)
+      amountChanged(CONFIG.DEBUG.SEND_AMOUNT)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -121,14 +105,15 @@ export const SendScreen = ({
     setRecomputing(true)
 
     const promise = recomputeAll({
+      wallet,
       utxos,
       addressInput: receiver,
       amount,
       sendAll,
       defaultAsset,
       selectedTokenInfo: tokenInfo,
-      tokenBalance,
-      walletMetadata,
+      defaultAssetAvailableAmount,
+      selectedAssetAvailableAmount,
     })
 
     promiseRef.current = promise
@@ -138,16 +123,16 @@ export const SendScreen = ({
 
       setAddress(newState.address)
       setAddressErrors(newState.addressErrors)
-      setAmount(newState.amount)
+      amountChanged(newState.amount)
       setAmountErrors(newState.amountErrors)
       setBalanceErrors(newState.balanceErrors)
       setFee(newState.fee)
       setBalanceAfter(newState.balanceAfter)
-      setUnsignedTx(newState.unsignedTx)
+      setYoroiUnsignedTx(newState.yoroiUnsignedTx)
       setRecomputing(false)
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [receiver, amount, selectedTokenIdentifier, sendAll])
+  }, [receiver, amount, tokenId, sendAll])
 
   const onConfirm = () => {
     if (sendAll) {
@@ -158,72 +143,42 @@ export const SendScreen = ({
   }
 
   const handleConfirm = async () => {
-    if (!isValid || recomputing || !unsignedTx) return
+    if (!isValid || recomputing || !yoroiUnsignedTx) return
 
-    const defaultAssetAmount = tokenInfo.isDefault
-      ? parseAmountDecimal(amount, tokenInfo)
+    const defaultAssetAmount: Quantity = tokenInfo.isDefault
+      ? (parseAmountDecimal(amount, tokenInfo).toString() as Quantity)
       : // note: inside this if balanceAfter shouldn't be null
-        tokenBalance.getDefault().minus(balanceAfter ?? 0)
+        Quantities.diff(defaultAssetAvailableAmount, balanceAfter ?? '0')
 
-    const tokens: Array<TokenEntry> = await (async () => {
-      if (tokenInfo.isDefault) {
-        return sendAll ? (await unsignedTx.totalOutput()).nonDefaultEntries() : []
-      }
-
-      if (!tokenInfo.isDefault) {
-        return [
-          {
-            identifier: tokenInfo.identifier,
-            networkId: tokenInfo.networkId,
-            amount: parseAmountDecimal(amount, tokenInfo),
-          },
-        ]
-      }
-    })()
+    const selectedTokens: YoroiAmounts = tokenInfo.isDefault
+      ? sendAll
+        ? Amounts.remove(balances, [defaultAsset.identifier])
+        : {}
+      : {
+          [tokenId]: amount as Quantity,
+        }
 
     setShowSendAllWarning(false)
 
-    if (UI_V2) {
-      navigation.navigate('app-root', {
-        screen: 'main-wallet-routes',
+    navigation.navigate('app-root', {
+      screen: 'main-wallet-routes',
+      params: {
+        screen: 'history',
         params: {
-          screen: 'history',
+          screen: 'send-confirm',
           params: {
-            screen: 'send-confirm',
-            params: {
-              availableAmount: tokenBalance.getDefault(),
-              address,
-              defaultAssetAmount,
-              transactionData: unsignedTx,
-              balanceAfterTx: balanceAfter,
-              utxos,
-              fee,
-              tokens,
-            },
+            availableAmount: defaultAssetAvailableAmount,
+            address,
+            defaultAssetAmount,
+            yoroiUnsignedTx,
+            balanceAfterTx: balanceAfter,
+            utxos,
+            fee,
+            selectedTokens,
           },
         },
-      })
-    } else {
-      navigation.navigate('app-root', {
-        screen: 'main-wallet-routes',
-        params: {
-          screen: 'send-ada',
-          params: {
-            screen: 'send-ada-confirm',
-            params: {
-              availableAmount: tokenBalance.getDefault(),
-              address,
-              defaultAssetAmount,
-              transactionData: unsignedTx,
-              balanceAfterTx: balanceAfter,
-              utxos,
-              fee,
-              tokens,
-            },
-          },
-        },
-      })
-    }
+      },
+    })
   }
 
   return (
@@ -244,9 +199,11 @@ export const SendScreen = ({
           value={receiver}
           multiline
           errorOnMount
-          onChangeText={setReceiver}
+          onChangeText={receiverChanged}
           label={strings.addressInputLabel}
           errorText={getAddressErrorText(intl, addressErrors)}
+          autoComplete={false}
+          testID="addressInput"
         />
 
         {!recomputing &&
@@ -258,51 +215,37 @@ export const SendScreen = ({
             </Text>
           )}
 
-        <AmountField amount={amount} setAmount={setAmount} error={amountErrorText} editable={!sendAll} />
+        <AmountField amount={amount} setAmount={amountChanged} error={amountErrorText} editable={!sendAll} />
 
         <TouchableOpacity
           onPress={() => {
-            if (UI_V2) {
-              navigation.navigate('app-root', {
-                screen: 'main-wallet-routes',
+            navigation.navigate('app-root', {
+              screen: 'main-wallet-routes',
+              params: {
+                screen: 'history',
                 params: {
-                  screen: 'history',
-                  params: {
-                    screen: 'select-asset',
-                  },
+                  screen: 'select-asset',
                 },
-              })
-            } else {
-              navigation.navigate('app-root', {
-                screen: 'main-wallet-routes',
-                params: {
-                  screen: 'send-ada',
-                  params: {
-                    screen: 'select-asset',
-                  },
-                },
-              })
-            }
+              },
+            })
           }}
         >
           <TextInput
-            right={<Image source={require('../../../legacy/assets/img/arrow_down_fill.png')} />}
+            right={<Image source={require('../../assets/img/arrow_down_fill.png')} testID="selectAssetButton" />}
             editable={false}
             label={strings.asset}
-            value={`${assetDenomination}: ${formatTokenAmount(
-              tokenBalance.get(selectedTokenIdentifier) || new BigNumber('0'),
-              tokenInfo,
-              15,
-            )}`}
+            value={`${assetDenomination}: ${formatTokenAmount(new BigNumber(selectedAssetAvailableAmount), tokenInfo)}`}
+            autoComplete={false}
           />
         </TouchableOpacity>
 
         <Checkbox
           checked={sendAll}
-          onChange={onSendAll}
+          onChange={sendAllChanged}
           text={
             tokenInfo.isDefault ? strings.checkboxSendAllAssets : strings.checkboxSendAll({assetId: assetDenomination})
           }
+          testID="sendAllCheckbox"
         />
 
         {recomputing && (
@@ -313,13 +256,18 @@ export const SendScreen = ({
       </ScrollView>
 
       <View style={styles.actions}>
-        <Button onPress={onConfirm} title={strings.continueButton} disabled={!isValid || fee == null} />
+        <Button
+          onPress={onConfirm}
+          title={strings.continueButton}
+          disabled={!isValid || fee == null}
+          testID="continueButton"
+        />
       </View>
 
       <SendAllWarning
         showSendAllWarning={showSendAllWarning}
         onCancel={() => setShowSendAllWarning(false)}
-        selectedTokenIdentifier={selectedTokenIdentifier}
+        selectedTokenIdentifier={tokenId}
         onConfirm={handleConfirm}
       />
     </SafeAreaView>

@@ -2,5 +2,5 @@
 . "$(dirname "$0")/_/husky.sh"
 
 npx lint-staged
-yarn flow
 yarn tsc
+yarn test --ci --bail --silent

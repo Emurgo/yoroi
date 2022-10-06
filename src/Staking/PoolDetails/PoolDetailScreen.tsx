@@ -2,11 +2,11 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 
-import {Button, Text, TextInput} from '../../../legacy/components/UiKit'
-import {COLORS, spacing} from '../../../legacy/styles/config'
+import {Button, Text, TextInput} from '../../components'
+import {COLORS, spacing} from '../../theme'
 
 type Props = {
-  onPressDelegate: (poolHash?: string) => void
+  onPressDelegate: (poolHash: string) => void
   disabled?: boolean
 }
 
@@ -20,7 +20,13 @@ export const PoolDetailScreen = ({onPressDelegate, disabled = false}: Props) => 
         <Text style={styles.title}>{strings.title}</Text>
       </View>
 
-      <TextInput label={strings.poolHash} value={poolHash} onChangeText={setPoolHash} />
+      <TextInput
+        label={strings.poolHash}
+        value={poolHash}
+        onChangeText={setPoolHash}
+        autoComplete={false}
+        testID="nightlyPoolHashInput"
+      />
 
       <Button
         outlineOnLight
@@ -29,6 +35,7 @@ export const PoolDetailScreen = ({onPressDelegate, disabled = false}: Props) => 
         title={strings.delegate}
         style={styles.button}
         disabled={disabled}
+        testID="nightlyDelegateButton"
       />
     </View>
   )

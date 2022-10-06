@@ -1,30 +1,26 @@
-import {useNavigation, useRoute} from '@react-navigation/native'
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import LedgerTransportSwitchModal from '../../../legacy/components/Ledger/LedgerTransportSwitchModal'
-import {Button, Modal, ScreenBackground, StatusBar} from '../../../legacy/components/UiKit'
-import {CONFIG, isByron, isHaskellShelley} from '../../../legacy/config/config'
-import {isJormungandr} from '../../../legacy/config/networks'
-import type {NetworkId, WalletImplementationId, YoroiProvider} from '../../../legacy/config/types'
-import globalMessages from '../../../legacy/i18n/global-messages'
-import {COLORS} from '../../../legacy/styles/config'
-import {WalletInitRouteNavigation} from '../../navigation'
+import {Button, Modal, ScreenBackground, StatusBar} from '../../components'
+import {LedgerTransportSwitchModal} from '../../HW'
+import globalMessages from '../../i18n/global-messages'
+import {CONFIG, isByron, isHaskellShelley} from '../../legacy/config'
+import {isJormungandr} from '../../legacy/networks'
+import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
+import {COLORS} from '../../theme'
+import {NetworkId, WalletImplementationId, YoroiProvider} from '../../yoroi-wallets'
 import {WalletDescription} from '../WalletDescription'
 import {ExpandableItem} from './ExpandableItem'
 
 export const WalletInitScreen = () => {
   const strings = useStrings()
-  /* eslint-disable @typescript-eslint/no-explicit-any */
-  const route: any = useRoute()
-  /* eslint-enable @typescript-eslint/no-explicit-any */
+  const route = useRoute<RouteProp<WalletInitRoutes, 'choose-create-restore'>>()
   const [modalState, setModalState] = React.useState<ModalState>(MODAL_STATES.CLOSED)
 
-  const networkId: NetworkId = route.params.networkId
-  const provider = route.params.provider
-  const implementationId: WalletImplementationId = route.params.walletImplementationId
+  const {networkId, provider, walletImplementationId: implementationId} = route.params
   const navigateTo = useNavigateTo({networkId})
 
   return (
@@ -65,6 +61,7 @@ export const WalletInitScreen = () => {
                 onPress={() => setModalState(MODAL_STATES.LEDGER_TRANSPORT_SWITCH)}
                 title={strings.createWalletWithLedgerButton({networkId})}
                 style={styles.createButton}
+                testID="createLedgerWalletButton"
               />
               <LedgerTransportSwitchModal
                 visible={modalState === MODAL_STATES.LEDGER_TRANSPORT_SWITCH}
@@ -202,14 +199,14 @@ const useNavigateTo = ({networkId}: {networkId: NetworkId}) => {
   const navigation = useNavigation<WalletInitRouteNavigation>()
 
   return {
-    restoreWallet: (walletImplementationId: WalletImplementationId, provider?: YoroiProvider) =>
+    restoreWallet: (walletImplementationId: WalletImplementationId, provider: YoroiProvider) =>
       navigation.navigate('restore-wallet-form', {
         networkId,
         walletImplementationId,
         provider,
       }),
 
-    createWallet: (walletImplementationId: WalletImplementationId, provider?: YoroiProvider) =>
+    createWallet: (walletImplementationId: WalletImplementationId, provider: YoroiProvider) =>
       navigation.navigate('create-wallet-form', {
         networkId,
         walletImplementationId,

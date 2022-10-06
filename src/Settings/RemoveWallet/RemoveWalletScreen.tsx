@@ -3,35 +3,35 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, View} from 'react-native'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useDispatch, useSelector} from 'react-redux'
+import {useDispatch} from 'react-redux'
 
-import {updateWallets} from '../../../legacy/actions'
-import {Button, Checkbox, StatusBar, Text, TextInput} from '../../../legacy/components/UiKit'
-import {Checkmark} from '../../../legacy/components/UiKit/TextInput'
-import {isHWSelector} from '../../../legacy/selectors'
-import {COLORS} from '../../../legacy/styles/config'
-import {Spacer} from '../../components'
+import {Button, Checkbox, Checkmark, Spacer, StatusBar, Text, TextInput} from '../../components'
 import {useRemoveWallet, useWalletName} from '../../hooks'
+import {clearAccountState} from '../../legacy/account'
+import {clearUTXOs} from '../../legacy/utxo'
 import {useWalletNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
+import {COLORS} from '../../theme'
 
 export const RemoveWalletScreen = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const walletName = useWalletName(wallet)
-  const isHW = useSelector(isHWSelector)
 
   const {resetToWalletSelection} = useWalletNavigation()
   const dispatch = useDispatch()
-  const {removeWallet, isLoading} = useRemoveWallet({
+  const {removeWallet, isLoading} = useRemoveWallet(wallet.id, {
     onMutate: () => resetToWalletSelection(),
-    onSuccess: () => dispatch(updateWallets()),
+    onSettled: () => {
+      dispatch(clearUTXOs())
+      dispatch(clearAccountState())
+    },
   })
 
   const [hasMnemonicWrittenDown, setHasMnemonicWrittenDown] = React.useState(false)
   const [typedWalletName, setTypedWalletName] = React.useState('')
 
-  const disabled = isLoading || (!isHW && !hasMnemonicWrittenDown) || walletName !== typedWalletName
+  const disabled = isLoading || (!wallet.isHW && !hasMnemonicWrittenDown) || walletName !== typedWalletName
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
@@ -39,7 +39,7 @@ export const RemoveWalletScreen = () => {
 
       <ScrollView bounces={false} contentContainerStyle={styles.contentContainer}>
         <Description>
-          {!isHW && <Text style={styles.description}>{strings.descriptionParagraph1}</Text>}
+          {!wallet.isHW && <Text style={styles.description}>{strings.descriptionParagraph1}</Text>}
           <Text style={styles.description}>{strings.descriptionParagraph2}</Text>
         </Description>
 
@@ -63,7 +63,7 @@ export const RemoveWalletScreen = () => {
       </ScrollView>
 
       <Actions>
-        {!isHW && (
+        {!wallet.isHW && (
           <Checkbox
             checked={hasMnemonicWrittenDown}
             text={strings.hasWrittenDownMnemonic}
@@ -73,7 +73,7 @@ export const RemoveWalletScreen = () => {
 
         <Spacer height={16} />
 
-        <Button onPress={removeWallet} title={strings.remove} style={styles.removeButton} disabled={disabled} />
+        <Button onPress={() => removeWallet()} title={strings.remove} style={styles.removeButton} disabled={disabled} />
       </Actions>
     </SafeAreaView>
   )

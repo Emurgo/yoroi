@@ -2,25 +2,30 @@ import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {useIntl} from 'react-intl'
 import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
-import {useSelector} from 'react-redux'
 
-import {actionMessages} from '../../legacy/i18n/global-messages'
-import {isReadOnlySelector} from '../../legacy/selectors'
-import {COLORS} from '../../legacy/styles/config'
 import {Icon, Spacer} from '../components'
 import features from '../features'
+import {actionMessages} from '../i18n/global-messages'
 import {TxHistoryRouteNavigation} from '../navigation'
+import {useSelectedWallet} from '../SelectedWallet'
+import {useSend} from '../Send/Context/SendContext'
+import {COLORS} from '../theme'
 
 const ACTION_PROPS = {
-  height: 36,
-  width: 36,
+  size: 32,
   color: COLORS.WHITE,
 }
 
 export const ActionsBanner = () => {
   const strings = useStrings()
   const navigateTo = useNavigateTo()
-  const isReadOnly = useSelector(isReadOnlySelector)
+  const wallet = useSelectedWallet()
+  const {resetForm} = useSend()
+
+  const onSend = () => {
+    navigateTo.send()
+    resetForm()
+  }
 
   return (
     <View style={styles.banner}>
@@ -28,19 +33,19 @@ export const ActionsBanner = () => {
 
       <View style={styles.centralized}>
         <View style={styles.row}>
-          {!isReadOnly && (
+          {!wallet.isReadOnly && (
             <View style={styles.centralized}>
-              <TouchableOpacity style={styles.actionIcon} onPress={navigateTo.send}>
-                <Icon.Sent {...ACTION_PROPS} />
+              <TouchableOpacity style={styles.actionIcon} onPress={onSend} testID="sendButton">
+                <Icon.Send {...ACTION_PROPS} />
               </TouchableOpacity>
               <Text style={styles.actionLabel}>{strings.sendLabel}</Text>
             </View>
           )}
 
-          {!isReadOnly && <Spacer width={32} />}
+          {!wallet.isReadOnly && <Spacer width={32} />}
 
           <View style={styles.centralized}>
-            <TouchableOpacity style={styles.actionIcon} onPress={navigateTo.receive}>
+            <TouchableOpacity style={styles.actionIcon} onPress={navigateTo.receive} testID="receiveButton">
               <Icon.Received {...ACTION_PROPS} />
             </TouchableOpacity>
             <Text style={styles.actionLabel}>{strings.receiveLabel}</Text>

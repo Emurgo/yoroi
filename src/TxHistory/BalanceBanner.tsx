@@ -1,23 +1,15 @@
 import React, {useState} from 'react'
-import {useIntl} from 'react-intl'
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
-import {UI_V2} from '../../legacy/config/config'
-import globalMessages from '../../legacy/i18n/global-messages'
-import {availableAssetsSelector, tokenBalanceSelector} from '../../legacy/selectors'
-import {COLORS} from '../../legacy/styles/config'
-import {formatTokenWithText, formatTokenWithTextWhenHidden} from '../../legacy/utils/format'
-import closedEyeIcon from '../assets/img/icon/visibility-closed.png'
-import openedEyeIcon from '../assets/img/icon/visibility-opened.png'
-import {Spacer} from '../components'
+import {Boundary, Spacer} from '../components'
 import {Icon} from '../components/Icon'
-import features from '../features'
+import {useExchangeRate} from '../hooks'
+import {formatTokenWithText, formatTokenWithTextWhenHidden} from '../legacy/format'
+import {availableAssetsSelector, tokenBalanceSelector} from '../legacy/selectors'
 import {useSelectedWallet} from '../SelectedWallet'
-
-const BALANCE_WHEN_HIDDEN = '*.******'
-const TOTAL_WHEN_HIDDEN = '*.**'
-const QUOTE_PAIR_CURRENCY = 'USD'
+import {useCurrencyContext} from '../Settings/Currency'
+import {COLORS} from '../theme'
 
 export const BalanceBanner = () => {
   const wallet = useSelectedWallet()
@@ -28,56 +20,68 @@ export const BalanceBanner = () => {
     <View style={styles.banner}>
       <Spacer height={14} />
 
-      {UI_V2 && (
-        <View style={styles.centered}>
-          <Icon.WalletAccount style={styles.walletIcon} iconSeed={wallet.checksum.ImagePart} />
-        </View>
-      )}
+      <Row>
+        <Icon.WalletAccount style={styles.walletIcon} iconSeed={wallet.checksum.ImagePart} scalePx={7} />
+      </Row>
 
       <Spacer height={10} />
 
       <TouchableOpacity onPress={() => setPrivacyMode(!privacyMode)} style={styles.button}>
-        <View style={styles.container}>
+        <Row>
           <Balance privacyMode={privacyMode} />
-
-          <View style={styles.rightSideContainer}>
-            <PrivacyIndicator privacyMode={privacyMode} />
-          </View>
-        </View>
+        </Row>
+        <Row>
+          <Boundary loading={{fallbackProps: {size: 'small'}}} error={{size: 'inline'}}>
+            <PairedBalance privacyMode={privacyMode} />
+          </Boundary>
+        </Row>
       </TouchableOpacity>
-
-      <Spacer height={8} />
     </View>
   )
 }
 
+const hiddenBalance = '*.******'
 const Balance = ({privacyMode}: {privacyMode: boolean}) => {
-  const intl = useIntl()
-
   const availableAssets = useSelector(availableAssetsSelector)
   const tokenBalance = useSelector(tokenBalanceSelector)
   const token = availableAssets[tokenBalance.getDefaultId()]
 
-  return (
-    <View style={styles.centered}>
-      {!UI_V2 && <Text>{intl.formatMessage(globalMessages.availableFunds)}</Text>}
-      <Text style={styles.balanceText}>
-        {privacyMode
-          ? formatTokenWithTextWhenHidden(BALANCE_WHEN_HIDDEN, token)
-          : formatTokenWithText(tokenBalance.getDefault(), token)}
-      </Text>
+  const balance = privacyMode
+    ? formatTokenWithTextWhenHidden(hiddenBalance, token)
+    : formatTokenWithText(tokenBalance.getDefault(), token)
 
-      {features.walletHero.fiat && (
-        <Text style={styles.totalText}>
-          {privacyMode ? TOTAL_WHEN_HIDDEN : '0.00'} {QUOTE_PAIR_CURRENCY}
-        </Text>
-      )}
-    </View>
+  return (
+    <Row>
+      <Text style={styles.balanceText} testID="balanceText">
+        {balance}
+      </Text>
+    </Row>
   )
 }
 
-const PrivacyIndicator = ({privacyMode}: {privacyMode: boolean}) =>
-  !privacyMode ? <Image source={closedEyeIcon} /> : <Image source={openedEyeIcon} />
+const Row = ({children}: {children: React.ReactNode}) => <View style={styles.centered}>{children}</View>
+
+const hiddenPairedTotal = '*.**'
+const PairedBalance = ({privacyMode}: {privacyMode: boolean}) => {
+  const wallet = useSelectedWallet()
+  const tokenBalance = useSelector(tokenBalanceSelector)
+  const {currency, config} = useCurrencyContext()
+  const rate = useExchangeRate({wallet, to: currency})
+
+  // hide pairing when set to the default asset ticker
+  if (currency === 'ADA') return null
+
+  const balance = tokenBalance?.getDefault().dividedBy(10e5)
+  const total = rate != null ? balance?.times(rate).decimalPlaces(config.decimals).toString() : '...'
+
+  const pairedTotal = privacyMode ? hiddenPairedTotal : total
+
+  return (
+    <Text style={styles.totalText} testID="pairedTotalText">
+      {pairedTotal} {currency}
+    </Text>
+  )
+}
 
 const styles = StyleSheet.create({
   banner: {
@@ -89,17 +93,9 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   button: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  rightSideContainer: {
-    position: 'absolute',
-    right: -32,
   },
   balanceText: {
     fontSize: 16,
@@ -108,7 +104,7 @@ const styles = StyleSheet.create({
     color: COLORS.ERROR_TEXT_COLOR_DARK,
   },
   totalText: {
-    fontSize: 16,
+    fontSize: 14,
     lineHeight: 24,
     fontFamily: 'Rubik-Regular',
     color: COLORS.TEXT_INPUT,

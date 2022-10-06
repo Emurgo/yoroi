@@ -4,9 +4,9 @@ import {defineMessages, useIntl} from 'react-intl'
 import {View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, KeyboardSpacer, StatusBar, Text} from '../../../legacy/components/UiKit'
-import {getWalletConfigById} from '../../../legacy/config/config'
-import {ScrollableView, Spacer} from '../../components'
+import {Button, KeyboardSpacer, ScrollableView, Spacer, StatusBar, Text} from '../../components'
+import {getWalletConfigById} from '../../legacy/config'
+import {isEmptyString} from '../../legacy/utils'
 import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
 import {MnemonicInput} from '../MnemonicInput'
 
@@ -46,7 +46,7 @@ export const RestoreWalletScreen = () => {
         <Button
           onPress={navigateToWalletCredentials}
           title={strings.restoreButton}
-          disabled={!phrase}
+          disabled={isEmptyString(phrase)}
           testID="restoreButton"
         />
       </Actions>

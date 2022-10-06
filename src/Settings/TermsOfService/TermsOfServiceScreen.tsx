@@ -2,19 +2,23 @@ import React from 'react'
 import {ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {StatusBar} from '../../../legacy/components/UiKit'
-import {TermsOfService} from '../../FirstRun/TermsOfServiceScreen/TermsOfService'
+import {StatusBar} from '../../components'
+import {useLanguage} from '../../i18n'
+import {TermsOfService} from '../../Legal/TermsOfService'
 
-export const TermsOfServiceScreen = () => (
-  <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
-    <StatusBar type="dark" />
+export const TermsOfServiceScreen = () => {
+  const {languageCode} = useLanguage()
 
-    <ScrollView contentContainerStyle={styles.contentContainer}>
-      <TermsOfService />
-    </ScrollView>
-  </SafeAreaView>
-)
+  return (
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
+      <StatusBar type="dark" />
 
+      <ScrollView contentContainerStyle={styles.contentContainer}>
+        <TermsOfService languageCode={languageCode} />
+      </ScrollView>
+    </SafeAreaView>
+  )
+}
 const styles = StyleSheet.create({
   safeAreaView: {
     backgroundColor: '#fff',

@@ -25,6 +25,7 @@ DerivedData
 *.xcuserstate
 *.d
 *.dia
+.dependencygraph
 
 # Android/IntelliJ
 #
@@ -110,3 +111,6 @@ coverage-ts
 #Test's data
 tests/app
 tests/artifacts
+
+coverage/
+.jest/

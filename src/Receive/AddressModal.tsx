@@ -1,26 +1,29 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 import QRCode from 'react-native-qrcode-svg'
 import {useSelector} from 'react-redux'
 
-import {Button, CopyButton, Modal, Text} from '../../legacy/components/UiKit'
-import {formatPath} from '../../legacy/crypto/commonUtils'
-import {AddressDTOCardano} from '../../legacy/crypto/shelley/Address.dto'
-import {externalAddressIndexSelector, walletMetaSelector} from '../../legacy/selectors'
-import type {WalletMeta} from '../../legacy/state'
-import {Spacer} from '../components'
+import {CopyButton, Modal, Spacer, Text} from '../components'
+import {AddressType, formatPath} from '../legacy/commonUtils'
+import {externalAddressIndexSelector, internalAddressIndexSelector} from '../legacy/selectors'
+import {useSelectedWallet} from '../SelectedWallet'
+import {getSpendingKey, getStakingKey} from '../yoroi-wallets/cardano/addressInfo'
+
+type Path = {
+  account: number
+  role: number
+  index: number
+}
 
 type Props = {
   address: string
   onRequestClose: () => void
   visible: boolean
-  onAddressVerify: () => void
-  walletMeta: WalletMeta
-  index: number
+  path?: Path
 }
 
-export const AddressModal = ({address, visible, onRequestClose, walletMeta, index, onAddressVerify}: Props) => {
+export const AddressModal = ({address, visible, onRequestClose, path}: Props) => {
   const strings = useStrings()
   const keyHashes = useKeyHashes(address)
 
@@ -53,12 +56,12 @@ export const AddressModal = ({address, visible, onRequestClose, walletMeta, inde
 
         <Spacer width={8} />
 
-        <Text style={styles.subtitle}>{strings.BIP32path}</Text>
-        <Text secondary monospace>
-          {index != null && formatPath(0, 'External', index, walletMeta.walletImplementationId)}
-        </Text>
-
-        <Spacer width={8} />
+        {path && (
+          <>
+            <PathInfo path={path} />
+            <Spacer width={8} />
+          </>
+        )}
 
         <Text style={styles.subtitle}>{strings.staking}</Text>
         <Text secondary monospace>
@@ -72,10 +75,6 @@ export const AddressModal = ({address, visible, onRequestClose, walletMeta, inde
           {keyHashes?.spending}
         </Text>
       </Info>
-
-      <Spacer height={16} />
-
-      {walletMeta.isHW && <Button onPress={onAddressVerify} title={strings.verifyLabel} />}
     </Modal>
   )
 }
@@ -84,16 +83,36 @@ type ExternalProps = {
   address: string
   onRequestClose: () => void
   visible: boolean
-  onAddressVerify: () => void
 }
 
 export default (props: ExternalProps) => {
-  const index = useSelector(externalAddressIndexSelector)[props.address]
-  const walletMeta = useSelector(walletMetaSelector)
+  const externalIndex: number | undefined = useSelector(externalAddressIndexSelector)[props.address]
+  const internalIndex: number | undefined = useSelector(internalAddressIndexSelector)[props.address]
 
-  return <AddressModal index={index} walletMeta={walletMeta} {...props} />
+  if (externalIndex !== undefined) return <AddressModal path={{account: 0, index: externalIndex, role: 0}} {...props} />
+  if (internalIndex !== undefined) return <AddressModal path={{account: 0, index: internalIndex, role: 1}} {...props} />
+
+  return <AddressModal {...props} />
 }
 
+type PathInfoProps = {
+  path: Path
+}
+const PathInfo = ({path}: PathInfoProps) => {
+  const {account, index, role} = path
+  const strings = useStrings()
+  const wallet = useSelectedWallet()
+  const addressType: AddressType = role === 0 ? 'External' : 'Internal'
+
+  return (
+    <>
+      <Text style={styles.subtitle}>{strings.BIP32path}</Text>
+      <Text secondary monospace>
+        {formatPath(account, addressType, index, wallet.walletImplementationId)}
+      </Text>
+    </>
+  )
+}
 const Info = (props) => <View {...props} style={styles.info} />
 const Row = (props) => <View {...props} style={styles.row} />
 
@@ -158,12 +177,16 @@ const useStrings = () => {
 }
 
 const useKeyHashes = (address) => {
-  const [keyHashes, setKeyHashes] = React.useState<null | {staking: unknown; spending: unknown}>(null)
+  const [spending, setSpending] = useState<string | null>(null)
+  const [staking, setStaking] = useState<string | null>(null)
 
   React.useEffect(() => {
-    const addressInfo = new AddressDTOCardano(address)
-    addressInfo.getKeyHashes().then(setKeyHashes)
+    getSpendingKey(address).then(setSpending)
+    getStakingKey(address).then(setStaking)
   }, [address])
 
-  return keyHashes
+  return {
+    spending,
+    staking,
+  }
 }

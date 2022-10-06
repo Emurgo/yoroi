@@ -4,18 +4,13 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps} from 'react-native'
 import {useSelector} from 'react-redux'
 
-import {Button} from '../../legacy/components/UiKit'
-import {UI_V2} from '../../legacy/config/config'
-import {tokenBalanceSelector, transactionsInfoSelector} from '../../legacy/selectors'
-import {COLORS} from '../../legacy/styles/config'
-import {formatDateToSeconds} from '../../legacy/utils/format'
-import iconGear from '../assets/img/icon/gear.png'
 import {Boundary, Icon} from '../components'
 import {useWalletName} from '../hooks'
+import {formatDateToSeconds} from '../legacy/format'
+import {transactionsInfoSelector} from '../legacy/selectors'
 import {
   defaultStackNavigationOptions,
   defaultStackNavigationOptionsV2,
-  TxHistoryRouteNavigation,
   TxHistoryRoutes,
   useWalletNavigation,
 } from '../navigation'
@@ -24,8 +19,10 @@ import {useSelectedWallet} from '../SelectedWallet'
 import {AddressReaderQR} from '../Send/AddressReaderQR'
 import {AssetSelectorScreen} from '../Send/AssetSelectorScreen'
 import {ConfirmScreen} from '../Send/ConfirmScreen'
+import {SendProvider} from '../Send/Context/SendContext'
 import {ScannerButton} from '../Send/ScannerButton'
 import {SendScreen} from '../Send/SendScreen'
+import {COLORS} from '../theme'
 import {ModalInfo} from './ModalInfo'
 import {TxDetails} from './TxDetails'
 import {TxHistory} from './TxHistory'
@@ -34,46 +31,24 @@ const Stack = createStackNavigator<TxHistoryRoutes>()
 export const TxHistoryNavigator = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
+
   const walletName = useWalletName(wallet)
   const transactionInfos = useSelector(transactionsInfoSelector)
-  const tokenBalance = useSelector(tokenBalanceSelector)
   const [modalInfoState, setModalInfoState] = React.useState(false)
   const showModalInfo = () => setModalInfoState(true)
   const hideModalInfo = () => setModalInfoState(false)
-  const [selectedTokenIdentifier, setSelectedTokenIdentifier] = React.useState(
-    tokenBalance.getDefaultEntry().identifier,
-  )
-  const [sendAll, setSendAll] = React.useState(false)
-  const [receiver, setReceiver] = React.useState('')
-  const [amount, setAmount] = React.useState('')
-
-  // when the selected asset is no longer available
-  const selectedAsset = tokenBalance.values.find(({identifier}) => identifier === selectedTokenIdentifier)
-  if (!selectedAsset) {
-    setSelectedTokenIdentifier(tokenBalance.getDefaultEntry().identifier)
-    setSendAll(false)
-    setReceiver('')
-    setAmount('')
-  }
 
   return (
-    <>
+    <SendProvider key={wallet.id} wallet={wallet}>
       <Stack.Navigator screenOptions={defaultStackNavigationOptions} initialRouteName="history-list">
         <Stack.Screen
           name="history-list"
           component={TxHistory}
-          options={
-            UI_V2
-              ? {
-                  ...defaultStackNavigationOptionsV2,
-                  title: walletName,
-                  headerRight: () => <HeaderRightHistoryV2 />,
-                }
-              : {
-                  title: walletName,
-                  headerRight: () => <HeaderRightHistory />,
-                }
-          }
+          options={{
+            ...defaultStackNavigationOptionsV2,
+            title: walletName,
+            headerRight: () => <HeaderRightHistory />,
+          }}
         />
 
         <Stack.Screen
@@ -108,43 +83,24 @@ export const TxHistoryNavigator = () => {
         >
           {() => (
             <Boundary>
-              <SendScreen
-                selectedTokenIdentifier={selectedTokenIdentifier}
-                onSendAll={setSendAll}
-                sendAll={sendAll}
-                amount={amount}
-                setAmount={setAmount}
-                receiver={receiver}
-                setReceiver={setReceiver}
-              />
+              <SendScreen />
             </Boundary>
           )}
         </Stack.Screen>
 
         <Stack.Screen name="select-asset" options={{title: strings.selectAssetTitle}}>
-          {({navigation}: {navigation: TxHistoryRouteNavigation}) => (
-            <AssetSelectorScreen
-              assetTokens={tokenBalance.values}
-              onSelect={(token) => {
-                setSendAll(false)
-                setSelectedTokenIdentifier(token.identifier)
-                navigation.navigate('send')
-              }}
-              onSelectAll={() => {
-                setSendAll(true)
-                setSelectedTokenIdentifier(tokenBalance.getDefaultEntry().identifier)
-                navigation.navigate('send')
-              }}
-            />
+          {() => (
+            <Boundary>
+              <AssetSelectorScreen />
+            </Boundary>
           )}
         </Stack.Screen>
 
         <Stack.Screen //
           name="address-reader-qr"
+          component={AddressReaderQR}
           options={{title: strings.qrScannerTitle}}
-        >
-          {() => <AddressReaderQR setQrAmount={setAmount} setQrReceiver={setReceiver} />}
-        </Stack.Screen>
+        />
 
         <Stack.Screen //
           name="send-confirm"
@@ -156,7 +112,7 @@ export const TxHistoryNavigator = () => {
       <ModalInfo hideModalInfo={hideModalInfo} visible={modalInfoState}>
         <Text style={styles.receiveInfoText}>{strings.receiveInfoText}</Text>
       </ModalInfo>
-    </>
+    </SendProvider>
   )
 }
 
@@ -219,16 +175,10 @@ const SettingsIconButton = (props: TouchableOpacityProps) => {
   )
 }
 
-const HeaderRightHistoryV2 = () => {
-  const {navigateToSettings} = useWalletNavigation()
-
-  return <SettingsIconButton style={styles.settingIconButton} onPress={() => navigateToSettings()} />
-}
-
 const HeaderRightHistory = () => {
   const {navigateToSettings} = useWalletNavigation()
 
-  return <Button onPress={() => navigateToSettings()} iconImage={iconGear} title="" withoutBackground />
+  return <SettingsIconButton style={styles.settingIconButton} onPress={() => navigateToSettings()} />
 }
 
 const styles = StyleSheet.create({

@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 
+import {Icon} from '../../components'
 import {Spacer} from '../../components/Spacer'
 import features from '../../features'
 import {ChipButton} from './ChipButton'
@@ -44,7 +44,7 @@ export const ActionsBanner = (props: Props) => {
 
       {features.txHistory.search && (
         <TouchableOpacity onPress={props.onSearch}>
-          <Icon name="magnify" size={24} color="#6B7384" />
+          <Icon.Magnify size={24} color="#6B7384" />
         </TouchableOpacity>
       )}
     </View>

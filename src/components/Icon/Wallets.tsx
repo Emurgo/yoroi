@@ -1,29 +1,24 @@
 import React from 'react'
-import Svg, {G, Path, Polygon, Rect} from 'react-native-svg'
+import Svg, {Path} from 'react-native-svg'
 
-type Props = {size?: number; color?: string; backgroundColor?: string}
+type Props = {
+  size?: number
+  color?: string
+}
 
-export const Wallets = ({size = 40, color = 'black', backgroundColor = 'transparent'}: Props) => (
-  <Svg width={size} height={size} viewBox="0 0 24 24">
-    <G id="✅-REWAMP-1.1-(iOS)-current-implementation" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-      <G id="7.1---menu" transform="translate(-15.000000, -128.000000)">
-        <Rect id="Rectangle" fill={backgroundColor} x="0" y="0" width="375" height="812" />
-        <G id="icon/feedback-copy-2">
-          <G transform="translate(15.000000, 128.000000)">
-            <Polygon id="icon-" points="0 24 24 24 24 0 0 0" />
-            <G id="icon" transform="translate(1.000000, 3.000000)" stroke={color} strokeWidth="2">
-              <Path
-                d="M21.9962087,2.08685217 L21.9962087,11.3529391 C21.9962087,12.5112 21.067513,13.4398957 19.9092522,13.4398957 L18.2605565,13.4398957 L18.2605565,5.82250435 C18.2605565,4.67467826 17.3224696,3.73554783 16.1736,3.73554783 L3.73533913,3.73554783 L3.73533913,2.08685217 C3.73533913,0.928591304 4.67446957,-0.000104347826 5.82229565,-0.000104347826 L19.9092522,-0.000104347826 C21.067513,-0.000104347826 21.9962087,0.928591304 21.9962087,2.08685217 Z"
-                id="Stroke-1"
-              />
-              <Path
-                d="M18.2604522,5.8226087 L18.2604522,15.0991304 C18.2604522,16.2469565 17.3223652,17.186087 16.1734957,17.186087 L2.08653913,17.186087 C0.929321739,17.186087 -0.000417391304,16.2469565 -0.000417391304,15.0991304 L-0.000417391304,5.8226087 C-0.000417391304,4.67478261 0.929321739,3.73565217 2.08653913,3.73565217 L16.1734957,3.73565217 C17.3223652,3.73565217 18.2604522,4.67478261 18.2604522,5.8226087 Z"
-                id="Stroke-3"
-              />
-            </G>
-          </G>
-        </G>
-      </G>
-    </G>
+export const Wallets = ({size = 36, color = 'black'}: Props) => (
+  <Svg width={size} height={size} viewBox="-2 -2 28 28">
+    <Path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M4.6 9C4.40463 9 4 9.23941 4 9.86191V18.1381C4 18.7606 4.40463 19 4.6 19H15.4C15.5913 19 16 18.7578 16 18.1381V9.86191C16 9.24218 15.5913 9 15.4 9H4.6ZM2 9.86191C2 8.43631 3.02097 7 4.6 7H15.4C16.9703 7 18 8.43354 18 9.86191V18.1381C18 19.5665 16.9703 21 15.4 21H4.6C3.02097 21 2 19.5637 2 18.1381V9.86191Z"
+      fill={color}
+    />
+    <Path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M7.71429 5C7.39496 5 7 5.30773 7 5.86191H5C5 4.36799 6.13247 3 7.71429 3H19.2857C20.8582 3 22 4.36529 22 5.86191V14.1381C22 15.6347 20.8582 17 19.2857 17V15C19.6007 15 20 14.6896 20 14.1381V5.86191C20 5.31043 19.6007 5 19.2857 5H7.71429Z"
+      fill={color}
+    />
   </Svg>
 )

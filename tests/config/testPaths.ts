@@ -1,2 +1,3 @@
-export const screenshotsDir = "./tests/artifacts/screenshots/";
-export const appiumLogsPath = "./tests/artifacts/appium_info.log";
+export const artifactsDir = './tests/artifacts/'
+export const screenshotsDir = `${artifactsDir}screenshots/`
+export const appiumLogsPath = `${artifactsDir}appium_info.log`

@@ -1,10 +1,10 @@
 import React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
-import {CONFIG, isByron, isHaskellShelley, isJormun, isNightly} from '../../../legacy/config/config'
-import {WalletMeta} from '../../../legacy/state'
-import stylesConfig, {COLORS} from '../../../legacy/styles/config'
 import {Icon} from '../../components'
+import {CONFIG, isByron, isHaskellShelley, isJormun, isNightly} from '../../legacy/config'
+import {WalletMeta} from '../../legacy/state'
+import {brand, COLORS} from '../../theme'
 type Props = {
   wallet: WalletMeta
   onPress: (walletMeta: WalletMeta) => void
@@ -22,7 +22,9 @@ export const WalletListItem = ({wallet, onPress}: Props) => {
             <Text style={styles.walletName} numberOfLines={1}>
               {wallet.name}
             </Text>
-            <Text style={styles.walletMeta}>{wallet.checksum ? `${wallet.checksum.TextPart} | ${type}` : type}</Text>
+            <Text style={styles.walletMeta}>
+              {wallet.checksum != null ? `${wallet.checksum.TextPart} | ${type}` : type}
+            </Text>
           </View>
 
           {(isNightly() || CONFIG.IS_TESTNET_BUILD) && (
@@ -44,19 +46,19 @@ const getWalletItemMeta = (walletMeta: WalletMeta): WalletItemMeta => {
   if (isByron(walletMeta.walletImplementationId)) {
     return {
       type: 'Byron',
-      icon: <Icon.Ada height={18} width={18} color={COLORS.WHITE} />,
+      icon: <Icon.Ada size={18} color={COLORS.WHITE} />,
     }
   }
   if (isHaskellShelley(walletMeta.walletImplementationId)) {
     return {
       type: 'Shelley',
-      icon: <Icon.Ada height={18} width={18} color={COLORS.WHITE} />,
+      icon: <Icon.Ada size={18} color={COLORS.WHITE} />,
     }
   }
   if (isJormun(walletMeta.walletImplementationId)) {
     return {
       type: 'Jormungandr',
-      icon: <Icon.Ada height={18} width={18} color={COLORS.WHITE} />,
+      icon: <Icon.Ada size={18} color={COLORS.WHITE} />,
     }
   }
   throw new Error('getWalletItemMeta:: invalid wallet implementation id')
@@ -88,7 +90,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   walletName: {
-    fontFamily: stylesConfig.defaultFont,
+    fontFamily: brand.defaultFont,
     fontSize: 16,
     color: COLORS.WHITE,
     flex: 1,

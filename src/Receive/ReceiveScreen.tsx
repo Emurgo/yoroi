@@ -4,16 +4,14 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {generateNewReceiveAddress, generateNewReceiveAddressIfNeeded} from '../../legacy/actions'
-import {Banner, Button, OfflineBanner, StatusBar} from '../../legacy/components/UiKit'
-import {UI_V2} from '../../legacy/config/config'
+import {Button, OfflineBanner, Spacer, StatusBar} from '../components'
+import {generateNewReceiveAddress, generateNewReceiveAddressIfNeeded} from '../legacy/actions'
 import {
   canGenerateNewReceiveAddressSelector,
   isUsedAddressIndexSelector,
   receiveAddressesSelector,
-} from '../../legacy/selectors'
-import {COLORS} from '../../legacy/styles/config'
-import {Spacer} from '../components'
+} from '../legacy/selectors'
+import {COLORS} from '../theme'
 import {AddressDetail} from './AddressDetail'
 import {UnusedAddresses, UsedAddresses} from './Addresses'
 
@@ -38,16 +36,15 @@ export const ReceiveScreen = () => {
 
   return (
     <View style={styles.root}>
-      <StatusBar type={UI_V2 ? 'light' : 'dark'} />
+      <StatusBar type="light" />
       <OfflineBanner />
 
       <ScrollView>
-        {!UI_V2 && <Banner text={strings.infoText} />}
-        {UI_V2 && <Spacer height={24} />}
+        <Spacer height={24} />
 
         <Content>
           <View style={styles.address}>
-            {currentAddress ? (
+            {currentAddress != null ? (
               <AddressDetail address={currentAddress} />
             ) : (
               <ActivityIndicator size="large" color="black" />
@@ -61,6 +58,7 @@ export const ReceiveScreen = () => {
             onPress={() => dispatch(generateNewReceiveAddress())}
             disabled={addressLimitReached}
             title={!addressLimitReached ? strings.generateButton : strings.cannotGenerate}
+            testID="generateNewReceiveAddressButton"
           />
 
           <Spacer height={24} />

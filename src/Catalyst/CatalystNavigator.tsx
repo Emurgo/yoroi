@@ -1,9 +1,10 @@
 import {createStackNavigator} from '@react-navigation/stack'
-import React from 'react'
+import React, {useState} from 'react'
 import {useIntl} from 'react-intl'
 
-import globalMessages from '../../legacy/i18n/global-messages'
+import globalMessages from '../i18n/global-messages'
 import {CatalystRoutes, defaultStackNavigationOptions} from '../navigation'
+import {VotingRegTxData} from './hooks'
 import {Step1} from './Step1'
 import {Step2} from './Step2'
 import {Step3} from './Step3'
@@ -14,6 +15,8 @@ import {Step6} from './Step6'
 const Stack = createStackNavigator<CatalystRoutes>()
 export const CatalystNavigator = () => {
   const strings = useStrings()
+  const [pin, setPin] = useState('')
+  const [votingRegTxData, setVotingRegTxData] = useState<VotingRegTxData | undefined>()
 
   return (
     <Stack.Navigator
@@ -23,16 +26,28 @@ export const CatalystNavigator = () => {
       }}
       initialRouteName="catalyst-landing"
     >
-      <Stack.Screen name="catalyst-landing" component={Step1} />
-      <Stack.Screen name="catalyst-generate-pin" component={Step2} />
-      <Stack.Screen name="catalyst-confirm-pin" component={Step3} />
-      <Stack.Screen name="catalyst-generate-trx" component={Step4} />
-      <Stack.Screen name="catalyst-transaction" component={Step5} />
-      <Stack.Screen
-        name="catalyst-qr-code"
-        component={Step6}
-        options={{...defaultStackNavigationOptions, headerLeft: () => null}}
-      />
+      <Stack.Screen name="catalyst-landing">{() => <Step1 setPin={setPin} />}</Stack.Screen>
+      <Stack.Screen name="catalyst-generate-pin">{() => <Step2 pin={pin} />}</Stack.Screen>
+      <Stack.Screen name="catalyst-confirm-pin">
+        {() => <Step3 pin={pin} setVotingRegTxData={setVotingRegTxData} />}
+      </Stack.Screen>
+      <Stack.Screen name="catalyst-generate-trx">
+        {() => <Step4 pin={pin} setVotingRegTxData={setVotingRegTxData} />}
+      </Stack.Screen>
+      <Stack.Screen name="catalyst-transaction">
+        {() => {
+          if (!votingRegTxData) throw new Error('invalid state')
+
+          return <Step5 yoroiUnsignedTx={votingRegTxData.yoroiUnsignedTx} />
+        }}
+      </Stack.Screen>
+      <Stack.Screen name="catalyst-qr-code" options={{...defaultStackNavigationOptions, headerLeft: () => null}}>
+        {() => {
+          if (!votingRegTxData) throw new Error('invalid state')
+
+          return <Step6 catalystSKHexEncrypted={votingRegTxData.catalystSKHexEncrypted} />
+        }}
+      </Stack.Screen>
     </Stack.Navigator>
   )
 }

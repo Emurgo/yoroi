@@ -1,13 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import DelegationConfirmation from '../../legacy/components/Delegation/DelegationConfirmation'
-import {UI_V2} from '../../legacy/config/config'
 import {SettingsButton} from '../components/Button'
 import {useWalletName} from '../hooks'
 import {DashboardRoutes, defaultStackNavigationOptions, useWalletNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
+import {DelegationConfirmation} from '../Staking'
 import {StakingCenter} from '../Staking/StakingCenter'
 import {Dashboard} from './Dashboard'
 
@@ -36,20 +36,16 @@ export const DashboardNavigator = () => {
           headerRightContainerStyle: {paddingRight: 16},
         }}
       />
-      {UI_V2 && (
-        <Stack.Screen //
-          name="staking-center"
-          component={StakingCenter}
-          options={{title: strings.title}}
-        />
-      )}
-      {UI_V2 && (
-        <Stack.Screen
-          name="delegation-confirmation"
-          component={DelegationConfirmation}
-          options={{title: strings.title}}
-        />
-      )}
+      <Stack.Screen //
+        name="staking-center"
+        component={StakingCenter}
+        options={{title: strings.title}}
+      />
+      <Stack.Screen
+        name="delegation-confirmation"
+        component={DelegationConfirmation}
+        options={{title: strings.title}}
+      />
     </Stack.Navigator>
   )
 }

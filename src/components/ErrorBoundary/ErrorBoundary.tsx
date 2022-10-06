@@ -2,11 +2,13 @@ import React, {Component, ErrorInfo, ReactNode} from 'react'
 import {BackHandler, Image, Platform, ScrollView, StyleSheet, Text, View} from 'react-native'
 import {Divider} from 'react-native-paper'
 
-import image from '../../../legacy/assets/img/error.png'
-import {Button, CopyButton} from '../../../legacy/components/UiKit'
-import {Logger} from '../../../legacy/utils/logging'
+import errorImage from '../../assets/img/error.png'
+import {Logger} from '../../legacy/logging'
 import {ExpandableItem} from '../../WalletInit/WalletInit/ExpandableItem'
+import {Button} from '../Button/Button'
+import {CopyButton} from '../CopyButton'
 import {Spacer} from '../Spacer'
+
 interface Props {
   children: ReactNode
 }
@@ -45,7 +47,7 @@ export class ErrorBoundary extends Component<Props, State> {
             <View style={styles.headerView}>
               <Text style={styles.title}>Oops!!! Something went wrong.</Text>
               <Spacer height={24} />
-              <Image source={image} />
+              <Image source={errorImage} />
             </View>
             <Divider />
 
