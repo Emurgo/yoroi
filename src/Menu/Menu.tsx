@@ -7,15 +7,13 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import SupportImage from '../assets/img/icon/shape.png'
 import {CatalystNavigator} from '../Catalyst/CatalystNavigator'
+import {useCanVote} from '../Catalyst/hooks'
+import {InsufficientFundsModal} from '../Catalyst/InsufficientFundsModal'
 import {Icon, Spacer, Text} from '../components'
-import {useBalances, useWalletMetas} from '../hooks'
-import {CONFIG} from '../legacy/config'
+import {useWalletMetas} from '../hooks'
 import {defaultStackNavigationOptions, useWalletNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
 import {useWalletManager} from '../WalletManager'
-import {Quantity} from '../yoroi-wallets/types'
-import {Amounts, Quantities} from '../yoroi-wallets/utils'
-import {InsufficientFundsModal} from './InsufficientFundsModal'
 
 const MenuStack = createStackNavigator()
 
@@ -121,11 +119,7 @@ const Settings = Item
 const KnowledgeBase = Item
 const Catalyst = ({label, left, onPress}: {label: string; left: React.ReactElement; onPress: () => void}) => {
   const wallet = useSelectedWallet()
-  const balances = useBalances(wallet)
-  const sufficientFunds = Quantities.isGreaterThan(
-    Amounts.getAmount(balances, '').quantity,
-    CONFIG.CATALYST.MIN_ADA.toString() as Quantity,
-  )
+  const {sufficientFunds} = useCanVote(wallet)
 
   const [showInsufficientFundsModal, setShowInsufficientFundsModal] = React.useState(false)
 

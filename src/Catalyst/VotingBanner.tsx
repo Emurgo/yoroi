@@ -1,30 +1,24 @@
-import BigNumber from 'bignumber.js'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {useSelectedWallet} from '../../src/SelectedWallet'
-import {Icon, StandardModal, Text} from '../components'
-import {useBalances, useTokenInfo} from '../hooks'
+import {Icon, Text} from '../components'
 import globalMessages, {confirmationMessages} from '../i18n/global-messages'
-import {CONFIG, isHaskellShelley, isNightly} from '../legacy/config'
-import {formatTokenWithText} from '../legacy/format'
+import {isNightly} from '../legacy/config'
 import {Logger} from '../legacy/logging'
 import {COLORS} from '../theme'
 import {isRegistrationOpen} from '../yoroi-wallets'
-import {Quantity} from '../yoroi-wallets/types'
-import {Amounts, Quantities} from '../yoroi-wallets/utils'
+import {useCanVote} from './hooks'
+import {InsufficientFundsModal} from './InsufficientFundsModal'
+
 type Props = {onPress: () => void; disabled?: boolean}
 
 export const VotingBanner = ({onPress, disabled}: Props) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
-
-  const balances = useBalances(wallet)
-  const tokenInfo = useTokenInfo({wallet, tokenId: ''})
-
+  const {canVote, sufficientFunds} = useCanVote(wallet)
   const [showInsufficientFundsModal, setShowInsufficientFundsModal] = useState(false)
-  const canVote = isHaskellShelley(wallet.walletImplementationId)
   const [showCatalystBanner, setShowCatalystBanner] = useState(canVote)
 
   useEffect(() => {
@@ -57,19 +51,7 @@ export const VotingBanner = ({onPress, disabled}: Props) => {
 
   if (!showCatalystBanner) return null
 
-  const handleOnPress = () => {
-    const sufficientFunds = Quantities.isGreaterThan(
-      Amounts.getAmount(balances, '').quantity,
-      CONFIG.CATALYST.MIN_ADA.toString() as Quantity,
-    )
-
-    if (!sufficientFunds) {
-      setShowInsufficientFundsModal(true)
-      return
-    }
-
-    onPress()
-  }
+  const handleOnPress = () => (sufficientFunds ? onPress() : setShowInsufficientFundsModal(true))
 
   return (
     <View style={styles.container}>
@@ -80,25 +62,10 @@ export const VotingBanner = ({onPress, disabled}: Props) => {
         </View>
       </TouchableOpacity>
 
-      <StandardModal
+      <InsufficientFundsModal
         visible={showInsufficientFundsModal}
-        title={strings.attention}
         onRequestClose={() => setShowInsufficientFundsModal(false)}
-        primaryButton={{
-          label: strings.back,
-          onPress: () => setShowInsufficientFundsModal(false),
-        }}
-        showCloseIcon
-      >
-        <View>
-          <Text>
-            {strings.noBalance({
-              requiredBalance: formatTokenWithText(CONFIG.CATALYST.DISPLAYED_MIN_ADA, tokenInfo),
-              currentBalance: formatTokenWithText(new BigNumber(Amounts.getAmount(balances, '').quantity), tokenInfo),
-            })}
-          </Text>
-        </View>
-      </StandardModal>
+      />
     </View>
   )
 }
