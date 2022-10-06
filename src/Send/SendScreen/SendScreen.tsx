@@ -10,15 +10,10 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useSelector} from 'react-redux'
 
 import {Button, Checkbox, Spacer, StatusBar, Text, TextInput} from '../../components'
-import {useBalances, useTokenInfo} from '../../hooks'
+import {useBalances, useHasPendingTx, useTokenInfo} from '../../hooks'
 import {CONFIG, getDefaultAssetByNetworkId} from '../../legacy/config'
 import {formatTokenAmount, getAssetDenominationOrId, truncateWithEllipsis} from '../../legacy/format'
-import {
-  hasPendingOutgoingTransactionSelector,
-  isFetchingUtxosSelector,
-  lastUtxosFetchErrorSelector,
-  utxosSelector,
-} from '../../legacy/selectors'
+import {isFetchingUtxosSelector, lastUtxosFetchErrorSelector, utxosSelector} from '../../legacy/selectors'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {UtxoAutoRefresher} from '../../UtxoAutoRefresher'
@@ -50,7 +45,7 @@ export const SendScreen = () => {
   const defaultAsset = getDefaultAssetByNetworkId(wallet.networkId)
   const balances = useBalances(wallet)
   const utxos = useSelector(utxosSelector)
-  const hasPendingOutgoingTransaction = useSelector(hasPendingOutgoingTransactionSelector)
+  const hasPendingTx = useHasPendingTx(wallet)
   const netInfo = useNetInfo()
   const isOnline = netInfo.type !== 'none' && netInfo.type !== 'unknown'
 
@@ -81,7 +76,7 @@ export const SendScreen = () => {
 
   const isValid =
     isOnline &&
-    !hasPendingOutgoingTransaction &&
+    !hasPendingTx &&
     !isFetchingBalance &&
     lastFetchingError == null &&
     utxos &&

@@ -111,6 +111,10 @@ export const mockWallet: YoroiWallet = {
   },
   fetchCurrentPrice: () => Promise.resolve(1.9938153154314795),
   toJSON: () => null as any,
+  internalAddresses: [],
+  externalAddresses: [],
+  confirmationCounts: {},
+  transactions: {},
 
   // enableEasyConfirmation: () => {
   //   throw new Error('not implemented: enableEasyConfirmation')
