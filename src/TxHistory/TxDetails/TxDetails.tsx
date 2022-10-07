@@ -7,15 +7,11 @@ import {LayoutAnimation, Linking, StyleSheet, TouchableOpacity, View} from 'reac
 import {useSelector} from 'react-redux'
 
 import {Banner, Boundary, Button, CopyButton, Icon, OfflineBanner, StatusBar, Text} from '../../components'
-import {useTipStatus, useTokenInfo} from '../../hooks'
+import {useTipStatus, useTokenInfo, useTransactionInfos} from '../../hooks'
 import globalMessages from '../../i18n/global-messages'
 import {formatTokenWithSymbol} from '../../legacy/format'
 import {getNetworkConfigById} from '../../legacy/networks'
-import {
-  externalAddressIndexSelector,
-  internalAddressIndexSelector,
-  transactionsInfoSelector,
-} from '../../legacy/selectors'
+import {externalAddressIndexSelector, internalAddressIndexSelector} from '../../legacy/selectors'
 import {isEmptyString} from '../../legacy/utils'
 import AddressModal from '../../Receive/AddressModal'
 import Screen from '../../Screen'
@@ -33,11 +29,11 @@ export const TxDetails = () => {
   const internalAddressIndex = useSelector(internalAddressIndexSelector)
   const externalAddressIndex = useSelector(externalAddressIndexSelector)
   const wallet = useSelectedWallet()
-  const transactions = useSelector(transactionsInfoSelector)
+  const transactionInfos = useTransactionInfos(wallet)
   const [expandedInItemId, setExpandedInItemId] = useState<null | ItemId>(null)
   const [expandedOutItemId, setExpandedOutItemId] = useState<null | ItemId>(null)
   const [addressDetail, setAddressDetail] = React.useState<null | string>(null)
-  const transaction = transactions[id]
+  const transaction = transactionInfos[id]
 
   const {fromFiltered, toFiltered, cntOmittedTo} = getShownAddresses(
     intl,

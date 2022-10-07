@@ -1,19 +1,21 @@
+import BigNumber from 'bignumber.js'
 import * as React from 'react'
 import {useIntl} from 'react-intl'
 import {Text, View} from 'react-native'
-import {useSelector} from 'react-redux'
 
 import {StandardModal} from '../components'
+import {useBalances, useTokenInfo} from '../hooks'
 import globalMessages, {confirmationMessages} from '../i18n/global-messages'
 import {CONFIG} from '../legacy/config'
 import {formatTokenWithText} from '../legacy/format'
-import {availableAssetsSelector, tokenBalanceSelector} from '../legacy/selectors'
+import {useSelectedWallet} from '../SelectedWallet'
+import {Amounts} from '../yoroi-wallets/utils'
 
 export const InsufficientFundsModal = ({visible, onRequestClose}: {visible: boolean; onRequestClose: () => void}) => {
   const strings = useStrings()
-  const tokenBalance = useSelector(tokenBalanceSelector)
-  const availableAssets = useSelector(availableAssetsSelector)
-  const assetMetaData = availableAssets[tokenBalance.getDefaultId()]
+  const wallet = useSelectedWallet()
+  const balances = useBalances(wallet)
+  const tokenInfo = useTokenInfo({wallet, tokenId: ''})
 
   return (
     <StandardModal
@@ -29,8 +31,8 @@ export const InsufficientFundsModal = ({visible, onRequestClose}: {visible: bool
       <View>
         <Text>
           {strings.insufficientBalance({
-            requiredBalance: formatTokenWithText(CONFIG.CATALYST.DISPLAYED_MIN_ADA, assetMetaData),
-            currentBalance: formatTokenWithText(tokenBalance.getDefault(), assetMetaData),
+            requiredBalance: formatTokenWithText(CONFIG.CATALYST.DISPLAYED_MIN_ADA, tokenInfo),
+            currentBalance: formatTokenWithText(new BigNumber(Amounts.getAmount(balances, '').quantity), tokenInfo),
           })}
         </Text>
       </View>

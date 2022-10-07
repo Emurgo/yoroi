@@ -4,8 +4,10 @@ import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {hasPendingOutgoingTransactionSelector, isFetchingUtxosSelector} from './legacy/selectors'
+import {useHasPendingTx} from './hooks'
+import {isFetchingUtxosSelector} from './legacy/selectors'
 import {fetchUTXOs} from './legacy/utxo'
+import {useSelectedWallet} from './SelectedWallet'
 
 type Props = {
   isFetching: boolean
@@ -61,7 +63,8 @@ export const UtxoAutoRefresher = () => {
   const navigation = useNavigation()
   const isFetching = useSelector(isFetchingUtxosSelector)
   const netInfo = useNetInfo()
-  const hasPendingTx = useSelector(hasPendingOutgoingTransactionSelector)
+  const wallet = useSelectedWallet()
+  const hasPendingTx = useHasPendingTx(wallet)
   const dispatch = useDispatch()
 
   return (

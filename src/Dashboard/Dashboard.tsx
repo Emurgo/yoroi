@@ -8,17 +8,18 @@ import {ActivityIndicator, RefreshControl, ScrollView, StyleSheet, View, ViewPro
 import {useDispatch, useSelector} from 'react-redux'
 
 import {Banner, Button, Modal, OfflineBanner, StatusBar} from '../components'
+import {useBalances} from '../hooks'
 import globalMessages from '../i18n/global-messages'
 import {getCardanoBaseConfig} from '../legacy/config'
 import KeyStore from '../legacy/KeyStore'
 import {getCardanoNetworkConfigById} from '../legacy/networks'
-import {isFetchingUtxosSelector, tokenBalanceSelector} from '../legacy/selectors'
+import {isFetchingUtxosSelector} from '../legacy/selectors'
 import {isEmptyString} from '../legacy/utils'
 import {fetchUTXOs} from '../legacy/utxo'
 import {useWalletNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
 import {UtxoAutoRefresher} from '../UtxoAutoRefresher'
-import {YoroiWallet} from '../yoroi-wallets'
+import {Amounts} from '../yoroi-wallets/utils'
 import {
   genCurrentEpochLength,
   genCurrentSlotLength,
@@ -42,6 +43,7 @@ export const Dashboard = () => {
 
   const wallet = useSelectedWallet()
   const balances = useBalances(wallet)
+  const primaryAmount = Amounts.getAmount(balances, '')
   const {stakingInfo, refetch: refetchStakingInfo, error, isLoading} = useStakingInfo(wallet)
 
   const [showWithdrawalDialog, setShowWithdrawalDialog] = React.useState(false)
@@ -81,7 +83,7 @@ export const Dashboard = () => {
               <ActivityIndicator size="large" color="black" />
             ) : stakingInfo.status === 'staked' ? (
               <UserSummary
-                totalAdaSum={!isEmptyString(balances['ADA']) ? new BigNumber(balances['ADA']) : null}
+                totalAdaSum={!isEmptyString(primaryAmount.quantity) ? new BigNumber(primaryAmount.quantity) : null}
                 totalRewards={new BigNumber(stakingInfo.rewards)}
                 totalDelegated={new BigNumber(stakingInfo.amount)}
                 onWithdraw={() => setShowWithdrawalDialog(true)}
@@ -89,7 +91,7 @@ export const Dashboard = () => {
               />
             ) : (
               <UserSummary
-                totalAdaSum={!isEmptyString(balances['ADA']) ? new BigNumber(balances['ADA']) : null}
+                totalAdaSum={!isEmptyString(primaryAmount.quantity) ? new BigNumber(primaryAmount.quantity) : null}
                 totalRewards={null}
                 totalDelegated={null}
                 onWithdraw={() => setShowWithdrawalDialog(true)}
@@ -256,15 +258,3 @@ const styles = StyleSheet.create({
     shadowOffset: {width: 0, height: -8},
   },
 })
-
-const useBalances = (_wallet: YoroiWallet) => {
-  const multitoken = useSelector(tokenBalanceSelector)
-
-  return multitoken.values.reduce(
-    (result, token) => ({
-      ...result,
-      [token.identifier === '' ? 'ADA' : token.identifier]: token.amount.toString(),
-    }),
-    {},
-  )
-}

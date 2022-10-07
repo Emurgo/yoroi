@@ -3,6 +3,7 @@ import {useNetInfo} from '@react-native-community/netinfo'
 import {useFocusEffect} from '@react-navigation/native'
 import {delay} from 'bluebird'
 import cryptoRandomString from 'crypto-random-string'
+import {mapValues} from 'lodash'
 import * as React from 'react'
 import {IntlShape} from 'react-intl'
 import {
@@ -16,8 +17,10 @@ import {
 } from 'react-query'
 
 import {getDefaultAssetByNetworkId} from '../legacy/config'
+import {ObjectValues} from '../legacy/flow'
 import KeyStore from '../legacy/KeyStore'
 import {HWDeviceInfo} from '../legacy/ledgerUtils'
+import {processTxHistoryData} from '../legacy/processTransactions'
 import {WalletMeta} from '../legacy/state'
 import storage from '../legacy/storage'
 import {Storage} from '../Storage'
@@ -34,7 +37,14 @@ import {
 } from '../yoroi-wallets'
 import {generateShelleyPlateFromKey} from '../yoroi-wallets/cardano/shelley/plate'
 import {DefaultAsset, Token, YoroiAmounts, YoroiSignedTx, YoroiUnsignedTx} from '../yoroi-wallets/types'
-import {CurrencySymbol, RawUtxo, TipStatusResponse} from '../yoroi-wallets/types/other'
+import {
+  CurrencySymbol,
+  RawUtxo,
+  TipStatusResponse,
+  Transaction,
+  TRANSACTION_DIRECTION,
+  TRANSACTION_STATUS,
+} from '../yoroi-wallets/types/other'
 import {Utxos} from '../yoroi-wallets/utils'
 
 // WALLET
@@ -439,6 +449,42 @@ export const useSignTxWithHW = (
   }
 }
 
+const getTransactionInfos = (wallet: YoroiWallet) =>
+  mapValues(wallet.transactions, (tx: Transaction) => {
+    if (!wallet.networkId) throw new Error('invalid state')
+    return processTxHistoryData(
+      tx,
+      wallet.rewardAddressHex != null
+        ? [...wallet.internalAddresses, ...wallet.externalAddresses, ...[wallet.rewardAddressHex]]
+        : [...wallet.internalAddresses, ...wallet.externalAddresses],
+      wallet.confirmationCounts[tx.id] || 0,
+      wallet.networkId,
+    )
+  })
+
+export const useTransactionInfos = (wallet: YoroiWallet) => {
+  const [transactionInfos, setTransactionInfos] = React.useState(() => getTransactionInfos(wallet))
+  React.useEffect(() => {
+    wallet.subscribe((event) => {
+      if (event.type !== 'transactions') return
+
+      setTransactionInfos(getTransactionInfos(wallet))
+    })
+  })
+
+  return transactionInfos
+}
+
+export const useHasPendingTx = (wallet: YoroiWallet) => {
+  const transactionInfos = useTransactionInfos(wallet)
+
+  return ObjectValues(transactionInfos).some(
+    (transactionInfo) =>
+      transactionInfo.status === TRANSACTION_STATUS.PENDING &&
+      transactionInfo.direction !== TRANSACTION_DIRECTION.RECEIVED,
+  )
+}
+
 // WALLET MANAGER
 export const useCreatePin = (storage: Storage, options: UseMutationOptions<void, Error, string>) => {
   const mutation = useMutation({
@@ -520,6 +566,23 @@ export const useWalletMetas = (walletManager: WalletManager, options?: UseQueryO
     ...query,
     walletMetas: query.data,
   }
+}
+
+export const useHasWallets = (
+  walletManager: WalletManager,
+  options?: UseQueryOptions<Array<WalletMeta>, Error, boolean>,
+) => {
+  const query = useQuery({
+    queryKey: ['walletMetas'],
+    queryFn: async () => walletManager.listWallets(),
+    select: (walletMetas) => walletMetas.length > 0,
+    suspense: true,
+    ...options,
+  })
+
+  if (query.data == null) throw new Error('invalid state')
+
+  return query.data
 }
 
 export const useRemoveWallet = (id: YoroiWallet['id'], options: UseMutationOptions<void, Error, void> = {}) => {
