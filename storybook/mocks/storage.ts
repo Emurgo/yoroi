@@ -1,4 +1,5 @@
 import KeyStore from '../../src/legacy/KeyStore'
+import storage from '../../src/legacy/storage'
 
 export const mockKeyStore = (overrides?: {
   getData?: typeof KeyStore.getData
@@ -18,3 +19,7 @@ export const mockKeyStore = (overrides?: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ...(overrides as any),
   } as unknown as typeof KeyStore)
+
+export const mockStorage: typeof storage = {
+  ...storage,
+}

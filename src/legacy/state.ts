@@ -16,10 +16,6 @@ export type WalletMeta = {
 }
 export type State = {
   wallets: Record<string, WalletMeta>
-  txHistory: {
-    isSynchronizing: boolean
-    lastSyncError: any // TODO(ppershing): type me
-  }
   balance: {
     isFetching: boolean
     lastFetchingError: any
@@ -44,10 +40,6 @@ export type State = {
 }
 export const getInitialState = (): State => ({
   wallets: {},
-  txHistory: {
-    isSynchronizing: false,
-    lastSyncError: null,
-  },
   balance: {
     isFetching: false,
     lastFetchingError: null,

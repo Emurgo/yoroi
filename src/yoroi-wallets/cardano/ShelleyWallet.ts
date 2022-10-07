@@ -17,6 +17,7 @@ import {Logger} from '../../legacy/logging'
 import type {CardanoHaskellShelleyNetwork} from '../../legacy/networks'
 import {isHaskellShelleyNetwork, PROVIDERS} from '../../legacy/networks'
 import type {WalletMeta} from '../../legacy/state'
+import storageLegacy from '../../legacy/storage'
 import {deriveRewardAddressHex} from '../../legacy/utils'
 import {
   Cardano,
@@ -57,7 +58,16 @@ import {yoroiUnsignedTx} from './unsignedTx'
 
 export default ShelleyWallet
 export class ShelleyWallet extends Wallet implements WalletInterface {
+  storage: typeof storageLegacy
   // =================== create =================== //
+  constructor(storage: typeof storageLegacy) {
+    super()
+    this.storage = storage
+  }
+
+  save() {
+    return this.storage.write(`/wallet/${this.id}/data`, this.toJSON())
+  }
 
   async _initialize(
     networkId: NetworkId,
@@ -282,6 +292,11 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     this.setupSubscriptions()
 
     this.isInitialized = true
+  }
+
+  async sync() {
+    await this.doFullSync()
+    this.save()
   }
 
   // =================== utils =================== //

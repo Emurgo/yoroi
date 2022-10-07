@@ -3,6 +3,7 @@ import type {IntlShape} from 'react-intl'
 
 import type {HWDeviceInfo} from '../../legacy/ledgerUtils'
 import {WalletMeta} from '../../legacy/state'
+import storage from '../../legacy/storage'
 import {
   AccountStates,
   StakePoolInfoRequest,
@@ -74,6 +75,8 @@ export interface WalletInterface {
 
   checksum: undefined | CardanoTypes.WalletChecksum
 
+  storage: typeof storage
+
   // =================== getters =================== //
 
   get internalAddresses(): Addresses
@@ -123,9 +126,9 @@ export interface WalletInterface {
 
   // =================== synch =================== //
 
-  doFullSync(): Promise<Record<string, Transaction>>
+  doFullSync(): Promise<void>
 
-  tryDoFullSync(): Promise<Record<string, Transaction> | null>
+  tryDoFullSync(): Promise<void>
 
   // =================== state/UI =================== //
 
@@ -136,6 +139,8 @@ export interface WalletInterface {
   generateNewUiReceiveAddress(): boolean
 
   // =================== persistence =================== //
+
+  save(): Promise<void>
 
   // TODO: type
   toJSON(): unknown
@@ -262,6 +267,7 @@ export type YoroiWallet = Pick<WalletInterface, YoroiWalletKeys> & {
   checksum: NonNullable<WalletInterface['checksum']>
   isReadOnly: NonNullable<WalletInterface['isReadOnly']>
   rewardAddressHex: NonNullable<WalletInterface['rewardAddressHex']>
+  sync: () => Promise<void>
 }
 
 export const isYoroiWallet = (wallet: unknown): wallet is YoroiWallet => {
@@ -309,6 +315,9 @@ type YoroiWalletKeys =
   | 'isUsedAddressIndex'
   | 'numReceiveAddresses'
   | 'canGenerateNewReceiveAddress'
+  | 'storage'
+  | 'save'
+  | 'doFullSync'
 
 const yoroiWalletKeys: Array<YoroiWalletKeys> = [
   'id',
@@ -350,4 +359,7 @@ const yoroiWalletKeys: Array<YoroiWalletKeys> = [
   'isUsedAddressIndex',
   'numReceiveAddresses',
   'canGenerateNewReceiveAddress',
+  'storage',
+  'save',
+  'doFullSync',
 ]

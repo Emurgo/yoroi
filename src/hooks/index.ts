@@ -68,6 +68,18 @@ export const useWallet = (wallet: YoroiWallet, event: WalletEvent['type']) => {
   }, [event, wallet])
 }
 
+export const useSync = (wallet: YoroiWallet, options?: UseMutationOptions<void, Error>) => {
+  const mutation = useMutation({
+    ...options,
+    mutationFn: () => wallet.sync(),
+  })
+
+  return {
+    ...mutation,
+    sync: mutation.mutate,
+  }
+}
+
 export const useEnableEasyConfirmation = (
   options?: UseMutationOptions<void, Error, {password: string; intl: IntlShape}>,
 ) => {
