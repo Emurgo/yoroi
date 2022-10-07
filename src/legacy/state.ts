@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type {CardanoTypes, ServerStatus, WalletInterface} from '../yoroi-wallets'
 import type {NetworkId, RawUtxo, WalletImplementationId, YoroiProvider} from '../yoroi-wallets/types/other'
-import {NETWORK_REGISTRY} from '../yoroi-wallets/types/other'
 import {mockReduxWallet} from './mockWallet'
 
 export type WalletMeta = {
@@ -17,22 +16,11 @@ export type WalletMeta = {
   provider?: YoroiProvider | null | undefined
 }
 export type ReduxWallet = {
-  id: WalletInterface['id']
-  networkId: WalletInterface['networkId']
-  walletImplementationId: WalletInterface['walletImplementationId']
-  isHW: WalletInterface['isHW']
-  isReadOnly: WalletInterface['isReadOnly']
-  transactions: WalletInterface['transactions']
   internalAddresses: WalletInterface['internalAddresses']
   externalAddresses: WalletInterface['externalAddresses']
-  rewardAddressHex: WalletInterface['rewardAddressHex']
   confirmationCounts: WalletInterface['confirmationCounts']
   isUsedAddressIndex: WalletInterface['isUsedAddressIndex']
   numReceiveAddresses: WalletInterface['numReceiveAddresses']
-  checksum: WalletInterface['checksum']
-  provider?: WalletInterface['provider']
-  isInitialized: WalletInterface['isInitialized']
-  name: string
   canGenerateNewReceiveAddress: boolean
 }
 export type State = {
@@ -67,26 +55,12 @@ export type State = {
 export const getInitialState = (): State => ({
   wallets: {},
   wallet: {
-    id: '',
-    name: '',
-    isInitialized: false,
-    networkId: NETWORK_REGISTRY.UNDEFINED,
-    walletImplementationId: '',
-    provider: null,
-    isHW: false,
-    isReadOnly: false,
-    transactions: {},
     internalAddresses: [],
     externalAddresses: [],
-    rewardAddressHex: null,
     confirmationCounts: {},
     isUsedAddressIndex: {},
     numReceiveAddresses: 0,
     canGenerateNewReceiveAddress: false,
-    checksum: {
-      ImagePart: '',
-      TextPart: '',
-    },
   },
   txHistory: {
     isSynchronizing: false,

@@ -2,12 +2,10 @@ import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps} from 'react-native'
-import {useSelector} from 'react-redux'
 
 import {Boundary, Icon} from '../components'
-import {useWalletName} from '../hooks'
+import {useTransactionInfos, useWalletName} from '../hooks'
 import {formatDateToSeconds} from '../legacy/format'
-import {transactionsInfoSelector} from '../legacy/selectors'
 import {
   defaultStackNavigationOptions,
   defaultStackNavigationOptionsV2,
@@ -33,7 +31,7 @@ export const TxHistoryNavigator = () => {
   const wallet = useSelectedWallet()
 
   const walletName = useWalletName(wallet)
-  const transactionInfos = useSelector(transactionsInfoSelector)
+  const transactionInfos = useTransactionInfos(wallet)
   const [modalInfoState, setModalInfoState] = React.useState(false)
   const showModalInfo = () => setModalInfoState(true)
   const hideModalInfo = () => setModalInfoState(false)
