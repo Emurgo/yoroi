@@ -233,11 +233,9 @@ export class Wallet {
   async tryDoFullSync() {
     try {
       return await nonblockingSynchronize(this._doFullSyncMutex, () => this._doFullSync())
-    } catch (e) {
-      if (e instanceof IsLockedError) {
-        return null
-      } else {
-        throw e
+    } catch (error) {
+      if (!(error instanceof IsLockedError)) {
+        throw error
       }
     }
   }
@@ -293,7 +291,6 @@ export class Wallet {
     if (lastUsedIndex > this.state.lastGeneratedAddressIndex) {
       this.state.lastGeneratedAddressIndex = lastUsedIndex
     }
-    return this.transactionCache.transactions
   }
 
   resync() {

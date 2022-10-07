@@ -13,6 +13,7 @@ import {
   YoroiSignedTx,
   YoroiUnsignedTx,
 } from '../../src/yoroi-wallets/types'
+import {mockStorage} from './storage'
 
 export const mockedWalletMeta: WalletMeta = {
   id: 'wallet-id',
@@ -118,6 +119,16 @@ export const mockWallet: YoroiWallet = {
   isUsedAddressIndex: {},
   numReceiveAddresses: 0,
   canGenerateNewReceiveAddress: () => true,
+  storage: mockStorage,
+  save: async (...args) => {
+    action('save')(...args)
+  },
+  doFullSync: async (...args) => {
+    action('doFullSync')(...args)
+  },
+  sync: async (...args) => {
+    action('sync')(...args)
+  },
 
   // enableEasyConfirmation: () => {
   //   throw new Error('not implemented: enableEasyConfirmation')

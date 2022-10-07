@@ -4,8 +4,6 @@ import {createSelector} from 'reselect'
 import type {State} from '../legacy/state'
 import {RawUtxo} from '../yoroi-wallets/types/other'
 
-export const isSynchronizingHistorySelector = (state: State): boolean => state.txHistory.isSynchronizing
-export const lastHistorySyncErrorSelector = (state: State) => state.txHistory.lastSyncError
 // TokenInfo
 export const isFetchingUtxosSelector = (state: State): boolean => state.balance.isFetching
 export const lastUtxosFetchErrorSelector = (state: State) => state.balance.lastFetchingError
