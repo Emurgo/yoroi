@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useNavigation} from '@react-navigation/native'
 import {BigNumber} from 'bignumber.js'
-import _ from 'lodash'
+import _, {fromPairs} from 'lodash'
 import React from 'react'
 import {defineMessages, MessageDescriptor, useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import {useSelector} from 'react-redux'
 
 import {Text} from '../../components'
 import {Icon} from '../../components/Icon'
@@ -17,7 +16,6 @@ import {
   formatTokenInteger,
   getAssetDenominationOrId,
 } from '../../legacy/format'
-import {externalAddressIndexSelector, internalAddressIndexSelector} from '../../legacy/selectors'
 import utfSymbols from '../../legacy/utfSymbols'
 import {isEmptyString} from '../../legacy/utils'
 import {TxHistoryRouteNavigation} from '../../navigation'
@@ -64,8 +62,8 @@ export const TxHistoryListItem = ({transaction}: Props) => {
 
   const rootBgColor = bgColorByAssurance(transaction.assurance)
 
-  const internalAddressIndex = useSelector(internalAddressIndexSelector)
-  const externalAddressIndex = useSelector(externalAddressIndexSelector)
+  const internalAddressIndex = fromPairs(wallet.internalAddresses.map((addr, i) => [addr, i]))
+  const externalAddressIndex = fromPairs(wallet.externalAddresses.map((addr, i) => [addr, i]))
 
   const fee = transaction.fee ? transaction.fee[0] : null
   const amountAsMT = MultiToken.fromArray(transaction.amount)

@@ -306,6 +306,9 @@ type YoroiWalletKeys =
   | 'externalAddresses'
   | 'confirmationCounts'
   | 'transactions'
+  | 'isUsedAddressIndex'
+  | 'numReceiveAddresses'
+  | 'canGenerateNewReceiveAddress'
 
 const yoroiWalletKeys: Array<YoroiWalletKeys> = [
   'id',
@@ -344,4 +347,7 @@ const yoroiWalletKeys: Array<YoroiWalletKeys> = [
   'externalAddresses',
   'confirmationCounts',
   'transactions',
+  'isUsedAddressIndex',
+  'numReceiveAddresses',
+  'canGenerateNewReceiveAddress',
 ]

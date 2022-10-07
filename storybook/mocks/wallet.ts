@@ -115,6 +115,9 @@ export const mockWallet: YoroiWallet = {
   externalAddresses: [],
   confirmationCounts: {},
   transactions: {},
+  isUsedAddressIndex: {},
+  numReceiveAddresses: 0,
+  canGenerateNewReceiveAddress: () => true,
 
   // enableEasyConfirmation: () => {
   //   throw new Error('not implemented: enableEasyConfirmation')
