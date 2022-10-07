@@ -212,7 +212,7 @@
     "@wdio/appium-service": "^7.16.6",
     "@wdio/local-runner": "^7.16.8",
     "@wdio/mocha-framework": "^7.16.6",
-    "@wdio/selenium-standalone-service": "^7.16.6",
+    "@wdio/selenium-standalone-service": "^7.25.1",
     "@wdio/spec-reporter": "^7.16.4",
     "babel-eslint": "^10.1.0",
     "babel-jest": "^27.5.1",
