@@ -19,7 +19,7 @@ import {CONFIG, isNightly} from './config'
 import crashReporting from './crashReporting'
 import {encryptCustomPin} from './customPin'
 import {canBiometricEncryptionBeEnabled, recreateAppSignInKeys, removeAppSignInKeys} from './deviceSettings'
-import {mirrorTxHistory, setBackgroundSyncError} from './history'
+import {setBackgroundSyncError} from './history'
 import KeyStore from './KeyStore'
 import {getCardanoNetworkConfigById} from './networks'
 import {
@@ -254,7 +254,6 @@ const setIsKeyboardOpen = (isOpen) => ({
 export const setupHooks = () => (dispatch: Dispatch<any>) => {
   Logger.debug('setting up isOnline callback')
   Logger.debug('setting wallet manager hook')
-  walletManager.subscribe(() => dispatch(mirrorTxHistory()))
   walletManager.subscribeBackgroundSyncError((err: any) => dispatch(setBackgroundSyncError(err)))
   walletManager.subscribeServerSync((status) => dispatch(_setServerStatus(status)))
   Logger.debug('setting up app lock')

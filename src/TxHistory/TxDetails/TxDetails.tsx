@@ -1,17 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useRoute} from '@react-navigation/native'
 import {BigNumber} from 'bignumber.js'
+import {fromPairs} from 'lodash'
 import React, {useState} from 'react'
 import {defineMessages, IntlShape, useIntl} from 'react-intl'
 import {LayoutAnimation, Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
-import {useSelector} from 'react-redux'
 
 import {Banner, Boundary, Button, CopyButton, Icon, OfflineBanner, StatusBar, Text} from '../../components'
 import {useTipStatus, useTokenInfo, useTransactionInfos} from '../../hooks'
 import globalMessages from '../../i18n/global-messages'
 import {formatTokenWithSymbol} from '../../legacy/format'
 import {getNetworkConfigById} from '../../legacy/networks'
-import {externalAddressIndexSelector, internalAddressIndexSelector} from '../../legacy/selectors'
 import {isEmptyString} from '../../legacy/utils'
 import AddressModal from '../../Receive/AddressModal'
 import Screen from '../../Screen'
@@ -26,9 +25,9 @@ export const TxDetails = () => {
   const strings = useStrings()
   const intl = useIntl()
   const {id} = useRoute().params as Params
-  const internalAddressIndex = useSelector(internalAddressIndexSelector)
-  const externalAddressIndex = useSelector(externalAddressIndexSelector)
   const wallet = useSelectedWallet()
+  const internalAddressIndex = fromPairs(wallet.internalAddresses.map((addr, i) => [addr, i]))
+  const externalAddressIndex = fromPairs(wallet.externalAddresses.map((addr, i) => [addr, i]))
   const transactionInfos = useTransactionInfos(wallet)
   const [expandedInItemId, setExpandedInItemId] = useState<null | ItemId>(null)
   const [expandedOutItemId, setExpandedOutItemId] = useState<null | ItemId>(null)
@@ -41,7 +40,7 @@ export const TxDetails = () => {
     internalAddressIndex,
     externalAddressIndex,
   )
-  const txFee = transaction.fee ? MultiToken.fromArray(transaction.fee).getDefault() : null
+  const txFee = transaction.fee != null ? MultiToken.fromArray(transaction.fee).getDefault() : null
   const amountAsMT = MultiToken.fromArray(transaction.amount)
   const amount = amountAsMT.getDefault()
 

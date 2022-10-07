@@ -1,26 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {fromPairs} from 'lodash'
 import {createSelector} from 'reselect'
 
 import type {State} from '../legacy/state'
 import {RawUtxo} from '../yoroi-wallets/types/other'
-
-export const internalAddressIndexSelector: (state: State) => Record<string, number> = createSelector(
-  (state: State) => state.wallet.internalAddresses,
-  (addresses) => fromPairs(addresses.map((addr, i) => [addr, i])),
-)
-export const externalAddressIndexSelector: (state: State) => Record<string, number> = createSelector(
-  (state: State) => state.wallet.externalAddresses,
-  (addresses) => fromPairs(addresses.map((addr, i) => [addr, i])),
-)
-export const isUsedAddressIndexSelector = (state: State) => state.wallet.isUsedAddressIndex
-
-export const receiveAddressesSelector: (state: State) => Array<string> = createSelector(
-  (state: State) => state.wallet.externalAddresses,
-  (state: State) => state.wallet.numReceiveAddresses,
-  (addresses, count) => addresses.slice(0, count),
-)
-export const canGenerateNewReceiveAddressSelector = (state: State) => state.wallet.canGenerateNewReceiveAddress
 
 export const isSynchronizingHistorySelector = (state: State): boolean => state.txHistory.isSynchronizing
 export const lastHistorySyncErrorSelector = (state: State) => state.txHistory.lastSyncError

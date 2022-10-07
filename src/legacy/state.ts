@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type {CardanoTypes, ServerStatus, WalletInterface} from '../yoroi-wallets'
+import type {CardanoTypes, ServerStatus} from '../yoroi-wallets'
 import type {NetworkId, RawUtxo, WalletImplementationId, YoroiProvider} from '../yoroi-wallets/types/other'
-import {mockReduxWallet} from './mockWallet'
 
 export type WalletMeta = {
   id: string
@@ -15,17 +14,8 @@ export type WalletMeta = {
   checksum: CardanoTypes.WalletChecksum
   provider?: YoroiProvider | null | undefined
 }
-export type ReduxWallet = {
-  internalAddresses: WalletInterface['internalAddresses']
-  externalAddresses: WalletInterface['externalAddresses']
-  confirmationCounts: WalletInterface['confirmationCounts']
-  isUsedAddressIndex: WalletInterface['isUsedAddressIndex']
-  numReceiveAddresses: WalletInterface['numReceiveAddresses']
-  canGenerateNewReceiveAddress: boolean
-}
 export type State = {
   wallets: Record<string, WalletMeta>
-  wallet: ReduxWallet
   txHistory: {
     isSynchronizing: boolean
     lastSyncError: any // TODO(ppershing): type me
@@ -54,14 +44,6 @@ export type State = {
 }
 export const getInitialState = (): State => ({
   wallets: {},
-  wallet: {
-    internalAddresses: [],
-    externalAddresses: [],
-    confirmationCounts: {},
-    isUsedAddressIndex: {},
-    numReceiveAddresses: 0,
-    canGenerateNewReceiveAddress: false,
-  },
   txHistory: {
     isSynchronizing: false,
     lastSyncError: null,
@@ -98,7 +80,6 @@ export const mockState = (mockedState?: State | null | undefined): State => {
 
   return {
     ...getInitialState(),
-    wallet: mockReduxWallet,
     wallets: {
       '6cad6524-55bf-4ff8-903e-eb8af29b1b60': {
         id: '6cad6524-55bf-4ff8-903e-eb8af29b1b60',
