@@ -35,7 +35,7 @@ import {WalletInitNavigator} from './WalletInit/WalletInitNavigator'
 import {WalletNavigator} from './WalletNavigator'
 import {walletManager} from './yoroi-wallets'
 
-const IS_STORYBOOK = env.getBoolean('IS_STORYBOOK', false)
+const IS_STORYBOOK = !env.getBoolean('IS_STORYBOOK', false)
 
 export const AppNavigator = () => {
   useAutoLogout()

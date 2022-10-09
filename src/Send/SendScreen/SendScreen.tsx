@@ -7,16 +7,13 @@ import {useIntl} from 'react-intl'
 import {ActivityIndicator, Image, ScrollView, StyleSheet, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useSelector} from 'react-redux'
 
 import {Button, Checkbox, Spacer, StatusBar, Text, TextInput} from '../../components'
-import {useBalances, useHasPendingTx, useTokenInfo} from '../../hooks'
+import {useBalances, useHasPendingTx, useTokenInfo, useUtxos} from '../../hooks'
 import {CONFIG, getDefaultAssetByNetworkId} from '../../legacy/config'
 import {formatTokenAmount, getAssetDenominationOrId, truncateWithEllipsis} from '../../legacy/format'
-import {isFetchingUtxosSelector, lastUtxosFetchErrorSelector, utxosSelector} from '../../legacy/selectors'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
-import {UtxoAutoRefresher} from '../../UtxoAutoRefresher'
 import {Quantity, YoroiAmounts, YoroiUnsignedTx} from '../../yoroi-wallets/types'
 import {Amounts, Quantities} from '../../yoroi-wallets/utils'
 import {parseAmountDecimal} from '../../yoroi-wallets/utils/parsing'
@@ -40,11 +37,10 @@ export const SendScreen = () => {
   const strings = useStrings()
   const navigation = useNavigation()
   const wallet = useSelectedWallet()
-  const isFetchingBalance = useSelector(isFetchingUtxosSelector)
-  const lastFetchingError = useSelector(lastUtxosFetchErrorSelector)
   const defaultAsset = getDefaultAssetByNetworkId(wallet.networkId)
   const balances = useBalances(wallet)
-  const utxos = useSelector(utxosSelector)
+
+  const {utxos, isLoading, error} = useUtxos(wallet)
   const hasPendingTx = useHasPendingTx(wallet)
   const netInfo = useNetInfo()
   const isOnline = netInfo.type !== 'none' && netInfo.type !== 'unknown'
@@ -77,8 +73,8 @@ export const SendScreen = () => {
   const isValid =
     isOnline &&
     !hasPendingTx &&
-    !isFetchingBalance &&
-    lastFetchingError == null &&
+    !isLoading &&
+    error == null &&
     utxos &&
     _.isEmpty(addressErrors) &&
     _.isEmpty(amountErrors) &&
@@ -180,7 +176,6 @@ export const SendScreen = () => {
     <SafeAreaView edges={['left', 'right']} style={styles.container}>
       <StatusBar type="dark" />
 
-      <UtxoAutoRefresher />
       <ErrorBanners />
       <AvailableAmountBanner />
 
@@ -278,8 +273,8 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   actions: {
-    marginHorizontal: 16,
-    marginBottom: 16,
+    paddingHorizontal: 16,
+    paddingBottom: 16,
   },
   indicator: {
     marginTop: 26,

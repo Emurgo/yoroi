@@ -56,16 +56,30 @@ export const mockWallet: YoroiWallet = {
   createWithdrawalTx: () => {
     throw new Error('not implemented: createWithdrawalTx')
   },
-  fetchUTXOs: () => Promise.resolve([]),
+  fetchUTXOs: (...args) => {
+    action('fetchUTXOs')(...args)
+    return Promise.resolve([])
+  },
   getAllUtxosForKey: () => Promise.resolve([]),
-  fetchTokenInfo: () => Promise.resolve(tokenResponses),
-  fetchPoolInfo: () => Promise.resolve({[stakePoolId]: poolInfoAndHistory} as StakePoolInfosAndHistories),
-  getDelegationStatus: () => Promise.resolve({isRegistered: false, poolKeyHash: null}),
+  fetchTokenInfo: (...args) => {
+    action('fetchTokenInfo')(...args)
+    return Promise.resolve(tokenResponses)
+  },
+  fetchPoolInfo: (...args) => {
+    action('fetchPoolInfo')(...args)
+    return Promise.resolve({[stakePoolId]: poolInfoAndHistory} as StakePoolInfosAndHistories)
+  },
+  getDelegationStatus: (...args) => {
+    action('getDelegationStatus')(...args)
+    return Promise.resolve({isRegistered: false, poolKeyHash: null})
+  },
   subscribeOnTxHistoryUpdate: () => {
     null
   },
-  fetchAccountState: () =>
-    Promise.resolve({['reward-address-hex']: {remainingAmount: '0', rewards: '0', withdrawals: ''}}),
+  fetchAccountState: (...args) => {
+    action('fetchAccountState')(...args)
+    return Promise.resolve({['reward-address-hex']: {remainingAmount: '0', rewards: '0', withdrawals: ''}})
+  },
   changePassword: () => {
     throw new Error('Not implemented: changePassword')
   },
@@ -75,16 +89,22 @@ export const mockWallet: YoroiWallet = {
   signTxWithLedger: () => {
     throw new Error('Not implemented: signTxWithLedger')
   },
-  checkServerStatus: () =>
-    Promise.resolve({
+  checkServerStatus: (...args) => {
+    action('checkServerStatus')(...args)
+    return Promise.resolve({
       isServerOk: true,
       isMaintenance: false,
       serverTime: Date.now(),
       isQueueOnline: true,
-    }),
-  fetchTxStatus: async () => ({}),
-  fetchTipStatus: async () =>
-    Promise.resolve({
+    })
+  },
+  fetchTxStatus: async (...args) => {
+    action('fetchTxStatus')(...args)
+    return {}
+  },
+  fetchTipStatus: async (...args) => {
+    action('fetchTipStatus')(...args)
+    return Promise.resolve({
       bestBlock: {
         epoch: 210,
         slot: 76027,
@@ -99,7 +119,8 @@ export const mockWallet: YoroiWallet = {
         hash: 'ca18a2b607411dd18fbb2c1c0e653ec8a6a3f794f46ce050b4a07cf8ba4ab916',
         height: 3617698,
       },
-    }),
+    })
+  },
   submitTransaction: () => {
     throw new Error('Not implemented: submitTransaction')
   },
@@ -108,17 +129,28 @@ export const mockWallet: YoroiWallet = {
   },
   subscribe: (...args) => {
     action('subscribe')(...args)
-    return () => undefined
+    return (...args) => {
+      action('unsubscribe')(...args)
+    }
   },
-  fetchCurrentPrice: () => Promise.resolve(1.9938153154314795),
-  toJSON: () => null as any,
+  fetchCurrentPrice: (...args) => {
+    action('fetchCurrentPrice')(...args)
+    return Promise.resolve(1.9938153154314795)
+  },
+  toJSON: (...args) => {
+    action('toJSON')(...args)
+    return null as any
+  },
   internalAddresses: [],
   externalAddresses: [],
   confirmationCounts: {},
   transactions: {},
   isUsedAddressIndex: {},
   numReceiveAddresses: 0,
-  canGenerateNewReceiveAddress: () => true,
+  canGenerateNewReceiveAddress: (...args) => {
+    action('canGenerateNewReceiveAddress')(...args)
+    return true
+  },
   storage: mockStorage,
   save: async (...args) => {
     action('save')(...args)

@@ -3,7 +3,7 @@ import type {MessageDescriptor} from 'react-intl'
 import {defineMessages, useIntl} from 'react-intl'
 import {InteractionManager, ScrollView, StyleSheet, Switch} from 'react-native'
 import {useMutation, UseMutationOptions} from 'react-query'
-import {useDispatch, useSelector} from 'react-redux'
+import {useSelector} from 'react-redux'
 
 import {useAuth} from '../../auth/AuthProvider'
 import {StatusBar} from '../../components'
@@ -13,7 +13,6 @@ import {DIALOG_BUTTONS, showConfirmationDialog} from '../../legacy/actions'
 import {isByron, isHaskellShelley} from '../../legacy/config'
 import {getNetworkConfigById} from '../../legacy/networks'
 import {isSystemAuthEnabledSelector} from '../../legacy/selectors'
-import {clearUTXOs} from '../../legacy/utxo'
 import {useWalletNavigation} from '../../navigation'
 import {useSelectedWallet, useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
 import {NetworkId, WalletImplementationId, walletManager} from '../../yoroi-wallets'
@@ -212,14 +211,12 @@ const getWalletType = (implementationId: WalletImplementationId): MessageDescrip
 const useLogout = (options?: UseMutationOptions<void, Error>) => {
   const {logout} = useAuth()
   const intl = useIntl()
-  const dispatch = useDispatch()
   const setSelectedWallet = useSetSelectedWallet()
   const setSelectedWalletMeta = useSetSelectedWalletMeta()
   const {closeWallet, ...mutation} = useCloseWallet({
     onSuccess: () => {
       setSelectedWallet(undefined)
       setSelectedWalletMeta(undefined)
-      dispatch(clearUTXOs())
     },
     ...options,
   })

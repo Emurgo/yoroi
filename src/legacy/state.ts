@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type {CardanoTypes, ServerStatus} from '../yoroi-wallets'
-import type {NetworkId, RawUtxo, WalletImplementationId, YoroiProvider} from '../yoroi-wallets/types/other'
+import type {NetworkId, WalletImplementationId, YoroiProvider} from '../yoroi-wallets/types/other'
 
 export type WalletMeta = {
   id: string
@@ -16,11 +16,6 @@ export type WalletMeta = {
 }
 export type State = {
   wallets: Record<string, WalletMeta>
-  balance: {
-    isFetching: boolean
-    lastFetchingError: any
-    utxos: Array<RawUtxo> | null | undefined
-  }
   isAppInitialized: boolean
   isKeyboardOpen: boolean
   appSettings: {
@@ -40,11 +35,6 @@ export type State = {
 }
 export const getInitialState = (): State => ({
   wallets: {},
-  balance: {
-    isFetching: false,
-    lastFetchingError: null,
-    utxos: null,
-  },
   isAppInitialized: false,
   isKeyboardOpen: false,
   appSettings: {
