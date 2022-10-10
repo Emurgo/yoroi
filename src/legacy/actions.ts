@@ -29,7 +29,6 @@ import {
   sendCrashReportsSelector,
 } from './selectors'
 import type {State} from './state'
-import {clearUTXOs} from './utxo'
 
 const updateCrashlytics = (fieldName: AppSettingsKey, value: any) => {
   const handlers = {
@@ -226,7 +225,6 @@ export const checkBiometricStatus = (logout: () => void) => async (dispatch: Dis
       Logger.debug('Ignore if no wallet is selected')
     }
     await walletManager.closeWallet()
-    dispatch(clearUTXOs())
     logout()
   }
 }

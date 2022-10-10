@@ -36,7 +36,7 @@ import {
   YoroiWallet,
 } from '../yoroi-wallets'
 import {generateShelleyPlateFromKey} from '../yoroi-wallets/cardano/shelley/plate'
-import {DefaultAsset, Token, YoroiAmounts, YoroiSignedTx, YoroiUnsignedTx} from '../yoroi-wallets/types'
+import {Token, YoroiAmounts, YoroiSignedTx, YoroiUnsignedTx} from '../yoroi-wallets/types'
 import {
   CurrencySymbol,
   RawUtxo,
@@ -66,6 +66,38 @@ export const useWallet = (wallet: YoroiWallet, event: WalletEvent['type']) => {
       unsubWalletManager()
     }
   }, [event, wallet])
+}
+
+export const useUtxos = (
+  wallet: YoroiWallet,
+  options?: UseQueryOptions<Array<RawUtxo>, Error, Array<RawUtxo>, [string, 'utxos']>,
+) => {
+  const {refetch, ...query} = useQuery({
+    ...options,
+    refetchInterval: 20000,
+    queryKey: [wallet.id, 'utxos'],
+    queryFn: () => wallet.fetchUTXOs(),
+  })
+
+  const netInfo = useNetInfo()
+  React.useEffect(() => {
+    const isOnline = netInfo.type !== 'none' && netInfo.type !== 'unknown'
+    if (isOnline) refetch()
+  }, [netInfo.type, refetch])
+
+  React.useEffect(() => wallet.subscribe(() => refetch()), [refetch, wallet])
+
+  useFocusEffect(
+    React.useCallback(() => {
+      refetch()
+    }, [refetch]),
+  )
+
+  return {
+    ...query,
+    refetch,
+    utxos: query.data,
+  }
 }
 
 export const useSync = (wallet: YoroiWallet, options?: UseMutationOptions<void, Error>) => {
@@ -279,23 +311,26 @@ export const usePlate = ({networkId, publicKeyHex}: {networkId: NetworkId; publi
 export const useWithdrawalTx = (
   {
     wallet,
-    utxos,
-    defaultAsset,
     deregister = false,
   }: {
     wallet: YoroiWallet
-    utxos: Array<RawUtxo>
-    defaultAsset: DefaultAsset
     deregister?: boolean
   },
-  options?: UseQueryOptions<YoroiUnsignedTx>,
+  options?: UseQueryOptions<YoroiUnsignedTx, Error, YoroiUnsignedTx, [string, 'withdrawalTx', {deregister: boolean}]>,
 ) => {
   const query = useQuery({
+    ...options,
     queryKey: [wallet.id, 'withdrawalTx', {deregister}],
-    queryFn: () => wallet.createWithdrawalTx(utxos, defaultAsset, deregister),
+    queryFn: async () => {
+      const utxos = await wallet.fetchUTXOs()
+      const defaultAsset = getDefaultAssetByNetworkId(wallet.networkId)
+
+      return wallet.createWithdrawalTx(utxos, defaultAsset, deregister)
+    },
     retry: false,
     cacheTime: 0,
-    ...options,
+    useErrorBoundary: true,
+    suspense: true,
   })
 
   return {
@@ -482,7 +517,7 @@ export const useTransactionInfos = (wallet: YoroiWallet) => {
 
       setTransactionInfos(getTransactionInfos(wallet))
     })
-  })
+  }, [wallet])
 
   return transactionInfos
 }
@@ -797,36 +832,10 @@ export const useExchangeRate = ({
 }
 
 export const useBalances = (wallet: YoroiWallet): YoroiAmounts => {
-  const {refetch, ...query} = useQuery({
-    suspense: true,
-    queryKey: [wallet.id, 'utxos'],
-    refetchInterval: 20000,
-    queryFn: () => {
-      const primaryTokenId = getDefaultAssetByNetworkId(wallet.networkId).identifier
+  const {utxos} = useUtxos(wallet, {suspense: true})
+  if (utxos == null) throw new Error('invalid state')
 
-      return wallet.fetchUTXOs().then((utxos) => Utxos.toAmounts(utxos, primaryTokenId))
-    },
-  })
+  const primaryTokenId = getDefaultAssetByNetworkId(wallet.networkId).identifier
 
-  const netInfo = useNetInfo()
-  const onlineRef = React.useRef()
-
-  React.useEffect(() => {
-    const isOnline = netInfo.type !== 'none' && netInfo.type !== 'unknown'
-    if (onlineRef.current !== isOnline) {
-      refetch()
-    }
-  }, [netInfo, refetch])
-
-  React.useEffect(() => wallet.subscribe(() => refetch()))
-
-  useFocusEffect(
-    React.useCallback(() => {
-      refetch()
-    }, [refetch]),
-  )
-
-  if (!query.data) throw new Error('invalid state')
-
-  return query.data
+  return Utxos.toAmounts(utxos, primaryTokenId)
 }

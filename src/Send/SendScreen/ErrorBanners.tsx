@@ -1,11 +1,8 @@
 import {useNetInfo} from '@react-native-community/netinfo'
 import React from 'react'
-import {useDispatch, useSelector} from 'react-redux'
 
 import {Banner, ClickableBanner, OfflineBanner} from '../../components'
-import {useHasPendingTx} from '../../hooks'
-import {isFetchingUtxosSelector, lastUtxosFetchErrorSelector} from '../../legacy/selectors'
-import {fetchUTXOs} from '../../legacy/utxo'
+import {useHasPendingTx, useUtxos} from '../../hooks'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {useStrings} from './strings'
 
@@ -15,14 +12,12 @@ export const ErrorBanners = () => {
   const isOnline = netInfo.type !== 'none' && netInfo.type !== 'unknown'
   const wallet = useSelectedWallet()
   const hasPengingTx = useHasPendingTx(wallet)
-  const lastFetchingError = useSelector(lastUtxosFetchErrorSelector)
-  const isFetchingBalance = useSelector(isFetchingUtxosSelector)
-  const dispatch = useDispatch()
+  const {isLoading, refetch, error} = useUtxos(wallet)
 
   if (!isOnline) {
     return <OfflineBanner />
-  } else if (lastFetchingError != null && !isFetchingBalance) {
-    return <ClickableBanner error onPress={() => dispatch(fetchUTXOs())} text={strings.errorBannerNetworkError} />
+  } else if (error != null && !isLoading) {
+    return <ClickableBanner error onPress={() => refetch()} text={strings.errorBannerNetworkError} />
   } else if (hasPengingTx) {
     return <Banner error text={strings.errorBannerPendingOutgoingTransaction} />
   } else {

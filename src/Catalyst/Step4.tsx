@@ -3,7 +3,6 @@ import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useDispatch} from 'react-redux'
 
 import {Button, OfflineBanner, ProgressStep, Spacer, TextInput} from '../components'
 import {ErrorModal} from '../components'
@@ -15,7 +14,6 @@ import {ensureKeysValidity} from '../legacy/deviceSettings'
 import {WrongPassword} from '../legacy/errors'
 import KeyStore from '../legacy/KeyStore'
 import {isEmptyString} from '../legacy/utils'
-import {clearUTXOs} from '../legacy/utxo'
 import {useSelectedWallet} from '../SelectedWallet'
 import {SystemAuthDisabled, walletManager} from '../yoroi-wallets'
 import {Actions, Description, Title} from './components'
@@ -38,13 +36,8 @@ export const Step4 = ({pin, setVotingRegTxData}: Props) => {
   const {createVotingRegTx, isLoading: generatingTransaction} = useCreateVotingRegTx({wallet})
   const navigation = useNavigation()
   const [password, setPassword] = useState('')
-  const dispatch = useDispatch()
 
-  const {closeWallet} = useCloseWallet({
-    onSuccess: () => {
-      dispatch(clearUTXOs())
-    },
-  })
+  const {closeWallet} = useCloseWallet()
 
   const [errorData, setErrorData] = useState<ErrorData>({
     showErrorDialog: false,

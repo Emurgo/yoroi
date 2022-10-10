@@ -2,14 +2,12 @@ import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {useIntl} from 'react-intl'
 import {ActivityIndicator, StyleSheet, View} from 'react-native'
-import {useDispatch} from 'react-redux'
 
 import {TwoActionView} from '../../../components'
 import {useCloseWallet, useSignAndSubmitTx} from '../../../hooks'
 import {confirmationMessages, errorMessages, txLabels} from '../../../i18n/global-messages'
 import {showErrorDialog} from '../../../legacy/actions'
 import {ensureKeysValidity} from '../../../legacy/deviceSettings'
-import {clearUTXOs} from '../../../legacy/utxo'
 import {SystemAuthDisabled, YoroiWallet} from '../../../yoroi-wallets'
 import {YoroiUnsignedTx} from '../../../yoroi-wallets/types'
 import {TransferSummary} from '../TransferSummary'
@@ -25,13 +23,8 @@ export const ConfirmTxWithOS = ({wallet, unsignedTx, onSuccess, onCancel}: Props
   const intl = useIntl()
   const strings = useStrings()
   const navigation = useNavigation()
-  const dispatch = useDispatch()
 
-  const {closeWallet} = useCloseWallet({
-    onSuccess: () => {
-      dispatch(clearUTXOs())
-    },
-  })
+  const {closeWallet} = useCloseWallet()
 
   const {signAndSubmitTx, isLoading} = useSignAndSubmitTx(
     {wallet},

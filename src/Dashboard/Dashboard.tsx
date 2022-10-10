@@ -5,20 +5,16 @@ import BigNumber from 'bignumber.js'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, RefreshControl, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
-import {useDispatch, useSelector} from 'react-redux'
 
 import {Banner, Button, Modal, OfflineBanner, StatusBar} from '../components'
-import {useBalances} from '../hooks'
+import {useBalances, useUtxos} from '../hooks'
 import globalMessages from '../i18n/global-messages'
 import {getCardanoBaseConfig} from '../legacy/config'
 import KeyStore from '../legacy/KeyStore'
 import {getCardanoNetworkConfigById} from '../legacy/networks'
-import {isFetchingUtxosSelector} from '../legacy/selectors'
 import {isEmptyString} from '../legacy/utils'
-import {fetchUTXOs} from '../legacy/utxo'
 import {useWalletNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
-import {UtxoAutoRefresher} from '../UtxoAutoRefresher'
 import {Amounts} from '../yoroi-wallets/utils'
 import {
   genCurrentEpochLength,
@@ -35,13 +31,12 @@ import {WithdrawStakingRewards} from './WithdrawStakingRewards'
 export const Dashboard = () => {
   const intl = useIntl()
   const navigation = useNavigation()
-  const dispatch = useDispatch()
 
-  const isFetchingUtxos = useSelector(isFetchingUtxosSelector)
+  const wallet = useSelectedWallet()
+  const {isLoading: isFetchingUtxos, refetch: refetchUtxos} = useUtxos(wallet)
   const netInfo = useNetInfo()
   const isOnline = netInfo.type !== 'none' && netInfo.type !== 'unknown'
 
-  const wallet = useSelectedWallet()
   const balances = useBalances(wallet)
   const primaryAmount = Amounts.getAmount(balances, '')
   const {stakingInfo, refetch: refetchStakingInfo, error, isLoading} = useStakingInfo(wallet)
@@ -53,7 +48,6 @@ export const Dashboard = () => {
   return (
     <View style={styles.root}>
       <StatusBar type="dark" />
-      <UtxoAutoRefresher />
 
       <View style={styles.container}>
         <OfflineBanner />
@@ -65,7 +59,7 @@ export const Dashboard = () => {
           refreshControl={
             <RefreshControl
               onRefresh={() => {
-                dispatch(fetchUTXOs())
+                refetchUtxos()
                 refetchStakingInfo()
               }}
               refreshing={false}

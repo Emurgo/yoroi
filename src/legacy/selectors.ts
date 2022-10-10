@@ -2,12 +2,7 @@
 import {createSelector} from 'reselect'
 
 import type {State} from '../legacy/state'
-import {RawUtxo} from '../yoroi-wallets/types/other'
 
-// TokenInfo
-export const isFetchingUtxosSelector = (state: State): boolean => state.balance.isFetching
-export const lastUtxosFetchErrorSelector = (state: State) => state.balance.lastFetchingError
-export const utxosSelector = (state: State): Array<RawUtxo> | null | undefined => state.balance.utxos
 // app-related selectors
 export const biometricHwSupportSelector = (state: State): boolean => state.appSettings.isBiometricHardwareSupported
 export const canEnableBiometricSelector = (state: State): boolean => state.appSettings.canEnableBiometricEncryption
