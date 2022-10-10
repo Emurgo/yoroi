@@ -1,9 +1,8 @@
 import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
-import {QueryClient, QueryClientProvider} from 'react-query'
 
-import {mockHwWallet, mockOsWallet, mockWallet, mockYoroiTx, WithModalProps} from '../../storybook'
+import {mockHwWallet, mockOsWallet, mockWallet, mockYoroiTx, QueryProvider, WithModalProps} from '../../storybook'
 import {Boundary} from '../components'
 import {SelectedWalletProvider} from '../SelectedWallet'
 import {CatalystBackupCheckModal} from './CatalystBackupCheckModal'
@@ -16,7 +15,7 @@ import {Step6} from './Step6'
 
 storiesOf('Catalyst', module)
   .add('Step 1, staked', () => (
-    <QueryClientProvider client={new QueryClient()}>
+    <QueryProvider>
       <SelectedWalletProvider
         wallet={{
           ...mockWallet,
@@ -45,11 +44,11 @@ storiesOf('Catalyst', module)
           <Step1 setPin={action('setPin')} />
         </Boundary>
       </SelectedWalletProvider>
-    </QueryClientProvider>
+    </QueryProvider>
   ))
 
   .add('Step 1, notStaked ', () => (
-    <QueryClientProvider client={new QueryClient()}>
+    <QueryProvider>
       <SelectedWalletProvider
         wallet={{
           ...mockWallet,
@@ -64,78 +63,162 @@ storiesOf('Catalyst', module)
           <Step1 setPin={action('setPin')} />
         </Boundary>
       </SelectedWalletProvider>
-    </QueryClientProvider>
+    </QueryProvider>
   ))
 
   .add('Step 2', () => (
-    <QueryClientProvider client={new QueryClient()}>
+    <QueryProvider>
       <SelectedWalletProvider wallet={mockWallet}>
         <Step2 pin="1234" />
       </SelectedWalletProvider>
-    </QueryClientProvider>
+    </QueryProvider>
   ))
 
-  .add('Step 3', () => (
-    <QueryClientProvider client={new QueryClient()}>
-      <SelectedWalletProvider wallet={mockWallet}>
+  .add('Step 3, loading', () => (
+    <QueryProvider>
+      <SelectedWalletProvider
+        wallet={{
+          ...mockWallet,
+          createVotingRegTx: (...args) => {
+            action('createVotingRegTx')(...args)
+            return new Promise(() => null)
+          },
+        }}
+      >
         <Step3 pin="1234" setVotingRegTxData={action('setVotingRegTxData')} />
       </SelectedWalletProvider>
-    </QueryClientProvider>
+    </QueryProvider>
+  ))
+  .add('Step 3, error', () => (
+    <QueryProvider>
+      <SelectedWalletProvider
+        wallet={{
+          ...mockWallet,
+          createVotingRegTx: (...args) => {
+            action('createVotingRegTx')(...args)
+            return Promise.reject(new Error('createVotingRegTx: error message'))
+          },
+        }}
+      >
+        <Step3 pin="1234" setVotingRegTxData={action('setVotingRegTxData')} />
+      </SelectedWalletProvider>
+    </QueryProvider>
+  ))
+  .add('Step 3, success', () => (
+    <QueryProvider>
+      <SelectedWalletProvider
+        wallet={{
+          ...mockWallet,
+          createVotingRegTx: (...args) => {
+            action('createVotingRegTx')(...args)
+            return Promise.resolve(mockYoroiTx)
+          },
+        }}
+      >
+        <Step3 pin="1234" setVotingRegTxData={action('setVotingRegTxData')} />
+      </SelectedWalletProvider>
+    </QueryProvider>
+  ))
+
+  .add('Step 3, hw, loading', () => (
+    <QueryProvider>
+      <SelectedWalletProvider
+        wallet={{
+          ...mockHwWallet,
+          createVotingRegTx: (...args) => {
+            action('createVotingRegTx')(...args)
+            return new Promise(() => null)
+          },
+        }}
+      >
+        <Step3 pin="1234" setVotingRegTxData={action('setVotingRegTxData')} />
+      </SelectedWalletProvider>
+    </QueryProvider>
+  ))
+  .add('Step 3, hw, error', () => (
+    <QueryProvider>
+      <SelectedWalletProvider
+        wallet={{
+          ...mockHwWallet,
+          createVotingRegTx: (...args) => {
+            action('createVotingRegTx')(...args)
+            return Promise.reject(new Error('createVotingRegTx: error message'))
+          },
+        }}
+      >
+        <Step3 pin="1234" setVotingRegTxData={action('setVotingRegTxData')} />
+      </SelectedWalletProvider>
+    </QueryProvider>
+  ))
+  .add('Step 3, hw, success', () => (
+    <QueryProvider>
+      <SelectedWalletProvider
+        wallet={{
+          ...mockHwWallet,
+          createVotingRegTx: (...args) => {
+            action('createVotingRegTx')(...args)
+            return Promise.resolve(mockYoroiTx)
+          },
+        }}
+      >
+        <Step3 pin="1234" setVotingRegTxData={action('setVotingRegTxData')} />
+      </SelectedWalletProvider>
+    </QueryProvider>
   ))
 
   .add('Step 4, password', () => (
-    <QueryClientProvider client={new QueryClient()}>
+    <QueryProvider>
       <SelectedWalletProvider wallet={mockWallet}>
         <Step4 pin="1234" setVotingRegTxData={action('setVotingRegTxData')} />
       </SelectedWalletProvider>
-    </QueryClientProvider>
+    </QueryProvider>
   ))
 
   .add('Step 4, hw', () => (
-    <QueryClientProvider client={new QueryClient()}>
+    <QueryProvider>
       <SelectedWalletProvider wallet={mockHwWallet}>
         <Step4 pin="1234" setVotingRegTxData={action('setVotingRegTxData')} />
       </SelectedWalletProvider>
-    </QueryClientProvider>
+    </QueryProvider>
   ))
 
   .add('Step 4, os', () => (
-    <QueryClientProvider client={new QueryClient()}>
+    <QueryProvider>
       <SelectedWalletProvider wallet={mockOsWallet}>
         <Step4 pin="1234" setVotingRegTxData={action('setVotingRegTxData')} />
       </SelectedWalletProvider>
-    </QueryClientProvider>
+    </QueryProvider>
   ))
 
   .add('Step 5, password', () => (
-    <QueryClientProvider client={new QueryClient()}>
+    <QueryProvider>
       <SelectedWalletProvider wallet={mockWallet}>
         <Step5 yoroiUnsignedTx={mockYoroiTx} />
       </SelectedWalletProvider>
-    </QueryClientProvider>
+    </QueryProvider>
   ))
 
   .add('Step 5, hw', () => (
-    <QueryClientProvider client={new QueryClient()}>
+    <QueryProvider>
       <SelectedWalletProvider wallet={mockHwWallet}>
         <Step5 yoroiUnsignedTx={mockYoroiTx} />
       </SelectedWalletProvider>
-    </QueryClientProvider>
+    </QueryProvider>
   ))
 
   .add('Step 5, os', () => (
-    <QueryClientProvider client={new QueryClient()}>
+    <QueryProvider>
       <SelectedWalletProvider wallet={mockOsWallet}>
         <Step5 yoroiUnsignedTx={mockYoroiTx} />
       </SelectedWalletProvider>
-    </QueryClientProvider>
+    </QueryProvider>
   ))
 
   .add('Step 6', () => <Step6 catalystSKHexEncrypted="catalystSKHexEncrypted" />)
   .add('CatalystBackupCheckModal', () => (
-    <QueryClientProvider client={new QueryClient()}>
+    <QueryProvider>
       <WithModalProps>
         {(modalProps) => <CatalystBackupCheckModal {...modalProps} onConfirm={action('onConfirm')} />}
       </WithModalProps>
-    </QueryClientProvider>
+    </QueryProvider>
   ))
