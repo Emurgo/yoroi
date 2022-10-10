@@ -80,14 +80,10 @@ export const useUtxos = (
   })
 
   const netInfo = useNetInfo()
-  const onlineRef = React.useRef()
-
   React.useEffect(() => {
     const isOnline = netInfo.type !== 'none' && netInfo.type !== 'unknown'
-    if (onlineRef.current !== isOnline) {
-      refetch()
-    }
-  }, [netInfo, refetch])
+    if (isOnline) refetch()
+  }, [netInfo.type, refetch])
 
   React.useEffect(() => wallet.subscribe(() => refetch()), [refetch, wallet])
 
