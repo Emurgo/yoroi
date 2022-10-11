@@ -178,12 +178,7 @@ export interface WalletInterface {
     defaultAsset: DefaultAsset,
   ): Promise<YoroiUnsignedTx>
 
-  createVotingRegTx(
-    utxos: Array<RawUtxo>,
-    catalystPrivateKey: string,
-    defaultAsset: DefaultAsset,
-    decryptedKey: string | undefined,
-  ): Promise<YoroiUnsignedTx>
+  createVotingRegTx(): Promise<{votingRegTx: YoroiUnsignedTx; votingKeyEncrypted: string}>
 
   createWithdrawalTx(
     utxos: Array<RawUtxo>,

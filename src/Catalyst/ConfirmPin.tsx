@@ -1,4 +1,3 @@
-import {useNavigation} from '@react-navigation/native'
 import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View} from 'react-native'
@@ -7,42 +6,24 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {PinInputKeyboard, ProgressStep, Spacer} from '../components'
 import {errorMessages} from '../i18n/global-messages'
 import {showErrorDialog} from '../legacy/actions'
-import {CatalystRouteNavigation} from '../navigation'
-import {useSelectedWallet} from '../SelectedWallet'
 import {Description, PinBox, Row, Title} from './components'
-import {useCreateVotingRegTx, VotingRegTxData} from './hooks'
 
 const PIN_LENGTH = 4
 
 type Props = {
   pin: string
-  setVotingRegTxData: (votingRegTxData?: VotingRegTxData) => void
+  onNext: () => void
 }
-export const Step3 = ({pin, setVotingRegTxData}: Props) => {
+export const ConfirmPin = ({pin, onNext}: Props) => {
   const intl = useIntl()
   const strings = useStrings()
-  const navigation = useNavigation<CatalystRouteNavigation>()
-  const wallet = useSelectedWallet()
-  const {createVotingRegTx} = useCreateVotingRegTx({wallet})
   const [confirmPin, setConfirmPin] = useState('')
 
   const pinChange = (enteredPin: string) => {
     setConfirmPin(enteredPin)
-    if (enteredPin.length === 4) {
+    if (enteredPin.length === PIN_LENGTH) {
       if (pin === enteredPin) {
-        if (wallet.isHW) {
-          createVotingRegTx(
-            {pin},
-            {
-              onSuccess: (votingRegTxData) => {
-                setVotingRegTxData(votingRegTxData)
-                navigation.navigate('catalyst-transaction')
-              },
-            },
-          )
-        } else {
-          navigation.navigate('catalyst-generate-trx')
-        }
+        onNext()
       } else {
         showErrorDialog(errorMessages.incorrectPin, intl)
       }

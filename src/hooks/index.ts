@@ -339,6 +339,31 @@ export const useWithdrawalTx = (
   }
 }
 
+export type VotingRegTxAndEncryptedKey = {
+  votingRegTx: YoroiUnsignedTx
+  votingKeyEncrypted: string
+}
+
+export const useVotingRegTx = (
+  wallet: YoroiWallet,
+  options?: UseQueryOptions<VotingRegTxAndEncryptedKey, Error, VotingRegTxAndEncryptedKey, [string, 'voting-reg-tx']>,
+) => {
+  const query = useQuery({
+    ...options,
+    suspense: true,
+    useErrorBoundary: false,
+    cacheTime: 0,
+
+    queryKey: [wallet.id, 'voting-reg-tx'],
+    queryFn: async () => wallet.createVotingRegTx(),
+  })
+
+  return {
+    ...query,
+    ...query.data,
+  }
+}
+
 export const useSignWithPasswordAndSubmitTx = (
   {wallet, storage}: {wallet: YoroiWallet; storage: typeof KeyStore},
   options?: {

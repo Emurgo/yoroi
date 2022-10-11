@@ -8,23 +8,19 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Icon, ProgressStep, Spacer, Text} from '../components'
 import {confirmationMessages} from '../i18n/global-messages'
-import {useWalletNavigation} from '../navigation'
 import {COLORS} from '../theme'
-import {CatalystBackupCheckModal} from './CatalystBackupCheckModal'
 import {Actions, Description, Title} from './components'
+import {useCountdown} from './hooks'
+import {VotingRegistrationBackupCheckModal} from './VotingRegistrationBackupCheckModal'
 
 const {FlagSecure} = NativeModules
 
-export const Step6 = ({catalystSKHexEncrypted}: {catalystSKHexEncrypted: string}) => {
+export const QrCode = ({catalystSKHexEncrypted, onNext}: {catalystSKHexEncrypted: string; onNext: () => void}) => {
   useBlockGoBack()
   const strings = useStrings()
-  const {resetToTxHistory} = useWalletNavigation()
-  const [countDown, setCountDown] = useState<number>(5)
-  const [showBackupWarningModal, setShowBackupWarningModal] = useState(false)
 
-  useEffect(() => {
-    countDown > 0 && setTimeout(() => setCountDown(countDown - 1), 1000)
-  }, [countDown])
+  const [showBackupWarningModal, setShowBackupWarningModal] = useState(false)
+  const countdown = useCountdown()
 
   useFocusEffect(
     // eslint-disable-next-line consistent-return
@@ -84,17 +80,15 @@ export const Step6 = ({catalystSKHexEncrypted}: {catalystSKHexEncrypted: string}
       <Actions>
         <Button
           onPress={() => setShowBackupWarningModal(true)}
-          title={countDown !== 0 ? countDown.toString() : strings.completeButton}
-          disabled={countDown !== 0}
+          title={countdown !== 0 ? countdown.toString() : strings.completeButton}
+          disabled={countdown !== 0}
         />
       </Actions>
 
-      <CatalystBackupCheckModal
+      <VotingRegistrationBackupCheckModal
         visible={showBackupWarningModal}
         onRequestClose={() => setShowBackupWarningModal(false)}
-        onConfirm={() => {
-          resetToTxHistory()
-        }}
+        onConfirm={() => onNext()}
       />
     </SafeAreaView>
   )

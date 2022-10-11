@@ -6,9 +6,9 @@ import {Image, Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 're
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import SupportImage from '../assets/img/icon/shape.png'
-import {CatalystNavigator} from '../Catalyst/CatalystNavigator'
 import {useCanVote} from '../Catalyst/hooks'
 import {InsufficientFundsModal} from '../Catalyst/InsufficientFundsModal'
+import {VotingRegistration} from '../Catalyst/VotingRegistration'
 import {Icon, Spacer, Text} from '../components'
 import {useWalletMetas} from '../hooks'
 import {defaultStackNavigationOptions, useWalletNavigation} from '../navigation'
@@ -26,7 +26,7 @@ export const MenuNavigator = () => {
       screenOptions={{...defaultStackNavigationOptions, headerLeft: () => null}}
     >
       <MenuStack.Screen name="menu" component={Menu} options={{title: strings.menu}} />
-      <MenuStack.Screen name="catalyst-voting" component={CatalystNavigator} />
+      <MenuStack.Screen name="voting-registration" component={VotingRegistration} />
     </MenuStack.Navigator>
   )
 }
@@ -149,9 +149,9 @@ const useNavigateTo = () => {
     allWallets: () => navigation.navigate('app-root', {screen: 'wallet-selection'}),
     catalystVoting: () =>
       navigation.navigate('app-root', {
-        screen: 'catalyst-router',
+        screen: 'voting-registration',
         params: {
-          screen: 'catalyst-landing',
+          screen: 'download-catalyst',
         },
       }),
     settings: () => navigateToSettings(),

@@ -3,8 +3,8 @@ import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import {CatalystNavigator} from './Catalyst'
-import {Icon} from './components'
+import {VotingRegistration as VotingRegistration} from './Catalyst'
+import {Boundary, Icon} from './components'
 import {DashboardNavigator} from './Dashboard'
 import {isHaskellShelley} from './legacy/config'
 import {MenuNavigator} from './Menu'
@@ -82,7 +82,13 @@ export const WalletNavigator = () => (
     <Stack.Screen name="wallet-selection" component={WalletSelectionScreen} />
     <Stack.Screen name="main-wallet-routes" component={WalletTabNavigator} />
     <Stack.Screen name="settings" component={SettingsScreenNavigator} />
-    <Stack.Screen name="catalyst-router" component={CatalystNavigator} />
+    <Stack.Screen name="voting-registration">
+      {() => (
+        <Boundary>
+          <VotingRegistration />
+        </Boundary>
+      )}
+    </Stack.Screen>
   </Stack.Navigator>
 )
 
