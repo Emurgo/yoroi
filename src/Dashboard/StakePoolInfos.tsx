@@ -46,32 +46,34 @@ type Staked = {
   rewards: string
 }
 
+const getStakePoolInfo = async (wallet: YoroiWallet) => {
+  const stakingStatus = await wallet.getDelegationStatus()
+  if (!stakingStatus.isRegistered) return {status: 'not-registered'} as NotRegistered
+  if (!('poolKeyHash' in stakingStatus)) return {status: 'registered'} as Registered
+
+  const accountStates = await wallet.fetchAccountState()
+  const accountState = accountStates[wallet.rewardAddressHex]
+  if (!accountState) throw new Error('Account state not found')
+
+  const utxos = await wallet.fetchUTXOs()
+  const stakingUtxos = await wallet.getAllUtxosForKey(utxos)
+  const amount = sum([...stakingUtxos.map((utxo) => utxo.amount), accountState.remainingAmount])
+
+  return {
+    status: 'staked',
+    poolId: stakingStatus.poolKeyHash,
+    amount,
+    rewards: accountState.remainingAmount,
+  } as Staked
+}
+
 export const usePrefetchStakingInfo = (wallet: YoroiWallet) => {
   const queryClient = useQueryClient()
 
   useEffect(() => {
     queryClient.prefetchQuery({
       queryKey: [wallet.id, 'stakingInfo'],
-      queryFn: async () => {
-        const stakingStatus = await wallet.getDelegationStatus()
-        if (!stakingStatus.isRegistered) return {status: 'not-registered'} as NotRegistered
-        if (!('poolKeyHash' in stakingStatus)) return {status: 'registered'} as Registered
-
-        const accountStates = await wallet.fetchAccountState()
-        const accountState = accountStates[wallet.rewardAddressHex]
-        if (!accountState) throw new Error('Account state not found')
-
-        const utxos = await wallet.fetchUTXOs()
-        const stakingUtxos = await wallet.getAllUtxosForKey(utxos)
-        const amount = sum([...stakingUtxos.map((utxo) => utxo.amount), accountState.remainingAmount])
-
-        return {
-          status: 'staked',
-          poolId: stakingStatus.poolKeyHash,
-          amount,
-          rewards: accountState.remainingAmount,
-        } as Staked
-      },
+      queryFn: () => getStakePoolInfo(wallet),
     })
   }, [queryClient, wallet])
 }
@@ -84,26 +86,7 @@ export const useStakingInfo = (
     ...options,
     retry: false,
     queryKey: [wallet.id, 'stakingInfo'],
-    queryFn: async () => {
-      const stakingStatus = await wallet.getDelegationStatus()
-      if (!stakingStatus.isRegistered) return {status: 'not-registered'} as NotRegistered
-      if (!('poolKeyHash' in stakingStatus)) return {status: 'registered'} as Registered
-
-      const accountStates = await wallet.fetchAccountState()
-      const accountState = accountStates[wallet.rewardAddressHex]
-      if (!accountState) throw new Error('Account state not found')
-
-      const utxos = await wallet.fetchUTXOs()
-      const stakingUtxos = await wallet.getAllUtxosForKey(utxos)
-      const amount = sum([...stakingUtxos.map((utxo) => utxo.amount), accountState.remainingAmount])
-
-      return {
-        status: 'staked',
-        poolId: stakingStatus.poolKeyHash,
-        amount,
-        rewards: accountState.remainingAmount,
-      } as Staked
-    },
+    queryFn: () => getStakePoolInfo(wallet),
   })
 
   React.useEffect(() => {

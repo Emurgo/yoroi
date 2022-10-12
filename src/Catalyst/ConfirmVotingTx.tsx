@@ -11,7 +11,7 @@ import {useVotingRegTx} from '../hooks'
 import {Instructions as HWInstructions} from '../HW'
 import {errorMessages, txLabels} from '../i18n/global-messages'
 import LocalizableError from '../i18n/LocalizableError'
-import {getDefaultAssetByNetworkId} from '../legacy/config'
+import {CONFIG, getDefaultAssetByNetworkId} from '../legacy/config'
 import {formatTokenWithSymbol} from '../legacy/format'
 import {useSelectedWallet} from '../SelectedWallet'
 import {Amounts} from '../yoroi-wallets/utils'
@@ -20,7 +20,7 @@ import {Actions, Description, Title} from './components'
 export const ConfirmVotingTx = ({onNext}: {onNext: () => void}) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
-  const [password, setPassword] = useState('')
+  const [password, setPassword] = useState(CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '')
   const [useUSB, setUseUSB] = useState<boolean>(false)
   const {votingRegTx} = useVotingRegTx(wallet)
 
