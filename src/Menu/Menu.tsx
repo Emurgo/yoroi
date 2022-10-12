@@ -9,6 +9,7 @@ import SupportImage from '../assets/img/icon/shape.png'
 import {useCanVote} from '../Catalyst/hooks'
 import {InsufficientFundsModal} from '../Catalyst/InsufficientFundsModal'
 import {Icon, Spacer, Text} from '../components'
+import {usePrefetchStakingInfo} from '../Dashboard/StakePoolInfos'
 import {useWalletMetas} from '../hooks'
 import {defaultStackNavigationOptions, useWalletNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
@@ -18,6 +19,8 @@ const MenuStack = createStackNavigator()
 
 export const MenuNavigator = () => {
   const strings = useStrings()
+  const wallet = useSelectedWallet()
+  usePrefetchStakingInfo(wallet)
 
   return (
     <MenuStack.Navigator

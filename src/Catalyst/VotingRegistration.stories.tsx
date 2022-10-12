@@ -13,6 +13,24 @@ import {QrCode} from './QrCode'
 import {VotingRegistrationBackupCheckModal} from './VotingRegistrationBackupCheckModal'
 
 storiesOf('Catalyst', module)
+  .add('DownloadCatalyst, loading', () => (
+    <QueryProvider>
+      <SelectedWalletProvider
+        wallet={{
+          ...mockWallet,
+          getDelegationStatus: async (...args) => {
+            action('getDelegationStatus')(...args)
+            return new Promise(() => null)
+          },
+        }}
+      >
+        <Boundary loading={{fallbackProps: {style: {flex: 1}}}}>
+          <DownloadCatalyst onNext={action('onNext')} />
+        </Boundary>
+      </SelectedWalletProvider>
+    </QueryProvider>
+  ))
+
   .add('DownloadCatalyst, staked', () => (
     <QueryProvider>
       <SelectedWalletProvider
@@ -39,7 +57,7 @@ storiesOf('Catalyst', module)
           },
         }}
       >
-        <Boundary>
+        <Boundary loading={{fallbackProps: {style: {flex: 1}}}}>
           <DownloadCatalyst onNext={action('onNext')} />
         </Boundary>
       </SelectedWalletProvider>
@@ -58,7 +76,7 @@ storiesOf('Catalyst', module)
           },
         }}
       >
-        <Boundary>
+        <Boundary loading={{fallbackProps: {style: {flex: 1}}}}>
           <DownloadCatalyst onNext={action('onNext')} />
         </Boundary>
       </SelectedWalletProvider>
@@ -80,7 +98,7 @@ storiesOf('Catalyst', module)
           },
         }}
       >
-        <Boundary>
+        <Boundary loading={{fallbackProps: {style: {flex: 1}}}}>
           <ConfirmVotingTx onNext={action('onNext')} />
         </Boundary>
       </SelectedWalletProvider>
@@ -98,7 +116,7 @@ storiesOf('Catalyst', module)
           },
         }}
       >
-        <Boundary>
+        <Boundary loading={{fallbackProps: {style: {flex: 1}}}}>
           <ConfirmVotingTx onNext={action('onNext')} />
         </Boundary>
       </SelectedWalletProvider>
@@ -119,7 +137,9 @@ storiesOf('Catalyst', module)
           },
         }}
       >
-        <ConfirmVotingTx onNext={action('onNext')} />
+        <Boundary loading={{fallbackProps: {style: {flex: 1}}}}>
+          <ConfirmVotingTx onNext={action('onNext')} />
+        </Boundary>
       </SelectedWalletProvider>
     </QueryProvider>
   ))
@@ -138,7 +158,7 @@ storiesOf('Catalyst', module)
           },
         }}
       >
-        <Boundary>
+        <Boundary loading={{fallbackProps: {style: {flex: 1}}}}>
           <ConfirmVotingTx onNext={action('onNext')} />
         </Boundary>
       </SelectedWalletProvider>
@@ -159,7 +179,7 @@ storiesOf('Catalyst', module)
           },
         }}
       >
-        <Boundary>
+        <Boundary loading={{fallbackProps: {style: {flex: 1}}}}>
           <ConfirmVotingTx onNext={action('onNext')} />
         </Boundary>
       </SelectedWalletProvider>
@@ -177,7 +197,7 @@ storiesOf('Catalyst', module)
           },
         }}
       >
-        <Boundary>
+        <Boundary loading={{fallbackProps: {style: {flex: 1}}}}>
           <QrCode onNext={action('onNext')} />
         </Boundary>
       </SelectedWalletProvider>
@@ -194,7 +214,7 @@ storiesOf('Catalyst', module)
           },
         }}
       >
-        <Boundary>
+        <Boundary loading={{fallbackProps: {style: {flex: 1}}}}>
           <QrCode onNext={action('onNext')} />
         </Boundary>
       </SelectedWalletProvider>
@@ -214,7 +234,7 @@ storiesOf('Catalyst', module)
           },
         }}
       >
-        <Boundary>
+        <Boundary loading={{fallbackProps: {style: {flex: 1}}}}>
           <QrCode onNext={action('onNext')} />
         </Boundary>
       </SelectedWalletProvider>

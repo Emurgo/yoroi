@@ -40,7 +40,7 @@ export const VotingRegistration = () => {
     >
       <Stack.Screen name="download-catalyst">
         {() => (
-          <Boundary>
+          <Boundary loading={{fallbackProps: {style: {flex: 1}}}}>
             <DownloadCatalyst onNext={() => navigation.navigate('display-pin')} />
           </Boundary>
         )}

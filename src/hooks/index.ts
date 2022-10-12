@@ -348,7 +348,7 @@ export const usePrefetchVotingRegTx = (wallet: YoroiWallet) => {
   const queryClient = useQueryClient()
 
   React.useEffect(() => {
-    queryClient.prefetchQuery({
+    queryClient.prefetchQuery<VotingRegTxAndEncryptedKey, Error>({
       queryKey: [wallet.id, 'voting-reg-tx'],
       queryFn: async () => wallet.createVotingRegTx(),
     })
