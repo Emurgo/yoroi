@@ -358,6 +358,7 @@ export const usePrefetchVotingRegTx = (wallet: YoroiWallet) => {
 export const useVotingRegTx = (wallet: YoroiWallet, options?: UseQueryOptions<VotingRegTxAndEncryptedKey, Error>) => {
   const query = useQuery({
     ...options,
+    cacheTime: 0,
     suspense: true,
     queryKey: [wallet.id, 'voting-reg-tx'] as QueryKey,
     queryFn: async () => wallet.createVotingRegTx(),

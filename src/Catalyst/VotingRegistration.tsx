@@ -56,7 +56,7 @@ export const VotingRegistration = () => {
 
       <Stack.Screen name="confirm-tx">
         {() => (
-          <Boundary>
+          <Boundary loading={{fallbackProps: {style: {flex: 1}}}}>
             <ConfirmVotingTx onNext={() => navigation.navigate('qr-code')} />
           </Boundary>
         )}
@@ -64,7 +64,7 @@ export const VotingRegistration = () => {
 
       <Stack.Screen name="qr-code" options={{...defaultStackNavigationOptions, headerLeft: () => null}}>
         {() => (
-          <Boundary>
+          <Boundary loading={{fallbackProps: {style: {flex: 1}}}}>
             <QrCode onNext={() => resetToTxHistory()} />
           </Boundary>
         )}
