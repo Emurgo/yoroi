@@ -7,21 +7,22 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {OfflineBanner, ProgressStep, Spacer, TextInput} from '../components'
 import {ConfirmTx} from '../components/ConfirmTx'
+import {useVotingRegTx} from '../hooks'
 import {Instructions as HWInstructions} from '../HW'
-import {txLabels} from '../i18n/global-messages'
+import {errorMessages, txLabels} from '../i18n/global-messages'
 import LocalizableError from '../i18n/LocalizableError'
 import {getDefaultAssetByNetworkId} from '../legacy/config'
 import {formatTokenWithSymbol} from '../legacy/format'
 import {useSelectedWallet} from '../SelectedWallet'
-import {YoroiUnsignedTx} from '../yoroi-wallets/types'
 import {Amounts} from '../yoroi-wallets/utils'
 import {Actions, Description, Title} from './components'
 
-export const ConfirmVotingTx = ({votingRegTx, onNext}: {votingRegTx: YoroiUnsignedTx; onNext: () => void}) => {
+export const ConfirmVotingTx = ({onNext}: {onNext: () => void}) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const [password, setPassword] = useState('')
   const [useUSB, setUseUSB] = useState<boolean>(false)
+  const {votingRegTx} = useVotingRegTx(wallet)
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
@@ -123,5 +124,7 @@ const useStrings = () => {
     description: intl.formatMessage(messages.description),
     bioAuthInstructions: intl.formatMessage(messages.bioAuthInstructions),
     password: intl.formatMessage(txLabels.password),
+    errorTitle: intl.formatMessage(errorMessages.generalTxError.title),
+    generalErrorMessage: intl.formatMessage(errorMessages.generalTxError.message),
   }
 }

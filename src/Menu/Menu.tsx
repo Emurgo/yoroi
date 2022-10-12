@@ -8,7 +8,6 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import SupportImage from '../assets/img/icon/shape.png'
 import {useCanVote} from '../Catalyst/hooks'
 import {InsufficientFundsModal} from '../Catalyst/InsufficientFundsModal'
-import {VotingRegistration} from '../Catalyst/VotingRegistration'
 import {Icon, Spacer, Text} from '../components'
 import {useWalletMetas} from '../hooks'
 import {defaultStackNavigationOptions, useWalletNavigation} from '../navigation'
@@ -22,11 +21,10 @@ export const MenuNavigator = () => {
 
   return (
     <MenuStack.Navigator
-      initialRouteName="menu"
+      initialRouteName="_menu"
       screenOptions={{...defaultStackNavigationOptions, headerLeft: () => null}}
     >
-      <MenuStack.Screen name="menu" component={Menu} options={{title: strings.menu}} />
-      <MenuStack.Screen name="voting-registration" component={VotingRegistration} />
+      <MenuStack.Screen name="_menu" component={Menu} options={{title: strings.menu}} />
     </MenuStack.Navigator>
   )
 }

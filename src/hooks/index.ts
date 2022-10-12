@@ -344,24 +344,25 @@ export type VotingRegTxAndEncryptedKey = {
   votingKeyEncrypted: string
 }
 
-export const useVotingRegTx = (
-  wallet: YoroiWallet,
-  options?: UseQueryOptions<VotingRegTxAndEncryptedKey, Error, VotingRegTxAndEncryptedKey, [string, 'voting-reg-tx']>,
-) => {
+export const usePrefetchVotingRegTx = (wallet: YoroiWallet) => {
+  const queryClient = useQueryClient()
+
+  React.useEffect(() => {
+    queryClient.prefetchQuery([wallet.id, 'voting-reg-tx'])
+  }, [queryClient, wallet])
+}
+
+export const useVotingRegTx = (wallet: YoroiWallet, options?: UseQueryOptions<VotingRegTxAndEncryptedKey, Error>) => {
   const query = useQuery({
     ...options,
     suspense: true,
-    useErrorBoundary: false,
-    cacheTime: 0,
-
-    queryKey: [wallet.id, 'voting-reg-tx'],
+    queryKey: [wallet.id, 'voting-reg-tx'] as QueryKey,
     queryFn: async () => wallet.createVotingRegTx(),
   })
 
-  return {
-    ...query,
-    ...query.data,
-  }
+  if (!query.data) throw new Error('invalid state')
+
+  return query.data
 }
 
 export const useSignWithPasswordAndSubmitTx = (

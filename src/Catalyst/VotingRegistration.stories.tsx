@@ -46,7 +46,7 @@ storiesOf('Catalyst', module)
     </QueryProvider>
   ))
 
-  .add('DownloadCatalyst, notStaked ', () => (
+  .add('DownloadCatalyst, not staked ', () => (
     <QueryProvider>
       <SelectedWalletProvider
         wallet={{
@@ -65,47 +65,162 @@ storiesOf('Catalyst', module)
     </QueryProvider>
   ))
 
-  .add('DisplayPin', () => (
+  .add('DisplayPin', () => <DisplayPin pin="1234" onNext={action('onNext')} />)
+
+  .add('ConfirmPin', () => <ConfirmPin pin="1234" onNext={action('onNext')} />)
+
+  .add('ConfirmVotingTx, loading', () => (
     <QueryProvider>
-      <SelectedWalletProvider wallet={mockWallet}>
-        <DisplayPin pin="1234" onNext={action('onNext')} />
+      <SelectedWalletProvider
+        wallet={{
+          ...mockWallet,
+          createVotingRegTx: (...args) => {
+            action('createVotingRegTx')(...args)
+            return new Promise(() => null) // never resolves
+          },
+        }}
+      >
+        <Boundary>
+          <ConfirmVotingTx onNext={action('onNext')} />
+        </Boundary>
       </SelectedWalletProvider>
     </QueryProvider>
   ))
 
-  .add('ConfirmPin', () => (
+  .add('ConfirmVotingTx, error', () => (
     <QueryProvider>
-      <SelectedWalletProvider wallet={mockWallet}>
-        <ConfirmPin pin="1234" onNext={action('onNext')} />
+      <SelectedWalletProvider
+        wallet={{
+          ...mockWallet,
+          createVotingRegTx: (...args) => {
+            action('createVotingRegTx')(...args)
+            return Promise.reject(new Error('createVotingRegTx: error message'))
+          },
+        }}
+      >
+        <Boundary>
+          <ConfirmVotingTx onNext={action('onNext')} />
+        </Boundary>
       </SelectedWalletProvider>
     </QueryProvider>
   ))
 
   .add('ConfirmVotingTx, password', () => (
     <QueryProvider>
-      <SelectedWalletProvider wallet={mockWallet}>
-        <ConfirmVotingTx votingRegTx={mockYoroiTx} onNext={action('onNext')} />
+      <SelectedWalletProvider
+        wallet={{
+          ...mockWallet,
+          createVotingRegTx: async (...args) => {
+            action('createVotingRegTx')(...args)
+            return {
+              votingRegTx: mockYoroiTx,
+              votingKeyEncrypted: 'votingKeyEncrypted',
+            }
+          },
+        }}
+      >
+        <ConfirmVotingTx onNext={action('onNext')} />
       </SelectedWalletProvider>
     </QueryProvider>
   ))
 
   .add('ConfirmVotingTx, hw', () => (
     <QueryProvider>
-      <SelectedWalletProvider wallet={mockHwWallet}>
-        <ConfirmVotingTx votingRegTx={mockYoroiTx} onNext={action('onNext')} />
+      <SelectedWalletProvider
+        wallet={{
+          ...mockHwWallet,
+          createVotingRegTx: async (...args) => {
+            action('createVotingRegTx')(...args)
+            return {
+              votingRegTx: mockYoroiTx,
+              votingKeyEncrypted: 'votingKeyEncrypted',
+            }
+          },
+        }}
+      >
+        <Boundary>
+          <ConfirmVotingTx onNext={action('onNext')} />
+        </Boundary>
       </SelectedWalletProvider>
     </QueryProvider>
   ))
 
   .add('ConfirmVotingTx, os', () => (
     <QueryProvider>
-      <SelectedWalletProvider wallet={mockOsWallet}>
-        <ConfirmVotingTx votingRegTx={mockYoroiTx} onNext={action('onNext')} />
+      <SelectedWalletProvider
+        wallet={{
+          ...mockOsWallet,
+          createVotingRegTx: async (...args) => {
+            action('createVotingRegTx')(...args)
+            return {
+              votingRegTx: mockYoroiTx,
+              votingKeyEncrypted: 'votingKeyEncrypted',
+            }
+          },
+        }}
+      >
+        <Boundary>
+          <ConfirmVotingTx onNext={action('onNext')} />
+        </Boundary>
       </SelectedWalletProvider>
     </QueryProvider>
   ))
 
-  .add('QrCode', () => <QrCode catalystSKHexEncrypted="catalystSKHexEncrypted" onNext={action('onNext')} />)
+  .add('QrCode, loading', () => (
+    <QueryProvider>
+      <SelectedWalletProvider
+        wallet={{
+          ...mockWallet,
+          createVotingRegTx: (...args) => {
+            action('createVotingRegTx')(...args)
+            return new Promise(() => null) // never resolves
+          },
+        }}
+      >
+        <Boundary>
+          <QrCode onNext={action('onNext')} />
+        </Boundary>
+      </SelectedWalletProvider>
+    </QueryProvider>
+  ))
+  .add('QrCode, error', () => (
+    <QueryProvider>
+      <SelectedWalletProvider
+        wallet={{
+          ...mockWallet,
+          createVotingRegTx: (...args) => {
+            action('createVotingRegTx')(...args)
+            return Promise.reject(new Error('createVotingRegTx: error message'))
+          },
+        }}
+      >
+        <Boundary>
+          <QrCode onNext={action('onNext')} />
+        </Boundary>
+      </SelectedWalletProvider>
+    </QueryProvider>
+  ))
+  .add('QrCode', () => (
+    <QueryProvider>
+      <SelectedWalletProvider
+        wallet={{
+          ...mockWallet,
+          createVotingRegTx: async (...args) => {
+            action('createVotingRegTx')(...args)
+            return {
+              votingRegTx: mockYoroiTx,
+              votingKeyEncrypted: 'votingKeyEncrypted',
+            }
+          },
+        }}
+      >
+        <Boundary>
+          <QrCode onNext={action('onNext')} />
+        </Boundary>
+      </SelectedWalletProvider>
+    </QueryProvider>
+  ))
+
   .add('CatalystBackupCheckModal', () => (
     <QueryProvider>
       <WithModalProps>

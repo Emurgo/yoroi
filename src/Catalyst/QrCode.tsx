@@ -7,7 +7,9 @@ import QRCodeSVG from 'react-native-qrcode-svg'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Icon, ProgressStep, Spacer, Text} from '../components'
+import {useVotingRegTx} from '../hooks'
 import {confirmationMessages} from '../i18n/global-messages'
+import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
 import {Actions, Description, Title} from './components'
 import {useCountdown} from './hooks'
@@ -15,9 +17,11 @@ import {VotingRegistrationBackupCheckModal} from './VotingRegistrationBackupChec
 
 const {FlagSecure} = NativeModules
 
-export const QrCode = ({catalystSKHexEncrypted, onNext}: {catalystSKHexEncrypted: string; onNext: () => void}) => {
+export const QrCode = ({onNext}: {onNext: () => void}) => {
   useBlockGoBack()
   const strings = useStrings()
+  const wallet = useSelectedWallet()
+  const {votingKeyEncrypted} = useVotingRegTx(wallet)
 
   const [showBackupWarningModal, setShowBackupWarningModal] = useState(false)
   const countdown = useCountdown()
@@ -39,9 +43,7 @@ export const QrCode = ({catalystSKHexEncrypted, onNext}: {catalystSKHexEncrypted
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
       <ProgressStep currentStep={6} totalSteps={6} />
 
-      <ScrollView bounces={false} contentContainerStyle={styles.contentContainer}>
-        <Spacer height={48} />
-
+      <ScrollView bounces={false} style={{paddingTop: 16}} contentContainerStyle={styles.contentContainer}>
         <Title>{strings.subTitle}</Title>
 
         <Spacer height={16} />
@@ -64,16 +66,16 @@ export const QrCode = ({catalystSKHexEncrypted, onNext}: {catalystSKHexEncrypted
 
         <Spacer height={32} />
 
-        <QRCode text={catalystSKHexEncrypted} />
+        <QRCode text={votingKeyEncrypted} />
 
         <Spacer height={32} />
 
         <Text>{strings.secretCode}</Text>
 
         <SecretCodeBox>
-          <Text style={{flex: 1}}>{catalystSKHexEncrypted}</Text>
+          <Text style={{flex: 1}}>{votingKeyEncrypted}</Text>
           <Spacer width={16} />
-          <CopyButton text={catalystSKHexEncrypted} />
+          <CopyButton text={votingKeyEncrypted} />
         </SecretCodeBox>
       </ScrollView>
 

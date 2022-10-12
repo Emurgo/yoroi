@@ -678,7 +678,6 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
       const txOptions = {}
       const nonce = absSlotNumber.toNumber()
       const chainNetworkConfig = Number.parseInt(this._getChainNetworkId(), 10)
-      const signer = (_hashedMetadata) => Promise.resolve('0'.repeat(64 * 2))
 
       const addressedUtxos = this.asAddressedUtxo(await utxos)
 
@@ -694,7 +693,6 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
         txOptions,
         nonce,
         chainNetworkConfig,
-        signer,
       )
 
       const votingRegistration: {
