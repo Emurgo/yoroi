@@ -15821,6 +15821,11 @@ react-native-screens@3.1.0:
   resolved "https://registry.yarnpkg.com/react-native-screens/-/react-native-screens-3.1.0.tgz#3b516528b54ab8108bf230197fa6e65c7c4a062a"
   integrity sha512-2nCwfminzGfM61Py4PID5hJVV4zGhbYD6TIv16Xj6M0MMNWr9esqIlI94NymY7B12SToXMb5duKU/IR5iBCykg==
 
+react-native-skeleton-placeholder@^5.2.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/react-native-skeleton-placeholder/-/react-native-skeleton-placeholder-5.2.0.tgz#eace7e6ec1a2637e0e19d20210e4d36466c0af4d"
+  integrity sha512-Usy3nvWeyODHkhV+kpsZGnXE/7gyxazk2sKhr7CgFgm3VGl549TPeLBZ1YK8AM46/uFxLd+CJhQ6saJDVhPUmQ==
+
 react-native-storybook-loader@^1.8.1:
   version "1.8.1"
   resolved "https://registry.yarnpkg.com/react-native-storybook-loader/-/react-native-storybook-loader-1.8.1.tgz#5d6b3c51b0b85a3d676e9fafa95c19553a9ef918"
