@@ -6,8 +6,8 @@
 function loadStories() {
 	require('../src/BiometricAuth/BiometricAuthScreen.stories');
 	require('../src/BiometricAuth/FingerprintScreenBase/FingerprintScreenBase.stories');
-	require('../src/Catalyst/Catalyst.stories');
 	require('../src/Catalyst/VotingBanner.stories');
+	require('../src/Catalyst/VotingRegistration.stories');
 	require('../src/Dashboard/Dashboard.stories');
 	require('../src/Dashboard/StakePoolInfos.stories');
 	require('../src/Dashboard/WithdrawStakingRewards/ConfirmTx/ConfirmTxWithHW.stories');
@@ -105,8 +105,8 @@ function loadStories() {
 const stories = [
 	'../src/BiometricAuth/BiometricAuthScreen.stories',
 	'../src/BiometricAuth/FingerprintScreenBase/FingerprintScreenBase.stories',
-	'../src/Catalyst/Catalyst.stories',
 	'../src/Catalyst/VotingBanner.stories',
+	'../src/Catalyst/VotingRegistration.stories',
 	'../src/Dashboard/Dashboard.stories',
 	'../src/Dashboard/StakePoolInfos.stories',
 	'../src/Dashboard/WithdrawStakingRewards/ConfirmTx/ConfirmTxWithHW.stories',

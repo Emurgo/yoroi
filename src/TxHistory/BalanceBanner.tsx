@@ -27,14 +27,15 @@ export const BalanceBanner = () => {
       <Spacer height={10} />
 
       <TouchableOpacity onPress={() => setPrivacyMode(!privacyMode)} style={styles.button}>
-        <Row>
-          <Balance privacyMode={privacyMode} />
-        </Row>
-        <Row>
-          <Boundary loading={{fallbackProps: {size: 'small'}}} error={{size: 'inline'}}>
+        <Boundary loading={{fallbackProps: {size: 'small'}}} error={{size: 'inline'}}>
+          <Row>
+            <Balance privacyMode={privacyMode} />
+          </Row>
+
+          <Row>
             <PairedBalance privacyMode={privacyMode} />
-          </Boundary>
-        </Row>
+          </Row>
+        </Boundary>
       </TouchableOpacity>
     </View>
   )

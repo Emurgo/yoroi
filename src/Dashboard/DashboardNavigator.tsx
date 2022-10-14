@@ -33,7 +33,6 @@ export const DashboardNavigator = () => {
         options={{
           title: walletName,
           headerRight: () => <HeaderRight />,
-          headerRightContainerStyle: {paddingRight: 16},
         }}
       />
       <Stack.Screen //
@@ -68,5 +67,5 @@ const messages = defineMessages({
 const HeaderRight = () => {
   const {navigateToSettings} = useWalletNavigation()
 
-  return <SettingsButton onPress={() => navigateToSettings()} />
+  return <SettingsButton style={{paddingRight: 16}} onPress={() => navigateToSettings()} />
 }

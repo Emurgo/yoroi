@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
-import cryptoRandomString from 'crypto-random-string'
 import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Image, Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
@@ -12,33 +10,19 @@ import AppDownload from '../assets/img/pic-catalyst-step1.png'
 import {Button, ProgressStep, Spacer, StandardModal, Text} from '../components'
 import {useStakingInfo} from '../Dashboard/StakePoolInfos'
 import globalMessages, {confirmationMessages} from '../i18n/global-messages'
-import {CONFIG} from '../legacy/config'
 import {Logger} from '../legacy/logging'
-import {CatalystRouteNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
 import {Actions, Row} from './components'
 
 type Props = {
-  setPin: (pin: string) => void
+  onNext: () => void
 }
-export const Step1 = ({setPin}: Props) => {
+export const DownloadCatalyst = ({onNext}: Props) => {
   const strings = useStrings()
-  const navigation = useNavigation<CatalystRouteNavigation>()
   const wallet = useSelectedWallet()
   const {stakingInfo, isLoading} = useStakingInfo(wallet, {suspense: true})
   const isStaked = stakingInfo?.status === 'staked'
   const [showModal, setShowModal] = useState<boolean>(!isStaked)
-
-  useFocusEffect(
-    React.useCallback(() => {
-      if (CONFIG.DEBUG.PREFILL_FORMS) {
-        if (!__DEV__) throw new Error('using debug data in non-dev env')
-        setPin(CONFIG.DEBUG.CATALYST_PIN)
-      } else {
-        setPin(cryptoRandomString({length: 4, type: 'numeric'}))
-      }
-    }, [setPin]),
-  )
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
@@ -69,11 +53,7 @@ export const Step1 = ({setPin}: Props) => {
       </ScrollView>
 
       <Actions>
-        <Button
-          onPress={() => navigation.navigate('catalyst-generate-pin')}
-          title={strings.continueButton}
-          disabled={isLoading}
-        />
+        <Button onPress={() => onNext()} title={strings.continueButton} disabled={isLoading} />
       </Actions>
 
       <StandardModal

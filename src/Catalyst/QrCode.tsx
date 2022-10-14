@@ -7,24 +7,24 @@ import QRCodeSVG from 'react-native-qrcode-svg'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Icon, ProgressStep, Spacer, Text} from '../components'
+import {useVotingRegTx} from '../hooks'
 import {confirmationMessages} from '../i18n/global-messages'
-import {useWalletNavigation} from '../navigation'
+import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
-import {CatalystBackupCheckModal} from './CatalystBackupCheckModal'
 import {Actions, Description, Title} from './components'
+import {useCountdown} from './hooks'
+import {VotingRegistrationBackupCheckModal} from './VotingRegistrationBackupCheckModal'
 
 const {FlagSecure} = NativeModules
 
-export const Step6 = ({catalystSKHexEncrypted}: {catalystSKHexEncrypted: string}) => {
+export const QrCode = ({onNext}: {onNext: () => void}) => {
   useBlockGoBack()
   const strings = useStrings()
-  const {resetToTxHistory} = useWalletNavigation()
-  const [countDown, setCountDown] = useState<number>(5)
-  const [showBackupWarningModal, setShowBackupWarningModal] = useState(false)
+  const wallet = useSelectedWallet()
+  const {votingKeyEncrypted} = useVotingRegTx(wallet)
 
-  useEffect(() => {
-    countDown > 0 && setTimeout(() => setCountDown(countDown - 1), 1000)
-  }, [countDown])
+  const [showBackupWarningModal, setShowBackupWarningModal] = useState(false)
+  const countdown = useCountdown()
 
   useFocusEffect(
     // eslint-disable-next-line consistent-return
@@ -43,9 +43,7 @@ export const Step6 = ({catalystSKHexEncrypted}: {catalystSKHexEncrypted: string}
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
       <ProgressStep currentStep={6} totalSteps={6} />
 
-      <ScrollView bounces={false} contentContainerStyle={styles.contentContainer}>
-        <Spacer height={48} />
-
+      <ScrollView bounces={false} style={{paddingTop: 16}} contentContainerStyle={styles.contentContainer}>
         <Title>{strings.subTitle}</Title>
 
         <Spacer height={16} />
@@ -68,33 +66,31 @@ export const Step6 = ({catalystSKHexEncrypted}: {catalystSKHexEncrypted: string}
 
         <Spacer height={32} />
 
-        <QRCode text={catalystSKHexEncrypted} />
+        <QRCode text={votingKeyEncrypted} />
 
         <Spacer height={32} />
 
         <Text>{strings.secretCode}</Text>
 
         <SecretCodeBox>
-          <Text style={{flex: 1}}>{catalystSKHexEncrypted}</Text>
+          <Text style={{flex: 1}}>{votingKeyEncrypted}</Text>
           <Spacer width={16} />
-          <CopyButton text={catalystSKHexEncrypted} />
+          <CopyButton text={votingKeyEncrypted} />
         </SecretCodeBox>
       </ScrollView>
 
       <Actions>
         <Button
           onPress={() => setShowBackupWarningModal(true)}
-          title={countDown !== 0 ? countDown.toString() : strings.completeButton}
-          disabled={countDown !== 0}
+          title={countdown !== 0 ? countdown.toString() : strings.completeButton}
+          disabled={countdown !== 0}
         />
       </Actions>
 
-      <CatalystBackupCheckModal
+      <VotingRegistrationBackupCheckModal
         visible={showBackupWarningModal}
         onRequestClose={() => setShowBackupWarningModal(false)}
-        onConfirm={() => {
-          resetToTxHistory()
-        }}
+        onConfirm={() => onNext()}
       />
     </SafeAreaView>
   )
