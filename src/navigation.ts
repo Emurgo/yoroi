@@ -6,8 +6,7 @@ import {Platform} from 'react-native'
 import {HWDeviceInfo} from './legacy/ledgerUtils'
 import {COLORS} from './theme'
 import {NetworkId, WalletImplementationId, YoroiProvider} from './yoroi-wallets'
-import {Quantity, YoroiAmounts, YoroiUnsignedTx} from './yoroi-wallets/types'
-import type {RawUtxo} from './yoroi-wallets/types/other'
+import {YoroiUnsignedTx} from './yoroi-wallets/types'
 
 // prettier-ignore
 export const useUnsafeParams = <Params, >() => {
@@ -212,13 +211,6 @@ export type SettingsRouteNavigation = StackNavigationProp<SettingsStackRoutes>
 
 export type SendConfirmParams = {
   yoroiUnsignedTx: YoroiUnsignedTx
-  defaultAssetAmount: Quantity
-  address: string
-  balanceAfterTx: Quantity | null
-  availableAmount: Quantity
-  fee: Quantity | null
-  selectedTokens: YoroiAmounts
-  utxos: RawUtxo[]
 }
 export type SendRoutes = {
   'send-ada-main': undefined
