@@ -14,6 +14,7 @@ import {
   YoroiUnsignedTx,
 } from '../../src/yoroi-wallets/types'
 import {mockStorage} from './storage'
+import {mockTransaction} from './transaction'
 
 export const mockedWalletMeta: WalletMeta = {
   id: 'wallet-id',
@@ -160,6 +161,14 @@ export const mockWallet: YoroiWallet = {
   },
   sync: async (...args) => {
     action('sync')(...args)
+  },
+  getTransactions: async (txids: Array<string>) => {
+    action('getTransactions')(txids)
+    const txInfo = mockTransaction({id: txids[0]})
+
+    return {
+      [txInfo.id]: txInfo,
+    }
   },
 
   // enableEasyConfirmation: () => {

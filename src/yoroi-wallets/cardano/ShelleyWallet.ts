@@ -8,7 +8,6 @@ import uuid from 'uuid'
 
 import {encryptWithPassword} from '../../Catalyst/catalystCipher'
 import LocalizableError from '../../i18n/LocalizableError'
-import * as api from '../../legacy/api'
 import assert from '../../legacy/assert'
 import {ADDRESS_TYPE_TO_CHANGE, generateWalletRootKey} from '../../legacy/commonUtils'
 import {
@@ -25,6 +24,7 @@ import {signTxWithLedger} from '../../legacy/ledgerUtils'
 import {Logger} from '../../legacy/logging'
 import type {CardanoHaskellShelleyNetwork} from '../../legacy/networks'
 import {isHaskellShelleyNetwork, PROVIDERS} from '../../legacy/networks'
+import {processTxHistoryData} from '../../legacy/processTransactions'
 import type {WalletMeta} from '../../legacy/state'
 import storageLegacy from '../../legacy/storage'
 import {deriveRewardAddressHex} from '../../legacy/utils'
@@ -50,6 +50,7 @@ import type {
   RawUtxo,
   TipStatusResponse,
   TokenInfoRequest,
+  TransactionInfo,
   TxBodiesRequest,
   TxBodiesResponse,
   TxStatusRequest,
@@ -59,9 +60,10 @@ import {NETWORK_REGISTRY} from '../types/other'
 import {genTimeToSlot} from '../utils/timeUtils'
 import {versionCompare} from '../utils/versioning'
 import Wallet, {WalletJSON} from '../Wallet'
+import * as api from './api'
 import {AddressChain, AddressGenerator} from './chain'
 import {filterAddressesByStakingKey, getDelegationStatus} from './shelley/delegationUtils'
-import {TransactionCache} from './shelley/transactionCache'
+import {toCachedTx, TransactionCache} from './shelley/transactionCache'
 import {yoroiSignedTx} from './signedTx'
 import {NetworkId, WalletImplementationId, WalletInterface, YoroiProvider} from './types'
 import {yoroiUnsignedTx} from './unsignedTx'
@@ -807,14 +809,29 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     return api.checkServerStatus(this._getBackendConfig())
   }
 
-  async getBestBlock() {
-    return api.getBestBlock(this._getBackendConfig())
-  }
-
   async submitTransaction(signedTx: string) {
     const response: any = await api.submitTransaction(signedTx, this._getBackendConfig())
     Logger.info(response)
     return response as any
+  }
+
+  async getTransactions(txids: Array<string>) {
+    const rawTxs = await api.getTransactions(txids, this._getBackendConfig())
+    const txs = Object.values(rawTxs).map((rawTx) => toCachedTx(rawTx))
+    const txInfos = txs.map((tx) => {
+      if (!this.networkId) throw new Error('invalid state')
+
+      return processTxHistoryData(
+        tx,
+        this.rewardAddressHex != null
+          ? [...this.internalAddresses, ...this.externalAddresses, ...[this.rewardAddressHex]]
+          : [...this.internalAddresses, ...this.externalAddresses],
+        this.confirmationCounts[tx.id] || 0,
+        this.networkId,
+      )
+    })
+
+    return txInfos.reduce((result, txInfo) => ({...result, [txInfo.id]: txInfo}), {} as Record<string, TransactionInfo>)
   }
 
   async getTxsBodiesForUTXOs(request: TxBodiesRequest): Promise<TxBodiesResponse> {

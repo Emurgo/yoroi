@@ -11,7 +11,7 @@ import uuid from 'uuid'
 import globalMessages, {errorMessages} from '../i18n/global-messages'
 import {Logger} from '../legacy/logging'
 import {ServerStatus, walletManager} from '../yoroi-wallets'
-import * as api from './api'
+import {checkServerStatus} from '../yoroi-wallets'
 import type {AppSettingsKey} from './appSettings'
 import {APP_SETTINGS_KEYS, AppSettingsError, readAppSettings, removeAppSettings, writeAppSettings} from './appSettings'
 import assert from './assert'
@@ -127,7 +127,7 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
   try {
     // check status of default network
     const backendConfig = getCardanoNetworkConfigById(CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID).BACKEND
-    const status = await api.checkServerStatus(backendConfig)
+    const status = await checkServerStatus(backendConfig)
     dispatch(
       _setServerStatus({
         isServerOk: status.isServerOk,
