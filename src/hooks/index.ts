@@ -44,6 +44,7 @@ import {
   Transaction,
   TRANSACTION_DIRECTION,
   TRANSACTION_STATUS,
+  TransactionInfo,
 } from '../yoroi-wallets/types/other'
 import {Utxos} from '../yoroi-wallets/utils'
 
@@ -524,6 +525,26 @@ export const useSignTxWithHW = (
     signTx: mutation.mutate,
     ...mutation,
   }
+}
+
+export const useTransactionInfo = (
+  {wallet, txid}: {wallet: YoroiWallet; txid: string},
+  options?: UseQueryOptions<TransactionInfo, Error, TransactionInfo, [string, 'transactionInfo', {txid: string}]>,
+) => {
+  const {data} = useQuery({
+    ...options,
+    suspense: true,
+    refetchInterval: 5000,
+    queryKey: [wallet.id, 'transactionInfo', {txid}],
+    queryFn: async () => {
+      const txInfos = await wallet.getTransactions([txid])
+      return txInfos[txid]
+    },
+  })
+
+  if (!data) throw new Error('invalid state')
+
+  return data
 }
 
 const getTransactionInfos = (wallet: YoroiWallet) =>

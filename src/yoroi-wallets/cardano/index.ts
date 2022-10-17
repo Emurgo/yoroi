@@ -1,3 +1,4 @@
+export * from './api'
 export * from './catalyst'
 export * from './chain'
 export * from './MultiToken'

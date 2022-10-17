@@ -51,11 +51,16 @@ export const TxHistoryNavigator = () => {
 
         <Stack.Screen
           name="history-details"
-          component={TxDetails}
           options={({route}) => ({
             title: formatDateToSeconds(transactionInfos[route.params.id]?.submittedAt),
           })}
-        />
+        >
+          {() => (
+            <Boundary loading={{fallbackProps: {style: {flex: 1}}}}>
+              <TxDetails />
+            </Boundary>
+          )}
+        </Stack.Screen>
 
         <Stack.Screen
           name="receive"
