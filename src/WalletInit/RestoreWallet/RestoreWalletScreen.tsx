@@ -27,7 +27,7 @@ export const RestoreWalletScreen = () => {
   const [phrase, setPhrase] = React.useState('')
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={{flex: 1, backgroundColor: 'white', borderWidth: 1}}>
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={{flex: 1, backgroundColor: 'white'}}>
       <StatusBar type="dark" />
 
       <ScrollableView bounces={false} style={{paddingHorizontal: 16}} keyboardShouldPersistTaps="always">

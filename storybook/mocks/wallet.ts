@@ -288,11 +288,15 @@ export const poolInfoAndHistory: RemotePoolMetaSuccess = {
 }
 
 export const mockYoroiTx: YoroiUnsignedTx & {mock: true} = {
-  entries: {},
-  amounts: {},
+  entries: {
+    address1: {'': '99999'},
+  },
+  amounts: {'': '99999'},
   fee: {'': '12345'},
   metadata: {},
-  change: {},
+  change: {
+    change_address: {'': '1'},
+  },
   staking: {
     registrations: {},
     deregistrations: {},

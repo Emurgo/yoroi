@@ -3,24 +3,35 @@ import React from 'react'
 import {StyleSheet} from 'react-native'
 
 import {Text} from '../../components'
-import {getDefaultAssetByNetworkId} from '../../legacy/config'
+import {useTokenInfo} from '../../hooks'
 import {formatTokenWithSymbol} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
-import {Quantity} from '../../yoroi-wallets/types'
+import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
+import {Amounts} from '../../yoroi-wallets/utils'
 import {useStrings} from './strings'
 
-export const Fee = ({fee}: {fee: Quantity | null}) => {
+export const Fee = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx | null}) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
-  const defaultAsset = getDefaultAssetByNetworkId(wallet.networkId)
+  const tokenInfo = useTokenInfo({wallet, tokenId: ''})
 
-  const value = fee !== null ? formatTokenWithSymbol(new BigNumber(fee), defaultAsset) : strings.feeNotAvailable
+  if (yoroiUnsignedTx == null) {
+    return (
+      <Text style={styles.info} testID="feesText">
+        {strings.feeLabel}
+        {': '}
+        {strings.feeNotAvailable}
+      </Text>
+    )
+  }
+
+  const primaryAmount = Amounts.getAmount(yoroiUnsignedTx.fee, '')
 
   return (
     <Text style={styles.info} testID="feesText">
       {strings.feeLabel}
       {': '}
-      {value}
+      {formatTokenWithSymbol(new BigNumber(primaryAmount.quantity), tokenInfo)}
     </Text>
   )
 }
