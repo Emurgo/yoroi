@@ -1,13 +1,9 @@
-import Clipboard from '@react-native-community/clipboard'
 import React from 'react'
-import {defineMessages, useIntl} from 'react-intl'
 import {Linking, StyleSheet, TouchableOpacity, View, ViewStyle} from 'react-native'
 
-import {Icon, Text} from '../../components'
+import {CopyButton, Text} from '../../components'
 import {getNetworkConfigById} from '../../legacy/networks'
-import {COLORS} from '../../theme'
 import {NetworkId} from '../../yoroi-wallets'
-import {FadeOutView} from './FadeOutView'
 
 export const WalletAddress = ({
   addressHash,
@@ -18,17 +14,9 @@ export const WalletAddress = ({
   networkId: NetworkId
   style?: ViewStyle
 }) => {
-  const strings = useStrings()
-  const [showCopyNotification, setShowCopyNotification] = React.useState(false)
-
   const onTapAddress = () => {
     const config = getNetworkConfigById(networkId)
     Linking.openURL(config.EXPLORER_URL_FOR_ADDRESS(addressHash))
-  }
-
-  const copyHash = () => {
-    Clipboard.setString(addressHash)
-    setShowCopyNotification(true)
   }
 
   return (
@@ -39,35 +27,9 @@ export const WalletAddress = ({
         </Text>
       </TouchableOpacity>
 
-      <TouchableOpacity
-        activeOpacity={0.5}
-        onPress={copyHash}
-        disabled={showCopyNotification}
-        style={styles.copyButton}
-      >
-        <Icon.Copy size={30} color={COLORS.GRAY} />
-      </TouchableOpacity>
-
-      <FadeOutView visible={showCopyNotification} onEnd={() => setShowCopyNotification(false)}>
-        <Text style={styles.notifView}>{strings.copied}</Text>
-      </FadeOutView>
+      <CopyButton value={addressHash} />
     </View>
   )
-}
-
-const messages = defineMessages({
-  copied: {
-    id: 'components.delegationsummary.delegatedStakepoolInfo.copied',
-    defaultMessage: '!!!Copied!',
-  },
-})
-
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    copied: intl.formatMessage(messages.copied),
-  }
 }
 
 const styles = StyleSheet.create({
@@ -75,12 +37,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap',
-  },
-  copyButton: {
-    padding: 4,
-  },
-  notifView: {
-    paddingLeft: 4,
   },
   addressHash: {
     width: 280,

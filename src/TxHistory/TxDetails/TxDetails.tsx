@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {useRoute} from '@react-navigation/native'
+import {useNavigation, useRoute} from '@react-navigation/native'
 import {BigNumber} from 'bignumber.js'
 import {fromPairs} from 'lodash'
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {defineMessages, IntlShape, useIntl} from 'react-intl'
 import {LayoutAnimation, Linking, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {Banner, Boundary, Button, CopyButton, Icon, OfflineBanner, StatusBar, Text} from '../../components'
+import {Banner, Boundary, Button, CopyButton, FadeIn, Icon, OfflineBanner, StatusBar, Text} from '../../components'
 import {useTipStatus, useTokenInfo, useTransactionInfo} from '../../hooks'
 import globalMessages from '../../i18n/global-messages'
-import {formatTokenWithSymbol} from '../../legacy/format'
+import {formatDateToSeconds, formatTokenWithSymbol} from '../../legacy/format'
 import {getNetworkConfigById} from '../../legacy/networks'
 import {isEmptyString} from '../../legacy/utils'
 import AddressModal from '../../Receive/AddressModal'
@@ -33,6 +33,8 @@ export const TxDetails = () => {
   const [addressDetail, setAddressDetail] = React.useState<null | string>(null)
   const transaction = useTransactionInfo({wallet, txid: id})
 
+  useTitle(formatDateToSeconds(transaction.submittedAt))
+
   const {fromFiltered, toFiltered, cntOmittedTo} = getShownAddresses(
     intl,
     transaction,
@@ -54,7 +56,7 @@ export const TxDetails = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <FadeIn style={styles.container}>
       <StatusBar type="dark" />
       <OfflineBanner />
 
@@ -137,7 +139,7 @@ export const TxDetails = () => {
       {!isEmptyString(addressDetail) && (
         <AddressModal visible onRequestClose={() => setAddressDetail(null)} address={addressDetail} />
       )}
-    </View>
+    </FadeIn>
   )
 }
 
@@ -422,3 +424,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
 })
+
+const useTitle = (text: string) => {
+  const navigation = useNavigation()
+
+  useEffect(() => navigation.setOptions({title: text}))
+}

@@ -4,8 +4,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps} from 'react-native'
 
 import {Boundary, Icon} from '../components'
-import {useTransactionInfos, useWalletName} from '../hooks'
-import {formatDateToSeconds} from '../legacy/format'
+import {useWalletName} from '../hooks'
 import {
   defaultStackNavigationOptions,
   defaultStackNavigationOptionsV2,
@@ -31,7 +30,6 @@ export const TxHistoryNavigator = () => {
   const wallet = useSelectedWallet()
 
   const walletName = useWalletName(wallet)
-  const transactionInfos = useTransactionInfos(wallet)
   const [modalInfoState, setModalInfoState] = React.useState(false)
   const showModalInfo = () => setModalInfoState(true)
   const hideModalInfo = () => setModalInfoState(false)
@@ -44,17 +42,12 @@ export const TxHistoryNavigator = () => {
           component={TxHistory}
           options={{
             ...defaultStackNavigationOptionsV2,
-            title: walletName,
+            title: walletName ?? '',
             headerRight: () => <HeaderRightHistory />,
           }}
         />
 
-        <Stack.Screen
-          name="history-details"
-          options={({route}) => ({
-            title: formatDateToSeconds(transactionInfos[route.params.id]?.submittedAt),
-          })}
-        >
+        <Stack.Screen name="history-details" options={{title: ''}}>
           {() => (
             <Boundary loading={{fallbackProps: {style: {flex: 1}}}}>
               <TxDetails />

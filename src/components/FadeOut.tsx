@@ -1,40 +1,36 @@
 import React from 'react'
 import {Animated, ViewStyle} from 'react-native'
 
-export const FadeOutView = ({
-  displayDuration = 3000,
+export const FadeOut = ({
+  delay = 3000,
   fadeDuration = 2000,
   onStart,
   onEnd,
-  visible,
   style,
   children,
 }: {
-  displayDuration?: number
+  delay?: number
   fadeDuration?: number
   onStart?: () => void
   onEnd?: () => void
-  visible: boolean
   style?: ViewStyle
   children: React.ReactNode
 }) => {
   const opacity = React.useRef(new Animated.Value(1)).current
 
   React.useEffect(() => {
-    if (!visible) return
-
-    const timeout = setTimeout(() => onStart?.(), displayDuration)
+    const timeout = setTimeout(() => onStart?.(), delay)
     Animated.timing(opacity, {
       toValue: 0,
-      delay: displayDuration,
+      delay,
       duration: fadeDuration,
       useNativeDriver: true,
     }).start(() => onEnd?.())
 
     // eslint-disable-next-line consistent-return
     return () => clearTimeout(timeout)
-  }, [opacity, onStart, onEnd, displayDuration, visible, fadeDuration])
+  }, [opacity, onStart, onEnd, delay, fadeDuration])
 
   // eslint-disable-next-line react-native/no-inline-styles
-  return <Animated.View style={[{opacity: visible ? opacity : 0}, style]}>{children}</Animated.View>
+  return <Animated.View style={[{opacity}, style]}>{children}</Animated.View>
 }
