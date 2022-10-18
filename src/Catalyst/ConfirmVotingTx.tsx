@@ -1,35 +1,28 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {useNavigation} from '@react-navigation/native'
 import BigNumber from 'bignumber.js'
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {OfflineBanner, ProgressStep, Spacer, TextInput} from '../components'
 import {ConfirmTx} from '../components/ConfirmTx'
+import {useVotingRegTx} from '../hooks'
 import {Instructions as HWInstructions} from '../HW'
-import {txLabels} from '../i18n/global-messages'
+import {errorMessages, txLabels} from '../i18n/global-messages'
 import LocalizableError from '../i18n/LocalizableError'
 import {CONFIG, getDefaultAssetByNetworkId} from '../legacy/config'
 import {formatTokenWithSymbol} from '../legacy/format'
-import {CatalystRouteNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
-import {YoroiUnsignedTx} from '../yoroi-wallets/types'
 import {Amounts} from '../yoroi-wallets/utils'
 import {Actions, Description, Title} from './components'
 
-export const Step5 = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx}) => {
+export const ConfirmVotingTx = ({onNext}: {onNext: () => void}) => {
   const strings = useStrings()
-  const navigation = useNavigation<CatalystRouteNavigation>()
   const wallet = useSelectedWallet()
-  const [password, setPassword] = useState('')
-
+  const [password, setPassword] = useState(CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '')
   const [useUSB, setUseUSB] = useState<boolean>(false)
-
-  useEffect(() => {
-    setPassword(CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '')
-  }, [])
+  const {votingRegTx} = useVotingRegTx(wallet)
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
@@ -56,7 +49,7 @@ export const Step5 = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx}) => 
 
         <TextInput
           value={formatTokenWithSymbol(
-            new BigNumber(Amounts.getAmount(yoroiUnsignedTx.fee, '').quantity),
+            new BigNumber(Amounts.getAmount(votingRegTx.fee, '').quantity),
             getDefaultAssetByNetworkId(wallet.networkId),
           )}
           label={strings.fees}
@@ -79,12 +72,12 @@ export const Step5 = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx}) => 
 
       <Actions>
         <ConfirmTx
-          onSuccess={() => navigation.navigate('catalyst-qr-code')}
+          onSuccess={() => onNext()}
           isProvidingPassword
           providedPassword={password}
           setUseUSB={setUseUSB}
           useUSB={useUSB}
-          yoroiUnsignedTx={yoroiUnsignedTx}
+          yoroiUnsignedTx={votingRegTx}
           biometricInstructions={[strings.bioAuthInstructions]}
         />
       </Actions>
@@ -131,5 +124,7 @@ const useStrings = () => {
     description: intl.formatMessage(messages.description),
     bioAuthInstructions: intl.formatMessage(messages.bioAuthInstructions),
     password: intl.formatMessage(txLabels.password),
+    errorTitle: intl.formatMessage(errorMessages.generalTxError.title),
+    generalErrorMessage: intl.formatMessage(errorMessages.generalTxError.message),
   }
 }

@@ -44,6 +44,7 @@ import {
   Transaction,
   TRANSACTION_DIRECTION,
   TRANSACTION_STATUS,
+  TransactionInfo,
 } from '../yoroi-wallets/types/other'
 import {Utxos} from '../yoroi-wallets/utils'
 
@@ -339,6 +340,36 @@ export const useWithdrawalTx = (
   }
 }
 
+export type VotingRegTxAndEncryptedKey = {
+  votingRegTx: YoroiUnsignedTx
+  votingKeyEncrypted: string
+}
+
+export const usePrefetchVotingRegTx = (wallet: YoroiWallet) => {
+  const queryClient = useQueryClient()
+
+  React.useEffect(() => {
+    queryClient.prefetchQuery<VotingRegTxAndEncryptedKey, Error>({
+      queryKey: [wallet.id, 'voting-reg-tx'],
+      queryFn: async () => wallet.createVotingRegTx(),
+    })
+  }, [queryClient, wallet])
+}
+
+export const useVotingRegTx = (wallet: YoroiWallet, options?: UseQueryOptions<VotingRegTxAndEncryptedKey, Error>) => {
+  const query = useQuery({
+    ...options,
+    cacheTime: 0,
+    suspense: true,
+    queryKey: [wallet.id, 'voting-reg-tx'] as QueryKey,
+    queryFn: async () => wallet.createVotingRegTx(),
+  })
+
+  if (!query.data) throw new Error('invalid state')
+
+  return query.data
+}
+
 export const useSignWithPasswordAndSubmitTx = (
   {wallet, storage}: {wallet: YoroiWallet; storage: typeof KeyStore},
   options?: {
@@ -494,6 +525,26 @@ export const useSignTxWithHW = (
     signTx: mutation.mutate,
     ...mutation,
   }
+}
+
+export const useTransactionInfo = (
+  {wallet, txid}: {wallet: YoroiWallet; txid: string},
+  options?: UseQueryOptions<TransactionInfo, Error, TransactionInfo, [string, 'transactionInfo', {txid: string}]>,
+) => {
+  const {data} = useQuery({
+    ...options,
+    suspense: true,
+    refetchInterval: 5000,
+    queryKey: [wallet.id, 'transactionInfo', {txid}],
+    queryFn: async () => {
+      const txInfos = await wallet.getTransactions([txid])
+      return txInfos[txid]
+    },
+  })
+
+  if (!data) throw new Error('invalid state')
+
+  return data
 }
 
 const getTransactionInfos = (wallet: YoroiWallet) =>

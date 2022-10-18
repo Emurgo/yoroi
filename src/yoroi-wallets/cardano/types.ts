@@ -19,6 +19,7 @@ import type {
   RawUtxo,
   TipStatusResponse,
   Transaction,
+  TransactionInfo,
   TxBodiesRequest,
   TxBodiesResponse,
   TxStatusRequest,
@@ -178,12 +179,7 @@ export interface WalletInterface {
     defaultAsset: DefaultAsset,
   ): Promise<YoroiUnsignedTx>
 
-  createVotingRegTx(
-    utxos: Array<RawUtxo>,
-    catalystPrivateKey: string,
-    defaultAsset: DefaultAsset,
-    decryptedKey: string | undefined,
-  ): Promise<YoroiUnsignedTx>
+  createVotingRegTx(): Promise<{votingRegTx: YoroiUnsignedTx; votingKeyEncrypted: string}>
 
   createWithdrawalTx(
     utxos: Array<RawUtxo>,
@@ -267,6 +263,7 @@ export type YoroiWallet = Pick<WalletInterface, YoroiWalletKeys> & {
   checksum: NonNullable<WalletInterface['checksum']>
   isReadOnly: NonNullable<WalletInterface['isReadOnly']>
   rewardAddressHex: NonNullable<WalletInterface['rewardAddressHex']>
+  getTransactions: (txids: Array<string>) => Promise<Record<string, TransactionInfo>>
   sync: () => Promise<void>
 }
 

@@ -45,11 +45,17 @@ export const checkedFetch = (request: FetchRequest) => {
   const {endpoint, payload, method, headers} = request
   const checkResponse = request.checkResponse || _checkResponse
   Logger.info(`API call: ${endpoint}`)
-  return fetch(endpoint, {
-    method,
-    headers: headers != null ? headers : undefined,
-    body: payload != null ? JSON.stringify(payload) : undefined,
-  }) // Fetch throws only for network/dns/related errors, not http statuses
+
+  const args = [
+    endpoint,
+    {
+      method,
+      headers: headers != null ? headers : undefined,
+      body: payload != null ? JSON.stringify(payload) : undefined,
+    },
+  ] as const
+
+  return fetch(...args) // Fetch throws only for network/dns/related errors, not http statuses
     .catch((e) => {
       Logger.info(`API call ${endpoint} failed`, e)
 

@@ -1,14 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {BigNumber} from 'bignumber.js'
 import _ from 'lodash'
 
-import {ServerStatus} from '../yoroi-wallets'
-import {StakePoolInfosAndHistories} from '../yoroi-wallets/types'
+import assert from '../../legacy/assert'
+import {ApiError} from '../../legacy/errors'
+import fetchDefault, {checkedFetch} from '../../legacy/fetch'
+import {ServerStatus} from '..'
+import {StakePoolInfosAndHistories} from '../types'
 import type {
   AccountStateRequest,
   AccountStateResponse,
   BackendConfig,
-  BestblockResponse,
   CurrencySymbol,
   FundInfoResponse,
   PoolInfoRequest,
@@ -23,18 +24,12 @@ import type {
   TxHistoryRequest,
   TxStatusRequest,
   TxStatusResponse,
-} from '../yoroi-wallets/types/other'
-import assert from './assert'
-import {ApiError} from './errors'
-import fetchDefault, {checkedFetch} from './fetch'
+} from '../types/other'
 
 type Addresses = Array<string>
 
 export const checkServerStatus = (config: BackendConfig): Promise<ServerStatus> =>
   fetchDefault('status', null, config, 'GET') as any
-
-export const getBestBlock = (config: BackendConfig): Promise<BestblockResponse> =>
-  fetchDefault('v2/bestblock', null, config, 'GET') as any
 
 export const getTipStatus = async (config: BackendConfig): Promise<TipStatusResponse> =>
   fetchDefault('v2/tipStatus', null, config, 'GET') as unknown as TipStatusResponse
@@ -88,35 +83,15 @@ export const submitTransaction = (signedTx: string, config: BackendConfig) => {
   return fetchDefault('txs/signed', {signedTx}, config)
 }
 
-export const fetchUTXOSumForAddresses = (addresses: Addresses, config: BackendConfig): Promise<{sum: string}> => {
-  assert.preconditionCheck(
-    addresses.length <= config.FETCH_UTXOS_MAX_ADDRESSES,
-    'fetchUTXOSumForAddresses: too many addresses',
-  )
-  return fetchDefault('txs/utxoSumForAddresses', {addresses}, config) as any
-}
-
-export const bulkFetchUTXOSumForAddresses = async (
-  addresses: Addresses,
-  config: BackendConfig,
-): Promise<{fundedAddresses: Array<string>; sum: BigNumber}> => {
-  const chunks = _.chunk(addresses, config.FETCH_UTXOS_MAX_ADDRESSES)
-
-  const responses = await Promise.all(chunks.map((addrs) => fetchUTXOSumForAddresses(addrs, config)))
-  const sum = responses.reduce((x: BigNumber, y) => x.plus(new BigNumber(y.sum || 0)), new BigNumber(0))
-
-  const responseUTXOAddresses = await Promise.all(chunks.map((addrs) => fetchUTXOsForAddresses(addrs, config)))
-
-  const fundedAddresses = _.flatten(responseUTXOAddresses).map((address: any) => address.receiver)
-
-  return {
-    fundedAddresses: _.uniq(fundedAddresses),
-    sum,
-  }
-}
-
 export const getTxsBodiesForUTXOs = (request: TxBodiesRequest, config: BackendConfig): Promise<TxBodiesResponse> => {
   return fetchDefault('txs/txBodies', request, config)
+}
+
+export const getTransactions = (
+  txids: Array<string>,
+  config: BackendConfig,
+): Promise<Record<string, RawTransaction>> => {
+  return fetchDefault('v2/txs/get', {txHashes: txids}, config)
 }
 
 export const getAccountState = (request: AccountStateRequest, config: BackendConfig): Promise<AccountStateResponse> => {

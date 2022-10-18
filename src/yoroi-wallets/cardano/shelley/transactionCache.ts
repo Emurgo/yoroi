@@ -3,7 +3,6 @@
 import {fromPairs, mapValues, max} from 'lodash'
 import {defaultMemoize} from 'reselect'
 
-import * as yoroiApi from '../../../legacy/api'
 import assert from '../../../legacy/assert'
 import {ApiHistoryError} from '../../../legacy/errors'
 import {ObjectValues} from '../../../legacy/flow'
@@ -11,6 +10,7 @@ import {Logger} from '../../../legacy/logging'
 import type {RemoteCertificateMeta, TxHistoryRequest} from '../../types'
 import {BackendConfig, RawTransaction, Transaction, TRANSACTION_STATUS} from '../../types/other'
 import {CERTIFICATE_KIND} from '../../types/other'
+import * as yoroiApi from '../api'
 
 type SyncMetadata = {
   bestBlockNum: number
