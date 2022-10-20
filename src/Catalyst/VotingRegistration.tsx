@@ -35,8 +35,8 @@ export const VotingRegistration = () => {
       screenOptions={{
         ...defaultStackNavigationOptions,
         title: strings.title,
+        detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
       }}
-      initialRouteName="download-catalyst"
     >
       <Stack.Screen name="download-catalyst">
         {() => (

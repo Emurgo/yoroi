@@ -36,7 +36,12 @@ export const TxHistoryNavigator = () => {
 
   return (
     <SendProvider key={wallet.id} wallet={wallet}>
-      <Stack.Navigator screenOptions={defaultStackNavigationOptions} initialRouteName="history-list">
+      <Stack.Navigator
+        screenOptions={{
+          ...defaultStackNavigationOptions,
+          detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
+        }}
+      >
         <Stack.Screen
           name="history-list"
           component={TxHistory}
