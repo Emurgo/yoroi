@@ -27,6 +27,7 @@ export const WalletInitNavigator = () => {
       screenOptions={{
         cardStyle: {backgroundColor: 'transparent'},
         ...defaultStackNavigationOptions,
+        detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
       }}
     >
       <Stack.Screen

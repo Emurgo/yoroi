@@ -25,7 +25,11 @@ export const MenuNavigator = () => {
   return (
     <MenuStack.Navigator
       initialRouteName="_menu"
-      screenOptions={{...defaultStackNavigationOptions, headerLeft: () => null}}
+      screenOptions={{
+        ...defaultStackNavigationOptions,
+        headerLeft: () => null,
+        detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
+      }}
     >
       <MenuStack.Screen name="_menu" component={Menu} options={{title: strings.menu}} />
     </MenuStack.Navigator>

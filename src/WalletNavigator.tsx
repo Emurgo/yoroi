@@ -78,7 +78,12 @@ const WalletTabNavigator = () => {
 
 const Stack = createStackNavigator<WalletStackRoutes>()
 export const WalletNavigator = () => (
-  <Stack.Navigator initialRouteName="wallet-selection" screenOptions={{headerShown: false}}>
+  <Stack.Navigator
+    screenOptions={{
+      headerShown: false /* used only for transition */,
+      detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
+    }}
+  >
     <Stack.Screen name="wallet-selection" component={WalletSelectionScreen} />
     <Stack.Screen name="main-wallet-routes" component={WalletTabNavigator} />
     <Stack.Screen name="settings" component={SettingsScreenNavigator} />
