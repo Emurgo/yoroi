@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import AsyncStorage, {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
 import {useNetInfo} from '@react-native-community/netinfo'
 import {useFocusEffect} from '@react-navigation/native'
 import {delay} from 'bluebird'
@@ -47,6 +48,52 @@ import {
   TransactionInfo,
 } from '../yoroi-wallets/types/other'
 import {Utxos} from '../yoroi-wallets/utils'
+
+const crashReportsStorageKey = 'sendCrashReports'
+
+export const getCrashReportsEnabled = async (storage: AsyncStorageStatic = AsyncStorage) => {
+  const data = await storage.getItem(crashReportsStorageKey)
+  if (data != null) {
+    const parsed = JSON.parse(data)
+    if (typeof parsed === 'boolean') {
+      return parsed
+    }
+  }
+
+  return false
+}
+
+export const useCrashReportsEnabled = (storage: AsyncStorageStatic = AsyncStorage) => {
+  const query = useQuery({
+    suspense: true,
+    queryKey: [crashReportsStorageKey],
+    queryFn: () => getCrashReportsEnabled(storage),
+  })
+
+  if (query.data == null) throw new Error('invalid state')
+
+  return query.data
+}
+
+export const useSetCrashReportsEnabled = (storage: AsyncStorageStatic = AsyncStorage) => {
+  const mutation = useMutationWithInvalidations<void, Error, boolean>({
+    useErrorBoundary: true,
+    mutationFn: (enabled) => storage.setItem(crashReportsStorageKey, JSON.stringify(enabled)),
+    invalidateQueries: [[crashReportsStorageKey]],
+  })
+
+  return mutation.mutate
+}
+
+export const useCrashReports = () => {
+  const set = useSetCrashReportsEnabled()
+
+  return {
+    enabled: useCrashReportsEnabled(),
+    enable: React.useCallback(() => set(true), [set]),
+    disable: React.useCallback(() => set(false), [set]),
+  }
+}
 
 // WALLET
 export const useWallet = (wallet: YoroiWallet, event: WalletEvent['type']) => {

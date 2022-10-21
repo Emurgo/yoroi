@@ -7,7 +7,6 @@ import type {State} from '../legacy/state'
 export const biometricHwSupportSelector = (state: State): boolean => state.appSettings.isBiometricHardwareSupported
 export const canEnableBiometricSelector = (state: State): boolean => state.appSettings.canEnableBiometricEncryption
 export const isSystemAuthEnabledSelector = (state: State): boolean => state.appSettings.isSystemAuthEnabled
-export const sendCrashReportsSelector = (state: State): boolean => state.appSettings.sendCrashReports
 export const installationIdSelector = (state: State) => state.appSettings.installationId
 export const isMaintenanceSelector = (state: State): boolean => state.serverStatus.isMaintenance
 
