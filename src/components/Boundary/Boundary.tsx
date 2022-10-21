@@ -39,7 +39,7 @@ type LoadingBoundaryProps = {
   }
   children: React.ReactNode
 }
-const LoadingBoundary = ({children, ...props}: LoadingBoundaryProps) => {
+export const LoadingBoundary = ({children, ...props}: LoadingBoundaryProps) => {
   if (props.loading?.enabled === false) return <>{children}</>
 
   return (

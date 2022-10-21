@@ -16,8 +16,6 @@ export type WalletMeta = {
 }
 export type State = {
   wallets: Record<string, WalletMeta>
-  isAppInitialized: boolean
-  isKeyboardOpen: boolean
   appSettings: {
     acceptedTos: boolean
     installationId: string | null | undefined
@@ -35,8 +33,6 @@ export type State = {
 }
 export const getInitialState = (): State => ({
   wallets: {},
-  isAppInitialized: false,
-  isKeyboardOpen: false,
   appSettings: {
     acceptedTos: false,
     installationId: null,
