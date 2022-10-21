@@ -7,6 +7,7 @@ import {Alert, Platform} from 'react-native'
 import type {Dispatch} from 'redux'
 import uuid from 'uuid'
 
+import {getCrashReportsEnabled} from '../hooks'
 import globalMessages, {errorMessages} from '../i18n/global-messages'
 import {Logger} from '../legacy/logging'
 import {ServerStatus, walletManager} from '../yoroi-wallets'
@@ -25,7 +26,6 @@ import {
   installationIdSelector,
   isAppSetupCompleteSelector,
   isSystemAuthEnabledSelector,
-  sendCrashReportsSelector,
 } from './selectors'
 import type {State} from './state'
 
@@ -146,7 +146,8 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
   const installationId = (await dispatch(initInstallationId())) as unknown as string
   const state = getState()
 
-  if (sendCrashReportsSelector(getState())) {
+  const crashReportsEnabled = await getCrashReportsEnabled()
+  if (crashReportsEnabled) {
     crashReporting.enable()
     // TODO(ppershing): just update crashlytic variables here
     await dispatch(reloadAppSettings())
