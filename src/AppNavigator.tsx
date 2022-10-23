@@ -92,7 +92,12 @@ const NavigatorSwitch = ({authAction}: {authAction: 'create-link-pin' | 'check-p
   if (isEmptyString(installationId)) throw new Error('invalid state')
 
   return (
-    <Stack.Navigator screenOptions={{headerShown: false}}>
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false /* used only for transition */,
+        detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
+      }}
+    >
       {/* Initial Route */}
       <Stack.Group>
         {isMaintenance && <Stack.Screen name="maintenance" component={MaintenanceScreen} />}
@@ -144,7 +149,11 @@ const CreatePinScreenWrapper = () => {
 }
 
 const StoryBook = () => (
-  <Stack.Navigator>
+  <Stack.Navigator
+    screenOptions={{
+      detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
+    }}
+  >
     <Stack.Screen name="storybook" component={StorybookScreen} />
   </Stack.Navigator>
 )

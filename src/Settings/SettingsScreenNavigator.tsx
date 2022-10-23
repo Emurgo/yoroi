@@ -32,7 +32,12 @@ export const SettingsScreenNavigator = () => {
   const strings = useStrings()
 
   return (
-    <Stack.Navigator screenOptions={defaultStackNavigationOptions} initialRouteName="settings-main">
+    <Stack.Navigator
+      screenOptions={{
+        ...defaultStackNavigationOptions,
+        detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
+      }}
+    >
       <Stack.Screen //
         name="settings-main"
         component={SettingsTabNavigator}

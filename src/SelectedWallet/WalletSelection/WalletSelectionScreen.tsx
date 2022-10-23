@@ -5,7 +5,6 @@ import {defineMessages, useIntl} from 'react-intl'
 import {FlatList, Linking, RefreshControl, StyleSheet, Text, TouchableOpacity} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useMutation, UseMutationOptions, useQueryClient} from 'react-query'
-import {useDispatch} from 'react-redux'
 
 import {useAuth} from '../../auth/AuthProvider'
 import {Button, Icon, PleaseWaitModal, StatusBar} from '../../components'
@@ -16,7 +15,6 @@ import {CONFIG, isNightly} from '../../legacy/config'
 import {InvalidState} from '../../legacy/errors'
 import {isJormungandr} from '../../legacy/networks'
 import {WalletMeta} from '../../legacy/state'
-import {clearUTXOs} from '../../legacy/utxo'
 import {useWalletNavigation} from '../../navigation'
 import {COLORS} from '../../theme'
 import {useWalletManager} from '../../WalletManager'
@@ -35,14 +33,9 @@ export const WalletSelectionScreen = () => {
   const selectWallet = useSetSelectedWallet()
   const intl = useIntl()
   const queryClient = useQueryClient()
-  const dispatch = useDispatch()
   const {logout} = useAuth()
 
-  const {closeWallet} = useCloseWallet({
-    onSuccess: () => {
-      dispatch(clearUTXOs())
-    },
-  })
+  const {closeWallet} = useCloseWallet()
 
   useFocusEffect(closeWallet)
 
@@ -248,13 +241,7 @@ const useOpenWallet = (
     WalletMeta
   >,
 ) => {
-  const dispatch = useDispatch()
-
-  const {closeWallet} = useCloseWallet({
-    onSuccess: () => {
-      dispatch(clearUTXOs())
-    },
-  })
+  const {closeWallet} = useCloseWallet()
 
   const mutation = useMutation({
     ...options,

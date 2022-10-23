@@ -24,7 +24,6 @@ import {
 import {StakePoolInfosAndHistories} from './types'
 import {
   FundInfoResponse,
-  NETWORK_REGISTRY,
   PoolInfoRequest,
   RawUtxo,
   TokenInfoRequest,
@@ -152,109 +151,12 @@ export class WalletManager {
     this._onTxHistoryUpdateSubscribers.push(handler)
   }
 
-  /** ========== getters =============
-   * these properties are passed on to redux's State in
-   * actions/history.js::mirrorTxHistory
-   */
-
-  get id() {
-    return this.getWallet().id
-  }
-
-  get isInitialized() {
-    if (!this._wallet) return false
-
-    return this.getWallet().isInitialized
-  }
-
-  get transactions() {
-    if (!this._wallet) return {}
-    return this._wallet.transactions
-  }
-
-  get internalAddresses() {
-    if (!this._wallet) return []
-    return this._wallet.internalAddresses
-  }
-
-  get externalAddresses() {
-    if (!this._wallet) return []
-    return this._wallet.externalAddresses
-  }
-
-  get rewardAddressHex() {
-    if (!this._wallet) return null
-    return this._wallet.rewardAddressHex
-  }
-
-  get isEasyConfirmationEnabled() {
-    if (!this._wallet) return false
-
-    return this.getWallet().isEasyConfirmationEnabled
-  }
-
-  get confirmationCounts() {
-    if (!this._wallet) return {}
-    return this._wallet.confirmationCounts
-  }
-
-  get numReceiveAddresses() {
-    if (!this._wallet) return 0
-    return this._wallet.numReceiveAddresses
-  }
-
-  get canGenerateNewReceiveAddress() {
-    if (!this._wallet) return false
-    return this._wallet.canGenerateNewReceiveAddress()
-  }
-
-  get isUsedAddressIndex() {
-    if (!this._wallet) return {}
-    return this._wallet.isUsedAddressIndex
-  }
-
-  get networkId() {
-    if (!this._wallet) return NETWORK_REGISTRY.UNDEFINED
-    return this._wallet.networkId
-  }
-
-  get walletImplementationId() {
-    if (!this._wallet) return ''
-    return this._wallet.walletImplementationId
-  }
-
-  get isHW() {
-    if (!this._wallet) return false
-    return this._wallet.isHW
-  }
-
-  get isReadOnly() {
-    if (!this._wallet) return false
-    return this._wallet.isReadOnly
-  }
-
-  get version() {
-    if (!this._wallet) return null
-    return this._wallet.version
-  }
-
-  get checksum() {
-    if (!this._wallet) return undefined
-
-    return this.getWallet().checksum
-  }
-
-  get provider() {
-    if (!this._wallet) return ''
-    return this._wallet.provider
-  }
-
   // ============ security & key management ============ //
   async disableEasyConfirmation() {
     const wallet = this.getWallet()
 
     wallet.isEasyConfirmationEnabled = false
-    await this._saveState(wallet)
+    await wallet.save()
 
     await this._updateMetadata(wallet.id, {
       isEasyConfirmationEnabled: false,
@@ -271,8 +173,7 @@ export class WalletManager {
     await this._updateMetadata(wallet.id, {
       isEasyConfirmationEnabled: true,
     })
-
-    await this._saveState(wallet)
+    await wallet.save()
     this._notify({type: 'easy-confirmation', enabled: true})
   }
 
@@ -286,7 +187,7 @@ export class WalletManager {
       if (this._wallet) {
         const wallet = this._wallet
         await wallet.tryDoFullSync()
-        await this._saveState(wallet)
+        await wallet.save()
         const status = await wallet.checkServerStatus()
         this._notifyServerSync(status)
       }
@@ -298,17 +199,6 @@ export class WalletManager {
         setTimeout(() => this._backgroundSync(), CONFIG.HISTORY_REFRESH_TIME)
       }
     }
-  }
-
-  async doFullSync() {
-    // TODO(ppershing): this should "quit" early if we change wallet
-    if (!this._wallet) return
-    const wallet = this._wallet
-    await this.abortWhenWalletCloses(wallet.doFullSync())
-    // note: don't await on purpose
-    // TODO(ppershing): should we save in case wallet is closed mid-sync?
-    this._saveState(wallet)
-    return
   }
 
   // ========== UI state ============= //
@@ -325,7 +215,7 @@ export class WalletManager {
     const didGenerateNew = wallet.generateNewUiReceiveAddress()
     if (didGenerateNew) {
       // note: don't await on purpose
-      this._saveState(wallet)
+      wallet.save()
     }
     return didGenerateNew
   }
@@ -342,7 +232,7 @@ export class WalletManager {
   ) {
     this._id = id
 
-    await this._saveState(wallet)
+    await wallet.save()
     if (!wallet.checksum) throw new Error('invalid wallet')
     const walletMeta: WalletMeta = {
       id,
@@ -381,7 +271,7 @@ export class WalletManager {
 
     // wallet state might have changed after restore due to migrations, so we
     // update the data in storage immediately
-    await this._saveState(wallet)
+    await wallet.save()
 
     wallet.subscribe((event) => this._notify(event as any))
     wallet.subscribeOnTxHistoryUpdate(this._notifyOnTxHistoryUpdate)
@@ -397,18 +287,6 @@ export class WalletManager {
     }
 
     throw new Error('invalid wallet')
-  }
-
-  async save() {
-    if (!this._wallet) return
-    await this._saveState(this._wallet)
-  }
-
-  async _saveState(wallet: WalletInterface) {
-    assert.assert(wallet.id, 'saveState:: wallet.id')
-    /* :: if (!this._wallet) throw 'assert' */
-    const data = wallet.toJSON()
-    await storage.write(`/wallet/${wallet.id}/data`, data)
   }
 
   closeWallet(): Promise<void> {
@@ -438,7 +316,7 @@ export class WalletManager {
     if (!this._wallet) return
     const wallet = this._wallet
     wallet.resync()
-    this.save()
+    wallet.save()
     await this.closeWallet()
   }
 
@@ -458,7 +336,7 @@ export class WalletManager {
 
   async updateHWDeviceInfo(wallet: YoroiWallet, hwDeviceInfo: HWDeviceInfo) {
     wallet.hwDeviceInfo = hwDeviceInfo
-    await this._saveState(wallet as unknown as WalletInterface)
+    await wallet.save()
   }
 
   // =================== create =================== //
@@ -471,7 +349,7 @@ export class WalletManager {
       case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON:
       case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY:
       case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY_24:
-        return new ShelleyWallet()
+        return new ShelleyWallet(storage)
       // TODO
       // case WALLET_IMPLEMENTATION_REGISTRY.ERGO:
       //   return ErgoWallet()

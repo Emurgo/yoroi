@@ -12,7 +12,9 @@ storiesOf('V2/TxHistory', module)
     return (
       <QueryProvider>
         <SelectedWalletProvider wallet={mockWallet}>
-          <TxHistoryScreen />
+          <SendProvider wallet={mockWallet}>
+            <TxHistoryScreen />
+          </SendProvider>
         </SelectedWalletProvider>
       </QueryProvider>
     )
@@ -38,7 +40,9 @@ storiesOf('V2/TxHistory', module)
     return (
       <QueryProvider>
         <SelectedWalletProvider wallet={{...mockWallet, walletImplementationId: 'haskell-byron'}}>
-          <TxHistoryScreen />
+          <SendProvider wallet={mockWallet}>
+            <TxHistoryScreen />
+          </SendProvider>
         </SelectedWalletProvider>
       </QueryProvider>
     )

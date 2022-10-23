@@ -1,1 +1,1 @@
-export * from './CatalystNavigator'
+export * from './VotingRegistration'

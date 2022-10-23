@@ -2,12 +2,9 @@ import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps} from 'react-native'
-import {useSelector} from 'react-redux'
 
 import {Boundary, Icon} from '../components'
 import {useWalletName} from '../hooks'
-import {formatDateToSeconds} from '../legacy/format'
-import {transactionsInfoSelector} from '../legacy/selectors'
 import {
   defaultStackNavigationOptions,
   defaultStackNavigationOptionsV2,
@@ -33,31 +30,35 @@ export const TxHistoryNavigator = () => {
   const wallet = useSelectedWallet()
 
   const walletName = useWalletName(wallet)
-  const transactionInfos = useSelector(transactionsInfoSelector)
   const [modalInfoState, setModalInfoState] = React.useState(false)
   const showModalInfo = () => setModalInfoState(true)
   const hideModalInfo = () => setModalInfoState(false)
 
   return (
     <SendProvider key={wallet.id} wallet={wallet}>
-      <Stack.Navigator screenOptions={defaultStackNavigationOptions} initialRouteName="history-list">
+      <Stack.Navigator
+        screenOptions={{
+          ...defaultStackNavigationOptions,
+          detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
+        }}
+      >
         <Stack.Screen
           name="history-list"
           component={TxHistory}
           options={{
             ...defaultStackNavigationOptionsV2,
-            title: walletName,
+            title: walletName ?? '',
             headerRight: () => <HeaderRightHistory />,
           }}
         />
 
-        <Stack.Screen
-          name="history-details"
-          component={TxDetails}
-          options={({route}) => ({
-            title: formatDateToSeconds(transactionInfos[route.params.id]?.submittedAt),
-          })}
-        />
+        <Stack.Screen name="history-details" options={{title: ''}}>
+          {() => (
+            <Boundary loading={{fallbackProps: {style: {flex: 1}}}}>
+              <TxDetails />
+            </Boundary>
+          )}
+        </Stack.Screen>
 
         <Stack.Screen
           name="receive"

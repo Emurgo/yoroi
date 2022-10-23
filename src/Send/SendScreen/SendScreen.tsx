@@ -7,24 +7,15 @@ import {useIntl} from 'react-intl'
 import {ActivityIndicator, Image, ScrollView, StyleSheet, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useSelector} from 'react-redux'
 
 import {Button, Checkbox, Spacer, StatusBar, Text, TextInput} from '../../components'
-import {useBalances, useTokenInfo} from '../../hooks'
+import {useBalances, useHasPendingTx, useTokenInfo, useUtxos} from '../../hooks'
 import {CONFIG, getDefaultAssetByNetworkId} from '../../legacy/config'
 import {formatTokenAmount, getAssetDenominationOrId, truncateWithEllipsis} from '../../legacy/format'
-import {
-  hasPendingOutgoingTransactionSelector,
-  isFetchingUtxosSelector,
-  lastUtxosFetchErrorSelector,
-  utxosSelector,
-} from '../../legacy/selectors'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
-import {UtxoAutoRefresher} from '../../UtxoAutoRefresher'
-import {Quantity, YoroiAmounts, YoroiUnsignedTx} from '../../yoroi-wallets/types'
+import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
 import {Amounts, Quantities} from '../../yoroi-wallets/utils'
-import {parseAmountDecimal} from '../../yoroi-wallets/utils/parsing'
 import type {
   AddressValidationErrors,
   AmountValidationErrors,
@@ -45,12 +36,11 @@ export const SendScreen = () => {
   const strings = useStrings()
   const navigation = useNavigation()
   const wallet = useSelectedWallet()
-  const isFetchingBalance = useSelector(isFetchingUtxosSelector)
-  const lastFetchingError = useSelector(lastUtxosFetchErrorSelector)
   const defaultAsset = getDefaultAssetByNetworkId(wallet.networkId)
   const balances = useBalances(wallet)
-  const utxos = useSelector(utxosSelector)
-  const hasPendingOutgoingTransaction = useSelector(hasPendingOutgoingTransactionSelector)
+
+  const {utxos, isLoading, error} = useUtxos(wallet)
+  const hasPendingTx = useHasPendingTx(wallet)
   const netInfo = useNetInfo()
   const isOnline = netInfo.type !== 'none' && netInfo.type !== 'unknown'
 
@@ -69,9 +59,7 @@ export const SendScreen = () => {
   const [addressErrors, setAddressErrors] = React.useState<AddressValidationErrors>({addressIsRequired: true})
   const [amountErrors, setAmountErrors] = React.useState<AmountValidationErrors>({amountIsRequired: true})
   const [balanceErrors, setBalanceErrors] = React.useState<BalanceValidationErrors>({})
-  const [balanceAfter, setBalanceAfter] = React.useState<Quantity | null>(null)
   const [yoroiUnsignedTx, setYoroiUnsignedTx] = React.useState<null | YoroiUnsignedTx>(null)
-  const [fee, setFee] = React.useState<Quantity | null>(null)
   const [recomputing, setRecomputing] = React.useState(false)
   const [showSendAllWarning, setShowSendAllWarning] = React.useState(false)
 
@@ -81,13 +69,14 @@ export const SendScreen = () => {
 
   const isValid =
     isOnline &&
-    !hasPendingOutgoingTransaction &&
-    !isFetchingBalance &&
-    lastFetchingError == null &&
+    !hasPendingTx &&
+    !isLoading &&
+    error == null &&
     utxos &&
     _.isEmpty(addressErrors) &&
     _.isEmpty(amountErrors) &&
-    _.isEmpty(balanceErrors)
+    _.isEmpty(balanceErrors) &&
+    !!yoroiUnsignedTx
 
   React.useEffect(() => {
     if (CONFIG.DEBUG.PREFILL_FORMS) {
@@ -100,8 +89,9 @@ export const SendScreen = () => {
 
   const promiseRef = React.useRef<undefined | Promise<unknown>>()
   React.useEffect(() => {
-    setFee(null)
-    setBalanceAfter(null)
+    setYoroiUnsignedTx(null)
+    setBalanceErrors({})
+    setAmountErrors({})
     setRecomputing(true)
 
     const promise = recomputeAll({
@@ -126,8 +116,6 @@ export const SendScreen = () => {
       amountChanged(newState.amount)
       setAmountErrors(newState.amountErrors)
       setBalanceErrors(newState.balanceErrors)
-      setFee(newState.fee)
-      setBalanceAfter(newState.balanceAfter)
       setYoroiUnsignedTx(newState.yoroiUnsignedTx)
       setRecomputing(false)
     })
@@ -143,20 +131,7 @@ export const SendScreen = () => {
   }
 
   const handleConfirm = async () => {
-    if (!isValid || recomputing || !yoroiUnsignedTx) return
-
-    const defaultAssetAmount: Quantity = tokenInfo.isDefault
-      ? (parseAmountDecimal(amount, tokenInfo).toString() as Quantity)
-      : // note: inside this if balanceAfter shouldn't be null
-        Quantities.diff(defaultAssetAvailableAmount, balanceAfter ?? '0')
-
-    const selectedTokens: YoroiAmounts = tokenInfo.isDefault
-      ? sendAll
-        ? Amounts.remove(balances, [defaultAsset.identifier])
-        : {}
-      : {
-          [tokenId]: amount as Quantity,
-        }
+    if (isValid == false || recomputing || yoroiUnsignedTx == null) return
 
     setShowSendAllWarning(false)
 
@@ -166,16 +141,7 @@ export const SendScreen = () => {
         screen: 'history',
         params: {
           screen: 'send-confirm',
-          params: {
-            availableAmount: defaultAssetAvailableAmount,
-            address,
-            defaultAssetAmount,
-            yoroiUnsignedTx,
-            balanceAfterTx: balanceAfter,
-            utxos,
-            fee,
-            selectedTokens,
-          },
+          params: {yoroiUnsignedTx},
         },
       },
     })
@@ -185,13 +151,12 @@ export const SendScreen = () => {
     <SafeAreaView edges={['left', 'right']} style={styles.container}>
       <StatusBar type="dark" />
 
-      <UtxoAutoRefresher />
       <ErrorBanners />
       <AvailableAmountBanner />
 
-      <ScrollView style={styles.content} keyboardDismissMode="on-drag">
-        <BalanceAfterTransaction balanceAfter={balanceAfter} />
-        <Fee fee={fee} />
+      <ScrollView style={styles.content} keyboardDismissMode="on-drag" keyboardShouldPersistTaps>
+        <BalanceAfterTransaction yoroiUnsignedTx={yoroiUnsignedTx} />
+        <Fee yoroiUnsignedTx={yoroiUnsignedTx} />
 
         <Spacer height={16} />
 
@@ -256,12 +221,7 @@ export const SendScreen = () => {
       </ScrollView>
 
       <View style={styles.actions}>
-        <Button
-          onPress={onConfirm}
-          title={strings.continueButton}
-          disabled={!isValid || fee == null}
-          testID="continueButton"
-        />
+        <Button onPress={onConfirm} title={strings.continueButton} disabled={!isValid} testID="continueButton" />
       </View>
 
       <SendAllWarning
@@ -283,8 +243,8 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   actions: {
-    marginHorizontal: 16,
-    marginBottom: 16,
+    paddingHorizontal: 16,
+    paddingBottom: 16,
   },
   indicator: {
     marginTop: 26,

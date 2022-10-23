@@ -5,12 +5,11 @@ import {Platform, UIManager} from 'react-native'
 import * as RNP from 'react-native-paper'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {enableScreens} from 'react-native-screens'
-import {useDispatch, useSelector} from 'react-redux'
+import {useDispatch} from 'react-redux'
 
 import AppMigrations from './AppMigrations'
 import {AuthProvider} from './auth/AuthProvider'
 import {initApp} from './legacy/actions'
-import {isAppInitializedSelector} from './legacy/selectors'
 import {SelectedWalletMetaProvider, SelectedWalletProvider} from './SelectedWallet'
 import {StorageProvider} from './Storage'
 
@@ -23,10 +22,9 @@ if (Platform.OS === 'android') {
 }
 
 const App = () => {
-  useInitializeApp()
-  const isAppInitialized = useSelector(isAppInitializedSelector)
+  const loaded = useInitApp()
 
-  if (!isAppInitialized) return null
+  if (!loaded) return null
 
   return (
     <SafeAreaProvider>
@@ -45,11 +43,19 @@ const App = () => {
   )
 }
 
-const useInitializeApp = () => {
+const useInitApp = () => {
+  const [loaded, setLoaded] = React.useState(false)
   const dispatch = useDispatch()
   useEffect(() => {
-    dispatch(initApp())
+    const load = async () => {
+      await dispatch(initApp())
+      setLoaded(true)
+    }
+
+    load()
   }, [dispatch])
+
+  return loaded
 }
 
 export default App

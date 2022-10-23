@@ -1,32 +1,25 @@
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import {useSelector} from 'react-redux'
 
 import {useSelectedWallet} from '../../src/SelectedWallet'
-import {Icon, StandardModal, Text} from '../components'
+import {Icon, Text} from '../components'
 import globalMessages, {confirmationMessages} from '../i18n/global-messages'
-import {CONFIG, isHaskellShelley, isNightly} from '../legacy/config'
-import {formatTokenWithText} from '../legacy/format'
+import {isNightly} from '../legacy/config'
 import {Logger} from '../legacy/logging'
-import {availableAssetsSelector, tokenBalanceSelector} from '../legacy/selectors'
 import {COLORS} from '../theme'
-import {useWalletManager} from '../WalletManager'
 import {isRegistrationOpen} from '../yoroi-wallets'
+import {useCanVote} from './hooks'
+import {InsufficientFundsModal} from './InsufficientFundsModal'
+
 type Props = {onPress: () => void; disabled?: boolean}
 
 export const VotingBanner = ({onPress, disabled}: Props) => {
   const strings = useStrings()
-  const walletManager = useWalletManager()
   const wallet = useSelectedWallet()
-
-  const tokenBalance = useSelector(tokenBalanceSelector)
-  const availableAssets = useSelector(availableAssetsSelector)
-  const assetMetaData = availableAssets[tokenBalance.getDefaultId()]
-
-  const [showInsufficientFundsModal, setShowInsufficientFundsModal] = useState<boolean>(false)
-  const canVote = isHaskellShelley(wallet.walletImplementationId)
-  const [showCatalystBanner, setShowCatalystBanner] = useState<boolean>(canVote)
+  const {canVote, sufficientFunds} = useCanVote(wallet)
+  const [showInsufficientFundsModal, setShowInsufficientFundsModal] = useState(false)
+  const [showCatalystBanner, setShowCatalystBanner] = useState(canVote)
 
   useEffect(() => {
     const checkCatalystFundInfo = async () => {
@@ -37,7 +30,7 @@ export const VotingBanner = ({onPress, disabled}: Props) => {
 
       if (canVote) {
         try {
-          const {currentFund} = await walletManager.fetchFundInfo()
+          const {currentFund} = await wallet.fetchFundInfo()
           if (currentFund != null) {
             fundInfo = {
               registrationStart: currentFund.registrationStart,
@@ -58,14 +51,7 @@ export const VotingBanner = ({onPress, disabled}: Props) => {
 
   if (!showCatalystBanner) return null
 
-  const handleOnPress = () => {
-    if (tokenBalance.getDefault().lt(CONFIG.CATALYST.MIN_ADA)) {
-      setShowInsufficientFundsModal(true)
-      return
-    }
-
-    onPress()
-  }
+  const handleOnPress = () => (sufficientFunds ? onPress() : setShowInsufficientFundsModal(true))
 
   return (
     <View style={styles.container}>
@@ -76,25 +62,10 @@ export const VotingBanner = ({onPress, disabled}: Props) => {
         </View>
       </TouchableOpacity>
 
-      <StandardModal
+      <InsufficientFundsModal
         visible={showInsufficientFundsModal}
-        title={strings.attention}
         onRequestClose={() => setShowInsufficientFundsModal(false)}
-        primaryButton={{
-          label: strings.back,
-          onPress: () => setShowInsufficientFundsModal(false),
-        }}
-        showCloseIcon
-      >
-        <View>
-          <Text>
-            {strings.noBalance({
-              requiredBalance: formatTokenWithText(CONFIG.CATALYST.DISPLAYED_MIN_ADA, assetMetaData),
-              currentBalance: formatTokenWithText(tokenBalance.getDefault(), assetMetaData),
-            })}
-          </Text>
-        </View>
-      </StandardModal>
+      />
     </View>
   )
 }

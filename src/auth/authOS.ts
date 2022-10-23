@@ -1,6 +1,12 @@
 import {useMutation, UseMutationOptions, useQuery, UseQueryOptions} from 'react-query'
 
-import {AUTH_METHOD_KEY, AUTH_METHOD_PIN, ENCRYPTED_PIN_HASH_KEY, useMutationWithInvalidations} from '../hooks'
+import {
+  AUTH_METHOD_KEY,
+  AUTH_METHOD_PIN,
+  ENCRYPTED_PIN_HASH_KEY,
+  useMutationWithInvalidations,
+  useWallet,
+} from '../hooks'
 import {WalletMeta} from '../legacy/state'
 import storage from '../legacy/storage'
 import {Storage} from '../Storage'
@@ -116,6 +122,12 @@ export const useEnableEasyConfirmation = (
     ...mutation,
     enableEasyConfirmation: mutation.mutate,
   }
+}
+
+export const useEasyConfirmationEnabled = (wallet: YoroiWallet) => {
+  useWallet(wallet, 'easy-confirmation')
+
+  return wallet.isEasyConfirmationEnabled
 }
 
 export const useDisableAllEasyConfirmation = (

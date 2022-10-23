@@ -3,6 +3,7 @@ import type {IntlShape} from 'react-intl'
 
 import type {HWDeviceInfo} from '../../legacy/ledgerUtils'
 import {WalletMeta} from '../../legacy/state'
+import storage from '../../legacy/storage'
 import {
   AccountStates,
   StakePoolInfoRequest,
@@ -18,6 +19,7 @@ import type {
   RawUtxo,
   TipStatusResponse,
   Transaction,
+  TransactionInfo,
   TxBodiesRequest,
   TxBodiesResponse,
   TxStatusRequest,
@@ -74,6 +76,8 @@ export interface WalletInterface {
 
   checksum: undefined | CardanoTypes.WalletChecksum
 
+  storage: typeof storage
+
   // =================== getters =================== //
 
   get internalAddresses(): Addresses
@@ -123,9 +127,9 @@ export interface WalletInterface {
 
   // =================== synch =================== //
 
-  doFullSync(): Promise<Record<string, Transaction>>
+  doFullSync(): Promise<void>
 
-  tryDoFullSync(): Promise<Record<string, Transaction> | null>
+  tryDoFullSync(): Promise<void>
 
   // =================== state/UI =================== //
 
@@ -136,6 +140,8 @@ export interface WalletInterface {
   generateNewUiReceiveAddress(): boolean
 
   // =================== persistence =================== //
+
+  save(): Promise<void>
 
   // TODO: type
   toJSON(): unknown
@@ -173,12 +179,7 @@ export interface WalletInterface {
     defaultAsset: DefaultAsset,
   ): Promise<YoroiUnsignedTx>
 
-  createVotingRegTx(
-    utxos: Array<RawUtxo>,
-    catalystPrivateKey: string,
-    defaultAsset: DefaultAsset,
-    decryptedKey: string | undefined,
-  ): Promise<YoroiUnsignedTx>
+  createVotingRegTx(): Promise<{votingRegTx: YoroiUnsignedTx; votingKeyEncrypted: string}>
 
   createWithdrawalTx(
     utxos: Array<RawUtxo>,
@@ -262,6 +263,8 @@ export type YoroiWallet = Pick<WalletInterface, YoroiWalletKeys> & {
   checksum: NonNullable<WalletInterface['checksum']>
   isReadOnly: NonNullable<WalletInterface['isReadOnly']>
   rewardAddressHex: NonNullable<WalletInterface['rewardAddressHex']>
+  getTransactions: (txids: Array<string>) => Promise<Record<string, TransactionInfo>>
+  sync: () => Promise<void>
 }
 
 export const isYoroiWallet = (wallet: unknown): wallet is YoroiWallet => {
@@ -301,6 +304,17 @@ type YoroiWalletKeys =
   | 'subscribe'
   | 'toJSON'
   | 'fetchCurrentPrice'
+  | 'fetchFundInfo'
+  | 'internalAddresses'
+  | 'externalAddresses'
+  | 'confirmationCounts'
+  | 'transactions'
+  | 'isUsedAddressIndex'
+  | 'numReceiveAddresses'
+  | 'canGenerateNewReceiveAddress'
+  | 'storage'
+  | 'save'
+  | 'doFullSync'
 
 const yoroiWalletKeys: Array<YoroiWalletKeys> = [
   'id',
@@ -334,4 +348,15 @@ const yoroiWalletKeys: Array<YoroiWalletKeys> = [
   'fetchPoolInfo',
   'toJSON',
   'fetchCurrentPrice',
+  'fetchFundInfo',
+  'internalAddresses',
+  'externalAddresses',
+  'confirmationCounts',
+  'transactions',
+  'isUsedAddressIndex',
+  'numReceiveAddresses',
+  'canGenerateNewReceiveAddress',
+  'storage',
+  'save',
+  'doFullSync',
 ]

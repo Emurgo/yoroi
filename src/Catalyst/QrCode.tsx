@@ -1,51 +1,36 @@
-import Clipboard from '@react-native-community/clipboard'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {NativeModules, Platform, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {NativeModules, Platform, ScrollView, StyleSheet, View} from 'react-native'
 import QRCodeSVG from 'react-native-qrcode-svg'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, Icon, ProgressStep, Spacer, Text} from '../components'
+import {Button, CopyButton, ProgressStep, Spacer, Text} from '../components'
+import {useVotingRegTx} from '../hooks'
 import {confirmationMessages} from '../i18n/global-messages'
-import {useWalletNavigation} from '../navigation'
+import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
-import {CatalystBackupCheckModal} from './CatalystBackupCheckModal'
 import {Actions, Description, Title} from './components'
+import {useCountdown} from './hooks'
+import {VotingRegistrationBackupCheckModal} from './VotingRegistrationBackupCheckModal'
 
 const {FlagSecure} = NativeModules
 
-export const Step6 = ({catalystSKHexEncrypted}: {catalystSKHexEncrypted: string}) => {
+export const QrCode = ({onNext}: {onNext: () => void}) => {
   useBlockGoBack()
+  useAllowScreenshot()
   const strings = useStrings()
-  const {resetToTxHistory} = useWalletNavigation()
-  const [countDown, setCountDown] = useState<number>(5)
+  const wallet = useSelectedWallet()
+  const {votingKeyEncrypted} = useVotingRegTx(wallet)
+
   const [showBackupWarningModal, setShowBackupWarningModal] = useState(false)
-
-  useEffect(() => {
-    countDown > 0 && setTimeout(() => setCountDown(countDown - 1), 1000)
-  }, [countDown])
-
-  useFocusEffect(
-    // eslint-disable-next-line consistent-return
-    React.useCallback(() => {
-      if (Platform.OS === 'android') {
-        FlagSecure.deactivate()
-
-        return () => {
-          FlagSecure.activate()
-        }
-      }
-    }, []),
-  )
+  const countdown = useCountdown()
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
       <ProgressStep currentStep={6} totalSteps={6} />
 
-      <ScrollView bounces={false} contentContainerStyle={styles.contentContainer}>
-        <Spacer height={48} />
-
+      <ScrollView bounces={false} style={{paddingTop: 16}} contentContainerStyle={styles.contentContainer}>
         <Title>{strings.subTitle}</Title>
 
         <Spacer height={16} />
@@ -68,33 +53,31 @@ export const Step6 = ({catalystSKHexEncrypted}: {catalystSKHexEncrypted: string}
 
         <Spacer height={32} />
 
-        <QRCode text={catalystSKHexEncrypted} />
+        <QRCode text={votingKeyEncrypted} />
 
         <Spacer height={32} />
 
         <Text>{strings.secretCode}</Text>
 
         <SecretCodeBox>
-          <Text style={{flex: 1}}>{catalystSKHexEncrypted}</Text>
+          <Text style={{flex: 1}}>{votingKeyEncrypted}</Text>
           <Spacer width={16} />
-          <CopyButton text={catalystSKHexEncrypted} />
+          <CopyButton value={votingKeyEncrypted} />
         </SecretCodeBox>
       </ScrollView>
 
       <Actions>
         <Button
           onPress={() => setShowBackupWarningModal(true)}
-          title={countDown !== 0 ? countDown.toString() : strings.completeButton}
-          disabled={countDown !== 0}
+          title={countdown !== 0 ? countdown.toString() : strings.completeButton}
+          disabled={countdown !== 0}
         />
       </Actions>
 
-      <CatalystBackupCheckModal
+      <VotingRegistrationBackupCheckModal
         visible={showBackupWarningModal}
         onRequestClose={() => setShowBackupWarningModal(false)}
-        onConfirm={() => {
-          resetToTxHistory()
-        }}
+        onConfirm={() => onNext()}
       />
     </SafeAreaView>
   )
@@ -107,11 +90,6 @@ const QRCode = ({text}: {text: string}) => (
   </View>
 )
 const SecretCodeBox = (props) => <View {...props} style={styles.secretCodeBox} />
-const CopyButton = ({text}: {text: string}) => (
-  <TouchableOpacity style={{justifyContent: 'center', alignItems: 'center'}} onPress={() => Clipboard.setString(text)}>
-    <Icon.Copy size={26} color={COLORS.DARK_GRAY} />
-  </TouchableOpacity>
-)
 
 const useBlockGoBack = () => {
   const navigation = useNavigation()
@@ -200,4 +178,18 @@ const useStrings = () => {
     secretCode: intl.formatMessage(messages.secretCode),
     completeButton: intl.formatMessage(confirmationMessages.commonButtons.completeButton),
   }
+}
+
+const useAllowScreenshot = () => {
+  useFocusEffect(
+    React.useCallback(() => {
+      if (Platform.OS === 'android') {
+        FlagSecure.deactivate()
+
+        return () => {
+          FlagSecure.activate()
+        }
+      }
+    }, []),
+  )
 }

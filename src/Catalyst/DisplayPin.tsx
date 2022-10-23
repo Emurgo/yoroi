@@ -1,30 +1,20 @@
-import {useNavigation} from '@react-navigation/native'
-import React, {useEffect, useState} from 'react'
+import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, ProgressStep, Spacer} from '../components'
 import {confirmationMessages} from '../i18n/global-messages'
-import {CatalystRouteNavigation} from '../navigation'
 import {Actions, Description, PinBox, Row, Title} from './components'
+import {useCountdown} from './hooks'
 
 type Props = {
   pin: string
+  onNext: () => void
 }
-export const Step2 = ({pin}: Props) => {
+export const DisplayPin = ({pin, onNext}: Props) => {
   const strings = useStrings()
-  const navigation = useNavigation<CatalystRouteNavigation>()
-  const [countDown, setCountDown] = useState(5)
-
-  useEffect(() => {
-    let timeout
-    if (countDown > 0) {
-      timeout = setTimeout(() => setCountDown(countDown - 1), 1000)
-    }
-
-    return () => clearTimeout(timeout)
-  }, [countDown])
+  const countdown = useCountdown()
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
@@ -56,9 +46,9 @@ export const Step2 = ({pin}: Props) => {
 
       <Actions>
         <Button
-          onPress={() => navigation.navigate('catalyst-confirm-pin')}
-          title={countDown !== 0 ? countDown.toString() : strings.continueButton}
-          disabled={countDown !== 0}
+          onPress={() => onNext()}
+          title={countdown !== 0 ? countdown.toString() : strings.continueButton}
+          disabled={countdown !== 0}
         />
       </Actions>
     </SafeAreaView>

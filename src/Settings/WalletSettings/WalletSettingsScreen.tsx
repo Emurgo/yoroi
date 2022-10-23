@@ -3,16 +3,15 @@ import type {MessageDescriptor} from 'react-intl'
 import {defineMessages, useIntl} from 'react-intl'
 import {InteractionManager, ScrollView, StyleSheet, Switch} from 'react-native'
 import {useMutation, UseMutationOptions} from 'react-query'
-import {useDispatch} from 'react-redux'
 
+import {useEasyConfirmationEnabled} from '../../auth'
 import {useAuth} from '../../auth/AuthProvider'
 import {StatusBar} from '../../components'
-import {useAuthMethod, useCloseWallet, useEasyConfirmationEnabled, useWalletName} from '../../hooks'
+import {useAuthMethod, useCloseWallet, useWalletName} from '../../hooks'
 import {confirmationMessages} from '../../i18n/global-messages'
 import {DIALOG_BUTTONS, showConfirmationDialog} from '../../legacy/actions'
 import {isByron, isHaskellShelley} from '../../legacy/config'
 import {getNetworkConfigById} from '../../legacy/networks'
-import {clearUTXOs} from '../../legacy/utxo'
 import {useWalletNavigation} from '../../navigation'
 import {useSelectedWallet, useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
 import {useStorage} from '../../Storage'
@@ -210,14 +209,12 @@ const getWalletType = (implementationId: WalletImplementationId): MessageDescrip
 const useLogout = (options?: UseMutationOptions<void, Error>) => {
   const {logout} = useAuth()
   const intl = useIntl()
-  const dispatch = useDispatch()
   const setSelectedWallet = useSetSelectedWallet()
   const setSelectedWalletMeta = useSetSelectedWalletMeta()
   const {closeWallet, ...mutation} = useCloseWallet({
     onSuccess: () => {
       setSelectedWallet(undefined)
       setSelectedWalletMeta(undefined)
-      dispatch(clearUTXOs())
     },
     ...options,
   })

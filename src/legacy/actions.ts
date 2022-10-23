@@ -3,20 +3,22 @@ import 'react-intl'
 import 'redux'
 
 import type {IntlShape} from 'react-intl'
-import {Alert, Keyboard} from 'react-native'
+import {Alert} from 'react-native'
 import type {Dispatch} from 'redux'
 import uuid from 'uuid'
 
+import {getCrashReportsEnabled} from '../hooks'
 import globalMessages, {errorMessages} from '../i18n/global-messages'
 import {Logger} from '../legacy/logging'
-import {walletManager} from '../yoroi-wallets'
+import {ServerStatus, walletManager} from '../yoroi-wallets'
+import {checkServerStatus} from '../yoroi-wallets'
 import type {AppSettingsKey} from './appSettings'
 import {APP_SETTINGS_KEYS, readAppSettings, removeAppSettings, writeAppSettings} from './appSettings'
 import assert from './assert'
-import {isNightly} from './config'
+import {CONFIG, isNightly} from './config'
 import crashReporting from './crashReporting'
-import {mirrorTxHistory, setBackgroundSyncError} from './history'
-import {installationIdSelector, sendCrashReportsSelector} from './selectors'
+import {getCardanoNetworkConfigById} from './networks'
+import {installationIdSelector} from './selectors'
 import type {State} from './state'
 
 const updateCrashlytics = (fieldName: AppSettingsKey, value: any) => {
@@ -87,7 +89,30 @@ const initInstallationId =
     return newInstallationId
   }
 
+const _setServerStatus = (serverStatus: ServerStatus) => (dispatch: Dispatch<any>) =>
+  dispatch({
+    path: ['serverStatus'],
+    payload: serverStatus,
+    type: 'SET_SERVER_STATUS',
+    reducer: (state: State, payload) => payload,
+  })
+
 export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
+  try {
+    // check status of default network
+    const backendConfig = getCardanoNetworkConfigById(CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID).BACKEND
+    const status = await checkServerStatus(backendConfig)
+    dispatch(
+      _setServerStatus({
+        isServerOk: status.isServerOk,
+        isMaintenance: status.isMaintenance,
+        serverTime: status.serverTime || Date.now(),
+      }),
+    )
+  } catch (e) {
+    Logger.warn('actions::initApp could not retrieve server status', e)
+  }
+
   if (isNightly()) {
     dispatch(setAppSettingField(APP_SETTINGS_KEYS.SEND_CRASH_REPORTS, true))
   }
@@ -95,7 +120,8 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
   await dispatch(reloadAppSettings())
   await dispatch(initInstallationId())
 
-  if (sendCrashReportsSelector(getState())) {
+  const crashReportsEnabled = await getCrashReportsEnabled()
+  if (crashReportsEnabled) {
     crashReporting.enable()
     // TODO(ppershing): just update crashlytic variables here
     await dispatch(reloadAppSettings())
@@ -103,39 +129,20 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
   }
 
   await walletManager.initialize()
-
-  dispatch({
-    path: ['isAppInitialized'],
-    payload: true,
-    reducer: (state: State, value) => value,
-    type: 'INITIALIZE_APP',
-  })
 }
-
-const setIsKeyboardOpen = (isOpen) => ({
-  type: 'Set isKeyboardOpen',
-  path: ['isKeyboardOpen'],
-  payload: isOpen,
-  reducer: (state: State, payload) => payload,
-})
 
 export const setupHooks = () => (dispatch: Dispatch<any>) => {
-  Logger.debug('setting up isOnline callback')
-  Logger.debug('setting wallet manager hook')
-  walletManager.subscribe(() => dispatch(mirrorTxHistory()))
-  walletManager.subscribeBackgroundSyncError((err: any) => dispatch(setBackgroundSyncError(err)))
-  Logger.debug('setting up app lock')
-
-  Logger.debug('setting up keyboard manager')
-  Keyboard.addListener('keyboardDidShow', () => dispatch(setIsKeyboardOpen(true)))
-  Keyboard.addListener('keyboardDidHide', () => dispatch(setIsKeyboardOpen(false)))
+  walletManager.subscribeServerSync((status) => dispatch(_setServerStatus(status)))
 }
+
 export const generateNewReceiveAddress = () => async (_dispatch: Dispatch<any>) => {
   return walletManager.generateNewUiReceiveAddress()
 }
+
 export const generateNewReceiveAddressIfNeeded = () => async (_dispatch: Dispatch<any>) => {
   return walletManager.generateNewUiReceiveAddressIfNeeded()
 }
+
 type DialogOptions = {
   title: string
   message: string

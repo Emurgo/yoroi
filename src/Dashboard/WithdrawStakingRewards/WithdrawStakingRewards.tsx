@@ -2,14 +2,11 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet} from 'react-native'
 import Markdown from 'react-native-easy-markdown'
-import {useSelector} from 'react-redux'
 
 import {RootKey} from '../../auth'
 import {Boundary, DangerousAction, PleaseWaitView, Spacer} from '../../components'
 import {useWithdrawalTx} from '../../hooks'
 import globalMessages, {ledgerMessages} from '../../i18n/global-messages'
-import {getDefaultAssetByNetworkId} from '../../legacy/config'
-import {utxosSelector} from '../../legacy/selectors'
 import {theme} from '../../theme'
 import {YoroiWallet} from '../../yoroi-wallets'
 import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
@@ -59,22 +56,8 @@ export const WithdrawalTxForm = ({
   onDone: (withdrawalTx: YoroiUnsignedTx) => void
 }) => {
   const strings = useStrings()
-  const [deregister, setDeregister] = React.useState<boolean>()
-  const utxos = useSelector(utxosSelector) || []
-  const {isLoading} = useWithdrawalTx(
-    {
-      wallet,
-      deregister,
-      defaultAsset: getDefaultAssetByNetworkId(wallet.networkId),
-      utxos,
-    },
-    {
-      onSuccess: (withdrawalTx) => onDone(withdrawalTx),
-      enabled: deregister != null,
-      useErrorBoundary: true,
-      suspense: true,
-    },
-  )
+  const [deregister, setDeregister] = React.useState(false)
+  const {isLoading} = useWithdrawalTx({wallet, deregister}, {onSuccess: (withdrawalTx) => onDone(withdrawalTx)})
 
   return (
     <DangerousAction

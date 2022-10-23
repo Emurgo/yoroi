@@ -5,8 +5,7 @@ import {Platform} from 'react-native'
 import {HWDeviceInfo} from './legacy/ledgerUtils'
 import {COLORS} from './theme'
 import {NetworkId, WalletImplementationId, YoroiProvider} from './yoroi-wallets'
-import {Quantity, YoroiAmounts, YoroiUnsignedTx} from './yoroi-wallets/types'
-import type {RawUtxo} from './yoroi-wallets/types/other'
+import {YoroiUnsignedTx} from './yoroi-wallets/types'
 
 // prettier-ignore
 export const useUnsafeParams = <Params, >() => {
@@ -74,7 +73,7 @@ export type WalletStackRoutes = {
   'wallet-selection': undefined
   'main-wallet-routes': NavigatorScreenParams<WalletTabRoutes>
   settings: NavigatorScreenParams<SettingsStackRoutes>
-  'catalyst-router': NavigatorScreenParams<CatalystRoutes>
+  'voting-registration': NavigatorScreenParams<VotingRegistrationRoutes>
 }
 export type WalletStackRouteNavigation = StackNavigationProp<WalletStackRoutes>
 
@@ -203,13 +202,6 @@ export type SettingsRouteNavigation = StackNavigationProp<SettingsStackRoutes>
 
 export type SendConfirmParams = {
   yoroiUnsignedTx: YoroiUnsignedTx
-  defaultAssetAmount: Quantity
-  address: string
-  balanceAfterTx: Quantity | null
-  availableAmount: Quantity
-  fee: Quantity | null
-  selectedTokens: YoroiAmounts
-  utxos: RawUtxo[]
 }
 export type SendRoutes = {
   'send-ada-main': undefined
@@ -225,15 +217,15 @@ export type DashboardRoutes = {
   'delegation-confirmation': undefined
 }
 
-export type CatalystRoutes = {
-  'catalyst-landing': undefined
-  'catalyst-generate-pin': undefined
-  'catalyst-confirm-pin': undefined
-  'catalyst-generate-trx': undefined
-  'catalyst-transaction': undefined
-  'catalyst-qr-code': undefined
+export type VotingRegistrationRoutes = {
+  'download-catalyst': undefined
+  'display-pin': undefined
+  'confirm-pin': undefined
+  'create-tx': undefined
+  'confirm-tx': undefined
+  'qr-code': undefined
 }
-export type CatalystRouteNavigation = StackNavigationProp<CatalystRoutes>
+export type VotingRegistrationRouteNavigation = StackNavigationProp<VotingRegistrationRoutes>
 
 export type FirstRunRoutes = {
   'language-pick': undefined
@@ -244,7 +236,7 @@ export type FirstRunRouteNavigation = StackNavigationProp<FirstRunRoutes>
 
 export type MenuRoutes = {
   menu: undefined
-  'catalyst-voting': undefined
+  'voting-registration': undefined
 }
 
 export type AppRoutes = {

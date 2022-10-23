@@ -2,16 +2,12 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Alert, ScrollView, StyleSheet, Switch} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
-import {useDispatch, useSelector} from 'react-redux'
 
 import {useAuthOsErrorDecoder, useAuthWithOs, useCanEnableAuthOs} from '../../auth'
 import {StatusBar} from '../../components'
-import {useAuthMethod, useRefetchOnFocus} from '../../hooks'
+import {useAuthMethod, useCrashReports, useRefetchOnFocus} from '../../hooks'
 import globalMessages from '../../i18n/global-messages'
-import {setAppSettingField} from '../../legacy/actions'
-import {APP_SETTINGS_KEYS} from '../../legacy/appSettings'
 import {CONFIG, isNightly} from '../../legacy/config'
-import {installationIdSelector, sendCrashReportsSelector} from '../../legacy/selectors'
 import {isEmptyString} from '../../legacy/utils'
 import {useWalletNavigation} from '../../navigation'
 import {useStorage} from '../../Storage'
@@ -23,9 +19,7 @@ const version = DeviceInfo.getVersion()
 export const ApplicationSettingsScreen = () => {
   const strings = useStrings()
   const {navigation} = useWalletNavigation()
-  const sendCrashReports = useSelector(sendCrashReportsSelector)
 
-  const dispatch = useDispatch()
   const {currency} = useCurrencyContext()
   const storage = useStorage()
   const {authMethod, refetch: refetchAuthMethod} = useAuthMethod(storage)
@@ -56,12 +50,7 @@ export const ApplicationSettingsScreen = () => {
     },
   )
 
-  const installationId = useSelector(installationIdSelector)
-  if (isEmptyString(installationId)) throw new Error('invalid state')
-
-  const setCrashReporting = (value: boolean) => {
-    dispatch(setAppSettingField(APP_SETTINGS_KEYS.SEND_CRASH_REPORTS, value))
-  }
+  const crashReports = useCrashReports()
 
   const onToggleBiometricsAuthIn = async () => {
     if (authMethod?.isOS) {
@@ -96,7 +85,11 @@ export const ApplicationSettingsScreen = () => {
 
       <SettingsSection title={strings.crashReporting}>
         <SettingsItem label={strings.crashReportingText}>
-          <Switch value={sendCrashReports} onValueChange={setCrashReporting} disabled={isNightly()} />
+          <Switch
+            value={crashReports.enabled}
+            onValueChange={crashReports.enabled ? crashReports.disable : crashReports.enable}
+            disabled={isNightly()}
+          />
         </SettingsItem>
       </SettingsSection>
 

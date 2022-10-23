@@ -3,7 +3,6 @@ import _ from 'lodash'
 import {defaultMemoize} from 'reselect'
 
 import {RootKey} from '../auth/RootKey'
-import * as api from '../legacy/api'
 import assert from '../legacy/assert'
 import {CONFIG} from '../legacy/config'
 import type {HWDeviceInfo} from '../legacy/ledgerUtils'
@@ -11,6 +10,7 @@ import {Logger} from '../legacy/logging'
 import {getCardanoNetworkConfigById, isJormungandr} from '../legacy/networks'
 import {IsLockedError, nonblockingSynchronize, synchronize} from '../legacy/promise'
 import {CardanoTypes, NetworkId, WalletImplementationId, YoroiProvider} from './cardano'
+import * as api from './cardano/api'
 import {AddressChain, AddressChainJSON, Addresses} from './cardano/chain'
 import {TransactionCache, TransactionCacheJSON} from './cardano/shelley/transactionCache'
 import type {BackendConfig, Transaction} from './types/other'
@@ -213,11 +213,9 @@ export class Wallet {
   async tryDoFullSync() {
     try {
       return await nonblockingSynchronize(this._doFullSyncMutex, () => this._doFullSync())
-    } catch (e) {
-      if (e instanceof IsLockedError) {
-        return null
-      } else {
-        throw e
+    } catch (error) {
+      if (!(error instanceof IsLockedError)) {
+        throw error
       }
     }
   }
@@ -273,7 +271,6 @@ export class Wallet {
     if (lastUsedIndex > this.state.lastGeneratedAddressIndex) {
       this.state.lastGeneratedAddressIndex = lastUsedIndex
     }
-    return this.transactionCache.transactions
   }
 
   resync() {

@@ -11,7 +11,7 @@ type Props = {
   onRequestClose: () => void
 }
 
-export const CatalystBackupCheckModal = ({onConfirm, visible, onRequestClose}: Props) => {
+export const VotingRegistrationBackupCheckModal = ({onConfirm, visible, onRequestClose}: Props) => {
   const strings = useStrings()
   const [acceptedPin, setAcceptedPin] = useState(false)
   const [acceptedQrCode, setAcceptedQrCode] = useState(false)

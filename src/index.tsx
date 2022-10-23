@@ -8,9 +8,8 @@ import {Provider} from 'react-redux'
 
 import App from './App'
 import {name as appName} from './app.json'
-import {Boundary} from './components'
+import {LoadingBoundary} from './components'
 import {ErrorBoundary} from './components/ErrorBoundary'
-import {LoadingOverlay} from './components/LoadingOverlay'
 import {LanguageProvider} from './i18n'
 import translations from './i18n/translations'
 import {handleGeneralError, setupHooks} from './legacy/actions'
@@ -71,7 +70,7 @@ const AppWithProviders = () => {
       <ErrorBoundary>
         <Provider store={store}>
           <QueryClientProvider client={queryClient}>
-            <Boundary loading={{fallback: <LoadingOverlay loading />}}>
+            <LoadingBoundary>
               <ThemeProvider>
                 <LanguageProvider>
                   <CurrencyProvider>
@@ -79,7 +78,7 @@ const AppWithProviders = () => {
                   </CurrencyProvider>
                 </LanguageProvider>
               </ThemeProvider>
-            </Boundary>
+            </LoadingBoundary>
           </QueryClientProvider>
         </Provider>
       </ErrorBoundary>
