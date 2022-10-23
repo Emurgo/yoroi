@@ -38,29 +38,16 @@ export async function resetSecret({key}: {key: string}) {
 
 export async function canEnableAuthOs() {
   return Platform.select({
-    android: () =>
-      Keychain.getSupportedBiometryType().then(
-        (supportedBioType) => supportedBioType != null && androidSupportedBioTypes.includes(supportedBioType),
-      ),
+    android: () => Keychain.getSupportedBiometryType().then((supportedBioType) => supportedBioType != null),
     ios: () =>
       Promise.all([
         Keychain.canImplyAuthentication({
           authenticationType: Keychain.AUTHENTICATION_TYPE.DEVICE_PASSCODE_OR_BIOMETRICS,
         }),
         Keychain.getSupportedBiometryType(),
-      ]).then(
-        ([canAuth, supportedBioType]) =>
-          supportedBioType != null && iosSupportedBioTypes.includes(supportedBioType) && canAuth,
-      ),
+      ]).then(([canAuth, supportedBioType]) => supportedBioType != null && canAuth),
     default: () => Promise.reject('OS Authentication is not supported'),
   })()
 }
-
-const iosSupportedBioTypes = [Keychain.BIOMETRY_TYPE.TOUCH_ID, Keychain.BIOMETRY_TYPE.FACE_ID]
-const androidSupportedBioTypes = [
-  Keychain.BIOMETRY_TYPE.FINGERPRINT,
-  Keychain.BIOMETRY_TYPE.FACE,
-  Keychain.BIOMETRY_TYPE.IRIS,
-]
 
 export type AuthenticationPrompt = Keychain.Options['authenticationPrompt']
