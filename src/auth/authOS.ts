@@ -41,7 +41,7 @@ export const useEnableAuthWithOs = (
           throw new Error('Invalid state')
         })
         .then(JSON.parse)
-        .then((installationId) => Keychain.saveSecret({key: installationId, value: installationId}))
+        .then((installationId: string) => Keychain.saveSecret({key: installationId, value: installationId}))
         .then(({service}) => Keychain.loadSecret({key: service, authenticationPrompt}))
         .then(() => storage.setItem(AUTH_METHOD_KEY, JSON.stringify(AUTH_METHOD_OS)))
         .then(() => storage.getItem(ENCRYPTED_PIN_HASH_KEY))
@@ -69,7 +69,7 @@ export const useAuthWithOs = (
           throw new Error('Invalid state')
         })
         .then(JSON.parse)
-        .then((key) => Keychain.loadSecret({key, authenticationPrompt})),
+        .then((key: string) => Keychain.loadSecret({key, authenticationPrompt})),
     ...options,
   })
 
@@ -171,7 +171,7 @@ export const useMigrateAuthMethod = (storage: Storage) => {
               throw new Error('Invalid state')
             })
             .then(JSON.parse)
-            .then((installationId) => Keychain.saveSecret({key: installationId, value: installationId}))
+            .then((installationId: string) => Keychain.saveSecret({key: installationId, value: installationId}))
             .then(() => storage.setItem(AUTH_METHOD_KEY, JSON.stringify(AUTH_METHOD_OS)))
             .then(() => disableAllEasyConfirmation())
         }
