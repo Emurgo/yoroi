@@ -184,3 +184,88 @@ export const fetchCurrentPrice = async (currency: CurrencySymbol, config: Backen
 
   return response.ticker.prices[currency]
 }
+
+// async function genCardanoAssetMap(tokenIds: Array<string>) {
+//   let tokenInfoResponse
+//   try {
+//     tokenInfoResponse = await getTokenInfo({tokenIds})
+//   } catch {
+//     tokenInfoResponse = {}
+//   }
+//   const metadata = await getTokenMintMetadata(tokenIds, getMultiAssetMetadata)
+
+//   const tokensWithMetadata = tokenIds
+//     .map((tokenId) => {
+//       const id = tokenId.split('.').join('')
+
+//       let numberOfDecimals
+//       let ticker
+//       let lastUpdatedAt
+//       let longName
+
+//       const tokenInfo = tokenInfoResponse[id]
+//       if (tokenInfo) {
+//         numberOfDecimals = tokenInfo.decimals ?? 0
+//         ticker = tokenInfo.ticker ?? null
+//         lastUpdatedAt = new Date().toISOString()
+//         longName = tokenInfo.name ?? null
+//       } else if (tokenInfo === null) {
+//         // the token is not registered
+//         numberOfDecimals = 0
+//         ticker = null
+//         lastUpdatedAt = new Date().toISOString()
+//         longName = null
+//       } else {
+//         // the token entry doesn't exists, insert a placeholder row
+//         numberOfDecimals = 0
+//         ticker = null
+//         lastUpdatedAt = null
+//         longName = null
+//       }
+
+//       const parts = identifierToCardanoAsset(tokenId)
+
+//       const assetName = Buffer.from(parts.name.name()).toString('hex')
+//       const policyId = Buffer.from(parts.policyId.to_bytes()).toString('hex')
+
+//       const assetNameInMetadata = Buffer.from(assetName, 'hex').toString()
+//       const identifierInMetadata = `${policyId}.${assetNameInMetadata}`
+
+//       const tokenMetadata = metadata[identifierInMetadata]
+
+//       let isNft = false
+
+//       let assetMintMetadata: CardanoAssetMintMetadata[] = []
+//       if (tokenMetadata) {
+//         if (tokenMetadata.filter((m) => m.key === '721').length > 0) {
+//           isNft = true
+//         }
+
+//         assetMintMetadata = tokenMetadata.map((m) => {
+//           const metaObj: CardanoAssetMintMetadata = {}
+//           metaObj[m.key] = m.metadata
+//           return metaObj
+//         })
+//       }
+
+//       return {
+//         Identifier: tokenId,
+//         IsDefault: false,
+//         TokenId: tokenId,
+//         IsNFT: isNft,
+//         Metadata: {
+//           type: 'Cardano',
+//           ticker,
+//           longName,
+//           numberOfDecimals,
+//           assetName,
+//           policyId,
+//           lastUpdatedAt,
+//           assetMintMetadata,
+//         },
+//       }
+//     })
+//     .filter(Boolean)
+
+//   return tokensWithMetadata
+// }

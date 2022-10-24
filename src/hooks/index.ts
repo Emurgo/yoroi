@@ -35,6 +35,7 @@ import {
 } from '../yoroi-wallets'
 import {generateShelleyPlateFromKey} from '../yoroi-wallets/cardano/shelley/plate'
 import {
+  YoroiNFT,
   Quantity,
   Token,
   Transaction,
@@ -868,4 +869,11 @@ export const useResync = (wallet: YoroiWallet, options?: UseMutationOptions<void
     ...mutation,
     resync: mutation.mutate,
   }
+}
+
+export const useNfts = (wallet: YoroiWallet): YoroiNFT[] => {
+  const utxos = useUtxos(wallet)
+  if (utxos == null) throw new Error('invalid state')
+
+  return []
 }

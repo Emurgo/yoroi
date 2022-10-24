@@ -66,6 +66,7 @@ export type WalletTabRoutes = {
   'receive-ada': NavigatorScreenParams<ReceiveRoutes>
   'staking-dashboard': NavigatorScreenParams<DashboardRoutes>
   'staking-center': NavigatorScreenParams<StakingCenterRoutes>
+  nfts: NavigatorScreenParams<NftRoutes>
   menu: NavigatorScreenParams<MenuRoutes>
 }
 
@@ -233,6 +234,15 @@ export type FirstRunRoutes = {
   'enable-login-with-pin': undefined
 }
 export type FirstRunRouteNavigation = StackNavigationProp<FirstRunRoutes>
+
+export type NftRoutes = {
+  nfts: undefined
+  'nfts-gallery': undefined
+  'nft-details': {
+    id: string
+  }
+}
+export type NftRouteNavigation = StackNavigationProp<NftRoutes>
 
 export type MenuRoutes = {
   menu: undefined
