@@ -2,7 +2,7 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {delay} from 'bluebird'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {FlatList, Linking, RefreshControl, StyleSheet, Text, TouchableOpacity} from 'react-native'
+import {Alert, FlatList, Linking, RefreshControl, StyleSheet, Text, TouchableOpacity} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useMutation, UseMutationOptions, useQueryClient} from 'react-query'
 
@@ -59,7 +59,7 @@ export const WalletSelectionScreen = () => {
         closeWallet()
         logout()
       } else {
-        throw error
+        Alert.alert('QWEQWE', error.message)
       }
     },
   })
@@ -232,14 +232,7 @@ const OnlyDevButton = () => {
 }
 
 const useOpenWallet = (
-  options?: UseMutationOptions<
-    {
-      wallet: YoroiWallet
-      walletMeta: WalletMeta
-    },
-    Error,
-    WalletMeta
-  >,
+  options?: UseMutationOptions<{wallet: YoroiWallet; walletMeta: WalletMeta}, Error, WalletMeta>,
 ) => {
   const {closeWallet} = useCloseWallet()
 
@@ -249,6 +242,7 @@ const useOpenWallet = (
       closeWallet()
       await delay(500)
       const [newWallet, newWalletMeta] = await walletManager.openWallet(walletMeta)
+
       return {
         wallet: newWallet,
         walletMeta: newWalletMeta,
@@ -256,7 +250,10 @@ const useOpenWallet = (
     },
   })
 
-  return {openWallet: mutation.mutate, ...mutation}
+  return {
+    openWallet: mutation.mutate,
+    ...mutation,
+  }
 }
 
 const styles = StyleSheet.create({

@@ -13,7 +13,7 @@ import {IsLockedError, nonblockingSynchronize, synchronize} from '../legacy/prom
 import {CardanoTypes, NetworkId, WalletImplementationId, YoroiProvider} from './cardano'
 import * as api from './cardano/api'
 import {AddressChain, AddressChainJSON, Addresses} from './cardano/chain'
-import {TransactionCache, TransactionCacheJSON} from './cardano/shelley/transactionCache'
+import {TransactionCache} from './cardano/shelley/transactionCache'
 import type {BackendConfig, EncryptionMethod, Transaction} from './types/other'
 import {validatePassword} from './utils/validators'
 
@@ -38,8 +38,6 @@ export type ShelleyWalletJSON = {
   lastGeneratedAddressIndex: number
   internalChain: AddressChainJSON
   externalChain: AddressChainJSON
-
-  transactionCache: TransactionCacheJSON
 }
 
 export type ByronWalletJSON = Omit<ShelleyWalletJSON, 'account'>
@@ -354,7 +352,6 @@ export class Wallet {
     if (this.internalAddresses == null) throw new Error('invalid WalletJSON: internalAddresses')
     if (this.externalChain == null) throw new Error('invalid WalletJSON: externalChain')
     if (this.internalChain == null) throw new Error('invalid WalletJSON: internalChain')
-    if (this.transactionCache == null) throw new Error('invalid WalletJSON: transactionCache')
 
     return {
       lastGeneratedAddressIndex: this.state.lastGeneratedAddressIndex,
@@ -362,7 +359,6 @@ export class Wallet {
       version: this.version,
       internalChain: this.internalChain.toJSON(),
       externalChain: this.externalChain.toJSON(),
-      transactionCache: this.transactionCache.toJSON(),
       networkId: this.networkId,
       walletImplementationId: this.walletImplementationId,
       isHW: this.isHW,

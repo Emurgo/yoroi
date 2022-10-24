@@ -58,12 +58,12 @@ import type {
 } from '../types/other'
 import {NETWORK_REGISTRY} from '../types/other'
 import {genTimeToSlot} from '../utils/timeUtils'
-import {versionCompare} from '../utils/versioning'
+import {Version, versionCompare} from '../utils/versioning'
 import Wallet, {WalletJSON} from '../Wallet'
 import * as api from './api'
 import {AddressChain, AddressGenerator} from './chain'
 import {filterAddressesByStakingKey, getDelegationStatus} from './shelley/delegationUtils'
-import {toCachedTx, TransactionCache} from './shelley/transactionCache'
+import {toCachedTx, TransactionCache, TransactionCacheJSON} from './shelley/transactionCache'
 import {yoroiSignedTx} from './signedTx'
 import {NetworkId, WalletImplementationId, WalletInterface, YoroiProvider} from './types'
 import {yoroiUnsignedTx} from './unsignedTx'
@@ -77,8 +77,14 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     this.storage = storage
   }
 
-  save() {
-    return this.storage.write(`/wallet/${this.id}/data`, this.toJSON())
+  async save() {
+    if (!this.transactionCache) throw new Error('invalid wallet')
+    const txCache = this.transactionCache.toJSON()
+
+    await Promise.all([
+      this.storage.write(`/wallet/${this.id}/data`, this.toJSON()),
+      this.storage.write(`/wallet/${this.id}/txs`, txCache),
+    ])
   }
 
   async _initialize(
@@ -242,29 +248,19 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     // from address generator
     this.publicKeyHex = data.publicKeyHex != null ? data.publicKeyHex : this.internalChain.publicKey
     this.rewardAddressHex = await deriveRewardAddressHex(this.publicKeyHex, this.networkId)
-    this.transactionCache = TransactionCache.fromJSON(data.transactionCache)
     this.isEasyConfirmationEnabled = data.isEasyConfirmationEnabled
 
-    let shouldResync = false
-    if (lastSeenVersion == null) {
-      shouldResync = true
-    } else {
-      try {
-        if (versionCompare(lastSeenVersion, '4.1.0') === -1) {
-          // force resync for versions < 4.1.0 due to server sync issue
-          // this also covers versions < 4.0 (prior to Mary HF), which also
-          // need a resync because of the new fields introduced in the tx format
-          shouldResync = true
-        }
-      } catch (e) {
-        Logger.warn('runMigrations: some migrations might have not been applied', e)
-      }
-    }
+    this.transactionCache = await this.initTxCache(data.version as Version)
+  }
 
-    if (shouldResync) {
-      this.transactionCache.resetState()
-      Logger.info('runMigrations: the transaction cache has been reset')
-    }
+  private async initTxCache(version: Version) {
+    const isDeprecatedCache = versionCompare(version, '4.1.0') === -1
+    if (isDeprecatedCache) return new TransactionCache()
+
+    const txCacheData = await this.storage.read<TransactionCacheJSON | undefined>(`/wallet/${this.id}/txs`)
+    const transactionCache = txCacheData ? TransactionCache.fromJSON(txCacheData) : new TransactionCache() // if txs exceeds storage limits, it gets dropped completely
+
+    return transactionCache
   }
 
   _integrityCheck(): void {
@@ -296,6 +292,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     Logger.info('restore wallet', walletMeta.name)
     assert.assert(!this.isInitialized, 'restoreWallet: !isInitialized')
 
+    this.id = walletMeta.id
     await this._runMigrations(data, walletMeta)
 
     this._integrityCheck()
