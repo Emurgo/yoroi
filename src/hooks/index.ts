@@ -36,7 +36,7 @@ import {
   YoroiWallet,
 } from '../yoroi-wallets'
 import {generateShelleyPlateFromKey} from '../yoroi-wallets/cardano/shelley/plate'
-import {Token, YoroiAmounts, YoroiSignedTx, YoroiUnsignedTx} from '../yoroi-wallets/types'
+import {Token, YoroiAmounts, YoroiNFT, YoroiSignedTx, YoroiUnsignedTx} from '../yoroi-wallets/types'
 import {
   CurrencySymbol,
   RawUtxo,
@@ -889,4 +889,11 @@ export const useBalances = (wallet: YoroiWallet): YoroiAmounts => {
   const primaryTokenId = getDefaultAssetByNetworkId(wallet.networkId).identifier
 
   return Utxos.toAmounts(utxos, primaryTokenId)
+}
+
+export const useNfts = (wallet: YoroiWallet): YoroiNFT[] => {
+  const {utxos} = useUtxos(wallet, {suspense: true})
+  if (utxos == null) throw new Error('invalid state')
+
+  return []
 }

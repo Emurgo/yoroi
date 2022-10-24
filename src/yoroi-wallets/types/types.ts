@@ -57,3 +57,19 @@ export type YoroiAmount = {
 export type YoroiMetadata = {
   [label: string]: string
 }
+
+export type YoroiNFT = {
+  id: string
+  name: string
+  denominations: [{name: string; decimals: number; symbol: string}]
+  author: string
+  collection: string
+  description: string
+  createAt: number
+  metadata: {
+    policyId: number
+    assetNameHex: number
+    subject: string
+    originalMetadata: object
+  }
+}

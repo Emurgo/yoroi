@@ -1,12 +1,24 @@
 import React from 'react'
-import {Image, ImageSourcePropType, ScrollView, StyleSheet, View} from 'react-native'
+import {
+  GestureResponderEvent,
+  Image,
+  ImageSourcePropType,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
 import {Text} from '../Text'
 
 type Props = {
-  images: Array<{image: ImageSourcePropType; text: string}>
+  images: Array<{
+    image: ImageSourcePropType
+    text: string
+    onPress?: ((event: GestureResponderEvent) => void) | undefined
+  }>
   loading: boolean
 }
 
@@ -14,12 +26,14 @@ export const ImageGallery = ({images = [], loading = false}: Props) => {
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
       <ScrollView bounces={false} contentContainerStyle={styles.galleryContainer}>
-        {images.map(({image, text}, id) => (
+        {images.map(({image, text, onPress}, id) => (
           <SkeletonPlaceholder key={id} enabled={loading}>
-            <View style={styles.elementContainer}>
-              <Image source={image} style={styles.image} />
-              <Text style={styles.text}>{text}</Text>
-            </View>
+            <TouchableOpacity onPress={onPress} style={styles.imageContainer}>
+              <View>
+                <Image source={image} style={styles.image} />
+                <Text style={styles.textTop}>{text}</Text>
+              </View>
+            </TouchableOpacity>
           </SkeletonPlaceholder>
         ))}
       </ScrollView>
@@ -39,16 +53,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
   },
-  elementContainer: {
-    padding: 5,
+  imageContainer: {
+    paddingHorizontal: 5,
   },
   image: {
-    marginBottom: 10, // When the skeleton is active, only margins are displayed as empty space. The Spacer component (view component) also becomes skeleton.
-    height: 120,
-    width: 120,
+    marginBottom: 8,
+    height: 175,
+    width: 175,
+    borderRadius: 8,
   },
-  text: {
-    height: 15,
+  textTop: {
+    marginBottom: 13,
+    height: 16,
+    width: 148,
     borderRadius: 50, // skeleton styling
   },
 })
