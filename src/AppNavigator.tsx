@@ -20,7 +20,7 @@ import {isEmptyString} from './legacy/utils'
 import MaintenanceScreen from './MaintenanceScreen'
 import {AppRoutes} from './navigation'
 import {OsLoginScreen} from './OsAuth'
-import {Storage, useStorage} from './Storage'
+import {useStorage} from './Storage'
 import StorybookScreen from './StorybookScreen'
 import {WalletInitNavigator} from './WalletInit/WalletInitNavigator'
 import {WalletNavigator} from './WalletNavigator'
@@ -29,11 +29,12 @@ const IS_STORYBOOK = env.getBoolean('IS_STORYBOOK', false)
 
 export const AppNavigator = () => {
   const strings = useStrings()
+  const storage = useStorage()
   const [isReady, setIsReady] = React.useState(false)
   useAutoLogout()
   useHideScreenInAppSwitcher()
-  const storage = useStorage()
-  const authAction = useAuthAction(storage)
+  useCheckOsAuth()
+  const authAction = useAuthAction()
 
   const {isLoggedOut, login} = useAuth()
   const {authWithOs} = useAuthWithOs(
@@ -202,8 +203,23 @@ const useAutoLogout = () => {
   })
 }
 
-export const useAuthAction = (storage: Storage) => {
+const useAuthAction = () => {
+  const storage = useStorage()
+  const {authMethod, isLoading: loadingAuthMethod} = useAuthMethod(storage)
+  const {canEnableOsAuth, isLoading: loadingCanEnableOsAuth} = useCanEnableAuthOs()
+
+  const isLoading = loadingAuthMethod || loadingCanEnableOsAuth
+  const hasTurnedOffOSAuth = !isLoading && !canEnableOsAuth && authMethod?.isOS
+
+  if (isLoading) return
+  if (authMethod?.isNone || hasTurnedOffOSAuth) return 'create-link-pin'
+  if (authMethod?.isPIN) return 'check-pin'
+  if (authMethod?.isOS) return 'os'
+}
+
+const useCheckOsAuth = () => {
   const strings = useStrings()
+  const storage = useStorage()
   const {logout} = useAuth()
   const {authMethod, isLoading: loadingAuthMethod} = useAuthMethod(storage)
   const {canEnableOsAuth, isLoading: loadingCanEnableOsAuth, refetch} = useCanEnableAuthOs()
@@ -225,11 +241,6 @@ export const useAuthAction = (storage: Storage) => {
       logout()
     }
   }, [hasTurnedOffOSAuth, strings.biometricsChangeTitle, strings.biometricsChangeMessage, logout])
-
-  if (isLoading) return
-  if (authMethod?.isNone || hasTurnedOffOSAuth) return 'create-link-pin'
-  if (authMethod?.isPIN) return 'check-pin'
-  if (authMethod?.isOS) return 'os'
 }
 
 const useHideScreenInAppSwitcher = () => {
