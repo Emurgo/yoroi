@@ -67,7 +67,7 @@ export class UtxoStorage implements UtxoStorage {
   }
 
   async setUtxoAtSafePoint(utxoAtSafePoint: UtxoAtSafePoint): Promise<void> {
-    const data = (await this.getAllUtxosData()) ?? {}
+    const data = await this.getAllUtxosData()
     const newData = {
       ...data,
       utxoAtSafePoint,
@@ -85,7 +85,7 @@ export class UtxoStorage implements UtxoStorage {
   }
 
   async setUtxoDiffToBestBlock(utxoDiffToBestBlock: UtxoDiffToBestBlock[]): Promise<void> {
-    const data = (await this.getAllUtxosData()) ?? {}
+    const data = await this.getAllUtxosData()
     const newData = {
       ...data,
       utxoDiffToBestBlock,
