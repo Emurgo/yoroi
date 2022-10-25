@@ -2,7 +2,7 @@ import React from 'react'
 import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-export function LoadingOverlay({loading}: {loading: boolean}) {
+export const LoadingOverlay = ({loading}: {loading: boolean}) => {
   return loading ? (
     <LinearGradient
       style={[StyleSheet.absoluteFill, {opacity: 0.5}]}
