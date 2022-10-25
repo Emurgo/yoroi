@@ -6,7 +6,7 @@ import {useAuth} from '../../auth/AuthProvider'
 import {Button} from '../../components'
 import globalMessages from '../../i18n/global-messages'
 import {useStorage} from '../../Storage'
-import {OsAuthBaseScreen} from '../OsAuthBaseScreen'
+import {OsAuthScreen} from '../OsAuthScreen'
 
 export const OsLoginScreen = () => {
   const strings = useStrings()
@@ -28,7 +28,7 @@ export const OsLoginScreen = () => {
   const errorMessage = decodeAuthOsError(error)
 
   return (
-    <OsAuthBaseScreen
+    <OsAuthScreen
       headings={[strings.headings1, strings.headings2]}
       buttons={[<Button disabled={isLoading} key="login" title={strings.login} onPress={() => authWithOs()} />]}
       error={errorMessage}

@@ -21,7 +21,7 @@ function loadStories() {
 	require('../src/HW/LedgerTransportSwitchModal/LedgerTransportSwitchModal.stories');
 	require('../src/MaintenanceScreen.stories');
 	require('../src/Menu/Menu.stories');
-	require('../src/OsAuth/OsAuthBaseScreen/OsAuthBaseScreen.stories');
+	require('../src/OsAuth/OsAuthScreen/OsAuthScreen.stories');
 	require('../src/OsAuth/OsLoginScreen/OsLoginScreen.stories');
 	require('../src/Receive/AddressModal.stories');
 	require('../src/Receive/Addresses.stories');
@@ -121,7 +121,7 @@ const stories = [
 	'../src/HW/LedgerTransportSwitchModal/LedgerTransportSwitchModal.stories',
 	'../src/MaintenanceScreen.stories',
 	'../src/Menu/Menu.stories',
-	'../src/OsAuth/OsAuthBaseScreen/OsAuthBaseScreen.stories',
+	'../src/OsAuth/OsAuthScreen/OsAuthScreen.stories',
 	'../src/OsAuth/OsLoginScreen/OsLoginScreen.stories',
 	'../src/Receive/AddressModal.stories',
 	'../src/Receive/Addresses.stories',

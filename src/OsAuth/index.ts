@@ -1,2 +1,2 @@
-export * from './OsAuthBaseScreen'
+export * from './OsAuthScreen'
 export * from './OsLoginScreen'

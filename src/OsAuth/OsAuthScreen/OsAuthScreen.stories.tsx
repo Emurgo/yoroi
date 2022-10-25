@@ -3,15 +3,15 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
 import {Button} from '../../components'
-import {OsAuthBaseScreen} from './OsAuthBaseScreen'
+import {OsAuthScreen} from './OsAuthScreen'
 
-storiesOf('OsAuthBaseScreen', module)
-  .add('Default', () => <OsAuthBaseScreen headings={['heading1', 'heading2']} buttons={[]} />)
+storiesOf('OsAuthScreen', module)
+  .add('Default', () => <OsAuthScreen headings={['heading1', 'heading2']} buttons={[]} />)
   .add('with onGoBack', () => (
-    <OsAuthBaseScreen headings={['heading1', 'heading2']} buttons={[]} onGoBack={action('goBack')} />
+    <OsAuthScreen headings={['heading1', 'heading2']} buttons={[]} onGoBack={action('goBack')} />
   ))
   .add('with buttons', () => (
-    <OsAuthBaseScreen
+    <OsAuthScreen
       headings={['heading1', 'heading2']}
       buttons={[
         <Button key="button1" title="button1" onPress={action('button1')} />,
@@ -21,7 +21,7 @@ storiesOf('OsAuthBaseScreen', module)
     />
   ))
   .add('with subheading', () => (
-    <OsAuthBaseScreen
+    <OsAuthScreen
       headings={['heading1', 'heading2']}
       subHeadings={['subheading1', 'subheading2']}
       buttons={[
@@ -32,7 +32,7 @@ storiesOf('OsAuthBaseScreen', module)
     />
   ))
   .add('with error', () => (
-    <OsAuthBaseScreen
+    <OsAuthScreen
       headings={['heading1', 'heading2']}
       subHeadings={['subheading1', 'subheading2']}
       buttons={[
@@ -44,7 +44,7 @@ storiesOf('OsAuthBaseScreen', module)
     />
   ))
   .add('with welcome message', () => (
-    <OsAuthBaseScreen
+    <OsAuthScreen
       headings={['heading1', 'heading2']}
       subHeadings={['subheading1', 'subheading2']}
       buttons={[
@@ -57,7 +57,7 @@ storiesOf('OsAuthBaseScreen', module)
     />
   ))
   .add('with fingerprint placeholder', () => (
-    <OsAuthBaseScreen
+    <OsAuthScreen
       headings={['heading1', 'heading2']}
       subHeadings={['subheading1', 'subheading2']}
       buttons={[

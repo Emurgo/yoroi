@@ -20,7 +20,7 @@ type Props = {
   showFingerPlaceholder?: boolean
 }
 
-export const OsAuthBaseScreen = ({
+export const OsAuthScreen = ({
   headings,
   subHeadings,
   buttons,
@@ -81,10 +81,18 @@ export const OsAuthBaseScreen = ({
 
         {error != null && error !== false ? <Text style={styles.error}>{error}</Text> : null}
 
-        <View style={[buttons.length > 1 ? styles.manyControls : styles.oneControl]}>{buttons}</View>
+        {buttons.length > 1 ? <Actions>{buttons}</Actions> : <Action>{buttons}</Action>}
       </SafeAreaView>
     </ScreenBackground>
   )
+}
+
+const Actions = ({children}: {children: React.ReactNode}) => {
+  return <View style={styles.actions}>{children}</View>
+}
+
+const Action = ({children}: {children: React.ReactNode}) => {
+  return <View style={styles.action}>{children}</View>
 }
 
 const messages = defineMessages({
@@ -144,11 +152,11 @@ const styles = StyleSheet.create({
     fontSize: 50,
     lineHeight: 60,
   },
-  manyControls: {
+  actions: {
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  oneControl: {
+  action: {
     flexDirection: 'column',
     alignItems: 'stretch',
   },

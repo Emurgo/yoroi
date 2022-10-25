@@ -6,7 +6,7 @@ import {StyleSheet} from 'react-native'
 import {useAuthOsErrorDecoder, useEnableAuthWithOs} from '../../auth'
 import {Button} from '../../components'
 import globalMessages from '../../i18n/global-messages'
-import {OsAuthBaseScreen} from '../../OsAuth'
+import {OsAuthScreen} from '../../OsAuth'
 import {useStorage} from '../../Storage'
 
 export const EnableLoginWithOsScreen = () => {
@@ -30,7 +30,7 @@ export const EnableLoginWithOsScreen = () => {
   )
 
   return (
-    <OsAuthBaseScreen
+    <OsAuthScreen
       headings={[strings.heading]}
       subHeadings={[strings.subHeading1, strings.subHeading2]}
       error={decodeAuthOsError(error)}
