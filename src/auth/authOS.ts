@@ -51,8 +51,8 @@ export const useEnableAuthWithOs = (
   })
 
   return {
-    enableAuthWithOs: mutation.mutate,
     ...mutation,
+    enableAuthWithOs: mutation.mutate,
   }
 }
 
@@ -74,8 +74,8 @@ export const useAuthWithOs = (
   })
 
   return {
-    authWithOs: mutation.mutate,
     ...mutation,
+    authWithOs: mutation.mutate,
   }
 }
 
@@ -89,8 +89,8 @@ export const useAuthOsWithEasyConfirmation = (
   })
 
   return {
-    authWithOs: mutation.mutate,
     ...mutation,
+    authWithOs: mutation.mutate,
   }
 }
 
@@ -159,8 +159,8 @@ export const useMigrateAuthMethod = (storage: Storage) => {
   })
 
   return {
-    migrate: mutation.mutate,
     ...mutation,
+    migrate: mutation.mutate,
   }
 }
 
