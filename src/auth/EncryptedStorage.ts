@@ -65,6 +65,6 @@ export const EncryptedStorage = {
   remove(key: StorageKey) {
     return storage.remove(key)
   },
-}
+} as const
 
 export type EncryptedStorage = typeof EncryptedStorage

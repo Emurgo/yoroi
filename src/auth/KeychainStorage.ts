@@ -1,7 +1,7 @@
 import {Platform} from 'react-native'
 import * as Keychain from 'react-native-keychain'
 
-export function saveSecret({key, value}: {key: string; value: string}) {
+function write(key: string, value: string) {
   return Keychain.setGenericPassword(key, value, {
     service: key,
     accessControl: Keychain.ACCESS_CONTROL.BIOMETRY_ANY_OR_DEVICE_PASSCODE,
@@ -13,13 +13,7 @@ export function saveSecret({key, value}: {key: string; value: string}) {
   })
 }
 
-export async function loadSecret({
-  key,
-  authenticationPrompt,
-}: {
-  key: string
-  authenticationPrompt: Keychain.Options['authenticationPrompt']
-}) {
+async function read(key: string, authenticationPrompt: Keychain.Options['authenticationPrompt']) {
   const credentials: false | Keychain.UserCredentials = await Keychain.getGenericPassword({
     service: key,
     authenticationPrompt,
@@ -30,11 +24,17 @@ export async function loadSecret({
   return credentials.password
 }
 
-export async function resetSecret({key}: {key: string}) {
+async function remove(key: string) {
   return Keychain.resetGenericPassword({
     service: key,
   })
 }
+
+export const KeychainStorage = {
+  read,
+  write,
+  remove,
+} as const
 
 export async function canEnableAuthOs() {
   return Platform.select({

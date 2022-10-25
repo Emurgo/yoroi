@@ -12,12 +12,12 @@ import storage from '../legacy/storage'
 import {Storage} from '../Storage'
 import {WalletJSON, walletManager, YoroiWallet} from '../yoroi-wallets'
 import {AuthMethod} from '../yoroi-wallets/types'
-import * as Keychain from './Keychain'
+import {AuthenticationPrompt, canEnableAuthOs, KeychainStorage} from './KeychainStorage'
 
 export const useCanEnableAuthOs = (options?: UseQueryOptions<boolean, Error>) => {
   const query = useQuery({
     queryKey: ['canEnableAuthOs'],
-    queryFn: Keychain.canEnableAuthOs,
+    queryFn: canEnableAuthOs,
     ...options,
   })
 
@@ -29,7 +29,7 @@ export const useCanEnableAuthOs = (options?: UseQueryOptions<boolean, Error>) =>
 
 export const AUTH_METHOD_OS: AuthMethod = 'os'
 export const useEnableAuthWithOs = (
-  {authenticationPrompt, storage}: {authenticationPrompt: Keychain.AuthenticationPrompt; storage: Storage},
+  {authenticationPrompt, storage}: {authenticationPrompt: AuthenticationPrompt; storage: Storage},
   options?: UseMutationOptions<void, Error>,
 ) => {
   const mutation = useMutationWithInvalidations({
@@ -41,8 +41,8 @@ export const useEnableAuthWithOs = (
           throw new Error('Invalid state')
         })
         .then(JSON.parse)
-        .then((installationId: string) => Keychain.saveSecret({key: installationId, value: installationId}))
-        .then(({service}) => Keychain.loadSecret({key: service, authenticationPrompt}))
+        .then((installationId: string) => KeychainStorage.write(installationId, installationId)) // the data here is irrelevant
+        .then(({service: id}) => KeychainStorage.read(id, authenticationPrompt))
         .then(() => storage.setItem(AUTH_METHOD_KEY, JSON.stringify(AUTH_METHOD_OS)))
         .then(() => storage.getItem(ENCRYPTED_PIN_HASH_KEY))
         .then((pin) => (pin != null ? storage.removeItem(ENCRYPTED_PIN_HASH_KEY) : undefined)),
@@ -57,7 +57,7 @@ export const useEnableAuthWithOs = (
 }
 
 export const useAuthWithOs = (
-  {authenticationPrompt, storage}: {authenticationPrompt: Keychain.AuthenticationPrompt; storage: Storage},
+  {authenticationPrompt, storage}: {authenticationPrompt: AuthenticationPrompt; storage: Storage},
   options?: UseMutationOptions<string, Error>,
 ) => {
   const mutation = useMutation({
@@ -69,7 +69,7 @@ export const useAuthWithOs = (
           throw new Error('Invalid state')
         })
         .then(JSON.parse)
-        .then((key: string) => Keychain.loadSecret({key, authenticationPrompt})),
+        .then((key: string) => KeychainStorage.read(key, authenticationPrompt)),
     ...options,
   })
 
@@ -80,11 +80,11 @@ export const useAuthWithOs = (
 }
 
 export const useAuthOsWithEasyConfirmation = (
-  {id, authenticationPrompt}: {id: YoroiWallet['id']; authenticationPrompt: Keychain.AuthenticationPrompt},
+  {id, authenticationPrompt}: {id: YoroiWallet['id']; authenticationPrompt: AuthenticationPrompt},
   options?: UseMutationOptions<string, Error>,
 ) => {
   const mutation = useMutation({
-    mutationFn: () => Keychain.loadSecret({key: id, authenticationPrompt}),
+    mutationFn: () => KeychainStorage.read(id, authenticationPrompt),
     ...options,
   })
 
@@ -97,7 +97,7 @@ export const useAuthOsWithEasyConfirmation = (
 export const useDisableEasyConfirmation = ({id}: {id: YoroiWallet['id']}, options?: UseMutationOptions) => {
   const mutation = useMutationWithInvalidations({
     ...options,
-    mutationFn: () => Keychain.resetSecret({key: id}).then(() => walletManager.disableEasyConfirmation()),
+    mutationFn: () => KeychainStorage.remove(id).then(() => walletManager.disableEasyConfirmation()),
     invalidateQueries: [['walletMetas']],
   })
 
@@ -114,7 +114,7 @@ export const useEnableEasyConfirmation = (
   const mutation = useMutationWithInvalidations({
     ...options,
     mutationFn: (rootKey: string) =>
-      Keychain.saveSecret({key: id, value: rootKey}).then(() => walletManager.enableEasyConfirmation()),
+      KeychainStorage.write(id, rootKey).then(() => walletManager.enableEasyConfirmation()),
     invalidateQueries: [['walletMetas']],
   })
 
@@ -183,7 +183,7 @@ const migrateAuthMethod = async (storage: Storage) => {
           throw new Error('Invalid state')
         })
         .then(JSON.parse)
-        .then((installationId: string) => Keychain.saveSecret({key: installationId, value: installationId}))
+        .then((installationId: string) => KeychainStorage.write(installationId, installationId)) // the data here is irrelevant
         .then(() => storage.setItem(AUTH_METHOD_KEY, JSON.stringify(AUTH_METHOD_OS)))
         .then(() => disableAllEasyConfirmation())
     }
