@@ -170,7 +170,7 @@ export interface WalletInterface {
     metadata?: Array<CardanoTypes.TxMetadata>,
   ): Promise<YoroiUnsignedTx>
 
-  signTx(signRequest: YoroiUnsignedTx, decryptedRootKey: string): Promise<YoroiSignedTx>
+  signTx(signRequest: YoroiUnsignedTx, rootKey: string): Promise<YoroiSignedTx>
 
   createDelegationTx(
     poolRequest: string,

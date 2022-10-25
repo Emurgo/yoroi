@@ -2,7 +2,7 @@
 import _ from 'lodash'
 import {defaultMemoize} from 'reselect'
 
-import {RootKey} from '../auth/RootKey'
+import {EncryptedStorage, StorageKeys} from '../auth'
 import assert from '../legacy/assert'
 import {CONFIG} from '../legacy/config'
 import type {HWDeviceInfo} from '../legacy/ledgerUtils'
@@ -140,13 +140,13 @@ export class Wallet {
 
   // ============ security & key management ============ //
   async encryptAndSaveRootKey(rootKey: string, password: string) {
-    if (this.id != null) return RootKey(this.id).keep(password, rootKey)
+    if (this.id != null) return EncryptedStorage.write(StorageKeys.rootKey(this.id), rootKey, password)
 
     throw new Error('invalid wallet state')
   }
 
-  async getDecryptedRootKey(rootPassword: string) {
-    if (this.id != null) return RootKey(this.id).reveal(rootPassword)
+  async getDecryptedRootKey(password: string) {
+    if (this.id != null) return EncryptedStorage.read(StorageKeys.rootKey(this.id), password)
 
     throw new Error('invalid wallet state')
   }
@@ -157,13 +157,14 @@ export class Wallet {
     this.notify({type: 'easy-confirmation', enabled: this.isEasyConfirmationEnabled})
   }
 
-  async changePassword(rootPassword: string, newPassword: string) {
+  async changePassword(oldPassword: string, newPassword: string) {
     if (!this.id) throw new Error('invalid wallet state')
 
     if (!_.isEmpty(validatePassword(newPassword, newPassword))) throw new Error('New password is not valid')
 
-    const {reveal, keep} = RootKey(this.id)
-    return reveal(rootPassword).then((decrypted) => keep(newPassword, decrypted))
+    const key = StorageKeys.rootKey(this.id)
+    const rootKey = await EncryptedStorage.read(key, oldPassword)
+    return EncryptedStorage.write(key, rootKey, newPassword)
   }
 
   // =================== subscriptions =================== //

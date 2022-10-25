@@ -3,7 +3,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet} from 'react-native'
 import Markdown from 'react-native-easy-markdown'
 
-import {RootKey} from '../../auth'
+import {EncryptedStorage} from '../../auth'
 import {Boundary, DangerousAction, PleaseWaitView, Spacer} from '../../components'
 import {useWithdrawalTx} from '../../hooks'
 import globalMessages, {ledgerMessages} from '../../i18n/global-messages'
@@ -16,10 +16,10 @@ type Props = {
   wallet: YoroiWallet
   onCancel: () => void
   onSuccess: () => void
-  rootKey: RootKey
+  encryptedStorage: EncryptedStorage
 }
 
-export const WithdrawStakingRewards = ({wallet, onSuccess, onCancel, rootKey}: Props) => {
+export const WithdrawStakingRewards = ({wallet, onSuccess, onCancel, encryptedStorage}: Props) => {
   const strings = useStrings()
   const [state, setState] = React.useState<
     {step: 'form'; withdrawalTx: undefined} | {step: 'confirm'; withdrawalTx: YoroiUnsignedTx}
@@ -40,7 +40,7 @@ export const WithdrawStakingRewards = ({wallet, onSuccess, onCancel, rootKey}: P
             unsignedTx={state.withdrawalTx}
             onSuccess={onSuccess}
             onCancel={onCancel}
-            rootKey={rootKey}
+            encryptedStorage={encryptedStorage}
           />
         </Route>
       )}

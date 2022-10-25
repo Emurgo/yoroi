@@ -3,7 +3,7 @@ import ExtendableError from 'es6-error'
 import _ from 'lodash'
 
 import {migrateWalletMetas} from '../appStorage'
-import {RootKey} from '../auth/RootKey'
+import {EncryptedStorage, StorageKeys} from '../auth'
 import assert from '../legacy/assert'
 import {CONFIG, DISABLE_BACKGROUND_SYNC} from '../legacy/config'
 import {ISignRequest} from '../legacy/ISignRequest'
@@ -324,7 +324,7 @@ export class WalletManager {
     await this.closeWallet()
     await storage.remove(`/wallet/${id}/data`)
     await storage.remove(`/wallet/${id}`)
-    await RootKey(id).discard()
+    await EncryptedStorage.remove(StorageKeys.rootKey(id))
   }
 
   // TODO(ppershing): how should we deal with race conditions?

@@ -2,7 +2,7 @@ import React from 'react'
 import {useIntl} from 'react-intl'
 import {ActivityIndicator, View} from 'react-native'
 
-import {RootKey} from '../../../auth'
+import {EncryptedStorage} from '../../../auth'
 import {TextInput, TwoActionView} from '../../../components'
 import {useSignWithPasswordAndSubmitTx} from '../../../hooks'
 import {confirmationMessages, txLabels} from '../../../i18n/global-messages'
@@ -16,15 +16,15 @@ type Props = {
   unsignedTx: YoroiUnsignedTx
   onCancel: () => void
   onSuccess: () => void
-  rootKey: RootKey
+  encryptedStorage: EncryptedStorage
 }
 
-export const ConfirmTxWithPassword = ({wallet, onSuccess, onCancel, unsignedTx, rootKey}: Props) => {
+export const ConfirmTxWithPassword = ({wallet, onSuccess, onCancel, unsignedTx, encryptedStorage}: Props) => {
   const strings = useStrings()
   const [password, setPassword] = React.useState(CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '')
 
   const {signAndSubmitTx, isLoading} = useSignWithPasswordAndSubmitTx(
-    {wallet, rootKey}, //
+    {wallet, encryptedStorage}, //
     {submitTx: {onSuccess}},
   )
 

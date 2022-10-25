@@ -31,3 +31,15 @@ jest.mock('react-native-reanimated', () => {
   return Reanimated
 })
 jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper')
+jest.mock('react-native', () => {
+  const RN = jest.requireActual('react-native')
+
+  RN.NativeModules.SettingsManager = {
+    settings: {
+      AppLocale: true,
+      AppleLanguages: ['en-US'],
+    },
+  }
+
+  return RN
+})

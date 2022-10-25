@@ -4,7 +4,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useEnableEasyConfirmation, useRevealRootKey} from '../../auth'
+import {useEnableEasyConfirmation, useReadRootKey} from '../../auth'
 import {Button, StatusBar, Text, TextInput} from '../../components'
 import {LoadingOverlay} from '../../components/LoadingOverlay'
 import {errorMessages} from '../../i18n/global-messages'
@@ -38,7 +38,7 @@ export const EnableEasyConfirmationScreen = () => {
       },
     },
   )
-  const {reveal, isLoading: revealing} = useRevealRootKey(
+  const {readRootKey, isLoading: loadingRootKey} = useReadRootKey(
     {id: wallet.id, password: rootPassword},
     {
       onSuccess: enableEasyConfirmation,
@@ -49,7 +49,7 @@ export const EnableEasyConfirmationScreen = () => {
     },
   )
 
-  const isLoading = revealing || enablingEasyConfirmation
+  const isLoading = loadingRootKey || enablingEasyConfirmation
 
   return (
     <SafeAreaView edges={['bottom']} style={styles.container}>
@@ -74,7 +74,7 @@ export const EnableEasyConfirmationScreen = () => {
       <View style={styles.actions}>
         <Button
           title={strings.enableButton}
-          onPress={() => reveal()}
+          onPress={() => readRootKey()}
           disabled={isEmptyString(rootPassword) || isLoading}
         />
       </View>

@@ -2,7 +2,7 @@ import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {mockHwWallet, mockRootKey, mockYoroiSignedTx, mockYoroiTx, WithModal} from '../../../storybook'
+import {mockEncryptedStorage, mockHwWallet, mockYoroiSignedTx, mockYoroiTx, WithModal} from '../../../storybook'
 import {WithdrawStakingRewards} from './WithdrawStakingRewards'
 
 storiesOf('WithdrawStakingRewards', module)
@@ -15,7 +15,7 @@ storiesOf('WithdrawStakingRewards', module)
         }}
         onSuccess={action('onSuccess')}
         onCancel={action('onCancel')}
-        rootKey={mockRootKey()}
+        encryptedStorage={mockEncryptedStorage}
       />
     </WithModal>
   ))
@@ -28,7 +28,7 @@ storiesOf('WithdrawStakingRewards', module)
         }}
         onSuccess={action('onSuccess')}
         onCancel={action('onCancel')}
-        rootKey={mockRootKey()}
+        encryptedStorage={mockEncryptedStorage}
       />
     </WithModal>
   ))
@@ -42,7 +42,7 @@ storiesOf('WithdrawStakingRewards', module)
         }}
         onSuccess={action('onSuccess')}
         onCancel={action('onCancel')}
-        rootKey={mockRootKey()}
+        encryptedStorage={mockEncryptedStorage}
       />
     </WithModal>
   ))
@@ -56,7 +56,7 @@ storiesOf('WithdrawStakingRewards', module)
         }}
         onSuccess={action('onSuccess')}
         onCancel={action('onCancel')}
-        rootKey={mockRootKey()}
+        encryptedStorage={mockEncryptedStorage}
       />
     </WithModal>
   ))
@@ -71,7 +71,7 @@ storiesOf('WithdrawStakingRewards', module)
         }}
         onSuccess={action('onSuccess')}
         onCancel={action('onCancel')}
-        rootKey={mockRootKey()}
+        encryptedStorage={mockEncryptedStorage}
       />
     </WithModal>
   ))
@@ -86,7 +86,7 @@ storiesOf('WithdrawStakingRewards', module)
         }}
         onSuccess={action('onSuccess')}
         onCancel={action('onCancel')}
-        rootKey={mockRootKey()}
+        encryptedStorage={mockEncryptedStorage}
       />
     </WithModal>
   ))
