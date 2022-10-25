@@ -355,12 +355,15 @@ export class WalletManager {
     throw new Error('invalid wallet')
   }
 
-  closeWallet(): Promise<void> {
+  async closeWallet(): Promise<void> {
     if (!this._wallet) return Promise.resolve()
+    await this._wallet.clear()
+
     Logger.debug('closing wallet...')
     assert.assert(this._closeReject, 'close: should have _closeReject')
     /* :: if (!this._closeReject) throw 'assert' */
     // Abort all async interactions with the wallet
+
     const reject = this._closeReject
     this._closePromise = null
     this._closeReject = null

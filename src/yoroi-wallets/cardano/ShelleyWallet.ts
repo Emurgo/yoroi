@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {initUtxo, UtxoService} from '@emurgo/yoroi-lib'
 import {BigNumber} from 'bignumber.js'
 import cryptoRandomString from 'crypto-random-string'
 import ExtendableError from 'es6-error'
@@ -67,10 +68,13 @@ import {toCachedTx, TransactionCache} from './shelley/transactionCache'
 import {yoroiSignedTx} from './signedTx'
 import {NetworkId, WalletImplementationId, WalletInterface, YoroiProvider} from './types'
 import {yoroiUnsignedTx} from './unsignedTx'
+import {UtxoStorage} from './utxoStorage'
 
 export default ShelleyWallet
 export class ShelleyWallet extends Wallet implements WalletInterface {
   storage: typeof storageLegacy
+  utxoService: UtxoService | null = null
+
   // =================== create =================== //
   constructor(storage: typeof storageLegacy) {
     super()
@@ -79,6 +83,10 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
 
   save() {
     return this.storage.write(`/wallet/${this.id}/data`, this.toJSON())
+  }
+
+  clear() {
+    return this.clearUTXOs()
   }
 
   async _initialize(
@@ -134,9 +142,19 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     this.setupSubscriptions()
     this.notify({type: 'initialize'})
 
+    this.initializeUtxoService()
+
     this.isInitialized = true
 
     return this.id
+  }
+
+  initializeUtxoService() {
+    if (!this.utxoService) {
+      const utxoStorage = new UtxoStorage(this.storage, `/wallet/${this.id}/utxos`)
+      const config = this._getBackendConfig()
+      this.utxoService = initUtxo(utxoStorage, `${config.API_ROOT}/`)
+    }
   }
 
   async create(
@@ -302,6 +320,8 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
 
     // subscriptions
     this.setupSubscriptions()
+
+    this.initializeUtxoService()
 
     this.isInitialized = true
   }
@@ -839,10 +859,24 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
   }
 
   async fetchUTXOs() {
-    return api.bulkFetchUTXOsForAddresses(
-      [...this.internalAddresses, ...this.externalAddresses],
-      this._getBackendConfig(),
-    )
+    if (!this.utxoService) throw new Error('utxoService not initialized')
+
+    const addresses = this.externalAddresses.concat(this.internalAddresses)
+    await this.utxoService.syncUtxoState(addresses)
+    const utxos = await this.utxoService.getAvailableUtxos()
+
+    return utxos.map((utxo) => ({
+      utxo_id: utxo.utxoId,
+      tx_hash: utxo.txHash,
+      tx_index: utxo.txIndex,
+      amount: utxo.amount,
+      receiver: utxo.receiver,
+      assets: utxo.assets,
+    })) as unknown as RawUtxo[]
+  }
+
+  async clearUTXOs() {
+    await this.storage.remove(`/wallet/${this.id}/utxos`)
   }
 
   async fetchAccountState(): Promise<AccountStateResponse> {

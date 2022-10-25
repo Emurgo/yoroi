@@ -1,3 +1,4 @@
+import type {UtxoService} from '@emurgo/yoroi-lib'
 import {BigNumber} from 'bignumber.js'
 import type {IntlShape} from 'react-intl'
 
@@ -78,6 +79,8 @@ export interface WalletInterface {
 
   storage: typeof storage
 
+  utxoService: UtxoService | null
+
   // =================== getters =================== //
 
   get internalAddresses(): Addresses
@@ -142,6 +145,8 @@ export interface WalletInterface {
   // =================== persistence =================== //
 
   save(): Promise<void>
+
+  clear(): Promise<void>
 
   // TODO: type
   toJSON(): unknown
