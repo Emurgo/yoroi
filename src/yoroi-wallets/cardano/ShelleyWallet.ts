@@ -58,12 +58,11 @@ import type {
 } from '../types/other'
 import {NETWORK_REGISTRY} from '../types/other'
 import {genTimeToSlot} from '../utils/timeUtils'
-import {Version, versionCompare} from '../utils/versioning'
 import Wallet, {WalletJSON} from '../Wallet'
 import * as api from './api'
 import {AddressChain, AddressGenerator} from './chain'
 import {filterAddressesByStakingKey, getDelegationStatus} from './shelley/delegationUtils'
-import {toCachedTx, TransactionCache, TransactionCacheJSON} from './shelley/transactionCache'
+import {toCachedTx, TransactionCache} from './shelley/transactionCache'
 import {yoroiSignedTx} from './signedTx'
 import {NetworkId, WalletImplementationId, WalletInterface, YoroiProvider} from './types'
 import {yoroiUnsignedTx} from './unsignedTx'
@@ -78,13 +77,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
   }
 
   async save() {
-    if (!this.transactionCache) throw new Error('invalid wallet')
-    const txCache = this.transactionCache.toJSON()
-
-    await Promise.all([
-      this.storage.write(`/wallet/${this.id}/data`, this.toJSON()),
-      this.storage.write(`/wallet/${this.id}/txs`, txCache),
-    ])
+    this.storage.write(`/wallet/${this.id}/data`, this.toJSON())
   }
 
   async _initialize(
@@ -108,7 +101,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
 
     this.provider = provider
 
-    this.transactionCache = new TransactionCache()
+    this.transactionCache = await TransactionCache.create(txCacheStorage(this.id))
 
     // initialize address chains
     const _walletConfig = getWalletConfigById(implementationId)
@@ -250,17 +243,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     this.rewardAddressHex = await deriveRewardAddressHex(this.publicKeyHex, this.networkId)
     this.isEasyConfirmationEnabled = data.isEasyConfirmationEnabled
 
-    this.transactionCache = await this.initTxCache(data.version as Version)
-  }
-
-  private async initTxCache(version: Version) {
-    const isDeprecatedCache = versionCompare(version, '4.1.0') === -1
-    if (isDeprecatedCache) return new TransactionCache()
-
-    const txCacheData = await this.storage.read<TransactionCacheJSON | undefined>(`/wallet/${this.id}/txs`)
-    const transactionCache = txCacheData ? TransactionCache.fromJSON(txCacheData) : new TransactionCache() // if txs exceeds storage limits, it gets dropped completely
-
-    return transactionCache
+    this.transactionCache = await TransactionCache.create(txCacheStorage(walletMeta.id))
   }
 
   _integrityCheck(): void {
@@ -873,3 +856,12 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
 }
 
 const toHex = (bytes: Uint8Array) => Buffer.from(bytes).toString('hex')
+
+const txCacheStorage = (id: string) => {
+  const prefix = `/wallet/${id}/txs`
+
+  return {
+    read: (path: string) => storageLegacy.read(`${prefix}/${path}`),
+    write: (path: string, data: unknown) => storageLegacy.write(`${prefix}/${path}`, data),
+  }
+}

@@ -1,137 +1,309 @@
 import {fromPairs} from 'lodash'
+import DeviceInfo from 'react-native-device-info'
 
 import {ApiHistoryError} from '../../../legacy/errors'
 import type {BackendConfig, RawTransaction, TipStatusResponse, Transaction} from '../../types/other'
-import {syncTxs, toCachedTx} from './transactionCache'
+import {syncTxs, toCachedTx, TransactionCache, TransactionCacheState} from './transactionCache'
 
 describe('transactionCache', () => {
-  describe('syncTxs (undefined means no updates)', () => {
-    it('should return undefined if tipStatus bestBlock.hash is empty', async () => {
-      const params = {
-        addressesByChunks: [],
-        backendConfig: mockedBackendConfig,
-        transactions: mockedEmptyLocalTransactions,
-        api: {
-          getTipStatus: jest.fn().mockResolvedValue({
-            safeBlock: mockedTipStatusResponse.safeBlock,
-            bestBlock: {...mockedTipStatusResponse.bestBlock, hash: ''},
-          }),
-          fetchNewTxHistory: jest.fn(),
-        },
+  describe('create', () => {
+    it('loads from storage', async () => {
+      DeviceInfo.getVersion = () => '9.9.9'
+      const txCacheJSON: TransactionCacheState = {
+        transactions: {[mockTx.id]: mockTx},
+        perAddressSyncMetadata: {},
+        bestBlockNum: 0,
       }
+      const storage = {
+        read: async (path: string) => {
+          if (path === 'state') return txCacheJSON
+          throw new Error('invalid path')
+        },
+        write: jest.fn(),
+      }
+      const txCache = await TransactionCache.create(storage)
 
-      const result = await syncTxs(params)
-
-      expect(result).toBeUndefined()
-      expect(params.api.getTipStatus).toBeCalledTimes(1)
+      expect(txCache.transactions).toMatchSnapshot()
+      expect(txCache.perAddressTxs).toMatchSnapshot()
+      expect(txCache.perRewardAddressCertificates).toMatchSnapshot()
+      expect(txCache.confirmationCounts).toMatchSnapshot()
     })
 
-    it('should return undefined if there is no new transactions', async () => {
-      const params = {
-        addressesByChunks: mockedAddressesByChunks,
-        backendConfig: mockedBackendConfig,
-        transactions: mockedLocalTransactions,
-        api: {
-          getTipStatus: jest.fn().mockResolvedValue(mockedTipStatusResponse),
-          fetchNewTxHistory: jest
-            .fn()
-            .mockResolvedValueOnce(mockedEmptyHistoryResponse)
-            .mockResolvedValueOnce(mockedEmptyHistoryResponse)
-            .mockResolvedValueOnce(mockedEmptyHistoryResponse),
-        },
+    it('starts fresh if data is invalid format', async () => {
+      DeviceInfo.getVersion = () => '9.9.9'
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const txCacheJSON: any = {
+        foo: 123,
       }
+      const storage = {
+        read: async (path: string) => {
+          if (path === 'state') return txCacheJSON
+          throw new Error('invalid path')
+        },
+        write: jest.fn(),
+      }
+      const txCache = await TransactionCache.create(storage)
 
-      const result = await syncTxs(params)
-
-      expect(result).toBeUndefined()
-      expect(params.api.fetchNewTxHistory).toBeCalledTimes(3)
+      expect(txCache.transactions).toMatchSnapshot()
+      expect(txCache.perAddressTxs).toMatchSnapshot()
+      expect(txCache.perRewardAddressCertificates).toMatchSnapshot()
+      expect(txCache.confirmationCounts).toMatchSnapshot()
     })
 
-    it('should return current txs plus new txs if there are new transactions', async () => {
-      const params = {
-        addressesByChunks: mockedAddressesByChunks,
-        backendConfig: mockedBackendConfig,
-        transactions: mockedLocalTransactions,
-        api: {
-          getTipStatus: jest.fn().mockResolvedValue(mockedTipStatusResponse),
-          fetchNewTxHistory: jest
-            .fn()
-            .mockResolvedValueOnce(mockedHistoryResponse)
-            .mockResolvedValueOnce(mockedEmptyHistoryResponse)
-            .mockResolvedValueOnce(mockedEmptyHistoryResponse),
+    it('starts fresh if data doesnt load', async () => {
+      DeviceInfo.getVersion = () => '9.9.9'
+      const storage = {
+        read: async (path: string) => {
+          if (path === 'state') return // data doesn't load
+          throw new Error('invalid path')
         },
+        write: jest.fn(),
       }
-      const response = {
-        ...mockedLocalTransactions,
-        ...fromPairs(mockedHistoryResponse.transactions.map((t) => [t.hash, toCachedTx(t)])),
-      }
+      const txCache = await TransactionCache.create(storage)
 
-      const result = await syncTxs(params)
-
-      expect(result).toEqual(response)
-      expect(params.api.fetchNewTxHistory).toBeCalledTimes(3)
+      expect(txCache.transactions).toMatchSnapshot()
+      expect(txCache.perAddressTxs).toMatchSnapshot()
+      expect(txCache.perRewardAddressCertificates).toMatchSnapshot()
+      expect(txCache.confirmationCounts).toMatchSnapshot()
     })
 
-    it('should return current txs plus new txs if there are new transactions and continue to request while is not the last', async () => {
-      const params = {
-        addressesByChunks: [mockedAddressesByChunks[0]],
-        backendConfig: mockedBackendConfig,
-        transactions: {},
-        api: {
-          getTipStatus: jest.fn().mockResolvedValue(mockedTipStatusResponse),
-          fetchNewTxHistory: jest
-            .fn()
-            .mockResolvedValueOnce({...mockedHistoryResponse, isLast: false})
-            .mockResolvedValueOnce({...mockedHistoryResponse, isLast: false})
-            .mockResolvedValueOnce({...mockedHistoryResponse, isLast: false})
-            .mockResolvedValueOnce({...mockedHistoryResponse, isLast: false})
-            .mockResolvedValueOnce(mockedEmptyHistoryResponse),
+    it('starts fresh if upgrading from old version', async () => {
+      DeviceInfo.getVersion = () => '0.0.1'
+      const storage = {
+        read: async (path: string) => {
+          if (path === 'state') return // data doesn't load
+          throw new Error('invalid path')
         },
+        write: jest.fn(),
       }
-      const response = fromPairs(mockedHistoryResponse.transactions.map((t) => [t.hash, toCachedTx(t)]))
+      const txCache = await TransactionCache.create(storage)
 
-      const result = await syncTxs(params)
-
-      expect(result).toEqual(response)
-      expect(params.api.fetchNewTxHistory).toBeCalledTimes(5)
+      expect(txCache.transactions).toMatchSnapshot()
+      expect(txCache.perAddressTxs).toMatchSnapshot()
+      expect(txCache.perRewardAddressCertificates).toMatchSnapshot()
+      expect(txCache.confirmationCounts).toMatchSnapshot()
     })
+  })
 
-    it.each([ApiHistoryError.errors.REFERENCE_BLOCK_MISMATCH, ApiHistoryError.errors.REFERENCE_TX_NOT_FOUND])(
-      `should return current txs minus txs after last_tx.height if receives %p`,
-      async (error) => {
-        const params = {
-          addressesByChunks: mockedAddressesByChunks,
-          backendConfig: mockedBackendConfig,
-          transactions: {
-            ...mockedLocalTransactions,
-            ...fromPairs(mockedHistoryResponse.transactions.map((t) => [t.hash, toCachedTx(t)])),
-          },
-          api: {
-            getTipStatus: jest.fn().mockResolvedValue(mockedTipStatusResponse),
-            fetchNewTxHistory: jest
-              .fn()
-              .mockRejectedValueOnce(new ApiHistoryError(error))
-              .mockResolvedValueOnce(mockedEmptyHistoryResponse)
-              .mockResolvedValueOnce(mockedEmptyHistoryResponse),
-          },
-        }
+  describe('reset', () => {
+    it('resets state', async () => {
+      const mockTx = {
+        id: '1234567890',
+      } as Transaction
+      const txCacheJSON: TransactionCacheState = {
+        transactions: {[mockTx.id]: mockTx},
+        perAddressSyncMetadata: {},
+        bestBlockNum: 0,
+      }
+      const storage = {
+        read: async (path: string) => {
+          if (path === 'state') return txCacheJSON
+          throw new Error('invalid path')
+        },
+        write: jest.fn(),
+      }
+      const txCache = await TransactionCache.create(storage)
 
-        const result = await syncTxs(params)
+      expect(txCache.transactions).toMatchSnapshot()
+      expect(txCache.perAddressTxs).toMatchSnapshot()
+      expect(txCache.perRewardAddressCertificates).toMatchSnapshot()
+      expect(txCache.confirmationCounts).toMatchSnapshot()
+    })
+  })
+})
 
-        expect(result).toEqual(mockedLocalTransactions)
+const mockTx: Transaction = {
+  id: '0a8962dde362eef1f840defe6f916fdf9701ad53c7cb5dd4a74ab85df8e9bffc',
+  type: 'shelley',
+  fee: '179537',
+  status: 'Successful',
+  inputs: [
+    {
+      address:
+        'addr_test1qrrdv3uxj8shu27ea9djvnn3rl4w3lvh3cyck6yc36mvf6ctlqxj9g0azvpycncr9u600p6t556qhc3psk06uzzw6saq4kvdpq',
+      amount: '967141533',
+      assets: [
+        {
+          amount: '1',
+          assetId: '57e37bc9a9c0a099a6636c3deb93b82e7edec8a9a40883017bae2674.717171717171',
+          policyId: '57e37bc9a9c0a099a6636c3deb93b82e7edec8a9a40883017bae2674',
+          name: '717171717171',
+        },
+        {
+          amount: '1',
+          assetId: 'fc53320cfda5add9cde1e7094c73596eacc26dbe79834b67c14b5dad.656565656565',
+          policyId: 'fc53320cfda5add9cde1e7094c73596eacc26dbe79834b67c14b5dad',
+          name: '656565656565',
+        },
+      ],
+    },
+    {
+      address:
+        'addr_test1qqgxd3r59psq0dg33t7asmvjmtu55tvvcmeq5kmhj0tmqjctlqxj9g0azvpycncr9u600p6t556qhc3psk06uzzw6saqk4x7z6',
+      amount: '2000000',
+      assets: [
+        {
+          amount: '1',
+          assetId: '0b71c073fcf017eeff0664070c790a2bcc47077566904be471c46c13.727272727272',
+          policyId: '0b71c073fcf017eeff0664070c790a2bcc47077566904be471c46c13',
+          name: '727272727272',
+        },
+      ],
+    },
+  ],
+  outputs: [
+    {
+      address:
+        'addr_test1qrxlnftwl73taxvcapnhgctae895l582a6r7k7jjeuwvzp0rvvww4m29k4km54utxag3mlhdsr73m62rsae6ad3hj6kqcexkh8',
+      amount: '7305977',
+      assets: [],
+    },
+    {
+      address:
+        'addr_test1qrqzse20fh7mmt5k9xf4sug3a2lh5fa7x9nr98avp0ac78stlqxj9g0azvpycncr9u600p6t556qhc3psk06uzzw6saq6xr7ra',
+      amount: '961656019',
+      assets: [
+        {
+          amount: '1',
+          assetId: '0b71c073fcf017eeff0664070c790a2bcc47077566904be471c46c13.727272727272',
+          policyId: '0b71c073fcf017eeff0664070c790a2bcc47077566904be471c46c13',
+          name: '727272727272',
+        },
+        {
+          amount: '1',
+          assetId: '57e37bc9a9c0a099a6636c3deb93b82e7edec8a9a40883017bae2674.717171717171',
+          policyId: '57e37bc9a9c0a099a6636c3deb93b82e7edec8a9a40883017bae2674',
+          name: '717171717171',
+        },
+        {
+          amount: '1',
+          assetId: 'fc53320cfda5add9cde1e7094c73596eacc26dbe79834b67c14b5dad.656565656565',
+          policyId: 'fc53320cfda5add9cde1e7094c73596eacc26dbe79834b67c14b5dad',
+          name: '656565656565',
+        },
+      ],
+    },
+  ],
+  lastUpdatedAt: '2021-09-13T18:42:10.000Z',
+  submittedAt: '2021-09-13T18:42:10.000Z',
+  blockNum: 2909238,
+  blockHash: 'fb418acaa29c66e799a16b594f7beedfe2ef53413e9863b61a418f2df1ff1442',
+  txOrdinal: 0,
+  epoch: 156,
+  slot: 166914,
+  withdrawals: [],
+  certificates: [],
+  validContract: true,
+  scriptSize: 0,
+  collateralInputs: [],
+}
+
+describe('syncTxs (undefined means no updates)', () => {
+  it('should return undefined if tipStatus bestBlock.hash is empty', async () => {
+    const params = {
+      addressesByChunks: [],
+      backendConfig: mockedBackendConfig,
+      transactions: mockedEmptyLocalTransactions,
+      api: {
+        getTipStatus: jest.fn().mockResolvedValue({
+          safeBlock: mockedTipStatusResponse.safeBlock,
+          bestBlock: {...mockedTipStatusResponse.bestBlock, hash: ''},
+        }),
+        fetchNewTxHistory: jest.fn(),
       },
-    )
+    }
 
-    it(`should return undefined if receives ${ApiHistoryError.errors.REFERENCE_BEST_BLOCK_MISMATCH}`, async () => {
+    const result = await syncTxs(params)
+
+    expect(result).toBeUndefined()
+    expect(params.api.getTipStatus).toBeCalledTimes(1)
+  })
+
+  it('should return undefined if there is no new transactions', async () => {
+    const params = {
+      addressesByChunks: mockedAddressesByChunks,
+      backendConfig: mockedBackendConfig,
+      transactions: mockedLocalTransactions,
+      api: {
+        getTipStatus: jest.fn().mockResolvedValue(mockedTipStatusResponse),
+        fetchNewTxHistory: jest
+          .fn()
+          .mockResolvedValueOnce(mockedEmptyHistoryResponse)
+          .mockResolvedValueOnce(mockedEmptyHistoryResponse)
+          .mockResolvedValueOnce(mockedEmptyHistoryResponse),
+      },
+    }
+
+    const result = await syncTxs(params)
+
+    expect(result).toBeUndefined()
+    expect(params.api.fetchNewTxHistory).toBeCalledTimes(3)
+  })
+
+  it('should return current txs plus new txs if there are new transactions', async () => {
+    const params = {
+      addressesByChunks: mockedAddressesByChunks,
+      backendConfig: mockedBackendConfig,
+      transactions: mockedLocalTransactions,
+      api: {
+        getTipStatus: jest.fn().mockResolvedValue(mockedTipStatusResponse),
+        fetchNewTxHistory: jest
+          .fn()
+          .mockResolvedValueOnce(mockedHistoryResponse)
+          .mockResolvedValueOnce(mockedEmptyHistoryResponse)
+          .mockResolvedValueOnce(mockedEmptyHistoryResponse),
+      },
+    }
+    const response = {
+      ...mockedLocalTransactions,
+      ...fromPairs(mockedHistoryResponse.transactions.map((t) => [t.hash, toCachedTx(t)])),
+    }
+
+    const result = await syncTxs(params)
+
+    expect(result).toEqual(response)
+    expect(params.api.fetchNewTxHistory).toBeCalledTimes(3)
+  })
+
+  it('should return current txs plus new txs if there are new transactions and continue to request while is not the last', async () => {
+    const params = {
+      addressesByChunks: [mockedAddressesByChunks[0]],
+      backendConfig: mockedBackendConfig,
+      transactions: {},
+      api: {
+        getTipStatus: jest.fn().mockResolvedValue(mockedTipStatusResponse),
+        fetchNewTxHistory: jest
+          .fn()
+          .mockResolvedValueOnce({...mockedHistoryResponse, isLast: false})
+          .mockResolvedValueOnce({...mockedHistoryResponse, isLast: false})
+          .mockResolvedValueOnce({...mockedHistoryResponse, isLast: false})
+          .mockResolvedValueOnce({...mockedHistoryResponse, isLast: false})
+          .mockResolvedValueOnce(mockedEmptyHistoryResponse),
+      },
+    }
+    const response = fromPairs(mockedHistoryResponse.transactions.map((t) => [t.hash, toCachedTx(t)]))
+
+    const result = await syncTxs(params)
+
+    expect(result).toEqual(response)
+    expect(params.api.fetchNewTxHistory).toBeCalledTimes(5)
+  })
+
+  it.each([ApiHistoryError.errors.REFERENCE_BLOCK_MISMATCH, ApiHistoryError.errors.REFERENCE_TX_NOT_FOUND])(
+    `should return current txs minus txs after last_tx.height if receives %p`,
+    async (error) => {
       const params = {
         addressesByChunks: mockedAddressesByChunks,
         backendConfig: mockedBackendConfig,
-        transactions: mockedLocalTransactions,
+        transactions: {
+          ...mockedLocalTransactions,
+          ...fromPairs(mockedHistoryResponse.transactions.map((t) => [t.hash, toCachedTx(t)])),
+        },
         api: {
           getTipStatus: jest.fn().mockResolvedValue(mockedTipStatusResponse),
           fetchNewTxHistory: jest
             .fn()
-            .mockRejectedValueOnce(new ApiHistoryError(ApiHistoryError.errors.REFERENCE_BEST_BLOCK_MISMATCH))
+            .mockRejectedValueOnce(new ApiHistoryError(error))
             .mockResolvedValueOnce(mockedEmptyHistoryResponse)
             .mockResolvedValueOnce(mockedEmptyHistoryResponse),
         },
@@ -139,28 +311,48 @@ describe('transactionCache', () => {
 
       const result = await syncTxs(params)
 
-      expect(result).toBeUndefined()
-    })
+      expect(result).toEqual(mockedLocalTransactions)
+    },
+  )
 
-    it(`should return undefined if receives any other error`, async () => {
-      const params = {
-        addressesByChunks: mockedAddressesByChunks,
-        backendConfig: mockedBackendConfig,
-        transactions: mockedLocalTransactions,
-        api: {
-          getTipStatus: jest.fn().mockResolvedValue(mockedTipStatusResponse),
-          fetchNewTxHistory: jest
-            .fn()
-            .mockRejectedValueOnce(new Error('error'))
-            .mockResolvedValueOnce(mockedEmptyHistoryResponse)
-            .mockResolvedValueOnce(mockedEmptyHistoryResponse),
-        },
-      }
+  it(`should return undefined if receives ${ApiHistoryError.errors.REFERENCE_BEST_BLOCK_MISMATCH}`, async () => {
+    const params = {
+      addressesByChunks: mockedAddressesByChunks,
+      backendConfig: mockedBackendConfig,
+      transactions: mockedLocalTransactions,
+      api: {
+        getTipStatus: jest.fn().mockResolvedValue(mockedTipStatusResponse),
+        fetchNewTxHistory: jest
+          .fn()
+          .mockRejectedValueOnce(new ApiHistoryError(ApiHistoryError.errors.REFERENCE_BEST_BLOCK_MISMATCH))
+          .mockResolvedValueOnce(mockedEmptyHistoryResponse)
+          .mockResolvedValueOnce(mockedEmptyHistoryResponse),
+      },
+    }
 
-      const result = await syncTxs(params)
+    const result = await syncTxs(params)
 
-      expect(result).toBeUndefined()
-    })
+    expect(result).toBeUndefined()
+  })
+
+  it(`should return undefined if receives any other error`, async () => {
+    const params = {
+      addressesByChunks: mockedAddressesByChunks,
+      backendConfig: mockedBackendConfig,
+      transactions: mockedLocalTransactions,
+      api: {
+        getTipStatus: jest.fn().mockResolvedValue(mockedTipStatusResponse),
+        fetchNewTxHistory: jest
+          .fn()
+          .mockRejectedValueOnce(new Error('error'))
+          .mockResolvedValueOnce(mockedEmptyHistoryResponse)
+          .mockResolvedValueOnce(mockedEmptyHistoryResponse),
+      },
+    }
+
+    const result = await syncTxs(params)
+
+    expect(result).toBeUndefined()
   })
 })
 

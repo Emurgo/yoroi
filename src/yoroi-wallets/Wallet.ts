@@ -213,7 +213,7 @@ export class Wallet {
     if (!this.transactionCache) throw new Error('invalid wallet state')
 
     this.transactionCache.subscribe(() => this.notify({type: 'transactions', transactions: this.transactions}))
-    this.transactionCache.subscribeOnTxHistoryUpdate(this.notifyOnTxHistoryUpdate)
+    this.transactionCache.subscribe(this.notifyOnTxHistoryUpdate)
     this.internalChain.addSubscriberToNewAddresses(() =>
       this.notify({type: 'addresses', addresses: this.internalAddresses}),
     )
