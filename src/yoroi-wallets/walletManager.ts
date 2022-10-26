@@ -35,6 +35,7 @@ import {
   TxBodiesRequest,
   WALLET_IMPLEMENTATION_REGISTRY,
 } from './types/other'
+import {WalletJSON} from './Wallet'
 
 export class WalletClosed extends ExtendableError {}
 export class SystemAuthDisabled extends ExtendableError {}
@@ -301,14 +302,19 @@ export class WalletManager {
 
   async openWallet(walletMeta: WalletMeta): Promise<[YoroiWallet, WalletMeta]> {
     assert.preconditionCheck(!!walletMeta.id, 'openWallet:: !!id')
-    const data = await storage.read(`/wallet/${walletMeta.id}/data`)
+    const data = await storage.read<WalletJSON>(`/wallet/${walletMeta.id}/data`)
     const appSettings = await readAppSettings()
     const isSystemAuthEnabled = appSettings[APP_SETTINGS_KEYS.SYSTEM_AUTH_ENABLED]
     Logger.debug('openWallet::data', data)
     if (!data) throw new Error('Cannot read saved data')
 
-    const wallet: WalletInterface = this._getWalletImplementation(walletMeta.walletImplementationId)
     const newWalletMeta = {...walletMeta}
+
+    // can be null for versions < 3.0.0
+    const networkId = data.networkId != null ? data.networkId : walletMeta.networkId
+
+    const Wallet = this._getWalletImplementation(walletMeta.walletImplementationId)
+    const wallet = new Wallet(storage, networkId)
 
     await wallet.restore(data, walletMeta)
     wallet.id = walletMeta.id
@@ -357,7 +363,6 @@ export class WalletManager {
 
   async closeWallet(): Promise<void> {
     if (!this._wallet) return Promise.resolve()
-    await this._wallet.clear()
 
     Logger.debug('closing wallet...')
     assert.assert(this._closeReject, 'close: should have _closeReject')
@@ -384,6 +389,7 @@ export class WalletManager {
   async resyncWallet() {
     if (!this._wallet) return
     const wallet = this._wallet
+    await wallet.clear()
     wallet.resync()
     wallet.save()
     await this.closeWallet()
@@ -391,13 +397,15 @@ export class WalletManager {
 
   async removeWallet(id: string) {
     if (!this._wallet) throw new Error('invalid state')
+    const wallet = this._wallet
 
-    if (this._wallet.isEasyConfirmationEnabled) {
+    if (wallet.isEasyConfirmationEnabled) {
       await this.deleteEncryptedKey('BIOMETRICS')
       await this.deleteEncryptedKey('SYSTEM_PIN')
     }
     await this.deleteEncryptedKey('MASTER_PASSWORD')
 
+    await wallet.clear()
     await this.closeWallet()
     await storage.remove(`/wallet/${id}/data`)
     await storage.remove(`/wallet/${id}`)
@@ -420,12 +428,12 @@ export class WalletManager {
   // returns the corresponding implementation of WalletInterface. Normally we
   // should expect that each blockchain network has 1 wallet implementation.
   // In the case of Cardano, there are two: Byron-era and Shelley-era.
-  _getWalletImplementation(walletImplementationId: WalletImplementationId): WalletInterface {
+  _getWalletImplementation(walletImplementationId: WalletImplementationId): typeof ShelleyWallet {
     switch (walletImplementationId) {
       case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON:
       case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY:
       case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY_24:
-        return new ShelleyWallet(storage)
+        return ShelleyWallet
       // TODO
       // case WALLET_IMPLEMENTATION_REGISTRY.ERGO:
       //   return ErgoWallet()
@@ -442,7 +450,8 @@ export class WalletManager {
     implementationId: WalletImplementationId,
     provider?: null | YoroiProvider,
   ) {
-    const wallet = this._getWalletImplementation(implementationId)
+    const Wallet = this._getWalletImplementation(implementationId)
+    const wallet = new Wallet(storage, networkId)
     const id = await wallet.create(mnemonic, password, networkId, implementationId, provider)
 
     return this.saveWallet(id, name, wallet, networkId, implementationId, provider)
@@ -456,7 +465,8 @@ export class WalletManager {
     hwDeviceInfo: null | HWDeviceInfo,
     isReadOnly: boolean,
   ) {
-    const wallet = this._getWalletImplementation(implementationId)
+    const Wallet = this._getWalletImplementation(implementationId)
+    const wallet = new Wallet(storage, networkId)
     const id = await wallet.createWithBip44Account(
       bip44AccountPublic,
       networkId,

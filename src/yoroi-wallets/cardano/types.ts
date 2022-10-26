@@ -1,4 +1,3 @@
-import type {UtxoService} from '@emurgo/yoroi-lib'
 import {BigNumber} from 'bignumber.js'
 import type {IntlShape} from 'react-intl'
 
@@ -78,8 +77,6 @@ export interface WalletInterface {
   checksum: undefined | CardanoTypes.WalletChecksum
 
   storage: typeof storage
-
-  utxoService: UtxoService | null
 
   // =================== getters =================== //
 
