@@ -10,7 +10,6 @@ import {useSelector} from 'react-redux'
 import {PinLoginScreen, useAuthWithOs, useBackgroundTimeout, useCanEnableAuthOs} from './auth'
 import {useAuth} from './auth/AuthProvider'
 import {EnableLoginWithPin} from './auth/EnableLoginWithPin'
-import {AuthMethodState} from './auth/types'
 import {FirstRunNavigator} from './FirstRun/FirstRunNavigator'
 import {useAuthMethod} from './hooks'
 import globalMessages from './i18n/global-messages'
@@ -36,7 +35,7 @@ export const AppNavigator = () => {
   useHideScreenInAppSwitcher()
   const {authMethod} = useAuthMethod(storage)
   const osAuthDisabled = useOsAuthDisabled()
-  useCheckOsAuthDisabled(osAuthDisabled, authMethod)
+  useCheckOsAuthDisabled(osAuthDisabled)
   // when using OS if it was disabled it will ask for a pin creation and to link auth with pin
   const authAction = osAuthDisabled || authMethod?.None ? 'create-link-pin' : authMethod?.method
 
@@ -215,17 +214,9 @@ const useOsAuthDisabled = () => {
   return !canEnableOsAuth && authMethod?.OS === true
 }
 
-const useCheckOsAuthDisabled = (osAuthDisabled: boolean, authMethod?: AuthMethodState) => {
+const useCheckOsAuthDisabled = (osAuthDisabled: boolean) => {
   const strings = useStrings()
   const {logout} = useAuth()
-  const {refetch} = useCanEnableAuthOs()
-
-  React.useEffect(() => {
-    const appStateSubscription = AppState.addEventListener('change', async (appState) => {
-      if (authMethod?.OS && appState === 'active' && !osAuthDisabled) refetch()
-    })
-    return () => appStateSubscription?.remove()
-  }, [authMethod, refetch, osAuthDisabled])
 
   React.useEffect(() => {
     if (osAuthDisabled) {
