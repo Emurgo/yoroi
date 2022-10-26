@@ -34,19 +34,21 @@ export const useEnableAuthWithOs = (
   options?: UseMutationOptions<void, Error>,
 ) => {
   const mutation = useMutationWithInvalidations({
-    mutationFn: () =>
-      storage
+    mutationFn: async () => {
+      const installationId = await storage
         .getItem(INSTALLATION_ID_KEY)
         .then((data) => {
           if (data != null) return data
-          throw new Error('Invalid state')
+          return Promise.reject('Invalid state')
         })
         .then(JSON.parse)
-        .then((installationId: string) => KeychainStorage.write(installationId, installationId)) // the data here is irrelevant
-        .then(({service: id}) => KeychainStorage.read(id, authenticationPrompt))
+
+      return KeychainStorage.write(installationId, installationId) // the data here is irrelevant
+        .then(() => KeychainStorage.read(installationId, authenticationPrompt))
         .then(() => storage.setItem(AUTH_METHOD_KEY, JSON.stringify(AUTH_METHOD_OS)))
         .then(() => storage.getItem(ENCRYPTED_PIN_HASH_KEY))
-        .then((pin) => (pin != null ? storage.removeItem(ENCRYPTED_PIN_HASH_KEY) : undefined)),
+        .then((pin) => (pin != null ? storage.removeItem(ENCRYPTED_PIN_HASH_KEY) : undefined))
+    },
     ...options,
     invalidateQueries: [['authMethod']],
   })

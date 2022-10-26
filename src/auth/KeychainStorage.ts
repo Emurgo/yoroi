@@ -1,15 +1,14 @@
 import {Platform} from 'react-native'
 import * as Keychain from 'react-native-keychain'
 
-function write(key: string, value: string) {
+async function write(key: string, value: string) {
   return Keychain.setGenericPassword(key, value, {
     service: key,
     accessControl: Keychain.ACCESS_CONTROL.BIOMETRY_ANY_OR_DEVICE_PASSCODE,
     accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
     securityLevel: Keychain.SECURITY_LEVEL.SECURE_HARDWARE,
   }).then((result) => {
-    if (result === false) throw new Error('Unable to store secret')
-    return result as Keychain.Result
+    if (result === false) Promise.reject('Unable to store secret')
   })
 }
 
