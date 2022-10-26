@@ -53,7 +53,7 @@ export const ApplicationSettingsScreen = () => {
   const crashReports = useCrashReports()
 
   const onToggleBiometricsAuthIn = async () => {
-    if (authMethod?.isOS) {
+    if (authMethod?.OS) {
       authWithOs()
     } else {
       navigation.navigate('app-root', {
@@ -76,10 +76,10 @@ export const ApplicationSettingsScreen = () => {
       </SettingsSection>
 
       <SettingsSection title={strings.security}>
-        <NavigatedSettingsItem label={strings.changePin} navigateTo="change-custom-pin" disabled={!authMethod?.isPIN} />
+        <NavigatedSettingsItem label={strings.changePin} navigateTo="change-custom-pin" disabled={!authMethod?.PIN} />
 
         <SettingsItem label={strings.biometricsSignIn} disabled={!canEnableOsAuth}>
-          <Switch value={authMethod?.isOS} onValueChange={onToggleBiometricsAuthIn} disabled={!canEnableOsAuth} />
+          <Switch value={authMethod?.OS} onValueChange={onToggleBiometricsAuthIn} disabled={!canEnableOsAuth} />
         </SettingsItem>
       </SettingsSection>
 

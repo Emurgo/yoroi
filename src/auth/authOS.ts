@@ -11,13 +11,14 @@ import {WalletMeta} from '../legacy/state'
 import storage from '../legacy/storage'
 import {Storage} from '../Storage'
 import {WalletJSON, walletManager, YoroiWallet} from '../yoroi-wallets'
-import {AuthMethod} from '../yoroi-wallets/types'
 import {AuthenticationPrompt, canEnableAuthOs, KeychainStorage} from './KeychainStorage'
+import {AuthMethod} from './types'
 
 export const useCanEnableAuthOs = (options?: UseQueryOptions<boolean, Error>) => {
   const query = useQuery({
     queryKey: ['canEnableAuthOs'],
     queryFn: canEnableAuthOs,
+    suspense: true,
     ...options,
   })
 

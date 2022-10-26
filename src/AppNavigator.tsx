@@ -10,6 +10,7 @@ import {useSelector} from 'react-redux'
 import {PinLoginScreen, useAuthWithOs, useBackgroundTimeout, useCanEnableAuthOs} from './auth'
 import {useAuth} from './auth/AuthProvider'
 import {EnableLoginWithPin} from './auth/EnableLoginWithPin'
+import {AuthMethodState} from './auth/types'
 import {FirstRunNavigator} from './FirstRun/FirstRunNavigator'
 import {useAuthMethod} from './hooks'
 import globalMessages from './i18n/global-messages'
@@ -33,8 +34,11 @@ export const AppNavigator = () => {
   const [isReady, setIsReady] = React.useState(false)
   useAutoLogout()
   useHideScreenInAppSwitcher()
-  useCheckOsAuth()
-  const authAction = useAuthAction()
+  const {authMethod} = useAuthMethod(storage)
+  const osAuthDisabled = useOsAuthDisabled()
+  useCheckOsAuthDisabled(osAuthDisabled, authMethod)
+  // when using OS if it was disabled it will ask for a pin creation and to link auth with pin
+  const authAction = osAuthDisabled || authMethod?.None ? 'create-link-pin' : authMethod?.method
 
   const {isLoggedOut, login} = useAuth()
   const {authWithOs} = useAuthWithOs(
@@ -83,7 +87,7 @@ export const AppNavigator = () => {
 export default AppNavigator
 
 const Stack = createStackNavigator<AppRoutes>()
-const NavigatorSwitch = ({authAction}: {authAction: 'create-link-pin' | 'check-pin' | 'os'}) => {
+const NavigatorSwitch = ({authAction}: {authAction: 'create-link-pin' | 'pin' | 'os'}) => {
   const strings = useStrings()
   const isMaintenance = useSelector(isMaintenanceSelector)
   const isTosAccepted = useSelector(isTosAcceptedSelector)
@@ -108,7 +112,7 @@ const NavigatorSwitch = ({authAction}: {authAction: 'create-link-pin' | 'check-p
       {/* Not Authenticated */}
       {isLoggedOut && (
         <Stack.Group>
-          {authAction === 'check-pin' && (
+          {authAction === 'pin' && (
             <Stack.Screen name="custom-pin-auth" component={PinLoginScreen} options={{title: strings.loginPinTitle}} />
           )}
           {authAction === 'os' && (
@@ -203,44 +207,33 @@ const useAutoLogout = () => {
   })
 }
 
-const useAuthAction = () => {
+const useOsAuthDisabled = () => {
   const storage = useStorage()
-  const {authMethod, isLoading: loadingAuthMethod} = useAuthMethod(storage)
-  const {canEnableOsAuth, isLoading: loadingCanEnableOsAuth} = useCanEnableAuthOs()
+  const {authMethod} = useAuthMethod(storage)
+  const {canEnableOsAuth} = useCanEnableAuthOs()
 
-  const isLoading = loadingAuthMethod || loadingCanEnableOsAuth
-  const hasTurnedOffOSAuth = !isLoading && !canEnableOsAuth && authMethod?.isOS
-
-  if (isLoading) return
-  if (authMethod?.isNone || hasTurnedOffOSAuth) return 'create-link-pin'
-  if (authMethod?.isPIN) return 'check-pin'
-  if (authMethod?.isOS) return 'os'
+  return !canEnableOsAuth && authMethod?.OS === true
 }
 
-const useCheckOsAuth = () => {
+const useCheckOsAuthDisabled = (osAuthDisabled: boolean, authMethod?: AuthMethodState) => {
   const strings = useStrings()
-  const storage = useStorage()
   const {logout} = useAuth()
-  const {authMethod, isLoading: loadingAuthMethod} = useAuthMethod(storage)
-  const {canEnableOsAuth, isLoading: loadingCanEnableOsAuth, refetch} = useCanEnableAuthOs()
-
-  const isLoading = loadingAuthMethod || loadingCanEnableOsAuth
-  const hasTurnedOffOSAuth = !isLoading && !canEnableOsAuth && authMethod?.isOS
+  const {refetch} = useCanEnableAuthOs()
 
   React.useEffect(() => {
     const appStateSubscription = AppState.addEventListener('change', async (appState) => {
-      if (authMethod?.isOS && appState === 'active' && !hasTurnedOffOSAuth) refetch()
+      if (authMethod?.OS && appState === 'active' && !osAuthDisabled) refetch()
     })
     return () => appStateSubscription?.remove()
-  }, [authMethod, refetch, hasTurnedOffOSAuth])
+  }, [authMethod, refetch, osAuthDisabled])
 
   React.useEffect(() => {
-    if (hasTurnedOffOSAuth) {
+    if (osAuthDisabled) {
       Alert.alert(strings.biometricsChangeTitle, strings.biometricsChangeMessage)
 
       logout()
     }
-  }, [hasTurnedOffOSAuth, strings.biometricsChangeTitle, strings.biometricsChangeMessage, logout])
+  }, [osAuthDisabled, strings.biometricsChangeTitle, strings.biometricsChangeMessage, logout])
 }
 
 const useHideScreenInAppSwitcher = () => {

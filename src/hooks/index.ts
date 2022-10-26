@@ -17,6 +17,7 @@ import {
 } from 'react-query'
 
 import {EncryptedStorage, StorageKeys} from '../auth'
+import {AuthMethod, AuthMethodState} from '../auth/types'
 import {getDefaultAssetByNetworkId} from '../legacy/config'
 import {ObjectValues} from '../legacy/flow'
 import {HWDeviceInfo} from '../legacy/ledgerUtils'
@@ -47,7 +48,7 @@ import {
   YoroiSignedTx,
   YoroiUnsignedTx,
 } from '../yoroi-wallets/types'
-import {AuthMethod, AuthMethodState, CurrencySymbol, RawUtxo, TipStatusResponse} from '../yoroi-wallets/types/other'
+import {CurrencySymbol, RawUtxo, TipStatusResponse} from '../yoroi-wallets/types/other'
 import {Utxos} from '../yoroi-wallets/utils'
 
 const crashReportsStorageKey = 'sendCrashReports'
@@ -932,21 +933,23 @@ export const useAuthMethod = (storage: Storage, options?: UseQueryOptions<AuthMe
           switch (parsedAuthMethod) {
             case 'pin':
               return {
-                isPIN: true,
-                isOS: false,
-                isNone: false,
+                method: 'pin',
+                PIN: true,
+                OS: false,
+                None: false,
               } as const
             case 'os':
               return {
-                isPIN: false,
-                isOS: true,
-                isNone: false,
+                method: 'os',
+                PIN: false,
+                OS: true,
+                None: false,
               } as const
             default:
               return {
-                isPIN: false,
-                isOS: false,
-                isNone: true,
+                PIN: false,
+                OS: false,
+                None: true,
               } as const
           }
         }),
