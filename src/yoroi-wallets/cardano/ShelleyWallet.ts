@@ -39,6 +39,7 @@ import {
   RegistrationStatus,
   walletChecksum,
 } from '../cardano'
+import {makeStorageWithPrefix} from '../storage'
 import {DefaultAsset, SendTokenList, Token, YoroiSignedTx, YoroiUnsignedTx} from '../types'
 import type {
   AccountStateResponse,
@@ -58,7 +59,6 @@ import type {
 } from '../types/other'
 import {NETWORK_REGISTRY} from '../types/other'
 import {genTimeToSlot} from '../utils/timeUtils'
-import {versionCompare} from '../utils/versioning'
 import Wallet, {WalletJSON} from '../Wallet'
 import * as api from './api'
 import {AddressChain, AddressGenerator} from './chain'
@@ -102,7 +102,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
 
     this.provider = provider
 
-    this.transactionCache = new TransactionCache()
+    this.transactionCache = await TransactionCache.create(makeStorageWithPrefix(`/wallet/${this.id}/txs`))
 
     // initialize address chains
     const _walletConfig = getWalletConfigById(implementationId)
@@ -242,29 +242,9 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     // from address generator
     this.publicKeyHex = data.publicKeyHex != null ? data.publicKeyHex : this.internalChain.publicKey
     this.rewardAddressHex = await deriveRewardAddressHex(this.publicKeyHex, this.networkId)
-    this.transactionCache = TransactionCache.fromJSON(data.transactionCache)
     this.isEasyConfirmationEnabled = data.isEasyConfirmationEnabled
 
-    let shouldResync = false
-    if (lastSeenVersion == null) {
-      shouldResync = true
-    } else {
-      try {
-        if (versionCompare(lastSeenVersion, '4.1.0') === -1) {
-          // force resync for versions < 4.1.0 due to server sync issue
-          // this also covers versions < 4.0 (prior to Mary HF), which also
-          // need a resync because of the new fields introduced in the tx format
-          shouldResync = true
-        }
-      } catch (e) {
-        Logger.warn('runMigrations: some migrations might have not been applied', e)
-      }
-    }
-
-    if (shouldResync) {
-      this.transactionCache.resetState()
-      Logger.info('runMigrations: the transaction cache has been reset')
-    }
+    this.transactionCache = await TransactionCache.create(makeStorageWithPrefix(`/wallet/${walletMeta.id}/txs`))
   }
 
   _integrityCheck(): void {
@@ -296,6 +276,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     Logger.info('restore wallet', walletMeta.name)
     assert.assert(!this.isInitialized, 'restoreWallet: !isInitialized')
 
+    this.id = walletMeta.id
     await this._runMigrations(data, walletMeta)
 
     this._integrityCheck()

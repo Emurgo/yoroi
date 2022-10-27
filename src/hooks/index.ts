@@ -2,6 +2,7 @@
 import AsyncStorage, {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
 import {useNetInfo} from '@react-native-community/netinfo'
 import {useFocusEffect} from '@react-navigation/native'
+import BigNumber from 'bignumber.js'
 import {delay} from 'bluebird'
 import cryptoRandomString from 'crypto-random-string'
 import {mapValues} from 'lodash'
@@ -21,13 +22,16 @@ import {AuthMethod, AuthMethodState} from '../auth/types'
 import {getDefaultAssetByNetworkId} from '../legacy/config'
 import {ObjectValues} from '../legacy/flow'
 import {HWDeviceInfo} from '../legacy/ledgerUtils'
+import {getCardanoNetworkConfigById} from '../legacy/networks'
 import {processTxHistoryData} from '../legacy/processTransactions'
 import {WalletMeta} from '../legacy/state'
 import storage from '../legacy/storage'
+import {cardanoValueFromRemoteFormat} from '../legacy/utils'
 import {isEmptyString} from '../legacy/utils'
 import {Storage} from '../Storage'
 import {
   Cardano,
+  CardanoMobile,
   NetworkId,
   TxSubmissionStatus,
   WalletEvent,
@@ -39,6 +43,7 @@ import {
 } from '../yoroi-wallets'
 import {generateShelleyPlateFromKey} from '../yoroi-wallets/cardano/shelley/plate'
 import {
+  Quantity,
   Token,
   Transaction,
   TRANSACTION_DIRECTION,
@@ -148,6 +153,58 @@ export const useUtxos = (
     refetch,
     utxos: query.data,
   }
+}
+
+/**
+ * Calculate the lovelace locked up to hold utxos with assets
+ * Important `minAdaRequired` is missing `has_hash_data`
+ * which could be adding 10 in size to calc the words of the utxo
+ *
+ * @summary Returns the locked amount in Lovelace
+ */
+export const useLockedAmount = (
+  {wallet}: {wallet: YoroiWallet},
+  options?: UseQueryOptions<Quantity, Error, Quantity, [string, 'lockedAmount']>,
+) => {
+  const queryClient = useQueryClient()
+  const query = useQuery({
+    ...options,
+    suspense: true,
+    queryKey: [wallet.id, 'lockedAmount'],
+    queryFn: () =>
+      wallet
+        .fetchUTXOs()
+        .then((utxos) => calcLockedDeposit(utxos, wallet.networkId))
+        .then((amount) => amount.toString() as Quantity),
+  })
+
+  React.useEffect(() => {
+    const unsubscribe = wallet.subscribeOnTxHistoryUpdate(() =>
+      queryClient.invalidateQueries([wallet.id, 'lockedAmount']),
+    )
+
+    return () => unsubscribe()
+  }, [queryClient, wallet])
+
+  if (query.data == null) throw new Error('invalid state')
+
+  return query.data
+}
+
+export const calcLockedDeposit = async (utxos: RawUtxo[], networkId: NetworkId) => {
+  const networkConfig = getCardanoNetworkConfigById(networkId)
+  const minUtxoValue = await CardanoMobile.BigNum.fromStr(networkConfig.MINIMUM_UTXO_VAL)
+  const utxosWithAssets = utxos.filter((utxo) => utxo.assets.length > 0)
+
+  const promises = utxosWithAssets.map(async (utxo) => {
+    return cardanoValueFromRemoteFormat(utxo)
+      .then((value) => CardanoMobile.minAdaRequired(value, minUtxoValue))
+      .then((bigNum) => bigNum.toStr())
+  })
+  const results = await Promise.all(promises)
+  const totalLocked = results.reduce((result, current) => result.plus(current), new BigNumber(0)).toString() as Quantity
+
+  return totalLocked
 }
 
 export const useSync = (wallet: YoroiWallet, options?: UseMutationOptions<void, Error>) => {
@@ -597,6 +654,18 @@ export const useHasPendingTx = (wallet: YoroiWallet) => {
 }
 
 // WALLET MANAGER
+export const useOpenWallet = (options?: UseMutationOptions<[YoroiWallet, WalletMeta], Error, WalletMeta>) => {
+  const mutation = useMutation({
+    ...options,
+    mutationFn: async (walletMeta) => walletManager.openWallet(walletMeta),
+  })
+
+  return {
+    openWallet: mutation.mutate,
+    ...mutation,
+  }
+}
+
 export const AUTH_METHOD_PIN: AuthMethod = 'pin'
 export const useCreatePin = (storage: Storage, options: UseMutationOptions<void, Error, string>) => {
   const mutation = useMutation({

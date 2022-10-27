@@ -256,6 +256,7 @@ export class WalletManager {
   }
 
   async openWallet(walletMeta: WalletMeta): Promise<[YoroiWallet, WalletMeta]> {
+    await this.closeWallet()
     assert.preconditionCheck(!!walletMeta.id, 'openWallet:: !!id')
     const data = await storage.read(`/wallet/${walletMeta.id}/data`)
     Logger.debug('openWallet::data', data)
@@ -265,7 +266,8 @@ export class WalletManager {
     const newWalletMeta = {...walletMeta}
 
     await wallet.restore(data, walletMeta)
-    wallet.id = walletMeta.id
+    if (!isYoroiWallet(wallet)) throw new Error('invalid wallet')
+
     this._wallet = wallet
     this._id = walletMeta.id
 
@@ -282,11 +284,7 @@ export class WalletManager {
 
     this._notifyOnOpen()
 
-    if (isYoroiWallet(wallet)) {
-      return [wallet, newWalletMeta]
-    }
-
-    throw new Error('invalid wallet')
+    return [wallet, newWalletMeta]
   }
 
   closeWallet(): Promise<void> {
