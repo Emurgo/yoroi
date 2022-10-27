@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type {UtxoStorage} from '@emurgo/yoroi-lib'
+import {UtxoModels} from '@emurgo/yoroi-lib'
 import {initUtxo, UtxoService} from '@emurgo/yoroi-lib'
 import {BigNumber} from 'bignumber.js'
 import cryptoRandomString from 'crypto-random-string'
@@ -854,14 +855,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     await this.utxoService.syncUtxoState(addresses)
     const utxos = await this.utxoService.getAvailableUtxos()
 
-    return utxos.map((utxo) => ({
-      utxo_id: utxo.utxoId,
-      tx_hash: utxo.txHash,
-      tx_index: utxo.txIndex,
-      amount: utxo.amount.toString(),
-      receiver: utxo.receiver,
-      assets: utxo.assets,
-    }))
+    return mapUTXOs(utxos)
   }
 
   async clearUTXOs() {
@@ -899,3 +893,12 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
 }
 
 const toHex = (bytes: Uint8Array) => Buffer.from(bytes).toString('hex')
+const mapUTXOs = (utxos: UtxoModels.Utxo[]): RawUtxo[] =>
+  utxos.map((utxo) => ({
+    utxo_id: utxo.utxoId,
+    tx_hash: utxo.txHash,
+    tx_index: utxo.txIndex,
+    amount: utxo.amount.toString(),
+    receiver: utxo.receiver,
+    assets: utxo.assets,
+  }))
