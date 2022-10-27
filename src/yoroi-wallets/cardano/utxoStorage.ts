@@ -15,11 +15,11 @@ export const generateUtxoStorage = (storage: typeof storageLegacy, storagePath: 
   }
 
   const getUtxoDiffToBestBlock = async (): Promise<UtxoModels.UtxoDiffToBestBlock[]> => {
-    const data = await storage.read<UtxoStorageItem>(storagePath)
+    const {utxoDiffToBestBlock} = await storage.read<UtxoStorageItem>(storagePath)
 
-    if (!data?.utxoDiffToBestBlock) return []
+    if (!utxoDiffToBestBlock) return []
 
-    return data.utxoDiffToBestBlock
+    return utxoDiffToBestBlock
   }
 
   const setUtxoDiffToBestBlock = async (utxoDiffToBestBlock: UtxoModels.UtxoDiffToBestBlock[]): Promise<void> => {
@@ -33,11 +33,9 @@ export const generateUtxoStorage = (storage: typeof storageLegacy, storagePath: 
   }
 
   const getUtxoAtSafePoint = async (): Promise<UtxoModels.UtxoAtSafePoint | undefined> => {
-    const data = await storage.read<UtxoStorageItem>(storagePath)
+    const {utxoAtSafePoint} = await storage.read<UtxoStorageItem>(storagePath)
 
-    if (!data?.utxoAtSafePoint) return undefined
-
-    return data.utxoAtSafePoint
+    return utxoAtSafePoint
   }
 
   const setUtxoAtSafePoint = async (utxoAtSafePoint: UtxoModels.UtxoAtSafePoint): Promise<void> => {
