@@ -203,8 +203,12 @@ export class Wallet {
     this._onTxHistoryUpdateSubscriptions.forEach((handler) => handler(this))
   }
 
-  subscribeOnTxHistoryUpdate(handler: () => void) {
-    this._onTxHistoryUpdateSubscriptions.push(handler)
+  subscribeOnTxHistoryUpdate(subscription: () => void) {
+    this._onTxHistoryUpdateSubscriptions.push(subscription)
+
+    return () => {
+      this._onTxHistoryUpdateSubscriptions = this._onTxHistoryUpdateSubscriptions.filter((sub) => sub !== subscription)
+    }
   }
 
   setupSubscriptions() {

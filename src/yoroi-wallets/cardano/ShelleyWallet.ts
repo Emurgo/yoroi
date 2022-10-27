@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import {BigNumber} from 'bignumber.js'
 import cryptoRandomString from 'crypto-random-string'
 import ExtendableError from 'es6-error'
@@ -40,6 +39,7 @@ import {
   RegistrationStatus,
   walletChecksum,
 } from '../cardano'
+import {makeStorageWithPrefix} from '../storage'
 import {DefaultAsset, SendTokenList, Token, YoroiSignedTx, YoroiUnsignedTx} from '../types'
 import type {
   AccountStateResponse,
@@ -63,7 +63,7 @@ import Wallet, {WalletJSON} from '../Wallet'
 import * as api from './api'
 import {AddressChain, AddressGenerator} from './chain'
 import {filterAddressesByStakingKey, getDelegationStatus} from './shelley/delegationUtils'
-import {Storage, toCachedTx, TransactionCache} from './shelley/transactionCache'
+import {toCachedTx, TransactionCache} from './shelley/transactionCache'
 import {yoroiSignedTx} from './signedTx'
 import {NetworkId, WalletImplementationId, WalletInterface, YoroiProvider} from './types'
 import {yoroiUnsignedTx} from './unsignedTx'
@@ -857,22 +857,3 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
 }
 
 const toHex = (bytes: Uint8Array) => Buffer.from(bytes).toString('hex')
-
-const makeStorageWithPrefix = (prefix: string): Storage => {
-  const withPrefix = (key: string) => `${prefix}/${key}`
-
-  return {
-    getItem: (key: string) => {
-      return AsyncStorage.getItem(withPrefix(key))
-    },
-    multiGet: (keys: Array<string>) => {
-      return AsyncStorage.multiGet(keys.map((key) => withPrefix(key)))
-    },
-    setItem: (key: string, value: string) => {
-      return AsyncStorage.setItem(withPrefix(key), value)
-    },
-    multiSet: (items: Array<[string, string]>) => {
-      return AsyncStorage.multiSet(items.map(([key, value]) => [withPrefix(key), value]))
-    },
-  }
-}

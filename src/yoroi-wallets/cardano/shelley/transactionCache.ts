@@ -8,6 +8,7 @@ import {defaultMemoize} from 'reselect'
 import assert from '../../../legacy/assert'
 import {ApiHistoryError} from '../../../legacy/errors'
 import {Logger} from '../../../legacy/logging'
+import {Storage} from '../../storage'
 import type {RemoteCertificateMeta, TxHistoryRequest} from '../../types'
 import {BackendConfig, CERTIFICATE_KIND, RawTransaction, Transaction, TRANSACTION_STATUS} from '../../types/other'
 import {Version, versionCompare} from '../../utils/versioning'
@@ -459,13 +460,6 @@ type SyncMetadata = {
   bestBlockNum: number
   bestBlockHash: string | null | undefined
   bestTxHash: string | null | undefined
-}
-
-export type Storage = {
-  getItem: AsyncStorageStatic['getItem']
-  multiGet: AsyncStorageStatic['multiGet']
-  setItem: AsyncStorageStatic['setItem']
-  multiSet: AsyncStorageStatic['multiSet']
 }
 
 export type TxCacheStorage = {
