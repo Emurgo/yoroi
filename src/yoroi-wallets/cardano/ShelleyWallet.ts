@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import type {UtxoStorage} from '@emurgo/yoroi-lib'
 import {initUtxo, UtxoService} from '@emurgo/yoroi-lib'
 import {BigNumber} from 'bignumber.js'
 import cryptoRandomString from 'crypto-random-string'
@@ -74,6 +75,7 @@ export default ShelleyWallet
 export class ShelleyWallet extends Wallet implements WalletInterface {
   storage: typeof storageLegacy
   private utxoService: UtxoService
+  private utxoStorage: UtxoStorage
 
   // =================== create =================== //
   constructor(storage: typeof storageLegacy, networkId: NetworkId) {
@@ -81,9 +83,9 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     this.storage = storage
     this.networkId = networkId
 
-    const utxoStorage = generateUtxoStorage(this.storage, `/wallet/${this.id}/utxos`)
     const config = this.getBackendConfig()
-    this.utxoService = initUtxo(utxoStorage, `${config.API_ROOT}/`)
+    this.utxoStorage = generateUtxoStorage(this.storage, `/wallet/${this.id}/utxos`)
+    this.utxoService = initUtxo(this.utxoStorage, `${config.API_ROOT}/`)
   }
 
   save() {
@@ -848,7 +850,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
   }
 
   async fetchUTXOs() {
-    const addresses = this.externalAddresses.concat(this.internalAddresses)
+    const addresses = [...this.internalAddresses, ...this.externalAddresses]
     await this.utxoService.syncUtxoState(addresses)
     const utxos = await this.utxoService.getAvailableUtxos()
 
@@ -856,14 +858,14 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
       utxo_id: utxo.utxoId,
       tx_hash: utxo.txHash,
       tx_index: utxo.txIndex,
-      amount: utxo.amount,
+      amount: utxo.amount.toString(),
       receiver: utxo.receiver,
       assets: utxo.assets,
-    })) as unknown as RawUtxo[]
+    }))
   }
 
   async clearUTXOs() {
-    return this.storage.remove(`/wallet/${this.id}/utxos`)
+    await this.utxoStorage.clearUtxoState()
   }
 
   async fetchAccountState(): Promise<AccountStateResponse> {
