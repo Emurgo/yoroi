@@ -461,14 +461,19 @@ type SyncMetadata = {
   bestTxHash: string | null | undefined
 }
 
+export type Storage = {
+  getItem: AsyncStorageStatic['getItem']
+  multiGet: AsyncStorageStatic['multiGet']
+  setItem: AsyncStorageStatic['setItem']
+  multiSet: AsyncStorageStatic['multiSet']
+}
+
 export type TxCacheStorage = {
   loadTxs: () => Promise<Record<string, Transaction>>
   saveTxs: (txs: Record<string, Transaction>) => Promise<void>
 }
 
-const makeTxCacheStorage = (
-  storage: Pick<AsyncStorageStatic, 'getItem' | 'multiGet' | 'setItem' | 'multiSet'>,
-): TxCacheStorage => ({
+const makeTxCacheStorage = (storage: Storage): TxCacheStorage => ({
   loadTxs: async () => {
     const txids: Array<string> = await storage.getItem('txids').then(parseTxids)
     if (!txids) return {}

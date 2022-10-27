@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import AsyncStorage, {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import {BigNumber} from 'bignumber.js'
 import cryptoRandomString from 'crypto-random-string'
 import ExtendableError from 'es6-error'
@@ -63,7 +63,7 @@ import Wallet, {WalletJSON} from '../Wallet'
 import * as api from './api'
 import {AddressChain, AddressGenerator} from './chain'
 import {filterAddressesByStakingKey, getDelegationStatus} from './shelley/delegationUtils'
-import {toCachedTx, TransactionCache} from './shelley/transactionCache'
+import {Storage, toCachedTx, TransactionCache} from './shelley/transactionCache'
 import {yoroiSignedTx} from './signedTx'
 import {NetworkId, WalletImplementationId, WalletInterface, YoroiProvider} from './types'
 import {yoroiUnsignedTx} from './unsignedTx'
@@ -77,8 +77,8 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     this.storage = storage
   }
 
-  async save() {
-    this.storage.write(`/wallet/${this.id}/data`, this.toJSON())
+  save() {
+    return this.storage.write(`/wallet/${this.id}/data`, this.toJSON())
   }
 
   async _initialize(
@@ -858,7 +858,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
 
 const toHex = (bytes: Uint8Array) => Buffer.from(bytes).toString('hex')
 
-const makeStorageWithPrefix = (prefix: string): Omit<AsyncStorageStatic, 'mergeItem' | 'multiMerge' | 'clear'> => {
+const makeStorageWithPrefix = (prefix: string): Storage => {
   const withPrefix = (key: string) => `${prefix}/${key}`
 
   return {
@@ -874,8 +874,5 @@ const makeStorageWithPrefix = (prefix: string): Omit<AsyncStorageStatic, 'mergeI
     multiSet: (items: Array<[string, string]>) => {
       return AsyncStorage.multiSet(items.map(([key, value]) => [withPrefix(key), value]))
     },
-    getAllKeys: () => AsyncStorage.getAllKeys().then((keys) => keys.filter((key) => key.startsWith(prefix))),
-    removeItem: (key: string) => AsyncStorage.removeItem(withPrefix(key)),
-    multiRemove: (keys: Array<string>) => AsyncStorage.multiRemove(keys.map(withPrefix)),
   }
 }

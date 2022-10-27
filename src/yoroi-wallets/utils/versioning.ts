@@ -8,7 +8,7 @@
  *   0 if A = B,
  *  -1 if A < B
  */
-export type Version = `${number}.${number}.${number}`
+export type Version = `${number}.${number}.${number}` | `${number}.${number}` | `${number}`
 
 export const versionCompare = (versionA: Version, versionB: Version): number => {
   const chunksA = versionA.split(/\./g, 3)

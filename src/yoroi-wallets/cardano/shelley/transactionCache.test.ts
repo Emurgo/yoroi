@@ -1,12 +1,9 @@
-import {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
 import {fromPairs} from 'lodash'
 import DeviceInfo from 'react-native-device-info'
 
 import {ApiHistoryError} from '../../../legacy/errors'
 import type {BackendConfig, RawTransaction, TipStatusResponse, Transaction} from '../../types/other'
-import {syncTxs, toCachedTx, TransactionCache} from './transactionCache'
-
-type Foo = Omit<AsyncStorageStatic, 'clear' | 'multiMerge' | 'mergeItem' | 'removeItem' | 'multiRemove' | 'getAllKeys'>
+import {Storage, syncTxs, toCachedTx, TransactionCache} from './transactionCache'
 
 describe('transactionCache', () => {
   describe('create', () => {
@@ -76,7 +73,7 @@ describe('transactionCache', () => {
   })
 })
 
-const mockStorage: Foo = {
+const mockStorage: Storage = {
   getItem: async (path: string) => {
     if (path === 'txids') return JSON.stringify([mockTx.id])
     throw new Error('invalid path')
