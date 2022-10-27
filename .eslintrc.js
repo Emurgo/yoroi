@@ -9,7 +9,10 @@ module.exports = {
     {
       files: ['*.tsx'],
       rules: {
-        '@typescript-eslint/strict-boolean-expressions': ['error', {allowString: false, allowNumber: false, allowNullableBoolean: true}],
+        '@typescript-eslint/strict-boolean-expressions': [
+          'error',
+          {allowString: false, allowNumber: false, allowNullableBoolean: true},
+        ],
       },
     },
   ],
@@ -51,6 +54,7 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': ['error', {argsIgnorePattern: '^_', varsIgnorePattern: '^_'}],
     'react/jsx-curly-brace-presence': ['warn', {props: 'never', children: 'never'}],
     'no-return-await': 'error',
+    'no-template-curly-in-string': 'error',
   },
   globals: {
     Buffer: false,

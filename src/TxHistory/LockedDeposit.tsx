@@ -2,17 +2,14 @@ import BigNumber from 'bignumber.js'
 import React from 'react'
 import {useIntl} from 'react-intl'
 import {View} from 'react-native'
-import {useQuery, UseQueryOptions} from 'react-query'
 
 import {Boundary, Spacer, Text} from '../components'
-import {useTokenInfo} from '../hooks'
+import {useLockedAmount, useTokenInfo} from '../hooks'
 import globalMessages from '../i18n/global-messages'
 import {formatTokenWithText, formatTokenWithTextWhenHidden} from '../legacy/format'
 import {isEmptyString} from '../legacy/utils'
 import {useSelectedWallet} from '../SelectedWallet'
-import {YoroiWallet} from '../yoroi-wallets'
-import {calcLockedDeposit} from '../yoroi-wallets/cardano/assetUtils'
-import {Quantity, Token} from '../yoroi-wallets/types'
+import {Token} from '../yoroi-wallets/types'
 
 type Props = {
   privacyMode?: boolean
@@ -72,31 +69,4 @@ const useStrings = () => {
   return {
     lockedDeposit: intl.formatMessage(globalMessages.lockedDeposit),
   }
-}
-
-/**
- * Calculate the lovelace locked up to hold utxos with assets
- * Important `minAdaRequired` is missing `has_hash_data`
- * which could be adding 10 in size to calc the words of the utxo
- *
- * @summary Returns the locked amount in Lovelace
- */
-export const useLockedAmount = (
-  {wallet}: {wallet: YoroiWallet},
-  options?: UseQueryOptions<Quantity, Error, Quantity, [string, 'lockedAmount']>,
-) => {
-  const query = useQuery({
-    ...options,
-    suspense: true,
-    queryKey: [wallet.id, 'lockedAmount'],
-    queryFn: () =>
-      wallet
-        .fetchUTXOs()
-        .then((utxos) => calcLockedDeposit(utxos, wallet.networkId))
-        .then((amount) => amount.toString() as Quantity),
-  })
-
-  if (query.data == null) throw new Error('invalid state')
-
-  return query.data
 }

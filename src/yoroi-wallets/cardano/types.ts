@@ -123,7 +123,7 @@ export interface WalletInterface {
   // =================== subscriptions =================== //
 
   subscribe(handler: (event: WalletEvent) => void): () => void
-  subscribeOnTxHistoryUpdate(handler: () => void): void
+  subscribeOnTxHistoryUpdate(handler: () => void): () => void
 
   // =================== synch =================== //
 
