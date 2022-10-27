@@ -1,5 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`transactionCache create drops transaction if invalid format 1`] = `Object {}`;
+
+exports[`transactionCache create drops transaction if invalid format 2`] = `Object {}`;
+
+exports[`transactionCache create drops transaction if invalid format 3`] = `Object {}`;
+
+exports[`transactionCache create drops transaction if invalid format 4`] = `Object {}`;
+
 exports[`transactionCache create loads from storage 1`] = `
 Object {
   "0a8962dde362eef1f840defe6f916fdf9701ad53c7cb5dd4a74ab85df8e9bffc": Object {
@@ -111,21 +119,21 @@ Object {
 }
 `;
 
-exports[`transactionCache create starts fresh if data doesnt load 1`] = `Object {}`;
+exports[`transactionCache create loads from storage 5`] = `Object {}`;
 
-exports[`transactionCache create starts fresh if data doesnt load 2`] = `Object {}`;
+exports[`transactionCache create loads from storage 6`] = `Object {}`;
 
-exports[`transactionCache create starts fresh if data doesnt load 3`] = `Object {}`;
+exports[`transactionCache create loads from storage 7`] = `Object {}`;
 
-exports[`transactionCache create starts fresh if data doesnt load 4`] = `Object {}`;
+exports[`transactionCache create loads from storage 8`] = `Object {}`;
 
-exports[`transactionCache create starts fresh if data is invalid format 1`] = `Object {}`;
+exports[`transactionCache create starts fresh if txids is invalid format 1`] = `Object {}`;
 
-exports[`transactionCache create starts fresh if data is invalid format 2`] = `Object {}`;
+exports[`transactionCache create starts fresh if txids is invalid format 2`] = `Object {}`;
 
-exports[`transactionCache create starts fresh if data is invalid format 3`] = `Object {}`;
+exports[`transactionCache create starts fresh if txids is invalid format 3`] = `Object {}`;
 
-exports[`transactionCache create starts fresh if data is invalid format 4`] = `Object {}`;
+exports[`transactionCache create starts fresh if txids is invalid format 4`] = `Object {}`;
 
 exports[`transactionCache create starts fresh if upgrading from old version 1`] = `Object {}`;
 
@@ -134,11 +142,3 @@ exports[`transactionCache create starts fresh if upgrading from old version 2`] 
 exports[`transactionCache create starts fresh if upgrading from old version 3`] = `Object {}`;
 
 exports[`transactionCache create starts fresh if upgrading from old version 4`] = `Object {}`;
-
-exports[`transactionCache reset resets state 1`] = `Object {}`;
-
-exports[`transactionCache reset resets state 2`] = `Object {}`;
-
-exports[`transactionCache reset resets state 3`] = `Object {}`;
-
-exports[`transactionCache reset resets state 4`] = `Object {}`;

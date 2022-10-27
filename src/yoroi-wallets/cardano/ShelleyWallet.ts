@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import AsyncStorage, {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
 import {BigNumber} from 'bignumber.js'
 import cryptoRandomString from 'crypto-random-string'
 import ExtendableError from 'es6-error'
@@ -101,7 +102,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
 
     this.provider = provider
 
-    this.transactionCache = await TransactionCache.create(txCacheStorage(this.id))
+    this.transactionCache = await TransactionCache.create(makeStorageWithPrefix(`/wallet/${this.id}/txs`))
 
     // initialize address chains
     const _walletConfig = getWalletConfigById(implementationId)
@@ -243,7 +244,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     this.rewardAddressHex = await deriveRewardAddressHex(this.publicKeyHex, this.networkId)
     this.isEasyConfirmationEnabled = data.isEasyConfirmationEnabled
 
-    this.transactionCache = await TransactionCache.create(txCacheStorage(walletMeta.id))
+    this.transactionCache = await TransactionCache.create(makeStorageWithPrefix(`/wallet/${walletMeta.id}/txs`))
   }
 
   _integrityCheck(): void {
@@ -857,11 +858,24 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
 
 const toHex = (bytes: Uint8Array) => Buffer.from(bytes).toString('hex')
 
-const txCacheStorage = (id: string) => {
-  const prefix = `/wallet/${id}/txs`
+const makeStorageWithPrefix = (prefix: string): Omit<AsyncStorageStatic, 'mergeItem' | 'multiMerge' | 'clear'> => {
+  const withPrefix = (key: string) => `${prefix}/${key}`
 
   return {
-    read: (path: string) => storageLegacy.read(`${prefix}/${path}`),
-    write: (path: string, data: unknown) => storageLegacy.write(`${prefix}/${path}`, data),
+    getItem: (key: string) => {
+      return AsyncStorage.getItem(withPrefix(key))
+    },
+    multiGet: (keys: Array<string>) => {
+      return AsyncStorage.multiGet(keys.map((key) => withPrefix(key)))
+    },
+    setItem: (key: string, value: string) => {
+      return AsyncStorage.setItem(withPrefix(key), value)
+    },
+    multiSet: (items: Array<[string, string]>) => {
+      return AsyncStorage.multiSet(items.map(([key, value]) => [withPrefix(key), value]))
+    },
+    getAllKeys: () => AsyncStorage.getAllKeys().then((keys) => keys.filter((key) => key.startsWith(prefix))),
+    removeItem: (key: string) => AsyncStorage.removeItem(withPrefix(key)),
+    multiRemove: (keys: Array<string>) => AsyncStorage.multiRemove(keys.map(withPrefix)),
   }
 }

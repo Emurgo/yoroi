@@ -1,27 +1,25 @@
+import {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
 import {fromPairs} from 'lodash'
 import DeviceInfo from 'react-native-device-info'
 
 import {ApiHistoryError} from '../../../legacy/errors'
 import type {BackendConfig, RawTransaction, TipStatusResponse, Transaction} from '../../types/other'
-import {syncTxs, toCachedTx, TransactionCache, TransactionCacheState} from './transactionCache'
+import {syncTxs, toCachedTx, TransactionCache} from './transactionCache'
+
+type Foo = Omit<AsyncStorageStatic, 'clear' | 'multiMerge' | 'mergeItem' | 'removeItem' | 'multiRemove' | 'getAllKeys'>
 
 describe('transactionCache', () => {
   describe('create', () => {
     it('loads from storage', async () => {
       DeviceInfo.getVersion = () => '9.9.9'
-      const txCacheJSON: TransactionCacheState = {
-        transactions: {[mockTx.id]: mockTx},
-        perAddressSyncMetadata: {},
-        bestBlockNum: 0,
-      }
-      const storage = {
-        read: async (path: string) => {
-          if (path === 'state') return txCacheJSON
-          throw new Error('invalid path')
-        },
-        write: jest.fn(),
-      }
-      const txCache = await TransactionCache.create(storage)
+      const txCache = await TransactionCache.create(mockStorage)
+
+      expect(txCache.transactions).toMatchSnapshot()
+      expect(txCache.perAddressTxs).toMatchSnapshot()
+      expect(txCache.perRewardAddressCertificates).toMatchSnapshot()
+      expect(txCache.confirmationCounts).toMatchSnapshot()
+
+      txCache.resetState()
 
       expect(txCache.transactions).toMatchSnapshot()
       expect(txCache.perAddressTxs).toMatchSnapshot()
@@ -29,20 +27,18 @@ describe('transactionCache', () => {
       expect(txCache.confirmationCounts).toMatchSnapshot()
     })
 
-    it('starts fresh if data is invalid format', async () => {
+    it('starts fresh if txids is invalid format', async () => {
       DeviceInfo.getVersion = () => '9.9.9'
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const txCacheJSON: any = {
-        foo: 123,
-      }
-      const storage = {
-        read: async (path: string) => {
-          if (path === 'state') return txCacheJSON
+
+      const txCache = await TransactionCache.create({
+        ...mockStorage,
+        getItem: async (path: string) => {
+          if (path === 'txids') {
+            return JSON.stringify('not an array of strings')
+          }
           throw new Error('invalid path')
         },
-        write: jest.fn(),
-      }
-      const txCache = await TransactionCache.create(storage)
+      })
 
       expect(txCache.transactions).toMatchSnapshot()
       expect(txCache.perAddressTxs).toMatchSnapshot()
@@ -50,16 +46,17 @@ describe('transactionCache', () => {
       expect(txCache.confirmationCounts).toMatchSnapshot()
     })
 
-    it('starts fresh if data doesnt load', async () => {
+    it('drops transaction if invalid format', async () => {
       DeviceInfo.getVersion = () => '9.9.9'
-      const storage = {
-        read: async (path: string) => {
-          if (path === 'state') return // data doesn't load
+      const txCache = await TransactionCache.create({
+        ...mockStorage,
+        multiGet: async (paths: Array<string>) => {
+          if (paths.length === 1 && paths[0] === mockTx.id) {
+            return [[mockTx.id, 'cannot parse']]
+          }
           throw new Error('invalid path')
         },
-        write: jest.fn(),
-      }
-      const txCache = await TransactionCache.create(storage)
+      })
 
       expect(txCache.transactions).toMatchSnapshot()
       expect(txCache.perAddressTxs).toMatchSnapshot()
@@ -69,40 +66,7 @@ describe('transactionCache', () => {
 
     it('starts fresh if upgrading from old version', async () => {
       DeviceInfo.getVersion = () => '0.0.1'
-      const storage = {
-        read: async (path: string) => {
-          if (path === 'state') return // data doesn't load
-          throw new Error('invalid path')
-        },
-        write: jest.fn(),
-      }
-      const txCache = await TransactionCache.create(storage)
-
-      expect(txCache.transactions).toMatchSnapshot()
-      expect(txCache.perAddressTxs).toMatchSnapshot()
-      expect(txCache.perRewardAddressCertificates).toMatchSnapshot()
-      expect(txCache.confirmationCounts).toMatchSnapshot()
-    })
-  })
-
-  describe('reset', () => {
-    it('resets state', async () => {
-      const mockTx = {
-        id: '1234567890',
-      } as Transaction
-      const txCacheJSON: TransactionCacheState = {
-        transactions: {[mockTx.id]: mockTx},
-        perAddressSyncMetadata: {},
-        bestBlockNum: 0,
-      }
-      const storage = {
-        read: async (path: string) => {
-          if (path === 'state') return txCacheJSON
-          throw new Error('invalid path')
-        },
-        write: jest.fn(),
-      }
-      const txCache = await TransactionCache.create(storage)
+      const txCache = await TransactionCache.create(mockStorage)
 
       expect(txCache.transactions).toMatchSnapshot()
       expect(txCache.perAddressTxs).toMatchSnapshot()
@@ -111,6 +75,19 @@ describe('transactionCache', () => {
     })
   })
 })
+
+const mockStorage: Foo = {
+  getItem: async (path: string) => {
+    if (path === 'txids') return JSON.stringify([mockTx.id])
+    throw new Error('invalid path')
+  },
+  multiGet: async (paths: Array<string>) => {
+    if (paths.length === 1 && paths[0] === mockTx.id) return [[mockTx.id, JSON.stringify(mockTx)]]
+    throw new Error('invalid path')
+  },
+  setItem: jest.fn(),
+  multiSet: jest.fn(),
+}
 
 const mockTx: Transaction = {
   id: '0a8962dde362eef1f840defe6f916fdf9701ad53c7cb5dd4a74ab85df8e9bffc',

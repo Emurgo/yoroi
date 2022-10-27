@@ -1,22 +1,17 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
 import {fromPairs, mapValues, max} from 'lodash'
 import DeviceInfo from 'react-native-device-info'
 import {defaultMemoize} from 'reselect'
 
 import assert from '../../../legacy/assert'
 import {ApiHistoryError} from '../../../legacy/errors'
-import {ObjectValues} from '../../../legacy/flow'
 import {Logger} from '../../../legacy/logging'
 import type {RemoteCertificateMeta, TxHistoryRequest} from '../../types'
 import {BackendConfig, CERTIFICATE_KIND, RawTransaction, Transaction, TRANSACTION_STATUS} from '../../types/other'
 import {Version, versionCompare} from '../../utils/versioning'
 import * as yoroiApi from '../api'
-
-export type Storage = {
-  read: (path: string) => Promise<unknown>
-  write: (path: string, data: unknown) => Promise<void>
-}
 
 export type TransactionCacheState = {
   transactions: Record<string, Transaction>
@@ -32,31 +27,32 @@ export class TransactionCache {
   #perAddressTxsSelector = defaultMemoize(perAddressTxsSelector)
   #perAddressCertificatesSelector = defaultMemoize(perAddressCertificatesSelector)
   #confirmationCountsSelector = defaultMemoize(confirmationCountsSelector)
-  #storage: Storage
+  #storage: TxCacheStorage
 
-  static async create(storage: Storage) {
+  static async create(storage: Pick<AsyncStorageStatic, 'getItem' | 'multiGet' | 'setItem' | 'multiSet'>) {
+    const txStorage = makeTxCacheStorage(storage)
     const version = DeviceInfo.getVersion() as Version
     const isDeprecatedSchema = versionCompare(version, '4.1.0') === -1
     if (isDeprecatedSchema) {
-      return new TransactionCache({storage})
+      return new TransactionCache({
+        storage: txStorage,
+        transactions: {},
+      })
     }
 
-    const txCacheData = await storage.read('state')
-    if (!isTxCache(txCacheData))
-      /* data corrupted */
-      return new TransactionCache({storage})
+    const txs = await txStorage.loadTxs()
 
     return new TransactionCache({
-      storage,
-      initialState: txCacheData,
+      storage: txStorage,
+      transactions: txs,
     })
   }
 
-  private constructor({storage, initialState}: {storage: Storage; initialState?: TransactionCacheState}) {
+  private constructor({storage, transactions}: {storage: TxCacheStorage; transactions: Record<string, Transaction>}) {
     this.#storage = storage
-    this.#state = initialState || {
+    this.#state = {
       perAddressSyncMetadata: {},
-      transactions: {},
+      transactions,
       bestBlockNum: 0,
     }
   }
@@ -66,9 +62,10 @@ export class TransactionCache {
   }
 
   private updateState(update: TransactionCacheState) {
-    const nextState = {...this.#state, ...update}
-    this.#storage.write('state', nextState)
-    this.#state = nextState
+    this.#state = {...this.#state, ...update}
+    if (Object.keys(this.#state.transactions).length > 0) {
+      this.#storage.saveTxs(this.#state.transactions)
+    }
     this.#subscriptions.forEach((handler) => handler(this.#state.transactions))
   }
 
@@ -366,17 +363,6 @@ export function toCachedTx(tx: RawTransaction): Transaction {
   }
 }
 
-const isTxCache = (data: any): data is TransactionCacheState => {
-  const cache = data as TransactionCacheState | undefined
-
-  return (
-    !!cache &&
-    typeof cache.transactions === 'object' &&
-    typeof cache.perAddressSyncMetadata === 'object' &&
-    typeof cache.bestBlockNum === 'number'
-  )
-}
-
 type TimeForTx = {
   blockHash: string
   blockNum: number
@@ -386,22 +372,19 @@ type TimeForTx = {
 
 const perAddressTxsSelector = (state: TransactionCacheState) => {
   const transactions = state.transactions
-  const addressToTxs = {}
+  const addressToTxs: Record<string, Array<Transaction['id']>> = {}
 
-  const addTxTo = (txId, addr) => {
-    const current = addressToTxs[addr] || []
-    const cleared = current.filter((_txId) => txId !== _txId)
+  const addTxTo = (txId: string, addr: string) => {
+    const current = addressToTxs[addr] || ([] as Array<string>)
+    const cleared = current.filter((_txId: string) => txId !== _txId)
     addressToTxs[addr] = [...cleared, txId]
   }
 
-  ObjectValues(transactions).forEach((tx) => {
-    tx.inputs.forEach(({address}) => {
-      addTxTo(tx.id, address)
-    })
-    tx.outputs.forEach(({address}) => {
-      addTxTo(tx.id, address)
-    })
+  Object.values(transactions).forEach((tx) => {
+    tx.inputs.forEach(({address}) => addTxTo(tx.id, address))
+    tx.outputs.forEach(({address}) => addTxTo(tx.id, address))
   })
+
   return addressToTxs
 }
 
@@ -435,7 +418,7 @@ const perAddressCertificatesSelector = (state: TransactionCacheState): PerAddres
     }
   }
 
-  ObjectValues(transactions).forEach((tx) => {
+  Object.values(transactions).forEach((tx) => {
     tx.certificates.forEach((cert) => {
       if (
         cert.kind === CERTIFICATE_KIND.STAKE_REGISTRATION ||
@@ -476,4 +459,60 @@ type SyncMetadata = {
   bestBlockNum: number
   bestBlockHash: string | null | undefined
   bestTxHash: string | null | undefined
+}
+
+export type TxCacheStorage = {
+  loadTxs: () => Promise<Record<string, Transaction>>
+  saveTxs: (txs: Record<string, Transaction>) => Promise<void>
+}
+
+const makeTxCacheStorage = (
+  storage: Pick<AsyncStorageStatic, 'getItem' | 'multiGet' | 'setItem' | 'multiSet'>,
+): TxCacheStorage => ({
+  loadTxs: async () => {
+    const txids: Array<string> = await storage.getItem('txids').then(parseTxids)
+    if (!txids) return {}
+    if (txids.length === 0) {
+      return {}
+    }
+
+    const values = await storage.multiGet(txids)
+    return values.reduce((result, [txid, tx]) => {
+      if (!tx) return result
+      try {
+        return {...result, [txid]: JSON.parse(tx)}
+      } catch (_error) {
+        return result
+      }
+    }, {} as Record<string, Transaction>)
+  },
+
+  saveTxs: async (txs: Record<string, Transaction>) => {
+    const items = Object.entries(txs) //
+      .map(([txid, tx]) => [txid, JSON.stringify(tx)])
+    const keys = items.map(([key]) => key)
+
+    await Promise.all([
+      storage.multiSet(items), //
+      storage.setItem('txids', JSON.stringify(keys)),
+    ])
+  },
+})
+
+const parseTxids = (data: string | null | undefined) => {
+  if (!data) return [] // initial
+  const txids = parse(data)
+
+  const isTxids = (data: unknown): data is Array<string> =>
+    Array.isArray(data) && data.every((item: unknown) => typeof item === 'string')
+
+  return isTxids(txids) ? txids : []
+}
+
+const parse = (data: string): unknown => {
+  try {
+    return JSON.parse(data)
+  } catch (_error) {
+    return
+  }
 }
