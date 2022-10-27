@@ -361,7 +361,7 @@ export class WalletManager {
     throw new Error('invalid wallet')
   }
 
-  async closeWallet(): Promise<void> {
+  closeWallet(): Promise<void> {
     if (!this._wallet) return Promise.resolve()
 
     Logger.debug('closing wallet...')
