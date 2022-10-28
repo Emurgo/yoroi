@@ -42,7 +42,7 @@ import {
   walletChecksum,
 } from '../cardano'
 import {makeStorageWithPrefix} from '../storage'
-import {DefaultAsset, SendTokenList, Token, YoroiSignedTx, YoroiUnsignedTx} from '../types'
+import {DefaultAsset, SendTokenList, YoroiSignedTx, YoroiUnsignedTx} from '../types'
 import type {
   AccountStateResponse,
   AddressedUtxo,
@@ -76,6 +76,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
   storage: typeof storageLegacy
   private utxoService: UtxoService
   private utxoStorage: UtxoStorage
+  defaultAsset: DefaultAsset
 
   // =================== create =================== //
   constructor(storage: typeof storageLegacy, networkId: NetworkId, id: string) {
@@ -83,6 +84,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     this.id = id
     this.storage = storage
     this.networkId = networkId
+    this.defaultAsset = getDefaultAssetByNetworkId(this.networkId)
 
     const config = this.getBackendConfig()
     this.utxoStorage = generateUtxoStorage(this.storage, `/wallet/${this.id}/utxos`)
@@ -502,12 +504,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
 
   // =================== tx building =================== //
 
-  async createUnsignedTx(
-    receiver: string,
-    tokens: SendTokenList,
-    defaultToken: Token,
-    auxiliaryData?: Array<CardanoTypes.TxMetadata>,
-  ) {
+  async createUnsignedTx(receiver: string, tokens: SendTokenList, auxiliaryData?: Array<CardanoTypes.TxMetadata>) {
     const timeToSlotFn = genTimeToSlot(getCardanoBaseConfig(this.getNetworkConfig()))
     const time = await this.checkServerStatus()
       .then(({serverTime}) => serverTime || Date.now())
@@ -535,7 +532,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
           poolDeposit: networkConfig.POOL_DEPOSIT,
           networkId: networkConfig.NETWORK_ID,
         },
-        defaultToken,
+        this.defaultAsset,
         {metadata: auxiliaryData},
       )
 
@@ -579,7 +576,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     })
   }
 
-  async createDelegationTx(poolId: string | undefined, delegatedAmount: BigNumber, defaultAsset: DefaultAsset) {
+  async createDelegationTx(poolId: string | undefined, delegatedAmount: BigNumber) {
     const timeToSlotFn = genTimeToSlot(getCardanoBaseConfig(this.getNetworkConfig()))
     const time = await this.checkServerStatus()
       .then(({serverTime}) => serverTime || Date.now())
@@ -594,7 +591,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     const networkConfig = this.getNetworkConfig()
     const delegatedAmountMT = {
       values: [{identifier: '', amount: delegatedAmount, networkId: networkConfig.NETWORK_ID}],
-      defaults: defaultAsset,
+      defaults: this.defaultAsset,
     }
 
     const unsignedTx = await Cardano.createUnsignedDelegationTx(
@@ -605,7 +602,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
       poolId || null,
       changeAddr,
       delegatedAmountMT,
-      defaultAsset,
+      this.defaultAsset,
       {},
       {
         keyDeposit: networkConfig.KEY_DEPOSIT,
@@ -645,7 +642,6 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
         .catch(() => Date.now())
 
       const absSlotNumber = new BigNumber(timeToSlotFn({time}).slot)
-      const defaultToken = getDefaultAssetByNetworkId(this.networkId)
       const votingPublicKey = await Promise.resolve(Buffer.from(catalystKeyHex, 'hex'))
         .then((bytes) => CardanoMobile.PrivateKey.fromExtendedBytes(bytes))
         .then((key) => key.toPublic())
@@ -671,7 +667,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
 
       const unsignedTx = await Cardano.createUnsignedVotingTx(
         absSlotNumber,
-        defaultToken,
+        this.defaultAsset,
         votingPublicKey,
         stakingKeyPath,
         stakingPublicKey,
@@ -711,7 +707,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     }
   }
 
-  async createWithdrawalTx(defaultAsset: DefaultAsset, shouldDeregister: boolean): Promise<YoroiUnsignedTx> {
+  async createWithdrawalTx(shouldDeregister: boolean): Promise<YoroiUnsignedTx> {
     if (this.rewardAddressHex == null) throw new Error('reward address is null')
     const timeToSlotFn = genTimeToSlot(getCardanoBaseConfig(this.getNetworkConfig()))
 
@@ -726,9 +722,10 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
       {addresses: [this.rewardAddressHex]},
       this.getNetworkConfig().BACKEND,
     )
+
     const withdrawalTx = await Cardano.createUnsignedWithdrawalTx(
       accountState,
-      defaultAsset,
+      this.defaultAsset,
       absSlotNumber,
       addressedUtxos,
       [
