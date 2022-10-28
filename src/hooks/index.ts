@@ -426,10 +426,9 @@ export const useWithdrawalTx = (
     ...options,
     queryKey: [wallet.id, 'withdrawalTx', {deregister}],
     queryFn: async () => {
-      const utxos = await wallet.fetchUTXOs()
       const defaultAsset = getDefaultAssetByNetworkId(wallet.networkId)
 
-      return wallet.createWithdrawalTx(utxos, defaultAsset, deregister)
+      return wallet.createWithdrawalTx(defaultAsset, deregister)
     },
     retry: false,
     cacheTime: 0,

@@ -30,10 +30,8 @@ import type {EncryptionMethod} from './types/other'
 import {
   FundInfoResponse,
   PoolInfoRequest,
-  RawUtxo,
   TokenInfoRequest,
   TokenInfoResponse,
-  TxBodiesRequest,
   WALLET_IMPLEMENTATION_REGISTRY,
 } from './types/other'
 import {WalletJSON} from './Wallet'
@@ -476,19 +474,9 @@ export class WalletManager {
 
   // =================== tx building =================== //
 
-  async getAllUtxosForKey(utxos: Array<RawUtxo>) {
-    const wallet = this.getWallet()
-    return wallet.getAllUtxosForKey(utxos)
-  }
-
   getAddressingInfo(address: string) {
     const wallet = this.getWallet()
     return wallet.getAddressing(address)
-  }
-
-  asAddressedUtxo(utxos: Array<RawUtxo>) {
-    const wallet = this.getWallet()
-    return wallet.asAddressedUtxo(utxos)
   }
 
   async getDelegationStatus() {
@@ -511,16 +499,6 @@ export class WalletManager {
   async submitTransaction(signedTx: string) {
     const wallet = this.getWallet()
     return this.abortWhenWalletCloses(wallet.submitTransaction(signedTx))
-  }
-
-  async getTxsBodiesForUTXOs(request: TxBodiesRequest) {
-    const wallet = this.getWallet()
-    return this.abortWhenWalletCloses(wallet.getTxsBodiesForUTXOs(request))
-  }
-
-  async fetchUTXOs() {
-    const wallet = this.getWallet()
-    return this.abortWhenWalletCloses(wallet.fetchUTXOs())
   }
 
   async fetchAccountState() {

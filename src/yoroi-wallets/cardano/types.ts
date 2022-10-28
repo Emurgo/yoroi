@@ -155,17 +155,16 @@ export interface WalletInterface {
   // not exposed to wallet manager, consider removing
   getChangeAddress(): string
 
-  getAllUtxosForKey(utxos: Array<RawUtxo>): Promise<Array<AddressedUtxo>>
+  getAllUtxosForKey(): Promise<Array<AddressedUtxo>>
 
   getAddressing(address: string): unknown
 
-  asAddressedUtxo(utxos: Array<RawUtxo>): Array<CardanoTypes.CardanoAddressedUtxo>
-  asLegacyAddressedUtxo(utxos: Array<RawUtxo>): Array<AddressedUtxo>
+  asAddressedUtxo(): Promise<Array<CardanoTypes.CardanoAddressedUtxo>>
+  asLegacyAddressedUtxo(): Promise<Array<AddressedUtxo>>
 
   getDelegationStatus(): Promise<StakingStatus>
 
   createUnsignedTx(
-    utxos: Array<RawUtxo>,
     receiver: string,
     tokens: SendTokenList,
     defaultToken: Token,
@@ -177,17 +176,12 @@ export interface WalletInterface {
   createDelegationTx(
     poolRequest: string,
     valueInAccount: BigNumber,
-    utxos: Array<RawUtxo>,
     defaultAsset: DefaultAsset,
   ): Promise<YoroiUnsignedTx>
 
   createVotingRegTx(): Promise<{votingRegTx: YoroiUnsignedTx; votingKeyEncrypted: string}>
 
-  createWithdrawalTx(
-    utxos: Array<RawUtxo>,
-    defaultAsset: DefaultAsset,
-    shouldDeregister: boolean,
-  ): Promise<YoroiUnsignedTx>
+  createWithdrawalTx(defaultAsset: DefaultAsset, shouldDeregister: boolean): Promise<YoroiUnsignedTx>
 
   signTxWithLedger(request: YoroiUnsignedTx, useUSB: boolean): Promise<YoroiSignedTx>
 

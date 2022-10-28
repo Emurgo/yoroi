@@ -53,7 +53,6 @@ export const getMinAda = async (selectedToken: Token, defaultAsset: DefaultAsset
 
 export const getTransactionData = async (
   wallet: YoroiWallet,
-  utxos: Array<RawUtxo>,
   address: string,
   amount: string,
   sendAll: boolean,
@@ -80,7 +79,7 @@ export const getTransactionData = async (
       amount: await getMinAda(selectedToken, defaultAsset),
     })
   }
-  return wallet.createUnsignedTx(utxos, address, sendTokenList, defaultAsset)
+  return wallet.createUnsignedTx(address, sendTokenList, defaultAsset)
 }
 
 export const recomputeAll = async ({
@@ -136,15 +135,7 @@ export const recomputeAll = async ({
           : '0'
 
       if (sendAll) {
-        yoroiUnsignedTx = await getTransactionData(
-          wallet,
-          utxos,
-          address,
-          amount,
-          sendAll,
-          defaultAsset,
-          selectedTokenInfo,
-        )
+        yoroiUnsignedTx = await getTransactionData(wallet, address, amount, sendAll, defaultAsset, selectedTokenInfo)
 
         fee = Amounts.getAmount(yoroiUnsignedTx.fee, defaultAsset.identifier).quantity
 
@@ -171,15 +162,7 @@ export const recomputeAll = async ({
           ? (parseAmountDecimal(amount, selectedTokenInfo).toString() as Quantity)
           : '0'
 
-        yoroiUnsignedTx = await getTransactionData(
-          wallet,
-          utxos,
-          address,
-          amount,
-          false,
-          defaultAsset,
-          selectedTokenInfo,
-        )
+        yoroiUnsignedTx = await getTransactionData(wallet, address, amount, false, defaultAsset, selectedTokenInfo)
 
         fee = Amounts.getAmount(yoroiUnsignedTx.fee, defaultAsset.identifier).quantity
         balanceAfter = Quantities.diff(defaultAssetAvailableAmount, Quantities.sum([parsedAmount, minAda, fee]))
