@@ -1,93 +1,75 @@
-import type {UtxoStorage} from '@emurgo/yoroi-lib'
-import {UtxoModels} from '@emurgo/yoroi-lib'
+import {UtxoStorage} from '@emurgo/yoroi-lib'
+import {Utxo, UtxoAtSafePoint, UtxoDiffToBestBlock} from '@emurgo/yoroi-lib/dist/utxo/models'
 
 import storageLegacy from '../../legacy/storage'
 
 export type UtxoStorageItem = {
-  utxoAtSafePoint: UtxoModels.UtxoAtSafePoint
-  utxoDiffToBestBlock: UtxoModels.UtxoDiffToBestBlock[]
+  utxoAtSafePoint: UtxoAtSafePoint
+  utxoDiffToBestBlock: UtxoDiffToBestBlock[]
 }
 
-export const generateUtxoStorage = (storage: typeof storageLegacy, storagePath: string): UtxoStorage => {
-  const getAllUtxosData = async (): Promise<UtxoStorageItem> => {
-    return storage.read<UtxoStorageItem>(storagePath)
-  }
+export const generateUtxoStorage = (storage: typeof storageLegacy, storagePath: string) => {
+  const getAllUtxosData = () => storage.read<UtxoStorageItem>(storagePath)
 
-  const getUtxoDiffToBestBlock = async (): Promise<UtxoModels.UtxoDiffToBestBlock[]> => {
-    const data = await storage.read<UtxoStorageItem>(storagePath)
-
-    if (!data?.utxoDiffToBestBlock) return []
-
-    return data?.utxoDiffToBestBlock
-  }
-
-  const setUtxoDiffToBestBlock = async (utxoDiffToBestBlock: UtxoModels.UtxoDiffToBestBlock[]): Promise<void> => {
+  const setUtxoDiffToBestBlock = async (utxoDiffToBestBlock: UtxoDiffToBestBlock[]) => {
     const data = await getAllUtxosData()
-    const newData = {
+
+    return storage.write(storagePath, {
       ...data,
       utxoDiffToBestBlock,
-    }
-
-    await storage.write(storagePath, newData)
+    })
   }
 
-  const getUtxoAtSafePoint = async (): Promise<UtxoModels.UtxoAtSafePoint | undefined> => {
-    const data = await storage.read<UtxoStorageItem>(storagePath)
-
-    return data?.utxoAtSafePoint
-  }
-
-  const setUtxoAtSafePoint = async (utxoAtSafePoint: UtxoModels.UtxoAtSafePoint): Promise<void> => {
+  const setUtxoAtSafePoint = async (utxoAtSafePoint: UtxoAtSafePoint) => {
     const data = await getAllUtxosData()
-    const newData = {
+
+    return storage.write(storagePath, {
       ...data,
       utxoAtSafePoint,
-    }
-
-    await storage.write(storagePath, newData)
+    })
   }
 
-  const replaceUtxoAtSafePoint = async (utxos: UtxoModels.Utxo[], safeBlockHash: string): Promise<void> => {
-    const utxoAtSafePoint: UtxoModels.UtxoAtSafePoint = {
-      lastSafeBlockHash: safeBlockHash,
-      utxos,
-    }
+  const utxoStorage: UtxoStorage = {
+    getUtxoAtSafePoint: async () => {
+      const data = await storage.read<UtxoStorageItem>(storagePath)
 
-    await setUtxoAtSafePoint(utxoAtSafePoint)
+      return data?.utxoAtSafePoint
+    },
+    replaceUtxoAtSafePoint: async (utxos: Utxo[], safeBlockHash: string) => {
+      const utxoAtSafePoint = {
+        lastSafeBlockHash: safeBlockHash,
+        utxos,
+      }
+
+      return setUtxoAtSafePoint(utxoAtSafePoint)
+    },
+
+    getUtxoDiffToBestBlock: async () => {
+      const data = await storage.read<UtxoStorageItem>(storagePath)
+
+      return data?.utxoDiffToBestBlock || []
+    },
+    appendUtxoDiffToBestBlock: async (diff: UtxoDiffToBestBlock) => {
+      const currentDiffs = await utxoStorage.getUtxoDiffToBestBlock()
+
+      if (!currentDiffs.find((d) => d.lastBestBlockHash === diff.lastBestBlockHash)) {
+        currentDiffs.push(diff)
+
+        return setUtxoDiffToBestBlock(currentDiffs)
+      }
+    },
+    removeDiffWithBestBlock: async (blockHash: string) => {
+      const currentDiffs = await utxoStorage.getUtxoDiffToBestBlock()
+      const diffToRemove = currentDiffs.find((d) => d.lastBestBlockHash === blockHash) as UtxoDiffToBestBlock
+
+      const index = currentDiffs.indexOf(diffToRemove)
+      if (index > -1) currentDiffs.splice(index, 1)
+
+      return setUtxoDiffToBestBlock(currentDiffs)
+    },
+
+    clearUtxoState: () => storage.remove(storagePath),
   }
 
-  const clearUtxoState = async (): Promise<void> => {
-    return storage.remove(storagePath)
-  }
-
-  const appendUtxoDiffToBestBlock = async (diff: UtxoModels.UtxoDiffToBestBlock): Promise<void> => {
-    const currentDiffs = await getUtxoDiffToBestBlock()
-
-    if (!currentDiffs.find((d) => d.lastBestBlockHash === diff.lastBestBlockHash)) {
-      currentDiffs.push(diff)
-
-      await setUtxoDiffToBestBlock(currentDiffs)
-    }
-  }
-
-  const removeDiffWithBestBlock = async (blockHash: string): Promise<void> => {
-    const currentDiffs = await getUtxoDiffToBestBlock()
-    const diffToRemove = currentDiffs.find((d) => d.lastBestBlockHash === blockHash) as UtxoModels.UtxoDiffToBestBlock
-
-    const index = currentDiffs.indexOf(diffToRemove)
-    if (index > -1) {
-      currentDiffs.splice(index, 1)
-    }
-
-    await setUtxoDiffToBestBlock(currentDiffs)
-  }
-
-  return {
-    getUtxoAtSafePoint,
-    getUtxoDiffToBestBlock,
-    replaceUtxoAtSafePoint,
-    clearUtxoState,
-    appendUtxoDiffToBestBlock,
-    removeDiffWithBestBlock,
-  }
+  return utxoStorage
 }
