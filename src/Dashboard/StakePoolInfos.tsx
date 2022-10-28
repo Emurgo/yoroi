@@ -3,7 +3,6 @@ import React, {useEffect} from 'react'
 import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {useQuery, useQueryClient, UseQueryOptions} from 'react-query'
 
-import {getDefaultAssetByNetworkId} from '../legacy/config'
 import {useSelectedWallet} from '../SelectedWallet'
 import {YoroiWallet} from '../yoroi-wallets'
 import {YoroiUnsignedTx} from '../yoroi-wallets/types'
@@ -132,11 +131,7 @@ export const useStakingTx = (
       const stakingUtxos = await wallet.getAllUtxosForKey()
       const amountToDelegate = sum([...stakingUtxos.map((utxo) => utxo.amount), accountState.remainingAmount])
 
-      return wallet.createDelegationTx(
-        poolId,
-        new BigNumber(amountToDelegate),
-        getDefaultAssetByNetworkId(wallet.networkId),
-      )
+      return wallet.createDelegationTx(poolId, new BigNumber(amountToDelegate))
     },
     enabled: poolId != null,
   })

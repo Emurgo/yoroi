@@ -16,9 +16,7 @@ export const generateUtxoStorage = (storage: typeof storageLegacy, storagePath: 
   const getUtxoDiffToBestBlock = async (): Promise<UtxoModels.UtxoDiffToBestBlock[]> => {
     const data = await storage.read<UtxoStorageItem>(storagePath)
 
-    if (!data?.utxoDiffToBestBlock) return []
-
-    return data?.utxoDiffToBestBlock
+    return data?.utxoDiffToBestBlock || []
   }
 
   const setUtxoDiffToBestBlock = async (utxoDiffToBestBlock: UtxoModels.UtxoDiffToBestBlock[]): Promise<void> => {

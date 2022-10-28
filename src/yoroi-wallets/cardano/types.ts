@@ -26,7 +26,7 @@ import type {
   TxStatusResponse,
 } from '../types/other'
 import type {EncryptionMethod, WalletState} from '../types/other'
-import {DefaultAsset, SendTokenList, Token, TokenInfo} from '../types/tokens'
+import {SendTokenList, TokenInfo} from '../types/tokens'
 import {WalletEvent} from '../Wallet'
 import {CardanoTypes} from '.'
 import type {Addresses} from './chain'
@@ -167,21 +167,16 @@ export interface WalletInterface {
   createUnsignedTx(
     receiver: string,
     tokens: SendTokenList,
-    defaultToken: Token,
     metadata?: Array<CardanoTypes.TxMetadata>,
   ): Promise<YoroiUnsignedTx>
 
   signTx(signRequest: YoroiUnsignedTx, decryptedMasterKey: string): Promise<YoroiSignedTx>
 
-  createDelegationTx(
-    poolRequest: string,
-    valueInAccount: BigNumber,
-    defaultAsset: DefaultAsset,
-  ): Promise<YoroiUnsignedTx>
+  createDelegationTx(poolRequest: string, valueInAccount: BigNumber): Promise<YoroiUnsignedTx>
 
   createVotingRegTx(): Promise<{votingRegTx: YoroiUnsignedTx; votingKeyEncrypted: string}>
 
-  createWithdrawalTx(defaultAsset: DefaultAsset, shouldDeregister: boolean): Promise<YoroiUnsignedTx>
+  createWithdrawalTx(shouldDeregister: boolean): Promise<YoroiUnsignedTx>
 
   signTxWithLedger(request: YoroiUnsignedTx, useUSB: boolean): Promise<YoroiSignedTx>
 
