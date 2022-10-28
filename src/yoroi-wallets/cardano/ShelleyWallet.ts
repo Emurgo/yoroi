@@ -7,7 +7,6 @@ import cryptoRandomString from 'crypto-random-string'
 import ExtendableError from 'es6-error'
 import _ from 'lodash'
 import DeviceInfo from 'react-native-device-info'
-import uuid from 'uuid'
 
 import {encryptWithPassword} from '../../Catalyst/catalystCipher'
 import LocalizableError from '../../i18n/LocalizableError'
@@ -79,8 +78,9 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
   private utxoStorage: UtxoStorage
 
   // =================== create =================== //
-  constructor(storage: typeof storageLegacy, networkId: NetworkId) {
+  constructor(storage: typeof storageLegacy, networkId: NetworkId, id: string) {
     super()
+    this.id = id
     this.storage = storage
     this.networkId = networkId
 
@@ -163,7 +163,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     Logger.info(`create wallet (networkId=${String(networkId)})`)
     Logger.info(`create wallet (implementationId=${String(implementationId)})`)
     Logger.info(`create wallet (provider=${String(provider)})`)
-    this.id = uuid.v4()
+
     assert.assert(!this.isInitialized, 'ShelleyWallet::create: !isInitialized')
     assert.assert(isHaskellShelleyNetwork(networkId), 'ShelleyWallet::create: invalid networkId')
     assert.assert(
@@ -202,7 +202,6 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
   ) {
     Logger.info(`create wallet with account pub key (networkId=${String(networkId)})`)
     Logger.debug('account pub key', accountPublicKey)
-    this.id = uuid.v4()
     assert.assert(!this.isInitialized, 'createWallet: !isInitialized')
     return this.initialize(networkId, implementationId, accountPublicKey, hwDeviceInfo, readOnly)
   }
@@ -288,7 +287,6 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     Logger.info('restore wallet', walletMeta.name)
     assert.assert(!this.isInitialized, 'restoreWallet: !isInitialized')
 
-    this.id = walletMeta.id
     await this.runMigrations(data, walletMeta)
 
     this.integrityCheck()

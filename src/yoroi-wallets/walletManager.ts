@@ -2,6 +2,7 @@
 import ExtendableError from 'es6-error'
 import _ from 'lodash'
 import type {IntlShape} from 'react-intl'
+import uuid from 'uuid'
 
 import {migrateWalletMetas} from '../appStorage'
 import {APP_SETTINGS_KEYS, readAppSettings} from '../legacy/appSettings'
@@ -315,7 +316,7 @@ export class WalletManager {
     const networkId = data.networkId != null ? data.networkId : walletMeta.networkId
 
     const Wallet = this._getWalletImplementation(walletMeta.walletImplementationId)
-    const wallet = new Wallet(storage, networkId)
+    const wallet = new Wallet(storage, networkId, newWalletMeta.id)
 
     await wallet.restore(data, walletMeta)
     if (!isYoroiWallet(wallet)) throw new Error('invalid wallet')
@@ -448,8 +449,9 @@ export class WalletManager {
     provider?: null | YoroiProvider,
   ) {
     const Wallet = this._getWalletImplementation(implementationId)
-    const wallet = new Wallet(storage, networkId)
-    const id = await wallet.create(mnemonic, password, networkId, implementationId, provider)
+    const id = uuid.v4()
+    const wallet = new Wallet(storage, networkId, id)
+    await wallet.create(mnemonic, password, networkId, implementationId, provider)
 
     return this.saveWallet(id, name, wallet, networkId, implementationId, provider)
   }
@@ -463,14 +465,10 @@ export class WalletManager {
     isReadOnly: boolean,
   ) {
     const Wallet = this._getWalletImplementation(implementationId)
-    const wallet = new Wallet(storage, networkId)
-    const id = await wallet.createWithBip44Account(
-      bip44AccountPublic,
-      networkId,
-      implementationId,
-      hwDeviceInfo,
-      isReadOnly,
-    )
+    const id = uuid.v4()
+    const wallet = new Wallet(storage, networkId, id)
+    await wallet.createWithBip44Account(bip44AccountPublic, networkId, implementationId, hwDeviceInfo, isReadOnly)
+
     Logger.debug('creating wallet...', wallet)
 
     return this.saveWallet(id, name, wallet, networkId, implementationId)
