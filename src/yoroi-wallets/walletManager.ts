@@ -301,6 +301,7 @@ export class WalletManager {
   }
 
   async openWallet(walletMeta: WalletMeta): Promise<[YoroiWallet, WalletMeta]> {
+    await this.closeWallet()
     assert.preconditionCheck(!!walletMeta.id, 'openWallet:: !!id')
     const data = await storage.read<WalletJSON>(`/wallet/${walletMeta.id}/data`)
     const appSettings = await readAppSettings()
@@ -317,7 +318,8 @@ export class WalletManager {
     const wallet = new Wallet(storage, networkId)
 
     await wallet.restore(data, walletMeta)
-    wallet.id = walletMeta.id
+    if (!isYoroiWallet(wallet)) throw new Error('invalid wallet')
+
     this._wallet = wallet
     this._id = walletMeta.id
 
@@ -354,11 +356,7 @@ export class WalletManager {
       await ensureKeysValidity(wallet.id)
     }
 
-    if (isYoroiWallet(wallet)) {
-      return [wallet, newWalletMeta]
-    }
-
-    throw new Error('invalid wallet')
+    return [wallet, newWalletMeta]
   }
 
   closeWallet(): Promise<void> {
@@ -397,15 +395,14 @@ export class WalletManager {
 
   async removeWallet(id: string) {
     if (!this._wallet) throw new Error('invalid state')
-    const wallet = this._wallet
 
-    if (wallet.isEasyConfirmationEnabled) {
+    if (this._wallet.isEasyConfirmationEnabled) {
       await this.deleteEncryptedKey('BIOMETRICS')
       await this.deleteEncryptedKey('SYSTEM_PIN')
     }
     await this.deleteEncryptedKey('MASTER_PASSWORD')
 
-    await wallet.clear()
+    await this._wallet.clear()
     await this.closeWallet()
     await storage.remove(`/wallet/${id}/data`)
     await storage.remove(`/wallet/${id}`)

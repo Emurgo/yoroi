@@ -10,16 +10,15 @@ export type UtxoStorageItem = {
 
 export const generateUtxoStorage = (storage: typeof storageLegacy, storagePath: string): UtxoStorage => {
   const getAllUtxosData = async (): Promise<UtxoStorageItem> => {
-    const data = await storage.read<UtxoStorageItem>(storagePath)
-    return data
+    return storage.read<UtxoStorageItem>(storagePath)
   }
 
   const getUtxoDiffToBestBlock = async (): Promise<UtxoModels.UtxoDiffToBestBlock[]> => {
-    const {utxoDiffToBestBlock} = await storage.read<UtxoStorageItem>(storagePath)
+    const data = await storage.read<UtxoStorageItem>(storagePath)
 
-    if (!utxoDiffToBestBlock) return []
+    if (!data?.utxoDiffToBestBlock) return []
 
-    return utxoDiffToBestBlock
+    return data?.utxoDiffToBestBlock
   }
 
   const setUtxoDiffToBestBlock = async (utxoDiffToBestBlock: UtxoModels.UtxoDiffToBestBlock[]): Promise<void> => {
@@ -33,9 +32,9 @@ export const generateUtxoStorage = (storage: typeof storageLegacy, storagePath: 
   }
 
   const getUtxoAtSafePoint = async (): Promise<UtxoModels.UtxoAtSafePoint | undefined> => {
-    const {utxoAtSafePoint} = await storage.read<UtxoStorageItem>(storagePath)
+    const data = await storage.read<UtxoStorageItem>(storagePath)
 
-    return utxoAtSafePoint
+    return data?.utxoAtSafePoint
   }
 
   const setUtxoAtSafePoint = async (utxoAtSafePoint: UtxoModels.UtxoAtSafePoint): Promise<void> => {
