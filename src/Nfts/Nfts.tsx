@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useNavigation} from '@react-navigation/native'
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import {Image, RefreshControl, ScrollView, StyleSheet, Text, View, ViewProps} from 'react-native'
 
 import noNftsImage from '../assets/img/no-nft.png'
-import { OfflineBanner, StatusBar} from '../components'
+import {OfflineBanner, StatusBar} from '../components'
 import {ImageGallery} from '../components/ImageGallery'
 import nft1 from '../components/ImageGallery/fake-images/nft1.png'
 import nft2 from '../components/ImageGallery/fake-images/nft2.png'
@@ -12,8 +12,8 @@ import nft3 from '../components/ImageGallery/fake-images/nft3.png'
 import nft4 from '../components/ImageGallery/fake-images/nft4.png'
 import nft5 from '../components/ImageGallery/fake-images/nft5.png'
 import nft6 from '../components/ImageGallery/fake-images/nft6.png'
-import {NftRouteNavigation} from '../navigation'
 // import {useNfts} from '../hooks'
+import {NftRouteNavigation} from '../navigation'
 // import {useSelectedWallet} from '../SelectedWallet'
 
 export const mockNFTs = [
@@ -44,6 +44,17 @@ export const mockNFTs = [
 ]
 
 export const Nfts = () => {
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setLoading(false)
+    }, 3000)
+
+    return () => {
+      clearTimeout(timeout)
+    }
+  })
   // const wallet = useSelectedWallet()
   const navigation = useNavigation<NftRouteNavigation>()
 
@@ -68,7 +79,7 @@ export const Nfts = () => {
           </Row>
           <Row>
             {NFTsWithAction.length > 0 ? (
-              <ImageGallery images={NFTsWithAction} loading={false} />
+              <ImageGallery images={NFTsWithAction} loading={loading} />
             ) : (
               <View style={styles.imageContainer}>
                 <Image source={noNftsImage} style={styles.image} />
