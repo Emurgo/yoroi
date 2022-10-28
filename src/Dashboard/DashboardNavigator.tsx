@@ -24,8 +24,8 @@ export const DashboardNavigator = () => {
         cardStyle: {
           backgroundColor: 'transparent',
         },
+        detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
       }}
-      initialRouteName="staking-dashboard-main"
     >
       <Stack.Screen
         name="staking-dashboard-main"
@@ -35,11 +35,13 @@ export const DashboardNavigator = () => {
           headerRight: () => <HeaderRight />,
         }}
       />
+
       <Stack.Screen //
         name="staking-center"
         component={StakingCenter}
         options={{title: strings.title}}
       />
+
       <Stack.Screen
         name="delegation-confirmation"
         component={DelegationConfirmation}

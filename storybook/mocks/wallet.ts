@@ -75,7 +75,7 @@ export const mockWallet: YoroiWallet = {
     return Promise.resolve({isRegistered: false, poolKeyHash: null})
   },
   subscribeOnTxHistoryUpdate: () => {
-    null
+    return () => null
   },
   fetchAccountState: (...args) => {
     action('fetchAccountState')(...args)

@@ -1,156 +1,73 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
 import {fromPairs, mapValues, max} from 'lodash'
+import DeviceInfo from 'react-native-device-info'
 import {defaultMemoize} from 'reselect'
 
 import assert from '../../../legacy/assert'
 import {ApiHistoryError} from '../../../legacy/errors'
-import {ObjectValues} from '../../../legacy/flow'
 import {Logger} from '../../../legacy/logging'
+import {Storage} from '../../storage'
 import type {RemoteCertificateMeta, TxHistoryRequest} from '../../types'
-import {BackendConfig, RawTransaction, Transaction, TRANSACTION_STATUS} from '../../types/other'
-import {CERTIFICATE_KIND} from '../../types/other'
+import {BackendConfig, CERTIFICATE_KIND, RawTransaction, Transaction, TRANSACTION_STATUS} from '../../types/other'
+import {Version, versionCompare} from '../../utils/versioning'
 import * as yoroiApi from '../api'
 
-type SyncMetadata = {
-  bestBlockNum: number
-  bestBlockHash: string | null | undefined
-  bestTxHash: string | null | undefined
-}
-type TransactionCacheState = {
+export type TransactionCacheState = {
   transactions: Record<string, Transaction>
   // @deprecated
   perAddressSyncMetadata: Record<string, SyncMetadata>
   // @deprecated
   bestBlockNum: number | null | undefined // global best block, not per address
 }
-export type TimeForTx = {
-  blockHash: string
-  blockNum: number
-  txHash: string
-  txOrdinal: number
-}
 
-const perAddressTxsSelector = (state: TransactionCacheState) => {
-  const transactions = state.transactions
-  const addressToTxs = {}
-
-  const addTxTo = (txId, addr) => {
-    const current = addressToTxs[addr] || []
-    const cleared = current.filter((_txId) => txId !== _txId)
-    addressToTxs[addr] = [...cleared, txId]
-  }
-
-  ObjectValues(transactions).forEach((tx) => {
-    tx.inputs.forEach(({address}) => {
-      addTxTo(tx.id, address)
-    })
-    tx.outputs.forEach(({address}) => {
-      addTxTo(tx.id, address)
-    })
-  })
-  return addressToTxs
-}
-
-export type TimestampedCertMeta = {
-  submittedAt: string
-  epoch: number
-  certificates: Array<RemoteCertificateMeta>
-}
-type PerAddressCertificatesDict = Record<string, Record<string, TimestampedCertMeta>>
-
-const perAddressCertificatesSelector = (state: TransactionCacheState): PerAddressCertificatesDict => {
-  const transactions = state.transactions
-  const addressToPerTxCerts = {}
-
-  const addTxTo = (
-    txId: string,
-    certificates: Array<RemoteCertificateMeta>,
-    submittedAt: string | null | undefined,
-    epoch: number | null | undefined,
-    addr: string,
-  ) => {
-    const current: Record<string, TimestampedCertMeta> = addressToPerTxCerts[addr] || {}
-
-    if (current[txId] == null && submittedAt != null && epoch != null) {
-      current[txId] = {
-        submittedAt,
-        epoch,
-        certificates,
-      }
-      addressToPerTxCerts[addr] = current
-    }
-  }
-
-  ObjectValues(transactions).forEach((tx) => {
-    tx.certificates.forEach((cert) => {
-      if (
-        cert.kind === CERTIFICATE_KIND.STAKE_REGISTRATION ||
-        cert.kind === CERTIFICATE_KIND.STAKE_DEREGISTRATION ||
-        cert.kind === CERTIFICATE_KIND.STAKE_DELEGATION
-      ) {
-        const {rewardAddress} = cert as any
-        addTxTo(tx.id, tx.certificates, tx.submittedAt, tx.epoch, rewardAddress)
-      }
-    })
-  })
-  return addressToPerTxCerts
-}
-
-const confirmationCountsSelector = (state: TransactionCacheState) => {
-  const {perAddressSyncMetadata, transactions} = state
-  return mapValues(transactions, (tx: Transaction) => {
-    if (tx.status !== TRANSACTION_STATUS.SUCCESSFUL) {
-      // TODO(ppershing): do failed transactions have assurance?
-      return null
-    }
-
-    const getBlockNum = ({address}) =>
-      perAddressSyncMetadata[address] ? perAddressSyncMetadata[address].bestBlockNum : 0
-
-    const bestBlockNum: any = max([
-      state.bestBlockNum || 0,
-      ...tx.inputs.map(getBlockNum),
-      ...tx.outputs.map(getBlockNum),
-    ])
-    assert.assert(tx.blockNum, 'Successfull tx should have blockNum')
-
-    return bestBlockNum - (tx as any).blockNum
-  })
-}
-
-export type TransactionCacheJSON = TransactionCacheState
 export class TransactionCache {
-  _state: TransactionCacheState = {
-    perAddressSyncMetadata: {},
-    transactions: {},
-    bestBlockNum: 0,
+  #state: TransactionCacheState
+  #subscriptions: Array<(transactions: Record<string, Transaction>) => void> = []
+  #perAddressTxsSelector = defaultMemoize(perAddressTxsSelector)
+  #perAddressCertificatesSelector = defaultMemoize(perAddressCertificatesSelector)
+  #confirmationCountsSelector = defaultMemoize(confirmationCountsSelector)
+  #storage: TxCacheStorage
+
+  static async create(storage: Pick<AsyncStorageStatic, 'getItem' | 'multiGet' | 'setItem' | 'multiSet'>) {
+    const txStorage = makeTxCacheStorage(storage)
+    const version = DeviceInfo.getVersion() as Version
+    const isDeprecatedSchema = versionCompare(version, '4.1.0') === -1
+    if (isDeprecatedSchema) {
+      return new TransactionCache({
+        storage: txStorage,
+        transactions: {},
+      })
+    }
+
+    const txs = await txStorage.loadTxs()
+
+    return new TransactionCache({
+      storage: txStorage,
+      transactions: txs,
+    })
   }
 
-  _subscriptions: Array<() => any> = []
-  _onTxHistoryUpdateSubscriptions: Array<() => any> = []
-  _perAddressTxsSelector = defaultMemoize(perAddressTxsSelector)
-  _perAddressCertificates = defaultMemoize(perAddressCertificatesSelector)
-  _confirmationCountsSelector = defaultMemoize(confirmationCountsSelector)
+  private constructor({storage, transactions}: {storage: TxCacheStorage; transactions: Record<string, Transaction>}) {
+    this.#storage = storage
+    this.#state = {
+      perAddressSyncMetadata: {},
+      transactions,
+      bestBlockNum: 0,
+    }
+  }
 
   subscribe(handler: () => any) {
-    this._subscriptions.push(handler)
+    this.#subscriptions.push(handler)
   }
 
-  notifyOnTxHistoryUpdate = () => {
-    this._onTxHistoryUpdateSubscriptions.forEach((handler) => handler())
-  }
-
-  subscribeOnTxHistoryUpdate(handler: () => any) {
-    this._onTxHistoryUpdateSubscriptions.push(handler)
-  }
-
-  updateState(update: TransactionCacheState) {
-    Logger.debug('TransactionHistory update state')
-    // Logger.debug('Update', update)
-    this._state = {...this._state, ...update}
-
-    this._subscriptions.forEach((handler) => handler())
+  private updateState(update: TransactionCacheState) {
+    this.#state = {...this.#state, ...update}
+    if (Object.keys(this.#state.transactions).length > 0) {
+      this.#storage.saveTxs(this.#state.transactions)
+    }
+    this.#subscriptions.forEach((handler) => handler(this.#state.transactions))
   }
 
   resetState() {
@@ -162,56 +79,26 @@ export class TransactionCache {
   }
 
   get transactions() {
-    return this._state.transactions
+    return this.#state.transactions
   }
 
   get perAddressTxs() {
-    return this._perAddressTxsSelector(this._state)
+    return this.#perAddressTxsSelector(this.#state)
   }
 
   get perRewardAddressCertificates() {
-    return this._perAddressCertificates(this._state)
+    return this.#perAddressCertificatesSelector(this.#state)
   }
 
   get confirmationCounts() {
-    return this._confirmationCountsSelector(this._state)
-  }
-
-  _getBlockMetadata(addrs: Array<string>) {
-    assert.assert(addrs.length, 'getBlockMetadata: addrs not empty')
-    const metadata = addrs.map((addr) => this._state.perAddressSyncMetadata[addr])
-    const first = metadata[0]
-
-    if (!first) {
-      // New addresses
-      assert.assert(
-        metadata.every((x) => !x),
-        'getBlockMetadata: undefined vs defined',
-      )
-      return {
-        bestBlockNum: 0,
-        bestBlockHash: null,
-        bestTxHash: null,
-      }
-    } else {
-      // Old addresses
-      assert.assert(
-        metadata.every((x) => x.bestBlockNum === first.bestBlockNum),
-        'getBlockMetadata: bestBlockNum metadata same',
-      )
-      assert.assert(
-        metadata.every((x) => x.bestBlockHash === first.bestBlockHash),
-        'getBlockMetadata: bestBlockHash metadata same',
-      )
-      return first
-    }
+    return this.#confirmationCountsSelector(this.#state)
   }
 
   async doSync(addressesByChunks: Array<Array<string>>, backendConfig: BackendConfig) {
     const txUpdate = await syncTxs({
       addressesByChunks,
       backendConfig,
-      transactions: this._state.transactions,
+      transactions: this.#state.transactions,
       api: yoroiApi,
     })
 
@@ -219,40 +106,11 @@ export class TransactionCache {
       this.updateState({
         transactions: txUpdate,
         // @deprecated
-        bestBlockNum: this._state.bestBlockNum,
+        bestBlockNum: this.#state.bestBlockNum,
         // @deprecated
-        perAddressSyncMetadata: this._state.perAddressSyncMetadata,
+        perAddressSyncMetadata: this.#state.perAddressSyncMetadata,
       })
-
-      Logger.info('TransactionCache: notifying subscribers on txs update')
-      this.notifyOnTxHistoryUpdate()
     }
-  }
-
-  toJSON(): TransactionCacheJSON {
-    return this._state
-  }
-
-  static fromJSON(data: TransactionCacheJSON) {
-    const cache = new TransactionCache()
-    // if cache is deprecated it means it was obtained when the old history
-    // endpoint was still being used (in versions <= 2.2.1)
-    // in this case, we do not load the data and start from a fresh object.
-    const isDeprecatedCache = ObjectValues(data.perAddressSyncMetadata).some(
-      (metadata: any) => metadata.lastUpdated != null,
-    )
-    // similarly, the haskell shelley endpoint introduces withdrawals & certs.
-    // versions < 3.0.1 need resync
-    const txs = ObjectValues(data.transactions)
-    const lacksShelleyTxData = txs ? txs.some((tx) => tx.withdrawals == null || tx.certificates == null) : false
-
-    if (!isDeprecatedCache && !lacksShelleyTxData) {
-      cache.updateState(data)
-    } else {
-      Logger.info('TransactionCache: deprecated tx. Restoring from empty object')
-    }
-
-    return cache
   }
 }
 
@@ -503,5 +361,157 @@ export function toCachedTx(tx: RawTransaction): Transaction {
         name: a.name,
       })),
     })),
+  }
+}
+
+type TimeForTx = {
+  blockHash: string
+  blockNum: number
+  txHash: string
+  txOrdinal: number
+}
+
+const perAddressTxsSelector = (state: TransactionCacheState) => {
+  const transactions = state.transactions
+  const addressToTxs: Record<string, Array<Transaction['id']>> = {}
+
+  const addTxTo = (txId: string, addr: string) => {
+    const current = addressToTxs[addr] || ([] as Array<string>)
+    const cleared = current.filter((_txId: string) => txId !== _txId)
+    addressToTxs[addr] = [...cleared, txId]
+  }
+
+  Object.values(transactions).forEach((tx) => {
+    tx.inputs.forEach(({address}) => addTxTo(tx.id, address))
+    tx.outputs.forEach(({address}) => addTxTo(tx.id, address))
+  })
+
+  return addressToTxs
+}
+
+export type TimestampedCertMeta = {
+  submittedAt: string
+  epoch: number
+  certificates: Array<RemoteCertificateMeta>
+}
+type PerAddressCertificatesDict = Record<string, Record<string, TimestampedCertMeta>>
+
+const perAddressCertificatesSelector = (state: TransactionCacheState): PerAddressCertificatesDict => {
+  const transactions = state.transactions
+  const addressToPerTxCerts = {}
+
+  const addTxTo = (
+    txId: string,
+    certificates: Array<RemoteCertificateMeta>,
+    submittedAt: string | null | undefined,
+    epoch: number | null | undefined,
+    addr: string,
+  ) => {
+    const current: Record<string, TimestampedCertMeta> = addressToPerTxCerts[addr] || {}
+
+    if (current[txId] == null && submittedAt != null && epoch != null) {
+      current[txId] = {
+        submittedAt,
+        epoch,
+        certificates,
+      }
+      addressToPerTxCerts[addr] = current
+    }
+  }
+
+  Object.values(transactions).forEach((tx) => {
+    tx.certificates.forEach((cert) => {
+      if (
+        cert.kind === CERTIFICATE_KIND.STAKE_REGISTRATION ||
+        cert.kind === CERTIFICATE_KIND.STAKE_DEREGISTRATION ||
+        cert.kind === CERTIFICATE_KIND.STAKE_DELEGATION
+      ) {
+        const {rewardAddress} = cert as any
+        addTxTo(tx.id, tx.certificates, tx.submittedAt, tx.epoch, rewardAddress)
+      }
+    })
+  })
+  return addressToPerTxCerts
+}
+
+const confirmationCountsSelector = (state: TransactionCacheState) => {
+  const {perAddressSyncMetadata, transactions} = state
+  return mapValues(transactions, (tx: Transaction) => {
+    if (tx.status !== TRANSACTION_STATUS.SUCCESSFUL) {
+      // TODO(ppershing): do failed transactions have assurance?
+      return null
+    }
+
+    const getBlockNum = ({address}) =>
+      perAddressSyncMetadata[address] ? perAddressSyncMetadata[address].bestBlockNum : 0
+
+    const bestBlockNum: any = max([
+      state.bestBlockNum || 0,
+      ...tx.inputs.map(getBlockNum),
+      ...tx.outputs.map(getBlockNum),
+    ])
+    assert.assert(tx.blockNum, 'Successfull tx should have blockNum')
+
+    return bestBlockNum - (tx as any).blockNum
+  })
+}
+
+type SyncMetadata = {
+  bestBlockNum: number
+  bestBlockHash: string | null | undefined
+  bestTxHash: string | null | undefined
+}
+
+export type TxCacheStorage = {
+  loadTxs: () => Promise<Record<string, Transaction>>
+  saveTxs: (txs: Record<string, Transaction>) => Promise<void>
+}
+
+const makeTxCacheStorage = (storage: Storage): TxCacheStorage => ({
+  loadTxs: async () => {
+    const txids: Array<string> = await storage.getItem('txids').then(parseTxids)
+    if (!txids) return {}
+    if (txids.length === 0) {
+      return {}
+    }
+
+    const values = await storage.multiGet(txids)
+    return values.reduce((result, [txid, tx]) => {
+      if (!tx) return result
+      try {
+        return {...result, [txid]: JSON.parse(tx)}
+      } catch (_error) {
+        return result
+      }
+    }, {} as Record<string, Transaction>)
+  },
+
+  saveTxs: async (txs: Record<string, Transaction>) => {
+    const items = Object.entries(txs) //
+      .map(([txid, tx]) => [txid, JSON.stringify(tx)])
+    const keys = items.map(([key]) => key)
+
+    await Promise.all([
+      storage.multiSet(items), //
+      storage.setItem('txids', JSON.stringify(keys)),
+    ])
+  },
+})
+
+const parseTxids = (data: string | null | undefined) => {
+  if (!data) return [] // initial
+  const txids = parse(data)
+
+  const isTxids = (data: unknown): data is Array<string> =>
+    Array.isArray(data) && data.every((item: unknown) => typeof item === 'string')
+
+  return isTxids(txids) ? txids : []
+}
+
+const parse = (data: string): unknown => {
+  try {
+    return JSON.parse(data)
+  } catch (_error) {
+    return
   }
 }

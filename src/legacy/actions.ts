@@ -3,11 +3,11 @@ import 'react-intl'
 import 'redux'
 
 import type {IntlShape} from 'react-intl'
-import {Alert, Keyboard, Platform} from 'react-native'
-import RNBootSplash from 'react-native-bootsplash'
+import {Alert, Platform} from 'react-native'
 import type {Dispatch} from 'redux'
 import uuid from 'uuid'
 
+import {getCrashReportsEnabled} from '../hooks'
 import globalMessages, {errorMessages} from '../i18n/global-messages'
 import {Logger} from '../legacy/logging'
 import {ServerStatus, walletManager} from '../yoroi-wallets'
@@ -26,7 +26,6 @@ import {
   installationIdSelector,
   isAppSetupCompleteSelector,
   isSystemAuthEnabledSelector,
-  sendCrashReportsSelector,
 } from './selectors'
 import type {State} from './state'
 
@@ -147,7 +146,8 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
   const installationId = (await dispatch(initInstallationId())) as unknown as string
   const state = getState()
 
-  if (sendCrashReportsSelector(getState())) {
+  const crashReportsEnabled = await getCrashReportsEnabled()
+  if (crashReportsEnabled) {
     crashReporting.enable()
     // TODO(ppershing): just update crashlytic variables here
     await dispatch(reloadAppSettings())
@@ -191,16 +191,6 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
       await recreateAppSignInKeys(installationId)
     }
   }
-
-  dispatch({
-    path: ['isAppInitialized'],
-    payload: true,
-    reducer: (state: State, value) => value,
-    type: 'INITIALIZE_APP',
-  })
-  RNBootSplash.hide({
-    fade: true,
-  })
 }
 
 export const checkBiometricStatus = (logout: () => void) => async (dispatch: Dispatch<any>, getState: any) => {
@@ -229,34 +219,10 @@ export const checkBiometricStatus = (logout: () => void) => async (dispatch: Dis
   }
 }
 
-const _setOnline = (isOnline: boolean) => (dispatch, getState) => {
-  const state = getState()
-  if (state.isOnline === isOnline) return // avoid useless state updates
-
-  dispatch({
-    type: 'Set isOnline',
-    path: ['isOnline'],
-    payload: isOnline,
-    reducer: (state: State, payload) => payload,
-  })
-}
-
-const setIsKeyboardOpen = (isOpen) => ({
-  type: 'Set isKeyboardOpen',
-  path: ['isKeyboardOpen'],
-  payload: isOpen,
-  reducer: (state: State, payload) => payload,
-})
-
 export const setupHooks = () => (dispatch: Dispatch<any>) => {
   Logger.debug('setting up isOnline callback')
   Logger.debug('setting wallet manager hook')
   walletManager.subscribeServerSync((status) => dispatch(_setServerStatus(status)))
-  Logger.debug('setting up app lock')
-
-  Logger.debug('setting up keyboard manager')
-  Keyboard.addListener('keyboardDidShow', () => dispatch(setIsKeyboardOpen(true)))
-  Keyboard.addListener('keyboardDidHide', () => dispatch(setIsKeyboardOpen(false)))
 }
 export const generateNewReceiveAddress = () => async (_dispatch: Dispatch<any>) => {
   return walletManager.generateNewUiReceiveAddress()

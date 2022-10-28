@@ -5,18 +5,14 @@ import DeviceInfo from 'react-native-device-info'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {StatusBar} from '../../components'
+import {useCrashReports} from '../../hooks'
 import globalMessages from '../../i18n/global-messages'
 import {setAppSettingField} from '../../legacy/actions'
 import {APP_SETTINGS_KEYS} from '../../legacy/appSettings'
 import {CONFIG, isNightly} from '../../legacy/config'
 import {canBiometricEncryptionBeEnabled, isBiometricEncryptionHardwareSupported} from '../../legacy/deviceSettings'
 import KeyStore from '../../legacy/KeyStore'
-import {
-  biometricHwSupportSelector,
-  installationIdSelector,
-  isSystemAuthEnabledSelector,
-  sendCrashReportsSelector,
-} from '../../legacy/selectors'
+import {biometricHwSupportSelector, installationIdSelector, isSystemAuthEnabledSelector} from '../../legacy/selectors'
 import {isEmptyString} from '../../legacy/utils'
 import {useWalletNavigation} from '../../navigation'
 import {useCurrencyContext} from '../Currency'
@@ -28,15 +24,12 @@ export const ApplicationSettingsScreen = () => {
   const strings = useStrings()
   const {navigation, navigateToSettings} = useWalletNavigation()
   const isBiometricHardwareSupported = useSelector(biometricHwSupportSelector)
-  const sendCrashReports = useSelector(sendCrashReportsSelector)
   const isSystemAuthEnabled = useSelector(isSystemAuthEnabledSelector)
   const installationId = useSelector(installationIdSelector)
   const dispatch = useDispatch()
   const {currency} = useCurrencyContext()
 
-  const setCrashReporting = (value: boolean) => {
-    dispatch(setAppSettingField(APP_SETTINGS_KEYS.SEND_CRASH_REPORTS, value))
-  }
+  const crashReports = useCrashReports()
 
   const onToggleBiometricsAuthIn = async () => {
     if (isEmptyString(installationId)) throw new Error('invalid state')
@@ -118,7 +111,11 @@ export const ApplicationSettingsScreen = () => {
 
       <SettingsSection title={strings.crashReporting}>
         <SettingsItem label={strings.crashReportingText}>
-          <Switch value={sendCrashReports} onValueChange={setCrashReporting} disabled={isNightly()} />
+          <Switch
+            value={crashReports.enabled}
+            onValueChange={crashReports.enabled ? crashReports.disable : crashReports.enable}
+            disabled={isNightly()}
+          />
         </SettingsItem>
       </SettingsSection>
 
