@@ -1,21 +1,35 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useNavigation, useRoute} from '@react-navigation/native'
-import React, {useEffect} from 'react'
+import React, {ReactNode, useEffect, useState} from 'react'
 // import {defineMessages, useIntl} from 'react-intl'
 import {Image, StyleSheet, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {CopyButton, FadeIn, OfflineBanner, StatusBar, Text} from '../components'
+import {Tab, TabPanel, TabPanels, Tabs} from '../components/Tabs'
 // import globalMessages from '../i18n/global-messages'
 // import {useSelectedWallet} from '../SelectedWallet'
 import {mockNFTs} from './Nfts'
+
+const VIEW_TABS = {
+  OVERVIEW: {
+    id: 'nftOverviewTabButton',
+  },
+  METADATA: {
+    id: 'nftMetadataTabButton',
+  },
+}
+
+type Params = {id: string}
 
 export const NftDetails = () => {
   // const strings = useStrings()
   // const intl = useIntl()
   // const wallet = useSelectedWallet()
+  const [activeTab, setActiveTab] = useState(VIEW_TABS.OVERVIEW.id)
   const {id} = useRoute().params as Params
   const nft = mockNFTs[id] ?? {}
+  const stringifiedMetadata = JSON.stringify(nft, undefined, 2)
 
   useTitle('NFT Details')
 
@@ -28,85 +42,60 @@ export const NftDetails = () => {
         <View style={styles.imageContainer}>
           <Image source={nft.image} style={styles.image} />
         </View>
-        <View style={styles.contentContainer}>
-          <Text secondary monospace numberOfLines={1} ellipsizeMode="middle">
-            {nft.text}
-          </Text>
-          <CopyButton value={nft.text} />
+        <View style={styles.tabsContainer}>
+          <Tabs>
+            <Tab
+              onPress={() => setActiveTab(VIEW_TABS.OVERVIEW.id)}
+              label="Overview"
+              active={activeTab === VIEW_TABS.OVERVIEW.id}
+              testID={VIEW_TABS.OVERVIEW.id}
+            />
+            <Tab //
+              onPress={() => setActiveTab(VIEW_TABS.METADATA.id)}
+              label="Metadata"
+              active={activeTab === VIEW_TABS.METADATA.id}
+              testID={VIEW_TABS.METADATA.id}
+            />
+          </Tabs>
+
+          <TabPanels>
+            <TabPanel active={activeTab === VIEW_TABS.OVERVIEW.id}>
+              <MetadataRow title="NFT Name" content={nft.text} />
+              <MetadataRow title="Created" content={nft.text} />
+              <MetadataRow title="Description" content={nft.text} />
+              <MetadataRow title="Author" content={nft.text} />
+              <MetadataRow title="Collection name" content={nft.text} />
+              <MetadataRow title="Fingerprint" content={nft.text} withCopy />
+              <MetadataRow title="Policy id" content={nft.text} withCopy />
+              <MetadataRow title="Details on" content={nft.text} />
+            </TabPanel>
+            <TabPanel active={activeTab === VIEW_TABS.METADATA.id}>
+              <View style={styles.metadataTab}>
+                <View style={styles.copyMetadata}>
+                  <CopyButton value={stringifiedMetadata} />
+                  <Text>COPY METADATA</Text>
+                </View>
+                <Text>{stringifiedMetadata}</Text>
+              </View>
+            </TabPanel>
+          </TabPanels>
         </View>
       </ScrollView>
     </FadeIn>
   )
 }
 
-// const Label = ({children}: {children: string}) => <Text style={styles.label}>{children}</Text>
-
-export type Params = {
-  id: string
+const MetadataRow = ({title, content, withCopy = false}: {title: string; content: string; withCopy?: boolean}) => {
+  return (
+    <View style={styles.rowContainer}>
+      <View style={styles.rowTitleContainer}>
+        <Text style={styles.rowTitleText}>{title}</Text>
+        {withCopy && <CopyButton value={content} />}
+      </View>
+      <Text secondary>{content}</Text>
+    </View>
+  )
 }
-
-// const useStrings = () => {
-//   const intl = useIntl()
-
-//   return {
-//     fee: intl.formatMessage(messages.fee),
-//     fromAddresses: intl.formatMessage(messages.fromAddresses),
-//     toAddresses: intl.formatMessage(messages.toAddresses),
-//     transactionId: intl.formatMessage(messages.transactionId),
-//     txAssuranceLevel: intl.formatMessage(messages.txAssuranceLevel),
-//     confirmations: (cnt) => intl.formatMessage(messages.confirmations, {cnt}),
-//     omittedCount: (cnt) => intl.formatMessage(messages.omittedCount, {cnt}),
-//     openInExplorer: intl.formatMessage(messages.openInExplorer),
-//     assetsLabel: intl.formatMessage(globalMessages.assetsLabel),
-//   }
-// }
-
-// const messages = defineMessages({
-//   addressPrefixReceive: {
-//     id: 'components.txhistory.txdetails.addressPrefixReceive',
-//     defaultMessage: '!!!/{idx}',
-//   },
-//   addressPrefixChange: {
-//     id: 'components.txhistory.txdetails.addressPrefixChange',
-//     defaultMessage: '!!!/change',
-//   },
-//   addressPrefixNotMine: {
-//     id: 'components.txhistory.txdetails.addressPrefixNotMine',
-//     defaultMessage: '!!!not mine',
-//   },
-//   fee: {
-//     id: 'components.txhistory.txdetails.fee',
-//     defaultMessage: '!!!Fee: ',
-//   },
-//   fromAddresses: {
-//     id: 'components.txhistory.txdetails.fromAddresses',
-//     defaultMessage: '!!!From Addresses',
-//   },
-//   toAddresses: {
-//     id: 'components.txhistory.txdetails.toAddresses',
-//     defaultMessage: '!!!To Addresses',
-//   },
-//   transactionId: {
-//     id: 'components.txhistory.txdetails.transactionId',
-//     defaultMessage: '!!!Transaction ID',
-//   },
-//   txAssuranceLevel: {
-//     id: 'components.txhistory.txdetails.txAssuranceLevel',
-//     defaultMessage: '!!!Transaction assurance level',
-//   },
-//   confirmations: {
-//     id: 'components.txhistory.txdetails.confirmations',
-//     defaultMessage: '!!!{cnt} {cnt, plural, one {CONFIRMATION} other {CONFIRMATIONS}}',
-//   },
-//   omittedCount: {
-//     id: 'components.txhistory.txdetails.omittedCount',
-//     defaultMessage: '!!!+ {cnt} omitted {cnt, plural, one {address} other {addresses}}',
-//   },
-//   openInExplorer: {
-//     id: 'global.openInExplorer',
-//     defaultMessage: '!!!Open in explorer',
-//   },
-// })
 
 const styles = StyleSheet.create({
   container: {
@@ -114,25 +103,39 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     flex: 1,
-    paddingHorizontal: 16,
   },
   image: {
     flex: 1,
-    paddingHorizontal: 16,
-    width: 350,
-    height: 350,
+    width: 380,
+    height: 380,
   },
   contentContainer: {
     paddingHorizontal: 16,
   },
-  // label: {
-  //   marginTop: 16,
-  //   marginBottom: 8,
-  // },
-  // borderBottom: {
-  //   borderBottomWidth: 1,
-  //   borderColor: 'rgba(173, 174, 182, 0.3)',
-  // },
+  tabsContainer: {flex: 1},
+  rowContainer: {
+    paddingVertical: 17,
+    borderBottomWidth: 1,
+    borderColor: 'rgba(173, 174, 182, 0.3)',
+  },
+  rowTitleContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'nowrap',
+    justifyContent: 'space-between',
+    marginBottom: 2,
+  },
+  rowTitleText: {},
+  metadataTab: {
+    paddingVertical: 34,
+  },
+  copyMetadata: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 14,
+  },
 })
 
 const useTitle = (text: string) => {
