@@ -29,10 +29,17 @@ async function remove(key: string) {
   })
 }
 
+const KEYCHAIN_APP_AUTH_KEY = 'os-authentication'
+const initializeAppAuth = () => write(KEYCHAIN_APP_AUTH_KEY, KEYCHAIN_APP_AUTH_KEY) // value is irrelevant
+const appAuth = (authenticationPrompt: Keychain.Options['authenticationPrompt']) =>
+  read(KEYCHAIN_APP_AUTH_KEY, authenticationPrompt)
+
 export const KeychainStorage = {
   read,
   write,
   remove,
+  initializeAppAuth,
+  appAuth,
 } as const
 
 export async function canEnableAuthOs() {

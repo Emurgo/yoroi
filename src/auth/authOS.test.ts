@@ -1,11 +1,14 @@
 import storage from '@react-native-async-storage/async-storage'
 
 import {migrateAuthMethod} from './authOS'
+import {KeychainStorage} from './KeychainStorage'
 
-const mockKeychainStorage = {
+const mockKeychainStorage: typeof KeychainStorage = {
   read: jest.fn(),
   write: jest.fn(),
   remove: jest.fn(),
+  initializeAppAuth: jest.fn(),
+  appAuth: jest.fn(),
 }
 
 describe('migrateAuthMethod', () => {

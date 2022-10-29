@@ -34,21 +34,13 @@ export const useEnableAuthWithOs = (
   options?: UseMutationOptions<void, Error>,
 ) => {
   const mutation = useMutationWithInvalidations({
-    mutationFn: async () => {
-      const installationId = await storage
-        .getItem(INSTALLATION_ID_KEY)
-        .then((data) => {
-          if (data != null) return data
-          return Promise.reject('Invalid state')
-        })
-        .then(JSON.parse)
-
-      return KeychainStorage.write(installationId, installationId) // the data here is irrelevant
-        .then(() => KeychainStorage.read(installationId, authenticationPrompt))
+    mutationFn: () =>
+      KeychainStorage.initializeAppAuth()
+        .then(() => KeychainStorage.appAuth(authenticationPrompt))
         .then(() => storage.setItem(AUTH_METHOD_KEY, JSON.stringify(AUTH_METHOD_OS)))
+        // current behavior - on auth with os it deletes the pin stored
         .then(() => storage.getItem(ENCRYPTED_PIN_HASH_KEY))
-        .then((pin) => (pin != null ? storage.removeItem(ENCRYPTED_PIN_HASH_KEY) : undefined))
-    },
+        .then((pin) => (pin != null ? storage.removeItem(ENCRYPTED_PIN_HASH_KEY) : undefined)),
     ...options,
     invalidateQueries: [['authMethod']],
   })
@@ -60,19 +52,11 @@ export const useEnableAuthWithOs = (
 }
 
 export const useAuthWithOs = (
-  {authenticationPrompt, storage}: {authenticationPrompt: AuthenticationPrompt; storage: Storage},
+  {authenticationPrompt}: {authenticationPrompt: AuthenticationPrompt; storage: Storage},
   options?: UseMutationOptions<string, Error>,
 ) => {
   const mutation = useMutation({
-    mutationFn: () =>
-      storage
-        .getItem(INSTALLATION_ID_KEY)
-        .then((data) => {
-          if (data != null) return data
-          throw new Error('Invalid state')
-        })
-        .then(JSON.parse)
-        .then((key: string) => KeychainStorage.read(key, authenticationPrompt)),
+    mutationFn: () => KeychainStorage.appAuth(authenticationPrompt),
     ...options,
   })
 
@@ -207,9 +191,8 @@ export const migrateAuthMethod = async (storage: Storage, keychainStorage: typeo
     INSTALLATION_ID_KEY,
   ])
   if (authMethod == null && installationId != null) {
-    const id = JSON.parse(installationId)
     if (isOldSystemAuth != null && JSON.parse(isOldSystemAuth) === true) {
-      await keychainStorage.write(id, id) // the data here is irrelevant
+      await keychainStorage.initializeAppAuth()
       await storage.setItem(AUTH_METHOD_KEY, JSON.stringify(AUTH_METHOD_OS))
       return disableAllEasyConfirmation()
     }
