@@ -152,42 +152,6 @@ export const useDisableAllEasyConfirmation = (
     disableAllEasyConfirmation: mutation.mutate,
   }
 }
-
-const OLD_OS_AUTH_KEY = '/appSettings/isSystemAuthEnabled'
-export const useMigrateAuthMethod = (storage: Storage) => {
-  const mutation = useMutation({
-    mutationFn: () => migrateAuthMethod(storage, KeychainStorage),
-    useErrorBoundary: true,
-    retry: false,
-  })
-
-  return {
-    ...mutation,
-    migrate: mutation.mutate,
-  }
-}
-
-// HELPERS
-export const migrateAuthMethod = async (storage: Storage, keychainStorage: typeof KeychainStorage) => {
-  const [[, authMethod], [, pin], [, isOldSystemAuth], [, installationId]] = await storage.multiGet([
-    AUTH_METHOD_KEY,
-    ENCRYPTED_PIN_HASH_KEY,
-    OLD_OS_AUTH_KEY,
-    INSTALLATION_ID_KEY,
-  ])
-  if (authMethod == null && installationId != null) {
-    const id = JSON.parse(installationId)
-    if (isOldSystemAuth != null && JSON.parse(isOldSystemAuth) === true) {
-      await keychainStorage.write(id, id) // the data here is irrelevant
-      await storage.setItem(AUTH_METHOD_KEY, JSON.stringify(AUTH_METHOD_OS))
-      return disableAllEasyConfirmation()
-    }
-    if (pin != null) {
-      return storage.setItem(AUTH_METHOD_KEY, JSON.stringify(AUTH_METHOD_PIN))
-    }
-  }
-}
-
 const disableAllEasyConfirmation = () =>
   storage
     .keys('/wallet/', false)
@@ -221,4 +185,36 @@ const disableAllEasyConfirmation = () =>
       }
     })
 
+const OLD_OS_AUTH_KEY = '/appSettings/isSystemAuthEnabled'
+export const useMigrateAuthMethod = (storage: Storage) => {
+  const mutation = useMutation({
+    mutationFn: () => migrateAuthMethod(storage, KeychainStorage),
+    useErrorBoundary: true,
+    retry: false,
+  })
+
+  return {
+    ...mutation,
+    migrate: mutation.mutate,
+  }
+}
 const INSTALLATION_ID_KEY = '/appSettings/installationId'
+export const migrateAuthMethod = async (storage: Storage, keychainStorage: typeof KeychainStorage) => {
+  const [[, authMethod], [, pin], [, isOldSystemAuth], [, installationId]] = await storage.multiGet([
+    AUTH_METHOD_KEY,
+    ENCRYPTED_PIN_HASH_KEY,
+    OLD_OS_AUTH_KEY,
+    INSTALLATION_ID_KEY,
+  ])
+  if (authMethod == null && installationId != null) {
+    const id = JSON.parse(installationId)
+    if (isOldSystemAuth != null && JSON.parse(isOldSystemAuth) === true) {
+      await keychainStorage.write(id, id) // the data here is irrelevant
+      await storage.setItem(AUTH_METHOD_KEY, JSON.stringify(AUTH_METHOD_OS))
+      return disableAllEasyConfirmation()
+    }
+    if (pin != null) {
+      return storage.setItem(AUTH_METHOD_KEY, JSON.stringify(AUTH_METHOD_PIN))
+    }
+  }
+}
