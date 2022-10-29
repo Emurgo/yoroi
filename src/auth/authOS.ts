@@ -170,18 +170,6 @@ const disableAllEasyConfirmation = () =>
     })
 
 const OLD_OS_AUTH_KEY = '/appSettings/isSystemAuthEnabled'
-export const useMigrateAuthMethod = (storage: Storage) => {
-  const mutation = useMutation({
-    mutationFn: () => migrateAuthMethod(storage, KeychainStorage),
-    useErrorBoundary: true,
-    retry: false,
-  })
-
-  return {
-    ...mutation,
-    migrate: mutation.mutate,
-  }
-}
 const INSTALLATION_ID_KEY = '/appSettings/installationId'
 export const migrateAuthMethod = async (storage: Storage, keychainStorage: typeof KeychainStorage) => {
   const [[, authMethod], [, pin], [, isOldSystemAuth], [, installationId]] = await storage.multiGet([

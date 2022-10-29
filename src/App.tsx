@@ -7,7 +7,7 @@ import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {enableScreens} from 'react-native-screens'
 import {useDispatch} from 'react-redux'
 
-import AppMigrations from './AppMigrations'
+import AppNavigator from './AppNavigator'
 import {AuthProvider} from './auth/AuthProvider'
 import {initApp} from './legacy/actions'
 import {SelectedWalletMetaProvider, SelectedWalletProvider} from './SelectedWallet'
@@ -33,7 +33,7 @@ const App = () => {
           <StorageProvider>
             <SelectedWalletMetaProvider>
               <SelectedWalletProvider>
-                <AppMigrations />
+                <AppNavigator />
               </SelectedWalletProvider>
             </SelectedWalletMetaProvider>
           </StorageProvider>
