@@ -5,7 +5,7 @@ import {Alert, ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch} from 'react-redux'
 
-import {useAuthOsErrorDecoder, useCanEnableAuthOs, useEnableAuthWithOs} from '../../auth'
+import {useAuthOsEnabledOnDevice, useAuthOsErrorDecoder, useEnableAuthWithOs} from '../../auth'
 import {useAuth} from '../../auth/AuthProvider'
 import {Button, Checkbox, PleaseWaitModal, Spacer, StatusBar} from '../../components'
 import {useLanguage} from '../../i18n'
@@ -23,8 +23,9 @@ export const TermsOfServiceScreen = () => {
   const [acceptedTos, setAcceptedTos] = React.useState(false)
   const [savingConsent, setSavingConsent] = React.useState(false)
 
+  // should be another step in the first run flow -> auth method
   const {login} = useAuth()
-  const {canEnableOsAuth} = useCanEnableAuthOs()
+  const {authOsEnabledOnDevice} = useAuthOsEnabledOnDevice()
   const storage = useStorage()
   const decodeAuthOsError = useAuthOsErrorDecoder()
   const {enableAuthWithOs, isLoading: enablingAuth} = useEnableAuthWithOs(
@@ -54,7 +55,7 @@ export const TermsOfServiceScreen = () => {
   const onAccept = async () => {
     setSavingConsent(true)
 
-    if (canEnableOsAuth) {
+    if (authOsEnabledOnDevice) {
       enableAuthWithOs()
     } else {
       await dispatch(acceptAndSaveTos())

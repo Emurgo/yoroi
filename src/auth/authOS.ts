@@ -11,20 +11,22 @@ import {WalletMeta} from '../legacy/state'
 import storage from '../legacy/storage'
 import {Storage} from '../Storage'
 import {WalletJSON, walletManager, YoroiWallet} from '../yoroi-wallets'
-import {AuthenticationPrompt, canEnableAuthOs, KeychainStorage} from './KeychainStorage'
+import {AuthenticationPrompt, authOsEnabledOnDevice, KeychainStorage} from './KeychainStorage'
 import {AuthMethod} from './types'
 
-export const useCanEnableAuthOs = (options?: UseQueryOptions<boolean, Error>) => {
+export const useAuthOsEnabledOnDevice = (options?: UseQueryOptions<boolean, Error>) => {
   const query = useQuery({
-    queryKey: ['canEnableAuthOs'],
-    queryFn: canEnableAuthOs,
+    cacheTime: 0,
+    queryKey: ['useAuthOsEnabledOnDevice'],
+    queryFn: authOsEnabledOnDevice,
     suspense: true,
     ...options,
   })
 
+  // use refetch on app settings
   return {
     ...query,
-    canEnableOsAuth: query.data,
+    authOsEnabledOnDevice: query.data,
   }
 }
 

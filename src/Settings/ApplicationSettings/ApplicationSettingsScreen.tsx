@@ -3,7 +3,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Alert, ScrollView, StyleSheet, Switch} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
-import {useAuthOsErrorDecoder, useAuthWithOs, useCanEnableAuthOs} from '../../auth'
+import {useAuthOsEnabledOnDevice, useAuthOsErrorDecoder, useAuthWithOs} from '../../auth'
 import {StatusBar} from '../../components'
 import {useAuthMethod, useCrashReports, useRefetchOnFocus} from '../../hooks'
 import globalMessages from '../../i18n/global-messages'
@@ -24,7 +24,7 @@ export const ApplicationSettingsScreen = () => {
   const storage = useStorage()
   const {authMethod, refetch: refetchAuthMethod} = useAuthMethod(storage)
 
-  const {canEnableOsAuth, refetch: refetchCanEnableOSAuth} = useCanEnableAuthOs({
+  const {authOsEnabledOnDevice, refetch: refetchCanEnableOSAuth} = useAuthOsEnabledOnDevice({
     // on emulator
     refetchInterval: __DEV__ ? 2000 : false,
   })
@@ -78,8 +78,8 @@ export const ApplicationSettingsScreen = () => {
       <SettingsSection title={strings.security}>
         <NavigatedSettingsItem label={strings.changePin} navigateTo="change-custom-pin" disabled={!authMethod?.PIN} />
 
-        <SettingsItem label={strings.biometricsSignIn} disabled={!canEnableOsAuth}>
-          <Switch value={authMethod?.OS} onValueChange={onToggleBiometricsAuthIn} disabled={!canEnableOsAuth} />
+        <SettingsItem label={strings.biometricsSignIn} disabled={!authOsEnabledOnDevice}>
+          <Switch value={authMethod?.OS} onValueChange={onToggleBiometricsAuthIn} disabled={!authOsEnabledOnDevice} />
         </SettingsItem>
       </SettingsSection>
 

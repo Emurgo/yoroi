@@ -42,7 +42,7 @@ export const KeychainStorage = {
   appAuth,
 } as const
 
-export async function canEnableAuthOs() {
+export async function authOsEnabledOnDevice() {
   return Platform.select({
     android: () => Keychain.getSupportedBiometryType().then((supportedBioType) => supportedBioType != null),
     ios: () =>

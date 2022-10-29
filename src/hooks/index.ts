@@ -18,6 +18,7 @@ import {
 } from 'react-query'
 
 import {EncryptedStorage, StorageKeys} from '../auth'
+import {authOsEnabledOnDevice} from '../auth/KeychainStorage'
 import {AuthMethod, AuthMethodState} from '../auth/types'
 import {getDefaultAssetByNetworkId} from '../legacy/config'
 import {ObjectValues} from '../legacy/flow'
@@ -993,40 +994,59 @@ export const useAuthMethod = (storage: Storage, options?: UseQueryOptions<AuthMe
   const query = useQuery({
     suspense: true,
     queryKey: ['authMethod'],
-    queryFn: () =>
-      Promise.resolve(AUTH_METHOD_KEY)
+    queryFn: async () => {
+      const authMethod: AuthMethod | '' = await Promise.resolve(AUTH_METHOD_KEY)
         .then(storage.getItem)
         .then((storedAuthMethod) => (!isEmptyString(storedAuthMethod) ? storedAuthMethod : '""'))
         .then(JSON.parse)
-        .then((parsedAuthMethod) => {
-          switch (parsedAuthMethod) {
-            case 'pin':
-              return {
-                method: 'pin',
-                PIN: true,
-                OS: false,
-                None: false,
-              } as const
-            case 'os':
-              return {
-                method: 'os',
-                PIN: false,
-                OS: true,
-                None: false,
-              } as const
-            default:
-              return {
-                PIN: false,
-                OS: false,
-                None: true,
-              } as const
-          }
-        }),
+
+      if (authMethod === 'pin')
+        return {
+          PIN: true,
+          OS: false,
+          None: false,
+        } as const
+
+      if (authMethod === 'os')
+        return {
+          PIN: false,
+          OS: true,
+          None: false,
+        } as const
+
+      return {
+        PIN: false,
+        OS: false,
+        None: true,
+      } as const
+    },
     ...options,
   })
 
+  // refetch on settings
   return {
-    authMethod: query.data,
     ...query,
+    authMethod: query.data ?? {
+      PIN: false,
+      OS: false,
+      None: true,
+    },
   }
+}
+
+export type AuthAction = 'auth-with-pin' | 'auth-with-os' | 'create-and-link-with-pin' | undefined
+export const useAuthAction = (authMethod: AuthMethodState, options?: UseQueryOptions<AuthAction, Error>) => {
+  const query = useQuery({
+    queryKey: ['useAuthAction'],
+    cacheTime: 0,
+    queryFn: async () => {
+      const canEnableOsAuth = await authOsEnabledOnDevice()
+      if (authMethod.PIN) return 'auth-with-pin'
+      if (authMethod.OS && canEnableOsAuth) return 'auth-with-os'
+      if (authMethod.OS && !canEnableOsAuth) return 'create-and-link-with-pin'
+    },
+    ...options,
+  })
+
+  return query.data
 }
