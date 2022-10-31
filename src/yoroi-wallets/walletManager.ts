@@ -27,13 +27,7 @@ import {
 } from './cardano'
 import {StakePoolInfosAndHistories} from './types'
 import type {EncryptionMethod} from './types/other'
-import {
-  FundInfoResponse,
-  PoolInfoRequest,
-  TokenInfoRequest,
-  TokenInfoResponse,
-  WALLET_IMPLEMENTATION_REGISTRY,
-} from './types/other'
+import {FundInfoResponse, PoolInfoRequest, WALLET_IMPLEMENTATION_REGISTRY} from './types/other'
 import {WalletJSON} from './Wallet'
 
 export class WalletClosed extends ExtendableError {}
@@ -509,11 +503,6 @@ export class WalletManager {
   async fetchPoolInfo(request: PoolInfoRequest): Promise<StakePoolInfosAndHistories> {
     const wallet = this.getWallet()
     return wallet.fetchPoolInfo(request)
-  }
-
-  async fetchTokenInfo(request: TokenInfoRequest): Promise<TokenInfoResponse> {
-    const wallet = this.getWallet()
-    return wallet.fetchTokenInfo(request)
   }
 
   async fetchFundInfo(): Promise<FundInfoResponse> {

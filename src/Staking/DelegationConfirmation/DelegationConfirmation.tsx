@@ -10,7 +10,7 @@ import {ConfirmTx} from '../../components/ConfirmTx'
 import {useStakePoolInfoAndHistory} from '../../Dashboard/StakePoolInfo'
 import {Instructions as HWInstructions} from '../../HW'
 import globalMessages, {txLabels} from '../../i18n/global-messages'
-import {CONFIG, getDefaultAssetByNetworkId} from '../../legacy/config'
+import {CONFIG} from '../../legacy/config'
 import {formatTokenAmount, formatTokenWithText} from '../../legacy/format'
 import {useParams, useWalletNavigation} from '../../navigation'
 import {StakingCenterRoutes} from '../../navigation'
@@ -34,7 +34,7 @@ const isParams = (params?: Params | object | undefined): params is Params => {
 export const DelegationConfirmation = ({mockDefaultAsset}: {mockDefaultAsset?: DefaultAsset}) => {
   const {resetToTxHistory} = useWalletNavigation()
   const wallet = useSelectedWallet()
-  const defaultAsset = mockDefaultAsset || getDefaultAssetByNetworkId(wallet.networkId)
+  const defaultAsset = mockDefaultAsset || wallet.defaultAsset
   const strings = useStrings()
 
   const {poolId, yoroiUnsignedTx} = useParams<Params>(isParams)

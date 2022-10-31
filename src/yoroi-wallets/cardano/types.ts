@@ -26,7 +26,7 @@ import type {
   TxStatusResponse,
 } from '../types/other'
 import type {EncryptionMethod, WalletState} from '../types/other'
-import {SendTokenList, TokenInfo} from '../types/tokens'
+import {DefaultAsset, SendTokenList, TokenInfo} from '../types/tokens'
 import {WalletEvent} from '../Wallet'
 import {CardanoTypes} from '.'
 import type {Addresses} from './chain'
@@ -251,6 +251,7 @@ export type YoroiWallet = Pick<WalletInterface, YoroiWalletKeys> & {
   id: NonNullable<WalletInterface['id']>
   networkId: NonNullable<WalletInterface['networkId']>
   walletImplementationId: NonNullable<WalletInterface['walletImplementationId']>
+  defaultAsset: DefaultAsset
   checksum: NonNullable<WalletInterface['checksum']>
   isReadOnly: NonNullable<WalletInterface['isReadOnly']>
   rewardAddressHex: NonNullable<WalletInterface['rewardAddressHex']>

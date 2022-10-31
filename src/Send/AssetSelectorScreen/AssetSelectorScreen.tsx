@@ -12,7 +12,6 @@ import NoImage from '../../assets/img/asset_no_image.png'
 import {Boundary, Button, Spacer, Text, TextInput} from '../../components'
 import {useBalances, useTokenInfo} from '../../hooks'
 import globalMessages, {txLabels} from '../../i18n/global-messages'
-import {getDefaultAssetByNetworkId} from '../../legacy/config'
 import {decodeHexAscii, formatTokenAmount, getAssetDenominationOrId, getTokenFingerprint} from '../../legacy/format'
 import {TxHistoryRouteNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
@@ -26,7 +25,6 @@ export const AssetSelectorScreen = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const balances = useBalances(wallet)
-  const defaultAsset = getDefaultAssetByNetworkId(wallet.networkId)
   const [matcher, setMatcher] = React.useState('')
   const navigation = useNavigation<TxHistoryRouteNavigation>()
   const {tokenSelected, allTokensSelected} = useSend()
@@ -40,7 +38,7 @@ export const AssetSelectorScreen = () => {
     .sort(([, quantityA]: [TokenId, Quantity], [, quantityB]: [TokenId, Quantity]) =>
       Quantities.isGreaterThan(quantityA, quantityB) ? -1 : 1,
     )
-    .sort(([tokenId]: [TokenId, Quantity]) => (tokenId === defaultAsset.identifier ? -1 : 1)) // default first
+    .sort(([tokenId]: [TokenId, Quantity]) => (tokenId === wallet.defaultAsset.identifier ? -1 : 1)) // default first
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={{flex: 1, backgroundColor: 'white'}}>
