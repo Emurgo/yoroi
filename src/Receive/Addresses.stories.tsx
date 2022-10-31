@@ -16,7 +16,6 @@ storiesOf('AddressesList', module)
           address123: true,
           address234: true,
           address345: true,
-          address456: false,
         },
       }}
     >
@@ -33,7 +32,6 @@ storiesOf('AddressesList', module)
           address123: true,
           address234: true,
           address345: true,
-          address456: false,
         },
       }}
     >
