@@ -1,3 +1,4 @@
+import {useFocusEffect} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Alert, ScrollView, StyleSheet, Switch} from 'react-native'
@@ -5,7 +6,7 @@ import DeviceInfo from 'react-native-device-info'
 
 import {useAuthOsEnabledOnDevice, useAuthOsErrorDecoder, useAuthWithOs} from '../../auth'
 import {StatusBar} from '../../components'
-import {useAuthMethod, useCrashReports, useRefetchOnFocus} from '../../hooks'
+import {useAuthMethod, useCrashReports} from '../../hooks'
 import globalMessages from '../../i18n/global-messages'
 import {CONFIG, isNightly} from '../../legacy/config'
 import {isEmptyString} from '../../legacy/utils'
@@ -29,8 +30,16 @@ export const ApplicationSettingsScreen = () => {
     refetchInterval: __DEV__ ? 2000 : false,
   })
   // react-query useRefetchOnWindowsFocus doesn't work in react-native
-  useRefetchOnFocus(refetchCanEnableOSAuth)
-  useRefetchOnFocus(refetchAuthMethod)
+  useFocusEffect(
+    React.useCallback(() => {
+      refetchCanEnableOSAuth()
+    }, [refetchCanEnableOSAuth]),
+  )
+  useFocusEffect(
+    React.useCallback(() => {
+      refetchAuthMethod()
+    }, [refetchAuthMethod]),
+  )
 
   const decodeAuthOsError = useAuthOsErrorDecoder()
   const {authWithOs} = useAuthWithOs(

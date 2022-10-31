@@ -975,20 +975,6 @@ export const useBalances = (wallet: YoroiWallet): YoroiAmounts => {
   return Utxos.toAmounts(utxos, primaryTokenId)
 }
 
-export const useRefetchOnFocus = (refetch: () => unknown, canRefetch = true) => {
-  const [isScreenFocused, setIsScreenFocused] = React.useState(false)
-  useFocusEffect(() => {
-    setIsScreenFocused(true)
-    return () => setIsScreenFocused(false)
-  })
-
-  React.useEffect(() => {
-    if (isScreenFocused && canRefetch) {
-      refetch()
-    }
-  }, [canRefetch, isScreenFocused, refetch])
-}
-
 export const AUTH_METHOD_KEY = '/appSettings/authMethod'
 export const useAuthMethod = (storage: Storage, options?: UseQueryOptions<AuthMethodState, Error>) => {
   const query = useQuery({
