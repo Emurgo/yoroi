@@ -16,7 +16,7 @@ import {useParams, useWalletNavigation} from '../../navigation'
 import {StakingCenterRoutes} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
-import {DefaultAsset, Quantity} from '../../yoroi-wallets/types'
+import {Quantity} from '../../yoroi-wallets/types'
 import {Amounts, Entries, Quantities} from '../../yoroi-wallets/utils'
 
 type Params = StakingCenterRoutes['delegation-confirmation']
@@ -31,10 +31,9 @@ const isParams = (params?: Params | object | undefined): params is Params => {
   )
 }
 
-export const DelegationConfirmation = ({mockDefaultAsset}: {mockDefaultAsset?: DefaultAsset}) => {
+export const DelegationConfirmation = () => {
   const {resetToTxHistory} = useWalletNavigation()
   const wallet = useSelectedWallet()
-  const defaultAsset = mockDefaultAsset || wallet.defaultAsset
   const strings = useStrings()
 
   const {poolId, yoroiUnsignedTx} = useParams<Params>(isParams)
@@ -71,14 +70,14 @@ export const DelegationConfirmation = ({mockDefaultAsset}: {mockDefaultAsset?: D
 
         <View style={styles.input} testID="stakingAmount">
           <Text small style={styles.fees}>
-            {`+ ${formatTokenAmount(new BigNumber(yoroiUnsignedTx.fee['']), defaultAsset)} ${strings.ofFees}`}
+            {`+ ${formatTokenAmount(new BigNumber(yoroiUnsignedTx.fee['']), wallet.defaultAsset)} ${strings.ofFees}`}
           </Text>
 
           {/* requires a handler so we pass on a dummy function */}
           <ValidatedTextInput
             onChangeText={() => undefined}
             editable={false}
-            value={formatTokenAmount(new BigNumber(stakingAmount.quantity), defaultAsset)}
+            value={formatTokenAmount(new BigNumber(stakingAmount.quantity), wallet.defaultAsset)}
             label={strings.amount}
           />
         </View>
@@ -91,7 +90,7 @@ export const DelegationConfirmation = ({mockDefaultAsset}: {mockDefaultAsset?: D
 
         <View style={styles.itemBlock}>
           <Text style={styles.itemTitle}>{strings.rewardsExplanation}</Text>
-          <Text style={styles.rewards}>{formatTokenWithText(new BigNumber(reward), defaultAsset)}</Text>
+          <Text style={styles.rewards}>{formatTokenWithText(new BigNumber(reward), wallet.defaultAsset)}</Text>
         </View>
 
         {wallet.isHW && <HWInstructions useUSB={useUSB} addMargin />}
