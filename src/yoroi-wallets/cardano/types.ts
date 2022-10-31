@@ -159,8 +159,8 @@ export interface WalletInterface {
 
   getAddressing(address: string): unknown
 
-  asAddressedUtxo(): Promise<Array<CardanoTypes.CardanoAddressedUtxo>>
-  asLegacyAddressedUtxo(): Promise<Array<AddressedUtxo>>
+  getAddressedUtxos(): Promise<Array<CardanoTypes.CardanoAddressedUtxo>>
+  getLegacyAddressedUtxos(): Promise<Array<AddressedUtxo>>
 
   getDelegationStatus(): Promise<StakingStatus>
 

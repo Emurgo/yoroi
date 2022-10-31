@@ -423,7 +423,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
   async getAllUtxosForKey() {
     return filterAddressesByStakingKey(
       await CardanoMobile.StakeCredential.fromKeyhash(await (await this.getStakingKey()).hash()),
-      await this.asLegacyAddressedUtxo(),
+      await this.getLegacyAddressedUtxos(),
       false,
     )
   }
@@ -462,7 +462,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     throw new Error(`Missing address info for: ${address} `)
   }
 
-  async asAddressedUtxo() {
+  async getAddressedUtxos() {
     const utxos = await this.fetchUTXOs()
     const addressedUtxos = utxos.map((utxo: RawUtxo): CardanoTypes.CardanoAddressedUtxo => {
       const addressing = this.getAddressing(utxo.receiver)
@@ -481,7 +481,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     return addressedUtxos
   }
 
-  async asLegacyAddressedUtxo() {
+  async getLegacyAddressedUtxos() {
     const utxos = await this.fetchUTXOs()
     const addressedUtxos = utxos.map((utxo: RawUtxo): AddressedUtxo => {
       const addressing = this.getAddressing(utxo.receiver)
@@ -512,7 +512,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
 
     const absSlotNumber = new BigNumber(timeToSlotFn({time}).slot)
     const changeAddr = await this.getAddressedChangeAddress()
-    const addressedUtxos = await this.asAddressedUtxo()
+    const addressedUtxos = await this.getAddressedUtxos()
     const networkConfig = this.getNetworkConfig()
 
     try {
@@ -584,7 +584,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
 
     const absSlotNumber = new BigNumber(timeToSlotFn({time}).slot)
     const changeAddr = await this.getAddressedChangeAddress()
-    const addressedUtxos = await this.asAddressedUtxo()
+    const addressedUtxos = await this.getAddressedUtxos()
     const registrationStatus = (await this.getDelegationStatus()).isRegistered
     const stakingKey = await this.getStakingKey()
     const delegationType = registrationStatus ? RegistrationStatus.DelegateOnly : RegistrationStatus.RegisterAndDelegate
@@ -663,7 +663,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
       const nonce = absSlotNumber.toNumber()
       const chainNetworkConfig = Number.parseInt(this.getChainNetworkId(), 10)
 
-      const addressedUtxos = await this.asAddressedUtxo()
+      const addressedUtxos = await this.getAddressedUtxos()
 
       const unsignedTx = await Cardano.createUnsignedVotingTx(
         absSlotNumber,
@@ -717,7 +717,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
 
     const absSlotNumber = new BigNumber(timeToSlotFn({time}).slot)
     const changeAddr = await this.getAddressedChangeAddress()
-    const addressedUtxos = await this.asAddressedUtxo()
+    const addressedUtxos = await this.getAddressedUtxos()
     const accountState = await api.getAccountState(
       {addresses: [this.rewardAddressHex]},
       this.getNetworkConfig().BACKEND,
@@ -822,7 +822,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     await this.utxoService.syncUtxoState(addresses)
     const utxos = await this.utxoService.getAvailableUtxos()
 
-    return utxos.map(toUTXOs)
+    return utxos.map(toUTXO)
   }
 
   async clearUTXOs() {
@@ -860,7 +860,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
 }
 
 const toHex = (bytes: Uint8Array) => Buffer.from(bytes).toString('hex')
-const toUTXOs = (utxo: UtxoModels.Utxo): RawUtxo => ({
+const toUTXO = (utxo: UtxoModels.Utxo): RawUtxo => ({
   utxo_id: utxo.utxoId,
   tx_hash: utxo.txHash,
   tx_index: utxo.txIndex,

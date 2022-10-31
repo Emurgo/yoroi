@@ -25,9 +25,8 @@ import {
   YoroiProvider,
   YoroiWallet,
 } from './cardano'
-import {StakePoolInfosAndHistories} from './types'
 import type {EncryptionMethod} from './types/other'
-import {FundInfoResponse, PoolInfoRequest, WALLET_IMPLEMENTATION_REGISTRY} from './types/other'
+import {WALLET_IMPLEMENTATION_REGISTRY} from './types/other'
 import {WalletJSON} from './Wallet'
 
 export class WalletClosed extends ExtendableError {}
@@ -305,9 +304,9 @@ export class WalletManager {
     const newWalletMeta = {...walletMeta}
 
     // can be null for versions < 3.0.0
-    const networkId = data.networkId != null ? data.networkId : walletMeta.networkId
+    const networkId = data.networkId ?? walletMeta.networkId
 
-    const Wallet = this._getWalletImplementation(walletMeta.walletImplementationId)
+    const Wallet = this.getWalletImplementation(walletMeta.walletImplementationId)
     const wallet = new Wallet(storage, networkId, newWalletMeta.id)
 
     await wallet.restore(data, walletMeta)
@@ -418,7 +417,7 @@ export class WalletManager {
   // returns the corresponding implementation of WalletInterface. Normally we
   // should expect that each blockchain network has 1 wallet implementation.
   // In the case of Cardano, there are two: Byron-era and Shelley-era.
-  _getWalletImplementation(walletImplementationId: WalletImplementationId): typeof ShelleyWallet {
+  private getWalletImplementation(walletImplementationId: WalletImplementationId): typeof ShelleyWallet {
     switch (walletImplementationId) {
       case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON:
       case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY:
@@ -440,7 +439,7 @@ export class WalletManager {
     implementationId: WalletImplementationId,
     provider?: null | YoroiProvider,
   ) {
-    const Wallet = this._getWalletImplementation(implementationId)
+    const Wallet = this.getWalletImplementation(implementationId)
     const id = uuid.v4()
     const wallet = new Wallet(storage, networkId, id)
     await wallet.create(mnemonic, password, networkId, implementationId, provider)
@@ -456,7 +455,7 @@ export class WalletManager {
     hwDeviceInfo: null | HWDeviceInfo,
     isReadOnly: boolean,
   ) {
-    const Wallet = this._getWalletImplementation(implementationId)
+    const Wallet = this.getWalletImplementation(implementationId)
     const id = uuid.v4()
     const wallet = new Wallet(storage, networkId, id)
     await wallet.createWithBip44Account(bip44AccountPublic, networkId, implementationId, hwDeviceInfo, isReadOnly)
@@ -493,21 +492,6 @@ export class WalletManager {
   async submitTransaction(signedTx: string) {
     const wallet = this.getWallet()
     return this.abortWhenWalletCloses(wallet.submitTransaction(signedTx))
-  }
-
-  async fetchAccountState() {
-    const wallet = this.getWallet()
-    return this.abortWhenWalletCloses(wallet.fetchAccountState())
-  }
-
-  async fetchPoolInfo(request: PoolInfoRequest): Promise<StakePoolInfosAndHistories> {
-    const wallet = this.getWallet()
-    return wallet.fetchPoolInfo(request)
-  }
-
-  async fetchFundInfo(): Promise<FundInfoResponse> {
-    const wallet = this.getWallet()
-    return wallet.fetchFundInfo()
   }
 }
 
