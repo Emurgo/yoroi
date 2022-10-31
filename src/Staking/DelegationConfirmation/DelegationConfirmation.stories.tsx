@@ -15,6 +15,7 @@ storiesOf('DelegationConfirmation', module)
       <SelectedWalletProvider
         wallet={{
           ...mockWallet,
+          defaultAsset: getDefaultAssets()[0],
           fetchPoolInfo: async () => {
             return {
               '6777ed5eac05ab8bf55d073424132e200935c8d3be62fb00f5252cd27a9fe6e5': {
@@ -40,7 +41,7 @@ storiesOf('DelegationConfirmation', module)
         }}
       >
         <RouteProvider params={params}>
-          <DelegationConfirmation mockDefaultAsset={getDefaultAssets()[0]} />
+          <DelegationConfirmation />
         </RouteProvider>
       </SelectedWalletProvider>
     </QueryClientProvider>
@@ -50,11 +51,12 @@ storiesOf('DelegationConfirmation', module)
       <SelectedWalletProvider
         wallet={{
           ...mockWallet,
+          defaultAsset: getDefaultAssets()[0],
           fetchPoolInfo: async () => new Promise(() => undefined),
         }}
       >
         <RouteProvider params={params}>
-          <DelegationConfirmation mockDefaultAsset={getDefaultAssets()[0]} />
+          <DelegationConfirmation />
         </RouteProvider>
       </SelectedWalletProvider>
     </QueryClientProvider>
@@ -64,11 +66,12 @@ storiesOf('DelegationConfirmation', module)
       <SelectedWalletProvider
         wallet={{
           ...mockWallet,
+          defaultAsset: getDefaultAssets()[0],
           fetchPoolInfo: async () => Promise.reject(new Error('fetchPoolInfo: failed')),
         }}
       >
         <RouteProvider params={params}>
-          <DelegationConfirmation mockDefaultAsset={getDefaultAssets()[0]} />
+          <DelegationConfirmation />
         </RouteProvider>
       </SelectedWalletProvider>
     </QueryClientProvider>

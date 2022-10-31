@@ -2,6 +2,7 @@
 import {action} from '@storybook/addon-actions'
 import BigNumber from 'bignumber.js'
 
+import {getDefaultAssetByNetworkId} from '../../src/legacy/config'
 import {PRIMARY_ASSET_CONSTANTS} from '../../src/legacy/networks'
 import {WalletMeta} from '../../src/legacy/state'
 import {TokenEntry, YoroiWallet} from '../../src/yoroi-wallets'
@@ -33,6 +34,7 @@ export const mockedWalletMeta: WalletMeta = {
 
 export const mockWallet: YoroiWallet = {
   id: 'wallet-id',
+  defaultAsset: getDefaultAssetByNetworkId(300),
   walletImplementationId: 'haskell-shelley',
   networkId: 300,
   checksum: {

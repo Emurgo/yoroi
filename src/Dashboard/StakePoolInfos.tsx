@@ -3,7 +3,6 @@ import React, {useEffect} from 'react'
 import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {useQuery, useQueryClient, UseQueryOptions} from 'react-query'
 
-import {getDefaultAssetByNetworkId} from '../legacy/config'
 import {useSelectedWallet} from '../SelectedWallet'
 import {YoroiWallet} from '../yoroi-wallets'
 import {YoroiUnsignedTx} from '../yoroi-wallets/types'
@@ -55,8 +54,7 @@ const getStakePoolInfo = async (wallet: YoroiWallet) => {
   const accountState = accountStates[wallet.rewardAddressHex]
   if (!accountState) throw new Error('Account state not found')
 
-  const utxos = await wallet.fetchUTXOs()
-  const stakingUtxos = await wallet.getAllUtxosForKey(utxos)
+  const stakingUtxos = await wallet.getAllUtxosForKey()
   const amount = sum([...stakingUtxos.map((utxo) => utxo.amount), accountState.remainingAmount])
 
   return {
@@ -130,16 +128,10 @@ export const useStakingTx = (
       const accountState = accountStates[wallet.rewardAddressHex]
       if (!accountState) throw new Error('Account state not found')
 
-      const utxos = await wallet.fetchUTXOs()
-      const stakingUtxos = await wallet.getAllUtxosForKey(utxos)
+      const stakingUtxos = await wallet.getAllUtxosForKey()
       const amountToDelegate = sum([...stakingUtxos.map((utxo) => utxo.amount), accountState.remainingAmount])
 
-      return wallet.createDelegationTx(
-        poolId,
-        new BigNumber(amountToDelegate),
-        utxos,
-        getDefaultAssetByNetworkId(wallet.networkId),
-      )
+      return wallet.createDelegationTx(poolId, new BigNumber(amountToDelegate))
     },
     enabled: poolId != null,
   })
