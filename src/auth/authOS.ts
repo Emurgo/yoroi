@@ -11,7 +11,8 @@ import {WalletMeta} from '../legacy/state'
 import storage from '../legacy/storage'
 import {Storage} from '../Storage'
 import {WalletJSON, walletManager, YoroiWallet} from '../yoroi-wallets'
-import {AuthenticationPrompt, authOsEnabledOnDevice, KeychainStorage} from './KeychainStorage'
+import {Keychain} from './Keychain'
+import {AuthenticationPrompt, authOsEnabledOnDevice} from './KeychainStorage'
 import {AuthMethod} from './types'
 
 export const useAuthOsEnabledOnDevice = (options?: UseQueryOptions<boolean, Error>) => {
@@ -37,8 +38,8 @@ export const useEnableAuthWithOs = (
 ) => {
   const mutation = useMutationWithInvalidations({
     mutationFn: () =>
-      KeychainStorage.initializeAppAuth()
-        .then(() => KeychainStorage.appAuth(authenticationPrompt))
+      Keychain.initialize()
+        .then(() => Keychain.authenticate(authenticationPrompt))
         .then(() => storage.setItem(AUTH_METHOD_KEY, JSON.stringify(AUTH_METHOD_OS)))
         .then(() => storage.getItem(ENCRYPTED_PIN_HASH_KEY))
         .then((pin) => (pin != null ? storage.removeItem(ENCRYPTED_PIN_HASH_KEY) : undefined)),
@@ -58,7 +59,7 @@ export const useAuthWithOs = (
 ) => {
   const mutation = useMutationWithInvalidations({
     invalidateQueries: [['useAuthMethod']],
-    mutationFn: () => KeychainStorage.appAuth(authenticationPrompt),
+    mutationFn: () => Keychain.authenticate(authenticationPrompt),
     ...options,
   })
 
@@ -73,7 +74,7 @@ export const useAuthOsWithEasyConfirmation = (
   options?: UseMutationOptions<string, Error>,
 ) => {
   const mutation = useMutation({
-    mutationFn: () => KeychainStorage.read(id, authenticationPrompt),
+    mutationFn: () => Keychain.getWalletKey(id, authenticationPrompt),
     ...options,
   })
 
@@ -86,7 +87,7 @@ export const useAuthOsWithEasyConfirmation = (
 export const useDisableEasyConfirmation = ({id}: {id: YoroiWallet['id']}, options?: UseMutationOptions) => {
   const mutation = useMutationWithInvalidations({
     ...options,
-    mutationFn: () => KeychainStorage.remove(id).then(() => walletManager.disableEasyConfirmation()),
+    mutationFn: () => Keychain.removeWalletKey(id).then(() => walletManager.disableEasyConfirmation()),
     invalidateQueries: [['walletMetas']],
   })
 
@@ -103,7 +104,7 @@ export const useEnableEasyConfirmation = (
   const mutation = useMutationWithInvalidations({
     ...options,
     mutationFn: (rootKey: string) =>
-      KeychainStorage.write(id, rootKey).then(() => walletManager.enableEasyConfirmation()),
+      Keychain.setWalletKey(id, rootKey).then(() => walletManager.enableEasyConfirmation()),
     invalidateQueries: [['walletMetas']],
   })
 
@@ -173,7 +174,7 @@ const disableAllEasyConfirmation = () =>
 
 const OLD_OS_AUTH_KEY = '/appSettings/isSystemAuthEnabled'
 const INSTALLATION_ID_KEY = '/appSettings/installationId'
-export const migrateAuthMethod = async (storage: Storage, keychainStorage: typeof KeychainStorage) => {
+export const migrateAuthMethod = async (storage: Storage, keychain: typeof Keychain = Keychain) => {
   const [[, authMethod], [, pin], [, isOldSystemAuth], [, installationId]] = await storage.multiGet([
     AUTH_METHOD_KEY,
     ENCRYPTED_PIN_HASH_KEY,
@@ -182,7 +183,7 @@ export const migrateAuthMethod = async (storage: Storage, keychainStorage: typeo
   ])
   if (authMethod == null && installationId != null) {
     if (isOldSystemAuth != null && JSON.parse(isOldSystemAuth) === true) {
-      await keychainStorage.initializeAppAuth()
+      await keychain.initialize()
       await storage.setItem(AUTH_METHOD_KEY, JSON.stringify(AUTH_METHOD_OS))
       return disableAllEasyConfirmation()
     }

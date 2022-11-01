@@ -957,12 +957,12 @@ export const useAuthMethod = (storage: Storage, options?: UseQueryOptions<AuthMe
   return query.data
 }
 
-const parseAuthMethod = (data: string | null) => {
+const parseAuthMethod = (data: unknown) => {
   if (!data) return undefined
   try {
-    return JSON.parse(data)
+    return JSON.parse(data as string)
   } catch (error) {
-    return Promise.reject(new Error('parseAuthMethod invalid data'))
+    return undefined
   }
 }
 const isAuthMethod = (data: any): data is 'os' | 'pin' | undefined => ['os', 'pin', undefined].includes(data)

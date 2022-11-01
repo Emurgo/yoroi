@@ -1,14 +1,14 @@
 import storage from '@react-native-async-storage/async-storage'
 
 import {migrateAuthMethod} from './authOS'
-import {KeychainStorage} from './KeychainStorage'
+import {Keychain} from './Keychain'
 
-const mockKeychainStorage: typeof KeychainStorage = {
-  read: jest.fn(),
-  write: jest.fn(),
-  remove: jest.fn(),
-  initializeAppAuth: jest.fn(),
-  appAuth: jest.fn(),
+const mockKeychain: typeof Keychain = {
+  authenticate: jest.fn(),
+  getWalletKey: jest.fn(),
+  initialize: jest.fn(),
+  removeWalletKey: jest.fn(),
+  setWalletKey: jest.fn(),
 }
 
 describe('migrateAuthMethod', () => {
@@ -21,13 +21,9 @@ describe('migrateAuthMethod', () => {
   })
 
   it('method = null and no pin/os means new setup, it should remain null', async () => {
-    const keychainStorage = {
-      ...mockKeychainStorage,
-      write: jest.fn(),
-    }
     await storage.setItem(INSTALLATION_ID_KEY, JSON.stringify(installationId))
 
-    await migrateAuthMethod(storage, keychainStorage)
+    await migrateAuthMethod(storage, mockKeychain)
 
     await expect(await storage.getItem(AUTH_METHOD_KEY)).toBeNull()
   })
@@ -35,18 +31,14 @@ describe('migrateAuthMethod', () => {
   // correct way should make sure that .setItem was not called
   // but there are some issues when resetting back the storage mock
   it('method != null remains the same', async () => {
-    const keychainStorage = {
-      ...mockKeychainStorage,
-      write: jest.fn(),
-    }
     await storage.setItem(INSTALLATION_ID_KEY, JSON.stringify(installationId))
 
     await storage.setItem(AUTH_METHOD_KEY, os)
-    await migrateAuthMethod(storage, keychainStorage)
+    await migrateAuthMethod(storage, mockKeychain)
     await expect(await storage.getItem(AUTH_METHOD_KEY)).toBe(os)
 
     await storage.setItem(AUTH_METHOD_KEY, pin)
-    await migrateAuthMethod(storage, keychainStorage)
+    await migrateAuthMethod(storage, mockKeychain)
     await expect(await storage.getItem(AUTH_METHOD_KEY)).toBe(pin)
   })
 
@@ -57,12 +49,8 @@ describe('migrateAuthMethod', () => {
       [ENCRYPTED_PIN_HASH_KEY, JSON.stringify('encrypted-hash')],
       [OLD_OS_AUTH_KEY, JSON.stringify(true)],
     ])
-    const keychainStorage = {
-      ...mockKeychainStorage,
-      write: jest.fn(),
-    }
 
-    await migrateAuthMethod(storage, keychainStorage)
+    await migrateAuthMethod(storage, mockKeychain)
 
     await expect(await storage.getItem(AUTH_METHOD_KEY)).toBe(os)
   })
@@ -70,12 +58,8 @@ describe('migrateAuthMethod', () => {
   it('old store is pin, method = "pin"', async () => {
     await storage.setItem(INSTALLATION_ID_KEY, JSON.stringify(installationId))
     await storage.setItem(ENCRYPTED_PIN_HASH_KEY, JSON.stringify('encrypted-hash'))
-    const keychainStorage = {
-      ...mockKeychainStorage,
-      write: jest.fn(),
-    }
 
-    await migrateAuthMethod(storage, keychainStorage)
+    await migrateAuthMethod(storage, mockKeychain)
 
     await expect(await storage.getItem(AUTH_METHOD_KEY)).toBe(pin)
   })
