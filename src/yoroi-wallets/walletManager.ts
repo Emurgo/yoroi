@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import ExtendableError from 'es6-error'
 import _ from 'lodash'
+import uuid from 'uuid'
 
 import {migrateWalletMetas} from '../appStorage'
 import {EncryptedStorage, StorageKeys} from '../auth'
@@ -21,16 +22,8 @@ import {
   YoroiProvider,
   YoroiWallet,
 } from './cardano'
-import {StakePoolInfosAndHistories} from './types'
-import {
-  FundInfoResponse,
-  PoolInfoRequest,
-  RawUtxo,
-  TokenInfoRequest,
-  TokenInfoResponse,
-  TxBodiesRequest,
-  WALLET_IMPLEMENTATION_REGISTRY,
-} from './types/other'
+import {WALLET_IMPLEMENTATION_REGISTRY} from './types/other'
+import {WalletJSON} from './Wallet'
 
 export class WalletClosed extends ExtendableError {}
 export class SystemAuthDisabled extends ExtendableError {}
@@ -258,12 +251,17 @@ export class WalletManager {
   async openWallet(walletMeta: WalletMeta): Promise<[YoroiWallet, WalletMeta]> {
     await this.closeWallet()
     assert.preconditionCheck(!!walletMeta.id, 'openWallet:: !!id')
-    const data = await storage.read(`/wallet/${walletMeta.id}/data`)
+    const data = await storage.read<WalletJSON>(`/wallet/${walletMeta.id}/data`)
     Logger.debug('openWallet::data', data)
     if (!data) throw new Error('Cannot read saved data')
 
-    const wallet: WalletInterface = this._getWalletImplementation(walletMeta.walletImplementationId)
     const newWalletMeta = {...walletMeta}
+
+    // can be null for versions < 3.0.0
+    const networkId = data.networkId ?? walletMeta.networkId
+
+    const Wallet = this.getWalletImplementation(walletMeta.walletImplementationId)
+    const wallet = new Wallet(storage, networkId, newWalletMeta.id)
 
     await wallet.restore(data, walletMeta)
     if (!isYoroiWallet(wallet)) throw new Error('invalid wallet')
@@ -289,10 +287,12 @@ export class WalletManager {
 
   closeWallet(): Promise<void> {
     if (!this._wallet) return Promise.resolve()
+
     Logger.debug('closing wallet...')
     assert.assert(this._closeReject, 'close: should have _closeReject')
     /* :: if (!this._closeReject) throw 'assert' */
     // Abort all async interactions with the wallet
+
     const reject = this._closeReject
     this._closePromise = null
     this._closeReject = null
@@ -313,12 +313,16 @@ export class WalletManager {
   async resyncWallet() {
     if (!this._wallet) return
     const wallet = this._wallet
+    await wallet.clear()
     wallet.resync()
     wallet.save()
     await this.closeWallet()
   }
 
   async removeWallet(id: string) {
+    if (!this._wallet) throw new Error('invalid state')
+
+    await this._wallet.clear()
     await this.closeWallet()
     await storage.remove(`/wallet/${id}/data`)
     await storage.remove(`/wallet/${id}`)
@@ -342,12 +346,12 @@ export class WalletManager {
   // returns the corresponding implementation of WalletInterface. Normally we
   // should expect that each blockchain network has 1 wallet implementation.
   // In the case of Cardano, there are two: Byron-era and Shelley-era.
-  _getWalletImplementation(walletImplementationId: WalletImplementationId): WalletInterface {
+  private getWalletImplementation(walletImplementationId: WalletImplementationId): typeof ShelleyWallet {
     switch (walletImplementationId) {
       case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON:
       case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY:
       case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY_24:
-        return new ShelleyWallet(storage)
+        return ShelleyWallet
       // TODO
       // case WALLET_IMPLEMENTATION_REGISTRY.ERGO:
       //   return ErgoWallet()
@@ -364,8 +368,10 @@ export class WalletManager {
     implementationId: WalletImplementationId,
     provider?: null | YoroiProvider,
   ) {
-    const wallet = this._getWalletImplementation(implementationId)
-    const id = await wallet.create(mnemonic, password, networkId, implementationId, provider)
+    const Wallet = this.getWalletImplementation(implementationId)
+    const id = uuid.v4()
+    const wallet = new Wallet(storage, networkId, id)
+    await wallet.create(mnemonic, password, networkId, implementationId, provider)
 
     return this.saveWallet(id, name, wallet, networkId, implementationId, provider)
   }
@@ -378,14 +384,11 @@ export class WalletManager {
     hwDeviceInfo: null | HWDeviceInfo,
     isReadOnly: boolean,
   ) {
-    const wallet = this._getWalletImplementation(implementationId)
-    const id = await wallet.createWithBip44Account(
-      bip44AccountPublic,
-      networkId,
-      implementationId,
-      hwDeviceInfo,
-      isReadOnly,
-    )
+    const Wallet = this.getWalletImplementation(implementationId)
+    const id = uuid.v4()
+    const wallet = new Wallet(storage, networkId, id)
+    await wallet.createWithBip44Account(bip44AccountPublic, networkId, implementationId, hwDeviceInfo, isReadOnly)
+
     Logger.debug('creating wallet...', wallet)
 
     return this.saveWallet(id, name, wallet, networkId, implementationId)
@@ -393,19 +396,9 @@ export class WalletManager {
 
   // =================== tx building =================== //
 
-  async getAllUtxosForKey(utxos: Array<RawUtxo>) {
-    const wallet = this.getWallet()
-    return wallet.getAllUtxosForKey(utxos)
-  }
-
   getAddressingInfo(address: string) {
     const wallet = this.getWallet()
     return wallet.getAddressing(address)
-  }
-
-  asAddressedUtxo(utxos: Array<RawUtxo>) {
-    const wallet = this.getWallet()
-    return wallet.asAddressedUtxo(utxos)
   }
 
   async getDelegationStatus() {
@@ -428,36 +421,6 @@ export class WalletManager {
   async submitTransaction(signedTx: string) {
     const wallet = this.getWallet()
     return this.abortWhenWalletCloses(wallet.submitTransaction(signedTx))
-  }
-
-  async getTxsBodiesForUTXOs(request: TxBodiesRequest) {
-    const wallet = this.getWallet()
-    return this.abortWhenWalletCloses(wallet.getTxsBodiesForUTXOs(request))
-  }
-
-  async fetchUTXOs() {
-    const wallet = this.getWallet()
-    return this.abortWhenWalletCloses(wallet.fetchUTXOs())
-  }
-
-  async fetchAccountState() {
-    const wallet = this.getWallet()
-    return this.abortWhenWalletCloses(wallet.fetchAccountState())
-  }
-
-  async fetchPoolInfo(request: PoolInfoRequest): Promise<StakePoolInfosAndHistories> {
-    const wallet = this.getWallet()
-    return wallet.fetchPoolInfo(request)
-  }
-
-  async fetchTokenInfo(request: TokenInfoRequest): Promise<TokenInfoResponse> {
-    const wallet = this.getWallet()
-    return wallet.fetchTokenInfo(request)
-  }
-
-  async fetchFundInfo(): Promise<FundInfoResponse> {
-    const wallet = this.getWallet()
-    return wallet.fetchFundInfo()
   }
 }
 

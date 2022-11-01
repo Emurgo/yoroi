@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import type {UtxoStorage} from '@emurgo/yoroi-lib'
+import {UtxoModels} from '@emurgo/yoroi-lib'
+import {initUtxo, UtxoService} from '@emurgo/yoroi-lib'
 import {BigNumber} from 'bignumber.js'
 import cryptoRandomString from 'crypto-random-string'
 import ExtendableError from 'es6-error'
 import _ from 'lodash'
 import DeviceInfo from 'react-native-device-info'
-import uuid from 'uuid'
 
 import {encryptWithPassword} from '../../Catalyst/catalystCipher'
 import LocalizableError from '../../i18n/LocalizableError'
@@ -40,7 +42,7 @@ import {
   walletChecksum,
 } from '../cardano'
 import {makeStorageWithPrefix} from '../storage'
-import {DefaultAsset, SendTokenList, Token, YoroiSignedTx, YoroiUnsignedTx} from '../types'
+import {DefaultAsset, SendTokenList, YoroiSignedTx, YoroiUnsignedTx} from '../types'
 import type {
   AccountStateResponse,
   AddressedUtxo,
@@ -67,21 +69,37 @@ import {toCachedTx, TransactionCache} from './shelley/transactionCache'
 import {yoroiSignedTx} from './signedTx'
 import {NetworkId, WalletImplementationId, WalletInterface, YoroiProvider} from './types'
 import {yoroiUnsignedTx} from './unsignedTx'
+import {generateUtxoStorage} from './utxoStorage'
 
 export default ShelleyWallet
 export class ShelleyWallet extends Wallet implements WalletInterface {
   storage: typeof storageLegacy
+  private utxoService: UtxoService
+  private utxoStorage: UtxoStorage
+  defaultAsset: DefaultAsset
+
   // =================== create =================== //
-  constructor(storage: typeof storageLegacy) {
+  constructor(storage: typeof storageLegacy, networkId: NetworkId, id: string) {
     super()
+    this.id = id
     this.storage = storage
+    this.networkId = networkId
+    this.defaultAsset = getDefaultAssetByNetworkId(this.networkId)
+
+    const config = this.getBackendConfig()
+    this.utxoStorage = generateUtxoStorage(this.storage, `/wallet/${this.id}/utxos`)
+    this.utxoService = initUtxo(this.utxoStorage, `${config.API_ROOT}/`)
   }
 
   save() {
     return this.storage.write(`/wallet/${this.id}/data`, this.toJSON())
   }
 
-  async _initialize(
+  clear() {
+    return this.clearUTXOs()
+  }
+
+  private async initialize(
     networkId: NetworkId,
     implementationId: WalletImplementationId,
     accountPubKeyHex: string,
@@ -90,8 +108,6 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     provider?: null | YoroiProvider,
   ) {
     if (!this.id) throw new Error('Invalid wallet creation state')
-    this.networkId = networkId
-
     this.walletImplementationId = implementationId
 
     this.isHW = hwDeviceInfo != null
@@ -105,16 +121,16 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     this.transactionCache = await TransactionCache.create(makeStorageWithPrefix(`/wallet/${this.id}/txs`))
 
     // initialize address chains
-    const _walletConfig = getWalletConfigById(implementationId)
+    const walletConfig = getWalletConfigById(implementationId)
     this.internalChain = new AddressChain(
       new AddressGenerator(accountPubKeyHex, 'Internal', implementationId, networkId),
-      _walletConfig.DISCOVERY_BLOCK_SIZE,
-      _walletConfig.DISCOVERY_GAP_SIZE,
+      walletConfig.DISCOVERY_BLOCK_SIZE,
+      walletConfig.DISCOVERY_GAP_SIZE,
     )
     this.externalChain = new AddressChain(
       new AddressGenerator(accountPubKeyHex, 'External', implementationId, networkId),
-      _walletConfig.DISCOVERY_BLOCK_SIZE,
-      _walletConfig.DISCOVERY_GAP_SIZE,
+      walletConfig.DISCOVERY_BLOCK_SIZE,
+      walletConfig.DISCOVERY_GAP_SIZE,
     )
 
     this.rewardAddressHex = await deriveRewardAddressHex(accountPubKeyHex, networkId)
@@ -149,7 +165,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     Logger.info(`create wallet (networkId=${String(networkId)})`)
     Logger.info(`create wallet (implementationId=${String(implementationId)})`)
     Logger.info(`create wallet (provider=${String(provider)})`)
-    this.id = uuid.v4()
+
     assert.assert(!this.isInitialized, 'ShelleyWallet::create: !isInitialized')
     assert.assert(isHaskellShelleyNetwork(networkId), 'ShelleyWallet::create: invalid networkId')
     assert.assert(
@@ -169,7 +185,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     const accountPubKey = await accountKey.toPublic()
     const accountPubKeyHex: string = Buffer.from(await accountPubKey.asBytes()).toString('hex')
 
-    return this._initialize(
+    return this.initialize(
       networkId,
       implementationId,
       accountPubKeyHex,
@@ -188,14 +204,13 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
   ) {
     Logger.info(`create wallet with account pub key (networkId=${String(networkId)})`)
     Logger.debug('account pub key', accountPublicKey)
-    this.id = uuid.v4()
     assert.assert(!this.isInitialized, 'createWallet: !isInitialized')
-    return this._initialize(networkId, implementationId, accountPublicKey, hwDeviceInfo, readOnly)
+    return this.initialize(networkId, implementationId, accountPublicKey, hwDeviceInfo, readOnly)
   }
 
   // =================== persistence =================== //
 
-  async _runMigrations(data: WalletJSON, walletMeta: WalletMeta): Promise<void> {
+  private async runMigrations(data: WalletJSON, walletMeta: WalletMeta): Promise<void> {
     /**
      * New versions of Yoroi may involve changes in the data structure used to
      * store the wallet state. Hence, we need to check whether data migrations
@@ -214,8 +229,6 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
       lastGeneratedAddressIndex: data.lastGeneratedAddressIndex,
     }
 
-    // can be null for versions < 3.0.0
-    this.networkId = data.networkId != null ? data.networkId : walletMeta.networkId
     // can be null for versions < 3.0.2
     this.walletImplementationId =
       data.walletImplementationId != null ? data.walletImplementationId : walletMeta.walletImplementationId
@@ -247,7 +260,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     this.transactionCache = await TransactionCache.create(makeStorageWithPrefix(`/wallet/${walletMeta.id}/txs`))
   }
 
-  _integrityCheck(): void {
+  private integrityCheck(): void {
     try {
       if (this.networkId === NETWORK_REGISTRY.BYRON_MAINNET) {
         this.networkId = NETWORK_REGISTRY.HASKELL_SHELLEY
@@ -276,10 +289,9 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     Logger.info('restore wallet', walletMeta.name)
     assert.assert(!this.isInitialized, 'restoreWallet: !isInitialized')
 
-    this.id = walletMeta.id
-    await this._runMigrations(data, walletMeta)
+    await this.runMigrations(data, walletMeta)
 
-    this._integrityCheck()
+    this.integrityCheck()
 
     // subscriptions
     this.setupSubscriptions()
@@ -294,7 +306,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
 
   // =================== utils =================== //
 
-  _getNetworkConfig(): CardanoHaskellShelleyNetwork {
+  private getNetworkConfig(): CardanoHaskellShelleyNetwork {
     switch (this.networkId) {
       case PROVIDERS.HASKELL_SHELLEY.NETWORK_ID:
         if (this.provider === 'emurgo-alonzo') {
@@ -311,15 +323,15 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     }
   }
 
-  _getBaseNetworkConfig() {
-    return this._getNetworkConfig().BASE_CONFIG.reduce((acc, next) => Object.assign(acc, next), {})
+  private getBaseNetworkConfig() {
+    return this.getNetworkConfig().BASE_CONFIG.reduce((acc, next) => Object.assign(acc, next), {})
   }
 
-  _getBackendConfig(): BackendConfig {
-    return this._getNetworkConfig().BACKEND
+  private getBackendConfig(): BackendConfig {
+    return this.getNetworkConfig().BACKEND
   }
 
-  _getPurpose(): number {
+  private getPurpose(): number {
     if (this.walletImplementationId == null) throw new Error('Invalid wallet: walletImplementationId')
 
     if (isByron(this.walletImplementationId)) {
@@ -331,8 +343,8 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     }
   }
 
-  _getChainNetworkId(): string {
-    return this._getNetworkConfig().CHAIN_NETWORK_ID
+  private getChainNetworkId(): string {
+    return this.getNetworkConfig().CHAIN_NETWORK_ID
   }
 
   // returns the address in bech32 (Shelley) or base58 (Byron) format
@@ -347,7 +359,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     return changeAddress
   }
 
-  async _getAddressedChangeAddress(): Promise<{address: string; addressing: CardanoTypes.Addressing}> {
+  private async getAddressedChangeAddress(): Promise<{address: string; addressing: CardanoTypes.Addressing}> {
     const changeAddr = this.getChangeAddress()
     const addressing = this.getAddressing(changeAddr)
 
@@ -391,14 +403,14 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     assert.assert(isHaskellShelley(this.walletImplementationId), 'cannot get reward address from a byron-era wallet')
     const stakingKey = await this.getStakingKey()
     const credential = await CardanoMobile.StakeCredential.fromKeyhash(await stakingKey.hash())
-    const rewardAddr = await CardanoMobile.RewardAddress.new(Number.parseInt(this._getChainNetworkId(), 10), credential)
+    const rewardAddr = await CardanoMobile.RewardAddress.new(Number.parseInt(this.getChainNetworkId(), 10), credential)
     return rewardAddr.toAddress()
   }
 
-  _getRewardAddressAddressing() {
+  private getRewardAddressAddressing() {
     return {
       path: [
-        this._getPurpose(),
+        this.getPurpose(),
         CONFIG.NUMBERS.COIN_TYPES.CARDANO,
         CONFIG.NUMBERS.ACCOUNT_INDEX + CONFIG.NUMBERS.HARD_DERIVATION_START,
         CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
@@ -408,16 +420,16 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     }
   }
 
-  async getAllUtxosForKey(utxos: Array<RawUtxo>) {
+  async getAllUtxosForKey() {
     return filterAddressesByStakingKey(
       await CardanoMobile.StakeCredential.fromKeyhash(await (await this.getStakingKey()).hash()),
-      this.asLegacyAddressedUtxo(utxos),
+      await this.getLegacyAddressedUtxos(),
       false,
     )
   }
 
   getAddressing(address: string) {
-    const purpose = this._getPurpose()
+    const purpose = this.getPurpose()
     if (!this.internalChain) throw new Error('invalid wallet state')
     if (!this.externalChain) throw new Error('invalid wallet state')
 
@@ -450,7 +462,8 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     throw new Error(`Missing address info for: ${address} `)
   }
 
-  asAddressedUtxo(utxos: Array<RawUtxo>) {
+  async getAddressedUtxos() {
+    const utxos = await this.fetchUTXOs()
     const addressedUtxos = utxos.map((utxo: RawUtxo): CardanoTypes.CardanoAddressedUtxo => {
       const addressing = this.getAddressing(utxo.receiver)
 
@@ -468,7 +481,8 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     return addressedUtxos
   }
 
-  asLegacyAddressedUtxo(utxos: Array<RawUtxo>) {
+  async getLegacyAddressedUtxos() {
+    const utxos = await this.fetchUTXOs()
     const addressedUtxos = utxos.map((utxo: RawUtxo): AddressedUtxo => {
       const addressing = this.getAddressing(utxo.receiver)
 
@@ -490,22 +504,16 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
 
   // =================== tx building =================== //
 
-  async createUnsignedTx(
-    utxos: Array<RawUtxo>,
-    receiver: string,
-    tokens: SendTokenList,
-    defaultToken: Token,
-    auxiliaryData?: Array<CardanoTypes.TxMetadata>,
-  ) {
-    const timeToSlotFn = genTimeToSlot(getCardanoBaseConfig(this._getNetworkConfig()))
+  async createUnsignedTx(receiver: string, tokens: SendTokenList, auxiliaryData?: Array<CardanoTypes.TxMetadata>) {
+    const timeToSlotFn = genTimeToSlot(getCardanoBaseConfig(this.getNetworkConfig()))
     const time = await this.checkServerStatus()
       .then(({serverTime}) => serverTime || Date.now())
       .catch(() => Date.now())
 
     const absSlotNumber = new BigNumber(timeToSlotFn({time}).slot)
-    const changeAddr = await this._getAddressedChangeAddress()
-    const addressedUtxos = this.asAddressedUtxo(utxos)
-    const networkConfig = this._getNetworkConfig()
+    const changeAddr = await this.getAddressedChangeAddress()
+    const addressedUtxos = await this.getAddressedUtxos()
+    const networkConfig = this.getNetworkConfig()
 
     try {
       const unsignedTx = await Cardano.createUnsignedTx(
@@ -524,11 +532,11 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
           poolDeposit: networkConfig.POOL_DEPOSIT,
           networkId: networkConfig.NETWORK_ID,
         },
-        defaultToken,
+        this.defaultAsset,
         {metadata: auxiliaryData},
       )
 
-      return yoroiUnsignedTx({unsignedTx, networkConfig: this._getNetworkConfig(), addressedUtxos})
+      return yoroiUnsignedTx({unsignedTx, networkConfig: this.getNetworkConfig(), addressedUtxos})
     } catch (e) {
       if (e instanceof NotEnoughMoneyToSendError || e instanceof NoOutputsError) throw e
       Logger.error(`shelley::createUnsignedTx:: ${(e as Error).message}`, e)
@@ -536,10 +544,10 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     }
   }
 
-  async signTx(unsignedTx: YoroiUnsignedTx, decryptedRootKey: string) {
-    const rootKey = await CardanoMobile.Bip32PrivateKey.fromBytes(Buffer.from(decryptedRootKey, 'hex'))
-    const accountPrivateKey = await rootKey
-      .derive(this._getPurpose())
+  async signTx(unsignedTx: YoroiUnsignedTx, decryptedMasterKey: string) {
+    const masterKey = await CardanoMobile.Bip32PrivateKey.fromBytes(Buffer.from(decryptedMasterKey, 'hex'))
+    const accountPrivateKey = await masterKey
+      .derive(this.getPurpose())
       .then((key) => key.derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO))
       .then((key) => key.derive(0 + CONFIG.NUMBERS.HARD_DERIVATION_START))
     const accountPrivateKeyHex = await accountPrivateKey.asBytes().then(toHex)
@@ -568,27 +576,22 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     })
   }
 
-  async createDelegationTx(
-    poolId: string | undefined,
-    delegatedAmount: BigNumber,
-    utxos: Array<RawUtxo>,
-    defaultAsset: DefaultAsset,
-  ) {
-    const timeToSlotFn = genTimeToSlot(getCardanoBaseConfig(this._getNetworkConfig()))
+  async createDelegationTx(poolId: string | undefined, delegatedAmount: BigNumber) {
+    const timeToSlotFn = genTimeToSlot(getCardanoBaseConfig(this.getNetworkConfig()))
     const time = await this.checkServerStatus()
       .then(({serverTime}) => serverTime || Date.now())
       .catch(() => Date.now())
 
     const absSlotNumber = new BigNumber(timeToSlotFn({time}).slot)
-    const changeAddr = await this._getAddressedChangeAddress()
-    const addressedUtxos = this.asAddressedUtxo(utxos)
+    const changeAddr = await this.getAddressedChangeAddress()
+    const addressedUtxos = await this.getAddressedUtxos()
     const registrationStatus = (await this.getDelegationStatus()).isRegistered
     const stakingKey = await this.getStakingKey()
     const delegationType = registrationStatus ? RegistrationStatus.DelegateOnly : RegistrationStatus.RegisterAndDelegate
-    const networkConfig = this._getNetworkConfig()
+    const networkConfig = this.getNetworkConfig()
     const delegatedAmountMT = {
       values: [{identifier: '', amount: delegatedAmount, networkId: networkConfig.NETWORK_ID}],
-      defaults: defaultAsset,
+      defaults: this.defaultAsset,
     }
 
     const unsignedTx = await Cardano.createUnsignedDelegationTx(
@@ -599,7 +602,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
       poolId || null,
       changeAddr,
       delegatedAmountMT,
-      defaultAsset,
+      this.defaultAsset,
       {},
       {
         keyDeposit: networkConfig.KEY_DEPOSIT,
@@ -623,7 +626,6 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
   async createVotingRegTx() {
     Logger.debug('ShelleyWallet::createVotingRegTx called')
     if (!this.networkId) throw new Error('invalid wallet')
-    const utxos = this.fetchUTXOs()
 
     const bytes = await generatePrivateKeyForCatalyst()
       .then((key) => key.toRawKey())
@@ -634,20 +636,19 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     const catalystKeyHex = Buffer.from(bytes).toString('hex')
 
     try {
-      const timeToSlotFn = genTimeToSlot(getCardanoBaseConfig(this._getNetworkConfig()))
+      const timeToSlotFn = genTimeToSlot(getCardanoBaseConfig(this.getNetworkConfig()))
       const time = await this.checkServerStatus()
         .then(({serverTime}) => serverTime || Date.now())
         .catch(() => Date.now())
 
       const absSlotNumber = new BigNumber(timeToSlotFn({time}).slot)
-      const defaultToken = getDefaultAssetByNetworkId(this.networkId)
       const votingPublicKey = await Promise.resolve(Buffer.from(catalystKeyHex, 'hex'))
         .then((bytes) => CardanoMobile.PrivateKey.fromExtendedBytes(bytes))
         .then((key) => key.toPublic())
       const stakingKeyPath = this.getStakingKeyPath()
       const stakingPublicKey = await this.getStakingKey()
-      const changeAddr = await this._getAddressedChangeAddress()
-      const networkConfig = this._getNetworkConfig()
+      const changeAddr = await this.getAddressedChangeAddress()
+      const networkConfig = this.getNetworkConfig()
       const config = {
         keyDeposit: networkConfig.KEY_DEPOSIT,
         linearFee: {
@@ -660,13 +661,13 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
       }
       const txOptions = {}
       const nonce = absSlotNumber.toNumber()
-      const chainNetworkConfig = Number.parseInt(this._getChainNetworkId(), 10)
+      const chainNetworkConfig = Number.parseInt(this.getChainNetworkId(), 10)
 
-      const addressedUtxos = this.asAddressedUtxo(await utxos)
+      const addressedUtxos = await this.getAddressedUtxos()
 
       const unsignedTx = await Cardano.createUnsignedVotingTx(
         absSlotNumber,
-        defaultToken,
+        this.defaultAsset,
         votingPublicKey,
         stakingKeyPath,
         stakingPublicKey,
@@ -706,33 +707,30 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     }
   }
 
-  async createWithdrawalTx(
-    utxos: Array<RawUtxo>,
-    defaultAsset: DefaultAsset,
-    shouldDeregister: boolean,
-  ): Promise<YoroiUnsignedTx> {
+  async createWithdrawalTx(shouldDeregister: boolean): Promise<YoroiUnsignedTx> {
     if (this.rewardAddressHex == null) throw new Error('reward address is null')
-    const timeToSlotFn = genTimeToSlot(getCardanoBaseConfig(this._getNetworkConfig()))
+    const timeToSlotFn = genTimeToSlot(getCardanoBaseConfig(this.getNetworkConfig()))
 
     const time = await this.checkServerStatus()
       .then(({serverTime}) => serverTime || Date.now())
       .catch(() => Date.now())
 
     const absSlotNumber = new BigNumber(timeToSlotFn({time}).slot)
-    const changeAddr = await this._getAddressedChangeAddress()
-    const addressedUtxos = this.asAddressedUtxo(utxos)
+    const changeAddr = await this.getAddressedChangeAddress()
+    const addressedUtxos = await this.getAddressedUtxos()
     const accountState = await api.getAccountState(
       {addresses: [this.rewardAddressHex]},
-      this._getNetworkConfig().BACKEND,
+      this.getNetworkConfig().BACKEND,
     )
+
     const withdrawalTx = await Cardano.createUnsignedWithdrawalTx(
       accountState,
-      defaultAsset,
+      this.defaultAsset,
       absSlotNumber,
       addressedUtxos,
       [
         {
-          addressing: this._getRewardAddressAddressing(),
+          addressing: this.getRewardAddressAddressing(),
           rewardAddress: this.rewardAddressHex,
           shouldDeregister,
         },
@@ -740,20 +738,20 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
       changeAddr,
       {
         linearFee: {
-          coefficient: this._getNetworkConfig().LINEAR_FEE.COEFFICIENT,
-          constant: this._getNetworkConfig().LINEAR_FEE.CONSTANT,
+          coefficient: this.getNetworkConfig().LINEAR_FEE.COEFFICIENT,
+          constant: this.getNetworkConfig().LINEAR_FEE.CONSTANT,
         },
-        minimumUtxoVal: this._getNetworkConfig().MINIMUM_UTXO_VAL,
-        poolDeposit: this._getNetworkConfig().POOL_DEPOSIT,
-        keyDeposit: this._getNetworkConfig().KEY_DEPOSIT,
-        networkId: this._getNetworkConfig().NETWORK_ID,
+        minimumUtxoVal: this.getNetworkConfig().MINIMUM_UTXO_VAL,
+        poolDeposit: this.getNetworkConfig().POOL_DEPOSIT,
+        keyDeposit: this.getNetworkConfig().KEY_DEPOSIT,
+        networkId: this.getNetworkConfig().NETWORK_ID,
       },
       {metadata: undefined},
     )
 
     return yoroiUnsignedTx({
       unsignedTx: withdrawalTx,
-      networkConfig: this._getNetworkConfig(),
+      networkConfig: this.getNetworkConfig(),
       addressedUtxos,
     })
   }
@@ -765,8 +763,8 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
 
     const ledgerPayload = await Cardano.buildLedgerPayload(
       unsignedTx.unsignedTx,
-      Number.parseInt(this._getChainNetworkId(), 10),
-      (this._getBaseNetworkConfig() as any).PROTOCOL_MAGIC,
+      Number.parseInt(this.getChainNetworkId(), 10),
+      (this.getBaseNetworkConfig() as any).PROTOCOL_MAGIC,
       this.getStakingKeyPath(),
     )
 
@@ -774,7 +772,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     const signedTx = await Cardano.buildLedgerSignedTx(
       unsignedTx.unsignedTx,
       signedLedgerTx,
-      this._getPurpose(),
+      this.getPurpose(),
       this.publicKeyHex,
     )
 
@@ -787,17 +785,17 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
   // =================== backend API =================== //
 
   async checkServerStatus() {
-    return api.checkServerStatus(this._getBackendConfig())
+    return api.checkServerStatus(this.getBackendConfig())
   }
 
   async submitTransaction(signedTx: string) {
-    const response: any = await api.submitTransaction(signedTx, this._getBackendConfig())
+    const response: any = await api.submitTransaction(signedTx, this.getBackendConfig())
     Logger.info(response)
     return response as any
   }
 
   async getTransactions(txids: Array<string>) {
-    const rawTxs = await api.getTransactions(txids, this._getBackendConfig())
+    const rawTxs = await api.getTransactions(txids, this.getBackendConfig())
     const txs = Object.values(rawTxs).map((rawTx) => toCachedTx(rawTx))
     const txInfos = txs.map((tx) => {
       if (!this.networkId) throw new Error('invalid state')
@@ -816,44 +814,57 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
   }
 
   async getTxsBodiesForUTXOs(request: TxBodiesRequest): Promise<TxBodiesResponse> {
-    return api.getTxsBodiesForUTXOs(request, this._getBackendConfig())
+    return api.getTxsBodiesForUTXOs(request, this.getBackendConfig())
   }
 
   async fetchUTXOs() {
-    return api.bulkFetchUTXOsForAddresses(
-      [...this.internalAddresses, ...this.externalAddresses],
-      this._getBackendConfig(),
-    )
+    const addresses = [...this.internalAddresses, ...this.externalAddresses]
+    await this.utxoService.syncUtxoState(addresses)
+    const utxos = await this.utxoService.getAvailableUtxos()
+
+    return utxos.map(toUTXO)
+  }
+
+  async clearUTXOs() {
+    return this.utxoStorage.clearUtxoState()
   }
 
   async fetchAccountState(): Promise<AccountStateResponse> {
     if (this.rewardAddressHex == null) throw new Error('reward address is null')
-    return api.bulkGetAccountState([this.rewardAddressHex], this._getBackendConfig())
+    return api.bulkGetAccountState([this.rewardAddressHex], this.getBackendConfig())
   }
 
   async fetchPoolInfo(request: PoolInfoRequest) {
-    return api.getPoolInfo(request, this._getBackendConfig())
+    return api.getPoolInfo(request, this.getBackendConfig())
   }
 
   fetchTokenInfo(request: TokenInfoRequest) {
-    return api.getTokenInfo(request, this._getBackendConfig())
+    return api.getTokenInfo(request, this.getBackendConfig())
   }
 
   async fetchFundInfo(): Promise<FundInfoResponse> {
-    return api.getFundInfo(this._getBackendConfig(), this._getNetworkConfig().IS_MAINNET)
+    return api.getFundInfo(this.getBackendConfig(), this.getNetworkConfig().IS_MAINNET)
   }
 
   async fetchTxStatus(request: TxStatusRequest): Promise<TxStatusResponse> {
-    return api.fetchTxStatus(request, this._getBackendConfig())
+    return api.fetchTxStatus(request, this.getBackendConfig())
   }
 
   async fetchTipStatus(): Promise<TipStatusResponse> {
-    return api.getTipStatus(this._getBackendConfig())
+    return api.getTipStatus(this.getBackendConfig())
   }
 
   async fetchCurrentPrice(symbol: CurrencySymbol): Promise<number> {
-    return api.fetchCurrentPrice(symbol, this._getBackendConfig())
+    return api.fetchCurrentPrice(symbol, this.getBackendConfig())
   }
 }
 
 const toHex = (bytes: Uint8Array) => Buffer.from(bytes).toString('hex')
+const toUTXO = (utxo: UtxoModels.Utxo): RawUtxo => ({
+  utxo_id: utxo.utxoId,
+  tx_hash: utxo.txHash,
+  tx_index: utxo.txIndex,
+  amount: utxo.amount.toString(),
+  receiver: utxo.receiver,
+  assets: utxo.assets,
+})

@@ -266,36 +266,6 @@ export const useChangeWalletName = (wallet: YoroiWallet, options: UseMutationOpt
   }
 }
 
-export const primaryTokenInfo: Token = {
-  networkId: 1,
-  identifier: '',
-  isDefault: true,
-  metadata: {
-    type: 'Cardano',
-    policyId: '',
-    assetName: '',
-    ticker: 'ADA',
-    longName: null,
-    numberOfDecimals: 6,
-    maxSupply: String(45000000000000000),
-  },
-} as const
-
-export const primaryTokenInfoTestnet: Token = {
-  networkId: 300,
-  identifier: '',
-  isDefault: true,
-  metadata: {
-    type: 'Cardano',
-    policyId: '',
-    assetName: '',
-    ticker: 'TADA',
-    longName: null,
-    numberOfDecimals: 6,
-    maxSupply: String(45000000000000000),
-  },
-} as const
-
 export const useTokenInfo = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string}) => {
   const _queryKey = queryKey({wallet, tokenId})
   const query = useQuery<Token, Error>({
@@ -331,9 +301,10 @@ export const useTokenInfos = ({wallet, tokenIds}: {wallet: YoroiWallet; tokenIds
 
 export const queryKey = ({wallet, tokenId}) => [wallet.id, 'tokenInfo', tokenId]
 export const fetchTokenInfo = async ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string}): Promise<Token> => {
-  if ((tokenId === '' || tokenId === 'ADA') && wallet.networkId === 1) return primaryTokenInfo
+  if ((tokenId === '' || tokenId === 'ADA') && wallet.networkId === 1)
+    return getDefaultAssetByNetworkId(wallet.networkId)
   if ((tokenId === '' || tokenId === 'ADA' || tokenId === 'TADA') && wallet.networkId === 300)
-    return primaryTokenInfoTestnet
+    return getDefaultAssetByNetworkId(wallet.networkId)
 
   const tokenSubject = tokenId.replace('.', '')
   const tokenMetadatas = await wallet.fetchTokenInfo({tokenIds: [tokenSubject]})
@@ -397,12 +368,7 @@ export const useWithdrawalTx = (
   const query = useQuery({
     ...options,
     queryKey: [wallet.id, 'withdrawalTx', {deregister}],
-    queryFn: async () => {
-      const utxos = await wallet.fetchUTXOs()
-      const defaultAsset = getDefaultAssetByNetworkId(wallet.networkId)
-
-      return wallet.createWithdrawalTx(utxos, defaultAsset, deregister)
-    },
+    queryFn: async () => wallet.createWithdrawalTx(deregister),
     retry: false,
     cacheTime: 0,
     useErrorBoundary: true,
@@ -970,7 +936,7 @@ export const useBalances = (wallet: YoroiWallet): YoroiAmounts => {
   const {utxos} = useUtxos(wallet, {suspense: true})
   if (utxos == null) throw new Error('invalid state')
 
-  const primaryTokenId = getDefaultAssetByNetworkId(wallet.networkId).identifier
+  const primaryTokenId = wallet.defaultAsset.identifier
 
   return Utxos.toAmounts(utxos, primaryTokenId)
 }
