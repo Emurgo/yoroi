@@ -32,7 +32,7 @@ export const WalletSettingsScreen = () => {
   const walletName = useWalletName(wallet)
   const easyConfirmationEnabled = useEasyConfirmationEnabled(wallet)
   const storage = useStorage()
-  const {authMethod} = useAuthMethod(storage)
+  const authMethod = useAuthMethod(storage)
 
   const onSwitchWallet = () => {
     resetToWalletSelection()
@@ -76,11 +76,14 @@ export const WalletSettingsScreen = () => {
           disabled={wallet.isHW || wallet.isReadOnly}
         />
 
-        <SettingsItem label={strings.easyConfirmation} disabled={!authMethod.OS || wallet.isHW || wallet.isReadOnly}>
+        <SettingsItem
+          label={strings.easyConfirmation}
+          disabled={authMethod === 'pin' || wallet.isHW || wallet.isReadOnly}
+        >
           <Switch
             value={easyConfirmationEnabled}
             onValueChange={easyConfirmationEnabled ? onDisableEasyConfirmation : onEnableEasyConfirmation}
-            disabled={!authMethod.OS || wallet.isHW || wallet.isReadOnly}
+            disabled={authMethod === 'pin' || wallet.isHW || wallet.isReadOnly}
           />
         </SettingsItem>
       </SettingsSection>

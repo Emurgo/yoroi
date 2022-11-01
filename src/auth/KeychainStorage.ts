@@ -8,7 +8,7 @@ async function write(key: string, value: string) {
     accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
     securityLevel: Keychain.SECURITY_LEVEL.SECURE_HARDWARE,
   }).then((result) => {
-    if (result === false) Promise.reject('Unable to store secret')
+    if (result) return Promise.reject(new Error('Unable to store secret'))
   })
 }
 
@@ -30,9 +30,12 @@ async function remove(key: string) {
 }
 
 const KEYCHAIN_APP_AUTH_KEY = 'os-authentication'
-const initializeAppAuth = () => write(KEYCHAIN_APP_AUTH_KEY, KEYCHAIN_APP_AUTH_KEY) // value is irrelevant
-const appAuth = (authenticationPrompt: Keychain.Options['authenticationPrompt']) =>
-  read(KEYCHAIN_APP_AUTH_KEY, authenticationPrompt)
+const initializeAppAuth = async () => {
+  await write(KEYCHAIN_APP_AUTH_KEY, '') // value is irrelevant
+}
+const appAuth = async (authenticationPrompt: Keychain.Options['authenticationPrompt']) => {
+  await read(KEYCHAIN_APP_AUTH_KEY, authenticationPrompt)
+}
 
 export const KeychainStorage = {
   read,
@@ -52,7 +55,7 @@ export async function authOsEnabledOnDevice() {
         }),
         Keychain.getSupportedBiometryType(),
       ]).then(([canAuth, supportedBioType]) => supportedBioType != null && canAuth),
-    default: () => Promise.reject('OS Authentication is not supported'),
+    default: () => Promise.reject(new Error('OS Authentication is not supported')),
   })()
 }
 

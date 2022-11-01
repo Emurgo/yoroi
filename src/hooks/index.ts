@@ -19,7 +19,7 @@ import {
 
 import {EncryptedStorage, StorageKeys} from '../auth'
 import {authOsEnabledOnDevice} from '../auth/KeychainStorage'
-import {AuthMethod, AuthMethodState} from '../auth/types'
+import {AuthMethod} from '../auth/types'
 import {getDefaultAssetByNetworkId} from '../legacy/config'
 import {ObjectValues} from '../legacy/flow'
 import {HWDeviceInfo} from '../legacy/ledgerUtils'
@@ -28,7 +28,6 @@ import {processTxHistoryData} from '../legacy/processTransactions'
 import {WalletMeta} from '../legacy/state'
 import storage from '../legacy/storage'
 import {cardanoValueFromRemoteFormat} from '../legacy/utils'
-import {isEmptyString} from '../legacy/utils'
 import {Storage} from '../Storage'
 import {
   Cardano,
@@ -635,7 +634,8 @@ export const useOpenWallet = (options?: UseMutationOptions<[YoroiWallet, WalletM
 
 export const AUTH_METHOD_PIN: AuthMethod = 'pin'
 export const useCreatePin = (storage: Storage, options: UseMutationOptions<void, Error, string>) => {
-  const mutation = useMutation({
+  const mutation = useMutationWithInvalidations({
+    invalidateQueries: [['useAuthMethod']],
     mutationFn: async (pin) => {
       const installationId = await storage.getItem('/appSettings/installationId')
       if (!installationId) throw new Error('Invalid installation id')
@@ -942,60 +942,41 @@ export const useBalances = (wallet: YoroiWallet): YoroiAmounts => {
 }
 
 export const AUTH_METHOD_KEY = '/appSettings/authMethod'
-export const useAuthMethod = (storage: Storage, options?: UseQueryOptions<AuthMethodState, Error>) => {
+export const useAuthMethod = (storage: Storage, options?: UseQueryOptions<AuthMethod, Error>) => {
   const query = useQuery({
     suspense: true,
-    queryKey: ['authMethod'],
+    queryKey: ['useAuthMethod'],
     queryFn: async () => {
-      const authMethod: AuthMethod | '' = await Promise.resolve(AUTH_METHOD_KEY)
-        .then(storage.getItem)
-        .then((storedAuthMethod) => (!isEmptyString(storedAuthMethod) ? storedAuthMethod : '""'))
-        .then(JSON.parse)
-
-      if (authMethod === 'pin')
-        return {
-          PIN: true,
-          OS: false,
-          None: false,
-        } as const
-
-      if (authMethod === 'os')
-        return {
-          PIN: false,
-          OS: true,
-          None: false,
-        } as const
-
-      return {
-        PIN: false,
-        OS: false,
-        None: true,
-      } as const
+      const authMethod = parseAuthMethod(await storage.getItem(AUTH_METHOD_KEY))
+      if (isAuthMethod(authMethod)) return authMethod
+      return Promise.reject(new Error('useAuthMethod invalid data'))
     },
     ...options,
   })
 
-  // refetch on settings
-  return {
-    ...query,
-    authMethod: query.data ?? {
-      PIN: false,
-      OS: false,
-      None: true,
-    },
-  }
+  return query.data
 }
 
+const parseAuthMethod = (data: string | null) => {
+  if (!data) return undefined
+  try {
+    return JSON.parse(data)
+  } catch (error) {
+    return Promise.reject(new Error('parseAuthMethod invalid data'))
+  }
+}
+const isAuthMethod = (data: any): data is 'os' | 'pin' | undefined => ['os', 'pin', undefined].includes(data)
+
 export type AuthAction = 'auth-with-pin' | 'auth-with-os' | 'create-and-link-with-pin' | undefined
-export const useAuthAction = (authMethod: AuthMethodState, options?: UseQueryOptions<AuthAction, Error>) => {
+export const useAuthAction = (authMethod: AuthMethod, options?: UseQueryOptions<AuthAction, Error>) => {
   const query = useQuery({
     queryKey: ['useAuthAction'],
     cacheTime: 0,
     queryFn: async () => {
       const canEnableOsAuth = await authOsEnabledOnDevice()
-      if (authMethod.PIN) return 'auth-with-pin'
-      if (authMethod.OS && canEnableOsAuth) return 'auth-with-os'
-      if (authMethod.OS && !canEnableOsAuth) return 'create-and-link-with-pin'
+      if (authMethod === 'pin') return 'auth-with-pin'
+      if (authMethod === 'os' && canEnableOsAuth) return 'auth-with-os'
+      if (authMethod === 'os' && !canEnableOsAuth) return 'create-and-link-with-pin'
     },
     ...options,
   })

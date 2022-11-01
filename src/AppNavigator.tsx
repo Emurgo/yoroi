@@ -11,7 +11,7 @@ import {useSelector} from 'react-redux'
 import {PinLoginScreen, useAuthOsEnabledOnDevice, useAuthWithOs, useBackgroundTimeout} from './auth'
 import {useAuth} from './auth/AuthProvider'
 import {EnableLoginWithPin} from './auth/EnableLoginWithPin'
-import {AuthMethodState} from './auth/types'
+import {AuthMethod} from './auth/types'
 import {FirstRunNavigator} from './FirstRun/FirstRunNavigator'
 import {AuthAction, useAuthAction, useAuthMethod} from './hooks'
 import globalMessages from './i18n/global-messages'
@@ -34,7 +34,7 @@ export const AppNavigator = () => {
   const [isReady, setIsReady] = React.useState(false)
   useHideScreenInAppSwitcher()
 
-  const {authMethod} = useAuthMethod(storage)
+  const authMethod = useAuthMethod(storage)
   const authAction = useAuthAction(authMethod)
 
   useAutoLogout(authMethod)
@@ -195,11 +195,11 @@ const messages = defineMessages({
   },
 })
 
-const useAutoLogout = (authMethod: AuthMethodState) => {
+const useAutoLogout = (authMethod: AuthMethod) => {
   const strings = useStrings()
   const {logout} = useAuth()
   const {authOsEnabledOnDevice, refetch} = useAuthOsEnabledOnDevice()
-  const osAuthDisabled = !authOsEnabledOnDevice && authMethod.OS
+  const osAuthDisabled = !authOsEnabledOnDevice && authMethod === 'os'
   const queryClient = useQueryClient()
 
   useBackgroundTimeout({
@@ -210,13 +210,13 @@ const useAutoLogout = (authMethod: AuthMethodState) => {
   React.useEffect(() => {
     const appStateSubscription = AppState.addEventListener('change', async (appState) => {
       // when using OS auth and app is active again needs to check if still enabled
-      if (appState === 'active' && authMethod.OS) {
+      if (appState === 'active' && authMethod === 'os') {
         queryClient.invalidateQueries(['useAuthAction'])
         refetch()
       }
     })
     return () => appStateSubscription?.remove()
-  }, [authMethod.OS, queryClient, refetch])
+  }, [authMethod, queryClient, refetch])
 
   React.useEffect(() => {
     if (osAuthDisabled) {

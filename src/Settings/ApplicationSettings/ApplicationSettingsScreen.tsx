@@ -1,4 +1,3 @@
-import {useFocusEffect} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Alert, ScrollView, StyleSheet, Switch} from 'react-native'
@@ -23,23 +22,9 @@ export const ApplicationSettingsScreen = () => {
 
   const {currency} = useCurrencyContext()
   const storage = useStorage()
-  const {authMethod, refetch: refetchAuthMethod} = useAuthMethod(storage)
+  const authMethod = useAuthMethod(storage)
 
-  const {authOsEnabledOnDevice, refetch: refetchCanEnableOSAuth} = useAuthOsEnabledOnDevice({
-    // on emulator
-    refetchInterval: __DEV__ ? 2000 : false,
-  })
-  // react-query useRefetchOnWindowsFocus doesn't work in react-native
-  useFocusEffect(
-    React.useCallback(() => {
-      refetchCanEnableOSAuth()
-    }, [refetchCanEnableOSAuth]),
-  )
-  useFocusEffect(
-    React.useCallback(() => {
-      refetchAuthMethod()
-    }, [refetchAuthMethod]),
-  )
+  const {authOsEnabledOnDevice} = useAuthOsEnabledOnDevice()
 
   const decodeAuthOsError = useAuthOsErrorDecoder()
   const {authWithOs} = useAuthWithOs(
@@ -62,7 +47,7 @@ export const ApplicationSettingsScreen = () => {
   const crashReports = useCrashReports()
 
   const onToggleBiometricsAuthIn = async () => {
-    if (authMethod?.OS) {
+    if (authMethod === 'os') {
       authWithOs()
     } else {
       navigation.navigate('app-root', {
@@ -85,10 +70,18 @@ export const ApplicationSettingsScreen = () => {
       </SettingsSection>
 
       <SettingsSection title={strings.security}>
-        <NavigatedSettingsItem label={strings.changePin} navigateTo="change-custom-pin" disabled={!authMethod?.PIN} />
+        <NavigatedSettingsItem
+          label={strings.changePin}
+          navigateTo="change-custom-pin"
+          disabled={authMethod !== 'pin'}
+        />
 
         <SettingsItem label={strings.biometricsSignIn} disabled={!authOsEnabledOnDevice}>
-          <Switch value={authMethod?.OS} onValueChange={onToggleBiometricsAuthIn} disabled={!authOsEnabledOnDevice} />
+          <Switch
+            value={authMethod === 'os'}
+            onValueChange={onToggleBiometricsAuthIn}
+            disabled={!authOsEnabledOnDevice}
+          />
         </SettingsItem>
       </SettingsSection>
 

@@ -40,11 +40,10 @@ export const useEnableAuthWithOs = (
       KeychainStorage.initializeAppAuth()
         .then(() => KeychainStorage.appAuth(authenticationPrompt))
         .then(() => storage.setItem(AUTH_METHOD_KEY, JSON.stringify(AUTH_METHOD_OS)))
-        // current behavior - on auth with os it deletes the pin stored
         .then(() => storage.getItem(ENCRYPTED_PIN_HASH_KEY))
         .then((pin) => (pin != null ? storage.removeItem(ENCRYPTED_PIN_HASH_KEY) : undefined)),
     ...options,
-    invalidateQueries: [['authMethod']],
+    invalidateQueries: [['useAuthMethod']],
   })
 
   return {
@@ -55,9 +54,10 @@ export const useEnableAuthWithOs = (
 
 export const useAuthWithOs = (
   {authenticationPrompt}: {authenticationPrompt: AuthenticationPrompt; storage: Storage},
-  options?: UseMutationOptions<string, Error>,
+  options?: UseMutationOptions<void, Error>,
 ) => {
-  const mutation = useMutation({
+  const mutation = useMutationWithInvalidations({
+    invalidateQueries: [['useAuthMethod']],
     mutationFn: () => KeychainStorage.appAuth(authenticationPrompt),
     ...options,
   })
