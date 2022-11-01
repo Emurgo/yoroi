@@ -8,7 +8,7 @@ async function write(key: string, value: string) {
     accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
     securityLevel: Keychain.SECURITY_LEVEL.SECURE_HARDWARE,
   }).then((result) => {
-    if (result) return Promise.reject(new Error('Unable to store secret'))
+    if (result === false) return Promise.reject(new Error('Unable to store secret'))
   })
 }
 
@@ -35,7 +35,7 @@ export const KeychainStorage = {
   remove,
 } as const
 
-export async function authOsEnabledOnDevice() {
+export async function authOsEnabled() {
   return Platform.select({
     android: () => Keychain.getSupportedBiometryType().then((supportedBioType) => supportedBioType != null),
     ios: () =>

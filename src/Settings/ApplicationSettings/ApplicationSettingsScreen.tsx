@@ -3,7 +3,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Alert, ScrollView, StyleSheet, Switch} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
-import {useAuthOsEnabledOnDevice, useAuthOsErrorDecoder, useAuthWithOs} from '../../auth'
+import {useAuthOsEnabled, useAuthOsErrorDecoder, useAuthWithOs} from '../../auth'
 import {StatusBar} from '../../components'
 import {useAuthMethod, useCrashReports} from '../../hooks'
 import globalMessages from '../../i18n/global-messages'
@@ -23,8 +23,7 @@ export const ApplicationSettingsScreen = () => {
   const {currency} = useCurrencyContext()
   const storage = useStorage()
   const authMethod = useAuthMethod(storage)
-
-  const {authOsEnabledOnDevice} = useAuthOsEnabledOnDevice()
+  const authOsEnabled = useAuthOsEnabled()
 
   const decodeAuthOsError = useAuthOsErrorDecoder()
   const {authWithOs} = useAuthWithOs(
@@ -76,12 +75,8 @@ export const ApplicationSettingsScreen = () => {
           disabled={authMethod !== 'pin'}
         />
 
-        <SettingsItem label={strings.biometricsSignIn} disabled={!authOsEnabledOnDevice}>
-          <Switch
-            value={authMethod === 'os'}
-            onValueChange={onToggleBiometricsAuthIn}
-            disabled={!authOsEnabledOnDevice}
-          />
+        <SettingsItem label={strings.biometricsSignIn} disabled={!authOsEnabled}>
+          <Switch value={authMethod === 'os'} onValueChange={onToggleBiometricsAuthIn} disabled={!authOsEnabled} />
         </SettingsItem>
       </SettingsSection>
 

@@ -18,7 +18,6 @@ import {
 } from 'react-query'
 
 import {EncryptedStorage, StorageKeys} from '../auth'
-import {authOsEnabledOnDevice} from '../auth/KeychainStorage'
 import {AuthMethod} from '../auth/types'
 import {getDefaultAssetByNetworkId} from '../legacy/config'
 import {ObjectValues} from '../legacy/flow'
@@ -968,18 +967,8 @@ const parseAuthMethod = (data: unknown) => {
 const isAuthMethod = (data: any): data is 'os' | 'pin' | undefined => ['os', 'pin', undefined].includes(data)
 
 export type AuthAction = 'auth-with-pin' | 'auth-with-os' | 'create-and-link-with-pin' | undefined
-export const useAuthAction = (authMethod: AuthMethod, options?: UseQueryOptions<AuthAction, Error>) => {
-  const query = useQuery({
-    queryKey: ['useAuthAction'],
-    cacheTime: 0,
-    queryFn: async () => {
-      const canEnableOsAuth = await authOsEnabledOnDevice()
-      if (authMethod === 'pin') return 'auth-with-pin'
-      if (authMethod === 'os' && canEnableOsAuth) return 'auth-with-os'
-      if (authMethod === 'os' && !canEnableOsAuth) return 'create-and-link-with-pin'
-    },
-    ...options,
-  })
-
-  return query.data
+export const useAuthAction = (authOsEnabled: boolean, authMethod: AuthMethod): AuthAction => {
+  if (authMethod === 'pin') return 'auth-with-pin'
+  if (authMethod === 'os' && authOsEnabled) return 'auth-with-os'
+  if (authMethod === 'os' && !authOsEnabled) return 'create-and-link-with-pin'
 }

@@ -1,4 +1,6 @@
-import {useMutation, UseMutationOptions, useQuery, UseQueryOptions} from 'react-query'
+import React from 'react'
+import {AppState} from 'react-native'
+import {useMutation, UseMutationOptions, useQuery, useQueryClient, UseQueryOptions} from 'react-query'
 
 import {
   AUTH_METHOD_KEY,
@@ -12,23 +14,31 @@ import storage from '../legacy/storage'
 import {Storage} from '../Storage'
 import {WalletJSON, walletManager, YoroiWallet} from '../yoroi-wallets'
 import {Keychain} from './Keychain'
-import {AuthenticationPrompt, authOsEnabledOnDevice} from './KeychainStorage'
+import {AuthenticationPrompt, authOsEnabled} from './KeychainStorage'
 import {AuthMethod} from './types'
 
-export const useAuthOsEnabledOnDevice = (options?: UseQueryOptions<boolean, Error>) => {
+export const useAuthOsEnabled = (options?: UseQueryOptions<boolean, Error>) => {
+  const queryClient = useQueryClient()
   const query = useQuery({
-    cacheTime: 0,
-    queryKey: ['useAuthOsEnabledOnDevice'],
-    queryFn: authOsEnabledOnDevice,
+    queryKey: ['useAuthOsEnabled'],
+    queryFn: authOsEnabled,
     suspense: true,
     ...options,
   })
 
-  // use refetch on app settings
-  return {
-    ...query,
-    authOsEnabledOnDevice: query.data,
-  }
+  React.useEffect(() => {
+    const appStateSubscription = AppState.addEventListener('change', async (appState) => {
+      // when using OS auth and app is active again needs to check if still enabled
+      if (appState === 'active') {
+        query.refetch()
+      }
+    })
+    return () => appStateSubscription?.remove()
+  }, [query, queryClient])
+
+  if (query.data == null) return false
+
+  return query.data
 }
 
 export const AUTH_METHOD_OS: AuthMethod = 'os'

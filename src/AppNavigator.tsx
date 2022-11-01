@@ -5,10 +5,9 @@ import React, {useEffect} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Alert, AppState, AppStateStatus, Platform} from 'react-native'
 import RNBootSplash from 'react-native-bootsplash'
-import {useQueryClient} from 'react-query'
 import {useSelector} from 'react-redux'
 
-import {PinLoginScreen, useAuthOsEnabledOnDevice, useAuthWithOs, useBackgroundTimeout} from './auth'
+import {PinLoginScreen, useAuthOsEnabled, useAuthWithOs, useBackgroundTimeout} from './auth'
 import {useAuth} from './auth/AuthProvider'
 import {EnableLoginWithPin} from './auth/EnableLoginWithPin'
 import {AuthMethod} from './auth/types'
@@ -35,7 +34,8 @@ export const AppNavigator = () => {
   useHideScreenInAppSwitcher()
 
   const authMethod = useAuthMethod(storage)
-  const authAction = useAuthAction(authMethod)
+  const authOsEnabled = useAuthOsEnabled()
+  const authAction = useAuthAction(authOsEnabled, authMethod)
 
   useAutoLogout(authMethod)
 
@@ -198,25 +198,13 @@ const messages = defineMessages({
 const useAutoLogout = (authMethod: AuthMethod) => {
   const strings = useStrings()
   const {logout} = useAuth()
-  const {authOsEnabledOnDevice, refetch} = useAuthOsEnabledOnDevice()
-  const osAuthDisabled = !authOsEnabledOnDevice && authMethod === 'os'
-  const queryClient = useQueryClient()
+  const authOsEnabled = useAuthOsEnabled()
+  const osAuthDisabled = !authOsEnabled && authMethod === 'os'
 
   useBackgroundTimeout({
     onTimeout: logout,
     duration: 120 * 1000,
   })
-
-  React.useEffect(() => {
-    const appStateSubscription = AppState.addEventListener('change', async (appState) => {
-      // when using OS auth and app is active again needs to check if still enabled
-      if (appState === 'active' && authMethod === 'os') {
-        queryClient.invalidateQueries(['useAuthAction'])
-        refetch()
-      }
-    })
-    return () => appStateSubscription?.remove()
-  }, [authMethod, queryClient, refetch])
 
   React.useEffect(() => {
     if (osAuthDisabled) {

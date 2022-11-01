@@ -5,7 +5,7 @@ const authenticate = async (authenticationPrompt: AuthenticationPrompt) => {
   await KeychainStorage.read(KEYCHAIN_APP_AUTH_KEY, authenticationPrompt)
 }
 const initialize = async () => {
-  await KeychainStorage.write(KEYCHAIN_APP_AUTH_KEY, '') // value is irrelevant
+  await KeychainStorage.write(KEYCHAIN_APP_AUTH_KEY, '-') // value is irrelevant
 }
 
 const getWalletKey = (id: YoroiWallet['id'], authenticationPrompt: AuthenticationPrompt) =>

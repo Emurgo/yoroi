@@ -1,7 +1,7 @@
 import {Platform} from 'react-native'
 import Keychain from 'react-native-keychain'
 
-import {authOsEnabledOnDevice} from './KeychainStorage'
+import {authOsEnabled} from './KeychainStorage'
 
 let mockedBioType = Keychain.BIOMETRY_TYPE.FINGERPRINT
 let mockedCanImply = true
@@ -33,7 +33,7 @@ describe('authOsEnabledOnDevice()', () => {
       Platform.select = jest.fn((platformConfig) => platformConfig['android'])
       mockedBioType = bioType
 
-      authOsEnabledOnDevice().then((result) => expect(result).toBe(expected))
+      authOsEnabled().then((result) => expect(result).toBe(expected))
     })
   })
   describe('on iOS', () => {
@@ -50,7 +50,7 @@ describe('authOsEnabledOnDevice()', () => {
         mockedBioType = bioType
         mockedCanImply = canImply
 
-        authOsEnabledOnDevice().then((result) => expect(result).toBe(expected))
+        authOsEnabled().then((result) => expect(result).toBe(expected))
       },
     )
   })
@@ -63,7 +63,7 @@ describe('authOsEnabledOnDevice()', () => {
     `('should reject when platform is $platform', async ({expected, platform}) => {
       Platform.select = jest.fn((platformConfig) => platformConfig[platform])
 
-      authOsEnabledOnDevice().catch((error) => expect(error).toBeInstanceOf(expected))
+      authOsEnabled().catch((error) => expect(error).toBeInstanceOf(expected))
     })
   })
 })
