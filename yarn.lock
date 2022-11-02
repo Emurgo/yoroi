@@ -10515,10 +10515,10 @@ husky@>=6:
   resolved "https://registry.yarnpkg.com/husky/-/husky-7.0.4.tgz#242048245dc49c8fb1bf0cc7cfb98dd722531535"
   integrity sha512-vbaCKN2QLtP/vD4yvs6iz6hBEo6wkSzs8HpRah1Z6aGmF2KW5PdYuAd7uX5a+OyBZHBhd+TFLqgjUgytQr4RvQ==
 
-i18n-unused@^0.8.0:
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/i18n-unused/-/i18n-unused-0.8.0.tgz#93e5166734495b06ebd91874eedbadefa341db1f"
-  integrity sha512-xqlf9idp2A5Xz+UWECmhUyS24OG748oBRLVDA7fwHHahCawwcBMoN0LmtSUAlT/5q00t2e4OlBuEKM8q8imJNQ==
+i18n-unused@^0.11.1:
+  version "0.11.1"
+  resolved "https://registry.yarnpkg.com/i18n-unused/-/i18n-unused-0.11.1.tgz#3f00b83e8f1712cff1f5e40323a4f2c747cee30d"
+  integrity sha512-BPayPVLLqkRGCgcYk0hxNIF9XUif8sljkJfvA7l9F6kMZvnzJcqXo9wGcp5d5qamlE6zTIvOtex+jZAePKpRCQ==
   dependencies:
     commander "^8.0.0"
     esm "^3.2.25"
