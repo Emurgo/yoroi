@@ -2,10 +2,11 @@
 import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 
-import {NftRoutes} from '../navigation'
+import {NftDetailsRoutes} from '../navigation'
 import {NftDetails} from './NftDetails'
+import {NftDetailsImage} from './NftDetailsImage'
 
-const Stack = createStackNavigator<NftRoutes>()
+const Stack = createStackNavigator<NftDetailsRoutes>()
 
 export const NftDetailsNavigator = () => {
   return (
@@ -17,6 +18,7 @@ export const NftDetailsNavigator = () => {
       initialRouteName="nft-details"
     >
       <Stack.Screen name="nft-details" component={NftDetails} />
+      <Stack.Screen name="nft-details-image" component={NftDetailsImage} />
     </Stack.Navigator>
   )
 }
