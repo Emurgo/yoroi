@@ -5,42 +5,24 @@ import {Image, RefreshControl, ScrollView, StyleSheet, Text, View, ViewProps} fr
 
 import noNftsImage from '../assets/img/no-nft.png'
 import {OfflineBanner, StatusBar} from '../components'
-import {ImageGallery} from '../components/ImageGallery'
-import nft1 from '../components/ImageGallery/fake-images/nft1.png'
-import nft2 from '../components/ImageGallery/fake-images/nft2.png'
-import nft3 from '../components/ImageGallery/fake-images/nft3.png'
-import nft4 from '../components/ImageGallery/fake-images/nft4.png'
-import nft5 from '../components/ImageGallery/fake-images/nft5.png'
-import nft6 from '../components/ImageGallery/fake-images/nft6.png'
 // import {useNfts} from '../hooks'
 import {WalletStackRouteNavigation} from '../navigation'
+import {ImageGallery} from './ImageGallery'
+import nft1 from './ImageGallery/fake-images/nft1.png'
+import nft2 from './ImageGallery/fake-images/nft2.png'
+import nft3 from './ImageGallery/fake-images/nft3.png'
+import nft4 from './ImageGallery/fake-images/nft4.png'
+import nft5 from './ImageGallery/fake-images/nft5.png'
+import nft6 from './ImageGallery/fake-images/nft6.png'
 // import {useSelectedWallet} from '../SelectedWallet'
 
 export const mockNFTs = [
-  {
-    image: nft1,
-    text: 'nft1',
-  },
-  {
-    image: nft2,
-    text: 'nft2',
-  },
-  {
-    image: nft3,
-    text: 'nft3',
-  },
-  {
-    image: nft4,
-    text: 'nft4',
-  },
-  {
-    image: nft5,
-    text: 'nft5',
-  },
-  {
-    image: nft6,
-    text: 'nft6',
-  },
+  {image: nft1, text: 'nft1'},
+  {image: nft2, text: 'nft2'},
+  {image: nft3, text: 'nft3'},
+  {image: nft4, text: 'nft4'},
+  {image: nft5, text: 'nft5'},
+  {image: nft6, text: 'nft6'},
 ]
 
 export const Nfts = () => {

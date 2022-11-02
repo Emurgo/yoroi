@@ -2,14 +2,15 @@
 import {useNavigation, useRoute} from '@react-navigation/native'
 import React, {useEffect, useState} from 'react'
 // import {defineMessages, useIntl} from 'react-intl'
-import {Image, StyleSheet, View} from 'react-native'
+import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {CopyButton, FadeIn, OfflineBanner, StatusBar, Text} from '../components'
 import {Tab, TabPanel, TabPanels, Tabs} from '../components/Tabs'
+import {NftDetailsNavigation} from '../navigation'
 // import globalMessages from '../i18n/global-messages'
 // import {useSelectedWallet} from '../SelectedWallet'
-import {mockNFTs} from './Nfts'
+import {mockNFTs} from '../Nfts/Nfts'
 
 const VIEW_TABS = {
   OVERVIEW: {
@@ -26,12 +27,15 @@ export const NftDetails = () => {
   // const strings = useStrings()
   // const intl = useIntl()
   // const wallet = useSelectedWallet()
+  const navigation = useNavigation<NftDetailsNavigation>()
   const [activeTab, setActiveTab] = useState(VIEW_TABS.OVERVIEW.id)
   const {id} = useRoute().params as Params
   const nft = mockNFTs[id] ?? {}
   const stringifiedMetadata = JSON.stringify(nft, undefined, 2)
 
   useTitle('NFT Details')
+
+  const handleFullScreenImage = () => navigation.navigate('nft-details-image', {id: id})
 
   return (
     <FadeIn style={styles.container}>
@@ -40,7 +44,9 @@ export const NftDetails = () => {
 
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <View style={styles.imageContainer}>
-          <Image source={nft.image} style={styles.image} />
+          <TouchableOpacity onPress={handleFullScreenImage}>
+            <Image source={nft.image} style={styles.image} />
+          </TouchableOpacity>
         </View>
         <View style={styles.tabsContainer}>
           <Tabs>

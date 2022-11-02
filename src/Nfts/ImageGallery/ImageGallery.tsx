@@ -11,7 +11,7 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
-import {Text} from '../Text'
+import {Text} from '../../components/Text'
 
 type Props = {
   images: Array<{
