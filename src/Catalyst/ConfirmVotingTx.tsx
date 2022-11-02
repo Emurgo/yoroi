@@ -7,11 +7,11 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {OfflineBanner, ProgressStep, Spacer, TextInput} from '../components'
 import {ConfirmTx} from '../components/ConfirmTx'
-import {useVotingRegTx} from '../hooks'
+import {useTokenInfo, useVotingRegTx} from '../hooks'
 import {Instructions as HWInstructions} from '../HW'
 import {errorMessages, txLabels} from '../i18n/global-messages'
 import LocalizableError from '../i18n/LocalizableError'
-import {CONFIG, getDefaultAssetByNetworkId} from '../legacy/config'
+import {CONFIG} from '../legacy/config'
 import {formatTokenWithSymbol} from '../legacy/format'
 import {useSelectedWallet} from '../SelectedWallet'
 import {Amounts} from '../yoroi-wallets/utils'
@@ -23,6 +23,7 @@ export const ConfirmVotingTx = ({onNext}: {onNext: () => void}) => {
   const [password, setPassword] = useState(CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '')
   const [useUSB, setUseUSB] = useState<boolean>(false)
   const {votingRegTx} = useVotingRegTx(wallet)
+  const tokenInfo = useTokenInfo({wallet, tokenId: wallet.defaultAsset.identifier})
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
@@ -48,10 +49,7 @@ export const ConfirmVotingTx = ({onNext}: {onNext: () => void}) => {
         <Spacer height={48} />
 
         <TextInput
-          value={formatTokenWithSymbol(
-            new BigNumber(Amounts.getAmount(votingRegTx.fee, '').quantity),
-            getDefaultAssetByNetworkId(wallet.networkId),
-          )}
+          value={formatTokenWithSymbol(new BigNumber(Amounts.getAmount(votingRegTx.fee, '').quantity), tokenInfo)}
           label={strings.fees}
           editable={false}
           autoComplete={false}

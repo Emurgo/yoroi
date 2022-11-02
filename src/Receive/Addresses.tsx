@@ -184,7 +184,7 @@ const useUnusedAddresses = () => {
   const receiveAddresses = wallet.externalAddresses.slice(0, wallet.numReceiveAddresses)
   const isUsedAddressIndex = wallet.isUsedAddressIndex
 
-  return receiveAddresses.filter((address) => isUsedAddressIndex[address] === false)
+  return receiveAddresses.filter((address) => isUsedAddressIndex[address] !== true)
 }
 
 const useUsedAddresses = () => {

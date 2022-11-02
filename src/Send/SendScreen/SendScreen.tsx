@@ -10,7 +10,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Checkbox, Spacer, StatusBar, Text, TextInput} from '../../components'
 import {useBalances, useHasPendingTx, useTokenInfo, useUtxos} from '../../hooks'
-import {CONFIG, getDefaultAssetByNetworkId} from '../../legacy/config'
+import {CONFIG} from '../../legacy/config'
 import {formatTokenAmount, getAssetDenominationOrId, truncateWithEllipsis} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
@@ -36,7 +36,6 @@ export const SendScreen = () => {
   const strings = useStrings()
   const navigation = useNavigation()
   const wallet = useSelectedWallet()
-  const defaultAsset = getDefaultAssetByNetworkId(wallet.networkId)
   const balances = useBalances(wallet)
 
   const {utxos, isLoading, error} = useUtxos(wallet)
@@ -47,13 +46,13 @@ export const SendScreen = () => {
   const {tokenId, resetForm, receiverChanged, amountChanged, receiver, amount, sendAll, sendAllChanged} = useSend()
 
   const selectedAssetAvailableAmount = Amounts.getAmount(balances, tokenId).quantity
-  const defaultAssetAvailableAmount = Amounts.getAmount(balances, defaultAsset.identifier).quantity
+  const defaultAssetAvailableAmount = Amounts.getAmount(balances, wallet.defaultAsset.identifier).quantity
 
   React.useEffect(() => {
-    if (defaultAsset.identifier !== tokenId && !Quantities.isGreaterThan(selectedAssetAvailableAmount, '0')) {
+    if (wallet.defaultAsset.identifier !== tokenId && !Quantities.isGreaterThan(selectedAssetAvailableAmount, '0')) {
       resetForm()
     }
-  }, [defaultAsset.identifier, tokenId, resetForm, selectedAssetAvailableAmount])
+  }, [wallet.defaultAsset.identifier, tokenId, resetForm, selectedAssetAvailableAmount])
 
   const [address, setAddress] = React.useState('')
   const [addressErrors, setAddressErrors] = React.useState<AddressValidationErrors>({addressIsRequired: true})
@@ -65,7 +64,7 @@ export const SendScreen = () => {
 
   const tokenInfo = useTokenInfo({wallet, tokenId})
   const assetDenomination = truncateWithEllipsis(getAssetDenominationOrId(tokenInfo), 20)
-  const amountErrorText = getAmountErrorText(intl, amountErrors, balanceErrors, defaultAsset)
+  const amountErrorText = getAmountErrorText(intl, amountErrors, balanceErrors, wallet.defaultAsset)
 
   const isValid =
     isOnline &&
@@ -100,7 +99,6 @@ export const SendScreen = () => {
       addressInput: receiver,
       amount,
       sendAll,
-      defaultAsset,
       selectedTokenInfo: tokenInfo,
       defaultAssetAvailableAmount,
       selectedAssetAvailableAmount,

@@ -26,7 +26,7 @@ import type {
   TxStatusResponse,
 } from '../types/other'
 import type {EncryptionMethod, WalletState} from '../types/other'
-import {DefaultAsset, SendTokenList, Token, TokenInfo} from '../types/tokens'
+import {DefaultAsset, SendTokenList, TokenInfo} from '../types/tokens'
 import {WalletEvent} from '../Wallet'
 import {CardanoTypes} from '.'
 import type {Addresses} from './chain'
@@ -143,6 +143,8 @@ export interface WalletInterface {
 
   save(): Promise<void>
 
+  clear(): Promise<void>
+
   // TODO: type
   toJSON(): unknown
 
@@ -153,39 +155,28 @@ export interface WalletInterface {
   // not exposed to wallet manager, consider removing
   getChangeAddress(): string
 
-  getAllUtxosForKey(utxos: Array<RawUtxo>): Promise<Array<AddressedUtxo>>
+  getAllUtxosForKey(): Promise<Array<AddressedUtxo>>
 
   getAddressing(address: string): unknown
 
-  asAddressedUtxo(utxos: Array<RawUtxo>): Array<CardanoTypes.CardanoAddressedUtxo>
-  asLegacyAddressedUtxo(utxos: Array<RawUtxo>): Array<AddressedUtxo>
+  getAddressedUtxos(): Promise<Array<CardanoTypes.CardanoAddressedUtxo>>
+  getLegacyAddressedUtxos(): Promise<Array<AddressedUtxo>>
 
   getDelegationStatus(): Promise<StakingStatus>
 
   createUnsignedTx(
-    utxos: Array<RawUtxo>,
     receiver: string,
     tokens: SendTokenList,
-    defaultToken: Token,
     metadata?: Array<CardanoTypes.TxMetadata>,
   ): Promise<YoroiUnsignedTx>
 
   signTx(signRequest: YoroiUnsignedTx, decryptedMasterKey: string): Promise<YoroiSignedTx>
 
-  createDelegationTx(
-    poolRequest: string,
-    valueInAccount: BigNumber,
-    utxos: Array<RawUtxo>,
-    defaultAsset: DefaultAsset,
-  ): Promise<YoroiUnsignedTx>
+  createDelegationTx(poolRequest: string, valueInAccount: BigNumber): Promise<YoroiUnsignedTx>
 
   createVotingRegTx(): Promise<{votingRegTx: YoroiUnsignedTx; votingKeyEncrypted: string}>
 
-  createWithdrawalTx(
-    utxos: Array<RawUtxo>,
-    defaultAsset: DefaultAsset,
-    shouldDeregister: boolean,
-  ): Promise<YoroiUnsignedTx>
+  createWithdrawalTx(shouldDeregister: boolean): Promise<YoroiUnsignedTx>
 
   signTxWithLedger(request: YoroiUnsignedTx, useUSB: boolean): Promise<YoroiSignedTx>
 
@@ -260,6 +251,7 @@ export type YoroiWallet = Pick<WalletInterface, YoroiWalletKeys> & {
   id: NonNullable<WalletInterface['id']>
   networkId: NonNullable<WalletInterface['networkId']>
   walletImplementationId: NonNullable<WalletInterface['walletImplementationId']>
+  defaultAsset: DefaultAsset
   checksum: NonNullable<WalletInterface['checksum']>
   isReadOnly: NonNullable<WalletInterface['isReadOnly']>
   rewardAddressHex: NonNullable<WalletInterface['rewardAddressHex']>
