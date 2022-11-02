@@ -9,6 +9,7 @@ import {DashboardNavigator} from './Dashboard'
 import {isHaskellShelley} from './legacy/config'
 import {MenuNavigator} from './Menu'
 import {WalletStackRoutes, WalletTabRoutes} from './navigation'
+import {NftDetailsNavigator} from './Nfts/NftDetailsNavigator'
 import {NftsNavigator} from './Nfts/NftsNavigator'
 import {useSelectedWallet, WalletSelectionScreen} from './SelectedWallet'
 import {SettingsScreenNavigator} from './Settings'
@@ -50,32 +51,32 @@ const WalletTabNavigator = () => {
           }}
         />
 
-        {isHaskellShelley(wallet.walletImplementationId) && (
-          <Tab.Screen
-            name="staking-dashboard"
-            component={DashboardNavigator}
-            options={{
-              tabBarIcon: ({focused}) => (
-                <Icon.TabStaking
-                  size={24}
-                  color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
-                />
-              ),
-              tabBarLabel: strings.stakingButton,
-              tabBarTestID: 'stakingTabBarButton',
-            }}
-          />
-        )}
-
       <Tab.Screen
         name="nfts"
         component={NftsNavigator}
         options={{
-          tabBarIcon: ({focused}) => <Icon.NftAsset size={28} color={focused ? '#17d1aa' : '#A7AFC0'} />,
+          tabBarIcon: ({focused}) => <Icon.Image size={28} color={focused ? '#17d1aa' : '#A7AFC0'} />,
           tabBarLabel: strings.nftsTabBarLabel,
           tabBarTestID: 'nftsTabBarButton',
         }}
       />
+
+      {isHaskellShelley(wallet.walletImplementationId) && (
+        <Tab.Screen
+          name="staking-dashboard"
+          component={DashboardNavigator}
+          options={{
+            tabBarIcon: ({focused}) => (
+              <Icon.TabStaking
+                size={24}
+                color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
+              />
+            ),
+            tabBarLabel: strings.stakingButton,
+            tabBarTestID: 'stakingTabBarButton',
+          }}
+        />
+      )}
 
       <Tab.Screen
         name="menu"
@@ -101,6 +102,7 @@ export const WalletNavigator = () => (
   >
     <Stack.Screen name="wallet-selection" component={WalletSelectionScreen} />
     <Stack.Screen name="main-wallet-routes" component={WalletTabNavigator} />
+    <Stack.Screen name="nft-details-routes" component={NftDetailsNavigator} />
     <Stack.Screen name="settings" component={SettingsScreenNavigator} />
     <Stack.Screen name="voting-registration" component={VotingRegistration} />
   </Stack.Navigator>

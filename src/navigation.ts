@@ -73,6 +73,7 @@ export type WalletTabRoutes = {
 export type WalletStackRoutes = {
   'wallet-selection': undefined
   'main-wallet-routes': NavigatorScreenParams<WalletTabRoutes>
+  'nft-details-routes': NavigatorScreenParams<NftDetailsRoutes>
   settings: NavigatorScreenParams<SettingsStackRoutes>
   'voting-registration': NavigatorScreenParams<VotingRegistrationRoutes>
 }
@@ -243,6 +244,12 @@ export type NftRoutes = {
   }
 }
 export type NftRouteNavigation = StackNavigationProp<NftRoutes>
+
+export type NftDetailsRoutes = {
+  'nft-details': {id: string}
+  'nft-details-image': undefined
+}
+export type NftDetailsNavigation = StackNavigationProp<NftDetailsRoutes>
 
 export type MenuRoutes = {
   menu: undefined

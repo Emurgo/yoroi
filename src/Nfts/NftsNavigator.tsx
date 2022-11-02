@@ -5,7 +5,6 @@ import {defineMessages, useIntl} from 'react-intl'
 
 import {Icon} from '../components'
 import {NftRoutes} from '../navigation'
-import {NftDetails} from './NftDetails'
 import {Nfts} from './Nfts'
 
 const Stack = createStackNavigator<NftRoutes>()
@@ -31,11 +30,6 @@ export const NftsNavigator = () => {
           headerLeftContainerStyle: {paddingLeft: 16},
           headerRightContainerStyle: {paddingRight: 16},
         }}
-      />
-      <Stack.Screen
-        name="nft-details"
-        component={NftDetails}
-        options={{headerRightContainerStyle: {paddingRight: 16}}}
       />
     </Stack.Navigator>
   )

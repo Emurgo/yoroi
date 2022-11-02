@@ -13,7 +13,7 @@ import nft4 from '../components/ImageGallery/fake-images/nft4.png'
 import nft5 from '../components/ImageGallery/fake-images/nft5.png'
 import nft6 from '../components/ImageGallery/fake-images/nft6.png'
 // import {useNfts} from '../hooks'
-import {NftRouteNavigation} from '../navigation'
+import {WalletStackRouteNavigation} from '../navigation'
 // import {useSelectedWallet} from '../SelectedWallet'
 
 export const mockNFTs = [
@@ -56,10 +56,11 @@ export const Nfts = () => {
     }
   })
   // const wallet = useSelectedWallet()
-  const navigation = useNavigation<NftRouteNavigation>()
+  const navigation = useNavigation<WalletStackRouteNavigation>()
 
   // const nfts = useNfts(wallet)
-  const showDetails = (id) => navigation.navigate('nft-details', {id: id ?? '1'})
+  const showDetails = (id) =>
+    navigation.navigate('nft-details-routes', {screen: 'nft-details', params: {id: id ?? '1'}})
 
   const NFTsWithAction = mockNFTs.map((n, i) => ({...n, onPress: () => showDetails(i)}))
 

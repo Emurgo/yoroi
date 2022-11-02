@@ -874,6 +874,7 @@ export const useResync = (wallet: YoroiWallet, options?: UseMutationOptions<void
 export const useNfts = (wallet: YoroiWallet): YoroiNFT[] => {
   const utxos = useUtxos(wallet)
   if (utxos == null) throw new Error('invalid state')
+  console.log(`🚀 > useNfts > utxos`, JSON.stringify(utxos))
 
   return []
 }
