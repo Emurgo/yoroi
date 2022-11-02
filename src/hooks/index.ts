@@ -975,6 +975,7 @@ export const useBalances = (wallet: YoroiWallet): YoroiAmounts => {
 export const useNfts = (wallet: YoroiWallet): YoroiNFT[] => {
   const {utxos} = useUtxos(wallet, {suspense: true})
   if (utxos == null) throw new Error('invalid state')
+  console.log(`🚀 > useNfts > utxos`, JSON.stringify(utxos))
 
   return []
 }

@@ -21,25 +21,7 @@ const mockedAccountState = {
 }
 
 storiesOf('Nfts', module)
-  .add('not delegating', () => {
-    const store = getConfiguredStore(true, true, {accountState: mockedAccountState})
-
-    const notDelegatingWallet: YoroiWallet = {
-      ...mockWallet,
-      getDelegationStatus: () => Promise.resolve({isRegistered: false, poolKeyHash: null}),
-    }
-
-    return (
-      <QueryClientProvider client={new QueryClient()}>
-        <Provider store={store}>
-          <SelectedWalletProvider wallet={notDelegatingWallet}>
-            <Nfts />
-          </SelectedWalletProvider>
-        </Provider>
-      </QueryClientProvider>
-    )
-  })
-  .add('Loading ids', () => {
+  .add('Loading', () => {
     const store = getConfiguredStore(true, true, {
       accountState: {...mockedAccountState, isDelegating: true, poolOperator: stakePoolId},
     })
@@ -59,28 +41,7 @@ storiesOf('Nfts', module)
       </QueryClientProvider>
     )
   })
-  .add('Loading StakePoolInfo', () => {
-    const store = getConfiguredStore(true, true, {
-      accountState: {...mockedAccountState, isDelegating: true, poolOperator: stakePoolId},
-    })
-
-    const loadingWallet: YoroiWallet = {
-      ...mockWallet,
-      getDelegationStatus: () => Promise.resolve({isRegistered: true, poolKeyHash: stakePoolId}),
-      fetchPoolInfo: () => new Promise((_resolve, _reject) => undefined), // never resolves
-    }
-
-    return (
-      <QueryClientProvider client={new QueryClient()}>
-        <Provider store={store}>
-          <SelectedWalletProvider wallet={loadingWallet}>
-            <Nfts />
-          </SelectedWalletProvider>
-        </Provider>
-      </QueryClientProvider>
-    )
-  })
-  .add('Loaded, StakePoolInfo success', () => {
+  .add('Loaded', () => {
     const store = getConfiguredStore(true, true, {
       accountState: {...mockedAccountState, isDelegating: true, poolOperator: stakePoolId},
     })
@@ -110,27 +71,6 @@ storiesOf('Nfts', module)
       ...mockWallet,
       getDelegationStatus: () => Promise.resolve({isRegistered: true, poolKeyHash: stakePoolId}),
       fetchPoolInfo: () => Promise.reject('unknown error'),
-    }
-
-    return (
-      <QueryClientProvider client={new QueryClient()}>
-        <Provider store={store}>
-          <SelectedWalletProvider wallet={loadedWallet}>
-            <Nfts />
-          </SelectedWalletProvider>
-        </Provider>
-      </QueryClientProvider>
-    )
-  })
-  .add('Loaded, StakePoolInfo not found', () => {
-    const store = getConfiguredStore(true, true, {
-      accountState: {...mockedAccountState, isDelegating: true, poolOperator: stakePoolId},
-    })
-
-    const loadedWallet: YoroiWallet = {
-      ...mockWallet,
-      getDelegationStatus: () => Promise.resolve({isRegistered: true, poolKeyHash: stakePoolId}),
-      fetchPoolInfo: () => Promise.resolve({[stakePoolId]: null} as StakePoolInfosAndHistories),
     }
 
     return (
