@@ -376,15 +376,6 @@ export class WalletManager {
     })
   }
 
-  async resyncWallet() {
-    if (!this._wallet) return
-    const wallet = this._wallet
-    await wallet.clear()
-    wallet.resync()
-    wallet.save()
-    await this.closeWallet()
-  }
-
   async removeWallet(id: string) {
     if (!this._wallet) throw new Error('invalid state')
 

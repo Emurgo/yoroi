@@ -7,7 +7,8 @@ import {delay} from 'bluebird'
 import cryptoRandomString from 'crypto-random-string'
 import {mapValues} from 'lodash'
 import * as React from 'react'
-import {IntlShape} from 'react-intl'
+import {IntlShape, useIntl} from 'react-intl'
+import {InteractionManager} from 'react-native'
 import {
   QueryKey,
   useMutation,
@@ -18,6 +19,9 @@ import {
   UseQueryOptions,
 } from 'react-query'
 
+import {useAuth} from '../auth/AuthProvider'
+import {confirmationMessages} from '../i18n/global-messages'
+import {DIALOG_BUTTONS, showConfirmationDialog} from '../legacy/actions'
 import {getDefaultAssetByNetworkId} from '../legacy/config'
 import {ObjectValues} from '../legacy/flow'
 import KeyStore from '../legacy/KeyStore'
@@ -27,6 +31,8 @@ import {processTxHistoryData} from '../legacy/processTransactions'
 import {WalletMeta} from '../legacy/state'
 import storage from '../legacy/storage'
 import {cardanoValueFromRemoteFormat} from '../legacy/utils'
+import {useWalletNavigation} from '../navigation'
+import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../SelectedWallet'
 import {Storage} from '../Storage'
 import {
   Cardano,
@@ -970,4 +976,59 @@ export const useBalances = (wallet: YoroiWallet): YoroiAmounts => {
   const primaryTokenId = wallet.defaultAsset.identifier
 
   return Utxos.toAmounts(utxos, primaryTokenId)
+}
+
+export const useResync = (wallet, options?: UseMutationOptions<void, Error>) => {
+  const intl = useIntl()
+  const {resetToTxHistory} = useWalletNavigation()
+  const mutation = useMutation({
+    mutationFn: () => wallet.resync(),
+    ...options,
+  })
+
+  return {
+    resyncWithConfirmation: async () => {
+      const selection = await showConfirmationDialog(confirmationMessages.resync, intl)
+      if (selection === DIALOG_BUTTONS.YES) {
+        resetToTxHistory()
+        InteractionManager.runAfterInteractions(() => {
+          mutation.mutate()
+        })
+      }
+    },
+    ...mutation,
+  }
+}
+
+export const useLogout = (options?: UseMutationOptions<void, Error>) => {
+  const {logout} = useAuth()
+  const intl = useIntl()
+  const setSelectedWallet = useSetSelectedWallet()
+  const setSelectedWalletMeta = useSetSelectedWalletMeta()
+  const {closeWallet, ...mutation} = useCloseWallet({
+    onSuccess: () => {
+      setSelectedWallet(undefined)
+      setSelectedWalletMeta(undefined)
+    },
+    ...options,
+  })
+
+  return {
+    logout: () => {
+      logout() // triggers navigation to login
+      InteractionManager.runAfterInteractions(() => {
+        closeWallet()
+      })
+    },
+    logoutWithConfirmation: async () => {
+      const selection = await showConfirmationDialog(confirmationMessages.logout, intl)
+      if (selection === DIALOG_BUTTONS.YES) {
+        logout() // triggers navigation to login
+        InteractionManager.runAfterInteractions(() => {
+          closeWallet()
+        })
+      }
+    },
+    ...mutation,
+  }
 }

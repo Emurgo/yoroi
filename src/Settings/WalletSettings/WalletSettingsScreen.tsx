@@ -1,21 +1,17 @@
 import React from 'react'
 import type {MessageDescriptor} from 'react-intl'
 import {defineMessages, useIntl} from 'react-intl'
-import {InteractionManager, ScrollView, StyleSheet, Switch} from 'react-native'
-import {useMutation, UseMutationOptions} from 'react-query'
+import {ScrollView, StyleSheet, Switch} from 'react-native'
 import {useSelector} from 'react-redux'
 
-import {useAuth} from '../../auth/AuthProvider'
 import {StatusBar} from '../../components'
-import {useCloseWallet, useEasyConfirmationEnabled, useWalletName} from '../../hooks'
-import {confirmationMessages} from '../../i18n/global-messages'
-import {DIALOG_BUTTONS, showConfirmationDialog} from '../../legacy/actions'
+import {useEasyConfirmationEnabled, useLogout, useResync, useWalletName} from '../../hooks'
 import {isByron, isHaskellShelley} from '../../legacy/config'
 import {getNetworkConfigById} from '../../legacy/networks'
 import {isSystemAuthEnabledSelector} from '../../legacy/selectors'
 import {useWalletNavigation} from '../../navigation'
-import {useSelectedWallet, useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
-import {NetworkId, WalletImplementationId, walletManager} from '../../yoroi-wallets'
+import {useSelectedWallet} from '../../SelectedWallet'
+import {NetworkId, WalletImplementationId, YoroiWallet} from '../../yoroi-wallets'
 import {
   NavigatedSettingsItem,
   PressableSettingsItem,
@@ -89,7 +85,7 @@ export const WalletSettingsScreen = () => {
 
       <SettingsSection>
         <NavigatedSettingsItem label={strings.removeWallet} navigateTo="remove-wallet" />
-        <ResyncButton />
+        <ResyncButton wallet={wallet} />
       </SettingsSection>
 
       <SettingsSection title={strings.about}>
@@ -208,39 +204,6 @@ const getWalletType = (implementationId: WalletImplementationId): MessageDescrip
   return messages.unknownWalletType
 }
 
-const useLogout = (options?: UseMutationOptions<void, Error>) => {
-  const {logout} = useAuth()
-  const intl = useIntl()
-  const setSelectedWallet = useSetSelectedWallet()
-  const setSelectedWalletMeta = useSetSelectedWalletMeta()
-  const {closeWallet, ...mutation} = useCloseWallet({
-    onSuccess: () => {
-      setSelectedWallet(undefined)
-      setSelectedWalletMeta(undefined)
-    },
-    ...options,
-  })
-
-  return {
-    logout: () => {
-      logout() // triggers navigation to login
-      InteractionManager.runAfterInteractions(() => {
-        closeWallet()
-      })
-    },
-    logoutWithConfirmation: async () => {
-      const selection = await showConfirmationDialog(confirmationMessages.logout, intl)
-      if (selection === DIALOG_BUTTONS.YES) {
-        logout() // triggers navigation to login
-        InteractionManager.runAfterInteractions(() => {
-          closeWallet()
-        })
-      }
-    },
-    ...mutation,
-  }
-}
-
 const LogoutButton = () => {
   const strings = useStrings()
   const {logoutWithConfirmation, isLoading} = useLogout()
@@ -248,31 +211,9 @@ const LogoutButton = () => {
   return <PressableSettingsItem label={strings.logout} onPress={logoutWithConfirmation} disabled={isLoading} />
 }
 
-const useResync = (options?: UseMutationOptions<void, Error>) => {
-  const intl = useIntl()
-  const {resetToWalletSelection} = useWalletNavigation()
-  const mutation = useMutation({
-    mutationFn: () => walletManager.resyncWallet(),
-    ...options,
-  })
-
-  return {
-    resyncWithConfirmation: async () => {
-      const selection = await showConfirmationDialog(confirmationMessages.resync, intl)
-      if (selection === DIALOG_BUTTONS.YES) {
-        resetToWalletSelection()
-        InteractionManager.runAfterInteractions(() => {
-          mutation.mutate()
-        })
-      }
-    },
-    ...mutation,
-  }
-}
-
-const ResyncButton = () => {
+const ResyncButton = ({wallet}: {wallet: YoroiWallet}) => {
   const strings = useStrings()
-  const {resyncWithConfirmation, isLoading} = useResync()
+  const {resyncWithConfirmation, isLoading} = useResync(wallet)
 
   return <PressableSettingsItem label={strings.resync} onPress={resyncWithConfirmation} disabled={isLoading} />
 }
