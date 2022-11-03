@@ -25,7 +25,7 @@ import type {DeviceId, DeviceObj} from '../../legacy/ledgerUtils'
 import {BluetoothDisabledError, RejectedByUserError} from '../../legacy/ledgerUtils'
 import {Logger} from '../../legacy/logging'
 import {COLORS, spacing} from '../../theme'
-import {Device} from '../../types'
+import {Device} from '../../yoroi-wallets/types'
 import {DeviceItem} from './DeviceItem'
 
 type Props = {
@@ -77,7 +77,7 @@ class _LedgerConnect extends React.Component<Props, State> {
       // modified when component is mounted
       let previousAvailable = false
       TransportBLE.observeState({
-        next: (e) => {
+        next: (e: {available: boolean}) => {
           if (this._isMounted) {
             Logger.debug('BLE observeState event', e)
             if (this._bluetoothEnabled == null && !e.available) {
@@ -330,7 +330,7 @@ const deviceAddition =
   (device) =>
   ({devices}) => {
     return {
-      devices: devices.some((i) => i.id === device.id) ? devices : devices.concat(device),
+      devices: devices.some((i) => i.id === device.id) === true ? devices : devices.concat(device),
     }
   }
 

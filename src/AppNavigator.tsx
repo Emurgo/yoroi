@@ -1,7 +1,6 @@
 import {useReduxDevToolsExtension} from '@react-navigation/devtools'
 import {NavigationContainer, useNavigationContainerRef} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
-import {isEmpty} from 'lodash'
 import React, {useEffect} from 'react'
 import type {IntlShape} from 'react-intl'
 import {defineMessages, useIntl} from 'react-intl'
@@ -10,10 +9,13 @@ import {useQueryClient} from 'react-query'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {CreatePinScreen, PinLoginScreen} from './auth'
+import {useBackgroundTimeout} from './auth'
+import {useAuth} from './auth/AuthProvider'
 import {BiometricAuthScreen} from './BiometricAuth'
 import {FirstRunNavigator} from './FirstRun/FirstRunNavigator'
+import {useHasWallets} from './hooks'
 import {errorMessages} from './i18n/global-messages'
-import {checkBiometricStatus, reloadAppSettings, setSystemAuth, showErrorDialog, signin} from './legacy/actions'
+import {checkBiometricStatus, reloadAppSettings, setSystemAuth, showErrorDialog} from './legacy/actions'
 import {DeveloperScreen} from './legacy/DeveloperScreen'
 import {canBiometricEncryptionBeEnabled, recreateAppSignInKeys} from './legacy/deviceSettings'
 import env from './legacy/env'
@@ -22,20 +24,22 @@ import {
   canEnableBiometricSelector,
   installationIdSelector,
   isAppSetupCompleteSelector,
-  isAuthenticatedSelector,
   isMaintenanceSelector,
   isSystemAuthEnabledSelector,
 } from './legacy/selectors'
-import type {State} from './legacy/state'
+import {isEmptyString} from './legacy/utils'
 import MaintenanceScreen from './MaintenanceScreen'
 import {AppRoutes} from './navigation'
 import StorybookScreen from './StorybookScreen'
 import {WalletInitNavigator} from './WalletInit/WalletInitNavigator'
 import {WalletNavigator} from './WalletNavigator'
+import {walletManager} from './yoroi-wallets'
 
 const IS_STORYBOOK = env.getBoolean('IS_STORYBOOK', false)
 
 export const AppNavigator = () => {
+  useAutoLogout()
+
   const navRef = useNavigationContainerRef()
 
   useReduxDevToolsExtension(navRef)
@@ -50,32 +54,37 @@ const NavigatorSwitch = () => {
   const strings = useStrings()
   const isMaintenance = useSelector(isMaintenanceSelector)
   const isSystemAuthEnabled = useSelector(isSystemAuthEnabledSelector)
-  const isAuthenticated = useSelector(isAuthenticatedSelector)
-  const hasAnyWallet = useSelector(hasAnyWalletSelector)
+  const hasAnyWallet = useHasWallets(walletManager)
   const isAppSetupComplete = useSelector(isAppSetupCompleteSelector)
   const canEnableBiometrics = useSelector(canEnableBiometricSelector)
   const installationId = useSelector(installationIdSelector)
   const queryClient = useQueryClient()
   const dispatch = useDispatch()
+  const {isLoggedIn, isLoggedOut, login, logout} = useAuth()
 
-  if (!installationId) throw new Error('invalid state')
+  if (isEmptyString(installationId)) throw new Error('invalid state')
 
   useEffect(() => {
     const appStateSubscription = AppState.addEventListener('change', async () => {
-      await dispatch(checkBiometricStatus())
+      await dispatch(checkBiometricStatus(logout))
       queryClient.invalidateQueries(['walletMetas'])
     })
     return () => appStateSubscription?.remove()
-  }, [dispatch, queryClient])
+  }, [dispatch, logout, queryClient])
 
   useEffect(() => {
-    if (hasAnyWallet && !isAuthenticated && isSystemAuthEnabled && !canEnableBiometrics && !isMaintenance) {
+    if (hasAnyWallet && isLoggedOut && isSystemAuthEnabled && !canEnableBiometrics && !isMaintenance) {
       Alert.alert(strings.biometricsChangeTitle, strings.biometricsChangeMessage)
     }
-  }, [hasAnyWallet, isAuthenticated, isSystemAuthEnabled, canEnableBiometrics, isMaintenance, strings])
+  }, [hasAnyWallet, isLoggedOut, isSystemAuthEnabled, canEnableBiometrics, isMaintenance, strings])
 
   return (
-    <Stack.Navigator screenOptions={{headerShown: false}}>
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false /* used only for transition */,
+        detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
+      }}
+    >
       {/* Initial Route */}
       <Stack.Group>
         {isMaintenance && <Stack.Screen name="maintenance" component={MaintenanceScreen} />}
@@ -83,7 +92,7 @@ const NavigatorSwitch = () => {
       </Stack.Group>
 
       {/* Not Authenticated */}
-      {!isAuthenticated && hasAnyWallet && (
+      {isLoggedOut && hasAnyWallet && (
         <Stack.Group>
           {!isSystemAuthEnabled && (
             <Stack.Screen name="custom-pin-auth" component={PinLoginScreen} options={{title: strings.loginPinTitle}} />
@@ -95,12 +104,10 @@ const NavigatorSwitch = () => {
               options={{headerShown: false}}
               initialParams={{
                 keyId: installationId,
-                onSuccess: () => {
-                  dispatch(signin())
-                },
+                onSuccess: login,
                 onFail: async (reason: string, intl: IntlShape) => {
                   if (reason === KeyStore.REJECTIONS.INVALID_KEY) {
-                    if ((await canBiometricEncryptionBeEnabled()) && installationId) {
+                    if (await canBiometricEncryptionBeEnabled()) {
                       await recreateAppSignInKeys(installationId)
                     } else {
                       await showErrorDialog(errorMessages.biometricsIsTurnedOff, intl)
@@ -122,7 +129,7 @@ const NavigatorSwitch = () => {
       )}
 
       {/* Authenticated */}
-      {(isAuthenticated || !hasAnyWallet) && (
+      {(isLoggedIn || !hasAnyWallet) && (
         <Stack.Group>
           <Stack.Screen name="app-root" component={WalletNavigator} />
           <Stack.Screen name="new-wallet" component={WalletInitNavigator} />
@@ -143,25 +150,28 @@ const NavigatorSwitch = () => {
 
 const CreatePinScreenWrapper = () => {
   const dispatch = useDispatch()
+  const {login} = useAuth()
 
   return (
     <CreatePinScreen
       onDone={async () => {
         await dispatch(reloadAppSettings())
         await dispatch(setSystemAuth(false))
-        dispatch(signin())
+        login()
       }}
     />
   )
 }
 
 const StoryBook = () => (
-  <Stack.Navigator>
+  <Stack.Navigator
+    screenOptions={{
+      detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
+    }}
+  >
     <Stack.Screen name="storybook" component={StorybookScreen} />
   </Stack.Navigator>
 )
-
-const hasAnyWalletSelector = (state: State): boolean => !isEmpty(state.wallets)
 
 const useStrings = () => {
   const intl = useIntl()
@@ -192,3 +202,11 @@ const messages = defineMessages({
     defaultMessage: '!!!Biometrics changed detected ',
   },
 })
+
+const useAutoLogout = () => {
+  const {logout} = useAuth()
+  useBackgroundTimeout({
+    onTimeout: logout,
+    duration: 120 * 1000,
+  })
+}

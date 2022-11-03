@@ -1,68 +1,33 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {RouteProp, useRoute} from '@react-navigation/native'
 import {BigNumber} from 'bignumber.js'
-import React, {useEffect} from 'react'
+import React, {useEffect, useRef} from 'react'
 import {useIntl} from 'react-intl'
-import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
+import {Keyboard, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 
-import {Banner, Boundary, OfflineBanner, Spacer, StatusBar, Text, ValidatedTextInput} from '../../components'
+import {Boundary, KeyboardSpacer, OfflineBanner, Spacer, StatusBar, Text, ValidatedTextInput} from '../../components'
 import {ConfirmTx} from '../../components/ConfirmTx'
-import {useTokenInfo} from '../../hooks'
+import {useBalances, useTokenInfo} from '../../hooks'
 import {Instructions as HWInstructions} from '../../HW'
 import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../i18n/global-messages'
-import {CONFIG, getDefaultAssetByNetworkId} from '../../legacy/config'
+import {CONFIG} from '../../legacy/config'
 import {formatTokenWithSymbol, formatTokenWithText} from '../../legacy/format'
-import {useParams, useWalletNavigation} from '../../navigation'
+import {TxHistoryRoutes, useWalletNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
-import {TokenEntry} from '../../types'
-import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
-
-export type Params = {
-  yoroiUnsignedTx: YoroiUnsignedTx
-  defaultAssetAmount: BigNumber
-  address: string
-  balanceAfterTx: BigNumber
-  availableAmount: BigNumber
-  fee: BigNumber
-  tokens: TokenEntry[]
-  easyConfirmDecryptKey: string
-}
-
-const isParams = (params?: Params | object | undefined): params is Params => {
-  return (
-    !!params &&
-    'yoroiUnsignedTx' in params &&
-    typeof params.yoroiUnsignedTx === 'object' &&
-    'defaultAssetAmount' in params &&
-    params.defaultAssetAmount instanceof BigNumber &&
-    'address' in params &&
-    typeof params.address === 'string' &&
-    'balanceAfterTx' in params &&
-    params.balanceAfterTx instanceof BigNumber &&
-    'availableAmount' in params &&
-    params.availableAmount instanceof BigNumber &&
-    'fee' in params &&
-    params.fee instanceof BigNumber &&
-    'tokens' in params &&
-    Array.isArray(params.tokens)
-  )
-}
+import {YoroiAmount, YoroiUnsignedTx} from '../../yoroi-wallets/types'
+import {Amounts, Quantities} from '../../yoroi-wallets/utils'
+import {useSend} from '../Context/SendContext'
+import {AvailableAmountBanner} from '../SendScreen/AvailableAmountBanner'
 
 export const ConfirmScreen = () => {
   const strings = useStrings()
-  const {
-    defaultAssetAmount,
-    address,
-    balanceAfterTx,
-    availableAmount,
-    fee,
-    tokens: tokenEntries,
-    yoroiUnsignedTx,
-  } = useParams(isParams)
+  const {yoroiUnsignedTx} = useRoute<RouteProp<TxHistoryRoutes, 'send-confirm'>>().params
   const {resetToTxHistory} = useWalletNavigation()
   const wallet = useSelectedWallet()
   const [password, setPassword] = React.useState('')
   const [useUSB, setUseUSB] = React.useState(false)
+  const {resetForm, receiver} = useSend()
 
   useEffect(() => {
     if (CONFIG.DEBUG.PREFILL_FORMS && __DEV__) {
@@ -72,84 +37,161 @@ export const ConfirmScreen = () => {
 
   const onSuccess = () => {
     resetToTxHistory()
+    resetForm()
   }
+
+  const scrollViewRef = useFlashAndScroll()
 
   return (
     <View style={styles.root}>
-      <View style={{flex: 1}}>
-        <StatusBar type="dark" />
+      <StatusBar type="dark" />
 
-        <OfflineBanner />
+      <OfflineBanner />
 
-        <Banner
-          label={strings.availableFunds}
-          text={formatTokenWithText(availableAmount, getDefaultAssetByNetworkId(wallet.networkId))}
-          boldText
-        />
+      <AvailableAmountBanner />
 
-        <ScrollView style={styles.container} contentContainerStyle={{padding: 16}}>
-          <Text small>
-            {strings.fees}: {formatTokenWithSymbol(fee, getDefaultAssetByNetworkId(wallet.networkId))}
-          </Text>
+      <View style={{paddingTop: 16, paddingHorizontal: 16}}>
+        <Fees yoroiUnsignedTx={yoroiUnsignedTx} />
 
-          <Text small>
-            {strings.balanceAfterTx}:{' '}
-            {formatTokenWithSymbol(balanceAfterTx, getDefaultAssetByNetworkId(wallet.networkId))}
-          </Text>
+        <Spacer height={4} />
 
-          <Spacer height={16} />
+        <BalanceAfter yoroiUnsignedTx={yoroiUnsignedTx} />
 
-          <Text>{strings.receiver}</Text>
-          <Text>{address}</Text>
+        <Spacer height={16} />
 
-          <Spacer height={16} />
-
-          <Text>{strings.total}</Text>
-          <Text style={styles.amount}>
-            {formatTokenWithSymbol(defaultAssetAmount, getDefaultAssetByNetworkId(wallet.networkId))}
-          </Text>
-
-          {tokenEntries.map((entry) => (
-            <Boundary key={entry.identifier}>
-              <Entry tokenEntry={entry} />
-            </Boundary>
-          ))}
-
-          {!wallet.isEasyConfirmationEnabled && !wallet.isHW && (
-            <>
-              <Spacer height={16} />
-              <ValidatedTextInput
-                secureTextEntry
-                value={password}
-                label={strings.password}
-                onChangeText={setPassword}
-              />
-            </>
-          )}
-
-          {wallet.isHW && <HWInstructions useUSB={useUSB} addMargin />}
-        </ScrollView>
-
-        <Actions>
-          <ConfirmTx
-            onSuccess={onSuccess}
-            yoroiUnsignedTx={yoroiUnsignedTx}
-            useUSB={useUSB}
-            setUseUSB={setUseUSB}
-            isProvidingPassword
-            providedPassword={password}
-          />
-        </Actions>
+        <Boundary loading={{fallbackProps: {size: 'small'}}}>
+          <Receiver receiver={receiver} />
+        </Boundary>
       </View>
+
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={{padding: 16}}
+        persistentScrollbar
+        ref={scrollViewRef}
+      >
+        <PrimaryTotal yoroiUnsignedTx={yoroiUnsignedTx} />
+
+        <Spacer height={8} />
+
+        <TokenTotals yoroiUnsignedTx={yoroiUnsignedTx} />
+
+        {!wallet.isEasyConfirmationEnabled && !wallet.isHW && (
+          <>
+            <ValidatedTextInput
+              secureTextEntry
+              value={password}
+              label={strings.password}
+              onChangeText={setPassword}
+              testID="spendingPasswordInput"
+            />
+          </>
+        )}
+
+        {wallet.isHW && <HWInstructions useUSB={useUSB} addMargin />}
+
+        <KeyboardSpacer />
+      </ScrollView>
+
+      <Actions>
+        <ConfirmTx
+          onSuccess={onSuccess}
+          yoroiUnsignedTx={yoroiUnsignedTx}
+          useUSB={useUSB}
+          setUseUSB={setUseUSB}
+          isProvidingPassword
+          providedPassword={password}
+          chooseTransportOnConfirmation
+        />
+      </Actions>
     </View>
   )
 }
 
-const Entry = ({tokenEntry}: {tokenEntry: TokenEntry}) => {
+const Fees = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx}) => {
+  const strings = useStrings()
   const wallet = useSelectedWallet()
-  const tokenInfo = useTokenInfo({wallet, tokenId: tokenEntry.identifier})
+  const feeAmount = Amounts.getAmount(yoroiUnsignedTx.fee, '')
+  const tokenInfo = useTokenInfo({wallet, tokenId: ''})
 
-  return <Text style={styles.amount}>{formatTokenWithText(tokenEntry.amount, tokenInfo)}</Text>
+  return (
+    <Text small testID="feesText">
+      {strings.fees}: {formatTokenWithSymbol(new BigNumber(feeAmount.quantity), tokenInfo)}
+    </Text>
+  )
+}
+
+const BalanceAfter = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx}) => {
+  const strings = useStrings()
+  const wallet = useSelectedWallet()
+  const tokenInfo = useTokenInfo({wallet, tokenId: ''})
+  const balances = useBalances(wallet)
+
+  // prettier-ignore
+  const balancesAfter = Amounts.diff(
+    balances,
+    Amounts.sum([
+      yoroiUnsignedTx.amounts,
+      yoroiUnsignedTx.fee,
+    ]),
+  )
+  const primaryAmountAfter = Amounts.getAmount(balancesAfter, '')
+
+  return (
+    <Text small testID="balanceAfterTxText">
+      {strings.balanceAfterTx}: {formatTokenWithSymbol(new BigNumber(primaryAmountAfter.quantity), tokenInfo)}
+    </Text>
+  )
+}
+
+const Receiver = ({receiver}: {receiver: string}) => {
+  const strings = useStrings()
+
+  return (
+    <>
+      <Text>{strings.receiver}</Text>
+      <Text testID="receiverAddressText">{receiver}</Text>
+    </>
+  )
+}
+
+const PrimaryTotal = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx}) => {
+  const strings = useStrings()
+  const wallet = useSelectedWallet()
+  const primaryAmount = Amounts.getAmount(yoroiUnsignedTx.amounts, '')
+  const primaryTokenInfo = useTokenInfo({wallet, tokenId: ''})
+
+  return (
+    <>
+      <Text>{strings.total}</Text>
+      <Text style={styles.amount} testID="totalAmountText">
+        {formatTokenWithSymbol(new BigNumber(primaryAmount.quantity), primaryTokenInfo)}
+      </Text>
+    </>
+  )
+}
+
+const TokenTotals = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx}) => {
+  const tokens = Amounts.remove(yoroiUnsignedTx.amounts, [''])
+
+  return (
+    <>
+      {Amounts.toArray(tokens)
+        .sort((a, b) => (Quantities.isGreaterThan(a.quantity, b.quantity) ? -1 : 1))
+        .map((amount) => (
+          <Boundary key={amount.tokenId} loading={{fallbackProps: {size: 'small'}}}>
+            <Amount amount={amount} />
+          </Boundary>
+        ))}
+    </>
+  )
+}
+
+const Amount = ({amount}: {amount: YoroiAmount}) => {
+  const wallet = useSelectedWallet()
+  const tokenInfo = useTokenInfo({wallet, tokenId: amount.tokenId})
+
+  return <Text style={styles.amount}>{formatTokenWithText(new BigNumber(amount.quantity), tokenInfo)}</Text>
 }
 
 const Actions = (props: ViewProps) => <View {...props} style={{padding: 16}} />
@@ -186,4 +228,20 @@ const useStrings = () => {
       message: intl.formatMessage(errorMessages.generalTxError.message),
     },
   }
+}
+
+const useFlashAndScroll = () => {
+  const scrollViewRef = useRef<ScrollView | null>(null)
+
+  useEffect(() => {
+    setTimeout(() => {
+      scrollViewRef.current?.flashScrollIndicators()
+    }, 500)
+
+    Keyboard.addListener('keyboardWillShow', () => {
+      scrollViewRef.current?.scrollToEnd()
+    })
+  }, [])
+
+  return scrollViewRef
 }

@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-types */
 import produce from 'immer'
-import {get, set} from 'lodash'
+import {get, isEmpty, set} from 'lodash'
 
 import {delay} from '../legacy/promise'
 import type {Path, SegmentReducer} from './reduxTypes'
@@ -27,7 +27,7 @@ export const mapObjToId = (data: Record<string, any>, id: number | string) => {
   return dict
 }
 export const immutableSet = <S extends {}>(obj: S, path: Path | null | undefined, value: S): S =>
-  path && path.length
+  path && path.length > 0
     ? produce((obj): void => {
         set(obj, path, value)
       })(obj) || value
@@ -53,77 +53,35 @@ export function forwardReducerTo<S extends {}, T>(
 
 import {BigNumber} from 'bignumber.js'
 
-import {
-  Address,
-  AssetName,
-  Assets,
-  BaseAddress,
-  BigNum,
-  Bip32PublicKey,
-  ByronAddress,
-  CardanoTypes,
-  DefaultTokenEntry,
-  MultiAsset,
-  MultiToken,
-  RewardAddress,
-  ScriptHash,
-  StakeCredential,
-  Value,
-} from '../yoroi-wallets'
+import {CardanoMobile, CardanoTypes, DefaultTokenEntry, MultiToken} from '../yoroi-wallets'
+import type {BaseAsset, NetworkId} from '../yoroi-wallets/types/other'
+import type {RawUtxo} from '../yoroi-wallets/types/other'
+import type {Addressing} from '../yoroi-wallets/types/other'
 import {CONFIG} from './config'
-import type {BaseAsset} from './HistoryTransaction'
 import {getNetworkConfigById} from './networks'
-import type {NetworkId} from './types'
-import type {RawUtxo} from './types'
-import type {Addressing} from './types'
 
 const PRIMARY_ASSET_CONSTANTS = CONFIG.PRIMARY_ASSET_CONSTANTS
-// null -> legacy address (no key hash)
-// undefined -> script hash instead of key hash
-export const getCardanoAddrKeyHash = async (addr: CardanoTypes.Address) => {
-  {
-    const byronAddr = await ByronAddress.fromAddress(addr)
-    if (byronAddr) return null
-  }
-  {
-    const baseAddr = await BaseAddress.fromAddress(addr)
-    if (baseAddr) return await (await baseAddr.paymentCred()).toKeyhash()
-  }
-  // {
-  //   const ptrAddr = await PointerAddress.fromAddress(addr)
-  //   if (ptrAddr) return ptrAddr.paymentCred().toKeyhash()
-  // }
-  // {
-  //   const enterpriseAddr = await EnterpriseAddress.fromAddress(addr)
-  //   if (enterpriseAddr) return enterpriseAddr.paymentCred().toKeyhash()
-  // }
-  {
-    const rewardAddr = await RewardAddress.fromAddress(addr)
-    if (rewardAddr) return await (await rewardAddr.paymentCred()).toKeyhash()
-  }
-  throw new Error('getCardanoAddrKeyHash:: unknown address type')
-}
 
 export const normalizeToAddress = async (addr: string) => {
   // in Shelley, addresses can be base16, bech32 or base58
   // in this function, we try parsing in all encodings possible
   // 1) Try converting from base58
   try {
-    if (await ByronAddress.isValid(addr)) {
-      return await (await ByronAddress.fromBase58(addr)).toAddress()
+    if (await CardanoMobile.ByronAddress.isValid(addr)) {
+      return await (await CardanoMobile.ByronAddress.fromBase58(addr)).toAddress()
     }
   } catch (_e) {}
 
   // eslint-disable-line no-empty
   // 2) If already base16, simply return
   try {
-    return await Address.fromBytes(Buffer.from(addr, 'hex'))
+    return await CardanoMobile.Address.fromBytes(Buffer.from(addr, 'hex'))
   } catch (_e) {}
 
   // eslint-disable-line no-empty
   // 3) Try converting from bech32
   try {
-    return await Address.fromBech32(addr)
+    return await CardanoMobile.Address.fromBech32(addr)
   } catch (_e) {}
 
   // eslint-disable-line no-empty
@@ -131,18 +89,18 @@ export const normalizeToAddress = async (addr: string) => {
 }
 
 export const byronAddrToHex = async (base58Addr: string) => {
-  return Buffer.from(await ((await ByronAddress.fromBase58(base58Addr)) as any).toBytes()).toString('hex')
+  return Buffer.from(await ((await CardanoMobile.ByronAddress.fromBase58(base58Addr)) as any).toBytes()).toString('hex')
 }
 // need to format shelley addresses as base16 but only legacy addresses as base58
 
 export const toHexOrBase58 = async (address: CardanoTypes.Address) => {
-  const asByron = await ByronAddress.fromAddress(address)
+  const asByron = await CardanoMobile.ByronAddress.fromAddress(address)
 
   if (!asByron.hasValue()) {
     return Buffer.from(await address.toBytes()).toString('hex')
   }
 
-  return await asByron.toBase58()
+  return asByron.toBase58()
 }
 
 export const derivePublicByAddressing = async (request: {
@@ -207,13 +165,13 @@ export const verifyFromBip44Root = (request: Addressing['addressing']) => {
 }
 
 export const deriveRewardAddressHex = async (accountPubKeyHex: string, networkId: NetworkId): Promise<string> => {
-  const accountPubKeyPtr = await Bip32PublicKey.fromBytes(Buffer.from(accountPubKeyHex, 'hex'))
+  const accountPubKeyPtr = await CardanoMobile.Bip32PublicKey.fromBytes(Buffer.from(accountPubKeyHex, 'hex'))
   const stakingKey = await (
     await (
       await accountPubKeyPtr.derive(CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT)
     ).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)
   ).toRawKey()
-  const credential = await StakeCredential.fromKeyhash(await stakingKey.hash())
+  const credential = await CardanoMobile.StakeCredential.fromKeyhash(await stakingKey.hash())
   let chainNetworkId = CONFIG.NETWORKS.HASKELL_SHELLEY.CHAIN_NETWORK_ID
   const config: any = getNetworkConfigById(networkId)
 
@@ -221,7 +179,7 @@ export const deriveRewardAddressHex = async (accountPubKeyHex: string, networkId
     chainNetworkId = config.CHAIN_NETWORK_ID
   }
 
-  const rewardAddr = await RewardAddress.new(parseInt(chainNetworkId, 10), credential)
+  const rewardAddr = await CardanoMobile.RewardAddress.new(parseInt(chainNetworkId, 10), credential)
   const rewardAddrAsAddr = await rewardAddr.toAddress()
   return Buffer.from((await rewardAddrAsAddr.toBytes()) as any, 'hex').toString('hex')
 }
@@ -243,8 +201,8 @@ export const identifierToCardanoAsset = async (
   // recall: 'a.'.split() gives ['a', ''] as desired
   const parts = identifier.split('.')
   return {
-    policyId: await ScriptHash.fromBytes(Buffer.from(parts[0], 'hex')),
-    name: await AssetName.new(Buffer.from(parts[1], 'hex')),
+    policyId: await CardanoMobile.ScriptHash.fromBytes(Buffer.from(parts[0], 'hex')),
+    name: await CardanoMobile.AssetName.new(Buffer.from(parts[1], 'hex')),
   }
 }
 
@@ -285,17 +243,19 @@ export const parseTokenList = async (
 }
 
 export const cardanoValueFromMultiToken = async (tokens: MultiToken) => {
-  const value = await Value.new(await BigNum.fromStr(tokens.getDefaultEntry().amount.toString()))
+  const value = await CardanoMobile.Value.new(
+    await CardanoMobile.BigNum.fromStr(tokens.getDefaultEntry().amount.toString()),
+  )
   // recall: primary asset counts towards size
   if (tokens.size() === 1) return value
-  const assets = await MultiAsset.new()
+  const assets = await CardanoMobile.MultiAsset.new()
 
   for (const entry of tokens.nonDefaultEntries()) {
     const {policyId, name} = await identifierToCardanoAsset(entry.identifier)
     const asset = await assets.get(policyId)
-    const policyContent = asset.hasValue() ? asset : await Assets.new()
+    const policyContent = asset.hasValue() ? asset : await CardanoMobile.Assets.new()
 
-    await policyContent.insert(name, await BigNum.fromStr(entry.amount.toString()))
+    await policyContent.insert(name, await CardanoMobile.BigNum.fromStr(entry.amount.toString()))
     // recall: we always have to insert since WASM returns copies of objects
     await assets.insert(policyId, policyContent)
   }
@@ -327,15 +287,15 @@ export const multiTokenFromCardanoValue = async (value: CardanoTypes.Value, defa
 }
 
 export const cardanoValueFromRemoteFormat = async (utxo: RawUtxo) => {
-  const value = await Value.new(await BigNum.fromStr(utxo.amount))
+  const value = await CardanoMobile.Value.new(await CardanoMobile.BigNum.fromStr(utxo.amount))
   if (utxo.assets.length === 0) return value
-  const assets = await MultiAsset.new()
+  const assets = await CardanoMobile.MultiAsset.new()
 
   for (const entry of utxo.assets) {
     const {policyId, name} = await identifierToCardanoAsset(entry.assetId)
     let policyContent = await assets.get(policyId)
-    policyContent = policyContent.hasValue() ? policyContent : await Assets.new()
-    await policyContent.insert(name, await BigNum.fromStr(entry.amount))
+    policyContent = policyContent.hasValue() ? policyContent : await CardanoMobile.Assets.new()
+    await policyContent.insert(name, await CardanoMobile.BigNum.fromStr(entry.amount))
     // recall: we always have to insert since WASM returns copies of objects
     await assets.insert(policyId, policyContent)
   }
@@ -423,4 +383,24 @@ export const ignoreConcurrentAsyncHandler = <Props, T, R>(
   additionalDelay?: number,
 ): ((props: Props) => (t: T) => Promise<R | void>) => {
   return uncurry(ignoreConcurrentAsync(curry(handler), additionalDelay))
+}
+
+/**
+ * Wrapper function to lodash.isEmpty that
+ * returns true if the string is empty.
+ * The lodash.isEmpty function doesn't have the typescript's safeguard signature.
+ * It will be fixed in this PR https://github.com/DefinitelyTyped/DefinitelyTyped/pull/60401
+ *
+ * @summary Returns true if the value is empty: length === 0, null or undefined, else false.
+ *
+ * @param value The string to inspect
+ * @return {boolean} Returns true if the string is empty, else false.
+ *
+ * @example isEmptyString('') returns true
+ * @example isEmptyString(' ') returns false
+ * @example isEmptyString(null) returns true
+ * @example isEmptyString(undefined) returns true
+ */
+export function isEmptyString(value: string | null | undefined): value is '' | null | undefined {
+  return isEmpty(value)
 }

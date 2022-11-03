@@ -10,6 +10,7 @@ import {AppRoutes, useWalletNavigation} from '../navigation'
 import {useSelectedWalletContext} from '../SelectedWallet'
 import {generateAdaMnemonic} from './commonUtils'
 import storage from './storage'
+import {isEmptyString} from './utils'
 
 const routes: Array<{label: string; path: keyof AppRoutes}> = [
   {label: 'Storybook', path: 'storybook'},
@@ -46,9 +47,7 @@ export const DeveloperScreen = () => {
   const {resetToWalletSelection} = useWalletNavigation()
   const {createWallet, isLoading} = useCreateWallet({
     onSuccess: async () => {
-      resetToWalletSelection({
-        reopen: true,
-      })
+      resetToWalletSelection()
     },
   })
   const [wallet] = useSelectedWalletContext()
@@ -141,7 +140,7 @@ export const DeveloperScreen = () => {
                   .then((keys) => storage.readMany(keys.map((k) => `/wallet/${k}`)))
                   .then((wallets) => {
                     const id = wallets.flat().find((k) => (k as any)?.name === 'RO-Mainnet')?.id
-                    if (id) {
+                    if (!isEmptyString(id)) {
                       return Promise.resolve(id)
                     }
                     return Promise.reject('Missing wallet RO-Mainnet')
@@ -163,9 +162,7 @@ export const DeveloperScreen = () => {
                   })
                   .then(() => {
                     Alert.alert('Success', 'Addresses updated')
-                    resetToWalletSelection({
-                      reopen: true,
-                    })
+                    resetToWalletSelection()
                   })
                   .catch((e) => {
                     Alert.alert('Error', e)

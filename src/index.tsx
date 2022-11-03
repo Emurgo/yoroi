@@ -8,7 +8,7 @@ import {Provider} from 'react-redux'
 
 import App from './App'
 import {name as appName} from './app.json'
-import {Boundary} from './components'
+import {LoadingBoundary} from './components'
 import {ErrorBoundary} from './components/ErrorBoundary'
 import {LanguageProvider} from './i18n'
 import translations from './i18n/translations'
@@ -17,8 +17,11 @@ import {CONFIG} from './legacy/config'
 import getConfiguredStore from './legacy/configureStore'
 import {ApiError, NetworkError} from './legacy/errors'
 import {Logger, setLogLevel} from './legacy/logging'
+import {isEmptyString} from './legacy/utils'
 import {CurrencyProvider} from './Settings/Currency/CurrencyContext'
 import {ThemeProvider} from './theme'
+import {WalletManagerProvider} from './WalletManager'
+import {walletManager} from './yoroi-wallets'
 
 setLogLevel(CONFIG.LOG_LEVEL)
 
@@ -52,7 +55,7 @@ global.onunhandledrejection = (error: any) => {
   Logger.error(`${error}`)
   if (error instanceof NetworkError) return
   if (error instanceof ApiError) return
-  if (!error?.message) return
+  if (isEmptyString(error?.message)) return
   handleGeneralError(error.message, intl)
 }
 
@@ -63,21 +66,23 @@ const queryClient = new QueryClient()
 
 const AppWithProviders = () => {
   return (
-    <ErrorBoundary>
-      <Provider store={store}>
-        <QueryClientProvider client={queryClient}>
-          <Boundary>
-            <ThemeProvider>
-              <LanguageProvider>
-                <CurrencyProvider>
-                  <App />
-                </CurrencyProvider>
-              </LanguageProvider>
-            </ThemeProvider>
-          </Boundary>
-        </QueryClientProvider>
-      </Provider>
-    </ErrorBoundary>
+    <WalletManagerProvider walletManager={walletManager}>
+      <ErrorBoundary>
+        <Provider store={store}>
+          <QueryClientProvider client={queryClient}>
+            <LoadingBoundary>
+              <ThemeProvider>
+                <LanguageProvider>
+                  <CurrencyProvider>
+                    <App />
+                  </CurrencyProvider>
+                </LanguageProvider>
+              </ThemeProvider>
+            </LoadingBoundary>
+          </QueryClientProvider>
+        </Provider>
+      </ErrorBoundary>
+    </WalletManagerProvider>
   )
 }
 

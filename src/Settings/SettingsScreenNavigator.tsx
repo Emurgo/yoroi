@@ -16,7 +16,7 @@ import {
 } from '../navigation'
 import {useSelectedWalletMeta, useSetSelectedWalletMeta} from '../SelectedWallet'
 import {lightPalette} from '../theme'
-import {walletManager} from '../yoroi-wallets'
+import {useWalletManager} from '../WalletManager'
 import {About} from './About'
 import {ApplicationSettingsScreen} from './ApplicationSettings'
 import {BiometricsLinkScreen} from './BiometricsLink/'
@@ -24,15 +24,16 @@ import {ChangeLanguageScreen} from './ChangeLanguage'
 import {ChangePasswordScreen} from './ChangePassword'
 import {ChangeWalletName} from './ChangeWalletName'
 import {ChangeCurrencyScreen} from './Currency/ChangeCurrencyScreen'
+import {DisableEasyConfirmationScreen, EnableEasyConfirmationScreen} from './EasyConfirmation'
 import {RemoveWalletScreen} from './RemoveWallet'
 import {SupportScreen} from './Support'
 import {TermsOfServiceScreen} from './TermsOfService'
-import {ToggleEasyConfirmationScreen} from './ToggleEasyConfirmation'
 import {WalletSettingsScreen} from './WalletSettings'
 
 const Stack = createStackNavigator<SettingsStackRoutes>()
 export const SettingsScreenNavigator = () => {
   const strings = useStrings()
+  const walletManager = useWalletManager()
   const navigation = useNavigation()
   const {navigateToSettings} = useWalletNavigation()
   const dispatch = useDispatch()
@@ -40,7 +41,12 @@ export const SettingsScreenNavigator = () => {
   const walletMeta = useSelectedWalletMeta()
 
   return (
-    <Stack.Navigator screenOptions={defaultStackNavigationOptionsV2} initialRouteName="settings-main">
+    <Stack.Navigator
+      screenOptions={{
+        ...defaultStackNavigationOptionsV2,
+        detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
+      }}
+    >
       <Stack.Screen //
         name="settings-main"
         component={SettingsTabNavigator}
@@ -101,9 +107,15 @@ export const SettingsScreenNavigator = () => {
       />
 
       <Stack.Screen //
-        name="easy-confirmation"
-        component={ToggleEasyConfirmationScreen}
-        options={{title: strings.toggleEachConfirmationTitle}}
+        name="enable-easy-confirmation"
+        component={EnableEasyConfirmationScreen}
+        options={{title: strings.enableEasyConfirmationTitle}}
+      />
+
+      <Stack.Screen //
+        name="disable-easy-confirmation"
+        component={DisableEasyConfirmationScreen}
+        options={{title: strings.disableEasyConfirmationTitle}}
       />
 
       <Stack.Screen //
@@ -199,8 +211,12 @@ const messages = defineMessages({
     id: 'components.settings.settingsscreen.title',
     defaultMessage: '!!!Support',
   },
-  toggleEachConfirmationTitle: {
-    id: 'components.settings.toggleeasyconfirmationscreen.title',
+  enableEasyConfirmationTitle: {
+    id: 'components.settings.enableeasyconfirmationscreen.title',
+    defaultMessage: '!!!Easy confirmation',
+  },
+  disableEasyConfirmationTitle: {
+    id: 'components.settings.disableeasyconfirmationscreen.title',
     defaultMessage: '!!!Easy confirmation',
   },
   customPinTitle: {
@@ -234,7 +250,8 @@ const useStrings = () => {
     termsOfServiceTitle: intl.formatMessage(messages.termsOfServiceTitle),
     changeWalletNameTitle: intl.formatMessage(messages.changeWalletNameTitle),
     supportTitle: intl.formatMessage(messages.supportTitle),
-    toggleEachConfirmationTitle: intl.formatMessage(messages.toggleEachConfirmationTitle),
+    enableEasyConfirmationTitle: intl.formatMessage(messages.enableEasyConfirmationTitle),
+    disableEasyConfirmationTitle: intl.formatMessage(messages.disableEasyConfirmationTitle),
     customPinTitle: intl.formatMessage(messages.customPinTitle),
     settingsTitle: intl.formatMessage(messages.settingsTitle),
     appSettingsTitle: intl.formatMessage(messages.appSettingsTitle),

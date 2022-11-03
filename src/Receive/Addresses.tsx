@@ -1,17 +1,18 @@
+import {fromPairs} from 'lodash'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import {useSelector} from 'react-redux'
 
 import {CopyButton, Icon, Spacer, Text} from '../components'
-import {externalAddressIndexSelector, isUsedAddressIndexSelector, receiveAddressesSelector} from '../legacy/selectors'
+import {isEmptyString} from '../legacy/utils'
+import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
-import {Modals} from './Modals'
+import AddressModal from './AddressModal'
 
 export const UnusedAddresses = () => {
   const strings = useStrings()
   const addresses = useUnusedAddresses()
-  const [address, setAddress] = React.useState<string | void>()
+  const [address, setAddress] = React.useState<string | null>(null)
 
   return (
     <View>
@@ -27,7 +28,7 @@ export const UnusedAddresses = () => {
         </React.Fragment>
       ))}
 
-      {address && <Modals address={address} onDone={() => setAddress()} />}
+      {!isEmptyString(address) && <AddressModal address={address} onRequestClose={() => setAddress(null)} visible />}
     </View>
   )
 }
@@ -35,7 +36,7 @@ export const UnusedAddresses = () => {
 export const UsedAddresses = () => {
   const strings = useStrings()
   const addresses = useUsedAddresses()
-  const [address, setAddress] = React.useState<string | void>()
+  const [address, setAddress] = React.useState<string | null>(null)
 
   return (
     <View>
@@ -50,7 +51,7 @@ export const UsedAddresses = () => {
         </React.Fragment>
       ))}
 
-      {address && <Modals address={address} onDone={() => setAddress()} />}
+      {!isEmptyString(address) && <AddressModal address={address} onRequestClose={() => setAddress(null)} visible />}
     </View>
   )
 }
@@ -59,13 +60,13 @@ const UsedAddress = ({address, onPress}: {address: string; onPress: () => void})
   const index = useAddressIndex(address)
 
   return (
-    <Row>
+    <Row testID="usedAddress">
       <Address>
         <Text secondary small bold>{`/${index}`}</Text>
 
         <Spacer width={8} />
 
-        <Text style={{flex: 1}} secondary small numberOfLines={1} ellipsizeMode="middle" monospace>
+        <Text style={{flex: 1}} secondary small numberOfLines={1} ellipsizeMode="middle" monospace testID="addressText">
           {address}
         </Text>
       </Address>
@@ -82,13 +83,13 @@ const UnusedAddress = ({address, onPress}: {address: string; onPress: () => void
   const index = useAddressIndex(address)
 
   return (
-    <Row>
+    <Row testID="unusedAddress">
       <Address>
         <Text small bold>{`/${index}`}</Text>
 
         <Spacer width={8} />
 
-        <Text style={{flex: 1}} small numberOfLines={1} ellipsizeMode="middle" monospace>
+        <Text style={{flex: 1}} small numberOfLines={1} ellipsizeMode="middle" monospace testID="addressText">
           {address}
         </Text>
       </Address>
@@ -106,7 +107,7 @@ const Row = (props) => <View {...props} style={styles.row} />
 const Address = (props) => <View {...props} style={styles.address} />
 const Actions = (props) => <View {...props} style={styles.actions} />
 const VerifyButton = (props) => (
-  <TouchableOpacity {...props}>
+  <TouchableOpacity {...props} testID="verifyAddressButton">
     <Icon.Verify size={20} color={COLORS.GRAY} />
   </TouchableOpacity>
 )
@@ -172,21 +173,24 @@ const useStrings = () => {
 }
 
 const useAddressIndex = (address: string) => {
-  const index = useSelector(externalAddressIndexSelector)[address]
+  const wallet = useSelectedWallet()
+  const index = fromPairs(wallet.externalAddresses.map((addr, i) => [addr, i]))[address]
 
   return index
 }
 
 const useUnusedAddresses = () => {
-  const receiveAddresses = useSelector(receiveAddressesSelector)
-  const isUsedAddressIndex = useSelector(isUsedAddressIndexSelector)
+  const wallet = useSelectedWallet()
+  const receiveAddresses = wallet.externalAddresses.slice(0, wallet.numReceiveAddresses)
+  const isUsedAddressIndex = wallet.isUsedAddressIndex
 
-  return receiveAddresses.filter((address) => !isUsedAddressIndex[address])
+  return receiveAddresses.filter((address) => isUsedAddressIndex[address] !== true)
 }
 
 const useUsedAddresses = () => {
-  const receiveAddresses = useSelector(receiveAddressesSelector)
-  const isUsedAddressIndex = useSelector(isUsedAddressIndexSelector)
+  const wallet = useSelectedWallet()
+  const receiveAddresses = wallet.externalAddresses.slice(0, wallet.numReceiveAddresses)
+  const isUsedAddressIndex = wallet.isUsedAddressIndex
 
   return receiveAddresses.filter((address) => isUsedAddressIndex[address])
 }

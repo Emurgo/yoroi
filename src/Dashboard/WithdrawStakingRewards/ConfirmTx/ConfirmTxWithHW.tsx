@@ -1,14 +1,12 @@
 import React from 'react'
 import {useIntl} from 'react-intl'
-import {useDispatch} from 'react-redux'
 
 import {TwoActionView} from '../../../components'
 import {useSignWithHwAndSubmitTx} from '../../../hooks'
 import {LedgerConnect, LedgerTransportSwitch} from '../../../HW'
 import {confirmationMessages, txLabels} from '../../../i18n/global-messages'
-import {setLedgerDeviceId, setLedgerDeviceObj} from '../../../legacy/hwWallet'
 import type {DeviceId, DeviceObj} from '../../../legacy/ledgerUtils'
-import {YoroiWallet} from '../../../yoroi-wallets'
+import {walletManager, withBLE, withUSB, YoroiWallet} from '../../../yoroi-wallets'
 import {YoroiUnsignedTx} from '../../../yoroi-wallets/types'
 import {TransferSummary} from '../TransferSummary'
 
@@ -19,7 +17,7 @@ type Props = {
   onSuccess: () => void
 }
 
-export const ConfirmTxWithHW: React.FC<Props> = ({wallet, unsignedTx, onSuccess, onCancel}) => {
+export const ConfirmTxWithHW = ({wallet, unsignedTx, onSuccess, onCancel}: Props) => {
   const strings = useStrings()
   const [transport, setTransport] = React.useState<'USB' | 'BLE'>('USB')
   const [step, setStep] = React.useState<'select-transport' | 'connect-transport' | 'confirm'>('select-transport')
@@ -29,13 +27,13 @@ export const ConfirmTxWithHW: React.FC<Props> = ({wallet, unsignedTx, onSuccess,
     setStep('connect-transport')
   }
 
-  const dispatch = useDispatch()
-  const onConnectBLE = async (deviceID: DeviceId) => {
-    await dispatch(setLedgerDeviceId(deviceID))
+  const onConnectBLE = async (deviceId: DeviceId) => {
+    await walletManager.updateHWDeviceInfo(wallet, withBLE(wallet, deviceId))
     setStep('confirm')
   }
+
   const onConnectUSB = async (deviceObj: DeviceObj) => {
-    await dispatch(setLedgerDeviceObj(deviceObj))
+    await walletManager.updateHWDeviceInfo(wallet, withUSB(wallet, deviceObj))
     setStep('confirm')
   }
 
@@ -77,7 +75,7 @@ export const ConfirmTxWithHW: React.FC<Props> = ({wallet, unsignedTx, onSuccess,
   )
 }
 
-const Route: React.FC<{active: boolean}> = ({active, children}) => <>{active ? children : null}</>
+const Route = ({active, children}: {active: boolean; children: React.ReactNode}) => <>{active ? children : null}</>
 
 const useStrings = () => {
   const intl = useIntl()

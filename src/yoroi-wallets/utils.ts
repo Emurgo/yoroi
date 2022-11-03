@@ -1,6 +1,7 @@
 import BigNumber from 'bignumber.js'
 
 import {Quantity, TokenId, YoroiAmount, YoroiAmounts, YoroiEntries, YoroiEntry} from './types'
+import {RawUtxo} from './types/other'
 
 export const Entries = {
   first: (entries: YoroiEntries): YoroiEntry => {
@@ -62,6 +63,11 @@ export const Amounts = {
       quantity: amounts[tokenId] || '0',
     }
   },
+  toArray: (amounts: YoroiAmounts) =>
+    Object.keys(amounts).reduce(
+      (result, current) => [...result, Amounts.getAmount(amounts, current)],
+      [] as Array<YoroiAmount>,
+    ),
 }
 
 export const Quantities = {
@@ -83,5 +89,39 @@ export const Quantities = {
   },
   quotient: (quantity1: Quantity, quantity2: Quantity) => {
     return new BigNumber(quantity1).dividedBy(new BigNumber(quantity2)).toString() as Quantity
+  },
+  isGreaterThan: (quantity1: Quantity, quantity2: Quantity) => {
+    return new BigNumber(quantity1).isGreaterThan(new BigNumber(quantity2))
+  },
+  decimalPlaces: (quantity: Quantity, precision: number) => {
+    return new BigNumber(quantity).decimalPlaces(precision).toString() as Quantity
+  },
+}
+
+export const Utxos = {
+  toAmounts: (utxos: RawUtxo[], primaryTokenId: TokenId) => {
+    return utxos.reduce(
+      (previousAmounts, currentUtxo) => {
+        const amounts = {
+          ...previousAmounts,
+          [primaryTokenId]: Quantities.sum([previousAmounts[primaryTokenId], currentUtxo.amount as Quantity]),
+        }
+
+        if (currentUtxo.assets) {
+          return currentUtxo.assets.reduce((previousAmountsWithAssets, currentAsset) => {
+            return {
+              ...previousAmountsWithAssets,
+              [currentAsset.assetId]: Quantities.sum([
+                previousAmountsWithAssets[currentAsset.assetId] ?? ('0' as Quantity),
+                currentAsset.amount as Quantity,
+              ]),
+            }
+          }, amounts)
+        }
+
+        return amounts
+      },
+      {[primaryTokenId]: '0'} as YoroiAmounts,
+    )
   },
 }

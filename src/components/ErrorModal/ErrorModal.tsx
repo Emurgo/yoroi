@@ -2,15 +2,16 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Image, LayoutAnimation, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
-import image from '../../assets//img/error.png'
+import image from '../../assets/img/error.png'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
+import {isEmptyString} from '../../legacy/utils'
 import {brand, COLORS, spacing} from '../../theme'
 import {Button, Icon, Modal} from '..'
 
 type ErrorViewProps = {
   title?: string
   errorMessage: string
-  errorLogs?: string | null
+  errorLogs: string | undefined | null
   onDismiss: () => void
 }
 
@@ -23,7 +24,7 @@ export const ErrorView = ({title, errorMessage, errorLogs, onDismiss}: ErrorView
   }
 
   return (
-    <ScrollView style={styles.scrollView}>
+    <ScrollView style={styles.scrollView} testID="errorView">
       <View style={styles.headerView}>
         <Text style={styles.title}>{title ?? intl.formatMessage(errorMessages.generalLocalizableError.title)}</Text>
         <Image source={image} style={styles.image} />
@@ -31,9 +32,14 @@ export const ErrorView = ({title, errorMessage, errorLogs, onDismiss}: ErrorView
 
       <Text style={styles.paragraph}>{errorMessage}</Text>
 
-      {errorLogs != null && (
+      {!isEmptyString(errorLogs) && (
         <View style={styles.errorSection}>
-          <TouchableOpacity accessibilityRole="button" onPress={toggleShowErrorlogs} activeOpacity={0.5}>
+          <TouchableOpacity
+            accessibilityRole="button"
+            onPress={toggleShowErrorlogs}
+            activeOpacity={0.5}
+            testID="showErrorLogsButton"
+          >
             <View style={styles.errorSectionHeader}>
               <Text style={styles.showErrorTrigger}>
                 {showErrorLogs ? intl.formatMessage(messages.hideError) : intl.formatMessage(messages.showError)}
@@ -51,7 +57,12 @@ export const ErrorView = ({title, errorMessage, errorLogs, onDismiss}: ErrorView
           )}
         </View>
       )}
-      <Button block onPress={onDismiss} title={intl.formatMessage(globalMessages.close)} />
+      <Button
+        block
+        onPress={onDismiss}
+        title={intl.formatMessage(globalMessages.close)}
+        testID="closeErrorModalButton"
+      />
     </ScrollView>
   )
 }
@@ -60,7 +71,7 @@ type Props = {
   visible: boolean
   title?: string
   errorMessage: string
-  errorLogs?: string | null
+  errorLogs: string | null
   onRequestClose: () => void
 }
 

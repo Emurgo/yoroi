@@ -1,16 +1,16 @@
+import BigNumber from 'bignumber.js'
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
-import {useSelector} from 'react-redux'
 
 import {Boundary, Spacer} from '../components'
 import {Icon} from '../components/Icon'
-import {useExchangeRate} from '../hooks'
+import {useBalances, useExchangeRate, useTokenInfo} from '../hooks'
 import {formatTokenWithText, formatTokenWithTextWhenHidden} from '../legacy/format'
-import {availableAssetsSelector, tokenBalanceSelector} from '../legacy/selectors'
 import {useSelectedWallet} from '../SelectedWallet'
 import {useCurrencyContext} from '../Settings/Currency'
 import {usePrivacyMode} from '../Settings/PrivacyMode/PrivacyMode'
 import {COLORS} from '../theme'
+import {Amounts, Quantities} from '../yoroi-wallets/utils'
 
 export const BalanceBanner = () => {
   const wallet = useSelectedWallet()
@@ -40,18 +40,20 @@ export const BalanceBanner = () => {
 const hiddenBalance = '*.******'
 const Balance = () => {
   const {privacyMode} = usePrivacyMode()
-  const availableAssets = useSelector(availableAssetsSelector)
-  const tokenBalance = useSelector(tokenBalanceSelector)
-  const token = availableAssets[tokenBalance.getDefaultId()]
+  const wallet = useSelectedWallet()
+  const balances = useBalances(wallet)
+  const tokenInfo = useTokenInfo({wallet, tokenId: ''})
 
   const balance =
     privacyMode === 'HIDDEN'
-      ? formatTokenWithTextWhenHidden(hiddenBalance, token)
-      : formatTokenWithText(tokenBalance.getDefault(), token)
+      ? formatTokenWithTextWhenHidden(hiddenBalance, tokenInfo)
+      : formatTokenWithText(new BigNumber(Amounts.getAmount(balances, '').quantity), tokenInfo)
 
   return (
     <Row>
-      <Text style={styles.balanceText}>{balance}</Text>
+      <Text style={styles.balanceText} testID="balanceText">
+        {balance}
+      </Text>
     </Row>
   )
 }
@@ -62,20 +64,34 @@ const hiddenPairedTotal = '*.**'
 const PairedBalance = () => {
   const {privacyMode} = usePrivacyMode()
   const wallet = useSelectedWallet()
-  const tokenBalance = useSelector(tokenBalanceSelector)
+  const balances = useBalances(wallet)
   const {currency, config} = useCurrencyContext()
   const rate = useExchangeRate({wallet, to: currency})
+  const tokenInfo = useTokenInfo({wallet, tokenId: ''})
 
   // hide pairing when set to the default asset ticker
   if (currency === 'ADA') return null
 
-  const balance = tokenBalance?.getDefault().dividedBy(10e5)
-  const total = rate && balance ? balance.times(rate).decimalPlaces(config.decimals).toString() : '...'
+  if (rate == null)
+    return (
+      <Text style={styles.totalText} testID="pairedTotalText">
+        ... {currency}
+      </Text>
+    )
 
-  const pairedTotal = privacyMode === 'HIDDEN' ? hiddenPairedTotal : total
+  const primaryAmount = Amounts.getAmount(balances, '')
+  const primaryExchangeQuantity = Quantities.quotient(
+    primaryAmount.quantity,
+    `${10 ** tokenInfo.metadata.numberOfDecimals}`,
+  )
+  const secondaryExchangeQuantity = Quantities.decimalPlaces(
+    Quantities.product([primaryExchangeQuantity, `${rate}`]),
+    config.decimals,
+  )
+  const pairedTotal = privacyMode === 'HIDDEN' ? hiddenPairedTotal : secondaryExchangeQuantity
 
   return (
-    <Text style={styles.totalText}>
+    <Text style={styles.totalText} testID="pairedTotalText">
       {pairedTotal} {currency}
     </Text>
   )

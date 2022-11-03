@@ -1,17 +1,18 @@
 import BigNumber from 'bignumber.js'
-import React from 'react'
+import React, {useEffect} from 'react'
 import {ActivityIndicator, StyleSheet, View} from 'react-native'
-import {useQuery} from 'react-query'
+import {useQuery, useQueryClient, UseQueryOptions} from 'react-query'
 
 import {useSelectedWallet} from '../SelectedWallet'
 import {YoroiWallet} from '../yoroi-wallets'
+import {YoroiUnsignedTx} from '../yoroi-wallets/types'
 import {StakePoolInfo} from './StakePoolInfo'
 
 export const StakePoolInfos = () => {
   const wallet = useSelectedWallet()
   const {stakePoolIds, isLoading} = useStakePoolIds(wallet)
 
-  return stakePoolIds ? (
+  return stakePoolIds != null ? (
     <View>
       {stakePoolIds.map((stakePoolId) => (
         <StakePoolInfo key={stakePoolId} stakePoolId={stakePoolId} />
@@ -44,32 +45,46 @@ type Staked = {
   rewards: string
 }
 
-export const useStakingInfo = (wallet: YoroiWallet) => {
-  const query = useQuery<StakingInfo>({
+const getStakePoolInfo = async (wallet: YoroiWallet) => {
+  const stakingStatus = await wallet.getDelegationStatus()
+  if (!stakingStatus.isRegistered) return {status: 'not-registered'} as NotRegistered
+  if (!('poolKeyHash' in stakingStatus)) return {status: 'registered'} as Registered
+
+  const accountStates = await wallet.fetchAccountState()
+  const accountState = accountStates[wallet.rewardAddressHex]
+  if (!accountState) throw new Error('Account state not found')
+
+  const stakingUtxos = await wallet.getAllUtxosForKey()
+  const amount = sum([...stakingUtxos.map((utxo) => utxo.amount), accountState.remainingAmount])
+
+  return {
+    status: 'staked',
+    poolId: stakingStatus.poolKeyHash,
+    amount,
+    rewards: accountState.remainingAmount,
+  } as Staked
+}
+
+export const usePrefetchStakingInfo = (wallet: YoroiWallet) => {
+  const queryClient = useQueryClient()
+
+  useEffect(() => {
+    queryClient.prefetchQuery({
+      queryKey: [wallet.id, 'stakingInfo'],
+      queryFn: () => getStakePoolInfo(wallet),
+    })
+  }, [queryClient, wallet])
+}
+
+export const useStakingInfo = (
+  wallet: YoroiWallet,
+  options?: UseQueryOptions<StakingInfo, Error, StakingInfo, [string, string]>,
+) => {
+  const query = useQuery({
+    ...options,
     retry: false,
     queryKey: [wallet.id, 'stakingInfo'],
-    queryFn: async () => {
-      const stakingStatus = await wallet.getDelegationStatus()
-      if (!stakingStatus.isRegistered || !('poolKeyHash' in stakingStatus))
-        return {
-          status: stakingStatus.isRegistered ? 'registered' : 'not-registered',
-        }
-
-      const accountStates = await wallet.fetchAccountState()
-      const accountState = accountStates[wallet.rewardAddressHex]
-      if (!accountState) throw new Error('Account state not found')
-
-      const utxos = await wallet.fetchUTXOs()
-      const stakingUtxos = await wallet.getAllUtxosForKey(utxos)
-      const amount = sum([...stakingUtxos.map((utxo) => utxo.amount), accountState.remainingAmount])
-
-      return {
-        status: 'staked',
-        poolId: stakingStatus.poolKeyHash,
-        amount,
-        rewards: accountState.remainingAmount,
-      }
-    },
+    queryFn: () => getStakePoolInfo(wallet),
   })
 
   React.useEffect(() => {
@@ -86,13 +101,43 @@ export const useStakingInfo = (wallet: YoroiWallet) => {
   }
 }
 
-export const useStakePoolIds = (wallet: YoroiWallet) => {
-  const {stakingInfo, ...stakingInfoQuery} = useStakingInfo(wallet)
+export const useStakePoolIds = (
+  wallet: YoroiWallet,
+  options?: UseQueryOptions<StakingInfo, Error, StakingInfo, [string, string]>,
+) => {
+  const {stakingInfo, ...query} = useStakingInfo(wallet, options)
 
   return {
-    ...stakingInfoQuery,
-    stakePoolIds: !stakingInfo ? undefined : stakingInfo.status === 'staked' ? [stakingInfo.poolId] : [],
+    ...query,
+    stakePoolIds: stakingInfo?.status === 'staked' ? [stakingInfo.poolId] : [],
   }
 }
 
 const sum = (numbers: Array<string>) => numbers.reduce((x: BigNumber, y) => x.plus(y), new BigNumber(0)).toString()
+
+export const useStakingTx = (
+  {wallet, poolId}: {wallet: YoroiWallet; poolId?: string},
+  options: UseQueryOptions<YoroiUnsignedTx, Error, YoroiUnsignedTx, [string, 'stakingTx']>,
+) => {
+  const query = useQuery({
+    ...options,
+    queryKey: [wallet.id, 'stakingTx'],
+    queryFn: async () => {
+      if (poolId == null) throw new Error('invalid state')
+      const accountStates = await wallet.fetchAccountState()
+      const accountState = accountStates[wallet.rewardAddressHex]
+      if (!accountState) throw new Error('Account state not found')
+
+      const stakingUtxos = await wallet.getAllUtxosForKey()
+      const amountToDelegate = sum([...stakingUtxos.map((utxo) => utxo.amount), accountState.remainingAmount])
+
+      return wallet.createDelegationTx(poolId, new BigNumber(amountToDelegate))
+    },
+    enabled: poolId != null,
+  })
+
+  return {
+    ...query,
+    stakingTx: query.data,
+  }
+}

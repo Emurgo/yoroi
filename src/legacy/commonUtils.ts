@@ -10,14 +10,14 @@ import {generateMnemonic, mnemonicToEntropy} from 'bip39'
 import cryptoRandomString from 'crypto-random-string'
 import {randomBytes} from 'react-native-randombytes'
 
-import {SendTokenList} from '../types'
-import {Bip32PrivateKey, decryptWithPassword, DefaultTokenEntry, encryptWithPassword} from '../yoroi-wallets'
+import {Cardano, CardanoMobile, DefaultTokenEntry} from '../yoroi-wallets'
 import {MultiToken} from '../yoroi-wallets'
+import {SendTokenList} from '../yoroi-wallets/types'
+import type {WalletImplementationId} from '../yoroi-wallets/types/other'
+import {DERIVATION_TYPES} from '../yoroi-wallets/types/other'
 import assert from './assert'
 import {CONFIG, getWalletConfigById} from './config'
 import {CardanoError, WrongPassword} from './errors'
-import type {WalletImplementationId} from './types'
-import {DERIVATION_TYPES} from './types'
 export type AddressType = 'Internal' | 'External'
 export const ADDRESS_TYPE_TO_CHANGE: Record<AddressType, number> = {
   External: 0,
@@ -31,7 +31,7 @@ export const generateAdaMnemonic = () => generateMnemonic(CONFIG.MNEMONIC_STRENG
 export const generateWalletRootKey = async (mnemonic: string) => {
   const bip39entropy = mnemonicToEntropy(mnemonic)
   const EMPTY_PASSWORD = Buffer.from('')
-  const rootKey = await Bip32PrivateKey.fromBip39Entropy(Buffer.from(bip39entropy, 'hex'), EMPTY_PASSWORD)
+  const rootKey = await CardanoMobile.Bip32PrivateKey.fromBip39Entropy(Buffer.from(bip39entropy, 'hex'), EMPTY_PASSWORD)
 
   return rootKey
 }
@@ -49,7 +49,7 @@ export const encryptData = async (plaintextHex: string, secretKey: string): Prom
   const nonceHex = cryptoRandomString({
     length: 2 * 12,
   })
-  return await encryptWithPassword(secretKeyHex, saltHex, nonceHex, plaintextHex)
+  return Cardano.encryptWithPassword(secretKeyHex, saltHex, nonceHex, plaintextHex)
 }
 export const decryptData = async (ciphertext: string, secretKey: string): Promise<string> => {
   assert.assert(!!ciphertext, 'decrypt:: !!cyphertext')
@@ -57,7 +57,7 @@ export const decryptData = async (ciphertext: string, secretKey: string): Promis
   const secretKeyHex = Buffer.from(secretKey, 'utf8').toString('hex')
 
   try {
-    return await decryptWithPassword(secretKeyHex, ciphertext)
+    return await Cardano.decryptWithPassword(secretKeyHex, ciphertext)
   } catch (error) {
     if ((error as Error).message === 'Decryption error') {
       throw new WrongPassword()

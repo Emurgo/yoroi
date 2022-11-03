@@ -1,35 +1,34 @@
-import type {WalletChecksum} from '@emurgo/cip4-js'
-import {CardanoAddressedUtxo, TxMetadata} from '@emurgo/yoroi-lib-core'
 import {BigNumber} from 'bignumber.js'
 import type {IntlShape} from 'react-intl'
 
-import type {Transaction} from '../../legacy/HistoryTransaction'
 import type {HWDeviceInfo} from '../../legacy/ledgerUtils'
 import {WalletMeta} from '../../legacy/state'
+import storage from '../../legacy/storage'
+import {
+  AccountStates,
+  StakePoolInfoRequest,
+  StakePoolInfosAndHistories,
+  StakingStatus,
+  YoroiSignedTx,
+  YoroiUnsignedTx,
+} from '../types'
 import type {
+  AddressedUtxo,
   CurrencySymbol,
   FundInfoResponse,
   RawUtxo,
   TipStatusResponse,
+  Transaction,
+  TransactionInfo,
   TxBodiesRequest,
   TxBodiesResponse,
   TxStatusRequest,
   TxStatusResponse,
-} from '../../legacy/types'
-import type {EncryptionMethod, WalletState} from '../../legacy/types'
-import {
-  AccountStates,
-  AddressedUtxo,
-  DefaultAsset,
-  SendTokenList,
-  StakePoolInfoRequest,
-  StakePoolInfosAndHistories,
-  StakingStatus,
-  Token,
-  TokenInfo,
-} from '../../types'
-import {YoroiSignedTx, YoroiUnsignedTx} from '../types'
-import Wallet from '../Wallet'
+} from '../types/other'
+import type {EncryptionMethod, WalletState} from '../types/other'
+import {DefaultAsset, SendTokenList, TokenInfo} from '../types/tokens'
+import {WalletEvent} from '../Wallet'
+import {CardanoTypes} from '.'
 import type {Addresses} from './chain'
 import {AddressChain} from './chain'
 import {TransactionCache} from './shelley/transactionCache'
@@ -75,7 +74,9 @@ export interface WalletInterface {
 
   transactionCache: null | TransactionCache
 
-  checksum: undefined | WalletChecksum
+  checksum: undefined | CardanoTypes.WalletChecksum
+
+  storage: typeof storage
 
   // =================== getters =================== //
 
@@ -121,14 +122,14 @@ export interface WalletInterface {
 
   // =================== subscriptions =================== //
 
-  subscribe(handler: (wallet: Wallet) => void): void
-  subscribeOnTxHistoryUpdate(handler: () => void): void
+  subscribe(handler: (event: WalletEvent) => void): () => void
+  subscribeOnTxHistoryUpdate(handler: () => void): () => void
 
   // =================== synch =================== //
 
-  doFullSync(): Promise<Record<string, Transaction>>
+  doFullSync(): Promise<void>
 
-  tryDoFullSync(): Promise<Record<string, Transaction> | null>
+  tryDoFullSync(): Promise<void>
 
   // =================== state/UI =================== //
 
@@ -140,6 +141,10 @@ export interface WalletInterface {
 
   // =================== persistence =================== //
 
+  save(): Promise<void>
+
+  clear(): Promise<void>
+
   // TODO: type
   toJSON(): unknown
 
@@ -150,44 +155,28 @@ export interface WalletInterface {
   // not exposed to wallet manager, consider removing
   getChangeAddress(): string
 
-  getAllUtxosForKey(utxos: Array<RawUtxo>): Promise<Array<AddressedUtxo>>
+  getAllUtxosForKey(): Promise<Array<AddressedUtxo>>
 
   getAddressing(address: string): unknown
 
-  asAddressedUtxo(utxos: Array<RawUtxo>): Array<CardanoAddressedUtxo>
-  asLegacyAddressedUtxo(utxos: Array<RawUtxo>): Array<AddressedUtxo>
+  getAddressedUtxos(): Promise<Array<CardanoTypes.CardanoAddressedUtxo>>
+  getLegacyAddressedUtxos(): Promise<Array<AddressedUtxo>>
 
   getDelegationStatus(): Promise<StakingStatus>
 
   createUnsignedTx(
-    utxos: Array<RawUtxo>,
     receiver: string,
     tokens: SendTokenList,
-    defaultToken: Token,
-    metadata?: Array<TxMetadata>,
+    metadata?: Array<CardanoTypes.TxMetadata>,
   ): Promise<YoroiUnsignedTx>
 
   signTx(signRequest: YoroiUnsignedTx, decryptedMasterKey: string): Promise<YoroiSignedTx>
 
-  createDelegationTx(
-    poolRequest: string,
-    valueInAccount: BigNumber,
-    utxos: Array<RawUtxo>,
-    defaultAsset: DefaultAsset,
-  ): Promise<YoroiUnsignedTx>
+  createDelegationTx(poolRequest: string, valueInAccount: BigNumber): Promise<YoroiUnsignedTx>
 
-  createVotingRegTx(
-    utxos: Array<RawUtxo>,
-    catalystPrivateKey: string,
-    defaultAsset: DefaultAsset,
-    decryptedKey: string | undefined,
-  ): Promise<YoroiUnsignedTx>
+  createVotingRegTx(): Promise<{votingRegTx: YoroiUnsignedTx; votingKeyEncrypted: string}>
 
-  createWithdrawalTx(
-    utxos: Array<RawUtxo>,
-    defaultAsset: DefaultAsset,
-    shouldDeregister: boolean,
-  ): Promise<YoroiUnsignedTx>
+  createWithdrawalTx(shouldDeregister: boolean): Promise<YoroiUnsignedTx>
 
   signTxWithLedger(request: YoroiUnsignedTx, useUSB: boolean): Promise<YoroiSignedTx>
 
@@ -236,7 +225,7 @@ export type YoroiProvider = '' | 'emurgo-alonzo'
 export type ServerStatus = {
   isServerOk: boolean
   isMaintenance: boolean
-  serverTime: Date | undefined
+  serverTime: number | undefined
   isQueueOnline?: boolean
 }
 
@@ -262,9 +251,12 @@ export type YoroiWallet = Pick<WalletInterface, YoroiWalletKeys> & {
   id: NonNullable<WalletInterface['id']>
   networkId: NonNullable<WalletInterface['networkId']>
   walletImplementationId: NonNullable<WalletInterface['walletImplementationId']>
+  defaultAsset: DefaultAsset
   checksum: NonNullable<WalletInterface['checksum']>
   isReadOnly: NonNullable<WalletInterface['isReadOnly']>
   rewardAddressHex: NonNullable<WalletInterface['rewardAddressHex']>
+  getTransactions: (txids: Array<string>) => Promise<Record<string, TransactionInfo>>
+  sync: () => Promise<void>
 }
 
 export const isYoroiWallet = (wallet: unknown): wallet is YoroiWallet => {
@@ -304,6 +296,17 @@ type YoroiWalletKeys =
   | 'subscribe'
   | 'toJSON'
   | 'fetchCurrentPrice'
+  | 'fetchFundInfo'
+  | 'internalAddresses'
+  | 'externalAddresses'
+  | 'confirmationCounts'
+  | 'transactions'
+  | 'isUsedAddressIndex'
+  | 'numReceiveAddresses'
+  | 'canGenerateNewReceiveAddress'
+  | 'storage'
+  | 'save'
+  | 'doFullSync'
 
 const yoroiWalletKeys: Array<YoroiWalletKeys> = [
   'id',
@@ -337,6 +340,15 @@ const yoroiWalletKeys: Array<YoroiWalletKeys> = [
   'fetchPoolInfo',
   'toJSON',
   'fetchCurrentPrice',
+  'fetchFundInfo',
+  'internalAddresses',
+  'externalAddresses',
+  'confirmationCounts',
+  'transactions',
+  'isUsedAddressIndex',
+  'numReceiveAddresses',
+  'canGenerateNewReceiveAddress',
+  'storage',
+  'save',
+  'doFullSync',
 ]
-
-export * from '@emurgo/yoroi-lib-core/dist/internals/wasm-contract'

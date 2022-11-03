@@ -20,6 +20,7 @@ export const CopyButton = ({value, onCopy}: CopyButtonProps) => {
         onCopy?.()
       }}
       disabled={isCopying}
+      testID="copyButton"
     >
       {isCopying ? <Icon.CopySuccess size={26} color={COLORS.GRAY} /> : <Icon.Copy size={26} color={COLORS.GRAY} />}
     </TouchableOpacity>

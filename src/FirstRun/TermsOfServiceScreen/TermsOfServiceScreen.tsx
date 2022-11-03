@@ -5,10 +5,11 @@ import {Platform, ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch} from 'react-redux'
 
+import {useAuth} from '../../auth/AuthProvider'
 import {Button, Checkbox, PleaseWaitModal, Spacer, StatusBar} from '../../components'
 import {useLanguage} from '../../i18n'
 import globalMessages from '../../i18n/global-messages'
-import {acceptAndSaveTos, setSystemAuth, signin} from '../../legacy/actions'
+import {acceptAndSaveTos, setSystemAuth} from '../../legacy/actions'
 import {CONFIG} from '../../legacy/config'
 import {canBiometricEncryptionBeEnabled} from '../../legacy/deviceSettings'
 import {TermsOfService} from '../../Legal'
@@ -20,6 +21,7 @@ export const TermsOfServiceScreen = () => {
   const {language} = useLanguage()
   const [acceptedTos, setAcceptedTos] = React.useState(false)
   const [savingConsent, setSavingConsent] = React.useState(false)
+  const {login} = useAuth()
 
   const dispatch = useDispatch()
   const handleAccepted = async () => {
@@ -39,7 +41,7 @@ export const TermsOfServiceScreen = () => {
       // note(v-almonacid) here we don't setSavingConsent(false)
       // because signin() will likely unmount the component before the
       // update is dispatched
-      dispatch(signin())
+      login()
     } else {
       setSavingConsent(false)
       navigation.navigate('custom-pin')

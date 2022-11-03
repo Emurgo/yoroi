@@ -6,27 +6,62 @@ import RNBootSplash from 'react-native-bootsplash'
 import * as RNP from 'react-native-paper'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {enableScreens} from 'react-native-screens'
-import {useDispatch, useSelector} from 'react-redux'
+import {useDispatch} from 'react-redux'
 
 import AppNavigator from './AppNavigator'
+import {AuthProvider} from './auth/AuthProvider'
 import {initApp} from './legacy/actions'
-import {isAppInitializedSelector} from './legacy/selectors'
 import {SelectedWalletMetaProvider, SelectedWalletProvider} from './SelectedWallet'
 import {StorageProvider} from './Storage'
 
 enableScreens()
 
 if (Platform.OS === 'android') {
-  if (UIManager.setLayoutAnimationEnabledExperimental) {
+  if (UIManager.setLayoutAnimationEnabledExperimental != null) {
     UIManager.setLayoutAnimationEnabledExperimental(true)
   }
 }
 
-const useInitializeApp = () => {
+const App = () => {
+  useHideScreenInAppSwitcher()
+
+  const loaded = useInitApp()
+
+  if (!loaded) return null
+
+  return (
+    <SafeAreaProvider>
+      <RNP.Provider>
+        <AuthProvider>
+          <StorageProvider>
+            <SelectedWalletMetaProvider>
+              <SelectedWalletProvider>
+                <AppNavigator />
+              </SelectedWalletProvider>
+            </SelectedWalletMetaProvider>
+          </StorageProvider>
+        </AuthProvider>
+      </RNP.Provider>
+    </SafeAreaProvider>
+  )
+}
+
+export default App
+
+const useInitApp = () => {
+  const [loaded, setLoaded] = React.useState(false)
   const dispatch = useDispatch()
   useEffect(() => {
-    dispatch(initApp())
+    const load = async () => {
+      await dispatch(initApp())
+      setLoaded(true)
+      setTimeout(() => RNBootSplash.hide({fade: true}), 200)
+    }
+
+    load()
   }, [dispatch])
+
+  return loaded
 }
 
 const useHideScreenInAppSwitcher = () => {
@@ -48,27 +83,3 @@ const useHideScreenInAppSwitcher = () => {
     return () => subscription?.remove()
   }, [])
 }
-
-const App = () => {
-  useHideScreenInAppSwitcher()
-  useInitializeApp()
-  const isAppInitialized = useSelector(isAppInitializedSelector)
-
-  if (!isAppInitialized) return null
-
-  return (
-    <SafeAreaProvider>
-      <RNP.Provider>
-        <StorageProvider>
-          <SelectedWalletMetaProvider>
-            <SelectedWalletProvider>
-              <AppNavigator />
-            </SelectedWalletProvider>
-          </SelectedWalletMetaProvider>
-        </StorageProvider>
-      </RNP.Provider>
-    </SafeAreaProvider>
-  )
-}
-
-export default App

@@ -7,8 +7,10 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Button, TextInput} from '../../components'
 import {useChangeWalletName, useWalletName, useWalletNames} from '../../hooks'
 import globalMessages from '../../i18n/global-messages'
+import {isEmptyString} from '../../legacy/utils'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
+import {useWalletManager} from '../../WalletManager'
 import {getWalletNameError, validateWalletName} from '../../yoroi-wallets/utils/validators'
 
 export const ChangeWalletName = () => {
@@ -19,19 +21,19 @@ export const ChangeWalletName = () => {
   const walletName = useWalletName(wallet)
   const {renameWallet, isLoading} = useChangeWalletName(wallet, {onSuccess: () => navigation.goBack()})
 
-  const walletNames = useWalletNames()
-  const [newWalletName, setNewWalletName] = React.useState(walletName || '')
-  const validationErrors = validateWalletName(newWalletName, walletName || null, walletNames || [])
+  const walletManager = useWalletManager()
+  const {walletNames} = useWalletNames(walletManager)
+  const [newWalletName, setNewWalletName] = React.useState(walletName ?? '')
+  const validationErrors = validateWalletName(newWalletName, walletName ?? null, walletNames || [])
   const hasErrors = Object.keys(validationErrors).length > 0
-  const errorText =
-    getWalletNameError(
-      {
-        tooLong: strings.tooLong,
-        nameAlreadyTaken: strings.nameAlreadyTaken,
-        mustBeFilled: strings.mustBeFilled,
-      },
-      validationErrors,
-    ) || undefined
+  const errorText = getWalletNameError(
+    {
+      tooLong: strings.tooLong,
+      nameAlreadyTaken: strings.nameAlreadyTaken,
+      mustBeFilled: strings.mustBeFilled,
+    },
+    validationErrors,
+  )
 
   return (
     <SafeAreaView style={styles.safeAreaView} edges={['left', 'right', 'bottom']}>
@@ -48,7 +50,7 @@ export const ChangeWalletName = () => {
           label={strings.walletNameInputLabel}
           value={newWalletName}
           onChangeText={(walletName: string) => setNewWalletName(walletName.trim())}
-          errorText={errorText}
+          errorText={!isEmptyString(errorText) ? errorText : undefined}
           autoComplete={false}
         />
       </ScrollView>
@@ -56,7 +58,7 @@ export const ChangeWalletName = () => {
       <View style={styles.action}>
         <Button
           onPress={() => {
-            if (hasErrors || !newWalletName) return
+            if (hasErrors || isEmptyString(newWalletName)) return
             renameWallet(newWalletName)
           }}
           title={strings.changeButton}

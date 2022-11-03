@@ -1,10 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type {WalletChecksum} from '@emurgo/cip4-js'
 import _ from 'lodash'
 import type {IntlShape} from 'react-intl'
 import {defaultMemoize} from 'reselect'
 
-import * as api from '../legacy/api'
 import assert from '../legacy/assert'
 import {CONFIG} from '../legacy/config'
 import KeyStore from '../legacy/KeyStore'
@@ -12,10 +10,11 @@ import type {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {Logger} from '../legacy/logging'
 import {getCardanoNetworkConfigById, isJormungandr} from '../legacy/networks'
 import {IsLockedError, nonblockingSynchronize, synchronize} from '../legacy/promise'
-import type {BackendConfig, EncryptionMethod} from '../legacy/types'
-import {NetworkId, WalletImplementationId, YoroiProvider} from './cardano'
-import {AddressChain, AddressChainJSON} from './cardano/chain'
-import {TransactionCache, TransactionCacheJSON} from './cardano/shelley/transactionCache'
+import {CardanoTypes, NetworkId, WalletImplementationId, YoroiProvider} from './cardano'
+import * as api from './cardano/api'
+import {AddressChain, AddressChainJSON, Addresses} from './cardano/chain'
+import {TransactionCache} from './cardano/shelley/transactionCache'
+import type {BackendConfig, EncryptionMethod, Transaction} from './types/other'
 import {validatePassword} from './utils/validators'
 
 type WalletState = {
@@ -39,13 +38,20 @@ export type ShelleyWalletJSON = {
   lastGeneratedAddressIndex: number
   internalChain: AddressChainJSON
   externalChain: AddressChainJSON
-
-  transactionCache: TransactionCacheJSON
 }
 
 export type ByronWalletJSON = Omit<ShelleyWalletJSON, 'account'>
 
 export type WalletJSON = ShelleyWalletJSON | ByronWalletJSON
+
+export type WalletEvent =
+  | {type: 'initialize'}
+  | {type: 'easy-confirmation'; enabled: boolean}
+  | {type: 'transactions'; transactions: Record<string, Transaction>}
+  | {type: 'addresses'; addresses: Addresses}
+  | {type: 'state'; state: WalletState}
+
+export type WalletSubscription = (event: WalletEvent) => void
 
 export class Wallet {
   id: null | string = null
@@ -75,7 +81,7 @@ export class Wallet {
   // last known version the wallet has been opened on
   version: undefined | string
 
-  checksum: undefined | WalletChecksum
+  checksum: undefined | CardanoTypes.WalletChecksum
 
   state: WalletState = {
     lastGeneratedAddressIndex: 0,
@@ -87,7 +93,7 @@ export class Wallet {
 
   _doFullSyncMutex: any = {name: 'doFullSyncMutex', lock: null}
 
-  _subscriptions: Array<(Wallet) => void> = []
+  private subscriptions: Array<WalletSubscription> = []
 
   _onTxHistoryUpdateSubscriptions: Array<(Wallet) => void> = []
 
@@ -152,7 +158,7 @@ export class Wallet {
 
   async getDecryptedMasterKey(masterPassword: string, intl: IntlShape) {
     if (!this.id) throw new Error('invalid wallet state')
-    return await KeyStore.getData(this.id, 'MASTER_PASSWORD', '', masterPassword, intl)
+    return KeyStore.getData(this.id, 'MASTER_PASSWORD', '', masterPassword, intl)
   }
 
   async enableEasyConfirmation(masterPassword: string, intl: IntlShape) {
@@ -162,6 +168,8 @@ export class Wallet {
     await this.encryptAndSaveMasterKey('SYSTEM_PIN', decryptedMasterKey)
 
     this.isEasyConfirmationEnabled = true
+
+    this.notify({type: 'easy-confirmation', enabled: this.isEasyConfirmationEnabled})
   }
 
   async changePassword(masterPassword: string, newPassword: string, intl: IntlShape) {
@@ -179,20 +187,28 @@ export class Wallet {
   // =================== subscriptions =================== //
 
   // needs to be bound
-  notify = () => {
-    this._subscriptions.forEach((handler) => handler(this))
+  notify = (event: WalletEvent) => {
+    this.subscriptions.forEach((handler) => handler(event))
   }
 
-  subscribe(handler: (Wallet) => void) {
-    this._subscriptions.push(handler)
+  subscribe(subscription: WalletSubscription) {
+    this.subscriptions.push(subscription)
+
+    return () => {
+      this.subscriptions = this.subscriptions.filter((sub) => sub !== subscription)
+    }
   }
 
   notifyOnTxHistoryUpdate = () => {
     this._onTxHistoryUpdateSubscriptions.forEach((handler) => handler(this))
   }
 
-  subscribeOnTxHistoryUpdate(handler: () => void) {
-    this._onTxHistoryUpdateSubscriptions.push(handler)
+  subscribeOnTxHistoryUpdate(subscription: () => void) {
+    this._onTxHistoryUpdateSubscriptions.push(subscription)
+
+    return () => {
+      this._onTxHistoryUpdateSubscriptions = this._onTxHistoryUpdateSubscriptions.filter((sub) => sub !== subscription)
+    }
   }
 
   setupSubscriptions() {
@@ -200,26 +216,28 @@ export class Wallet {
     if (!this.externalChain) throw new Error('invalid wallet state')
     if (!this.transactionCache) throw new Error('invalid wallet state')
 
-    this.transactionCache.subscribe(this.notify)
-    this.transactionCache.subscribeOnTxHistoryUpdate(this.notifyOnTxHistoryUpdate)
-    this.internalChain.addSubscriberToNewAddresses(this.notify)
-    this.externalChain.addSubscriberToNewAddresses(this.notify)
+    this.transactionCache.subscribe(() => this.notify({type: 'transactions', transactions: this.transactions}))
+    this.transactionCache.subscribe(this.notifyOnTxHistoryUpdate)
+    this.internalChain.addSubscriberToNewAddresses(() =>
+      this.notify({type: 'addresses', addresses: this.internalAddresses}),
+    )
+    this.externalChain.addSubscriberToNewAddresses(() =>
+      this.notify({type: 'addresses', addresses: this.externalAddresses}),
+    )
   }
 
   // =================== synch =================== //
 
   async doFullSync() {
-    return await synchronize(this._doFullSyncMutex, () => this._doFullSync())
+    return synchronize(this._doFullSyncMutex, () => this._doFullSync())
   }
 
   async tryDoFullSync() {
     try {
       return await nonblockingSynchronize(this._doFullSyncMutex, () => this._doFullSync())
-    } catch (e) {
-      if (e instanceof IsLockedError) {
-        return null
-      } else {
-        throw e
+    } catch (error) {
+      if (!(error instanceof IsLockedError)) {
+        throw error
       }
     }
   }
@@ -275,7 +293,6 @@ export class Wallet {
     if (lastUsedIndex > this.state.lastGeneratedAddressIndex) {
       this.state.lastGeneratedAddressIndex = lastUsedIndex
     }
-    return this.transactionCache.transactions
   }
 
   resync() {
@@ -293,7 +310,7 @@ export class Wallet {
       ...update,
     }
 
-    this.notify()
+    this.notify({type: 'state', state: this.state})
   }
 
   canGenerateNewReceiveAddress() {
@@ -339,7 +356,6 @@ export class Wallet {
     if (this.internalAddresses == null) throw new Error('invalid WalletJSON: internalAddresses')
     if (this.externalChain == null) throw new Error('invalid WalletJSON: externalChain')
     if (this.internalChain == null) throw new Error('invalid WalletJSON: internalChain')
-    if (this.transactionCache == null) throw new Error('invalid WalletJSON: transactionCache')
 
     return {
       lastGeneratedAddressIndex: this.state.lastGeneratedAddressIndex,
@@ -347,7 +363,6 @@ export class Wallet {
       version: this.version,
       internalChain: this.internalChain.toJSON(),
       externalChain: this.externalChain.toJSON(),
-      transactionCache: this.transactionCache.toJSON(),
       networkId: this.networkId,
       walletImplementationId: this.walletImplementationId,
       isHW: this.isHW,

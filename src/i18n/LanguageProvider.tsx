@@ -1,15 +1,17 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import _ from 'lodash'
 import React from 'react'
 import {IntlProvider} from 'react-intl'
 import {NativeModules, Platform, Text} from 'react-native'
 import {useMutation, UseMutationOptions, useQuery, useQueryClient, UseQueryOptions} from 'react-query'
 
+import {isEmptyString} from '../legacy/utils'
 import {updateLanguageSettings} from '.'
 import {supportedLanguages} from './languages'
 import translations from './translations'
 
 const LanguageContext = React.createContext<undefined | LanguageContext>(undefined)
-export const LanguageProvider: React.FC = ({children}) => {
+export const LanguageProvider = ({children}: {children: React.ReactNode}) => {
   const languageCode = useLanguageCode()
   const language = supportedLanguages[languageCode]
   const selectLanguageCode = useSaveLanguageCode()
@@ -31,15 +33,14 @@ const missingProvider = () => {
 
 const useLanguageCode = ({onSuccess, ...options}: UseQueryOptions<LanguageCode> = {}) => {
   const query = useQuery({
-    initialData: defaultLanguageCode,
     queryKey: ['languageCode'],
     queryFn: async () => {
       const languageCode = await AsyncStorage.getItem('/appSettings/languageCode')
 
-      if (languageCode) {
+      if (!_.isNil(languageCode)) {
         const parsedLanguageCode: LanguageCode = JSON.parse(languageCode)
         const stillSupported = supportedLanguages[parsedLanguageCode]
-        if (stillSupported) {
+        if (!_.isNil(stillSupported)) {
           return parsedLanguageCode
         }
       }
@@ -54,7 +55,7 @@ const useLanguageCode = ({onSuccess, ...options}: UseQueryOptions<LanguageCode> 
     ...options,
   })
 
-  if (!query.data) throw new Error('Invalid state')
+  if (isEmptyString(query.data)) throw new Error('Invalid state')
 
   return query.data
 }
@@ -87,9 +88,10 @@ type LanguageContext = {
 
 const systemLanguageCode: string = Platform.select({
   ios: () =>
-    NativeModules.SettingsManager.settings.AppleLocale || NativeModules.SettingsManager.settings.AppleLanguages[0],
+    NativeModules.SettingsManager.settings.AppleLocale ?? NativeModules.SettingsManager.settings.AppleLanguages[0],
   android: () => NativeModules.I18nManager.localeIdentifier,
   default: () => 'en-US',
 })()
 
-const defaultLanguageCode = supportedLanguages[systemLanguageCode] ? (systemLanguageCode as LanguageCode) : 'en-US'
+const defaultLanguageCode =
+  supportedLanguages[systemLanguageCode] !== undefined ? (systemLanguageCode as LanguageCode) : 'en-US'

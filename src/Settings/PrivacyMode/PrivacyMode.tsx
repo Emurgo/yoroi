@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import {UseMutationOptions, useQuery} from 'react-query'
 
 import {useMutationWithInvalidations} from '../../hooks'
+import {isEmptyString} from '../../legacy/utils'
 
 export const useReadPrivacyMode = () => {
   const query = useQuery<PrivacyMode, Error>({
@@ -9,7 +10,7 @@ export const useReadPrivacyMode = () => {
     queryFn: async () => {
       const storedPrivacyMode = await AsyncStorage.getItem('/appSettings/privacyMode')
 
-      if (storedPrivacyMode) {
+      if (!isEmptyString(storedPrivacyMode)) {
         const parsedPrivacyMode = JSON.parse(storedPrivacyMode)
         return parsedPrivacyMode
       }
@@ -19,7 +20,7 @@ export const useReadPrivacyMode = () => {
     suspense: true,
   })
 
-  if (!query.data) throw new Error('Invalid state')
+  if (isEmptyString(query.data)) throw new Error('Invalid state')
 
   return query.data
 }

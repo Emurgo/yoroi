@@ -4,11 +4,11 @@ import {useIntl} from 'react-intl'
 import {ActivityIndicator, StyleSheet, View} from 'react-native'
 
 import {TwoActionView} from '../../../components'
-import {useSignAndSubmitTx} from '../../../hooks'
+import {useCloseWallet, useSignAndSubmitTx} from '../../../hooks'
 import {confirmationMessages, errorMessages, txLabels} from '../../../i18n/global-messages'
 import {showErrorDialog} from '../../../legacy/actions'
 import {ensureKeysValidity} from '../../../legacy/deviceSettings'
-import {SystemAuthDisabled, walletManager, YoroiWallet} from '../../../yoroi-wallets'
+import {SystemAuthDisabled, YoroiWallet} from '../../../yoroi-wallets'
 import {YoroiUnsignedTx} from '../../../yoroi-wallets/types'
 import {TransferSummary} from '../TransferSummary'
 
@@ -19,10 +19,12 @@ type Props = {
   onSuccess: () => void
 }
 
-export const ConfirmTxWithOS: React.FC<Props> = ({wallet, unsignedTx, onSuccess, onCancel}) => {
+export const ConfirmTxWithOS = ({wallet, unsignedTx, onSuccess, onCancel}: Props) => {
   const intl = useIntl()
   const strings = useStrings()
   const navigation = useNavigation()
+
+  const {closeWallet} = useCloseWallet()
 
   const {signAndSubmitTx, isLoading} = useSignAndSubmitTx(
     {wallet},
@@ -53,7 +55,7 @@ export const ConfirmTxWithOS: React.FC<Props> = ({wallet, unsignedTx, onSuccess,
               .catch(async (error) => {
                 if (error instanceof SystemAuthDisabled) {
                   onCancel()
-                  await walletManager.closeWallet()
+                  closeWallet()
                   await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
                   navigation.navigate('app-root', {screen: 'wallet-selection'})
                 }
@@ -72,7 +74,7 @@ export const ConfirmTxWithOS: React.FC<Props> = ({wallet, unsignedTx, onSuccess,
   )
 }
 
-const LoadingOverlay: React.FC<{loading: boolean}> = ({loading}) => {
+const LoadingOverlay = ({loading}: {loading: boolean}) => {
   return loading ? (
     <View style={StyleSheet.absoluteFill}>
       <View style={[StyleSheet.absoluteFill, {opacity: 0.5, backgroundColor: 'pink'}]} />

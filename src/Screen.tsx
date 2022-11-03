@@ -5,13 +5,8 @@ import {COLORS} from './theme'
 
 export const screenPadding = 20
 
-export const Screen: React.FC<ViewProps & {scroll?: boolean; bgColor?: string}> = ({
-  children,
-  scroll,
-  bgColor,
-  style = {},
-  ...restProps
-}) => {
+type Props = ViewProps & {scroll?: boolean; bgColor?: string}
+export const Screen = ({children, scroll, bgColor, style = {}, ...restProps}: Props) => {
   const Container = scroll === true ? ScrollView : View
 
   return (

@@ -1,47 +1,39 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {useRoute} from '@react-navigation/native'
+import {useNavigation, useRoute} from '@react-navigation/native'
 import {BigNumber} from 'bignumber.js'
-import React, {useState} from 'react'
+import {fromPairs} from 'lodash'
+import React, {useEffect, useState} from 'react'
 import {defineMessages, IntlShape, useIntl} from 'react-intl'
-import {LayoutAnimation, Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
-import {useSelector} from 'react-redux'
+import {LayoutAnimation, Linking, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
+import {ScrollView} from 'react-native-gesture-handler'
 
-import {Banner, Boundary, Button, CopyButton, Icon, OfflineBanner, StatusBar, Text} from '../../components'
-import {useTipStatus, useTokenInfo} from '../../hooks'
+import {Banner, Boundary, Button, CopyButton, FadeIn, Icon, OfflineBanner, StatusBar, Text} from '../../components'
+import {useTipStatus, useTokenInfo, useTransactionInfo} from '../../hooks'
 import globalMessages from '../../i18n/global-messages'
-import {formatTokenWithSymbol} from '../../legacy/format'
-import {TransactionInfo} from '../../legacy/HistoryTransaction'
+import {formatDateToSeconds, formatTokenWithSymbol} from '../../legacy/format'
 import {getNetworkConfigById} from '../../legacy/networks'
-import {
-  externalAddressIndexSelector,
-  internalAddressIndexSelector,
-  transactionsInfoSelector,
-} from '../../legacy/selectors'
+import {isEmptyString} from '../../legacy/utils'
 import AddressModal from '../../Receive/AddressModal'
-import Screen from '../../Screen'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {brand, COLORS} from '../../theme'
-import {TokenEntry} from '../../types'
-import {MultiToken, YoroiWallet} from '../../yoroi-wallets'
+import {MultiToken, TokenEntry, YoroiWallet} from '../../yoroi-wallets'
+import {TransactionInfo} from '../../yoroi-wallets/types'
 import {AssetList} from './AssetList'
 import assetListStyle from './AssetListTransaction.style'
-
-export type Params = {
-  id: string
-}
 
 export const TxDetails = () => {
   const strings = useStrings()
   const intl = useIntl()
   const {id} = useRoute().params as Params
-  const internalAddressIndex = useSelector(internalAddressIndexSelector)
-  const externalAddressIndex = useSelector(externalAddressIndexSelector)
   const wallet = useSelectedWallet()
-  const transactions = useSelector(transactionsInfoSelector)
-  const [expandedIn, setExpandedIn] = useState(false)
-  const [expandedOut, setExpandedOut] = useState(false)
+  const internalAddressIndex = fromPairs(wallet.internalAddresses.map((addr, i) => [addr, i]))
+  const externalAddressIndex = fromPairs(wallet.externalAddresses.map((addr, i) => [addr, i]))
+  const [expandedInItemId, setExpandedInItemId] = useState<null | ItemId>(null)
+  const [expandedOutItemId, setExpandedOutItemId] = useState<null | ItemId>(null)
   const [addressDetail, setAddressDetail] = React.useState<null | string>(null)
-  const transaction = transactions[id]
+  const transaction = useTransactionInfo({wallet, txid: id})
+
+  useTitle(formatDateToSeconds(transaction.submittedAt))
 
   const {fromFiltered, toFiltered, cntOmittedTo} = getShownAddresses(
     intl,
@@ -49,26 +41,26 @@ export const TxDetails = () => {
     internalAddressIndex,
     externalAddressIndex,
   )
-  const txFee = transaction.fee ? MultiToken.fromArray(transaction.fee).getDefault() : null
+  const txFee = transaction.fee != null ? MultiToken.fromArray(transaction.fee).getDefault() : null
   const amountAsMT = MultiToken.fromArray(transaction.amount)
   const amount = amountAsMT.getDefault()
 
-  const toggleExpandIn = () => {
+  const toggleExpandIn = (itemId: ItemId) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-    setExpandedIn(!expandedIn)
+    setExpandedInItemId(expandedInItemId !== itemId ? itemId : null)
   }
 
-  const toggleExpandOut = () => {
+  const toggleExpandOut = (itemId: ItemId) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-    setExpandedOut(!expandedOut)
+    setExpandedOutItemId(expandedOutItemId !== itemId ? itemId : null)
   }
 
   return (
-    <View style={styles.container}>
+    <FadeIn style={styles.container}>
       <StatusBar type="dark" />
-
       <OfflineBanner />
-      <Screen scroll>
+
+      <ScrollView contentContainerStyle={styles.contentContainer}>
         <Banner label={strings[transaction.direction]}>
           <Boundary>
             <AdaAmount amount={amount} />
@@ -76,66 +68,78 @@ export const TxDetails = () => {
           </Boundary>
         </Banner>
 
-        <View style={styles.content}>
-          <Label>{strings.fromAddresses}</Label>
-          {fromFiltered.map((item) => (
-            <View key={item.id}>
-              <AddressEntry {...item} showModalForAddress={setAddressDetail} />
-              {item.assets.length > 0 && (
-                <TouchableOpacity style={styles.assetsExpandable} activeOpacity={0.5} onPress={() => toggleExpandIn()}>
-                  <Text style={styles.assetsTitle}>{` -${item.assets.length} ${strings.assetsLabel} `}</Text>
-                  <Icon.Chevron direction={expandedIn ? 'up' : 'down'} color={COLORS.ACTION_GRAY} size={23} />
-                </TouchableOpacity>
-              )}
-              <ExpandableAssetList expanded={expandedIn} assets={item.assets} />
-            </View>
-          ))}
+        <Label>{strings.fromAddresses}</Label>
+        {fromFiltered.map((item) => (
+          <View key={item.id}>
+            <AddressEntry {...item} showModalForAddress={setAddressDetail} />
+            {item.assets.length > 0 && (
+              <TouchableOpacity
+                style={styles.assetsExpandable}
+                activeOpacity={0.5}
+                onPress={() => toggleExpandIn(item.id)}
+              >
+                <Text style={styles.assetsTitle}>{` -${item.assets.length} ${strings.assetsLabel} `}</Text>
+                <Icon.Chevron
+                  direction={expandedInItemId === item.id ? 'up' : 'down'}
+                  color={COLORS.ACTION_GRAY}
+                  size={23}
+                />
+              </TouchableOpacity>
+            )}
+            <ExpandableAssetList expanded={expandedInItemId === item.id} assets={item.assets} />
+          </View>
+        ))}
 
-          <View style={styles.borderTop}>
-            <Label>{strings.toAddresses}</Label>
-          </View>
-          {toFiltered.map((item) => (
-            <View key={item.id}>
-              <AddressEntry {...item} showModalForAddress={setAddressDetail} />
-              {item.assets.length > 0 && (
-                <TouchableOpacity style={styles.assetsExpandable} activeOpacity={0.5} onPress={() => toggleExpandOut()}>
-                  <Text style={styles.assetsTitle}>{` +${item.assets.length} ${strings.assetsLabel} `}</Text>
-                  <Icon.Chevron direction={expandedOut ? 'up' : 'down'} color={COLORS.ACTION_GRAY} size={23} />
-                </TouchableOpacity>
-              )}
-              <ExpandableAssetList expanded={expandedOut} assets={item.assets} />
-            </View>
-          ))}
-
-          {cntOmittedTo > 0 && <Text>{strings.omittedCount(cntOmittedTo)}</Text>}
-          <View style={styles.borderTop}>
-            <Label>{strings.txAssuranceLevel}</Label>
-          </View>
-          <View>
-            <Boundary loading={{fallbackProps: {size: 'small'}}}>
-              <Confirmations transaction={transaction} wallet={wallet} />
-            </Boundary>
-            <Label>{strings.transactionId}</Label>
-            <View style={styles.dataContainer}>
-              <Text secondary monospace numberOfLines={1} ellipsizeMode="middle">
-                {transaction.id}
-              </Text>
-              <CopyButton value={transaction.id} />
-            </View>
-            <Button onPress={() => openInExplorer(transaction, wallet.networkId)} title={strings.openInExplorer} />
-          </View>
+        <View style={styles.borderTop}>
+          <Label>{strings.toAddresses}</Label>
         </View>
-      </Screen>
+        {toFiltered.map((item) => (
+          <View key={item.id}>
+            <AddressEntry {...item} showModalForAddress={setAddressDetail} />
+            {item.assets.length > 0 && (
+              <TouchableOpacity
+                style={styles.assetsExpandable}
+                activeOpacity={0.5}
+                onPress={() => toggleExpandOut(item.id)}
+              >
+                <Text style={styles.assetsTitle}>{` +${item.assets.length} ${strings.assetsLabel} `}</Text>
+                <Icon.Chevron
+                  direction={expandedOutItemId === item.id ? 'up' : 'down'}
+                  color={COLORS.ACTION_GRAY}
+                  size={23}
+                />
+              </TouchableOpacity>
+            )}
+            <ExpandableAssetList expanded={expandedOutItemId === item.id} assets={item.assets} />
+          </View>
+        ))}
 
-      {addressDetail && (
-        <AddressModal
-          visible
-          onRequestClose={() => setAddressDetail(null)}
-          address={addressDetail}
-          onAddressVerify={() => setAddressDetail(null)}
-        />
+        {cntOmittedTo > 0 && <Text>{strings.omittedCount(cntOmittedTo)}</Text>}
+        <View style={styles.borderTop}>
+          <Label>{strings.txAssuranceLevel}</Label>
+        </View>
+
+        <Boundary loading={{fallbackProps: {size: 'small'}}}>
+          <Confirmations transaction={transaction} wallet={wallet} />
+        </Boundary>
+        <Label>{strings.transactionId}</Label>
+
+        <View style={styles.dataContainer}>
+          <Text secondary monospace numberOfLines={1} ellipsizeMode="middle">
+            {transaction.id}
+          </Text>
+          <CopyButton value={transaction.id} />
+        </View>
+      </ScrollView>
+
+      <Actions>
+        <Button onPress={() => openInExplorer(transaction, wallet.networkId)} title={strings.openInExplorer} />
+      </Actions>
+
+      {!isEmptyString(addressDetail) && (
+        <AddressModal visible onRequestClose={() => setAddressDetail(null)} address={addressDetail} />
       )}
-    </View>
+    </FadeIn>
   )
 }
 
@@ -207,6 +211,8 @@ const AddressEntry = ({address, path, isHighlighted, showModalForAddress}: Addre
   )
 }
 
+const Actions = ({style, ...props}: ViewProps) => <View style={[{padding: 16}, style]} {...props} />
+
 const getShownAddresses = (
   intl: IntlShape,
   transaction: TransactionInfo,
@@ -270,7 +276,7 @@ const getShownAddresses = (
     path: getPath(address),
     isHighlighted: isHighlightedTo(address),
   }))
-  const toFiltered = toAddresses.filter(({address}) => (filterTo ? filterTo(address) : true))
+  const toFiltered = toAddresses.filter(({address}) => (filterTo != null ? filterTo(address) : true))
   const cntOmittedTo = toAddresses.length - toFiltered.length
 
   return {
@@ -279,6 +285,17 @@ const getShownAddresses = (
     cntOmittedTo,
   }
 }
+
+const openInExplorer = async (transaction: TransactionInfo, networkId: number) => {
+  const networkConfig = getNetworkConfigById(networkId)
+  await Linking.openURL(networkConfig.EXPLORER_URL_FOR_TX(transaction.id))
+}
+
+export type Params = {
+  id: string
+}
+
+type ItemId = number
 
 const useStrings = () => {
   const intl = useIntl()
@@ -370,7 +387,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  content: {
+  contentContainer: {
     paddingHorizontal: 16,
   },
   positiveAmount: {
@@ -408,7 +425,8 @@ const styles = StyleSheet.create({
   },
 })
 
-const openInExplorer = async (transaction: TransactionInfo, networkId: number) => {
-  const networkConfig = getNetworkConfigById(networkId)
-  await Linking.openURL(networkConfig.EXPLORER_URL_FOR_TX(transaction.id))
+const useTitle = (text: string) => {
+  const navigation = useNavigation()
+
+  useEffect(() => navigation.setOptions({title: text}))
 }

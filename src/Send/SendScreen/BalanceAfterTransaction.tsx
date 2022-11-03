@@ -1,28 +1,46 @@
 import {BigNumber} from 'bignumber.js'
 import React from 'react'
 import {StyleSheet} from 'react-native'
-import {useSelector} from 'react-redux'
 
 import {Text} from '../../components'
-import {useTokenInfo} from '../../hooks'
+import {useBalances, useTokenInfo} from '../../hooks'
 import {formatTokenWithSymbol} from '../../legacy/format'
-import {tokenBalanceSelector} from '../../legacy/selectors'
 import {useSelectedWallet} from '../../SelectedWallet'
+import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
+import {Amounts} from '../../yoroi-wallets/utils'
 import {useStrings} from './strings'
 
-export const BalanceAfterTransaction = ({balanceAfter}: {balanceAfter: BigNumber | null}) => {
+export const BalanceAfterTransaction = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx | null}) => {
   const strings = useStrings()
-  const tokenBalance = useSelector(tokenBalanceSelector)
   const wallet = useSelectedWallet()
-  const tokenInfo = useTokenInfo({wallet, tokenId: tokenBalance.getDefaultId()})
+  const tokenInfo = useTokenInfo({wallet, tokenId: ''})
+  const balances = useBalances(wallet)
 
-  const value = balanceAfter ? formatTokenWithSymbol(balanceAfter, tokenInfo) : strings.balanceAfterNotAvailable
+  if (!yoroiUnsignedTx) {
+    return (
+      <Text style={styles.info} testID="balanceAfterTxText">
+        {strings.balanceAfterLabel}
+        {': '}
+        {strings.balanceAfterNotAvailable}
+      </Text>
+    )
+  }
+
+  // prettier-ignore
+  const balancesAfter = Amounts.diff(
+    balances,
+    Amounts.sum([
+      yoroiUnsignedTx.amounts,
+      yoroiUnsignedTx.fee,
+    ]),
+  )
+  const primaryAmountAfter = Amounts.getAmount(balancesAfter, '')
 
   return (
-    <Text style={styles.info}>
+    <Text style={styles.info} testID="balanceAfterTxText">
       {strings.balanceAfterLabel}
       {': '}
-      {value}
+      {formatTokenWithSymbol(new BigNumber(primaryAmountAfter.quantity), tokenInfo)}
     </Text>
   )
 }

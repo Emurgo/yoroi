@@ -16,8 +16,20 @@ type Props = {
   enabled?: boolean
 }
 
-export const PinInput = ({enabled = true, pinMaxLength, title, subtitles = [], onDone}: Props) => {
+export type PinInputRef = {
+  clear: () => void
+}
+
+export const PinInput = React.forwardRef<PinInputRef, Props>((props, ref) => {
+  const {enabled = true, pinMaxLength, title, subtitles = [], onDone} = props
+
   const [pin, setPin] = React.useState('')
+
+  React.useImperativeHandle(ref, () => ({
+    clear: () => {
+      setPin('')
+    },
+  }))
 
   const onKeyDown = (value: string) => {
     if (!enabled) return
@@ -65,7 +77,7 @@ export const PinInput = ({enabled = true, pinMaxLength, title, subtitles = [], o
       <Keyboard onKeyDown={onKeyDown} />
     </View>
   )
-}
+})
 
 type PinPlaceholderProps = {
   isActive: boolean

@@ -22,6 +22,6 @@ const Typography = () => {
   )
 }
 
-const Row: React.FC = ({children}) => {
+const Row = ({children}: {children: React.ReactNode}) => {
   return <View style={{alignItems: 'center', flexDirection: 'row'}}>{children}</View>
 }

@@ -1,24 +1,31 @@
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useDispatch} from 'react-redux'
 
 import {StatusBar} from '../../components'
 import {useCheckPin} from '../../hooks'
 import {errorMessages} from '../../i18n/global-messages'
-import {showErrorDialog, signin} from '../../legacy/actions'
+import {showErrorDialog} from '../../legacy/actions'
 import {CONFIG} from '../../legacy/config'
 import {useStorage} from '../../Storage'
-import {PinInput} from '../PinInput'
+import {useAuth} from '../AuthProvider'
+import {PinInput, PinInputRef} from '../PinInput'
 
 export const PinLoginScreen = () => {
+  const pinInputRef = React.useRef<null | PinInputRef>(null)
   const intl = useIntl()
   const strings = useStrings()
-  const dispatch = useDispatch()
   const storage = useStorage()
+  const {login} = useAuth()
+
   const {checkPin, isLoading} = useCheckPin(storage, {
     onSuccess: (isValid) => {
-      isValid ? dispatch(signin()) : showErrorDialog(errorMessages.incorrectPin, intl)
+      if (isValid) {
+        login()
+      } else {
+        showErrorDialog(errorMessages.incorrectPin, intl)
+        pinInputRef.current?.clear()
+      }
     },
   })
 
@@ -26,7 +33,13 @@ export const PinLoginScreen = () => {
     <SafeAreaView edges={['left', 'right', 'bottom']} style={{flex: 1}}>
       <StatusBar type="dark" />
 
-      <PinInput enabled={!isLoading} pinMaxLength={CONFIG.PIN_LENGTH} title={strings.title} onDone={checkPin} />
+      <PinInput
+        ref={pinInputRef}
+        enabled={!isLoading}
+        pinMaxLength={CONFIG.PIN_LENGTH}
+        title={strings.title}
+        onDone={checkPin}
+      />
     </SafeAreaView>
   )
 }

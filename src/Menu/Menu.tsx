@@ -4,29 +4,33 @@ import React from 'react'
 import {useIntl} from 'react-intl'
 import {Image, Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useSelector} from 'react-redux'
 
 import SupportImage from '../assets/img/icon/shape.png'
-import {CatalystNavigator} from '../Catalyst/CatalystNavigator'
+import {useCanVote} from '../Catalyst/hooks'
+import {InsufficientFundsModal} from '../Catalyst/InsufficientFundsModal'
 import {Hr, Icon, Spacer, Text} from '../components'
-import {CONFIG} from '../legacy/config'
-import {tokenBalanceSelector} from '../legacy/selectors'
+import {usePrefetchStakingInfo} from '../Dashboard/StakePoolInfos'
 import {defaultStackNavigationOptionsV2, useWalletNavigation} from '../navigation'
+import {useSelectedWallet} from '../SelectedWallet'
 import {lightPalette} from '../theme'
-import {InsufficientFundsModal} from './InsufficientFundsModal'
 
 const MenuStack = createStackNavigator()
 
 export const MenuNavigator = () => {
   const strings = useStrings()
+  const wallet = useSelectedWallet()
+  usePrefetchStakingInfo(wallet)
 
   return (
     <MenuStack.Navigator
-      initialRouteName="menu"
-      screenOptions={{...defaultStackNavigationOptionsV2, headerLeft: () => null}}
+      initialRouteName="_menu"
+      screenOptions={{
+        ...defaultStackNavigationOptionsV2,
+        headerLeft: () => null,
+        detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
+      }}
     >
-      <MenuStack.Screen name="menu" component={Menu} options={{title: strings.menu}} />
-      <MenuStack.Screen name="catalyst-voting" component={CatalystNavigator} />
+      <MenuStack.Screen name="_menu" component={Menu} options={{title: strings.menu}} />
     </MenuStack.Navigator>
   )
 }
@@ -117,11 +121,10 @@ const Item = ({
   )
 }
 
-const AppSettings = Item
 const KnowledgeBase = Item
 const Catalyst = ({label, left, onPress}: {label: string; left: React.ReactElement; onPress: () => void}) => {
-  const tokenBalance = useSelector(tokenBalanceSelector)
-  const sufficientFunds = tokenBalance.getDefault().gte(CONFIG.CATALYST.MIN_ADA)
+  const wallet = useSelectedWallet()
+  const {sufficientFunds} = useCanVote(wallet)
 
   const [showInsufficientFundsModal, setShowInsufficientFundsModal] = React.useState(false)
 
@@ -141,6 +144,8 @@ const Catalyst = ({label, left, onPress}: {label: string; left: React.ReactEleme
   )
 }
 
+const AppSettings = Item
+
 const SUPPORT_TICKET_LINK = 'https://emurgohelpdesk.zendesk.com/hc/en-us/requests/new?ticket_form_id=360013330335'
 const KNOWLEDGE_BASE_LINK = 'https://emurgohelpdesk.zendesk.com/hc/en-us/categories/4412619927695-Yoroi'
 
@@ -148,11 +153,12 @@ const useNavigateTo = () => {
   const {navigation, navigateToAppSettings} = useWalletNavigation()
 
   return {
+    allWallets: () => navigation.navigate('app-root', {screen: 'wallet-selection'}),
     catalystVoting: () =>
       navigation.navigate('app-root', {
-        screen: 'catalyst-router',
+        screen: 'voting-registration',
         params: {
-          screen: 'catalyst-landing',
+          screen: 'download-catalyst',
         },
       }),
     appSettings: () => navigateToAppSettings(),
@@ -160,6 +166,55 @@ const useNavigateTo = () => {
     knowledgeBase: () => Linking.openURL(KNOWLEDGE_BASE_LINK),
   }
 }
+
+const useStrings = () => {
+  const intl = useIntl()
+
+  return {
+    catalystVoting: intl.formatMessage(messages.catalystVoting),
+    appSettings: intl.formatMessage(messages.appSettings),
+    releases: intl.formatMessage(messages.releases),
+    supportTitle: intl.formatMessage(messages.supportTitle),
+    supportLink: intl.formatMessage(messages.supportLink),
+    knowledgeBase: intl.formatMessage(messages.knowledgeBase),
+    menu: intl.formatMessage(messages.menu),
+  }
+}
+
+const messages = defineMessage({
+  allWallets: {
+    id: 'menu.allWallets',
+    defaultMessage: '!!!All wallets',
+  },
+  catalystVoting: {
+    id: 'menu.catalystVoting',
+    defaultMessage: '!!!Catalyst voting',
+  },
+  appSettings: {
+    id: 'menu.appSettings',
+    defaultMessage: '!!!App Settings',
+  },
+  releases: {
+    id: 'menu.releases',
+    defaultMessage: '!!!Releases',
+  },
+  supportTitle: {
+    id: 'menu.supportTitle',
+    defaultMessage: '!!!Any questions',
+  },
+  supportLink: {
+    id: 'menu.supportLink',
+    defaultMessage: '!!!Ask our support team',
+  },
+  knowledgeBase: {
+    id: 'menu.knowledgeBase',
+    defaultMessage: '!!!Knowledge base',
+  },
+  menu: {
+    id: 'menu',
+    defaultMessage: '!!!Menu',
+  },
+})
 
 const styles = StyleSheet.create({
   root: {
@@ -192,50 +247,5 @@ const styles = StyleSheet.create({
   },
   supportLinkText: {
     color: '#4B6DDE',
-  },
-})
-
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    catalystVoting: intl.formatMessage(messages.catalystVoting),
-    appSettings: intl.formatMessage(messages.appSettings),
-    releases: intl.formatMessage(messages.releases),
-    supportTitle: intl.formatMessage(messages.supportTitle),
-    supportLink: intl.formatMessage(messages.supportLink),
-    knowledgeBase: intl.formatMessage(messages.knowledgeBase),
-    menu: intl.formatMessage(messages.menu),
-  }
-}
-
-const messages = defineMessage({
-  catalystVoting: {
-    id: 'menu.catalystVoting',
-    defaultMessage: '!!!Catalyst voting',
-  },
-  appSettings: {
-    id: 'menu.appSettings',
-    defaultMessage: '!!!App Settings',
-  },
-  releases: {
-    id: 'menu.releases',
-    defaultMessage: '!!!Releases',
-  },
-  supportTitle: {
-    id: 'menu.supportTitle',
-    defaultMessage: '!!!Any questions',
-  },
-  supportLink: {
-    id: 'menu.supportLink',
-    defaultMessage: '!!!Ask our support team',
-  },
-  knowledgeBase: {
-    id: 'menu.knowledgeBase',
-    defaultMessage: '!!!Knowledge base',
-  },
-  menu: {
-    id: 'menu',
-    defaultMessage: '!!!Menu',
   },
 })

@@ -10,6 +10,7 @@ import {
 } from 'react-native'
 import {HelperText, TextInput as RNPTextInput} from 'react-native-paper'
 
+import {isEmptyString} from '../../legacy/utils'
 import {COLORS} from '../../theme'
 import {Icon} from '../Icon'
 
@@ -24,6 +25,7 @@ type Props = TextInputProps &
     noErrors?: boolean
     dense?: boolean
     faded?: boolean
+    showErrorOnBlur?: boolean
   }
 
 const useDebounced = (callback, value, delay = 1000) => {
@@ -55,8 +57,10 @@ export const TextInput = React.forwardRef((props: Props, ref: ForwardedRef<RNTex
     noErrors,
     textAlign,
     faded,
+    showErrorOnBlur,
     ...restProps
   } = props
+
   const [showPassword, setShowPassword] = React.useState(false)
   const [errorTextEnabled, setErrorTextEnabled] = React.useState(errorOnMount)
   useDebounced(
@@ -66,7 +70,7 @@ export const TextInput = React.forwardRef((props: Props, ref: ForwardedRef<RNTex
   )
 
   return (
-    <View style={containerStyle}>
+    <View style={containerStyle} testID={restProps.testID}>
       <RNPTextInput
         ref={ref}
         style={{textAlign}}
@@ -75,6 +79,11 @@ export const TextInput = React.forwardRef((props: Props, ref: ForwardedRef<RNTex
         autoCorrect={false}
         autoCompleteType="off"
         autoCapitalize="none"
+        onBlur={() => {
+          if (showErrorOnBlur && !errorTextEnabled && !isEmptyString(errorText)) {
+            setErrorTextEnabled(true)
+          }
+        }}
         theme={{
           roundness: 8,
           colors: {
@@ -86,11 +95,11 @@ export const TextInput = React.forwardRef((props: Props, ref: ForwardedRef<RNTex
         }}
         secureTextEntry={secureTextEntry && !showPassword}
         mode="outlined"
-        error={errorTextEnabled && !!errorText}
+        error={errorTextEnabled && !isEmptyString(errorText)}
         render={({style, ...inputProps}) => (
           <InputContainer>
             <RNTextInput {...inputProps} style={[style, {color: faded ? COLORS.GREY_6 : COLORS.BLACK}]} />
-            {right ? <AdornmentContainer style={styles.checkmarkContainer}>{right}</AdornmentContainer> : null}
+            {right != null ? <AdornmentContainer style={styles.checkmarkContainer}>{right}</AdornmentContainer> : null}
 
             {secureTextEntry ? (
               <SecureTextEntryToggle showPassword={showPassword} onPress={() => setShowPassword(!showPassword)} />
@@ -101,8 +110,8 @@ export const TextInput = React.forwardRef((props: Props, ref: ForwardedRef<RNTex
       />
 
       {!noErrors && (
-        <HelperText type={errorTextEnabled && !!errorText ? 'error' : 'info'} visible>
-          {errorTextEnabled && !!errorText ? errorText : helperText}
+        <HelperText type={errorTextEnabled && !isEmptyString(errorText) ? 'error' : 'info'} visible>
+          {errorTextEnabled && !isEmptyString(errorText) ? errorText : helperText}
         </HelperText>
       )}
     </View>
@@ -123,9 +132,11 @@ const SecureTextEntryToggle = ({showPassword, onPress}: {showPassword: boolean; 
   </AdornmentContainer>
 )
 
-const InputContainer: React.FC = ({children}) => <View style={styles.inputContainer}>{children}</View>
+const InputContainer = ({children}: {children: React.ReactNode}) => (
+  <View style={styles.inputContainer}>{children}</View>
+)
 
-const AdornmentContainer: React.FC<ViewProps> = ({style, children}) => (
+const AdornmentContainer = ({style, children}: ViewProps) => (
   <View style={[styles.adornmentContainer, style]}>{children}</View>
 )
 

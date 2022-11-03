@@ -1,6 +1,7 @@
 import React from 'react'
 import {Platform, StyleSheet, TextInput, TextInputProps, TouchableOpacity, View, ViewStyle} from 'react-native'
 
+import {isEmptyString} from '../legacy/utils'
 import {COLORS} from '../theme'
 import {Icon} from './Icon'
 import {Text} from './Text'
@@ -28,7 +29,7 @@ export const ValidatedTextInput = ({label, error, style, secureTextEntry, keyboa
         secureTextEntry={secureTextEntry === true && !showPassword}
         autoCorrect={!secureTextEntry}
         keyboardType={
-          keyboardType
+          !isEmptyString(keyboardType)
             ? keyboardType !== 'visible-password'
               ? keyboardType
               : Platform.OS === 'android'

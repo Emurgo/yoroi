@@ -1,11 +1,10 @@
 import {NavigationRouteContext} from '@react-navigation/native'
 import {storiesOf} from '@storybook/react-native'
-import BigNumber from 'bignumber.js'
 import React from 'react'
 
-import {mockWallet, tokenEntries} from '../../../storybook'
+import {mockWallet, mockYoroiTx} from '../../../storybook'
 import {SelectedWalletProvider} from '../../SelectedWallet'
-import type {Params} from './ConfirmScreen'
+import {SendProvider} from '../Context/SendContext'
 import {ConfirmScreen} from './ConfirmScreen'
 
 storiesOf('ConfirmScreen', module).add('Default', () => {
@@ -13,21 +12,20 @@ storiesOf('ConfirmScreen', module).add('Default', () => {
     key: 'key',
     name: 'name',
     params: {
-      defaultAssetAmount: new BigNumber('1111111111'),
-      balanceAfterTx: new BigNumber('10'),
-      address: 'address_123123123',
-      availableAmount: new BigNumber('1111111100'),
-      fee: new BigNumber('1'),
-      tokens: tokenEntries,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      yoroiUnsignedTx: null as any,
-    } as Params,
+      yoroiUnsignedTx: {
+        ...mockYoroiTx,
+        amounts: {'': '1'},
+        fee: {'': '1'},
+      },
+    },
   }
 
   return (
     <SelectedWalletProvider wallet={mockWallet}>
       <NavigationRouteContext.Provider value={route}>
-        <ConfirmScreen />
+        <SendProvider wallet={mockWallet} initialState={{receiver: 'storybook: receiver uri or address'}}>
+          <ConfirmScreen />
+        </SendProvider>
       </NavigationRouteContext.Provider>
     </SelectedWalletProvider>
   )

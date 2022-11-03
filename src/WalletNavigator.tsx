@@ -3,7 +3,7 @@ import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import {CatalystNavigator} from './Catalyst'
+import {VotingRegistration as VotingRegistration} from './Catalyst'
 import {Icon} from './components'
 import {DashboardNavigator} from './Dashboard'
 import {isHaskellShelley} from './legacy/config'
@@ -42,6 +42,7 @@ const WalletTabNavigator = () => {
             />
           ),
           tabBarLabel: strings.walletTabBarLabel,
+          tabBarTestID: 'walletTabBarButton',
         }}
       />
 
@@ -57,6 +58,7 @@ const WalletTabNavigator = () => {
               />
             ),
             tabBarLabel: strings.stakingButton,
+            tabBarTestID: 'stakingTabBarButton',
           }}
         />
       )}
@@ -67,6 +69,7 @@ const WalletTabNavigator = () => {
         options={{
           tabBarIcon: ({focused}) => <Icon.Menu size={28} color={focused ? '#17d1aa' : '#A7AFC0'} />,
           tabBarLabel: strings.menuTabBarLabel,
+          tabBarTestID: 'menuTabBarButton',
         }}
       />
     </Tab.Navigator>
@@ -75,11 +78,16 @@ const WalletTabNavigator = () => {
 
 const Stack = createStackNavigator<WalletStackRoutes>()
 export const WalletNavigator = () => (
-  <Stack.Navigator initialRouteName="wallet-selection" screenOptions={{headerShown: false}}>
+  <Stack.Navigator
+    screenOptions={{
+      headerShown: false /* used only for transition */,
+      detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
+    }}
+  >
     <Stack.Screen name="wallet-selection" component={WalletSelectionScreen} />
     <Stack.Screen name="main-wallet-routes" component={WalletTabNavigator} />
     <Stack.Screen name="settings" component={SettingsScreenNavigator} />
-    <Stack.Screen name="catalyst-router" component={CatalystNavigator} />
+    <Stack.Screen name="voting-registration" component={VotingRegistration} />
   </Stack.Navigator>
 )
 

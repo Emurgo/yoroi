@@ -1,45 +1,93 @@
 import {storiesOf} from '@storybook/react-native'
-import {BigNumber} from 'bignumber.js'
 import React from 'react'
+import {QueryClient, QueryClientProvider} from 'react-query'
 
-import {RouteProvider} from '../../../storybook'
+import {mockWallet, mockYoroiTx, RouteProvider} from '../../../storybook'
 import {getDefaultAssets} from '../../legacy/config'
-import {getDefaultNetworkTokenEntry, MultiToken} from '../../yoroi-wallets'
+import {StakingCenterRoutes} from '../../navigation'
+import {SelectedWalletProvider} from '../../SelectedWallet'
+import {StakePoolInfosAndHistories} from '../../yoroi-wallets/types'
 import {DelegationConfirmation} from './DelegationConfirmation'
 
-const defaultNetworkId = getDefaultAssets()[0].networkId
-
-storiesOf('DelegationConfirmation', module).add('Default', () => {
-  return (
-    <RouteProvider
-      params={{
-        poolName: 'EMURGO’ STAKEPOOL',
-        poolHash: ['6777ed5eac05ab8bf55d073424132e200935c8d3be62fb00f5252cd27a9fe6e5'],
-        transactionData: {
-          totalAmountToDelegate: new MultiToken(
-            [
-              {
-                amount: new BigNumber('100000000'), // 100 ADA
-                identifier: '',
-                networkId: defaultNetworkId,
+storiesOf('DelegationConfirmation', module)
+  .add('Default', () => (
+    <QueryClientProvider client={new QueryClient()}>
+      <SelectedWalletProvider
+        wallet={{
+          ...mockWallet,
+          defaultAsset: getDefaultAssets()[0],
+          fetchPoolInfo: async () => {
+            return {
+              '6777ed5eac05ab8bf55d073424132e200935c8d3be62fb00f5252cd27a9fe6e5': {
+                history: [
+                  {
+                    epoch: 123,
+                    slot: 123,
+                    tx_ordinal: 123,
+                    cert_ordinal: 123,
+                    payload: {
+                      kind: 'PoolRegistration',
+                      certIndex: 123,
+                      poolParams: {},
+                    },
+                  },
+                ],
+                info: {
+                  name: 'Emurgo',
+                },
               },
-            ],
-            getDefaultNetworkTokenEntry(defaultNetworkId),
-          ),
-        },
-        transactionFee: new MultiToken(
-          [
-            {
-              amount: new BigNumber('2000000'), // 2 ADA
-              identifier: '',
-              networkId: defaultNetworkId,
-            },
-          ],
-          getDefaultNetworkTokenEntry(defaultNetworkId),
-        ),
-      }}
-    >
-      <DelegationConfirmation mockDefaultAsset={getDefaultAssets()[0]} />
-    </RouteProvider>
-  )
-})
+            } as StakePoolInfosAndHistories
+          },
+        }}
+      >
+        <RouteProvider params={params}>
+          <DelegationConfirmation />
+        </RouteProvider>
+      </SelectedWalletProvider>
+    </QueryClientProvider>
+  ))
+  .add('loading', () => (
+    <QueryClientProvider client={new QueryClient()}>
+      <SelectedWalletProvider
+        wallet={{
+          ...mockWallet,
+          defaultAsset: getDefaultAssets()[0],
+          fetchPoolInfo: async () => new Promise(() => undefined),
+        }}
+      >
+        <RouteProvider params={params}>
+          <DelegationConfirmation />
+        </RouteProvider>
+      </SelectedWalletProvider>
+    </QueryClientProvider>
+  ))
+  .add('error', () => (
+    <QueryClientProvider client={new QueryClient()}>
+      <SelectedWalletProvider
+        wallet={{
+          ...mockWallet,
+          defaultAsset: getDefaultAssets()[0],
+          fetchPoolInfo: async () => Promise.reject(new Error('fetchPoolInfo: failed')),
+        }}
+      >
+        <RouteProvider params={params}>
+          <DelegationConfirmation />
+        </RouteProvider>
+      </SelectedWalletProvider>
+    </QueryClientProvider>
+  ))
+
+const params: StakingCenterRoutes['delegation-confirmation'] = {
+  poolId: '6777ed5eac05ab8bf55d073424132e200935c8d3be62fb00f5252cd27a9fe6e5',
+  yoroiUnsignedTx: {
+    ...mockYoroiTx,
+    staking: {
+      registrations: {},
+      deregistrations: {},
+      delegations: {
+        rewardAddress: {'': '123456789'},
+      },
+      withdrawals: {},
+    },
+  },
+}

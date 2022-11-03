@@ -3,25 +3,22 @@ import 'react-intl'
 import 'redux'
 
 import type {IntlShape} from 'react-intl'
-import {Alert, AppState, Keyboard, Platform} from 'react-native'
-import RNBootSplash from 'react-native-bootsplash'
+import {Alert, Platform} from 'react-native'
 import type {Dispatch} from 'redux'
 import uuid from 'uuid'
 
+import {getCrashReportsEnabled} from '../hooks'
 import globalMessages, {errorMessages} from '../i18n/global-messages'
 import {Logger} from '../legacy/logging'
 import {ServerStatus, walletManager} from '../yoroi-wallets'
-import {clearAccountState} from './account'
-import * as api from './api'
+import {checkServerStatus} from '../yoroi-wallets'
 import type {AppSettingsKey} from './appSettings'
 import {APP_SETTINGS_KEYS, AppSettingsError, readAppSettings, removeAppSettings, writeAppSettings} from './appSettings'
 import assert from './assert'
-import {backgroundLockListener} from './backgroundLockHelper'
 import {CONFIG, isNightly} from './config'
 import crashReporting from './crashReporting'
 import {encryptCustomPin} from './customPin'
 import {canBiometricEncryptionBeEnabled, recreateAppSignInKeys, removeAppSignInKeys} from './deviceSettings'
-import {mirrorTxHistory, setBackgroundSyncError} from './history'
 import KeyStore from './KeyStore'
 import {getCardanoNetworkConfigById} from './networks'
 import {
@@ -29,10 +26,8 @@ import {
   installationIdSelector,
   isAppSetupCompleteSelector,
   isSystemAuthEnabledSelector,
-  sendCrashReportsSelector,
 } from './selectors'
 import type {State} from './state'
-import {clearUTXOs} from './utxo'
 
 const updateCrashlytics = (fieldName: AppSettingsKey, value: any) => {
   const handlers = {
@@ -71,18 +66,6 @@ export const setEasyConfirmation = (enable: boolean) => ({
   reducer: (state: State, value: boolean) => value,
   type: 'SET_EASY_CONFIRMATION',
 })
-
-const _updateWallets = (wallets) => ({
-  path: ['wallets'],
-  payload: wallets,
-  reducer: (state: State, value) => value,
-  type: 'UPDATE_WALLETS',
-})
-
-export const updateWallets = () => (dispatch: Dispatch<any>) => {
-  const wallets = walletManager.getWallets()
-  dispatch(_updateWallets(wallets))
-}
 
 const _setAppSettings = (appSettings) => ({
   path: ['appSettings'],
@@ -131,33 +114,6 @@ const initInstallationId =
     return newInstallationId
   }
 
-export const closeWallet = () => async (_dispatch: Dispatch<any>) => {
-  await walletManager.closeWallet()
-}
-// note(v-almonacid): authentication occurs after entering pin or biometrics,
-// it does not mean we opened a wallet
-export const signin = () => (dispatch: Dispatch<any>) => {
-  dispatch({
-    path: ['isAuthenticated'],
-    payload: true,
-    type: 'SIGN_IN',
-    reducer: (state: State, payload) => payload,
-  })
-}
-export const signout = () => (dispatch: Dispatch<any>) => {
-  dispatch({
-    path: ['isAuthenticated'],
-    payload: false,
-    type: 'SIGN_OUT',
-    reducer: (state: State, payload) => payload,
-  })
-}
-// logout closes the active wallet and signout
-export const logout = () => async (dispatch: Dispatch<any>) => {
-  await closeWallet()
-  dispatch(signout())
-}
-
 const _setServerStatus = (serverStatus: ServerStatus) => (dispatch: Dispatch<any>) =>
   dispatch({
     path: ['serverStatus'],
@@ -170,12 +126,12 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
   try {
     // check status of default network
     const backendConfig = getCardanoNetworkConfigById(CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID).BACKEND
-    const status = await api.checkServerStatus(backendConfig)
+    const status = await checkServerStatus(backendConfig)
     dispatch(
       _setServerStatus({
         isServerOk: status.isServerOk,
         isMaintenance: status.isMaintenance,
-        serverTime: new Date(status.serverTime as any),
+        serverTime: status.serverTime || Date.now(),
       }),
     )
   } catch (e) {
@@ -190,7 +146,8 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
   const installationId = (await dispatch(initInstallationId())) as unknown as string
   const state = getState()
 
-  if (sendCrashReportsSelector(getState())) {
+  const crashReportsEnabled = await getCrashReportsEnabled()
+  if (crashReportsEnabled) {
     crashReporting.enable()
     // TODO(ppershing): just update crashlytic variables here
     await dispatch(reloadAppSettings())
@@ -217,7 +174,6 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
   const canEnableBiometricEncryption = (await canBiometricEncryptionBeEnabled()) && !shouldNotEnableBiometricAuth
   await dispatch(setAppSettingField(APP_SETTINGS_KEYS.CAN_ENABLE_BIOMETRIC_ENCRYPTION, canEnableBiometricEncryption))
   await walletManager.initialize()
-  await dispatch(updateWallets())
 
   if (canEnableBiometricEncryption && isSystemAuthEnabledSelector(state)) {
     // On android 6 signin keys can get invalidated
@@ -235,19 +191,9 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
       await recreateAppSignInKeys(installationId)
     }
   }
-
-  dispatch({
-    path: ['isAppInitialized'],
-    payload: true,
-    reducer: (state: State, value) => value,
-    type: 'INITIALIZE_APP',
-  })
-  RNBootSplash.hide({
-    fade: true,
-  })
 }
 
-export const checkBiometricStatus = () => async (dispatch: Dispatch<any>, getState: any) => {
+export const checkBiometricStatus = (logout: () => void) => async (dispatch: Dispatch<any>, getState: any) => {
   const bioShouldBeDisabled =
     Platform.OS === 'android' && CONFIG.ANDROID_BIO_AUTH_EXCLUDED_SDK.includes(Platform.Version)
   if (bioShouldBeDisabled) return
@@ -268,55 +214,21 @@ export const checkBiometricStatus = () => async (dispatch: Dispatch<any>, getSta
     } catch (_e) {
       Logger.debug('Ignore if no wallet is selected')
     }
-    await dispatch(logout())
+    await walletManager.closeWallet()
+    logout()
   }
 }
-
-const _setOnline = (isOnline: boolean) => (dispatch, getState) => {
-  const state = getState()
-  if (state.isOnline === isOnline) return // avoid useless state updates
-
-  dispatch({
-    type: 'Set isOnline',
-    path: ['isOnline'],
-    payload: isOnline,
-    reducer: (state: State, payload) => payload,
-  })
-}
-
-const setIsKeyboardOpen = (isOpen) => ({
-  type: 'Set isKeyboardOpen',
-  path: ['isKeyboardOpen'],
-  payload: isOpen,
-  reducer: (state: State, payload) => payload,
-})
 
 export const setupHooks = () => (dispatch: Dispatch<any>) => {
   Logger.debug('setting up isOnline callback')
   Logger.debug('setting wallet manager hook')
-  walletManager.subscribe(() => dispatch(mirrorTxHistory()))
-  walletManager.subscribeBackgroundSyncError((err: any) => dispatch(setBackgroundSyncError(err)))
   walletManager.subscribeServerSync((status) => dispatch(_setServerStatus(status)))
-  walletManager.subscribeOnClose(() => dispatch(clearUTXOs()))
-  walletManager.subscribeOnClose(() => dispatch(clearAccountState()))
-  Logger.debug('setting up app lock')
-
-  const onTimeoutAction = () => {
-    dispatch(logout())
-  }
-
-  AppState.addEventListener('change', () => {
-    backgroundLockListener(onTimeoutAction)
-  })
-  Logger.debug('setting up keyboard manager')
-  Keyboard.addListener('keyboardDidShow', () => dispatch(setIsKeyboardOpen(true)))
-  Keyboard.addListener('keyboardDidHide', () => dispatch(setIsKeyboardOpen(false)))
 }
 export const generateNewReceiveAddress = () => async (_dispatch: Dispatch<any>) => {
-  return await walletManager.generateNewUiReceiveAddress()
+  return walletManager.generateNewUiReceiveAddress()
 }
 export const generateNewReceiveAddressIfNeeded = () => async (_dispatch: Dispatch<any>) => {
-  return await walletManager.generateNewUiReceiveAddressIfNeeded()
+  return walletManager.generateNewUiReceiveAddressIfNeeded()
 }
 type DialogOptions = {
   title: string

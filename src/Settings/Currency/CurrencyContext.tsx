@@ -2,10 +2,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import React from 'react'
 import {useMutation, UseMutationOptions, useQuery, useQueryClient} from 'react-query'
 
-import {ConfigCurrencies, configCurrencies, CurrencySymbol, supportedCurrencies} from '../../legacy/types'
+import {isEmptyString} from '../../legacy/utils'
+import {ConfigCurrencies, configCurrencies, CurrencySymbol, supportedCurrencies} from '../../yoroi-wallets/types/other'
 
 const CurrencyContext = React.createContext<undefined | CurrencyContext>(undefined)
-export const CurrencyProvider: React.FC = ({children}) => {
+export const CurrencyProvider = ({children}: {children: React.ReactNode}) => {
   const currency = useCurrency()
   const selectCurrency = useSaveCurrency()
   const config = configCurrencies[currency]
@@ -33,12 +34,11 @@ const missingProvider = () => {
 
 const useCurrency = () => {
   const query = useQuery<CurrencySymbol, Error>({
-    initialData: defaultCurrency,
     queryKey: ['currencySymbol'],
     queryFn: async () => {
       const storedCurrencySymbol = await AsyncStorage.getItem('/appSettings/currencySymbol')
 
-      if (storedCurrencySymbol) {
+      if (!isEmptyString(storedCurrencySymbol)) {
         const parsedCurrencySymbol = JSON.parse(storedCurrencySymbol)
         const stillSupported = Object.values(supportedCurrencies).includes(parsedCurrencySymbol)
         if (stillSupported) return parsedCurrencySymbol
@@ -49,7 +49,7 @@ const useCurrency = () => {
     suspense: true,
   })
 
-  if (!query.data) throw new Error('Invalid state')
+  if (isEmptyString(query.data)) throw new Error('Invalid state')
 
   return query.data
 }

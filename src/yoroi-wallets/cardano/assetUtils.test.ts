@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js'
 
-import {RawUtxo} from '../../legacy/types'
+import {RawUtxo} from '../types/other'
 import {calcLockedDeposit} from './assetUtils'
 
 describe('assetUtils', () => {

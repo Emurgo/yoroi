@@ -8,9 +8,10 @@ import {COLORS} from '../../theme'
 type Props = {
   visible: boolean
   hideModalInfo: () => void
+  children: React.ReactNode
 }
 
-export const ModalInfo: React.FC<Props> = ({visible, hideModalInfo, children}) => {
+export const ModalInfo = ({visible, hideModalInfo, children}: Props) => {
   const strings = useStrings()
 
   return (

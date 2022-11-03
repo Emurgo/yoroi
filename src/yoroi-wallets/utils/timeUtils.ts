@@ -113,7 +113,7 @@ export function genToRelativeSlotNumber(
 }
 
 export type TimeToAbsoluteSlotRequest = {
-  time: Date
+  time: number
 }
 export type TimeToAbsoluteSlotResponse = {
   slot: number
@@ -136,7 +136,7 @@ export function genTimeToSlot(
     }
     let SlotDuration = config[0].SlotDuration
     let SlotsPerEpoch = config[0].SlotsPerEpoch
-    let timeLeftToTip = request.time.getTime() - new Date(Number.parseInt(GenesisDate, 10)).getTime()
+    let timeLeftToTip = request.time - Number.parseInt(GenesisDate, 10)
     let slotCount = 0
 
     // for pairs of config changes (x, x+1), get the time between these pairs

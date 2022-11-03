@@ -5,26 +5,17 @@ import BigNumber from 'bignumber.js'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, RefreshControl, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
-import {useDispatch, useSelector} from 'react-redux'
 
-import {AccountAutoRefresher} from '../AccountAutoRefresher'
 import {Banner, Button, Modal, OfflineBanner, StatusBar} from '../components'
+import {useBalances, useUtxos} from '../hooks'
 import globalMessages from '../i18n/global-messages'
-import {fetchAccountState} from '../legacy/account'
 import {getCardanoBaseConfig} from '../legacy/config'
 import KeyStore from '../legacy/KeyStore'
 import {getCardanoNetworkConfigById} from '../legacy/networks'
-import {
-  isFetchingAccountStateSelector,
-  isFetchingUtxosSelector,
-  lastAccountStateFetchErrorSelector,
-  tokenBalanceSelector,
-} from '../legacy/selectors'
-import {fetchUTXOs} from '../legacy/utxo'
+import {isEmptyString} from '../legacy/utils'
 import {useWalletNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
-import {UtxoAutoRefresher} from '../UtxoAutoRefresher'
-import {YoroiWallet} from '../yoroi-wallets'
+import {Amounts} from '../yoroi-wallets/utils'
 import {
   genCurrentEpochLength,
   genCurrentSlotLength,
@@ -40,17 +31,15 @@ import {WithdrawStakingRewards} from './WithdrawStakingRewards'
 export const Dashboard = () => {
   const intl = useIntl()
   const navigation = useNavigation()
-  const dispatch = useDispatch()
 
-  const isFetchingUtxos = useSelector(isFetchingUtxosSelector)
-  const isFetchingAccountState = useSelector(isFetchingAccountStateSelector)
-  const lastAccountStateSyncError = useSelector(lastAccountStateFetchErrorSelector)
+  const wallet = useSelectedWallet()
+  const {isLoading: isFetchingUtxos, refetch: refetchUtxos} = useUtxos(wallet)
   const netInfo = useNetInfo()
   const isOnline = netInfo.type !== 'none' && netInfo.type !== 'unknown'
 
-  const wallet = useSelectedWallet()
   const balances = useBalances(wallet)
-  const {stakingInfo, refetch: refetchStakingInfo, error} = useStakingInfo(wallet)
+  const primaryAmount = Amounts.getAmount(balances, '')
+  const {stakingInfo, refetch: refetchStakingInfo, error, isLoading} = useStakingInfo(wallet)
 
   const [showWithdrawalDialog, setShowWithdrawalDialog] = React.useState(false)
 
@@ -59,14 +48,10 @@ export const Dashboard = () => {
   return (
     <View style={styles.root}>
       <StatusBar type="dark" />
-      <UtxoAutoRefresher />
-      <AccountAutoRefresher />
 
       <View style={styles.container}>
         <OfflineBanner />
-        {isOnline && (lastAccountStateSyncError || error) && (
-          <SyncErrorBanner showRefresh={!(isFetchingAccountState || isFetchingUtxos)} />
-        )}
+        {isOnline && error && <SyncErrorBanner showRefresh={!(isLoading || isFetchingUtxos)} />}
 
         <ScrollView
           style={styles.scrollView}
@@ -74,8 +59,7 @@ export const Dashboard = () => {
           refreshControl={
             <RefreshControl
               onRefresh={() => {
-                dispatch(fetchUTXOs())
-                dispatch(fetchAccountState())
+                refetchUtxos()
                 refetchStakingInfo()
               }}
               refreshing={false}
@@ -93,7 +77,7 @@ export const Dashboard = () => {
               <ActivityIndicator size="large" color="black" />
             ) : stakingInfo.status === 'staked' ? (
               <UserSummary
-                totalAdaSum={balances['ADA'] ? new BigNumber(balances['ADA']) : null}
+                totalAdaSum={!isEmptyString(primaryAmount.quantity) ? new BigNumber(primaryAmount.quantity) : null}
                 totalRewards={new BigNumber(stakingInfo.rewards)}
                 totalDelegated={new BigNumber(stakingInfo.amount)}
                 onWithdraw={() => setShowWithdrawalDialog(true)}
@@ -101,7 +85,7 @@ export const Dashboard = () => {
               />
             ) : (
               <UserSummary
-                totalAdaSum={balances['ADA'] ? new BigNumber(balances['ADA']) : null}
+                totalAdaSum={!isEmptyString(primaryAmount.quantity) ? new BigNumber(primaryAmount.quantity) : null}
                 totalRewards={null}
                 totalDelegated={null}
                 onWithdraw={() => setShowWithdrawalDialog(true)}
@@ -110,7 +94,7 @@ export const Dashboard = () => {
             )}
           </Row>
 
-          {stakingInfo?.status === 'registered' && (
+          {stakingInfo?.status === 'staked' && (
             <Row>
               <StakePoolInfos />
             </Row>
@@ -137,6 +121,7 @@ export const Dashboard = () => {
             disabled={wallet.isReadOnly}
             shelleyTheme
             block
+            testID="stakingCenterButton"
           />
         </Actions>
       </View>
@@ -157,7 +142,7 @@ export const Dashboard = () => {
 
 const Row = ({style, ...props}: ViewProps) => <View {...props} style={[style, styles.row]} />
 
-const SyncErrorBanner = ({showRefresh}: Record<string, unknown> /* TODO: type */) => {
+const SyncErrorBanner = ({showRefresh}: {showRefresh: boolean}) => {
   const intl = useIntl()
 
   return (
@@ -173,9 +158,9 @@ const SyncErrorBanner = ({showRefresh}: Record<string, unknown> /* TODO: type */
 }
 
 const useCurrentTime = () => {
-  const [currentTime, setCurrentTime] = React.useState(() => new Date())
+  const [currentTime, setCurrentTime] = React.useState(() => Date.now())
   React.useEffect(() => {
-    const id = setInterval(() => setCurrentTime(new Date()), 1000)
+    const id = setInterval(() => setCurrentTime(Date.now()), 1000)
 
     return () => clearInterval(id)
   }, [])
@@ -197,7 +182,7 @@ const EpochInfo = () => {
 
   const currentRelativeTime = toRelativeSlotNumberFn(
     timeToSlotFn({
-      time: new Date(),
+      time: Date.now(),
     }).slot,
   )
   const epochLength = genCurrentEpochLength(config)()
@@ -267,15 +252,3 @@ const styles = StyleSheet.create({
     shadowOffset: {width: 0, height: -8},
   },
 })
-
-const useBalances = (_wallet: YoroiWallet) => {
-  const multitoken = useSelector(tokenBalanceSelector)
-
-  return multitoken.values.reduce(
-    (result, token) => ({
-      ...result,
-      [token.identifier === '' ? 'ADA' : token.identifier]: token.amount.toString(),
-    }),
-    {},
-  )
-}

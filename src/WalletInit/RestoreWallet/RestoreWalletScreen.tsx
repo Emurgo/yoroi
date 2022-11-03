@@ -6,6 +6,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, KeyboardSpacer, ScrollableView, Spacer, StatusBar, Text} from '../../components'
 import {getWalletConfigById} from '../../legacy/config'
+import {isEmptyString} from '../../legacy/utils'
 import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
 import {MnemonicInput} from '../MnemonicInput'
 
@@ -26,7 +27,7 @@ export const RestoreWalletScreen = () => {
   const [phrase, setPhrase] = React.useState('')
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={{flex: 1, backgroundColor: 'white', borderWidth: 1}}>
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={{flex: 1, backgroundColor: 'white'}}>
       <StatusBar type="dark" />
 
       <ScrollableView bounces={false} style={{paddingHorizontal: 16}} keyboardShouldPersistTaps="always">
@@ -45,7 +46,7 @@ export const RestoreWalletScreen = () => {
         <Button
           onPress={navigateToWalletCredentials}
           title={strings.restoreButton}
-          disabled={!phrase}
+          disabled={isEmptyString(phrase)}
           testID="restoreButton"
         />
       </Actions>

@@ -17,28 +17,11 @@ import {BleError} from 'react-native-ble-plx'
 import {ledgerMessages} from '../i18n/global-messages'
 import LocalizableError from '../i18n/LocalizableError'
 import {Logger} from '../legacy/logging'
-import {
-  BaseAddress,
-  Bip32PublicKey,
-  BootstrapWitness,
-  BootstrapWitnesses,
-  ByronAddress,
-  CardanoTypes,
-  Ed25519Signature,
-  hashTransaction,
-  RewardAddress,
-  Transaction,
-  TransactionWitnessSet,
-  Vkey,
-  Vkeywitness,
-  Vkeywitnesses,
-} from '../yoroi-wallets'
-import {YoroiUnsignedTx} from '../yoroi-wallets/types'
+import {CardanoMobile, CardanoTypes} from '../yoroi-wallets'
+import type {Addressing, NetworkId, WalletImplementationId} from '../yoroi-wallets/types/other'
 import {CONFIG, isByron, isHaskellShelley} from './config'
 import {getNetworkConfigById} from './networks'
-import {NUMBERS} from './numbers'
-import type {Addressing, NetworkId, WalletImplementationId} from './types'
-import {derivePublicByAddressing, normalizeToAddress, verifyFromBip44Root} from './utils'
+import {normalizeToAddress, verifyFromBip44Root} from './utils'
 
 //
 // ============== Errors ==================
@@ -372,10 +355,13 @@ export const verifyAddress = async (
     const stakingKeyAddressing = {}
 
     if (isHaskellShelley(walletImplementationId)) {
-      const baseAddr = await BaseAddress.fromAddress(addressPtr as any)
+      const baseAddr = await CardanoMobile.BaseAddress.fromAddress(addressPtr as any)
 
       if (baseAddr) {
-        const rewardAddr = await RewardAddress.new(Number.parseInt(chainNetworkId, 10), await baseAddr.stakeCred())
+        const rewardAddr = await CardanoMobile.RewardAddress.new(
+          Number.parseInt(chainNetworkId, 10),
+          await baseAddr.stakeCred(),
+        )
         const addressPayload = Buffer.from(await (await rewardAddr.toAddress()).toBytes()).toString('hex')
         stakingKeyAddressing[addressPayload] = {
           path: [
@@ -422,7 +408,7 @@ async function toLedgerAddressParameters(request: {
   addressingMap: (arg0: string) => void | Addressing['addressing']
 }): Promise<DeviceOwnedAddress> {
   {
-    const byronAddr = await ByronAddress.fromAddress(request.address)
+    const byronAddr = await CardanoMobile.ByronAddress.fromAddress(request.address)
 
     if (byronAddr) {
       return {
@@ -434,10 +420,10 @@ async function toLedgerAddressParameters(request: {
     }
   }
   {
-    const baseAddr = await BaseAddress.fromAddress(request.address)
+    const baseAddr = await CardanoMobile.BaseAddress.fromAddress(request.address)
 
     if (baseAddr) {
-      const rewardAddr = await RewardAddress.new(request.networkId, await baseAddr.stakeCred())
+      const rewardAddr = await CardanoMobile.RewardAddress.new(request.networkId, await baseAddr.stakeCred())
       const addressPayload = Buffer.from(await (await rewardAddr.toAddress()).toBytes()).toString('hex')
       const addressing = request.addressingMap(addressPayload)
 
@@ -475,7 +461,7 @@ async function toLedgerAddressParameters(request: {
   // TODO(v-almonacid): PointerAddress not yet implemented (bindings missing)
   // TODO(v-almonacid): EnterpriseAddress not yet implemented (bindings missing)
   {
-    const rewardAddr = await RewardAddress.fromAddress(request.address)
+    const rewardAddr = await CardanoMobile.RewardAddress.fromAddress(request.address)
 
     if (rewardAddr) {
       return {
@@ -495,11 +481,6 @@ export const signTxWithLedger = async (
 ): Promise<SignTransactionResponse> => {
   try {
     Logger.debug('ledgerUtils::signTxWithLedger called')
-
-    if (hwDeviceInfo == null) {
-      throw new Error('ledgerUtils::signTxWithLedger: hwDeviceInfo is null')
-    }
-
     const appAda = await connectionHandler(hwDeviceInfo.hwFeatures.deviceId, hwDeviceInfo.hwFeatures.deviceObj, useUSB)
     Logger.debug('ledgerUtils::signTxWithLedger inputs', signRequest.tx.inputs)
     Logger.debug('ledgerUtils::signTxWithLedger outputs', signRequest.tx.outputs)
@@ -509,158 +490,5 @@ export const signTxWithLedger = async (
     return ledgerSignature
   } catch (e) {
     throw mapLedgerError(e)
-  }
-}
-export const buildSignedTransaction = async (
-  unsignedTx: YoroiUnsignedTx,
-  signedLedgerTx: SignTransactionResponse,
-  purpose: number,
-  publicKeyHex: string,
-) => {
-  const key = await Bip32PublicKey.fromBytes(Buffer.from(publicKeyHex, 'hex'))
-  const addressing = {
-    path: [
-      purpose,
-      CONFIG.NUMBERS.COIN_TYPES.CARDANO,
-      CONFIG.NUMBERS.ACCOUNT_INDEX + CONFIG.NUMBERS.HARD_DERIVATION_START,
-    ],
-    startLevel: CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.PURPOSE,
-  }
-
-  const isSameArray = (array1: Array<number>, array2: Array<number>) =>
-    array1.length === array2.length && array1.every((value, index) => value === array2[index])
-
-  const findWitness = (path: Array<number>) => {
-    for (const witness of signedLedgerTx.witnesses) {
-      if (isSameArray(witness.path, path)) {
-        return witness.witnessSignatureHex
-      }
-    }
-
-    throw new Error(`buildSignedTransaction no witness for ${JSON.stringify(path)}`)
-  }
-
-  const keyLevel = addressing.startLevel + addressing.path.length - 1
-  const witSet = await TransactionWitnessSet.new()
-  const bootstrapWitnesses: Array<CardanoTypes.BootstrapWitness> = []
-  const vkeys: Array<CardanoTypes.Vkeywitness> = []
-
-  // Note: Ledger removes duplicate witnesses
-  // but there may be a one-to-many relationship
-  // ex: same witness is used in both a bootstrap witness and a vkey witness
-  const seenVKeyWit = new Set<string>()
-  const seenBootstrapWit = new Set<string>()
-  for (const utxo of unsignedTx.unsignedTx.senderUtxos) {
-    verifyFromBip44Root(utxo.addressing)
-    const witness = findWitness(utxo.addressing.path)
-    const addressKey = await derivePublicByAddressing({
-      addressing: utxo.addressing,
-      startingFrom: {
-        level: keyLevel,
-        key,
-      },
-    })
-
-    if (await ByronAddress.isValid(utxo.receiver)) {
-      const byronAddr = await ByronAddress.fromBase58(utxo.receiver)
-      const bootstrapWit = await BootstrapWitness.new(
-        await Vkey.new(await addressKey.toRawKey()),
-        await Ed25519Signature.fromBytes(Buffer.from(witness, 'hex')),
-        await addressKey.chaincode(),
-        await byronAddr.attributes(),
-      )
-      const asString = Buffer.from(await bootstrapWit.toBytes()).toString('hex')
-
-      if (seenBootstrapWit.has(asString)) {
-        continue
-      }
-
-      seenBootstrapWit.add(asString)
-      bootstrapWitnesses.push(bootstrapWit)
-      continue
-    }
-
-    const vkeyWit = await Vkeywitness.new(
-      await Vkey.new(await addressKey.toRawKey()),
-      await Ed25519Signature.fromBytes(Buffer.from(witness, 'hex')),
-    )
-    const asString = Buffer.from(await vkeyWit.toBytes()).toString('hex')
-
-    if (seenVKeyWit.has(asString)) {
-      continue
-    }
-
-    seenVKeyWit.add(asString)
-    vkeys.push(vkeyWit)
-  }
-
-  // add any staking key needed
-  for (const witness of signedLedgerTx.witnesses) {
-    const addressing = {
-      path: witness.path,
-      startLevel: 1,
-    }
-    verifyFromBip44Root(addressing)
-
-    if (witness.path[NUMBERS.BIP44_DERIVATION_LEVELS.CHAIN - 1] === NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT) {
-      const stakingKey = await derivePublicByAddressing({
-        addressing,
-        startingFrom: {
-          level: keyLevel,
-          key,
-        },
-      })
-      const vkeyWit = await Vkeywitness.new(
-        await Vkey.new(await stakingKey.toRawKey()),
-        await Ed25519Signature.fromBytes(Buffer.from(witness.witnessSignatureHex, 'hex')),
-      )
-      const asString = Buffer.from(await vkeyWit.toBytes()).toString('hex')
-
-      if (seenVKeyWit.has(asString)) {
-        continue
-      }
-
-      seenVKeyWit.add(asString)
-      vkeys.push(vkeyWit)
-    }
-  }
-
-  if (bootstrapWitnesses.length > 0) {
-    const bootstrapWitWasm = await BootstrapWitnesses.new()
-
-    for (const bootstrapWit of bootstrapWitnesses) {
-      await bootstrapWitWasm.add(bootstrapWit)
-    }
-
-    await witSet.setBootstraps(bootstrapWitWasm)
-  }
-
-  if (vkeys.length > 0) {
-    const vkeyWitWasm = await Vkeywitnesses.new()
-
-    for (const vkey of vkeys) {
-      await vkeyWitWasm.add(vkey)
-    }
-
-    await witSet.setVkeys(vkeyWitWasm)
-  }
-
-  // TODO: handle script witnesses
-  const signedTx = await Transaction.new(
-    unsignedTx.unsignedTx.txBody,
-    witSet,
-    unsignedTx.unsignedTx.auxiliaryData as any,
-  )
-
-  const id = await signedTx
-    .body()
-    .then((txBody) => hashTransaction(txBody))
-    .then((hash) => hash.toBytes())
-    .then((bytes) => Buffer.from(bytes).toString('hex'))
-  const encodedTx = await signedTx.toBytes()
-
-  return {
-    id,
-    encodedTx,
   }
 }

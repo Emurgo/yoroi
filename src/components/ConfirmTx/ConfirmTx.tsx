@@ -1,11 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {SignedTx} from '@emurgo/yoroi-lib-core'
 import {useNavigation} from '@react-navigation/native'
 import {delay} from 'bluebird'
 import React, {useEffect, useState} from 'react'
 import {useIntl} from 'react-intl'
 import {Platform, StyleSheet, View} from 'react-native'
-import {useDispatch, useSelector} from 'react-redux'
 
 import {useSubmitTx} from '../../hooks'
 import {confirmationMessages, errorMessages, txLabels} from '../../i18n/global-messages'
@@ -14,12 +12,12 @@ import {showErrorDialog} from '../../legacy/actions'
 import {CONFIG} from '../../legacy/config'
 import {ensureKeysValidity} from '../../legacy/deviceSettings'
 import {WrongPassword} from '../../legacy/errors'
-import {setLedgerDeviceId as _setLedgerDeviceId, setLedgerDeviceObj as _setLedgerDeviceObj} from '../../legacy/hwWallet'
 import KeyStore from '../../legacy/KeyStore'
-import {hwDeviceInfoSelector} from '../../legacy/selectors'
+import {DeviceId, DeviceObj} from '../../legacy/ledgerUtils'
+import {isEmptyString} from '../../legacy/utils'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
-import {SystemAuthDisabled, walletManager} from '../../yoroi-wallets'
+import {CardanoTypes, SystemAuthDisabled, walletManager, withBLE, withUSB} from '../../yoroi-wallets'
 import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
 import {Button, ButtonProps, ValidatedTextInput} from '..'
 import {Dialog, Step as DialogStep} from './Dialog'
@@ -31,7 +29,7 @@ type ErrorData = {
 
 type Props = {
   buttonProps?: Omit<Partial<ButtonProps>, 'disabled' | 'onPress'>
-  onSuccess: (signedTx: SignedTx) => void
+  onSuccess: (signedTx: CardanoTypes.SignedTx) => void
   onError?: (err: Error) => void
   yoroiUnsignedTx: YoroiUnsignedTx
   useUSB: boolean
@@ -44,7 +42,7 @@ type Props = {
   biometricInstructions?: Array<string>
 }
 
-export const ConfirmTx: React.FC<Props> = ({
+export const ConfirmTx = ({
   yoroiUnsignedTx,
   onError,
   onSuccess,
@@ -57,13 +55,10 @@ export const ConfirmTx: React.FC<Props> = ({
   autoSignIfEasyConfirmation,
   chooseTransportOnConfirmation,
   biometricInstructions,
-}) => {
+}: Props) => {
   const intl = useIntl()
   const strings = useStrings()
   const navigation = useNavigation()
-  const dispatch = useDispatch()
-
-  const hwDeviceInfo = useSelector(hwDeviceInfoSelector)
 
   const wallet = useSelectedWallet()
 
@@ -97,21 +92,18 @@ export const ConfirmTx: React.FC<Props> = ({
     setDialogStep(DialogStep.Error)
   }
 
-  const setLedgerDeviceId = (deviceId) => dispatch(_setLedgerDeviceId(deviceId))
-  const setLedgerDeviceObj = (deviceObj) => dispatch(_setLedgerDeviceObj(deviceObj))
-
   const onConfirmationChooseTransport = (useUSB: boolean) => {
-    if (!hwDeviceInfo) throw new Error('No device info')
+    if (!wallet.hwDeviceInfo) throw new Error('No device info')
     setUseUSB(useUSB)
     setDialogStep(DialogStep.LedgerConnect)
   }
 
   const onMountChooseTransport = (useUSB: boolean) => {
-    if (!hwDeviceInfo) throw new Error('No device info')
+    if (!wallet.hwDeviceInfo) throw new Error('No device info')
     setUseUSB(useUSB)
     if (
-      (useUSB && hwDeviceInfo.hwFeatures.deviceObj == null) ||
-      (!useUSB && hwDeviceInfo.hwFeatures.deviceId == null)
+      (useUSB && wallet.hwDeviceInfo.hwFeatures.deviceObj == null) ||
+      (!useUSB && wallet.hwDeviceInfo.hwFeatures.deviceId == null)
     ) {
       setDialogStep(DialogStep.LedgerConnect)
     } else {
@@ -119,8 +111,9 @@ export const ConfirmTx: React.FC<Props> = ({
     }
   }
 
-  const onConnectUSB = async (deviceObj) => {
-    await setLedgerDeviceObj(deviceObj)
+  const onConnectUSB = async (deviceObj: DeviceObj) => {
+    await walletManager.updateHWDeviceInfo(wallet, withUSB(wallet, deviceObj))
+
     if (chooseTransportOnConfirmation) {
       await delay(1000)
       onConfirm()
@@ -129,8 +122,9 @@ export const ConfirmTx: React.FC<Props> = ({
     }
   }
 
-  const onConnectBLE = async (deviceId) => {
-    await setLedgerDeviceId(deviceId)
+  const onConnectBLE = async (deviceId: DeviceId) => {
+    await walletManager.updateHWDeviceInfo(wallet, withBLE(wallet, deviceId))
+
     if (chooseTransportOnConfirmation) {
       await delay(1000)
       onConfirm()
@@ -146,14 +140,21 @@ export const ConfirmTx: React.FC<Props> = ({
 
         let signedTx
         if (wallet.isEasyConfirmationEnabled) {
-          if (easyConfirmDecryptKey) {
+          if (!isEmptyString(easyConfirmDecryptKey)) {
             setDialogStep(DialogStep.Signing)
             signedTx = await smoothModalNotification(wallet.signTx(yoroiUnsignedTx, easyConfirmDecryptKey))
+          } else {
+            throw new Error('Empty decrypt key')
           }
         } else {
-          const decryptedKey = await KeyStore.getData(walletManager._id, 'MASTER_PASSWORD', '', password, intl)
-          setDialogStep(DialogStep.Signing)
-          signedTx = await smoothModalNotification(wallet.signTx(yoroiUnsignedTx, decryptedKey))
+          if (wallet.isHW) {
+            setDialogStep(DialogStep.WaitingHwResponse)
+            signedTx = await wallet.signTxWithLedger(yoroiUnsignedTx, useUSB)
+          } else {
+            const decryptedKey = await KeyStore.getData(walletManager._id, 'MASTER_PASSWORD', '', password, intl)
+            setDialogStep(DialogStep.Signing)
+            signedTx = await smoothModalNotification(wallet.signTx(yoroiUnsignedTx, decryptedKey))
+          }
         }
 
         setDialogStep(DialogStep.Submitting)
@@ -166,13 +167,13 @@ export const ConfirmTx: React.FC<Props> = ({
             showError({
               errorMessage: strings.errorMessage(err),
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              errorLogs: (err as any).values.response || null,
+              errorLogs: (err as any).values?.response,
             })
           } else {
             showError({
               errorMessage: strings.generalTxErrorMessage,
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              errorLogs: (err as any).message || null,
+              errorLogs: (err as any).message,
             })
           }
           onError?.(err as Error)
@@ -187,14 +188,14 @@ export const ConfirmTx: React.FC<Props> = ({
           showError({
             errorMessage: strings.generalTxErrorMessage,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            errorLogs: (err as any).message || null,
+            errorLogs: (err as any).message,
           })
         }
       } finally {
         setIsProcessing(false)
       }
     },
-    [intl, onError, onSuccess, password, strings, submitTx, wallet, yoroiUnsignedTx],
+    [intl, onError, onSuccess, password, strings, submitTx, useUSB, wallet, yoroiUnsignedTx],
   )
 
   const _onConfirm = React.useCallback(async () => {
@@ -242,7 +243,7 @@ export const ConfirmTx: React.FC<Props> = ({
     biometricInstructions,
   ])
 
-  const isConfirmationDisabled = !wallet.isEasyConfirmationEnabled && !password && !wallet.isHW
+  const isConfirmationDisabled = !wallet.isEasyConfirmationEnabled && isEmptyString(password) && !wallet.isHW
 
   useEffect(() => {
     if (wallet.isEasyConfirmationEnabled && autoSignIfEasyConfirmation) {
@@ -267,7 +268,7 @@ export const ConfirmTx: React.FC<Props> = ({
         {!wallet.isEasyConfirmationEnabled && !wallet.isHW && !isProvidingPassword && (
           <ValidatedTextInput
             secureTextEntry
-            value={password || ''}
+            value={password ?? ''}
             label={strings.password}
             onChangeText={setPassword}
           />
@@ -277,6 +278,7 @@ export const ConfirmTx: React.FC<Props> = ({
           title={strings.confirmButton}
           {...buttonProps}
           disabled={isConfirmationDisabled || isProcessing || disabled}
+          testID="confirmTxButton"
         />
       </View>
 

@@ -7,7 +7,7 @@ import {useTokenInfo} from '../../hooks'
 import globalMessages, {txLabels} from '../../i18n/global-messages'
 import {formatTokenAmount, getName, getTicker, getTokenFingerprint} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
-import type {TokenEntry} from '../../types'
+import {TokenEntry} from '../../yoroi-wallets'
 import assetListSendStyle from './AssetListSend.style'
 import assetListTransactionStyle from './AssetListTransaction.style'
 import baseStyle from './Base.style'
@@ -60,8 +60,8 @@ const AssetRow = ({styles, entry, backColor, onSelect}: AssetRowProps) => {
       <View style={styles.tokenMetaView}>
         <Text style={styles.assetName}>
           {tokenInfo.isDefault
-            ? getTicker(tokenInfo) || intl.formatMessage(messages.unknownAssetName)
-            : getName(tokenInfo) || intl.formatMessage(messages.unknownAssetName)}
+            ? getTicker(tokenInfo)
+            : getName(tokenInfo) ?? intl.formatMessage(messages.unknownAssetName)}
         </Text>
 
         <Text style={styles.assetMeta} ellipsizeMode="middle" numberOfLines={1}>
@@ -70,7 +70,7 @@ const AssetRow = ({styles, entry, backColor, onSelect}: AssetRowProps) => {
       </View>
 
       <View style={styles.assetBalanceView}>
-        <Text style={styles.assetBalance}>{formatTokenAmount(entry.amount, tokenInfo, 15)}</Text>
+        <Text style={styles.assetBalance}>{formatTokenAmount(entry.amount, tokenInfo)}</Text>
       </View>
     </>
   )

@@ -27,7 +27,7 @@ export const LanguagePickerScreen = () => {
   )
 }
 
-const Actions: React.FC = (props: ViewProps) => <View {...props} style={{padding: 16}} />
+const Actions = (props: ViewProps) => <View {...props} style={{padding: 16}} />
 
 const styles = StyleSheet.create({
   safeAreaView: {

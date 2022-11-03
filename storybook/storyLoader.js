@@ -6,14 +6,15 @@
 function loadStories() {
 	require('../src/BiometricAuth/BiometricAuthScreen.stories');
 	require('../src/BiometricAuth/FingerprintScreenBase/FingerprintScreenBase.stories');
-	require('../src/Catalyst/Catalyst.stories');
 	require('../src/Catalyst/VotingBanner.stories');
+	require('../src/Catalyst/VotingRegistration.stories');
 	require('../src/Dashboard/Dashboard.stories');
 	require('../src/Dashboard/StakePoolInfos.stories');
 	require('../src/Dashboard/WithdrawStakingRewards/ConfirmTx/ConfirmTxWithHW.stories');
 	require('../src/Dashboard/WithdrawStakingRewards/ConfirmTx/ConfirmTxWithOS.stories');
 	require('../src/Dashboard/WithdrawStakingRewards/ConfirmTx/ConfirmTxWithPassword.stories');
 	require('../src/Dashboard/WithdrawStakingRewards/TransferSummary/TransferSummary.stories');
+	require('../src/Dashboard/WithdrawStakingRewards/WithdrawStakingRewards.stories');
 	require('../src/FirstRun/LanguagePickerScreen/LanguagePickerScreen.stories');
 	require('../src/FirstRun/TermsOfServiceScreen/TermsOfServiceScreen.stories');
 	require('../src/HW/Instructions/Instructions.stories');
@@ -23,7 +24,6 @@ function loadStories() {
 	require('../src/MaintenanceScreen.stories');
 	require('../src/Menu/Menu.stories');
 	require('../src/Receive/AddressModal.stories');
-	require('../src/Receive/AddressVerifyModal.stories');
 	require('../src/Receive/Addresses.stories');
 	require('../src/Receive/ReceiveScreen.stories');
 	require('../src/SelectedWallet/WalletSelection/WalletSelectionScreen.stories');
@@ -38,10 +38,10 @@ function loadStories() {
 	require('../src/Settings/ChangePassword/ChangePasswordScreen.stories');
 	require('../src/Settings/ChangeWalletName/ChangeWalletName.stories');
 	require('../src/Settings/Currency/ChangeCurrencyScreen.stories');
+	require('../src/Settings/EasyConfirmation/EasyConfirmationScreen.stories');
 	require('../src/Settings/RemoveWallet/RemoveWalletScreen.stories');
 	require('../src/Settings/Support/SupportScreen.stories');
 	require('../src/Settings/TermsOfService/TermsOfServiceScreen.stories');
-	require('../src/Settings/ToggleEasyConfirmation/ToggleEasyConfirmationScreen.stories');
 	require('../src/Settings/WalletSettings/WalletSettingsScreen.stories');
 	require('../src/Staking/DelegationConfirmation/DelegationConfirmation.stories');
 	require('../src/Staking/PoolDetails/PoolDetailScreen.stories');
@@ -78,7 +78,9 @@ function loadStories() {
 	require('../src/auth/CheckPinInput/CheckPinInput.stories');
 	require('../src/auth/CreatePinInput/CreatePinInput.stories');
 	require('../src/auth/CreatePinScreen/CreatePinScreen.stories');
+	require('../src/auth/PinInput/PinInput.stories');
 	require('../src/auth/PinLoginScreen/PinLoginScreen.stories');
+	require('../src/auth/backgroundTimeout.stories');
 	require('../src/components/Boundary/Boundary.stories');
 	require('../src/components/Button/Button.stories');
 	require('../src/components/Checkbox/Checkbox.stories');
@@ -104,14 +106,15 @@ function loadStories() {
 const stories = [
 	'../src/BiometricAuth/BiometricAuthScreen.stories',
 	'../src/BiometricAuth/FingerprintScreenBase/FingerprintScreenBase.stories',
-	'../src/Catalyst/Catalyst.stories',
 	'../src/Catalyst/VotingBanner.stories',
+	'../src/Catalyst/VotingRegistration.stories',
 	'../src/Dashboard/Dashboard.stories',
 	'../src/Dashboard/StakePoolInfos.stories',
 	'../src/Dashboard/WithdrawStakingRewards/ConfirmTx/ConfirmTxWithHW.stories',
 	'../src/Dashboard/WithdrawStakingRewards/ConfirmTx/ConfirmTxWithOS.stories',
 	'../src/Dashboard/WithdrawStakingRewards/ConfirmTx/ConfirmTxWithPassword.stories',
 	'../src/Dashboard/WithdrawStakingRewards/TransferSummary/TransferSummary.stories',
+	'../src/Dashboard/WithdrawStakingRewards/WithdrawStakingRewards.stories',
 	'../src/FirstRun/LanguagePickerScreen/LanguagePickerScreen.stories',
 	'../src/FirstRun/TermsOfServiceScreen/TermsOfServiceScreen.stories',
 	'../src/HW/Instructions/Instructions.stories',
@@ -121,7 +124,6 @@ const stories = [
 	'../src/MaintenanceScreen.stories',
 	'../src/Menu/Menu.stories',
 	'../src/Receive/AddressModal.stories',
-	'../src/Receive/AddressVerifyModal.stories',
 	'../src/Receive/Addresses.stories',
 	'../src/Receive/ReceiveScreen.stories',
 	'../src/SelectedWallet/WalletSelection/WalletSelectionScreen.stories',
@@ -136,10 +138,10 @@ const stories = [
 	'../src/Settings/ChangePassword/ChangePasswordScreen.stories',
 	'../src/Settings/ChangeWalletName/ChangeWalletName.stories',
 	'../src/Settings/Currency/ChangeCurrencyScreen.stories',
+	'../src/Settings/EasyConfirmation/EasyConfirmationScreen.stories',
 	'../src/Settings/RemoveWallet/RemoveWalletScreen.stories',
 	'../src/Settings/Support/SupportScreen.stories',
 	'../src/Settings/TermsOfService/TermsOfServiceScreen.stories',
-	'../src/Settings/ToggleEasyConfirmation/ToggleEasyConfirmationScreen.stories',
 	'../src/Settings/WalletSettings/WalletSettingsScreen.stories',
 	'../src/Staking/DelegationConfirmation/DelegationConfirmation.stories',
 	'../src/Staking/PoolDetails/PoolDetailScreen.stories',
@@ -176,7 +178,9 @@ const stories = [
 	'../src/auth/CheckPinInput/CheckPinInput.stories',
 	'../src/auth/CreatePinInput/CreatePinInput.stories',
 	'../src/auth/CreatePinScreen/CreatePinScreen.stories',
+	'../src/auth/PinInput/PinInput.stories',
 	'../src/auth/PinLoginScreen/PinLoginScreen.stories',
+	'../src/auth/backgroundTimeout.stories',
 	'../src/components/Boundary/Boundary.stories',
 	'../src/components/Button/Button.stories',
 	'../src/components/Checkbox/Checkbox.stories',

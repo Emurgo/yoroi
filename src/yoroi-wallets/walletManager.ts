@@ -2,31 +2,19 @@
 import ExtendableError from 'es6-error'
 import _ from 'lodash'
 import type {IntlShape} from 'react-intl'
+import uuid from 'uuid'
 
 import {migrateWalletMetas} from '../appStorage'
 import {APP_SETTINGS_KEYS, readAppSettings} from '../legacy/appSettings'
 import assert from '../legacy/assert'
 import {CONFIG, DISABLE_BACKGROUND_SYNC} from '../legacy/config'
 import {canBiometricEncryptionBeEnabled, ensureKeysValidity, isSystemAuthSupported} from '../legacy/deviceSettings'
-import {ObjectValues} from '../legacy/flow'
 import {ISignRequest} from '../legacy/ISignRequest'
 import KeyStore from '../legacy/KeyStore'
 import type {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {Logger} from '../legacy/logging'
 import type {WalletMeta} from '../legacy/state'
 import storage from '../legacy/storage'
-import type {EncryptionMethod} from '../legacy/types'
-import {
-  FundInfoResponse,
-  NETWORK_REGISTRY,
-  PoolInfoRequest,
-  RawUtxo,
-  TokenInfoRequest,
-  TokenInfoResponse,
-  TxBodiesRequest,
-  WALLET_IMPLEMENTATION_REGISTRY,
-} from '../legacy/types'
-import {StakePoolInfosAndHistories} from '../types'
 import {
   isYoroiWallet,
   NetworkId,
@@ -37,32 +25,40 @@ import {
   YoroiProvider,
   YoroiWallet,
 } from './cardano'
+import type {EncryptionMethod} from './types/other'
+import {WALLET_IMPLEMENTATION_REGISTRY} from './types/other'
+import {WalletJSON} from './Wallet'
 
 export class WalletClosed extends ExtendableError {}
 export class SystemAuthDisabled extends ExtendableError {}
 export class KeysAreInvalid extends ExtendableError {}
 
-class WalletManager {
+export type WalletManagerEvent =
+  | {type: 'easy-confirmation'; enabled: boolean}
+  | {type: 'wallet-opened'; wallet: WalletInterface}
+  | {type: 'wallet-closed'; id: string}
+  | {type: 'hw-device-info'; hwDeviceInfo: HWDeviceInfo}
+
+export type WalletManagerSubscription = (event: WalletManagerEvent) => void
+
+export class WalletManager {
   _wallet: null | WalletInterface = null
   _id = ''
-  _subscribers: Array<() => void> = []
+  private subscriptions: Array<WalletManagerSubscription> = []
   _syncErrorSubscribers: Array<(err: null | Error) => void> = []
   _serverSyncSubscribers: Array<(status: ServerStatus) => void> = []
   _onOpenSubscribers: Array<() => void> = []
-  _onCloseSubscribers: Array<() => void> = []
   _onTxHistoryUpdateSubscribers: Array<() => void> = []
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   _closePromise: null | Promise<any> = null
   _closeReject: null | ((error: Error) => void) = null
-
-  _wallets = {}
 
   constructor() {
     // do not await on purpose
     this._backgroundSync()
   }
 
-  async _listWallets() {
+  async listWallets() {
     const keys = await storage.keys('/wallet/')
     const result = await Promise.all(keys.map((key) => storage.read<WalletMeta>(`/wallet/${key}`)))
 
@@ -78,17 +74,8 @@ class WalletManager {
   // The responsibility to check data consistency is left to the each wallet
   // implementation.
   async initialize() {
-    const _storedWalletMetas = await this._listWallets()
-    // need to migrate wallet list to new format after (haskell) shelley
-    // integration. Prior to v3.0, w.isShelley denoted an ITN wallet
-    const migratedWalletMetas = await migrateWalletMetas(_storedWalletMetas)
-
-    this._wallets = _.fromPairs(migratedWalletMetas.map((w) => [w.id, w]))
-    Logger.debug('WalletManager::initialize::wallets()', this._wallets)
-  }
-
-  getWallets() {
-    return this._wallets
+    const _storedWalletMetas = await this.listWallets()
+    return migrateWalletMetas(_storedWalletMetas)
   }
 
   getWallet() {
@@ -110,9 +97,9 @@ class WalletManager {
   }
 
   // Note(ppershing): needs 'this' to be bound
-  _notify = () => {
+  _notify = (event: WalletManagerEvent) => {
     // TODO(ppershing): do this in next tick?
-    this._subscribers.forEach((handler) => handler())
+    this.subscriptions.forEach((handler) => handler(event))
   }
 
   _notifySyncError = (error: null | Error) => {
@@ -124,7 +111,7 @@ class WalletManager {
       handler({
         isServerOk: status.isServerOk,
         isMaintenance: status.isMaintenance,
-        serverTime: new Date(status.serverTime || Date.now()),
+        serverTime: status.serverTime || Date.now(),
       }),
     )
   }
@@ -133,16 +120,16 @@ class WalletManager {
     this._onOpenSubscribers.forEach((handler) => handler())
   }
 
-  _notifyOnClose = () => {
-    this._onCloseSubscribers.forEach((handler) => handler())
-  }
-
   _notifyOnTxHistoryUpdate = () => {
     this._onTxHistoryUpdateSubscribers.forEach((handler) => handler())
   }
 
-  subscribe(handler: () => void) {
-    this._subscribers.push(handler)
+  subscribe(subscription: (event: WalletManagerEvent) => void) {
+    this.subscriptions.push(subscription)
+
+    return () => {
+      this.subscriptions = this.subscriptions.filter((sub) => sub !== subscription)
+    }
   }
 
   subscribeBackgroundSyncError(handler: (err: null | Error) => void) {
@@ -157,114 +144,8 @@ class WalletManager {
     this._onOpenSubscribers.push(handler)
   }
 
-  subscribeOnClose(handler: () => void) {
-    this._onCloseSubscribers.push(handler)
-  }
-
   subscribeOnTxHistoryUpdate(handler: () => void) {
     this._onTxHistoryUpdateSubscribers.push(handler)
-  }
-
-  /** ========== getters =============
-   * these properties are passed on to redux's State in
-   * actions/history.js::mirrorTxHistory
-   */
-
-  get id() {
-    return this.getWallet().id
-  }
-
-  get isInitialized() {
-    if (!this._wallet) return false
-
-    return this.getWallet().isInitialized
-  }
-
-  get transactions() {
-    if (!this._wallet) return {}
-    return this._wallet.transactions
-  }
-
-  get internalAddresses() {
-    if (!this._wallet) return []
-    return this._wallet.internalAddresses
-  }
-
-  get externalAddresses() {
-    if (!this._wallet) return []
-    return this._wallet.externalAddresses
-  }
-
-  get rewardAddressHex() {
-    if (!this._wallet) return null
-    return this._wallet.rewardAddressHex
-  }
-
-  get isEasyConfirmationEnabled() {
-    if (!this._wallet) return false
-
-    return this.getWallet().isEasyConfirmationEnabled
-  }
-
-  get confirmationCounts() {
-    if (!this._wallet) return {}
-    return this._wallet.confirmationCounts
-  }
-
-  get numReceiveAddresses() {
-    if (!this._wallet) return 0
-    return this._wallet.numReceiveAddresses
-  }
-
-  get canGenerateNewReceiveAddress() {
-    if (!this._wallet) return false
-    return this._wallet.canGenerateNewReceiveAddress()
-  }
-
-  get isUsedAddressIndex() {
-    if (!this._wallet) return {}
-    return this._wallet.isUsedAddressIndex
-  }
-
-  get networkId() {
-    if (!this._wallet) return NETWORK_REGISTRY.UNDEFINED
-    return this._wallet.networkId
-  }
-
-  get walletImplementationId() {
-    if (!this._wallet) return ''
-    return this._wallet.walletImplementationId
-  }
-
-  get isHW() {
-    if (!this._wallet) return false
-    return this._wallet.isHW
-  }
-
-  get hwDeviceInfo() {
-    if (!this._wallet) return null
-    return this._wallet.hwDeviceInfo
-  }
-
-  get isReadOnly() {
-    if (!this._wallet) return false
-    return this._wallet.isReadOnly
-  }
-
-  get version() {
-    if (!this._wallet) return null
-    return this._wallet.version
-  }
-
-  get checksum() {
-    if (!this._wallet) return undefined
-
-    return this.getWallet().checksum
-  }
-
-  get provider() {
-    if (!this._wallet) return ''
-    return this._wallet.provider
   }
 
   // ============ security & key management ============ //
@@ -310,7 +191,7 @@ class WalletManager {
     const wallet = this.getWallet()
 
     wallet.isEasyConfirmationEnabled = false
-    await this._saveState(wallet)
+    await wallet.save()
 
     await this._updateMetadata(wallet.id, {
       isEasyConfirmationEnabled: false,
@@ -318,7 +199,7 @@ class WalletManager {
 
     await this.deleteEncryptedKey('BIOMETRICS')
     await this.deleteEncryptedKey('SYSTEM_PIN')
-    this._notify()
+    this._notify({type: 'easy-confirmation', enabled: false})
   }
 
   async enableEasyConfirmation(masterPassword: string, intl: IntlShape) {
@@ -329,16 +210,8 @@ class WalletManager {
     await this._updateMetadata(wallet.id, {
       isEasyConfirmationEnabled: true,
     })
-    await this._saveState(wallet)
-    this._notify()
-  }
-
-  canBiometricsSignInBeDisabled() {
-    if (!this._wallets) {
-      throw new Error('Wallet list is not initialized')
-    }
-
-    return ObjectValues(this._wallets).every((wallet: any) => !wallet.isEasyConfirmationEnabled)
+    await wallet.save()
+    this._notify({type: 'easy-confirmation', enabled: true})
   }
 
   // =================== synch =================== //
@@ -351,7 +224,7 @@ class WalletManager {
       if (this._wallet) {
         const wallet = this._wallet
         await wallet.tryDoFullSync()
-        await this._saveState(wallet)
+        await wallet.save()
         const status = await wallet.checkServerStatus()
         this._notifyServerSync(status)
       }
@@ -363,17 +236,6 @@ class WalletManager {
         setTimeout(() => this._backgroundSync(), CONFIG.HISTORY_REFRESH_TIME)
       }
     }
-  }
-
-  async doFullSync() {
-    // TODO(ppershing): this should "quit" early if we change wallet
-    if (!this._wallet) return
-    const wallet = this._wallet
-    await this.abortWhenWalletCloses(wallet.doFullSync())
-    // note: don't await on purpose
-    // TODO(ppershing): should we save in case wallet is closed mid-sync?
-    this._saveState(wallet)
-    return
   }
 
   // ========== UI state ============= //
@@ -390,7 +252,7 @@ class WalletManager {
     const didGenerateNew = wallet.generateNewUiReceiveAddress()
     if (didGenerateNew) {
       // note: don't await on purpose
-      this._saveState(wallet)
+      wallet.save()
     }
     return didGenerateNew
   }
@@ -406,22 +268,20 @@ class WalletManager {
     provider?: null | YoroiProvider,
   ) {
     this._id = id
-    this._wallets = {
-      ...this._wallets,
-      [id]: {
-        id,
-        name,
-        networkId,
-        walletImplementationId,
-        isHW: wallet.isHW,
-        checksum: wallet.checksum,
-        isEasyConfirmationEnabled: false,
-        provider,
-      } as WalletMeta,
-    }
 
-    await this._saveState(wallet)
-    await storage.write(`/wallet/${id}`, this._wallets[id])
+    await wallet.save()
+    if (!wallet.checksum) throw new Error('invalid wallet')
+    const walletMeta: WalletMeta = {
+      id,
+      name,
+      networkId,
+      walletImplementationId,
+      isHW: wallet.isHW,
+      checksum: wallet.checksum,
+      isEasyConfirmationEnabled: false,
+      provider,
+    }
+    await storage.write(`/wallet/${id}`, walletMeta)
 
     Logger.debug('WalletManager::saveWallet::wallet', wallet)
 
@@ -433,18 +293,25 @@ class WalletManager {
   }
 
   async openWallet(walletMeta: WalletMeta): Promise<[YoroiWallet, WalletMeta]> {
+    await this.closeWallet()
     assert.preconditionCheck(!!walletMeta.id, 'openWallet:: !!id')
-    const data = await storage.read(`/wallet/${walletMeta.id}/data`)
+    const data = await storage.read<WalletJSON>(`/wallet/${walletMeta.id}/data`)
     const appSettings = await readAppSettings()
     const isSystemAuthEnabled = appSettings[APP_SETTINGS_KEYS.SYSTEM_AUTH_ENABLED]
     Logger.debug('openWallet::data', data)
     if (!data) throw new Error('Cannot read saved data')
 
-    const wallet: WalletInterface = this._getWalletImplementation(walletMeta.walletImplementationId)
     const newWalletMeta = {...walletMeta}
 
+    // can be null for versions < 3.0.0
+    const networkId = data.networkId ?? walletMeta.networkId
+
+    const Wallet = this.getWalletImplementation(walletMeta.walletImplementationId)
+    const wallet = new Wallet(storage, networkId, newWalletMeta.id)
+
     await wallet.restore(data, walletMeta)
-    wallet.id = walletMeta.id
+    if (!isYoroiWallet(wallet)) throw new Error('invalid wallet')
+
     this._wallet = wallet
     this._id = walletMeta.id
 
@@ -466,14 +333,14 @@ class WalletManager {
 
     // wallet state might have changed after restore due to migrations, so we
     // update the data in storage immediately
-    await this._saveState(wallet)
+    await wallet.save()
 
-    wallet.subscribe(this._notify)
+    wallet.subscribe((event) => this._notify(event as any))
     wallet.subscribeOnTxHistoryUpdate(this._notifyOnTxHistoryUpdate)
     this._closePromise = new Promise((resolve, reject) => {
       this._closeReject = reject
     })
-    this._notify() // update redux store
+    this._notify({type: 'wallet-opened', wallet})
 
     this._notifyOnOpen()
 
@@ -481,38 +348,26 @@ class WalletManager {
       await ensureKeysValidity(wallet.id)
     }
 
-    if (isYoroiWallet(wallet)) {
-      return [wallet, newWalletMeta]
-    }
-
-    throw new Error('invalid wallet')
-  }
-
-  async save() {
-    if (!this._wallet) return
-    await this._saveState(this._wallet)
-  }
-
-  async _saveState(wallet: WalletInterface) {
-    assert.assert(wallet.id, 'saveState:: wallet.id')
-    /* :: if (!this._wallet) throw 'assert' */
-    const data = wallet.toJSON()
-    await storage.write(`/wallet/${wallet.id}/data`, data)
+    return [wallet, newWalletMeta]
   }
 
   closeWallet(): Promise<void> {
     if (!this._wallet) return Promise.resolve()
+
     Logger.debug('closing wallet...')
     assert.assert(this._closeReject, 'close: should have _closeReject')
     /* :: if (!this._closeReject) throw 'assert' */
     // Abort all async interactions with the wallet
+
     const reject = this._closeReject
     this._closePromise = null
     this._closeReject = null
+
+    this._notify({type: 'wallet-closed', id: this._id})
+
     this._wallet = null
     this._id = ''
-    this._notify()
-    this._notifyOnClose()
+
     // need to reject in next microtask otherwise
     // closeWallet would throw if some rejection
     // handler does not catch
@@ -524,48 +379,37 @@ class WalletManager {
   async resyncWallet() {
     if (!this._wallet) return
     const wallet = this._wallet
+    await wallet.clear()
     wallet.resync()
-    this.save()
+    wallet.save()
     await this.closeWallet()
   }
 
-  async removeCurrentWallet() {
-    if (!this._wallet) return
-    const id = this._id
+  async removeWallet(id: string) {
+    if (!this._wallet) throw new Error('invalid state')
 
-    if (this.isEasyConfirmationEnabled) {
+    if (this._wallet.isEasyConfirmationEnabled) {
       await this.deleteEncryptedKey('BIOMETRICS')
       await this.deleteEncryptedKey('SYSTEM_PIN')
     }
     await this.deleteEncryptedKey('MASTER_PASSWORD')
 
+    await this._wallet.clear()
     await this.closeWallet()
     await storage.remove(`/wallet/${id}/data`)
     await storage.remove(`/wallet/${id}`)
-
-    this._wallets = _.omit(this._wallets, id)
   }
 
   // TODO(ppershing): how should we deal with race conditions?
   async _updateMetadata(id, newMeta) {
-    assert.assert(this._wallets[id], '_updateMetadata id')
-    const merged = {
-      ...this._wallets[id],
-      ...newMeta,
-    }
-    await storage.write(`/wallet/${id}`, merged)
-    this._wallets = {
-      ...this._wallets,
-      [id]: merged,
-    }
+    const walletMeta = await storage.read<WalletMeta>(`/wallet/${id}`)
+    const merged = {...walletMeta, ...newMeta}
+    return storage.write(`/wallet/${id}`, merged)
   }
 
-  async updateHWDeviceInfo(hwDeviceInfo: HWDeviceInfo) {
-    const wallet = this.getWallet()
-
+  async updateHWDeviceInfo(wallet: YoroiWallet, hwDeviceInfo: HWDeviceInfo) {
     wallet.hwDeviceInfo = hwDeviceInfo
-    await this._saveState(wallet)
-    this._notify() // update redux Store
+    await wallet.save()
   }
 
   // =================== create =================== //
@@ -573,12 +417,12 @@ class WalletManager {
   // returns the corresponding implementation of WalletInterface. Normally we
   // should expect that each blockchain network has 1 wallet implementation.
   // In the case of Cardano, there are two: Byron-era and Shelley-era.
-  _getWalletImplementation(walletImplementationId: WalletImplementationId): WalletInterface {
+  private getWalletImplementation(walletImplementationId: WalletImplementationId): typeof ShelleyWallet {
     switch (walletImplementationId) {
       case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON:
       case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY:
       case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY_24:
-        return new ShelleyWallet()
+        return ShelleyWallet
       // TODO
       // case WALLET_IMPLEMENTATION_REGISTRY.ERGO:
       //   return ErgoWallet()
@@ -595,8 +439,10 @@ class WalletManager {
     implementationId: WalletImplementationId,
     provider?: null | YoroiProvider,
   ) {
-    const wallet = this._getWalletImplementation(implementationId)
-    const id = await wallet.create(mnemonic, password, networkId, implementationId, provider)
+    const Wallet = this.getWalletImplementation(implementationId)
+    const id = uuid.v4()
+    const wallet = new Wallet(storage, networkId, id)
+    await wallet.create(mnemonic, password, networkId, implementationId, provider)
 
     return this.saveWallet(id, name, wallet, networkId, implementationId, provider)
   }
@@ -609,14 +455,11 @@ class WalletManager {
     hwDeviceInfo: null | HWDeviceInfo,
     isReadOnly: boolean,
   ) {
-    const wallet = this._getWalletImplementation(implementationId)
-    const id = await wallet.createWithBip44Account(
-      bip44AccountPublic,
-      networkId,
-      implementationId,
-      hwDeviceInfo,
-      isReadOnly,
-    )
+    const Wallet = this.getWalletImplementation(implementationId)
+    const id = uuid.v4()
+    const wallet = new Wallet(storage, networkId, id)
+    await wallet.createWithBip44Account(bip44AccountPublic, networkId, implementationId, hwDeviceInfo, isReadOnly)
+
     Logger.debug('creating wallet...', wallet)
 
     return this.saveWallet(id, name, wallet, networkId, implementationId)
@@ -624,74 +467,36 @@ class WalletManager {
 
   // =================== tx building =================== //
 
-  async getAllUtxosForKey(utxos: Array<RawUtxo>) {
-    const wallet = this.getWallet()
-    return await wallet.getAllUtxosForKey(utxos)
-  }
-
   getAddressingInfo(address: string) {
     const wallet = this.getWallet()
     return wallet.getAddressing(address)
   }
 
-  asAddressedUtxo(utxos: Array<RawUtxo>) {
-    const wallet = this.getWallet()
-    return wallet.asAddressedUtxo(utxos)
-  }
-
   async getDelegationStatus() {
     const wallet = this.getWallet()
-    return await wallet.getDelegationStatus()
+    return wallet.getDelegationStatus()
   }
 
   async signTx<T>(signRequest: ISignRequest<T>, decryptedKey: string) {
     const wallet = this.getWallet()
-    return await this.abortWhenWalletCloses(wallet.signTx(signRequest as any, decryptedKey))
+    return this.abortWhenWalletCloses(wallet.signTx(signRequest as any, decryptedKey))
   }
 
   async signTxWithLedger(request: ISignRequest, useUSB: boolean) {
     const wallet = this.getWallet()
-    return await this.abortWhenWalletCloses(wallet.signTxWithLedger(request as any, useUSB))
+    return this.abortWhenWalletCloses(wallet.signTxWithLedger(request as any, useUSB))
   }
 
   // =================== backend API =================== //
 
   async submitTransaction(signedTx: string) {
     const wallet = this.getWallet()
-    return await this.abortWhenWalletCloses(wallet.submitTransaction(signedTx))
-  }
-
-  async getTxsBodiesForUTXOs(request: TxBodiesRequest) {
-    const wallet = this.getWallet()
-    return await this.abortWhenWalletCloses(wallet.getTxsBodiesForUTXOs(request))
-  }
-
-  async fetchUTXOs() {
-    const wallet = this.getWallet()
-    return await this.abortWhenWalletCloses(wallet.fetchUTXOs())
-  }
-
-  async fetchAccountState() {
-    const wallet = this.getWallet()
-    return await this.abortWhenWalletCloses(wallet.fetchAccountState())
-  }
-
-  async fetchPoolInfo(request: PoolInfoRequest): Promise<StakePoolInfosAndHistories> {
-    const wallet = this.getWallet()
-    return await wallet.fetchPoolInfo(request)
-  }
-
-  async fetchTokenInfo(request: TokenInfoRequest): Promise<TokenInfoResponse> {
-    const wallet = this.getWallet()
-    return await wallet.fetchTokenInfo(request)
-  }
-
-  async fetchFundInfo(): Promise<FundInfoResponse> {
-    const wallet = this.getWallet()
-    return await wallet.fetchFundInfo()
+    return this.abortWhenWalletCloses(wallet.submitTransaction(signedTx))
   }
 }
 
 export const walletManager = new WalletManager()
 
 export default walletManager
+
+export const mockWalletManager = {} as WalletManager

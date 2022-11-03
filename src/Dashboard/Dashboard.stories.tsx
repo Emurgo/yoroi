@@ -1,14 +1,13 @@
 import {storiesOf} from '@storybook/react-native'
 import BigNumber from 'bignumber.js'
 import React from 'react'
-import {QueryClient, QueryClientProvider} from 'react-query'
 import {Provider} from 'react-redux'
 
-import {mockWallet, poolInfoAndHistory, stakePoolId} from '../../storybook'
+import {mockWallet, poolInfoAndHistory, QueryProvider, stakePoolId} from '../../storybook'
 import getConfiguredStore from '../legacy/configureStore'
 import {SelectedWalletProvider} from '../SelectedWallet'
-import {StakePoolInfosAndHistories} from '../types'
 import {YoroiWallet} from '../yoroi-wallets'
+import {StakePoolInfosAndHistories} from '../yoroi-wallets/types'
 import {Dashboard} from './Dashboard'
 
 const mockedAccountState = {
@@ -30,13 +29,13 @@ storiesOf('Dashboard', module)
     }
 
     return (
-      <QueryClientProvider client={new QueryClient()}>
+      <QueryProvider>
         <Provider store={store}>
           <SelectedWalletProvider wallet={notDelegatingWallet}>
             <Dashboard />
           </SelectedWalletProvider>
         </Provider>
-      </QueryClientProvider>
+      </QueryProvider>
     )
   })
   .add('Loading ids', () => {
@@ -50,13 +49,13 @@ storiesOf('Dashboard', module)
     }
 
     return (
-      <QueryClientProvider client={new QueryClient()}>
+      <QueryProvider>
         <Provider store={store}>
           <SelectedWalletProvider wallet={loadingWallet}>
             <Dashboard />
           </SelectedWalletProvider>
         </Provider>
-      </QueryClientProvider>
+      </QueryProvider>
     )
   })
   .add('Loading StakePoolInfo', () => {
@@ -71,13 +70,13 @@ storiesOf('Dashboard', module)
     }
 
     return (
-      <QueryClientProvider client={new QueryClient()}>
+      <QueryProvider>
         <Provider store={store}>
           <SelectedWalletProvider wallet={loadingWallet}>
             <Dashboard />
           </SelectedWalletProvider>
         </Provider>
-      </QueryClientProvider>
+      </QueryProvider>
     )
   })
   .add('Loaded, StakePoolInfo success', () => {
@@ -92,16 +91,16 @@ storiesOf('Dashboard', module)
     }
 
     return (
-      <QueryClientProvider client={new QueryClient()}>
+      <QueryProvider>
         <Provider store={store}>
           <SelectedWalletProvider wallet={loadedWallet}>
             <Dashboard />
           </SelectedWalletProvider>
         </Provider>
-      </QueryClientProvider>
+      </QueryProvider>
     )
   })
-  .add('Loaded, StakePoolInfo error', () => {
+  .add('Error', () => {
     const store = getConfiguredStore(true, true, {
       accountState: {...mockedAccountState, isDelegating: true, poolOperator: stakePoolId},
     })
@@ -109,19 +108,37 @@ storiesOf('Dashboard', module)
     const loadedWallet: YoroiWallet = {
       ...mockWallet,
       getDelegationStatus: () => Promise.resolve({isRegistered: true, poolKeyHash: stakePoolId}),
-      fetchPoolInfo: () =>
-        Promise.resolve({
-          [stakePoolId]: {error: new Error('Pool operator not found')},
-        } as StakePoolInfosAndHistories),
+      fetchPoolInfo: () => Promise.reject('unknown error'),
     }
 
     return (
-      <QueryClientProvider client={new QueryClient()}>
+      <QueryProvider>
         <Provider store={store}>
           <SelectedWalletProvider wallet={loadedWallet}>
             <Dashboard />
           </SelectedWalletProvider>
         </Provider>
-      </QueryClientProvider>
+      </QueryProvider>
+    )
+  })
+  .add('Loaded, StakePoolInfo not found', () => {
+    const store = getConfiguredStore(true, true, {
+      accountState: {...mockedAccountState, isDelegating: true, poolOperator: stakePoolId},
+    })
+
+    const loadedWallet: YoroiWallet = {
+      ...mockWallet,
+      getDelegationStatus: () => Promise.resolve({isRegistered: true, poolKeyHash: stakePoolId}),
+      fetchPoolInfo: () => Promise.resolve({[stakePoolId]: null} as StakePoolInfosAndHistories),
+    }
+
+    return (
+      <QueryProvider>
+        <Provider store={store}>
+          <SelectedWalletProvider wallet={loadedWallet}>
+            <Dashboard />
+          </SelectedWalletProvider>
+        </Provider>
+      </QueryProvider>
     )
   })

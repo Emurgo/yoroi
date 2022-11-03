@@ -3,17 +3,18 @@ import React from 'react'
 import {useColorScheme} from 'react-native'
 import {useMutation, UseMutationOptions, useQuery, useQueryClient} from 'react-query'
 
+import {isEmptyString} from '../legacy/utils'
 import {darkTheme} from './darkTheme'
 import {lightTheme} from './lightTheme'
 import {Theme} from './types'
 
 const ThemeContext = React.createContext<undefined | ThemeContext>(undefined)
-export const ThemeProvider: React.FC = ({children}) => {
-  const defaultColorScheme = useColorScheme() || 'light'
+export const ThemeProvider = ({children}: {children: React.ReactNode}) => {
+  const defaultColorScheme = useColorScheme() ?? 'light'
   const savedColorScheme = useSavedColorScheme()
 
   const selectColorScheme = useSaveColorScheme()
-  const colorScheme = savedColorScheme || defaultColorScheme
+  const colorScheme = savedColorScheme ?? defaultColorScheme
   const theme = themes[colorScheme]
 
   return <ThemeContext.Provider value={{theme, colorScheme, selectColorScheme}}>{children}</ThemeContext.Provider>
@@ -31,7 +32,7 @@ const useSavedColorScheme = () => {
     queryFn: async () => {
       const savedTheme = await AsyncStorage.getItem('/appSettings/theme')
 
-      return savedTheme ? JSON.parse(savedTheme) : null
+      return !isEmptyString(savedTheme) ? JSON.parse(savedTheme) : null
     },
     suspense: true,
   })

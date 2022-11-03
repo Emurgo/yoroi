@@ -5,18 +5,15 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {Icon, Spacer, StatusBar} from '../../components'
+import {useCrashReports} from '../../hooks'
 import {useLanguage} from '../../i18n'
 import {setAppSettingField} from '../../legacy/actions'
 import {APP_SETTINGS_KEYS} from '../../legacy/appSettings'
 import {CONFIG, isNightly} from '../../legacy/config'
 import {canBiometricEncryptionBeEnabled, isBiometricEncryptionHardwareSupported} from '../../legacy/deviceSettings'
 import KeyStore from '../../legacy/KeyStore'
-import {
-  biometricHwSupportSelector,
-  installationIdSelector,
-  isSystemAuthEnabledSelector,
-  sendCrashReportsSelector,
-} from '../../legacy/selectors'
+import {biometricHwSupportSelector, installationIdSelector, isSystemAuthEnabledSelector} from '../../legacy/selectors'
+import {isEmptyString} from '../../legacy/utils'
 import {useWalletNavigation} from '../../navigation'
 import {usePrivacyMode} from '../../Settings/PrivacyMode/PrivacyMode'
 import {lightPalette} from '../../theme'
@@ -32,7 +29,6 @@ export const ApplicationSettingsScreen = () => {
   const strings = useStrings()
   const {navigation, navigateToSettings} = useWalletNavigation()
   const isBiometricHardwareSupported = useSelector(biometricHwSupportSelector)
-  const sendCrashReports = useSelector(sendCrashReportsSelector)
   const isSystemAuthEnabled = useSelector(isSystemAuthEnabledSelector)
   const installationId = useSelector(installationIdSelector)
   const dispatch = useDispatch()
@@ -40,12 +36,10 @@ export const ApplicationSettingsScreen = () => {
   const {language} = useLanguage()
   const {privacyMode, togglePrivacyMode} = usePrivacyMode()
 
-  const setCrashReporting = (value: boolean) => {
-    dispatch(setAppSettingField(APP_SETTINGS_KEYS.SEND_CRASH_REPORTS, value))
-  }
+  const crashReports = useCrashReports()
 
   const onToggleBiometricsAuthIn = async () => {
-    if (!installationId) throw new Error('invalid state')
+    if (isEmptyString(installationId)) throw new Error('invalid state')
 
     if (isSystemAuthEnabled) {
       navigation.navigate('biometrics', {
@@ -156,7 +150,11 @@ export const ApplicationSettingsScreen = () => {
             label={strings.crashReporting}
             info={strings.crashReportingInfo}
           >
-            <Switch value={sendCrashReports} onValueChange={setCrashReporting} disabled={isNightly()} />
+            <Switch
+              value={crashReports.enabled}
+              onValueChange={crashReports.enabled ? crashReports.disable : crashReports.enable}
+              disabled={isNightly()}
+            />
           </SettingsItem>
         </SettingsSection>
       </ScrollView>

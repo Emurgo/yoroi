@@ -6,13 +6,13 @@ import {ActivityIndicator, Image, ImageSourcePropType, StyleSheet, View, ViewSty
 import {Button, ProgressStep, TextInput} from '../../components'
 import {useWalletNames} from '../../hooks'
 import globalMessages from '../../i18n/global-messages'
-import {CONFIG} from '../../legacy/config'
 import {ignoreConcurrentAsyncHandler} from '../../legacy/utils'
 import {spacing} from '../../theme'
+import {useWalletManager} from '../../WalletManager'
 import {getWalletNameError, validateWalletName} from '../../yoroi-wallets/utils/validators'
 
 type Props = {
-  onSubmit: ({name: string}) => void
+  onSubmit: ({name}: {name: string}) => void
   defaultWalletName?: string
   image?: ImageSourcePropType
   progress?: {
@@ -34,11 +34,13 @@ export const WalletNameForm = ({
   buttonStyle,
   topContent,
   bottomContent,
+  defaultWalletName,
   isWaiting = false,
 }: Props) => {
   const strings = useStrings()
-  const [name, setName] = React.useState(CONFIG.HARDWARE_WALLETS.LEDGER_NANO.DEFAULT_WALLET_NAME || '')
-  const walletNames = useWalletNames()
+  const [name, setName] = React.useState(defaultWalletName ?? '')
+  const walletManager = useWalletManager()
+  const {walletNames} = useWalletNames(walletManager)
   const validationErrors = validateWalletName(name, null, walletNames || [])
   const hasErrors = Object.keys(validationErrors).length > 0
   const errorMessages = {
@@ -46,7 +48,7 @@ export const WalletNameForm = ({
     nameAlreadyTaken: strings.walletNameErrorNameAlreadyTaken,
     mustBeFilled: strings.walletNameErrorMustBeFilled,
   }
-  const walletNameErrorText = getWalletNameError(errorMessages, validationErrors) || undefined
+  const walletNameErrorText = getWalletNameError(errorMessages, validationErrors) ?? undefined
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const submit = React.useCallback((ignoreConcurrentAsyncHandler as any)(() => () => onSubmit({name}), 1000)(), [
@@ -66,6 +68,7 @@ export const WalletNameForm = ({
         {topContent}
 
         <TextInput
+          errorOnMount
           autoFocus
           label={strings.walletNameInputLabel}
           value={name}
@@ -73,6 +76,7 @@ export const WalletNameForm = ({
           errorText={walletNameErrorText}
           disabled={isWaiting}
           autoComplete={false}
+          testID="walletNameInput"
         />
 
         {bottomContent}

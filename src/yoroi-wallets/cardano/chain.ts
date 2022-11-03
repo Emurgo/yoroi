@@ -9,7 +9,7 @@ import {ADDRESS_TYPE_TO_CHANGE} from '../../legacy/commonUtils'
 import {CONFIG, isByron, isHaskellShelley} from '../../legacy/config'
 import {Logger} from '../../legacy/logging'
 import {getNetworkConfigById} from '../../legacy/networks'
-import {BaseAddress, Bip32PublicKey, CardanoTypes, RewardAddress, StakeCredential} from '.'
+import {CardanoMobile, CardanoTypes} from '.'
 import type {CryptoAccount} from './byron/util'
 import * as util from './byron/util'
 import {NetworkId, WalletImplementationId} from './types'
@@ -70,7 +70,7 @@ export class AddressGenerator {
     if (this._rewardAddressHex != null) return this._rewardAddressHex
     // cache account public key
     if (this._accountPubKeyPtr == null) {
-      this._accountPubKeyPtr = await Bip32PublicKey.fromBytes(Buffer.from(this.accountPubKeyHex, 'hex'))
+      this._accountPubKeyPtr = await CardanoMobile.Bip32PublicKey.fromBytes(Buffer.from(this.accountPubKeyHex, 'hex'))
     }
     const stakingKey = await (
       await (
@@ -79,8 +79,8 @@ export class AddressGenerator {
     ).toRawKey()
 
     // cache reward address
-    const credential = await StakeCredential.fromKeyhash(await stakingKey.hash())
-    const rewardAddr = await RewardAddress.new(parseInt(chainNetworkId, 10), credential)
+    const credential = await CardanoMobile.StakeCredential.fromKeyhash(await stakingKey.hash())
+    const rewardAddr = await CardanoMobile.RewardAddress.new(parseInt(chainNetworkId, 10), credential)
     const rewardAddrAsAddr = await rewardAddr.toAddress()
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this._rewardAddressHex = Buffer.from((await rewardAddrAsAddr.toBytes()) as any, 'hex').toString('hex')
@@ -97,7 +97,7 @@ export class AddressGenerator {
       }
       // cache account public key
       if (this._accountPubKeyPtr == null) {
-        this._accountPubKeyPtr = await Bip32PublicKey.fromBytes(Buffer.from(this.accountPubKeyHex, 'hex'))
+        this._accountPubKeyPtr = await CardanoMobile.Bip32PublicKey.fromBytes(Buffer.from(this.accountPubKeyHex, 'hex'))
       }
       const chainKey = await this._accountPubKeyPtr.derive(ADDRESS_TYPE_TO_CHANGE[this.type])
       const stakingKey = await (
@@ -106,20 +106,20 @@ export class AddressGenerator {
         ).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)
       ).toRawKey()
 
-      return await Promise.all(
+      return Promise.all(
         idxs.map(async (idx) => {
           const addrKey = await (await chainKey.derive(idx)).toRawKey()
-          const addr = await BaseAddress.new(
+          const addr = await CardanoMobile.BaseAddress.new(
             parseInt(chainNetworkId, 10),
-            await StakeCredential.fromKeyhash(await addrKey.hash()),
-            await StakeCredential.fromKeyhash(await stakingKey.hash()),
+            await CardanoMobile.StakeCredential.fromKeyhash(await addrKey.hash()),
+            await CardanoMobile.StakeCredential.fromKeyhash(await stakingKey.hash()),
           )
-          return await (await addr.toAddress()).toBech32()
+          return (await addr.toAddress()).toBech32()
         }),
       )
     }
 
-    return await util.getAddresses(this.byronAccount, this.type, idxs)
+    return util.getAddresses(this.byronAccount, this.type, idxs)
   }
 
   toJSON(): AddressGeneratorJSON {
@@ -220,7 +220,7 @@ export class AddressChain {
   }
 
   async getRewardAddressHex() {
-    return await this._addressGenerator.getRewardAddressHex()
+    return this._addressGenerator.getRewardAddressHex()
   }
 
   addSubscriberToNewAddresses(subscriber: (addresses: Addresses) => unknown) {

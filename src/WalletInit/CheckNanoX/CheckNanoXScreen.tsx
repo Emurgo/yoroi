@@ -40,15 +40,15 @@ export const CheckNanoXScreen = () => {
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <Spacer height={16} />
         {(useUSB ? usbRequirements : bleRequirements).map((item, index) => (
-          <>
-            <BulletPointItem key={item} style={styles.item} textRow={item} />
+          <React.Fragment key={item}>
+            <BulletPointItem style={styles.item} textRow={item} />
             {index !== usbRequirements.length - 1 && <Spacer height={16} />}
-          </>
+          </React.Fragment>
         ))}
       </ScrollView>
 
       <Actions>
-        <Button onPress={onContinue} title={strings.continueButton} />
+        <Button onPress={onContinue} title={strings.continueButton} testID="continueButton" />
       </Actions>
     </SafeAreaView>
   )

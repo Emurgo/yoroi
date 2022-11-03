@@ -1,4 +1,3 @@
-import {WalletChecksum} from '@emurgo/cip4-js'
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -6,12 +5,12 @@ import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {BulletPointItem, Button, Icon, Spacer, StatusBar, Text} from '../../components'
-import {WALLET_IMPLEMENTATION_REGISTRY} from '../../legacy/types'
 import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
 import {COLORS} from '../../theme'
-import {NetworkId, WalletImplementationId} from '../../yoroi-wallets'
+import {CardanoTypes, NetworkId, WalletImplementationId} from '../../yoroi-wallets'
 import {generateByronPlateFromMnemonics} from '../../yoroi-wallets/cardano/byron/plate'
 import {generateShelleyPlateFromMnemonics} from '../../yoroi-wallets/cardano/shelley/plate'
+import {WALLET_IMPLEMENTATION_REGISTRY} from '../../yoroi-wallets/types/other'
 import {WalletAddress} from '../WalletAddress'
 
 export const VerifyRestoredWalletScreen = () => {
@@ -148,7 +147,7 @@ const usePlateFromMnemonic = ({
   walletImplementationId: WalletImplementationId
 }) => {
   const [addresses, setAddresses] = useState<undefined | Array<string>>(undefined)
-  const [plate, setPlate] = useState<undefined | WalletChecksum>(undefined)
+  const [plate, setPlate] = useState<undefined | CardanoTypes.WalletChecksum>(undefined)
 
   useEffect(() => {
     const getPlate = async (
@@ -160,7 +159,7 @@ const usePlateFromMnemonic = ({
       switch (walletImplId) {
         case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY:
         case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY_24:
-          return await generateShelleyPlateFromMnemonics(mnemonic, count, networkId)
+          return generateShelleyPlateFromMnemonics(mnemonic, count, networkId)
         case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON:
           return generateByronPlateFromMnemonics(mnemonic, count)
         default:

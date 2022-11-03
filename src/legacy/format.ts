@@ -5,8 +5,8 @@ import moment from 'moment'
 import type {IntlShape} from 'react-intl'
 import {defineMessages} from 'react-intl'
 
+import {DefaultAsset, Token} from '../yoroi-wallets/types'
 import {getCardanoDefaultAsset} from './config'
-import type {DefaultAsset, Token} from './HistoryTransaction'
 import utfSymbols from './utfSymbols'
 const messages = defineMessages({
   today: {
@@ -90,13 +90,9 @@ export const normalizeTokenAmount = (amount: BigNumber, token: Token | DefaultAs
   const normalizationFactor = Math.pow(10, token.metadata.numberOfDecimals)
   return amount.dividedBy(normalizationFactor).decimalPlaces(token.metadata.numberOfDecimals)
 }
-export const formatTokenAmount = (amount: BigNumber, token: Token | DefaultAsset, maxLen: number | void): string => {
+export const formatTokenAmount = (amount: BigNumber, token: Token | DefaultAsset): string => {
   const normalized = normalizeTokenAmount(amount, token)
   const amountStr = normalized.toFormat(token.metadata.numberOfDecimals)
-
-  if (maxLen !== undefined && amountStr.length > maxLen) {
-    return normalized.toExponential(maxLen)
-  }
 
   return amountStr
 }

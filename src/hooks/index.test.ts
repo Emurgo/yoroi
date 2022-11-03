@@ -2,7 +2,7 @@ import {expect} from 'chai'
 import * as sinon from 'ts-sinon'
 
 import {mockWallet} from '../../storybook/mocks/wallet'
-import {TxStatusRequest, TxStatusResponse} from '../legacy/types'
+import {TxStatusRequest, TxStatusResponse} from '../yoroi-wallets/types/other'
 import {fetchTxStatus} from '.'
 
 describe('fetchTxStatus', () => {

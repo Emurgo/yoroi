@@ -7,31 +7,21 @@ import {useIntl} from 'react-intl'
 import {ActivityIndicator, Image, ScrollView, StyleSheet, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useSelector} from 'react-redux'
 
 import {Button, Checkbox, Spacer, StatusBar, Text, TextInput} from '../../components'
-import {useTokenInfo} from '../../hooks'
-import {CONFIG, getDefaultAssetByNetworkId} from '../../legacy/config'
+import {useBalances, useHasPendingTx, useTokenInfo, useUtxos} from '../../hooks'
+import {CONFIG} from '../../legacy/config'
 import {formatTokenAmount, getAssetDenominationOrId, truncateWithEllipsis} from '../../legacy/format'
-import {
-  hasPendingOutgoingTransactionSelector,
-  isFetchingUtxosSelector,
-  lastUtxosFetchErrorSelector,
-  tokenBalanceSelector,
-  utxosSelector,
-} from '../../legacy/selectors'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
-import {TokenEntry} from '../../types'
-import {UtxoAutoRefresher} from '../../UtxoAutoRefresher'
-import {MultiToken} from '../../yoroi-wallets'
 import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
-import {parseAmountDecimal} from '../../yoroi-wallets/utils/parsing'
+import {Amounts, Quantities} from '../../yoroi-wallets/utils'
 import type {
   AddressValidationErrors,
   AmountValidationErrors,
   BalanceValidationErrors,
 } from '../../yoroi-wallets/utils/validators'
+import {useSend} from '../Context/SendContext'
 import {AmountField} from './../AmountField'
 import {AvailableAmountBanner} from './AvailableAmountBanner'
 import {BalanceAfterTransaction} from './BalanceAfterTransaction'
@@ -41,80 +31,66 @@ import {SendAllWarning} from './SendAllWarning'
 import {useStrings} from './strings'
 import {getAddressErrorText, getAmountErrorText, hasDomainErrors, isDomain, recomputeAll} from './utils'
 
-type Props = {
-  selectedTokenIdentifier: string
-  sendAll: boolean
-  onSendAll: (sendAll: boolean) => void
-  receiver: string
-  setReceiver: (receiver: string) => void
-  amount: string
-  setAmount: (amount: string) => void
-}
-
-export const SendScreen = ({
-  selectedTokenIdentifier,
-  sendAll,
-  onSendAll,
-  receiver,
-  amount,
-  setReceiver,
-  setAmount,
-}: Props) => {
+export const SendScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
   const navigation = useNavigation()
   const wallet = useSelectedWallet()
+  const balances = useBalances(wallet)
 
-  const tokenBalance = useSelector(tokenBalanceSelector)
-  const isFetchingBalance = useSelector(isFetchingUtxosSelector)
-  const lastFetchingError = useSelector(lastUtxosFetchErrorSelector)
-  const defaultAsset = getDefaultAssetByNetworkId(wallet.networkId)
-  const utxos = useSelector(utxosSelector)
-  const hasPendingOutgoingTransaction = useSelector(hasPendingOutgoingTransactionSelector)
+  const {utxos, isLoading, error} = useUtxos(wallet)
+  const hasPendingTx = useHasPendingTx(wallet)
   const netInfo = useNetInfo()
   const isOnline = netInfo.type !== 'none' && netInfo.type !== 'unknown'
-  const selectedAsset = tokenBalance.values.find(({identifier}) => identifier === selectedTokenIdentifier)
 
-  if (!selectedAsset) {
-    throw new Error('Invalid token')
-  }
+  const {tokenId, resetForm, receiverChanged, amountChanged, receiver, amount, sendAll, sendAllChanged} = useSend()
+
+  const selectedAssetAvailableAmount = Amounts.getAmount(balances, tokenId).quantity
+  const defaultAssetAvailableAmount = Amounts.getAmount(balances, wallet.defaultAsset.identifier).quantity
+
+  React.useEffect(() => {
+    if (wallet.defaultAsset.identifier !== tokenId && !Quantities.isGreaterThan(selectedAssetAvailableAmount, '0')) {
+      resetForm()
+    }
+  }, [wallet.defaultAsset.identifier, tokenId, resetForm, selectedAssetAvailableAmount])
 
   const [address, setAddress] = React.useState('')
   const [addressErrors, setAddressErrors] = React.useState<AddressValidationErrors>({addressIsRequired: true})
   const [amountErrors, setAmountErrors] = React.useState<AmountValidationErrors>({amountIsRequired: true})
   const [balanceErrors, setBalanceErrors] = React.useState<BalanceValidationErrors>({})
-  const [balanceAfter, setBalanceAfter] = React.useState<BigNumber | null>(null)
   const [yoroiUnsignedTx, setYoroiUnsignedTx] = React.useState<null | YoroiUnsignedTx>(null)
-  const [fee, setFee] = React.useState<BigNumber | null>(null)
   const [recomputing, setRecomputing] = React.useState(false)
   const [showSendAllWarning, setShowSendAllWarning] = React.useState(false)
 
-  const tokenInfo = useTokenInfo({wallet, tokenId: selectedTokenIdentifier})
+  const tokenInfo = useTokenInfo({wallet, tokenId})
   const assetDenomination = truncateWithEllipsis(getAssetDenominationOrId(tokenInfo), 20)
-  const amountErrorText = getAmountErrorText(intl, amountErrors, balanceErrors, defaultAsset)
+  const amountErrorText = getAmountErrorText(intl, amountErrors, balanceErrors, wallet.defaultAsset)
+
   const isValid =
     isOnline &&
-    !hasPendingOutgoingTransaction &&
-    !isFetchingBalance &&
-    !lastFetchingError &&
+    !hasPendingTx &&
+    !isLoading &&
+    error == null &&
     utxos &&
     _.isEmpty(addressErrors) &&
     _.isEmpty(amountErrors) &&
-    _.isEmpty(balanceErrors)
+    _.isEmpty(balanceErrors) &&
+    !!yoroiUnsignedTx
 
   React.useEffect(() => {
     if (CONFIG.DEBUG.PREFILL_FORMS) {
       if (!__DEV__) throw new Error('using debug data in non-dev env')
-      setReceiver(CONFIG.DEBUG.SEND_ADDRESS)
-      setAmount(CONFIG.DEBUG.SEND_AMOUNT)
+      receiverChanged(CONFIG.DEBUG.SEND_ADDRESS)
+      amountChanged(CONFIG.DEBUG.SEND_AMOUNT)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const promiseRef = React.useRef<undefined | Promise<unknown>>()
   React.useEffect(() => {
-    setFee(null)
-    setBalanceAfter(null)
+    setYoroiUnsignedTx(null)
+    setBalanceErrors({})
+    setAmountErrors({})
     setRecomputing(true)
 
     const promise = recomputeAll({
@@ -123,9 +99,9 @@ export const SendScreen = ({
       addressInput: receiver,
       amount,
       sendAll,
-      defaultAsset,
       selectedTokenInfo: tokenInfo,
-      tokenBalance,
+      defaultAssetAvailableAmount,
+      selectedAssetAvailableAmount,
     })
 
     promiseRef.current = promise
@@ -135,16 +111,14 @@ export const SendScreen = ({
 
       setAddress(newState.address)
       setAddressErrors(newState.addressErrors)
-      setAmount(newState.amount)
+      amountChanged(newState.amount)
       setAmountErrors(newState.amountErrors)
       setBalanceErrors(newState.balanceErrors)
-      setFee(newState.fee)
-      setBalanceAfter(newState.balanceAfter)
       setYoroiUnsignedTx(newState.yoroiUnsignedTx)
       setRecomputing(false)
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [receiver, amount, selectedTokenIdentifier, sendAll])
+  }, [receiver, amount, tokenId, sendAll])
 
   const onConfirm = () => {
     if (sendAll) {
@@ -155,27 +129,7 @@ export const SendScreen = ({
   }
 
   const handleConfirm = async () => {
-    if (!isValid || recomputing || !yoroiUnsignedTx) return
-
-    const defaultAssetAmount = tokenInfo.isDefault
-      ? parseAmountDecimal(amount, tokenInfo)
-      : // note: inside this if balanceAfter shouldn't be null
-        tokenBalance.getDefault().minus(balanceAfter ?? 0)
-
-    const tokens: Array<TokenEntry> = tokenInfo.isDefault
-      ? sendAll
-        ? new MultiToken(yoroiUnsignedTx.unsignedTx.totalOutput.values, {
-            defaultNetworkId: yoroiUnsignedTx.unsignedTx.totalOutput.defaults.networkId,
-            defaultIdentifier: yoroiUnsignedTx.unsignedTx.totalOutput.defaults.identifier,
-          }).nonDefaultEntries()
-        : []
-      : [
-          {
-            identifier: tokenInfo.identifier,
-            networkId: tokenInfo.networkId,
-            amount: parseAmountDecimal(amount, tokenInfo),
-          },
-        ]
+    if (isValid == false || recomputing || yoroiUnsignedTx == null) return
 
     setShowSendAllWarning(false)
 
@@ -185,16 +139,7 @@ export const SendScreen = ({
         screen: 'history',
         params: {
           screen: 'send-confirm',
-          params: {
-            availableAmount: tokenBalance.getDefault(),
-            address,
-            defaultAssetAmount,
-            yoroiUnsignedTx,
-            balanceAfterTx: balanceAfter,
-            utxos,
-            fee,
-            tokens,
-          },
+          params: {yoroiUnsignedTx},
         },
       },
     })
@@ -204,13 +149,12 @@ export const SendScreen = ({
     <SafeAreaView edges={['left', 'right']} style={styles.container}>
       <StatusBar type="dark" />
 
-      <UtxoAutoRefresher />
       <ErrorBanners />
       <AvailableAmountBanner />
 
-      <ScrollView style={styles.content} keyboardDismissMode="on-drag">
-        <BalanceAfterTransaction balanceAfter={balanceAfter} />
-        <Fee fee={fee} />
+      <ScrollView style={styles.content} keyboardDismissMode="on-drag" keyboardShouldPersistTaps>
+        <BalanceAfterTransaction yoroiUnsignedTx={yoroiUnsignedTx} />
+        <Fee yoroiUnsignedTx={yoroiUnsignedTx} />
 
         <Spacer height={16} />
 
@@ -218,10 +162,11 @@ export const SendScreen = ({
           value={receiver}
           multiline
           errorOnMount
-          onChangeText={setReceiver}
+          onChangeText={receiverChanged}
           label={strings.addressInputLabel}
           errorText={getAddressErrorText(intl, addressErrors)}
           autoComplete={false}
+          testID="addressInput"
         />
 
         {!recomputing &&
@@ -233,7 +178,7 @@ export const SendScreen = ({
             </Text>
           )}
 
-        <AmountField amount={amount} setAmount={setAmount} error={amountErrorText} editable={!sendAll} />
+        <AmountField amount={amount} setAmount={amountChanged} error={amountErrorText} editable={!sendAll} />
 
         <TouchableOpacity
           onPress={() => {
@@ -249,24 +194,21 @@ export const SendScreen = ({
           }}
         >
           <TextInput
-            right={<Image source={require('../../assets/img/arrow_down_fill.png')} />}
+            right={<Image source={require('../../assets/img/arrow_down_fill.png')} testID="selectAssetButton" />}
             editable={false}
             label={strings.asset}
-            value={`${assetDenomination}: ${formatTokenAmount(
-              tokenBalance.get(selectedTokenIdentifier) || new BigNumber('0'),
-              tokenInfo,
-              15,
-            )}`}
+            value={`${assetDenomination}: ${formatTokenAmount(new BigNumber(selectedAssetAvailableAmount), tokenInfo)}`}
             autoComplete={false}
           />
         </TouchableOpacity>
 
         <Checkbox
           checked={sendAll}
-          onChange={onSendAll}
+          onChange={sendAllChanged}
           text={
             tokenInfo.isDefault ? strings.checkboxSendAllAssets : strings.checkboxSendAll({assetId: assetDenomination})
           }
+          testID="sendAllCheckbox"
         />
 
         {recomputing && (
@@ -277,13 +219,13 @@ export const SendScreen = ({
       </ScrollView>
 
       <View style={styles.actions}>
-        <Button onPress={onConfirm} title={strings.continueButton} disabled={!isValid || fee == null} />
+        <Button onPress={onConfirm} title={strings.continueButton} disabled={!isValid} testID="continueButton" />
       </View>
 
       <SendAllWarning
         showSendAllWarning={showSendAllWarning}
         onCancel={() => setShowSendAllWarning(false)}
-        selectedTokenIdentifier={selectedTokenIdentifier}
+        selectedTokenIdentifier={tokenId}
         onConfirm={handleConfirm}
       />
     </SafeAreaView>
@@ -299,8 +241,8 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   actions: {
-    marginHorizontal: 16,
-    marginBottom: 16,
+    paddingHorizontal: 16,
+    paddingBottom: 16,
   },
   indicator: {
     marginTop: 26,

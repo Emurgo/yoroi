@@ -8,7 +8,7 @@ import {useTos} from '..'
 export const TermsOfService = ({languageCode}: {languageCode: string}) => {
   const tos = useTos({languageCode})
 
-  return tos ? (
+  return tos != null ? (
     <Markdown
       markdownStyles={{
         text: {

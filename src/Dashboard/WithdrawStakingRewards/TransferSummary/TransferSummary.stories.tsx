@@ -1,14 +1,14 @@
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {mockWallet, mockYoroiTx, WithModal} from '../../../../storybook'
+import {mockWallet, mockYoroiTx, QueryProvider} from '../../../../storybook'
 import {Boundary} from '../../../components'
 import {YoroiUnsignedTx} from '../../../yoroi-wallets/types'
 import {TransferSummary} from './TransferSummary'
 
 storiesOf('TransferSummary', module)
   .add('withdrawals, no deregistrations', () => (
-    <WithModal>
+    <QueryProvider>
       <Boundary>
         <TransferSummary
           wallet={mockWallet}
@@ -25,10 +25,10 @@ storiesOf('TransferSummary', module)
           }
         />
       </Boundary>
-    </WithModal>
+    </QueryProvider>
   ))
   .add('deregistrations, no withdrawals', () => (
-    <WithModal>
+    <QueryProvider>
       <Boundary>
         <TransferSummary
           wallet={mockWallet}
@@ -45,10 +45,10 @@ storiesOf('TransferSummary', module)
           }
         />
       </Boundary>
-    </WithModal>
+    </QueryProvider>
   ))
   .add('deregistrations, withdrawals', () => (
-    <WithModal>
+    <QueryProvider>
       <Boundary>
         <TransferSummary
           wallet={mockWallet}
@@ -68,5 +68,5 @@ storiesOf('TransferSummary', module)
           }
         />
       </Boundary>
-    </WithModal>
+    </QueryProvider>
   ))

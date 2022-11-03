@@ -6,7 +6,9 @@ import {Button, Checkmark, Spacer, TextInput} from '../components'
 import {useWalletNames} from '../hooks'
 import globalMessages from '../i18n/global-messages'
 import {CONFIG} from '../legacy/config'
+import {isEmptyString} from '../legacy/utils'
 import {COLORS} from '../theme'
+import {useWalletManager} from '../WalletManager'
 import {
   getWalletNameError,
   REQUIRED_PASSWORD_LENGTH,
@@ -20,14 +22,14 @@ type Props = {
 
 export const WalletForm = ({onSubmit}: Props) => {
   const strings = useStrings()
-  const walletNames = useWalletNames()
+  const walletManager = useWalletManager()
+  const {walletNames} = useWalletNames(walletManager)
   const [name, setName] = React.useState(CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.WALLET_NAME : '')
-  const nameErrors = validateWalletName(name, null, walletNames || [])
-  const walletNameErrorText =
-    getWalletNameError(
-      {tooLong: strings.tooLong, nameAlreadyTaken: strings.nameAlreadyTaken, mustBeFilled: strings.mustBeFilled},
-      nameErrors,
-    ) || undefined
+  const nameErrors = validateWalletName(name, null, walletNames ?? [])
+  const walletNameErrorText = getWalletNameError(
+    {tooLong: strings.tooLong, nameAlreadyTaken: strings.nameAlreadyTaken, mustBeFilled: strings.mustBeFilled},
+    nameErrors,
+  )
 
   const passwordRef = React.useRef<RNTextInput>(null)
   const [password, setPassword] = React.useState(CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '')
@@ -58,12 +60,13 @@ export const WalletForm = ({onSubmit}: Props) => {
           label={strings.walletNameInputLabel}
           value={name}
           onChangeText={(walletName: string) => setName(walletName.trim())}
-          errorText={walletNameErrorText}
+          errorText={!isEmptyString(walletNameErrorText) ? walletNameErrorText : undefined}
           errorDelay={0}
           returnKeyType="next"
           onSubmitEditing={() => passwordRef.current?.focus()}
           testID="walletNameInput"
           autoComplete={false}
+          showErrorOnBlur
         />
 
         <Spacer />
@@ -84,6 +87,7 @@ export const WalletForm = ({onSubmit}: Props) => {
           onSubmitEditing={() => passwordConfirmationRef.current?.focus()}
           testID="walletPasswordInput"
           autoComplete={false}
+          showErrorOnBlur
         />
 
         <Spacer />
@@ -102,6 +106,7 @@ export const WalletForm = ({onSubmit}: Props) => {
           }
           testID="walletRepeatPasswordInput"
           autoComplete={false}
+          showErrorOnBlur
         />
       </ScrollView>
 

@@ -13,8 +13,8 @@ import type {DeviceId, DeviceObj} from '../../legacy/ledgerUtils'
 import {getHWDeviceInfo} from '../../legacy/ledgerUtils'
 import {Logger} from '../../legacy/logging'
 import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
-import {Device} from '../../types'
 import {NetworkId, WalletImplementationId} from '../../yoroi-wallets'
+import {Device} from '../../yoroi-wallets/types'
 
 export type Params = {
   useUSB?: boolean

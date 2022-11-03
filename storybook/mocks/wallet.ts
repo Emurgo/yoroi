@@ -1,12 +1,40 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import {action} from '@storybook/addon-actions'
 import BigNumber from 'bignumber.js'
-import KeyStore from '../../src/legacy/KeyStore'
 
-import {RemotePoolMetaSuccess, StakePoolInfosAndHistories, TokenEntry, TokenInfo} from '../../src/types'
-import {YoroiWallet} from '../../src/yoroi-wallets'
-import {YoroiSignedTx} from '../../src/yoroi-wallets/types'
+import {getDefaultAssetByNetworkId} from '../../src/legacy/config'
+import {PRIMARY_ASSET_CONSTANTS} from '../../src/legacy/networks'
+import {WalletMeta} from '../../src/legacy/state'
+import {TokenEntry, YoroiWallet} from '../../src/yoroi-wallets'
+import {
+  RemotePoolMetaSuccess,
+  StakePoolInfosAndHistories,
+  TokenInfo,
+  YoroiAmounts,
+  YoroiSignedTx,
+  YoroiUnsignedTx,
+} from '../../src/yoroi-wallets/types'
+import {mockStorage} from './storage'
+import {mockTransaction} from './transaction'
+
+export const mockedWalletMeta: WalletMeta = {
+  id: 'wallet-id',
+  name: 'my-wallet',
+  networkId: 1,
+  isHW: false,
+  isEasyConfirmationEnabled: true,
+  checksum: {
+    TextPart: 'JHKT-8080',
+    ImagePart:
+      'b04dc22991594170974bbbb5908cc50b48f236d680a9ebfe6c1d00f52f8f4813341943eb66dec48cfe7f3be5beec705b91300a07641e668ff19dfa2fbeccbfba',
+  },
+  provider: '',
+  walletImplementationId: 'haskell-shelley-24',
+}
 
 export const mockWallet: YoroiWallet = {
   id: 'wallet-id',
+  defaultAsset: getDefaultAssetByNetworkId(300),
   walletImplementationId: 'haskell-shelley',
   networkId: 300,
   checksum: {
@@ -31,35 +59,55 @@ export const mockWallet: YoroiWallet = {
   createWithdrawalTx: () => {
     throw new Error('not implemented: createWithdrawalTx')
   },
-  fetchUTXOs: () => Promise.resolve([]),
-  getAllUtxosForKey: () => Promise.resolve([]),
-  fetchTokenInfo: () => Promise.resolve(tokenResponses),
-  fetchPoolInfo: () => Promise.resolve({[stakePoolId]: poolInfoAndHistory} as StakePoolInfosAndHistories),
-  getDelegationStatus: () => Promise.resolve({isRegistered: false, poolKeyHash: null}),
-  subscribeOnTxHistoryUpdate: () => {
-    null
+  fetchUTXOs: (...args) => {
+    action('fetchUTXOs')(...args)
+    return Promise.resolve([])
   },
-  fetchAccountState: () =>
-    Promise.resolve({['reward-address-hex']: {remainingAmount: '0', rewards: '0', withdrawals: ''}}),
+  getAllUtxosForKey: () => Promise.resolve([]),
+  fetchTokenInfo: (...args) => {
+    action('fetchTokenInfo')(...args)
+    return Promise.resolve(tokenResponses)
+  },
+  fetchPoolInfo: (...args) => {
+    action('fetchPoolInfo')(...args)
+    return Promise.resolve({[stakePoolId]: poolInfoAndHistory} as StakePoolInfosAndHistories)
+  },
+  getDelegationStatus: (...args) => {
+    action('getDelegationStatus')(...args)
+    return Promise.resolve({isRegistered: false, poolKeyHash: null})
+  },
+  subscribeOnTxHistoryUpdate: () => {
+    return () => null
+  },
+  fetchAccountState: (...args) => {
+    action('fetchAccountState')(...args)
+    return Promise.resolve({['reward-address-hex']: {remainingAmount: '0', rewards: '0', withdrawals: ''}})
+  },
   changePassword: () => {
-    throw new Error('Not implemented')
+    throw new Error('Not implemented: changePassword')
   },
   signTx: () => {
-    throw new Error('Not implemented')
+    throw new Error('Not implemented: signTx')
   },
   signTxWithLedger: () => {
-    throw new Error('Not implemented')
+    throw new Error('Not implemented: signTxWithLedger')
   },
-  checkServerStatus: () =>
-    Promise.resolve({
+  checkServerStatus: (...args) => {
+    action('checkServerStatus')(...args)
+    return Promise.resolve({
       isServerOk: true,
       isMaintenance: false,
-      serverTime: new Date(),
+      serverTime: Date.now(),
       isQueueOnline: true,
-    }),
-  fetchTxStatus: async () => ({}),
-  fetchTipStatus: async () =>
-    Promise.resolve({
+    })
+  },
+  fetchTxStatus: async (...args) => {
+    action('fetchTxStatus')(...args)
+    return {}
+  },
+  fetchTipStatus: async (...args) => {
+    action('fetchTipStatus')(...args)
+    return Promise.resolve({
       bestBlock: {
         epoch: 210,
         slot: 76027,
@@ -74,18 +122,56 @@ export const mockWallet: YoroiWallet = {
         hash: 'ca18a2b607411dd18fbb2c1c0e653ec8a6a3f794f46ce050b4a07cf8ba4ab916',
         height: 3617698,
       },
-    }),
+    })
+  },
   submitTransaction: () => {
-    throw new Error('Not implemented')
+    throw new Error('Not implemented: submitTransaction')
   },
   createVotingRegTx: () => {
-    throw new Error('Not implemented')
+    throw new Error('Not implemented: createVotingRegTx')
   },
-  subscribe: () => {
-    throw new Error('Not implemented')
+  subscribe: (...args) => {
+    action('subscribe')(...args)
+    return (...args) => {
+      action('unsubscribe')(...args)
+    }
   },
-  fetchCurrentPrice: async () => Promise.resolve(1.9938153154314795),
-  toJSON: () => null as any,
+  fetchCurrentPrice: (...args) => {
+    action('fetchCurrentPrice')(...args)
+    return Promise.resolve(1.9938153154314795)
+  },
+  toJSON: (...args) => {
+    action('toJSON')(...args)
+    return null as any
+  },
+  internalAddresses: [],
+  externalAddresses: [],
+  confirmationCounts: {},
+  transactions: {},
+  isUsedAddressIndex: {},
+  numReceiveAddresses: 0,
+  canGenerateNewReceiveAddress: (...args) => {
+    action('canGenerateNewReceiveAddress')(...args)
+    return true
+  },
+  storage: mockStorage,
+  save: async (...args) => {
+    action('save')(...args)
+  },
+  doFullSync: async (...args) => {
+    action('doFullSync')(...args)
+  },
+  sync: async (...args) => {
+    action('sync')(...args)
+  },
+  getTransactions: async (txids: Array<string>) => {
+    action('getTransactions')(txids)
+    const txInfo = mockTransaction({id: txids[0]})
+
+    return {
+      [txInfo.id]: txInfo,
+    }
+  },
 
   // enableEasyConfirmation: () => {
   //   throw new Error('not implemented: enableEasyConfirmation')
@@ -111,9 +197,28 @@ export const mockWallet: YoroiWallet = {
   //   throw new Error('not implemented: createUnsignedTx')
   // },
 
-  // fetchFundInfo: () => {
-  //   throw new Error('not implemented: fetchFundInfo')
-  // },
+  fetchFundInfo: () => {
+    throw new Error('not implemented: fetchFundInfo')
+  },
+}
+
+export const mockHwWallet = {
+  ...mockWallet,
+  isHW: true,
+  hwDeviceInfo: {
+    bip44AccountPublic: '1234567',
+    hwFeatures: {
+      vendor: 'ledger',
+      model: 'nano x',
+      deviceId: '123456',
+      deviceObj: null,
+    },
+  },
+}
+
+export const mockOsWallet = {
+  ...mockWallet,
+  isEasyConfirmationEnabled: true,
 }
 
 export const tokenEntries: Array<TokenEntry> = [
@@ -148,6 +253,15 @@ export const tokenEntries: Array<TokenEntry> = [
     amount: new BigNumber(12344.00234523),
   },
 ]
+
+export const balances: YoroiAmounts = {
+  [PRIMARY_ASSET_CONSTANTS.CARDANO]: '2727363743849',
+  '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950': '12344',
+  '29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6.4d494e': '215410',
+  '1d129dc9c03f95a863489883914f05a52e13135994a32f0cbeacc65f.74484f444c52': '5',
+  '1ca1fc0c880d25850cb00303788dfb51bdf2f902f6dce47d1ad09d5b.44': '2463889379',
+  '08d91ec4e6c743a92de97d2fde5ca0d81493555c535894a3097061f7.c8b0': '148',
+}
 
 export const tokenResponses: Record<string, TokenInfo> = {
   '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d7444524950': {
@@ -184,12 +298,16 @@ export const poolInfoAndHistory: RemotePoolMetaSuccess = {
   ],
 }
 
-export const mockYoroiTx = {
-  entries: {},
-  amounts: {},
+export const mockYoroiTx: YoroiUnsignedTx & {mock: true} = {
+  entries: {
+    address1: {'': '99999'},
+  },
+  amounts: {'': '99999'},
   fee: {'': '12345'},
   metadata: {},
-  change: {},
+  change: {
+    change_address: {'': '1'},
+  },
   staking: {
     registrations: {},
     deregistrations: {},
@@ -217,19 +335,3 @@ export const mockYoroiSignedTx: YoroiSignedTx & {mock: true} = {
   signedTx: {id: 'tx-id', encodedTx: new Uint8Array([1, 2, 3])},
   mock: true,
 }
-
-export const mockKeyStore = (overrides?: {
-  getData?: typeof KeyStore.getData
-  storeData?: typeof KeyStore.storeData
-  deleteData?: typeof KeyStore.deleteData
-}) =>
-  ({
-    getData: async (_keyId, _encrpytionMethod, _message, password, _intl) => {
-      if (password !== 'password') throw new Error('Invalid Password')
-
-      return 'masterkey'
-    },
-    storeData: async () => undefined,
-    deleteData: async () => undefined,
-    ...(overrides as any),
-  } as unknown as typeof KeyStore)
