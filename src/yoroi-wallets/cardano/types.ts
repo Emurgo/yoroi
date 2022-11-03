@@ -257,6 +257,7 @@ export type YoroiWallet = Pick<WalletInterface, YoroiWalletKeys> & {
   rewardAddressHex: NonNullable<WalletInterface['rewardAddressHex']>
   getTransactions: (txids: Array<string>) => Promise<Record<string, TransactionInfo>>
   sync: () => Promise<void>
+  resync: () => Promise<void>
 }
 
 export const isYoroiWallet = (wallet: unknown): wallet is YoroiWallet => {
