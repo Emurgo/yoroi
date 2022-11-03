@@ -164,6 +164,9 @@ export const mockWallet: YoroiWallet = {
   sync: async (...args) => {
     action('sync')(...args)
   },
+  resync: async (...args) => {
+    action('resync')(...args)
+  },
   getTransactions: async (txids: Array<string>) => {
     action('getTransactions')(txids)
     const txInfo = mockTransaction({id: txids[0]})
