@@ -31,7 +31,10 @@ export class TransactionCache {
   #storage: TxCacheStorage
 
   static async create(
-    storage: Pick<AsyncStorageStatic, 'getItem' | 'multiGet' | 'setItem' | 'multiSet' | 'removeItem' | 'clear'>,
+    storage: Pick<
+      AsyncStorageStatic,
+      'getItem' | 'multiGet' | 'setItem' | 'multiSet' | 'removeItem' | 'multiRemove' | 'clear'
+    >,
   ) {
     const txStorage = makeTxCacheStorage(storage)
     const version = DeviceInfo.getVersion() as Version
