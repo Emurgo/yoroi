@@ -85,8 +85,7 @@ const mockStorage: Storage = {
   },
   setItem: jest.fn(),
   multiSet: jest.fn(),
-  removeItem: jest.fn(),
-  multiRemove: jest.fn(),
+  clear: jest.fn(),
 }
 
 const mockTx: Transaction = {
