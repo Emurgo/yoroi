@@ -80,8 +80,8 @@ export class TransactionCache {
     })
   }
 
-  clearTxs() {
-    return this.#storage.clearTxs()
+  clear() {
+    return this.#storage.clear()
   }
 
   get transactions() {
@@ -471,7 +471,7 @@ type SyncMetadata = {
 export type TxCacheStorage = {
   loadTxs: () => Promise<Record<string, Transaction>>
   saveTxs: (txs: Record<string, Transaction>) => Promise<void>
-  clearTxs: () => Promise<void>
+  clear: () => Promise<void>
 }
 
 const makeTxCacheStorage = (storage: Storage): TxCacheStorage => ({
@@ -504,7 +504,7 @@ const makeTxCacheStorage = (storage: Storage): TxCacheStorage => ({
     ])
   },
 
-  clearTxs: async () => {
+  clear: async () => {
     const txids = await storage.getItem('txids').then(parseTxids)
     await storage.multiRemove([...txids, 'txids'])
   },

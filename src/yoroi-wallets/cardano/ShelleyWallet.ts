@@ -96,7 +96,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
   }
 
   async clear() {
-    await this.transactionCache?.clearTxs()
+    await this.transactionCache?.clear()
     await this.clearUTXOs()
   }
 
