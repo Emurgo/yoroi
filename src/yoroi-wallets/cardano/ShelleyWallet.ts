@@ -305,12 +305,6 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     this.save()
   }
 
-  async resync() {
-    await this.clear()
-    super.resync()
-    this.save()
-  }
-
   // =================== utils =================== //
 
   private getNetworkConfig(): CardanoHaskellShelleyNetwork {
