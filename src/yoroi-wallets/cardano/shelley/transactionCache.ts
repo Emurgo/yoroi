@@ -78,6 +78,10 @@ export class TransactionCache {
     })
   }
 
+  clearTxs() {
+    return this.#storage.removeTxs()
+  }
+
   get transactions() {
     return this.#state.transactions
   }
