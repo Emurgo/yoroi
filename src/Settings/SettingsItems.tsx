@@ -1,4 +1,5 @@
 import {useNavigation} from '@react-navigation/native'
+import _ from 'lodash'
 import React, {ReactElement} from 'react'
 import {Image, StyleSheet, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 
@@ -71,7 +72,7 @@ export const SettingsItem = ({label, children, disabled, icon, info}: SettingsIt
         <View>{children}</View>
       </View>
 
-      {info && (
+      {!_.isNil(info) && (
         <>
           <Spacer height={12} />
           <Text
@@ -126,7 +127,7 @@ export const NavigatedSettingsItem = ({label, navigateTo, icon, disabled, select
     <NavigateTo to={navigateTo} navigation={navigation} disabled={disabled}>
       <SettingsItem icon={icon} label={label} disabled={disabled}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          {selected && (
+          {!_.isNil(selected) && (
             <Text
               style={{
                 fontFamily: 'Rubik-Regular',
