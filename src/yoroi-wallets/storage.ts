@@ -5,6 +5,8 @@ export type Storage = {
   multiGet: AsyncStorageStatic['multiGet']
   setItem: AsyncStorageStatic['setItem']
   multiSet: AsyncStorageStatic['multiSet']
+  removeItem: AsyncStorageStatic['removeItem']
+  multiRemove: AsyncStorageStatic['multiRemove']
 }
 
 export const makeStorageWithPrefix = (prefix: string): Storage => {
@@ -22,6 +24,12 @@ export const makeStorageWithPrefix = (prefix: string): Storage => {
     },
     multiSet: (items: Array<[string, string]>) => {
       return AsyncStorage.multiSet(items.map(([key, value]) => [withPrefix(key), value]))
+    },
+    removeItem: (key: string) => {
+      return AsyncStorage.removeItem(withPrefix(key))
+    },
+    multiRemove: (keys: Array<string>) => {
+      return AsyncStorage.multiRemove(keys.map((key) => withPrefix(key)))
     },
   }
 }
