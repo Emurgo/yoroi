@@ -30,7 +30,9 @@ export class TransactionCache {
   #confirmationCountsSelector = defaultMemoize(confirmationCountsSelector)
   #storage: TxCacheStorage
 
-  static async create(storage: Pick<AsyncStorageStatic, 'getItem' | 'multiGet' | 'setItem' | 'multiSet' | 'clear'>) {
+  static async create(
+    storage: Pick<AsyncStorageStatic, 'getItem' | 'multiGet' | 'setItem' | 'multiSet' | 'removeItem' | 'clear'>,
+  ) {
     const txStorage = makeTxCacheStorage(storage)
     const version = DeviceInfo.getVersion() as Version
     const isDeprecatedSchema = versionCompare(version, '4.1.0') === -1
