@@ -30,7 +30,9 @@ export class TransactionCache {
   #confirmationCountsSelector = defaultMemoize(confirmationCountsSelector)
   #storage: TxCacheStorage
 
-  static async create(storage: Pick<AsyncStorageStatic, 'getItem' | 'multiGet' | 'setItem' | 'multiSet' | 'removeItem' | 'multiRemove'>) {
+  static async create(
+    storage: Pick<AsyncStorageStatic, 'getItem' | 'multiGet' | 'setItem' | 'multiSet' | 'removeItem' | 'multiRemove'>,
+  ) {
     const txStorage = makeTxCacheStorage(storage)
     const version = DeviceInfo.getVersion() as Version
     const isDeprecatedSchema = versionCompare(version, '4.1.0') === -1
@@ -79,7 +81,7 @@ export class TransactionCache {
   }
 
   clearTxs() {
-    return this.#storage.removeTxs()
+    return this.#storage.clearTxs()
   }
 
   get transactions() {
@@ -469,7 +471,7 @@ type SyncMetadata = {
 export type TxCacheStorage = {
   loadTxs: () => Promise<Record<string, Transaction>>
   saveTxs: (txs: Record<string, Transaction>) => Promise<void>
-  removeTxs: () => Promise<void>
+  clearTxs: () => Promise<void>
 }
 
 const makeTxCacheStorage = (storage: Storage): TxCacheStorage => ({
@@ -502,10 +504,10 @@ const makeTxCacheStorage = (storage: Storage): TxCacheStorage => ({
     ])
   },
 
-  removeTxs: async () => {
+  clearTxs: async () => {
     const txids = await storage.getItem('txids').then(parseTxids)
     await storage.multiRemove([...txids, 'txids'])
-  }
+  },
 })
 
 const parseTxids = (data: string | null | undefined) => {
