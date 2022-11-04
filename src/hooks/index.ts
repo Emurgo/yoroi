@@ -971,3 +971,15 @@ export const useBalances = (wallet: YoroiWallet): YoroiAmounts => {
 
   return Utxos.toAmounts(utxos, primaryTokenId)
 }
+
+export const useResync = (wallet: YoroiWallet, options?: UseMutationOptions<void, Error>) => {
+  const mutation = useMutation({
+    mutationFn: () => wallet.resync(),
+    ...options,
+  })
+
+  return {
+    ...mutation,
+    resync: mutation.mutate,
+  }
+}
