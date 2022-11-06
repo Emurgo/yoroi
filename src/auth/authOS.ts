@@ -2,14 +2,21 @@ import React from 'react'
 import {AppState} from 'react-native'
 import {useMutation, UseMutationOptions, useQuery, useQueryClient, UseQueryOptions} from 'react-query'
 
-import {AUTH_METHOD_PIN, useMutationWithInvalidations, useWallet} from '../hooks'
+import {useMutationWithInvalidations, useWallet} from '../hooks'
 import {WalletMeta} from '../legacy/state'
 import storage from '../legacy/storage'
+import {
+  AUTH_SETTINGS_KEY,
+  AUTH_WITH_OS,
+  AUTH_WITH_PIN,
+  ENCRYPTED_PIN_HASH_KEY,
+  INSTALLATION_ID_KEY,
+  OLD_OS_AUTH_KEY,
+} from '../Settings/types'
 import {Storage} from '../Storage'
 import {WalletJSON, walletManager, YoroiWallet} from '../yoroi-wallets'
 import {Keychain} from './Keychain'
 import {AuthenticationPrompt, authOsEnabled} from './KeychainStorage'
-import {AUTH_METHOD_KEY, AuthMethod, ENCRYPTED_PIN_HASH_KEY, INSTALLATION_ID_KEY, OLD_OS_AUTH_KEY} from './types'
 
 export const useAuthOsEnabled = (options?: UseQueryOptions<boolean, Error>) => {
   const queryClient = useQueryClient()
@@ -35,7 +42,6 @@ export const useAuthOsEnabled = (options?: UseQueryOptions<boolean, Error>) => {
   return query.data
 }
 
-export const AUTH_METHOD_OS: AuthMethod = 'os'
 export const useEnableAuthWithOs = (
   {authenticationPrompt, storage}: {authenticationPrompt: AuthenticationPrompt; storage: Storage},
   options?: UseMutationOptions<void, Error>,
@@ -43,11 +49,11 @@ export const useEnableAuthWithOs = (
   const mutation = useMutationWithInvalidations({
     mutationFn: () =>
       Keychain.authenticate(authenticationPrompt)
-        .then(() => storage.setItem(AUTH_METHOD_KEY, JSON.stringify(AUTH_METHOD_OS)))
+        .then(() => storage.setItem(AUTH_SETTINGS_KEY, JSON.stringify(AUTH_WITH_OS)))
         .then(() => storage.getItem(ENCRYPTED_PIN_HASH_KEY))
         .then((pin) => (pin != null ? storage.removeItem(ENCRYPTED_PIN_HASH_KEY) : undefined)),
     ...options,
-    invalidateQueries: [['useAuthMethod']],
+    invalidateQueries: [['useAuthSettings']],
   })
 
   return {
@@ -61,7 +67,7 @@ export const useAuthWithOs = (
   options?: UseMutationOptions<void, Error>,
 ) => {
   const mutation = useMutationWithInvalidations({
-    invalidateQueries: [['useAuthMethod']],
+    invalidateQueries: [['useAuthSettings']],
     mutationFn: () => Keychain.authenticate(authenticationPrompt),
     ...options,
   })
@@ -175,19 +181,19 @@ const disableAllEasyConfirmation = () =>
       }
     })
 
-export const migrateAuthMethod = async (storage: Storage) => {
-  const authMethod = await storage.getItem(AUTH_METHOD_KEY)
+export const migrateAuthSettings = async (storage: Storage) => {
+  const authSettings = await storage.getItem(AUTH_SETTINGS_KEY)
   const pin = await storage.getItem(ENCRYPTED_PIN_HASH_KEY)
   const isOldSystemAuth = await storage.getItem(OLD_OS_AUTH_KEY)
   const installationId = await storage.getItem(INSTALLATION_ID_KEY)
 
-  if (authMethod == null && installationId != null) {
+  if (authSettings == null && installationId != null) {
     if (isOldSystemAuth != null && JSON.parse(isOldSystemAuth) === true) {
-      await storage.setItem(AUTH_METHOD_KEY, JSON.stringify(AUTH_METHOD_OS))
+      await storage.setItem(AUTH_SETTINGS_KEY, JSON.stringify(AUTH_WITH_OS))
       return disableAllEasyConfirmation()
     }
     if (pin != null) {
-      return storage.setItem(AUTH_METHOD_KEY, JSON.stringify(AUTH_METHOD_PIN))
+      return storage.setItem(AUTH_SETTINGS_KEY, JSON.stringify(AUTH_WITH_PIN))
     }
   }
 }

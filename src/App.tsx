@@ -7,13 +7,15 @@ import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {enableScreens} from 'react-native-screens'
 import {useDispatch} from 'react-redux'
 
-import AppNavigator from './AppNavigator'
+import AppNavigator, {StoryBookNavigator} from './AppNavigator'
 import {AuthProvider} from './auth/AuthProvider'
 import {initApp} from './legacy/actions'
+import env from './legacy/env'
 import {SelectedWalletMetaProvider, SelectedWalletProvider} from './SelectedWallet'
 import {StorageProvider} from './Storage'
 
 enableScreens()
+const IS_STORYBOOK = env.getBoolean('IS_STORYBOOK', false)
 
 if (Platform.OS === 'android') {
   if (UIManager.setLayoutAnimationEnabledExperimental != null) {
@@ -33,7 +35,7 @@ const App = () => {
           <StorageProvider>
             <SelectedWalletMetaProvider>
               <SelectedWalletProvider>
-                <AppNavigator />
+                {IS_STORYBOOK ? <StoryBookNavigator /> : <AppNavigator />}
               </SelectedWalletProvider>
             </SelectedWalletMetaProvider>
           </StorageProvider>

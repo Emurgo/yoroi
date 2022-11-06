@@ -10,22 +10,27 @@ import {useSelector} from 'react-redux'
 import {PinLoginScreen, useAuthOsEnabled, useAuthWithOs, useBackgroundTimeout} from './auth'
 import {useAuth} from './auth/AuthProvider'
 import {EnableLoginWithPin} from './auth/EnableLoginWithPin'
-import {AuthMethod} from './auth/types'
 import {FirstRunNavigator} from './FirstRun/FirstRunNavigator'
-import {AuthAction, useAuthAction, useAuthMethod} from './hooks'
+import {useAuthSettings} from './hooks'
 import globalMessages from './i18n/global-messages'
 import {DeveloperScreen} from './legacy/DeveloperScreen'
-import env from './legacy/env'
-import {isMaintenanceSelector, isTosAcceptedSelector} from './legacy/selectors'
+import {isMaintenanceSelector} from './legacy/selectors'
 import MaintenanceScreen from './MaintenanceScreen'
 import {AppRoutes} from './navigation'
 import {OsLoginScreen} from './OsAuth'
+import {AuthSettings} from './Settings/types'
 import {useStorage} from './Storage'
 import StorybookScreen from './StorybookScreen'
 import {WalletInitNavigator} from './WalletInit/WalletInitNavigator'
 import {WalletNavigator} from './WalletNavigator'
 
-const IS_STORYBOOK = env.getBoolean('IS_STORYBOOK', false)
+type AuthAction = 'auth-with-pin' | 'auth-with-os' | 'request-new-pin' | 'first-run'
+const useAuthAction = (authOsEnabled: boolean, authSettings: AuthSettings): AuthAction => {
+  if (authSettings === 'pin') return 'auth-with-pin'
+  if (authSettings === 'os' && authOsEnabled) return 'auth-with-os'
+  if (authSettings === 'os' && !authOsEnabled) return 'request-new-pin'
+  return 'first-run' // setup not complete
+}
 
 export const AppNavigator = () => {
   const strings = useStrings()
@@ -33,11 +38,11 @@ export const AppNavigator = () => {
   const [isReady, setIsReady] = React.useState(false)
   useHideScreenInAppSwitcher()
 
-  const authMethod = useAuthMethod(storage)
+  const authSettings = useAuthSettings(storage)
   const authOsEnabled = useAuthOsEnabled()
-  const authAction = useAuthAction(authOsEnabled, authMethod)
+  const authAction = useAuthAction(authOsEnabled, authSettings)
 
-  useAutoLogout(authMethod)
+  useAutoLogout(authSettings)
 
   const {isLoggedOut, login} = useAuth()
   const {authWithOs} = useAuthWithOs(
@@ -50,10 +55,7 @@ export const AppNavigator = () => {
     },
     {
       onSuccess: login,
-      onSettled: () =>
-        RNBootSplash.hide({
-          fade: true,
-        }),
+      onSettled: () => RNBootSplash.hide({fade: true}),
     },
   )
 
@@ -78,7 +80,7 @@ export const AppNavigator = () => {
 
   return (
     <NavigationContainer onReady={() => setIsReady(true)} ref={navRef}>
-      {IS_STORYBOOK ? <StoryBook /> : <NavigatorSwitch authAction={authAction} />}
+      <NavigatorSwitch authAction={authAction} />
     </NavigationContainer>
   )
 }
@@ -89,7 +91,6 @@ const Stack = createStackNavigator<AppRoutes>()
 const NavigatorSwitch = ({authAction}: {authAction: AuthAction}) => {
   const strings = useStrings()
   const isMaintenance = useSelector(isMaintenanceSelector)
-  const isTosAccepted = useSelector(isTosAcceptedSelector)
   const {isLoggedIn, isLoggedOut} = useAuth()
 
   return (
@@ -99,22 +100,19 @@ const NavigatorSwitch = ({authAction}: {authAction: AuthAction}) => {
         detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
       }}
     >
-      {/* Initial Route */}
-      <Stack.Group>
-        {isMaintenance && <Stack.Screen name="maintenance" component={MaintenanceScreen} />}
-        {!isTosAccepted && <Stack.Screen name="first-run" component={FirstRunNavigator} />}
-      </Stack.Group>
+      {isMaintenance && <Stack.Screen name="maintenance" component={MaintenanceScreen} />}
 
       {/* Not Authenticated */}
       {isLoggedOut && (
         <Stack.Group>
+          {authAction === 'first-run' && <Stack.Screen name="first-run" component={FirstRunNavigator} />}
           {authAction === 'auth-with-pin' && (
             <Stack.Screen name="custom-pin-auth" component={PinLoginScreen} options={{title: strings.loginPinTitle}} />
           )}
           {authAction === 'auth-with-os' && (
             <Stack.Screen name="bio-auth-initial" component={OsLoginScreen} options={{headerShown: false}} />
           )}
-          {authAction === 'create-and-link-with-pin' && (
+          {authAction === 'request-new-pin' && (
             <Stack.Screen //
               name="enable-login-with-pin"
               component={CreatePinScreenWrapper}
@@ -149,14 +147,16 @@ const CreatePinScreenWrapper = () => {
   return <EnableLoginWithPin onDone={login} />
 }
 
-const StoryBook = () => (
-  <Stack.Navigator
-    screenOptions={{
-      detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
-    }}
-  >
-    <Stack.Screen name="storybook" component={StorybookScreen} />
-  </Stack.Navigator>
+export const StoryBookNavigator = () => (
+  <NavigationContainer>
+    <Stack.Navigator
+      screenOptions={{
+        detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
+      }}
+    >
+      <Stack.Screen name="storybook" component={StorybookScreen} />
+    </Stack.Navigator>
+  </NavigationContainer>
 )
 
 const useStrings = () => {
@@ -195,11 +195,11 @@ const messages = defineMessages({
   },
 })
 
-const useAutoLogout = (authMethod: AuthMethod) => {
+const useAutoLogout = (authSettings: AuthSettings) => {
   const strings = useStrings()
   const {logout} = useAuth()
   const authOsEnabled = useAuthOsEnabled()
-  const osAuthDisabled = !authOsEnabled && authMethod === 'os'
+  const osAuthDisabled = !authOsEnabled && authSettings === 'os'
 
   useBackgroundTimeout({
     onTimeout: logout,

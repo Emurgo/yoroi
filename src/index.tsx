@@ -10,7 +10,7 @@ import {Provider} from 'react-redux'
 
 import App from './App'
 import {name as appName} from './app.json'
-import {migrateAuthMethod} from './auth'
+import {migrateAuthSettings} from './auth'
 import {LoadingBoundary} from './components'
 import {ErrorBoundary} from './components/ErrorBoundary'
 import {LanguageProvider} from './i18n'
@@ -102,7 +102,7 @@ const useMigrations = () => {
 
       // asc order
       // 4.8.0
-      if (before4_8_0) await migrateAuthMethod(storage) // old auth settings
+      if (before4_8_0) await migrateAuthSettings(storage) // old auth settings
 
       setDone(true)
     }

@@ -18,7 +18,6 @@ import {
 } from 'react-query'
 
 import {EncryptedStorage, StorageKeys} from '../auth'
-import {AuthMethod} from '../auth/types'
 import {getDefaultAssetByNetworkId} from '../legacy/config'
 import {ObjectValues} from '../legacy/flow'
 import {HWDeviceInfo} from '../legacy/ledgerUtils'
@@ -27,6 +26,7 @@ import {processTxHistoryData} from '../legacy/processTransactions'
 import {WalletMeta} from '../legacy/state'
 import storage from '../legacy/storage'
 import {cardanoValueFromRemoteFormat} from '../legacy/utils'
+import {AUTH_SETTINGS_KEY, AUTH_WITH_PIN, AuthSettings} from '../Settings/types'
 import {Storage} from '../Storage'
 import {
   Cardano,
@@ -631,10 +631,9 @@ export const useOpenWallet = (options?: UseMutationOptions<[YoroiWallet, WalletM
   }
 }
 
-export const AUTH_METHOD_PIN: AuthMethod = 'pin'
 export const useCreatePin = (storage: Storage, options: UseMutationOptions<void, Error, string>) => {
   const mutation = useMutationWithInvalidations({
-    invalidateQueries: [['useAuthMethod']],
+    invalidateQueries: [['useAuthSettings']],
     mutationFn: async (pin) => {
       const installationId = await storage.getItem('/appSettings/installationId')
       if (!installationId) throw new Error('Invalid installation id')
@@ -643,7 +642,7 @@ export const useCreatePin = (storage: Storage, options: UseMutationOptions<void,
       const saltHex = cryptoRandomString({length: 2 * 32})
       const nonceHex = cryptoRandomString({length: 2 * 12})
       const encryptedPinHash = await Cardano.encryptWithPassword(pinHex, saltHex, nonceHex, installationIdHex)
-      await storage.setItem(AUTH_METHOD_KEY, JSON.stringify(AUTH_METHOD_PIN))
+      await storage.setItem(AUTH_SETTINGS_KEY, JSON.stringify(AUTH_WITH_PIN))
       return storage.setItem(ENCRYPTED_PIN_HASH_KEY, JSON.stringify(encryptedPinHash))
     },
     ...options,
@@ -940,15 +939,14 @@ export const useBalances = (wallet: YoroiWallet): YoroiAmounts => {
   return Utxos.toAmounts(utxos, primaryTokenId)
 }
 
-export const AUTH_METHOD_KEY = '/appSettings/authMethod'
-export const useAuthMethod = (storage: Storage, options?: UseQueryOptions<AuthMethod, Error>) => {
+export const useAuthSettings = (storage: Storage, options?: UseQueryOptions<AuthSettings, Error>) => {
   const query = useQuery({
     suspense: true,
-    queryKey: ['useAuthMethod'],
+    queryKey: ['useAuthSettings'],
     queryFn: async () => {
-      const authMethod = parseAuthMethod(await storage.getItem(AUTH_METHOD_KEY))
-      if (isAuthMethod(authMethod)) return authMethod
-      return Promise.reject(new Error('useAuthMethod invalid data'))
+      const authSettings = parseAuthSettings(await storage.getItem(AUTH_SETTINGS_KEY))
+      if (isAuthSettings(authSettings)) return authSettings
+      return Promise.reject(new Error('useAuthSettings invalid data'))
     },
     ...options,
   })
@@ -956,7 +954,7 @@ export const useAuthMethod = (storage: Storage, options?: UseQueryOptions<AuthMe
   return query.data
 }
 
-const parseAuthMethod = (data: unknown) => {
+const parseAuthSettings = (data: unknown) => {
   if (!data) return undefined
   try {
     return JSON.parse(data as string)
@@ -964,11 +962,4 @@ const parseAuthMethod = (data: unknown) => {
     return undefined
   }
 }
-const isAuthMethod = (data: any): data is 'os' | 'pin' | undefined => ['os', 'pin', undefined].includes(data)
-
-export type AuthAction = 'auth-with-pin' | 'auth-with-os' | 'create-and-link-with-pin' | undefined
-export const useAuthAction = (authOsEnabled: boolean, authMethod: AuthMethod): AuthAction => {
-  if (authMethod === 'pin') return 'auth-with-pin'
-  if (authMethod === 'os' && authOsEnabled) return 'auth-with-os'
-  if (authMethod === 'os' && !authOsEnabled) return 'create-and-link-with-pin'
-}
+const isAuthSettings = (data: any): data is 'os' | 'pin' | undefined => ['os', 'pin', undefined].includes(data)

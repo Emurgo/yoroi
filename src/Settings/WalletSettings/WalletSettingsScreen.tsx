@@ -7,7 +7,7 @@ import {useMutation, UseMutationOptions} from 'react-query'
 import {useEasyConfirmationEnabled} from '../../auth'
 import {useAuth} from '../../auth/AuthProvider'
 import {StatusBar} from '../../components'
-import {useAuthMethod, useCloseWallet, useWalletName} from '../../hooks'
+import {useAuthSettings, useCloseWallet, useWalletName} from '../../hooks'
 import {confirmationMessages} from '../../i18n/global-messages'
 import {DIALOG_BUTTONS, showConfirmationDialog} from '../../legacy/actions'
 import {isByron, isHaskellShelley} from '../../legacy/config'
@@ -32,7 +32,7 @@ export const WalletSettingsScreen = () => {
   const walletName = useWalletName(wallet)
   const easyConfirmationEnabled = useEasyConfirmationEnabled(wallet)
   const storage = useStorage()
-  const authMethod = useAuthMethod(storage)
+  const authSettings = useAuthSettings(storage)
 
   const onSwitchWallet = () => {
     resetToWalletSelection()
@@ -78,12 +78,12 @@ export const WalletSettingsScreen = () => {
 
         <SettingsItem
           label={strings.easyConfirmation}
-          disabled={authMethod === 'pin' || wallet.isHW || wallet.isReadOnly}
+          disabled={authSettings === 'pin' || wallet.isHW || wallet.isReadOnly}
         >
           <Switch
             value={easyConfirmationEnabled}
             onValueChange={easyConfirmationEnabled ? onDisableEasyConfirmation : onEnableEasyConfirmation}
-            disabled={authMethod === 'pin' || wallet.isHW || wallet.isReadOnly}
+            disabled={authSettings === 'pin' || wallet.isHW || wallet.isReadOnly}
           />
         </SettingsItem>
       </SettingsSection>
