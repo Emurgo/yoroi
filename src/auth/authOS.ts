@@ -187,7 +187,8 @@ export const migrateAuthSettings = async (storage: Storage) => {
   const isOldSystemAuth = await storage.getItem(OLD_OS_AUTH_KEY)
   const installationId = await storage.getItem(INSTALLATION_ID_KEY)
 
-  if (authSettings == null && installationId != null) {
+  const oldAuthSettings = authSettings == null && installationId != null
+  if (oldAuthSettings) {
     if (isOldSystemAuth != null && JSON.parse(isOldSystemAuth) === true) {
       await storage.setItem(AUTH_SETTINGS_KEY, JSON.stringify(AUTH_WITH_OS))
       return disableAllEasyConfirmation()
