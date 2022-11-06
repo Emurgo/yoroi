@@ -112,11 +112,12 @@ export interface WalletInterface {
 
   // ============ security & key management ============ //
 
-  encryptAndSaveRootKey(encryptionMethod: EncryptionMethod, rootKey: string, password?: string): Promise<void>
+  encryptAndSaveRootKey(encryptionMethod: EncryptionMethod, rootKey: string, password: string): Promise<void>
 
   getDecryptedRootKey(rootPassword: string, intl: IntlShape): Promise<string>
 
-  enableEasyConfirmation(): Promise<void>
+  enableEasyConfirmation(rootKey: string): Promise<void>
+  disableEasyConfirmation(): Promise<void>
 
   changePassword(rootPassword: string, newPassword: string, intl: IntlShape): Promise<void>
 
@@ -257,6 +258,8 @@ export type YoroiWallet = Pick<WalletInterface, YoroiWalletKeys> & {
   rewardAddressHex: NonNullable<WalletInterface['rewardAddressHex']>
   getTransactions: (txids: Array<string>) => Promise<Record<string, TransactionInfo>>
   sync: () => Promise<void>
+  enableEasyConfirmation: (rootKey: string) => Promise<void>
+  disableEasyConfirmation: () => Promise<void>
 }
 
 export const isYoroiWallet = (wallet: unknown): wallet is YoroiWallet => {
@@ -264,91 +267,95 @@ export const isYoroiWallet = (wallet: unknown): wallet is YoroiWallet => {
 }
 
 type YoroiWalletKeys =
-  | 'id'
-  | 'networkId'
-  | 'checksum'
-  | 'provider'
-  | 'isHW'
-  | 'hwDeviceInfo'
-  | 'isEasyConfirmationEnabled'
-  | 'walletImplementationId'
-  | 'isReadOnly'
-  | 'fetchTokenInfo'
+  | 'canGenerateNewReceiveAddress'
   | 'changePassword'
-  | 'fetchTxStatus'
   | 'checkServerStatus'
-  | 'subscribeOnTxHistoryUpdate'
-  | 'getAllUtxosForKey'
-  | 'fetchUTXOs'
-  | 'fetchAccountState'
-  | 'fetchTipStatus'
-  | 'getDelegationStatus'
-  | 'rewardAddressHex'
-  | 'createUnsignedTx'
+  | 'checksum'
+  | 'confirmationCounts'
   | 'createDelegationTx'
-  | 'createWithdrawalTx'
+  | 'createUnsignedTx'
   | 'createVotingRegTx'
-  | 'submitTransaction'
-  | 'signTx'
-  | 'signTxWithLedger'
-  | 'fetchPoolInfo'
-  | 'publicKeyHex'
-  | 'subscribe'
-  | 'toJSON'
+  | 'createWithdrawalTx'
+  | 'disableEasyConfirmation'
+  | 'doFullSync'
+  | 'enableEasyConfirmation'
+  | 'externalAddresses'
+  | 'fetchAccountState'
   | 'fetchCurrentPrice'
   | 'fetchFundInfo'
+  | 'fetchPoolInfo'
+  | 'fetchTipStatus'
+  | 'fetchTokenInfo'
+  | 'fetchTxStatus'
+  | 'fetchUTXOs'
+  | 'getAllUtxosForKey'
+  | 'getDelegationStatus'
+  | 'hwDeviceInfo'
+  | 'id'
   | 'internalAddresses'
-  | 'externalAddresses'
-  | 'confirmationCounts'
-  | 'transactions'
+  | 'isEasyConfirmationEnabled'
+  | 'isHW'
+  | 'isReadOnly'
   | 'isUsedAddressIndex'
+  | 'networkId'
   | 'numReceiveAddresses'
-  | 'canGenerateNewReceiveAddress'
-  | 'storage'
+  | 'provider'
+  | 'publicKeyHex'
+  | 'rewardAddressHex'
   | 'save'
-  | 'doFullSync'
+  | 'signTx'
+  | 'signTxWithLedger'
+  | 'storage'
+  | 'submitTransaction'
+  | 'subscribe'
+  | 'subscribeOnTxHistoryUpdate'
+  | 'toJSON'
+  | 'transactions'
+  | 'walletImplementationId'
 
 const yoroiWalletKeys: Array<YoroiWalletKeys> = [
-  'id',
-  'networkId',
-  'checksum',
-  'provider',
-  'publicKeyHex',
-  'isHW',
-  'hwDeviceInfo',
-  'isEasyConfirmationEnabled',
-  'walletImplementationId',
-  'isReadOnly',
-  'fetchTokenInfo',
+  'canGenerateNewReceiveAddress',
   'changePassword',
-  'fetchTxStatus',
   'checkServerStatus',
-  'subscribeOnTxHistoryUpdate',
-  'getAllUtxosForKey',
-  'fetchUTXOs',
-  'fetchAccountState',
-  'fetchTipStatus',
-  'getDelegationStatus',
-  'rewardAddressHex',
-  'createUnsignedTx',
+  'checksum',
+  'confirmationCounts',
   'createDelegationTx',
-  'createWithdrawalTx',
+  'createUnsignedTx',
   'createVotingRegTx',
-  'submitTransaction',
-  'signTx',
-  'signTxWithLedger',
-  'fetchPoolInfo',
-  'toJSON',
+  'createWithdrawalTx',
+  'disableEasyConfirmation',
+  'doFullSync',
+  'enableEasyConfirmation',
+  'externalAddresses',
+  'fetchAccountState',
   'fetchCurrentPrice',
   'fetchFundInfo',
+  'fetchPoolInfo',
+  'fetchTipStatus',
+  'fetchTokenInfo',
+  'fetchTxStatus',
+  'fetchUTXOs',
+  'getAllUtxosForKey',
+  'getDelegationStatus',
+  'hwDeviceInfo',
+  'id',
   'internalAddresses',
-  'externalAddresses',
-  'confirmationCounts',
-  'transactions',
+  'isEasyConfirmationEnabled',
+  'isHW',
+  'isReadOnly',
   'isUsedAddressIndex',
+  'networkId',
   'numReceiveAddresses',
-  'canGenerateNewReceiveAddress',
-  'storage',
+  'provider',
+  'publicKeyHex',
+  'rewardAddressHex',
   'save',
-  'doFullSync',
+  'signTx',
+  'signTxWithLedger',
+  'storage',
+  'submitTransaction',
+  'subscribeOnTxHistoryUpdate',
+  'toJSON',
+  'transactions',
+  'walletImplementationId',
 ]

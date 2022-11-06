@@ -146,10 +146,8 @@ export class WalletManager {
   }
 
   // ============ security & key management ============ //
-  async disableEasyConfirmation() {
-    const wallet = this.getWallet()
-
-    wallet.isEasyConfirmationEnabled = false
+  async disableEasyConfirmation(wallet: YoroiWallet) {
+    await wallet.disableEasyConfirmation()
     await wallet.save()
 
     await this._updateMetadata(wallet.id, {
@@ -159,15 +157,14 @@ export class WalletManager {
     this._notify({type: 'easy-confirmation', enabled: false})
   }
 
-  async enableEasyConfirmation() {
-    const wallet = this.getWallet()
-
-    await wallet.enableEasyConfirmation()
+  async enableEasyConfirmation(wallet: YoroiWallet, rootKey: string) {
+    await wallet.enableEasyConfirmation(rootKey)
+    await wallet.save()
 
     await this._updateMetadata(wallet.id, {
       isEasyConfirmationEnabled: true,
     })
-    await wallet.save()
+
     this._notify({type: 'easy-confirmation', enabled: true})
   }
 

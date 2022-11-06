@@ -3,6 +3,7 @@ import _ from 'lodash'
 import {defaultMemoize} from 'reselect'
 
 import {EncryptedStorage, EncryptedStorageKeys} from '../auth'
+import {Keychain} from '../auth/Keychain'
 import assert from '../legacy/assert'
 import {CONFIG} from '../legacy/config'
 import type {HWDeviceInfo} from '../legacy/ledgerUtils'
@@ -149,8 +150,20 @@ export class Wallet {
     throw new Error('invalid wallet state')
   }
 
-  async enableEasyConfirmation() {
+  async enableEasyConfirmation(rootKey: string) {
+    if (!this.id) throw new Error('invalid wallet state')
+
+    await Keychain.setWalletKey(this.id, rootKey)
     this.isEasyConfirmationEnabled = true
+
+    this.notify({type: 'easy-confirmation', enabled: this.isEasyConfirmationEnabled})
+  }
+
+  async disableEasyConfirmation() {
+    if (!this.id) throw new Error('invalid wallet state')
+
+    await Keychain.removeWalletKey(this.id)
+    this.isEasyConfirmationEnabled = false
 
     this.notify({type: 'easy-confirmation', enabled: this.isEasyConfirmationEnabled})
   }

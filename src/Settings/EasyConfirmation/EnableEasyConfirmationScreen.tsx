@@ -22,22 +22,19 @@ export const EnableEasyConfirmationScreen = () => {
   const walletMeta = useSelectedWalletMeta()
   const setSelectedWalletMeta = useSetSelectedWalletMeta()
   const wallet = useSelectedWallet()
-  const {enableEasyConfirmation, isLoading: enablingEasyConfirmation} = useEnableEasyConfirmation(
-    {id: wallet.id},
-    {
-      onSuccess: () => {
-        if (!walletMeta) throw new Error('Missing walletMeta')
-        setSelectedWalletMeta({
-          ...walletMeta,
-          isEasyConfirmationEnabled: true,
-        })
-        navigation.goBack()
-      },
-      onError: (error) => {
-        throw error
-      },
+  const {enableEasyConfirmation, isLoading: enablingEasyConfirmation} = useEnableEasyConfirmation(wallet, {
+    onSuccess: () => {
+      if (!walletMeta) throw new Error('Missing walletMeta')
+      setSelectedWalletMeta({
+        ...walletMeta,
+        isEasyConfirmationEnabled: true,
+      })
+      navigation.goBack()
     },
-  )
+    onError: (error) => {
+      throw error
+    },
+  })
   const {readRootKey, isLoading: loadingRootKey} = useReadRootKey(
     {id: wallet.id, password: rootPassword},
     {

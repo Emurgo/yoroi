@@ -93,10 +93,10 @@ export const useAuthOsWithEasyConfirmation = (
   }
 }
 
-export const useDisableEasyConfirmation = ({id}: {id: YoroiWallet['id']}, options?: UseMutationOptions) => {
+export const useDisableEasyConfirmation = (wallet: YoroiWallet, options?: UseMutationOptions) => {
   const mutation = useMutationWithInvalidations({
     ...options,
-    mutationFn: () => Keychain.removeWalletKey(id).then(() => walletManager.disableEasyConfirmation()),
+    mutationFn: () => walletManager.disableEasyConfirmation(wallet),
     invalidateQueries: [['walletMetas']],
   })
 
@@ -106,14 +106,10 @@ export const useDisableEasyConfirmation = ({id}: {id: YoroiWallet['id']}, option
   }
 }
 
-export const useEnableEasyConfirmation = (
-  {id}: {id: YoroiWallet['id']},
-  options?: UseMutationOptions<void, Error, string>,
-) => {
+export const useEnableEasyConfirmation = (wallet: YoroiWallet, options?: UseMutationOptions<void, Error, string>) => {
   const mutation = useMutationWithInvalidations({
     ...options,
-    mutationFn: (rootKey: string) =>
-      Keychain.setWalletKey(id, rootKey).then(() => walletManager.enableEasyConfirmation()),
+    mutationFn: (rootKey: string) => walletManager.enableEasyConfirmation(wallet, rootKey),
     invalidateQueries: [['walletMetas']],
   })
 
@@ -136,8 +132,8 @@ export const useDisableAllEasyConfirmation = (
   const mutation = useMutationWithInvalidations({
     mutationFn: async () => {
       await disableAllEasyConfirmation()
-      // if there is a wallet selected it needs to trigger the event
-      if (wallet !== undefined) await walletManager.disableEasyConfirmation()
+      // if there is a wallet selected it needs to trigger event for subcribers
+      if (wallet !== undefined) await walletManager.disableEasyConfirmation(wallet)
     },
     invalidateQueries: [['walletMetas']],
     ...options,
