@@ -8,19 +8,23 @@ export type Storage = {
 }
 
 export const makeStorageWithPrefix = (prefix: string): Storage => {
-  const withPrefix = (key: string) => `${prefix}/${key}`
+  const withPrefix = (key: string) => `${prefix}${key}`
+  const withoutPrefix = (value: string) => value.slice(prefix.length)
 
   return {
     getItem: (key: string) => {
       return AsyncStorage.getItem(withPrefix(key))
     },
-    multiGet: (keys: Array<string>) => {
-      return AsyncStorage.multiGet(keys.map((key) => withPrefix(key)))
+    multiGet: async (keys: Array<string>) => {
+      const prefixedKeys = keys.map((key) => withPrefix(key))
+      const items = await AsyncStorage.multiGet(prefixedKeys)
+
+      return items.map(([key, value]) => [withoutPrefix(key), value])
     },
     setItem: (key: string, value: string) => {
       return AsyncStorage.setItem(withPrefix(key), value)
     },
-    multiSet: (items: Array<[string, string]>) => {
+    multiSet: (items: Array<[key: string, value: string]>) => {
       return AsyncStorage.multiSet(items.map(([key, value]) => [withPrefix(key), value]))
     },
   }

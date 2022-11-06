@@ -15,7 +15,7 @@ import {Version, versionCompare} from '../../utils/versioning'
 import * as yoroiApi from '../api'
 
 export type TransactionCacheState = {
-  transactions: Record<string, Transaction>
+  transactions: {[txid: string]: Transaction}
   // @deprecated
   perAddressSyncMetadata: Record<string, SyncMetadata>
   // @deprecated
@@ -24,7 +24,7 @@ export type TransactionCacheState = {
 
 export class TransactionCache {
   #state: TransactionCacheState
-  #subscriptions: Array<(transactions: Record<string, Transaction>) => void> = []
+  #subscriptions: Array<(transactions: TransactionCacheState['transactions']) => void> = []
   #perAddressTxsSelector = defaultMemoize(perAddressTxsSelector)
   #perAddressCertificatesSelector = defaultMemoize(perAddressCertificatesSelector)
   #confirmationCountsSelector = defaultMemoize(confirmationCountsSelector)
@@ -471,29 +471,29 @@ const makeTxCacheStorage = (storage: Storage): TxCacheStorage => ({
   loadTxs: async () => {
     const txids: Array<string> = await storage.getItem('txids').then(parseTxids)
     if (!txids) return {}
-    if (txids.length === 0) {
-      return {}
-    }
+    if (txids.length === 0) return {}
 
-    const values = await storage.multiGet(txids)
-    return values.reduce((result, [txid, tx]) => {
-      if (!tx) return result
-      try {
-        return {...result, [txid]: JSON.parse(tx)}
-      } catch (_error) {
+    const tuples = await storage.multiGet(txids)
+
+    return tuples.reduce((result: TransactionCacheState['transactions'], [txid, txData]) => {
+      const tx = parseTx(txData)
+      if (!tx) {
+        console.warn('corrupted transaction', {txid})
         return result
       }
-    }, {} as Record<string, Transaction>)
+
+      return {...result, [tx.id]: tx}
+    }, {})
   },
 
-  saveTxs: async (txs: Record<string, Transaction>) => {
-    const items = Object.entries(txs) //
+  saveTxs: async (txs: TransactionCacheState['transactions']) => {
+    const items: Array<[txid: string, transaction: string]> = Object.entries(txs) //
       .map(([txid, tx]) => [txid, JSON.stringify(tx)])
-    const keys = items.map(([key]) => key)
+    const txids = Object.keys(txs)
 
     await Promise.all([
       storage.multiSet(items), //
-      storage.setItem('txids', JSON.stringify(keys)),
+      storage.setItem('txids', JSON.stringify(txids)),
     ])
   },
 })
@@ -508,6 +508,29 @@ const parseTxids = (data: string | null | undefined) => {
   return isTxids(txids) ? txids : []
 }
 
+const parseTx = (data: string | null | undefined): Transaction | undefined => {
+  if (!data) return
+
+  const isTx = (data: unknown): data is Transaction => {
+    const tx = data as Transaction
+
+    return (
+      exists(tx) &&
+      isObject(tx) &&
+      isString(tx.id) &&
+      isString(tx.status) &&
+      isString(tx.lastUpdatedAt) &&
+      isArray(tx.inputs) &&
+      isArray(tx.outputs) &&
+      isArray(tx.certificates) &&
+      isArray(tx.withdrawals)
+    )
+  }
+
+  const tx = parse(data)
+  return isTx(tx) ? tx : undefined
+}
+
 const parse = (data: string): unknown => {
   try {
     return JSON.parse(data)
@@ -515,3 +538,8 @@ const parse = (data: string): unknown => {
     return
   }
 }
+
+const exists = <T>(data: unknown): data is NonNullable<T> => !!data
+const isObject = (data: unknown): data is object => typeof data === 'object'
+const isString = (data: unknown): data is string => typeof data === 'string'
+const isArray = (data: unknown): data is Array<unknown> => Array.isArray(data)
