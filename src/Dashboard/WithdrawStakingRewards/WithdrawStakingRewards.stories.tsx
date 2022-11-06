@@ -2,7 +2,7 @@ import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {mockEncryptedStorage, mockHwWallet, mockYoroiSignedTx, mockYoroiTx, WithModal} from '../../../storybook'
+import {mockHwWallet, mockYoroiSignedTx, mockYoroiTx, WithModal} from '../../../storybook'
 import {WithdrawStakingRewards} from './WithdrawStakingRewards'
 
 storiesOf('WithdrawStakingRewards', module)
@@ -15,7 +15,6 @@ storiesOf('WithdrawStakingRewards', module)
         }}
         onSuccess={action('onSuccess')}
         onCancel={action('onCancel')}
-        encryptedStorage={mockEncryptedStorage}
       />
     </WithModal>
   ))
@@ -28,7 +27,6 @@ storiesOf('WithdrawStakingRewards', module)
         }}
         onSuccess={action('onSuccess')}
         onCancel={action('onCancel')}
-        encryptedStorage={mockEncryptedStorage}
       />
     </WithModal>
   ))
@@ -42,7 +40,6 @@ storiesOf('WithdrawStakingRewards', module)
         }}
         onSuccess={action('onSuccess')}
         onCancel={action('onCancel')}
-        encryptedStorage={mockEncryptedStorage}
       />
     </WithModal>
   ))
@@ -56,7 +53,6 @@ storiesOf('WithdrawStakingRewards', module)
         }}
         onSuccess={action('onSuccess')}
         onCancel={action('onCancel')}
-        encryptedStorage={mockEncryptedStorage}
       />
     </WithModal>
   ))
@@ -71,7 +67,6 @@ storiesOf('WithdrawStakingRewards', module)
         }}
         onSuccess={action('onSuccess')}
         onCancel={action('onCancel')}
-        encryptedStorage={mockEncryptedStorage}
       />
     </WithModal>
   ))
@@ -86,7 +81,6 @@ storiesOf('WithdrawStakingRewards', module)
         }}
         onSuccess={action('onSuccess')}
         onCancel={action('onCancel')}
-        encryptedStorage={mockEncryptedStorage}
       />
     </WithModal>
   ))

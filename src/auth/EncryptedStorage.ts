@@ -5,14 +5,15 @@ import storage from '../legacy/storage'
 import {YoroiWallet} from '../yoroi-wallets'
 
 export const useReadRootKey = (
-  {id, password}: {id: YoroiWallet['id']; password: string},
+  {wallet, password}: {wallet: YoroiWallet; password: string},
   options?: UseQueryOptions<string, Error>,
 ) => {
   const query = useQuery({
     enabled: false,
     retry: false,
-    queryKey: ['rootKey'],
-    queryFn: () => EncryptedStorage.read(EncryptedStorageKeys.rootKey(id), password),
+    cacheTime: 0,
+    queryKey: ['useReadRootKey'],
+    queryFn: () => wallet.encryptedStorage.rootKey.read(password),
     ...options,
   })
 
@@ -23,12 +24,12 @@ export const useReadRootKey = (
 }
 
 export const useWriteRootKey = (
-  {id}: {id: YoroiWallet['id']},
+  {wallet}: {wallet: YoroiWallet},
   options?: UseMutationOptions<void, Error, {password: string; rootKey: string}>,
 ) => {
   const mutation = useMutation({
     ...options,
-    mutationFn: ({password, rootKey}) => EncryptedStorage.write(EncryptedStorageKeys.rootKey(id), rootKey, password),
+    mutationFn: ({password, rootKey}) => wallet.encryptedStorage.rootKey.write(rootKey, password),
   })
 
   return {
@@ -64,4 +65,17 @@ export const EncryptedStorage = {
   },
 } as const
 
+export const makeWalletEncryptedStorage = (id: YoroiWallet['id']) => {
+  const rootKey = EncryptedStorageKeys.rootKey(id)
+
+  return {
+    rootKey: {
+      read: (password: string) => EncryptedStorage.read(rootKey, password),
+      write: (value: string, password: string) => EncryptedStorage.write(rootKey, value, password),
+      remove: () => EncryptedStorage.remove(rootKey),
+    },
+  } as const
+}
+
+export type WalletEncryptedStorage = ReturnType<typeof makeWalletEncryptedStorage>
 export type EncryptedStorage = typeof EncryptedStorage

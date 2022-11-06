@@ -1,14 +1,12 @@
-import {EncryptedStorage} from '../../src/auth'
+import {WalletEncryptedStorage} from '../../src/auth'
 import storage from '../../src/legacy/storage'
 
-export const mockEncryptedStorage: EncryptedStorage = {
-  read: async (_key, password) => {
-    if (password !== 'password') throw new Error('Invalid Password')
-
-    return 'rootKey'
+export const mockEncryptedStorage: WalletEncryptedStorage = {
+  rootKey: {
+    read: (password) => password === 'pasword' ? Promise.resolve('') : Promise.reject(new Error('Invalid Password')),
+    write: () => Promise.resolve(),
+    remove: () => Promise.resolve(true),
   },
-  write: async () => undefined,
-  remove: async () => true,
 }
 
 export const mockStorage: typeof storage = {

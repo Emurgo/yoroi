@@ -317,15 +317,22 @@ export class WalletManager {
     await this.closeWallet()
   }
 
+  // wallet pending promises can still write to the storage (requires a semaphore)
   async removeWallet(id: string) {
     if (!this._wallet) throw new Error('invalid state')
 
+    // wallet.remove
     await this._wallet.clear()
+
+    // legacy
     await this.closeWallet()
+
+    // wallet.remove
     await storage.remove(`/wallet/${id}/data`)
-    await storage.remove(`/wallet/${id}`)
     await EncryptedStorage.remove(EncryptedStorageKeys.rootKey(id))
     await Keychain.removeWalletKey(id)
+
+    await storage.remove(`/wallet/${id}`)
   }
 
   // TODO(ppershing): how should we deal with race conditions?

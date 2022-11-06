@@ -1,6 +1,7 @@
 import {BigNumber} from 'bignumber.js'
 import type {IntlShape} from 'react-intl'
 
+import {WalletEncryptedStorage} from '../../auth'
 import type {HWDeviceInfo} from '../../legacy/ledgerUtils'
 import {WalletMeta} from '../../legacy/state'
 import storage from '../../legacy/storage'
@@ -258,8 +259,7 @@ export type YoroiWallet = Pick<WalletInterface, YoroiWalletKeys> & {
   rewardAddressHex: NonNullable<WalletInterface['rewardAddressHex']>
   getTransactions: (txids: Array<string>) => Promise<Record<string, TransactionInfo>>
   sync: () => Promise<void>
-  enableEasyConfirmation: (rootKey: string) => Promise<void>
-  disableEasyConfirmation: () => Promise<void>
+  encryptedStorage: WalletEncryptedStorage
 }
 
 export const isYoroiWallet = (wallet: unknown): wallet is YoroiWallet => {

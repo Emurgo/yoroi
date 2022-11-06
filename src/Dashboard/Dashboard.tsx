@@ -6,7 +6,6 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, RefreshControl, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 
-import {EncryptedStorage} from '../auth'
 import {Banner, Button, Modal, OfflineBanner, StatusBar} from '../components'
 import {useBalances, useUtxos} from '../hooks'
 import globalMessages from '../i18n/global-messages'
@@ -132,7 +131,6 @@ export const Dashboard = () => {
             wallet={wallet}
             onSuccess={() => resetToTxHistory()}
             onCancel={() => setShowWithdrawalDialog(false)}
-            encryptedStorage={EncryptedStorage}
           />
         </Modal>
       )}

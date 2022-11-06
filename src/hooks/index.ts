@@ -17,7 +17,6 @@ import {
   UseQueryOptions,
 } from 'react-query'
 
-import {EncryptedStorage, EncryptedStorageKeys} from '../auth'
 import {getDefaultAssetByNetworkId} from '../legacy/config'
 import {ObjectValues} from '../legacy/flow'
 import {HWDeviceInfo} from '../legacy/ledgerUtils'
@@ -410,14 +409,14 @@ export const useVotingRegTx = (wallet: YoroiWallet, options?: UseQueryOptions<Vo
 }
 
 export const useSignWithPasswordAndSubmitTx = (
-  {wallet, encryptedStorage}: {wallet: YoroiWallet; encryptedStorage: EncryptedStorage},
+  {wallet}: {wallet: YoroiWallet},
   options?: {
     signTx?: UseMutationOptions<YoroiSignedTx, Error, {unsignedTx: YoroiUnsignedTx; password: string}>
     submitTx?: UseMutationOptions<TxSubmissionStatus, Error, YoroiSignedTx>
   },
 ) => {
   const signTx = useSignTxWithPassword(
-    {wallet, encryptedStorage},
+    {wallet},
     {
       useErrorBoundary: true,
       ...options?.signTx,
@@ -527,12 +526,12 @@ export const useSignTx = (
 }
 
 export const useSignTxWithPassword = (
-  {wallet, encryptedStorage}: {wallet: YoroiWallet; encryptedStorage: EncryptedStorage},
+  {wallet}: {wallet: YoroiWallet},
   options: UseMutationOptions<YoroiSignedTx, Error, {unsignedTx: YoroiUnsignedTx; password: string}> = {},
 ) => {
   const mutation = useMutation({
     mutationFn: async ({unsignedTx, password}) => {
-      const rootKey = await encryptedStorage.read(EncryptedStorageKeys.rootKey(wallet.id), password)
+      const rootKey = await wallet.encryptedStorage.rootKey.read(password)
 
       return wallet.signTx(unsignedTx, rootKey)
     },

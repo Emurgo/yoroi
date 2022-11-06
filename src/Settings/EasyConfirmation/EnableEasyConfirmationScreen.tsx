@@ -36,7 +36,7 @@ export const EnableEasyConfirmationScreen = () => {
     },
   })
   const {readRootKey, isLoading: loadingRootKey} = useReadRootKey(
-    {id: wallet.id, password: rootPassword},
+    {wallet, password: rootPassword},
     {
       onSuccess: enableEasyConfirmation,
       onError: (error) => {

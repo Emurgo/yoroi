@@ -1,6 +1,5 @@
 import React from 'react'
 
-import {EncryptedStorage} from '../../../auth'
 import {YoroiWallet} from '../../../yoroi-wallets'
 import {YoroiUnsignedTx} from '../../../yoroi-wallets/types'
 import {ConfirmTxWithHW} from './ConfirmTxWithHW'
@@ -12,10 +11,9 @@ type Props = {
   unsignedTx: YoroiUnsignedTx
   onCancel: () => void
   onSuccess: () => void
-  encryptedStorage: EncryptedStorage
 }
 
-export const ConfirmTx = ({wallet, onSuccess, onCancel, unsignedTx, encryptedStorage}: Props) => {
+export const ConfirmTx = ({wallet, onSuccess, onCancel, unsignedTx}: Props) => {
   return wallet.isHW ? (
     <ConfirmTxWithHW //
       wallet={wallet}
@@ -36,7 +34,6 @@ export const ConfirmTx = ({wallet, onSuccess, onCancel, unsignedTx, encryptedSto
       unsignedTx={unsignedTx}
       onSuccess={onSuccess}
       onCancel={onCancel}
-      encryptedStorage={encryptedStorage}
     />
   )
 }
