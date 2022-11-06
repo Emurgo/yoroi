@@ -71,10 +71,6 @@ export const reloadAppSettings = () => async (dispatch: Dispatch<any>) => {
   dispatch(_setAppSettings(appSettings))
 }
 
-export const acceptAndSaveTos = () => async (dispatch: Dispatch<any>) => {
-  await dispatch(setAppSettingField(APP_SETTINGS_KEYS.ACCEPTED_TOS, true))
-}
-
 const initInstallationId =
   () =>
   async (dispatch: Dispatch<any>, getState: any): Promise<string> => {

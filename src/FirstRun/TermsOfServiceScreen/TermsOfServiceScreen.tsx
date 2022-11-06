@@ -3,14 +3,12 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Alert, ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useDispatch} from 'react-redux'
 
 import {useAuthOsEnabled, useAuthOsErrorDecoder, useEnableAuthWithOs} from '../../auth'
 import {useAuth} from '../../auth/AuthProvider'
 import {Button, Checkbox, PleaseWaitModal, Spacer, StatusBar} from '../../components'
 import {useLanguage} from '../../i18n'
 import globalMessages from '../../i18n/global-messages'
-import {acceptAndSaveTos} from '../../legacy/actions'
 import {isEmptyString} from '../../legacy/utils'
 import {TermsOfService} from '../../Legal'
 import {FirstRunRouteNavigation} from '../../navigation'
@@ -21,14 +19,13 @@ export const TermsOfServiceScreen = () => {
   const navigation = useNavigation<FirstRunRouteNavigation>()
   const {languageCode} = useLanguage()
   const [acceptedTos, setAcceptedTos] = React.useState(false)
-  const [savingConsent, setSavingConsent] = React.useState(false)
 
   // should be another step in the first run flow -> auth method
   const {login} = useAuth()
   const authOsEnabled = useAuthOsEnabled()
   const storage = useStorage()
   const decodeAuthOsError = useAuthOsErrorDecoder()
-  const {enableAuthWithOs, isLoading: enablingAuth} = useEnableAuthWithOs(
+  const {enableAuthWithOs, isLoading} = useEnableAuthWithOs(
     {
       storage,
       authenticationPrompt: {
@@ -37,10 +34,7 @@ export const TermsOfServiceScreen = () => {
       },
     },
     {
-      onSuccess: async () => {
-        await dispatch(acceptAndSaveTos())
-        login()
-      },
+      onSuccess: login,
       onError: (error) => {
         const errorMessage = decodeAuthOsError(error)
         if (!isEmptyString(errorMessage)) Alert.alert(strings.error, errorMessage)
@@ -49,16 +43,10 @@ export const TermsOfServiceScreen = () => {
     },
   )
 
-  const isLoading = enablingAuth || savingConsent
-
-  const dispatch = useDispatch()
   const onAccept = async () => {
-    setSavingConsent(true)
-
     if (authOsEnabled) {
       enableAuthWithOs()
     } else {
-      await dispatch(acceptAndSaveTos())
       navigation.navigate('enable-login-with-pin')
     }
   }
