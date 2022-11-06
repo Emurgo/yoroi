@@ -79,9 +79,12 @@ const mockStorage: Storage = {
     if (path === 'txids') return JSON.stringify([mockTx.id])
     throw new Error('invalid path')
   },
-  multiGet: async (paths: Array<string>) => {
-    if (paths.length === 1 && paths[0] === mockTx.id) return [[mockTx.id, JSON.stringify(mockTx)]]
-    throw new Error('invalid path')
+  multiGet: async (txids: Array<string>) => {
+    if (txids.length > 1 || txids[0] !== mockTx.id) throw new Error('invalid path')
+
+    return [
+      [txids[0], JSON.stringify(mockTx)], //
+    ]
   },
   setItem: jest.fn(),
   multiSet: jest.fn(),
