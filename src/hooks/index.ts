@@ -17,7 +17,7 @@ import {
   UseQueryOptions,
 } from 'react-query'
 
-import {EncryptedStorage, StorageKeys} from '../auth'
+import {EncryptedStorage, EncryptedStorageKeys} from '../auth'
 import {getDefaultAssetByNetworkId} from '../legacy/config'
 import {ObjectValues} from '../legacy/flow'
 import {HWDeviceInfo} from '../legacy/ledgerUtils'
@@ -532,7 +532,7 @@ export const useSignTxWithPassword = (
 ) => {
   const mutation = useMutation({
     mutationFn: async ({unsignedTx, password}) => {
-      const rootKey = await encryptedStorage.read(StorageKeys.rootKey(wallet.id), password)
+      const rootKey = await encryptedStorage.read(EncryptedStorageKeys.rootKey(wallet.id), password)
 
       return wallet.signTx(unsignedTx, rootKey)
     },

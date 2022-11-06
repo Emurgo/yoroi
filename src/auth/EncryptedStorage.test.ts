@@ -1,9 +1,9 @@
-import {EncryptedStorage as ES, StorageKeys} from './EncryptedStorage'
+import {EncryptedStorage as ES, EncryptedStorageKeys as ESKeys} from './EncryptedStorage'
 
 describe('EncryptedStorage', () => {
   const password = '1234567890'
   const data = '65656565494949'
-  const key = StorageKeys.rootKey('walletId')
+  const key = ESKeys.rootKey('walletId')
 
   beforeEach(async () => {
     ES.remove(key)

@@ -12,7 +12,7 @@ export const useReadRootKey = (
     enabled: false,
     retry: false,
     queryKey: ['rootKey'],
-    queryFn: () => EncryptedStorage.read(StorageKeys.rootKey(id), password),
+    queryFn: () => EncryptedStorage.read(EncryptedStorageKeys.rootKey(id), password),
     ...options,
   })
 
@@ -28,7 +28,7 @@ export const useWriteRootKey = (
 ) => {
   const mutation = useMutation({
     ...options,
-    mutationFn: ({password, rootKey}) => EncryptedStorage.write(StorageKeys.rootKey(id), rootKey, password),
+    mutationFn: ({password, rootKey}) => EncryptedStorage.write(EncryptedStorageKeys.rootKey(id), rootKey, password),
   })
 
   return {
@@ -38,7 +38,7 @@ export const useWriteRootKey = (
 }
 
 type StorageKey = `/keystore/${string}-MASTER_PASSWORD`
-export const StorageKeys = {
+export const EncryptedStorageKeys = {
   rootKey: (id: YoroiWallet['id']): StorageKey => `/keystore/${id}-MASTER_PASSWORD`,
 }
 

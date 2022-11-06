@@ -4,7 +4,8 @@ import _ from 'lodash'
 import uuid from 'uuid'
 
 import {migrateWalletMetas} from '../appStorage'
-import {EncryptedStorage, StorageKeys} from '../auth'
+import {EncryptedStorage, EncryptedStorageKeys} from '../auth'
+import {Keychain} from '../auth/Keychain'
 import assert from '../legacy/assert'
 import {CONFIG, DISABLE_BACKGROUND_SYNC} from '../legacy/config'
 import {ISignRequest} from '../legacy/ISignRequest'
@@ -326,7 +327,8 @@ export class WalletManager {
     await this.closeWallet()
     await storage.remove(`/wallet/${id}/data`)
     await storage.remove(`/wallet/${id}`)
-    await EncryptedStorage.remove(StorageKeys.rootKey(id))
+    await EncryptedStorage.remove(EncryptedStorageKeys.rootKey(id))
+    await Keychain.removeWalletKey(id)
   }
 
   // TODO(ppershing): how should we deal with race conditions?
