@@ -1,11 +1,8 @@
-import ExtendableError from 'es6-error'
 import {useMutation, UseMutationOptions, useQuery, UseQueryOptions} from 'react-query'
 
 import {decryptData, encryptData} from '../legacy/commonUtils'
 import storage from '../legacy/storage'
 import {YoroiWallet} from '../yoroi-wallets'
-
-export class CredentialsNotFound extends ExtendableError {}
 
 export const useReadRootKey = (
   {id, password}: {id: YoroiWallet['id']; password: string},
@@ -49,7 +46,7 @@ export const EncryptedStorage = {
   async read(key: StorageKey, password: string) {
     const encrypted = await storage.read<string | null>(key)
     if (encrypted == null) {
-      throw new CredentialsNotFound('RootKey invalid state.')
+      throw new Error('RootKey invalid')
     }
 
     return decryptData(encrypted, password)
