@@ -95,8 +95,9 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     return this.storage.write(`/wallet/${this.id}/data`, this.toJSON())
   }
 
-  clear() {
-    return this.clearUTXOs()
+  async clear() {
+    await this.transactionCache?.clear()
+    await this.clearUTXOs()
   }
 
   private async initialize(
