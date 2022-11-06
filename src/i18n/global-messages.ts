@@ -257,7 +257,7 @@ export const errorMessages = {
       defaultMessage: '!!!Password you provided is incorrect.',
     },
   }),
-  biometricsIsTurnedOff: defineMessages({
+  authOsIsTurnedOff: defineMessages({
     title: {
       id: 'global.actions.dialogs.biometricsIsTurnedOff.title',
       defaultMessage: '!!!Biometrics was turned off',

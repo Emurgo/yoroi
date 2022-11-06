@@ -45,7 +45,7 @@ export const ApplicationSettingsScreen = () => {
 
   const crashReports = useCrashReports()
 
-  const onToggleBiometricsAuthIn = async () => {
+  const onToggleAuthWithOs = async () => {
     if (authSettings === 'os') {
       authWithOs()
     } else {
@@ -75,8 +75,8 @@ export const ApplicationSettingsScreen = () => {
           disabled={authSettings !== 'pin'}
         />
 
-        <SettingsItem label={strings.biometricsSignIn} disabled={!authOsEnabled}>
-          <Switch value={authSettings === 'os'} onValueChange={onToggleBiometricsAuthIn} disabled={!authOsEnabled} />
+        <SettingsItem label={strings.authWithOsSignIn} disabled={!authOsEnabled}>
+          <Switch value={authSettings === 'os'} onValueChange={onToggleAuthWithOs} disabled={!authOsEnabled} />
         </SettingsItem>
       </SettingsSection>
 
@@ -113,7 +113,7 @@ const useStrings = () => {
     currentLanguage: intl.formatMessage(messages.currentLanguage),
     security: intl.formatMessage(messages.security),
     changePin: intl.formatMessage(messages.changePin),
-    biometricsSignIn: intl.formatMessage(messages.biometricsSignIn),
+    authWithOsSignIn: intl.formatMessage(messages.authWithOsSignIn),
     termsOfUse: intl.formatMessage(messages.termsOfUse),
     support: intl.formatMessage(messages.support),
     version: intl.formatMessage(messages.version),
@@ -148,7 +148,7 @@ const messages = defineMessages({
     id: 'components.settings.applicationsettingsscreen.changePin',
     defaultMessage: '!!!Change PIN',
   },
-  biometricsSignIn: {
+  authWithOsSignIn: {
     id: 'components.settings.applicationsettingsscreen.biometricsSignIn',
     defaultMessage: '!!!Sign in with your biometrics',
   },

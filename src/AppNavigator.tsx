@@ -165,8 +165,8 @@ const useStrings = () => {
   return {
     customPinTitle: intl.formatMessage(messages.customPinTitle),
     loginPinTitle: intl.formatMessage(messages.pinLoginTitle),
-    biometricsChangeTitle: intl.formatMessage(messages.biometricsChangeTitle),
-    biometricsChangeMessage: intl.formatMessage(messages.biometricsChangeMessage),
+    authWithOsChangeTitle: intl.formatMessage(messages.authWithOsChangeTitle),
+    authWithOsChangeMessage: intl.formatMessage(messages.authWithOsChangeMessage),
     cancel: intl.formatMessage(globalMessages.cancel),
     authorize: intl.formatMessage(messages.authorize),
   }
@@ -181,13 +181,13 @@ const messages = defineMessages({
     id: 'components.firstrun.custompinscreen.title',
     defaultMessage: '!!!Set PIN',
   },
-  biometricsChangeTitle: {
+  authWithOsChangeTitle: {
     id: 'global.actions.dialogs.walletKeysInvalidated.title',
-    defaultMessage: '!!!Biometrics changes',
+    defaultMessage: '!!!Auth with OS changes',
   },
-  biometricsChangeMessage: {
+  authWithOsChangeMessage: {
     id: 'global.actions.dialogs.biometricsChange.message',
-    defaultMessage: '!!!Biometrics changed detected ',
+    defaultMessage: '!!!Auth with OS changed detected ',
   },
   authorize: {
     id: 'components.send.biometricauthscreen.authorizeOperation',
@@ -208,11 +208,11 @@ const useAutoLogout = (authSettings: AuthSettings) => {
 
   React.useEffect(() => {
     if (osAuthDisabled) {
-      Alert.alert(strings.biometricsChangeTitle, strings.biometricsChangeMessage)
+      Alert.alert(strings.authWithOsChangeTitle, strings.authWithOsChangeMessage)
 
       logout()
     }
-  }, [osAuthDisabled, strings.biometricsChangeTitle, strings.biometricsChangeMessage, logout])
+  }, [osAuthDisabled, strings.authWithOsChangeTitle, strings.authWithOsChangeMessage, logout])
 }
 
 const useHideScreenInAppSwitcher = () => {
