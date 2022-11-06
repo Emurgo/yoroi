@@ -2,20 +2,14 @@ import React from 'react'
 import {AppState} from 'react-native'
 import {useMutation, UseMutationOptions, useQuery, useQueryClient, UseQueryOptions} from 'react-query'
 
-import {
-  AUTH_METHOD_KEY,
-  AUTH_METHOD_PIN,
-  ENCRYPTED_PIN_HASH_KEY,
-  useMutationWithInvalidations,
-  useWallet,
-} from '../hooks'
+import {AUTH_METHOD_PIN, useMutationWithInvalidations, useWallet} from '../hooks'
 import {WalletMeta} from '../legacy/state'
 import storage from '../legacy/storage'
 import {Storage} from '../Storage'
 import {WalletJSON, walletManager, YoroiWallet} from '../yoroi-wallets'
 import {Keychain} from './Keychain'
 import {AuthenticationPrompt, authOsEnabled} from './KeychainStorage'
-import {AuthMethod} from './types'
+import {AUTH_METHOD_KEY, AuthMethod, ENCRYPTED_PIN_HASH_KEY, INSTALLATION_ID_KEY, OLD_OS_AUTH_KEY} from './types'
 
 export const useAuthOsEnabled = (options?: UseQueryOptions<boolean, Error>) => {
   const queryClient = useQueryClient()
@@ -48,8 +42,7 @@ export const useEnableAuthWithOs = (
 ) => {
   const mutation = useMutationWithInvalidations({
     mutationFn: () =>
-      Keychain.initialize()
-        .then(() => Keychain.authenticate(authenticationPrompt))
+      Keychain.authenticate(authenticationPrompt)
         .then(() => storage.setItem(AUTH_METHOD_KEY, JSON.stringify(AUTH_METHOD_OS)))
         .then(() => storage.getItem(ENCRYPTED_PIN_HASH_KEY))
         .then((pin) => (pin != null ? storage.removeItem(ENCRYPTED_PIN_HASH_KEY) : undefined)),
@@ -182,18 +175,14 @@ const disableAllEasyConfirmation = () =>
       }
     })
 
-const OLD_OS_AUTH_KEY = '/appSettings/isSystemAuthEnabled'
-const INSTALLATION_ID_KEY = '/appSettings/installationId'
-export const migrateAuthMethod = async (storage: Storage, keychain: typeof Keychain = Keychain) => {
-  const [[, authMethod], [, pin], [, isOldSystemAuth], [, installationId]] = await storage.multiGet([
-    AUTH_METHOD_KEY,
-    ENCRYPTED_PIN_HASH_KEY,
-    OLD_OS_AUTH_KEY,
-    INSTALLATION_ID_KEY,
-  ])
+export const migrateAuthMethod = async (storage: Storage) => {
+  const authMethod = await storage.getItem(AUTH_METHOD_KEY)
+  const pin = await storage.getItem(ENCRYPTED_PIN_HASH_KEY)
+  const isOldSystemAuth = await storage.getItem(OLD_OS_AUTH_KEY)
+  const installationId = await storage.getItem(INSTALLATION_ID_KEY)
+
   if (authMethod == null && installationId != null) {
     if (isOldSystemAuth != null && JSON.parse(isOldSystemAuth) === true) {
-      await keychain.initialize()
       await storage.setItem(AUTH_METHOD_KEY, JSON.stringify(AUTH_METHOD_OS))
       return disableAllEasyConfirmation()
     }

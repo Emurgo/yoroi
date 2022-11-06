@@ -1,15 +1,6 @@
 import storage from '@react-native-async-storage/async-storage'
 
 import {migrateAuthMethod} from './authOS'
-import {Keychain} from './Keychain'
-
-const mockKeychain: typeof Keychain = {
-  authenticate: jest.fn(),
-  getWalletKey: jest.fn(),
-  initialize: jest.fn(),
-  removeWalletKey: jest.fn(),
-  setWalletKey: jest.fn(),
-}
 
 describe('migrateAuthMethod', () => {
   const installationId = 'uuidv4'
@@ -23,7 +14,7 @@ describe('migrateAuthMethod', () => {
   it('method = null and no pin/os means new setup, it should remain null', async () => {
     await storage.setItem(INSTALLATION_ID_KEY, JSON.stringify(installationId))
 
-    await migrateAuthMethod(storage, mockKeychain)
+    await migrateAuthMethod(storage)
 
     await expect(await storage.getItem(AUTH_METHOD_KEY)).toBeNull()
   })
@@ -34,11 +25,11 @@ describe('migrateAuthMethod', () => {
     await storage.setItem(INSTALLATION_ID_KEY, JSON.stringify(installationId))
 
     await storage.setItem(AUTH_METHOD_KEY, os)
-    await migrateAuthMethod(storage, mockKeychain)
+    await migrateAuthMethod(storage)
     await expect(await storage.getItem(AUTH_METHOD_KEY)).toBe(os)
 
     await storage.setItem(AUTH_METHOD_KEY, pin)
-    await migrateAuthMethod(storage, mockKeychain)
+    await migrateAuthMethod(storage)
     await expect(await storage.getItem(AUTH_METHOD_KEY)).toBe(pin)
   })
 
@@ -50,7 +41,7 @@ describe('migrateAuthMethod', () => {
       [OLD_OS_AUTH_KEY, JSON.stringify(true)],
     ])
 
-    await migrateAuthMethod(storage, mockKeychain)
+    await migrateAuthMethod(storage)
 
     await expect(await storage.getItem(AUTH_METHOD_KEY)).toBe(os)
   })
@@ -59,7 +50,7 @@ describe('migrateAuthMethod', () => {
     await storage.setItem(INSTALLATION_ID_KEY, JSON.stringify(installationId))
     await storage.setItem(ENCRYPTED_PIN_HASH_KEY, JSON.stringify('encrypted-hash'))
 
-    await migrateAuthMethod(storage, mockKeychain)
+    await migrateAuthMethod(storage)
 
     await expect(await storage.getItem(AUTH_METHOD_KEY)).toBe(pin)
   })
