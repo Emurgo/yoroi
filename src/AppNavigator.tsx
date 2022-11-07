@@ -24,14 +24,6 @@ import StorybookScreen from './StorybookScreen'
 import {WalletInitNavigator} from './WalletInit/WalletInitNavigator'
 import {WalletNavigator} from './WalletNavigator'
 
-type AuthAction = 'auth-with-pin' | 'auth-with-os' | 'request-new-pin' | 'first-run'
-const useAuthAction = (authOsEnabled: boolean, authSettings: AuthSettings): AuthAction => {
-  if (authSettings === 'pin') return 'auth-with-pin'
-  if (authSettings === 'os' && authOsEnabled) return 'auth-with-os'
-  if (authSettings === 'os' && !authOsEnabled) return 'request-new-pin'
-  return 'first-run' // setup not complete
-}
-
 export const AppNavigator = () => {
   const strings = useStrings()
   const storage = useStorage()
@@ -40,7 +32,7 @@ export const AppNavigator = () => {
 
   const authSettings = useAuthSettings(storage)
   const authOsEnabled = useAuthOsEnabled()
-  const authAction = useAuthAction(authOsEnabled, authSettings)
+  const authAction = nextAuthAction(authOsEnabled, authSettings)
 
   useAutoLogout(authSettings)
 
@@ -147,18 +139,6 @@ const CreatePinScreenWrapper = () => {
   return <EnableLoginWithPin onDone={login} />
 }
 
-export const StoryBookNavigator = () => (
-  <NavigationContainer>
-    <Stack.Navigator
-      screenOptions={{
-        detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
-      }}
-    >
-      <Stack.Screen name="storybook" component={StorybookScreen} />
-    </Stack.Navigator>
-  </NavigationContainer>
-)
-
 const useStrings = () => {
   const intl = useIntl()
 
@@ -233,4 +213,12 @@ const useHideScreenInAppSwitcher = () => {
 
     return () => subscription?.remove()
   }, [])
+}
+
+type AuthAction = 'auth-with-pin' | 'auth-with-os' | 'request-new-pin' | 'first-run'
+const nextAuthAction = (authOsEnabled: boolean, authSettings: AuthSettings): AuthAction => {
+  if (authSettings === 'pin') return 'auth-with-pin'
+  if (authSettings === 'os' && authOsEnabled) return 'auth-with-os'
+  if (authSettings === 'os' && !authOsEnabled) return 'request-new-pin'
+  return 'first-run' // setup not completed
 }
