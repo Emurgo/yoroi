@@ -4,7 +4,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useEnableEasyConfirmation, useReadRootKey} from '../../auth'
+import {useEnableEasyConfirmation} from '../../auth'
 import {Button, StatusBar, Text, TextInput} from '../../components'
 import {LoadingOverlay} from '../../components/LoadingOverlay'
 import {errorMessages} from '../../i18n/global-messages'
@@ -22,7 +22,7 @@ export const EnableEasyConfirmationScreen = () => {
   const walletMeta = useSelectedWalletMeta()
   const setSelectedWalletMeta = useSetSelectedWalletMeta()
   const wallet = useSelectedWallet()
-  const {enableEasyConfirmation, isLoading: enablingEasyConfirmation} = useEnableEasyConfirmation(wallet, {
+  const {enableEasyConfirmation, isLoading} = useEnableEasyConfirmation(wallet, {
     onSuccess: () => {
       if (!walletMeta) throw new Error('Missing walletMeta')
       setSelectedWalletMeta({
@@ -32,21 +32,10 @@ export const EnableEasyConfirmationScreen = () => {
       navigation.goBack()
     },
     onError: (error) => {
-      throw error
+      if (!(error instanceof WrongPassword)) throw error
+      showErrorDialog(errorMessages.incorrectPassword, intl)
     },
   })
-  const {readRootKey, isLoading: loadingRootKey} = useReadRootKey(
-    {wallet, password: rootPassword},
-    {
-      onSuccess: enableEasyConfirmation,
-      onError: (error) => {
-        if (!(error instanceof WrongPassword)) throw error
-        showErrorDialog(errorMessages.incorrectPassword, intl)
-      },
-    },
-  )
-
-  const isLoading = loadingRootKey || enablingEasyConfirmation
 
   return (
     <SafeAreaView edges={['bottom']} style={styles.container}>
@@ -71,7 +60,7 @@ export const EnableEasyConfirmationScreen = () => {
       <View style={styles.actions}>
         <Button
           title={strings.enableButton}
-          onPress={() => readRootKey()}
+          onPress={() => enableEasyConfirmation(rootPassword)}
           disabled={isEmptyString(rootPassword) || isLoading}
         />
       </View>

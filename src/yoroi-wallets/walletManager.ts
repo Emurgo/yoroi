@@ -157,7 +157,8 @@ export class WalletManager {
     this._notify({type: 'easy-confirmation', enabled: false})
   }
 
-  async enableEasyConfirmation(wallet: YoroiWallet, rootKey: string) {
+  async enableEasyConfirmation(wallet: YoroiWallet, password: string) {
+    const rootKey = await wallet.encryptedStorage.rootKey.read(password)
     await wallet.enableEasyConfirmation(rootKey)
     await wallet.save()
 

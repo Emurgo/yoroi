@@ -109,7 +109,7 @@ export const useDisableEasyConfirmation = (wallet: YoroiWallet, options?: UseMut
 export const useEnableEasyConfirmation = (wallet: YoroiWallet, options?: UseMutationOptions<void, Error, string>) => {
   const mutation = useMutationWithInvalidations({
     ...options,
-    mutationFn: (rootKey: string) => walletManager.enableEasyConfirmation(wallet, rootKey),
+    mutationFn: (password: string) => walletManager.enableEasyConfirmation(wallet, password),
     invalidateQueries: [['walletMetas']],
   })
 
