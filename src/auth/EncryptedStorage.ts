@@ -1,42 +1,6 @@
-import {useMutation, UseMutationOptions, useQuery, UseQueryOptions} from 'react-query'
-
 import {decryptData, encryptData} from '../legacy/commonUtils'
 import storage from '../legacy/storage'
 import {YoroiWallet} from '../yoroi-wallets'
-
-export const useReadRootKey = (
-  {wallet, password}: {wallet: YoroiWallet; password: string},
-  options?: UseQueryOptions<string, Error>,
-) => {
-  const query = useQuery({
-    enabled: false,
-    retry: false,
-    cacheTime: 0,
-    queryKey: ['useReadRootKey'],
-    queryFn: () => wallet.encryptedStorage.rootKey.read(password),
-    ...options,
-  })
-
-  return {
-    readRootKey: query.refetch,
-    ...query,
-  }
-}
-
-export const useWriteRootKey = (
-  {wallet}: {wallet: YoroiWallet},
-  options?: UseMutationOptions<void, Error, {password: string; rootKey: string}>,
-) => {
-  const mutation = useMutation({
-    ...options,
-    mutationFn: ({password, rootKey}) => wallet.encryptedStorage.rootKey.write(rootKey, password),
-  })
-
-  return {
-    writeRootKey: mutation.mutate,
-    ...mutation,
-  }
-}
 
 type StorageKey = `/keystore/${string}-MASTER_PASSWORD`
 export const EncryptedStorageKeys = {
