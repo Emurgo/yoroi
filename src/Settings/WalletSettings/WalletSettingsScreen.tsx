@@ -100,7 +100,7 @@ export const WalletSettingsScreen = () => {
 
       <SettingsSection>
         <NavigatedSettingsItem label={strings.removeWallet} navigateTo="remove-wallet" />
-        <ResyncButton onClick={onResync} isLoading={isResyncLoading} />
+        <ResyncButton onPress={onResync} isLoading={isResyncLoading} />
       </SettingsSection>
 
       <SettingsSection title={strings.about}>
@@ -140,10 +140,10 @@ const LogoutButton = () => {
   return <PressableSettingsItem label={strings.logout} onPress={logoutWithConfirmation} disabled={isLoading} />
 }
 
-const ResyncButton = ({onClick, isLoading}: {onClick: () => void; isLoading: boolean}) => {
+const ResyncButton = ({onPress, isLoading}: {onPress: () => void; isLoading: boolean}) => {
   const strings = useStrings()
 
-  return <PressableSettingsItem label={strings.resync} onPress={onClick} disabled={isLoading} />
+  return <PressableSettingsItem label={strings.resync} onPress={onPress} disabled={isLoading} />
 }
 
 const LoadingOverlay = ({loading}: {loading: boolean}) => {
