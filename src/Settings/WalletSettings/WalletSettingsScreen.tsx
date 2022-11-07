@@ -1,8 +1,7 @@
 import React from 'react'
 import type {MessageDescriptor} from 'react-intl'
 import {defineMessages, useIntl} from 'react-intl'
-import {InteractionManager, ScrollView, StyleSheet, Switch, View} from 'react-native'
-import {ActivityIndicator} from 'react-native-paper'
+import {InteractionManager, ScrollView, StyleSheet, Switch} from 'react-native'
 import {UseMutationOptions} from 'react-query'
 import {useSelector} from 'react-redux'
 
@@ -28,14 +27,11 @@ import {
 export const WalletSettingsScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
-  const {navigation, resetToWalletSelection, resetToTxHistory} = useWalletNavigation()
+  const {navigation, resetToWalletSelection} = useWalletNavigation()
   const isSystemAuthEnabled = useSelector(isSystemAuthEnabledSelector)
   const wallet = useSelectedWallet()
   const walletName = useWalletName(wallet)
   const easyConfirmationEnabled = useEasyConfirmationEnabled(wallet)
-  const {resync, isLoading: isResyncLoading} = useResync(wallet, {
-    onSuccess: () => resetToTxHistory(),
-  })
 
   const onSwitchWallet = () => {
     resetToWalletSelection()
@@ -57,13 +53,6 @@ export const WalletSettingsScreen = () => {
         screen: 'disable-easy-confirmation',
       },
     })
-  }
-
-  const onResync = async () => {
-    const selection = await showConfirmationDialog(confirmationMessages.resync, intl)
-    if (selection === DIALOG_BUTTONS.YES) {
-      resync()
-    }
   }
 
   return (
@@ -100,7 +89,7 @@ export const WalletSettingsScreen = () => {
 
       <SettingsSection>
         <NavigatedSettingsItem label={strings.removeWallet} navigateTo="remove-wallet" />
-        <ResyncButton onPress={onResync} isLoading={isResyncLoading} />
+        <ResyncButton />
       </SettingsSection>
 
       <SettingsSection title={strings.about}>
@@ -111,7 +100,6 @@ export const WalletSettingsScreen = () => {
           value={intl.formatMessage(getWalletType(wallet.walletImplementationId))}
         />
       </SettingsSection>
-      <LoadingOverlay loading={isResyncLoading} />
     </ScrollView>
   )
 }
@@ -140,22 +128,23 @@ const LogoutButton = () => {
   return <PressableSettingsItem label={strings.logout} onPress={logoutWithConfirmation} disabled={isLoading} />
 }
 
-const ResyncButton = ({onPress, isLoading}: {onPress: () => void; isLoading: boolean}) => {
+const ResyncButton = () => {
   const strings = useStrings()
+  const wallet = useSelectedWallet()
+  const {navigateToTxHistory} = useWalletNavigation()
+  const intl = useIntl()
+  const {resync, isLoading} = useResync(wallet, {
+    onMutate: () => navigateToTxHistory(),
+  })
 
-  return <PressableSettingsItem label={strings.resync} onPress={onPress} disabled={isLoading} />
-}
+  const onResync = async () => {
+    const selection = await showConfirmationDialog(confirmationMessages.resync, intl)
+    if (selection === DIALOG_BUTTONS.YES) {
+      resync()
+    }
+  }
 
-const LoadingOverlay = ({loading}: {loading: boolean}) => {
-  return loading ? (
-    <View style={StyleSheet.absoluteFill}>
-      <View style={[StyleSheet.absoluteFill, styles.loadingOverlayBackground]} />
-
-      <View style={[StyleSheet.absoluteFill, styles.loadingOverlayIcon]}>
-        <ActivityIndicator animating size="large" color="black" />
-      </View>
-    </View>
-  ) : null
+  return <PressableSettingsItem label={strings.resync} onPress={onResync} disabled={isLoading} />
 }
 
 const useLogout = (options?: UseMutationOptions<void, Error>) => {
@@ -275,12 +264,5 @@ const useStrings = () => {
 const styles = StyleSheet.create({
   scrollView: {
     backgroundColor: '#fff',
-  },
-  loadingOverlayBackground: {
-    opacity: 0.5,
-  },
-  loadingOverlayIcon: {
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 })
