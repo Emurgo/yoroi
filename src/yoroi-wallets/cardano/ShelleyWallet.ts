@@ -8,6 +8,7 @@ import ExtendableError from 'es6-error'
 import _ from 'lodash'
 import DeviceInfo from 'react-native-device-info'
 
+import {makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../auth'
 import {encryptWithPassword} from '../../Catalyst/catalystCipher'
 import LocalizableError from '../../i18n/LocalizableError'
 import assert from '../../legacy/assert'
@@ -76,6 +77,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
   storage: typeof storageLegacy
   private utxoService: UtxoService
   private utxoStorage: UtxoStorage
+  protected encryptedStorage: WalletEncryptedStorage
   defaultAsset: DefaultAsset
 
   // =================== create =================== //
@@ -89,6 +91,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     const config = this.getBackendConfig()
     this.utxoStorage = generateUtxoStorage(this.storage, `/wallet/${this.id}/utxos`)
     this.utxoService = initUtxo(this.utxoStorage, `${config.API_ROOT}/`)
+    this.encryptedStorage = makeWalletEncryptedStorage(id)
   }
 
   save() {
@@ -173,15 +176,15 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
       isByron(implementationId) || isHaskellShelley(implementationId),
       'ShelleyWallet::create: invalid walletImplementationId',
     )
-    const masterKeyPtr = await generateWalletRootKey(mnemonic)
-    const masterKey: string = Buffer.from(await masterKeyPtr.asBytes()).toString('hex')
-    await this.encryptAndSaveMasterKey('MASTER_PASSWORD', masterKey, newPassword)
+    const rootKeyPtr = await generateWalletRootKey(mnemonic)
+    const rootKey: string = Buffer.from(await rootKeyPtr.asBytes()).toString('hex')
+    await this.encryptAndSaveRootKey(rootKey, newPassword)
     const purpose = isByron(implementationId)
       ? CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.BIP44
       : CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852
 
     const accountKey = await (
-      await (await masterKeyPtr.derive(purpose)).derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO)
+      await (await rootKeyPtr.derive(purpose)).derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO)
     ).derive(CONFIG.NUMBERS.ACCOUNT_INDEX + CONFIG.NUMBERS.HARD_DERIVATION_START)
     const accountPubKey = await accountKey.toPublic()
     const accountPubKeyHex: string = Buffer.from(await accountPubKey.asBytes()).toString('hex')

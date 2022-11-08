@@ -54,8 +54,10 @@ export const remove = async (path: string) => {
   try {
     await AsyncStorage.removeItem(path)
   } catch (error) {
-    throw new StorageError((error as Error).message)
+    console.warn(`Missing storage key ${path}`)
+    return false
   }
+  return true
 }
 
 export const clearAll = async () => {

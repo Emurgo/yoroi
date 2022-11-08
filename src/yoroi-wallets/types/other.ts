@@ -104,7 +104,7 @@ export type V4UnsignedTxAddressedUtxoResponse = {
 export type WalletState = {
   lastGeneratedAddressIndex: number
 }
-export type EncryptionMethod = 'BIOMETRICS' | 'SYSTEM_PIN' | 'MASTER_PASSWORD'
+export type EncryptionMethod = 'SYSTEM_PIN' | 'MASTER_PASSWORD'
 export type PlateResponse = {
   addresses: Array<string>
   accountPlate: CardanoTypes.WalletChecksum

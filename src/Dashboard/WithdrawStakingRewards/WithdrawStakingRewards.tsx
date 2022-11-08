@@ -6,7 +6,6 @@ import Markdown from 'react-native-easy-markdown'
 import {Boundary, DangerousAction, PleaseWaitView, Spacer} from '../../components'
 import {useWithdrawalTx} from '../../hooks'
 import globalMessages, {ledgerMessages} from '../../i18n/global-messages'
-import KeyStore from '../../legacy/KeyStore'
 import {theme} from '../../theme'
 import {YoroiWallet} from '../../yoroi-wallets'
 import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
@@ -14,12 +13,11 @@ import {ConfirmTx} from './ConfirmTx/ConfirmTx'
 
 type Props = {
   wallet: YoroiWallet
-  storage: typeof KeyStore
   onCancel: () => void
   onSuccess: () => void
 }
 
-export const WithdrawStakingRewards = ({wallet, storage, onSuccess, onCancel}: Props) => {
+export const WithdrawStakingRewards = ({wallet, onSuccess, onCancel}: Props) => {
   const strings = useStrings()
   const [state, setState] = React.useState<
     {step: 'form'; withdrawalTx: undefined} | {step: 'confirm'; withdrawalTx: YoroiUnsignedTx}
@@ -35,13 +33,7 @@ export const WithdrawStakingRewards = ({wallet, storage, onSuccess, onCancel}: P
 
       {state.step === 'confirm' && (
         <Route active={true}>
-          <ConfirmTx
-            wallet={wallet}
-            storage={storage}
-            unsignedTx={state.withdrawalTx}
-            onSuccess={onSuccess}
-            onCancel={onCancel}
-          />
+          <ConfirmTx wallet={wallet} unsignedTx={state.withdrawalTx} onSuccess={onSuccess} onCancel={onCancel} />
         </Route>
       )}
     </Boundary>

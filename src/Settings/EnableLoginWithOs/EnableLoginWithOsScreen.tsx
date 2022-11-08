@@ -1,46 +1,55 @@
+import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet} from 'react-native'
-import {useDispatch} from 'react-redux'
 
-import {FingerprintScreenBase} from '../../BiometricAuth'
+import {useAuthOsErrorDecoder, useEnableAuthWithOs} from '../../auth'
 import {Button} from '../../components'
-import {errorMessages} from '../../i18n/global-messages'
-import {setSystemAuth, showErrorDialog} from '../../legacy/actions'
-import {canBiometricEncryptionBeEnabled} from '../../legacy/deviceSettings'
-import {useWalletNavigation} from '../../navigation'
+import globalMessages from '../../i18n/global-messages'
+import {OsAuthScreen} from '../../OsAuth'
+import {useStorage} from '../../Storage'
 
-export const BiometricsLinkScreen = () => {
-  const intl = useIntl()
+export const EnableLoginWithOsScreen = () => {
   const strings = useStrings()
-  const {navigateToSettings} = useWalletNavigation()
-  const dispatch = useDispatch()
+  const navigation = useNavigation()
+  const storage = useStorage()
 
-  const linkBiometricsSignIn = async () => {
-    if (await canBiometricEncryptionBeEnabled()) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ;(dispatch(setSystemAuth(true)) as any)
-        .then(() => navigateToSettings())
-        .catch(() => showErrorDialog(errorMessages.disableEasyConfirmationFirst, intl))
-    } else {
-      await showErrorDialog(errorMessages.enableFingerprintsFirst, intl)
-    }
-  }
-  const cancelLinking = () => navigateToSettings()
+  const decodeAuthOsError = useAuthOsErrorDecoder()
+  const {enableAuthWithOs, isLoading, error} = useEnableAuthWithOs(
+    {
+      storage,
+      authenticationPrompt: {
+        title: strings.authorize,
+        cancel: strings.cancel,
+      },
+    },
+    {
+      onSuccess: () => navigation.goBack(),
+      retry: false,
+    },
+  )
 
   return (
-    <FingerprintScreenBase
+    <OsAuthScreen
       headings={[strings.heading]}
       subHeadings={[strings.subHeading1, strings.subHeading2]}
+      error={decodeAuthOsError(error)}
       buttons={[
         <Button
           key="cancel"
+          disabled={isLoading}
           outline
           title={strings.notNowButton}
-          onPress={cancelLinking}
+          onPress={() => navigation.goBack()}
           containerStyle={styles.cancel}
         />,
-        <Button key="link" title={strings.linkButton} onPress={linkBiometricsSignIn} containerStyle={styles.link} />,
+        <Button
+          disabled={isLoading}
+          key="link"
+          title={strings.linkButton}
+          onPress={() => enableAuthWithOs()}
+          containerStyle={styles.link}
+        />,
       ]}
     />
   )
@@ -50,19 +59,20 @@ const useStrings = () => {
   const intl = useIntl()
 
   return {
+    authorize: intl.formatMessage(messages.authorize),
+    cancel: intl.formatMessage(globalMessages.cancel),
     heading: intl.formatMessage(messages.heading),
     subHeading1: intl.formatMessage(messages.subHeading1),
     subHeading2: intl.formatMessage(messages.subHeading2),
     notNowButton: intl.formatMessage(messages.notNowButton),
     linkButton: intl.formatMessage(messages.linkButton),
-    enableFingerprintsMessage: intl.formatMessage(messages.enableFingerprintsMessage),
   }
 }
 
 const messages = defineMessages({
-  enableFingerprintsMessage: {
-    id: 'components.settings.biometricslinkscreen.enableFingerprintsMessage',
-    defaultMessage: '!!!Enable use of fingerprints in device settings first!',
+  authorize: {
+    id: 'components.send.biometricauthscreen.authorizeOperation',
+    defaultMessage: '!!!Authorize',
   },
   notNowButton: {
     id: 'components.settings.biometricslinkscreen.notNowButton',
