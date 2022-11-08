@@ -68,7 +68,9 @@ export const generateUtxoStorage = (storage: typeof storageLegacy, storagePath: 
       return setUtxoDiffToBestBlock(currentDiffs)
     },
 
-    clearUtxoState: () => storage.remove(storagePath),
+    clearUtxoState: async () => {
+      await storage.remove(storagePath)
+    },
   }
 
   return utxoStorage

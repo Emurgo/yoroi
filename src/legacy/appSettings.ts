@@ -12,10 +12,7 @@ export const APP_SETTINGS_KEYS = {
   CUSTOM_PIN_HASH: 'customPinHash',
   ACCEPTED_TOS: 'acceptedTos',
   LANG: 'languageCode',
-  SYSTEM_AUTH_ENABLED: 'isSystemAuthEnabled',
-  BIOMETRIC_HW_SUPPORT: 'isBiometricHardwareSupported',
   SEND_CRASH_REPORTS: 'sendCrashReports',
-  CAN_ENABLE_BIOMETRIC_ENCRYPTION: 'canEnableBiometricEncryption',
   CURRENT_VERSION: 'currentVersion',
 }
 
