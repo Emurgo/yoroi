@@ -75,6 +75,14 @@ export class TransactionCache {
     this.#subscriptions.forEach((handler) => handler(this.#state.transactions))
   }
 
+  resetState() {
+    this.updateState({
+      perAddressSyncMetadata: {},
+      transactions: {},
+      bestBlockNum: 0,
+    })
+  }
+
   clear() {
     return this.#storage.clear()
   }

@@ -119,6 +119,14 @@ Object {
 }
 `;
 
+exports[`transactionCache create loads from storage 5`] = `Object {}`;
+
+exports[`transactionCache create loads from storage 6`] = `Object {}`;
+
+exports[`transactionCache create loads from storage 7`] = `Object {}`;
+
+exports[`transactionCache create loads from storage 8`] = `Object {}`;
+
 exports[`transactionCache create starts fresh if txids is invalid format 1`] = `Object {}`;
 
 exports[`transactionCache create starts fresh if txids is invalid format 2`] = `Object {}`;
