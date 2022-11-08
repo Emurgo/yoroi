@@ -95,8 +95,9 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     return this.storage.write(`/wallet/${this.id}/data`, this.toJSON())
   }
 
-  clear() {
-    return this.clearUTXOs()
+  async clear() {
+    await this.transactionCache?.clear()
+    await this.clearUTXOs()
   }
 
   private async initialize(
@@ -257,7 +258,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     this.rewardAddressHex = await deriveRewardAddressHex(this.publicKeyHex, this.networkId)
     this.isEasyConfirmationEnabled = data.isEasyConfirmationEnabled
 
-    this.transactionCache = await TransactionCache.create(makeStorageWithPrefix(`/wallet/${walletMeta.id}/txs`))
+    this.transactionCache = await TransactionCache.create(makeStorageWithPrefix(`/wallet/${walletMeta.id}/txs/`))
   }
 
   private integrityCheck(): void {
