@@ -302,13 +302,13 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
 
   async sync() {
     await this.doFullSync()
-    this.save()
+    await this.save()
   }
 
   async resync() {
     await this.clear()
     super.resync()
-    this.save()
+    await this.save()
   }
 
   // =================== utils =================== //
