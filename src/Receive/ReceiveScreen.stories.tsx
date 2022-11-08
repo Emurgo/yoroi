@@ -6,7 +6,20 @@ import {mockWallet} from '../../storybook'
 import {ReceiveScreen} from './ReceiveScreen'
 
 storiesOf('ReceiveScreen', module).add('Default', () => (
-  <SelectedWalletProvider wallet={mockWallet}>
+  <SelectedWalletProvider
+    wallet={{
+      ...mockWallet,
+      numReceiveAddresses: 20,
+      externalAddresses: ['address123', 'address234', 'address345', 'address456'],
+      internalAddresses: ['address123', 'address234', 'address345', 'address456'],
+      isUsedAddressIndex: {
+        address123: true,
+        address234: true,
+        address345: true,
+        address456: false,
+      },
+    }}
+  >
     <ReceiveScreen />
   </SelectedWalletProvider>
 ))

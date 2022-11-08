@@ -1,12 +1,11 @@
+import {fromPairs} from 'lodash'
 import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 import QRCode from 'react-native-qrcode-svg'
-import {useSelector} from 'react-redux'
 
 import {CopyButton, Modal, Spacer, Text} from '../components'
 import {AddressType, formatPath} from '../legacy/commonUtils'
-import {externalAddressIndexSelector, internalAddressIndexSelector} from '../legacy/selectors'
 import {useSelectedWallet} from '../SelectedWallet'
 import {getSpendingKey, getStakingKey} from '../yoroi-wallets/cardano/addressInfo'
 
@@ -86,8 +85,13 @@ type ExternalProps = {
 }
 
 export default (props: ExternalProps) => {
-  const externalIndex: number | undefined = useSelector(externalAddressIndexSelector)[props.address]
-  const internalIndex: number | undefined = useSelector(internalAddressIndexSelector)[props.address]
+  const wallet = useSelectedWallet()
+  const externalIndex: number | undefined = fromPairs(wallet.internalAddresses.map((addr, i) => [addr, i]))[
+    props.address
+  ]
+  const internalIndex: number | undefined = fromPairs(wallet.internalAddresses.map((addr, i) => [addr, i]))[
+    props.address
+  ]
 
   if (externalIndex !== undefined) return <AddressModal path={{account: 0, index: externalIndex, role: 0}} {...props} />
   if (internalIndex !== undefined) return <AddressModal path={{account: 0, index: internalIndex, role: 1}} {...props} />

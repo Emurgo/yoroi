@@ -8,7 +8,8 @@ import {CONFIG} from '../../legacy/config'
 import {useStorage} from '../../Storage'
 import {PinInput, PinInputRef} from '../PinInput'
 
-export const CreatePinInput: React.FC<{onDone: () => void}> = ({onDone}) => {
+type Props = {onDone: () => void}
+export const CreatePinInput = ({onDone}: Props) => {
   const pinInputRef = React.useRef<null | PinInputRef>(null)
   const pinConfirmationInputRef = React.useRef<null | PinInputRef>(null)
 
@@ -58,6 +59,7 @@ export const CreatePinInput: React.FC<{onDone: () => void}> = ({onDone}) => {
       title={strings.pinInputConfirmationTitle}
       pinMaxLength={CONFIG.PIN_LENGTH}
       onDone={onPinConfirmation}
+      onGoBack={() => setStep('pin')}
     />
   )
 }

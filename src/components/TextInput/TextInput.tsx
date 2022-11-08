@@ -132,9 +132,11 @@ const SecureTextEntryToggle = ({showPassword, onPress}: {showPassword: boolean; 
   </AdornmentContainer>
 )
 
-const InputContainer: React.FC = ({children}) => <View style={styles.inputContainer}>{children}</View>
+const InputContainer = ({children}: {children: React.ReactNode}) => (
+  <View style={styles.inputContainer}>{children}</View>
+)
 
-const AdornmentContainer: React.FC<ViewProps> = ({style, children}) => (
+const AdornmentContainer = ({style, children}: ViewProps) => (
   <View style={[styles.adornmentContainer, style]}>{children}</View>
 )
 

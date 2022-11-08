@@ -8,13 +8,9 @@
  *   0 if A = B,
  *  -1 if A < B
  */
-export const versionCompare = (versionA: string, versionB: string): number => {
-  for (const s of [versionA, versionB]) {
-    const re = /^\d+(.\d+){0,2}$/ // only accept numbers and dots
-    if (!(typeof s === 'string' || (s as unknown) instanceof String) || !s.match(re)) {
-      throw new Error(`versionCompare: invalid argument ${s}`)
-    }
-  }
+export type Version = `${number}.${number}.${number}` | `${number}.${number}` | `${number}`
+
+export const versionCompare = (versionA: Version, versionB: Version): number => {
   const chunksA = versionA.split(/\./g, 3)
   const chunksB = versionB.split(/\./g, 3)
 

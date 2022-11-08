@@ -1,6 +1,6 @@
+import {WALLET_IMPLEMENTATION_REGISTRY} from '../yoroi-wallets/types/other'
 import {decryptData, encryptData, formatPath, generateAdaMnemonic, generateWalletRootKey} from './commonUtils'
-import {WrongPassword} from './errors'
-import {WALLET_IMPLEMENTATION_REGISTRY} from './types'
+import {CardanoError} from './errors'
 
 const mnemonic = [
   'dry balcony arctic what garbage sort',
@@ -26,19 +26,19 @@ describe('BIP39', () => {
 })
 
 describe('encryption/decryption', () => {
-  it('Can encrypt / decrypt masterKey', async () => {
+  it('Can encrypt / decrypt rootKey', async () => {
     expect.assertions(1)
-    const masterKeyPtr = await generateWalletRootKey(mnemonic)
-    const masterKey = Buffer.from(await masterKeyPtr.asBytes()).toString('hex')
-    const encryptedKey = await encryptData(masterKey, 'password')
+    const rootKeyPtr = await generateWalletRootKey(mnemonic)
+    const rootKey = Buffer.from(await rootKeyPtr.asBytes()).toString('hex')
+    const encryptedKey = await encryptData(rootKey, 'password')
     const decryptedKey = await decryptData(encryptedKey, 'password')
-    expect(masterKey).toEqual(decryptedKey)
+    expect(rootKey).toEqual(decryptedKey)
   })
 
   it('Throws on wrong password', async () => {
     expect.assertions(1)
     const encryptedData = await encryptData('308f9977d04e7f3a45abd148905c628e2bb2621360a585f352', 'password')
-    await expect(decryptData(encryptedData, 'wrong-password')).rejects.toThrow(WrongPassword)
+    await expect(decryptData(encryptedData, 'wrong-password')).rejects.toThrow(CardanoError)
   })
 
   it('Can decrypt data encrypted with rust v2 library', async () => {

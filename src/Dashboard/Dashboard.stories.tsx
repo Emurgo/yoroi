@@ -1,14 +1,13 @@
 import {storiesOf} from '@storybook/react-native'
 import BigNumber from 'bignumber.js'
 import React from 'react'
-import {QueryClient, QueryClientProvider} from 'react-query'
 import {Provider} from 'react-redux'
 
-import {mockWallet, poolInfoAndHistory, stakePoolId} from '../../storybook'
+import {mockWallet, poolInfoAndHistory, QueryProvider, stakePoolId} from '../../storybook'
 import getConfiguredStore from '../legacy/configureStore'
 import {SelectedWalletProvider} from '../SelectedWallet'
-import {StakePoolInfosAndHistories} from '../types'
 import {YoroiWallet} from '../yoroi-wallets'
+import {StakePoolInfosAndHistories} from '../yoroi-wallets/types'
 import {Dashboard} from './Dashboard'
 
 const mockedAccountState = {
@@ -30,13 +29,13 @@ storiesOf('Dashboard', module)
     }
 
     return (
-      <QueryClientProvider client={new QueryClient()}>
+      <QueryProvider>
         <Provider store={store}>
           <SelectedWalletProvider wallet={notDelegatingWallet}>
             <Dashboard />
           </SelectedWalletProvider>
         </Provider>
-      </QueryClientProvider>
+      </QueryProvider>
     )
   })
   .add('Loading ids', () => {
@@ -50,13 +49,13 @@ storiesOf('Dashboard', module)
     }
 
     return (
-      <QueryClientProvider client={new QueryClient()}>
+      <QueryProvider>
         <Provider store={store}>
           <SelectedWalletProvider wallet={loadingWallet}>
             <Dashboard />
           </SelectedWalletProvider>
         </Provider>
-      </QueryClientProvider>
+      </QueryProvider>
     )
   })
   .add('Loading StakePoolInfo', () => {
@@ -71,13 +70,13 @@ storiesOf('Dashboard', module)
     }
 
     return (
-      <QueryClientProvider client={new QueryClient()}>
+      <QueryProvider>
         <Provider store={store}>
           <SelectedWalletProvider wallet={loadingWallet}>
             <Dashboard />
           </SelectedWalletProvider>
         </Provider>
-      </QueryClientProvider>
+      </QueryProvider>
     )
   })
   .add('Loaded, StakePoolInfo success', () => {
@@ -92,13 +91,13 @@ storiesOf('Dashboard', module)
     }
 
     return (
-      <QueryClientProvider client={new QueryClient()}>
+      <QueryProvider>
         <Provider store={store}>
           <SelectedWalletProvider wallet={loadedWallet}>
             <Dashboard />
           </SelectedWalletProvider>
         </Provider>
-      </QueryClientProvider>
+      </QueryProvider>
     )
   })
   .add('Error', () => {
@@ -113,13 +112,13 @@ storiesOf('Dashboard', module)
     }
 
     return (
-      <QueryClientProvider client={new QueryClient()}>
+      <QueryProvider>
         <Provider store={store}>
           <SelectedWalletProvider wallet={loadedWallet}>
             <Dashboard />
           </SelectedWalletProvider>
         </Provider>
-      </QueryClientProvider>
+      </QueryProvider>
     )
   })
   .add('Loaded, StakePoolInfo not found', () => {
@@ -134,12 +133,12 @@ storiesOf('Dashboard', module)
     }
 
     return (
-      <QueryClientProvider client={new QueryClient()}>
+      <QueryProvider>
         <Provider store={store}>
           <SelectedWalletProvider wallet={loadedWallet}>
             <Dashboard />
           </SelectedWalletProvider>
         </Provider>
-      </QueryClientProvider>
+      </QueryProvider>
     )
   })

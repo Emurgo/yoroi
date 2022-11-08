@@ -1,11 +1,11 @@
+import {fromPairs} from 'lodash'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import {useSelector} from 'react-redux'
 
 import {CopyButton, Icon, Spacer, Text} from '../components'
-import {externalAddressIndexSelector, isUsedAddressIndexSelector, receiveAddressesSelector} from '../legacy/selectors'
 import {isEmptyString} from '../legacy/utils'
+import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
 import AddressModal from './AddressModal'
 
@@ -173,21 +173,24 @@ const useStrings = () => {
 }
 
 const useAddressIndex = (address: string) => {
-  const index = useSelector(externalAddressIndexSelector)[address]
+  const wallet = useSelectedWallet()
+  const index = fromPairs(wallet.externalAddresses.map((addr, i) => [addr, i]))[address]
 
   return index
 }
 
 const useUnusedAddresses = () => {
-  const receiveAddresses = useSelector(receiveAddressesSelector)
-  const isUsedAddressIndex = useSelector(isUsedAddressIndexSelector)
+  const wallet = useSelectedWallet()
+  const receiveAddresses = wallet.externalAddresses.slice(0, wallet.numReceiveAddresses)
+  const isUsedAddressIndex = wallet.isUsedAddressIndex
 
-  return receiveAddresses.filter((address) => !isUsedAddressIndex[address])
+  return receiveAddresses.filter((address) => isUsedAddressIndex[address] !== true)
 }
 
 const useUsedAddresses = () => {
-  const receiveAddresses = useSelector(receiveAddressesSelector)
-  const isUsedAddressIndex = useSelector(isUsedAddressIndexSelector)
+  const wallet = useSelectedWallet()
+  const receiveAddresses = wallet.externalAddresses.slice(0, wallet.numReceiveAddresses)
+  const isUsedAddressIndex = wallet.isUsedAddressIndex
 
   return receiveAddresses.filter((address) => isUsedAddressIndex[address])
 }

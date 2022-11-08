@@ -25,7 +25,7 @@ import type {DeviceId, DeviceObj} from '../../legacy/ledgerUtils'
 import {BluetoothDisabledError, RejectedByUserError} from '../../legacy/ledgerUtils'
 import {Logger} from '../../legacy/logging'
 import {COLORS, spacing} from '../../theme'
-import {Device} from '../../types'
+import {Device} from '../../yoroi-wallets/types'
 import {DeviceItem} from './DeviceItem'
 
 type Props = {

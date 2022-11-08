@@ -1,14 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import storage from '@react-native-async-storage/async-storage'
 import bluebird from 'bluebird'
 import React from 'react'
 import {createIntl, createIntlCache} from 'react-intl'
 import {AppRegistry, LogBox} from 'react-native'
+import DeviceInfo from 'react-native-device-info'
 import {QueryClient, QueryClientProvider} from 'react-query'
 import {Provider} from 'react-redux'
 
 import App from './App'
 import {name as appName} from './app.json'
-import {Boundary} from './components'
+import {migrateAuthSetting} from './auth'
+import {LoadingBoundary} from './components'
 import {ErrorBoundary} from './components/ErrorBoundary'
 import {LanguageProvider} from './i18n'
 import translations from './i18n/translations'
@@ -20,6 +23,9 @@ import {Logger, setLogLevel} from './legacy/logging'
 import {isEmptyString} from './legacy/utils'
 import {CurrencyProvider} from './Settings/Currency/CurrencyContext'
 import {ThemeProvider} from './theme'
+import {WalletManagerProvider} from './WalletManager'
+import {walletManager} from './yoroi-wallets'
+import {Version, versionCompare} from './yoroi-wallets/utils/versioning'
 
 setLogLevel(CONFIG.LOG_LEVEL)
 
@@ -63,23 +69,45 @@ store.dispatch(setupHooks() as any)
 const queryClient = new QueryClient()
 
 const AppWithProviders = () => {
-  return (
-    <ErrorBoundary>
-      <Provider store={store}>
-        <QueryClientProvider client={queryClient}>
-          <Boundary>
-            <ThemeProvider>
-              <LanguageProvider>
-                <CurrencyProvider>
-                  <App />
-                </CurrencyProvider>
-              </LanguageProvider>
-            </ThemeProvider>
-          </Boundary>
-        </QueryClientProvider>
-      </Provider>
-    </ErrorBoundary>
-  )
+  const migrated = useMigrations()
+  return migrated ? (
+    <WalletManagerProvider walletManager={walletManager}>
+      <ErrorBoundary>
+        <Provider store={store}>
+          <QueryClientProvider client={queryClient}>
+            <LoadingBoundary>
+              <ThemeProvider>
+                <LanguageProvider>
+                  <CurrencyProvider>
+                    <App />
+                  </CurrencyProvider>
+                </LanguageProvider>
+              </ThemeProvider>
+            </LoadingBoundary>
+          </QueryClientProvider>
+        </Provider>
+      </ErrorBoundary>
+    </WalletManagerProvider>
+  ) : null
 }
 
 AppRegistry.registerComponent(appName, () => AppWithProviders)
+
+const useMigrations = () => {
+  const [done, setDone] = React.useState(false)
+  React.useEffect(() => {
+    const runMigrations = async () => {
+      const version = DeviceInfo.getVersion() as Version
+      const before4_8_0 = versionCompare(version, '4.8.0') === -1
+
+      // asc order
+      // 4.8.0
+      if (before4_8_0) await migrateAuthSetting(storage) // old auth settings
+
+      setDone(true)
+    }
+    runMigrations()
+  }, [])
+
+  return done
+}

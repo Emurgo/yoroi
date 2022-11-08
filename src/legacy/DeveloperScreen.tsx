@@ -3,7 +3,9 @@ import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {Alert, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity} from 'react-native'
 import config from 'react-native-config'
+import * as Keychain from 'react-native-keychain'
 
+import {useAuth} from '../auth/AuthProvider'
 import {Button, StatusBar, Text, TextInput} from '../components'
 import {useCreateWallet} from '../hooks'
 import {AppRoutes, useWalletNavigation} from '../navigation'
@@ -44,12 +46,11 @@ const crash = () => {
 
 export const DeveloperScreen = () => {
   const navigation = useNavigation()
+  const {logout} = useAuth()
   const {resetToWalletSelection} = useWalletNavigation()
   const {createWallet, isLoading} = useCreateWallet({
     onSuccess: async () => {
-      resetToWalletSelection({
-        reopen: true,
-      })
+      resetToWalletSelection()
     },
   })
   const [wallet] = useSelectedWalletContext()
@@ -74,6 +75,19 @@ export const DeveloperScreen = () => {
         <TouchableOpacity onPress={crash}>
           <Text style={styles.link}>Crash</Text>
         </TouchableOpacity>
+        <Button
+          title="All kc"
+          style={styles.button}
+          onPress={() => Keychain.getAllGenericPasswordServices().then(console.log)}
+        />
+        <Button
+          title="Logout"
+          style={styles.button}
+          onPress={() => {
+            logout()
+            navigation.goBack()
+          }}
+        />
         <Button
           disabled={isLoading}
           style={styles.button}
@@ -164,9 +178,7 @@ export const DeveloperScreen = () => {
                   })
                   .then(() => {
                     Alert.alert('Success', 'Addresses updated')
-                    resetToWalletSelection({
-                      reopen: true,
-                    })
+                    resetToWalletSelection()
                   })
                   .catch((e) => {
                     Alert.alert('Error', e)

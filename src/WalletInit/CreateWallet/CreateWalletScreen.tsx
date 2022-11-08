@@ -33,7 +33,7 @@ export const CreateWalletScreen = () => {
     assert(!isEmptyString(name), 'Wallet name is required')
     assert(!isEmptyString(password), 'Password is required')
 
-    navigation.navigate('mnemoinc-show', {
+    navigation.navigate('mnemonic-show', {
       mnemonic,
       networkId,
       walletImplementationId,

@@ -19,8 +19,8 @@ const externalAddresses = [
 test('Can generate external addresses', async () => {
   expect.assertions(1)
 
-  const masterKey = await getMasterKeyFromMnemonic(mnemonic)
-  const account = await getAccountFromMasterKey(masterKey, CONFIG.NUMBERS.ACCOUNT_INDEX)
+  const rootKey = await getMasterKeyFromMnemonic(mnemonic)
+  const account = await getAccountFromMasterKey(rootKey, CONFIG.NUMBERS.ACCOUNT_INDEX)
   const addresses = await getExternalAddresses(account, [0, 1], BYRON_PROTOCOL_MAGIC)
 
   expect(addresses).toEqual(externalAddresses)
@@ -40,5 +40,5 @@ test('Throws error when converting bad address', () => {
 
 test('Make sure that we are using safe buffers', () => {
   // in response to https://github.com/nodejs/node/issues/4660
-  expect(new Buffer(10).toString('hex')).toBe('00000000000000000000')
+  expect(Buffer.alloc(10).toString('hex')).toBe('00000000000000000000')
 })

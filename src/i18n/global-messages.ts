@@ -1,6 +1,6 @@
 import {defineMessages} from 'react-intl'
 
-import {supportedCurrencies} from '../legacy/types'
+import {supportedCurrencies} from '../yoroi-wallets/types/other'
 
 /*
  * Some messages need to be used in multiple components
@@ -257,7 +257,7 @@ export const errorMessages = {
       defaultMessage: '!!!Password you provided is incorrect.',
     },
   }),
-  biometricsIsTurnedOff: defineMessages({
+  authOsIsTurnedOff: defineMessages({
     title: {
       id: 'global.actions.dialogs.biometricsIsTurnedOff.title',
       defaultMessage: '!!!Biometrics was turned off',
@@ -664,5 +664,13 @@ export default defineMessages({
   next: {
     id: 'global.next',
     defaultMessage: '!!!Next',
+  },
+  error: {
+    id: 'global.error',
+    defaultMessage: '!!!Error',
+  },
+  cancel: {
+    id: 'global.cancel',
+    defaultMessage: '!!!Cancel',
   },
 })

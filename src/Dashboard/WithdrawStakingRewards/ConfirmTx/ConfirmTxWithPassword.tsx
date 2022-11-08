@@ -6,26 +6,23 @@ import {TextInput, TwoActionView} from '../../../components'
 import {useSignWithPasswordAndSubmitTx} from '../../../hooks'
 import {confirmationMessages, txLabels} from '../../../i18n/global-messages'
 import {CONFIG} from '../../../legacy/config'
-import KeyStore from '../../../legacy/KeyStore'
 import {YoroiWallet} from '../../../yoroi-wallets'
 import {YoroiUnsignedTx} from '../../../yoroi-wallets/types'
 import {TransferSummary} from '../TransferSummary'
 
 type Props = {
   wallet: YoroiWallet
-  storage: typeof KeyStore
   unsignedTx: YoroiUnsignedTx
   onCancel: () => void
   onSuccess: () => void
 }
 
-export const ConfirmTxWithPassword: React.FC<Props> = ({wallet, storage, onSuccess, onCancel, unsignedTx}) => {
-  const intl = useIntl()
+export const ConfirmTxWithPassword = ({wallet, onSuccess, onCancel, unsignedTx}: Props) => {
   const strings = useStrings()
   const [password, setPassword] = React.useState(CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '')
 
   const {signAndSubmitTx, isLoading} = useSignWithPasswordAndSubmitTx(
-    {wallet, storage}, //
+    {wallet}, //
     {submitTx: {onSuccess}},
   )
 
@@ -36,7 +33,7 @@ export const ConfirmTxWithPassword: React.FC<Props> = ({wallet, storage, onSucce
         primaryButton={{
           disabled: isLoading,
           label: strings.confirmButton,
-          onPress: () => signAndSubmitTx({unsignedTx, password, intl}),
+          onPress: () => signAndSubmitTx({unsignedTx, password}),
           testID: 'confirmTxButton',
         }}
         secondaryButton={{

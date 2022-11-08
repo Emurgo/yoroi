@@ -1,21 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import _ from 'lodash'
-import type {IntlShape} from 'react-intl'
 import {defaultMemoize} from 'reselect'
 
-import * as api from '../legacy/api'
+import {EncryptedStorage, EncryptedStorageKeys} from '../auth'
+import {Keychain} from '../auth/Keychain'
 import assert from '../legacy/assert'
 import {CONFIG} from '../legacy/config'
-import {Transaction} from '../legacy/HistoryTransaction'
-import KeyStore from '../legacy/KeyStore'
 import type {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {Logger} from '../legacy/logging'
 import {getCardanoNetworkConfigById, isJormungandr} from '../legacy/networks'
 import {IsLockedError, nonblockingSynchronize, synchronize} from '../legacy/promise'
-import type {BackendConfig, EncryptionMethod} from '../legacy/types'
 import {CardanoTypes, NetworkId, WalletImplementationId, YoroiProvider} from './cardano'
+import * as api from './cardano/api'
 import {AddressChain, AddressChainJSON, Addresses} from './cardano/chain'
-import {TransactionCache, TransactionCacheJSON} from './cardano/shelley/transactionCache'
+import {TransactionCache} from './cardano/shelley/transactionCache'
+import type {BackendConfig, Transaction} from './types/other'
 import {validatePassword} from './utils/validators'
 
 type WalletState = {
@@ -39,8 +38,6 @@ export type ShelleyWalletJSON = {
   lastGeneratedAddressIndex: number
   internalChain: AddressChainJSON
   externalChain: AddressChainJSON
-
-  transactionCache: TransactionCacheJSON
 }
 
 export type ByronWalletJSON = Omit<ShelleyWalletJSON, 'account'>
@@ -141,50 +138,44 @@ export class Wallet {
   }
 
   // ============ security & key management ============ //
+  async encryptAndSaveRootKey(rootKey: string, password: string) {
+    if (this.id != null) return EncryptedStorage.write(EncryptedStorageKeys.rootKey(this.id), rootKey, password)
 
-  encryptAndSaveMasterKey(encryptionMethod: 'BIOMETRICS', masterKey: string): Promise<void>
-  encryptAndSaveMasterKey(encryptionMethod: 'SYSTEM_PIN', masterKey: string): Promise<void>
-  encryptAndSaveMasterKey(encryptionMethod: 'MASTER_PASSWORD', masterKey: string, password: string): Promise<void>
-  async encryptAndSaveMasterKey(encryptionMethod: EncryptionMethod, masterKey: string, password?: string) {
-    if (!this.id) throw new Error('invalid wallet state')
-    if (encryptionMethod === 'MASTER_PASSWORD') {
-      if (!password) throw new Error('password is required')
-      await KeyStore.storeData(this.id, 'MASTER_PASSWORD', masterKey, password)
-    }
-    if (encryptionMethod === 'BIOMETRICS') {
-      await KeyStore.storeData(this.id, encryptionMethod, masterKey)
-    }
-    if (encryptionMethod === 'SYSTEM_PIN') {
-      await KeyStore.storeData(this.id, encryptionMethod, masterKey)
-    }
+    throw new Error('invalid wallet state')
   }
 
-  async getDecryptedMasterKey(masterPassword: string, intl: IntlShape) {
-    if (!this.id) throw new Error('invalid wallet state')
-    return KeyStore.getData(this.id, 'MASTER_PASSWORD', '', masterPassword, intl)
+  async getDecryptedRootKey(password: string) {
+    if (this.id != null) return EncryptedStorage.read(EncryptedStorageKeys.rootKey(this.id), password)
+
+    throw new Error('invalid wallet state')
   }
 
-  async enableEasyConfirmation(masterPassword: string, intl: IntlShape) {
-    const decryptedMasterKey = await this.getDecryptedMasterKey(masterPassword, intl)
+  async enableEasyConfirmation(rootKey: string) {
+    if (!this.id) throw new Error('invalid wallet state')
 
-    await this.encryptAndSaveMasterKey('BIOMETRICS', decryptedMasterKey)
-    await this.encryptAndSaveMasterKey('SYSTEM_PIN', decryptedMasterKey)
-
+    await Keychain.setWalletKey(this.id, rootKey)
     this.isEasyConfirmationEnabled = true
 
     this.notify({type: 'easy-confirmation', enabled: this.isEasyConfirmationEnabled})
   }
 
-  async changePassword(masterPassword: string, newPassword: string, intl: IntlShape) {
-    const isNewPasswordValid = _.isEmpty(validatePassword(newPassword, newPassword))
+  async disableEasyConfirmation() {
+    if (!this.id) throw new Error('invalid wallet state')
 
-    if (!isNewPasswordValid) {
-      throw new Error('New password is not valid')
-    }
+    await Keychain.removeWalletKey(this.id)
+    this.isEasyConfirmationEnabled = false
 
-    const masterKey = await this.getDecryptedMasterKey(masterPassword, intl)
+    this.notify({type: 'easy-confirmation', enabled: this.isEasyConfirmationEnabled})
+  }
 
-    await this.encryptAndSaveMasterKey('MASTER_PASSWORD', masterKey, newPassword)
+  async changePassword(oldPassword: string, newPassword: string) {
+    if (!this.id) throw new Error('invalid wallet state')
+
+    if (!_.isEmpty(validatePassword(newPassword, newPassword))) throw new Error('New password is not valid')
+
+    const key = EncryptedStorageKeys.rootKey(this.id)
+    const rootKey = await EncryptedStorage.read(key, oldPassword)
+    return EncryptedStorage.write(key, rootKey, newPassword)
   }
 
   // =================== subscriptions =================== //
@@ -206,8 +197,12 @@ export class Wallet {
     this._onTxHistoryUpdateSubscriptions.forEach((handler) => handler(this))
   }
 
-  subscribeOnTxHistoryUpdate(handler: () => void) {
-    this._onTxHistoryUpdateSubscriptions.push(handler)
+  subscribeOnTxHistoryUpdate(subscription: () => void) {
+    this._onTxHistoryUpdateSubscriptions.push(subscription)
+
+    return () => {
+      this._onTxHistoryUpdateSubscriptions = this._onTxHistoryUpdateSubscriptions.filter((sub) => sub !== subscription)
+    }
   }
 
   setupSubscriptions() {
@@ -216,7 +211,7 @@ export class Wallet {
     if (!this.transactionCache) throw new Error('invalid wallet state')
 
     this.transactionCache.subscribe(() => this.notify({type: 'transactions', transactions: this.transactions}))
-    this.transactionCache.subscribeOnTxHistoryUpdate(this.notifyOnTxHistoryUpdate)
+    this.transactionCache.subscribe(this.notifyOnTxHistoryUpdate)
     this.internalChain.addSubscriberToNewAddresses(() =>
       this.notify({type: 'addresses', addresses: this.internalAddresses}),
     )
@@ -234,11 +229,9 @@ export class Wallet {
   async tryDoFullSync() {
     try {
       return await nonblockingSynchronize(this._doFullSyncMutex, () => this._doFullSync())
-    } catch (e) {
-      if (e instanceof IsLockedError) {
-        return null
-      } else {
-        throw e
+    } catch (error) {
+      if (!(error instanceof IsLockedError)) {
+        throw error
       }
     }
   }
@@ -294,7 +287,6 @@ export class Wallet {
     if (lastUsedIndex > this.state.lastGeneratedAddressIndex) {
       this.state.lastGeneratedAddressIndex = lastUsedIndex
     }
-    return this.transactionCache.transactions
   }
 
   resync() {
@@ -358,7 +350,6 @@ export class Wallet {
     if (this.internalAddresses == null) throw new Error('invalid WalletJSON: internalAddresses')
     if (this.externalChain == null) throw new Error('invalid WalletJSON: externalChain')
     if (this.internalChain == null) throw new Error('invalid WalletJSON: internalChain')
-    if (this.transactionCache == null) throw new Error('invalid WalletJSON: transactionCache')
 
     return {
       lastGeneratedAddressIndex: this.state.lastGeneratedAddressIndex,
@@ -366,7 +357,6 @@ export class Wallet {
       version: this.version,
       internalChain: this.internalChain.toJSON(),
       externalChain: this.externalChain.toJSON(),
-      transactionCache: this.transactionCache.toJSON(),
       networkId: this.networkId,
       walletImplementationId: this.walletImplementationId,
       isHW: this.isHW,

@@ -4,18 +4,20 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useDisableEasyConfirmation} from '../../auth'
 import {Button, StatusBar, Text} from '../../components'
-import {useDisableEasyConfirmation} from '../../hooks'
-import {useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../SelectedWallet'
+import {LoadingOverlay} from '../../components/LoadingOverlay'
+import {useSelectedWallet, useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../SelectedWallet'
 
 export const DisableEasyConfirmationScreen = () => {
   const strings = useStrings()
   const navigation = useNavigation()
+  const wallet = useSelectedWallet()
   const walletMeta = useSelectedWalletMeta()
   const setSelectedWalletMeta = useSetSelectedWalletMeta()
-  const {disableEasyConfirmation, isLoading} = useDisableEasyConfirmation({
+  if (!walletMeta) throw new Error('Missing walletMeta')
+  const {disableEasyConfirmation, isLoading} = useDisableEasyConfirmation(wallet, {
     onSuccess: () => {
-      if (!walletMeta) throw new Error('Missing walletMeta')
       setSelectedWalletMeta({
         ...walletMeta,
         isEasyConfirmationEnabled: false,
@@ -35,6 +37,8 @@ export const DisableEasyConfirmationScreen = () => {
       <View style={styles.actions}>
         <Button title={strings.disableButton} onPress={() => disableEasyConfirmation()} disabled={isLoading} />
       </View>
+
+      <LoadingOverlay loading={isLoading} />
     </SafeAreaView>
   )
 }

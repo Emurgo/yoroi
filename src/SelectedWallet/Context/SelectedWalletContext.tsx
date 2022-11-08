@@ -8,7 +8,7 @@ type SelectedWalletContext = readonly [SelectedWallet | undefined, SetSelectedWa
 
 const SelectedWalletContext = React.createContext<SelectedWalletContext | undefined>(undefined)
 
-export const SelectedWalletProvider: React.FC<{wallet?: SelectedWallet}> = ({children, wallet}) => {
+export const SelectedWalletProvider = ({children, wallet}: {wallet?: SelectedWallet; children: React.ReactNode}) => {
   const [selectedWallet, selectWallet] = React.useState<SelectedWallet | undefined>(wallet)
 
   return (
@@ -34,7 +34,13 @@ export const useSetSelectedWallet = () => {
   return setSelectedWallet
 }
 
-export const SelectedWalletBoundary: React.FC<{fallback?: React.ReactNode}> = ({children, fallback = null}) => {
+export const SelectedWalletBoundary = ({
+  children,
+  fallback = null,
+}: {
+  fallback?: React.ReactNode
+  children: React.ReactNode
+}) => {
   const [wallet] = useSelectedWalletContext()
 
   if (!wallet) return <>{fallback}</>

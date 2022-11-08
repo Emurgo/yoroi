@@ -10,6 +10,7 @@ import globalMessages from '../../i18n/global-messages'
 import {isEmptyString} from '../../legacy/utils'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
+import {useWalletManager} from '../../WalletManager'
 import {getWalletNameError, validateWalletName} from '../../yoroi-wallets/utils/validators'
 
 export const ChangeWalletName = () => {
@@ -20,7 +21,8 @@ export const ChangeWalletName = () => {
   const walletName = useWalletName(wallet)
   const {renameWallet, isLoading} = useChangeWalletName(wallet, {onSuccess: () => navigation.goBack()})
 
-  const walletNames = useWalletNames()
+  const walletManager = useWalletManager()
+  const {walletNames} = useWalletNames(walletManager)
   const [newWalletName, setNewWalletName] = React.useState(walletName ?? '')
   const validationErrors = validateWalletName(newWalletName, walletName ?? null, walletNames || [])
   const hasErrors = Object.keys(validationErrors).length > 0

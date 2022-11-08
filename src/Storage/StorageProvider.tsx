@@ -3,7 +3,7 @@ import React from 'react'
 
 export type Storage = typeof AsyncStorage
 const StorageContext = React.createContext<undefined | Storage>(undefined)
-export const StorageProvider: React.FC<{storage?: Storage}> = ({children, storage = AsyncStorage}) => {
+export const StorageProvider = ({children, storage = AsyncStorage}: {storage?: Storage; children: React.ReactNode}) => {
   return <StorageContext.Provider value={storage}>{children}</StorageContext.Provider>
 }
 

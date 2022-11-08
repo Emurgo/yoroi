@@ -1,13 +1,11 @@
 import {NavigatorScreenParams, useNavigation, useRoute} from '@react-navigation/native'
 import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/stack'
-import {IntlShape} from 'react-intl'
 import {Platform} from 'react-native'
 
 import {HWDeviceInfo} from './legacy/ledgerUtils'
-import type {RawUtxo} from './legacy/types'
 import {COLORS} from './theme'
 import {NetworkId, WalletImplementationId, YoroiProvider} from './yoroi-wallets'
-import {Quantity, YoroiAmounts, YoroiUnsignedTx} from './yoroi-wallets/types'
+import {YoroiUnsignedTx} from './yoroi-wallets/types'
 
 // prettier-ignore
 export const useUnsafeParams = <Params, >() => {
@@ -62,14 +60,6 @@ export const defaultStackNavigationOptions: StackNavigationOptions = {
 }
 
 // ROUTES
-export type BiometricParams = {
-  onSuccess: (decryptedKey: string) => void | Promise<void>
-  onFail?: (reason: string, intl: IntlShape) => void | Promise<void>
-  keyId: string
-  addWelcomeMessage?: boolean
-  instructions?: string[]
-}
-
 export type WalletTabRoutes = {
   history: NavigatorScreenParams<TxHistoryRoutes>
   'send-ada': NavigatorScreenParams<SendRoutes>
@@ -79,12 +69,11 @@ export type WalletTabRoutes = {
   menu: NavigatorScreenParams<MenuRoutes>
 }
 
-export type WalletSelectionParams = undefined | {reopen: boolean}
 export type WalletStackRoutes = {
-  'wallet-selection': WalletSelectionParams
+  'wallet-selection': undefined
   'main-wallet-routes': NavigatorScreenParams<WalletTabRoutes>
   settings: NavigatorScreenParams<SettingsStackRoutes>
-  'catalyst-router': NavigatorScreenParams<CatalystRoutes>
+  'voting-registration': NavigatorScreenParams<VotingRegistrationRoutes>
 }
 export type WalletStackRouteNavigation = StackNavigationProp<WalletStackRoutes>
 
@@ -130,7 +119,7 @@ export type WalletInitRoutes = {
     walletImplementationId: WalletImplementationId
     hwDeviceInfo: HWDeviceInfo
   }
-  'mnemoinc-show': {
+  'mnemonic-show': {
     networkId: NetworkId
     walletImplementationId: WalletImplementationId
     provider: YoroiProvider
@@ -181,8 +170,7 @@ export type TxHistoryRouteNavigation = StackNavigationProp<TxHistoryRoutes>
 export type StakingCenterRoutes = {
   'staking-center-main': undefined
   'delegation-confirmation': {
-    poolName: string
-    poolHash: string
+    poolId: string
     yoroiUnsignedTx: YoroiUnsignedTx
   }
 }
@@ -198,7 +186,7 @@ export type SettingsStackRoutes = {
   'change-wallet-name': undefined
   'terms-of-use': undefined
   support: undefined
-  'fingerprint-link': undefined
+  'enable-login-with-os': undefined
   'remove-wallet': undefined
   'change-language': undefined
   'change-currency': undefined
@@ -206,7 +194,7 @@ export type SettingsStackRoutes = {
   'disable-easy-confirmation': undefined
   'change-password': undefined
   'change-custom-pin': undefined
-  'setup-custom-pin': {
+  'enable-login-with-pin': {
     onSuccess: () => void | Promise<void>
   }
 }
@@ -214,13 +202,6 @@ export type SettingsRouteNavigation = StackNavigationProp<SettingsStackRoutes>
 
 export type SendConfirmParams = {
   yoroiUnsignedTx: YoroiUnsignedTx
-  defaultAssetAmount: Quantity
-  address: string
-  balanceAfterTx: Quantity | null
-  availableAmount: Quantity
-  fee: Quantity | null
-  selectedTokens: YoroiAmounts
-  utxos: RawUtxo[]
 }
 export type SendRoutes = {
   'send-ada-main': undefined
@@ -236,26 +217,26 @@ export type DashboardRoutes = {
   'delegation-confirmation': undefined
 }
 
-export type CatalystRoutes = {
-  'catalyst-landing': undefined
-  'catalyst-generate-pin': undefined
-  'catalyst-confirm-pin': undefined
-  'catalyst-generate-trx': undefined
-  'catalyst-transaction': undefined
-  'catalyst-qr-code': undefined
+export type VotingRegistrationRoutes = {
+  'download-catalyst': undefined
+  'display-pin': undefined
+  'confirm-pin': undefined
+  'create-tx': undefined
+  'confirm-tx': undefined
+  'qr-code': undefined
 }
-export type CatalystRouteNavigation = StackNavigationProp<CatalystRoutes>
+export type VotingRegistrationRouteNavigation = StackNavigationProp<VotingRegistrationRoutes>
 
 export type FirstRunRoutes = {
   'language-pick': undefined
   'accept-terms-of-service': undefined
-  'custom-pin': undefined
+  'enable-login-with-pin': undefined
 }
 export type FirstRunRouteNavigation = StackNavigationProp<FirstRunRoutes>
 
 export type MenuRoutes = {
   menu: undefined
-  'catalyst-voting': undefined
+  'voting-registration': undefined
 }
 
 export type AppRoutes = {
@@ -266,9 +247,8 @@ export type AppRoutes = {
   'new-wallet': NavigatorScreenParams<WalletInitRoutes>
   'app-root': NavigatorScreenParams<WalletStackRoutes>
   'custom-pin-auth': undefined
-  'bio-auth-initial': BiometricParams
-  biometrics: BiometricParams
-  'setup-custom-pin': undefined
+  'bio-auth-initial': undefined
+  'enable-login-with-pin': undefined
 }
 export type AppRouteNavigation = StackNavigationProp<AppRoutes>
 
@@ -312,14 +292,14 @@ export const useWalletNavigation = () => {
     })
   }
 
-  const resetToWalletSelection = (params?: WalletSelectionParams) => {
+  const resetToWalletSelection = () => {
     navigation.reset({
       index: 0,
       routes: [
         {
           name: 'app-root',
           state: {
-            routes: [{name: 'wallet-selection', params}],
+            routes: [{name: 'wallet-selection'}],
           },
         },
       ],

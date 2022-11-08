@@ -6,7 +6,7 @@ import {migrateWalletMetas} from './appStorage'
 import {WALLETS} from './legacy/config'
 import {WalletMeta} from './legacy/state'
 import storage from './legacy/storage'
-import {NETWORK_REGISTRY, WALLET_IMPLEMENTATION_REGISTRY} from './legacy/types'
+import {NETWORK_REGISTRY, WALLET_IMPLEMENTATION_REGISTRY} from './yoroi-wallets/types'
 
 const mockedWalletMeta: Partial<WalletMeta> = Object.freeze({
   id: 'wallet-id',

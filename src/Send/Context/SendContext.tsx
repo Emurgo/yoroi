@@ -1,13 +1,7 @@
 import * as React from 'react'
 
-import {getDefaultAssetByNetworkId} from '../../legacy/config'
 import {YoroiWallet} from '../../yoroi-wallets'
 import {TokenId} from '../../yoroi-wallets/types'
-
-type SendProvider = {
-  wallet: YoroiWallet
-  initialState?: Partial<SendState>
-}
 
 type SendState = {
   tokenId: TokenId
@@ -26,18 +20,27 @@ type SendActions = {
 }
 
 const SendContext = React.createContext<undefined | (SendActions & SendState)>(undefined)
-export const SendProvider: React.FC<SendProvider> = ({children, wallet, ...props}) => {
-  const primaryTokenId = getDefaultAssetByNetworkId(wallet.networkId).identifier
-
-  const [state, dispatch] = React.useReducer(sendReducer, {...initialState(primaryTokenId), ...props.initialState})
+export const SendProvider = ({
+  children,
+  wallet,
+  ...props
+}: {
+  wallet: YoroiWallet
+  initialState?: Partial<SendState>
+  children: React.ReactNode
+}) => {
+  const [state, dispatch] = React.useReducer(sendReducer, {
+    ...initialState(wallet.defaultAsset.identifier),
+    ...props.initialState,
+  })
 
   const actions = React.useRef<SendActions>({
     receiverChanged: (receiver) => dispatch({type: 'receiverChanged', receiver}),
     amountChanged: (amount) => dispatch({type: 'amountChanged', amount}),
     tokenSelected: (tokenId) => dispatch({type: 'tokenSelected', tokenId}),
     sendAllChanged: () => dispatch({type: 'sendAllChanged'}),
-    allTokensSelected: () => dispatch({type: 'allTokensSelected', primaryTokenId}),
-    resetForm: () => dispatch({type: 'resetForm', primaryTokenId}),
+    allTokensSelected: () => dispatch({type: 'allTokensSelected', primaryTokenId: wallet.defaultAsset.identifier}),
+    resetForm: () => dispatch({type: 'resetForm', primaryTokenId: wallet.defaultAsset.identifier}),
   }).current
 
   const context = React.useMemo(() => ({...state, ...actions}), [actions, state])

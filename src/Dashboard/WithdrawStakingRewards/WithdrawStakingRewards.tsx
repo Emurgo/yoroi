@@ -2,14 +2,10 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet} from 'react-native'
 import Markdown from 'react-native-easy-markdown'
-import {useSelector} from 'react-redux'
 
 import {Boundary, DangerousAction, PleaseWaitView, Spacer} from '../../components'
 import {useWithdrawalTx} from '../../hooks'
 import globalMessages, {ledgerMessages} from '../../i18n/global-messages'
-import {getDefaultAssetByNetworkId} from '../../legacy/config'
-import KeyStore from '../../legacy/KeyStore'
-import {utxosSelector} from '../../legacy/selectors'
 import {theme} from '../../theme'
 import {YoroiWallet} from '../../yoroi-wallets'
 import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
@@ -17,12 +13,11 @@ import {ConfirmTx} from './ConfirmTx/ConfirmTx'
 
 type Props = {
   wallet: YoroiWallet
-  storage: typeof KeyStore
   onCancel: () => void
   onSuccess: () => void
 }
 
-export const WithdrawStakingRewards = ({wallet, storage, onSuccess, onCancel}: Props) => {
+export const WithdrawStakingRewards = ({wallet, onSuccess, onCancel}: Props) => {
   const strings = useStrings()
   const [state, setState] = React.useState<
     {step: 'form'; withdrawalTx: undefined} | {step: 'confirm'; withdrawalTx: YoroiUnsignedTx}
@@ -38,40 +33,23 @@ export const WithdrawStakingRewards = ({wallet, storage, onSuccess, onCancel}: P
 
       {state.step === 'confirm' && (
         <Route active={true}>
-          <ConfirmTx
-            wallet={wallet}
-            storage={storage}
-            unsignedTx={state.withdrawalTx}
-            onSuccess={onSuccess}
-            onCancel={onCancel}
-          />
+          <ConfirmTx wallet={wallet} unsignedTx={state.withdrawalTx} onSuccess={onSuccess} onCancel={onCancel} />
         </Route>
       )}
     </Boundary>
   )
 }
 
-export const WithdrawalTxForm: React.FC<{
+export const WithdrawalTxForm = ({
+  wallet,
+  onDone,
+}: {
   wallet: YoroiWallet
   onDone: (withdrawalTx: YoroiUnsignedTx) => void
-}> = ({wallet, onDone}) => {
+}) => {
   const strings = useStrings()
-  const [deregister, setDeregister] = React.useState<boolean>()
-  const utxos = useSelector(utxosSelector) || []
-  const {isLoading} = useWithdrawalTx(
-    {
-      wallet,
-      deregister,
-      defaultAsset: getDefaultAssetByNetworkId(wallet.networkId),
-      utxos,
-    },
-    {
-      onSuccess: (withdrawalTx) => onDone(withdrawalTx),
-      enabled: deregister != null,
-      useErrorBoundary: true,
-      suspense: true,
-    },
-  )
+  const [deregister, setDeregister] = React.useState(false)
+  const {isLoading} = useWithdrawalTx({wallet, deregister}, {onSuccess: (withdrawalTx) => onDone(withdrawalTx)})
 
   return (
     <DangerousAction
@@ -99,7 +77,7 @@ export const WithdrawalTxForm: React.FC<{
   )
 }
 
-const Route: React.FC<{active: boolean}> = ({active, children}) => <>{active ? children : null}</>
+const Route = ({active, children}: {active: boolean; children: React.ReactNode}) => <>{active ? children : null}</>
 
 const styles = StyleSheet.create({
   paragraph: {

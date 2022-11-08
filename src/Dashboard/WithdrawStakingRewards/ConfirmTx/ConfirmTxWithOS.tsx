@@ -1,17 +1,14 @@
-import {useNavigation} from '@react-navigation/native'
 import React from 'react'
-import {useIntl} from 'react-intl'
-import {ActivityIndicator, StyleSheet, View} from 'react-native'
-import {useDispatch} from 'react-redux'
+import {defineMessages, useIntl} from 'react-intl'
+import {Alert} from 'react-native'
 
+import {useAuthOsErrorDecoder, useAuthOsWithEasyConfirmation} from '../../../auth'
 import {TwoActionView} from '../../../components'
-import {useCloseWallet, useSignAndSubmitTx} from '../../../hooks'
-import {confirmationMessages, errorMessages, txLabels} from '../../../i18n/global-messages'
-import {clearAccountState} from '../../../legacy/account'
-import {showErrorDialog} from '../../../legacy/actions'
-import {ensureKeysValidity} from '../../../legacy/deviceSettings'
-import {clearUTXOs} from '../../../legacy/utxo'
-import {SystemAuthDisabled, YoroiWallet} from '../../../yoroi-wallets'
+import {LoadingOverlay} from '../../../components/LoadingOverlay'
+import {useSignAndSubmitTx} from '../../../hooks'
+import globalMessages, {confirmationMessages, txLabels} from '../../../i18n/global-messages'
+import {isEmptyString} from '../../../legacy/utils'
+import {YoroiWallet} from '../../../yoroi-wallets'
 import {YoroiUnsignedTx} from '../../../yoroi-wallets/types'
 import {TransferSummary} from '../TransferSummary'
 
@@ -22,26 +19,35 @@ type Props = {
   onSuccess: () => void
 }
 
-export const ConfirmTxWithOS: React.FC<Props> = ({wallet, unsignedTx, onSuccess, onCancel}) => {
-  const intl = useIntl()
+export const ConfirmTxWithOS = ({wallet, unsignedTx, onSuccess, onCancel}: Props) => {
   const strings = useStrings()
-  const navigation = useNavigation()
-  const dispatch = useDispatch()
-
-  const {closeWallet} = useCloseWallet({
-    onSuccess: () => {
-      dispatch(clearUTXOs())
-      dispatch(clearAccountState())
+  const decodeAuthOsError = useAuthOsErrorDecoder()
+  const {authWithOs, isLoading: authenticating} = useAuthOsWithEasyConfirmation(
+    {
+      id: wallet.id,
+      authenticationPrompt: {
+        title: strings.authorize,
+        cancel: strings.cancel,
+      },
     },
-  })
+    {
+      onSuccess: (rootKey) => signAndSubmitTx({unsignedTx, rootKey}),
+      onError: (error) => {
+        const errorMessage = decodeAuthOsError(error)
+        if (!isEmptyString(errorMessage)) Alert.alert(strings.error, errorMessage)
+      },
+    },
+  )
 
-  const {signAndSubmitTx, isLoading} = useSignAndSubmitTx(
+  const {signAndSubmitTx, isLoading: processingTx} = useSignAndSubmitTx(
     {wallet},
     {
       signTx: {useErrorBoundary: true},
       submitTx: {onSuccess, useErrorBoundary: true},
     },
   )
+
+  const isLoading = authenticating || processingTx
 
   return (
     <>
@@ -50,25 +56,7 @@ export const ConfirmTxWithOS: React.FC<Props> = ({wallet, unsignedTx, onSuccess,
         primaryButton={{
           disabled: isLoading,
           label: strings.confirmButton,
-          onPress: () =>
-            ensureKeysValidity(wallet.id)
-              .then(() =>
-                navigation.navigate('biometrics', {
-                  keyId: wallet.id,
-                  onSuccess: (masterKey) => {
-                    return signAndSubmitTx({unsignedTx, masterKey})
-                  },
-                  onFail: () => navigation.goBack(),
-                }),
-              )
-              .catch(async (error) => {
-                if (error instanceof SystemAuthDisabled) {
-                  onCancel()
-                  closeWallet()
-                  await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
-                  navigation.navigate('app-root', {screen: 'wallet-selection'})
-                }
-              }),
+          onPress: () => authWithOs(),
         }}
         secondaryButton={{
           disabled: isLoading,
@@ -83,22 +71,20 @@ export const ConfirmTxWithOS: React.FC<Props> = ({wallet, unsignedTx, onSuccess,
   )
 }
 
-const LoadingOverlay: React.FC<{loading: boolean}> = ({loading}) => {
-  return loading ? (
-    <View style={StyleSheet.absoluteFill}>
-      <View style={[StyleSheet.absoluteFill, {opacity: 0.5, backgroundColor: 'pink'}]} />
-
-      <View style={[StyleSheet.absoluteFill, {alignItems: 'center', justifyContent: 'center'}]}>
-        <ActivityIndicator animating size="large" color="black" />
-      </View>
-    </View>
-  ) : null
-}
+const messages = defineMessages({
+  authorize: {
+    id: 'components.send.biometricauthscreen.authorizeOperation',
+    defaultMessage: '!!!Authorize',
+  },
+})
 
 const useStrings = () => {
   const intl = useIntl()
 
   return {
+    error: intl.formatMessage(globalMessages.error),
+    authorize: intl.formatMessage(messages.authorize),
+    cancel: intl.formatMessage(globalMessages.cancel),
     confirmButton: intl.formatMessage(confirmationMessages.commonButtons.confirmButton),
     confirmTx: intl.formatMessage(txLabels.confirmTx),
     password: intl.formatMessage(txLabels.password),

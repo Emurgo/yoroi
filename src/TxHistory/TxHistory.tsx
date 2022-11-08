@@ -1,20 +1,14 @@
 import {useNetInfo} from '@react-native-community/netinfo'
-import React, {useEffect, useState} from 'react'
+import {useFocusEffect} from '@react-navigation/native'
+import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {LayoutAnimation, StyleSheet, TouchableOpacity, View} from 'react-native'
-import {useDispatch, useSelector} from 'react-redux'
 
 import infoIcon from '../assets/img/icon/info-light-green.png'
 import {OfflineBanner, Spacer, StatusBar, Text} from '../components'
+import {useSync} from '../hooks'
 import {assetMessages, txLabels} from '../i18n/global-messages'
-import {fetchAccountState} from '../legacy/account'
 import {isByron} from '../legacy/config'
-import {updateHistory} from '../legacy/history'
-import {
-  isSynchronizingHistorySelector,
-  lastHistorySyncErrorSelector,
-  walletIsInitializedSelector,
-} from '../legacy/selectors'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
 import {ActionsBanner} from './ActionsBanner'
@@ -30,20 +24,11 @@ type Tab = 'transactions' | 'assets'
 
 export const TxHistory = () => {
   const strings = useStrings()
-  const dispatch = useDispatch()
-  const isSyncing = useSelector(isSynchronizingHistorySelector)
-  const lastSyncError = useSelector(lastHistorySyncErrorSelector)
   const netInfo = useNetInfo()
   const isOnline = netInfo.type !== 'none' && netInfo.type !== 'unknown'
   const wallet = useSelectedWallet()
-  const walletIsInitialized = useSelector(walletIsInitializedSelector)
 
   const [showWarning, setShowWarning] = useState(isByron(wallet.walletImplementationId))
-
-  useEffect(() => {
-    dispatch(updateHistory())
-    dispatch(fetchAccountState())
-  }, [dispatch])
 
   const [expanded, setExpanded] = useState(true)
 
@@ -53,9 +38,8 @@ export const TxHistory = () => {
     setActiveTab(tab)
   }
 
-  if (!walletIsInitialized) {
-    return <Text>l10n Please wait while wallet is initialized...</Text>
-  }
+  const {sync, isLoading, error} = useSync(wallet)
+  useFocusEffect(React.useCallback(() => sync(), [sync]))
 
   return (
     <View style={styles.scrollView}>
@@ -63,7 +47,7 @@ export const TxHistory = () => {
 
       <View style={styles.container}>
         <OfflineBanner />
-        <SyncErrorBanner showRefresh={!isSyncing} isOpen={isOnline && lastSyncError} />
+        <SyncErrorBanner showRefresh={!isLoading} isOpen={isOnline && !!error} />
 
         <CollapsibleHeader expanded={expanded}>
           <BalanceBanner />
@@ -113,8 +97,8 @@ export const TxHistory = () => {
             <TxHistoryList
               onScrollUp={() => setExpanded(true)}
               onScrollDown={() => setExpanded(false)}
-              refreshing={isSyncing}
-              onRefresh={() => dispatch(updateHistory())}
+              refreshing={isLoading}
+              onRefresh={() => sync()}
             />
           </TabPanel>
 
@@ -122,8 +106,8 @@ export const TxHistory = () => {
             <AssetList
               onScrollUp={() => setExpanded(true)}
               onScrollDown={() => setExpanded(false)}
-              refreshing={isSyncing}
-              onRefresh={() => dispatch(updateHistory())}
+              refreshing={isLoading}
+              onRefresh={() => sync()}
             />
           </TabPanel>
         </TabPanels>
@@ -132,7 +116,7 @@ export const TxHistory = () => {
   )
 }
 
-const Tabs: React.FC = ({children}) => <View style={styles.tabs}>{children}</View>
+const Tabs = ({children}: {children: React.ReactNode}) => <View style={styles.tabs}>{children}</View>
 const Tab = ({
   onPress,
   active,
@@ -152,8 +136,8 @@ const Tab = ({
     {active && <View style={styles.indicator} />}
   </TouchableOpacity>
 )
-const TabPanels: React.FC = ({children}) => <View style={styles.tabNavigatorRoot}>{children}</View>
-const TabPanel: React.FC<{active: boolean}> = ({active, children}) => <>{active ? children : null}</>
+const TabPanels = ({children}: {children: React.ReactNode}) => <View style={styles.tabNavigatorRoot}>{children}</View>
+const TabPanel = ({active, children}: {active: boolean; children: React.ReactNode}) => <>{active ? children : null}</>
 
 const useStrings = () => {
   const intl = useIntl()

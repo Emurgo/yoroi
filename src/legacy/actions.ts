@@ -3,43 +3,27 @@ import 'react-intl'
 import 'redux'
 
 import type {IntlShape} from 'react-intl'
-import {Alert, AppState, Keyboard, Platform} from 'react-native'
-import RNBootSplash from 'react-native-bootsplash'
+import {Alert} from 'react-native'
 import type {Dispatch} from 'redux'
 import uuid from 'uuid'
 
+import {getCrashReportsEnabled} from '../hooks'
 import globalMessages, {errorMessages} from '../i18n/global-messages'
 import {Logger} from '../legacy/logging'
 import {ServerStatus, walletManager} from '../yoroi-wallets'
-import {clearAccountState} from './account'
-import * as api from './api'
+import {checkServerStatus} from '../yoroi-wallets'
 import type {AppSettingsKey} from './appSettings'
-import {APP_SETTINGS_KEYS, AppSettingsError, readAppSettings, removeAppSettings, writeAppSettings} from './appSettings'
+import {APP_SETTINGS_KEYS, readAppSettings, removeAppSettings, writeAppSettings} from './appSettings'
 import assert from './assert'
-import {backgroundLockListener} from './backgroundLockHelper'
 import {CONFIG, isNightly} from './config'
 import crashReporting from './crashReporting'
-import {encryptCustomPin} from './customPin'
-import {canBiometricEncryptionBeEnabled, recreateAppSignInKeys, removeAppSignInKeys} from './deviceSettings'
-import {mirrorTxHistory, setBackgroundSyncError} from './history'
-import KeyStore from './KeyStore'
 import {getCardanoNetworkConfigById} from './networks'
-import {
-  canEnableBiometricSelector,
-  installationIdSelector,
-  isAppSetupCompleteSelector,
-  isSystemAuthEnabledSelector,
-  sendCrashReportsSelector,
-} from './selectors'
+import {installationIdSelector} from './selectors'
 import type {State} from './state'
-import {clearUTXOs} from './utxo'
 
 const updateCrashlytics = (fieldName: AppSettingsKey, value: any) => {
   const handlers = {
     [APP_SETTINGS_KEYS.LANG]: () => crashReporting.setStringValue('language_code', value),
-    [APP_SETTINGS_KEYS.BIOMETRIC_HW_SUPPORT]: () => crashReporting.setBoolValue('biometric_hw_support', value),
-    [APP_SETTINGS_KEYS.CAN_ENABLE_BIOMETRIC_ENCRYPTION]: () =>
-      crashReporting.setBoolValue('can_enable_biometric_encryption', value),
   }
   const handler = handlers[fieldName] || null
   handler && handler()
@@ -72,18 +56,6 @@ export const setEasyConfirmation = (enable: boolean) => ({
   type: 'SET_EASY_CONFIRMATION',
 })
 
-const _updateWallets = (wallets) => ({
-  path: ['wallets'],
-  payload: wallets,
-  reducer: (state: State, value) => value,
-  type: 'UPDATE_WALLETS',
-})
-
-export const updateWallets = () => (dispatch: Dispatch<any>) => {
-  const wallets = walletManager.getWallets()
-  dispatch(_updateWallets(wallets))
-}
-
 const _setAppSettings = (appSettings) => ({
   path: ['appSettings'],
   payload: appSettings,
@@ -97,24 +69,6 @@ export const reloadAppSettings = () => async (dispatch: Dispatch<any>) => {
     updateCrashlytics(key, value)
   })
   dispatch(_setAppSettings(appSettings))
-}
-
-export const encryptAndStoreCustomPin = (pin: string) => async (dispatch: Dispatch<any>, getState: () => State) => {
-  const state = getState()
-  const installationId = state.appSettings.installationId
-
-  if (installationId == null) {
-    throw new AppSettingsError(APP_SETTINGS_KEYS.INSTALLATION_ID)
-  }
-
-  const customPinHash = await encryptCustomPin(installationId, pin)
-  await dispatch(setAppSettingField(APP_SETTINGS_KEYS.CUSTOM_PIN_HASH, customPinHash))
-}
-export const removeCustomPin = () => async (dispatch: Dispatch<any>) => {
-  await dispatch(clearAppSettingField(APP_SETTINGS_KEYS.CUSTOM_PIN_HASH))
-}
-export const acceptAndSaveTos = () => async (dispatch: Dispatch<any>) => {
-  await dispatch(setAppSettingField(APP_SETTINGS_KEYS.ACCEPTED_TOS, true))
 }
 
 const initInstallationId =
@@ -131,32 +85,6 @@ const initInstallationId =
     return newInstallationId
   }
 
-// note(v-almonacid): authentication occurs after entering pin or biometrics,
-// it does not mean we opened a wallet
-export const signin = () => (dispatch: Dispatch<any>) => {
-  dispatch({
-    path: ['isAuthenticated'],
-    payload: true,
-    type: 'SIGN_IN',
-    reducer: (state: State, payload) => payload,
-  })
-}
-export const signout = () => (dispatch: Dispatch<any>) => {
-  dispatch({
-    path: ['isAuthenticated'],
-    payload: false,
-    type: 'SIGN_OUT',
-    reducer: (state: State, payload) => payload,
-  })
-}
-
-export const logout = () => async (dispatch: Dispatch<any>) => {
-  await walletManager.closeWallet()
-  dispatch(clearUTXOs())
-  dispatch(clearAccountState())
-  dispatch(signout())
-}
-
 const _setServerStatus = (serverStatus: ServerStatus) => (dispatch: Dispatch<any>) =>
   dispatch({
     path: ['serverStatus'],
@@ -169,7 +97,7 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
   try {
     // check status of default network
     const backendConfig = getCardanoNetworkConfigById(CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID).BACKEND
-    const status = await api.checkServerStatus(backendConfig)
+    const status = await checkServerStatus(backendConfig)
     dispatch(
       _setServerStatus({
         isServerOk: status.isServerOk,
@@ -186,135 +114,31 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
   }
 
   await dispatch(reloadAppSettings())
-  const installationId = (await dispatch(initInstallationId())) as unknown as string
-  const state = getState()
+  await dispatch(initInstallationId())
 
-  if (sendCrashReportsSelector(getState())) {
+  const crashReportsEnabled = await getCrashReportsEnabled()
+  if (crashReportsEnabled) {
     crashReporting.enable()
     // TODO(ppershing): just update crashlytic variables here
     await dispatch(reloadAppSettings())
     crashReporting.setUserId(installationIdSelector(getState()))
   }
 
-  /**
-   * note(v-almonacid): temporary disable biometric auth for Android >= 10
-   * (SDK >= 29), as our java auth module is currently outdated, causing
-   * issues in some devices
-   */
-  let shouldNotEnableBiometricAuth = false
-
-  if (
-    !isAppSetupCompleteSelector(state) &&
-    Platform.OS === 'android' &&
-    CONFIG.ANDROID_BIO_AUTH_EXCLUDED_SDK.includes(Platform.Version)
-  ) {
-    shouldNotEnableBiometricAuth = true
-  }
-
-  Logger.debug('shouldDisableBiometricAuth:', shouldNotEnableBiometricAuth)
-  Logger.debug('isSystemAuthEnabled:', isSystemAuthEnabledSelector(state))
-  const canEnableBiometricEncryption = (await canBiometricEncryptionBeEnabled()) && !shouldNotEnableBiometricAuth
-  await dispatch(setAppSettingField(APP_SETTINGS_KEYS.CAN_ENABLE_BIOMETRIC_ENCRYPTION, canEnableBiometricEncryption))
   await walletManager.initialize()
-  await dispatch(updateWallets())
-
-  if (canEnableBiometricEncryption && isSystemAuthEnabledSelector(state)) {
-    // On android 6 signin keys can get invalidated
-    // (e. g. when you change fingerprint),
-    // if that happens we want to regenerate them.
-    // As for the invalidate PIN case -> that should only
-    // happen when user removes PIN and re-creates it, but that should
-    // not be possible without first removing biometrics?
-    // So the biometrics key would be invalidated first.
-    // Also there is no way we know of to check if the key is valid
-    // in SYSTEM_PIN case without user typing the correct PIN.
-    const isKeyValid = await KeyStore.isKeyValid(installationId, 'BIOMETRICS')
-
-    if (!isKeyValid) {
-      await recreateAppSignInKeys(installationId)
-    }
-  }
-
-  dispatch({
-    path: ['isAppInitialized'],
-    payload: true,
-    reducer: (state: State, value) => value,
-    type: 'INITIALIZE_APP',
-  })
-  RNBootSplash.hide({
-    fade: true,
-  })
 }
-
-export const checkBiometricStatus = () => async (dispatch: Dispatch<any>, getState: any) => {
-  const bioShouldBeDisabled =
-    Platform.OS === 'android' && CONFIG.ANDROID_BIO_AUTH_EXCLUDED_SDK.includes(Platform.Version)
-  if (bioShouldBeDisabled) return
-
-  const state = getState()
-
-  const canEnableBioFromCurrentState = canEnableBiometricSelector(state)
-  if (!canEnableBioFromCurrentState) return
-
-  const canEnableBioFromDevice = await canBiometricEncryptionBeEnabled()
-
-  const bioWasTurnedOff = !canEnableBioFromDevice && canEnableBioFromCurrentState
-  if (bioWasTurnedOff) {
-    Logger.debug('Biometric was turned off')
-    await dispatch(setAppSettingField(APP_SETTINGS_KEYS.CAN_ENABLE_BIOMETRIC_ENCRYPTION, false))
-    try {
-      await walletManager.disableEasyConfirmation()
-    } catch (_e) {
-      Logger.debug('Ignore if no wallet is selected')
-    }
-    await dispatch(logout())
-  }
-}
-
-const _setOnline = (isOnline: boolean) => (dispatch, getState) => {
-  const state = getState()
-  if (state.isOnline === isOnline) return // avoid useless state updates
-
-  dispatch({
-    type: 'Set isOnline',
-    path: ['isOnline'],
-    payload: isOnline,
-    reducer: (state: State, payload) => payload,
-  })
-}
-
-const setIsKeyboardOpen = (isOpen) => ({
-  type: 'Set isKeyboardOpen',
-  path: ['isKeyboardOpen'],
-  payload: isOpen,
-  reducer: (state: State, payload) => payload,
-})
 
 export const setupHooks = () => (dispatch: Dispatch<any>) => {
-  Logger.debug('setting up isOnline callback')
-  Logger.debug('setting wallet manager hook')
-  walletManager.subscribe(() => dispatch(mirrorTxHistory()))
-  walletManager.subscribeBackgroundSyncError((err: any) => dispatch(setBackgroundSyncError(err)))
   walletManager.subscribeServerSync((status) => dispatch(_setServerStatus(status)))
-  Logger.debug('setting up app lock')
-
-  const onTimeoutAction = () => {
-    dispatch(logout())
-  }
-
-  AppState.addEventListener('change', () => {
-    backgroundLockListener(onTimeoutAction)
-  })
-  Logger.debug('setting up keyboard manager')
-  Keyboard.addListener('keyboardDidShow', () => dispatch(setIsKeyboardOpen(true)))
-  Keyboard.addListener('keyboardDidHide', () => dispatch(setIsKeyboardOpen(false)))
 }
+
 export const generateNewReceiveAddress = () => async (_dispatch: Dispatch<any>) => {
   return walletManager.generateNewUiReceiveAddress()
 }
+
 export const generateNewReceiveAddressIfNeeded = () => async (_dispatch: Dispatch<any>) => {
   return walletManager.generateNewUiReceiveAddressIfNeeded()
 }
+
 type DialogOptions = {
   title: string
   message: string
@@ -393,21 +217,6 @@ export const showConfirmationDialog = (dialog: any | DialogOptions, intl: IntlSh
     yesButton: intl.formatMessage(dialog.yesButton),
     noButton: intl.formatMessage(dialog.noButton),
   })
-export const setSystemAuth = (enable: boolean) => async (dispatch: Dispatch<any>, getState: any) => {
-  await dispatch(setAppSettingField(APP_SETTINGS_KEYS.SYSTEM_AUTH_ENABLED, enable))
-  const installationId = installationIdSelector(getState())
-
-  if (installationId == null) {
-    throw new Error('Installation id is not defined')
-  }
-
-  if (enable) {
-    await recreateAppSignInKeys(installationId)
-    await dispatch(removeCustomPin())
-  } else {
-    await removeAppSignInKeys(installationId)
-  }
-}
 
 export const handleGeneralError = async (message: string, intl: IntlShape) => {
   await showErrorDialog(errorMessages.generalError, intl, {message})

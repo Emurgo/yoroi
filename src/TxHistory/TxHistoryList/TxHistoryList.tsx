@@ -3,14 +3,14 @@ import _ from 'lodash'
 import React from 'react'
 import {useIntl} from 'react-intl'
 import {Alert, Platform, SectionList, SectionListProps, StyleSheet, View} from 'react-native'
-import {useSelector} from 'react-redux'
 
 import {Text} from '../../components'
 import features from '../../features'
+import {useTransactionInfos} from '../../hooks'
 import {actionMessages} from '../../i18n/global-messages'
 import {formatDateRelative} from '../../legacy/format'
-import {TransactionInfo} from '../../legacy/HistoryTransaction'
-import {transactionsInfoSelector} from '../../legacy/selectors'
+import {useSelectedWallet} from '../../SelectedWallet'
+import {TransactionInfo} from '../../yoroi-wallets/types'
 import {useOnScroll} from '../useOnScroll'
 import {ActionsBanner} from './ActionsBanner'
 import {EmptyHistory} from './EmptyHistory'
@@ -25,8 +25,8 @@ type Props = Partial<ListProps> & {
 export const TxHistoryList = ({onScrollUp, onScrollDown, ...props}: Props) => {
   const strings = useStrings()
   const key = useRemountOnFocusHack()
-
-  const transactionsInfo = useSelector(transactionsInfoSelector)
+  const wallet = useSelectedWallet()
+  const transactionsInfo = useTransactionInfos(wallet)
   const groupedTransactions = getTransactionsByDate(transactionsInfo)
 
   const onScroll = useOnScroll({onScrollUp, onScrollDown})

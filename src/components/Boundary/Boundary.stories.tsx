@@ -2,23 +2,26 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {Button, StyleSheet, Text, View} from 'react-native'
 import {ActivityIndicator} from 'react-native-paper'
-import {QueryClient, QueryClientProvider, useQuery} from 'react-query'
+import {useQuery} from 'react-query'
 
+import {QueryProvider} from '../../../storybook/decorators'
+import {errorMessages} from '../../i18n/global-messages'
+import LocalizableError from '../../i18n/LocalizableError'
 import {Boundary} from './Boundary'
 
 storiesOf('Boundary', module)
   .add('Loading default', () => {
     return (
-      <QueryClientProvider client={new QueryClient()}>
+      <QueryProvider>
         <Boundary>
           <IsLoading />
         </Boundary>
-      </QueryClientProvider>
+      </QueryProvider>
     )
   })
   .add('Loading/fallback', () => {
     return (
-      <QueryClientProvider client={new QueryClient()}>
+      <QueryProvider>
         <Boundary
           loading={{
             fallback: (
@@ -30,30 +33,57 @@ storiesOf('Boundary', module)
         >
           <IsLoading />
         </Boundary>
-      </QueryClientProvider>
+      </QueryProvider>
     )
   })
   .add('Loading/overlay', () => {
     return (
-      <QueryClientProvider client={new QueryClient()}>
+      <QueryProvider>
         <Boundary>
           <LoadingWithOverlay />
         </Boundary>
-      </QueryClientProvider>
+      </QueryProvider>
     )
   })
-  .add('Error/default', () => {
+  .add('Error/default large size', () => {
     return (
-      <QueryClientProvider client={new QueryClient()}>
+      <QueryProvider>
         <Boundary>
           <Bomb />
         </Boundary>
-      </QueryClientProvider>
+      </QueryProvider>
+    )
+  })
+  .add('Error/default small size', () => {
+    return (
+      <QueryProvider>
+        <Boundary error={{size: 'small'}}>
+          <Bomb />
+        </Boundary>
+      </QueryProvider>
+    )
+  })
+  .add('Error/default inline size', () => {
+    return (
+      <QueryProvider>
+        <Boundary error={{size: 'inline'}}>
+          <Bomb />
+        </Boundary>
+      </QueryProvider>
+    )
+  })
+  .add('Error/default i18n error', () => {
+    return (
+      <QueryProvider>
+        <Boundary>
+          <I18nMessageBomb />
+        </Boundary>
+      </QueryProvider>
     )
   })
   .add('Error/fallback', () => {
     return (
-      <QueryClientProvider client={new QueryClient()}>
+      <QueryProvider>
         <Boundary
           error={{
             fallback: ({error}) => (
@@ -66,7 +96,7 @@ storiesOf('Boundary', module)
         >
           <Bomb />
         </Boundary>
-      </QueryClientProvider>
+      </QueryProvider>
     )
   })
 
@@ -87,8 +117,32 @@ const IsLoading = () => {
 
 const Bomb = () => {
   useQuery({
-    queryKey: ['loading'],
+    queryKey: ['error'],
     queryFn: () => Promise.reject(new Error('Error message')),
+    suspense: true,
+    retry: false,
+  })
+
+  return (
+    <View>
+      <Text>This should not be visible</Text>
+    </View>
+  )
+}
+
+export class i18Error extends LocalizableError {
+  constructor() {
+    super({
+      id: errorMessages.fetchError.message.id,
+      defaultMessage: errorMessages.fetchError.message.defaultMessage,
+    })
+  }
+}
+
+const I18nMessageBomb = () => {
+  useQuery({
+    queryKey: ['i18nMessageError'],
+    queryFn: () => Promise.reject(new i18Error()),
     suspense: true,
     retry: false,
   })
@@ -124,7 +178,7 @@ const LoadingWithOverlay = () => {
   )
 }
 
-const LoadingOverlay: React.FC<{loading: boolean}> = ({loading}) => {
+const LoadingOverlay = ({loading}: {loading: boolean}) => {
   return loading ? (
     <View style={StyleSheet.absoluteFill}>
       <View style={[StyleSheet.absoluteFill, {opacity: 0.5, backgroundColor: 'pink'}]} />
