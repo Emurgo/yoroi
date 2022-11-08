@@ -14,11 +14,8 @@ export const FirstRunNavigator = () => {
 
   return (
     <Stack.Navigator
-      initialRouteName="language-pick"
       screenOptions={{
-        cardStyle: {
-          backgroundColor: 'transparent',
-        },
+        cardStyle: {backgroundColor: 'transparent'},
         ...defaultStackNavigationOptions,
         detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
       }}

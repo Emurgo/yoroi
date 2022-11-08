@@ -2,7 +2,7 @@ import React from 'react'
 import {AppState} from 'react-native'
 import {useMutation, UseMutationOptions, useQuery, useQueryClient, UseQueryOptions} from 'react-query'
 
-import {useMutationWithInvalidations, useWallet} from '../hooks'
+import {getAuthSetting, useMutationWithInvalidations, useWallet} from '../hooks'
 import {WalletMeta} from '../legacy/state'
 import storage from '../legacy/storage'
 import {
@@ -21,7 +21,7 @@ import {AuthenticationPrompt, authOsEnabled} from './KeychainStorage'
 export const useAuthOsEnabled = (options?: UseQueryOptions<boolean, Error>) => {
   const queryClient = useQueryClient()
   const query = useQuery({
-    queryKey: ['useAuthOsEnabled'],
+    queryKey: ['authOsEnabled'],
     queryFn: authOsEnabled,
     suspense: true,
     ...options,
@@ -178,19 +178,19 @@ const disableAllEasyConfirmation = () =>
     })
 
 export const migrateAuthSetting = async (storage: Storage) => {
-  const authSetting = await storage.getItem(AUTH_SETTINGS_KEY)
-  const pin = await storage.getItem(ENCRYPTED_PIN_HASH_KEY)
-  const isOldSystemAuth = await storage.getItem(OLD_OS_AUTH_KEY)
-  const installationId = await storage.getItem(INSTALLATION_ID_KEY)
+  const authSetting = await getAuthSetting(storage)
+  const isFirstRun = await storage.getItem(INSTALLATION_ID_KEY).then((data) => data === null)
+  const isLegacyAuth = authSetting == null && !isFirstRun
+  if (!isLegacyAuth) return
 
-  const oldAuthSetting = authSetting == null && installationId != null
-  if (oldAuthSetting) {
-    if (isOldSystemAuth != null && JSON.parse(isOldSystemAuth) === true) {
-      await storage.setItem(AUTH_SETTINGS_KEY, JSON.stringify(AUTH_WITH_OS))
-      return disableAllEasyConfirmation()
-    }
-    if (pin != null) {
-      return storage.setItem(AUTH_SETTINGS_KEY, JSON.stringify(AUTH_WITH_PIN))
-    }
+  const isAuthWithOS = await storage.getItem(OLD_OS_AUTH_KEY).then(Boolean)
+  if (isAuthWithOS) {
+    await storage.setItem(AUTH_SETTINGS_KEY, JSON.stringify(AUTH_WITH_OS))
+    return disableAllEasyConfirmation()
+  }
+
+  const isAuthWithPIN = await storage.getItem(ENCRYPTED_PIN_HASH_KEY).then(Boolean)
+  if (isAuthWithPIN) {
+    return storage.setItem(AUTH_SETTINGS_KEY, JSON.stringify(AUTH_WITH_PIN))
   }
 }

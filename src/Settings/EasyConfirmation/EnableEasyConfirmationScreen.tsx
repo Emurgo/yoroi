@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ScrollView, StyleSheet, View} from 'react-native'
+import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useEnableEasyConfirmation} from '../../auth'
@@ -45,7 +45,7 @@ export const EnableEasyConfirmationScreen = () => {
         <Text style={styles.heading}>{strings.enableHeading}</Text>
         <Text style={styles.warning}>{strings.enableWarning}</Text>
 
-        <TextInput
+        <PasswordInput
           autoFocus
           enablesReturnKeyAutomatically
           returnKeyType="done"
@@ -57,18 +57,22 @@ export const EnableEasyConfirmationScreen = () => {
         />
       </ScrollView>
 
-      <View style={styles.actions}>
+      <Actions>
         <Button
           title={strings.enableButton}
           onPress={() => enableEasyConfirmation(rootPassword)}
           disabled={isEmptyString(rootPassword) || isLoading}
         />
-      </View>
+      </Actions>
 
       <LoadingOverlay loading={isLoading} />
     </SafeAreaView>
   )
 }
+
+const PasswordInput = TextInput
+
+const Actions = ({children}: ViewProps) => <View style={styles.actions}>{children}</View>
 
 const useStrings = () => {
   const intl = useIntl()

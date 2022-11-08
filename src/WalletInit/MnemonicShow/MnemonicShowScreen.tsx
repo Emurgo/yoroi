@@ -13,7 +13,7 @@ import {MnemonicBackupImportanceModal} from '../MnemonicBackupModal'
 
 export const MnemonicShowScreen = () => {
   const navigation = useNavigation<WalletInitRouteNavigation>()
-  const route = useRoute<RouteProp<WalletInitRoutes, 'mnemoinc-show'>>()
+  const route = useRoute<RouteProp<WalletInitRoutes, 'mnemonic-show'>>()
   const strings = useStrings()
   const mnemonic = route.params.mnemonic
   const provider = route.params.provider

@@ -26,13 +26,7 @@ export const TermsOfServiceScreen = () => {
   const storage = useStorage()
   const decodeAuthOsError = useAuthOsErrorDecoder()
   const {enableAuthWithOs, isLoading} = useEnableAuthWithOs(
-    {
-      storage,
-      authenticationPrompt: {
-        title: strings.authorize,
-        cancel: strings.cancel,
-      },
-    },
+    {storage, authenticationPrompt: {title: strings.authorize, cancel: strings.cancel}},
     {
       onSuccess: login,
       onError: (error) => {

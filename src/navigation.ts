@@ -119,7 +119,7 @@ export type WalletInitRoutes = {
     walletImplementationId: WalletImplementationId
     hwDeviceInfo: HWDeviceInfo
   }
-  'mnemoinc-show': {
+  'mnemonic-show': {
     networkId: NetworkId
     walletImplementationId: WalletImplementationId
     provider: YoroiProvider

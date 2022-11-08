@@ -13,16 +13,8 @@ export const OsLoginScreen = () => {
   const storage = useStorage()
   const {login} = useAuth()
   const {authWithOs, isLoading, error} = useAuthWithOs(
-    {
-      storage,
-      authenticationPrompt: {
-        title: strings.authorize,
-        cancel: strings.cancel,
-      },
-    },
-    {
-      onSuccess: login,
-    },
+    {storage, authenticationPrompt: {title: strings.authorize, cancel: strings.cancel}},
+    {onSuccess: login},
   )
   const decodeAuthOsError = useAuthOsErrorDecoder()
   const errorMessage = decodeAuthOsError(error)
