@@ -25,7 +25,7 @@ import {processTxHistoryData} from '../legacy/processTransactions'
 import {WalletMeta} from '../legacy/state'
 import storage from '../legacy/storage'
 import {cardanoValueFromRemoteFormat} from '../legacy/utils'
-import {AUTH_SETTINGS_KEY, AUTH_WITH_PIN, authSetting} from '../Settings/types'
+import {AUTH_SETTINGS_KEY, AUTH_WITH_PIN, AuthSetting} from '../Settings/types'
 import {Storage} from '../Storage'
 import {
   Cardano,
@@ -938,7 +938,7 @@ export const useBalances = (wallet: YoroiWallet): YoroiAmounts => {
   return Utxos.toAmounts(utxos, primaryTokenId)
 }
 
-export const useAuthSetting = (storage: Storage, options?: UseQueryOptions<authSetting, Error>) => {
+export const useAuthSetting = (storage: Storage, options?: UseQueryOptions<AuthSetting, Error>) => {
   const query = useQuery({
     suspense: true,
     queryKey: ['authSetting'],

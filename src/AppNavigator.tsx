@@ -18,120 +18,94 @@ import {isMaintenanceSelector} from './legacy/selectors'
 import MaintenanceScreen from './MaintenanceScreen'
 import {AppRoutes} from './navigation'
 import {OsLoginScreen} from './OsAuth'
-import {authSetting} from './Settings/types'
+import {AuthSetting} from './Settings/types'
 import {useStorage} from './Storage'
 import StorybookScreen from './StorybookScreen'
 import {WalletInitNavigator} from './WalletInit/WalletInitNavigator'
 import {WalletNavigator} from './WalletNavigator'
 
+const Stack = createStackNavigator<AppRoutes>()
+
 export const AppNavigator = () => {
   const strings = useStrings()
   const storage = useStorage()
-  const [isReady, setIsReady] = React.useState(false)
+  const isMaintenance = useSelector(isMaintenanceSelector)
   useHideScreenInAppSwitcher()
+  useAutoLogout()
 
-  const authSetting = useAuthSetting(storage)
-  const authOsEnabled = useAuthOsEnabled()
-  const authAction = nextAuthAction(authOsEnabled, authSetting)
-
-  useAutoLogout(authSetting)
-
-  const {isLoggedOut, login} = useAuth()
+  const {isLoggedIn, isLoggedOut, login} = useAuth()
   const {authWithOs} = useAuthWithOs(
-    {
-      authenticationPrompt: {
-        cancel: strings.cancel,
-        title: strings.authorize,
-      },
-      storage,
-    },
-    {
-      onSuccess: login,
-      onSettled: () => RNBootSplash.hide({fade: true}),
-    },
+    {authenticationPrompt: {cancel: strings.cancel, title: strings.authorize}, storage},
+    {onSuccess: login, onSettled: () => RNBootSplash.hide({fade: true})},
   )
 
-  const navRef = useNavigationContainerRef()
-  useReduxDevToolsExtension(navRef)
+  const authAction = useAuthAction()
+  const onReady = () => {
+    if (!isLoggedOut) return
 
-  // when auth with OS keep splash screen on 1st attempt
-  React.useEffect(() => {
-    if (isReady && authAction !== 'auth-with-os') {
-      RNBootSplash.hide({
-        fade: true,
-      })
+    // try first OS auth before navigating
+    if (authAction === 'auth-with-os') {
+      authWithOs()
+    } else {
+      RNBootSplash.hide({fade: true})
     }
-  }, [authAction, isReady])
-
-  // try first OS auth before navigating
-  React.useEffect(() => {
-    if (authAction === 'auth-with-os' && isLoggedOut) authWithOs()
-  }, [authAction, authWithOs, isLoggedOut, strings.authorize, strings.cancel])
-
-  if (authAction == null) return null
+  }
 
   return (
-    <NavigationContainer onReady={() => setIsReady(true)} ref={navRef}>
-      <NavigatorSwitch authAction={authAction} />
+    <NavigationContainer onReady={onReady} ref={useDevToolsNavigation()}>
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false /* used only for transition */,
+          detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
+        }}
+      >
+        {isMaintenance && <Stack.Screen name="maintenance" component={MaintenanceScreen} />}
+
+        {/* Not Authenticated */}
+        {isLoggedOut && (
+          <Stack.Group>
+            {authAction === 'first-run' && <Stack.Screen name="first-run" component={FirstRunNavigator} />}
+            {authAction === 'auth-with-pin' && (
+              <Stack.Screen
+                name="custom-pin-auth"
+                component={PinLoginScreen}
+                options={{title: strings.loginPinTitle}}
+              />
+            )}
+            {authAction === 'auth-with-os' && (
+              <Stack.Screen name="bio-auth-initial" component={OsLoginScreen} options={{headerShown: false}} />
+            )}
+            {authAction === 'request-new-pin' && (
+              <Stack.Screen //
+                name="enable-login-with-pin"
+                component={CreatePinScreenWrapper}
+                options={{title: strings.customPinTitle}}
+              />
+            )}
+          </Stack.Group>
+        )}
+
+        {/* Authenticated */}
+        {isLoggedIn && (
+          <Stack.Group>
+            <Stack.Screen name="app-root" component={WalletNavigator} />
+            <Stack.Screen name="new-wallet" component={WalletInitNavigator} />
+          </Stack.Group>
+        )}
+
+        {/* Development */}
+        {__DEV__ && (
+          <Stack.Group>
+            <Stack.Screen name="developer" component={DeveloperScreen} options={{headerShown: false}} />
+            <Stack.Screen name="storybook" component={StorybookScreen} />
+          </Stack.Group>
+        )}
+      </Stack.Navigator>
     </NavigationContainer>
   )
 }
 
 export default AppNavigator
-
-const Stack = createStackNavigator<AppRoutes>()
-const NavigatorSwitch = ({authAction}: {authAction: AuthAction}) => {
-  const strings = useStrings()
-  const isMaintenance = useSelector(isMaintenanceSelector)
-  const {isLoggedIn, isLoggedOut} = useAuth()
-
-  return (
-    <Stack.Navigator
-      screenOptions={{
-        headerShown: false /* used only for transition */,
-        detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
-      }}
-    >
-      {isMaintenance && <Stack.Screen name="maintenance" component={MaintenanceScreen} />}
-
-      {/* Not Authenticated */}
-      {isLoggedOut && (
-        <Stack.Group>
-          {authAction === 'first-run' && <Stack.Screen name="first-run" component={FirstRunNavigator} />}
-          {authAction === 'auth-with-pin' && (
-            <Stack.Screen name="custom-pin-auth" component={PinLoginScreen} options={{title: strings.loginPinTitle}} />
-          )}
-          {authAction === 'auth-with-os' && (
-            <Stack.Screen name="bio-auth-initial" component={OsLoginScreen} options={{headerShown: false}} />
-          )}
-          {authAction === 'request-new-pin' && (
-            <Stack.Screen //
-              name="enable-login-with-pin"
-              component={CreatePinScreenWrapper}
-              options={{title: strings.customPinTitle}}
-            />
-          )}
-        </Stack.Group>
-      )}
-
-      {/* Authenticated */}
-      {isLoggedIn && (
-        <Stack.Group>
-          <Stack.Screen name="app-root" component={WalletNavigator} />
-          <Stack.Screen name="new-wallet" component={WalletInitNavigator} />
-        </Stack.Group>
-      )}
-
-      {/* Development */}
-      {__DEV__ && (
-        <Stack.Group>
-          <Stack.Screen name="developer" component={DeveloperScreen} options={{headerShown: false}} />
-          <Stack.Screen name="storybook" component={StorybookScreen} />
-        </Stack.Group>
-      )}
-    </Stack.Navigator>
-  )
-}
 
 const CreatePinScreenWrapper = () => {
   const {login} = useAuth()
@@ -175,7 +149,9 @@ const messages = defineMessages({
   },
 })
 
-const useAutoLogout = (authSetting: authSetting) => {
+const useAutoLogout = () => {
+  const storage = useStorage()
+  const authSetting = useAuthSetting(storage)
   const strings = useStrings()
   const {logout} = useAuth()
   const authOsEnabled = useAuthOsEnabled()
@@ -216,9 +192,24 @@ const useHideScreenInAppSwitcher = () => {
 }
 
 type AuthAction = 'auth-with-pin' | 'auth-with-os' | 'request-new-pin' | 'first-run'
-const nextAuthAction = (authOsEnabled: boolean, authSetting: authSetting): AuthAction => {
+const getAuthAction = (authOsEnabled: boolean, authSetting: AuthSetting): AuthAction => {
   if (authSetting === 'pin') return 'auth-with-pin'
   if (authSetting === 'os' && authOsEnabled) return 'auth-with-os'
   if (authSetting === 'os' && !authOsEnabled) return 'request-new-pin'
   return 'first-run' // setup not completed
+}
+
+const useAuthAction = () => {
+  const storage = useStorage()
+  const authSetting = useAuthSetting(storage)
+  const authOsEnabled = useAuthOsEnabled()
+
+  return getAuthAction(authOsEnabled, authSetting)
+}
+
+const useDevToolsNavigation = () => {
+  const navRef = useNavigationContainerRef()
+  useReduxDevToolsExtension(navRef)
+
+  return navRef
 }
