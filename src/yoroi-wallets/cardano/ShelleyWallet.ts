@@ -97,7 +97,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
 
   async clear() {
     await this.transactionCache?.clear()
-    await this.clearUtxoState()
+    await this.utxoStorage.clearUtxoState()
   }
 
   private async initialize(
@@ -830,10 +830,6 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     const utxos = await this.utxoService.getAvailableUtxos()
 
     return utxos.map(toUTXO)
-  }
-
-  async clearUtxoState() {
-    return this.utxoStorage.clearUtxoState()
   }
 
   async fetchAccountState(): Promise<AccountStateResponse> {
