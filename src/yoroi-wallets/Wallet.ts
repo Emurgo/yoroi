@@ -289,11 +289,6 @@ export class Wallet {
     }
   }
 
-  resync() {
-    if (!this.transactionCache) throw new Error('invalid wallet state')
-    this.transactionCache.resetState()
-  }
-
   // ========== UI state ============= //
 
   updateState(update: Partial<WalletState>) {

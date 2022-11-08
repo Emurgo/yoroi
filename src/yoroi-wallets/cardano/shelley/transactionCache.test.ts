@@ -16,13 +16,6 @@ describe('transactionCache', () => {
       expect(txCache.perAddressTxs).toMatchSnapshot()
       expect(txCache.perRewardAddressCertificates).toMatchSnapshot()
       expect(txCache.confirmationCounts).toMatchSnapshot()
-
-      txCache.resetState()
-
-      expect(txCache.transactions).toMatchSnapshot()
-      expect(txCache.perAddressTxs).toMatchSnapshot()
-      expect(txCache.perRewardAddressCertificates).toMatchSnapshot()
-      expect(txCache.confirmationCounts).toMatchSnapshot()
     })
 
     it('starts fresh if txids is invalid format', async () => {
