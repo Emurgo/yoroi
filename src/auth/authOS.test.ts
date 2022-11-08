@@ -1,8 +1,8 @@
 import storage from '@react-native-async-storage/async-storage'
 
 import {AUTH_SETTINGS_KEY, ENCRYPTED_PIN_HASH_KEY, INSTALLATION_ID_KEY, OLD_OS_AUTH_KEY} from '../Settings/types'
-import {migrateAuthSettings} from './authOS'
-describe('migrateAuthSettings', () => {
+import {migrateAuthSetting} from './authOS'
+describe('migrateAuthSetting', () => {
   const installationId = 'uuidv4'
   const os = JSON.stringify('os')
   const pin = JSON.stringify('pin')
@@ -13,7 +13,7 @@ describe('migrateAuthSettings', () => {
   })
 
   it('method = null and no pin/os means new setup, it should remain null', async () => {
-    await migrateAuthSettings(storage)
+    await migrateAuthSetting(storage)
 
     await expect(await storage.getItem(AUTH_SETTINGS_KEY)).toBeNull()
   })
@@ -22,11 +22,11 @@ describe('migrateAuthSettings', () => {
   // but there are some issues when resetting back the storage mock
   it('method != null remains the same', async () => {
     await storage.setItem(AUTH_SETTINGS_KEY, os)
-    await migrateAuthSettings(storage)
+    await migrateAuthSetting(storage)
     await expect(await storage.getItem(AUTH_SETTINGS_KEY)).toBe(os)
 
     await storage.setItem(AUTH_SETTINGS_KEY, pin)
-    await migrateAuthSettings(storage)
+    await migrateAuthSetting(storage)
     await expect(await storage.getItem(AUTH_SETTINGS_KEY)).toBe(pin)
   })
 
@@ -37,7 +37,7 @@ describe('migrateAuthSettings', () => {
       [OLD_OS_AUTH_KEY, JSON.stringify(true)],
     ])
 
-    await migrateAuthSettings(storage)
+    await migrateAuthSetting(storage)
 
     await expect(await storage.getItem(AUTH_SETTINGS_KEY)).toBe(os)
   })
@@ -45,7 +45,7 @@ describe('migrateAuthSettings', () => {
   it('old store is pin, method = "pin"', async () => {
     await storage.setItem(ENCRYPTED_PIN_HASH_KEY, JSON.stringify('encrypted-hash'))
 
-    await migrateAuthSettings(storage)
+    await migrateAuthSetting(storage)
 
     await expect(await storage.getItem(AUTH_SETTINGS_KEY)).toBe(pin)
   })

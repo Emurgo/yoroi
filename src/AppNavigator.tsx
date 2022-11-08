@@ -11,14 +11,14 @@ import {PinLoginScreen, useAuthOsEnabled, useAuthWithOs, useBackgroundTimeout} f
 import {useAuth} from './auth/AuthProvider'
 import {EnableLoginWithPin} from './auth/EnableLoginWithPin'
 import {FirstRunNavigator} from './FirstRun/FirstRunNavigator'
-import {useAuthSettings} from './hooks'
+import {useAuthSetting} from './hooks'
 import globalMessages from './i18n/global-messages'
 import {DeveloperScreen} from './legacy/DeveloperScreen'
 import {isMaintenanceSelector} from './legacy/selectors'
 import MaintenanceScreen from './MaintenanceScreen'
 import {AppRoutes} from './navigation'
 import {OsLoginScreen} from './OsAuth'
-import {AuthSettings} from './Settings/types'
+import {authSetting} from './Settings/types'
 import {useStorage} from './Storage'
 import StorybookScreen from './StorybookScreen'
 import {WalletInitNavigator} from './WalletInit/WalletInitNavigator'
@@ -30,11 +30,11 @@ export const AppNavigator = () => {
   const [isReady, setIsReady] = React.useState(false)
   useHideScreenInAppSwitcher()
 
-  const authSettings = useAuthSettings(storage)
+  const authSetting = useAuthSetting(storage)
   const authOsEnabled = useAuthOsEnabled()
-  const authAction = nextAuthAction(authOsEnabled, authSettings)
+  const authAction = nextAuthAction(authOsEnabled, authSetting)
 
-  useAutoLogout(authSettings)
+  useAutoLogout(authSetting)
 
   const {isLoggedOut, login} = useAuth()
   const {authWithOs} = useAuthWithOs(
@@ -175,11 +175,11 @@ const messages = defineMessages({
   },
 })
 
-const useAutoLogout = (authSettings: AuthSettings) => {
+const useAutoLogout = (authSetting: authSetting) => {
   const strings = useStrings()
   const {logout} = useAuth()
   const authOsEnabled = useAuthOsEnabled()
-  const osAuthDisabled = !authOsEnabled && authSettings === 'os'
+  const osAuthDisabled = !authOsEnabled && authSetting === 'os'
 
   useBackgroundTimeout({
     onTimeout: logout,
@@ -216,9 +216,9 @@ const useHideScreenInAppSwitcher = () => {
 }
 
 type AuthAction = 'auth-with-pin' | 'auth-with-os' | 'request-new-pin' | 'first-run'
-const nextAuthAction = (authOsEnabled: boolean, authSettings: AuthSettings): AuthAction => {
-  if (authSettings === 'pin') return 'auth-with-pin'
-  if (authSettings === 'os' && authOsEnabled) return 'auth-with-os'
-  if (authSettings === 'os' && !authOsEnabled) return 'request-new-pin'
+const nextAuthAction = (authOsEnabled: boolean, authSetting: authSetting): AuthAction => {
+  if (authSetting === 'pin') return 'auth-with-pin'
+  if (authSetting === 'os' && authOsEnabled) return 'auth-with-os'
+  if (authSetting === 'os' && !authOsEnabled) return 'request-new-pin'
   return 'first-run' // setup not completed
 }

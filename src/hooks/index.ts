@@ -25,7 +25,7 @@ import {processTxHistoryData} from '../legacy/processTransactions'
 import {WalletMeta} from '../legacy/state'
 import storage from '../legacy/storage'
 import {cardanoValueFromRemoteFormat} from '../legacy/utils'
-import {AUTH_SETTINGS_KEY, AUTH_WITH_PIN, AuthSettings} from '../Settings/types'
+import {AUTH_SETTINGS_KEY, AUTH_WITH_PIN, authSetting} from '../Settings/types'
 import {Storage} from '../Storage'
 import {
   Cardano,
@@ -632,7 +632,7 @@ export const useOpenWallet = (options?: UseMutationOptions<[YoroiWallet, WalletM
 
 export const useCreatePin = (storage: Storage, options: UseMutationOptions<void, Error, string>) => {
   const mutation = useMutationWithInvalidations({
-    invalidateQueries: [['useAuthSettings']],
+    invalidateQueries: [['authSetting']],
     mutationFn: async (pin) => {
       const installationId = await storage.getItem('/appSettings/installationId')
       if (!installationId) throw new Error('Invalid installation id')
@@ -938,14 +938,14 @@ export const useBalances = (wallet: YoroiWallet): YoroiAmounts => {
   return Utxos.toAmounts(utxos, primaryTokenId)
 }
 
-export const useAuthSettings = (storage: Storage, options?: UseQueryOptions<AuthSettings, Error>) => {
+export const useAuthSetting = (storage: Storage, options?: UseQueryOptions<authSetting, Error>) => {
   const query = useQuery({
     suspense: true,
-    queryKey: ['useAuthSettings'],
+    queryKey: ['authSetting'],
     queryFn: async () => {
-      const authSettings = parseAuthSettings(await storage.getItem(AUTH_SETTINGS_KEY))
-      if (isAuthSettings(authSettings)) return authSettings
-      return Promise.reject(new Error('useAuthSettings invalid data'))
+      const authSetting = parseAuthSetting(await storage.getItem(AUTH_SETTINGS_KEY))
+      if (isAuthSetting(authSetting)) return authSetting
+      return Promise.reject(new Error('useAuthSetting invalid data'))
     },
     ...options,
   })
@@ -953,7 +953,7 @@ export const useAuthSettings = (storage: Storage, options?: UseQueryOptions<Auth
   return query.data
 }
 
-const parseAuthSettings = (data: unknown) => {
+const parseAuthSetting = (data: unknown) => {
   if (!data) return undefined
   try {
     return JSON.parse(data as string)
@@ -961,4 +961,4 @@ const parseAuthSettings = (data: unknown) => {
     return undefined
   }
 }
-const isAuthSettings = (data: any): data is 'os' | 'pin' | undefined => ['os', 'pin', undefined].includes(data)
+const isAuthSetting = (data: any): data is 'os' | 'pin' | undefined => ['os', 'pin', undefined].includes(data)

@@ -53,7 +53,7 @@ export const useEnableAuthWithOs = (
         .then(() => storage.getItem(ENCRYPTED_PIN_HASH_KEY))
         .then((pin) => (pin != null ? storage.removeItem(ENCRYPTED_PIN_HASH_KEY) : undefined)),
     ...options,
-    invalidateQueries: [['useAuthSettings']],
+    invalidateQueries: [['authSetting']],
   })
 
   return {
@@ -67,7 +67,7 @@ export const useAuthWithOs = (
   options?: UseMutationOptions<void, Error>,
 ) => {
   const mutation = useMutationWithInvalidations({
-    invalidateQueries: [['useAuthSettings']],
+    invalidateQueries: [['authSetting']],
     mutationFn: () => Keychain.authenticate(authenticationPrompt),
     ...options,
   })
@@ -177,14 +177,14 @@ const disableAllEasyConfirmation = () =>
       }
     })
 
-export const migrateAuthSettings = async (storage: Storage) => {
-  const authSettings = await storage.getItem(AUTH_SETTINGS_KEY)
+export const migrateAuthSetting = async (storage: Storage) => {
+  const authSetting = await storage.getItem(AUTH_SETTINGS_KEY)
   const pin = await storage.getItem(ENCRYPTED_PIN_HASH_KEY)
   const isOldSystemAuth = await storage.getItem(OLD_OS_AUTH_KEY)
   const installationId = await storage.getItem(INSTALLATION_ID_KEY)
 
-  const oldAuthSettings = authSettings == null && installationId != null
-  if (oldAuthSettings) {
+  const oldAuthSetting = authSetting == null && installationId != null
+  if (oldAuthSetting) {
     if (isOldSystemAuth != null && JSON.parse(isOldSystemAuth) === true) {
       await storage.setItem(AUTH_SETTINGS_KEY, JSON.stringify(AUTH_WITH_OS))
       return disableAllEasyConfirmation()

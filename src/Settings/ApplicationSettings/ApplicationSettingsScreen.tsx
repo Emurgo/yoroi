@@ -5,7 +5,7 @@ import DeviceInfo from 'react-native-device-info'
 
 import {useAuthOsEnabled, useAuthOsErrorDecoder, useAuthWithOs} from '../../auth'
 import {StatusBar} from '../../components'
-import {useAuthSettings, useCrashReports} from '../../hooks'
+import {useAuthSetting, useCrashReports} from '../../hooks'
 import globalMessages from '../../i18n/global-messages'
 import {CONFIG, isNightly} from '../../legacy/config'
 import {isEmptyString} from '../../legacy/utils'
@@ -22,7 +22,7 @@ export const ApplicationSettingsScreen = () => {
 
   const {currency} = useCurrencyContext()
   const storage = useStorage()
-  const authSettings = useAuthSettings(storage)
+  const authSetting = useAuthSetting(storage)
   const authOsEnabled = useAuthOsEnabled()
 
   const decodeAuthOsError = useAuthOsErrorDecoder()
@@ -46,7 +46,7 @@ export const ApplicationSettingsScreen = () => {
   const crashReports = useCrashReports()
 
   const onToggleAuthWithOs = async () => {
-    if (authSettings === 'os') {
+    if (authSetting === 'os') {
       authWithOs()
     } else {
       navigation.navigate('app-root', {
@@ -72,11 +72,11 @@ export const ApplicationSettingsScreen = () => {
         <NavigatedSettingsItem
           label={strings.changePin}
           navigateTo="change-custom-pin"
-          disabled={authSettings !== 'pin'}
+          disabled={authSetting !== 'pin'}
         />
 
         <SettingsItem label={strings.authWithOsSignIn} disabled={!authOsEnabled}>
-          <Switch value={authSettings === 'os'} onValueChange={onToggleAuthWithOs} disabled={!authOsEnabled} />
+          <Switch value={authSetting === 'os'} onValueChange={onToggleAuthWithOs} disabled={!authOsEnabled} />
         </SettingsItem>
       </SettingsSection>
 
