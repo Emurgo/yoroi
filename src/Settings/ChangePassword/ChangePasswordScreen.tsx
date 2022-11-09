@@ -167,9 +167,8 @@ const useChangePassword = (
   wallet: YoroiWallet,
   mutationOptions: MutationOptions<void, Error, {currentPassword: string; newPassword: string}>,
 ) => {
-  const intl = useIntl()
   const {mutate, ...mutation} = useMutation(
-    ({currentPassword, newPassword}) => wallet.changePassword(currentPassword, newPassword, intl),
+    ({currentPassword, newPassword}) => wallet.changePassword(currentPassword, newPassword),
     mutationOptions,
   )
 
