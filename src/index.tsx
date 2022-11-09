@@ -98,11 +98,11 @@ const useMigrations = () => {
   React.useEffect(() => {
     const runMigrations = async () => {
       const version = DeviceInfo.getVersion() as Version
-      const before4_8_0 = versionCompare(version, '4.8.0') === -1
+      const before4_9_0 = versionCompare(version, '4.9.0') === -1
 
       // asc order
-      // 4.8.0
-      if (before4_8_0) await migrateAuthSetting(storage) // old auth settings
+      // 4.9.0
+      if (before4_9_0) await migrateAuthSetting(storage) // old auth settings
 
       setDone(true)
     }
