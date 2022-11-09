@@ -67,16 +67,16 @@ export class TransactionCache {
     this.#subscriptions.push(handler)
   }
 
-  private async updateState(update: TransactionCacheState) {
+  private updateState(update: TransactionCacheState) {
     this.#state = {...this.#state, ...update}
     if (Object.keys(this.#state.transactions).length > 0) {
-      await this.#storage.saveTxs(this.#state.transactions)
+      this.#storage.saveTxs(this.#state.transactions)
     }
     this.#subscriptions.forEach((handler) => handler(this.#state.transactions))
   }
 
-  async resetState() {
-    await this.updateState({
+  resetState() {
+    this.updateState({
       perAddressSyncMetadata: {},
       transactions: {},
       bestBlockNum: 0,
@@ -112,7 +112,7 @@ export class TransactionCache {
     })
 
     if (txUpdate) {
-      await this.updateState({
+      this.updateState({
         transactions: txUpdate,
         // @deprecated
         bestBlockNum: this.#state.bestBlockNum,
