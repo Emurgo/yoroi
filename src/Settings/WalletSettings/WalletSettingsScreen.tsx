@@ -2,12 +2,12 @@ import React from 'react'
 import type {MessageDescriptor} from 'react-intl'
 import {defineMessages, useIntl} from 'react-intl'
 import {InteractionManager, ScrollView, StyleSheet, Switch} from 'react-native'
-import {useMutation, UseMutationOptions} from 'react-query'
+import {UseMutationOptions} from 'react-query'
 
 import {useEasyConfirmationEnabled} from '../../auth'
 import {useAuth} from '../../auth/AuthProvider'
 import {StatusBar} from '../../components'
-import {useAuthSetting, useCloseWallet, useWalletName} from '../../hooks'
+import {useAuthSetting, useCloseWallet, useResync, useWalletName} from '../../hooks'
 import {confirmationMessages} from '../../i18n/global-messages'
 import {DIALOG_BUTTONS, showConfirmationDialog} from '../../legacy/actions'
 import {isByron, isHaskellShelley} from '../../legacy/config'
@@ -15,7 +15,7 @@ import {getNetworkConfigById} from '../../legacy/networks'
 import {useWalletNavigation} from '../../navigation'
 import {useSelectedWallet, useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
 import {useStorage} from '../../Storage'
-import {NetworkId, WalletImplementationId, walletManager} from '../../yoroi-wallets'
+import {NetworkId, WalletImplementationId} from '../../yoroi-wallets'
 import {
   NavigatedSettingsItem,
   PressableSettingsItem,
@@ -82,7 +82,7 @@ export const WalletSettingsScreen = () => {
         >
           <Switch
             value={easyConfirmationEnabled}
-            onValueChange={easyConfirmationEnabled ? onDisableEasyConfirmation : onEnableEasyConfirmation}
+            onValueChange={easyConfirmationEnabled === true ? onDisableEasyConfirmation : onEnableEasyConfirmation}
             disabled={authSetting === 'pin' || wallet.isHW || wallet.isReadOnly}
           />
         </SettingsItem>
@@ -103,6 +103,82 @@ export const WalletSettingsScreen = () => {
       </SettingsSection>
     </ScrollView>
   )
+}
+
+const getNetworkName = (networkId: NetworkId) => {
+  // note(v-almonacid): this throws when switching wallet
+  try {
+    const config = getNetworkConfigById(networkId)
+    return config.MARKETING_NAME
+  } catch (_e) {
+    return '-'
+  }
+}
+
+const getWalletType = (implementationId: WalletImplementationId): MessageDescriptor => {
+  if (isByron(implementationId)) return messages.byronWallet
+  if (isHaskellShelley(implementationId)) return messages.shelleyWallet
+
+  return messages.unknownWalletType
+}
+
+const LogoutButton = () => {
+  const strings = useStrings()
+  const {logoutWithConfirmation, isLoading} = useLogout()
+
+  return <PressableSettingsItem label={strings.logout} onPress={logoutWithConfirmation} disabled={isLoading} />
+}
+
+const ResyncButton = () => {
+  const strings = useStrings()
+  const wallet = useSelectedWallet()
+  const {navigateToTxHistory} = useWalletNavigation()
+  const intl = useIntl()
+  const {resync, isLoading} = useResync(wallet, {
+    onMutate: () => navigateToTxHistory(),
+  })
+
+  const onResync = async () => {
+    const selection = await showConfirmationDialog(confirmationMessages.resync, intl)
+    if (selection === DIALOG_BUTTONS.YES) {
+      resync()
+    }
+  }
+
+  return <PressableSettingsItem label={strings.resync} onPress={onResync} disabled={isLoading} />
+}
+
+const useLogout = (options?: UseMutationOptions<void, Error>) => {
+  const {logout} = useAuth()
+  const intl = useIntl()
+  const setSelectedWallet = useSetSelectedWallet()
+  const setSelectedWalletMeta = useSetSelectedWalletMeta()
+  const {closeWallet, ...mutation} = useCloseWallet({
+    onSuccess: () => {
+      setSelectedWallet(undefined)
+      setSelectedWalletMeta(undefined)
+    },
+    ...options,
+  })
+
+  return {
+    logout: () => {
+      logout() // triggers navigation to login
+      InteractionManager.runAfterInteractions(() => {
+        closeWallet()
+      })
+    },
+    logoutWithConfirmation: async () => {
+      const selection = await showConfirmationDialog(confirmationMessages.logout, intl)
+      if (selection === DIALOG_BUTTONS.YES) {
+        logout() // triggers navigation to login
+        InteractionManager.runAfterInteractions(() => {
+          closeWallet()
+        })
+      }
+    },
+    ...mutation,
+  }
 }
 
 const messages = defineMessages({
@@ -191,89 +267,3 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
 })
-
-const getNetworkName = (networkId: NetworkId) => {
-  // note(v-almonacid): this throws when switching wallet
-  try {
-    const config = getNetworkConfigById(networkId)
-    return config.MARKETING_NAME
-  } catch (_e) {
-    return '-'
-  }
-}
-
-const getWalletType = (implementationId: WalletImplementationId): MessageDescriptor => {
-  if (isByron(implementationId)) return messages.byronWallet
-  if (isHaskellShelley(implementationId)) return messages.shelleyWallet
-
-  return messages.unknownWalletType
-}
-
-const useLogout = (options?: UseMutationOptions<void, Error>) => {
-  const {logout} = useAuth()
-  const intl = useIntl()
-  const setSelectedWallet = useSetSelectedWallet()
-  const setSelectedWalletMeta = useSetSelectedWalletMeta()
-  const {closeWallet, ...mutation} = useCloseWallet({
-    onSuccess: () => {
-      setSelectedWallet(undefined)
-      setSelectedWalletMeta(undefined)
-    },
-    ...options,
-  })
-
-  return {
-    logout: () => {
-      logout() // triggers navigation to login
-      InteractionManager.runAfterInteractions(() => {
-        closeWallet()
-      })
-    },
-    logoutWithConfirmation: async () => {
-      const selection = await showConfirmationDialog(confirmationMessages.logout, intl)
-      if (selection === DIALOG_BUTTONS.YES) {
-        logout() // triggers navigation to login
-        InteractionManager.runAfterInteractions(() => {
-          closeWallet()
-        })
-      }
-    },
-    ...mutation,
-  }
-}
-
-const LogoutButton = () => {
-  const strings = useStrings()
-  const {logoutWithConfirmation, isLoading} = useLogout()
-
-  return <PressableSettingsItem label={strings.logout} onPress={logoutWithConfirmation} disabled={isLoading} />
-}
-
-const useResync = (options?: UseMutationOptions<void, Error>) => {
-  const intl = useIntl()
-  const {resetToWalletSelection} = useWalletNavigation()
-  const mutation = useMutation({
-    mutationFn: () => walletManager.resyncWallet(),
-    ...options,
-  })
-
-  return {
-    resyncWithConfirmation: async () => {
-      const selection = await showConfirmationDialog(confirmationMessages.resync, intl)
-      if (selection === DIALOG_BUTTONS.YES) {
-        resetToWalletSelection()
-        InteractionManager.runAfterInteractions(() => {
-          mutation.mutate()
-        })
-      }
-    },
-    ...mutation,
-  }
-}
-
-const ResyncButton = () => {
-  const strings = useStrings()
-  const {resyncWithConfirmation, isLoading} = useResync()
-
-  return <PressableSettingsItem label={strings.resync} onPress={resyncWithConfirmation} disabled={isLoading} />
-}
