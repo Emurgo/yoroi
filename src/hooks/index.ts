@@ -635,7 +635,7 @@ export const useCreatePin = (storage: Storage, options: UseMutationOptions<void,
     mutationFn: async (pin) => {
       const installationId = await storage.getItem('/appSettings/installationId')
       if (!installationId) throw new Error('Invalid installation id')
-      const encryptedPinHash = encryptData(toHex(installationId), pin)
+      const encryptedPinHash = await encryptData(toHex(installationId), pin)
       await storage.setItem(AUTH_SETTINGS_KEY, JSON.stringify(AUTH_WITH_PIN))
       return storage.setItem(ENCRYPTED_PIN_HASH_KEY, JSON.stringify(encryptedPinHash))
     },
