@@ -42,7 +42,7 @@ export const ConfirmVotingTx = ({onNext}: {onNext: () => void}) => {
           <HWInstructions useUSB={useUSB} />
         ) : (
           <Description>
-            {wallet.isEasyConfirmationEnabled ? strings.bioAuthInstructions : strings.description}
+            {wallet.isEasyConfirmationEnabled ? strings.authOsInstructions : strings.description}
           </Description>
         )}
 
@@ -76,7 +76,7 @@ export const ConfirmVotingTx = ({onNext}: {onNext: () => void}) => {
           setUseUSB={setUseUSB}
           useUSB={useUSB}
           yoroiUnsignedTx={votingRegTx}
-          biometricInstructions={[strings.bioAuthInstructions]}
+          biometricInstructions={[strings.authOsInstructions]}
         />
       </Actions>
     </SafeAreaView>
@@ -95,7 +95,7 @@ const messages = defineMessages({
       'registration and submit the certificate generated in the previous ' +
       'step.',
   },
-  bioAuthInstructions: {
+  authOsInstructions: {
     id: 'components.catalyst.step4.bioAuthInstructions',
     defaultMessage: '!!!Please authenticate so that Yoroi can generate the required certificate for voting',
   },
@@ -120,7 +120,7 @@ const useStrings = () => {
     fees: intl.formatMessage(txLabels.fees),
     subTitle: intl.formatMessage(messages.subTitle),
     description: intl.formatMessage(messages.description),
-    bioAuthInstructions: intl.formatMessage(messages.bioAuthInstructions),
+    authOsInstructions: intl.formatMessage(messages.authOsInstructions),
     password: intl.formatMessage(txLabels.password),
     errorTitle: intl.formatMessage(errorMessages.generalTxError.title),
     generalErrorMessage: intl.formatMessage(errorMessages.generalTxError.message),

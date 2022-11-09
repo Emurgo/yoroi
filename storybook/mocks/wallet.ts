@@ -14,7 +14,7 @@ import {
   YoroiSignedTx,
   YoroiUnsignedTx,
 } from '../../src/yoroi-wallets/types'
-import {mockStorage} from './storage'
+import {mockEncryptedStorage, mockStorage} from './storage'
 import {mockTransaction} from './transaction'
 
 export const mockedWalletMeta: WalletMeta = {
@@ -49,6 +49,7 @@ export const mockWallet: YoroiWallet = {
   rewardAddressHex: 'reward-address-hex',
   provider: null,
   publicKeyHex: 'publicKeyHex',
+  encryptedStorage: mockEncryptedStorage,
 
   createUnsignedTx: () => {
     throw new Error('not implemented: createUnsignedTx')
@@ -164,6 +165,9 @@ export const mockWallet: YoroiWallet = {
   sync: async (...args) => {
     action('sync')(...args)
   },
+  resync: async (...args) => {
+    action('resync')(...args)
+  },
   getTransactions: async (txids: Array<string>) => {
     action('getTransactions')(txids)
     const txInfo = mockTransaction({id: txids[0]})
@@ -172,10 +176,12 @@ export const mockWallet: YoroiWallet = {
       [txInfo.id]: txInfo,
     }
   },
-
-  // enableEasyConfirmation: () => {
-  //   throw new Error('not implemented: enableEasyConfirmation')
-  // },
+  enableEasyConfirmation: async (rootKey: string) => {
+    action('enableEasyConfirmation')(rootKey)
+  },
+  disableEasyConfirmation: async () => {
+    action('disableEasyConfirmation')
+  },
 
   // canGenerateNewReceiveAddress: () => {
   //   throw new Error('not implemented: canGenerateNewReceiveAddress')

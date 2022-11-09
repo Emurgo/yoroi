@@ -16,17 +16,27 @@ type Props = {
   onGoBack?: () => void
   error?: null | false | string
   addWelcomeMessage?: boolean
+  // storybook only
+  showFingerPlaceholder?: boolean
 }
 
-export const FingerprintScreenBase = ({headings, subHeadings, buttons, onGoBack, error, addWelcomeMessage}: Props) => {
+export const OsAuthScreen = ({
+  headings,
+  subHeadings,
+  buttons,
+  onGoBack,
+  error,
+  addWelcomeMessage,
+  showFingerPlaceholder = false,
+}: Props) => {
   const intl = useIntl()
-  const [showImage, setShowImage] = React.useState(false)
+  const [showImage, setShowImage] = React.useState(showFingerPlaceholder)
 
   React.useEffect(() => {
     DeviceInfo.getApiLevel().then((sdk) => {
-      setShowImage(Platform.OS === 'android' && sdk < 28)
+      setShowImage((Platform.OS === 'android' && sdk < 28) || showFingerPlaceholder)
     })
-  }, [])
+  }, [showFingerPlaceholder])
 
   return (
     <ScreenBackground style={styles.container}>
@@ -71,10 +81,18 @@ export const FingerprintScreenBase = ({headings, subHeadings, buttons, onGoBack,
 
         {error != null && error !== false ? <Text style={styles.error}>{error}</Text> : null}
 
-        <View style={styles.controls}>{buttons}</View>
+        {buttons.length > 1 ? <Actions>{buttons}</Actions> : <Action>{buttons}</Action>}
       </SafeAreaView>
     </ScreenBackground>
   )
+}
+
+const Actions = ({children}: {children: React.ReactNode}) => {
+  return <View style={styles.actions}>{children}</View>
+}
+
+const Action = ({children}: {children: React.ReactNode}) => {
+  return <View style={styles.action}>{children}</View>
 }
 
 const messages = defineMessages({
@@ -134,9 +152,13 @@ const styles = StyleSheet.create({
     fontSize: 50,
     lineHeight: 60,
   },
-  controls: {
+  actions: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  action: {
+    flexDirection: 'column',
+    alignItems: 'stretch',
   },
   error: {
     color: COLORS.RED,

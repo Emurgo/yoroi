@@ -1,50 +1,47 @@
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Platform, ScrollView, StyleSheet, View} from 'react-native'
+import {Alert, ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useDispatch} from 'react-redux'
 
+import {useAuthOsEnabled, useAuthOsErrorDecoder, useEnableAuthWithOs} from '../../auth'
 import {useAuth} from '../../auth/AuthProvider'
 import {Button, Checkbox, PleaseWaitModal, Spacer, StatusBar} from '../../components'
 import {useLanguage} from '../../i18n'
 import globalMessages from '../../i18n/global-messages'
-import {acceptAndSaveTos, setSystemAuth} from '../../legacy/actions'
-import {CONFIG} from '../../legacy/config'
-import {canBiometricEncryptionBeEnabled} from '../../legacy/deviceSettings'
+import {isEmptyString} from '../../legacy/utils'
 import {TermsOfService} from '../../Legal'
 import {FirstRunRouteNavigation} from '../../navigation'
+import {useStorage} from '../../Storage'
 
 export const TermsOfServiceScreen = () => {
   const strings = useStrings()
   const navigation = useNavigation<FirstRunRouteNavigation>()
   const {languageCode} = useLanguage()
   const [acceptedTos, setAcceptedTos] = React.useState(false)
-  const [savingConsent, setSavingConsent] = React.useState(false)
+
+  // should be another step in the first run flow -> auth method
   const {login} = useAuth()
+  const authOsEnabled = useAuthOsEnabled()
+  const storage = useStorage()
+  const decodeAuthOsError = useAuthOsErrorDecoder()
+  const {enableAuthWithOs, isLoading} = useEnableAuthWithOs(
+    {storage, authenticationPrompt: {title: strings.authorize, cancel: strings.cancel}},
+    {
+      onSuccess: login,
+      onError: (error) => {
+        const errorMessage = decodeAuthOsError(error)
+        if (!isEmptyString(errorMessage)) Alert.alert(strings.error, errorMessage)
+      },
+      retry: false,
+    },
+  )
 
-  const dispatch = useDispatch()
-  const handleAccepted = async () => {
-    setSavingConsent(true)
-    await dispatch(acceptAndSaveTos())
-
-    const canSystemAuthBeEnabled = await canBiometricEncryptionBeEnabled()
-
-    // temporary disable biometric auth for Android SDK >= 29
-    // TODO(v-almonacid): re-enable for Android SDK >= 29 once the module
-    // is updated
-    const shouldNotEnableBiometricAuth =
-      Platform.OS === 'android' && CONFIG.ANDROID_BIO_AUTH_EXCLUDED_SDK.includes(Platform.Version)
-
-    if (canSystemAuthBeEnabled && !shouldNotEnableBiometricAuth) {
-      await dispatch(setSystemAuth(true))
-      // note(v-almonacid) here we don't setSavingConsent(false)
-      // because signin() will likely unmount the component before the
-      // update is dispatched
-      login()
+  const onAccept = async () => {
+    if (authOsEnabled) {
+      enableAuthWithOs()
     } else {
-      setSavingConsent(false)
-      navigation.navigate('custom-pin')
+      navigation.navigate('enable-login-with-pin')
     }
   }
 
@@ -67,18 +64,14 @@ export const TermsOfServiceScreen = () => {
         <Spacer />
 
         <Button
-          onPress={handleAccepted}
-          disabled={!acceptedTos}
+          onPress={onAccept}
+          disabled={!acceptedTos || isLoading}
           title={strings.continueButton}
           testID="acceptTosButton"
         />
       </Footer>
 
-      <PleaseWaitModal
-        title={strings.savingConsentModalTitle}
-        spinnerText={strings.pleaseWait}
-        visible={savingConsent}
-      />
+      <PleaseWaitModal title={strings.savingConsentModalTitle} spinnerText={strings.pleaseWait} visible={isLoading} />
     </SafeAreaView>
   )
 }
@@ -99,6 +92,10 @@ const styles = StyleSheet.create({
 })
 
 const messages = defineMessages({
+  authorize: {
+    id: 'components.send.biometricauthscreen.authorizeOperation',
+    defaultMessage: '!!!Authorize',
+  },
   aggreeClause: {
     id: 'components.firstrun.acepttermsofservicescreen.aggreeClause',
     defaultMessage: '!!!I agree with terms of service',
@@ -117,6 +114,9 @@ const useStrings = () => {
   const intl = useIntl()
 
   return {
+    authorize: intl.formatMessage(messages.authorize),
+    cancel: intl.formatMessage(globalMessages.cancel),
+    error: intl.formatMessage(globalMessages.error),
     aggreeClause: intl.formatMessage(messages.aggreeClause),
     continueButton: intl.formatMessage(messages.continueButton),
     savingConsentModalTitle: intl.formatMessage(messages.savingConsentModalTitle),

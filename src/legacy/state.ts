@@ -18,10 +18,7 @@ export type State = {
     acceptedTos: boolean
     installationId: string | null | undefined
     customPinHash: string | null | undefined
-    isSystemAuthEnabled: boolean
-    isBiometricHardwareSupported: boolean
     sendCrashReports: boolean
-    canEnableBiometricEncryption: boolean
   }
   serverStatus: ServerStatus
 }
@@ -30,10 +27,7 @@ export const getInitialState = (): State => ({
     acceptedTos: false,
     installationId: null,
     customPinHash: null,
-    isSystemAuthEnabled: false,
-    isBiometricHardwareSupported: false,
     sendCrashReports: false,
-    canEnableBiometricEncryption: false,
   },
   serverStatus: {
     isServerOk: true,

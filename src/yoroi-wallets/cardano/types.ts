@@ -1,6 +1,7 @@
 import {BigNumber} from 'bignumber.js'
 import type {IntlShape} from 'react-intl'
 
+import {WalletEncryptedStorage} from '../../auth'
 import type {HWDeviceInfo} from '../../legacy/ledgerUtils'
 import {WalletMeta} from '../../legacy/state'
 import storage from '../../legacy/storage'
@@ -112,13 +113,14 @@ export interface WalletInterface {
 
   // ============ security & key management ============ //
 
-  encryptAndSaveMasterKey(encryptionMethod: EncryptionMethod, masterKey: string, password?: string): Promise<void>
+  encryptAndSaveRootKey(encryptionMethod: EncryptionMethod, rootKey: string, password: string): Promise<void>
 
-  getDecryptedMasterKey(masterPassword: string, intl: IntlShape): Promise<string>
+  getDecryptedRootKey(rootPassword: string, intl: IntlShape): Promise<string>
 
-  enableEasyConfirmation(masterPassword: string, intl: IntlShape): Promise<void>
+  enableEasyConfirmation(rootKey: string): Promise<void>
+  disableEasyConfirmation(): Promise<void>
 
-  changePassword(masterPassword: string, newPassword: string, intl: IntlShape): Promise<void>
+  changePassword(rootPassword: string, newPassword: string, intl: IntlShape): Promise<void>
 
   // =================== subscriptions =================== //
 
@@ -170,7 +172,7 @@ export interface WalletInterface {
     metadata?: Array<CardanoTypes.TxMetadata>,
   ): Promise<YoroiUnsignedTx>
 
-  signTx(signRequest: YoroiUnsignedTx, decryptedMasterKey: string): Promise<YoroiSignedTx>
+  signTx(signRequest: YoroiUnsignedTx, rootKey: string): Promise<YoroiSignedTx>
 
   createDelegationTx(poolRequest: string, valueInAccount: BigNumber): Promise<YoroiUnsignedTx>
 
@@ -257,6 +259,8 @@ export type YoroiWallet = Pick<WalletInterface, YoroiWalletKeys> & {
   rewardAddressHex: NonNullable<WalletInterface['rewardAddressHex']>
   getTransactions: (txids: Array<string>) => Promise<Record<string, TransactionInfo>>
   sync: () => Promise<void>
+  resync: () => Promise<void>
+  encryptedStorage: WalletEncryptedStorage
 }
 
 export const isYoroiWallet = (wallet: unknown): wallet is YoroiWallet => {
@@ -264,91 +268,95 @@ export const isYoroiWallet = (wallet: unknown): wallet is YoroiWallet => {
 }
 
 type YoroiWalletKeys =
-  | 'id'
-  | 'networkId'
-  | 'checksum'
-  | 'provider'
-  | 'isHW'
-  | 'hwDeviceInfo'
-  | 'isEasyConfirmationEnabled'
-  | 'walletImplementationId'
-  | 'isReadOnly'
-  | 'fetchTokenInfo'
+  | 'canGenerateNewReceiveAddress'
   | 'changePassword'
-  | 'fetchTxStatus'
   | 'checkServerStatus'
-  | 'subscribeOnTxHistoryUpdate'
-  | 'getAllUtxosForKey'
-  | 'fetchUTXOs'
-  | 'fetchAccountState'
-  | 'fetchTipStatus'
-  | 'getDelegationStatus'
-  | 'rewardAddressHex'
-  | 'createUnsignedTx'
+  | 'checksum'
+  | 'confirmationCounts'
   | 'createDelegationTx'
-  | 'createWithdrawalTx'
+  | 'createUnsignedTx'
   | 'createVotingRegTx'
-  | 'submitTransaction'
-  | 'signTx'
-  | 'signTxWithLedger'
-  | 'fetchPoolInfo'
-  | 'publicKeyHex'
-  | 'subscribe'
-  | 'toJSON'
+  | 'createWithdrawalTx'
+  | 'disableEasyConfirmation'
+  | 'doFullSync'
+  | 'enableEasyConfirmation'
+  | 'externalAddresses'
+  | 'fetchAccountState'
   | 'fetchCurrentPrice'
   | 'fetchFundInfo'
+  | 'fetchPoolInfo'
+  | 'fetchTipStatus'
+  | 'fetchTokenInfo'
+  | 'fetchTxStatus'
+  | 'fetchUTXOs'
+  | 'getAllUtxosForKey'
+  | 'getDelegationStatus'
+  | 'hwDeviceInfo'
+  | 'id'
   | 'internalAddresses'
-  | 'externalAddresses'
-  | 'confirmationCounts'
-  | 'transactions'
+  | 'isEasyConfirmationEnabled'
+  | 'isHW'
+  | 'isReadOnly'
   | 'isUsedAddressIndex'
+  | 'networkId'
   | 'numReceiveAddresses'
-  | 'canGenerateNewReceiveAddress'
-  | 'storage'
+  | 'provider'
+  | 'publicKeyHex'
+  | 'rewardAddressHex'
   | 'save'
-  | 'doFullSync'
+  | 'signTx'
+  | 'signTxWithLedger'
+  | 'storage'
+  | 'submitTransaction'
+  | 'subscribe'
+  | 'subscribeOnTxHistoryUpdate'
+  | 'toJSON'
+  | 'transactions'
+  | 'walletImplementationId'
 
 const yoroiWalletKeys: Array<YoroiWalletKeys> = [
-  'id',
-  'networkId',
-  'checksum',
-  'provider',
-  'publicKeyHex',
-  'isHW',
-  'hwDeviceInfo',
-  'isEasyConfirmationEnabled',
-  'walletImplementationId',
-  'isReadOnly',
-  'fetchTokenInfo',
+  'canGenerateNewReceiveAddress',
   'changePassword',
-  'fetchTxStatus',
   'checkServerStatus',
-  'subscribeOnTxHistoryUpdate',
-  'getAllUtxosForKey',
-  'fetchUTXOs',
-  'fetchAccountState',
-  'fetchTipStatus',
-  'getDelegationStatus',
-  'rewardAddressHex',
-  'createUnsignedTx',
+  'checksum',
+  'confirmationCounts',
   'createDelegationTx',
-  'createWithdrawalTx',
+  'createUnsignedTx',
   'createVotingRegTx',
-  'submitTransaction',
-  'signTx',
-  'signTxWithLedger',
-  'fetchPoolInfo',
-  'toJSON',
+  'createWithdrawalTx',
+  'disableEasyConfirmation',
+  'doFullSync',
+  'enableEasyConfirmation',
+  'externalAddresses',
+  'fetchAccountState',
   'fetchCurrentPrice',
   'fetchFundInfo',
+  'fetchPoolInfo',
+  'fetchTipStatus',
+  'fetchTokenInfo',
+  'fetchTxStatus',
+  'fetchUTXOs',
+  'getAllUtxosForKey',
+  'getDelegationStatus',
+  'hwDeviceInfo',
+  'id',
   'internalAddresses',
-  'externalAddresses',
-  'confirmationCounts',
-  'transactions',
+  'isEasyConfirmationEnabled',
+  'isHW',
+  'isReadOnly',
   'isUsedAddressIndex',
+  'networkId',
   'numReceiveAddresses',
-  'canGenerateNewReceiveAddress',
-  'storage',
+  'provider',
+  'publicKeyHex',
+  'rewardAddressHex',
   'save',
-  'doFullSync',
+  'signTx',
+  'signTxWithLedger',
+  'storage',
+  'submitTransaction',
+  'subscribeOnTxHistoryUpdate',
+  'toJSON',
+  'transactions',
+  'walletImplementationId',
 ]

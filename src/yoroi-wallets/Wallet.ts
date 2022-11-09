@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import _ from 'lodash'
-import type {IntlShape} from 'react-intl'
 import {defaultMemoize} from 'reselect'
 
+import {EncryptedStorage, EncryptedStorageKeys} from '../auth'
+import {Keychain} from '../auth/Keychain'
 import assert from '../legacy/assert'
 import {CONFIG} from '../legacy/config'
-import KeyStore from '../legacy/KeyStore'
 import type {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {Logger} from '../legacy/logging'
 import {getCardanoNetworkConfigById, isJormungandr} from '../legacy/networks'
@@ -14,7 +14,7 @@ import {CardanoTypes, NetworkId, WalletImplementationId, YoroiProvider} from './
 import * as api from './cardano/api'
 import {AddressChain, AddressChainJSON, Addresses} from './cardano/chain'
 import {TransactionCache} from './cardano/shelley/transactionCache'
-import type {BackendConfig, EncryptionMethod, Transaction} from './types/other'
+import type {BackendConfig, Transaction} from './types/other'
 import {validatePassword} from './utils/validators'
 
 type WalletState = {
@@ -138,50 +138,44 @@ export class Wallet {
   }
 
   // ============ security & key management ============ //
+  async encryptAndSaveRootKey(rootKey: string, password: string) {
+    if (this.id != null) return EncryptedStorage.write(EncryptedStorageKeys.rootKey(this.id), rootKey, password)
 
-  encryptAndSaveMasterKey(encryptionMethod: 'BIOMETRICS', masterKey: string): Promise<void>
-  encryptAndSaveMasterKey(encryptionMethod: 'SYSTEM_PIN', masterKey: string): Promise<void>
-  encryptAndSaveMasterKey(encryptionMethod: 'MASTER_PASSWORD', masterKey: string, password: string): Promise<void>
-  async encryptAndSaveMasterKey(encryptionMethod: EncryptionMethod, masterKey: string, password?: string) {
-    if (!this.id) throw new Error('invalid wallet state')
-    if (encryptionMethod === 'MASTER_PASSWORD') {
-      if (!password) throw new Error('password is required')
-      await KeyStore.storeData(this.id, 'MASTER_PASSWORD', masterKey, password)
-    }
-    if (encryptionMethod === 'BIOMETRICS') {
-      await KeyStore.storeData(this.id, encryptionMethod, masterKey)
-    }
-    if (encryptionMethod === 'SYSTEM_PIN') {
-      await KeyStore.storeData(this.id, encryptionMethod, masterKey)
-    }
+    throw new Error('invalid wallet state')
   }
 
-  async getDecryptedMasterKey(masterPassword: string, intl: IntlShape) {
-    if (!this.id) throw new Error('invalid wallet state')
-    return KeyStore.getData(this.id, 'MASTER_PASSWORD', '', masterPassword, intl)
+  async getDecryptedRootKey(password: string) {
+    if (this.id != null) return EncryptedStorage.read(EncryptedStorageKeys.rootKey(this.id), password)
+
+    throw new Error('invalid wallet state')
   }
 
-  async enableEasyConfirmation(masterPassword: string, intl: IntlShape) {
-    const decryptedMasterKey = await this.getDecryptedMasterKey(masterPassword, intl)
+  async enableEasyConfirmation(rootKey: string) {
+    if (!this.id) throw new Error('invalid wallet state')
 
-    await this.encryptAndSaveMasterKey('BIOMETRICS', decryptedMasterKey)
-    await this.encryptAndSaveMasterKey('SYSTEM_PIN', decryptedMasterKey)
-
+    await Keychain.setWalletKey(this.id, rootKey)
     this.isEasyConfirmationEnabled = true
 
     this.notify({type: 'easy-confirmation', enabled: this.isEasyConfirmationEnabled})
   }
 
-  async changePassword(masterPassword: string, newPassword: string, intl: IntlShape) {
-    const isNewPasswordValid = _.isEmpty(validatePassword(newPassword, newPassword))
+  async disableEasyConfirmation() {
+    if (!this.id) throw new Error('invalid wallet state')
 
-    if (!isNewPasswordValid) {
-      throw new Error('New password is not valid')
-    }
+    await Keychain.removeWalletKey(this.id)
+    this.isEasyConfirmationEnabled = false
 
-    const masterKey = await this.getDecryptedMasterKey(masterPassword, intl)
+    this.notify({type: 'easy-confirmation', enabled: this.isEasyConfirmationEnabled})
+  }
 
-    await this.encryptAndSaveMasterKey('MASTER_PASSWORD', masterKey, newPassword)
+  async changePassword(oldPassword: string, newPassword: string) {
+    if (!this.id) throw new Error('invalid wallet state')
+
+    if (!_.isEmpty(validatePassword(newPassword, newPassword))) throw new Error('New password is not valid')
+
+    const key = EncryptedStorageKeys.rootKey(this.id)
+    const rootKey = await EncryptedStorage.read(key, oldPassword)
+    return EncryptedStorage.write(key, rootKey, newPassword)
   }
 
   // =================== subscriptions =================== //

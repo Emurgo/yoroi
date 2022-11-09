@@ -30,7 +30,6 @@ public class MainApplication extends Application implements ReactApplication {
       // Packages that cannot be autolinked yet can be added manually here, for example:
       // packages.add(new ChainLibsPackage());
       // packages.add(new CardanoPackage());
-      packages.add(new KeyStorePackage());
       packages.add(new FlagSecurePackage());
       return packages;
     }

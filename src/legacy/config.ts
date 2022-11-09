@@ -166,8 +166,6 @@ export const CONFIG = {
   PIN_LENGTH: 6,
   LOG_LEVEL: _LOG_LEVEL,
   COMMIT: _COMMIT,
-  // added next SDKs till update bridge, 31 there are installations already
-  ANDROID_BIO_AUTH_EXCLUDED_SDK: [29, 30, 32, 33],
 }
 
 // Staking pools for testing/nightly deploys
