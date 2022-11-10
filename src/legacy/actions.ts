@@ -109,14 +109,10 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
     Logger.warn('actions::initApp could not retrieve server status', e)
   }
 
-  if (isNightly()) {
-    dispatch(setAppSettingField(APP_SETTINGS_KEYS.SEND_CRASH_REPORTS, true))
-  }
-
   await dispatch(reloadAppSettings())
   await dispatch(initInstallationId())
 
-  const crashReportsEnabled = await getCrashReportsEnabled()
+  const crashReportsEnabled = isNightly() ? true : await getCrashReportsEnabled()
   if (crashReportsEnabled) {
     crashReporting.enable()
     // TODO(ppershing): just update crashlytic variables here

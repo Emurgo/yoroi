@@ -12,7 +12,6 @@ export const APP_SETTINGS_KEYS = {
   CUSTOM_PIN_HASH: 'customPinHash',
   ACCEPTED_TOS: 'acceptedTos',
   LANG: 'languageCode',
-  SEND_CRASH_REPORTS: 'sendCrashReports',
   CURRENT_VERSION: 'currentVersion',
 }
 

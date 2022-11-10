@@ -52,19 +52,13 @@ import {
 } from '../yoroi-wallets/types'
 import {CurrencySymbol, RawUtxo, TipStatusResponse} from '../yoroi-wallets/types/other'
 import {Utxos} from '../yoroi-wallets/utils'
+import {parseBoolean} from '../yoroi-wallets/utils/parsing'
 
 const crashReportsStorageKey = 'sendCrashReports'
 
 export const getCrashReportsEnabled = async (storage: AsyncStorageStatic = AsyncStorage) => {
   const data = await storage.getItem(crashReportsStorageKey)
-  if (data != null) {
-    const parsed = JSON.parse(data)
-    if (typeof parsed === 'boolean') {
-      return parsed
-    }
-  }
-
-  return false
+  return parseBoolean(data) ?? false
 }
 
 export const useCrashReportsEnabled = (storage: AsyncStorageStatic = AsyncStorage) => {

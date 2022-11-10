@@ -18,7 +18,6 @@ export type State = {
     acceptedTos: boolean
     installationId: string | null | undefined
     customPinHash: string | null | undefined
-    sendCrashReports: boolean
   }
   serverStatus: ServerStatus
 }
@@ -27,7 +26,6 @@ export const getInitialState = (): State => ({
     acceptedTos: false,
     installationId: null,
     customPinHash: null,
-    sendCrashReports: false,
   },
   serverStatus: {
     isServerOk: true,
