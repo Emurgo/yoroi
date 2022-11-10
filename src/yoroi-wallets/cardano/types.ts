@@ -9,12 +9,12 @@ import {
   AccountStates,
   StakePoolInfoRequest,
   StakePoolInfosAndHistories,
+  StakingInfo,
   StakingStatus,
   YoroiSignedTx,
   YoroiUnsignedTx,
 } from '../types'
 import type {
-  AddressedUtxo,
   CurrencySymbol,
   FundInfoResponse,
   RawUtxo,
@@ -157,12 +157,11 @@ export interface WalletInterface {
   // not exposed to wallet manager, consider removing
   getChangeAddress(): string
 
-  getAllUtxosForKey(): Promise<Array<AddressedUtxo>>
+  getAllUtxosForKey(): Promise<Array<CardanoTypes.CardanoAddressedUtxo>>
 
   getAddressing(address: string): unknown
 
   getAddressedUtxos(): Promise<Array<CardanoTypes.CardanoAddressedUtxo>>
-  getLegacyAddressedUtxos(): Promise<Array<AddressedUtxo>>
 
   getDelegationStatus(): Promise<StakingStatus>
 
@@ -258,6 +257,7 @@ export type YoroiWallet = Pick<WalletInterface, YoroiWalletKeys> & {
   isReadOnly: NonNullable<WalletInterface['isReadOnly']>
   rewardAddressHex: NonNullable<WalletInterface['rewardAddressHex']>
   getTransactions: (txids: Array<string>) => Promise<Record<string, TransactionInfo>>
+  getStakingInfo: () => Promise<StakingInfo>
   sync: () => Promise<void>
   resync: () => Promise<void>
   encryptedStorage: WalletEncryptedStorage

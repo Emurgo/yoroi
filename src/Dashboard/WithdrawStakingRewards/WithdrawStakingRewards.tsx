@@ -1,6 +1,6 @@
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet, View} from 'react-native'
+import {StyleSheet} from 'react-native'
 import Markdown from 'react-native-easy-markdown'
 
 import {Boundary, DangerousAction, PleaseWaitView, Spacer} from '../../components'
@@ -8,7 +8,7 @@ import {useWithdrawalTx} from '../../hooks'
 import globalMessages, {ledgerMessages} from '../../i18n/global-messages'
 import {theme} from '../../theme'
 import {YoroiWallet} from '../../yoroi-wallets'
-import {Quantity, YoroiUnsignedTx} from '../../yoroi-wallets/types'
+import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
 import {Quantities} from '../../yoroi-wallets/utils'
 import {useStakingInfo} from '../StakePoolInfos'
 import {ConfirmTx} from './ConfirmTx/ConfirmTx'
@@ -29,9 +29,7 @@ export const WithdrawStakingRewards = ({wallet, onSuccess, onCancel}: Props) => 
     <Boundary loading={{fallback: <PleaseWaitView title="" spinnerText={strings.pleaseWait} />}}>
       <Route active={state.step === 'form'}>
         <Boundary>
-          <View style={{borderWidth: 1}}>
-            <WithdrawalTxForm wallet={wallet} onDone={(withdrawalTx) => setState({step: 'confirm', withdrawalTx})} />
-          </View>
+          <WithdrawalTxForm wallet={wallet} onDone={(withdrawalTx) => setState({step: 'confirm', withdrawalTx})} />
         </Boundary>
       </Route>
 
@@ -51,9 +49,7 @@ export const WithdrawalTxForm = ({
   wallet: YoroiWallet
   onDone: (withdrawalTx: YoroiUnsignedTx) => void
 }) => {
-  const {stakingInfo} = useStakingInfo(wallet)
-  if (stakingInfo?.status !== 'staked') throw new Error('invalid wallet')
-
+  const {stakingInfo} = useStakingInfo(wallet, {suspense: true})
   const strings = useStrings()
   const [deregister, setDeregister] = React.useState<boolean>()
   const {isLoading} = useWithdrawalTx(
@@ -61,7 +57,10 @@ export const WithdrawalTxForm = ({
     {enabled: deregister != null, onSuccess: (withdrawalTx) => onDone(withdrawalTx)},
   )
 
-  const hasRewards = Quantities.isGreaterThan(stakingInfo.rewards as Quantity, '0')
+  const hasRewards =
+    stakingInfo?.status === 'staked' //
+      ? Quantities.isGreaterThan(stakingInfo.rewards, '0')
+      : false
 
   return (
     <DangerousAction
