@@ -193,26 +193,6 @@ export class WalletManager {
     }
   }
 
-  // ========== UI state ============= //
-
-  async generateNewUiReceiveAddressIfNeeded() {
-    if (!this._wallet) return
-    await this.abortWhenWalletCloses(Promise.resolve(this._wallet.generateNewUiReceiveAddressIfNeeded()))
-  }
-
-  generateNewUiReceiveAddress() {
-    if (!this._wallet) return false
-    const wallet = this._wallet
-
-    const didGenerateNew = wallet.generateNewUiReceiveAddress()
-
-    if (didGenerateNew) {
-      // note: don't await on purpose
-      wallet.save()
-    }
-    return didGenerateNew
-  }
-
   // =================== state & persistence =================== //
 
   async saveWallet(

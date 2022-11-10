@@ -6,29 +6,27 @@ import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native'
 import {Button, OfflineBanner, Spacer, StatusBar} from '../components'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
-import {Addresses, walletManager, YoroiWallet} from '../yoroi-wallets'
 import {AddressDetail} from './AddressDetail'
 import {UnusedAddresses, UsedAddresses} from './Addresses'
 
 export const ReceiveScreen = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
-  const [receiveAddresses, setReceiveAddresses] = React.useState(makeReceiveAddresses(wallet))
+  const [receiveAddresses, setReceiveAddresses] = React.useState(wallet.receiveAddresses)
   const addressLimitReached = wallet.canGenerateNewReceiveAddress() == false
 
   const currentAddress = _.last(receiveAddresses)
 
   const onGenerateNewAddresses = () => {
-    walletManager.generateNewUiReceiveAddress()
-    const newReceiveAddresses = makeReceiveAddresses(wallet)
-    setReceiveAddresses(newReceiveAddresses)
+    wallet.generateNewReceiveAddress()
+    setReceiveAddresses(wallet.receiveAddresses)
   }
 
   // This is here just so that we can properly monitor changes and fire
   // generateNewReceiveAddressIfNeeded()
   React.useEffect(() => {
-    walletManager.generateNewUiReceiveAddressIfNeeded()
-  }, [wallet.isUsedAddressIndex])
+    wallet.generateNewReceiveAddressIfNeeded()
+  }, [wallet, wallet.isUsedAddressIndex])
 
   return (
     <View style={styles.root}>
@@ -69,9 +67,6 @@ export const ReceiveScreen = () => {
 }
 
 const Content = (props) => <View {...props} style={styles.content} />
-
-const makeReceiveAddresses = (wallet: YoroiWallet): Addresses =>
-  wallet.externalAddresses.slice(0, wallet.numReceiveAddresses)
 
 const messages = defineMessages({
   infoText: {

@@ -133,14 +133,6 @@ export interface WalletInterface {
 
   tryDoFullSync(): Promise<void>
 
-  // =================== state/UI =================== //
-
-  canGenerateNewReceiveAddress(): boolean
-
-  generateNewUiReceiveAddressIfNeeded(): boolean
-
-  generateNewUiReceiveAddress(): boolean
-
   // =================== persistence =================== //
 
   save(): Promise<void>
@@ -261,6 +253,10 @@ export type YoroiWallet = Pick<WalletInterface, YoroiWalletKeys> & {
   sync: () => Promise<void>
   resync: () => Promise<void>
   encryptedStorage: WalletEncryptedStorage
+  canGenerateNewReceiveAddress(): boolean
+  generateNewReceiveAddressIfNeeded(): boolean
+  generateNewReceiveAddress(): boolean
+  receiveAddresses: Addresses
 }
 
 export const isYoroiWallet = (wallet: unknown): wallet is YoroiWallet => {
@@ -268,7 +264,6 @@ export const isYoroiWallet = (wallet: unknown): wallet is YoroiWallet => {
 }
 
 type YoroiWalletKeys =
-  | 'canGenerateNewReceiveAddress'
   | 'changePassword'
   | 'checkServerStatus'
   | 'checksum'
@@ -315,7 +310,6 @@ type YoroiWalletKeys =
   | 'walletImplementationId'
 
 const yoroiWalletKeys: Array<YoroiWalletKeys> = [
-  'canGenerateNewReceiveAddress',
   'changePassword',
   'checkServerStatus',
   'checksum',

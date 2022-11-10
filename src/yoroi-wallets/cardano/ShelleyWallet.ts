@@ -64,7 +64,7 @@ import {NETWORK_REGISTRY} from '../types/other'
 import {genTimeToSlot} from '../utils/timeUtils'
 import Wallet, {WalletJSON} from '../Wallet'
 import * as api from './api'
-import {AddressChain, AddressGenerator} from './chain'
+import {AddressChain, Addresses, AddressGenerator} from './chain'
 import {filterAddressesByStakingKey, getDelegationStatus} from './shelley/delegationUtils'
 import {toCachedTx, TransactionCache} from './shelley/transactionCache'
 import {yoroiSignedTx} from './signedTx'
@@ -92,6 +92,10 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     this.utxoStorage = makeUtxoStorage(this.storage, `/wallet/${this.id}/utxos`)
     this.utxoService = initUtxo(this.utxoStorage, `${config.API_ROOT}/`)
     this.encryptedStorage = makeWalletEncryptedStorage(id)
+  }
+
+  get receiveAddresses(): Addresses {
+    return this.externalAddresses.slice(0, this.numReceiveAddresses)
   }
 
   save() {
@@ -510,6 +514,40 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     if (this.rewardAddressHex == null) throw new Error('reward address is null')
     const certsForKey = this.transactionCache.perRewardAddressCertificates[this.rewardAddressHex]
     return Promise.resolve(getDelegationStatus(this.rewardAddressHex, certsForKey))
+  }
+
+  canGenerateNewReceiveAddress() {
+    if (!this.externalChain) throw new Error('invalid wallet state')
+    const lastUsedIndex = this.getLastUsedIndex(this.externalChain)
+    // TODO: should use specific wallet config
+    const maxIndex = lastUsedIndex + CONFIG.WALLETS.HASKELL_SHELLEY.MAX_GENERATED_UNUSED
+    if (this.state.lastGeneratedAddressIndex >= maxIndex) {
+      return false
+    }
+    return this.numReceiveAddresses < this.externalAddresses.length
+  }
+
+  generateNewReceiveAddressIfNeeded() {
+    /* new address is automatically generated when you use the latest unused */
+    if (!this.externalChain) throw new Error('invalid wallet state')
+    const lastGeneratedAddress = this.externalChain.addresses[this.state.lastGeneratedAddressIndex]
+    if (!this.isUsedAddress(lastGeneratedAddress)) {
+      return false
+    }
+    return this.generateNewReceiveAddress()
+  }
+
+  generateNewReceiveAddress(): boolean {
+    if (!this.canGenerateNewReceiveAddress()) return false
+
+    this.updateState({
+      lastGeneratedAddressIndex: this.state.lastGeneratedAddressIndex + 1,
+    })
+
+    // note: don't await on purpose
+    this.save()
+
+    return true
   }
 
   // =================== tx building =================== //

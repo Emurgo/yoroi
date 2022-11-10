@@ -5,7 +5,6 @@ import {defaultMemoize} from 'reselect'
 import {EncryptedStorage, EncryptedStorageKeys} from '../auth'
 import {Keychain} from '../auth/Keychain'
 import assert from '../legacy/assert'
-import {CONFIG} from '../legacy/config'
 import type {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {Logger} from '../legacy/logging'
 import {getCardanoNetworkConfigById, isJormungandr} from '../legacy/networks'
@@ -305,37 +304,6 @@ export class Wallet {
     }
 
     this.notify({type: 'state', state: this.state})
-  }
-
-  canGenerateNewReceiveAddress() {
-    if (!this.externalChain) throw new Error('invalid wallet state')
-    const lastUsedIndex = this.getLastUsedIndex(this.externalChain)
-    // TODO: should use specific wallet config
-    const maxIndex = lastUsedIndex + CONFIG.WALLETS.HASKELL_SHELLEY.MAX_GENERATED_UNUSED
-    if (this.state.lastGeneratedAddressIndex >= maxIndex) {
-      return false
-    }
-    return this.numReceiveAddresses < this.externalAddresses.length
-  }
-
-  generateNewUiReceiveAddressIfNeeded() {
-    /* new address is automatically generated when you use the latest unused */
-    if (!this.externalChain) throw new Error('invalid wallet state')
-    const lastGeneratedAddress = this.externalChain.addresses[this.state.lastGeneratedAddressIndex]
-    if (!this.isUsedAddress(lastGeneratedAddress)) {
-      return false
-    }
-    return this.generateNewUiReceiveAddress()
-  }
-
-  generateNewUiReceiveAddress(): boolean {
-    if (!this.canGenerateNewReceiveAddress()) return false
-
-    this.updateState({
-      lastGeneratedAddressIndex: this.state.lastGeneratedAddressIndex + 1,
-    })
-
-    return true
   }
 
   // ========== persistence ============= //
