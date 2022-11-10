@@ -9,6 +9,8 @@ import globalMessages, {ledgerMessages} from '../../i18n/global-messages'
 import {theme} from '../../theme'
 import {YoroiWallet} from '../../yoroi-wallets'
 import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
+import {Quantities} from '../../yoroi-wallets/utils'
+import {useStakingInfo} from '../StakePoolInfos'
 import {ConfirmTx} from './ConfirmTx/ConfirmTx'
 
 type Props = {
@@ -47,16 +49,25 @@ export const WithdrawalTxForm = ({
   wallet: YoroiWallet
   onDone: (withdrawalTx: YoroiUnsignedTx) => void
 }) => {
+  const {stakingInfo} = useStakingInfo(wallet, {suspense: true})
   const strings = useStrings()
-  const [deregister, setDeregister] = React.useState(false)
-  const {isLoading} = useWithdrawalTx({wallet, deregister}, {onSuccess: (withdrawalTx) => onDone(withdrawalTx)})
+  const [deregister, setDeregister] = React.useState<boolean>()
+  const {isLoading} = useWithdrawalTx(
+    {wallet, deregister},
+    {enabled: deregister != null, onSuccess: (withdrawalTx) => onDone(withdrawalTx)},
+  )
+
+  const hasRewards =
+    stakingInfo?.status === 'staked' //
+      ? Quantities.isGreaterThan(stakingInfo.rewards, '0')
+      : false
 
   return (
     <DangerousAction
       title={strings.warningModalTitle}
       alertBox={{content: [strings.warning1, strings.warning2, strings.warning3]}}
       primaryButton={{
-        disabled: isLoading,
+        disabled: !hasRewards || isLoading,
         label: strings.keepButton,
         onPress: () => setDeregister(false),
         testID: 'keepRegisteredButton',

@@ -43,10 +43,9 @@ import {
   walletChecksum,
 } from '../cardano'
 import {makeStorageWithPrefix} from '../storage'
-import {DefaultAsset, SendTokenList, YoroiSignedTx, YoroiUnsignedTx} from '../types'
+import {DefaultAsset, Quantity, SendTokenList, StakingInfo, YoroiSignedTx, YoroiUnsignedTx} from '../types'
 import type {
   AccountStateResponse,
-  AddressedUtxo,
   BackendConfig,
   CurrencySymbol,
   FundInfoResponse,
@@ -61,6 +60,7 @@ import type {
   TxStatusResponse,
 } from '../types/other'
 import {NETWORK_REGISTRY} from '../types/other'
+import {Quantities} from '../utils'
 import {genTimeToSlot} from '../utils/timeUtils'
 import Wallet, {WalletJSON} from '../Wallet'
 import * as api from './api'
@@ -433,7 +433,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
   async getAllUtxosForKey() {
     return filterAddressesByStakingKey(
       await CardanoMobile.StakeCredential.fromKeyhash(await (await this.getStakingKey()).hash()),
-      await this.getLegacyAddressedUtxos(),
+      await this.getAddressedUtxos(),
       false,
     )
   }
@@ -491,25 +491,36 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     return addressedUtxos
   }
 
-  async getLegacyAddressedUtxos() {
-    const utxos = await this.fetchUTXOs()
-    const addressedUtxos = utxos.map((utxo: RawUtxo): AddressedUtxo => {
-      const addressing = this.getAddressing(utxo.receiver)
-
-      return {
-        ...utxo,
-        addressing,
-      }
-    })
-
-    return addressedUtxos
-  }
-
   getDelegationStatus() {
     if (!this.transactionCache) throw new Error('invalid wallet state')
     if (this.rewardAddressHex == null) throw new Error('reward address is null')
     const certsForKey = this.transactionCache.perRewardAddressCertificates[this.rewardAddressHex]
     return Promise.resolve(getDelegationStatus(this.rewardAddressHex, certsForKey))
+  }
+
+  async getStakingInfo(): Promise<StakingInfo> {
+    if (!this.rewardAddressHex) throw new Error('invalid wallet')
+
+    const stakingStatus = await this.getDelegationStatus()
+    if (!stakingStatus.isRegistered) return {status: 'not-registered'}
+    if (!('poolKeyHash' in stakingStatus)) return {status: 'registered'}
+
+    const accountStates = await this.fetchAccountState()
+    const accountState = accountStates[this.rewardAddressHex]
+    if (!accountState) throw new Error('Account state not found')
+
+    const stakingUtxos = await this.getAllUtxosForKey()
+    const amount = Quantities.sum([
+      ...stakingUtxos.map((utxo) => utxo.amount as Quantity),
+      accountState.remainingAmount as Quantity,
+    ])
+
+    return {
+      status: 'staked',
+      poolId: stakingStatus.poolKeyHash,
+      amount,
+      rewards: accountState.remainingAmount as Quantity,
+    }
   }
 
   // =================== tx building =================== //

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import {CardanoAddressedUtxo} from '@emurgo/yoroi-lib'
 import {sortBy} from 'lodash'
 
 import assert from '../../../legacy/assert'
@@ -7,7 +8,6 @@ import {ObjectValues} from '../../../legacy/flow'
 import {Logger} from '../../../legacy/logging'
 import {normalizeToAddress} from '../../../legacy/utils'
 import {StakingStatus} from '../../types'
-import type {AddressedUtxo} from '../../types/other'
 import {CardanoMobile, CardanoTypes} from '..'
 import type {TimestampedCertMeta} from './transactionCache'
 
@@ -41,10 +41,10 @@ const addrContainsAccountKey = async (
 
 export const filterAddressesByStakingKey = async (
   stakingKey: CardanoTypes.StakeCredential,
-  utxos: ReadonlyArray<AddressedUtxo>,
+  utxos: ReadonlyArray<CardanoAddressedUtxo>,
   acceptTypeMismatch: boolean,
 ) => {
-  const result: Array<AddressedUtxo> = []
+  const result: Array<CardanoAddressedUtxo> = []
 
   for (const utxo of utxos) {
     if (await addrContainsAccountKey(utxo.receiver, stakingKey, acceptTypeMismatch)) {

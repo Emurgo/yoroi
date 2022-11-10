@@ -49,6 +49,9 @@ export const mockWallet: YoroiWallet = {
   rewardAddressHex: 'reward-address-hex',
   provider: null,
   publicKeyHex: 'publicKeyHex',
+  getStakingInfo: async () => {
+    throw new Error('not implemented: getStakingInfo')
+  },
   encryptedStorage: mockEncryptedStorage,
 
   createUnsignedTx: () => {
