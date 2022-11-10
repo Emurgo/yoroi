@@ -205,6 +205,7 @@ export class WalletManager {
     const wallet = this._wallet
 
     const didGenerateNew = wallet.generateNewUiReceiveAddress()
+
     if (didGenerateNew) {
       // note: don't await on purpose
       wallet.save()

@@ -2,33 +2,33 @@ import _ from 'lodash'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native'
-import {useDispatch} from 'react-redux'
 
 import {Button, OfflineBanner, Spacer, StatusBar} from '../components'
-import {generateNewReceiveAddress, generateNewReceiveAddressIfNeeded} from '../legacy/actions'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
+import {Addresses, walletManager, YoroiWallet} from '../yoroi-wallets'
 import {AddressDetail} from './AddressDetail'
 import {UnusedAddresses, UsedAddresses} from './Addresses'
 
 export const ReceiveScreen = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
-  const receiveAddresses = wallet.externalAddresses.slice(0, wallet.numReceiveAddresses)
+  const [receiveAddresses, setReceiveAddresses] = React.useState(makeReceiveAddresses(wallet))
   const addressLimitReached = wallet.canGenerateNewReceiveAddress() == false
 
   const currentAddress = _.last(receiveAddresses)
 
-  const dispatch = useDispatch()
-  React.useEffect(() => {
-    dispatch(generateNewReceiveAddressIfNeeded())
-  }, [dispatch])
+  const onGenerateNewAddresses = () => {
+    walletManager.generateNewUiReceiveAddress()
+    const newReceiveAddresses = makeReceiveAddresses(wallet)
+    setReceiveAddresses(newReceiveAddresses)
+  }
 
   // This is here just so that we can properly monitor changes and fire
   // generateNewReceiveAddressIfNeeded()
   React.useEffect(() => {
-    dispatch(generateNewReceiveAddressIfNeeded())
-  }, [dispatch, wallet.isUsedAddressIndex])
+    walletManager.generateNewUiReceiveAddressIfNeeded()
+  }, [wallet.isUsedAddressIndex])
 
   return (
     <View style={styles.root}>
@@ -51,7 +51,7 @@ export const ReceiveScreen = () => {
 
           <Button
             outlineOnLight
-            onPress={() => dispatch(generateNewReceiveAddress())}
+            onPress={onGenerateNewAddresses}
             disabled={addressLimitReached}
             title={!addressLimitReached ? strings.generateButton : strings.cannotGenerate}
             testID="generateNewReceiveAddressButton"
@@ -69,6 +69,9 @@ export const ReceiveScreen = () => {
 }
 
 const Content = (props) => <View {...props} style={styles.content} />
+
+const makeReceiveAddresses = (wallet: YoroiWallet): Addresses =>
+  wallet.externalAddresses.slice(0, wallet.numReceiveAddresses)
 
 const messages = defineMessages({
   infoText: {

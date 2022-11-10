@@ -70,7 +70,7 @@ import {toCachedTx, TransactionCache} from './shelley/transactionCache'
 import {yoroiSignedTx} from './signedTx'
 import {NetworkId, WalletImplementationId, WalletInterface, YoroiProvider} from './types'
 import {yoroiUnsignedTx} from './unsignedTx'
-import {generateUtxoStorage} from './utxoStorage'
+import {makeUtxoStorage} from './utxoStorage'
 
 export default ShelleyWallet
 export class ShelleyWallet extends Wallet implements WalletInterface {
@@ -89,7 +89,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     this.defaultAsset = getDefaultAssetByNetworkId(this.networkId)
 
     const config = this.getBackendConfig()
-    this.utxoStorage = generateUtxoStorage(this.storage, `/wallet/${this.id}/utxos`)
+    this.utxoStorage = makeUtxoStorage(this.storage, `/wallet/${this.id}/utxos`)
     this.utxoService = initUtxo(this.utxoStorage, `${config.API_ROOT}/`)
     this.encryptedStorage = makeWalletEncryptedStorage(id)
   }
