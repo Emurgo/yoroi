@@ -5,7 +5,8 @@ import {useQuery, useQueryClient, UseQueryOptions} from 'react-query'
 
 import {useSelectedWallet} from '../SelectedWallet'
 import {YoroiWallet} from '../yoroi-wallets'
-import {YoroiUnsignedTx} from '../yoroi-wallets/types'
+import {Quantity, StakingInfo, YoroiUnsignedTx} from '../yoroi-wallets/types'
+import {Quantities} from '../yoroi-wallets/utils'
 import {StakePoolInfo} from './StakePoolInfo'
 
 export const StakePoolInfos = () => {
@@ -31,68 +32,34 @@ const styles = StyleSheet.create({
   },
 })
 
-type StakingInfo = Registered | Staked | NotRegistered
-type NotRegistered = {
-  status: 'not-registered'
-}
-type Registered = {
-  status: 'registered'
-}
-type Staked = {
-  status: 'staked'
-  poolId: string
-  amount: string
-  rewards: string
-}
-
-const getStakePoolInfo = async (wallet: YoroiWallet) => {
-  const stakingStatus = await wallet.getDelegationStatus()
-  if (!stakingStatus.isRegistered) return {status: 'not-registered'} as NotRegistered
-  if (!('poolKeyHash' in stakingStatus)) return {status: 'registered'} as Registered
-
-  const accountStates = await wallet.fetchAccountState()
-  const accountState = accountStates[wallet.rewardAddressHex]
-  if (!accountState) throw new Error('Account state not found')
-
-  const stakingUtxos = await wallet.getAllUtxosForKey()
-  const amount = sum([...stakingUtxos.map((utxo) => utxo.amount), accountState.remainingAmount])
-
-  return {
-    status: 'staked',
-    poolId: stakingStatus.poolKeyHash,
-    amount,
-    rewards: accountState.remainingAmount,
-  } as Staked
-}
-
 export const usePrefetchStakingInfo = (wallet: YoroiWallet) => {
   const queryClient = useQueryClient()
 
   useEffect(() => {
     queryClient.prefetchQuery({
       queryKey: [wallet.id, 'stakingInfo'],
-      queryFn: () => getStakePoolInfo(wallet),
+      queryFn: () => wallet.getStakingInfo(),
     })
   }, [queryClient, wallet])
 }
 
 export const useStakingInfo = (
   wallet: YoroiWallet,
-  options?: UseQueryOptions<StakingInfo, Error, StakingInfo, [string, string]>,
+  options?: UseQueryOptions<StakingInfo, Error, StakingInfo, [string, 'stakingInfo']>,
 ) => {
   const query = useQuery({
     ...options,
     retry: false,
     queryKey: [wallet.id, 'stakingInfo'],
-    queryFn: () => getStakePoolInfo(wallet),
+    queryFn: () => wallet.getStakingInfo(),
   })
 
   React.useEffect(() => {
-    wallet.subscribeOnTxHistoryUpdate(() => {
+    const unsubscribe = wallet.subscribeOnTxHistoryUpdate(() => {
       setTimeout(() => query.refetch(), 1000)
     }) // refetch on new transactions
 
-    // currently no way to unsubscribe from wallet events
+    return () => unsubscribe()
   }, [query, wallet])
 
   return {
@@ -103,7 +70,7 @@ export const useStakingInfo = (
 
 export const useStakePoolIds = (
   wallet: YoroiWallet,
-  options?: UseQueryOptions<StakingInfo, Error, StakingInfo, [string, string]>,
+  options?: UseQueryOptions<StakingInfo, Error, StakingInfo, [string, 'stakingInfo']>,
 ) => {
   const {stakingInfo, ...query} = useStakingInfo(wallet, options)
 
@@ -112,8 +79,6 @@ export const useStakePoolIds = (
     stakePoolIds: stakingInfo?.status === 'staked' ? [stakingInfo.poolId] : [],
   }
 }
-
-const sum = (numbers: Array<string>) => numbers.reduce((x: BigNumber, y) => x.plus(y), new BigNumber(0)).toString()
 
 export const useStakingTx = (
   {wallet, poolId}: {wallet: YoroiWallet; poolId?: string},
@@ -129,7 +94,10 @@ export const useStakingTx = (
       if (!accountState) throw new Error('Account state not found')
 
       const stakingUtxos = await wallet.getAllUtxosForKey()
-      const amountToDelegate = sum([...stakingUtxos.map((utxo) => utxo.amount), accountState.remainingAmount])
+      const amountToDelegate = Quantities.sum([
+        ...stakingUtxos.map((utxo) => utxo.amount as Quantity),
+        accountState.remainingAmount as Quantity,
+      ])
 
       return wallet.createDelegationTx(poolId, new BigNumber(amountToDelegate))
     },
