@@ -181,7 +181,7 @@ const useAddressIndex = (address: string) => {
 
 const useUnusedAddresses = () => {
   const wallet = useSelectedWallet()
-  const receiveAddresses = wallet.externalAddresses.slice(0, wallet.numReceiveAddresses)
+  const receiveAddresses = wallet.receiveAddresses
   const isUsedAddressIndex = wallet.isUsedAddressIndex
 
   return receiveAddresses.filter((address) => isUsedAddressIndex[address] !== true)
@@ -189,7 +189,7 @@ const useUnusedAddresses = () => {
 
 const useUsedAddresses = () => {
   const wallet = useSelectedWallet()
-  const receiveAddresses = wallet.externalAddresses.slice(0, wallet.numReceiveAddresses)
+  const receiveAddresses = wallet.receiveAddresses
   const isUsedAddressIndex = wallet.isUsedAddressIndex
 
   return receiveAddresses.filter((address) => isUsedAddressIndex[address])

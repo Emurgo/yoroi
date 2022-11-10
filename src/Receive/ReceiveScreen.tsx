@@ -22,11 +22,10 @@ export const ReceiveScreen = () => {
     setReceiveAddresses(wallet.receiveAddresses)
   }
 
-  // This is here just so that we can properly monitor changes and fire
-  // generateNewReceiveAddressIfNeeded()
   React.useEffect(() => {
     wallet.generateNewReceiveAddressIfNeeded()
-  }, [wallet, wallet.isUsedAddressIndex])
+    setReceiveAddresses(wallet.receiveAddresses)
+  }, [wallet])
 
   return (
     <View style={styles.root}>
