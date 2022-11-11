@@ -8,7 +8,6 @@ import {EncryptedStorage, EncryptedStorageKeys} from '../auth'
 import {Keychain} from '../auth/Keychain'
 import assert from '../legacy/assert'
 import {CONFIG, DISABLE_BACKGROUND_SYNC} from '../legacy/config'
-import {ISignRequest} from '../legacy/ISignRequest'
 import type {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {Logger} from '../legacy/logging'
 import type {WalletMeta} from '../legacy/state'
@@ -20,11 +19,11 @@ import {
   ShelleyWallet,
   WalletImplementationId,
   WalletInterface,
+  WalletJSON,
   YoroiProvider,
   YoroiWallet,
 } from './cardano'
 import {WALLET_IMPLEMENTATION_REGISTRY} from './types/other'
-import {WalletJSON} from './Wallet'
 
 export class WalletClosed extends ExtendableError {}
 export class SystemAuthDisabled extends ExtendableError {}
@@ -371,35 +370,6 @@ export class WalletManager {
     Logger.debug('creating wallet...', wallet)
 
     return this.saveWallet(id, name, wallet, networkId, implementationId)
-  }
-
-  // =================== tx building =================== //
-
-  getAddressingInfo(address: string) {
-    const wallet = this.getWallet()
-    return wallet.getAddressing(address)
-  }
-
-  async getDelegationStatus() {
-    const wallet = this.getWallet()
-    return wallet.getDelegationStatus()
-  }
-
-  async signTx<T>(signRequest: ISignRequest<T>, decryptedKey: string) {
-    const wallet = this.getWallet()
-    return this.abortWhenWalletCloses(wallet.signTx(signRequest as any, decryptedKey))
-  }
-
-  async signTxWithLedger(request: ISignRequest, useUSB: boolean) {
-    const wallet = this.getWallet()
-    return this.abortWhenWalletCloses(wallet.signTxWithLedger(request as any, useUSB))
-  }
-
-  // =================== backend API =================== //
-
-  async submitTransaction(signedTx: string) {
-    const wallet = this.getWallet()
-    return this.abortWhenWalletCloses(wallet.submitTransaction(signedTx))
   }
 }
 

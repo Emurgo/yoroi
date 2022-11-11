@@ -7,8 +7,10 @@ import cryptoRandomString from 'crypto-random-string'
 import ExtendableError from 'es6-error'
 import _ from 'lodash'
 import DeviceInfo from 'react-native-device-info'
+import {defaultMemoize} from 'reselect'
 
-import {makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../auth'
+import {EncryptedStorage, EncryptedStorageKeys, makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../auth'
+import {Keychain} from '../../auth/Keychain'
 import {encryptWithPassword} from '../../Catalyst/catalystCipher'
 import LocalizableError from '../../i18n/LocalizableError'
 import assert from '../../legacy/assert'
@@ -25,9 +27,10 @@ import {CardanoError, InvalidState} from '../../legacy/errors'
 import type {HWDeviceInfo} from '../../legacy/ledgerUtils'
 import {signTxWithLedger} from '../../legacy/ledgerUtils'
 import {Logger} from '../../legacy/logging'
-import type {CardanoHaskellShelleyNetwork} from '../../legacy/networks'
+import {CardanoHaskellShelleyNetwork, getCardanoNetworkConfigById, isJormungandr} from '../../legacy/networks'
 import {isHaskellShelleyNetwork, PROVIDERS} from '../../legacy/networks'
 import {processTxHistoryData} from '../../legacy/processTransactions'
+import {IsLockedError, nonblockingSynchronize, synchronize} from '../../legacy/promise'
 import type {WalletMeta} from '../../legacy/state'
 import storageLegacy from '../../legacy/storage'
 import {deriveRewardAddressHex} from '../../legacy/utils'
@@ -62,27 +65,74 @@ import type {
 } from '../types/other'
 import {NETWORK_REGISTRY} from '../types/other'
 import {genTimeToSlot} from '../utils/timeUtils'
-import Wallet, {WalletJSON} from '../Wallet'
+import {validatePassword} from '../utils/validators'
 import * as api from './api'
-import {AddressChain, Addresses, AddressGenerator} from './chain'
+import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from './chain'
 import {filterAddressesByStakingKey, getDelegationStatus} from './shelley/delegationUtils'
 import {toCachedTx, TransactionCache} from './shelley/transactionCache'
 import {yoroiSignedTx} from './signedTx'
-import {NetworkId, WalletImplementationId, WalletInterface, YoroiProvider} from './types'
+import {
+  NetworkId,
+  WalletEvent,
+  WalletImplementationId,
+  WalletInterface,
+  WalletSubscription,
+  YoroiProvider,
+} from './types'
 import {yoroiUnsignedTx} from './unsignedTx'
 import {makeUtxoStorage} from './utxoStorage'
 
+type WalletState = {
+  lastGeneratedAddressIndex: number
+}
+
+export type ShelleyWalletJSON = {
+  version: string
+
+  networkId: NetworkId
+  walletImplementationId: WalletImplementationId
+  provider?: null | YoroiProvider
+
+  isHW: boolean
+  hwDeviceInfo: null | HWDeviceInfo
+  isReadOnly: boolean
+  isEasyConfirmationEnabled: boolean
+
+  publicKeyHex?: string
+
+  lastGeneratedAddressIndex: number
+  internalChain: AddressChainJSON
+  externalChain: AddressChainJSON
+}
+
+export type ByronWalletJSON = Omit<ShelleyWalletJSON, 'account'>
+
+export type WalletJSON = ShelleyWalletJSON | ByronWalletJSON
+
 export default ShelleyWallet
-export class ShelleyWallet extends Wallet implements WalletInterface {
+export class ShelleyWallet implements WalletInterface {
   storage: typeof storageLegacy
   private utxoService: UtxoService
   private utxoStorage: UtxoStorage
   protected encryptedStorage: WalletEncryptedStorage
   defaultAsset: DefaultAsset
+  id: null | string = null
+  networkId: undefined | NetworkId
+  walletImplementationId: undefined | WalletImplementationId
+  isHW = false
+  hwDeviceInfo: null | HWDeviceInfo = null
+  isReadOnly: undefined | boolean
+  provider: null | undefined | YoroiProvider
+  isEasyConfirmationEnabled = false
+  internalChain: null | AddressChain = null
+  externalChain: null | AddressChain = null
+  publicKeyHex: undefined | string
+  rewardAddressHex: null | string = null
+  version: undefined | string
+  checksum: undefined | CardanoTypes.WalletChecksum
 
   // =================== create =================== //
   constructor(storage: typeof storageLegacy, networkId: NetworkId, id: string) {
-    super()
     this.id = id
     this.storage = storage
     this.networkId = networkId
@@ -314,7 +364,8 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
 
   async resync() {
     await this.clear()
-    super.resync()
+    if (!this.transactionCache) throw new Error('invalid wallet state')
+    this.transactionCache.resetState()
     await this.save()
   }
 
@@ -902,6 +953,264 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
 
   async fetchCurrentPrice(symbol: CurrencySymbol): Promise<number> {
     return api.fetchCurrentPrice(symbol, this.getBackendConfig())
+  }
+
+  state: WalletState = {
+    lastGeneratedAddressIndex: 0,
+  }
+
+  isInitialized = false
+
+  transactionCache: null | TransactionCache = null
+
+  _doFullSyncMutex: any = {name: 'doFullSyncMutex', lock: null}
+
+  private subscriptions: Array<WalletSubscription> = []
+
+  _onTxHistoryUpdateSubscriptions: Array<(Wallet) => void> = []
+
+  _isUsedAddressIndexSelector = defaultMemoize((perAddressTxs) =>
+    _.mapValues(perAddressTxs, (txs) => {
+      assert.assert(!!txs, 'perAddressTxs cointains false-ish value')
+      return txs.length > 0
+    }),
+  )
+
+  // =================== getters =================== //
+
+  get internalAddresses() {
+    if (!this.internalChain) throw new Error('invalid wallet state')
+
+    return this.internalChain.addresses
+  }
+
+  get externalAddresses() {
+    if (!this.externalChain) throw new Error('invalid wallet state')
+
+    return this.externalChain.addresses
+  }
+
+  get isUsedAddressIndex() {
+    if (!this.transactionCache) throw new Error('invalid wallet state')
+    return this._isUsedAddressIndexSelector(this.transactionCache.perAddressTxs)
+  }
+
+  get numReceiveAddresses() {
+    return this.state.lastGeneratedAddressIndex + 1
+  }
+
+  get transactions() {
+    if (!this.transactionCache) throw new Error('invalid wallet state')
+    return this.transactionCache.transactions
+  }
+
+  get confirmationCounts() {
+    if (!this.transactionCache) throw new Error('invalid wallet state')
+    return this.transactionCache.confirmationCounts
+  }
+
+  // ============ security & key management ============ //
+  async encryptAndSaveRootKey(rootKey: string, password: string) {
+    if (this.id != null) return EncryptedStorage.write(EncryptedStorageKeys.rootKey(this.id), rootKey, password)
+
+    throw new Error('invalid wallet state')
+  }
+
+  async getDecryptedRootKey(password: string) {
+    if (this.id != null) return EncryptedStorage.read(EncryptedStorageKeys.rootKey(this.id), password)
+
+    throw new Error('invalid wallet state')
+  }
+
+  async enableEasyConfirmation(rootKey: string) {
+    if (!this.id) throw new Error('invalid wallet state')
+
+    await Keychain.setWalletKey(this.id, rootKey)
+    this.isEasyConfirmationEnabled = true
+
+    this.notify({type: 'easy-confirmation', enabled: this.isEasyConfirmationEnabled})
+  }
+
+  async disableEasyConfirmation() {
+    if (!this.id) throw new Error('invalid wallet state')
+
+    await Keychain.removeWalletKey(this.id)
+    this.isEasyConfirmationEnabled = false
+
+    this.notify({type: 'easy-confirmation', enabled: this.isEasyConfirmationEnabled})
+  }
+
+  async changePassword(oldPassword: string, newPassword: string) {
+    if (!this.id) throw new Error('invalid wallet state')
+
+    if (!_.isEmpty(validatePassword(newPassword, newPassword))) throw new Error('New password is not valid')
+
+    const key = EncryptedStorageKeys.rootKey(this.id)
+    const rootKey = await EncryptedStorage.read(key, oldPassword)
+    return EncryptedStorage.write(key, rootKey, newPassword)
+  }
+
+  // =================== subscriptions =================== //
+
+  // needs to be bound
+  notify = (event: WalletEvent) => {
+    this.subscriptions.forEach((handler) => handler(event))
+  }
+
+  subscribe(subscription: WalletSubscription) {
+    this.subscriptions.push(subscription)
+
+    return () => {
+      this.subscriptions = this.subscriptions.filter((sub) => sub !== subscription)
+    }
+  }
+
+  notifyOnTxHistoryUpdate = () => {
+    this._onTxHistoryUpdateSubscriptions.forEach((handler) => handler(this))
+  }
+
+  subscribeOnTxHistoryUpdate(subscription: () => void) {
+    this._onTxHistoryUpdateSubscriptions.push(subscription)
+
+    return () => {
+      this._onTxHistoryUpdateSubscriptions = this._onTxHistoryUpdateSubscriptions.filter((sub) => sub !== subscription)
+    }
+  }
+
+  setupSubscriptions() {
+    if (!this.internalChain) throw new Error('invalid wallet state')
+    if (!this.externalChain) throw new Error('invalid wallet state')
+    if (!this.transactionCache) throw new Error('invalid wallet state')
+
+    this.transactionCache.subscribe(() => this.notify({type: 'transactions', transactions: this.transactions}))
+    this.transactionCache.subscribe(this.notifyOnTxHistoryUpdate)
+    this.internalChain.addSubscriberToNewAddresses(() =>
+      this.notify({type: 'addresses', addresses: this.internalAddresses}),
+    )
+    this.externalChain.addSubscriberToNewAddresses(() =>
+      this.notify({type: 'addresses', addresses: this.externalAddresses}),
+    )
+  }
+
+  // =================== synch =================== //
+
+  async doFullSync() {
+    return synchronize(this._doFullSyncMutex, () => this._doFullSync())
+  }
+
+  async tryDoFullSync() {
+    try {
+      return await nonblockingSynchronize(this._doFullSyncMutex, () => this._doFullSync())
+    } catch (error) {
+      if (!(error instanceof IsLockedError)) {
+        throw error
+      }
+    }
+  }
+
+  isUsedAddress(address: string) {
+    if (!this.transactionCache) throw new Error('invalid wallet state')
+    return !!this.transactionCache.perAddressTxs[address] && this.transactionCache.perAddressTxs[address].length > 0
+  }
+
+  getLastUsedIndex(chain: AddressChain): number {
+    for (let i = chain.size() - 1; i >= 0; i--) {
+      if (this.isUsedAddress(chain.addresses[i])) {
+        return i
+      }
+    }
+    return -1
+  }
+
+  async _getAddressesInChunks(backendConfig: BackendConfig) {
+    if (!this.internalChain) throw new Error('invalid wallet state')
+    if (!this.externalChain) throw new Error('invalid wallet state')
+
+    const filterFn = (addrs) => api.filterUsedAddresses(addrs, backendConfig)
+    await Promise.all([this.internalChain.sync(filterFn), this.externalChain.sync(filterFn)])
+
+    const internalAddresses = this.internalChain.getBlocks()
+    const externalAddresses = this.externalChain.getBlocks()
+
+    const addresses =
+      this.rewardAddressHex != null
+        ? [...internalAddresses, ...externalAddresses, [this.rewardAddressHex]]
+        : [...internalAddresses, ...externalAddresses]
+
+    return addresses
+  }
+
+  async _doFullSync() {
+    if (!this.transactionCache) throw new Error('invalid wallet state')
+    if (!this.networkId) throw new Error('invalid wallet state')
+    if (!this.externalChain) throw new Error('invalid wallet state')
+    assert.assert(this.isInitialized, 'doFullSync: isInitialized')
+
+    const backendConfig: BackendConfig = getCardanoNetworkConfigById(this.networkId, this.provider).BACKEND
+    const addressChunks = await this._getAddressesInChunks(backendConfig)
+
+    if (!isJormungandr(this.networkId)) {
+      Logger.info('Discovery done, now syncing transactions')
+      await this.transactionCache.doSync(addressChunks, backendConfig)
+    }
+
+    // update receive screen to include any new addresses found
+    const lastUsedIndex = this.getLastUsedIndex(this.externalChain)
+    if (lastUsedIndex > this.state.lastGeneratedAddressIndex) {
+      this.state.lastGeneratedAddressIndex = lastUsedIndex
+    }
+  }
+
+  // ========== UI state ============= //
+
+  updateState(update: Partial<WalletState>) {
+    Logger.debug('Wallet::updateState', update)
+
+    this.state = {
+      ...this.state,
+      ...update,
+    }
+
+    this.notify({type: 'state', state: this.state})
+  }
+
+  generateNewUiReceiveAddress(): boolean {
+    if (!this.canGenerateNewReceiveAddress()) return false
+
+    this.updateState({
+      lastGeneratedAddressIndex: this.state.lastGeneratedAddressIndex + 1,
+    })
+
+    return true
+  }
+
+  // ========== persistence ============= //
+
+  // TODO: move to specific child class?
+  toJSON(): WalletJSON {
+    if (this.networkId == null) throw new Error('invalid WalletJSON: networkId')
+    if (this.walletImplementationId == null) throw new Error('invalid WalletJSON: walletImplementationId')
+    if (this.version == null) throw new Error('invalid WalletJSON: version')
+    if (this.isReadOnly == null) throw new Error('invalid WalletJSON: isReadOnly')
+    if (this.externalAddresses == null) throw new Error('invalid WalletJSON: externalAddresses')
+    if (this.internalAddresses == null) throw new Error('invalid WalletJSON: internalAddresses')
+    if (this.externalChain == null) throw new Error('invalid WalletJSON: externalChain')
+    if (this.internalChain == null) throw new Error('invalid WalletJSON: internalChain')
+
+    return {
+      lastGeneratedAddressIndex: this.state.lastGeneratedAddressIndex,
+      publicKeyHex: this.publicKeyHex,
+      version: this.version,
+      internalChain: this.internalChain.toJSON(),
+      externalChain: this.externalChain.toJSON(),
+      networkId: this.networkId,
+      walletImplementationId: this.walletImplementationId,
+      isHW: this.isHW,
+      hwDeviceInfo: this.hwDeviceInfo,
+      isReadOnly: this.isReadOnly,
+      isEasyConfirmationEnabled: this.isEasyConfirmationEnabled,
+      provider: this.provider,
+    }
   }
 }
 
