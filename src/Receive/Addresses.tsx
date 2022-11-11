@@ -4,6 +4,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {CopyButton, Icon, Spacer, Text} from '../components'
+import {useReceiveAddresses, useWallet} from '../hooks'
 import {isEmptyString} from '../legacy/utils'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
@@ -181,7 +182,8 @@ const useAddressIndex = (address: string) => {
 
 const useUnusedAddresses = () => {
   const wallet = useSelectedWallet()
-  const receiveAddresses = wallet.receiveAddresses
+  const receiveAddresses = useReceiveAddresses(wallet)
+  useWallet(wallet, 'transactions')
   const isUsedAddressIndex = wallet.isUsedAddressIndex
 
   return receiveAddresses.filter((address) => isUsedAddressIndex[address] !== true)
@@ -189,7 +191,8 @@ const useUnusedAddresses = () => {
 
 const useUsedAddresses = () => {
   const wallet = useSelectedWallet()
-  const receiveAddresses = wallet.receiveAddresses
+  const receiveAddresses = useReceiveAddresses(wallet)
+  useWallet(wallet, 'transactions')
   const isUsedAddressIndex = wallet.isUsedAddressIndex
 
   return receiveAddresses.filter((address) => isUsedAddressIndex[address])
