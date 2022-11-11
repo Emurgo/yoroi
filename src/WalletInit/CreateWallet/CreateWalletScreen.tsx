@@ -1,11 +1,13 @@
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
 import assert from 'assert'
 import React from 'react'
+import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {generateAdaMnemonic} from '../../legacy/commonUtils'
 import {isEmptyString} from '../../legacy/utils'
 import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
+import {COLORS} from '../../theme'
 import {MnemonicExplanationModal} from '../MnemonicExplanationModal'
 import {WalletForm} from '../WalletForm'
 
@@ -44,7 +46,7 @@ export const CreateWalletScreen = () => {
   }
 
   return (
-    <SafeAreaView style={{flex: 1}} edges={['left', 'right', 'bottom']}>
+    <SafeAreaView style={styles.container} edges={['left', 'right', 'bottom']}>
       <WalletForm onSubmit={setFormData} />
       <MnemonicExplanationModal
         visible={visibleMnemonicExplanation}
@@ -54,3 +56,10 @@ export const CreateWalletScreen = () => {
     </SafeAreaView>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: COLORS.BACKGROUND,
+  },
+})

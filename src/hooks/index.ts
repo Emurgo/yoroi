@@ -18,6 +18,7 @@ import {
 
 import {decryptData, encryptData} from '../legacy/commonUtils'
 import {getDefaultAssetByNetworkId} from '../legacy/config'
+import {WrongPassword} from '../legacy/errors'
 import {ObjectValues} from '../legacy/flow'
 import {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {getCardanoNetworkConfigById} from '../legacy/networks'
@@ -112,6 +113,12 @@ export const useWallet = (wallet: YoroiWallet, event: WalletEvent['type']) => {
       unsubWalletManager()
     }
   }, [event, wallet])
+}
+
+export const useReceiveAddresses = (wallet: YoroiWallet) => {
+  useWallet(wallet, 'addresses')
+
+  return wallet.receiveAddresses
 }
 
 export const useUtxos = (
@@ -655,7 +662,7 @@ export const useCheckPin = (storage: Storage, options: UseMutationOptions<boolea
         .then((encryptedPinHash: string) => decryptData(encryptedPinHash, pin))
         .then(() => true)
         .catch((error) => {
-          if (error.message === 'Decryption error') return false
+          if (error instanceof WrongPassword) return false
           throw error
         }),
     retry: false,

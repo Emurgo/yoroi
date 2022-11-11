@@ -154,8 +154,17 @@ export const mockWallet: YoroiWallet = {
   transactions: {},
   isUsedAddressIndex: {},
   numReceiveAddresses: 0,
+  receiveAddresses: [],
   canGenerateNewReceiveAddress: (...args) => {
     action('canGenerateNewReceiveAddress')(...args)
+    return true
+  },
+  generateNewReceiveAddressIfNeeded: (...args) => {
+    action('generateNewReceiveAddressIfNeeded')(...args)
+    return true
+  },
+  generateNewReceiveAddress: (...args) => {
+    action('generateNewReceiveAddress')(...args)
     return true
   },
   storage: mockStorage,

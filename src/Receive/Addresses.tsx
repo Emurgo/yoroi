@@ -4,14 +4,16 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {CopyButton, Icon, Spacer, Text} from '../components'
+import {useReceiveAddresses, useWallet} from '../hooks'
 import {isEmptyString} from '../legacy/utils'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
+import {Address as AddressType} from '../yoroi-wallets/types'
 import AddressModal from './AddressModal'
 
 export const UnusedAddresses = () => {
   const strings = useStrings()
-  const addresses = useUnusedAddresses()
+  const addresses = useAddresses()
   const [address, setAddress] = React.useState<string | null>(null)
 
   return (
@@ -21,10 +23,10 @@ export const UnusedAddresses = () => {
         <Text style={styles.heading}>{strings.verifyAddress}</Text>
       </Header>
 
-      {addresses.map((address, index) => (
+      {addresses.unused.map((address, index) => (
         <React.Fragment key={address}>
           <UnusedAddress address={address} onPress={() => setAddress(address)} />
-          {index !== addresses.length - 1 && <Spacer height={16} />}
+          {index !== addresses.unused.length - 1 && <Spacer height={16} />}
         </React.Fragment>
       ))}
 
@@ -35,7 +37,7 @@ export const UnusedAddresses = () => {
 
 export const UsedAddresses = () => {
   const strings = useStrings()
-  const addresses = useUsedAddresses()
+  const addresses = useAddresses()
   const [address, setAddress] = React.useState<string | null>(null)
 
   return (
@@ -44,10 +46,10 @@ export const UsedAddresses = () => {
         <Text style={styles.heading}>{strings.usedAddresses}</Text>
       </Header>
 
-      {addresses.map((address, index) => (
+      {addresses.used.map((address, index) => (
         <React.Fragment key={address}>
           <UsedAddress address={address} onPress={() => setAddress(address)} />
-          {index !== addresses.length - 1 && <Spacer height={16} />}
+          {index !== addresses.used.length - 1 && <Spacer height={16} />}
         </React.Fragment>
       ))}
 
@@ -179,18 +181,24 @@ const useAddressIndex = (address: string) => {
   return index
 }
 
-const useUnusedAddresses = () => {
-  const wallet = useSelectedWallet()
-  const receiveAddresses = wallet.externalAddresses.slice(0, wallet.numReceiveAddresses)
-  const isUsedAddressIndex = wallet.isUsedAddressIndex
-
-  return receiveAddresses.filter((address) => isUsedAddressIndex[address] !== true)
+type Addresses = {
+  used: AddressType[]
+  unused: AddressType[]
 }
 
-const useUsedAddresses = () => {
+const useAddresses = (): Addresses => {
   const wallet = useSelectedWallet()
-  const receiveAddresses = wallet.externalAddresses.slice(0, wallet.numReceiveAddresses)
+  const receiveAddresses = useReceiveAddresses(wallet)
+  useWallet(wallet, 'transactions')
   const isUsedAddressIndex = wallet.isUsedAddressIndex
 
-  return receiveAddresses.filter((address) => isUsedAddressIndex[address])
+  return receiveAddresses.reduce(
+    (addresses, address) => {
+      isUsedAddressIndex[address]
+        ? (addresses.used = [...addresses.used, address])
+        : (addresses.unused = [...addresses.unused, address])
+      return addresses
+    },
+    {used: [], unused: []} as Addresses,
+  )
 }
