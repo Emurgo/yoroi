@@ -316,6 +316,7 @@ type YoroiWalletKeys =
   | 'canGenerateNewReceiveAddress'
   | 'generateNewReceiveAddressIfNeeded'
   | 'generateNewReceiveAddress'
+  | 'receiveAddresses'
 
 const yoroiWalletKeys: Array<YoroiWalletKeys> = [
   'changePassword',
