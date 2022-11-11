@@ -67,7 +67,7 @@ import {NETWORK_REGISTRY} from '../types/other'
 import {genTimeToSlot} from '../utils/timeUtils'
 import {validatePassword} from '../utils/validators'
 import * as api from './api'
-import {AddressChain, AddressChainJSON, AddressGenerator} from './chain'
+import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from './chain'
 import {filterAddressesByStakingKey, getDelegationStatus} from './shelley/delegationUtils'
 import {toCachedTx, TransactionCache} from './shelley/transactionCache'
 import {yoroiSignedTx} from './signedTx'
@@ -80,7 +80,7 @@ import {
   YoroiProvider,
 } from './types'
 import {yoroiUnsignedTx} from './unsignedTx'
-import {generateUtxoStorage} from './utxoStorage'
+import {makeUtxoStorage} from './utxoStorage'
 
 type WalletState = {
   lastGeneratedAddressIndex: number
@@ -139,9 +139,13 @@ export class ShelleyWallet implements WalletInterface {
     this.defaultAsset = getDefaultAssetByNetworkId(this.networkId)
 
     const config = this.getBackendConfig()
-    this.utxoStorage = generateUtxoStorage(this.storage, `/wallet/${this.id}/utxos`)
+    this.utxoStorage = makeUtxoStorage(this.storage, `/wallet/${this.id}/utxos`)
     this.utxoService = initUtxo(this.utxoStorage, `${config.API_ROOT}/`)
     this.encryptedStorage = makeWalletEncryptedStorage(id)
+  }
+
+  get receiveAddresses(): Addresses {
+    return this.externalAddresses.slice(0, this.numReceiveAddresses)
   }
 
   save() {
@@ -561,6 +565,42 @@ export class ShelleyWallet implements WalletInterface {
     if (this.rewardAddressHex == null) throw new Error('reward address is null')
     const certsForKey = this.transactionCache.perRewardAddressCertificates[this.rewardAddressHex]
     return Promise.resolve(getDelegationStatus(this.rewardAddressHex, certsForKey))
+  }
+
+  canGenerateNewReceiveAddress() {
+    if (!this.externalChain) throw new Error('invalid wallet state')
+    const lastUsedIndex = this.getLastUsedIndex(this.externalChain)
+    // TODO: should use specific wallet config
+    const maxIndex = lastUsedIndex + CONFIG.WALLETS.HASKELL_SHELLEY.MAX_GENERATED_UNUSED
+    if (this.state.lastGeneratedAddressIndex >= maxIndex) {
+      return false
+    }
+    return this.numReceiveAddresses < this.externalAddresses.length
+  }
+
+  generateNewReceiveAddressIfNeeded() {
+    /* new address is automatically generated when you use the latest unused */
+    if (!this.externalChain) throw new Error('invalid wallet state')
+    const lastGeneratedAddress = this.externalChain.addresses[this.state.lastGeneratedAddressIndex]
+    if (!this.isUsedAddress(lastGeneratedAddress)) {
+      return false
+    }
+    return this.generateNewReceiveAddress()
+  }
+
+  generateNewReceiveAddress(): boolean {
+    if (!this.canGenerateNewReceiveAddress()) return false
+
+    this.updateState({
+      lastGeneratedAddressIndex: this.state.lastGeneratedAddressIndex + 1,
+    })
+
+    // note: don't await on purpose
+    this.save()
+
+    this.notify({type: 'addresses', addresses: this.receiveAddresses})
+
+    return true
   }
 
   // =================== tx building =================== //
@@ -1132,27 +1172,6 @@ export class ShelleyWallet implements WalletInterface {
     }
 
     this.notify({type: 'state', state: this.state})
-  }
-
-  canGenerateNewReceiveAddress() {
-    if (!this.externalChain) throw new Error('invalid wallet state')
-    const lastUsedIndex = this.getLastUsedIndex(this.externalChain)
-    // TODO: should use specific wallet config
-    const maxIndex = lastUsedIndex + CONFIG.WALLETS.HASKELL_SHELLEY.MAX_GENERATED_UNUSED
-    if (this.state.lastGeneratedAddressIndex >= maxIndex) {
-      return false
-    }
-    return this.numReceiveAddresses < this.externalAddresses.length
-  }
-
-  generateNewUiReceiveAddressIfNeeded() {
-    /* new address is automatically generated when you use the latest unused */
-    if (!this.externalChain) throw new Error('invalid wallet state')
-    const lastGeneratedAddress = this.externalChain.addresses[this.state.lastGeneratedAddressIndex]
-    if (!this.isUsedAddress(lastGeneratedAddress)) {
-      return false
-    }
-    return this.generateNewUiReceiveAddress()
   }
 
   generateNewUiReceiveAddress(): boolean {

@@ -8,7 +8,7 @@ export type UtxoStorageItem = {
   utxoDiffToBestBlock: UtxoDiffToBestBlock[]
 }
 
-export const generateUtxoStorage = (storage: typeof storageLegacy, storagePath: string) => {
+export const makeUtxoStorage = (storage: typeof storageLegacy, storagePath: string) => {
   const getAllUtxosData = () => storage.read<UtxoStorageItem>(storagePath)
 
   const setUtxoDiffToBestBlock = async (utxoDiffToBestBlock: UtxoDiffToBestBlock[]) => {

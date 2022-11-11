@@ -102,6 +102,8 @@ export interface WalletInterface {
 
   get confirmationCounts(): Record<string, null | number>
 
+  get receiveAddresses(): Addresses
+
   // =================== create =================== //
 
   create(
@@ -141,14 +143,6 @@ export interface WalletInterface {
   doFullSync(): Promise<void>
 
   tryDoFullSync(): Promise<void>
-
-  // =================== state/UI =================== //
-
-  canGenerateNewReceiveAddress(): boolean
-
-  generateNewUiReceiveAddressIfNeeded(): boolean
-
-  generateNewUiReceiveAddress(): boolean
 
   // =================== persistence =================== //
 
@@ -190,6 +184,12 @@ export interface WalletInterface {
   createWithdrawalTx(shouldDeregister: boolean): Promise<YoroiUnsignedTx>
 
   signTxWithLedger(request: YoroiUnsignedTx, useUSB: boolean): Promise<YoroiSignedTx>
+
+  canGenerateNewReceiveAddress(): boolean
+
+  generateNewReceiveAddressIfNeeded(): boolean
+
+  generateNewReceiveAddress(): boolean
 
   // =================== backend API =================== //
 
@@ -285,7 +285,7 @@ export const isYoroiWallet = (wallet: unknown): wallet is YoroiWallet => {
 }
 
 type YoroiWalletKeys =
-  | 'canGenerateNewReceiveAddress'
+  | 'changePassword'
   | 'checkServerStatus'
   | 'checksum'
   | 'confirmationCounts'
@@ -324,9 +324,14 @@ type YoroiWalletKeys =
   | 'toJSON'
   | 'transactions'
   | 'walletImplementationId'
+  | 'receiveAddresses'
+  | 'canGenerateNewReceiveAddress'
+  | 'generateNewReceiveAddressIfNeeded'
+  | 'generateNewReceiveAddress'
+  | 'receiveAddresses'
 
 const yoroiWalletKeys: Array<YoroiWalletKeys> = [
-  'canGenerateNewReceiveAddress',
+  'changePassword',
   'checkServerStatus',
   'checksum',
   'confirmationCounts',
