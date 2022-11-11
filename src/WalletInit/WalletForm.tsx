@@ -127,21 +127,6 @@ const PasswordInput = TextInput
 const PasswordConfirmationInput = TextInput
 const Actions = (props) => <View {...props} style={styles.actions} />
 
-const styles = StyleSheet.create({
-  safeAreaView: {
-    backgroundColor: COLORS.BACKGROUND,
-    flex: 1,
-  },
-  scrollContentContainer: {
-    paddingHorizontal: 16,
-    paddingTop: 40,
-  },
-  actions: {
-    padding: 16,
-    backgroundColor: COLORS.BACKGROUND,
-  },
-})
-
 const messages = defineMessages({
   walletNameInputLabel: {
     id: 'components.walletinit.walletform.walletNameInputLabel',
@@ -184,3 +169,17 @@ const useStrings = () => {
     mustBeFilled: intl.formatMessage(globalMessages.walletNameErrorMustBeFilled),
   }
 }
+
+const styles = StyleSheet.create({
+  safeAreaView: {
+    flex: 1,
+  },
+  scrollContentContainer: {
+    paddingHorizontal: 16,
+    paddingTop: 40,
+  },
+  actions: {
+    padding: 16,
+    backgroundColor: COLORS.BACKGROUND,
+  },
+})
