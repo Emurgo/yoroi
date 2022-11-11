@@ -367,6 +367,7 @@ export class ShelleyWallet implements WalletInterface {
     if (!this.transactionCache) throw new Error('invalid wallet state')
     this.transactionCache.resetState()
     await this.save()
+    this.sync()
   }
 
   // =================== utils =================== //
