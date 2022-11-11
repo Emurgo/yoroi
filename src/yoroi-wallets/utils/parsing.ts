@@ -64,3 +64,18 @@ export const parseAmountDecimal = (amount: string, token: Token): BigNumber => {
 
   return value
 }
+
+export const parseBoolean = (data: unknown) => {
+  const parsed = parseSafe(data)
+  return isBoolean(parsed) ? parsed : undefined
+}
+
+export const parseSafe = (text: any) => {
+  try {
+    return JSON.parse(text)
+  } catch (_) {
+    return undefined
+  }
+}
+
+export const isBoolean = (data: unknown): data is boolean => typeof data === 'boolean'
