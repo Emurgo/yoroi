@@ -2,10 +2,9 @@ import _ from 'lodash'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native'
-import {useDispatch} from 'react-redux'
 
 import {Button, OfflineBanner, Spacer, StatusBar} from '../components'
-import {generateNewReceiveAddress, generateNewReceiveAddressIfNeeded} from '../legacy/actions'
+import {useReceiveAddresses} from '../hooks'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
 import {AddressDetail} from './AddressDetail'
@@ -14,21 +13,14 @@ import {UnusedAddresses, UsedAddresses} from './Addresses'
 export const ReceiveScreen = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
-  const receiveAddresses = wallet.externalAddresses.slice(0, wallet.numReceiveAddresses)
+  const receiveAddresses = useReceiveAddresses(wallet)
   const addressLimitReached = wallet.canGenerateNewReceiveAddress() == false
 
   const currentAddress = _.last(receiveAddresses)
 
-  const dispatch = useDispatch()
   React.useEffect(() => {
-    dispatch(generateNewReceiveAddressIfNeeded())
-  }, [dispatch])
-
-  // This is here just so that we can properly monitor changes and fire
-  // generateNewReceiveAddressIfNeeded()
-  React.useEffect(() => {
-    dispatch(generateNewReceiveAddressIfNeeded())
-  }, [dispatch, wallet.isUsedAddressIndex])
+    wallet.generateNewReceiveAddressIfNeeded()
+  }, [wallet])
 
   return (
     <View style={styles.root}>
@@ -51,7 +43,7 @@ export const ReceiveScreen = () => {
 
           <Button
             outlineOnLight
-            onPress={() => dispatch(generateNewReceiveAddress())}
+            onPress={() => wallet.generateNewReceiveAddress()}
             disabled={addressLimitReached}
             title={!addressLimitReached ? strings.generateButton : strings.cannotGenerate}
             testID="generateNewReceiveAddressButton"

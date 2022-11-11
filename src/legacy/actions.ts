@@ -127,14 +127,6 @@ export const setupHooks = () => (dispatch: Dispatch<any>) => {
   walletManager.subscribeServerSync((status) => dispatch(_setServerStatus(status)))
 }
 
-export const generateNewReceiveAddress = () => async (_dispatch: Dispatch<any>) => {
-  return walletManager.generateNewUiReceiveAddress()
-}
-
-export const generateNewReceiveAddressIfNeeded = () => async (_dispatch: Dispatch<any>) => {
-  return walletManager.generateNewUiReceiveAddressIfNeeded()
-}
-
 type DialogOptions = {
   title: string
   message: string

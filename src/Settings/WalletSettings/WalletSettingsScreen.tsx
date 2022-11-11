@@ -82,7 +82,7 @@ export const WalletSettingsScreen = () => {
         >
           <Switch
             value={easyConfirmationEnabled}
-            onValueChange={easyConfirmationEnabled === true ? onDisableEasyConfirmation : onEnableEasyConfirmation}
+            onValueChange={easyConfirmationEnabled ? onDisableEasyConfirmation : onEnableEasyConfirmation}
             disabled={authSetting === 'pin' || wallet.isHW || wallet.isReadOnly}
           />
         </SettingsItem>

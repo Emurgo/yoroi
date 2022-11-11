@@ -19,11 +19,11 @@ import {
   ShelleyWallet,
   WalletImplementationId,
   WalletInterface,
+  WalletJSON,
   YoroiProvider,
   YoroiWallet,
 } from './cardano'
 import {WALLET_IMPLEMENTATION_REGISTRY} from './types/other'
-import {WalletJSON} from './Wallet'
 
 export class WalletClosed extends ExtendableError {}
 export class SystemAuthDisabled extends ExtendableError {}
@@ -190,25 +190,6 @@ export class WalletManager {
         setTimeout(() => this._backgroundSync(), CONFIG.HISTORY_REFRESH_TIME)
       }
     }
-  }
-
-  // ========== UI state ============= //
-
-  async generateNewUiReceiveAddressIfNeeded() {
-    if (!this._wallet) return
-    await this.abortWhenWalletCloses(Promise.resolve(this._wallet.generateNewUiReceiveAddressIfNeeded()))
-  }
-
-  generateNewUiReceiveAddress() {
-    if (!this._wallet) return false
-    const wallet = this._wallet
-
-    const didGenerateNew = wallet.generateNewUiReceiveAddress()
-    if (didGenerateNew) {
-      // note: don't await on purpose
-      wallet.save()
-    }
-    return didGenerateNew
   }
 
   // =================== state & persistence =================== //
