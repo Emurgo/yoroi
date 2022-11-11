@@ -93,6 +93,8 @@ export interface WalletInterface {
 
   get confirmationCounts(): Record<string, null | number>
 
+  get receiveAddresses(): Addresses
+
   // =================== create =================== //
 
   create(
@@ -174,6 +176,12 @@ export interface WalletInterface {
 
   signTxWithLedger(request: YoroiUnsignedTx, useUSB: boolean): Promise<YoroiSignedTx>
 
+  canGenerateNewReceiveAddress(): boolean
+
+  generateNewReceiveAddressIfNeeded(): boolean
+
+  generateNewReceiveAddress(): boolean
+
   // =================== backend API =================== //
 
   checkServerStatus(): Promise<ServerStatus>
@@ -253,10 +261,6 @@ export type YoroiWallet = Pick<WalletInterface, YoroiWalletKeys> & {
   sync: () => Promise<void>
   resync: () => Promise<void>
   encryptedStorage: WalletEncryptedStorage
-  canGenerateNewReceiveAddress(): boolean
-  generateNewReceiveAddressIfNeeded(): boolean
-  generateNewReceiveAddress(): boolean
-  receiveAddresses: Addresses
 }
 
 export const isYoroiWallet = (wallet: unknown): wallet is YoroiWallet => {
@@ -308,6 +312,10 @@ type YoroiWalletKeys =
   | 'toJSON'
   | 'transactions'
   | 'walletImplementationId'
+  | 'receiveAddresses'
+  | 'canGenerateNewReceiveAddress'
+  | 'generateNewReceiveAddressIfNeeded'
+  | 'generateNewReceiveAddress'
 
 const yoroiWalletKeys: Array<YoroiWalletKeys> = [
   'changePassword',
