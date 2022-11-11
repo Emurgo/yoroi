@@ -4,27 +4,23 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native'
 
 import {Button, OfflineBanner, Spacer, StatusBar} from '../components'
+import {useWallet} from '../hooks'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
+import {YoroiWallet} from '../yoroi-wallets'
 import {AddressDetail} from './AddressDetail'
 import {UnusedAddresses, UsedAddresses} from './Addresses'
 
 export const ReceiveScreen = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
-  const [receiveAddresses, setReceiveAddresses] = React.useState(wallet.receiveAddresses)
+  const receiveAddresses = useReceiveAddresses(wallet)
   const addressLimitReached = wallet.canGenerateNewReceiveAddress() == false
 
   const currentAddress = _.last(receiveAddresses)
 
-  const onGenerateNewAddresses = () => {
-    wallet.generateNewReceiveAddress()
-    setReceiveAddresses(wallet.receiveAddresses)
-  }
-
   React.useEffect(() => {
     wallet.generateNewReceiveAddressIfNeeded()
-    setReceiveAddresses(wallet.receiveAddresses)
   }, [wallet])
 
   return (
@@ -48,7 +44,7 @@ export const ReceiveScreen = () => {
 
           <Button
             outlineOnLight
-            onPress={onGenerateNewAddresses}
+            onPress={() => wallet.generateNewReceiveAddress()}
             disabled={addressLimitReached}
             title={!addressLimitReached ? strings.generateButton : strings.cannotGenerate}
             testID="generateNewReceiveAddressButton"
@@ -63,6 +59,12 @@ export const ReceiveScreen = () => {
       </ScrollView>
     </View>
   )
+}
+
+const useReceiveAddresses = (wallet: YoroiWallet) => {
+  useWallet(wallet, 'addresses')
+
+  return wallet.receiveAddresses
 }
 
 const Content = (props) => <View {...props} style={styles.content} />

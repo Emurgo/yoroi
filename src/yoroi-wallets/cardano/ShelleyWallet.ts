@@ -547,6 +547,8 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     // note: don't await on purpose
     this.save()
 
+    this.notify({type: 'addresses', addresses: this.receiveAddresses})
+
     return true
   }
 
