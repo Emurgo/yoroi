@@ -1,4 +1,5 @@
-## fastlane documentation
+fastlane documentation
+----
 
 # Installation
 
@@ -46,7 +47,7 @@ Push a new mainnet build to TestFlight
 
 Builds the project. Useful to verify a succesful compilation.
 
----
+----
 
 This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.
 

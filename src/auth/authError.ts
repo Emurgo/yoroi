@@ -6,7 +6,8 @@ export const useAuthOsErrorDecoder = () => {
   const decoder = (error: Error | null | undefined) => {
     if (!error || /code: 13/.test(error?.message)) return // 13 = Cancelled by user
     if (/code: 7/.test(error?.message)) return strings.tooManyAttempts
-    return `${strings.unknownError} : ${error?.message}`
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return `${strings.unknownError} : ${(error as any)?.code}`
   }
 
   return decoder
