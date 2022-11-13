@@ -20,9 +20,9 @@ export const useAuthOsErrorDecoder = () => {
 
     ios: (error: any): string | undefined => {
       if (!error) return
-      if (error?.code === -128) return // cancelled by user
+      if (error?.code === '-128') return // cancelled by user
 
-      return `${strings.unknownError} : ${(error as any)?.code}`
+      return `${strings.unknownError} ${(error as any)?.code}`
     },
 
     default: (_error: any): string | undefined => {
