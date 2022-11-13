@@ -7,7 +7,7 @@ import {Alert, AppState, AppStateStatus, Platform} from 'react-native'
 import RNBootSplash from 'react-native-bootsplash'
 import {useSelector} from 'react-redux'
 
-import {PinLoginScreen, useAuthOsEnabled, useAuthWithOs, useBackgroundTimeout} from './auth'
+import {PinLoginScreen, useAuthOsEnabled, useAuthOsErrorDecoder, useAuthWithOs, useBackgroundTimeout} from './auth'
 import {useAuth} from './auth/AuthProvider'
 import {EnableLoginWithPin} from './auth/EnableLoginWithPin'
 import {FirstRunNavigator} from './FirstRun/FirstRunNavigator'
@@ -15,6 +15,7 @@ import {useAuthSetting} from './hooks'
 import globalMessages from './i18n/global-messages'
 import {DeveloperScreen} from './legacy/DeveloperScreen'
 import {isMaintenanceSelector} from './legacy/selectors'
+import {isEmptyString} from './legacy/utils'
 import MaintenanceScreen from './MaintenanceScreen'
 import {AppRoutes} from './navigation'
 import {OsLoginScreen} from './OsAuth'
@@ -30,20 +31,28 @@ export const AppNavigator = () => {
   const strings = useStrings()
   const storage = useStorage()
   const isMaintenance = useSelector(isMaintenanceSelector)
+  const decodeAuthOsError = useAuthOsErrorDecoder()
   useHideScreenInAppSwitcher()
   useAutoLogout()
 
   const {isLoggedIn, isLoggedOut, login} = useAuth()
   const {authWithOs} = useAuthWithOs(
     {authenticationPrompt: {cancel: strings.cancel, title: strings.authorize}, storage},
-    {onSuccess: login, onSettled: () => RNBootSplash.hide({fade: true})},
+    {
+      onSuccess: login,
+      onError: (error) => {
+        const errorMessage = decodeAuthOsError(error)
+        if (!isEmptyString(errorMessage)) Alert.alert(strings.error, errorMessage)
+      },
+      onSettled: () => RNBootSplash.hide({fade: true}),
+    },
   )
 
   const authAction = useAuthAction()
   const onReady = () => {
-    if (!isLoggedOut) return
+    if (isLoggedIn) return
 
-    // try first OS auth before navigating
+    // try first OS auth before navigating to os login screen
     if (authAction === 'auth-with-os') {
       authWithOs()
     } else {
@@ -118,6 +127,7 @@ const useStrings = () => {
 
   return {
     customPinTitle: intl.formatMessage(messages.customPinTitle),
+    error: intl.formatMessage(globalMessages.error),
     loginPinTitle: intl.formatMessage(messages.pinLoginTitle),
     authWithOsChangeTitle: intl.formatMessage(messages.authWithOsChangeTitle),
     authWithOsChangeMessage: intl.formatMessage(messages.authWithOsChangeMessage),

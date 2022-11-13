@@ -1,11 +1,12 @@
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet} from 'react-native'
+import {Alert, StyleSheet} from 'react-native'
 
 import {useAuthOsErrorDecoder, useEnableAuthWithOs} from '../../auth'
 import {Button} from '../../components'
 import globalMessages from '../../i18n/global-messages'
+import {isEmptyString} from '../../legacy/utils'
 import {OsAuthScreen} from '../../OsAuth'
 import {useStorage} from '../../Storage'
 
@@ -13,9 +14,9 @@ export const EnableLoginWithOsScreen = () => {
   const strings = useStrings()
   const navigation = useNavigation()
   const storage = useStorage()
-
   const decodeAuthOsError = useAuthOsErrorDecoder()
-  const {enableAuthWithOs, isLoading, error} = useEnableAuthWithOs(
+
+  const {enableAuthWithOs, isLoading} = useEnableAuthWithOs(
     {
       storage,
       authenticationPrompt: {
@@ -25,7 +26,10 @@ export const EnableLoginWithOsScreen = () => {
     },
     {
       onSuccess: () => navigation.goBack(),
-      retry: false,
+      onError: (error) => {
+        const errorMessage = decodeAuthOsError(error)
+        if (!isEmptyString(errorMessage)) Alert.alert(strings.error, errorMessage)
+      },
     },
   )
 
@@ -33,7 +37,6 @@ export const EnableLoginWithOsScreen = () => {
     <OsAuthScreen
       headings={[strings.heading]}
       subHeadings={[strings.subHeading1, strings.subHeading2]}
-      error={decodeAuthOsError(error)}
       buttons={[
         <Button
           key="cancel"
@@ -61,6 +64,7 @@ const useStrings = () => {
   return {
     authorize: intl.formatMessage(messages.authorize),
     cancel: intl.formatMessage(globalMessages.cancel),
+    error: intl.formatMessage(globalMessages.error),
     heading: intl.formatMessage(messages.heading),
     subHeading1: intl.formatMessage(messages.subHeading1),
     subHeading2: intl.formatMessage(messages.subHeading2),
