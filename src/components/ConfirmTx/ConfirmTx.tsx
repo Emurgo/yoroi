@@ -5,7 +5,7 @@ import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Platform, StyleSheet, View} from 'react-native'
 
-import {EncryptedStorage, EncryptedStorageKeys, useAuthOsErrorDecoder, useAuthOsWithEasyConfirmation} from '../../auth'
+import {EncryptedStorage, EncryptedStorageKeys, useAuthOsError, useAuthOsWithEasyConfirmation} from '../../auth'
 import {useSubmitTx} from '../../hooks'
 import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../i18n/global-messages'
 import LocalizableError from '../../i18n/LocalizableError'
@@ -194,7 +194,7 @@ export const ConfirmTx = ({
     [onError, onSuccess, password, strings, submitTx, useUSB, wallet, yoroiUnsignedTx],
   )
 
-  const decodeAuthOsError = useAuthOsErrorDecoder()
+  const {getMessage} = useAuthOsError()
   const {authWithOs} = useAuthOsWithEasyConfirmation(
     {
       id: wallet.id,
@@ -206,7 +206,7 @@ export const ConfirmTx = ({
     {
       onSuccess: onConfirm,
       onError: (error) => {
-        const errorMessage = decodeAuthOsError(error)
+        const errorMessage = getMessage(error)
         if (!isEmptyString(errorMessage)) showError({errorMessage})
       },
     },

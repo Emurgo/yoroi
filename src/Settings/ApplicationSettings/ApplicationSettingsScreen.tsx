@@ -1,14 +1,13 @@
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Alert, ScrollView, StyleSheet, Switch} from 'react-native'
+import {ScrollView, StyleSheet, Switch} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
-import {useAuthOsEnabled, useAuthOsErrorDecoder, useAuthWithOs} from '../../auth'
+import {useAuthOsEnabled, useAuthOsError, useAuthWithOs} from '../../auth'
 import {StatusBar} from '../../components'
 import {useAuthSetting, useCrashReports} from '../../hooks'
 import globalMessages from '../../i18n/global-messages'
 import {CONFIG, isNightly} from '../../legacy/config'
-import {isEmptyString} from '../../legacy/utils'
 import {useWalletNavigation} from '../../navigation'
 import {useStorage} from '../../Storage'
 import {useCurrencyContext} from '../Currency'
@@ -24,8 +23,8 @@ export const ApplicationSettingsScreen = () => {
   const storage = useStorage()
   const authSetting = useAuthSetting(storage)
   const authOsEnabled = useAuthOsEnabled()
+  const {alert} = useAuthOsError()
 
-  const decodeAuthOsError = useAuthOsErrorDecoder()
   const {authWithOs} = useAuthWithOs(
     {
       authenticationPrompt: {
@@ -36,10 +35,7 @@ export const ApplicationSettingsScreen = () => {
     },
     {
       onSuccess: () => navigation.navigate('enable-login-with-pin'),
-      onError: (error) => {
-        const errorMessage = decodeAuthOsError(error)
-        if (!isEmptyString(errorMessage)) Alert.alert(strings.error, errorMessage)
-      },
+      onError: alert,
     },
   )
 
@@ -123,7 +119,6 @@ const useStrings = () => {
     currency: intl.formatMessage(globalMessages.currency),
     authorize: intl.formatMessage(messages.authorize),
     cancel: intl.formatMessage(globalMessages.cancel),
-    error: intl.formatMessage(globalMessages.error),
   }
 }
 

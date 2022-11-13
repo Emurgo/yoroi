@@ -47,12 +47,12 @@ export const useEnableAuthWithOs = (
   options?: UseMutationOptions<void, Error>,
 ) => {
   const mutation = useMutationWithInvalidations({
+    ...options,
     mutationFn: () =>
       Keychain.authenticate(authenticationPrompt)
         .then(() => storage.setItem(AUTH_SETTINGS_KEY, JSON.stringify(AUTH_WITH_OS)))
         .then(() => storage.getItem(ENCRYPTED_PIN_HASH_KEY))
         .then((pin) => (pin != null ? storage.removeItem(ENCRYPTED_PIN_HASH_KEY) : undefined)),
-    ...options,
     invalidateQueries: [['authSetting']],
   })
 
@@ -67,9 +67,9 @@ export const useAuthWithOs = (
   options?: UseMutationOptions<void, Error>,
 ) => {
   const mutation = useMutationWithInvalidations({
+    ...options,
     invalidateQueries: [['authSetting']],
     mutationFn: () => Keychain.authenticate(authenticationPrompt),
-    ...options,
   })
 
   return {
@@ -83,8 +83,8 @@ export const useAuthOsWithEasyConfirmation = (
   options?: UseMutationOptions<string, Error>,
 ) => {
   const mutation = useMutation({
-    mutationFn: () => Keychain.getWalletKey(id, authenticationPrompt),
     ...options,
+    mutationFn: () => Keychain.getWalletKey(id, authenticationPrompt),
   })
 
   return {

@@ -1,12 +1,10 @@
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Alert} from 'react-native'
 
-import {useAuthOsErrorDecoder, useAuthWithOs} from '../../auth'
+import {useAuthOsError, useAuthWithOs} from '../../auth'
 import {useAuth} from '../../auth/AuthProvider'
 import {Button} from '../../components'
 import globalMessages from '../../i18n/global-messages'
-import {isEmptyString} from '../../legacy/utils'
 import {useStorage} from '../../Storage'
 import {OsAuthScreen} from '../OsAuthScreen'
 
@@ -14,15 +12,12 @@ export const OsLoginScreen = () => {
   const strings = useStrings()
   const storage = useStorage()
   const {login} = useAuth()
-  const decodeAuthOsError = useAuthOsErrorDecoder()
+  const {alert} = useAuthOsError()
   const {authWithOs, isLoading} = useAuthWithOs(
     {storage, authenticationPrompt: {title: strings.authorize, cancel: strings.cancel}},
     {
       onSuccess: login,
-      onError: (error) => {
-        const errorMessage = decodeAuthOsError(error)
-        if (!isEmptyString(errorMessage)) Alert.alert(strings.error, errorMessage)
-      },
+      onError: alert,
     },
   )
 
@@ -40,7 +35,6 @@ const useStrings = () => {
 
   return {
     cancel: intl.formatMessage(globalMessages.cancel),
-    error: intl.formatMessage(globalMessages.error),
     headings1: intl.formatMessage(messages.headings1),
     headings2: intl.formatMessage(messages.headings2),
     login: intl.formatMessage(messages.login),

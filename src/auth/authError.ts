@@ -1,34 +1,26 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {defineMessages, useIntl} from 'react-intl'
-import {Platform} from 'react-native'
+import {Alert} from 'react-native'
 
-// react-native-keychain doesn't normalize the errors, iOS = `Error.code`
-// Android the code is inside the message i.e "code 7: Too many attempts"
-export const useAuthOsErrorDecoder = () => {
+import globalMessages from '../i18n/global-messages'
+import {Keychain} from './Keychain'
+
+export const useAuthOsError = () => {
   const strings = useStrings()
 
-  return Platform.select({
-    android: (error: any): string | undefined => {
-      if (!error) return
-      if (/code: 13/.test(error?.message)) return // cancelled by user
+  const alert = (error: any) => {
+    if (error instanceof Keychain.Errors.CancelledByUser) return
+    if (error instanceof Keychain.Errors.TooManyAttempts) return Alert.alert(strings.error, strings.tooManyAttempts)
+    return Alert.alert(strings.error, strings.unknownError)
+  }
 
-      // iOS it will fallback to PIN, if wrong pin, sensor would be disabled (app will trigger pin creation)
-      if (/code: 7/.test(error?.message)) return strings.tooManyAttempts
+  const getMessage = (error: any) => {
+    if (error instanceof Keychain.Errors.CancelledByUser) return ''
+    if (error instanceof Keychain.Errors.TooManyAttempts) return strings.tooManyAttempts
+    return strings.unknownError
+  }
 
-      return `${strings.unknownError}`
-    },
-
-    ios: (error: any): string | undefined => {
-      if (!error) return
-      if (error?.code === '-128') return // cancelled by user
-
-      return `${strings.unknownError} ${(error as any)?.code}`
-    },
-
-    default: (_error: any): string | undefined => {
-      return
-    },
-  })
+  return {alert, getMessage}
 }
 
 const useStrings = () => {
@@ -37,6 +29,7 @@ const useStrings = () => {
   return {
     unknownError: intl.formatMessage(messages.unknownError),
     tooManyAttempts: intl.formatMessage(messages.tooManyAttempts),
+    error: intl.formatMessage(globalMessages.error),
   }
 }
 

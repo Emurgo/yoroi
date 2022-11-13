@@ -1,12 +1,11 @@
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Alert, StyleSheet} from 'react-native'
+import {StyleSheet} from 'react-native'
 
-import {useAuthOsErrorDecoder, useEnableAuthWithOs} from '../../auth'
+import {useAuthOsError, useEnableAuthWithOs} from '../../auth'
 import {Button} from '../../components'
 import globalMessages from '../../i18n/global-messages'
-import {isEmptyString} from '../../legacy/utils'
 import {OsAuthScreen} from '../../OsAuth'
 import {useStorage} from '../../Storage'
 
@@ -14,7 +13,7 @@ export const EnableLoginWithOsScreen = () => {
   const strings = useStrings()
   const navigation = useNavigation()
   const storage = useStorage()
-  const decodeAuthOsError = useAuthOsErrorDecoder()
+  const {alert} = useAuthOsError()
 
   const {enableAuthWithOs, isLoading} = useEnableAuthWithOs(
     {
@@ -24,13 +23,7 @@ export const EnableLoginWithOsScreen = () => {
         cancel: strings.cancel,
       },
     },
-    {
-      onSuccess: () => navigation.goBack(),
-      onError: (error) => {
-        const errorMessage = decodeAuthOsError(error)
-        if (!isEmptyString(errorMessage)) Alert.alert(strings.error, errorMessage)
-      },
-    },
+    {onSuccess: () => navigation.goBack(), onError: alert},
   )
 
   return (

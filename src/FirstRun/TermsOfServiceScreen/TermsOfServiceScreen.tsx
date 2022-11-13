@@ -1,15 +1,14 @@
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Alert, ScrollView, StyleSheet, View} from 'react-native'
+import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useAuthOsEnabled, useAuthOsErrorDecoder, useEnableAuthWithOs} from '../../auth'
+import {useAuthOsEnabled, useAuthOsError, useEnableAuthWithOs} from '../../auth'
 import {useAuth} from '../../auth/AuthProvider'
 import {Button, Checkbox, PleaseWaitModal, Spacer, StatusBar} from '../../components'
 import {useLanguage} from '../../i18n'
 import globalMessages from '../../i18n/global-messages'
-import {isEmptyString} from '../../legacy/utils'
 import {TermsOfService} from '../../Legal'
 import {FirstRunRouteNavigation} from '../../navigation'
 import {useStorage} from '../../Storage'
@@ -24,16 +23,12 @@ export const TermsOfServiceScreen = () => {
   const {login} = useAuth()
   const authOsEnabled = useAuthOsEnabled()
   const storage = useStorage()
-  const decodeAuthOsError = useAuthOsErrorDecoder()
+  const {alert} = useAuthOsError()
   const {enableAuthWithOs, isLoading} = useEnableAuthWithOs(
     {storage, authenticationPrompt: {title: strings.authorize, cancel: strings.cancel}},
     {
       onSuccess: login,
-      onError: (error) => {
-        const errorMessage = decodeAuthOsError(error)
-        if (!isEmptyString(errorMessage)) Alert.alert(strings.error, errorMessage)
-      },
-      retry: false,
+      onError: alert,
     },
   )
 

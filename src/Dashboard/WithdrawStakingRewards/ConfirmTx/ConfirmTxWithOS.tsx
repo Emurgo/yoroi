@@ -1,13 +1,11 @@
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Alert} from 'react-native'
 
-import {useAuthOsErrorDecoder, useAuthOsWithEasyConfirmation} from '../../../auth'
+import {useAuthOsError, useAuthOsWithEasyConfirmation} from '../../../auth'
 import {TwoActionView} from '../../../components'
 import {LoadingOverlay} from '../../../components/LoadingOverlay'
 import {useSignAndSubmitTx} from '../../../hooks'
 import globalMessages, {confirmationMessages, txLabels} from '../../../i18n/global-messages'
-import {isEmptyString} from '../../../legacy/utils'
 import {YoroiWallet} from '../../../yoroi-wallets'
 import {YoroiUnsignedTx} from '../../../yoroi-wallets/types'
 import {TransferSummary} from '../TransferSummary'
@@ -21,7 +19,7 @@ type Props = {
 
 export const ConfirmTxWithOS = ({wallet, unsignedTx, onSuccess, onCancel}: Props) => {
   const strings = useStrings()
-  const decodeAuthOsError = useAuthOsErrorDecoder()
+  const {alert} = useAuthOsError()
   const {authWithOs, isLoading: authenticating} = useAuthOsWithEasyConfirmation(
     {
       id: wallet.id,
@@ -32,10 +30,7 @@ export const ConfirmTxWithOS = ({wallet, unsignedTx, onSuccess, onCancel}: Props
     },
     {
       onSuccess: (rootKey) => signAndSubmitTx({unsignedTx, rootKey}),
-      onError: (error) => {
-        const errorMessage = decodeAuthOsError(error)
-        if (!isEmptyString(errorMessage)) Alert.alert(strings.error, errorMessage)
-      },
+      onError: alert,
     },
   )
 
@@ -82,11 +77,9 @@ const useStrings = () => {
   const intl = useIntl()
 
   return {
-    error: intl.formatMessage(globalMessages.error),
     authorize: intl.formatMessage(messages.authorize),
     cancel: intl.formatMessage(globalMessages.cancel),
     confirmButton: intl.formatMessage(confirmationMessages.commonButtons.confirmButton),
     confirmTx: intl.formatMessage(txLabels.confirmTx),
-    password: intl.formatMessage(txLabels.password),
   }
 }
