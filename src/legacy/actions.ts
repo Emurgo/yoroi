@@ -15,7 +15,7 @@ import {checkServerStatus} from '../yoroi-wallets'
 import type {AppSettingsKey} from './appSettings'
 import {APP_SETTINGS_KEYS, readAppSettings, removeAppSettings, writeAppSettings} from './appSettings'
 import assert from './assert'
-import {CONFIG, isNightly} from './config'
+import {CONFIG} from './config'
 import crashReporting from './crashReporting'
 import {getCardanoNetworkConfigById} from './networks'
 import {installationIdSelector} from './selectors'
@@ -99,7 +99,7 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
   await dispatch(reloadAppSettings())
   await dispatch(initInstallationId())
 
-  const crashReportsEnabled = isNightly() ? true : await getCrashReportsEnabled()
+  const crashReportsEnabled = await getCrashReportsEnabled()
   if (crashReportsEnabled) {
     crashReporting.setUserId(installationIdSelector(getState()))
     crashReporting.enable()

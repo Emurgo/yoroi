@@ -16,7 +16,7 @@ import {
   UseQueryOptions,
 } from 'react-query'
 
-import {getDefaultAssetByNetworkId} from '../legacy/config'
+import {getDefaultAssetByNetworkId, isNightly} from '../legacy/config'
 import {ObjectValues} from '../legacy/flow'
 import {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {getCardanoNetworkConfigById} from '../legacy/networks'
@@ -54,6 +54,8 @@ import {parseBoolean} from '../yoroi-wallets/utils/parsing'
 const crashReportsStorageKey = 'sendCrashReports'
 
 export const getCrashReportsEnabled = async (storage: AsyncStorageStatic = AsyncStorage) => {
+  if (isNightly()) return true
+
   const data = await storage.getItem(crashReportsStorageKey)
   return parseBoolean(data) ?? false
 }
