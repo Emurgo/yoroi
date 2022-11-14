@@ -1,8 +1,10 @@
 import React from 'react'
-import {AppState} from 'react-native'
+import {defineMessages, useIntl} from 'react-intl'
+import {Alert, AppState} from 'react-native'
 import {useMutation, UseMutationOptions, useQuery, useQueryClient, UseQueryOptions} from 'react-query'
 
 import {getAuthSetting, useMutationWithInvalidations, useWallet} from '../hooks'
+import globalMessages from '../i18n/global-messages'
 import {WalletMeta} from '../legacy/state'
 import storage from '../legacy/storage'
 import {
@@ -194,3 +196,44 @@ export const migrateAuthSetting = async (storage: Storage) => {
     return storage.setItem(AUTH_SETTINGS_KEY, JSON.stringify(AUTH_WITH_PIN))
   }
 }
+
+export const useAuthOsError = () => {
+  const strings = useStrings()
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const alert = (error: any) => {
+    if (error instanceof Keychain.Errors.CancelledByUser) return
+    if (error instanceof Keychain.Errors.TooManyAttempts) return Alert.alert(strings.error, strings.tooManyAttempts)
+    return Alert.alert(strings.error, strings.unknownError)
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const getMessage = (error: any) => {
+    if (error instanceof Keychain.Errors.CancelledByUser) return ''
+    if (error instanceof Keychain.Errors.TooManyAttempts) return strings.tooManyAttempts
+    return strings.unknownError
+  }
+
+  return {alert, getMessage}
+}
+
+const useStrings = () => {
+  const intl = useIntl()
+
+  return {
+    unknownError: intl.formatMessage(messages.unknownError),
+    tooManyAttempts: intl.formatMessage(messages.tooManyAttempts),
+    error: intl.formatMessage(globalMessages.error),
+  }
+}
+
+const messages = defineMessages({
+  tooManyAttempts: {
+    id: 'components.send.biometricauthscreen.SENSOR_LOCKOUT',
+    defaultMessage: '!!!Too many attempts',
+  },
+  unknownError: {
+    id: 'components.send.biometricauthscreen.UNKNOWN_ERROR',
+    defaultMessage: '!!!Unknown error!',
+  },
+})
