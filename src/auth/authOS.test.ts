@@ -43,10 +43,22 @@ describe('migrateAuthSetting', () => {
   })
 
   it('old store is pin, method = "pin"', async () => {
-    await storage.setItem(ENCRYPTED_PIN_HASH_KEY, JSON.stringify('encrypted-hash'))
+    await storage.multiSet([
+      [ENCRYPTED_PIN_HASH_KEY, JSON.stringify('encrypted-hash')],
+      [OLD_OS_AUTH_KEY, JSON.stringify(false)],
+    ])
 
     await migrateAuthSetting(storage)
 
     await expect(await storage.getItem(AUTH_SETTINGS_KEY)).toBe(pin)
+  })
+
+  // pin hash is deleted when changing to OS auth
+  it('old store is os, method = "os"', async () => {
+    await storage.setItem(OLD_OS_AUTH_KEY, JSON.stringify(true))
+
+    await migrateAuthSetting(storage)
+
+    await expect(await storage.getItem(AUTH_SETTINGS_KEY)).toBe(os)
   })
 })
