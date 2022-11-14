@@ -3,7 +3,6 @@ import ExtendableError from 'es6-error'
 import _ from 'lodash'
 import uuid from 'uuid'
 
-import {migrateWalletMetas} from '../appStorage'
 import {EncryptedStorage, EncryptedStorageKeys} from '../auth'
 import {Keychain} from '../auth/Keychain'
 import assert from '../legacy/assert'
@@ -12,6 +11,7 @@ import type {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {Logger} from '../legacy/logging'
 import type {WalletMeta} from '../legacy/state'
 import storage from '../legacy/storage'
+import {migrateWalletMetas} from '../Storage/migrations/walletMeta'
 import {
   isYoroiWallet,
   NetworkId,

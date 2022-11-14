@@ -12,3 +12,10 @@ export const useStorage = () => React.useContext(StorageContext) || invalid()
 const invalid = () => {
   throw new Error('Missing StorageProvider')
 }
+
+export const SettingsStorageKeys = {
+  OldAuthWithOs: '/appSettings/isSystemAuthEnabled', // deprecated, need for migrations
+  InstallationId: '/appSettings/installationId',
+  Pin: '/appSettings/customPinHash',
+  Auth: '/appSettings/auth',
+} as const

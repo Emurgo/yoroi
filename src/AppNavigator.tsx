@@ -7,18 +7,24 @@ import {Alert, AppState, AppStateStatus, Platform} from 'react-native'
 import RNBootSplash from 'react-native-bootsplash'
 import {useSelector} from 'react-redux'
 
-import {PinLoginScreen, useAuthOsEnabled, useAuthOsError, useAuthWithOs, useBackgroundTimeout} from './auth'
+import {
+  AuthSetting,
+  OsLoginScreen,
+  PinLoginScreen,
+  useAuthOsEnabled,
+  useAuthOsError,
+  useAuthSetting,
+  useAuthWithOs,
+  useBackgroundTimeout,
+} from './auth'
 import {useAuth} from './auth/AuthProvider'
 import {EnableLoginWithPin} from './auth/EnableLoginWithPin'
 import {FirstRunNavigator} from './FirstRun/FirstRunNavigator'
-import {useAuthSetting} from './hooks'
 import globalMessages from './i18n/global-messages'
 import {DeveloperScreen} from './legacy/DeveloperScreen'
 import {isMaintenanceSelector} from './legacy/selectors'
 import MaintenanceScreen from './MaintenanceScreen'
 import {AppRoutes} from './navigation'
-import {OsLoginScreen} from './OsAuth'
-import {AuthSetting} from './Settings/types'
 import {useStorage} from './Storage'
 import StorybookScreen from './StorybookScreen'
 import {WalletInitNavigator} from './WalletInit/WalletInitNavigator'

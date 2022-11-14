@@ -21,14 +21,6 @@ import {getCardanoNetworkConfigById} from './networks'
 import {installationIdSelector} from './selectors'
 import type {State} from './state'
 
-const updateCrashlytics = (fieldName: AppSettingsKey, value: any) => {
-  const handlers = {
-    [APP_SETTINGS_KEYS.LANG]: () => crashReporting.setStringValue('language_code', value),
-  }
-  const handler = handlers[fieldName] || null
-  handler && handler()
-}
-
 export const setAppSettingField = (fieldName: AppSettingsKey, value: any) => async (dispatch: Dispatch<any>) => {
   await writeAppSettings(fieldName, value)
   dispatch({
@@ -37,11 +29,9 @@ export const setAppSettingField = (fieldName: AppSettingsKey, value: any) => asy
     type: 'SET_APP_SETTING_FIELD',
     reducer: (state: State, payload) => payload,
   })
-  updateCrashlytics(fieldName, value)
 }
 export const clearAppSettingField = (fieldName: AppSettingsKey) => async (dispatch: Dispatch<any>) => {
   await removeAppSettings(fieldName)
-  updateCrashlytics(fieldName, null)
   dispatch({
     path: ['appSettings', fieldName],
     payload: null,
@@ -65,9 +55,6 @@ const _setAppSettings = (appSettings) => ({
 
 export const reloadAppSettings = () => async (dispatch: Dispatch<any>) => {
   const appSettings = await readAppSettings()
-  Object.entries(appSettings).forEach(([key, value]) => {
-    updateCrashlytics(key, value)
-  })
   dispatch(_setAppSettings(appSettings))
 }
 
@@ -114,10 +101,8 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
 
   const crashReportsEnabled = isNightly() ? true : await getCrashReportsEnabled()
   if (crashReportsEnabled) {
-    crashReporting.enable()
-    // TODO(ppershing): just update crashlytic variables here
-    await dispatch(reloadAppSettings())
     crashReporting.setUserId(installationIdSelector(getState()))
+    crashReporting.enable()
   }
 
   await walletManager.initialize()

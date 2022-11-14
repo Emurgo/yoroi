@@ -16,9 +16,7 @@ import {
   UseQueryOptions,
 } from 'react-query'
 
-import {decryptData, encryptData} from '../legacy/commonUtils'
 import {getDefaultAssetByNetworkId} from '../legacy/config'
-import {WrongPassword} from '../legacy/errors'
 import {ObjectValues} from '../legacy/flow'
 import {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {getCardanoNetworkConfigById} from '../legacy/networks'
@@ -26,8 +24,6 @@ import {processTxHistoryData} from '../legacy/processTransactions'
 import {WalletMeta} from '../legacy/state'
 import storage from '../legacy/storage'
 import {cardanoValueFromRemoteFormat} from '../legacy/utils'
-import {AUTH_SETTINGS_KEY, AUTH_WITH_PIN, AuthSetting} from '../Settings/types'
-import {Storage} from '../Storage'
 import {
   CardanoMobile,
   NetworkId,
@@ -630,55 +626,6 @@ export const useOpenWallet = (options?: UseMutationOptions<[YoroiWallet, WalletM
   }
 }
 
-export const useCreatePin = (storage: Storage, options: UseMutationOptions<void, Error, string>) => {
-  const mutation = useMutationWithInvalidations({
-    invalidateQueries: [['authSetting']],
-    mutationFn: async (pin) => {
-      const installationId = await storage.getItem('/appSettings/installationId')
-      if (!installationId) throw new Error('Invalid installation id')
-      const encryptedPinHash = await encryptData(toHex(installationId), pin)
-      await storage.setItem(AUTH_SETTINGS_KEY, JSON.stringify(AUTH_WITH_PIN))
-      return storage.setItem(ENCRYPTED_PIN_HASH_KEY, JSON.stringify(encryptedPinHash))
-    },
-    ...options,
-  })
-
-  return {
-    createPin: mutation.mutate,
-    ...mutation,
-  }
-}
-
-export const useCheckPin = (storage: Storage, options: UseMutationOptions<boolean, Error, string> = {}) => {
-  const mutation = useMutation({
-    mutationFn: (pin) =>
-      storage
-        .getItem(ENCRYPTED_PIN_HASH_KEY)
-        .then((data) => {
-          if (!data) throw new Error('missing pin')
-          return data
-        })
-        .then(JSON.parse)
-        .then((encryptedPinHash: string) => decryptData(encryptedPinHash, pin))
-        .then(() => true)
-        .catch((error) => {
-          if (error instanceof WrongPassword) return false
-          throw error
-        }),
-    retry: false,
-    ...options,
-  })
-
-  return {
-    checkPin: mutation.mutate,
-    isValid: mutation.data,
-    ...mutation,
-  }
-}
-
-export const ENCRYPTED_PIN_HASH_KEY = '/appSettings/customPinHash'
-const toHex = (text: string) => Buffer.from(text, 'utf8').toString('hex')
-
 export const useWalletNames = (
   walletManager: WalletManager,
   options?: UseQueryOptions<Array<WalletMeta>, Error, Array<string>>,
@@ -945,29 +892,3 @@ export const useResync = (wallet: YoroiWallet, options?: UseMutationOptions<void
     resync: mutation.mutate,
   }
 }
-export const useAuthSetting = (storage: Storage, options?: UseQueryOptions<AuthSetting, Error>) => {
-  const query = useQuery({
-    suspense: true,
-    queryKey: ['authSetting'],
-    queryFn: () => getAuthSetting(storage),
-    ...options,
-  })
-
-  return query.data
-}
-
-export const getAuthSetting = async (storage: Storage) => {
-  const authSetting = parseAuthSetting(await storage.getItem(AUTH_SETTINGS_KEY))
-  if (isAuthSetting(authSetting)) return authSetting
-  return Promise.reject(new Error('useAuthSetting invalid data'))
-}
-
-const parseAuthSetting = (data: unknown) => {
-  if (!data) return undefined
-  try {
-    return JSON.parse(data as string)
-  } catch (error) {
-    return undefined
-  }
-}
-const isAuthSetting = (data: any): data is 'os' | 'pin' | undefined => ['os', 'pin', undefined].includes(data)

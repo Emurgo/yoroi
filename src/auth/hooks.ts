@@ -3,19 +3,13 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Alert, AppState} from 'react-native'
 import {useMutation, UseMutationOptions, useQuery, useQueryClient, UseQueryOptions} from 'react-query'
 
-import {getAuthSetting, useMutationWithInvalidations, useWallet} from '../hooks'
+import {useMutationWithInvalidations, useWallet} from '../hooks'
 import globalMessages from '../i18n/global-messages'
+import {decryptData, encryptData} from '../legacy/commonUtils'
+import {WrongPassword} from '../legacy/errors'
 import {WalletMeta} from '../legacy/state'
 import storage from '../legacy/storage'
-import {
-  AUTH_SETTINGS_KEY,
-  AUTH_WITH_OS,
-  AUTH_WITH_PIN,
-  ENCRYPTED_PIN_HASH_KEY,
-  INSTALLATION_ID_KEY,
-  OLD_OS_AUTH_KEY,
-} from '../Settings/types'
-import {Storage} from '../Storage'
+import {SettingsStorageKeys, Storage} from '../Storage'
 import {WalletJSON, walletManager, YoroiWallet} from '../yoroi-wallets'
 import {Keychain} from './Keychain'
 import {AuthenticationPrompt, authOsEnabled} from './KeychainStorage'
@@ -52,9 +46,9 @@ export const useEnableAuthWithOs = (
     ...options,
     mutationFn: () =>
       Keychain.authenticate(authenticationPrompt)
-        .then(() => storage.setItem(AUTH_SETTINGS_KEY, JSON.stringify(AUTH_WITH_OS)))
-        .then(() => storage.getItem(ENCRYPTED_PIN_HASH_KEY))
-        .then((pin) => (pin != null ? storage.removeItem(ENCRYPTED_PIN_HASH_KEY) : undefined)),
+        .then(() => storage.setItem(SettingsStorageKeys.Auth, JSON.stringify(AUTH_WITH_OS)))
+        .then(() => storage.getItem(SettingsStorageKeys.Pin))
+        .then((pin) => (pin != null ? storage.removeItem(SettingsStorageKeys.Pin) : undefined)),
     invalidateQueries: [['authSetting']],
   })
 
@@ -146,7 +140,8 @@ export const useDisableAllEasyConfirmation = (
     disableAllEasyConfirmation: mutation.mutate,
   }
 }
-const disableAllEasyConfirmation = () =>
+
+export const disableAllEasyConfirmation = () =>
   storage
     .keys('/wallet/', false)
     .then((keys) =>
@@ -179,24 +174,6 @@ const disableAllEasyConfirmation = () =>
       }
     })
 
-export const migrateAuthSetting = async (storage: Storage) => {
-  const authSetting = await getAuthSetting(storage)
-  const isFirstRun = await storage.getItem(INSTALLATION_ID_KEY).then((data) => data === null)
-  const isLegacyAuth = authSetting == null && !isFirstRun
-  if (!isLegacyAuth) return
-
-  const isAuthWithOS = await storage.getItem(OLD_OS_AUTH_KEY).then(Boolean)
-  if (isAuthWithOS) {
-    await storage.setItem(AUTH_SETTINGS_KEY, JSON.stringify(AUTH_WITH_OS))
-    return disableAllEasyConfirmation()
-  }
-
-  const isAuthWithPIN = await storage.getItem(ENCRYPTED_PIN_HASH_KEY).then(Boolean)
-  if (isAuthWithPIN) {
-    return storage.setItem(AUTH_SETTINGS_KEY, JSON.stringify(AUTH_WITH_PIN))
-  }
-}
-
 export const useAuthOsError = () => {
   const strings = useStrings()
 
@@ -216,6 +193,81 @@ export const useAuthOsError = () => {
 
   return {alert, getMessage}
 }
+
+export const useCreatePin = (storage: Storage, options: UseMutationOptions<void, Error, string>) => {
+  const mutation = useMutationWithInvalidations({
+    invalidateQueries: [['authSetting']],
+    mutationFn: async (pin) => {
+      const installationId = await storage.getItem('/appSettings/installationId')
+      if (!installationId) throw new Error('Invalid installation id')
+      const encryptedPinHash = await encryptData(toHex(installationId), pin)
+      await storage.setItem(SettingsStorageKeys.Auth, JSON.stringify(AUTH_WITH_PIN))
+      return storage.setItem(SettingsStorageKeys.Pin, JSON.stringify(encryptedPinHash))
+    },
+    ...options,
+  })
+
+  return {
+    createPin: mutation.mutate,
+    ...mutation,
+  }
+}
+const toHex = (text: string) => Buffer.from(text, 'utf8').toString('hex')
+
+export const useCheckPin = (storage: Storage, options: UseMutationOptions<boolean, Error, string> = {}) => {
+  const mutation = useMutation({
+    mutationFn: (pin) =>
+      storage
+        .getItem(SettingsStorageKeys.Pin)
+        .then((data) => {
+          if (!data) throw new Error('missing pin')
+          return data
+        })
+        .then(JSON.parse)
+        .then((encryptedPinHash: string) => decryptData(encryptedPinHash, pin))
+        .then(() => true)
+        .catch((error) => {
+          if (error instanceof WrongPassword) return false
+          throw error
+        }),
+    retry: false,
+    ...options,
+  })
+
+  return {
+    checkPin: mutation.mutate,
+    isValid: mutation.data,
+    ...mutation,
+  }
+}
+
+export const useAuthSetting = (storage: Storage, options?: UseQueryOptions<AuthSetting, Error>) => {
+  const query = useQuery({
+    suspense: true,
+    queryKey: ['authSetting'],
+    queryFn: () => getAuthSetting(storage),
+    ...options,
+  })
+
+  return query.data
+}
+
+export const getAuthSetting = async (storage: Storage) => {
+  const authSetting = parseAuthSetting(await storage.getItem(SettingsStorageKeys.Auth))
+  if (isAuthSetting(authSetting)) return authSetting
+  return Promise.reject(new Error('useAuthSetting invalid data'))
+}
+
+const parseAuthSetting = (data: unknown) => {
+  if (!data) return undefined
+  try {
+    return JSON.parse(data as string)
+  } catch (error) {
+    return undefined
+  }
+}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const isAuthSetting = (data: any): data is 'os' | 'pin' | undefined => ['os', 'pin', undefined].includes(data)
 
 const useStrings = () => {
   const intl = useIntl()
@@ -237,3 +289,8 @@ const messages = defineMessages({
     defaultMessage: '!!!Unknown error!',
   },
 })
+
+export type AuthSetting = 'pin' | 'os' | undefined
+
+export const AUTH_WITH_OS: AuthSetting = 'os'
+export const AUTH_WITH_PIN: AuthSetting = 'pin'
