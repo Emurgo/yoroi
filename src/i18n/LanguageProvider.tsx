@@ -45,7 +45,6 @@ const useLanguageCode = ({onSuccess, ...options}: UseQueryOptions<string> = {}) 
       return defaultLanguageCode
     },
     onSuccess: (languageCode) => {
-      crashReporting.setStringValue('language_code', languageCode)
       updateLanguageSettings(languageCode)
       onSuccess?.(languageCode)
     },
