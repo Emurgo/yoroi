@@ -80,7 +80,7 @@ export const useAuthWithOs = (
   const mutation = useMutationWithInvalidations({
     ...options,
     invalidateQueries: [['authSetting']],
-    mutationFn: () => Keychain.authenticate(authenticationPrompt ?? primaryAuthenticationPrompt),
+    mutationFn: () => Keychain.authenticate(authenticationPrompt ?? defaultAuthenticationPrompt),
     onError: (error, variables, context) => {
       alert(error)
       options?.onError?.(error, variables, context)
