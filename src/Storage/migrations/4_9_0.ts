@@ -1,6 +1,7 @@
 import storage from '@react-native-async-storage/async-storage'
 
 import {AUTH_WITH_OS, AUTH_WITH_PIN, disableAllEasyConfirmation, getAuthSetting} from '../../auth'
+import {parseBoolean} from '../../yoroi-wallets/utils/parsing'
 import {SettingsStorageKeys, Storage} from '../StorageProvider'
 
 export const migrateAuthSetting = async (storage: Storage) => {
@@ -9,7 +10,7 @@ export const migrateAuthSetting = async (storage: Storage) => {
   const isLegacyAuth = authSetting == null && !isFirstRun
   if (!isLegacyAuth) return
 
-  const isAuthWithOS = await storage.getItem(SettingsStorageKeys.OldAuthWithOs).then(Boolean)
+  const isAuthWithOS = await storage.getItem(OLD_OS_AUTH_KEY).then((value) => parseBoolean(value) ?? false)
   if (isAuthWithOS) {
     await storage.setItem(SettingsStorageKeys.Auth, JSON.stringify(AUTH_WITH_OS))
     return disableAllEasyConfirmation()
@@ -22,3 +23,5 @@ export const migrateAuthSetting = async (storage: Storage) => {
 }
 
 export const to4_9_0 = async () => migrateAuthSetting(storage)
+
+const OLD_OS_AUTH_KEY = '/appSettings/isSystemAuthEnabled'

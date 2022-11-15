@@ -34,7 +34,7 @@ describe('migrateAuthSetting', () => {
   it('old store is pin + os (inconsistent), method = "os"', async () => {
     await storage.multiSet([
       [SettingsStorageKeys.Pin, JSON.stringify('encrypted-hash')],
-      [SettingsStorageKeys.OldAuthWithOs, JSON.stringify(true)],
+      [OLD_OS_AUTH_KEY, JSON.stringify(true)],
     ])
 
     await migrateAuthSetting(storage)
@@ -43,10 +43,24 @@ describe('migrateAuthSetting', () => {
   })
 
   it('old store is pin, method = "pin"', async () => {
-    await storage.setItem(SettingsStorageKeys.Pin, JSON.stringify('encrypted-hash'))
+    await storage.multiSet([
+      [SettingsStorageKeys.Pin, JSON.stringify('encrypted-hash')],
+      [OLD_OS_AUTH_KEY, JSON.stringify(false)],
+    ])
 
     await migrateAuthSetting(storage)
 
     await expect(await storage.getItem(SettingsStorageKeys.Auth)).toBe(pin)
   })
+
+  // pin hash is deleted when changing to OS auth
+  it('old store is os, method = "os"', async () => {
+    await storage.setItem(OLD_OS_AUTH_KEY, JSON.stringify(true))
+
+    await migrateAuthSetting(storage)
+
+    await expect(await storage.getItem(SettingsStorageKeys.Auth)).toBe(os)
+  })
 })
+
+const OLD_OS_AUTH_KEY = '/appSettings/isSystemAuthEnabled'
