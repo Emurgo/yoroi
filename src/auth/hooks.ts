@@ -99,7 +99,7 @@ export const useAuthOsWithEasyConfirmation = (
   const strings = useStrings()
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const alert = (error: any) => {
+  const alert = (error: unknown) => {
     if (error instanceof Keychain.Errors.CancelledByUser) return
     if (error instanceof Keychain.Errors.TooManyAttempts) return Alert.alert(strings.error, strings.tooManyAttempts)
     return Alert.alert(strings.error, strings.unknownError)
