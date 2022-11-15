@@ -112,7 +112,7 @@ export const useAuthOsWithEasyConfirmation = (
 
   const mutation = useMutation({
     ...options,
-    mutationFn: () => Keychain.getWalletKey(id, authenticationPrompt ?? primaryAuthenticationPrompt),
+    mutationFn: () => Keychain.getWalletKey(id, authenticationPrompt ?? defaultAuthenticationPrompt),
     onError: (error, variables, context) => {
       alert(error)
       options?.onError?.(error, variables, context)
