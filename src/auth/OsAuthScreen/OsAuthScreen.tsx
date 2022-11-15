@@ -14,7 +14,6 @@ type Props = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   buttons: Array<any>
   onGoBack?: () => void
-  error?: null | false | string
   addWelcomeMessage?: boolean
   // storybook only
   showFingerPlaceholder?: boolean
@@ -25,7 +24,6 @@ export const OsAuthScreen = ({
   subHeadings,
   buttons,
   onGoBack,
-  error,
   addWelcomeMessage,
   showFingerPlaceholder = false,
 }: Props) => {
@@ -78,8 +76,6 @@ export const OsAuthScreen = ({
             </View>
           )}
         </View>
-
-        {error != null && error !== false ? <Text style={styles.error}>{error}</Text> : null}
 
         {buttons.length > 1 ? <Actions>{buttons}</Actions> : <Action>{buttons}</Action>}
       </SafeAreaView>
@@ -159,12 +155,5 @@ const styles = StyleSheet.create({
   action: {
     flexDirection: 'column',
     alignItems: 'stretch',
-  },
-  error: {
-    color: COLORS.RED,
-    fontSize: 18,
-    lineHeight: 25,
-    marginBottom: 17,
-    textAlign: 'center',
   },
 })

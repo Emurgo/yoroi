@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import {WALLETS} from './legacy/config'
-import {Logger} from './legacy/logging'
-import {WalletMeta} from './legacy/state'
-import storage from './legacy/storage'
-import {CardanoTypes, legacyWalletChecksum, walletChecksum} from './yoroi-wallets'
-import type {NetworkId, WalletImplementationId} from './yoroi-wallets/types/other'
-import {NETWORK_REGISTRY, WALLET_IMPLEMENTATION_REGISTRY} from './yoroi-wallets/types/other'
+import {WALLETS} from '../../legacy/config'
+import {Logger} from '../../legacy/logging'
+import {WalletMeta} from '../../legacy/state'
+import storage from '../../legacy/storage'
+import {CardanoTypes, legacyWalletChecksum, walletChecksum} from '../../yoroi-wallets'
+import type {NetworkId, WalletImplementationId} from '../../yoroi-wallets/types/other'
+import {NETWORK_REGISTRY, WALLET_IMPLEMENTATION_REGISTRY} from '../../yoroi-wallets/types/other'
 
 async function toShelleyWalletMeta(currentWalletMeta: Partial<WalletMeta>): Promise<WalletMeta> {
   if (!currentWalletMeta.id) throw new Error(`Wallet meta stored is corrupted. ${JSON.stringify(currentWalletMeta)}`)

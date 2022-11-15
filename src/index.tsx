@@ -1,16 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import storage from '@react-native-async-storage/async-storage'
 import bluebird from 'bluebird'
 import React from 'react'
 import {createIntl, createIntlCache} from 'react-intl'
 import {AppRegistry, LogBox} from 'react-native'
-import DeviceInfo from 'react-native-device-info'
 import {QueryClient, QueryClientProvider} from 'react-query'
 import {Provider} from 'react-redux'
 
 import App from './App'
 import {name as appName} from './app.json'
-import {migrateAuthSetting} from './auth'
 import {LoadingBoundary} from './components'
 import {ErrorBoundary} from './components/ErrorBoundary'
 import {LanguageProvider} from './i18n'
@@ -22,10 +19,10 @@ import {ApiError, NetworkError} from './legacy/errors'
 import {Logger, setLogLevel} from './legacy/logging'
 import {isEmptyString} from './legacy/utils'
 import {CurrencyProvider} from './Settings/Currency/CurrencyContext'
+import {useMigrations} from './Storage'
 import {ThemeProvider} from './theme'
 import {WalletManagerProvider} from './WalletManager'
 import {walletManager} from './yoroi-wallets'
-import {Version, versionCompare} from './yoroi-wallets/utils/versioning'
 
 setLogLevel(CONFIG.LOG_LEVEL)
 
@@ -92,22 +89,3 @@ const AppWithProviders = () => {
 }
 
 AppRegistry.registerComponent(appName, () => AppWithProviders)
-
-const useMigrations = () => {
-  const [done, setDone] = React.useState(false)
-  React.useEffect(() => {
-    const runMigrations = async () => {
-      const version = DeviceInfo.getVersion() as Version
-      const before4_9_0 = versionCompare(version, '4.9.0') === -1
-
-      // asc order
-      // 4.9.0
-      if (before4_9_0) await migrateAuthSetting(storage) // old auth settings
-
-      setDone(true)
-    }
-    runMigrations()
-  }, [])
-
-  return done
-}

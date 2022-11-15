@@ -31,18 +31,6 @@ storiesOf('OsAuthScreen', module)
       onGoBack={action('goBack')}
     />
   ))
-  .add('with error', () => (
-    <OsAuthScreen
-      headings={['heading1', 'heading2']}
-      subHeadings={['subheading1', 'subheading2']}
-      buttons={[
-        <Button key="button1" title="button1" onPress={action('button1')} />,
-        <Button key="button2" title="button2" onPress={action('button2')} />,
-      ]}
-      onGoBack={action('goBack')}
-      error="this is the error messaqge"
-    />
-  ))
   .add('with welcome message', () => (
     <OsAuthScreen
       headings={['heading1', 'heading2']}
@@ -53,7 +41,6 @@ storiesOf('OsAuthScreen', module)
       ]}
       onGoBack={action('goBack')}
       addWelcomeMessage
-      error="this is the error messaqge"
     />
   ))
   .add('with fingerprint placeholder', () => (
@@ -67,6 +54,5 @@ storiesOf('OsAuthScreen', module)
       onGoBack={action('goBack')}
       addWelcomeMessage
       showFingerPlaceholder
-      error="this is the error messaqge"
     />
   ))
