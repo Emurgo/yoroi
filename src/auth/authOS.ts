@@ -15,6 +15,7 @@ import {
 } from '../Settings/types'
 import {Storage} from '../Storage'
 import {WalletJSON, walletManager, YoroiWallet} from '../yoroi-wallets'
+import {parseBoolean} from '../yoroi-wallets/utils/parsing'
 import {Keychain} from './Keychain'
 import {AuthenticationPrompt, authOsEnabled} from './KeychainStorage'
 
@@ -153,7 +154,7 @@ const disableAllEasyConfirmation = () =>
         storage.readMany(keys.map((walletId) => `/wallet/${walletId}/data`)),
       ]),
     )
-    .then(async ([metas, wallets]) => {
+    .then(([metas, wallets]) => {
       const metaUpdates: Array<[string, WalletMeta]> = []
       for (const [walletPath, meta] of metas) {
         if ((meta as WalletMeta)?.isEasyConfirmationEnabled) {
@@ -166,7 +167,7 @@ const disableAllEasyConfirmation = () =>
           walletUpdates.push([walletPath, {...wallet, isEasyConfirmationEnabled: false}])
         }
       }
-      return [metaUpdates, walletUpdates]
+      return Promise.resolve([metaUpdates, walletUpdates])
     })
     .then(async ([metaUpdates, walletUpdates]) => {
       for (const [key, value] of metaUpdates) {
@@ -183,7 +184,7 @@ export const migrateAuthSetting = async (storage: Storage) => {
   const isLegacyAuth = authSetting == null && !isFirstRun
   if (!isLegacyAuth) return
 
-  const isAuthWithOS = await storage.getItem(OLD_OS_AUTH_KEY).then(Boolean)
+  const isAuthWithOS = await storage.getItem(OLD_OS_AUTH_KEY).then(parseBoolean)
   if (isAuthWithOS) {
     await storage.setItem(AUTH_SETTINGS_KEY, JSON.stringify(AUTH_WITH_OS))
     return disableAllEasyConfirmation()

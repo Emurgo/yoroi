@@ -961,7 +961,7 @@ export const useAuthSetting = (storage: Storage, options?: UseQueryOptions<AuthS
 export const getAuthSetting = async (storage: Storage) => {
   const authSetting = parseAuthSetting(await storage.getItem(AUTH_SETTINGS_KEY))
   if (isAuthSetting(authSetting)) return authSetting
-  return Promise.reject(new Error('useAuthSetting invalid data'))
+  return Promise.reject(new Error('getAuthSetting invalid data'))
 }
 
 const parseAuthSetting = (data: unknown) => {
