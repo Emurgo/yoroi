@@ -114,7 +114,7 @@
   "components.send.biometricauthscreen.NOT_RECOGNIZED": "La huella digital no ha sido reconocida. Intenta nuevamente",
   "components.send.biometricauthscreen.SENSOR_LOCKOUT": "Demasiados intentos fallidos. El sensor ha sido desactivado",
   "components.send.biometricauthscreen.SENSOR_LOCKOUT_PERMANENT": "El sensor de huella dactilar ha sido bloqueado de manera permanente. Usa un método de ingreso alternativo.",
-  "components.send.biometricauthscreen.UNKNOWN_ERROR": "Error desconocido",
+  "components.send.biometricauthscreen.UNKNOWN_ERROR": "Something went wrong, try again later. Check your app settings.",
   "components.send.biometricauthscreen.authorizeOperation": "Autorizar la operación",
   "components.send.biometricauthscreen.cancelButton": "Cancelar",
   "components.send.biometricauthscreen.headings1": "Autorizar con tu",
