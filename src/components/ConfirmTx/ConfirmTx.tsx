@@ -2,12 +2,12 @@
 import {useNavigation} from '@react-navigation/native'
 import {delay} from 'bluebird'
 import React, {useEffect, useState} from 'react'
-import {defineMessages, useIntl} from 'react-intl'
+import {useIntl} from 'react-intl'
 import {Platform, StyleSheet, View} from 'react-native'
 
-import {EncryptedStorage, EncryptedStorageKeys, useAuthOsErrorDecoder, useAuthOsWithEasyConfirmation} from '../../auth'
+import {EncryptedStorage, EncryptedStorageKeys, useAuthOsWithEasyConfirmation} from '../../auth'
 import {useSubmitTx} from '../../hooks'
-import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../i18n/global-messages'
+import {confirmationMessages, errorMessages, txLabels} from '../../i18n/global-messages'
 import LocalizableError from '../../i18n/LocalizableError'
 import {CONFIG} from '../../legacy/config'
 import {WrongPassword} from '../../legacy/errors'
@@ -194,23 +194,7 @@ export const ConfirmTx = ({
     [onError, onSuccess, password, strings, submitTx, useUSB, wallet, yoroiUnsignedTx],
   )
 
-  const decodeAuthOsError = useAuthOsErrorDecoder()
-  const {authWithOs} = useAuthOsWithEasyConfirmation(
-    {
-      id: wallet.id,
-      authenticationPrompt: {
-        title: strings.authorize,
-        cancel: strings.cancel,
-      },
-    },
-    {
-      onSuccess: onConfirm,
-      onError: (error) => {
-        const errorMessage = decodeAuthOsError(error)
-        if (!isEmptyString(errorMessage)) showError({errorMessage})
-      },
-    },
-  )
+  const {authWithOs} = useAuthOsWithEasyConfirmation({id: wallet.id}, {onSuccess: onConfirm})
 
   const _onConfirm = React.useCallback(async () => {
     if (
@@ -295,13 +279,6 @@ const styles = StyleSheet.create({
   },
 })
 
-const messages = defineMessages({
-  authorize: {
-    id: 'components.send.biometricauthscreen.authorizeOperation',
-    defaultMessage: '!!!Authorize',
-  },
-})
-
 const useStrings = () => {
   const intl = useIntl()
 
@@ -313,8 +290,6 @@ const useStrings = () => {
     generalTxErrorMessage: intl.formatMessage(errorMessages.generalTxError.message),
     incorrectPasswordTitle: intl.formatMessage(errorMessages.incorrectPassword.title),
     incorrectPasswordMessage: intl.formatMessage(errorMessages.incorrectPassword.message),
-    cancel: intl.formatMessage(globalMessages.cancel),
-    authorize: intl.formatMessage(messages.authorize),
   }
 }
 
