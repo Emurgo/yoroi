@@ -3,7 +3,7 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet} from 'react-native'
 
-import {OsAuthScreen, useAuthOsError, useEnableAuthWithOs} from '../../auth'
+import {OsAuthScreen, useEnableAuthWithOs} from '../../auth'
 import {Button} from '../../components'
 import globalMessages from '../../i18n/global-messages'
 import {useStorage} from '../../Storage'
@@ -12,18 +12,8 @@ export const EnableLoginWithOsScreen = () => {
   const strings = useStrings()
   const navigation = useNavigation()
   const storage = useStorage()
-  const {alert} = useAuthOsError()
 
-  const {enableAuthWithOs, isLoading} = useEnableAuthWithOs(
-    {
-      storage,
-      authenticationPrompt: {
-        title: strings.authorize,
-        cancel: strings.cancel,
-      },
-    },
-    {onSuccess: () => navigation.goBack(), onError: alert},
-  )
+  const {enableAuthWithOs, isLoading} = useEnableAuthWithOs({storage}, {onSuccess: () => navigation.goBack()})
 
   return (
     <OsAuthScreen
@@ -54,8 +44,6 @@ const useStrings = () => {
   const intl = useIntl()
 
   return {
-    authorize: intl.formatMessage(messages.authorize),
-    cancel: intl.formatMessage(globalMessages.cancel),
     error: intl.formatMessage(globalMessages.error),
     heading: intl.formatMessage(messages.heading),
     subHeading1: intl.formatMessage(messages.subHeading1),
@@ -66,10 +54,6 @@ const useStrings = () => {
 }
 
 const messages = defineMessages({
-  authorize: {
-    id: 'components.send.biometricauthscreen.authorizeOperation',
-    defaultMessage: '!!!Authorize',
-  },
   notNowButton: {
     id: 'components.settings.biometricslinkscreen.notNowButton',
     defaultMessage: '!!!Not now',

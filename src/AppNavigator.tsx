@@ -12,7 +12,6 @@ import {
   OsLoginScreen,
   PinLoginScreen,
   useAuthOsEnabled,
-  useAuthOsError,
   useAuthSetting,
   useAuthWithOs,
   useBackgroundTimeout,
@@ -20,7 +19,6 @@ import {
 import {useAuth} from './auth/AuthProvider'
 import {EnableLoginWithPin} from './auth/EnableLoginWithPin'
 import {FirstRunNavigator} from './FirstRun/FirstRunNavigator'
-import globalMessages from './i18n/global-messages'
 import {DeveloperScreen} from './legacy/DeveloperScreen'
 import {isMaintenanceSelector} from './legacy/selectors'
 import MaintenanceScreen from './MaintenanceScreen'
@@ -34,22 +32,16 @@ const Stack = createStackNavigator<AppRoutes>()
 
 export const AppNavigator = () => {
   const strings = useStrings()
-  const storage = useStorage()
   const isMaintenance = useSelector(isMaintenanceSelector)
-  const {alert} = useAuthOsError()
 
   useHideScreenInAppSwitcher()
   useAutoLogout()
 
   const {isLoggedIn, isLoggedOut, login} = useAuth()
-  const {authWithOs} = useAuthWithOs(
-    {authenticationPrompt: {cancel: strings.cancel, title: strings.authorize}, storage},
-    {
-      onSuccess: login,
-      onError: alert,
-      onSettled: () => RNBootSplash.hide({fade: true}),
-    },
-  )
+  const {authWithOs} = useAuthWithOs({
+    onSuccess: login,
+    onSettled: () => RNBootSplash.hide({fade: true}),
+  })
 
   const authAction = useAuthAction()
   const onReady = () => {
@@ -133,8 +125,6 @@ const useStrings = () => {
     loginPinTitle: intl.formatMessage(messages.pinLoginTitle),
     authWithOsChangeTitle: intl.formatMessage(messages.authWithOsChangeTitle),
     authWithOsChangeMessage: intl.formatMessage(messages.authWithOsChangeMessage),
-    cancel: intl.formatMessage(globalMessages.cancel),
-    authorize: intl.formatMessage(messages.authorize),
   }
 }
 
@@ -154,10 +144,6 @@ const messages = defineMessages({
   authWithOsChangeMessage: {
     id: 'global.actions.dialogs.biometricsChange.message',
     defaultMessage: '!!!Auth with OS changed detected ',
-  },
-  authorize: {
-    id: 'components.send.biometricauthscreen.authorizeOperation',
-    defaultMessage: '!!!Authorize operation',
   },
 })
 

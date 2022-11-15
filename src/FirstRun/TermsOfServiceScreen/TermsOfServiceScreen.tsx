@@ -4,7 +4,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useAuthOsEnabled, useAuthOsError, useEnableAuthWithOs} from '../../auth'
+import {useAuthOsEnabled, useEnableAuthWithOs} from '../../auth'
 import {useAuth} from '../../auth/AuthProvider'
 import {Button, Checkbox, PleaseWaitModal, Spacer, StatusBar} from '../../components'
 import {useLanguage} from '../../i18n'
@@ -23,14 +23,7 @@ export const TermsOfServiceScreen = () => {
   const {login} = useAuth()
   const authOsEnabled = useAuthOsEnabled()
   const storage = useStorage()
-  const {alert} = useAuthOsError()
-  const {enableAuthWithOs, isLoading} = useEnableAuthWithOs(
-    {storage, authenticationPrompt: {title: strings.authorize, cancel: strings.cancel}},
-    {
-      onSuccess: login,
-      onError: alert,
-    },
-  )
+  const {enableAuthWithOs, isLoading} = useEnableAuthWithOs({storage}, {onSuccess: login})
 
   const onAccept = async () => {
     if (authOsEnabled) {
@@ -87,10 +80,6 @@ const styles = StyleSheet.create({
 })
 
 const messages = defineMessages({
-  authorize: {
-    id: 'components.send.biometricauthscreen.authorizeOperation',
-    defaultMessage: '!!!Authorize',
-  },
   aggreeClause: {
     id: 'components.firstrun.acepttermsofservicescreen.aggreeClause',
     defaultMessage: '!!!I agree with terms of service',
@@ -109,8 +98,6 @@ const useStrings = () => {
   const intl = useIntl()
 
   return {
-    authorize: intl.formatMessage(messages.authorize),
-    cancel: intl.formatMessage(globalMessages.cancel),
     error: intl.formatMessage(globalMessages.error),
     aggreeClause: intl.formatMessage(messages.aggreeClause),
     continueButton: intl.formatMessage(messages.continueButton),

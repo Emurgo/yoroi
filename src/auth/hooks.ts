@@ -39,33 +39,52 @@ export const useAuthOsEnabled = (options?: UseQueryOptions<boolean, Error>) => {
 }
 
 export const useEnableAuthWithOs = (
-  {authenticationPrompt, storage}: {authenticationPrompt: AuthenticationPrompt; storage: Storage},
+  {authenticationPrompt, storage}: {authenticationPrompt?: AuthenticationPrompt; storage: Storage},
   options?: UseMutationOptions<void, Error>,
 ) => {
-  const mutation = useMutationWithInvalidations({
-    ...options,
-    mutationFn: () =>
-      Keychain.authenticate(authenticationPrompt)
-        .then(() => storage.setItem(SettingsStorageKeys.Auth, JSON.stringify(AUTH_WITH_OS)))
-        .then(() => storage.getItem(SettingsStorageKeys.Pin))
-        .then((pin) => (pin != null ? storage.removeItem(SettingsStorageKeys.Pin) : undefined)),
-    invalidateQueries: [['authSetting']],
-  })
+  const {authWithOs: enableAuthWithOs, ...mutation} = useAuthWithOs(
+    {
+      ...options,
+      onSuccess: (data, variables, context) => {
+        storage
+          .setItem(SettingsStorageKeys.Auth, JSON.stringify(AUTH_WITH_OS))
+          .then(() => storage.getItem(SettingsStorageKeys.Pin))
+          .then((pin) => (pin != null ? storage.removeItem(SettingsStorageKeys.Pin) : undefined))
+        options?.onSuccess?.(data, variables, context)
+      },
+    },
+    {authenticationPrompt},
+  )
 
-  return {
-    ...mutation,
-    enableAuthWithOs: mutation.mutate,
-  }
+  return {...mutation, enableAuthWithOs}
 }
 
 export const useAuthWithOs = (
-  {authenticationPrompt}: {authenticationPrompt: AuthenticationPrompt; storage: Storage},
   options?: UseMutationOptions<void, Error>,
+  {authenticationPrompt}: {authenticationPrompt?: AuthenticationPrompt} = {},
 ) => {
+  const strings = useStrings()
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const alert = (error: any) => {
+    if (error instanceof Keychain.Errors.CancelledByUser) return
+    if (error instanceof Keychain.Errors.TooManyAttempts) return Alert.alert(strings.error, strings.tooManyAttempts)
+    return Alert.alert(strings.error, strings.unknownError)
+  }
+
+  const primaryAuthenticationPrompt: AuthenticationPrompt = {
+    cancel: strings.cancel,
+    title: strings.authorize,
+  }
+
   const mutation = useMutationWithInvalidations({
     ...options,
     invalidateQueries: [['authSetting']],
-    mutationFn: () => Keychain.authenticate(authenticationPrompt),
+    mutationFn: () => Keychain.authenticate(authenticationPrompt ?? primaryAuthenticationPrompt),
+    onError: (error, variables, context) => {
+      alert(error)
+      options?.onError?.(error, variables, context)
+    },
   })
 
   return {
@@ -75,12 +94,30 @@ export const useAuthWithOs = (
 }
 
 export const useAuthOsWithEasyConfirmation = (
-  {id, authenticationPrompt}: {id: YoroiWallet['id']; authenticationPrompt: AuthenticationPrompt},
+  {id, authenticationPrompt}: {id: YoroiWallet['id']; authenticationPrompt?: AuthenticationPrompt},
   options?: UseMutationOptions<string, Error>,
 ) => {
+  const strings = useStrings()
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const alert = (error: any) => {
+    if (error instanceof Keychain.Errors.CancelledByUser) return
+    if (error instanceof Keychain.Errors.TooManyAttempts) return Alert.alert(strings.error, strings.tooManyAttempts)
+    return Alert.alert(strings.error, strings.unknownError)
+  }
+
+  const primaryAuthenticationPrompt: AuthenticationPrompt = {
+    cancel: strings.cancel,
+    title: strings.authorize,
+  }
+
   const mutation = useMutation({
     ...options,
-    mutationFn: () => Keychain.getWalletKey(id, authenticationPrompt),
+    mutationFn: () => Keychain.getWalletKey(id, authenticationPrompt ?? primaryAuthenticationPrompt),
+    onError: (error, variables, context) => {
+      alert(error)
+      options?.onError?.(error, variables, context)
+    },
   })
 
   return {
@@ -174,26 +211,6 @@ export const disableAllEasyConfirmation = () =>
       }
     })
 
-export const useAuthOsError = () => {
-  const strings = useStrings()
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const alert = (error: any) => {
-    if (error instanceof Keychain.Errors.CancelledByUser) return
-    if (error instanceof Keychain.Errors.TooManyAttempts) return Alert.alert(strings.error, strings.tooManyAttempts)
-    return Alert.alert(strings.error, strings.unknownError)
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const getMessage = (error: any) => {
-    if (error instanceof Keychain.Errors.CancelledByUser) return ''
-    if (error instanceof Keychain.Errors.TooManyAttempts) return strings.tooManyAttempts
-    return strings.unknownError
-  }
-
-  return {alert, getMessage}
-}
-
 export const useCreatePin = (storage: Storage, options: UseMutationOptions<void, Error, string>) => {
   const mutation = useMutationWithInvalidations({
     invalidateQueries: [['authSetting']],
@@ -276,10 +293,16 @@ const useStrings = () => {
     unknownError: intl.formatMessage(messages.unknownError),
     tooManyAttempts: intl.formatMessage(messages.tooManyAttempts),
     error: intl.formatMessage(globalMessages.error),
+    cancel: intl.formatMessage(globalMessages.cancel),
+    authorize: intl.formatMessage(messages.authorize),
   }
 }
 
 const messages = defineMessages({
+  authorize: {
+    id: 'components.send.biometricauthscreen.authorizeOperation',
+    defaultMessage: '!!!Authorize',
+  },
   tooManyAttempts: {
     id: 'components.send.biometricauthscreen.SENSOR_LOCKOUT',
     defaultMessage: '!!!Too many attempts',

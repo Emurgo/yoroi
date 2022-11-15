@@ -3,7 +3,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, Switch} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
-import {useAuthOsEnabled, useAuthOsError, useAuthSetting, useAuthWithOs} from '../../auth'
+import {useAuthOsEnabled, useAuthSetting, useAuthWithOs} from '../../auth'
 import {StatusBar} from '../../components'
 import {useCrashReports} from '../../hooks'
 import globalMessages from '../../i18n/global-messages'
@@ -17,29 +17,15 @@ const version = DeviceInfo.getVersion()
 
 export const ApplicationSettingsScreen = () => {
   const strings = useStrings()
-  const {navigation} = useWalletNavigation()
-
-  const {currency} = useCurrencyContext()
   const storage = useStorage()
+
+  const {navigation} = useWalletNavigation()
+  const {currency} = useCurrencyContext()
+  const crashReports = useCrashReports()
+
   const authSetting = useAuthSetting(storage)
   const authOsEnabled = useAuthOsEnabled()
-  const {alert} = useAuthOsError()
-
-  const {authWithOs} = useAuthWithOs(
-    {
-      authenticationPrompt: {
-        title: strings.authorize,
-        cancel: strings.cancel,
-      },
-      storage,
-    },
-    {
-      onSuccess: () => navigation.navigate('enable-login-with-pin'),
-      onError: alert,
-    },
-  )
-
-  const crashReports = useCrashReports()
+  const {authWithOs} = useAuthWithOs({onSuccess: () => navigation.navigate('enable-login-with-pin')})
 
   const onToggleAuthWithOs = async () => {
     if (authSetting === 'os') {
@@ -117,16 +103,10 @@ const useStrings = () => {
     crashReporting: intl.formatMessage(messages.crashReporting),
     crashReportingText: intl.formatMessage(messages.crashReportingText),
     currency: intl.formatMessage(globalMessages.currency),
-    authorize: intl.formatMessage(messages.authorize),
-    cancel: intl.formatMessage(globalMessages.cancel),
   }
 }
 
 const messages = defineMessages({
-  authorize: {
-    id: 'components.send.biometricauthscreen.authorizeOperation',
-    defaultMessage: '!!!Authorize operation',
-  },
   language: {
     id: 'components.settings.applicationsettingsscreen.language',
     defaultMessage: '!!!Your language',

@@ -1,11 +1,11 @@
 import React from 'react'
-import {defineMessages, useIntl} from 'react-intl'
+import {useIntl} from 'react-intl'
 
-import {useAuthOsError, useAuthOsWithEasyConfirmation} from '../../../auth'
+import {useAuthOsWithEasyConfirmation} from '../../../auth'
 import {TwoActionView} from '../../../components'
 import {LoadingOverlay} from '../../../components/LoadingOverlay'
 import {useSignAndSubmitTx} from '../../../hooks'
-import globalMessages, {confirmationMessages, txLabels} from '../../../i18n/global-messages'
+import {confirmationMessages, txLabels} from '../../../i18n/global-messages'
 import {YoroiWallet} from '../../../yoroi-wallets'
 import {YoroiUnsignedTx} from '../../../yoroi-wallets/types'
 import {TransferSummary} from '../TransferSummary'
@@ -19,19 +19,10 @@ type Props = {
 
 export const ConfirmTxWithOS = ({wallet, unsignedTx, onSuccess, onCancel}: Props) => {
   const strings = useStrings()
-  const {alert} = useAuthOsError()
+
   const {authWithOs, isLoading: authenticating} = useAuthOsWithEasyConfirmation(
-    {
-      id: wallet.id,
-      authenticationPrompt: {
-        title: strings.authorize,
-        cancel: strings.cancel,
-      },
-    },
-    {
-      onSuccess: (rootKey) => signAndSubmitTx({unsignedTx, rootKey}),
-      onError: alert,
-    },
+    {id: wallet.id},
+    {onSuccess: (rootKey) => signAndSubmitTx({unsignedTx, rootKey})},
   )
 
   const {signAndSubmitTx, isLoading: processingTx} = useSignAndSubmitTx(
@@ -66,19 +57,10 @@ export const ConfirmTxWithOS = ({wallet, unsignedTx, onSuccess, onCancel}: Props
   )
 }
 
-const messages = defineMessages({
-  authorize: {
-    id: 'components.send.biometricauthscreen.authorizeOperation',
-    defaultMessage: '!!!Authorize',
-  },
-})
-
 const useStrings = () => {
   const intl = useIntl()
 
   return {
-    authorize: intl.formatMessage(messages.authorize),
-    cancel: intl.formatMessage(globalMessages.cancel),
     confirmButton: intl.formatMessage(confirmationMessages.commonButtons.confirmButton),
     confirmTx: intl.formatMessage(txLabels.confirmTx),
   }
