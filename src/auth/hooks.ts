@@ -72,7 +72,7 @@ export const useAuthWithOs = (
     return Alert.alert(strings.error, strings.unknownError)
   }
 
-  const primaryAuthenticationPrompt: AuthenticationPrompt = {
+  const defaultAuthenticationPrompt: AuthenticationPrompt = {
     cancel: strings.cancel,
     title: strings.authorize,
   }
