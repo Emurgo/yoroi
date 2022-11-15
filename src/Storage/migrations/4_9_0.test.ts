@@ -1,7 +1,7 @@
 import storage from '@react-native-async-storage/async-storage'
 
 import {SettingsStorageKeys} from '../StorageProvider'
-import {migrateAuthSetting} from './authSetting'
+import {migrateAuthSetting} from './4_9_0'
 describe('migrateAuthSetting', () => {
   const installationId = 'uuidv4'
   const os = JSON.stringify('os')

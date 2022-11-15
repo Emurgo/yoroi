@@ -1,3 +1,5 @@
+import storage from '@react-native-async-storage/async-storage'
+
 import {AUTH_WITH_OS, AUTH_WITH_PIN, disableAllEasyConfirmation, getAuthSetting} from '../../auth'
 import {SettingsStorageKeys, Storage} from '../StorageProvider'
 
@@ -18,3 +20,5 @@ export const migrateAuthSetting = async (storage: Storage) => {
     return storage.setItem(SettingsStorageKeys.Auth, JSON.stringify(AUTH_WITH_PIN))
   }
 }
+
+export const to4_9_0 = async () => migrateAuthSetting(storage)
