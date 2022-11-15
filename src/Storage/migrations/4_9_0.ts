@@ -22,6 +22,6 @@ export const migrateAuthSetting = async (storage: Storage) => {
   }
 }
 
-export const to4_9_0 = async () => migrateAuthSetting(storage)
+export const to4_9_0 = migrateAuthSetting
 
 export const OLD_OS_AUTH_KEY = '/appSettings/isSystemAuthEnabled'
