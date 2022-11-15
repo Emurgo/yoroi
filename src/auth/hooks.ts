@@ -42,14 +42,16 @@ export const useEnableAuthWithOs = (
   {authenticationPrompt, storage}: {authenticationPrompt?: AuthenticationPrompt; storage: Storage},
   options?: UseMutationOptions<void, Error>,
 ) => {
+  const queryClient = useQueryClient()
   const {authWithOs: enableAuthWithOs, ...mutation} = useAuthWithOs(
     {
       ...options,
-      onSuccess: (data, variables, context) => {
-        storage
+      onSuccess: async (data, variables, context) => {
+        await storage
           .setItem(SettingsStorageKeys.Auth, JSON.stringify(AUTH_WITH_OS))
           .then(() => storage.getItem(SettingsStorageKeys.Pin))
           .then((pin) => (pin != null ? storage.removeItem(SettingsStorageKeys.Pin) : undefined))
+        queryClient.invalidateQueries(['authSetting'])
         options?.onSuccess?.(data, variables, context)
       },
     },
@@ -76,9 +78,8 @@ export const useAuthWithOs = (
     title: strings.authorize,
   }
 
-  const mutation = useMutationWithInvalidations({
+  const mutation = useMutation({
     ...options,
-    invalidateQueries: [['authSetting']],
     mutationFn: () => Keychain.authenticate(authenticationPrompt ?? defaultAuthenticationPrompt),
     onError: (error, variables, context) => {
       alert(error)
