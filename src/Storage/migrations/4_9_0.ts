@@ -1,5 +1,3 @@
-import storage from '@react-native-async-storage/async-storage'
-
 import {AUTH_WITH_OS, AUTH_WITH_PIN, disableAllEasyConfirmation, getAuthSetting} from '../../auth'
 import {parseBoolean} from '../../yoroi-wallets/utils/parsing'
 import {SettingsStorageKeys, Storage} from '../StorageProvider'

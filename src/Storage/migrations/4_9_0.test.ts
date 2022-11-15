@@ -1,7 +1,7 @@
 import storage from '@react-native-async-storage/async-storage'
 
 import {SettingsStorageKeys} from '../StorageProvider'
-import {migrateAuthSetting} from './4_9_0'
+import {migrateAuthSetting, OLD_OS_AUTH_KEY} from './4_9_0'
 describe('migrateAuthSetting', () => {
   const installationId = 'uuidv4'
   const os = JSON.stringify('os')
@@ -62,5 +62,3 @@ describe('migrateAuthSetting', () => {
     await expect(await storage.getItem(SettingsStorageKeys.Auth)).toBe(os)
   })
 })
-
-const OLD_OS_AUTH_KEY = '/appSettings/isSystemAuthEnabled'
