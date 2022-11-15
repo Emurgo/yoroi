@@ -4,7 +4,6 @@ import {IntlProvider} from 'react-intl'
 import {NativeModules, Platform, Text} from 'react-native'
 import {useMutation, UseMutationOptions, useQuery, useQueryClient, UseQueryOptions} from 'react-query'
 
-import crashReporting from '../legacy/crashReporting'
 import {isEmptyString} from '../legacy/utils'
 import {updateLanguageSettings} from '.'
 import {supportedLanguages} from './languages'
