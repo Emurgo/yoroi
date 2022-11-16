@@ -22,4 +22,5 @@ export const Keychain = {
   getWalletKey,
   setWalletKey,
   removeWalletKey,
-}
+  Errors: KeychainStorage.Errors,
+} as const

@@ -114,7 +114,7 @@
   "components.send.biometricauthscreen.NOT_RECOGNIZED": "Biometrics were not recognized. Try again",
   "components.send.biometricauthscreen.SENSOR_LOCKOUT": "Too many failed attempts. The sensor is now disabled",
   "components.send.biometricauthscreen.SENSOR_LOCKOUT_PERMANENT": "Your biometrics sensor has been permanently locked. Use an alternate login method.",
-  "components.send.biometricauthscreen.UNKNOWN_ERROR": "Άγνωστο σφάλμα",
+  "components.send.biometricauthscreen.UNKNOWN_ERROR": "Something went wrong, try again later. Check your app settings.",
   "components.send.biometricauthscreen.authorizeOperation": "Authorize operation",
   "components.send.biometricauthscreen.cancelButton": "Ακύρωση",
   "components.send.biometricauthscreen.headings1": "Authorize with your",

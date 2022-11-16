@@ -114,7 +114,7 @@
   "components.send.biometricauthscreen.NOT_RECOGNIZED": "Impressão digital não foi reconhecida. Tente novamente",
   "components.send.biometricauthscreen.SENSOR_LOCKOUT": "Muitas tentativas com falhas. O sensor foi desativado",
   "components.send.biometricauthscreen.SENSOR_LOCKOUT_PERMANENT": "O sensor de impressâo digital foi permanentemente bloqueado. Use um método alternativo de login.",
-  "components.send.biometricauthscreen.UNKNOWN_ERROR": "Erro desconhecido",
+  "components.send.biometricauthscreen.UNKNOWN_ERROR": "Something went wrong, try again later. Check your app settings.",
   "components.send.biometricauthscreen.authorizeOperation": "Autorize a operação",
   "components.send.biometricauthscreen.cancelButton": "Cancela",
   "components.send.biometricauthscreen.headings1": "Autorize com seu",

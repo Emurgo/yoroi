@@ -114,7 +114,7 @@
   "components.send.biometricauthscreen.NOT_RECOGNIZED": "Der Fingerabdruck wurde nicht erkannt. Versuche es erneut",
   "components.send.biometricauthscreen.SENSOR_LOCKOUT": "Zu viele fehlgeschlagene Versuche. Der Sensor ist nun deaktiviert",
   "components.send.biometricauthscreen.SENSOR_LOCKOUT_PERMANENT": "Der Fingerabdrucksensor ist dauerhaft gesperrt. Verwende eine alternative Anmeldemethode.",
-  "components.send.biometricauthscreen.UNKNOWN_ERROR": "Unbekannter Fehler",
+  "components.send.biometricauthscreen.UNKNOWN_ERROR": "Something went wrong, try again later. Check your app settings.",
   "components.send.biometricauthscreen.authorizeOperation": "Autorisiere den Vorgang",
   "components.send.biometricauthscreen.cancelButton": "Abbrechen",
   "components.send.biometricauthscreen.headings1": "Autorisiere mit deiner",

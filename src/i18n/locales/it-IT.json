@@ -114,7 +114,7 @@
   "components.send.biometricauthscreen.NOT_RECOGNIZED": "La biometria non è stata riconosciuta. Riprovare",
   "components.send.biometricauthscreen.SENSOR_LOCKOUT": "Troppi tentativi falliti. Il sensore e' ora disabilitato.",
   "components.send.biometricauthscreen.SENSOR_LOCKOUT_PERMANENT": "Il vostro sensore biometrico è stato bloccato in modo permanente. Utilizzare un metodo di login alternativo.",
-  "components.send.biometricauthscreen.UNKNOWN_ERROR": "Errore sconosciuto",
+  "components.send.biometricauthscreen.UNKNOWN_ERROR": "Something went wrong, try again later. Check your app settings.",
   "components.send.biometricauthscreen.authorizeOperation": "Autorizza operazione",
   "components.send.biometricauthscreen.cancelButton": "Annulla",
   "components.send.biometricauthscreen.headings1": "Autorizza con il tuo",

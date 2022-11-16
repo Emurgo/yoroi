@@ -114,7 +114,7 @@
   "components.send.biometricauthscreen.NOT_RECOGNIZED": "A biometrikus adat felismerése sikertelen. Próbáld újra ",
   "components.send.biometricauthscreen.SENSOR_LOCKOUT": "Túl sok sikertelen próbálkozás. A biometrikus szenzor letiltásra került.",
   "components.send.biometricauthscreen.SENSOR_LOCKOUT_PERMANENT": "A biometrikus szenzor véglegesen letiltásra került. Használj alternatív bejelentkezési módot. ",
-  "components.send.biometricauthscreen.UNKNOWN_ERROR": "Ismeretlen hiba",
+  "components.send.biometricauthscreen.UNKNOWN_ERROR": "Something went wrong, try again later. Check your app settings.",
   "components.send.biometricauthscreen.authorizeOperation": "Műveletet engedélyezése",
   "components.send.biometricauthscreen.cancelButton": "Megszakítás",
   "components.send.biometricauthscreen.headings1": "Azonosítsd",

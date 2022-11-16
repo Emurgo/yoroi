@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {Platform} from 'react-native'
 import * as Keychain from 'react-native-keychain'
 
@@ -13,11 +14,16 @@ async function write(key: string, value: string) {
 }
 
 async function read(key: string, authenticationPrompt: Keychain.Options['authenticationPrompt']) {
-  const credentials: false | Keychain.UserCredentials = await Keychain.getGenericPassword({
-    service: key,
-    authenticationPrompt,
-    accessControl: Keychain.ACCESS_CONTROL.BIOMETRY_CURRENT_SET_OR_DEVICE_PASSCODE,
-  })
+  let credentials: false | Keychain.UserCredentials
+  try {
+    credentials = await Keychain.getGenericPassword({
+      service: key,
+      authenticationPrompt,
+      accessControl: Keychain.ACCESS_CONTROL.BIOMETRY_CURRENT_SET_OR_DEVICE_PASSCODE,
+    })
+  } catch (error) {
+    throw errorDecoder(error)
+  }
 
   if (!credentials) throw new Error('Failed to load secret')
   return credentials.password
@@ -29,10 +35,19 @@ async function remove(key: string) {
   })
 }
 
+class CancelledByUser extends Error {}
+class TooManyAttempts extends Error {}
+
+const Errors = {
+  CancelledByUser,
+  TooManyAttempts,
+}
+
 export const KeychainStorage = {
   read,
   write,
   remove,
+  Errors,
 } as const
 
 export async function authOsEnabled() {
@@ -48,5 +63,26 @@ export async function authOsEnabled() {
     default: () => Promise.reject(new Error('OS Authentication is not supported')),
   })()
 }
+
+// react-native-keychain doesn't normalize the errors, iOS = `Error.code`
+// Android the code is inside the message i.e "code 7: Too many attempts"
+const errorDecoder = Platform.select({
+  android: (error: any) => {
+    if (/code: 13/.test(error?.message)) return new CancelledByUser() // cancelled by user
+
+    // iOS it will fallback to PIN, if wrong pin, sensor would be disabled (app will trigger pin creation)
+    if (/code: 7/.test(error?.message)) return new TooManyAttempts()
+
+    return error
+  },
+
+  ios: (error: any) => {
+    if (error?.code === '-128') return new CancelledByUser() // cancelled by user
+
+    return error
+  },
+
+  default: (_) => new Error(),
+})
 
 export type AuthenticationPrompt = Keychain.Options['authenticationPrompt']

@@ -1,14 +1,13 @@
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Alert, ScrollView, StyleSheet, Switch} from 'react-native'
+import {ScrollView, StyleSheet, Switch} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
-import {useAuthOsEnabled, useAuthOsErrorDecoder, useAuthWithOs} from '../../auth'
+import {useAuthOsEnabled, useAuthSetting, useAuthWithOs} from '../../auth'
 import {StatusBar} from '../../components'
-import {useAuthSetting, useCrashReports} from '../../hooks'
+import {useCrashReports} from '../../hooks'
 import globalMessages from '../../i18n/global-messages'
 import {CONFIG, isNightly} from '../../legacy/config'
-import {isEmptyString} from '../../legacy/utils'
 import {useWalletNavigation} from '../../navigation'
 import {useStorage} from '../../Storage'
 import {useCurrencyContext} from '../Currency'
@@ -18,32 +17,15 @@ const version = DeviceInfo.getVersion()
 
 export const ApplicationSettingsScreen = () => {
   const strings = useStrings()
-  const {navigation} = useWalletNavigation()
-
-  const {currency} = useCurrencyContext()
   const storage = useStorage()
+
+  const {navigation} = useWalletNavigation()
+  const {currency} = useCurrencyContext()
+  const crashReports = useCrashReports()
+
   const authSetting = useAuthSetting(storage)
   const authOsEnabled = useAuthOsEnabled()
-
-  const decodeAuthOsError = useAuthOsErrorDecoder()
-  const {authWithOs} = useAuthWithOs(
-    {
-      authenticationPrompt: {
-        title: strings.authorize,
-        cancel: strings.cancel,
-      },
-      storage,
-    },
-    {
-      onSuccess: () => navigation.navigate('enable-login-with-pin'),
-      onError: (error) => {
-        const errorMessage = decodeAuthOsError(error)
-        if (!isEmptyString(errorMessage)) Alert.alert(strings.error, errorMessage)
-      },
-    },
-  )
-
-  const crashReports = useCrashReports()
+  const {authWithOs} = useAuthWithOs({onSuccess: () => navigation.navigate('enable-login-with-pin')})
 
   const onToggleAuthWithOs = async () => {
     if (authSetting === 'os') {
@@ -121,17 +103,10 @@ const useStrings = () => {
     crashReporting: intl.formatMessage(messages.crashReporting),
     crashReportingText: intl.formatMessage(messages.crashReportingText),
     currency: intl.formatMessage(globalMessages.currency),
-    authorize: intl.formatMessage(messages.authorize),
-    cancel: intl.formatMessage(globalMessages.cancel),
-    error: intl.formatMessage(globalMessages.error),
   }
 }
 
 const messages = defineMessages({
-  authorize: {
-    id: 'components.send.biometricauthscreen.authorizeOperation',
-    defaultMessage: '!!!Authorize operation',
-  },
   language: {
     id: 'components.settings.applicationsettingsscreen.language',
     defaultMessage: '!!!Your language',
