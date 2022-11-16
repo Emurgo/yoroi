@@ -114,7 +114,7 @@
   "components.send.biometricauthscreen.NOT_RECOGNIZED": "生物信息识别失败，请重试",
   "components.send.biometricauthscreen.SENSOR_LOCKOUT": "太多次失败的尝试。传感器现已禁用",
   "components.send.biometricauthscreen.SENSOR_LOCKOUT_PERMANENT": "您的生物信息传感器已被永久锁定，请使用其他方式登录。",
-  "components.send.biometricauthscreen.UNKNOWN_ERROR": "未知错误",
+  "components.send.biometricauthscreen.UNKNOWN_ERROR": "Something went wrong, try again later. Check your app settings.",
   "components.send.biometricauthscreen.authorizeOperation": "授权操作",
   "components.send.biometricauthscreen.cancelButton": "取消",
   "components.send.biometricauthscreen.headings1": "用您的指纹",
