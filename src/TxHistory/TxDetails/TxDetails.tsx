@@ -7,7 +7,7 @@ import {defineMessages, IntlShape, useIntl} from 'react-intl'
 import {LayoutAnimation, Linking, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {Banner, Boundary, Button, CopyButton, FadeIn, Icon, OfflineBanner, StatusBar, Text} from '../../components'
+import {Banner, Boundary, Button, CopyButton, FadeIn, Icon, StatusBar, Text} from '../../components'
 import {useTipStatus, useTokenInfo, useTransactionInfo} from '../../hooks'
 import globalMessages from '../../i18n/global-messages'
 import {formatDateToSeconds, formatTokenWithSymbol} from '../../legacy/format'
@@ -58,7 +58,6 @@ export const TxDetails = () => {
   return (
     <FadeIn style={styles.container}>
       <StatusBar type="dark" />
-      <OfflineBanner />
 
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <Banner label={strings[transaction.direction]}>

@@ -3,7 +3,7 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native'
 
-import {Button, OfflineBanner, Spacer, StatusBar} from '../components'
+import {Button, Spacer, StatusBar} from '../components'
 import {useReceiveAddresses} from '../hooks'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
@@ -25,7 +25,6 @@ export const ReceiveScreen = () => {
   return (
     <View style={styles.root}>
       <StatusBar type="light" />
-      <OfflineBanner />
 
       <ScrollView>
         <Spacer height={24} />
