@@ -22,8 +22,6 @@ import type {
   RawUtxo,
   TipStatusResponse,
   Transaction,
-  TxBodiesRequest,
-  TxBodiesResponse,
   TxStatusRequest,
   TxStatusResponse,
   WalletState,
@@ -195,8 +193,6 @@ export interface WalletInterface {
   checkServerStatus(): Promise<ServerStatus>
 
   submitTransaction(signedTx: string): Promise<[]>
-
-  getTxsBodiesForUTXOs(request: TxBodiesRequest): Promise<TxBodiesResponse>
 
   fetchUTXOs(): Promise<Array<RawUtxo>>
 

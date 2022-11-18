@@ -57,8 +57,6 @@ import type {
   TipStatusResponse,
   TokenInfoRequest,
   TransactionInfo,
-  TxBodiesRequest,
-  TxBodiesResponse,
   TxStatusRequest,
   TxStatusResponse,
 } from '../types/other'
@@ -924,10 +922,6 @@ export class ShelleyWallet implements WalletInterface {
     })
 
     return txInfos.reduce((result, txInfo) => ({...result, [txInfo.id]: txInfo}), {} as Record<string, TransactionInfo>)
-  }
-
-  async getTxsBodiesForUTXOs(request: TxBodiesRequest): Promise<TxBodiesResponse> {
-    return api.getTxsBodiesForUTXOs(request, this.getBackendConfig())
   }
 
   async fetchUTXOs() {
