@@ -20,7 +20,7 @@ type Props = {
 export const DownloadCatalyst = ({onNext}: Props) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
-  const {stakingInfo, isLoading} = useStakingInfo(wallet, {suspense: true})
+  const {stakingInfo} = useStakingInfo(wallet, {suspense: true})
   const isStaked = stakingInfo?.status === 'staked'
   const [showModal, setShowModal] = useState<boolean>(!isStaked)
 
@@ -53,7 +53,7 @@ export const DownloadCatalyst = ({onNext}: Props) => {
       </ScrollView>
 
       <Actions>
-        <Button onPress={() => onNext()} title={strings.continueButton} disabled={isLoading} />
+        <Button onPress={() => onNext()} title={strings.continueButton} />
       </Actions>
 
       <StandardModal

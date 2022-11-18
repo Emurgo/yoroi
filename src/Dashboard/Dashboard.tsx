@@ -28,7 +28,7 @@ import {WithdrawStakingRewards} from './WithdrawStakingRewards'
 
 export const Dashboard = () => {
   const intl = useIntl()
-  const navigation = useNavigation()
+  const navigateTo = useNavigateTo()
 
   const wallet = useSelectedWallet()
   const {isLoading: isFetchingUtxos, refetch: refetchUtxos} = useUtxos(wallet)
@@ -99,20 +99,7 @@ export const Dashboard = () => {
 
         <Actions>
           <Button
-            onPress={() => {
-              navigation.navigate('app-root', {
-                screen: 'main-wallet-routes',
-                params: {
-                  screen: 'staking-dashboard',
-                  params: {
-                    screen: 'staking-center',
-                    params: {
-                      screen: 'staking-center-main',
-                    },
-                  },
-                },
-              })
-            }}
+            onPress={navigateTo.stakingCenter}
             title={intl.formatMessage(messages.stakingCenterButton)}
             disabled={wallet.isReadOnly}
             shelleyTheme
@@ -133,6 +120,27 @@ export const Dashboard = () => {
       )}
     </View>
   )
+}
+
+const useNavigateTo = () => {
+  const navigation = useNavigation()
+
+  return {
+    stakingCenter: () => {
+      navigation.navigate('app-root', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'staking-dashboard',
+          params: {
+            screen: 'staking-center',
+            params: {
+              screen: 'staking-center-main',
+            },
+          },
+        },
+      })
+    },
+  }
 }
 
 const Row = ({style, ...props}: ViewProps) => <View {...props} style={[style, styles.row]} />

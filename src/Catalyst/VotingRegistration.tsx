@@ -26,7 +26,7 @@ export const VotingRegistration = () => {
   const navigation = useNavigation<VotingRegistrationRouteNavigation>()
   const {resetToTxHistory} = useWalletNavigation()
   const wallet = useSelectedWallet()
-  usePrefetchVotingRegTx(wallet)
+  const prefetchVotingRegTx = usePrefetchVotingRegTx(wallet)
 
   const pin = usePin({length: 4, type: 'numeric'})
 
@@ -51,7 +51,15 @@ export const VotingRegistration = () => {
       </Stack.Screen>
 
       <Stack.Screen name="confirm-pin">
-        {() => <ConfirmPin pin={pin} onNext={() => navigation.navigate('confirm-tx')} />}
+        {() => (
+          <ConfirmPin
+            pin={pin}
+            onNext={() => {
+              prefetchVotingRegTx()
+              navigation.navigate('confirm-tx')
+            }}
+          />
+        )}
       </Stack.Screen>
 
       <Stack.Screen name="confirm-tx">

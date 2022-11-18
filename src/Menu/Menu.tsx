@@ -19,8 +19,6 @@ const MenuStack = createStackNavigator()
 
 export const MenuNavigator = () => {
   const strings = useStrings()
-  const wallet = useSelectedWallet()
-  usePrefetchStakingInfo(wallet)
 
   return (
     <MenuStack.Navigator
@@ -151,16 +149,21 @@ const KNOWLEDGE_BASE_LINK = 'https://emurgohelpdesk.zendesk.com/hc/en-us/categor
 
 const useNavigateTo = () => {
   const {navigation, navigateToSettings} = useWalletNavigation()
+  const wallet = useSelectedWallet()
+  const prefetchStakingInfo = usePrefetchStakingInfo(wallet)
 
   return {
     allWallets: () => navigation.navigate('app-root', {screen: 'wallet-selection'}),
-    catalystVoting: () =>
+    catalystVoting: () => {
+      prefetchStakingInfo()
+
       navigation.navigate('app-root', {
         screen: 'voting-registration',
         params: {
           screen: 'download-catalyst',
         },
-      }),
+      })
+    },
     settings: () => navigateToSettings(),
     support: () => Linking.openURL(SUPPORT_TICKET_LINK),
     knowledgeBase: () => Linking.openURL(KNOWLEDGE_BASE_LINK),
