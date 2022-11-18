@@ -926,9 +926,11 @@ export class ShelleyWallet implements WalletInterface {
 
   async fetchUTXOs() {
     const addresses = [...this.internalAddresses, ...this.externalAddresses]
+    console.log('fetchUTXOs-addresses', addresses.length)
     await this.utxoService.syncUtxoState(addresses)
     const utxos = await this.utxoService.getAvailableUtxos()
 
+    console.log('fetchUTXOs-utxos', utxos.length)
     return utxos.map(toUTXO)
   }
 
@@ -1096,6 +1098,8 @@ export class ShelleyWallet implements WalletInterface {
     this.externalChain.addSubscriberToNewAddresses(() =>
       this.notify({type: 'addresses', addresses: this.externalAddresses}),
     )
+
+    this.subscribe((event) => event.type === 'addresses' && this.utxoStorage.clearUtxoState())
   }
 
   // =================== synch =================== //
@@ -1142,6 +1146,8 @@ export class ShelleyWallet implements WalletInterface {
       this.rewardAddressHex != null
         ? [...internalAddresses, ...externalAddresses, [this.rewardAddressHex]]
         : [...internalAddresses, ...externalAddresses]
+
+    this.notify({type: 'addresses', addresses: [...this.internalAddresses, ...this.externalAddresses]})
 
     return addresses
   }
