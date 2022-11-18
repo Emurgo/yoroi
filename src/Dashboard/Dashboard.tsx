@@ -1,13 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {useNetInfo} from '@react-native-community/netinfo'
 import {useNavigation} from '@react-navigation/native'
 import BigNumber from 'bignumber.js'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, RefreshControl, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 
-import {Banner, Button, Modal, OfflineBanner, StatusBar} from '../components'
-import {useBalances, useUtxos} from '../hooks'
+import {Banner, Button, Modal, StatusBar} from '../components'
+import {useBalances, useIsOnline, useUtxos} from '../hooks'
 import globalMessages from '../i18n/global-messages'
 import {getCardanoBaseConfig} from '../legacy/config'
 import {getCardanoNetworkConfigById} from '../legacy/networks'
@@ -33,8 +32,7 @@ export const Dashboard = () => {
 
   const wallet = useSelectedWallet()
   const {isLoading: isFetchingUtxos, refetch: refetchUtxos} = useUtxos(wallet)
-  const netInfo = useNetInfo()
-  const isOnline = netInfo.type !== 'none' && netInfo.type !== 'unknown'
+  const isOnline = useIsOnline(wallet)
 
   const balances = useBalances(wallet)
   const primaryAmount = Amounts.getAmount(balances, '')
@@ -49,7 +47,6 @@ export const Dashboard = () => {
       <StatusBar type="dark" />
 
       <View style={styles.container}>
-        <OfflineBanner />
         {isOnline && error && <SyncErrorBanner showRefresh={!(isLoading || isFetchingUtxos)} />}
 
         <ScrollView

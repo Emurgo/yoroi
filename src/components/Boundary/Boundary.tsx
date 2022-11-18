@@ -15,6 +15,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
+import {useQueryErrorResetBoundary} from 'react-query'
 
 import image from '../../assets/img/error.png'
 import LocalizableError from '../../i18n/LocalizableError'
@@ -65,18 +66,27 @@ type ErrorBoundaryProps = {
   children: React.ReactNode
 }
 const ErrorBoundary = ({children, ...props}: ErrorBoundaryProps) => {
+  const {reset} = useQueryErrorResetBoundary()
   if (props.error?.enabled === false) return <>{children}</>
 
   const fallbackRender = (fallbackProps: ErrorFallbackProps) => {
-    if (props.error?.fallback) {
-      return props.error.fallback(fallbackProps)
-    } else if (props.error?.size === 'small') {
-      return <SmallErrorFallback {...fallbackProps} />
-    } else if (props.error?.size === 'inline') {
-      return <InlineErrorFallback {...fallbackProps} />
+    const errorProps = {
+      ...fallbackProps,
+      resetErrorBoundary: () => {
+        reset()
+        fallbackProps.resetErrorBoundary()
+      },
     }
 
-    return <LargeErrorFallback {...fallbackProps} />
+    if (props.error?.fallback) {
+      return props.error.fallback(errorProps)
+    } else if (props.error?.size === 'small') {
+      return <SmallErrorFallback {...errorProps} />
+    } else if (props.error?.size === 'inline') {
+      return <InlineErrorFallback {...errorProps} />
+    }
+
+    return <LargeErrorFallback {...errorProps} />
   }
 
   return <ReactErrorBoundary fallbackRender={fallbackRender}>{children}</ReactErrorBoundary>
