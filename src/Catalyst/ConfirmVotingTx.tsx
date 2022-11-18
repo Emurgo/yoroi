@@ -5,7 +5,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {OfflineBanner, ProgressStep, Spacer, TextInput} from '../components'
+import {ProgressStep, Spacer, TextInput} from '../components'
 import {ConfirmTx} from '../components/ConfirmTx'
 import {useTokenInfo, useVotingRegTx} from '../hooks'
 import {Instructions as HWInstructions} from '../HW'
@@ -28,8 +28,6 @@ export const ConfirmVotingTx = ({onNext}: {onNext: () => void}) => {
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
       <ProgressStep currentStep={5} totalSteps={6} />
-
-      <OfflineBanner />
 
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <Spacer height={48} />

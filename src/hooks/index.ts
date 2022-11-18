@@ -1,20 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import AsyncStorage, {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
-import {useNetInfo} from '@react-native-community/netinfo'
 import {useFocusEffect} from '@react-navigation/native'
 import BigNumber from 'bignumber.js'
 import {delay} from 'bluebird'
 import {mapValues} from 'lodash'
 import * as React from 'react'
-import {
-  QueryKey,
-  useMutation,
-  UseMutationOptions,
-  useQueries,
-  useQuery,
-  useQueryClient,
-  UseQueryOptions,
-} from 'react-query'
+import {QueryKey, useMutation, UseMutationOptions, useQuery, useQueryClient, UseQueryOptions} from 'react-query'
 
 import {getDefaultAssetByNetworkId, isNightly} from '../legacy/config'
 import {ObjectValues} from '../legacy/flow'
@@ -130,11 +121,10 @@ export const useUtxos = (
     queryFn: () => wallet.fetchUTXOs(),
   })
 
-  const netInfo = useNetInfo()
+  const isOnline = useIsOnline(wallet)
   React.useEffect(() => {
-    const isOnline = netInfo.type !== 'none' && netInfo.type !== 'unknown'
-    if (isOnline) refetch()
-  }, [netInfo.type, refetch])
+    isOnline && refetch()
+  }, [isOnline, refetch])
 
   React.useEffect(() => wallet.subscribe(() => refetch()), [refetch, wallet])
 
@@ -261,11 +251,14 @@ export const useChangeWalletName = (wallet: YoroiWallet, options: UseMutationOpt
   }
 }
 
-export const useTokenInfo = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string}) => {
-  const _queryKey = queryKey({wallet, tokenId})
-  const query = useQuery<Token, Error>({
+export const useTokenInfo = (
+  {wallet, tokenId}: {wallet: YoroiWallet; tokenId: string},
+  options?: UseQueryOptions<Token, Error, Token, [string, 'tokenInfo', string]>,
+) => {
+  const query = useQuery({
+    ...options,
     suspense: true,
-    queryKey: _queryKey,
+    queryKey: [wallet.id, 'tokenInfo', tokenId],
     queryFn: () => fetchTokenInfo({wallet, tokenId}),
   })
 
@@ -274,27 +267,6 @@ export const useTokenInfo = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: s
   return query.data
 }
 
-export const useTokenInfos = ({wallet, tokenIds}: {wallet: YoroiWallet; tokenIds: Array<string>}) => {
-  const queries = useQueries(
-    tokenIds.map((tokenId: string) => ({
-      queryKey: queryKey({wallet, tokenId}),
-      queryFn: () => fetchTokenInfo({wallet, tokenId}),
-    })),
-  )
-
-  const tokens = queries
-    .filter((result) => result.isSuccess)
-    .map((result) => {
-      if (!result.data) throw new Error('Invalid tokenInfo')
-
-      return result.data
-    })
-    .reduce((result, current) => ({...result, [current.identifier]: current}), {} as Record<string, Token>)
-
-  return queries.every((query) => !query.isLoading) ? tokens : undefined
-}
-
-export const queryKey = ({wallet, tokenId}) => [wallet.id, 'tokenInfo', tokenId]
 export const fetchTokenInfo = async ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string}): Promise<Token> => {
   if ((tokenId === '' || tokenId === 'ADA') && wallet.networkId === 1)
     return getDefaultAssetByNetworkId(wallet.networkId)
@@ -739,6 +711,26 @@ export const useCreateWallet = (options?: UseMutationOptions<YoroiWallet, Error,
     createWallet: mutation.mutate,
     ...mutation,
   }
+}
+
+export const useIsOnline = (
+  wallet: YoroiWallet,
+  options?: UseQueryOptions<boolean, Error, boolean, [string, 'isOnline']>,
+) => {
+  const query = useQuery({
+    ...options,
+    queryKey: [wallet.id, 'isOnline'],
+    queryFn: () =>
+      wallet.checkServerStatus().then(
+        () => true,
+        () => false,
+      ),
+    refetchInterval: 5000,
+    suspense: true,
+    useErrorBoundary: false,
+  })
+
+  return query.data
 }
 
 export const useSubmitTx = (

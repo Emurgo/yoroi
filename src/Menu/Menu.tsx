@@ -8,7 +8,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import SupportImage from '../assets/img/icon/shape.png'
 import {useCanVote} from '../Catalyst/hooks'
 import {InsufficientFundsModal} from '../Catalyst/InsufficientFundsModal'
-import {Icon, Spacer, Text} from '../components'
+import {Boundary, Icon, Spacer, Text} from '../components'
 import {usePrefetchStakingInfo} from '../Dashboard/StakePoolInfos'
 import {useWalletMetas} from '../hooks'
 import {defaultStackNavigationOptions, useWalletNavigation} from '../navigation'
@@ -53,11 +53,13 @@ export const Menu = () => {
         />
         <HR />
 
-        <Catalyst //
-          label={strings.catalystVoting}
-          onPress={navigateTo.catalystVoting}
-          left={<Icon.Catalyst size={26} color="#6B7384" />}
-        />
+        <Boundary loading={{fallbackProps: {size: 'small', style: {padding: 16}}}} error={{size: 'inline'}}>
+          <Catalyst //
+            label={strings.catalystVoting}
+            onPress={navigateTo.catalystVoting}
+            left={<Icon.Catalyst size={26} color="#6B7384" />}
+          />
+        </Boundary>
         <HR />
 
         <Settings //
