@@ -926,11 +926,9 @@ export class ShelleyWallet implements WalletInterface {
 
   async fetchUTXOs() {
     const addresses = [...this.internalAddresses, ...this.externalAddresses]
-    console.log('fetchUTXOs-addresses', addresses.length)
     await this.utxoService.syncUtxoState(addresses)
     const utxos = await this.utxoService.getAvailableUtxos()
 
-    console.log('fetchUTXOs-utxos', utxos.length)
     return utxos.map(toUTXO)
   }
 
