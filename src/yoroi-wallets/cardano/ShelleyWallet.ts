@@ -925,6 +925,7 @@ export class ShelleyWallet implements WalletInterface {
   }
 
   async fetchUTXOs() {
+    if (!this.internalChain?.isInitialized || !this.externalChain?.isInitialized) return []
     const addresses = [...this.internalAddresses, ...this.externalAddresses]
     await this.utxoService.syncUtxoState(addresses)
     const utxos = await this.utxoService.getAvailableUtxos()
@@ -1144,8 +1145,6 @@ export class ShelleyWallet implements WalletInterface {
       this.rewardAddressHex != null
         ? [...internalAddresses, ...externalAddresses, [this.rewardAddressHex]]
         : [...internalAddresses, ...externalAddresses]
-
-    this.notify({type: 'addresses', addresses: [...this.internalAddresses, ...this.externalAddresses]})
 
     return addresses
   }

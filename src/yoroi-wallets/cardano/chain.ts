@@ -211,6 +211,10 @@ export class AddressChain {
     return this._addresses
   }
 
+  get isInitialized() {
+    return this._isInitialized
+  }
+
   get addressToIdxMap() {
     return this._addressToIdxSelector(this.addresses)
   }
@@ -262,6 +266,7 @@ export class AddressChain {
     await this._discoverNewBlock()
     assert.assert(!this._isInitialized, 'AddressChain::initialized(): Concurrent modification')
     this._isInitialized = true
+    console.log('fetchUTXOs-initialized')
   }
 
   _selfCheck() {
