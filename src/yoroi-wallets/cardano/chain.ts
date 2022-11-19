@@ -266,7 +266,6 @@ export class AddressChain {
     await this._discoverNewBlock()
     assert.assert(!this._isInitialized, 'AddressChain::initialized(): Concurrent modification')
     this._isInitialized = true
-    console.log('fetchUTXOs-initialized')
   }
 
   _selfCheck() {
