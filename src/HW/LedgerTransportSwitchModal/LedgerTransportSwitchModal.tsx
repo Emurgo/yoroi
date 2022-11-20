@@ -3,9 +3,9 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Platform, ScrollView, StyleSheet, View} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
-import {Button, Modal, Text} from '../../components'
+import {Button, Modal, Spacer, Text} from '../../components'
 import {CONFIG} from '../../legacy/config'
-import {spacing} from '../../theme'
+import {COLORS} from '../../theme'
 
 type Props = {
   onSelectUSB: () => void
@@ -24,42 +24,54 @@ const useIsUsbSupported = () => {
 }
 
 export const LedgerTransportSwitchView = ({onSelectUSB, onSelectBLE}: Props) => {
-  const intl = useIntl()
+  const strings = useStrings()
   const isUSBSupported = useIsUsbSupported()
-
-  const getUsbButtonTitle = (): string => {
-    if (Platform.OS === 'ios') {
-      return intl.formatMessage(messages.usbButtonDisabled)
-    } else if (!CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT || !isUSBSupported) {
-      return intl.formatMessage(messages.usbButtonNotSupported)
-    } else {
-      return intl.formatMessage(messages.usbButton)
-    }
-  }
 
   return (
     <ScrollView style={styles.scrollView}>
       <View style={styles.content}>
-        <View style={styles.heading}>
-          <Text style={styles.title}>{intl.formatMessage(messages.title)}</Text>
+        <View style={styles.center}>
+          <Text style={styles.title}>{strings.title}</Text>
         </View>
-        <Text style={styles.paragraph}>{intl.formatMessage(messages.usbExplanation)}</Text>
-        <Button
-          block
-          onPress={onSelectUSB}
-          title={getUsbButtonTitle()}
-          disabled={!isUSBSupported || !CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT}
-          style={styles.button}
-          testID="connectWithUSBButton"
-        />
-        <Text style={styles.paragraph}>{intl.formatMessage(messages.bluetoothExplanation)}</Text>
+
+        <Spacer height={16} />
+
+        {Platform.OS === 'android' && (
+          <>
+            <Text style={styles.paragraph}>{strings.usbHelp}</Text>
+            <Spacer height={16} />
+            <Button
+              block
+              onPress={onSelectUSB}
+              title={strings.usbButton}
+              disabled={!isUSBSupported || !CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT}
+              style={styles.button}
+              fontStyle={styles.buttonText}
+              testID="connectWithUSBButton"
+              outlineShelley
+            />
+            <Spacer height={16} />
+          </>
+        )}
+
+        <Text style={styles.paragraph}>{strings.bluetoothHelp}</Text>
+        <Spacer height={16} />
         <Button
           block
           onPress={onSelectBLE}
-          title={intl.formatMessage(messages.bluetoothButton)}
+          title={strings.bluetoothButton}
           style={styles.button}
           testID="connectWithBLEButton"
+          fontStyle={styles.buttonText}
+          outlineShelley
         />
+
+        {Platform.OS === 'ios' && (
+          <View style={styles.center}>
+            <Spacer height={26} />
+            <Text style={[styles.paragraph, styles.disabled]}>{strings.usbDisabled}</Text>
+          </View>
+        )}
       </View>
     </ScrollView>
   )
@@ -100,13 +112,9 @@ const messages = defineMessages({
     id: 'components.ledger.ledgertransportswitchmodal.usbButton',
     defaultMessage: '!!!Connect with USB',
   },
-  usbButtonNotSupported: {
-    id: 'components.ledger.ledgertransportswitchmodal.usbButtonNotSupported',
-    defaultMessage: '!!!Connect with USB\n(Not supported)',
-  },
-  usbButtonDisabled: {
-    id: 'components.ledger.ledgertransportswitchmodal.usbButtonDisabled',
-    defaultMessage: '!!!Connect with USB\n(Blocked by Apple for iOS)',
+  usbDisabled: {
+    id: 'components.ledger.ledgertransportswitchmodal.usbDisabled',
+    defaultMessage: '!!!Blocked by Apple for iOS',
   },
   bluetoothExplanation: {
     id: 'components.ledger.ledgertransportswitchmodal.bluetoothExplanation',
@@ -118,31 +126,47 @@ const messages = defineMessages({
   },
 })
 
+const useStrings = () => {
+  const intl = useIntl()
+
+  return {
+    title: intl.formatMessage(messages.title),
+    usbButton: intl.formatMessage(messages.usbButton),
+    usbHelp: intl.formatMessage(messages.usbExplanation),
+    usbDisabled: intl.formatMessage(messages.usbDisabled),
+    bluetoothButton: intl.formatMessage(messages.bluetoothButton),
+    bluetoothHelp: intl.formatMessage(messages.bluetoothExplanation),
+  }
+}
+
 const styles = StyleSheet.create({
   scrollView: {
     paddingRight: 10,
   },
   paragraph: {
-    marginBottom: spacing.paragraphBottomMargin,
-    fontSize: 14,
-    lineHeight: 22,
+    fontSize: 16,
+    lineHeight: 24,
+  },
+  disabled: {
+    color: COLORS.WORD_BADGE_TEXT,
   },
   content: {
     flex: 1,
-    marginBottom: 24,
   },
-  heading: {
+  center: {
     alignItems: 'center',
     justifyContent: 'center',
   },
   title: {
     fontSize: 20,
-    lineHeight: 22,
+    lineHeight: 30,
     fontWeight: 'bold',
-    marginBottom: spacing.paragraphBottomMargin,
   },
   button: {
-    marginHorizontal: 10,
-    marginBottom: spacing.paragraphBottomMargin,
+    borderWidth: 2,
+  },
+  buttonText: {
+    fontWeight: '500',
+    fontFamily: 'Rubik-Medium',
   },
 })

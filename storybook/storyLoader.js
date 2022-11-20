@@ -28,6 +28,7 @@ function loadStories() {
 	require('../src/Send/AddressReaderQR/AddressReaderQR.stories');
 	require('../src/Send/AssetSelectorScreen/AssetSelectorScreen.stories');
 	require('../src/Send/ConfirmScreen/ConfirmScreen.stories');
+	require('../src/Send/ConfirmScreen/TransferSummary/TransferSummary.stories');
 	require('../src/Send/SendScreen/SendScreen.stories');
 	require('../src/Settings/ApplicationSettings/ApplicationSettingsScreen.stories');
 	require('../src/Settings/ChangeLanguage/ChangeLanguageScreen.stories');
@@ -82,13 +83,16 @@ function loadStories() {
 	require('../src/auth/backgroundTimeout.stories');
 	require('../src/components/Boundary/Boundary.stories');
 	require('../src/components/Button/Button.stories');
+	require('../src/components/Card/Card.stories');
 	require('../src/components/Checkbox/Checkbox.stories');
-	require('../src/components/ConfirmTx/ConfirmTx.stories');
-	require('../src/components/ConfirmTx/Dialog.stories');
+	require('../src/components/ConfirmTx/ConfirmTxWithHW.stories');
+	require('../src/components/ConfirmTx/ConfirmTxWithOS.stories');
+	require('../src/components/ConfirmTx/ConfirmTxWithPassword.stories');
 	require('../src/components/DangerousActionModal/DangerousActionModal.stories');
 	require('../src/components/ErrorBoundary/ErrorBoundary.stories');
 	require('../src/components/ErrorModal/ErrorModal.stories');
 	require('../src/components/HideableText/HideableText.stories');
+	require('../src/components/Hr/Hr.stories');
 	require('../src/components/Icon/Icon.stories');
 	require('../src/components/LanguagePicker/LanguagePicker.stories');
 	require('../src/components/LanguagePicker/LanguagePickerWarning.stories');
@@ -128,6 +132,7 @@ const stories = [
 	'../src/Send/AddressReaderQR/AddressReaderQR.stories',
 	'../src/Send/AssetSelectorScreen/AssetSelectorScreen.stories',
 	'../src/Send/ConfirmScreen/ConfirmScreen.stories',
+	'../src/Send/ConfirmScreen/TransferSummary/TransferSummary.stories',
 	'../src/Send/SendScreen/SendScreen.stories',
 	'../src/Settings/ApplicationSettings/ApplicationSettingsScreen.stories',
 	'../src/Settings/ChangeLanguage/ChangeLanguageScreen.stories',
@@ -182,13 +187,16 @@ const stories = [
 	'../src/auth/backgroundTimeout.stories',
 	'../src/components/Boundary/Boundary.stories',
 	'../src/components/Button/Button.stories',
+	'../src/components/Card/Card.stories',
 	'../src/components/Checkbox/Checkbox.stories',
-	'../src/components/ConfirmTx/ConfirmTx.stories',
-	'../src/components/ConfirmTx/Dialog.stories',
+	'../src/components/ConfirmTx/ConfirmTxWithHW.stories',
+	'../src/components/ConfirmTx/ConfirmTxWithOS.stories',
+	'../src/components/ConfirmTx/ConfirmTxWithPassword.stories',
 	'../src/components/DangerousActionModal/DangerousActionModal.stories',
 	'../src/components/ErrorBoundary/ErrorBoundary.stories',
 	'../src/components/ErrorModal/ErrorModal.stories',
 	'../src/components/HideableText/HideableText.stories',
+	'../src/components/Hr/Hr.stories',
 	'../src/components/Icon/Icon.stories',
 	'../src/components/LanguagePicker/LanguagePicker.stories',
 	'../src/components/LanguagePicker/LanguagePickerWarning.stories',

@@ -2,13 +2,12 @@
 import {BigNumber} from 'bignumber.js'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
+import {ScrollView, StyleSheet, View} from 'react-native'
 
 import {stakePoolId} from '../../../storybook'
 import {Text, ValidatedTextInput} from '../../components'
 import {ConfirmTx} from '../../components/ConfirmTx'
 import {useStakePoolInfoAndHistory} from '../../Dashboard/StakePoolInfo'
-import {Instructions as HWInstructions} from '../../HW'
 import globalMessages, {txLabels} from '../../i18n/global-messages'
 import {CONFIG} from '../../legacy/config'
 import {formatTokenAmount, formatTokenWithText} from '../../legacy/format'
@@ -43,7 +42,6 @@ export const DelegationConfirmation = () => {
   const reward = approximateReward(stakingAmount.quantity)
 
   const [password, setPassword] = useState('')
-  const [useUSB, setUseUSB] = useState(false)
 
   useEffect(() => {
     if (CONFIG.DEBUG.PREFILL_FORMS && __DEV__) setPassword(CONFIG.DEBUG.PASSWORD)
@@ -90,29 +88,12 @@ export const DelegationConfirmation = () => {
           <Text style={styles.itemTitle}>{strings.rewardsExplanation}</Text>
           <Text style={styles.rewards}>{formatTokenWithText(new BigNumber(reward), wallet.defaultAsset)}</Text>
         </View>
-
-        {wallet.isHW && <HWInstructions useUSB={useUSB} addMargin />}
       </ScrollView>
 
-      <Actions>
-        <ConfirmTx
-          buttonProps={{
-            shelleyTheme: true,
-            title: strings.delegateButtonLabel,
-          }}
-          isProvidingPassword
-          providedPassword={password}
-          onSuccess={onSuccess}
-          setUseUSB={setUseUSB}
-          useUSB={useUSB}
-          yoroiUnsignedTx={yoroiUnsignedTx}
-        />
-      </Actions>
+      <ConfirmTx onSuccess={onSuccess} unsignedTx={yoroiUnsignedTx} wallet={wallet} />
     </View>
   )
 }
-
-const Actions = (props: ViewProps) => <View {...props} style={{padding: 16}} />
 
 const StakePoolName = ({stakePoolId}: {stakePoolId: string}) => {
   const strings = useStrings()

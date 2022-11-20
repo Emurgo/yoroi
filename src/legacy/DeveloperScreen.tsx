@@ -94,7 +94,7 @@ export const DeveloperScreen = () => {
           onPress={() =>
             createWallet({
               mnemonicPhrase: config['WALLET_1_MNEMONIC'],
-              name: 'Wallet 1',
+              name: config['WALLET_1_NAME'] ?? 'Wallet 1',
               networkId: Number(config['WALLET_1_NETWORK_ID'] ?? 300),
               password: '1234567890',
               walletImplementationId: 'haskell-shelley',
@@ -109,8 +109,8 @@ export const DeveloperScreen = () => {
           onPress={() =>
             createWallet({
               mnemonicPhrase: config['WALLET_2_MNEMONIC'],
-              name: 'Wallet 2',
-              networkId: Number(config['WALLET_1_NETWORK_ID'] ?? 300),
+              name: config['WALLET_2_NAME'] ?? 'Wallet 2',
+              networkId: Number(config['WALLET_2_NETWORK_ID'] ?? 300),
               password: '1234567890',
               walletImplementationId: 'haskell-shelley',
               provider: '',
@@ -131,7 +131,7 @@ export const DeveloperScreen = () => {
               provider: '',
             })
           }
-          title="RO Mainnet For Forced Addresses"
+          title="Impersonated Mainnet"
         />
         {wallet?.networkId !== 1 && (
           <>

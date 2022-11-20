@@ -1,5 +1,5 @@
 import React from 'react'
-import {Image, StyleSheet, TouchableOpacity, TouchableOpacityProps, View, ViewStyle} from 'react-native'
+import {Image, StyleSheet, TextStyle, TouchableOpacity, TouchableOpacityProps, View, ViewStyle} from 'react-native'
 
 import {colors} from '../../theme'
 import {Text} from '../Text'
@@ -14,6 +14,7 @@ export type ButtonProps = TouchableOpacityProps & {
   withoutBackground?: boolean
   shelleyTheme?: boolean
   outlineShelley?: boolean
+  fontStyle?: TextStyle
 }
 
 export const Button = (props: ButtonProps) => {
@@ -29,6 +30,7 @@ export const Button = (props: ButtonProps) => {
     withoutBackground,
     shelleyTheme,
     outlineShelley,
+    fontStyle,
     ...rest
   } = props
 
@@ -54,6 +56,7 @@ export const Button = (props: ButtonProps) => {
             outlineOnLight && styles.textOutlineOnLight,
             outlineOnLight && shelleyTheme && styles.textShelleyOutlineOnLight,
             outlineShelley && styles.textOutlineShelley,
+            fontStyle,
           ]}
         >
           {title}
@@ -100,7 +103,7 @@ const styles = StyleSheet.create({
     color: 'white',
     textAlign: 'center',
     padding: 8,
-    fontSize: 14,
+    fontSize: 16,
     textTransform: 'uppercase',
   },
   textOutlineOnLight: {

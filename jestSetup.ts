@@ -42,3 +42,4 @@ jest.mock('react-native', () => {
 
   return RN
 })
+jest.mock('react-native-linear-gradient', () => 'LinearGradient');

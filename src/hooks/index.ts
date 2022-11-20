@@ -15,6 +15,8 @@ import {processTxHistoryData} from '../legacy/processTransactions'
 import {WalletMeta} from '../legacy/state'
 import storage from '../legacy/storage'
 import {cardanoValueFromRemoteFormat} from '../legacy/utils'
+import {useSelectedWallet} from '../SelectedWallet'
+import {useCurrencyContext} from '../Settings/Currency'
 import {
   CardanoMobile,
   NetworkId,
@@ -34,12 +36,13 @@ import {
   TRANSACTION_DIRECTION,
   TRANSACTION_STATUS,
   TransactionInfo,
+  YoroiAmount,
   YoroiAmounts,
   YoroiSignedTx,
   YoroiUnsignedTx,
 } from '../yoroi-wallets/types'
 import {CurrencySymbol, RawUtxo, TipStatusResponse} from '../yoroi-wallets/types/other'
-import {Utxos} from '../yoroi-wallets/utils'
+import {Quantities, Utxos} from '../yoroi-wallets/utils'
 import {parseBoolean} from '../yoroi-wallets/utils/parsing'
 
 const crashReportsStorageKey = 'sendCrashReports'
@@ -266,6 +269,7 @@ export const useTokenInfo = (
 
   return query.data
 }
+export const usePrimaryToken = (wallet: YoroiWallet) => useTokenInfo({wallet, tokenId: wallet.defaultAsset.identifier})
 
 export const fetchTokenInfo = async ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string}): Promise<Token> => {
   if ((tokenId === '' || tokenId === 'ADA') && wallet.networkId === 1)
@@ -888,4 +892,21 @@ export const useResync = (wallet: YoroiWallet, options?: UseMutationOptions<void
     ...mutation,
     resync: mutation.mutate,
   }
+}
+
+export const usePrimaryPaired = (primaryAmount: YoroiAmount) => {
+  const wallet = useSelectedWallet()
+  const {currency, config} = useCurrencyContext()
+  const rate = useExchangeRate({wallet, to: currency})
+  const primaryToken = usePrimaryToken(wallet)
+
+  // hide pairing when set to the default asset ticker
+  if (currency === 'ADA') return null
+
+  if (rate == null) return {product: '...', currency}
+
+  const amount = Quantities.quotient(primaryAmount.quantity, `${10 ** primaryToken.metadata.numberOfDecimals}`)
+  const product = Quantities.decimalPlaces(Quantities.product([amount, `${rate}`]), config.decimals)
+
+  return {product, currency}
 }

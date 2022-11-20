@@ -217,7 +217,7 @@ export const SendScreen = () => {
       </ScrollView>
 
       <View style={styles.actions}>
-        <Button onPress={onConfirm} title={strings.continueButton} disabled={!isValid} testID="continueButton" />
+        <Button onPress={onConfirm} title={strings.next} disabled={!isValid} testID="continueButton" shelleyTheme />
       </View>
 
       <SendAllWarning

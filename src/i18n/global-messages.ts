@@ -79,9 +79,18 @@ export const txLabels = defineMessages({
     id: 'global.txLabels.amount',
     defaultMessage: '!!!Amount',
   },
+  assets: {
+    id: 'global.txLabels.assets',
+    defaultMessage: '!!!{cnt} assets',
+    description: 'The number of assets different assets, not the amount',
+  },
   balanceAfterTx: {
     id: 'global.txLabels.balanceAfterTx',
     defaultMessage: '!!!Balance after transaction',
+  },
+  balanceAfter: {
+    id: 'components.send.sendscreen.balanceAfterLabel',
+    defaultMessage: '!!!Balance after',
   },
   confirmTx: {
     id: 'global.txLabels.confirmTx',
@@ -672,5 +681,13 @@ export default defineMessages({
   cancel: {
     id: 'global.cancel',
     defaultMessage: '!!!Cancel',
+  },
+  transaction: {
+    id: 'global.transaction',
+    defaultMessage: '!!!Transactions',
+  },
+  details: {
+    id: 'global.details',
+    defaultMessage: '!!!details',
   },
 })

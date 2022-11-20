@@ -27,6 +27,7 @@ export const useStrings = () => {
     backButton: intl.formatMessage(confirmationMessages.commonButtons.backButton),
     sendAllContinueButton: intl.formatMessage(confirmationMessages.commonButtons.continueButton),
     sendAllWarningText: intl.formatMessage(messages.sendAllWarningText),
+    next: intl.formatMessage(globalMessages.next),
   }
 }
 

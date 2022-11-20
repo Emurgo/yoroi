@@ -7,7 +7,7 @@ import {SelectedWalletProvider} from '../../SelectedWallet'
 import {SendProvider} from '../Context/SendContext'
 import {ConfirmScreen} from './ConfirmScreen'
 
-storiesOf('ConfirmScreen', module).add('Default', () => {
+storiesOf('Send/ConfirmScreen', module).add('Default', () => {
   const route = {
     key: 'key',
     name: 'name',

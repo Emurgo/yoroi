@@ -1,21 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import BigNumber from 'bignumber.js'
-import React, {useState} from 'react'
+import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ScrollView, StyleSheet} from 'react-native'
+import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {ProgressStep, Spacer, TextInput} from '../components'
 import {ConfirmTx} from '../components/ConfirmTx'
 import {useTokenInfo, useVotingRegTx} from '../hooks'
-import {Instructions as HWInstructions} from '../HW'
-import {errorMessages, txLabels} from '../i18n/global-messages'
-import LocalizableError from '../i18n/LocalizableError'
-import {CONFIG} from '../legacy/config'
+import {txLabels} from '../i18n/global-messages'
 import {formatTokenWithSymbol} from '../legacy/format'
 import {useSelectedWallet} from '../SelectedWallet'
 import {Amounts} from '../yoroi-wallets/utils'
-import {Actions, Description, Title} from './components'
+import {Title} from './components'
 
 export const ConfirmVotingTx = ({
   onSuccess,
@@ -32,62 +29,32 @@ export const ConfirmVotingTx = ({
     {wallet, pin}, //
     {onSuccess: ({votingKeyEncrypted}) => onSuccess(votingKeyEncrypted)},
   )
-  const [password, setPassword] = useState(CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '')
-  const [useUSB, setUseUSB] = useState<boolean>(false)
   const tokenInfo = useTokenInfo({wallet, tokenId: wallet.defaultAsset.identifier})
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
       <ProgressStep currentStep={5} totalSteps={6} />
 
-      <ScrollView contentContainerStyle={styles.contentContainer} bounces={false}>
-        <Spacer height={48} />
+      <View style={styles.container}>
+        <ScrollView bounces={false}>
+          <Spacer height={48} />
 
-        <Title>{strings.subTitle}</Title>
+          <Title>{strings.subTitle}</Title>
 
-        <Spacer height={16} />
+          <Spacer height={16} />
 
-        {wallet.isHW ? (
-          <HWInstructions useUSB={useUSB} />
-        ) : (
-          <Description>
-            {wallet.isEasyConfirmationEnabled ? strings.authOsInstructions : strings.description}
-          </Description>
-        )}
-
-        <Spacer height={48} />
-
-        <TextInput
-          value={formatTokenWithSymbol(new BigNumber(Amounts.getAmount(votingRegTx.fee, '').quantity), tokenInfo)}
-          label={strings.fees}
-          editable={false}
-          autoComplete={false}
-        />
-
-        {!wallet.isEasyConfirmationEnabled && !wallet.isHW && (
           <TextInput
-            secureTextEntry
-            value={password}
-            label={strings.password}
-            onChangeText={setPassword}
+            value={formatTokenWithSymbol(new BigNumber(Amounts.getAmount(votingRegTx.fee, '').quantity), tokenInfo)}
+            label={strings.fees}
+            editable={false}
             autoComplete={false}
           />
-        )}
-      </ScrollView>
+        </ScrollView>
 
-      <Spacer fill />
+        <Spacer fill />
 
-      <Actions>
-        <ConfirmTx
-          onSuccess={() => onNext()}
-          isProvidingPassword
-          providedPassword={password}
-          setUseUSB={setUseUSB}
-          useUSB={useUSB}
-          yoroiUnsignedTx={votingRegTx}
-          biometricInstructions={[strings.authOsInstructions]}
-        />
-      </Actions>
+        <ConfirmTx onSuccess={() => onNext()} unsignedTx={votingRegTx} wallet={wallet} />
+      </View>
     </SafeAreaView>
   )
 }
@@ -115,8 +82,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
   },
-  contentContainer: {
+  container: {
+    flex: 1,
     paddingHorizontal: 16,
+    paddingBottom: 16,
   },
 })
 
@@ -124,14 +93,7 @@ const useStrings = () => {
   const intl = useIntl()
 
   return {
-    errorMessage: (error: LocalizableError) =>
-      intl.formatMessage({id: error.id, defaultMessage: error.defaultMessage}, (error as any).values),
     fees: intl.formatMessage(txLabels.fees),
     subTitle: intl.formatMessage(messages.subTitle),
-    description: intl.formatMessage(messages.description),
-    authOsInstructions: intl.formatMessage(messages.authOsInstructions),
-    password: intl.formatMessage(txLabels.password),
-    errorTitle: intl.formatMessage(errorMessages.generalTxError.title),
-    generalErrorMessage: intl.formatMessage(errorMessages.generalTxError.message),
   }
 }

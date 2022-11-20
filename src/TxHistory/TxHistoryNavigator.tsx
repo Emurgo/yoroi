@@ -5,6 +5,7 @@ import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps} from 'react-n
 
 import {Boundary, Icon} from '../components'
 import {useWalletName} from '../hooks'
+import {txLabels} from '../i18n/global-messages'
 import {
   defaultStackNavigationOptions,
   defaultStackNavigationOptionsV2,
@@ -106,7 +107,15 @@ export const TxHistoryNavigator = () => {
         <Stack.Screen //
           name="send-confirm"
           component={ConfirmScreen}
-          options={{title: strings.confirmTitle}}
+          options={{
+            ...defaultStackNavigationOptionsV2,
+            headerStyle: {
+              elevation: 0,
+              shadowOpacity: 0,
+              backgroundColor: '#fff',
+            },
+            title: strings.confirmTx,
+          }}
         />
       </Stack.Navigator>
 
@@ -134,10 +143,6 @@ const messages = defineMessages({
     id: 'components.send.selectasset.title',
     defaultMessage: '!!!Select asset',
   },
-  confirmTitle: {
-    id: 'components.send.confirmscreen.title',
-    defaultMessage: '!!!Send',
-  },
   receiveInfoText: {
     id: 'components.receive.receivescreen.infoText',
     defaultMessage:
@@ -151,11 +156,11 @@ const useStrings = () => {
   const intl = useIntl()
 
   return {
+    confirmTx: intl.formatMessage(txLabels.confirmTx),
     receiveTitle: intl.formatMessage(messages.receiveTitle),
     sendTitle: intl.formatMessage(messages.sendTitle),
     qrScannerTitle: intl.formatMessage(messages.qrScannerTitle),
     selectAssetTitle: intl.formatMessage(messages.selectAssetTitle),
-    confirmTitle: intl.formatMessage(messages.confirmTitle),
     receiveInfoText: intl.formatMessage(messages.receiveInfoText),
   }
 }
