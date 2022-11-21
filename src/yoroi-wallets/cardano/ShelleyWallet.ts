@@ -3,7 +3,6 @@ import type {UtxoStorage} from '@emurgo/yoroi-lib'
 import {UtxoModels} from '@emurgo/yoroi-lib'
 import {initUtxo, UtxoService} from '@emurgo/yoroi-lib'
 import {BigNumber} from 'bignumber.js'
-import cryptoRandomString from 'crypto-random-string'
 import ExtendableError from 'es6-error'
 import _ from 'lodash'
 import DeviceInfo from 'react-native-device-info'
@@ -736,16 +735,14 @@ export class ShelleyWallet implements WalletInterface {
     })
   }
 
-  async createVotingRegTx() {
+  async createVotingRegTx(pin: string) {
     Logger.debug('ShelleyWallet::createVotingRegTx called')
     if (!this.networkId) throw new Error('invalid wallet')
 
     const bytes = await generatePrivateKeyForCatalyst()
       .then((key) => key.toRawKey())
       .then((key) => key.asBytes())
-    const pin = cryptoRandomString({length: 4, type: 'numeric'})
-    const password = Buffer.from(pin.split('').map(Number))
-    const catalystKeyEncrypted = await encryptWithPassword(password, bytes)
+
     const catalystKeyHex = Buffer.from(bytes).toString('hex')
 
     try {
@@ -803,6 +800,9 @@ export class ShelleyWallet implements WalletInterface {
         rewardAddress: await this.getRewardAddress().then((address) => address.toBech32()),
         nonce,
       }
+
+      const password = Buffer.from(pin.split('').map(Number))
+      const catalystKeyEncrypted = await encryptWithPassword(password, bytes)
 
       return {
         votingKeyEncrypted: catalystKeyEncrypted,

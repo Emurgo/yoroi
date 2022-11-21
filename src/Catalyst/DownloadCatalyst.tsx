@@ -21,8 +21,7 @@ export const DownloadCatalyst = ({onNext}: Props) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const {stakingInfo} = useStakingInfo(wallet, {suspense: true})
-  const isStaked = stakingInfo?.status === 'staked'
-  const [showModal, setShowModal] = useState<boolean>(!isStaked)
+  const [showModal, setShowModal] = useState<boolean>(stakingInfo?.status === 'not-registered')
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>

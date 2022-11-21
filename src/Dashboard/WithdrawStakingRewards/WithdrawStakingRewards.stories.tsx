@@ -2,8 +2,7 @@ import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {mockHwWallet, mockWallet, mockYoroiSignedTx, mockYoroiTx, WithModal} from '../../../storybook'
-import {StakingInfo} from '../../yoroi-wallets/types'
+import {mockHwWallet, mockStakingInfo, mockWallet, mockYoroiSignedTx, mockYoroiTx, WithModal} from '../../../storybook'
 import {WithdrawStakingRewards} from './WithdrawStakingRewards'
 
 storiesOf('WithdrawStakingRewards', module)
@@ -237,13 +236,6 @@ storiesOf('WithdrawStakingRewards', module)
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const LOADING = (): Promise<any> => new Promise(() => null)
 const FAILED = () => Promise.reject(new Error('storybook error message'))
-
-const mockStakingInfo: StakingInfo = {
-  status: 'staked',
-  amount: '123456789',
-  rewards: '123',
-  poolId: 'poolId',
-}
 
 const commonProps = {
   onSuccess: action('onSuccess'),

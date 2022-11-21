@@ -6,9 +6,7 @@ import QRCodeSVG from 'react-native-qrcode-svg'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, CopyButton, ProgressStep, Spacer, Text} from '../components'
-import {useVotingRegTx} from '../hooks'
 import {confirmationMessages} from '../i18n/global-messages'
-import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
 import {Actions, Description, Title} from './components'
 import {useCountdown} from './hooks'
@@ -16,12 +14,10 @@ import {VotingRegistrationBackupCheckModal} from './VotingRegistrationBackupChec
 
 const {FlagSecure} = NativeModules
 
-export const QrCode = ({onNext}: {onNext: () => void}) => {
+export const QrCode = ({onNext, votingKeyEncrypted}: {onNext: () => void; votingKeyEncrypted: string}) => {
   useBlockGoBack()
   useAllowScreenshot()
   const strings = useStrings()
-  const wallet = useSelectedWallet()
-  const {votingKeyEncrypted} = useVotingRegTx(wallet)
 
   const [showBackupWarningModal, setShowBackupWarningModal] = useState(false)
   const countdown = useCountdown()

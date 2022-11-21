@@ -353,32 +353,33 @@ export type VotingRegTxAndEncryptedKey = {
   votingKeyEncrypted: string
 }
 
-export const usePrefetchVotingRegTx = (wallet: YoroiWallet) => {
+export const usePrefetchVotingRegTx = ({wallet, pin}: {wallet: YoroiWallet; pin: string}) => {
   const queryClient = useQueryClient()
 
   return () => {
     queryClient.prefetchQuery<VotingRegTxAndEncryptedKey, Error>({
       queryKey: [wallet.id, 'voting-reg-tx'],
-      queryFn: async () => wallet.createVotingRegTx(),
+      queryFn: async () => wallet.createVotingRegTx(pin),
     })
   }
 }
 
 export const useVotingRegTx = (
-  wallet: YoroiWallet,
+  {wallet, pin}: {wallet: YoroiWallet; pin: string},
   options?: UseQueryOptions<VotingRegTxAndEncryptedKey, Error, VotingRegTxAndEncryptedKey, [string, 'voting-reg-tx']>,
 ) => {
   const query = useQuery({
     ...options,
+    retry: false,
+    cacheTime: 0,
     suspense: true,
-    refetchOnMount: false,
     queryKey: [wallet.id, 'voting-reg-tx'],
-    queryFn: () => wallet.createVotingRegTx(),
+    queryFn: () => wallet.createVotingRegTx(pin),
   })
 
   if (!query.data) throw new Error('invalid state')
 
-  return query.data
+  return query.data.votingRegTx
 }
 
 export const useSignWithPasswordAndSubmitTx = (

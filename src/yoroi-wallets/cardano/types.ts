@@ -178,7 +178,7 @@ export interface WalletInterface {
 
   createDelegationTx(poolRequest: string, valueInAccount: BigNumber): Promise<YoroiUnsignedTx>
 
-  createVotingRegTx(): Promise<{votingRegTx: YoroiUnsignedTx; votingKeyEncrypted: string}>
+  createVotingRegTx(pin: string): Promise<{votingRegTx: YoroiUnsignedTx; votingKeyEncrypted: string}>
 
   createWithdrawalTx(shouldDeregister: boolean): Promise<YoroiUnsignedTx>
 
