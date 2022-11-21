@@ -5,7 +5,7 @@ import React, {useEffect, useState} from 'react'
 import {useIntl} from 'react-intl'
 import {Platform, StyleSheet, View} from 'react-native'
 
-import {EncryptedStorage, EncryptedStorageKeys, useAuthOsWithEasyConfirmation} from '../../auth'
+import {useAuthOsWithEasyConfirmation} from '../../auth'
 import {useSubmitTx} from '../../hooks'
 import {confirmationMessages, errorMessages, txLabels} from '../../i18n/global-messages'
 import LocalizableError from '../../i18n/LocalizableError'
@@ -147,7 +147,7 @@ export const ConfirmTx = ({
             setDialogStep(DialogStep.WaitingHwResponse)
             signedTx = await wallet.signTxWithLedger(yoroiUnsignedTx, useUSB)
           } else {
-            const rootKey = await EncryptedStorage.read(EncryptedStorageKeys.rootKey(wallet.id), password)
+            const rootKey = await wallet.encryptedStorage.rootKey.read(password)
             setDialogStep(DialogStep.Signing)
             signedTx = await smoothModalNotification(wallet.signTx(yoroiUnsignedTx, rootKey))
           }

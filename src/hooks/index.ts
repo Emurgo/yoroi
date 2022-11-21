@@ -353,29 +353,23 @@ export type VotingRegTxAndEncryptedKey = {
   votingKeyEncrypted: string
 }
 
-export const usePrefetchVotingRegTx = (wallet: YoroiWallet) => {
-  const queryClient = useQueryClient()
+export const useVotingRegTx = (
+  {wallet, pin}: {wallet: YoroiWallet; pin: string},
 
-  React.useEffect(() => {
-    queryClient.prefetchQuery<VotingRegTxAndEncryptedKey, Error>({
-      queryKey: [wallet.id, 'voting-reg-tx'],
-      queryFn: async () => wallet.createVotingRegTx(),
-    })
-  }, [queryClient, wallet])
-}
-
-export const useVotingRegTx = (wallet: YoroiWallet, options?: UseQueryOptions<VotingRegTxAndEncryptedKey, Error>) => {
+  options?: UseQueryOptions<VotingRegTxAndEncryptedKey, Error, VotingRegTxAndEncryptedKey, [string, 'voting-reg-tx']>,
+) => {
   const query = useQuery({
     ...options,
+    retry: false,
     cacheTime: 0,
     suspense: true,
-    queryKey: [wallet.id, 'voting-reg-tx'] as QueryKey,
-    queryFn: async () => wallet.createVotingRegTx(),
+    queryKey: [wallet.id, 'voting-reg-tx'],
+    queryFn: () => wallet.createVotingRegTx(pin),
   })
 
   if (!query.data) throw new Error('invalid state')
 
-  return query.data
+  return query.data.votingRegTx
 }
 
 export const useSignWithPasswordAndSubmitTx = (
@@ -713,10 +707,14 @@ export const useCreateWallet = (options?: UseMutationOptions<YoroiWallet, Error,
   }
 }
 
+import {onlineManager} from 'react-query'
+
 export const useIsOnline = (
   wallet: YoroiWallet,
   options?: UseQueryOptions<boolean, Error, boolean, [string, 'isOnline']>,
 ) => {
+  const wasOnline = React.useRef(false)
+
   const query = useQuery({
     ...options,
     queryKey: [wallet.id, 'isOnline'],
@@ -728,6 +726,11 @@ export const useIsOnline = (
     refetchInterval: 5000,
     suspense: true,
     useErrorBoundary: false,
+    onSuccess: (isOnline) => {
+      if (wasOnline.current === isOnline) return
+      wasOnline.current = isOnline
+      onlineManager.setOnline(isOnline)
+    },
   })
 
   return query.data

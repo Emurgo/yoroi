@@ -2,7 +2,7 @@ import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {mockedWalletMeta} from '../../../storybook'
+import {mockWalletMeta} from '../../../storybook'
 import {WalletMeta} from '../../legacy/state'
 import {WalletManagerProvider} from '../../WalletManager'
 import {mockWalletManager, WalletManager} from '../../yoroi-wallets'
@@ -40,17 +40,61 @@ storiesOf('WalletSelectionScreen', module)
           ...mockWalletManager,
           listWallets: () =>
             Promise.resolve([
-              mockWalletMeta(),
-              mockWalletMeta(),
-              mockWalletMeta(),
-              mockWalletMeta(),
-              mockWalletMeta(),
-              mockWalletMeta(),
-              mockWalletMeta(),
-              mockWalletMeta(),
-              mockWalletMeta(),
-              mockWalletMeta(),
-              mockWalletMeta(),
+              {
+                ...mockWalletMeta,
+                id: Math.random(),
+                name: String(Math.random()),
+              },
+              {
+                ...mockWalletMeta,
+                id: Math.random(),
+                name: String(Math.random()),
+              },
+              {
+                ...mockWalletMeta,
+                id: Math.random(),
+                name: String(Math.random()),
+              },
+              {
+                ...mockWalletMeta,
+                id: Math.random(),
+                name: String(Math.random()),
+              },
+              {
+                ...mockWalletMeta,
+                id: Math.random(),
+                name: String(Math.random()),
+              },
+              {
+                ...mockWalletMeta,
+                id: Math.random(),
+                name: String(Math.random()),
+              },
+              {
+                ...mockWalletMeta,
+                id: Math.random(),
+                name: String(Math.random()),
+              },
+              {
+                ...mockWalletMeta,
+                id: Math.random(),
+                name: String(Math.random()),
+              },
+              {
+                ...mockWalletMeta,
+                id: Math.random(),
+                name: String(Math.random()),
+              },
+              {
+                ...mockWalletMeta,
+                id: Math.random(),
+                name: String(Math.random()),
+              },
+              {
+                ...mockWalletMeta,
+                id: Math.random(),
+                name: String(Math.random()),
+              },
             ]),
           openWallet: (walletMeta: WalletMeta) => {
             action('openWallet')(walletMeta)
@@ -61,13 +105,3 @@ storiesOf('WalletSelectionScreen', module)
       <WalletSelectionScreen />
     </WalletManagerProvider>
   ))
-
-const mockWalletMeta = () => {
-  const fakeData = Math.random()
-
-  return {
-    ...mockedWalletMeta,
-    id: fakeData,
-    name: String(fakeData),
-  }
-}

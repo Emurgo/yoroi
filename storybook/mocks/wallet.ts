@@ -9,6 +9,7 @@ import {TokenEntry, YoroiWallet} from '../../src/yoroi-wallets'
 import {
   RemotePoolMetaSuccess,
   StakePoolInfosAndHistories,
+  StakingInfo,
   TokenInfo,
   YoroiAmounts,
   YoroiSignedTx,
@@ -17,7 +18,7 @@ import {
 import {mockEncryptedStorage, mockStorage} from './storage'
 import {mockTransaction} from './transaction'
 
-export const mockedWalletMeta: WalletMeta = {
+export const mockWalletMeta: WalletMeta = {
   id: 'wallet-id',
   name: 'my-wallet',
   networkId: 1,
@@ -239,6 +240,75 @@ export const mockOsWallet = {
   isEasyConfirmationEnabled: true,
 }
 
+export const mockGetStakingInfo = {
+  success: {
+    registered: async (...args) => {
+      action('getStakingInfo')(...args)
+      return {status: 'registered'} as StakingInfo
+    },
+    notRegistered: async (...args) => {
+      action('getStakingInfo')(...args)
+      return {status: 'not-registered'} as StakingInfo
+    },
+  },
+  error: async (...args) => {
+    action('getStakingInfo')(...args)
+    return Promise.reject(new Error('storybook error message'))
+  },
+  loading: async (...args) => {
+    action('getStakingInfo')(...args)
+    return new Promise(() => null) as unknown as StakingInfo
+  },
+}
+
+export const mockCreateVotingRegTx = {
+  success: async (...args) => {
+    action('createVotingRegTx')(...args)
+    return {
+      votingRegTx: mockYoroiTx,
+      votingKeyEncrypted: 'votingKeyEncrypted',
+    }
+  },
+  error: async (...args) => {
+    action('createVotingRegTx')(...args)
+    return Promise.reject(new Error('storybook error message'))
+  },
+  loading: async (...args) => {
+    action('createVotingRegTx')(...args)
+    return new Promise(() => null)
+  },
+}
+
+export const mockSignTx = {
+  success: async (...args) => {
+    action('signTx')(...args)
+    return mockYoroiSignedTx
+  },
+  error: async (...args) => {
+    action('signTx')(...args)
+    return Promise.reject(new Error('storybook error message'))
+  },
+  loading: async (...args) => {
+    action('signTx')(...args)
+    return new Promise(() => null)
+  },
+}
+
+export const mockSubmitTransaction = {
+  success: async (...args) => {
+    action('submitTransaction')(...args)
+    return [] as unknown as []
+  },
+  error: async (...args) => {
+    action('submitTransaction')(...args)
+    return Promise.reject(new Error('storybook error message'))
+  },
+  loading: async (...args) => {
+    action('submitTransaction')(...args)
+    return new Promise(() => null)
+  },
+}
+
 export const tokenEntries: Array<TokenEntry> = [
   {
     networkId: 123,
@@ -314,6 +384,13 @@ export const poolInfoAndHistory: RemotePoolMetaSuccess = {
       },
     },
   ],
+}
+
+export const mockStakingInfo: StakingInfo = {
+  status: 'staked',
+  amount: '123456789',
+  rewards: '123',
+  poolId: 'poolId',
 }
 
 export const mockYoroiTx: YoroiUnsignedTx & {mock: true} = {

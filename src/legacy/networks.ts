@@ -93,7 +93,7 @@ const HASKELL_SHELLEY_TESTNET = {
   EXPLORER_URL_FOR_TX: (tx: string) => `https://explorer.cardano-testnet.iohkdev.io/tx/${tx}`,
   POOL_EXPLORER: 'https://adapools.yoroiwallet.com/?source=mobile',
   BACKEND: {
-    API_ROOT: 'https://testnet-backend.yoroiwallet.com/api',
+    API_ROOT: 'https://preprod-backend.yoroiwallet.com/api',
     TOKEN_INFO_SERVICE: 'https://metadata.cardano-testnet.iohkdev.io',
     ..._DEFAULT_BACKEND_RULES,
   },

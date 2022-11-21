@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js'
-import React, {useEffect} from 'react'
+import React from 'react'
 import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {useQuery, useQueryClient, UseQueryOptions} from 'react-query'
 
@@ -35,12 +35,11 @@ const styles = StyleSheet.create({
 export const usePrefetchStakingInfo = (wallet: YoroiWallet) => {
   const queryClient = useQueryClient()
 
-  useEffect(() => {
+  return () =>
     queryClient.prefetchQuery({
       queryKey: [wallet.id, 'stakingInfo'],
       queryFn: () => wallet.getStakingInfo(),
     })
-  }, [queryClient, wallet])
 }
 
 export const useStakingInfo = (
