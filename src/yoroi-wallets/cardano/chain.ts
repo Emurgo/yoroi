@@ -233,7 +233,7 @@ export class AddressChain {
       'extendAddresses received an existing address',
     )
     this._addresses = [...this._addresses, ...newAddresses]
-    this._subscriptions.map((handler) => handler(newAddresses))
+    this._subscriptions.forEach((handler) => handler(newAddresses))
   }
 
   async _discoverNewBlock() {

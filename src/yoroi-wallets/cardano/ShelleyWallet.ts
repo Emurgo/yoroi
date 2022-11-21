@@ -1096,6 +1096,8 @@ export class ShelleyWallet implements WalletInterface {
     this.externalChain.addSubscriberToNewAddresses(() =>
       this.notify({type: 'addresses', addresses: this.externalAddresses}),
     )
+
+    this.subscribe((event) => event.type === 'addresses' && this.utxoStorage.clearUtxoState())
   }
 
   // =================== synch =================== //
