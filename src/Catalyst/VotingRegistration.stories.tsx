@@ -135,6 +135,22 @@ storiesOf('Catalyst', module)
       </Providers>
     </NavigationContainer>
   ))
+  .add('Voting Registration, error', () => (
+    <NavigationContainer independent>
+      <Providers
+        wallet={{
+          ...mockWallet,
+          getStakingInfo: mockGetStakingInfo.success.registered,
+          encryptedStorage: mockEncryptedStorage,
+          createVotingRegTx: mockCreateVotingRegTx.error,
+          signTx: mockSignTx.success,
+          submitTransaction: mockSubmitTransaction.success,
+        }}
+      >
+        <VotingRegistration />
+      </Providers>
+    </NavigationContainer>
+  ))
 
 const Providers = ({wallet, children}: {wallet: YoroiWallet; children: React.ReactNode}) => {
   return (
