@@ -293,6 +293,20 @@ export const mockSignTx = {
     return new Promise(() => null)
   },
 }
+export const mockSignTxWithLedger = {
+  success: async (...args) => {
+    action('signTx')(...args)
+    return mockYoroiSignedTx
+  },
+  error: async (...args) => {
+    action('signTx')(...args)
+    return Promise.reject(new Error('storybook error message'))
+  },
+  loading: async (...args): Promise<YoroiSignedTx> => {
+    action('signTx')(...args)
+    return new Promise(() => null)
+  },
+}
 
 export const mockSubmitTransaction = {
   success: async (...args) => {
