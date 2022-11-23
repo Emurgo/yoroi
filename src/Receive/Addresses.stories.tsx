@@ -1,7 +1,7 @@
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {mockWallet} from '../../storybook'
+import {mocks} from '../../storybook'
 import {SelectedWalletProvider} from '../SelectedWallet'
 import {UnusedAddresses, UsedAddresses} from './Addresses'
 
@@ -9,7 +9,7 @@ storiesOf('AddressesList', module)
   .add('unused', () => (
     <SelectedWalletProvider
       wallet={{
-        ...mockWallet,
+        ...mocks.wallet,
         numReceiveAddresses: 20,
         externalAddresses: ['address123', 'address234', 'address345', 'address456'],
         isUsedAddressIndex: {
@@ -25,7 +25,7 @@ storiesOf('AddressesList', module)
   .add('used', () => (
     <SelectedWalletProvider
       wallet={{
-        ...mockWallet,
+        ...mocks.wallet,
         numReceiveAddresses: 20,
         externalAddresses: ['address123', 'address234', 'address345', 'address456'],
         isUsedAddressIndex: {

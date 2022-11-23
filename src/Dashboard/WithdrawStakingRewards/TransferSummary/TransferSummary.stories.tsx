@@ -1,7 +1,7 @@
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {mockWallet, mockYoroiTx, QueryProvider} from '../../../../storybook'
+import {mocks, QueryProvider} from '../../../../storybook'
 import {Boundary} from '../../../components'
 import {YoroiUnsignedTx} from '../../../yoroi-wallets/types'
 import {TransferSummary} from './TransferSummary'
@@ -11,12 +11,12 @@ storiesOf('TransferSummary', module)
     <QueryProvider>
       <Boundary>
         <TransferSummary
-          wallet={mockWallet}
+          wallet={mocks.wallet}
           unsignedTx={
             {
-              ...mockYoroiTx,
+              ...mocks.unsignedYoroiTx,
               staking: {
-                ...mockYoroiTx.staking,
+                ...mocks.unsignedYoroiTx.staking,
                 withdrawals: {
                   'withdrawal-address': {'': '12356789'},
                 },
@@ -31,12 +31,12 @@ storiesOf('TransferSummary', module)
     <QueryProvider>
       <Boundary>
         <TransferSummary
-          wallet={mockWallet}
+          wallet={mocks.wallet}
           unsignedTx={
             {
-              ...mockYoroiTx,
+              ...mocks.unsignedYoroiTx,
               staking: {
-                ...mockYoroiTx.staking,
+                ...mocks.unsignedYoroiTx.staking,
                 deregistrations: {
                   'deregistration-address': {'': '2000000'},
                 },
@@ -51,12 +51,12 @@ storiesOf('TransferSummary', module)
     <QueryProvider>
       <Boundary>
         <TransferSummary
-          wallet={mockWallet}
+          wallet={mocks.wallet}
           unsignedTx={
             {
-              ...mockYoroiTx,
+              ...mocks.unsignedYoroiTx,
               staking: {
-                ...mockYoroiTx.staking,
+                ...mocks.unsignedYoroiTx.staking,
                 deregistrations: {
                   'deregistration-address': {'': '2000000'},
                 },

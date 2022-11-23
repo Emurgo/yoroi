@@ -3,18 +3,7 @@ import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {
-  mockCreateVotingRegTx,
-  mockEncryptedStorage,
-  mockGetStakingInfo,
-  mockHwWallet,
-  mockOsWallet,
-  mockSignTx,
-  mockSubmitTransaction,
-  mockWallet,
-  QueryProvider,
-  WithModalProps,
-} from '../../storybook'
+import {mocks, QueryProvider, WithModalProps} from '../../storybook'
 import {Boundary} from '../components'
 import {SelectedWalletProvider} from '../SelectedWallet'
 import {YoroiWallet} from '../yoroi-wallets'
@@ -30,8 +19,8 @@ storiesOf('Catalyst', module)
   .add('DownloadCatalyst, loading', () => (
     <Providers
       wallet={{
-        ...mockWallet,
-        getStakingInfo: mockGetStakingInfo.loading,
+        ...mocks.wallet,
+        getStakingInfo: mocks.getStakingInfo.loading,
       }}
     >
       <DownloadCatalyst onNext={action('onNext')} />
@@ -41,8 +30,8 @@ storiesOf('Catalyst', module)
   .add('DownloadCatalyst, error', () => (
     <Providers
       wallet={{
-        ...mockWallet,
-        getStakingInfo: mockGetStakingInfo.error,
+        ...mocks.wallet,
+        getStakingInfo: mocks.getStakingInfo.error,
       }}
     >
       <DownloadCatalyst onNext={action('onNext')} />
@@ -52,8 +41,8 @@ storiesOf('Catalyst', module)
   .add('DownloadCatalyst, registered', () => (
     <Providers
       wallet={{
-        ...mockWallet,
-        getStakingInfo: mockGetStakingInfo.success.registered,
+        ...mocks.wallet,
+        getStakingInfo: mocks.getStakingInfo.success.registered,
       }}
     >
       <DownloadCatalyst onNext={action('onNext')} />
@@ -63,8 +52,8 @@ storiesOf('Catalyst', module)
   .add('DownloadCatalyst, not registered ', () => (
     <Providers
       wallet={{
-        ...mockWallet,
-        getStakingInfo: mockGetStakingInfo.success.notRegistered,
+        ...mocks.wallet,
+        getStakingInfo: mocks.getStakingInfo.success.notRegistered,
       }}
     >
       <DownloadCatalyst onNext={action('onNext')} />
@@ -78,9 +67,9 @@ storiesOf('Catalyst', module)
   .add('ConfirmVotingTx, password', () => (
     <Providers
       wallet={{
-        ...mockWallet,
-        createVotingRegTx: mockCreateVotingRegTx.success,
-        encryptedStorage: mockEncryptedStorage,
+        ...mocks.wallet,
+        createVotingRegTx: mocks.createVotingRegTx.success,
+        encryptedStorage: mocks.encryptedStorage,
       }}
     >
       <ConfirmVotingTx pin="1234" onSuccess={action('onSuccess')} onNext={action('onNext')} />
@@ -90,8 +79,8 @@ storiesOf('Catalyst', module)
   .add('ConfirmVotingTx, hw', () => (
     <Providers
       wallet={{
-        ...mockHwWallet,
-        createVotingRegTx: mockCreateVotingRegTx.success,
+        ...mocks.hwWallet,
+        createVotingRegTx: mocks.createVotingRegTx.success,
       }}
     >
       <ConfirmVotingTx pin="1234" onSuccess={action('onSuccess')} onNext={action('onNext')} />
@@ -101,8 +90,8 @@ storiesOf('Catalyst', module)
   .add('ConfirmVotingTx, os', () => (
     <Providers
       wallet={{
-        ...mockOsWallet,
-        createVotingRegTx: mockCreateVotingRegTx.success,
+        ...mocks.osWallet,
+        createVotingRegTx: mocks.createVotingRegTx.success,
       }}
     >
       <ConfirmVotingTx pin="1234" onSuccess={action('onSuccess')} onNext={action('onNext')} />
@@ -123,12 +112,12 @@ storiesOf('Catalyst', module)
     <NavigationContainer independent>
       <Providers
         wallet={{
-          ...mockWallet,
-          getStakingInfo: mockGetStakingInfo.success.registered,
-          encryptedStorage: mockEncryptedStorage,
-          createVotingRegTx: mockCreateVotingRegTx.success,
-          signTx: mockSignTx.success,
-          submitTransaction: mockSubmitTransaction.success,
+          ...mocks.wallet,
+          getStakingInfo: mocks.getStakingInfo.success.registered,
+          encryptedStorage: mocks.encryptedStorage,
+          createVotingRegTx: mocks.createVotingRegTx.success,
+          signTx: mocks.signTx.success,
+          submitTransaction: mocks.submitTransaction.success,
         }}
       >
         <VotingRegistration />
@@ -139,12 +128,12 @@ storiesOf('Catalyst', module)
     <NavigationContainer independent>
       <Providers
         wallet={{
-          ...mockWallet,
-          getStakingInfo: mockGetStakingInfo.success.registered,
-          encryptedStorage: mockEncryptedStorage,
-          createVotingRegTx: mockCreateVotingRegTx.error,
-          signTx: mockSignTx.success,
-          submitTransaction: mockSubmitTransaction.success,
+          ...mocks.wallet,
+          getStakingInfo: mocks.getStakingInfo.success.registered,
+          encryptedStorage: mocks.encryptedStorage,
+          createVotingRegTx: mocks.createVotingRegTx.error,
+          signTx: mocks.signTx.success,
+          submitTransaction: mocks.submitTransaction.success,
         }}
       >
         <VotingRegistration />
