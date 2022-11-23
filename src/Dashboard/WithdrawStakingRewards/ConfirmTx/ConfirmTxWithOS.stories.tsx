@@ -17,9 +17,9 @@ storiesOf('ConfirmWithdrawalTx/OS', module)
             submitTransaction: mocks.submitTransaction.success,
           }}
           unsignedTx={{
-            ...mocks.unsignedYoroiTx,
+            ...mocks.yoroiUnsignedTx,
             staking: {
-              ...mocks.unsignedYoroiTx.staking,
+              ...mocks.yoroiUnsignedTx.staking,
               withdrawals: {
                 'withdrawal-address': {['']: '12356789'},
               },
@@ -39,15 +39,15 @@ storiesOf('ConfirmWithdrawalTx/OS', module)
             submitTransaction: mocks.submitTransaction.success,
           }}
           unsignedTx={{
-            ...mocks.unsignedYoroiTx,
+            ...mocks.yoroiUnsignedTx,
             staking: {
-              ...mocks.unsignedYoroiTx.staking,
+              ...mocks.yoroiUnsignedTx.staking,
               deregistrations: {
-                ...mocks.unsignedYoroiTx.staking.deregistrations,
+                ...mocks.yoroiUnsignedTx.staking.deregistrations,
                 'deregistration-address': {['']: '12356789'},
               },
               withdrawals: {
-                ...mocks.unsignedYoroiTx.staking.withdrawals,
+                ...mocks.yoroiUnsignedTx.staking.withdrawals,
                 'withdrawal-address': {['']: '12356789'},
               },
             },
