@@ -2,7 +2,7 @@ import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {mockHwWallet, mockStakingInfo, mockWallet, mockYoroiSignedTx, mockYoroiTx, WithModal} from '../../../storybook'
+import {mocks, WithModal} from '../../../storybook'
 import {WithdrawStakingRewards} from './WithdrawStakingRewards'
 
 storiesOf('WithdrawStakingRewards', module)
@@ -11,9 +11,9 @@ storiesOf('WithdrawStakingRewards', module)
       <WithdrawStakingRewards
         {...commonProps}
         wallet={{
-          ...mockWallet,
-          getStakingInfo: async () => mockStakingInfo,
-          createWithdrawalTx: LOADING,
+          ...mocks.wallet,
+          getStakingInfo: mocks.getStakingInfo.success.registered,
+          createWithdrawalTx: mocks.createWithdrawalTx.loading,
         }}
       />
     </WithModal>
@@ -23,9 +23,9 @@ storiesOf('WithdrawStakingRewards', module)
       <WithdrawStakingRewards
         {...commonProps}
         wallet={{
-          ...mockWallet,
-          getStakingInfo: async () => mockStakingInfo,
-          createWithdrawalTx: FAILED,
+          ...mocks.wallet,
+          getStakingInfo: mocks.getStakingInfo.success.registered,
+          createWithdrawalTx: mocks.createWithdrawalTx.error,
         }}
       />
     </WithModal>
@@ -36,10 +36,10 @@ storiesOf('WithdrawStakingRewards', module)
       <WithdrawStakingRewards
         {...commonProps}
         wallet={{
-          ...mockWallet,
-          getStakingInfo: async () => mockStakingInfo,
-          createWithdrawalTx: async () => mockYoroiTx,
-          signTx: LOADING,
+          ...mocks.wallet,
+          getStakingInfo: mocks.getStakingInfo.success.registered,
+          createWithdrawalTx: mocks.createUnsignedTx.success,
+          signTx: mocks.signTx.loading,
         }}
       />
     </WithModal>
@@ -49,10 +49,10 @@ storiesOf('WithdrawStakingRewards', module)
       <WithdrawStakingRewards
         {...commonProps}
         wallet={{
-          ...mockWallet,
-          getStakingInfo: async () => mockStakingInfo,
-          createWithdrawalTx: async () => mockYoroiTx,
-          signTx: FAILED,
+          ...mocks.wallet,
+          getStakingInfo: mocks.getStakingInfo.success.registered,
+          createWithdrawalTx: mocks.createWithdrawalTx.success,
+          signTx: mocks.signTx.error,
         }}
       />
     </WithModal>
@@ -63,11 +63,11 @@ storiesOf('WithdrawStakingRewards', module)
       <WithdrawStakingRewards
         {...commonProps}
         wallet={{
-          ...mockWallet,
-          getStakingInfo: async () => mockStakingInfo,
-          createWithdrawalTx: async () => mockYoroiTx,
-          signTx: async () => mockYoroiSignedTx,
-          submitTransaction: LOADING,
+          ...mocks.wallet,
+          getStakingInfo: mocks.getStakingInfo.success.registered,
+          createWithdrawalTx: mocks.createWithdrawalTx.success,
+          signTx: mocks.signTx.success,
+          submitTransaction: mocks.submitTransaction.loading,
         }}
       />
     </WithModal>
@@ -77,11 +77,11 @@ storiesOf('WithdrawStakingRewards', module)
       <WithdrawStakingRewards
         {...commonProps}
         wallet={{
-          ...mockWallet,
-          getStakingInfo: async () => mockStakingInfo,
-          createWithdrawalTx: async () => mockYoroiTx,
-          signTx: async () => mockYoroiSignedTx,
-          submitTransaction: FAILED,
+          ...mocks.wallet,
+          getStakingInfo: mocks.getStakingInfo.success.registered,
+          createWithdrawalTx: mocks.createWithdrawalTx.success,
+          signTx: mocks.signTx.success,
+          submitTransaction: mocks.submitTransaction.error,
         }}
       />
     </WithModal>
@@ -92,11 +92,11 @@ storiesOf('WithdrawStakingRewards', module)
       <WithdrawStakingRewards
         {...commonProps}
         wallet={{
-          ...mockWallet,
-          getStakingInfo: async () => mockStakingInfo,
-          createWithdrawalTx: async () => mockYoroiTx,
-          signTx: async () => mockYoroiSignedTx,
-          submitTransaction: async () => [],
+          ...mocks.wallet,
+          getStakingInfo: mocks.getStakingInfo.success.registered,
+          createWithdrawalTx: mocks.createWithdrawalTx.success,
+          signTx: mocks.signTx.success,
+          submitTransaction: mocks.submitTransaction.success,
         }}
       />
     </WithModal>
@@ -106,14 +106,14 @@ storiesOf('WithdrawStakingRewards', module)
       <WithdrawStakingRewards
         {...commonProps}
         wallet={{
-          ...mockWallet,
+          ...mocks.wallet,
           getStakingInfo: async () => ({
-            ...mockStakingInfo,
+            ...mocks.stakingInfo,
             rewards: '0',
           }),
-          createWithdrawalTx: async () => mockYoroiTx,
-          signTx: async () => mockYoroiSignedTx,
-          submitTransaction: async () => [],
+          createWithdrawalTx: mocks.createWithdrawalTx.success,
+          signTx: mocks.signTx.success,
+          submitTransaction: mocks.submitTransaction.success,
         }}
       />
     </WithModal>
@@ -125,9 +125,9 @@ storiesOf('WithdrawStakingRewards', module)
       <WithdrawStakingRewards
         {...commonProps}
         wallet={{
-          ...mockHwWallet,
-          getStakingInfo: async () => mockStakingInfo,
-          createWithdrawalTx: LOADING,
+          ...mocks.hwWallet,
+          getStakingInfo: mocks.getStakingInfo.success.registered,
+          createWithdrawalTx: mocks.createWithdrawalTx.loading,
         }}
       />
     </WithModal>
@@ -137,9 +137,9 @@ storiesOf('WithdrawStakingRewards', module)
       <WithdrawStakingRewards
         {...commonProps}
         wallet={{
-          ...mockHwWallet,
-          getStakingInfo: async () => mockStakingInfo,
-          createWithdrawalTx: FAILED,
+          ...mocks.hwWallet,
+          getStakingInfo: mocks.getStakingInfo.success.registered,
+          createWithdrawalTx: mocks.createWithdrawalTx.error,
         }}
       />
     </WithModal>
@@ -150,10 +150,10 @@ storiesOf('WithdrawStakingRewards', module)
       <WithdrawStakingRewards
         {...commonProps}
         wallet={{
-          ...mockHwWallet,
-          getStakingInfo: async () => mockStakingInfo,
-          createWithdrawalTx: async () => mockYoroiTx,
-          signTxWithLedger: LOADING,
+          ...mocks.hwWallet,
+          getStakingInfo: mocks.getStakingInfo.success.registered,
+          createWithdrawalTx: mocks.createWithdrawalTx.success,
+          signTxWithLedger: mocks.signTxWithLedger.loading,
         }}
       />
     </WithModal>
@@ -163,10 +163,10 @@ storiesOf('WithdrawStakingRewards', module)
       <WithdrawStakingRewards
         {...commonProps}
         wallet={{
-          ...mockHwWallet,
-          getStakingInfo: async () => mockStakingInfo,
-          createWithdrawalTx: async () => mockYoroiTx,
-          signTxWithLedger: FAILED,
+          ...mocks.hwWallet,
+          getStakingInfo: mocks.getStakingInfo.success.registered,
+          createWithdrawalTx: mocks.createWithdrawalTx.success,
+          signTxWithLedger: mocks.signTxWithLedger.error,
         }}
       />
     </WithModal>
@@ -177,11 +177,11 @@ storiesOf('WithdrawStakingRewards', module)
       <WithdrawStakingRewards
         {...commonProps}
         wallet={{
-          ...mockHwWallet,
-          getStakingInfo: async () => mockStakingInfo,
-          createWithdrawalTx: async () => mockYoroiTx,
-          signTxWithLedger: async () => mockYoroiSignedTx,
-          submitTransaction: LOADING,
+          ...mocks.hwWallet,
+          getStakingInfo: mocks.getStakingInfo.success.registered,
+          createWithdrawalTx: mocks.createWithdrawalTx.success,
+          signTxWithLedger: mocks.signTxWithLedger.success,
+          submitTransaction: mocks.submitTransaction.loading,
         }}
       />
     </WithModal>
@@ -191,11 +191,11 @@ storiesOf('WithdrawStakingRewards', module)
       <WithdrawStakingRewards
         {...commonProps}
         wallet={{
-          ...mockHwWallet,
-          getStakingInfo: async () => mockStakingInfo,
-          createWithdrawalTx: async () => mockYoroiTx,
-          signTxWithLedger: async () => mockYoroiSignedTx,
-          submitTransaction: FAILED,
+          ...mocks.hwWallet,
+          getStakingInfo: mocks.getStakingInfo.success.registered,
+          createWithdrawalTx: mocks.createWithdrawalTx.success,
+          signTxWithLedger: mocks.signTxWithLedger.success,
+          submitTransaction: mocks.submitTransaction.error,
         }}
       />
     </WithModal>
@@ -206,11 +206,11 @@ storiesOf('WithdrawStakingRewards', module)
       <WithdrawStakingRewards
         {...commonProps}
         wallet={{
-          ...mockHwWallet,
-          getStakingInfo: async () => mockStakingInfo,
-          createWithdrawalTx: async () => mockYoroiTx,
-          signTxWithLedger: async () => mockYoroiSignedTx,
-          submitTransaction: async () => [],
+          ...mocks.hwWallet,
+          getStakingInfo: mocks.getStakingInfo.success.registered,
+          createWithdrawalTx: mocks.createWithdrawalTx.success,
+          signTxWithLedger: mocks.signTxWithLedger.success,
+          submitTransaction: mocks.submitTransaction.success,
         }}
       />
     </WithModal>
@@ -220,22 +220,18 @@ storiesOf('WithdrawStakingRewards', module)
       <WithdrawStakingRewards
         {...commonProps}
         wallet={{
-          ...mockHwWallet,
+          ...mocks.hwWallet,
           getStakingInfo: async () => ({
-            ...mockStakingInfo,
+            ...mocks.stakingInfo,
             rewards: '0',
           }),
-          createWithdrawalTx: async () => mockYoroiTx,
-          signTxWithLedger: async () => mockYoroiSignedTx,
-          submitTransaction: async () => [],
+          createWithdrawalTx: mocks.createWithdrawalTx.success,
+          signTxWithLedger: mocks.signTxWithLedger.success,
+          submitTransaction: mocks.submitTransaction.success,
         }}
       />
     </WithModal>
   ))
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const LOADING = (): Promise<any> => new Promise(() => null)
-const FAILED = () => Promise.reject(new Error('storybook error message'))
 
 const commonProps = {
   onSuccess: action('onSuccess'),

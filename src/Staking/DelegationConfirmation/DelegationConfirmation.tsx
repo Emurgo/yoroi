@@ -4,7 +4,6 @@ import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 
-import {stakePoolId} from '../../../storybook'
 import {Text, ValidatedTextInput} from '../../components'
 import {ConfirmTx} from '../../components/ConfirmTx'
 import {useStakePoolInfoAndHistory} from '../../Dashboard/StakePoolInfo'
@@ -58,7 +57,7 @@ export const DelegationConfirmation = () => {
       <ScrollView style={styles.scrollView}>
         <View style={styles.itemBlock}>
           <Text style={styles.itemTitle}>{strings.stakePoolName}</Text>
-          <StakePoolName stakePoolId={stakePoolId} />
+          <StakePoolName stakePoolId={poolId} />
         </View>
 
         <View style={styles.itemBlock}>

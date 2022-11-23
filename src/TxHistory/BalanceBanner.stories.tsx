@@ -3,7 +3,7 @@ import React from 'react'
 import {View} from 'react-native'
 import {QueryClient, QueryClientProvider} from 'react-query'
 
-import {mockWallet} from '../../storybook'
+import {mocks} from '../../storybook'
 import {SelectedWalletProvider} from '../SelectedWallet'
 import {BalanceBanner} from './BalanceBanner'
 
@@ -13,8 +13,8 @@ storiesOf('V2/BalanceBanner', module)
       <QueryClientProvider client={new QueryClient({defaultOptions: {queries: {retry: false}}})}>
         <SelectedWalletProvider
           wallet={{
-            ...mockWallet,
-            fetchCurrentPrice: () => new Promise(() => undefined), // never resolves
+            ...mocks.wallet,
+            fetchCurrentPrice: mocks.fetchCurrentPrice.loading,
           }}
         >
           <View style={{flex: 1, justifyContent: 'center'}}>
@@ -31,8 +31,8 @@ storiesOf('V2/BalanceBanner', module)
       <QueryClientProvider client={new QueryClient({defaultOptions: {queries: {retry: false}}})}>
         <SelectedWalletProvider
           wallet={{
-            ...mockWallet,
-            fetchCurrentPrice: () => Promise.resolve(12.123),
+            ...mocks.wallet,
+            fetchCurrentPrice: mocks.fetchCurrentPrice.success,
           }}
         >
           <View style={{flex: 1, justifyContent: 'center'}}>
@@ -49,8 +49,8 @@ storiesOf('V2/BalanceBanner', module)
       <QueryClientProvider client={new QueryClient({defaultOptions: {queries: {retry: false}}})}>
         <SelectedWalletProvider
           wallet={{
-            ...mockWallet,
-            fetchCurrentPrice: () => Promise.reject(new Error('Some error message')),
+            ...mocks.wallet,
+            fetchCurrentPrice: mocks.fetchCurrentPrice.error,
           }}
         >
           <View style={{flex: 1, justifyContent: 'center'}}>
