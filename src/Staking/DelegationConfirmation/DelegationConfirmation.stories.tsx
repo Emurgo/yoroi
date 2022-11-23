@@ -58,7 +58,7 @@ storiesOf('DelegationConfirmation', module)
 const params: StakingCenterRoutes['delegation-confirmation'] = {
   poolId: '6777ed5eac05ab8bf55d073424132e200935c8d3be62fb00f5252cd27a9fe6e5',
   yoroiUnsignedTx: {
-    ...mocks.unsignedYoroiTx,
+    ...mocks.yoroiUnsignedTx,
     staking: {
       registrations: {},
       deregistrations: {},

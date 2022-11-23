@@ -14,9 +14,9 @@ storiesOf('TransferSummary', module)
           wallet={mocks.wallet}
           unsignedTx={
             {
-              ...mocks.unsignedYoroiTx,
+              ...mocks.yoroiUnsignedTx,
               staking: {
-                ...mocks.unsignedYoroiTx.staking,
+                ...mocks.yoroiUnsignedTx.staking,
                 withdrawals: {
                   'withdrawal-address': {'': '12356789'},
                 },
@@ -34,9 +34,9 @@ storiesOf('TransferSummary', module)
           wallet={mocks.wallet}
           unsignedTx={
             {
-              ...mocks.unsignedYoroiTx,
+              ...mocks.yoroiUnsignedTx,
               staking: {
-                ...mocks.unsignedYoroiTx.staking,
+                ...mocks.yoroiUnsignedTx.staking,
                 deregistrations: {
                   'deregistration-address': {'': '2000000'},
                 },
@@ -54,9 +54,9 @@ storiesOf('TransferSummary', module)
           wallet={mocks.wallet}
           unsignedTx={
             {
-              ...mocks.unsignedYoroiTx,
+              ...mocks.yoroiUnsignedTx,
               staking: {
-                ...mocks.unsignedYoroiTx.staking,
+                ...mocks.yoroiUnsignedTx.staking,
                 deregistrations: {
                   'deregistration-address': {'': '2000000'},
                 },

@@ -16,9 +16,9 @@ storiesOf('ConfirmWithdrawalTx/Password', module)
       submitTransaction: mocks.submitTransaction.success,
     }
     const unsignedTx: YoroiUnsignedTx = {
-      ...mocks.unsignedYoroiTx,
+      ...mocks.yoroiUnsignedTx,
       staking: {
-        ...mocks.unsignedYoroiTx.staking,
+        ...mocks.yoroiUnsignedTx.staking,
         withdrawals: {
           'withdrawal-address': {'': '12356789'},
         },
@@ -45,11 +45,11 @@ storiesOf('ConfirmWithdrawalTx/Password', module)
       submitTransaction: mocks.submitTransaction.success,
     }
     const unsignedTx: YoroiUnsignedTx = {
-      ...mocks.unsignedYoroiTx,
+      ...mocks.yoroiUnsignedTx,
       staking: {
-        ...mocks.unsignedYoroiTx.staking,
+        ...mocks.yoroiUnsignedTx.staking,
         deregistrations: {
-          ...mocks.unsignedYoroiTx.staking.deregistrations,
+          ...mocks.yoroiUnsignedTx.staking.deregistrations,
           'deregistration-address': {'': '12356789'},
         },
         withdrawals: {

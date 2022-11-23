@@ -13,7 +13,7 @@ storiesOf('ConfirmScreen', module).add('Default', () => {
     name: 'name',
     params: {
       yoroiUnsignedTx: {
-        ...mocks.unsignedYoroiTx,
+        ...mocks.yoroiUnsignedTx,
         amounts: {'': '1'},
         fee: {'': '1'},
       },
