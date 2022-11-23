@@ -304,13 +304,13 @@ export class ShelleyWallet implements WalletInterface {
 
     if (this.networkId == null) throw new Error('Invalid wallet: networkId')
 
-    const chains = await Promise.all([
+    const [internalChain, externalChain] = await Promise.all([
       AddressChain.fromJSON(data.internalChain, this.networkId),
       AddressChain.fromJSON(data.externalChain, this.networkId),
     ])
 
-    this.internalChain = chains[0]
-    this.externalChain = chains[1]
+    this.internalChain = internalChain
+    this.externalChain = externalChain
 
     // can be null for versions < 3.0.2, in which case we can just retrieve
     // from address generator
