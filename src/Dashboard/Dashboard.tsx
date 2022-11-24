@@ -47,7 +47,7 @@ export const Dashboard = () => {
       <StatusBar type="dark" />
 
       <View style={styles.container}>
-        {isOnline && error && <SyncErrorBanner showRefresh={!(isLoading || isSync)} />}
+        {isOnline && error && <SyncErrorBanner showRefresh={!(isLoading || isSyncing)} />}
 
         <ScrollView
           style={styles.scrollView}
