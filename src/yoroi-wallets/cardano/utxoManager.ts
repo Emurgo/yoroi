@@ -1,7 +1,9 @@
-import {UtxoStorage} from '@emurgo/yoroi-lib'
+import {UtxoModels, UtxoStorage} from '@emurgo/yoroi-lib'
+import {initUtxo} from '@emurgo/yoroi-lib'
 import {Utxo, UtxoAtSafePoint, UtxoDiffToBestBlock} from '@emurgo/yoroi-lib/dist/utxo/models'
 
 import storageLegacy from '../../legacy/storage'
+import {RawUtxo} from '../types'
 
 export type UtxoStorageItem = {
   utxoAtSafePoint: UtxoAtSafePoint
@@ -75,3 +77,61 @@ export const makeUtxoStorage = (storage: typeof storageLegacy, storagePath: stri
 
   return utxoStorage
 }
+
+const makeUtxoManagerStorage = (storage: typeof storageLegacy, storagePath: string) => {
+  const addrCounterPath = `${storagePath}/addrCounter`
+  return {
+    addrCounter: {
+      save: (addrCounter: number) => storage.write(addrCounterPath, addrCounter),
+      clear: async () => {
+        await storage.remove(addrCounterPath)
+      },
+      read: async () => (await storage.read<number>(addrCounterPath)) ?? 0,
+    },
+  } as const
+}
+
+export const makeUtxoManager = async (id: string, apiUrl: string, storage: typeof storageLegacy) => {
+  const managerStorage = makeUtxoManagerStorage(storage, `/wallet/${id}/utxosManager`)
+  const serviceStorage = makeUtxoStorage(storage, `/wallet/${id}/utxos`)
+  const service = initUtxo(serviceStorage, `${apiUrl}/`)
+
+  let addrCounter = await managerStorage.addrCounter.read()
+
+  const getCachedUtxos = () => service.getAvailableUtxos().then((utxos) => utxos.map(serializer))
+  const initialUtxos = await getCachedUtxos()
+
+  // utxo state is related to the addresses used, if it changes a reset is needed
+  const sync = async (addresses: Array<string>) => {
+    if (addresses.length === addrCounter) return service.syncUtxoState(addresses)
+
+    return serviceStorage
+      .clearUtxoState()
+      .then(() => service.syncUtxoState(addresses))
+      .then(() => managerStorage.addrCounter.save(addresses.length))
+      .then(() => {
+        addrCounter = addresses.length
+      })
+  }
+
+  return {
+    clear: async () => {
+      await serviceStorage.clearUtxoState()
+      await managerStorage.addrCounter.clear()
+    },
+    initialUtxos,
+    getCachedUtxos,
+    sync,
+  } as const
+}
+
+const serializer = (utxo: UtxoModels.Utxo): RawUtxo => ({
+  utxo_id: utxo.utxoId,
+  tx_hash: utxo.txHash,
+  tx_index: utxo.txIndex,
+  amount: utxo.amount.toString(),
+  receiver: utxo.receiver,
+  assets: utxo.assets,
+})
+
+export type UtxoManager = Awaited<ReturnType<typeof makeUtxoManager>>

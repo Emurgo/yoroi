@@ -23,7 +23,6 @@ storiesOf('V2/TxHistory', module)
     const wallet = {
       ...mocks.wallet,
       fetchCurrentPrice: mocks.fetchCurrentPrice.error,
-      fetchUTXOs: () => Promise.reject(new Error('fetchUTXOs failed')),
     }
 
     return (

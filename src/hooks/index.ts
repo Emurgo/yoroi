@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import AsyncStorage, {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
-import {useFocusEffect} from '@react-navigation/native'
 import BigNumber from 'bignumber.js'
 import {delay} from 'bluebird'
 import {mapValues} from 'lodash'
@@ -110,35 +109,10 @@ export const useReceiveAddresses = (wallet: YoroiWallet) => {
   return wallet.receiveAddresses
 }
 
-export const useUtxos = (
-  wallet: YoroiWallet,
-  options?: UseQueryOptions<Array<RawUtxo>, Error, Array<RawUtxo>, [string, 'utxos']>,
-) => {
-  const {refetch, ...query} = useQuery({
-    ...options,
-    refetchInterval: 20000,
-    queryKey: [wallet.id, 'utxos'],
-    queryFn: () => wallet.fetchUTXOs(),
-  })
+export const useUtxos = (wallet: YoroiWallet) => {
+  useWallet(wallet, 'utxos')
 
-  const isOnline = useIsOnline(wallet)
-  React.useEffect(() => {
-    isOnline && refetch()
-  }, [isOnline, refetch])
-
-  React.useEffect(() => wallet.subscribe(() => refetch()), [refetch, wallet])
-
-  useFocusEffect(
-    React.useCallback(() => {
-      refetch()
-    }, [refetch]),
-  )
-
-  return {
-    ...query,
-    refetch,
-    utxos: query.data,
-  }
+  return wallet.utxos
 }
 
 /**
@@ -152,25 +126,18 @@ export const useLockedAmount = (
   {wallet}: {wallet: YoroiWallet},
   options?: UseQueryOptions<Quantity, Error, Quantity, [string, 'lockedAmount']>,
 ) => {
-  const queryClient = useQueryClient()
   const query = useQuery({
     ...options,
     suspense: true,
     queryKey: [wallet.id, 'lockedAmount'],
-    queryFn: () =>
-      wallet
-        .fetchUTXOs()
-        .then((utxos) => calcLockedDeposit(utxos, wallet.networkId))
-        .then((amount) => amount.toString() as Quantity),
+    queryFn: () => calcLockedDeposit(wallet.utxos, wallet.networkId).then((amount) => amount.toString() as Quantity),
   })
 
   React.useEffect(() => {
-    const unsubscribe = wallet.subscribeOnTxHistoryUpdate(() =>
-      queryClient.invalidateQueries([wallet.id, 'lockedAmount']),
-    )
+    const unsubscribe = wallet.subscribe(({type}) => type === 'utxos' && query.refetch())
 
-    return () => unsubscribe()
-  }, [queryClient, wallet])
+    return () => unsubscribe?.()
+  }, [query, wallet])
 
   if (query.data == null) throw new Error('invalid state')
 
@@ -561,11 +528,12 @@ const getTransactionInfos = (wallet: YoroiWallet) =>
 export const useTransactionInfos = (wallet: YoroiWallet) => {
   const [transactionInfos, setTransactionInfos] = React.useState(() => getTransactionInfos(wallet))
   React.useEffect(() => {
-    wallet.subscribe((event) => {
+    const unsubscribe = wallet.subscribe((event) => {
       if (event.type !== 'transactions') return
 
       setTransactionInfos(getTransactionInfos(wallet))
     })
+    return () => unsubscribe?.()
   }, [wallet])
 
   return transactionInfos
@@ -870,8 +838,7 @@ export const useExchangeRate = ({
 }
 
 export const useBalances = (wallet: YoroiWallet): YoroiAmounts => {
-  const {utxos} = useUtxos(wallet, {suspense: true})
-  if (utxos == null) throw new Error('invalid state')
+  const utxos = useUtxos(wallet)
 
   const primaryTokenId = wallet.defaultAsset.identifier
 
