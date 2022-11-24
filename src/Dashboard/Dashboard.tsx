@@ -31,7 +31,7 @@ export const Dashboard = () => {
   const navigateTo = useNavigateTo()
 
   const wallet = useSelectedWallet()
-  const {isLoading: isSync, sync} = useSync(wallet)
+  const {isLoading: isSyncing, sync} = useSync(wallet)
   const isOnline = useIsOnline(wallet)
 
   const balances = useBalances(wallet)
