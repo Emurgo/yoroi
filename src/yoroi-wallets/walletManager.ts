@@ -9,7 +9,6 @@ import assert from '../legacy/assert'
 import {CONFIG, DISABLE_BACKGROUND_SYNC} from '../legacy/config'
 import type {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {Logger} from '../legacy/logging'
-import {getCardanoNetworkConfigById} from '../legacy/networks'
 import type {WalletMeta} from '../legacy/state'
 import storage from '../legacy/storage'
 import {migrateWalletMetas} from '../Storage/migrations/walletMeta'
@@ -24,7 +23,6 @@ import {
   YoroiProvider,
   YoroiWallet,
 } from './cardano'
-import {makeUtxoManager} from './cardano/utxoManager'
 import {WALLET_IMPLEMENTATION_REGISTRY} from './types/other'
 
 export class WalletClosed extends ExtendableError {}
@@ -243,10 +241,7 @@ export class WalletManager {
 
     const Wallet = this.getWalletImplementation(walletMeta.walletImplementationId)
 
-    const apiUrl = getCardanoNetworkConfigById(networkId, newWalletMeta.provider).BACKEND.API_ROOT
-    const utxoManager = await makeUtxoManager(newWalletMeta.id, apiUrl, storage)
-
-    const wallet = new Wallet(storage, networkId, newWalletMeta.id, utxoManager)
+    const wallet = await Wallet.build(storage, networkId, newWalletMeta.id)
 
     await wallet.restore(data, walletMeta)
     if (!isYoroiWallet(wallet)) throw new Error('invalid wallet')
@@ -355,10 +350,7 @@ export class WalletManager {
     const Wallet = this.getWalletImplementation(implementationId)
     const id = uuid.v4()
 
-    const apiUrl = getCardanoNetworkConfigById(networkId, provider).BACKEND.API_ROOT
-    const utxoManager = await makeUtxoManager(id, apiUrl, storage)
-
-    const wallet = new Wallet(storage, networkId, id, utxoManager)
+    const wallet = await Wallet.build(storage, networkId, id)
     await wallet.create(mnemonic, password, networkId, implementationId, provider)
 
     return this.saveWallet(id, name, wallet, networkId, implementationId, provider)
@@ -375,10 +367,7 @@ export class WalletManager {
     const Wallet = this.getWalletImplementation(implementationId)
     const id = uuid.v4()
 
-    const apiUrl = getCardanoNetworkConfigById(networkId).BACKEND.API_ROOT
-    const utxoManager = await makeUtxoManager(id, apiUrl, storage)
-
-    const wallet = new Wallet(storage, networkId, id, utxoManager)
+    const wallet = await Wallet.build(storage, networkId, id)
     await wallet.createWithBip44Account(bip44AccountPublic, networkId, implementationId, hwDeviceInfo, isReadOnly)
 
     Logger.debug('creating wallet...', wallet)

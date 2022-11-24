@@ -1,16 +1,19 @@
 import {UtxoModels, UtxoStorage} from '@emurgo/yoroi-lib'
 import {initUtxo} from '@emurgo/yoroi-lib'
 import {Utxo, UtxoAtSafePoint, UtxoDiffToBestBlock} from '@emurgo/yoroi-lib/dist/utxo/models'
+import {parseInt} from 'lodash'
 
-import storageLegacy from '../../legacy/storage'
+import storage from '../../legacy/storage'
+import {makeStorageWithPrefix} from '../storage'
 import {RawUtxo} from '../types'
 
+type Storage = typeof storage
 export type UtxoStorageItem = {
   utxoAtSafePoint: UtxoAtSafePoint
   utxoDiffToBestBlock: UtxoDiffToBestBlock[]
 }
 
-export const makeUtxoStorage = (storage: typeof storageLegacy, storagePath: string) => {
+export const makeUtxoStorage = (storage: Storage, storagePath: string) => {
   const getAllUtxosData = () => storage.read<UtxoStorageItem>(storagePath)
 
   const setUtxoDiffToBestBlock = async (utxoDiffToBestBlock: UtxoDiffToBestBlock[]) => {
@@ -78,21 +81,22 @@ export const makeUtxoStorage = (storage: typeof storageLegacy, storagePath: stri
   return utxoStorage
 }
 
-const makeUtxoManagerStorage = (storage: typeof storageLegacy, storagePath: string) => {
-  const addrCounterPath = `${storagePath}/addrCounter`
+const makeUtxoManagerStorage = (prefix: string) => {
+  const storage = makeStorageWithPrefix(prefix)
+  const addrCounterKey = `addrCounter`
   return {
     addrCounter: {
-      save: (addrCounter: number) => storage.write(addrCounterPath, addrCounter),
+      save: (addrCounter: number) => storage.setItem(addrCounterKey, addrCounter.toString()),
       clear: async () => {
-        await storage.remove(addrCounterPath)
+        await storage.removeItem(addrCounterKey)
       },
-      read: async () => (await storage.read<number>(addrCounterPath)) ?? 0,
+      read: async () => storage.getItem(addrCounterKey).then((counter) => (counter != null ? parseInt(counter) : 0)),
     },
   } as const
 }
 
-export const makeUtxoManager = async (id: string, apiUrl: string, storage: typeof storageLegacy) => {
-  const managerStorage = makeUtxoManagerStorage(storage, `/wallet/${id}/utxosManager`)
+export const makeUtxoManager = async (id: string, apiUrl: string, storage: Storage) => {
+  const managerStorage = makeUtxoManagerStorage(`/wallet/${id}/utxosManager/`)
   const serviceStorage = makeUtxoStorage(storage, `/wallet/${id}/utxos`)
   const service = initUtxo(serviceStorage, `${apiUrl}/`)
 

@@ -365,5 +365,6 @@ const yoroiWalletKeys: Array<YoroiWalletKeys> = [
   'subscribeOnTxHistoryUpdate',
   'toJSON',
   'transactions',
+  'utxos',
   'walletImplementationId',
 ]

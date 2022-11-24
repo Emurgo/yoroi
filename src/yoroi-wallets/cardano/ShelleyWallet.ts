@@ -23,7 +23,7 @@ import {CardanoError, InvalidState} from '../../legacy/errors'
 import type {HWDeviceInfo} from '../../legacy/ledgerUtils'
 import {signTxWithLedger} from '../../legacy/ledgerUtils'
 import {Logger} from '../../legacy/logging'
-import {CardanoHaskellShelleyNetwork, isJormungandr} from '../../legacy/networks'
+import {CardanoHaskellShelleyNetwork, getCardanoNetworkConfigById, isJormungandr} from '../../legacy/networks'
 import {isHaskellShelleyNetwork, PROVIDERS} from '../../legacy/networks'
 import {processTxHistoryData} from '../../legacy/processTransactions'
 import {IsLockedError, nonblockingSynchronize, synchronize} from '../../legacy/promise'
@@ -74,7 +74,7 @@ import {
   YoroiProvider,
 } from './types'
 import {yoroiUnsignedTx} from './unsignedTx'
-import {UtxoManager} from './utxoManager'
+import {makeUtxoManager, UtxoManager} from './utxoManager'
 
 type WalletState = {
   lastGeneratedAddressIndex: number
@@ -106,7 +106,7 @@ export type WalletJSON = ShelleyWalletJSON | ByronWalletJSON
 export default ShelleyWallet
 export class ShelleyWallet implements WalletInterface {
   storage: typeof storageLegacy
-  private utxoManager: UtxoManager
+  private readonly utxoManager: UtxoManager
   protected encryptedStorage: WalletEncryptedStorage
   defaultAsset: DefaultAsset
   id: null | string = null
@@ -126,7 +126,7 @@ export class ShelleyWallet implements WalletInterface {
   private _utxos: RawUtxo[]
 
   // =================== create =================== //
-  constructor(storage: typeof storageLegacy, networkId: NetworkId, id: string, utxoManager: UtxoManager) {
+  private constructor(storage: typeof storageLegacy, networkId: NetworkId, id: string, utxoManager: UtxoManager) {
     this.id = id
     this.storage = storage
     this.networkId = networkId
@@ -135,6 +135,13 @@ export class ShelleyWallet implements WalletInterface {
     this.utxoManager = utxoManager
     this._utxos = utxoManager.initialUtxos
     this.encryptedStorage = makeWalletEncryptedStorage(id)
+  }
+
+  static async build(storage: typeof storageLegacy, networkId: NetworkId, id: string) {
+    const apiUrl = getCardanoNetworkConfigById(networkId).BACKEND.API_ROOT
+    const utxoManager = await makeUtxoManager(id, apiUrl, storage)
+
+    return new ShelleyWallet(storage, networkId, id, utxoManager)
   }
 
   get utxos() {
