@@ -1164,7 +1164,7 @@ export class ShelleyWallet implements WalletInterface {
     }
   }
 
-  async _doFullSync() {
+  private async _doFullSync() {
     if (!this.transactionCache) throw new Error('invalid wallet state')
     if (!this.networkId) throw new Error('invalid wallet state')
     if (!this.externalChain) throw new Error('invalid wallet state')
