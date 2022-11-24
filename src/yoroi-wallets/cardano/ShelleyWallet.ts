@@ -138,7 +138,7 @@ export class ShelleyWallet implements WalletInterface {
   }
 
   get utxos() {
-    return [...this._utxos]
+    return this._utxos
   }
 
   get receiveAddresses(): Addresses {
