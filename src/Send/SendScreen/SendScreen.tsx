@@ -37,7 +37,7 @@ export const SendScreen = () => {
   const wallet = useSelectedWallet()
   const balances = useBalances(wallet)
 
-  const {utxos, isLoading, error} = useUtxos(wallet)
+  const utxos = useUtxos(wallet)
   const hasPendingTx = useHasPendingTx(wallet)
   const isOnline = useIsOnline(wallet)
 
@@ -67,9 +67,6 @@ export const SendScreen = () => {
   const isValid =
     isOnline &&
     !hasPendingTx &&
-    !isLoading &&
-    error == null &&
-    utxos &&
     _.isEmpty(addressErrors) &&
     _.isEmpty(amountErrors) &&
     _.isEmpty(balanceErrors) &&

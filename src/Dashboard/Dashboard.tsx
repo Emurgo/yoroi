@@ -6,7 +6,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, RefreshControl, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 
 import {Banner, Button, Modal, StatusBar} from '../components'
-import {useBalances, useIsOnline, useUtxos} from '../hooks'
+import {useBalances, useIsOnline, useSync} from '../hooks'
 import globalMessages from '../i18n/global-messages'
 import {getCardanoBaseConfig} from '../legacy/config'
 import {getCardanoNetworkConfigById} from '../legacy/networks'
@@ -31,7 +31,7 @@ export const Dashboard = () => {
   const navigateTo = useNavigateTo()
 
   const wallet = useSelectedWallet()
-  const {isLoading: isFetchingUtxos, refetch: refetchUtxos} = useUtxos(wallet)
+  const {isLoading: isSyncing, sync} = useSync(wallet)
   const isOnline = useIsOnline(wallet)
 
   const balances = useBalances(wallet)
@@ -47,7 +47,7 @@ export const Dashboard = () => {
       <StatusBar type="dark" />
 
       <View style={styles.container}>
-        {isOnline && error && <SyncErrorBanner showRefresh={!(isLoading || isFetchingUtxos)} />}
+        {isOnline && error && <SyncErrorBanner showRefresh={!(isLoading || isSyncing)} />}
 
         <ScrollView
           style={styles.scrollView}
@@ -55,7 +55,7 @@ export const Dashboard = () => {
           refreshControl={
             <RefreshControl
               onRefresh={() => {
-                refetchUtxos()
+                sync()
                 refetchStakingInfo()
               }}
               refreshing={false}

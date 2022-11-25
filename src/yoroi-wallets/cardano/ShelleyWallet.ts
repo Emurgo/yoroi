@@ -1,7 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type {UtxoStorage} from '@emurgo/yoroi-lib'
-import {UtxoModels} from '@emurgo/yoroi-lib'
-import {initUtxo, UtxoService} from '@emurgo/yoroi-lib'
 import {BigNumber} from 'bignumber.js'
 import ExtendableError from 'es6-error'
 import _ from 'lodash'
@@ -77,7 +74,7 @@ import {
   YoroiProvider,
 } from './types'
 import {yoroiUnsignedTx} from './unsignedTx'
-import {makeUtxoStorage} from './utxoStorage'
+import {makeUtxoManager, UtxoManager} from './utxoManager'
 
 type WalletState = {
   lastGeneratedAddressIndex: number
@@ -109,8 +106,7 @@ export type WalletJSON = ShelleyWalletJSON | ByronWalletJSON
 export default ShelleyWallet
 export class ShelleyWallet implements WalletInterface {
   storage: typeof storageLegacy
-  private utxoService: UtxoService
-  private utxoStorage: UtxoStorage
+  private readonly utxoManager: UtxoManager
   protected encryptedStorage: WalletEncryptedStorage
   defaultAsset: DefaultAsset
   id: null | string = null
@@ -127,18 +123,29 @@ export class ShelleyWallet implements WalletInterface {
   rewardAddressHex: null | string = null
   version: undefined | string
   checksum: undefined | CardanoTypes.WalletChecksum
+  private _utxos: RawUtxo[]
 
   // =================== create =================== //
-  constructor(storage: typeof storageLegacy, networkId: NetworkId, id: string) {
+  private constructor(storage: typeof storageLegacy, networkId: NetworkId, id: string, utxoManager: UtxoManager) {
     this.id = id
     this.storage = storage
     this.networkId = networkId
     this.defaultAsset = getDefaultAssetByNetworkId(this.networkId)
 
-    const config = this.getBackendConfig()
-    this.utxoStorage = makeUtxoStorage(this.storage, `/wallet/${this.id}/utxos`)
-    this.utxoService = initUtxo(this.utxoStorage, `${config.API_ROOT}/`)
+    this.utxoManager = utxoManager
+    this._utxos = utxoManager.initialUtxos
     this.encryptedStorage = makeWalletEncryptedStorage(id)
+  }
+
+  static async build(storage: typeof storageLegacy, networkId: NetworkId, id: string) {
+    const apiUrl = getCardanoNetworkConfigById(networkId).BACKEND.API_ROOT
+    const utxoManager = await makeUtxoManager(id, apiUrl, storage)
+
+    return new ShelleyWallet(storage, networkId, id, utxoManager)
+  }
+
+  get utxos() {
+    return this._utxos
   }
 
   get receiveAddresses(): Addresses {
@@ -151,7 +158,7 @@ export class ShelleyWallet implements WalletInterface {
 
   async clear() {
     await this.transactionCache?.clear()
-    await this.utxoStorage.clearUtxoState()
+    await this.utxoManager.clear()
   }
 
   private async initialize(
@@ -526,8 +533,7 @@ export class ShelleyWallet implements WalletInterface {
   }
 
   async getAddressedUtxos() {
-    const utxos = await this.fetchUTXOs()
-    const addressedUtxos = utxos.map((utxo: RawUtxo): CardanoTypes.CardanoAddressedUtxo => {
+    const addressedUtxos = this.utxos.map((utxo: RawUtxo): CardanoTypes.CardanoAddressedUtxo => {
       const addressing = this.getAddressing(utxo.receiver)
 
       return {
@@ -924,12 +930,15 @@ export class ShelleyWallet implements WalletInterface {
     return txInfos.reduce((result, txInfo) => ({...result, [txInfo.id]: txInfo}), {} as Record<string, TransactionInfo>)
   }
 
-  async fetchUTXOs() {
+  async syncUtxos() {
     const addresses = [...this.internalAddresses, ...this.externalAddresses]
-    await this.utxoService.syncUtxoState(addresses)
-    const utxos = await this.utxoService.getAvailableUtxos()
 
-    return utxos.map(toUTXO)
+    await this.utxoManager.sync(addresses)
+
+    this._utxos = await this.utxoManager.getCachedUtxos()
+
+    // notifying always -> sync from lib need to flag if something has changed
+    this.notify({type: 'utxos', utxos: this.utxos})
   }
 
   async fetchAccountState(): Promise<AccountStateResponse> {
@@ -1096,8 +1105,6 @@ export class ShelleyWallet implements WalletInterface {
     this.externalChain.addSubscriberToNewAddresses(() =>
       this.notify({type: 'addresses', addresses: this.externalAddresses}),
     )
-
-    this.subscribe((event) => event.type === 'addresses' && this.utxoStorage.clearUtxoState())
   }
 
   // =================== synch =================== //
@@ -1130,43 +1137,47 @@ export class ShelleyWallet implements WalletInterface {
     return -1
   }
 
-  async _getAddressesInChunks(backendConfig: BackendConfig) {
+  private getAddressesInBlocks() {
     if (!this.internalChain) throw new Error('invalid wallet state')
     if (!this.externalChain) throw new Error('invalid wallet state')
-
-    const filterFn = (addrs) => api.filterUsedAddresses(addrs, backendConfig)
-    await Promise.all([this.internalChain.sync(filterFn), this.externalChain.sync(filterFn)])
 
     const internalAddresses = this.internalChain.getBlocks()
     const externalAddresses = this.externalChain.getBlocks()
 
-    const addresses =
-      this.rewardAddressHex != null
-        ? [...internalAddresses, ...externalAddresses, [this.rewardAddressHex]]
-        : [...internalAddresses, ...externalAddresses]
+    if (this.rewardAddressHex != null) return [...internalAddresses, ...externalAddresses, [this.rewardAddressHex]]
 
-    return addresses
+    return [...internalAddresses, ...externalAddresses]
   }
 
-  async _doFullSync() {
-    if (!this.transactionCache) throw new Error('invalid wallet state')
-    if (!this.networkId) throw new Error('invalid wallet state')
+  async discoverAddresses() {
+    if (!this.internalChain) throw new Error('invalid wallet state')
     if (!this.externalChain) throw new Error('invalid wallet state')
-    assert.assert(this.isInitialized, 'doFullSync: isInitialized')
 
-    const backendConfig: BackendConfig = getCardanoNetworkConfigById(this.networkId, this.provider).BACKEND
-    const addressChunks = await this._getAddressesInChunks(backendConfig)
-
-    if (!isJormungandr(this.networkId)) {
-      Logger.info('Discovery done, now syncing transactions')
-      await this.transactionCache.doSync(addressChunks, backendConfig)
-    }
+    // last chunk gap limit check
+    const filterFn = (addrs) => api.filterUsedAddresses(addrs, this.getBackendConfig())
+    await Promise.all([this.internalChain.sync(filterFn), this.externalChain.sync(filterFn)])
 
     // update receive screen to include any new addresses found
     const lastUsedIndex = this.getLastUsedIndex(this.externalChain)
     if (lastUsedIndex > this.state.lastGeneratedAddressIndex) {
       this.state.lastGeneratedAddressIndex = lastUsedIndex
     }
+  }
+
+  private async _doFullSync() {
+    if (!this.transactionCache) throw new Error('invalid wallet state')
+    if (!this.networkId) throw new Error('invalid wallet state')
+    if (!this.externalChain) throw new Error('invalid wallet state')
+    assert.assert(this.isInitialized, 'doFullSync: isInitialized')
+
+    if (isJormungandr(this.networkId)) return
+    Logger.info('Discovery done, now syncing transactions')
+
+    await this.discoverAddresses()
+    await this.syncUtxos()
+
+    // later only if utxos have changed
+    await this.transactionCache.doSync(this.getAddressesInBlocks(), this.getBackendConfig())
   }
 
   // ========== UI state ============= //
@@ -1223,11 +1234,3 @@ export class ShelleyWallet implements WalletInterface {
 }
 
 const toHex = (bytes: Uint8Array) => Buffer.from(bytes).toString('hex')
-const toUTXO = (utxo: UtxoModels.Utxo): RawUtxo => ({
-  utxo_id: utxo.utxoId,
-  tx_hash: utxo.txHash,
-  tx_index: utxo.txIndex,
-  amount: utxo.amount.toString(),
-  receiver: utxo.receiver,
-  assets: utxo.assets,
-})

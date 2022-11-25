@@ -52,6 +52,7 @@ const wallet: YoroiWallet = {
   rewardAddressHex: 'reward-address-hex',
   provider: null,
   publicKeyHex: 'publicKeyHex',
+  utxos: [],
   getStakingInfo: async () => {
     throw new Error('not implemented: getStakingInfo')
   },
@@ -65,10 +66,6 @@ const wallet: YoroiWallet = {
   },
   createWithdrawalTx: () => {
     throw new Error('not implemented: createWithdrawalTx')
-  },
-  fetchUTXOs: (...args) => {
-    action('fetchUTXOs')(...args)
-    return Promise.resolve([])
   },
   getAllUtxosForKey: () => Promise.resolve([]),
   fetchTokenInfo: (...args) => {

@@ -54,11 +54,9 @@ export const useStakingInfo = (
   })
 
   React.useEffect(() => {
-    const unsubscribe = wallet.subscribeOnTxHistoryUpdate(() => {
-      setTimeout(() => query.refetch(), 1000)
-    }) // refetch on new transactions
+    const unsubscribe = wallet.subscribe(({type}) => type === 'utxos' && query.refetch())
 
-    return () => unsubscribe()
+    return () => unsubscribe?.()
   }, [query, wallet])
 
   return {
