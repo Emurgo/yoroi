@@ -1,7 +1,6 @@
-import {defineMessage} from '@formatjs/intl'
 import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
-import {useIntl} from 'react-intl'
+import {defineMessages, useIntl} from 'react-intl'
 import {Image, Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
@@ -184,7 +183,7 @@ const useStrings = () => {
   }
 }
 
-const messages = defineMessage({
+const messages = defineMessages({
   allWallets: {
     id: 'menu.allWallets',
     defaultMessage: '!!!All wallets',
