@@ -38,6 +38,7 @@ export type WalletEvent =
   | {type: 'transactions'; transactions: Record<string, Transaction>}
   | {type: 'addresses'; addresses: Addresses}
   | {type: 'state'; state: WalletState}
+  | {type: 'utxos'; utxos: RawUtxo[]}
 
 export type WalletSubscription = (event: WalletEvent) => void
 export type Unsubscribe = () => void
@@ -83,6 +84,8 @@ export interface WalletInterface {
   transactionCache: null | TransactionCache
 
   checksum: undefined | CardanoTypes.WalletChecksum
+
+  utxos: Array<RawUtxo>
 
   storage: typeof storage
 
@@ -194,8 +197,6 @@ export interface WalletInterface {
 
   submitTransaction(signedTx: string): Promise<[]>
 
-  fetchUTXOs(): Promise<Array<RawUtxo>>
-
   fetchAccountState(): Promise<AccountStates>
 
   fetchPoolInfo(request: StakePoolInfoRequest): Promise<StakePoolInfosAndHistories>
@@ -300,7 +301,6 @@ type YoroiWalletKeys =
   | 'fetchTipStatus'
   | 'fetchTokenInfo'
   | 'fetchTxStatus'
-  | 'fetchUTXOs'
   | 'getAllUtxosForKey'
   | 'getDelegationStatus'
   | 'hwDeviceInfo'
@@ -319,6 +319,7 @@ type YoroiWalletKeys =
   | 'subscribeOnTxHistoryUpdate'
   | 'toJSON'
   | 'transactions'
+  | 'utxos'
   | 'walletImplementationId'
   | 'receiveAddresses'
   | 'canGenerateNewReceiveAddress'
@@ -346,7 +347,6 @@ const yoroiWalletKeys: Array<YoroiWalletKeys> = [
   'fetchTipStatus',
   'fetchTokenInfo',
   'fetchTxStatus',
-  'fetchUTXOs',
   'getAllUtxosForKey',
   'getDelegationStatus',
   'hwDeviceInfo',
@@ -365,5 +365,6 @@ const yoroiWalletKeys: Array<YoroiWalletKeys> = [
   'subscribeOnTxHistoryUpdate',
   'toJSON',
   'transactions',
+  'utxos',
   'walletImplementationId',
 ]

@@ -3,17 +3,17 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
 import {SelectedWalletProvider} from '../../src/SelectedWallet'
-import {mockWallet} from '../../storybook'
+import {mocks} from '../../storybook'
 import {VotingBanner} from './VotingBanner'
 
 storiesOf('Voting Banner', module)
   .add('default', () => (
-    <SelectedWalletProvider wallet={mockWallet}>
+    <SelectedWalletProvider wallet={mocks.wallet}>
       <VotingBanner onPress={action('onPress')} disabled={false} />
     </SelectedWalletProvider>
   ))
   .add('disabled', () => (
-    <SelectedWalletProvider wallet={mockWallet}>
+    <SelectedWalletProvider wallet={mocks.wallet}>
       <VotingBanner onPress={action('onPress')} disabled />
     </SelectedWalletProvider>
   ))

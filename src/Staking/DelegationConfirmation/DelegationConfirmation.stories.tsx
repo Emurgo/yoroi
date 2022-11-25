@@ -2,11 +2,10 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {QueryClient, QueryClientProvider} from 'react-query'
 
-import {mockWallet, mockYoroiTx, RouteProvider} from '../../../storybook'
+import {mocks, RouteProvider} from '../../../storybook'
 import {getDefaultAssets} from '../../legacy/config'
 import {StakingCenterRoutes} from '../../navigation'
 import {SelectedWalletProvider} from '../../SelectedWallet'
-import {StakePoolInfosAndHistories} from '../../yoroi-wallets/types'
 import {DelegationConfirmation} from './DelegationConfirmation'
 
 storiesOf('DelegationConfirmation', module)
@@ -14,30 +13,9 @@ storiesOf('DelegationConfirmation', module)
     <QueryClientProvider client={new QueryClient()}>
       <SelectedWalletProvider
         wallet={{
-          ...mockWallet,
+          ...mocks.wallet,
           defaultAsset: getDefaultAssets()[0],
-          fetchPoolInfo: async () => {
-            return {
-              '6777ed5eac05ab8bf55d073424132e200935c8d3be62fb00f5252cd27a9fe6e5': {
-                history: [
-                  {
-                    epoch: 123,
-                    slot: 123,
-                    tx_ordinal: 123,
-                    cert_ordinal: 123,
-                    payload: {
-                      kind: 'PoolRegistration',
-                      certIndex: 123,
-                      poolParams: {},
-                    },
-                  },
-                ],
-                info: {
-                  name: 'Emurgo',
-                },
-              },
-            } as StakePoolInfosAndHistories
-          },
+          fetchPoolInfo: mocks.fetchPoolInfo.success.poolFound,
         }}
       >
         <RouteProvider params={params}>
@@ -50,9 +28,9 @@ storiesOf('DelegationConfirmation', module)
     <QueryClientProvider client={new QueryClient()}>
       <SelectedWalletProvider
         wallet={{
-          ...mockWallet,
+          ...mocks.wallet,
           defaultAsset: getDefaultAssets()[0],
-          fetchPoolInfo: async () => new Promise(() => undefined),
+          fetchPoolInfo: mocks.fetchPoolInfo.loading,
         }}
       >
         <RouteProvider params={params}>
@@ -65,9 +43,9 @@ storiesOf('DelegationConfirmation', module)
     <QueryClientProvider client={new QueryClient()}>
       <SelectedWalletProvider
         wallet={{
-          ...mockWallet,
+          ...mocks.wallet,
           defaultAsset: getDefaultAssets()[0],
-          fetchPoolInfo: async () => Promise.reject(new Error('fetchPoolInfo: failed')),
+          fetchPoolInfo: mocks.fetchPoolInfo.error,
         }}
       >
         <RouteProvider params={params}>
@@ -80,7 +58,7 @@ storiesOf('DelegationConfirmation', module)
 const params: StakingCenterRoutes['delegation-confirmation'] = {
   poolId: '6777ed5eac05ab8bf55d073424132e200935c8d3be62fb00f5252cd27a9fe6e5',
   yoroiUnsignedTx: {
-    ...mockYoroiTx,
+    ...mocks.yoroiUnsignedTx,
     staking: {
       registrations: {},
       deregistrations: {},

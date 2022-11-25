@@ -240,7 +240,8 @@ export class WalletManager {
     const networkId = data.networkId ?? walletMeta.networkId
 
     const Wallet = this.getWalletImplementation(walletMeta.walletImplementationId)
-    const wallet = new Wallet(storage, networkId, newWalletMeta.id)
+
+    const wallet = await Wallet.build(storage, networkId, newWalletMeta.id)
 
     await wallet.restore(data, walletMeta)
     if (!isYoroiWallet(wallet)) throw new Error('invalid wallet')
@@ -348,7 +349,8 @@ export class WalletManager {
   ) {
     const Wallet = this.getWalletImplementation(implementationId)
     const id = uuid.v4()
-    const wallet = new Wallet(storage, networkId, id)
+
+    const wallet = await Wallet.build(storage, networkId, id)
     await wallet.create(mnemonic, password, networkId, implementationId, provider)
 
     return this.saveWallet(id, name, wallet, networkId, implementationId, provider)
@@ -364,7 +366,8 @@ export class WalletManager {
   ) {
     const Wallet = this.getWalletImplementation(implementationId)
     const id = uuid.v4()
-    const wallet = new Wallet(storage, networkId, id)
+
+    const wallet = await Wallet.build(storage, networkId, id)
     await wallet.createWithBip44Account(bip44AccountPublic, networkId, implementationId, hwDeviceInfo, isReadOnly)
 
     Logger.debug('creating wallet...', wallet)

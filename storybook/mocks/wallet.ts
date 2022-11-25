@@ -10,7 +10,9 @@ import {
   RemotePoolMetaSuccess,
   StakePoolInfosAndHistories,
   StakingInfo,
+  StakingStatus,
   TokenInfo,
+  TransactionInfo,
   YoroiAmounts,
   YoroiSignedTx,
   YoroiUnsignedTx,
@@ -18,7 +20,7 @@ import {
 import {mockEncryptedStorage, mockStorage} from './storage'
 import {mockTransaction} from './transaction'
 
-export const mockWalletMeta: WalletMeta = {
+const walletMeta: WalletMeta = {
   id: 'wallet-id',
   name: 'my-wallet',
   networkId: 1,
@@ -33,7 +35,7 @@ export const mockWalletMeta: WalletMeta = {
   walletImplementationId: 'haskell-shelley-24',
 }
 
-export const mockWallet: YoroiWallet = {
+const wallet: YoroiWallet = {
   id: 'wallet-id',
   defaultAsset: getDefaultAssetByNetworkId(300),
   walletImplementationId: 'haskell-shelley',
@@ -50,6 +52,7 @@ export const mockWallet: YoroiWallet = {
   rewardAddressHex: 'reward-address-hex',
   provider: null,
   publicKeyHex: 'publicKeyHex',
+  utxos: [],
   getStakingInfo: async () => {
     throw new Error('not implemented: getStakingInfo')
   },
@@ -63,10 +66,6 @@ export const mockWallet: YoroiWallet = {
   },
   createWithdrawalTx: () => {
     throw new Error('not implemented: createWithdrawalTx')
-  },
-  fetchUTXOs: (...args) => {
-    action('fetchUTXOs')(...args)
-    return Promise.resolve([])
   },
   getAllUtxosForKey: () => Promise.resolve([]),
   fetchTokenInfo: (...args) => {
@@ -181,13 +180,8 @@ export const mockWallet: YoroiWallet = {
   resync: async (...args) => {
     action('resync')(...args)
   },
-  getTransactions: async (txids: Array<string>) => {
-    action('getTransactions')(txids)
-    const txInfo = mockTransaction({id: txids[0]})
-
-    return {
-      [txInfo.id]: txInfo,
-    }
+  getTransactions: () => {
+    throw new Error('not implemented')
   },
   enableEasyConfirmation: async (rootKey: string) => {
     action('enableEasyConfirmation')(rootKey)
@@ -212,17 +206,13 @@ export const mockWallet: YoroiWallet = {
   //   throw new Error('not implemented: getAddressingInfo')
   // },
 
-  // createUnsignedTx: () => {
-  //   throw new Error('not implemented: createUnsignedTx')
-  // },
-
   fetchFundInfo: () => {
     throw new Error('not implemented: fetchFundInfo')
   },
 }
 
-export const mockHwWallet = {
-  ...mockWallet,
+const hwWallet = {
+  ...wallet,
   isHW: true,
   hwDeviceInfo: {
     bip44AccountPublic: '1234567',
@@ -235,12 +225,80 @@ export const mockHwWallet = {
   },
 }
 
-export const mockOsWallet = {
-  ...mockWallet,
+const osWallet = {
+  ...wallet,
   isEasyConfirmationEnabled: true,
 }
 
-export const mockGetStakingInfo = {
+const txid = '31b1abca49857fd50c7959cc019d14c7dc5deaa754ba45372fb21748c411f210'
+
+const getTransactions = {
+  success: async (...args) => {
+    action('getTransactions')(...args)
+    const txInfo = mockTransaction({id: txid})
+
+    return {
+      [txInfo.id]: txInfo,
+    }
+  },
+
+  error: async (...args) => {
+    action('getTransactions')(...args)
+    return Promise.reject(new Error('storybook error message'))
+  },
+  loading: async (...args) => {
+    action('getTransactions')(...args)
+    return new Promise(() => null) as unknown as {[txid: string]: TransactionInfo}
+  },
+}
+
+const fetchPoolInfo = {
+  success: {
+    poolFound: async (...args) => {
+      action('fetchPoolInfo')(...args)
+      return {[mocks.stakePoolId]: mocks.poolInfoAndHistory} as StakePoolInfosAndHistories
+    },
+    poolNotFound: async (...args) => {
+      action('fetchPoolInfo')(...args)
+      return {[mocks.stakePoolId]: null} as StakePoolInfosAndHistories
+    },
+  },
+  error: async (...args) => {
+    action('fetchPoolInfo')(...args)
+    return Promise.reject(new Error('storybook error message'))
+  },
+  loading: async (...args) => {
+    action('fetchPoolInfo')(...args)
+    return new Promise(() => null) as unknown as StakePoolInfosAndHistories
+  },
+}
+
+const getDelegationStatus = {
+  success: {
+    delegating: async (...args) => {
+      action('getDelegationStatus')(...args)
+      return {isRegistered: true, poolKeyHash: stakePoolId} as StakingStatus
+    },
+    registered: async (...args) => {
+      action('getDelegationStatus')(...args)
+      return {isRegistered: true} as StakingStatus
+    },
+    notRegistered: async (...args) => {
+      action('getDelegationStatus')(...args)
+      return {isRegistered: false, poolKeyHash: null} as StakingStatus
+    },
+  },
+  error: async (...args) => {
+    action('getDelegationStatus')(...args)
+    return Promise.reject(new Error('storybook error message'))
+  },
+  loading: async (...args) => {
+    action('getDelegationStatus')(...args)
+    return new Promise(() => null) as unknown as StakingStatus
+  },
+}
+
+const getStakingInfo = {
   success: {
     registered: async (...args) => {
       action('getStakingInfo')(...args)
@@ -261,11 +319,56 @@ export const mockGetStakingInfo = {
   },
 }
 
-export const mockCreateVotingRegTx = {
+const createUnsignedTx = {
+  success: async (...args) => {
+    action('createUnsignedTx')(...args)
+    return mocks.yoroiUnsignedTx
+  },
+  error: async (...args) => {
+    action('createUnsignedTx')(...args)
+    return Promise.reject(new Error('storybook error message'))
+  },
+  loading: async (...args) => {
+    action('createUnsignedTx')(...args)
+    return new Promise(() => null) as unknown as YoroiUnsignedTx
+  },
+}
+
+const createDelegationTx = {
+  success: async (...args) => {
+    action('createDelegationTx')(...args)
+    return mocks.yoroiUnsignedTx
+  },
+  error: async (...args) => {
+    action('createDelegationTx')(...args)
+    return Promise.reject(new Error('storybook error message'))
+  },
+  loading: async (...args) => {
+    action('createDelegationTx')(...args)
+    return new Promise(() => null) as unknown as YoroiUnsignedTx
+  },
+}
+
+const createWithdrawalTx = {
+  success: async (...args) => {
+    action('createWithdrawalTx')(...args)
+    return mocks.yoroiUnsignedTx
+  },
+  error: async (...args) => {
+    action('createWithdrawalTx')(...args)
+    return Promise.reject(new Error('storybook error message'))
+  },
+  loading: async (...args) => {
+    action('createWithdrawalTx')(...args)
+    return new Promise(() => null) as unknown as YoroiUnsignedTx
+  },
+}
+
+const createVotingRegTx = {
   success: async (...args) => {
     action('createVotingRegTx')(...args)
     return {
-      votingRegTx: mockYoroiTx,
+      votingRegTx: mocks.yoroiUnsignedTx,
       votingKeyEncrypted: 'votingKeyEncrypted',
     }
   },
@@ -279,10 +382,10 @@ export const mockCreateVotingRegTx = {
   },
 }
 
-export const mockSignTx = {
+const signTx = {
   success: async (...args) => {
     action('signTx')(...args)
-    return mockYoroiSignedTx
+    return yoroiSignedTx
   },
   error: async (...args) => {
     action('signTx')(...args)
@@ -290,13 +393,13 @@ export const mockSignTx = {
   },
   loading: async (...args) => {
     action('signTx')(...args)
-    return new Promise(() => null)
+    return new Promise(() => null) as unknown as YoroiSignedTx
   },
 }
-export const mockSignTxWithLedger = {
+const signTxWithLedger = {
   success: async (...args) => {
     action('signTx')(...args)
-    return mockYoroiSignedTx
+    return yoroiSignedTx
   },
   error: async (...args) => {
     action('signTx')(...args)
@@ -308,7 +411,7 @@ export const mockSignTxWithLedger = {
   },
 }
 
-export const mockSubmitTransaction = {
+const submitTransaction = {
   success: async (...args) => {
     action('submitTransaction')(...args)
     return [] as unknown as []
@@ -319,11 +422,26 @@ export const mockSubmitTransaction = {
   },
   loading: async (...args) => {
     action('submitTransaction')(...args)
-    return new Promise(() => null)
+    return new Promise(() => null) as unknown as []
   },
 }
 
-export const tokenEntries: Array<TokenEntry> = [
+const fetchCurrentPrice = {
+  success: async (...args) => {
+    action('fetchCurrentPrice')(...args)
+    return 0.123456789
+  },
+  error: async (...args) => {
+    action('fetchCurrentPrice')(...args)
+    return Promise.reject(new Error('storybook error message'))
+  },
+  loading: async (...args) => {
+    action('fetchCurrentPrice')(...args)
+    return new Promise(() => null) as unknown as number
+  },
+}
+
+const tokenEntries: Array<TokenEntry> = [
   {
     networkId: 123,
     identifier: '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950',
@@ -356,7 +474,7 @@ export const tokenEntries: Array<TokenEntry> = [
   },
 ]
 
-export const balances: YoroiAmounts = {
+const balances: YoroiAmounts = {
   [PRIMARY_ASSET_CONSTANTS.CARDANO]: '2727363743849',
   '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950': '12344',
   '29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6.4d494e': '215410',
@@ -365,7 +483,7 @@ export const balances: YoroiAmounts = {
   '08d91ec4e6c743a92de97d2fde5ca0d81493555c535894a3097061f7.c8b0': '148',
 }
 
-export const tokenResponses: Record<string, TokenInfo> = {
+const tokenResponses: Record<string, TokenInfo> = {
   '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d7444524950': {
     name: 'tDRIP',
     decimals: 6,
@@ -376,8 +494,8 @@ export const tokenResponses: Record<string, TokenInfo> = {
   },
 }
 
-export const stakePoolId = 'af22f95915a19cd57adb14c558dcc4a175f60c6193dc23b8bd2d8beb'
-export const poolInfoAndHistory: RemotePoolMetaSuccess = {
+const stakePoolId = 'af22f95915a19cd57adb14c558dcc4a175f60c6193dc23b8bd2d8beb'
+const poolInfoAndHistory: RemotePoolMetaSuccess = {
   info: {
     ticker: 'EMUR1',
     name: 'Emurgo #1',
@@ -400,14 +518,14 @@ export const poolInfoAndHistory: RemotePoolMetaSuccess = {
   ],
 }
 
-export const mockStakingInfo: StakingInfo = {
+const stakingInfo: StakingInfo = {
   status: 'staked',
   amount: '123456789',
   rewards: '123',
   poolId: 'poolId',
 }
 
-export const mockYoroiTx: YoroiUnsignedTx & {mock: true} = {
+const yoroiUnsignedTx: YoroiUnsignedTx & {mock: true} = {
   entries: {
     address1: {'': '99999'},
   },
@@ -428,7 +546,7 @@ export const mockYoroiTx: YoroiUnsignedTx & {mock: true} = {
   mock: true,
 } as const
 
-export const mockYoroiSignedTx: YoroiSignedTx & {mock: true} = {
+const yoroiSignedTx: YoroiSignedTx & {mock: true} = {
   entries: {},
   amounts: {},
   fee: {'': '12345'},
@@ -443,4 +561,37 @@ export const mockYoroiSignedTx: YoroiSignedTx & {mock: true} = {
   voting: {},
   signedTx: {id: 'tx-id', encodedTx: new Uint8Array([1, 2, 3])},
   mock: true,
+}
+
+export const mocks = {
+  walletMeta,
+  wallet,
+  osWallet,
+  hwWallet,
+
+  stakePoolId,
+
+  encryptedStorage: mockEncryptedStorage,
+
+  balances,
+  stakingInfo,
+  poolInfoAndHistory,
+  tokenEntries,
+  tokenResponses,
+  yoroiUnsignedTx,
+  yoroiSignedTx,
+
+  fetchCurrentPrice,
+  txid,
+  getTransactions,
+  fetchPoolInfo,
+  createUnsignedTx,
+  createDelegationTx,
+  createWithdrawalTx,
+  createVotingRegTx,
+  getStakingInfo,
+  getDelegationStatus,
+  signTx,
+  signTxWithLedger,
+  submitTransaction,
 }

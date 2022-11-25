@@ -7,7 +7,6 @@ import {Boundary, Spacer, Text} from '../components'
 import {useLockedAmount, useTokenInfo} from '../hooks'
 import globalMessages from '../i18n/global-messages'
 import {formatTokenWithText, formatTokenWithTextWhenHidden} from '../legacy/format'
-import {isEmptyString} from '../legacy/utils'
 import {useSelectedWallet} from '../SelectedWallet'
 import {Token} from '../yoroi-wallets/types'
 
@@ -38,7 +37,7 @@ export const LockedDeposit = ({privacyMode}: Props) => {
 const LockedAmount = ({tokenInfo}: {tokenInfo: Token}) => {
   const wallet = useSelectedWallet()
   const lockedAmount = useLockedAmount({wallet})
-  const amount = formatTokenWithText(new BigNumber(!isEmptyString(lockedAmount) ? lockedAmount : 0), tokenInfo)
+  const amount = formatTokenWithText(new BigNumber(lockedAmount), tokenInfo)
 
   return <FormattedAmount amount={amount} />
 }
