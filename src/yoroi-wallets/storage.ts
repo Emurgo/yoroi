@@ -18,7 +18,7 @@ export const makeStorageWithPrefix = (prefix: string): Storage => {
     getItem: (key: string) => {
       return AsyncStorage.getItem(withPrefix(key))
     },
-    multiGet: async (keys: Array<string>) => {
+    multiGet: async (keys: Readonly<Array<string>>) => {
       const prefixedKeys = keys.map((key) => withPrefix(key))
       const items = await AsyncStorage.multiGet(prefixedKeys)
 
@@ -33,7 +33,7 @@ export const makeStorageWithPrefix = (prefix: string): Storage => {
     removeItem: (key: string) => {
       return AsyncStorage.removeItem(withPrefix(key))
     },
-    multiRemove: (keys: Array<string>) => {
+    multiRemove: (keys: Readonly<Array<string>>) => {
       return AsyncStorage.multiRemove(keys.map((key) => withPrefix(key)))
     },
     clear: async () => {

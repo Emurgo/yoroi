@@ -51,7 +51,7 @@ export const ChangeWalletName = () => {
           value={newWalletName}
           onChangeText={(walletName: string) => setNewWalletName(walletName.trim())}
           errorText={!isEmptyString(errorText) ? errorText : undefined}
-          autoComplete={false}
+          autoComplete="off"
         />
       </ScrollView>
 
