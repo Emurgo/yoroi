@@ -5,7 +5,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {OfflineBanner, ProgressStep, Spacer, TextInput} from '../components'
+import {ProgressStep, Spacer, TextInput} from '../components'
 import {ConfirmTx} from '../components/ConfirmTx'
 import {useTokenInfo, useVotingRegTx} from '../hooks'
 import {Instructions as HWInstructions} from '../HW'
@@ -17,21 +17,30 @@ import {useSelectedWallet} from '../SelectedWallet'
 import {Amounts} from '../yoroi-wallets/utils'
 import {Actions, Description, Title} from './components'
 
-export const ConfirmVotingTx = ({onNext}: {onNext: () => void}) => {
+export const ConfirmVotingTx = ({
+  onSuccess,
+  onNext,
+  pin,
+}: {
+  onSuccess: (key: string) => void
+  onNext: () => void
+  pin: string
+}) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
+  const votingRegTx = useVotingRegTx(
+    {wallet, pin}, //
+    {onSuccess: ({votingKeyEncrypted}) => onSuccess(votingKeyEncrypted)},
+  )
   const [password, setPassword] = useState(CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '')
   const [useUSB, setUseUSB] = useState<boolean>(false)
-  const {votingRegTx} = useVotingRegTx(wallet)
   const tokenInfo = useTokenInfo({wallet, tokenId: wallet.defaultAsset.identifier})
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
       <ProgressStep currentStep={5} totalSteps={6} />
 
-      <OfflineBanner />
-
-      <ScrollView contentContainerStyle={styles.contentContainer}>
+      <ScrollView contentContainerStyle={styles.contentContainer} bounces={false}>
         <Spacer height={48} />
 
         <Title>{strings.subTitle}</Title>

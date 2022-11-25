@@ -114,7 +114,7 @@
   "components.send.biometricauthscreen.NOT_RECOGNIZED": "Biometrische aanmelding niet herkend, Probeer het opnieuw",
   "components.send.biometricauthscreen.SENSOR_LOCKOUT": "Teveel mislukte pogingen. De sensor is nu uitgeschakeld",
   "components.send.biometricauthscreen.SENSOR_LOCKOUT_PERMANENT": "Uw biometrische aanmelding is definitief geblokkeerd. Gebruik een alternatieve inlogmethode.",
-  "components.send.biometricauthscreen.UNKNOWN_ERROR": "Onbekende fout",
+  "components.send.biometricauthscreen.UNKNOWN_ERROR": "Something went wrong, try again later. Check your app settings.",
   "components.send.biometricauthscreen.authorizeOperation": "Bevestig de bewerking",
   "components.send.biometricauthscreen.cancelButton": "Afbreken",
   "components.send.biometricauthscreen.headings1": "Bevestig met uw",

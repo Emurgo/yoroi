@@ -3,10 +3,9 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet} from 'react-native'
 
-import {useAuthOsErrorDecoder, useEnableAuthWithOs} from '../../auth'
+import {OsAuthScreen, useEnableAuthWithOs} from '../../auth'
 import {Button} from '../../components'
 import globalMessages from '../../i18n/global-messages'
-import {OsAuthScreen} from '../../OsAuth'
 import {useStorage} from '../../Storage'
 
 export const EnableLoginWithOsScreen = () => {
@@ -14,26 +13,12 @@ export const EnableLoginWithOsScreen = () => {
   const navigation = useNavigation()
   const storage = useStorage()
 
-  const decodeAuthOsError = useAuthOsErrorDecoder()
-  const {enableAuthWithOs, isLoading, error} = useEnableAuthWithOs(
-    {
-      storage,
-      authenticationPrompt: {
-        title: strings.authorize,
-        cancel: strings.cancel,
-      },
-    },
-    {
-      onSuccess: () => navigation.goBack(),
-      retry: false,
-    },
-  )
+  const {enableAuthWithOs, isLoading} = useEnableAuthWithOs({storage}, {onSuccess: () => navigation.goBack()})
 
   return (
     <OsAuthScreen
       headings={[strings.heading]}
       subHeadings={[strings.subHeading1, strings.subHeading2]}
-      error={decodeAuthOsError(error)}
       buttons={[
         <Button
           key="cancel"
@@ -59,8 +44,7 @@ const useStrings = () => {
   const intl = useIntl()
 
   return {
-    authorize: intl.formatMessage(messages.authorize),
-    cancel: intl.formatMessage(globalMessages.cancel),
+    error: intl.formatMessage(globalMessages.error),
     heading: intl.formatMessage(messages.heading),
     subHeading1: intl.formatMessage(messages.subHeading1),
     subHeading2: intl.formatMessage(messages.subHeading2),
@@ -70,10 +54,6 @@ const useStrings = () => {
 }
 
 const messages = defineMessages({
-  authorize: {
-    id: 'components.send.biometricauthscreen.authorizeOperation',
-    defaultMessage: '!!!Authorize',
-  },
   notNowButton: {
     id: 'components.settings.biometricslinkscreen.notNowButton',
     defaultMessage: '!!!Not now',

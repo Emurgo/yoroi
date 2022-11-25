@@ -2,7 +2,7 @@ import {NavigationRouteContext} from '@react-navigation/native'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {mockWallet, mockYoroiTx} from '../../../storybook'
+import {mocks} from '../../../storybook'
 import {SelectedWalletProvider} from '../../SelectedWallet'
 import {SendProvider} from '../Context/SendContext'
 import {ConfirmScreen} from './ConfirmScreen'
@@ -13,7 +13,7 @@ storiesOf('ConfirmScreen', module).add('Default', () => {
     name: 'name',
     params: {
       yoroiUnsignedTx: {
-        ...mockYoroiTx,
+        ...mocks.yoroiUnsignedTx,
         amounts: {'': '1'},
         fee: {'': '1'},
       },
@@ -21,9 +21,9 @@ storiesOf('ConfirmScreen', module).add('Default', () => {
   }
 
   return (
-    <SelectedWalletProvider wallet={mockWallet}>
+    <SelectedWalletProvider wallet={mocks.wallet}>
       <NavigationRouteContext.Provider value={route}>
-        <SendProvider wallet={mockWallet} initialState={{receiver: 'storybook: receiver uri or address'}}>
+        <SendProvider wallet={mocks.wallet} initialState={{receiver: 'storybook: receiver uri or address'}}>
           <ConfirmScreen />
         </SendProvider>
       </NavigationRouteContext.Provider>

@@ -1,14 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type {UtxoStorage} from '@emurgo/yoroi-lib'
-import {UtxoModels} from '@emurgo/yoroi-lib'
-import {initUtxo, UtxoService} from '@emurgo/yoroi-lib'
 import {BigNumber} from 'bignumber.js'
-import cryptoRandomString from 'crypto-random-string'
 import ExtendableError from 'es6-error'
 import _ from 'lodash'
 import DeviceInfo from 'react-native-device-info'
+import {defaultMemoize} from 'reselect'
 
-import {makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../auth'
+import {EncryptedStorage, EncryptedStorageKeys, makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../auth'
+import {Keychain} from '../../auth/Keychain'
 import {encryptWithPassword} from '../../Catalyst/catalystCipher'
 import LocalizableError from '../../i18n/LocalizableError'
 import assert from '../../legacy/assert'
@@ -25,9 +23,10 @@ import {CardanoError, InvalidState} from '../../legacy/errors'
 import type {HWDeviceInfo} from '../../legacy/ledgerUtils'
 import {signTxWithLedger} from '../../legacy/ledgerUtils'
 import {Logger} from '../../legacy/logging'
-import type {CardanoHaskellShelleyNetwork} from '../../legacy/networks'
+import {CardanoHaskellShelleyNetwork, getCardanoNetworkConfigById, isJormungandr} from '../../legacy/networks'
 import {isHaskellShelleyNetwork, PROVIDERS} from '../../legacy/networks'
 import {processTxHistoryData} from '../../legacy/processTransactions'
+import {IsLockedError, nonblockingSynchronize, synchronize} from '../../legacy/promise'
 import type {WalletMeta} from '../../legacy/state'
 import storageLegacy from '../../legacy/storage'
 import {deriveRewardAddressHex} from '../../legacy/utils'
@@ -43,10 +42,9 @@ import {
   walletChecksum,
 } from '../cardano'
 import {makeStorageWithPrefix} from '../storage'
-import {DefaultAsset, SendTokenList, YoroiSignedTx, YoroiUnsignedTx} from '../types'
+import {DefaultAsset, Quantity, SendTokenList, StakingInfo, YoroiSignedTx, YoroiUnsignedTx} from '../types'
 import type {
   AccountStateResponse,
-  AddressedUtxo,
   BackendConfig,
   CurrencySymbol,
   FundInfoResponse,
@@ -55,43 +53,103 @@ import type {
   TipStatusResponse,
   TokenInfoRequest,
   TransactionInfo,
-  TxBodiesRequest,
-  TxBodiesResponse,
   TxStatusRequest,
   TxStatusResponse,
 } from '../types/other'
 import {NETWORK_REGISTRY} from '../types/other'
+import {Quantities} from '../utils'
 import {genTimeToSlot} from '../utils/timeUtils'
-import Wallet, {WalletJSON} from '../Wallet'
+import {validatePassword} from '../utils/validators'
 import * as api from './api'
-import {AddressChain, AddressGenerator} from './chain'
+import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from './chain'
 import {filterAddressesByStakingKey, getDelegationStatus} from './shelley/delegationUtils'
 import {toCachedTx, TransactionCache} from './shelley/transactionCache'
 import {yoroiSignedTx} from './signedTx'
-import {NetworkId, WalletImplementationId, WalletInterface, YoroiProvider} from './types'
+import {
+  NetworkId,
+  WalletEvent,
+  WalletImplementationId,
+  WalletInterface,
+  WalletSubscription,
+  YoroiProvider,
+} from './types'
 import {yoroiUnsignedTx} from './unsignedTx'
-import {generateUtxoStorage} from './utxoStorage'
+import {makeUtxoManager, UtxoManager} from './utxoManager'
+
+type WalletState = {
+  lastGeneratedAddressIndex: number
+}
+
+export type ShelleyWalletJSON = {
+  version: string
+
+  networkId: NetworkId
+  walletImplementationId: WalletImplementationId
+  provider?: null | YoroiProvider
+
+  isHW: boolean
+  hwDeviceInfo: null | HWDeviceInfo
+  isReadOnly: boolean
+  isEasyConfirmationEnabled: boolean
+
+  publicKeyHex?: string
+
+  lastGeneratedAddressIndex: number
+  internalChain: AddressChainJSON
+  externalChain: AddressChainJSON
+}
+
+export type ByronWalletJSON = Omit<ShelleyWalletJSON, 'account'>
+
+export type WalletJSON = ShelleyWalletJSON | ByronWalletJSON
 
 export default ShelleyWallet
-export class ShelleyWallet extends Wallet implements WalletInterface {
+export class ShelleyWallet implements WalletInterface {
   storage: typeof storageLegacy
-  private utxoService: UtxoService
-  private utxoStorage: UtxoStorage
+  private readonly utxoManager: UtxoManager
   protected encryptedStorage: WalletEncryptedStorage
   defaultAsset: DefaultAsset
+  id: null | string = null
+  networkId: undefined | NetworkId
+  walletImplementationId: undefined | WalletImplementationId
+  isHW = false
+  hwDeviceInfo: null | HWDeviceInfo = null
+  isReadOnly: undefined | boolean
+  provider: null | undefined | YoroiProvider
+  isEasyConfirmationEnabled = false
+  internalChain: null | AddressChain = null
+  externalChain: null | AddressChain = null
+  publicKeyHex: undefined | string
+  rewardAddressHex: null | string = null
+  version: undefined | string
+  checksum: undefined | CardanoTypes.WalletChecksum
+  private _utxos: RawUtxo[]
 
   // =================== create =================== //
-  constructor(storage: typeof storageLegacy, networkId: NetworkId, id: string) {
-    super()
+  private constructor(storage: typeof storageLegacy, networkId: NetworkId, id: string, utxoManager: UtxoManager) {
     this.id = id
     this.storage = storage
     this.networkId = networkId
     this.defaultAsset = getDefaultAssetByNetworkId(this.networkId)
 
-    const config = this.getBackendConfig()
-    this.utxoStorage = generateUtxoStorage(this.storage, `/wallet/${this.id}/utxos`)
-    this.utxoService = initUtxo(this.utxoStorage, `${config.API_ROOT}/`)
+    this.utxoManager = utxoManager
+    this._utxos = utxoManager.initialUtxos
     this.encryptedStorage = makeWalletEncryptedStorage(id)
+  }
+
+  static async build(storage: typeof storageLegacy, networkId: NetworkId, id: string) {
+    const apiUrl = getCardanoNetworkConfigById(networkId).BACKEND.API_ROOT
+    const utxoManager = await makeUtxoManager(id, apiUrl, storage)
+
+    return new ShelleyWallet(storage, networkId, id, utxoManager)
+  }
+
+  get utxos() {
+    return this._utxos
+  }
+
+  get receiveAddresses(): Addresses {
+    return this.externalAddresses.slice(0, this.numReceiveAddresses)
   }
 
   save() {
@@ -100,7 +158,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
 
   async clear() {
     await this.transactionCache?.clear()
-    await this.utxoStorage.clearUtxoState()
+    await this.utxoManager.clear()
   }
 
   private async initialize(
@@ -310,8 +368,10 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
 
   async resync() {
     await this.clear()
-    super.resync()
+    if (!this.transactionCache) throw new Error('invalid wallet state')
+    this.transactionCache.resetState()
     await this.save()
+    this.sync()
   }
 
   // =================== utils =================== //
@@ -433,7 +493,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
   async getAllUtxosForKey() {
     return filterAddressesByStakingKey(
       await CardanoMobile.StakeCredential.fromKeyhash(await (await this.getStakingKey()).hash()),
-      await this.getLegacyAddressedUtxos(),
+      await this.getAddressedUtxos(),
       false,
     )
   }
@@ -473,8 +533,7 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
   }
 
   async getAddressedUtxos() {
-    const utxos = await this.fetchUTXOs()
-    const addressedUtxos = utxos.map((utxo: RawUtxo): CardanoTypes.CardanoAddressedUtxo => {
+    const addressedUtxos = this.utxos.map((utxo: RawUtxo): CardanoTypes.CardanoAddressedUtxo => {
       const addressing = this.getAddressing(utxo.receiver)
 
       return {
@@ -491,25 +550,72 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     return addressedUtxos
   }
 
-  async getLegacyAddressedUtxos() {
-    const utxos = await this.fetchUTXOs()
-    const addressedUtxos = utxos.map((utxo: RawUtxo): AddressedUtxo => {
-      const addressing = this.getAddressing(utxo.receiver)
-
-      return {
-        ...utxo,
-        addressing,
-      }
-    })
-
-    return addressedUtxos
-  }
-
   getDelegationStatus() {
     if (!this.transactionCache) throw new Error('invalid wallet state')
     if (this.rewardAddressHex == null) throw new Error('reward address is null')
     const certsForKey = this.transactionCache.perRewardAddressCertificates[this.rewardAddressHex]
     return Promise.resolve(getDelegationStatus(this.rewardAddressHex, certsForKey))
+  }
+
+  canGenerateNewReceiveAddress() {
+    if (!this.externalChain) throw new Error('invalid wallet state')
+    const lastUsedIndex = this.getLastUsedIndex(this.externalChain)
+    // TODO: should use specific wallet config
+    const maxIndex = lastUsedIndex + CONFIG.WALLETS.HASKELL_SHELLEY.MAX_GENERATED_UNUSED
+    if (this.state.lastGeneratedAddressIndex >= maxIndex) {
+      return false
+    }
+    return this.numReceiveAddresses < this.externalAddresses.length
+  }
+
+  generateNewReceiveAddressIfNeeded() {
+    /* new address is automatically generated when you use the latest unused */
+    if (!this.externalChain) throw new Error('invalid wallet state')
+    const lastGeneratedAddress = this.externalChain.addresses[this.state.lastGeneratedAddressIndex]
+    if (!this.isUsedAddress(lastGeneratedAddress)) {
+      return false
+    }
+    return this.generateNewReceiveAddress()
+  }
+
+  generateNewReceiveAddress(): boolean {
+    if (!this.canGenerateNewReceiveAddress()) return false
+
+    this.updateState({
+      lastGeneratedAddressIndex: this.state.lastGeneratedAddressIndex + 1,
+    })
+
+    // note: don't await on purpose
+    this.save()
+
+    this.notify({type: 'addresses', addresses: this.receiveAddresses})
+
+    return true
+  }
+
+  async getStakingInfo(): Promise<StakingInfo> {
+    if (!this.rewardAddressHex) throw new Error('invalid wallet')
+
+    const stakingStatus = await this.getDelegationStatus()
+    if (!stakingStatus.isRegistered) return {status: 'not-registered'}
+    if (!('poolKeyHash' in stakingStatus)) return {status: 'registered'}
+
+    const accountStates = await this.fetchAccountState()
+    const accountState = accountStates[this.rewardAddressHex]
+    if (!accountState) throw new Error('Account state not found')
+
+    const stakingUtxos = await this.getAllUtxosForKey()
+    const amount = Quantities.sum([
+      ...stakingUtxos.map((utxo) => utxo.amount as Quantity),
+      accountState.remainingAmount as Quantity,
+    ])
+
+    return {
+      status: 'staked',
+      poolId: stakingStatus.poolKeyHash,
+      amount,
+      rewards: accountState.remainingAmount as Quantity,
+    }
   }
 
   // =================== tx building =================== //
@@ -633,16 +739,14 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     })
   }
 
-  async createVotingRegTx() {
+  async createVotingRegTx(pin: string) {
     Logger.debug('ShelleyWallet::createVotingRegTx called')
     if (!this.networkId) throw new Error('invalid wallet')
 
     const bytes = await generatePrivateKeyForCatalyst()
       .then((key) => key.toRawKey())
       .then((key) => key.asBytes())
-    const pin = cryptoRandomString({length: 4, type: 'numeric'})
-    const password = Buffer.from(pin.split('').map(Number))
-    const catalystKeyEncrypted = await encryptWithPassword(password, bytes)
+
     const catalystKeyHex = Buffer.from(bytes).toString('hex')
 
     try {
@@ -700,6 +804,9 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
         rewardAddress: await this.getRewardAddress().then((address) => address.toBech32()),
         nonce,
       }
+
+      const password = Buffer.from(pin.split('').map(Number))
+      const catalystKeyEncrypted = await encryptWithPassword(password, bytes)
 
       return {
         votingKeyEncrypted: catalystKeyEncrypted,
@@ -823,16 +930,15 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
     return txInfos.reduce((result, txInfo) => ({...result, [txInfo.id]: txInfo}), {} as Record<string, TransactionInfo>)
   }
 
-  async getTxsBodiesForUTXOs(request: TxBodiesRequest): Promise<TxBodiesResponse> {
-    return api.getTxsBodiesForUTXOs(request, this.getBackendConfig())
-  }
-
-  async fetchUTXOs() {
+  async syncUtxos() {
     const addresses = [...this.internalAddresses, ...this.externalAddresses]
-    await this.utxoService.syncUtxoState(addresses)
-    const utxos = await this.utxoService.getAvailableUtxos()
 
-    return utxos.map(toUTXO)
+    await this.utxoManager.sync(addresses)
+
+    this._utxos = await this.utxoManager.getCachedUtxos()
+
+    // notifying always -> sync from lib need to flag if something has changed
+    this.notify({type: 'utxos', utxos: this.utxos})
   }
 
   async fetchAccountState(): Promise<AccountStateResponse> {
@@ -863,14 +969,268 @@ export class ShelleyWallet extends Wallet implements WalletInterface {
   async fetchCurrentPrice(symbol: CurrencySymbol): Promise<number> {
     return api.fetchCurrentPrice(symbol, this.getBackendConfig())
   }
+
+  state: WalletState = {
+    lastGeneratedAddressIndex: 0,
+  }
+
+  isInitialized = false
+
+  transactionCache: null | TransactionCache = null
+
+  _doFullSyncMutex: any = {name: 'doFullSyncMutex', lock: null}
+
+  private subscriptions: Array<WalletSubscription> = []
+
+  _onTxHistoryUpdateSubscriptions: Array<(Wallet) => void> = []
+
+  _isUsedAddressIndexSelector = defaultMemoize((perAddressTxs) =>
+    _.mapValues(perAddressTxs, (txs) => {
+      assert.assert(!!txs, 'perAddressTxs cointains false-ish value')
+      return txs.length > 0
+    }),
+  )
+
+  // =================== getters =================== //
+
+  get internalAddresses() {
+    if (!this.internalChain) throw new Error('invalid wallet state')
+
+    return this.internalChain.addresses
+  }
+
+  get externalAddresses() {
+    if (!this.externalChain) throw new Error('invalid wallet state')
+
+    return this.externalChain.addresses
+  }
+
+  get isUsedAddressIndex() {
+    if (!this.transactionCache) throw new Error('invalid wallet state')
+    return this._isUsedAddressIndexSelector(this.transactionCache.perAddressTxs)
+  }
+
+  get numReceiveAddresses() {
+    return this.state.lastGeneratedAddressIndex + 1
+  }
+
+  get transactions() {
+    if (!this.transactionCache) throw new Error('invalid wallet state')
+    return this.transactionCache.transactions
+  }
+
+  get confirmationCounts() {
+    if (!this.transactionCache) throw new Error('invalid wallet state')
+    return this.transactionCache.confirmationCounts
+  }
+
+  // ============ security & key management ============ //
+  async encryptAndSaveRootKey(rootKey: string, password: string) {
+    if (this.id != null) return EncryptedStorage.write(EncryptedStorageKeys.rootKey(this.id), rootKey, password)
+
+    throw new Error('invalid wallet state')
+  }
+
+  async getDecryptedRootKey(password: string) {
+    if (this.id != null) return EncryptedStorage.read(EncryptedStorageKeys.rootKey(this.id), password)
+
+    throw new Error('invalid wallet state')
+  }
+
+  async enableEasyConfirmation(rootKey: string) {
+    if (!this.id) throw new Error('invalid wallet state')
+
+    await Keychain.setWalletKey(this.id, rootKey)
+    this.isEasyConfirmationEnabled = true
+
+    this.notify({type: 'easy-confirmation', enabled: this.isEasyConfirmationEnabled})
+  }
+
+  async disableEasyConfirmation() {
+    if (!this.id) throw new Error('invalid wallet state')
+
+    await Keychain.removeWalletKey(this.id)
+    this.isEasyConfirmationEnabled = false
+
+    this.notify({type: 'easy-confirmation', enabled: this.isEasyConfirmationEnabled})
+  }
+
+  async changePassword(oldPassword: string, newPassword: string) {
+    if (!this.id) throw new Error('invalid wallet state')
+
+    if (!_.isEmpty(validatePassword(newPassword, newPassword))) throw new Error('New password is not valid')
+
+    const key = EncryptedStorageKeys.rootKey(this.id)
+    const rootKey = await EncryptedStorage.read(key, oldPassword)
+    return EncryptedStorage.write(key, rootKey, newPassword)
+  }
+
+  // =================== subscriptions =================== //
+
+  // needs to be bound
+  notify = (event: WalletEvent) => {
+    this.subscriptions.forEach((handler) => handler(event))
+  }
+
+  subscribe(subscription: WalletSubscription) {
+    this.subscriptions.push(subscription)
+
+    return () => {
+      this.subscriptions = this.subscriptions.filter((sub) => sub !== subscription)
+    }
+  }
+
+  notifyOnTxHistoryUpdate = () => {
+    this._onTxHistoryUpdateSubscriptions.forEach((handler) => handler(this))
+  }
+
+  subscribeOnTxHistoryUpdate(subscription: () => void) {
+    this._onTxHistoryUpdateSubscriptions.push(subscription)
+
+    return () => {
+      this._onTxHistoryUpdateSubscriptions = this._onTxHistoryUpdateSubscriptions.filter((sub) => sub !== subscription)
+    }
+  }
+
+  setupSubscriptions() {
+    if (!this.internalChain) throw new Error('invalid wallet state')
+    if (!this.externalChain) throw new Error('invalid wallet state')
+    if (!this.transactionCache) throw new Error('invalid wallet state')
+
+    this.transactionCache.subscribe(() => this.notify({type: 'transactions', transactions: this.transactions}))
+    this.transactionCache.subscribe(this.notifyOnTxHistoryUpdate)
+    this.internalChain.addSubscriberToNewAddresses(() =>
+      this.notify({type: 'addresses', addresses: this.internalAddresses}),
+    )
+    this.externalChain.addSubscriberToNewAddresses(() =>
+      this.notify({type: 'addresses', addresses: this.externalAddresses}),
+    )
+  }
+
+  // =================== synch =================== //
+
+  async doFullSync() {
+    return synchronize(this._doFullSyncMutex, () => this._doFullSync())
+  }
+
+  async tryDoFullSync() {
+    try {
+      return await nonblockingSynchronize(this._doFullSyncMutex, () => this._doFullSync())
+    } catch (error) {
+      if (!(error instanceof IsLockedError)) {
+        throw error
+      }
+    }
+  }
+
+  isUsedAddress(address: string) {
+    if (!this.transactionCache) throw new Error('invalid wallet state')
+    return !!this.transactionCache.perAddressTxs[address] && this.transactionCache.perAddressTxs[address].length > 0
+  }
+
+  getLastUsedIndex(chain: AddressChain): number {
+    for (let i = chain.size() - 1; i >= 0; i--) {
+      if (this.isUsedAddress(chain.addresses[i])) {
+        return i
+      }
+    }
+    return -1
+  }
+
+  private getAddressesInBlocks() {
+    if (!this.internalChain) throw new Error('invalid wallet state')
+    if (!this.externalChain) throw new Error('invalid wallet state')
+
+    const internalAddresses = this.internalChain.getBlocks()
+    const externalAddresses = this.externalChain.getBlocks()
+
+    if (this.rewardAddressHex != null) return [...internalAddresses, ...externalAddresses, [this.rewardAddressHex]]
+
+    return [...internalAddresses, ...externalAddresses]
+  }
+
+  async discoverAddresses() {
+    if (!this.internalChain) throw new Error('invalid wallet state')
+    if (!this.externalChain) throw new Error('invalid wallet state')
+
+    // last chunk gap limit check
+    const filterFn = (addrs) => api.filterUsedAddresses(addrs, this.getBackendConfig())
+    await Promise.all([this.internalChain.sync(filterFn), this.externalChain.sync(filterFn)])
+
+    // update receive screen to include any new addresses found
+    const lastUsedIndex = this.getLastUsedIndex(this.externalChain)
+    if (lastUsedIndex > this.state.lastGeneratedAddressIndex) {
+      this.state.lastGeneratedAddressIndex = lastUsedIndex
+    }
+  }
+
+  private async _doFullSync() {
+    if (!this.transactionCache) throw new Error('invalid wallet state')
+    if (!this.networkId) throw new Error('invalid wallet state')
+    if (!this.externalChain) throw new Error('invalid wallet state')
+    assert.assert(this.isInitialized, 'doFullSync: isInitialized')
+
+    if (isJormungandr(this.networkId)) return
+    Logger.info('Discovery done, now syncing transactions')
+
+    await this.discoverAddresses()
+    await this.syncUtxos()
+
+    // later only if utxos have changed
+    await this.transactionCache.doSync(this.getAddressesInBlocks(), this.getBackendConfig())
+  }
+
+  // ========== UI state ============= //
+
+  updateState(update: Partial<WalletState>) {
+    Logger.debug('Wallet::updateState', update)
+
+    this.state = {
+      ...this.state,
+      ...update,
+    }
+
+    this.notify({type: 'state', state: this.state})
+  }
+
+  generateNewUiReceiveAddress(): boolean {
+    if (!this.canGenerateNewReceiveAddress()) return false
+
+    this.updateState({
+      lastGeneratedAddressIndex: this.state.lastGeneratedAddressIndex + 1,
+    })
+
+    return true
+  }
+
+  // ========== persistence ============= //
+
+  // TODO: move to specific child class?
+  toJSON(): WalletJSON {
+    if (this.networkId == null) throw new Error('invalid WalletJSON: networkId')
+    if (this.walletImplementationId == null) throw new Error('invalid WalletJSON: walletImplementationId')
+    if (this.version == null) throw new Error('invalid WalletJSON: version')
+    if (this.isReadOnly == null) throw new Error('invalid WalletJSON: isReadOnly')
+    if (this.externalAddresses == null) throw new Error('invalid WalletJSON: externalAddresses')
+    if (this.internalAddresses == null) throw new Error('invalid WalletJSON: internalAddresses')
+    if (this.externalChain == null) throw new Error('invalid WalletJSON: externalChain')
+    if (this.internalChain == null) throw new Error('invalid WalletJSON: internalChain')
+
+    return {
+      lastGeneratedAddressIndex: this.state.lastGeneratedAddressIndex,
+      publicKeyHex: this.publicKeyHex,
+      version: this.version,
+      internalChain: this.internalChain.toJSON(),
+      externalChain: this.externalChain.toJSON(),
+      networkId: this.networkId,
+      walletImplementationId: this.walletImplementationId,
+      isHW: this.isHW,
+      hwDeviceInfo: this.hwDeviceInfo,
+      isReadOnly: this.isReadOnly,
+      isEasyConfirmationEnabled: this.isEasyConfirmationEnabled,
+      provider: this.provider,
+    }
+  }
 }
 
 const toHex = (bytes: Uint8Array) => Buffer.from(bytes).toString('hex')
-const toUTXO = (utxo: UtxoModels.Utxo): RawUtxo => ({
-  utxo_id: utxo.utxoId,
-  tx_hash: utxo.txHash,
-  tx_index: utxo.txIndex,
-  amount: utxo.amount.toString(),
-  receiver: utxo.receiver,
-  assets: utxo.assets,
-})

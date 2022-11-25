@@ -1,4 +1,3 @@
-import {useNetInfo} from '@react-native-community/netinfo'
 import {useNavigation} from '@react-navigation/native'
 import {BigNumber} from 'bignumber.js'
 import _ from 'lodash'
@@ -9,7 +8,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Checkbox, Spacer, StatusBar, Text, TextInput} from '../../components'
-import {useBalances, useHasPendingTx, useTokenInfo, useUtxos} from '../../hooks'
+import {useBalances, useHasPendingTx, useIsOnline, useTokenInfo, useUtxos} from '../../hooks'
 import {CONFIG} from '../../legacy/config'
 import {formatTokenAmount, getAssetDenominationOrId, truncateWithEllipsis} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
@@ -38,10 +37,9 @@ export const SendScreen = () => {
   const wallet = useSelectedWallet()
   const balances = useBalances(wallet)
 
-  const {utxos, isLoading, error} = useUtxos(wallet)
+  const utxos = useUtxos(wallet)
   const hasPendingTx = useHasPendingTx(wallet)
-  const netInfo = useNetInfo()
-  const isOnline = netInfo.type !== 'none' && netInfo.type !== 'unknown'
+  const isOnline = useIsOnline(wallet)
 
   const {tokenId, resetForm, receiverChanged, amountChanged, receiver, amount, sendAll, sendAllChanged} = useSend()
 
@@ -69,9 +67,6 @@ export const SendScreen = () => {
   const isValid =
     isOnline &&
     !hasPendingTx &&
-    !isLoading &&
-    error == null &&
-    utxos &&
     _.isEmpty(addressErrors) &&
     _.isEmpty(amountErrors) &&
     _.isEmpty(balanceErrors) &&

@@ -23,8 +23,6 @@ function loadStories() {
 	require('../src/Menu/Menu.stories');
 	require('../src/Nfts/ImageGallery/ImageGallery.stories');
 	require('../src/Nfts/Nfts.stories');
-	require('../src/OsAuth/OsAuthScreen/OsAuthScreen.stories');
-	require('../src/OsAuth/OsLoginScreen/OsLoginScreen.stories');
 	require('../src/Receive/AddressModal.stories');
 	require('../src/Receive/Addresses.stories');
 	require('../src/Receive/ReceiveScreen.stories');
@@ -79,6 +77,8 @@ function loadStories() {
 	require('../src/auth/CheckPinInput/CheckPinInput.stories');
 	require('../src/auth/CreatePinInput/CreatePinInput.stories');
 	require('../src/auth/CreatePinScreen/CreatePinScreen.stories');
+	require('../src/auth/OsAuthScreen/OsAuthScreen.stories');
+	require('../src/auth/OsLoginScreen/OsLoginScreen.stories');
 	require('../src/auth/PinInput/PinInput.stories');
 	require('../src/auth/PinLoginScreen/PinLoginScreen.stories');
 	require('../src/auth/backgroundTimeout.stories');
@@ -125,8 +125,6 @@ const stories = [
 	'../src/Menu/Menu.stories',
 	'../src/Nfts/ImageGallery/ImageGallery.stories',
 	'../src/Nfts/Nfts.stories',
-	'../src/OsAuth/OsAuthScreen/OsAuthScreen.stories',
-	'../src/OsAuth/OsLoginScreen/OsLoginScreen.stories',
 	'../src/Receive/AddressModal.stories',
 	'../src/Receive/Addresses.stories',
 	'../src/Receive/ReceiveScreen.stories',
@@ -181,6 +179,8 @@ const stories = [
 	'../src/auth/CheckPinInput/CheckPinInput.stories',
 	'../src/auth/CreatePinInput/CreatePinInput.stories',
 	'../src/auth/CreatePinScreen/CreatePinScreen.stories',
+	'../src/auth/OsAuthScreen/OsAuthScreen.stories',
+	'../src/auth/OsLoginScreen/OsLoginScreen.stories',
 	'../src/auth/PinInput/PinInput.stories',
 	'../src/auth/PinLoginScreen/PinLoginScreen.stories',
 	'../src/auth/backgroundTimeout.stories',

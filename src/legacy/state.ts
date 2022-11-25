@@ -15,19 +15,15 @@ export type WalletMeta = {
 }
 export type State = {
   appSettings: {
-    acceptedTos: boolean
     installationId: string | null | undefined
     customPinHash: string | null | undefined
-    sendCrashReports: boolean
   }
   serverStatus: ServerStatus
 }
 export const getInitialState = (): State => ({
   appSettings: {
-    acceptedTos: false,
     installationId: null,
     customPinHash: null,
-    sendCrashReports: false,
   },
   serverStatus: {
     isServerOk: true,

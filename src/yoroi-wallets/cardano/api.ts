@@ -19,8 +19,6 @@ import type {
   TipStatusResponse,
   TokenInfoRequest,
   TokenInfoResponse,
-  TxBodiesRequest,
-  TxBodiesResponse,
   TxHistoryRequest,
   TxStatusRequest,
   TxStatusResponse,
@@ -81,10 +79,6 @@ export const bulkFetchUTXOsForAddresses = async (
 
 export const submitTransaction = (signedTx: string, config: BackendConfig) => {
   return fetchDefault('txs/signed', {signedTx}, config)
-}
-
-export const getTxsBodiesForUTXOs = (request: TxBodiesRequest, config: BackendConfig): Promise<TxBodiesResponse> => {
-  return fetchDefault('txs/txBodies', request, config)
 }
 
 export const getTransactions = (

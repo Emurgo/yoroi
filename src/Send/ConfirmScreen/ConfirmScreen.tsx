@@ -5,7 +5,7 @@ import React, {useEffect, useRef} from 'react'
 import {useIntl} from 'react-intl'
 import {Keyboard, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 
-import {Boundary, KeyboardSpacer, OfflineBanner, Spacer, StatusBar, Text, ValidatedTextInput} from '../../components'
+import {Boundary, KeyboardSpacer, Spacer, StatusBar, Text, ValidatedTextInput} from '../../components'
 import {ConfirmTx} from '../../components/ConfirmTx'
 import {useBalances, useTokenInfo} from '../../hooks'
 import {Instructions as HWInstructions} from '../../HW'
@@ -45,8 +45,6 @@ export const ConfirmScreen = () => {
   return (
     <View style={styles.root}>
       <StatusBar type="dark" />
-
-      <OfflineBanner />
 
       <AvailableAmountBanner />
 

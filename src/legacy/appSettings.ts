@@ -9,10 +9,7 @@ import storage from '../legacy/storage'
 // keys in redux state
 export const APP_SETTINGS_KEYS = {
   INSTALLATION_ID: 'installationId',
-  CUSTOM_PIN_HASH: 'customPinHash',
-  ACCEPTED_TOS: 'acceptedTos',
   LANG: 'languageCode',
-  SEND_CRASH_REPORTS: 'sendCrashReports',
   CURRENT_VERSION: 'currentVersion',
 }
 

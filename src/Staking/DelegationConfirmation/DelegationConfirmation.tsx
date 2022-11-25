@@ -4,8 +4,7 @@ import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 
-import {stakePoolId} from '../../../storybook'
-import {OfflineBanner, Text, ValidatedTextInput} from '../../components'
+import {Text, ValidatedTextInput} from '../../components'
 import {ConfirmTx} from '../../components/ConfirmTx'
 import {useStakePoolInfoAndHistory} from '../../Dashboard/StakePoolInfo'
 import {Instructions as HWInstructions} from '../../HW'
@@ -55,12 +54,10 @@ export const DelegationConfirmation = () => {
 
   return (
     <View style={styles.container}>
-      <OfflineBanner />
-
       <ScrollView style={styles.scrollView}>
         <View style={styles.itemBlock}>
           <Text style={styles.itemTitle}>{strings.stakePoolName}</Text>
-          <StakePoolName stakePoolId={stakePoolId} />
+          <StakePoolName stakePoolId={poolId} />
         </View>
 
         <View style={styles.itemBlock}>

@@ -2,7 +2,7 @@ import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {mockWallet, mockYoroiTx, WithModal} from '../../../../storybook'
+import {mocks, WithModal} from '../../../../storybook'
 import {Boundary} from '../../../components'
 import {ConfirmTxWithOS} from './ConfirmTxWithOS'
 
@@ -11,24 +11,20 @@ storiesOf('ConfirmWithdrawalTx/OS', module)
     <WithModal>
       <Boundary>
         <ConfirmTxWithOS
+          {...commonProps}
           wallet={{
-            ...mockWallet,
-            submitTransaction: async (yoroiSignedTx) => {
-              action('onSubmit')(yoroiSignedTx)
-              return []
-            },
+            ...mocks.osWallet,
+            submitTransaction: mocks.submitTransaction.success,
           }}
           unsignedTx={{
-            ...mockYoroiTx,
+            ...mocks.yoroiUnsignedTx,
             staking: {
-              ...mockYoroiTx.staking,
+              ...mocks.yoroiUnsignedTx.staking,
               withdrawals: {
                 'withdrawal-address': {['']: '12356789'},
               },
             },
           }}
-          onSuccess={action('onSuccess')}
-          onCancel={action('onCancel')}
         />
       </Boundary>
     </WithModal>
@@ -37,30 +33,31 @@ storiesOf('ConfirmWithdrawalTx/OS', module)
     <WithModal>
       <Boundary>
         <ConfirmTxWithOS
+          {...commonProps}
           wallet={{
-            ...mockWallet,
-            submitTransaction: async (yoroiSignedTx) => {
-              action('onSubmit')(yoroiSignedTx)
-              return []
-            },
+            ...mocks.osWallet,
+            submitTransaction: mocks.submitTransaction.success,
           }}
           unsignedTx={{
-            ...mockYoroiTx,
+            ...mocks.yoroiUnsignedTx,
             staking: {
-              ...mockYoroiTx.staking,
+              ...mocks.yoroiUnsignedTx.staking,
               deregistrations: {
-                ...mockYoroiTx.staking.deregistrations,
+                ...mocks.yoroiUnsignedTx.staking.deregistrations,
                 'deregistration-address': {['']: '12356789'},
               },
               withdrawals: {
-                ...mockYoroiTx.staking.withdrawals,
+                ...mocks.yoroiUnsignedTx.staking.withdrawals,
                 'withdrawal-address': {['']: '12356789'},
               },
             },
           }}
-          onSuccess={action('onSuccess')}
-          onCancel={action('onCancel')}
         />
       </Boundary>
     </WithModal>
   ))
+
+const commonProps = {
+  onSuccess: action('onSuccess'),
+  onCancel: action('onCancel'),
+}

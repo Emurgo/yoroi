@@ -114,7 +114,7 @@
   "components.send.biometricauthscreen.NOT_RECOGNIZED": "Biometrické údaje neodpovedajú. Skúste to znovu",
   "components.send.biometricauthscreen.SENSOR_LOCKOUT": "Velký počet neúspešných pokusov. Senzor je teraz zablokovaný",
   "components.send.biometricauthscreen.SENSOR_LOCKOUT_PERMANENT": "Biometrický senzor bol permanentne zamknutý. Použite inú prihlasovaciu metódu.",
-  "components.send.biometricauthscreen.UNKNOWN_ERROR": "Neznáma chyba",
+  "components.send.biometricauthscreen.UNKNOWN_ERROR": "Something went wrong, try again later. Check your app settings.",
   "components.send.biometricauthscreen.authorizeOperation": "Autorizovať operáciu",
   "components.send.biometricauthscreen.cancelButton": "Zrušiť",
   "components.send.biometricauthscreen.headings1": "Autorizujte pomocou",

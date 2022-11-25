@@ -6,8 +6,10 @@ import type {IntlShape} from 'react-intl'
 import {defineMessages, injectIntl} from 'react-intl'
 import {
   ActivityIndicator,
+  Alert,
   FlatList,
   Image,
+  LayoutAnimation,
   PermissionsAndroid,
   Platform,
   RefreshControl,
@@ -19,7 +21,7 @@ import {
 import bleImage from '../../assets/img/bluetooth.png'
 import usbImage from '../../assets/img/ledger-nano-usb.png'
 import {BulletPointItem, Button, Text} from '../../components'
-import {confirmationMessages, ledgerMessages} from '../../i18n/global-messages'
+import globalMessages, {confirmationMessages, ledgerMessages} from '../../i18n/global-messages'
 import LocalizableError from '../../i18n/LocalizableError'
 import type {DeviceId, DeviceObj} from '../../legacy/ledgerUtils'
 import {BluetoothDisabledError, RejectedByUserError} from '../../legacy/ledgerUtils'
@@ -81,7 +83,7 @@ class _LedgerConnect extends React.Component<Props, State> {
           if (this._isMounted) {
             Logger.debug('BLE observeState event', e)
             if (this._bluetoothEnabled == null && !e.available) {
-              this.setState({
+              this.setStateWithAnimimation({
                 error: new BluetoothDisabledError(),
                 refreshing: false,
               })
@@ -92,7 +94,7 @@ class _LedgerConnect extends React.Component<Props, State> {
               if (e.available) {
                 this.reload()
               } else {
-                this.setState({
+                this.setStateWithAnimimation({
                   error: new BluetoothDisabledError(),
                   refreshing: false,
                   devices: [],
@@ -113,30 +115,30 @@ class _LedgerConnect extends React.Component<Props, State> {
 
   startScan = () => {
     const {useUSB} = this.props
-    this.setState({refreshing: true})
+    this.setStateWithAnimimation({refreshing: true})
 
     this._subscriptions = this._transportLib.listen({
       complete: () => {
         Logger.debug('listen: subscription completed')
-        this.setState({refreshing: false})
+        this.setStateWithAnimimation({refreshing: false})
       },
       next: (e) => {
         if (e.type === 'add') {
           Logger.debug('listen: new device detected')
           if (useUSB === true) {
             // if a device is detected, save it in state immediately
-            this.setState({
+            this.setStateWithAnimimation({
               refreshing: false,
               deviceObj: e.descriptor,
             })
           } else {
             // with bluetooth, new devices are appended in the screen
-            this.setState(deviceAddition(e.descriptor))
+            this.setStateWithAnimimation(deviceAddition(e.descriptor))
           }
         }
       },
       error: (error) => {
-        this.setState({error, refreshing: false, devices: []})
+        this.setStateWithAnimimation({error, refreshing: false, devices: []})
       },
     })
   }
@@ -148,13 +150,14 @@ class _LedgerConnect extends React.Component<Props, State> {
     }
   }
 
-  _setStateSafe = (newState) => {
+  private setStateWithAnimimation = (newState) => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     if (this._isMounted) this.setState(newState)
   }
 
   reload = () => {
     this._unsubscribe()
-    this._setStateSafe({
+    this.setStateWithAnimimation({
       devices: this.props.defaultDevices ? this.props.defaultDevices : [],
       deviceId: null,
       deviceObj: null,
@@ -173,7 +176,7 @@ class _LedgerConnect extends React.Component<Props, State> {
         // should never happen
         throw new Error('device id is null')
       }
-      this.setState({
+      this.setStateWithAnimimation({
         deviceId: device.id.toString(),
         refreshing: false,
         waiting: true,
@@ -185,9 +188,9 @@ class _LedgerConnect extends React.Component<Props, State> {
         this.reload()
         return
       }
-      this._setStateSafe({error: e})
+      this.setStateWithAnimimation({error: e})
     } finally {
-      this._setStateSafe({waiting: false})
+      this.setStateWithAnimimation({waiting: false})
     }
   }
 
@@ -198,7 +201,7 @@ class _LedgerConnect extends React.Component<Props, State> {
         // should never happen
         throw new Error('deviceObj is null')
       }
-      this.setState({
+      this.setStateWithAnimimation({
         waiting: true,
       })
       await this.props.onConnectUSB(deviceObj)
@@ -208,9 +211,9 @@ class _LedgerConnect extends React.Component<Props, State> {
         this.reload()
         return
       }
-      this._setStateSafe({error: e})
+      this.setStateWithAnimimation({error: e})
     } finally {
-      this._setStateSafe({waiting: false})
+      this.setStateWithAnimimation({waiting: false})
     }
   }
 
@@ -256,13 +259,13 @@ class _LedgerConnect extends React.Component<Props, State> {
         <View style={[styles.container, fillSpace === true && styles.fillSpace]}>
           <View style={styles.heading}>
             <Image source={useUSB === true ? usbImage : bleImage} />
-            {useUSB === false && (
+            {!useUSB && (
               <Text secondary style={styles.caption}>
                 {intl.formatMessage(messages.caption)}
               </Text>
             )}
           </View>
-          {((useUSB === false && devices.length === 0) || (useUSB === true && deviceObj == null)) && (
+          {((!useUSB && devices.length === 0) || (useUSB && deviceObj == null)) && (
             <View style={styles.instructionsBlock}>
               <Text style={styles.paragraphText}>{intl.formatMessage(messages.introline)}</Text>
               {rows.map((row, i) => (
@@ -293,10 +296,17 @@ class _LedgerConnect extends React.Component<Props, State> {
         </View>
         {useUSB === true && (
           <Button
-            onPress={() => this._onConfirm(deviceObj)}
+            onPress={() => {
+              if (refreshing || deviceObj == null || waiting) {
+                return Alert.alert(
+                  intl.formatMessage(globalMessages.error),
+                  rows.reduce((acc, item) => acc + '\n' + item),
+                )
+              }
+              this._onConfirm(deviceObj)
+            }}
             title={intl.formatMessage(confirmationMessages.commonButtons.confirmButton)}
             style={styles.button}
-            disabled={refreshing || deviceObj == null || waiting}
           />
         )}
         {waiting && <ActivityIndicator color="black" />}

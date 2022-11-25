@@ -15,19 +15,11 @@ import {checkServerStatus} from '../yoroi-wallets'
 import type {AppSettingsKey} from './appSettings'
 import {APP_SETTINGS_KEYS, readAppSettings, removeAppSettings, writeAppSettings} from './appSettings'
 import assert from './assert'
-import {CONFIG, isNightly} from './config'
+import {CONFIG} from './config'
 import crashReporting from './crashReporting'
 import {getCardanoNetworkConfigById} from './networks'
 import {installationIdSelector} from './selectors'
 import type {State} from './state'
-
-const updateCrashlytics = (fieldName: AppSettingsKey, value: any) => {
-  const handlers = {
-    [APP_SETTINGS_KEYS.LANG]: () => crashReporting.setStringValue('language_code', value),
-  }
-  const handler = handlers[fieldName] || null
-  handler && handler()
-}
 
 export const setAppSettingField = (fieldName: AppSettingsKey, value: any) => async (dispatch: Dispatch<any>) => {
   await writeAppSettings(fieldName, value)
@@ -37,11 +29,9 @@ export const setAppSettingField = (fieldName: AppSettingsKey, value: any) => asy
     type: 'SET_APP_SETTING_FIELD',
     reducer: (state: State, payload) => payload,
   })
-  updateCrashlytics(fieldName, value)
 }
 export const clearAppSettingField = (fieldName: AppSettingsKey) => async (dispatch: Dispatch<any>) => {
   await removeAppSettings(fieldName)
-  updateCrashlytics(fieldName, null)
   dispatch({
     path: ['appSettings', fieldName],
     payload: null,
@@ -65,9 +55,6 @@ const _setAppSettings = (appSettings) => ({
 
 export const reloadAppSettings = () => async (dispatch: Dispatch<any>) => {
   const appSettings = await readAppSettings()
-  Object.entries(appSettings).forEach(([key, value]) => {
-    updateCrashlytics(key, value)
-  })
   dispatch(_setAppSettings(appSettings))
 }
 
@@ -109,19 +96,13 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
     Logger.warn('actions::initApp could not retrieve server status', e)
   }
 
-  if (isNightly()) {
-    dispatch(setAppSettingField(APP_SETTINGS_KEYS.SEND_CRASH_REPORTS, true))
-  }
-
   await dispatch(reloadAppSettings())
   await dispatch(initInstallationId())
 
   const crashReportsEnabled = await getCrashReportsEnabled()
   if (crashReportsEnabled) {
-    crashReporting.enable()
-    // TODO(ppershing): just update crashlytic variables here
-    await dispatch(reloadAppSettings())
     crashReporting.setUserId(installationIdSelector(getState()))
+    crashReporting.enable()
   }
 
   await walletManager.initialize()
@@ -129,14 +110,6 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
 
 export const setupHooks = () => (dispatch: Dispatch<any>) => {
   walletManager.subscribeServerSync((status) => dispatch(_setServerStatus(status)))
-}
-
-export const generateNewReceiveAddress = () => async (_dispatch: Dispatch<any>) => {
-  return walletManager.generateNewUiReceiveAddress()
-}
-
-export const generateNewReceiveAddressIfNeeded = () => async (_dispatch: Dispatch<any>) => {
-  return walletManager.generateNewUiReceiveAddressIfNeeded()
 }
 
 type DialogOptions = {

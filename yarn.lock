@@ -1737,10 +1737,10 @@
   dependencies:
     base-64 "0.1.0"
 
-"@emurgo/yoroi-lib@^0.1.4":
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/@emurgo/yoroi-lib/-/yoroi-lib-0.1.4.tgz#6fc1c42baf57f6fec034668c1b22996c3b99a68b"
-  integrity sha512-FyYKDlRb03NhcjiAwbedWYK2RUib9DGUr225IxFefHg/dIwTpzF3Ftyh3Osm9sp/ZOo0M2604zV7r/5IEMxL2w==
+"@emurgo/yoroi-lib@^0.1.5":
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/@emurgo/yoroi-lib/-/yoroi-lib-0.1.5.tgz#4ea13c38f7f011c18dc3f7a7992c991516124a0f"
+  integrity sha512-A+vkYnP0srwQToQU8ydMklUmltJmphRlUA29r5mG+PkL/RhjcLtmex9bNynB0WhNeYFIbmOSgFU0lJt0Eh2m+w==
   dependencies:
     "@cardano-foundation/ledgerjs-hw-app-cardano" "^5.1.0"
     "@emurgo/cross-csl-core" "^1.0.0"
@@ -2996,11 +2996,6 @@
   version "0.1.10"
   resolved "https://registry.yarnpkg.com/@react-native-community/masked-view/-/masked-view-0.1.10.tgz#5dda643e19e587793bc2034dd9bf7398ad43d401"
   integrity sha512-rk4sWFsmtOw8oyx8SD3KSvawwaK7gRBSEIy2TAwURyGt+3TizssXP1r8nx3zY+R7v2vYYHXZ+k2/GULAT/bcaQ==
-
-"@react-native-community/netinfo@9.3.0":
-  version "9.3.0"
-  resolved "https://registry.yarnpkg.com/@react-native-community/netinfo/-/netinfo-9.3.0.tgz#9792c23341eab5c629566baee016146f4f3f6086"
-  integrity sha512-NNdMeIXXqmPCbXrWxVqRzZ1gEZ6L1ykotWnCZLVjQBUgjyGWdL5LiDM/bcIa5DLzqZY7Km08rMgB7BoHUuEmnQ==
 
 "@react-native/assets@1.0.0":
   version "1.0.0"

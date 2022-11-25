@@ -7,18 +7,22 @@ import {Alert, AppState, AppStateStatus, Platform} from 'react-native'
 import RNBootSplash from 'react-native-bootsplash'
 import {useSelector} from 'react-redux'
 
-import {PinLoginScreen, useAuthOsEnabled, useAuthWithOs, useBackgroundTimeout} from './auth'
+import {
+  AuthSetting,
+  OsLoginScreen,
+  PinLoginScreen,
+  useAuthOsEnabled,
+  useAuthSetting,
+  useAuthWithOs,
+  useBackgroundTimeout,
+} from './auth'
 import {useAuth} from './auth/AuthProvider'
 import {EnableLoginWithPin} from './auth/EnableLoginWithPin'
 import {FirstRunNavigator} from './FirstRun/FirstRunNavigator'
-import {useAuthSetting} from './hooks'
-import globalMessages from './i18n/global-messages'
 import {DeveloperScreen} from './legacy/DeveloperScreen'
 import {isMaintenanceSelector} from './legacy/selectors'
 import MaintenanceScreen from './MaintenanceScreen'
 import {AppRoutes} from './navigation'
-import {OsLoginScreen} from './OsAuth'
-import {AuthSetting} from './Settings/types'
 import {useStorage} from './Storage'
 import StorybookScreen from './StorybookScreen'
 import {WalletInitNavigator} from './WalletInit/WalletInitNavigator'
@@ -28,22 +32,22 @@ const Stack = createStackNavigator<AppRoutes>()
 
 export const AppNavigator = () => {
   const strings = useStrings()
-  const storage = useStorage()
   const isMaintenance = useSelector(isMaintenanceSelector)
+
   useHideScreenInAppSwitcher()
   useAutoLogout()
 
   const {isLoggedIn, isLoggedOut, login} = useAuth()
-  const {authWithOs} = useAuthWithOs(
-    {authenticationPrompt: {cancel: strings.cancel, title: strings.authorize}, storage},
-    {onSuccess: login, onSettled: () => RNBootSplash.hide({fade: true})},
-  )
+  const {authWithOs} = useAuthWithOs({
+    onSuccess: login,
+    onSettled: () => RNBootSplash.hide({fade: true}),
+  })
 
   const authAction = useAuthAction()
   const onReady = () => {
-    if (!isLoggedOut) return
+    if (isLoggedIn) return
 
-    // try first OS auth before navigating
+    // try first OS auth before navigating to os login screen
     if (authAction === 'auth-with-os') {
       authWithOs()
     } else {
@@ -121,8 +125,6 @@ const useStrings = () => {
     loginPinTitle: intl.formatMessage(messages.pinLoginTitle),
     authWithOsChangeTitle: intl.formatMessage(messages.authWithOsChangeTitle),
     authWithOsChangeMessage: intl.formatMessage(messages.authWithOsChangeMessage),
-    cancel: intl.formatMessage(globalMessages.cancel),
-    authorize: intl.formatMessage(messages.authorize),
   }
 }
 
@@ -142,10 +144,6 @@ const messages = defineMessages({
   authWithOsChangeMessage: {
     id: 'global.actions.dialogs.biometricsChange.message',
     defaultMessage: '!!!Auth with OS changed detected ',
-  },
-  authorize: {
-    id: 'components.send.biometricauthscreen.authorizeOperation',
-    defaultMessage: '!!!Authorize operation',
   },
 })
 

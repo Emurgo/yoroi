@@ -2,11 +2,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import assert from 'assert'
 import {expect} from 'chai'
 
-import {migrateWalletMetas} from './appStorage'
-import {WALLETS} from './legacy/config'
-import {WalletMeta} from './legacy/state'
-import storage from './legacy/storage'
-import {NETWORK_REGISTRY, WALLET_IMPLEMENTATION_REGISTRY} from './yoroi-wallets/types'
+import {WALLETS} from '../../legacy/config'
+import {WalletMeta} from '../../legacy/state'
+import storage from '../../legacy/storage'
+import {NETWORK_REGISTRY, WALLET_IMPLEMENTATION_REGISTRY} from '../../yoroi-wallets/types'
+import {migrateWalletMetas} from './walletMeta'
 
 const mockedWalletMeta: Partial<WalletMeta> = Object.freeze({
   id: 'wallet-id',

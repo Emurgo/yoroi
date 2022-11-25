@@ -2,13 +2,13 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
 import {SelectedWalletProvider} from '../../src/SelectedWallet'
-import {mockWallet} from '../../storybook'
+import {mocks} from '../../storybook'
 import {ReceiveScreen} from './ReceiveScreen'
 
 storiesOf('ReceiveScreen', module).add('Default', () => (
   <SelectedWalletProvider
     wallet={{
-      ...mockWallet,
+      ...mocks.wallet,
       numReceiveAddresses: 20,
       externalAddresses: ['address123', 'address234', 'address345', 'address456'],
       internalAddresses: ['address123', 'address234', 'address345', 'address456'],

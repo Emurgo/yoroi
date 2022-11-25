@@ -3,16 +3,15 @@ import ExtendableError from 'es6-error'
 import _ from 'lodash'
 import uuid from 'uuid'
 
-import {migrateWalletMetas} from '../appStorage'
 import {EncryptedStorage, EncryptedStorageKeys} from '../auth'
 import {Keychain} from '../auth/Keychain'
 import assert from '../legacy/assert'
 import {CONFIG, DISABLE_BACKGROUND_SYNC} from '../legacy/config'
-import {ISignRequest} from '../legacy/ISignRequest'
 import type {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {Logger} from '../legacy/logging'
 import type {WalletMeta} from '../legacy/state'
 import storage from '../legacy/storage'
+import {migrateWalletMetas} from '../Storage/migrations/walletMeta'
 import {
   isYoroiWallet,
   NetworkId,
@@ -20,11 +19,11 @@ import {
   ShelleyWallet,
   WalletImplementationId,
   WalletInterface,
+  WalletJSON,
   YoroiProvider,
   YoroiWallet,
 } from './cardano'
 import {WALLET_IMPLEMENTATION_REGISTRY} from './types/other'
-import {WalletJSON} from './Wallet'
 
 export class WalletClosed extends ExtendableError {}
 export class SystemAuthDisabled extends ExtendableError {}
@@ -193,25 +192,6 @@ export class WalletManager {
     }
   }
 
-  // ========== UI state ============= //
-
-  async generateNewUiReceiveAddressIfNeeded() {
-    if (!this._wallet) return
-    await this.abortWhenWalletCloses(Promise.resolve(this._wallet.generateNewUiReceiveAddressIfNeeded()))
-  }
-
-  generateNewUiReceiveAddress() {
-    if (!this._wallet) return false
-    const wallet = this._wallet
-
-    const didGenerateNew = wallet.generateNewUiReceiveAddress()
-    if (didGenerateNew) {
-      // note: don't await on purpose
-      wallet.save()
-    }
-    return didGenerateNew
-  }
-
   // =================== state & persistence =================== //
 
   async saveWallet(
@@ -260,7 +240,8 @@ export class WalletManager {
     const networkId = data.networkId ?? walletMeta.networkId
 
     const Wallet = this.getWalletImplementation(walletMeta.walletImplementationId)
-    const wallet = new Wallet(storage, networkId, newWalletMeta.id)
+
+    const wallet = await Wallet.build(storage, networkId, newWalletMeta.id)
 
     await wallet.restore(data, walletMeta)
     if (!isYoroiWallet(wallet)) throw new Error('invalid wallet')
@@ -368,7 +349,8 @@ export class WalletManager {
   ) {
     const Wallet = this.getWalletImplementation(implementationId)
     const id = uuid.v4()
-    const wallet = new Wallet(storage, networkId, id)
+
+    const wallet = await Wallet.build(storage, networkId, id)
     await wallet.create(mnemonic, password, networkId, implementationId, provider)
 
     return this.saveWallet(id, name, wallet, networkId, implementationId, provider)
@@ -384,41 +366,13 @@ export class WalletManager {
   ) {
     const Wallet = this.getWalletImplementation(implementationId)
     const id = uuid.v4()
-    const wallet = new Wallet(storage, networkId, id)
+
+    const wallet = await Wallet.build(storage, networkId, id)
     await wallet.createWithBip44Account(bip44AccountPublic, networkId, implementationId, hwDeviceInfo, isReadOnly)
 
     Logger.debug('creating wallet...', wallet)
 
     return this.saveWallet(id, name, wallet, networkId, implementationId)
-  }
-
-  // =================== tx building =================== //
-
-  getAddressingInfo(address: string) {
-    const wallet = this.getWallet()
-    return wallet.getAddressing(address)
-  }
-
-  async getDelegationStatus() {
-    const wallet = this.getWallet()
-    return wallet.getDelegationStatus()
-  }
-
-  async signTx<T>(signRequest: ISignRequest<T>, decryptedKey: string) {
-    const wallet = this.getWallet()
-    return this.abortWhenWalletCloses(wallet.signTx(signRequest as any, decryptedKey))
-  }
-
-  async signTxWithLedger(request: ISignRequest, useUSB: boolean) {
-    const wallet = this.getWallet()
-    return this.abortWhenWalletCloses(wallet.signTxWithLedger(request as any, useUSB))
-  }
-
-  // =================== backend API =================== //
-
-  async submitTransaction(signedTx: string) {
-    const wallet = this.getWallet()
-    return this.abortWhenWalletCloses(wallet.submitTransaction(signedTx))
   }
 }
 
