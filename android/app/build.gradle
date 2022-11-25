@@ -200,36 +200,36 @@ android {
         mainnet {
             dimension "version"
             applicationId 'com.emurgo'
-            minSdkVersion 21
-            compileSdkVersion = 30
-            targetSdkVersion 30
+            minSdkVersion 23
+            compileSdkVersion = 31
+            targetSdkVersion 31
             resValue "string", "build_config_package", "com.emurgo"
         }
         dev {
             dimension "version"
             applicationIdSuffix ".staging"
             applicationId 'com.emurgo'
-            minSdkVersion 21
-            compileSdkVersion = 30
-            targetSdkVersion 30
+            minSdkVersion 23
+            compileSdkVersion = 31
+            targetSdkVersion 31
             resValue "string", "build_config_package", "com.emurgo"
         }
         nightly {
             dimension "version"
             applicationIdSuffix ".nightly"
             applicationId 'com.emurgo'
-            minSdkVersion 21
-            compileSdkVersion = 30
-            targetSdkVersion 30
+            minSdkVersion 23
+            compileSdkVersion = 31
+            targetSdkVersion 31
             resValue "string", "build_config_package", "com.emurgo"
         }
         storybook {
             dimension "version"
             applicationIdSuffix ".storybook"
             applicationId 'com.emurgo'
-            minSdkVersion 21
-            compileSdkVersion = 30
-            targetSdkVersion 30
+            minSdkVersion 23
+            compileSdkVersion = 31
+            targetSdkVersion 31
             resValue "string", "build_config_package", "com.emurgo"
         }
     }
