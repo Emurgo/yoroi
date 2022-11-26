@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {TouchableOpacity} from 'react-native-gesture-handler'
+import {TouchableOpacity} from 'react-native'
 
 import {Icon} from '../Icon'
 
