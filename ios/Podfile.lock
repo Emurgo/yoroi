@@ -14,17 +14,17 @@ PODS:
   - fmt (6.2.1)
   - glog (0.3.5)
   - MultiplatformBleAdapter (0.1.9)
-  - Permission-BluetoothPeripheral (3.3.1):
+  - Permission-BluetoothPeripheral (3.6.1):
     - RNPermissions
-  - Permission-Camera (3.3.1):
+  - Permission-Camera (3.6.1):
     - RNPermissions
-  - Permission-FaceID (3.3.1):
+  - Permission-FaceID (3.6.1):
     - RNPermissions
-  - Permission-LocationAccuracy (3.3.1):
+  - Permission-LocationAccuracy (3.6.1):
     - RNPermissions
-  - Permission-LocationAlways (3.3.1):
+  - Permission-LocationAlways (3.6.1):
     - RNPermissions
-  - Permission-LocationWhenInUse (3.3.1):
+  - Permission-LocationWhenInUse (3.6.1):
     - RNPermissions
   - RCT-Folly (2021.06.28.00-v2):
     - boost
@@ -241,7 +241,7 @@ PODS:
     - React
   - react-native-haskell-shelley (3.1.4):
     - React
-  - react-native-pager-view (5.4.15):
+  - react-native-pager-view (6.1.1):
     - React-Core
   - react-native-randombytes (3.6.0):
     - React-Core
@@ -332,7 +332,7 @@ PODS:
     - React-Core
   - RNKeychain (7.0.0):
     - React-Core
-  - RNPermissions (3.3.1):
+  - RNPermissions (3.6.1):
     - React-Core
   - RNScreens (3.1.0):
     - React-Core
@@ -341,7 +341,7 @@ PODS:
     - Sentry (= 7.10.1)
   - RNSVG (7.2.1):
     - React
-  - RNVectorIcons (8.1.0):
+  - RNVectorIcons (9.2.0):
     - React-Core
   - Sentry (7.10.1):
     - Sentry/Core (= 7.10.1)
@@ -543,12 +543,12 @@ SPEC CHECKSUMS:
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   glog: 85ecdd10ee8d8ec362ef519a6a45ff9aa27b2e85
   MultiplatformBleAdapter: 5a6a897b006764392f9cef785e4360f54fb9477d
-  Permission-BluetoothPeripheral: a408e2ba4b43e60c5a4b8b4d442bb8abc93394b2
-  Permission-Camera: bae27a8503530770c35aadfecbb97ec71823382a
-  Permission-FaceID: 278547824ae3a5cae07050505e8a505932c3c5c4
-  Permission-LocationAccuracy: 43d7a6b3d736a90168e9fc7117a721ca44722f83
-  Permission-LocationAlways: fbf36cbdcabc3101f1168ad1ec45cfc5a6448cc4
-  Permission-LocationWhenInUse: 006c85c8de0c05b5d8be8e8029e4f6b813270293
+  Permission-BluetoothPeripheral: 67708853584bb9208c76d36d0e0ea4eafb97ea5b
+  Permission-Camera: bf6791b17c7f614b6826019fcfdcc286d3a107f6
+  Permission-FaceID: e70223280292a1a5e4b8ad943b70cd9229a7d2c3
+  Permission-LocationAccuracy: 76df17de5c6b8bc2eee34e61ee92cdd7a864c73d
+  Permission-LocationAlways: 8d99b025c9f73c696e0cdb367e42525f2e9a26f2
+  Permission-LocationWhenInUse: 3ba99e45c852763f730eabecec2870c2382b7bd4
   RCT-Folly: 803a9cfd78114b2ec0f140cfa6fa2a6bafb2d685
   RCTRequired: 412e994c1e570cf35378a32c18fd46e50634938b
   RCTTypeSafety: ef27340c728e6d673af345ed69e479a010c8a2d8
@@ -566,7 +566,7 @@ SPEC CHECKSUMS:
   react-native-camera: 3eae183c1d111103963f3dd913b65d01aef8110f
   react-native-config: f2c2ae45625a068c35681a16b9bfb1ca58b0adc7
   react-native-haskell-shelley: 508d0b6f88d14629ae6f28648a4425b202f73764
-  react-native-pager-view: b1914469643f40042e65d78cbf3d3dfebd6fb0d9
+  react-native-pager-view: 3c66c4e2f3ab423643d07b2c7041f8ac48395f72
   react-native-randombytes: b6677f7d495c27e9ee0dbd77ebc97b3c59173729
   react-native-safe-area-context: 806f8370bf9fc9db90a3413aaa1aab0d2e22fdf3
   react-native-webview: a287d7c405756d253d88ed8e4f3c1a5256834d30
@@ -589,11 +589,11 @@ SPEC CHECKSUMS:
   RNDeviceInfo: 6dd5c07a482f2a5e4a29fe8a9d99eadd4277175a
   RNGestureHandler: 62232ba8f562f7dea5ba1b3383494eb5bf97a4d3
   RNKeychain: f75b8c8b2f17d3b2aa1f25b4a0ac5b83d947ff8f
-  RNPermissions: 34d678157c800b25b22a488e4d8babb57456e796
+  RNPermissions: dcdb7b99796bbeda6975a6e79ad519c41b251b1c
   RNScreens: 3ba2198ca3179f77f6158425fc31ba3c90a0d49f
   RNSentry: f8c14c77e400a93331b38538f735c2538f8108a8
   RNSVG: 6c8e8c6f9e5a0caf910dd25aa6e4216045426e1d
-  RNVectorIcons: 31cebfcf94e8cf8686eb5303ae0357da64d7a5a4
+  RNVectorIcons: fcc2f6cb32f5735b586e66d14103a74ce6ad61f8
   Sentry: ddcd9fde63cfe7e9e2243da59d98daa382413e49
   Yoga: 099a946cbf84c9b32ffdc4278d72db26710ecf92
 
