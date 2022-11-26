@@ -324,15 +324,15 @@ PODS:
     - React-Core
   - RNCClipboard (1.5.1):
     - React-Core
+  - RNCMaskedView (0.2.8):
+    - React-Core
   - RNDeviceInfo (6.0.1):
     - React
-  - RNGestureHandler (2.3.2):
+  - RNGestureHandler (2.8.0):
     - React-Core
   - RNKeychain (7.0.0):
     - React-Core
   - RNPermissions (3.3.1):
-    - React-Core
-  - RNReanimated (1.13.4):
     - React-Core
   - RNScreens (3.1.0):
     - React-Core
@@ -399,11 +399,11 @@ DEPENDENCIES:
   - RNBootSplash (from `../node_modules/react-native-bootsplash`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNCClipboard (from `../node_modules/@react-native-community/clipboard`)"
+  - "RNCMaskedView (from `../node_modules/@react-native-masked-view/masked-view`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNKeychain (from `../node_modules/react-native-keychain`)
   - RNPermissions (from `../node_modules/react-native-permissions`)
-  - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - "RNSentry (from `../node_modules/@sentry/react-native`)"
   - RNSVG (from `../node_modules/react-native-svg`)
@@ -513,6 +513,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-async-storage/async-storage"
   RNCClipboard:
     :path: "../node_modules/@react-native-community/clipboard"
+  RNCMaskedView:
+    :path: "../node_modules/@react-native-masked-view/masked-view"
   RNDeviceInfo:
     :path: "../node_modules/react-native-device-info"
   RNGestureHandler:
@@ -521,8 +523,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-keychain"
   RNPermissions:
     :path: "../node_modules/react-native-permissions"
-  RNReanimated:
-    :path: "../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../node_modules/react-native-screens"
   RNSentry:
@@ -585,11 +585,11 @@ SPEC CHECKSUMS:
   RNBootSplash: 8ef5ffa03dadd35f66510b42960ce40f397c98bf
   RNCAsyncStorage: 8616bd5a58af409453ea4e1b246521bb76578d60
   RNCClipboard: 41d8d918092ae8e676f18adada19104fa3e68495
+  RNCMaskedView: bc0170f389056201c82a55e242e5d90070e18e5a
   RNDeviceInfo: 6dd5c07a482f2a5e4a29fe8a9d99eadd4277175a
-  RNGestureHandler: 6e757e487a4834e7280e98e9bac66d2d9c575e9c
+  RNGestureHandler: 62232ba8f562f7dea5ba1b3383494eb5bf97a4d3
   RNKeychain: f75b8c8b2f17d3b2aa1f25b4a0ac5b83d947ff8f
   RNPermissions: 34d678157c800b25b22a488e4d8babb57456e796
-  RNReanimated: c1b56d030d1616239861534d9adb531f8cffab68
   RNScreens: 3ba2198ca3179f77f6158425fc31ba3c90a0d49f
   RNSentry: f8c14c77e400a93331b38538f735c2538f8108a8
   RNSVG: 6c8e8c6f9e5a0caf910dd25aa6e4216045426e1d
