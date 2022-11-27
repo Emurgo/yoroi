@@ -23,9 +23,9 @@ export const UnusedAddresses = () => {
         <Text style={styles.heading}>{strings.verifyAddress}</Text>
       </Header>
 
-      {addresses.unused.map((address, index) => (
-        <React.Fragment key={address}>
-          <UnusedAddress address={address} onPress={() => setAddress(address)} />
+      {addresses.unused.map((unusedAddress, index) => (
+        <React.Fragment key={unusedAddress}>
+          <UnusedAddress address={unusedAddress} onPress={() => setAddress(unusedAddress)} />
           {index !== addresses.unused.length - 1 && <Spacer height={16} />}
         </React.Fragment>
       ))}
@@ -46,9 +46,9 @@ export const UsedAddresses = () => {
         <Text style={styles.heading}>{strings.usedAddresses}</Text>
       </Header>
 
-      {addresses.used.map((address, index) => (
-        <React.Fragment key={address}>
-          <UsedAddress address={address} onPress={() => setAddress(address)} />
+      {addresses.used.map((usedAddress, index) => (
+        <React.Fragment key={usedAddress}>
+          <UsedAddress address={usedAddress} onPress={() => setAddress(usedAddress)} />
           {index !== addresses.used.length - 1 && <Spacer height={16} />}
         </React.Fragment>
       ))}

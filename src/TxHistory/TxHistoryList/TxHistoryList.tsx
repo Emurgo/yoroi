@@ -70,7 +70,7 @@ export const useRemountOnFocusHack = () => {
     }
 
     const unsubscribe = navigation.addListener('focus', () => {
-      setKey((key) => key + 1)
+      setKey((state) => state + 1)
     })
 
     return unsubscribe

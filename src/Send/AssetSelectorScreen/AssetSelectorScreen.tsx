@@ -29,9 +29,9 @@ export const AssetSelectorScreen = () => {
   const navigation = useNavigation<TxHistoryRouteNavigation>()
   const {tokenSelected, allTokensSelected} = useSend()
 
-  const onChangeMatcher = (matcher: string) => {
+  const onChangeMatcher = (normalizedText: string) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-    setMatcher(matcher)
+    setMatcher(normalizedText)
   }
 
   const sortedBalance: Array<[TokenId, Quantity]> = Object.entries(balances)

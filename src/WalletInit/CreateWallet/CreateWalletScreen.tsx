@@ -18,8 +18,8 @@ export const CreateWalletScreen = () => {
   const [visibleMnemonicExplanation, setVisibleMnemonicExplanation] = React.useState(false)
   const [formData, _setFormData] = React.useState<WalletFormData>(null)
 
-  const setFormData = (formData: WalletFormData) => {
-    _setFormData(formData)
+  const setFormData = (newFormData: WalletFormData) => {
+    _setFormData(newFormData)
     setVisibleMnemonicExplanation(true)
   }
 

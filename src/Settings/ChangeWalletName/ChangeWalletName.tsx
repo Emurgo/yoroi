@@ -49,7 +49,7 @@ export const ChangeWalletName = () => {
           autoFocus
           label={strings.walletNameInputLabel}
           value={newWalletName}
-          onChangeText={(walletName: string) => setNewWalletName(walletName.trim())}
+          onChangeText={(name: string) => setNewWalletName(name.trim())}
           errorText={!isEmptyString(errorText) ? errorText : undefined}
           autoComplete="off"
         />

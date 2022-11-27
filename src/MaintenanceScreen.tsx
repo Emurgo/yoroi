@@ -20,7 +20,6 @@ type Props = {
 
 type State = {appState?: string}
 
-// eslint-disable-next-line react-prefer-function-component/react-prefer-function-component
 class MaintenanceModal extends React.Component<Props, State> {
   state = {
     appState: AppState.currentState,

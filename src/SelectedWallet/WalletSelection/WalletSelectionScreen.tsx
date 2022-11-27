@@ -25,7 +25,7 @@ export const WalletSelectionScreen = () => {
   const {resetToWalletSelection, navigateToTxHistory} = useWalletNavigation()
   const walletManager = useWalletManager()
   const {walletMetas, isFetching, refetch} = useWalletMetas(walletManager, {
-    select: (walletMetas) => walletMetas.sort(byName),
+    select: (metas) => metas.sort(byName),
   })
   const selectWalletMeta = useSetSelectedWalletMeta()
   const selectWallet = useSetSelectedWallet()
