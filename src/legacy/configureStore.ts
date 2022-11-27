@@ -32,6 +32,7 @@ export const getConfiguredStore = (useMockState = false, storybook = false, mock
   }
 
   // When not running devtools, use regular compose
+  // @ts-ignore
   const composeEnhancers = ((window as any).__DEV__ && (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose
 
   const store = createStore<State, GenericAction<State, any>, Dispatch, unknown>(

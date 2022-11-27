@@ -65,7 +65,8 @@ export const DeveloperScreen = () => {
           <Button
             key={route.path}
             style={styles.button}
-            onPress={() => navigation.navigate(route.path)}
+            // https://github.com/react-navigation/react-navigation/issues/10802
+            onPress={() => navigation.navigate(route.path as any)}
             title={route.label}
           />
         ))}

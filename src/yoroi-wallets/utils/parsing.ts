@@ -35,7 +35,7 @@ export const parseAmountDecimal = (amount: string, token: Token): BigNumber => {
     throw new InvalidAssetAmount(InvalidAssetAmount.ERROR_CODES.INVALID_AMOUNT)
   }
 
-  if (parsed.decimalPlaces() > numberOfDecimals) {
+  if (Number(parsed.decimalPlaces()) > numberOfDecimals) {
     throw new InvalidAssetAmount(InvalidAssetAmount.ERROR_CODES.TOO_MANY_DECIMAL_PLACES)
   }
 
