@@ -10,7 +10,7 @@ describe('EncryptedStorage', () => {
   })
 
   it('should remove inexistent key', async () => {
-    await expect(ES.remove(key)).resolves.toBeFalsy()
+    await expect(ES.remove(key)).resolves.toBeTruthy()
   })
 
   it('should throw Error(RootKey invalid) if reading an empty key', async () => {
