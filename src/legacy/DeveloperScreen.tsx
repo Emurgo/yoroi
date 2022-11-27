@@ -136,7 +136,7 @@ export const DeveloperScreen = () => {
         {wallet?.networkId !== 1 && (
           <>
             <TextInput
-              autoComplete={false}
+              autoComplete="off"
               editable
               maxLength={8096}
               multiline

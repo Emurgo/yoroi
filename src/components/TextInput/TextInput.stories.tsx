@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
 storiesOf('TextInput', module)
   .addDecorator((story) => <View style={styles.container}>{story()}</View>)
   .add('with label', () => (
-    <TextInput autoFocus label="This is a label" onChangeText={action('onChangeText')} autoComplete={false} />
+    <TextInput autoFocus label="This is a label" onChangeText={action('onChangeText')} autoComplete="off" />
   ))
   .add('secure entry', () => (
     <TextInput
@@ -24,7 +24,7 @@ storiesOf('TextInput', module)
       label="secure entry"
       keyboardType={Platform.OS === 'ios' ? 'default' : 'visible-password'}
       onChangeText={action('onChangeText')}
-      autoComplete={false}
+      autoComplete="off"
     />
   ))
   .add('secure entry, with checkmark', () => (
@@ -35,7 +35,7 @@ storiesOf('TextInput', module)
       secureTextEntry
       keyboardType={Platform.OS === 'ios' ? 'default' : 'visible-password'}
       onChangeText={action('onChangeText')}
-      autoComplete={false}
+      autoComplete="off"
     />
   ))
   .add('with error', () => (
@@ -44,7 +44,7 @@ storiesOf('TextInput', module)
       label="with error"
       onChangeText={action('onChangeText')}
       errorText="This is what an error text look like"
-      autoComplete={false}
+      autoComplete="off"
     />
   ))
   .add('with error, with label', () => (
@@ -53,7 +53,7 @@ storiesOf('TextInput', module)
       label="with error, with label"
       onChangeText={action('onChangeText')}
       errorText="error text"
-      autoComplete={false}
+      autoComplete="off"
     />
   ))
   .add('numeric entry', () => (
@@ -62,7 +62,7 @@ storiesOf('TextInput', module)
       label="numeric input"
       keyboardType="numeric"
       onChangeText={action('onChangeText')}
-      autoComplete={false}
+      autoComplete="off"
     />
   ))
   .add('prefilled', () => (
@@ -71,7 +71,7 @@ storiesOf('TextInput', module)
       label="prefilled"
       value="prefilled"
       onChangeText={action('onChangeText')}
-      autoComplete={false}
+      autoComplete="off"
     />
   ))
   .add('disabled', () => (
@@ -81,7 +81,7 @@ storiesOf('TextInput', module)
       value="prefilled value"
       disabled
       onChangeText={action('onChangeText')}
-      autoComplete={false}
+      autoComplete="off"
     />
   ))
   .add('with helper text', () => (
@@ -90,7 +90,7 @@ storiesOf('TextInput', module)
       label="with helper text"
       onChangeText={action('onChangeText')}
       helperText="This is what helper text looks like"
-      autoComplete={false}
+      autoComplete="off"
     />
   ))
   .add('with helper text and error text', () => (
@@ -100,6 +100,6 @@ storiesOf('TextInput', module)
       onChangeText={action('onChangeText')}
       helperText="This is what helper text looks like"
       errorText="This is what an error looks likes"
-      autoComplete={false}
+      autoComplete="off"
     />
   ))

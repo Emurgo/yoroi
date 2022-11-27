@@ -159,7 +159,7 @@ export const SendScreen = () => {
           onChangeText={receiverChanged}
           label={strings.addressInputLabel}
           errorText={getAddressErrorText(intl, addressErrors)}
-          autoComplete={false}
+          autoComplete="off"
           testID="addressInput"
         />
 
@@ -192,7 +192,7 @@ export const SendScreen = () => {
             editable={false}
             label={strings.asset}
             value={`${assetDenomination}: ${formatTokenAmount(new BigNumber(selectedAssetAvailableAmount), tokenInfo)}`}
-            autoComplete={false}
+            autoComplete="off"
           />
         </TouchableOpacity>
 

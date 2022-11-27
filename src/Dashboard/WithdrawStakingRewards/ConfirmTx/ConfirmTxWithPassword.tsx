@@ -45,7 +45,7 @@ export const ConfirmTxWithPassword = ({wallet, onSuccess, onCancel, unsignedTx}:
         <TransferSummary wallet={wallet} unsignedTx={unsignedTx} />
 
         <PasswordInput
-          autoComplete={false}
+          autoComplete="off"
           autoFocus
           onChangeText={setPassword}
           secureTextEntry
