@@ -38,12 +38,7 @@ const WalletTabNavigator = () => {
           name="history"
           component={TxHistoryNavigator}
           options={{
-            tabBarIcon: ({focused}) => (
-              <Icon.TabWallet
-                size={24}
-                color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
-              />
-            ),
+            tabBarIcon: TabWalletIcon,
             tabBarLabel: strings.walletTabBarLabel,
             tabBarTestID: 'walletTabBarButton',
           }}
@@ -54,12 +49,7 @@ const WalletTabNavigator = () => {
             name="staking-dashboard"
             component={DashboardNavigator}
             options={{
-              tabBarIcon: ({focused}) => (
-                <Icon.TabStaking
-                  size={24}
-                  color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
-                />
-              ),
+              tabBarIcon: TabStakingIcon,
               tabBarLabel: strings.stakingButton,
               tabBarTestID: 'stakingTabBarButton',
             }}
@@ -70,7 +60,7 @@ const WalletTabNavigator = () => {
           name="menu"
           component={MenuNavigator}
           options={{
-            tabBarIcon: ({focused}) => <Icon.Menu size={28} color={focused ? '#17d1aa' : '#A7AFC0'} />,
+            tabBarIcon: TabMenuIcon,
             tabBarLabel: strings.menuTabBarLabel,
             tabBarTestID: 'menuTabBarButton',
           }}
@@ -79,6 +69,14 @@ const WalletTabNavigator = () => {
     </>
   )
 }
+
+const TabWalletIcon = ({focused}: {focused: Boolean}) => (
+  <Icon.TabWallet size={24} color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE} />
+)
+const TabMenuIcon = ({focused}: {focused: Boolean}) => <Icon.Menu size={28} color={focused ? '#17d1aa' : '#A7AFC0'} />
+const TabStakingIcon = ({focused}: {focused: Boolean}) => (
+  <Icon.Menu size={28} color={focused ? '#17d1aa' : '#A7AFC0'} />
+)
 
 const Stack = createStackNavigator<WalletStackRoutes>()
 export const WalletNavigator = () => (

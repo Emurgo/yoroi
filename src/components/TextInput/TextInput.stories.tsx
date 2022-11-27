@@ -66,13 +66,7 @@ storiesOf('TextInput', module)
     />
   ))
   .add('prefilled', () => (
-    <TextInput
-      autoFocus
-      label="prefilled"
-      value="prefilled"
-      onChangeText={action('onChangeText')}
-      autoComplete="off"
-    />
+    <TextInput autoFocus label="prefilled" value="prefilled" onChangeText={action('onChangeText')} autoComplete="off" />
   ))
   .add('disabled', () => (
     <TextInput

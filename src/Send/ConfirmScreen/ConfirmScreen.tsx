@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {RouteProp, useRoute} from '@react-navigation/native'
 import {BigNumber} from 'bignumber.js'
 import React, {useEffect, useRef} from 'react'

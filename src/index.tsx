@@ -45,7 +45,6 @@ LogBox.ignoreLogs([
   https://github.com/facebook/react-native/issues/19490
   https://github.com/facebook/react-native/issues/17972
 */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 global.Promise = bluebird as any
 
 const cache = createIntlCache()

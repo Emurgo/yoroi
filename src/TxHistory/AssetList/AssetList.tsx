@@ -61,13 +61,15 @@ export const AssetList = ({onScrollUp, onScrollDown, ...props}: Props) => {
             <AssetItem amount={amount} />
           </Boundary>
         )}
-        ItemSeparatorComponent={() => <Spacer height={16} />}
+        ItemSeparatorComponent={Separator}
         contentContainerStyle={{paddingTop: 16, paddingHorizontal: 16}}
         keyExtractor={(item) => item.tokenId}
       />
     </SafeAreaView>
   )
 }
+
+const Separator = () => <Spacer height={16} />
 
 type AssetItemProps = {
   amount: YoroiAmount

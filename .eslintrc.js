@@ -21,6 +21,8 @@ module.exports = {
     'react-native/no-unused-styles': 2,
     '@typescript-eslint/no-unused-vars': ['error', {argsIgnorePattern: '^_', varsIgnorePattern: '^_'}],
     '@typescript-eslint/no-explicit-any': 'error',
+    'dot-notation': 0,
+    'no-console': 'error',
   },
 }
 

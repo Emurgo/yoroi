@@ -27,10 +27,8 @@ export const FadeIn = ({
       useNativeDriver: true,
     }).start(() => onEnd?.())
 
-    // eslint-disable-next-line consistent-return
     return () => clearTimeout(timeout)
   }, [opacity, onStart, onEnd, delay, fadeDuration])
 
-  // eslint-disable-next-line react-native/no-inline-styles
   return <Animated.View style={[{opacity}, style]}>{children}</Animated.View>
 }

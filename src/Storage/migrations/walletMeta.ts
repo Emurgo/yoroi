@@ -99,8 +99,7 @@ export async function migrateWalletMetas(currentWalletMetas: Array<Partial<Walle
 }
 
 function migrateAttribute(attr: keyof WalletMeta, walletMetaUpdated: Partial<WalletMeta>): Promise<void> {
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const id = walletMetaUpdated!.id
+  const id = walletMetaUpdated.id
   Logger.warn(`migrateAttribute::${attr} of wallet ${id}`)
   return storage.write(`/wallet/${id}`, walletMetaUpdated)
 }

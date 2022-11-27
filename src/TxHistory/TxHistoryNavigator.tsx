@@ -31,8 +31,12 @@ export const TxHistoryNavigator = () => {
 
   const walletName = useWalletName(wallet)
   const [modalInfoState, setModalInfoState] = React.useState(false)
-  const showModalInfo = () => setModalInfoState(true)
   const hideModalInfo = () => setModalInfoState(false)
+
+  const ModalInfoButton = React.useCallback(
+    () => <ModalInfoIconButton onPress={() => setModalInfoState(true)} style={styles.modalInfo} />,
+    [],
+  )
 
   return (
     <SendProvider key={wallet.id} wallet={wallet}>
@@ -48,7 +52,7 @@ export const TxHistoryNavigator = () => {
           options={{
             ...defaultStackNavigationOptionsV2,
             title: walletName ?? '',
-            headerRight: () => <HeaderRightHistory />,
+            headerRight: HeaderRightHistory,
           }}
         />
 
@@ -66,7 +70,7 @@ export const TxHistoryNavigator = () => {
           options={{
             ...defaultStackNavigationOptionsV2,
             title: strings.receiveTitle,
-            headerRight: () => <ModalInfoIconButton onPress={showModalInfo} style={styles.modalInfo} />,
+            headerRight: ModalInfoButton,
             headerStyle: {
               elevation: 0,
               shadowOpacity: 0,
@@ -79,7 +83,7 @@ export const TxHistoryNavigator = () => {
           name="send"
           options={{
             title: strings.sendTitle,
-            headerRight: () => <ScannerButton />,
+            headerRight: ScannerButton,
           }}
         >
           {() => (

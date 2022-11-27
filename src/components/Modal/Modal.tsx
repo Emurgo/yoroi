@@ -26,7 +26,6 @@ type Props = {
   showCloseIcon?: boolean
   noPadding?: boolean
   title?: string
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 }
 
 type NavigationHookProp = {
@@ -43,7 +42,6 @@ type State = {
 // Warning: This means that children components are unmounted
 // while on different screen and therefore should not keep any
 // important state!
-// eslint-disable-next-line react-prefer-function-component/react-prefer-function-component
 class ModalClassComponent extends React.Component<Props & NavigationHookProp, State> {
   state = {
     isFocused: true,

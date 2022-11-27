@@ -123,7 +123,7 @@ export const SendScreen = () => {
   }
 
   const handleConfirm = async () => {
-    if (isValid == false || recomputing || yoroiUnsignedTx == null) return
+    if (isValid === false || recomputing || yoroiUnsignedTx == null) return
 
     setShowSendAllWarning(false)
 

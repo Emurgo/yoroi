@@ -1,5 +1,5 @@
 import React from 'react'
-import {FlatList, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
+import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {useLanguage} from '../../i18n'
 import {COLORS} from '../../theme'
@@ -24,7 +24,7 @@ export const LanguagePicker = () => {
             {languageCode === code && <Icon.Check size={24} color={COLORS.SHELLEY_BLUE} />}
           </TouchableOpacity>
         )}
-        ItemSeparatorComponent={() => <HR />}
+        ItemSeparatorComponent={HR}
         keyExtractor={(item) => item.code}
       />
 
@@ -33,7 +33,7 @@ export const LanguagePicker = () => {
   )
 }
 
-const HR = (props: ViewProps) => <View {...props} style={styles.hr} />
+const HR = () => <View style={styles.hr} />
 
 const styles = StyleSheet.create({
   languagePicker: {

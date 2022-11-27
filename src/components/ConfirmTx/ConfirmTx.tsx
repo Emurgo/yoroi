@@ -162,13 +162,11 @@ export const ConfirmTx = ({
           if (err instanceof LocalizableError) {
             showError({
               errorMessage: strings.errorMessage(err),
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               errorLogs: (err as any).values?.response,
             })
           } else {
             showError({
               errorMessage: strings.generalTxErrorMessage,
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               errorLogs: (err as any).message,
             })
           }
@@ -183,7 +181,6 @@ export const ConfirmTx = ({
         } else {
           showError({
             errorMessage: strings.generalTxErrorMessage,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             errorLogs: (err as any).message,
           })
         }
