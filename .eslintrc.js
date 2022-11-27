@@ -15,6 +15,8 @@ module.exports = {
   ],
   rules: {
     'react/sort-comp': [2, {order: ['instance-variables', 'lifecycle', 'everything-else', 'render']}],
+    'simple-import-sort/exports': 'error',
+    'simple-import-sort/imports': 'error',
     '@typescript-eslint/no-unused-vars': ['error', {argsIgnorePattern: '^_', varsIgnorePattern: '^_'}],
   },
 }
