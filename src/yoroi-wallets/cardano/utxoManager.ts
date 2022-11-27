@@ -3,11 +3,11 @@ import {initUtxo} from '@emurgo/yoroi-lib'
 import {Utxo, UtxoAtSafePoint, UtxoDiffToBestBlock} from '@emurgo/yoroi-lib/dist/utxo/models'
 import {parseInt} from 'lodash'
 
-import storage from '../../legacy/storage'
+import legacyStorage from '../../legacy/storage'
 import {makeStorageWithPrefix} from '../storage'
 import {RawUtxo} from '../types'
 
-type Storage = typeof storage
+type Storage = typeof legacyStorage
 export type UtxoStorageItem = {
   utxoAtSafePoint: UtxoAtSafePoint
   utxoDiffToBestBlock: UtxoDiffToBestBlock[]

@@ -33,7 +33,7 @@ export const Entries = {
 
 export const Amounts = {
   sum: (amounts: Array<YoroiAmounts>): YoroiAmounts => {
-    const entries = amounts.map((amounts) => Object.entries(amounts)).flat()
+    const entries = amounts.map((amountsRecord) => Object.entries(amountsRecord)).flat()
 
     return entries.reduce(
       (result, [tokenId, quantity]) => ({

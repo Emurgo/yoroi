@@ -17,8 +17,12 @@ export const yoroiUnsignedTx = async ({
   const fee = toAmounts(unsignedTx.fee.values)
   const change = toEntries(
     await Promise.all(
-      unsignedTx.change.map((change) =>
-        toDisplayAddress(change.address).then((address) => ({...change, address, value: change.values})),
+      unsignedTx.change.map((changeRecord) =>
+        toDisplayAddress(changeRecord.address).then((address) => ({
+          ...changeRecord,
+          address,
+          value: changeRecord.values,
+        })),
       ),
     ),
   )
@@ -121,7 +125,7 @@ const Staking = {
       const amount = (await withdrawals.get(rewardAddress).then((x) => x.toStr())) as Quantity
       const address = await rewardAddress
         .toAddress()
-        .then((address) => address.toBytes())
+        .then((wasmAddress) => wasmAddress.toBytes())
         .then((bytes) => Buffer.from(bytes).toString('hex'))
 
       result[address] = {'': amount}
@@ -142,7 +146,7 @@ const Staking = {
         .stakeCredential()
         .then((stakeCredential) => CardanoMobile.RewardAddress.new(NETWORK_ID, stakeCredential))
         .then((rewardAddress) => rewardAddress.toAddress())
-        .then((address) => address.toBytes())
+        .then((wasmAddress) => wasmAddress.toBytes())
         .then((bytes) => Buffer.from(bytes).toString('hex'))
 
       return {
@@ -163,7 +167,7 @@ const Staking = {
         .stakeCredential()
         .then((stakeCredential) => CardanoMobile.RewardAddress.new(NETWORK_ID, stakeCredential))
         .then((rewardAddress) => rewardAddress.toAddress())
-        .then((address) => address.toBytes())
+        .then((wasmAddress) => wasmAddress.toBytes())
         .then((bytes) => Buffer.from(bytes).toString('hex'))
 
       return {
@@ -213,13 +217,13 @@ export const toDisplayAddress = async (address: string) => {
     isEnterpriseAddressHex(address) ||
     isPointerAddressHex(address)
   ) {
-    return CardanoMobile.Address.fromBytes(Buffer.from(address, 'hex')).then((address) => address.toBech32())
+    return CardanoMobile.Address.fromBytes(Buffer.from(address, 'hex')).then((wasmAddress) => wasmAddress.toBech32())
   }
 
   if (isByronAddressHex(address)) {
     return CardanoMobile.Address.fromBytes(Buffer.from(address, 'hex'))
-      .then((address) => CardanoMobile.ByronAddress.fromAddress(address))
-      .then((address) => address.toBase58())
+      .then((wasmAddress) => CardanoMobile.ByronAddress.fromAddress(wasmAddress))
+      .then((byronAddress) => byronAddress.toBase58())
   }
 
   return address
