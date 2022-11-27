@@ -198,32 +198,32 @@ export const processTxHistoryData = (
   // included in own utxo outputs
   const delta = _sum(ownUtxoOutputs, networkId).joinSubtractMutable(_sum(ownUtxoInputs, networkId))
 
-  let amount
+  let txAmount
   let fee
   const remoteFee = tx.fee != null ? _strToDefaultMultiAsset(new BigNumber(tx.fee).times(-1).toString()) : null
   let direction
 
   if (isInvalidScriptExecution) {
     direction = TRANSACTION_DIRECTION.SELF
-    amount = brutto
+    txAmount = brutto
     // NOTE: the collateral is the fee when it has failed
     fee = null
   } else if (isIntraWallet) {
     direction = TRANSACTION_DIRECTION.SELF
-    amount = _strToDefaultMultiAsset('0')
+    txAmount = _strToDefaultMultiAsset('0')
     fee = remoteFee ?? totalFee
   } else if (isMultiParty) {
     direction = TRANSACTION_DIRECTION.MULTI
-    amount = brutto
+    txAmount = brutto
     fee = null
   } else if (hasOnlyOwnInputs) {
     direction = TRANSACTION_DIRECTION.SENT
-    amount = brutto.joinSubtractMutable(totalFee)
+    txAmount = brutto.joinSubtractMutable(totalFee)
     fee = remoteFee ?? totalFee
   } else {
     assert.assert(ownInputs.length === 0, 'This cannot be receiving transaction')
     direction = TRANSACTION_DIRECTION.RECEIVED
-    amount = brutto
+    txAmount = brutto
     fee = null
   }
 
@@ -248,7 +248,7 @@ export const processTxHistoryData = (
       amount,
       assets: assets.map(_remoteAssetAsTokenEntry),
     })),
-    amount: amount.asArray(),
+    amount: txAmount.asArray(),
     fee: fee != null ? fee.asArray() : null,
     delta: delta.asArray(),
     confirmations,

@@ -757,7 +757,7 @@ export class ShelleyWallet implements WalletInterface {
 
       const absSlotNumber = new BigNumber(timeToSlotFn({time}).slot)
       const votingPublicKey = await Promise.resolve(Buffer.from(catalystKeyHex, 'hex'))
-        .then((bytes) => CardanoMobile.PrivateKey.fromExtendedBytes(bytes))
+        .then((keyInBytes) => CardanoMobile.PrivateKey.fromExtendedBytes(keyInBytes))
         .then((key) => key.toPublic())
       const stakingKeyPath = this.getStakingKeyPath()
       const stakingPublicKey = await this.getStakingKey()

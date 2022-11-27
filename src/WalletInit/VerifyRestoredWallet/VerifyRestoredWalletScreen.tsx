@@ -137,6 +137,23 @@ const useStrings = () => {
   }
 }
 
+const getPlate = async (
+  walletImplementationId: WalletImplementationId,
+  networkId: NetworkId,
+  mnemonic: string,
+  count: number,
+) => {
+  switch (walletImplementationId) {
+    case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY:
+    case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY_24:
+      return generateShelleyPlateFromMnemonics(mnemonic, count, networkId)
+    case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON:
+      return generateByronPlateFromMnemonics(mnemonic, count)
+    default:
+      throw new Error('wallet implementation id is not valid')
+  }
+}
+
 const usePlateFromMnemonic = ({
   mnemonic,
   networkId,
@@ -150,26 +167,9 @@ const usePlateFromMnemonic = ({
   const [plate, setPlate] = useState<undefined | CardanoTypes.WalletChecksum>(undefined)
 
   useEffect(() => {
-    const getPlate = async (
-      walletImplId: WalletImplementationId,
-      networkId: NetworkId,
-      mnemonic: string,
-      count: number,
-    ) => {
-      switch (walletImplId) {
-        case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY:
-        case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY_24:
-          return generateShelleyPlateFromMnemonics(mnemonic, count, networkId)
-        case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON:
-          return generateByronPlateFromMnemonics(mnemonic, count)
-        default:
-          throw new Error('wallet implementation id is not valid')
-      }
-    }
-
     const generatePlates = async () => {
-      const {addresses, accountPlate} = await getPlate(walletImplementationId, networkId, mnemonic, 1)
-      setAddresses(addresses)
+      const {addresses: newAddresses, accountPlate} = await getPlate(walletImplementationId, networkId, mnemonic, 1)
+      setAddresses(newAddresses)
       setPlate(accountPlate)
     }
 

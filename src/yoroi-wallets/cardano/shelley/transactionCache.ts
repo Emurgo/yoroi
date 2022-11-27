@@ -487,7 +487,7 @@ const makeTxCacheStorage = (storage: Storage): TxCacheStorage => ({
     return tuples.reduce((result: TransactionCacheState['transactions'], [txid, txData]) => {
       const tx = parseTx(txData)
       if (!tx) {
-        console.warn('corrupted transaction', {txid})
+        Logger.warn('corrupted transaction', {txid})
         return result
       }
 
@@ -521,24 +521,24 @@ const parseTxids = (data: string | null | undefined) => {
   return isTxids(txids) ? txids : []
 }
 
+const isTx = (data: unknown): data is Transaction => {
+  const tx = data as Transaction
+
+  return (
+    exists(tx) &&
+    isObject(tx) &&
+    isString(tx.id) &&
+    isString(tx.status) &&
+    isString(tx.lastUpdatedAt) &&
+    isArray(tx.inputs) &&
+    isArray(tx.outputs) &&
+    isArray(tx.certificates) &&
+    isArray(tx.withdrawals)
+  )
+}
+
 const parseTx = (data: string | null | undefined): Transaction | undefined => {
   if (!data) return
-
-  const isTx = (data: unknown): data is Transaction => {
-    const tx = data as Transaction
-
-    return (
-      exists(tx) &&
-      isObject(tx) &&
-      isString(tx.id) &&
-      isString(tx.status) &&
-      isString(tx.lastUpdatedAt) &&
-      isArray(tx.inputs) &&
-      isArray(tx.outputs) &&
-      isArray(tx.certificates) &&
-      isArray(tx.withdrawals)
-    )
-  }
 
   const tx = parse(data)
   return isTx(tx) ? tx : undefined

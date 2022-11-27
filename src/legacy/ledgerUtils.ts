@@ -376,7 +376,7 @@ export const verifyAddress = async (
       }
     }
 
-    const addressingMap = (address) => stakingKeyAddressing[address]
+    const addressingMap = (stakeAddress) => stakingKeyAddressing[stakeAddress]
 
     const addressParams = await toLedgerAddressParameters({
       networkId: Number.parseInt(chainNetworkId, 10),

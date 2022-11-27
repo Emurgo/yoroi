@@ -63,26 +63,39 @@ export const PinInputKeyboard = ({onPinChange, pinLength}: Props) => {
   return (
     <View style={styles.keyboard}>
       <Row>
-        {keyboard[0].map((value) => (
-          <KeyboardKey key={value} value={value} onKeyDown={(value) => processPin(pin, updatePin, pinLength, value)} />
+        {keyboard[0].map((digit) => (
+          <KeyboardKey
+            key={digit}
+            value={digit}
+            onKeyDown={(newDigit) => processPin(pin, updatePin, pinLength, newDigit)}
+          />
         ))}
       </Row>
-
       <Row>
-        {keyboard[1].map((value) => (
-          <KeyboardKey key={value} value={value} onKeyDown={(value) => processPin(pin, updatePin, pinLength, value)} />
+        {keyboard[1].map((digit) => (
+          <KeyboardKey
+            key={digit}
+            value={digit}
+            onKeyDown={(newDigit) => processPin(pin, updatePin, pinLength, newDigit)}
+          />
         ))}
       </Row>
-
       <Row>
-        {keyboard[2].map((value) => (
-          <KeyboardKey key={value} value={value} onKeyDown={(value) => processPin(pin, updatePin, pinLength, value)} />
+        {keyboard[2].map((digit) => (
+          <KeyboardKey
+            key={digit}
+            value={digit}
+            onKeyDown={(newDigit) => processPin(pin, updatePin, pinLength, newDigit)}
+          />
         ))}
       </Row>
-
       <Row>
-        {keyboard[3].map((value) => (
-          <KeyboardKey key={value} value={value} onKeyDown={(value) => processPin(pin, updatePin, pinLength, value)} />
+        {keyboard[3].map((digit) => (
+          <KeyboardKey
+            key={digit}
+            value={digit}
+            onKeyDown={(newDigit) => processPin(pin, updatePin, pinLength, newDigit)}
+          />
         ))}
       </Row>
     </View>

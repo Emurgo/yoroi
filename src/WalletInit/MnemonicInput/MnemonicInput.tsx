@@ -66,7 +66,7 @@ const MnemonicWordsInput = ({onSelect, words}: MnemonicWordsInputProps) => {
       style={{padding: 4, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-around'}}
       testID="mnemonicInputsView"
     >
-      {words.map((word, index) => (
+      {words.map((_, index) => (
         <View
           key={index}
           style={{width: '33%', padding: 4}}
@@ -105,9 +105,9 @@ const MnemonicWordInput = React.forwardRef<RNTextInput, MnemonicWordInputProps>(
   const [menuEnabled, setMenuEnabled] = React.useState(false)
   const dateTime = React.useRef<number>()
 
-  const selectWord = (word: string) => {
-    setWord(normalizeText(word))
-    onSelect(normalizeText(word))
+  const selectWord = (selectedWord: string) => {
+    setWord(normalizeText(selectedWord))
+    onSelect(normalizeText(selectedWord))
 
     if (dateTime.current == null) throw new Error()
     setTimeout(() => {
@@ -136,7 +136,7 @@ const MnemonicWordInput = React.forwardRef<RNTextInput, MnemonicWordInputProps>(
             setMenuEnabled(true)
             dateTime.current = Date.now()
           }}
-          onChangeText={(word) => setWord(normalizeText(word))}
+          onChangeText={(newWord) => setWord(normalizeText(newWord))}
           enablesReturnKeyAutomatically
           blurOnSubmit={false}
           onSubmitEditing={onSubmitEditing}
@@ -155,8 +155,13 @@ const MnemonicWordInput = React.forwardRef<RNTextInput, MnemonicWordInputProps>(
       }}
     >
       <ScrollView style={styles.menuScrollView} keyboardShouldPersistTaps="always">
-        {matchingWords.map((word) => (
-          <Menu.Item titleStyle={styles.menuItemText} key={word} title={word} onPress={() => selectWord(word)} />
+        {matchingWords.map((mactchingWord) => (
+          <Menu.Item
+            titleStyle={styles.menuItemText}
+            key={mactchingWord}
+            title={mactchingWord}
+            onPress={() => selectWord(mactchingWord)}
+          />
         ))}
       </ScrollView>
     </Menu>

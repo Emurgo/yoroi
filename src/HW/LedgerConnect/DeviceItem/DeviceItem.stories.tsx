@@ -12,10 +12,10 @@ const device: Device = {
 
 const doTheThing = () => new Promise((resolve) => setTimeout(resolve, 1000))
 
-const onSelect = async (device) => {
-  action('onSelect start')(device)
+const onSelect = async (selectedDevice) => {
+  action('onSelect start')(selectedDevice)
   await doTheThing()
-  action('onSelect end')(device)
+  action('onSelect end')(selectedDevice)
 }
 
 storiesOf('Device Item Button', module).add('default', () => <DeviceItem onSelect={onSelect} device={device} />)

@@ -6,7 +6,7 @@ import {useDispatch} from 'react-redux'
 import image from './assets/img/error.png'
 import {Button, Link, Modal, Text} from './components'
 import globalMessages from './i18n/global-messages'
-import {initApp} from './legacy/actions'
+import {initApp as initAppAction} from './legacy/actions'
 import {COLORS, spacing} from './theme'
 
 const URL = 'https://twitter.com/YoroiWallet'
@@ -71,7 +71,7 @@ export const MaintenanceScreen = () => {
       visible
       onRequestClose={() => BackHandler.exitApp()}
       intl={intl}
-      initApp={() => dispatch(initApp())}
+      initApp={() => dispatch(initAppAction())}
     />
   )
 }

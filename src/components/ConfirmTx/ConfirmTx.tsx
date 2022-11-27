@@ -88,18 +88,18 @@ export const ConfirmTx = ({
     setDialogStep(DialogStep.Error)
   }
 
-  const onConfirmationChooseTransport = (useUSB: boolean) => {
+  const onConfirmationChooseTransport = (newUseUSB: boolean) => {
     if (!wallet.hwDeviceInfo) throw new Error('No device info')
-    setUseUSB(useUSB)
+    setUseUSB(newUseUSB)
     setDialogStep(DialogStep.LedgerConnect)
   }
 
-  const onMountChooseTransport = (useUSB: boolean) => {
+  const onMountChooseTransport = (newUseUSB: boolean) => {
     if (!wallet.hwDeviceInfo) throw new Error('No device info')
-    setUseUSB(useUSB)
+    setUseUSB(newUseUSB)
     if (
-      (useUSB && wallet.hwDeviceInfo.hwFeatures.deviceObj == null) ||
-      (!useUSB && wallet.hwDeviceInfo.hwFeatures.deviceId == null)
+      (newUseUSB && wallet.hwDeviceInfo.hwFeatures.deviceObj == null) ||
+      (!newUseUSB && wallet.hwDeviceInfo.hwFeatures.deviceId == null)
     ) {
       setDialogStep(DialogStep.LedgerConnect)
     } else {

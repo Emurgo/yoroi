@@ -93,13 +93,13 @@ describe('AddressChain', () => {
     const data = chain.toJSON()
     const chain2 = AddressChain.fromJSON(data, networkId)
 
-    const used = [
+    const usedAddresses = [
       // '2cWKMJemoBaiAKW7iBFgK3prZAK3gAEgkndCUTkGpUAoRofmXJcbmie2qe6JTN44dQ2Ag', // byron testnet
       'Ae2tdPwUPEZ6ipzynAWN6atmb9LNqEogput2NrMD3Z8UL7phtQLDhrKt1bf', // byron mainnet
     ]
 
     const filter = (addresses) => {
-      return Promise.resolve(addresses.filter((addr) => used.includes(addr)))
+      return Promise.resolve(addresses.filter((addr) => usedAddresses.includes(addr)))
     }
     await chain.sync(filter)
     await chain2.sync(filter)

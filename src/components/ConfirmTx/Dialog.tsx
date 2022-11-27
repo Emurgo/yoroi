@@ -2,7 +2,7 @@ import React from 'react'
 import {useIntl} from 'react-intl'
 
 import {ErrorView, Modal, PleaseWaitView} from '../../components'
-import {LedgerConnect, LedgerTransportSwitchView} from '../../HW'
+import {LedgerConnect as LedgerConnectView, LedgerTransportSwitchView} from '../../HW'
 import globalMessages, {ledgerMessages, txLabels} from '../../i18n/global-messages'
 import type {DeviceId, DeviceObj} from '../../legacy/ledgerUtils'
 
@@ -71,7 +71,7 @@ export const DialogWithLedger = ({
           />
         )
       case Step.LedgerConnect:
-        return <LedgerConnect onConnectBLE={onConnectBLE} onConnectUSB={onConnectUSB} useUSB={useUSB} />
+        return <LedgerConnectView onConnectBLE={onConnectBLE} onConnectUSB={onConnectUSB} useUSB={useUSB} />
       case Step.WaitingHwResponse:
         return <PleaseWaitView title={strings.continueOnLedger} spinnerText={strings.followSteps} />
       case Step.Signing:

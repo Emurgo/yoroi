@@ -27,8 +27,8 @@ export const CreatePinInput = ({onDone}: Props) => {
   const [pin, setPin] = React.useState('')
   const [step, setStep] = React.useState<'pin' | 'pinConfirmation'>('pin')
 
-  const onPinInput = (pin: string) => {
-    setPin(pin)
+  const onPinInput = (newPin: string) => {
+    setPin(newPin)
     setStep('pinConfirmation')
   }
 
