@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
 import {fromPairs, mapValues, max} from 'lodash'
@@ -512,12 +511,12 @@ const makeTxCacheStorage = (storage: Storage): TxCacheStorage => ({
   },
 })
 
+const isTxids = (data: unknown): data is Array<string> =>
+  Array.isArray(data) && data.every((item: unknown) => typeof item === 'string')
+
 const parseTxids = (data: string | null | undefined) => {
   if (!data) return [] // initial
   const txids = parse(data)
-
-  const isTxids = (data: unknown): data is Array<string> =>
-    Array.isArray(data) && data.every((item: unknown) => typeof item === 'string')
 
   return isTxids(txids) ? txids : []
 }

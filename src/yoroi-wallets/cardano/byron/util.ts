@@ -72,7 +72,6 @@ export const getAddresses = async (
     await CardanoMobile.Bip32PublicKey.fromBytes(Buffer.from(account.root_cached_key, 'hex'))
   ).derive(ADDRESS_TYPE_TO_CHANGE[type])
   for (const i of indexes) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const byronAddr = await CardanoMobile.ByronAddress.icarusFromKey(await chainKeyPtr.derive(i), protocolMagic)
     const byronAddrBs58 = await byronAddr.toBase58()
     addrs.push(byronAddrBs58)

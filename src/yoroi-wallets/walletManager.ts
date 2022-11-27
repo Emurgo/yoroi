@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import ExtendableError from 'es6-error'
 import _ from 'lodash'
 import uuid from 'uuid'
@@ -253,6 +252,7 @@ export class WalletManager {
     // update the data in storage immediately
     await wallet.save()
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     wallet.subscribe((event) => this._notify(event as any))
     wallet.subscribeOnTxHistoryUpdate(this._notifyOnTxHistoryUpdate)
     this._closePromise = new Promise((resolve, reject) => {

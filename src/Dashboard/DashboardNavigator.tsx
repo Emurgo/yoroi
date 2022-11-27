@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -32,7 +31,7 @@ export const DashboardNavigator = () => {
         component={Dashboard}
         options={{
           title: walletName,
-          headerRight: () => <HeaderRight />,
+          headerRight: HeaderRight,
         }}
       />
 

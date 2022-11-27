@@ -1,6 +1,4 @@
-/* eslint-disable no-empty */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/ban-types */
 import produce from 'immer'
 import {get, isEmpty, set} from 'lodash'
 
@@ -28,8 +26,8 @@ export const mapObjToId = (data: Record<string, any>, id: number | string) => {
 }
 export const immutableSet = <S extends {}>(obj: S, path: Path | null | undefined, value: S): S =>
   path && path.length > 0
-    ? produce((obj): void => {
-        set(obj, path, value)
+    ? produce((_obj): void => {
+        set(_obj, path, value)
       })(obj) || value
     : value
 
@@ -72,19 +70,16 @@ export const normalizeToAddress = async (addr: string) => {
     }
   } catch (_e) {}
 
-  // eslint-disable-line no-empty
   // 2) If already base16, simply return
   try {
     return await CardanoMobile.Address.fromBytes(Buffer.from(addr, 'hex'))
   } catch (_e) {}
 
-  // eslint-disable-line no-empty
   // 3) Try converting from bech32
   try {
     return await CardanoMobile.Address.fromBech32(addr)
   } catch (_e) {}
 
-  // eslint-disable-line no-empty
   return undefined
 }
 

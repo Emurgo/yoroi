@@ -253,9 +253,7 @@ export type AppRoutes = {
 export type AppRouteNavigation = StackNavigationProp<AppRoutes>
 
 declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace ReactNavigation {
-    // eslint-disable-next-line @typescript-eslint/no-empty-interface
     interface RootParamList extends AppRoutes {}
   }
 }

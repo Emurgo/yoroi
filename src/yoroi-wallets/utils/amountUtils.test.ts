@@ -25,7 +25,7 @@ describe('stripInvalidCharacters', () => {
   })
 })
 
-describe('stripInvalidCharacters', () => {
+describe('stripInvalidCharacters I.e @', () => {
   it('strips all non numeric and non comma/dot chars', () => {
     expect(stripInvalidCharacters('me1@23')).toBe('123')
     expect(stripInvalidCharacters('me123,.')).toBe('123,.')

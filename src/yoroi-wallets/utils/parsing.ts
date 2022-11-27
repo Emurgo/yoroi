@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {BigNumber} from 'bignumber.js'
 import ExtendableError from 'es6-error'
 
@@ -7,6 +6,8 @@ import {isHaskellShelleyNetwork} from '../../legacy/networks'
 import {Token} from '../types'
 
 export class InvalidAssetAmount extends ExtendableError {
+  errorCode: typeof InvalidAssetAmount.ERROR_CODES[keyof typeof InvalidAssetAmount.ERROR_CODES]
+
   static ERROR_CODES = {
     // general parsing problem or amount is equal to 0
     INVALID_AMOUNT: 'INVALID_AMOUNT',
@@ -20,7 +21,7 @@ export class InvalidAssetAmount extends ExtendableError {
 
   constructor(errorCode: typeof InvalidAssetAmount.ERROR_CODES[keyof typeof InvalidAssetAmount.ERROR_CODES]) {
     super('InvalidAssetAmount')
-    ;(this as any).errorCode = errorCode
+    this.errorCode = errorCode
   }
 }
 
@@ -70,6 +71,7 @@ export const parseBoolean = (data: unknown) => {
   return isBoolean(parsed) ? parsed : undefined
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const parseSafe = (text: any) => {
   try {
     return JSON.parse(text)

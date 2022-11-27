@@ -82,7 +82,6 @@ export class AddressGenerator {
     const credential = await CardanoMobile.StakeCredential.fromKeyhash(await stakingKey.hash())
     const rewardAddr = await CardanoMobile.RewardAddress.new(parseInt(chainNetworkId, 10), credential)
     const rewardAddrAsAddr = await rewardAddr.toAddress()
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this._rewardAddressHex = Buffer.from((await rewardAddrAsAddr.toBytes()) as any, 'hex').toString('hex')
     return this._rewardAddressHex
   }
@@ -283,7 +282,6 @@ export class AddressChain {
 
     // Index relative to the start of the block
     // It is okay to "overshoot" with -1 here
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const lastUsedIdx = used.length > 0 ? block.indexOf(_.last(used)!) : -1
 
     const needsNewBlock = lastUsedIdx + this._gapLimit >= this._blockSize

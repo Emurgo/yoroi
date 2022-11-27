@@ -17,7 +17,10 @@ module.exports = {
     'react/sort-comp': [2, {order: ['instance-variables', 'lifecycle', 'everything-else', 'render']}],
     'simple-import-sort/exports': 'error',
     'simple-import-sort/imports': 'error',
+    'react-native/no-inline-styles': 0,
+    'react-native/no-unused-styles': 2,
     '@typescript-eslint/no-unused-vars': ['error', {argsIgnorePattern: '^_', varsIgnorePattern: '^_'}],
+    '@typescript-eslint/no-explicit-any': 'error',
   },
 }
 

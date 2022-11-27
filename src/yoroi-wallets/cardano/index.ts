@@ -25,7 +25,6 @@ export {RegistrationStatus} from '@emurgo/yoroi-lib'
 
 export const CardanoMobile = init()
 export {AssetOverflowError, NoOutputsError, NotEnoughMoneyToSendError} from '@emurgo/yoroi-lib/dist/errors'
-// eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace CardanoTypes {
   export type TxMetadata = TxMetadataType
   export type CardanoAddressedUtxo = CardanoAddressedUtxoType
