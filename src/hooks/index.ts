@@ -12,7 +12,7 @@ import {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {getCardanoNetworkConfigById} from '../legacy/networks'
 import {processTxHistoryData} from '../legacy/processTransactions'
 import {WalletMeta} from '../legacy/state'
-import storage from '../legacy/storage'
+import legacyStorage from '../legacy/storage'
 import {cardanoValueFromRemoteFormat} from '../legacy/utils'
 import {
   CardanoMobile,
@@ -21,7 +21,7 @@ import {
   WalletEvent,
   WalletImplementationId,
   WalletManager,
-  walletManager,
+  walletManager as walletManagerMod,
   YoroiProvider,
   YoroiWallet,
 } from '../yoroi-wallets'
@@ -91,7 +91,7 @@ export const useWallet = (wallet: YoroiWallet, event: WalletEvent['type']) => {
       if (subscriptionEvent.type !== event) return
       rerender(() => ({}))
     })
-    const unsubWalletManager = walletManager.subscribe((subscriptionEvent) => {
+    const unsubWalletManager = walletManagerMod.subscribe((subscriptionEvent) => {
       if (subscriptionEvent.type !== event) return
       rerender(() => ({}))
     })
@@ -174,7 +174,7 @@ export const useSync = (wallet: YoroiWallet, options?: UseMutationOptions<void, 
 
 export const useCloseWallet = (options: UseMutationOptions<void, Error> = {}) => {
   const mutation = useMutation({
-    mutationFn: () => walletManager.closeWallet(),
+    mutationFn: () => walletManagerMod.closeWallet(),
     ...options,
   })
 
@@ -188,7 +188,7 @@ export const useWalletName = (wallet: YoroiWallet, options?: UseQueryOptions<str
   const query = useQuery({
     queryKey: [wallet.id, 'name'],
     queryFn: async () => {
-      const walletMeta = await storage.read<WalletMeta>(`/wallet/${wallet.id}`)
+      const walletMeta = await legacyStorage.read<WalletMeta>(`/wallet/${wallet.id}`)
       if (!walletMeta) throw new Error('Invalid wallet id')
 
       return walletMeta.name
@@ -202,10 +202,10 @@ export const useWalletName = (wallet: YoroiWallet, options?: UseQueryOptions<str
 export const useChangeWalletName = (wallet: YoroiWallet, options: UseMutationOptions<void, Error, string> = {}) => {
   const mutation = useMutationWithInvalidations<void, Error, string>({
     mutationFn: async (newName) => {
-      const walletMeta = await storage.read<WalletMeta>(`/wallet/${wallet.id}`)
+      const walletMeta = await legacyStorage.read<WalletMeta>(`/wallet/${wallet.id}`)
       if (!walletMeta) throw new Error('Invalid wallet id')
 
-      return storage.write(`/wallet/${wallet.id}`, {...walletMeta, name: newName})
+      return legacyStorage.write(`/wallet/${wallet.id}`, {...walletMeta, name: newName})
     },
     invalidateQueries: [[wallet.id, 'name'], ['walletMetas']],
     ...options,
@@ -553,7 +553,7 @@ export const useHasPendingTx = (wallet: YoroiWallet) => {
 export const useOpenWallet = (options?: UseMutationOptions<[YoroiWallet, WalletMeta], Error, WalletMeta>) => {
   const mutation = useMutation({
     ...options,
-    mutationFn: async (walletMeta) => walletManager.openWallet(walletMeta),
+    mutationFn: async (walletMeta) => walletManagerMod.openWallet(walletMeta),
   })
 
   return {
@@ -579,7 +579,11 @@ export const useWalletNames = (
   }
 }
 
-export const useWalletMetas = (walletManager: WalletManager, options?: UseQueryOptions<Array<WalletMeta>, Error>) => {
+export const useWalletMetas = (
+  //
+  walletManager: WalletManager,
+  options?: UseQueryOptions<Array<WalletMeta>, Error>,
+) => {
   const query = useQuery({
     queryKey: ['walletMetas'],
     queryFn: async () => walletManager.listWallets(),
@@ -611,7 +615,7 @@ export const useHasWallets = (
 
 export const useRemoveWallet = (id: YoroiWallet['id'], options: UseMutationOptions<void, Error, void> = {}) => {
   const mutation = useMutationWithInvalidations({
-    mutationFn: () => walletManager.removeWallet(id),
+    mutationFn: () => walletManagerMod.removeWallet(id),
     invalidateQueries: [['walletMetas']],
     ...options,
   })
@@ -634,7 +638,7 @@ type CreateBip44WalletInfo = {
 export const useCreateBip44Wallet = (options?: UseMutationOptions<YoroiWallet, Error, CreateBip44WalletInfo>) => {
   const mutation = useMutationWithInvalidations<YoroiWallet, Error, CreateBip44WalletInfo>({
     mutationFn: ({name, bip44AccountPublic, networkId, implementationId, hwDeviceInfo, readOnly}) =>
-      walletManager.createWalletWithBip44Account(
+      walletManagerMod.createWalletWithBip44Account(
         name,
         bip44AccountPublic,
         networkId,
@@ -664,7 +668,7 @@ export type CreateWalletInfo = {
 export const useCreateWallet = (options?: UseMutationOptions<YoroiWallet, Error, CreateWalletInfo>) => {
   const mutation = useMutationWithInvalidations({
     mutationFn: ({name, mnemonicPhrase, password, networkId, walletImplementationId, provider}) =>
-      walletManager.createWallet(name, mnemonicPhrase, password, networkId, walletImplementationId, provider),
+      walletManagerMod.createWallet(name, mnemonicPhrase, password, networkId, walletImplementationId, provider),
     invalidateQueries: [['walletMetas']],
     ...options,
   })

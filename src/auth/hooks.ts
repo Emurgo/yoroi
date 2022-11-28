@@ -8,7 +8,7 @@ import globalMessages from '../i18n/global-messages'
 import {decryptData, encryptData} from '../legacy/commonUtils'
 import {WrongPassword} from '../legacy/errors'
 import {WalletMeta} from '../legacy/state'
-import storage from '../legacy/storage'
+import legacyStorage from '../legacy/storage'
 import {SettingsStorageKeys, Storage} from '../Storage'
 import {WalletJSON, walletManager, YoroiWallet} from '../yoroi-wallets'
 import {Keychain} from './Keychain'
@@ -178,12 +178,12 @@ export const useDisableAllEasyConfirmation = (
 }
 
 export const disableAllEasyConfirmation = () =>
-  storage
+  legacyStorage
     .keys('/wallet/', false)
     .then((keys) =>
       Promise.all([
-        storage.readMany(keys.map((walletId) => `/wallet/${walletId}`)),
-        storage.readMany(keys.map((walletId) => `/wallet/${walletId}/data`)),
+        legacyStorage.readMany(keys.map((walletId) => `/wallet/${walletId}`)),
+        legacyStorage.readMany(keys.map((walletId) => `/wallet/${walletId}/data`)),
       ]),
     )
     .then(async ([metas, wallets]) => {
@@ -203,10 +203,10 @@ export const disableAllEasyConfirmation = () =>
     })
     .then(async ([metaUpdates, walletUpdates]) => {
       for (const [key, value] of metaUpdates) {
-        await storage.write(key, value)
+        await legacyStorage.write(key, value)
       }
       for (const [key, value] of walletUpdates) {
-        await storage.write(key, value)
+        await legacyStorage.write(key, value)
       }
     })
 
