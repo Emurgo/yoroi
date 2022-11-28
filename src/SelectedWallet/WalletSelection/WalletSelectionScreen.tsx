@@ -40,6 +40,10 @@ export const WalletSelectionScreen = () => {
       selectWalletMeta(walletMeta)
       selectWallet(wallet)
 
+      // fixes modal issue
+      // https://github.com/facebook/react-native/issues/32329
+      // https://github.com/facebook/react-native/issues/33733
+      // https://github.com/facebook/react-native/issues/29319
       InteractionManager.runAfterInteractions(() => {
         navigateToTxHistory()
       })
