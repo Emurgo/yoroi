@@ -18,6 +18,7 @@ buildscript {
             url "https://plugins.gradle.org/m2/"
             google()
         }
+        mavenCentral()
     }
     dependencies {
         classpath('com.android.tools.build:gradle:4.2.2')
@@ -51,13 +52,18 @@ allprojects {
             // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
             url("$rootDir/../node_modules/react-native/android")
         }
+
         maven {
             // Android JSC is installed from npm
             url("$rootDir/../node_modules/jsc-android/dist")
         }
-        maven {
-            // All of Detox' artifacts are provided via the npm module
-            url("$rootDir/../node_modules/detox/Detox-android")
+
+        mavenCentral {
+            // We don't want to fetch react-native from Maven Central as there are
+            // older versions over there.
+            content {
+                excludeGroup "com.facebook.react"
+            }
         }
         // react-native-ble-plx setup
         // https://github.com/Polidea/react-native-ble-plx (@2.0.0)
