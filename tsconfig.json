@@ -64,19 +64,3 @@
   },
   "exclude": ["node_modules", "babel.config.js", "metro.config.js", "jest.config.js"]
 }
-// difference
-// {
-//   "compilerOptions": {
-//     "allowJs": false,
-//     "lib": ["es2017", "dom"],
-//     "types": [
-//       "react",
-//       "react-native",
-//       "react-redux",
-//       "jest",
-//       "node",
-//       "chai"
-//     ],
-//   },
-//   "include": ["./.d.ts", "./src", "."],
-// }
