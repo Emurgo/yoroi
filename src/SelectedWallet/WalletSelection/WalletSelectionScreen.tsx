@@ -36,7 +36,7 @@ export const WalletSelectionScreen = () => {
   const {closeWallet} = useCloseWallet()
 
   const {openWallet, isLoading} = useOpenWallet({
-    onSuccess: async ([wallet, walletMeta]) => {
+    onSuccess: ([wallet, walletMeta]) => {
       selectWalletMeta(walletMeta)
       selectWallet(wallet)
 
