@@ -484,3 +484,19 @@ export type CommonMetadata = {
   readonly longName: null | string
   readonly maxSupply: null | string
 }
+
+export type MultiAssetRequest = {
+  assets: Array<{
+    nameHex: string
+    policy: string
+  }>
+}
+
+export type MultiAssetMintMetadataResponse = {
+  [key: string]: MultiAssetMintMetadataResponseAsset[]
+}
+
+export type MultiAssetMintMetadataResponseAsset = {
+  key: string
+  metadata: {[key: string]: any}
+}

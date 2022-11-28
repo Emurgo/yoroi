@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import AssetFingerprint from '@emurgo/cip14-js'
 import AsyncStorage, {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
 import BigNumber from 'bignumber.js'
 import {delay} from 'bluebird'
@@ -22,6 +23,8 @@ import {processTxHistoryData} from '../legacy/processTransactions'
 import {WalletMeta} from '../legacy/state'
 import storage from '../legacy/storage'
 import {cardanoValueFromRemoteFormat} from '../legacy/utils'
+import {useSelectedWallet} from '../SelectedWallet'
+import {Storage} from '../Storage'
 import {useWalletManager} from '../WalletManager'
 import {
   CardanoMobile,
@@ -35,7 +38,6 @@ import {
 } from '../yoroi-wallets'
 import {generateShelleyPlateFromKey} from '../yoroi-wallets/cardano/shelley/plate'
 import {
-  YoroiNFT,
   Quantity,
   Token,
   Transaction,
@@ -43,11 +45,12 @@ import {
   TRANSACTION_STATUS,
   TransactionInfo,
   YoroiAmounts,
+  YoroiNFT,
   YoroiSignedTx,
   YoroiUnsignedTx,
 } from '../yoroi-wallets/types'
 import {CurrencySymbol, RawUtxo, TipStatusResponse} from '../yoroi-wallets/types/other'
-import {Utxos} from '../yoroi-wallets/utils'
+import {Amounts, Utxos} from '../yoroi-wallets/utils'
 import {parseBoolean} from '../yoroi-wallets/utils/parsing'
 
 const crashReportsStorageKey = 'sendCrashReports'
@@ -871,10 +874,23 @@ export const useResync = (wallet: YoroiWallet, options?: UseMutationOptions<void
   }
 }
 
-export const useNfts = (wallet: YoroiWallet): YoroiNFT[] => {
-  const utxos = useUtxos(wallet)
-  if (utxos == null) throw new Error('invalid state')
-  console.log(`🚀 > useNfts > utxos`, JSON.stringify(utxos))
+export const useNfts = (options?) => {
+  // const wallet = useSelectedWallet()
+  // const balances = useBalances(wallet)
+  // const tokenIds = Amounts.toArray(balances)
+  //   .map((a) => a.tokenId)
+  //   .filter(Boolean)
 
-  return []
+  // const infos = useTokenInfo({wallet, tokenIds}) || {}
+
+  // const query = useQuery({
+  //   queryKey: [wallet.id, infos.length, 'nfts'],
+  //   queryFn: async () => wallet.fetchNfts(infos),
+  //   ...options,
+  // })
+
+  return {
+    // ...query,
+    nfts: [],
+  }
 }

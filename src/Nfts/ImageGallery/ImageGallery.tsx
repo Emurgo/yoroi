@@ -1,13 +1,5 @@
 import React from 'react'
-import {
-  GestureResponderEvent,
-  Image,
-  ImageSourcePropType,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import {GestureResponderEvent, Image, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
@@ -15,7 +7,7 @@ import {Text} from '../../components/Text'
 
 type Props = {
   images: Array<{
-    image: ImageSourcePropType
+    image: string
     text: string
     onPress?: ((event: GestureResponderEvent) => void) | undefined
   }>
@@ -30,7 +22,7 @@ export const ImageGallery = ({images = [], loading = false}: Props) => {
           <SkeletonPlaceholder key={id} enabled={loading}>
             <TouchableOpacity onPress={onPress} style={styles.imageContainer}>
               <View>
-                <Image source={image} style={styles.image} />
+                <Image source={{uri: image}} style={styles.image} />
                 <Text style={styles.textTop}>{text}</Text>
               </View>
             </TouchableOpacity>

@@ -5,7 +5,7 @@ import {Image, RefreshControl, ScrollView, StyleSheet, Text, View, ViewProps} fr
 
 import noNftsImage from '../assets/img/no-nft.png'
 import {OfflineBanner, StatusBar} from '../components'
-// import {useNfts} from '../hooks'
+import {useNfts} from '../hooks'
 import {WalletStackRouteNavigation} from '../navigation'
 import {ImageGallery} from './ImageGallery'
 import nft1 from './ImageGallery/fake-images/nft1.png'
@@ -14,7 +14,6 @@ import nft3 from './ImageGallery/fake-images/nft3.png'
 import nft4 from './ImageGallery/fake-images/nft4.png'
 import nft5 from './ImageGallery/fake-images/nft5.png'
 import nft6 from './ImageGallery/fake-images/nft6.png'
-// import {useSelectedWallet} from '../SelectedWallet'
 
 export const mockNFTs = [
   {image: nft1, text: 'nft1'},
@@ -26,25 +25,15 @@ export const mockNFTs = [
 ]
 
 export const Nfts = () => {
-  const [loading, setLoading] = useState(true)
+  const {nfts, loading} = useNfts()
+  console.log(`🚀 > Nfts > nfts`, nfts)
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setLoading(false)
-    }, 3000)
-
-    return () => {
-      clearTimeout(timeout)
-    }
-  })
-  // const wallet = useSelectedWallet()
   const navigation = useNavigation<WalletStackRouteNavigation>()
 
-  // const nfts = useNfts(wallet)
   const showDetails = (id) =>
     navigation.navigate('nft-details-routes', {screen: 'nft-details', params: {id: id ?? '1'}})
 
-  const NFTsWithAction = mockNFTs.map((n, i) => ({...n, onPress: () => showDetails(i)}))
+  const NFTsWithAction = nfts.map((n, i) => ({image: n.thumbnail, text: n.name, onPress: () => showDetails(i)}))
 
   return (
     <View style={styles.root}>

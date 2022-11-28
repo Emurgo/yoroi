@@ -42,7 +42,15 @@ import {
   walletChecksum,
 } from '../cardano'
 import {makeStorageWithPrefix} from '../storage'
-import {DefaultAsset, Quantity, SendTokenList, StakingInfo, YoroiSignedTx, YoroiUnsignedTx} from '../types'
+import {
+  DefaultAsset,
+  MultiAssetMintMetadataResponse,
+  Quantity,
+  SendTokenList,
+  StakingInfo,
+  YoroiSignedTx,
+  YoroiUnsignedTx,
+} from '../types'
 import type {
   AccountStateResponse,
   BackendConfig,
@@ -971,6 +979,18 @@ export class ShelleyWallet implements WalletInterface {
 
   async fetchCurrentPrice(symbol: CurrencySymbol): Promise<number> {
     return api.fetchCurrentPrice(symbol, this.getBackendConfig())
+  }
+
+  async fetchNfts(infos): Promise<MultiAssetMintMetadataResponse> {
+    const assets = Object.keys(infos)
+      .filter(Boolean)
+      .map((k) => {
+        const {policyId, assetName} = infos[k].metadata
+        return {nameHex: assetName, policy: policyId}
+      })
+      .filter((a) => a.nameHex !== '' && a.policy !== '')
+
+    return api.getMultiAssetMetadata({assets}, this.getBackendConfig())
   }
 
   state: WalletState = {

@@ -7,6 +7,8 @@ import {WalletMeta} from '../../legacy/state'
 import storage from '../../legacy/storage'
 import {
   AccountStates,
+  MultiAssetMintMetadataResponse,
+  MultiAssetRequest,
   StakePoolInfoRequest,
   StakePoolInfosAndHistories,
   StakingInfo,
@@ -211,6 +213,8 @@ export interface WalletInterface {
 
   fetchCurrentPrice(symbol: CurrencySymbol): Promise<number>
 
+  fetchNfts(request): Promise<MultiAssetMintMetadataResponse>
+
   sync(): Promise<void>
 
   resync(): Promise<void>
@@ -318,6 +322,12 @@ type YoroiWalletKeys =
   | 'storage'
   | 'subscribeOnTxHistoryUpdate'
   | 'toJSON'
+  | 'fetchCurrentPrice'
+  | 'fetchFundInfo'
+  | 'fetchNfts'
+  | 'internalAddresses'
+  | 'externalAddresses'
+  | 'confirmationCounts'
   | 'transactions'
   | 'utxos'
   | 'walletImplementationId'
@@ -350,6 +360,7 @@ const yoroiWalletKeys: Array<YoroiWalletKeys> = [
   'getAllUtxosForKey',
   'getDelegationStatus',
   'hwDeviceInfo',
+  'fetchNfts',
   'internalAddresses',
   'isEasyConfirmationEnabled',
   'isHW',
