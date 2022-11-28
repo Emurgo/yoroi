@@ -250,7 +250,7 @@
   },
   "engineStrict": true,
   "engine": {
-    "node": "~16.5.0",
+    "node": "~16.10.0",
     "npm": "~7.19.1"
   },
   "xcodeSchemes": {
