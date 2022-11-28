@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {FlatList, Linking, RefreshControl, StyleSheet, Text, TouchableOpacity} from 'react-native'
+import {FlatList, InteractionManager, Linking, RefreshControl, StyleSheet, Text, TouchableOpacity} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useAuth} from '../../auth/AuthProvider'
@@ -36,11 +36,13 @@ export const WalletSelectionScreen = () => {
   const {closeWallet} = useCloseWallet()
 
   const {openWallet, isLoading} = useOpenWallet({
-    onSuccess: ([wallet, walletMeta]) => {
+    onSuccess: async ([wallet, walletMeta]) => {
       selectWalletMeta(walletMeta)
       selectWallet(wallet)
 
-      navigateToTxHistory()
+      InteractionManager.runAfterInteractions(() => {
+        navigateToTxHistory()
+      })
     },
     onError: async (error) => {
       closeWallet()
