@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import AssetFingerprint from '@emurgo/cip14-js'
 import _ from 'lodash'
 
 import assert from '../../legacy/assert'
 import {ApiError} from '../../legacy/errors'
 import fetchDefault, {checkedFetch} from '../../legacy/fetch'
 import {ServerStatus} from '..'
-import {StakePoolInfosAndHistories} from '../types'
+import {MultiAssetRequest, StakePoolInfosAndHistories} from '../types'
 import type {
   AccountStateRequest,
   AccountStateResponse,
@@ -109,6 +110,59 @@ export const getPoolInfo = (request: PoolInfoRequest, config: BackendConfig): Pr
   return fetchDefault('pool/info', request, config)
 }
 
+const BUCKET_URL = 'https://validated-images.s3.amazonaws.com'
+
+const processNfts = (metadata = [], assets) => {
+  const nfts = Object.keys(metadata)
+    .map((metadataKey) => {
+      const [policyId, nftName] = metadataKey.split('.')
+
+      const meta = metadata[metadataKey][0]
+      const nftMetadata = meta.metadata?.[policyId]?.[nftName] ?? {}
+      const fingerprint = null
+
+      // new AssetFingerprint(
+      //   Buffer.from(asset.policy, 'hex'),
+      //   Buffer.from(asset.nameHex, 'hex'),
+      // ).fingerprint()
+
+      return {
+        id: metadataKey,
+        name: nftMetadata.name,
+        description: nftMetadata.description,
+        thumbnail: `${BUCKET_URL}/p_${fingerprint}`,
+        image: `${BUCKET_URL}/${fingerprint}`,
+        metadata: {
+          policyId,
+          assetNameHex: nftMetadata.name,
+          originalMetadata: nftMetadata,
+        },
+      }
+    })
+    .filter(Boolean)
+
+  return nfts
+}
+
+export const getMultiAssetMetadata = async (request: MultiAssetRequest, config: BackendConfig): Promise<any> => {
+  const {assets} = request
+  console.log(`🚀 > getMultiAssetMetadata > assets`, assets)
+  try {
+    const response = await fetchDefault('multiAsset/metadata', request, config)
+
+    const filteredResponse = Object.keys(response)
+      .filter((k) => response[k][0]?.key === '721')
+      .map((nftKeys) => response[nftKeys][0].metadata)
+    console.log(`🚀 > getMultiAssetMetadata > filteredResponse`, filteredResponse)
+
+    const nfts = processNfts(filteredResponse, assets)
+    return nfts
+  } catch (error) {
+    console.log(`🚀 > getMultiAssetMetadata > error`, error)
+    return []
+  }
+}
+
 export const getTokenInfo = async (request: TokenInfoRequest, config: BackendConfig): Promise<TokenInfoResponse> => {
   const {tokenIds} = request
   if (config.TOKEN_INFO_SERVICE == null) {
@@ -184,88 +238,3 @@ export const fetchCurrentPrice = async (currency: CurrencySymbol, config: Backen
 
   return response.ticker.prices[currency]
 }
-
-// async function genCardanoAssetMap(tokenIds: Array<string>) {
-//   let tokenInfoResponse
-//   try {
-//     tokenInfoResponse = await getTokenInfo({tokenIds})
-//   } catch {
-//     tokenInfoResponse = {}
-//   }
-//   const metadata = await getTokenMintMetadata(tokenIds, getMultiAssetMetadata)
-
-//   const tokensWithMetadata = tokenIds
-//     .map((tokenId) => {
-//       const id = tokenId.split('.').join('')
-
-//       let numberOfDecimals
-//       let ticker
-//       let lastUpdatedAt
-//       let longName
-
-//       const tokenInfo = tokenInfoResponse[id]
-//       if (tokenInfo) {
-//         numberOfDecimals = tokenInfo.decimals ?? 0
-//         ticker = tokenInfo.ticker ?? null
-//         lastUpdatedAt = new Date().toISOString()
-//         longName = tokenInfo.name ?? null
-//       } else if (tokenInfo === null) {
-//         // the token is not registered
-//         numberOfDecimals = 0
-//         ticker = null
-//         lastUpdatedAt = new Date().toISOString()
-//         longName = null
-//       } else {
-//         // the token entry doesn't exists, insert a placeholder row
-//         numberOfDecimals = 0
-//         ticker = null
-//         lastUpdatedAt = null
-//         longName = null
-//       }
-
-//       const parts = identifierToCardanoAsset(tokenId)
-
-//       const assetName = Buffer.from(parts.name.name()).toString('hex')
-//       const policyId = Buffer.from(parts.policyId.to_bytes()).toString('hex')
-
-//       const assetNameInMetadata = Buffer.from(assetName, 'hex').toString()
-//       const identifierInMetadata = `${policyId}.${assetNameInMetadata}`
-
-//       const tokenMetadata = metadata[identifierInMetadata]
-
-//       let isNft = false
-
-//       let assetMintMetadata: CardanoAssetMintMetadata[] = []
-//       if (tokenMetadata) {
-//         if (tokenMetadata.filter((m) => m.key === '721').length > 0) {
-//           isNft = true
-//         }
-
-//         assetMintMetadata = tokenMetadata.map((m) => {
-//           const metaObj: CardanoAssetMintMetadata = {}
-//           metaObj[m.key] = m.metadata
-//           return metaObj
-//         })
-//       }
-
-//       return {
-//         Identifier: tokenId,
-//         IsDefault: false,
-//         TokenId: tokenId,
-//         IsNFT: isNft,
-//         Metadata: {
-//           type: 'Cardano',
-//           ticker,
-//           longName,
-//           numberOfDecimals,
-//           assetName,
-//           policyId,
-//           lastUpdatedAt,
-//           assetMintMetadata,
-//         },
-//       }
-//     })
-//     .filter(Boolean)
-
-//   return tokensWithMetadata
-// }
