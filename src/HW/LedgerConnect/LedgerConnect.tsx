@@ -56,7 +56,7 @@ class _LedgerConnect extends React.Component<Props, State> {
     deviceId: null,
     deviceObj: null,
     error: null,
-    refreshing: false,
+    refreshing: true,
     waiting: false,
   }
 
@@ -115,7 +115,6 @@ class _LedgerConnect extends React.Component<Props, State> {
 
   startScan = () => {
     const {useUSB} = this.props
-    this.setStateWithAnimimation({refreshing: true})
 
     this._subscriptions = this._transportLib.listen({
       complete: () => {
