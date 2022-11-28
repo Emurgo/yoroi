@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {FlatList, Linking, RefreshControl, StyleSheet, Text, TouchableOpacity} from 'react-native'
+import {FlatList, InteractionManager, Linking, RefreshControl, StyleSheet, Text, TouchableOpacity} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useAuth} from '../../auth/AuthProvider'
@@ -40,7 +40,13 @@ export const WalletSelectionScreen = () => {
       selectWalletMeta(walletMeta)
       selectWallet(wallet)
 
-      navigateToTxHistory()
+      // fixes modal issue
+      // https://github.com/facebook/react-native/issues/32329
+      // https://github.com/facebook/react-native/issues/33733
+      // https://github.com/facebook/react-native/issues/29319
+      InteractionManager.runAfterInteractions(() => {
+        navigateToTxHistory()
+      })
     },
     onError: async (error) => {
       closeWallet()
