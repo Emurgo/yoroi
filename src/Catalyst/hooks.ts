@@ -15,7 +15,7 @@ export const useCanVote = (wallet: YoroiWallet) => {
   )
 
   return {
-    canVote: isHaskellShelley(wallet.walletImplementationId),
+    canVote: !wallet.isReadOnly && isHaskellShelley(wallet.walletImplementationId),
     sufficientFunds,
   }
 }
