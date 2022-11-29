@@ -8,7 +8,6 @@ import {Keyboard, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {Boundary, KeyboardSpacer, Spacer, StatusBar, Text, ValidatedTextInput} from '../../components'
 import {ConfirmTx} from '../../components/ConfirmTx'
 import {useBalances, useTokenInfo} from '../../hooks'
-import {Instructions as HWInstructions} from '../../HW'
 import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../i18n/global-messages'
 import {CONFIG} from '../../legacy/config'
 import {formatTokenWithSymbol, formatTokenWithText} from '../../legacy/format'
@@ -85,8 +84,6 @@ export const ConfirmScreen = () => {
             />
           </>
         )}
-
-        {wallet.isHW && <HWInstructions useUSB={useUSB} addMargin />}
 
         <KeyboardSpacer />
       </ScrollView>
