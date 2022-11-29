@@ -10,7 +10,7 @@ describe('EncryptedStorage', () => {
   })
 
   it('should remove inexistent key', async () => {
-    await expect(ES.remove(key)).resolves.toBeTruthy()
+    await expect(ES.remove(key)).resolves
   })
 
   it('should throw Error(RootKey invalid) if reading an empty key', async () => {
@@ -38,7 +38,7 @@ describe('EncryptedStorage', () => {
     const decryptedNewData = await ES.read(key, password)
     expect(decryptedNewData).toBe(newData)
 
-    await expect(ES.remove(key)).resolves.toBeTruthy()
+    await expect(ES.remove(key)).resolves
     await expect(ES.read(key, password)).rejects.toThrowError('RootKey invalid')
   })
 })

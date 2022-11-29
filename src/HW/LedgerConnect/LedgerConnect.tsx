@@ -50,7 +50,7 @@ type State = {
 }
 
 // eslint-disable-next-line react-prefer-function-component/react-prefer-function-component
-class WrapperLedgerConnect extends React.Component<Props, State> {
+class _LedgerConnect extends React.Component<Props, State> {
   state: State = {
     devices: this.props.defaultDevices ? this.props.defaultDevices : [],
     deviceId: null,
@@ -220,6 +220,12 @@ class WrapperLedgerConnect extends React.Component<Props, State> {
     const {error, waiting, deviceObj} = this.state
     const {intl, onWaitingMessage} = this.props
 
+    const ListHeaderWrapper = ({msg, err}: {msg: string; err?: string | null}) => (
+      <View style={styles.listHeader}>
+        <Text style={[styles.paragraph, styles.paragraphText]}>{msg}</Text>
+        {err != null && <Text style={[styles.error, styles.paragraphText]}>{err}</Text>}
+      </View>
+    )
     let msg, errMsg
     if (error != null) {
       msg = intl.formatMessage(messages.error)
@@ -308,14 +314,7 @@ class WrapperLedgerConnect extends React.Component<Props, State> {
   }
 }
 
-const ListHeaderWrapper = ({msg, err}: {msg: string; err?: string | null}) => (
-  <View style={styles.listHeader}>
-    <Text style={[styles.paragraph, styles.paragraphText]}>{msg}</Text>
-    {err != null && <Text style={[styles.error, styles.paragraphText]}>{err}</Text>}
-  </View>
-)
-
-export const LedgerConnect = injectIntl(WrapperLedgerConnect)
+export const LedgerConnect = injectIntl(_LedgerConnect)
 
 const messages = defineMessages({
   caption: {

@@ -61,7 +61,7 @@ export const ConfirmVotingTx = ({
           value={formatTokenWithSymbol(new BigNumber(Amounts.getAmount(votingRegTx.fee, '').quantity), tokenInfo)}
           label={strings.fees}
           editable={false}
-          autoComplete="off"
+          autoComplete={false}
         />
 
         {!wallet.isEasyConfirmationEnabled && !wallet.isHW && (
@@ -70,7 +70,7 @@ export const ConfirmVotingTx = ({
             value={password}
             label={strings.password}
             onChangeText={setPassword}
-            autoComplete="off"
+            autoComplete={false}
           />
         )}
       </ScrollView>

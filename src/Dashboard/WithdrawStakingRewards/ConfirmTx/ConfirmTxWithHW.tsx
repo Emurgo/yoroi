@@ -25,9 +25,9 @@ export const ConfirmTxWithHW = (props: Props) => {
   const [transportType, setTransportType] = React.useState<TransportType>('USB')
   const [step, setStep] = React.useState<'select-transport' | 'connect-transport' | 'confirm'>('select-transport')
 
-  const onSelectTransport = (newTransportType: TransportType) => {
+  const onSelectTransport = (transportType: TransportType) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-    setTransportType(newTransportType)
+    setTransportType(transportType)
     setStep('connect-transport')
   }
 

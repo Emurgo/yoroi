@@ -5,7 +5,6 @@ import ExtendableError from 'es6-error'
 import _ from 'lodash'
 
 import assert from './assert'
-import {Logger} from './logging'
 
 export class StorageError extends ExtendableError {}
 
@@ -55,7 +54,7 @@ export const remove = async (path: string) => {
   try {
     await AsyncStorage.removeItem(path)
   } catch (error) {
-    Logger.warn(`Missing storage key ${path}`)
+    console.warn(`Missing storage key ${path}`)
     return false
   }
   return true

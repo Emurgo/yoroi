@@ -45,7 +45,7 @@ export const MnemonicInput = ({
       render={({ref: _ref, ...inputProps}) => (
         <MnemonicWordsInput onSelect={onSelect} words={mnemonicWords} {...inputProps} />
       )}
-      autoComplete="off"
+      autoComplete={false}
     />
   )
 }
@@ -66,7 +66,7 @@ const MnemonicWordsInput = ({onSelect, words}: MnemonicWordsInputProps) => {
       style={{padding: 4, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-around'}}
       testID="mnemonicInputsView"
     >
-      {words.map((_, index) => (
+      {words.map((word, index) => (
         <View
           key={index}
           style={{width: '33%', padding: 4}}
@@ -145,7 +145,7 @@ const MnemonicWordInput = React.forwardRef<RNTextInput, MnemonicWordInputProps>(
           noErrors
           errorDelay={0}
           errorText={matchingWords.length <= 0 ? 'No matching words' : ''}
-          autoComplete="off"
+          autoComplete={false}
         />
       }
       visible={menuEnabled && word.length > 0 && !isEmptyString(word)}

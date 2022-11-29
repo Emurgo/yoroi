@@ -3,7 +3,8 @@ import {BigNumber} from 'bignumber.js'
 import _ from 'lodash'
 import React from 'react'
 import {useIntl} from 'react-intl'
-import {ActivityIndicator, Image, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {ActivityIndicator, Image, ScrollView, StyleSheet, View} from 'react-native'
+import {TouchableOpacity} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Checkbox, Spacer, StatusBar, Text, TextInput} from '../../components'
@@ -123,7 +124,7 @@ export const SendScreen = () => {
   }
 
   const handleConfirm = async () => {
-    if (isValid === false || recomputing || yoroiUnsignedTx == null) return
+    if (isValid == false || recomputing || yoroiUnsignedTx == null) return
 
     setShowSendAllWarning(false)
 
@@ -159,7 +160,7 @@ export const SendScreen = () => {
           onChangeText={receiverChanged}
           label={strings.addressInputLabel}
           errorText={getAddressErrorText(intl, addressErrors)}
-          autoComplete="off"
+          autoComplete={false}
           testID="addressInput"
         />
 
@@ -192,7 +193,7 @@ export const SendScreen = () => {
             editable={false}
             label={strings.asset}
             value={`${assetDenomination}: ${formatTokenAmount(new BigNumber(selectedAssetAvailableAmount), tokenInfo)}`}
-            autoComplete="off"
+            autoComplete={false}
           />
         </TouchableOpacity>
 

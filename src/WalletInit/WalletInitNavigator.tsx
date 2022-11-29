@@ -78,7 +78,7 @@ export const WalletInitNavigator = () => {
       <Stack.Screen //
         name="connect-nano-x"
         options={{title: strings.connectNanoXTitle}}
-        component={ConnectNanoXScreenWrapper}
+        component={ConnectNanoXScreen}
       />
 
       <Stack.Screen
@@ -115,8 +115,6 @@ export const WalletInitNavigator = () => {
     </Stack.Navigator>
   )
 }
-
-const ConnectNanoXScreenWrapper = () => <ConnectNanoXScreen />
 
 const messages = defineMessages({
   addWalletTitle: {

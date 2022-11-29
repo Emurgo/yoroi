@@ -5,7 +5,7 @@
  * hack to get text from element (feature not available in detox)
  *  see issue https://github.com/wix/detox/issues/445
  */
-export async function readTextValue(testID) {
+export async function readTextValue(testID: string) {
   try {
     await expect(element(by.id(testID))).toHaveText('__read_element_error_')
     return ''
