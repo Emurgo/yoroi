@@ -33,6 +33,7 @@ const Stack = createStackNavigator<AppRoutes>()
 export const AppNavigator = () => {
   const strings = useStrings()
   const isMaintenance = useSelector(isMaintenanceSelector)
+  const navRef = useDevToolsNavigation()
 
   useHideScreenInAppSwitcher()
   useAutoLogout()
@@ -56,7 +57,7 @@ export const AppNavigator = () => {
   }
 
   return (
-    <NavigationContainer onReady={onReady} ref={useDevToolsNavigation()}>
+    <NavigationContainer onReady={onReady} ref={navRef}>
       <Stack.Navigator
         screenOptions={{
           headerShown: false /* used only for transition */,
