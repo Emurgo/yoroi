@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
@@ -66,8 +65,7 @@ export const DeveloperScreen = () => {
           <Button
             key={route.path}
             style={styles.button}
-            // https://github.com/react-navigation/react-navigation/issues/10802
-            onPress={() => navigation.navigate(route.path as any)}
+            onPress={() => navigation.navigate(route.path)}
             title={route.label}
           />
         ))}
@@ -138,7 +136,7 @@ export const DeveloperScreen = () => {
         {wallet?.networkId !== 1 && (
           <>
             <TextInput
-              autoComplete="off"
+              autoComplete={false}
               editable
               maxLength={8096}
               multiline

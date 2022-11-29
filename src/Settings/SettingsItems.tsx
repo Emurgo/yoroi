@@ -17,9 +17,7 @@ type NavigateToProps = {
 }
 
 const NavigateTo = ({navigation, to, ...props}: NavigateToProps) => {
-  // https://github.com/react-navigation/react-navigation/issues/10802
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return <Touchable onPress={() => navigation.navigate(to as any)} {...props} />
+  return <Touchable onPress={() => navigation.navigate(to)} {...props} />
 }
 
 type SettingsSectionProps = {

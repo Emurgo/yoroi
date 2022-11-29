@@ -50,7 +50,7 @@ export const ChangePasswordScreen = () => {
           returnKeyType="next"
           onSubmitEditing={() => newPasswordRef.current?.focus()}
           errorText={isError ? strings.incorrectPassword : undefined}
-          autoComplete="off"
+          autoComplete={false}
         />
 
         <Spacer />
@@ -67,7 +67,7 @@ export const ChangePasswordScreen = () => {
           returnKeyType="next"
           onSubmitEditing={() => newPasswordConfirmationRef.current?.focus()}
           right={!newPasswordErrors.passwordIsWeak ? <Checkmark /> : undefined}
-          autoComplete="off"
+          autoComplete={false}
         />
 
         <Spacer />
@@ -86,7 +86,7 @@ export const ChangePasswordScreen = () => {
               <Checkmark />
             ) : undefined
           }
-          autoComplete="off"
+          autoComplete={false}
         />
       </ScrollView>
 

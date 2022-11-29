@@ -21,10 +21,7 @@ end
 target 'emurgo' do
   config = use_native_modules!
 
-  use_react_native!(
-    :path => config["reactNativePath"],
-    :hermes_enabled => false
-  )
+  use_react_native!(:path => config["reactNativePath"])
   platform :ios, '11.0'
 
   # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
@@ -44,8 +41,4 @@ target 'emurgo' do
     inherit! :complete
   end
 
-  post_install do |installer|
-    react_native_post_install(installer)
-    __apply_Xcode_12_5_M1_post_install_workaround(installer)
-  end
 end

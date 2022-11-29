@@ -24,7 +24,7 @@ export const PoolDetailScreen = ({onPressDelegate, disabled = false}: Props) => 
         label={strings.poolHash}
         value={poolHash}
         onChangeText={setPoolHash}
-        autoComplete="off"
+        autoComplete={false}
         testID="nightlyPoolHashInput"
       />
 
