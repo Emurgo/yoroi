@@ -33,8 +33,6 @@ bluebird.config({
 })
 
 LogBox.ignoreLogs([
-  // react navigation didn't port everything
-  "[react-native-gesture-handler] Seems like you're using an old API with gesture components, check out new Gestures system!",
   // react-query default cacheTime (not an issue)
   'Setting a timer for a long period of time, i.e. multiple minutes, is a performance and correctness issue on Android as it keeps the timer module awake, and timers can only be called when the app is in the foreground. See https://github.com/facebook/react-native/issues/12981 for more info.',
   // react navigation fix old params
@@ -47,7 +45,6 @@ LogBox.ignoreLogs([
   https://github.com/facebook/react-native/issues/19490
   https://github.com/facebook/react-native/issues/17972
 */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 global.Promise = bluebird as any
 
 const cache = createIntlCache()

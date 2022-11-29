@@ -53,7 +53,7 @@ export const EnableEasyConfirmationScreen = () => {
           label={strings.enableRootPassword}
           onChangeText={setRootPassword}
           value={rootPassword}
-          autoComplete={false}
+          autoComplete="off"
         />
       </ScrollView>
 

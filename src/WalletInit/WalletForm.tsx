@@ -65,7 +65,7 @@ export const WalletForm = ({onSubmit}: Props) => {
           returnKeyType="next"
           onSubmitEditing={() => passwordRef.current?.focus()}
           testID="walletNameInput"
-          autoComplete={false}
+          autoComplete="off"
           showErrorOnBlur
         />
 
@@ -86,7 +86,7 @@ export const WalletForm = ({onSubmit}: Props) => {
           right={!passwordErrors.passwordIsWeak ? <Checkmark /> : undefined}
           onSubmitEditing={() => passwordConfirmationRef.current?.focus()}
           testID="walletPasswordInput"
-          autoComplete={false}
+          autoComplete="off"
           showErrorOnBlur
         />
 
@@ -105,7 +105,7 @@ export const WalletForm = ({onSubmit}: Props) => {
             !passwordErrors.matchesConfirmation && !passwordErrors.passwordConfirmationReq ? <Checkmark /> : undefined
           }
           testID="walletRepeatPasswordInput"
-          autoComplete={false}
+          autoComplete="off"
           showErrorOnBlur
         />
       </ScrollView>

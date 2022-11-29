@@ -14,7 +14,7 @@ export const ReceiveScreen = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const receiveAddresses = useReceiveAddresses(wallet)
-  const addressLimitReached = wallet.canGenerateNewReceiveAddress() == false
+  const addressLimitReached = !wallet.canGenerateNewReceiveAddress()
 
   const currentAddress = _.last(receiveAddresses)
 

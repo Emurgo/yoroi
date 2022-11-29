@@ -48,7 +48,7 @@ describe('transactionCache', () => {
       DeviceInfo.getVersion = () => '9.9.9'
       const txCache = await TransactionCache.create({
         ...mockStorage,
-        multiGet: async (paths: Array<string>) => {
+        multiGet: async (paths: Readonly<Array<string>>) => {
           if (paths.length === 1 && paths[0] === mockTx.id) {
             return [[mockTx.id, 'cannot parse']]
           }
@@ -79,7 +79,7 @@ const mockStorage: Storage = {
     if (path === 'txids') return JSON.stringify([mockTx.id])
     throw new Error('invalid path')
   },
-  multiGet: async (txids: Array<string>) => {
+  multiGet: async (txids: Readonly<Array<string>>) => {
     if (txids.length > 1 || txids[0] !== mockTx.id) throw new Error('invalid path')
 
     return [

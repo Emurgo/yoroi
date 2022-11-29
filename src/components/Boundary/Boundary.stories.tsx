@@ -167,7 +167,6 @@ const LoadingWithOverlay = () => {
 
       <Button
         onPress={() => {
-          console.log('refetch', Date.now())
           refetch()
         }}
         title="Refetch"
