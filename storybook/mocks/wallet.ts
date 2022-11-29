@@ -211,7 +211,7 @@ const wallet: YoroiWallet = {
   },
 }
 
-const hwWallet = {
+const hwWallet: YoroiWallet = {
   ...wallet,
   isHW: true,
   hwDeviceInfo: {
@@ -225,9 +225,14 @@ const hwWallet = {
   },
 }
 
-const osWallet = {
+const osWallet: YoroiWallet = {
   ...wallet,
   isEasyConfirmationEnabled: true,
+}
+
+const readonlyWallet: YoroiWallet = {
+  ...wallet,
+  isReadOnly: true,
 }
 
 const txid = '31b1abca49857fd50c7959cc019d14c7dc5deaa754ba45372fb21748c411f210'
@@ -568,6 +573,7 @@ export const mocks = {
   wallet,
   osWallet,
   hwWallet,
+  readonlyWallet,
 
   stakePoolId,
 
