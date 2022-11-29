@@ -1737,6 +1737,13 @@
   dependencies:
     base-64 "0.1.0"
 
+"@emurgo/react-native-haskell-shelley@4.0.0-beta.2":
+  version "4.0.0-beta.2"
+  resolved "https://registry.yarnpkg.com/@emurgo/react-native-haskell-shelley/-/react-native-haskell-shelley-4.0.0-beta.2.tgz#7ab724b742c603f259ed69843d8eb4eca0cb6e99"
+  integrity sha512-IQ0WHNNY9Zhtndr0mc+t3kjxb1uwRo7goQoy2nyiN0A4qhhy5jAuhPkcQiB+V/L4aRw6wdyyEv0BtbjHT1BPPA==
+  dependencies:
+    base-64 "0.1.0"
+
 "@emurgo/yoroi-lib@^0.1.5":
   version "0.1.5"
   resolved "https://registry.yarnpkg.com/@emurgo/yoroi-lib/-/yoroi-lib-0.1.5.tgz#4ea13c38f7f011c18dc3f7a7992c991516124a0f"
