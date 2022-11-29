@@ -103,9 +103,19 @@ const SupportLink = () => {
   )
 }
 
-const Item = ({label, left, onPress}: {label: string; left: React.ReactElement; onPress: () => void}) => {
+const Item = ({
+  label,
+  left,
+  disabled = false,
+  onPress,
+}: {
+  label: string
+  left: React.ReactElement
+  disabled?: boolean
+  onPress: () => void
+}) => {
   return (
-    <TouchableOpacity onPress={onPress} style={styles.item}>
+    <TouchableOpacity onPress={onPress} style={styles.item} disabled={disabled}>
       {left}
       <Spacer width={12} />
       <Text style={styles.itemText}>{label}</Text>
@@ -124,7 +134,7 @@ const Settings = Item
 const KnowledgeBase = Item
 const Catalyst = ({label, left, onPress}: {label: string; left: React.ReactElement; onPress: () => void}) => {
   const wallet = useSelectedWallet()
-  const {sufficientFunds} = useCanVote(wallet)
+  const {canVote, sufficientFunds} = useCanVote(wallet)
 
   const [showInsufficientFundsModal, setShowInsufficientFundsModal] = React.useState(false)
 
@@ -134,6 +144,7 @@ const Catalyst = ({label, left, onPress}: {label: string; left: React.ReactEleme
         label={label}
         onPress={() => (sufficientFunds ? onPress() : setShowInsufficientFundsModal(true))}
         left={left}
+        disabled={!canVote}
       />
 
       <InsufficientFundsModal

@@ -46,8 +46,7 @@ export const VotingBanner = ({onPress, disabled}: Props) => {
     }
 
     checkCatalystFundInfo()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [canVote, wallet])
 
   if (!showCatalystBanner) return null
 
