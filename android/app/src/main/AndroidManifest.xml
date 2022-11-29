@@ -35,6 +35,7 @@
         android:exported="true">
       </activity>
       <activity
+        android:exported="true"
         android:name="com.zoontek.rnbootsplash.RNBootSplashActivity"
         android:theme="@style/BootTheme"
         android:launchMode="singleTask">
