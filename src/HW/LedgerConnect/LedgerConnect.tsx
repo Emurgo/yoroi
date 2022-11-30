@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import TransportHID from '@emurgo/react-native-hid'
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
-import TransportHID from '@v-almonacid/react-native-hid'
 import React from 'react'
 import type {IntlShape} from 'react-intl'
 import {defineMessages, injectIntl} from 'react-intl'
@@ -10,8 +10,6 @@ import {
   FlatList,
   Image,
   LayoutAnimation,
-  PermissionsAndroid,
-  Platform,
   RefreshControl,
   ScrollView,
   StyleSheet,
@@ -70,9 +68,6 @@ class _LedgerConnect extends React.Component<Props, State> {
     this._transportLib = useUSB === true ? TransportHID : TransportBLE
     this._isMounted = true
     if (useUSB === false) {
-      if (Platform.OS === 'android') {
-        await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
-      }
       // check if bluetooth is available
       // no need to save a reference to this subscription's unsubscribe func
       // as it's just an empty method. Rather, we make sure sate is only

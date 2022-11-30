@@ -1744,6 +1744,17 @@
   dependencies:
     base-64 "0.1.0"
 
+"@emurgo/react-native-hid@^5.15.6":
+  version "5.15.6"
+  resolved "https://registry.yarnpkg.com/@emurgo/react-native-hid/-/react-native-hid-5.15.6.tgz#bade99f9434a1d4080b777e9f724f4634a73330f"
+  integrity sha512-jtWsp0QfkWRWAGgNVp9ThTtAEqNmddSRk/yABQTK1vrVhZKxwc66l9ejl9YZw1crIr7W4FTqDThQ0KWuj9TlPw==
+  dependencies:
+    "@ledgerhq/devices" "^5.15.0"
+    "@ledgerhq/errors" "^5.15.0"
+    "@ledgerhq/hw-transport" "^5.15.0"
+    "@ledgerhq/logs" "^5.15.0"
+    rxjs "^6.5.5"
+
 "@emurgo/yoroi-lib@^0.1.5":
   version "0.1.5"
   resolved "https://registry.yarnpkg.com/@emurgo/yoroi-lib/-/yoroi-lib-0.1.5.tgz#4ea13c38f7f011c18dc3f7a7992c991516124a0f"
@@ -4718,17 +4729,6 @@
     ethereum-ens-network-map "^1.0.2"
     js-sha256 "^0.9.0"
     js-sha3 "^0.8.0"
-
-"@v-almonacid/react-native-hid@5.15.4":
-  version "5.15.4"
-  resolved "https://registry.yarnpkg.com/@v-almonacid/react-native-hid/-/react-native-hid-5.15.4.tgz#30b6c1a2b3235da61fe5f4cf4777538876c5039b"
-  integrity sha512-4NBMVCUuBoa/SpRFIbH4FOoEaORSE8beaoKnWtRjV7bACscbHA5cZSguvPJijiB7miHju0h5Xnx4oa5yVOrjbQ==
-  dependencies:
-    "@ledgerhq/devices" "^5.15.0"
-    "@ledgerhq/errors" "^5.15.0"
-    "@ledgerhq/hw-transport" "^5.15.0"
-    "@ledgerhq/logs" "^5.15.0"
-    rxjs "^6.5.5"
 
 "@wdio/appium-service@^7.16.6":
   version "7.16.11"
@@ -15670,10 +15670,10 @@ react-native-fit-image@^1.5.2:
   dependencies:
     prop-types "^15.5.10"
 
-react-native-gesture-handler@^2.3.2:
-  version "2.3.2"
-  resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-2.3.2.tgz#65ce3b145bd96242c2200abbb9730c94bc73386c"
-  integrity sha512-ibcYWHMiDbioUcaAMuw3/Taz3mYn0fJz0q2KnGX1hWpLNz/x/E5/BzKB+T3ycwAm1dQEgPgHWpaZ8eqO/EVFlw==
+react-native-gesture-handler@^2.8.0:
+  version "2.8.0"
+  resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-2.8.0.tgz#ef9857871c10663c95a51546225b6e00cd4740cf"
+  integrity sha512-poOSfz/w0IyD6Qwq7aaIRRfEaVTl1ecQFoyiIbpOpfNTjm2B1niY2FLrdVQIOtIOe+K9nH55Qal04nr4jGkHdQ==
   dependencies:
     "@egjs/hammerjs" "^2.0.17"
     hoist-non-react-statics "^3.3.0"
@@ -15886,10 +15886,10 @@ react-native-vector-icons@^8.1.0:
     prop-types "^15.7.2"
     yargs "^16.1.1"
 
-react-native-webview@11.14.4:
-  version "11.14.4"
-  resolved "https://registry.yarnpkg.com/react-native-webview/-/react-native-webview-11.14.4.tgz#e654714f1792901e5208fb03f2dc0a0fb4afc344"
-  integrity sha512-667NNC1VEjl8PNBwGiEllWe7QhcqauCFeisL4Pk9cgQbtCiacemYF+8d+VJg27eMGJ0G05RFgpB5aDZbBcNhmw==
+react-native-webview@^11.25.0:
+  version "11.25.0"
+  resolved "https://registry.yarnpkg.com/react-native-webview/-/react-native-webview-11.25.0.tgz#fd2e0265224192d7381443cec732af56d6ca4d69"
+  integrity sha512-yq3con7vDQUQKAyl9a7pJaR3A1/cI0K2AeRhGugXfWQfdsne18pddJwQuOsc63khecipeCbB8pthCqw0UlsgVw==
   dependencies:
     escape-string-regexp "2.0.0"
     invariant "2.2.4"

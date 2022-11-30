@@ -9,10 +9,11 @@ import type {
   SignTransactionResponse,
 } from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import AppAda, {AddressType, DeviceStatusCodes} from '@cardano-foundation/ledgerjs-hw-app-cardano'
+import TransportHID from '@emurgo/react-native-hid'
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
-import TransportHID from '@v-almonacid/react-native-hid'
-import {PermissionsAndroid, Platform} from 'react-native'
+import {Permission, PermissionsAndroid, Platform} from 'react-native'
 import {BleError} from 'react-native-ble-plx'
+import {useMutation, UseMutationOptions} from 'react-query'
 
 import {ledgerMessages} from '../i18n/global-messages'
 import LocalizableError from '../i18n/LocalizableError'
@@ -278,11 +279,6 @@ const connectionHandler = async (
       throw new Error('ledgerUtils::connectionHandler deviceId is null')
     }
 
-    // check for permissions just in case
-    if (Platform.OS === 'android') {
-      await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
-    }
-
     transport = await TransportBLE.open(deviceId)
   }
 
@@ -490,5 +486,40 @@ export const signTxWithLedger = async (
     return ledgerSignature
   } catch (e) {
     throw mapLedgerError(e)
+  }
+}
+
+// not bumping react-native right now (couple to ledger)
+const BLUETOOTH_SCAN = 'android.permission.BLUETOOTH_SCAN'
+const BLUETOOTH_CONNECT = 'android.permission.BLUETOOTH_CONNECT'
+export const getLedgerPermissions = () => {
+  const permissions: Array<string> = [PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION]
+  if (Platform.Version >= 31) {
+    permissions.push(BLUETOOTH_CONNECT)
+    permissions.push(BLUETOOTH_SCAN)
+  }
+  // hack
+  return permissions as unknown as Permission[]
+}
+
+export const requestLedgerPermissions = async () => {
+  if (Platform.OS !== 'android') return Promise.resolve()
+
+  const permissions = getLedgerPermissions()
+  const statuses = await PermissionsAndroid.requestMultiple(permissions)
+  const denied = Object.values(statuses).some((value) => value === 'denied')
+
+  return denied ? Promise.reject() : Promise.resolve()
+}
+
+export const useLedgerPermissions = (options?: UseMutationOptions<void, Error>) => {
+  const mutation = useMutation({
+    ...options,
+    mutationFn: requestLedgerPermissions,
+  })
+
+  return {
+    request: mutation.mutate,
+    ...mutation,
   }
 }
