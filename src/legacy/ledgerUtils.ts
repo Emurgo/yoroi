@@ -498,7 +498,7 @@ export const getLedgerPermissions = () => {
     permissions.push(BLUETOOTH_CONNECT as Permission)
     permissions.push(BLUETOOTH_SCAN as Permission)
   }
-  
+
   return permissions
 }
 
