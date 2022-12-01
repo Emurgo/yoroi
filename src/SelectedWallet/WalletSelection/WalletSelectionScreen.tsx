@@ -5,7 +5,8 @@ import {FlatList, InteractionManager, Linking, RefreshControl, StyleSheet, Text,
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useAuth} from '../../auth/AuthProvider'
-import {Button, Icon, PleaseWaitModal, StatusBar} from '../../components'
+import {Button, Icon, StatusBar} from '../../components'
+import {LoadingOverlay} from '../../components/LoadingOverlay'
 import {useCloseWallet, useOpenWallet, useWalletMetas} from '../../hooks'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
 import {showErrorDialog} from '../../legacy/actions'
@@ -40,10 +41,7 @@ export const WalletSelectionScreen = () => {
       selectWalletMeta(walletMeta)
       selectWallet(wallet)
 
-      // fixes modal issue
-      // https://github.com/facebook/react-native/issues/32329
-      // https://github.com/facebook/react-native/issues/33733
-      // https://github.com/facebook/react-native/issues/29319
+      // fixes blank screen issue
       InteractionManager.runAfterInteractions(() => {
         navigateToTxHistory()
       })
@@ -95,7 +93,7 @@ export const WalletSelectionScreen = () => {
       <ByronButton />
       <OnlyDevButton />
 
-      <PleaseWaitModal title={strings.loadingWallet} spinnerText={strings.pleaseWait} visible={isLoading} />
+      <LoadingOverlay loading={isLoading} />
     </SafeAreaView>
   )
 }
