@@ -233,7 +233,7 @@ PODS:
     - React-Core
   - react-native-config (0.12.0):
     - React
-  - react-native-haskell-shelley (3.1.4):
+  - react-native-haskell-shelley (4.0.0-beta.2):
     - React
   - react-native-pager-view (5.4.15):
     - React-Core
@@ -245,7 +245,7 @@ PODS:
     - RCTTypeSafety
     - React
     - ReactCommon/turbomodule/core
-  - react-native-webview (11.14.4):
+  - react-native-webview (11.25.0):
     - React-Core
   - React-perflogger (0.64.4)
   - React-RCTActionSheet (0.64.4):
@@ -321,7 +321,7 @@ PODS:
     - React
   - RNDeviceInfo (6.0.1):
     - React
-  - RNGestureHandler (2.3.2):
+  - RNGestureHandler (2.8.0):
     - React-Core
   - RNKeychain (7.0.0):
     - React-Core
@@ -555,11 +555,11 @@ SPEC CHECKSUMS:
   react-native-ble-plx: f10240444452dfb2d2a13a0e4f58d7783e92d76e
   react-native-camera: 3eae183c1d111103963f3dd913b65d01aef8110f
   react-native-config: f2c2ae45625a068c35681a16b9bfb1ca58b0adc7
-  react-native-haskell-shelley: 508d0b6f88d14629ae6f28648a4425b202f73764
+  react-native-haskell-shelley: 47b49a21ea5fb9e74467e55585527b11972ef392
   react-native-pager-view: b1914469643f40042e65d78cbf3d3dfebd6fb0d9
   react-native-randombytes: b6677f7d495c27e9ee0dbd77ebc97b3c59173729
   react-native-safe-area-context: 806f8370bf9fc9db90a3413aaa1aab0d2e22fdf3
-  react-native-webview: a287d7c405756d253d88ed8e4f3c1a5256834d30
+  react-native-webview: a71da846ed2e9085440e1d6659c04e285528834b
   React-perflogger: 5a890ca0911669421b7611661e9b58f91c805f5c
   React-RCTActionSheet: bd180e0879f8424a73650c5c28fbef4f3b5b27fb
   React-RCTAnimation: 1004d2b4be1f2cedfdc4cb2326adc95b989e6c6b
@@ -577,7 +577,7 @@ SPEC CHECKSUMS:
   RNCClipboard: 41d8d918092ae8e676f18adada19104fa3e68495
   RNCMaskedView: 5a8ec07677aa885546a0d98da336457e2bea557f
   RNDeviceInfo: 6dd5c07a482f2a5e4a29fe8a9d99eadd4277175a
-  RNGestureHandler: 6e757e487a4834e7280e98e9bac66d2d9c575e9c
+  RNGestureHandler: 62232ba8f562f7dea5ba1b3383494eb5bf97a4d3
   RNKeychain: f75b8c8b2f17d3b2aa1f25b4a0ac5b83d947ff8f
   RNPermissions: 34d678157c800b25b22a488e4d8babb57456e796
   RNReanimated: c1b56d030d1616239861534d9adb531f8cffab68
