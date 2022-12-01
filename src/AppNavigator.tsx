@@ -33,7 +33,6 @@ const navRef = React.createRef<NavigationContainerRef<ReactNavigation.RootParamL
 export const AppNavigator = () => {
   const strings = useStrings()
   const isMaintenance = useSelector(isMaintenanceSelector)
-  const navRef = useDevToolsNavigation()
 
   useHideScreenInAppSwitcher()
   useAutoLogout()
