@@ -488,7 +488,7 @@
   "global.ledgerMessages.appInstalled": "A Cardano ADA alkalmazás telepítve van a Ledger eszközön.",
   "global.ledgerMessages.appOpened": "A Cardano ADA alkalmazásnak futnia kell  a Ledger eszközön.",
   "global.ledgerMessages.bluetoothEnabled": "Az okostelefonon engedélyezve van a Bluetooth. ",
-  "global.ledgerMessages.bluetoothDisabledError": "Az okostelefonon a Bluetooth ki van kapcsolva ",
+  "global.ledgerMessages.bluetoothDisabledError": "Bluetooth is disabled in your smartphone, or the requested permission was denied.",
   "global.ledgerMessages.connectionError": "Hiba történt a hardvertárcához való csatlakozás közben. Kérlek ellenőrizd, hogy helyesen követted-e a lépéseket. A hardvertárca újraindítása szintén megoldhatja a problémát. ",
   "global.ledgerMessages.connectUsb": "Csatlakoztasd a Ledger eszközt az okostelefon USB-portján keresztül OTG adapter segítségével. ",
   "global.ledgerMessages.deprecatedAdaAppError": "A Ledgeren telepített Cardano ADA alkalmazás verziója elavult. Támogatott verzió: {version}",

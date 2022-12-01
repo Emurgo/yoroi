@@ -488,7 +488,7 @@
   "global.ledgerMessages.appInstalled": "Cardano ADA应用程序已安装在您的Ledger设备上。",
   "global.ledgerMessages.appOpened": "Cardano ADA应用必须在Ledger设备上保持打开状态。",
   "global.ledgerMessages.bluetoothEnabled": "您智能手机上的蓝牙已启动。",
-  "global.ledgerMessages.bluetoothDisabledError": "您智能手机上的蓝牙已关闭。",
+  "global.ledgerMessages.bluetoothDisabledError": "Bluetooth is disabled in your smartphone, or the requested permission was denied.",
   "global.ledgerMessages.connectionError": "尝试连接您的硬件钱包时发生错误。请确保您正确地遵循了这些步骤。重新启动硬件钱包也许可以解决此问题。",
   "global.ledgerMessages.connectUsb": "请使用OTG适配器通过智能手机的USB端口连接您的Ledger设备",
   "global.ledgerMessages.deprecatedAdaAppError": "安装在您的Ledger设备上的Cardano ADA应用不是最新的。最低要求版本：{version}",
