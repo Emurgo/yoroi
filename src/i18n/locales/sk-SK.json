@@ -488,7 +488,7 @@
   "global.ledgerMessages.appInstalled": "Aplikácia Cardano ADA je nainštalovaná na vaše Ledger zariadenie.",
   "global.ledgerMessages.appOpened": "Aplikácia Cardano ADA musí zostať otvorená na vašom Ledger zariadení.",
   "global.ledgerMessages.bluetoothEnabled": "Bluetooth je zapnutý.",
-  "global.ledgerMessages.bluetoothDisabledError": "Bluetooth na vašom zariadení je vypnutý.",
+  "global.ledgerMessages.bluetoothDisabledError": "Bluetooth is disabled in your smartphone, or the requested permission was denied.",
   "global.ledgerMessages.connectionError": "Nastala chyba pri pripojovaní k hardwarovej peňaženke. Skontrolujte prosím, že postupujete správne. Reštartovanie HW peňaženky može tiež pomocť. Chyba.",
   "global.ledgerMessages.connectUsb": "Pripojiť zariadenie Ledger pomocou USB portu vašeho telefónu za použitia OTG adaptéru.",
   "global.ledgerMessages.deprecatedAdaAppError": "Cardano ADA aplikácia v zariadení Ledger nie je aktuálna. Požadovaná verzia: {version}",
