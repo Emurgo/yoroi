@@ -88,6 +88,7 @@
     "@emurgo/react-native-haskell-shelley": "4.0.0-beta.2",
     "@emurgo/react-native-hid": "^5.15.6",
     "@emurgo/yoroi-lib": "^0.1.5",
+    "@emurgo/yoroi-lib": "0.2.0",
     "@formatjs/intl": "^1.14.1",
     "@formatjs/intl-datetimeformat": "^4.2.3",
     "@formatjs/intl-getcanonicallocales": "^1.7.3",

@@ -1730,13 +1730,6 @@
     "@emurgo/cardano-serialization-lib-nodejs" "9.1.4"
     "@emurgo/cross-csl-core" "^1.0.1"
 
-"@emurgo/react-native-haskell-shelley@3.1.4":
-  version "3.1.4"
-  resolved "https://registry.yarnpkg.com/@emurgo/react-native-haskell-shelley/-/react-native-haskell-shelley-3.1.4.tgz#fa7c4997125fde97978ee1e42d19e6f51102deb4"
-  integrity sha512-cxI1XVsSdAR8EXnTSKI8pstmVmFtnlY40tl9HFf1Om0e0stJuX+UF1K4ilfrkTyOd/0YhBM5Mm2t0woP8Xgbpg==
-  dependencies:
-    base-64 "0.1.0"
-
 "@emurgo/react-native-haskell-shelley@4.0.0-beta.2":
   version "4.0.0-beta.2"
   resolved "https://registry.yarnpkg.com/@emurgo/react-native-haskell-shelley/-/react-native-haskell-shelley-4.0.0-beta.2.tgz#7ab724b742c603f259ed69843d8eb4eca0cb6e99"
@@ -1755,10 +1748,10 @@
     "@ledgerhq/logs" "^5.15.0"
     rxjs "^6.5.5"
 
-"@emurgo/yoroi-lib@^0.1.5":
-  version "0.1.5"
-  resolved "https://registry.yarnpkg.com/@emurgo/yoroi-lib/-/yoroi-lib-0.1.5.tgz#4ea13c38f7f011c18dc3f7a7992c991516124a0f"
-  integrity sha512-A+vkYnP0srwQToQU8ydMklUmltJmphRlUA29r5mG+PkL/RhjcLtmex9bNynB0WhNeYFIbmOSgFU0lJt0Eh2m+w==
+"@emurgo/yoroi-lib@0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@emurgo/yoroi-lib/-/yoroi-lib-0.2.0.tgz#c51942a3cc2ef38e483fa23f75976f0ea86839c6"
+  integrity sha512-lcYFco0x7gxIrPXWxxw3Fz1AtWqY9do3l7cFZINH29FUSfu3yUR/pvU/TMlSZBROs3yXv7BsMuGWYVMdUoZ98w==
   dependencies:
     "@cardano-foundation/ledgerjs-hw-app-cardano" "^5.1.0"
     "@emurgo/cross-csl-core" "^1.0.0"
