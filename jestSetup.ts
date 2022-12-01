@@ -15,6 +15,7 @@ jest.mock('react-native-background-timer', () => {})
 jest.mock('@sentry/react-native', () => ({init: () => jest.fn()}))
 jest.mock('@ledgerhq/react-native-hw-transport-ble', () => ({}))
 jest.mock('react-native-ble-plx', () => ({}))
+jest.mock('react-native-linear-gradient', () => ({}))
 jest.mock('@react-native-async-storage/async-storage', () =>
   require('@react-native-async-storage/async-storage/jest/async-storage-mock'),
 )
