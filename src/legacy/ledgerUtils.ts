@@ -493,13 +493,13 @@ export const signTxWithLedger = async (
 const BLUETOOTH_SCAN = 'android.permission.BLUETOOTH_SCAN'
 const BLUETOOTH_CONNECT = 'android.permission.BLUETOOTH_CONNECT'
 export const getLedgerPermissions = () => {
-  const permissions: Array<string> = [PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION]
+  const permissions: Array<Permission> = [PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION]
   if (Platform.Version >= 31) {
-    permissions.push(BLUETOOTH_CONNECT)
-    permissions.push(BLUETOOTH_SCAN)
+    permissions.push(BLUETOOTH_CONNECT as Permission)
+    permissions.push(BLUETOOTH_SCAN as Permission)
   }
-  // hack
-  return permissions as unknown as Permission[]
+  
+  return permissions
 }
 
 export const requestLedgerPermissions = async () => {
