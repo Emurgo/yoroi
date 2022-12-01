@@ -1,5 +1,4 @@
-import {useReduxDevToolsExtension} from '@react-navigation/devtools'
-import {NavigationContainer, useNavigationContainerRef} from '@react-navigation/native'
+import {NavigationContainer, NavigationContainerRef} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import React, {useEffect} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -29,6 +28,7 @@ import {WalletInitNavigator} from './WalletInit/WalletInitNavigator'
 import {WalletNavigator} from './WalletNavigator'
 
 const Stack = createStackNavigator<AppRoutes>()
+const navRef = React.createRef<NavigationContainerRef<ReactNavigation.RootParamList>>()
 
 export const AppNavigator = () => {
   const strings = useStrings()
@@ -204,11 +204,4 @@ const useAuthAction = () => {
   const authOsEnabled = useAuthOsEnabled()
 
   return getAuthAction(authOsEnabled, authSetting)
-}
-
-const useDevToolsNavigation = () => {
-  const navRef = useNavigationContainerRef()
-  useReduxDevToolsExtension(navRef)
-
-  return navRef
 }
