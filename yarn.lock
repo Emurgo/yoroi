@@ -1737,10 +1737,10 @@
   dependencies:
     base-64 "0.1.0"
 
-"@emurgo/yoroi-lib@^0.1.5":
-  version "0.1.5"
-  resolved "https://registry.yarnpkg.com/@emurgo/yoroi-lib/-/yoroi-lib-0.1.5.tgz#4ea13c38f7f011c18dc3f7a7992c991516124a0f"
-  integrity sha512-A+vkYnP0srwQToQU8ydMklUmltJmphRlUA29r5mG+PkL/RhjcLtmex9bNynB0WhNeYFIbmOSgFU0lJt0Eh2m+w==
+"@emurgo/yoroi-lib@0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@emurgo/yoroi-lib/-/yoroi-lib-0.2.0.tgz#c51942a3cc2ef38e483fa23f75976f0ea86839c6"
+  integrity sha512-lcYFco0x7gxIrPXWxxw3Fz1AtWqY9do3l7cFZINH29FUSfu3yUR/pvU/TMlSZBROs3yXv7BsMuGWYVMdUoZ98w==
   dependencies:
     "@cardano-foundation/ledgerjs-hw-app-cardano" "^5.1.0"
     "@emurgo/cross-csl-core" "^1.0.0"
