@@ -114,7 +114,7 @@
     "bip39": "2.5.0",
     "blake2b": "2.1.3",
     "bluebird": "3.7.2",
-    "bs58": "^4.0.1",
+    "bs58": "^5.0.0",
     "chacha": "2.1.0",
     "crypto-random-string": "3.3.0",
     "es6-error": "^4.1.1",
