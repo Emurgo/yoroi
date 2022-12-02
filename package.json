@@ -105,7 +105,7 @@
     "@react-navigation/native": "^6.0.16",
     "@react-navigation/routers": "^6.1.5",
     "@react-navigation/stack": "^6.3.7",
-    "@sentry/react-native": "3.3.2",
+    "@sentry/react-native": "4.10.1",
     "@unstoppabledomains/resolution": "6.0.3",
     "@wdio/cli": "^7.16.8",
     "add": "2.0.6",
