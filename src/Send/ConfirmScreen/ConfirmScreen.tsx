@@ -6,7 +6,7 @@ import {useIntl} from 'react-intl'
 import {Keyboard, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 
 import {Boundary, KeyboardSpacer, Spacer, StatusBar, Text, ValidatedTextInput} from '../../components'
-import {ConfirmTx} from '../../components/ConfirmTx'
+import {ConfirmTx, ConfirmTxWithOSAndSubmit} from '../../components/ConfirmTx'
 import {useBalances, useTokenInfo} from '../../hooks'
 import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../i18n/global-messages'
 import {CONFIG} from '../../legacy/config'
@@ -89,15 +89,19 @@ export const ConfirmScreen = () => {
       </ScrollView>
 
       <Actions>
-        <ConfirmTx
-          onSuccess={onSuccess}
-          yoroiUnsignedTx={yoroiUnsignedTx}
-          useUSB={useUSB}
-          setUseUSB={setUseUSB}
-          isProvidingPassword
-          providedPassword={password}
-          chooseTransportOnConfirmation
-        />
+        {wallet.isEasyConfirmationEnabled ? (
+          <ConfirmTxWithOSAndSubmit wallet={wallet} unsignedTx={yoroiUnsignedTx} onSuccess={() => onSuccess()} />
+        ) : (
+          <ConfirmTx
+            onSuccess={onSuccess}
+            yoroiUnsignedTx={yoroiUnsignedTx}
+            useUSB={useUSB}
+            setUseUSB={setUseUSB}
+            isProvidingPassword
+            providedPassword={password}
+            chooseTransportOnConfirmation
+          />
+        )}
       </Actions>
     </View>
   )

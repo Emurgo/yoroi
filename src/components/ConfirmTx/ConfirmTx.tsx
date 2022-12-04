@@ -20,6 +20,8 @@ import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
 import {Button, ButtonProps, ValidatedTextInput} from '..'
 import {Dialog, Step as DialogStep} from './Dialog'
 
+export {ConfirmTxWithOSAndSubmit} from './ConfirmTxWithOSAndSubmit'
+
 type ErrorData = {
   errorMessage: string
   errorLogs?: string

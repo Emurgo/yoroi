@@ -100,7 +100,7 @@ export const useAuthOsWithEasyConfirmation = (
   const strings = useStrings()
 
   const alert = (error: unknown) => {
-    if (error instanceof Keychain.Errors.CancelledByUser) return
+    if (error instanceof Keychain.Errors.CancelledByUser) return Alert.alert(strings.error, strings.biometricCancelled)
     if (error instanceof Keychain.Errors.TooManyAttempts) return Alert.alert(strings.error, strings.tooManyAttempts)
     return Alert.alert(strings.error, strings.unknownError)
   }
@@ -294,6 +294,7 @@ const useStrings = () => {
     error: intl.formatMessage(globalMessages.error),
     cancel: intl.formatMessage(globalMessages.cancel),
     authorize: intl.formatMessage(messages.authorize),
+    biometricCancelled: intl.formatMessage(messages.biometricCancelled),
   }
 }
 
@@ -309,6 +310,10 @@ const messages = defineMessages({
   unknownError: {
     id: 'components.send.biometricauthscreen.UNKNOWN_ERROR',
     defaultMessage: '!!!Unknown error!',
+  },
+  biometricCancelled: {
+    id: 'components.send.biometricauthscreen.biometricCancelled',
+    defaultMessage: '!!!Biometric cancelled',
   },
 })
 
