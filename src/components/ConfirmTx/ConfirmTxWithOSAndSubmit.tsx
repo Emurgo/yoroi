@@ -20,12 +20,7 @@ export const ConfirmTxWithOSAndSubmit = ({wallet, unsignedTx, onSuccess}: Props)
 
   const {authWithOs, isLoading: authenticating} = useAuthOsWithEasyConfirmation(
     {id: wallet.id},
-    {
-      onSuccess: async (rootKey) => {
-        const signed = await signAndSubmitTx({unsignedTx, rootKey})
-        signed
-      },
-    },
+    {onSuccess: (rootKey) => signAndSubmitTx({unsignedTx, rootKey})},
   )
 
   const {signAndSubmitTx, isLoading: processingTx} = useSignAndSubmitTx(

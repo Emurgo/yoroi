@@ -84,6 +84,7 @@ function loadStories() {
 	require('../src/components/Button/Button.stories');
 	require('../src/components/Checkbox/Checkbox.stories');
 	require('../src/components/ConfirmTx/ConfirmTx.stories');
+	require('../src/components/ConfirmTx/ConfirmTxWithOSAndSubmit.stories');
 	require('../src/components/ConfirmTx/Dialog.stories');
 	require('../src/components/DangerousActionModal/DangerousActionModal.stories');
 	require('../src/components/ErrorBoundary/ErrorBoundary.stories');
@@ -184,6 +185,7 @@ const stories = [
 	'../src/components/Button/Button.stories',
 	'../src/components/Checkbox/Checkbox.stories',
 	'../src/components/ConfirmTx/ConfirmTx.stories',
+	'../src/components/ConfirmTx/ConfirmTxWithOSAndSubmit.stories',
 	'../src/components/ConfirmTx/Dialog.stories',
 	'../src/components/DangerousActionModal/DangerousActionModal.stories',
 	'../src/components/ErrorBoundary/ErrorBoundary.stories',
