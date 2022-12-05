@@ -7,9 +7,10 @@ import {Device} from '../../../yoroi-wallets/types'
 type Props = {
   device: Device
   onSelect: (device: Device) => Promise<void> | void
+  disabled?: boolean
 }
 
-export const DeviceItem = ({device, onSelect}: Props) => {
+export const DeviceItem = ({device, onSelect, disabled}: Props) => {
   const [pending, setPending] = React.useState(false)
   const onPress = async () => {
     setPending(true)
@@ -21,7 +22,7 @@ export const DeviceItem = ({device, onSelect}: Props) => {
   }
 
   return (
-    <TouchableOpacity style={styles.deviceItem} onPress={onPress} disabled={pending}>
+    <TouchableOpacity style={styles.deviceItem} onPress={onPress} disabled={pending || disabled}>
       <Text style={styles.deviceName}>{device.name}</Text>
       {pending && <ActivityIndicator color="black" />}
     </TouchableOpacity>

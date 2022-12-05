@@ -51,9 +51,9 @@ export const ConnectNanoXScreen = ({defaultDevices}: Props) => {
     }
   }
 
-  const onConnectBLE = (deviceId: DeviceId) => {
+  const onConnectBLE = async (deviceId: DeviceId) => {
     Logger.debug('deviceId', deviceId)
-    getHWDeviceInfo(walletImplementationId, deviceId, null, useUSB).then(onSuccess).catch(onError)
+    await getHWDeviceInfo(walletImplementationId, deviceId, null, useUSB).then(onSuccess).catch(onError)
   }
 
   const onConnectUSB = (deviceObj: DeviceObj) => {
