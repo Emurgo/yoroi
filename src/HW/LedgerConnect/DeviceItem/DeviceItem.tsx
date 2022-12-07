@@ -21,8 +21,14 @@ export const DeviceItem = ({device, onSelect, disabled}: Props) => {
     }
   }
 
+  const isButtonDisabled = disabled || pending
+
   return (
-    <TouchableOpacity style={styles.deviceItem} onPress={onPress} disabled={pending || disabled}>
+    <TouchableOpacity
+      style={[styles.deviceItem, isButtonDisabled && styles.disabled]}
+      onPress={onPress}
+      disabled={isButtonDisabled}
+    >
       <Text style={styles.deviceName}>{device.name}</Text>
       {pending && <ActivityIndicator color="black" />}
     </TouchableOpacity>
@@ -47,5 +53,8 @@ export const styles = StyleSheet.create({
     lineHeight: 24,
     fontWeight: 'bold',
     color: COLORS.LIGHT_POSITIVE_GREEN,
+  },
+  disabled: {
+    opacity: 0.5,
   },
 })
