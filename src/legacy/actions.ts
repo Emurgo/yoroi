@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import 'react-intl'
-import 'redux'
 
 import type {IntlShape} from 'react-intl'
 import {Alert} from 'react-native'
@@ -11,7 +10,7 @@ import {getCrashReportsEnabled} from '../hooks'
 import globalMessages, {errorMessages} from '../i18n/global-messages'
 import {walletManager} from '../yoroi-wallets'
 import type {AppSettingsKey} from './appSettings'
-import {APP_SETTINGS_KEYS, readAppSettings, removeAppSettings, writeAppSettings} from './appSettings'
+import {APP_SETTINGS_KEYS, readAppSettings, writeAppSettings} from './appSettings'
 import assert from './assert'
 import crashReporting from './crashReporting'
 import {installationIdSelector} from './selectors'
@@ -26,21 +25,6 @@ export const setAppSettingField = (fieldName: AppSettingsKey, value: any) => asy
     reducer: (state: State, payload) => payload,
   })
 }
-export const clearAppSettingField = (fieldName: AppSettingsKey) => async (dispatch: Dispatch<any>) => {
-  await removeAppSettings(fieldName)
-  dispatch({
-    path: ['appSettings', fieldName],
-    payload: null,
-    type: 'REMOVE_APP_SETTING_FIELD',
-    reducer: (state: State, payload) => payload,
-  })
-}
-export const setEasyConfirmation = (enable: boolean) => ({
-  path: ['wallet', 'isEasyConfirmationEnabled'],
-  payload: enable,
-  reducer: (state: State, value: boolean) => value,
-  type: 'SET_EASY_CONFIRMATION',
-})
 
 const _setAppSettings = (appSettings) => ({
   path: ['appSettings'],
