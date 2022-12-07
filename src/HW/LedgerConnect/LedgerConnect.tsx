@@ -162,7 +162,6 @@ class _LedgerConnect extends React.Component<Props, State> {
   }
 
   _onSelectDevice = async (device: Device) => {
-    if (this.state.deviceId != null) return
     this._unsubscribe()
     const {onConnectBLE} = this.props
     try {
@@ -274,7 +273,7 @@ class _LedgerConnect extends React.Component<Props, State> {
               contentContainerStyle={styles.flatListContentContainer}
               data={devices}
               renderItem={({item}: {item: Device}) => (
-                <DeviceItem device={item} onSelect={() => this._onSelectDevice(item)} />
+                <DeviceItem disabled={waiting} device={item} onSelect={() => this._onSelectDevice(item)} />
               )}
               ListHeaderComponent={this.ListHeader}
               keyExtractor={(item) => item.id.toString()}
