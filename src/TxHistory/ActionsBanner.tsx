@@ -16,15 +16,21 @@ const ACTION_PROPS = {
   color: COLORS.WHITE,
 }
 
-export const ActionsBanner = () => {
+export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   const strings = useStrings()
   const navigateTo = useNavigateTo()
   const wallet = useSelectedWallet()
   const {resetForm} = useSend()
 
   const onSend = () => {
+    if (disabled) return
     navigateTo.send()
     resetForm()
+  }
+
+  const onReceive = () => {
+    if (disabled) return
+    navigateTo.receive()
   }
 
   return (
@@ -32,7 +38,7 @@ export const ActionsBanner = () => {
       <Spacer height={16} />
 
       <View style={styles.centralized}>
-        <View style={styles.row}>
+        <View style={[styles.row, disabled && styles.disabled]}>
           {!wallet.isReadOnly && (
             <View style={styles.centralized}>
               <TouchableOpacity style={styles.actionIcon} onPress={onSend} testID="sendButton">
@@ -45,7 +51,7 @@ export const ActionsBanner = () => {
           {!wallet.isReadOnly && <Spacer width={32} />}
 
           <View style={styles.centralized}>
-            <TouchableOpacity style={styles.actionIcon} onPress={navigateTo.receive} testID="receiveButton">
+            <TouchableOpacity style={styles.actionIcon} onPress={onReceive} testID="receiveButton">
               <Icon.Received {...ACTION_PROPS} />
             </TouchableOpacity>
             <Text style={styles.actionLabel}>{strings.receiveLabel}</Text>
@@ -106,6 +112,9 @@ const styles = StyleSheet.create({
     fontSize: 10,
     color: COLORS.TEXT_GRAY3,
     fontFamily: 'Rubik-Regular',
+  },
+  disabled: {
+    opacity: 0.5,
   },
 })
 

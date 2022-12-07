@@ -1123,20 +1123,6 @@ export class ShelleyWallet implements WalletInterface {
     }
   }
 
-  isUsedAddress(address: string) {
-    if (!this.transactionCache) throw new Error('invalid wallet state')
-    return !!this.transactionCache.perAddressTxs[address] && this.transactionCache.perAddressTxs[address].length > 0
-  }
-
-  getLastUsedIndex(chain: AddressChain): number {
-    for (let i = chain.size() - 1; i >= 0; i--) {
-      if (this.isUsedAddress(chain.addresses[i])) {
-        return i
-      }
-    }
-    return -1
-  }
-
   private getAddressesInBlocks() {
     if (!this.internalChain) throw new Error('invalid wallet state')
     if (!this.externalChain) throw new Error('invalid wallet state')
@@ -1156,8 +1142,25 @@ export class ShelleyWallet implements WalletInterface {
     // last chunk gap limit check
     const filterFn = (addrs) => api.filterUsedAddresses(addrs, this.getBackendConfig())
     await Promise.all([this.internalChain.sync(filterFn), this.externalChain.sync(filterFn)])
+  }
 
-    // update receive screen to include any new addresses found
+  isUsedAddress(address: string) {
+    if (!this.transactionCache) throw new Error('invalid wallet state')
+    return !!this.transactionCache.perAddressTxs[address] && this.transactionCache.perAddressTxs[address].length > 0
+  }
+
+  getLastUsedIndex(chain: AddressChain): number {
+    for (let i = chain.size() - 1; i >= 0; i--) {
+      if (this.isUsedAddress(chain.addresses[i])) {
+        return i
+      }
+    }
+    return -1
+  }
+
+  updateLastGeneratedAddressIndex = () => {
+    if (!this.externalChain) throw new Error('invalid wallet state')
+
     const lastUsedIndex = this.getLastUsedIndex(this.externalChain)
     if (lastUsedIndex > this.state.lastGeneratedAddressIndex) {
       this.state.lastGeneratedAddressIndex = lastUsedIndex
@@ -1178,6 +1181,8 @@ export class ShelleyWallet implements WalletInterface {
 
     // later only if utxos have changed
     await this.transactionCache.doSync(this.getAddressesInBlocks(), this.getBackendConfig())
+
+    this.updateLastGeneratedAddressIndex()
   }
 
   // ========== UI state ============= //
