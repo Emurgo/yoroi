@@ -19,7 +19,6 @@ function loadStories() {
 	require('../src/HW/LedgerConnect/DeviceItem/DeviceItem.stories');
 	require('../src/HW/LedgerConnect/LedgerConnect.stories');
 	require('../src/HW/LedgerTransportSwitchModal/LedgerTransportSwitchModal.stories');
-	require('../src/MaintenanceScreen.stories');
 	require('../src/Menu/Menu.stories');
 	require('../src/Receive/AddressModal.stories');
 	require('../src/Receive/Addresses.stories');
@@ -119,7 +118,6 @@ const stories = [
 	'../src/HW/LedgerConnect/DeviceItem/DeviceItem.stories',
 	'../src/HW/LedgerConnect/LedgerConnect.stories',
 	'../src/HW/LedgerTransportSwitchModal/LedgerTransportSwitchModal.stories',
-	'../src/MaintenanceScreen.stories',
 	'../src/Menu/Menu.stories',
 	'../src/Receive/AddressModal.stories',
 	'../src/Receive/Addresses.stories',

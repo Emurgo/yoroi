@@ -98,20 +98,6 @@ export class WalletManager {
     this.subscriptions.forEach((handler) => handler(event))
   }
 
-  _notifySyncError = (error: null | Error) => {
-    this._syncErrorSubscribers.forEach((handler) => handler(error))
-  }
-
-  _notifyServerSync = (status: ServerStatus) => {
-    this._serverSyncSubscribers.forEach((handler) =>
-      handler({
-        isServerOk: status.isServerOk,
-        isMaintenance: status.isMaintenance,
-        serverTime: status.serverTime || Date.now(),
-      }),
-    )
-  }
-
   _notifyOnOpen = () => {
     this._onOpenSubscribers.forEach((handler) => handler())
   }
@@ -126,14 +112,6 @@ export class WalletManager {
     return () => {
       this.subscriptions = this.subscriptions.filter((sub) => sub !== subscription)
     }
-  }
-
-  subscribeBackgroundSyncError(handler: (err: null | Error) => void) {
-    this._syncErrorSubscribers.push(handler)
-  }
-
-  subscribeServerSync(handler: (status: ServerStatus) => void) {
-    this._serverSyncSubscribers.push(handler)
   }
 
   subscribeOnOpen(handler: () => void) {
@@ -179,12 +157,9 @@ export class WalletManager {
         const wallet = this._wallet
         await wallet.tryDoFullSync()
         await wallet.save()
-        const status = await wallet.checkServerStatus()
-        this._notifyServerSync(status)
       }
-      this._notifySyncError(null)
-    } catch (e) {
-      this._notifySyncError(e as Error)
+    } catch (error) {
+      Logger.error((error as Error)?.message)
     } finally {
       if (!DISABLE_BACKGROUND_SYNC && process.env.NODE_ENV !== 'test') {
         setTimeout(() => this._backgroundSync(), CONFIG.HISTORY_REFRESH_TIME)
