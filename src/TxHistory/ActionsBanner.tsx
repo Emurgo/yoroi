@@ -28,7 +28,6 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   }
 
   const onReceive = () => {
-    if (disabled) return
     navigateTo.receive()
   }
 
