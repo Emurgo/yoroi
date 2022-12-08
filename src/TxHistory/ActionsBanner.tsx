@@ -39,7 +39,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
         <View style={[styles.row, disabled && styles.disabled]}>
           {!wallet.isReadOnly && (
             <View style={styles.centralized}>
-              <TouchableOpacity style={styles.actionIcon} onPress={onSend} testID="sendButton">
+              <TouchableOpacity style={styles.actionIcon} onPress={onSend} testID="sendButton" disabled={disabled}>
                 <Icon.Send {...ACTION_PROPS} />
               </TouchableOpacity>
               <Text style={styles.actionLabel}>{strings.sendLabel}</Text>
