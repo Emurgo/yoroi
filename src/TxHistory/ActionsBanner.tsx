@@ -23,7 +23,6 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   const {resetForm} = useSend()
 
   const onSend = () => {
-    if (disabled) return
     navigateTo.send()
     resetForm()
   }
