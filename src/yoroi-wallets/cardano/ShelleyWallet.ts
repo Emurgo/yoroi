@@ -209,6 +209,8 @@ export class ShelleyWallet implements WalletInterface {
     await this.internalChain.initialize()
     await this.externalChain.initialize()
 
+    await this.discoverAddresses()
+
     this.setupSubscriptions()
     this.notify({type: 'initialize'})
 
@@ -355,7 +357,8 @@ export class ShelleyWallet implements WalletInterface {
 
     this.integrityCheck()
 
-    // subscriptions
+    await this.discoverAddresses()
+
     this.setupSubscriptions()
 
     this.isInitialized = true
@@ -1177,7 +1180,7 @@ export class ShelleyWallet implements WalletInterface {
     Logger.info('Discovery done, now syncing transactions')
 
     await this.discoverAddresses()
-    
+
     await Promise.all([
       this.syncUtxos(),
       this.transactionCache.doSync(this.getAddressesInBlocks(), this.getBackendConfig()),
