@@ -12,7 +12,7 @@ import {LoadingBoundary} from './components'
 import {ErrorBoundary} from './components/ErrorBoundary'
 import {LanguageProvider} from './i18n'
 import translations from './i18n/translations'
-import {handleGeneralError, setupHooks} from './legacy/actions'
+import {handleGeneralError} from './legacy/actions'
 import {CONFIG} from './legacy/config'
 import getConfiguredStore from './legacy/configureStore'
 import {ApiError, NetworkError} from './legacy/errors'
@@ -61,7 +61,6 @@ global.onunhandledrejection = (error: any) => {
 }
 
 const store = getConfiguredStore()
-store.dispatch(setupHooks() as any)
 
 const queryClient = new QueryClient()
 
