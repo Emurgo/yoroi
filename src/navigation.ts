@@ -240,7 +240,6 @@ export type MenuRoutes = {
 }
 
 export type AppRoutes = {
-  maintenance: undefined
   'first-run': NavigatorScreenParams<FirstRunRoutes>
   developer: undefined
   storybook: undefined

@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import 'react-intl'
-import 'redux'
 
 import type {IntlShape} from 'react-intl'
 import {Alert} from 'react-native'
@@ -9,15 +8,11 @@ import uuid from 'uuid'
 
 import {getCrashReportsEnabled} from '../hooks'
 import globalMessages, {errorMessages} from '../i18n/global-messages'
-import {Logger} from '../legacy/logging'
-import {ServerStatus, walletManager} from '../yoroi-wallets'
-import {checkServerStatus} from '../yoroi-wallets'
+import {walletManager} from '../yoroi-wallets'
 import type {AppSettingsKey} from './appSettings'
-import {APP_SETTINGS_KEYS, readAppSettings, removeAppSettings, writeAppSettings} from './appSettings'
+import {APP_SETTINGS_KEYS, readAppSettings, writeAppSettings} from './appSettings'
 import assert from './assert'
-import {CONFIG} from './config'
 import crashReporting from './crashReporting'
-import {getCardanoNetworkConfigById} from './networks'
 import {installationIdSelector} from './selectors'
 import type {State} from './state'
 
@@ -30,21 +25,6 @@ export const setAppSettingField = (fieldName: AppSettingsKey, value: any) => asy
     reducer: (state: State, payload) => payload,
   })
 }
-export const clearAppSettingField = (fieldName: AppSettingsKey) => async (dispatch: Dispatch<any>) => {
-  await removeAppSettings(fieldName)
-  dispatch({
-    path: ['appSettings', fieldName],
-    payload: null,
-    type: 'REMOVE_APP_SETTING_FIELD',
-    reducer: (state: State, payload) => payload,
-  })
-}
-export const setEasyConfirmation = (enable: boolean) => ({
-  path: ['wallet', 'isEasyConfirmationEnabled'],
-  payload: enable,
-  reducer: (state: State, value: boolean) => value,
-  type: 'SET_EASY_CONFIRMATION',
-})
 
 const _setAppSettings = (appSettings) => ({
   path: ['appSettings'],
@@ -72,30 +52,7 @@ const initInstallationId =
     return newInstallationId
   }
 
-const _setServerStatus = (serverStatus: ServerStatus) => (dispatch: Dispatch<any>) =>
-  dispatch({
-    path: ['serverStatus'],
-    payload: serverStatus,
-    type: 'SET_SERVER_STATUS',
-    reducer: (state: State, payload) => payload,
-  })
-
 export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
-  try {
-    // check status of default network
-    const backendConfig = getCardanoNetworkConfigById(CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID).BACKEND
-    const status = await checkServerStatus(backendConfig)
-    dispatch(
-      _setServerStatus({
-        isServerOk: status.isServerOk,
-        isMaintenance: status.isMaintenance,
-        serverTime: status.serverTime || Date.now(),
-      }),
-    )
-  } catch (e) {
-    Logger.warn('actions::initApp could not retrieve server status', e)
-  }
-
   await dispatch(reloadAppSettings())
   await dispatch(initInstallationId())
 
@@ -106,10 +63,6 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
   }
 
   await walletManager.initialize()
-}
-
-export const setupHooks = () => (dispatch: Dispatch<any>) => {
-  walletManager.subscribeServerSync((status) => dispatch(_setServerStatus(status)))
 }
 
 type DialogOptions = {

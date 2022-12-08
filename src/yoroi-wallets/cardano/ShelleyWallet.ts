@@ -1177,10 +1177,11 @@ export class ShelleyWallet implements WalletInterface {
     Logger.info('Discovery done, now syncing transactions')
 
     await this.discoverAddresses()
-    await this.syncUtxos()
-
-    // later only if utxos have changed
-    await this.transactionCache.doSync(this.getAddressesInBlocks(), this.getBackendConfig())
+    
+    await Promise.all([
+      this.syncUtxos(),
+      this.transactionCache.doSync(this.getAddressesInBlocks(), this.getBackendConfig()),
+    ])
 
     this.updateLastGeneratedAddressIndex()
   }
