@@ -77,7 +77,6 @@ export const TextInput = React.forwardRef((props: Props, ref: ForwardedRef<RNTex
         value={value}
         onChange={() => setErrorTextEnabled(false)}
         autoCorrect={false}
-        autoCompleteType="off"
         autoCapitalize="none"
         onBlur={() => {
           if (showErrorOnBlur && !errorTextEnabled && !isEmptyString(errorText)) {

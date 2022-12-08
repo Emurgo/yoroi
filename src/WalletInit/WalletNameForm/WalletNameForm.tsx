@@ -75,7 +75,7 @@ export const WalletNameForm = ({
           onChangeText={(walletName: string) => setName(walletName.trim())}
           errorText={walletNameErrorText}
           disabled={isWaiting}
-          autoComplete={false}
+          autoComplete="off"
           testID="walletNameInput"
         />
 
