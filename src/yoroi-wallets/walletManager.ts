@@ -15,7 +15,6 @@ import {migrateWalletMetas} from '../Storage/migrations/walletMeta'
 import {
   isYoroiWallet,
   NetworkId,
-  ServerStatus,
   ShelleyWallet,
   WalletImplementationId,
   WalletInterface,
@@ -41,8 +40,6 @@ export class WalletManager {
   _wallet: null | WalletInterface = null
   _id = ''
   private subscriptions: Array<WalletManagerSubscription> = []
-  _syncErrorSubscribers: Array<(err: null | Error) => void> = []
-  _serverSyncSubscribers: Array<(status: ServerStatus) => void> = []
   _onOpenSubscribers: Array<() => void> = []
   _onTxHistoryUpdateSubscribers: Array<() => void> = []
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
