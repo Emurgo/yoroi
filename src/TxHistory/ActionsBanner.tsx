@@ -27,10 +27,6 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
     resetForm()
   }
 
-  const onReceive = () => {
-    navigateTo.receive()
-  }
-
   return (
     <View style={styles.banner}>
       <Spacer height={16} />
