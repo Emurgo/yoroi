@@ -4,7 +4,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {CopyButton, Icon, Spacer, Text} from '../components'
-import {useReceiveAddresses, useWallet} from '../hooks'
+import {useReceiveAddresses} from '../hooks'
 import {isEmptyString} from '../legacy/utils'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
@@ -189,7 +189,6 @@ type Addresses = {
 const useAddresses = (): Addresses => {
   const wallet = useSelectedWallet()
   const receiveAddresses = useReceiveAddresses(wallet)
-  useWallet(wallet, 'transactions')
   const isUsedAddressIndex = wallet.isUsedAddressIndex
 
   return receiveAddresses.reduce(
