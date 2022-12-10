@@ -2,7 +2,7 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {ColorSchemeName, ScrollView, Text, TextInput, View} from 'react-native'
 
-import {mockTransaction} from '../../../storybook/mocks'
+import {mockTransactionInfo} from '../../../storybook/mocks'
 import {Icon} from '..'
 
 storiesOf('Icon', module).add('Gallery', () => {
@@ -34,27 +34,27 @@ storiesOf('Icon', module).add('Gallery', () => {
         <Item icon={<Icon.Info size={40} />} title="Info" />
         <Item icon={<Icon.Menu size={40} />} title="Menu" />
         <Item
-          icon={<Icon.Direction transaction={mockTransaction({direction: 'SENT', status: 'SUCCESSFUL'})} />}
+          icon={<Icon.Direction transaction={mockTransactionInfo({direction: 'SENT', status: 'SUCCESSFUL'})} />}
           title="Success-Sent"
         />
         <Item
-          icon={<Icon.Direction transaction={mockTransaction({direction: 'RECEIVED', status: 'SUCCESSFUL'})} />}
+          icon={<Icon.Direction transaction={mockTransactionInfo({direction: 'RECEIVED', status: 'SUCCESSFUL'})} />}
           title="Success-Received"
         />
         <Item
-          icon={<Icon.Direction transaction={mockTransaction({direction: 'SELF', status: 'SUCCESSFUL'})} />}
+          icon={<Icon.Direction transaction={mockTransactionInfo({direction: 'SELF', status: 'SUCCESSFUL'})} />}
           title="Success-Intrawallet"
         />
         <Item
-          icon={<Icon.Direction transaction={mockTransaction({direction: 'SENT', status: 'PENDING'})} />}
+          icon={<Icon.Direction transaction={mockTransactionInfo({direction: 'SENT', status: 'PENDING'})} />}
           title="Pending-Sent"
         />
         <Item
-          icon={<Icon.Direction transaction={mockTransaction({direction: 'RECEIVED', status: 'PENDING'})} />}
+          icon={<Icon.Direction transaction={mockTransactionInfo({direction: 'RECEIVED', status: 'PENDING'})} />}
           title="Pending-Received"
         />
         <Item
-          icon={<Icon.Direction transaction={mockTransaction({direction: 'SELF', status: 'PENDING'})} />}
+          icon={<Icon.Direction transaction={mockTransactionInfo({direction: 'SELF', status: 'PENDING'})} />}
           title="Pending-Intrawallet"
         />
         <Item icon={<Icon.NoAssetImage />} title="No Asset Image" />
