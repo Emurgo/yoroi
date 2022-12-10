@@ -4,7 +4,7 @@ import React from 'react'
 import {useIntl} from 'react-intl'
 import {Alert, Platform, SectionList, SectionListProps, StyleSheet, View} from 'react-native'
 
-import {Text} from '../../components'
+import {Spacer, Text} from '../../components'
 import features from '../../features'
 import {useTransactionInfos} from '../../hooks'
 import {actionMessages} from '../../i18n/global-messages'
@@ -35,7 +35,7 @@ export const TxHistoryList = ({onScrollUp, onScrollDown, ...props}: Props) => {
   const handleSearch = () => Alert.alert(strings.soon, strings.soon)
 
   return (
-    <View style={styles.listRoot}>
+    <View style={styles.container}>
       {(features.txHistory.export || features.txHistory.search) && (
         <ActionsBanner onExport={handleExport} onSearch={handleSearch} />
       )}
@@ -43,8 +43,10 @@ export const TxHistoryList = ({onScrollUp, onScrollDown, ...props}: Props) => {
         {...props}
         {...onScroll}
         key={key}
+        contentContainerStyle={{paddingHorizontal: 16, paddingBottom: 8}}
         ListEmptyComponent={<EmptyHistory />}
         renderItem={({item}) => <TxHistoryListItem transaction={item} />}
+        ItemSeparatorComponent={() => <Spacer height={16} />}
         renderSectionHeader={({section: {data}}) => <DayHeader ts={data[0].submittedAt} />}
         sections={groupedTransactions}
         keyExtractor={(item) => item.id}
@@ -104,7 +106,7 @@ const getTransactionsByDate = (transactions: Record<string, TransactionInfo>) =>
     .value()
 
 const styles = StyleSheet.create({
-  listRoot: {
+  container: {
     flex: 1,
   },
   dayHeaderRoot: {
