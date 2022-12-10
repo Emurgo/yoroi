@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {Platform} from 'react-native'
 import * as Keychain from 'react-native-keychain'
 
@@ -64,20 +63,23 @@ export async function authOsEnabled() {
   })()
 }
 
-// react-native-keychain doesn't normalize the errors, iOS = `Error.code`
-// Android the code is inside the message i.e "code 7: Too many attempts"
-const errorDecoder = Platform.select({
-  android: (error: any) => {
-    if (/code: 13/.test(error?.message)) return new CancelledByUser() // cancelled by user
-
-    // iOS it will fallback to PIN, if wrong pin, sensor would be disabled (app will trigger pin creation)
+// react-native-keychain doesn't normalize the errors
+// iOS = `Error.code`
+// Android = Error.message
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const errorDecoder = Platform.select<(error: any) => Error>({
+  android: (error) => {
+    if (/code: 13/.test(error?.message)) return new CancelledByUser()
+    if (/code: 10/.test(error?.message)) return new CancelledByUser()
     if (/code: 7/.test(error?.message)) return new TooManyAttempts()
 
     return error
   },
 
-  ios: (error: any) => {
-    if (error?.code === '-128') return new CancelledByUser() // cancelled by user
+  ios: (error) => {
+    if (error?.code === '-128') return new CancelledByUser()
+    // if too many attempts, iOS will fallback to PIN,
+    // if incorrect pin, sensor would be disabled (app will trigger pin creation)
 
     return error
   },
