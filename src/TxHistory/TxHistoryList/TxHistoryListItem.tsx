@@ -80,7 +80,7 @@ export const TxHistoryListItem = ({transaction}: Props) => {
         <Spacer height={4} />
 
         <Text secondary small testID="submittedAtText">
-          {totalAssets === 0 && submittedAt}
+          {submittedAt}
         </Text>
       </Middle>
 
@@ -92,11 +92,7 @@ export const TxHistoryListItem = ({transaction}: Props) => {
         )}
 
         {totalAssets !== 0 && (
-          <Row>
-            <Text secondary small testID="submittedAtText">
-              {submittedAt}
-            </Text>
-
+          <Row style={{justifyContent: 'space-between'}}>
             <Text testID="totalAssetsText">{strings.assets(totalAssets)}</Text>
           </Row>
         )}
