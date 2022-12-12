@@ -92,7 +92,7 @@ export const TxHistoryListItem = ({transaction}: Props) => {
         )}
 
         {totalAssets !== 0 && (
-          <Row style={{justifyContent: 'space-between'}}>
+          <Row>
             <Text testID="totalAssetsText">{strings.assets(totalAssets)}</Text>
           </Row>
         )}
