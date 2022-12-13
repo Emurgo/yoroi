@@ -18,4 +18,6 @@ const onSelect = async (device) => {
   action('onSelect end')(device)
 }
 
-storiesOf('Device Item Button', module).add('default', () => <DeviceItem onSelect={onSelect} device={device} />)
+storiesOf('Device Item Button', module)
+  .add('default', () => <DeviceItem onSelect={onSelect} device={device} />)
+  .add('disabled', () => <DeviceItem device={device} onSelect={onSelect} disabled />)

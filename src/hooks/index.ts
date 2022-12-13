@@ -105,6 +105,7 @@ export const useWallet = (wallet: YoroiWallet, event: WalletEvent['type']) => {
 
 export const useReceiveAddresses = (wallet: YoroiWallet) => {
   useWallet(wallet, 'addresses')
+  useWallet(wallet, 'transactions')
 
   return wallet.receiveAddresses
 }
