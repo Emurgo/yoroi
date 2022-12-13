@@ -8,17 +8,18 @@ import {Provider} from 'react-redux'
 
 import App from './App'
 import {name as appName} from './app.json'
-import {Boundary} from './components'
+import {LoadingBoundary} from './components'
 import {ErrorBoundary} from './components/ErrorBoundary'
 import {LanguageProvider} from './i18n'
 import translations from './i18n/translations'
-import {handleGeneralError, setupHooks} from './legacy/actions'
+import {handleGeneralError} from './legacy/actions'
 import {CONFIG} from './legacy/config'
 import getConfiguredStore from './legacy/configureStore'
 import {ApiError, NetworkError} from './legacy/errors'
 import {Logger, setLogLevel} from './legacy/logging'
 import {isEmptyString} from './legacy/utils'
 import {CurrencyProvider} from './Settings/Currency/CurrencyContext'
+import {useMigrations} from './Storage'
 import {ThemeProvider} from './theme'
 import {WalletManagerProvider} from './WalletManager'
 import {walletManager} from './yoroi-wallets'
@@ -60,17 +61,17 @@ global.onunhandledrejection = (error: any) => {
 }
 
 const store = getConfiguredStore()
-store.dispatch(setupHooks() as any)
 
 const queryClient = new QueryClient()
 
 const AppWithProviders = () => {
-  return (
+  const migrated = useMigrations()
+  return migrated ? (
     <WalletManagerProvider walletManager={walletManager}>
       <ErrorBoundary>
         <Provider store={store}>
           <QueryClientProvider client={queryClient}>
-            <Boundary>
+            <LoadingBoundary>
               <ThemeProvider>
                 <LanguageProvider>
                   <CurrencyProvider>
@@ -78,12 +79,12 @@ const AppWithProviders = () => {
                   </CurrencyProvider>
                 </LanguageProvider>
               </ThemeProvider>
-            </Boundary>
+            </LoadingBoundary>
           </QueryClientProvider>
         </Provider>
       </ErrorBoundary>
     </WalletManagerProvider>
-  )
+  ) : null
 }
 
 AppRegistry.registerComponent(appName, () => AppWithProviders)

@@ -1,20 +1,13 @@
-import {useNetInfo} from '@react-native-community/netinfo'
-import React, {useEffect, useState} from 'react'
+import {useFocusEffect} from '@react-navigation/native'
+import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {LayoutAnimation, StyleSheet, TouchableOpacity, View} from 'react-native'
-import {useDispatch, useSelector} from 'react-redux'
 
 import infoIcon from '../assets/img/icon/info-light-green.png'
-import {OfflineBanner, Spacer, StatusBar, Text} from '../components'
+import {Boundary, Spacer, StatusBar, Text} from '../components'
+import {useSync} from '../hooks'
 import {assetMessages, txLabels} from '../i18n/global-messages'
-import {fetchAccountState} from '../legacy/account'
 import {isByron} from '../legacy/config'
-import {updateHistory} from '../legacy/history'
-import {
-  isSynchronizingHistorySelector,
-  lastHistorySyncErrorSelector,
-  walletIsInitializedSelector,
-} from '../legacy/selectors'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
 import {ActionsBanner} from './ActionsBanner'
@@ -22,7 +15,6 @@ import {AssetList} from './AssetList'
 import {BalanceBanner} from './BalanceBanner'
 import {CollapsibleHeader} from './CollapsibleHeader'
 import {LockedDeposit} from './LockedDeposit'
-import {SyncErrorBanner} from './SyncErrorBanner'
 import {TxHistoryList} from './TxHistoryList'
 import {WarningBanner} from './WarningBanner'
 
@@ -30,20 +22,9 @@ type Tab = 'transactions' | 'assets'
 
 export const TxHistory = () => {
   const strings = useStrings()
-  const dispatch = useDispatch()
-  const isSyncing = useSelector(isSynchronizingHistorySelector)
-  const lastSyncError = useSelector(lastHistorySyncErrorSelector)
-  const netInfo = useNetInfo()
-  const isOnline = netInfo.type !== 'none' && netInfo.type !== 'unknown'
   const wallet = useSelectedWallet()
-  const walletIsInitialized = useSelector(walletIsInitializedSelector)
 
   const [showWarning, setShowWarning] = useState(isByron(wallet.walletImplementationId))
-
-  useEffect(() => {
-    dispatch(updateHistory())
-    dispatch(fetchAccountState())
-  }, [dispatch])
 
   const [expanded, setExpanded] = useState(true)
 
@@ -53,21 +34,17 @@ export const TxHistory = () => {
     setActiveTab(tab)
   }
 
-  if (!walletIsInitialized) {
-    return <Text>l10n Please wait while wallet is initialized...</Text>
-  }
+  const {sync, isLoading} = useSync(wallet)
+  useFocusEffect(React.useCallback(() => sync(), [sync]))
 
   return (
     <View style={styles.scrollView}>
       <StatusBar type="light" />
 
       <View style={styles.container}>
-        <OfflineBanner />
-        <SyncErrorBanner showRefresh={!isSyncing} isOpen={isOnline && lastSyncError} />
-
         <CollapsibleHeader expanded={expanded}>
           <BalanceBanner />
-          <ActionsBanner />
+          <ActionsBanner disabled={isLoading} />
         </CollapsibleHeader>
 
         <Tabs>
@@ -113,18 +90,20 @@ export const TxHistory = () => {
             <TxHistoryList
               onScrollUp={() => setExpanded(true)}
               onScrollDown={() => setExpanded(false)}
-              refreshing={isSyncing}
-              onRefresh={() => dispatch(updateHistory())}
+              refreshing={isLoading}
+              onRefresh={() => sync()}
             />
           </TabPanel>
 
           <TabPanel active={activeTab === 'assets'}>
-            <AssetList
-              onScrollUp={() => setExpanded(true)}
-              onScrollDown={() => setExpanded(false)}
-              refreshing={isSyncing}
-              onRefresh={() => dispatch(updateHistory())}
-            />
+            <Boundary loading={{fallbackProps: {style: {flex: 1}}}}>
+              <AssetList
+                onScrollUp={() => setExpanded(true)}
+                onScrollDown={() => setExpanded(false)}
+                refreshing={isLoading}
+                onRefresh={() => sync()}
+              />
+            </Boundary>
           </TabPanel>
         </TabPanels>
       </View>

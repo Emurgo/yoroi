@@ -4,17 +4,16 @@ import React from 'react'
 import {useIntl} from 'react-intl'
 import {Image, Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useSelector} from 'react-redux'
 
 import SupportImage from '../assets/img/icon/shape.png'
-import {CatalystNavigator} from '../Catalyst/CatalystNavigator'
-import {Icon, Spacer, Text} from '../components'
+import {useCanVote} from '../Catalyst/hooks'
+import {InsufficientFundsModal} from '../Catalyst/InsufficientFundsModal'
+import {Boundary, Icon, Spacer, Text} from '../components'
+import {usePrefetchStakingInfo} from '../Dashboard/StakePoolInfos'
 import {useWalletMetas} from '../hooks'
-import {CONFIG} from '../legacy/config'
-import {tokenBalanceSelector} from '../legacy/selectors'
 import {defaultStackNavigationOptions, useWalletNavigation} from '../navigation'
+import {useSelectedWallet} from '../SelectedWallet'
 import {useWalletManager} from '../WalletManager'
-import {InsufficientFundsModal} from './InsufficientFundsModal'
 
 const MenuStack = createStackNavigator()
 
@@ -23,11 +22,14 @@ export const MenuNavigator = () => {
 
   return (
     <MenuStack.Navigator
-      initialRouteName="menu"
-      screenOptions={{...defaultStackNavigationOptions, headerLeft: () => null}}
+      initialRouteName="_menu"
+      screenOptions={{
+        ...defaultStackNavigationOptions,
+        headerLeft: () => null,
+        detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
+      }}
     >
-      <MenuStack.Screen name="menu" component={Menu} options={{title: strings.menu}} />
-      <MenuStack.Screen name="catalyst-voting" component={CatalystNavigator} />
+      <MenuStack.Screen name="_menu" component={Menu} options={{title: strings.menu}} />
     </MenuStack.Navigator>
   )
 }
@@ -49,11 +51,13 @@ export const Menu = () => {
         />
         <HR />
 
-        <Catalyst //
-          label={strings.catalystVoting}
-          onPress={navigateTo.catalystVoting}
-          left={<Icon.Catalyst size={26} color="#6B7384" />}
-        />
+        <Boundary loading={{fallbackProps: {size: 'small', style: {padding: 16}}}} error={{size: 'inline'}}>
+          <Catalyst //
+            label={strings.catalystVoting}
+            onPress={navigateTo.catalystVoting}
+            left={<Icon.Catalyst size={26} color="#6B7384" />}
+          />
+        </Boundary>
         <HR />
 
         <Settings //
@@ -99,9 +103,19 @@ const SupportLink = () => {
   )
 }
 
-const Item = ({label, left, onPress}: {label: string; left: React.ReactElement; onPress: () => void}) => {
+const Item = ({
+  label,
+  left,
+  disabled = false,
+  onPress,
+}: {
+  label: string
+  left: React.ReactElement
+  disabled?: boolean
+  onPress: () => void
+}) => {
   return (
-    <TouchableOpacity onPress={onPress} style={styles.item}>
+    <TouchableOpacity onPress={onPress} style={styles.item} disabled={disabled}>
       {left}
       <Spacer width={12} />
       <Text style={styles.itemText}>{label}</Text>
@@ -119,8 +133,8 @@ const AllWallets = Item
 const Settings = Item
 const KnowledgeBase = Item
 const Catalyst = ({label, left, onPress}: {label: string; left: React.ReactElement; onPress: () => void}) => {
-  const tokenBalance = useSelector(tokenBalanceSelector)
-  const sufficientFunds = tokenBalance.getDefault().gte(CONFIG.CATALYST.MIN_ADA)
+  const wallet = useSelectedWallet()
+  const {canVote, sufficientFunds} = useCanVote(wallet)
 
   const [showInsufficientFundsModal, setShowInsufficientFundsModal] = React.useState(false)
 
@@ -130,6 +144,7 @@ const Catalyst = ({label, left, onPress}: {label: string; left: React.ReactEleme
         label={label}
         onPress={() => (sufficientFunds ? onPress() : setShowInsufficientFundsModal(true))}
         left={left}
+        disabled={!canVote}
       />
 
       <InsufficientFundsModal
@@ -145,16 +160,21 @@ const KNOWLEDGE_BASE_LINK = 'https://emurgohelpdesk.zendesk.com/hc/en-us/categor
 
 const useNavigateTo = () => {
   const {navigation, navigateToSettings} = useWalletNavigation()
+  const wallet = useSelectedWallet()
+  const prefetchStakingInfo = usePrefetchStakingInfo(wallet)
 
   return {
     allWallets: () => navigation.navigate('app-root', {screen: 'wallet-selection'}),
-    catalystVoting: () =>
+    catalystVoting: () => {
+      prefetchStakingInfo()
+
       navigation.navigate('app-root', {
-        screen: 'catalyst-router',
+        screen: 'voting-registration',
         params: {
-          screen: 'catalyst-landing',
+          screen: 'download-catalyst',
         },
-      }),
+      })
+    },
     settings: () => navigateToSettings(),
     support: () => Linking.openURL(SUPPORT_TICKET_LINK),
     knowledgeBase: () => Linking.openURL(KNOWLEDGE_BASE_LINK),

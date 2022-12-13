@@ -29,11 +29,11 @@ export const generateShelleyPlateFromMnemonics = async (
   networkId: NetworkId,
   isJormungandr = false,
 ): Promise<PlateResponse> => {
-  const masterKey = await getMasterKeyFromMnemonic(phrase)
-  const masterKeyPtr = await CardanoMobile.Bip32PrivateKey.fromBytes(Buffer.from(masterKey, 'hex'))
+  const rootKey = await getMasterKeyFromMnemonic(phrase)
+  const rootKeyPtr = await CardanoMobile.Bip32PrivateKey.fromBytes(Buffer.from(rootKey, 'hex'))
   const accountKey = await (
     await (
-      await masterKeyPtr.derive(CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852)
+      await rootKeyPtr.derive(CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852)
     ).derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO)
   ).derive(0 + CONFIG.NUMBERS.HARD_DERIVATION_START)
   const accountPubKey = await accountKey.toPublic()

@@ -1,27 +1,22 @@
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
-import {delay} from 'bluebird'
+import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {FlatList, Linking, RefreshControl, StyleSheet, Text, TouchableOpacity} from 'react-native'
+import {FlatList, InteractionManager, Linking, RefreshControl, StyleSheet, Text, TouchableOpacity} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useMutation, UseMutationOptions, useQueryClient} from 'react-query'
-import {useDispatch} from 'react-redux'
 
 import {useAuth} from '../../auth/AuthProvider'
 import {Button, Icon, PleaseWaitModal, StatusBar} from '../../components'
-import {useCloseWallet, useWalletMetas} from '../../hooks'
+import {useCloseWallet, useOpenWallet, useWalletMetas} from '../../hooks'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
-import {clearAccountState} from '../../legacy/account'
 import {showErrorDialog} from '../../legacy/actions'
 import {CONFIG, isNightly} from '../../legacy/config'
 import {InvalidState} from '../../legacy/errors'
 import {isJormungandr} from '../../legacy/networks'
 import {WalletMeta} from '../../legacy/state'
-import {clearUTXOs} from '../../legacy/utxo'
 import {useWalletNavigation} from '../../navigation'
 import {COLORS} from '../../theme'
 import {useWalletManager} from '../../WalletManager'
-import {KeysAreInvalid, SystemAuthDisabled, walletManager, YoroiWallet} from '../../yoroi-wallets'
+import {KeysAreInvalid, SystemAuthDisabled} from '../../yoroi-wallets'
 import {useSetSelectedWallet, useSetSelectedWalletMeta} from '..'
 import {WalletListItem} from './WalletListItem'
 
@@ -35,40 +30,37 @@ export const WalletSelectionScreen = () => {
   const selectWalletMeta = useSetSelectedWalletMeta()
   const selectWallet = useSetSelectedWallet()
   const intl = useIntl()
-  const queryClient = useQueryClient()
-  const dispatch = useDispatch()
+
   const {logout} = useAuth()
 
-  const {closeWallet} = useCloseWallet({
-    onSuccess: () => {
-      dispatch(clearUTXOs())
-      dispatch(clearAccountState())
-    },
-  })
-
-  useFocusEffect(closeWallet)
+  const {closeWallet} = useCloseWallet()
 
   const {openWallet, isLoading} = useOpenWallet({
-    onSuccess: ({wallet, walletMeta}) => {
+    onSuccess: ([wallet, walletMeta]) => {
       selectWalletMeta(walletMeta)
       selectWallet(wallet)
-      wallet.subscribeOnTxHistoryUpdate(() => queryClient.invalidateQueries([wallet.id, 'lockedAmount']))
-      navigateToTxHistory()
+
+      // fixes modal issue
+      // https://github.com/facebook/react-native/issues/32329
+      // https://github.com/facebook/react-native/issues/33733
+      // https://github.com/facebook/react-native/issues/29319
+      InteractionManager.runAfterInteractions(() => {
+        navigateToTxHistory()
+      })
     },
     onError: async (error) => {
+      closeWallet()
+
       if (error instanceof SystemAuthDisabled) {
-        closeWallet()
         await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
         resetToWalletSelection()
       } else if (error instanceof InvalidState) {
-        closeWallet()
         await showErrorDialog(errorMessages.walletStateInvalid, intl)
       } else if (error instanceof KeysAreInvalid) {
         await showErrorDialog(errorMessages.walletKeysInvalidated, intl)
-        closeWallet()
         logout()
       } else {
-        throw error
+        await showErrorDialog(errorMessages.generalError, intl, {message: error.message})
       }
     },
   })
@@ -238,41 +230,6 @@ const OnlyDevButton = () => {
   if (!__DEV__) return null
 
   return <Button onPress={() => navigation.navigate('developer')} title="Dev options" style={styles.button} />
-}
-
-const useOpenWallet = (
-  options?: UseMutationOptions<
-    {
-      wallet: YoroiWallet
-      walletMeta: WalletMeta
-    },
-    Error,
-    WalletMeta
-  >,
-) => {
-  const dispatch = useDispatch()
-
-  const {closeWallet} = useCloseWallet({
-    onSuccess: () => {
-      dispatch(clearUTXOs())
-      dispatch(clearAccountState())
-    },
-  })
-
-  const mutation = useMutation({
-    ...options,
-    mutationFn: async (walletMeta) => {
-      closeWallet()
-      await delay(500)
-      const [newWallet, newWalletMeta] = await walletManager.openWallet(walletMeta)
-      return {
-        wallet: newWallet,
-        walletMeta: newWalletMeta,
-      }
-    },
-  })
-
-  return {openWallet: mutation.mutate, ...mutation}
 }
 
 const styles = StyleSheet.create({

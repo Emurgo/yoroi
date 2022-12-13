@@ -1,7 +1,7 @@
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {mockWallet} from '../../storybook'
+import {mocks} from '../../storybook'
 import {QueryProvider} from '../../storybook/decorators'
 import {SelectedWalletProvider} from '../SelectedWallet'
 import {SendProvider} from '../Send/Context/SendContext'
@@ -11,17 +11,18 @@ storiesOf('V2/TxHistory', module)
   .add('default', () => {
     return (
       <QueryProvider>
-        <SelectedWalletProvider wallet={mockWallet}>
-          <TxHistoryScreen />
+        <SelectedWalletProvider wallet={mocks.wallet}>
+          <SendProvider wallet={mocks.wallet}>
+            <TxHistoryScreen />
+          </SendProvider>
         </SelectedWalletProvider>
       </QueryProvider>
     )
   })
   .add('default with API errors', () => {
     const wallet = {
-      ...mockWallet,
-      fetchCurrentPrice: () => Promise.reject(new Error('fetchCurrentPrice failed')),
-      fetchUTXOs: () => Promise.reject(new Error('fetchUTXOs failed')),
+      ...mocks.wallet,
+      fetchCurrentPrice: mocks.fetchCurrentPrice.error,
     }
 
     return (
@@ -37,8 +38,15 @@ storiesOf('V2/TxHistory', module)
   .add('byron', () => {
     return (
       <QueryProvider>
-        <SelectedWalletProvider wallet={{...mockWallet, walletImplementationId: 'haskell-byron'}}>
-          <TxHistoryScreen />
+        <SelectedWalletProvider
+          wallet={{
+            ...mocks.wallet,
+            walletImplementationId: 'haskell-byron',
+          }}
+        >
+          <SendProvider wallet={mocks.wallet}>
+            <TxHistoryScreen />
+          </SendProvider>
         </SelectedWalletProvider>
       </QueryProvider>
     )

@@ -1,7 +1,7 @@
 import {expect} from 'chai'
 import * as sinon from 'ts-sinon'
 
-import {mockWallet} from '../../storybook/mocks/wallet'
+import {mocks} from '../../storybook/mocks/wallet'
 import {TxStatusRequest, TxStatusResponse} from '../yoroi-wallets/types/other'
 import {fetchTxStatus} from '.'
 
@@ -13,7 +13,7 @@ describe('fetchTxStatus', () => {
     const requestShouldBe: TxStatusRequest = {
       txHashes: [txId],
     }
-    const wallet = sinon.stubObject(mockWallet, {
+    const wallet = sinon.stubObject(mocks.wallet, {
       fetchTxStatus: Promise.resolve({
         depth: {'12366dd454b4793d83d554329245d4bc67659f6f0468bb0e0d41f1ac6f496999': 1},
       } as TxStatusResponse),
@@ -37,7 +37,7 @@ describe('fetchTxStatus', () => {
     const requestShouldBe: TxStatusRequest = {
       txHashes: [txId],
     }
-    const wallet = sinon.stubObject(mockWallet, {
+    const wallet = sinon.stubObject(mocks.wallet, {
       fetchTxStatus: Promise.resolve({
         depth: {},
         submissionStatus: {
@@ -64,7 +64,7 @@ describe('fetchTxStatus', () => {
     const requestShouldBe: TxStatusRequest = {
       txHashes: [txId],
     }
-    const wallet = sinon.stubObject(mockWallet, {
+    const wallet = sinon.stubObject(mocks.wallet, {
       fetchTxStatus: Promise.resolve({
         depth: {},
         submissionStatus: {
@@ -90,7 +90,7 @@ describe('fetchTxStatus', () => {
     const requestShouldBe: TxStatusRequest = {
       txHashes: [txId],
     }
-    const wallet = sinon.stubObject(mockWallet, {
+    const wallet = sinon.stubObject(mocks.wallet, {
       fetchTxStatus: Promise.resolve({
         depth: {},
         submissionStatus: {'12366dd454b4793d83d554329245d4bc67659f6f0468bb0e0d41f1ac6f496999': {status: 'WAITING'}},
@@ -116,7 +116,7 @@ describe('fetchTxStatus', () => {
     const requestShouldBe: TxStatusRequest = {
       txHashes: [txId],
     }
-    const wallet = sinon.stubObject(mockWallet, {
+    const wallet = sinon.stubObject(mocks.wallet, {
       fetchTxStatus: Promise.resolve({
         depth: {},
       } as TxStatusResponse),
@@ -142,7 +142,7 @@ describe('fetchTxStatus', () => {
       const requestShouldBe: TxStatusRequest = {
         txHashes: [txId],
       }
-      const wallet = sinon.stubObject(mockWallet, {
+      const wallet = sinon.stubObject(mocks.wallet, {
         fetchTxStatus: Promise.resolve({
           depth: {},
           submissionStatus: {'12366dd454b4793d83d554329245d4bc67659f6f0468bb0e0d41f1ac6f496999': {status: 'WAITING'}},
@@ -167,7 +167,7 @@ describe('fetchTxStatus', () => {
       const requestShouldBe: TxStatusRequest = {
         txHashes: [txId],
       }
-      const wallet = sinon.stubObject(mockWallet)
+      const wallet = sinon.stubObject(mocks.wallet)
       wallet.fetchTxStatus
         .onFirstCall()
         .resolves({
@@ -197,7 +197,7 @@ describe('fetchTxStatus', () => {
       const requestShouldBe: TxStatusRequest = {
         txHashes: [txId],
       }
-      const wallet = sinon.stubObject(mockWallet)
+      const wallet = sinon.stubObject(mocks.wallet)
       wallet.fetchTxStatus
         .onFirstCall()
         .resolves({
@@ -227,7 +227,7 @@ describe('fetchTxStatus', () => {
       const requestShouldBe: TxStatusRequest = {
         txHashes: [txId],
       }
-      const wallet = sinon.stubObject(mockWallet)
+      const wallet = sinon.stubObject(mocks.wallet)
       wallet.fetchTxStatus
         .onFirstCall()
         .resolves({

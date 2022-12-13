@@ -75,6 +75,7 @@ export const DangerousAction = ({
           block
           onPress={primaryButton.onPress}
           title={primaryButton.label}
+          disabled={primaryButton.disabled}
           style={styles.primaryButton}
           testID={primaryButton.testID}
         />

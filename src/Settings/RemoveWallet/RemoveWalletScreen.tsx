@@ -3,12 +3,9 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, View} from 'react-native'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useDispatch} from 'react-redux'
 
 import {Button, Checkbox, Checkmark, Spacer, StatusBar, Text, TextInput} from '../../components'
 import {useRemoveWallet, useWalletName} from '../../hooks'
-import {clearAccountState} from '../../legacy/account'
-import {clearUTXOs} from '../../legacy/utxo'
 import {useWalletNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
@@ -19,13 +16,8 @@ export const RemoveWalletScreen = () => {
   const walletName = useWalletName(wallet)
 
   const {resetToWalletSelection} = useWalletNavigation()
-  const dispatch = useDispatch()
   const {removeWallet, isLoading} = useRemoveWallet(wallet.id, {
     onMutate: () => resetToWalletSelection(),
-    onSettled: () => {
-      dispatch(clearUTXOs())
-      dispatch(clearAccountState())
-    },
   })
 
   const [hasMnemonicWrittenDown, setHasMnemonicWrittenDown] = React.useState(false)

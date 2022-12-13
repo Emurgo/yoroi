@@ -115,6 +115,13 @@ const MnemonicWordInput = React.forwardRef<RNTextInput, MnemonicWordInputProps>(
     }, 1000 - (Date.now() - dateTime.current)) // RNP.Menu has a buggy show/hide
   }
 
+  const onSubmitEditing = () => {
+    if (!isEmptyString(matchingWords[0])) {
+      setWord(matchingWords[0])
+      selectWord(matchingWords[0])
+    }
+  }
+
   return (
     <Menu
       style={styles.menu}
@@ -132,7 +139,7 @@ const MnemonicWordInput = React.forwardRef<RNTextInput, MnemonicWordInputProps>(
           onChangeText={(word) => setWord(normalizeText(word))}
           enablesReturnKeyAutomatically
           blurOnSubmit={false}
-          onSubmitEditing={() => !isEmptyString(matchingWords[0]) && selectWord(matchingWords[0])}
+          onSubmitEditing={onSubmitEditing}
           dense
           textAlign="center"
           noErrors

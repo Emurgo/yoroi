@@ -1,7 +1,7 @@
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {mockWallet, WithModalProps} from '../../storybook'
+import {mocks, WithModalProps} from '../../storybook'
 import {SelectedWalletProvider} from '../SelectedWallet'
 import {AddressModal} from './AddressModal'
 
@@ -10,7 +10,7 @@ const address =
 
 storiesOf('AddressModal', module)
   .add('with path', () => (
-    <SelectedWalletProvider wallet={mockWallet}>
+    <SelectedWalletProvider wallet={mocks.wallet}>
       <WithModalProps>
         {({visible, onRequestClose}) => (
           <AddressModal
@@ -28,7 +28,7 @@ storiesOf('AddressModal', module)
     </SelectedWalletProvider>
   ))
   .add('without path', () => (
-    <SelectedWalletProvider wallet={{...mockWallet}}>
+    <SelectedWalletProvider wallet={{...mocks.wallet}}>
       <WithModalProps>
         {({visible, onRequestClose}) => (
           <AddressModal address={address} visible={visible} onRequestClose={onRequestClose} />

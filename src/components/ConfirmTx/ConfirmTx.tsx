@@ -5,19 +5,17 @@ import React, {useEffect, useState} from 'react'
 import {useIntl} from 'react-intl'
 import {Platform, StyleSheet, View} from 'react-native'
 
+import {useAuthOsWithEasyConfirmation} from '../../auth'
 import {useSubmitTx} from '../../hooks'
 import {confirmationMessages, errorMessages, txLabels} from '../../i18n/global-messages'
 import LocalizableError from '../../i18n/LocalizableError'
-import {showErrorDialog} from '../../legacy/actions'
 import {CONFIG} from '../../legacy/config'
-import {ensureKeysValidity} from '../../legacy/deviceSettings'
 import {WrongPassword} from '../../legacy/errors'
-import KeyStore from '../../legacy/KeyStore'
 import {DeviceId, DeviceObj} from '../../legacy/ledgerUtils'
 import {isEmptyString} from '../../legacy/utils'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
-import {CardanoTypes, SystemAuthDisabled, walletManager, withBLE, withUSB} from '../../yoroi-wallets'
+import {CardanoTypes, walletManager, withBLE, withUSB} from '../../yoroi-wallets'
 import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
 import {Button, ButtonProps, ValidatedTextInput} from '..'
 import {Dialog, Step as DialogStep} from './Dialog'
@@ -54,9 +52,7 @@ export const ConfirmTx = ({
   disabled,
   autoSignIfEasyConfirmation,
   chooseTransportOnConfirmation,
-  biometricInstructions,
 }: Props) => {
-  const intl = useIntl()
   const strings = useStrings()
   const navigation = useNavigation()
 
@@ -73,7 +69,7 @@ export const ConfirmTx = ({
   })
   useEffect(() => {
     if (!isProvidingPassword && __DEV__) {
-      CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : ''
+      setPassword(CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '')
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -151,9 +147,9 @@ export const ConfirmTx = ({
             setDialogStep(DialogStep.WaitingHwResponse)
             signedTx = await wallet.signTxWithLedger(yoroiUnsignedTx, useUSB)
           } else {
-            const decryptedKey = await KeyStore.getData(walletManager._id, 'MASTER_PASSWORD', '', password, intl)
+            const rootKey = await wallet.encryptedStorage.rootKey.read(password)
             setDialogStep(DialogStep.Signing)
-            signedTx = await smoothModalNotification(wallet.signTx(yoroiUnsignedTx, decryptedKey))
+            signedTx = await smoothModalNotification(wallet.signTx(yoroiUnsignedTx, rootKey))
           }
         }
 
@@ -195,8 +191,10 @@ export const ConfirmTx = ({
         setIsProcessing(false)
       }
     },
-    [intl, onError, onSuccess, password, strings, submitTx, useUSB, wallet, yoroiUnsignedTx],
+    [onError, onSuccess, password, strings, submitTx, useUSB, wallet, yoroiUnsignedTx],
   )
+
+  const {authWithOs} = useAuthOsWithEasyConfirmation({id: wallet.id}, {onSuccess: onConfirm})
 
   const _onConfirm = React.useCallback(async () => {
     if (
@@ -207,41 +205,11 @@ export const ConfirmTx = ({
     ) {
       setDialogStep(DialogStep.ChooseTransport)
     } else if (wallet.isEasyConfirmationEnabled) {
-      try {
-        await ensureKeysValidity(wallet.id)
-        navigation.navigate('biometrics', {
-          keyId: wallet.id,
-          onSuccess: (decryptedKey) => {
-            navigation.goBack()
-            onConfirm(decryptedKey)
-          },
-          onFail: () => navigation.goBack(),
-          addWelcomeMessage: false,
-          instructions: biometricInstructions,
-        })
-      } catch (err) {
-        if (err instanceof SystemAuthDisabled) {
-          await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
-          navigation.goBack()
-          return
-        } else {
-          throw err
-        }
-      }
-      return
+      return authWithOs()
     } else {
       return onConfirm()
     }
-  }, [
-    intl,
-    wallet.isHW,
-    navigation,
-    onConfirm,
-    wallet.id,
-    wallet.isEasyConfirmationEnabled,
-    chooseTransportOnConfirmation,
-    biometricInstructions,
-  ])
+  }, [wallet.isHW, wallet.isEasyConfirmationEnabled, chooseTransportOnConfirmation, authWithOs, onConfirm])
 
   const isConfirmationDisabled = !wallet.isEasyConfirmationEnabled && isEmptyString(password) && !wallet.isHW
 

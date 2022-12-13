@@ -104,7 +104,7 @@ export type V4UnsignedTxAddressedUtxoResponse = {
 export type WalletState = {
   lastGeneratedAddressIndex: number
 }
-export type EncryptionMethod = 'BIOMETRICS' | 'SYSTEM_PIN' | 'MASTER_PASSWORD'
+export type EncryptionMethod = 'SYSTEM_PIN' | 'MASTER_PASSWORD'
 export type PlateResponse = {
   addresses: Array<string>
   accountPlate: CardanoTypes.WalletChecksum
@@ -164,11 +164,7 @@ export type TokenInfoRequest = {
 }
 
 export type TokenInfoResponse = Record<string, TokenInfo | null>
-// getTxsBodiesForUTXOs
-export type TxBodiesRequest = {
-  txsHashes: Array<string>
-}
-export type TxBodiesResponse = Record<string, string>
+
 // reputation
 export type ReputationObject = {
   node_flags?: number // note: could be more metrics that are not handled

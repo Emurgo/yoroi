@@ -1,8 +1,8 @@
-import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import * as React from 'react'
 
-import {mockWallet} from '../../../storybook'
+import {mocks, QueryProvider} from '../../../storybook'
+import {Boundary} from '../../components'
 import {SelectedWalletProvider} from '../../SelectedWallet'
 import {YoroiWallet} from '../../yoroi-wallets'
 import {SendProvider} from '../Context/SendContext'
@@ -13,16 +13,17 @@ storiesOf('SendScreen', module)
   .add('SendAll', () => <SendScreenTest isSendAll />)
 
 const SendScreenTest = ({isSendAll}: {isSendAll?: boolean}) => {
-  const wallet: YoroiWallet = {
-    ...mockWallet,
-    subscribe: () => action('subscribe'),
-  }
+  const wallet: YoroiWallet = mocks.wallet
 
   return (
-    <SelectedWalletProvider wallet={wallet}>
-      <SendProvider wallet={wallet} initialState={{sendAll: isSendAll}}>
-        <SendScreen />
-      </SendProvider>
-    </SelectedWalletProvider>
+    <QueryProvider>
+      <SelectedWalletProvider wallet={wallet}>
+        <SendProvider wallet={wallet} initialState={{sendAll: isSendAll}}>
+          <Boundary>
+            <SendScreen />
+          </Boundary>
+        </SendProvider>
+      </SelectedWalletProvider>
+    </QueryProvider>
   )
 }

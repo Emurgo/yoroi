@@ -1,15 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useNavigation} from '@react-navigation/native'
 import {BigNumber} from 'bignumber.js'
-import _ from 'lodash'
+import _, {fromPairs} from 'lodash'
 import React from 'react'
 import {defineMessages, MessageDescriptor, useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import {useSelector} from 'react-redux'
 
 import {Text} from '../../components'
 import {Icon} from '../../components/Icon'
-import {getDefaultAssetByNetworkId} from '../../legacy/config'
+import {useTokenInfo} from '../../hooks'
 import {
   ASSET_DENOMINATION,
   formatTimeToSeconds,
@@ -17,24 +16,13 @@ import {
   formatTokenInteger,
   getAssetDenominationOrId,
 } from '../../legacy/format'
-import {
-  availableAssetsSelector,
-  externalAddressIndexSelector,
-  internalAddressIndexSelector,
-} from '../../legacy/selectors'
 import utfSymbols from '../../legacy/utfSymbols'
 import {isEmptyString} from '../../legacy/utils'
 import {TxHistoryRouteNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {MultiToken} from '../../yoroi-wallets'
-import {
-  DefaultAsset,
-  IOData,
-  TransactionAssurance,
-  TransactionDirection,
-  TransactionInfo,
-} from '../../yoroi-wallets/types'
+import {IOData, TransactionAssurance, TransactionDirection, TransactionInfo} from '../../yoroi-wallets/types'
 
 const filtersTxIO = (address: string) => {
   const isMyReceive = (extAddrIdx) => extAddrIdx[address] != null
@@ -74,20 +62,17 @@ export const TxHistoryListItem = ({transaction}: Props) => {
 
   const rootBgColor = bgColorByAssurance(transaction.assurance)
 
-  const availableAssets = useSelector(availableAssetsSelector)
-  const internalAddressIndex = useSelector(internalAddressIndexSelector)
-  const externalAddressIndex = useSelector(externalAddressIndexSelector)
+  const internalAddressIndex = fromPairs(wallet.internalAddresses.map((addr, i) => [addr, i]))
+  const externalAddressIndex = fromPairs(wallet.externalAddresses.map((addr, i) => [addr, i]))
 
   const fee = transaction.fee ? transaction.fee[0] : null
   const amountAsMT = MultiToken.fromArray(transaction.amount)
   const amount: BigNumber = amountAsMT.getDefault()
-  const amountDefaultAsset = availableAssets[amountAsMT.getDefaultId()] as DefaultAsset
 
-  const defaultAsset = amountDefaultAsset ?? getDefaultAssetByNetworkId(wallet.networkId)
-
+  const tokenInfo = useTokenInfo({wallet, tokenId: ''})
   // if we don't have a symbol for this asset, default to ticker first and
   // then to identifier
-  const assetSymbol = getAssetDenominationOrId(defaultAsset, ASSET_DENOMINATION.SYMBOL)
+  const assetSymbol = getAssetDenominationOrId(tokenInfo, ASSET_DENOMINATION.SYMBOL)
 
   const amountToDisplay = isEmptyString(fee?.amount) ? amount : amount.plus(new BigNumber(fee?.amount ?? 0))
   const amountStyle = amountToDisplay.eq(0)
@@ -113,28 +98,34 @@ export const TxHistoryListItem = ({transaction}: Props) => {
               <Text small secondary={isPending} testID="transactionDirection">
                 {strings.direction(transaction.direction as any)}
               </Text>
+
               {transaction.amount.length > 0 ? (
                 <View style={styles.amount} testID="transactionAmount">
                   <Text style={amountStyle} secondary={isPending}>
-                    {formatTokenInteger(amountToDisplay, defaultAsset)}
+                    {formatTokenInteger(amountToDisplay, tokenInfo)}
                   </Text>
+
                   <Text small style={amountStyle} secondary={isPending}>
-                    {formatTokenFractional(amountToDisplay, defaultAsset)}
+                    {formatTokenFractional(amountToDisplay, tokenInfo)}
                   </Text>
+
                   <Text style={amountStyle}>{`${utfSymbols.NBSP}${assetSymbol}`}</Text>
                 </View>
               ) : (
                 <Text style={amountStyle}>- -</Text>
               )}
             </View>
+
             {totalAssets !== 0 && (
               <View style={styles.row}>
                 <Text secondary small testID="submittedAtText">
                   {submittedAt}
                 </Text>
+
                 <Text testID="totalAssetsText">{strings.assets(totalAssets)}</Text>
               </View>
             )}
+
             <View style={styles.last}>
               <Text secondary small testID="submittedAtText">
                 {totalAssets === 0 && submittedAt}

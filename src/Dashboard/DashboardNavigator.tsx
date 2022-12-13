@@ -24,8 +24,8 @@ export const DashboardNavigator = () => {
         cardStyle: {
           backgroundColor: 'transparent',
         },
+        detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
       }}
-      initialRouteName="staking-dashboard-main"
     >
       <Stack.Screen
         name="staking-dashboard-main"
@@ -33,14 +33,15 @@ export const DashboardNavigator = () => {
         options={{
           title: walletName,
           headerRight: () => <HeaderRight />,
-          headerRightContainerStyle: {paddingRight: 16},
         }}
       />
+
       <Stack.Screen //
         name="staking-center"
         component={StakingCenter}
         options={{title: strings.title}}
       />
+
       <Stack.Screen
         name="delegation-confirmation"
         component={DelegationConfirmation}
@@ -68,5 +69,5 @@ const messages = defineMessages({
 const HeaderRight = () => {
   const {navigateToSettings} = useWalletNavigation()
 
-  return <SettingsButton onPress={() => navigateToSettings()} />
+  return <SettingsButton style={{paddingRight: 16}} onPress={() => navigateToSettings()} />
 }

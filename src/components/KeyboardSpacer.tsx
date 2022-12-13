@@ -11,7 +11,7 @@ export const KeyboardSpacer = ({padding = 0, duration = 500, debug}: KeyboardSpa
 
   React.useEffect(() => {
     const listeners = [
-      Keyboard.addListener('keyboardDidShow', (event) =>
+      Keyboard.addListener('keyboardWillShow', (event) =>
         Animated.timing(paddingRef.current, {
           toValue: event.endCoordinates.height + padding,
           duration,
@@ -19,7 +19,7 @@ export const KeyboardSpacer = ({padding = 0, duration = 500, debug}: KeyboardSpa
         }).start(),
       ),
 
-      Keyboard.addListener('keyboardDidHide', () =>
+      Keyboard.addListener('keyboardWillHide', () =>
         Animated.timing(paddingRef.current, {
           toValue: 0,
           duration,

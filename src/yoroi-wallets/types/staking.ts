@@ -1,14 +1,22 @@
-export type StakingStatus = Registered | Staked | NotRegistered
-type Registered = {
-  isRegistered: true
-}
-type Staked = {
-  isRegistered: true
-  poolKeyHash: string
-}
-type NotRegistered = {
-  isRegistered: false
-}
+import {Quantity} from './types'
+
+export type StakingInfo =
+  | {status: 'not-registered'}
+  | {status: 'registered'}
+  | {
+      status: 'staked'
+      poolId: string
+      amount: Quantity
+      rewards: Quantity
+    }
+
+export type StakingStatus =
+  | {isRegistered: false}
+  | {isRegistered: true}
+  | {
+      isRegistered: true
+      poolKeyHash: string
+    }
 
 export type StakePoolInfoRequest = {
   poolIds: Array<string>

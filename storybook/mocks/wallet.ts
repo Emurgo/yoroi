@@ -1,20 +1,26 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {action} from '@storybook/addon-actions'
 import BigNumber from 'bignumber.js'
 
-import KeyStore from '../../src/legacy/KeyStore'
+import {getDefaultAssetByNetworkId} from '../../src/legacy/config'
 import {PRIMARY_ASSET_CONSTANTS} from '../../src/legacy/networks'
 import {WalletMeta} from '../../src/legacy/state'
 import {TokenEntry, YoroiWallet} from '../../src/yoroi-wallets'
 import {
   RemotePoolMetaSuccess,
   StakePoolInfosAndHistories,
+  StakingInfo,
+  StakingStatus,
   TokenInfo,
+  TransactionInfo,
   YoroiAmounts,
   YoroiSignedTx,
   YoroiUnsignedTx,
 } from '../../src/yoroi-wallets/types'
+import {mockEncryptedStorage, mockStorage} from './storage'
+import {mockTransaction} from './transaction'
 
-export const mockedWalletMeta: WalletMeta = {
+const walletMeta: WalletMeta = {
   id: 'wallet-id',
   name: 'my-wallet',
   networkId: 1,
@@ -29,8 +35,9 @@ export const mockedWalletMeta: WalletMeta = {
   walletImplementationId: 'haskell-shelley-24',
 }
 
-export const mockWallet: YoroiWallet = {
+const wallet: YoroiWallet = {
   id: 'wallet-id',
+  defaultAsset: getDefaultAssetByNetworkId(300),
   walletImplementationId: 'haskell-shelley',
   networkId: 300,
   checksum: {
@@ -45,6 +52,11 @@ export const mockWallet: YoroiWallet = {
   rewardAddressHex: 'reward-address-hex',
   provider: null,
   publicKeyHex: 'publicKeyHex',
+  utxos: [],
+  getStakingInfo: async () => {
+    throw new Error('not implemented: getStakingInfo')
+  },
+  encryptedStorage: mockEncryptedStorage,
 
   createUnsignedTx: () => {
     throw new Error('not implemented: createUnsignedTx')
@@ -55,16 +67,26 @@ export const mockWallet: YoroiWallet = {
   createWithdrawalTx: () => {
     throw new Error('not implemented: createWithdrawalTx')
   },
-  fetchUTXOs: () => Promise.resolve([]),
   getAllUtxosForKey: () => Promise.resolve([]),
-  fetchTokenInfo: () => Promise.resolve(tokenResponses),
-  fetchPoolInfo: () => Promise.resolve({[stakePoolId]: poolInfoAndHistory} as StakePoolInfosAndHistories),
-  getDelegationStatus: () => Promise.resolve({isRegistered: false, poolKeyHash: null}),
-  subscribeOnTxHistoryUpdate: () => {
-    null
+  fetchTokenInfo: (...args) => {
+    action('fetchTokenInfo')(...args)
+    return Promise.resolve(tokenResponses)
   },
-  fetchAccountState: () =>
-    Promise.resolve({['reward-address-hex']: {remainingAmount: '0', rewards: '0', withdrawals: ''}}),
+  fetchPoolInfo: (...args) => {
+    action('fetchPoolInfo')(...args)
+    return Promise.resolve({[stakePoolId]: poolInfoAndHistory} as StakePoolInfosAndHistories)
+  },
+  getDelegationStatus: (...args) => {
+    action('getDelegationStatus')(...args)
+    return Promise.resolve({isRegistered: false, poolKeyHash: null})
+  },
+  subscribeOnTxHistoryUpdate: () => {
+    return () => null
+  },
+  fetchAccountState: (...args) => {
+    action('fetchAccountState')(...args)
+    return Promise.resolve({['reward-address-hex']: {remainingAmount: '0', rewards: '0', withdrawals: ''}})
+  },
   changePassword: () => {
     throw new Error('Not implemented: changePassword')
   },
@@ -74,16 +96,22 @@ export const mockWallet: YoroiWallet = {
   signTxWithLedger: () => {
     throw new Error('Not implemented: signTxWithLedger')
   },
-  checkServerStatus: () =>
-    Promise.resolve({
+  checkServerStatus: (...args) => {
+    action('checkServerStatus')(...args)
+    return Promise.resolve({
       isServerOk: true,
       isMaintenance: false,
       serverTime: Date.now(),
       isQueueOnline: true,
-    }),
-  fetchTxStatus: async () => ({}),
-  fetchTipStatus: async () =>
-    Promise.resolve({
+    })
+  },
+  fetchTxStatus: async (...args) => {
+    action('fetchTxStatus')(...args)
+    return {}
+  },
+  fetchTipStatus: async (...args) => {
+    action('fetchTipStatus')(...args)
+    return Promise.resolve({
       bestBlock: {
         epoch: 210,
         slot: 76027,
@@ -98,22 +126,69 @@ export const mockWallet: YoroiWallet = {
         hash: 'ca18a2b607411dd18fbb2c1c0e653ec8a6a3f794f46ce050b4a07cf8ba4ab916',
         height: 3617698,
       },
-    }),
+    })
+  },
   submitTransaction: () => {
     throw new Error('Not implemented: submitTransaction')
   },
   createVotingRegTx: () => {
     throw new Error('Not implemented: createVotingRegTx')
   },
-  subscribe: () => {
-    throw new Error('Not implemented: subscribe')
+  subscribe: (...args) => {
+    action('subscribe')(...args)
+    return (...args) => {
+      action('unsubscribe')(...args)
+    }
   },
-  fetchCurrentPrice: () => Promise.resolve(1.9938153154314795),
-  toJSON: () => null as any,
-
-  // enableEasyConfirmation: () => {
-  //   throw new Error('not implemented: enableEasyConfirmation')
-  // },
+  fetchCurrentPrice: (...args) => {
+    action('fetchCurrentPrice')(...args)
+    return Promise.resolve(1.9938153154314795)
+  },
+  toJSON: (...args) => {
+    action('toJSON')(...args)
+    return null as any
+  },
+  internalAddresses: [],
+  externalAddresses: [],
+  confirmationCounts: {},
+  transactions: {},
+  isUsedAddressIndex: {},
+  numReceiveAddresses: 0,
+  receiveAddresses: [],
+  canGenerateNewReceiveAddress: (...args) => {
+    action('canGenerateNewReceiveAddress')(...args)
+    return true
+  },
+  generateNewReceiveAddressIfNeeded: (...args) => {
+    action('generateNewReceiveAddressIfNeeded')(...args)
+    return true
+  },
+  generateNewReceiveAddress: (...args) => {
+    action('generateNewReceiveAddress')(...args)
+    return true
+  },
+  storage: mockStorage,
+  save: async (...args) => {
+    action('save')(...args)
+  },
+  doFullSync: async (...args) => {
+    action('doFullSync')(...args)
+  },
+  sync: async (...args) => {
+    action('sync')(...args)
+  },
+  resync: async (...args) => {
+    action('resync')(...args)
+  },
+  getTransactions: () => {
+    throw new Error('not implemented')
+  },
+  enableEasyConfirmation: async (rootKey: string) => {
+    action('enableEasyConfirmation')(rootKey)
+  },
+  disableEasyConfirmation: async () => {
+    action('disableEasyConfirmation')
+  },
 
   // canGenerateNewReceiveAddress: () => {
   //   throw new Error('not implemented: canGenerateNewReceiveAddress')
@@ -131,17 +206,13 @@ export const mockWallet: YoroiWallet = {
   //   throw new Error('not implemented: getAddressingInfo')
   // },
 
-  // createUnsignedTx: () => {
-  //   throw new Error('not implemented: createUnsignedTx')
-  // },
-
-  // fetchFundInfo: () => {
-  //   throw new Error('not implemented: fetchFundInfo')
-  // },
+  fetchFundInfo: () => {
+    throw new Error('not implemented: fetchFundInfo')
+  },
 }
 
-export const mockHwWallet = {
-  ...mockWallet,
+const hwWallet: YoroiWallet = {
+  ...wallet,
   isHW: true,
   hwDeviceInfo: {
     bip44AccountPublic: '1234567',
@@ -154,12 +225,228 @@ export const mockHwWallet = {
   },
 }
 
-export const mockOsWallet = {
-  ...mockWallet,
+const osWallet: YoroiWallet = {
+  ...wallet,
   isEasyConfirmationEnabled: true,
 }
 
-export const tokenEntries: Array<TokenEntry> = [
+const readonlyWallet: YoroiWallet = {
+  ...wallet,
+  isReadOnly: true,
+}
+
+const txid = '31b1abca49857fd50c7959cc019d14c7dc5deaa754ba45372fb21748c411f210'
+
+const getTransactions = {
+  success: async (...args) => {
+    action('getTransactions')(...args)
+    const txInfo = mockTransaction({id: txid})
+
+    return {
+      [txInfo.id]: txInfo,
+    }
+  },
+
+  error: async (...args) => {
+    action('getTransactions')(...args)
+    return Promise.reject(new Error('storybook error message'))
+  },
+  loading: async (...args) => {
+    action('getTransactions')(...args)
+    return new Promise(() => null) as unknown as {[txid: string]: TransactionInfo}
+  },
+}
+
+const fetchPoolInfo = {
+  success: {
+    poolFound: async (...args) => {
+      action('fetchPoolInfo')(...args)
+      return {[mocks.stakePoolId]: mocks.poolInfoAndHistory} as StakePoolInfosAndHistories
+    },
+    poolNotFound: async (...args) => {
+      action('fetchPoolInfo')(...args)
+      return {[mocks.stakePoolId]: null} as StakePoolInfosAndHistories
+    },
+  },
+  error: async (...args) => {
+    action('fetchPoolInfo')(...args)
+    return Promise.reject(new Error('storybook error message'))
+  },
+  loading: async (...args) => {
+    action('fetchPoolInfo')(...args)
+    return new Promise(() => null) as unknown as StakePoolInfosAndHistories
+  },
+}
+
+const getDelegationStatus = {
+  success: {
+    delegating: async (...args) => {
+      action('getDelegationStatus')(...args)
+      return {isRegistered: true, poolKeyHash: stakePoolId} as StakingStatus
+    },
+    registered: async (...args) => {
+      action('getDelegationStatus')(...args)
+      return {isRegistered: true} as StakingStatus
+    },
+    notRegistered: async (...args) => {
+      action('getDelegationStatus')(...args)
+      return {isRegistered: false, poolKeyHash: null} as StakingStatus
+    },
+  },
+  error: async (...args) => {
+    action('getDelegationStatus')(...args)
+    return Promise.reject(new Error('storybook error message'))
+  },
+  loading: async (...args) => {
+    action('getDelegationStatus')(...args)
+    return new Promise(() => null) as unknown as StakingStatus
+  },
+}
+
+const getStakingInfo = {
+  success: {
+    registered: async (...args) => {
+      action('getStakingInfo')(...args)
+      return {status: 'registered'} as StakingInfo
+    },
+    notRegistered: async (...args) => {
+      action('getStakingInfo')(...args)
+      return {status: 'not-registered'} as StakingInfo
+    },
+  },
+  error: async (...args) => {
+    action('getStakingInfo')(...args)
+    return Promise.reject(new Error('storybook error message'))
+  },
+  loading: async (...args) => {
+    action('getStakingInfo')(...args)
+    return new Promise(() => null) as unknown as StakingInfo
+  },
+}
+
+const createUnsignedTx = {
+  success: async (...args) => {
+    action('createUnsignedTx')(...args)
+    return mocks.yoroiUnsignedTx
+  },
+  error: async (...args) => {
+    action('createUnsignedTx')(...args)
+    return Promise.reject(new Error('storybook error message'))
+  },
+  loading: async (...args) => {
+    action('createUnsignedTx')(...args)
+    return new Promise(() => null) as unknown as YoroiUnsignedTx
+  },
+}
+
+const createDelegationTx = {
+  success: async (...args) => {
+    action('createDelegationTx')(...args)
+    return mocks.yoroiUnsignedTx
+  },
+  error: async (...args) => {
+    action('createDelegationTx')(...args)
+    return Promise.reject(new Error('storybook error message'))
+  },
+  loading: async (...args) => {
+    action('createDelegationTx')(...args)
+    return new Promise(() => null) as unknown as YoroiUnsignedTx
+  },
+}
+
+const createWithdrawalTx = {
+  success: async (...args) => {
+    action('createWithdrawalTx')(...args)
+    return mocks.yoroiUnsignedTx
+  },
+  error: async (...args) => {
+    action('createWithdrawalTx')(...args)
+    return Promise.reject(new Error('storybook error message'))
+  },
+  loading: async (...args) => {
+    action('createWithdrawalTx')(...args)
+    return new Promise(() => null) as unknown as YoroiUnsignedTx
+  },
+}
+
+const createVotingRegTx = {
+  success: async (...args) => {
+    action('createVotingRegTx')(...args)
+    return {
+      votingRegTx: mocks.yoroiUnsignedTx,
+      votingKeyEncrypted: 'votingKeyEncrypted',
+    }
+  },
+  error: async (...args) => {
+    action('createVotingRegTx')(...args)
+    return Promise.reject(new Error('storybook error message'))
+  },
+  loading: async (...args) => {
+    action('createVotingRegTx')(...args)
+    return new Promise(() => null)
+  },
+}
+
+const signTx = {
+  success: async (...args) => {
+    action('signTx')(...args)
+    return yoroiSignedTx
+  },
+  error: async (...args) => {
+    action('signTx')(...args)
+    return Promise.reject(new Error('storybook error message'))
+  },
+  loading: async (...args) => {
+    action('signTx')(...args)
+    return new Promise(() => null) as unknown as YoroiSignedTx
+  },
+}
+const signTxWithLedger = {
+  success: async (...args) => {
+    action('signTx')(...args)
+    return yoroiSignedTx
+  },
+  error: async (...args) => {
+    action('signTx')(...args)
+    return Promise.reject(new Error('storybook error message'))
+  },
+  loading: async (...args): Promise<YoroiSignedTx> => {
+    action('signTx')(...args)
+    return new Promise(() => null)
+  },
+}
+
+const submitTransaction = {
+  success: async (...args) => {
+    action('submitTransaction')(...args)
+    return [] as unknown as []
+  },
+  error: async (...args) => {
+    action('submitTransaction')(...args)
+    return Promise.reject(new Error('storybook error message'))
+  },
+  loading: async (...args) => {
+    action('submitTransaction')(...args)
+    return new Promise(() => null) as unknown as []
+  },
+}
+
+const fetchCurrentPrice = {
+  success: async (...args) => {
+    action('fetchCurrentPrice')(...args)
+    return 0.123456789
+  },
+  error: async (...args) => {
+    action('fetchCurrentPrice')(...args)
+    return Promise.reject(new Error('storybook error message'))
+  },
+  loading: async (...args) => {
+    action('fetchCurrentPrice')(...args)
+    return new Promise(() => null) as unknown as number
+  },
+}
+
+const tokenEntries: Array<TokenEntry> = [
   {
     networkId: 123,
     identifier: '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950',
@@ -192,7 +479,7 @@ export const tokenEntries: Array<TokenEntry> = [
   },
 ]
 
-export const balances: YoroiAmounts = {
+const balances: YoroiAmounts = {
   [PRIMARY_ASSET_CONSTANTS.CARDANO]: '2727363743849',
   '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950': '12344',
   '29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6.4d494e': '215410',
@@ -201,7 +488,7 @@ export const balances: YoroiAmounts = {
   '08d91ec4e6c743a92de97d2fde5ca0d81493555c535894a3097061f7.c8b0': '148',
 }
 
-export const tokenResponses: Record<string, TokenInfo> = {
+const tokenResponses: Record<string, TokenInfo> = {
   '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d7444524950': {
     name: 'tDRIP',
     decimals: 6,
@@ -212,8 +499,8 @@ export const tokenResponses: Record<string, TokenInfo> = {
   },
 }
 
-export const stakePoolId = 'af22f95915a19cd57adb14c558dcc4a175f60c6193dc23b8bd2d8beb'
-export const poolInfoAndHistory: RemotePoolMetaSuccess = {
+const stakePoolId = 'af22f95915a19cd57adb14c558dcc4a175f60c6193dc23b8bd2d8beb'
+const poolInfoAndHistory: RemotePoolMetaSuccess = {
   info: {
     ticker: 'EMUR1',
     name: 'Emurgo #1',
@@ -236,12 +523,23 @@ export const poolInfoAndHistory: RemotePoolMetaSuccess = {
   ],
 }
 
-export const mockYoroiTx: YoroiUnsignedTx & {mock: true} = {
-  entries: {},
-  amounts: {},
+const stakingInfo: StakingInfo = {
+  status: 'staked',
+  amount: '123456789',
+  rewards: '123',
+  poolId: 'poolId',
+}
+
+const yoroiUnsignedTx: YoroiUnsignedTx & {mock: true} = {
+  entries: {
+    address1: {'': '99999'},
+  },
+  amounts: {'': '99999'},
   fee: {'': '12345'},
   metadata: {},
-  change: {},
+  change: {
+    change_address: {'': '1'},
+  },
   staking: {
     registrations: {},
     deregistrations: {},
@@ -253,7 +551,7 @@ export const mockYoroiTx: YoroiUnsignedTx & {mock: true} = {
   mock: true,
 } as const
 
-export const mockYoroiSignedTx: YoroiSignedTx & {mock: true} = {
+const yoroiSignedTx: YoroiSignedTx & {mock: true} = {
   entries: {},
   amounts: {},
   fee: {'': '12345'},
@@ -268,4 +566,38 @@ export const mockYoroiSignedTx: YoroiSignedTx & {mock: true} = {
   voting: {},
   signedTx: {id: 'tx-id', encodedTx: new Uint8Array([1, 2, 3])},
   mock: true,
+}
+
+export const mocks = {
+  walletMeta,
+  wallet,
+  osWallet,
+  hwWallet,
+  readonlyWallet,
+
+  stakePoolId,
+
+  encryptedStorage: mockEncryptedStorage,
+
+  balances,
+  stakingInfo,
+  poolInfoAndHistory,
+  tokenEntries,
+  tokenResponses,
+  yoroiUnsignedTx,
+  yoroiSignedTx,
+
+  fetchCurrentPrice,
+  txid,
+  getTransactions,
+  fetchPoolInfo,
+  createUnsignedTx,
+  createDelegationTx,
+  createWithdrawalTx,
+  createVotingRegTx,
+  getStakingInfo,
+  getDelegationStatus,
+  signTx,
+  signTxWithLedger,
+  submitTransaction,
 }

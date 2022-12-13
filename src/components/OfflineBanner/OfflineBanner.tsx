@@ -1,13 +1,14 @@
-import {useNetInfo} from '@react-native-community/netinfo'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
+import {useIsOnline} from '../../hooks'
+import {useSelectedWallet} from '../../SelectedWallet'
 import {Banner} from '../Banner'
 
 export const OfflineBanner = () => {
   const intl = useIntl()
-  const netInfo = useNetInfo()
-  const isOnline = netInfo.type !== 'none' && netInfo.type !== 'unknown'
+  const wallet = useSelectedWallet()
+  const isOnline = useIsOnline(wallet)
 
   return isOnline ? null : <Banner error text={intl.formatMessage(messages.offline)} />
 }

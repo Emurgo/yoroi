@@ -1,9 +1,11 @@
 import fs, {promises as fsAsync} from 'fs'
-import {appiumLogsPath, artifactsDir, screenshotsDir} from './testPaths'
+import rimraf from 'rimraf'
+
 import {APP_ID, APP_ID_PARENT, APP_PATH, VALID_PIN} from '../constants'
 import {enterPinCodeIfNecessary, prepareAppIfNecessary} from '../screenFunctions/prepare.screenFunctions';
-import rimraf from 'rimraf'
 import * as myWalletsScreen from "../screenObjects/myWallets.screen";
+import {appiumLogsPath, artifactsDir, screenRecordsDir, screenshotsDir} from './testPaths'
+
 
 export const config: WebdriverIO.Config = {
   runner: 'local',
@@ -24,6 +26,7 @@ export const config: WebdriverIO.Config = {
       platformName: 'Android',
       maxInstances: 1,
       'appium:deviceName': 'Pixel_5',
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       'appium:autoLaunch': false,
       'appium:appWaitActivity': APP_ID_PARENT,
@@ -71,12 +74,12 @@ export const config: WebdriverIO.Config = {
   // it and to build services around it. You can either apply a single function or an array of
   // methods to it. If one of them returns with a promise, WebdriverIO will wait until that promise got
   // resolved to continue.
-  /**
-   * Gets executed once before all workers get launched.
-   * @param {Object} config wdio configuration object
-   * @param {Array.<Object>} capabilities list of capabilities details
-   */
-  onPrepare: function (config, capabilities) {
+  // /**
+  //  * Gets executed once before all workers get launched.
+  //  * @param {Object} config wdio configuration object
+  //  * @param {Array.<Object>} capabilities list of capabilities details
+  //  */
+  onPrepare: function () {
     rimraf.sync(artifactsDir)
     fs.mkdirSync(artifactsDir)
   },
@@ -97,9 +100,8 @@ export const config: WebdriverIO.Config = {
    * @param {Object} config wdio configuration object
    * @param {Array.<Object>} capabilities list of capabilities details
    * @param {Array.<String>} specs List of spec file paths that are to be run
-   * @param {String} cid worker id (e.g. 0-0)
    */
-  beforeSession: function (config, capabilities, specs, cid) {
+  beforeSession: function (config, capabilities, specs) {
     const testSuitePathArray = specs[0].split('/')
     const testSuiteName = testSuitePathArray[testSuitePathArray.length - 1]
     capabilities['appium:noReset'] = !testSuiteName.includes('resetApp')
@@ -129,11 +131,12 @@ export const config: WebdriverIO.Config = {
   /**
    * Function to be executed before a tests (in Mocha/Jasmine) starts.
    */
-  beforeTest: async function (tests, context) {
+  beforeTest: async function () {
+    driver.startRecordingScreen();
     driver.launchApp()
     await prepareAppIfNecessary()
     await enterPinCodeIfNecessary(VALID_PIN)
-    await driver.waitUntil(async () => await myWalletsScreen.pageTitle().isDisplayed())
+    await driver.waitUntil(async () => myWalletsScreen.pageTitle().isDisplayed())
   },
   /**
    * Hook that gets executed _before_ a hook within the suite starts (e.g. runs before calling
@@ -151,48 +154,56 @@ export const config: WebdriverIO.Config = {
    * Function to be executed after a tests (in Mocha/Jasmine only)
    * @param {Object}  test             tests object
    * @param {Object}  context          scope object the tests was executed with
-   * @param {Error}   result.error     error object in case the tests fails, otherwise `undefined`
-   * @param {Any}     result.result    return object of tests function
-   * @param {Number}  result.duration  duration of tests
-   * @param {Boolean} result.passed    true if tests has passed, otherwise false
-   * @param {Object}  result.retries   information to spec related retries, e.g. `{ attempts: 0, limit: 0 }`
+   * @param {Error}   error            error object in case the tests fails, otherwise `undefined`
+   // * @param {Any}     result.result    return object of tests function
+   // * @param {Number}  result.duration  duration of tests
+   // * @param {Boolean} result.passed    true if tests has passed, otherwise false
+   // * @param {Object}  result.retries   information to spec related retries, e.g. `{ attempts: 0, limit: 0 }`
    */
-  afterTest: async function (test, context, {error, result, duration, passed, retries}) {
+  afterTest: async function (test, context, {error}) {
+    const screenRecord = await driver.stopRecordingScreen();
     // take a screenshot anytime a tests fails and throws an error
     if (error) {
       if (!fs.existsSync(screenshotsDir)) {
         fs.mkdirSync(screenshotsDir, {recursive: true})
       }
-      const screenshotName = `${test.parent.replace(/ /g, '_')}-${test.title.replace(/ /g, '_')}.png`
+      if (!fs.existsSync(screenRecordsDir)) {
+        fs.mkdirSync(screenRecordsDir, {recursive: true})
+      }
+      const testCaseNameFormatted = `${test.parent.replace(/ /g, '_')}-${test.title.replace(/ /g, '_')}`
+      const screenshotName = `${testCaseNameFormatted}.png`
+      const screenRecordName = `${testCaseNameFormatted}.mp4`
       const screenshotPath = `${screenshotsDir}${screenshotName}`
+      const screenRecordPath = `${screenRecordsDir}${screenRecordName}`
       const screenshot = await driver.takeScreenshot()
       await fsAsync.writeFile(screenshotPath, screenshot, 'base64')
+      await fsAsync.writeFile(screenRecordPath, screenRecord, 'base64')
     }
     driver.closeApp()
   },
-  /**
-   * Hook that gets executed after the suite has ended
-   * @param {Object} suite suite details
-   */
+  // /**
+  //  * Hook that gets executed after the suite has ended
+  //  * @param {Object} suite suite details
+  //  */
   // afterSuite: function (suite) {
   // },
-  /**
-   * Runs after a WebdriverIO command gets executed
-   * @param {String} commandName hook command name
-   * @param {Array} args arguments that command would receive
-   * @param {Number} result 0 - command success, 1 - command error
-   * @param {Object} error error object if any
-   */
+  // /**
+  //  * Runs after a WebdriverIO command gets executed
+  //  * @param {String} commandName hook command name
+  //  * @param {Array} args arguments that command would receive
+  //  * @param {Number} result 0 - command success, 1 - command error
+  //  * @param {Object} error error object if any
+  //  */
   // afterCommand: function (commandName, args, result, error) {
   // },
-  /**
-   * Gets executed after all tests are done. You still have access to all global variables from
-   * the tests.
-   * @param {Number} result 0 - tests pass, 1 - tests fail
-   * @param {Array.<Object>} capabilities list of capabilities details
-   * @param {Array.<String>} specs List of spec file paths that ran
-   */
-  after: function (result, capabilities, specs) {
+  // /**
+  //  * Gets executed after all tests are done. You still have access to all global variables from
+  //  * the tests.
+  //  * @param {Number} result 0 - tests pass, 1 - tests fail
+  //  * @param {Array.<Object>} capabilities list of capabilities details
+  //  * @param {Array.<String>} specs List of spec file paths that ran
+  //  */
+  after: function () {
     driver.removeApp(APP_ID)
   },
   /**

@@ -1,11 +1,9 @@
 import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {useDispatch} from 'react-redux'
 
 import {useAuth} from '../auth/AuthProvider'
-import {CreatePinScreen} from '../auth/CreatePinScreen/CreatePinScreen'
-import {reloadAppSettings, setSystemAuth} from '../legacy/actions'
+import {EnableLoginWithPin} from '../auth/EnableLoginWithPin'
 import {defaultStackNavigationOptions, FirstRunRoutes} from '../navigation'
 import {LanguagePickerScreen} from './LanguagePickerScreen'
 import {TermsOfServiceScreen} from './TermsOfServiceScreen'
@@ -16,12 +14,10 @@ export const FirstRunNavigator = () => {
 
   return (
     <Stack.Navigator
-      initialRouteName="language-pick"
       screenOptions={{
-        cardStyle: {
-          backgroundColor: 'transparent',
-        },
+        cardStyle: {backgroundColor: 'transparent'},
         ...defaultStackNavigationOptions,
+        detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
       }}
     >
       <Stack.Screen //
@@ -37,7 +33,7 @@ export const FirstRunNavigator = () => {
       />
 
       <Stack.Screen //
-        name="custom-pin"
+        name="enable-login-with-pin"
         options={{headerShown: false}}
         component={CreatePinScreenWrapper}
       />
@@ -46,18 +42,9 @@ export const FirstRunNavigator = () => {
 }
 
 const CreatePinScreenWrapper = () => {
-  const dispatch = useDispatch()
   const {login} = useAuth()
 
-  return (
-    <CreatePinScreen
-      onDone={async () => {
-        await dispatch(reloadAppSettings())
-        await dispatch(setSystemAuth(false))
-        login()
-      }}
-    />
-  )
+  return <EnableLoginWithPin onDone={login} />
 }
 
 const messages = defineMessages({
