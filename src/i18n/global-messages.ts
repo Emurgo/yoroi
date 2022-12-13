@@ -595,7 +595,7 @@ export default defineMessages({
     defaultMessage: '!!!Epoch',
   },
   learnMore: {
-    id: 'components.maintenancemodal.learnMore',
+    id: 'global.learnMore',
     defaultMessage: '!!!Learn more',
   },
   notSupported: {

@@ -1,11 +1,9 @@
-import {useReduxDevToolsExtension} from '@react-navigation/devtools'
-import {NavigationContainer, useNavigationContainerRef} from '@react-navigation/native'
+import {NavigationContainer, NavigationContainerRef} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import React, {useEffect} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Alert, AppState, AppStateStatus, Platform} from 'react-native'
 import RNBootSplash from 'react-native-bootsplash'
-import {useSelector} from 'react-redux'
 
 import {
   AuthSetting,
@@ -20,8 +18,6 @@ import {useAuth} from './auth/AuthProvider'
 import {EnableLoginWithPin} from './auth/EnableLoginWithPin'
 import {FirstRunNavigator} from './FirstRun/FirstRunNavigator'
 import {DeveloperScreen} from './legacy/DeveloperScreen'
-import {isMaintenanceSelector} from './legacy/selectors'
-import MaintenanceScreen from './MaintenanceScreen'
 import {AppRoutes} from './navigation'
 import {useStorage} from './Storage'
 import StorybookScreen from './StorybookScreen'
@@ -29,11 +25,10 @@ import {WalletInitNavigator} from './WalletInit/WalletInitNavigator'
 import {WalletNavigator} from './WalletNavigator'
 
 const Stack = createStackNavigator<AppRoutes>()
+const navRef = React.createRef<NavigationContainerRef<ReactNavigation.RootParamList>>()
 
 export const AppNavigator = () => {
   const strings = useStrings()
-  const isMaintenance = useSelector(isMaintenanceSelector)
-  const navRef = useDevToolsNavigation()
 
   useHideScreenInAppSwitcher()
   useAutoLogout()
@@ -64,8 +59,6 @@ export const AppNavigator = () => {
           detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
         }}
       >
-        {isMaintenance && <Stack.Screen name="maintenance" component={MaintenanceScreen} />}
-
         {/* Not Authenticated */}
         {isLoggedOut && (
           <Stack.Group>
@@ -204,11 +197,4 @@ const useAuthAction = () => {
   const authOsEnabled = useAuthOsEnabled()
 
   return getAuthAction(authOsEnabled, authSetting)
-}
-
-const useDevToolsNavigation = () => {
-  const navRef = useNavigationContainerRef()
-  useReduxDevToolsExtension(navRef)
-
-  return navRef
 }

@@ -1,4 +1,4 @@
-import type {CardanoTypes, ServerStatus} from '../yoroi-wallets'
+import type {CardanoTypes} from '../yoroi-wallets'
 import type {NetworkId, WalletImplementationId, YoroiProvider} from '../yoroi-wallets/types/other'
 
 export type WalletMeta = {
@@ -16,20 +16,11 @@ export type WalletMeta = {
 export type State = {
   appSettings: {
     installationId: string | null | undefined
-    customPinHash: string | null | undefined
   }
-  serverStatus: ServerStatus
 }
 export const getInitialState = (): State => ({
   appSettings: {
     installationId: null,
-    customPinHash: null,
-  },
-  serverStatus: {
-    isServerOk: true,
-    isMaintenance: false,
-    serverTime: undefined,
-    isQueueOnline: false,
   },
 })
 export const mockState = (mockedState?: State | null | undefined): State => {

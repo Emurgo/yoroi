@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import TransportHID from '@emurgo/react-native-hid'
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
-import TransportHID from '@v-almonacid/react-native-hid'
 import React from 'react'
 import type {IntlShape} from 'react-intl'
 import {defineMessages, injectIntl} from 'react-intl'
@@ -9,8 +9,6 @@ import {
   FlatList,
   Image,
   LayoutAnimation,
-  PermissionsAndroid,
-  Platform,
   RefreshControl,
   ScrollView,
   StyleSheet,
@@ -69,9 +67,6 @@ class _LedgerConnect extends React.Component<Props, State> {
     this._transportLib = useUSB === true ? TransportHID : TransportBLE
     this._isMounted = true
     if (useUSB === false) {
-      if (Platform.OS === 'android') {
-        await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
-      }
       // check if bluetooth is available
       // no need to save a reference to this subscription's unsubscribe func
       // as it's just an empty method. Rather, we make sure sate is only
@@ -82,7 +77,7 @@ class _LedgerConnect extends React.Component<Props, State> {
           if (this._isMounted) {
             Logger.debug('BLE observeState event', e)
             if (this._bluetoothEnabled == null && !e.available) {
-              this.setStateWithAnimimation({
+              this.setStateWithAnimation({
                 error: new BluetoothDisabledError(),
                 refreshing: false,
               })
@@ -93,7 +88,7 @@ class _LedgerConnect extends React.Component<Props, State> {
               if (e.available) {
                 this.reload()
               } else {
-                this.setStateWithAnimimation({
+                this.setStateWithAnimation({
                   error: new BluetoothDisabledError(),
                   refreshing: false,
                   devices: [],
@@ -118,25 +113,25 @@ class _LedgerConnect extends React.Component<Props, State> {
     this._subscriptions = this._transportLib.listen({
       complete: () => {
         Logger.debug('listen: subscription completed')
-        this.setStateWithAnimimation({refreshing: false})
+        this.setStateWithAnimation({refreshing: false})
       },
       next: (e) => {
         if (e.type === 'add') {
           Logger.debug('listen: new device detected')
           if (useUSB === true) {
             // if a device is detected, save it in state immediately
-            this.setStateWithAnimimation({
+            this.setStateWithAnimation({
               refreshing: false,
               deviceObj: e.descriptor,
             })
           } else {
             // with bluetooth, new devices are appended in the screen
-            this.setStateWithAnimimation(deviceAddition(e.descriptor))
+            this.setStateWithAnimation(deviceAddition(e.descriptor))
           }
         }
       },
       error: (error) => {
-        this.setStateWithAnimimation({error, refreshing: false, devices: []})
+        this.setStateWithAnimation({error, refreshing: false, devices: []})
       },
     })
   }
@@ -148,14 +143,14 @@ class _LedgerConnect extends React.Component<Props, State> {
     }
   }
 
-  private setStateWithAnimimation = (newState) => {
+  private setStateWithAnimation = (newState) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     if (this._isMounted) this.setState(newState)
   }
 
   reload = () => {
     this._unsubscribe()
-    this.setStateWithAnimimation({
+    this.setStateWithAnimation({
       devices: this.props.defaultDevices ? this.props.defaultDevices : [],
       deviceId: null,
       deviceObj: null,
@@ -166,7 +161,6 @@ class _LedgerConnect extends React.Component<Props, State> {
   }
 
   _onSelectDevice = async (device: Device) => {
-    if (this.state.deviceId != null) return
     this._unsubscribe()
     const {onConnectBLE} = this.props
     try {
@@ -174,7 +168,7 @@ class _LedgerConnect extends React.Component<Props, State> {
         // should never happen
         throw new Error('device id is null')
       }
-      this.setStateWithAnimimation({
+      this.setStateWithAnimation({
         deviceId: device.id.toString(),
         refreshing: false,
         waiting: true,
@@ -186,9 +180,9 @@ class _LedgerConnect extends React.Component<Props, State> {
         this.reload()
         return
       }
-      this.setStateWithAnimimation({error: e})
+      this.setStateWithAnimation({error: e})
     } finally {
-      this.setStateWithAnimimation({waiting: false})
+      this.setStateWithAnimation({waiting: false})
     }
   }
 
@@ -199,7 +193,7 @@ class _LedgerConnect extends React.Component<Props, State> {
         // should never happen
         throw new Error('deviceObj is null')
       }
-      this.setStateWithAnimimation({
+      this.setStateWithAnimation({
         waiting: true,
       })
       await this.props.onConnectUSB(deviceObj)
@@ -209,9 +203,9 @@ class _LedgerConnect extends React.Component<Props, State> {
         this.reload()
         return
       }
-      this.setStateWithAnimimation({error: e})
+      this.setStateWithAnimation({error: e})
     } finally {
-      this.setStateWithAnimimation({waiting: false})
+      this.setStateWithAnimation({waiting: false})
     }
   }
 
@@ -278,7 +272,7 @@ class _LedgerConnect extends React.Component<Props, State> {
               contentContainerStyle={styles.flatListContentContainer}
               data={devices}
               renderItem={({item}: {item: Device}) => (
-                <DeviceItem device={item} onSelect={() => this._onSelectDevice(item)} />
+                <DeviceItem disabled={waiting} device={item} onSelect={() => this._onSelectDevice(item)} />
               )}
               ListHeaderComponent={this.ListHeader}
               keyExtractor={(item) => item.id.toString()}
