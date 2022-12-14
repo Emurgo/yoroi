@@ -121,7 +121,7 @@ class _LedgerConnect extends React.Component<Props, State> {
           Logger.debug('listen: new device detected')
           if (useUSB === true) {
             // if a device is detected, save it in state immediately
-            this.setState({
+            this.setStateWithAnimation({
               refreshing: false,
               deviceObj: e.descriptor,
             })
