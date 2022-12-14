@@ -3,8 +3,13 @@ import {LayoutAnimation, View, ViewProps} from 'react-native'
 
 export const CollapsibleHeader = ({expanded, children}: {expanded: boolean} & ViewProps) => {
   const [_expanded, setExpanded] = React.useState(expanded)
+  const firstRenderRef = React.useRef(true)
 
   React.useLayoutEffect(() => {
+    if (firstRenderRef.current) {
+      firstRenderRef.current = false
+      return
+    }
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
 
     setExpanded(expanded)
