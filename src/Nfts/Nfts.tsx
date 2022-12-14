@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useNavigation} from '@react-navigation/native'
-import React, {useEffect, useState} from 'react'
+import React from 'react'
 import {Image, RefreshControl, ScrollView, StyleSheet, Text, View, ViewProps} from 'react-native'
 
 import noNftsImage from '../assets/img/no-nft.png'

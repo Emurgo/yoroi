@@ -51,44 +51,44 @@ const WalletTabNavigator = () => {
           }}
         />
 
-      <Tab.Screen
-        name="nfts"
-        component={NftsNavigator}
-        options={{
-          tabBarIcon: ({focused}) => <Icon.Image size={28} color={focused ? '#17d1aa' : '#A7AFC0'} />,
-          tabBarLabel: strings.nftsTabBarLabel,
-          tabBarTestID: 'nftsTabBarButton',
-        }}
-      />
-
-      {isHaskellShelley(wallet.walletImplementationId) && (
         <Tab.Screen
-          name="staking-dashboard"
-          component={DashboardNavigator}
+          name="nfts"
+          component={NftsNavigator}
           options={{
-            tabBarIcon: ({focused}) => (
-              <Icon.TabStaking
-                size={24}
-                color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
-              />
-            ),
-            tabBarLabel: strings.stakingButton,
-            tabBarTestID: 'stakingTabBarButton',
+            tabBarIcon: ({focused}) => <Icon.Image size={28} color={focused ? '#17d1aa' : '#A7AFC0'} />,
+            tabBarLabel: strings.nftsTabBarLabel,
+            tabBarTestID: 'nftsTabBarButton',
           }}
         />
-      )}
 
-      <Tab.Screen
-        name="menu"
-        component={MenuNavigator}
-        options={{
-          tabBarIcon: ({focused}) => <Icon.Menu size={28} color={focused ? '#17d1aa' : '#A7AFC0'} />,
-          tabBarLabel: strings.menuTabBarLabel,
-          tabBarTestID: 'menuTabBarButton',
-        }}
-      />
-    </Tab.Navigator>
-        </>
+        {isHaskellShelley(wallet.walletImplementationId) && (
+          <Tab.Screen
+            name="staking-dashboard"
+            component={DashboardNavigator}
+            options={{
+              tabBarIcon: ({focused}) => (
+                <Icon.TabStaking
+                  size={24}
+                  color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
+                />
+              ),
+              tabBarLabel: strings.stakingButton,
+              tabBarTestID: 'stakingTabBarButton',
+            }}
+          />
+        )}
+
+        <Tab.Screen
+          name="menu"
+          component={MenuNavigator}
+          options={{
+            tabBarIcon: ({focused}) => <Icon.Menu size={28} color={focused ? '#17d1aa' : '#A7AFC0'} />,
+            tabBarLabel: strings.menuTabBarLabel,
+            tabBarTestID: 'menuTabBarButton',
+          }}
+        />
+      </Tab.Navigator>
+    </>
   )
 }
 

@@ -8,7 +8,6 @@ import storage from '../../legacy/storage'
 import {
   AccountStates,
   MultiAssetMintMetadataResponse,
-  MultiAssetRequest,
   StakePoolInfoRequest,
   StakePoolInfosAndHistories,
   StakingInfo,

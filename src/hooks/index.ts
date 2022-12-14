@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import AssetFingerprint from '@emurgo/cip14-js'
 import AsyncStorage, {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
 import BigNumber from 'bignumber.js'
 import {delay} from 'bluebird'
@@ -50,7 +49,7 @@ import {
   YoroiUnsignedTx,
 } from '../yoroi-wallets/types'
 import {CurrencySymbol, RawUtxo, TipStatusResponse} from '../yoroi-wallets/types/other'
-import {Amounts, Utxos} from '../yoroi-wallets/utils'
+import {Utxos} from '../yoroi-wallets/utils'
 import {parseBoolean} from '../yoroi-wallets/utils/parsing'
 
 const crashReportsStorageKey = 'sendCrashReports'
@@ -874,7 +873,7 @@ export const useResync = (wallet: YoroiWallet, options?: UseMutationOptions<void
   }
 }
 
-export const useNfts = (options?) => {
+export const useNfts = () => {
   // const wallet = useSelectedWallet()
   // const balances = useBalances(wallet)
   // const tokenIds = Amounts.toArray(balances)
@@ -889,8 +888,11 @@ export const useNfts = (options?) => {
   //   ...options,
   // })
 
+  const nfts: YoroiNFT[] = []
+
   return {
     // ...query,
-    nfts: [],
+    nfts,
+    loading: false,
   }
 }

@@ -7,6 +7,7 @@ import {PRIMARY_ASSET_CONSTANTS} from '../../src/legacy/networks'
 import {WalletMeta} from '../../src/legacy/state'
 import {TokenEntry, YoroiWallet} from '../../src/yoroi-wallets'
 import {
+  MultiAssetMintMetadataResponse,
   RemotePoolMetaSuccess,
   StakePoolInfosAndHistories,
   StakingInfo,
@@ -68,6 +69,9 @@ const wallet: YoroiWallet = {
     throw new Error('not implemented: createWithdrawalTx')
   },
   getAllUtxosForKey: () => Promise.resolve([]),
+  fetchNfts(): Promise<MultiAssetMintMetadataResponse> {
+    throw new Error('not implemented: fetchNfts')
+  },
   fetchTokenInfo: (...args) => {
     action('fetchTokenInfo')(...args)
     return Promise.resolve(tokenResponses)

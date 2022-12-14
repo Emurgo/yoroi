@@ -1,12 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import AssetFingerprint from '@emurgo/cip14-js'
 import _ from 'lodash'
 
 import assert from '../../legacy/assert'
 import {ApiError} from '../../legacy/errors'
 import fetchDefault, {checkedFetch} from '../../legacy/fetch'
 import {ServerStatus} from '..'
-import {MultiAssetRequest, StakePoolInfosAndHistories} from '../types'
+import {MultiAssetRequest, NFTMetadata, StakePoolInfosAndHistories} from '../types'
 import type {
   AccountStateRequest,
   AccountStateResponse,
@@ -28,6 +26,7 @@ import type {
 type Addresses = Array<string>
 
 export const checkServerStatus = (config: BackendConfig): Promise<ServerStatus> =>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   fetchDefault('status', null, config, 'GET') as any
 
 export const getTipStatus = async (config: BackendConfig): Promise<TipStatusResponse> =>
@@ -55,6 +54,7 @@ export const filterUsedAddresses = async (addresses: Addresses, config: BackendC
   )
   // Take a copy in case underlying data mutates during await
   const copy = [...addresses]
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const used: any = await fetchDefault('v2/addresses/filterUsed', {addresses: copy}, config)
   // We need to do this so that we keep original order of addresses
   return copy.filter((addr) => used.includes(addr))
@@ -75,6 +75,7 @@ export const bulkFetchUTXOsForAddresses = async (
   const chunks = _.chunk(addresses, config.FETCH_UTXOS_MAX_ADDRESSES)
 
   const responses = await Promise.all(chunks.map((addrs) => fetchUTXOsForAddresses(addrs, config)))
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return _.flatten(responses) as any
 }
 
@@ -112,7 +113,8 @@ export const getPoolInfo = (request: PoolInfoRequest, config: BackendConfig): Pr
 
 const BUCKET_URL = 'https://validated-images.s3.amazonaws.com'
 
-const processNfts = (metadata = [], assets) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const processNfts = (metadata: NFTMetadata[] = [], assets: unknown) => {
   const nfts = Object.keys(metadata)
     .map((metadataKey) => {
       const [policyId, nftName] = metadataKey.split('.')
@@ -120,11 +122,6 @@ const processNfts = (metadata = [], assets) => {
       const meta = metadata[metadataKey][0]
       const nftMetadata = meta.metadata?.[policyId]?.[nftName] ?? {}
       const fingerprint = null
-
-      // new AssetFingerprint(
-      //   Buffer.from(asset.policy, 'hex'),
-      //   Buffer.from(asset.nameHex, 'hex'),
-      // ).fingerprint()
 
       return {
         id: metadataKey,
@@ -144,6 +141,7 @@ const processNfts = (metadata = [], assets) => {
   return nfts
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getMultiAssetMetadata = async (request: MultiAssetRequest, config: BackendConfig): Promise<any> => {
   const {assets} = request
   console.log(`🚀 > getMultiAssetMetadata > assets`, assets)
@@ -169,6 +167,7 @@ export const getTokenInfo = async (request: TokenInfoRequest, config: BackendCon
     throw new Error('Cardano wallets should have a Token metadata provider')
   }
   const endpointRoot = `${config.TOKEN_INFO_SERVICE}/metadata`
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const responses: Array<any> = await Promise.all(
     tokenIds.map(async (tokenId) => {
       try {
@@ -224,6 +223,7 @@ export const getTokenInfo = async (request: TokenInfoRequest, config: BackendCon
 
 export const getFundInfo = (config: BackendConfig, isMainnet: boolean): Promise<FundInfoResponse> => {
   const prefix = isMainnet ? '' : 'api/'
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return fetchDefault(`${prefix}v0/catalyst/fundInfo/`, null, config, 'GET') as any
 }
 
