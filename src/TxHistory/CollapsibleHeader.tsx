@@ -9,11 +9,12 @@ export const CollapsibleHeader = ({expanded, children}: {expanded: boolean} & Vi
     // it fixes layout and blank screen issues
     // https://emurgo.atlassian.net/browse/YOMO-428
     // https://emurgo.atlassian.net/browse/YOMO-427
+    if (firstRenderRef.current) {
+      firstRenderRef.current = false
+      return
+    }
+
     InteractionManager.runAfterInteractions(() => {
-      if (firstRenderRef.current) {
-        firstRenderRef.current = false
-        return
-      }
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
 
       setExpanded(expanded)
