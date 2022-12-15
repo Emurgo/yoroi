@@ -36,6 +36,15 @@ storiesOf('Boundary', module)
       </QueryProvider>
     )
   })
+  .add('Loading/debug', () => {
+    return (
+      <QueryProvider>
+        <Boundary debug>
+          <IsLoading />
+        </Boundary>
+      </QueryProvider>
+    )
+  })
   .add('Loading/overlay', () => {
     return (
       <QueryProvider>
@@ -94,6 +103,15 @@ storiesOf('Boundary', module)
             ),
           }}
         >
+          <Bomb />
+        </Boundary>
+      </QueryProvider>
+    )
+  })
+  .add('Error/debug', () => {
+    return (
+      <QueryProvider>
+        <Boundary debug>
           <Bomb />
         </Boundary>
       </QueryProvider>

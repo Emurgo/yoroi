@@ -13,7 +13,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
-  ViewStyle,
+  ViewProps,
 } from 'react-native'
 import {useQueryErrorResetBoundary} from 'react-query'
 
@@ -22,67 +22,73 @@ import LocalizableError from '../../i18n/LocalizableError'
 import {Button} from '../Button'
 import {Text} from '../Text'
 
-type BoundaryProps = LoadingBoundaryProps & ErrorBoundaryProps
+type BoundaryProps = {
+  loading?: LoadingBoundaryProps
+  error?: ErrorBoundaryProps
+  debug?: boolean
+  children: React.ReactNode
+}
 
 export const Boundary = (props: BoundaryProps) => {
   return (
-    <LoadingBoundary {...props}>
-      <ErrorBoundary {...props} />
+    <LoadingBoundary {...props.loading} debug={props.debug}>
+      <ErrorBoundary {...props.error} debug={props.debug}>
+        {props.children}
+      </ErrorBoundary>
     </LoadingBoundary>
   )
 }
 
 type LoadingBoundaryProps = {
-  loading?: {
-    fallback?: SuspenseProps['fallback']
-    fallbackProps?: LoadingFallbackProps
-    enabled?: boolean
-  }
-  children: React.ReactNode
+  fallback?: SuspenseProps['fallback']
+  fallbackProps?: LoadingFallbackProps
+  enabled?: boolean
+  debug?: boolean
 }
-export const LoadingBoundary = ({children, ...props}: LoadingBoundaryProps) => {
-  if (props.loading?.enabled === false) return <>{children}</>
+export const LoadingBoundary = ({children, ...props}: LoadingBoundaryProps & {children: React.ReactNode}) => {
+  if (props.enabled === false) return <>{children}</>
 
   return (
-    <React.Suspense fallback={props.loading?.fallback ?? <LoadingFallback {...props.loading?.fallbackProps} />}>
+    <React.Suspense
+      fallback={props.fallback === undefined ? <LoadingFallback {...props.fallbackProps} debug={props.debug} /> : null}
+    >
       {children}
     </React.Suspense>
   )
 }
 
-type LoadingFallbackProps = {style?: ViewStyle} & Omit<ActivityIndicatorProps, 'style'>
-export const LoadingFallback = ({size = 'large', color = 'black', style}: LoadingFallbackProps) => (
-  <View style={[styles.container, style]}>
+type LoadingFallbackProps = {style?: ViewProps['style']; debug?: boolean} & Omit<ActivityIndicatorProps, 'style'>
+export const LoadingFallback = ({size = 'large', color = 'black', style, debug = false}: LoadingFallbackProps) => (
+  <View style={[styles.container, style, debug && styles.debug]}>
     <ActivityIndicator size={size} color={color} />
   </View>
 )
 
 type ErrorBoundaryProps = {
-  error?: {
-    fallback?: ReactErrorBoundaryProps['fallbackRender']
-    enabled?: boolean
-    size?: 'large' | 'small' | 'inline'
-  }
-  children: React.ReactNode
+  fallback?: ReactErrorBoundaryProps['fallbackRender']
+  enabled?: boolean
+  size?: 'large' | 'small' | 'inline'
+  debug?: boolean
 }
-const ErrorBoundary = ({children, ...props}: ErrorBoundaryProps) => {
+const ErrorBoundary = ({children, ...props}: ErrorBoundaryProps & {children: React.ReactNode}) => {
   const {reset} = useQueryErrorResetBoundary()
-  if (props.error?.enabled === false) return <>{children}</>
+  if (props.enabled === false) return <>{children}</>
 
   const fallbackRender = (fallbackProps: ErrorFallbackProps) => {
     const errorProps = {
       ...fallbackProps,
+      debug: props.debug,
       resetErrorBoundary: () => {
         reset()
         fallbackProps.resetErrorBoundary()
       },
     }
 
-    if (props.error?.fallback) {
-      return props.error.fallback(errorProps)
-    } else if (props.error?.size === 'small') {
+    if (props.fallback) {
+      return props.fallback(errorProps)
+    } else if (props.size === 'small') {
       return <SmallErrorFallback {...errorProps} />
-    } else if (props.error?.size === 'inline') {
+    } else if (props.size === 'inline') {
       return <InlineErrorFallback {...errorProps} />
     }
 
@@ -96,12 +102,13 @@ type ErrorFallbackProps = {
   error: FallbackProps['error'] | LocalizableError
   resetErrorBoundary: FallbackProps['resetErrorBoundary']
   reset?: boolean
+  debug?: boolean
 }
 
-export const LargeErrorFallback = ({error, resetErrorBoundary, reset = true}: ErrorFallbackProps) => {
+export const LargeErrorFallback = ({error, resetErrorBoundary, reset = true, debug}: ErrorFallbackProps) => {
   const intl = useIntl()
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, debug && styles.debug]}>
       <View style={styles.errorHeader}>
         <Text>{error instanceof LocalizableError ? intl.formatMessage(error) : error.message}</Text>
       </View>
@@ -120,10 +127,11 @@ export const LargeErrorFallback = ({error, resetErrorBoundary, reset = true}: Er
   )
 }
 
-export const SmallErrorFallback = ({error, resetErrorBoundary, reset = true}: ErrorFallbackProps) => {
+export const SmallErrorFallback = ({error, resetErrorBoundary, reset = true, debug}: ErrorFallbackProps) => {
   const intl = useIntl()
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, debug && styles.debug]}>
       <View style={styles.errorHeader}>
         <Text>{error instanceof LocalizableError ? intl.formatMessage(error) : error.message}</Text>
       </View>
@@ -141,10 +149,11 @@ export const SmallErrorFallback = ({error, resetErrorBoundary, reset = true}: Er
   )
 }
 
-export const InlineErrorFallback = ({error, resetErrorBoundary, reset}: ErrorFallbackProps) => {
+export const InlineErrorFallback = ({error, resetErrorBoundary, reset, debug}: ErrorFallbackProps) => {
   const intl = useIntl()
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, debug && styles.debug]}>
       <TouchableOpacity
         onLongPress={() => {
           LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
@@ -160,6 +169,13 @@ export const InlineErrorFallback = ({error, resetErrorBoundary, reset}: ErrorFal
 }
 
 const styles = StyleSheet.create({
-  container: {alignItems: 'center', justifyContent: 'center'},
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   errorHeader: {alignItems: 'center', justifyContent: 'center', padding: 20},
+  debug: {
+    backgroundColor: 'pink',
+  },
 })

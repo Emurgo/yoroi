@@ -2,7 +2,7 @@
 import bluebird from 'bluebird'
 import React from 'react'
 import {createIntl, createIntlCache} from 'react-intl'
-import {AppRegistry, LogBox} from 'react-native'
+import {AppRegistry, LogBox, StyleSheet} from 'react-native'
 import {QueryClient, QueryClientProvider} from 'react-query'
 import {Provider} from 'react-redux'
 
@@ -66,12 +66,13 @@ const queryClient = new QueryClient()
 
 const AppWithProviders = () => {
   const migrated = useMigrations()
+
   return migrated ? (
     <WalletManagerProvider walletManager={walletManager}>
       <ErrorBoundary>
         <Provider store={store}>
           <QueryClientProvider client={queryClient}>
-            <LoadingBoundary>
+            <LoadingBoundary fallbackProps={{style: StyleSheet.absoluteFill}}>
               <ThemeProvider>
                 <LanguageProvider>
                   <CurrencyProvider>
