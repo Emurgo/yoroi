@@ -42,15 +42,7 @@ import {
   walletChecksum,
 } from '../cardano'
 import {makeStorageWithPrefix} from '../storage'
-import {
-  DefaultAsset,
-  MultiAssetMintMetadataResponse,
-  Quantity,
-  SendTokenList,
-  StakingInfo,
-  YoroiSignedTx,
-  YoroiUnsignedTx,
-} from '../types'
+import {DefaultAsset, Quantity, SendTokenList, StakingInfo, YoroiNFT, YoroiSignedTx, YoroiUnsignedTx} from '../types'
 import type {
   AccountStateResponse,
   BackendConfig,
@@ -981,16 +973,22 @@ export class ShelleyWallet implements WalletInterface {
     return api.fetchCurrentPrice(symbol, this.getBackendConfig())
   }
 
-  async fetchNfts(infos): Promise<MultiAssetMintMetadataResponse> {
-    const assets = Object.keys(infos)
-      .filter(Boolean)
-      .map((k) => {
-        const {policyId, assetName} = infos[k].metadata
-        return {nameHex: assetName, policy: policyId}
-      })
-      .filter((a) => a.nameHex !== '' && a.policy !== '')
+  async fetchNfts(): Promise<YoroiNFT[]> {
+    const utxos = this.utxos
+    const assets = utxos.flatMap((utxo) => utxo.assets ?? [])
 
-    return api.getMultiAssetMetadata({assets}, this.getBackendConfig())
+    const nftAssets = assets
+      .filter((asset) => asset.policyId && asset.name)
+      .map((asset) => {
+        const {policyId, name} = asset
+        return {nameHex: name, policy: policyId}
+      })
+
+    if (nftAssets.length === 0) {
+      return []
+    }
+
+    return api.getMultiAssetMetadata({assets: nftAssets}, this.getBackendConfig())
   }
 
   state: WalletState = {

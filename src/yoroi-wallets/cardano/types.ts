@@ -7,12 +7,12 @@ import {WalletMeta} from '../../legacy/state'
 import storage from '../../legacy/storage'
 import {
   AccountStates,
-  MultiAssetMintMetadataResponse,
   StakePoolInfoRequest,
   StakePoolInfosAndHistories,
   StakingInfo,
   StakingStatus,
   TransactionInfo,
+  YoroiNFT,
   YoroiSignedTx,
   YoroiUnsignedTx,
 } from '../types'
@@ -212,7 +212,7 @@ export interface WalletInterface {
 
   fetchCurrentPrice(symbol: CurrencySymbol): Promise<number>
 
-  fetchNfts(request): Promise<MultiAssetMintMetadataResponse>
+  fetchNfts(): Promise<YoroiNFT[]>
 
   sync(): Promise<void>
 

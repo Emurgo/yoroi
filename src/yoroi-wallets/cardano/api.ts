@@ -1,10 +1,11 @@
+import AssetFingerprint from '@emurgo/cip14-js'
 import _ from 'lodash'
 
 import assert from '../../legacy/assert'
 import {ApiError} from '../../legacy/errors'
 import fetchDefault, {checkedFetch} from '../../legacy/fetch'
 import {ServerStatus} from '..'
-import {MultiAssetRequest, NFTMetadata, StakePoolInfosAndHistories} from '../types'
+import {MultiAssetRequest, NFTMetadata, StakePoolInfosAndHistories, YoroiNFT} from '../types'
 import type {
   AccountStateRequest,
   AccountStateResponse,
@@ -142,7 +143,7 @@ const processNfts = (metadata: NFTMetadata[] = [], assets: unknown) => {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const getMultiAssetMetadata = async (request: MultiAssetRequest, config: BackendConfig): Promise<any> => {
+export const getMultiAssetMetadata = async (request: MultiAssetRequest, config: BackendConfig): Promise<YoroiNFT[]> => {
   const {assets} = request
   console.log(`🚀 > getMultiAssetMetadata > assets`, assets)
   try {
@@ -150,14 +151,49 @@ export const getMultiAssetMetadata = async (request: MultiAssetRequest, config: 
 
     const filteredResponse = Object.keys(response)
       .filter((k) => response[k][0]?.key === '721')
-      .map((nftKeys) => response[nftKeys][0].metadata)
+      .map((nftKeys) => response[nftKeys][0].metadata as ResponseMetadata)
     console.log(`🚀 > getMultiAssetMetadata > filteredResponse`, filteredResponse)
 
-    const nfts = processNfts(filteredResponse, assets)
+    const nfts: YoroiNFT[] = await Promise.all(
+      filteredResponse.map(async (backendMetadata: ResponseMetadata) => {
+        const policyId = Object.keys(backendMetadata)[0]
+        const assetNameKey = Object.keys(backendMetadata[policyId])[0]
+        const metadata: NFTMetadata = backendMetadata[policyId][assetNameKey]
+        const assetNameHex = assets.find((asset) => asset.policy === policyId)?.nameHex ?? ''
+        const fingerprint = getNFTFingerprint(policyId, assetNameHex)
+
+        // const validity = await fetchDefault('multiAsset/validateNFT/' + fingerprint, {envName: 'prod'}, config, 'POST')
+        // console.log('validity', validity)
+        return {
+          id: `${policyId}.${assetNameHex}`,
+          name: metadata.name,
+          description: typeof metadata.description === 'string' ? metadata.description : '',
+          thumbnail: `${BUCKET_URL}/p_${fingerprint}.jpeg`,
+          image: `${BUCKET_URL}/${fingerprint}.jpeg`,
+          metadata: {
+            policyId,
+            assetNameHex: assetNameHex,
+            originalMetadata: metadata,
+          },
+        }
+      }),
+    )
+
     return nfts
   } catch (error) {
     console.log(`🚀 > getMultiAssetMetadata > error`, error)
     return []
+  }
+}
+
+const getNFTFingerprint = (policyId: string, assetNameHex: string) => {
+  const assetFingerprint = new AssetFingerprint(Buffer.from(policyId, 'hex'), Buffer.from(assetNameHex, 'hex'))
+  return assetFingerprint.fingerprint()
+}
+
+interface ResponseMetadata {
+  [policyID: string]: {
+    [assetNameHex: string]: NFTMetadata
   }
 }
 

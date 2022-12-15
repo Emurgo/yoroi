@@ -44,7 +44,6 @@ import {
   TRANSACTION_STATUS,
   TransactionInfo,
   YoroiAmounts,
-  YoroiNFT,
   YoroiSignedTx,
   YoroiUnsignedTx,
 } from '../yoroi-wallets/types'
@@ -874,25 +873,11 @@ export const useResync = (wallet: YoroiWallet, options?: UseMutationOptions<void
 }
 
 export const useNfts = () => {
-  // const wallet = useSelectedWallet()
-  // const balances = useBalances(wallet)
-  // const tokenIds = Amounts.toArray(balances)
-  //   .map((a) => a.tokenId)
-  //   .filter(Boolean)
-
-  // const infos = useTokenInfo({wallet, tokenIds}) || {}
-
-  // const query = useQuery({
-  //   queryKey: [wallet.id, infos.length, 'nfts'],
-  //   queryFn: async () => wallet.fetchNfts(infos),
-  //   ...options,
-  // })
-
-  const nfts: YoroiNFT[] = []
+  const wallet = useSelectedWallet()
+  const query = useQuery({queryKey: ['nfts'], queryFn: () => wallet.fetchNfts(), enabled: true})
 
   return {
-    // ...query,
-    nfts,
+    nfts: query.data ?? [],
     loading: false,
   }
 }

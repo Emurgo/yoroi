@@ -15,6 +15,7 @@ import {
   TokenInfo,
   TransactionInfo,
   YoroiAmounts,
+  YoroiNFT,
   YoroiSignedTx,
   YoroiUnsignedTx,
 } from '../../src/yoroi-wallets/types'
@@ -69,7 +70,7 @@ const wallet: YoroiWallet = {
     throw new Error('not implemented: createWithdrawalTx')
   },
   getAllUtxosForKey: () => Promise.resolve([]),
-  fetchNfts(): Promise<MultiAssetMintMetadataResponse> {
+  fetchNfts(): Promise<YoroiNFT[]> {
     throw new Error('not implemented: fetchNfts')
   },
   fetchTokenInfo: (...args) => {
