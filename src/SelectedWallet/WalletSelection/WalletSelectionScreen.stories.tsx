@@ -6,7 +6,7 @@ import {mocks} from '../../../storybook'
 import {InvalidState, NetworkError} from '../../legacy/errors'
 import {WalletMeta} from '../../legacy/state'
 import {WalletManagerProvider} from '../../WalletManager'
-import {mockWalletManager, SystemAuthDisabled, WalletManager} from '../../yoroi-wallets'
+import {mockWalletManager, WalletManager} from '../../yoroi-wallets'
 import {WalletSelectionScreen} from './WalletSelectionScreen'
 
 storiesOf('WalletSelectionScreen', module)
@@ -60,23 +60,6 @@ storiesOf('WalletSelectionScreen', module)
             action('openWallet')(walletMeta)
             await delay(1000)
             throw new NetworkError()
-          },
-        } as unknown as WalletManager
-      }
-    >
-      <WalletSelectionScreen />
-    </WalletManagerProvider>
-  ))
-  .add('error, system auth disabled ', () => (
-    <WalletManagerProvider
-      walletManager={
-        {
-          ...mockWalletManager,
-          listWallets: () => Promise.resolve(mockWalletMetas),
-          openWallet: async (walletMeta: WalletMeta) => {
-            action('openWallet')(walletMeta)
-            await delay(1000)
-            throw new SystemAuthDisabled()
           },
         } as unknown as WalletManager
       }

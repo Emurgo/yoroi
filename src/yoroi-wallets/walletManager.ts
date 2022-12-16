@@ -25,7 +25,6 @@ import {
 import {WALLET_IMPLEMENTATION_REGISTRY} from './types/other'
 
 export class WalletClosed extends ExtendableError {}
-export class SystemAuthDisabled extends ExtendableError {}
 
 export type WalletManagerEvent =
   | {type: 'easy-confirmation'; enabled: boolean}

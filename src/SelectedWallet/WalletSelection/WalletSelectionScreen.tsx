@@ -15,7 +15,6 @@ import {WalletMeta} from '../../legacy/state'
 import {useWalletNavigation} from '../../navigation'
 import {COLORS} from '../../theme'
 import {useWalletManager} from '../../WalletManager'
-import {SystemAuthDisabled} from '../../yoroi-wallets'
 import {useSetSelectedWallet, useSetSelectedWalletMeta} from '..'
 import {WalletListItem} from './WalletListItem'
 
@@ -49,9 +48,7 @@ export const WalletSelectionScreen = () => {
       closeWallet()
 
       InteractionManager.runAfterInteractions(() => {
-        return error instanceof SystemAuthDisabled
-          ? showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
-          : error instanceof InvalidState
+        return error instanceof InvalidState
           ? showErrorDialog(errorMessages.walletStateInvalid, intl)
           : error instanceof NetworkError
           ? showErrorDialog(errorMessages.networkError, intl)
