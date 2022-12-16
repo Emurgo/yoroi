@@ -10,7 +10,7 @@ import {useCloseWallet, useOpenWallet, useWalletMetas} from '../../hooks'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
 import {showErrorDialog} from '../../legacy/actions'
 import {CONFIG, isNightly} from '../../legacy/config'
-import {InvalidState} from '../../legacy/errors'
+import {InvalidState, NetworkError} from '../../legacy/errors'
 import {isJormungandr} from '../../legacy/networks'
 import {WalletMeta} from '../../legacy/state'
 import {useWalletNavigation} from '../../navigation'
@@ -59,6 +59,8 @@ export const WalletSelectionScreen = () => {
       } else if (error instanceof KeysAreInvalid) {
         await showErrorDialog(errorMessages.walletKeysInvalidated, intl)
         logout()
+      } else if (error instanceof NetworkError) {
+        await showErrorDialog(errorMessages.networkError, intl)
       } else {
         await showErrorDialog(errorMessages.generalError, intl, {message: error.message})
       }
