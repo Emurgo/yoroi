@@ -23,8 +23,13 @@ import {CardanoError, InvalidState} from '../../legacy/errors'
 import type {HWDeviceInfo} from '../../legacy/ledgerUtils'
 import {signTxWithLedger} from '../../legacy/ledgerUtils'
 import {Logger} from '../../legacy/logging'
-import {CardanoHaskellShelleyNetwork, getCardanoNetworkConfigById, isJormungandr} from '../../legacy/networks'
-import {isHaskellShelleyNetwork, PROVIDERS} from '../../legacy/networks'
+import {
+  CardanoHaskellShelleyNetwork,
+  getCardanoNetworkConfigById,
+  isHaskellShelleyNetwork,
+  isJormungandr,
+  PROVIDERS,
+} from '../../legacy/networks'
 import {processTxHistoryData} from '../../legacy/processTransactions'
 import {IsLockedError, nonblockingSynchronize, synchronize} from '../../legacy/promise'
 import type {WalletMeta} from '../../legacy/state'
@@ -42,7 +47,16 @@ import {
   walletChecksum,
 } from '../cardano'
 import {makeStorageWithPrefix} from '../storage'
-import {DefaultAsset, Quantity, SendTokenList, StakingInfo, YoroiNFT, YoroiSignedTx, YoroiUnsignedTx} from '../types'
+import {
+  DefaultAsset,
+  Quantity,
+  SendTokenList,
+  StakingInfo,
+  YoroiNFT,
+  YoroiNFTModerationStatus,
+  YoroiSignedTx,
+  YoroiUnsignedTx,
+} from '../types'
 import type {
   AccountStateResponse,
   BackendConfig,
@@ -989,6 +1003,14 @@ export class ShelleyWallet implements WalletInterface {
     }
 
     return api.getMultiAssetMetadata({assets: nftAssets}, this.getBackendConfig())
+  }
+
+  async fetchNftModerationStatus(fingerprint: string): Promise<YoroiNFTModerationStatus> {
+    const {status} = await api.getNFTModerationStatus(fingerprint, this.getBackendConfig())
+    if (status === YoroiNFTModerationStatus.PENDING) {
+      return new Promise((resolve) => setTimeout(() => resolve(this.fetchNftModerationStatus(fingerprint)), 5000))
+    }
+    return status
   }
 
   state: WalletState = {

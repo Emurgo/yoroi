@@ -5,7 +5,7 @@ import assert from '../../legacy/assert'
 import {ApiError} from '../../legacy/errors'
 import fetchDefault, {checkedFetch} from '../../legacy/fetch'
 import {ServerStatus} from '..'
-import {MultiAssetRequest, NFTMetadata, StakePoolInfosAndHistories, YoroiNFT} from '../types'
+import {MultiAssetRequest, NFTMetadata, StakePoolInfosAndHistories, YoroiNFT, YoroiNFTModerationStatus} from '../types'
 import type {
   AccountStateRequest,
   AccountStateResponse,
@@ -112,35 +112,7 @@ export const getPoolInfo = (request: PoolInfoRequest, config: BackendConfig): Pr
   return fetchDefault('pool/info', request, config)
 }
 
-const BUCKET_URL = 'https://validated-images.s3.amazonaws.com'
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const processNfts = (metadata: NFTMetadata[] = [], assets: unknown) => {
-  const nfts = Object.keys(metadata)
-    .map((metadataKey) => {
-      const [policyId, nftName] = metadataKey.split('.')
-
-      const meta = metadata[metadataKey][0]
-      const nftMetadata = meta.metadata?.[policyId]?.[nftName] ?? {}
-      const fingerprint = null
-
-      return {
-        id: metadataKey,
-        name: nftMetadata.name,
-        description: nftMetadata.description,
-        thumbnail: `${BUCKET_URL}/p_${fingerprint}`,
-        image: `${BUCKET_URL}/${fingerprint}`,
-        metadata: {
-          policyId,
-          assetNameHex: nftMetadata.name,
-          originalMetadata: nftMetadata,
-        },
-      }
-    })
-    .filter(Boolean)
-
-  return nfts
-}
+const BUCKET_URL = 'https://fibo-validated-nft-images.s3.amazonaws.com'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getMultiAssetMetadata = async (request: MultiAssetRequest, config: BackendConfig): Promise<YoroiNFT[]> => {
@@ -159,11 +131,9 @@ export const getMultiAssetMetadata = async (request: MultiAssetRequest, config: 
         const policyId = Object.keys(backendMetadata)[0]
         const assetNameKey = Object.keys(backendMetadata[policyId])[0]
         const metadata: NFTMetadata = backendMetadata[policyId][assetNameKey]
-        const assetNameHex = assets.find((asset) => asset.policy === policyId)?.nameHex ?? ''
+        const assetNameHex = asciiToHex(assetNameKey)
         const fingerprint = getNFTFingerprint(policyId, assetNameHex)
 
-        // const validity = await fetchDefault('multiAsset/validateNFT/' + fingerprint, {envName: 'prod'}, config, 'POST')
-        // console.log('validity', validity)
         return {
           id: `${policyId}.${assetNameHex}`,
           name: metadata.name,
@@ -184,6 +154,40 @@ export const getMultiAssetMetadata = async (request: MultiAssetRequest, config: 
     console.log(`🚀 > getMultiAssetMetadata > error`, error)
     return []
   }
+}
+
+export const getNFTModerationStatus = async (
+  fingerprint: string,
+  config: BackendConfig,
+): Promise<{status: YoroiNFTModerationStatus}> => {
+  const validity = await fetchDefault('multiAsset/validateNFT/' + fingerprint, {envName: 'prod'}, config, 'POST', {
+    checkResponse: async (response): Promise<{status: YoroiNFTModerationStatus}> => {
+      if (response.status === 202) {
+        return {status: YoroiNFTModerationStatus.PENDING}
+      }
+      const json = await response.json()
+      const status = json?.status
+      if (isValidModerationStatus(status)) {
+        return {status}
+      }
+      throw new Error(`Invalid server response "${json?.status}"`)
+    },
+  })
+
+  const status = validity.status
+  return {status}
+}
+
+const isValidModerationStatus = (status: unknown): status is YoroiNFTModerationStatus => {
+  return Object.values(YoroiNFTModerationStatus).includes(<YoroiNFTModerationStatus>status)
+}
+
+const asciiToHex = (text: string) => {
+  let result = ''
+  for (let i = 0; i < text.length; i++) {
+    result += text.charCodeAt(i).toString(16)
+  }
+  return result
 }
 
 const getNFTFingerprint = (policyId: string, assetNameHex: string) => {

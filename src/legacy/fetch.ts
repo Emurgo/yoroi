@@ -75,12 +75,13 @@ export const checkedFetch = (request: FetchRequest) => {
       return response
     })
 }
-export const fetchDefault = (
+export const fetchDefault = <T extends typeof _checkResponse>(
   path: string,
   payload: any,
   networkConfig: BackendConfig,
   method: RequestMethod = 'POST',
-) => {
+  options?: {checkResponse?: T},
+): ReturnType<Awaited<T>> => {
   const fullPath = `${networkConfig.API_ROOT}/${path}`
   const platform = Platform.OS === 'android' || Platform.OS === 'ios' ? Platform.OS : '-'
   const yoroiVersion = `${platform} / ${DeviceInfo.getVersion()}`
@@ -92,9 +93,9 @@ export const fetchDefault = (
     endpoint: fullPath,
     payload,
     method,
-    checkResponse: _checkResponse,
+    checkResponse: options?.checkResponse ?? _checkResponse,
     headers,
   }
-  return checkedFetch(request)
+  return checkedFetch(request) as ReturnType<Awaited<T>>
 }
 export default fetchDefault

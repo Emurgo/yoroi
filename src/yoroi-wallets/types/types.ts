@@ -70,3 +70,11 @@ export type YoroiNFT = {
     originalMetadata: object
   }
 }
+
+export enum YoroiNFTModerationStatus {
+  YELLOW = 'YELLOW',
+  RED = 'RED',
+  GREEN = 'GREEN',
+  PENDING = 'PENDING',
+  MANUAL_REVIEW = 'MANUAL_REVIEW',
+}

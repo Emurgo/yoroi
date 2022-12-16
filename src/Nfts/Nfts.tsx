@@ -7,7 +7,7 @@ import noNftsImage from '../assets/img/no-nft.png'
 import {OfflineBanner, StatusBar} from '../components'
 import {useNfts} from '../hooks'
 import {WalletStackRouteNavigation} from '../navigation'
-import {ImageGallery} from './ImageGallery'
+import {ImageGallery, SkeletonGallery} from './ImageGallery'
 import nft1 from './ImageGallery/fake-images/nft1.png'
 import nft2 from './ImageGallery/fake-images/nft2.png'
 import nft3 from './ImageGallery/fake-images/nft3.png'
@@ -25,7 +25,7 @@ export const mockNFTs = [
 ]
 
 export const Nfts = () => {
-  const {nfts, loading} = useNfts()
+  const {nfts, isLoading, refetch, isRefetching} = useNfts()
   console.log(`🚀 > Nfts > nfts`, nfts)
 
   const navigation = useNavigation<WalletStackRouteNavigation>()
@@ -33,7 +33,7 @@ export const Nfts = () => {
   const showDetails = (id) =>
     navigation.navigate('nft-details-routes', {screen: 'nft-details', params: {id: id ?? '1'}})
 
-  const NFTsWithAction = nfts.map((n, i) => ({image: n.thumbnail, text: n.name, onPress: () => showDetails(i)}))
+  const nftsWithAction = nfts.map((n, i) => ({image: n.thumbnail, text: n.name, onPress: () => showDetails(i)}))
 
   return (
     <View style={styles.root}>
@@ -44,15 +44,15 @@ export const Nfts = () => {
         <ScrollView
           style={styles.scrollView}
           contentContainerStyle={styles.contentContainer}
-          refreshControl={<RefreshControl onRefresh={() => console.log('fetch state')} refreshing={false} />}
+          refreshControl={<RefreshControl onRefresh={refetch} refreshing={isRefetching} />}
         >
           <Row>
-            <Text style={styles.count}>NFT count: {NFTsWithAction.length}</Text>
+            <Text style={styles.count}>NFT count: {nftsWithAction.length}</Text>
           </Row>
           <Row>
-            {NFTsWithAction.length > 0 ? (
-              <ImageGallery images={NFTsWithAction} loading={loading} />
-            ) : (
+            {isLoading && <SkeletonGallery amount={3} />}
+            {!isLoading && nfts.length > 0 && <ImageGallery nfts={nfts} />}
+            {!isLoading && nfts.length === 0 && (
               <View style={styles.imageContainer}>
                 <Image source={noNftsImage} style={styles.image} />
                 <Text style={styles.contentText}>No NFTs added to your wallet yet</Text>

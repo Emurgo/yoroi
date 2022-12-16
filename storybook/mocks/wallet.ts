@@ -7,7 +7,6 @@ import {PRIMARY_ASSET_CONSTANTS} from '../../src/legacy/networks'
 import {WalletMeta} from '../../src/legacy/state'
 import {TokenEntry, YoroiWallet} from '../../src/yoroi-wallets'
 import {
-  MultiAssetMintMetadataResponse,
   RemotePoolMetaSuccess,
   StakePoolInfosAndHistories,
   StakingInfo,
@@ -16,6 +15,7 @@ import {
   TransactionInfo,
   YoroiAmounts,
   YoroiNFT,
+  YoroiNFTModerationStatus,
   YoroiSignedTx,
   YoroiUnsignedTx,
 } from '../../src/yoroi-wallets/types'
@@ -72,6 +72,9 @@ const wallet: YoroiWallet = {
   getAllUtxosForKey: () => Promise.resolve([]),
   fetchNfts(): Promise<YoroiNFT[]> {
     throw new Error('not implemented: fetchNfts')
+  },
+  fetchNftModerationStatus(): Promise<YoroiNFTModerationStatus> {
+    throw new Error('not implemented: fetchNftModerationStatus')
   },
   fetchTokenInfo: (...args) => {
     action('fetchTokenInfo')(...args)

@@ -13,6 +13,7 @@ import {
   StakingStatus,
   TransactionInfo,
   YoroiNFT,
+  YoroiNFTModerationStatus,
   YoroiSignedTx,
   YoroiUnsignedTx,
 } from '../types'
@@ -214,6 +215,8 @@ export interface WalletInterface {
 
   fetchNfts(): Promise<YoroiNFT[]>
 
+  fetchNftModerationStatus(fingerprint: string): Promise<YoroiNFTModerationStatus>
+
   sync(): Promise<void>
 
   resync(): Promise<void>
@@ -324,6 +327,7 @@ type YoroiWalletKeys =
   | 'fetchCurrentPrice'
   | 'fetchFundInfo'
   | 'fetchNfts'
+  | 'fetchNftModerationStatus'
   | 'internalAddresses'
   | 'externalAddresses'
   | 'confirmationCounts'
@@ -360,6 +364,7 @@ const yoroiWalletKeys: Array<YoroiWalletKeys> = [
   'getDelegationStatus',
   'hwDeviceInfo',
   'fetchNfts',
+  'fetchNftModerationStatus',
   'internalAddresses',
   'isEasyConfirmationEnabled',
   'isHW',
