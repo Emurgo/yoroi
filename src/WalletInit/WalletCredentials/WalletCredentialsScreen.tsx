@@ -1,9 +1,13 @@
 import {RouteProp, useRoute} from '@react-navigation/native'
 import React from 'react'
-import {ActivityIndicator, StyleSheet} from 'react-native'
+import {useIntl} from 'react-intl'
+import {ActivityIndicator, InteractionManager, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useCreateWallet} from '../../hooks'
+import {errorMessages} from '../../i18n/global-messages'
+import {showErrorDialog} from '../../legacy/actions'
+import {NetworkError} from '../../legacy/errors'
 import {useWalletNavigation, WalletInitRoutes} from '../../navigation'
 import {COLORS} from '../../theme'
 import {WalletForm} from '../WalletForm'
@@ -13,9 +17,15 @@ export const WalletCredentialsScreen = () => {
   const route = useRoute<RouteProp<WalletInitRoutes, 'wallet-credentials'>>()
   const {phrase, networkId, walletImplementationId, provider} = route.params
 
+  const intl = useIntl()
   const {createWallet, isLoading, isSuccess} = useCreateWallet({
-    onSuccess: async () => {
-      resetToWalletSelection()
+    onSuccess: () => resetToWalletSelection(),
+    onError: (error) => {
+      InteractionManager.runAfterInteractions(() => {
+        return error instanceof NetworkError
+          ? showErrorDialog(errorMessages.networkError, intl)
+          : showErrorDialog(errorMessages.generalError, intl, {message: error.message})
+      })
     },
   })
 
