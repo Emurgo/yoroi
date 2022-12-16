@@ -56,7 +56,7 @@ export const ConfirmScreen = () => {
 
         <Spacer height={16} />
 
-        <Boundary loading={{fallbackProps: {size: 'small'}}}>
+        <Boundary loading={{size: 'small'}}>
           <Receiver receiver={receiver} />
         </Boundary>
       </View>
@@ -174,7 +174,7 @@ const TokenTotals = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx}) => {
       {Amounts.toArray(tokens)
         .sort((a, b) => (Quantities.isGreaterThan(a.quantity, b.quantity) ? -1 : 1))
         .map((amount) => (
-          <Boundary key={amount.tokenId} loading={{fallbackProps: {size: 'small'}}}>
+          <Boundary key={amount.tokenId} loading={{size: 'small'}}>
             <Amount amount={amount} />
           </Boundary>
         ))}

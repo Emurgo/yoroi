@@ -118,7 +118,7 @@ export const TxDetails = () => {
           <Label>{strings.txAssuranceLevel}</Label>
         </View>
 
-        <Boundary loading={{fallbackProps: {size: 'small'}}}>
+        <Boundary loading={{size: 'small'}}>
           <Confirmations transaction={transaction} wallet={wallet} />
         </Boundary>
         <Label>{strings.transactionId}</Label>

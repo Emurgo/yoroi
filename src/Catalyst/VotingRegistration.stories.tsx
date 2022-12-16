@@ -145,7 +145,7 @@ const Providers = ({wallet, children}: {wallet: YoroiWallet; children: React.Rea
   return (
     <QueryProvider>
       <SelectedWalletProvider wallet={wallet}>
-        <Boundary loading={{fallbackProps: {style: {flex: 1}}}}>{children}</Boundary>
+        <Boundary loading={{size: 'full'}}>{children}</Boundary>
       </SelectedWalletProvider>
     </QueryProvider>
   )

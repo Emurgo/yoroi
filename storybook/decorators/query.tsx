@@ -5,6 +5,6 @@ import {Boundary} from '../../src/components'
 
 export const QueryProvider = ({children}: {children: React.ReactNode}) => (
   <QueryClientProvider client={new QueryClient({defaultOptions: {queries: {retry: false}}})}>
-    <Boundary loading={{fallbackProps: {style: {flex: 1}}}}>{children}</Boundary>
+    <Boundary loading={{size: 'full'}}>{children}</Boundary>
   </QueryClientProvider>
 )
