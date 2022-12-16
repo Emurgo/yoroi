@@ -104,60 +104,8 @@ storiesOf('WalletSelectionScreen', module)
 
 const delay = (delay: number) => new Promise((resolve) => setTimeout(resolve, delay))
 
-const mockWalletMetas = [
-  {
-    ...mocks.walletMeta,
-    id: Math.random(),
-    name: String(Math.random()),
-  },
-  {
-    ...mocks.walletMeta,
-    id: Math.random(),
-    name: String(Math.random()),
-  },
-  {
-    ...mocks.walletMeta,
-    id: Math.random(),
-    name: String(Math.random()),
-  },
-  {
-    ...mocks.walletMeta,
-    id: Math.random(),
-    name: String(Math.random()),
-  },
-  {
-    ...mocks.walletMeta,
-    id: Math.random(),
-    name: String(Math.random()),
-  },
-  {
-    ...mocks.walletMeta,
-    id: Math.random(),
-    name: String(Math.random()),
-  },
-  {
-    ...mocks.walletMeta,
-    id: Math.random(),
-    name: String(Math.random()),
-  },
-  {
-    ...mocks.walletMeta,
-    id: Math.random(),
-    name: String(Math.random()),
-  },
-  {
-    ...mocks.walletMeta,
-    id: Math.random(),
-    name: String(Math.random()),
-  },
-  {
-    ...mocks.walletMeta,
-    id: Math.random(),
-    name: String(Math.random()),
-  },
-  {
-    ...mocks.walletMeta,
-    id: Math.random(),
-    name: String(Math.random()),
-  },
-]
+const mockWalletMetas = new Array(15).fill(null).map(() => ({
+  ...mocks.walletMeta,
+  id: Math.random(),
+  name: `Wallet # ${String(Math.floor(Math.random() * 1000))}`,
+}))
