@@ -24,8 +24,7 @@ export const SaveNanoXScreen = () => {
     },
     onError: (error) => {
       InteractionManager.runAfterInteractions(() => {
-        const newLocal = error instanceof NetworkError
-        return newLocal
+        return error instanceof NetworkError
           ? showErrorDialog(errorMessages.networkError, intl)
           : showErrorDialog(errorMessages.generalError, intl, {message: error.message})
       })
