@@ -24,7 +24,6 @@ type Tab = 'transactions' | 'assets'
 export const TxHistory = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
-
   const [showWarning, setShowWarning] = useState(isByron(wallet.walletImplementationId))
 
   const [activeTab, setActiveTab] = useState<Tab>('transactions')

@@ -136,6 +136,7 @@ export const FullErrorFallback = ({error, resetErrorBoundary, reset = true, debu
 
 export const LargeErrorFallback = ({error, resetErrorBoundary, reset = true, debug}: ErrorFallbackProps) => {
   const intl = useIntl()
+
   return (
     <View style={[styles.container, debug && styles.debug]}>
       <View style={styles.errorHeader}>

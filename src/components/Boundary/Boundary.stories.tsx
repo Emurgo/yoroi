@@ -156,6 +156,15 @@ storiesOf('Boundary', module)
       </QueryProvider>
     )
   })
+  .add('Error/debug', () => {
+    return (
+      <QueryProvider>
+        <Boundary debug>
+          <Bomb />
+        </Boundary>
+      </QueryProvider>
+    )
+  })
 
 const IsLoading = () => {
   useQuery({
