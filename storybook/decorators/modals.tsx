@@ -1,7 +1,7 @@
 import {action} from '@storybook/addon-actions'
-
 import React from 'react'
 import {Button, View} from 'react-native'
+
 import {Modal} from '../../src/components'
 
 type childrenFn = (modalProps: {
@@ -16,7 +16,7 @@ export const WithModalProps = ({children, autoClose}: {children: childrenFn; aut
   React.useEffect(() => {
     setTimeout(() => setVisible(true), 500) // weird behavior when starting with visible: true
     autoClose && setTimeout(() => setVisible(false), 3500) // auto-close
-  }, [])
+  }, [autoClose])
 
   return (
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>

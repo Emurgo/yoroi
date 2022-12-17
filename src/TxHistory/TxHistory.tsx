@@ -96,7 +96,7 @@ export const TxHistory = () => {
           </TabPanel>
 
           <TabPanel active={activeTab === 'assets'}>
-            <Boundary loading={{fallbackProps: {style: {flex: 1}}}}>
+            <Boundary loading={{size: 'full'}}>
               <AssetList onScroll={onScroll} refreshing={isLoading} onRefresh={() => sync()} />
             </Boundary>
           </TabPanel>

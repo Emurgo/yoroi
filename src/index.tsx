@@ -72,7 +72,7 @@ const AppWithProviders = () => {
       <ErrorBoundary>
         <Provider store={store}>
           <QueryClientProvider client={queryClient}>
-            <LoadingBoundary fallbackProps={{style: StyleSheet.absoluteFill}}>
+            <LoadingBoundary style={StyleSheet.absoluteFill}>
               <ThemeProvider>
                 <LanguageProvider>
                   <CurrencyProvider>
