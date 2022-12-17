@@ -18,7 +18,7 @@ import {
   YoroiUnsignedTx,
 } from '../../src/yoroi-wallets/types'
 import {mockEncryptedStorage, mockStorage} from './storage'
-import {mockTransaction} from './transaction'
+import {mockTransactionInfo, mockTransactions} from './transaction'
 
 const walletMeta: WalletMeta = {
   id: 'wallet-id',
@@ -151,7 +151,7 @@ const wallet: YoroiWallet = {
   internalAddresses: [],
   externalAddresses: [],
   confirmationCounts: {},
-  transactions: {},
+  transactions: mockTransactions,
   isUsedAddressIndex: {},
   numReceiveAddresses: 0,
   receiveAddresses: [],
@@ -240,7 +240,7 @@ const txid = '31b1abca49857fd50c7959cc019d14c7dc5deaa754ba45372fb21748c411f210'
 const getTransactions = {
   success: async (...args) => {
     action('getTransactions')(...args)
-    const txInfo = mockTransaction({id: txid})
+    const txInfo = mockTransactionInfo({id: txid})
 
     return {
       [txInfo.id]: txInfo,

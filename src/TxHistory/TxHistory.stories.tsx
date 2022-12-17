@@ -5,7 +5,7 @@ import {mocks} from '../../storybook'
 import {QueryProvider} from '../../storybook/decorators'
 import {SelectedWalletProvider} from '../SelectedWallet'
 import {SendProvider} from '../Send/Context/SendContext'
-import {TxHistory as TxHistoryScreen} from './TxHistory'
+import {TxHistory} from './TxHistory'
 
 storiesOf('V2/TxHistory', module)
   .add('default', () => {
@@ -13,7 +13,32 @@ storiesOf('V2/TxHistory', module)
       <QueryProvider>
         <SelectedWalletProvider wallet={mocks.wallet}>
           <SendProvider wallet={mocks.wallet}>
-            <TxHistoryScreen />
+            <TxHistory />
+          </SendProvider>
+        </SelectedWalletProvider>
+      </QueryProvider>
+    )
+  })
+  .add('1 transaction', () => {
+    return (
+      <QueryProvider>
+        <SelectedWalletProvider
+          wallet={{
+            ...mocks.wallet,
+            transactions: {
+              [mockTransaction.id]: mockTransaction,
+            },
+          }}
+        >
+          <SendProvider
+            wallet={{
+              ...mocks.wallet,
+              transactions: {
+                [mockTransaction.id]: mockTransaction,
+              },
+            }}
+          >
+            <TxHistory />
           </SendProvider>
         </SelectedWalletProvider>
       </QueryProvider>
@@ -29,7 +54,7 @@ storiesOf('V2/TxHistory', module)
       <QueryProvider>
         <SelectedWalletProvider wallet={wallet}>
           <SendProvider wallet={wallet}>
-            <TxHistoryScreen />
+            <TxHistory />
           </SendProvider>
         </SelectedWalletProvider>
       </QueryProvider>
@@ -45,9 +70,11 @@ storiesOf('V2/TxHistory', module)
           }}
         >
           <SendProvider wallet={mocks.wallet}>
-            <TxHistoryScreen />
+            <TxHistory />
           </SendProvider>
         </SelectedWalletProvider>
       </QueryProvider>
     )
   })
+
+const mockTransaction = Object.values(mocks.wallet.transactions)[0]

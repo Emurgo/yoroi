@@ -1,13 +1,24 @@
 import React from 'react'
-import {LayoutAnimation, View, ViewProps} from 'react-native'
+import {InteractionManager, LayoutAnimation, View, ViewProps} from 'react-native'
 
 export const CollapsibleHeader = ({expanded, children}: {expanded: boolean} & ViewProps) => {
   const [_expanded, setExpanded] = React.useState(expanded)
+  const firstRenderRef = React.useRef(true)
 
   React.useLayoutEffect(() => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    // it fixes layout and blank screen issues
+    // https://emurgo.atlassian.net/browse/YOMO-428
+    // https://emurgo.atlassian.net/browse/YOMO-427
+    if (firstRenderRef.current) {
+      firstRenderRef.current = false
+      return
+    }
 
-    setExpanded(expanded)
+    InteractionManager.runAfterInteractions(() => {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+
+      setExpanded(expanded)
+    })
   }, [expanded])
 
   return _expanded ? (
