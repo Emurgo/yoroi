@@ -1,7 +1,7 @@
 name: Trigger Gitlab jobs
 on:
-  pull_request:
-    types: [ opened, ready_for_review ]
+  pull_request_review:
+    types: [ submitted ]
 
 jobs:
 
@@ -10,18 +10,11 @@ jobs:
     name: Requst building the app
     runs-on: ubuntu-latest
     steps:
-    - name: Extract branch name
-      shell: bash
-      run: echo "branch=$(echo ${GITHUB_REF_NAME})" >> $GITHUB_OUTPUT
-      id: extract_branch
-
-    - name: Extract branch name
-      shell: bash
-      run: echo "branch=$(echo ${GITHUB_HEAD_REF})" >> $GITHUB_OUTPUT
-      id: extract_head_branch
+    - name: Get branch name
+      id: branch-name
+      uses: tj-actions/branch-names@v6
 
     - name: Trigger GitLab CI
       run: |
-        echo "GITHUB_REF_NAME ${{ steps.extract_branch.outputs.branch }}"
-        echo "GITHUB_HEAD_REF ${{ steps.extract_head_branch.outputs.branch }}"
+        echo ${{ steps.branch-name.outputs.current_branch }}
 
