@@ -10,6 +10,10 @@ jobs:
     name: Requst building the app
     runs-on: ubuntu-latest
     steps:
+    - name: Extract branch name
+      shell: bash
+      run: echo "branch=$(echo ${GITHUB_REF_NAME})" >> $GITHUB_OUTPUT
+      id: extract_branch
 
     - name: Trigger GitLab CI
-      run: curl --request POST --form token=${{ secrets.GITLAB_TOKEN }} --form ref=main --form "variables[BUILD_BRANCH]=${{ GITHUB_REF_NAME }}" ${{ secrets.GITLAB_API_PIPELINE }} > tempfile
+      run: curl --request POST --form token=${{ secrets.GITLAB_TOKEN }} --form ref=main --form "variables[BUILD_BRANCH]=${{ steps.extract_branch.outputs.branch }}" ${{ secrets.GITLAB_API_PIPELINE }} > tempfile
