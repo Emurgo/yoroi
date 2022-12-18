@@ -1,7 +1,7 @@
 name: Trigger Gitlab jobs
 on:
-  pull_request_review:
-    types: [ submitted ]
+  pull_request:
+    types: [ opened, ready_for_review ]
 
 jobs:
 
