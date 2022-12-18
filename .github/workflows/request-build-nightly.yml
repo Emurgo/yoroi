@@ -12,7 +12,7 @@ jobs:
     steps:
     - name: Extract branch name
       shell: bash
-      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+      run: echo "branch=$(echo ${GITHUB_REF##*/})" >> $GITHUB_OUTPUT
       id: extract_branch
 
     - name: Trigger GitLab CI
