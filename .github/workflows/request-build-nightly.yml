@@ -6,7 +6,7 @@ on:
 jobs:
 
   Build_Request:
-    if: github.event.review && (github.event.review.state == 'approved' || contains(github.event.review.body, '/check')
+    if: github.event.review && (github.event.review.state == 'approved' || contains(github.event.review.body, '/check'))
     name: Requst building the app
     runs-on: ubuntu-latest
     steps:
