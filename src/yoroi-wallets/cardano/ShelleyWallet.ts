@@ -1002,7 +1002,7 @@ export class ShelleyWallet implements WalletInterface {
       return []
     }
 
-    return api.getMultiAssetMetadata({assets: nftAssets}, this.getBackendConfig())
+    return api.getNFTs({assets: nftAssets}, this.getBackendConfig())
   }
 
   async fetchNftModerationStatus(fingerprint: string): Promise<YoroiNFTModerationStatus> {

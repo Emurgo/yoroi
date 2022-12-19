@@ -339,6 +339,7 @@ describe('syncTxs (undefined means no updates)', () => {
 
 const mockedBackendConfig: BackendConfig = {
   API_ROOT: 'https://emurgo.node.api',
+  NFT_STORAGE_URL: 'https://fibo-validated-nft-images.s3.amazonaws.com',
   TOKEN_INFO_SERVICE: 'https://emurgo.token.api',
   FETCH_UTXOS_MAX_ADDRESSES: 2,
   TX_HISTORY_MAX_ADDRESSES: 2,

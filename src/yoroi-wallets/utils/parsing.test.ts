@@ -1,5 +1,5 @@
 import {CONFIG, getCardanoDefaultAsset} from '../../legacy/config'
-import {InvalidAssetAmount, parseAmountDecimal} from './parsing'
+import {asciiToHex, InvalidAssetAmount, parseAmountDecimal} from './parsing'
 
 describe('parseAdaDecimal', () => {
   // recall: tests run on mainnet (default network)
@@ -23,5 +23,19 @@ describe('parseAdaDecimal', () => {
         parseAmountDecimal(value, defaultAsset)
       }).toThrow(InvalidAssetAmount)
     }
+  })
+})
+
+describe('asciiToHex', () => {
+  it('converts "hello" to hex', () => {
+    const ascii = 'hello'
+    const hex = asciiToHex(ascii)
+    expect(hex).toEqual('68656c6c6f')
+  })
+
+  it('converts empty string to empty string', () => {
+    const ascii = ''
+    const hex = asciiToHex(ascii)
+    expect(hex).toEqual('')
   })
 })

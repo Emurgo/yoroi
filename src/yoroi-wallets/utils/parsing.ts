@@ -70,6 +70,11 @@ export const parseBoolean = (data: unknown) => {
   return isBoolean(parsed) ? parsed : undefined
 }
 
+export const asciiToHex = (text: string) => {
+  const characters = text.split('')
+  return characters.map((char) => char.charCodeAt(0).toString(16)).join('')
+}
+
 export const parseSafe = (text: any) => {
   try {
     return JSON.parse(text)

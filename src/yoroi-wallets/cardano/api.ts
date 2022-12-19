@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import _ from 'lodash'
 
 import assert from '../../legacy/assert'
@@ -30,11 +31,12 @@ import type {
   TxStatusRequest,
   TxStatusResponse,
 } from '../types/other'
+import {asciiToHex} from '../utils/parsing'
+import {isValidModerationStatus} from '../utils/validators'
 
 type Addresses = Array<string>
 
 export const checkServerStatus = (config: BackendConfig): Promise<ServerStatus> =>
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   fetchDefault('status', null, config, 'GET') as any
 
 export const getTipStatus = async (config: BackendConfig): Promise<TipStatusResponse> =>
@@ -62,7 +64,6 @@ export const filterUsedAddresses = async (addresses: Addresses, config: BackendC
   )
   // Take a copy in case underlying data mutates during await
   const copy = [...addresses]
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const used: any = await fetchDefault('v2/addresses/filterUsed', {addresses: copy}, config)
   // We need to do this so that we keep original order of addresses
   return copy.filter((addr) => used.includes(addr))
@@ -83,7 +84,6 @@ export const bulkFetchUTXOsForAddresses = async (
   const chunks = _.chunk(addresses, config.FETCH_UTXOS_MAX_ADDRESSES)
 
   const responses = await Promise.all(chunks.map((addrs) => fetchUTXOsForAddresses(addrs, config)))
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return _.flatten(responses) as any
 }
 
@@ -119,9 +119,7 @@ export const getPoolInfo = (request: PoolInfoRequest, config: BackendConfig): Pr
   return fetchDefault('pool/info', request, config)
 }
 
-const BUCKET_URL = 'https://fibo-validated-nft-images.s3.amazonaws.com'
-
-export const getMultiAssetMetadata = async (request: MultiAssetRequest, config: BackendConfig): Promise<YoroiNFT[]> => {
+export const getNFTs = async (request: MultiAssetRequest, config: BackendConfig): Promise<YoroiNFT[]> => {
   try {
     const response = await fetchDefault('multiAsset/metadata', request, config)
 
@@ -135,13 +133,14 @@ export const getMultiAssetMetadata = async (request: MultiAssetRequest, config: 
       const metadata: NFTMetadata = backendMetadata[policyId][assetNameKey]
       const assetNameHex = asciiToHex(assetNameKey)
       const fingerprint = getAssetFingerprint(policyId, assetNameHex)
+      const description = Array.isArray(metadata.description) ? metadata.description.join(' ') : metadata.description
 
       return {
         id: `${policyId}.${assetNameHex}`,
         name: metadata.name,
-        description: typeof metadata.description === 'string' ? metadata.description : '',
-        thumbnail: `${BUCKET_URL}/p_${fingerprint}.jpeg`,
-        image: `${BUCKET_URL}/${fingerprint}.jpeg`,
+        description: description ?? '',
+        thumbnail: `${config.NFT_STORAGE_URL}/p_${fingerprint}.jpeg`,
+        image: `${config.NFT_STORAGE_URL}/${fingerprint}.jpeg`,
         metadata: {
           policyId,
           assetNameHex: assetNameHex,
@@ -171,22 +170,9 @@ export const getNFTModerationStatus = async (
       if (isValidModerationStatus(status)) {
         return status
       }
-      throw new Error(`Invalid server response "${json?.status}"`)
+      throw new Error(`Invalid server response "${status}"`)
     },
   })
-}
-
-// TODO: move to a separate file
-const isValidModerationStatus = (status: unknown): status is YoroiNFTModerationStatus => {
-  return Object.values(YoroiNFTModerationStatus).includes(<YoroiNFTModerationStatus>status)
-}
-
-const asciiToHex = (text: string) => {
-  let result = ''
-  for (let i = 0; i < text.length; i++) {
-    result += text.charCodeAt(i).toString(16)
-  }
-  return result
 }
 
 export const getTokenInfo = async (request: TokenInfoRequest, config: BackendConfig): Promise<TokenInfoResponse> => {
@@ -195,7 +181,6 @@ export const getTokenInfo = async (request: TokenInfoRequest, config: BackendCon
     throw new Error('Cardano wallets should have a Token metadata provider')
   }
   const endpointRoot = `${config.TOKEN_INFO_SERVICE}/metadata`
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const responses: Array<any> = await Promise.all(
     tokenIds.map(async (tokenId) => {
       try {
@@ -251,7 +236,6 @@ export const getTokenInfo = async (request: TokenInfoRequest, config: BackendCon
 
 export const getFundInfo = (config: BackendConfig, isMainnet: boolean): Promise<FundInfoResponse> => {
   const prefix = isMainnet ? '' : 'api/'
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return fetchDefault(`${prefix}v0/catalyst/fundInfo/`, null, config, 'GET') as any
 }
 
