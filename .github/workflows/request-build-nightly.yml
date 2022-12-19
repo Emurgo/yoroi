@@ -4,17 +4,16 @@ on:
     types: [ submitted ]
 
 jobs:
-
   Build_Request:
-    name: Requst building the app
     if: github.event.review && (github.event.review.state == 'approved' || contains(github.event.review.body, '/check'))
+    name: Requst building the app
     runs-on: ubuntu-latest
+    steps:
     - uses: actions/checkout@v3
 
     - name: Get latest commit
       run: echo "latest_commit=$(echo ${git rev-parse HEAD})" >> $GITHUB_OUTPUT
       id: extract_latest_commit
-
 
     - name: Trigger GitLab CI
       run: echo ${{ steps.extract_latest_commit.outputs.latest_commit }}
