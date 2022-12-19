@@ -6,6 +6,7 @@ on:
 jobs:
 
   Build_Request:
+    name: Requst building the app
     if: github.event.review && (github.event.review.state == 'approved' || contains(github.event.review.body, '/check'))
     runs-on: ubuntu-latest
     - uses: actions/checkout@v3
