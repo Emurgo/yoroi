@@ -1,22 +1,17 @@
 name: Trigger Gitlab jobs
-on:
-  pull_request_review:
-    types: [ submitted ]
+on: [push, pull_request]
 
 jobs:
 
   Build_Request:
-    if: github.event.review && (github.event.review.state == 'approved' || contains(github.event.review.body, '/check'))
     name: Requst building the app
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
     - name: Extract branch name
       run: |
-        echo "branch=$(git branch --show-current)" >> $GITHUB_OUTPUT
-        echo $(git branch --show-current)
+        echo "branch=$(echo ${{ github.head_ref || github.ref_name }})" >> $GITHUB_OUTPUT
       id: extract_branch
 
     - name: Trigger GitLab CI
-      run: echo ${{ steps.extract_branch.outputs.branch }}
+      run: echo ${{ github.head_ref || github.ref_name }}
 
