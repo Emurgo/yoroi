@@ -324,13 +324,8 @@ type YoroiWalletKeys =
   | 'storage'
   | 'subscribeOnTxHistoryUpdate'
   | 'toJSON'
-  | 'fetchCurrentPrice'
-  | 'fetchFundInfo'
   | 'fetchNfts'
   | 'fetchNftModerationStatus'
-  | 'internalAddresses'
-  | 'externalAddresses'
-  | 'confirmationCounts'
   | 'transactions'
   | 'utxos'
   | 'walletImplementationId'
@@ -338,7 +333,6 @@ type YoroiWalletKeys =
   | 'canGenerateNewReceiveAddress'
   | 'generateNewReceiveAddressIfNeeded'
   | 'generateNewReceiveAddress'
-  | 'receiveAddresses'
 
 const yoroiWalletKeys: Array<YoroiWalletKeys> = [
   'changePassword',

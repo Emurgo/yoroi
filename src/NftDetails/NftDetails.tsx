@@ -9,13 +9,9 @@ import {Tab, TabPanel, TabPanels, Tabs} from '../components/Tabs'
 import {useNfts} from '../hooks'
 import {NftDetailsNavigation} from '../navigation'
 
-const VIEW_TABS = {
-  OVERVIEW: {
-    id: 'nftOverviewTabButton',
-  },
-  METADATA: {
-    id: 'nftMetadataTabButton',
-  },
+enum VIEW_TABS {
+  OVERVIEW = 'OVERVIEW',
+  METADATA = 'METADATA',
 }
 
 type Params = {id: string}
@@ -24,7 +20,7 @@ export const NftDetails = () => {
   const {nfts} = useNfts()
 
   const navigation = useNavigation<NftDetailsNavigation>()
-  const [activeTab, setActiveTab] = useState(VIEW_TABS.OVERVIEW.id)
+  const [activeTab, setActiveTab] = useState<VIEW_TABS>(VIEW_TABS.OVERVIEW)
   const {id} = useRoute().params as Params
   const nft = nfts.find((nft) => nft.id === id)
   const stringifiedMetadata = JSON.stringify(nft, undefined, 2)
@@ -51,21 +47,21 @@ export const NftDetails = () => {
         <View style={styles.tabsContainer}>
           <Tabs>
             <Tab
-              onPress={() => setActiveTab(VIEW_TABS.OVERVIEW.id)}
+              onPress={() => setActiveTab(VIEW_TABS.OVERVIEW)}
               label="Overview"
-              active={activeTab === VIEW_TABS.OVERVIEW.id}
-              testID={VIEW_TABS.OVERVIEW.id}
+              active={activeTab === VIEW_TABS.OVERVIEW}
+              testID={VIEW_TABS.OVERVIEW}
             />
             <Tab
-              onPress={() => setActiveTab(VIEW_TABS.METADATA.id)}
+              onPress={() => setActiveTab(VIEW_TABS.METADATA)}
               label="Metadata"
-              active={activeTab === VIEW_TABS.METADATA.id}
-              testID={VIEW_TABS.METADATA.id}
+              active={activeTab === VIEW_TABS.METADATA}
+              testID={VIEW_TABS.METADATA}
             />
           </Tabs>
 
           <TabPanels>
-            <TabPanel active={activeTab === VIEW_TABS.OVERVIEW.id}>
+            <TabPanel active={activeTab === VIEW_TABS.OVERVIEW}>
               <MetadataRow title="NFT Name" content={nft.name} />
               <MetadataRow title="Created" content={nft.name} />
               <MetadataRow title="Description" content={nft.name} />
@@ -75,7 +71,7 @@ export const NftDetails = () => {
               <MetadataRow title="Policy id" content={nft.name} withCopy />
               <MetadataRow title="Details on" content={nft.name} />
             </TabPanel>
-            <TabPanel active={activeTab === VIEW_TABS.METADATA.id}>
+            <TabPanel active={activeTab === VIEW_TABS.METADATA}>
               <View style={styles.metadataTab}>
                 <View style={styles.copyMetadata}>
                   <CopyButton value={stringifiedMetadata} />
