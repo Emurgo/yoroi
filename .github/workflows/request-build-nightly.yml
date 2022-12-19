@@ -1,17 +1,20 @@
 name: Trigger Gitlab jobs
-on: [push, pull_request]
+on:
+  pull_request_review:
+    types: [ submitted ]
 
 jobs:
 
   Build_Request:
-    name: Requst building the app
+    if: github.event.review && (github.event.review.state == 'approved' || contains(github.event.review.body, '/check'))
     runs-on: ubuntu-latest
-    steps:
-    - name: Extract branch name
-      run: |
-        echo "branch=$(echo ${{ github.head_ref || github.ref_name }})" >> $GITHUB_OUTPUT
-      id: extract_branch
+    - uses: actions/checkout@v3
+
+    - name: Get latest commit
+      run: echo "latest_commit=$(echo ${git rev-parse HEAD})" >> $GITHUB_OUTPUT
+      id: extract_latest_commit
+
 
     - name: Trigger GitLab CI
-      run: echo ${{ github.head_ref || github.ref_name }}
+      run: echo ${{ steps.extract_latest_commit.outputs.latest_commit }}
 
