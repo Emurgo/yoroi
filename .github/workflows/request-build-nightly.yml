@@ -1,21 +1,17 @@
 name: Trigger Gitlab jobs
-on:
-  pull_request_review:
-    types: [ submitted ]
+on: [push]
 
 jobs:
   Build_Request:
-    if: github.event.review && (github.event.review.state == 'approved' || contains(github.event.review.body, '/check'))
     name: Requst building the app
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-
-    - name: Get latest commit
-      run: echo "latest_commit=$(git rev-parse --abbrev-ref HEAD)" >> $GITHUB_OUTPUT
-      id: extract_latest_commit
+    - name: Get branch name
+      run: echo "branch_name=$(echo ${GITHUB_REF_NAME})" >> $GITHUB_OUTPUT
+      id: get_branch_name
 
     - name: Trigger GitLab CI
-      run: echo ${{ steps.extract_latest_commit.outputs.latest_commit }}
-      # run: curl --request POST --form token=${{ secrets.GITLAB_TOKEN }} --form ref=main --form "variables[BUILD_BRANCH]=${{ steps.extract_latest_commit.outputs.latest_commit }}" ${{ secrets.GITLAB_API_PIPELINE }} > tempfile
+      run: |
+        echo Branch name is ${{ steps.get_branch_name.outputs.branch_name }}
+        curl --request POST --form token=${{ secrets.GITLAB_TOKEN }} --form ref=main --form "variables[BUILD_BRANCH]=${{ steps.get_branch_name.outputs.branch_name }}" ${{ secrets.GITLAB_API_PIPELINE }} > tempfile
 
