@@ -12,7 +12,9 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Extract branch name
-      run: echo "branch=$(git branch --show-current)" >> $GITHUB_OUTPUT
+      run: |
+        echo "branch=$(git branch --show-current)" >> $GITHUB_OUTPUT
+        echo $(git branch --show-current)
       id: extract_branch
 
     - name: Trigger GitLab CI
