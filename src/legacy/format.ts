@@ -24,9 +24,14 @@ const messages = defineMessages({
 })
 export const getTokenFingerprint = (token: Token | DefaultAsset) => {
   const {policyId, assetName} = token.metadata
+  return getAssetFingerprint(policyId, assetName)
+}
+
+export const getAssetFingerprint = (policyId: string, assetName: string) => {
   const assetFingerprint = new AssetFingerprint(Buffer.from(policyId, 'hex'), Buffer.from(assetName, 'hex'))
   return assetFingerprint.fingerprint()
 }
+
 export const ASSET_DENOMINATION = {
   TICKER: 'ticker',
   SYMBOL: 'symbol',

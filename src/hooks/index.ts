@@ -877,5 +877,5 @@ export const useNfts = () => {
   const utxos = useUtxos(wallet)
   const query = useQuery({queryKey: ['nfts', wallet.id, utxos.length], queryFn: () => wallet.fetchNfts()})
   const {data: nfts = [], ...rest} = query
-  return {nfts: nfts, ...rest}
+  return {nfts, ...rest}
 }

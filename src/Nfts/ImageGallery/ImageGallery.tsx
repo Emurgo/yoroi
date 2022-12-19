@@ -1,4 +1,3 @@
-import AssetFingerprint from '@emurgo/cip14-js'
 import React from 'react'
 import {GestureResponderEvent, Image, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -6,11 +5,13 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 import {useQuery} from 'react-query'
 
 import {Text} from '../../components/Text'
+import {getAssetFingerprint} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {YoroiNFT, YoroiNFTModerationStatus} from '../../yoroi-wallets/types'
 
 type Props = {
   nfts: YoroiNFT[]
+  onNftPress: (index: number) => void
 }
 
 export const SkeletonGallery = (props: {amount: number} = {amount: 3}) => {
@@ -26,21 +27,25 @@ export const SkeletonGallery = (props: {amount: number} = {amount: 3}) => {
   )
 }
 
-export const ImageGallery = ({nfts = []}: Props) => {
+export const ImageGallery = ({nfts = [], onNftPress}: Props) => {
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
       <ScrollView bounces={false} contentContainerStyle={styles.galleryContainer}>
-        {nfts.map((nft) => {
-          const fingerprint = getNFTFingerprint(nft.metadata.policyId, nft.metadata.assetNameHex)
-          return <ModeratedNFTImage image={nft.image} fingerprint={fingerprint} text={nft.name} key={fingerprint} />
+        {nfts.map((nft, index) => {
+          const fingerprint = getAssetFingerprint(nft.metadata.policyId, nft.metadata.assetNameHex)
+          return (
+            <ModeratedNFTImage
+              onPress={() => onNftPress(index)}
+              image={nft.image}
+              fingerprint={fingerprint}
+              text={nft.name}
+              key={fingerprint}
+            />
+          )
         })}
       </ScrollView>
     </SafeAreaView>
   )
-}
-const getNFTFingerprint = (policyId: string, assetNameHex: string) => {
-  const assetFingerprint = new AssetFingerprint(Buffer.from(policyId, 'hex'), Buffer.from(assetNameHex, 'hex'))
-  return assetFingerprint.fingerprint()
 }
 
 interface ModeratedNFTImageProps {

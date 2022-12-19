@@ -1,16 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useNavigation, useRoute} from '@react-navigation/native'
 import React, {useEffect, useState} from 'react'
-// import {defineMessages, useIntl} from 'react-intl'
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {CopyButton, FadeIn, OfflineBanner, StatusBar, Text} from '../components'
 import {Tab, TabPanel, TabPanels, Tabs} from '../components/Tabs'
+import {useNfts} from '../hooks'
 import {NftDetailsNavigation} from '../navigation'
-// import globalMessages from '../i18n/global-messages'
-// import {useSelectedWallet} from '../SelectedWallet'
-import {mockNFTs} from '../Nfts/Nfts'
 
 const VIEW_TABS = {
   OVERVIEW: {
@@ -24,18 +21,21 @@ const VIEW_TABS = {
 type Params = {id: string}
 
 export const NftDetails = () => {
-  // const strings = useStrings()
-  // const intl = useIntl()
-  // const wallet = useSelectedWallet()
+  const {nfts} = useNfts()
+
   const navigation = useNavigation<NftDetailsNavigation>()
   const [activeTab, setActiveTab] = useState(VIEW_TABS.OVERVIEW.id)
   const {id} = useRoute().params as Params
-  const nft = mockNFTs[id] ?? {}
+  const nft = nfts.find((nft) => nft.id === id)
   const stringifiedMetadata = JSON.stringify(nft, undefined, 2)
 
   useTitle('NFT Details')
 
-  const handleFullScreenImage = () => navigation.navigate('nft-details-image', {id: id})
+  const handleFullScreenImage = () => navigation.navigate('nft-details-image', {id})
+
+  if (!nft) {
+    return null
+  }
 
   return (
     <FadeIn style={styles.container}>
@@ -45,7 +45,7 @@ export const NftDetails = () => {
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <View style={styles.imageContainer}>
           <TouchableOpacity onPress={handleFullScreenImage}>
-            <Image source={nft.image} style={styles.image} />
+            <Image source={{uri: nft.image}} style={styles.image} />
           </TouchableOpacity>
         </View>
         <View style={styles.tabsContainer}>
@@ -56,7 +56,7 @@ export const NftDetails = () => {
               active={activeTab === VIEW_TABS.OVERVIEW.id}
               testID={VIEW_TABS.OVERVIEW.id}
             />
-            <Tab //
+            <Tab
               onPress={() => setActiveTab(VIEW_TABS.METADATA.id)}
               label="Metadata"
               active={activeTab === VIEW_TABS.METADATA.id}
@@ -66,14 +66,14 @@ export const NftDetails = () => {
 
           <TabPanels>
             <TabPanel active={activeTab === VIEW_TABS.OVERVIEW.id}>
-              <MetadataRow title="NFT Name" content={nft.text} />
-              <MetadataRow title="Created" content={nft.text} />
-              <MetadataRow title="Description" content={nft.text} />
-              <MetadataRow title="Author" content={nft.text} />
-              <MetadataRow title="Collection name" content={nft.text} />
-              <MetadataRow title="Fingerprint" content={nft.text} withCopy />
-              <MetadataRow title="Policy id" content={nft.text} withCopy />
-              <MetadataRow title="Details on" content={nft.text} />
+              <MetadataRow title="NFT Name" content={nft.name} />
+              <MetadataRow title="Created" content={nft.name} />
+              <MetadataRow title="Description" content={nft.name} />
+              <MetadataRow title="Author" content={nft.name} />
+              <MetadataRow title="Collection name" content={nft.name} />
+              <MetadataRow title="Fingerprint" content={nft.name} withCopy />
+              <MetadataRow title="Policy id" content={nft.name} withCopy />
+              <MetadataRow title="Details on" content={nft.name} />
             </TabPanel>
             <TabPanel active={activeTab === VIEW_TABS.METADATA.id}>
               <View style={styles.metadataTab}>
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
   },
   image: {
     flex: 1,
-    width: 380,
+    width: '100%',
     height: 380,
   },
   contentContainer: {

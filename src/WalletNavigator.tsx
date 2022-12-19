@@ -6,6 +6,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {VotingRegistration as VotingRegistration} from './Catalyst'
 import {Icon, OfflineBanner} from './components'
 import {DashboardNavigator} from './Dashboard'
+import {useNfts} from './hooks'
 import {isHaskellShelley} from './legacy/config'
 import {MenuNavigator} from './Menu'
 import {WalletStackRoutes, WalletTabRoutes} from './navigation'
@@ -20,6 +21,7 @@ const Tab = createBottomTabNavigator<WalletTabRoutes>()
 const WalletTabNavigator = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
+  const {nfts} = useNfts()
   const initialRoute = isHaskellShelley(wallet.walletImplementationId) ? 'staking-dashboard' : 'history'
 
   return (
@@ -56,7 +58,7 @@ const WalletTabNavigator = () => {
           component={NftsNavigator}
           options={{
             tabBarIcon: ({focused}) => <Icon.Image size={28} color={focused ? '#17d1aa' : '#A7AFC0'} />,
-            tabBarLabel: strings.nftsTabBarLabel,
+            tabBarLabel: strings.nftsTabBarLabel(nfts?.length ?? 0),
             tabBarTestID: 'nftsTabBarButton',
           }}
         />
@@ -157,7 +159,7 @@ const useStrings = () => {
     receiveTabBarLabel: intl.formatMessage(messages.receiveButton),
     delegateTabBarLabel: intl.formatMessage(messages.delegateButton),
     walletTabBarLabel: intl.formatMessage(messages.walletButton),
-    nftsTabBarLabel: intl.formatMessage(messages.nftsButton),
+    nftsTabBarLabel: (qty) => intl.formatMessage(messages.nftsButton, {qty}),
     menuTabBarLabel: intl.formatMessage(messages.menuButton),
   }
 }

@@ -1006,7 +1006,7 @@ export class ShelleyWallet implements WalletInterface {
   }
 
   async fetchNftModerationStatus(fingerprint: string): Promise<YoroiNFTModerationStatus> {
-    const {status} = await api.getNFTModerationStatus(fingerprint, this.getBackendConfig())
+    const status = await api.getNFTModerationStatus(fingerprint, this.getBackendConfig())
     if (status === YoroiNFTModerationStatus.PENDING) {
       return new Promise((resolve) => setTimeout(() => resolve(this.fetchNftModerationStatus(fingerprint)), 5000))
     }

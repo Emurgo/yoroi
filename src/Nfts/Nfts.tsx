@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {Image, RefreshControl, ScrollView, StyleSheet, Text, View, ViewProps} from 'react-native'
@@ -8,33 +7,13 @@ import {OfflineBanner, StatusBar} from '../components'
 import {useNfts} from '../hooks'
 import {WalletStackRouteNavigation} from '../navigation'
 import {ImageGallery, SkeletonGallery} from './ImageGallery'
-import nft1 from './ImageGallery/fake-images/nft1.png'
-import nft2 from './ImageGallery/fake-images/nft2.png'
-import nft3 from './ImageGallery/fake-images/nft3.png'
-import nft4 from './ImageGallery/fake-images/nft4.png'
-import nft5 from './ImageGallery/fake-images/nft5.png'
-import nft6 from './ImageGallery/fake-images/nft6.png'
-
-export const mockNFTs = [
-  {image: nft1, text: 'nft1'},
-  {image: nft2, text: 'nft2'},
-  {image: nft3, text: 'nft3'},
-  {image: nft4, text: 'nft4'},
-  {image: nft5, text: 'nft5'},
-  {image: nft6, text: 'nft6'},
-]
 
 export const Nfts = () => {
   const {nfts, isLoading, refetch, isRefetching} = useNfts()
-  console.log(`🚀 > Nfts > nfts`, nfts)
-
   const navigation = useNavigation<WalletStackRouteNavigation>()
 
-  const showDetails = (id) =>
-    navigation.navigate('nft-details-routes', {screen: 'nft-details', params: {id: id ?? '1'}})
-
-  const nftsWithAction = nfts.map((n, i) => ({image: n.thumbnail, text: n.name, onPress: () => showDetails(i)}))
-
+  const showDetails = (id: string) => navigation.navigate('nft-details-routes', {screen: 'nft-details', params: {id}})
+  const handleNFTPress = (index: number) => showDetails(nfts[index].id)
   return (
     <View style={styles.root}>
       <StatusBar type="dark" />
@@ -47,11 +26,11 @@ export const Nfts = () => {
           refreshControl={<RefreshControl onRefresh={refetch} refreshing={isRefetching} />}
         >
           <Row>
-            <Text style={styles.count}>NFT count: {nftsWithAction.length}</Text>
+            <Text style={styles.count}>NFT count: {nfts.length}</Text>
           </Row>
           <Row>
             {isLoading && <SkeletonGallery amount={3} />}
-            {!isLoading && nfts.length > 0 && <ImageGallery nfts={nfts} />}
+            {!isLoading && nfts.length > 0 && <ImageGallery nfts={nfts} onNftPress={handleNFTPress} />}
             {!isLoading && nfts.length === 0 && (
               <View style={styles.imageContainer}>
                 <Image source={noNftsImage} style={styles.image} />
