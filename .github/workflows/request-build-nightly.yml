@@ -16,5 +16,5 @@ jobs:
       id: extract_latest_commit
 
     - name: Trigger GitLab CI
-      run: echo ${{ steps.extract_latest_commit.outputs.latest_commit }}
+      run: curl --request POST --form token=${{ secrets.GITLAB_TOKEN }} --form ref=main --form "variables[BUILD_BRANCH]=${{ steps.extract_latest_commit.outputs.latest_commit }}" ${{ secrets.GITLAB_API_PIPELINE }} > tempfile
 
