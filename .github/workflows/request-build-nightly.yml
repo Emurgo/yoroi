@@ -12,7 +12,7 @@ jobs:
     - uses: actions/checkout@v3
 
     - name: Get latest commit
-      run: echo "latest_commit=$(echo ${git rev-parse HEAD})" >> $GITHUB_OUTPUT
+      run: echo "latest_commit=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
       id: extract_latest_commit
 
     - name: Trigger GitLab CI
