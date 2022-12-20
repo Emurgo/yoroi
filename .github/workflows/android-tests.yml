@@ -12,9 +12,12 @@ jobs:
       - name: Preparing SSH key
         run: |
           CURRENT_DIR=$(pwd)
+          echo $(pwd)
           cd ~
           mkdir .ssh && cd .ssh
+          echo $(pwd)
           echo ${{ secrets.SSH_KEY }} | base64 -d > id_rsa
+          echo $(ls -A)
           sudo chmod 600 $pwd/id_rsa
           cd $CURRENT_DIR
 
