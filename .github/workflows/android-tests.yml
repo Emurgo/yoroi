@@ -25,6 +25,11 @@ jobs:
         run: |
           sudo apt-get install python2 -y
           sudo ln -sf /usr/bin/python2 /usr/bin/python
+
+      - name: DEBUG. Finding sdkmanager
+        run: |
+          echo $(ls -A $ANDROID_SDK_ROOT)
+          echo $(ls -A $ANDROID_SDK_ROOT/tools)
       
       - name: Installing NDK 21.4.7075529
         run: $ANDROID_SDK_ROOT/cmdline-tools/bin/sdkmanager --sdk_root=$ANDROID_SDK_ROOT --install "ndk;21.4.7075529"
