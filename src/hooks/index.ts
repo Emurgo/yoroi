@@ -23,7 +23,6 @@ import {WalletMeta} from '../legacy/state'
 import storage from '../legacy/storage'
 import {cardanoValueFromRemoteFormat} from '../legacy/utils'
 import {useSelectedWallet} from '../SelectedWallet'
-import {Storage} from '../Storage'
 import {useWalletManager} from '../WalletManager'
 import {
   CardanoMobile,

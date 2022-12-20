@@ -120,40 +120,35 @@ export const getPoolInfo = (request: PoolInfoRequest, config: BackendConfig): Pr
 }
 
 export const getNFTs = async (request: MultiAssetRequest, config: BackendConfig): Promise<YoroiNFT[]> => {
-  try {
-    const response = await fetchDefault('multiAsset/metadata', request, config)
+  const response = await fetchDefault('multiAsset/metadata', request, config)
 
-    const filteredResponse = Object.keys(response)
-      .filter((k) => response[k][0]?.key === '721')
-      .map((nftKeys) => response[nftKeys][0].metadata as CardanoAssetMetadataResponse)
+  const filteredResponse = Object.keys(response)
+    .filter((k) => response[k][0]?.key === '721')
+    .map((nftKeys) => response[nftKeys][0].metadata as CardanoAssetMetadataResponse)
 
-    const nfts = filteredResponse.map<YoroiNFT>((backendMetadata: CardanoAssetMetadataResponse) => {
-      const policyId = Object.keys(backendMetadata)[0]
-      const assetNameKey = Object.keys(backendMetadata[policyId])[0]
-      const metadata: NFTMetadata = backendMetadata[policyId][assetNameKey]
-      const assetNameHex = asciiToHex(assetNameKey)
-      const fingerprint = getAssetFingerprint(policyId, assetNameHex)
-      const description = Array.isArray(metadata.description) ? metadata.description.join(' ') : metadata.description
+  const nfts = filteredResponse.map<YoroiNFT>((backendMetadata: CardanoAssetMetadataResponse) => {
+    const policyId = Object.keys(backendMetadata)[0]
+    const assetNameKey = Object.keys(backendMetadata[policyId])[0]
+    const metadata: NFTMetadata = backendMetadata[policyId][assetNameKey]
+    const assetNameHex = asciiToHex(assetNameKey)
+    const fingerprint = getAssetFingerprint(policyId, assetNameHex)
+    const description = Array.isArray(metadata.description) ? metadata.description.join(' ') : metadata.description
 
-      return {
-        id: `${policyId}.${assetNameHex}`,
-        name: metadata.name,
-        description: description ?? '',
-        thumbnail: `${config.NFT_STORAGE_URL}/p_${fingerprint}.jpeg`,
-        image: `${config.NFT_STORAGE_URL}/${fingerprint}.jpeg`,
-        metadata: {
-          policyId,
-          assetNameHex: assetNameHex,
-          originalMetadata: metadata,
-        },
-      }
-    })
+    return {
+      id: `${policyId}.${assetNameHex}`,
+      name: metadata.name,
+      description: description ?? '',
+      thumbnail: `${config.NFT_STORAGE_URL}/p_${fingerprint}.jpeg`,
+      image: `${config.NFT_STORAGE_URL}/${fingerprint}.jpeg`,
+      metadata: {
+        policyId,
+        assetNameHex: assetNameHex,
+        originalMetadata: metadata,
+      },
+    }
+  })
 
-    return nfts
-  } catch (error) {
-    // TODO: Add error handling
-    return []
-  }
+  return nfts
 }
 
 export const getNFTModerationStatus = async (
