@@ -25,15 +25,14 @@ jobs:
         run: |
           curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
           . $HOME/.cargo/env
-          export PATH="$PATH:$HOME/.cargo/bin"
 
       - name: Installing Rust toolchain
         run: |
-          rustup toolchain install 1.41.0 
-          rustup install 1.41.0 
-          rustup target add wasm32-unknown-unknown --toolchain 1.41.0
-          rustup default 1.41.0
-          rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
+          $HOME/.cargo/bin/rustup toolchain install 1.41.0 
+          $HOME/.cargo/bin/rustup install 1.41.0 
+          $HOME/.cargo/bin/rustup target add wasm32-unknown-unknown --toolchain 1.41.0
+          $HOME/.cargo/bin/rustup default 1.41.0
+          $HOME/.cargo/bin/rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
 
       - name: Installing WASM
         run: |
