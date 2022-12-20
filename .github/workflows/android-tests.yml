@@ -1,0 +1,105 @@
+name: Tests
+
+on:
+  pull_request_review:
+    types: [submitted]
+
+jobs:
+  Android_tests:
+    if: github.event.review && (github.event.review.state == 'approved' || contains(github.event.review.body, '/check'))
+    runs-on: ubuntu-latest
+    steps:      
+      - name: Installing Rust toolchain
+        run: |
+          rustup toolchain install 1.41.0 
+          rustup install 1.41.0 
+          rustup target add wasm32-unknown-unknown --toolchain 1.41.0
+          rustup default 1.41.0
+          rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
+
+      - name: Installing WASM
+        run: |
+          curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+
+      - name: Installing Python 2.7
+        run: |
+          apt-get install python2 -y
+          ln -sf /usr/bin/python2 /usr/bin/python
+      
+      - name: Installing NDK 21.4.7075529
+        run: sdkmanager --sdk_root=${ANDROID_SDK_ROOT} --install "ndk;21.4.7075529"
+
+      - name: Installing Gradle
+        run: apt-get install gradle -y
+
+      - uses: actions/checkout@v3
+
+      - name: Reading .nvmrc
+        id: nvm
+        run: echo "NVMRC=$(cat .nvmrc)" >> $GITHUB_OUTPUT
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '${{ steps.nvm.outputs.NVMRC }}'
+          cache: 'yarn'
+
+      - name: Installing project dependencies
+        run: yarn install
+
+      - name: Adding android/gradle.properties.local
+        run: |
+          cat <<EOF > android/gradle.properties.local
+          MYAPP_RELEASE_STORE_PASSWORD=${{ secrets.RELEASE_PASSWORD }}
+          MYAPP_RELEASE_KEY_PASSWORD=${{ secrets.RELEASE_PASSWORD }}
+          EOF
+
+      - name: Adding .env.nightly
+        run: |
+          cat <<EOF > .env.nightly
+          BUILD_VARIANT=NIGHTLY
+          SHOW_INIT_DEBUG_SCREEN=false
+          PREFILL_WALLET_INFO=false
+          USE_TESTNET=false
+          SENTRY=${{ secrets.SENTRY_KEY }}
+          COMMIT=XXXXXXX
+          EOF
+
+      - name: Getting the latest commit hash
+        run: |
+          COMMIT_HASH=$(git rev-parse --short HEAD)
+          if [ -z "$COMMIT_HASH" ]; then
+            echo "ERROR: Couldn't get last commit hash"
+            COMMIT_HASH="-"
+          fi
+          sed -i "s/XXXXXXX/$COMMIT_HASH/g" .env.nightly
+
+      - name: Setting up cargo config
+        run: |
+          cat <<EOF >> ~/.cargo/config
+          [net]
+          git-fetch-with-cli = true
+          EOF
+
+      - name: Adding android/sentry.properties
+        run: |
+          cat <<EOF > android/sentry.properties
+          defaults.url=https://sentry.io/
+          defaults.org=emurgo
+          defaults.project=yoroi-mobile
+          auth.token=${{ secrets.SENTRY_AUTH_TOKEN }}
+          EOF
+
+      - name: Adding android/app/my-release-key.keystore
+        run: echo ${{ secrets.RELEASE_KEY }} | base64 -d > android/app/my-release-key.keystore
+
+      - name: A little hack, maybe, will be removed in future
+        run: cp "index.ts" "index.js"
+
+      - name: Building the nightly app
+        run: |
+          cd android
+          ./gradlew clean assembleNightlyRelease
+
+      - name: Check the app exists
+        run: echo $(file -i android/app/build/outputs/apk/nightly/release/app-nightly-release.apk)
