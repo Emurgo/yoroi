@@ -1,11 +1,10 @@
 /* eslint-disable no-empty */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/ban-types */
+
 import {BigNumber} from 'bignumber.js'
 import {isEmpty} from 'lodash'
 
 import {delay} from '../legacy/promise'
-import {CardanoMobile, CardanoTypes, DefaultTokenEntry, MultiToken} from '../yoroi-wallets'
+import {CardanoMobile, CardanoTypes, MultiToken} from '../yoroi-wallets'
 import type {Addressing, BaseAsset, NetworkId, RawUtxo} from '../yoroi-wallets/types/other'
 import {CONFIG} from './config'
 import {getNetworkConfigById} from './networks'
@@ -38,67 +37,7 @@ export const normalizeToAddress = async (addr: string) => {
   return undefined
 }
 
-export const byronAddrToHex = async (base58Addr: string) => {
-  return Buffer.from(await ((await CardanoMobile.ByronAddress.fromBase58(base58Addr)) as any).toBytes()).toString('hex')
-}
 // need to format shelley addresses as base16 but only legacy addresses as base58
-
-export const toHexOrBase58 = async (address: CardanoTypes.Address) => {
-  const asByron = await CardanoMobile.ByronAddress.fromAddress(address)
-
-  if (!asByron.hasValue()) {
-    return Buffer.from(await address.toBytes()).toString('hex')
-  }
-
-  return asByron.toBase58()
-}
-
-export const derivePublicByAddressing = async (request: {
-  addressing: Addressing['addressing']
-  startingFrom: {
-    key: CardanoTypes.Bip32PublicKey
-    level: number
-  }
-}) => {
-  if (request.startingFrom.level + 1 < request.addressing.startLevel) {
-    throw new Error('derivePublicByAddressing: keyLevel < startLevel')
-  }
-
-  let derivedKey = request.startingFrom.key
-
-  for (
-    let i = request.startingFrom.level - request.addressing.startLevel + 1;
-    i < request.addressing.path.length;
-    i++
-  ) {
-    derivedKey = await derivedKey.derive(request.addressing.path[i])
-  }
-
-  return derivedKey
-}
-export const derivePrivateByAddressing = async (request: {
-  addressing: Addressing['addressing']
-  startingFrom: {
-    key: CardanoTypes.Bip32PrivateKey
-    level: number
-  }
-}) => {
-  if (request.startingFrom.level + 1 < request.addressing.startLevel) {
-    throw new Error('derivePrivateByAddressing: keyLevel < startLevel')
-  }
-
-  let derivedKey = request.startingFrom.key
-
-  for (
-    let i = request.startingFrom.level - request.addressing.startLevel + 1;
-    i < request.addressing.path.length;
-    i++
-  ) {
-    derivedKey = await derivedKey.derive(request.addressing.path[i])
-  }
-
-  return derivedKey
-}
 
 export const verifyFromBip44Root = (request: Addressing['addressing']) => {
   const accountPosition = request.startLevel
@@ -123,6 +62,7 @@ export const deriveRewardAddressHex = async (accountPubKeyHex: string, networkId
   ).toRawKey()
   const credential = await CardanoMobile.StakeCredential.fromKeyhash(await stakingKey.hash())
   let chainNetworkId = CONFIG.NETWORKS.HASKELL_SHELLEY.CHAIN_NETWORK_ID
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const config: any = getNetworkConfigById(networkId)
 
   if (config.CHAIN_NETWORK_ID != null) {
@@ -131,17 +71,13 @@ export const deriveRewardAddressHex = async (accountPubKeyHex: string, networkId
 
   const rewardAddr = await CardanoMobile.RewardAddress.new(parseInt(chainNetworkId, 10), credential)
   const rewardAddrAsAddr = await rewardAddr.toAddress()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return Buffer.from((await rewardAddrAsAddr.toBytes()) as any, 'hex').toString('hex')
 }
 
 /**
  * Multi-asset related
  */
-export const cardanoAssetToIdentifier = async (policyId: CardanoTypes.ScriptHash, name: CardanoTypes.AssetName) => {
-  // note: possible for name to be empty causing a trailing hyphen
-  return `${Buffer.from(await policyId.toBytes()).toString('hex')}.${Buffer.from(await name.name()).toString('hex')}`
-}
-
 export const identifierToCardanoAsset = async (
   identifier: string,
 ): Promise<{
@@ -154,42 +90,6 @@ export const identifierToCardanoAsset = async (
     policyId: await CardanoMobile.ScriptHash.fromBytes(Buffer.from(parts[0], 'hex')),
     name: await CardanoMobile.AssetName.new(Buffer.from(parts[1], 'hex')),
   }
-}
-
-export const parseTokenList = async (
-  assets: void | CardanoTypes.MultiAsset,
-): Promise<
-  Array<{
-    assetId: string
-    policyId: string
-    name: string
-    amount: string
-  }>
-> => {
-  if (assets == null) return []
-  const result: Array<any> = []
-  const hashes = await assets.keys()
-
-  for (let i = 0; i < (await hashes.len()); i++) {
-    const policyId = await hashes.get(i)
-    const assetsForPolicy = await assets.get(policyId)
-    if (assetsForPolicy == null) continue
-    const policies = await assetsForPolicy.keys()
-
-    for (let j = 0; j < (await policies.len()); j++) {
-      const assetName = await policies.get(j)
-      const amount = await assetsForPolicy.get(assetName)
-      if (amount == null) continue
-      result.push({
-        amount: await amount.toStr(),
-        assetId: await cardanoAssetToIdentifier(policyId, assetName),
-        policyId: Buffer.from(await policyId.toBytes()).toString('hex'),
-        name: Buffer.from(await assetName.name()).toString('hex'),
-      })
-    }
-  }
-
-  return result
 }
 
 export const cardanoValueFromMultiToken = async (tokens: MultiToken) => {
@@ -215,25 +115,6 @@ export const cardanoValueFromMultiToken = async (tokens: MultiToken) => {
   }
 
   return value
-}
-
-export const multiTokenFromCardanoValue = async (value: CardanoTypes.Value, defaults: DefaultTokenEntry) => {
-  const multiToken = new MultiToken([], defaults)
-  multiToken.add({
-    amount: new BigNumber(await (await value.coin()).toStr()),
-    identifier: defaults.defaultIdentifier,
-    networkId: defaults.defaultNetworkId,
-  })
-
-  for (const token of await parseTokenList(await value.multiasset())) {
-    multiToken.add({
-      amount: new BigNumber(token.amount),
-      identifier: token.assetId,
-      networkId: defaults.defaultNetworkId,
-    })
-  }
-
-  return multiToken
 }
 
 export const cardanoValueFromRemoteFormat = async (utxo: RawUtxo) => {
@@ -299,6 +180,7 @@ export const ignoreConcurrentAsync = <T, R>(
     _inProgress = true
 
     try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return (await handler(...args)) as any
     } finally {
       // note: don't await on purpose
