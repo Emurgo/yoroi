@@ -27,7 +27,7 @@ jobs:
           sudo ln -sf /usr/bin/python2 /usr/bin/python
       
       - name: Installing NDK 21.4.7075529
-        run: sdkmanager --sdk_root=${ANDROID_SDK_ROOT} --install "ndk;21.4.7075529"
+        run: $ANDROID_SDK_ROOT/cmdline-tools/bin/sdkmanager --sdk_root=$ANDROID_SDK_ROOT --install "ndk;21.4.7075529"
 
       - name: Installing Gradle
         run: sudo apt-get install gradle -y
