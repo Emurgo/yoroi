@@ -28,8 +28,9 @@ jobs:
 
       - name: DEBUG. Finding sdkmanager
         run: |
-          echo $(ls -A $ANDROID_SDK_ROOT)
-          echo $(ls -A $ANDROID_SDK_ROOT/tools)
+          echo $(ls -A $ANDROID_SDK_ROOT/tools/bin)
+          echo $(ls -A $ANDROID_SDK_ROOT/cmdline-tools)
+          echo $(ls -A $ANDROID_SDK_ROOT/cmdline-tools/bin)
       
       - name: Installing NDK 21.4.7075529
         run: $ANDROID_SDK_ROOT/cmdline-tools/bin/sdkmanager --sdk_root=$ANDROID_SDK_ROOT --install "ndk;21.4.7075529"
