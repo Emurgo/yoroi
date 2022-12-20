@@ -65,7 +65,8 @@ export const getDelegationStatus = (
   let status: StakingStatus = {isRegistered: false}
 
   for (const certData of ObjectValues(sortedCerts)) {
-    const certificates = (certData as any).certificates
+    // organize for txs with more than 1 cert
+    const certificates = (certData as any).certificates?.sort((a, b) => a?.certIndex?.low - b?.certIndex?.low)
 
     for (const cert of certificates) {
       if (cert.rewardAddress !== rewardAddress) continue
