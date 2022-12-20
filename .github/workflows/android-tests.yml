@@ -23,14 +23,14 @@ jobs:
 
       - name: Installing Python 2.7
         run: |
-          apt-get install python2 -y
-          ln -sf /usr/bin/python2 /usr/bin/python
+          sudo apt-get install python2 -y
+          sudo ln -sf /usr/bin/python2 /usr/bin/python
       
       - name: Installing NDK 21.4.7075529
         run: sdkmanager --sdk_root=${ANDROID_SDK_ROOT} --install "ndk;21.4.7075529"
 
       - name: Installing Gradle
-        run: apt-get install gradle -y
+        run: sudo apt-get install gradle -y
 
       - uses: actions/checkout@v3
 
