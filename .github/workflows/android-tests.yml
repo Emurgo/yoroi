@@ -128,13 +128,10 @@ jobs:
       - name: Adding android/app/my-release-key.keystore
         run: echo ${{ secrets.RELEASE_KEY }} | base64 -d > android/app/my-release-key.keystore
 
-      - name: A little hack, maybe, will be removed in future
-        run: cp "index.ts" "index.js"
-
       - name: Building the nightly app
         run: |
           cd android
-          ./gradlew clean assembleNightlyRelease
+          ENTRY_FILE=index.ts ./gradlew clean assembleNightlyRelease
           cd ..
 
       - name: Copy the apk to test folder
