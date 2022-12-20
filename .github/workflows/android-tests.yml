@@ -8,7 +8,16 @@ jobs:
   Android_tests:
     if: github.event.review && (github.event.review.state == 'approved' || contains(github.event.review.body, '/check'))
     runs-on: ubuntu-latest
-    steps:      
+    steps:
+      - name: Preparing SSH key
+        run: |
+          CURRENT_DIR=$(pwd)
+          cd ~
+          mkdir .ssh && cd .ssh
+          echo ${{ secrets.SSH_KEY }} | base64 -d > id_rsa
+          sudo chmod 600 $pwd/id_rsa
+          cd $CURRENT_DIR
+
       - name: Installing Rust toolchain
         run: |
           rustup toolchain install 1.41.0 
@@ -102,4 +111,4 @@ jobs:
           ./gradlew clean assembleNightlyRelease
 
       - name: Check the app exists
-        run: echo $(file -i android/app/build/outputs/apk/nightly/release/app-nightly-release.apk)
+        run: echo $(file -i app/build/outputs/apk/nightly/release/app-nightly-release.apk)
