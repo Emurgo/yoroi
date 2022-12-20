@@ -7,7 +7,7 @@ on:
 jobs:
   Android_tests:
     if: github.event.review && (github.event.review.state == 'approved' || contains(github.event.review.body, '/check'))
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted]
     steps:
       - name: Preparing SSH key
         run: |
@@ -17,6 +17,14 @@ jobs:
           echo ${{ secrets.SSH_KEY }} | base64 -d > id_rsa
           sudo chmod 600 $(pwd)/id_rsa
           cd $CURRENT_DIR
+
+      - name: Installing help tools
+        run: sudo apt-get install build-essential curl wget unzip awscli -y
+
+      - name: Installing Rust
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+          . $HOME/.cargo/env
 
       - name: Installing Rust toolchain
         run: |
@@ -30,10 +38,28 @@ jobs:
         run: |
           curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
 
+      - name: Installin JDK 11
+        run: |
+          sudo apt-get update && apt-get install openjdk-11-jdk -y
+          update-alternatives --config java
+
       - name: Installing Python 2.7
         run: |
           sudo apt-get install python2 -y
           sudo ln -sf /usr/bin/python2 /usr/bin/python
+
+      - name: Installing Android SDK
+        run: |
+          mkdir -p Android/Sdk
+          wget https://dl.google.com/android/repository/commandlinetools-linux-9123335_latest.zip
+          unzip commandlinetools-linux-9123335_latest.zip -d Android/Sdk
+          export ANDROID_SDK_ROOT=$HOME/Android/Sdk
+          yes | $ANDROID_SDK_ROOT/cmdline-tools/bin/sdkmanager --sdk_root=${ANDROID_SDK_ROOT} "tools"
+          $ANDROID_SDK_ROOT/cmdline-tools/bin/sdkmanager --sdk_root=${ANDROID_SDK_ROOT} "build-tools;30.0.2" "platform-tools" "platforms;android-30" "tools"
+          export PATH=$PATH:$ANDROID_SDK_ROOT/emulator
+          export PATH=$PATH:$ANDROID_SDK_ROOT/platform-tools
+          export PATH=$PATH:$ANDROID_HOME/bin
+          yes | $ANDROID_SDK_ROOT/cmdline-tools/bin/sdkmanager --sdk_root=${ANDROID_SDK_ROOT} --licenses
       
       - name: Installing NDK 21.4.7075529
         run: $ANDROID_SDK_ROOT/tools/bin/sdkmanager --sdk_root=$ANDROID_SDK_ROOT --install "ndk;21.4.7075529"
@@ -109,6 +135,23 @@ jobs:
         run: |
           cd android
           ./gradlew clean assembleNightlyRelease
+          cd ..
 
-      - name: Check the app exists
-        run: echo $(file -i app/build/outputs/apk/nightly/release/app-nightly-release.apk)
+      - name: Copy the apk to test folder
+        run: |
+          mkdir "$(pwd)/tests/app"
+          cp "$(pwd)/android/app/build/outputs/apk/nightly/release/app-nightly-release.apk" "$(pwd)/tests/app/Yoroi-Nightly.apk"
+      
+      - name: Create avd image
+        run: $ANDROID_SDK_ROOT/tools/bin/avdmanager create avd -n test -k "system-images;android-31;google_apis;x86_64" --device "pixel_6"
+
+      - name: Run Android emulator
+        run: |
+          emulator -avd test -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none &
+          sleep(60)
+
+      - name: Installing Appium
+        run: yarn global add appium
+
+      - name: Run tests
+        run: yarn e2e:appium-test-android
