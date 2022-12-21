@@ -81,9 +81,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '${{ steps.nvm.outputs.NVMRC }}'
-
-      - name: Installing Yarn
-        run: npm install yarn --global
+          cache: 'yarn'
 
       - name: Installing project dependencies
         run: yarn install
