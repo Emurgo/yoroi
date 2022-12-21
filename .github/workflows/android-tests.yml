@@ -50,7 +50,7 @@ jobs:
       #     sudo apt-get install python2 -y
       #     sudo ln -sf /usr/bin/python2 /usr/bin/python
 
-      - name: Installing Android SDK and NDK
+      - name: Installing Android SDK
         run: |
           mkdir -p $HOME/Android/Sdk
           export ANDROID_SDK_ROOT=$HOME/Android/Sdk
@@ -60,7 +60,9 @@ jobs:
           export PATH=$PATH:$ANDROID_SDK_ROOT/platform-tools
           export PATH=$PATH:$ANDROID_HOME/bin
           echo "y" | $ANDROID_SDK_ROOT/cmdline-tools/bin/sdkmanager --sdk_root=${ANDROID_SDK_ROOT} --licenses
-          $ANDROID_SDK_ROOT/cmdline-tools/bin/sdkmanager --sdk_root=$ANDROID_SDK_ROOT --install "ndk;21.4.7075529"
+      
+      - name: Installing NDK 21.4.7075529
+        run: $ANDROID_SDK_ROOT/cmdline-tools/bin/sdkmanager --sdk_root=$ANDROID_SDK_ROOT --install "ndk;21.4.7075529"
 
       - name: Installing Gradle
         run: sudo apt-get install gradle -y
