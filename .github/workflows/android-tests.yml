@@ -28,7 +28,6 @@ jobs:
 
       - name: Installing Rust toolchain
         run: |
-          . $HOME/.cargo/env
           rustup toolchain install 1.41.0 
           rustup install 1.41.0 
           rustup target add wasm32-unknown-unknown --toolchain 1.41.0
@@ -37,7 +36,6 @@ jobs:
 
       - name: Installing WASM
         run: |
-          . $HOME/.cargo/env
           curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
 
       - name: Installin JDK 11
@@ -132,7 +130,6 @@ jobs:
 
       - name: Building the nightly app
         run: |
-          . $HOME/.cargo/env
           cd android
           ENTRY_FILE=index.ts ./gradlew clean assembleNightlyRelease
           cd ..
@@ -147,7 +144,7 @@ jobs:
 
       - name: Run Android emulator
         run: |
-          nohup emulator -avd test -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none &
+          emulator -avd test -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none &
           sleep(60)
 
       - name: Installing Appium
@@ -155,8 +152,3 @@ jobs:
 
       - name: Run tests
         run: yarn e2e:appium-test-android
-
-      - name: Kill emulator
-        run: |
-          EMULATOR_PID=$(ps -A | grep -w qemu-system-x86 | grep -Po "(?<=^\s)[0-9]+")
-          sudo kill $EMULATOR_PID
