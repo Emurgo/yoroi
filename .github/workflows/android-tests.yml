@@ -50,22 +50,28 @@ jobs:
       #     sudo apt-get install python2 -y
       #     sudo ln -sf /usr/bin/python2 /usr/bin/python
 
-      - name: Installing Android SDK and NDK
-        run: |
-          mkdir -p $HOME/Android/Sdk
-          export ANDROID_SDK_ROOT=$HOME/Android/Sdk
-          echo "y" | $ANDROID_SDK_ROOT/cmdline-tools/bin/sdkmanager --sdk_root=${ANDROID_SDK_ROOT} "tools"
-          $ANDROID_SDK_ROOT/cmdline-tools/bin/sdkmanager --sdk_root=${ANDROID_SDK_ROOT} "build-tools;30.0.2" "platform-tools" "platforms;android-30" "tools"
-          export PATH=$PATH:$ANDROID_SDK_ROOT/emulator
-          export PATH=$PATH:$ANDROID_SDK_ROOT/platform-tools
-          export PATH=$PATH:$ANDROID_HOME/bin
-          echo "y" | $ANDROID_SDK_ROOT/cmdline-tools/bin/sdkmanager --sdk_root=${ANDROID_SDK_ROOT} --licenses
-          $ANDROID_SDK_ROOT/cmdline-tools/bin/sdkmanager --sdk_root=$ANDROID_SDK_ROOT --install "ndk;21.4.7075529"
+      # - name: Installing Android SDK and NDK
+      #   run: |
+      #     mkdir -p $HOME/Android/Sdk
+      #     export ANDROID_SDK_ROOT=$HOME/Android/Sdk
+      #     echo "y" | $ANDROID_SDK_ROOT/cmdline-tools/bin/sdkmanager --sdk_root=${ANDROID_SDK_ROOT} "tools"
+      #     $ANDROID_SDK_ROOT/cmdline-tools/bin/sdkmanager --sdk_root=${ANDROID_SDK_ROOT} "build-tools;30.0.2" "platform-tools" "platforms;android-30" "tools"
+      #     export PATH=$PATH:$ANDROID_SDK_ROOT/emulator
+      #     export PATH=$PATH:$ANDROID_SDK_ROOT/platform-tools
+      #     export PATH=$PATH:$ANDROID_HOME/bin
+      #     echo "y" | $ANDROID_SDK_ROOT/cmdline-tools/bin/sdkmanager --sdk_root=${ANDROID_SDK_ROOT} --licenses
+      #     $ANDROID_SDK_ROOT/cmdline-tools/bin/sdkmanager --sdk_root=$ANDROID_SDK_ROOT --install "ndk;21.4.7075529"
 
-      - name: Installing Gradle
-        run: sudo apt-get install gradle -y
+      # - name: Installing Gradle
+      #   run: sudo apt-get install gradle -y
 
       - uses: actions/checkout@v3
+
+      - name: Installing Yarn
+        run: |
+          curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+          echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+          sudo apt install yarn
 
       - name: Reading .nvmrc
         id: nvm
