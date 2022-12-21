@@ -56,15 +56,15 @@ jobs:
           wget https://dl.google.com/android/repository/commandlinetools-linux-9123335_latest.zip
           unzip commandlinetools-linux-9123335_latest.zip -d $HOME/Android/Sdk
           export ANDROID_SDK_ROOT=$HOME/Android/Sdk
-          echo "y" | $ANDROID_SDK_ROOT/cmdline-tools/bin/sdkmanager --sdk_root=${ANDROID_SDK_ROOT} "tools"
+          yes | $ANDROID_SDK_ROOT/cmdline-tools/bin/sdkmanager --sdk_root=${ANDROID_SDK_ROOT} "tools"
           $ANDROID_SDK_ROOT/cmdline-tools/bin/sdkmanager --sdk_root=${ANDROID_SDK_ROOT} "build-tools;30.0.2" "platform-tools" "platforms;android-30" "tools"
           export PATH=$PATH:$ANDROID_SDK_ROOT/emulator
           export PATH=$PATH:$ANDROID_SDK_ROOT/platform-tools
           export PATH=$PATH:$ANDROID_HOME/bin
-          echo "y" | $ANDROID_SDK_ROOT/cmdline-tools/bin/sdkmanager --sdk_root=${ANDROID_SDK_ROOT} --licenses
+          yes | $ANDROID_SDK_ROOT/cmdline-tools/bin/sdkmanager --sdk_root=${ANDROID_SDK_ROOT} --licenses
       
       - name: Installing NDK 21.4.7075529
-        run: $ANDROID_SDK_ROOT/cmdline-tools/bin/sdkmanager --sdk_root=$ANDROID_SDK_ROOT --install "ndk;21.4.7075529"
+        run: $ANDROID_SDK_ROOT/tools/bin/sdkmanager --sdk_root=$ANDROID_SDK_ROOT --install "ndk;21.4.7075529"
 
       - name: Installing Gradle
         run: sudo apt-get install gradle -y
