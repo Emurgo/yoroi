@@ -5,13 +5,12 @@ import {Platform, UIManager} from 'react-native'
 import * as RNP from 'react-native-paper'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {enableScreens} from 'react-native-screens'
-import {useDispatch} from 'react-redux'
 
 import AppNavigator from './AppNavigator'
 import {AuthProvider} from './auth/AuthProvider'
 import {initApp} from './legacy/actions'
 import {SelectedWalletMetaProvider, SelectedWalletProvider} from './SelectedWallet'
-import {StorageProvider} from './Storage'
+import {useStorage} from './Storage'
 
 enableScreens()
 
@@ -30,13 +29,11 @@ const App = () => {
     <SafeAreaProvider>
       <RNP.Provider>
         <AuthProvider>
-          <StorageProvider>
-            <SelectedWalletMetaProvider>
-              <SelectedWalletProvider>
-                <AppNavigator />
-              </SelectedWalletProvider>
-            </SelectedWalletMetaProvider>
-          </StorageProvider>
+          <SelectedWalletMetaProvider>
+            <SelectedWalletProvider>
+              <AppNavigator />
+            </SelectedWalletProvider>
+          </SelectedWalletMetaProvider>
         </AuthProvider>
       </RNP.Provider>
     </SafeAreaProvider>
@@ -45,15 +42,16 @@ const App = () => {
 
 const useInitApp = () => {
   const [loaded, setLoaded] = React.useState(false)
-  const dispatch = useDispatch()
+  const storage = useStorage()
+
   useEffect(() => {
     const load = async () => {
-      await dispatch(initApp())
+      await initApp(storage)
       setLoaded(true)
     }
 
     load()
-  }, [dispatch])
+  }, [storage])
 
   return loaded
 }

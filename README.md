@@ -564,7 +564,7 @@ If you get this error during the build phase for a simulator on a Mac
 
 Error:
 
-``` bash
+```bash
   = note: ld: building for iOS Simulator, but linking in .tbd built for macOS/Mac Catalyst, file '/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib/libobjc.tbd' for architecture x86_64
 
 ```
@@ -573,9 +573,7 @@ Then try to comment out the following code in `build.sh`
 
 The `build.sh` file is normally located in the node_modules directory:
 
-`
-.../node_modules/@emurgo/react-native-haskell-shelley/ios/build.sh
-` 
+`.../node_modules/@emurgo/react-native-haskell-shelley/ios/build.sh`
 
 Comment out this section:
 
@@ -613,8 +611,6 @@ Example:
 ```js
 // external libraries
 import React from 'react'
-import {compose} from 'redux'
-import {connect} from 'react-redux'
 import {View} from 'react-native'
 
 // our code
