@@ -1,13 +1,13 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {useNavigation, useRoute} from '@react-navigation/native'
 import React, {useEffect, useState} from 'react'
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {CopyButton, FadeIn, OfflineBanner, StatusBar, Text} from '../components'
+import {CopyButton, FadeIn, OfflineBanner, Spacer, StatusBar, Text} from '../components'
 import {Tab, TabPanel, TabPanels, Tabs} from '../components/Tabs'
 import {useNfts} from '../hooks'
 import {NftDetailsNavigation} from '../navigation'
+import {useSelectedWallet} from '../SelectedWallet'
 
 enum VIEW_TABS {
   OVERVIEW = 'OVERVIEW',
@@ -17,7 +17,8 @@ enum VIEW_TABS {
 type Params = {id: string}
 
 export const NftDetails = () => {
-  const {nfts} = useNfts()
+  const wallet = useSelectedWallet()
+  const {nfts} = useNfts(wallet)
 
   const navigation = useNavigation<NftDetailsNavigation>()
   const [activeTab, setActiveTab] = useState<VIEW_TABS>(VIEW_TABS.OVERVIEW)
@@ -27,7 +28,7 @@ export const NftDetails = () => {
 
   useTitle('NFT Details')
 
-  const handleFullScreenImage = () => navigation.navigate('nft-details-image', {id})
+  const onFullscreen = () => navigation.navigate('nft-details-image', {id})
 
   if (!nft) {
     return null
@@ -40,10 +41,11 @@ export const NftDetails = () => {
 
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <View style={styles.imageContainer}>
-          <TouchableOpacity onPress={handleFullScreenImage}>
+          <TouchableOpacity onPress={onFullscreen}>
             <Image source={{uri: nft.image}} style={styles.image} />
           </TouchableOpacity>
         </View>
+
         <View style={styles.tabsContainer}>
           <Tabs>
             <Tab
@@ -71,12 +73,15 @@ export const NftDetails = () => {
               <MetadataRow title="Policy id" content={nft.name} withCopy />
               <MetadataRow title="Details on" content={nft.name} />
             </TabPanel>
+
             <TabPanel active={activeTab === VIEW_TABS.METADATA}>
               <View style={styles.metadataTab}>
                 <View style={styles.copyMetadata}>
                   <CopyButton value={stringifiedMetadata} />
                   <Text>COPY METADATA</Text>
                 </View>
+                <Spacer height={14} />
+
                 <Text>{stringifiedMetadata}</Text>
               </View>
             </TabPanel>
@@ -94,6 +99,7 @@ const MetadataRow = ({title, content, withCopy = false}: {title: string; content
         <Text style={styles.rowTitleText}>{title}</Text>
         {withCopy && <CopyButton value={content} />}
       </View>
+      <Spacer height={2} />
       <Text secondary>{content}</Text>
     </View>
   )
@@ -126,7 +132,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexWrap: 'nowrap',
     justifyContent: 'space-between',
-    marginBottom: 2,
   },
   rowTitleText: {},
   metadataTab: {
@@ -136,7 +141,6 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 14,
   },
 })
 

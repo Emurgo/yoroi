@@ -67,7 +67,7 @@ export type YoroiNFT = {
   metadata: {
     policyId: string
     assetNameHex: string
-    originalMetadata: object
+    originalMetadata: Record<string, unknown>
   }
 }
 

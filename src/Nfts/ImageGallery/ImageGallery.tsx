@@ -4,6 +4,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 import {useQuery} from 'react-query'
 
+import {Spacer} from '../../components'
 import {Text} from '../../components/Text'
 import {getAssetFingerprint} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
@@ -51,14 +52,14 @@ export const ImageGallery = ({nfts = [], onNftPress}: Props) => {
 interface ModeratedNFTImageProps {
   image: string
   text: string
-  onPress?: ((event: GestureResponderEvent) => void) | undefined
+  onPress?(event: GestureResponderEvent): void
   fingerprint: string
 }
 
 const ModeratedNFTImage = ({fingerprint, image, text, onPress}: ModeratedNFTImageProps) => {
   const wallet = useSelectedWallet()
   const moderationStatusQuery = useQuery({
-    queryKey: ['nft', fingerprint],
+    queryKey: [wallet.id, 'nft', fingerprint],
     queryFn: () => wallet.fetchNftModerationStatus(fingerprint),
   })
 
@@ -74,12 +75,16 @@ const ModeratedNFTImage = ({fingerprint, image, text, onPress}: ModeratedNFTImag
       {isImageApproved ? (
         <View>
           <Image source={{uri: image}} style={styles.image} />
+          <Spacer height={8} />
           <Text style={styles.textTop}>{text}</Text>
+          <Spacer height={13} />
         </View>
       ) : (
         <View>
           <View style={styles.image} />
+          <Spacer height={8} />
           <Text style={styles.textTop}>Image is not approved</Text>
+          <Spacer height={13} />
         </View>
       )}
     </TouchableOpacity>
@@ -89,12 +94,14 @@ const ModeratedNFTImage = ({fingerprint, image, text, onPress}: ModeratedNFTImag
 function SkeletonImagePlaceholder() {
   return (
     <SkeletonPlaceholder enabled={true}>
-      <TouchableOpacity style={styles.imageContainer}>
+      <View style={styles.imageContainer}>
         <View>
           <View style={styles.image} />
-          <Text style={styles.textTop}>Loading</Text>
+          <SkeletonPlaceholder.Item style={styles.textTop} marginTop={8} marginBottom={13}>
+            <Text style={styles.textTop}>Loading...</Text>
+          </SkeletonPlaceholder.Item>
         </View>
-      </TouchableOpacity>
+      </View>
     </SkeletonPlaceholder>
   )
 }
@@ -115,13 +122,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
   },
   image: {
-    marginBottom: 8,
     height: 175,
     width: 175,
     borderRadius: 8,
   },
   textTop: {
-    marginBottom: 13,
     height: 16,
     width: 148,
     borderRadius: 50, // skeleton styling

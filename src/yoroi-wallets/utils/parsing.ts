@@ -4,7 +4,7 @@ import ExtendableError from 'es6-error'
 
 import {CONFIG, getCardanoDefaultAsset} from '../../legacy/config'
 import {isHaskellShelleyNetwork} from '../../legacy/networks'
-import {Token} from '../types'
+import {Token, YoroiNFTModerationStatus} from '../types'
 
 export class InvalidAssetAmount extends ExtendableError {
   static ERROR_CODES = {
@@ -84,3 +84,8 @@ export const parseSafe = (text: any) => {
 }
 
 export const isBoolean = (data: unknown): data is boolean => typeof data === 'boolean'
+
+export const parseModerationStatus = (status: unknown): YoroiNFTModerationStatus | undefined => {
+  const isValidStatus = Object.values(YoroiNFTModerationStatus).includes(<YoroiNFTModerationStatus>status)
+  return isValidStatus ? (status as YoroiNFTModerationStatus) : undefined
+}

@@ -991,12 +991,10 @@ export class ShelleyWallet implements WalletInterface {
     const utxos = this.utxos
     const assets = utxos.flatMap((utxo) => utxo.assets ?? [])
 
-    const nftAssets = assets
-      .filter((asset) => asset.policyId && asset.name)
-      .map((asset) => {
-        const {policyId, name} = asset
-        return {nameHex: name, policy: policyId}
-      })
+    const nftAssets = assets.map((asset) => {
+      const {policyId, name} = asset
+      return {nameHex: name, policy: policyId}
+    })
 
     if (nftAssets.length === 0) {
       return []

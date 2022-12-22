@@ -113,7 +113,7 @@ export type CardanoAssetMintMetadata = {
   }
 }
 
-export type CardanoAssetMetadataResponse = {
+export type CardanoAssetMetadata = {
   [policyID: string]: {
     [assetNameHex: string]: NFTMetadata
   }

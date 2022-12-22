@@ -22,7 +22,6 @@ import {processTxHistoryData} from '../legacy/processTransactions'
 import {WalletMeta} from '../legacy/state'
 import storage from '../legacy/storage'
 import {cardanoValueFromRemoteFormat} from '../legacy/utils'
-import {useSelectedWallet} from '../SelectedWallet'
 import {useWalletManager} from '../WalletManager'
 import {
   CardanoMobile,
@@ -871,10 +870,9 @@ export const useResync = (wallet: YoroiWallet, options?: UseMutationOptions<void
   }
 }
 
-export const useNfts = () => {
-  const wallet = useSelectedWallet()
+export const useNfts = (wallet: YoroiWallet) => {
   const utxos = useUtxos(wallet)
-  const query = useQuery({queryKey: ['nfts', wallet.id, utxos.length], queryFn: () => wallet.fetchNfts()})
+  const query = useQuery({queryKey: [wallet.id, 'nfts', utxos.length], queryFn: () => wallet.fetchNfts()})
   const {data: nfts = [], ...rest} = query
   return {nfts, ...rest}
 }

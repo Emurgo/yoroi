@@ -4,11 +4,13 @@ import {Image, StyleSheet, View} from 'react-native'
 
 import {FadeIn, OfflineBanner, StatusBar} from '../components'
 import {useNfts} from '../hooks'
+import {useSelectedWallet} from '../SelectedWallet'
 
 type Params = {id: string}
 
 export const NftDetailsImage = () => {
-  const {nfts} = useNfts()
+  const wallet = useSelectedWallet()
+  const {nfts} = useNfts(wallet)
 
   const {id} = useRoute().params as Params
   const nft = nfts.find((nft) => nft.id === id)

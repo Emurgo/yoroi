@@ -7,7 +7,7 @@ import fetchDefault, {checkedFetch} from '../../legacy/fetch'
 import {getAssetFingerprint} from '../../legacy/format'
 import {ServerStatus} from '..'
 import {
-  CardanoAssetMetadataResponse,
+  CardanoAssetMetadata,
   MultiAssetRequest,
   NFTMetadata,
   StakePoolInfosAndHistories,
@@ -31,8 +31,7 @@ import type {
   TxStatusRequest,
   TxStatusResponse,
 } from '../types/other'
-import {asciiToHex} from '../utils/parsing'
-import {isValidModerationStatus} from '../utils/validators'
+import {asciiToHex, parseModerationStatus} from '../utils/parsing'
 
 type Addresses = Array<string>
 
@@ -124,9 +123,9 @@ export const getNFTs = async (request: MultiAssetRequest, config: BackendConfig)
 
   const filteredResponse = Object.keys(response)
     .filter((k) => response[k][0]?.key === '721')
-    .map((nftKeys) => response[nftKeys][0].metadata as CardanoAssetMetadataResponse)
+    .map((nftKeys) => response[nftKeys][0].metadata as CardanoAssetMetadata)
 
-  const nfts = filteredResponse.map<YoroiNFT>((backendMetadata: CardanoAssetMetadataResponse) => {
+  const nfts = filteredResponse.map<YoroiNFT>((backendMetadata: CardanoAssetMetadata) => {
     const policyId = Object.keys(backendMetadata)[0]
     const assetNameKey = Object.keys(backendMetadata[policyId])[0]
     const metadata: NFTMetadata = backendMetadata[policyId][assetNameKey]
@@ -162,8 +161,9 @@ export const getNFTModerationStatus = async (
       }
       const json = await response.json()
       const status = json?.status
-      if (isValidModerationStatus(status)) {
-        return status
+      const parsedStatus = parseModerationStatus(status)
+      if (parsedStatus) {
+        return parsedStatus
       }
       throw new Error(`Invalid server response "${status}"`)
     },

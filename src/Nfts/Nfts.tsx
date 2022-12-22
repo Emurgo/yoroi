@@ -3,17 +3,20 @@ import React from 'react'
 import {Image, RefreshControl, ScrollView, StyleSheet, Text, View, ViewProps} from 'react-native'
 
 import noNftsImage from '../assets/img/no-nft.png'
-import {OfflineBanner, StatusBar} from '../components'
+import {OfflineBanner, Spacer, StatusBar} from '../components'
 import {useNfts} from '../hooks'
 import {WalletStackRouteNavigation} from '../navigation'
+import {useSelectedWallet} from '../SelectedWallet'
 import {ImageGallery, SkeletonGallery} from './ImageGallery'
 
 export const Nfts = () => {
-  const {nfts, isLoading, refetch, isRefetching} = useNfts()
+  const wallet = useSelectedWallet()
+  const {nfts, isLoading, refetch, isRefetching} = useNfts(wallet)
   const navigation = useNavigation<WalletStackRouteNavigation>()
 
   const showDetails = (id: string) => navigation.navigate('nft-details-routes', {screen: 'nft-details', params: {id}})
   const handleNFTPress = (index: number) => showDetails(nfts[index].id)
+
   return (
     <View style={styles.root}>
       <StatusBar type="dark" />
@@ -32,10 +35,14 @@ export const Nfts = () => {
             {isLoading && <SkeletonGallery amount={3} />}
             {!isLoading && nfts.length > 0 && <ImageGallery nfts={nfts} onNftPress={handleNFTPress} />}
             {!isLoading && nfts.length === 0 && (
-              <View style={styles.imageContainer}>
-                <Image source={noNftsImage} style={styles.image} />
-                <Text style={styles.contentText}>No NFTs added to your wallet yet</Text>
-              </View>
+              <>
+                <Spacer height={75} />
+                <View style={styles.imageContainer}>
+                  <Image source={noNftsImage} style={styles.image} />
+                  <Spacer height={20} />
+                  <Text style={styles.contentText}>No NFTs added to your wallet yet</Text>
+                </View>
+              </>
             )}
           </Row>
         </ScrollView>
@@ -77,7 +84,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     fontSize: 20,
     color: '#000',
-    marginTop: 20,
   },
   image: {
     flex: 1,
@@ -87,7 +93,6 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     flex: 1,
-    marginTop: 75,
     textAlign: 'center',
   },
 })
