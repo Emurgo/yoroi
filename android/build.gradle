@@ -79,4 +79,14 @@ allprojects {
         // https://github.com/Polidea/react-native-ble-plx (@2.0.0)
         maven { url 'https://jitpack.io' }
     }
+
+    afterEvaluate {
+        if (it.hasProperty('android')){
+            android {
+                defaultConfig {
+                    minSdkVersion rootProject.ext.minSdkVersion // Replace '21' with whatever suites your case
+                }
+            }
+        }
+    }
 }

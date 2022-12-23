@@ -22,7 +22,7 @@ module.exports = {
     },
     'android.debug': {
       type: 'android.apk',
-      binaryPath: 'android/app/build/outputs/apk/debug/app-debug.apk',
+      binaryPath: 'android/app/build/outputs/apk/androidTest/nightly/debug/app-nightly-debug-androidTest.apk',
       build: 'cd android ; ENTRY_FILE=index.ts ./gradlew assembleDebug assembleAndroidTest -DtestBuildType=debug ; cd -',
       reversePorts: [
         8081
