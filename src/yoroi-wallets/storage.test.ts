@@ -1,6 +1,14 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-import {createPrefixedStorage, debug, makeRootStorage, toAbsolutePath, toFileName, validatePath} from './storage'
+import {
+  createPrefixedStorage,
+  debug,
+  makeRootStorage,
+  toAbsolutePath,
+  toFilename,
+  validateFilename,
+  validatePath,
+} from './storage'
 
 describe('storage', () => {
   beforeEach(() => {
@@ -252,9 +260,29 @@ describe('storage', () => {
     `)
   })
 
+  it('validates filename', () => {
+    expect(validateFilename('valid')).toBe(true)
+
+    expect(validateFilename('(')).toBe(false)
+    expect(validateFilename(')')).toBe(false)
+    expect(validateFilename('')).toBe(false)
+    expect(validateFilename('\\')).toBe(false)
+    expect(validateFilename('/invalid')).toBe(false)
+    expect(validateFilename('invalid/filename')).toBe(false)
+    expect(validateFilename('/invalid/filename')).toBe(false)
+    expect(validateFilename('/invalid/')).toBe(false)
+    expect(validateFilename('//')).toBe(false)
+    expect(validateFilename('invalid/')).toBe(false)
+  })
+
   it('validates path', () => {
+    expect(validatePath('/')).toBe(true)
     expect(validatePath('valid')).toBe(true)
 
+    expect(validatePath('(')).toBe(false)
+    expect(validatePath(')')).toBe(false)
+    expect(validatePath('')).toBe(false)
+    expect(validatePath('\\')).toBe(false)
     expect(validatePath('')).toBe(false)
     expect(validatePath('/invalid')).toBe(false)
     expect(validatePath('invalid/path')).toBe(false)
@@ -265,15 +293,15 @@ describe('storage', () => {
   })
 
   it('toAbsolutePath', () => {
-    expect(toAbsolutePath('/', '/', 'fileName')).toEqual('/fileName')
-    expect(toAbsolutePath('/', 'level1', 'fileName')).toEqual('/level1/fileName')
-    expect(toAbsolutePath('/level1', '/', 'fileName')).toEqual('/level1/fileName')
-    expect(toAbsolutePath('/level1', 'level2', 'fileName')).toEqual('/level1/level2/fileName')
+    expect(toAbsolutePath('/', '/', 'filename')).toEqual('/filename')
+    expect(toAbsolutePath('/', 'level1', 'filename')).toEqual('/level1/filename')
+    expect(toAbsolutePath('/level1', '/', 'filename')).toEqual('/level1/filename')
+    expect(toAbsolutePath('/level1', 'level2', 'filename')).toEqual('/level1/level2/filename')
   })
 
-  it('toFileName', () => {
-    expect(toFileName('/fileName')).toBe('fileName')
-    expect(toFileName('/level1/fileName')).toBe('fileName')
-    expect(toFileName('/level1/level2/fileName')).toBe('fileName')
+  it('toFilename', () => {
+    expect(toFilename('/filename')).toBe('filename')
+    expect(toFilename('/level1/filename')).toBe('filename')
+    expect(toFilename('/level1/level2/filename')).toBe('filename')
   })
 })

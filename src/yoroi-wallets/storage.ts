@@ -84,32 +84,45 @@ export const createPrefixedStorage = (options?: {storage?: PrefixedStorage; path
 
   const prefixedStorage: PrefixedStorage = {
     path: storagePath,
-    toAbsolutePath: (fileName: string) => toAbsolutePath(storage.path, path, fileName),
-    async getItem(fileName: string) {
-      const absolutePath = toAbsolutePath(storage.path, path, fileName)
+    toAbsolutePath: (filename: string) => toAbsolutePath(storage.path, path, filename),
+
+    async getItem(filename: string) {
+      if (!validateFilename(filename)) throw new Error('invalid filename')
+      const absolutePath = toAbsolutePath(storage.path, path, filename)
       return AsyncStorage.getItem(absolutePath)
     },
-    async multiGet(fileNames: string[]) {
-      const absolutePaths = fileNames.map((fileName) => toAbsolutePath(storage.path, path, fileName))
+    async multiGet(filenames: string[]) {
+      const absolutePaths = filenames.map((filename) => {
+        if (!validateFilename(filename)) throw new Error('invalid filename')
+        return toAbsolutePath(storage.path, path, filename)
+      })
       const items = await AsyncStorage.multiGet(absolutePaths)
-      return items.map(([absolutePath, file]) => [toFileName(absolutePath), file])
+      return items.map(([absolutePath, file]) => [toFilename(absolutePath), file])
     },
 
-    async setItem(fileName: string, file: string) {
-      const absolutePath = toAbsolutePath(storage.path, path, fileName)
+    async setItem(filename: string, file: string) {
+      if (!validateFilename(filename)) throw new Error('invalid filename')
+      const absolutePath = toAbsolutePath(storage.path, path, filename)
       return AsyncStorage.setItem(absolutePath, file)
     },
     async multiSet(items: string[][]) {
-      const absolutePathItems = items.map(([fileName, file]) => [toAbsolutePath(storage.path, path, fileName), file])
+      const absolutePathItems = items.map(([filename, file]) => {
+        if (!validateFilename(filename)) throw new Error('invalid filename')
+        return [toAbsolutePath(storage.path, path, filename), file]
+      })
       return AsyncStorage.multiSet(absolutePathItems)
     },
 
-    async removeItem(fileName: string) {
-      const absolutePath = toAbsolutePath(storage.path, path, fileName)
+    async removeItem(filename: string) {
+      if (!validateFilename(filename)) throw new Error('invalid filename')
+      const absolutePath = toAbsolutePath(storage.path, path, filename)
       return AsyncStorage.removeItem(absolutePath)
     },
-    async multiRemove(fileNames: string[]) {
-      const absolutePaths = fileNames.map((fileName) => toAbsolutePath(storage.path, path, fileName))
+    async multiRemove(filenames: string[]) {
+      const absolutePaths = filenames.map((filename) => {
+        if (!validateFilename(filename)) throw new Error('invalid filename')
+        return toAbsolutePath(storage.path, path, filename)
+      })
       return AsyncStorage.multiRemove(absolutePaths)
     },
     async clear() {
@@ -121,7 +134,7 @@ export const createPrefixedStorage = (options?: {storage?: PrefixedStorage; path
       const allKeys = await AsyncStorage.getAllKeys()
       const regex = isRootStorage && isRootPath ? new RegExp(`^/[^/]*$`) : new RegExp(`^${storagePath}/[^/]*$`)
 
-      return allKeys.filter((absolutePath) => absolutePath.match(regex)).map(toFileName)
+      return allKeys.filter((absolutePath) => absolutePath.match(regex)).map(toFilename)
     },
   }
 
@@ -129,26 +142,34 @@ export const createPrefixedStorage = (options?: {storage?: PrefixedStorage; path
 }
 
 export const validatePath = (path: string) => {
+  if (path.match(/[\\^$*+?.()|[\]{}]/g)) return false // contains escaping characters
   if (path === '/') return true
   if (path.includes('/')) return false
   if (path === '') return false
   return true
 }
 
-export const toAbsolutePath = (storagePath: string, folderName: string, fileName: string) => {
+export const validateFilename = (filename: string) => {
+  if (filename.match(/[\\^$*+?.()|[\]{}]/g)) return false // contains escaping characters
+  if (filename.includes('/')) return false
+  if (filename === '') return false
+  return true
+}
+
+export const toAbsolutePath = (storagePath: string, folderName: string, filename: string) => {
   const isRootStorage = storagePath === '/'
   const isRootFolder = folderName === '/'
 
   return isRootStorage && isRootFolder
-    ? `/${fileName}`
+    ? `/${filename}`
     : !isRootStorage && isRootFolder
-    ? `${storagePath}/${fileName}`
+    ? `${storagePath}/${filename}`
     : isRootStorage && !isRootFolder
-    ? `${storagePath}${folderName}/${fileName}`
-    : `${storagePath}/${folderName}/${fileName}`
+    ? `${storagePath}${folderName}/${filename}`
+    : `${storagePath}/${folderName}/${filename}`
 }
 
-export const toFileName = (absolutePath: string) => {
+export const toFilename = (absolutePath: string) => {
   const lastSlashIndex = absolutePath.lastIndexOf('/')
   return absolutePath.slice(lastSlashIndex + 1)
 }
