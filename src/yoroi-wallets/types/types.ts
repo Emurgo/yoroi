@@ -71,10 +71,4 @@ export type YoroiNFT = {
   }
 }
 
-export enum YoroiNFTModerationStatus {
-  YELLOW = 'YELLOW',
-  RED = 'RED',
-  GREEN = 'GREEN',
-  PENDING = 'PENDING',
-  MANUAL_REVIEW = 'MANUAL_REVIEW',
-}
+export type YoroiNFTModerationStatus = 'yellow' | 'red' | 'green' | 'pending' | 'manual_review'

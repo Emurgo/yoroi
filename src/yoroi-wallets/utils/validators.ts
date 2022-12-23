@@ -6,7 +6,7 @@ import _ from 'lodash'
 import assert from '../../legacy/assert'
 import {getNetworkConfigById} from '../../legacy/networks'
 import {normalizeToAddress} from '../../legacy/utils'
-import {Token, YoroiNFTModerationStatus} from '../types'
+import {Token} from '../types'
 import {InvalidAssetAmount, parseAmountDecimal} from './parsing'
 
 export type PasswordValidationErrors = {
@@ -198,8 +198,4 @@ export const cleanMnemonic = (mnemonic: string) => {
   mnemonic = mnemonic.toLowerCase()
   // remove leading/trailing whitespace
   return mnemonic.trim()
-}
-
-export const isValidModerationStatus = (status: unknown): status is YoroiNFTModerationStatus => {
-  return Object.values(YoroiNFTModerationStatus).includes(<YoroiNFTModerationStatus>status)
 }

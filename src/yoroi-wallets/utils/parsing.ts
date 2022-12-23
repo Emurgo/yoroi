@@ -86,6 +86,13 @@ export const parseSafe = (text: any) => {
 export const isBoolean = (data: unknown): data is boolean => typeof data === 'boolean'
 
 export const parseModerationStatus = (status: unknown): YoroiNFTModerationStatus | undefined => {
-  const isValidStatus = Object.values(YoroiNFTModerationStatus).includes(<YoroiNFTModerationStatus>status)
-  return isValidStatus ? (status as YoroiNFTModerationStatus) : undefined
+  const statusString = String(status)
+  const map = {
+    RED: 'red',
+    YELLOW: 'yellow',
+    GREEN: 'green',
+    PENDING: 'pending',
+    MANUAL_REVIEW: 'manual_review',
+  } as const
+  return map[statusString.toUpperCase() as keyof typeof map]
 }

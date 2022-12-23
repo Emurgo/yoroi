@@ -243,7 +243,6 @@ export type NftRoutes = {
     id: string
   }
 }
-export type NftRouteNavigation = StackNavigationProp<NftRoutes>
 
 export type NftDetailsRoutes = {
   'nft-details': {id: string}

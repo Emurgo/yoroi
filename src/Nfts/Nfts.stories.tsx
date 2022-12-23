@@ -4,17 +4,11 @@ import {QueryClient, QueryClientProvider} from 'react-query'
 
 import {mocks} from '../../storybook'
 import {SelectedWalletProvider} from '../SelectedWallet'
-import {YoroiWallet} from '../yoroi-wallets'
-import {StakePoolInfosAndHistories} from '../yoroi-wallets/types'
 import {Nfts} from './Nfts'
 
 storiesOf('Nfts', module)
   .add('Loading', () => {
-    const loadingWallet: YoroiWallet = {
-      ...mocks.wallet,
-      getDelegationStatus: mocks.getDelegationStatus.loading,
-    }
-
+    const loadingWallet = {...mocks.wallet, fetchNfts: mocks.fetchNfts.loading}
     return (
       <QueryClientProvider client={new QueryClient()}>
         <SelectedWalletProvider wallet={loadingWallet}>
@@ -23,12 +17,11 @@ storiesOf('Nfts', module)
       </QueryClientProvider>
     )
   })
-  .add('Loaded', () => {
-    const loadedWallet: YoroiWallet = {
+  .add('Loaded & Approved', () => {
+    const loadedWallet = {
       ...mocks.wallet,
-      getDelegationStatus: () => Promise.resolve({isRegistered: true, poolKeyHash: mocks.stakePoolId}),
-      fetchPoolInfo: () =>
-        Promise.resolve({[mocks.stakePoolId]: mocks.poolInfoAndHistory} as StakePoolInfosAndHistories),
+      fetchNfts: mocks.fetchNfts.success,
+      fetchNftModerationStatus: mocks.fetchNftModerationStatus.success,
     }
 
     return (
@@ -40,15 +33,13 @@ storiesOf('Nfts', module)
     )
   })
   .add('Error', () => {
-    const loadedWallet: YoroiWallet = {
+    const errorWallet = {
       ...mocks.wallet,
-      getDelegationStatus: () => Promise.resolve({isRegistered: true, poolKeyHash: mocks.stakePoolId}),
-      fetchPoolInfo: mocks.fetchPoolInfo.error,
+      fetchNfts: mocks.fetchNfts.error,
     }
-
     return (
       <QueryClientProvider client={new QueryClient()}>
-        <SelectedWalletProvider wallet={loadedWallet}>
+        <SelectedWalletProvider wallet={errorWallet}>
           <Nfts />
         </SelectedWalletProvider>
       </QueryClientProvider>

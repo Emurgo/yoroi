@@ -11,11 +11,23 @@ import {ImageGallery, SkeletonGallery} from './ImageGallery'
 
 export const Nfts = () => {
   const wallet = useSelectedWallet()
-  const {nfts, isLoading, refetch, isRefetching} = useNfts(wallet)
+  const {nfts, isLoading, refetch, isRefetching, error} = useNfts(wallet)
   const navigation = useNavigation<WalletStackRouteNavigation>()
 
   const showDetails = (id: string) => navigation.navigate('nft-details-routes', {screen: 'nft-details', params: {id}})
-  const handleNFTPress = (index: number) => showDetails(nfts[index].id)
+  const handleNFTSelect = (index: number) => showDetails(nfts[index].id)
+
+  if (error !== null) {
+    return (
+      <View style={styles.root}>
+        <StatusBar type="dark" />
+        <View style={styles.container}>
+          <OfflineBanner />
+          <Text>Error loading NFTs</Text>
+        </View>
+      </View>
+    )
+  }
 
   return (
     <View style={styles.root}>
@@ -32,9 +44,11 @@ export const Nfts = () => {
             <Text style={styles.count}>NFT count: {nfts.length}</Text>
           </Row>
           <Row>
-            {isLoading && <SkeletonGallery amount={3} />}
-            {!isLoading && nfts.length > 0 && <ImageGallery nfts={nfts} onNftPress={handleNFTPress} />}
-            {!isLoading && nfts.length === 0 && (
+            {isLoading ? (
+              <SkeletonGallery amount={3} />
+            ) : nfts.length > 0 ? (
+              <ImageGallery nfts={nfts} onSelect={handleNFTSelect} />
+            ) : (
               <>
                 <Spacer height={75} />
                 <View style={styles.imageContainer}>

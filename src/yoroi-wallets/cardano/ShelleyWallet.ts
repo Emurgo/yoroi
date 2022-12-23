@@ -990,11 +990,7 @@ export class ShelleyWallet implements WalletInterface {
   async fetchNfts(): Promise<YoroiNFT[]> {
     const utxos = this.utxos
     const assets = utxos.flatMap((utxo) => utxo.assets ?? [])
-
-    const nftAssets = assets.map((asset) => {
-      const {policyId, name} = asset
-      return {nameHex: name, policy: policyId}
-    })
+    const nftAssets = assets.map((asset) => ({nameHex: asset.name, policy: asset.policyId}))
 
     if (nftAssets.length === 0) {
       return []
@@ -1004,11 +1000,7 @@ export class ShelleyWallet implements WalletInterface {
   }
 
   async fetchNftModerationStatus(fingerprint: string): Promise<YoroiNFTModerationStatus> {
-    const status = await api.getNFTModerationStatus(fingerprint, this.getBackendConfig())
-    if (status === YoroiNFTModerationStatus.PENDING) {
-      return new Promise((resolve) => setTimeout(() => resolve(this.fetchNftModerationStatus(fingerprint)), 5000))
-    }
-    return status
+    return api.getNFTModerationStatus(fingerprint, this.getBackendConfig())
   }
 
   state: WalletState = {

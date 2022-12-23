@@ -83,8 +83,7 @@ export const fetchDefault = <T extends typeof _checkResponse>(
   options?: {checkResponse?: T},
 ): ReturnType<Awaited<T>> => {
   const fullPath = `${networkConfig.API_ROOT}/${path}`
-  const platform = Platform.OS === 'android' || Platform.OS === 'ios' ? Platform.OS : '-'
-  const yoroiVersion = `${platform} / ${DeviceInfo.getVersion()}`
+  const yoroiVersion = `${Platform.OS} / ${DeviceInfo.getVersion()}`
   const headers = {
     'Content-Type': 'application/json; charset=utf-8',
     'yoroi-version': yoroiVersion,

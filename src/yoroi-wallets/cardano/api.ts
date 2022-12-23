@@ -157,7 +157,7 @@ export const getNFTModerationStatus = async (
   return fetchDefault('multiAsset/validateNFT/' + fingerprint, {envName: 'prod'}, config, 'POST', {
     checkResponse: async (response): Promise<YoroiNFTModerationStatus> => {
       if (response.status === 202) {
-        return YoroiNFTModerationStatus.PENDING
+        return 'pending'
       }
       const json = await response.json()
       const status = json?.status
