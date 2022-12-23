@@ -57,7 +57,12 @@ const WalletTabNavigator = () => {
           name="nfts"
           component={NftsNavigator}
           options={{
-            tabBarIcon: ({focused}) => <Icon.Image size={28} color={focused ? '#17d1aa' : '#A7AFC0'} />,
+            tabBarIcon: ({focused}) => (
+              <Icon.Image
+                size={28}
+                color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
+              />
+            ),
             tabBarLabel: strings.nftsTabBarLabel(nfts?.length ?? 0),
             tabBarTestID: 'nftsTabBarButton',
           }}

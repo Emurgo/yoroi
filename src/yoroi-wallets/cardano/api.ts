@@ -4,12 +4,10 @@ import _ from 'lodash'
 import assert from '../../legacy/assert'
 import {ApiError} from '../../legacy/errors'
 import fetchDefault, {checkedFetch} from '../../legacy/fetch'
-import {getAssetFingerprint} from '../../legacy/format'
 import {ServerStatus} from '..'
 import {
   CardanoAssetMetadata,
   MultiAssetRequest,
-  NFTMetadata,
   StakePoolInfosAndHistories,
   YoroiNFT,
   YoroiNFTModerationStatus,
@@ -31,7 +29,8 @@ import type {
   TxStatusRequest,
   TxStatusResponse,
 } from '../types/other'
-import {asciiToHex, parseModerationStatus} from '../utils/parsing'
+import {parseModerationStatus} from '../utils/parsing'
+import {convertNft} from './nfts'
 
 type Addresses = Array<string>
 
@@ -125,29 +124,9 @@ export const getNFTs = async (request: MultiAssetRequest, config: BackendConfig)
     .filter((k) => response[k][0]?.key === '721')
     .map((nftKeys) => response[nftKeys][0].metadata as CardanoAssetMetadata)
 
-  const nfts = filteredResponse.map<YoroiNFT>((backendMetadata: CardanoAssetMetadata) => {
-    const policyId = Object.keys(backendMetadata)[0]
-    const assetNameKey = Object.keys(backendMetadata[policyId])[0]
-    const metadata: NFTMetadata = backendMetadata[policyId][assetNameKey]
-    const assetNameHex = asciiToHex(assetNameKey)
-    const fingerprint = getAssetFingerprint(policyId, assetNameHex)
-    const description = Array.isArray(metadata.description) ? metadata.description.join(' ') : metadata.description
-
-    return {
-      id: `${policyId}.${assetNameHex}`,
-      name: metadata.name,
-      description: description ?? '',
-      thumbnail: `${config.NFT_STORAGE_URL}/p_${fingerprint}.jpeg`,
-      image: `${config.NFT_STORAGE_URL}/${fingerprint}.jpeg`,
-      metadata: {
-        policyId,
-        assetNameHex: assetNameHex,
-        originalMetadata: metadata,
-      },
-    }
-  })
-
-  return nfts
+  return filteredResponse.map<YoroiNFT>((metadata: CardanoAssetMetadata) =>
+    convertNft(metadata, config.NFT_STORAGE_URL),
+  )
 }
 
 export const getNFTModerationStatus = async (

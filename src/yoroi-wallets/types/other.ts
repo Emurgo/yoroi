@@ -2,7 +2,15 @@
 import {BigNumber} from 'bignumber.js'
 
 import {CardanoTypes, MultiToken} from '..'
-import {RemoteAccountState, RemoteCertificateMeta, Token, TokenEntry, TokenEntryPlain, TokenInfo} from '.'
+import {
+  CardanoAssetMetadata,
+  RemoteAccountState,
+  RemoteCertificateMeta,
+  Token,
+  TokenEntry,
+  TokenEntryPlain,
+  TokenInfo,
+} from '.'
 export type AddressObj = {
   readonly address: string
 }
@@ -499,5 +507,5 @@ export type MultiAssetMintMetadataResponse = {
 
 export type MultiAssetMintMetadataResponseAsset = {
   key: string
-  metadata: {[key: string]: any}
+  metadata: CardanoAssetMetadata
 }

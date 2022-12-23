@@ -7,7 +7,9 @@ import type {BackendConfig} from '../yoroi-wallets/types/other'
 import {ApiError, ApiHistoryError, NetworkError} from './errors'
 type RequestMethod = 'POST' | 'GET'
 
-const _checkResponse = async (rawResponse: Record<string, any>, requestPayload: Record<string, any>) => {
+type ResponseChecker<T> = (rawResponse: Record<string, any>, requestPayload: Record<string, any>) => Promise<T>
+
+const _checkResponse: ResponseChecker<Record<string, any>> = async (rawResponse, requestPayload) => {
   let responseBody = {}
 
   try {
@@ -34,14 +36,14 @@ const _checkResponse = async (rawResponse: Record<string, any>, requestPayload: 
   return responseBody
 }
 
-type FetchRequest = {
+type FetchRequest<T> = {
   endpoint: string
   payload: any
   method: RequestMethod
-  checkResponse?: (arg0: Record<string, any>, arg1: Record<string, any>) => Promise<Record<string, any>>
+  checkResponse?: ResponseChecker<T>
   headers?: Record<string, string>
 }
-export const checkedFetch = (request: FetchRequest) => {
+export const checkedFetch = (request: FetchRequest<any>) => {
   const {endpoint, payload, method, headers} = request
   const checkResponse = request.checkResponse || _checkResponse
   Logger.info(`API call: ${endpoint}`)
@@ -75,13 +77,13 @@ export const checkedFetch = (request: FetchRequest) => {
       return response
     })
 }
-export const fetchDefault = <T extends typeof _checkResponse>(
+export const fetchDefault = <T = Record<string, any>>(
   path: string,
   payload: any,
   networkConfig: BackendConfig,
   method: RequestMethod = 'POST',
-  options?: {checkResponse?: T},
-): ReturnType<Awaited<T>> => {
+  options?: {checkResponse?: ResponseChecker<T>},
+): Promise<T> => {
   const fullPath = `${networkConfig.API_ROOT}/${path}`
   const yoroiVersion = `${Platform.OS} / ${DeviceInfo.getVersion()}`
   const headers = {
@@ -95,6 +97,6 @@ export const fetchDefault = <T extends typeof _checkResponse>(
     checkResponse: options?.checkResponse ?? _checkResponse,
     headers,
   }
-  return checkedFetch(request) as ReturnType<Awaited<T>>
+  return checkedFetch(request)
 }
 export default fetchDefault
