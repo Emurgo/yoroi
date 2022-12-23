@@ -1,38 +1,85 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-import {
-  createPrefixedStorage,
-  debug,
-  isValidFilename,
-  isValidPath,
-  makeRootStorage,
-  toAbsolutePath,
-  toFilename,
-} from './storage'
+import {createPrefixedStorage, debug, isValidFilename, isValidPath, toAbsolutePath, toFilename} from './storage'
 
 describe('storage', () => {
   beforeEach(() => {
     AsyncStorage.clear()
   })
 
-  it('prefixes', async () => {
-    const storage0 = makeRootStorage()
-    expect(storage0.path).toBe('/')
+  describe('create', () => {
+    it('prefixes', async () => {
+      const storage0 = createPrefixedStorage()
+      expect(storage0.path).toBe('/')
 
-    const storage1 = createPrefixedStorage({storage: storage0, path: 'level1'})
-    expect(storage1.path).toBe('/level1')
+      const storage1 = createPrefixedStorage({storage: storage0, path: 'level1'})
+      expect(storage1.path).toBe('/level1')
 
-    const storage2 = createPrefixedStorage({storage: storage1, path: 'level2'})
-    expect(storage2.path).toBe('/level1/level2')
+      const storage2 = createPrefixedStorage({storage: storage1, path: 'level2'})
+      expect(storage2.path).toBe('/level1/level2')
 
-    const storage3 = createPrefixedStorage({storage: storage2, path: 'level3'})
-    expect(storage3.path).toBe('/level1/level2/level3')
+      const storage3 = createPrefixedStorage({storage: storage2, path: 'level3'})
+      expect(storage3.path).toBe('/level1/level2/level3')
 
-    const storage4 = createPrefixedStorage({storage: storage3, path: 'level4'})
-    expect(storage4.path).toBe('/level1/level2/level3/level4')
+      const storage4 = createPrefixedStorage({storage: storage3, path: 'level4'})
+      expect(storage4.path).toBe('/level1/level2/level3/level4')
+    })
+
+    it('prefixes, with root path', async () => {
+      const storage0 = createPrefixedStorage({path: '/'})
+      expect(storage0.path).toBe('/')
+
+      const storage1 = createPrefixedStorage({storage: storage0, path: 'level1'})
+      expect(storage1.path).toBe('/level1')
+
+      const storage2 = createPrefixedStorage({storage: storage1, path: 'level2'})
+      expect(storage2.path).toBe('/level1/level2')
+
+      const storage3 = createPrefixedStorage({storage: storage2, path: 'level3'})
+      expect(storage3.path).toBe('/level1/level2/level3')
+
+      const storage4 = createPrefixedStorage({storage: storage3, path: 'level4'})
+      expect(storage4.path).toBe('/level1/level2/level3/level4')
+    })
+
+    it('validates path', () => {
+      expect(() => createPrefixedStorage({path: '//'})).toThrowErrorMatchingInlineSnapshot(`"invalid path"`)
+      expect(() => createPrefixedStorage({path: '/invalid/path'})).toThrowErrorMatchingInlineSnapshot(`"invalid path"`)
+      // prettier-ignore
+      // eslint-disable-next-line no-useless-escape
+      expect(() => createPrefixedStorage({ path: '/invalid\/' })).toThrowErrorMatchingInlineSnapshot(`"invalid path"`)
+    })
   })
 
-  describe('create, setItem, getItem, getAllKeys', () => {
+  describe('setItem, getItem, getAllKeys', () => {
+    it('validates filename', async () => {
+      const storage = createPrefixedStorage()
+
+      await expect(storage.setItem('/', 'data')).rejects.toThrowErrorMatchingInlineSnapshot(`"invalid filename"`)
+      await expect(storage.setItem('//', 'data')).rejects.toThrowErrorMatchingInlineSnapshot(`"invalid filename"`)
+      await expect(storage.setItem('(', 'data')).rejects.toThrowErrorMatchingInlineSnapshot(`"invalid filename"`)
+      await expect(storage.setItem('', 'data')).rejects.toThrowErrorMatchingInlineSnapshot(`"invalid filename"`)
+      await expect(storage.setItem('/invalid/filename', 'data')).rejects.toThrowErrorMatchingInlineSnapshot(
+        `"invalid filename"`,
+      )
+
+      await expect(storage.getItem('/')).rejects.toThrowErrorMatchingInlineSnapshot(`"invalid filename"`)
+      await expect(storage.getItem('//')).rejects.toThrowErrorMatchingInlineSnapshot(`"invalid filename"`)
+      await expect(storage.getItem('(')).rejects.toThrowErrorMatchingInlineSnapshot(`"invalid filename"`)
+      await expect(storage.getItem('')).rejects.toThrowErrorMatchingInlineSnapshot(`"invalid filename"`)
+      await expect(storage.getItem('/invalid/filename')).rejects.toThrowErrorMatchingInlineSnapshot(
+        `"invalid filename"`,
+      )
+
+      await expect(storage.removeItem('/')).rejects.toThrowErrorMatchingInlineSnapshot(`"invalid filename"`)
+      await expect(storage.removeItem('//')).rejects.toThrowErrorMatchingInlineSnapshot(`"invalid filename"`)
+      await expect(storage.removeItem('(')).rejects.toThrowErrorMatchingInlineSnapshot(`"invalid filename"`)
+      await expect(storage.removeItem('')).rejects.toThrowErrorMatchingInlineSnapshot(`"invalid filename"`)
+      await expect(storage.removeItem('/invalid/filename')).rejects.toThrowErrorMatchingInlineSnapshot(
+        `"invalid filename"`,
+      )
+    })
+
     it('works', async () => {
       // storage0
       const storage0 = createPrefixedStorage()
@@ -170,13 +217,33 @@ describe('storage', () => {
     })
   })
 
-  describe('create, multiSet, multiGet, multiRemove, clear', () => {
-    it('validatesFileName', () => {
-      expect(() => createPrefixedStorage({path: '//'})).toThrowErrorMatchingInlineSnapshot(`"invalid path"`)
-      expect(() => createPrefixedStorage({path: '/invalid/path'})).toThrowErrorMatchingInlineSnapshot(`"invalid path"`)
-      // prettier-ignore
-      // eslint-disable-next-line no-useless-escape
-      expect(() => createPrefixedStorage({ path: '/invalid\/' })).toThrowErrorMatchingInlineSnapshot(`"invalid path"`)
+  describe('multiSet, multiGet, multiRemove, clear', () => {
+    it('validates filename', async () => {
+      const storage = createPrefixedStorage()
+
+      await expect(storage.multiSet([['/', 'data']])).rejects.toThrowErrorMatchingInlineSnapshot(`"invalid filename"`)
+      await expect(storage.multiSet([['//', 'data']])).rejects.toThrowErrorMatchingInlineSnapshot(`"invalid filename"`)
+      await expect(storage.multiSet([['(', 'data']])).rejects.toThrowErrorMatchingInlineSnapshot(`"invalid filename"`)
+      await expect(storage.multiSet([['', 'data']])).rejects.toThrowErrorMatchingInlineSnapshot(`"invalid filename"`)
+      await expect(storage.multiSet([['/invalid/filename', 'data']])).rejects.toThrowErrorMatchingInlineSnapshot(
+        `"invalid filename"`,
+      )
+
+      await expect(storage.multiGet(['/'])).rejects.toThrowErrorMatchingInlineSnapshot(`"invalid filename"`)
+      await expect(storage.multiGet(['//'])).rejects.toThrowErrorMatchingInlineSnapshot(`"invalid filename"`)
+      await expect(storage.multiGet(['('])).rejects.toThrowErrorMatchingInlineSnapshot(`"invalid filename"`)
+      await expect(storage.multiGet([''])).rejects.toThrowErrorMatchingInlineSnapshot(`"invalid filename"`)
+      await expect(storage.multiGet(['/invalid/filename'])).rejects.toThrowErrorMatchingInlineSnapshot(
+        `"invalid filename"`,
+      )
+
+      await expect(storage.multiRemove(['/'])).rejects.toThrowErrorMatchingInlineSnapshot(`"invalid filename"`)
+      await expect(storage.multiRemove(['//'])).rejects.toThrowErrorMatchingInlineSnapshot(`"invalid filename"`)
+      await expect(storage.multiRemove(['('])).rejects.toThrowErrorMatchingInlineSnapshot(`"invalid filename"`)
+      await expect(storage.multiRemove([''])).rejects.toThrowErrorMatchingInlineSnapshot(`"invalid filename"`)
+      await expect(storage.multiRemove(['/invalid/filename'])).rejects.toThrowErrorMatchingInlineSnapshot(
+        `"invalid filename"`,
+      )
     })
 
     it('works', async () => {
@@ -275,6 +342,7 @@ describe('storage', () => {
   it('validates filename', () => {
     expect(isValidFilename('valid')).toBe(true)
 
+    expect(isValidFilename('/')).toBe(false)
     expect(isValidFilename('(')).toBe(false)
     expect(isValidFilename(')')).toBe(false)
     expect(isValidFilename('')).toBe(false)

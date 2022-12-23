@@ -50,14 +50,6 @@ interface PrefixedStorage extends Omit<AsyncStorageStatic, 'multiMerge' | 'merge
   toAbsolutePath: (key: string) => string
 }
 
-export const makeRootStorage = (storage: AsyncStorageStatic = AsyncStorage) => {
-  return {
-    ...storage,
-    path: '/',
-    toAbsolutePath: (key: string) => `/${key}`,
-  }
-}
-
 export const debug = async () => {
   const keys = await AsyncStorage.getAllKeys()
   const items = await AsyncStorage.multiGet(keys)
@@ -68,7 +60,7 @@ export const debug = async () => {
 }
 
 export const createPrefixedStorage = (options?: {storage?: PrefixedStorage; path?: string}) => {
-  const {storage = makeRootStorage(), path = '/'} = options || {}
+  const {storage = {...AsyncStorage, path: '/'}, path = '/'} = options || {}
   if (!isValidPath(path)) throw new Error('invalid path')
   const isRootStorage = storage.path === '/'
   const isRootPath = path === '/'
