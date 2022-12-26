@@ -70,7 +70,7 @@ export const TextInput = React.forwardRef((props: Props, ref: ForwardedRef<RNTex
   )
 
   return (
-    <View style={containerStyle} testID={restProps.testID}>
+    <View style={containerStyle}>
       <RNPTextInput
         ref={ref}
         style={{textAlign}}
@@ -95,6 +95,7 @@ export const TextInput = React.forwardRef((props: Props, ref: ForwardedRef<RNTex
         }}
         secureTextEntry={secureTextEntry && !showPassword}
         mode="outlined"
+        testID={restProps.testID}
         error={errorTextEnabled && !isEmptyString(errorText)}
         render={({style, ...inputProps}) => (
           <InputContainer>

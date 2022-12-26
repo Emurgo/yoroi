@@ -163,6 +163,7 @@ const ShelleyButton = () => {
       }
       title={`${strings.addWalletButton}`}
       style={styles.topButton}
+      testID="addWalletButton"
     />
   )
 }
@@ -189,6 +190,7 @@ const OnlyNightlyShelleyTestnetButton = () => {
       }
       title={`${strings.addWalletButton} on TESTNET (Shelley-era)`}
       style={styles.button}
+      testID="addWalletButtonShelleyTestnet"
     />
   )
 }
@@ -212,6 +214,7 @@ const ByronButton = () => {
       }
       title={`${strings.addWalletButton} (Byron-era - ${strings.deprecated})`}
       style={styles.button}
+      testID="addWalletButtonByron"
     />
   )
 }
