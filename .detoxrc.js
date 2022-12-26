@@ -20,18 +20,10 @@ module.exports = {
       binaryPath: 'ios/build/Build/Products/Release-iphonesimulator/YOUR_APP.app',
       build: 'xcodebuild -workspace ios/emurgo.xcworkspace -scheme emurgo -configuration Release -sdk iphonesimulator -derivedDataPath ios/build'
     },
-    'android.debug': {
+    'android.nightly.release': {
       type: 'android.apk',
-      binaryPath: 'android/app/build/outputs/apk/androidTest/nightly/debug/app-nightly-debug-androidTest.apk',
-      build: 'cd android ; ENTRY_FILE=index.ts ./gradlew assembleDebug assembleAndroidTest -DtestBuildType=debug ; cd -',
-      reversePorts: [
-        8081
-      ]
-    },
-    'android.release': {
-      type: 'android.apk',
-      binaryPath: 'android/app/build/outputs/apk/release/app-release.apk',
-      build: 'cd android ; ENTRY_FILE=index.ts ./gradlew assembleRelease assembleAndroidTest -DtestBuildType=release ; cd -'
+      binaryPath: 'android/app/build/outputs/apk/nightly/release/app-nightly-release.apk',
+      build: 'cd android ; ENVFILE=.env.nightly ENTRY_FILE=index.ts ./gradlew assembleNightlyRelease -DtestBuildType=release ; cd -'
     }
   },
   devices: {
@@ -63,21 +55,13 @@ module.exports = {
       device: 'simulator',
       app: 'ios.release'
     },
-    'android.att.debug': {
+    'android.device.nightly.release': {
       device: 'attached',
-      app: 'android.debug'
+      app: 'android.nightly.release'
     },
-    'android.att.release': {
-      device: 'attached',
-      app: 'android.release'
-    },
-    'android.emu.debug': {
+    'android.emu.nightly.release': {
       device: 'emulator',
-      app: 'android.debug'
+      app: 'android.nightly.release'
     },
-    'android.emu.release': {
-      device: 'emulator',
-      app: 'android.release'
-    }
   }
 };
