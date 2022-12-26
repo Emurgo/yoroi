@@ -112,6 +112,7 @@ coverage-ts
 #Test's data
 tests/app
 tests/artifacts
+/artifacts
 
 coverage/
 .jest/
