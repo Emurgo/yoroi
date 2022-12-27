@@ -63,7 +63,7 @@ class _LedgerConnect extends React.Component<Props, State> {
   _transportLib: any = null
   _isMounted = false
 
-  async componentDidMount() {
+  componentDidMount() {
     const {useUSB} = this.props
     this._transportLib = useUSB === true ? TransportHID : TransportBLE
     this._isMounted = true
@@ -161,7 +161,7 @@ class _LedgerConnect extends React.Component<Props, State> {
     this.startScan()
   }
 
-  _onSelectDevice = async (device: Device) => {
+  _onSelectDevice = (device: Device) => {
     this._unsubscribe()
     const {onConnectBLE} = this.props
     try {
@@ -174,7 +174,7 @@ class _LedgerConnect extends React.Component<Props, State> {
         refreshing: false,
         waiting: true,
       })
-      await onConnectBLE(device.id.toString())
+      onConnectBLE(device.id.toString())
     } catch (e) {
       Logger.debug(e as any)
       if (e instanceof RejectedByUserError) {
@@ -187,17 +187,13 @@ class _LedgerConnect extends React.Component<Props, State> {
     }
   }
 
-  _onConfirm = async (deviceObj?: DeviceObj | null): Promise<void> => {
+  _onConfirm = (deviceObj: DeviceObj) => {
     this._unsubscribe()
     try {
-      if (deviceObj == null) {
-        // should never happen
-        throw new Error('deviceObj is null')
-      }
       this.setStateWithAnimation({
         waiting: true,
       })
-      await this.props.onConnectUSB(deviceObj)
+      this.props.onConnectUSB(deviceObj)
     } catch (e) {
       Logger.debug(e as any)
       if (e instanceof RejectedByUserError) {

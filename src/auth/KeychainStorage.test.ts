@@ -29,11 +29,11 @@ describe('authOsEnabledOnDevice()', () => {
       ${true}  | ${Keychain.BIOMETRY_TYPE.FINGERPRINT}
       ${true}  | ${Keychain.BIOMETRY_TYPE.IRIS}
       ${true}  | ${Keychain.BIOMETRY_TYPE.FACE}
-    `('should return $expected when type is $bioType', async ({expected, bioType}) => {
+    `('should return $expected when type is $bioType', ({expected, bioType}) => {
       Platform.select = jest.fn((platformConfig) => platformConfig['android'])
       mockedBioType = bioType
 
-      authOsEnabled().then((result) => expect(result).toBe(expected))
+      return authOsEnabled().then((result) => expect(result).toBe(expected))
     })
   })
   describe('on iOS', () => {
@@ -43,16 +43,13 @@ describe('authOsEnabledOnDevice()', () => {
       ${false} | ${Keychain.BIOMETRY_TYPE.FACE_ID}  | ${false}
       ${true}  | ${Keychain.BIOMETRY_TYPE.TOUCH_ID} | ${true}
       ${false} | ${Keychain.BIOMETRY_TYPE.TOUCH_ID} | ${false}
-    `(
-      'should return $expected when type is $bioType and canImply is $canImply',
-      async ({expected, bioType, canImply}) => {
-        Platform.select = jest.fn((platformConfig) => platformConfig['ios'])
-        mockedBioType = bioType
-        mockedCanImply = canImply
+    `('should return $expected when type is $bioType and canImply is $canImply', ({expected, bioType, canImply}) => {
+      Platform.select = jest.fn((platformConfig) => platformConfig['ios'])
+      mockedBioType = bioType
+      mockedCanImply = canImply
 
-        authOsEnabled().then((result) => expect(result).toBe(expected))
-      },
-    )
+      return authOsEnabled().then((result) => expect(result).toBe(expected))
+    })
   })
   describe('on other platforms', () => {
     it.each`
@@ -60,10 +57,10 @@ describe('authOsEnabledOnDevice()', () => {
       ${Error} | ${'web'}
       ${Error} | ${'windows'}
       ${Error} | ${'macos'}
-    `('should reject when platform is $platform', async ({expected, platform}) => {
+    `('should reject when platform is $platform', ({expected, platform}) => {
       Platform.select = jest.fn((platformConfig) => platformConfig[platform])
 
-      authOsEnabled().catch((error) => expect(error).toBeInstanceOf(expected))
+      return authOsEnabled().catch((error) => expect(error).toBeInstanceOf(expected))
     })
   })
 })

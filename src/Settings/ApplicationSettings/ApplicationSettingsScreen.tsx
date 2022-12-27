@@ -27,7 +27,7 @@ export const ApplicationSettingsScreen = () => {
   const authOsEnabled = useAuthOsEnabled()
   const {authWithOs} = useAuthWithOs({onSuccess: () => navigation.navigate('enable-login-with-pin')})
 
-  const onToggleAuthWithOs = async () => {
+  const onToggleAuthWithOs = () => {
     if (authSetting === 'os') {
       authWithOs()
     } else {
