@@ -31,8 +31,8 @@ import {DeviceItem} from './DeviceItem'
 type Props = {
   intl: IntlShape
   defaultDevices?: Array<Device> | null // for storybook
-  onConnectUSB: (deviceObj: DeviceObj) => void
-  onConnectBLE: (deviceId: DeviceId) => void
+  onConnectUSB: (deviceObj: DeviceObj) => Promise<void> | void
+  onConnectBLE: (deviceId: DeviceId) => Promise<void> | void
   useUSB?: boolean
   onWaitingMessage?: string
   fillSpace?: boolean
@@ -161,7 +161,7 @@ class _LedgerConnect extends React.Component<Props, State> {
     this.startScan()
   }
 
-  _onSelectDevice = (device: Device) => {
+  _onSelectDevice = async (device: Device) => {
     this._unsubscribe()
     const {onConnectBLE} = this.props
     try {
@@ -174,7 +174,7 @@ class _LedgerConnect extends React.Component<Props, State> {
         refreshing: false,
         waiting: true,
       })
-      onConnectBLE(device.id.toString())
+      await onConnectBLE(device.id.toString())
     } catch (e) {
       Logger.debug(e as any)
       if (e instanceof RejectedByUserError) {
@@ -187,13 +187,13 @@ class _LedgerConnect extends React.Component<Props, State> {
     }
   }
 
-  _onConfirm = (deviceObj: DeviceObj) => {
+  _onConfirm = async (deviceObj: DeviceObj) => {
     this._unsubscribe()
     try {
       this.setStateWithAnimation({
         waiting: true,
       })
-      this.props.onConnectUSB(deviceObj)
+      await this.props.onConnectUSB(deviceObj)
     } catch (e) {
       Logger.debug(e as any)
       if (e instanceof RejectedByUserError) {
