@@ -45,6 +45,7 @@ import {Message} from './Message'
 import {MultipleWallets} from './MultipleWallets'
 import {NftAsset} from './NftAsset'
 import {NoAssetImage} from './NoAssetImage'
+import {NoNFTs} from './NoNFTs'
 import {Pin} from './Pin'
 import {Placeholder} from './Placeholder'
 import {PlateNumber} from './PlateNumber'
@@ -110,12 +111,12 @@ export const Icon = {
   Device,
   DigitalAsset,
   Direction,
-  Drag,
   Document,
+  Drag,
   Emurgo,
+  Export,
   EyeOff,
   EyeOn,
-  Export,
   Facebook,
   Gear,
   Github,
@@ -124,8 +125,8 @@ export const Icon = {
   Image,
   Info,
   Launchpad,
-  Link,
   Lightning,
+  Link,
   Lock,
   Magnify,
   Megaphone,
@@ -134,6 +135,7 @@ export const Icon = {
   MultipleWallets,
   NftAsset,
   NoAssetImage,
+  NoNFTs,
   Pin,
   Placeholder,
   PlateNumber,
@@ -155,9 +157,9 @@ export const Icon = {
   StarFilled,
   StarOutlined,
   Support,
-  Table,
   TabStaking,
   TabWallet,
+  Table,
   Telegram,
   TermsOfUse,
   ThumbsUp,
@@ -168,10 +170,10 @@ export const Icon = {
   Transaction,
   Twitter,
   Verify,
-  WalletAccount,
   Wallet,
-  Wallets,
+  WalletAccount,
   WalletStack,
+  Wallets,
   YoroiNightly,
   YoroiWallet,
 }

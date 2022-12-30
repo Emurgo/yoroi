@@ -1,18 +1,16 @@
 import {useNavigation, useRoute} from '@react-navigation/native'
-import React, {useEffect, useState} from 'react'
+import React, {ReactNode, useEffect, useMemo, useState} from 'react'
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {CopyButton, FadeIn, OfflineBanner, Spacer, StatusBar, Text} from '../components'
+import {CopyButton, FadeIn, Link, OfflineBanner, Spacer, StatusBar, Text} from '../components'
 import {Tab, TabPanel, TabPanels, Tabs} from '../components/Tabs'
 import {useNfts} from '../hooks'
+import {getAssetFingerprint} from '../legacy/format'
 import {NftDetailsNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
 
-enum VIEW_TABS {
-  OVERVIEW = 'OVERVIEW',
-  METADATA = 'METADATA',
-}
+type VIEW_TABS = 'overview' | 'metadata'
 
 type Params = {id: string}
 
@@ -21,10 +19,14 @@ export const NftDetails = () => {
   const {nfts} = useNfts(wallet)
 
   const navigation = useNavigation<NftDetailsNavigation>()
-  const [activeTab, setActiveTab] = useState<VIEW_TABS>(VIEW_TABS.OVERVIEW)
+  const [activeTab, setActiveTab] = useState<VIEW_TABS>('overview')
   const {id} = useRoute().params as Params
   const nft = nfts.find((nft) => nft.id === id)
   const stringifiedMetadata = JSON.stringify(nft, undefined, 2)
+  const fingerprint = useMemo(
+    () => (nft ? getAssetFingerprint(nft.metadata.policyId, nft.metadata.assetNameHex) : null),
+    [nft],
+  )
 
   useTitle('NFT Details')
 
@@ -49,41 +51,73 @@ export const NftDetails = () => {
         <View style={styles.tabsContainer}>
           <Tabs>
             <Tab
-              onPress={() => setActiveTab(VIEW_TABS.OVERVIEW)}
+              onPress={() => setActiveTab('overview')}
               label="Overview"
-              active={activeTab === VIEW_TABS.OVERVIEW}
-              testID={VIEW_TABS.OVERVIEW}
+              active={activeTab === 'overview'}
+              testID="overview"
             />
             <Tab
-              onPress={() => setActiveTab(VIEW_TABS.METADATA)}
+              onPress={() => setActiveTab('metadata')}
               label="Metadata"
-              active={activeTab === VIEW_TABS.METADATA}
-              testID={VIEW_TABS.METADATA}
+              active={activeTab === 'metadata'}
+              testID="metadata"
             />
           </Tabs>
 
           <TabPanels>
-            <TabPanel active={activeTab === VIEW_TABS.OVERVIEW}>
-              <MetadataRow title="NFT Name" content={nft.name} />
-              <MetadataRow title="Created" content={nft.name} />
-              <MetadataRow title="Description" content={nft.name} />
-              <MetadataRow title="Author" content={nft.name} />
-              <MetadataRow title="Collection name" content={nft.name} />
-              <MetadataRow title="Fingerprint" content={nft.name} withCopy />
-              <MetadataRow title="Policy id" content={nft.name} withCopy />
-              <MetadataRow title="Details on" content={nft.name} />
+            <TabPanel active={activeTab === 'overview'}>
+              <MetadataRow title="NFT Name" content={<Text secondary>{nft.name}</Text>} />
+              <MetadataRow title="Created" content={<Text secondary>{nft.name}</Text>} />
+              <MetadataRow title="Description" content={<Text secondary>{nft.description}</Text>} />
+              <MetadataRow
+                title="Author"
+                content={<Text secondary>{nft.metadata.originalMetadata.author ?? '-'}</Text>}
+              />
+              <MetadataRow title="Collection name" content={<Text secondary>{nft.name}</Text>} />
+              <MetadataRow
+                title="Fingerprint"
+                content={<Text secondary>{fingerprint ?? '-'}</Text>}
+                withCopy
+                copyText={fingerprint ?? '-'}
+              />
+              <MetadataRow
+                title="Policy id"
+                content={<Text secondary>{nft.metadata.policyId}</Text>}
+                withCopy
+                copyText={nft.metadata.policyId}
+              />
+              <MetadataRow
+                title="Details on"
+                content={
+                  <>
+                    <View>
+                      <Link
+                        url={`https://cardanoscan.io/token/${fingerprint}`}
+                        text="Cardanoscan"
+                        style={styles.linkText}
+                      />
+                    </View>
+                    <View>
+                      <Link
+                        url={`https://cexplorer.io/asset/${fingerprint}`}
+                        text="Cexplorer"
+                        style={styles.linkText}
+                      />
+                    </View>
+                  </>
+                }
+              />
             </TabPanel>
 
-            <TabPanel active={activeTab === VIEW_TABS.METADATA}>
-              <View style={styles.metadataTab}>
-                <View style={styles.copyMetadata}>
-                  <CopyButton value={stringifiedMetadata} />
-                  <Text>COPY METADATA</Text>
-                </View>
-                <Spacer height={14} />
-
-                <Text>{stringifiedMetadata}</Text>
+            <TabPanel active={activeTab === 'metadata'}>
+              <View style={styles.copyMetadata}>
+                <CopyButton value={stringifiedMetadata} style={styles.copyButton}>
+                  <Text style={styles.copyText}>COPY METADATA</Text>
+                </CopyButton>
               </View>
+              <Spacer height={14} />
+
+              <Text>{stringifiedMetadata}</Text>
             </TabPanel>
           </TabPanels>
         </View>
@@ -92,20 +126,44 @@ export const NftDetails = () => {
   )
 }
 
-const MetadataRow = ({title, content, withCopy = false}: {title: string; content: string; withCopy?: boolean}) => {
+const MetadataRow = ({
+  title,
+  copyText,
+  content,
+  withCopy = false,
+}: {
+  title: string
+  withCopy?: boolean
+  content: ReactNode
+  copyText?: string
+}) => {
   return (
     <View style={styles.rowContainer}>
       <View style={styles.rowTitleContainer}>
-        <Text style={styles.rowTitleText}>{title}</Text>
-        {withCopy && <CopyButton value={content} />}
+        <Text>{title}</Text>
+        {withCopy && copyText && <CopyButton value={copyText} />}
       </View>
       <Spacer height={2} />
-      <Text secondary>{content}</Text>
+      {content}
     </View>
   )
 }
 
 const styles = StyleSheet.create({
+  copyButton: {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
+  linkText: {
+    flex: 1,
+  },
+  copyText: {
+    fontWeight: 'bold',
+    color: '#242838',
+  },
   container: {
     flex: 1,
   },
@@ -133,10 +191,7 @@ const styles = StyleSheet.create({
     flexWrap: 'nowrap',
     justifyContent: 'space-between',
   },
-  rowTitleText: {},
-  metadataTab: {
-    paddingVertical: 34,
-  },
+
   copyMetadata: {
     display: 'flex',
     flexDirection: 'row',

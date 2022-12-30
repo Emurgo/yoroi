@@ -299,7 +299,11 @@ const fetchNfts = {
       metadata: {
         policyId: '8e2c7604711faef7c84c91b286c7327d17df825b7f0c88ec0332c0b4',
         assetNameHex: '496D6167652031',
-        originalMetadata: {},
+        originalMetadata: {
+          name: 'Image 1',
+          description: 'NFT 1 description',
+          image: 'https://fibo-validated-nft-images.s3.amazonaws.com/asset1a6765qk8cpk2wll3hevw6xy9xry893jrzl9ms3.jpeg',
+        },
       },
     }
     return [nft1]

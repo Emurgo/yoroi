@@ -1,11 +1,9 @@
 import React, {useEffect} from 'react'
 import {GestureResponderEvent, Image, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 import {useQuery} from 'react-query'
 
-import {Spacer} from '../../components'
-import {Text} from '../../components/Text'
+import {Spacer, Text} from '../../components'
 import {getAssetFingerprint} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {YoroiNFT} from '../../yoroi-wallets/types'
@@ -18,34 +16,30 @@ type Props = {
 export const SkeletonGallery = ({amount}: {amount: number} = {amount: 3}) => {
   const placeholders = new Array(amount).fill(undefined)
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
-      <ScrollView bounces={false} contentContainerStyle={styles.galleryContainer}>
-        {placeholders.map((item, index) => (
-          <SkeletonImagePlaceholder key={index} />
-        ))}
-      </ScrollView>
-    </SafeAreaView>
+    <ScrollView bounces={false} contentContainerStyle={styles.galleryContainer}>
+      {placeholders.map((item, index) => (
+        <SkeletonImagePlaceholder key={index} />
+      ))}
+    </ScrollView>
   )
 }
 
 export const ImageGallery = ({nfts = [], onSelect}: Props) => {
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
-      <ScrollView bounces={false} contentContainerStyle={styles.galleryContainer}>
-        {nfts.map((nft, index) => {
-          const fingerprint = getAssetFingerprint(nft.metadata.policyId, nft.metadata.assetNameHex)
-          return (
-            <ModeratedImage
-              onPress={() => onSelect(index)}
-              image={nft.image}
-              fingerprint={fingerprint}
-              text={nft.name}
-              key={fingerprint}
-            />
-          )
-        })}
-      </ScrollView>
-    </SafeAreaView>
+    <ScrollView bounces={false} contentContainerStyle={styles.galleryContainer}>
+      {nfts.map((nft, index) => {
+        const fingerprint = getAssetFingerprint(nft.metadata.policyId, nft.metadata.assetNameHex)
+        return (
+          <ModeratedImage
+            onPress={() => onSelect(index)}
+            image={nft.image}
+            fingerprint={fingerprint}
+            text={nft.name}
+            key={fingerprint}
+          />
+        )
+      })}
+    </ScrollView>
   )
 }
 
@@ -111,14 +105,10 @@ function SkeletonImagePlaceholder() {
 }
 
 const styles = StyleSheet.create({
-  safeAreaView: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
   galleryContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
     flexDirection: 'row',
     flexWrap: 'wrap',
   },
@@ -126,13 +116,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
   },
   image: {
-    height: 175,
-    width: 175,
+    height: 164,
+    width: 164,
     borderRadius: 8,
   },
   textTop: {
-    height: 16,
-    width: 148,
+    fontSize: 14,
+    lineHeight: 22,
+    width: 164,
     borderRadius: 50, // skeleton styling
   },
 })
