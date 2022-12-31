@@ -83,14 +83,13 @@ export const makeUtxoStorage = (storage: Storage, storagePath: string) => {
 
 const makeUtxoManagerStorage = (prefix: string) => {
   const storage = makeStorageWithPrefix(prefix)
-  const addrCounterKey = `addrCounter`
+  const addrCounterKey = 'addrCounter'
+
   return {
     addrCounter: {
       save: (addrCounter: number) => storage.setItem(addrCounterKey, addrCounter.toString()),
-      clear: async () => {
-        await storage.removeItem(addrCounterKey)
-      },
-      read: async () => storage.getItem(addrCounterKey).then((counter) => (counter != null ? parseInt(counter) : 0)),
+      clear: () => storage.removeItem(addrCounterKey),
+      read: () => storage.getItem(addrCounterKey).then((counter) => (counter != null ? parseInt(counter) : 0)),
     },
   } as const
 }
@@ -106,7 +105,7 @@ export const makeUtxoManager = async (id: string, apiUrl: string, storage: Stora
   const initialUtxos = await getCachedUtxos()
 
   // utxo state is related to the addresses used, if it changes a reset is needed
-  const sync = async (addresses: Array<string>) => {
+  const sync = (addresses: Array<string>) => {
     if (addresses.length === addrCounter) return service.syncUtxoState(addresses)
 
     return serviceStorage

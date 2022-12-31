@@ -15,6 +15,18 @@ module.exports = {
         ],
       },
     },
+    {
+      files: ['*.stories.tsx'],
+      rules: {
+        '@typescript-eslint/require-await': 'off',
+      },
+    },
+    {
+      files: ['*.test.ts'],
+      rules: {
+        '@typescript-eslint/require-await': 'off',
+      },
+    },
   ],
   extends: [
     'eslint:recommended',
@@ -55,6 +67,9 @@ module.exports = {
     'react/jsx-curly-brace-presence': ['warn', {props: 'never', children: 'never'}],
     'no-return-await': 'error',
     'no-template-curly-in-string': 'error',
+    'require-await': 'off',
+    '@typescript-eslint/require-await': 'error',
+    '@typescript-eslint/await-thenable': 'error',
   },
   globals: {
     Buffer: false,
