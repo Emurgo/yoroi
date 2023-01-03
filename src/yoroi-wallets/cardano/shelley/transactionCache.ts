@@ -488,7 +488,7 @@ const makeTxCacheStorage = (storage: Storage): TxCacheStorage => ({
     return tuples.reduce((result: TransactionCacheState['transactions'], [txid, txData]) => {
       const tx = parseTx(txData)
       if (!tx) {
-        console.warn('corrupted transaction', {txid})
+        Logger.warn('corrupted transaction', {txid})
         return result
       }
 

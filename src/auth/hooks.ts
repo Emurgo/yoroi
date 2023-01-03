@@ -24,7 +24,7 @@ export const useAuthOsEnabled = (options?: UseQueryOptions<boolean, Error>) => {
   })
 
   React.useEffect(() => {
-    const appStateSubscription = AppState.addEventListener('change', async (appState) => {
+    const appStateSubscription = AppState.addEventListener('change', (appState) => {
       // when using OS auth and app is active again needs to check if still enabled
       if (appState === 'active') {
         query.refetch()
@@ -186,7 +186,7 @@ export const disableAllEasyConfirmation = () =>
         storage.readMany(keys.map((walletId) => `/wallet/${walletId}/data`)),
       ]),
     )
-    .then(async ([metas, wallets]) => {
+    .then(([metas, wallets]) => {
       const metaUpdates: Array<[string, WalletMeta]> = []
       for (const [walletPath, meta] of metas) {
         if ((meta as WalletMeta)?.isEasyConfirmationEnabled) {

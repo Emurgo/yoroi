@@ -432,14 +432,14 @@ export class ShelleyWallet implements WalletInterface {
     return changeAddress
   }
 
-  private async getAddressedChangeAddress(): Promise<{address: string; addressing: CardanoTypes.Addressing}> {
+  private getAddressedChangeAddress(): Promise<{address: string; addressing: CardanoTypes.Addressing}> {
     const changeAddr = this.getChangeAddress()
     const addressing = this.getAddressing(changeAddr)
 
-    return {
+    return Promise.resolve({
       address: changeAddr,
       addressing,
-    }
+    })
   }
 
   async getStakingKey() {
@@ -535,7 +535,7 @@ export class ShelleyWallet implements WalletInterface {
     throw new Error(`Missing address info for: ${address} `)
   }
 
-  async getAddressedUtxos() {
+  getAddressedUtxos() {
     const addressedUtxos = this.utxos.map((utxo: RawUtxo): CardanoTypes.CardanoAddressedUtxo => {
       const addressing = this.getAddressing(utxo.receiver)
 
@@ -550,7 +550,7 @@ export class ShelleyWallet implements WalletInterface {
       }
     })
 
-    return addressedUtxos
+    return Promise.resolve(addressedUtxos)
   }
 
   getDelegationStatus() {
