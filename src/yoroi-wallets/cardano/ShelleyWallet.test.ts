@@ -62,10 +62,10 @@ describe('migration', () => {
           vendor: 'ledger.com',
         },
       }
-      const readOnly = false
+      const isReadOnly = false
 
       legacyWallet = await ShelleyWalletLegacy.build(storageLegacy, networkId, id)
-      await legacyWallet.createWithBip44Account(accountPubKeyHex, networkId, implementationId, hwDeviceInfo, readOnly)
+      await legacyWallet.createWithBip44Account(accountPubKeyHex, networkId, implementationId, hwDeviceInfo, isReadOnly)
 
       wallet = await ShelleyWallet.createBip44({
         id,
@@ -74,7 +74,7 @@ describe('migration', () => {
         implementationId,
         storage: storageLegacy,
         hwDeviceInfo,
-        readOnly,
+        isReadOnly,
       })
     })
 

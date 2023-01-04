@@ -320,7 +320,7 @@ export class WalletManager {
     networkId: NetworkId,
     implementationId: WalletImplementationId,
     hwDeviceInfo: null | HWDeviceInfo,
-    readOnly: boolean,
+    isReadOnly: boolean,
   ) {
     const Wallet = this.getWalletImplementation(implementationId)
     const id = uuid.v4()
@@ -332,7 +332,7 @@ export class WalletManager {
       accountPubKeyHex,
       implementationId,
       hwDeviceInfo,
-      readOnly,
+      isReadOnly,
     })
 
     Logger.debug('creating wallet...', wallet)

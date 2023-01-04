@@ -135,122 +135,135 @@ export class ShelleyWallet implements WalletInterface {
   // =================== create =================== //
 
   static async create({
-    storage,
-    networkId,
     id,
+    networkId,
+    implementationId,
+    storage,
+
     mnemonic,
     password,
-    implementationId,
-    provider,
   }: {
-    storage: typeof storageLegacy
-    networkId: NetworkId
     id: string
+    implementationId: WalletImplementationId
+    networkId: NetworkId
+    storage: typeof storageLegacy
+    provider: YoroiProvider | undefined
+
     mnemonic: string
     password: string
-    implementationId: WalletImplementationId
-    provider: YoroiProvider | undefined
   }): Promise<YoroiWallet> {
-    const apiUrl = getCardanoNetworkConfigById(networkId).BACKEND.API_ROOT
-    const utxoManager = await makeUtxoManager(id, apiUrl, storage)
-    const rootKeyPtr = await generateWalletRootKey(mnemonic)
-    const rootKey: string = Buffer.from(await rootKeyPtr.asBytes()).toString('hex')
+    const {rootKey, accountPubKeyHex} = await makeKeys({mnemonic, implementationId})
+    const {internalChain, externalChain} = await addressChains.create({implementationId, networkId, accountPubKeyHex})
 
-    const purpose = isByron(implementationId)
-      ? CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.BIP44
-      : CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852
-    const accountKey = await (
-      await (await rootKeyPtr.derive(purpose)).derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO)
-    ).derive(CONFIG.NUMBERS.ACCOUNT_INDEX + CONFIG.NUMBERS.HARD_DERIVATION_START)
-    const accountPubKey = await accountKey.toPublic()
-    const accountPubKeyHex: string = Buffer.from(await accountPubKey.asBytes()).toString('hex')
-    const transactionCache = await TransactionCache.create(makeStorageWithPrefix(`/wallet/${id}/txs`))
-
-    const walletConfig = getWalletConfigById(implementationId)
-    const internalChain = new AddressChain(
-      new AddressGenerator(accountPubKeyHex, 'Internal', implementationId, networkId),
-      walletConfig.DISCOVERY_BLOCK_SIZE,
-      walletConfig.DISCOVERY_GAP_SIZE,
-    )
-    const externalChain = new AddressChain(
-      new AddressGenerator(accountPubKeyHex, 'External', implementationId, networkId),
-      walletConfig.DISCOVERY_BLOCK_SIZE,
-      walletConfig.DISCOVERY_GAP_SIZE,
-    )
-
-    const rewardAddressHex = await deriveRewardAddressHex(accountPubKeyHex, networkId)
-
-    // Create at least one address in each block
-    await internalChain.initialize()
-    await externalChain.initialize()
-
-    const wallet = new ShelleyWallet({
-      storage,
-      networkId,
+    const wallet = await this.commonCreate({
       id,
-      utxoManager,
+      networkId,
       implementationId,
-      hwDeviceInfo: null,
-      readOnly: false,
-      provider,
+      storage,
       accountPubKeyHex,
-      rewardAddressHex,
-      transactionCache,
+      hwDeviceInfo: null, // hw wallet
+      isReadOnly: false, // readonly wallet
       internalChain,
       externalChain,
     })
 
-    await wallet.discoverAddresses()
-
-    wallet.setupSubscriptions()
-    wallet.notify({type: 'initialize'})
-
-    wallet.isInitialized = true
     await wallet.encryptAndSaveRootKey(rootKey, password)
-
-    if (!isYoroiWallet(wallet)) throw new Error('invalid wallet')
 
     return wallet
   }
 
   static async createBip44({
-    storage,
-    networkId,
     id,
-    accountPubKeyHex,
+    networkId,
     implementationId,
-    hwDeviceInfo,
-    readOnly,
+    storage,
+
+    accountPubKeyHex,
+    hwDeviceInfo, // hw wallet
+    isReadOnly, // readonly wallet
   }: {
-    storage: typeof storageLegacy
-    networkId: NetworkId
-    id: string
     accountPubKeyHex: string
-    implementationId: WalletImplementationId
     hwDeviceInfo: HWDeviceInfo | null
-    readOnly: boolean
+    id: string
+    implementationId: WalletImplementationId
+    networkId: NetworkId
+
+    isReadOnly: boolean
+    storage: typeof storageLegacy
   }): Promise<YoroiWallet> {
+    const {internalChain, externalChain} = await addressChains.create({implementationId, networkId, accountPubKeyHex})
+
+    return this.commonCreate({
+      id,
+      networkId,
+      implementationId,
+      storage,
+      accountPubKeyHex,
+      hwDeviceInfo, // hw wallet
+      isReadOnly, // readonly wallet
+      internalChain,
+      externalChain,
+    })
+  }
+
+  static async restore({walletMeta, storage}: {storage: typeof storageLegacy; walletMeta: WalletMeta}) {
+    const data = await storage.read<WalletJSON>(`/wallet/${walletMeta.id}/data`)
+    if (!data) throw new Error('Cannot read saved data')
+    Logger.debug('openWallet::data', data)
+    Logger.info('restore wallet', walletMeta.name)
+
+    const networkId = data.networkId ?? walletMeta.networkId // can be null for versions < 3.0.0
+    const {internalChain, externalChain} = addressChains.restore({data, networkId})
+
+    const wallet = await this.commonCreate({
+      id: walletMeta.id,
+      networkId,
+      storage,
+      internalChain,
+      externalChain,
+
+      implementationId: data.walletImplementationId ?? walletMeta.walletImplementationId, // can be null for versions < 3.0.2
+      accountPubKeyHex: data.publicKeyHex ?? internalChain.publicKey, // can be null for versions < 3.0.2, in which case we can just retrieve from address generator
+      hwDeviceInfo: data.hwDeviceInfo, // hw wallet
+      isReadOnly: data.isReadOnly ?? false, // readonly wallet
+    })
+
+    wallet.isEasyConfirmationEnabled = data.isEasyConfirmationEnabled
+    wallet.isHW = data.isHW ?? false
+    wallet.state = {lastGeneratedAddressIndex: data.lastGeneratedAddressIndex}
+
+    wallet.integrityCheck()
+
+    return wallet
+  }
+
+  private static commonCreate = async ({
+    id,
+    networkId,
+    implementationId,
+    storage,
+    internalChain,
+    externalChain,
+
+    accountPubKeyHex,
+    hwDeviceInfo, // hw wallet
+    isReadOnly, // readonly wallet
+  }: {
+    accountPubKeyHex: string
+    hwDeviceInfo: HWDeviceInfo | null
+    id: string
+    implementationId: WalletImplementationId
+    networkId: NetworkId
+    storage: typeof storageLegacy
+    internalChain: AddressChain
+    externalChain: AddressChain
+
+    isReadOnly: boolean
+  }) => {
+    const rewardAddressHex = await deriveRewardAddressHex(accountPubKeyHex, networkId)
     const apiUrl = getCardanoNetworkConfigById(networkId).BACKEND.API_ROOT
     const utxoManager = await makeUtxoManager(id, apiUrl, storage)
-    const rewardAddressHex = await deriveRewardAddressHex(accountPubKeyHex, networkId)
-
     const transactionCache = await TransactionCache.create(makeStorageWithPrefix(`/wallet/${id}/txs`))
-
-    const walletConfig = getWalletConfigById(implementationId)
-    const internalChain = new AddressChain(
-      new AddressGenerator(accountPubKeyHex, 'Internal', implementationId, networkId),
-      walletConfig.DISCOVERY_BLOCK_SIZE,
-      walletConfig.DISCOVERY_GAP_SIZE,
-    )
-    const externalChain = new AddressChain(
-      new AddressGenerator(accountPubKeyHex, 'External', implementationId, networkId),
-      walletConfig.DISCOVERY_BLOCK_SIZE,
-      walletConfig.DISCOVERY_GAP_SIZE,
-    )
-
-    // Create at least one address in each block
-    await internalChain.initialize()
-    await externalChain.initialize()
 
     const wallet = new ShelleyWallet({
       storage,
@@ -259,7 +272,7 @@ export class ShelleyWallet implements WalletInterface {
       utxoManager,
       implementationId,
       hwDeviceInfo,
-      readOnly,
+      isReadOnly,
       provider: undefined,
       accountPubKeyHex,
       rewardAddressHex,
@@ -268,84 +281,12 @@ export class ShelleyWallet implements WalletInterface {
       externalChain,
     })
 
-    if (!isYoroiWallet(wallet)) throw new Error('invalid wallet')
-
-    return wallet
-  }
-
-  static async restore({walletMeta, storage}: {storage: typeof storageLegacy; walletMeta: WalletMeta}) {
-    const data = await storage.read<WalletJSON>(`/wallet/${walletMeta.id}/data`)
-    Logger.debug('openWallet::data', data)
-    if (!data) throw new Error('Cannot read saved data')
-
-    Logger.info('restore wallet', walletMeta.name)
-    const lastSeenVersion = data.version
-
-    // can be null for versions < 3.0.2
-    const walletImplementationId =
-      data.walletImplementationId != null ? data.walletImplementationId : walletMeta.walletImplementationId
-
-    const hwDeviceInfo = data.hwDeviceInfo
-    const isReadOnly = data.isReadOnly ?? false
-    const provider = data.provider
-
-    const version = DeviceInfo.getVersion()
-    if (version !== lastSeenVersion) {
-      Logger.debug(`updated version from ${lastSeenVersion} to ${version}`)
-    }
-
-    // can be null for versions < 3.0.0
-    const networkId = data.networkId ?? walletMeta.networkId
-
-    if (networkId == null) throw new Error('Invalid wallet: networkId')
-
-    const internalChain = AddressChain.fromJSON(data.internalChain, networkId)
-    const externalChain = AddressChain.fromJSON(data.externalChain, networkId)
-    // can be null for versions < 3.0.2, in which case we can just retrieve from address generator
-    const accountPubKeyHex = data.publicKeyHex != null ? data.publicKeyHex : internalChain.publicKey
-    const rewardAddressHex = await deriveRewardAddressHex(accountPubKeyHex, networkId)
-
-    const transactionCache = await TransactionCache.create(makeStorageWithPrefix(`/wallet/${walletMeta.id}/txs/`))
-
-    const apiUrl = getCardanoNetworkConfigById(networkId).BACKEND.API_ROOT
-    const utxoManager = await makeUtxoManager(walletMeta.id, apiUrl, storage)
-
-    const wallet = new ShelleyWallet({
-      storage,
-      networkId,
-      id: walletMeta.id,
-      utxoManager,
-      implementationId: walletImplementationId,
-      hwDeviceInfo,
-      readOnly: isReadOnly,
-      provider,
-      accountPubKeyHex,
-      rewardAddressHex,
-      transactionCache,
-      internalChain,
-      externalChain,
-    })
-
     await wallet.discoverAddresses()
-
     wallet.setupSubscriptions()
     wallet.notify({type: 'initialize'})
-
-    wallet.isInitialized = true
-
-    wallet.isEasyConfirmationEnabled = data.isEasyConfirmationEnabled
-    wallet.isHW = data.isHW ?? false
-    wallet.state = {
-      lastGeneratedAddressIndex: data.lastGeneratedAddressIndex,
-    }
-
-    wallet.integrityCheck()
-    await wallet.discoverAddresses()
-    wallet.setupSubscriptions()
     wallet.isInitialized = true
 
     if (!isYoroiWallet(wallet)) throw new Error('invalid wallet')
-
     return wallet
   }
 
@@ -356,7 +297,7 @@ export class ShelleyWallet implements WalletInterface {
     utxoManager,
     implementationId,
     hwDeviceInfo,
-    readOnly,
+    isReadOnly,
     provider,
     accountPubKeyHex,
     rewardAddressHex,
@@ -370,7 +311,7 @@ export class ShelleyWallet implements WalletInterface {
     utxoManager: UtxoManager
     implementationId: WalletImplementationId
     hwDeviceInfo: HWDeviceInfo | null
-    readOnly: boolean
+    isReadOnly: boolean
     provider: YoroiProvider | null | undefined
     accountPubKeyHex: string
     rewardAddressHex: string
@@ -388,7 +329,7 @@ export class ShelleyWallet implements WalletInterface {
     this.walletImplementationId = implementationId
     this.isHW = hwDeviceInfo != null
     this.hwDeviceInfo = hwDeviceInfo
-    this.isReadOnly = readOnly
+    this.isReadOnly = isReadOnly
     this.provider = provider
     this.transactionCache = transactionCache
     this.internalChain = internalChain
@@ -1239,15 +1180,6 @@ export class ShelleyWallet implements WalletInterface {
 
   // TODO: move to specific child class?
   toJSON(): WalletJSON {
-    if (this.networkId == null) throw new Error('invalid WalletJSON: networkId')
-    if (this.walletImplementationId == null) throw new Error('invalid WalletJSON: walletImplementationId')
-    if (this.version == null) throw new Error('invalid WalletJSON: version')
-    if (this.isReadOnly == null) throw new Error('invalid WalletJSON: isReadOnly')
-    if (this.externalAddresses == null) throw new Error('invalid WalletJSON: externalAddresses')
-    if (this.internalAddresses == null) throw new Error('invalid WalletJSON: internalAddresses')
-    if (this.externalChain == null) throw new Error('invalid WalletJSON: externalChain')
-    if (this.internalChain == null) throw new Error('invalid WalletJSON: internalChain')
-
     return {
       lastGeneratedAddressIndex: this.state.lastGeneratedAddressIndex,
       publicKeyHex: this.publicKeyHex,
@@ -1266,3 +1198,61 @@ export class ShelleyWallet implements WalletInterface {
 }
 
 const toHex = (bytes: Uint8Array) => Buffer.from(bytes).toString('hex')
+
+const makeKeys = async ({mnemonic, implementationId}: {mnemonic: string; implementationId: WalletImplementationId}) => {
+  const rootKeyPtr = await generateWalletRootKey(mnemonic)
+  const rootKey: string = Buffer.from(await rootKeyPtr.asBytes()).toString('hex')
+
+  const purpose = isByron(implementationId)
+    ? CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.BIP44
+    : CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852
+  const accountPubKeyHex = await rootKeyPtr
+    .derive(purpose)
+    .then((key) => key.derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO))
+    .then((key) => key.derive(CONFIG.NUMBERS.ACCOUNT_INDEX + CONFIG.NUMBERS.HARD_DERIVATION_START))
+    .then((accountKey) => accountKey.toPublic())
+    .then((accountPubKey) => accountPubKey.asBytes())
+    .then((bytes) => Buffer.from(bytes).toString('hex'))
+
+  return {
+    rootKey,
+    accountPubKeyHex,
+  }
+}
+
+const addressChains = {
+  create: async ({
+    accountPubKeyHex,
+    implementationId,
+    networkId,
+  }: {
+    accountPubKeyHex: string
+    implementationId: WalletImplementationId
+    networkId: NetworkId
+  }) => {
+    const walletConfig = getWalletConfigById(implementationId)
+    const internalChain = new AddressChain(
+      new AddressGenerator(accountPubKeyHex, 'Internal', implementationId, networkId),
+      walletConfig.DISCOVERY_BLOCK_SIZE,
+      walletConfig.DISCOVERY_GAP_SIZE,
+    )
+    const externalChain = new AddressChain(
+      new AddressGenerator(accountPubKeyHex, 'External', implementationId, networkId),
+      walletConfig.DISCOVERY_BLOCK_SIZE,
+      walletConfig.DISCOVERY_GAP_SIZE,
+    )
+
+    // Create at least one address in each block
+    await internalChain.initialize()
+    await externalChain.initialize()
+
+    return {internalChain, externalChain}
+  },
+
+  restore: ({data, networkId}: {data: WalletJSON; networkId: NetworkId}) => {
+    return {
+      internalChain: AddressChain.fromJSON(data.internalChain, networkId),
+      externalChain: AddressChain.fromJSON(data.externalChain, networkId),
+    }
+  },
+}
