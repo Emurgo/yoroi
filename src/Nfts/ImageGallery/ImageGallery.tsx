@@ -3,10 +3,11 @@ import {Dimensions, GestureResponderEvent, Image, ScrollView, StyleSheet, Toucha
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 import {useQuery} from 'react-query'
 
-import {Spacer, Text} from '../../components'
+import {Icon, Spacer, Text} from '../../components'
 import {getAssetFingerprint} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {YoroiNFT} from '../../yoroi-wallets/types'
+import placeholderImage from './placeholder.png'
 
 type Props = {
   nfts: YoroiNFT[]
@@ -64,30 +65,46 @@ const ModeratedImage = ({fingerprint, image, text, onPress}: ModeratedImageProps
   }, [moderationStatusQuery.data, moderationStatusQuery])
   const size = getImageSize()
 
-  const showSkeleton = moderationStatusQuery.isLoading
-  const isImageApproved = moderationStatusQuery.data === 'green'
+  const isPendingReview = moderationStatusQuery.data === 'pending' || moderationStatusQuery.data === 'manual_review'
+  const showSkeleton = moderationStatusQuery.isLoading || isPendingReview
+
+  const isGreenImage = moderationStatusQuery.data === 'green'
+  const isYellowImage = moderationStatusQuery.data === 'yellow'
+  const isRedImage = moderationStatusQuery.data === 'red'
 
   if (showSkeleton) {
     return <SkeletonImagePlaceholder />
   }
 
   return (
-    <TouchableOpacity onPress={onPress} style={[styles.imageContainer]}>
-      {isImageApproved ? (
+    <TouchableOpacity disabled={isRedImage} onPress={onPress} style={[styles.imageContainer]}>
+      {isGreenImage ? (
         <>
           <Image source={{uri: image}} style={[styles.image, {width: size, height: size}]} />
           <Spacer height={8} />
           <Text style={[styles.textTop, {width: size}]}>{text}</Text>
           <Spacer height={13} />
         </>
-      ) : (
-        <>
-          <View style={[styles.image, {width: size, height: size}]} />
+      ) : isYellowImage ? (
+        <View>
+          <View style={styles.imageWrapper}>
+            <Image source={{uri: image}} style={[styles.image, {width: size, height: size}]} blurRadius={20} />
+            <View style={styles.eyeWrapper}>
+              <Icon.EyeOff size={20} color="#FFFFFF" />
+            </View>
+          </View>
           <Spacer height={8} />
-          <Text style={styles.textTop}>Image is not approved</Text>
+          <Text style={[styles.textTop, {width: size}]}>{text}</Text>
+          <Spacer height={13} />
+        </View>
+      ) : isRedImage ? (
+        <>
+          <Image source={placeholderImage} style={[styles.image, {width: size, height: size}]} />
+          <Spacer height={8} />
+          <Text style={[styles.textTop, {width: size}]}>{text}</Text>
           <Spacer height={13} />
         </>
-      )}
+      ) : null}
     </TouchableOpacity>
   )
 }
@@ -114,6 +131,20 @@ function SkeletonImagePlaceholder() {
 }
 
 const styles = StyleSheet.create({
+  imageWrapper: {
+    position: 'relative',
+  },
+  eyeWrapper: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+    zIndex: 1,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   galleryContainer: {
     flex: 1,
     justifyContent: 'flex-start',
