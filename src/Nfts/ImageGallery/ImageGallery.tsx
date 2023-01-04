@@ -72,12 +72,12 @@ const ModeratedImage = ({fingerprint, image, text, onPress}: ModeratedImageProps
   }
 
   return (
-    <TouchableOpacity onPress={onPress} style={styles.imageContainer}>
+    <TouchableOpacity onPress={onPress} style={[styles.imageContainer]}>
       {isImageApproved ? (
         <>
           <Image source={{uri: image}} style={[styles.image, {width: size, height: size}]} />
           <Spacer height={8} />
-          <Text style={styles.textTop}>{text}</Text>
+          <Text style={[styles.textTop, {width: size}]}>{text}</Text>
           <Spacer height={13} />
         </>
       ) : (
@@ -95,14 +95,21 @@ const ModeratedImage = ({fingerprint, image, text, onPress}: ModeratedImageProps
 function SkeletonImagePlaceholder() {
   const size = getImageSize()
   return (
-    <SkeletonPlaceholder enabled={true}>
-      <View style={styles.imageContainer}>
-        <View style={[styles.image, {width: size, height: size}]} />
-        <SkeletonPlaceholder.Item style={styles.textTop} marginTop={8} marginBottom={13}>
-          <Text style={styles.textTop}>Loading...</Text>
-        </SkeletonPlaceholder.Item>
-      </View>
-    </SkeletonPlaceholder>
+    <View style={[styles.imageContainer, {width: size + 10, height: size + 8 + 20 + 13}]}>
+      <SkeletonPlaceholder enabled={true}>
+        <View>
+          <View style={{width: size, height: size, borderRadius: 8}} />
+          <View
+            style={{
+              marginTop: 8,
+              width: (size * 3) / 4,
+              height: 20,
+              borderRadius: 8,
+            }}
+          />
+        </View>
+      </SkeletonPlaceholder>
+    </View>
   )
 }
 
@@ -125,8 +132,6 @@ const styles = StyleSheet.create({
   textTop: {
     fontSize: 14,
     lineHeight: 22,
-    width: 164,
-    borderRadius: 50, // skeleton styling
   },
 })
 
