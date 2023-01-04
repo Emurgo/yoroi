@@ -3,12 +3,14 @@ import React, {ReactNode, useEffect, useMemo, useState} from 'react'
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {CopyButton, FadeIn, Link, OfflineBanner, Spacer, StatusBar, Text} from '../components'
+import {getPrettyDate} from '../../tests/helpers/utils'
+import {CopyButton, FadeIn, Icon, Link, OfflineBanner, Spacer, StatusBar, Text} from '../components'
 import {Tab, TabPanel, TabPanels, Tabs} from '../components/Tabs'
-import {useNfts} from '../hooks'
+import {useNfts, useTransactionInfos} from '../hooks'
 import {getAssetFingerprint} from '../legacy/format'
 import {NftDetailsNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
+import {COLORS} from '../theme'
 
 type VIEW_TABS = 'overview' | 'metadata'
 
@@ -17,6 +19,7 @@ type Params = {id: string}
 export const NftDetails = () => {
   const wallet = useSelectedWallet()
   const {nfts} = useNfts(wallet)
+  const transactionsInfo = useTransactionInfos(wallet)
 
   const navigation = useNavigation<NftDetailsNavigation>()
   const [activeTab, setActiveTab] = useState<VIEW_TABS>('overview')
@@ -27,6 +30,10 @@ export const NftDetails = () => {
     () => (nft ? getAssetFingerprint(nft.metadata.policyId, nft.metadata.assetNameHex) : null),
     [nft],
   )
+
+  const matchingTransaction = Object.values(transactionsInfo).find((t) => Object.keys(t.tokens).includes(id))
+  const transactionUpdatedAt = matchingTransaction?.submittedAt ?? null
+  const formattedTime = transactionUpdatedAt !== null ? getPrettyDate(new Date(transactionUpdatedAt)) : null
 
   useTitle('NFT Details')
 
@@ -67,13 +74,13 @@ export const NftDetails = () => {
           <TabPanels>
             <TabPanel active={activeTab === 'overview'}>
               <MetadataRow title="NFT Name" content={<Text secondary>{nft.name}</Text>} />
-              <MetadataRow title="Created" content={<Text secondary>{nft.name}</Text>} />
+              <MetadataRow title="Created" content={<Text secondary>{formattedTime}</Text>} />
               <MetadataRow title="Description" content={<Text secondary>{nft.description}</Text>} />
               <MetadataRow
                 title="Author"
                 content={<Text secondary>{nft.metadata.originalMetadata.author ?? '-'}</Text>}
               />
-              <MetadataRow title="Collection name" content={<Text secondary>{nft.name}</Text>} />
+              {/* <MetadataRow title="Collection name" content={<Text secondary>{nft.name}</Text>} /> */}
               <MetadataRow
                 title="Fingerprint"
                 content={<Text secondary>{fingerprint ?? '-'}</Text>}
@@ -91,18 +98,22 @@ export const NftDetails = () => {
                 content={
                   <>
                     <View>
-                      <Link
-                        url={`https://cardanoscan.io/token/${fingerprint}`}
-                        text="Cardanoscan"
-                        style={styles.linkText}
-                      />
+                      <Link url={`https://cardanoscan.io/token/${fingerprint}`}>
+                        <View style={styles.linkContent}>
+                          <Icon.ExternalLink size={12} color={COLORS.SHELLEY_BLUE} />
+                          <Spacer width={2} />
+                          <Text style={styles.linkText}>Cardanoscan</Text>
+                        </View>
+                      </Link>
                     </View>
                     <View>
-                      <Link
-                        url={`https://cexplorer.io/asset/${fingerprint}`}
-                        text="Cexplorer"
-                        style={styles.linkText}
-                      />
+                      <Link url={`https://cexplorer.io/asset/${fingerprint}`}>
+                        <View style={styles.linkContent}>
+                          <Icon.ExternalLink size={12} color={COLORS.SHELLEY_BLUE} />
+                          <Spacer width={2} />
+                          <Text style={styles.linkText}>Cexplorer</Text>
+                        </View>
+                      </Link>
                     </View>
                   </>
                 }
@@ -157,8 +168,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
   },
+  linkContent: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+  },
   linkText: {
     flex: 1,
+    fontWeight: 'bold',
+    textDecorationLine: 'none',
+    color: COLORS.SHELLEY_BLUE,
   },
   copyText: {
     fontWeight: 'bold',
@@ -201,5 +221,5 @@ const styles = StyleSheet.create({
 
 const useTitle = (text: string) => {
   const navigation = useNavigation()
-  useEffect(() => navigation.setOptions({title: text}))
+  useEffect(() => navigation.setOptions({title: text}), [navigation, text])
 }

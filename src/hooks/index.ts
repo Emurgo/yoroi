@@ -873,6 +873,7 @@ export const useResync = (wallet: YoroiWallet, options?: UseMutationOptions<void
 export const useNfts = (wallet: YoroiWallet) => {
   const utxos = useUtxos(wallet)
   const query = useQuery({queryKey: [wallet.id, 'nfts', utxos.length], queryFn: () => wallet.fetchNfts()})
+  // console.log('nfts', JSON.stringify(utxos, null, 2))
   const {data: nfts = [], ...rest} = query
   return {nfts, ...rest}
 }

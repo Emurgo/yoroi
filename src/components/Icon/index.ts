@@ -25,6 +25,7 @@ import {Document} from './Document'
 import {Drag} from './Drag'
 import {Emurgo} from './Emurgo'
 import {Export} from './Export'
+import {ExternalLink} from './ExternalLink'
 import {EyeOff} from './EyeOff'
 import {EyeOn} from './EyeOn'
 import {Facebook} from './Facebook'
@@ -115,6 +116,7 @@ export const Icon = {
   Drag,
   Emurgo,
   Export,
+  ExternalLink,
   EyeOff,
   EyeOn,
   Facebook,

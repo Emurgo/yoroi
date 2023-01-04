@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react'
-import {GestureResponderEvent, Image, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {Dimensions, GestureResponderEvent, Image, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 import {useQuery} from 'react-query'
 
@@ -62,6 +62,7 @@ const ModeratedImage = ({fingerprint, image, text, onPress}: ModeratedImageProps
       moderationStatusQuery.refetch()
     }
   }, [moderationStatusQuery.data, moderationStatusQuery])
+  const size = getImageSize()
 
   const showSkeleton = moderationStatusQuery.isLoading
   const isImageApproved = moderationStatusQuery.data === 'green'
@@ -74,14 +75,14 @@ const ModeratedImage = ({fingerprint, image, text, onPress}: ModeratedImageProps
     <TouchableOpacity onPress={onPress} style={styles.imageContainer}>
       {isImageApproved ? (
         <>
-          <Image source={{uri: image}} style={styles.image} />
+          <Image source={{uri: image}} style={[styles.image, {width: size, height: size}]} />
           <Spacer height={8} />
           <Text style={styles.textTop}>{text}</Text>
           <Spacer height={13} />
         </>
       ) : (
         <>
-          <View style={styles.image} />
+          <View style={[styles.image, {width: size, height: size}]} />
           <Spacer height={8} />
           <Text style={styles.textTop}>Image is not approved</Text>
           <Spacer height={13} />
@@ -92,10 +93,11 @@ const ModeratedImage = ({fingerprint, image, text, onPress}: ModeratedImageProps
 }
 
 function SkeletonImagePlaceholder() {
+  const size = getImageSize()
   return (
     <SkeletonPlaceholder enabled={true}>
       <View style={styles.imageContainer}>
-        <View style={styles.image} />
+        <View style={[styles.image, {width: size, height: size}]} />
         <SkeletonPlaceholder.Item style={styles.textTop} marginTop={8} marginBottom={13}>
           <Text style={styles.textTop}>Loading...</Text>
         </SkeletonPlaceholder.Item>
@@ -127,3 +129,9 @@ const styles = StyleSheet.create({
     borderRadius: 50, // skeleton styling
   },
 })
+
+function getImageSize() {
+  const dimensions = Dimensions.get('window')
+  const minSize = Math.min(dimensions.width, dimensions.height)
+  return minSize / 2 - 26
+}
