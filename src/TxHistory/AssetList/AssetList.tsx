@@ -9,7 +9,7 @@ import AdaImage from '../../assets/img/asset_ada.png'
 import NoImage from '../../assets/img/asset_no_image.png'
 import {Boundary, Text} from '../../components'
 import {Spacer} from '../../components/Spacer'
-import {useBalances, useTokenInfo} from '../../hooks'
+import {useBalances, useTokenImage, useTokenInfo} from '../../hooks'
 import globalMessages, {actionMessages} from '../../i18n/global-messages'
 import {formatTokenAmount, getAssetDenominationOrId, getTokenFingerprint} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
@@ -71,11 +71,12 @@ type AssetItemProps = {
 const AssetItem = ({amount, onPress}: AssetItemProps) => {
   const wallet = useSelectedWallet()
   const tokenInfo = useTokenInfo({wallet, tokenId: amount.tokenId})
+  const tokenImage = useTokenImage({wallet, tokenId: amount.tokenId})
 
   return (
     <TouchableOpacity onPress={onPress} style={styles.button} testID="assetItem">
       <Left>
-        <Icon source={tokenInfo.isDefault ? AdaImage : NoImage} />
+        <Icon source={tokenInfo.isDefault ? AdaImage : tokenImage !== null ? {uri: tokenImage} : NoImage} />
       </Left>
 
       <Middle>

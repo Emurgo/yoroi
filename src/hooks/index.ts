@@ -17,6 +17,7 @@ import {
 
 import {getDefaultAssetByNetworkId, isNightly} from '../legacy/config'
 import {ObjectValues} from '../legacy/flow'
+import {getAssetFingerprint} from '../legacy/format'
 import {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {getCardanoNetworkConfigById} from '../legacy/networks'
 import {processTxHistoryData} from '../legacy/processTransactions'
@@ -244,6 +245,24 @@ export const useTokenInfo = (
   if (!query.data) throw new Error('Invalid token id')
 
   return query.data
+}
+
+export const useTokenImage = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string}): string | null => {
+  const {nfts} = useNfts(wallet)
+  const nft = nfts.find((nft) => nft.id === tokenId)
+  const fingerprint = nft ? getAssetFingerprint(nft.metadata.policyId, nft.metadata.assetNameHex) : null
+
+  const moderationStatusQuery = useQuery({
+    queryKey: [wallet.id, 'nft', fingerprint],
+    queryFn: () => (fingerprint ? wallet.fetchNftModerationStatus(fingerprint) : null),
+    enabled: !!nft,
+  })
+
+  if (nft && moderationStatusQuery.data === 'green') {
+    return nft.image
+  }
+
+  return null
 }
 
 export const fetchTokenInfo = async ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string}): Promise<Token> => {
