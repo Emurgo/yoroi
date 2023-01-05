@@ -4,6 +4,7 @@ import BigNumber from 'bignumber.js'
 import {delay} from 'bluebird'
 import {mapValues} from 'lodash'
 import * as React from 'react'
+import {useMemo} from 'react'
 import {
   onlineManager,
   QueryKey,
@@ -870,10 +871,15 @@ export const useResync = (wallet: YoroiWallet, options?: UseMutationOptions<void
   }
 }
 
-export const useNfts = (wallet: YoroiWallet) => {
+export const useNfts = (wallet: YoroiWallet, {search}: {search?: string} = {}) => {
   const utxos = useUtxos(wallet)
-  const query = useQuery({queryKey: [wallet.id, 'nfts', utxos.length], queryFn: () => wallet.fetchNfts()})
-  // console.log('nfts', JSON.stringify(utxos, null, 2))
-  const {data: nfts = [], ...rest} = query
-  return {nfts, ...rest}
+  const {data, ...rest} = useQuery({
+    queryKey: [wallet.id, 'nfts', utxos.length],
+    queryFn: () => wallet.fetchNfts(),
+  })
+  const filteredNfts = useMemo(
+    () => (search && data ? data.filter((n) => n.name.toLowerCase().includes(search.toLowerCase())) : data ?? []),
+    [search, data],
+  )
+  return {...rest, nfts: filteredNfts}
 }

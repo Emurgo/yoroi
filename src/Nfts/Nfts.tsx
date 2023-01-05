@@ -10,9 +10,13 @@ import {WalletStackRouteNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
 import {ImageGallery, SkeletonGallery} from './ImageGallery'
 
-export const Nfts = () => {
+type Props = {
+  search?: string
+}
+
+export const Nfts = ({search}: Props) => {
   const wallet = useSelectedWallet()
-  const {nfts, isLoading, refetch, isRefetching, isError} = useNfts(wallet)
+  const {nfts, isLoading, refetch, isRefetching, isError} = useNfts(wallet, {search})
   const navigation = useNavigation<WalletStackRouteNavigation>()
 
   const showDetails = (id: string) => navigation.navigate('nft-details-routes', {screen: 'nft-details', params: {id}})
@@ -46,10 +50,14 @@ export const Nfts = () => {
               </>
             ) : (
               <>
-                <View>
-                  <Text style={styles.count}>NFT count: {nfts.length}</Text>
-                </View>
-                <Spacer height={16} />
+                {search?.length === 0 && (
+                  <>
+                    <View>
+                      <Text style={styles.count}>NFT count: {nfts.length}</Text>
+                    </View>
+                    <Spacer height={16} />
+                  </>
+                )}
                 <View>
                   {isLoading ? (
                     <SkeletonGallery amount={6} />

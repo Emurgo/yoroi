@@ -237,7 +237,7 @@ export type FirstRunRoutes = {
 export type FirstRunRouteNavigation = StackNavigationProp<FirstRunRoutes>
 
 export type NftRoutes = {
-  nfts: undefined
+  nfts?: {search?: string}
   'nfts-gallery': undefined
   'nft-details': {
     id: string
