@@ -1,9 +1,9 @@
 import React, {useEffect} from 'react'
 import {Dimensions, GestureResponderEvent, Image, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
-import {useQuery} from 'react-query'
 
 import {Icon, Spacer, Text} from '../../components'
+import {useNftModerationStatus} from '../../hooks'
 import {getAssetFingerprint} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {YoroiNFT} from '../../yoroi-wallets/types'
@@ -53,10 +53,7 @@ interface ModeratedImageProps {
 
 const ModeratedImage = ({fingerprint, image, text, onPress}: ModeratedImageProps) => {
   const wallet = useSelectedWallet()
-  const moderationStatusQuery = useQuery({
-    queryKey: [wallet.id, 'nft', fingerprint],
-    queryFn: () => wallet.fetchNftModerationStatus(fingerprint),
-  })
+  const moderationStatusQuery = useNftModerationStatus({wallet, fingerprint})
 
   useEffect(() => {
     if (moderationStatusQuery.data === 'pending') {

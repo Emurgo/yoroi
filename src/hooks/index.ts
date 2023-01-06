@@ -247,18 +247,21 @@ export const useTokenInfo = (
   return query.data
 }
 
+export const useNftModerationStatus = ({wallet, fingerprint}: {wallet: YoroiWallet; fingerprint: string | null}) => {
+  return useQuery({
+    queryKey: [wallet.id, 'nft', fingerprint],
+    queryFn: () => (fingerprint ? wallet.fetchNftModerationStatus(fingerprint) : null),
+    enabled: !!fingerprint,
+  })
+}
+
 export const useTokenImage = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string}): string | null => {
   const {nfts} = useNfts(wallet)
   const nft = nfts.find((nft) => nft.id === tokenId)
   const fingerprint = nft ? getAssetFingerprint(nft.metadata.policyId, nft.metadata.assetNameHex) : null
+  const {data} = useNftModerationStatus({wallet, fingerprint})
 
-  const moderationStatusQuery = useQuery({
-    queryKey: [wallet.id, 'nft', fingerprint],
-    queryFn: () => (fingerprint ? wallet.fetchNftModerationStatus(fingerprint) : null),
-    enabled: !!nft,
-  })
-
-  if (nft && moderationStatusQuery.data === 'green') {
+  if (nft && data === 'green') {
     return nft.image
   }
 
