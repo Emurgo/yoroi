@@ -1,5 +1,6 @@
 import {useNavigation, useRoute} from '@react-navigation/native'
-import React, {ReactNode, useEffect, useMemo, useState} from 'react'
+import React, {ReactNode, useMemo, useState} from 'react'
+import {defineMessages, useIntl} from 'react-intl'
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
@@ -17,6 +18,7 @@ type VIEW_TABS = 'overview' | 'metadata'
 type Params = {id: string}
 
 export const NftDetails = () => {
+  const strings = useStrings()
   const wallet = useSelectedWallet()
   const {nfts} = useNfts(wallet)
   const transactionsInfo = useTransactionInfos(wallet)
@@ -34,8 +36,6 @@ export const NftDetails = () => {
   const matchingTransaction = Object.values(transactionsInfo).find((t) => Object.keys(t.tokens).includes(id))
   const transactionUpdatedAt = matchingTransaction?.submittedAt ?? null
   const formattedTime = transactionUpdatedAt !== null ? getPrettyDate(new Date(transactionUpdatedAt)) : null
-
-  useTitle('NFT Details')
 
   const onFullscreen = () => navigation.navigate('nft-details-image', {id})
 
@@ -59,13 +59,13 @@ export const NftDetails = () => {
           <Tabs>
             <Tab
               onPress={() => setActiveTab('overview')}
-              label="Overview"
+              label={strings.overview}
               active={activeTab === 'overview'}
               testID="overview"
             />
             <Tab
               onPress={() => setActiveTab('metadata')}
-              label="Metadata"
+              label={strings.metadata}
               active={activeTab === 'metadata'}
               testID="metadata"
             />
@@ -73,28 +73,27 @@ export const NftDetails = () => {
 
           <TabPanels>
             <TabPanel active={activeTab === 'overview'}>
-              <MetadataRow title="NFT Name" content={<Text secondary>{nft.name}</Text>} />
-              <MetadataRow title="Created" content={<Text secondary>{formattedTime}</Text>} />
-              <MetadataRow title="Description" content={<Text secondary>{nft.description}</Text>} />
+              <MetadataRow title={strings.nftName} content={<Text secondary>{nft.name}</Text>} />
+              <MetadataRow title={strings.createdAt} content={<Text secondary>{formattedTime}</Text>} />
+              <MetadataRow title={strings.description} content={<Text secondary>{nft.description}</Text>} />
               <MetadataRow
-                title="Author"
+                title={strings.author}
                 content={<Text secondary>{nft.metadata.originalMetadata.author ?? '-'}</Text>}
               />
-              {/* <MetadataRow title="Collection name" content={<Text secondary>{nft.name}</Text>} /> */}
               <MetadataRow
-                title="Fingerprint"
+                title={strings.fingerprint}
                 content={<Text secondary>{fingerprint ?? '-'}</Text>}
                 withCopy
                 copyText={fingerprint ?? '-'}
               />
               <MetadataRow
-                title="Policy id"
+                title={strings.policyId}
                 content={<Text secondary>{nft.metadata.policyId}</Text>}
                 withCopy
                 copyText={nft.metadata.policyId}
               />
               <MetadataRow
-                title="Details on"
+                title={strings.detailsLinks}
                 content={
                   <>
                     <View>
@@ -123,7 +122,7 @@ export const NftDetails = () => {
             <TabPanel active={activeTab === 'metadata'}>
               <View style={styles.copyMetadata}>
                 <CopyButton value={stringifiedMetadata} style={styles.copyButton}>
-                  <Text style={styles.copyText}>COPY METADATA</Text>
+                  <Text style={styles.copyText}>{strings.copyMetadata}</Text>
                 </CopyButton>
               </View>
               <Spacer height={14} />
@@ -183,6 +182,7 @@ const styles = StyleSheet.create({
   copyText: {
     fontWeight: 'bold',
     color: '#242838',
+    textTransform: 'uppercase',
   },
   container: {
     flex: 1,
@@ -219,7 +219,67 @@ const styles = StyleSheet.create({
   },
 })
 
-const useTitle = (text: string) => {
-  const navigation = useNavigation()
-  useEffect(() => navigation.setOptions({title: text}), [navigation, text])
+const messages = defineMessages({
+  title: {
+    id: 'components.nftDetails.title',
+    defaultMessage: '!!!NFT Details',
+  },
+  overview: {
+    id: 'components.nftDetails.overview',
+    defaultMessage: '!!!Overview',
+  },
+  metadata: {
+    id: 'components.nftDetails.metadata',
+    defaultMessage: '!!!Metadata',
+  },
+  nftName: {
+    id: 'components.nftDetails.nftName',
+    defaultMessage: '!!!NFT Name',
+  },
+  createdAt: {
+    id: 'components.nftDetails.createdAt',
+    defaultMessage: '!!!Created',
+  },
+  description: {
+    id: 'components.nftDetails.description',
+    defaultMessage: '!!!Description',
+  },
+  author: {
+    id: 'components.nftDetails.author',
+    defaultMessage: '!!!Author',
+  },
+  fingerprint: {
+    id: 'components.nftDetails.fingerprint',
+    defaultMessage: '!!!Fingerprint',
+  },
+  policyId: {
+    id: 'components.nftDetails.policyId',
+    defaultMessage: '!!!Policy id',
+  },
+  detailsLinks: {
+    id: 'components.nftDetails.detailsLinks',
+    defaultMessage: '!!!Details on',
+  },
+  copyMetadata: {
+    id: 'components.nftDetails.copyMetadata',
+    defaultMessage: '!!!Copy metadata',
+  },
+})
+
+const useStrings = () => {
+  const intl = useIntl()
+
+  return {
+    title: intl.formatMessage(messages.title),
+    overview: intl.formatMessage(messages.overview),
+    metadata: intl.formatMessage(messages.metadata),
+    nftName: intl.formatMessage(messages.nftName),
+    createdAt: intl.formatMessage(messages.createdAt),
+    description: intl.formatMessage(messages.description),
+    author: intl.formatMessage(messages.author),
+    fingerprint: intl.formatMessage(messages.fingerprint),
+    policyId: intl.formatMessage(messages.policyId),
+    detailsLinks: intl.formatMessage(messages.detailsLinks),
+    copyMetadata: intl.formatMessage(messages.copyMetadata),
+  }
 }

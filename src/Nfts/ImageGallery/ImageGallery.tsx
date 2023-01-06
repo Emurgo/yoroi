@@ -23,6 +23,9 @@ type Props = {
   onSelect: (index: number) => void
 }
 
+const IMAGE_PADDING = 8
+const TEXT_PADDING = 13
+
 export const SkeletonGallery = ({amount}: {amount: number} = {amount: 3}) => {
   const placeholders = new Array(amount).fill(undefined)
   return (
@@ -71,14 +74,6 @@ export const ImageGallery = ({nfts = [], onSelect}: Props) => {
   )
 }
 
-function groupArray<T>(arr: T[]) {
-  const result: T[][] = []
-  for (let i = 0; i < arr.length; i += 2) {
-    result.push([arr[i], arr[i + 1]])
-  }
-  return result
-}
-
 interface ModeratedImageProps {
   image: string
   text: string
@@ -113,9 +108,9 @@ const ModeratedImage = ({fingerprint, image, text, onPress}: ModeratedImageProps
       {isGreenImage ? (
         <>
           <Image source={{uri: image}} style={[styles.image, {width: size, height: size}]} />
-          <Spacer height={8} />
+          <Spacer height={IMAGE_PADDING} />
           <Text style={[styles.textTop, {width: size}]}>{text}</Text>
-          <Spacer height={13} />
+          <Spacer height={TEXT_PADDING} />
         </>
       ) : isYellowImage ? (
         <View>
@@ -125,16 +120,16 @@ const ModeratedImage = ({fingerprint, image, text, onPress}: ModeratedImageProps
               <Icon.EyeOff size={20} color="#FFFFFF" />
             </View>
           </View>
-          <Spacer height={8} />
+          <Spacer height={IMAGE_PADDING} />
           <Text style={[styles.textTop, {width: size}]}>{text}</Text>
-          <Spacer height={13} />
+          <Spacer height={TEXT_PADDING} />
         </View>
       ) : isRedImage ? (
         <>
           <Image source={placeholderImage} style={[styles.image, {width: size, height: size}]} />
-          <Spacer height={8} />
+          <Spacer height={IMAGE_PADDING} />
           <Text style={[styles.textTop, {width: size}]}>{text}</Text>
-          <Spacer height={13} />
+          <Spacer height={TEXT_PADDING} />
         </>
       ) : null}
     </TouchableOpacity>
@@ -143,16 +138,17 @@ const ModeratedImage = ({fingerprint, image, text, onPress}: ModeratedImageProps
 
 function SkeletonImagePlaceholder() {
   const size = getImageSize()
+  const textSize = 20
   return (
-    <View style={[styles.imageContainer, {width: size + 10, height: size + 8 + 20 + 13}]}>
+    <View style={[styles.imageContainer, {width: size + 10, height: size + IMAGE_PADDING + textSize + TEXT_PADDING}]}>
       <SkeletonPlaceholder enabled={true}>
         <View>
           <View style={{width: size, height: size, borderRadius: 8}} />
           <View
             style={{
-              marginTop: 8,
+              marginTop: TEXT_PADDING,
               width: (size * 3) / 4,
-              height: 20,
+              height: textSize,
               borderRadius: 8,
             }}
           />
@@ -208,4 +204,12 @@ function getImageSize() {
   const dimensions = Dimensions.get('window')
   const minSize = Math.min(dimensions.width, dimensions.height)
   return minSize / 2 - 26
+}
+
+function groupArray<T>(arr: T[]) {
+  const result: T[][] = []
+  for (let i = 0; i < arr.length; i += 2) {
+    result.push([arr[i], arr[i + 1]])
+  }
+  return result
 }

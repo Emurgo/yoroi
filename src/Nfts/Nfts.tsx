@@ -1,5 +1,6 @@
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
+import {defineMessages, useIntl} from 'react-intl'
 import {Image, RefreshControl, ScrollView, StyleSheet, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
@@ -15,6 +16,7 @@ type Props = {
 }
 
 export const Nfts = ({search}: Props) => {
+  const strings = useStrings()
   const wallet = useSelectedWallet()
   const {nfts, isLoading, refetch, isRefetching, isError} = useNfts(wallet, {search})
   const navigation = useNavigation<WalletStackRouteNavigation>()
@@ -37,15 +39,15 @@ export const Nfts = ({search}: Props) => {
             {isError ? (
               <>
                 <View>
-                  <Text style={styles.count}>NFT count: --</Text>
+                  <Text style={styles.count}>{strings.nftCount}: --</Text>
                 </View>
-                <View style={{flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                <View style={styles.errorContainer}>
                   <Icon.NoNFTs size={140} />
                   <Spacer height={20} />
-                  <Text style={styles.titleText}>Oops!</Text>
+                  <Text style={styles.titleText}>{strings.errorTitle}</Text>
                   <Spacer height={4} />
-                  <Text>Something went wrong.</Text>
-                  <Text>Try to reload this page or restart the app.</Text>
+                  <Text>{strings.errorDescription}</Text>
+                  <Text>{strings.reloadApp}</Text>
                 </View>
               </>
             ) : (
@@ -53,7 +55,9 @@ export const Nfts = ({search}: Props) => {
                 {search?.length === 0 && (
                   <>
                     <View>
-                      <Text style={styles.count}>NFT count: {nfts.length}</Text>
+                      <Text style={styles.count}>
+                        {strings.nftCount}: {nfts.length}
+                      </Text>
                     </View>
                     <Spacer height={16} />
                   </>
@@ -69,7 +73,7 @@ export const Nfts = ({search}: Props) => {
                       <View style={styles.imageContainer}>
                         <Image source={noNftsImage} style={styles.image} />
                         <Spacer height={20} />
-                        <Text style={styles.contentText}>No NFTs found</Text>
+                        <Text style={styles.contentText}>{strings.noNFTs}</Text>
                       </View>
                     </>
                   )}
@@ -137,4 +141,45 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: 'center',
   },
+  errorContainer: {
+    flex: 1,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 })
+
+const messages = defineMessages({
+  noNFTs: {
+    id: 'components.nfts.noNFTs',
+    defaultMessage: '!!!No NFTs found',
+  },
+  nftCount: {
+    id: 'components.nfts.nftCount',
+    defaultMessage: '!!!NFT count',
+  },
+  errorTitle: {
+    id: 'components.nfts.errorTitle',
+    defaultMessage: '!!!Oops!',
+  },
+  errorDescription: {
+    id: 'components.nfts.errorDescription',
+    defaultMessage: '!!!Something went wrong.',
+  },
+  reloadApp: {
+    id: 'components.nfts.reloadApp',
+    defaultMessage: '!!!Try to reload this page or restart the app.',
+  },
+})
+
+const useStrings = () => {
+  const intl = useIntl()
+
+  return {
+    noNFTs: intl.formatMessage(messages.noNFTs),
+    nftCount: intl.formatMessage(messages.nftCount),
+    errorTitle: intl.formatMessage(messages.errorTitle),
+    errorDescription: intl.formatMessage(messages.errorDescription),
+    reloadApp: intl.formatMessage(messages.reloadApp),
+  }
+}

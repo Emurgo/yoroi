@@ -39,6 +39,7 @@ export const NftsNavigator = () => {
         name="nfts"
         options={{
           title: strings.title,
+          headerTitleAlign: 'center',
           header: showSearch
             ? () => (
                 <View style={styles.header}>
@@ -47,7 +48,7 @@ export const NftsNavigator = () => {
                   </TouchableOpacity>
                   <TextInput
                     autoFocus
-                    placeholder="Search NFT"
+                    placeholder={strings.search}
                     style={styles.input}
                     onChangeText={(search) => setSearch(search)}
                   />
@@ -57,9 +58,9 @@ export const NftsNavigator = () => {
                 </View>
               )
             : undefined,
-          headerLeft: () => null,
+          headerLeft: () => <View style={styles.iconPlaceholder} />,
           headerRight: () => (
-            <TouchableOpacity onPress={() => setShowSearch(true)}>
+            <TouchableOpacity onPress={() => setShowSearch(true)} style={styles.center}>
               <Icon.Magnify size={26} />
             </TouchableOpacity>
           ),
@@ -86,6 +87,14 @@ const styles = StyleSheet.create({
     paddingRight: 20,
     paddingLeft: 10,
   },
+  center: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  iconPlaceholder: {
+    width: 0,
+  },
 })
 
 const useStrings = () => {
@@ -93,12 +102,17 @@ const useStrings = () => {
 
   return {
     title: intl.formatMessage(messages.title),
+    search: intl.formatMessage(messages.search),
   }
 }
 
 const messages = defineMessages({
   title: {
-    id: 'components.nfts.title',
+    id: 'components.nftsNavigation.title',
     defaultMessage: '!!!NFT Gallery',
+  },
+  search: {
+    id: 'components.nftsNavigation.search',
+    defaultMessage: '!!!Search NFT',
   },
 })

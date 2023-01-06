@@ -1,5 +1,6 @@
 import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
+import {defineMessages, useIntl} from 'react-intl'
 
 import {NftDetailsRoutes} from '../navigation'
 import {NftDetails} from './NftDetails'
@@ -8,6 +9,7 @@ import {NftDetailsImage} from './NftDetailsImage'
 const Stack = createStackNavigator<NftDetailsRoutes>()
 
 export const NftDetailsNavigator = () => {
+  const strings = useStrings()
   return (
     <Stack.Navigator
       screenOptions={{
@@ -16,8 +18,27 @@ export const NftDetailsNavigator = () => {
       }}
       initialRouteName="nft-details"
     >
-      <Stack.Screen name="nft-details" component={NftDetails} />
+      <Stack.Screen
+        name="nft-details"
+        options={{title: strings.title, headerTitleAlign: 'center'}}
+        component={NftDetails}
+      />
       <Stack.Screen name="nft-details-image" component={NftDetailsImage} />
     </Stack.Navigator>
   )
+}
+
+const messages = defineMessages({
+  title: {
+    id: 'components.nftDetailsNavigator.title',
+    defaultMessage: '!!!NFT Details',
+  },
+})
+
+const useStrings = () => {
+  const intl = useIntl()
+
+  return {
+    title: intl.formatMessage(messages.title),
+  }
 }
