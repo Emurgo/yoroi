@@ -26,6 +26,7 @@ const PREFILL_WALLET_INFO = !__DEV__ ? false : env.getBoolean('PREFILL_WALLET_IN
 const USE_TESTNET = env.getBoolean('USE_TESTNET', false)
 export const SHOW_PROD_POOLS_IN_DEV = !__DEV__ ? false : env.getBoolean('SHOW_PROD_POOLS_IN_DEV', false)
 export const DISABLE_BACKGROUND_SYNC = !__DEV__ ? false : env.getBoolean('DISABLE_BACKGROUND_SYNC', false)
+export const SHOW_NFT_GALLERY = __DEV__ ? true : env.getBoolean('SHOW_NFT_GALLERY', false)
 
 // TODO(v-almonacid): consider adding 'ENABLE' as an env variable
 const SENTRY = {

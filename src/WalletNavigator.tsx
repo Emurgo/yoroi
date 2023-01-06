@@ -6,7 +6,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {VotingRegistration as VotingRegistration} from './Catalyst'
 import {Icon, OfflineBanner} from './components'
 import {DashboardNavigator} from './Dashboard'
-import {isHaskellShelley} from './legacy/config'
+import {isHaskellShelley, SHOW_NFT_GALLERY} from './legacy/config'
 import {MenuNavigator} from './Menu'
 import {WalletStackRoutes, WalletTabRoutes} from './navigation'
 import {NftDetailsNavigator} from './NftDetails/NftDetailsNavigator'
@@ -51,20 +51,22 @@ const WalletTabNavigator = () => {
           }}
         />
 
-        <Tab.Screen
-          name="nfts"
-          component={NftsNavigator}
-          options={{
-            tabBarIcon: ({focused}) => (
-              <Icon.Image
-                size={28}
-                color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
-              />
-            ),
-            tabBarLabel: strings.nftsTabBarLabel,
-            tabBarTestID: 'nftsTabBarButton',
-          }}
-        />
+        {SHOW_NFT_GALLERY && (
+          <Tab.Screen
+            name="nfts"
+            component={NftsNavigator}
+            options={{
+              tabBarIcon: ({focused}) => (
+                <Icon.Image
+                  size={28}
+                  color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
+                />
+              ),
+              tabBarLabel: strings.nftsTabBarLabel,
+              tabBarTestID: 'nftsTabBarButton',
+            }}
+          />
+        )}
 
         {isHaskellShelley(wallet.walletImplementationId) && (
           <Tab.Screen
