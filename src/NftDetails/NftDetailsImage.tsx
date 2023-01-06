@@ -21,7 +21,7 @@ export const NftDetailsImage = () => {
     navigation.setOptions({title: ''})
   }, [navigation])
 
-  if (!nft) {
+  if (nft === undefined) {
     return null
   }
   const dimensions = Dimensions.get('window')

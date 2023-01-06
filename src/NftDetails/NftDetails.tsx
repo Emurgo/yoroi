@@ -27,7 +27,7 @@ export const NftDetails = () => {
   const nft = nfts.find((nft) => nft.id === id)
   const stringifiedMetadata = JSON.stringify(nft, undefined, 2)
   const fingerprint = useMemo(
-    () => (nft ? getAssetFingerprint(nft.metadata.policyId, nft.metadata.assetNameHex) : null),
+    () => (nft !== undefined ? getAssetFingerprint(nft.metadata.policyId, nft.metadata.assetNameHex) : null),
     [nft],
   )
 
@@ -39,7 +39,7 @@ export const NftDetails = () => {
 
   const onFullscreen = () => navigation.navigate('nft-details-image', {id})
 
-  if (!nft) {
+  if (nft === undefined) {
     return null
   }
 
