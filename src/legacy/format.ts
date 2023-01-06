@@ -28,8 +28,7 @@ export const getTokenFingerprint = (token: Token | DefaultAsset) => {
 }
 
 export const getAssetFingerprint = (policyId: string, assetName: string) => {
-  const assetFingerprint = new AssetFingerprint(Buffer.from(policyId, 'hex'), Buffer.from(assetName, 'hex'))
-  return assetFingerprint.fingerprint()
+  return AssetFingerprint.fromParts(Buffer.from(policyId, 'hex'), Buffer.from(assetName, 'hex')).fingerprint()
 }
 
 export const ASSET_DENOMINATION = {
