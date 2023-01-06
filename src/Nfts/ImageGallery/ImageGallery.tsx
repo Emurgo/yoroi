@@ -46,26 +46,34 @@ export const ImageGallery = ({nfts = [], onSelect}: Props) => {
         initialNumToRender={4}
         getItem={(array, index) => array[index]}
         getItemCount={() => rows.length}
-        keyExtractor={(row: YoroiNFT[]) => getAssetFingerprint(row[0].metadata.policyId, row[0].metadata.assetNameHex)}
+        keyExtractor={(row: Array<YoroiNFT | undefined>, index) =>
+          row[0] !== undefined
+            ? getAssetFingerprint(row[0].metadata.policyId, row[0].metadata.assetNameHex)
+            : String(index)
+        }
         renderItem={({item: [nft1, nft2]}) => {
-          const nft1Fingerprint = getAssetFingerprint(nft1.metadata.policyId, nft1.metadata.assetNameHex)
-          const nft2Fingerprint = getAssetFingerprint(nft2.metadata.policyId, nft2.metadata.assetNameHex)
+          const nft1Fingerprint = nft1 ? getAssetFingerprint(nft1.metadata.policyId, nft1.metadata.assetNameHex) : null
+          const nft2Fingerprint = nft2 ? getAssetFingerprint(nft2.metadata.policyId, nft2.metadata.assetNameHex) : null
           return (
             <View style={styles.row}>
-              <ModeratedImage
-                onPress={() => onSelect(nfts.indexOf(nft1))}
-                image={nft1.image}
-                fingerprint={nft1Fingerprint}
-                text={nft1.name}
-                key={nft1Fingerprint}
-              />
-              <ModeratedImage
-                onPress={() => onSelect(nfts.indexOf(nft2))}
-                image={nft2.image}
-                fingerprint={nft2Fingerprint}
-                text={nft2.name}
-                key={nft2Fingerprint}
-              />
+              {nft1 && nft1Fingerprint && (
+                <ModeratedImage
+                  onPress={() => onSelect(nfts.indexOf(nft1))}
+                  image={nft1.image}
+                  fingerprint={nft1Fingerprint}
+                  text={nft1.name}
+                  key={nft1Fingerprint}
+                />
+              )}
+              {nft2 && nft2Fingerprint && (
+                <ModeratedImage
+                  onPress={() => onSelect(nfts.indexOf(nft2))}
+                  image={nft2.image}
+                  fingerprint={nft2Fingerprint}
+                  text={nft2.name}
+                  key={nft2Fingerprint}
+                />
+              )}
             </View>
           )
         }}
@@ -207,7 +215,7 @@ function getImageSize() {
 }
 
 function groupArray<T>(arr: T[]) {
-  const result: T[][] = []
+  const result: Array<(T | undefined)[]> = []
   for (let i = 0; i < arr.length; i += 2) {
     result.push([arr[i], arr[i + 1]])
   }

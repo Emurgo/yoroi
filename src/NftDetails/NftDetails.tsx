@@ -1,4 +1,4 @@
-import {useNavigation, useRoute} from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/native'
 import React, {ReactNode, useMemo, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
@@ -15,9 +15,13 @@ import {COLORS} from '../theme'
 
 type VIEW_TABS = 'overview' | 'metadata'
 
-type Params = {id: string}
+type Props = {route: {params: {id: string}}}
 
-export const NftDetails = () => {
+export const NftDetails = ({
+  route: {
+    params: {id},
+  },
+}: Props) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const {nfts} = useNfts(wallet)
@@ -25,7 +29,6 @@ export const NftDetails = () => {
 
   const navigation = useNavigation<NftDetailsNavigation>()
   const [activeTab, setActiveTab] = useState<VIEW_TABS>('overview')
-  const {id} = useRoute().params as Params
   const nft = nfts.find((nft) => nft.id === id)
   const stringifiedMetadata = JSON.stringify(nft, undefined, 2)
   const fingerprint = useMemo(

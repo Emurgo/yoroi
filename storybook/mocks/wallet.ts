@@ -319,9 +319,21 @@ const fetchNfts = {
 }
 
 const fetchNftModerationStatus = {
-  success: async (...args): Promise<YoroiNFTModerationStatus> => {
+  successGreen: async (...args): Promise<YoroiNFTModerationStatus> => {
     action('fetchNftModerationStatus')(...args)
     return 'green'
+  },
+  successYellow: async (...args): Promise<YoroiNFTModerationStatus> => {
+    action('fetchNftModerationStatus')(...args)
+    return 'yellow'
+  },
+  successRed: async (...args): Promise<YoroiNFTModerationStatus> => {
+    action('fetchNftModerationStatus')(...args)
+    return 'red'
+  },
+  successPendingReview: async (...args): Promise<YoroiNFTModerationStatus> => {
+    action('fetchNftModerationStatus')(...args)
+    return 'pending'
   },
   error: async (...args) => {
     action('fetchNftModerationStatus')(...args)

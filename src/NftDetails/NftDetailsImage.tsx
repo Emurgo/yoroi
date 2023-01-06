@@ -1,4 +1,4 @@
-import {useNavigation, useRoute} from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/native'
 import React, {useEffect} from 'react'
 import {Dimensions, Image, StyleSheet, View} from 'react-native'
 import ViewTransformer from 'react-native-easy-view-transformer'
@@ -7,14 +7,17 @@ import {FadeIn, OfflineBanner, StatusBar} from '../components'
 import {useNfts} from '../hooks'
 import {useSelectedWallet} from '../SelectedWallet'
 
-type Params = {id: string}
+type Props = {route: {params: {id: string}}}
 
-export const NftDetailsImage = () => {
+export const NftDetailsImage = ({
+  route: {
+    params: {id},
+  },
+}: Props) => {
   const wallet = useSelectedWallet()
   const {nfts} = useNfts(wallet)
   const navigation = useNavigation()
 
-  const {id} = useRoute().params as Params
   const nft = nfts.find((nft) => nft.id === id)
 
   useEffect(() => {
