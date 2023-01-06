@@ -70,7 +70,6 @@ export interface WalletInterface {
   // and was never updated. Starting from v4.1.0, we instead store the
   // last version the wallet has been *opened* on, since this is the actual
   // relevant information we need to decide on whether migrations are needed.
-  version: string
 
   checksum: CardanoTypes.WalletChecksum
 

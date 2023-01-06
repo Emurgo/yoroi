@@ -16,7 +16,7 @@ import {NetworkId, WalletImplementationId} from './types'
 
 export type AddressBlock = [number, Moment, Array<string>]
 
-type ShelleyAddressGeneratorJSON = {
+export type ShelleyAddressGeneratorJSON = {
   accountPubKeyHex: string
   walletImplementationId: WalletImplementationId
   type: AddressType

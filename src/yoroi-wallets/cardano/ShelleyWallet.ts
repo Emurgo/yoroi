@@ -139,6 +139,7 @@ export class ShelleyWallet implements WalletInterface {
     networkId,
     implementationId,
     storage,
+    provider,
 
     mnemonic,
     password,
@@ -165,6 +166,8 @@ export class ShelleyWallet implements WalletInterface {
       isReadOnly: false, // readonly wallet
       internalChain,
       externalChain,
+      isEasyConfirmationEnabled: false,
+      provider,
     })
 
     await wallet.encryptAndSaveRootKey(rootKey, password)
@@ -203,6 +206,8 @@ export class ShelleyWallet implements WalletInterface {
       isReadOnly, // readonly wallet
       internalChain,
       externalChain,
+      isEasyConfirmationEnabled: false,
+      provider: undefined,
     })
   }
 
@@ -226,11 +231,10 @@ export class ShelleyWallet implements WalletInterface {
       accountPubKeyHex: data.publicKeyHex ?? internalChain.publicKey, // can be null for versions < 3.0.2, in which case we can just retrieve from address generator
       hwDeviceInfo: data.hwDeviceInfo, // hw wallet
       isReadOnly: data.isReadOnly ?? false, // readonly wallet
+      provider: data.provider ?? '',
+      isEasyConfirmationEnabled: data.isEasyConfirmationEnabled,
+      lastGeneratedAddressIndex: data.lastGeneratedAddressIndex ?? 0, // AddressManager
     })
-
-    wallet.isEasyConfirmationEnabled = data.isEasyConfirmationEnabled
-    wallet.isHW = data.isHW ?? false
-    wallet.state = {lastGeneratedAddressIndex: data.lastGeneratedAddressIndex}
 
     wallet.integrityCheck()
 
@@ -248,6 +252,9 @@ export class ShelleyWallet implements WalletInterface {
     accountPubKeyHex,
     hwDeviceInfo, // hw wallet
     isReadOnly, // readonly wallet
+    provider,
+    isEasyConfirmationEnabled,
+    lastGeneratedAddressIndex = 0,
   }: {
     accountPubKeyHex: string
     hwDeviceInfo: HWDeviceInfo | null
@@ -257,8 +264,10 @@ export class ShelleyWallet implements WalletInterface {
     storage: typeof storageLegacy
     internalChain: AddressChain
     externalChain: AddressChain
-
     isReadOnly: boolean
+    provider: YoroiProvider | null | undefined
+    isEasyConfirmationEnabled: boolean
+    lastGeneratedAddressIndex?: number
   }) => {
     const rewardAddressHex = await deriveRewardAddressHex(accountPubKeyHex, networkId)
     const apiUrl = getCardanoNetworkConfigById(networkId).BACKEND.API_ROOT
@@ -273,18 +282,21 @@ export class ShelleyWallet implements WalletInterface {
       implementationId,
       hwDeviceInfo,
       isReadOnly,
-      provider: undefined,
+      provider,
       accountPubKeyHex,
       rewardAddressHex,
       transactionCache,
       internalChain,
       externalChain,
+      isEasyConfirmationEnabled,
+      lastGeneratedAddressIndex,
     })
 
     await wallet.discoverAddresses()
     wallet.setupSubscriptions()
-    wallet.notify({type: 'initialize'})
     wallet.isInitialized = true
+    wallet.save()
+    wallet.notify({type: 'initialize'})
 
     if (!isYoroiWallet(wallet)) throw new Error('invalid wallet')
     return wallet
@@ -304,6 +316,8 @@ export class ShelleyWallet implements WalletInterface {
     transactionCache,
     internalChain,
     externalChain,
+    isEasyConfirmationEnabled,
+    lastGeneratedAddressIndex,
   }: {
     storage: typeof storageLegacy
     networkId: NetworkId
@@ -318,6 +332,8 @@ export class ShelleyWallet implements WalletInterface {
     transactionCache: TransactionCache
     internalChain: AddressChain
     externalChain: AddressChain
+    isEasyConfirmationEnabled: boolean
+    lastGeneratedAddressIndex: number
   }) {
     this.id = id
     this.storage = storage
@@ -343,6 +359,8 @@ export class ShelleyWallet implements WalletInterface {
     this.setupSubscriptions()
     this.notify({type: 'initialize'})
     this.isInitialized = true
+    this.isEasyConfirmationEnabled = isEasyConfirmationEnabled
+    this.state = {lastGeneratedAddressIndex}
   }
 
   get utxos() {
@@ -1033,7 +1051,11 @@ export class ShelleyWallet implements WalletInterface {
 
   // ============ security & key management ============ //
   async encryptAndSaveRootKey(rootKey: string, password: string) {
-    return EncryptedStorage.write(EncryptedStorageKeys.rootKey(this.id), rootKey, password)
+    return this.encryptedStorage.rootKey.write(rootKey, password)
+  }
+
+  async getDecryptedRootKey(password: string) {
+    return this.encryptedStorage.rootKey.read(password)
   }
 
   async enableEasyConfirmation(rootKey: string) {
