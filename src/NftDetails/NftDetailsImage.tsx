@@ -1,5 +1,4 @@
-import {useNavigation} from '@react-navigation/native'
-import React, {useEffect} from 'react'
+import React from 'react'
 import {Dimensions, Image, StyleSheet, View} from 'react-native'
 import ViewTransformer from 'react-native-easy-view-transformer'
 
@@ -16,13 +15,8 @@ export const NftDetailsImage = ({
 }: Props) => {
   const wallet = useSelectedWallet()
   const {nfts} = useNfts(wallet)
-  const navigation = useNavigation()
 
   const nft = nfts.find((nft) => nft.id === id)
-
-  useEffect(() => {
-    navigation.setOptions({title: ''})
-  }, [navigation])
 
   if (nft === undefined) {
     return null

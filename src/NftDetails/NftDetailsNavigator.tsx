@@ -23,7 +23,7 @@ export const NftDetailsNavigator = () => {
         options={{title: strings.title, headerTitleAlign: 'center'}}
         component={NftDetails}
       />
-      <Stack.Screen name="nft-details-image" component={NftDetailsImage} />
+      <Stack.Screen name="nft-details-image" options={{header: () => null}} component={NftDetailsImage} />
     </Stack.Navigator>
   )
 }
