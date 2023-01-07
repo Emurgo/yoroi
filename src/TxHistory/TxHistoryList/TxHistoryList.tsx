@@ -11,7 +11,6 @@ import {actionMessages} from '../../i18n/global-messages'
 import {formatDateRelative} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {TransactionInfo} from '../../yoroi-wallets/types'
-import {useOnScroll} from '../useOnScroll'
 import {ActionsBanner} from './ActionsBanner'
 import {EmptyHistory} from './EmptyHistory'
 import {TxHistoryListItem} from './TxHistoryListItem'
@@ -19,17 +18,14 @@ import {TxHistoryListItem} from './TxHistoryListItem'
 type ListProps = SectionListProps<TransactionInfo>
 
 type Props = Partial<ListProps> & {
-  onScrollUp: ListProps['onScroll']
-  onScrollDown: ListProps['onScroll']
+  onScroll: ListProps['onScroll']
 }
-export const TxHistoryList = ({onScrollUp, onScrollDown, ...props}: Props) => {
+export const TxHistoryList = (props: Props) => {
   const strings = useStrings()
   const key = useRemountOnFocusHack()
   const wallet = useSelectedWallet()
   const transactionsInfo = useTransactionInfos(wallet)
   const groupedTransactions = getTransactionsByDate(transactionsInfo)
-
-  const onScroll = useOnScroll({onScrollUp, onScrollDown})
 
   const handleExport = () => Alert.alert(strings.soon, strings.soon)
   const handleSearch = () => Alert.alert(strings.soon, strings.soon)
@@ -41,7 +37,6 @@ export const TxHistoryList = ({onScrollUp, onScrollDown, ...props}: Props) => {
       )}
       <SectionList
         {...props}
-        {...onScroll}
         key={key}
         contentContainerStyle={{paddingHorizontal: 16, paddingBottom: 8}}
         ListEmptyComponent={<EmptyHistory />}

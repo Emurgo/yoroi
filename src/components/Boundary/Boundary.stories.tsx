@@ -13,7 +13,7 @@ storiesOf('Boundary', module)
   .add('Loading default', () => {
     return (
       <QueryProvider>
-        <Boundary>
+        <Boundary debug>
           <IsLoading />
         </Boundary>
       </QueryProvider>
@@ -30,7 +30,17 @@ storiesOf('Boundary', module)
               </View>
             ),
           }}
+          debug
         >
+          <IsLoading />
+        </Boundary>
+      </QueryProvider>
+    )
+  })
+  .add('Loading/debug', () => {
+    return (
+      <QueryProvider>
+        <Boundary debug>
           <IsLoading />
         </Boundary>
       </QueryProvider>
@@ -39,61 +49,117 @@ storiesOf('Boundary', module)
   .add('Loading/overlay', () => {
     return (
       <QueryProvider>
-        <Boundary>
+        <Boundary debug>
           <LoadingWithOverlay />
         </Boundary>
+      </QueryProvider>
+    )
+  })
+  .add('Error/default full size', () => {
+    return (
+      <QueryProvider>
+        <View
+          style={{flex: 1, alignItems: 'center', justifyContent: 'center', borderWidth: 1, backgroundColor: 'yellow'}}
+        >
+          <Boundary error={{size: 'full'}} debug>
+            <Bomb />
+          </Boundary>
+        </View>
       </QueryProvider>
     )
   })
   .add('Error/default large size', () => {
     return (
       <QueryProvider>
-        <Boundary>
-          <Bomb />
-        </Boundary>
+        <View
+          style={{flex: 1, alignItems: 'center', justifyContent: 'center', borderWidth: 1, backgroundColor: 'yellow'}}
+        >
+          <Boundary error={{size: 'large'}} debug>
+            <Bomb />
+          </Boundary>
+        </View>
       </QueryProvider>
     )
   })
   .add('Error/default small size', () => {
     return (
       <QueryProvider>
-        <Boundary error={{size: 'small'}}>
-          <Bomb />
-        </Boundary>
+        <View
+          style={{flex: 1, alignItems: 'center', justifyContent: 'center', borderWidth: 1, backgroundColor: 'yellow'}}
+        >
+          <Boundary error={{size: 'small'}} debug>
+            <Bomb />
+          </Boundary>
+        </View>
       </QueryProvider>
     )
   })
   .add('Error/default inline size', () => {
     return (
       <QueryProvider>
-        <Boundary error={{size: 'inline'}}>
-          <Bomb />
-        </Boundary>
+        <View
+          style={{flex: 1, alignItems: 'center', justifyContent: 'center', borderWidth: 1, backgroundColor: 'yellow'}}
+        >
+          <Boundary error={{size: 'inline'}} debug>
+            <Bomb />
+          </Boundary>
+        </View>
       </QueryProvider>
     )
   })
   .add('Error/default i18n error', () => {
     return (
       <QueryProvider>
-        <Boundary>
-          <I18nMessageBomb />
-        </Boundary>
+        <View
+          style={{flex: 1, alignItems: 'center', justifyContent: 'center', borderWidth: 1, backgroundColor: 'yellow'}}
+        >
+          <Boundary debug>
+            <I18nMessageBomb />
+          </Boundary>
+        </View>
       </QueryProvider>
     )
   })
   .add('Error/fallback', () => {
     return (
       <QueryProvider>
-        <Boundary
-          error={{
-            fallback: ({error}) => (
-              <View>
-                <Text>Error fallback</Text>
-                <Text>{error.message}</Text>
-              </View>
-            ),
-          }}
+        <View
+          style={{flex: 1, alignItems: 'center', justifyContent: 'center', borderWidth: 1, backgroundColor: 'yellow'}}
         >
+          <Boundary
+            error={{
+              fallback: ({error}) => (
+                <View>
+                  <Text>Error fallback</Text>
+                  <Text>{error.message}</Text>
+                </View>
+              ),
+            }}
+            debug
+          >
+            <Bomb />
+          </Boundary>
+        </View>
+      </QueryProvider>
+    )
+  })
+  .add('Error/debug', () => {
+    return (
+      <QueryProvider>
+        <View
+          style={{flex: 1, alignItems: 'center', justifyContent: 'center', borderWidth: 1, backgroundColor: 'yellow'}}
+        >
+          <Boundary debug>
+            <Bomb />
+          </Boundary>
+        </View>
+      </QueryProvider>
+    )
+  })
+  .add('Error/debug', () => {
+    return (
+      <QueryProvider>
+        <Boundary debug>
           <Bomb />
         </Boundary>
       </QueryProvider>

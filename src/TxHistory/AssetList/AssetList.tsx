@@ -16,17 +16,15 @@ import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {YoroiAmount} from '../../yoroi-wallets/types'
 import {Amounts, Quantities} from '../../yoroi-wallets/utils'
-import {useOnScroll} from '../useOnScroll'
 import {ActionsBanner} from './ActionsBanner'
 
 type ListProps = FlatListProps<YoroiAmount>
 type Props = Partial<ListProps> & {
-  onScrollUp: ListProps['onScroll']
-  onScrollDown: ListProps['onScroll']
+  onScroll: ListProps['onScroll']
   refreshing: boolean
   onRefresh: () => void
 }
-export const AssetList = ({onScrollUp, onScrollDown, ...props}: Props) => {
+export const AssetList = (props: Props) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const balances = useBalances(wallet)
@@ -38,8 +36,6 @@ export const AssetList = ({onScrollUp, onScrollDown, ...props}: Props) => {
   const handleOnPressNFTs = () => Alert.alert(strings.soon, strings.soon)
   const handleOnPressTokens = () => Alert.alert(strings.soon, strings.soon)
   const handleSearch = () => Alert.alert(strings.soon, strings.soon)
-
-  const onScroll = useOnScroll({onScrollUp, onScrollDown})
 
   return (
     <View style={styles.assetList} testID="assetList">
@@ -53,10 +49,9 @@ export const AssetList = ({onScrollUp, onScrollDown, ...props}: Props) => {
 
       <FlatList
         {...props}
-        {...onScroll}
         data={orderedTokens}
         renderItem={({item: amount}) => (
-          <Boundary loading={{fallbackProps: {size: 'small'}}}>
+          <Boundary loading={{size: 'small'}}>
             <AssetItem amount={amount} />
           </Boundary>
         )}

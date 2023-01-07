@@ -1,15 +1,15 @@
 import {RouteProp, useRoute} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {FlatList, ScrollView, View} from 'react-native'
-import {StyleSheet} from 'react-native'
+import {FlatList, InteractionManager, ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Boundary, Icon, Line, StatusBar, Text} from '../../components'
 import {useCreateBip44Wallet, usePlate} from '../../hooks'
-import {handleGeneralError} from '../../legacy/actions'
+import {errorMessages} from '../../i18n/global-messages'
+import {showErrorDialog} from '../../legacy/actions'
 import {CONFIG} from '../../legacy/config'
-import {Logger} from '../../legacy/logging'
+import {NetworkError} from '../../legacy/errors'
 import {isEmptyString} from '../../legacy/utils'
 import {useWalletNavigation, WalletInitRoutes} from '../../navigation'
 import {theme} from '../../theme'
@@ -33,16 +33,13 @@ export const SaveReadOnlyWalletScreen = () => {
   })
 
   const {createWallet, isLoading} = useCreateBip44Wallet({
-    onError: async (error) => {
-      Logger.error('SaveReadOnlyWalletScreen::onSubmit', error)
-      if (error instanceof Error) {
-        await handleGeneralError(error.message, intl)
-      }
-
-      throw error
-    },
-    onSuccess: () => {
-      resetToWalletSelection()
+    onSuccess: () => resetToWalletSelection(),
+    onError: (error) => {
+      InteractionManager.runAfterInteractions(() => {
+        return error instanceof NetworkError
+          ? showErrorDialog(errorMessages.networkError, intl)
+          : showErrorDialog(errorMessages.generalError, intl, {message: error.message})
+      })
     },
   })
 

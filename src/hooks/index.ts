@@ -4,7 +4,15 @@ import BigNumber from 'bignumber.js'
 import {delay} from 'bluebird'
 import {mapValues} from 'lodash'
 import * as React from 'react'
-import {QueryKey, useMutation, UseMutationOptions, useQuery, useQueryClient, UseQueryOptions} from 'react-query'
+import {
+  onlineManager,
+  QueryKey,
+  useMutation,
+  UseMutationOptions,
+  useQuery,
+  useQueryClient,
+  UseQueryOptions,
+} from 'react-query'
 
 import {getDefaultAssetByNetworkId, isNightly} from '../legacy/config'
 import {ObjectValues} from '../legacy/flow'
@@ -14,6 +22,7 @@ import {processTxHistoryData} from '../legacy/processTransactions'
 import {WalletMeta} from '../legacy/state'
 import storage from '../legacy/storage'
 import {cardanoValueFromRemoteFormat} from '../legacy/utils'
+import {useWalletManager} from '../WalletManager'
 import {
   CardanoMobile,
   NetworkId,
@@ -21,7 +30,6 @@ import {
   WalletEvent,
   WalletImplementationId,
   WalletManager,
-  walletManager,
   YoroiProvider,
   YoroiWallet,
 } from '../yoroi-wallets'
@@ -84,6 +92,7 @@ export const useCrashReports = () => {
 
 // WALLET
 export const useWallet = (wallet: YoroiWallet, event: WalletEvent['type']) => {
+  const walletManager = useWalletManager()
   const [_, rerender] = React.useState({})
 
   React.useEffect(() => {
@@ -100,7 +109,7 @@ export const useWallet = (wallet: YoroiWallet, event: WalletEvent['type']) => {
       unsubWallet()
       unsubWalletManager()
     }
-  }, [event, wallet])
+  }, [event, wallet, walletManager])
 }
 
 export const useReceiveAddresses = (wallet: YoroiWallet) => {
@@ -174,6 +183,7 @@ export const useSync = (wallet: YoroiWallet, options?: UseMutationOptions<void, 
 }
 
 export const useCloseWallet = (options: UseMutationOptions<void, Error> = {}) => {
+  const walletManager = useWalletManager()
   const mutation = useMutation({
     mutationFn: () => walletManager.closeWallet(),
     ...options,
@@ -552,6 +562,7 @@ export const useHasPendingTx = (wallet: YoroiWallet) => {
 
 // WALLET MANAGER
 export const useOpenWallet = (options?: UseMutationOptions<[YoroiWallet, WalletMeta], Error, WalletMeta>) => {
+  const walletManager = useWalletManager()
   const mutation = useMutation({
     ...options,
     mutationFn: async (walletMeta) => walletManager.openWallet(walletMeta),
@@ -611,6 +622,7 @@ export const useHasWallets = (
 }
 
 export const useRemoveWallet = (id: YoroiWallet['id'], options: UseMutationOptions<void, Error, void> = {}) => {
+  const walletManager = useWalletManager()
   const mutation = useMutationWithInvalidations({
     mutationFn: () => walletManager.removeWallet(id),
     invalidateQueries: [['walletMetas']],
@@ -633,6 +645,7 @@ type CreateBip44WalletInfo = {
 }
 
 export const useCreateBip44Wallet = (options?: UseMutationOptions<YoroiWallet, Error, CreateBip44WalletInfo>) => {
+  const walletManager = useWalletManager()
   const mutation = useMutationWithInvalidations<YoroiWallet, Error, CreateBip44WalletInfo>({
     mutationFn: ({name, bip44AccountPublic, networkId, implementationId, hwDeviceInfo, readOnly}) =>
       walletManager.createWalletWithBip44Account(
@@ -663,6 +676,7 @@ export type CreateWalletInfo = {
 }
 
 export const useCreateWallet = (options?: UseMutationOptions<YoroiWallet, Error, CreateWalletInfo>) => {
+  const walletManager = useWalletManager()
   const mutation = useMutationWithInvalidations({
     mutationFn: ({name, mnemonicPhrase, password, networkId, walletImplementationId, provider}) =>
       walletManager.createWallet(name, mnemonicPhrase, password, networkId, walletImplementationId, provider),
@@ -675,8 +689,6 @@ export const useCreateWallet = (options?: UseMutationOptions<YoroiWallet, Error,
     ...mutation,
   }
 }
-
-import {onlineManager} from 'react-query'
 
 export const useIsOnline = (
   wallet: YoroiWallet,

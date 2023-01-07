@@ -4,25 +4,23 @@ import {defineMessages, useIntl} from 'react-intl'
 import {FlatList, InteractionManager, Linking, RefreshControl, StyleSheet, Text, TouchableOpacity} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useAuth} from '../../auth/AuthProvider'
 import {Button, Icon, PleaseWaitModal, StatusBar} from '../../components'
 import {useCloseWallet, useOpenWallet, useWalletMetas} from '../../hooks'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
 import {showErrorDialog} from '../../legacy/actions'
 import {CONFIG, isNightly} from '../../legacy/config'
-import {InvalidState} from '../../legacy/errors'
+import {InvalidState, NetworkError} from '../../legacy/errors'
 import {isJormungandr} from '../../legacy/networks'
 import {WalletMeta} from '../../legacy/state'
 import {useWalletNavigation} from '../../navigation'
 import {COLORS} from '../../theme'
 import {useWalletManager} from '../../WalletManager'
-import {KeysAreInvalid, SystemAuthDisabled} from '../../yoroi-wallets'
 import {useSetSelectedWallet, useSetSelectedWalletMeta} from '..'
 import {WalletListItem} from './WalletListItem'
 
 export const WalletSelectionScreen = () => {
   const strings = useStrings()
-  const {resetToWalletSelection, navigateToTxHistory} = useWalletNavigation()
+  const {navigateToTxHistory} = useWalletNavigation()
   const walletManager = useWalletManager()
   const {walletMetas, isFetching, refetch} = useWalletMetas(walletManager, {
     select: (walletMetas) => walletMetas.sort(byName),
@@ -30,8 +28,6 @@ export const WalletSelectionScreen = () => {
   const selectWalletMeta = useSetSelectedWalletMeta()
   const selectWallet = useSetSelectedWallet()
   const intl = useIntl()
-
-  const {logout} = useAuth()
 
   const {closeWallet} = useCloseWallet()
 
@@ -48,20 +44,16 @@ export const WalletSelectionScreen = () => {
         navigateToTxHistory()
       })
     },
-    onError: async (error) => {
+    onError: (error) => {
       closeWallet()
 
-      if (error instanceof SystemAuthDisabled) {
-        await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
-        resetToWalletSelection()
-      } else if (error instanceof InvalidState) {
-        await showErrorDialog(errorMessages.walletStateInvalid, intl)
-      } else if (error instanceof KeysAreInvalid) {
-        await showErrorDialog(errorMessages.walletKeysInvalidated, intl)
-        logout()
-      } else {
-        await showErrorDialog(errorMessages.generalError, intl, {message: error.message})
-      }
+      InteractionManager.runAfterInteractions(() => {
+        return error instanceof InvalidState
+          ? showErrorDialog(errorMessages.walletStateInvalid, intl)
+          : error instanceof NetworkError
+          ? showErrorDialog(errorMessages.networkError, intl)
+          : showErrorDialog(errorMessages.generalError, intl, {message: error.message})
+      })
     },
   })
 

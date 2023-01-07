@@ -16,6 +16,7 @@ import {BalanceBanner} from './BalanceBanner'
 import {CollapsibleHeader} from './CollapsibleHeader'
 import {LockedDeposit} from './LockedDeposit'
 import {TxHistoryList} from './TxHistoryList'
+import {useOnScroll} from './useOnScroll'
 import {WarningBanner} from './WarningBanner'
 
 type Tab = 'transactions' | 'assets'
@@ -23,10 +24,7 @@ type Tab = 'transactions' | 'assets'
 export const TxHistory = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
-
   const [showWarning, setShowWarning] = useState(isByron(wallet.walletImplementationId))
-
-  const [expanded, setExpanded] = useState(true)
 
   const [activeTab, setActiveTab] = useState<Tab>('transactions')
   const onSelectTab = (tab: Tab) => {
@@ -36,6 +34,12 @@ export const TxHistory = () => {
 
   const {sync, isLoading} = useSync(wallet)
   useFocusEffect(React.useCallback(() => sync(), [sync]))
+
+  const [expanded, setExpanded] = useState(true)
+  const onScroll = useOnScroll({
+    onScrollUp: () => setExpanded(true),
+    onScrollDown: () => setExpanded(false),
+  })
 
   return (
     <View style={styles.scrollView}>
@@ -87,22 +91,12 @@ export const TxHistory = () => {
                 style={styles.warningNoteStyles}
               />
             )}
-            <TxHistoryList
-              onScrollUp={() => setExpanded(true)}
-              onScrollDown={() => setExpanded(false)}
-              refreshing={isLoading}
-              onRefresh={() => sync()}
-            />
+            <TxHistoryList onScroll={onScroll} refreshing={isLoading} onRefresh={() => sync()} />
           </TabPanel>
 
           <TabPanel active={activeTab === 'assets'}>
-            <Boundary loading={{fallbackProps: {style: {flex: 1}}}}>
-              <AssetList
-                onScrollUp={() => setExpanded(true)}
-                onScrollDown={() => setExpanded(false)}
-                refreshing={isLoading}
-                onRefresh={() => sync()}
-              />
+            <Boundary loading={{size: 'full'}}>
+              <AssetList onScroll={onScroll} refreshing={isLoading} onRefresh={() => sync()} />
             </Boundary>
           </TabPanel>
         </TabPanels>

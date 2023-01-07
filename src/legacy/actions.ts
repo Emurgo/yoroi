@@ -3,62 +3,30 @@ import 'react-intl'
 
 import type {IntlShape} from 'react-intl'
 import {Alert} from 'react-native'
-import type {Dispatch} from 'redux'
 import uuid from 'uuid'
 
 import {getCrashReportsEnabled} from '../hooks'
 import globalMessages, {errorMessages} from '../i18n/global-messages'
+import {Storage} from '../Storage'
 import {walletManager} from '../yoroi-wallets'
-import type {AppSettingsKey} from './appSettings'
-import {APP_SETTINGS_KEYS, readAppSettings, writeAppSettings} from './appSettings'
 import assert from './assert'
 import crashReporting from './crashReporting'
-import {installationIdSelector} from './selectors'
-import type {State} from './state'
 
-export const setAppSettingField = (fieldName: AppSettingsKey, value: any) => async (dispatch: Dispatch<any>) => {
-  await writeAppSettings(fieldName, value)
-  dispatch({
-    path: ['appSettings', fieldName],
-    payload: value,
-    type: 'SET_APP_SETTING_FIELD',
-    reducer: (state: State, payload) => payload,
-  })
+const initInstallationId = async (storage: Storage) => {
+  const installationId = await storage.getItem('/appSettings/installationId')
+  if (installationId != null) return installationId
+
+  const newInstallationId = uuid.v4()
+  await storage.setItem('/appSettings/installationId', newInstallationId)
+  return newInstallationId
 }
 
-const _setAppSettings = (appSettings) => ({
-  path: ['appSettings'],
-  payload: appSettings,
-  type: 'SET_APP_SETTINGS',
-  reducer: (state: State, payload) => payload,
-})
-
-export const reloadAppSettings = () => async (dispatch: Dispatch<any>) => {
-  const appSettings = await readAppSettings()
-  dispatch(_setAppSettings(appSettings))
-}
-
-const initInstallationId =
-  () =>
-  async (dispatch: Dispatch<any>, getState: any): Promise<string> => {
-    const installationId = installationIdSelector(getState())
-
-    if (installationId != null) {
-      return installationId
-    }
-
-    const newInstallationId = uuid.v4()
-    await dispatch(setAppSettingField(APP_SETTINGS_KEYS.INSTALLATION_ID, newInstallationId))
-    return newInstallationId
-  }
-
-export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
-  await dispatch(reloadAppSettings())
-  await dispatch(initInstallationId())
+export const initApp = async (storage: Storage) => {
+  const installationId = await initInstallationId(storage)
 
   const crashReportsEnabled = await getCrashReportsEnabled()
   if (crashReportsEnabled) {
-    crashReporting.setUserId(installationIdSelector(getState()))
+    crashReporting.setUserId(installationId)
     crashReporting.enable()
   }
 

@@ -38,7 +38,7 @@ export const VotingRegistration = () => {
         <Stack.Group>
           <Stack.Screen name="download-catalyst">
             {() => (
-              <Boundary loading={{fallbackProps: {style: {flex: 1}}}}>
+              <Boundary loading={{size: 'full'}}>
                 <DownloadCatalyst onNext={navigateTo.displayPin} />
               </Boundary>
             )}
@@ -55,7 +55,7 @@ export const VotingRegistration = () => {
 
           <Stack.Screen name="confirm-tx">
             {() => (
-              <Boundary loading={{fallbackProps: {style: {flex: 1}}}}>
+              <Boundary loading={{size: 'full'}} error={{size: 'full'}}>
                 <ConfirmVotingTx
                   onNext={() => {
                     setComplete(true)

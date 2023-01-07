@@ -30,8 +30,8 @@ import {DeviceItem} from './DeviceItem'
 type Props = {
   intl: IntlShape
   defaultDevices?: Array<Device> | null // for storybook
-  onConnectUSB: (deviceObj: DeviceObj) => void
-  onConnectBLE: (deviceId: DeviceId) => void
+  onConnectUSB: (deviceObj: DeviceObj) => Promise<void> | void
+  onConnectBLE: (deviceId: DeviceId) => Promise<void> | void
   useUSB?: boolean
   onWaitingMessage?: string
   fillSpace?: boolean
@@ -62,7 +62,7 @@ class _LedgerConnect extends React.Component<Props, State> {
   _transportLib: any = null
   _isMounted = false
 
-  async componentDidMount() {
+  componentDidMount() {
     const {useUSB} = this.props
     this._transportLib = useUSB === true ? TransportHID : TransportBLE
     this._isMounted = true
@@ -186,13 +186,9 @@ class _LedgerConnect extends React.Component<Props, State> {
     }
   }
 
-  _onConfirm = async (deviceObj?: DeviceObj | null): Promise<void> => {
+  _onConfirm = async (deviceObj: DeviceObj) => {
     this._unsubscribe()
     try {
-      if (deviceObj == null) {
-        // should never happen
-        throw new Error('deviceObj is null')
-      }
       this.setStateWithAnimation({
         waiting: true,
       })

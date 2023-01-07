@@ -13,24 +13,3 @@ export type WalletMeta = {
   checksum: CardanoTypes.WalletChecksum
   provider?: YoroiProvider | null | undefined
 }
-export type State = {
-  appSettings: {
-    installationId: string | null | undefined
-  }
-}
-export const getInitialState = (): State => ({
-  appSettings: {
-    installationId: null,
-  },
-})
-export const mockState = (mockedState?: State | null | undefined): State => {
-  if (!__DEV__) {
-    throw new Error('calling mockState in a production build')
-  }
-
-  return {
-    ...getInitialState(),
-    ...mockedState,
-  }
-}
-export default getInitialState
