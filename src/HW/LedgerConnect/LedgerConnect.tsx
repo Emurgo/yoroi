@@ -6,7 +6,6 @@ import type {IntlShape} from 'react-intl'
 import {defineMessages, injectIntl} from 'react-intl'
 import {
   ActivityIndicator,
-  Alert,
   FlatList,
   Image,
   LayoutAnimation,
@@ -19,7 +18,7 @@ import {
 import bleImage from '../../assets/img/bluetooth.png'
 import usbImage from '../../assets/img/ledger-nano-usb.png'
 import {BulletPointItem, Button, Text} from '../../components'
-import globalMessages, {confirmationMessages, ledgerMessages} from '../../i18n/global-messages'
+import {confirmationMessages, ledgerMessages} from '../../i18n/global-messages'
 import LocalizableError from '../../i18n/LocalizableError'
 import type {DeviceId, DeviceObj} from '../../legacy/ledgerUtils'
 import {BluetoothDisabledError, RejectedByUserError} from '../../legacy/ledgerUtils'
@@ -31,8 +30,8 @@ import {DeviceItem} from './DeviceItem'
 type Props = {
   intl: IntlShape
   defaultDevices?: Array<Device> | null // for storybook
-  onConnectUSB: (deviceObj: DeviceObj) => void
-  onConnectBLE: (deviceId: DeviceId) => void
+  onConnectUSB: (deviceObj: DeviceObj) => Promise<void> | void
+  onConnectBLE: (deviceId: DeviceId) => Promise<void> | void
   useUSB?: boolean
   onWaitingMessage?: string
   fillSpace?: boolean
@@ -63,7 +62,7 @@ class _LedgerConnect extends React.Component<Props, State> {
   _transportLib: any = null
   _isMounted = false
 
-  async componentDidMount() {
+  componentDidMount() {
     const {useUSB} = this.props
     this._transportLib = useUSB === true ? TransportHID : TransportBLE
     this._isMounted = true
@@ -187,13 +186,9 @@ class _LedgerConnect extends React.Component<Props, State> {
     }
   }
 
-  _onConfirm = async (deviceObj?: DeviceObj | null): Promise<void> => {
+  _onConfirm = async (deviceObj: DeviceObj) => {
     this._unsubscribe()
     try {
-      if (deviceObj == null) {
-        // should never happen
-        throw new Error('deviceObj is null')
-      }
       this.setStateWithAnimation({
         waiting: true,
       })
@@ -289,17 +284,10 @@ class _LedgerConnect extends React.Component<Props, State> {
         </View>
         {useUSB === true && (
           <Button
-            onPress={() => {
-              if (refreshing || deviceObj == null || waiting) {
-                return Alert.alert(
-                  intl.formatMessage(globalMessages.error),
-                  rows.reduce((acc, item) => acc + '\n' + item),
-                )
-              }
-              this._onConfirm(deviceObj)
-            }}
+            onPress={() => this._onConfirm(deviceObj)}
             title={intl.formatMessage(confirmationMessages.commonButtons.confirmButton)}
             style={styles.button}
+            disabled={refreshing || deviceObj == null || waiting}
           />
         )}
         {waiting && <ActivityIndicator color="black" />}

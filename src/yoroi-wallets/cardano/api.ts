@@ -37,8 +37,8 @@ type Addresses = Array<string>
 export const checkServerStatus = (config: BackendConfig): Promise<ServerStatus> =>
   fetchDefault('status', null, config, 'GET') as any
 
-export const getTipStatus = async (config: BackendConfig): Promise<TipStatusResponse> =>
-  fetchDefault('v2/tipStatus', null, config, 'GET') as unknown as TipStatusResponse
+export const getTipStatus = (config: BackendConfig): Promise<TipStatusResponse> =>
+  fetchDefault('v2/tipStatus', null, config, 'GET') as unknown as Promise<TipStatusResponse>
 
 export const fetchNewTxHistory = async (
   request: TxHistoryRequest,

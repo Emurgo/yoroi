@@ -25,7 +25,7 @@ export const TermsOfServiceScreen = () => {
   const storage = useStorage()
   const {enableAuthWithOs, isLoading} = useEnableAuthWithOs({storage}, {onSuccess: login})
 
-  const onAccept = async () => {
+  const onAccept = () => {
     if (authOsEnabled) {
       enableAuthWithOs()
     } else {
