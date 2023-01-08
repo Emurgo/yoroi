@@ -6,6 +6,7 @@ import type {IntlShape} from 'react-intl'
 import {defineMessages, injectIntl} from 'react-intl'
 import {
   ActivityIndicator,
+  Alert,
   FlatList,
   Image,
   LayoutAnimation,
@@ -18,7 +19,7 @@ import {
 import bleImage from '../../assets/img/bluetooth.png'
 import usbImage from '../../assets/img/ledger-nano-usb.png'
 import {BulletPointItem, Button, Text} from '../../components'
-import {confirmationMessages, ledgerMessages} from '../../i18n/global-messages'
+import globalMessages, {confirmationMessages, ledgerMessages} from '../../i18n/global-messages'
 import LocalizableError from '../../i18n/LocalizableError'
 import type {DeviceId, DeviceObj} from '../../legacy/ledgerUtils'
 import {BluetoothDisabledError, RejectedByUserError} from '../../legacy/ledgerUtils'
@@ -284,10 +285,17 @@ class _LedgerConnect extends React.Component<Props, State> {
         </View>
         {useUSB === true && (
           <Button
-            onPress={() => this._onConfirm(deviceObj)}
+            onPress={() => {
+              if (refreshing || deviceObj == null || waiting) {
+                return Alert.alert(
+                  intl.formatMessage(globalMessages.error),
+                  rows.reduce((acc, item) => acc + '\n' + item),
+                )
+              }
+              this._onConfirm(deviceObj)
+            }}
             title={intl.formatMessage(confirmationMessages.commonButtons.confirmButton)}
             style={styles.button}
-            disabled={refreshing || deviceObj == null || waiting}
           />
         )}
         {waiting && <ActivityIndicator color="black" />}
