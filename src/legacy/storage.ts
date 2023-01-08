@@ -79,6 +79,15 @@ export const keys = async (path: string, includeSubdirs?: boolean): Promise<Arra
   }
 }
 
+const storage = {
+  read,
+  readMany,
+  write,
+  remove,
+  clearAll,
+  keys,
+}
+
 export default {
   read,
   readMany,
@@ -86,4 +95,34 @@ export default {
   remove,
   clearAll,
   keys,
+}
+
+export const makeMockStorage = (mockStorage?: Record<string, unknown>): typeof storage => {
+  if (!mockStorage) return storage
+
+  let _storage = mockStorage ?? {}
+
+  return {
+    read: (path) => {
+      return Promise.resolve<any>(_storage[path])
+    },
+    write: (path, value) => {
+      _storage[path] = value
+      return Promise.resolve()
+    },
+    remove: (path) => {
+      delete _storage[path]
+      return Promise.resolve(true)
+    },
+    clearAll: () => {
+      _storage = {}
+      return Promise.resolve()
+    },
+    readMany: () => {
+      throw new Error('not implemented: readMany')
+    },
+    keys: () => {
+      throw new Error('not implemented: keys')
+    },
+  }
 }
