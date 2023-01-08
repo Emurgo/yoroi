@@ -482,6 +482,7 @@
   "global.error.walletNameTooLong": "El nombre de la billetera no puede exceder los 40 caracteres",
   "global.error.walletNameMustBeFilled": "Debe llenarse",
   "global.info": "Info",
+  "global.learnMore": "Learn more",
   "global.ledgerMessages.appInstalled": "La aplicación Cardano ADA está instalada en tu dispositivo Ledger.",
   "global.ledgerMessages.appOpened": "La aplicación Cardano ADA debe permanecer abierta en el dispositivo Ledger.",
   "global.ledgerMessages.bluetoothEnabled": "El bluetooth está activado en tu smartphone.",
