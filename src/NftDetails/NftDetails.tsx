@@ -1,40 +1,38 @@
-import {useNavigation} from '@react-navigation/native'
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
 import React, {ReactNode, useMemo, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {getPrettyDate} from '../../tests/helpers/utils'
-import {CopyButton, FadeIn, Icon, Link, OfflineBanner, Spacer, StatusBar, Text} from '../components'
+import {CopyButton, FadeIn, Icon, Link, Spacer, StatusBar, Text} from '../components'
 import {Tab, TabPanel, TabPanels, Tabs} from '../components/Tabs'
-import {useNfts, useTransactionInfos} from '../hooks'
+import {useNft, useTransactionInfos} from '../hooks'
 import {getAssetFingerprint} from '../legacy/format'
-import {NftDetailsNavigation} from '../navigation'
+import {NftDetailsNavigation, NftRoutes} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
 
-type VIEW_TABS = 'overview' | 'metadata'
+type ViewTabs = 'overview' | 'metadata'
 
-type Props = {route: {params: {id: string}}}
-
-export const NftDetails = ({
-  route: {
-    params: {id},
-  },
-}: Props) => {
+export const NftDetails = () => {
+  const {id} = useRoute<RouteProp<NftRoutes, 'nft-details'>>().params
   const strings = useStrings()
   const wallet = useSelectedWallet()
-  const {nfts} = useNfts(wallet)
   const transactionsInfo = useTransactionInfos(wallet)
 
   const navigation = useNavigation<NftDetailsNavigation>()
-  const [activeTab, setActiveTab] = useState<VIEW_TABS>('overview')
-  const nft = nfts.find((nft) => nft.id === id)
+  const [activeTab, setActiveTab] = useState<ViewTabs>('overview')
+  const nft = useNft(wallet, {id})
   const stringifiedMetadata = JSON.stringify(nft, undefined, 2)
   const fingerprint = useMemo(
-    () => (nft !== undefined ? getAssetFingerprint(nft.metadata.policyId, nft.metadata.assetNameHex) : null),
+    () => (nft !== null ? getAssetFingerprint(nft.metadata.policyId, nft.metadata.assetNameHex) : null),
     [nft],
   )
+
+  if (nft === null) {
+    return null
+  }
 
   const matchingTransaction = Object.values(transactionsInfo).find((t) => Object.keys(t.tokens).includes(id))
   const transactionUpdatedAt = matchingTransaction?.submittedAt ?? null
@@ -42,14 +40,9 @@ export const NftDetails = ({
 
   const onFullscreen = () => navigation.navigate('nft-details-image', {id})
 
-  if (nft === undefined) {
-    return null
-  }
-
   return (
     <FadeIn style={styles.container}>
       <StatusBar type="dark" />
-      <OfflineBanner />
 
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <View style={styles.imageContainer}>

@@ -23,9 +23,6 @@ type Props = {
   onSelect: (index: number) => void
 }
 
-const IMAGE_PADDING = 8
-const TEXT_PADDING = 13
-
 export const SkeletonGallery = ({amount}: {amount: number} = {amount: 3}) => {
   const placeholders = new Array(amount).fill(undefined)
   return (
@@ -98,65 +95,85 @@ const ModeratedImage = ({fingerprint, image, text, onPress}: ModeratedImageProps
       moderationStatusQuery.refetch()
     }
   }, [moderationStatusQuery.data, moderationStatusQuery])
-  const size = getImageSize()
 
   const isPendingReview = moderationStatusQuery.data === 'pending' || moderationStatusQuery.data === 'manual_review'
   const showSkeleton = moderationStatusQuery.isLoading || isPendingReview
 
-  const isGreenImage = moderationStatusQuery.data === 'green'
-  const isYellowImage = moderationStatusQuery.data === 'yellow'
-  const isRedImage = moderationStatusQuery.data === 'red'
+  const isImageApproved = moderationStatusQuery.data === 'approved'
+  const isImageWithConsent = moderationStatusQuery.data === 'consent'
+  const isImageBlocked = moderationStatusQuery.data === 'blocked'
 
   if (showSkeleton) {
     return <SkeletonImagePlaceholder />
   }
 
   return (
-    <TouchableOpacity disabled={isRedImage} onPress={onPress} style={[styles.imageContainer]}>
-      {isGreenImage ? (
-        <>
-          <Image source={{uri: image}} style={[styles.image, {width: size, height: size}]} />
-          <Spacer height={IMAGE_PADDING} />
-          <Text style={[styles.textTop, {width: size}]}>{text}</Text>
-          <Spacer height={TEXT_PADDING} />
-        </>
-      ) : isYellowImage ? (
-        <View>
-          <View style={styles.imageWrapper}>
-            <Image source={{uri: image}} style={[styles.image, {width: size, height: size}]} blurRadius={20} />
-            <View style={styles.eyeWrapper}>
-              <Icon.EyeOff size={20} color="#FFFFFF" />
-            </View>
-          </View>
-          <Spacer height={IMAGE_PADDING} />
-          <Text style={[styles.textTop, {width: size}]}>{text}</Text>
-          <Spacer height={TEXT_PADDING} />
-        </View>
-      ) : isRedImage ? (
-        <>
-          <Image source={placeholderImage} style={[styles.image, {width: size, height: size}]} />
-          <Spacer height={IMAGE_PADDING} />
-          <Text style={[styles.textTop, {width: size}]}>{text}</Text>
-          <Spacer height={TEXT_PADDING} />
-        </>
+    <TouchableOpacity disabled={isImageBlocked} onPress={onPress} style={[styles.imageContainer]}>
+      {isImageApproved ? (
+        <ApprovedNFT text={text} uri={image} />
+      ) : isImageWithConsent ? (
+        <RequiresConsentNFT text={text} uri={image} />
+      ) : isImageBlocked ? (
+        <BlockedNFT text={text} />
       ) : null}
     </TouchableOpacity>
   )
 }
 
-function SkeletonImagePlaceholder() {
-  const size = getImageSize()
-  const textSize = 20
+function BlockedNFT({text}: {text: string}) {
   return (
-    <View style={[styles.imageContainer, {width: size + 10, height: size + IMAGE_PADDING + textSize + TEXT_PADDING}]}>
+    <>
+      <Image source={placeholderImage} style={[styles.image, {width: imageSize, height: imageSize}]} />
+      <Spacer height={IMAGE_PADDING} />
+      <Text style={[styles.textTop, {width: imageSize}]}>{text}</Text>
+      <Spacer height={TEXT_PADDING} />
+    </>
+  )
+}
+
+function RequiresConsentNFT({uri, text}: {text: string; uri: string}) {
+  return (
+    <View>
+      <View style={styles.imageWrapper}>
+        <Image source={{uri}} style={[styles.image, {width: imageSize, height: imageSize}]} blurRadius={20} />
+        <View style={styles.eyeWrapper}>
+          <Icon.EyeOff size={20} color="#FFFFFF" />
+        </View>
+      </View>
+      <Spacer height={IMAGE_PADDING} />
+      <Text style={[styles.textTop, {width: imageSize}]}>{text}</Text>
+      <Spacer height={TEXT_PADDING} />
+    </View>
+  )
+}
+
+function ApprovedNFT({uri, text}: {text: string; uri: string}) {
+  return (
+    <>
+      <Image source={{uri}} style={[styles.image, {width: imageSize, height: imageSize}]} />
+      <Spacer height={IMAGE_PADDING} />
+      <Text style={[styles.textTop, {width: imageSize}]}>{text}</Text>
+      <Spacer height={TEXT_PADDING} />
+    </>
+  )
+}
+
+function SkeletonImagePlaceholder() {
+  return (
+    <View
+      style={[
+        styles.imageContainer,
+        {width: imageSize + 10, height: imageSize + IMAGE_PADDING + TEXT_SIZE + TEXT_PADDING},
+      ]}
+    >
       <SkeletonPlaceholder enabled={true}>
         <View>
-          <View style={{width: size, height: size, borderRadius: 8}} />
+          <View style={{width: imageSize, height: imageSize, borderRadius: 8}} />
           <View
             style={{
               marginTop: TEXT_PADDING,
-              width: (size * 3) / 4,
-              height: textSize,
+              width: (imageSize * 3) / 4,
+              height: TEXT_SIZE,
               borderRadius: 8,
             }}
           />
@@ -207,6 +224,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
 })
+
+const IMAGE_PADDING = 8
+const TEXT_PADDING = 13
+const TEXT_SIZE = 20
+
+const imageSize = getImageSize()
 
 function getImageSize() {
   const dimensions = Dimensions.get('window')

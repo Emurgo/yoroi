@@ -72,4 +72,4 @@ export type YoroiNFT = {
   }
 }
 
-export type YoroiNFTModerationStatus = 'yellow' | 'red' | 'green' | 'pending' | 'manual_review'
+export type YoroiNFTModerationStatus = 'consent' | 'blocked' | 'approved' | 'pending' | 'manual_review'

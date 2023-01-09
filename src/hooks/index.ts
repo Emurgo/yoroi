@@ -4,7 +4,6 @@ import BigNumber from 'bignumber.js'
 import {delay} from 'bluebird'
 import {mapValues} from 'lodash'
 import * as React from 'react'
-import {useMemo} from 'react'
 import {
   onlineManager,
   QueryKey,
@@ -44,6 +43,7 @@ import {
   TRANSACTION_STATUS,
   TransactionInfo,
   YoroiAmounts,
+  YoroiNFT,
   YoroiSignedTx,
   YoroiUnsignedTx,
 } from '../yoroi-wallets/types'
@@ -256,12 +256,11 @@ export const useNftModerationStatus = ({wallet, fingerprint}: {wallet: YoroiWall
 }
 
 export const useTokenImage = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string}): string | null => {
-  const {nfts} = useNfts(wallet)
-  const nft = nfts.find((nft) => nft.id === tokenId)
+  const nft = useNft(wallet, {id: tokenId})
   const fingerprint = nft ? getAssetFingerprint(nft.metadata.policyId, nft.metadata.assetNameHex) : null
   const {data} = useNftModerationStatus({wallet, fingerprint})
 
-  if (nft && data === 'green') {
+  if (nft && data === 'approved') {
     return nft.image
   }
 
@@ -898,10 +897,14 @@ export const useNfts = (wallet: YoroiWallet, {search}: {search?: string} = {}) =
   const {data, ...rest} = useQuery({
     queryKey: [wallet.id, 'nfts', utxos.length],
     queryFn: () => wallet.fetchNfts(),
+    select: (data): YoroiNFT[] =>
+      search && data ? data.filter((n) => n.name.toLowerCase().includes(search.toLowerCase())) : data || [],
   })
-  const filteredNfts = useMemo(
-    () => (search && data ? data.filter((n) => n.name.toLowerCase().includes(search.toLowerCase())) : data ?? []),
-    [search, data],
-  )
-  return {...rest, nfts: filteredNfts}
+
+  return {...rest, nfts: data ?? []}
+}
+
+export const useNft = (wallet: YoroiWallet, {id}: {id?: string} = {}): YoroiNFT | null => {
+  const {nfts} = useNfts(wallet)
+  return nfts.find((nft) => nft.id === id) ?? null
 }

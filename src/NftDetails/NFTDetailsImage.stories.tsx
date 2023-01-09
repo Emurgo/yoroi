@@ -2,7 +2,7 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {QueryClient, QueryClientProvider} from 'react-query'
 
-import {mocks} from '../../storybook'
+import {mocks, RouteProvider} from '../../storybook'
 import {SelectedWalletProvider} from '../SelectedWallet'
 import {NftDetailsImage} from './NftDetailsImage'
 
@@ -13,10 +13,12 @@ storiesOf('NFT Details Image', module).add('Initial', () => {
     fetchNftModerationStatus: mocks.fetchNftModerationStatus.successGreen,
   }
   return (
-    <QueryClientProvider client={new QueryClient()}>
-      <SelectedWalletProvider wallet={loadedWallet}>
-        <NftDetailsImage route={{params: {id: '1'}}} />
-      </SelectedWalletProvider>
-    </QueryClientProvider>
+    <RouteProvider params={{id: '1'}}>
+      <QueryClientProvider client={new QueryClient()}>
+        <SelectedWalletProvider wallet={loadedWallet}>
+          <NftDetailsImage />
+        </SelectedWalletProvider>
+      </QueryClientProvider>
+    </RouteProvider>
   )
 })

@@ -88,9 +88,9 @@ export const isBoolean = (data: unknown): data is boolean => typeof data === 'bo
 export const parseModerationStatus = (status: unknown): YoroiNFTModerationStatus | undefined => {
   const statusString = String(status)
   const map = {
-    RED: 'red',
-    YELLOW: 'yellow',
-    GREEN: 'green',
+    RED: 'blocked',
+    YELLOW: 'consent',
+    GREEN: 'approved',
     PENDING: 'pending',
     MANUAL_REVIEW: 'manual_review',
   } as const

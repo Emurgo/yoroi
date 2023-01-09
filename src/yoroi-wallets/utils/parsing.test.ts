@@ -44,10 +44,10 @@ describe('asciiToHex', () => {
 describe('parseModerationStatus', () => {
   it('should return status on valid NFT Moderation status', () => {
     expect(parseModerationStatus('PENDING')).toBe('pending')
-    expect(parseModerationStatus('GREEN')).toBe('green')
-    expect(parseModerationStatus('RED')).toBe('red')
+    expect(parseModerationStatus('GREEN')).toBe('approved')
+    expect(parseModerationStatus('RED')).toBe('blocked')
     expect(parseModerationStatus('MANUAL_REVIEW')).toBe('manual_review')
-    expect(parseModerationStatus('YELLOW')).toBe('yellow')
+    expect(parseModerationStatus('YELLOW')).toBe('consent')
   })
 
   it('returns undefined on invalid NFT Moderation status', () => {
