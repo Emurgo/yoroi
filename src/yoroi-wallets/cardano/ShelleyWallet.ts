@@ -115,7 +115,7 @@ export class ShelleyWallet implements WalletInterface {
   storage: typeof storageLegacy
   private readonly utxoManager: UtxoManager
   protected encryptedStorage: WalletEncryptedStorage
-  defaultAsset: DefaultAsset
+  readonly primaryToken: Readonly<DefaultAsset>
   id: string
   networkId: NetworkId
   walletImplementationId: WalletImplementationId
@@ -338,7 +338,7 @@ export class ShelleyWallet implements WalletInterface {
     this.id = id
     this.storage = storage
     this.networkId = networkId
-    this.defaultAsset = getDefaultAssetByNetworkId(this.networkId)
+    this.primaryToken = getDefaultAssetByNetworkId(this.networkId)
     this.utxoManager = utxoManager
     this._utxos = utxoManager.initialUtxos
     this.encryptedStorage = makeWalletEncryptedStorage(id)
@@ -685,7 +685,7 @@ export class ShelleyWallet implements WalletInterface {
           poolDeposit: networkConfig.POOL_DEPOSIT,
           networkId: networkConfig.NETWORK_ID,
         },
-        this.defaultAsset,
+        this.primaryToken,
         {metadata: auxiliaryData},
       )
 
@@ -744,7 +744,7 @@ export class ShelleyWallet implements WalletInterface {
     const networkConfig = this.getNetworkConfig()
     const delegatedAmountMT = {
       values: [{identifier: '', amount: delegatedAmount, networkId: networkConfig.NETWORK_ID}],
-      defaults: this.defaultAsset,
+      defaults: this.primaryToken,
     }
 
     const unsignedTx = await Cardano.createUnsignedDelegationTx(
@@ -755,7 +755,7 @@ export class ShelleyWallet implements WalletInterface {
       poolId || null,
       changeAddr,
       delegatedAmountMT,
-      this.defaultAsset,
+      this.primaryToken,
       {},
       {
         keyDeposit: networkConfig.KEY_DEPOSIT,
@@ -817,7 +817,7 @@ export class ShelleyWallet implements WalletInterface {
 
       const unsignedTx = await Cardano.createUnsignedVotingTx(
         absSlotNumber,
-        this.defaultAsset,
+        this.primaryToken,
         votingPublicKey,
         stakingKeyPath,
         stakingPublicKey,
@@ -878,7 +878,7 @@ export class ShelleyWallet implements WalletInterface {
 
     const withdrawalTx = await Cardano.createUnsignedWithdrawalTx(
       accountState,
-      this.defaultAsset,
+      this.primaryToken,
       absSlotNumber,
       addressedUtxos,
       [

@@ -74,8 +74,8 @@ export const getTransactionData = async (
   }
   if (!selectedToken.isDefault && isHaskellShelleyNetwork(selectedToken.networkId)) {
     sendTokenList.push({
-      token: wallet.defaultAsset,
-      amount: await getMinAda(selectedToken, wallet.defaultAsset),
+      token: wallet.primaryToken,
+      amount: await getMinAda(selectedToken, wallet.primaryToken),
     })
   }
   return wallet.createUnsignedTx(address, sendTokenList)
@@ -128,13 +128,13 @@ export const recomputeAll = async ({
       // we'll substract minAda from ADA balance if we are sending a token
       const minAda =
         !selectedTokenInfo.isDefault && isHaskellShelleyNetwork(selectedTokenInfo.networkId)
-          ? ((await getMinAda(selectedTokenInfo, wallet.defaultAsset)) as Quantity)
+          ? ((await getMinAda(selectedTokenInfo, wallet.primaryToken)) as Quantity)
           : '0'
 
       if (sendAll) {
         yoroiUnsignedTx = await getTransactionData(wallet, address, amount, sendAll, selectedTokenInfo)
 
-        fee = Amounts.getAmount(yoroiUnsignedTx.fee, wallet.defaultAsset.identifier).quantity
+        fee = Amounts.getAmount(yoroiUnsignedTx.fee, wallet.primaryToken.identifier).quantity
 
         if (selectedTokenInfo.isDefault) {
           recomputedAmount = normalizeTokenAmount(
@@ -161,7 +161,7 @@ export const recomputeAll = async ({
 
         yoroiUnsignedTx = await getTransactionData(wallet, address, amount, false, selectedTokenInfo)
 
-        fee = Amounts.getAmount(yoroiUnsignedTx.fee, wallet.defaultAsset.identifier).quantity
+        fee = Amounts.getAmount(yoroiUnsignedTx.fee, wallet.primaryToken.identifier).quantity
         balanceAfter = Quantities.diff(defaultAssetAvailableAmount, Quantities.sum([parsedAmount, minAda, fee]))
       }
     } catch (err) {

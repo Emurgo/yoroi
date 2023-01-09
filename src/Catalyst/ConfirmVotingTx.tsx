@@ -7,7 +7,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {ProgressStep, Spacer, TextInput} from '../components'
 import {ConfirmTx} from '../components/ConfirmTx'
-import {useTokenInfo, useVotingRegTx} from '../hooks'
+import {useVotingRegTx} from '../hooks'
 import {Instructions as HWInstructions} from '../HW'
 import {errorMessages, txLabels} from '../i18n/global-messages'
 import LocalizableError from '../i18n/LocalizableError'
@@ -34,7 +34,6 @@ export const ConfirmVotingTx = ({
   )
   const [password, setPassword] = useState(CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '')
   const [useUSB, setUseUSB] = useState<boolean>(false)
-  const tokenInfo = useTokenInfo({wallet, tokenId: wallet.defaultAsset.identifier})
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
@@ -58,7 +57,10 @@ export const ConfirmVotingTx = ({
         <Spacer height={48} />
 
         <TextInput
-          value={formatTokenWithSymbol(new BigNumber(Amounts.getAmount(votingRegTx.fee, '').quantity), tokenInfo)}
+          value={formatTokenWithSymbol(
+            new BigNumber(Amounts.getAmount(votingRegTx.fee, wallet.primaryToken.identifier).quantity),
+            wallet.primaryToken,
+          )}
           label={strings.fees}
           editable={false}
           autoComplete={false}

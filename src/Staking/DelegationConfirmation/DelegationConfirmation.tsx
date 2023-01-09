@@ -67,14 +67,14 @@ export const DelegationConfirmation = () => {
 
         <View style={styles.input} testID="stakingAmount">
           <Text small style={styles.fees}>
-            {`+ ${formatTokenAmount(new BigNumber(yoroiUnsignedTx.fee['']), wallet.defaultAsset)} ${strings.ofFees}`}
+            {`+ ${formatTokenAmount(new BigNumber(yoroiUnsignedTx.fee['']), wallet.primaryToken)} ${strings.ofFees}`}
           </Text>
 
           {/* requires a handler so we pass on a dummy function */}
           <ValidatedTextInput
             onChangeText={() => undefined}
             editable={false}
-            value={formatTokenAmount(new BigNumber(stakingAmount.quantity), wallet.defaultAsset)}
+            value={formatTokenAmount(new BigNumber(stakingAmount.quantity), wallet.primaryToken)}
             label={strings.amount}
           />
         </View>
@@ -87,7 +87,7 @@ export const DelegationConfirmation = () => {
 
         <View style={styles.itemBlock}>
           <Text style={styles.itemTitle}>{strings.rewardsExplanation}</Text>
-          <Text style={styles.rewards}>{formatTokenWithText(new BigNumber(reward), wallet.defaultAsset)}</Text>
+          <Text style={styles.rewards}>{formatTokenWithText(new BigNumber(reward), wallet.primaryToken)}</Text>
         </View>
 
         {wallet.isHW && <HWInstructions useUSB={useUSB} addMargin />}

@@ -853,7 +853,7 @@ export const useExchangeRate = ({
 export const useBalances = (wallet: YoroiWallet): YoroiAmounts => {
   const utxos = useUtxos(wallet)
 
-  const primaryTokenId = wallet.defaultAsset.identifier
+  const primaryTokenId = wallet.primaryToken.identifier
 
   return Utxos.toAmounts(utxos, primaryTokenId)
 }
