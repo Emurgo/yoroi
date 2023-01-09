@@ -5,7 +5,7 @@ import storage from '../../legacy/storage'
 import storageLegacy, {makeMockStorage} from '../../legacy/storage'
 import {ShelleyAddressGeneratorJSON} from './chain'
 import {ShelleyWallet} from './ShelleyWallet'
-import {ShelleyWallet as ShelleyWalletLegacy, WalletJSON} from './ShelleyWallet.legacy'
+import {WalletJSON} from './ShelleyWallet.legacy'
 
 describe('migration', () => {
   afterEach(() => storage.clearAll())
@@ -15,7 +15,7 @@ describe('migration', () => {
       'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon oak'
     const password = 'password'
 
-    // const wallet = await ShelleyWalletLegacy.build(storageLegacy, walletMeta.networkId, walletMeta.id)
+    // const wallet = await any.build(storageLegacy, walletMeta.networkId, walletMeta.id)
     // await wallet.create(mnemonic, password, walletMeta.networkId, walletMeta.walletImplementationId)
     // await wallet.save()
 
@@ -27,7 +27,7 @@ describe('migration', () => {
       storage: storageLegacy,
       password,
       provider: undefined,
-    })) as unknown as ShelleyWalletLegacy
+    })) as unknown as any
 
     expect(wallet.id).toMatchInlineSnapshot(`"261c7e0f-dd72-490c-8ce9-6714b512b969"`)
     expect(wallet.networkId).toMatchInlineSnapshot(`1`)
@@ -144,10 +144,10 @@ describe('migration', () => {
     const password = 'password'
     await EncryptedStorage.write(EncryptedStorageKeys.rootKey(walletMeta.id), rootKey, password)
 
-    // const wallet = await ShelleyWalletLegacy.build(storage, walletMeta.networkId, walletMeta.id)
+    // const wallet = await any.build(storage, walletMeta.networkId, walletMeta.id)
     // await wallet.restore(data, walletMeta)
 
-    const wallet = (await ShelleyWallet.restore({storage, walletMeta})) as unknown as ShelleyWalletLegacy
+    const wallet = (await ShelleyWallet.restore({storage, walletMeta})) as unknown as any
     await wallet.internalChain?._addressGenerator.getRewardAddressHex()
 
     expect(wallet.id).toMatchInlineSnapshot(`"261c7e0f-dd72-490c-8ce9-6714b512b969"`)
@@ -269,7 +269,7 @@ describe('migration', () => {
     }
     const isReadOnly = false
 
-    // const wallet = await ShelleyWalletLegacy.build(storageLegacy, walletMeta.networkId, walletMeta.id)
+    // const wallet = await any.build(storageLegacy, walletMeta.networkId, walletMeta.id)
     // await wallet.createWithBip44Account(
     //   accountPubKeyHex,
     //   walletMeta.networkId,
@@ -287,7 +287,7 @@ describe('migration', () => {
       storage: storageLegacy,
       hwDeviceInfo,
       isReadOnly,
-    })) as unknown as ShelleyWalletLegacy
+    })) as unknown as any
 
     expect(wallet.id).toMatchInlineSnapshot(`"261c7e0f-dd72-490c-8ce9-6714b512b969"`)
     expect(wallet.networkId).toMatchInlineSnapshot(`1`)
@@ -539,9 +539,7 @@ const data: WalletJSON = {
   provider: '',
 }
 
-const getBech32InternalChain = (wallet: ShelleyWalletLegacy) =>
-  wallet.internalChain?._addressGenerator._accountPubKeyPtr?.toBech32()
-const getRewardAddress = (wallet: ShelleyWalletLegacy) =>
-  wallet.getRewardAddress().then((address) => address.toBech32())
-const getWalletData = (wallet: ShelleyWalletLegacy) => wallet.storage.read(`/wallet/${wallet.id}/data`)
-const getStakingKey = (wallet: ShelleyWalletLegacy) => wallet.getStakingKey().then((key) => key.toBech32())
+const getBech32InternalChain = (wallet: any) => wallet.internalChain?._addressGenerator._accountPubKeyPtr?.toBech32()
+const getRewardAddress = (wallet: any) => wallet.getRewardAddress().then((address) => address.toBech32())
+const getWalletData = (wallet: any) => wallet.storage.read(`/wallet/${wallet.id}/data`)
+const getStakingKey = (wallet: any) => wallet.getStakingKey().then((key) => key.toBech32())

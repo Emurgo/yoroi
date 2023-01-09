@@ -35,7 +35,7 @@ import {IsLockedError, nonblockingSynchronize, synchronize} from '../../legacy/p
 import type {WalletMeta} from '../../legacy/state'
 import storageLegacy from '../../legacy/storage'
 import {deriveRewardAddressHex} from '../../legacy/utils'
-import {makeStorageWithPrefix} from '../storage'
+import {mountStorage} from '../storage'
 import {DefaultAsset, Quantity, SendTokenList, StakingInfo, YoroiSignedTx, YoroiUnsignedTx} from '../types'
 import type {
   AccountStateResponse,
@@ -271,8 +271,8 @@ export class ShelleyWallet implements WalletInterface {
   }) => {
     const rewardAddressHex = await deriveRewardAddressHex(accountPubKeyHex, networkId)
     const apiUrl = getCardanoNetworkConfigById(networkId).BACKEND.API_ROOT
-    const utxoManager = await makeUtxoManager(id, apiUrl, storage)
-    const transactionCache = await TransactionCache.create(makeStorageWithPrefix(`/wallet/${id}/txs`))
+    const utxoManager = await makeUtxoManager(id, apiUrl)
+    const transactionCache = await TransactionCache.create(mountStorage(`/wallet/${id}/txs/`))
 
     const wallet = new ShelleyWallet({
       storage,

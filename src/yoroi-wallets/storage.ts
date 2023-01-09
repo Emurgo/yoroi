@@ -1,40 +1,51 @@
-import AsyncStorage, {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
-export type Storage = {
-  getItem: AsyncStorageStatic['getItem']
-  multiGet: AsyncStorageStatic['multiGet']
-  setItem: AsyncStorageStatic['setItem']
-  multiSet: AsyncStorageStatic['multiSet']
-  removeItem: AsyncStorageStatic['removeItem']
-  multiRemove: AsyncStorageStatic['multiRemove']
-  clear: AsyncStorageStatic['clear']
-}
+import {parseSafe} from './utils/parsing'
 
-export const makeStorageWithPrefix = (prefix: string): Storage => {
-  const withPrefix = (key: string) => `${prefix}${key}`
+export type Storage = ReturnType<typeof mountStorage>
+
+export type Prefix = `${string}/`
+
+export const mountStorage = (prefix: Prefix) => {
+  const withPrefix = (key: string) => `${prefix}${key}` as `${Prefix}${string}`
   const withoutPrefix = (value: string) => value.slice(prefix.length)
 
-  return {
-    getItem: (key: string) => {
-      return AsyncStorage.getItem(withPrefix(key))
-    },
-    multiGet: async (keys: Array<string>) => {
-      const prefixedKeys = keys.map((key) => withPrefix(key))
-      const items = await AsyncStorage.multiGet(prefixedKeys)
+  function getItem<T>(key: string, parse: (item: string | null) => T): Promise<T>
+  function getItem<T = unknown>(key: string): Promise<T>
+  async function getItem(key: string, parse = parseSafe) {
+    const item = await AsyncStorage.getItem(withPrefix(key))
+    return parse(item)
+  }
 
-      return items.map(([key, value]) => [withoutPrefix(key), value])
+  function multiGet<T>(keys: Array<string>, parse: (item: string | null) => T): Promise<Array<[string, T]>>
+  function multiGet<T = unknown>(keys: Array<string>): Promise<Array<[string, T]>>
+  async function multiGet(keys: Array<string>, parse = parseSafe) {
+    const prefixedKeys = keys.map((key) => withPrefix(key))
+    const items = await AsyncStorage.multiGet(prefixedKeys)
+    return items.map(([key, value]) => [withoutPrefix(key), parse(value)] as const)
+  }
+
+  return {
+    getItem,
+    multiGet,
+    setItem: (key: string, value: unknown) => {
+      const item = JSON.stringify(value)
+      return AsyncStorage.setItem(withPrefix(key), item)
     },
-    setItem: (key: string, value: string) => {
-      return AsyncStorage.setItem(withPrefix(key), value)
-    },
-    multiSet: (items: Array<[key: string, value: string]>) => {
-      return AsyncStorage.multiSet(items.map(([key, value]) => [withPrefix(key), value]))
+    multiSet: (tuples: Array<[key: string, value: unknown]>) => {
+      const items = tuples.map(([key, value]) => [withPrefix(key), JSON.stringify(value)])
+      return AsyncStorage.multiSet(items)
     },
     removeItem: (key: string) => {
       return AsyncStorage.removeItem(withPrefix(key))
     },
     multiRemove: (keys: Array<string>) => {
       return AsyncStorage.multiRemove(keys.map((key) => withPrefix(key)))
+    },
+    getAllKeys: () => {
+      return AsyncStorage.getAllKeys()
+        .then((keys) => keys.filter((key) => key.startsWith(prefix)))
+        .then((filteredKeys) => filteredKeys.map(withoutPrefix))
     },
     clear: async () => {
       const keys = await AsyncStorage.getAllKeys()
