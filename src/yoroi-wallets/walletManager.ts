@@ -12,7 +12,7 @@ import {Logger} from '../legacy/logging'
 import type {WalletMeta} from '../legacy/state'
 import {isWalletMeta, migrateWalletMetas, parseWalletMeta} from '../Storage/migrations/walletMeta'
 import {isYoroiWallet, NetworkId, ShelleyWallet, WalletImplementationId, YoroiProvider, YoroiWallet} from './cardano'
-import {mountStorage} from './storage'
+import {mountStorage, Storage} from './storage'
 import {WALLET_IMPLEMENTATION_REGISTRY} from './types/other'
 
 export class WalletClosed extends ExtendableError {}
@@ -34,16 +34,17 @@ export class WalletManager {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   _closePromise: null | Promise<any> = null
   _closeReject: null | ((error: Error) => void) = null
+  storage: Storage
 
   constructor() {
     // do not await on purpose
     this._backgroundSync()
+    this.storage = mountStorage('/wallet/')
   }
 
   async listWallets() {
-    const storage = mountStorage('/wallet/')
-    const keys = await storage.getAllKeys()
-    const result = await storage.multiGet(keys, parseWalletMeta)
+    const keys = await this.storage.getAllKeys()
+    const result = await this.storage.multiGet(keys, parseWalletMeta)
 
     Logger.debug('result::_listWallets', result)
 
@@ -177,8 +178,8 @@ export class WalletManager {
       isEasyConfirmationEnabled: false,
       provider,
     }
-    const storage = mountStorage('/wallet/')
-    await storage.setItem(id, walletMeta)
+
+    await this.storage.setItem(id, walletMeta)
 
     Logger.debug('WalletManager::saveWallet::wallet', wallet)
 
@@ -257,19 +258,18 @@ export class WalletManager {
     await this.closeWallet()
 
     // wallet.remove
-    const storage = mountStorage('/wallet/')
-    await storage.removeItem(`${id}/data`) // remove wallet data
+
+    await this.storage.removeItem(`${id}/data`) // remove wallet data
     await EncryptedStorage.remove(EncryptedStorageKeys.rootKey(id)) // remove auth with password
     await Keychain.removeWalletKey(id) // remove auth with os
-    await storage.removeItem(id) // remove wallet meta
+    await this.storage.removeItem(id) // remove wallet meta
   }
 
   // TODO(ppershing): how should we deal with race conditions?
   async _updateMetadata(id, newMeta) {
-    const storage = mountStorage('/wallet/')
-    const walletMeta = await storage.getItem(id, parseWalletMeta)
+    const walletMeta = await this.storage.getItem(id, parseWalletMeta)
     const merged = {...walletMeta, ...newMeta}
-    return storage.setItem(id, merged)
+    return this.storage.setItem(id, merged)
   }
 
   async updateHWDeviceInfo(wallet: YoroiWallet, hwDeviceInfo: HWDeviceInfo) {
