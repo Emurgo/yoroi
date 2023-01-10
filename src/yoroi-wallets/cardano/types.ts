@@ -3,7 +3,7 @@ import type {IntlShape} from 'react-intl'
 
 import {WalletEncryptedStorage} from '../../auth'
 import type {HWDeviceInfo} from '../../legacy/ledgerUtils'
-import storage from '../../legacy/storage'
+import {Storage} from '../storage'
 import {
   AccountStates,
   StakePoolInfoRequest,
@@ -75,7 +75,7 @@ export interface WalletInterface {
 
   utxos: Array<RawUtxo>
 
-  storage: typeof storage
+  storage: Storage
 
   // =================== getters =================== //
 

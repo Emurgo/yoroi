@@ -33,9 +33,8 @@ import {
 import {processTxHistoryData} from '../../legacy/processTransactions'
 import {IsLockedError, nonblockingSynchronize, synchronize} from '../../legacy/promise'
 import type {WalletMeta} from '../../legacy/state'
-import storageLegacy from '../../legacy/storage'
 import {deriveRewardAddressHex} from '../../legacy/utils'
-import {mountStorage} from '../storage'
+import {Storage} from '../storage'
 import {DefaultAsset, Quantity, SendTokenList, StakingInfo, YoroiSignedTx, YoroiUnsignedTx} from '../types'
 import type {
   AccountStateResponse,
@@ -52,6 +51,7 @@ import type {
 } from '../types/other'
 import {NETWORK_REGISTRY} from '../types/other'
 import {Quantities} from '../utils'
+import {parseSafe} from '../utils/parsing'
 import {genTimeToSlot} from '../utils/timeUtils'
 import {validatePassword} from '../utils/validators'
 import {
@@ -112,7 +112,7 @@ export type WalletJSON = ShelleyWalletJSON | ByronWalletJSON
 
 export default ShelleyWallet
 export class ShelleyWallet implements WalletInterface {
-  storage: typeof storageLegacy
+  storage: Storage
   private readonly utxoManager: UtxoManager
   protected encryptedStorage: WalletEncryptedStorage
   readonly primaryToken: Readonly<DefaultAsset>
@@ -147,7 +147,7 @@ export class ShelleyWallet implements WalletInterface {
     id: string
     implementationId: WalletImplementationId
     networkId: NetworkId
-    storage: typeof storageLegacy
+    storage: Storage
     provider: YoroiProvider | undefined
 
     mnemonic: string
@@ -192,7 +192,7 @@ export class ShelleyWallet implements WalletInterface {
     networkId: NetworkId
 
     isReadOnly: boolean
-    storage: typeof storageLegacy
+    storage: Storage
   }): Promise<YoroiWallet> {
     const {internalChain, externalChain} = await addressChains.create({implementationId, networkId, accountPubKeyHex})
 
@@ -211,8 +211,8 @@ export class ShelleyWallet implements WalletInterface {
     })
   }
 
-  static async restore({walletMeta, storage}: {storage: typeof storageLegacy; walletMeta: WalletMeta}) {
-    const data = await storage.read<WalletJSON>(`/wallet/${walletMeta.id}/data`)
+  static async restore({walletMeta, storage}: {storage: Storage; walletMeta: WalletMeta}) {
+    const data = await storage.getItem('data', parseWalletJSON)
     if (!data) throw new Error('Cannot read saved data')
     Logger.debug('openWallet::data', data)
     Logger.info('restore wallet', walletMeta.name)
@@ -261,7 +261,7 @@ export class ShelleyWallet implements WalletInterface {
     id: string
     implementationId: WalletImplementationId
     networkId: NetworkId
-    storage: typeof storageLegacy
+    storage: Storage
     internalChain: AddressChain
     externalChain: AddressChain
     isReadOnly: boolean
@@ -271,8 +271,8 @@ export class ShelleyWallet implements WalletInterface {
   }) => {
     const rewardAddressHex = await deriveRewardAddressHex(accountPubKeyHex, networkId)
     const apiUrl = getCardanoNetworkConfigById(networkId).BACKEND.API_ROOT
-    const utxoManager = await makeUtxoManager(id, apiUrl)
-    const transactionCache = await TransactionCache.create(mountStorage(`/wallet/${id}/txs/`))
+    const utxoManager = await makeUtxoManager({storage: storage.join("utxoManager/"), apiUrl})
+    const transactionCache = await TransactionCache.create(storage.join('txs/'))
 
     const wallet = new ShelleyWallet({
       storage,
@@ -319,7 +319,7 @@ export class ShelleyWallet implements WalletInterface {
     isEasyConfirmationEnabled,
     lastGeneratedAddressIndex,
   }: {
-    storage: typeof storageLegacy
+    storage: Storage
     networkId: NetworkId
     id: string
     utxoManager: UtxoManager
@@ -372,7 +372,7 @@ export class ShelleyWallet implements WalletInterface {
   }
 
   save() {
-    return this.storage.write(`/wallet/${this.id}/data`, this.toJSON())
+    return this.storage.setItem('data', this.toJSON())
   }
 
   async clear() {
@@ -1278,3 +1278,23 @@ const addressChains = {
     }
   },
 }
+
+const parseWalletJSON = (data: unknown) => {
+  const parsed = parseSafe(data)
+  return isWalletJSON(parsed) ? parsed : undefined
+}
+
+const isWalletJSON = (data: unknown): data is WalletJSON => {
+  const candidate = data as WalletJSON
+  return !!candidate && typeof candidate === 'object' && keys.every((key) => key in candidate)
+}
+
+const keys: Array<keyof WalletJSON> = [
+  'publicKeyHex',
+  'networkId',
+  'walletImplementationId',
+  'internalChain',
+  'externalChain',
+  'isEasyConfirmationEnabled',
+  'lastGeneratedAddressIndex',
+]

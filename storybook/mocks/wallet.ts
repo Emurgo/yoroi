@@ -7,6 +7,7 @@ import {getDefaultAssetByNetworkId} from '../../src/legacy/config'
 import {PRIMARY_ASSET_CONSTANTS} from '../../src/legacy/networks'
 import {WalletMeta} from '../../src/legacy/state'
 import {TokenEntry, YoroiWallet} from '../../src/yoroi-wallets'
+import {mountStorage} from '../../src/yoroi-wallets/storage'
 import {
   RemotePoolMetaSuccess,
   StakePoolInfosAndHistories,
@@ -18,7 +19,7 @@ import {
   YoroiSignedTx,
   YoroiUnsignedTx,
 } from '../../src/yoroi-wallets/types'
-import {mockEncryptedStorage, mockStorage} from './storage'
+import {mockEncryptedStorage} from './storage'
 import {mockTransactionInfo, mockTransactions} from './transaction'
 
 const walletMeta: WalletMeta = {
@@ -168,7 +169,7 @@ const wallet: YoroiWallet = {
     action('generateNewReceiveAddress')(...args)
     return true
   },
-  storage: mockStorage,
+  storage: mountStorage('/mock/'),
   save: async (...args) => {
     action('save')(...args)
   },

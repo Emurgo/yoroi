@@ -3,13 +3,13 @@ import {initUtxo} from '@emurgo/yoroi-lib'
 import {Utxo, UtxoAtSafePoint, UtxoDiffToBestBlock} from '@emurgo/yoroi-lib/dist/utxo/models'
 import {parseInt} from 'lodash'
 
-import {mountStorage, Storage} from '../storage'
+import {Storage} from '../storage'
 import {RawUtxo} from '../types'
 import {parseSafe} from '../utils/parsing'
 
-export const makeUtxoManager = async (id: string, apiUrl: string) => {
-  const managerStorage = makeUtxoManagerStorage(mountStorage(`/wallet/${id}/utxosManager/`))
-  const serviceStorage = makeUtxoStorage(mountStorage(`/wallet/${id}/utxos/`))
+export const makeUtxoManager = async ({storage, apiUrl}: {storage: Storage; apiUrl: string}) => {
+  const managerStorage = makeUtxoManagerStorage(storage)
+  const serviceStorage = makeUtxoStorage(storage.join('utxos/'))
   const service = initUtxo(serviceStorage, `${apiUrl}/`)
 
   let addrCounter = await managerStorage.addrCounter.read()

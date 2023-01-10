@@ -108,6 +108,7 @@ const mockStorage: Storage = {
       [txids[0], mockTx] as [string, Transaction], //
     ]
   },
+  join: () => mockStorage,
   setItem: jest.fn(),
   multiSet: jest.fn(),
   removeItem: jest.fn(),

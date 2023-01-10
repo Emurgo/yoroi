@@ -1,33 +1,30 @@
+import AsyncStorage from '@react-native-async-storage/async-storage'
+
 import {EncryptedStorage, EncryptedStorageKeys} from '../../auth'
 import {HWDeviceInfo} from '../../legacy/ledgerUtils'
 import {WalletMeta} from '../../legacy/state'
-import storage from '../../legacy/storage'
-import storageLegacy, {makeMockStorage} from '../../legacy/storage'
+import {mountStorage} from '../storage'
 import {ShelleyAddressGeneratorJSON} from './chain'
-import {ShelleyWallet} from './ShelleyWallet'
-import {WalletJSON} from './ShelleyWallet.legacy'
+import {ShelleyWallet, WalletJSON} from './ShelleyWallet'
+import {YoroiWallet} from './types'
 
 describe('migration', () => {
-  afterEach(() => storage.clearAll())
+  afterEach(() => AsyncStorage.clear())
 
   it('create', async () => {
     const mnemonic =
       'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon oak'
     const password = 'password'
 
-    // const wallet = await any.build(storageLegacy, walletMeta.networkId, walletMeta.id)
-    // await wallet.create(mnemonic, password, walletMeta.networkId, walletMeta.walletImplementationId)
-    // await wallet.save()
-
-    const wallet = (await ShelleyWallet.create({
+    const wallet: YoroiWallet & Record<string, any> = await ShelleyWallet.create({
       id: walletMeta.id,
       mnemonic,
       networkId: walletMeta.networkId,
       implementationId: walletMeta.walletImplementationId,
-      storage: storageLegacy,
+      storage: mountStorage(`/wallet/${walletMeta.id}/`),
       password,
       provider: undefined,
-    })) as unknown as any
+    })
 
     expect(wallet.id).toMatchInlineSnapshot(`"261c7e0f-dd72-490c-8ce9-6714b512b969"`)
     expect(wallet.networkId).toMatchInlineSnapshot(`1`)
@@ -55,7 +52,7 @@ describe('migration', () => {
           }
           `)
 
-    expect(getBech32InternalChain(wallet)).resolves.toMatchInlineSnapshot(
+    await expect(getBech32InternalChain(wallet)).resolves.toMatchInlineSnapshot(
       `"xpub1ds33reh84y6828z4q4xtyx4cgnew2ka2fr7g72vd64zrpugk68q5chcj69tpzecy2ns9a7k8f6846h5g0t3vzhhnpphqdywsmppevegxuvdnj"`,
     )
     expect(wallet.internalChain?._addressGenerator.toJSON().type).toMatchInlineSnapshot(`"Internal"`)
@@ -82,7 +79,7 @@ describe('migration', () => {
     expect(wallet.getDecryptedRootKey('wrong password')).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Decryption error"`,
     )
-    expect(wallet.getDecryptedRootKey(password)).resolves.toMatchInlineSnapshot(
+    await expect(wallet.getDecryptedRootKey(password)).resolves.toMatchInlineSnapshot(
       `"a0cf109fd1346748a20f2ade2b3d1e1561485d2f28ae6d8c36e289b4d0ca22544b4e892132ca15095d48370d4cb2bc7c8cde3f68b8a2f63cfeda4c5ac2752599065111b0929f2b3e6fa0f4bddbc90f9a00d1997d4164f6361d2c0f3c4be1f050"`,
     )
 
@@ -93,7 +90,7 @@ describe('migration', () => {
     await wallet.changePassword(password, newPassword)
 
     expect(wallet.getDecryptedRootKey(password)).rejects.toThrowErrorMatchingInlineSnapshot(`"Decryption error"`)
-    expect(wallet.getDecryptedRootKey(newPassword)).resolves.toMatchInlineSnapshot(
+    await expect(wallet.getDecryptedRootKey(newPassword)).resolves.toMatchInlineSnapshot(
       `"a0cf109fd1346748a20f2ade2b3d1e1561485d2f28ae6d8c36e289b4d0ca22544b4e892132ca15095d48370d4cb2bc7c8cde3f68b8a2f63cfeda4c5ac2752599065111b0929f2b3e6fa0f4bddbc90f9a00d1997d4164f6361d2c0f3c4be1f050"`,
     )
 
@@ -101,7 +98,7 @@ describe('migration', () => {
       `"addr1q90qj49u70m8xa9v0f6d2frtvv33v5x4gwckvxllv6regw7prmcgc38nvy9hu4k5dcyxhyqcdsfwnf50q5sm03x89e9sv69ppj"`,
     )
 
-    expect(getRewardAddress(wallet)).resolves.toMatchInlineSnapshot(
+    await expect(getRewardAddress(wallet)).resolves.toMatchInlineSnapshot(
       `"stake1u8q3auyvgnekzzm72m2xuzrtjqvxcyhf568s2gdhcnrjujcr25kkv"`,
     )
 
@@ -126,28 +123,27 @@ describe('migration', () => {
         "networkId": 1,
       }
     `)
-    expect(getStakingKey(wallet)).resolves.toMatchInlineSnapshot(
+    await expect(getStakingKey(wallet)).resolves.toMatchInlineSnapshot(
       `"ed25519_pk158gpk02jqrsxa58aw2e4f0ww6fffu7p2qsflenapdz7a3r5lxx4sn9nx84"`,
     )
 
-    expect(getWalletData(wallet)).resolves.toMatchSnapshot()
+    await expect(getWalletData(wallet)).resolves.toMatchSnapshot()
   })
 
   it('restore', async () => {
-    const storage = makeMockStorage({
-      [`/wallet/${walletMeta.id}`]: walletMeta,
-      [`/wallet/${walletMeta.id}/data`]: data,
-    })
+    const storage = mountStorage('/wallet/')
+    storage.setItem(`${walletMeta.id}`, walletMeta)
+    storage.setItem(`${walletMeta.id}/data`, data)
 
     const rootKey =
       'a0cf109fd1346748a20f2ade2b3d1e1561485d2f28ae6d8c36e289b4d0ca22544b4e892132ca15095d48370d4cb2bc7c8cde3f68b8a2f63cfeda4c5ac2752599065111b0929f2b3e6fa0f4bddbc90f9a00d1997d4164f6361d2c0f3c4be1f050'
     const password = 'password'
     await EncryptedStorage.write(EncryptedStorageKeys.rootKey(walletMeta.id), rootKey, password)
 
-    // const wallet = await any.build(storage, walletMeta.networkId, walletMeta.id)
-    // await wallet.restore(data, walletMeta)
-
-    const wallet = (await ShelleyWallet.restore({storage, walletMeta})) as unknown as any
+    const wallet: YoroiWallet & Record<string, any> = await ShelleyWallet.restore({
+      storage: mountStorage(`/wallet/${walletMeta.id}/`),
+      walletMeta,
+    })
     await wallet.internalChain?._addressGenerator.getRewardAddressHex()
 
     expect(wallet.id).toMatchInlineSnapshot(`"261c7e0f-dd72-490c-8ce9-6714b512b969"`)
@@ -176,7 +172,7 @@ describe('migration', () => {
       }
     `)
 
-    expect(getBech32InternalChain(wallet)).resolves.toMatchInlineSnapshot(
+    await expect(getBech32InternalChain(wallet)).resolves.toMatchInlineSnapshot(
       `"xpub1ds33reh84y6828z4q4xtyx4cgnew2ka2fr7g72vd64zrpugk68q5chcj69tpzecy2ns9a7k8f6846h5g0t3vzhhnpphqdywsmppevegxuvdnj"`,
     )
     expect(wallet.internalChain?._addressGenerator.toJSON().type).toMatchInlineSnapshot(`"Internal"`)
@@ -203,7 +199,7 @@ describe('migration', () => {
     expect(wallet.getDecryptedRootKey('wrong password')).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Decryption error"`,
     )
-    expect(wallet.getDecryptedRootKey(password)).resolves.toMatchInlineSnapshot(
+    await expect(wallet.getDecryptedRootKey(password)).resolves.toMatchInlineSnapshot(
       `"a0cf109fd1346748a20f2ade2b3d1e1561485d2f28ae6d8c36e289b4d0ca22544b4e892132ca15095d48370d4cb2bc7c8cde3f68b8a2f63cfeda4c5ac2752599065111b0929f2b3e6fa0f4bddbc90f9a00d1997d4164f6361d2c0f3c4be1f050"`,
     )
 
@@ -214,7 +210,7 @@ describe('migration', () => {
     await wallet.changePassword(password, newPassword)
 
     expect(wallet.getDecryptedRootKey(password)).rejects.toThrowErrorMatchingInlineSnapshot(`"Decryption error"`)
-    expect(wallet.getDecryptedRootKey(newPassword)).resolves.toMatchInlineSnapshot(
+    await expect(wallet.getDecryptedRootKey(newPassword)).resolves.toMatchInlineSnapshot(
       `"a0cf109fd1346748a20f2ade2b3d1e1561485d2f28ae6d8c36e289b4d0ca22544b4e892132ca15095d48370d4cb2bc7c8cde3f68b8a2f63cfeda4c5ac2752599065111b0929f2b3e6fa0f4bddbc90f9a00d1997d4164f6361d2c0f3c4be1f050"`,
     )
 
@@ -222,7 +218,7 @@ describe('migration', () => {
       `"addr1q90qj49u70m8xa9v0f6d2frtvv33v5x4gwckvxllv6regw7prmcgc38nvy9hu4k5dcyxhyqcdsfwnf50q5sm03x89e9sv69ppj"`,
     )
 
-    expect(getRewardAddress(wallet)).resolves.toMatchInlineSnapshot(
+    await expect(getRewardAddress(wallet)).resolves.toMatchInlineSnapshot(
       `"stake1u8q3auyvgnekzzm72m2xuzrtjqvxcyhf568s2gdhcnrjujcr25kkv"`,
     )
 
@@ -247,11 +243,11 @@ describe('migration', () => {
         "networkId": 1,
       }
     `)
-    expect(getStakingKey(wallet)).resolves.toMatchInlineSnapshot(
+    await expect(getStakingKey(wallet)).resolves.toMatchInlineSnapshot(
       `"ed25519_pk158gpk02jqrsxa58aw2e4f0ww6fffu7p2qsflenapdz7a3r5lxx4sn9nx84"`,
     )
 
-    expect(getWalletData(wallet)).resolves.toMatchSnapshot()
+    await expect(getWalletData(wallet)).resolves.toMatchSnapshot()
   })
 
   it('create hw ', async () => {
@@ -269,25 +265,15 @@ describe('migration', () => {
     }
     const isReadOnly = false
 
-    // const wallet = await any.build(storageLegacy, walletMeta.networkId, walletMeta.id)
-    // await wallet.createWithBip44Account(
-    //   accountPubKeyHex,
-    //   walletMeta.networkId,
-    //   walletMeta.walletImplementationId,
-    //   hwDeviceInfo,
-    //   isReadOnly,
-    // )
-    // await wallet.save()
-
-    const wallet = (await ShelleyWallet.createBip44({
+    const wallet: YoroiWallet & Record<string, any> = await ShelleyWallet.createBip44({
       id: walletMeta.id,
       accountPubKeyHex,
       networkId: walletMeta.networkId,
       implementationId: walletMeta.walletImplementationId,
-      storage: storageLegacy,
+      storage: mountStorage(`/wallet/${walletMeta.id}/`),
       hwDeviceInfo,
       isReadOnly,
-    })) as unknown as any
+    })
 
     expect(wallet.id).toMatchInlineSnapshot(`"261c7e0f-dd72-490c-8ce9-6714b512b969"`)
     expect(wallet.networkId).toMatchInlineSnapshot(`1`)
@@ -326,7 +312,7 @@ describe('migration', () => {
           }
           `)
 
-    expect(getBech32InternalChain(wallet)).resolves.toMatchInlineSnapshot(
+    await expect(getBech32InternalChain(wallet)).resolves.toMatchInlineSnapshot(
       `"xpub1rw3rxtw2znt0rad99qj39ee9s54rf5awu8xzvpt7nnajcfes79n9jd86pv86gtskmm2sf75prx8ythpz6yx6k6fe3ees2s4pnrwtlnczfu90c"`,
     )
     expect(wallet.internalChain?._addressGenerator.toJSON().type).toMatchInlineSnapshot(`"Internal"`)
@@ -353,7 +339,7 @@ describe('migration', () => {
       `"addr1qyeacjehv4qpyr68hszxdxrsx4whts8ctkeez4s0e0an6qy68r3aa9x2zd434q86jrtnvrkpledgm0px6snllm89fm3q85yacp"`,
     )
 
-    expect(getRewardAddress(wallet)).resolves.toMatchInlineSnapshot(
+    await expect(getRewardAddress(wallet)).resolves.toMatchInlineSnapshot(
       `"stake1uxdr3c77jn9px6c6srafp4ekpmqluk5dhsndgfllanj5acsqkljgd"`,
     )
 
@@ -378,11 +364,11 @@ describe('migration', () => {
         "networkId": 1,
       }
     `)
-    expect(getStakingKey(wallet)).resolves.toMatchInlineSnapshot(
+    await expect(getStakingKey(wallet)).resolves.toMatchInlineSnapshot(
       `"ed25519_pk1su9gfd9nkxw0uchht47cluxus3lqlf50mruvvuv2pqpph9qgmhzq08a7zq"`,
     )
 
-    expect(getWalletData(wallet)).resolves.toMatchSnapshot()
+    await expect(getWalletData(wallet)).resolves.toMatchSnapshot()
   })
 })
 
@@ -541,5 +527,5 @@ const data: WalletJSON = {
 
 const getBech32InternalChain = (wallet: any) => wallet.internalChain?._addressGenerator._accountPubKeyPtr?.toBech32()
 const getRewardAddress = (wallet: any) => wallet.getRewardAddress().then((address) => address.toBech32())
-const getWalletData = (wallet: any) => wallet.storage.read(`/wallet/${wallet.id}/data`)
+const getWalletData = (wallet: any) => wallet.storage.getItem(`data`)
 const getStakingKey = (wallet: any) => wallet.getStakingKey().then((key) => key.toBech32())
