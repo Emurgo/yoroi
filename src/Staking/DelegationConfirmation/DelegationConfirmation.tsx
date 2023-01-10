@@ -67,7 +67,10 @@ export const DelegationConfirmation = () => {
 
         <View style={styles.input} testID="stakingAmount">
           <Text small style={styles.fees}>
-            {`+ ${formatTokenAmount(new BigNumber(yoroiUnsignedTx.fee['']), wallet.primaryToken)} ${strings.ofFees}`}
+            {`+ ${formatTokenAmount(
+              new BigNumber(yoroiUnsignedTx.fee[wallet.primaryToken.identifier]),
+              wallet.primaryToken,
+            )} ${strings.ofFees}`}
           </Text>
 
           {/* requires a handler so we pass on a dummy function */}
