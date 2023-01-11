@@ -44,6 +44,7 @@ import {
   TransactionInfo,
   YoroiAmounts,
   YoroiNFT,
+  YoroiNFTModerationStatus,
   YoroiSignedTx,
   YoroiUnsignedTx,
 } from '../yoroi-wallets/types'
@@ -265,6 +266,19 @@ export const useTokenImage = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: 
   }
 
   return null
+}
+
+export const useNftImageModerated = ({
+  wallet,
+  nftId,
+}: {
+  wallet: YoroiWallet
+  nftId: string
+}): {image: string; status: YoroiNFTModerationStatus} | null => {
+  const nft = useNft(wallet, {id: nftId})
+  const fingerprint = nft ? getAssetFingerprint(nft.metadata.policyId, nft.metadata.assetNameHex) : null
+  const {data} = useNftModerationStatus({wallet, fingerprint})
+  return nft && data ? {image: nft.image, status: data} : null
 }
 
 export const fetchTokenInfo = async ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string}): Promise<Token> => {

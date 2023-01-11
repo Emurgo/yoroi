@@ -2,19 +2,30 @@ import BigNumber from 'bignumber.js'
 import React from 'react'
 import {defineMessages} from 'react-intl'
 import {useIntl} from 'react-intl'
-import {Alert, FlatList, FlatListProps, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
+import {
+  ActivityIndicator,
+  Alert,
+  FlatList,
+  FlatListProps,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  ViewProps,
+} from 'react-native'
 import {Avatar} from 'react-native-paper'
 
 import AdaImage from '../../assets/img/asset_ada.png'
 import NoImage from '../../assets/img/asset_no_image.png'
 import {Boundary, Text} from '../../components'
 import {Spacer} from '../../components/Spacer'
-import {useBalances, useTokenImage, useTokenInfo} from '../../hooks'
+import {useBalances, useNftImageModerated, useTokenInfo} from '../../hooks'
 import globalMessages, {actionMessages} from '../../i18n/global-messages'
+import {SHOW_NFT_GALLERY} from '../../legacy/config'
 import {formatTokenAmount, getAssetDenominationOrId, getTokenFingerprint} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
-import {YoroiAmount} from '../../yoroi-wallets/types'
+import {YoroiAmount, YoroiNFTModerationStatus} from '../../yoroi-wallets/types'
 import {Amounts, Quantities} from '../../yoroi-wallets/utils'
 import {ActionsBanner} from './ActionsBanner'
 
@@ -71,12 +82,16 @@ type AssetItemProps = {
 const AssetItem = ({amount, onPress}: AssetItemProps) => {
   const wallet = useSelectedWallet()
   const tokenInfo = useTokenInfo({wallet, tokenId: amount.tokenId})
-  const tokenImage = useTokenImage({wallet, tokenId: amount.tokenId})
+  const nftModeratedImage = useNftImageModerated({wallet, nftId: amount.tokenId})
 
   return (
     <TouchableOpacity onPress={onPress} style={styles.button} testID="assetItem">
       <Left>
-        <Icon source={tokenInfo.isDefault ? AdaImage : tokenImage !== null ? {uri: tokenImage} : NoImage} />
+        {nftModeratedImage && SHOW_NFT_GALLERY ? (
+          <ModeratedNftIcon image={nftModeratedImage.image} status={nftModeratedImage.status} />
+        ) : (
+          <Icon source={tokenInfo.isDefault ? AdaImage : NoImage} />
+        )}
       </Left>
 
       <Middle>
@@ -132,15 +147,17 @@ const styles = StyleSheet.create({
   tokenAmount: {
     color: COLORS.DARK_TEXT,
   },
+  assetIcon: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+    height: 32,
+    width: 32,
+  },
 })
 
-const Icon = (props) => (
-  <Avatar.Image
-    {...props}
-    size={32}
-    style={{alignItems: 'center', justifyContent: 'center', backgroundColor: 'transparent'}}
-  />
-)
+const Icon = (props) => <Avatar.Image {...props} size={32} style={styles.assetIcon} />
 
 const messages = defineMessages({
   unknownAsset: {
@@ -148,6 +165,30 @@ const messages = defineMessages({
     defaultMessage: '!!!Unknown asset',
   },
 })
+
+const ModeratedNftIcon = ({image, status}: {image: string; status: YoroiNFTModerationStatus}) => {
+  if (status === 'pending' || status === 'manual_review') {
+    return (
+      <View style={styles.assetIcon}>
+        <ActivityIndicator size="small" color="black" />
+      </View>
+    )
+  }
+
+  if (status === 'blocked') {
+    return <Icon source={NoImage} />
+  }
+
+  if (status === 'consent') {
+    return <Image source={{uri: image}} style={styles.assetIcon} blurRadius={20} borderRadius={32} />
+  }
+
+  if (status === 'approved') {
+    return <Icon source={{uri: image}} />
+  }
+
+  return null
+}
 
 const useStrings = () => {
   const intl = useIntl()

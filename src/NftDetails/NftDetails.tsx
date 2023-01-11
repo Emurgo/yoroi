@@ -217,47 +217,47 @@ const styles = StyleSheet.create({
 
 const messages = defineMessages({
   title: {
-    id: 'components.nftDetails.title',
+    id: 'nft.detail.title',
     defaultMessage: '!!!NFT Details',
   },
   overview: {
-    id: 'components.nftDetails.overview',
+    id: 'nft.detail.overview',
     defaultMessage: '!!!Overview',
   },
   metadata: {
-    id: 'components.nftDetails.metadata',
+    id: 'nft.detail.metadata',
     defaultMessage: '!!!Metadata',
   },
   nftName: {
-    id: 'components.nftDetails.nftName',
+    id: 'nft.detail.nftName',
     defaultMessage: '!!!NFT Name',
   },
   createdAt: {
-    id: 'components.nftDetails.createdAt',
+    id: 'nft.detail.createdAt',
     defaultMessage: '!!!Created',
   },
   description: {
-    id: 'components.nftDetails.description',
+    id: 'nft.detail.description',
     defaultMessage: '!!!Description',
   },
   author: {
-    id: 'components.nftDetails.author',
+    id: 'nft.detail.author',
     defaultMessage: '!!!Author',
   },
   fingerprint: {
-    id: 'components.nftDetails.fingerprint',
+    id: 'nft.detail.fingerprint',
     defaultMessage: '!!!Fingerprint',
   },
   policyId: {
-    id: 'components.nftDetails.policyId',
+    id: 'nft.detail.policyId',
     defaultMessage: '!!!Policy id',
   },
   detailsLinks: {
-    id: 'components.nftDetails.detailsLinks',
+    id: 'nft.detail.detailsLinks',
     defaultMessage: '!!!Details on',
   },
   copyMetadata: {
-    id: 'components.nftDetails.copyMetadata',
+    id: 'nft.detail.copyMetadata',
     defaultMessage: '!!!Copy metadata',
   },
 })

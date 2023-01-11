@@ -1,9 +1,9 @@
 import {createStackNavigator} from '@react-navigation/stack'
 import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet, TextInput, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
-import {Icon} from '../components'
+import {Icon, SearchBar} from '../components'
 import {NftRoutes} from '../navigation'
 import {Nfts} from './Nfts'
 
@@ -14,12 +14,8 @@ export const NftsNavigator = () => {
   const [showSearch, setShowSearch] = useState(false)
   const [search, setSearch] = useState('')
 
-  const handleCrossPress = () => {
-    if (search.length > 0) {
-      setSearch('')
-    } else {
-      setShowSearch(false)
-    }
+  const handleClearPress = () => {
+    setSearch('')
   }
 
   const handleBackPress = () => {
@@ -42,20 +38,13 @@ export const NftsNavigator = () => {
           headerTitleAlign: 'center',
           header: showSearch
             ? () => (
-                <View style={styles.header}>
-                  <TouchableOpacity onPress={handleBackPress}>
-                    <Icon.Chevron direction="left" color="#000000" />
-                  </TouchableOpacity>
-                  <TextInput
-                    autoFocus
-                    placeholder={strings.search}
-                    style={styles.input}
-                    onChangeText={(search) => setSearch(search)}
-                  />
-                  <TouchableOpacity onPress={handleCrossPress}>
-                    <Icon.Cross color="#000000" size={23} />
-                  </TouchableOpacity>
-                </View>
+                <SearchBar
+                  placeholder={strings.search}
+                  onChangeText={(search) => setSearch(search)}
+                  value={search}
+                  onClearPress={handleClearPress}
+                  onBackPress={handleBackPress}
+                />
               )
             : undefined,
           headerLeft: () => <View style={styles.iconPlaceholder} />,
@@ -75,18 +64,6 @@ export const NftsNavigator = () => {
 }
 
 const styles = StyleSheet.create({
-  input: {
-    width: '100%',
-    flex: 1,
-  },
-  header: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
-    paddingRight: 20,
-    paddingLeft: 10,
-  },
   center: {
     display: 'flex',
     alignItems: 'center',
@@ -108,11 +85,11 @@ const useStrings = () => {
 
 const messages = defineMessages({
   title: {
-    id: 'components.nftsNavigation.title',
+    id: 'nft.navigation.title',
     defaultMessage: '!!!NFT Gallery',
   },
   search: {
-    id: 'components.nftsNavigation.search',
+    id: 'nft.navigation.search',
     defaultMessage: '!!!Search NFT',
   },
 })

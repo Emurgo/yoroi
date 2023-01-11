@@ -5,7 +5,7 @@ import {Image, RefreshControl, ScrollView, StyleSheet, Text, View} from 'react-n
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import noNftsImage from '../assets/img/no-nft.png'
-import {Icon, OfflineBanner, Spacer, StatusBar} from '../components'
+import {Icon, Spacer, StatusBar} from '../components'
 import {useNfts} from '../hooks'
 import {WalletStackRouteNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
@@ -29,7 +29,6 @@ export const Nfts = ({search}: Props) => {
       <StatusBar type="dark" />
       <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
         <View style={styles.container}>
-          <OfflineBanner />
           <Spacer height={16} />
           <ScrollView
             style={styles.scrollView}
@@ -151,23 +150,23 @@ const styles = StyleSheet.create({
 
 const messages = defineMessages({
   noNFTs: {
-    id: 'components.nfts.noNFTs',
+    id: 'nft.gallery.noNFTs',
     defaultMessage: '!!!No NFTs found',
   },
   nftCount: {
-    id: 'components.nfts.nftCount',
+    id: 'nft.gallery.nftCount',
     defaultMessage: '!!!NFT count',
   },
   errorTitle: {
-    id: 'components.nfts.errorTitle',
+    id: 'nft.gallery.errorTitle',
     defaultMessage: '!!!Oops!',
   },
   errorDescription: {
-    id: 'components.nfts.errorDescription',
+    id: 'nft.gallery.errorDescription',
     defaultMessage: '!!!Something went wrong.',
   },
   reloadApp: {
-    id: 'components.nfts.reloadApp',
+    id: 'nft.gallery.reloadApp',
     defaultMessage: '!!!Try to reload this page or restart the app.',
   },
 })

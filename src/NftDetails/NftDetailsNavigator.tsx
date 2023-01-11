@@ -30,7 +30,7 @@ export const NftDetailsNavigator = () => {
 
 const messages = defineMessages({
   title: {
-    id: 'components.nftDetailsNavigator.title',
+    id: 'nft.detail.title',
     defaultMessage: '!!!NFT Details',
   },
 })
