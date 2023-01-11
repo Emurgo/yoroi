@@ -4,7 +4,7 @@ import {useIntl} from 'react-intl'
 import {Text, View} from 'react-native'
 
 import {StandardModal} from '../components'
-import {useBalances, useTokenInfo} from '../hooks'
+import {useBalances} from '../hooks'
 import globalMessages, {confirmationMessages} from '../i18n/global-messages'
 import {CONFIG} from '../legacy/config'
 import {formatTokenWithText} from '../legacy/format'
@@ -15,7 +15,6 @@ export const InsufficientFundsModal = ({visible, onRequestClose}: {visible: bool
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const balances = useBalances(wallet)
-  const tokenInfo = useTokenInfo({wallet, tokenId: ''})
 
   return (
     <StandardModal
@@ -31,8 +30,11 @@ export const InsufficientFundsModal = ({visible, onRequestClose}: {visible: bool
       <View>
         <Text>
           {strings.insufficientBalance({
-            requiredBalance: formatTokenWithText(CONFIG.CATALYST.DISPLAYED_MIN_ADA, tokenInfo),
-            currentBalance: formatTokenWithText(new BigNumber(Amounts.getAmount(balances, '').quantity), tokenInfo),
+            requiredBalance: formatTokenWithText(CONFIG.CATALYST.DISPLAYED_MIN_ADA, wallet.primaryToken),
+            currentBalance: formatTokenWithText(
+              new BigNumber(Amounts.getAmount(balances, wallet.primaryToken.identifier).quantity),
+              wallet.primaryToken,
+            ),
           })}
         </Text>
       </View>

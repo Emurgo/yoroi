@@ -14,7 +14,7 @@ storiesOf('DelegationConfirmation', module)
       <SelectedWalletProvider
         wallet={{
           ...mocks.wallet,
-          defaultAsset: getDefaultAssets()[0],
+          primaryToken: getDefaultAssets()[0],
           fetchPoolInfo: mocks.fetchPoolInfo.success.poolFound,
         }}
       >
@@ -29,7 +29,7 @@ storiesOf('DelegationConfirmation', module)
       <SelectedWalletProvider
         wallet={{
           ...mocks.wallet,
-          defaultAsset: getDefaultAssets()[0],
+          primaryToken: getDefaultAssets()[0],
           fetchPoolInfo: mocks.fetchPoolInfo.loading,
         }}
       >
@@ -44,7 +44,7 @@ storiesOf('DelegationConfirmation', module)
       <SelectedWalletProvider
         wallet={{
           ...mocks.wallet,
-          defaultAsset: getDefaultAssets()[0],
+          primaryToken: getDefaultAssets()[0],
           fetchPoolInfo: mocks.fetchPoolInfo.error,
         }}
       >

@@ -30,7 +30,7 @@ export const SendProvider = ({
   children: React.ReactNode
 }) => {
   const [state, dispatch] = React.useReducer(sendReducer, {
-    ...initialState(wallet.defaultAsset.identifier),
+    ...initialState(wallet.primaryToken.identifier),
     ...props.initialState,
   })
 
@@ -39,8 +39,8 @@ export const SendProvider = ({
     amountChanged: (amount) => dispatch({type: 'amountChanged', amount}),
     tokenSelected: (tokenId) => dispatch({type: 'tokenSelected', tokenId}),
     sendAllChanged: () => dispatch({type: 'sendAllChanged'}),
-    allTokensSelected: () => dispatch({type: 'allTokensSelected', primaryTokenId: wallet.defaultAsset.identifier}),
-    resetForm: () => dispatch({type: 'resetForm', primaryTokenId: wallet.defaultAsset.identifier}),
+    allTokensSelected: () => dispatch({type: 'allTokensSelected', primaryTokenId: wallet.primaryToken.identifier}),
+    resetForm: () => dispatch({type: 'resetForm', primaryTokenId: wallet.primaryToken.identifier}),
   }).current
 
   const context = React.useMemo(() => ({...state, ...actions}), [actions, state])

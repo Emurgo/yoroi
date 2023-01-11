@@ -3,7 +3,6 @@ import React from 'react'
 import {StyleSheet} from 'react-native'
 
 import {Text} from '../../components'
-import {useTokenInfo} from '../../hooks'
 import {formatTokenWithSymbol} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
@@ -13,7 +12,6 @@ import {useStrings} from './strings'
 export const Fee = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx | null}) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
-  const tokenInfo = useTokenInfo({wallet, tokenId: ''})
 
   if (yoroiUnsignedTx == null) {
     return (
@@ -25,13 +23,13 @@ export const Fee = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx | null}
     )
   }
 
-  const primaryAmount = Amounts.getAmount(yoroiUnsignedTx.fee, '')
+  const primaryAmount = Amounts.getAmount(yoroiUnsignedTx.fee, wallet.primaryToken.identifier)
 
   return (
     <Text style={styles.info} testID="feesText">
       {strings.feeLabel}
       {': '}
-      {formatTokenWithSymbol(new BigNumber(primaryAmount.quantity), tokenInfo)}
+      {formatTokenWithSymbol(new BigNumber(primaryAmount.quantity), wallet.primaryToken)}
     </Text>
   )
 }
