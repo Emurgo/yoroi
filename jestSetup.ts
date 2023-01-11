@@ -42,3 +42,5 @@ jest.mock('react-native', () => {
 
   return RN
 })
+
+Logger.setLogLevel(LogLevel.Nothing)

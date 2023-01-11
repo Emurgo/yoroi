@@ -482,6 +482,7 @@
   "global.error.walletNameTooLong": "Имя кошелька не может превышать 40 символов",
   "global.error.walletNameMustBeFilled": "Must be filled",
   "global.info": "Info",
+  "global.learnMore": "Learn more",
   "global.ledgerMessages.appInstalled": "Cardano ADA app is installed on your Ledger device.",
   "global.ledgerMessages.appOpened": "Cardano ADA app must remain open on your Ledger device.",
   "global.ledgerMessages.bluetoothEnabled": "Bluetooth is enabled on your smartphone.",

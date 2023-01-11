@@ -15,7 +15,7 @@ describe('migrateAuthSetting', () => {
   it('method = null and no pin/os means new setup, it should remain null', async () => {
     await migrateAuthSetting(storage)
 
-    await expect(await storage.getItem(SettingsStorageKeys.Auth)).toBeNull()
+    await expect(storage.getItem(SettingsStorageKeys.Auth)).resolves.toBeNull()
   })
 
   // correct way should make sure that .setItem was not called
@@ -23,11 +23,11 @@ describe('migrateAuthSetting', () => {
   it('method != null remains the same', async () => {
     await storage.setItem(SettingsStorageKeys.Auth, os)
     await migrateAuthSetting(storage)
-    await expect(await storage.getItem(SettingsStorageKeys.Auth)).toBe(os)
+    await expect(storage.getItem(SettingsStorageKeys.Auth)).resolves.toBe(os)
 
     await storage.setItem(SettingsStorageKeys.Auth, pin)
     await migrateAuthSetting(storage)
-    await expect(await storage.getItem(SettingsStorageKeys.Auth)).toBe(pin)
+    await expect(storage.getItem(SettingsStorageKeys.Auth)).resolves.toBe(pin)
   })
 
   // if the store is inconsistent we favor OS, so the user can disable on device and it will ask for a new pin
@@ -39,7 +39,7 @@ describe('migrateAuthSetting', () => {
 
     await migrateAuthSetting(storage)
 
-    await expect(await storage.getItem(SettingsStorageKeys.Auth)).toBe(os)
+    await expect(storage.getItem(SettingsStorageKeys.Auth)).resolves.toBe(os)
   })
 
   it('old store is pin, method = "pin"', async () => {
@@ -50,7 +50,7 @@ describe('migrateAuthSetting', () => {
 
     await migrateAuthSetting(storage)
 
-    await expect(await storage.getItem(SettingsStorageKeys.Auth)).toBe(pin)
+    await expect(storage.getItem(SettingsStorageKeys.Auth)).resolves.toBe(pin)
   })
 
   // pin hash is deleted when changing to OS auth
@@ -59,6 +59,6 @@ describe('migrateAuthSetting', () => {
 
     await migrateAuthSetting(storage)
 
-    await expect(await storage.getItem(SettingsStorageKeys.Auth)).toBe(os)
+    await expect(storage.getItem(SettingsStorageKeys.Auth)).resolves.toBe(os)
   })
 })

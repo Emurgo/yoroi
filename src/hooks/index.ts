@@ -601,7 +601,7 @@ export const useOpenWallet = (options?: UseMutationOptions<[YoroiWallet, WalletM
   const walletManager = useWalletManager()
   const mutation = useMutation({
     ...options,
-    mutationFn: async (walletMeta) => walletManager.openWallet(walletMeta),
+    mutationFn: (walletMeta) => Promise.all([walletManager.openWallet(walletMeta), walletMeta]),
   })
 
   return {

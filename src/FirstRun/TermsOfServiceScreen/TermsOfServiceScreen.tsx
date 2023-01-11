@@ -23,9 +23,12 @@ export const TermsOfServiceScreen = () => {
   const {login} = useAuth()
   const authOsEnabled = useAuthOsEnabled()
   const storage = useStorage()
-  const {enableAuthWithOs, isLoading} = useEnableAuthWithOs({storage}, {onSuccess: login})
+  const {enableAuthWithOs, isLoading} = useEnableAuthWithOs(
+    {storage},
+    {onSuccess: login, onError: () => navigation.navigate('enable-login-with-pin')},
+  )
 
-  const onAccept = async () => {
+  const onAccept = () => {
     if (authOsEnabled) {
       enableAuthWithOs()
     } else {

@@ -6,7 +6,6 @@ import {ActivityIndicator, Image, ImageSourcePropType, StyleSheet, View, ViewSty
 import {Button, ProgressStep, TextInput} from '../../components'
 import {useWalletNames} from '../../hooks'
 import globalMessages from '../../i18n/global-messages'
-import {ignoreConcurrentAsyncHandler} from '../../legacy/utils'
 import {spacing} from '../../theme'
 import {useWalletManager} from '../../WalletManager'
 import {getWalletNameError, validateWalletName} from '../../yoroi-wallets/utils/validators'
@@ -50,12 +49,6 @@ export const WalletNameForm = ({
   }
   const walletNameErrorText = getWalletNameError(errorMessages, validationErrors) ?? undefined
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const submit = React.useCallback((ignoreConcurrentAsyncHandler as any)(() => () => onSubmit({name}), 1000)(), [
-    onSubmit,
-    name,
-  ])
-
   return (
     <View style={styles.root}>
       {progress != null && (
@@ -85,7 +78,7 @@ export const WalletNameForm = ({
       <View style={styles.buttonContainer}>
         <Button
           block
-          onPress={submit}
+          onPress={() => onSubmit({name})}
           title={strings.save}
           style={[styles.button, buttonStyle]}
           disabled={hasErrors || isWaiting}

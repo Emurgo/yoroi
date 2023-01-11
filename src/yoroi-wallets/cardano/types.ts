@@ -3,7 +3,6 @@ import type {IntlShape} from 'react-intl'
 
 import {WalletEncryptedStorage} from '../../auth'
 import type {HWDeviceInfo} from '../../legacy/ledgerUtils'
-import {WalletMeta} from '../../legacy/state'
 import storage from '../../legacy/storage'
 import {
   AccountStates,
@@ -32,7 +31,6 @@ import {DefaultAsset, SendTokenList, TokenInfo} from '../types/tokens'
 import {CardanoTypes} from '.'
 import type {Addresses} from './chain'
 import {AddressChain} from './chain'
-import {TransactionCache} from './shelley/transactionCache'
 
 export type WalletEvent =
   | {type: 'initialize'}
@@ -45,30 +43,28 @@ export type WalletEvent =
 export type WalletSubscription = (event: WalletEvent) => void
 export type Unsubscribe = () => void
 export interface WalletInterface {
-  id: null | string
+  id: string
 
-  networkId: undefined | NetworkId
+  networkId: NetworkId
 
-  walletImplementationId: undefined | WalletImplementationId
+  walletImplementationId: WalletImplementationId
 
   isHW: boolean
 
   hwDeviceInfo: null | HWDeviceInfo
 
-  isReadOnly: undefined | boolean
+  isReadOnly: boolean
 
   provider: null | undefined | YoroiProvider
 
   isEasyConfirmationEnabled: boolean
 
-  internalChain: null | AddressChain
+  internalChain: AddressChain
 
-  externalChain: null | AddressChain
+  externalChain: AddressChain
 
-  // note: currently not exposed to redux's store
-  publicKeyHex: undefined | string
+  publicKeyHex: string
 
-  // note: exposed to redux's store but not in storage (as it can be derived)
   rewardAddressHex: null | string
 
   // last known version the wallet has been opened on
@@ -76,16 +72,8 @@ export interface WalletInterface {
   // and was never updated. Starting from v4.1.0, we instead store the
   // last version the wallet has been *opened* on, since this is the actual
   // relevant information we need to decide on whether migrations are needed.
-  // Saved in storage but not exposed to redux's store.
-  version: undefined | string
 
-  state: WalletState
-
-  isInitialized: boolean
-
-  transactionCache: null | TransactionCache
-
-  checksum: undefined | CardanoTypes.WalletChecksum
+  checksum: CardanoTypes.WalletChecksum
 
   utxos: Array<RawUtxo>
 
@@ -107,29 +95,9 @@ export interface WalletInterface {
 
   get receiveAddresses(): Addresses
 
-  // =================== create =================== //
-
-  create(
-    mnemonic: string,
-    newPassword: string,
-    networkId: NetworkId,
-    implementationId: WalletImplementationId,
-    provider?: null | YoroiProvider,
-  ): Promise<string>
-
-  createWithBip44Account(
-    accountPublicKey: string,
-    networkId: NetworkId,
-    implementationId: WalletImplementationId,
-    hwDeviceInfo: null | HWDeviceInfo,
-    isReadOnly: boolean,
-  ): Promise<string>
-
   // ============ security & key management ============ //
 
   encryptAndSaveRootKey(encryptionMethod: EncryptionMethod, rootKey: string, password: string): Promise<void>
-
-  getDecryptedRootKey(rootPassword: string, intl: IntlShape): Promise<string>
 
   enableEasyConfirmation(rootKey: string): Promise<void>
   disableEasyConfirmation(): Promise<void>
@@ -143,8 +111,6 @@ export interface WalletInterface {
 
   // =================== synch =================== //
 
-  doFullSync(): Promise<void>
-
   tryDoFullSync(): Promise<void>
 
   // =================== persistence =================== //
@@ -156,18 +122,9 @@ export interface WalletInterface {
   // TODO: type
   toJSON(): unknown
 
-  restore(data: unknown, walletMeta: WalletMeta): Promise<void>
-
   // =================== tx building =================== //
 
-  // not exposed to wallet manager, consider removing
-  getChangeAddress(): string
-
   getAllUtxosForKey(): Promise<Array<CardanoTypes.CardanoAddressedUtxo>>
-
-  getAddressing(address: string): unknown
-
-  getAddressedUtxos(): Promise<Array<CardanoTypes.CardanoAddressedUtxo>>
 
   getDelegationStatus(): Promise<StakingStatus>
 
@@ -297,7 +254,6 @@ type YoroiWalletKeys =
   | 'createVotingRegTx'
   | 'createWithdrawalTx'
   | 'disableEasyConfirmation'
-  | 'doFullSync'
   | 'enableEasyConfirmation'
   | 'externalAddresses'
   | 'fetchAccountState'
@@ -333,6 +289,8 @@ type YoroiWalletKeys =
   | 'canGenerateNewReceiveAddress'
   | 'generateNewReceiveAddressIfNeeded'
   | 'generateNewReceiveAddress'
+  | 'tryDoFullSync'
+  | 'clear'
 
 const yoroiWalletKeys: Array<YoroiWalletKeys> = [
   'changePassword',
@@ -344,7 +302,6 @@ const yoroiWalletKeys: Array<YoroiWalletKeys> = [
   'createVotingRegTx',
   'createWithdrawalTx',
   'disableEasyConfirmation',
-  'doFullSync',
   'enableEasyConfirmation',
   'externalAddresses',
   'fetchAccountState',
@@ -376,4 +333,6 @@ const yoroiWalletKeys: Array<YoroiWalletKeys> = [
   'transactions',
   'utxos',
   'walletImplementationId',
+  'tryDoFullSync',
+  'clear',
 ]

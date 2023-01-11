@@ -482,6 +482,7 @@
   "global.error.walletNameTooLong": "ウォレット名が40文字を超えています。",
   "global.error.walletNameMustBeFilled": "Must be filled",
   "global.info": "Info",
+  "global.learnMore": "Learn more",
   "global.ledgerMessages.appInstalled": "Cardano ADA app is installed on your Ledger device.",
   "global.ledgerMessages.appOpened": "Cardano ADA app must remain open on your Ledger device.",
   "global.ledgerMessages.bluetoothEnabled": "スマートフォンでBluetoothが有効になっています。",
