@@ -6,7 +6,7 @@ describe('utxo manager storage', () => {
     const storage = rootStorage.join('utxos/')
     const {addrCounter} = makeUtxoManagerStorage(storage)
 
-    // iniital
+    // initial
     await addrCounter.read().then((addrCounter) => {
       return expect(addrCounter).toEqual(0)
     })
