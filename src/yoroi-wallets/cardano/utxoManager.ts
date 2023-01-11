@@ -73,7 +73,7 @@ export const makeUtxoStorage = (storage: Storage) => {
     storage.setItem(diffPath, utxoDiffToBestBlock)
 
   const getUtxoAtSafePoint = () => storage.getItem(safePointPath, parseSafePoint)
-  const setUtxoAtSafePoint = async (utxoAtSafePoint: UtxoAtSafePoint) => storage.setItem(safePointPath, utxoAtSafePoint)
+  const setUtxoAtSafePoint = (utxoAtSafePoint: UtxoAtSafePoint) => storage.setItem(safePointPath, utxoAtSafePoint)
 
   const utxoStorage: UtxoStorage = {
     getUtxoAtSafePoint,
