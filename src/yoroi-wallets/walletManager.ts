@@ -43,10 +43,13 @@ export class WalletManager {
   }
 
   async listWallets() {
-    const keys = await this.storage.getAllKeys()
-    const result = await this.storage.multiGet(keys, parseWalletMeta)
+    const walletIds = await this.storage.getAllKeys()
+    const walletMetas = await this.storage
+      .multiGet(walletIds, parseWalletMeta)
+      .then((tuples) => tuples.map(([_, walletMeta]) => walletMeta))
+      .then((walletMetas) => walletMetas.filter(isWalletMeta)) // filter corrupted wallet metas)
 
-    return result.map(([_, walletMeta]) => walletMeta).filter(isWalletMeta) // filter corrupted wallet metas
+    return walletMetas
   }
 
   // note(v-almonacid): This method retrieves all the wallets' metadata from
