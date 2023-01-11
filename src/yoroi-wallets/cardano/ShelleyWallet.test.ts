@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import {EncryptedStorage, EncryptedStorageKeys} from '../../auth'
 import {HWDeviceInfo} from '../../legacy/ledgerUtils'
 import {WalletMeta} from '../../legacy/state'
-import {mountStorage} from '../storage'
+import {storage} from '../storage'
 import {ShelleyAddressGeneratorJSON} from './chain'
 import {ShelleyWallet, WalletJSON} from './ShelleyWallet'
 import {YoroiWallet} from './types'
@@ -21,7 +21,7 @@ describe('migration', () => {
       mnemonic,
       networkId: walletMeta.networkId,
       implementationId: walletMeta.walletImplementationId,
-      storage: mountStorage(`/wallet/${walletMeta.id}/`),
+      storage: storage.join(`${walletMeta.id}/`),
       password,
       provider: undefined,
     })
@@ -131,7 +131,6 @@ describe('migration', () => {
   })
 
   it('restore', async () => {
-    const storage = mountStorage('/wallet/')
     storage.setItem(`${walletMeta.id}`, walletMeta)
     storage.setItem(`${walletMeta.id}/data`, data)
 
@@ -141,7 +140,7 @@ describe('migration', () => {
     await EncryptedStorage.write(EncryptedStorageKeys.rootKey(walletMeta.id), rootKey, password)
 
     const wallet: YoroiWallet & Record<string, any> = await ShelleyWallet.restore({
-      storage: mountStorage(`/wallet/${walletMeta.id}/`),
+      storage: storage.join(`${walletMeta.id}/`),
       walletMeta,
     })
     await wallet.internalChain?._addressGenerator.getRewardAddressHex()
@@ -270,7 +269,7 @@ describe('migration', () => {
       accountPubKeyHex,
       networkId: walletMeta.networkId,
       implementationId: walletMeta.walletImplementationId,
-      storage: mountStorage(`/wallet/${walletMeta.id}/`),
+      storage: storage.join(`${walletMeta.id}/`),
       hwDeviceInfo,
       isReadOnly,
     })

@@ -1,9 +1,9 @@
-import {mountStorage} from '../storage'
+import {storage as rootStorage} from '../storage'
 import {makeUtxoManagerStorage, makeUtxoStorage} from './utxoManager'
 
 describe('utxo manager storage', () => {
   it('works', async () => {
-    const storage = mountStorage('utxos/')
+    const storage = rootStorage.join('utxos/')
     const {addrCounter} = makeUtxoManagerStorage(storage)
 
     // iniital
@@ -25,7 +25,7 @@ describe('utxo manager storage', () => {
 
 describe('utxo storage', () => {
   it('works', async () => {
-    const storage = mountStorage('utxos/')
+    const storage = rootStorage.join('utxos/')
 
     const {
       getUtxoDiffToBestBlock,

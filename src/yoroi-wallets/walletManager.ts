@@ -12,7 +12,7 @@ import {Logger} from '../legacy/logging'
 import type {WalletMeta} from '../legacy/state'
 import {isWalletMeta, migrateWalletMetas, parseWalletMeta} from '../Storage/migrations/walletMeta'
 import {isYoroiWallet, NetworkId, ShelleyWallet, WalletImplementationId, YoroiProvider, YoroiWallet} from './cardano'
-import {mountStorage, Storage} from './storage'
+import {Storage, storage} from './storage'
 import {WALLET_IMPLEMENTATION_REGISTRY} from './types/other'
 
 export class WalletClosed extends ExtendableError {}
@@ -39,7 +39,7 @@ export class WalletManager {
   constructor() {
     // do not await on purpose
     this._backgroundSync()
-    this.storage = mountStorage('/wallet/')
+    this.storage = storage.join('wallet/')
   }
 
   async listWallets() {
@@ -197,7 +197,7 @@ export class WalletManager {
     const Wallet = this.getWalletImplementation(walletMeta.walletImplementationId)
 
     const wallet = await Wallet.restore({
-      storage: mountStorage(`/wallet/${walletMeta.id}/`),
+      storage: this.storage.join(`${walletMeta.id}/`),
       walletMeta,
     })
 
@@ -308,7 +308,7 @@ export class WalletManager {
     const id = uuid.v4()
 
     const wallet = await Wallet.create({
-      storage: mountStorage(`/wallet/${id}/`),
+      storage: this.storage.join(`${id}/`),
       networkId,
       id,
       mnemonic,
@@ -332,7 +332,7 @@ export class WalletManager {
     const id = uuid.v4()
 
     const wallet = await Wallet.createBip44({
-      storage: mountStorage(`/wallet/${id}/`),
+      storage: this.storage.join(`${id}/`),
       networkId,
       id,
       accountPubKeyHex,

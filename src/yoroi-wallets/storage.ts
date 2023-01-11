@@ -5,7 +5,7 @@ import {parseSafe} from './utils/parsing'
 export type Storage = ReturnType<typeof mountStorage>
 export type Path = `${string}/`
 
-export const mountStorage = (path: Path) => {
+const mountStorage = (path: Path) => {
   const withPath = (key: string) => `${path}${key}` as `${Path}${string}`
   const withoutPath = (value: string) => value.slice(path.length)
 
@@ -58,3 +58,5 @@ export const mountStorage = (path: Path) => {
 }
 
 const isLeafKey = ({key, path}: {key: string; path: string}) => !key.slice(path.length).includes('/')
+
+export const storage = mountStorage('/')

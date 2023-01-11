@@ -2,7 +2,7 @@ import {fromPairs} from 'lodash'
 import DeviceInfo from 'react-native-device-info'
 
 import {ApiHistoryError} from '../../../legacy/errors'
-import {mountStorage, Storage} from '../../storage'
+import {Storage, storage as rootStorage} from '../../storage'
 import type {BackendConfig, RawTransaction, TipStatusResponse, Transaction} from '../../types/other'
 import {makeTxCacheStorage, syncTxs, toCachedTx, TransactionCache} from './transactionCache'
 
@@ -76,7 +76,7 @@ describe('transactionCache', () => {
 
 describe('transaction storage', () => {
   it('works', async () => {
-    const storage = mountStorage('txs/')
+    const storage = rootStorage.join('txs/')
     const {loadTxs, saveTxs, clear} = makeTxCacheStorage(storage)
 
     // initial
