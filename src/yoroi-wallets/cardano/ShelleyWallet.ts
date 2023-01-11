@@ -271,7 +271,7 @@ export class ShelleyWallet implements WalletInterface {
   }) => {
     const rewardAddressHex = await deriveRewardAddressHex(accountPubKeyHex, networkId)
     const apiUrl = getCardanoNetworkConfigById(networkId).BACKEND.API_ROOT
-    const utxoManager = await makeUtxoManager({storage: storage.join("utxoManager/"), apiUrl})
+    const utxoManager = await makeUtxoManager({storage: storage.join('utxoManager/'), apiUrl})
     const transactionCache = await TransactionCache.create(storage.join('txs/'))
 
     const wallet = new ShelleyWallet({
