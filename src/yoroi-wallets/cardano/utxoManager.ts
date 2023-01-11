@@ -77,7 +77,7 @@ export const makeUtxoStorage = (storage: Storage) => {
 
   const utxoStorage: UtxoStorage = {
     getUtxoAtSafePoint,
-    replaceUtxoAtSafePoint: async (utxos: Utxo[], lastSafeBlockHash: string) =>
+    replaceUtxoAtSafePoint: (utxos: Utxo[], lastSafeBlockHash: string) =>
       setUtxoAtSafePoint({lastSafeBlockHash, utxos}),
 
     getUtxoDiffToBestBlock,
