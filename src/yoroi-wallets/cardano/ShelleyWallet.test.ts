@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import {EncryptedStorage, EncryptedStorageKeys} from '../../auth'
