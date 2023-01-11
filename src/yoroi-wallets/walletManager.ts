@@ -46,8 +46,6 @@ export class WalletManager {
     const keys = await this.storage.getAllKeys()
     const result = await this.storage.multiGet(keys, parseWalletMeta)
 
-    Logger.debug('result::_listWallets', result)
-
     return result.map(([_, walletMeta]) => walletMeta).filter(isWalletMeta) // filter corrupted wallet metas
   }
 
