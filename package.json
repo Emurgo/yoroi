@@ -21,7 +21,6 @@
     "lint:fix": "yarn lint:typescript --fix",
     "lint:typescript": "eslint --max-warnings=0 ./src -c ./.eslintrc.js",
     "manage-translations": "node ./translations/translation-runner.js",
-    "nigh-android": "react-native run-android --variant=devDebug --appIdSuffix=nightly",
     "prepare": "husky install",
     "prettify": "prettier --write ./src ./e2e ./storybook ./translations --config .prettierrc",
     "purge-translations": "rimraf ./translations/messages",

@@ -371,6 +371,10 @@ export class ShelleyWallet implements WalletInterface {
     return this.externalAddresses.slice(0, this.numReceiveAddresses)
   }
 
+  get stakingKeyPath() {
+    return isByron(this.walletImplementationId) ? [] : this.getStakingKeyPath()
+  }
+
   save() {
     return this.storage.write(`/wallet/${this.id}/data`, this.toJSON())
   }
@@ -795,7 +799,6 @@ export class ShelleyWallet implements WalletInterface {
       const votingPublicKey = await Promise.resolve(Buffer.from(catalystKeyHex, 'hex'))
         .then((bytes) => CardanoMobile.PrivateKey.fromExtendedBytes(bytes))
         .then((key) => key.toPublic())
-      const stakingKeyPath = this.getStakingKeyPath()
       const stakingPublicKey = await this.getStakingKey()
       const changeAddr = await this.getAddressedChangeAddress()
       const networkConfig = this.getNetworkConfig()
@@ -819,7 +822,7 @@ export class ShelleyWallet implements WalletInterface {
         absSlotNumber,
         this.defaultAsset,
         votingPublicKey,
-        stakingKeyPath,
+        this.stakingKeyPath,
         stakingPublicKey,
         addressedUtxos,
         changeAddr,
@@ -911,13 +914,12 @@ export class ShelleyWallet implements WalletInterface {
 
   async signTxWithLedger(unsignedTx: YoroiUnsignedTx, useUSB: boolean): Promise<YoroiSignedTx> {
     if (!this.hwDeviceInfo) throw new Error('Invalid wallet state')
-    const stakingKeyPath = isByron(this.walletImplementationId) ? undefined : this.getStakingKeyPath()
 
     const ledgerPayload = await Cardano.buildLedgerPayload(
       unsignedTx.unsignedTx,
       Number.parseInt(this.getChainNetworkId(), 10),
       (this.getBaseNetworkConfig() as any).PROTOCOL_MAGIC,
-      stakingKeyPath,
+      this.stakingKeyPath,
     )
 
     const signedLedgerTx = await signTxWithLedger(ledgerPayload, this.hwDeviceInfo, useUSB)
