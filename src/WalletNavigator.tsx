@@ -6,8 +6,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {VotingRegistration as VotingRegistration} from './Catalyst'
 import {Icon, OfflineBanner} from './components'
 import {DashboardNavigator} from './Dashboard'
-import {useNfts} from './hooks'
-import {isHaskellShelley} from './legacy/config'
+import {isHaskellShelley, SHOW_NFT_GALLERY} from './legacy/config'
 import {MenuNavigator} from './Menu'
 import {WalletStackRoutes, WalletTabRoutes} from './navigation'
 import {NftDetailsNavigator} from './NftDetails/NftDetailsNavigator'
@@ -21,7 +20,6 @@ const Tab = createBottomTabNavigator<WalletTabRoutes>()
 const WalletTabNavigator = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
-  const {nfts} = useNfts(wallet)
   const initialRoute = isHaskellShelley(wallet.walletImplementationId) ? 'staking-dashboard' : 'history'
 
   return (
@@ -53,20 +51,22 @@ const WalletTabNavigator = () => {
           }}
         />
 
-        <Tab.Screen
-          name="nfts"
-          component={NftsNavigator}
-          options={{
-            tabBarIcon: ({focused}) => (
-              <Icon.Image
-                size={28}
-                color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
-              />
-            ),
-            tabBarLabel: strings.nftsTabBarLabel(nfts?.length ?? 0),
-            tabBarTestID: 'nftsTabBarButton',
-          }}
-        />
+        {SHOW_NFT_GALLERY && (
+          <Tab.Screen
+            name="nfts"
+            component={NftsNavigator}
+            options={{
+              tabBarIcon: ({focused}) => (
+                <Icon.Image
+                  size={28}
+                  color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
+                />
+              ),
+              tabBarLabel: strings.nftsTabBarLabel,
+              tabBarTestID: 'nftsTabBarButton',
+            }}
+          />
+        )}
 
         {isHaskellShelley(wallet.walletImplementationId) && (
           <Tab.Screen
@@ -145,8 +145,8 @@ const messages = defineMessages({
     defaultMessage: '!!!Staking',
   },
   nftsButton: {
-    id: 'global.nfts',
-    defaultMessage: '!!!NFTs',
+    id: 'components.common.navigation.nftGallery',
+    defaultMessage: '!!!NFT Gallery',
   },
   menuButton: {
     id: 'menu',
@@ -164,7 +164,7 @@ const useStrings = () => {
     receiveTabBarLabel: intl.formatMessage(messages.receiveButton),
     delegateTabBarLabel: intl.formatMessage(messages.delegateButton),
     walletTabBarLabel: intl.formatMessage(messages.walletButton),
-    nftsTabBarLabel: (qty) => intl.formatMessage(messages.nftsButton, {qty}),
+    nftsTabBarLabel: intl.formatMessage(messages.nftsButton),
     menuTabBarLabel: intl.formatMessage(messages.menuButton),
   }
 }

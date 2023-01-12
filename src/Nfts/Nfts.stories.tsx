@@ -6,7 +6,7 @@ import {mocks} from '../../storybook'
 import {SelectedWalletProvider} from '../SelectedWallet'
 import {Nfts} from './Nfts'
 
-storiesOf('Nfts', module)
+storiesOf('NFT Gallery', module)
   .add('Loading', () => {
     const loadingWallet = {...mocks.wallet, fetchNfts: mocks.fetchNfts.loading}
     return (
@@ -21,7 +21,52 @@ storiesOf('Nfts', module)
     const loadedWallet = {
       ...mocks.wallet,
       fetchNfts: mocks.fetchNfts.success,
-      fetchNftModerationStatus: mocks.fetchNftModerationStatus.success,
+      fetchNftModerationStatus: mocks.fetchNftModerationStatus.successGreen,
+    }
+
+    return (
+      <QueryClientProvider client={new QueryClient()}>
+        <SelectedWalletProvider wallet={loadedWallet}>
+          <Nfts />
+        </SelectedWalletProvider>
+      </QueryClientProvider>
+    )
+  })
+  .add('Loaded & Blurred image', () => {
+    const loadedWallet = {
+      ...mocks.wallet,
+      fetchNfts: mocks.fetchNfts.success,
+      fetchNftModerationStatus: mocks.fetchNftModerationStatus.successYellow,
+    }
+
+    return (
+      <QueryClientProvider client={new QueryClient()}>
+        <SelectedWalletProvider wallet={loadedWallet}>
+          <Nfts />
+        </SelectedWalletProvider>
+      </QueryClientProvider>
+    )
+  })
+  .add('Loaded & Not approved', () => {
+    const loadedWallet = {
+      ...mocks.wallet,
+      fetchNfts: mocks.fetchNfts.success,
+      fetchNftModerationStatus: mocks.fetchNftModerationStatus.successRed,
+    }
+
+    return (
+      <QueryClientProvider client={new QueryClient()}>
+        <SelectedWalletProvider wallet={loadedWallet}>
+          <Nfts />
+        </SelectedWalletProvider>
+      </QueryClientProvider>
+    )
+  })
+  .add('Loaded & Pending review', () => {
+    const loadedWallet = {
+      ...mocks.wallet,
+      fetchNfts: mocks.fetchNfts.success,
+      fetchNftModerationStatus: mocks.fetchNftModerationStatus.successPendingReview,
     }
 
     return (

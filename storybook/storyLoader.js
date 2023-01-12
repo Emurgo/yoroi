@@ -20,6 +20,8 @@ function loadStories() {
 	require('../src/HW/LedgerConnect/LedgerConnect.stories');
 	require('../src/HW/LedgerTransportSwitchModal/LedgerTransportSwitchModal.stories');
 	require('../src/Menu/Menu.stories');
+	require('../src/NftDetails/NFTDetails.stories');
+	require('../src/NftDetails/NFTDetailsImage.stories');
 	require('../src/Nfts/ImageGallery/ImageGallery.stories');
 	require('../src/Nfts/Nfts.stories');
 	require('../src/Receive/AddressModal.stories');
@@ -121,6 +123,8 @@ const stories = [
 	'../src/HW/LedgerConnect/LedgerConnect.stories',
 	'../src/HW/LedgerTransportSwitchModal/LedgerTransportSwitchModal.stories',
 	'../src/Menu/Menu.stories',
+	'../src/NftDetails/NFTDetails.stories',
+	'../src/NftDetails/NFTDetailsImage.stories',
 	'../src/Nfts/ImageGallery/ImageGallery.stories',
 	'../src/Nfts/Nfts.stories',
 	'../src/Receive/AddressModal.stories',

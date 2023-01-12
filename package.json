@@ -82,7 +82,7 @@
   },
   "dependencies": {
     "@cardano-foundation/ledgerjs-hw-app-cardano": "^5.1.0",
-    "@emurgo/cip14-js": "2.0.0",
+    "@emurgo/cip14-js": "^3.0.1",
     "@emurgo/cip4-js": "1.0.7",
     "@emurgo/cross-csl-mobile": "^1.0.0",
     "@emurgo/react-native-haskell-shelley": "4.0.0-beta.2",
@@ -140,6 +140,7 @@
     "react-native-crypto": "2.2.0",
     "react-native-device-info": "6.0.1",
     "react-native-easy-markdown": "1.4.1",
+    "react-native-easy-view-transformer": "^1.2.0",
     "react-native-gesture-handler": "^2.8.0",
     "react-native-keychain": "7.0.0",
     "react-native-linear-gradient": "2.5.6",

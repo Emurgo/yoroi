@@ -1,31 +1,32 @@
-import {useRoute} from '@react-navigation/native'
+import {RouteProp, useRoute} from '@react-navigation/native'
 import React from 'react'
-import {Image, StyleSheet, View} from 'react-native'
+import {Dimensions, Image, StyleSheet, View} from 'react-native'
+import ViewTransformer from 'react-native-easy-view-transformer'
 
-import {FadeIn, OfflineBanner, StatusBar} from '../components'
-import {useNfts} from '../hooks'
+import {FadeIn, StatusBar} from '../components'
+import {useNft} from '../hooks'
+import {NftRoutes} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
 
-type Params = {id: string}
-
 export const NftDetailsImage = () => {
+  const {id} = useRoute<RouteProp<NftRoutes, 'nft-details'>>().params
   const wallet = useSelectedWallet()
-  const {nfts} = useNfts(wallet)
+  const nft = useNft(wallet, {id})
 
-  const {id} = useRoute().params as Params
-  const nft = nfts.find((nft) => nft.id === id)
-
-  if (!nft) {
+  if (nft === null) {
     return null
   }
+  const dimensions = Dimensions.get('window')
+  const imageSize = Math.min(dimensions.width, dimensions.height)
 
   return (
     <FadeIn style={styles.container}>
       <StatusBar type="dark" />
-      <OfflineBanner />
-      <View style={styles.contentContainer}>
-        <Image source={{uri: nft.image}} style={styles.image} resizeMode="contain" />
-      </View>
+      <ViewTransformer maxScale={3} minScale={1}>
+        <View style={styles.contentContainer}>
+          <Image source={{uri: nft.image}} style={{height: imageSize, width: imageSize}} resizeMode="contain" />
+        </View>
+      </ViewTransformer>
     </FadeIn>
   )
 }
@@ -40,10 +41,6 @@ const styles = StyleSheet.create({
     height: '100%',
     flexDirection: 'column',
     alignItems: 'center',
-    paddingTop: '12.5%',
-  },
-  image: {
-    height: '75%',
-    width: '100%',
+    justifyContent: 'center',
   },
 })
