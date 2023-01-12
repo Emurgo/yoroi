@@ -69,6 +69,9 @@ jobs:
       - name: Building the nightly app
         run: |
           cd android
+          echo ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+          printenv
+          echo ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
           ENTRY_FILE=index.ts ./gradlew clean assembleNightlyRelease
           cd ..
 
