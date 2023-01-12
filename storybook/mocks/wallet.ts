@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/require-await */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {action} from '@storybook/addon-actions'
 import BigNumber from 'bignumber.js'
@@ -39,7 +40,7 @@ const walletMeta: WalletMeta = {
 
 const wallet: YoroiWallet = {
   id: 'wallet-id',
-  defaultAsset: getDefaultAssetByNetworkId(300),
+  primaryToken: getDefaultAssetByNetworkId(300),
   walletImplementationId: 'haskell-shelley',
   networkId: 300,
   checksum: {

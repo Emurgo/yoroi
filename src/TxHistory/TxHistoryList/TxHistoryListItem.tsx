@@ -8,7 +8,6 @@ import {StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 
 import {Spacer, Text} from '../../components'
 import {Icon} from '../../components/Icon'
-import {useTokenInfo} from '../../hooks'
 import {
   ASSET_DENOMINATION,
   formatTimeToSeconds,
@@ -117,15 +116,14 @@ const Amount = ({wallet, transaction}: {wallet: YoroiWallet; transaction: Transa
     : amountToDisplay.gte(0)
     ? styles.positiveAmount
     : styles.negativeAmount
-  const tokenInfo = useTokenInfo({wallet, tokenId: ''})
-  const ticker = getAssetDenominationOrId(tokenInfo, ASSET_DENOMINATION.SYMBOL)
+  const ticker = getAssetDenominationOrId(wallet.primaryToken, ASSET_DENOMINATION.SYMBOL)
 
   return (
     <View style={styles.amount} testID="transactionAmount">
       <Text style={style} secondary={transaction.assurance === 'PENDING'}>
-        <Text>{formatTokenInteger(amount, tokenInfo)}</Text>
+        <Text>{formatTokenInteger(amount, wallet.primaryToken)}</Text>
 
-        <Text small>{formatTokenFractional(amount, tokenInfo)}</Text>
+        <Text small>{formatTokenFractional(amount, wallet.primaryToken)}</Text>
       </Text>
 
       <Text style={style}>{`${utfSymbols.NBSP}${ticker}`}</Text>

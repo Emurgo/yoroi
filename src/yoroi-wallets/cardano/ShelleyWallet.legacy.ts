@@ -101,7 +101,7 @@ export class ShelleyWallet {
   storage: typeof storageLegacy
   private readonly utxoManager: UtxoManager
   protected encryptedStorage: WalletEncryptedStorage
-  defaultAsset: DefaultAsset
+  primaryToken: DefaultAsset
   id: null | string = null
   networkId: undefined | NetworkId
   walletImplementationId: undefined | WalletImplementationId
@@ -123,7 +123,7 @@ export class ShelleyWallet {
     this.id = id
     this.storage = storage
     this.networkId = networkId
-    this.defaultAsset = getDefaultAssetByNetworkId(this.networkId)
+    this.primaryToken = getDefaultAssetByNetworkId(this.networkId)
 
     this.utxoManager = utxoManager
     this._utxos = utxoManager.initialUtxos
@@ -644,7 +644,7 @@ export class ShelleyWallet {
           poolDeposit: networkConfig.POOL_DEPOSIT,
           networkId: networkConfig.NETWORK_ID,
         },
-        this.defaultAsset,
+        this.primaryToken,
         {metadata: auxiliaryData},
       )
 
@@ -703,7 +703,7 @@ export class ShelleyWallet {
     const networkConfig = this.getNetworkConfig()
     const delegatedAmountMT = {
       values: [{identifier: '', amount: delegatedAmount, networkId: networkConfig.NETWORK_ID}],
-      defaults: this.defaultAsset,
+      defaults: this.primaryToken,
     }
 
     const unsignedTx = await Cardano.createUnsignedDelegationTx(
@@ -714,7 +714,7 @@ export class ShelleyWallet {
       poolId || null,
       changeAddr,
       delegatedAmountMT,
-      this.defaultAsset,
+      this.primaryToken,
       {},
       {
         keyDeposit: networkConfig.KEY_DEPOSIT,
@@ -777,7 +777,7 @@ export class ShelleyWallet {
 
       const unsignedTx = await Cardano.createUnsignedVotingTx(
         absSlotNumber,
-        this.defaultAsset,
+        this.primaryToken,
         votingPublicKey,
         stakingKeyPath,
         stakingPublicKey,
@@ -838,7 +838,7 @@ export class ShelleyWallet {
 
     const withdrawalTx = await Cardano.createUnsignedWithdrawalTx(
       accountState,
-      this.defaultAsset,
+      this.primaryToken,
       absSlotNumber,
       addressedUtxos,
       [

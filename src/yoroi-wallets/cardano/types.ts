@@ -233,7 +233,7 @@ export type YoroiWallet = Pick<WalletInterface, YoroiWalletKeys> & {
   // NonNullable
   networkId: NonNullable<WalletInterface['networkId']>
   walletImplementationId: NonNullable<WalletInterface['walletImplementationId']>
-  defaultAsset: DefaultAsset
+  primaryToken: Readonly<DefaultAsset>
   checksum: NonNullable<WalletInterface['checksum']>
   isReadOnly: NonNullable<WalletInterface['isReadOnly']>
   rewardAddressHex: NonNullable<WalletInterface['rewardAddressHex']>

@@ -110,7 +110,7 @@ describe('migration', () => {
     expect(wallet.transactionCache?.perAddressTxs).toMatchInlineSnapshot(`Object {}`)
     expect(wallet.transactionCache?.transactions).toMatchInlineSnapshot(`Object {}`)
 
-    expect(wallet.defaultAsset).toMatchInlineSnapshot(`
+    expect(wallet.primaryToken).toMatchInlineSnapshot(`
       Object {
         "identifier": "",
         "isDefault": true,
@@ -231,7 +231,7 @@ describe('migration', () => {
     expect(wallet.transactionCache?.perAddressTxs).toMatchInlineSnapshot(`Object {}`)
     expect(wallet.transactionCache?.transactions).toMatchInlineSnapshot(`Object {}`)
 
-    expect(wallet.defaultAsset).toMatchInlineSnapshot(`
+    expect(wallet.primaryToken).toMatchInlineSnapshot(`
       Object {
         "identifier": "",
         "isDefault": true,
@@ -362,7 +362,7 @@ describe('migration', () => {
     expect(wallet.transactionCache?.perAddressTxs).toMatchInlineSnapshot(`Object {}`)
     expect(wallet.transactionCache?.transactions).toMatchInlineSnapshot(`Object {}`)
 
-    expect(wallet.defaultAsset).toMatchInlineSnapshot(`
+    expect(wallet.primaryToken).toMatchInlineSnapshot(`
       Object {
         "identifier": "",
         "isDefault": true,
