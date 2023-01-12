@@ -371,8 +371,18 @@ export class ShelleyWallet implements WalletInterface {
     return this.externalAddresses.slice(0, this.numReceiveAddresses)
   }
 
-  get stakingKeyPath() {
-    return isByron(this.walletImplementationId) ? [] : this.getStakingKeyPath()
+  get stakingKeyPath(): number[] {
+    if (this.walletImplementationId == null) throw new Error('Invalid wallet: walletImplementationId')
+
+    if (isByron(this.walletImplementationId)) return []
+
+    return [
+      CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852,
+      CONFIG.NUMBERS.COIN_TYPES.CARDANO,
+      CONFIG.NUMBERS.ACCOUNT_INDEX + CONFIG.NUMBERS.HARD_DERIVATION_START,
+      CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
+      CONFIG.NUMBERS.STAKING_KEY_INDEX,
+    ]
   }
 
   save() {
@@ -498,19 +508,6 @@ export class ShelleyWallet implements WalletInterface {
 
     Logger.info(`getStakingKey: ${Buffer.from(await stakingKey.asBytes()).toString('hex')}`)
     return stakingKey
-  }
-
-  getStakingKeyPath(): Array<number> {
-    if (this.walletImplementationId == null) throw new Error('Invalid wallet: walletImplementationId')
-
-    assert.assert(isHaskellShelley(this.walletImplementationId), 'cannot get staking key from a byron-era wallet')
-    return [
-      CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852,
-      CONFIG.NUMBERS.COIN_TYPES.CARDANO,
-      CONFIG.NUMBERS.ACCOUNT_INDEX + CONFIG.NUMBERS.HARD_DERIVATION_START,
-      CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
-      CONFIG.NUMBERS.STAKING_KEY_INDEX,
-    ]
   }
 
   private async getRewardAddress() {
