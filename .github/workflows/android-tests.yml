@@ -54,13 +54,6 @@ jobs:
           fi
           sed -i "s/XXXXXXX/$COMMIT_HASH/g" .env.nightly
 
-      - name: Setting up cargo config
-        run: |
-          cat <<EOF >> $(pwd)/.cargo/config
-          [net]
-          git-fetch-with-cli = true
-          EOF
-
       - name: Adding android/sentry.properties
         run: |
           cat <<EOF > android/sentry.properties
