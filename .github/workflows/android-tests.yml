@@ -56,7 +56,7 @@ jobs:
 
       - name: Setting up cargo config
         run: |
-          cat <<EOF >> ~/.cargo/config
+          cat <<EOF >> $(pwd)/.cargo/config
           [net]
           git-fetch-with-cli = true
           EOF
