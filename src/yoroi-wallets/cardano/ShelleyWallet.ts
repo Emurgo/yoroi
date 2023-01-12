@@ -911,12 +911,13 @@ export class ShelleyWallet implements WalletInterface {
 
   async signTxWithLedger(unsignedTx: YoroiUnsignedTx, useUSB: boolean): Promise<YoroiSignedTx> {
     if (!this.hwDeviceInfo) throw new Error('Invalid wallet state')
+    const stakingKeyPath = isByron(this.walletImplementationId) ? undefined : this.getStakingKeyPath()
 
     const ledgerPayload = await Cardano.buildLedgerPayload(
       unsignedTx.unsignedTx,
       Number.parseInt(this.getChainNetworkId(), 10),
       (this.getBaseNetworkConfig() as any).PROTOCOL_MAGIC,
-      this.getStakingKeyPath(),
+      stakingKeyPath,
     )
 
     const signedLedgerTx = await signTxWithLedger(ledgerPayload, this.hwDeviceInfo, useUSB)
