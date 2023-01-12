@@ -68,8 +68,6 @@ jobs:
 
       - name: Building the nightly app
         run: |
-          . $HOME/.cargo/env
-          export ANDROID_SDK_ROOT=$HOME/Android/Sdk
           cd android
           ENTRY_FILE=index.ts ./gradlew clean assembleNightlyRelease
           cd ..
