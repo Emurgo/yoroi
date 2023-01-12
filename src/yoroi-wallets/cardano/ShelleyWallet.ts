@@ -112,25 +112,26 @@ export type WalletJSON = ShelleyWalletJSON | ByronWalletJSON
 
 export default ShelleyWallet
 export class ShelleyWallet implements WalletInterface {
-  storage: Storage
+  readonly primaryToken: DefaultAsset
+  readonly id: string
+  readonly networkId: NetworkId
+  readonly walletImplementationId: WalletImplementationId
+  readonly hwDeviceInfo: null | HWDeviceInfo
+  readonly isHW: boolean
+  readonly isReadOnly: boolean
+  readonly provider: null | undefined | YoroiProvider
+  readonly internalChain: AddressChain
+  readonly externalChain: AddressChain
+  readonly publicKeyHex: string
+  readonly rewardAddressHex: null | string = null
+  readonly version: string
+  readonly checksum: CardanoTypes.WalletChecksum
+  isEasyConfirmationEnabled = false
+
+  private _utxos: RawUtxo[]
+  private readonly storage: Storage
   private readonly utxoManager: UtxoManager
   protected encryptedStorage: WalletEncryptedStorage
-  readonly primaryToken: Readonly<DefaultAsset>
-  id: string
-  networkId: NetworkId
-  walletImplementationId: WalletImplementationId
-  isHW = false
-  hwDeviceInfo: null | HWDeviceInfo
-  isReadOnly: boolean
-  provider: null | undefined | YoroiProvider
-  isEasyConfirmationEnabled = false
-  internalChain: AddressChain
-  externalChain: AddressChain
-  publicKeyHex: string
-  rewardAddressHex: null | string = null
-  version: string
-  checksum: CardanoTypes.WalletChecksum
-  private _utxos: RawUtxo[]
 
   // =================== create =================== //
 
@@ -337,7 +338,7 @@ export class ShelleyWallet implements WalletInterface {
   }) {
     this.id = id
     this.storage = storage
-    this.networkId = networkId
+    this.networkId = networkId === NETWORK_REGISTRY.BYRON_MAINNET ? NETWORK_REGISTRY.HASKELL_SHELLEY : networkId
     this.primaryToken = getDefaultAssetByNetworkId(this.networkId)
     this.utxoManager = utxoManager
     this._utxos = utxoManager.initialUtxos
@@ -384,9 +385,6 @@ export class ShelleyWallet implements WalletInterface {
 
   private integrityCheck(): void {
     try {
-      if (this.networkId === NETWORK_REGISTRY.BYRON_MAINNET) {
-        this.networkId = NETWORK_REGISTRY.HASKELL_SHELLEY
-      }
       assert.assert(isHaskellShelleyNetwork(this.networkId), 'invalid networkId')
       if (this.walletImplementationId == null) throw new Error('Invalid wallet: walletImplementationId')
       assert.assert(

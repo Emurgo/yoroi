@@ -527,5 +527,5 @@ const data: WalletJSON = {
 
 const getBech32InternalChain = (wallet: any) => wallet.internalChain?._addressGenerator._accountPubKeyPtr?.toBech32()
 const getRewardAddress = (wallet: any) => wallet.getRewardAddress().then((address) => address.toBech32())
-const getWalletData = (wallet: any) => wallet.storage.getItem(`data`)
+const getWalletData = (wallet: YoroiWallet) => storage.join(`${wallet.id}/`).getItem(`data`)
 const getStakingKey = (wallet: any) => wallet.getStakingKey().then((key) => key.toBech32())
