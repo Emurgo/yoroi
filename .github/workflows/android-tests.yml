@@ -69,6 +69,7 @@ jobs:
       - name: Building the nightly app
         run: |
           cd android
+          . ~/.bashrc
           echo ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
           echo java_home is $JAVA_HOME
           echo android_sdk_root is $ANDROID_SDK_ROOT
