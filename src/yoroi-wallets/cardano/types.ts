@@ -77,6 +77,8 @@ export interface WalletInterface {
 
   storage: typeof storage
 
+  stakingKeyPath: number[]
+
   // =================== getters =================== //
 
   get internalAddresses(): Addresses

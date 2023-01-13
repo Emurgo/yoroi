@@ -131,6 +131,7 @@ export class ShelleyWallet implements WalletInterface {
   version: string
   checksum: CardanoTypes.WalletChecksum
   private _utxos: RawUtxo[]
+  stakingKeyPath: number[]
 
   // =================== create =================== //
 
@@ -361,6 +362,15 @@ export class ShelleyWallet implements WalletInterface {
     this.isInitialized = true
     this.isEasyConfirmationEnabled = isEasyConfirmationEnabled
     this.state = {lastGeneratedAddressIndex}
+    this.stakingKeyPath = isByron(this.walletImplementationId)
+      ? []
+      : [
+          CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852,
+          CONFIG.NUMBERS.COIN_TYPES.CARDANO,
+          CONFIG.NUMBERS.ACCOUNT_INDEX + CONFIG.NUMBERS.HARD_DERIVATION_START,
+          CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
+          CONFIG.NUMBERS.STAKING_KEY_INDEX,
+        ]
   }
 
   get utxos() {
@@ -369,20 +379,6 @@ export class ShelleyWallet implements WalletInterface {
 
   get receiveAddresses(): Addresses {
     return this.externalAddresses.slice(0, this.numReceiveAddresses)
-  }
-
-  get stakingKeyPath(): number[] {
-    if (this.walletImplementationId == null) throw new Error('Invalid wallet: walletImplementationId')
-
-    if (isByron(this.walletImplementationId)) return []
-
-    return [
-      CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852,
-      CONFIG.NUMBERS.COIN_TYPES.CARDANO,
-      CONFIG.NUMBERS.ACCOUNT_INDEX + CONFIG.NUMBERS.HARD_DERIVATION_START,
-      CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
-      CONFIG.NUMBERS.STAKING_KEY_INDEX,
-    ]
   }
 
   save() {
