@@ -101,19 +101,7 @@ export type NFTMetadata = {
   }>
 }
 
-export type CardanoAssetMintMetadata = {
-  // transaction_metadatum_label: 721 for NFTs
-  // See CIP 721
-  // https://github.com/cardano-foundation/CIPs/blob/8b1f2f0900d81d6233e9805442c2b42aa1779d2d/CIP-NFTMetadataStandard.md
-  [key: string]: {
-    // version?: string
-    [policyID: string]: {
-      [assetNameHex: string]: NFTMetadata
-    }
-  }
-}
-
-export type CardanoAssetMetadata = {
+export type AssetMetadata = {
   [policyID: string]: {
     [assetNameHex: string]: NFTMetadata
   }

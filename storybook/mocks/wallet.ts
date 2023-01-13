@@ -310,7 +310,7 @@ const fetchNfts = {
         },
       },
     }
-    return [nft1]
+    return [nft1, {...nft1, id: '2'}, {...nft1, id: '3'}, {...nft1, id: '4'}]
   },
   error: async (...args) => {
     action('fetchNfts')(...args)
@@ -323,15 +323,15 @@ const fetchNfts = {
 }
 
 const fetchNftModerationStatus = {
-  successGreen: async (...args): Promise<YoroiNFTModerationStatus> => {
+  successApproved: async (...args): Promise<YoroiNFTModerationStatus> => {
     action('fetchNftModerationStatus')(...args)
     return 'approved'
   },
-  successYellow: async (...args): Promise<YoroiNFTModerationStatus> => {
+  successConsent: async (...args): Promise<YoroiNFTModerationStatus> => {
     action('fetchNftModerationStatus')(...args)
     return 'consent'
   },
-  successRed: async (...args): Promise<YoroiNFTModerationStatus> => {
+  successBlocked: async (...args): Promise<YoroiNFTModerationStatus> => {
     action('fetchNftModerationStatus')(...args)
     return 'blocked'
   },

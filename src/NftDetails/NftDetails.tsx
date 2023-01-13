@@ -1,7 +1,7 @@
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
-import React, {ReactNode, useMemo, useState} from 'react'
+import React, {memo, ReactNode, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {ActivityIndicator, Image, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {getPrettyDate} from '../../tests/helpers/utils'
@@ -12,6 +12,7 @@ import {getAssetFingerprint} from '../legacy/format'
 import {NftDetailsNavigation, NftRoutes} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
+import {YoroiNFT} from '../yoroi-wallets/types'
 
 type ViewTabs = 'overview' | 'metadata'
 
@@ -24,19 +25,18 @@ export const NftDetails = () => {
   const navigation = useNavigation<NftDetailsNavigation>()
   const [activeTab, setActiveTab] = useState<ViewTabs>('overview')
   const nft = useNft(wallet, {id})
-  const stringifiedMetadata = JSON.stringify(nft, undefined, 2)
-  const fingerprint = useMemo(
-    () => (nft !== null ? getAssetFingerprint(nft.metadata.policyId, nft.metadata.assetNameHex) : null),
-    [nft],
-  )
 
   if (nft === null) {
-    return null
+    return (
+      <View style={styles.center}>
+        <ActivityIndicator size="large" color="black" />
+      </View>
+    )
   }
 
+  const stringifiedMetadata = JSON.stringify(nft, undefined, 2)
   const matchingTransaction = Object.values(transactionsInfo).find((t) => Object.keys(t.tokens).includes(id))
   const transactionUpdatedAt = matchingTransaction?.submittedAt ?? null
-  const formattedTime = transactionUpdatedAt !== null ? getPrettyDate(new Date(transactionUpdatedAt)) : null
 
   const onFullscreen = () => navigation.navigate('nft-details-image', {id})
 
@@ -69,50 +69,7 @@ export const NftDetails = () => {
 
           <TabPanels>
             <TabPanel active={activeTab === 'overview'}>
-              <MetadataRow title={strings.nftName} content={<Text secondary>{nft.name}</Text>} />
-              <MetadataRow title={strings.createdAt} content={<Text secondary>{formattedTime}</Text>} />
-              <MetadataRow title={strings.description} content={<Text secondary>{nft.description}</Text>} />
-              <MetadataRow
-                title={strings.author}
-                content={<Text secondary>{nft.metadata.originalMetadata.author ?? '-'}</Text>}
-              />
-              <MetadataRow
-                title={strings.fingerprint}
-                content={<Text secondary>{fingerprint ?? '-'}</Text>}
-                withCopy
-                copyText={fingerprint ?? '-'}
-              />
-              <MetadataRow
-                title={strings.policyId}
-                content={<Text secondary>{nft.metadata.policyId}</Text>}
-                withCopy
-                copyText={nft.metadata.policyId}
-              />
-              <MetadataRow
-                title={strings.detailsLinks}
-                content={
-                  <>
-                    <View>
-                      <Link url={`https://cardanoscan.io/token/${fingerprint}`}>
-                        <View style={styles.linkContent}>
-                          <Icon.ExternalLink size={12} color={COLORS.SHELLEY_BLUE} />
-                          <Spacer width={2} />
-                          <Text style={styles.linkText}>Cardanoscan</Text>
-                        </View>
-                      </Link>
-                    </View>
-                    <View>
-                      <Link url={`https://cexplorer.io/asset/${fingerprint}`}>
-                        <View style={styles.linkContent}>
-                          <Icon.ExternalLink size={12} color={COLORS.SHELLEY_BLUE} />
-                          <Spacer width={2} />
-                          <Text style={styles.linkText}>Cexplorer</Text>
-                        </View>
-                      </Link>
-                    </View>
-                  </>
-                }
-              />
+              <NftMedataPanel nft={nft} transactionTime={transactionUpdatedAt ?? undefined} />
             </TabPanel>
 
             <TabPanel active={activeTab === 'metadata'}>
@@ -132,28 +89,69 @@ export const NftDetails = () => {
   )
 }
 
-const MetadataRow = ({
-  title,
-  copyText,
-  content,
-  withCopy = false,
-}: {
-  title: string
-  withCopy?: boolean
-  content: ReactNode
-  copyText?: string
-}) => {
+const MetadataRow = ({title, copyText, children}: {title: string; children: ReactNode; copyText?: string}) => {
   return (
     <View style={styles.rowContainer}>
       <View style={styles.rowTitleContainer}>
         <Text>{title}</Text>
-        {withCopy && copyText && <CopyButton value={copyText} />}
+        {copyText !== undefined ? <CopyButton value={copyText} /> : null}
       </View>
       <Spacer height={2} />
-      {content}
+      {children}
     </View>
   )
 }
+
+const NftMedataPanel = memo(({nft, transactionTime}: {nft: YoroiNFT; transactionTime?: string}) => {
+  const strings = useStrings()
+  const fingerprint = getAssetFingerprint(nft.metadata.policyId, nft.metadata.assetNameHex)
+  const formattedTime = transactionTime !== undefined ? getPrettyDate(new Date(transactionTime)) : null
+
+  return (
+    <>
+      <MetadataRow title={strings.nftName}>
+        <Text secondary>{nft.name}</Text>
+      </MetadataRow>
+      <MetadataRow title={strings.createdAt}>
+        <Text secondary>{formattedTime}</Text>
+      </MetadataRow>
+      <MetadataRow title={strings.description}>
+        <Text secondary>{nft.description}</Text>
+      </MetadataRow>
+      <MetadataRow title={strings.author}>
+        <Text secondary>{nft.metadata.originalMetadata.author ?? '-'}</Text>
+      </MetadataRow>
+      <MetadataRow title={strings.fingerprint} copyText={fingerprint ?? '-'}>
+        <Text secondary>{fingerprint ?? '-'}</Text>
+      </MetadataRow>
+      <MetadataRow title={strings.policyId} copyText={nft.metadata.policyId}>
+        <Text secondary>{nft.metadata.policyId}</Text>
+      </MetadataRow>
+      <MetadataRow title={strings.detailsLinks}>
+        <>
+          <View>
+            <Link url={`https://cardanoscan.io/token/${fingerprint}`}>
+              <View style={styles.linkContent}>
+                <Icon.ExternalLink size={12} color={COLORS.SHELLEY_BLUE} />
+                <Spacer width={2} />
+                <Text style={styles.linkText}>Cardanoscan</Text>
+              </View>
+            </Link>
+          </View>
+          <View>
+            <Link url={`https://cexplorer.io/asset/${fingerprint}`}>
+              <View style={styles.linkContent}>
+                <Icon.ExternalLink size={12} color={COLORS.SHELLEY_BLUE} />
+                <Spacer width={2} />
+                <Text style={styles.linkText}>Cexplorer</Text>
+              </View>
+            </Link>
+          </View>
+        </>
+      </MetadataRow>
+    </>
+  )
+})
 
 const styles = StyleSheet.create({
   copyButton: {
@@ -212,6 +210,15 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+  },
+
+  center: {
+    flex: 1,
+    display: 'flex',
+    height: '100%',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 })
 

@@ -1,6 +1,5 @@
 import {CONFIG, getCardanoDefaultAsset} from '../../legacy/config'
 import {asciiToHex, InvalidAssetAmount, parseAmountDecimal} from './parsing'
-import {parseModerationStatus} from './parsing'
 
 describe('parseAdaDecimal', () => {
   // recall: tests run on mainnet (default network)
@@ -38,28 +37,5 @@ describe('asciiToHex', () => {
     const ascii = ''
     const hex = asciiToHex(ascii)
     expect(hex).toEqual('')
-  })
-})
-
-describe('parseModerationStatus', () => {
-  it('should return status on valid NFT Moderation status', () => {
-    expect(parseModerationStatus('PENDING')).toBe('pending')
-    expect(parseModerationStatus('GREEN')).toBe('approved')
-    expect(parseModerationStatus('RED')).toBe('blocked')
-    expect(parseModerationStatus('MANUAL_REVIEW')).toBe('manual_review')
-    expect(parseModerationStatus('YELLOW')).toBe('consent')
-  })
-
-  it('returns undefined on invalid NFT Moderation status', () => {
-    expect(parseModerationStatus('invalid')).toBe(undefined)
-  })
-
-  it('returns undefined when given invalid types', () => {
-    expect(parseModerationStatus(null)).toBe(undefined)
-    expect(parseModerationStatus(undefined)).toBe(undefined)
-    expect(parseModerationStatus(1)).toBe(undefined)
-    expect(parseModerationStatus('')).toBe(undefined)
-    expect(parseModerationStatus({})).toBe(undefined)
-    expect(parseModerationStatus([])).toBe(undefined)
   })
 })

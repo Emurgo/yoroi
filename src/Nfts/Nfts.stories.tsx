@@ -21,7 +21,7 @@ storiesOf('NFT Gallery', module)
     const loadedWallet = {
       ...mocks.wallet,
       fetchNfts: mocks.fetchNfts.success,
-      fetchNftModerationStatus: mocks.fetchNftModerationStatus.successGreen,
+      fetchNftModerationStatus: mocks.fetchNftModerationStatus.successApproved,
     }
 
     return (
@@ -36,7 +36,7 @@ storiesOf('NFT Gallery', module)
     const loadedWallet = {
       ...mocks.wallet,
       fetchNfts: mocks.fetchNfts.success,
-      fetchNftModerationStatus: mocks.fetchNftModerationStatus.successYellow,
+      fetchNftModerationStatus: mocks.fetchNftModerationStatus.successConsent,
     }
 
     return (
@@ -51,7 +51,7 @@ storiesOf('NFT Gallery', module)
     const loadedWallet = {
       ...mocks.wallet,
       fetchNfts: mocks.fetchNfts.success,
-      fetchNftModerationStatus: mocks.fetchNftModerationStatus.successRed,
+      fetchNftModerationStatus: mocks.fetchNftModerationStatus.successBlocked,
     }
 
     return (

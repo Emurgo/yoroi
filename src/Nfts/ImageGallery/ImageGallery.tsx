@@ -1,13 +1,13 @@
 import React, {useEffect} from 'react'
 import {
   Dimensions,
+  FlatList,
   GestureResponderEvent,
   Image,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
   View,
-  VirtualizedList,
 } from 'react-native'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
@@ -35,42 +35,24 @@ export const SkeletonGallery = ({amount}: {amount: number} = {amount: 3}) => {
 }
 
 export const ImageGallery = ({nfts = [], onSelect}: Props) => {
-  const rows = groupArray(nfts)
   return (
     <ScrollView bounces={false} contentContainerStyle={styles.galleryContainer}>
-      <VirtualizedList
-        data={rows}
-        initialNumToRender={4}
-        getItem={(array, index) => array[index]}
-        getItemCount={() => rows.length}
-        keyExtractor={(row: Array<YoroiNFT | undefined>, index) =>
-          row[0] !== undefined
-            ? getAssetFingerprint(row[0].metadata.policyId, row[0].metadata.assetNameHex)
-            : String(index)
-        }
-        renderItem={({item: [nft1, nft2]}) => {
-          const nft1Fingerprint = nft1 ? getAssetFingerprint(nft1.metadata.policyId, nft1.metadata.assetNameHex) : null
-          const nft2Fingerprint = nft2 ? getAssetFingerprint(nft2.metadata.policyId, nft2.metadata.assetNameHex) : null
+      <FlatList
+        data={nfts}
+        numColumns={2}
+        horizontal={false}
+        keyExtractor={(nft) => nft.id + Math.random()}
+        renderItem={({item}) => {
+          const nft1Fingerprint = getAssetFingerprint(item.metadata.policyId, item.metadata.assetNameHex)
           return (
             <View style={styles.row}>
-              {nft1 && nft1Fingerprint && (
-                <ModeratedImage
-                  onPress={() => onSelect(nfts.indexOf(nft1))}
-                  image={nft1.image}
-                  fingerprint={nft1Fingerprint}
-                  text={nft1.name}
-                  key={nft1Fingerprint}
-                />
-              )}
-              {nft2 && nft2Fingerprint && (
-                <ModeratedImage
-                  onPress={() => onSelect(nfts.indexOf(nft2))}
-                  image={nft2.image}
-                  fingerprint={nft2Fingerprint}
-                  text={nft2.name}
-                  key={nft2Fingerprint}
-                />
-              )}
+              <ModeratedImage
+                onPress={() => onSelect(nfts.indexOf(item))}
+                image={item.image}
+                fingerprint={nft1Fingerprint}
+                text={item.name}
+                key={nft1Fingerprint}
+              />
             </View>
           )
         }}
@@ -108,7 +90,7 @@ const ModeratedImage = ({fingerprint, image, text, onPress}: ModeratedImageProps
   }
 
   return (
-    <TouchableOpacity disabled={isImageBlocked} onPress={onPress} style={[styles.imageContainer]}>
+    <TouchableOpacity disabled={isImageBlocked} onPress={onPress} style={styles.imageContainer}>
       {isImageApproved ? (
         <ApprovedNFT text={text} uri={image} />
       ) : isImageWithConsent ? (
@@ -123,9 +105,9 @@ const ModeratedImage = ({fingerprint, image, text, onPress}: ModeratedImageProps
 function BlockedNFT({text}: {text: string}) {
   return (
     <>
-      <Image source={placeholderImage} style={[styles.image, {width: imageSize, height: imageSize}]} />
+      <Image source={placeholderImage} style={[styles.image, {width: IMAGE_SIZE, height: IMAGE_SIZE}]} />
       <Spacer height={IMAGE_PADDING} />
-      <Text style={[styles.textTop, {width: imageSize}]}>{text}</Text>
+      <Text style={[styles.textTop, {width: IMAGE_SIZE}]}>{text}</Text>
       <Spacer height={TEXT_PADDING} />
     </>
   )
@@ -135,13 +117,13 @@ function RequiresConsentNFT({uri, text}: {text: string; uri: string}) {
   return (
     <View>
       <View style={styles.imageWrapper}>
-        <Image source={{uri}} style={[styles.image, {width: imageSize, height: imageSize}]} blurRadius={20} />
+        <Image source={{uri}} style={[styles.image, {width: IMAGE_SIZE, height: IMAGE_SIZE}]} blurRadius={20} />
         <View style={styles.eyeWrapper}>
           <Icon.EyeOff size={20} color="#FFFFFF" />
         </View>
       </View>
       <Spacer height={IMAGE_PADDING} />
-      <Text style={[styles.textTop, {width: imageSize}]}>{text}</Text>
+      <Text style={[styles.textTop, {width: IMAGE_SIZE}]}>{text}</Text>
       <Spacer height={TEXT_PADDING} />
     </View>
   )
@@ -150,9 +132,9 @@ function RequiresConsentNFT({uri, text}: {text: string; uri: string}) {
 function ApprovedNFT({uri, text}: {text: string; uri: string}) {
   return (
     <>
-      <Image source={{uri}} style={[styles.image, {width: imageSize, height: imageSize}]} />
+      <Image source={{uri}} style={[styles.image, {width: IMAGE_SIZE, height: IMAGE_SIZE}]} />
       <Spacer height={IMAGE_PADDING} />
-      <Text style={[styles.textTop, {width: imageSize}]}>{text}</Text>
+      <Text style={[styles.textTop, {width: IMAGE_SIZE}]}>{text}</Text>
       <Spacer height={TEXT_PADDING} />
     </>
   )
@@ -160,21 +142,17 @@ function ApprovedNFT({uri, text}: {text: string; uri: string}) {
 
 function SkeletonImagePlaceholder() {
   return (
-    <View
-      style={[
-        styles.imageContainer,
-        {width: imageSize + 10, height: imageSize + IMAGE_PADDING + TEXT_SIZE + TEXT_PADDING},
-      ]}
-    >
+    <View style={styles.imageContainer}>
       <SkeletonPlaceholder enabled={true}>
         <View>
-          <View style={{width: imageSize, height: imageSize, borderRadius: 8}} />
+          <View style={{width: IMAGE_SIZE, height: IMAGE_SIZE, borderRadius: 8}} />
           <View
             style={{
-              marginTop: TEXT_PADDING,
-              width: (imageSize * 3) / 4,
+              marginTop: IMAGE_PADDING,
+              width: (IMAGE_SIZE * 3) / 4,
               height: TEXT_SIZE,
               borderRadius: 8,
+              marginBottom: TEXT_PADDING,
             }}
           />
         </View>
@@ -226,21 +204,10 @@ const styles = StyleSheet.create({
 })
 
 const IMAGE_PADDING = 8
-const TEXT_PADDING = 13
+const TEXT_PADDING = 14
 const TEXT_SIZE = 20
-
-const imageSize = getImageSize()
-
-function getImageSize() {
-  const dimensions = Dimensions.get('window')
-  const minSize = Math.min(dimensions.width, dimensions.height)
-  return minSize / 2 - 26
-}
-
-function groupArray<T>(arr: T[]) {
-  const result: Array<(T | undefined)[]> = []
-  for (let i = 0; i < arr.length; i += 2) {
-    result.push([arr[i], arr[i + 1]])
-  }
-  return result
-}
+const NUMBER_OF_COLUMNS = 2
+const CONTAINER_HORIZONTAL_PADDING = 16
+const DIMENSIONS = Dimensions.get('window')
+const MIN_SIZE = Math.min(DIMENSIONS.width, DIMENSIONS.height)
+const IMAGE_SIZE = MIN_SIZE / NUMBER_OF_COLUMNS - CONTAINER_HORIZONTAL_PADDING * 2

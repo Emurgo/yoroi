@@ -1011,18 +1011,19 @@ export class ShelleyWallet implements WalletInterface {
     return api.fetchCurrentPrice(symbol, this.getBackendConfig())
   }
 
+  // TODO: caching
   async fetchNfts(): Promise<YoroiNFT[]> {
     const utxos = this.utxos
     const assets = utxos.flatMap((utxo) => utxo.assets ?? [])
-    const nftAssets = assets.map((asset) => ({nameHex: asset.name, policy: asset.policyId}))
 
-    if (nftAssets.length === 0) {
+    if (assets.length === 0) {
       return []
     }
 
-    return api.getNFTs({assets: nftAssets}, this.getBackendConfig())
+    return api.getNFTs(assets, this.getBackendConfig())
   }
 
+  // TODO: caching
   async fetchNftModerationStatus(fingerprint: string): Promise<YoroiNFTModerationStatus> {
     return api.getNFTModerationStatus(fingerprint, this.getBackendConfig())
   }

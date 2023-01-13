@@ -5,13 +5,7 @@ import assert from '../../legacy/assert'
 import {ApiError} from '../../legacy/errors'
 import fetchDefault, {checkedFetch} from '../../legacy/fetch'
 import {ServerStatus} from '..'
-import {
-  CardanoAssetMetadata,
-  MultiAssetRequest,
-  StakePoolInfosAndHistories,
-  YoroiNFT,
-  YoroiNFTModerationStatus,
-} from '../types'
+import {AssetMetadata, RemoteAsset, StakePoolInfosAndHistories, YoroiNFT, YoroiNFTModerationStatus} from '../types'
 import type {
   AccountStateRequest,
   AccountStateResponse,
@@ -29,7 +23,6 @@ import type {
   TxStatusRequest,
   TxStatusResponse,
 } from '../types/other'
-import {parseModerationStatus} from '../utils/parsing'
 import {convertNft} from './nfts'
 
 type Addresses = Array<string>
@@ -117,16 +110,10 @@ export const getPoolInfo = (request: PoolInfoRequest, config: BackendConfig): Pr
   return fetchDefault('pool/info', request, config)
 }
 
-export const getNFTs = async (request: MultiAssetRequest, config: BackendConfig): Promise<YoroiNFT[]> => {
+export const getNFTs = async (assets: RemoteAsset[], config: BackendConfig): Promise<YoroiNFT[]> => {
+  const request = {assets: assets.map((asset) => ({nameHex: asset.name, policy: asset.policyId}))}
   const response = await fetchDefault('multiAsset/metadata', request, config)
-
-  const filteredResponse = Object.keys(response)
-    .filter((k) => response[k][0]?.key === '721')
-    .map((nftKeys) => response[nftKeys][0].metadata as CardanoAssetMetadata)
-
-  return filteredResponse.map<YoroiNFT>((metadata: CardanoAssetMetadata) =>
-    convertNft(metadata, config.NFT_STORAGE_URL),
-  )
+  return parseNFTs(response, config.NFT_STORAGE_URL)
 }
 
 export const getNFTModerationStatus = async (
@@ -224,3 +211,29 @@ export const fetchCurrentPrice = async (currency: CurrencySymbol, config: Backen
 
   return response.ticker.prices[currency]
 }
+
+export const parseModerationStatus = (status: unknown): YoroiNFTModerationStatus | undefined => {
+  const statusString = String(status)
+  const map = {
+    RED: 'blocked',
+    YELLOW: 'consent',
+    GREEN: 'approved',
+    PENDING: 'pending',
+    MANUAL_REVIEW: 'manual_review',
+  } as const
+  return map[statusString.toUpperCase() as keyof typeof map]
+}
+
+function parseNFTs(value: unknown, storageUrl: string): YoroiNFT[] {
+  if (!value || typeof value !== 'object') {
+    return []
+  }
+
+  const filteredResponse = Object.keys(value)
+    .filter((key) => value[key]?.[0]?.key === NFT_METADATA_KEY)
+    .map((key) => value[key][0].metadata as AssetMetadata)
+
+  return filteredResponse.map<YoroiNFT>((metadata: AssetMetadata) => convertNft(metadata, storageUrl))
+}
+
+const NFT_METADATA_KEY = '721'
