@@ -131,7 +131,7 @@ export class ShelleyWallet implements WalletInterface {
   version: string
   checksum: CardanoTypes.WalletChecksum
   private _utxos: RawUtxo[]
-  stakingKeyPath: number[]
+  private readonly stakingKeyPath: number[]
 
   // =================== create =================== //
 
