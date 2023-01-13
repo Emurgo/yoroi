@@ -10,37 +10,37 @@ describe('prefixed storage', () => {
     await storage.getAllKeys().then((keys) => expect(keys).toEqual([]))
 
     await storage.setItem('item1', item1)
-    await storage.getItem('item1').then((item) => expect(item).toEqual(item1))
+    expect(await storage.getItem('item1')).toEqual(item1)
     await storage.setItem('item2', item2)
-    await storage.getItem('item2').then((item) => expect(item).toEqual(item2))
-    await storage.getItem('does not exist').then((item) => expect(item).toEqual(null))
-    await storage.getAllKeys().then((keys) => expect(keys).toEqual(['item1', 'item2']))
+    expect(await storage.getItem('item2')).toEqual(item2)
+    expect(await storage.getItem('does not exist')).toEqual(null)
+    expect(await storage.getAllKeys()).toEqual(['item1', 'item2'])
 
     await storage.removeItem('item1')
-    await storage.getItem('item1').then((item) => expect(item).toEqual(null))
-    await storage.getAllKeys().then((keys) => expect(keys).toEqual(['item2']))
+    expect(await storage.getItem('item1')).toEqual(null)
+    expect(await storage.getAllKeys()).toEqual(['item2'])
 
     await storage.clear()
-    await storage.getAllKeys().then((keys) => expect(keys).toEqual([]))
+    expect(await storage.getAllKeys()).toEqual([])
   })
 
-  it('getAllKeys, setItem, getItem, removeItem, clear', async () => {
+  it('getAllKeys, setItem, getItem, removeItem, clear, with prefix', async () => {
     const storage = yoroiStorage.join('prefix/')
-    await storage.getAllKeys().then((keys) => expect(keys).toEqual([]))
+    expect(await storage.getAllKeys()).toEqual([])
 
     await storage.setItem('item1', item1)
-    await storage.getItem('item1').then((item) => expect(item).toEqual(item1))
+    expect(await storage.getItem('item1')).toEqual(item1)
     await storage.setItem('item2', item2)
-    await storage.getItem('item2').then((item) => expect(item).toEqual(item2))
-    await storage.getItem('does not exist').then((item) => expect(item).toEqual(null))
-    await storage.getAllKeys().then((keys) => expect(keys).toEqual(['item1', 'item2']))
+    expect(await storage.getItem('item2')).toEqual(item2)
+    expect(await storage.getItem('does not exist')).toEqual(null)
+    expect(await storage.getAllKeys()).toEqual(['item1', 'item2'])
 
     await storage.removeItem('item1')
-    await storage.getItem('item1').then((item) => expect(item).toEqual(null))
-    await storage.getAllKeys().then((keys) => expect(keys).toEqual(['item2']))
+    expect(await storage.getItem('item1')).toEqual(null)
+    expect(await storage.getAllKeys()).toEqual(['item2'])
 
     await storage.clear()
-    await storage.getAllKeys().then((keys) => expect(keys).toEqual([]))
+    expect(await storage.getAllKeys()).toEqual([])
   })
 
   it('getAllKeys, multiSet, multiGet, multiRemove', async () => {
@@ -71,46 +71,46 @@ describe('prefixed storage', () => {
 
   it('getAllKeys', async () => {
     const storage1 = yoroiStorage.join('prefix/1/')
-    await storage1.getAllKeys().then((keys) => expect(keys).toEqual([]))
+    expect(await storage1.getAllKeys()).toEqual([])
     await storage1.setItem('key1', item1)
     await storage1.setItem('key2', item2)
-    await storage1.getAllKeys().then((keys) => expect(keys).toEqual(['key1', 'key2']))
+    expect(await storage1.getAllKeys()).toEqual(['key1', 'key2'])
 
     const storage2 = yoroiStorage.join('prefix/2/3/')
-    await storage2.getAllKeys().then((keys) => expect(keys).toEqual([]))
+    expect(await storage2.getAllKeys()).toEqual([])
     await storage2.setItem('key1', item1)
     await storage2.setItem('key2', item2)
-    await storage2.getAllKeys().then((keys) => expect(keys).toEqual(['key1', 'key2']))
+    expect(await storage2.getAllKeys()).toEqual(['key1', 'key2'])
 
     const storage = yoroiStorage.join('prefix/')
-    await storage.getAllKeys().then((keys) => expect(keys).toEqual([]))
+    expect(await storage.getAllKeys()).toEqual([])
     await storage.setItem('key1', item1)
     await storage.setItem('key2', item2)
-    await storage.getAllKeys().then((keys) => expect(keys).toEqual(['key1', 'key2']))
+    expect(await storage.getAllKeys()).toEqual(['key1', 'key2'])
   })
 
   it('join', async () => {
     const root = yoroiStorage.join('/')
     await root.setItem('key1', item1)
     await root.setItem('key2', item2)
-    await root.getAllKeys().then((keys) => expect(keys).toEqual(['key1', 'key2']))
+    expect(await root.getAllKeys()).toEqual(['key1', 'key2'])
 
     const storage = root.join('dir/')
-    await storage.getAllKeys().then((keys) => expect(keys).toEqual([]))
+    expect(await storage.getAllKeys()).toEqual([])
 
     await storage.setItem('item1', item1)
-    await storage.getItem('item1').then((item) => expect(item).toEqual(item1))
+    expect(await storage.getItem('item1')).toEqual(item1)
     await storage.setItem('item2', item2)
-    await storage.getItem('item2').then((item) => expect(item).toEqual(item2))
-    await storage.getItem('does not exist').then((item) => expect(item).toEqual(null))
-    await storage.getAllKeys().then((keys) => expect(keys).toEqual(['item1', 'item2']))
+    expect(await storage.getItem('item2')).toEqual(item2)
+    expect(await storage.getItem('does not exist')).toEqual(null)
+    expect(await storage.getAllKeys()).toEqual(['item1', 'item2'])
 
     await storage.removeItem('item1')
-    await storage.getItem('item1').then((item) => expect(item).toEqual(null))
-    await storage.getAllKeys().then((keys) => expect(keys).toEqual(['item2']))
+    expect(await storage.getItem('item1')).toEqual(null)
+    expect(await storage.getAllKeys()).toEqual(['item2'])
 
     await storage.clear()
-    await storage.getAllKeys().then((keys) => expect(keys).toEqual([]))
+    expect(await storage.getAllKeys()).toEqual([])
   })
 })
 

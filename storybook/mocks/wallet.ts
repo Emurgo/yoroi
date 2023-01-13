@@ -7,7 +7,6 @@ import {getDefaultAssetByNetworkId} from '../../src/legacy/config'
 import {PRIMARY_ASSET_CONSTANTS} from '../../src/legacy/networks'
 import {WalletMeta} from '../../src/legacy/state'
 import {TokenEntry, YoroiWallet} from '../../src/yoroi-wallets'
-import {storage} from '../../src/yoroi-wallets/storage'
 import {
   RemotePoolMetaSuccess,
   StakePoolInfosAndHistories,
@@ -37,7 +36,7 @@ const walletMeta: WalletMeta = {
   walletImplementationId: 'haskell-shelley-24',
 }
 
-const wallet: YoroiWallet & Record<string, unknown> = {
+const wallet: YoroiWallet = {
   id: 'wallet-id',
   primaryToken: getDefaultAssetByNetworkId(300),
   walletImplementationId: 'haskell-shelley',
@@ -169,7 +168,6 @@ const wallet: YoroiWallet & Record<string, unknown> = {
     action('generateNewReceiveAddress')(...args)
     return true
   },
-  storage: storage.join('/mock/'),
   save: async (...args) => {
     action('save')(...args)
   },
