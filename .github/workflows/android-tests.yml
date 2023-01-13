@@ -70,7 +70,10 @@ jobs:
         run: |
           cd android
           echo ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-          printenv
+          echo java_home is $JAVA_HOME
+          echo android_sdk_root is $ANDROID_SDK_ROOT
+          echo android_home is $ANDROID_HOME
+          echo path is $PATH
           echo ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
           ENTRY_FILE=index.ts ./gradlew clean assembleNightlyRelease
           cd ..
