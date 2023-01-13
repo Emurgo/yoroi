@@ -18,7 +18,7 @@ import {
   YoroiSignedTx,
   YoroiUnsignedTx,
 } from '../../src/yoroi-wallets/types'
-import {mockEncryptedStorage, mockStorage} from './storage'
+import {mockEncryptedStorage} from './storage'
 import {mockTransactionInfo, mockTransactions} from './transaction'
 
 const walletMeta: WalletMeta = {
@@ -168,7 +168,6 @@ const wallet: YoroiWallet = {
     action('generateNewReceiveAddress')(...args)
     return true
   },
-  storage: mockStorage,
   save: async (...args) => {
     action('save')(...args)
   },
