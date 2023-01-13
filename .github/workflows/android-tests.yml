@@ -71,6 +71,7 @@ jobs:
           cd android
           . ~/.bashrc
           echo ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+          echo home is $HOME
           echo java_home is $JAVA_HOME
           echo android_sdk_root is $ANDROID_SDK_ROOT
           echo android_home is $ANDROID_HOME
