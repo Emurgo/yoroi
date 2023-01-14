@@ -131,6 +131,7 @@ export class ShelleyWallet implements WalletInterface {
   version: string
   checksum: CardanoTypes.WalletChecksum
   private _utxos: RawUtxo[]
+  private readonly stakingKeyPath: number[]
 
   // =================== create =================== //
 
@@ -361,6 +362,15 @@ export class ShelleyWallet implements WalletInterface {
     this.isInitialized = true
     this.isEasyConfirmationEnabled = isEasyConfirmationEnabled
     this.state = {lastGeneratedAddressIndex}
+    this.stakingKeyPath = isByron(this.walletImplementationId)
+      ? []
+      : [
+          CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852,
+          CONFIG.NUMBERS.COIN_TYPES.CARDANO,
+          CONFIG.NUMBERS.ACCOUNT_INDEX + CONFIG.NUMBERS.HARD_DERIVATION_START,
+          CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
+          CONFIG.NUMBERS.STAKING_KEY_INDEX,
+        ]
   }
 
   get utxos() {
@@ -494,19 +504,6 @@ export class ShelleyWallet implements WalletInterface {
 
     Logger.info(`getStakingKey: ${Buffer.from(await stakingKey.asBytes()).toString('hex')}`)
     return stakingKey
-  }
-
-  getStakingKeyPath(): Array<number> {
-    if (this.walletImplementationId == null) throw new Error('Invalid wallet: walletImplementationId')
-
-    assert.assert(isHaskellShelley(this.walletImplementationId), 'cannot get staking key from a byron-era wallet')
-    return [
-      CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852,
-      CONFIG.NUMBERS.COIN_TYPES.CARDANO,
-      CONFIG.NUMBERS.ACCOUNT_INDEX + CONFIG.NUMBERS.HARD_DERIVATION_START,
-      CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
-      CONFIG.NUMBERS.STAKING_KEY_INDEX,
-    ]
   }
 
   private async getRewardAddress() {
@@ -795,7 +792,6 @@ export class ShelleyWallet implements WalletInterface {
       const votingPublicKey = await Promise.resolve(Buffer.from(catalystKeyHex, 'hex'))
         .then((bytes) => CardanoMobile.PrivateKey.fromExtendedBytes(bytes))
         .then((key) => key.toPublic())
-      const stakingKeyPath = this.getStakingKeyPath()
       const stakingPublicKey = await this.getStakingKey()
       const changeAddr = await this.getAddressedChangeAddress()
       const networkConfig = this.getNetworkConfig()
@@ -819,7 +815,7 @@ export class ShelleyWallet implements WalletInterface {
         absSlotNumber,
         this.defaultAsset,
         votingPublicKey,
-        stakingKeyPath,
+        this.stakingKeyPath,
         stakingPublicKey,
         addressedUtxos,
         changeAddr,
@@ -916,7 +912,7 @@ export class ShelleyWallet implements WalletInterface {
       unsignedTx.unsignedTx,
       Number.parseInt(this.getChainNetworkId(), 10),
       (this.getBaseNetworkConfig() as any).PROTOCOL_MAGIC,
-      this.getStakingKeyPath(),
+      this.stakingKeyPath,
     )
 
     const signedLedgerTx = await signTxWithLedger(ledgerPayload, this.hwDeviceInfo, useUSB)
