@@ -4,17 +4,7 @@ import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
 import React from 'react'
 import type {IntlShape} from 'react-intl'
 import {defineMessages, injectIntl} from 'react-intl'
-import {
-  ActivityIndicator,
-  Alert,
-  FlatList,
-  Image,
-  LayoutAnimation,
-  RefreshControl,
-  ScrollView,
-  StyleSheet,
-  View,
-} from 'react-native'
+import {ActivityIndicator, Alert, FlatList, Image, RefreshControl, ScrollView, StyleSheet, View} from 'react-native'
 
 import bleImage from '../../assets/img/bluetooth.png'
 import usbImage from '../../assets/img/ledger-nano-usb.png'
@@ -78,7 +68,7 @@ class _LedgerConnect extends React.Component<Props, State> {
           if (this._isMounted) {
             Logger.debug('BLE observeState event', e)
             if (this._bluetoothEnabled == null && !e.available) {
-              this.setStateWithAnimation({
+              this.setState({
                 error: new BluetoothDisabledError(),
                 refreshing: false,
               })
@@ -89,7 +79,7 @@ class _LedgerConnect extends React.Component<Props, State> {
               if (e.available) {
                 this.reload()
               } else {
-                this.setStateWithAnimation({
+                this.setState({
                   error: new BluetoothDisabledError(),
                   refreshing: false,
                   devices: [],
@@ -114,25 +104,25 @@ class _LedgerConnect extends React.Component<Props, State> {
     this._subscriptions = this._transportLib.listen({
       complete: () => {
         Logger.debug('listen: subscription completed')
-        this.setStateWithAnimation({refreshing: false})
+        this.setState({refreshing: false})
       },
       next: (e) => {
         if (e.type === 'add') {
           Logger.debug('listen: new device detected')
           if (useUSB === true) {
             // if a device is detected, save it in state immediately
-            this.setStateWithAnimation({
+            this.setState({
               refreshing: false,
               deviceObj: e.descriptor,
             })
           } else {
             // with bluetooth, new devices are appended in the screen
-            this.setStateWithAnimation(deviceAddition(e.descriptor))
+            this.setState(deviceAddition(e.descriptor))
           }
         }
       },
       error: (error) => {
-        this.setStateWithAnimation({error, refreshing: false, devices: []})
+        this.setState({error, refreshing: false, devices: []})
       },
     })
   }
@@ -144,14 +134,9 @@ class _LedgerConnect extends React.Component<Props, State> {
     }
   }
 
-  private setStateWithAnimation = (newState) => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-    if (this._isMounted) this.setState(newState)
-  }
-
   reload = () => {
     this._unsubscribe()
-    this.setStateWithAnimation({
+    this.setState({
       devices: this.props.defaultDevices ? this.props.defaultDevices : [],
       deviceId: null,
       deviceObj: null,
@@ -169,7 +154,7 @@ class _LedgerConnect extends React.Component<Props, State> {
         // should never happen
         throw new Error('device id is null')
       }
-      this.setStateWithAnimation({
+      this.setState({
         deviceId: device.id.toString(),
         refreshing: false,
         waiting: true,
@@ -181,16 +166,16 @@ class _LedgerConnect extends React.Component<Props, State> {
         this.reload()
         return
       }
-      this.setStateWithAnimation({error: e})
+      this.setState({error: e})
     } finally {
-      this.setStateWithAnimation({waiting: false})
+      this.setState({waiting: false})
     }
   }
 
   _onConfirm = async (deviceObj: DeviceObj) => {
     this._unsubscribe()
     try {
-      this.setStateWithAnimation({
+      this.setState({
         waiting: true,
       })
       await this.props.onConnectUSB(deviceObj)
@@ -200,9 +185,9 @@ class _LedgerConnect extends React.Component<Props, State> {
         this.reload()
         return
       }
-      this.setStateWithAnimation({error: e})
+      this.setState({error: e})
     } finally {
-      this.setStateWithAnimation({waiting: false})
+      this.setState({waiting: false})
     }
   }
 
