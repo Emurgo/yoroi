@@ -10,21 +10,16 @@ jobs:
     runs-on: [self-hosted]
     steps:
 
+      - name: Preparing SSH key
+        run: |
+          cd ~
+          mkdir .ssh && cd .ssh
+          echo ${{ secrets.SSH_KEY }} | base64 -d > id_rsa
+          sudo chmod 600 $pwd/id_rsa
+
       - name: Set Android SDK path
         id: sdk_path
         run: echo "ANDROID_SDK=$HOME/Android/Sdk" >> $GITHUB_OUTPUT
-
-      - name: Cargo config content
-        run: |
-          cat ~/.cargo/config
-
-      - name: Recreating the cargo config
-        run: |
-          rm -rf ~/.cargo/config
-          cat <<EOF >> ~/.cargo/config
-          [net]
-          git-fetch-with-cli = true
-          EOF
 
       - uses: actions/checkout@v3
 
