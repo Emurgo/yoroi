@@ -20,6 +20,7 @@ jobs:
 
       - name: Run emulator
         run: |
+          export ANDROID_HOME=~/Android
           ~/Android/emulator/emulator -avd test -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none &
           sleep(60)
 
