@@ -21,9 +21,6 @@ jobs:
       - name: Create avd image
         run: |
           export ANDROID_SDK_ROOT=${{ steps.sdk_path.outputs.ANDROID_SDK }}
-          echo ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-          $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --list
-          echo ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
           $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/avdmanager create avd -n test -k "system-images;android-31;google_apis;x86_64" --device "pixel_6"
 
       # - uses: actions/checkout@v3
