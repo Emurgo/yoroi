@@ -20,10 +20,15 @@ jobs:
 
       - name: Run emulator
         run: |
-          export ANDROID_SDK_ROOT=$HOME/Android
+          export ANDROID_SDK_ROOT=${{ steps.sdk_path.outputs.ANDROID_SDK }}
           echo **********START**********
+          cd $ANDROID_SDK_ROOT
+          mkdir emulator
+          mv -v ~/Android/emulator/* $ANDROID_SDK_ROOT/emulator
+          cd ~/Android/
+          rm -rf emulator
           echo ***********END***********
-          ~/Android/emulator/emulator -avd test -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none &
+          $ANDROID_SDK_ROOT/emulator/emulator -avd test -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none &
           sleep(60)
 
       # - uses: actions/checkout@v3
@@ -102,7 +107,7 @@ jobs:
       # - name: Create avd image, run emulator, run tests
       #   run: |
       #     export ANDROID_SDK_ROOT=${{ steps.sdk_path.outputs.ANDROID_SDK }}
-      #     ~/Android/emulator/emulator -avd test -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none &
+      #     $ANDROID_SDK_ROOT/emulator/emulator -avd test -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none &
       #     sleep(60)
       #     yarn e2e:appium-test-android
 
