@@ -22,7 +22,7 @@ jobs:
         run: |
           export ANDROID_SDK_ROOT=${{ steps.sdk_path.outputs.ANDROID_SDK }}
           export ANDROID_HOME=$HOME/Android
-          cd $ANDROID_SDK_HOME
+          cd $ANDROID_HOME
           mkdir emulator
           mv -v $ANDROID_SDK_ROOT/emulator/* $ANDROID_HOME/emulator
           cd ~
