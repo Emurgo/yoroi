@@ -95,7 +95,7 @@ jobs:
         run: |
           export ANDROID_SDK_ROOT=${{ steps.sdk_path.outputs.ANDROID_SDK }}
           export ANDROID_HOME=${{ steps.sdk_path.outputs.ANDROID_SDK }}
-          $ANDROID_SDK_ROOT/emulator/emulator -avd test -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none &
+          $ANDROID_SDK_ROOT/emulator/emulator -avd test -wipe-data -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none &
           sleep 60
           yarn e2e:appium-test-android
 
