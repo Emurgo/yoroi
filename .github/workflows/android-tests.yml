@@ -23,10 +23,7 @@ jobs:
           export ANDROID_SDK_ROOT=${{ steps.sdk_path.outputs.ANDROID_SDK }}
           export ANDROID_HOME=${{ steps.sdk_path.outputs.ANDROID_SDK }}
           echo **********START**********
-          cd $ANDROID_SDK_ROOT
-          mv -v ~/Android/emulator/* $ANDROID_SDK_ROOT/emulator
-          cd ~/Android/
-          rm -rf emulator
+          cat ~/.android/avd/test.avd/config.ini
           echo ***********END***********
           $ANDROID_SDK_ROOT/emulator/emulator -avd test -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none &
           sleep(60)
