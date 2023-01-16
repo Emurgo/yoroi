@@ -66,43 +66,30 @@ jobs:
       - name: Adding android/app/my-release-key.keystore
         run: echo ${{ secrets.RELEASE_KEY }} | base64 -d > android/app/my-release-key.keystore
 
-      - name: Building the nightly app
-        run: |
-          cd android
-          . ~/.bashrc
-          export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
-          echo ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-          echo home is $HOME
-          echo java_home is $JAVA_HOME
-          ls $JAVA_HOME -A
-          echo android_sdk_root is $ANDROID_SDK_ROOT
-          echo android_home is $ANDROID_HOME
-          echo path is $PATH
-          echo ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-          ENTRY_FILE=index.ts ./gradlew clean assembleNightlyRelease
-          cd ..
-
-      - name: Copy the apk to test folder
-        run: |
-          mkdir "$(pwd)/tests/app"
-          cp "$(pwd)/android/app/build/outputs/apk/nightly/release/app-nightly-release.apk" "$(pwd)/tests/app/Yoroi-Nightly.apk"
-      
-      - name: Create avd image
-        run: |
-          export ANDROID_SDK_ROOT=$HOME/Android/Sdk
-          $ANDROID_SDK_ROOT/tools/bin/avdmanager create avd -n test -k "system-images;android-31;google_apis;x86_64" --device "pixel_6"
-
-      - name: Run Android emulator
-        run: |
-          export ANDROID_SDK_ROOT=$HOME/Android/Sdk
-          emulator -avd test -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none &
-          sleep(60)
-
       - name: Installing Appium
         run: yarn global add appium
 
-      - name: Run tests
-        run: yarn e2e:appium-test-android
+      - name: Building the nightly app and run tests
+        uses: addnab/docker-run-action@v3
+        with:
+          image: emurgornd/yoroi-mobile-image:latest
+          run: |
+            cd android
+            echo ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            echo home is $HOME
+            echo java_home is $JAVA_HOME
+            echo android_sdk_root is $ANDROID_SDK_ROOT
+            echo android_home is $ANDROID_HOME
+            echo path is $PATH
+            echo ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            ENTRY_FILE=index.ts ./gradlew clean assembleNightlyRelease
+            cd ..
+            mkdir "$(pwd)/tests/app"
+            cp "$(pwd)/android/app/build/outputs/apk/nightly/release/app-nightly-release.apk" "$(pwd)/tests/app/Yoroi-Nightly.apk"
+            $ANDROID_SDK_ROOT/tools/bin/avdmanager create avd -n test -k "system-images;android-31;google_apis;x86_64" --device "pixel_6"
+            emulator -avd test -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none &
+            sleep(60)
+            yarn e2e:appium-test-android
 
       - name: Archive tests screenshots and logs
         if: ${{ failure() }}
