@@ -14,11 +14,6 @@ jobs:
         run: |
           eval `ssh-agent -s`
 
-      - name: Known hosts
-        run: |
-          cd ~/.ssh
-          rm -rf known_hosts.old
-
       - name: Set Android SDK path
         id: sdk_path
         run: echo "ANDROID_SDK=$HOME/Android/Sdk" >> $GITHUB_OUTPUT
