@@ -24,8 +24,6 @@ jobs:
           echo **********START**********
           ls $ANDROID_SDK_ROOT -A
           echo ***********END***********
-          # ~/Android/emulator/emulator -avd test -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none &
-          # sleep(60)
 
       # - uses: actions/checkout@v3
 
@@ -103,7 +101,7 @@ jobs:
       # - name: Create avd image, run emulator, run tests
       #   run: |
       #     export ANDROID_SDK_ROOT=${{ steps.sdk_path.outputs.ANDROID_SDK }}
-      #     $ANDROID_SDK_ROOT/emulator/emulator -avd test -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none &
+      #     ~/Android/emulator/emulator -avd test -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none &
       #     sleep(60)
       #     yarn e2e:appium-test-android
 
