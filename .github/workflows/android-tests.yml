@@ -18,6 +18,12 @@ jobs:
         id: sdk_path
         run: echo "ANDROID_SDK=$HOME/Android/Sdk" >> $GITHUB_OUTPUT
 
+      - name: Create avd image
+        run: |
+          java -version
+          export ANDROID_SDK_ROOT=${{ steps.sdk_path.outputs.ANDROID_SDK }}
+          $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/avdmanager create avd -n test -k "system-images;android-31;google_apis;x86_64" --device "pixel_6"
+
       - uses: actions/checkout@v3
 
       - name: Reading .nvmrc
@@ -83,11 +89,6 @@ jobs:
           ENTRY_FILE=index.ts ./gradlew clean assembleNightlyRelease
           cd ..
 
-      - name: Install Java 8
-        run: |
-          apt-get update && apt-get install openjdk-8-jdk -y
-          update-alternatives --set java /usr/lib/jvm/jdk1.8.0_version/bin/java
-
       - name: Copy the apk to test folder
         run: |
           mkdir "$(pwd)/tests/app"
@@ -99,7 +100,7 @@ jobs:
       - name: Create avd image, run emulator, run tests
         run: |
           export ANDROID_SDK_ROOT=${{ steps.sdk_path.outputs.ANDROID_SDK }}
-          $ANDROID_SDK_ROOT/tools/bin/avdmanager create avd -n test -k "system-images;android-31;google_apis;x86_64" --device "pixel_6"
+          $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/avdmanager create avd -n test -k "system-images;android-31;google_apis;x86_64" --device "pixel_6"
           emulator -avd test -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none &
           sleep(60)
           yarn e2e:appium-test-android
