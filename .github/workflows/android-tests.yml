@@ -10,33 +10,21 @@ jobs:
     runs-on: [self-hosted]
     steps:
 
-      - name: Installing Android SDK
-        id: sdk
+      - name: Set Android SDK path
+        id: sdk_path
+        run: echo "ANDROID_SDK=$HOME/Android/Sdk" >> $GITHUB_OUTPUT
+
+      - name: Cargo config content
         run: |
-          rm -rf ./Android/Sdk/
-          echo ^^^^^^^^^^^^^^^^^^^^^^^^^^
-          $pwd
-          echo ^^^^^^^^^^^^^^^^^^^^^^^^^^
-          sdk_dir=$HOME/Android/Sdk
-          mkdir -p $sdk_dir
-          wget https://dl.google.com/android/repository/commandlinetools-linux-9123335_latest.zip
-          unzip commandlinetools-linux-9123335_latest.zip -d $sdk_dir
-          export ANDROID_SDK_ROOT=$sdk_dir
-          echo ^^^^^^^^^^^^^^^^^^^^^^^^^^
-          ls $ANDROID_SDK_ROOT
-          echo ^^^^^^^^^^^^^^^^^^^^^^^^^^
-          echo "y" | $ANDROID_SDK_ROOT/cmdline-tools/bin/sdkmanager --sdk_root=${ANDROID_SDK_ROOT} "tools"
-          $ANDROID_SDK_ROOT/cmdline-tools/bin/sdkmanager --sdk_root=${ANDROID_SDK_ROOT} "build-tools;30.0.2" "platform-tools" "platforms;android-30" "tools"
-          export PATH=$PATH:$ANDROID_SDK_ROOT/emulator
-          export PATH=$PATH:$ANDROID_SDK_ROOT/platform-tools
-          export PATH=$PATH:$ANDROID_SDK_ROOT/bin
-          echo "y" | $ANDROID_SDK_ROOT/cmdline-tools/bin/sdkmanager --sdk_root=${ANDROID_SDK_ROOT} --licenses
-          echo "ANDROID_SDK=$ANDROID_SDK_ROOT" >> $GITHUB_OUTPUT
-      
-      - name: Installing NDK 21.4.7075529
+          cat ~/.cargo/config
+
+      - name: Recreating the cargo config
         run: |
-          export ANDROID_SDK_ROOT=${{ steps.sdk.outputs.ANDROID_SDK }}
-          $ANDROID_SDK_ROOT/cmdline-tools/bin/sdkmanager --sdk_root=$ANDROID_SDK_ROOT --install "ndk;21.4.7075529"
+          rm -rf ~/.cargo/config
+          cat <<EOF >> ~/.cargo/config
+          [net]
+          git-fetch-with-cli = true
+          EOF
 
       - uses: actions/checkout@v3
 
@@ -105,11 +93,7 @@ jobs:
       - name: Building the nightly app
         run: |
           . $HOME/.cargo/env
-          export ANDROID_SDK_ROOT=${{ steps.sdk.outputs.ANDROID_SDK }}
-          echo ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-          echo $ANDROID_SDK_ROOT
-          ls $ANDROID_SDK_ROOT
-          echo ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+          export ANDROID_SDK_ROOT=${{ steps.sdk_path.outputs.ANDROID_SDK }}
           cd android
           ENTRY_FILE=index.ts ./gradlew clean assembleNightlyRelease
           cd ..
@@ -121,12 +105,12 @@ jobs:
       
       - name: Create avd image
         run: |
-          export ANDROID_SDK_ROOT=${{ steps.sdk.outputs.ANDROID_SDK }}
+          export ANDROID_SDK_ROOT=${{ steps.sdk_path.outputs.ANDROID_SDK }}
           $ANDROID_SDK_ROOT/tools/bin/avdmanager create avd -n test -k "system-images;android-31;google_apis;x86_64" --device "pixel_6"
 
       - name: Run Android emulator
         run: |
-          export ANDROID_SDK_ROOT=${{ steps.sdk.outputs.ANDROID_SDK }}
+          export ANDROID_SDK_ROOT=${{ steps.sdk_path.outputs.ANDROID_SDK }}
           emulator -avd test -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none &
           sleep(60)
 
