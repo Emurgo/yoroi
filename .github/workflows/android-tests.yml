@@ -83,27 +83,26 @@ jobs:
           ENTRY_FILE=index.ts ./gradlew clean assembleNightlyRelease
           cd ..
 
+      - name: Install Java 8
+        run: |
+          apt-get update && apt-get install openjdk-8-jdk -y
+          update-alternatives --set java /usr/lib/jvm/jdk1.8.0_version/bin/java
+
       - name: Copy the apk to test folder
         run: |
           mkdir "$(pwd)/tests/app"
           cp "$(pwd)/android/app/build/outputs/apk/nightly/release/app-nightly-release.apk" "$(pwd)/tests/app/Yoroi-Nightly.apk"
-      
-      - name: Create avd image
-        run: |
-          export ANDROID_SDK_ROOT=${{ steps.sdk_path.outputs.ANDROID_SDK }}
-          $ANDROID_SDK_ROOT/tools/bin/avdmanager create avd -n test -k "system-images;android-31;google_apis;x86_64" --device "pixel_6"
-
-      - name: Run Android emulator
-        run: |
-          export ANDROID_SDK_ROOT=${{ steps.sdk_path.outputs.ANDROID_SDK }}
-          emulator -avd test -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none &
-          sleep(60)
 
       - name: Installing Appium
         run: yarn global add appium
 
-      - name: Run tests
-        run: yarn e2e:appium-test-android
+      - name: Create avd image, run emulator, run tests
+        run: |
+          export ANDROID_SDK_ROOT=${{ steps.sdk_path.outputs.ANDROID_SDK }}
+          $ANDROID_SDK_ROOT/tools/bin/avdmanager create avd -n test -k "system-images;android-31;google_apis;x86_64" --device "pixel_6"
+          emulator -avd test -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none &
+          sleep(60)
+          yarn e2e:appium-test-android
 
       - name: Archive tests screenshots and logs
         if: ${{ failure() }}
