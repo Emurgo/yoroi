@@ -21,6 +21,7 @@ jobs:
       - name: Run emulator
         run: |
           export ANDROID_SDK_ROOT=${{ steps.sdk_path.outputs.ANDROID_SDK }}
+          export ANDROID_HOME=${{ steps.sdk_path.outputs.ANDROID_SDK }}
           echo **********START**********
           cd $ANDROID_SDK_ROOT
           mkdir emulator
