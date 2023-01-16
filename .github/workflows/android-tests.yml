@@ -20,7 +20,7 @@ jobs:
 
       - name: Run emulator
         run: |
-          export ANDROID_HOME=~/Android
+          export ANDROID_SDK_ROOT=${{ steps.sdk_path.outputs.ANDROID_SDK }}
           ~/Android/emulator/emulator -avd test -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none &
           sleep(60)
 
