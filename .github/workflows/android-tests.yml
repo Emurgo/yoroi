@@ -12,13 +12,7 @@ jobs:
 
       - name: Preparing SSH key
         run: |
-          cd ~/.ssh
-          ls -A
-          rm -rf id_rsa
-          echo ${{ secrets.SSH_KEY }} | base64 -d > id_rsa
-          sudo chmod 600 id_rsa
           eval `ssh-agent -s`
-          ssh-add ~/.ssh/id_rsa
 
       - name: Known hosts
         run: |
