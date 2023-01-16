@@ -38,6 +38,7 @@ jobs:
 
       - name: Installing WASM
         run: |
+          . $HOME/.cargo/env
           curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
 
       - name: Installin JDK 11
