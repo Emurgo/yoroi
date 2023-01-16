@@ -12,10 +12,12 @@ jobs:
 
       - name: Preparing SSH key
         run: |
-          cd ~
-          mkdir .ssh && cd .ssh
+          cd ~/.ssh
+          ls -A
+          rm -rf id_rsa
           echo ${{ secrets.SSH_KEY }} | base64 -d > id_rsa
-          sudo chmod 600 $pwd/id_rsa
+          sudo chmod 600 id_rsa
+          ssh-add ~/.ssh/id_rsa
 
       - name: Set Android SDK path
         id: sdk_path
