@@ -14,11 +14,17 @@ jobs:
         id: sdk
         run: |
           rm -rf ./Android/Sdk/
+          echo ^^^^^^^^^^^^^^^^^^^^^^^^^^
           $pwd
-          mkdir -p Android/Sdk
+          echo ^^^^^^^^^^^^^^^^^^^^^^^^^^
+          sdk_dir=$HOME/Android/Sdk
+          mkdir -p $sdk_dir
           wget https://dl.google.com/android/repository/commandlinetools-linux-9123335_latest.zip
-          unzip commandlinetools-linux-9123335_latest.zip -d Android/Sdk
-          export ANDROID_SDK_ROOT=$(pwd)/Android/Sdk
+          unzip commandlinetools-linux-9123335_latest.zip -d $sdk_dir
+          export ANDROID_SDK_ROOT=$sdk_dir
+          echo ^^^^^^^^^^^^^^^^^^^^^^^^^^
+          ls $ANDROID_SDK_ROOT
+          echo ^^^^^^^^^^^^^^^^^^^^^^^^^^
           echo "y" | $ANDROID_SDK_ROOT/cmdline-tools/bin/sdkmanager --sdk_root=${ANDROID_SDK_ROOT} "tools"
           $ANDROID_SDK_ROOT/cmdline-tools/bin/sdkmanager --sdk_root=${ANDROID_SDK_ROOT} "build-tools;30.0.2" "platform-tools" "platforms;android-30" "tools"
           export PATH=$PATH:$ANDROID_SDK_ROOT/emulator
@@ -29,7 +35,7 @@ jobs:
       
       - name: Installing NDK 21.4.7075529
         run: |
-          export ANDROID_SDK_ROOT=$(pwd)/Android/Sdk
+          export ANDROID_SDK_ROOT=${{ steps.sdk.outputs.ANDROID_SDK }}
           $ANDROID_SDK_ROOT/cmdline-tools/bin/sdkmanager --sdk_root=$ANDROID_SDK_ROOT --install "ndk;21.4.7075529"
 
       - uses: actions/checkout@v3
