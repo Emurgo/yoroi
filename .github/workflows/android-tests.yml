@@ -22,15 +22,10 @@ jobs:
         run: |
           export ANDROID_SDK_ROOT=${{ steps.sdk_path.outputs.ANDROID_SDK }}
           echo ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-          cd $ANDROID_SDK_ROOT/cmdline-tools
-          mkdir bin
-          cd ~
-          mv -v $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/* $ANDROID_SDK_ROOT/cmdline-tools/bin/
-          cd $ANDROID_SDK_ROOT/cmdline-tools
-          rm -rf latest/
           $ANDROID_SDK_ROOT/cmdline-tools/bin/sdkmanager --sdk_root=$ANDROID_SDK_ROOT --list
+          $ANDROID_SDK_ROOT/cmdline-tools/bin/sdkmanager --sdk_root=$ANDROID_SDK_ROOT --install "system-images;android-31;google_apis;x86_64"
           echo ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-          $ANDROID_SDK_ROOT/cmdline-tools/bin/avdmanager --sdk_root=$ANDROID_SDK_ROOT create avd -n test -k "system-images;android-31;google_apis;x86_64" --device "pixel_6"
+          $ANDROID_SDK_ROOT/cmdline-tools/bin/avdmanager create avd -n test -k "system-images;android-31;google_apis;x86_64" --device "pixel_6"
 
       # - uses: actions/checkout@v3
 
