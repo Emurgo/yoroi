@@ -20,10 +20,11 @@ jobs:
 
       - name: Run emulator
         run: |
-          export ANDROID_SDK_ROOT=${{ steps.sdk_path.outputs.ANDROID_SDK }}
+          export ANDROID_SDK_ROOT=$HOME/Android
           echo **********START**********
-          ls $ANDROID_SDK_ROOT -A
           echo ***********END***********
+          ~/Android/emulator/emulator -avd test -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none &
+          sleep(60)
 
       # - uses: actions/checkout@v3
 
