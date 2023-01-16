@@ -24,7 +24,6 @@ type Tab = 'transactions' | 'assets'
 export const TxHistory = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
-
   const [showWarning, setShowWarning] = useState(isByron(wallet.walletImplementationId))
 
   const [activeTab, setActiveTab] = useState<Tab>('transactions')
@@ -96,7 +95,7 @@ export const TxHistory = () => {
           </TabPanel>
 
           <TabPanel active={activeTab === 'assets'}>
-            <Boundary loading={{fallbackProps: {style: {flex: 1}}}}>
+            <Boundary loading={{size: 'full'}}>
               <AssetList onScroll={onScroll} refreshing={isLoading} onRefresh={() => sync()} />
             </Boundary>
           </TabPanel>

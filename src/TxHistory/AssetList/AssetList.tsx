@@ -51,7 +51,7 @@ export const AssetList = (props: Props) => {
         {...props}
         data={orderedTokens}
         renderItem={({item: amount}) => (
-          <Boundary loading={{fallbackProps: {size: 'small'}}}>
+          <Boundary loading={{size: 'small'}}>
             <AssetItem amount={amount} />
           </Boundary>
         )}

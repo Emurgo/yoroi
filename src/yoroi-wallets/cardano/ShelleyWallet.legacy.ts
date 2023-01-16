@@ -23,13 +23,8 @@ import {CardanoError, InvalidState} from '../../legacy/errors'
 import type {HWDeviceInfo} from '../../legacy/ledgerUtils'
 import {signTxWithLedger} from '../../legacy/ledgerUtils'
 import {Logger} from '../../legacy/logging'
-import {
-  CardanoHaskellShelleyNetwork,
-  getCardanoNetworkConfigById,
-  isHaskellShelleyNetwork,
-  isJormungandr,
-  PROVIDERS,
-} from '../../legacy/networks'
+import {CardanoHaskellShelleyNetwork, getCardanoNetworkConfigById, isJormungandr} from '../../legacy/networks'
+import {isHaskellShelleyNetwork, PROVIDERS} from '../../legacy/networks'
 import {processTxHistoryData} from '../../legacy/processTransactions'
 import {IsLockedError, nonblockingSynchronize, synchronize} from '../../legacy/promise'
 import type {WalletMeta} from '../../legacy/state'
@@ -70,16 +65,7 @@ import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from './cha
 import {filterAddressesByStakingKey, getDelegationStatus} from './shelley/delegationUtils'
 import {toCachedTx, TransactionCache} from './shelley/transactionCache'
 import {yoroiSignedTx} from './signedTx'
-import {
-  isYoroiWallet,
-  NetworkId,
-  WalletEvent,
-  WalletImplementationId,
-  WalletInterface,
-  WalletSubscription,
-  YoroiProvider,
-  YoroiWallet,
-} from './types'
+import {NetworkId, WalletEvent, WalletImplementationId, WalletSubscription, YoroiProvider} from './types'
 import {yoroiUnsignedTx} from './unsignedTx'
 import {makeUtxoManager, UtxoManager} from './utxoManager'
 
@@ -111,266 +97,44 @@ export type ByronWalletJSON = Omit<ShelleyWalletJSON, 'account'>
 export type WalletJSON = ShelleyWalletJSON | ByronWalletJSON
 
 export default ShelleyWallet
-export class ShelleyWallet implements WalletInterface {
+export class ShelleyWallet {
   storage: typeof storageLegacy
   private readonly utxoManager: UtxoManager
   protected encryptedStorage: WalletEncryptedStorage
   defaultAsset: DefaultAsset
-  id: string
-  networkId: NetworkId
-  walletImplementationId: WalletImplementationId
+  id: null | string = null
+  networkId: undefined | NetworkId
+  walletImplementationId: undefined | WalletImplementationId
   isHW = false
-  hwDeviceInfo: null | HWDeviceInfo
-  isReadOnly: boolean
+  hwDeviceInfo: null | HWDeviceInfo = null
+  isReadOnly: undefined | boolean
   provider: null | undefined | YoroiProvider
   isEasyConfirmationEnabled = false
-  internalChain: AddressChain
-  externalChain: AddressChain
-  publicKeyHex: string
+  internalChain: null | AddressChain = null
+  externalChain: null | AddressChain = null
+  publicKeyHex: undefined | string
   rewardAddressHex: null | string = null
-  version: string
-  checksum: CardanoTypes.WalletChecksum
+  version: undefined | string
+  checksum: undefined | CardanoTypes.WalletChecksum
   private _utxos: RawUtxo[]
-  private readonly stakingKeyPath: number[]
 
   // =================== create =================== //
-
-  static async create({
-    id,
-    networkId,
-    implementationId,
-    storage,
-    provider,
-
-    mnemonic,
-    password,
-  }: {
-    id: string
-    implementationId: WalletImplementationId
-    networkId: NetworkId
-    storage: typeof storageLegacy
-    provider: YoroiProvider | undefined
-
-    mnemonic: string
-    password: string
-  }): Promise<YoroiWallet> {
-    const {rootKey, accountPubKeyHex} = await makeKeys({mnemonic, implementationId})
-    const {internalChain, externalChain} = await addressChains.create({implementationId, networkId, accountPubKeyHex})
-
-    const wallet = await this.commonCreate({
-      id,
-      networkId,
-      implementationId,
-      storage,
-      accountPubKeyHex,
-      hwDeviceInfo: null, // hw wallet
-      isReadOnly: false, // readonly wallet
-      internalChain,
-      externalChain,
-      isEasyConfirmationEnabled: false,
-      provider,
-    })
-
-    await wallet.encryptAndSaveRootKey(rootKey, password)
-
-    return wallet
-  }
-
-  static async createBip44({
-    id,
-    networkId,
-    implementationId,
-    storage,
-
-    accountPubKeyHex,
-    hwDeviceInfo, // hw wallet
-    isReadOnly, // readonly wallet
-  }: {
-    accountPubKeyHex: string
-    hwDeviceInfo: HWDeviceInfo | null
-    id: string
-    implementationId: WalletImplementationId
-    networkId: NetworkId
-
-    isReadOnly: boolean
-    storage: typeof storageLegacy
-  }): Promise<YoroiWallet> {
-    const {internalChain, externalChain} = await addressChains.create({implementationId, networkId, accountPubKeyHex})
-
-    return this.commonCreate({
-      id,
-      networkId,
-      implementationId,
-      storage,
-      accountPubKeyHex,
-      hwDeviceInfo, // hw wallet
-      isReadOnly, // readonly wallet
-      internalChain,
-      externalChain,
-      isEasyConfirmationEnabled: false,
-      provider: undefined,
-    })
-  }
-
-  static async restore({walletMeta, storage}: {storage: typeof storageLegacy; walletMeta: WalletMeta}) {
-    const data = await storage.read<WalletJSON>(`/wallet/${walletMeta.id}/data`)
-    if (!data) throw new Error('Cannot read saved data')
-    Logger.debug('openWallet::data', data)
-    Logger.info('restore wallet', walletMeta.name)
-
-    const networkId = data.networkId ?? walletMeta.networkId // can be null for versions < 3.0.0
-    const {internalChain, externalChain} = addressChains.restore({data, networkId})
-
-    const wallet = await this.commonCreate({
-      id: walletMeta.id,
-      networkId,
-      storage,
-      internalChain,
-      externalChain,
-
-      implementationId: data.walletImplementationId ?? walletMeta.walletImplementationId, // can be null for versions < 3.0.2
-      accountPubKeyHex: data.publicKeyHex ?? internalChain.publicKey, // can be null for versions < 3.0.2, in which case we can just retrieve from address generator
-      hwDeviceInfo: data.hwDeviceInfo, // hw wallet
-      isReadOnly: data.isReadOnly ?? false, // readonly wallet
-      provider: data.provider ?? '',
-      isEasyConfirmationEnabled: data.isEasyConfirmationEnabled,
-      lastGeneratedAddressIndex: data.lastGeneratedAddressIndex ?? 0, // AddressManager
-    })
-
-    wallet.integrityCheck()
-
-    return wallet
-  }
-
-  private static commonCreate = async ({
-    id,
-    networkId,
-    implementationId,
-    storage,
-    internalChain,
-    externalChain,
-
-    accountPubKeyHex,
-    hwDeviceInfo, // hw wallet
-    isReadOnly, // readonly wallet
-    provider,
-    isEasyConfirmationEnabled,
-    lastGeneratedAddressIndex = 0,
-  }: {
-    accountPubKeyHex: string
-    hwDeviceInfo: HWDeviceInfo | null
-    id: string
-    implementationId: WalletImplementationId
-    networkId: NetworkId
-    storage: typeof storageLegacy
-    internalChain: AddressChain
-    externalChain: AddressChain
-    isReadOnly: boolean
-    provider: YoroiProvider | null | undefined
-    isEasyConfirmationEnabled: boolean
-    lastGeneratedAddressIndex?: number
-  }) => {
-    const rewardAddressHex = await deriveRewardAddressHex(accountPubKeyHex, networkId)
-    const apiUrl = getCardanoNetworkConfigById(networkId).BACKEND.API_ROOT
-    const utxoManager = await makeUtxoManager(id, apiUrl, storage)
-    const transactionCache = await TransactionCache.create(makeStorageWithPrefix(`/wallet/${id}/txs`))
-
-    const wallet = new ShelleyWallet({
-      storage,
-      networkId,
-      id,
-      utxoManager,
-      implementationId,
-      hwDeviceInfo,
-      isReadOnly,
-      provider,
-      accountPubKeyHex,
-      rewardAddressHex,
-      transactionCache,
-      internalChain,
-      externalChain,
-      isEasyConfirmationEnabled,
-      lastGeneratedAddressIndex,
-    })
-
-    await wallet.discoverAddresses()
-    wallet.setupSubscriptions()
-    wallet.isInitialized = true
-    wallet.save()
-    wallet.notify({type: 'initialize'})
-
-    if (!isYoroiWallet(wallet)) throw new Error('invalid wallet')
-    return wallet
-  }
-
-  private constructor({
-    storage,
-    networkId,
-    id,
-    utxoManager,
-    implementationId,
-    hwDeviceInfo,
-    isReadOnly,
-    provider,
-    accountPubKeyHex,
-    rewardAddressHex,
-    transactionCache,
-    internalChain,
-    externalChain,
-    isEasyConfirmationEnabled,
-    lastGeneratedAddressIndex,
-  }: {
-    storage: typeof storageLegacy
-    networkId: NetworkId
-    id: string
-    utxoManager: UtxoManager
-    implementationId: WalletImplementationId
-    hwDeviceInfo: HWDeviceInfo | null
-    isReadOnly: boolean
-    provider: YoroiProvider | null | undefined
-    accountPubKeyHex: string
-    rewardAddressHex: string
-    transactionCache: TransactionCache
-    internalChain: AddressChain
-    externalChain: AddressChain
-    isEasyConfirmationEnabled: boolean
-    lastGeneratedAddressIndex: number
-  }) {
+  private constructor(storage: typeof storageLegacy, networkId: NetworkId, id: string, utxoManager: UtxoManager) {
     this.id = id
     this.storage = storage
     this.networkId = networkId
     this.defaultAsset = getDefaultAssetByNetworkId(this.networkId)
+
     this.utxoManager = utxoManager
     this._utxos = utxoManager.initialUtxos
     this.encryptedStorage = makeWalletEncryptedStorage(id)
-    this.walletImplementationId = implementationId
-    this.isHW = hwDeviceInfo != null
-    this.hwDeviceInfo = hwDeviceInfo
-    this.isReadOnly = isReadOnly
-    this.provider = provider
-    this.transactionCache = transactionCache
-    this.internalChain = internalChain
-    this.externalChain = externalChain
-    this.rewardAddressHex = rewardAddressHex
-    this.publicKeyHex = accountPubKeyHex
-    this.version = DeviceInfo.getVersion()
-    this.checksum = isByron(implementationId)
-      ? legacyWalletChecksum(accountPubKeyHex)
-      : walletChecksum(accountPubKeyHex)
-    this.setupSubscriptions()
-    this.notify({type: 'initialize'})
-    this.isInitialized = true
-    this.isEasyConfirmationEnabled = isEasyConfirmationEnabled
-    this.state = {lastGeneratedAddressIndex}
-    this.stakingKeyPath = isByron(this.walletImplementationId)
-      ? []
-      : [
-          CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852,
-          CONFIG.NUMBERS.COIN_TYPES.CARDANO,
-          CONFIG.NUMBERS.ACCOUNT_INDEX + CONFIG.NUMBERS.HARD_DERIVATION_START,
-          CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
-          CONFIG.NUMBERS.STAKING_KEY_INDEX,
-        ]
+  }
+
+  static async build(storage: typeof storageLegacy, networkId: NetworkId, id: string) {
+    const apiUrl = getCardanoNetworkConfigById(networkId).BACKEND.API_ROOT
+    const utxoManager = await makeUtxoManager(id, apiUrl, storage)
+
+    return new ShelleyWallet(storage, networkId, id, utxoManager)
   }
 
   get utxos() {
@@ -390,13 +154,175 @@ export class ShelleyWallet implements WalletInterface {
     await this.utxoManager.clear()
   }
 
+  private async initialize(
+    networkId: NetworkId,
+    implementationId: WalletImplementationId,
+    accountPubKeyHex: string,
+    hwDeviceInfo: null | HWDeviceInfo,
+    readOnly: boolean,
+    provider?: null | YoroiProvider,
+  ) {
+    if (!this.id) throw new Error('Invalid wallet creation state')
+    this.walletImplementationId = implementationId
+
+    this.isHW = hwDeviceInfo != null
+
+    this.hwDeviceInfo = hwDeviceInfo
+
+    this.isReadOnly = readOnly
+
+    this.provider = provider
+
+    this.transactionCache = await TransactionCache.create(makeStorageWithPrefix(`/wallet/${this.id}/txs`))
+
+    // initialize address chains
+    const walletConfig = getWalletConfigById(implementationId)
+    this.internalChain = new AddressChain(
+      new AddressGenerator(accountPubKeyHex, 'Internal', implementationId, networkId),
+      walletConfig.DISCOVERY_BLOCK_SIZE,
+      walletConfig.DISCOVERY_GAP_SIZE,
+    )
+    this.externalChain = new AddressChain(
+      new AddressGenerator(accountPubKeyHex, 'External', implementationId, networkId),
+      walletConfig.DISCOVERY_BLOCK_SIZE,
+      walletConfig.DISCOVERY_GAP_SIZE,
+    )
+
+    this.rewardAddressHex = await deriveRewardAddressHex(accountPubKeyHex, networkId)
+
+    this.publicKeyHex = accountPubKeyHex
+
+    this.version = DeviceInfo.getVersion()
+
+    this.checksum = isByron(implementationId)
+      ? legacyWalletChecksum(accountPubKeyHex)
+      : walletChecksum(accountPubKeyHex)
+
+    // Create at least one address in each block
+    await this.internalChain.initialize()
+    await this.externalChain.initialize()
+
+    await this.discoverAddresses()
+
+    this.setupSubscriptions()
+    this.notify({type: 'initialize'})
+
+    this.isInitialized = true
+
+    return this.id
+  }
+
+  async create(
+    mnemonic: string,
+    newPassword: string,
+    networkId: NetworkId,
+    implementationId: WalletImplementationId,
+    provider?: null | YoroiProvider,
+  ) {
+    Logger.info(`create wallet (networkId=${String(networkId)})`)
+    Logger.info(`create wallet (implementationId=${String(implementationId)})`)
+    Logger.info(`create wallet (provider=${String(provider)})`)
+
+    assert.assert(!this.isInitialized, 'ShelleyWallet::create: !isInitialized')
+    assert.assert(isHaskellShelleyNetwork(networkId), 'ShelleyWallet::create: invalid networkId')
+    assert.assert(
+      isByron(implementationId) || isHaskellShelley(implementationId),
+      'ShelleyWallet::create: invalid walletImplementationId',
+    )
+    const rootKeyPtr = await generateWalletRootKey(mnemonic)
+    const rootKey: string = Buffer.from(await rootKeyPtr.asBytes()).toString('hex')
+    await this.encryptAndSaveRootKey(rootKey, newPassword)
+    const purpose = isByron(implementationId)
+      ? CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.BIP44
+      : CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852
+
+    const accountKey = await (
+      await (await rootKeyPtr.derive(purpose)).derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO)
+    ).derive(CONFIG.NUMBERS.ACCOUNT_INDEX + CONFIG.NUMBERS.HARD_DERIVATION_START)
+    const accountPubKey = await accountKey.toPublic()
+    const accountPubKeyHex: string = Buffer.from(await accountPubKey.asBytes()).toString('hex')
+
+    return this.initialize(
+      networkId,
+      implementationId,
+      accountPubKeyHex,
+      null, // this is not a HW
+      false, // not a read-only wallet
+      provider,
+    )
+  }
+
+  async createWithBip44Account(
+    accountPublicKey: string,
+    networkId: NetworkId,
+    implementationId: WalletImplementationId,
+    hwDeviceInfo: null | HWDeviceInfo,
+    readOnly: boolean,
+  ) {
+    Logger.info(`create wallet with account pub key (networkId=${String(networkId)})`)
+    Logger.debug('account pub key', accountPublicKey)
+    assert.assert(!this.isInitialized, 'createWallet: !isInitialized')
+    return this.initialize(networkId, implementationId, accountPublicKey, hwDeviceInfo, readOnly)
+  }
+
   // =================== persistence =================== //
+
+  private async runMigrations(data: WalletJSON, walletMeta: WalletMeta): Promise<void> {
+    /**
+     * New versions of Yoroi may involve changes in the data structure used to
+     * store the wallet state. Hence, we need to check whether data migrations
+     * are needed every time we open a wallet.
+     * In some cases, we can determine that some data field needs to be
+     * re-accommodated to a new format just by inspecting the data structure in
+     * storage. In other cases, we may use the explicit version number, though
+     * it should only be available for versions >= 4.1.0
+     */
+
+    // recall: Prior to v4.1.0, `version` corresponded to the version on which
+    // the wallet was created/restored.
+    const lastSeenVersion = data.version
+
+    this.state = {
+      lastGeneratedAddressIndex: data.lastGeneratedAddressIndex,
+    }
+
+    // can be null for versions < 3.0.2
+    this.walletImplementationId =
+      data.walletImplementationId != null ? data.walletImplementationId : walletMeta.walletImplementationId
+
+    this.isHW = data.isHW ?? false
+    this.hwDeviceInfo = data.hwDeviceInfo
+    this.isReadOnly = data.isReadOnly ?? false
+    this.provider = data.provider
+
+    if (!this.checksum) {
+      this.checksum = walletMeta.checksum
+    }
+
+    this.version = DeviceInfo.getVersion()
+    if (this.version !== lastSeenVersion) {
+      Logger.debug(`updated version from ${lastSeenVersion} to ${this.version}`)
+    }
+
+    if (this.networkId == null) throw new Error('Invalid wallet: networkId')
+
+    this.internalChain = AddressChain.fromJSON(data.internalChain, this.networkId)
+    this.externalChain = AddressChain.fromJSON(data.externalChain, this.networkId)
+    // can be null for versions < 3.0.2, in which case we can just retrieve
+    // from address generator
+    this.publicKeyHex = data.publicKeyHex != null ? data.publicKeyHex : this.internalChain.publicKey
+    this.rewardAddressHex = await deriveRewardAddressHex(this.publicKeyHex, this.networkId)
+    this.isEasyConfirmationEnabled = data.isEasyConfirmationEnabled
+
+    this.transactionCache = await TransactionCache.create(makeStorageWithPrefix(`/wallet/${walletMeta.id}/txs/`))
+  }
 
   private integrityCheck(): void {
     try {
       if (this.networkId === NETWORK_REGISTRY.BYRON_MAINNET) {
         this.networkId = NETWORK_REGISTRY.HASKELL_SHELLEY
       }
+      if (!this.networkId) throw new Error('invalid state')
       assert.assert(isHaskellShelleyNetwork(this.networkId), 'invalid networkId')
       if (this.walletImplementationId == null) throw new Error('Invalid wallet: walletImplementationId')
       assert.assert(
@@ -415,6 +341,22 @@ export class ShelleyWallet implements WalletInterface {
     }
   }
 
+  // TODO(v-almonacid): move to parent class?
+  async restore(data: WalletJSON, walletMeta: WalletMeta) {
+    Logger.info('restore wallet', walletMeta.name)
+    assert.assert(!this.isInitialized, 'restoreWallet: !isInitialized')
+
+    await this.runMigrations(data, walletMeta)
+
+    this.integrityCheck()
+
+    await this.discoverAddresses()
+
+    this.setupSubscriptions()
+
+    this.isInitialized = true
+  }
+
   async sync() {
     await this.doFullSync()
     await this.save()
@@ -422,6 +364,7 @@ export class ShelleyWallet implements WalletInterface {
 
   async resync() {
     await this.clear()
+    if (!this.transactionCache) throw new Error('invalid wallet state')
     this.transactionCache.resetState()
     await this.save()
     this.sync()
@@ -471,7 +414,8 @@ export class ShelleyWallet implements WalletInterface {
   }
 
   // returns the address in bech32 (Shelley) or base58 (Byron) format
-  private getChangeAddress(): string {
+  getChangeAddress(): string {
+    if (!this.internalChain) throw new Error('invalid wallet state')
     const candidateAddresses = this.internalChain.addresses
     const unseen = candidateAddresses.filter((addr) => !this.isUsedAddress(addr))
     assert.assert(unseen.length > 0, 'Cannot find change address')
@@ -491,11 +435,11 @@ export class ShelleyWallet implements WalletInterface {
     })
   }
 
-  private async getStakingKey() {
+  async getStakingKey() {
     if (this.walletImplementationId == null) throw new Error('Invalid wallet: walletImplementationId')
 
     assert.assert(isHaskellShelley(this.walletImplementationId), 'cannot get staking key from a byron-era wallet')
-
+    if (!this.publicKeyHex) throw new Error('invalid wallet state')
     const accountPubKey = await CardanoMobile.Bip32PublicKey.fromBytes(Buffer.from(this.publicKeyHex, 'hex'))
     const stakingKey = await accountPubKey
       .derive(CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT)
@@ -506,7 +450,20 @@ export class ShelleyWallet implements WalletInterface {
     return stakingKey
   }
 
-  private async getRewardAddress() {
+  getStakingKeyPath(): Array<number> {
+    if (this.walletImplementationId == null) throw new Error('Invalid wallet: walletImplementationId')
+
+    assert.assert(isHaskellShelley(this.walletImplementationId), 'cannot get staking key from a byron-era wallet')
+    return [
+      CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852,
+      CONFIG.NUMBERS.COIN_TYPES.CARDANO,
+      CONFIG.NUMBERS.ACCOUNT_INDEX + CONFIG.NUMBERS.HARD_DERIVATION_START,
+      CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
+      CONFIG.NUMBERS.STAKING_KEY_INDEX,
+    ]
+  }
+
+  async getRewardAddress() {
     if (this.walletImplementationId == null) throw new Error('Invalid wallet: walletImplementationId')
 
     assert.assert(isHaskellShelley(this.walletImplementationId), 'cannot get reward address from a byron-era wallet')
@@ -537,8 +494,10 @@ export class ShelleyWallet implements WalletInterface {
     )
   }
 
-  private getAddressing(address: string) {
+  getAddressing(address: string) {
     const purpose = this.getPurpose()
+    if (!this.internalChain) throw new Error('invalid wallet state')
+    if (!this.externalChain) throw new Error('invalid wallet state')
 
     if (this.internalChain.isMyAddress(address)) {
       return {
@@ -569,7 +528,7 @@ export class ShelleyWallet implements WalletInterface {
     throw new Error(`Missing address info for: ${address} `)
   }
 
-  private getAddressedUtxos() {
+  getAddressedUtxos() {
     const addressedUtxos = this.utxos.map((utxo: RawUtxo): CardanoTypes.CardanoAddressedUtxo => {
       const addressing = this.getAddressing(utxo.receiver)
 
@@ -588,12 +547,14 @@ export class ShelleyWallet implements WalletInterface {
   }
 
   getDelegationStatus() {
+    if (!this.transactionCache) throw new Error('invalid wallet state')
     if (this.rewardAddressHex == null) throw new Error('reward address is null')
     const certsForKey = this.transactionCache.perRewardAddressCertificates[this.rewardAddressHex]
     return Promise.resolve(getDelegationStatus(this.rewardAddressHex, certsForKey))
   }
 
   canGenerateNewReceiveAddress() {
+    if (!this.externalChain) throw new Error('invalid wallet state')
     const lastUsedIndex = this.getLastUsedIndex(this.externalChain)
     // TODO: should use specific wallet config
     const maxIndex = lastUsedIndex + CONFIG.WALLETS.HASKELL_SHELLEY.MAX_GENERATED_UNUSED
@@ -605,6 +566,7 @@ export class ShelleyWallet implements WalletInterface {
 
   generateNewReceiveAddressIfNeeded() {
     /* new address is automatically generated when you use the latest unused */
+    if (!this.externalChain) throw new Error('invalid wallet state')
     const lastGeneratedAddress = this.externalChain.addresses[this.state.lastGeneratedAddressIndex]
     if (!this.isUsedAddress(lastGeneratedAddress)) {
       return false
@@ -775,6 +737,7 @@ export class ShelleyWallet implements WalletInterface {
 
   async createVotingRegTx(pin: string) {
     Logger.debug('ShelleyWallet::createVotingRegTx called')
+    if (!this.networkId) throw new Error('invalid wallet')
 
     const bytes = await generatePrivateKeyForCatalyst()
       .then((key) => key.toRawKey())
@@ -792,6 +755,7 @@ export class ShelleyWallet implements WalletInterface {
       const votingPublicKey = await Promise.resolve(Buffer.from(catalystKeyHex, 'hex'))
         .then((bytes) => CardanoMobile.PrivateKey.fromExtendedBytes(bytes))
         .then((key) => key.toPublic())
+      const stakingKeyPath = this.getStakingKeyPath()
       const stakingPublicKey = await this.getStakingKey()
       const changeAddr = await this.getAddressedChangeAddress()
       const networkConfig = this.getNetworkConfig()
@@ -815,7 +779,7 @@ export class ShelleyWallet implements WalletInterface {
         absSlotNumber,
         this.defaultAsset,
         votingPublicKey,
-        this.stakingKeyPath,
+        stakingKeyPath,
         stakingPublicKey,
         addressedUtxos,
         changeAddr,
@@ -907,12 +871,14 @@ export class ShelleyWallet implements WalletInterface {
 
   async signTxWithLedger(unsignedTx: YoroiUnsignedTx, useUSB: boolean): Promise<YoroiSignedTx> {
     if (!this.hwDeviceInfo) throw new Error('Invalid wallet state')
+    if (!this.publicKeyHex) throw new Error('Invalid wallet state')
+    if (!this.walletImplementationId) throw new Error('Invalid wallet state')
 
     const ledgerPayload = await Cardano.buildLedgerPayload(
       unsignedTx.unsignedTx,
       Number.parseInt(this.getChainNetworkId(), 10),
       (this.getBaseNetworkConfig() as any).PROTOCOL_MAGIC,
-      this.stakingKeyPath,
+      this.getStakingKeyPath(),
     )
 
     const signedLedgerTx = await signTxWithLedger(ledgerPayload, this.hwDeviceInfo, useUSB)
@@ -945,6 +911,8 @@ export class ShelleyWallet implements WalletInterface {
     const rawTxs = await api.getTransactions(txids, this.getBackendConfig())
     const txs = Object.values(rawTxs).map((rawTx) => toCachedTx(rawTx))
     const txInfos = txs.map((tx) => {
+      if (!this.networkId) throw new Error('invalid state')
+
       return processTxHistoryData(
         tx,
         this.rewardAddressHex != null
@@ -958,7 +926,7 @@ export class ShelleyWallet implements WalletInterface {
     return txInfos.reduce((result, txInfo) => ({...result, [txInfo.id]: txInfo}), {} as Record<string, TransactionInfo>)
   }
 
-  private async syncUtxos() {
+  async syncUtxos() {
     const addresses = [...this.internalAddresses, ...this.externalAddresses]
 
     await this.utxoManager.sync(addresses)
@@ -1002,9 +970,9 @@ export class ShelleyWallet implements WalletInterface {
     lastGeneratedAddressIndex: 0,
   }
 
-  private isInitialized = false
+  isInitialized = false
 
-  private transactionCache: TransactionCache
+  transactionCache: null | TransactionCache = null
 
   _doFullSyncMutex: any = {name: 'doFullSyncMutex', lock: null}
 
@@ -1022,14 +990,19 @@ export class ShelleyWallet implements WalletInterface {
   // =================== getters =================== //
 
   get internalAddresses() {
+    if (!this.internalChain) throw new Error('invalid wallet state')
+
     return this.internalChain.addresses
   }
 
   get externalAddresses() {
+    if (!this.externalChain) throw new Error('invalid wallet state')
+
     return this.externalChain.addresses
   }
 
   get isUsedAddressIndex() {
+    if (!this.transactionCache) throw new Error('invalid wallet state')
     return this._isUsedAddressIndexSelector(this.transactionCache.perAddressTxs)
   }
 
@@ -1038,23 +1011,31 @@ export class ShelleyWallet implements WalletInterface {
   }
 
   get transactions() {
+    if (!this.transactionCache) throw new Error('invalid wallet state')
     return this.transactionCache.transactions
   }
 
   get confirmationCounts() {
+    if (!this.transactionCache) throw new Error('invalid wallet state')
     return this.transactionCache.confirmationCounts
   }
 
   // ============ security & key management ============ //
   async encryptAndSaveRootKey(rootKey: string, password: string) {
-    return this.encryptedStorage.rootKey.write(rootKey, password)
+    if (this.id != null) return EncryptedStorage.write(EncryptedStorageKeys.rootKey(this.id), rootKey, password)
+
+    throw new Error('invalid wallet state')
   }
 
   async getDecryptedRootKey(password: string) {
-    return this.encryptedStorage.rootKey.read(password)
+    if (this.id != null) return EncryptedStorage.read(EncryptedStorageKeys.rootKey(this.id), password)
+
+    throw new Error('invalid wallet state')
   }
 
   async enableEasyConfirmation(rootKey: string) {
+    if (!this.id) throw new Error('invalid wallet state')
+
     await Keychain.setWalletKey(this.id, rootKey)
     this.isEasyConfirmationEnabled = true
 
@@ -1062,6 +1043,8 @@ export class ShelleyWallet implements WalletInterface {
   }
 
   async disableEasyConfirmation() {
+    if (!this.id) throw new Error('invalid wallet state')
+
     await Keychain.removeWalletKey(this.id)
     this.isEasyConfirmationEnabled = false
 
@@ -1069,6 +1052,8 @@ export class ShelleyWallet implements WalletInterface {
   }
 
   async changePassword(oldPassword: string, newPassword: string) {
+    if (!this.id) throw new Error('invalid wallet state')
+
     if (!_.isEmpty(validatePassword(newPassword, newPassword))) throw new Error('New password is not valid')
 
     const key = EncryptedStorageKeys.rootKey(this.id)
@@ -1079,7 +1064,7 @@ export class ShelleyWallet implements WalletInterface {
   // =================== subscriptions =================== //
 
   // needs to be bound
-  private notify = (event: WalletEvent) => {
+  notify = (event: WalletEvent) => {
     this.subscriptions.forEach((handler) => handler(event))
   }
 
@@ -1091,7 +1076,7 @@ export class ShelleyWallet implements WalletInterface {
     }
   }
 
-  private notifyOnTxHistoryUpdate = () => {
+  notifyOnTxHistoryUpdate = () => {
     this._onTxHistoryUpdateSubscriptions.forEach((handler) => handler(this))
   }
 
@@ -1103,7 +1088,11 @@ export class ShelleyWallet implements WalletInterface {
     }
   }
 
-  private setupSubscriptions() {
+  setupSubscriptions() {
+    if (!this.internalChain) throw new Error('invalid wallet state')
+    if (!this.externalChain) throw new Error('invalid wallet state')
+    if (!this.transactionCache) throw new Error('invalid wallet state')
+
     this.transactionCache.subscribe(() => this.notify({type: 'transactions', transactions: this.transactions}))
     this.transactionCache.subscribe(this.notifyOnTxHistoryUpdate)
     this.internalChain.addSubscriberToNewAddresses(() =>
@@ -1114,7 +1103,11 @@ export class ShelleyWallet implements WalletInterface {
     )
   }
 
-  // =================== sync =================== //
+  // =================== synch =================== //
+
+  async doFullSync() {
+    return synchronize(this._doFullSyncMutex, () => this._doFullSync())
+  }
 
   async tryDoFullSync() {
     try {
@@ -1126,11 +1119,54 @@ export class ShelleyWallet implements WalletInterface {
     }
   }
 
-  private async doFullSync() {
-    return synchronize(this._doFullSyncMutex, () => this._doFullSync())
+  private getAddressesInBlocks() {
+    if (!this.internalChain) throw new Error('invalid wallet state')
+    if (!this.externalChain) throw new Error('invalid wallet state')
+
+    const internalAddresses = this.internalChain.getBlocks()
+    const externalAddresses = this.externalChain.getBlocks()
+
+    if (this.rewardAddressHex != null) return [...internalAddresses, ...externalAddresses, [this.rewardAddressHex]]
+
+    return [...internalAddresses, ...externalAddresses]
+  }
+
+  async discoverAddresses() {
+    if (!this.internalChain) throw new Error('invalid wallet state')
+    if (!this.externalChain) throw new Error('invalid wallet state')
+
+    // last chunk gap limit check
+    const filterFn = (addrs) => api.filterUsedAddresses(addrs, this.getBackendConfig())
+    await Promise.all([this.internalChain.sync(filterFn), this.externalChain.sync(filterFn)])
+  }
+
+  isUsedAddress(address: string) {
+    if (!this.transactionCache) throw new Error('invalid wallet state')
+    return !!this.transactionCache.perAddressTxs[address] && this.transactionCache.perAddressTxs[address].length > 0
+  }
+
+  getLastUsedIndex(chain: AddressChain): number {
+    for (let i = chain.size() - 1; i >= 0; i--) {
+      if (this.isUsedAddress(chain.addresses[i])) {
+        return i
+      }
+    }
+    return -1
+  }
+
+  updateLastGeneratedAddressIndex = () => {
+    if (!this.externalChain) throw new Error('invalid wallet state')
+
+    const lastUsedIndex = this.getLastUsedIndex(this.externalChain)
+    if (lastUsedIndex > this.state.lastGeneratedAddressIndex) {
+      this.state.lastGeneratedAddressIndex = lastUsedIndex
+    }
   }
 
   private async _doFullSync() {
+    if (!this.transactionCache) throw new Error('invalid wallet state')
+    if (!this.networkId) throw new Error('invalid wallet state')
+    if (!this.externalChain) throw new Error('invalid wallet state')
     assert.assert(this.isInitialized, 'doFullSync: isInitialized')
 
     if (isJormungandr(this.networkId)) return
@@ -1146,44 +1182,9 @@ export class ShelleyWallet implements WalletInterface {
     this.updateLastGeneratedAddressIndex()
   }
 
-  private getAddressesInBlocks() {
-    const internalAddresses = this.internalChain.getBlocks()
-    const externalAddresses = this.externalChain.getBlocks()
-
-    if (this.rewardAddressHex != null) return [...internalAddresses, ...externalAddresses, [this.rewardAddressHex]]
-
-    return [...internalAddresses, ...externalAddresses]
-  }
-
-  private async discoverAddresses() {
-    // last chunk gap limit check
-    const filterFn = (addrs) => api.filterUsedAddresses(addrs, this.getBackendConfig())
-    await Promise.all([this.internalChain.sync(filterFn), this.externalChain.sync(filterFn)])
-  }
-
-  private isUsedAddress(address: string) {
-    return !!this.transactionCache.perAddressTxs[address] && this.transactionCache.perAddressTxs[address].length > 0
-  }
-
-  private getLastUsedIndex(chain: AddressChain): number {
-    for (let i = chain.size() - 1; i >= 0; i--) {
-      if (this.isUsedAddress(chain.addresses[i])) {
-        return i
-      }
-    }
-    return -1
-  }
-
-  private updateLastGeneratedAddressIndex = () => {
-    const lastUsedIndex = this.getLastUsedIndex(this.externalChain)
-    if (lastUsedIndex > this.state.lastGeneratedAddressIndex) {
-      this.state.lastGeneratedAddressIndex = lastUsedIndex
-    }
-  }
-
   // ========== UI state ============= //
 
-  private updateState(update: Partial<WalletState>) {
+  updateState(update: Partial<WalletState>) {
     Logger.debug('Wallet::updateState', update)
 
     this.state = {
@@ -1194,10 +1195,29 @@ export class ShelleyWallet implements WalletInterface {
     this.notify({type: 'state', state: this.state})
   }
 
+  generateNewUiReceiveAddress(): boolean {
+    if (!this.canGenerateNewReceiveAddress()) return false
+
+    this.updateState({
+      lastGeneratedAddressIndex: this.state.lastGeneratedAddressIndex + 1,
+    })
+
+    return true
+  }
+
   // ========== persistence ============= //
 
   // TODO: move to specific child class?
   toJSON(): WalletJSON {
+    if (this.networkId == null) throw new Error('invalid WalletJSON: networkId')
+    if (this.walletImplementationId == null) throw new Error('invalid WalletJSON: walletImplementationId')
+    if (this.version == null) throw new Error('invalid WalletJSON: version')
+    if (this.isReadOnly == null) throw new Error('invalid WalletJSON: isReadOnly')
+    if (this.externalAddresses == null) throw new Error('invalid WalletJSON: externalAddresses')
+    if (this.internalAddresses == null) throw new Error('invalid WalletJSON: internalAddresses')
+    if (this.externalChain == null) throw new Error('invalid WalletJSON: externalChain')
+    if (this.internalChain == null) throw new Error('invalid WalletJSON: internalChain')
+
     return {
       lastGeneratedAddressIndex: this.state.lastGeneratedAddressIndex,
       publicKeyHex: this.publicKeyHex,
@@ -1216,61 +1236,3 @@ export class ShelleyWallet implements WalletInterface {
 }
 
 const toHex = (bytes: Uint8Array) => Buffer.from(bytes).toString('hex')
-
-const makeKeys = async ({mnemonic, implementationId}: {mnemonic: string; implementationId: WalletImplementationId}) => {
-  const rootKeyPtr = await generateWalletRootKey(mnemonic)
-  const rootKey: string = Buffer.from(await rootKeyPtr.asBytes()).toString('hex')
-
-  const purpose = isByron(implementationId)
-    ? CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.BIP44
-    : CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852
-  const accountPubKeyHex = await rootKeyPtr
-    .derive(purpose)
-    .then((key) => key.derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO))
-    .then((key) => key.derive(CONFIG.NUMBERS.ACCOUNT_INDEX + CONFIG.NUMBERS.HARD_DERIVATION_START))
-    .then((accountKey) => accountKey.toPublic())
-    .then((accountPubKey) => accountPubKey.asBytes())
-    .then((bytes) => Buffer.from(bytes).toString('hex'))
-
-  return {
-    rootKey,
-    accountPubKeyHex,
-  }
-}
-
-const addressChains = {
-  create: async ({
-    accountPubKeyHex,
-    implementationId,
-    networkId,
-  }: {
-    accountPubKeyHex: string
-    implementationId: WalletImplementationId
-    networkId: NetworkId
-  }) => {
-    const walletConfig = getWalletConfigById(implementationId)
-    const internalChain = new AddressChain(
-      new AddressGenerator(accountPubKeyHex, 'Internal', implementationId, networkId),
-      walletConfig.DISCOVERY_BLOCK_SIZE,
-      walletConfig.DISCOVERY_GAP_SIZE,
-    )
-    const externalChain = new AddressChain(
-      new AddressGenerator(accountPubKeyHex, 'External', implementationId, networkId),
-      walletConfig.DISCOVERY_BLOCK_SIZE,
-      walletConfig.DISCOVERY_GAP_SIZE,
-    )
-
-    // Create at least one address in each block
-    await internalChain.initialize()
-    await externalChain.initialize()
-
-    return {internalChain, externalChain}
-  },
-
-  restore: ({data, networkId}: {data: WalletJSON; networkId: NetworkId}) => {
-    return {
-      internalChain: AddressChain.fromJSON(data.internalChain, networkId),
-      externalChain: AddressChain.fromJSON(data.externalChain, networkId),
-    }
-  },
-}

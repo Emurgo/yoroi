@@ -1,16 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
-import {Alert, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity} from 'react-native'
+import {useIntl} from 'react-intl'
+import {Alert, InteractionManager, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity} from 'react-native'
 import config from 'react-native-config'
 import * as Keychain from 'react-native-keychain'
 
 import {useAuth} from '../auth/AuthProvider'
 import {Button, StatusBar, Text, TextInput} from '../components'
 import {useCreateWallet} from '../hooks'
+import {errorMessages} from '../i18n/global-messages'
 import {AppRoutes, useWalletNavigation} from '../navigation'
 import {useSelectedWalletContext} from '../SelectedWallet'
+import {showErrorDialog} from './actions'
 import {generateAdaMnemonic} from './commonUtils'
+import {NetworkError} from './errors'
 import storage from './storage'
 import {isEmptyString} from './utils'
 
@@ -48,9 +52,15 @@ export const DeveloperScreen = () => {
   const navigation = useNavigation()
   const {logout} = useAuth()
   const {resetToWalletSelection} = useWalletNavigation()
+  const intl = useIntl()
   const {createWallet, isLoading} = useCreateWallet({
-    onSuccess: async () => {
-      resetToWalletSelection()
+    onSuccess: () => resetToWalletSelection(),
+    onError: (error) => {
+      InteractionManager.runAfterInteractions(() => {
+        return error instanceof NetworkError
+          ? showErrorDialog(errorMessages.networkError, intl)
+          : showErrorDialog(errorMessages.generalError, intl, {message: error.message})
+      })
     },
   })
   const [wallet] = useSelectedWalletContext()

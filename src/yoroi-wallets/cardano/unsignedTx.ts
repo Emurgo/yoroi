@@ -53,7 +53,7 @@ export const yoroiUnsignedTx = async ({
           : undefined,
       delegations:
         unsignedTx.delegations.length > 0
-          ? await Staking.toDelegations({
+          ? Staking.toDelegations({
               balances: stakingBalances,
               fee,
             })
@@ -61,7 +61,7 @@ export const yoroiUnsignedTx = async ({
     },
     voting: {
       registration: votingRegistration
-        ? await Voting.toRegistration({
+        ? Voting.toRegistration({
             votingRegistration,
           })
         : undefined,
@@ -172,13 +172,13 @@ const Staking = {
       }
     }, Promise.resolve({} as YoroiEntries)),
 
-  toDelegations: async ({
+  toDelegations: ({
     balances,
     fee,
   }: {
     balances: CardanoTypes.StakingKeyBalances
     fee: YoroiUnsignedTx['fee']
-  }): Promise<{[poolId: string]: YoroiAmounts}> =>
+  }): {[poolId: string]: YoroiAmounts} =>
     Object.entries(balances).reduce(
       (result, [poolId, quantity]) => ({
         ...result,
@@ -195,11 +195,8 @@ type VotingRegistration = {
   nonce: number
 }
 const Voting = {
-  toRegistration: async ({
+  toRegistration: ({votingRegistration}: {votingRegistration?: VotingRegistration}): YoroiVoting['registration'] =>
     votingRegistration,
-  }: {
-    votingRegistration?: VotingRegistration
-  }): Promise<YoroiVoting['registration']> => votingRegistration,
 }
 
 export const toDisplayAddress = async (address: string) => {

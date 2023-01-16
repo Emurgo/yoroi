@@ -482,6 +482,7 @@
   "global.error.walletNameTooLong": "Tárca név nem haladhatja meg a 40 karaktert",
   "global.error.walletNameMustBeFilled": "Kötelező kitölteni",
   "global.info": "Info",
+  "global.learnMore": "Learn more",
   "global.ledgerMessages.appInstalled": "A Cardano ADA alkalmazás telepítve van a Ledger eszközön.",
   "global.ledgerMessages.appOpened": "A Cardano ADA alkalmazásnak futnia kell  a Ledger eszközön.",
   "global.ledgerMessages.bluetoothEnabled": "Az okostelefonon engedélyezve van a Bluetooth. ",

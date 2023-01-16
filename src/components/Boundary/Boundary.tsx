@@ -5,21 +5,13 @@ import {
   FallbackProps,
 } from 'react-error-boundary'
 import {useIntl} from 'react-intl'
-import {
-  ActivityIndicator,
-  ActivityIndicatorProps,
-  Image,
-  LayoutAnimation,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  ViewProps,
-} from 'react-native'
+import {ActivityIndicator, Image, LayoutAnimation, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 import {useQueryErrorResetBoundary} from 'react-query'
 
 import image from '../../assets/img/error.png'
 import LocalizableError from '../../i18n/LocalizableError'
 import {Button} from '../Button'
+import {Spacer} from '../Spacer'
 import {Text} from '../Text'
 
 type BoundaryProps = {
@@ -40,34 +32,42 @@ export const Boundary = (props: BoundaryProps) => {
 }
 
 type LoadingBoundaryProps = {
-  fallback?: SuspenseProps['fallback']
-  fallbackProps?: LoadingFallbackProps
   enabled?: boolean
+  fallback?: SuspenseProps['fallback']
+  style?: ViewProps['style']
+  size?: 'full' | 'large' | 'small'
   debug?: boolean
 }
-export const LoadingBoundary = ({children, ...props}: LoadingBoundaryProps & {children: React.ReactNode}) => {
-  if (props.enabled === false) return <>{children}</>
+export const LoadingBoundary = ({
+  children,
+  enabled,
+  style,
+  size,
+  debug,
+  ...props
+}: LoadingBoundaryProps & {children: React.ReactNode}) => {
+  if (enabled === false) return <>{children}</>
+  const fallback =
+    props.fallback === undefined ? <LoadingFallback style={style} size={size} debug={debug} /> : props.fallback
 
-  return (
-    <React.Suspense
-      fallback={props.fallback === undefined ? <LoadingFallback {...props.fallbackProps} debug={props.debug} /> : null}
-    >
-      {children}
-    </React.Suspense>
-  )
+  return <React.Suspense fallback={fallback}>{children}</React.Suspense>
 }
 
-type LoadingFallbackProps = {style?: ViewProps['style']; debug?: boolean} & Omit<ActivityIndicatorProps, 'style'>
-export const LoadingFallback = ({size = 'large', color = 'black', style, debug = false}: LoadingFallbackProps) => (
-  <View style={[styles.container, style, debug && styles.debug]}>
-    <ActivityIndicator size={size} color={color} />
+type LoadingFallbackProps = {
+  style?: ViewProps['style']
+  size?: 'full' | 'large' | 'small'
+  debug?: boolean
+}
+export const LoadingFallback = ({size = 'large', style, debug = false}: LoadingFallbackProps) => (
+  <View style={[size === 'full' && styles.stretch, styles.container, style, debug && styles.debug]}>
+    <ActivityIndicator size={size === 'small' ? 'small' : 'large'} color="black" />
   </View>
 )
 
 type ErrorBoundaryProps = {
   fallback?: ReactErrorBoundaryProps['fallbackRender']
   enabled?: boolean
-  size?: 'large' | 'small' | 'inline'
+  size?: 'full' | 'large' | 'small' | 'inline'
   debug?: boolean
 }
 const ErrorBoundary = ({children, ...props}: ErrorBoundaryProps & {children: React.ReactNode}) => {
@@ -86,6 +86,8 @@ const ErrorBoundary = ({children, ...props}: ErrorBoundaryProps & {children: Rea
 
     if (props.fallback) {
       return props.fallback(errorProps)
+    } else if (props.size === 'full') {
+      return <FullErrorFallback {...errorProps} />
     } else if (props.size === 'small') {
       return <SmallErrorFallback {...errorProps} />
     } else if (props.size === 'inline') {
@@ -105,15 +107,48 @@ type ErrorFallbackProps = {
   debug?: boolean
 }
 
+export const FullErrorFallback = ({error, resetErrorBoundary, reset = true, debug}: ErrorFallbackProps) => {
+  const intl = useIntl()
+  return (
+    <View style={[styles.stretch, styles.container, debug && styles.debug]}>
+      <View style={styles.errorHeader}>
+        <Text>{error instanceof LocalizableError ? intl.formatMessage(error) : error.message}</Text>
+      </View>
+
+      <Spacer height={16} />
+
+      <Image source={image} />
+
+      <Spacer height={16} />
+
+      {reset && (
+        <Button
+          title="Try again"
+          onPress={() => {
+            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+            resetErrorBoundary()
+          }}
+        />
+      )}
+    </View>
+  )
+}
+
 export const LargeErrorFallback = ({error, resetErrorBoundary, reset = true, debug}: ErrorFallbackProps) => {
   const intl = useIntl()
+
   return (
     <View style={[styles.container, debug && styles.debug]}>
       <View style={styles.errorHeader}>
         <Text>{error instanceof LocalizableError ? intl.formatMessage(error) : error.message}</Text>
       </View>
 
+      <Spacer height={16} />
+
       <Image source={image} />
+
+      <Spacer height={16} />
+
       {reset && (
         <Button
           title="Try again"
@@ -135,6 +170,8 @@ export const SmallErrorFallback = ({error, resetErrorBoundary, reset = true, deb
       <View style={styles.errorHeader}>
         <Text>{error instanceof LocalizableError ? intl.formatMessage(error) : error.message}</Text>
       </View>
+
+      <Spacer height={16} />
 
       {reset && (
         <Button
@@ -169,12 +206,19 @@ export const InlineErrorFallback = ({error, resetErrorBoundary, reset, debug}: E
 }
 
 const styles = StyleSheet.create({
+  stretch: {
+    height: '100%',
+    width: '100%',
+  },
   container: {
-    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 16,
+  },
+  errorHeader: {
     alignItems: 'center',
     justifyContent: 'center',
   },
-  errorHeader: {alignItems: 'center', justifyContent: 'center', padding: 20},
   debug: {
     backgroundColor: 'pink',
   },

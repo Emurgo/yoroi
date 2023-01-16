@@ -51,7 +51,7 @@ export const Menu = () => {
         />
         <HR />
 
-        <Boundary loading={{fallbackProps: {size: 'small', style: {padding: 16}}}} error={{size: 'inline'}}>
+        <Boundary loading={{size: 'small', style: {padding: 16}}} error={{size: 'inline'}}>
           <Catalyst //
             label={strings.catalystVoting}
             onPress={navigateTo.catalystVoting}
