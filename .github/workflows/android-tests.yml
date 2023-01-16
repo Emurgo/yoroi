@@ -18,95 +18,89 @@ jobs:
         id: sdk_path
         run: echo "ANDROID_SDK=$HOME/Android/Sdk" >> $GITHUB_OUTPUT
 
-      - name: Create avd image
+      - uses: actions/checkout@v3
+
+      - name: Reading .nvmrc
+        id: nvm
+        run: echo "NVMRC=$(cat .nvmrc)" >> $GITHUB_OUTPUT
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '${{ steps.nvm.outputs.NVMRC }}'
+
+      - name: Installing Yarn
+        run: |
+          npm install --global yarn
+
+      - name: Installing project dependencies
+        run: yarn install
+
+      - name: Installing Appium
+        run: yarn global add appium
+
+      - name: Adding android/gradle.properties.local
+        run: |
+          cat <<EOF > android/gradle.properties.local
+          MYAPP_RELEASE_STORE_PASSWORD=${{ secrets.RELEASE_PASSWORD }}
+          MYAPP_RELEASE_KEY_PASSWORD=${{ secrets.RELEASE_PASSWORD }}
+          EOF
+
+      - name: Adding .env.nightly
+        run: |
+          cat <<EOF > .env.nightly
+          BUILD_VARIANT=NIGHTLY
+          SHOW_INIT_DEBUG_SCREEN=false
+          PREFILL_WALLET_INFO=false
+          USE_TESTNET=false
+          SENTRY=${{ secrets.SENTRY_KEY }}
+          COMMIT=XXXXXXX
+          EOF
+
+      - name: Getting the latest commit hash
+        run: |
+          COMMIT_HASH=$(git rev-parse --short HEAD)
+          if [ -z "$COMMIT_HASH" ]; then
+            echo "ERROR: Couldn't get last commit hash"
+            COMMIT_HASH="-"
+          fi
+          sed -i "s/XXXXXXX/$COMMIT_HASH/g" .env.nightly
+
+      - name: Adding android/sentry.properties
+        run: |
+          cat <<EOF > android/sentry.properties
+          defaults.url=https://sentry.io/
+          defaults.org=emurgo
+          defaults.project=yoroi-mobile
+          auth.token=${{ secrets.SENTRY_AUTH_TOKEN }}
+          EOF
+
+      - name: Adding android/app/my-release-key.keystore
+        run: echo ${{ secrets.RELEASE_KEY }} | base64 -d > android/app/my-release-key.keystore
+
+      - name: Building the nightly app
+        run: |
+          . $HOME/.cargo/env
+          export ANDROID_SDK_ROOT=${{ steps.sdk_path.outputs.ANDROID_SDK }}
+          cd android
+          ENTRY_FILE=index.ts ./gradlew clean assembleNightlyRelease
+          cd ..
+
+      - name: Copy the apk to test folder
+        run: |
+          mkdir "$(pwd)/tests/app"
+          cp "$(pwd)/android/app/build/outputs/apk/nightly/release/app-nightly-release.apk" "$(pwd)/tests/app/Yoroi-Nightly.apk"
+
+      - name: Create avd image, run emulator, run tests
         run: |
           export ANDROID_SDK_ROOT=${{ steps.sdk_path.outputs.ANDROID_SDK }}
-          $ANDROID_SDK_ROOT/cmdline-tools/bin/avdmanager create avd -n test -k "system-images;android-31;google_apis;x86_64" --device "pixel_6"
+          emulator -avd test -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none &
+          sleep(60)
+          yarn e2e:appium-test-android
 
-      # - uses: actions/checkout@v3
-
-      # - name: Reading .nvmrc
-      #   id: nvm
-      #   run: echo "NVMRC=$(cat .nvmrc)" >> $GITHUB_OUTPUT
-
-      # - name: Setup node
-      #   uses: actions/setup-node@v3
-      #   with:
-      #     node-version: '${{ steps.nvm.outputs.NVMRC }}'
-
-      # - name: Installing Yarn
-      #   run: |
-      #     npm install --global yarn
-
-      # - name: Installing project dependencies
-      #   run: yarn install
-
-      # - name: Adding android/gradle.properties.local
-      #   run: |
-      #     cat <<EOF > android/gradle.properties.local
-      #     MYAPP_RELEASE_STORE_PASSWORD=${{ secrets.RELEASE_PASSWORD }}
-      #     MYAPP_RELEASE_KEY_PASSWORD=${{ secrets.RELEASE_PASSWORD }}
-      #     EOF
-
-      # - name: Adding .env.nightly
-      #   run: |
-      #     cat <<EOF > .env.nightly
-      #     BUILD_VARIANT=NIGHTLY
-      #     SHOW_INIT_DEBUG_SCREEN=false
-      #     PREFILL_WALLET_INFO=false
-      #     USE_TESTNET=false
-      #     SENTRY=${{ secrets.SENTRY_KEY }}
-      #     COMMIT=XXXXXXX
-      #     EOF
-
-      # - name: Getting the latest commit hash
-      #   run: |
-      #     COMMIT_HASH=$(git rev-parse --short HEAD)
-      #     if [ -z "$COMMIT_HASH" ]; then
-      #       echo "ERROR: Couldn't get last commit hash"
-      #       COMMIT_HASH="-"
-      #     fi
-      #     sed -i "s/XXXXXXX/$COMMIT_HASH/g" .env.nightly
-
-      # - name: Adding android/sentry.properties
-      #   run: |
-      #     cat <<EOF > android/sentry.properties
-      #     defaults.url=https://sentry.io/
-      #     defaults.org=emurgo
-      #     defaults.project=yoroi-mobile
-      #     auth.token=${{ secrets.SENTRY_AUTH_TOKEN }}
-      #     EOF
-
-      # - name: Adding android/app/my-release-key.keystore
-      #   run: echo ${{ secrets.RELEASE_KEY }} | base64 -d > android/app/my-release-key.keystore
-
-      # - name: Building the nightly app
-      #   run: |
-      #     . $HOME/.cargo/env
-      #     export ANDROID_SDK_ROOT=${{ steps.sdk_path.outputs.ANDROID_SDK }}
-      #     cd android
-      #     ENTRY_FILE=index.ts ./gradlew clean assembleNightlyRelease
-      #     cd ..
-
-      # - name: Copy the apk to test folder
-      #   run: |
-      #     mkdir "$(pwd)/tests/app"
-      #     cp "$(pwd)/android/app/build/outputs/apk/nightly/release/app-nightly-release.apk" "$(pwd)/tests/app/Yoroi-Nightly.apk"
-
-      # - name: Installing Appium
-      #   run: yarn global add appium
-
-      # - name: Create avd image, run emulator, run tests
-      #   run: |
-      #     export ANDROID_SDK_ROOT=${{ steps.sdk_path.outputs.ANDROID_SDK }}
-      #     $ANDROID_SDK_ROOT/cmdline-tools/bin/avdmanager create avd -n test -k "system-images;android-31;google_apis;x86_64" --device "pixel_6"
-      #     emulator -avd test -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none &
-      #     sleep(60)
-      #     yarn e2e:appium-test-android
-
-      # - name: Archive tests screenshots and logs
-      #   if: ${{ failure() }}
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: test_artifacts
-      #     path: ./tests/artifacts
+      - name: Archive tests screenshots and logs
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: test_artifacts
+          path: ./tests/artifacts
