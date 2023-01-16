@@ -91,7 +91,7 @@ jobs:
           mkdir "$(pwd)/tests/app"
           cp "$(pwd)/android/app/build/outputs/apk/nightly/release/app-nightly-release.apk" "$(pwd)/tests/app/Yoroi-Nightly.apk"
 
-      - name: Create avd image, run emulator, run tests
+      - name: Run emulator, run tests
         run: |
           export ANDROID_SDK_ROOT=${{ steps.sdk_path.outputs.ANDROID_SDK }}
           export ANDROID_HOME=${{ steps.sdk_path.outputs.ANDROID_SDK }}
