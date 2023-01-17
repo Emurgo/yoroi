@@ -1,4 +1,4 @@
-name: Tests
+name: Detox Tests
 
 on:
   pull_request_review:
