@@ -1,0 +1,100 @@
+name: Tests
+
+on:
+  pull_request_review:
+    types: [submitted]
+
+jobs:
+  Android_tests:
+    if: github.event.review && (github.event.review.state == 'approved' || contains(github.event.review.body, '/check'))
+    runs-on: [self-hosted]
+    steps:
+
+      - name: Preparing SSH key
+        run: |
+          eval `ssh-agent -s`
+
+      - name: Set Android SDK path
+        id: sdk_path
+        run: echo "ANDROID_SDK=$HOME/Android/Sdk" >> $GITHUB_OUTPUT
+
+      - uses: actions/checkout@v3
+
+      - name: Reading .nvmrc
+        id: nvm
+        run: echo "NVMRC=$(cat .nvmrc)" >> $GITHUB_OUTPUT
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '${{ steps.nvm.outputs.NVMRC }}'
+
+      - name: Installing Yarn
+        run: |
+          npm install --global yarn
+
+      - name: Installing project dependencies
+        run: yarn install
+
+      - name: Installing Detox-CLI
+        run: yarn global add detox-cli
+
+      - name: Adding android/gradle.properties.local
+        run: |
+          cat <<EOF > android/gradle.properties.local
+          MYAPP_RELEASE_STORE_PASSWORD=${{ secrets.RELEASE_PASSWORD }}
+          MYAPP_RELEASE_KEY_PASSWORD=${{ secrets.RELEASE_PASSWORD }}
+          EOF
+
+      - name: Adding .env.nightly
+        run: |
+          cat <<EOF > .env.nightly
+          BUILD_VARIANT=NIGHTLY
+          SHOW_INIT_DEBUG_SCREEN=false
+          PREFILL_WALLET_INFO=false
+          USE_TESTNET=false
+          SENTRY=${{ secrets.SENTRY_KEY }}
+          COMMIT=XXXXXXX
+          EOF
+
+      - name: Getting the latest commit hash
+        run: |
+          COMMIT_HASH=$(git rev-parse --short HEAD)
+          if [ -z "$COMMIT_HASH" ]; then
+            echo "ERROR: Couldn't get last commit hash"
+            COMMIT_HASH="-"
+          fi
+          sed -i "s/XXXXXXX/$COMMIT_HASH/g" .env.nightly
+
+      - name: Adding android/sentry.properties
+        run: |
+          cat <<EOF > android/sentry.properties
+          defaults.url=https://sentry.io/
+          defaults.org=emurgo
+          defaults.project=yoroi-mobile
+          auth.token=${{ secrets.SENTRY_AUTH_TOKEN }}
+          EOF
+
+      - name: Adding android/app/my-release-key.keystore
+        run: echo ${{ secrets.RELEASE_KEY }} | base64 -d > android/app/my-release-key.keystore
+
+      - name: Building by detox the nightly app
+        run: |
+          . $HOME/.cargo/env
+          export ANDROID_SDK_ROOT=${{ steps.sdk_path.outputs.ANDROID_SDK }}
+          yarn e2e:detox:build:android-nightly
+
+      - name: Run emulator, run tests
+        run: |
+          export ANDROID_SDK_ROOT=${{ steps.sdk_path.outputs.ANDROID_SDK }}
+          export ANDROID_HOME=${{ steps.sdk_path.outputs.ANDROID_SDK }}
+          $ANDROID_SDK_ROOT/emulator/emulator -avd test -wipe-data -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none &
+          sleep 60
+          yarn e2e:detox:test:emu:android-nightly
+
+      - name: Archive tests screenshots and logs
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: test_artifacts
+          path: ./artifacts
