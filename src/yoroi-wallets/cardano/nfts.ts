@@ -11,14 +11,14 @@ export const convertNft = (assetMetadata: AssetMetadata, storageUrl: string): Yo
   const description = Array.isArray(metadata.description) ? metadata.description.join(' ') : metadata.description
 
   return {
-    id: `${fingerprint}`,
+    id: fingerprint,
     name: metadata.name,
     description: description ?? '',
     thumbnail: `${storageUrl}/p_${fingerprint}.jpeg`,
     image: `${storageUrl}/${fingerprint}.jpeg`,
     metadata: {
       policyId,
-      assetNameHex: assetNameHex,
+      assetNameHex,
       originalMetadata: metadata,
     },
   }

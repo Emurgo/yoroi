@@ -230,7 +230,7 @@ function parseNFTs(value: unknown, storageUrl: string): YoroiNFT[] {
     return []
   }
 
-  const assets = Object.values(value).map((arr) => arr[0])
+  const assets = Object.values(value).map((arrayWithOneAsset) => arrayWithOneAsset[0])
   const nftAssets: NFTAsset[] = assets.filter((asset) => isAssetNFT(asset))
   return nftAssets.map((nft) => convertNft(nft.metadata, storageUrl))
 }

@@ -293,24 +293,12 @@ const fetchPoolInfo = {
 const fetchNfts = {
   success: async (...args) => {
     action('fetchNfts')(...args)
-    const nft1: YoroiNFT = {
-      id: '1',
-      name: 'Image 1',
-      description: 'NFT 1 description',
-      image: 'https://fibo-validated-nft-images.s3.amazonaws.com/asset1a6765qk8cpk2wll3hevw6xy9xry893jrzl9ms3.jpeg',
-      thumbnail:
-        'https://fibo-validated-nft-images.s3.amazonaws.com/p_asset1a6765qk8cpk2wll3hevw6xy9xry893jrzl9ms3.jpeg',
-      metadata: {
-        policyId: '8e2c7604711faef7c84c91b286c7327d17df825b7f0c88ec0332c0b4',
-        assetNameHex: '496D6167652031',
-        originalMetadata: {
-          name: 'Image 1',
-          description: 'NFT 1 description',
-          image: 'https://fibo-validated-nft-images.s3.amazonaws.com/asset1a6765qk8cpk2wll3hevw6xy9xry893jrzl9ms3.jpeg',
-        },
-      },
-    }
-    return [nft1, {...nft1, id: '2'}, {...nft1, id: '3'}, {...nft1, id: '4'}]
+    return [
+      {...nft, id: '1'},
+      {...nft, id: '2'},
+      {...nft, id: '3'},
+      {...nft, id: '4'},
+    ]
   },
   error: async (...args) => {
     action('fetchNfts')(...args)
@@ -639,6 +627,23 @@ const yoroiSignedTx: YoroiSignedTx & {mock: true} = {
   voting: {},
   signedTx: {id: 'tx-id', encodedTx: new Uint8Array([1, 2, 3])},
   mock: true,
+}
+
+const nft: YoroiNFT = {
+  id: '1',
+  name: 'Image 1',
+  description: 'NFT 1 description',
+  image: 'https://fibo-validated-nft-images.s3.amazonaws.com/asset1a6765qk8cpk2wll3hevw6xy9xry893jrzl9ms3.jpeg',
+  thumbnail: 'https://fibo-validated-nft-images.s3.amazonaws.com/p_asset1a6765qk8cpk2wll3hevw6xy9xry893jrzl9ms3.jpeg',
+  metadata: {
+    policyId: '8e2c7604711faef7c84c91b286c7327d17df825b7f0c88ec0332c0b4',
+    assetNameHex: '496D6167652031',
+    originalMetadata: {
+      name: 'Image 1',
+      description: 'NFT 1 description',
+      image: 'https://fibo-validated-nft-images.s3.amazonaws.com/asset1a6765qk8cpk2wll3hevw6xy9xry893jrzl9ms3.jpeg',
+    },
+  },
 }
 
 export const mocks = {
