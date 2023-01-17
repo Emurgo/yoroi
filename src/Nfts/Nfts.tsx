@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native'
-import React from 'react'
+import React, {ReactNode} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Image, RefreshControl, ScrollView, StyleSheet, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -16,10 +16,14 @@ type Props = {
 }
 
 export const Nfts = ({search}: Props) => {
-  const strings = useStrings()
+  const searchTermLowerCase = (search ?? '').toLowerCase()
   const wallet = useSelectedWallet()
-  const {nfts, isLoading, refetch, isRefetching, isError} = useNfts(wallet, {search})
+  const {nfts, isLoading, refetch, isRefetching, isError} = useNfts(wallet)
   const navigation = useNavigation<WalletStackRouteNavigation>()
+  const filteredNFTs =
+    searchTermLowerCase.length > 0 && nfts.length > 0
+      ? nfts.filter((n) => n.name.toLowerCase().includes(searchTermLowerCase))
+      : nfts
 
   const showDetails = (id: string) => navigation.navigate('nft-details-routes', {screen: 'nft-details', params: {id}})
   const handleNFTSelect = (index: number) => showDetails(nfts[index].id)
@@ -30,59 +34,126 @@ export const Nfts = ({search}: Props) => {
       <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
         <View style={styles.container}>
           <Spacer height={16} />
-          <ScrollView
-            style={styles.scrollView}
-            contentContainerStyle={isError ? styles.scrollViewError : styles.contentContainer}
-            refreshControl={<RefreshControl onRefresh={refetch} refreshing={isRefetching} />}
-          >
-            {isError ? (
-              <>
-                <View>
-                  <Text style={styles.count}>{strings.nftCount}: --</Text>
-                </View>
-                <View style={styles.errorContainer}>
-                  <Icon.NoNFTs size={140} />
-                  <Spacer height={20} />
-                  <Text style={styles.titleText}>{strings.errorTitle}</Text>
-                  <Spacer height={4} />
-                  <Text>{strings.errorDescription}</Text>
-                  <Text>{strings.reloadApp}</Text>
-                </View>
-              </>
-            ) : (
-              <>
-                {search?.length === 0 && (
-                  <>
-                    <View>
-                      <Text style={styles.count}>
-                        {strings.nftCount}: {nfts.length}
-                      </Text>
-                    </View>
-                    <Spacer height={16} />
-                  </>
-                )}
-                <View>
-                  {isLoading ? (
-                    <SkeletonGallery amount={6} />
-                  ) : nfts.length > 0 ? (
-                    <ImageGallery nfts={nfts} onSelect={handleNFTSelect} />
-                  ) : (
-                    <>
-                      <Spacer height={75} />
-                      <View style={styles.imageContainer}>
-                        <Image source={noNftsImage} style={styles.image} />
-                        <Spacer height={20} />
-                        <Text style={styles.contentText}>{strings.noNFTs}</Text>
-                      </View>
-                    </>
-                  )}
-                </View>
-              </>
-            )}
-          </ScrollView>
+          {isError ? (
+            <ErrorScreen onRefresh={refetch} isRefreshing={isRefetching} />
+          ) : isLoading ? (
+            <LoadingScreen nftsCount={filteredNFTs.length} onRefresh={refetch} isRefreshing={isRefetching} />
+          ) : searchTermLowerCase.length > 0 && filteredNFTs.length === 0 ? (
+            <NoNftsScreen onRefresh={refetch} isRefreshing={isRefetching} />
+          ) : searchTermLowerCase.length === 0 && filteredNFTs.length === 0 ? (
+            <NoNftsScreen onRefresh={refetch} isRefreshing={isRefetching} count={filteredNFTs.length} />
+          ) : (
+            <View style={styles.galleryContainer}>
+              {searchTermLowerCase.length === 0 && <NftCount count={filteredNFTs.length} />}
+              <ImageGallery
+                nfts={filteredNFTs}
+                onSelect={handleNFTSelect}
+                onRefresh={refetch}
+                isRefreshing={isRefetching}
+              />
+            </View>
+          )}
         </View>
       </SafeAreaView>
     </View>
+  )
+}
+
+function ErrorScreen({onRefresh, isRefreshing}: {onRefresh: () => void; isRefreshing: boolean}) {
+  const strings = useStrings()
+  return (
+    <ScrollView
+      style={styles.scrollView}
+      contentContainerStyle={styles.scrollViewError}
+      refreshControl={<RefreshControl onRefresh={onRefresh} refreshing={isRefreshing} />}
+    >
+      <View>
+        <View>
+          <Text style={styles.count}>{strings.nftCount}: --</Text>
+        </View>
+        <View style={styles.errorContainer}>
+          <Icon.NoNFTs size={140} />
+          <Spacer height={20} />
+          <Text style={styles.titleText}>{strings.errorTitle}</Text>
+          <Spacer height={4} />
+          <Text>{strings.errorDescription}</Text>
+          <Text>{strings.reloadApp}</Text>
+        </View>
+      </View>
+    </ScrollView>
+  )
+}
+function NoNftsScreen({
+  onRefresh,
+  isRefreshing,
+  count,
+}: {
+  onRefresh: () => void
+  isRefreshing: boolean
+  children?: ReactNode
+  count?: number
+}) {
+  const strings = useStrings()
+
+  return (
+    <ScrollView
+      style={styles.scrollView}
+      contentContainerStyle={styles.contentContainer}
+      refreshControl={<RefreshControl onRefresh={onRefresh} refreshing={isRefreshing} />}
+    >
+      <View>
+        {typeof count !== 'undefined' && <NftCount count={count} />}
+        <Spacer height={75} />
+        <View style={styles.imageContainer}>
+          <Image source={noNftsImage} style={styles.image} />
+          <Spacer height={20} />
+          <Text style={styles.contentText}>{strings.noNFTs}</Text>
+        </View>
+      </View>
+    </ScrollView>
+  )
+}
+
+function NftCount({count}: {count?: number}) {
+  const strings = useStrings()
+  return (
+    <View>
+      <View style={styles.countBar}>
+        <Text style={styles.count}>
+          {strings.nftCount}: {count}
+        </Text>
+      </View>
+      <Spacer height={16} />
+    </View>
+  )
+}
+
+function LoadingScreen({
+  nftsCount,
+  onRefresh,
+  isRefreshing,
+}: {
+  nftsCount: number
+  onRefresh: () => void
+  isRefreshing: boolean
+}) {
+  const strings = useStrings()
+  return (
+    <ScrollView
+      style={styles.scrollView}
+      contentContainerStyle={styles.contentContainer}
+      refreshControl={<RefreshControl onRefresh={onRefresh} refreshing={isRefreshing} />}
+    >
+      <View>
+        <View>
+          <Text style={styles.count}>
+            {strings.nftCount}: {nftsCount}
+          </Text>
+        </View>
+        <Spacer height={16} />
+        <SkeletonGallery amount={6} />
+      </View>
+    </ScrollView>
   )
 }
 
@@ -100,7 +171,7 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flex: 1,
-    backgroundColor: '#fff',
+    flexGrow: 1,
   },
   scrollViewError: {
     flexGrow: 1,
@@ -111,11 +182,13 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingHorizontal: 16,
   },
+  countBar: {
+    height: 22,
+  },
   count: {
     flex: 1,
     textAlign: 'center',
     color: '#6B7384',
-    height: 22,
   },
   contentText: {
     flex: 1,
@@ -145,6 +218,11 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  galleryContainer: {
+    paddingHorizontal: 16,
+    flex: 1,
+    flexGrow: 1,
   },
 })
 

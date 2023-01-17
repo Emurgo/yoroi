@@ -256,18 +256,6 @@ export const useNftModerationStatus = ({wallet, fingerprint}: {wallet: YoroiWall
   })
 }
 
-export const useTokenImage = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string}): string | null => {
-  const nft = useNft(wallet, {id: tokenId})
-  const fingerprint = nft ? getAssetFingerprint(nft.metadata.policyId, nft.metadata.assetNameHex) : null
-  const {data} = useNftModerationStatus({wallet, fingerprint})
-
-  if (nft && data === 'approved') {
-    return nft.image
-  }
-
-  return null
-}
-
 export const useNftImageModerated = ({
   wallet,
   nftId,
@@ -906,13 +894,11 @@ export const useResync = (wallet: YoroiWallet, options?: UseMutationOptions<void
   }
 }
 
-export const useNfts = (wallet: YoroiWallet, {search}: {search?: string} = {}) => {
+export const useNfts = (wallet: YoroiWallet) => {
   const utxos = useUtxos(wallet)
   const {data, ...rest} = useQuery({
     queryKey: [wallet.id, 'nfts', utxos.length],
     queryFn: () => wallet.fetchNfts(),
-    select: (data): YoroiNFT[] =>
-      search && data ? data.filter((n) => n.name.toLowerCase().includes(search.toLowerCase())) : data || [],
   })
 
   return {...rest, nfts: data ?? []}

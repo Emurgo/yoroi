@@ -23,7 +23,7 @@ storiesOf('NFT Details', module)
     const loadedWallet = {
       ...mocks.wallet,
       fetchNfts: mocks.fetchNfts.success,
-      fetchNftModerationStatus: mocks.fetchNftModerationStatus.successApproved,
+      fetchNftModerationStatus: mocks.fetchNftModerationStatus.success.approved,
     }
     return (
       <RouteProvider params={{id: '1'}}>

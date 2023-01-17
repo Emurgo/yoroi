@@ -21,6 +21,8 @@ import placeholderImage from './placeholder.png'
 type Props = {
   nfts: YoroiNFT[]
   onSelect: (index: number) => void
+  onRefresh: () => void
+  isRefreshing: boolean
 }
 
 export const SkeletonGallery = ({amount}: {amount: number} = {amount: 3}) => {
@@ -34,30 +36,32 @@ export const SkeletonGallery = ({amount}: {amount: number} = {amount: 3}) => {
   )
 }
 
-export const ImageGallery = ({nfts = [], onSelect}: Props) => {
+export const ImageGallery = ({nfts = [], onSelect, onRefresh, isRefreshing}: Props) => {
   return (
-    <ScrollView bounces={false} contentContainerStyle={styles.galleryContainer}>
-      <FlatList
-        data={nfts}
-        numColumns={2}
-        horizontal={false}
-        keyExtractor={(nft) => nft.id + Math.random()}
-        renderItem={({item}) => {
-          const nft1Fingerprint = getAssetFingerprint(item.metadata.policyId, item.metadata.assetNameHex)
-          return (
-            <View style={styles.row}>
-              <ModeratedImage
-                onPress={() => onSelect(nfts.indexOf(item))}
-                image={item.image}
-                fingerprint={nft1Fingerprint}
-                text={item.name}
-                key={nft1Fingerprint}
-              />
-            </View>
-          )
-        }}
-      />
-    </ScrollView>
+    <FlatList
+      bounces={false}
+      onRefresh={onRefresh}
+      refreshing={isRefreshing}
+      contentContainerStyle={styles.galleryContainer}
+      data={nfts}
+      numColumns={2}
+      horizontal={false}
+      keyExtractor={(nft) => nft.id}
+      renderItem={({item}) => {
+        const nft1Fingerprint = getAssetFingerprint(item.metadata.policyId, item.metadata.assetNameHex)
+        return (
+          <View style={styles.row}>
+            <ModeratedImage
+              onPress={() => onSelect(nfts.indexOf(item))}
+              image={item.image}
+              fingerprint={nft1Fingerprint}
+              text={item.name}
+              key={nft1Fingerprint}
+            />
+          </View>
+        )
+      }}
+    />
   )
 }
 

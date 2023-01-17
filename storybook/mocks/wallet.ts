@@ -323,21 +323,23 @@ const fetchNfts = {
 }
 
 const fetchNftModerationStatus = {
-  successApproved: async (...args): Promise<YoroiNFTModerationStatus> => {
-    action('fetchNftModerationStatus')(...args)
-    return 'approved'
-  },
-  successConsent: async (...args): Promise<YoroiNFTModerationStatus> => {
-    action('fetchNftModerationStatus')(...args)
-    return 'consent'
-  },
-  successBlocked: async (...args): Promise<YoroiNFTModerationStatus> => {
-    action('fetchNftModerationStatus')(...args)
-    return 'blocked'
-  },
-  successPendingReview: async (...args): Promise<YoroiNFTModerationStatus> => {
-    action('fetchNftModerationStatus')(...args)
-    return 'pending'
+  success: {
+    approved: async (...args): Promise<YoroiNFTModerationStatus> => {
+      action('fetchNftModerationStatus')(...args)
+      return 'approved'
+    },
+    consent: async (...args): Promise<YoroiNFTModerationStatus> => {
+      action('fetchNftModerationStatus')(...args)
+      return 'consent'
+    },
+    blocked: async (...args): Promise<YoroiNFTModerationStatus> => {
+      action('fetchNftModerationStatus')(...args)
+      return 'blocked'
+    },
+    pendingReview: async (...args): Promise<YoroiNFTModerationStatus> => {
+      action('fetchNftModerationStatus')(...args)
+      return 'pending'
+    },
   },
   error: async (...args) => {
     action('fetchNftModerationStatus')(...args)
