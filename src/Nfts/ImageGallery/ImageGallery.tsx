@@ -182,10 +182,6 @@ const styles = StyleSheet.create({
   },
   galleryContainer: {
     flex: 1,
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
   },
   imageContainer: {
     paddingHorizontal: 5,
