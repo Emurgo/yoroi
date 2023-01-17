@@ -1,6 +1,5 @@
 import React from 'react'
 import {useIntl} from 'react-intl'
-import {LayoutAnimation} from 'react-native'
 
 import {Boundary, TwoActionView} from '../../../components'
 import {useSignWithHwAndSubmitTx} from '../../../hooks'
@@ -26,20 +25,17 @@ export const ConfirmTxWithHW = (props: Props) => {
   const [step, setStep] = React.useState<'select-transport' | 'connect-transport' | 'confirm'>('select-transport')
 
   const onSelectTransport = (transportType: TransportType) => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     setTransportType(transportType)
     setStep('connect-transport')
   }
 
   const onConnectBLE = async (deviceId: DeviceId) => {
     await walletManager.updateHWDeviceInfo(wallet, withBLE(wallet, deviceId))
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     setStep('confirm')
   }
 
   const onConnectUSB = async (deviceObj: DeviceObj) => {
     await walletManager.updateHWDeviceInfo(wallet, withUSB(wallet, deviceObj))
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     setStep('confirm')
   }
 

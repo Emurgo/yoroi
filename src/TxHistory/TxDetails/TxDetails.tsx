@@ -8,7 +8,7 @@ import {LayoutAnimation, Linking, StyleSheet, TouchableOpacity, View, ViewProps}
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {Banner, Boundary, Button, CopyButton, FadeIn, Icon, StatusBar, Text} from '../../components'
-import {useTipStatus, useTokenInfo, useTransactionInfo} from '../../hooks'
+import {useTipStatus, useTransactionInfo} from '../../hooks'
 import globalMessages from '../../i18n/global-messages'
 import {formatDateToSeconds, formatTokenWithSymbol} from '../../legacy/format'
 import {getNetworkConfigById} from '../../legacy/networks'
@@ -162,20 +162,18 @@ const Label = ({children}: {children: string}) => <Text style={styles.label}>{ch
 
 const AdaAmount = ({amount}: {amount: BigNumber}) => {
   const wallet = useSelectedWallet()
-  const tokenInfo = useTokenInfo({wallet, tokenId: ''})
   const amountStyle = amount.gte(0) ? styles.positiveAmount : styles.negativeAmount
 
-  return <Text style={amountStyle}>{formatTokenWithSymbol(amount, tokenInfo)}</Text>
+  return <Text style={amountStyle}>{formatTokenWithSymbol(amount, wallet.primaryToken)}</Text>
 }
 
 const Fee = ({amount}: {amount: BigNumber}) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
-  const tokenInfo = useTokenInfo({wallet, tokenId: ''})
 
   return (
     <Text small>
-      {strings.fee} {formatTokenWithSymbol(amount, tokenInfo)}
+      {strings.fee} {formatTokenWithSymbol(amount, wallet.primaryToken)}
     </Text>
   )
 }

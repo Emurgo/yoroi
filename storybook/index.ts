@@ -4,12 +4,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import {addDecorator, configure, getStorybookUI} from '@storybook/react-native'
 import {Platform} from 'react-native'
 
-import {withCommonNavigation, withIntl, withRedux} from './decorators'
+import {withCommonNavigation, withIntl} from './decorators'
 import {loadStories} from './storyLoader'
 
 configure(() => loadStories(), module)
 
-addDecorator(withRedux)
 addDecorator(withCommonNavigation)
 addDecorator(withIntl)
 

@@ -4,7 +4,7 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {Boundary, Spacer} from '../components'
 import {Icon} from '../components/Icon'
-import {useBalances, useExchangeRate, useTokenInfo} from '../hooks'
+import {useBalances, useExchangeRate} from '../hooks'
 import {formatTokenWithText, formatTokenWithTextWhenHidden} from '../legacy/format'
 import {useSelectedWallet} from '../SelectedWallet'
 import {useCurrencyContext} from '../Settings/Currency'
@@ -45,11 +45,13 @@ const hiddenBalance = '*.******'
 const Balance = ({privacyMode}: {privacyMode: boolean}) => {
   const wallet = useSelectedWallet()
   const balances = useBalances(wallet)
-  const tokenInfo = useTokenInfo({wallet, tokenId: ''})
 
   const balance = privacyMode
-    ? formatTokenWithTextWhenHidden(hiddenBalance, tokenInfo)
-    : formatTokenWithText(new BigNumber(Amounts.getAmount(balances, '').quantity), tokenInfo)
+    ? formatTokenWithTextWhenHidden(hiddenBalance, wallet.primaryToken)
+    : formatTokenWithText(
+        new BigNumber(Amounts.getAmount(balances, wallet.primaryToken.identifier).quantity),
+        wallet.primaryToken,
+      )
 
   return (
     <Row>
@@ -68,7 +70,6 @@ const PairedBalance = ({privacyMode}: {privacyMode: boolean}) => {
   const balances = useBalances(wallet)
   const {currency, config} = useCurrencyContext()
   const rate = useExchangeRate({wallet, to: currency})
-  const tokenInfo = useTokenInfo({wallet, tokenId: ''})
 
   // hide pairing when set to the default asset ticker
   if (currency === 'ADA') return null
@@ -83,7 +84,7 @@ const PairedBalance = ({privacyMode}: {privacyMode: boolean}) => {
   const primaryAmount = Amounts.getAmount(balances, '')
   const primaryExchangeQuantity = Quantities.quotient(
     primaryAmount.quantity,
-    `${10 ** tokenInfo.metadata.numberOfDecimals}`,
+    `${10 ** wallet.primaryToken.metadata.numberOfDecimals}`,
   )
   const secondaryExchangeQuantity = Quantities.decimalPlaces(
     Quantities.product([primaryExchangeQuantity, `${rate}`]),

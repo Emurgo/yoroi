@@ -7,6 +7,7 @@ import storage from '../../legacy/storage'
 import {CardanoTypes, legacyWalletChecksum, walletChecksum} from '../../yoroi-wallets'
 import type {NetworkId, WalletImplementationId} from '../../yoroi-wallets/types/other'
 import {NETWORK_REGISTRY, WALLET_IMPLEMENTATION_REGISTRY} from '../../yoroi-wallets/types/other'
+import {parseSafe} from '../../yoroi-wallets/utils/parsing'
 
 async function toShelleyWalletMeta(currentWalletMeta: Partial<WalletMeta>): Promise<WalletMeta> {
   if (!currentWalletMeta.id) throw new Error(`Wallet meta stored is corrupted. ${JSON.stringify(currentWalletMeta)}`)
@@ -105,7 +106,13 @@ function migrateAttribute(attr: keyof WalletMeta, walletMetaUpdated: Partial<Wal
   return storage.write(`/wallet/${id}`, walletMetaUpdated)
 }
 
-function isWalletMeta(walletMeta: WalletMeta | object | undefined): walletMeta is WalletMeta {
+export const parseWalletMeta = (data: unknown) => {
+  const parsed = parseSafe(data)
+
+  return isWalletMeta(parsed) ? parsed : undefined
+}
+
+export function isWalletMeta(walletMeta: any): walletMeta is WalletMeta {
   return (
     // prettier-ignore
     !!walletMeta &&

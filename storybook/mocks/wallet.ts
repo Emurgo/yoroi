@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/require-await */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {action} from '@storybook/addon-actions'
 import BigNumber from 'bignumber.js'
@@ -17,7 +18,7 @@ import {
   YoroiSignedTx,
   YoroiUnsignedTx,
 } from '../../src/yoroi-wallets/types'
-import {mockEncryptedStorage, mockStorage} from './storage'
+import {mockEncryptedStorage} from './storage'
 import {mockTransactionInfo, mockTransactions} from './transaction'
 
 const walletMeta: WalletMeta = {
@@ -37,7 +38,7 @@ const walletMeta: WalletMeta = {
 
 const wallet: YoroiWallet = {
   id: 'wallet-id',
-  defaultAsset: getDefaultAssetByNetworkId(300),
+  primaryToken: getDefaultAssetByNetworkId(300),
   walletImplementationId: 'haskell-shelley',
   networkId: 300,
   checksum: {
@@ -167,12 +168,14 @@ const wallet: YoroiWallet = {
     action('generateNewReceiveAddress')(...args)
     return true
   },
-  storage: mockStorage,
   save: async (...args) => {
     action('save')(...args)
   },
-  doFullSync: async (...args) => {
-    action('doFullSync')(...args)
+  tryDoFullSync: async (...args) => {
+    action('tryDoFullSync')(...args)
+  },
+  clear: async (...args) => {
+    action('clear')(...args)
   },
   sync: async (...args) => {
     action('sync')(...args)

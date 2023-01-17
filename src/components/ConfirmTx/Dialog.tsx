@@ -48,7 +48,7 @@ export const Dialog = (props: DialogSimpleProps | DialogWithLedgerProps) => {
   }
 }
 
-export const DialogWithLedger = ({
+const DialogWithLedger = ({
   step,
   onRequestClose,
   onChooseTransport,
