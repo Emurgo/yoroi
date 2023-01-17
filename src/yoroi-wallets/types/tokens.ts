@@ -106,3 +106,8 @@ export type AssetMetadata = {
     [assetNameHex: string]: NFTMetadata
   }
 }
+
+export type NFTAsset = {
+  key: '721'
+  metadata: AssetMetadata
+}

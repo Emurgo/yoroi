@@ -5,7 +5,7 @@ import assert from '../../legacy/assert'
 import {ApiError} from '../../legacy/errors'
 import fetchDefault, {checkedFetch} from '../../legacy/fetch'
 import {ServerStatus} from '..'
-import {AssetMetadata, RemoteAsset, StakePoolInfosAndHistories, YoroiNFT, YoroiNFTModerationStatus} from '../types'
+import {NFTAsset, RemoteAsset, StakePoolInfosAndHistories, YoroiNFT, YoroiNFTModerationStatus} from '../types'
 import type {
   AccountStateRequest,
   AccountStateResponse,
@@ -229,11 +229,13 @@ function parseNFTs(value: unknown, storageUrl: string): YoroiNFT[] {
     return []
   }
 
-  const filteredResponse = Object.keys(value)
-    .filter((key) => value[key]?.[0]?.key === NFT_METADATA_KEY)
-    .map((key) => value[key][0].metadata as AssetMetadata)
+  const assets = Object.values(value).map((arr) => arr[0])
+  const nftAssets: NFTAsset[] = assets.filter((asset) => isAssetNFT(asset))
+  return nftAssets.map((nft) => convertNft(nft.metadata, storageUrl))
+}
 
-  return filteredResponse.map<YoroiNFT>((metadata: AssetMetadata) => convertNft(metadata, storageUrl))
+function isAssetNFT(asset: unknown): asset is NFTAsset {
+  return typeof asset === 'object' && !!asset && (asset as NFTAsset).key === NFT_METADATA_KEY
 }
 
 const NFT_METADATA_KEY = '721'
