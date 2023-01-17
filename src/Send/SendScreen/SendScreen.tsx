@@ -44,13 +44,13 @@ export const SendScreen = () => {
   const {tokenId, resetForm, receiverChanged, amountChanged, receiver, amount, sendAll, sendAllChanged} = useSend()
 
   const selectedAssetAvailableAmount = Amounts.getAmount(balances, tokenId).quantity
-  const defaultAssetAvailableAmount = Amounts.getAmount(balances, wallet.defaultAsset.identifier).quantity
+  const defaultAssetAvailableAmount = Amounts.getAmount(balances, wallet.primaryToken.identifier).quantity
 
   React.useEffect(() => {
-    if (wallet.defaultAsset.identifier !== tokenId && !Quantities.isGreaterThan(selectedAssetAvailableAmount, '0')) {
+    if (wallet.primaryToken.identifier !== tokenId && !Quantities.isGreaterThan(selectedAssetAvailableAmount, '0')) {
       resetForm()
     }
-  }, [wallet.defaultAsset.identifier, tokenId, resetForm, selectedAssetAvailableAmount])
+  }, [wallet.primaryToken.identifier, tokenId, resetForm, selectedAssetAvailableAmount])
 
   const [address, setAddress] = React.useState('')
   const [addressErrors, setAddressErrors] = React.useState<AddressValidationErrors>({addressIsRequired: true})
@@ -62,7 +62,7 @@ export const SendScreen = () => {
 
   const tokenInfo = useTokenInfo({wallet, tokenId})
   const assetDenomination = truncateWithEllipsis(getAssetDenominationOrId(tokenInfo), 20)
-  const amountErrorText = getAmountErrorText(intl, amountErrors, balanceErrors, wallet.defaultAsset)
+  const amountErrorText = getAmountErrorText(intl, amountErrors, balanceErrors, wallet.primaryToken)
 
   const isValid =
     isOnline &&
