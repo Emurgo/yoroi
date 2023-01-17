@@ -23,7 +23,7 @@ module.exports = {
     'android.nightly.release': {
       type: 'android.apk',
       binaryPath: 'android/app/build/outputs/apk/nightly/release/app-nightly-release.apk',
-      build: 'cd android ; ENVFILE=.env.nightly ENTRY_FILE=index.ts ./gradlew assembleNightlyRelease -DtestBuildType=release ; cd -'
+      build: 'cd android ; ENVFILE=.env.nightly ENTRY_FILE=index.ts ./gradlew clean assembleNightlyRelease assembleNightlyReleaseAndroidTest -DtestBuildType=release ; cd -'
     }
   },
   devices: {
