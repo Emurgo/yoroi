@@ -6,7 +6,7 @@ on:
 
 jobs:
   Android_tests:
-    if: github.event.review && (github.event.review.state == 'approved' || contains(github.event.review.body, '/check'))
+    if: github.event.review && (github.event.review.state == 'approved' || contains(github.event.review.body, 'run_detox'))
     runs-on: [self-hosted]
     steps:
 
