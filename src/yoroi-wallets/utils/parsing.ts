@@ -75,6 +75,17 @@ export const asciiToHex = (text: string) => {
   return characters.map((char) => char.charCodeAt(0).toString(16)).join('')
 }
 
+export const isObject = (data: unknown): data is object => {
+  return typeof data === 'object' && data !== null && !Array.isArray(data)
+}
+
+export const hasProperties = <T extends object, K extends string>(
+  obj: T,
+  keys: K[],
+): obj is T & {[J in K]: unknown} => {
+  return !!obj && keys.every((key) => Object.prototype.hasOwnProperty.call(obj, key))
+}
+
 export const parseSafe = (text: any) => {
   try {
     return JSON.parse(text)

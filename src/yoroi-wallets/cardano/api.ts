@@ -23,6 +23,7 @@ import type {
   TxStatusRequest,
   TxStatusResponse,
 } from '../types/other'
+import {hasProperties, isObject} from '../utils/parsing'
 import {convertNft} from './nfts'
 
 type Addresses = Array<string>
@@ -235,7 +236,7 @@ function parseNFTs(value: unknown, storageUrl: string): YoroiNFT[] {
 }
 
 function isAssetNFT(asset: unknown): asset is NFTAsset {
-  return typeof asset === 'object' && !!asset && (asset as NFTAsset).key === NFT_METADATA_KEY
+  return isObject(asset) && hasProperties(asset, ['key']) && asset.key === NFT_METADATA_KEY
 }
 
 const NFT_METADATA_KEY = '721'
