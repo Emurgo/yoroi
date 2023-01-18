@@ -1,7 +1,7 @@
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
 import React, {memo, ReactNode, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ActivityIndicator, Image, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {getPrettyDate} from '../../tests/helpers/utils'
@@ -25,14 +25,6 @@ export const NftDetails = () => {
   const navigation = useNavigation<NftDetailsNavigation>()
   const [activeTab, setActiveTab] = useState<ViewTabs>('overview')
   const nft = useNft(wallet, {id})
-
-  if (nft === null) {
-    return (
-      <View style={styles.center}>
-        <ActivityIndicator size="large" color="black" />
-      </View>
-    )
-  }
 
   const stringifiedMetadata = JSON.stringify(nft, undefined, 2)
   const matchingTransaction = Object.values(transactionsInfo).find((t) => Object.keys(t.tokens).includes(id))
@@ -69,7 +61,7 @@ export const NftDetails = () => {
 
           <TabPanels>
             <TabPanel active={activeTab === 'overview'}>
-              <NftMedataPanel nft={nft} transactionTime={transactionUpdatedAt ?? undefined} />
+              <NftMetadataPanel nft={nft} transactionTime={transactionUpdatedAt ?? undefined} />
             </TabPanel>
 
             <TabPanel active={activeTab === 'metadata'}>
@@ -102,7 +94,7 @@ const MetadataRow = ({title, copyText, children}: {title: string; children: Reac
   )
 }
 
-const NftMedataPanel = memo(({nft, transactionTime}: {nft: YoroiNFT; transactionTime?: string}) => {
+const NftMetadataPanel = memo(({nft, transactionTime}: {nft: YoroiNFT; transactionTime?: string}) => {
   const strings = useStrings()
   const fingerprint = getAssetFingerprint(nft.metadata.policyId, nft.metadata.assetNameHex)
   const formattedTime = transactionTime !== undefined ? getPrettyDate(new Date(transactionTime)) : null
@@ -208,15 +200,6 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-  },
-
-  center: {
-    flex: 1,
-    display: 'flex',
-    height: '100%',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 })
 

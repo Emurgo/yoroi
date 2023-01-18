@@ -1,6 +1,6 @@
 import {RouteProp, useRoute} from '@react-navigation/native'
 import React from 'react'
-import {ActivityIndicator, Dimensions, Image, StyleSheet, View} from 'react-native'
+import {Dimensions, Image, StyleSheet, View} from 'react-native'
 import ViewTransformer from 'react-native-easy-view-transformer'
 
 import {FadeIn, StatusBar} from '../components'
@@ -13,13 +13,6 @@ export const NftDetailsImage = () => {
   const wallet = useSelectedWallet()
   const nft = useNft(wallet, {id})
 
-  if (nft === null) {
-    return (
-      <View style={styles.contentContainer}>
-        <ActivityIndicator size="large" color="black" />
-      </View>
-    )
-  }
   const dimensions = Dimensions.get('window')
   const imageSize = Math.min(dimensions.width, dimensions.height)
 

@@ -248,10 +248,10 @@ export const useTokenInfo = (
   return query.data
 }
 
-export const useNftModerationStatus = ({wallet, fingerprint}: {wallet: YoroiWallet; fingerprint: string | null}) => {
+export const useNftModerationStatus = ({wallet, fingerprint}: {wallet: YoroiWallet; fingerprint: string}) => {
   return useQuery({
     queryKey: [wallet.id, 'nft', fingerprint],
-    queryFn: () => (fingerprint ? wallet.fetchNftModerationStatus(fingerprint) : null),
+    queryFn: () => wallet.fetchNftModerationStatus(fingerprint),
     enabled: !!fingerprint,
   })
 }
@@ -264,7 +264,7 @@ export const useNftImageModerated = ({
   nftId: string
 }): {image: string; status: YoroiNFTModerationStatus} | null => {
   const nft = useNft(wallet, {id: nftId})
-  const fingerprint = nft ? getAssetFingerprint(nft.metadata.policyId, nft.metadata.assetNameHex) : null
+  const fingerprint = getAssetFingerprint(nft.metadata.policyId, nft.metadata.assetNameHex)
   const {data} = useNftModerationStatus({wallet, fingerprint})
   return nft && data ? {image: nft.image, status: data} : null
 }
@@ -904,7 +904,12 @@ export const useNfts = (wallet: YoroiWallet) => {
   return {...rest, nfts: data ?? []}
 }
 
-export const useNft = (wallet: YoroiWallet, {id}: {id?: string} = {}): YoroiNFT | null => {
+export const useNft = (wallet: YoroiWallet, {id}: {id?: string} = {}): YoroiNFT => {
   const {nfts} = useNfts(wallet)
-  return nfts.find((nft) => nft.id === id) ?? null
+  const nft = nfts.find((nft) => nft.id === id)
+
+  if (!nft) {
+    throw new Error(`Invalid id used "${id}" to get NFT`)
+  }
+  return nft
 }
