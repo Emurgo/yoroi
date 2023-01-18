@@ -4,7 +4,7 @@ import {makeTransactionManager} from './transactionManager'
 describe('transaction manager', () => {
   it('memo storage', async () => {
     const storage = rootStorage.join('tx-manager/')
-    const transactionManager = makeTransactionManager({storage})
+    const transactionManager = makeTransactionManager(storage)
 
     // saving two memos
     await transactionManager.saveMemo('fake-tx-id-1', 'Send money to my friend')

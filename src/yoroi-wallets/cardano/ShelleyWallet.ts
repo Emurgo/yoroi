@@ -70,6 +70,7 @@ import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from './cha
 import {filterAddressesByStakingKey, getDelegationStatus} from './shelley/delegationUtils'
 import {toCachedTx, TransactionCache} from './shelley/transactionCache'
 import {yoroiSignedTx} from './signedTx'
+import {makeTransactionManager, TransactionManager} from './transactionManager'
 import {
   isYoroiWallet,
   NetworkId,
@@ -133,6 +134,7 @@ export class ShelleyWallet implements WalletInterface {
   private readonly storage: Storage
   private readonly utxoManager: UtxoManager
   private readonly stakingKeyPath: number[]
+  private readonly transactionManager: TransactionManager
 
   // =================== create =================== //
 
@@ -275,6 +277,7 @@ export class ShelleyWallet implements WalletInterface {
     const apiUrl = getCardanoNetworkConfigById(networkId).BACKEND.API_ROOT
     const utxoManager = await makeUtxoManager({storage: storage.join('utxoManager/'), apiUrl})
     const transactionCache = await TransactionCache.create(storage.join('txs/'))
+    const transactionManager = makeTransactionManager(storage.join('tx-manager/'))
 
     const wallet = new ShelleyWallet({
       storage,
@@ -292,6 +295,7 @@ export class ShelleyWallet implements WalletInterface {
       externalChain,
       isEasyConfirmationEnabled,
       lastGeneratedAddressIndex,
+      transactionManager,
     })
 
     await wallet.discoverAddresses()
@@ -320,6 +324,7 @@ export class ShelleyWallet implements WalletInterface {
     externalChain,
     isEasyConfirmationEnabled,
     lastGeneratedAddressIndex,
+    transactionManager,
   }: {
     storage: Storage
     networkId: NetworkId
@@ -336,6 +341,7 @@ export class ShelleyWallet implements WalletInterface {
     externalChain: AddressChain
     isEasyConfirmationEnabled: boolean
     lastGeneratedAddressIndex: number
+    transactionManager: TransactionManager
   }) {
     this.id = id
     this.storage = storage
@@ -350,6 +356,7 @@ export class ShelleyWallet implements WalletInterface {
     this.isReadOnly = isReadOnly
     this.provider = provider
     this.transactionCache = transactionCache
+    this.transactionManager = transactionManager
     this.internalChain = internalChain
     this.externalChain = externalChain
     this.rewardAddressHex = rewardAddressHex
@@ -389,6 +396,14 @@ export class ShelleyWallet implements WalletInterface {
   async clear() {
     await this.transactionCache?.clear()
     await this.utxoManager.clear()
+  }
+
+  saveMemo(txId: string, memo: string): Promise<void> {
+    return this.transactionManager.saveMemo(txId, memo)
+  }
+
+  readMemo(txId: string): Promise<string> {
+    return this.transactionManager.readMemo(txId)
   }
 
   // =================== persistence =================== //

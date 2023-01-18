@@ -102,6 +102,10 @@ export interface WalletInterface {
 
   clear(): Promise<void>
 
+  saveMemo(txId: string, memo: string): Promise<void>
+
+  readMemo(txId: string): Promise<string>
+
   // TODO: type
   toJSON(): unknown
 
@@ -267,6 +271,8 @@ type YoroiWalletKeys =
   | 'generateNewReceiveAddress'
   | 'tryDoFullSync'
   | 'clear'
+  | 'saveMemo'
+  | 'readMemo'
 
 const yoroiWalletKeys: Array<YoroiWalletKeys> = [
   'changePassword',
@@ -308,4 +314,6 @@ const yoroiWalletKeys: Array<YoroiWalletKeys> = [
   'walletImplementationId',
   'tryDoFullSync',
   'clear',
+  'saveMemo',
+  'readMemo',
 ]
