@@ -558,6 +558,37 @@ The output will be something like that
    ssh-keygen -Hf ~/.ssh/known_hosts
    ```
 
+## Linking with 'cc' error
+
+If you get this error during the build phase for a simulator on a Mac
+
+Error:
+
+```bash
+  = note: ld: building for iOS Simulator, but linking in .tbd built for macOS/Mac Catalyst, file '/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib/libobjc.tbd' for architecture x86_64
+
+```
+
+Then try to comment out the following code in `build.sh`
+
+The `build.sh` file is normally located in the node_modules directory:
+
+`.../node_modules/@emurgo/react-native-haskell-shelley/ios/build.sh`
+
+Comment out this section:
+
+```bash
+#if [[ -n "${DEVELOPER_SDK_DIR:-}" ]]; then
+  # Assume we're in Xcode, which means we're probably cross-compiling.
+  # In this case, we need to add an extra library search path for build scripts and proc-macros,
+  # which run on the host instead of the target.
+  # (macOS Big Sur does not have linkable libraries in /usr/lib/.)
+#  export LIBRARY_PATH="${DEVELOPER_SDK_DIR}/MacOSX.sdk/usr/lib:${LIBRARY_PATH:-}"
+#fi
+```
+
+This code was originally introduced to fix linking issues that were observed in Mac Big Sur. However in more recent Mac versions (tested on Mac Monterey) this fix can actualy cause an error.
+
 ---
 
 # Code style
@@ -580,8 +611,6 @@ Example:
 ```js
 // external libraries
 import React from 'react'
-import {compose} from 'redux'
-import {connect} from 'react-redux'
 import {View} from 'react-native'
 
 // our code

@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
 import {fromPairs, mapValues, max} from 'lodash'
 import DeviceInfo from 'react-native-device-info'
 import {defaultMemoize} from 'reselect'
@@ -11,11 +10,12 @@ import {Logger} from '../../../legacy/logging'
 import {Storage} from '../../storage'
 import type {RemoteCertificateMeta, TxHistoryRequest} from '../../types'
 import {BackendConfig, CERTIFICATE_KIND, RawTransaction, Transaction, TRANSACTION_STATUS} from '../../types/other'
+import {parseSafe} from '../../utils/parsing'
 import {Version, versionCompare} from '../../utils/versioning'
 import * as yoroiApi from '../api'
 
 export type TransactionCacheState = {
-  transactions: Record<string, Transaction>
+  transactions: {[txid: string]: Transaction}
   // @deprecated
   perAddressSyncMetadata: Record<string, SyncMetadata>
   // @deprecated
@@ -24,13 +24,13 @@ export type TransactionCacheState = {
 
 export class TransactionCache {
   #state: TransactionCacheState
-  #subscriptions: Array<(transactions: Record<string, Transaction>) => void> = []
+  #subscriptions: Array<(transactions: TransactionCacheState['transactions']) => void> = []
   #perAddressTxsSelector = defaultMemoize(perAddressTxsSelector)
   #perAddressCertificatesSelector = defaultMemoize(perAddressCertificatesSelector)
   #confirmationCountsSelector = defaultMemoize(confirmationCountsSelector)
   #storage: TxCacheStorage
 
-  static async create(storage: Pick<AsyncStorageStatic, 'getItem' | 'multiGet' | 'setItem' | 'multiSet'>) {
+  static async create(storage: Storage) {
     const txStorage = makeTxCacheStorage(storage)
     const version = DeviceInfo.getVersion() as Version
     const isDeprecatedSchema = versionCompare(version, '4.1.0') === -1
@@ -76,6 +76,10 @@ export class TransactionCache {
       transactions: {},
       bestBlockNum: 0,
     })
+  }
+
+  clear() {
+    return this.#storage.clear()
   }
 
   get transactions() {
@@ -465,42 +469,45 @@ type SyncMetadata = {
 export type TxCacheStorage = {
   loadTxs: () => Promise<Record<string, Transaction>>
   saveTxs: (txs: Record<string, Transaction>) => Promise<void>
+  clear: () => Promise<void>
 }
 
-const makeTxCacheStorage = (storage: Storage): TxCacheStorage => ({
+export const makeTxCacheStorage = (storage: Storage): TxCacheStorage => ({
   loadTxs: async () => {
-    const txids: Array<string> = await storage.getItem('txids').then(parseTxids)
+    const txids = await storage.getItem('txids', parseTxids)
     if (!txids) return {}
-    if (txids.length === 0) {
-      return {}
-    }
+    if (txids.length === 0) return {}
 
-    const values = await storage.multiGet(txids)
-    return values.reduce((result, [txid, tx]) => {
-      if (!tx) return result
-      try {
-        return {...result, [txid]: JSON.parse(tx)}
-      } catch (_error) {
+    const tuples = await storage.multiGet(txids, parseTx)
+
+    return tuples.reduce((result: TransactionCacheState['transactions'], [txid, tx]) => {
+      if (!tx) {
+        Logger.warn('corrupted transaction', {txid})
         return result
       }
-    }, {} as Record<string, Transaction>)
+
+      return {...result, [tx.id]: tx}
+    }, {})
   },
 
-  saveTxs: async (txs: Record<string, Transaction>) => {
-    const items = Object.entries(txs) //
-      .map(([txid, tx]) => [txid, JSON.stringify(tx)])
-    const keys = items.map(([key]) => key)
+  saveTxs: async (txs: TransactionCacheState['transactions']) => {
+    const items = Object.entries(txs)
+    const txids = Object.keys(txs)
 
     await Promise.all([
       storage.multiSet(items), //
-      storage.setItem('txids', JSON.stringify(keys)),
+      storage.setItem('txids', txids),
     ])
+  },
+
+  clear: () => {
+    return storage.clear()
   },
 })
 
 const parseTxids = (data: string | null | undefined) => {
   if (!data) return [] // initial
-  const txids = parse(data)
+  const txids = parseSafe(data)
 
   const isTxids = (data: unknown): data is Array<string> =>
     Array.isArray(data) && data.every((item: unknown) => typeof item === 'string')
@@ -508,10 +515,30 @@ const parseTxids = (data: string | null | undefined) => {
   return isTxids(txids) ? txids : []
 }
 
-const parse = (data: string): unknown => {
-  try {
-    return JSON.parse(data)
-  } catch (_error) {
-    return
+const parseTx = (data: string | null | undefined): Transaction | undefined => {
+  if (!data) return
+
+  const isTx = (data: unknown): data is Transaction => {
+    const tx = data as Transaction
+
+    return (
+      exists(tx) &&
+      isObject(tx) &&
+      isString(tx.id) &&
+      isString(tx.status) &&
+      isString(tx.lastUpdatedAt) &&
+      isArray(tx.inputs) &&
+      isArray(tx.outputs) &&
+      isArray(tx.certificates) &&
+      isArray(tx.withdrawals)
+    )
   }
+
+  const tx = parseSafe(data)
+  return isTx(tx) ? tx : undefined
 }
+
+const exists = <T>(data: unknown): data is NonNullable<T> => !!data
+const isObject = (data: unknown): data is object => typeof data === 'object'
+const isString = (data: unknown): data is string => typeof data === 'string'
+const isArray = (data: unknown): data is Array<unknown> => Array.isArray(data)

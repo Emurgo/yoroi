@@ -1,7 +1,6 @@
 import {NavigatorScreenParams, useNavigation, useRoute} from '@react-navigation/native'
 import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/stack'
 import React from 'react'
-import {IntlShape} from 'react-intl'
 import {Platform} from 'react-native'
 
 import {Icon} from './components'
@@ -62,14 +61,6 @@ export const defaultStackNavigationOptions: StackNavigationOptions = {
 }
 
 // ROUTES
-export type BiometricParams = {
-  onSuccess: (decryptedKey: string) => void | Promise<void>
-  onFail?: (reason: string, intl: IntlShape) => void | Promise<void>
-  keyId: string
-  addWelcomeMessage?: boolean
-  instructions?: string[]
-}
-
 export type WalletTabRoutes = {
   history: NavigatorScreenParams<TxHistoryRoutes>
   'send-ada': NavigatorScreenParams<SendRoutes>
@@ -129,7 +120,7 @@ export type WalletInitRoutes = {
     walletImplementationId: WalletImplementationId
     hwDeviceInfo: HWDeviceInfo
   }
-  'mnemoinc-show': {
+  'mnemonic-show': {
     networkId: NetworkId
     walletImplementationId: WalletImplementationId
     provider: YoroiProvider
@@ -197,7 +188,7 @@ export type SettingsStackRoutes = {
   'change-wallet-name': undefined
   'terms-of-use': undefined
   support: undefined
-  'fingerprint-link': undefined
+  'enable-login-with-os': undefined
   'remove-wallet': undefined
   'change-language': undefined
   'change-currency': undefined
@@ -206,7 +197,7 @@ export type SettingsStackRoutes = {
   'change-password': undefined
   'change-custom-pin': undefined
   about: undefined
-  'setup-custom-pin': {
+  'enable-login-with-pin': {
     onSuccess: () => void | Promise<void>
   }
 }
@@ -242,7 +233,7 @@ export type VotingRegistrationRouteNavigation = StackNavigationProp<VotingRegist
 export type FirstRunRoutes = {
   'language-pick': undefined
   'accept-terms-of-service': undefined
-  'custom-pin': undefined
+  'enable-login-with-pin': undefined
 }
 export type FirstRunRouteNavigation = StackNavigationProp<FirstRunRoutes>
 
@@ -252,16 +243,14 @@ export type MenuRoutes = {
 }
 
 export type AppRoutes = {
-  maintenance: undefined
   'first-run': NavigatorScreenParams<FirstRunRoutes>
   developer: undefined
   storybook: undefined
   'new-wallet': NavigatorScreenParams<WalletInitRoutes>
   'app-root': NavigatorScreenParams<WalletStackRoutes>
   'custom-pin-auth': undefined
-  'bio-auth-initial': BiometricParams
-  biometrics: BiometricParams
-  'setup-custom-pin': undefined
+  'bio-auth-initial': undefined
+  'enable-login-with-pin': undefined
 }
 export type AppRouteNavigation = StackNavigationProp<AppRoutes>
 

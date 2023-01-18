@@ -1,25 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import TransportHID from '@emurgo/react-native-hid'
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
-import TransportHID from '@v-almonacid/react-native-hid'
 import React from 'react'
 import type {IntlShape} from 'react-intl'
 import {defineMessages, injectIntl} from 'react-intl'
-import {
-  ActivityIndicator,
-  FlatList,
-  Image,
-  PermissionsAndroid,
-  Platform,
-  RefreshControl,
-  ScrollView,
-  StyleSheet,
-  View,
-} from 'react-native'
+import {ActivityIndicator, Alert, FlatList, Image, RefreshControl, ScrollView, StyleSheet, View} from 'react-native'
 
 import bleImage from '../../assets/img/bluetooth.png'
 import usbImage from '../../assets/img/ledger-nano-usb.png'
 import {BulletPointItem, Button, Text} from '../../components'
-import {confirmationMessages, ledgerMessages} from '../../i18n/global-messages'
+import globalMessages, {confirmationMessages, ledgerMessages} from '../../i18n/global-messages'
 import LocalizableError from '../../i18n/LocalizableError'
 import type {DeviceId, DeviceObj} from '../../legacy/ledgerUtils'
 import {BluetoothDisabledError, RejectedByUserError} from '../../legacy/ledgerUtils'
@@ -31,8 +21,8 @@ import {DeviceItem} from './DeviceItem'
 type Props = {
   intl: IntlShape
   defaultDevices?: Array<Device> | null // for storybook
-  onConnectUSB: (deviceObj: DeviceObj) => void
-  onConnectBLE: (deviceId: DeviceId) => void
+  onConnectUSB: (deviceObj: DeviceObj) => Promise<void> | void
+  onConnectBLE: (deviceId: DeviceId) => Promise<void> | void
   useUSB?: boolean
   onWaitingMessage?: string
   fillSpace?: boolean
@@ -54,7 +44,7 @@ class _LedgerConnect extends React.Component<Props, State> {
     deviceId: null,
     deviceObj: null,
     error: null,
-    refreshing: false,
+    refreshing: true,
     waiting: false,
   }
 
@@ -63,14 +53,11 @@ class _LedgerConnect extends React.Component<Props, State> {
   _transportLib: any = null
   _isMounted = false
 
-  async componentDidMount() {
+  componentDidMount() {
     const {useUSB} = this.props
     this._transportLib = useUSB === true ? TransportHID : TransportBLE
     this._isMounted = true
     if (useUSB === false) {
-      if (Platform.OS === 'android') {
-        await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
-      }
       // check if bluetooth is available
       // no need to save a reference to this subscription's unsubscribe func
       // as it's just an empty method. Rather, we make sure sate is only
@@ -113,7 +100,6 @@ class _LedgerConnect extends React.Component<Props, State> {
 
   startScan = () => {
     const {useUSB} = this.props
-    this.setState({refreshing: true})
 
     this._subscriptions = this._transportLib.listen({
       complete: () => {
@@ -148,13 +134,9 @@ class _LedgerConnect extends React.Component<Props, State> {
     }
   }
 
-  _setStateSafe = (newState) => {
-    if (this._isMounted) this.setState(newState)
-  }
-
   reload = () => {
     this._unsubscribe()
-    this._setStateSafe({
+    this.setState({
       devices: this.props.defaultDevices ? this.props.defaultDevices : [],
       deviceId: null,
       deviceObj: null,
@@ -165,7 +147,6 @@ class _LedgerConnect extends React.Component<Props, State> {
   }
 
   _onSelectDevice = async (device: Device) => {
-    if (this.state.deviceId != null) return
     this._unsubscribe()
     const {onConnectBLE} = this.props
     try {
@@ -185,19 +166,15 @@ class _LedgerConnect extends React.Component<Props, State> {
         this.reload()
         return
       }
-      this._setStateSafe({error: e})
+      this.setState({error: e})
     } finally {
-      this._setStateSafe({waiting: false})
+      this.setState({waiting: false})
     }
   }
 
-  _onConfirm = async (deviceObj?: DeviceObj | null): Promise<void> => {
+  _onConfirm = async (deviceObj: DeviceObj) => {
     this._unsubscribe()
     try {
-      if (deviceObj == null) {
-        // should never happen
-        throw new Error('deviceObj is null')
-      }
       this.setState({
         waiting: true,
       })
@@ -208,9 +185,9 @@ class _LedgerConnect extends React.Component<Props, State> {
         this.reload()
         return
       }
-      this._setStateSafe({error: e})
+      this.setState({error: e})
     } finally {
-      this._setStateSafe({waiting: false})
+      this.setState({waiting: false})
     }
   }
 
@@ -256,13 +233,13 @@ class _LedgerConnect extends React.Component<Props, State> {
         <View style={[styles.container, fillSpace === true && styles.fillSpace]}>
           <View style={styles.heading}>
             <Image source={useUSB === true ? usbImage : bleImage} />
-            {useUSB === false && (
+            {!useUSB && (
               <Text secondary style={styles.caption}>
                 {intl.formatMessage(messages.caption)}
               </Text>
             )}
           </View>
-          {((useUSB === false && devices.length === 0) || (useUSB === true && deviceObj == null)) && (
+          {((!useUSB && devices.length === 0) || (useUSB && deviceObj == null)) && (
             <View style={styles.instructionsBlock}>
               <Text style={styles.paragraphText}>{intl.formatMessage(messages.introline)}</Text>
               {rows.map((row, i) => (
@@ -277,7 +254,7 @@ class _LedgerConnect extends React.Component<Props, State> {
               contentContainerStyle={styles.flatListContentContainer}
               data={devices}
               renderItem={({item}: {item: Device}) => (
-                <DeviceItem device={item} onSelect={() => this._onSelectDevice(item)} />
+                <DeviceItem disabled={waiting} device={item} onSelect={() => this._onSelectDevice(item)} />
               )}
               ListHeaderComponent={this.ListHeader}
               keyExtractor={(item) => item.id.toString()}
@@ -293,10 +270,17 @@ class _LedgerConnect extends React.Component<Props, State> {
         </View>
         {useUSB === true && (
           <Button
-            onPress={() => this._onConfirm(deviceObj)}
+            onPress={() => {
+              if (refreshing || deviceObj == null || waiting) {
+                return Alert.alert(
+                  intl.formatMessage(globalMessages.error),
+                  rows.reduce((acc, item) => acc + '\n' + item),
+                )
+              }
+              this._onConfirm(deviceObj)
+            }}
             title={intl.formatMessage(confirmationMessages.commonButtons.confirmButton)}
             style={styles.button}
-            disabled={refreshing || deviceObj == null || waiting}
           />
         )}
         {waiting && <ActivityIndicator color="black" />}

@@ -166,8 +166,6 @@ export const CONFIG = {
   PIN_LENGTH: 6,
   LOG_LEVEL: _LOG_LEVEL,
   COMMIT: _COMMIT,
-  // added next SDKs till update bridge, 31 there are installations already
-  ANDROID_BIO_AUTH_EXCLUDED_SDK: [29, 30, 32, 33],
 }
 
 // Staking pools for testing/nightly deploys
@@ -175,7 +173,7 @@ const TESTNET_STAKING_POOLS_BY_PROVIDER = new Map<YoroiProvider, Array<string>>(
   ['emurgo-alonzo', ['03868bffac073e46cfeca68486ce8c8cdb5e3bf2677f63f2954e9cae']],
 ])
 const TESTNET_STAKING_POOLS_BY_NETWORK = new Map<NetworkId, Array<string>>([
-  [NETWORKS.HASKELL_SHELLEY_TESTNET.NETWORK_ID, ['26b17b78de4f035dc0bfce60d1d3c3a8085c38dcce5fb8767e518bed']],
+  [NETWORKS.HASKELL_SHELLEY_TESTNET.NETWORK_ID, ['fe662c24cf56fb98626161f76d231ac50ab7b47dd83986a30c1d4796']],
 ])
 
 /**

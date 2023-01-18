@@ -4,7 +4,7 @@ import {StyleSheet, Text, View} from 'react-native'
 
 import {Boundary, Spacer} from '../components'
 import {Icon} from '../components/Icon'
-import {useBalances, useExchangeRate, useTokenInfo} from '../hooks'
+import {useBalances, useExchangeRate} from '../hooks'
 import {formatTokenWithText, formatTokenWithTextWhenHidden} from '../legacy/format'
 import {useSelectedWallet} from '../SelectedWallet'
 import {useCurrencyContext} from '../Settings/Currency'
@@ -26,11 +26,14 @@ export const BalanceBanner = () => {
       <Spacer height={10} />
 
       <Row>
-        <Balance />
-      </Row>
-      <Row>
-        <Boundary loading={{fallbackProps: {size: 'small'}}}>
-          <PairedBalance />
+        <Boundary loading={{size: 'small'}} error={{size: 'inline'}}>
+          <Row>
+            <Balance />
+          </Row>
+
+          <Row>
+            <PairedBalance />
+          </Row>
         </Boundary>
       </Row>
     </View>
@@ -39,15 +42,17 @@ export const BalanceBanner = () => {
 
 const hiddenBalance = '*.******'
 const Balance = () => {
-  const {privacyMode} = usePrivacyMode()
   const wallet = useSelectedWallet()
   const balances = useBalances(wallet)
-  const tokenInfo = useTokenInfo({wallet, tokenId: ''})
+  const {privacyMode} = usePrivacyMode()
 
   const balance =
     privacyMode === 'HIDDEN'
-      ? formatTokenWithTextWhenHidden(hiddenBalance, tokenInfo)
-      : formatTokenWithText(new BigNumber(Amounts.getAmount(balances, '').quantity), tokenInfo)
+      ? formatTokenWithTextWhenHidden(hiddenBalance, wallet.primaryToken)
+      : formatTokenWithText(
+          new BigNumber(Amounts.getAmount(balances, wallet.primaryToken.identifier).quantity),
+          wallet.primaryToken,
+        )
 
   return (
     <Row>
@@ -62,12 +67,11 @@ const Row = ({children}: {children: React.ReactNode}) => <View style={styles.cen
 
 const hiddenPairedTotal = '*.**'
 const PairedBalance = () => {
-  const {privacyMode} = usePrivacyMode()
   const wallet = useSelectedWallet()
   const balances = useBalances(wallet)
   const {currency, config} = useCurrencyContext()
   const rate = useExchangeRate({wallet, to: currency})
-  const tokenInfo = useTokenInfo({wallet, tokenId: ''})
+  const {privacyMode} = usePrivacyMode()
 
   // hide pairing when set to the default asset ticker
   if (currency === 'ADA') return null
@@ -82,7 +86,7 @@ const PairedBalance = () => {
   const primaryAmount = Amounts.getAmount(balances, '')
   const primaryExchangeQuantity = Quantities.quotient(
     primaryAmount.quantity,
-    `${10 ** tokenInfo.metadata.numberOfDecimals}`,
+    `${10 ** wallet.primaryToken.metadata.numberOfDecimals}`,
   )
   const secondaryExchangeQuantity = Quantities.decimalPlaces(
     Quantities.product([primaryExchangeQuantity, `${rate}`]),

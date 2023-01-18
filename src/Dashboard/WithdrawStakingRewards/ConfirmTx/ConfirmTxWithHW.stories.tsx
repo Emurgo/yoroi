@@ -2,26 +2,70 @@ import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {mockWallet, mockYoroiTx, WithModal} from '../../../../storybook'
+import {mocks, WithModal} from '../../../../storybook'
 import {Boundary} from '../../../components'
 import {ConfirmTxWithHW} from './ConfirmTxWithHW'
 
 storiesOf('ConfirmWithdrawalTx/HW', module)
+  .add('loading', () => (
+    <WithModal>
+      <Boundary>
+        <ConfirmTxWithHW
+          wallet={{
+            ...mocks.hwWallet,
+            signTxWithLedger: mocks.signTxWithLedger.loading,
+          }}
+          unsignedTx={{
+            ...mocks.yoroiUnsignedTx,
+            staking: {
+              ...mocks.yoroiUnsignedTx.staking,
+              withdrawals: {
+                'withdrawal-address': {['']: '12356789'},
+              },
+            },
+          }}
+          onSuccess={action('onSuccess')}
+          onCancel={action('onCancel')}
+        />
+      </Boundary>
+    </WithModal>
+  ))
+  .add('error', () => (
+    <WithModal>
+      <Boundary>
+        <ConfirmTxWithHW
+          wallet={{
+            ...mocks.hwWallet,
+            signTxWithLedger: mocks.signTxWithLedger.error,
+          }}
+          unsignedTx={{
+            ...mocks.yoroiUnsignedTx,
+            staking: {
+              ...mocks.yoroiUnsignedTx.staking,
+              withdrawals: {
+                'withdrawal-address': {['']: '12356789'},
+              },
+            },
+          }}
+          onSuccess={action('onSuccess')}
+          onCancel={action('onCancel')}
+        />
+      </Boundary>
+    </WithModal>
+  ))
   .add('withdrawals, no deregistrations', () => (
     <WithModal>
       <Boundary>
         <ConfirmTxWithHW
           wallet={{
-            ...mockWallet,
-            submitTransaction: async (yoroiSignedTx) => {
-              action('onSubmit')(yoroiSignedTx)
-              return []
-            },
+            ...mocks.hwWallet,
+            signTxWithLedger: mocks.signTxWithLedger.success,
+            submitTransaction: mocks.submitTransaction.success,
           }}
           unsignedTx={{
-            ...mockYoroiTx,
+            ...mocks.yoroiUnsignedTx,
             staking: {
-              ...mockYoroiTx.staking,
+              ...mocks.yoroiUnsignedTx.staking,
               withdrawals: {
                 'withdrawal-address': {['']: '12356789'},
               },
@@ -38,22 +82,45 @@ storiesOf('ConfirmWithdrawalTx/HW', module)
       <Boundary>
         <ConfirmTxWithHW
           wallet={{
-            ...mockWallet,
-            submitTransaction: async (yoroiSignedTx) => {
-              action('onSubmit')(yoroiSignedTx)
-              return []
-            },
+            ...mocks.hwWallet,
+            signTxWithLedger: mocks.signTxWithLedger.success,
+            submitTransaction: mocks.submitTransaction.success,
           }}
           unsignedTx={{
-            ...mockYoroiTx,
+            ...mocks.yoroiUnsignedTx,
             staking: {
-              ...mockYoroiTx.staking,
+              ...mocks.yoroiUnsignedTx.staking,
               deregistrations: {
-                ...mockYoroiTx.staking.deregistrations,
+                ...mocks.yoroiUnsignedTx.staking.deregistrations,
                 'deregistration-address': {['']: '12356789'},
               },
               withdrawals: {
                 'withdrawal-address': {['']: '12356789'},
+              },
+            },
+          }}
+          onSuccess={action('onSuccess')}
+          onCancel={action('onCancel')}
+        />
+      </Boundary>
+    </WithModal>
+  ))
+  .add('no withdrawals, deregistrations', () => (
+    <WithModal>
+      <Boundary>
+        <ConfirmTxWithHW
+          wallet={{
+            ...mocks.hwWallet,
+            signTxWithLedger: mocks.signTxWithLedger.success,
+            submitTransaction: mocks.submitTransaction.success,
+          }}
+          unsignedTx={{
+            ...mocks.yoroiUnsignedTx,
+            staking: {
+              ...mocks.yoroiUnsignedTx.staking,
+              deregistrations: {
+                ...mocks.yoroiUnsignedTx.staking.deregistrations,
+                'deregistration-address': {['']: '12356789'},
               },
             },
           }}

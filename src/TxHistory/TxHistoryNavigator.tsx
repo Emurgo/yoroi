@@ -54,7 +54,7 @@ export const TxHistoryNavigator = () => {
 
         <Stack.Screen name="history-details" options={{title: ''}}>
           {() => (
-            <Boundary loading={{fallbackProps: {style: {flex: 1}}}}>
+            <Boundary loading={{size: 'full'}}>
               <TxDetails />
             </Boundary>
           )}

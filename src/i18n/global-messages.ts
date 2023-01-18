@@ -257,7 +257,7 @@ export const errorMessages = {
       defaultMessage: '!!!Password you provided is incorrect.',
     },
   }),
-  biometricsIsTurnedOff: defineMessages({
+  authOsIsTurnedOff: defineMessages({
     title: {
       id: 'global.actions.dialogs.biometricsIsTurnedOff.title',
       defaultMessage: '!!!Biometrics was turned off',
@@ -595,7 +595,7 @@ export default defineMessages({
     defaultMessage: '!!!Epoch',
   },
   learnMore: {
-    id: 'components.maintenancemodal.learnMore',
+    id: 'global.learnMore',
     defaultMessage: '!!!Learn more',
   },
   notSupported: {
@@ -664,5 +664,13 @@ export default defineMessages({
   next: {
     id: 'global.next',
     defaultMessage: '!!!Next',
+  },
+  error: {
+    id: 'global.error',
+    defaultMessage: '!!!Error',
+  },
+  cancel: {
+    id: 'global.cancel',
+    defaultMessage: '!!!Cancel',
   },
 })

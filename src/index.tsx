@@ -2,9 +2,8 @@
 import bluebird from 'bluebird'
 import React from 'react'
 import {createIntl, createIntlCache} from 'react-intl'
-import {AppRegistry, LogBox} from 'react-native'
+import {AppRegistry, LogBox, StyleSheet} from 'react-native'
 import {QueryClient, QueryClientProvider} from 'react-query'
-import {Provider} from 'react-redux'
 
 import App from './App'
 import {name as appName} from './app.json'
@@ -12,13 +11,13 @@ import {LoadingBoundary} from './components'
 import {ErrorBoundary} from './components/ErrorBoundary'
 import {LanguageProvider} from './i18n'
 import translations from './i18n/translations'
-import {handleGeneralError, setupHooks} from './legacy/actions'
+import {handleGeneralError} from './legacy/actions'
 import {CONFIG} from './legacy/config'
-import getConfiguredStore from './legacy/configureStore'
 import {ApiError, NetworkError} from './legacy/errors'
 import {Logger, setLogLevel} from './legacy/logging'
 import {isEmptyString} from './legacy/utils'
 import {CurrencyProvider} from './Settings/Currency/CurrencyContext'
+import {StorageProvider, useMigrations} from './Storage'
 import {ThemeProvider} from './theme'
 import {WalletManagerProvider} from './WalletManager'
 import {walletManager} from './yoroi-wallets'
@@ -59,31 +58,30 @@ global.onunhandledrejection = (error: any) => {
   handleGeneralError(error.message, intl)
 }
 
-const store = getConfiguredStore()
-store.dispatch(setupHooks() as any)
-
 const queryClient = new QueryClient()
 
 const AppWithProviders = () => {
-  return (
+  const migrated = useMigrations()
+
+  return migrated ? (
     <WalletManagerProvider walletManager={walletManager}>
       <ErrorBoundary>
-        <Provider store={store}>
-          <QueryClientProvider client={queryClient}>
-            <LoadingBoundary>
-              <ThemeProvider>
-                <LanguageProvider>
-                  <CurrencyProvider>
+        <QueryClientProvider client={queryClient}>
+          <LoadingBoundary style={StyleSheet.absoluteFill}>
+            <ThemeProvider>
+              <LanguageProvider>
+                <CurrencyProvider>
+                  <StorageProvider>
                     <App />
-                  </CurrencyProvider>
-                </LanguageProvider>
-              </ThemeProvider>
-            </LoadingBoundary>
-          </QueryClientProvider>
-        </Provider>
+                  </StorageProvider>
+                </CurrencyProvider>
+              </LanguageProvider>
+            </ThemeProvider>
+          </LoadingBoundary>
+        </QueryClientProvider>
       </ErrorBoundary>
     </WalletManagerProvider>
-  )
+  ) : null
 }
 
 AppRegistry.registerComponent(appName, () => AppWithProviders)

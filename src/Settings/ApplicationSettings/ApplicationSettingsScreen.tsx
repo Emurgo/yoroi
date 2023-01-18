@@ -1,21 +1,16 @@
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Platform, ScrollView, StyleSheet, Switch} from 'react-native'
+import {ScrollView, StyleSheet, Switch} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useDispatch, useSelector} from 'react-redux'
 
+import {useAuthOsEnabled, useAuthSetting, useAuthWithOs} from '../../auth'
 import {Icon, Spacer, StatusBar} from '../../components'
 import {useCrashReports} from '../../hooks'
 import {useLanguage} from '../../i18n'
-import {setAppSettingField} from '../../legacy/actions'
-import {APP_SETTINGS_KEYS} from '../../legacy/appSettings'
-import {CONFIG, isNightly} from '../../legacy/config'
-import {canBiometricEncryptionBeEnabled, isBiometricEncryptionHardwareSupported} from '../../legacy/deviceSettings'
-import KeyStore from '../../legacy/KeyStore'
-import {biometricHwSupportSelector, installationIdSelector, isSystemAuthEnabledSelector} from '../../legacy/selectors'
-import {isEmptyString} from '../../legacy/utils'
+import {isNightly} from '../../legacy/config'
 import {useWalletNavigation} from '../../navigation'
 import {usePrivacyMode} from '../../Settings/PrivacyMode/PrivacyMode'
+import {useStorage} from '../../Storage'
 import {lightPalette} from '../../theme'
 import {useCurrencyContext} from '../Currency'
 import {NavigatedSettingsItem, SettingsItem, SettingsSection} from '../SettingsItems'
@@ -27,65 +22,30 @@ const iconProps = {
 
 export const ApplicationSettingsScreen = () => {
   const strings = useStrings()
-  const {navigation, navigateToSettings} = useWalletNavigation()
-  const isBiometricHardwareSupported = useSelector(biometricHwSupportSelector)
-  const isSystemAuthEnabled = useSelector(isSystemAuthEnabledSelector)
-  const installationId = useSelector(installationIdSelector)
-  const dispatch = useDispatch()
-  const {currency} = useCurrencyContext()
+  const storage = useStorage()
   const {language} = useLanguage()
   const {privacyMode, togglePrivacyMode} = usePrivacyMode()
 
+  const {navigation} = useWalletNavigation()
+  const {currency} = useCurrencyContext()
   const crashReports = useCrashReports()
 
-  const onToggleBiometricsAuthIn = async () => {
-    if (isEmptyString(installationId)) throw new Error('invalid state')
+  const authSetting = useAuthSetting(storage)
+  const authOsEnabled = useAuthOsEnabled()
+  const {authWithOs} = useAuthWithOs({onSuccess: () => navigation.navigate('enable-login-with-pin')})
 
-    if (isSystemAuthEnabled) {
-      navigation.navigate('biometrics', {
-        keyId: installationId,
-        onSuccess: () => navigation.navigate('setup-custom-pin'),
-        onFail: (reason) => {
-          if (reason === KeyStore.REJECTIONS.CANCELED) {
-            navigateToSettings()
-          } else {
-            throw new Error(`Could not authenticate user: ${reason}`)
-          }
-        },
-      })
+  const onToggleAuthWithOs = () => {
+    if (authSetting === 'os') {
+      authWithOs()
     } else {
       navigation.navigate('app-root', {
         screen: 'settings',
         params: {
-          screen: 'fingerprint-link',
+          screen: 'enable-login-with-os',
         },
       })
     }
   }
-
-  React.useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      const updateDeviceSettings = async () => {
-        const isHardwareSupported = await isBiometricEncryptionHardwareSupported()
-        const canEnableBiometricEncryption = await canBiometricEncryptionBeEnabled()
-        await dispatch(setAppSettingField(APP_SETTINGS_KEYS.BIOMETRIC_HW_SUPPORT, isHardwareSupported))
-        await dispatch(
-          setAppSettingField(APP_SETTINGS_KEYS.CAN_ENABLE_BIOMETRIC_ENCRYPTION, canEnableBiometricEncryption),
-        )
-      }
-
-      updateDeviceSettings()
-    })
-    return unsubscribe
-  }, [navigation, dispatch])
-
-  // it's better if we prevent users who:
-  //   1. are not using biometric auth yet
-  //   2. are on Android 10+
-  // from enabling this feature since they can encounter issues (and may not be
-  // able to access their wallets eventually, neither rollback this!)
-  const shouldNotEnableBiometricAuth =
-    Platform.OS === 'android' && CONFIG.ANDROID_BIO_AUTH_EXCLUDED_SDK.includes(Platform.Version) && !isSystemAuthEnabled
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.settings}>
@@ -136,13 +96,9 @@ export const ApplicationSettingsScreen = () => {
             icon={<Icon.Bio {...iconProps} />}
             label={strings.biometricsSignIn}
             info={strings.biometricsSignInInfo}
-            disabled={!isBiometricHardwareSupported || shouldNotEnableBiometricAuth}
+            disabled={!authOsEnabled}
           >
-            <Switch
-              value={isSystemAuthEnabled}
-              onValueChange={onToggleBiometricsAuthIn}
-              disabled={!isBiometricHardwareSupported || shouldNotEnableBiometricAuth}
-            />
+            <Switch value={authSetting === 'os'} onValueChange={onToggleAuthWithOs} disabled={!authOsEnabled} />
           </SettingsItem>
 
           <SettingsItem

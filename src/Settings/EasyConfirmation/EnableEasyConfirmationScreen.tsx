@@ -1,26 +1,28 @@
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ScrollView, StyleSheet, View} from 'react-native'
+import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useEnableEasyConfirmation} from '../../auth'
 import {Button, StatusBar, Text, TextInput} from '../../components'
-import {useEnableEasyConfirmation} from '../../hooks'
+import {LoadingOverlay} from '../../components/LoadingOverlay'
 import {errorMessages} from '../../i18n/global-messages'
 import {showErrorDialog} from '../../legacy/actions'
 import {WrongPassword} from '../../legacy/errors'
 import {isEmptyString} from '../../legacy/utils'
-import {useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../SelectedWallet'
+import {useSelectedWallet, useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 
 export const EnableEasyConfirmationScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
   const navigation = useNavigation()
-  const [masterPassword, setMasterPassword] = React.useState('')
+  const [rootPassword, setRootPassword] = React.useState('')
   const walletMeta = useSelectedWalletMeta()
   const setSelectedWalletMeta = useSetSelectedWalletMeta()
-  const {enableEasyConfirmation, isLoading} = useEnableEasyConfirmation({
+  const wallet = useSelectedWallet()
+  const {enableEasyConfirmation, isLoading} = useEnableEasyConfirmation(wallet, {
     onSuccess: () => {
       if (!walletMeta) throw new Error('Missing walletMeta')
       setSelectedWalletMeta({
@@ -43,28 +45,34 @@ export const EnableEasyConfirmationScreen = () => {
         <Text style={styles.heading}>{strings.enableHeading}</Text>
         <Text style={styles.warning}>{strings.enableWarning}</Text>
 
-        <TextInput
+        <PasswordInput
           autoFocus
           enablesReturnKeyAutomatically
           returnKeyType="done"
           secureTextEntry
-          label={strings.enableMasterPassword}
-          onChangeText={setMasterPassword}
-          value={masterPassword}
+          label={strings.enableRootPassword}
+          onChangeText={setRootPassword}
+          value={rootPassword}
           autoComplete={false}
         />
       </ScrollView>
 
-      <View style={styles.actions}>
+      <Actions>
         <Button
           title={strings.enableButton}
-          onPress={() => enableEasyConfirmation({password: masterPassword, intl})}
-          disabled={isEmptyString(masterPassword) || isLoading}
+          onPress={() => enableEasyConfirmation(rootPassword)}
+          disabled={isEmptyString(rootPassword) || isLoading}
         />
-      </View>
+      </Actions>
+
+      <LoadingOverlay loading={isLoading} />
     </SafeAreaView>
   )
 }
+
+const PasswordInput = TextInput
+
+const Actions = ({children}: ViewProps) => <View style={styles.actions}>{children}</View>
 
 const useStrings = () => {
   const intl = useIntl()
@@ -72,7 +80,7 @@ const useStrings = () => {
   return {
     enableHeading: intl.formatMessage(messages.enableHeading),
     enableWarning: intl.formatMessage(messages.enableWarning),
-    enableMasterPassword: intl.formatMessage(messages.enableMasterPassword),
+    enableRootPassword: intl.formatMessage(messages.enableRootPassword),
     enableButton: intl.formatMessage(messages.enableButton),
   }
 }
@@ -93,7 +101,7 @@ const messages = defineMessages({
       '!!!Please remember your master password, as you may need it ' +
       'in case your biometrics data are removed from the device.',
   },
-  enableMasterPassword: {
+  enableRootPassword: {
     id: 'components.settings.enableeasyconfirmationscreen.enableMasterPassword',
     defaultMessage: '!!!Master password',
   },

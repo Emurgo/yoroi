@@ -2,9 +2,9 @@ import {fromPairs} from 'lodash'
 import DeviceInfo from 'react-native-device-info'
 
 import {ApiHistoryError} from '../../../legacy/errors'
-import {Storage} from '../../storage'
+import {Storage, storage as rootStorage} from '../../storage'
 import type {BackendConfig, RawTransaction, TipStatusResponse, Transaction} from '../../types/other'
-import {syncTxs, toCachedTx, TransactionCache} from './transactionCache'
+import {makeTxCacheStorage, syncTxs, toCachedTx, TransactionCache} from './transactionCache'
 
 describe('transactionCache', () => {
   describe('create', () => {
@@ -31,10 +31,10 @@ describe('transactionCache', () => {
       const txCache = await TransactionCache.create({
         ...mockStorage,
         getItem: async (path: string) => {
-          if (path === 'txids') {
-            return JSON.stringify('not an array of strings')
+          if (path !== 'txids') {
+            throw new Error('invalid path')
           }
-          throw new Error('invalid path')
+          return undefined // invalid txids
         },
       })
 
@@ -50,7 +50,7 @@ describe('transactionCache', () => {
         ...mockStorage,
         multiGet: async (paths: Array<string>) => {
           if (paths.length === 1 && paths[0] === mockTx.id) {
-            return [[mockTx.id, 'cannot parse']]
+            return [[mockTx.id, undefined] as [string, undefined]]
           }
           throw new Error('invalid path')
         },
@@ -74,17 +74,47 @@ describe('transactionCache', () => {
   })
 })
 
+describe('transaction storage', () => {
+  it('works', async () => {
+    const storage = rootStorage.join('txs/')
+    const {loadTxs, saveTxs, clear} = makeTxCacheStorage(storage)
+
+    // initial
+    await loadTxs().then((txs) => {
+      return expect(txs).toEqual({})
+    })
+
+    await saveTxs({[mockTx.id]: mockTx})
+    await loadTxs().then((txs) => {
+      return expect(txs).toEqual({[mockTx.id]: mockTx})
+    })
+
+    await clear()
+    await loadTxs().then((txs) => {
+      return expect(txs).toEqual({})
+    })
+  })
+})
+
 const mockStorage: Storage = {
   getItem: async (path: string) => {
-    if (path === 'txids') return JSON.stringify([mockTx.id])
+    if (path === 'txids') return [mockTx.id]
     throw new Error('invalid path')
   },
-  multiGet: async (paths: Array<string>) => {
-    if (paths.length === 1 && paths[0] === mockTx.id) return [[mockTx.id, JSON.stringify(mockTx)]]
-    throw new Error('invalid path')
+  multiGet: async (txids: Array<string>) => {
+    if (txids[0] !== mockTx.id) throw new Error('invalid path')
+
+    return [
+      [txids[0], mockTx] as [string, Transaction], //
+    ]
   },
+  join: () => mockStorage,
   setItem: jest.fn(),
   multiSet: jest.fn(),
+  removeItem: jest.fn(),
+  multiRemove: jest.fn(),
+  getAllKeys: jest.fn(),
+  clear: jest.fn(),
 }
 
 const mockTx: Transaction = {

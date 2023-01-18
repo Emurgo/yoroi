@@ -1,7 +1,7 @@
 import React from 'react'
 import {useIntl} from 'react-intl'
 
-import {TwoActionView} from '../../../components'
+import {Boundary, TwoActionView} from '../../../components'
 import {useSignWithHwAndSubmitTx} from '../../../hooks'
 import {LedgerConnect, LedgerTransportSwitch} from '../../../HW'
 import {confirmationMessages, txLabels} from '../../../i18n/global-messages'
@@ -17,13 +17,15 @@ type Props = {
   onSuccess: () => void
 }
 
-export const ConfirmTxWithHW = ({wallet, unsignedTx, onSuccess, onCancel}: Props) => {
-  const strings = useStrings()
-  const [transport, setTransport] = React.useState<'USB' | 'BLE'>('USB')
+type TransportType = 'USB' | 'BLE'
+
+export const ConfirmTxWithHW = (props: Props) => {
+  const {wallet} = props
+  const [transportType, setTransportType] = React.useState<TransportType>('USB')
   const [step, setStep] = React.useState<'select-transport' | 'connect-transport' | 'confirm'>('select-transport')
 
-  const onSelectTransport = (transport: 'USB' | 'BLE') => {
-    setTransport(transport)
+  const onSelectTransport = (transportType: TransportType) => {
+    setTransportType(transportType)
     setStep('connect-transport')
   }
 
@@ -37,11 +39,6 @@ export const ConfirmTxWithHW = ({wallet, unsignedTx, onSuccess, onCancel}: Props
     setStep('confirm')
   }
 
-  const {signAndSubmitTx, isLoading} = useSignWithHwAndSubmitTx(
-    {wallet}, //
-    {signTx: {onSuccess}},
-  )
-
   return (
     <>
       <Route active={step === 'select-transport'}>
@@ -52,26 +49,47 @@ export const ConfirmTxWithHW = ({wallet, unsignedTx, onSuccess, onCancel}: Props
       </Route>
 
       <Route active={step === 'connect-transport'}>
-        <LedgerConnect onConnectBLE={onConnectBLE} onConnectUSB={onConnectUSB} useUSB={transport === 'USB'} />
+        <LedgerConnect onConnectBLE={onConnectBLE} onConnectUSB={onConnectUSB} useUSB={transportType === 'USB'} />
       </Route>
 
       <Route active={step === 'confirm'}>
-        <TwoActionView
-          title={strings.confirmTx}
-          primaryButton={{
-            disabled: isLoading,
-            label: strings.confirmButton,
-            onPress: () => signAndSubmitTx({unsignedTx, useUSB: transport === 'USB'}),
-          }}
-          secondaryButton={{
-            disabled: isLoading,
-            onPress: () => onCancel(),
-          }}
-        >
-          <TransferSummary wallet={wallet} unsignedTx={unsignedTx} />
-        </TwoActionView>
+        <Boundary>
+          <Confirm {...props} transport={transportType} />
+        </Boundary>
       </Route>
     </>
+  )
+}
+
+const Confirm = ({
+  wallet,
+  onSuccess,
+  onCancel,
+  unsignedTx,
+  transport: transportType,
+}: Props & {transport: TransportType}) => {
+  const strings = useStrings()
+
+  const {signAndSubmitTx, isLoading} = useSignWithHwAndSubmitTx(
+    {wallet}, //
+    {signTx: {onSuccess}},
+  )
+
+  return (
+    <TwoActionView
+      title={strings.confirmTx}
+      primaryButton={{
+        disabled: isLoading,
+        label: strings.confirmButton,
+        onPress: () => signAndSubmitTx({unsignedTx, useUSB: transportType === 'USB'}),
+      }}
+      secondaryButton={{
+        disabled: isLoading,
+        onPress: () => onCancel(),
+      }}
+    >
+      <TransferSummary wallet={wallet} unsignedTx={unsignedTx} />
+    </TwoActionView>
   )
 }
 

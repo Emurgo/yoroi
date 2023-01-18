@@ -1,16 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {useNetInfo} from '@react-native-community/netinfo'
 import {useNavigation} from '@react-navigation/native'
 import BigNumber from 'bignumber.js'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, RefreshControl, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 
-import {Banner, Button, Modal, OfflineBanner, StatusBar} from '../components'
-import {useBalances, useUtxos} from '../hooks'
+import {Banner, Button, Modal, StatusBar} from '../components'
+import {useBalances, useIsOnline, useSync} from '../hooks'
 import globalMessages from '../i18n/global-messages'
 import {getCardanoBaseConfig} from '../legacy/config'
-import KeyStore from '../legacy/KeyStore'
 import {getCardanoNetworkConfigById} from '../legacy/networks'
 import {isEmptyString} from '../legacy/utils'
 import {useWalletNavigation} from '../navigation'
@@ -30,12 +28,11 @@ import {WithdrawStakingRewards} from './WithdrawStakingRewards'
 
 export const Dashboard = () => {
   const intl = useIntl()
-  const navigation = useNavigation()
+  const navigateTo = useNavigateTo()
 
   const wallet = useSelectedWallet()
-  const {isLoading: isFetchingUtxos, refetch: refetchUtxos} = useUtxos(wallet)
-  const netInfo = useNetInfo()
-  const isOnline = netInfo.type !== 'none' && netInfo.type !== 'unknown'
+  const {isLoading: isSyncing, sync} = useSync(wallet)
+  const isOnline = useIsOnline(wallet)
 
   const balances = useBalances(wallet)
   const primaryAmount = Amounts.getAmount(balances, '')
@@ -50,8 +47,7 @@ export const Dashboard = () => {
       <StatusBar type="dark" />
 
       <View style={styles.container}>
-        <OfflineBanner />
-        {isOnline && error && <SyncErrorBanner showRefresh={!(isLoading || isFetchingUtxos)} />}
+        {isOnline && error && <SyncErrorBanner showRefresh={!(isLoading || isSyncing)} />}
 
         <ScrollView
           style={styles.scrollView}
@@ -59,7 +55,7 @@ export const Dashboard = () => {
           refreshControl={
             <RefreshControl
               onRefresh={() => {
-                refetchUtxos()
+                sync()
                 refetchStakingInfo()
               }}
               refreshing={false}
@@ -103,20 +99,7 @@ export const Dashboard = () => {
 
         <Actions>
           <Button
-            onPress={() => {
-              navigation.navigate('app-root', {
-                screen: 'main-wallet-routes',
-                params: {
-                  screen: 'staking-dashboard',
-                  params: {
-                    screen: 'staking-center',
-                    params: {
-                      screen: 'staking-center-main',
-                    },
-                  },
-                },
-              })
-            }}
+            onPress={navigateTo.stakingCenter}
             title={intl.formatMessage(messages.stakingCenterButton)}
             disabled={wallet.isReadOnly}
             shelleyTheme
@@ -130,7 +113,6 @@ export const Dashboard = () => {
         <Modal visible={showWithdrawalDialog} onRequestClose={() => setShowWithdrawalDialog(false)} showCloseIcon>
           <WithdrawStakingRewards
             wallet={wallet}
-            storage={KeyStore}
             onSuccess={() => resetToTxHistory()}
             onCancel={() => setShowWithdrawalDialog(false)}
           />
@@ -138,6 +120,27 @@ export const Dashboard = () => {
       )}
     </View>
   )
+}
+
+const useNavigateTo = () => {
+  const navigation = useNavigation()
+
+  return {
+    stakingCenter: () => {
+      navigation.navigate('app-root', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'staking-dashboard',
+          params: {
+            screen: 'staking-center',
+            params: {
+              screen: 'staking-center-main',
+            },
+          },
+        },
+      })
+    },
+  }
 }
 
 const Row = ({style, ...props}: ViewProps) => <View {...props} style={[style, styles.row]} />

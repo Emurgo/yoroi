@@ -148,7 +148,7 @@ describe('Happy paths', () => {
     })
 
     it(`Intrawallet transaction, ${NORMAL_15_WORD_WALLET.name} wallet, token`, async () => {
-      const tokenName = 'tSUNDAE'
+      const tokenName = 'wDOGE'
       await openWallet(NORMAL_15_WORD_WALLET.name)
       const latestTxTime = await getLatestTxTime()
       await checkTokenInAssets(tokenName)

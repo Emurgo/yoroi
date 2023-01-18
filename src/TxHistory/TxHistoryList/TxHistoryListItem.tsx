@@ -4,11 +4,10 @@ import {BigNumber} from 'bignumber.js'
 import _, {fromPairs} from 'lodash'
 import React from 'react'
 import {defineMessages, MessageDescriptor, useIntl} from 'react-intl'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 
-import {Text} from '../../components'
+import {Spacer, Text} from '../../components'
 import {Icon} from '../../components/Icon'
-import {useTokenInfo} from '../../hooks'
 import {
   ASSET_DENOMINATION,
   formatTimeToSeconds,
@@ -21,28 +20,8 @@ import {isEmptyString} from '../../legacy/utils'
 import {TxHistoryRouteNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
-import {MultiToken} from '../../yoroi-wallets'
+import {MultiToken, YoroiWallet} from '../../yoroi-wallets'
 import {IOData, TransactionAssurance, TransactionDirection, TransactionInfo} from '../../yoroi-wallets/types'
-
-const filtersTxIO = (address: string) => {
-  const isMyReceive = (extAddrIdx) => extAddrIdx[address] != null
-  const isMyChange = (intAddrIdx) => intAddrIdx[address] != null
-  const isMyAddress = (extAddrIdx, intAddrIdx) => isMyReceive(extAddrIdx) || isMyChange(intAddrIdx)
-  return {
-    isMyReceive,
-    isMyChange,
-    isMyAddress,
-  }
-}
-
-const getTxIOMyWallet = (txIO: Array<IOData>, extAddrIdx, intAddrIdx) => {
-  const io = _.uniq(txIO).map(({address, assets}) => ({
-    address,
-    assets,
-  }))
-  const filtered = io.filter(({address}) => filtersTxIO(address).isMyAddress(extAddrIdx, intAddrIdx))
-  return filtered ?? []
-}
 
 type Props = {
   transaction: TransactionInfo
@@ -69,11 +48,6 @@ export const TxHistoryListItem = ({transaction}: Props) => {
   const amountAsMT = MultiToken.fromArray(transaction.amount)
   const amount: BigNumber = amountAsMT.getDefault()
 
-  const tokenInfo = useTokenInfo({wallet, tokenId: ''})
-  // if we don't have a symbol for this asset, default to ticker first and
-  // then to identifier
-  const assetSymbol = getAssetDenominationOrId(tokenInfo, ASSET_DENOMINATION.SYMBOL)
-
   const amountToDisplay = isEmptyString(fee?.amount) ? amount : amount.plus(new BigNumber(fee?.amount ?? 0))
   const amountStyle = amountToDisplay.eq(0)
     ? styles.neutralAmount
@@ -87,61 +61,77 @@ export const TxHistoryListItem = ({transaction}: Props) => {
   const totalAssets = outputsToMyWallet.reduce((acc, {assets}) => acc + Number(assets.length), 0)
 
   return (
-    <View removeClippedSubviews style={styles.wrapper}>
-      <TouchableOpacity onPress={showDetails} activeOpacity={0.5} testID="txHistoryListItem">
-        <View style={[styles.item, {backgroundColor: rootBgColor}]}>
-          <View style={styles.iconRoot}>
-            <Icon.Direction transaction={transaction} />
-          </View>
-          <View style={styles.transactionRoot}>
-            <View style={styles.row}>
-              <Text small secondary={isPending} testID="transactionDirection">
-                {strings.direction(transaction.direction as any)}
-              </Text>
+    <TouchableOpacity
+      onPress={showDetails}
+      activeOpacity={0.5}
+      testID="txHistoryListItem"
+      style={[styles.item, {backgroundColor: rootBgColor}]}
+    >
+      <Left>
+        <Icon.Direction transaction={transaction} />
+      </Left>
 
-              {transaction.amount.length > 0 ? (
-                <View style={styles.amount} testID="transactionAmount">
-                  <Text style={amountStyle} secondary={isPending}>
-                    {formatTokenInteger(amountToDisplay, tokenInfo)}
-                  </Text>
+      <Middle>
+        <Text small secondary={isPending} testID="transactionDirection">
+          {strings.direction(transaction.direction as any)}
+        </Text>
 
-                  <Text small style={amountStyle} secondary={isPending}>
-                    {formatTokenFractional(amountToDisplay, tokenInfo)}
-                  </Text>
+        <Spacer height={4} />
 
-                  <Text style={amountStyle}>{`${utfSymbols.NBSP}${assetSymbol}`}</Text>
-                </View>
-              ) : (
-                <Text style={amountStyle}>- -</Text>
-              )}
-            </View>
+        <Text secondary small testID="submittedAtText">
+          {submittedAt}
+        </Text>
+      </Middle>
 
-            {totalAssets !== 0 && (
-              <View style={styles.row}>
-                <Text secondary small testID="submittedAtText">
-                  {submittedAt}
-                </Text>
+      <Right>
+        {transaction.amount.length > 0 ? (
+          <Amount wallet={wallet} transaction={transaction} />
+        ) : (
+          <Text style={amountStyle}>- -</Text>
+        )}
 
-                <Text testID="totalAssetsText">{strings.assets(totalAssets)}</Text>
-              </View>
-            )}
+        {totalAssets !== 0 && (
+          <Row>
+            <Text testID="totalAssetsText">{strings.assets(totalAssets)}</Text>
+          </Row>
+        )}
+      </Right>
+    </TouchableOpacity>
+  )
+}
 
-            <View style={styles.last}>
-              <Text secondary small testID="submittedAtText">
-                {totalAssets === 0 && submittedAt}
-              </Text>
-            </View>
-          </View>
-        </View>
-      </TouchableOpacity>
+const Row = ({style, ...props}: ViewProps) => <View style={[style, {flexDirection: 'row'}]} {...props} />
+const Left = ({style, ...props}: ViewProps) => <View style={[style, {padding: 4}]} {...props} />
+const Middle = ({style, ...props}: ViewProps) => (
+  <View style={[style, {flex: 1, justifyContent: 'center', padding: 4}]} {...props} />
+)
+const Right = ({style, ...props}: ViewProps) => <View style={[style, {padding: 4}]} {...props} />
+const Amount = ({wallet, transaction}: {wallet: YoroiWallet; transaction: TransactionInfo}) => {
+  const amountAsMT = MultiToken.fromArray(transaction.amount)
+  const amount: BigNumber = amountAsMT.getDefault()
+  const fee = transaction.fee ? transaction.fee[0] : null
+  const amountToDisplay = isEmptyString(fee?.amount) ? amount : amount.plus(new BigNumber(fee?.amount ?? 0))
+  const style = amountToDisplay.eq(0)
+    ? styles.neutralAmount
+    : amountToDisplay.gte(0)
+    ? styles.positiveAmount
+    : styles.negativeAmount
+  const ticker = getAssetDenominationOrId(wallet.primaryToken, ASSET_DENOMINATION.SYMBOL)
+
+  return (
+    <View style={styles.amount} testID="transactionAmount">
+      <Text style={style} secondary={transaction.assurance === 'PENDING'}>
+        <Text>{formatTokenInteger(amount, wallet.primaryToken)}</Text>
+
+        <Text small>{formatTokenFractional(amount, wallet.primaryToken)}</Text>
+      </Text>
+
+      <Text style={style}>{`${utfSymbols.NBSP}${ticker}`}</Text>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  wrapper: {
-    overflow: 'hidden',
-  },
   item: {
     flex: 1,
     flexDirection: 'row',
@@ -152,26 +142,12 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.08,
     shadowColor: '#181a1e',
     backgroundColor: '#fff',
-    marginBottom: 16,
     paddingHorizontal: 12,
     paddingVertical: 12,
-    justifyContent: 'center',
-    marginHorizontal: 16,
-  },
-  last: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 3,
   },
   amount: {
+    flex: 1,
     flexDirection: 'row',
-    alignItems: 'flex-end',
   },
   positiveAmount: {
     color: COLORS.POSITIVE_AMOUNT,
@@ -181,12 +157,6 @@ const styles = StyleSheet.create({
   },
   neutralAmount: {
     color: COLORS.BLACK,
-  },
-  iconRoot: {
-    paddingRight: 8,
-  },
-  transactionRoot: {
-    flex: 14,
   },
 })
 
@@ -217,6 +187,26 @@ const messages = defineMessages({
     description: 'The number of assets different assets, not the amount',
   },
 })
+
+const filtersTxIO = (address: string) => {
+  const isMyReceive = (extAddrIdx) => extAddrIdx[address] != null
+  const isMyChange = (intAddrIdx) => intAddrIdx[address] != null
+  const isMyAddress = (extAddrIdx, intAddrIdx) => isMyReceive(extAddrIdx) || isMyChange(intAddrIdx)
+  return {
+    isMyReceive,
+    isMyChange,
+    isMyAddress,
+  }
+}
+
+const getTxIOMyWallet = (txIO: Array<IOData>, extAddrIdx, intAddrIdx) => {
+  const io = _.uniq(txIO).map(({address, assets}) => ({
+    address,
+    assets,
+  }))
+  const filtered = io.filter(({address}) => filtersTxIO(address).isMyAddress(extAddrIdx, intAddrIdx))
+  return filtered ?? []
+}
 
 const directionMessages: Record<TransactionDirection, MessageDescriptor> = Object.freeze({
   SENT: messages.transactionTypeSent,

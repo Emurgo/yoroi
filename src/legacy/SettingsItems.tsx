@@ -3,9 +3,24 @@ import React from 'react'
 import {Image, StyleSheet, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 
 import chevronRight from '../assets/img/chevron_right.png'
-import {Spacer, Text} from '../components'
+import {Text} from '../components'
 import {SettingsRouteNavigation, SettingsStackRoutes} from '../navigation'
 import {COLORS} from '../theme'
+
+const Touchable = (props: TouchableOpacityProps) => <TouchableOpacity {...props} activeOpacity={0.5} />
+
+type NavigateToProps = {
+  to: keyof SettingsStackRoutes
+  navigation: SettingsRouteNavigation
+  children: React.ReactNode
+  disabled?: boolean
+}
+
+const NavigateTo = ({navigation, to, ...props}: NavigateToProps) => {
+  // https://github.com/react-navigation/react-navigation/issues/10802
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return <Touchable onPress={() => navigation.navigate(to as any)} {...props} />
+}
 
 type SettingsSectionProps = {
   title?: string
@@ -13,20 +28,14 @@ type SettingsSectionProps = {
 }
 
 export const SettingsSection = ({title, children}: SettingsSectionProps) => (
-  <>
-    <Spacer height={16} />
-    <View>
-      {title != null && (
-        <>
-          <Text small secondary style={styles.sectionTitle}>
-            {title}
-          </Text>
-          <Spacer height={5} />
-        </>
-      )}
-      <View style={styles.sectionContent}>{children}</View>
-    </View>
-  </>
+  <View style={styles.section}>
+    {title != null && (
+      <Text small secondary style={styles.sectionTitle}>
+        {title}
+      </Text>
+    )}
+    <View style={styles.sectionContent}>{children}</View>
+  </View>
 )
 
 type SettingsItemProps = {
@@ -86,19 +95,6 @@ export const PressableSettingsItem = ({label, onPress, disabled}: PressableSetti
   </Touchable>
 )
 
-const Touchable = (props: TouchableOpacityProps) => <TouchableOpacity {...props} activeOpacity={0.5} />
-
-type NavigateToProps = {
-  to: keyof SettingsStackRoutes
-  navigation: SettingsRouteNavigation
-  children: React.ReactNode
-  disabled?: boolean
-}
-
-const NavigateTo = ({navigation, to, ...props}: NavigateToProps) => {
-  return <Touchable onPress={() => navigation.navigate(to)} {...props} />
-}
-
 const styles = StyleSheet.create({
   item: {
     flexDirection: 'row',
@@ -112,6 +108,9 @@ const styles = StyleSheet.create({
   disabled: {
     color: COLORS.DISABLED,
   },
+  section: {
+    marginTop: 16,
+  },
   sectionContent: {
     marginHorizontal: 16,
     elevation: 1,
@@ -123,6 +122,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   sectionTitle: {
+    marginBottom: 5,
     paddingHorizontal: 28,
   },
 })

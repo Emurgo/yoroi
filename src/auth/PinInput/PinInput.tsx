@@ -14,6 +14,7 @@ type Props = {
   onDone: (pin: string) => void
   pinMaxLength: number
   enabled?: boolean
+  onGoBack?: () => void
 }
 
 export type PinInputRef = {
@@ -21,7 +22,7 @@ export type PinInputRef = {
 }
 
 export const PinInput = React.forwardRef<PinInputRef, Props>((props, ref) => {
-  const {enabled = true, pinMaxLength, title, subtitles = [], onDone} = props
+  const {enabled = true, pinMaxLength, title, subtitles = [], onDone, onGoBack} = props
 
   const [pin, setPin] = React.useState('')
 
@@ -34,6 +35,7 @@ export const PinInput = React.forwardRef<PinInputRef, Props>((props, ref) => {
   const onKeyDown = (value: string) => {
     if (!enabled) return
     if (value === BACKSPACE) {
+      if (pin.length === 0) onGoBack?.()
       setPin(pin.substring(0, pin.length - 1))
       return
     }

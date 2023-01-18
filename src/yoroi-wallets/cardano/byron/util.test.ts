@@ -19,8 +19,8 @@ const externalAddresses = [
 test('Can generate external addresses', async () => {
   expect.assertions(1)
 
-  const masterKey = await getMasterKeyFromMnemonic(mnemonic)
-  const account = await getAccountFromMasterKey(masterKey, CONFIG.NUMBERS.ACCOUNT_INDEX)
+  const rootKey = await getMasterKeyFromMnemonic(mnemonic)
+  const account = await getAccountFromMasterKey(rootKey, CONFIG.NUMBERS.ACCOUNT_INDEX)
   const addresses = await getExternalAddresses(account, [0, 1], BYRON_PROTOCOL_MAGIC)
 
   expect(addresses).toEqual(externalAddresses)

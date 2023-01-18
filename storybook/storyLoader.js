@@ -4,8 +4,6 @@
 // https://github.com/elderfo/react-native-storybook-loader.git
 
 function loadStories() {
-	require('../src/BiometricAuth/BiometricAuthScreen.stories');
-	require('../src/BiometricAuth/FingerprintScreenBase/FingerprintScreenBase.stories');
 	require('../src/Catalyst/VotingBanner.stories');
 	require('../src/Catalyst/VotingRegistration.stories');
 	require('../src/Dashboard/Dashboard.stories');
@@ -21,7 +19,6 @@ function loadStories() {
 	require('../src/HW/LedgerConnect/DeviceItem/DeviceItem.stories');
 	require('../src/HW/LedgerConnect/LedgerConnect.stories');
 	require('../src/HW/LedgerTransportSwitchModal/LedgerTransportSwitchModal.stories');
-	require('../src/MaintenanceScreen.stories');
 	require('../src/Menu/Menu.stories');
 	require('../src/Receive/AddressModal.stories');
 	require('../src/Receive/Addresses.stories');
@@ -33,12 +30,12 @@ function loadStories() {
 	require('../src/Send/SendScreen/SendScreen.stories');
 	require('../src/Settings/About/About.stories');
 	require('../src/Settings/ApplicationSettings/ApplicationSettingsScreen.stories');
-	require('../src/Settings/BiometricsLink/BiometricsLinkScreen.stories');
 	require('../src/Settings/ChangeLanguage/ChangeLanguageScreen.stories');
 	require('../src/Settings/ChangePassword/ChangePasswordScreen.stories');
 	require('../src/Settings/ChangeWalletName/ChangeWalletName.stories');
 	require('../src/Settings/Currency/ChangeCurrencyScreen.stories');
 	require('../src/Settings/EasyConfirmation/EasyConfirmationScreen.stories');
+	require('../src/Settings/EnableLoginWithOs/EnableLoginWithOsScreen.stories');
 	require('../src/Settings/RemoveWallet/RemoveWalletScreen.stories');
 	require('../src/Settings/Support/SupportScreen.stories');
 	require('../src/Settings/TermsOfService/TermsOfServiceScreen.stories');
@@ -78,6 +75,8 @@ function loadStories() {
 	require('../src/auth/CheckPinInput/CheckPinInput.stories');
 	require('../src/auth/CreatePinInput/CreatePinInput.stories');
 	require('../src/auth/CreatePinScreen/CreatePinScreen.stories');
+	require('../src/auth/OsAuthScreen/OsAuthScreen.stories');
+	require('../src/auth/OsLoginScreen/OsLoginScreen.stories');
 	require('../src/auth/PinInput/PinInput.stories');
 	require('../src/auth/PinLoginScreen/PinLoginScreen.stories');
 	require('../src/auth/backgroundTimeout.stories');
@@ -94,6 +93,7 @@ function loadStories() {
 	require('../src/components/LanguagePicker/LanguagePicker.stories');
 	require('../src/components/LanguagePicker/LanguagePickerWarning.stories');
 	require('../src/components/Link/Link.stories');
+	require('../src/components/LoadingOverlay/LoadingOverlay.stories');
 	require('../src/components/Modal/Modal.stories');
 	require('../src/components/StandardModal/StandardModal.stories');
 	require('../src/components/TextInput/TextInput.stories');
@@ -104,8 +104,6 @@ function loadStories() {
 }
 
 const stories = [
-	'../src/BiometricAuth/BiometricAuthScreen.stories',
-	'../src/BiometricAuth/FingerprintScreenBase/FingerprintScreenBase.stories',
 	'../src/Catalyst/VotingBanner.stories',
 	'../src/Catalyst/VotingRegistration.stories',
 	'../src/Dashboard/Dashboard.stories',
@@ -121,7 +119,6 @@ const stories = [
 	'../src/HW/LedgerConnect/DeviceItem/DeviceItem.stories',
 	'../src/HW/LedgerConnect/LedgerConnect.stories',
 	'../src/HW/LedgerTransportSwitchModal/LedgerTransportSwitchModal.stories',
-	'../src/MaintenanceScreen.stories',
 	'../src/Menu/Menu.stories',
 	'../src/Receive/AddressModal.stories',
 	'../src/Receive/Addresses.stories',
@@ -133,12 +130,12 @@ const stories = [
 	'../src/Send/SendScreen/SendScreen.stories',
 	'../src/Settings/About/About.stories',
 	'../src/Settings/ApplicationSettings/ApplicationSettingsScreen.stories',
-	'../src/Settings/BiometricsLink/BiometricsLinkScreen.stories',
 	'../src/Settings/ChangeLanguage/ChangeLanguageScreen.stories',
 	'../src/Settings/ChangePassword/ChangePasswordScreen.stories',
 	'../src/Settings/ChangeWalletName/ChangeWalletName.stories',
 	'../src/Settings/Currency/ChangeCurrencyScreen.stories',
 	'../src/Settings/EasyConfirmation/EasyConfirmationScreen.stories',
+	'../src/Settings/EnableLoginWithOs/EnableLoginWithOsScreen.stories',
 	'../src/Settings/RemoveWallet/RemoveWalletScreen.stories',
 	'../src/Settings/Support/SupportScreen.stories',
 	'../src/Settings/TermsOfService/TermsOfServiceScreen.stories',
@@ -178,6 +175,8 @@ const stories = [
 	'../src/auth/CheckPinInput/CheckPinInput.stories',
 	'../src/auth/CreatePinInput/CreatePinInput.stories',
 	'../src/auth/CreatePinScreen/CreatePinScreen.stories',
+	'../src/auth/OsAuthScreen/OsAuthScreen.stories',
+	'../src/auth/OsLoginScreen/OsLoginScreen.stories',
 	'../src/auth/PinInput/PinInput.stories',
 	'../src/auth/PinLoginScreen/PinLoginScreen.stories',
 	'../src/auth/backgroundTimeout.stories',
@@ -194,6 +193,7 @@ const stories = [
 	'../src/components/LanguagePicker/LanguagePicker.stories',
 	'../src/components/LanguagePicker/LanguagePickerWarning.stories',
 	'../src/components/Link/Link.stories',
+	'../src/components/LoadingOverlay/LoadingOverlay.stories',
 	'../src/components/Modal/Modal.stories',
 	'../src/components/StandardModal/StandardModal.stories',
 	'../src/components/TextInput/TextInput.stories',

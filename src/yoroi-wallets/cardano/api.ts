@@ -19,8 +19,6 @@ import type {
   TipStatusResponse,
   TokenInfoRequest,
   TokenInfoResponse,
-  TxBodiesRequest,
-  TxBodiesResponse,
   TxHistoryRequest,
   TxStatusRequest,
   TxStatusResponse,
@@ -31,8 +29,8 @@ type Addresses = Array<string>
 export const checkServerStatus = (config: BackendConfig): Promise<ServerStatus> =>
   fetchDefault('status', null, config, 'GET') as any
 
-export const getTipStatus = async (config: BackendConfig): Promise<TipStatusResponse> =>
-  fetchDefault('v2/tipStatus', null, config, 'GET') as unknown as TipStatusResponse
+export const getTipStatus = (config: BackendConfig): Promise<TipStatusResponse> =>
+  fetchDefault('v2/tipStatus', null, config, 'GET') as unknown as Promise<TipStatusResponse>
 
 export const fetchNewTxHistory = async (
   request: TxHistoryRequest,
@@ -81,10 +79,6 @@ export const bulkFetchUTXOsForAddresses = async (
 
 export const submitTransaction = (signedTx: string, config: BackendConfig) => {
   return fetchDefault('txs/signed', {signedTx}, config)
-}
-
-export const getTxsBodiesForUTXOs = (request: TxBodiesRequest, config: BackendConfig): Promise<TxBodiesResponse> => {
-  return fetchDefault('txs/txBodies', request, config)
 }
 
 export const getTransactions = (

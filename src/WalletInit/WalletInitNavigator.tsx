@@ -69,16 +69,16 @@ export const WalletInitNavigator = () => {
         options={{title: strings.saveReadOnlyWalletTitle}}
       />
 
-      <Stack.Screen // prettier-ignore
+      <Stack.Screen //
         name="check-nano-x"
         component={CheckNanoXScreen}
         options={{title: strings.checkNanoXTitle}}
       />
 
-      <Stack.Screen // prettier-ignore
+      <Stack.Screen //
         name="connect-nano-x"
         options={{title: strings.connectNanoXTitle}}
-        component={ConnectNanoXScreen}
+        component={ConnectNanoXScreenWrapper}
       />
 
       <Stack.Screen
@@ -89,8 +89,8 @@ export const WalletInitNavigator = () => {
         }}
       />
 
-      <Stack.Screen // prettier-ignore
-        name="mnemoinc-show"
+      <Stack.Screen //
+        name="mnemonic-show"
         component={MnemonicShowScreen}
         options={{title: strings.mnemonicShowTitle}}
       />
@@ -115,6 +115,8 @@ export const WalletInitNavigator = () => {
     </Stack.Navigator>
   )
 }
+
+const ConnectNanoXScreenWrapper = () => <ConnectNanoXScreen />
 
 const messages = defineMessages({
   addWalletTitle: {

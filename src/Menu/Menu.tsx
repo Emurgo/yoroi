@@ -8,7 +8,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import SupportImage from '../assets/img/icon/shape.png'
 import {useCanVote} from '../Catalyst/hooks'
 import {InsufficientFundsModal} from '../Catalyst/InsufficientFundsModal'
-import {Hr, Icon, Spacer, Text} from '../components'
+import {Boundary, Hr, Icon, Spacer, Text} from '../components'
 import {usePrefetchStakingInfo} from '../Dashboard/StakePoolInfos'
 import {defaultStackNavigationOptionsV2, useWalletNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
@@ -18,8 +18,6 @@ const MenuStack = createStackNavigator()
 
 export const MenuNavigator = () => {
   const strings = useStrings()
-  const wallet = useSelectedWallet()
-  usePrefetchStakingInfo(wallet)
 
   return (
     <MenuStack.Navigator
@@ -44,17 +42,19 @@ export const Menu = () => {
       <ScrollView contentContainerStyle={styles.scrollViewContent} bounces={false}>
         <AppSettings //
           label={strings.appSettings}
-          onPress={navigateTo.appSettings}
+          onPress={navigateTo.settings}
           left={<Icon.Gear size={24} color={lightPalette.gray['600']} />}
         />
 
         <Hr />
 
-        <Catalyst //
-          label={strings.catalystVoting}
-          onPress={navigateTo.catalystVoting}
-          left={<Icon.Catalyst size={24} color={lightPalette.gray['600']} />}
-        />
+        <Boundary loading={{size: 'small', style: {padding: 16}}} error={{size: 'inline'}}>
+          <Catalyst //
+            label={strings.catalystVoting}
+            onPress={navigateTo.catalystVoting}
+            left={<Icon.Catalyst size={24} color={lightPalette.gray['600']} />}
+          />
+        </Boundary>
 
         <Hr />
 
@@ -99,15 +99,17 @@ const Item = ({
   label,
   left,
   right = null,
+  disabled = false,
   onPress,
 }: {
   label: string
   left: React.ReactElement
   right?: React.ReactElement | null
+  disabled?: boolean
   onPress: () => void
 }) => {
   return (
-    <TouchableOpacity onPress={onPress} style={styles.item}>
+    <TouchableOpacity onPress={onPress} style={styles.item} disabled={disabled}>
       {left}
       <Spacer width={12} />
       <Text style={{fontFamily: 'Rubik-Medium', fontSize: 16, lineHeight: 24, color: lightPalette.gray['900']}}>
@@ -124,7 +126,7 @@ const Item = ({
 const KnowledgeBase = Item
 const Catalyst = ({label, left, onPress}: {label: string; left: React.ReactElement; onPress: () => void}) => {
   const wallet = useSelectedWallet()
-  const {sufficientFunds} = useCanVote(wallet)
+  const {canVote, sufficientFunds} = useCanVote(wallet)
 
   const [showInsufficientFundsModal, setShowInsufficientFundsModal] = React.useState(false)
 
@@ -134,6 +136,7 @@ const Catalyst = ({label, left, onPress}: {label: string; left: React.ReactEleme
         label={label}
         onPress={() => (sufficientFunds ? onPress() : setShowInsufficientFundsModal(true))}
         left={left}
+        disabled={!canVote}
       />
 
       <InsufficientFundsModal
@@ -150,18 +153,23 @@ const SUPPORT_TICKET_LINK = 'https://emurgohelpdesk.zendesk.com/hc/en-us/request
 const KNOWLEDGE_BASE_LINK = 'https://emurgohelpdesk.zendesk.com/hc/en-us/categories/4412619927695-Yoroi'
 
 const useNavigateTo = () => {
-  const {navigation, navigateToAppSettings} = useWalletNavigation()
+  const {navigation, navigateToSettings} = useWalletNavigation()
+  const wallet = useSelectedWallet()
+  const prefetchStakingInfo = usePrefetchStakingInfo(wallet)
 
   return {
     allWallets: () => navigation.navigate('app-root', {screen: 'wallet-selection'}),
-    catalystVoting: () =>
+    catalystVoting: () => {
+      prefetchStakingInfo()
+
       navigation.navigate('app-root', {
         screen: 'voting-registration',
         params: {
           screen: 'download-catalyst',
         },
-      }),
-    appSettings: () => navigateToAppSettings(),
+      })
+    },
+    settings: () => navigateToSettings(),
     support: () => Linking.openURL(SUPPORT_TICKET_LINK),
     knowledgeBase: () => Linking.openURL(KNOWLEDGE_BASE_LINK),
   }

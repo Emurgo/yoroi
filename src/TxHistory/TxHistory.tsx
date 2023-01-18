@@ -1,11 +1,10 @@
-import {useNetInfo} from '@react-native-community/netinfo'
 import {useFocusEffect} from '@react-navigation/native'
 import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {LayoutAnimation, StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import infoIcon from '../assets/img/icon/info-light-green.png'
-import {OfflineBanner, Spacer, StatusBar, Text} from '../components'
+import {Boundary, Spacer, StatusBar, Text} from '../components'
 import {useSync} from '../hooks'
 import {assetMessages, txLabels} from '../i18n/global-messages'
 import {isByron} from '../legacy/config'
@@ -16,21 +15,16 @@ import {AssetList} from './AssetList'
 import {BalanceBanner} from './BalanceBanner'
 import {CollapsibleHeader} from './CollapsibleHeader'
 import {LockedDeposit} from './LockedDeposit'
-import {SyncErrorBanner} from './SyncErrorBanner'
 import {TxHistoryList} from './TxHistoryList'
+import {useOnScroll} from './useOnScroll'
 import {WarningBanner} from './WarningBanner'
 
 type Tab = 'transactions' | 'assets'
 
 export const TxHistory = () => {
   const strings = useStrings()
-  const netInfo = useNetInfo()
-  const isOnline = netInfo.type !== 'none' && netInfo.type !== 'unknown'
   const wallet = useSelectedWallet()
-
   const [showWarning, setShowWarning] = useState(isByron(wallet.walletImplementationId))
-
-  const [expanded, setExpanded] = useState(true)
 
   const [activeTab, setActiveTab] = useState<Tab>('transactions')
   const onSelectTab = (tab: Tab) => {
@@ -38,20 +32,23 @@ export const TxHistory = () => {
     setActiveTab(tab)
   }
 
-  const {sync, isLoading, error} = useSync(wallet)
+  const {sync, isLoading} = useSync(wallet)
   useFocusEffect(React.useCallback(() => sync(), [sync]))
+
+  const [expanded, setExpanded] = useState(true)
+  const onScroll = useOnScroll({
+    onScrollUp: () => setExpanded(true),
+    onScrollDown: () => setExpanded(false),
+  })
 
   return (
     <View style={styles.scrollView}>
       <StatusBar type="light" />
 
       <View style={styles.container}>
-        <OfflineBanner />
-        <SyncErrorBanner showRefresh={!isLoading} isOpen={isOnline && !!error} />
-
         <CollapsibleHeader expanded={expanded}>
           <BalanceBanner />
-          <ActionsBanner />
+          <ActionsBanner disabled={isLoading} />
         </CollapsibleHeader>
 
         <Tabs>
@@ -94,21 +91,13 @@ export const TxHistory = () => {
                 style={styles.warningNoteStyles}
               />
             )}
-            <TxHistoryList
-              onScrollUp={() => setExpanded(true)}
-              onScrollDown={() => setExpanded(false)}
-              refreshing={isLoading}
-              onRefresh={() => sync()}
-            />
+            <TxHistoryList onScroll={onScroll} refreshing={isLoading} onRefresh={() => sync()} />
           </TabPanel>
 
           <TabPanel active={activeTab === 'assets'}>
-            <AssetList
-              onScrollUp={() => setExpanded(true)}
-              onScrollDown={() => setExpanded(false)}
-              refreshing={isLoading}
-              onRefresh={() => sync()}
-            />
+            <Boundary loading={{size: 'full'}}>
+              <AssetList onScroll={onScroll} refreshing={isLoading} onRefresh={() => sync()} />
+            </Boundary>
           </TabPanel>
         </TabPanels>
       </View>

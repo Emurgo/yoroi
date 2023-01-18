@@ -38,7 +38,7 @@ export const AssetSelectorScreen = () => {
     .sort(([, quantityA]: [TokenId, Quantity], [, quantityB]: [TokenId, Quantity]) =>
       Quantities.isGreaterThan(quantityA, quantityB) ? -1 : 1,
     )
-    .sort(([tokenId]: [TokenId, Quantity]) => (tokenId === wallet.defaultAsset.identifier ? -1 : 1)) // default first
+    .sort(([tokenId]: [TokenId, Quantity]) => (tokenId === wallet.primaryToken.identifier ? -1 : 1)) // default first
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={{flex: 1, backgroundColor: 'white'}}>

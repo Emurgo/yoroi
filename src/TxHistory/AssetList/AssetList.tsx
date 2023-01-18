@@ -2,9 +2,8 @@ import BigNumber from 'bignumber.js'
 import React from 'react'
 import {defineMessages} from 'react-intl'
 import {useIntl} from 'react-intl'
-import {Alert, FlatList, FlatListProps, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {Alert, FlatList, FlatListProps, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 import {Avatar} from 'react-native-paper'
-import {SafeAreaView} from 'react-native-safe-area-context'
 
 import AdaImage from '../../assets/img/asset_ada.png'
 import NoImage from '../../assets/img/asset_no_image.png'
@@ -17,17 +16,15 @@ import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {YoroiAmount} from '../../yoroi-wallets/types'
 import {Amounts, Quantities} from '../../yoroi-wallets/utils'
-import {useOnScroll} from '../useOnScroll'
 import {ActionsBanner} from './ActionsBanner'
 
 type ListProps = FlatListProps<YoroiAmount>
 type Props = Partial<ListProps> & {
-  onScrollUp: ListProps['onScroll']
-  onScrollDown: ListProps['onScroll']
+  onScroll: ListProps['onScroll']
   refreshing: boolean
   onRefresh: () => void
 }
-export const AssetList = ({onScrollUp, onScrollDown, ...props}: Props) => {
+export const AssetList = (props: Props) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const balances = useBalances(wallet)
@@ -40,10 +37,8 @@ export const AssetList = ({onScrollUp, onScrollDown, ...props}: Props) => {
   const handleOnPressTokens = () => Alert.alert(strings.soon, strings.soon)
   const handleSearch = () => Alert.alert(strings.soon, strings.soon)
 
-  const onScroll = useOnScroll({onScrollUp, onScrollDown})
-
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.listRoot} testID="assetList">
+    <View style={styles.assetList} testID="assetList">
       <ActionsBanner
         tokensLabel={strings.tokens(orderedTokens.length)}
         nftsLabel={strings.nfts(0)}
@@ -54,18 +49,17 @@ export const AssetList = ({onScrollUp, onScrollDown, ...props}: Props) => {
 
       <FlatList
         {...props}
-        {...onScroll}
         data={orderedTokens}
         renderItem={({item: amount}) => (
-          <Boundary loading={{fallbackProps: {size: 'small'}}}>
+          <Boundary loading={{size: 'small'}}>
             <AssetItem amount={amount} />
           </Boundary>
         )}
         ItemSeparatorComponent={() => <Spacer height={16} />}
-        contentContainerStyle={{paddingTop: 16, paddingHorizontal: 16}}
+        contentContainerStyle={{paddingTop: 16, paddingHorizontal: 16, paddingBottom: 8}}
         keyExtractor={(item) => item.tokenId}
       />
-    </SafeAreaView>
+    </View>
   )
 }
 
@@ -79,36 +73,39 @@ const AssetItem = ({amount, onPress}: AssetItemProps) => {
   const tokenInfo = useTokenInfo({wallet, tokenId: amount.tokenId})
 
   return (
-    <TouchableOpacity onPress={onPress} testID="assetItem">
-      <View style={styles.tokenRoot}>
-        <View style={styles.tokenAvatar}>
-          <Icon source={tokenInfo.isDefault ? AdaImage : NoImage} />
-        </View>
+    <TouchableOpacity onPress={onPress} style={styles.button} testID="assetItem">
+      <Left>
+        <Icon source={tokenInfo.isDefault ? AdaImage : NoImage} />
+      </Left>
 
-        <View style={styles.tokenData}>
-          <Text numberOfLines={1} ellipsizeMode="middle" style={styles.tokenInfo} testID="tokenInfoText">
-            {getAssetDenominationOrId(tokenInfo)}
-          </Text>
-          <Text numberOfLines={1} ellipsizeMode="middle" style={styles.tokenName} testID="tokenFingerprintText">
-            {tokenInfo.isDefault ? '' : getTokenFingerprint(tokenInfo)}
-          </Text>
-        </View>
+      <Middle>
+        <Text numberOfLines={1} ellipsizeMode="middle" style={styles.tokenInfo} testID="tokenInfoText">
+          {getAssetDenominationOrId(tokenInfo)}
+        </Text>
 
-        <View>
-          <Text style={styles.tokenAmount} testID="tokenAmountText">
-            {formatTokenAmount(new BigNumber(amount.quantity), tokenInfo)}
-          </Text>
-        </View>
-      </View>
+        <Text numberOfLines={1} ellipsizeMode="middle" style={styles.tokenName} testID="tokenFingerprintText">
+          {tokenInfo.isDefault ? '' : getTokenFingerprint(tokenInfo)}
+        </Text>
+      </Middle>
+
+      <Right>
+        <Text style={styles.tokenAmount} testID="tokenAmountText">
+          {formatTokenAmount(new BigNumber(amount.quantity), tokenInfo)}
+        </Text>
+      </Right>
     </TouchableOpacity>
   )
 }
 
+const Left = ({style, ...props}: ViewProps) => <View style={[style, {padding: 4}]} {...props} />
+const Middle = ({style, ...props}: ViewProps) => (
+  <View style={[style, {flex: 1, justifyContent: 'center', padding: 4}]} {...props} />
+)
+const Right = ({style, ...props}: ViewProps) => <View style={[style, {padding: 4}]} {...props} />
+
 const styles = StyleSheet.create({
-  listRoot: {
-    flex: 1,
-  },
-  tokenRoot: {
+  assetList: {flex: 1},
+  button: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     borderRadius: 8,
@@ -120,13 +117,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     paddingHorizontal: 12,
     paddingVertical: 12,
-  },
-  tokenAvatar: {
-    padding: 4,
-  },
-  tokenData: {
-    flex: 1,
-    padding: 4,
   },
   tokenInfo: {
     color: COLORS.DARK_TEXT,

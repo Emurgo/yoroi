@@ -5,9 +5,9 @@ import {legacyWalletChecksum} from '..'
 import {getAccountFromMasterKey, getAddresses} from './util'
 
 export const generateByronPlateFromMnemonics = async (phrase: string, count: number): Promise<PlateResponse> => {
-  const masterKeyPtr = await generateWalletRootKey(phrase)
-  const masterKey = Buffer.from(await masterKeyPtr.asBytes()).toString('hex')
-  const account = await getAccountFromMasterKey(masterKey)
+  const rootKeyPtr = await generateWalletRootKey(phrase)
+  const rootKey = Buffer.from(await rootKeyPtr.asBytes()).toString('hex')
+  const account = await getAccountFromMasterKey(rootKey)
   const displayAddrType: AddressType = 'External'
 
   const accountPlate = legacyWalletChecksum(account.root_cached_key)

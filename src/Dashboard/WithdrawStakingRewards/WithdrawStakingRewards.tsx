@@ -6,20 +6,20 @@ import Markdown from 'react-native-easy-markdown'
 import {Boundary, DangerousAction, PleaseWaitView, Spacer} from '../../components'
 import {useWithdrawalTx} from '../../hooks'
 import globalMessages, {ledgerMessages} from '../../i18n/global-messages'
-import KeyStore from '../../legacy/KeyStore'
 import {theme} from '../../theme'
 import {YoroiWallet} from '../../yoroi-wallets'
 import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
+import {Quantities} from '../../yoroi-wallets/utils'
+import {useStakingInfo} from '../StakePoolInfos'
 import {ConfirmTx} from './ConfirmTx/ConfirmTx'
 
 type Props = {
   wallet: YoroiWallet
-  storage: typeof KeyStore
   onCancel: () => void
   onSuccess: () => void
 }
 
-export const WithdrawStakingRewards = ({wallet, storage, onSuccess, onCancel}: Props) => {
+export const WithdrawStakingRewards = ({wallet, onSuccess, onCancel}: Props) => {
   const strings = useStrings()
   const [state, setState] = React.useState<
     {step: 'form'; withdrawalTx: undefined} | {step: 'confirm'; withdrawalTx: YoroiUnsignedTx}
@@ -35,13 +35,7 @@ export const WithdrawStakingRewards = ({wallet, storage, onSuccess, onCancel}: P
 
       {state.step === 'confirm' && (
         <Route active={true}>
-          <ConfirmTx
-            wallet={wallet}
-            storage={storage}
-            unsignedTx={state.withdrawalTx}
-            onSuccess={onSuccess}
-            onCancel={onCancel}
-          />
+          <ConfirmTx wallet={wallet} unsignedTx={state.withdrawalTx} onSuccess={onSuccess} onCancel={onCancel} />
         </Route>
       )}
     </Boundary>
@@ -55,16 +49,25 @@ export const WithdrawalTxForm = ({
   wallet: YoroiWallet
   onDone: (withdrawalTx: YoroiUnsignedTx) => void
 }) => {
+  const {stakingInfo} = useStakingInfo(wallet, {suspense: true})
   const strings = useStrings()
-  const [deregister, setDeregister] = React.useState(false)
-  const {isLoading} = useWithdrawalTx({wallet, deregister}, {onSuccess: (withdrawalTx) => onDone(withdrawalTx)})
+  const [deregister, setDeregister] = React.useState<boolean>()
+  const {isLoading} = useWithdrawalTx(
+    {wallet, deregister},
+    {enabled: deregister != null, onSuccess: (withdrawalTx) => onDone(withdrawalTx)},
+  )
+
+  const hasRewards =
+    stakingInfo?.status === 'staked' //
+      ? Quantities.isGreaterThan(stakingInfo.rewards, '0')
+      : false
 
   return (
     <DangerousAction
       title={strings.warningModalTitle}
       alertBox={{content: [strings.warning1, strings.warning2, strings.warning3]}}
       primaryButton={{
-        disabled: isLoading,
+        disabled: !hasRewards || isLoading,
         label: strings.keepButton,
         onPress: () => setDeregister(false),
         testID: 'keepRegisteredButton',

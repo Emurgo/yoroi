@@ -1,9 +1,8 @@
-import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {QueryClient, QueryClientProvider} from 'react-query'
 
-import {mockWallet, mockYoroiTx} from '../../../storybook'
+import {mocks} from '../../../storybook'
 import {SelectedWalletProvider} from '../../SelectedWallet'
 import {StakingCenter} from './StakingCenter'
 
@@ -12,13 +11,9 @@ storiesOf('StakingCenter', module)
     <QueryClientProvider client={new QueryClient()}>
       <SelectedWalletProvider
         wallet={{
-          ...mockWallet,
+          ...mocks.wallet,
           networkId: 1,
-          createDelegationTx: async (...args) => {
-            action('createDelegationTx')(...args)
-
-            return mockYoroiTx
-          },
+          createDelegationTx: mocks.createDelegationTx.success,
         }}
       >
         <StakingCenter />
@@ -29,9 +24,9 @@ storiesOf('StakingCenter', module)
     <QueryClientProvider client={new QueryClient()}>
       <SelectedWalletProvider
         wallet={{
-          ...mockWallet,
+          ...mocks.wallet,
           networkId: 1,
-          createDelegationTx: async () => new Promise(() => undefined),
+          createDelegationTx: mocks.createDelegationTx.loading,
         }}
       >
         <StakingCenter />
@@ -42,9 +37,9 @@ storiesOf('StakingCenter', module)
     <QueryClientProvider client={new QueryClient()}>
       <SelectedWalletProvider
         wallet={{
-          ...mockWallet,
+          ...mocks.wallet,
           networkId: 1,
-          createDelegationTx: async () => Promise.reject(new Error('createDelegationTx: error message')),
+          createDelegationTx: mocks.createDelegationTx.error,
         }}
       >
         <StakingCenter />

@@ -1,25 +1,9 @@
-import KeyStore from '../../src/legacy/KeyStore'
-import storage from '../../src/legacy/storage'
+import {WalletEncryptedStorage} from '../../src/auth'
 
-export const mockKeyStore = (overrides?: {
-  getData?: typeof KeyStore.getData
-  storeData?: typeof KeyStore.storeData
-  deleteData?: typeof KeyStore.deleteData
-}) =>
-  ({
-    getData: async (_keyId, encryptionMethod, _message, password, _intl) => {
-      if (encryptionMethod === 'MASTER_PASSWORD' && password !== 'password') {
-        throw new Error('Invalid Password')
-      }
-
-      return 'masterkey'
-    },
-    storeData: async () => undefined,
-    deleteData: async () => undefined,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ...(overrides as any),
-  } as unknown as typeof KeyStore)
-
-export const mockStorage: typeof storage = {
-  ...storage,
+export const mockEncryptedStorage: WalletEncryptedStorage = {
+  rootKey: {
+    read: (password) => (password === 'password' ? Promise.resolve('') : Promise.reject(new Error('Invalid Password'))),
+    write: () => Promise.resolve(),
+    remove: () => Promise.resolve(true),
+  },
 }

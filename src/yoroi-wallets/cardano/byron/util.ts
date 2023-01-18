@@ -30,8 +30,8 @@ export const KNOWN_ERROR_MSG = {
  * returns a root key for HD wallets
  */
 export const getMasterKeyFromMnemonic = async (mnemonic: string) => {
-  const masterKeyPtr = await generateWalletRootKey(mnemonic)
-  return Buffer.from(await masterKeyPtr.asBytes()).toString('hex')
+  const rootKeyPtr = await generateWalletRootKey(mnemonic)
+  return Buffer.from(await rootKeyPtr.asBytes()).toString('hex')
 }
 
 /**
@@ -39,14 +39,12 @@ export const getMasterKeyFromMnemonic = async (mnemonic: string) => {
  * old CryptoAccount format
  */
 export const getAccountFromMasterKey = async (
-  masterKey: string,
+  rootKey: string,
   accountIndex: number = CONFIG.NUMBERS.ACCOUNT_INDEX,
 ): Promise<CryptoAccount> => {
-  const masterKeyPtr = await CardanoMobile.Bip32PrivateKey.fromBytes(Buffer.from(masterKey, 'hex'))
+  const rootKeyPtr = await CardanoMobile.Bip32PrivateKey.fromBytes(Buffer.from(rootKey, 'hex'))
   const accountKey = await (
-    await (
-      await masterKeyPtr.derive(CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.BIP44)
-    ).derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO)
+    await (await rootKeyPtr.derive(CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.BIP44)).derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO)
   ).derive(accountIndex + CONFIG.NUMBERS.HARD_DERIVATION_START)
   const accountPubKey = await accountKey.toPublic()
   // match old byron CryptoAccount type
@@ -87,8 +85,8 @@ export const getAddressesFromMnemonics = async (
   type: AddressType,
   indexes: Array<number>,
 ): Promise<Array<string>> => {
-  const masterKey = await getMasterKeyFromMnemonic(mnemonic)
-  const account = await getAccountFromMasterKey(masterKey)
+  const rootKey = await getMasterKeyFromMnemonic(mnemonic)
+  const account = await getAccountFromMasterKey(rootKey)
   return getAddresses(account, type, indexes)
 }
 

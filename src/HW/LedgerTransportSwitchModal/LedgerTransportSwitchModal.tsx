@@ -1,10 +1,12 @@
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Platform, ScrollView, StyleSheet, View} from 'react-native'
+import {Alert, Platform, ScrollView, StyleSheet, View} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
 import {Button, Modal, Text} from '../../components'
+import globalMessages from '../../i18n/global-messages'
 import {CONFIG} from '../../legacy/config'
+import {useLedgerPermissions} from '../../legacy/ledgerUtils'
 import {spacing} from '../../theme'
 
 type Props = {
@@ -24,16 +26,21 @@ const useIsUsbSupported = () => {
 }
 
 export const LedgerTransportSwitchView = ({onSelectUSB, onSelectBLE}: Props) => {
-  const intl = useIntl()
+  const strings = useStrings()
   const isUSBSupported = useIsUsbSupported()
+
+  const {request} = useLedgerPermissions({
+    onError: () => Alert.alert(strings.error, strings.bluetoothError),
+    onSuccess: onSelectBLE,
+  })
 
   const getUsbButtonTitle = (): string => {
     if (Platform.OS === 'ios') {
-      return intl.formatMessage(messages.usbButtonDisabled)
+      return strings.usbButtonDisabled
     } else if (!CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT || !isUSBSupported) {
-      return intl.formatMessage(messages.usbButtonNotSupported)
+      return strings.usbButtonNotSupported
     } else {
-      return intl.formatMessage(messages.usbButton)
+      return strings.usbButton
     }
   }
 
@@ -41,9 +48,9 @@ export const LedgerTransportSwitchView = ({onSelectUSB, onSelectBLE}: Props) => 
     <ScrollView style={styles.scrollView}>
       <View style={styles.content}>
         <View style={styles.heading}>
-          <Text style={styles.title}>{intl.formatMessage(messages.title)}</Text>
+          <Text style={styles.title}>{strings.title}</Text>
         </View>
-        <Text style={styles.paragraph}>{intl.formatMessage(messages.usbExplanation)}</Text>
+        <Text style={styles.paragraph}>{strings.usbExplanation}</Text>
         <Button
           block
           onPress={onSelectUSB}
@@ -52,11 +59,11 @@ export const LedgerTransportSwitchView = ({onSelectUSB, onSelectBLE}: Props) => 
           style={styles.button}
           testID="connectWithUSBButton"
         />
-        <Text style={styles.paragraph}>{intl.formatMessage(messages.bluetoothExplanation)}</Text>
+        <Text style={styles.paragraph}>{strings.bluetoothExplanation}</Text>
         <Button
           block
-          onPress={onSelectBLE}
-          title={intl.formatMessage(messages.bluetoothButton)}
+          onPress={() => request()}
+          title={strings.bluetoothButton}
           style={styles.button}
           testID="connectWithBLEButton"
         />
@@ -116,7 +123,27 @@ const messages = defineMessages({
     id: 'components.ledger.ledgertransportswitchmodal.bluetoothButton',
     defaultMessage: '!!!Connect with Bluetooth',
   },
+  bluetoothError: {
+    id: 'global.ledgerMessages.bluetoothDisabledError',
+    defaultMessage: '!!!Connect with Bluetooth',
+  },
 })
+
+const useStrings = () => {
+  const intl = useIntl()
+
+  return {
+    error: intl.formatMessage(globalMessages.error),
+    title: intl.formatMessage(messages.title),
+    usbExplanation: intl.formatMessage(messages.usbExplanation),
+    usbButton: intl.formatMessage(messages.usbButton),
+    usbButtonNotSupported: intl.formatMessage(messages.usbButtonNotSupported),
+    usbButtonDisabled: intl.formatMessage(messages.usbButtonDisabled),
+    bluetoothExplanation: intl.formatMessage(messages.bluetoothExplanation),
+    bluetoothButton: intl.formatMessage(messages.bluetoothButton),
+    bluetoothError: intl.formatMessage(messages.bluetoothError),
+  }
+}
 
 const styles = StyleSheet.create({
   scrollView: {

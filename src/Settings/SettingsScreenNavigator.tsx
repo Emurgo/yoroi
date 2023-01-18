@@ -3,28 +3,21 @@ import {useNavigation} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {useDispatch} from 'react-redux'
 
-import {ChangePinScreen, CreatePinScreen} from '../auth'
+import {ChangePinScreen} from '../auth'
+import {EnableLoginWithPin} from '../auth/EnableLoginWithPin'
+import {Boundary} from '../components'
 import globalMessages from '../i18n/global-messages'
-import {setEasyConfirmation, setSystemAuth} from '../legacy/actions'
-import {
-  defaultStackNavigationOptionsV2,
-  SettingsStackRoutes,
-  SettingsTabRoutes,
-  useWalletNavigation,
-} from '../navigation'
-import {useSelectedWalletMeta, useSetSelectedWalletMeta} from '../SelectedWallet'
+import {defaultStackNavigationOptionsV2, SettingsStackRoutes, SettingsTabRoutes} from '../navigation'
 import {lightPalette} from '../theme'
-import {useWalletManager} from '../WalletManager'
 import {About} from './About'
 import {ApplicationSettingsScreen} from './ApplicationSettings'
-import {BiometricsLinkScreen} from './BiometricsLink/'
 import {ChangeLanguageScreen} from './ChangeLanguage'
 import {ChangePasswordScreen} from './ChangePassword'
 import {ChangeWalletName} from './ChangeWalletName'
 import {ChangeCurrencyScreen} from './Currency/ChangeCurrencyScreen'
 import {DisableEasyConfirmationScreen, EnableEasyConfirmationScreen} from './EasyConfirmation'
+import {EnableLoginWithOsScreen} from './EnableLoginWithOs'
 import {RemoveWalletScreen} from './RemoveWallet'
 import {SupportScreen} from './Support'
 import {TermsOfServiceScreen} from './TermsOfService'
@@ -33,12 +26,6 @@ import {WalletSettingsScreen} from './WalletSettings'
 const Stack = createStackNavigator<SettingsStackRoutes>()
 export const SettingsScreenNavigator = () => {
   const strings = useStrings()
-  const walletManager = useWalletManager()
-  const navigation = useNavigation()
-  const {navigateToSettings} = useWalletNavigation()
-  const dispatch = useDispatch()
-  const setSelectedWalletMeta = useSetSelectedWalletMeta()
-  const walletMeta = useSelectedWalletMeta()
 
   return (
     <Stack.Navigator
@@ -80,8 +67,8 @@ export const SettingsScreenNavigator = () => {
       />
 
       <Stack.Screen //
-        name="fingerprint-link"
-        component={BiometricsLinkScreen}
+        name="enable-login-with-os"
+        component={EnableLoginWithOsScreenWrapper}
         options={{headerShown: false}}
       />
 
@@ -126,31 +113,18 @@ export const SettingsScreenNavigator = () => {
 
       <Stack.Screen //
         name="change-custom-pin"
-        options={{title: strings.changeCustomPinTitle}}
-      >
-        {() => <ChangePinScreen onDone={() => navigation.goBack()} />}
-      </Stack.Screen>
+        options={{
+          title: strings.changeCustomPinTitle,
+          headerStyle: defaultStackNavigationOptionsV2.headerStyle,
+        }}
+        component={ChangePinScreenWrapper}
+      />
 
-      <Stack.Screen //
-        name="setup-custom-pin"
+      <Stack.Screen
+        name="enable-login-with-pin"
         options={{title: strings.customPinTitle}}
-      >
-        {() => (
-          <CreatePinScreen
-            onDone={async () => {
-              await dispatch(setSystemAuth(false))
-              await walletManager.disableEasyConfirmation()
-              dispatch(setEasyConfirmation(false))
-              if (!walletMeta) throw new Error('No wallet meta')
-              setSelectedWalletMeta({
-                ...walletMeta,
-                isEasyConfirmationEnabled: false,
-              })
-              navigateToSettings()
-            }}
-          />
-        )}
-      </Stack.Screen>
+        component={EnableLoginWithPinWrapper}
+      />
     </Stack.Navigator>
   )
 }
@@ -172,6 +146,26 @@ const SettingsTabNavigator = () => {
       <Tab.Screen name="app-settings" component={ApplicationSettingsScreen} />
     </Tab.Navigator>
   )
+}
+
+const EnableLoginWithOsScreenWrapper = () => {
+  return (
+    <Boundary>
+      <EnableLoginWithOsScreen />
+    </Boundary>
+  )
+}
+
+const ChangePinScreenWrapper = () => {
+  const navigation = useNavigation()
+
+  return <ChangePinScreen onDone={navigation.goBack} />
+}
+
+const EnableLoginWithPinWrapper = () => {
+  const navigation = useNavigation()
+
+  return <EnableLoginWithPin onDone={navigation.goBack} />
 }
 
 const messages = defineMessages({

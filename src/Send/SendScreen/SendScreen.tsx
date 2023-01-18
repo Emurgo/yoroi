@@ -1,4 +1,3 @@
-import {useNetInfo} from '@react-native-community/netinfo'
 import {useNavigation} from '@react-navigation/native'
 import {BigNumber} from 'bignumber.js'
 import _ from 'lodash'
@@ -9,7 +8,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Checkbox, Spacer, StatusBar, Text, TextInput} from '../../components'
-import {useBalances, useHasPendingTx, useTokenInfo, useUtxos} from '../../hooks'
+import {useBalances, useHasPendingTx, useIsOnline, useTokenInfo, useUtxos} from '../../hooks'
 import {CONFIG} from '../../legacy/config'
 import {formatTokenAmount, getAssetDenominationOrId, truncateWithEllipsis} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
@@ -38,21 +37,20 @@ export const SendScreen = () => {
   const wallet = useSelectedWallet()
   const balances = useBalances(wallet)
 
-  const {utxos, isLoading, error} = useUtxos(wallet)
+  const utxos = useUtxos(wallet)
   const hasPendingTx = useHasPendingTx(wallet)
-  const netInfo = useNetInfo()
-  const isOnline = netInfo.type !== 'none' && netInfo.type !== 'unknown'
+  const isOnline = useIsOnline(wallet)
 
   const {tokenId, resetForm, receiverChanged, amountChanged, receiver, amount, sendAll, sendAllChanged} = useSend()
 
   const selectedAssetAvailableAmount = Amounts.getAmount(balances, tokenId).quantity
-  const defaultAssetAvailableAmount = Amounts.getAmount(balances, wallet.defaultAsset.identifier).quantity
+  const defaultAssetAvailableAmount = Amounts.getAmount(balances, wallet.primaryToken.identifier).quantity
 
   React.useEffect(() => {
-    if (wallet.defaultAsset.identifier !== tokenId && !Quantities.isGreaterThan(selectedAssetAvailableAmount, '0')) {
+    if (wallet.primaryToken.identifier !== tokenId && !Quantities.isGreaterThan(selectedAssetAvailableAmount, '0')) {
       resetForm()
     }
-  }, [wallet.defaultAsset.identifier, tokenId, resetForm, selectedAssetAvailableAmount])
+  }, [wallet.primaryToken.identifier, tokenId, resetForm, selectedAssetAvailableAmount])
 
   const [address, setAddress] = React.useState('')
   const [addressErrors, setAddressErrors] = React.useState<AddressValidationErrors>({addressIsRequired: true})
@@ -64,14 +62,11 @@ export const SendScreen = () => {
 
   const tokenInfo = useTokenInfo({wallet, tokenId})
   const assetDenomination = truncateWithEllipsis(getAssetDenominationOrId(tokenInfo), 20)
-  const amountErrorText = getAmountErrorText(intl, amountErrors, balanceErrors, wallet.defaultAsset)
+  const amountErrorText = getAmountErrorText(intl, amountErrors, balanceErrors, wallet.primaryToken)
 
   const isValid =
     isOnline &&
     !hasPendingTx &&
-    !isLoading &&
-    error == null &&
-    utxos &&
     _.isEmpty(addressErrors) &&
     _.isEmpty(amountErrors) &&
     _.isEmpty(balanceErrors) &&
@@ -128,7 +123,7 @@ export const SendScreen = () => {
     handleConfirm()
   }
 
-  const handleConfirm = async () => {
+  const handleConfirm = () => {
     if (isValid == false || recomputing || yoroiUnsignedTx == null) return
 
     setShowSendAllWarning(false)
