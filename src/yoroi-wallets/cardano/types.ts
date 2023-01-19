@@ -104,8 +104,6 @@ export interface WalletInterface {
 
   saveMemo(txId: string, memo: string): Promise<void>
 
-  readMemo(txId: string): Promise<string>
-
   // TODO: type
   toJSON(): unknown
 
@@ -272,7 +270,6 @@ type YoroiWalletKeys =
   | 'tryDoFullSync'
   | 'clear'
   | 'saveMemo'
-  | 'readMemo'
 
 const yoroiWalletKeys: Array<YoroiWalletKeys> = [
   'changePassword',
@@ -315,5 +312,4 @@ const yoroiWalletKeys: Array<YoroiWalletKeys> = [
   'tryDoFullSync',
   'clear',
   'saveMemo',
-  'readMemo',
 ]

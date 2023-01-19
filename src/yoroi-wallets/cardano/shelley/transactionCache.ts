@@ -29,28 +29,40 @@ export class TransactionCache {
   #perAddressCertificatesSelector = defaultMemoize(perAddressCertificatesSelector)
   #confirmationCountsSelector = defaultMemoize(confirmationCountsSelector)
   #storage: TxCacheStorage
+  #memosStorage: Storage
 
-  static async create(storage: Storage) {
+  static async create(storage: Storage, memosStorage: Storage) {
     const txStorage = makeTxCacheStorage(storage)
     const version = DeviceInfo.getVersion() as Version
     const isDeprecatedSchema = versionCompare(version, '4.1.0') === -1
     if (isDeprecatedSchema) {
       return new TransactionCache({
         storage: txStorage,
+        memosStorage,
         transactions: {},
       })
     }
 
-    const txs = await txStorage.loadTxs()
+    const txs = await addMemos(await txStorage.loadTxs(), memosStorage)
 
     return new TransactionCache({
       storage: txStorage,
+      memosStorage,
       transactions: txs,
     })
   }
 
-  private constructor({storage, transactions}: {storage: TxCacheStorage; transactions: Record<string, Transaction>}) {
+  private constructor({
+    storage,
+    transactions,
+    memosStorage,
+  }: {
+    storage: TxCacheStorage
+    transactions: Record<string, Transaction>
+    memosStorage: Storage
+  }) {
     this.#storage = storage
+    this.#memosStorage = memosStorage
     this.#state = {
       perAddressSyncMetadata: {},
       transactions,
@@ -108,7 +120,7 @@ export class TransactionCache {
 
     if (txUpdate) {
       this.updateState({
-        transactions: txUpdate,
+        transactions: await addMemos(txUpdate, this.#memosStorage),
         // @deprecated
         bestBlockNum: this.#state.bestBlockNum,
         // @deprecated
@@ -365,6 +377,7 @@ export function toCachedTx(tx: RawTransaction): Transaction {
         name: a.name,
       })),
     })),
+    memo: null,
   }
 }
 
@@ -504,6 +517,22 @@ export const makeTxCacheStorage = (storage: Storage): TxCacheStorage => ({
     return storage.clear()
   },
 })
+
+const addMemos = async (transactions: Record<string, Transaction>, memosStorage: Storage) => {
+  const memosTxIds = await memosStorage.getAllKeys()
+
+  memosTxIds.forEach(async (memoTxId) => {
+    const memo = (await memosStorage.getItem(memoTxId)) as string
+    transactions = Object.assign(transactions, {
+      [memoTxId]: {
+        ...transactions[memoTxId],
+        memo,
+      },
+    })
+  })
+
+  return transactions
+}
 
 const parseTxids = (data: string | null | undefined) => {
   if (!data) return [] // initial

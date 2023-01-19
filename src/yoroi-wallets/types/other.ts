@@ -476,6 +476,7 @@ export type Transaction = {
     amount: string
     assets: Array<BaseAsset>
   }>
+  memo: string | null
 }
 
 export type CommonMetadata = {

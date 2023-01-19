@@ -68,7 +68,7 @@ import {
 import * as api from './api'
 import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from './chain'
 import {filterAddressesByStakingKey, getDelegationStatus} from './shelley/delegationUtils'
-import {toCachedTx, TransactionCache} from './shelley/transactionCache'
+import {toCachedTx} from './shelley/transactionCache'
 import {yoroiSignedTx} from './signedTx'
 import {makeTransactionManager, TransactionManager} from './transactionManager'
 import {
@@ -276,8 +276,7 @@ export class ShelleyWallet implements WalletInterface {
     const rewardAddressHex = await deriveRewardAddressHex(accountPubKeyHex, networkId)
     const apiUrl = getCardanoNetworkConfigById(networkId).BACKEND.API_ROOT
     const utxoManager = await makeUtxoManager({storage: storage.join('utxoManager/'), apiUrl})
-    const transactionCache = await TransactionCache.create(storage.join('txs/'))
-    const transactionManager = makeTransactionManager(storage.join('tx-manager/'))
+    const transactionManager = await makeTransactionManager(storage.join('tx-manager/'))
 
     const wallet = new ShelleyWallet({
       storage,
@@ -290,7 +289,6 @@ export class ShelleyWallet implements WalletInterface {
       provider,
       accountPubKeyHex,
       rewardAddressHex,
-      transactionCache,
       internalChain,
       externalChain,
       isEasyConfirmationEnabled,
@@ -319,7 +317,6 @@ export class ShelleyWallet implements WalletInterface {
     provider,
     accountPubKeyHex,
     rewardAddressHex,
-    transactionCache,
     internalChain,
     externalChain,
     isEasyConfirmationEnabled,
@@ -336,7 +333,6 @@ export class ShelleyWallet implements WalletInterface {
     provider: YoroiProvider | null | undefined
     accountPubKeyHex: string
     rewardAddressHex: string
-    transactionCache: TransactionCache
     internalChain: AddressChain
     externalChain: AddressChain
     isEasyConfirmationEnabled: boolean
@@ -355,7 +351,6 @@ export class ShelleyWallet implements WalletInterface {
     this.hwDeviceInfo = hwDeviceInfo
     this.isReadOnly = isReadOnly
     this.provider = provider
-    this.transactionCache = transactionCache
     this.transactionManager = transactionManager
     this.internalChain = internalChain
     this.externalChain = externalChain
@@ -394,16 +389,12 @@ export class ShelleyWallet implements WalletInterface {
   }
 
   async clear() {
-    await this.transactionCache?.clear()
+    await this.transactionManager.clear()
     await this.utxoManager.clear()
   }
 
   saveMemo(txId: string, memo: string): Promise<void> {
     return this.transactionManager.saveMemo(txId, memo)
-  }
-
-  readMemo(txId: string): Promise<string> {
-    return this.transactionManager.readMemo(txId)
   }
 
   // =================== persistence =================== //
@@ -435,7 +426,7 @@ export class ShelleyWallet implements WalletInterface {
 
   async resync() {
     await this.clear()
-    this.transactionCache.resetState()
+    this.transactionManager.resetState()
     await this.save()
     this.sync()
   }
@@ -602,7 +593,7 @@ export class ShelleyWallet implements WalletInterface {
 
   getDelegationStatus() {
     if (this.rewardAddressHex == null) throw new Error('reward address is null')
-    const certsForKey = this.transactionCache.perRewardAddressCertificates[this.rewardAddressHex]
+    const certsForKey = this.transactionManager.perRewardAddressCertificates[this.rewardAddressHex]
     return Promise.resolve(getDelegationStatus(this.rewardAddressHex, certsForKey))
   }
 
@@ -1017,8 +1008,6 @@ export class ShelleyWallet implements WalletInterface {
 
   private isInitialized = false
 
-  private transactionCache: TransactionCache
-
   _doFullSyncMutex: any = {name: 'doFullSyncMutex', lock: null}
 
   private subscriptions: Array<WalletSubscription> = []
@@ -1043,7 +1032,7 @@ export class ShelleyWallet implements WalletInterface {
   }
 
   get isUsedAddressIndex() {
-    return this._isUsedAddressIndexSelector(this.transactionCache.perAddressTxs)
+    return this._isUsedAddressIndexSelector(this.transactionManager.perAddressTxs)
   }
 
   get numReceiveAddresses() {
@@ -1051,11 +1040,11 @@ export class ShelleyWallet implements WalletInterface {
   }
 
   get transactions() {
-    return this.transactionCache.transactions
+    return this.transactionManager.transactions
   }
 
   get confirmationCounts() {
-    return this.transactionCache.confirmationCounts
+    return this.transactionManager.confirmationCounts
   }
 
   // ============ security & key management ============ //
@@ -1117,8 +1106,8 @@ export class ShelleyWallet implements WalletInterface {
   }
 
   private setupSubscriptions() {
-    this.transactionCache.subscribe(() => this.notify({type: 'transactions', transactions: this.transactions}))
-    this.transactionCache.subscribe(this.notifyOnTxHistoryUpdate)
+    this.transactionManager.subscribe(() => this.notify({type: 'transactions', transactions: this.transactions}))
+    this.transactionManager.subscribe(this.notifyOnTxHistoryUpdate)
     this.internalChain.addSubscriberToNewAddresses(() =>
       this.notify({type: 'addresses', addresses: this.internalAddresses}),
     )
@@ -1153,7 +1142,7 @@ export class ShelleyWallet implements WalletInterface {
 
     await Promise.all([
       this.syncUtxos(),
-      this.transactionCache.doSync(this.getAddressesInBlocks(), this.getBackendConfig()),
+      this.transactionManager.doSync(this.getAddressesInBlocks(), this.getBackendConfig()),
     ])
 
     this.updateLastGeneratedAddressIndex()
@@ -1175,7 +1164,7 @@ export class ShelleyWallet implements WalletInterface {
   }
 
   private isUsedAddress(address: string) {
-    return !!this.transactionCache.perAddressTxs[address] && this.transactionCache.perAddressTxs[address].length > 0
+    return !!this.transactionManager.perAddressTxs[address] && this.transactionManager.perAddressTxs[address].length > 0
   }
 
   private getLastUsedIndex(chain: AddressChain): number {
