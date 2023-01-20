@@ -519,19 +519,20 @@ export const makeTxCacheStorage = (storage: Storage): TxCacheStorage => ({
 })
 
 const addMemos = async (transactions: Record<string, Transaction>, memosStorage: Storage) => {
+  const txs = {...transactions}
   const memosTxIds = await memosStorage.getAllKeys()
 
-  memosTxIds.forEach(async (memoTxId) => {
+  const promises = memosTxIds.map(async (memoTxId) => {
     const memo = (await memosStorage.getItem(memoTxId)) as string
-    transactions = Object.assign(transactions, {
-      [memoTxId]: {
-        ...transactions[memoTxId],
-        memo,
-      },
-    })
+    txs[memoTxId] = {
+      ...txs[memoTxId],
+      memo,
+    }
   })
 
-  return transactions
+  Promise.all(promises)
+
+  return txs
 }
 
 const parseTxids = (data: string | null | undefined) => {

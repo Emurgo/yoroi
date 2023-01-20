@@ -1040,6 +1040,7 @@ export class ShelleyWallet implements WalletInterface {
   }
 
   get transactions() {
+    console.log(this.transactionManager.transactions)
     return this.transactionManager.transactions
   }
 
