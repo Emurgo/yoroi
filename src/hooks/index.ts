@@ -842,7 +842,7 @@ export const useExchangeRate = ({
     suspense: true,
     staleTime: 60000,
     retryDelay: 1000,
-    useErrorBoundary: false,
+    // useErrorBoundary: false,
     queryKey: [wallet.id, 'exchangeRate', {to}],
     queryFn: () => (to === 'ADA' ? 1 : wallet.fetchCurrentPrice(to)),
     ...options,

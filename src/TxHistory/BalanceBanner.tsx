@@ -42,7 +42,7 @@ export const BalanceBanner = () => {
 }
 
 const hiddenBalance = '*.******'
-const Balance = ({privacyMode}: {privacyMode: boolean}) => {
+export const Balance = ({privacyMode}: {privacyMode: boolean}) => {
   const wallet = useSelectedWallet()
   const balances = useBalances(wallet)
 
@@ -62,10 +62,10 @@ const Balance = ({privacyMode}: {privacyMode: boolean}) => {
   )
 }
 
-const Row = ({children}: {children: React.ReactNode}) => <View style={styles.centered}>{children}</View>
+export const Row = ({children}: {children: React.ReactNode}) => <View style={styles.centered}>{children}</View>
 
 const hiddenPairedTotal = '*.**'
-const PairedBalance = ({privacyMode}: {privacyMode: boolean}) => {
+export const PairedBalance = ({privacyMode}: {privacyMode: boolean}) => {
   const wallet = useSelectedWallet()
   const balances = useBalances(wallet)
   const {currency, config} = useCurrencyContext()
