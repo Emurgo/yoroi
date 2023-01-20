@@ -96,6 +96,9 @@ export const Quantities = {
   decimalPlaces: (quantity: Quantity, precision: number) => {
     return new BigNumber(quantity).decimalPlaces(precision).toString() as Quantity
   },
+  denominated: (quantity: Quantity, denomination: number) => {
+    return Quantities.quotient(quantity, `${10 ** denomination}`)
+  },
 }
 
 export const Utxos = {

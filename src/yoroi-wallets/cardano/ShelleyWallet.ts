@@ -35,21 +35,21 @@ import {IsLockedError, nonblockingSynchronize, synchronize} from '../../legacy/p
 import type {WalletMeta} from '../../legacy/state'
 import {deriveRewardAddressHex} from '../../legacy/utils'
 import {Storage} from '../storage'
-import {DefaultAsset, Quantity, SendTokenList, StakingInfo, YoroiSignedTx, YoroiUnsignedTx} from '../types'
 import type {
   AccountStateResponse,
   BackendConfig,
   CurrencySymbol,
+  DefaultAsset,
   FundInfoResponse,
   PoolInfoRequest,
   RawUtxo,
   TipStatusResponse,
-  TokenInfoRequest,
+  TokenInfo,
   TransactionInfo,
   TxStatusRequest,
   TxStatusResponse,
-} from '../types/other'
-import {NETWORK_REGISTRY} from '../types/other'
+} from '../types'
+import {NETWORK_REGISTRY, Quantity, SendTokenList, StakingInfo, YoroiSignedTx, YoroiUnsignedTx} from '../types'
 import {Quantities} from '../utils'
 import {parseSafe} from '../utils/parsing'
 import {genTimeToSlot} from '../utils/timeUtils'
@@ -113,6 +113,7 @@ export type WalletJSON = ShelleyWalletJSON | ByronWalletJSON
 export default ShelleyWallet
 export class ShelleyWallet implements WalletInterface {
   readonly primaryToken: DefaultAsset
+  readonly primaryTokenInfo: TokenInfo
   readonly id: string
   readonly networkId: NetworkId
   readonly walletImplementationId: WalletImplementationId
@@ -341,6 +342,8 @@ export class ShelleyWallet implements WalletInterface {
     this.storage = storage
     this.networkId = networkId === NETWORK_REGISTRY.BYRON_MAINNET ? NETWORK_REGISTRY.HASKELL_SHELLEY : networkId
     this.primaryToken = getDefaultAssetByNetworkId(this.networkId)
+    this.primaryTokenInfo =
+      networkId === NETWORK_REGISTRY.HASKELL_SHELLEY ? primaryTokenInfo.mainnet : primaryTokenInfo.testnet
     this.utxoManager = utxoManager
     this._utxos = utxoManager.initialUtxos
     this.encryptedStorage = makeWalletEncryptedStorage(id)
@@ -976,8 +979,15 @@ export class ShelleyWallet implements WalletInterface {
     return api.getPoolInfo(request, this.getBackendConfig())
   }
 
-  fetchTokenInfo(request: TokenInfoRequest) {
-    return api.getTokenInfo(request, this.getBackendConfig())
+  async fetchTokenInfo(tokenId: string) {
+    const apiUrl = this.getBackendConfig().TOKEN_INFO_SERVICE
+    if (!apiUrl) throw new Error('invalid wallet')
+
+    return (tokenId === '' || tokenId === 'ADA') && this.networkId === 1
+      ? primaryTokenInfo.mainnet
+      : (tokenId === '' || tokenId === 'ADA' || tokenId === 'TADA') && this.networkId === 300
+      ? primaryTokenInfo.testnet
+      : api.getTokenInfo(tokenId, `${apiUrl}/metadata`)
   }
 
   async fetchFundInfo(): Promise<FundInfoResponse> {
@@ -1292,3 +1302,20 @@ const keys: Array<keyof WalletJSON> = [
   'isEasyConfirmationEnabled',
   'lastGeneratedAddressIndex',
 ]
+
+export const primaryTokenInfo = {
+  mainnet: {
+    id: '',
+    name: 'ADA',
+    decimals: 6,
+    description: '',
+    ticker: 'ADA',
+  } as TokenInfo,
+  testnet: {
+    id: '',
+    name: 'TADA',
+    decimals: 6,
+    description: '',
+    ticker: 'TADA',
+  } as TokenInfo,
+}

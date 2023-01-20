@@ -12,12 +12,12 @@ import NoImage from '../../assets/img/asset_no_image.png'
 import {Boundary, Button, Spacer, Text, TextInput} from '../../components'
 import {useBalances, useTokenInfo} from '../../hooks'
 import globalMessages, {txLabels} from '../../i18n/global-messages'
-import {decodeHexAscii, formatTokenAmount, getAssetDenominationOrId, getTokenFingerprint} from '../../legacy/format'
+import {formatTokenAmount} from '../../legacy/format'
 import {TxHistoryRouteNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
-import {YoroiWallet} from '../../yoroi-wallets'
-import {Quantity, Token, TokenId} from '../../yoroi-wallets/types'
+import {toToken, YoroiWallet} from '../../yoroi-wallets'
+import {Quantity, TokenId, TokenInfo} from '../../yoroi-wallets/types'
 import {Quantities} from '../../yoroi-wallets/utils'
 import {useSend} from '../Context/SendContext'
 
@@ -102,6 +102,7 @@ type AssetSelectorItemProps = {
 
 const AssetSelectorItem = ({wallet, tokenId, quantity, onSelect, matcher}: AssetSelectorItemProps) => {
   const tokenInfo = useTokenInfo({wallet, tokenId})
+  const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
 
   if (!matches(tokenInfo, matcher)) return null
 
@@ -109,25 +110,28 @@ const AssetSelectorItem = ({wallet, tokenId, quantity, onSelect, matcher}: Asset
     <TouchableOpacity style={{paddingVertical: 16}} onPress={onSelect} testID="assetSelectorItem">
       <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
         <View style={{padding: 4}}>
-          <Icon source={tokenInfo.isDefault ? AdaImage : NoImage} />
+          <Icon source={isPrimary ? AdaImage : NoImage} />
         </View>
 
         <View style={{flex: 1, padding: 4}}>
           <Text numberOfLines={1} ellipsizeMode="middle" style={{color: COLORS.BLUE_LIGHTER}} testID="tokenInfoText">
-            {getAssetDenominationOrId(tokenInfo)}
+            {tokenInfo.ticker ?? tokenInfo.name}
           </Text>
+
           <Text
             numberOfLines={1}
             ellipsizeMode="middle"
             style={{color: COLORS.TEXT_INPUT}}
             testID="tokenFingerprintText"
           >
-            {tokenInfo.isDefault ? '' : getTokenFingerprint(tokenInfo)}
+            {isPrimary ? '' : tokenInfo.id}
           </Text>
         </View>
 
         <View style={{flex: 1, alignItems: 'flex-end', padding: 4}} testID="tokenAmountText">
-          <Text style={{color: COLORS.DARK_TEXT}}>{formatTokenAmount(new BigNumber(quantity), tokenInfo)}</Text>
+          <Text style={{color: COLORS.DARK_TEXT}}>
+            {formatTokenAmount(new BigNumber(quantity), toToken({wallet, tokenInfo}))}
+          </Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -152,14 +156,12 @@ const SearchInput = (props) => {
   return <TextInput {...props} label={strings.searchLabel} />
 }
 
-const matches = (token: Token, matcher: string) =>
-  normalize(decodeHexAscii(token.metadata.assetName) ?? '').includes(matcher) ||
-  normalize(getTokenFingerprint(token) ?? '').includes(matcher) ||
-  normalize(token.metadata.ticker ?? '').includes(matcher) ||
-  normalize(token.metadata.longName ?? '').includes(matcher) ||
-  normalize(token.identifier).includes(matcher) ||
-  normalize(token.metadata.assetName).includes(matcher) ||
-  normalize(token.metadata.policyId).includes(matcher)
+const matches = (tokenInfo: TokenInfo, matcher: string) =>
+  normalize(tokenInfo.ticker ?? '').includes(matcher) ||
+  normalize(tokenInfo.name).includes(matcher) ||
+  normalize(tokenInfo.id).includes(matcher) ||
+  normalize(tokenInfo.description ?? '').includes(matcher) ||
+  normalize(tokenInfo.group ?? '').includes(matcher)
 
 const useStrings = () => {
   const intl = useIntl()

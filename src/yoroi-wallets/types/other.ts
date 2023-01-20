@@ -2,7 +2,7 @@
 import {BigNumber} from 'bignumber.js'
 
 import {CardanoTypes, MultiToken} from '..'
-import {RemoteAccountState, RemoteCertificateMeta, Token, TokenEntry, TokenEntryPlain, TokenInfo} from '.'
+import {RemoteAccountState, RemoteCertificateMeta, Token, TokenEntry, TokenEntryPlain} from '.'
 export type AddressObj = {
   readonly address: string
 }
@@ -158,12 +158,6 @@ export type RemotePoolMetaFailure = {
 export type PoolInfoRequest = {
   poolIds: Array<string>
 }
-// getTokenInfo
-export type TokenInfoRequest = {
-  tokenIds: Array<string>
-}
-
-export type TokenInfoResponse = Record<string, TokenInfo | null>
 
 // reputation
 export type ReputationObject = {

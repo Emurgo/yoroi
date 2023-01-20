@@ -67,22 +67,26 @@ export type DefaultAsset = Token & {
 }
 
 export type TokenInfo = {
-  name: string
-  decimals?: number
-  assetName: string
-  policyId: string
-  longName?: string
-  ticker?: string
-}
-
-// https://github.com/cardano-foundation/cardano-token-registry#semantic-content-of-registry-entries
-export type TokenRegistryEntry = {
-  subject: string
-  name: string
+  id: string // asset fingerprint
+  group: string // policyId
+  name: string // derived from token subject
+  decimals: number // default to 0
   description: string
-  policy?: string
+
   ticker?: string
   url?: string
   logo?: string
-  decimals?: number
+}
+
+export type LegacyToken = {
+  networkId: number
+  isDefault: boolean
+  /**
+   * For Ergo, this is the tokenId (box id of first input in tx)
+   * for Cardano, this is policyId || assetName
+   * Note: we don't use null for the primary token of the chain
+   * As some blockchains have multiple primary tokens
+   */
+  identifier: string
+  metadata: TokenMetadata
 }

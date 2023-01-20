@@ -7,7 +7,7 @@ import {Keyboard, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 
 import {Boundary, KeyboardSpacer, Spacer, StatusBar, Text, ValidatedTextInput} from '../../components'
 import {ConfirmTx} from '../../components/ConfirmTx'
-import {useBalances, useTokenInfo} from '../../hooks'
+import {useBalances, useToken} from '../../hooks'
 import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../i18n/global-messages'
 import {CONFIG} from '../../legacy/config'
 import {formatTokenWithSymbol, formatTokenWithText} from '../../legacy/format'
@@ -182,9 +182,9 @@ const TokenTotals = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx}) => {
 
 const Amount = ({amount}: {amount: YoroiAmount}) => {
   const wallet = useSelectedWallet()
-  const tokenInfo = useTokenInfo({wallet, tokenId: amount.tokenId})
+  const token = useToken({wallet, tokenId: amount.tokenId})
 
-  return <Text style={styles.amount}>{formatTokenWithText(new BigNumber(amount.quantity), tokenInfo)}</Text>
+  return <Text style={styles.amount}>{formatTokenWithText(new BigNumber(amount.quantity), token)}</Text>
 }
 
 const Actions = (props: ViewProps) => <View {...props} style={{padding: 16}} />

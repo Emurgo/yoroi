@@ -5,9 +5,9 @@ import {FlatList, Text, TouchableOpacity, View} from 'react-native'
 import {Boundary} from '../../components'
 import {useTokenInfo} from '../../hooks'
 import globalMessages, {txLabels} from '../../i18n/global-messages'
-import {formatTokenAmount, getName, getTicker, getTokenFingerprint} from '../../legacy/format'
+import {formatTokenAmount} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
-import {TokenEntry} from '../../yoroi-wallets'
+import {TokenEntry, toToken} from '../../yoroi-wallets'
 import assetListSendStyle from './AssetListSend.style'
 import assetListTransactionStyle from './AssetListTransaction.style'
 import baseStyle from './Base.style'
@@ -54,23 +54,23 @@ const AssetRow = ({styles, entry, backColor, onSelect}: AssetRowProps) => {
   const intl = useIntl()
   const wallet = useSelectedWallet()
   const tokenInfo = useTokenInfo({wallet, tokenId: entry.identifier})
+  const token = toToken({wallet, tokenInfo})
+  const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
 
   const item = (
     <>
       <View style={styles.tokenMetaView}>
         <Text style={styles.assetName}>
-          {tokenInfo.isDefault
-            ? getTicker(tokenInfo)
-            : getName(tokenInfo) ?? intl.formatMessage(messages.unknownAssetName)}
+          {isPrimary ? tokenInfo.ticker : tokenInfo.name ?? intl.formatMessage(messages.unknownAssetName)}
         </Text>
 
         <Text style={styles.assetMeta} ellipsizeMode="middle" numberOfLines={1}>
-          {tokenInfo.isDefault ? '' : getTokenFingerprint(tokenInfo)}
+          {isPrimary ? '' : tokenInfo.id}
         </Text>
       </View>
 
       <View style={styles.assetBalanceView}>
-        <Text style={styles.assetBalance}>{formatTokenAmount(entry.amount, tokenInfo)}</Text>
+        <Text style={styles.assetBalance}>{formatTokenAmount(entry.amount, token)}</Text>
       </View>
     </>
   )
