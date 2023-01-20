@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import AssetFingerprint from '@emurgo/cip14-js'
 import _ from 'lodash'
 
 import assert from '../../legacy/assert'
 import {ApiError} from '../../legacy/errors'
 import fetchDefault, {checkedFetch} from '../../legacy/fetch'
+import {getTokenFingerprint} from '../../legacy/format'
 import {Logger} from '../../legacy/logging'
 import {ServerStatus, YoroiWallet} from '..'
 import type {
@@ -111,7 +113,9 @@ export const getPoolInfo = (request: PoolInfoRequest, config: BackendConfig): Pr
 }
 
 export const getTokenInfo = async (tokenId: string, apiUrl: string) => {
+  if (tokenId !== '' && !tokenId.includes('.')) throw new Error(`invalid tokenId: ${tokenId}`)
   const tokenSubject = tokenId.replace('.', '')
+
   const response = await checkedFetch({
     endpoint: `${apiUrl}/${tokenSubject}`,
     method: 'GET',
@@ -124,35 +128,38 @@ export const getTokenInfo = async (tokenId: string, apiUrl: string) => {
 
   const entry = parseTokenRegistryEntry(response)
 
-  const [policyId, assetNameHex] = splitTokenSubject(tokenSubject)
-  const assetName = hexToAscii(assetNameHex)
-
-  const result = entry
-    ? tokenInfo({entry, group: policyId, name: assetName})
-    : fallbackTokenInfo({tokenId, group: policyId, name: assetName})
+  const result = entry ? tokenInfo(entry) : fallbackTokenInfo(tokenId)
 
   return result
 }
 
-const tokenInfo = ({entry, group, name}: {entry: TokenRegistryEntry; group: string; name: string}): TokenInfo => ({
-  id: entry.subject,
-  name,
-  group,
-  description: entry.description.value ?? '',
-  decimals: entry.decimals?.value ?? 0,
+const tokenInfo = (entry: TokenRegistryEntry): TokenInfo => {
+  const [policyId, assetNameHex] = splitTokenSubject(entry.subject)
 
-  ticker: entry.ticker?.value,
-  url: entry.url?.value,
-  logo: entry.logo?.value,
-})
+  return {
+    id: entry.subject,
+    name: hexToAscii(assetNameHex),
+    group: policyId,
+    description: entry.description.value ?? '',
+    decimals: entry.decimals?.value ?? 0,
 
-const fallbackTokenInfo = ({tokenId, group, name}: {tokenId: string; group: string; name: string}): TokenInfo => ({
-  id: tokenId,
-  name,
-  group,
-  decimals: 0,
-  description: '',
-})
+    ticker: entry.ticker?.value,
+    url: entry.url?.value,
+    logo: entry.logo?.value,
+  }
+}
+
+const fallbackTokenInfo = (tokenId: string): TokenInfo => {
+  const [policyId, assetNameHex] = splitTokenSubject(tokenId)
+
+  return {
+    id: tokenId,
+    name: hexToAscii(assetNameHex),
+    group: policyId,
+    decimals: 0,
+    description: '',
+  }
+}
 
 export const splitTokenSubject = (tokenSubject: string) => {
   const tokenSubject_ = tokenSubject.replace('.', '')
@@ -212,18 +219,24 @@ export const toToken = ({wallet, tokenInfo}: {wallet: YoroiWallet; tokenInfo: To
 }
 export const toTokenInfo = (token: LegacyToken): TokenInfo => {
   return {
-    id: toAssetFingerprint(token.metadata.policyId, token.metadata.assetName),
+    id: token.identifier,
     group: token.metadata.policyId,
     name: hexToAscii(token.metadata.assetName),
     decimals: token.metadata.numberOfDecimals,
     description: token.metadata.longName ?? '',
+    fingerprint: toAssetFingerprint(token.metadata.policyId, token.metadata.assetName),
   }
 }
 
-import AssetFingerprint from '@emurgo/cip14-js'
 export const toAssetFingerprint = (policyId: string, assetNameHex: string) => {
   const assetFingerprint = new AssetFingerprint(Buffer.from(policyId, 'hex'), Buffer.from(assetNameHex, 'hex'))
   return assetFingerprint.fingerprint()
+}
+
+export const toTokenId = (identifier: string) => {
+  const [policyId, assetNameHex] = splitTokenSubject(identifier)
+
+  return getTokenFingerprint({policyId, assetNameHex})
 }
 
 // Token Registry

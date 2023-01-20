@@ -74,6 +74,8 @@ type AssetItemProps = {
 
 const AssetItem = ({tokenInfo, onPress}: AssetItemProps) => {
   const wallet = useSelectedWallet()
+  const tokenId = tokenInfo.id
+  if (tokenId !== wallet.primaryTokenInfo.id && !tokenId.includes('.')) throw new Error(`invalid tokenId: ${tokenId}`)
   const balance = useBalance({wallet, tokenId: tokenInfo.id})
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
 

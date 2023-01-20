@@ -59,7 +59,10 @@ const serializer = (utxo: UtxoModels.Utxo): RawUtxo => ({
   tx_index: utxo.txIndex,
   amount: utxo.amount.toString(),
   receiver: utxo.receiver,
-  assets: utxo.assets,
+  assets: utxo.assets.map((asset) => ({
+    ...asset,
+    assetId: asset.assetId.replace('.', ''), // convert assetId to tokenSubject
+  })),
 })
 
 export type UtxoManager = Awaited<ReturnType<typeof makeUtxoManager>>

@@ -76,6 +76,8 @@ export type TokenInfo = {
   ticker?: string
   url?: string
   logo?: string
+
+  fingerprint?: string
 }
 
 export type LegacyToken = {

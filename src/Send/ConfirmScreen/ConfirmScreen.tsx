@@ -182,6 +182,8 @@ const TokenTotals = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx}) => {
 
 const Amount = ({amount}: {amount: YoroiAmount}) => {
   const wallet = useSelectedWallet()
+  const tokenId = amount.tokenId
+  if (tokenId !== wallet.primaryTokenInfo.id && !tokenId.includes('.')) throw new Error(`invalid tokenId: ${tokenId}`)
   const token = useToken({wallet, tokenId: amount.tokenId})
 
   return <Text style={styles.amount}>{formatTokenWithText(new BigNumber(amount.quantity), token)}</Text>

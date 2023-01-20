@@ -20,6 +20,8 @@ export const SendAllWarning = ({
 }: SendAllWarningProps) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
+  if (selectedTokenIdentifier !== wallet.primaryTokenInfo.id && !selectedTokenIdentifier.includes('.'))
+    throw new Error(`invalid tokenId: ${selectedTokenIdentifier}`)
   const token = useToken({wallet, tokenId: selectedTokenIdentifier})
   const assetNameOrId = truncateWithEllipsis(getAssetDenominationOrId(token), 20)
   const alertBoxContent = {
