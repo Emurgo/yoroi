@@ -10,15 +10,16 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import AdaImage from '../../assets/img/asset_ada.png'
 import NoImage from '../../assets/img/asset_no_image.png'
 import {Boundary, Button, Spacer, Text, TextInput} from '../../components'
-import {useBalances, useTokenInfo} from '../../hooks'
+import {useBalance, useBalances, useTokenInfos} from '../../hooks'
 import globalMessages, {txLabels} from '../../i18n/global-messages'
 import {formatTokenAmount} from '../../legacy/format'
 import {TxHistoryRouteNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
+import {descending, startsWith} from '../../TxHistory/AssetList/utils'
 import {toToken, YoroiWallet} from '../../yoroi-wallets'
-import {Quantity, TokenId, TokenInfo} from '../../yoroi-wallets/types'
-import {Quantities} from '../../yoroi-wallets/utils'
+import {TokenInfo} from '../../yoroi-wallets/types'
+import {Amounts} from '../../yoroi-wallets/utils'
 import {useSend} from '../Context/SendContext'
 
 export const AssetSelectorScreen = () => {
@@ -28,17 +29,18 @@ export const AssetSelectorScreen = () => {
   const [matcher, setMatcher] = React.useState('')
   const navigation = useNavigation<TxHistoryRouteNavigation>()
   const {tokenSelected, allTokensSelected} = useSend()
+  const tokenInfos = useTokenInfos({
+    wallet,
+    tokenIds: Amounts.toArray(balances).map(({tokenId}) => tokenId),
+  })
+  const sortedTokenInfos = tokenInfos
+    .sort(descending((tokenInfo) => tokenInfo.name.toLocaleLowerCase()))
+    .sort(startsWith((tokenInfo) => tokenInfo.id === wallet.primaryTokenInfo.id))
 
   const onChangeMatcher = (matcher: string) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     setMatcher(matcher)
   }
-
-  const sortedBalance: Array<[TokenId, Quantity]> = Object.entries(balances)
-    .sort(([, quantityA]: [TokenId, Quantity], [, quantityB]: [TokenId, Quantity]) =>
-      Quantities.isGreaterThan(quantityA, quantityB) ? -1 : 1,
-    )
-    .sort(([tokenId]: [TokenId, Quantity]) => (tokenId === wallet.primaryToken.identifier ? -1 : 1)) // default first
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={{flex: 1, backgroundColor: 'white'}}>
@@ -56,15 +58,14 @@ export const AssetSelectorScreen = () => {
       </View>
 
       <FlatList
-        data={sortedBalance}
-        renderItem={({item: [tokenId, quantity]}: {item: [TokenId, Quantity]}) => (
+        data={sortedTokenInfos}
+        renderItem={({item: tokenInfo}: {item: TokenInfo}) => (
           <Boundary>
             <AssetSelectorItem
               wallet={wallet}
-              tokenId={tokenId}
-              quantity={quantity}
+              tokenInfo={tokenInfo}
               onSelect={() => {
-                tokenSelected(tokenId)
+                tokenSelected(tokenInfo.id)
                 navigation.navigate('send')
               }}
               matcher={matcher}
@@ -73,7 +74,7 @@ export const AssetSelectorScreen = () => {
         )}
         bounces={false}
         contentContainerStyle={{paddingHorizontal: 16}}
-        keyExtractor={([tokenId]) => tokenId}
+        keyExtractor={(tokenInfo) => tokenInfo.id}
         testID="assetsList"
       />
 
@@ -94,14 +95,13 @@ export const AssetSelectorScreen = () => {
 
 type AssetSelectorItemProps = {
   wallet: YoroiWallet
-  tokenId: TokenId
-  quantity: Quantity
+  tokenInfo: TokenInfo
   onSelect: () => void
   matcher: string
 }
 
-const AssetSelectorItem = ({wallet, tokenId, quantity, onSelect, matcher}: AssetSelectorItemProps) => {
-  const tokenInfo = useTokenInfo({wallet, tokenId})
+const AssetSelectorItem = ({wallet, tokenInfo, onSelect, matcher}: AssetSelectorItemProps) => {
+  const quantity = useBalance({wallet, tokenId: tokenInfo.id})
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
 
   if (!matches(tokenInfo, matcher)) return null
