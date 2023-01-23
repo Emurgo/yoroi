@@ -3,10 +3,10 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
 import {mocks} from '../../../storybook'
-import {InvalidState, NetworkError} from '../../legacy/errors'
 import {WalletMeta} from '../../legacy/state'
 import {WalletManagerProvider} from '../../WalletManager'
 import {mockWalletManager, WalletManager} from '../../yoroi-wallets'
+import {InvalidState, NetworkError} from '../../yoroi-wallets/cardano/errors'
 import {WalletSelectionScreen} from './WalletSelectionScreen'
 
 storiesOf('WalletSelectionScreen', module)

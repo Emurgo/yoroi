@@ -2,32 +2,31 @@ import {BigNumber} from 'bignumber.js'
 import type {IntlShape} from 'react-intl'
 
 import {WalletEncryptedStorage} from '../../auth'
-import type {HWDeviceInfo} from '../../legacy/ledgerUtils'
+import {HWDeviceInfo} from '../ledgerUtils'
+import {EncryptionMethod, YoroiSignedTx, YoroiUnsignedTx} from '../types'
 import {
   AccountStates,
+  AddressChain,
+  Addresses,
+  CardanoTypes,
+  CurrencySymbol,
+  DefaultAsset,
+  FundInfoResponse,
+  MultiToken,
+  RemoteCertificateMeta,
+  SendTokenList,
   StakePoolInfoRequest,
   StakePoolInfosAndHistories,
   StakingInfo,
   StakingStatus,
-  TransactionInfo,
-  YoroiSignedTx,
-  YoroiUnsignedTx,
-} from '../types'
-import type {
-  CurrencySymbol,
-  EncryptionMethod,
-  FundInfoResponse,
-  RawUtxo,
   TipStatusResponse,
-  Transaction,
-  TxStatusRequest,
-  TxStatusResponse,
-  WalletState,
-} from '../types/other'
-import {DefaultAsset, SendTokenList, TokenInfo} from '../types/tokens'
-import {CardanoTypes} from '.'
-import type {Addresses} from './chain'
-import {AddressChain} from './chain'
+  Token,
+  TokenEntry,
+  TokenEntryPlain,
+  TokenInfo,
+} from '.'
+import {WALLET_IMPLEMENTATION_REGISTRY} from './config'
+import {NETWORK_REGISTRY} from './networks'
 
 export type WalletEvent =
   | {type: 'initialize'}
@@ -159,7 +158,7 @@ export interface WalletInterface {
 }
 
 export type WalletImplementation = {
-  WALLET_IMPLEMENTATION_ID: 'haskell-byron' | 'haskell-shelley' | 'haskell-shelley-24' | 'jormungandr-itn' | ''
+  WALLET_IMPLEMENTATION_ID: WalletImplementationId
   TYPE: 'bip44' | 'cip1852'
   MNEMONIC_LEN: number
   DISCOVERY_GAP_SIZE: number
@@ -167,9 +166,9 @@ export type WalletImplementation = {
   MAX_GENERATED_UNUSED: number
 }
 
-export type WalletImplementationId = WalletImplementation['WALLET_IMPLEMENTATION_ID']
+export type WalletImplementationId = typeof WALLET_IMPLEMENTATION_REGISTRY[keyof typeof WALLET_IMPLEMENTATION_REGISTRY]
 
-export type NetworkId = number
+export type NetworkId = typeof NETWORK_REGISTRY[keyof typeof NETWORK_REGISTRY]
 
 export type YoroiProvider = '' | 'emurgo-alonzo'
 
@@ -190,6 +189,11 @@ export type Block = {
 export type TxSubmissionStatus = {
   status: 'WAITING' | 'FAILED' | 'MAX_RETRY_REACHED' | 'SUCCESS'
   reason?: string | null
+}
+
+export type TxStatusResponse = {
+  readonly depth?: Record<string, number>
+  readonly submissionStatus?: Record<string, TxSubmissionStatus>
 }
 
 export type SignedTxLegacy = {
@@ -309,3 +313,244 @@ const yoroiWalletKeys: Array<YoroiWalletKeys> = [
   'tryDoFullSync',
   'clear',
 ]
+
+export type RemoteTransactionInputBase = {
+  readonly address: string
+  readonly amount: string
+  readonly assets: ReadonlyArray<RemoteAsset>
+}
+export type RemoteTransactionUtxoInput = {
+  readonly id: string
+  // concatenation of txHash || index
+  readonly index: number
+  readonly txHash: string
+}
+// not considering acount txs for now
+export type RemoteTransactionInput = RemoteTransactionInputBase & RemoteTransactionUtxoInput
+export type RemoteTransactionOutput = {
+  readonly address: string
+  readonly amount: string
+  readonly assets: ReadonlyArray<RemoteAsset>
+}
+
+/**
+ * only present if TX is in a block
+ */
+export type RemoteTxBlockMeta = {
+  readonly block_num: number
+  readonly block_hash: string
+  readonly tx_ordinal: number
+  readonly time: string
+  // timestamp with timezone
+  readonly epoch: number
+  readonly slot: number
+}
+
+export type RemoteTxInfo = {
+  readonly type: 'byron' | 'shelley'
+  readonly fee?: string
+  // only in shelley txs
+  readonly hash: string
+  readonly last_update: string
+  // timestamp with timezone
+  readonly tx_state: TransactionStatus
+  readonly inputs: Array<RemoteTransactionInput>
+  readonly outputs: Array<RemoteTransactionOutput>
+  readonly withdrawals: Array<{
+    address: string
+    // hex
+    amount: string
+  }>
+  readonly certificates: Array<RemoteCertificateMeta>
+  readonly valid_contract?: boolean
+  readonly script_size?: number
+  readonly collateral_inputs?: Array<RemoteTransactionInput>
+}
+export type RawTransaction = Partial<RemoteTxBlockMeta> & RemoteTxInfo
+
+export type TxStatusRequest = {
+  txHashes: Array<string>
+}
+
+// these are the different wallet implementations we have/had
+
+export type BackendConfig = {
+  API_ROOT: string
+  TOKEN_INFO_SERVICE?: string
+  FETCH_UTXOS_MAX_ADDRESSES: number
+  TX_HISTORY_MAX_ADDRESSES: number
+  FILTER_USED_MAX_ADDRESSES: number
+  TX_HISTORY_RESPONSE_LIMIT: number
+}
+
+export type IOData = {
+  address: string
+  assets: Array<TokenEntry>
+  amount: string
+}
+
+export type BaseAsset = RemoteAsset
+
+export const TRANSACTION_TYPE = {
+  BYRON: 'byron',
+  SHELLEY: 'shelley',
+}
+
+export type Transaction = {
+  id: string
+  type?: TransactionType
+  fee?: string
+  status: TransactionStatus
+  inputs: Array<{
+    address: string
+    amount: string
+    assets: Array<BaseAsset>
+  }>
+  outputs: Array<{
+    address: string
+    amount: string
+    assets: Array<BaseAsset>
+  }>
+  blockNum: number | null | undefined
+  blockHash: string | null | undefined
+  txOrdinal: number | null | undefined
+  submittedAt: string | null | undefined
+  lastUpdatedAt: string
+  epoch: number | null | undefined
+  slot: number | null | undefined
+  withdrawals: Array<{
+    address: string
+    // hex
+    amount: string
+  }>
+  certificates: Array<RemoteCertificateMeta>
+  readonly validContract?: boolean
+  readonly scriptSize?: number
+  readonly collateralInputs?: Array<{
+    address: string
+    amount: string
+    assets: Array<BaseAsset>
+  }>
+}
+
+export type CommonMetadata = {
+  readonly numberOfDecimals: number
+  readonly ticker: null | string
+  readonly longName: null | string
+  readonly maxSupply: null | string
+}
+
+export type TransactionType = typeof TRANSACTION_TYPE[keyof typeof TRANSACTION_TYPE]
+
+export type TransactionInfo = {
+  id: string
+  inputs: Array<IOData>
+  outputs: Array<IOData>
+  amount: Array<TokenEntryPlain>
+  fee: Array<TokenEntryPlain> | null | undefined
+  delta: Array<TokenEntryPlain>
+  direction: TransactionDirection
+  confirmations: number
+  submittedAt: string | null | undefined
+  lastUpdatedAt: string
+  status: TransactionStatus
+  assurance: TransactionAssurance
+  tokens: Record<string, Token>
+  blockNumber: number
+}
+
+export type Value = {
+  values: MultiToken
+}
+
+export type Addressing = {
+  readonly addressing: {
+    readonly path: Array<number>
+    readonly startLevel: number
+  }
+}
+
+export type WalletState = {
+  lastGeneratedAddressIndex: number
+}
+
+export type PlateResponse = {
+  addresses: Array<string>
+  accountPlate: CardanoTypes.WalletChecksum
+}
+export type ProtocolParameters = {
+  readonly linearFee: CardanoTypes.LinearFee
+  readonly minimumUtxoVal: CardanoTypes.BigNum
+  readonly poolDeposit: CardanoTypes.BigNum
+  readonly keyDeposit: CardanoTypes.BigNum
+  readonly networkId: number
+  readonly maxValueBytes?: number
+  readonly maxTxBytes?: number
+}
+
+export type RemoteAsset = {
+  readonly amount: string
+  readonly assetId: string
+  readonly policyId: string
+  readonly name: string
+}
+
+export type RawUtxo = {
+  readonly amount: string
+  readonly receiver: string
+  readonly tx_hash: string
+  readonly tx_index: number
+  readonly utxo_id: string
+  readonly assets: ReadonlyArray<RemoteAsset>
+}
+export const CERTIFICATE_KIND = {
+  STAKE_REGISTRATION: 'StakeRegistration',
+  STAKE_DEREGISTRATION: 'StakeDeregistration',
+  STAKE_DELEGATION: 'StakeDelegation',
+  POOL_REGISTRATION: 'PoolRegistration',
+  POOL_RETIREMENT: 'PoolRetirement',
+  MOVE_INSTANTANEOUS_REWARDS: 'MoveInstantaneousRewardsCert',
+}
+export type CertificateKind = typeof CERTIFICATE_KIND[keyof typeof CERTIFICATE_KIND]
+
+export type RemotePoolMetaFailure = {
+  error: Record<string, unknown>
+}
+
+export const TRANSACTION_DIRECTION = {
+  SENT: 'SENT',
+  RECEIVED: 'RECEIVED',
+  SELF: 'SELF',
+  // intra-wallet
+  MULTI: 'MULTI', // multi-party
+}
+
+export type TransactionDirection = typeof TRANSACTION_DIRECTION[keyof typeof TRANSACTION_DIRECTION]
+
+export type TransactionAssurance = 'PENDING' | 'FAILED' | 'LOW' | 'MEDIUM' | 'HIGH'
+
+export type TransactionStatus = typeof TRANSACTION_STATUS[keyof typeof TRANSACTION_STATUS]
+
+export const TRANSACTION_STATUS = {
+  SUCCESSFUL: 'Successful',
+  PENDING: 'Pending',
+  FAILED: 'Failed',
+}
+
+export type ServerStatusResponse = {
+  isServerOk: boolean
+  isMaintenance: boolean
+  serverTime: number
+  // in milliseconds
+  isQueueOnline?: boolean
+}
+
+export type ReputationResponse = Record<string, ReputationObject>
+
+export type ReputationObject = {
+  node_flags?: number // note: could be more metrics that are not handled
+}
+
+export type AddressObj = {
+  readonly address: string
+}

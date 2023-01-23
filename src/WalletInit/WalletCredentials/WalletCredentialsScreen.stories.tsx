@@ -3,9 +3,9 @@ import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {NetworkError} from '../../legacy/errors'
 import {WalletManagerProvider} from '../../WalletManager'
-import {WalletManager, walletManager} from '../../yoroi-wallets'
+import {WalletManager} from '../../yoroi-wallets'
+import {NetworkError} from '../../yoroi-wallets/cardano/errors'
 import {WalletCredentialsScreen} from './WalletCredentialsScreen'
 
 storiesOf('WalletCredentialsScreen', module)
@@ -26,7 +26,6 @@ storiesOf('WalletCredentialsScreen', module)
         <WalletManagerProvider
           walletManager={
             {
-              ...walletManager,
               createWallet: (...args) => {
                 action('create wallet')(...args)
               },
@@ -55,7 +54,6 @@ storiesOf('WalletCredentialsScreen', module)
         <WalletManagerProvider
           walletManager={
             {
-              ...walletManager,
               createWallet: (...args) => {
                 action('create wallet')(...args)
                 throw new NetworkError()

@@ -2,7 +2,7 @@ import {NavigationRouteContext} from '@react-navigation/native'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {CONFIG} from '../../legacy/config'
+import {CONFIG} from '../../yoroi-wallets'
 import {ConnectNanoXScreen} from './ConnectNanoXScreen'
 
 const devices = [

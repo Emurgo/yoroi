@@ -11,6 +11,7 @@ import {AuthProvider} from './auth/AuthProvider'
 import {initApp} from './legacy/actions'
 import {SelectedWalletMetaProvider, SelectedWalletProvider} from './SelectedWallet'
 import {useStorage} from './Storage'
+import {storage as rootStorage, WalletManager} from './yoroi-wallets'
 
 enableScreens()
 
@@ -46,7 +47,7 @@ const useInitApp = () => {
 
   useEffect(() => {
     const load = async () => {
-      await initApp(storage)
+      await initApp(storage, new WalletManager(rootStorage))
       setLoaded(true)
     }
 

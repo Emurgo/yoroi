@@ -1,3 +1,6 @@
 export * from './cardano'
 export * from './hwWallet'
+export * from './ledgerUtils'
+export * from './storage'
+export * from './types'
 export * from './walletManager'

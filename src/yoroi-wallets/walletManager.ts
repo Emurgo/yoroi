@@ -7,13 +7,20 @@ import {EncryptedStorage, EncryptedStorageKeys} from '../auth'
 import {Keychain} from '../auth/Keychain'
 import assert from '../legacy/assert'
 import {CONFIG, DISABLE_BACKGROUND_SYNC} from '../legacy/config'
-import type {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {Logger} from '../legacy/logging'
 import type {WalletMeta} from '../legacy/state'
 import {isWalletMeta, migrateWalletMetas, parseWalletMeta} from '../Storage/migrations/walletMeta'
-import {isYoroiWallet, NetworkId, ShelleyWallet, WalletImplementationId, YoroiProvider, YoroiWallet} from './cardano'
-import {Storage, storage} from './storage'
-import {WALLET_IMPLEMENTATION_REGISTRY} from './types/other'
+import {
+  isYoroiWallet,
+  NetworkId,
+  ShelleyWallet,
+  WALLET_IMPLEMENTATION_REGISTRY,
+  WalletImplementationId,
+  YoroiProvider,
+  YoroiWallet,
+} from './cardano'
+import {HWDeviceInfo} from './ledgerUtils'
+import {Storage} from './storage'
 
 export class WalletClosed extends ExtendableError {}
 
@@ -36,7 +43,7 @@ export class WalletManager {
   _closeReject: null | ((error: Error) => void) = null
   storage: Storage
 
-  constructor() {
+  constructor(storage: Storage) {
     // do not await on purpose
     this._backgroundSync()
     this.storage = storage.join('wallet/')
@@ -347,9 +354,5 @@ export class WalletManager {
     return this.saveWallet(id, name, wallet, networkId, implementationId)
   }
 }
-
-export const walletManager = new WalletManager()
-
-export default walletManager
 
 export const mockWalletManager = {} as WalletManager

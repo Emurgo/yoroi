@@ -2,7 +2,7 @@ import {NavigationRouteContext} from '@react-navigation/core'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {CONFIG} from '../../legacy/config'
+import {CONFIG} from '../../yoroi-wallets'
 import {MnemonicShowScreen} from './MnemonicShowScreen'
 
 storiesOf('MnemonicShowScreen', module).add('Default', () => {

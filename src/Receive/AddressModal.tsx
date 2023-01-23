@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {fromPairs} from 'lodash'
 import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -5,9 +6,8 @@ import {StyleSheet, View} from 'react-native'
 import QRCode from 'react-native-qrcode-svg'
 
 import {CopyButton, Modal, Spacer, Text} from '../components'
-import {AddressType, formatPath} from '../legacy/commonUtils'
 import {useSelectedWallet} from '../SelectedWallet'
-import {getSpendingKey, getStakingKey} from '../yoroi-wallets/cardano/addressInfo'
+import {AddressType, formatPath, getSpendingKey, getStakingKey} from '../yoroi-wallets'
 
 type Path = {
   account: number
@@ -86,12 +86,8 @@ type ExternalProps = {
 
 export default (props: ExternalProps) => {
   const wallet = useSelectedWallet()
-  const externalIndex: number | undefined = fromPairs(wallet.internalAddresses.map((addr, i) => [addr, i]))[
-    props.address
-  ]
-  const internalIndex: number | undefined = fromPairs(wallet.internalAddresses.map((addr, i) => [addr, i]))[
-    props.address
-  ]
+  const externalIndex: any = fromPairs(wallet.internalAddresses.map((addr, i) => [addr, i]))[props.address]
+  const internalIndex: any = fromPairs(wallet.internalAddresses.map((addr, i) => [addr, i]))[props.address]
 
   if (externalIndex !== undefined) return <AddressModal path={{account: 0, index: externalIndex, role: 0}} {...props} />
   if (internalIndex !== undefined) return <AddressModal path={{account: 0, index: internalIndex, role: 1}} {...props} />

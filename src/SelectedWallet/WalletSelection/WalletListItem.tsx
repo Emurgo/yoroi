@@ -2,9 +2,10 @@ import React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {Icon} from '../../components'
-import {CONFIG, isByron, isHaskellShelley, isJormun, isNightly} from '../../legacy/config'
+import {CONFIG, isNightly} from '../../legacy/config'
 import {WalletMeta} from '../../legacy/state'
 import {brand, COLORS} from '../../theme'
+import {isByron, isHaskellShelley, isJormun} from '../../yoroi-wallets'
 type Props = {
   wallet: WalletMeta
   onPress: (walletMeta: WalletMeta) => void

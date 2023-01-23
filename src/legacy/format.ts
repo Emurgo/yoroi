@@ -5,8 +5,7 @@ import moment from 'moment'
 import type {IntlShape} from 'react-intl'
 import {defineMessages} from 'react-intl'
 
-import {DefaultAsset, Token} from '../yoroi-wallets/types'
-import {getCardanoDefaultAsset} from './config'
+import {DefaultAsset, getCardanoDefaultAsset, Token} from '../yoroi-wallets'
 import utfSymbols from './utfSymbols'
 const messages = defineMessages({
   today: {

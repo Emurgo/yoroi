@@ -5,10 +5,10 @@ import {StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, ButtonProps, Spacer, StatusBar} from '../../components'
-import {CONFIG, isNightly} from '../../legacy/config'
+import {isNightly} from '../../legacy/config'
 import {WalletInitRouteNavigation} from '../../navigation'
 import {COLORS} from '../../theme'
-import {NetworkId, WalletImplementationId} from '../../yoroi-wallets'
+import {CONFIG, NetworkId, WalletImplementationId} from '../../yoroi-wallets'
 import {WalletDescription} from '../WalletDescription'
 
 export const WalletFreshInitScreen = () => {

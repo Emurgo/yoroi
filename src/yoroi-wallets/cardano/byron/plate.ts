@@ -1,7 +1,4 @@
-import type {AddressType} from '../../../legacy/commonUtils'
-import {generateWalletRootKey} from '../../../legacy/commonUtils'
-import type {PlateResponse} from '../../types/other'
-import {legacyWalletChecksum} from '..'
+import {AddressType, generateWalletRootKey, legacyWalletChecksum, PlateResponse} from '..'
 import {getAccountFromMasterKey, getAddresses} from './util'
 
 export const generateByronPlateFromMnemonics = async (phrase: string, count: number): Promise<PlateResponse> => {

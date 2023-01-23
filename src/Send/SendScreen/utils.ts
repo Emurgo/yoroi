@@ -4,17 +4,20 @@ import _ from 'lodash'
 import {IntlShape} from 'react-intl'
 
 import {formatTokenAmount, formatTokenInteger, normalizeTokenAmount} from '../../legacy/format'
-import {getCardanoNetworkConfigById, isHaskellShelleyNetwork} from '../../legacy/networks'
-import {cardanoValueFromMultiToken} from '../../legacy/utils'
 import {
   AssetOverflowError,
   CardanoMobile,
+  cardanoValueFromMultiToken,
+  DefaultAsset,
   MultiToken,
   NotEnoughMoneyToSendError,
+  RawUtxo,
+  SendTokenList,
+  Token,
   YoroiWallet,
 } from '../../yoroi-wallets'
-import {DefaultAsset, Quantity, SendTokenList, Token, YoroiUnsignedTx} from '../../yoroi-wallets/types'
-import {RawUtxo} from '../../yoroi-wallets/types/other'
+import {Quantity, YoroiUnsignedTx} from '../../yoroi-wallets'
+import {getCardanoNetworkConfigById, isHaskellShelleyNetwork} from '../../yoroi-wallets/cardano/networks'
 import {Amounts, Quantities} from '../../yoroi-wallets/utils'
 import {InvalidAssetAmount, parseAmountDecimal} from '../../yoroi-wallets/utils/parsing'
 import type {AddressValidationErrors} from '../../yoroi-wallets/utils/validators'

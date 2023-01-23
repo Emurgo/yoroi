@@ -1,7 +1,7 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {TransactionInfo} from '../yoroi-wallets/types'
+import {TransactionInfo} from '../yoroi-wallets'
 import {Icon} from './Icon'
 
 const ICON = {

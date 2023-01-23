@@ -10,12 +10,12 @@ import {useSubmitTx} from '../../hooks'
 import {confirmationMessages, errorMessages, txLabels} from '../../i18n/global-messages'
 import LocalizableError from '../../i18n/LocalizableError'
 import {CONFIG} from '../../legacy/config'
-import {WrongPassword} from '../../legacy/errors'
-import {DeviceId, DeviceObj} from '../../legacy/ledgerUtils'
 import {isEmptyString} from '../../legacy/utils'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
-import {CardanoTypes, walletManager, withBLE, withUSB} from '../../yoroi-wallets'
+import {useWalletManager} from '../../WalletManager'
+import {CardanoTypes, DeviceId, DeviceObj, withBLE, withUSB} from '../../yoroi-wallets'
+import {WrongPassword} from '../../yoroi-wallets/cardano/errors'
 import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
 import {Button, ButtonProps, ValidatedTextInput} from '..'
 import {Dialog, Step as DialogStep} from './Dialog'
@@ -53,6 +53,7 @@ export const ConfirmTx = ({
   autoSignIfEasyConfirmation,
   chooseTransportOnConfirmation,
 }: Props) => {
+  const walletManager = useWalletManager()
   const strings = useStrings()
   const navigation = useNavigation()
 

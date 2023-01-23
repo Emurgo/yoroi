@@ -6,10 +6,8 @@ import {Linking, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-nati
 import {Text} from '../../../components'
 import {confirmationMessages, txLabels} from '../../../i18n/global-messages'
 import {formatTokenWithText} from '../../../legacy/format'
-import {getNetworkConfigById} from '../../../legacy/networks'
 import {COLORS} from '../../../theme'
-import {YoroiWallet} from '../../../yoroi-wallets'
-import {YoroiStaking, YoroiUnsignedTx} from '../../../yoroi-wallets/types'
+import {getNetworkConfigById, YoroiStaking, YoroiUnsignedTx, YoroiWallet} from '../../../yoroi-wallets'
 import {Amounts, Entries} from '../../../yoroi-wallets/utils'
 
 export const TransferSummary = ({wallet, unsignedTx}: {wallet: YoroiWallet; unsignedTx: YoroiUnsignedTx}) => {

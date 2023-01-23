@@ -3,21 +3,20 @@
 import {action} from '@storybook/addon-actions'
 import BigNumber from 'bignumber.js'
 
-import {getDefaultAssetByNetworkId} from '../../src/legacy/config'
-import {PRIMARY_ASSET_CONSTANTS} from '../../src/legacy/networks'
 import {WalletMeta} from '../../src/legacy/state'
-import {TokenEntry, YoroiWallet} from '../../src/yoroi-wallets'
 import {
+  getDefaultAssetByNetworkId,
   RemotePoolMetaSuccess,
   StakePoolInfosAndHistories,
   StakingInfo,
   StakingStatus,
+  TokenEntry,
   TokenInfo,
   TransactionInfo,
-  YoroiAmounts,
-  YoroiSignedTx,
-  YoroiUnsignedTx,
-} from '../../src/yoroi-wallets/types'
+  YoroiWallet,
+} from '../../src/yoroi-wallets'
+import {PRIMARY_ASSET_CONSTANTS} from '../../src/yoroi-wallets/cardano/networks'
+import {YoroiAmounts, YoroiSignedTx, YoroiUnsignedTx} from '../../src/yoroi-wallets/types'
 import {mockEncryptedStorage} from './storage'
 import {mockTransactionInfo, mockTransactions} from './transaction'
 

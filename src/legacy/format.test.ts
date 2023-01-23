@@ -1,6 +1,6 @@
 import {BigNumber} from 'bignumber.js'
 
-import {getCardanoDefaultAsset} from './config'
+import {getCardanoDefaultAsset} from '../yoroi-wallets'
 import {
   ASSET_DENOMINATION,
   formatTokenAmount,

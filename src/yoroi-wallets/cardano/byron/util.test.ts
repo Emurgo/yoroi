@@ -1,5 +1,5 @@
-import {CONFIG} from '../../../legacy/config'
-import {getCardanoByronConfig} from '../../../legacy/networks'
+import {CONFIG} from '../config'
+import {getCardanoByronConfig} from '../networks'
 import {getAccountFromMasterKey, getAddressInHex, getExternalAddresses, getMasterKeyFromMnemonic} from './util'
 
 const BYRON_PROTOCOL_MAGIC = getCardanoByronConfig().PROTOCOL_MAGIC

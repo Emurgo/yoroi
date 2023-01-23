@@ -1,9 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import {isYoroiWallet} from './cardano'
-import walletManager from './walletManager'
+import {storage} from './storage'
+import {WalletManager} from './walletManager'
 
 describe('walletMananger', () => {
+  const walletManager = new WalletManager(storage)
   beforeEach(() => AsyncStorage.clear())
 
   it('creates a wallet', async () => {

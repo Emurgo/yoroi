@@ -14,38 +14,38 @@ import {
   UseQueryOptions,
 } from 'react-query'
 
-import {getDefaultAssetByNetworkId, isNightly} from '../legacy/config'
-import {ObjectValues} from '../legacy/flow'
-import {HWDeviceInfo} from '../legacy/ledgerUtils'
-import {getCardanoNetworkConfigById} from '../legacy/networks'
-import {processTxHistoryData} from '../legacy/processTransactions'
+import {isNightly} from '../legacy/config'
 import {WalletMeta} from '../legacy/state'
 import storage from '../legacy/storage'
-import {cardanoValueFromRemoteFormat} from '../legacy/utils'
 import {useWalletManager} from '../WalletManager'
 import {
   CardanoMobile,
+  cardanoValueFromRemoteFormat,
+  CurrencySymbol,
+  generateShelleyPlateFromKey,
+  getCardanoNetworkConfigById,
+  getDefaultAssetByNetworkId,
+  HWDeviceInfo,
   NetworkId,
-  TxSubmissionStatus,
-  WalletEvent,
-  WalletImplementationId,
-  WalletManager,
-  YoroiProvider,
-  YoroiWallet,
-} from '../yoroi-wallets'
-import {generateShelleyPlateFromKey} from '../yoroi-wallets/cardano/shelley/plate'
-import {
+  processTxHistoryData,
   Quantity,
+  RawUtxo,
+  TipStatusResponse,
   Token,
   Transaction,
   TRANSACTION_DIRECTION,
   TRANSACTION_STATUS,
   TransactionInfo,
+  TxSubmissionStatus,
+  WalletEvent,
+  WalletImplementationId,
+  WalletManager,
   YoroiAmounts,
+  YoroiProvider,
   YoroiSignedTx,
   YoroiUnsignedTx,
-} from '../yoroi-wallets/types'
-import {CurrencySymbol, RawUtxo, TipStatusResponse} from '../yoroi-wallets/types/other'
+  YoroiWallet,
+} from '../yoroi-wallets'
 import {Utxos} from '../yoroi-wallets/utils'
 import {parseBoolean} from '../yoroi-wallets/utils/parsing'
 
@@ -159,7 +159,7 @@ export const calcLockedDeposit = async (utxos: RawUtxo[], networkId: NetworkId) 
   const minUtxoValue = await CardanoMobile.BigNum.fromStr(networkConfig.MINIMUM_UTXO_VAL)
   const utxosWithAssets = utxos.filter((utxo) => utxo.assets.length > 0)
 
-  const promises = utxosWithAssets.map(async (utxo) => {
+  const promises = utxosWithAssets.map((utxo) => {
     return cardanoValueFromRemoteFormat(utxo)
       .then((value) => CardanoMobile.minAdaRequired(value, minUtxoValue))
       .then((bigNum) => bigNum.toStr())
@@ -553,7 +553,7 @@ export const useTransactionInfos = (wallet: YoroiWallet) => {
 export const useHasPendingTx = (wallet: YoroiWallet) => {
   const transactionInfos = useTransactionInfos(wallet)
 
-  return ObjectValues(transactionInfos).some(
+  return Object.values(transactionInfos).some(
     (transactionInfo) =>
       transactionInfo.status === TRANSACTION_STATUS.PENDING &&
       transactionInfo.direction !== TRANSACTION_DIRECTION.RECEIVED,
@@ -758,7 +758,7 @@ export const fetchTxStatus = async (
     })
 
     const confirmations = txStatus.depth?.[txHash] || 0
-    const submission: any = txStatus.submissionStatus?.[txHash]
+    const submission = txStatus.submissionStatus?.[txHash]
 
     // processed
     if (confirmations > 0) {

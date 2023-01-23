@@ -1,12 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import {WALLETS} from '../../legacy/config'
 import {Logger} from '../../legacy/logging'
 import {WalletMeta} from '../../legacy/state'
 import storage from '../../legacy/storage'
-import {CardanoTypes, legacyWalletChecksum, walletChecksum} from '../../yoroi-wallets'
-import type {NetworkId, WalletImplementationId} from '../../yoroi-wallets/types/other'
-import {NETWORK_REGISTRY, WALLET_IMPLEMENTATION_REGISTRY} from '../../yoroi-wallets/types/other'
+import {
+  CardanoTypes,
+  legacyWalletChecksum,
+  NETWORK_REGISTRY,
+  NetworkId,
+  walletChecksum,
+  WalletImplementationId,
+} from '../../yoroi-wallets'
+import {CONFIG, WALLET_IMPLEMENTATION_REGISTRY} from '../../yoroi-wallets/cardano/config'
 import {parseSafe} from '../../yoroi-wallets/utils/parsing'
 
 async function toShelleyWalletMeta(currentWalletMeta: Partial<WalletMeta>): Promise<WalletMeta> {
@@ -23,14 +28,14 @@ async function toShelleyWalletMeta(currentWalletMeta: Partial<WalletMeta>): Prom
   if (currentWalletMeta.networkId == null && currentWalletMeta.isShelley != null) {
     networkId = currentWalletMeta.isShelley ? NETWORK_REGISTRY.JORMUNGANDR : NETWORK_REGISTRY.HASKELL_SHELLEY
     walletImplementationId = currentWalletMeta.isShelley
-      ? WALLETS.JORMUNGANDR_ITN.WALLET_IMPLEMENTATION_ID
-      : WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID
+      ? CONFIG.WALLETS.JORMUNGANDR_ITN.WALLET_IMPLEMENTATION_ID
+      : CONFIG.WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID
   } else {
     // if wallet implementation/network is not defined, assume Byron
     walletImplementationId =
       currentWalletMeta.walletImplementationId != null
         ? currentWalletMeta.walletImplementationId
-        : WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID
+        : CONFIG.WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID
     networkId =
       currentWalletMeta.networkId != null
         ? currentWalletMeta.networkId === NETWORK_REGISTRY.BYRON_MAINNET
@@ -44,14 +49,14 @@ async function toShelleyWalletMeta(currentWalletMeta: Partial<WalletMeta>): Prom
     if (walletData != null && walletData?.externalChain?.addressGenerator != null) {
       const {accountPubKeyHex, account} = walletData.externalChain.addressGenerator
       switch (walletImplementationId) {
-        case WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID:
+        case CONFIG.WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID:
           checksum = legacyWalletChecksum(accountPubKeyHex || account.root_cached_key)
           break
-        case WALLETS.HASKELL_SHELLEY_24.WALLET_IMPLEMENTATION_ID:
-        case WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID:
+        case CONFIG.WALLETS.HASKELL_SHELLEY_24.WALLET_IMPLEMENTATION_ID:
+        case CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID:
           checksum = walletChecksum(accountPubKeyHex)
           break
-        case WALLETS.JORMUNGANDR_ITN.WALLET_IMPLEMENTATION_ID:
+        case CONFIG.WALLETS.JORMUNGANDR_ITN.WALLET_IMPLEMENTATION_ID:
           checksum = legacyWalletChecksum(account?.root_cached_key || '')
           break
         default:

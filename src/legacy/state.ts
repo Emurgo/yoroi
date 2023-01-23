@@ -1,5 +1,4 @@
-import type {CardanoTypes} from '../yoroi-wallets'
-import type {NetworkId, WalletImplementationId, YoroiProvider} from '../yoroi-wallets/types/other'
+import type {CardanoTypes, NetworkId, WalletImplementationId, YoroiProvider} from '../yoroi-wallets'
 
 export type WalletMeta = {
   id: string

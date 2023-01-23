@@ -9,7 +9,7 @@ import {isEmptyString} from '../legacy/utils'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
 import {YoroiWallet} from '../yoroi-wallets'
-import {StakePoolInfoAndHistory} from '../yoroi-wallets/types'
+import {StakePoolInfoAndHistory} from '../yoroi-wallets'
 
 export const StakePoolInfo = ({stakePoolId}: {stakePoolId: string}) => {
   const strings = useStrings()

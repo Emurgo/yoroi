@@ -3,11 +3,10 @@ import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {CONFIG} from '../../legacy/config'
-import {NetworkError} from '../../legacy/errors'
 import {WalletInitRoutes} from '../../navigation'
 import {WalletManagerProvider} from '../../WalletManager'
-import {WalletManager, walletManager} from '../../yoroi-wallets'
+import {CONFIG, WalletManager} from '../../yoroi-wallets'
+import {NetworkError} from '../../yoroi-wallets/cardano/errors'
 import {SaveNanoXScreen} from './SaveNanoXScreen'
 
 const params: RouteProp<WalletInitRoutes, 'save-nano-x'>['params'] = {
@@ -47,7 +46,6 @@ storiesOf('SaveNanoXScreen', module)
       <WalletManagerProvider
         walletManager={
           {
-            ...walletManager,
             createWalletWithBip44Account: async (...args) => {
               action('createWalletWithBip44Account')(...args)
               await new Promise((resolve) => setTimeout(resolve, 1000))

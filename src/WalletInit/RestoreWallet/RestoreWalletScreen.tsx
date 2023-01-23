@@ -5,9 +5,9 @@ import {View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, KeyboardSpacer, ScrollableView, Spacer, StatusBar, Text} from '../../components'
-import {getWalletConfigById} from '../../legacy/config'
 import {isEmptyString} from '../../legacy/utils'
 import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
+import {getWalletConfigById} from '../../yoroi-wallets'
 import {MnemonicInput} from '../MnemonicInput'
 
 export const RestoreWalletScreen = () => {

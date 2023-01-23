@@ -8,11 +8,11 @@ import {ActivityIndicator, RefreshControl, ScrollView, StyleSheet, View, ViewPro
 import {Banner, Button, Modal, StatusBar} from '../components'
 import {useBalances, useIsOnline, useSync} from '../hooks'
 import globalMessages from '../i18n/global-messages'
-import {getCardanoBaseConfig} from '../legacy/config'
-import {getCardanoNetworkConfigById} from '../legacy/networks'
 import {isEmptyString} from '../legacy/utils'
 import {useWalletNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
+import {getCardanoBaseConfig} from '../yoroi-wallets'
+import {getCardanoNetworkConfigById} from '../yoroi-wallets/cardano/networks'
 import {Amounts} from '../yoroi-wallets/utils'
 import {
   genCurrentEpochLength,

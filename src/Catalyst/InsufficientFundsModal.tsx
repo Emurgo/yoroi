@@ -6,9 +6,9 @@ import {Text, View} from 'react-native'
 import {StandardModal} from '../components'
 import {useBalances} from '../hooks'
 import globalMessages, {confirmationMessages} from '../i18n/global-messages'
-import {CONFIG} from '../legacy/config'
 import {formatTokenWithText} from '../legacy/format'
 import {useSelectedWallet} from '../SelectedWallet'
+import {CONFIG} from '../yoroi-wallets'
 import {Amounts} from '../yoroi-wallets/utils'
 
 export const InsufficientFundsModal = ({visible, onRequestClose}: {visible: boolean; onRequestClose: () => void}) => {

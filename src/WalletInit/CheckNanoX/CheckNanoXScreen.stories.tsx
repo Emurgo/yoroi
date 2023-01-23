@@ -2,8 +2,8 @@ import {NavigationRouteContext, RouteProp} from '@react-navigation/native'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {CONFIG} from '../../legacy/config'
 import {WalletInitRoutes} from '../../navigation'
+import {CONFIG} from '../../yoroi-wallets'
 import {CheckNanoXScreen} from './CheckNanoXScreen'
 
 storiesOf('CheckNanoXScreen', module)

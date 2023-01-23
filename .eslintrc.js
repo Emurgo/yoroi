@@ -68,6 +68,7 @@ module.exports = {
     'no-return-await': 'error',
     'no-template-curly-in-string': 'error',
     'require-await': 'off',
+    'object-shorthand': 'error',
     '@typescript-eslint/require-await': 'error',
     '@typescript-eslint/await-thenable': 'error',
   },

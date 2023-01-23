@@ -5,14 +5,15 @@ import DeviceInfo from 'react-native-device-info'
 import {defaultMemoize} from 'reselect'
 
 import assert from '../../../legacy/assert'
-import {ApiHistoryError} from '../../../legacy/errors'
 import {Logger} from '../../../legacy/logging'
 import {Storage} from '../../storage'
-import type {RemoteCertificateMeta, TxHistoryRequest} from '../../types'
-import {BackendConfig, CERTIFICATE_KIND, RawTransaction, Transaction, TRANSACTION_STATUS} from '../../types/other'
 import {parseSafe} from '../../utils/parsing'
 import {Version, versionCompare} from '../../utils/versioning'
-import * as yoroiApi from '../api'
+import {ApiHistoryError} from '../errors'
+import {getTipStatus} from '../other'
+import {RemoteCertificateMeta} from '../staking'
+import {fetchNewTxHistory, TxHistoryRequest} from '../txs'
+import {BackendConfig, CERTIFICATE_KIND, RawTransaction, Transaction, TRANSACTION_STATUS} from '../types'
 
 export type TransactionCacheState = {
   transactions: {[txid: string]: Transaction}
@@ -103,7 +104,7 @@ export class TransactionCache {
       addressesByChunks,
       backendConfig,
       transactions: this.#state.transactions,
-      api: yoroiApi,
+      api: {getTipStatus, fetchNewTxHistory},
     })
 
     if (txUpdate) {
@@ -127,7 +128,10 @@ export async function syncTxs({
   addressesByChunks: Array<Array<string>>
   backendConfig: BackendConfig
   transactions: Record<string, Transaction>
-  api: Pick<typeof yoroiApi, 'getTipStatus' | 'fetchNewTxHistory'>
+  api: {
+    getTipStatus: typeof getTipStatus
+    fetchNewTxHistory: typeof fetchNewTxHistory
+  }
 }>): Promise<Record<string, Transaction> | undefined> {
   const {bestBlock} = await api.getTipStatus(backendConfig)
   if (!bestBlock.hash) return
@@ -524,13 +528,12 @@ const parseTx = (data: string | null | undefined): Transaction | undefined => {
     return (
       exists(tx) &&
       isObject(tx) &&
-      isString(tx.id) &&
-      isString(tx.status) &&
-      isString(tx.lastUpdatedAt) &&
-      isArray(tx.inputs) &&
-      isArray(tx.outputs) &&
-      isArray(tx.certificates) &&
-      isArray(tx.withdrawals)
+      isString(tx['id']) &&
+      isString(tx['status']) &&
+      isString(tx['lastUpdatedAt']) &&
+      isArray(tx['inputs']) &&
+      isArray(tx['outputs']) &&
+      isArray(tx['certificates'])
     )
   }
 

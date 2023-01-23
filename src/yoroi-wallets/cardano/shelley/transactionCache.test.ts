@@ -1,9 +1,10 @@
 import {fromPairs} from 'lodash'
 import DeviceInfo from 'react-native-device-info'
 
-import {ApiHistoryError} from '../../../legacy/errors'
 import {Storage, storage as rootStorage} from '../../storage'
-import type {BackendConfig, RawTransaction, TipStatusResponse, Transaction} from '../../types/other'
+import {ApiHistoryError} from '../errors'
+import {TipStatusResponse} from '../other'
+import {BackendConfig, RawTransaction, Transaction} from '../types'
 import {makeTxCacheStorage, syncTxs, toCachedTx, TransactionCache} from './transactionCache'
 
 describe('transactionCache', () => {

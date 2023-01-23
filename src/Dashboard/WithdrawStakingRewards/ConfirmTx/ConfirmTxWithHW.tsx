@@ -5,8 +5,8 @@ import {Boundary, TwoActionView} from '../../../components'
 import {useSignWithHwAndSubmitTx} from '../../../hooks'
 import {LedgerConnect, LedgerTransportSwitch} from '../../../HW'
 import {confirmationMessages, txLabels} from '../../../i18n/global-messages'
-import type {DeviceId, DeviceObj} from '../../../legacy/ledgerUtils'
-import {walletManager, withBLE, withUSB, YoroiWallet} from '../../../yoroi-wallets'
+import {useWalletManager} from '../../../WalletManager'
+import {DeviceId, DeviceObj, withBLE, withUSB, YoroiWallet} from '../../../yoroi-wallets'
 import {YoroiUnsignedTx} from '../../../yoroi-wallets/types'
 import {TransferSummary} from '../TransferSummary'
 
@@ -20,6 +20,7 @@ type Props = {
 type TransportType = 'USB' | 'BLE'
 
 export const ConfirmTxWithHW = (props: Props) => {
+  const walletManager = useWalletManager()
   const {wallet} = props
   const [transportType, setTransportType] = React.useState<TransportType>('USB')
   const [step, setStep] = React.useState<'select-transport' | 'connect-transport' | 'confirm'>('select-transport')

@@ -20,8 +20,14 @@ import {isEmptyString} from '../../legacy/utils'
 import {TxHistoryRouteNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
-import {MultiToken, YoroiWallet} from '../../yoroi-wallets'
-import {IOData, TransactionAssurance, TransactionDirection, TransactionInfo} from '../../yoroi-wallets/types'
+import {
+  IOData,
+  MultiToken,
+  TransactionAssurance,
+  TransactionDirection,
+  TransactionInfo,
+  YoroiWallet,
+} from '../../yoroi-wallets'
 
 type Props = {
   transaction: TransactionInfo

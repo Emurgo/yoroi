@@ -1,8 +1,13 @@
-import {AddressType} from '../../../legacy/commonUtils'
-import {CONFIG} from '../../../legacy/config'
-import {AddressGenerator, CardanoMobile, legacyWalletChecksum, walletChecksum} from '../..'
-import type {NetworkId} from '../../types/other'
-import {PlateResponse} from '../../types/other'
+import {
+  AddressGenerator,
+  AddressType,
+  CardanoMobile,
+  CONFIG,
+  legacyWalletChecksum,
+  NetworkId,
+  PlateResponse,
+  walletChecksum,
+} from '../..'
 import {getMasterKeyFromMnemonic} from '../byron/util'
 
 export const generateShelleyPlateFromKey = async (

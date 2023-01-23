@@ -5,12 +5,12 @@ import {useMutation, UseMutationOptions, useQuery, useQueryClient, UseQueryOptio
 
 import {useMutationWithInvalidations, useWallet} from '../hooks'
 import globalMessages from '../i18n/global-messages'
-import {decryptData, encryptData} from '../legacy/commonUtils'
-import {WrongPassword} from '../legacy/errors'
 import {WalletMeta} from '../legacy/state'
 import storage from '../legacy/storage'
 import {SettingsStorageKeys, Storage} from '../Storage'
-import {WalletJSON, walletManager, YoroiWallet} from '../yoroi-wallets'
+import {useWalletManager} from '../WalletManager'
+import {decryptData, encryptData, WalletJSON, YoroiWallet} from '../yoroi-wallets'
+import {WrongPassword} from '../yoroi-wallets/cardano/errors'
 import {Keychain} from './Keychain'
 import {AuthenticationPrompt, authOsEnabled} from './KeychainStorage'
 
@@ -126,6 +126,7 @@ export const useAuthOsWithEasyConfirmation = (
 }
 
 export const useDisableEasyConfirmation = (wallet: YoroiWallet, options?: UseMutationOptions) => {
+  const walletManager = useWalletManager()
   const mutation = useMutationWithInvalidations({
     ...options,
     mutationFn: () => walletManager.disableEasyConfirmation(wallet),
@@ -139,6 +140,7 @@ export const useDisableEasyConfirmation = (wallet: YoroiWallet, options?: UseMut
 }
 
 export const useEnableEasyConfirmation = (wallet: YoroiWallet, options?: UseMutationOptions<void, Error, string>) => {
+  const walletManager = useWalletManager()
   const mutation = useMutationWithInvalidations({
     ...options,
     mutationFn: (password: string) => walletManager.enableEasyConfirmation(wallet, password),
@@ -161,6 +163,7 @@ export const useDisableAllEasyConfirmation = (
   wallet: YoroiWallet | undefined,
   options?: UseMutationOptions<void, Error>,
 ) => {
+  const walletManager = useWalletManager()
   const mutation = useMutationWithInvalidations({
     mutationFn: async () => {
       await disableAllEasyConfirmation()

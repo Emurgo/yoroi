@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js'
 
+import {RawUtxo} from './cardano'
 import {Quantity, TokenId, YoroiAmount, YoroiAmounts, YoroiEntries, YoroiEntry} from './types'
-import {RawUtxo} from './types/other'
 
 export const Entries = {
   first: (entries: YoroiEntries): YoroiEntry => {

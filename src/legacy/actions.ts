@@ -8,7 +8,7 @@ import uuid from 'uuid'
 import {getCrashReportsEnabled} from '../hooks'
 import globalMessages, {errorMessages} from '../i18n/global-messages'
 import {Storage} from '../Storage'
-import {walletManager} from '../yoroi-wallets'
+import {WalletManager} from '../yoroi-wallets'
 import assert from './assert'
 import crashReporting from './crashReporting'
 
@@ -21,7 +21,7 @@ const initInstallationId = async (storage: Storage) => {
   return newInstallationId
 }
 
-export const initApp = async (storage: Storage) => {
+export const initApp = async (storage: Storage, walletManager: WalletManager) => {
   const installationId = await initInstallationId(storage)
 
   const crashReportsEnabled = await getCrashReportsEnabled()

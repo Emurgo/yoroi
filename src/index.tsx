@@ -13,14 +13,15 @@ import {LanguageProvider} from './i18n'
 import translations from './i18n/translations'
 import {handleGeneralError} from './legacy/actions'
 import {CONFIG} from './legacy/config'
-import {ApiError, NetworkError} from './legacy/errors'
 import {Logger, setLogLevel} from './legacy/logging'
 import {isEmptyString} from './legacy/utils'
 import {CurrencyProvider} from './Settings/Currency/CurrencyContext'
 import {StorageProvider, useMigrations} from './Storage'
 import {ThemeProvider} from './theme'
 import {WalletManagerProvider} from './WalletManager'
-import {walletManager} from './yoroi-wallets'
+import {WalletManager} from './yoroi-wallets'
+import {ApiError, NetworkError} from './yoroi-wallets/cardano/errors'
+import {storage} from './yoroi-wallets/storage'
 
 setLogLevel(CONFIG.LOG_LEVEL)
 
@@ -59,6 +60,7 @@ global.onunhandledrejection = (error: any) => {
 }
 
 const queryClient = new QueryClient()
+const walletManager = new WalletManager(storage)
 
 const AppWithProviders = () => {
   const migrated = useMigrations()

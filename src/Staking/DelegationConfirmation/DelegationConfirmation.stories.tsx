@@ -3,9 +3,9 @@ import React from 'react'
 import {QueryClient, QueryClientProvider} from 'react-query'
 
 import {mocks, RouteProvider} from '../../../storybook'
-import {getDefaultAssets} from '../../legacy/config'
 import {StakingCenterRoutes} from '../../navigation'
 import {SelectedWalletProvider} from '../../SelectedWallet'
+import {DEFAULT_ASSETS, DefaultAsset} from '../../yoroi-wallets'
 import {DelegationConfirmation} from './DelegationConfirmation'
 
 storiesOf('DelegationConfirmation', module)
@@ -69,3 +69,20 @@ const params: StakingCenterRoutes['delegation-confirmation'] = {
     },
   },
 }
+
+const _asToken = (asset): DefaultAsset => ({
+  networkId: asset.NETWORK_ID,
+  identifier: asset.IDENTIFIER,
+  isDefault: asset.IS_DEFAULT,
+  metadata: {
+    type: asset.METADATA.TYPE,
+    policyId: asset.METADATA.POLICY_ID,
+    assetName: asset.METADATA.ASSET_NAME,
+    ticker: asset.METADATA.TICKER,
+    longName: asset.METADATA.LONG_NAME,
+    numberOfDecimals: asset.METADATA.NUMBER_OF_DECIMALS,
+    maxSupply: asset.METADATA.MAX_SUPPLY,
+  },
+})
+
+export const getDefaultAssets = (): Array<DefaultAsset> => DEFAULT_ASSETS.map((asset) => _asToken(asset))

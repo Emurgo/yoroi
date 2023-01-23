@@ -2,10 +2,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import {EncryptedStorage, EncryptedStorageKeys} from '../../auth'
-import {HWDeviceInfo} from '../../legacy/ledgerUtils'
 import {WalletMeta} from '../../legacy/state'
+import {HWDeviceInfo} from '../ledgerUtils'
 import {storage} from '../storage'
-import {ShelleyAddressGeneratorJSON} from './chain'
+import {ShelleyAddressGeneratorJSON} from './addresses'
 import {ShelleyWallet, WalletJSON} from './ShelleyWallet'
 import {YoroiWallet} from './types'
 

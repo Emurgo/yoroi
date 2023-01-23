@@ -1,6 +1,5 @@
-import {decryptData, encryptData} from '../legacy/commonUtils'
 import storage from '../legacy/storage'
-import {YoroiWallet} from '../yoroi-wallets'
+import {decryptData, encryptData, YoroiWallet} from '../yoroi-wallets'
 
 type StorageKey = `/keystore/${string}-MASTER_PASSWORD`
 export const EncryptedStorageKeys = {
