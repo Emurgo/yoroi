@@ -8,15 +8,13 @@ import noNftsImage from '../assets/img/no-nft.png'
 import {Icon, Spacer, StatusBar} from '../components'
 import {useNfts} from '../hooks'
 import {WalletStackRouteNavigation} from '../navigation'
+import {useSearch} from '../Search/SearchContext'
 import {useSelectedWallet} from '../SelectedWallet'
 import {ImageGallery, SkeletonGallery} from './ImageGallery'
 
-type Props = {
-  search?: string
-}
-
-export const Nfts = ({search}: Props) => {
-  const searchTermLowerCase = (search ?? '').toLowerCase()
+export const Nfts = () => {
+  const {search} = useSearch()
+  const searchTermLowerCase = search.toLowerCase()
   const wallet = useSelectedWallet()
   const {nfts, isLoading, refetch, isRefetching, isError} = useNfts(wallet)
   const navigation = useNavigation<WalletStackRouteNavigation>()

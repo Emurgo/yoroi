@@ -1,7 +1,7 @@
 import React from 'react'
 import {StyleSheet, TextInput, TouchableOpacity, View} from 'react-native'
 
-import {Icon} from '../Icon'
+import {Icon} from '../components/Icon'
 
 type Props = {
   placeholder: string

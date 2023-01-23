@@ -9,6 +9,7 @@ import {enableScreens} from 'react-native-screens'
 import AppNavigator from './AppNavigator'
 import {AuthProvider} from './auth/AuthProvider'
 import {initApp} from './legacy/actions'
+import {SearchProvider} from './Search'
 import {SelectedWalletMetaProvider, SelectedWalletProvider} from './SelectedWallet'
 import {useStorage} from './Storage'
 
@@ -27,15 +28,17 @@ const App = () => {
 
   return (
     <SafeAreaProvider>
-      <RNP.Provider>
-        <AuthProvider>
-          <SelectedWalletMetaProvider>
-            <SelectedWalletProvider>
-              <AppNavigator />
-            </SelectedWalletProvider>
-          </SelectedWalletMetaProvider>
-        </AuthProvider>
-      </RNP.Provider>
+      <SearchProvider>
+        <RNP.Provider>
+          <AuthProvider>
+            <SelectedWalletMetaProvider>
+              <SelectedWalletProvider>
+                <AppNavigator />
+              </SelectedWalletProvider>
+            </SelectedWalletMetaProvider>
+          </AuthProvider>
+        </RNP.Provider>
+      </SearchProvider>
     </SafeAreaProvider>
   )
 }
