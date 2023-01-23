@@ -180,7 +180,7 @@ export const fetchTxStatus = (request: TxStatusRequest, config: BackendConfig): 
 export const fetchCurrentPrice = async (currency: CurrencySymbol, config: BackendConfig): Promise<number> => {
   const response = (await fetchDefault('price/ADA/current', null, config, 'GET')) as unknown as PriceResponse
 
-  if (response.error) throw new ApiError(response.error)
+  if (!response.error) throw new ApiError(response.error)
 
   return response.ticker.prices[currency]
 }

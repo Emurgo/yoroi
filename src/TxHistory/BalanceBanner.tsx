@@ -1,5 +1,6 @@
 import BigNumber from 'bignumber.js'
 import React, {useState} from 'react'
+import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {Boundary, Spacer} from '../components'
@@ -13,8 +14,8 @@ import {Amounts, Quantities} from '../yoroi-wallets/utils'
 
 export const BalanceBanner = () => {
   const wallet = useSelectedWallet()
-
   const [privacyMode, setPrivacyMode] = useState(false)
+  const strings = useStrings()
 
   return (
     <View style={styles.banner}>
@@ -27,15 +28,27 @@ export const BalanceBanner = () => {
       <Spacer height={10} />
 
       <TouchableOpacity onPress={() => setPrivacyMode(!privacyMode)} style={styles.button}>
-        <Boundary loading={{size: 'small'}} error={{size: 'inline'}}>
-          <Row>
+        <Row>
+          <Boundary loading={{size: 'small'}} error={{size: 'inline'}}>
             <Balance privacyMode={privacyMode} />
-          </Row>
+          </Boundary>
+        </Row>
 
-          <Row>
+        <Row>
+          <Boundary
+            loading={{size: 'small'}}
+            error={{
+              size: 'inline',
+              fallback: () => (
+                <Text style={styles.pairedBalanceText} testID="pairedTotalText">
+                  {strings.pairedBalanceError}
+                </Text>
+              ),
+            }}
+          >
             <PairedBalance privacyMode={privacyMode} />
-          </Row>
-        </Boundary>
+          </Boundary>
+        </Row>
       </TouchableOpacity>
     </View>
   )
@@ -76,7 +89,7 @@ export const PairedBalance = ({privacyMode}: {privacyMode: boolean}) => {
 
   if (rate == null)
     return (
-      <Text style={styles.totalText} testID="pairedTotalText">
+      <Text style={styles.pairedBalanceText} testID="pairedTotalText">
         ... {currency}
       </Text>
     )
@@ -93,10 +106,26 @@ export const PairedBalance = ({privacyMode}: {privacyMode: boolean}) => {
   const pairedTotal = privacyMode ? hiddenPairedTotal : secondaryExchangeQuantity
 
   return (
-    <Text style={styles.totalText} testID="pairedTotalText">
+    <Text style={styles.pairedBalanceText} testID="pairedTotalText">
       {pairedTotal} {currency}
     </Text>
   )
+}
+
+const messages = defineMessages({
+  pairedBalanceError: {
+    id: 'components.txhistory.balancebanner.pairedbalance.error',
+    defaultMessage: '!!!Error obtaining {currency} pairing',
+  },
+})
+
+const useStrings = () => {
+  const intl = useIntl()
+  const {currency} = useCurrencyContext()
+
+  return {
+    pairedBalanceError: intl.formatMessage(messages.pairedBalanceError, {currency}),
+  }
 }
 
 const styles = StyleSheet.create({
@@ -119,7 +148,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Rubik-Medium',
     color: COLORS.ERROR_TEXT_COLOR_DARK,
   },
-  totalText: {
+  pairedBalanceText: {
     fontSize: 14,
     lineHeight: 24,
     fontFamily: 'Rubik-Regular',
