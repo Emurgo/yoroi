@@ -4,7 +4,7 @@ import {expect} from 'chai'
 
 import {WalletMeta} from '../../legacy/state'
 import storage from '../../legacy/storage'
-import {CONFIG, NETWORK_REGISTRY} from '../../yoroi-wallets'
+import {NETWORK_REGISTRY, WALLET_IMPLEMENTATION_REGISTRY, WALLETS} from '../../yoroi-wallets'
 import {migrateWalletMetas} from './walletMeta'
 
 const mockedWalletMeta: Partial<WalletMeta> = {
@@ -20,7 +20,7 @@ const mockedWalletMeta: Partial<WalletMeta> = {
       'b04dc22991594170974bbbb5908cc50b48f236d680a9ebfe6c1d00f52f8f4813341943eb66dec48cfe7f3be5beec705b91300a07641e668ff19dfa2fbeccbfba',
   },
   provider: '',
-  walletImplementationId: 'haskell-shelley-24',
+  walletImplementationId: WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY_24,
 }
 
 // legacy wallet data is any
@@ -57,7 +57,7 @@ describe('migrateWalletMetas()', () => {
           {
             ...mockedWalletMeta,
             networkId: NETWORK_REGISTRY.JORMUNGANDR,
-            walletImplementationId: CONFIG.WALLETS.JORMUNGANDR_ITN.WALLET_IMPLEMENTATION_ID,
+            walletImplementationId: WALLETS.JORMUNGANDR_ITN.WALLET_IMPLEMENTATION_ID,
           },
         ]
 
@@ -76,7 +76,7 @@ describe('migrateWalletMetas()', () => {
             ...mockedWalletMeta,
             isShelley: false,
             networkId: NETWORK_REGISTRY.HASKELL_SHELLEY,
-            walletImplementationId: CONFIG.WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID,
+            walletImplementationId: WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID,
           },
         ]
 
@@ -103,9 +103,7 @@ describe('migrateWalletMetas()', () => {
         await storage.write(`/wallet/${meta.id}`, meta)
         await storage.write(`/wallet/${meta.id}/data`, mockedWalletData)
         const walletMetas = [meta]
-        const expected = [
-          {...mockedWalletMeta, walletImplementationId: CONFIG.WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID},
-        ]
+        const expected = [{...mockedWalletMeta, walletImplementationId: WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID}]
 
         const result = await migrateWalletMetas(walletMetas)
 
@@ -172,7 +170,7 @@ describe('migrateWalletMetas()', () => {
       it('should set checksum with legacy data when the addressGenerator is present in the wallet/data BYRON', async () => {
         const meta = {
           ...mockedWalletMeta,
-          walletImplementationId: CONFIG.WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID,
+          walletImplementationId: WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID,
         }
         delete meta.checksum
         await storage.write(`/wallet/${meta.id}`, meta)
@@ -180,7 +178,7 @@ describe('migrateWalletMetas()', () => {
         const walletMetas = [meta]
         const expectedWalletMeta = {
           ...mockedWalletMeta,
-          walletImplementationId: CONFIG.WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID,
+          walletImplementationId: WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID,
           checksum: {
             TextPart: 'ATPE-6458',
             ImagePart:
@@ -196,7 +194,7 @@ describe('migrateWalletMetas()', () => {
       it('should set checksum with legacy data when the addressGenerator is present in the wallet/data JORMUNGANDR', async () => {
         const meta = {
           ...mockedWalletMeta,
-          walletImplementationId: CONFIG.WALLETS.JORMUNGANDR_ITN.WALLET_IMPLEMENTATION_ID,
+          walletImplementationId: WALLETS.JORMUNGANDR_ITN.WALLET_IMPLEMENTATION_ID,
         }
         delete meta.checksum
         await storage.write(`/wallet/${meta.id}`, meta)
@@ -204,7 +202,7 @@ describe('migrateWalletMetas()', () => {
         const walletMetas = [meta]
         const expectedWalletMeta = {
           ...mockedWalletMeta,
-          walletImplementationId: CONFIG.WALLETS.JORMUNGANDR_ITN.WALLET_IMPLEMENTATION_ID,
+          walletImplementationId: WALLETS.JORMUNGANDR_ITN.WALLET_IMPLEMENTATION_ID,
           checksum: {
             TextPart: 'SKBE-5478',
             ImagePart:

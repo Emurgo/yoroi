@@ -19,9 +19,8 @@ import {CurrencyProvider} from './Settings/Currency/CurrencyContext'
 import {StorageProvider, useMigrations} from './Storage'
 import {ThemeProvider} from './theme'
 import {WalletManagerProvider} from './WalletManager'
-import {WalletManager} from './yoroi-wallets'
+import {storage, WalletManager} from './yoroi-wallets'
 import {ApiError, NetworkError} from './yoroi-wallets/cardano/errors'
-import {storage} from './yoroi-wallets/storage'
 
 setLogLevel(CONFIG.LOG_LEVEL)
 

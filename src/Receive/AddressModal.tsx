@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {fromPairs} from 'lodash'
 import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -86,8 +85,12 @@ type ExternalProps = {
 
 export default (props: ExternalProps) => {
   const wallet = useSelectedWallet()
-  const externalIndex: any = fromPairs(wallet.internalAddresses.map((addr, i) => [addr, i]))[props.address]
-  const internalIndex: any = fromPairs(wallet.internalAddresses.map((addr, i) => [addr, i]))[props.address]
+  const externalIndex: number | undefined = fromPairs(wallet.internalAddresses.map((addr, i) => [addr, i]))[
+    props.address
+  ]
+  const internalIndex: number | undefined = fromPairs(wallet.internalAddresses.map((addr, i) => [addr, i]))[
+    props.address
+  ]
 
   if (externalIndex !== undefined) return <AddressModal path={{account: 0, index: externalIndex, role: 0}} {...props} />
   if (internalIndex !== undefined) return <AddressModal path={{account: 0, index: internalIndex, role: 1}} {...props} />

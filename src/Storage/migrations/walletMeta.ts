@@ -11,7 +11,7 @@ import {
   walletChecksum,
   WalletImplementationId,
 } from '../../yoroi-wallets'
-import {CONFIG, WALLET_IMPLEMENTATION_REGISTRY} from '../../yoroi-wallets/cardano/config'
+import {WALLET_IMPLEMENTATION_REGISTRY, WALLETS} from '../../yoroi-wallets/cardano/config'
 import {parseSafe} from '../../yoroi-wallets/utils/parsing'
 
 async function toShelleyWalletMeta(currentWalletMeta: Partial<WalletMeta>): Promise<WalletMeta> {
@@ -28,14 +28,14 @@ async function toShelleyWalletMeta(currentWalletMeta: Partial<WalletMeta>): Prom
   if (currentWalletMeta.networkId == null && currentWalletMeta.isShelley != null) {
     networkId = currentWalletMeta.isShelley ? NETWORK_REGISTRY.JORMUNGANDR : NETWORK_REGISTRY.HASKELL_SHELLEY
     walletImplementationId = currentWalletMeta.isShelley
-      ? CONFIG.WALLETS.JORMUNGANDR_ITN.WALLET_IMPLEMENTATION_ID
-      : CONFIG.WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID
+      ? WALLETS.JORMUNGANDR_ITN.WALLET_IMPLEMENTATION_ID
+      : WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID
   } else {
     // if wallet implementation/network is not defined, assume Byron
     walletImplementationId =
       currentWalletMeta.walletImplementationId != null
         ? currentWalletMeta.walletImplementationId
-        : CONFIG.WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID
+        : WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID
     networkId =
       currentWalletMeta.networkId != null
         ? currentWalletMeta.networkId === NETWORK_REGISTRY.BYRON_MAINNET
@@ -49,14 +49,14 @@ async function toShelleyWalletMeta(currentWalletMeta: Partial<WalletMeta>): Prom
     if (walletData != null && walletData?.externalChain?.addressGenerator != null) {
       const {accountPubKeyHex, account} = walletData.externalChain.addressGenerator
       switch (walletImplementationId) {
-        case CONFIG.WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID:
+        case WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID:
           checksum = legacyWalletChecksum(accountPubKeyHex || account.root_cached_key)
           break
-        case CONFIG.WALLETS.HASKELL_SHELLEY_24.WALLET_IMPLEMENTATION_ID:
-        case CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID:
+        case WALLETS.HASKELL_SHELLEY_24.WALLET_IMPLEMENTATION_ID:
+        case WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID:
           checksum = walletChecksum(accountPubKeyHex)
           break
-        case CONFIG.WALLETS.JORMUNGANDR_ITN.WALLET_IMPLEMENTATION_ID:
+        case WALLETS.JORMUNGANDR_ITN.WALLET_IMPLEMENTATION_ID:
           checksum = legacyWalletChecksum(account?.root_cached_key || '')
           break
         default:

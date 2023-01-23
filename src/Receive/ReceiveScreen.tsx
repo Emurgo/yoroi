@@ -16,8 +16,7 @@ export const ReceiveScreen = () => {
   const receiveAddresses = useReceiveAddresses(wallet)
   const addressLimitReached = wallet.canGenerateNewReceiveAddress() == false
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const currentAddress: string = _.last(receiveAddresses)!
+  const currentAddress = _.last(receiveAddresses)
 
   React.useEffect(() => {
     wallet.generateNewReceiveAddressIfNeeded()
