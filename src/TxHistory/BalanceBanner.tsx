@@ -10,11 +10,13 @@ import {formatTokenWithText, formatTokenWithTextWhenHidden} from '../legacy/form
 import {useSelectedWallet} from '../SelectedWallet'
 import {useCurrencyContext} from '../Settings/Currency'
 import {COLORS} from '../theme'
+import {CurrencySymbol} from '../yoroi-wallets/types'
 import {Amounts, Quantities} from '../yoroi-wallets/utils'
 
 export const BalanceBanner = () => {
   const wallet = useSelectedWallet()
   const [privacyMode, setPrivacyMode] = useState(false)
+  const {currency} = useCurrencyContext()
   const strings = useStrings()
 
   return (
@@ -41,7 +43,7 @@ export const BalanceBanner = () => {
               size: 'inline',
               fallback: () => (
                 <Text style={styles.pairedBalanceText} testID="pairedTotalText">
-                  {strings.pairedBalanceError}
+                  {strings.pairedBalanceError(currency)}
                 </Text>
               ),
             }}
@@ -121,10 +123,9 @@ const messages = defineMessages({
 
 const useStrings = () => {
   const intl = useIntl()
-  const {currency} = useCurrencyContext()
 
   return {
-    pairedBalanceError: intl.formatMessage(messages.pairedBalanceError, {currency}),
+    pairedBalanceError: (currency: CurrencySymbol) => intl.formatMessage(messages.pairedBalanceError, {currency}),
   }
 }
 
