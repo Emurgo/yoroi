@@ -4,5 +4,5 @@ import {typography} from './typography'
 
 export const lightTheme: Theme = {
   color: lightPalette,
-  typography: typography,
+  typography,
 }
