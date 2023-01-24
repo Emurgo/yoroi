@@ -181,13 +181,7 @@ export const fetchCurrentPrice = async (currency: CurrencySymbol, config: Backen
   return response.ticker.prices[currency]
 }
 
-export const hexToAscii = (hex: string) => {
-  const bytes = [...Buffer.from(hex, 'hex')]
-  const isAscii = bytes.every((byte) => byte > 32 && byte < 127)
-  if (!isAscii) throw new Error('invalid token name hex')
-
-  return String.fromCharCode(...bytes)
-}
+export const hexToAscii = (hex: string) => Buffer.from(hex, 'hex').toLocaleString()
 
 const asciiToHex = (ascii: string) => {
   const result: Array<string> = []
