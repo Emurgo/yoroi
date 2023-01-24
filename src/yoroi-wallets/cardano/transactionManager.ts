@@ -11,11 +11,11 @@ export const makeTransactionManager = async (storage: Storage) => {
     get transactions() {
       const {memos} = memosManager
       return Object.keys(memos).reduce(
-        (allTransactions, currentMemoAddress) => ({
+        (allTransactions, currentMemoTxAddress) => ({
           ...allTransactions,
-          [currentMemoAddress]: {
-            ...allTransactions[currentMemoAddress],
-            memo: memos[currentMemoAddress],
+          [currentMemoTxAddress]: {
+            ...allTransactions[currentMemoTxAddress],
+            memo: memos[currentMemoTxAddress],
           },
         }),
         {...transactionCache.transactions},
