@@ -5,16 +5,21 @@ import {TransactionCache} from './shelley'
 export const makeTransactionManager = async (storage: Storage) => {
   const transactionCache = await TransactionCache.create(storage.join('txs/'))
   const memosManager = await makeMemosManager(storage.join('memos/'))
-  await memosManager.updateMemos()
 
   return {
     // transactionCache api
     get transactions() {
-      const txs = {...transactionCache.transactions}
-      memosManager.memos.forEach(([address, memo]) => {
-        txs[address].memo = memo
-      })
-      return txs
+      const {memos} = memosManager
+      return Object.keys(memos).reduce(
+        (allTransactions, currentMemoAddress) => ({
+          ...allTransactions,
+          [currentMemoAddress]: {
+            ...allTransactions[currentMemoAddress],
+            memo: memos[currentMemoAddress],
+          },
+        }),
+        {...transactionCache.transactions},
+      )
     },
     get perRewardAddressCertificates() {
       return transactionCache.perRewardAddressCertificates
@@ -38,27 +43,19 @@ export const makeTransactionManager = async (storage: Storage) => {
 
 export type TransactionManager = Awaited<ReturnType<typeof makeTransactionManager>>
 
-
 const makeMemosManager = async (storage: Storage) => {
-  const getMemos = async () => (await storage.getAllKeys().then(storage.multiGet)) as unknown as Array<[string, string]>
-  let memos: Array<[string, string]> = []
-
-  const updateMemos = async () => {
-    memos = await getMemos()
-  }
-
-  await updateMemos()
+  const getMemos = async () => storage.getAllKeys().then(storage.multiGet).then(Object.fromEntries)
+  let memos = await getMemos()
 
   const saveMemo = async (txId: string, memo: string): Promise<void> => {
     await storage.setItem(txId, memo)
-    await updateMemos()
+    memos = await getMemos()
   }
 
   return {
     get memos() {
       return memos
     },
-    updateMemos,
     saveMemo,
   }
 }
