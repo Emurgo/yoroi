@@ -41,8 +41,8 @@ export const BalanceBanner = () => {
             loading={{size: 'small'}}
             error={{
               size: 'inline',
-              fallback: () => (
-                <Text style={styles.pairedBalanceText} testID="pairedTotalText">
+              fallback: ({resetErrorBoundary}) => (
+                <Text onPress={resetErrorBoundary} style={styles.pairedBalanceText} testID="pairedTotalText">
                   {strings.pairedBalanceError(currency)}
                 </Text>
               ),
