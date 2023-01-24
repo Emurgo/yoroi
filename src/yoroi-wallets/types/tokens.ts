@@ -67,17 +67,16 @@ export type DefaultAsset = Token & {
 }
 
 export type TokenInfo = {
-  id: string // asset fingerprint
+  id: string
   group: string // policyId
   name: string // derived from token subject
   decimals: number // default to 0
   description: string
+  fingerprint: string
 
   ticker?: string
   url?: string
   logo?: string
-
-  fingerprint: string
 }
 
 export type LegacyToken = {

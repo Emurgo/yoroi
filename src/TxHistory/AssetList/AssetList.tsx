@@ -89,7 +89,7 @@ const AssetItem = ({tokenInfo, onPress}: AssetItemProps) => {
         </Text>
 
         <Text numberOfLines={1} ellipsizeMode="middle" style={styles.tokenName} testID="tokenFingerprintText">
-          {isPrimary ? '' : tokenInfo.id}
+          {isPrimary ? '' : tokenInfo.fingerprint}
         </Text>
       </Middle>
 

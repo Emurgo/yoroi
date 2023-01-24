@@ -65,7 +65,7 @@ const AssetRow = ({styles, entry, backColor, onSelect}: AssetRowProps) => {
         </Text>
 
         <Text style={styles.assetMeta} ellipsizeMode="middle" numberOfLines={1}>
-          {isPrimary ? '' : tokenInfo.id}
+          {isPrimary ? '' : tokenInfo.fingerprint}
         </Text>
       </View>
 

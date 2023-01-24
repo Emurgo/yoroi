@@ -104,6 +104,7 @@ const AssetSelectorItem = ({wallet, tokenInfo, onSelect, matcher}: AssetSelector
   const quantity = useBalance({wallet, tokenId: tokenInfo.id})
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
 
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (!matches(tokenInfo, matcher)) return null
 
   return (
@@ -124,7 +125,7 @@ const AssetSelectorItem = ({wallet, tokenInfo, onSelect, matcher}: AssetSelector
             style={{color: COLORS.TEXT_INPUT}}
             testID="tokenFingerprintText"
           >
-            {isPrimary ? '' : tokenInfo.id}
+            {isPrimary ? '' : tokenInfo.fingerprint}
           </Text>
         </View>
 
@@ -157,11 +158,7 @@ const SearchInput = (props) => {
 }
 
 const matches = (tokenInfo: TokenInfo, matcher: string) =>
-  normalize(tokenInfo.ticker ?? '').includes(matcher) ||
-  normalize(tokenInfo.name).includes(matcher) ||
-  normalize(tokenInfo.id).includes(matcher) ||
-  normalize(tokenInfo.description ?? '').includes(matcher) ||
-  normalize(tokenInfo.group ?? '').includes(matcher)
+  Object.keys(tokenInfo).map((key) => normalize(key).includes(matcher))
 
 const useStrings = () => {
   const intl = useIntl()
