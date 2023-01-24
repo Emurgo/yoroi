@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import AsyncStorage, {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
-import BigNumber from 'bignumber.js'
 import {delay} from 'bluebird'
 import {mapValues} from 'lodash'
 import * as React from 'react'
@@ -18,14 +17,12 @@ import {
 import {isNightly} from '../legacy/config'
 import {ObjectValues} from '../legacy/flow'
 import {HWDeviceInfo} from '../legacy/ledgerUtils'
-import {getCardanoNetworkConfigById} from '../legacy/networks'
 import {processTxHistoryData} from '../legacy/processTransactions'
 import {WalletMeta} from '../legacy/state'
 import storage from '../legacy/storage'
-import {cardanoValueFromRemoteFormat} from '../legacy/utils'
 import {useWalletManager} from '../WalletManager'
 import {
-  CardanoMobile,
+  calcLockedDeposit,
   NetworkId,
   toToken,
   TxSubmissionStatus,
@@ -47,7 +44,7 @@ import {
   YoroiSignedTx,
   YoroiUnsignedTx,
 } from '../yoroi-wallets/types'
-import {CurrencySymbol, RawUtxo, TipStatusResponse} from '../yoroi-wallets/types/other'
+import {CurrencySymbol, TipStatusResponse} from '../yoroi-wallets/types/other'
 import {Amounts, Utxos} from '../yoroi-wallets/utils'
 import {parseBoolean} from '../yoroi-wallets/utils/parsing'
 
@@ -156,22 +153,6 @@ export const useLockedAmount = (
   return query.data
 }
 
-export const calcLockedDeposit = async (utxos: RawUtxo[], networkId: NetworkId) => {
-  const networkConfig = getCardanoNetworkConfigById(networkId)
-  const minUtxoValue = await CardanoMobile.BigNum.fromStr(networkConfig.MINIMUM_UTXO_VAL)
-  const utxosWithAssets = utxos.filter((utxo) => utxo.assets.length > 0)
-
-  const promises = utxosWithAssets.map(async (utxo) => {
-    return cardanoValueFromRemoteFormat(utxo)
-      .then((value) => CardanoMobile.minAdaRequired(value, minUtxoValue))
-      .then((bigNum) => bigNum.toStr())
-  })
-  const results = await Promise.all(promises)
-  const totalLocked = results.reduce((result, current) => result.plus(current), new BigNumber(0)).toString() as Quantity
-
-  return totalLocked
-}
-
 export const useSync = (wallet: YoroiWallet, options?: UseMutationOptions<void, Error>) => {
   const mutation = useMutation({
     ...options,
@@ -235,7 +216,7 @@ export const useTokenInfo = (
   {wallet, tokenId}: {wallet: YoroiWallet; tokenId: string},
   options?: UseQueryOptions<TokenInfo, Error, TokenInfo, [string, 'tokenInfo', string]>,
 ) => {
-  if (tokenId !== wallet.primaryTokenInfo.id && !tokenId.includes('.')) throw new Error(`invalid tokenId: ${tokenId}`)
+  if (tokenId.includes('.')) throw new Error(`invalid tokenId: ${tokenId}`)
 
   const query = useQuery({
     ...options,
@@ -253,7 +234,7 @@ export const useToken = (
   {wallet, tokenId}: {wallet: YoroiWallet; tokenId: string},
   options?: UseQueryOptions<TokenInfo, Error, TokenInfo, [string, 'tokenInfo', string]>,
 ) => {
-  if (tokenId !== wallet.primaryTokenInfo.id && !tokenId.includes('.')) throw new Error(`invalid tokenId: ${tokenId}`)
+  if (tokenId.includes('.')) throw new Error(`invalid tokenId: ${tokenId}`)
 
   const query = useQuery({
     ...options,

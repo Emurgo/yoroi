@@ -18,7 +18,6 @@ import type {
   PoolInfoRequest,
   PriceResponse,
   RawTransaction,
-  RawUtxo,
   TipStatusResponse,
   TokenInfo,
   TxHistoryRequest,
@@ -43,10 +42,21 @@ export const fetchNewTxHistory = async (
     request.addresses.length <= config.TX_HISTORY_MAX_ADDRESSES,
     'fetchNewTxHistory: too many addresses',
   )
-  const response = (await fetchDefault('v2/txs/history', request, config)) as Array<RawTransaction>
+  const transactions = (await fetchDefault('v2/txs/history', request, config)) as Array<RawTransaction>
+
+  // validate tokenId
+  transactions.forEach(({inputs, outputs}) =>
+    [...inputs, ...outputs].forEach(({assets}) =>
+      assets.forEach(({assetId}) => {
+        assetId.includes('.')
+        throw new Error(`fetchNewTxHistory: token id: ${assetId}`)
+      }),
+    ),
+  )
+
   return {
-    transactions: response,
-    isLast: response.length < config.TX_HISTORY_RESPONSE_LIMIT,
+    transactions,
+    isLast: transactions.length < config.TX_HISTORY_RESPONSE_LIMIT,
   }
 }
 
@@ -62,24 +72,6 @@ export const filterUsedAddresses = async (addresses: Addresses, config: BackendC
   return copy.filter((addr) => used.includes(addr))
 }
 
-export const fetchUTXOsForAddresses = (addresses: Addresses, config: BackendConfig) => {
-  assert.preconditionCheck(
-    addresses.length <= config.FETCH_UTXOS_MAX_ADDRESSES,
-    'fetchUTXOsForAddresses: too many addresses',
-  )
-  return fetchDefault('txs/utxoForAddresses', {addresses}, config)
-}
-
-export const bulkFetchUTXOsForAddresses = async (
-  addresses: Addresses,
-  config: BackendConfig,
-): Promise<Array<RawUtxo>> => {
-  const chunks = _.chunk(addresses, config.FETCH_UTXOS_MAX_ADDRESSES)
-
-  const responses = await Promise.all(chunks.map((addrs) => fetchUTXOsForAddresses(addrs, config)))
-  return _.flatten(responses) as any
-}
-
 export const submitTransaction = (signedTx: string, config: BackendConfig) => {
   return fetchDefault('txs/signed', {signedTx}, config)
 }
@@ -88,7 +80,25 @@ export const getTransactions = (
   txids: Array<string>,
   config: BackendConfig,
 ): Promise<Record<string, RawTransaction>> => {
-  return fetchDefault('v2/txs/get', {txHashes: txids}, config)
+  return fetchDefault('v2/txs/get', {txHashes: txids}, config).then((txs) => {
+    const entries: Array<[string, RawTransaction]> = Object.entries(txs)
+    const newEntries: Array<[string, RawTransaction]> = entries.map(([txid, tx]) => [
+      txid,
+      {
+        ...tx,
+        inputs: tx.inputs.map((input) => ({
+          ...input,
+          assets: input.assets.map((asset) => ({...asset, assetId: asset.assetId.replace('.', '')})), // migrate from legacy tokenId to tokenSubject
+        })),
+        outputs: tx.outputs.map((output) => ({
+          ...output,
+          assets: output.assets.map((asset) => ({...asset, assetId: asset.assetId.replace('.', '')})), // migrate from legacy tokenId to tokenSubject
+        })),
+      } as RawTransaction,
+    ])
+
+    return Object.fromEntries(newEntries)
+  })
 }
 
 export const getAccountState = (request: AccountStateRequest, config: BackendConfig): Promise<AccountStateResponse> => {
@@ -113,7 +123,7 @@ export const getPoolInfo = (request: PoolInfoRequest, config: BackendConfig): Pr
 }
 
 export const getTokenInfo = async (tokenId: string, apiUrl: string) => {
-  if (tokenId !== '' && !tokenId.includes('.')) throw new Error(`invalid tokenId: ${tokenId}`)
+  if (tokenId.includes('.')) throw new Error(`invalid tokenId: ${tokenId}`)
   const tokenSubject = tokenId.replace('.', '')
 
   const response = await checkedFetch({
@@ -150,10 +160,11 @@ const tokenInfo = (entry: TokenRegistryEntry): TokenInfo => {
 }
 
 const fallbackTokenInfo = (tokenId: string): TokenInfo => {
-  const [policyId, assetNameHex] = splitTokenSubject(tokenId)
+  const tokenSubject = tokenId.replace('.', '') // migrate from legacy to tokenSubject
+  const [policyId, assetNameHex] = splitTokenSubject(tokenSubject)
 
   return {
-    id: tokenId,
+    id: tokenId.replace('.', ''), // migrate from legacy to tokenSubject
     name: hexToAscii(assetNameHex),
     group: policyId,
     decimals: 0,
@@ -161,10 +172,7 @@ const fallbackTokenInfo = (tokenId: string): TokenInfo => {
   }
 }
 
-export const splitTokenSubject = (tokenSubject: string) => {
-  const tokenSubject_ = tokenSubject.replace('.', '')
-  return [tokenSubject_.slice(0, 56), tokenSubject_.slice(56)]
-}
+export const splitTokenSubject = (tokenSubject: string) => [tokenSubject.slice(0, 56), tokenSubject.slice(56)]
 
 export const getFundInfo = (config: BackendConfig, isMainnet: boolean): Promise<FundInfoResponse> => {
   const prefix = isMainnet ? '' : 'api/'
@@ -201,25 +209,23 @@ const asciiToHex = (ascii: string) => {
   return result.join('')
 }
 
-export const toToken = ({wallet, tokenInfo}: {wallet: YoroiWallet; tokenInfo: TokenInfo}): LegacyToken => {
-  return {
-    identifier: `${tokenInfo.group}${asciiToHex(tokenInfo.name)}`, // convert name to hex
-    networkId: wallet.networkId,
-    isDefault: tokenInfo.id === wallet.primaryTokenInfo.id,
-    metadata: {
-      type: 'Cardano',
-      policyId: tokenInfo.group,
-      assetName: asciiToHex(tokenInfo.name),
-      numberOfDecimals: tokenInfo.decimals,
-      ticker: tokenInfo.ticker ?? null,
-      longName: null,
-      maxSupply: null,
-    },
-  }
-}
+export const toToken = ({wallet, tokenInfo}: {wallet: YoroiWallet; tokenInfo: TokenInfo}): LegacyToken => ({
+  identifier: `${tokenInfo.group}${asciiToHex(tokenInfo.name)}`, // convert name to hex
+  networkId: wallet.networkId,
+  isDefault: tokenInfo.id === wallet.primaryTokenInfo.id,
+  metadata: {
+    type: 'Cardano',
+    policyId: tokenInfo.group,
+    assetName: asciiToHex(tokenInfo.name),
+    numberOfDecimals: tokenInfo.decimals,
+    ticker: tokenInfo.ticker ?? null,
+    longName: null,
+    maxSupply: null,
+  },
+})
 export const toTokenInfo = (token: LegacyToken): TokenInfo => {
   return {
-    id: token.identifier,
+    id: token.identifier.replace('.', ''), // migrate from legacy to tokenSubject
     group: token.metadata.policyId,
     name: hexToAscii(token.metadata.assetName),
     decimals: token.metadata.numberOfDecimals,
@@ -234,7 +240,8 @@ export const toAssetFingerprint = (policyId: string, assetNameHex: string) => {
 }
 
 export const toTokenId = (identifier: string) => {
-  const [policyId, assetNameHex] = splitTokenSubject(identifier)
+  const tokenSubject = identifier.replace('.', '') // migrate from legacy to tokenSubject
+  const [policyId, assetNameHex] = splitTokenSubject(tokenSubject)
 
   return getTokenFingerprint({policyId, assetNameHex})
 }

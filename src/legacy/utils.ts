@@ -83,7 +83,8 @@ export const identifierToCardanoAsset = async (
   policyId: CardanoTypes.ScriptHash
   name: CardanoTypes.AssetName
 }> => {
-  const [policyId, assetNameHex] = splitTokenSubject(identifier)
+  const tokenSubject = identifier.replace('.', '') // migrate from legacy to tokenSubject
+  const [policyId, assetNameHex] = splitTokenSubject(tokenSubject)
   return {
     policyId: await CardanoMobile.ScriptHash.fromBytes(Buffer.from(policyId, 'hex')),
     name: await CardanoMobile.AssetName.new(Buffer.from(assetNameHex, 'hex')),

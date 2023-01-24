@@ -453,50 +453,50 @@ const fetchCurrentPrice = {
 const tokenEntries: Array<TokenEntry> = [
   {
     networkId: 123,
-    identifier: '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950',
+    identifier: '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d7444524950',
     amount: new BigNumber(12344.00234523),
   },
   {
     networkId: 123,
-    identifier: '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950',
+    identifier: '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d7444524950',
     amount: new BigNumber(12344.00234523),
   },
   {
     networkId: 123,
-    identifier: '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950',
+    identifier: '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d7444524950',
     amount: new BigNumber(12344.00234523),
   },
   {
     networkId: 123,
-    identifier: '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950',
+    identifier: '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d7444524950',
     amount: new BigNumber(12344.00234523),
   },
   {
     networkId: 123,
-    identifier: '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950',
+    identifier: '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d7444524950',
     amount: new BigNumber(12344.00234523),
   },
   {
     networkId: 123,
-    identifier: '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950',
+    identifier: '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d7444524950',
     amount: new BigNumber(12344.00234523),
   },
 ]
 
 const balances: YoroiAmounts = {
   [PRIMARY_ASSET_CONSTANTS.CARDANO]: '2727363743849',
-  '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950': '12344',
-  '29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6.4d494e': '215410',
-  '1d129dc9c03f95a863489883914f05a52e13135994a32f0cbeacc65f.74484f444c52': '5',
-  '1ca1fc0c880d25850cb00303788dfb51bdf2f902f6dce47d1ad09d5b.44': '2463889379',
-  '08d91ec4e6c743a92de97d2fde5ca0d81493555c535894a3097061f7.c8b0': '148',
+  '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d7444524950': '12344',
+  '29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c64d494e': '215410',
+  '1d129dc9c03f95a863489883914f05a52e13135994a32f0cbeacc65f74484f444c52': '5',
+  '1ca1fc0c880d25850cb00303788dfb51bdf2f902f6dce47d1ad09d5b44': '2463889379',
+  '08d91ec4e6c743a92de97d2fde5ca0d81493555c535894a3097061f7c8b0': '148',
 }
 
 const tokenInfos: Record<string, TokenInfo> = {
   '': primaryTokenInfo.mainnet,
-  '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950': toTokenInfo({
+  '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d7444524950': toTokenInfo({
     networkId: 300,
-    identifier: '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950',
+    identifier: '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d7444524950',
     isDefault: false,
     metadata: {
       type: 'Cardano',

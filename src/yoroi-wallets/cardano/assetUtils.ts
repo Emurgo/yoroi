@@ -10,7 +10,7 @@ export async function calcLockedDeposit(utxos: RawUtxo[], networkId: NetworkId) 
   const minUtxoValue = await CardanoMobile.BigNum.fromStr(networkConfig.MINIMUM_UTXO_VAL)
   const utxosWithAssets = utxos.filter((u) => u.assets.length > 0)
 
-  const promises = utxosWithAssets.map(async (u) => {
+  const promises = utxosWithAssets.map((u) => {
     return cardanoValueFromRemoteFormat(u)
       .then((v) => CardanoMobile.minAdaRequired(v, minUtxoValue))
       .then((v) => v.toStr())

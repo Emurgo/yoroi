@@ -7,7 +7,7 @@ import {useTokenInfo} from '../../hooks'
 import globalMessages, {txLabels} from '../../i18n/global-messages'
 import {formatTokenAmount} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
-import {TokenEntry, toToken, toTokenId} from '../../yoroi-wallets'
+import {TokenEntry, toToken} from '../../yoroi-wallets'
 import assetListSendStyle from './AssetListSend.style'
 import assetListTransactionStyle from './AssetListTransaction.style'
 import baseStyle from './Base.style'
@@ -53,9 +53,10 @@ type AssetRowProps = {
 const AssetRow = ({styles, entry, backColor, onSelect}: AssetRowProps) => {
   const intl = useIntl()
   const wallet = useSelectedWallet()
-  const tokenId = tokenInfo.id
-  if (tokenId !== wallet.primaryTokenInfo.id && !tokenId.includes('.')) throw new Error(`invalid tokenId: ${tokenId}`)
   const tokenInfo = useTokenInfo({wallet, tokenId: entry.identifier})
+  const tokenId = tokenInfo.id
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+  if (tokenId.includes('.')) throw new Error(`invalid tokenId: ${tokenId}`)
   const token = toToken({wallet, tokenInfo})
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
 

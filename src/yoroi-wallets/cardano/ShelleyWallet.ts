@@ -979,14 +979,14 @@ export class ShelleyWallet implements WalletInterface {
     return api.getPoolInfo(request, this.getBackendConfig())
   }
 
-  async fetchTokenInfo(tokenId: string) {
+  fetchTokenInfo(tokenId: string) {
     const apiUrl = this.getBackendConfig().TOKEN_INFO_SERVICE
     if (!apiUrl) throw new Error('invalid wallet')
 
     return (tokenId === '' || tokenId === 'ADA') && this.networkId === 1
-      ? primaryTokenInfo.mainnet
+      ? Promise.resolve(primaryTokenInfo.mainnet)
       : (tokenId === '' || tokenId === 'ADA' || tokenId === 'TADA') && this.networkId === 300
-      ? primaryTokenInfo.testnet
+      ? Promise.resolve(primaryTokenInfo.testnet)
       : api.getTokenInfo(tokenId, `${apiUrl}/metadata`)
   }
 

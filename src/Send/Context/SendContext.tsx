@@ -38,8 +38,7 @@ export const SendProvider = ({
     receiverChanged: (receiver) => dispatch({type: 'receiverChanged', receiver}),
     amountChanged: (amount) => dispatch({type: 'amountChanged', amount}),
     tokenSelected: (tokenId) => {
-      if (tokenId !== wallet.primaryTokenInfo.id && !tokenId.includes('.'))
-        throw new Error(`invalid tokenId: ${tokenId}`)
+      if (tokenId.includes('.')) throw new Error(`invalid tokenId: ${tokenId}`)
       dispatch({type: 'tokenSelected', tokenId})
     },
     sendAllChanged: () => dispatch({type: 'sendAllChanged'}),

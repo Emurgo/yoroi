@@ -197,7 +197,7 @@ export type TxHistoryRequest = {
 export type RemoteTransactionInputBase = {
   readonly address: string
   readonly amount: string
-  readonly assets: ReadonlyArray<RemoteAsset>
+  readonly assets: Array<RemoteAsset>
 }
 export type RemoteTransactionUtxoInput = {
   readonly id: string
@@ -205,12 +205,12 @@ export type RemoteTransactionUtxoInput = {
   readonly index: number
   readonly txHash: string
 }
-// not considering acount txs for now
+// not considering account txs for now
 export type RemoteTransactionInput = RemoteTransactionInputBase & RemoteTransactionUtxoInput
 export type RemoteTransactionOutput = {
   readonly address: string
   readonly amount: string
-  readonly assets: ReadonlyArray<RemoteAsset>
+  readonly assets: Array<RemoteAsset>
 }
 
 /**
@@ -247,6 +247,7 @@ export type RemoteTxInfo = {
   readonly collateral_inputs?: Array<RemoteTransactionInput>
 }
 export type RawTransaction = Partial<RemoteTxBlockMeta> & RemoteTxInfo
+
 // Catalyst
 type FundInfo = {
   readonly id: number

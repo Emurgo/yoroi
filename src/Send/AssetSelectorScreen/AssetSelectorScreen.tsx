@@ -102,7 +102,7 @@ type AssetSelectorItemProps = {
 
 const AssetSelectorItem = ({wallet, tokenInfo, onSelect, matcher}: AssetSelectorItemProps) => {
   const tokenId = tokenInfo.id
-  if (tokenId !== wallet.primaryTokenInfo.id && !tokenId.includes('.')) throw new Error(`invalid tokenId: ${tokenId}`)
+  if (tokenId.includes('.')) throw new Error(`invalid tokenId: ${tokenId}`)
   const quantity = useBalance({wallet, tokenId: tokenInfo.id})
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
 
