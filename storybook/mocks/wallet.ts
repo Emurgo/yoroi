@@ -291,14 +291,20 @@ const fetchPoolInfo = {
 }
 
 const fetchNfts = {
-  success: async (...args) => {
-    action('fetchNfts')(...args)
-    return [
-      {...nft, id: '1'},
-      {...nft, id: '2'},
-      {...nft, id: '3'},
-      {...nft, id: '4'},
-    ]
+  success: {
+    many: async (...args) => {
+      action('fetchNfts')(...args)
+      return [
+        {...nft, id: '1'},
+        {...nft, id: '2'},
+        {...nft, id: '3'},
+        {...nft, id: '4'},
+      ]
+    },
+    empty: async (...args) => {
+      action('fetchNfts')(...args)
+      return []
+    },
   },
   error: async (...args) => {
     action('fetchNfts')(...args)

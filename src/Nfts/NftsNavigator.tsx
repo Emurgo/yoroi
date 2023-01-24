@@ -26,7 +26,7 @@ export const NftsNavigator = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerTitleContainerStyle: {width: '100%', alignItems: 'center'},
+        headerTitleContainerStyle: {alignItems: 'center'},
         cardStyle: {backgroundColor: '#fff'},
       }}
       initialRouteName="nfts"
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   iconPlaceholder: {
-    width: 0,
+    width: 26,
   },
 })
 

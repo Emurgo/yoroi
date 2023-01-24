@@ -13,7 +13,7 @@ export const NftDetailsNavigator = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerTitleContainerStyle: {width: '100%', alignItems: 'center'},
+        headerTitleContainerStyle: {alignItems: 'center'},
         cardStyle: {backgroundColor: '#fff'},
       }}
       initialRouteName="nft-details"

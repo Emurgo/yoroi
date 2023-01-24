@@ -1,13 +1,12 @@
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
-import React, {memo, ReactNode, useState} from 'react'
+import React, {ReactNode, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {getPrettyDate} from '../../tests/helpers/utils'
-import {CopyButton, FadeIn, Icon, Link, Spacer, StatusBar, Text} from '../components'
+import {CopyButton, FadeIn, Icon, Link, Spacer, Text} from '../components'
 import {Tab, TabPanel, TabPanels, Tabs} from '../components/Tabs'
-import {useNft, useTransactionInfos} from '../hooks'
+import {useNft} from '../hooks'
 import {getAssetFingerprint} from '../legacy/format'
 import {NftDetailsNavigation, NftRoutes} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
@@ -20,22 +19,17 @@ export const NftDetails = () => {
   const {id} = useRoute<RouteProp<NftRoutes, 'nft-details'>>().params
   const strings = useStrings()
   const wallet = useSelectedWallet()
-  const transactionsInfo = useTransactionInfos(wallet)
 
   const navigation = useNavigation<NftDetailsNavigation>()
   const [activeTab, setActiveTab] = useState<ViewTabs>('overview')
   const nft = useNft(wallet, {id})
 
   const stringifiedMetadata = JSON.stringify(nft, undefined, 2)
-  const matchingTransaction = Object.values(transactionsInfo).find((t) => Object.keys(t.tokens).includes(id))
-  const transactionUpdatedAt = matchingTransaction?.submittedAt ?? null
 
   const onFullscreen = () => navigation.navigate('nft-details-image', {id})
 
   return (
     <FadeIn style={styles.container}>
-      <StatusBar type="dark" />
-
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <View style={styles.imageContainer}>
           <TouchableOpacity onPress={onFullscreen}>
@@ -61,7 +55,7 @@ export const NftDetails = () => {
 
           <TabPanels>
             <TabPanel active={activeTab === 'overview'}>
-              <NftMetadataPanel nft={nft} transactionTime={transactionUpdatedAt ?? undefined} />
+              <NftMetadataPanel nft={nft} />
             </TabPanel>
 
             <TabPanel active={activeTab === 'metadata'}>
@@ -94,18 +88,14 @@ const MetadataRow = ({title, copyText, children}: {title: string; children: Reac
   )
 }
 
-const NftMetadataPanel = memo(({nft, transactionTime}: {nft: YoroiNFT; transactionTime?: string}) => {
+const NftMetadataPanel = ({nft}: {nft: YoroiNFT}) => {
   const strings = useStrings()
   const fingerprint = getAssetFingerprint(nft.metadata.policyId, nft.metadata.assetNameHex)
-  const formattedTime = transactionTime !== undefined ? getPrettyDate(new Date(transactionTime)) : null
 
   return (
     <>
       <MetadataRow title={strings.nftName}>
         <Text secondary>{nft.name}</Text>
-      </MetadataRow>
-      <MetadataRow title={strings.createdAt}>
-        <Text secondary>{formattedTime}</Text>
       </MetadataRow>
       <MetadataRow title={strings.description}>
         <Text secondary>{nft.description}</Text>
@@ -113,8 +103,8 @@ const NftMetadataPanel = memo(({nft, transactionTime}: {nft: YoroiNFT; transacti
       <MetadataRow title={strings.author}>
         <Text secondary>{nft.metadata.originalMetadata.author ?? '-'}</Text>
       </MetadataRow>
-      <MetadataRow title={strings.fingerprint} copyText={fingerprint ?? '-'}>
-        <Text secondary>{fingerprint ?? '-'}</Text>
+      <MetadataRow title={strings.fingerprint} copyText={fingerprint}>
+        <Text secondary>{fingerprint}</Text>
       </MetadataRow>
       <MetadataRow title={strings.policyId} copyText={nft.metadata.policyId}>
         <Text secondary>{nft.metadata.policyId}</Text>
@@ -141,7 +131,7 @@ const NftMetadataPanel = memo(({nft, transactionTime}: {nft: YoroiNFT; transacti
       </MetadataRow>
     </>
   )
-})
+}
 
 const styles = StyleSheet.create({
   copyButton: {
@@ -176,7 +166,6 @@ const styles = StyleSheet.create({
   },
   image: {
     flex: 1,
-    width: '100%',
     height: 380,
   },
   contentContainer: {

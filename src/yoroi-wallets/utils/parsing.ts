@@ -71,8 +71,11 @@ export const parseBoolean = (data: unknown) => {
 }
 
 export const asciiToHex = (text: string) => {
-  const characters = text.split('')
-  return characters.map((char) => char.charCodeAt(0).toString(16)).join('')
+  try {
+    return Buffer.from(text, 'utf-8').toString('hex')
+  } catch (e) {
+    return ''
+  }
 }
 
 export const isObject = (data: unknown): data is object => {

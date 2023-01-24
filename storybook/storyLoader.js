@@ -24,6 +24,7 @@ function loadStories() {
 	require('../src/NftDetails/NFTDetailsImage.stories');
 	require('../src/Nfts/ImageGallery/ImageGallery.stories');
 	require('../src/Nfts/Nfts.stories');
+	require('../src/Nfts/NoNftsScreen.stories');
 	require('../src/Receive/AddressModal.stories');
 	require('../src/Receive/Addresses.stories');
 	require('../src/Receive/ReceiveScreen.stories');
@@ -127,6 +128,7 @@ const stories = [
 	'../src/NftDetails/NFTDetailsImage.stories',
 	'../src/Nfts/ImageGallery/ImageGallery.stories',
 	'../src/Nfts/Nfts.stories',
+	'../src/Nfts/NoNftsScreen.stories',
 	'../src/Receive/AddressModal.stories',
 	'../src/Receive/Addresses.stories',
 	'../src/Receive/ReceiveScreen.stories',

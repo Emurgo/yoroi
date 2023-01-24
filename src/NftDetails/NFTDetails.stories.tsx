@@ -22,7 +22,7 @@ storiesOf('NFT Details', module)
   .add('Loaded', () => {
     const loadedWallet = {
       ...mocks.wallet,
-      fetchNfts: mocks.fetchNfts.success,
+      fetchNfts: mocks.fetchNfts.success.many,
       fetchNftModerationStatus: mocks.fetchNftModerationStatus.success.approved,
     }
     return (

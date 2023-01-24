@@ -17,10 +17,25 @@ storiesOf('NFT Gallery', module)
       </QueryClientProvider>
     )
   })
+  .add('Loaded & Empty', () => {
+    const loadedWallet = {
+      ...mocks.wallet,
+      fetchNfts: mocks.fetchNfts.success.empty,
+      fetchNftModerationStatus: mocks.fetchNftModerationStatus.success.approved,
+    }
+
+    return (
+      <QueryClientProvider client={new QueryClient()}>
+        <SelectedWalletProvider wallet={loadedWallet}>
+          <Nfts />
+        </SelectedWalletProvider>
+      </QueryClientProvider>
+    )
+  })
   .add('Loaded & Approved', () => {
     const loadedWallet = {
       ...mocks.wallet,
-      fetchNfts: mocks.fetchNfts.success,
+      fetchNfts: mocks.fetchNfts.success.many,
       fetchNftModerationStatus: mocks.fetchNftModerationStatus.success.approved,
     }
 
@@ -35,7 +50,7 @@ storiesOf('NFT Gallery', module)
   .add('Loaded & Blurred image', () => {
     const loadedWallet = {
       ...mocks.wallet,
-      fetchNfts: mocks.fetchNfts.success,
+      fetchNfts: mocks.fetchNfts.success.many,
       fetchNftModerationStatus: mocks.fetchNftModerationStatus.success.consent,
     }
 
@@ -50,7 +65,7 @@ storiesOf('NFT Gallery', module)
   .add('Loaded & Not approved', () => {
     const loadedWallet = {
       ...mocks.wallet,
-      fetchNfts: mocks.fetchNfts.success,
+      fetchNfts: mocks.fetchNfts.success.many,
       fetchNftModerationStatus: mocks.fetchNftModerationStatus.success.blocked,
     }
 
@@ -65,7 +80,7 @@ storiesOf('NFT Gallery', module)
   .add('Loaded & Pending review', () => {
     const loadedWallet = {
       ...mocks.wallet,
-      fetchNfts: mocks.fetchNfts.success,
+      fetchNfts: mocks.fetchNfts.success.many,
       fetchNftModerationStatus: mocks.fetchNftModerationStatus.success.pendingReview,
     }
 
