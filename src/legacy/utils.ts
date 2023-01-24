@@ -78,13 +78,12 @@ export const deriveRewardAddressHex = async (accountPubKeyHex: string, networkId
  * Multi-asset related
  */
 export const identifierToCardanoAsset = async (
-  identifier: string,
+  tokenId: string,
 ): Promise<{
   policyId: CardanoTypes.ScriptHash
   name: CardanoTypes.AssetName
 }> => {
-  const tokenSubject = identifier.replace('.', '') // migrate from legacy to tokenSubject
-  const [policyId, assetNameHex] = splitTokenSubject(tokenSubject)
+  const [policyId, assetNameHex] = splitTokenSubject(tokenId)
   return {
     policyId: await CardanoMobile.ScriptHash.fromBytes(Buffer.from(policyId, 'hex')),
     name: await CardanoMobile.AssetName.new(Buffer.from(assetNameHex, 'hex')),
@@ -121,11 +120,11 @@ export const cardanoValueFromRemoteFormat = async (utxo: RawUtxo) => {
   if (utxo.assets.length === 0) return value
   const assets = await CardanoMobile.MultiAsset.new()
 
-  for (const entry of utxo.assets) {
-    const {policyId, name} = await identifierToCardanoAsset(entry.assetId)
+  for (const remoteAsset of utxo.assets) {
+    const {policyId, name} = await identifierToCardanoAsset(remoteAsset.assetId)
     let policyContent = await assets.get(policyId)
     policyContent = policyContent.hasValue() ? policyContent : await CardanoMobile.Assets.new()
-    await policyContent.insert(name, await CardanoMobile.BigNum.fromStr(entry.amount))
+    await policyContent.insert(name, await CardanoMobile.BigNum.fromStr(remoteAsset.amount))
     // recall: we always have to insert since WASM returns copies of objects
     await assets.insert(policyId, policyContent)
   }

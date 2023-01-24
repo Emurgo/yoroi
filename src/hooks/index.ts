@@ -216,8 +216,6 @@ export const useTokenInfo = (
   {wallet, tokenId}: {wallet: YoroiWallet; tokenId: string},
   options?: UseQueryOptions<TokenInfo, Error, TokenInfo, [string, 'tokenInfo', string]>,
 ) => {
-  if (tokenId.includes('.')) throw new Error(`invalid tokenId: ${tokenId}`)
-
   const query = useQuery({
     ...options,
     suspense: true,
@@ -234,8 +232,6 @@ export const useToken = (
   {wallet, tokenId}: {wallet: YoroiWallet; tokenId: string},
   options?: UseQueryOptions<TokenInfo, Error, TokenInfo, [string, 'tokenInfo', string]>,
 ) => {
-  if (tokenId.includes('.')) throw new Error(`invalid tokenId: ${tokenId}`)
-
   const query = useQuery({
     ...options,
     suspense: true,

@@ -5,7 +5,6 @@ import _ from 'lodash'
 import assert from '../../legacy/assert'
 import {ApiError} from '../../legacy/errors'
 import fetchDefault, {checkedFetch} from '../../legacy/fetch'
-import {getTokenFingerprint} from '../../legacy/format'
 import {Logger} from '../../legacy/logging'
 import {ServerStatus, YoroiWallet} from '..'
 import type {
@@ -18,6 +17,7 @@ import type {
   PoolInfoRequest,
   PriceResponse,
   RawTransaction,
+  RemoteAsset,
   TipStatusResponse,
   TokenInfo,
   TxHistoryRequest,
@@ -76,29 +76,31 @@ export const submitTransaction = (signedTx: string, config: BackendConfig) => {
   return fetchDefault('txs/signed', {signedTx}, config)
 }
 
-export const getTransactions = (
+export const getTransactions = async (
   txids: Array<string>,
   config: BackendConfig,
 ): Promise<Record<string, RawTransaction>> => {
-  return fetchDefault('v2/txs/get', {txHashes: txids}, config).then((txs) => {
-    const entries: Array<[string, RawTransaction]> = Object.entries(txs)
-    const newEntries: Array<[string, RawTransaction]> = entries.map(([txid, tx]) => [
-      txid,
-      {
-        ...tx,
-        inputs: tx.inputs.map((input) => ({
-          ...input,
-          assets: input.assets.map((asset) => ({...asset, assetId: asset.assetId.replace('.', '')})), // migrate from legacy tokenId to tokenSubject
-        })),
-        outputs: tx.outputs.map((output) => ({
-          ...output,
-          assets: output.assets.map((asset) => ({...asset, assetId: asset.assetId.replace('.', '')})), // migrate from legacy tokenId to tokenSubject
-        })),
-      } as RawTransaction,
-    ])
+  const migrateTokenId = (ios: Array<{assets: RemoteAsset[]}>) =>
+    ios.map((io) => ({
+      ...io,
+      assets: io.assets.map((asset) => ({
+        ...asset,
+        assetId: asset.assetId.replace('.', ''),
+      })), // migrate from legacy tokenId to tokenSubject
+    }))
 
-    return Object.fromEntries(newEntries)
-  })
+  const txs = await fetchDefault('v2/txs/get', {txHashes: txids}, config)
+  const entries: Array<[string, RawTransaction]> = Object.entries(txs)
+  const newEntries: Array<[string, RawTransaction]> = entries.map(([txid, tx]) => [
+    txid,
+    {
+      ...tx,
+      inputs: migrateTokenId(tx.inputs),
+      outputs: migrateTokenId(tx.outputs),
+    } as RawTransaction,
+  ])
+
+  return Object.fromEntries(newEntries)
 }
 
 export const getAccountState = (request: AccountStateRequest, config: BackendConfig): Promise<AccountStateResponse> => {
@@ -123,11 +125,8 @@ export const getPoolInfo = (request: PoolInfoRequest, config: BackendConfig): Pr
 }
 
 export const getTokenInfo = async (tokenId: string, apiUrl: string) => {
-  if (tokenId.includes('.')) throw new Error(`invalid tokenId: ${tokenId}`)
-  const tokenSubject = tokenId.replace('.', '')
-
   const response = await checkedFetch({
-    endpoint: `${apiUrl}/${tokenSubject}`,
+    endpoint: `${apiUrl}/${tokenId}`,
     method: 'GET',
     payload: undefined,
   }).catch((error) => {
@@ -156,19 +155,20 @@ const tokenInfo = (entry: TokenRegistryEntry): TokenInfo => {
     ticker: entry.ticker?.value,
     url: entry.url?.value,
     logo: entry.logo?.value,
+    fingerprint: toTokenFingerprint({policyId, assetNameHex}),
   }
 }
 
 const fallbackTokenInfo = (tokenId: string): TokenInfo => {
-  const tokenSubject = tokenId.replace('.', '') // migrate from legacy to tokenSubject
-  const [policyId, assetNameHex] = splitTokenSubject(tokenSubject)
+  const [policyId, assetNameHex] = splitTokenSubject(tokenId)
 
   return {
-    id: tokenId.replace('.', ''), // migrate from legacy to tokenSubject
+    id: tokenId,
     name: hexToAscii(assetNameHex),
     group: policyId,
     decimals: 0,
     description: '',
+    fingerprint: toTokenFingerprint({policyId, assetNameHex}),
   }
 }
 
@@ -223,27 +223,18 @@ export const toToken = ({wallet, tokenInfo}: {wallet: YoroiWallet; tokenInfo: To
     maxSupply: null,
   },
 })
-export const toTokenInfo = (token: LegacyToken): TokenInfo => {
-  return {
-    id: token.identifier.replace('.', ''), // migrate from legacy to tokenSubject
-    group: token.metadata.policyId,
-    name: hexToAscii(token.metadata.assetName),
-    decimals: token.metadata.numberOfDecimals,
-    description: token.metadata.longName ?? '',
-    fingerprint: toAssetFingerprint(token.metadata.policyId, token.metadata.assetName),
-  }
-}
+export const toTokenInfo = (token: LegacyToken): TokenInfo => ({
+  id: token.identifier,
+  group: token.metadata.policyId,
+  name: hexToAscii(token.metadata.assetName),
+  decimals: token.metadata.numberOfDecimals,
+  description: token.metadata.longName ?? '',
+  fingerprint: toTokenFingerprint({policyId: token.metadata.policyId, assetNameHex: token.metadata.assetName}),
+})
 
-export const toAssetFingerprint = (policyId: string, assetNameHex: string) => {
+export const toTokenFingerprint = ({policyId, assetNameHex}) => {
   const assetFingerprint = new AssetFingerprint(Buffer.from(policyId, 'hex'), Buffer.from(assetNameHex, 'hex'))
   return assetFingerprint.fingerprint()
-}
-
-export const toTokenId = (identifier: string) => {
-  const tokenSubject = identifier.replace('.', '') // migrate from legacy to tokenSubject
-  const [policyId, assetNameHex] = splitTokenSubject(tokenSubject)
-
-  return getTokenFingerprint({policyId, assetNameHex})
 }
 
 // Token Registry
