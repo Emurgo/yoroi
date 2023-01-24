@@ -37,10 +37,7 @@ export const SendProvider = ({
   const actions = React.useRef<SendActions>({
     receiverChanged: (receiver) => dispatch({type: 'receiverChanged', receiver}),
     amountChanged: (amount) => dispatch({type: 'amountChanged', amount}),
-    tokenSelected: (tokenId) => {
-      if (tokenId.includes('.')) throw new Error(`invalid tokenId: ${tokenId}`)
-      dispatch({type: 'tokenSelected', tokenId})
-    },
+    tokenSelected: (tokenId) => dispatch({type: 'tokenSelected', tokenId}),
     sendAllChanged: () => dispatch({type: 'sendAllChanged'}),
     allTokensSelected: () => dispatch({type: 'allTokensSelected', primaryTokenId: wallet.primaryTokenInfo.id}),
     resetForm: () => dispatch({type: 'resetForm', primaryTokenId: wallet.primaryTokenInfo.id}),

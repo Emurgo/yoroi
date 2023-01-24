@@ -44,16 +44,6 @@ export const fetchNewTxHistory = async (
   )
   const transactions = (await fetchDefault('v2/txs/history', request, config)) as Array<RawTransaction>
 
-  // validate tokenId
-  transactions.forEach(({inputs, outputs}) =>
-    [...inputs, ...outputs].forEach(({assets}) =>
-      assets.forEach(({assetId}) => {
-        assetId.includes('.')
-        throw new Error(`fetchNewTxHistory: token id: ${assetId}`)
-      }),
-    ),
-  )
-
   return {
     transactions,
     isLast: transactions.length < config.TX_HISTORY_RESPONSE_LIMIT,

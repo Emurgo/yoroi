@@ -16,7 +16,7 @@ import {formatTokenAmount} from '../../legacy/format'
 import {TxHistoryRouteNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
-import {descending, startsWith} from '../../TxHistory/AssetList/utils'
+import {alpha, startsWith} from '../../TxHistory/AssetList/utils'
 import {toToken, YoroiWallet} from '../../yoroi-wallets'
 import {TokenInfo} from '../../yoroi-wallets/types'
 import {Amounts} from '../../yoroi-wallets/utils'
@@ -34,7 +34,7 @@ export const AssetSelectorScreen = () => {
     tokenIds: Amounts.toArray(balances).map(({tokenId}) => tokenId),
   })
   const sortedTokenInfos = tokenInfos
-    .sort(descending((tokenInfo) => tokenInfo.name.toLocaleLowerCase()))
+    .sort(alpha((tokenInfo) => tokenInfo.name.toLocaleLowerCase()))
     .sort(startsWith((tokenInfo) => tokenInfo.id === wallet.primaryTokenInfo.id))
 
   const onChangeMatcher = (matcher: string) => {
@@ -101,8 +101,6 @@ type AssetSelectorItemProps = {
 }
 
 const AssetSelectorItem = ({wallet, tokenInfo, onSelect, matcher}: AssetSelectorItemProps) => {
-  const tokenId = tokenInfo.id
-  if (tokenId.includes('.')) throw new Error(`invalid tokenId: ${tokenId}`)
   const quantity = useBalance({wallet, tokenId: tokenInfo.id})
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
 

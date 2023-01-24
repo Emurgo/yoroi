@@ -15,7 +15,7 @@ import {COLORS} from '../../theme'
 import {TokenInfo} from '../../yoroi-wallets/types'
 import {Amounts, Quantities} from '../../yoroi-wallets/utils'
 import {ActionsBanner} from './ActionsBanner'
-import {descending, startsWith} from './utils'
+import {alpha, startsWith} from './utils'
 
 type ListProps = FlatListProps<TokenInfo>
 type Props = Partial<ListProps> & {
@@ -38,7 +38,7 @@ export const AssetList = (props: Props) => {
   })
 
   const sortedTokenInfos = tokenInfos
-    .sort(descending((tokenInfo) => tokenInfo.name.toLocaleLowerCase()))
+    .sort(alpha((tokenInfo) => tokenInfo.name.toLocaleLowerCase()))
     .sort(startsWith((tokenInfo) => tokenInfo.id === wallet.primaryTokenInfo.id))
 
   return (
@@ -74,9 +74,6 @@ type AssetItemProps = {
 
 const AssetItem = ({tokenInfo, onPress}: AssetItemProps) => {
   const wallet = useSelectedWallet()
-  const tokenId = tokenInfo.id
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-  if (tokenId.includes('.')) throw new Error(`invalid tokenId: ${tokenId}`)
   const balance = useBalance({wallet, tokenId: tokenInfo.id})
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
 

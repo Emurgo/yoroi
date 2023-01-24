@@ -980,8 +980,6 @@ export class ShelleyWallet implements WalletInterface {
   }
 
   fetchTokenInfo(tokenId: string) {
-    if (tokenId.includes('.')) throw new Error(`invalid tokenId: ${tokenId}`)
-
     const apiUrl = this.getBackendConfig().TOKEN_INFO_SERVICE
     if (!apiUrl) throw new Error('invalid wallet')
 

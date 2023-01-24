@@ -20,11 +20,10 @@ export const SendAllWarning = ({
 }: SendAllWarningProps) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
-  if (selectedTokenIdentifier !== wallet.primaryTokenInfo.id && !selectedTokenIdentifier.includes('.'))
-    throw new Error(`invalid tokenId: ${selectedTokenIdentifier}`)
   const token = useToken({wallet, tokenId: selectedTokenIdentifier})
   const assetNameOrId = truncateWithEllipsis(getAssetDenominationOrId(token), 20)
   const alertBoxContent = {
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     content: token.isDefault
       ? [strings.sendAllWarningAlert1({assetNameOrId}), strings.sendAllWarningAlert2, strings.sendAllWarningAlert3]
       : [strings.sendAllWarningAlert1({assetNameOrId})],

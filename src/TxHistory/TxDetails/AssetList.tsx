@@ -54,9 +54,6 @@ const AssetRow = ({styles, entry, backColor, onSelect}: AssetRowProps) => {
   const intl = useIntl()
   const wallet = useSelectedWallet()
   const tokenInfo = useTokenInfo({wallet, tokenId: entry.identifier})
-  const tokenId = tokenInfo.id
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-  if (tokenId.includes('.')) throw new Error(`invalid tokenId: ${tokenId}`)
   const token = toToken({wallet, tokenInfo})
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
 
