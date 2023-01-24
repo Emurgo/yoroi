@@ -29,25 +29,22 @@ export class TransactionCache {
   #perAddressCertificatesSelector = defaultMemoize(perAddressCertificatesSelector)
   #confirmationCountsSelector = defaultMemoize(confirmationCountsSelector)
   #storage: TxCacheStorage
-  #memosStorage: Storage
 
-  static async create(storage: Storage, memosStorage: Storage) {
+  static async create(storage: Storage) {
     const txStorage = makeTxCacheStorage(storage)
     const version = DeviceInfo.getVersion() as Version
     const isDeprecatedSchema = versionCompare(version, '4.1.0') === -1
     if (isDeprecatedSchema) {
       return new TransactionCache({
         storage: txStorage,
-        memosStorage,
         transactions: {},
       })
     }
 
-    const txs = await addMemos(await txStorage.loadTxs(), memosStorage)
+    const txs = await txStorage.loadTxs()
 
     return new TransactionCache({
       storage: txStorage,
-      memosStorage,
       transactions: txs,
     })
   }
@@ -55,14 +52,11 @@ export class TransactionCache {
   private constructor({
     storage,
     transactions,
-    memosStorage,
   }: {
     storage: TxCacheStorage
     transactions: Record<string, Transaction>
-    memosStorage: Storage
   }) {
     this.#storage = storage
-    this.#memosStorage = memosStorage
     this.#state = {
       perAddressSyncMetadata: {},
       transactions,
@@ -120,7 +114,7 @@ export class TransactionCache {
 
     if (txUpdate) {
       this.updateState({
-        transactions: await addMemos(txUpdate, this.#memosStorage),
+        transactions: txUpdate,
         // @deprecated
         bestBlockNum: this.#state.bestBlockNum,
         // @deprecated
@@ -517,23 +511,6 @@ export const makeTxCacheStorage = (storage: Storage): TxCacheStorage => ({
     return storage.clear()
   },
 })
-
-const addMemos = async (transactions: Record<string, Transaction>, memosStorage: Storage) => {
-  const txs = {...transactions}
-  const memosTxIds = await memosStorage.getAllKeys()
-
-  const promises = memosTxIds.map(async (memoTxId) => {
-    const memo = (await memosStorage.getItem(memoTxId)) as string
-    txs[memoTxId] = {
-      ...txs[memoTxId],
-      memo,
-    }
-  })
-
-  Promise.all(promises)
-
-  return txs
-}
 
 const parseTxids = (data: string | null | undefined) => {
   if (!data) return [] // initial
