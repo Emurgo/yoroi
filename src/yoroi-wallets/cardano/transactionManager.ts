@@ -10,15 +10,15 @@ export const makeTransactionManager = async (storage: Storage) => {
     // transactionCache api
     get transactions() {
       const {memos} = memosManager
-      return Object.keys(memos).reduce(
-        (allTransactions, currentMemoTxAddress) => ({
-          ...allTransactions,
-          [currentMemoTxAddress]: {
-            ...allTransactions[currentMemoTxAddress],
-            memo: memos[currentMemoTxAddress],
+      return Object.keys(transactionCache.transactions).reduce(
+        (result, current) => ({
+          ...result,
+          [current]: {
+            ...transactionCache.transactions[current],
+            memo: memos[current],
           },
         }),
-        {...transactionCache.transactions},
+        {},
       )
     },
     get perRewardAddressCertificates() {
@@ -54,6 +54,7 @@ const makeMemosManager = async (storage: Storage) => {
 
   return {
     get memos() {
+      // to get the updated memos
       return memos
     },
     saveMemo,
