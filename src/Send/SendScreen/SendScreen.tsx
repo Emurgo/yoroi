@@ -94,7 +94,7 @@ export const SendScreen = () => {
       addressInput: receiver,
       amount,
       sendAll,
-      selectedTokenInfo: token,
+      selectedToken: token,
       defaultAssetAvailableAmount,
       selectedAssetAvailableAmount,
     })
@@ -147,7 +147,7 @@ export const SendScreen = () => {
       <ErrorBanners />
       <AvailableAmountBanner />
 
-      <ScrollView style={styles.content} keyboardDismissMode="on-drag" keyboardShouldPersistTaps>
+      <ScrollView style={styles.content} keyboardDismissMode="on-drag" keyboardShouldPersistTaps="always">
         <BalanceAfterTransaction yoroiUnsignedTx={yoroiUnsignedTx} />
         <Fee yoroiUnsignedTx={yoroiUnsignedTx} />
 
@@ -200,6 +200,7 @@ export const SendScreen = () => {
         <Checkbox
           checked={sendAll}
           onChange={sendAllChanged}
+          // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
           text={token.isDefault ? strings.checkboxSendAllAssets : strings.checkboxSendAll({assetId: assetDenomination})}
           testID="sendAllCheckbox"
         />

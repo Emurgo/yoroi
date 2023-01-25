@@ -16,7 +16,7 @@ import {formatTokenAmount} from '../../legacy/format'
 import {TxHistoryRouteNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
-import {alpha, startsWith} from '../../TxHistory/AssetList/utils'
+import {alpha, toEnd, toStart} from '../../TxHistory/AssetList/utils'
 import {toToken, YoroiWallet} from '../../yoroi-wallets'
 import {TokenInfo} from '../../yoroi-wallets/types'
 import {Amounts} from '../../yoroi-wallets/utils'
@@ -34,8 +34,10 @@ export const AssetSelectorScreen = () => {
     tokenIds: Amounts.toArray(balances).map(({tokenId}) => tokenId),
   })
   const sortedTokenInfos = tokenInfos
-    .sort(alpha((tokenInfo) => tokenInfo.name.toLocaleLowerCase()))
-    .sort(startsWith((tokenInfo) => tokenInfo.id === wallet.primaryTokenInfo.id))
+    .sort(alpha((tokenInfo) => tokenInfo.name?.toLocaleLowerCase() ?? ''))
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+    .sort(toEnd((tokenInfo) => !tokenInfo.name))
+    .sort(toStart((tokenInfo) => tokenInfo.id === wallet.primaryTokenInfo.id))
 
   const onChangeMatcher = (matcher: string) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
@@ -116,7 +118,8 @@ const AssetSelectorItem = ({wallet, tokenInfo, onSelect, matcher}: AssetSelector
 
         <View style={{flex: 1, padding: 4}}>
           <Text numberOfLines={1} ellipsizeMode="middle" style={{color: COLORS.BLUE_LIGHTER}} testID="tokenInfoText">
-            {tokenInfo.ticker ?? tokenInfo.name}
+            {/* eslint-disable-next-line @typescript-eslint/strict-boolean-expressions */}
+            {tokenInfo.ticker || tokenInfo.name || '-'}
           </Text>
 
           <Text
