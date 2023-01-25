@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js'
 
-import {mocks} from '../../../storybook'
+import {mocks} from '../../../storybook/mocks'
 import {calcLockedDeposit} from './assetUtils'
 
 describe('assetUtils', () => {
