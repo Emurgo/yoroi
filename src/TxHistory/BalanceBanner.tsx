@@ -1,5 +1,6 @@
 import BigNumber from 'bignumber.js'
 import React, {useState} from 'react'
+import {FallbackProps} from 'react-error-boundary'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
@@ -13,11 +14,9 @@ import {COLORS} from '../theme'
 import {CurrencySymbol} from '../yoroi-wallets/types'
 import {Amounts, Quantities} from '../yoroi-wallets/utils'
 
-export const BalanceBanner = () => {
+export const BalanceBanner = React.forwardRef<PairedBalanceErrorRef>((_, ref) => {
   const wallet = useSelectedWallet()
   const [privacyMode, setPrivacyMode] = useState(false)
-  const {currency} = useCurrencyContext()
-  const strings = useStrings()
 
   return (
     <View style={styles.banner}>
@@ -42,9 +41,7 @@ export const BalanceBanner = () => {
             error={{
               size: 'inline',
               fallback: ({resetErrorBoundary}) => (
-                <Text onPress={resetErrorBoundary} style={styles.pairedBalanceText} testID="pairedTotalText">
-                  {strings.pairedBalanceError(currency)}
-                </Text>
+                <PairedBalanceError resetErrorBoundary={resetErrorBoundary} ref={ref} />
               ),
             }}
           >
@@ -54,7 +51,31 @@ export const BalanceBanner = () => {
       </TouchableOpacity>
     </View>
   )
+})
+
+export type PairedBalanceErrorRef = {
+  refetchExchangeRate: () => void
 }
+
+const PairedBalanceError = React.forwardRef<
+  PairedBalanceErrorRef,
+  {resetErrorBoundary: FallbackProps['resetErrorBoundary']}
+>(({resetErrorBoundary}, ref) => {
+  const strings = useStrings()
+  const {currency} = useCurrencyContext()
+
+  React.useImperativeHandle(ref, () => ({
+    refetchExchangeRate: () => {
+      resetErrorBoundary()
+    },
+  }))
+
+  return (
+    <Text style={styles.pairedBalanceText} testID="pairedTotalText">
+      {strings.pairedBalanceError(currency)}
+    </Text>
+  )
+})
 
 const hiddenBalance = '*.******'
 const Balance = ({privacyMode}: {privacyMode: boolean}) => {

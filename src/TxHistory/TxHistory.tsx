@@ -12,7 +12,7 @@ import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
 import {ActionsBanner} from './ActionsBanner'
 import {AssetList} from './AssetList'
-import {BalanceBanner} from './BalanceBanner'
+import {BalanceBanner, PairedBalanceErrorRef} from './BalanceBanner'
 import {CollapsibleHeader} from './CollapsibleHeader'
 import {LockedDeposit} from './LockedDeposit'
 import {TxHistoryList} from './TxHistoryList'
@@ -22,6 +22,7 @@ import {WarningBanner} from './WarningBanner'
 type Tab = 'transactions' | 'assets'
 
 export const TxHistory = () => {
+  const pairedBalanceErrorRef = React.useRef<null | PairedBalanceErrorRef>(null)
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const [showWarning, setShowWarning] = useState(isByron(wallet.walletImplementationId))
@@ -41,13 +42,18 @@ export const TxHistory = () => {
     onScrollDown: () => setExpanded(false),
   })
 
+  const onRefresh = () => {
+    pairedBalanceErrorRef.current?.refetchExchangeRate()
+    sync()
+  }
+
   return (
     <View style={styles.scrollView}>
       <StatusBar type="light" />
 
       <View style={styles.container}>
         <CollapsibleHeader expanded={expanded}>
-          <BalanceBanner />
+          <BalanceBanner ref={pairedBalanceErrorRef} />
           <ActionsBanner disabled={isLoading} />
         </CollapsibleHeader>
 
@@ -91,12 +97,12 @@ export const TxHistory = () => {
                 style={styles.warningNoteStyles}
               />
             )}
-            <TxHistoryList onScroll={onScroll} refreshing={isLoading} onRefresh={() => sync()} />
+            <TxHistoryList onScroll={onScroll} refreshing={isLoading} onRefresh={onRefresh} />
           </TabPanel>
 
           <TabPanel active={activeTab === 'assets'}>
             <Boundary loading={{size: 'full'}}>
-              <AssetList onScroll={onScroll} refreshing={isLoading} onRefresh={() => sync()} />
+              <AssetList onScroll={onScroll} refreshing={isLoading} onRefresh={onRefresh} />
             </Boundary>
           </TabPanel>
         </TabPanels>
