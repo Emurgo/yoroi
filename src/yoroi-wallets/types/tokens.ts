@@ -35,12 +35,6 @@ export type TokenMetadata = TokenCommonMetadata & {
 export type Token = {
   networkId: number
   isDefault: boolean
-  /**
-   * For Ergo, this is the tokenId (box id of first input in tx)
-   * for Cardano, this is policyId || assetName
-   * Note: we don't use null for the primary token of the chain
-   * As some blockchains have multiple primary tokens
-   */
   identifier: string
   metadata: TokenMetadata
 }
