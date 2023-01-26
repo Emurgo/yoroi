@@ -4,8 +4,6 @@ interface SearchContextApi {
   search: string
   setSearch: (search: string) => void
   clearSearch: () => void
-  visible: boolean
-  setVisible: (visible: boolean) => void
 }
 
 const SearchContext = createContext<SearchContextApi | null>(null)
@@ -19,9 +17,10 @@ export const useSearch = () => {
 }
 
 export const SearchProvider = ({children, value}: {children: ReactNode; value?: Partial<SearchContextApi>}) => {
-  const [search, setSearch] = useState('')
-  const [visible, setVisible] = useState(false)
-  const clearSearch = () => setSearch('')
-  const defaultValue = {search, setSearch, clearSearch, visible, setVisible}
+  const [search, setSearch] = useState(DEFAULT_SEARCH_VALUE)
+  const clearSearch = () => setSearch(DEFAULT_SEARCH_VALUE)
+  const defaultValue = {search, setSearch, clearSearch}
   return <SearchContext.Provider value={{...defaultValue, ...value}}>{children}</SearchContext.Provider>
 }
+
+const DEFAULT_SEARCH_VALUE = ''

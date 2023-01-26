@@ -6,25 +6,16 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import noNftsImage from '../assets/img/no-nft.png'
 import {Icon, Spacer, StatusBar} from '../components'
-import {useNfts} from '../hooks'
+import {useFilteredNfts} from '../hooks'
 import {WalletStackRouteNavigation} from '../navigation'
-import {useSearch} from '../Search/SearchContext'
-import {useSelectedWallet} from '../SelectedWallet'
 import {ImageGallery, SkeletonGallery} from './ImageGallery'
 
 export const Nfts = () => {
-  const {search} = useSearch()
-  const searchTermLowerCase = search.toLowerCase()
-  const wallet = useSelectedWallet()
-  const {nfts, isLoading, refetch, isRefetching, isError} = useNfts(wallet)
   const navigation = useNavigation<WalletStackRouteNavigation>()
-  const filteredNFTs =
-    searchTermLowerCase.length > 0 && nfts.length > 0
-      ? nfts.filter((n) => n.name.toLowerCase().includes(searchTermLowerCase))
-      : nfts
+  const {search, filteredNfts, isLoading, refetch, isRefetching, isError} = useFilteredNfts()
 
   const showDetails = (id: string) => navigation.navigate('nft-details-routes', {screen: 'nft-details', params: {id}})
-  const handleNFTSelect = (index: number) => showDetails(nfts[index].id)
+  const handleNFTSelect = (index: number) => showDetails(filteredNfts[index].id)
 
   return (
     <View style={styles.root}>
@@ -35,16 +26,16 @@ export const Nfts = () => {
           {isError ? (
             <ErrorScreen onRefresh={refetch} isRefreshing={isRefetching} />
           ) : isLoading ? (
-            <LoadingScreen nftsCount={filteredNFTs.length} onRefresh={refetch} isRefreshing={isRefetching} />
-          ) : searchTermLowerCase.length > 0 && filteredNFTs.length === 0 ? (
+            <LoadingScreen nftsCount={filteredNfts.length} onRefresh={refetch} isRefreshing={isRefetching} />
+          ) : search.length > 0 && filteredNfts.length === 0 ? (
             <NoNftsScreen onRefresh={refetch} isRefreshing={isRefetching} />
-          ) : searchTermLowerCase.length === 0 && filteredNFTs.length === 0 ? (
-            <NoNftsScreen onRefresh={refetch} isRefreshing={isRefetching} count={filteredNFTs.length} />
+          ) : search.length === 0 && filteredNfts.length === 0 ? (
+            <NoNftsScreen onRefresh={refetch} isRefreshing={isRefetching} count={filteredNfts.length} />
           ) : (
             <View style={styles.galleryContainer}>
-              {searchTermLowerCase.length === 0 && <NftCount count={filteredNFTs.length} />}
+              {search.length === 0 && <NftCount count={filteredNfts.length} />}
               <ImageGallery
-                nfts={filteredNFTs}
+                nfts={filteredNfts}
                 onSelect={handleNFTSelect}
                 onRefresh={refetch}
                 isRefreshing={isRefetching}

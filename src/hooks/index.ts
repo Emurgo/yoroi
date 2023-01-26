@@ -23,6 +23,8 @@ import {processTxHistoryData} from '../legacy/processTransactions'
 import {WalletMeta} from '../legacy/state'
 import storage from '../legacy/storage'
 import {cardanoValueFromRemoteFormat} from '../legacy/utils'
+import {useSearch} from '../Search'
+import {useSelectedWallet} from '../SelectedWallet'
 import {useWalletManager} from '../WalletManager'
 import {
   CardanoMobile,
@@ -912,4 +914,16 @@ export const useNft = (wallet: YoroiWallet, {id}: {id?: string} = {}): YoroiNFT 
     throw new Error(`Invalid id used "${id}" to get NFT`)
   }
   return nft
+}
+
+export const useFilteredNfts = () => {
+  const {search} = useSearch()
+  const searchTermLowerCase = search.toLowerCase()
+  const wallet = useSelectedWallet()
+  const {nfts, isLoading, refetch, isRefetching, isError} = useNfts(wallet)
+  const filteredNfts =
+    searchTermLowerCase.length > 0 && nfts.length > 0
+      ? nfts.filter((n) => n.name.toLowerCase().includes(searchTermLowerCase))
+      : nfts
+  return {filteredNfts, isLoading, refetch, isRefetching, isError, search}
 }

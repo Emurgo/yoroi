@@ -7,8 +7,8 @@ type Props = {
   placeholder: string
   onChangeText(value: string): void
   value: string
-  onClearPress(): void
-  onBackPress(): void
+  onClearPress?(): void
+  onBackPress?(): void
 }
 
 export const SearchBar = ({placeholder, onChangeText, value, onClearPress, onBackPress}: Props) => {

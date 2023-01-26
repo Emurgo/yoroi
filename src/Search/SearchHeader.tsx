@@ -5,18 +5,18 @@ import {useSearch} from './SearchContext'
 
 export interface Props {
   placeholder: string
+  onClose?(): void
 }
 
-export const SearchHeader = (props: Props) => {
-  const {search, setSearch, clearSearch, setVisible, visible} = useSearch()
-  if (!visible) return null
+export const SearchHeader = ({placeholder, onClose}: Props) => {
+  const {search, setSearch, clearSearch} = useSearch()
   return (
     <SearchBar
-      placeholder={props.placeholder}
+      placeholder={placeholder}
       onChangeText={(search) => setSearch(search)}
       value={search}
       onClearPress={clearSearch}
-      onBackPress={() => setVisible(false)}
+      onBackPress={onClose}
     />
   )
 }
