@@ -602,7 +602,7 @@ export class ShelleyWallet implements WalletInterface {
 
   getDelegationStatus() {
     if (this.rewardAddressHex == null) throw new Error('reward address is null')
-    const certsForKey = this.transactionManager.perRewardAddressCertificates[this.rewardAddressHex]
+    const certsForKey = this.transactionManager.getPerRewardAddressCertificates()[this.rewardAddressHex]
     return Promise.resolve(getDelegationStatus(this.rewardAddressHex, certsForKey))
   }
 
@@ -1041,7 +1041,7 @@ export class ShelleyWallet implements WalletInterface {
   }
 
   get isUsedAddressIndex() {
-    return this._isUsedAddressIndexSelector(this.transactionManager.perAddressTxs)
+    return this._isUsedAddressIndexSelector(this.transactionManager.getPerAddressTxs())
   }
 
   get numReceiveAddresses() {
@@ -1049,11 +1049,12 @@ export class ShelleyWallet implements WalletInterface {
   }
 
   get transactions() {
-    return this.transactionManager.transactions
+    console.log('this.transactionManager.getTransactions()', this.transactionManager.getTransactions())
+    return this.transactionManager.getTransactions()
   }
 
   get confirmationCounts() {
-    return this.transactionManager.confirmationCounts
+    return this.transactionManager.getConfirmationCounts()
   }
 
   // ============ security & key management ============ //
@@ -1173,7 +1174,8 @@ export class ShelleyWallet implements WalletInterface {
   }
 
   private isUsedAddress(address: string) {
-    return !!this.transactionManager.perAddressTxs[address] && this.transactionManager.perAddressTxs[address].length > 0
+    const perAddressTxs = this.transactionManager.getPerAddressTxs()
+    return !!perAddressTxs[address] && perAddressTxs[address].length > 0
   }
 
   private getLastUsedIndex(chain: AddressChain): number {

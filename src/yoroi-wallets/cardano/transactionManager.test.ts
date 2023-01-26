@@ -9,7 +9,7 @@ describe('transaction manager', () => {
     await memosManager.saveMemo('fake-tx-id-1', 'Send money to my friend')
     await memosManager.saveMemo('fake-tx-id-2', 'Send money to my girlfriend')
 
-    expect(memosManager.memos).toEqual({
+    expect(memosManager.getMemos()).toEqual({
       'fake-tx-id-1': 'Send money to my friend',
       'fake-tx-id-2': 'Send money to my girlfriend',
     })

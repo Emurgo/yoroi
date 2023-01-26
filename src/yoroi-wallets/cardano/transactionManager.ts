@@ -8,8 +8,8 @@ export const makeTransactionManager = async (storage: Storage) => {
 
   return {
     // transactionCache api
-    get transactions() {
-      const {memos} = memosManager
+    getTransactions() {
+      const memos = memosManager.getMemos()
       return Object.keys(transactionCache.transactions).reduce(
         (result, current) => ({
           ...result,
@@ -21,13 +21,13 @@ export const makeTransactionManager = async (storage: Storage) => {
         {},
       )
     },
-    get perRewardAddressCertificates() {
+    getPerRewardAddressCertificates() {
       return transactionCache.perRewardAddressCertificates
     },
-    get perAddressTxs() {
+    getPerAddressTxs() {
       return transactionCache.perAddressTxs
     },
-    get confirmationCounts() {
+    getConfirmationCounts() {
       return transactionCache.confirmationCounts
     },
     clear: () => transactionCache.clear(),
@@ -56,11 +56,11 @@ export const makeMemosManager = async (storage: Storage) => {
   const clear = async () => storage.getAllKeys().then(storage.multiRemove)
 
   return {
-    get memos() {
+    getMemos() {
       // to get the updated memos
       return memos
     },
     saveMemo,
     clear,
-  }
+  } as const
 }
