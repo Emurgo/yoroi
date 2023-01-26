@@ -1049,7 +1049,6 @@ export class ShelleyWallet implements WalletInterface {
   }
 
   get transactions() {
-    console.log('this.transactionManager.getTransactions()', this.transactionManager.getTransactions())
     return this.transactionManager.getTransactions()
   }
 
