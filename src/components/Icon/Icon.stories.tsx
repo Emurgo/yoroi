@@ -118,6 +118,7 @@ storiesOf('Icon', module).add('Gallery', () => {
         <Item icon={<Icon.WalletStack size={40} />} title="Wallet Stack" />
         <Item icon={<Icon.Wallet size={40} />} title="Wallet" />
         <Item icon={<Icon.NoNFTs size={40} />} title="No NFTs" />
+        <Item icon={<Icon.ExternalLink size={40} />} title="External link" />
       </ScrollView>
     </FilterProvider>
   )

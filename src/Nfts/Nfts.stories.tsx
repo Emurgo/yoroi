@@ -1,20 +1,19 @@
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
-import {QueryClient, QueryClientProvider} from 'react-query'
 
-import {mocks} from '../../storybook'
+import {mocks, QueryProvider} from '../../storybook'
 import {SelectedWalletProvider} from '../SelectedWallet'
 import {Nfts} from './Nfts'
 
-storiesOf('NFT Gallery', module)
+storiesOf('NFT/Gallery', module)
   .add('Loading', () => {
     const loadingWallet = {...mocks.wallet, fetchNfts: mocks.fetchNfts.loading}
     return (
-      <QueryClientProvider client={new QueryClient()}>
+      <QueryProvider>
         <SelectedWalletProvider wallet={loadingWallet}>
           <Nfts />
         </SelectedWalletProvider>
-      </QueryClientProvider>
+      </QueryProvider>
     )
   })
   .add('Loaded & Empty', () => {
@@ -25,11 +24,11 @@ storiesOf('NFT Gallery', module)
     }
 
     return (
-      <QueryClientProvider client={new QueryClient()}>
+      <QueryProvider>
         <SelectedWalletProvider wallet={loadedWallet}>
           <Nfts />
         </SelectedWalletProvider>
-      </QueryClientProvider>
+      </QueryProvider>
     )
   })
   .add('Loaded & Approved', () => {
@@ -40,11 +39,11 @@ storiesOf('NFT Gallery', module)
     }
 
     return (
-      <QueryClientProvider client={new QueryClient()}>
+      <QueryProvider>
         <SelectedWalletProvider wallet={loadedWallet}>
           <Nfts />
         </SelectedWalletProvider>
-      </QueryClientProvider>
+      </QueryProvider>
     )
   })
   .add('Loaded & Blurred image', () => {
@@ -55,11 +54,11 @@ storiesOf('NFT Gallery', module)
     }
 
     return (
-      <QueryClientProvider client={new QueryClient()}>
+      <QueryProvider>
         <SelectedWalletProvider wallet={loadedWallet}>
           <Nfts />
         </SelectedWalletProvider>
-      </QueryClientProvider>
+      </QueryProvider>
     )
   })
   .add('Loaded & Not approved', () => {
@@ -70,11 +69,11 @@ storiesOf('NFT Gallery', module)
     }
 
     return (
-      <QueryClientProvider client={new QueryClient()}>
+      <QueryProvider>
         <SelectedWalletProvider wallet={loadedWallet}>
           <Nfts />
         </SelectedWalletProvider>
-      </QueryClientProvider>
+      </QueryProvider>
     )
   })
   .add('Loaded & Pending review', () => {
@@ -85,11 +84,11 @@ storiesOf('NFT Gallery', module)
     }
 
     return (
-      <QueryClientProvider client={new QueryClient()}>
+      <QueryProvider>
         <SelectedWalletProvider wallet={loadedWallet}>
           <Nfts />
         </SelectedWalletProvider>
-      </QueryClientProvider>
+      </QueryProvider>
     )
   })
   .add('Error', () => {
@@ -98,10 +97,10 @@ storiesOf('NFT Gallery', module)
       fetchNfts: mocks.fetchNfts.error,
     }
     return (
-      <QueryClientProvider client={new QueryClient()}>
+      <QueryProvider>
         <SelectedWalletProvider wallet={errorWallet}>
           <Nfts />
         </SelectedWalletProvider>
-      </QueryClientProvider>
+      </QueryProvider>
     )
   })

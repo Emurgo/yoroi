@@ -4,6 +4,7 @@ import BigNumber from 'bignumber.js'
 import {delay} from 'bluebird'
 import {mapValues} from 'lodash'
 import * as React from 'react'
+import {useMemo} from 'react'
 import {
   onlineManager,
   QueryKey,
@@ -95,23 +96,28 @@ export const useCrashReports = () => {
 
 // WALLET
 export const useWallet = (wallet: YoroiWallet, event: WalletEvent['type']) => {
-  const walletManager = useWalletManager()
   const [_, rerender] = React.useState({})
+  useWalletEvent(wallet, event, () => rerender(() => ({})))
+}
+
+export const useWalletEvent = (wallet: YoroiWallet, event: WalletEvent['type'], callback: () => void) => {
+  const walletManager = useWalletManager()
 
   React.useEffect(() => {
     const unsubWallet = wallet.subscribe((subscriptionEvent) => {
       if (subscriptionEvent.type !== event) return
-      rerender(() => ({}))
+      callback()
     })
     const unsubWalletManager = walletManager.subscribe((subscriptionEvent) => {
       if (subscriptionEvent.type !== event) return
-      rerender(() => ({}))
+      callback()
     })
 
     return () => {
       unsubWallet()
       unsubWalletManager()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [event, wallet, walletManager])
 }
 
@@ -248,11 +254,20 @@ export const useTokenInfo = (
   return query.data
 }
 
+export const useIsTokenKnownNft = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string}) => {
+  const tokenInfo = useTokenInfo({wallet, tokenId})
+  const {nfts} = useNfts(wallet)
+  return nfts.some(
+    (nft) =>
+      nft.metadata.policyId === tokenInfo.metadata.policyId &&
+      nft.metadata.assetNameHex === tokenInfo.metadata.assetName,
+  )
+}
+
 export const useNftModerationStatus = ({wallet, fingerprint}: {wallet: YoroiWallet; fingerprint: string}) => {
   return useQuery({
     queryKey: [wallet.id, 'nft', fingerprint],
     queryFn: () => wallet.fetchNftModerationStatus(fingerprint),
-    enabled: !!fingerprint,
   })
 }
 
@@ -266,7 +281,7 @@ export const useNftImageModerated = ({
   const nft = useNft(wallet, {id: nftId})
   const fingerprint = getAssetFingerprint(nft.metadata.policyId, nft.metadata.assetNameHex)
   const {data} = useNftModerationStatus({wallet, fingerprint})
-  return nft && data ? {image: nft.image, status: data} : null
+  return useMemo(() => (data ? {image: nft.image, status: data} : null), [nft, data])
 }
 
 export const fetchTokenInfo = async ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string}): Promise<Token> => {
@@ -894,18 +909,18 @@ export const useResync = (wallet: YoroiWallet, options?: UseMutationOptions<void
   }
 }
 
-export const useNfts = (wallet: YoroiWallet) => {
-  const utxos = useUtxos(wallet)
+export const useNfts = (wallet: YoroiWallet, options: UseQueryOptions<YoroiNFT[], Error> = {}) => {
   const {data, ...rest} = useQuery({
-    queryKey: [wallet.id, 'nfts', utxos.length],
+    queryKey: [wallet.id, 'nfts'],
     queryFn: () => wallet.fetchNfts(),
+    ...options,
   })
-
+  useWalletEvent(wallet, 'utxos', () => rest.refetch())
   return {...rest, nfts: data ?? []}
 }
 
-export const useNft = (wallet: YoroiWallet, {id}: {id?: string} = {}): YoroiNFT => {
-  const {nfts} = useNfts(wallet)
+export const useNft = (wallet: YoroiWallet, {id}: {id: string}): YoroiNFT => {
+  const {nfts} = useNfts(wallet, {suspense: true})
   const nft = nfts.find((nft) => nft.id === id)
 
   if (!nft) {

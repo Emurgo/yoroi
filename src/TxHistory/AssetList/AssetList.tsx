@@ -19,13 +19,13 @@ import AdaImage from '../../assets/img/asset_ada.png'
 import NoImage from '../../assets/img/asset_no_image.png'
 import {Boundary, Text} from '../../components'
 import {Spacer} from '../../components/Spacer'
-import {useBalances, useNftImageModerated, useTokenInfo} from '../../hooks'
+import {useBalances, useIsTokenKnownNft, useNftImageModerated, useTokenInfo} from '../../hooks'
 import globalMessages, {actionMessages} from '../../i18n/global-messages'
 import {SHOW_NFT_GALLERY} from '../../legacy/config'
 import {formatTokenAmount, getAssetDenominationOrId, getTokenFingerprint} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
-import {YoroiAmount, YoroiNFTModerationStatus} from '../../yoroi-wallets/types'
+import {Token, YoroiAmount, YoroiNFTModerationStatus} from '../../yoroi-wallets/types'
 import {Amounts, Quantities} from '../../yoroi-wallets/utils'
 import {ActionsBanner} from './ActionsBanner'
 
@@ -82,13 +82,13 @@ type AssetItemProps = {
 const AssetItem = ({amount, onPress}: AssetItemProps) => {
   const wallet = useSelectedWallet()
   const tokenInfo = useTokenInfo({wallet, tokenId: amount.tokenId})
-  const nftModeratedImage = useNftImageModerated({wallet, nftId: amount.tokenId})
+  const isTokenNft = useIsTokenKnownNft({wallet, tokenId: amount.tokenId})
 
   return (
     <TouchableOpacity onPress={onPress} style={styles.button} testID="assetItem">
       <Left>
-        {nftModeratedImage && SHOW_NFT_GALLERY ? (
-          <ModeratedNftIcon image={nftModeratedImage.image} status={nftModeratedImage.status} />
+        {isTokenNft && SHOW_NFT_GALLERY ? (
+          <NftIcon token={tokenInfo} />
         ) : (
           <Icon source={tokenInfo.isDefault ? AdaImage : NoImage} />
         )}
@@ -166,7 +166,19 @@ const messages = defineMessages({
   },
 })
 
-const ModeratedNftIcon = ({image, status}: {image: string; status: YoroiNFTModerationStatus}) => {
+const NftIcon = ({token}: {token: Token}) => {
+  const wallet = useSelectedWallet()
+  const fingerprint = getTokenFingerprint(token)
+  const nftModeratedImage = useNftImageModerated({wallet, nftId: fingerprint})
+
+  if (!nftModeratedImage) {
+    return <ModeratedNftIcon status="blocked" />
+  }
+
+  return <ModeratedNftIcon image={nftModeratedImage.image} status={nftModeratedImage.status} />
+}
+
+const ModeratedNftIcon = ({image, status}: {image?: string; status: YoroiNFTModerationStatus}) => {
   if (status === 'pending' || status === 'manual_review') {
     return (
       <View style={styles.assetIcon}>
