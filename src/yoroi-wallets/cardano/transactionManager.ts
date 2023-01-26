@@ -43,7 +43,7 @@ export const makeTransactionManager = async (storage: Storage) => {
 
 export type TransactionManager = Awaited<ReturnType<typeof makeTransactionManager>>
 
-const makeMemosManager = async (storage: Storage) => {
+export const makeMemosManager = async (storage: Storage) => {
   const getMemos = async () => storage.getAllKeys().then(storage.multiGet).then(Object.fromEntries)
   let memos = await getMemos()
 
