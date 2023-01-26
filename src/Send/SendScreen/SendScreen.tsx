@@ -61,7 +61,6 @@ export const SendScreen = () => {
   const [showSendAllWarning, setShowSendAllWarning] = React.useState(false)
 
   const token = useToken({wallet, tokenId})
-  const isPrimaryToken = token.isDefault
   const assetDenomination = truncateWithEllipsis(getAssetDenominationOrId(token), 20)
   const amountErrorText = getAmountErrorText(intl, amountErrors, balanceErrors, wallet.primaryToken)
 
@@ -201,8 +200,11 @@ export const SendScreen = () => {
         <Checkbox
           checked={sendAll}
           onChange={sendAllChanged}
-          // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-          text={isPrimaryToken ? strings.checkboxSendAllAssets : strings.checkboxSendAll({assetId: assetDenomination})}
+          text={
+            token.identifier === wallet.primaryToken.identifier
+              ? strings.checkboxSendAllAssets
+              : strings.checkboxSendAll({assetId: assetDenomination})
+          }
           testID="sendAllCheckbox"
         />
 
