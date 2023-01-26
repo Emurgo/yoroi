@@ -416,6 +416,7 @@ export type TransactionInfo = {
   assurance: TransactionAssurance
   tokens: Record<string, Token>
   blockNumber: number
+  memo: null | string
 }
 
 export type IOData = {

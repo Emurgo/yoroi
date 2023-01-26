@@ -51,6 +51,7 @@ Object {
       },
     ],
     "lastUpdatedAt": "2021-09-13T18:42:10.000Z",
+    "memo": null,
     "outputs": Array [
       Object {
         "address": "addr_test1qrxlnftwl73taxvcapnhgctae895l582a6r7k7jjeuwvzp0rvvww4m29k4km54utxag3mlhdsr73m62rsae6ad3hj6kqcexkh8",

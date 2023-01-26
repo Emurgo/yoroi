@@ -97,6 +97,7 @@ export const mockTransactionInfo = (transaction?: Partial<TransactionInfo>): Tra
         },
       },
     },
+    memo: null,
     ...transaction,
   }
 }
@@ -134,6 +135,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   ca5f2ccd993b91813c0d85887b34e49291e5c1931741d343d89f1e37d3003485: {
     id: 'ca5f2ccd993b91813c0d85887b34e49291e5c1931741d343d89f1e37d3003485',
@@ -174,6 +176,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '3534e33006ac5a531bde6c78cc9d9f35e38e5937ce0f8fd736dbafe6fcf569d1': {
     id: '3534e33006ac5a531bde6c78cc9d9f35e38e5937ce0f8fd736dbafe6fcf569d1',
@@ -214,6 +217,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   c141904765b3fca4f357edcf1c5978c729c4e55b97d189c748726ab13a9bb5d7: {
     id: 'c141904765b3fca4f357edcf1c5978c729c4e55b97d189c748726ab13a9bb5d7',
@@ -254,6 +258,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '79e9255dd70dc43651fb9c003fed4996edf261caaf97d1e587507c6c4c1c654e': {
     id: '79e9255dd70dc43651fb9c003fed4996edf261caaf97d1e587507c6c4c1c654e',
@@ -294,6 +299,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '3b6e74ce6c244512249362e3dc82425be69076852b3608bd72526be150f50b39': {
     id: '3b6e74ce6c244512249362e3dc82425be69076852b3608bd72526be150f50b39',
@@ -334,6 +340,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   fb5cd2e3597e44d9a13ac4f6d4f05803666b18848120a253e0de078757fa0e24: {
     id: 'fb5cd2e3597e44d9a13ac4f6d4f05803666b18848120a253e0de078757fa0e24',
@@ -374,6 +381,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '242eb8e2f629281427381c9c6e8319289bd6120492d467f0d8c5e7b91df4d9bc': {
     id: '242eb8e2f629281427381c9c6e8319289bd6120492d467f0d8c5e7b91df4d9bc',
@@ -420,6 +428,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '15023dedef98010780651858d4c9e8804ff2b780e2551c906eb36a36cbc4061c': {
     id: '15023dedef98010780651858d4c9e8804ff2b780e2551c906eb36a36cbc4061c',
@@ -460,6 +469,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   a717a19b9f5543972dac44d5369461fff5ff09e41b489585e1aa41d175265223: {
     id: 'a717a19b9f5543972dac44d5369461fff5ff09e41b489585e1aa41d175265223',
@@ -500,6 +510,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '6c6d69d5828a836c3d4e60c481c7a56d7617ceaaf4302d2b024ac20b09020c32': {
     id: '6c6d69d5828a836c3d4e60c481c7a56d7617ceaaf4302d2b024ac20b09020c32',
@@ -552,6 +563,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   f9976b1f9af9a627426df46d86cd0c87fe044b7460ed531501b27f08508aa731: {
     id: 'f9976b1f9af9a627426df46d86cd0c87fe044b7460ed531501b27f08508aa731',
@@ -592,6 +604,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '3cc7126e019601148449aeb11a91ff4c62d11377a23c9cad0ecd0e8e42065689': {
     id: '3cc7126e019601148449aeb11a91ff4c62d11377a23c9cad0ecd0e8e42065689',
@@ -632,6 +645,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '57ea605b5b0ddea6e0b5e2121cc575e0e89b600809f16123493b1fde95cd3721': {
     id: '57ea605b5b0ddea6e0b5e2121cc575e0e89b600809f16123493b1fde95cd3721',
@@ -672,6 +686,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '3704b809b41ad25d8d9694dd7d8ccf30cc61220c19b0caca639a8496b8d536c7': {
     id: '3704b809b41ad25d8d9694dd7d8ccf30cc61220c19b0caca639a8496b8d536c7',
@@ -712,6 +727,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '658fc520901dd879e058f2631d6c6fadca45972d48adace60600baada259d3c1': {
     id: '658fc520901dd879e058f2631d6c6fadca45972d48adace60600baada259d3c1',
@@ -764,6 +780,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   be3ff7931d826f2cc31aee2d74055a732286621c1cc6002328319c99b5a88417: {
     id: 'be3ff7931d826f2cc31aee2d74055a732286621c1cc6002328319c99b5a88417',
@@ -816,6 +833,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '8c84e3a23e12aced8f0a26cf9ef78566e59b71ac0833084d734906b63a854dff': {
     id: '8c84e3a23e12aced8f0a26cf9ef78566e59b71ac0833084d734906b63a854dff',
@@ -856,6 +874,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   b27191f62258c25420a6ba108c77364368647b3b4a23ae7e83b7b9b9fd141350: {
     id: 'b27191f62258c25420a6ba108c77364368647b3b4a23ae7e83b7b9b9fd141350',
@@ -902,6 +921,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '34ea48c633ca63fbfdd5cab7575fec0d2dcbe7f0adc2511cbbcb9ab83663da66': {
     id: '34ea48c633ca63fbfdd5cab7575fec0d2dcbe7f0adc2511cbbcb9ab83663da66',
@@ -942,6 +962,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '22e1daf8f90c80a9babe83c4ea07999e6d57c40372bd4361cb6e1eab412b1396': {
     id: '22e1daf8f90c80a9babe83c4ea07999e6d57c40372bd4361cb6e1eab412b1396',
@@ -994,6 +1015,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '92586ef6fae50f2d362ff99914d18e91a1b45ba854c1828fe638e1fdec401ff1': {
     id: '92586ef6fae50f2d362ff99914d18e91a1b45ba854c1828fe638e1fdec401ff1',
@@ -1040,6 +1062,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '1a48e8d78737f76dc74b81c5cf53abf4fc4db9d49f0571dd21f08936dcf19772': {
     id: '1a48e8d78737f76dc74b81c5cf53abf4fc4db9d49f0571dd21f08936dcf19772',
@@ -1086,6 +1109,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   b6f832b899d63af5ea7642b557c4343b9cb84a92895055d1357c85ff3aab4029: {
     id: 'b6f832b899d63af5ea7642b557c4343b9cb84a92895055d1357c85ff3aab4029',
@@ -1144,6 +1168,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   c8bc1ff2a1579f1b1a002538dc0b2c652842d3bed652ebcca880e922d31fc751: {
     id: 'c8bc1ff2a1579f1b1a002538dc0b2c652842d3bed652ebcca880e922d31fc751',
@@ -1190,6 +1215,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '8540acfc883d1ebf65e0902bb1aa1dee18a9c71e8381f0d712cee342af9b3e65': {
     id: '8540acfc883d1ebf65e0902bb1aa1dee18a9c71e8381f0d712cee342af9b3e65',
@@ -1236,6 +1262,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '6d9cfaec8ca2a2886926a24ba01e8c3881af564ce5873816851671ba91fecc5e': {
     id: '6d9cfaec8ca2a2886926a24ba01e8c3881af564ce5873816851671ba91fecc5e',
@@ -1309,6 +1336,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '16405c4068f4762cab2b993c23a2c85e10907a423628be0d50a4707689262d0e': {
     id: '16405c4068f4762cab2b993c23a2c85e10907a423628be0d50a4707689262d0e',
@@ -1382,6 +1410,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '83d95b409a3d5053e29a587a2cf014be9114e3b90d5171575af17a0f8e9eabe3': {
     id: '83d95b409a3d5053e29a587a2cf014be9114e3b90d5171575af17a0f8e9eabe3',
@@ -1448,6 +1477,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '02eac0d266492c8cbf1a4e5d8b03b083b82136d9698caeef88b08ce171a72464': {
     id: '02eac0d266492c8cbf1a4e5d8b03b083b82136d9698caeef88b08ce171a72464',
@@ -1526,6 +1556,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   ddbb1dcc0fecbe6cc83c60348c74f5c52b30a77a4fe1bd66f44d10fb2937e173: {
     id: 'ddbb1dcc0fecbe6cc83c60348c74f5c52b30a77a4fe1bd66f44d10fb2937e173',
@@ -1598,6 +1629,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '16180e3d3bf66178add07c6ba90072a84528cb28e7d84466ed357f31337a9ddb': {
     id: '16180e3d3bf66178add07c6ba90072a84528cb28e7d84466ed357f31337a9ddb',
@@ -1644,6 +1676,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   ffe80aa9ce8de4452a33d5701adeced564f78a09ff0f8a7b1d1a7b683e18f11b: {
     id: 'ffe80aa9ce8de4452a33d5701adeced564f78a09ff0f8a7b1d1a7b683e18f11b',
@@ -1690,6 +1723,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '3b6e01f5f12ad475f6b4ecaa78a30176cc8788b5e762075d0692c765b0467ec9': {
     id: '3b6e01f5f12ad475f6b4ecaa78a30176cc8788b5e762075d0692c765b0467ec9',
@@ -1748,6 +1782,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   af1904babfb2ff033ec4e88e573bfe13c15df69ce9df4e7ddbba7261ed165a25: {
     id: 'af1904babfb2ff033ec4e88e573bfe13c15df69ce9df4e7ddbba7261ed165a25',
@@ -1800,6 +1835,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '0354c304bbd06f38c7d0205e03b9dda0ec47f9d7b0f48915ba9df21b87e6c750': {
     id: '0354c304bbd06f38c7d0205e03b9dda0ec47f9d7b0f48915ba9df21b87e6c750',
@@ -1858,6 +1894,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '0ea71fe8aec19dbeccb11bc3c64b79e2797f112d98936ff2775c8e89c94779dc': {
     id: '0ea71fe8aec19dbeccb11bc3c64b79e2797f112d98936ff2775c8e89c94779dc',
@@ -1904,6 +1941,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '58f121cf6dc2414174b8d1552f8e6839fb4f9ebd9fb02c34b6738162ee48a5d5': {
     id: '58f121cf6dc2414174b8d1552f8e6839fb4f9ebd9fb02c34b6738162ee48a5d5',
@@ -1962,6 +2000,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '48dcdd703386356a08956ba0af1f8dc9cd5384a140b53c5203aead4ae7cd4368': {
     id: '48dcdd703386356a08956ba0af1f8dc9cd5384a140b53c5203aead4ae7cd4368',
@@ -2014,6 +2053,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '0953a5e90889ed0b2ea1e3230cccde871d90c17868aea22300716ecaeec93096': {
     id: '0953a5e90889ed0b2ea1e3230cccde871d90c17868aea22300716ecaeec93096',
@@ -2060,6 +2100,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '557ce671bf854dd8e37ff18cddb789cd2fd38511798fc4ea808567bdb22f8c1d': {
     id: '557ce671bf854dd8e37ff18cddb789cd2fd38511798fc4ea808567bdb22f8c1d',
@@ -2106,6 +2147,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   b75d26084e08ca3814b65e16da3393d16711fc7ae6a3d71a940cd3e1cd2d680f: {
     id: 'b75d26084e08ca3814b65e16da3393d16711fc7ae6a3d71a940cd3e1cd2d680f',
@@ -2150,6 +2192,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '311535da6b03bf73c79952996fe1cde95b91c24cf3508bdaa8a02d22dadffeef': {
     id: '311535da6b03bf73c79952996fe1cde95b91c24cf3508bdaa8a02d22dadffeef',
@@ -2189,6 +2232,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '876d56db88aa0e89e31931a11df918f557b2ac65c76c8b6e918ee2f038fa3484': {
     id: '876d56db88aa0e89e31931a11df918f557b2ac65c76c8b6e918ee2f038fa3484',
@@ -2233,6 +2277,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '85bf4a8fa7f94c36dcc8e7072779164d7d985f2e5e90e92db4392167c49ca949': {
     id: '85bf4a8fa7f94c36dcc8e7072779164d7d985f2e5e90e92db4392167c49ca949',
@@ -2273,6 +2318,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '7edacfe75f045e859b196933cd3dbcce017be1fa95f4e4dd9288cb1eeedeb80c': {
     id: '7edacfe75f045e859b196933cd3dbcce017be1fa95f4e4dd9288cb1eeedeb80c',
@@ -2313,6 +2359,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   da9c4a93ca679932bc0e22050fc231c003d546dc04568aa8e1ac9277979a1161: {
     id: 'da9c4a93ca679932bc0e22050fc231c003d546dc04568aa8e1ac9277979a1161',
@@ -2353,6 +2400,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   fb50b03a3b65294b010bc11fe08a0dc661a538e816c1eac06ae145b7348aaaea: {
     id: 'fb50b03a3b65294b010bc11fe08a0dc661a538e816c1eac06ae145b7348aaaea',
@@ -2393,6 +2441,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '806dfa5170d78798ebd71407cff54dfaba91d82c07f0ec9b5823d683f365108c': {
     id: '806dfa5170d78798ebd71407cff54dfaba91d82c07f0ec9b5823d683f365108c',
@@ -2433,6 +2482,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '460a3411bf4d44ecd68803f4431b107cf30f1f7e1102df6469fd59a1546226a1': {
     id: '460a3411bf4d44ecd68803f4431b107cf30f1f7e1102df6469fd59a1546226a1',
@@ -2479,6 +2529,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '015f519951c60c596b5ec5b28a19e19172f21d783210da9d4b815e115baad4c1': {
     id: '015f519951c60c596b5ec5b28a19e19172f21d783210da9d4b815e115baad4c1',
@@ -2519,6 +2570,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '56c106dc224fb4a5a0c4fa2e462db5f54c9c6b3b432969f2f9e99465f62f920b': {
     id: '56c106dc224fb4a5a0c4fa2e462db5f54c9c6b3b432969f2f9e99465f62f920b',
@@ -2559,6 +2611,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '201834cc2952bf9b820ff3512fd60e257b8de20e0e1e907b1f18662e63cd42d1': {
     id: '201834cc2952bf9b820ff3512fd60e257b8de20e0e1e907b1f18662e63cd42d1',
@@ -2617,6 +2670,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '6c3fffd6e1469f1e850b696d0e4decf059c2096b77f25c5c9d18237485c9b755': {
     id: '6c3fffd6e1469f1e850b696d0e4decf059c2096b77f25c5c9d18237485c9b755',
@@ -2720,6 +2774,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   f3a020e43a0083353a38dbfc9aec7dfd766c7cc1a9a2581fdae9c2749e8dc66f: {
     id: 'f3a020e43a0083353a38dbfc9aec7dfd766c7cc1a9a2581fdae9c2749e8dc66f',
@@ -2760,6 +2815,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   da3c764157b6a632e5428784b112e5b14beb362f57c5a97e3eb7a0967ad48870: {
     id: 'da3c764157b6a632e5428784b112e5b14beb362f57c5a97e3eb7a0967ad48870',
@@ -2800,6 +2856,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '9fb4a17f39926c9343c96a7b4fe5d03a02fa4d76590ec2c21dbe6ef2f516511f': {
     id: '9fb4a17f39926c9343c96a7b4fe5d03a02fa4d76590ec2c21dbe6ef2f516511f',
@@ -2852,6 +2909,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '1564fbd758a6a3d7440bd67a965e169f1b34f85a94d772f9e9e3a658f429ccfa': {
     id: '1564fbd758a6a3d7440bd67a965e169f1b34f85a94d772f9e9e3a658f429ccfa',
@@ -2898,6 +2956,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '9149c8d135235d1bb75aeaf5dc68334dfe4a5c145895052833abb82004aa888c': {
     id: '9149c8d135235d1bb75aeaf5dc68334dfe4a5c145895052833abb82004aa888c',
@@ -2938,6 +2997,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '0ab25607d82f1b1c80bc684dfacee06a3d2806ef632bbb314aab6ae9bc78d3db': {
     id: '0ab25607d82f1b1c80bc684dfacee06a3d2806ef632bbb314aab6ae9bc78d3db',
@@ -2978,6 +3038,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   ce236617499249385ec47a8afa7525bd89dabcb0189879b1a0efb0d28d293f81: {
     id: 'ce236617499249385ec47a8afa7525bd89dabcb0189879b1a0efb0d28d293f81',
@@ -3018,6 +3079,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   ece08365fe0e03db1daf8e06b2b54f74e548616504a69412c5b3b32fd6efc385: {
     id: 'ece08365fe0e03db1daf8e06b2b54f74e548616504a69412c5b3b32fd6efc385',
@@ -3058,6 +3120,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   e27efd73339e1234d6584acdf977f1f1c6439d41bec872eec17f898e8b0df16e: {
     id: 'e27efd73339e1234d6584acdf977f1f1c6439d41bec872eec17f898e8b0df16e',
@@ -3098,6 +3161,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '75b7fdfcb1f5b11514a420df9c3da2f3d66d9bedc5353059bf3841f0c38d43c6': {
     id: '75b7fdfcb1f5b11514a420df9c3da2f3d66d9bedc5353059bf3841f0c38d43c6',
@@ -3144,6 +3208,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '543e7139d0b3635e2c63aa145c0e875fa0ed9522a95dd005cdeac68961ea068f': {
     id: '543e7139d0b3635e2c63aa145c0e875fa0ed9522a95dd005cdeac68961ea068f',
@@ -3190,6 +3255,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   d0877bbd7095620d407026495312151e61929b86ba971a62abf58fa18ac2ba5f: {
     id: 'd0877bbd7095620d407026495312151e61929b86ba971a62abf58fa18ac2ba5f',
@@ -3230,6 +3296,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '7e005071fa4658b5677027b6d1b3d56b1b38dada55554024856ea887acc56a64': {
     id: '7e005071fa4658b5677027b6d1b3d56b1b38dada55554024856ea887acc56a64',
@@ -3270,6 +3337,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '7c849ae8d4cb08f0ed0a397d6d50cf2a3f3524f5c958c290b6dde793a8db5ad4': {
     id: '7c849ae8d4cb08f0ed0a397d6d50cf2a3f3524f5c958c290b6dde793a8db5ad4',
@@ -3367,6 +3435,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '8f8b2ba109d4ef78c9fa96d5bc31ee86dfef2aafbfa57d90994b15c5124704b4': {
     id: '8f8b2ba109d4ef78c9fa96d5bc31ee86dfef2aafbfa57d90994b15c5124704b4',
@@ -3407,6 +3476,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '6d5c25beb5090cc00cd3f15a9e3028a809b3e636af50e2e9aecc53bf1faeac9e': {
     id: '6d5c25beb5090cc00cd3f15a9e3028a809b3e636af50e2e9aecc53bf1faeac9e',
@@ -3447,6 +3517,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   f544ea9950867d8f5ca37be175bb14058395fc26a8a99cd304d446fd00dd2e1a: {
     id: 'f544ea9950867d8f5ca37be175bb14058395fc26a8a99cd304d446fd00dd2e1a',
@@ -3487,6 +3558,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   b0d069e94d80d10c831274cb0a1824bd88996f95329e09e6c06e32f85267462a: {
     id: 'b0d069e94d80d10c831274cb0a1824bd88996f95329e09e6c06e32f85267462a',
@@ -3527,6 +3599,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '9f4ad3fcf689404a64b078d414582865404b2b1aca06701571e7cb1fb447a9dd': {
     id: '9f4ad3fcf689404a64b078d414582865404b2b1aca06701571e7cb1fb447a9dd',
@@ -3573,6 +3646,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '966964576c4e7033f447f8be9b466fe0be505abb42ef9b7f2054e873ef5c991b': {
     id: '966964576c4e7033f447f8be9b466fe0be505abb42ef9b7f2054e873ef5c991b',
@@ -3619,6 +3693,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   c9570c39245d5fafb9d247447766f9ac2b8a38011878b2064eda438eb7d8272d: {
     id: 'c9570c39245d5fafb9d247447766f9ac2b8a38011878b2064eda438eb7d8272d',
@@ -3659,6 +3734,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '4e0f94e7af48d73b57a3bdada2114fa95dd817cb93935ed56f646db7c846b422': {
     id: '4e0f94e7af48d73b57a3bdada2114fa95dd817cb93935ed56f646db7c846b422',
@@ -3723,6 +3799,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '025c48568965faee1c77158af6cf1fb674a8680534ee50e8dbfd373095244436': {
     id: '025c48568965faee1c77158af6cf1fb674a8680534ee50e8dbfd373095244436',
@@ -3769,6 +3846,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '1b4404a9b5ced3a4a623c0780eb3d2023607b6ede8e12d8dccda285d4730c31b': {
     id: '1b4404a9b5ced3a4a623c0780eb3d2023607b6ede8e12d8dccda285d4730c31b',
@@ -3827,6 +3905,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   bd9742f5bb3a0b3e5ab86fed839fce10d734eb5146d495a3336ea322a98f8f7b: {
     id: 'bd9742f5bb3a0b3e5ab86fed839fce10d734eb5146d495a3336ea322a98f8f7b',
@@ -3879,6 +3958,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '8a647f79a29614f6b1ae49cfbdaca18135d355d7618814aff2580065fe69aade': {
     id: '8a647f79a29614f6b1ae49cfbdaca18135d355d7618814aff2580065fe69aade',
@@ -3937,6 +4017,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '2420838b40f3ec1bd084625f73e406720eaf6d330fd19e1cf6ad04098fb93ed7': {
     id: '2420838b40f3ec1bd084625f73e406720eaf6d330fd19e1cf6ad04098fb93ed7',
@@ -3995,6 +4076,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '907e462be79f05425a0b35f86d918a0f2020e17874e4fe32bda1bb98972ba53b': {
     id: '907e462be79f05425a0b35f86d918a0f2020e17874e4fe32bda1bb98972ba53b',
@@ -4053,6 +4135,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '8eb46fcde27a44132311c774a60693245bebd89e93a58b4351995878c57d9dbc': {
     id: '8eb46fcde27a44132311c774a60693245bebd89e93a58b4351995878c57d9dbc',
@@ -4111,6 +4194,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '995a71aa7e2f45cecbc7bf3d95cbc337663395d4f2e5b09a93f9bed66212eebd': {
     id: '995a71aa7e2f45cecbc7bf3d95cbc337663395d4f2e5b09a93f9bed66212eebd',
@@ -4169,6 +4253,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   c982056ed208a91547e1fc561b9002ba88347a4025897fcff95a4c2385d324bf: {
     id: 'c982056ed208a91547e1fc561b9002ba88347a4025897fcff95a4c2385d324bf',
@@ -4227,6 +4312,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   dd23f9c80672ecbd737be357229876906f25c4626e36039e17f046475591f8f1: {
     id: 'dd23f9c80672ecbd737be357229876906f25c4626e36039e17f046475591f8f1',
@@ -4360,6 +4446,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   ee34ff9ffa91d321f1e32ca047f38d64c85842c44835edc41a4871a3730b3256: {
     id: 'ee34ff9ffa91d321f1e32ca047f38d64c85842c44835edc41a4871a3730b3256',
@@ -4481,6 +4568,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   e9ba824a61e6c260a5d86fc45ff9627b30be6b1fdb16d6465d9f55c6bd5ce5b3: {
     id: 'e9ba824a61e6c260a5d86fc45ff9627b30be6b1fdb16d6465d9f55c6bd5ce5b3',
@@ -4515,6 +4603,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '1b26590cbf3fdb6ae4c17398fe19e0c335db3684b0820071ecbc4a3fe05b1dee': {
     id: '1b26590cbf3fdb6ae4c17398fe19e0c335db3684b0820071ecbc4a3fe05b1dee',
@@ -4555,6 +4644,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '809ce9c835c4b66bbd6b137380e48043ebc93e83b5ff53b337a23c5a5630c16e': {
     id: '809ce9c835c4b66bbd6b137380e48043ebc93e83b5ff53b337a23c5a5630c16e',
@@ -4589,6 +4679,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '4a9f5e697b35c77c4cb7c2fe5ad6d638bf6e589ef85ac79b204768fd24e31c96': {
     id: '4a9f5e697b35c77c4cb7c2fe5ad6d638bf6e589ef85ac79b204768fd24e31c96',
@@ -4623,6 +4714,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   b74edc98b07dea4707bde0d829fbbaa66eee89615241ab43804a989494aa29ba: {
     id: 'b74edc98b07dea4707bde0d829fbbaa66eee89615241ab43804a989494aa29ba',
@@ -4663,6 +4755,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '94eceaf6dd1192db382df76617c9e32048c58e6d0b36ab481cbb72c227a8bdbc': {
     id: '94eceaf6dd1192db382df76617c9e32048c58e6d0b36ab481cbb72c227a8bdbc',
@@ -4697,6 +4790,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '86c61deffb045add8108f276d4c836613a7f9482cade3f9d58bef2f6060eaa8c': {
     id: '86c61deffb045add8108f276d4c836613a7f9482cade3f9d58bef2f6060eaa8c',
@@ -4731,6 +4825,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '0eae36313a2b3d57203bcea2122c65053dc605490c1b5ea3dea70c9a18f27bb0': {
     id: '0eae36313a2b3d57203bcea2122c65053dc605490c1b5ea3dea70c9a18f27bb0',
@@ -4765,6 +4860,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '5bdd360b7e0d1309fd15013169f3837d53f63f7e5ffc74a189f11a915b267cf7': {
     id: '5bdd360b7e0d1309fd15013169f3837d53f63f7e5ffc74a189f11a915b267cf7',
@@ -4799,6 +4895,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '4c654ccedc6b2ba95120c1fd366839b94abe0e3676974fda1041fc1cd070ddd1': {
     id: '4c654ccedc6b2ba95120c1fd366839b94abe0e3676974fda1041fc1cd070ddd1',
@@ -4833,6 +4930,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '835a5378da893f18ffbca6fcb8f050393814ed21de004a968cbecc9241a048dd': {
     id: '835a5378da893f18ffbca6fcb8f050393814ed21de004a968cbecc9241a048dd',
@@ -4867,6 +4965,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '5cb142f5b61e02158bdea7bab2f19fbd58750fefe60e09055de6bf32848b5507': {
     id: '5cb142f5b61e02158bdea7bab2f19fbd58750fefe60e09055de6bf32848b5507',
@@ -4901,6 +5000,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '8b2783569b853c7f701a9c53a589cc18764fa188da1890377ee09b65f7d2ab10': {
     id: '8b2783569b853c7f701a9c53a589cc18764fa188da1890377ee09b65f7d2ab10',
@@ -4998,6 +5098,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   d097b1a253da19cc6e9f03c03c199aa76ba92836af5ee55c2693be0f36af4f80: {
     id: 'd097b1a253da19cc6e9f03c03c199aa76ba92836af5ee55c2693be0f36af4f80',
@@ -5062,6 +5163,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '8f483be42e890e3b102faaff9a76e6835a6b52daf00309f0c53107d9e1d6ae50': {
     id: '8f483be42e890e3b102faaff9a76e6835a6b52daf00309f0c53107d9e1d6ae50',
@@ -5159,6 +5261,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '7558e49a2a33078e046b29861864771868a34d78fd27e8fd7d4b318550cebecc': {
     id: '7558e49a2a33078e046b29861864771868a34d78fd27e8fd7d4b318550cebecc',
@@ -5205,6 +5308,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   a0e70b8244f42ba6a9e8bd0aa55a082376b88105bc8d138d1b61b7627834e10e: {
     id: 'a0e70b8244f42ba6a9e8bd0aa55a082376b88105bc8d138d1b61b7627834e10e',
@@ -5245,6 +5349,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '04d25a1ecd6bffa1aba7a48bc344a6753342387e256e07a30b6e5357b720bf3e': {
     id: '04d25a1ecd6bffa1aba7a48bc344a6753342387e256e07a30b6e5357b720bf3e',
@@ -5279,6 +5384,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   bd044471169fb4de29dab4eadc2e8557f6479d12f138ca03f0e7ef4cdb87477c: {
     id: 'bd044471169fb4de29dab4eadc2e8557f6479d12f138ca03f0e7ef4cdb87477c',
@@ -5319,6 +5425,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   f3c1cc8d19bd729cc3ef9dd33d95334948af04c538b040a04242065eaa0cf251: {
     id: 'f3c1cc8d19bd729cc3ef9dd33d95334948af04c538b040a04242065eaa0cf251',
@@ -5359,6 +5466,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '50e84f9ba4763669b6d467a72699b755df259f8def572167f411ca382f399108': {
     id: '50e84f9ba4763669b6d467a72699b755df259f8def572167f411ca382f399108',
@@ -5399,6 +5507,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '8d55f1a9d9890de665dae28ae6e6471851bda6dff56089916a637971e6de3405': {
     id: '8d55f1a9d9890de665dae28ae6e6471851bda6dff56089916a637971e6de3405',
@@ -5439,6 +5548,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '6aa5e250738fb424e845966553014f24778305931532767c4e18587e64f7af2f': {
     id: '6aa5e250738fb424e845966553014f24778305931532767c4e18587e64f7af2f',
@@ -5485,6 +5595,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   fe6653188028ae9073c17b07fdfff6780ad32fa9376e26a09cfb1f5446bb8000: {
     id: 'fe6653188028ae9073c17b07fdfff6780ad32fa9376e26a09cfb1f5446bb8000',
@@ -5525,6 +5636,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '32ab09c0a7c503b5c238dbe6c6419ecd3800afa4facdfaebf6816b68e8668c05': {
     id: '32ab09c0a7c503b5c238dbe6c6419ecd3800afa4facdfaebf6816b68e8668c05',
@@ -5571,6 +5683,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   bd8c4ea19ba9dac50c963372211b17d309269c61d4b66b08cd6d9c68ef64b282: {
     id: 'bd8c4ea19ba9dac50c963372211b17d309269c61d4b66b08cd6d9c68ef64b282',
@@ -5617,6 +5730,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   b10d792a89ac4b298ceb58c946b0ddda26ec2c37db0e1d8cea4275bfef64fc00: {
     id: 'b10d792a89ac4b298ceb58c946b0ddda26ec2c37db0e1d8cea4275bfef64fc00',
@@ -5663,6 +5777,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   b08756906e499c295a6d9e0828bd16994175ae070bfd685124d6b13d649058df: {
     id: 'b08756906e499c295a6d9e0828bd16994175ae070bfd685124d6b13d649058df',
@@ -5703,6 +5818,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '0c304efb0d8525d0322200d3afd9b9dbef89a6d16244b23d67a2f5f189aa0353': {
     id: '0c304efb0d8525d0322200d3afd9b9dbef89a6d16244b23d67a2f5f189aa0353',
@@ -5912,6 +6028,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   f42b17649a98e9b2252f8e0fb126128eb53fb849536c5d80463645a30aec2666: {
     id: 'f42b17649a98e9b2252f8e0fb126128eb53fb849536c5d80463645a30aec2666',
@@ -5952,6 +6069,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '2d809cfb56374ea2681f3aecdd7c16376d60da285f042e2f6e5449086b7017e2': {
     id: '2d809cfb56374ea2681f3aecdd7c16376d60da285f042e2f6e5449086b7017e2',
@@ -5998,6 +6116,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '5d5b48957c2a84849280f5fa2287ef18c184b66c07af9c68cf5c1fd578ce36de': {
     id: '5d5b48957c2a84849280f5fa2287ef18c184b66c07af9c68cf5c1fd578ce36de',
@@ -6044,6 +6163,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   b8ae284b0e38dfe7b09effebac1d370882a59028d997282d3e289fb246b9610f: {
     id: 'b8ae284b0e38dfe7b09effebac1d370882a59028d997282d3e289fb246b9610f',
@@ -6090,6 +6210,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   d6facec8e8a439cbd0d9e505af7b72e16c721449fd820a540a228faed354ff10: {
     id: 'd6facec8e8a439cbd0d9e505af7b72e16c721449fd820a540a228faed354ff10',
@@ -6124,6 +6245,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '3c5d5a4cca4533414f0ce5505d38179a6264f66b214453b4080563bf6fd3f062': {
     id: '3c5d5a4cca4533414f0ce5505d38179a6264f66b214453b4080563bf6fd3f062',
@@ -6170,6 +6292,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   e2b4f20164be73ee0d110a0199d9e1c95cf2ee683848b82a657a4b2a47b11030: {
     id: 'e2b4f20164be73ee0d110a0199d9e1c95cf2ee683848b82a657a4b2a47b11030',
@@ -6204,6 +6327,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '11fecedfe661c8d37dc6fb596b95e93fba6819787f1b55bf0725c514bede378e': {
     id: '11fecedfe661c8d37dc6fb596b95e93fba6819787f1b55bf0725c514bede378e',
@@ -6238,6 +6362,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '812a91f2df505d609302a846e797f4e25c95d0921638d6ca3155ab61747bf7e1': {
     id: '812a91f2df505d609302a846e797f4e25c95d0921638d6ca3155ab61747bf7e1',
@@ -6290,6 +6415,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   fca222042850180b51555aadf35790351dff9f1ffa8645944af5bf4fd420076d: {
     id: 'fca222042850180b51555aadf35790351dff9f1ffa8645944af5bf4fd420076d',
@@ -6336,6 +6462,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '0633b783f90ca41b5301acee9969dfa3debbb7e3f773b5d51baf7595b71e39b0': {
     id: '0633b783f90ca41b5301acee9969dfa3debbb7e3f773b5d51baf7595b71e39b0',
@@ -6370,6 +6497,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '2dc10027763ec495af8de53ed27b3b3979420f56a5a5eb66918a54a4d2bc5954': {
     id: '2dc10027763ec495af8de53ed27b3b3979420f56a5a5eb66918a54a4d2bc5954',
@@ -6410,6 +6538,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '82901dac4fbdeaa0c7eb829aa1ed30629cd4b688f91b3cfce415a17c5c5a8ff7': {
     id: '82901dac4fbdeaa0c7eb829aa1ed30629cd4b688f91b3cfce415a17c5c5a8ff7',
@@ -6800,6 +6929,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '29a6a5acaf24fd4df427cabdb37a227252a282b23c4ccacc8d24de02376ce660': {
     id: '29a6a5acaf24fd4df427cabdb37a227252a282b23c4ccacc8d24de02376ce660',
@@ -6866,6 +6996,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   ef727bd18c59c27b8c3392563579216420b79f7e7611d761d6d13b6b50c45409: {
     id: 'ef727bd18c59c27b8c3392563579216420b79f7e7611d761d6d13b6b50c45409',
@@ -7075,6 +7206,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '0a06869d44864494597d085513d627637cb41e721e0d635907dfbabdee490220': {
     id: '0a06869d44864494597d085513d627637cb41e721e0d635907dfbabdee490220',
@@ -7121,6 +7253,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '36be8934436ca1521c1fb4372400a00d87b9d8544acb41ad3fd630a24ffaebfc': {
     id: '36be8934436ca1521c1fb4372400a00d87b9d8544acb41ad3fd630a24ffaebfc',
@@ -7161,6 +7294,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   d6078e4c342be8ef986d7c8756f330321e89240bb9a99347aba11ba537e11438: {
     id: 'd6078e4c342be8ef986d7c8756f330321e89240bb9a99347aba11ba537e11438',
@@ -7370,6 +7504,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   d65187834759c5726697f80f8c687e3fb70d7e2867e1c11e6b46244a84b70f7e: {
     id: 'd65187834759c5726697f80f8c687e3fb70d7e2867e1c11e6b46244a84b70f7e',
@@ -7410,6 +7545,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   c663f534442cd46d94a112ab341e73cc5d5d10447a0e55c41aca2f0215338140: {
     id: 'c663f534442cd46d94a112ab341e73cc5d5d10447a0e55c41aca2f0215338140',
@@ -7613,6 +7749,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '11d46edfe4da00eb2efdc7de46d3783eb41c62c511cbbb2bc238087d01b04ebc': {
     id: '11d46edfe4da00eb2efdc7de46d3783eb41c62c511cbbb2bc238087d01b04ebc',
@@ -7677,6 +7814,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '006f6a556635d4ad5723fe3ff8cd4749d627803373c980a77e9989b921f2d720': {
     id: '006f6a556635d4ad5723fe3ff8cd4749d627803373c980a77e9989b921f2d720',
@@ -7735,6 +7873,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   ddea106a49c72e66aa826bdcfe6d7a2fc91bc256bf40d5606bd09062191f8b47: {
     id: 'ddea106a49c72e66aa826bdcfe6d7a2fc91bc256bf40d5606bd09062191f8b47',
@@ -7781,6 +7920,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   eb921d6a9680885490166a90b6bb5af808814e74984a254ffa772c2387c31bdf: {
     id: 'eb921d6a9680885490166a90b6bb5af808814e74984a254ffa772c2387c31bdf',
@@ -7845,6 +7985,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '00009abc77be9c703e6aecceccec78ff377c3e8e96efe3f3c383098a223854e4': {
     id: '00009abc77be9c703e6aecceccec78ff377c3e8e96efe3f3c383098a223854e4',
@@ -7885,6 +8026,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   c8548f06711e3f882ac0c0a4850e1d16c8bb5a30bdaece736814ca488b9189c0: {
     id: 'c8548f06711e3f882ac0c0a4850e1d16c8bb5a30bdaece736814ca488b9189c0',
@@ -8123,6 +8265,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '55f54f984c4fd97d1ca3069d16378350a782213b6bc7c327fc0af124b436d9ad': {
     id: '55f54f984c4fd97d1ca3069d16378350a782213b6bc7c327fc0af124b436d9ad',
@@ -8162,6 +8305,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '7edef42be1a6be0f8cf901c2b0975348756e2eb0c03c0c8e1a44131eb75d318b': {
     id: '7edef42be1a6be0f8cf901c2b0975348756e2eb0c03c0c8e1a44131eb75d318b',
@@ -8201,6 +8345,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '6498aa8943d012e854ade15c46266cb94c414967156dc6bc9ee8efed4081ddcf': {
     id: '6498aa8943d012e854ade15c46266cb94c414967156dc6bc9ee8efed4081ddcf',
@@ -8241,6 +8386,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '099312f9107b7b421a337c24f3bc03ab96e38403126d7dee0138bc9bb4affe9d': {
     id: '099312f9107b7b421a337c24f3bc03ab96e38403126d7dee0138bc9bb4affe9d',
@@ -8291,6 +8437,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '77fe11d1cdfefbc47587aff832870bf5e96676d5ca6a08cdd0d03620476758a8': {
     id: '77fe11d1cdfefbc47587aff832870bf5e96676d5ca6a08cdd0d03620476758a8',
@@ -8331,6 +8478,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '8ee895fa471ed5a5bf483f3e31967cb95ca7a69636ff23bee1b681b0c034fd52': {
     id: '8ee895fa471ed5a5bf483f3e31967cb95ca7a69636ff23bee1b681b0c034fd52',
@@ -8395,6 +8543,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '54671d7288cace2db79f6fcb71a6f40d193d85e9cc5af4b64f683b460bbdc009': {
     id: '54671d7288cace2db79f6fcb71a6f40d193d85e9cc5af4b64f683b460bbdc009',
@@ -8429,6 +8578,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '933e335bbc6ed366715bc746e81aa26df430f2f494eeb52599b898336631d847': {
     id: '933e335bbc6ed366715bc746e81aa26df430f2f494eeb52599b898336631d847',
@@ -8463,6 +8613,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '26de2837a25e97505e7094c44bb261ab9cc3a9c8bf067769e69a0af25dd2a088': {
     id: '26de2837a25e97505e7094c44bb261ab9cc3a9c8bf067769e69a0af25dd2a088',
@@ -8509,6 +8660,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '9cfd345bfbcdd8ffe1b9b40fe9634330841e1221f81f8266baa9c587b4803146': {
     id: '9cfd345bfbcdd8ffe1b9b40fe9634330841e1221f81f8266baa9c587b4803146',
@@ -8543,6 +8695,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '53e3daeac3212f129fd4698aecacf6f77f2c3e89d3554fefb32c5b55162e7efc': {
     id: '53e3daeac3212f129fd4698aecacf6f77f2c3e89d3554fefb32c5b55162e7efc',
@@ -8583,6 +8736,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '6dd04b58c9fe01b3f9c84da71eadbe9bbfa556d8d837be5189c229f1f4c58dbc': {
     id: '6dd04b58c9fe01b3f9c84da71eadbe9bbfa556d8d837be5189c229f1f4c58dbc',
@@ -8726,6 +8880,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '9393407284e2e41b911fe117e207942d36088bf51f03c3a0fccfd259de5d30be': {
     id: '9393407284e2e41b911fe117e207942d36088bf51f03c3a0fccfd259de5d30be',
@@ -8784,6 +8939,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   eb07ef2bb71d4f849d0fa8d7606f4f9ec0f9a9f992524046a369e2b60f69541b: {
     id: 'eb07ef2bb71d4f849d0fa8d7606f4f9ec0f9a9f992524046a369e2b60f69541b',
@@ -8844,6 +9000,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '098169cf606484a47ff4ce5c225519676f9db53313e68288f25b56647c1dd18e': {
     id: '098169cf606484a47ff4ce5c225519676f9db53313e68288f25b56647c1dd18e',
@@ -8884,6 +9041,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   a86f3ec97e07221837e3c62ecfcd3f9509302394bb277929cf26772c0abc2eb9: {
     id: 'a86f3ec97e07221837e3c62ecfcd3f9509302394bb277929cf26772c0abc2eb9',
@@ -8917,6 +9075,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '7798ba1fdcfba888bd4af968055b92afd832d6bff1d6f88a1ae5f0bd5308da4d': {
     id: '7798ba1fdcfba888bd4af968055b92afd832d6bff1d6f88a1ae5f0bd5308da4d',
@@ -8961,6 +9120,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   f62f45e552f78b2682ac356fa8eef260c827524b58d86f2dba7ae0fdb0790f42: {
     id: 'f62f45e552f78b2682ac356fa8eef260c827524b58d86f2dba7ae0fdb0790f42',
@@ -9005,6 +9165,7 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
   '68b816918038fe819ab10190e51939921642aa12b169d78fdfa09369ecfcc904': {
     id: '68b816918038fe819ab10190e51939921642aa12b169d78fdfa09369ecfcc904',
@@ -9044,5 +9205,6 @@ export const mockTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
 }

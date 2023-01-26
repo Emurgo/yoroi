@@ -201,6 +201,7 @@ const mockTx: Transaction = {
   validContract: true,
   scriptSize: 0,
   collateralInputs: [],
+  memo: null,
 }
 
 describe('syncTxs (undefined means no updates)', () => {
@@ -705,6 +706,7 @@ const mockedLocalTransactions: Record<string, Transaction> = {
     validContract: true,
     scriptSize: 0,
     collateralInputs: [],
+    memo: null,
   },
 }
 
