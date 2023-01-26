@@ -6,7 +6,6 @@ describe('transaction manager', () => {
     const storage = rootStorage.join('memos/')
     const memosManager = await makeMemosManager(storage)
 
-    // saving two memos
     await memosManager.saveMemo('fake-tx-id-1', 'Send money to my friend')
     await memosManager.saveMemo('fake-tx-id-2', 'Send money to my girlfriend')
 
