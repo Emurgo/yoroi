@@ -49,13 +49,7 @@ export class TransactionCache {
     })
   }
 
-  private constructor({
-    storage,
-    transactions,
-  }: {
-    storage: TxCacheStorage
-    transactions: Record<string, Transaction>
-  }) {
+  private constructor({storage, transactions}: {storage: TxCacheStorage; transactions: Record<string, Transaction>}) {
     this.#storage = storage
     this.#state = {
       perAddressSyncMetadata: {},
