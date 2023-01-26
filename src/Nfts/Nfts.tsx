@@ -1,12 +1,12 @@
 import {useNavigation} from '@react-navigation/native'
-import React from 'react'
+import React, {ReactNode} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {RefreshControl, ScrollView, StyleSheet, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Icon, Spacer} from '../components'
-import {useFilteredNfts} from '../hooks'
 import {WalletStackRouteNavigation} from '../navigation'
+import {useFilteredNfts} from './hooks'
 import {ImageGallery, SkeletonGallery} from './ImageGallery'
 import NoNftsScreen from './NoNftsScreen'
 
@@ -18,42 +18,67 @@ export const Nfts = () => {
     navigation.navigate('nft-details-routes', {screen: 'nft-details', params: {id}})
   const handleNftSelect = (index: number) => navigateToDetails(filteredNfts[index].id)
 
+  if (isError) {
+    return (
+      <ScreenWrapper>
+        <ErrorScreen onRefresh={refetch} isRefreshing={isRefetching} />
+      </ScreenWrapper>
+    )
+  }
+
+  if (isLoading) {
+    return (
+      <ScreenWrapper>
+        <LoadingScreen nftsCount={filteredNfts.length} onRefresh={refetch} isRefreshing={isRefetching} />
+      </ScreenWrapper>
+    )
+  }
+
+  if (search.length > 0 && filteredNfts.length === 0) {
+    return (
+      <ScreenWrapper>
+        <ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollViewError}
+          refreshControl={<RefreshControl onRefresh={refetch} refreshing={isRefetching} />}
+        >
+          <NoNftsScreen />
+        </ScrollView>
+      </ScreenWrapper>
+    )
+  }
+
+  if (search.length === 0 && filteredNfts.length === 0) {
+    return (
+      <ScreenWrapper>
+        <ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollViewError}
+          refreshControl={<RefreshControl onRefresh={refetch} refreshing={isRefetching} />}
+        >
+          <NoNftsScreen count={<NftCount count={filteredNfts.length} />} />
+        </ScrollView>
+      </ScreenWrapper>
+    )
+  }
+
+  return (
+    <ScreenWrapper>
+      <View style={styles.galleryContainer}>
+        {search.length === 0 && <NftCount count={filteredNfts.length} />}
+        <ImageGallery nfts={filteredNfts} onSelect={handleNftSelect} onRefresh={refetch} isRefreshing={isRefetching} />
+      </View>
+    </ScreenWrapper>
+  )
+}
+
+function ScreenWrapper({children}: {children: ReactNode}) {
   return (
     <View style={styles.root}>
       <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
         <View style={styles.container}>
           <Spacer height={16} />
-          {isError ? (
-            <ErrorScreen onRefresh={refetch} isRefreshing={isRefetching} />
-          ) : isLoading ? (
-            <LoadingScreen nftsCount={filteredNfts.length} onRefresh={refetch} isRefreshing={isRefetching} />
-          ) : search.length > 0 && filteredNfts.length === 0 ? (
-            <ScrollView
-              style={styles.scrollView}
-              contentContainerStyle={styles.scrollViewError}
-              refreshControl={<RefreshControl onRefresh={refetch} refreshing={isRefetching} />}
-            >
-              <NoNftsScreen />
-            </ScrollView>
-          ) : search.length === 0 && filteredNfts.length === 0 ? (
-            <ScrollView
-              style={styles.scrollView}
-              contentContainerStyle={styles.scrollViewError}
-              refreshControl={<RefreshControl onRefresh={refetch} refreshing={isRefetching} />}
-            >
-              <NoNftsScreen count={<NftCount count={filteredNfts.length} />} />
-            </ScrollView>
-          ) : (
-            <View style={styles.galleryContainer}>
-              {search.length === 0 && <NftCount count={filteredNfts.length} />}
-              <ImageGallery
-                nfts={filteredNfts}
-                onSelect={handleNftSelect}
-                onRefresh={refetch}
-                isRefreshing={isRefetching}
-              />
-            </View>
-          )}
+          {children}
         </View>
       </SafeAreaView>
     </View>
