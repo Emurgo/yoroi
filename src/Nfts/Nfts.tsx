@@ -20,14 +20,14 @@ export const Nfts = ({search}: Props) => {
   const wallet = useSelectedWallet()
   const {nfts, isLoading, refetch, isRefetching, isError} = useNfts(wallet)
   const navigation = useNavigation<WalletStackRouteNavigation>()
-  const filteredNFTs =
+  const filteredNfts =
     searchTermLowerCase.length > 0 && nfts.length > 0
       ? nfts.filter((n) => n.name.toLowerCase().includes(searchTermLowerCase))
       : nfts
 
   const navigateToDetails = (id: string) =>
     navigation.navigate('nft-details-routes', {screen: 'nft-details', params: {id}})
-  const handleNFTSelect = (index: number) => navigateToDetails(nfts[index].id)
+  const handleNftSelect = (index: number) => navigateToDetails(nfts[index].id)
 
   return (
     <View style={styles.root}>
@@ -37,8 +37,8 @@ export const Nfts = ({search}: Props) => {
           {isError ? (
             <ErrorScreen onRefresh={refetch} isRefreshing={isRefetching} />
           ) : isLoading ? (
-            <LoadingScreen nftsCount={filteredNFTs.length} onRefresh={refetch} isRefreshing={isRefetching} />
-          ) : searchTermLowerCase.length > 0 && filteredNFTs.length === 0 ? (
+            <LoadingScreen nftsCount={filteredNfts.length} onRefresh={refetch} isRefreshing={isRefetching} />
+          ) : searchTermLowerCase.length > 0 && filteredNfts.length === 0 ? (
             <ScrollView
               style={styles.scrollView}
               contentContainerStyle={styles.scrollViewError}
@@ -46,20 +46,20 @@ export const Nfts = ({search}: Props) => {
             >
               <NoNftsScreen />
             </ScrollView>
-          ) : searchTermLowerCase.length === 0 && filteredNFTs.length === 0 ? (
+          ) : searchTermLowerCase.length === 0 && filteredNfts.length === 0 ? (
             <ScrollView
               style={styles.scrollView}
               contentContainerStyle={styles.scrollViewError}
               refreshControl={<RefreshControl onRefresh={refetch} refreshing={isRefetching} />}
             >
-              <NoNftsScreen count={<NftCount count={filteredNFTs.length} />} />
+              <NoNftsScreen count={<NftCount count={filteredNfts.length} />} />
             </ScrollView>
           ) : (
             <View style={styles.galleryContainer}>
-              {searchTermLowerCase.length === 0 && <NftCount count={filteredNFTs.length} />}
+              {searchTermLowerCase.length === 0 && <NftCount count={filteredNfts.length} />}
               <ImageGallery
-                nfts={filteredNFTs}
-                onSelect={handleNFTSelect}
+                nfts={filteredNfts}
+                onSelect={handleNftSelect}
                 onRefresh={refetch}
                 isRefreshing={isRefetching}
               />
@@ -84,7 +84,7 @@ function ErrorScreen({onRefresh, isRefreshing}: {onRefresh: () => void; isRefres
           <Text style={styles.count}>{strings.nftCount}: --</Text>
         </View>
         <View style={styles.errorContainer}>
-          <Icon.NoNFTs size={140} />
+          <Icon.NoNfts size={140} />
           <Spacer height={20} />
           <Text style={styles.titleText}>{strings.errorTitle}</Text>
           <Spacer height={4} />

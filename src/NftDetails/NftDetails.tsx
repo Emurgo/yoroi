@@ -11,7 +11,7 @@ import {getAssetFingerprint} from '../legacy/format'
 import {NftDetailsNavigation, NftRoutes} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
-import {YoroiNFT} from '../yoroi-wallets/types'
+import {YoroiNft} from '../yoroi-wallets/types'
 
 type ViewTabs = 'overview' | 'metadata'
 
@@ -88,7 +88,7 @@ const MetadataRow = ({title, copyText, children}: {title: string; children: Reac
   )
 }
 
-const NftMetadataPanel = ({nft}: {nft: YoroiNFT}) => {
+const NftMetadataPanel = ({nft}: {nft: YoroiNft}) => {
   const strings = useStrings()
   const fingerprint = getAssetFingerprint(nft.metadata.policyId, nft.metadata.assetNameHex)
 

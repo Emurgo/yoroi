@@ -44,8 +44,8 @@ import {
   TRANSACTION_STATUS,
   TransactionInfo,
   YoroiAmounts,
-  YoroiNFT,
-  YoroiNFTModerationStatus,
+  YoroiNft,
+  YoroiNftModerationStatus,
   YoroiSignedTx,
   YoroiUnsignedTx,
 } from '../yoroi-wallets/types'
@@ -277,7 +277,7 @@ export const useNftImageModerated = ({
 }: {
   wallet: YoroiWallet
   nftId: string
-}): {image: string; status: YoroiNFTModerationStatus} | null => {
+}): {image: string; status: YoroiNftModerationStatus} | null => {
   const nft = useNft(wallet, {id: nftId})
   const fingerprint = getAssetFingerprint(nft.metadata.policyId, nft.metadata.assetNameHex)
   const {data} = useNftModerationStatus({wallet, fingerprint})
@@ -909,7 +909,7 @@ export const useResync = (wallet: YoroiWallet, options?: UseMutationOptions<void
   }
 }
 
-export const useNfts = (wallet: YoroiWallet, options: UseQueryOptions<YoroiNFT[], Error> = {}) => {
+export const useNfts = (wallet: YoroiWallet, options: UseQueryOptions<YoroiNft[], Error> = {}) => {
   const {data, ...rest} = useQuery({
     queryKey: [wallet.id, 'nfts'],
     queryFn: () => wallet.fetchNfts(),
@@ -919,7 +919,7 @@ export const useNfts = (wallet: YoroiWallet, options: UseQueryOptions<YoroiNFT[]
   return {...rest, nfts: data ?? []}
 }
 
-export const useNft = (wallet: YoroiWallet, {id}: {id: string}): YoroiNFT => {
+export const useNft = (wallet: YoroiWallet, {id}: {id: string}): YoroiNft => {
   const {nfts} = useNfts(wallet, {suspense: true})
   const nft = nfts.find((nft) => nft.id === id)
 

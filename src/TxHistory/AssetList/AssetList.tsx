@@ -25,7 +25,7 @@ import {SHOW_NFT_GALLERY} from '../../legacy/config'
 import {formatTokenAmount, getAssetDenominationOrId, getTokenFingerprint} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
-import {Token, YoroiAmount, YoroiNFTModerationStatus} from '../../yoroi-wallets/types'
+import {Token, YoroiAmount, YoroiNftModerationStatus} from '../../yoroi-wallets/types'
 import {Amounts, Quantities} from '../../yoroi-wallets/utils'
 import {ActionsBanner} from './ActionsBanner'
 
@@ -178,7 +178,7 @@ const NftIcon = ({token}: {token: Token}) => {
   return <ModeratedNftIcon image={nftModeratedImage.image} status={nftModeratedImage.status} />
 }
 
-const ModeratedNftIcon = ({image, status}: {image?: string; status: YoroiNFTModerationStatus}) => {
+const ModeratedNftIcon = ({image, status}: {image?: string; status: YoroiNftModerationStatus}) => {
   if (status === 'pending' || status === 'manual_review') {
     return (
       <View style={styles.assetIcon}>

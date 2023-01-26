@@ -41,8 +41,8 @@ import {
   Quantity,
   SendTokenList,
   StakingInfo,
-  YoroiNFT,
-  YoroiNFTModerationStatus,
+  YoroiNft,
+  YoroiNftModerationStatus,
   YoroiSignedTx,
   YoroiUnsignedTx,
 } from '../types'
@@ -1012,7 +1012,7 @@ export class ShelleyWallet implements WalletInterface {
   }
 
   // TODO: caching
-  async fetchNfts(): Promise<YoroiNFT[]> {
+  async fetchNfts(): Promise<YoroiNft[]> {
     const utxos = this.utxos
     const assets = utxos.flatMap((utxo) => utxo.assets ?? [])
 
@@ -1024,7 +1024,7 @@ export class ShelleyWallet implements WalletInterface {
   }
 
   // TODO: caching
-  async fetchNftModerationStatus(fingerprint: string): Promise<YoroiNFTModerationStatus> {
+  async fetchNftModerationStatus(fingerprint: string): Promise<YoroiNftModerationStatus> {
     return api.getNFTModerationStatus(fingerprint, this.getBackendConfig())
   }
 

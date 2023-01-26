@@ -5,7 +5,7 @@ import assert from '../../legacy/assert'
 import {ApiError} from '../../legacy/errors'
 import fetchDefault, {checkedFetch} from '../../legacy/fetch'
 import {ServerStatus} from '..'
-import {NFTAsset, RemoteAsset, StakePoolInfosAndHistories, YoroiNFT, YoroiNFTModerationStatus} from '../types'
+import {NFTAsset, RemoteAsset, StakePoolInfosAndHistories, YoroiNft, YoroiNftModerationStatus} from '../types'
 import type {
   AccountStateRequest,
   AccountStateResponse,
@@ -111,7 +111,7 @@ export const getPoolInfo = (request: PoolInfoRequest, config: BackendConfig): Pr
   return fetchDefault('pool/info', request, config)
 }
 
-export const getNFTs = async (assets: RemoteAsset[], config: BackendConfig): Promise<YoroiNFT[]> => {
+export const getNFTs = async (assets: RemoteAsset[], config: BackendConfig): Promise<YoroiNft[]> => {
   const request = {assets: assets.map((asset) => ({nameHex: asset.name, policy: asset.policyId}))}
   const response = await fetchDefault('multiAsset/metadata', request, config)
   return parseNFTs(response, config.NFT_STORAGE_URL)
@@ -120,9 +120,9 @@ export const getNFTs = async (assets: RemoteAsset[], config: BackendConfig): Pro
 export const getNFTModerationStatus = async (
   fingerprint: string,
   config: BackendConfig,
-): Promise<YoroiNFTModerationStatus> => {
+): Promise<YoroiNftModerationStatus> => {
   return fetchDefault('multiAsset/validateNFT/' + fingerprint, {envName: 'prod'}, config, 'POST', {
-    checkResponse: async (response): Promise<YoroiNFTModerationStatus> => {
+    checkResponse: async (response): Promise<YoroiNftModerationStatus> => {
       if (response.status === 202) {
         return 'pending'
       }
@@ -213,7 +213,7 @@ export const fetchCurrentPrice = async (currency: CurrencySymbol, config: Backen
   return response.ticker.prices[currency]
 }
 
-export const parseModerationStatus = (status: unknown): YoroiNFTModerationStatus | undefined => {
+export const parseModerationStatus = (status: unknown): YoroiNftModerationStatus | undefined => {
   const statusString = String(status)
   const map = {
     RED: 'blocked',
@@ -225,7 +225,7 @@ export const parseModerationStatus = (status: unknown): YoroiNFTModerationStatus
   return map[statusString.toUpperCase() as keyof typeof map]
 }
 
-function parseNFTs(value: unknown, storageUrl: string): YoroiNFT[] {
+function parseNFTs(value: unknown, storageUrl: string): YoroiNft[] {
   if (!value || typeof value !== 'object') {
     return []
   }

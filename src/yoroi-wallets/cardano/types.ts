@@ -11,8 +11,8 @@ import {
   StakingInfo,
   StakingStatus,
   TransactionInfo,
-  YoroiNFT,
-  YoroiNFTModerationStatus,
+  YoroiNft,
+  YoroiNftModerationStatus,
   YoroiSignedTx,
   YoroiUnsignedTx,
 } from '../types'
@@ -170,9 +170,9 @@ export interface WalletInterface {
 
   fetchCurrentPrice(symbol: CurrencySymbol): Promise<number>
 
-  fetchNfts(): Promise<YoroiNFT[]>
+  fetchNfts(): Promise<YoroiNft[]>
 
-  fetchNftModerationStatus(fingerprint: string): Promise<YoroiNFTModerationStatus>
+  fetchNftModerationStatus(fingerprint: string): Promise<YoroiNftModerationStatus>
 
   sync(): Promise<void>
 

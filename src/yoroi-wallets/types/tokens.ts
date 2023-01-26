@@ -87,7 +87,7 @@ export type TokenRegistryEntry = {
   decimals?: number
 }
 
-export type NFTMetadata = {
+export type NftMetadata = {
   name: string
   image: string | Array<string>
   mediaType?: string
@@ -103,7 +103,7 @@ export type NFTMetadata = {
 
 export type AssetMetadata = {
   [policyID: string]: {
-    [assetNameHex: string]: NFTMetadata
+    [assetNameHex: string]: NftMetadata
   }
 }
 

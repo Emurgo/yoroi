@@ -46,7 +46,7 @@ import {Message} from './Message'
 import {MultipleWallets} from './MultipleWallets'
 import {NftAsset} from './NftAsset'
 import {NoAssetImage} from './NoAssetImage'
-import {NoNFTs} from './NoNFTs'
+import {NoNfts} from './NoNfts'
 import {Pin} from './Pin'
 import {Placeholder} from './Placeholder'
 import {PlateNumber} from './PlateNumber'
@@ -137,7 +137,7 @@ export const Icon = {
   MultipleWallets,
   NftAsset,
   NoAssetImage,
-  NoNFTs,
+  NoNfts,
   Pin,
   Placeholder,
   PlateNumber,

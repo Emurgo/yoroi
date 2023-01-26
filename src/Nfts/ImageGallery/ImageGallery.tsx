@@ -6,11 +6,11 @@ import {Icon, Spacer, Text} from '../../components'
 import {useNftModerationStatus} from '../../hooks'
 import {getAssetFingerprint} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
-import {YoroiNFT} from '../../yoroi-wallets/types'
+import {YoroiNft} from '../../yoroi-wallets/types'
 import placeholderImage from './placeholder.png'
 
 type Props = {
-  nfts: YoroiNFT[]
+  nfts: YoroiNft[]
   onSelect: (index: number) => void
   onRefresh: () => void
   isRefreshing: boolean
@@ -56,7 +56,7 @@ export const ImageGallery = ({nfts = [], onSelect, onRefresh, isRefreshing}: Pro
 interface ModeratedImageProps {
   onPress?(event: GestureResponderEvent): void
 
-  nft: YoroiNFT
+  nft: YoroiNft
 }
 
 const ModeratedImage = ({onPress, nft}: ModeratedImageProps) => {
@@ -86,17 +86,17 @@ const ModeratedImage = ({onPress, nft}: ModeratedImageProps) => {
   return (
     <TouchableOpacity disabled={isImageBlocked} onPress={onPress} style={styles.imageContainer}>
       {isImageApproved ? (
-        <ApprovedNFT text={text} uri={image} />
+        <ApprovedNft text={text} uri={image} />
       ) : isImageWithConsent ? (
-        <RequiresConsentNFT text={text} uri={image} />
+        <RequiresConsentNft text={text} uri={image} />
       ) : isImageBlocked ? (
-        <BlockedNFT text={text} />
+        <BlockedNft text={text} />
       ) : null}
     </TouchableOpacity>
   )
 }
 
-function BlockedNFT({text}: {text: string}) {
+function BlockedNft({text}: {text: string}) {
   return (
     <View>
       <Image source={placeholderImage} style={[styles.image, {width: IMAGE_SIZE, height: IMAGE_SIZE}]} />
@@ -106,7 +106,7 @@ function BlockedNFT({text}: {text: string}) {
   )
 }
 
-function RequiresConsentNFT({uri, text}: {text: string; uri: string}) {
+function RequiresConsentNft({uri, text}: {text: string; uri: string}) {
   return (
     <View>
       <View style={styles.imageWrapper}>
@@ -121,7 +121,7 @@ function RequiresConsentNFT({uri, text}: {text: string; uri: string}) {
   )
 }
 
-function ApprovedNFT({uri, text}: {text: string; uri: string}) {
+function ApprovedNft({uri, text}: {text: string; uri: string}) {
   return (
     <View>
       <Image source={{uri}} style={[styles.image, {width: IMAGE_SIZE, height: IMAGE_SIZE}]} />
