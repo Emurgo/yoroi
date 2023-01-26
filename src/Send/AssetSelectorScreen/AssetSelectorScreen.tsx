@@ -161,7 +161,7 @@ const SearchInput = (props) => {
 }
 
 const matches = (tokenInfo: TokenInfo, matcher: string) =>
-  Object.keys(tokenInfo).some((key) => normalize(key).includes(matcher))
+  Object.values(tokenInfo).some((key) => normalize(String(key)).includes(normalize(matcher)))
 
 const useStrings = () => {
   const intl = useIntl()
