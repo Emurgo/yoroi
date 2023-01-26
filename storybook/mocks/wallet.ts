@@ -171,8 +171,14 @@ const wallet: YoroiWallet = {
   save: async (...args) => {
     action('save')(...args)
   },
+  remove: async (...args) => {
+    action('remove')(...args)
+  },
   saveMemo: async (...args) => {
     action('saveMemo')(...args)
+  },
+  clearMemos: async (...args) => {
+    action('clearMemos')(...args)
   },
   tryDoFullSync: async (...args) => {
     action('tryDoFullSync')(...args)

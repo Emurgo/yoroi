@@ -388,6 +388,11 @@ export class ShelleyWallet implements WalletInterface {
     return this.storage.setItem('data', this.toJSON())
   }
 
+  async remove() {
+    await this.clearMemos()
+    await this.clear()
+  }
+
   async clear() {
     await this.transactionManager.clear()
     await this.utxoManager.clear()
@@ -395,6 +400,10 @@ export class ShelleyWallet implements WalletInterface {
 
   saveMemo(txId: string, memo: string): Promise<void> {
     return this.transactionManager.saveMemo(txId, memo)
+  }
+
+  clearMemos(): Promise<void> {
+    return this.transactionManager.clearMemos()
   }
 
   // =================== persistence =================== //

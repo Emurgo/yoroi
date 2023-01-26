@@ -252,8 +252,7 @@ export class WalletManager {
   async removeWallet(id: string) {
     if (!this._wallet) throw new Error('invalid state')
 
-    // wallet.remove
-    await this._wallet.clear()
+    await this._wallet.remove()
 
     // legacy
     await this.closeWallet()

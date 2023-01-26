@@ -38,6 +38,7 @@ export const makeTransactionManager = async (storage: Storage) => {
 
     // memo api
     saveMemo: (txId: string, memo: string): Promise<void> => memosManager.saveMemo(txId, memo),
+    clearMemos: (): Promise<void> => memosManager.clear(),
   } as const
 }
 
@@ -52,11 +53,14 @@ export const makeMemosManager = async (storage: Storage) => {
     memos = await getMemos()
   }
 
+  const clear = async () => storage.getAllKeys().then(storage.multiRemove)
+
   return {
     get memos() {
       // to get the updated memos
       return memos
     },
     saveMemo,
+    clear,
   }
 }
