@@ -69,6 +69,10 @@ export const parseBoolean = (data: unknown) => {
   const parsed = parseSafe(data)
   return isBoolean(parsed) ? parsed : undefined
 }
+export const parseString = (data: unknown) => {
+  const parsed = parseSafe(data)
+  return isString(parsed) ? parsed : undefined
+}
 
 export const asciiToHex = (text: string) => {
   try {
@@ -91,10 +95,11 @@ export const hasProperties = <T extends object, K extends string>(
 
 export const parseSafe = (text: any) => {
   try {
-    return JSON.parse(text)
+    return JSON.parse(text) as unknown
   } catch (_) {
     return undefined
   }
 }
 
 export const isBoolean = (data: unknown): data is boolean => typeof data === 'boolean'
+export const isString = (data: unknown): data is string => typeof data === 'string'
