@@ -3,100 +3,13 @@ import {initUtxo} from '@emurgo/yoroi-lib'
 import {Utxo, UtxoAtSafePoint, UtxoDiffToBestBlock} from '@emurgo/yoroi-lib/dist/utxo/models'
 import {parseInt} from 'lodash'
 
-import storage from '../../legacy/storage'
-import {makeStorageWithPrefix} from '../storage'
+import {Storage} from '../storage'
 import {RawUtxo} from '../types'
+import {parseSafe} from '../utils/parsing'
 
-type Storage = typeof storage
-export type UtxoStorageItem = {
-  utxoAtSafePoint: UtxoAtSafePoint
-  utxoDiffToBestBlock: UtxoDiffToBestBlock[]
-}
-
-export const makeUtxoStorage = (storage: Storage, storagePath: string) => {
-  const getAllUtxosData = () => storage.read<UtxoStorageItem>(storagePath)
-
-  const setUtxoDiffToBestBlock = async (utxoDiffToBestBlock: UtxoDiffToBestBlock[]) => {
-    const data = await getAllUtxosData()
-
-    return storage.write(storagePath, {
-      ...data,
-      utxoDiffToBestBlock,
-    })
-  }
-
-  const setUtxoAtSafePoint = async (utxoAtSafePoint: UtxoAtSafePoint) => {
-    const data = await getAllUtxosData()
-
-    return storage.write(storagePath, {
-      ...data,
-      utxoAtSafePoint,
-    })
-  }
-
-  const utxoStorage: UtxoStorage = {
-    getUtxoAtSafePoint: async () => {
-      const data = await storage.read<UtxoStorageItem>(storagePath)
-
-      return data?.utxoAtSafePoint
-    },
-    replaceUtxoAtSafePoint: async (utxos: Utxo[], safeBlockHash: string) => {
-      const utxoAtSafePoint = {
-        lastSafeBlockHash: safeBlockHash,
-        utxos,
-      }
-
-      return setUtxoAtSafePoint(utxoAtSafePoint)
-    },
-
-    getUtxoDiffToBestBlock: async () => {
-      const data = await storage.read<UtxoStorageItem>(storagePath)
-
-      return data?.utxoDiffToBestBlock || []
-    },
-    appendUtxoDiffToBestBlock: async (diff: UtxoDiffToBestBlock) => {
-      const currentDiffs = await utxoStorage.getUtxoDiffToBestBlock()
-
-      if (!currentDiffs.find((d) => d.lastBestBlockHash === diff.lastBestBlockHash)) {
-        currentDiffs.push(diff)
-
-        return setUtxoDiffToBestBlock(currentDiffs)
-      }
-    },
-    removeDiffWithBestBlock: async (blockHash: string) => {
-      const currentDiffs = await utxoStorage.getUtxoDiffToBestBlock()
-      const diffToRemove = currentDiffs.find((d) => d.lastBestBlockHash === blockHash) as UtxoDiffToBestBlock
-
-      const index = currentDiffs.indexOf(diffToRemove)
-      if (index > -1) currentDiffs.splice(index, 1)
-
-      return setUtxoDiffToBestBlock(currentDiffs)
-    },
-
-    clearUtxoState: async () => {
-      await storage.remove(storagePath)
-    },
-  }
-
-  return utxoStorage
-}
-
-const makeUtxoManagerStorage = (prefix: string) => {
-  const storage = makeStorageWithPrefix(prefix)
-  const addrCounterKey = 'addrCounter'
-
-  return {
-    addrCounter: {
-      save: (addrCounter: number) => storage.setItem(addrCounterKey, addrCounter.toString()),
-      clear: () => storage.removeItem(addrCounterKey),
-      read: () => storage.getItem(addrCounterKey).then((counter) => (counter != null ? parseInt(counter) : 0)),
-    },
-  } as const
-}
-
-export const makeUtxoManager = async (id: string, apiUrl: string, storage: Storage) => {
-  const managerStorage = makeUtxoManagerStorage(`/wallet/${id}/utxosManager/`)
-  const serviceStorage = makeUtxoStorage(storage, `/wallet/${id}/utxos`)
+export const makeUtxoManager = async ({storage, apiUrl}: {storage: Storage; apiUrl: string}) => {
+  const managerStorage = makeUtxoManagerStorage(storage)
+  const serviceStorage = makeUtxoStorage(storage.join('utxos/'))
   const service = initUtxo(serviceStorage, `${apiUrl}/`)
 
   let addrCounter = await managerStorage.addrCounter.read()
@@ -128,6 +41,18 @@ export const makeUtxoManager = async (id: string, apiUrl: string, storage: Stora
   } as const
 }
 
+export const makeUtxoManagerStorage = (storage: Storage) => {
+  const addrCounterKey = 'addrCounter'
+
+  return {
+    addrCounter: {
+      save: (count: number) => storage.setItem(addrCounterKey, count),
+      clear: () => storage.removeItem(addrCounterKey),
+      read: () => storage.getItem(addrCounterKey, (count) => (count != null ? parseInt(count) : 0)),
+    },
+  } as const
+}
+
 const serializer = (utxo: UtxoModels.Utxo): RawUtxo => ({
   utxo_id: utxo.utxoId,
   tx_hash: utxo.txHash,
@@ -138,3 +63,55 @@ const serializer = (utxo: UtxoModels.Utxo): RawUtxo => ({
 })
 
 export type UtxoManager = Awaited<ReturnType<typeof makeUtxoManager>>
+
+const diffPath = 'diff'
+const safePointPath = 'safe-point'
+
+export const makeUtxoStorage = (storage: Storage) => {
+  const getUtxoDiffToBestBlock = () => storage.getItem(diffPath, parseDiff).then((diff) => diff ?? [])
+  const setUtxoDiffToBestBlock = (utxoDiffToBestBlock: UtxoDiffToBestBlock[]) =>
+    storage.setItem(diffPath, utxoDiffToBestBlock)
+
+  const getUtxoAtSafePoint = () => storage.getItem(safePointPath, parseSafePoint)
+  const setUtxoAtSafePoint = (utxoAtSafePoint: UtxoAtSafePoint) => storage.setItem(safePointPath, utxoAtSafePoint)
+
+  const utxoStorage: UtxoStorage = {
+    getUtxoAtSafePoint,
+    replaceUtxoAtSafePoint: (utxos: Utxo[], lastSafeBlockHash: string) =>
+      setUtxoAtSafePoint({lastSafeBlockHash, utxos}),
+
+    getUtxoDiffToBestBlock,
+    appendUtxoDiffToBestBlock: async (diff: UtxoDiffToBestBlock) => {
+      const currentDiffs = await getUtxoDiffToBestBlock()
+      if (currentDiffs.find((d) => d.lastBestBlockHash === diff.lastBestBlockHash)) return
+      return setUtxoDiffToBestBlock([...currentDiffs, diff])
+    },
+    removeDiffWithBestBlock: async (blockHash: string) => {
+      const currentDiffs = await getUtxoDiffToBestBlock()
+      return setUtxoDiffToBestBlock(currentDiffs.filter((d) => d.lastBestBlockHash !== blockHash))
+    },
+
+    clearUtxoState: () =>
+      Promise.all([storage.removeItem(safePointPath), storage.removeItem(diffPath)]).then(() => undefined),
+  }
+
+  return utxoStorage
+}
+
+const parseSafePoint = (data: unknown) => {
+  const parsed = parseSafe(data)
+  return isSafePoint(parsed) ? parsed : undefined
+}
+const isSafePoint = (data: unknown): data is UtxoAtSafePoint => {
+  const candidate = data as UtxoAtSafePoint
+  return !!candidate && !!candidate.lastSafeBlockHash && Array.isArray(candidate.utxos)
+}
+
+const parseDiff = (data: unknown) => {
+  const parsed = parseSafe(data)
+  return isDiff(parsed) ? parsed : undefined
+}
+const isDiff = (data: unknown): data is UtxoDiffToBestBlock[] => {
+  const candidate = data as UtxoDiffToBestBlock[]
+  return Array.isArray(candidate)
+}

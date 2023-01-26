@@ -10,9 +10,9 @@ import {CONFIG, DISABLE_BACKGROUND_SYNC} from '../legacy/config'
 import type {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {Logger} from '../legacy/logging'
 import type {WalletMeta} from '../legacy/state'
-import storage from '../legacy/storage'
-import {migrateWalletMetas} from '../Storage/migrations/walletMeta'
+import {isWalletMeta, migrateWalletMetas, parseWalletMeta} from '../Storage/migrations/walletMeta'
 import {isYoroiWallet, NetworkId, ShelleyWallet, WalletImplementationId, YoroiProvider, YoroiWallet} from './cardano'
+import {Storage, storage} from './storage'
 import {WALLET_IMPLEMENTATION_REGISTRY} from './types/other'
 
 export class WalletClosed extends ExtendableError {}
@@ -34,19 +34,22 @@ export class WalletManager {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   _closePromise: null | Promise<any> = null
   _closeReject: null | ((error: Error) => void) = null
+  storage: Storage
 
   constructor() {
     // do not await on purpose
     this._backgroundSync()
+    this.storage = storage.join('wallet/')
   }
 
   async listWallets() {
-    const keys = await storage.keys('/wallet/')
-    const result = await Promise.all(keys.map((key) => storage.read<WalletMeta>(`/wallet/${key}`)))
+    const walletIds = await this.storage.getAllKeys()
+    const walletMetas = await this.storage
+      .multiGet(walletIds, parseWalletMeta)
+      .then((tuples) => tuples.map(([_, walletMeta]) => walletMeta))
+      .then((walletMetas) => walletMetas.filter(isWalletMeta)) // filter corrupted wallet metas)
 
-    Logger.debug('result::_listWallets', result)
-
-    return result
+    return walletMetas
   }
 
   // note(v-almonacid): This method retrieves all the wallets' metadata from
@@ -176,7 +179,8 @@ export class WalletManager {
       isEasyConfirmationEnabled: false,
       provider,
     }
-    await storage.write(`/wallet/${id}`, walletMeta)
+
+    await this.storage.setItem(id, walletMeta)
 
     Logger.debug('WalletManager::saveWallet::wallet', wallet)
 
@@ -193,7 +197,10 @@ export class WalletManager {
 
     const Wallet = this.getWalletImplementation(walletMeta.walletImplementationId)
 
-    const wallet = await Wallet.restore({storage, walletMeta})
+    const wallet = await Wallet.restore({
+      storage: this.storage.join(`${walletMeta.id}/`),
+      walletMeta,
+    })
 
     if (!isYoroiWallet(wallet)) throw new Error('invalid wallet')
 
@@ -252,18 +259,18 @@ export class WalletManager {
     await this.closeWallet()
 
     // wallet.remove
-    await storage.remove(`/wallet/${id}/data`)
-    await EncryptedStorage.remove(EncryptedStorageKeys.rootKey(id))
-    await Keychain.removeWalletKey(id)
 
-    await storage.remove(`/wallet/${id}`)
+    await this.storage.removeItem(`${id}/data`) // remove wallet data
+    await EncryptedStorage.remove(EncryptedStorageKeys.rootKey(id)) // remove auth with password
+    await Keychain.removeWalletKey(id) // remove auth with os
+    await this.storage.removeItem(id) // remove wallet meta
   }
 
   // TODO(ppershing): how should we deal with race conditions?
   async _updateMetadata(id, newMeta) {
-    const walletMeta = await storage.read<WalletMeta>(`/wallet/${id}`)
+    const walletMeta = await this.storage.getItem(id, parseWalletMeta)
     const merged = {...walletMeta, ...newMeta}
-    return storage.write(`/wallet/${id}`, merged)
+    return this.storage.setItem(id, merged)
   }
 
   async updateHWDeviceInfo(wallet: YoroiWallet, hwDeviceInfo: HWDeviceInfo) {
@@ -302,7 +309,7 @@ export class WalletManager {
     const id = uuid.v4()
 
     const wallet = await Wallet.create({
-      storage,
+      storage: this.storage.join(`${id}/`),
       networkId,
       id,
       mnemonic,
@@ -326,7 +333,7 @@ export class WalletManager {
     const id = uuid.v4()
 
     const wallet = await Wallet.createBip44({
-      storage,
+      storage: this.storage.join(`${id}/`),
       networkId,
       id,
       accountPubKeyHex,

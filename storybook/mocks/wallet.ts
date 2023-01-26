@@ -15,12 +15,12 @@ import {
   TokenInfo,
   TransactionInfo,
   YoroiAmounts,
-  YoroiNFT,
-  YoroiNFTModerationStatus,
+  YoroiNft,
+  YoroiNftModerationStatus,
   YoroiSignedTx,
   YoroiUnsignedTx,
 } from '../../src/yoroi-wallets/types'
-import {mockEncryptedStorage, mockStorage} from './storage'
+import {mockEncryptedStorage} from './storage'
 import {mockTransactionInfo, mockTransactions} from './transaction'
 
 const walletMeta: WalletMeta = {
@@ -71,10 +71,10 @@ const wallet: YoroiWallet = {
     throw new Error('not implemented: createWithdrawalTx')
   },
   getAllUtxosForKey: () => Promise.resolve([]),
-  fetchNfts(): Promise<YoroiNFT[]> {
+  fetchNfts(): Promise<YoroiNft[]> {
     throw new Error('not implemented: fetchNfts')
   },
-  fetchNftModerationStatus(): Promise<YoroiNFTModerationStatus> {
+  fetchNftModerationStatus(): Promise<YoroiNftModerationStatus> {
     throw new Error('not implemented: fetchNftModerationStatus')
   },
   fetchTokenInfo: (...args) => {
@@ -176,7 +176,6 @@ const wallet: YoroiWallet = {
     action('generateNewReceiveAddress')(...args)
     return true
   },
-  storage: mockStorage,
   save: async (...args) => {
     action('save')(...args)
   },
@@ -291,14 +290,20 @@ const fetchPoolInfo = {
 }
 
 const fetchNfts = {
-  success: async (...args) => {
-    action('fetchNfts')(...args)
-    return [
-      {...nft, id: '1'},
-      {...nft, id: '2'},
-      {...nft, id: '3'},
-      {...nft, id: '4'},
-    ]
+  success: {
+    many: async (...args) => {
+      action('fetchNfts')(...args)
+      return [
+        {...nft, id: '1'},
+        {...nft, id: '2'},
+        {...nft, id: '3'},
+        {...nft, id: '4'},
+      ]
+    },
+    empty: async (...args) => {
+      action('fetchNfts')(...args)
+      return []
+    },
   },
   error: async (...args) => {
     action('fetchNfts')(...args)
@@ -306,25 +311,25 @@ const fetchNfts = {
   },
   loading: async (...args) => {
     action('fetchNfts')(...args)
-    return new Promise(() => null) as unknown as YoroiNFT[]
+    return new Promise(() => null) as unknown as YoroiNft[]
   },
 }
 
 const fetchNftModerationStatus = {
   success: {
-    approved: async (...args): Promise<YoroiNFTModerationStatus> => {
+    approved: async (...args): Promise<YoroiNftModerationStatus> => {
       action('fetchNftModerationStatus')(...args)
       return 'approved'
     },
-    consent: async (...args): Promise<YoroiNFTModerationStatus> => {
+    consent: async (...args): Promise<YoroiNftModerationStatus> => {
       action('fetchNftModerationStatus')(...args)
       return 'consent'
     },
-    blocked: async (...args): Promise<YoroiNFTModerationStatus> => {
+    blocked: async (...args): Promise<YoroiNftModerationStatus> => {
       action('fetchNftModerationStatus')(...args)
       return 'blocked'
     },
-    pendingReview: async (...args): Promise<YoroiNFTModerationStatus> => {
+    pendingReview: async (...args): Promise<YoroiNftModerationStatus> => {
       action('fetchNftModerationStatus')(...args)
       return 'pending'
     },
@@ -335,7 +340,7 @@ const fetchNftModerationStatus = {
   },
   loading: async (...args) => {
     action('fetchNftModerationStatus')(...args)
-    return new Promise(() => null) as unknown as YoroiNFTModerationStatus
+    return new Promise(() => null) as unknown as YoroiNftModerationStatus
   },
 }
 
@@ -629,7 +634,7 @@ const yoroiSignedTx: YoroiSignedTx & {mock: true} = {
   mock: true,
 }
 
-const nft: YoroiNFT = {
+const nft: YoroiNft = {
   id: '1',
   name: 'Image 1',
   description: 'NFT 1 description',

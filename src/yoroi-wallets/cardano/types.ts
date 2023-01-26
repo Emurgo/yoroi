@@ -3,7 +3,6 @@ import type {IntlShape} from 'react-intl'
 
 import {WalletEncryptedStorage} from '../../auth'
 import type {HWDeviceInfo} from '../../legacy/ledgerUtils'
-import storage from '../../legacy/storage'
 import {
   AccountStates,
   StakePoolInfoRequest,
@@ -11,8 +10,8 @@ import {
   StakingInfo,
   StakingStatus,
   TransactionInfo,
-  YoroiNFT,
-  YoroiNFTModerationStatus,
+  YoroiNft,
+  YoroiNftModerationStatus,
   YoroiSignedTx,
   YoroiUnsignedTx,
 } from '../types'
@@ -43,29 +42,17 @@ export type WalletEvent =
 export type WalletSubscription = (event: WalletEvent) => void
 export type Unsubscribe = () => void
 export interface WalletInterface {
-  id: string
-
-  networkId: NetworkId
-
-  walletImplementationId: WalletImplementationId
-
-  isHW: boolean
-
-  hwDeviceInfo: null | HWDeviceInfo
-
-  isReadOnly: boolean
-
-  provider: null | undefined | YoroiProvider
-
-  isEasyConfirmationEnabled: boolean
-
-  internalChain: AddressChain
-
-  externalChain: AddressChain
-
-  publicKeyHex: string
-
+  readonly id: string
+  readonly networkId: NetworkId
+  readonly walletImplementationId: WalletImplementationId
+  readonly isHW: boolean
+  readonly isReadOnly: boolean
+  readonly provider: null | undefined | YoroiProvider
+  readonly internalChain: AddressChain
+  readonly externalChain: AddressChain
+  readonly publicKeyHex: string
   rewardAddressHex: null | string
+  hwDeviceInfo: null | HWDeviceInfo
 
   // last known version the wallet has been opened on
   // note: Prior to v4.1.0, `version` was set upon wallet creation/restoration
@@ -73,11 +60,9 @@ export interface WalletInterface {
   // last version the wallet has been *opened* on, since this is the actual
   // relevant information we need to decide on whether migrations are needed.
 
-  checksum: CardanoTypes.WalletChecksum
-
+  readonly checksum: CardanoTypes.WalletChecksum
   utxos: Array<RawUtxo>
-
-  storage: typeof storage
+  isEasyConfirmationEnabled: boolean
 
   // =================== getters =================== //
 
@@ -170,9 +155,9 @@ export interface WalletInterface {
 
   fetchCurrentPrice(symbol: CurrencySymbol): Promise<number>
 
-  fetchNfts(): Promise<YoroiNFT[]>
+  fetchNfts(): Promise<YoroiNft[]>
 
-  fetchNftModerationStatus(fingerprint: string): Promise<YoroiNFTModerationStatus>
+  fetchNftModerationStatus(fingerprint: string): Promise<YoroiNftModerationStatus>
 
   sync(): Promise<void>
 
@@ -277,7 +262,6 @@ type YoroiWalletKeys =
   | 'rewardAddressHex'
   | 'save'
   | 'signTxWithLedger'
-  | 'storage'
   | 'subscribeOnTxHistoryUpdate'
   | 'toJSON'
   | 'fetchNfts'
@@ -327,7 +311,6 @@ const yoroiWalletKeys: Array<YoroiWalletKeys> = [
   'rewardAddressHex',
   'save',
   'signTxWithLedger',
-  'storage',
   'subscribeOnTxHistoryUpdate',
   'toJSON',
   'transactions',

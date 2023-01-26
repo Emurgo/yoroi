@@ -3,7 +3,7 @@ import React from 'react'
 import {Dimensions, Image, StyleSheet, View} from 'react-native'
 import ViewTransformer from 'react-native-easy-view-transformer'
 
-import {FadeIn, StatusBar} from '../components'
+import {FadeIn} from '../components'
 import {useNft} from '../hooks'
 import {NftRoutes} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
@@ -18,7 +18,6 @@ export const NftDetailsImage = () => {
 
   return (
     <FadeIn style={styles.container}>
-      <StatusBar type="dark" />
       <ViewTransformer maxScale={3} minScale={1}>
         <View style={styles.contentContainer}>
           <Image source={{uri: nft.image}} style={{height: imageSize, width: imageSize}} resizeMode="contain" />

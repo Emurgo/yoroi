@@ -1,11 +1,11 @@
 import {getAssetFingerprint} from '../../legacy/format'
-import {AssetMetadata, NFTMetadata, YoroiNFT} from '../types'
+import {AssetMetadata, NftMetadata, YoroiNft} from '../types'
 import {asciiToHex} from '../utils/parsing'
 
-export const convertNft = (assetMetadata: AssetMetadata, storageUrl: string): YoroiNFT => {
+export const convertNft = (assetMetadata: AssetMetadata, storageUrl: string): YoroiNft => {
   const policyId = Object.keys(assetMetadata)[0]
   const assetNameKey = Object.keys(assetMetadata[policyId])[0]
-  const metadata: NFTMetadata = assetMetadata[policyId][assetNameKey]
+  const metadata: NftMetadata = assetMetadata[policyId][assetNameKey]
   const assetNameHex = asciiToHex(assetNameKey)
   const fingerprint = getAssetFingerprint(policyId, assetNameHex)
   const description = Array.isArray(metadata.description) ? metadata.description.join(' ') : metadata.description

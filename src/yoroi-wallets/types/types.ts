@@ -1,5 +1,5 @@
 import {CardanoTypes} from '../cardano'
-import {NFTMetadata} from './tokens'
+import {NftMetadata} from './tokens'
 
 export type YoroiUnsignedTx = YoroiTxInfo & {
   unsignedTx: CardanoTypes.UnsignedTx
@@ -59,7 +59,7 @@ export type YoroiMetadata = {
   [label: string]: string
 }
 
-export type YoroiNFT = {
+export type YoroiNft = {
   id: string
   name: string
   description: string
@@ -68,8 +68,8 @@ export type YoroiNFT = {
   metadata: {
     policyId: string
     assetNameHex: string
-    originalMetadata: NFTMetadata
+    originalMetadata: NftMetadata
   }
 }
 
-export type YoroiNFTModerationStatus = 'consent' | 'blocked' | 'approved' | 'pending' | 'manual_review'
+export type YoroiNftModerationStatus = 'consent' | 'blocked' | 'approved' | 'pending' | 'manual_review'

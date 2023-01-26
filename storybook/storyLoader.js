@@ -20,10 +20,11 @@ function loadStories() {
 	require('../src/HW/LedgerConnect/LedgerConnect.stories');
 	require('../src/HW/LedgerTransportSwitchModal/LedgerTransportSwitchModal.stories');
 	require('../src/Menu/Menu.stories');
-	require('../src/NftDetails/NFTDetails.stories');
-	require('../src/NftDetails/NFTDetailsImage.stories');
+	require('../src/NftDetails/NftDetails.stories');
+	require('../src/NftDetails/NftDetailsImage.stories');
 	require('../src/Nfts/ImageGallery/ImageGallery.stories');
 	require('../src/Nfts/Nfts.stories');
+	require('../src/Nfts/NoNftsScreen.stories');
 	require('../src/Receive/AddressModal.stories');
 	require('../src/Receive/Addresses.stories');
 	require('../src/Receive/ReceiveScreen.stories');
@@ -124,10 +125,11 @@ const stories = [
 	'../src/HW/LedgerConnect/LedgerConnect.stories',
 	'../src/HW/LedgerTransportSwitchModal/LedgerTransportSwitchModal.stories',
 	'../src/Menu/Menu.stories',
-	'../src/NftDetails/NFTDetails.stories',
-	'../src/NftDetails/NFTDetailsImage.stories',
+	'../src/NftDetails/NftDetails.stories',
+	'../src/NftDetails/NftDetailsImage.stories',
 	'../src/Nfts/ImageGallery/ImageGallery.stories',
 	'../src/Nfts/Nfts.stories',
+	'../src/Nfts/NoNftsScreen.stories',
 	'../src/Receive/AddressModal.stories',
 	'../src/Receive/Addresses.stories',
 	'../src/Receive/ReceiveScreen.stories',
