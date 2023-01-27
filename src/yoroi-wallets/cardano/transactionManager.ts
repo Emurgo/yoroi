@@ -24,7 +24,7 @@ export const makeTransactionManager = async (storage: Storage, backendConfig: Ba
     getPerRewardAddressCertificates() {
       return transactionCache.perRewardAddressCertificates
     },
-    getPerAddressTxs(): Record<string, string[]> {
+    getPerAddressTxs() {
       return transactionCache.perAddressTxs
     },
     getConfirmationCounts(): {[x: string]: number | null} {
