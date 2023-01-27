@@ -1,28 +1,30 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import AssetFingerprint from '@emurgo/cip14-js'
 import _ from 'lodash'
 
 import assert from '../../legacy/assert'
+import {getDefaultAssetByNetworkId} from '../../legacy/config'
 import {ApiError} from '../../legacy/errors'
 import fetchDefault, {checkedFetch} from '../../legacy/fetch'
-import {ServerStatus} from '..'
-import {StakePoolInfosAndHistories} from '../types'
+import {Logger} from '../../legacy/logging'
+import {ServerStatus, YoroiWallet} from '..'
 import type {
   AccountStateRequest,
   AccountStateResponse,
   BackendConfig,
   CurrencySymbol,
   FundInfoResponse,
+  LegacyToken,
   PoolInfoRequest,
   PriceResponse,
   RawTransaction,
-  RawUtxo,
   TipStatusResponse,
-  TokenInfoRequest,
-  TokenInfoResponse,
+  TokenInfo,
   TxHistoryRequest,
   TxStatusRequest,
   TxStatusResponse,
-} from '../types/other'
+} from '../types'
+import {StakePoolInfosAndHistories} from '../types'
 
 type Addresses = Array<string>
 
@@ -40,10 +42,11 @@ export const fetchNewTxHistory = async (
     request.addresses.length <= config.TX_HISTORY_MAX_ADDRESSES,
     'fetchNewTxHistory: too many addresses',
   )
-  const response = (await fetchDefault('v2/txs/history', request, config)) as Array<RawTransaction>
+  const transactions = (await fetchDefault('v2/txs/history', request, config)) as Array<RawTransaction>
+
   return {
-    transactions: response,
-    isLast: response.length < config.TX_HISTORY_RESPONSE_LIMIT,
+    transactions,
+    isLast: transactions.length < config.TX_HISTORY_RESPONSE_LIMIT,
   }
 }
 
@@ -59,33 +62,18 @@ export const filterUsedAddresses = async (addresses: Addresses, config: BackendC
   return copy.filter((addr) => used.includes(addr))
 }
 
-export const fetchUTXOsForAddresses = (addresses: Addresses, config: BackendConfig) => {
-  assert.preconditionCheck(
-    addresses.length <= config.FETCH_UTXOS_MAX_ADDRESSES,
-    'fetchUTXOsForAddresses: too many addresses',
-  )
-  return fetchDefault('txs/utxoForAddresses', {addresses}, config)
-}
-
-export const bulkFetchUTXOsForAddresses = async (
-  addresses: Addresses,
-  config: BackendConfig,
-): Promise<Array<RawUtxo>> => {
-  const chunks = _.chunk(addresses, config.FETCH_UTXOS_MAX_ADDRESSES)
-
-  const responses = await Promise.all(chunks.map((addrs) => fetchUTXOsForAddresses(addrs, config)))
-  return _.flatten(responses) as any
-}
-
 export const submitTransaction = (signedTx: string, config: BackendConfig) => {
   return fetchDefault('txs/signed', {signedTx}, config)
 }
 
-export const getTransactions = (
+export const getTransactions = async (
   txids: Array<string>,
   config: BackendConfig,
 ): Promise<Record<string, RawTransaction>> => {
-  return fetchDefault('v2/txs/get', {txHashes: txids}, config)
+  const txs = await fetchDefault('v2/txs/get', {txHashes: txids}, config)
+  const entries: Array<[string, RawTransaction]> = Object.entries(txs)
+
+  return Object.fromEntries(entries)
 }
 
 export const getAccountState = (request: AccountStateRequest, config: BackendConfig): Promise<AccountStateResponse> => {
@@ -109,64 +97,57 @@ export const getPoolInfo = (request: PoolInfoRequest, config: BackendConfig): Pr
   return fetchDefault('pool/info', request, config)
 }
 
-export const getTokenInfo = async (request: TokenInfoRequest, config: BackendConfig): Promise<TokenInfoResponse> => {
-  const {tokenIds} = request
-  if (config.TOKEN_INFO_SERVICE == null) {
-    throw new Error('Cardano wallets should have a Token metadata provider')
-  }
-  const endpointRoot = `${config.TOKEN_INFO_SERVICE}/metadata`
-  const responses: Array<any> = await Promise.all(
-    tokenIds.map(async (tokenId) => {
-      try {
-        return await checkedFetch({
-          endpoint: `${endpointRoot}/${tokenId}`,
-          method: 'GET',
-          payload: undefined,
-        })
-      } catch (_e) {
-        return {}
-      }
-    }),
-  )
-  return responses.reduce((res, resp) => {
-    if (resp && resp.subject) {
-      const v: {
-        policyId: string
-        assetName: string
-      } & {
-        name?: string
-        decimals?: string
-        longName?: string
-        ticker?: string
-      } = {
-        policyId: resp.subject.slice(0, 56),
-        assetName: resp.subject.slice(56),
-      }
+export const getTokenInfo = async (tokenId: string, apiUrl: string) => {
+  const response = await checkedFetch({
+    endpoint: `${apiUrl}/${toTokenSubject(tokenId)}`,
+    method: 'GET',
+    payload: undefined,
+  }).catch((error) => {
+    Logger.error(error)
 
-      if (resp.name?.value) {
-        v.name = resp.name.value
-      }
+    return undefined
+  })
 
-      if (resp.decimals?.value) {
-        v.decimals = resp.decimals.value
-      }
+  const entry = parseTokenRegistryEntry(response)
 
-      if (resp.description?.value) {
-        v.longName = resp.name.value
-      }
-
-      if (resp.ticker?.value) {
-        v.ticker = resp.ticker.value
-      }
-
-      if (v.name || v.decimals) {
-        res[resp.subject] = v
-      }
-    }
-
-    return res
-  }, {})
+  return entry ? tokenInfo(entry) : fallbackTokenInfo(tokenId)
 }
+
+const tokenInfo = (entry: TokenRegistryEntry): TokenInfo => {
+  const [policyId, assetNameHex] = splitTokenIdentifier(entry.subject)
+
+  return {
+    id: toTokenId(entry.subject),
+    name: hexToAscii(assetNameHex),
+    group: policyId,
+    description: entry.description.value ?? '',
+    decimals: entry.decimals?.value ?? 0,
+
+    ticker: entry.ticker?.value,
+    url: entry.url?.value,
+    logo: entry.logo?.value,
+    fingerprint: toTokenFingerprint({policyId, assetNameHex}),
+  }
+}
+
+export const fallbackTokenInfo = (tokenId: string): TokenInfo => {
+  const [policyId, assetNameHex] = splitTokenIdentifier(tokenId)
+
+  return {
+    id: toTokenId(tokenId),
+    name: hexToAscii(assetNameHex),
+    group: policyId,
+    decimals: 0,
+    description: '',
+    fingerprint: toTokenFingerprint({policyId, assetNameHex}),
+  }
+}
+
+export const splitTokenIdentifier = (tokenIdentifier: string) =>
+  tokenIdentifier.includes('.') ? tokenIdentifier.split('.') : [tokenIdentifier.slice(0, 56), tokenIdentifier.slice(56)]
+export const toTokenSubject = (tokenIdentifier: string) => tokenIdentifier.replace('.', '')
+export const toTokenId = (tokenIdentifier: string) =>
+  tokenIdentifier.includes('.') ? tokenIdentifier : `${tokenIdentifier.slice(0, 56)}.${tokenIdentifier.slice(56)}`
 
 export const getFundInfo = (config: BackendConfig, isMainnet: boolean): Promise<FundInfoResponse> => {
   const prefix = isMainnet ? '' : 'api/'
@@ -183,4 +164,82 @@ export const fetchCurrentPrice = async (currency: CurrencySymbol, config: Backen
   if (response.error) throw new ApiError(response.error)
 
   return response.ticker.prices[currency]
+}
+
+export const hexToAscii = (hex: string) => Buffer.from(hex, 'hex').toLocaleString()
+
+const asciiToHex = (ascii: string) => {
+  const result: Array<string> = []
+  for (let n = 0, l = ascii.length; n < l; n++) {
+    const hex = Number(ascii.charCodeAt(n)).toString(16)
+    result.push(hex)
+  }
+
+  return result.join('')
+}
+
+export const toToken = ({wallet, tokenInfo}: {wallet: YoroiWallet; tokenInfo: TokenInfo}): LegacyToken => {
+  if (tokenInfo.id === wallet.primaryTokenInfo.id) return getDefaultAssetByNetworkId(wallet.networkId)
+  const assetNameHex = tokenInfo.name ? asciiToHex(tokenInfo.name) : ''
+
+  return {
+    identifier: `${tokenInfo.group}.${assetNameHex}`,
+    networkId: wallet.networkId,
+    isDefault: tokenInfo.id === wallet.primaryTokenInfo.id,
+    metadata: {
+      type: 'Cardano',
+      policyId: tokenInfo.group,
+      assetName: assetNameHex,
+      numberOfDecimals: tokenInfo.decimals,
+      ticker: tokenInfo.ticker ?? null,
+      longName: null,
+      maxSupply: null,
+    },
+  }
+}
+export const toTokenInfo = (token: LegacyToken): TokenInfo => ({
+  id: toTokenId(token.identifier),
+  group: token.metadata.policyId,
+  name: hexToAscii(token.metadata.assetName),
+  decimals: token.metadata.numberOfDecimals,
+  description: token.metadata.longName ?? '',
+  fingerprint: toTokenFingerprint({policyId: token.metadata.policyId, assetNameHex: token.metadata.assetName}),
+})
+
+export const toTokenFingerprint = ({policyId, assetNameHex}) => {
+  const assetFingerprint = new AssetFingerprint(Buffer.from(policyId, 'hex'), Buffer.from(assetNameHex, 'hex'))
+  return assetFingerprint.fingerprint()
+}
+
+// Token Registry
+// 721: https://github.com/cardano-foundation/cardano-token-registry#semantic-content-of-registry-entries
+export type TokenRegistryEntry = {
+  subject: string
+  name: Property<string>
+  description: Property<string>
+
+  policy?: string
+  logo?: Property<string>
+  ticker?: Property<string>
+  url?: Property<string>
+  decimals?: Property<number>
+}
+
+type Signature = {
+  publicKey: string
+  signature: string
+}
+
+type Property<T> = {
+  signatures: Array<Signature>
+  sequenceNumber: number
+  value: T
+}
+
+const parseTokenRegistryEntry = (data: unknown) => {
+  return isTokenRegistryEntry(data) ? data : undefined
+}
+
+const isTokenRegistryEntry = (data: unknown): data is TokenRegistryEntry => {
+  return !!data && typeof data === 'object' && 'name' in data && 'assetName' in data && 'policyId' in data
 }

@@ -12,7 +12,7 @@ export const mockTransactionInfo = (transaction?: Partial<TransactionInfo>): Tra
         amount: '481040108',
         assets: [
           {
-            identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
+            identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
             amount: new BigNumber('1407406'),
             networkId: 1,
           },
@@ -26,7 +26,7 @@ export const mockTransactionInfo = (transaction?: Partial<TransactionInfo>): Tra
         amount: '1407406',
         assets: [
           {
-            identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
+            identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
             amount: new BigNumber('1407406'),
             networkId: 1,
           },
@@ -38,7 +38,7 @@ export const mockTransactionInfo = (transaction?: Partial<TransactionInfo>): Tra
         amount: '479460117',
         assets: [
           {
-            identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
+            identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
             amount: new BigNumber('172585'),
             networkId: 1,
           },
@@ -53,7 +53,7 @@ export const mockTransactionInfo = (transaction?: Partial<TransactionInfo>): Tra
         isDefault: true,
       },
       {
-        identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
+        identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
         networkId: 1,
         amount: '2',
         isDefault: false,
@@ -68,7 +68,7 @@ export const mockTransactionInfo = (transaction?: Partial<TransactionInfo>): Tra
         isDefault: true,
       },
       {
-        identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
+        identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
         networkId: 1,
         amount: '2',
         isDefault: false,
@@ -82,10 +82,10 @@ export const mockTransactionInfo = (transaction?: Partial<TransactionInfo>): Tra
     status: 'SUCCESSFUL',
     assurance: 'HIGH',
     tokens: {
-      '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.': {
+      '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7': {
         networkId: 1,
         isDefault: false,
-        identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
+        identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
         metadata: {
           policyId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
           assetName: '',

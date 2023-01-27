@@ -1,4 +1,5 @@
 export * from './api'
+export * from './assetUtils'
 export * from './catalyst'
 export * from './chain'
 export * from './MultiToken'

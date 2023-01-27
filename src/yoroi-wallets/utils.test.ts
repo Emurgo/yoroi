@@ -36,6 +36,12 @@ describe('Quantities', () => {
     expect(Quantities.decimalPlaces('1.123456', 2)).toBe('1.12')
     expect(Quantities.decimalPlaces('1.123456', 10)).toBe('1.123456')
   })
+  it('denominated', () => {
+    expect(Quantities.denominated('1', 2)).toBe('0.01')
+    expect(Quantities.denominated('1000', 2)).toBe('10')
+    expect(Quantities.denominated('112345', 3)).toBe('112.345')
+    expect(Quantities.denominated('1123456', 10)).toBe('0.0001123456')
+  })
 })
 
 describe('Amounts', () => {

@@ -36,7 +36,6 @@ const LockedAmount = () => {
   const wallet = useSelectedWallet()
   const lockedAmount = useLockedAmount({wallet})
   const amount = formatTokenWithText(new BigNumber(lockedAmount), wallet.primaryToken)
-
   return <FormattedAmount amount={amount} />
 }
 
