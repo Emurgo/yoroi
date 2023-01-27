@@ -1,6 +1,6 @@
 import {Storage} from '../storage'
-import {BackendConfig} from '../types'
-import {TransactionCache} from './shelley'
+import {BackendConfig, Transactions} from '../types'
+import {PerAddressCertificatesDict, TransactionCache} from './shelley'
 
 export const makeTransactionManager = async (storage: Storage, backendConfig: BackendConfig) => {
   const transactionCache = await TransactionCache.create(storage.join('txs/'))
@@ -8,29 +8,29 @@ export const makeTransactionManager = async (storage: Storage, backendConfig: Ba
 
   return {
     // transactionCache api
-    getTransactions() {
+    getTransactions(): Transactions {
       const memos = memosManager.getMemos()
-      return Object.keys(transactionCache.transactions).reduce(
-        (result, current) => ({
+      return Object.entries(transactionCache.transactions).reduce(
+        (result, [txId, tx]) => ({
           ...result,
-          [current]: {
-            ...transactionCache.transactions[current],
-            memo: memos[current],
+          [txId]: {
+            ...tx,
+            memo: memos[txId],
           },
         }),
         {},
       )
     },
-    getPerRewardAddressCertificates() {
+    getPerRewardAddressCertificates(): PerAddressCertificatesDict {
       return transactionCache.perRewardAddressCertificates
     },
-    getPerAddressTxs() {
+    getPerAddressTxs(): Record<string, string[]> {
       return transactionCache.perAddressTxs
     },
-    getConfirmationCounts() {
+    getConfirmationCounts(): {[x: string]: number | null} {
       return transactionCache.confirmationCounts
     },
-    clear: () => transactionCache.clear(),
+    clear: (): Promise<void> => transactionCache.clear(),
     resetState: () => transactionCache.resetState(),
     subscribe: (handler) => transactionCache.subscribe(handler),
     doSync: async (addressesByChunks: Array<Array<string>>) =>
