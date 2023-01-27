@@ -27,7 +27,7 @@ export const makeTransactionManager = async (storage: Storage, backendConfig: Ba
     getPerAddressTxs() {
       return transactionCache.perAddressTxs
     },
-    getConfirmationCounts(): {[x: string]: number | null} {
+    getConfirmationCounts() {
       return transactionCache.confirmationCounts
     },
     clear: () => transactionCache.clear(),
