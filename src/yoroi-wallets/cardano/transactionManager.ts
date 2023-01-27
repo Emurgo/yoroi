@@ -18,7 +18,7 @@ export const makeTransactionManager = async (storage: Storage, backendConfig: Ba
             memo: memos[txId],
           },
         }),
-        {},
+        {} as Transactions,
       )
     },
     getPerRewardAddressCertificates(): PerAddressCertificatesDict {
