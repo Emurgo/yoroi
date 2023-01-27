@@ -2,7 +2,7 @@ import {Storage} from '../storage'
 import {BackendConfig} from '../types'
 import {TransactionCache} from './shelley'
 
-export const makeTransactionManager = async (storage: Storage) => {
+export const makeTransactionManager = async (storage: Storage, backendConfig: BackendConfig) => {
   const transactionCache = await TransactionCache.create(storage.join('txs/'))
   const memosManager = await makeMemosManager(storage.join('memos/'))
 
@@ -33,7 +33,7 @@ export const makeTransactionManager = async (storage: Storage) => {
     clear: () => transactionCache.clear(),
     resetState: () => transactionCache.resetState(),
     subscribe: (handler) => transactionCache.subscribe(handler),
-    doSync: async (addressesByChunks: Array<Array<string>>, backendConfig: BackendConfig) =>
+    doSync: async (addressesByChunks: Array<Array<string>>) =>
       transactionCache.doSync(addressesByChunks, backendConfig),
 
     // memo api
@@ -45,7 +45,7 @@ export const makeTransactionManager = async (storage: Storage) => {
 export type TransactionManager = Awaited<ReturnType<typeof makeTransactionManager>>
 
 export const makeMemosManager = async (storage: Storage) => {
-  const getMemos = () => storage.getAllKeys().then(storage.multiGet).then(Object.fromEntries)
+  const getMemos = () => storage.getAllKeys().then(storage.multiGet).then(Object.fromEntries) ?? {}
   let memos = await getMemos()
 
   const saveMemo = async (txId: string, memo: string): Promise<void> => {
@@ -53,7 +53,10 @@ export const makeMemosManager = async (storage: Storage) => {
     memos = await getMemos()
   }
 
-  const clear = async () => storage.getAllKeys().then(storage.multiRemove)
+  const clear = async () => {
+    await storage.getAllKeys().then(storage.multiRemove)
+    memos = {}
+  }
 
   return {
     getMemos() {

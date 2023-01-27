@@ -276,7 +276,10 @@ export class ShelleyWallet implements WalletInterface {
     const rewardAddressHex = await deriveRewardAddressHex(accountPubKeyHex, networkId)
     const apiUrl = getCardanoNetworkConfigById(networkId).BACKEND.API_ROOT
     const utxoManager = await makeUtxoManager({storage: storage.join('utxoManager/'), apiUrl})
-    const transactionManager = await makeTransactionManager(storage.join('tx-manager/'))
+    const transactionManager = await makeTransactionManager(
+      storage.join('txManager/'),
+      getCardanoNetworkConfigById(networkId).BACKEND,
+    )
 
     const wallet = new ShelleyWallet({
       storage,
@@ -389,7 +392,7 @@ export class ShelleyWallet implements WalletInterface {
   }
 
   async remove() {
-    await this.clearMemos()
+    await this.transactionManager.clearMemos()
     await this.clear()
   }
 
@@ -400,10 +403,6 @@ export class ShelleyWallet implements WalletInterface {
 
   saveMemo(txId: string, memo: string): Promise<void> {
     return this.transactionManager.saveMemo(txId, memo)
-  }
-
-  clearMemos(): Promise<void> {
-    return this.transactionManager.clearMemos()
   }
 
   // =================== persistence =================== //
@@ -1149,10 +1148,7 @@ export class ShelleyWallet implements WalletInterface {
 
     await this.discoverAddresses()
 
-    await Promise.all([
-      this.syncUtxos(),
-      this.transactionManager.doSync(this.getAddressesInBlocks(), this.getBackendConfig()),
-    ])
+    await Promise.all([this.syncUtxos(), this.transactionManager.doSync(this.getAddressesInBlocks())])
 
     this.updateLastGeneratedAddressIndex()
   }

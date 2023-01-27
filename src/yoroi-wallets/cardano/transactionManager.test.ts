@@ -1,10 +1,12 @@
 import {storage as rootStorage} from '../storage'
 import {makeMemosManager} from './transactionManager'
 
-describe('transaction manager', () => {
-  it('memo storage', async () => {
+describe('memo manager', () => {
+  it('works', async () => {
     const storage = rootStorage.join('memos/')
     const memosManager = await makeMemosManager(storage)
+
+    expect(memosManager.getMemos()).toEqual({})
 
     await memosManager.saveMemo('fake-tx-id-1', 'Send money to my friend')
     await memosManager.saveMemo('fake-tx-id-2', 'Send money to my girlfriend')
@@ -13,5 +15,9 @@ describe('transaction manager', () => {
       'fake-tx-id-1': 'Send money to my friend',
       'fake-tx-id-2': 'Send money to my girlfriend',
     })
+
+    await memosManager.clear()
+
+    expect(memosManager.getMemos()).toEqual({})
   })
 })
