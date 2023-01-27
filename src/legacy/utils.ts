@@ -3,7 +3,7 @@
 import {BigNumber} from 'bignumber.js'
 import {isEmpty} from 'lodash'
 
-import {CardanoMobile, CardanoTypes, MultiToken} from '../yoroi-wallets'
+import {CardanoMobile, CardanoTypes, MultiToken, splitTokenIdentifier} from '../yoroi-wallets'
 import type {Addressing, BaseAsset, NetworkId, RawUtxo} from '../yoroi-wallets/types/other'
 import {CONFIG} from './config'
 import {getNetworkConfigById} from './networks'
@@ -78,16 +78,15 @@ export const deriveRewardAddressHex = async (accountPubKeyHex: string, networkId
  * Multi-asset related
  */
 export const identifierToCardanoAsset = async (
-  identifier: string,
+  tokenId: string,
 ): Promise<{
   policyId: CardanoTypes.ScriptHash
   name: CardanoTypes.AssetName
 }> => {
-  // recall: 'a.'.split() gives ['a', ''] as desired
-  const parts = identifier.split('.')
+  const [policyId, assetNameHex] = splitTokenIdentifier(tokenId)
   return {
-    policyId: await CardanoMobile.ScriptHash.fromBytes(Buffer.from(parts[0], 'hex')),
-    name: await CardanoMobile.AssetName.new(Buffer.from(parts[1], 'hex')),
+    policyId: await CardanoMobile.ScriptHash.fromBytes(Buffer.from(policyId, 'hex')),
+    name: await CardanoMobile.AssetName.new(Buffer.from(assetNameHex, 'hex')),
   }
 }
 
@@ -121,11 +120,11 @@ export const cardanoValueFromRemoteFormat = async (utxo: RawUtxo) => {
   if (utxo.assets.length === 0) return value
   const assets = await CardanoMobile.MultiAsset.new()
 
-  for (const entry of utxo.assets) {
-    const {policyId, name} = await identifierToCardanoAsset(entry.assetId)
+  for (const remoteAsset of utxo.assets) {
+    const {policyId, name} = await identifierToCardanoAsset(remoteAsset.assetId)
     let policyContent = await assets.get(policyId)
     policyContent = policyContent.hasValue() ? policyContent : await CardanoMobile.Assets.new()
-    await policyContent.insert(name, await CardanoMobile.BigNum.fromStr(entry.amount))
+    await policyContent.insert(name, await CardanoMobile.BigNum.fromStr(remoteAsset.amount))
     // recall: we always have to insert since WASM returns copies of objects
     await assets.insert(policyId, policyContent)
   }

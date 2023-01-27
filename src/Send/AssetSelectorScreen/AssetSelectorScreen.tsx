@@ -10,15 +10,16 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import AdaImage from '../../assets/img/asset_ada.png'
 import NoImage from '../../assets/img/asset_no_image.png'
 import {Boundary, Button, Spacer, Text, TextInput} from '../../components'
-import {useBalances, useTokenInfo} from '../../hooks'
+import {useBalance, useBalances, useTokenInfos} from '../../hooks'
 import globalMessages, {txLabels} from '../../i18n/global-messages'
-import {decodeHexAscii, formatTokenAmount, getAssetDenominationOrId, getTokenFingerprint} from '../../legacy/format'
+import {formatTokenAmount} from '../../legacy/format'
 import {TxHistoryRouteNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
-import {YoroiWallet} from '../../yoroi-wallets'
-import {Quantity, Token, TokenId} from '../../yoroi-wallets/types'
-import {Quantities} from '../../yoroi-wallets/utils'
+import {alpha, toEnd, toStart} from '../../TxHistory/AssetList/utils'
+import {toToken, YoroiWallet} from '../../yoroi-wallets'
+import {TokenInfo} from '../../yoroi-wallets/types'
+import {Amounts} from '../../yoroi-wallets/utils'
 import {useSend} from '../Context/SendContext'
 
 export const AssetSelectorScreen = () => {
@@ -28,17 +29,20 @@ export const AssetSelectorScreen = () => {
   const [matcher, setMatcher] = React.useState('')
   const navigation = useNavigation<TxHistoryRouteNavigation>()
   const {tokenSelected, allTokensSelected} = useSend()
+  const tokenInfos = useTokenInfos({
+    wallet,
+    tokenIds: Amounts.toArray(balances).map(({tokenId}) => tokenId),
+  })
+  const sortedTokenInfos = tokenInfos
+    .sort(alpha((tokenInfo) => tokenInfo.name?.toLocaleLowerCase() ?? ''))
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+    .sort(toEnd((tokenInfo) => !tokenInfo.name))
+    .sort(toStart((tokenInfo) => tokenInfo.id === wallet.primaryTokenInfo.id))
 
   const onChangeMatcher = (matcher: string) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     setMatcher(matcher)
   }
-
-  const sortedBalance: Array<[TokenId, Quantity]> = Object.entries(balances)
-    .sort(([, quantityA]: [TokenId, Quantity], [, quantityB]: [TokenId, Quantity]) =>
-      Quantities.isGreaterThan(quantityA, quantityB) ? -1 : 1,
-    )
-    .sort(([tokenId]: [TokenId, Quantity]) => (tokenId === wallet.primaryToken.identifier ? -1 : 1)) // default first
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={{flex: 1, backgroundColor: 'white'}}>
@@ -56,15 +60,14 @@ export const AssetSelectorScreen = () => {
       </View>
 
       <FlatList
-        data={sortedBalance}
-        renderItem={({item: [tokenId, quantity]}: {item: [TokenId, Quantity]}) => (
+        data={sortedTokenInfos}
+        renderItem={({item: tokenInfo}: {item: TokenInfo}) => (
           <Boundary>
             <AssetSelectorItem
               wallet={wallet}
-              tokenId={tokenId}
-              quantity={quantity}
+              tokenInfo={tokenInfo}
               onSelect={() => {
-                tokenSelected(tokenId)
+                tokenSelected(tokenInfo.id)
                 navigation.navigate('send')
               }}
               matcher={matcher}
@@ -73,7 +76,7 @@ export const AssetSelectorScreen = () => {
         )}
         bounces={false}
         contentContainerStyle={{paddingHorizontal: 16}}
-        keyExtractor={([tokenId]) => tokenId}
+        keyExtractor={(tokenInfo) => tokenInfo.id}
         testID="assetsList"
       />
 
@@ -94,40 +97,45 @@ export const AssetSelectorScreen = () => {
 
 type AssetSelectorItemProps = {
   wallet: YoroiWallet
-  tokenId: TokenId
-  quantity: Quantity
+  tokenInfo: TokenInfo
   onSelect: () => void
   matcher: string
 }
 
-const AssetSelectorItem = ({wallet, tokenId, quantity, onSelect, matcher}: AssetSelectorItemProps) => {
-  const tokenInfo = useTokenInfo({wallet, tokenId})
+const AssetSelectorItem = ({wallet, tokenInfo, onSelect, matcher}: AssetSelectorItemProps) => {
+  const quantity = useBalance({wallet, tokenId: tokenInfo.id})
+  const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
 
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (!matches(tokenInfo, matcher)) return null
 
   return (
     <TouchableOpacity style={{paddingVertical: 16}} onPress={onSelect} testID="assetSelectorItem">
       <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
         <View style={{padding: 4}}>
-          <Icon source={tokenInfo.isDefault ? AdaImage : NoImage} />
+          <Icon source={isPrimary ? AdaImage : NoImage} />
         </View>
 
         <View style={{flex: 1, padding: 4}}>
           <Text numberOfLines={1} ellipsizeMode="middle" style={{color: COLORS.BLUE_LIGHTER}} testID="tokenInfoText">
-            {getAssetDenominationOrId(tokenInfo)}
+            {/* eslint-disable-next-line @typescript-eslint/strict-boolean-expressions */}
+            {tokenInfo.ticker || tokenInfo.name || '-'}
           </Text>
+
           <Text
             numberOfLines={1}
             ellipsizeMode="middle"
             style={{color: COLORS.TEXT_INPUT}}
             testID="tokenFingerprintText"
           >
-            {tokenInfo.isDefault ? '' : getTokenFingerprint(tokenInfo)}
+            {isPrimary ? '' : tokenInfo.fingerprint}
           </Text>
         </View>
 
         <View style={{flex: 1, alignItems: 'flex-end', padding: 4}} testID="tokenAmountText">
-          <Text style={{color: COLORS.DARK_TEXT}}>{formatTokenAmount(new BigNumber(quantity), tokenInfo)}</Text>
+          <Text style={{color: COLORS.DARK_TEXT}}>
+            {formatTokenAmount(new BigNumber(quantity), toToken({wallet, tokenInfo}))}
+          </Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -152,14 +160,8 @@ const SearchInput = (props) => {
   return <TextInput {...props} label={strings.searchLabel} />
 }
 
-const matches = (token: Token, matcher: string) =>
-  normalize(decodeHexAscii(token.metadata.assetName) ?? '').includes(matcher) ||
-  normalize(getTokenFingerprint(token) ?? '').includes(matcher) ||
-  normalize(token.metadata.ticker ?? '').includes(matcher) ||
-  normalize(token.metadata.longName ?? '').includes(matcher) ||
-  normalize(token.identifier).includes(matcher) ||
-  normalize(token.metadata.assetName).includes(matcher) ||
-  normalize(token.metadata.policyId).includes(matcher)
+const matches = (tokenInfo: TokenInfo, matcher: string) =>
+  Object.values(tokenInfo).some((key) => normalize(String(key)).includes(normalize(matcher)))
 
 const useStrings = () => {
   const intl = useIntl()

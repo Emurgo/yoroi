@@ -124,6 +124,15 @@ describe('migration', () => {
         "networkId": 1,
       }
     `)
+    expect(wallet.primaryTokenInfo).toMatchInlineSnapshot(`
+      Object {
+        "decimals": 6,
+        "description": "",
+        "id": "",
+        "name": "ADA",
+        "ticker": "ADA",
+      }
+    `)
     await expect(getStakingKey(wallet)).resolves.toMatchInlineSnapshot(
       `"ed25519_pk158gpk02jqrsxa58aw2e4f0ww6fffu7p2qsflenapdz7a3r5lxx4sn9nx84"`,
     )
@@ -241,6 +250,15 @@ describe('migration', () => {
           "type": "Cardano",
         },
         "networkId": 1,
+      }
+    `)
+    expect(wallet.primaryTokenInfo).toMatchInlineSnapshot(`
+      Object {
+        "decimals": 6,
+        "description": "",
+        "id": "",
+        "name": "ADA",
+        "ticker": "ADA",
       }
     `)
     await expect(getStakingKey(wallet)).resolves.toMatchInlineSnapshot(
@@ -362,6 +380,15 @@ describe('migration', () => {
           "type": "Cardano",
         },
         "networkId": 1,
+      }
+    `)
+    expect(wallet.primaryTokenInfo).toMatchInlineSnapshot(`
+      Object {
+        "decimals": 6,
+        "description": "",
+        "id": "",
+        "name": "ADA",
+        "ticker": "ADA",
       }
     `)
     await expect(getStakingKey(wallet)).resolves.toMatchInlineSnapshot(

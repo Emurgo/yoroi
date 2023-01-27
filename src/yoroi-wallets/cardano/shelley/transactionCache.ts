@@ -323,24 +323,24 @@ export function toCachedTx(tx: RawTransaction): Transaction {
     type: tx.type,
     fee: tx.fee ?? undefined,
     status: tx.tx_state,
-    inputs: tx.inputs.map((i) => ({
-      address: i.address,
-      amount: i.amount,
-      assets: (i.assets ?? []).map((a) => ({
-        amount: a.amount,
-        assetId: a.assetId,
-        policyId: a.policyId,
-        name: a.name,
+    inputs: tx.inputs.map((input) => ({
+      address: input.address,
+      amount: input.amount,
+      assets: (input.assets ?? []).map((asset) => ({
+        amount: asset.amount,
+        assetId: asset.assetId,
+        policyId: asset.policyId,
+        name: asset.name,
       })),
     })),
-    outputs: tx.outputs.map((o) => ({
-      address: o.address,
-      amount: o.amount,
-      assets: (o.assets ?? []).map((a) => ({
-        amount: a.amount,
-        assetId: a.assetId,
-        policyId: a.policyId,
-        name: a.name,
+    outputs: tx.outputs.map((output) => ({
+      address: output.address,
+      amount: output.amount,
+      assets: (output.assets ?? []).map((asset) => ({
+        amount: asset.amount,
+        assetId: asset.assetId,
+        policyId: asset.policyId,
+        name: asset.name,
       })),
     })),
     lastUpdatedAt: tx.last_update,
@@ -355,14 +355,14 @@ export function toCachedTx(tx: RawTransaction): Transaction {
     certificates: tx.certificates,
     validContract: tx.valid_contract,
     scriptSize: tx.script_size,
-    collateralInputs: (tx.collateral_inputs ?? []).map((i) => ({
-      address: i.address,
-      amount: i.amount,
-      assets: (i.assets ?? []).map((a) => ({
-        amount: a.amount,
-        assetId: a.assetId,
-        policyId: a.policyId,
-        name: a.name,
+    collateralInputs: (tx.collateral_inputs ?? []).map((input) => ({
+      address: input.address,
+      amount: input.amount,
+      assets: (input.assets ?? []).map((asset) => ({
+        amount: asset.amount,
+        assetId: asset.assetId,
+        policyId: asset.policyId,
+        name: asset.name,
       })),
     })),
     memo: null,
