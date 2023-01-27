@@ -8,7 +8,7 @@ export const makeTransactionManager = async (storage: Storage, backendConfig: Ba
 
   return {
     // transactionCache api
-    getTransactions(): Transactions {
+    getTransactions() {
       const memos = memosManager.getMemos()
       return Object.entries(transactionCache.transactions).reduce(
         (result, [txId, tx]) => ({
