@@ -38,7 +38,7 @@ export const makeTransactionManager = async (storage: Storage, backendConfig: Ba
 
     // memo api
     saveMemo: (txId: string, memo: string) => memosManager.saveMemo(txId, memo),
-    clearMemos: (): Promise<void> => memosManager.clear(),
+    clearMemos: () => memosManager.clear(),
   } as const
 }
 
