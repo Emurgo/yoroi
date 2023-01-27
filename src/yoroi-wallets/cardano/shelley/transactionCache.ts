@@ -406,7 +406,7 @@ export type TimestampedCertMeta = {
   epoch: number
   certificates: Array<RemoteCertificateMeta>
 }
-export type PerAddressCertificatesDict = Record<string, Record<string, TimestampedCertMeta>>
+type PerAddressCertificatesDict = Record<string, Record<string, TimestampedCertMeta>>
 
 const perAddressCertificatesSelector = (state: TransactionCacheState): PerAddressCertificatesDict => {
   const transactions = state.transactions
