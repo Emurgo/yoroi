@@ -1,6 +1,6 @@
 import {Storage} from '../storage'
 import {BackendConfig, Transactions} from '../types'
-import {PerAddressCertificatesDict, TransactionCache} from './shelley'
+import {TransactionCache} from './shelley'
 
 export const makeTransactionManager = async (storage: Storage, backendConfig: BackendConfig) => {
   const transactionCache = await TransactionCache.create(storage.join('txs/'))
