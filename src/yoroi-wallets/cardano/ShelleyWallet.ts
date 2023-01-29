@@ -34,7 +34,7 @@ import {processTxHistoryData} from '../../legacy/processTransactions'
 import {IsLockedError, nonblockingSynchronize, synchronize} from '../../legacy/promise'
 import type {WalletMeta} from '../../legacy/state'
 import {deriveRewardAddressHex} from '../../legacy/utils'
-import {Storage} from '../storage'
+import {YoroiStorage} from '../storage'
 import type {
   AccountStateResponse,
   BackendConfig,
@@ -131,7 +131,7 @@ export class ShelleyWallet implements WalletInterface {
   isEasyConfirmationEnabled = false
 
   private _utxos: RawUtxo[]
-  private readonly storage: Storage
+  private readonly storage: YoroiStorage
   private readonly utxoManager: UtxoManager
   private readonly stakingKeyPath: number[]
 
@@ -150,7 +150,7 @@ export class ShelleyWallet implements WalletInterface {
     id: string
     implementationId: WalletImplementationId
     networkId: NetworkId
-    storage: Storage
+    storage: YoroiStorage
     provider: YoroiProvider | undefined
 
     mnemonic: string
@@ -195,7 +195,7 @@ export class ShelleyWallet implements WalletInterface {
     networkId: NetworkId
 
     isReadOnly: boolean
-    storage: Storage
+    storage: YoroiStorage
   }): Promise<YoroiWallet> {
     const {internalChain, externalChain} = await addressChains.create({implementationId, networkId, accountPubKeyHex})
 
@@ -214,7 +214,7 @@ export class ShelleyWallet implements WalletInterface {
     })
   }
 
-  static async restore({walletMeta, storage}: {storage: Storage; walletMeta: WalletMeta}) {
+  static async restore({walletMeta, storage}: {storage: YoroiStorage; walletMeta: WalletMeta}) {
     const data = await storage.getItem('data', parseWalletJSON)
     if (!data) throw new Error('Cannot read saved data')
     Logger.debug('openWallet::data', data)
@@ -264,7 +264,7 @@ export class ShelleyWallet implements WalletInterface {
     id: string
     implementationId: WalletImplementationId
     networkId: NetworkId
-    storage: Storage
+    storage: YoroiStorage
     internalChain: AddressChain
     externalChain: AddressChain
     isReadOnly: boolean
@@ -322,7 +322,7 @@ export class ShelleyWallet implements WalletInterface {
     isEasyConfirmationEnabled,
     lastGeneratedAddressIndex,
   }: {
-    storage: Storage
+    storage: YoroiStorage
     networkId: NetworkId
     id: string
     utxoManager: UtxoManager

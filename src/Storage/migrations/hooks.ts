@@ -1,6 +1,6 @@
-import storage from '@react-native-async-storage/async-storage'
 import * as React from 'react'
 
+import {storage} from '../../yoroi-wallets/storage'
 import {to4_9_0} from './4_9_0'
 
 export const useMigrations = () => {

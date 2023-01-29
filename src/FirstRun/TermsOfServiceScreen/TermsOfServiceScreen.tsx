@@ -11,7 +11,7 @@ import {useLanguage} from '../../i18n'
 import globalMessages from '../../i18n/global-messages'
 import {TermsOfService} from '../../Legal'
 import {FirstRunRouteNavigation} from '../../navigation'
-import {useStorage} from '../../Storage'
+import {storage} from '../../yoroi-wallets/storage'
 
 export const TermsOfServiceScreen = () => {
   const strings = useStrings()
@@ -22,7 +22,6 @@ export const TermsOfServiceScreen = () => {
   // should be another step in the first run flow -> auth method
   const {login} = useAuth()
   const authOsEnabled = useAuthOsEnabled()
-  const storage = useStorage()
   const {enableAuthWithOs, isLoading} = useEnableAuthWithOs(
     {storage},
     {onSuccess: login, onError: () => navigation.navigate('enable-login-with-pin')},

@@ -19,10 +19,10 @@ import {EnableLoginWithPin} from './auth/EnableLoginWithPin'
 import {FirstRunNavigator} from './FirstRun/FirstRunNavigator'
 import {DeveloperScreen} from './legacy/DeveloperScreen'
 import {AppRoutes} from './navigation'
-import {useStorage} from './Storage'
 import StorybookScreen from './StorybookScreen'
 import {WalletInitNavigator} from './WalletInit/WalletInitNavigator'
 import {WalletNavigator} from './WalletNavigator'
+import {storage} from './yoroi-wallets/storage'
 
 const Stack = createStackNavigator<AppRoutes>()
 const navRef = React.createRef<NavigationContainerRef<ReactNavigation.RootParamList>>()
@@ -142,7 +142,6 @@ const messages = defineMessages({
 })
 
 const useAutoLogout = () => {
-  const storage = useStorage()
   const authSetting = useAuthSetting(storage)
   const strings = useStrings()
   const {logout} = useAuth()
@@ -192,7 +191,6 @@ const getAuthAction = (authOsEnabled: boolean, authSetting: AuthSetting): AuthAc
 }
 
 const useAuthAction = () => {
-  const storage = useStorage()
   const authSetting = useAuthSetting(storage)
   const authOsEnabled = useAuthOsEnabled()
 

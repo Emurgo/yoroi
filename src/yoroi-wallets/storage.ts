@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import {parseSafe} from './utils/parsing'
 
-export type Storage = ReturnType<typeof mountStorage>
+export type YoroiStorage = ReturnType<typeof mountStorage>
 export type Path = `${string}/`
 
 const mountStorage = (path: Path) => {

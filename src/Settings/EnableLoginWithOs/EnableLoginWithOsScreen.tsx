@@ -6,12 +6,11 @@ import {StyleSheet} from 'react-native'
 import {OsAuthScreen, useEnableAuthWithOs} from '../../auth'
 import {Button} from '../../components'
 import globalMessages from '../../i18n/global-messages'
-import {useStorage} from '../../Storage'
+import {storage} from '../../yoroi-wallets/storage'
 
 export const EnableLoginWithOsScreen = () => {
   const strings = useStrings()
   const navigation = useNavigation()
-  const storage = useStorage()
 
   const {enableAuthWithOs, isLoading} = useEnableAuthWithOs({storage}, {onSuccess: () => navigation.goBack()})
 

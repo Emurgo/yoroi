@@ -1,5 +1,4 @@
-import storage from '@react-native-async-storage/async-storage'
-
+import {storage} from '../../yoroi-wallets/storage'
 import {SettingsStorageKeys} from '../StorageProvider'
 import {migrateAuthSetting, OLD_OS_AUTH_KEY} from './4_9_0'
 describe('migrateAuthSetting', () => {
@@ -9,7 +8,7 @@ describe('migrateAuthSetting', () => {
 
   beforeEach(async () => {
     await storage.clear()
-    await storage.setItem(SettingsStorageKeys.InstallationId, JSON.stringify(installationId))
+    await storage.setItem(SettingsStorageKeys.InstallationId, installationId)
   })
 
   it('method = null and no pin/os means new setup, it should remain null', async () => {
@@ -33,8 +32,8 @@ describe('migrateAuthSetting', () => {
   // if the store is inconsistent we favor OS, so the user can disable on device and it will ask for a new pin
   it('old store is pin + os (inconsistent), method = "os"', async () => {
     await storage.multiSet([
-      [SettingsStorageKeys.Pin, JSON.stringify('encrypted-hash')],
-      [OLD_OS_AUTH_KEY, JSON.stringify(true)],
+      [SettingsStorageKeys.Pin, 'encrypted-hash'],
+      [OLD_OS_AUTH_KEY, true],
     ])
 
     await migrateAuthSetting(storage)
@@ -44,8 +43,8 @@ describe('migrateAuthSetting', () => {
 
   it('old store is pin, method = "pin"', async () => {
     await storage.multiSet([
-      [SettingsStorageKeys.Pin, JSON.stringify('encrypted-hash')],
-      [OLD_OS_AUTH_KEY, JSON.stringify(false)],
+      [SettingsStorageKeys.Pin, 'encrypted-hash'],
+      [OLD_OS_AUTH_KEY, false],
     ])
 
     await migrateAuthSetting(storage)
@@ -55,7 +54,7 @@ describe('migrateAuthSetting', () => {
 
   // pin hash is deleted when changing to OS auth
   it('old store is os, method = "os"', async () => {
-    await storage.setItem(OLD_OS_AUTH_KEY, JSON.stringify(true))
+    await storage.setItem(OLD_OS_AUTH_KEY, true)
 
     await migrateAuthSetting(storage)
 
