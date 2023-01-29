@@ -1,15 +1,18 @@
 import {decryptData, encryptData} from '../legacy/commonUtils'
-import storage from '../legacy/storage'
 import {YoroiWallet} from '../yoroi-wallets'
+import {storage} from '../yoroi-wallets/storage'
+import {parseString} from '../yoroi-wallets/utils/parsing'
 
-type StorageKey = `/keystore/${string}-MASTER_PASSWORD`
+type StorageKey = `${string}-MASTER_PASSWORD`
 export const EncryptedStorageKeys = {
-  rootKey: (id: YoroiWallet['id']): StorageKey => `/keystore/${id}-MASTER_PASSWORD`,
+  rootKey: (id: YoroiWallet['id']): StorageKey => `${id}-MASTER_PASSWORD`,
 }
+
+const keyStorage = storage.join('keystore/')
 
 export const EncryptedStorage = {
   async read(key: StorageKey, password: string) {
-    const encrypted = await storage.read<string | null>(key)
+    const encrypted = await keyStorage.getItem(key, parseString)
     if (encrypted == null) {
       throw new Error('RootKey invalid')
     }
@@ -21,11 +24,11 @@ export const EncryptedStorage = {
   async write(key: StorageKey, value: string, password: string) {
     const encrypted = await encryptData(value, password)
 
-    return storage.write(key, encrypted)
+    return keyStorage.setItem(key, encrypted)
   },
 
   remove(key: StorageKey) {
-    return storage.remove(key)
+    return keyStorage.removeItem(key)
   },
 } as const
 
