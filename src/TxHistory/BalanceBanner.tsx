@@ -1,10 +1,9 @@
 import BigNumber from 'bignumber.js'
 import React, {useState} from 'react'
-import {FallbackProps} from 'react-error-boundary'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
-import {Boundary, Spacer} from '../components'
+import {Boundary, ResetError, ResetErrorRef, Spacer} from '../components'
 import {Icon} from '../components/Icon'
 import {useBalances, useExchangeRate} from '../hooks'
 import {formatTokenWithText, formatTokenWithTextWhenHidden} from '../legacy/format'
@@ -14,9 +13,10 @@ import {COLORS} from '../theme'
 import {CurrencySymbol} from '../yoroi-wallets/types'
 import {Amounts, Quantities} from '../yoroi-wallets/utils'
 
-export const BalanceBanner = React.forwardRef<PairedBalanceErrorRef>((_, ref) => {
+export const BalanceBanner = React.forwardRef<ResetErrorRef>((_, ref) => {
   const wallet = useSelectedWallet()
   const [privacyMode, setPrivacyMode] = useState(false)
+  const {currency} = useCurrencyContext()
 
   return (
     <View style={styles.banner}>
@@ -37,11 +37,13 @@ export const BalanceBanner = React.forwardRef<PairedBalanceErrorRef>((_, ref) =>
 
         <Row>
           <Boundary
+            key={currency}
             loading={{size: 'small'}}
             error={{
-              size: 'inline',
               fallback: ({resetErrorBoundary}) => (
-                <PairedBalanceError resetErrorBoundary={resetErrorBoundary} ref={ref} />
+                <ResetError resetErrorBoundary={resetErrorBoundary} ref={ref}>
+                  <BalanceError />
+                </ResetError>
               ),
             }}
           >
@@ -50,30 +52,6 @@ export const BalanceBanner = React.forwardRef<PairedBalanceErrorRef>((_, ref) =>
         </Row>
       </TouchableOpacity>
     </View>
-  )
-})
-
-export type PairedBalanceErrorRef = {
-  refetchExchangeRate: () => void
-}
-
-const PairedBalanceError = React.forwardRef<
-  PairedBalanceErrorRef,
-  {resetErrorBoundary: FallbackProps['resetErrorBoundary']}
->(({resetErrorBoundary}, ref) => {
-  const strings = useStrings()
-  const {currency} = useCurrencyContext()
-
-  React.useImperativeHandle(ref, () => ({
-    refetchExchangeRate: () => {
-      resetErrorBoundary()
-    },
-  }))
-
-  return (
-    <Text style={styles.pairedBalanceText} testID="pairedTotalText">
-      {strings.pairedBalanceError(currency)}
-    </Text>
   )
 })
 
@@ -131,6 +109,17 @@ const PairedBalance = ({privacyMode}: {privacyMode: boolean}) => {
   return (
     <Text style={styles.pairedBalanceText} testID="pairedTotalText">
       {pairedTotal} {currency}
+    </Text>
+  )
+}
+
+const BalanceError = () => {
+  const strings = useStrings()
+  const {currency} = useCurrencyContext()
+
+  return (
+    <Text style={styles.pairedBalanceText} testID="pairedTotalText">
+      {strings.pairedBalanceError(currency)}
     </Text>
   )
 }

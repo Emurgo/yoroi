@@ -4,7 +4,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {LayoutAnimation, StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import infoIcon from '../assets/img/icon/info-light-green.png'
-import {Boundary, Spacer, StatusBar, Text} from '../components'
+import {Boundary, ResetErrorRef, Spacer, StatusBar, Text} from '../components'
 import {useSync} from '../hooks'
 import {assetMessages, txLabels} from '../i18n/global-messages'
 import {isByron} from '../legacy/config'
@@ -12,7 +12,7 @@ import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
 import {ActionsBanner} from './ActionsBanner'
 import {AssetList} from './AssetList'
-import {BalanceBanner, PairedBalanceErrorRef} from './BalanceBanner'
+import {BalanceBanner} from './BalanceBanner'
 import {CollapsibleHeader} from './CollapsibleHeader'
 import {LockedDeposit} from './LockedDeposit'
 import {TxHistoryList} from './TxHistoryList'
@@ -22,7 +22,7 @@ import {WarningBanner} from './WarningBanner'
 type Tab = 'transactions' | 'assets'
 
 export const TxHistory = () => {
-  const pairedBalanceErrorRef = React.useRef<null | PairedBalanceErrorRef>(null)
+  const resetErrorRef = React.useRef<null | ResetErrorRef>(null)
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const [showWarning, setShowWarning] = useState(isByron(wallet.walletImplementationId))
@@ -43,7 +43,7 @@ export const TxHistory = () => {
   })
 
   const onRefresh = () => {
-    pairedBalanceErrorRef.current?.refetchExchangeRate()
+    resetErrorRef.current?.reset()
     sync()
   }
 
@@ -53,7 +53,7 @@ export const TxHistory = () => {
 
       <View style={styles.container}>
         <CollapsibleHeader expanded={expanded}>
-          <BalanceBanner ref={pairedBalanceErrorRef} />
+          <BalanceBanner ref={resetErrorRef} />
           <ActionsBanner disabled={isLoading} />
         </CollapsibleHeader>
 

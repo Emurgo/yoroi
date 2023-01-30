@@ -443,6 +443,7 @@ const fetchCurrentPrice = {
   },
   error: async (...args) => {
     action('fetchCurrentPrice')(...args)
+    await new Promise((resolve) => setTimeout(resolve, 3000))
     return Promise.reject(new Error('storybook error message'))
   },
   loading: async (...args) => {
