@@ -15,7 +15,7 @@ export const makeTransactionManager = async (storage: Storage, backendConfig: Ba
           ...result,
           [txId]: {
             ...tx,
-            memo: memos[txId],
+            memo: memos[txId] ?? null,
           },
         }),
         {} as Transactions,
