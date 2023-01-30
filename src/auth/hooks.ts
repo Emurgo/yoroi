@@ -39,22 +39,17 @@ export const useAuthOsEnabled = (options?: UseQueryOptions<boolean, Error>) => {
   return query.data
 }
 
-export const useEnableAuthWithOs = (
-  {authenticationPrompt, storage}: {authenticationPrompt?: AuthenticationPrompt; storage: YoroiStorage},
-  options?: UseMutationOptions<void, Error>,
-) => {
+export const useEnableAuthWithOs = (options?: UseMutationOptions<void, Error>) => {
+  const storage = useStorage()
   const queryClient = useQueryClient()
-  const {authWithOs: enable, ...mutation} = useAuthWithOs(
-    {
-      ...options,
-      onSuccess: async (data, variables, context) => {
-        await enableAuthWithOs(storage)
-        queryClient.invalidateQueries(['authSetting'])
-        options?.onSuccess?.(data, variables, context)
-      },
+  const {authWithOs: enable, ...mutation} = useAuthWithOs({
+    ...options,
+    onSuccess: async (data, variables, context) => {
+      await enableAuthWithOs(storage)
+      queryClient.invalidateQueries(['authSetting'])
+      options?.onSuccess?.(data, variables, context)
     },
-    {authenticationPrompt},
-  )
+  })
 
   return {...mutation, enableAuthWithOs: enable}
 }
