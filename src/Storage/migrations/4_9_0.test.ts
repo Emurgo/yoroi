@@ -1,5 +1,4 @@
 import {storage} from '../../yoroi-wallets/storage'
-import {SettingsStorageKeys} from '../StorageProvider'
 import {migrateAuthSetting, OLD_OS_AUTH_KEY} from './4_9_0'
 describe('migrateAuthSetting', () => {
   const installationId = 'uuidv4'
@@ -8,56 +7,56 @@ describe('migrateAuthSetting', () => {
 
   beforeEach(async () => {
     await storage.clear()
-    await storage.setItem(SettingsStorageKeys.InstallationId, installationId)
+    await storage.join('appSettings/').setItem('installationId', installationId)
   })
 
   it('method = null and no pin/os means new setup, it should remain null', async () => {
     await migrateAuthSetting(storage)
 
-    await expect(storage.getItem(SettingsStorageKeys.Auth)).resolves.toBeNull()
+    await expect(storage.join('appSettings/').getItem('auth')).resolves.toBeNull()
   })
 
   // correct way should make sure that .setItem was not called
   // but there are some issues when resetting back the storage mock
   it('method != null remains the same', async () => {
-    await storage.setItem(SettingsStorageKeys.Auth, os)
+    await storage.join('appSettings/').setItem('auth', os)
     await migrateAuthSetting(storage)
-    await expect(storage.getItem(SettingsStorageKeys.Auth)).resolves.toBe(os)
+    await expect(storage.join('appSettings/').getItem('auth')).resolves.toBe(os)
 
-    await storage.setItem(SettingsStorageKeys.Auth, pin)
+    await storage.join('appSettings/').setItem('auth', pin)
     await migrateAuthSetting(storage)
-    await expect(storage.getItem(SettingsStorageKeys.Auth)).resolves.toBe(pin)
+    await expect(storage.join('appSettings/').getItem('auth')).resolves.toBe(pin)
   })
 
   // if the store is inconsistent we favor OS, so the user can disable on device and it will ask for a new pin
   it('old store is pin + os (inconsistent), method = "os"', async () => {
-    await storage.multiSet([
-      [SettingsStorageKeys.Pin, 'encrypted-hash'],
+    await storage.join('appSettings/').multiSet([
+      ['customPinHash', 'encrypted-hash'],
       [OLD_OS_AUTH_KEY, true],
     ])
 
     await migrateAuthSetting(storage)
 
-    await expect(storage.getItem(SettingsStorageKeys.Auth)).resolves.toBe(os)
+    await expect(storage.join('appSettings/').getItem('auth')).resolves.toBe(os)
   })
 
   it('old store is pin, method = "pin"', async () => {
-    await storage.multiSet([
-      [SettingsStorageKeys.Pin, 'encrypted-hash'],
+    await storage.join('appSettings/').multiSet([
+      ['customPinHash', 'encrypted-hash'],
       [OLD_OS_AUTH_KEY, false],
     ])
 
     await migrateAuthSetting(storage)
 
-    await expect(storage.getItem(SettingsStorageKeys.Auth)).resolves.toBe(pin)
+    await expect(storage.join('appSettings/').getItem('auth')).resolves.toBe(pin)
   })
 
   // pin hash is deleted when changing to OS auth
   it('old store is os, method = "os"', async () => {
-    await storage.setItem(OLD_OS_AUTH_KEY, true)
+    await storage.join('appSettings/').setItem('isSystemAuthEnabled', true)
 
     await migrateAuthSetting(storage)
 
-    await expect(storage.getItem(SettingsStorageKeys.Auth)).resolves.toBe(os)
+    await expect(storage.join('appSettings/').getItem('auth')).resolves.toBe(os)
   })
 })

@@ -7,21 +7,22 @@ import uuid from 'uuid'
 
 import {getCrashReportsEnabled} from '../hooks'
 import globalMessages, {errorMessages} from '../i18n/global-messages'
-import {Storage} from '../Storage'
 import {walletManager} from '../yoroi-wallets'
+import {YoroiStorage} from '../yoroi-wallets/storage'
+import {parseString} from '../yoroi-wallets/utils/parsing'
 import assert from './assert'
 import crashReporting from './crashReporting'
 
-const initInstallationId = async (storage: Storage) => {
-  const installationId = await storage.getItem('/appSettings/installationId')
+const initInstallationId = async (storage: YoroiStorage) => {
+  const installationId = await storage.join('appSettings/').getItem('installationId', parseString)
   if (installationId != null) return installationId
 
   const newInstallationId = uuid.v4()
-  await storage.setItem('/appSettings/installationId', newInstallationId)
+  await storage.join('appSettings/').setItem('installationId', newInstallationId)
   return newInstallationId
 }
 
-export const initApp = async (storage: Storage) => {
+export const initApp = async (storage: YoroiStorage) => {
   const installationId = await initInstallationId(storage)
 
   const crashReportsEnabled = await getCrashReportsEnabled()

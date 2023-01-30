@@ -10,7 +10,7 @@ import {WrongPassword} from '../legacy/errors'
 import {parseWalletMeta} from '../Storage/migrations/walletMeta'
 import {WalletJSON, walletManager, YoroiWallet} from '../yoroi-wallets'
 import {storage, YoroiStorage} from '../yoroi-wallets/storage'
-import {parseString} from '../yoroi-wallets/utils/parsing'
+import {parseSafe, parseString} from '../yoroi-wallets/utils/parsing'
 import {Keychain} from './Keychain'
 import {AuthenticationPrompt, authOsEnabled} from './KeychainStorage'
 
@@ -207,7 +207,7 @@ export const useCreatePin = (storage: YoroiStorage, options: UseMutationOptions<
   const mutation = useMutationWithInvalidations({
     invalidateQueries: [['authSetting']],
     mutationFn: async (pin) => {
-      const installationId = await storage.getItem('/appSettings/installationId', parseString)
+      const installationId = await storage.join('appSettings/').getItem('installationId', parseString)
       if (!installationId) throw new Error('Invalid installation id')
       const encryptedPinHash = await encryptData(toHex(installationId), pin)
       await storage.join('appSettings/').setItem('auth', AUTH_WITH_PIN)
@@ -259,21 +259,17 @@ export const useAuthSetting = (storage: YoroiStorage, options?: UseQueryOptions<
 }
 
 export const getAuthSetting = async (storage: YoroiStorage) => {
-  const authSetting = parseAuthSetting(await storage.join('appSettings/').getItem('auth'))
-  if (isAuthSetting(authSetting)) return authSetting
+  const authSetting = await storage.join('appSettings/').getItem('auth', parseAuthSetting)
+  if (authSetting !== null) return authSetting
   return Promise.reject(new Error('useAuthSetting invalid data'))
 }
 
 const parseAuthSetting = (data: unknown) => {
-  if (!data) return undefined
-  try {
-    return JSON.parse(data as string)
-  } catch (error) {
-    return undefined
-  }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const isAuthSetting = (data: any): data is 'os' | 'pin' | undefined => ['os', 'pin', undefined].includes(data)
+  const parsed = parseSafe(data)
+  return isAuthSetting(parsed) ? parsed : undefined
 }
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const isAuthSetting = (data: any): data is 'os' | 'pin' | undefined => ['os', 'pin', undefined].includes(data)
 
 const useStrings = () => {
   const intl = useIntl()

@@ -1,9 +1,10 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import React from 'react'
 import {useColorScheme} from 'react-native'
 import {useMutation, UseMutationOptions, useQuery, useQueryClient} from 'react-query'
 
 import {isEmptyString} from '../legacy/utils'
+import {storage} from '../yoroi-wallets/storage'
+import {parseString} from '../yoroi-wallets/utils/parsing'
 import {darkTheme} from './darkTheme'
 import {lightTheme} from './lightTheme'
 import {Theme} from './types'
@@ -30,7 +31,7 @@ const useSavedColorScheme = () => {
   const query = useQuery<ColorScheme | null>({
     queryKey: ['theme'],
     queryFn: async () => {
-      const savedTheme = await AsyncStorage.getItem('/appSettings/theme')
+      const savedTheme = await storage.join('appSettings/').getItem('theme', parseString)
 
       return !isEmptyString(savedTheme) ? JSON.parse(savedTheme) : null
     },
@@ -44,7 +45,7 @@ const useSaveColorScheme = (options: UseMutationOptions<void, Error, string> = {
   const queryClient = useQueryClient()
 
   const mutation = useMutation({
-    mutationFn: async (theme) => AsyncStorage.setItem('/appSettings/theme', JSON.stringify(theme)),
+    mutationFn: async (theme) => storage.join('appSettings/').setItem('theme', theme),
     onSuccess: () => queryClient.invalidateQueries('theme'),
     ...options,
   })

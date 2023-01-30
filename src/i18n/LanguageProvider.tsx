@@ -1,10 +1,11 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import React from 'react'
 import {IntlProvider} from 'react-intl'
 import {NativeModules, Platform, Text} from 'react-native'
 import {useMutation, UseMutationOptions, useQuery, useQueryClient, UseQueryOptions} from 'react-query'
 
 import {isEmptyString} from '../legacy/utils'
+import {storage} from '../yoroi-wallets/storage'
+import {parseString} from '../yoroi-wallets/utils/parsing'
 import {updateLanguageSettings} from '.'
 import {supportedLanguages} from './languages'
 import translations from './translations'
@@ -33,12 +34,11 @@ const useLanguageCode = ({onSuccess, ...options}: UseQueryOptions<string> = {}) 
   const query = useQuery({
     queryKey: ['languageCode'],
     queryFn: async () => {
-      const languageCode = await AsyncStorage.getItem('/appSettings/languageCode')
+      const languageCode = await storage.join('appSettings/').getItem('languageCode', parseString)
 
-      if (!isEmptyString(languageCode)) {
-        const parsedLanguageCode = JSON.parse(languageCode)
-        const stillSupported = supportedLanguages.some((language) => language.code === parsedLanguageCode)
-        if (stillSupported) return parsedLanguageCode
+      if (languageCode != null) {
+        const stillSupported = supportedLanguages.some((language) => language.code === languageCode)
+        if (stillSupported) return languageCode
       }
 
       return defaultLanguageCode
@@ -60,7 +60,7 @@ const useSaveLanguageCode = ({onSuccess, ...options}: UseMutationOptions<void, E
   const queryClient = useQueryClient()
 
   const mutation = useMutation({
-    mutationFn: async (languageCode) => AsyncStorage.setItem('/appSettings/languageCode', JSON.stringify(languageCode)),
+    mutationFn: async (languageCode) => storage.join('appSettings/').setItem('languageCode', languageCode),
     onSuccess: (data, languageCode, context) => {
       updateLanguageSettings(languageCode)
       queryClient.invalidateQueries('languageCode')
