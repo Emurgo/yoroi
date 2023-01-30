@@ -45,12 +45,14 @@ export const makeTransactionManager = async (storage: Storage, backendConfig: Ba
 export type TransactionManager = Awaited<ReturnType<typeof makeTransactionManager>>
 
 export const makeMemosManager = async (storage: Storage) => {
-  const getMemos = () => storage.getAllKeys().then(storage.multiGet).then(Object.fromEntries) ?? {}
-  let memos = await getMemos()
+  const getMemos = () => storage.getAllKeys().then(storage.multiGet).then(Object.fromEntries)
+  let memos: Readonly<....> = await getMemos()
+
+  const updateMemos = (txId, memo) => memos = {...memos, {[txId]: memo}}  
 
   const saveMemo = async (txId: string, memo: string): Promise<void> => {
-    await storage.setItem(txId, memo)
-    memos = await getMemos()
+    updateMemos(txId, memo) 
+    storage.setItem(txId, memo)
   }
 
   const clear = async () => {
