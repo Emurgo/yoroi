@@ -2,10 +2,11 @@ import {UseMutationOptions, useQuery} from 'react-query'
 
 import {useMutationWithInvalidations} from '../../hooks'
 import {isEmptyString} from '../../legacy/utils'
-import {storage} from '../../yoroi-wallets/storage'
+import {useStorage} from '../../Storage'
 import {parseString} from '../../yoroi-wallets/utils/parsing'
 
 export const usePrivacyMode = () => {
+  const storage = useStorage()
   const query = useQuery<PrivacyMode, Error>({
     queryKey: ['privacyMode'],
     queryFn: async () => {
@@ -27,6 +28,7 @@ export const usePrivacyMode = () => {
 }
 
 export const useSetPrivacyMode = ({...options}: UseMutationOptions<void, Error, PrivacyMode> = {}) => {
+  const storage = useStorage()
   const mutation = useMutationWithInvalidations({
     mutationFn: async (privacyMode) => storage.join('appSettings/').setItem('privacyMode', privacyMode),
     invalidateQueries: [['privacyMode']],

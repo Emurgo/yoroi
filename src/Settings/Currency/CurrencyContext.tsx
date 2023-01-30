@@ -2,7 +2,7 @@ import React from 'react'
 import {useMutation, UseMutationOptions, useQuery, useQueryClient} from 'react-query'
 
 import {isEmptyString} from '../../legacy/utils'
-import {storage} from '../../yoroi-wallets/storage'
+import {useStorage} from '../../Storage'
 import {ConfigCurrencies, configCurrencies, CurrencySymbol, supportedCurrencies} from '../../yoroi-wallets/types/other'
 import {parseSafe} from '../../yoroi-wallets/utils/parsing'
 
@@ -34,6 +34,7 @@ const missingProvider = () => {
 }
 
 const useCurrency = () => {
+  const storage = useStorage()
   const query = useQuery<CurrencySymbol, Error>({
     queryKey: ['currencySymbol'],
     queryFn: async () => {
@@ -56,6 +57,7 @@ const useCurrency = () => {
 
 const useSaveCurrency = ({onSuccess, ...options}: UseMutationOptions<void, Error, CurrencySymbol> = {}) => {
   const queryClient = useQueryClient()
+  const storage = useStorage()
 
   const mutation = useMutation({
     mutationFn: async (currencySymbol) => storage.join('appSettings/').setItem('currencySymbol', currencySymbol),

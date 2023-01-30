@@ -4,7 +4,7 @@ import {NativeModules, Platform, Text} from 'react-native'
 import {useMutation, UseMutationOptions, useQuery, useQueryClient, UseQueryOptions} from 'react-query'
 
 import {isEmptyString} from '../legacy/utils'
-import {storage} from '../yoroi-wallets/storage'
+import {useStorage} from '../Storage'
 import {parseString} from '../yoroi-wallets/utils/parsing'
 import {updateLanguageSettings} from '.'
 import {supportedLanguages} from './languages'
@@ -31,6 +31,7 @@ const missingProvider = () => {
 }
 
 const useLanguageCode = ({onSuccess, ...options}: UseQueryOptions<string> = {}) => {
+  const storage = useStorage()
   const query = useQuery({
     queryKey: ['languageCode'],
     queryFn: async () => {
@@ -57,10 +58,11 @@ const useLanguageCode = ({onSuccess, ...options}: UseQueryOptions<string> = {}) 
 }
 
 const useSaveLanguageCode = ({onSuccess, ...options}: UseMutationOptions<void, Error, string> = {}) => {
+  const storage = useStorage()
   const queryClient = useQueryClient()
 
   const mutation = useMutation({
-    mutationFn: async (languageCode) => storage.join('appSettings/').setItem('languageCode', languageCode),
+    mutationFn: (languageCode) => storage.join('appSettings/').setItem('languageCode', languageCode),
     onSuccess: (data, languageCode, context) => {
       updateLanguageSettings(languageCode)
       queryClient.invalidateQueries('languageCode')

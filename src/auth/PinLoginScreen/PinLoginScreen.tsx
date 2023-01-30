@@ -6,7 +6,6 @@ import {StatusBar} from '../../components'
 import {errorMessages} from '../../i18n/global-messages'
 import {showErrorDialog} from '../../legacy/actions'
 import {CONFIG} from '../../legacy/config'
-import {storage} from '../../yoroi-wallets/storage'
 import {useAuth} from '../AuthProvider'
 import {useCheckPin} from '../hooks'
 import {PinInput, PinInputRef} from '../PinInput'
@@ -17,7 +16,7 @@ export const PinLoginScreen = () => {
   const strings = useStrings()
   const {login} = useAuth()
 
-  const {checkPin, isLoading} = useCheckPin(storage, {
+  const {checkPin, isLoading} = useCheckPin({
     onSuccess: (isValid) => {
       if (isValid) {
         login()

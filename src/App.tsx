@@ -10,7 +10,7 @@ import AppNavigator from './AppNavigator'
 import {AuthProvider} from './auth/AuthProvider'
 import {initApp} from './legacy/actions'
 import {SelectedWalletMetaProvider, SelectedWalletProvider} from './SelectedWallet'
-import {storage} from './yoroi-wallets/storage'
+import {useStorage} from './Storage'
 
 enableScreens()
 
@@ -42,6 +42,7 @@ const App = () => {
 
 const useInitApp = () => {
   const [loaded, setLoaded] = React.useState(false)
+  const storage = useStorage()
 
   useEffect(() => {
     const load = async () => {
@@ -50,7 +51,7 @@ const useInitApp = () => {
     }
 
     load()
-  }, [])
+  }, [storage])
 
   return loaded
 }

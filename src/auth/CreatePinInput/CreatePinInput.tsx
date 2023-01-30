@@ -4,7 +4,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {errorMessages} from '../../i18n/global-messages'
 import {showErrorDialog} from '../../legacy/actions'
 import {CONFIG} from '../../legacy/config'
-import {storage} from '../../yoroi-wallets/storage'
+import {useStorage} from '../../Storage'
 import {useCreatePin} from '../hooks'
 import {PinInput, PinInputRef} from '../PinInput'
 
@@ -16,6 +16,7 @@ export const CreatePinInput = ({onDone}: Props) => {
   const intl = useIntl()
   const strings = useStrings()
 
+  const storage = useStorage()
   const {createPin, isLoading} = useCreatePin(storage, {
     onSuccess: () => onDone(),
     onError: (error) => {

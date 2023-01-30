@@ -13,6 +13,7 @@ export const StorageProvider = ({
   return <StorageContext.Provider value={storage}>{children}</StorageContext.Provider>
 }
 
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
 export const useStorage = () => React.useContext(StorageContext) || invalid()
 
 const invalid = () => {

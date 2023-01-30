@@ -19,6 +19,7 @@ import {ObjectValues} from '../legacy/flow'
 import {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {processTxHistoryData} from '../legacy/processTransactions'
 import {WalletMeta} from '../legacy/state'
+import {useStorage} from '../Storage'
 import {parseWalletMeta} from '../Storage/migrations/walletMeta'
 import {useWalletManager} from '../WalletManager'
 import {
@@ -33,7 +34,6 @@ import {
   YoroiWallet,
 } from '../yoroi-wallets'
 import {generateShelleyPlateFromKey} from '../yoroi-wallets/cardano/shelley/plate'
-import {storage} from '../yoroi-wallets/storage'
 import {
   Quantity,
   TokenInfo,
@@ -180,6 +180,7 @@ export const useCloseWallet = (options: UseMutationOptions<void, Error> = {}) =>
 }
 
 export const useWalletName = (wallet: YoroiWallet, options?: UseQueryOptions<string, Error>) => {
+  const storage = useStorage()
   const query = useQuery({
     queryKey: [wallet.id, 'name'],
     queryFn: async () => {
@@ -195,6 +196,7 @@ export const useWalletName = (wallet: YoroiWallet, options?: UseQueryOptions<str
 }
 
 export const useChangeWalletName = (wallet: YoroiWallet, options: UseMutationOptions<void, Error, string> = {}) => {
+  const storage = useStorage()
   const mutation = useMutationWithInvalidations<void, Error, string>({
     mutationFn: async (newName) => {
       const walletMeta = await storage.join('wallet/').getItem(wallet.id, parseWalletMeta)

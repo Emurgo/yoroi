@@ -1,9 +1,10 @@
 import * as React from 'react'
 
-import {storage} from '../../yoroi-wallets/storage'
+import {useStorage} from '../StorageProvider'
 import {to4_9_0} from './4_9_0'
 
 export const useMigrations = () => {
+  const storage = useStorage()
   const [done, setDone] = React.useState(false)
   React.useEffect(() => {
     const runMigrations = async () => {
@@ -12,7 +13,7 @@ export const useMigrations = () => {
       setDone(true)
     }
     runMigrations()
-  }, [])
+  }, [storage])
 
   return done
 }

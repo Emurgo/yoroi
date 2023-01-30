@@ -7,9 +7,10 @@ import {useMutationWithInvalidations, useWallet} from '../hooks'
 import globalMessages from '../i18n/global-messages'
 import {decryptData, encryptData} from '../legacy/commonUtils'
 import {WrongPassword} from '../legacy/errors'
+import {useStorage} from '../Storage'
 import {parseWalletMeta} from '../Storage/migrations/walletMeta'
 import {WalletJSON, walletManager, YoroiWallet} from '../yoroi-wallets'
-import {storage, YoroiStorage} from '../yoroi-wallets/storage'
+import {YoroiStorage} from '../yoroi-wallets/storage'
 import {parseSafe, parseString} from '../yoroi-wallets/utils/parsing'
 import {Keychain} from './Keychain'
 import {AuthenticationPrompt, authOsEnabled} from './KeychainStorage'
@@ -168,6 +169,7 @@ export const useDisableAllEasyConfirmation = (
   wallet: YoroiWallet | undefined,
   options?: UseMutationOptions<void, Error>,
 ) => {
+  const storage = useStorage()
   const mutation = useMutationWithInvalidations({
     mutationFn: async () => {
       await disableAllEasyConfirmation(storage)
@@ -223,7 +225,8 @@ export const useCreatePin = (storage: YoroiStorage, options: UseMutationOptions<
 }
 const toHex = (text: string) => Buffer.from(text, 'utf8').toString('hex')
 
-export const useCheckPin = (storage: YoroiStorage, options: UseMutationOptions<boolean, Error, string> = {}) => {
+export const useCheckPin = (options: UseMutationOptions<boolean, Error, string> = {}) => {
+  const storage = useStorage()
   const mutation = useMutation({
     mutationFn: async (pin) => {
       const encryptedPinHash = await storage.join('appSettings/').getItem('customPinHash', parseString)
@@ -247,7 +250,8 @@ export const useCheckPin = (storage: YoroiStorage, options: UseMutationOptions<b
   }
 }
 
-export const useAuthSetting = (storage: YoroiStorage, options?: UseQueryOptions<AuthSetting, Error>) => {
+export const useAuthSetting = (options?: UseQueryOptions<AuthSetting, Error>) => {
+  const storage = useStorage()
   const query = useQuery({
     suspense: true,
     queryKey: ['authSetting'],

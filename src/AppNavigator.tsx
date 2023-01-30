@@ -22,7 +22,6 @@ import {AppRoutes} from './navigation'
 import StorybookScreen from './StorybookScreen'
 import {WalletInitNavigator} from './WalletInit/WalletInitNavigator'
 import {WalletNavigator} from './WalletNavigator'
-import {storage} from './yoroi-wallets/storage'
 
 const Stack = createStackNavigator<AppRoutes>()
 const navRef = React.createRef<NavigationContainerRef<ReactNavigation.RootParamList>>()
@@ -142,7 +141,7 @@ const messages = defineMessages({
 })
 
 const useAutoLogout = () => {
-  const authSetting = useAuthSetting(storage)
+  const authSetting = useAuthSetting()
   const strings = useStrings()
   const {logout} = useAuth()
   const authOsEnabled = useAuthOsEnabled()
@@ -191,7 +190,7 @@ const getAuthAction = (authOsEnabled: boolean, authSetting: AuthSetting): AuthAc
 }
 
 const useAuthAction = () => {
-  const authSetting = useAuthSetting(storage)
+  const authSetting = useAuthSetting()
   const authOsEnabled = useAuthOsEnabled()
 
   return getAuthAction(authOsEnabled, authSetting)
