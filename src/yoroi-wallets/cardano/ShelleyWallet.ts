@@ -5,7 +5,7 @@ import _ from 'lodash'
 import DeviceInfo from 'react-native-device-info'
 import {defaultMemoize} from 'reselect'
 
-import {EncryptedStorage, EncryptedStorageKeys, makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../auth'
+import {makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../auth'
 import {Keychain} from '../../auth/Keychain'
 import {encryptWithPassword} from '../../Catalyst/catalystCipher'
 import LocalizableError from '../../i18n/LocalizableError'
@@ -1079,9 +1079,8 @@ export class ShelleyWallet implements WalletInterface {
   async changePassword(oldPassword: string, newPassword: string) {
     if (!_.isEmpty(validatePassword(newPassword, newPassword))) throw new Error('New password is not valid')
 
-    const key = EncryptedStorageKeys.rootKey(this.id)
-    const rootKey = await EncryptedStorage.read(key, oldPassword)
-    return EncryptedStorage.write(key, rootKey, newPassword)
+    const rootKey = await this.encryptedStorage.rootKey.read(oldPassword)
+    return this.encryptedStorage.rootKey.write(rootKey, newPassword)
   }
 
   // =================== subscriptions =================== //

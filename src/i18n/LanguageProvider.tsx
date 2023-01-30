@@ -5,9 +5,9 @@ import {useMutation, UseMutationOptions, useQuery, useQueryClient, UseQueryOptio
 
 import {isEmptyString} from '../legacy/utils'
 import {useStorage} from '../Storage'
-import {parseString} from '../yoroi-wallets/utils/parsing'
+import {parseSafe} from '../yoroi-wallets/utils/parsing'
 import {updateLanguageSettings} from '.'
-import {supportedLanguages} from './languages'
+import {LanguageCode, supportedLanguages} from './languages'
 import translations from './translations'
 
 const LanguageContext = React.createContext<undefined | LanguageContext>(undefined)
@@ -30,14 +30,15 @@ const missingProvider = () => {
   throw new Error('LanguageProvider is missing')
 }
 
-const useLanguageCode = ({onSuccess, ...options}: UseQueryOptions<string> = {}) => {
+const useLanguageCode = ({onSuccess, ...options}: UseQueryOptions<LanguageCode> = {}) => {
   const storage = useStorage()
   const query = useQuery({
     queryKey: ['languageCode'],
     queryFn: async () => {
-      const languageCode = await storage.join('appSettings/').getItem('languageCode', parseString)
+      const languageCode = await storage.join('appSettings/').getItem('languageCode', parseLanguageCode)
 
-      if (languageCode != null) {
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+      if (!languageCode) {
         const stillSupported = supportedLanguages.some((language) => language.code === languageCode)
         if (stillSupported) return languageCode
       }
@@ -57,7 +58,7 @@ const useLanguageCode = ({onSuccess, ...options}: UseQueryOptions<string> = {}) 
   return query.data
 }
 
-const useSaveLanguageCode = ({onSuccess, ...options}: UseMutationOptions<void, Error, string> = {}) => {
+const useSaveLanguageCode = ({onSuccess, ...options}: UseMutationOptions<void, Error, LanguageCode> = {}) => {
   const storage = useStorage()
   const queryClient = useQueryClient()
 
@@ -74,7 +75,6 @@ const useSaveLanguageCode = ({onSuccess, ...options}: UseMutationOptions<void, E
   return mutation.mutate
 }
 
-type LanguageCode = string
 type SaveLanguageCode = ReturnType<typeof useSaveLanguageCode>
 type SupportedLanguages = typeof supportedLanguages
 type LanguageContext = {
@@ -91,3 +91,11 @@ const systemLanguageCode = Platform.select({
 })()
 
 const defaultLanguageCode = supportedLanguages.some((v) => v.code === systemLanguageCode) ? systemLanguageCode : 'en-US'
+
+const parseLanguageCode = (data: unknown) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const isLanguageCode = (data: any): data is LanguageCode => Object.values(supportedLanguages).includes(data)
+  const parsed = parseSafe(data)
+
+  return isLanguageCode(parsed) ? parsed : undefined
+}
