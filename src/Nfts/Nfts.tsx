@@ -8,7 +8,7 @@ import {useNfts} from '../hooks'
 import {useSelectedWallet} from '../SelectedWallet'
 import {ImageGallery, SkeletonGallery} from './ImageGallery'
 import {useNavigateTo} from './navigation'
-import NoNftsScreen from './NoNftsScreen'
+import {NoNftsScreen} from './NoNftsScreen'
 
 type Props = {
   search?: string
@@ -50,11 +50,23 @@ export const Nfts = ({search}: Props) => {
             contentContainerStyle={styles.galleryContainer}
             refreshControl={<RefreshControl onRefresh={refetch} refreshing={isRefetching} />}
           >
-            <NoNftsScreen heading={<NftCount count={filteredNfts.length} />} />
+            <NoNftsScreen
+              heading={
+                <View>
+                  <NftCount count={filteredNfts.length} />
+                  <Spacer height={16} />
+                </View>
+              }
+            />
           </ScrollView>
         ) : (
           <View style={styles.galleryContainer}>
-            {searchTermLowerCase.length === 0 && <NftCount count={filteredNfts.length} />}
+            {searchTermLowerCase.length === 0 && (
+              <View>
+                <NftCount count={filteredNfts.length} />
+                <Spacer height={16} />
+              </View>
+            )}
             <ImageGallery
               nfts={filteredNfts}
               onSelect={handleNftSelect}
@@ -79,7 +91,7 @@ function ErrorScreen({onRefresh, isRefreshing}: {onRefresh: () => void; isRefres
     >
       <View style={styles.scrollViewError}>
         <NftCount count="-" />
-
+        <Spacer height={16} />
         <View style={styles.errorContainer}>
           <Icon.NoNfts size={140} />
           <Spacer height={20} />
@@ -103,7 +115,6 @@ function NftCount({count}: {count?: number | string}) {
           {strings.nftCount}: {count}
         </Text>
       </View>
-      <Spacer height={16} />
     </View>
   )
 }
@@ -112,6 +123,7 @@ function LoadingScreen({nftsCount}: {nftsCount: number; onRefresh: () => void; i
   return (
     <View style={styles.galleryContainer}>
       <NftCount count={nftsCount} />
+      <Spacer height={16} />
       <SkeletonGallery amount={6} />
     </View>
   )
@@ -178,7 +190,7 @@ const messages = defineMessages({
   },
   reloadApp: {
     id: 'nft.gallery.reloadApp',
-    defaultMessage: '!!!Try to reload this page or restart the app.',
+    defaultMessage: '!!!Try to restart the app.',
   },
 })
 

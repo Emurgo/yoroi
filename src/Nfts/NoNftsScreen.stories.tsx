@@ -4,7 +4,7 @@ import {QueryClient, QueryClientProvider} from 'react-query'
 
 import {mocks} from '../../storybook'
 import {SelectedWalletProvider} from '../SelectedWallet'
-import NoNftsScreen from './NoNftsScreen'
+import {NoNftsScreen} from './NoNftsScreen'
 
 storiesOf('NFT/No Nfts Screen', module).add('Default', () => {
   return (
