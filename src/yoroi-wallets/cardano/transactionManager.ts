@@ -56,8 +56,9 @@ export const makeMemosManager = async (storage: Storage) => {
   }
 
   const clear = async () => {
-    await storage.getAllKeys().then(storage.multiRemove)
     memos = {}
+    storage.getAllKeys().then(storage.multiRemove)
+
   }
 
   return {
