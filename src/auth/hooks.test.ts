@@ -105,10 +105,9 @@ describe('disableAllEasyConfirmations', () => {
 
 const storageSnapshot = async () => {
   const keys = await AsyncStorage.getAllKeys()
-  const entries = await AsyncStorage.multiGet(keys).then((entries) => {
-    console.log('QWE', entries)
-    return entries.map(([key, value]) => [key, parseSafe(value)])
-  })
+  const entries = await AsyncStorage.multiGet(keys).then((entries) =>
+    entries.map(([key, value]) => [key, parseSafe(value)]),
+  )
 
   return Object.fromEntries(entries)
 }

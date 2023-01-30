@@ -2,8 +2,8 @@ import {storage} from '../../yoroi-wallets/storage'
 import {migrateAuthSetting, OLD_OS_AUTH_KEY} from './4_9_0'
 describe('migrateAuthSetting', () => {
   const installationId = 'uuidv4'
-  const os = JSON.stringify('os')
-  const pin = JSON.stringify('pin')
+  const os = 'os'
+  const pin = 'pin'
 
   beforeEach(async () => {
     await storage.clear()
