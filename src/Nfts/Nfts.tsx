@@ -1,4 +1,3 @@
-import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {RefreshControl, ScrollView, StyleSheet, Text, View} from 'react-native'
@@ -6,9 +5,9 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Icon, Spacer} from '../components'
 import {useNfts} from '../hooks'
-import {WalletStackRouteNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
 import {ImageGallery, SkeletonGallery} from './ImageGallery'
+import {useNavigateTo} from './navigation'
 import NoNftsScreen from './NoNftsScreen'
 
 type Props = {
@@ -19,14 +18,14 @@ export const Nfts = ({search}: Props) => {
   const searchTermLowerCase = (search ?? '').toLowerCase()
   const wallet = useSelectedWallet()
   const {nfts, isLoading, refetch, isRefetching, isError} = useNfts(wallet)
-  const navigation = useNavigation<WalletStackRouteNavigation>()
   const filteredNfts =
     searchTermLowerCase.length > 0 && nfts.length > 0
       ? nfts.filter((n) => n.name.toLowerCase().includes(searchTermLowerCase))
       : nfts
 
-  const navigateToDetails = (id: string) =>
-    navigation.navigate('nft-details-routes', {screen: 'nft-details', params: {id}})
+  const navigateTo = useNavigateTo()
+
+  const navigateToDetails = (id: string) => navigateTo.nftDetails(id)
   const handleNftSelect = (index: number) => navigateToDetails(nfts[index].id)
 
   return (

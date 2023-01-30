@@ -1,4 +1,4 @@
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
+import {RouteProp, useRoute} from '@react-navigation/native'
 import React, {ReactNode, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
@@ -8,7 +8,8 @@ import {CopyButton, FadeIn, Icon, Link, Spacer, Text} from '../components'
 import {Tab, TabPanel, TabPanels, Tabs} from '../components/Tabs'
 import {useNft} from '../hooks'
 import {getAssetFingerprint} from '../legacy/format'
-import {NftDetailsNavigation, NftRoutes} from '../navigation'
+import {NftRoutes} from '../navigation'
+import {useNavigateTo} from '../Nfts/navigation'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
 import {YoroiNft} from '../yoroi-wallets/types'
@@ -20,13 +21,13 @@ export const NftDetails = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
 
-  const navigation = useNavigation<NftDetailsNavigation>()
   const [activeTab, setActiveTab] = useState<ViewTabs>('overview')
   const nft = useNft(wallet, {id})
+  const navigateTo = useNavigateTo()
 
   const stringifiedMetadata = JSON.stringify(nft, undefined, 2)
 
-  const navigateToImageZoom = () => navigation.navigate('image-zoom', {id})
+  const navigateToImageZoom = () => navigateTo.nftZoom(id)
 
   return (
     <FadeIn style={styles.container}>
