@@ -2,7 +2,7 @@
 import {BigNumber} from 'bignumber.js'
 
 import {CardanoTypes, MultiToken} from '..'
-import {RemoteAccountState, RemoteCertificateMeta, Token, TokenEntry, TokenEntryPlain, TokenInfo} from '.'
+import {RemoteAccountState, RemoteCertificateMeta, Token, TokenEntry, TokenEntryPlain} from '.'
 export type AddressObj = {
   readonly address: string
 }
@@ -158,12 +158,6 @@ export type RemotePoolMetaFailure = {
 export type PoolInfoRequest = {
   poolIds: Array<string>
 }
-// getTokenInfo
-export type TokenInfoRequest = {
-  tokenIds: Array<string>
-}
-
-export type TokenInfoResponse = Record<string, TokenInfo | null>
 
 // reputation
 export type ReputationObject = {
@@ -203,7 +197,7 @@ export type TxHistoryRequest = {
 export type RemoteTransactionInputBase = {
   readonly address: string
   readonly amount: string
-  readonly assets: ReadonlyArray<RemoteAsset>
+  readonly assets: Array<RemoteAsset>
 }
 export type RemoteTransactionUtxoInput = {
   readonly id: string
@@ -211,12 +205,12 @@ export type RemoteTransactionUtxoInput = {
   readonly index: number
   readonly txHash: string
 }
-// not considering acount txs for now
+// not considering account txs for now
 export type RemoteTransactionInput = RemoteTransactionInputBase & RemoteTransactionUtxoInput
 export type RemoteTransactionOutput = {
   readonly address: string
   readonly amount: string
-  readonly assets: ReadonlyArray<RemoteAsset>
+  readonly assets: Array<RemoteAsset>
 }
 
 /**
@@ -253,6 +247,7 @@ export type RemoteTxInfo = {
   readonly collateral_inputs?: Array<RemoteTransactionInput>
 }
 export type RawTransaction = Partial<RemoteTxBlockMeta> & RemoteTxInfo
+
 // Catalyst
 type FundInfo = {
   readonly id: number

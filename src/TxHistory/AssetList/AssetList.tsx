@@ -1,4 +1,3 @@
-import BigNumber from 'bignumber.js'
 import React from 'react'
 import {defineMessages} from 'react-intl'
 import {useIntl} from 'react-intl'
@@ -9,16 +8,16 @@ import AdaImage from '../../assets/img/asset_ada.png'
 import NoImage from '../../assets/img/asset_no_image.png'
 import {Boundary, Text} from '../../components'
 import {Spacer} from '../../components/Spacer'
-import {useBalances, useTokenInfo} from '../../hooks'
+import {useBalance, useBalances, useTokenInfos} from '../../hooks'
 import globalMessages, {actionMessages} from '../../i18n/global-messages'
-import {formatTokenAmount, getAssetDenominationOrId, getTokenFingerprint} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
-import {YoroiAmount} from '../../yoroi-wallets/types'
+import {sortTokenInfos} from '../../utils'
+import {TokenInfo} from '../../yoroi-wallets/types'
 import {Amounts, Quantities} from '../../yoroi-wallets/utils'
 import {ActionsBanner} from './ActionsBanner'
 
-type ListProps = FlatListProps<YoroiAmount>
+type ListProps = FlatListProps<TokenInfo>
 type Props = Partial<ListProps> & {
   onScroll: ListProps['onScroll']
   refreshing: boolean
@@ -29,18 +28,19 @@ export const AssetList = (props: Props) => {
   const wallet = useSelectedWallet()
   const balances = useBalances(wallet)
 
-  const orderedTokens = Amounts.toArray(balances)
-    .sort((a, b) => (Quantities.isGreaterThan(a.quantity, b.quantity) ? -1 : 1))
-    .sort((amount) => (amount.tokenId === '' ? -1 : 1))
-
   const handleOnPressNFTs = () => Alert.alert(strings.soon, strings.soon)
   const handleOnPressTokens = () => Alert.alert(strings.soon, strings.soon)
   const handleSearch = () => Alert.alert(strings.soon, strings.soon)
 
+  const tokenInfos = useTokenInfos({
+    wallet,
+    tokenIds: Amounts.toArray(balances).map(({tokenId}) => tokenId),
+  })
+
   return (
     <View style={styles.assetList} testID="assetList">
       <ActionsBanner
-        tokensLabel={strings.tokens(orderedTokens.length)}
+        tokensLabel={strings.tokens(tokenInfos.length)}
         nftsLabel={strings.nfts(0)}
         onPressNFTs={handleOnPressNFTs}
         onPressTokens={handleOnPressTokens}
@@ -49,48 +49,49 @@ export const AssetList = (props: Props) => {
 
       <FlatList
         {...props}
-        data={orderedTokens}
-        renderItem={({item: amount}) => (
-          <Boundary loading={{size: 'small'}}>
-            <AssetItem amount={amount} />
+        data={sortTokenInfos({wallet, tokenInfos})}
+        renderItem={({item: tokenInfo}) => (
+          <Boundary loading={{size: 'small'}} error={{size: 'inline'}}>
+            <AssetItem tokenInfo={tokenInfo} />
           </Boundary>
         )}
         ItemSeparatorComponent={() => <Spacer height={16} />}
         contentContainerStyle={{paddingTop: 16, paddingHorizontal: 16, paddingBottom: 8}}
-        keyExtractor={(item) => item.tokenId}
+        keyExtractor={(tokenInfo) => tokenInfo.id}
       />
     </View>
   )
 }
 
 type AssetItemProps = {
-  amount: YoroiAmount
+  tokenInfo: TokenInfo
   onPress?: () => void
 }
 
-const AssetItem = ({amount, onPress}: AssetItemProps) => {
+const AssetItem = ({tokenInfo, onPress}: AssetItemProps) => {
   const wallet = useSelectedWallet()
-  const tokenInfo = useTokenInfo({wallet, tokenId: amount.tokenId})
+  const balance = useBalance({wallet, tokenId: tokenInfo.id})
+  const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
 
   return (
     <TouchableOpacity onPress={onPress} style={styles.button} testID="assetItem">
       <Left>
-        <Icon source={tokenInfo.isDefault ? AdaImage : NoImage} />
+        <Icon source={isPrimary ? AdaImage : NoImage} />
       </Left>
 
       <Middle>
         <Text numberOfLines={1} ellipsizeMode="middle" style={styles.tokenInfo} testID="tokenInfoText">
-          {getAssetDenominationOrId(tokenInfo)}
+          {tokenInfo.ticker ?? tokenInfo.name ?? '-'}
         </Text>
 
         <Text numberOfLines={1} ellipsizeMode="middle" style={styles.tokenName} testID="tokenFingerprintText">
-          {tokenInfo.isDefault ? '' : getTokenFingerprint(tokenInfo)}
+          {isPrimary ? '' : tokenInfo.fingerprint}
         </Text>
       </Middle>
 
       <Right>
         <Text style={styles.tokenAmount} testID="tokenAmountText">
-          {formatTokenAmount(new BigNumber(amount.quantity), tokenInfo)}
+          {Quantities.denominated(balance, tokenInfo.decimals)}
         </Text>
       </Right>
     </TouchableOpacity>

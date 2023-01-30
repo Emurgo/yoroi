@@ -461,7 +461,7 @@ const mockedLocalTransactions: Record<string, Transaction> = {
           },
           {
             amount: '3',
-            assetId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
+            assetId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
             policyId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
             name: '',
           },
@@ -617,7 +617,7 @@ const mockedLocalTransactions: Record<string, Transaction> = {
           },
           {
             amount: '3',
-            assetId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
+            assetId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
             policyId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
             name: '',
           },
@@ -808,7 +808,7 @@ const mockedHistoryResponse: {isLast: boolean; transactions: Array<RawTransactio
               amount: '838202298',
             },
             {
-              assetId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
+              assetId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
               policyId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
               name: '',
               amount: '3',
@@ -965,7 +965,7 @@ const mockedHistoryResponse: {isLast: boolean; transactions: Array<RawTransactio
               amount: '838202298',
             },
             {
-              assetId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
+              assetId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
               policyId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
               name: '',
               amount: '3',
