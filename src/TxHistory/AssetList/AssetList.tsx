@@ -12,10 +12,10 @@ import {useBalance, useBalances, useTokenInfos} from '../../hooks'
 import globalMessages, {actionMessages} from '../../i18n/global-messages'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
+import {sortTokenInfos} from '../../utils'
 import {TokenInfo} from '../../yoroi-wallets/types'
 import {Amounts, Quantities} from '../../yoroi-wallets/utils'
 import {ActionsBanner} from './ActionsBanner'
-import {alpha, toEnd, toStart} from './utils'
 
 type ListProps = FlatListProps<TokenInfo>
 type Props = Partial<ListProps> & {
@@ -37,12 +37,6 @@ export const AssetList = (props: Props) => {
     tokenIds: Amounts.toArray(balances).map(({tokenId}) => tokenId),
   })
 
-  const sortedTokenInfos = tokenInfos
-    .sort(alpha((tokenInfo) => tokenInfo.name?.toLocaleLowerCase() ?? ''))
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-    .sort(toEnd((tokenInfo) => !tokenInfo.name))
-    .sort(toStart((tokenInfo) => tokenInfo.id === wallet.primaryTokenInfo.id))
-
   return (
     <View style={styles.assetList} testID="assetList">
       <ActionsBanner
@@ -55,7 +49,7 @@ export const AssetList = (props: Props) => {
 
       <FlatList
         {...props}
-        data={sortedTokenInfos}
+        data={sortTokenInfos({wallet, tokenInfos})}
         renderItem={({item: tokenInfo}) => (
           <Boundary loading={{size: 'small'}} error={{size: 'inline'}}>
             <AssetItem tokenInfo={tokenInfo} />
@@ -87,7 +81,7 @@ const AssetItem = ({tokenInfo, onPress}: AssetItemProps) => {
 
       <Middle>
         <Text numberOfLines={1} ellipsizeMode="middle" style={styles.tokenInfo} testID="tokenInfoText">
-          {tokenInfo.ticker ?? tokenInfo.name}
+          {tokenInfo.ticker ?? tokenInfo.name ?? '-'}
         </Text>
 
         <Text numberOfLines={1} ellipsizeMode="middle" style={styles.tokenName} testID="tokenFingerprintText">
