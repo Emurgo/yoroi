@@ -200,7 +200,8 @@ export const disableAllEasyConfirmation = async (storage: YoroiStorage) => {
   return Promise.all([...updateWalletMetas, ...updateWalletJSONs])
 }
 
-export const useCreatePin = (storage: YoroiStorage, options: UseMutationOptions<void, Error, string>) => {
+export const useCreatePin = (options: UseMutationOptions<void, Error, string>) => {
+  const storage = useStorage()
   const mutation = useMutationWithInvalidations({
     invalidateQueries: [['authSetting']],
     mutationFn: async (pin) => {
