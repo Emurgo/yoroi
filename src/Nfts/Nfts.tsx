@@ -30,44 +30,42 @@ export const Nfts = ({search}: Props) => {
   const handleNftSelect = (index: number) => navigateToDetails(nfts[index].id)
 
   return (
-    <View style={styles.root}>
-      <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
-        <View style={styles.container}>
-          <Spacer height={16} />
-          {isError ? (
-            <ErrorScreen onRefresh={refetch} isRefreshing={isRefetching} />
-          ) : isLoading ? (
-            <LoadingScreen nftsCount={filteredNfts.length} onRefresh={refetch} isRefreshing={isRefetching} />
-          ) : searchTermLowerCase.length > 0 && filteredNfts.length === 0 ? (
-            <ScrollView
-              style={styles.scrollView}
-              contentContainerStyle={styles.scrollViewError}
-              refreshControl={<RefreshControl onRefresh={refetch} refreshing={isRefetching} />}
-            >
-              <NoNftsScreen />
-            </ScrollView>
-          ) : searchTermLowerCase.length === 0 && filteredNfts.length === 0 ? (
-            <ScrollView
-              style={styles.scrollView}
-              contentContainerStyle={styles.scrollViewError}
-              refreshControl={<RefreshControl onRefresh={refetch} refreshing={isRefetching} />}
-            >
-              <NoNftsScreen heading={<NftCount count={filteredNfts.length} />} />
-            </ScrollView>
-          ) : (
-            <View style={styles.galleryContainer}>
-              {searchTermLowerCase.length === 0 && <NftCount count={filteredNfts.length} />}
-              <ImageGallery
-                nfts={filteredNfts}
-                onSelect={handleNftSelect}
-                onRefresh={refetch}
-                isRefreshing={isRefetching}
-              />
-            </View>
-          )}
-        </View>
-      </SafeAreaView>
-    </View>
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
+      <View style={styles.container}>
+        <Spacer height={16} />
+        {isError ? (
+          <ErrorScreen onRefresh={refetch} isRefreshing={isRefetching} />
+        ) : isLoading ? (
+          <LoadingScreen nftsCount={filteredNfts.length} onRefresh={refetch} isRefreshing={isRefetching} />
+        ) : searchTermLowerCase.length > 0 && filteredNfts.length === 0 ? (
+          <ScrollView
+            style={styles.scrollView}
+            contentContainerStyle={styles.galleryContainer}
+            refreshControl={<RefreshControl onRefresh={refetch} refreshing={isRefetching} />}
+          >
+            <NoNftsScreen />
+          </ScrollView>
+        ) : searchTermLowerCase.length === 0 && filteredNfts.length === 0 ? (
+          <ScrollView
+            style={styles.scrollView}
+            contentContainerStyle={styles.galleryContainer}
+            refreshControl={<RefreshControl onRefresh={refetch} refreshing={isRefetching} />}
+          >
+            <NoNftsScreen heading={<NftCount count={filteredNfts.length} />} />
+          </ScrollView>
+        ) : (
+          <View style={styles.galleryContainer}>
+            {searchTermLowerCase.length === 0 && <NftCount count={filteredNfts.length} />}
+            <ImageGallery
+              nfts={filteredNfts}
+              onSelect={handleNftSelect}
+              onRefresh={refetch}
+              isRefreshing={isRefetching}
+            />
+          </View>
+        )}
+      </View>
+    </SafeAreaView>
   )
 }
 
@@ -77,10 +75,10 @@ function ErrorScreen({onRefresh, isRefreshing}: {onRefresh: () => void; isRefres
   return (
     <ScrollView
       style={styles.scrollView}
-      contentContainerStyle={styles.scrollViewError}
+      contentContainerStyle={styles.galleryContainer}
       refreshControl={<RefreshControl onRefresh={onRefresh} refreshing={isRefreshing} />}
     >
-      <View>
+      <View style={styles.scrollViewError}>
         <NftCount count="-" />
 
         <View style={styles.errorContainer}>
@@ -125,9 +123,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
   },
-  root: {
-    flex: 1,
-  },
   container: {
     flexDirection: 'column',
     flex: 1,
@@ -137,10 +132,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   scrollViewError: {
-    flexGrow: 1,
     flex: 1,
-    backgroundColor: '#fff',
-    justifyContent: 'center',
   },
 
   countBar: {

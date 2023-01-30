@@ -91,6 +91,21 @@ storiesOf('NFT/Gallery', module)
       </QueryProvider>
     )
   })
+  .add('Loaded & Mixed moderation type', () => {
+    const loadedWallet = {
+      ...mocks.wallet,
+      fetchNfts: mocks.fetchNfts.success.many,
+      fetchNftModerationStatus: mocks.fetchNftModerationStatus.success.random,
+    }
+
+    return (
+      <QueryProvider>
+        <SelectedWalletProvider wallet={loadedWallet}>
+          <Nfts />
+        </SelectedWalletProvider>
+      </QueryProvider>
+    )
+  })
   .add('Error', () => {
     const errorWallet = {
       ...mocks.wallet,

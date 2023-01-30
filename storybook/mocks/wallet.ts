@@ -22,6 +22,7 @@ import {
 } from '../../src/yoroi-wallets/types'
 import {mockEncryptedStorage} from './storage'
 import {mockTransactionInfo, mockTransactions} from './transaction'
+import {asciiToHex} from '../../src/yoroi-wallets/utils/parsing'
 
 const walletMeta: WalletMeta = {
   id: 'wallet-id',
@@ -293,12 +294,15 @@ const fetchNfts = {
   success: {
     many: async (...args) => {
       action('fetchNfts')(...args)
-      return [
-        {...nft, id: '1'},
-        {...nft, id: '2'},
-        {...nft, id: '3'},
-        {...nft, id: '4'},
-      ]
+      const nfts = Array(30)
+        .fill(undefined)
+        .map((_, index) => ({
+          ...nft,
+          name: 'NFT ' + index,
+          id: index + '',
+          metadata: {...nft.metadata, policyId: nft.metadata.policyId, assetNameHex: asciiToHex('NFT ' + index)},
+        }))
+      return nfts
     },
     empty: async (...args) => {
       action('fetchNfts')(...args)
@@ -332,6 +336,11 @@ const fetchNftModerationStatus = {
     pendingReview: async (...args): Promise<YoroiNftModerationStatus> => {
       action('fetchNftModerationStatus')(...args)
       return 'pending'
+    },
+    random: async (...args): Promise<YoroiNftModerationStatus> => {
+      action('fetchNftModerationStatus')(...args)
+      const statuses = ['approved', 'consent', 'blocked', 'pending', 'manual_review'] as const
+      return statuses[Math.floor(Math.random() * statuses.length)]
     },
   },
   error: async (...args) => {

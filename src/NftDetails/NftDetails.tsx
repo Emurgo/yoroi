@@ -115,24 +115,21 @@ const NftMetadataPanel = ({nft}: {nft: YoroiNft}) => {
       </MetadataRow>
 
       <MetadataRow title={strings.detailsLinks}>
-        <View>
-          <Link url={`https://cardanoscan.io/token/${fingerprint}`}>
-            <View style={styles.linkContent}>
-              <Icon.ExternalLink size={12} color={COLORS.SHELLEY_BLUE} />
-              <Spacer width={2} />
-              <Text style={styles.linkText}>Cardanoscan</Text>
-            </View>
-          </Link>
-        </View>
-        <View>
-          <Link url={`https://cexplorer.io/asset/${fingerprint}`}>
-            <View style={styles.linkContent}>
-              <Icon.ExternalLink size={12} color={COLORS.SHELLEY_BLUE} />
-              <Spacer width={2} />
-              <Text style={styles.linkText}>Cexplorer</Text>
-            </View>
-          </Link>
-        </View>
+        <Link url={`https://cardanoscan.io/token/${fingerprint}`}>
+          <View style={styles.linkContent}>
+            <Icon.ExternalLink size={12} color={COLORS.SHELLEY_BLUE} />
+            <Spacer width={2} />
+            <Text style={styles.linkText}>Cardanoscan</Text>
+          </View>
+        </Link>
+
+        <Link url={`https://cexplorer.io/asset/${fingerprint}`}>
+          <View style={styles.linkContent}>
+            <Icon.ExternalLink size={12} color={COLORS.SHELLEY_BLUE} />
+            <Spacer width={2} />
+            <Text style={styles.linkText}>Cexplorer</Text>
+          </View>
+        </Link>
       </MetadataRow>
     </>
   )

@@ -9,7 +9,7 @@ export default function NoNftsScreen({heading}: {heading?: ReactNode}) {
   const strings = useStrings()
 
   return (
-    <View>
+    <View style={styles.root}>
       <View>{heading}</View>
       <Spacer height={75} />
       <View style={styles.imageContainer}>
@@ -37,6 +37,9 @@ const useStrings = () => {
 }
 
 const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+  },
   contentText: {
     flex: 1,
     textAlign: 'center',

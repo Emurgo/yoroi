@@ -21,7 +21,6 @@ export const SkeletonGallery = ({amount}: {amount: number} = {amount: 3}) => {
   return (
     <FlatList
       bounces={false}
-      contentContainerStyle={styles.galleryContainer}
       columnWrapperStyle={{paddingBottom: ROW_SPACING}}
       data={placeholders}
       numColumns={2}
@@ -38,7 +37,6 @@ export const ImageGallery = ({nfts = [], onSelect, onRefresh, isRefreshing}: Pro
       bounces={false}
       onRefresh={onRefresh}
       refreshing={isRefreshing}
-      contentContainerStyle={styles.galleryContainer}
       columnWrapperStyle={{paddingBottom: ROW_SPACING}}
       data={nfts}
       numColumns={2}
@@ -187,9 +185,6 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  galleryContainer: {
-    flex: 1,
   },
   imageContainer: {
     paddingHorizontal: 5,
