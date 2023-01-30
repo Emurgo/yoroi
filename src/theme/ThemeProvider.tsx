@@ -68,9 +68,3 @@ const parseColorScheme = (data: unknown) => {
 
   return isColorScheme(parsed) ? parsed : undefined
 }
-
-/* 
-syst | L | D | D | L |
-disk | X | X | S | S |
-resu | L | D | D | L |
-*/
