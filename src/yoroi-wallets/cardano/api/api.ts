@@ -1,30 +1,27 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import AssetFingerprint from '@emurgo/cip14-js'
 import _ from 'lodash'
 
-import assert from '../../legacy/assert'
-import {getDefaultAssetByNetworkId} from '../../legacy/config'
-import {ApiError} from '../../legacy/errors'
-import fetchDefault, {checkedFetch} from '../../legacy/fetch'
-import {Logger} from '../../legacy/logging'
-import {ServerStatus, YoroiWallet} from '..'
-import type {
+import assert from '../../../legacy/assert'
+import {ApiError} from '../../../legacy/errors'
+import fetchDefault, {checkedFetch} from '../../../legacy/fetch'
+import {Logger} from '../../../legacy/logging'
+import {
   AccountStateRequest,
   AccountStateResponse,
   BackendConfig,
   CurrencySymbol,
   FundInfoResponse,
-  LegacyToken,
   PoolInfoRequest,
   PriceResponse,
   RawTransaction,
+  StakePoolInfosAndHistories,
   TipStatusResponse,
-  TokenInfo,
   TxHistoryRequest,
   TxStatusRequest,
   TxStatusResponse,
-} from '../types'
-import {StakePoolInfosAndHistories} from '../types'
+} from '../../types'
+import {ServerStatus} from '..'
+import {fallbackTokenInfo, tokenInfo, toTokenSubject} from './utils'
 
 type Addresses = Array<string>
 
@@ -113,42 +110,6 @@ export const getTokenInfo = async (tokenId: string, apiUrl: string) => {
   return entry ? tokenInfo(entry) : fallbackTokenInfo(tokenId)
 }
 
-const tokenInfo = (entry: TokenRegistryEntry): TokenInfo => {
-  const [policyId, assetNameHex] = splitTokenIdentifier(entry.subject)
-
-  return {
-    id: toTokenId(entry.subject),
-    name: hexToAscii(assetNameHex),
-    group: policyId,
-    description: entry.description.value ?? '',
-    decimals: entry.decimals?.value ?? 0,
-
-    ticker: entry.ticker?.value,
-    url: entry.url?.value,
-    logo: entry.logo?.value,
-    fingerprint: toTokenFingerprint({policyId, assetNameHex}),
-  }
-}
-
-export const fallbackTokenInfo = (tokenId: string): TokenInfo => {
-  const [policyId, assetNameHex] = splitTokenIdentifier(tokenId)
-
-  return {
-    id: toTokenId(tokenId),
-    name: hexToAscii(assetNameHex),
-    group: policyId,
-    decimals: 0,
-    description: '',
-    fingerprint: toTokenFingerprint({policyId, assetNameHex}),
-  }
-}
-
-export const splitTokenIdentifier = (tokenIdentifier: string) =>
-  tokenIdentifier.includes('.') ? tokenIdentifier.split('.') : [tokenIdentifier.slice(0, 56), tokenIdentifier.slice(56)]
-export const toTokenSubject = (tokenIdentifier: string) => tokenIdentifier.replace('.', '')
-export const toTokenId = (tokenIdentifier: string) =>
-  tokenIdentifier.includes('.') ? tokenIdentifier : `${tokenIdentifier.slice(0, 56)}.${tokenIdentifier.slice(56)}`
-
 export const getFundInfo = (config: BackendConfig, isMainnet: boolean): Promise<FundInfoResponse> => {
   const prefix = isMainnet ? '' : 'api/'
   return fetchDefault(`${prefix}v0/catalyst/fundInfo/`, null, config, 'GET') as any
@@ -166,58 +127,13 @@ export const fetchCurrentPrice = async (currency: CurrencySymbol, config: Backen
   return response.ticker.prices[currency]
 }
 
-export const hexToAscii = (hex: string) => Buffer.from(hex, 'hex').toLocaleString()
-
-const asciiToHex = (ascii: string) => {
-  const result: Array<string> = []
-  for (let n = 0, l = ascii.length; n < l; n++) {
-    const hex = Number(ascii.charCodeAt(n)).toString(16)
-    result.push(hex)
-  }
-
-  return result.join('')
-}
-
-export const toToken = ({wallet, tokenInfo}: {wallet: YoroiWallet; tokenInfo: TokenInfo}): LegacyToken => {
-  if (tokenInfo.id === wallet.primaryTokenInfo.id) return getDefaultAssetByNetworkId(wallet.networkId)
-  const assetNameHex = tokenInfo.name ? asciiToHex(tokenInfo.name) : ''
-
-  return {
-    identifier: `${tokenInfo.group}.${assetNameHex}`,
-    networkId: wallet.networkId,
-    isDefault: tokenInfo.id === wallet.primaryTokenInfo.id,
-    metadata: {
-      type: 'Cardano',
-      policyId: tokenInfo.group,
-      assetName: assetNameHex,
-      numberOfDecimals: tokenInfo.decimals,
-      ticker: tokenInfo.ticker ?? null,
-      longName: null,
-      maxSupply: null,
-    },
-  }
-}
-export const toTokenInfo = (token: LegacyToken): TokenInfo => ({
-  id: toTokenId(token.identifier),
-  group: token.metadata.policyId,
-  name: hexToAscii(token.metadata.assetName),
-  decimals: token.metadata.numberOfDecimals,
-  description: token.metadata.longName ?? '',
-  fingerprint: toTokenFingerprint({policyId: token.metadata.policyId, assetNameHex: token.metadata.assetName}),
-})
-
-export const toTokenFingerprint = ({policyId, assetNameHex}) => {
-  const assetFingerprint = new AssetFingerprint(Buffer.from(policyId, 'hex'), Buffer.from(assetNameHex, 'hex'))
-  return assetFingerprint.fingerprint()
-}
-
 // Token Registry
 // 721: https://github.com/cardano-foundation/cardano-token-registry#semantic-content-of-registry-entries
 export type TokenRegistryEntry = {
   subject: string
   name: Property<string>
-  description: Property<string>
 
+  description?: Property<string>
   policy?: string
   logo?: Property<string>
   ticker?: Property<string>
@@ -233,7 +149,7 @@ type Signature = {
 type Property<T> = {
   signatures: Array<Signature>
   sequenceNumber: number
-  value: T
+  value: T | undefined
 }
 
 const parseTokenRegistryEntry = (data: unknown) => {
@@ -241,5 +157,17 @@ const parseTokenRegistryEntry = (data: unknown) => {
 }
 
 const isTokenRegistryEntry = (data: unknown): data is TokenRegistryEntry => {
-  return !!data && typeof data === 'object' && 'name' in data && 'assetName' in data && 'policyId' in data
+  const candidate = data as TokenRegistryEntry
+
+  return (
+    !!candidate &&
+    typeof candidate === 'object' &&
+    'subject' in candidate &&
+    typeof candidate.subject === 'string' &&
+    'name' in candidate &&
+    !!candidate.name &&
+    typeof candidate.name === 'object' &&
+    'value' in candidate.name &&
+    candidate.name.value === 'string'
+  )
 }

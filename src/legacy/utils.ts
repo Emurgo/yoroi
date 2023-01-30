@@ -3,7 +3,7 @@
 import {BigNumber} from 'bignumber.js'
 import {isEmpty} from 'lodash'
 
-import {CardanoMobile, CardanoTypes, MultiToken, splitTokenIdentifier} from '../yoroi-wallets'
+import {asciiToHex, CardanoMobile, CardanoTypes, MultiToken, toAssetName, toPolicyId} from '../yoroi-wallets'
 import type {Addressing, BaseAsset, NetworkId, RawUtxo} from '../yoroi-wallets/types/other'
 import {CONFIG} from './config'
 import {getNetworkConfigById} from './networks'
@@ -83,7 +83,9 @@ export const identifierToCardanoAsset = async (
   policyId: CardanoTypes.ScriptHash
   name: CardanoTypes.AssetName
 }> => {
-  const [policyId, assetNameHex] = splitTokenIdentifier(tokenId)
+  const policyId = toPolicyId(tokenId)
+  const assetNameHex = asciiToHex(toAssetName(tokenId) ?? '')
+
   return {
     policyId: await CardanoMobile.ScriptHash.fromBytes(Buffer.from(policyId, 'hex')),
     name: await CardanoMobile.AssetName.new(Buffer.from(assetNameHex, 'hex')),
