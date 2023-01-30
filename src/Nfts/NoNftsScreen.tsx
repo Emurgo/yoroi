@@ -5,18 +5,19 @@ import {Image, StyleSheet, Text, View} from 'react-native'
 import noNftsImage from '../assets/img/no-nft.png'
 import {Spacer} from '../components'
 
-export default function NoNftsScreen({count}: {count?: ReactNode}) {
+export default function NoNftsScreen({heading}: {heading?: ReactNode}) {
   const strings = useStrings()
+
   return (
-    <>
-      <View>{count}</View>
+    <View>
+      <View>{heading}</View>
       <Spacer height={75} />
       <View style={styles.imageContainer}>
         <Image source={noNftsImage} style={styles.image} />
         <Spacer height={20} />
         <Text style={styles.contentText}>{strings.noNFTs}</Text>
       </View>
-    </>
+    </View>
   )
 }
 

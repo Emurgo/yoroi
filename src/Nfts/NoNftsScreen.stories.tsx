@@ -6,11 +6,10 @@ import {mocks} from '../../storybook'
 import {SelectedWalletProvider} from '../SelectedWallet'
 import NoNftsScreen from './NoNftsScreen'
 
-storiesOf('NFT/Empty Screen', module).add('Default', () => {
-  const loadingWallet = {...mocks.wallet, fetchNfts: mocks.fetchNfts.success.many}
+storiesOf('NFT/No Nfts Screen', module).add('Default', () => {
   return (
     <QueryClientProvider client={new QueryClient()}>
-      <SelectedWalletProvider wallet={loadingWallet}>
+      <SelectedWalletProvider wallet={mocks.wallet}>
         <NoNftsScreen />
       </SelectedWalletProvider>
     </QueryClientProvider>

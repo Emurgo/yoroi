@@ -50,6 +50,7 @@ function loadStories() {
 	require('../src/Staking/StakingCenter/StakingCenter.stories');
 	require('../src/TxHistory/AssetList/ActionsBanner.stories');
 	require('../src/TxHistory/AssetList/ChipButton/ChipButton.stories');
+	require('../src/TxHistory/AssetList/ModeratedNftIcon.stories');
 	require('../src/TxHistory/BalanceBanner.stories');
 	require('../src/TxHistory/ModalInfo/ModalInfo.stories');
 	require('../src/TxHistory/TxDetails/AssetList.stories');
@@ -99,6 +100,7 @@ function loadStories() {
 	require('../src/components/Link/Link.stories');
 	require('../src/components/LoadingOverlay/LoadingOverlay.stories');
 	require('../src/components/Modal/Modal.stories');
+	require('../src/components/SearchBar/SearchBar.stories');
 	require('../src/components/StandardModal/StandardModal.stories');
 	require('../src/components/TextInput/TextInput.stories');
 	require('../src/theme/Palette.stories');
@@ -154,6 +156,7 @@ const stories = [
 	'../src/Staking/StakingCenter/StakingCenter.stories',
 	'../src/TxHistory/AssetList/ActionsBanner.stories',
 	'../src/TxHistory/AssetList/ChipButton/ChipButton.stories',
+	'../src/TxHistory/AssetList/ModeratedNftIcon.stories',
 	'../src/TxHistory/BalanceBanner.stories',
 	'../src/TxHistory/ModalInfo/ModalInfo.stories',
 	'../src/TxHistory/TxDetails/AssetList.stories',
@@ -203,6 +206,7 @@ const stories = [
 	'../src/components/Link/Link.stories',
 	'../src/components/LoadingOverlay/LoadingOverlay.stories',
 	'../src/components/Modal/Modal.stories',
+	'../src/components/SearchBar/SearchBar.stories',
 	'../src/components/StandardModal/StandardModal.stories',
 	'../src/components/TextInput/TextInput.stories',
 	'../src/theme/Palette.stories',

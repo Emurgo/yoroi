@@ -26,13 +26,13 @@ export const NftDetails = () => {
 
   const stringifiedMetadata = JSON.stringify(nft, undefined, 2)
 
-  const onFullscreen = () => navigation.navigate('nft-details-image', {id})
+  const navigateToImageZoom = () => navigation.navigate('image-zoom', {id})
 
   return (
     <FadeIn style={styles.container}>
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <View style={styles.imageContainer}>
-          <TouchableOpacity onPress={onFullscreen}>
+          <TouchableOpacity onPress={navigateToImageZoom}>
             <Image source={{uri: nft.image}} style={styles.image} />
           </TouchableOpacity>
         </View>
@@ -97,18 +97,23 @@ const NftMetadataPanel = ({nft}: {nft: YoroiNft}) => {
       <MetadataRow title={strings.nftName}>
         <Text secondary>{nft.name}</Text>
       </MetadataRow>
+
       <MetadataRow title={strings.description}>
         <Text secondary>{nft.description}</Text>
       </MetadataRow>
+
       <MetadataRow title={strings.author}>
         <Text secondary>{nft.metadata.originalMetadata.author ?? '-'}</Text>
       </MetadataRow>
+
       <MetadataRow title={strings.fingerprint} copyText={fingerprint}>
         <Text secondary>{fingerprint}</Text>
       </MetadataRow>
+
       <MetadataRow title={strings.policyId} copyText={nft.metadata.policyId}>
         <Text secondary>{nft.metadata.policyId}</Text>
       </MetadataRow>
+
       <MetadataRow title={strings.detailsLinks}>
         <View>
           <Link url={`https://cardanoscan.io/token/${fingerprint}`}>

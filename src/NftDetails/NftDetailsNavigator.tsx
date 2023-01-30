@@ -10,6 +10,7 @@ const Stack = createStackNavigator<NftDetailsRoutes>()
 
 export const NftDetailsNavigator = () => {
   const strings = useStrings()
+
   return (
     <Stack.Navigator
       screenOptions={{
@@ -23,7 +24,7 @@ export const NftDetailsNavigator = () => {
         options={{title: strings.title, headerTitleAlign: 'center'}}
         component={NftDetails}
       />
-      <Stack.Screen name="nft-details-image" options={{header: () => null}} component={NftDetailsImage} />
+      <Stack.Screen name="image-zoom" options={{header: () => null}} component={NftDetailsImage} />
     </Stack.Navigator>
   )
 }

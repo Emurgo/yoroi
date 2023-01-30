@@ -52,7 +52,7 @@ export const Nfts = ({search}: Props) => {
               contentContainerStyle={styles.scrollViewError}
               refreshControl={<RefreshControl onRefresh={refetch} refreshing={isRefetching} />}
             >
-              <NoNftsScreen count={<NftCount count={filteredNfts.length} />} />
+              <NoNftsScreen heading={<NftCount count={filteredNfts.length} />} />
             </ScrollView>
           ) : (
             <View style={styles.galleryContainer}>
@@ -73,6 +73,7 @@ export const Nfts = ({search}: Props) => {
 
 function ErrorScreen({onRefresh, isRefreshing}: {onRefresh: () => void; isRefreshing: boolean}) {
   const strings = useStrings()
+
   return (
     <ScrollView
       style={styles.scrollView}
@@ -80,9 +81,8 @@ function ErrorScreen({onRefresh, isRefreshing}: {onRefresh: () => void; isRefres
       refreshControl={<RefreshControl onRefresh={onRefresh} refreshing={isRefreshing} />}
     >
       <View>
-        <View>
-          <Text style={styles.count}>{strings.nftCount}: --</Text>
-        </View>
+        <NftCount count="-" />
+
         <View style={styles.errorContainer}>
           <Icon.NoNfts size={140} />
           <Spacer height={20} />
@@ -96,8 +96,9 @@ function ErrorScreen({onRefresh, isRefreshing}: {onRefresh: () => void; isRefres
   )
 }
 
-function NftCount({count}: {count?: number}) {
+function NftCount({count}: {count?: number | string}) {
   const strings = useStrings()
+
   return (
     <View>
       <View style={styles.countBar}>

@@ -2,17 +2,7 @@ import BigNumber from 'bignumber.js'
 import React from 'react'
 import {defineMessages} from 'react-intl'
 import {useIntl} from 'react-intl'
-import {
-  ActivityIndicator,
-  Alert,
-  FlatList,
-  FlatListProps,
-  Image,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  ViewProps,
-} from 'react-native'
+import {Alert, FlatList, FlatListProps, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 import {Avatar} from 'react-native-paper'
 
 import AdaImage from '../../assets/img/asset_ada.png'
@@ -25,9 +15,10 @@ import {SHOW_NFT_GALLERY} from '../../legacy/config'
 import {formatTokenAmount, getAssetDenominationOrId, getTokenFingerprint} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
-import {Token, YoroiAmount, YoroiNftModerationStatus} from '../../yoroi-wallets/types'
+import {Token, YoroiAmount} from '../../yoroi-wallets/types'
 import {Amounts, Quantities} from '../../yoroi-wallets/utils'
 import {ActionsBanner} from './ActionsBanner'
+import {ModeratedNftIcon} from './ModeratedNftIcon'
 
 type ListProps = FlatListProps<YoroiAmount>
 type Props = Partial<ListProps> & {
@@ -172,34 +163,10 @@ const NftIcon = ({token}: {token: Token}) => {
   const nftModeratedImage = useNftImageModerated({wallet, nftId: fingerprint})
 
   if (!nftModeratedImage) {
-    return <ModeratedNftIcon status="blocked" />
+    return <ModeratedNftIcon status="pending" />
   }
 
   return <ModeratedNftIcon image={nftModeratedImage.image} status={nftModeratedImage.status} />
-}
-
-const ModeratedNftIcon = ({image, status}: {image?: string; status: YoroiNftModerationStatus}) => {
-  if (status === 'pending' || status === 'manual_review') {
-    return (
-      <View style={styles.assetIcon}>
-        <ActivityIndicator size="small" color="black" />
-      </View>
-    )
-  }
-
-  if (status === 'blocked') {
-    return <Icon source={NoImage} />
-  }
-
-  if (status === 'consent') {
-    return <Image source={{uri: image}} style={styles.assetIcon} blurRadius={20} borderRadius={32} />
-  }
-
-  if (status === 'approved') {
-    return <Icon source={{uri: image}} />
-  }
-
-  return null
 }
 
 const useStrings = () => {
