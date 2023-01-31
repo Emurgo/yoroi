@@ -3,7 +3,6 @@ import {IntlProvider} from 'react-intl'
 import {NativeModules, Platform, Text} from 'react-native'
 import {useMutation, UseMutationOptions, useQuery, useQueryClient, UseQueryOptions} from 'react-query'
 
-import {isEmptyString} from '../legacy/utils'
 import {useStorage} from '../Storage'
 import {parseSafe} from '../yoroi-wallets/utils/parsing'
 import {updateLanguageSettings} from '.'
@@ -37,13 +36,7 @@ const useLanguageCode = ({onSuccess, ...options}: UseQueryOptions<LanguageCode> 
     queryFn: async () => {
       const languageCode = await storage.join('appSettings/').getItem('languageCode', parseLanguageCode)
 
-      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-      if (!languageCode) {
-        const stillSupported = supportedLanguages.some((language) => language.code === languageCode)
-        if (stillSupported) return languageCode
-      }
-
-      return defaultLanguageCode
+      return languageCode ?? defaultLanguageCode
     },
     onSuccess: (languageCode) => {
       updateLanguageSettings(languageCode)
@@ -53,7 +46,8 @@ const useLanguageCode = ({onSuccess, ...options}: UseQueryOptions<LanguageCode> 
     ...options,
   })
 
-  if (isEmptyString(query.data)) throw new Error('Invalid state')
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+  if (!query.data) throw new Error('Invalid state')
 
   return query.data
 }
@@ -93,8 +87,9 @@ const systemLanguageCode = Platform.select({
 const defaultLanguageCode = supportedLanguages.some((v) => v.code === systemLanguageCode) ? systemLanguageCode : 'en-US'
 
 const parseLanguageCode = (data: unknown) => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const isLanguageCode = (data: any): data is LanguageCode => Object.values(supportedLanguages).includes(data)
+  const isLanguageCode = (data: unknown): data is LanguageCode =>
+    supportedLanguages.some((language) => language.code === data)
+
   const parsed = parseSafe(data)
 
   return isLanguageCode(parsed) ? parsed : undefined
