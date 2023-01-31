@@ -257,11 +257,8 @@ export const useAuthSetting = (options?: UseQueryOptions<AuthSetting, Error>) =>
   return query.data
 }
 
-export const getAuthSetting = async (storage: YoroiStorage) => {
-  const authSetting = await storage.join('appSettings/').getItem('auth', parseAuthSetting)
-  if (authSetting !== null) return authSetting
-  return Promise.reject(new Error('useAuthSetting invalid data'))
-}
+export const getAuthSetting = async (storage: YoroiStorage) =>
+  storage.join('appSettings/').getItem('auth', parseAuthSetting)
 
 const parseAuthSetting = (data: unknown) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
