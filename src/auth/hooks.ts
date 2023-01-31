@@ -182,19 +182,17 @@ export const useDisableAllEasyConfirmation = (
 }
 
 export const disableAllEasyConfirmation = async (storage: YoroiStorage) => {
-  const walletIds = await storage.join('wallet/').getAllKeys()
+  const walletStorage = storage.join('wallet/')
+  const walletIds = await walletStorage.getAllKeys()
 
   const updateWalletMetas = walletIds.map(async (walletId) => {
-    const walletMeta = await storage.join('wallet/').getItem(walletId, parseWalletMeta)
-    await storage.join('wallet/').setItem(walletId, {...walletMeta, isEasyConfirmationEnabled: false})
+    const walletMeta = await walletStorage.getItem(walletId, parseWalletMeta)
+    await walletStorage.setItem(walletId, {...walletMeta, isEasyConfirmationEnabled: false})
   })
 
   const updateWalletJSONs = walletIds.map(async (walletId) => {
-    const walletJSON: WalletJSON = await storage.join('wallet/').join(`${walletId}/`).getItem('data')
-    await storage
-      .join('wallet/')
-      .join(`${walletId}/`)
-      .setItem('data', {...walletJSON, isEasyConfirmationEnabled: false})
+    const walletJSON: WalletJSON = await walletStorage.join(`${walletId}/`).getItem('data')
+    await walletStorage.join(`${walletId}/`).setItem('data', {...walletJSON, isEasyConfirmationEnabled: false})
   })
 
   return Promise.all([...updateWalletMetas, ...updateWalletJSONs])
@@ -202,14 +200,15 @@ export const disableAllEasyConfirmation = async (storage: YoroiStorage) => {
 
 export const useCreatePin = (options: UseMutationOptions<void, Error, string>) => {
   const storage = useStorage()
+  const appSettingsStorage = storage.join('appSettings/')
   const mutation = useMutationWithInvalidations({
     invalidateQueries: [['authSetting']],
     mutationFn: async (pin) => {
-      const installationId = await storage.join('appSettings/').getItem('installationId', parseString)
+      const installationId = await appSettingsStorage.getItem('installationId', (data) => data) // LEGACY: installationId is not serialized
       if (!installationId) throw new Error('Invalid installation id')
       const encryptedPinHash = await encryptData(toHex(installationId), pin)
-      await storage.join('appSettings/').setItem('auth', AUTH_WITH_PIN)
-      return storage.join('appSettings/').setItem('customPinHash', encryptedPinHash)
+      await appSettingsStorage.setItem('auth', AUTH_WITH_PIN)
+      return appSettingsStorage.setItem('customPinHash', encryptedPinHash)
     },
     ...options,
   })
