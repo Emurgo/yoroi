@@ -112,6 +112,24 @@ describe('prefixed storage', () => {
     await storage.clear()
     expect(await storage.getAllKeys()).toEqual([])
   })
+
+  it.only('stringify/parse', async () => {
+    const storage = yoroiStorage
+    const item = 'text'
+    const storedItem = 'item123'
+
+    await storage.setItem('item', item, (data) => {
+      expect(data).toBe(item)
+      return storedItem
+    }) // overrides JSON.stringify
+
+    const parsedResult = await storage.getItem('item', (data) => {
+      expect(data).toBe(storedItem)
+      return item
+    }) // overrides JSON.parse
+
+    expect(parsedResult).toBe(item)
+  })
 })
 
 const item1 = {a: 123, b: 234}

@@ -1,6 +1,5 @@
 import 'intl'
 
-import AsyncStorage, {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
 import React, {useEffect} from 'react'
 import {Platform, UIManager} from 'react-native'
 import * as RNP from 'react-native-paper'
@@ -13,7 +12,9 @@ import {AuthProvider} from './auth/AuthProvider'
 import {getCrashReportsEnabled} from './hooks'
 import crashReporting from './legacy/crashReporting'
 import {SelectedWalletMetaProvider, SelectedWalletProvider} from './SelectedWallet'
+import {useStorage} from './Storage'
 import {walletManager} from './yoroi-wallets'
+import {YoroiStorage} from './yoroi-wallets/storage'
 
 enableScreens()
 
@@ -45,31 +46,32 @@ const App = () => {
 
 const useInitApp = () => {
   const [loaded, setLoaded] = React.useState(false)
+  const storage = useStorage()
 
   useEffect(() => {
     const load = async () => {
-      await initApp(AsyncStorage)
+      await initApp(storage)
       setLoaded(true)
     }
 
     load()
-  }, [])
+  }, [storage])
 
   return loaded
 }
 
 export default App
 
-const initInstallationId = async (storage: AsyncStorageStatic) => {
-  const installationId = await storage.getItem('appSettings/installationId') // LEGACY: installationId is not serialized
+const initInstallationId = async (storage: YoroiStorage) => {
+  const installationId = await storage.join('appSettings/').getItem('installationId', (data) => data) // LEGACY: installationId is not serialized
   if (installationId != null) return installationId
 
   const newInstallationId = uuid.v4()
-  await storage.setItem('appSettings/installationId', newInstallationId) // LEGACY: installationId is not serialized
+  await storage.setItem('appSettings/installationId', newInstallationId, () => newInstallationId) // LEGACY: installationId is not serialized
   return newInstallationId
 }
 
-export const initApp = async (storage: AsyncStorageStatic) => {
+export const initApp = async (storage: YoroiStorage) => {
   const installationId = await initInstallationId(storage)
 
   const crashReportsEnabled = await getCrashReportsEnabled()

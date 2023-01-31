@@ -29,12 +29,12 @@ const mountStorage = (path: Path) => {
 
     getItem,
     multiGet,
-    setItem: (key: string, value: unknown) => {
-      const item = JSON.stringify(value)
+    setItem: <T = unknown>(key: string, value: T, stringify: (data: T) => string = JSON.stringify) => {
+      const item = stringify(value)
       return AsyncStorage.setItem(withPath(key), item)
     },
-    multiSet: (tuples: Array<[key: string, value: unknown]>) => {
-      const items = tuples.map(([key, value]) => [withPath(key), JSON.stringify(value)])
+    multiSet: (tuples: Array<[key: string, value: unknown]>, stringify: (data: unknown) => string = JSON.stringify) => {
+      const items = tuples.map(([key, value]) => [withPath(key), stringify(value)])
       return AsyncStorage.multiSet(items)
     },
     removeItem: (key: string) => {
