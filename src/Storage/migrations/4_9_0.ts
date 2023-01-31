@@ -7,7 +7,7 @@ export const migrateAuthSetting = async (storage: YoroiStorage) => {
   const isFirstRun = await storage
     .join('appSettings/')
     .getItem('installationId')
-    .then((data) => data === null)
+    .then((value) => value === null)
   const isLegacyAuth = authSetting == null && !isFirstRun
   if (!isLegacyAuth) return
 

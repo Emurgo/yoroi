@@ -54,7 +54,7 @@ const mountStorage = (path: Path) => {
 
       return AsyncStorage.multiRemove(filteredKeys)
     },
-  }
+  } as const
 }
 
 const isLeafKey = ({key, path}: {key: string; path: string}) => !key.slice(path.length).includes('/')
