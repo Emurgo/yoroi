@@ -3,36 +3,9 @@ import 'react-intl'
 
 import type {IntlShape} from 'react-intl'
 import {Alert} from 'react-native'
-import uuid from 'uuid'
 
-import {getCrashReportsEnabled} from '../hooks'
 import globalMessages, {errorMessages} from '../i18n/global-messages'
-import {walletManager} from '../yoroi-wallets'
-import {YoroiStorage} from '../yoroi-wallets/storage'
-import {parseString} from '../yoroi-wallets/utils/parsing'
 import assert from './assert'
-import crashReporting from './crashReporting'
-
-const initInstallationId = async (storage: YoroiStorage) => {
-  const installationId = await storage.join('appSettings/').getItem('installationId', parseString)
-  if (installationId != null) return installationId
-
-  const newInstallationId = uuid.v4()
-  await storage.join('appSettings/').setItem('installationId', newInstallationId)
-  return newInstallationId
-}
-
-export const initApp = async (storage: YoroiStorage) => {
-  const installationId = await initInstallationId(storage)
-
-  const crashReportsEnabled = await getCrashReportsEnabled()
-  if (crashReportsEnabled) {
-    crashReporting.setUserId(installationId)
-    crashReporting.enable()
-  }
-
-  await walletManager.initialize()
-}
 
 type DialogOptions = {
   title: string
