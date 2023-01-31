@@ -22,12 +22,15 @@ export const makeTransactionManager = async (storage: Storage, backendConfig: Ba
       )
     },
     getPerRewardAddressCertificates() {
+      // to get the updates
       return transactionCache.perRewardAddressCertificates
     },
     getPerAddressTxs() {
+      // to get the updates
       return transactionCache.perAddressTxs
     },
     getConfirmationCounts() {
+      // to get the updates
       return transactionCache.confirmationCounts
     },
     clear: () => transactionCache.clear(),
@@ -66,7 +69,7 @@ export const makeMemosManager = async (storage: Storage) => {
 
   return {
     getMemos() {
-      // to get the updated memos
+      // to get the updates
       return memos
     },
     saveMemo,
