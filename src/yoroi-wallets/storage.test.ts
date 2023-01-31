@@ -113,7 +113,7 @@ describe('prefixed storage', () => {
     expect(await storage.getAllKeys()).toEqual([])
   })
 
-  it.only('stringify/parse', async () => {
+  it('stringify/parse', async () => {
     const storage = yoroiStorage
     const item = 'text'
     const storedItem = 'item123'
