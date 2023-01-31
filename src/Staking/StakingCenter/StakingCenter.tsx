@@ -10,7 +10,7 @@ import {useStakingTx} from '../../Dashboard/StakePoolInfos'
 import {useLanguage} from '../../i18n'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
 import {showErrorDialog} from '../../legacy/actions'
-import {CONFIG, getTestStakingPool, isNightly, SHOW_PROD_POOLS_IN_DEV} from '../../legacy/config'
+import {CONFIG, isNightly, SHOW_PROD_POOLS_IN_DEV} from '../../legacy/config'
 import {Logger} from '../../legacy/logging'
 import {getNetworkConfigById} from '../../legacy/networks'
 import {StakingCenterRouteNavigation} from '../../navigation'
@@ -60,14 +60,13 @@ export const StakingCenter = () => {
     setSelectedPoolId(selectedPoolHashes[0])
   }
 
-  const nightlyAndDevPoolHashes = getTestStakingPool(wallet.networkId, wallet.provider)
   const config = getNetworkConfigById(wallet.networkId)
 
   return (
     <>
       {(__DEV__ || (isNightly() && !config.IS_MAINNET)) && (
         <View style={{flex: 1}}>
-          <PoolDetailScreen onPressDelegate={setSelectedPoolId} disabled={nightlyAndDevPoolHashes.length === 0} />
+          <PoolDetailScreen onPressDelegate={setSelectedPoolId} />
         </View>
       )}
 

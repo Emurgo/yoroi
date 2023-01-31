@@ -267,7 +267,7 @@ describe('migrateWalletMetas()', () => {
       })
 
       it('should not throw when optional fields are not present', async () => {
-        const {provider: _provider, isShelley: _isShelley, ...meta} = mockedWalletMeta
+        const {isShelley: _isShelley, ...meta} = mockedWalletMeta
         await storage.join('wallet/').setItem(meta.id, meta)
         await storage.join('wallet/').join(`${meta.id}/`).setItem('data', mockedWalletData)
         const walletMetas = [meta]
@@ -276,11 +276,7 @@ describe('migrateWalletMetas()', () => {
       })
 
       it('should throw when safeguard fails', async () => {
-        const {
-          provider: _provider,
-          isShelley: _isShelley,
-          ...meta
-        } = {...mockedWalletMeta, walletImplementationId: 'invalid'}
+        const {isShelley: _isShelley, ...meta} = {...mockedWalletMeta, walletImplementationId: 'invalid'}
         await storage.join('wallet/').setItem(meta.id, meta)
         await storage.join('wallet/').join(`${meta.id}/`).setItem('data', mockedWalletData)
         const walletMetas = [meta]
@@ -324,7 +320,6 @@ const mockedWalletMeta: WalletMeta = {
     ImagePart:
       'b04dc22991594170974bbbb5908cc50b48f236d680a9ebfe6c1d00f52f8f4813341943eb66dec48cfe7f3be5beec705b91300a07641e668ff19dfa2fbeccbfba',
   },
-  provider: '',
   walletImplementationId: WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY_24,
 }
 

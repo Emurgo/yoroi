@@ -91,7 +91,6 @@ const useNavigateTo = () => {
     navigation.navigate('choose-create-restore', {
       networkId,
       walletImplementationId,
-      provider: '',
     })
 
   return {

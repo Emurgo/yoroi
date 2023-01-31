@@ -18,14 +18,7 @@ describe('walletMananger', () => {
     const networkId = 300
     const walletImplementationId = 'haskell-shelley'
 
-    const wallet = await walletManager.createWallet(
-      name,
-      mnemonic,
-      'password',
-      networkId,
-      walletImplementationId,
-      undefined,
-    )
+    const wallet = await walletManager.createWallet(name, mnemonic, 'password', networkId, walletImplementationId)
     expect(isYoroiWallet(wallet)).toBe(true)
 
     const walletMetas = await walletManager.listWallets()

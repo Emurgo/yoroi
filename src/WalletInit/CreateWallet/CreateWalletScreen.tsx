@@ -28,7 +28,7 @@ export const CreateWalletScreen = () => {
   const navigateToMnemonicScreen = () => {
     hideMnemonicExplanation()
     const mnemonic = generateAdaMnemonic()
-    const {networkId, walletImplementationId, provider} = route.params
+    const {networkId, walletImplementationId} = route.params
     const name = formData?.name
     const password = formData?.password
 
@@ -39,7 +39,6 @@ export const CreateWalletScreen = () => {
       mnemonic,
       networkId,
       walletImplementationId,
-      provider,
       name,
       password,
     })

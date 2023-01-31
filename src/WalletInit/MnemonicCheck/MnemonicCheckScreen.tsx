@@ -12,7 +12,7 @@ import {showErrorDialog} from '../../legacy/actions'
 import {NetworkError} from '../../legacy/errors'
 import {useWalletNavigation, WalletInitRoutes} from '../../navigation'
 import {COLORS} from '../../theme'
-import {NetworkId, WalletImplementationId, YoroiProvider} from '../../yoroi-wallets'
+import {NetworkId, WalletImplementationId} from '../../yoroi-wallets'
 
 export type Params = {
   mnemonic: string
@@ -20,14 +20,13 @@ export type Params = {
   name: string
   networkId: NetworkId
   walletImplementationId: WalletImplementationId
-  provider: YoroiProvider
 }
 
 export const MnemonicCheckScreen = () => {
   const strings = useStrings()
   const {resetToWalletSelection} = useWalletNavigation()
   const route = useRoute<RouteProp<WalletInitRoutes, 'mnemonic-check'>>()
-  const {mnemonic, password, name, networkId, walletImplementationId, provider} = route.params
+  const {mnemonic, password, name, networkId, walletImplementationId} = route.params
 
   const mnemonicEntries: Array<Entry> = mnemonic
     .split(' ')
@@ -76,9 +75,7 @@ export const MnemonicCheckScreen = () => {
       <View style={styles.buttons}>
         <Button
           block
-          onPress={() =>
-            createWallet({name, mnemonicPhrase: mnemonic, password, networkId, walletImplementationId, provider})
-          }
+          onPress={() => createWallet({name, mnemonicPhrase: mnemonic, password, networkId, walletImplementationId})}
           disabled={!isPhraseComplete || !isPhraseValid || isLoading || isSuccess}
           title={strings.confirmButton}
           style={styles.confirmButton}

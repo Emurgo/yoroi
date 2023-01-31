@@ -30,7 +30,6 @@ import {
   WalletEvent,
   WalletImplementationId,
   WalletManager,
-  YoroiProvider,
   YoroiWallet,
 } from '../yoroi-wallets'
 import {generateShelleyPlateFromKey} from '../yoroi-wallets/cardano/shelley/plate'
@@ -646,14 +645,13 @@ export type CreateWalletInfo = {
   password: string
   networkId: number
   walletImplementationId: WalletImplementationId
-  provider?: YoroiProvider
 }
 
 export const useCreateWallet = (options?: UseMutationOptions<YoroiWallet, Error, CreateWalletInfo>) => {
   const walletManager = useWalletManager()
   const mutation = useMutationWithInvalidations({
-    mutationFn: ({name, mnemonicPhrase, password, networkId, walletImplementationId, provider}) =>
-      walletManager.createWallet(name, mnemonicPhrase, password, networkId, walletImplementationId, provider),
+    mutationFn: ({name, mnemonicPhrase, password, networkId, walletImplementationId}) =>
+      walletManager.createWallet(name, mnemonicPhrase, password, networkId, walletImplementationId),
     invalidateQueries: [['walletMetas']],
     ...options,
   })
