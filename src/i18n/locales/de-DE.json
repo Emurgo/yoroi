@@ -250,6 +250,7 @@
   "components.stakingcenter.title": "Staking Center",
   "components.stakingcenter.delegationTxBuildError": "Fehler beim Erstellen der Delegierungs-Transaktion",
   "components.transfer.transfersummarymodal.unregisterExplanation": "Diese Transaktion wird eine oder mehrere Staking Schlüssel zurückziehen, und Dir {refundAmount}  zurückgeben.",
+  "components.txhistory.balancebanner.pairedbalance.error": "Error obtaining {currency} pairing",
   "components.txhistory.flawedwalletmodal.title": "Warnung",
   "components.txhistory.flawedwalletmodal.explanation1": "Es sieht so aus, als hättest Du versehentlich eine Wallet erstellt oder wiederhergestellt, die nur in speziellen Versionen für die Entwicklung enthalten ist. Als Sicherheitsmaßnahme haben wir diese Wallet deaktiviert.",
   "components.txhistory.flawedwalletmodal.explanation2": "Du kannst weiterhin ohne Einschränkungen eine neue Wallet erstellen oder wiederherstellen. Wenn Du in irgendeiner Weise von diesem Problem betroffen warst, wende Dich bitte an EMURGO.",
