@@ -34,4 +34,6 @@ export const LANGUAGES = {
   CZECH: 'cs-CZ',
   HUNGARIAN: 'hu-HU',
   SLOVAK: 'sk-SK',
-}
+} as const
+
+export type LanguageCode = typeof LANGUAGES[keyof typeof LANGUAGES]

@@ -7,10 +7,11 @@ import {useMutationWithInvalidations, useWallet} from '../hooks'
 import globalMessages from '../i18n/global-messages'
 import {decryptData, encryptData} from '../legacy/commonUtils'
 import {WrongPassword} from '../legacy/errors'
-import {WalletMeta} from '../legacy/state'
-import storage from '../legacy/storage'
-import {SettingsStorageKeys, Storage} from '../Storage'
+import {useStorage} from '../Storage'
+import {parseWalletMeta} from '../Storage/migrations/walletMeta'
 import {WalletJSON, walletManager, YoroiWallet} from '../yoroi-wallets'
+import {YoroiStorage} from '../yoroi-wallets/storage'
+import {parseSafe, parseString} from '../yoroi-wallets/utils/parsing'
 import {Keychain} from './Keychain'
 import {AuthenticationPrompt, authOsEnabled} from './KeychainStorage'
 
@@ -38,27 +39,29 @@ export const useAuthOsEnabled = (options?: UseQueryOptions<boolean, Error>) => {
   return query.data
 }
 
-export const useEnableAuthWithOs = (
-  {authenticationPrompt, storage}: {authenticationPrompt?: AuthenticationPrompt; storage: Storage},
-  options?: UseMutationOptions<void, Error>,
-) => {
+export const useEnableAuthWithOs = (options?: UseMutationOptions<void, Error>) => {
+  const storage = useStorage()
   const queryClient = useQueryClient()
-  const {authWithOs: enableAuthWithOs, ...mutation} = useAuthWithOs(
-    {
-      ...options,
-      onSuccess: async (data, variables, context) => {
-        await storage
-          .setItem(SettingsStorageKeys.Auth, JSON.stringify(AUTH_WITH_OS))
-          .then(() => storage.getItem(SettingsStorageKeys.Pin))
-          .then((pin) => (pin != null ? storage.removeItem(SettingsStorageKeys.Pin) : undefined))
-        queryClient.invalidateQueries(['authSetting'])
-        options?.onSuccess?.(data, variables, context)
-      },
+  const {authWithOs: enable, ...mutation} = useAuthWithOs({
+    ...options,
+    onSuccess: async (data, variables, context) => {
+      await enableAuthWithOs(storage)
+      queryClient.invalidateQueries(['authSetting'])
+      options?.onSuccess?.(data, variables, context)
     },
-    {authenticationPrompt},
-  )
+  })
 
-  return {...mutation, enableAuthWithOs}
+  return {...mutation, enableAuthWithOs: enable}
+}
+
+export const enableAuthWithOs = async (storage: YoroiStorage) => {
+  const settingsStorage = storage.join('appSettings/')
+  await settingsStorage.setItem('auth', AUTH_WITH_OS)
+
+  const pin = await settingsStorage.getItem('customPinHash')
+  if (pin == null) return
+
+  return settingsStorage.removeItem('customPinHash')
 }
 
 export const useAuthWithOs = (
@@ -161,9 +164,10 @@ export const useDisableAllEasyConfirmation = (
   wallet: YoroiWallet | undefined,
   options?: UseMutationOptions<void, Error>,
 ) => {
+  const storage = useStorage()
   const mutation = useMutationWithInvalidations({
     mutationFn: async () => {
-      await disableAllEasyConfirmation()
+      await disableAllEasyConfirmation(storage)
       // if there is a wallet selected it needs to trigger event for subcribers
       if (wallet !== undefined) await walletManager.disableEasyConfirmation(wallet)
     },
@@ -177,48 +181,34 @@ export const useDisableAllEasyConfirmation = (
   }
 }
 
-export const disableAllEasyConfirmation = () =>
-  storage
-    .keys('/wallet/', false)
-    .then((keys) =>
-      Promise.all([
-        storage.readMany(keys.map((walletId) => `/wallet/${walletId}`)),
-        storage.readMany(keys.map((walletId) => `/wallet/${walletId}/data`)),
-      ]),
-    )
-    .then(([metas, wallets]) => {
-      const metaUpdates: Array<[string, WalletMeta]> = []
-      for (const [walletPath, meta] of metas) {
-        if ((meta as WalletMeta)?.isEasyConfirmationEnabled) {
-          metaUpdates.push([walletPath, {...meta, isEasyConfirmationEnabled: false}])
-        }
-      }
-      const walletUpdates: Array<[string, WalletJSON]> = []
-      for (const [walletPath, wallet] of wallets) {
-        if ((wallet as WalletJSON)?.isEasyConfirmationEnabled) {
-          walletUpdates.push([walletPath, {...wallet, isEasyConfirmationEnabled: false}])
-        }
-      }
-      return [metaUpdates, walletUpdates]
-    })
-    .then(async ([metaUpdates, walletUpdates]) => {
-      for (const [key, value] of metaUpdates) {
-        await storage.write(key, value)
-      }
-      for (const [key, value] of walletUpdates) {
-        await storage.write(key, value)
-      }
-    })
+export const disableAllEasyConfirmation = async (storage: YoroiStorage) => {
+  const walletStorage = storage.join('wallet/')
+  const walletIds = await walletStorage.getAllKeys()
 
-export const useCreatePin = (storage: Storage, options: UseMutationOptions<void, Error, string>) => {
+  const updateWalletMetas = walletIds.map(async (walletId) => {
+    const walletMeta = await walletStorage.getItem(walletId, parseWalletMeta)
+    await walletStorage.setItem(walletId, {...walletMeta, isEasyConfirmationEnabled: false})
+  })
+
+  const updateWalletJSONs = walletIds.map(async (walletId) => {
+    const walletJSON: WalletJSON = await walletStorage.join(`${walletId}/`).getItem('data')
+    await walletStorage.join(`${walletId}/`).setItem('data', {...walletJSON, isEasyConfirmationEnabled: false})
+  })
+
+  return Promise.all([...updateWalletMetas, ...updateWalletJSONs])
+}
+
+export const useCreatePin = (options: UseMutationOptions<void, Error, string>) => {
+  const storage = useStorage()
+  const appSettingsStorage = storage.join('appSettings/')
   const mutation = useMutationWithInvalidations({
     invalidateQueries: [['authSetting']],
     mutationFn: async (pin) => {
-      const installationId = await storage.getItem('/appSettings/installationId')
+      const installationId = await appSettingsStorage.getItem('installationId', (data) => data) // LEGACY: installationId is not serialized
       if (!installationId) throw new Error('Invalid installation id')
       const encryptedPinHash = await encryptData(toHex(installationId), pin)
-      await storage.setItem(SettingsStorageKeys.Auth, JSON.stringify(AUTH_WITH_PIN))
-      return storage.setItem(SettingsStorageKeys.Pin, JSON.stringify(encryptedPinHash))
+      await appSettingsStorage.setItem('auth', AUTH_WITH_PIN)
+      return appSettingsStorage.setItem('customPinHash', encryptedPinHash)
     },
     ...options,
   })
@@ -230,22 +220,20 @@ export const useCreatePin = (storage: Storage, options: UseMutationOptions<void,
 }
 const toHex = (text: string) => Buffer.from(text, 'utf8').toString('hex')
 
-export const useCheckPin = (storage: Storage, options: UseMutationOptions<boolean, Error, string> = {}) => {
+export const useCheckPin = (options: UseMutationOptions<boolean, Error, string> = {}) => {
+  const storage = useStorage()
   const mutation = useMutation({
-    mutationFn: (pin) =>
-      storage
-        .getItem(SettingsStorageKeys.Pin)
-        .then((data) => {
-          if (!data) throw new Error('missing pin')
-          return data
-        })
-        .then(JSON.parse)
-        .then((encryptedPinHash: string) => decryptData(encryptedPinHash, pin))
+    mutationFn: async (pin) => {
+      const encryptedPinHash = await storage.join('appSettings/').getItem('customPinHash', parseString)
+      if (!encryptedPinHash) throw new Error('missing pin')
+
+      return decryptData(encryptedPinHash, pin)
         .then(() => true)
         .catch((error) => {
           if (error instanceof WrongPassword) return false
           throw error
-        }),
+        })
+    },
     retry: false,
     ...options,
   })
@@ -257,7 +245,8 @@ export const useCheckPin = (storage: Storage, options: UseMutationOptions<boolea
   }
 }
 
-export const useAuthSetting = (storage: Storage, options?: UseQueryOptions<AuthSetting, Error>) => {
+export const useAuthSetting = (options?: UseQueryOptions<AuthSetting, Error>) => {
+  const storage = useStorage()
   const query = useQuery({
     suspense: true,
     queryKey: ['authSetting'],
@@ -268,22 +257,15 @@ export const useAuthSetting = (storage: Storage, options?: UseQueryOptions<AuthS
   return query.data
 }
 
-export const getAuthSetting = async (storage: Storage) => {
-  const authSetting = parseAuthSetting(await storage.getItem(SettingsStorageKeys.Auth))
-  if (isAuthSetting(authSetting)) return authSetting
-  return Promise.reject(new Error('useAuthSetting invalid data'))
-}
+export const getAuthSetting = async (storage: YoroiStorage) =>
+  storage.join('appSettings/').getItem('auth', parseAuthSetting)
 
 const parseAuthSetting = (data: unknown) => {
-  if (!data) return undefined
-  try {
-    return JSON.parse(data as string)
-  } catch (error) {
-    return undefined
-  }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const isAuthSetting = (data: any): data is 'os' | 'pin' | undefined => ['os', 'pin', undefined].includes(data)
+  const parsed = parseSafe(data)
+  return isAuthSetting(parsed) ? parsed : undefined
 }
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const isAuthSetting = (data: any): data is 'os' | 'pin' | undefined => ['os', 'pin', undefined].includes(data)
 
 const useStrings = () => {
   const intl = useIntl()

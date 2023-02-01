@@ -14,7 +14,6 @@ import {isByron, isHaskellShelley} from '../../legacy/config'
 import {getNetworkConfigById} from '../../legacy/networks'
 import {useWalletNavigation} from '../../navigation'
 import {useSelectedWallet, useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
-import {useStorage} from '../../Storage'
 import {NetworkId, WalletImplementationId} from '../../yoroi-wallets'
 import {
   NavigatedSettingsItem,
@@ -31,8 +30,7 @@ export const WalletSettingsScreen = () => {
   const wallet = useSelectedWallet()
   const walletName = useWalletName(wallet)
   const easyConfirmationEnabled = useEasyConfirmationEnabled(wallet)
-  const storage = useStorage()
-  const authSetting = useAuthSetting(storage)
+  const authSetting = useAuthSetting()
 
   const onSwitchWallet = () => {
     resetToWalletSelection()

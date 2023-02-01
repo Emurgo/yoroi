@@ -19,7 +19,6 @@ import {EnableLoginWithPin} from './auth/EnableLoginWithPin'
 import {FirstRunNavigator} from './FirstRun/FirstRunNavigator'
 import {DeveloperScreen} from './legacy/DeveloperScreen'
 import {AppRoutes} from './navigation'
-import {useStorage} from './Storage'
 import StorybookScreen from './StorybookScreen'
 import {WalletInitNavigator} from './WalletInit/WalletInitNavigator'
 import {WalletNavigator} from './WalletNavigator'
@@ -142,8 +141,7 @@ const messages = defineMessages({
 })
 
 const useAutoLogout = () => {
-  const storage = useStorage()
-  const authSetting = useAuthSetting(storage)
+  const authSetting = useAuthSetting()
   const strings = useStrings()
   const {logout} = useAuth()
   const authOsEnabled = useAuthOsEnabled()
@@ -192,8 +190,7 @@ const getAuthAction = (authOsEnabled: boolean, authSetting: AuthSetting): AuthAc
 }
 
 const useAuthAction = () => {
-  const storage = useStorage()
-  const authSetting = useAuthSetting(storage)
+  const authSetting = useAuthSetting()
   const authOsEnabled = useAuthOsEnabled()
 
   return getAuthAction(authOsEnabled, authSetting)

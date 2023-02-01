@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import {parseSafe} from './utils/parsing'
 
-export type Storage = ReturnType<typeof mountStorage>
+export type YoroiStorage = ReturnType<typeof mountStorage>
 export type Path = `${string}/`
 
 const mountStorage = (path: Path) => {
@@ -29,12 +29,12 @@ const mountStorage = (path: Path) => {
 
     getItem,
     multiGet,
-    setItem: (key: string, value: unknown) => {
-      const item = JSON.stringify(value)
+    setItem: <T = unknown>(key: string, value: T, stringify: (data: T) => string = JSON.stringify) => {
+      const item = stringify(value)
       return AsyncStorage.setItem(withPath(key), item)
     },
-    multiSet: (tuples: Array<[key: string, value: unknown]>) => {
-      const items = tuples.map(([key, value]) => [withPath(key), JSON.stringify(value)])
+    multiSet: (tuples: Array<[key: string, value: unknown]>, stringify: (data: unknown) => string = JSON.stringify) => {
+      const items = tuples.map(([key, value]) => [withPath(key), stringify(value)])
       return AsyncStorage.multiSet(items)
     },
     removeItem: (key: string) => {
@@ -54,7 +54,7 @@ const mountStorage = (path: Path) => {
 
       return AsyncStorage.multiRemove(filteredKeys)
     },
-  }
+  } as const
 }
 
 const isLeafKey = ({key, path}: {key: string; path: string}) => !key.slice(path.length).includes('/')
