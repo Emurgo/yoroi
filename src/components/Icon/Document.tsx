@@ -21,13 +21,20 @@ export const Document = ({size = 40, color = 'black', backgroundColor = 'transpa
         rx="2"
         fill={backgroundColor}
       />
+
       <G id="lines" stroke={color} strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
         <Line x1="8" y1="10" x2="11" y2="10" />
+
         <Line x1="8" y1="13" x2="11" y2="13" />
+
         <Line x1="8" y1="16" x2="11" y2="16" />
+
         <Line x1="8" y1="7" x2="11" y2="7" />
+
         <Line x1="13" y1="10" x2="16" y2="10" />
+
         <Line x1="13" y1="13" x2="16" y2="13" />
+
         <Line x1="13" y1="7" x2="16" y2="7" />
       </G>
     </G>

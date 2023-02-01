@@ -48,6 +48,7 @@ export const CreateWalletScreen = () => {
   return (
     <SafeAreaView style={styles.container} edges={['left', 'right', 'bottom']}>
       <WalletForm onSubmit={setFormData} />
+
       <MnemonicExplanationModal
         visible={visibleMnemonicExplanation}
         onRequestClose={hideMnemonicExplanation}

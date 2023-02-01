@@ -29,17 +29,24 @@ export const EpochProgress = ({percentage, currentEpoch, endTime}: Props) => {
         <View style={styles.stats}>
           <View style={styles.row}>
             <Text style={styles.label}>{intl.formatMessage(globalMessages.epochLabel)}:</Text>
+
             <Text style={styles.value}>{currentEpoch}</Text>
           </View>
 
           <View style={styles.row}>
             <Text style={styles.label}>{intl.formatMessage(messages.endsInLabel)}:</Text>
+
             <View style={styles.timeWrapper}>
               {endTime.d != null && <Text style={styles.timeBlock}>{endTime.d}</Text>}
+
               <Text style={styles.timeBlock}>{endTime.h}</Text>
+
               <Text>:</Text>
+
               <Text style={styles.timeBlock}>{endTime.m}</Text>
+
               <Text>:</Text>
+
               <Text style={styles.timeBlock}>{endTime.s}</Text>
             </View>
           </View>

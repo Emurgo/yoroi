@@ -60,6 +60,7 @@ export const WalletSettingsScreen = () => {
 
       <SettingsSection>
         <PressableSettingsItem label={strings.switchWallet} onPress={onSwitchWallet} />
+
         <LogoutButton />
       </SettingsSection>
 
@@ -88,6 +89,7 @@ export const WalletSettingsScreen = () => {
 
       <SettingsSection>
         <NavigatedSettingsItem label={strings.removeWallet} navigateTo="remove-wallet" />
+
         <ResyncButton />
       </SettingsSection>
 

@@ -16,9 +16,13 @@ const HideableTextTest = () => {
   return (
     <SafeAreaView edges={['bottom', 'right', 'left']} style={styles.mainColumn}>
       <Text style={styles.text}>Privacy Mode: {privacyMode}</Text>
+
       <Spacer height={20} />
+
       <HideableText text="Lorem ipsum dolor sit amet" />
+
       <Spacer height={20} />
+
       <Button
         onPress={() => setPrivacyMode(privacyMode === 'SHOWN' ? 'HIDDEN' : 'SHOWN')}
         title="Change Privacy Mode"

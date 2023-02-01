@@ -20,12 +20,14 @@ export const UnusedAddresses = () => {
     <View>
       <Header>
         <Text style={styles.heading}>{strings.unusedAddresses}</Text>
+
         <Text style={styles.heading}>{strings.verifyAddress}</Text>
       </Header>
 
       {addresses.unused.map((address, index) => (
         <React.Fragment key={address}>
           <UnusedAddress address={address} onPress={() => setAddress(address)} />
+
           {index !== addresses.unused.length - 1 && <Spacer height={16} />}
         </React.Fragment>
       ))}
@@ -49,6 +51,7 @@ export const UsedAddresses = () => {
       {addresses.used.map((address, index) => (
         <React.Fragment key={address}>
           <UsedAddress address={address} onPress={() => setAddress(address)} />
+
           {index !== addresses.used.length - 1 && <Spacer height={16} />}
         </React.Fragment>
       ))}
@@ -75,6 +78,7 @@ const UsedAddress = ({address, onPress}: {address: string; onPress: () => void})
 
       <Actions>
         <CopyButton value={address} />
+
         <VerifyButton onPress={() => onPress()} />
       </Actions>
     </Row>
@@ -98,6 +102,7 @@ const UnusedAddress = ({address, onPress}: {address: string; onPress: () => void
 
       <Actions>
         <CopyButton value={address} />
+
         <VerifyButton onPress={() => onPress()} />
       </Actions>
     </Row>

@@ -20,6 +20,7 @@ export const TransferSummary = ({wallet, unsignedTx}: {wallet: YoroiWallet; unsi
     <>
       <Item>
         <Text>{strings.balanceLabel}</Text>
+
         <Text style={styles.balanceAmount} testID="recoveredBalanceText">
           {formatTokenWithText(new BigNumber(refundAmount.quantity), wallet.primaryToken)}
         </Text>
@@ -27,6 +28,7 @@ export const TransferSummary = ({wallet, unsignedTx}: {wallet: YoroiWallet; unsi
 
       <Item>
         <Text>{strings.fees}</Text>
+
         <Text style={styles.balanceAmount} testID="feeAmountText">
           {formatTokenWithText(new BigNumber(feeAmount.quantity), wallet.primaryToken)}
         </Text>
@@ -34,12 +36,14 @@ export const TransferSummary = ({wallet, unsignedTx}: {wallet: YoroiWallet; unsi
 
       <Item>
         <Text>{strings.finalBalanceLabel}</Text>
+
         <Text style={styles.balanceAmount} testID="totalAmountText">
           {formatTokenWithText(new BigNumber(totalAmount.quantity), wallet.primaryToken)}
         </Text>
       </Item>
 
       {withdrawals && <Withdrawals wallet={wallet} withdrawals={withdrawals} />}
+
       {deregistrations && <Deregistrations wallet={wallet} deregistrations={deregistrations} />}
     </>
   )
@@ -79,6 +83,7 @@ const Withdrawals = ({
   return (
     <Item>
       <Text>{strings.withdrawals}</Text>
+
       {Object.keys(withdrawals).map((address) => (
         <TouchableOpacity
           key={address}
@@ -112,6 +117,7 @@ const Deregistrations = ({
     <>
       <Item>
         <Text>{strings.stakeDeregistration}</Text>
+
         {addresses.map((address) => (
           <TouchableOpacity
             key={address}

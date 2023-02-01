@@ -40,11 +40,14 @@ export const AddressModal = ({address, visible, onRequestClose, path}: Props) =>
 
       <Info>
         <Text style={styles.subtitle}>{strings.walletAddress}</Text>
+
         <Row>
           <Text style={{flex: 1}} secondary monospace numberOfLines={1} ellipsizeMode="middle">
             {address}
           </Text>
+
           <Spacer width={16} />
+
           <CopyButton
             value={address}
             onCopy={() => {
@@ -58,11 +61,13 @@ export const AddressModal = ({address, visible, onRequestClose, path}: Props) =>
         {path && (
           <>
             <PathInfo path={path} />
+
             <Spacer width={8} />
           </>
         )}
 
         <Text style={styles.subtitle}>{strings.staking}</Text>
+
         <Text secondary monospace>
           {keyHashes?.staking}
         </Text>
@@ -70,6 +75,7 @@ export const AddressModal = ({address, visible, onRequestClose, path}: Props) =>
         <Spacer width={8} />
 
         <Text style={styles.subtitle}>{strings.spending}</Text>
+
         <Text secondary monospace>
           {keyHashes?.spending}
         </Text>
@@ -111,6 +117,7 @@ const PathInfo = ({path}: PathInfoProps) => {
   return (
     <>
       <Text style={styles.subtitle}>{strings.BIP32path}</Text>
+
       <Text secondary monospace>
         {formatPath(account, addressType, index, wallet.walletImplementationId)}
       </Text>

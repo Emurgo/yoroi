@@ -34,6 +34,7 @@ export const SettingsSection = ({title, children}: SettingsSectionProps) => (
         {title}
       </Text>
     )}
+
     <View style={styles.sectionContent}>{children}</View>
   </View>
 )
@@ -47,6 +48,7 @@ type SettingsItemProps = {
 export const SettingsItem = ({label, children, disabled}: SettingsItemProps) => (
   <View style={styles.item}>
     <Text style={[styles.label, disabled === true && styles.disabled]}>{label}</Text>
+
     <View>{children}</View>
   </View>
 )

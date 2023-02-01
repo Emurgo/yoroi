@@ -41,6 +41,7 @@ export const WalletInitScreen = () => {
               testID="createWalletButton"
             />
           )}
+
           <Button
             outline
             onPress={() => {
@@ -63,6 +64,7 @@ export const WalletInitScreen = () => {
                 style={styles.createButton}
                 testID="createLedgerWalletButton"
               />
+
               <LedgerTransportSwitchModal
                 visible={modalState === MODAL_STATES.LEDGER_TRANSPORT_SWITCH}
                 onRequestClose={() => setModalState(MODAL_STATES.CLOSED)}

@@ -45,6 +45,7 @@ export const AssetSelectorScreen = () => {
 
         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
           <Text style={{color: COLORS.GREY_6}}>{strings.assetsLabel}</Text>
+
           <Text style={{color: COLORS.GREY_6}}>{strings.amount}</Text>
         </View>
 

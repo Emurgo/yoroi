@@ -14,6 +14,7 @@ type ExternalProps = {
 export const TitledCard = ({title, children, variant, testID}: ExternalProps) => (
   <View style={styles.wrapper} testID={testID}>
     {title !== undefined && <Text style={styles.title}>{title}</Text>}
+
     <View style={[styles.content, variant === 'poolInfo' ? styles.poolInfoContent : undefined]}>{children}</View>
   </View>
 )

@@ -48,6 +48,7 @@ export const Button = (props: ButtonProps) => {
         ]}
       >
         {iconImage != null && <Image source={iconImage} />}
+
         <Text
           style={[
             styles.text,

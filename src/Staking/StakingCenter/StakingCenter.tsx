@@ -70,6 +70,7 @@ export const StakingCenter = () => {
           <PoolDetailScreen onPressDelegate={setSelectedPoolId} disabled={nightlyAndDevPoolHashes.length === 0} />
         </View>
       )}
+
       {(config.IS_MAINNET || SHOW_PROD_POOLS_IN_DEV) && (
         <>
           <View style={{flex: 1, backgroundColor: '#fff'}}>

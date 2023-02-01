@@ -139,6 +139,7 @@ const SettingsTabNavigator = () => {
       })}
     >
       <Tab.Screen name="wallet-settings" component={WalletSettingsScreen} />
+
       <Tab.Screen name="app-settings" component={ApplicationSettingsScreen} />
     </Tab.Navigator>
   )

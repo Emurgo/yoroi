@@ -51,7 +51,9 @@ export const ReceiveScreen = () => {
           <Spacer height={24} />
 
           <UnusedAddresses />
+
           <Spacer height={24} />
+
           <UsedAddresses />
         </Content>
       </ScrollView>

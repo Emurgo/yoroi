@@ -16,6 +16,7 @@ const Loading = () => {
   return (
     <View style={styles.container}>
       <Text>Something to see</Text>
+
       <LoadingOverlay loading />
     </View>
   )
