@@ -250,6 +250,7 @@
   "components.stakingcenter.title": "Delegációs Központ",
   "components.stakingcenter.delegationTxBuildError": "Hiba történt a delegálási tranzakció során",
   "components.transfer.transfersummarymodal.unregisterExplanation": "Ez a tranzakció töröl egy vagy több delegációt,  s a korábban letétbe helyezett összeg visszafizetésre kerül {refundAmount}. ",
+  "components.txhistory.balancebanner.pairedbalance.error": "Error obtaining {currency} pairing",
   "components.txhistory.flawedwalletmodal.title": "Figyelmeztetés",
   "components.txhistory.flawedwalletmodal.explanation1": "Úgy tűnik, hogy véletlenül létrehoztál vagy helyreállítottál egy olyan pénztárcát, amelyet csak fejlesztésre szánt speciális verziók tartalmaznak. Biztonsági intézkedésként letiltottuk ezt a pénztárcát. ",
   "components.txhistory.flawedwalletmodal.explanation2": "Még mindig létrehozhatsz új pénztárcát, vagy korlátozások nélkül visszaállíthatsz egyet. Egyéb esetben fordul az EMURGO-hoz. ",

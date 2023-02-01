@@ -250,6 +250,7 @@
   "components.stakingcenter.title": "Centre de Délégation",
   "components.stakingcenter.delegationTxBuildError": "Erreur pendant le montage de la transaction de délégation",
   "components.transfer.transfersummarymodal.unregisterExplanation": "Cette opération va désenregistrer une ou plusieurs clés de staking, ce qui vous permettra de récupérer votre dépôt de {refundAmount} ADA.",
+  "components.txhistory.balancebanner.pairedbalance.error": "Error obtaining {currency} pairing",
   "components.txhistory.flawedwalletmodal.title": "Avertissement",
   "components.txhistory.flawedwalletmodal.explanation1": "Il semblerait que vous avez accidentellement créé ou restauré un wallet qui est seulement disponible pour des versions spéciales de développement. Par sécurité, nous avons désactivé ce wallet.",
   "components.txhistory.flawedwalletmodal.explanation2": "Vous pouvez toujours créer un nouveau wallet ou en restaurer un sans restrictions. Si vous avez été affecté de quelque manière que ce soit par ce problème, veuillez contacter EMURGO. ",
