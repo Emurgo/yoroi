@@ -5,7 +5,7 @@ import _ from 'lodash'
 import DeviceInfo from 'react-native-device-info'
 import {defaultMemoize} from 'reselect'
 
-import {EncryptedStorage, EncryptedStorageKeys, makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../auth'
+import {makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../auth'
 import {Keychain} from '../../auth/Keychain'
 import {encryptWithPassword} from '../../Catalyst/catalystCipher'
 import LocalizableError from '../../i18n/LocalizableError'
@@ -34,7 +34,7 @@ import {processTxHistoryData} from '../../legacy/processTransactions'
 import {IsLockedError, nonblockingSynchronize, synchronize} from '../../legacy/promise'
 import type {WalletMeta} from '../../legacy/state'
 import {deriveRewardAddressHex} from '../../legacy/utils'
-import {Storage} from '../storage'
+import {YoroiStorage} from '../storage'
 import type {
   AccountStateResponse,
   BackendConfig,
@@ -132,7 +132,7 @@ export class ShelleyWallet implements WalletInterface {
   isEasyConfirmationEnabled = false
 
   private _utxos: RawUtxo[]
-  private readonly storage: Storage
+  private readonly storage: YoroiStorage
   private readonly utxoManager: UtxoManager
   private readonly stakingKeyPath: number[]
   private readonly transactionManager: TransactionManager
@@ -152,7 +152,7 @@ export class ShelleyWallet implements WalletInterface {
     id: string
     implementationId: WalletImplementationId
     networkId: NetworkId
-    storage: Storage
+    storage: YoroiStorage
     provider: YoroiProvider | undefined
 
     mnemonic: string
@@ -197,7 +197,7 @@ export class ShelleyWallet implements WalletInterface {
     networkId: NetworkId
 
     isReadOnly: boolean
-    storage: Storage
+    storage: YoroiStorage
   }): Promise<YoroiWallet> {
     const {internalChain, externalChain} = await addressChains.create({implementationId, networkId, accountPubKeyHex})
 
@@ -216,7 +216,7 @@ export class ShelleyWallet implements WalletInterface {
     })
   }
 
-  static async restore({walletMeta, storage}: {storage: Storage; walletMeta: WalletMeta}) {
+  static async restore({walletMeta, storage}: {storage: YoroiStorage; walletMeta: WalletMeta}) {
     const data = await storage.getItem('data', parseWalletJSON)
     if (!data) throw new Error('Cannot read saved data')
     Logger.debug('openWallet::data', data)
@@ -266,7 +266,7 @@ export class ShelleyWallet implements WalletInterface {
     id: string
     implementationId: WalletImplementationId
     networkId: NetworkId
-    storage: Storage
+    storage: YoroiStorage
     internalChain: AddressChain
     externalChain: AddressChain
     isReadOnly: boolean
@@ -327,7 +327,7 @@ export class ShelleyWallet implements WalletInterface {
     lastGeneratedAddressIndex,
     transactionManager,
   }: {
-    storage: Storage
+    storage: YoroiStorage
     networkId: NetworkId
     id: string
     utxoManager: UtxoManager
@@ -1091,9 +1091,8 @@ export class ShelleyWallet implements WalletInterface {
   async changePassword(oldPassword: string, newPassword: string) {
     if (!_.isEmpty(validatePassword(newPassword, newPassword))) throw new Error('New password is not valid')
 
-    const key = EncryptedStorageKeys.rootKey(this.id)
-    const rootKey = await EncryptedStorage.read(key, oldPassword)
-    return EncryptedStorage.write(key, rootKey, newPassword)
+    const rootKey = await this.encryptedStorage.rootKey.read(oldPassword)
+    return this.encryptedStorage.rootKey.write(rootKey, newPassword)
   }
 
   // =================== subscriptions =================== //

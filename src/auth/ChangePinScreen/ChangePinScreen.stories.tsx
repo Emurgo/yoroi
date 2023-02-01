@@ -1,16 +1,16 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
 import {StorageProvider} from '../../Storage'
+import {storage} from '../../yoroi-wallets/storage'
 import {ChangePinScreen} from './ChangePinScreen'
 
 storiesOf('ChangePinScreen', module).add('Default', () => {
   return (
     <StorageProvider
       storage={{
-        ...AsyncStorage,
+        ...storage,
         getItem: async (key) => {
           action('getItem')(key)
           return encryptedKeyHash

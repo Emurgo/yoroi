@@ -2,7 +2,7 @@ import {fromPairs} from 'lodash'
 import DeviceInfo from 'react-native-device-info'
 
 import {ApiHistoryError} from '../../../legacy/errors'
-import {Storage, storage as rootStorage} from '../../storage'
+import {storage as rootStorage, YoroiStorage} from '../../storage'
 import type {BackendConfig, RawTransaction, TipStatusResponse, Transaction} from '../../types/other'
 import {makeTxCacheStorage, syncTxs, toCachedTx, TransactionCache} from './transactionCache'
 
@@ -96,7 +96,7 @@ describe('transaction storage', () => {
   })
 })
 
-const mockStorage: Storage = {
+const mockStorage: YoroiStorage = {
   getItem: async (path: string) => {
     if (path === 'txids') return [mockTx.id]
     throw new Error('invalid path')

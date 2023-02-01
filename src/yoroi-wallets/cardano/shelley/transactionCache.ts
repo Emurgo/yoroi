@@ -7,7 +7,7 @@ import {defaultMemoize} from 'reselect'
 import assert from '../../../legacy/assert'
 import {ApiHistoryError} from '../../../legacy/errors'
 import {Logger} from '../../../legacy/logging'
-import {Storage} from '../../storage'
+import {YoroiStorage} from '../../storage'
 import type {RemoteCertificateMeta, TxHistoryRequest} from '../../types'
 import {
   BackendConfig,
@@ -37,7 +37,7 @@ export class TransactionCache {
   #confirmationCountsSelector = defaultMemoize(confirmationCountsSelector)
   #storage: TxCacheStorage
 
-  static async create(storage: Storage) {
+  static async create(storage: YoroiStorage) {
     const txStorage = makeTxCacheStorage(storage)
     const version = DeviceInfo.getVersion() as Version
     const isDeprecatedSchema = versionCompare(version, '4.1.0') === -1
@@ -480,7 +480,7 @@ export type TxCacheStorage = {
   clear: () => Promise<void>
 }
 
-export const makeTxCacheStorage = (storage: Storage): TxCacheStorage => ({
+export const makeTxCacheStorage = (storage: YoroiStorage): TxCacheStorage => ({
   loadTxs: async () => {
     const txids = await storage.getItem('txids', parseTxids)
     if (!txids) return {}

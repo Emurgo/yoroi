@@ -9,7 +9,6 @@ import {useCrashReports} from '../../hooks'
 import globalMessages from '../../i18n/global-messages'
 import {CONFIG, isNightly} from '../../legacy/config'
 import {useWalletNavigation} from '../../navigation'
-import {useStorage} from '../../Storage'
 import {useCurrencyContext} from '../Currency'
 import {NavigatedSettingsItem, SettingsBuildItem, SettingsItem, SettingsSection} from '../SettingsItems'
 
@@ -17,13 +16,12 @@ const version = DeviceInfo.getVersion()
 
 export const ApplicationSettingsScreen = () => {
   const strings = useStrings()
-  const storage = useStorage()
 
   const {navigation} = useWalletNavigation()
   const {currency} = useCurrencyContext()
   const crashReports = useCrashReports()
 
-  const authSetting = useAuthSetting(storage)
+  const authSetting = useAuthSetting()
   const authOsEnabled = useAuthOsEnabled()
   const {authWithOs} = useAuthWithOs({onSuccess: () => navigation.navigate('enable-login-with-pin')})
 
