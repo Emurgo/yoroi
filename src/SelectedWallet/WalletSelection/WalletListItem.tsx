@@ -18,10 +18,12 @@ export const WalletListItem = ({wallet, onPress}: Props) => {
       <View style={styles.item}>
         <TouchableOpacity activeOpacity={0.5} onPress={() => onPress(wallet)} style={styles.leftSide}>
           <Icon.WalletAccount iconSeed={wallet.checksum.ImagePart} style={styles.walletAvatar} />
+
           <View style={styles.walletDetails}>
             <Text style={styles.walletName} numberOfLines={1}>
               {wallet.name}
             </Text>
+
             <Text style={styles.walletMeta}>
               {wallet.checksum != null ? `${wallet.checksum.TextPart} | ${type}` : type}
             </Text>

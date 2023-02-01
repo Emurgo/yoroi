@@ -241,6 +241,7 @@ export const ConfirmTx = ({
             onChangeText={setPassword}
           />
         )}
+
         <Button
           onPress={_onConfirm}
           title={strings.confirmButton}

@@ -81,17 +81,21 @@ export const DeveloperScreen = () => {
             title={route.label}
           />
         ))}
+
         <TouchableOpacity onPress={() => storage.clearAll()}>
           <Text style={styles.link}>Clear storage</Text>
         </TouchableOpacity>
+
         <TouchableOpacity onPress={crash}>
           <Text style={styles.link}>Crash</Text>
         </TouchableOpacity>
+
         <Button
           title="All kc"
           style={styles.button}
           onPress={() => Keychain.getAllGenericPasswordServices().then(console.log)}
         />
+
         <Button
           title="Logout"
           style={styles.button}
@@ -100,6 +104,7 @@ export const DeveloperScreen = () => {
             navigation.goBack()
           }}
         />
+
         <Button
           disabled={isLoading}
           style={styles.button}
@@ -115,6 +120,7 @@ export const DeveloperScreen = () => {
           }
           title="Restore Wallet 1"
         />
+
         <Button
           disabled={isLoading}
           style={styles.button}
@@ -130,6 +136,7 @@ export const DeveloperScreen = () => {
           }
           title="Restore Wallet 2"
         />
+
         <Button
           disabled={isLoading}
           style={styles.button}
@@ -145,6 +152,7 @@ export const DeveloperScreen = () => {
           }
           title="RO Mainnet For Forced Addresses"
         />
+
         {wallet?.networkId !== 1 && (
           <>
             <TextInput
@@ -158,6 +166,7 @@ export const DeveloperScreen = () => {
               style={{padding: 2, fontSize: 8}}
               placeholder="Paste all addresses here separated by comma"
             />
+
             <Button
               disabled={isLoading || addresses.split(',').length > 50 || addresses.length === 0}
               style={styles.button}

@@ -131,6 +131,7 @@ storiesOf('Boundary', module)
               fallback: ({error}) => (
                 <View>
                   <Text>Error fallback</Text>
+
                   <Text>{error.message}</Text>
                 </View>
               ),
@@ -228,7 +229,9 @@ const LoadingWithOverlay = () => {
   return (
     <>
       <Text>this is the content</Text>
+
       <Text>this is the content</Text>
+
       <Text>this is the content</Text>
 
       <Button

@@ -15,6 +15,7 @@ type Props = {
 export const Checkbox = ({checked, text, onChange, style, testID}: Props) => (
   <TouchableOpacity style={[styles.container, style]} onPress={() => onChange(!checked)} testID={testID}>
     <Image source={checked ? checkIcon : checkEmptyIcon} />
+
     <Text style={styles.text}>{text}</Text>
   </TouchableOpacity>
 )

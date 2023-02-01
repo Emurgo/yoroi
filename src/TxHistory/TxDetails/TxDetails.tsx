@@ -63,14 +63,17 @@ export const TxDetails = () => {
         <Banner label={strings[transaction.direction]}>
           <Boundary>
             <AdaAmount amount={amount} />
+
             {txFee && <Fee amount={txFee} />}
           </Boundary>
         </Banner>
 
         <Label>{strings.fromAddresses}</Label>
+
         {fromFiltered.map((item) => (
           <View key={item.id}>
             <AddressEntry {...item} showModalForAddress={setAddressDetail} />
+
             {item.assets.length > 0 && (
               <TouchableOpacity
                 style={styles.assetsExpandable}
@@ -78,6 +81,7 @@ export const TxDetails = () => {
                 onPress={() => toggleExpandIn(item.id)}
               >
                 <Text style={styles.assetsTitle}>{` -${item.assets.length} ${strings.assetsLabel} `}</Text>
+
                 <Icon.Chevron
                   direction={expandedInItemId === item.id ? 'up' : 'down'}
                   color={COLORS.ACTION_GRAY}
@@ -85,6 +89,7 @@ export const TxDetails = () => {
                 />
               </TouchableOpacity>
             )}
+
             <ExpandableAssetList expanded={expandedInItemId === item.id} assets={item.assets} />
           </View>
         ))}
@@ -92,9 +97,11 @@ export const TxDetails = () => {
         <View style={styles.borderTop}>
           <Label>{strings.toAddresses}</Label>
         </View>
+
         {toFiltered.map((item) => (
           <View key={item.id}>
             <AddressEntry {...item} showModalForAddress={setAddressDetail} />
+
             {item.assets.length > 0 && (
               <TouchableOpacity
                 style={styles.assetsExpandable}
@@ -102,6 +109,7 @@ export const TxDetails = () => {
                 onPress={() => toggleExpandOut(item.id)}
               >
                 <Text style={styles.assetsTitle}>{` +${item.assets.length} ${strings.assetsLabel} `}</Text>
+
                 <Icon.Chevron
                   direction={expandedOutItemId === item.id ? 'up' : 'down'}
                   color={COLORS.ACTION_GRAY}
@@ -109,11 +117,13 @@ export const TxDetails = () => {
                 />
               </TouchableOpacity>
             )}
+
             <ExpandableAssetList expanded={expandedOutItemId === item.id} assets={item.assets} />
           </View>
         ))}
 
         {cntOmittedTo > 0 && <Text>{strings.omittedCount(cntOmittedTo)}</Text>}
+
         <View style={styles.borderTop}>
           <Label>{strings.txAssuranceLevel}</Label>
         </View>
@@ -121,12 +131,14 @@ export const TxDetails = () => {
         <Boundary loading={{size: 'small'}}>
           <Confirmations transaction={transaction} wallet={wallet} />
         </Boundary>
+
         <Label>{strings.transactionId}</Label>
 
         <View style={styles.dataContainer}>
           <Text secondary monospace numberOfLines={1} ellipsizeMode="middle">
             {transaction.id}
           </Text>
+
           <CopyButton value={transaction.id} />
         </View>
       </ScrollView>
@@ -171,11 +183,8 @@ const Fee = ({amount}: {amount: BigNumber}) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
 
-  return (
-    <Text small>
-      {strings.fee} {formatTokenWithSymbol(amount, wallet.primaryToken)}
-    </Text>
-  )
+  const text = `${strings.fee} ${formatTokenWithSymbol(amount, wallet.primaryToken)}`
+  return <Text small>{text}</Text>
 }
 
 const ExpandableAssetList: React.VFC<{expanded: boolean; assets: TokenEntry[]}> = ({
@@ -187,7 +196,9 @@ const ExpandableAssetList: React.VFC<{expanded: boolean; assets: TokenEntry[]}> 
 }) => (
   <View style={{borderWidth: 1, borderColor: 'transparent'}}>
     {/* ↑↑↑ View wrapper fixes bug ↑↑↑ */}
+
     {expanded && <AssetList styles={assetListStyle} assets={assets} />}
+
     {/* ↓↓↓ View wrapper fixes bug ↓↓↓ */}
   </View>
 )
@@ -199,10 +210,11 @@ type AddressEntryProps = {
   showModalForAddress: (string) => void
 }
 const AddressEntry = ({address, path, isHighlighted, showModalForAddress}: AddressEntryProps) => {
+  const text = `(${path}) ${address}`
   return (
     <TouchableOpacity activeOpacity={0.5} onPress={() => showModalForAddress(address)}>
       <Text secondary bold={isHighlighted}>
-        ({path}) {address}
+        {text}
       </Text>
     </TouchableOpacity>
   )

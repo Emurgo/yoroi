@@ -15,6 +15,7 @@ export const LanguagePickerScreen = () => {
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
       <LanguagePicker />
+
       <Actions>
         <Button
           onPress={() => navigation.navigate('accept-terms-of-service')}

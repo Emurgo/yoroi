@@ -48,6 +48,7 @@ export const TxHistory = () => {
       <View style={styles.container}>
         <CollapsibleHeader expanded={expanded}>
           <BalanceBanner />
+
           <ActionsBanner disabled={isLoading} />
         </CollapsibleHeader>
 
@@ -61,6 +62,7 @@ export const TxHistory = () => {
             active={activeTab === 'transactions'}
             testID="transactionsTabButton"
           />
+
           <Tab //
             onPress={() => {
               setExpanded(true)
@@ -74,7 +76,9 @@ export const TxHistory = () => {
 
         <TabPanels>
           <Spacer height={4} />
+
           <LockedDeposit />
+
           <Spacer height={8} />
 
           <TabPanel active={activeTab === 'transactions'}>
@@ -91,6 +95,7 @@ export const TxHistory = () => {
                 style={styles.warningNoteStyles}
               />
             )}
+
             <TxHistoryList onScroll={onScroll} refreshing={isLoading} onRefresh={() => sync()} />
           </TabPanel>
 

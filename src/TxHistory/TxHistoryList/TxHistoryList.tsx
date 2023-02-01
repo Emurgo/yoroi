@@ -35,6 +35,7 @@ export const TxHistoryList = (props: Props) => {
       {(features.txHistory.export || features.txHistory.search) && (
         <ActionsBanner onExport={handleExport} onSearch={handleSearch} />
       )}
+
       <SectionList
         {...props}
         key={key}

@@ -29,6 +29,7 @@ export const CurrencyPickerItem = ({nativeName, symbol, selectCurrency, isSelect
       <Row>
         <Description>
           <Title>{title}</Title>
+
           <Subtitle>{subtitle}</Subtitle>
         </Description>
 

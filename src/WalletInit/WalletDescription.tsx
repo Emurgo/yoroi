@@ -11,6 +11,7 @@ export const WalletDescription = () => {
   return (
     <View style={styles.description}>
       <Icon.YoroiWallet color={COLORS.WHITE} width={208} height={60} />
+
       <View style={styles.emurgoCreditsContainer}>
         <Text light>{strings.slogan}</Text>
       </View>

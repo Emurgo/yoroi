@@ -82,9 +82,13 @@ export const WalletSelectionScreen = () => {
       />
 
       <SupportTicketLink />
+
       <ShelleyButton />
+
       <OnlyNightlyShelleyTestnetButton />
+
       <ByronButton />
+
       <OnlyDevButton />
 
       <PleaseWaitModal title={strings.loadingWallet} spinnerText={strings.pleaseWait} visible={isLoading} />
@@ -138,6 +142,7 @@ const SupportTicketLink = () => {
   return (
     <TouchableOpacity style={styles.link} onPress={() => onPress()}>
       <Icon.QuestionMark size={22} color="#fff" />
+
       <Text style={styles.linkText}>{strings.supportTicketLink.toLocaleUpperCase()}</Text>
     </TouchableOpacity>
   )

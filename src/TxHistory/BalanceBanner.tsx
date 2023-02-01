@@ -91,10 +91,10 @@ const PairedBalance = ({privacyMode}: {privacyMode: boolean}) => {
     config.decimals,
   )
   const pairedTotal = privacyMode ? hiddenPairedTotal : secondaryExchangeQuantity
-
+  const text = `${pairedTotal} ${currency}`
   return (
     <Text style={styles.totalText} testID="pairedTotalText">
-      {pairedTotal} {currency}
+      {text}
     </Text>
   )
 }

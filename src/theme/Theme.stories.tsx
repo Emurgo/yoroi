@@ -25,7 +25,9 @@ const ThemeGallery = () => {
         <Text>Palette: {JSON.stringify(theme.color, null, 2)}</Text>
 
         <Spacer height={16} />
+
         <View style={{height: 1, backgroundColor: 'black'}} />
+
         <Spacer height={16} />
 
         <Text>Typography: {JSON.stringify(theme.typography, null, 2)}</Text>

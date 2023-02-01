@@ -19,11 +19,13 @@ export const Banner = ({error, text, boldText, label, children}: Props) => (
         {label}
       </Text>
     )}
+
     {text != null && (
       <Text small={error} bold={boldText} style={[error != null && styles.textError]}>
         {text}
       </Text>
     )}
+
     {children}
   </View>
 )

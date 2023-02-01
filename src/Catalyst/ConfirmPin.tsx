@@ -47,11 +47,17 @@ export const ConfirmPin = ({pin, onNext}: Props) => {
 
         <Row style={{justifyContent: 'center'}}>
           <PinBox selected={confirmPin.length === 0}>{confirmPin[0]}</PinBox>
+
           <Spacer width={16} />
+
           <PinBox selected={confirmPin.length === 1}>{confirmPin[1]}</PinBox>
+
           <Spacer width={16} />
+
           <PinBox selected={confirmPin.length === 2}>{confirmPin[2]}</PinBox>
+
           <Spacer width={16} />
+
           <PinBox selected={confirmPin.length === 3}>{confirmPin[3]}</PinBox>
         </Row>
       </ScrollView>

@@ -17,7 +17,9 @@ export const Fee = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx | null}
     return (
       <Text style={styles.info} testID="feesText">
         {strings.feeLabel}
+
         {': '}
+
         {strings.feeNotAvailable}
       </Text>
     )
@@ -28,7 +30,9 @@ export const Fee = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx | null}
   return (
     <Text style={styles.info} testID="feesText">
       {strings.feeLabel}
+
       {': '}
+
       {formatTokenWithSymbol(new BigNumber(primaryAmount.quantity), wallet.primaryToken)}
     </Text>
   )

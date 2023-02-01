@@ -25,6 +25,7 @@ export const AssetList = ({assets, styles, onSelect}: AssetListProps) => {
     <View>
       <View style={styles.assetTitle}>
         <Text style={styles.assetHeading}>{intl.formatMessage(globalMessages.assetsLabel)}</Text>
+
         <Text style={styles.assetHeading}>{intl.formatMessage(txLabels.amount)}</Text>
       </View>
 

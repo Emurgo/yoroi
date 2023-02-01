@@ -56,6 +56,7 @@ module.exports = {
     'react-native/no-unused-styles': 2,
     'react-native/split-platform-components': 0,
     'react/display-name': 0,
+    'react/jsx-newline': ['warn', {prevent: false}],
     'react/no-access-state-in-setstate': 2,
     'react/no-typos': 2,
     'react/sort-comp': [2, {order: ['instance-variables', 'lifecycle', 'everything-else', 'render']}],

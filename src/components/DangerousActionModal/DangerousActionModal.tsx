@@ -56,6 +56,7 @@ export const DangerousAction = ({
       {alertBox && (
         <>
           <AlertBox title={alertBox.title} content={alertBox.content} />
+
           <Spacer height={24} />
         </>
       )}
@@ -163,6 +164,7 @@ const AlertBox = ({title, content}: {title?: string; content: string[]}) => {
       {content.map((line, i) => (
         <View key={line}>
           <Text style={[alertStyles.paragraph, alertStyles.text]}>{line}</Text>
+
           {i < content.length - 1 && <Spacer height={16} /> /* no spacer after last line */}
         </View>
       ))}

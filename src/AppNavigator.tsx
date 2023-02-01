@@ -60,9 +60,11 @@ export const AppNavigator = () => {
         }}
       >
         {/* Not Authenticated */}
+
         {isLoggedOut && (
           <Stack.Group>
             {authAction === 'first-run' && <Stack.Screen name="first-run" component={FirstRunNavigator} />}
+
             {authAction === 'auth-with-pin' && (
               <Stack.Screen
                 name="custom-pin-auth"
@@ -70,9 +72,11 @@ export const AppNavigator = () => {
                 options={{title: strings.loginPinTitle}}
               />
             )}
+
             {authAction === 'auth-with-os' && (
               <Stack.Screen name="bio-auth-initial" component={OsLoginScreen} options={{headerShown: false}} />
             )}
+
             {authAction === 'request-new-pin' && (
               <Stack.Screen //
                 name="enable-login-with-pin"
@@ -84,17 +88,21 @@ export const AppNavigator = () => {
         )}
 
         {/* Authenticated */}
+
         {isLoggedIn && (
           <Stack.Group>
             <Stack.Screen name="app-root" component={WalletNavigator} />
+
             <Stack.Screen name="new-wallet" component={WalletInitNavigator} />
           </Stack.Group>
         )}
 
         {/* Development */}
+
         {__DEV__ && (
           <Stack.Group>
             <Stack.Screen name="developer" component={DeveloperScreen} options={{headerShown: false}} />
+
             <Stack.Screen name="storybook" component={StorybookScreen} />
           </Stack.Group>
         )}
