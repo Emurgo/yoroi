@@ -250,6 +250,7 @@
   "components.stakingcenter.title": "ステーキングセンター",
   "components.stakingcenter.delegationTxBuildError": "委任トランザクション作成時のエラー",
   "components.transfer.transfersummarymodal.unregisterExplanation": "This transaction will unregister one or more staking keys, giving you back your {refundAmount} from your deposit.",
+  "components.txhistory.balancebanner.pairedbalance.error": "Error obtaining {currency} pairing",
   "components.txhistory.flawedwalletmodal.title": "注意",
   "components.txhistory.flawedwalletmodal.explanation1": "開発用特別バージョンのみを含むウォレットが誤って作成、または復元されたようです。セキュリティ上、このウォレットは無効化されています。",
   "components.txhistory.flawedwalletmodal.explanation2": "新しいウォレットの作成または復元は、制限なく実施することができます。この事象によって何らかの問題が生じている場合は、EMURGOまでご連絡ください。",
