@@ -6,7 +6,7 @@ import BigNumber from 'bignumber.js'
 import {getDefaultAssetByNetworkId} from '../../src/legacy/config'
 import {PRIMARY_ASSET_CONSTANTS} from '../../src/legacy/networks'
 import {WalletMeta} from '../../src/legacy/state'
-import {TokenEntry, YoroiWallet} from '../../src/yoroi-wallets'
+import {fallbackTokenInfo, primaryTokenInfo, TokenEntry, toTokenInfo, YoroiWallet} from '../../src/yoroi-wallets'
 import {
   RemotePoolMetaSuccess,
   StakePoolInfosAndHistories,
@@ -23,6 +23,7 @@ import {
 import {mockEncryptedStorage} from './storage'
 import {mockTransactionInfo, mockTransactions} from './transaction'
 import {asciiToHex} from '../../src/yoroi-wallets/utils/parsing'
+import {utxos} from './utxos'
 
 const walletMeta: WalletMeta = {
   id: 'wallet-id',
@@ -42,6 +43,7 @@ const walletMeta: WalletMeta = {
 const wallet: YoroiWallet = {
   id: 'wallet-id',
   primaryToken: getDefaultAssetByNetworkId(300),
+  primaryTokenInfo: primaryTokenInfo.testnet,
   walletImplementationId: 'haskell-shelley',
   networkId: 300,
   checksum: {
@@ -56,7 +58,7 @@ const wallet: YoroiWallet = {
   rewardAddressHex: 'reward-address-hex',
   provider: null,
   publicKeyHex: 'publicKeyHex',
-  utxos: [],
+  utxos,
   getStakingInfo: async () => {
     throw new Error('not implemented: getStakingInfo')
   },
@@ -72,15 +74,15 @@ const wallet: YoroiWallet = {
     throw new Error('not implemented: createWithdrawalTx')
   },
   getAllUtxosForKey: () => Promise.resolve([]),
+  fetchTokenInfo: (tokenId: string) => {
+    action('fetchTokenInfo')(tokenId)
+    return Promise.resolve(tokenInfos[tokenId] ?? fallbackTokenInfo(tokenId))
+  },
   fetchNfts(): Promise<YoroiNft[]> {
     throw new Error('not implemented: fetchNfts')
   },
   fetchNftModerationStatus(): Promise<YoroiNftModerationStatus> {
     throw new Error('not implemented: fetchNftModerationStatus')
-  },
-  fetchTokenInfo: (...args) => {
-    action('fetchTokenInfo')(...args)
-    return Promise.resolve(tokenResponses)
   },
   fetchPoolInfo: (...args) => {
     action('fetchPoolInfo')(...args)
@@ -563,15 +565,78 @@ const balances: YoroiAmounts = {
   '08d91ec4e6c743a92de97d2fde5ca0d81493555c535894a3097061f7.c8b0': '148',
 }
 
-const tokenResponses: Record<string, TokenInfo> = {
-  '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d7444524950': {
-    name: 'tDRIP',
-    decimals: 6,
-    assetName: '7444524950',
-    longName: 'tDRIP',
-    policyId: '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d',
-    ticker: 'tDRIP',
-  },
+const tokenInfos: Record<string, TokenInfo> = {
+  '': primaryTokenInfo.mainnet,
+  '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950': toTokenInfo({
+    networkId: 300,
+    identifier: '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950',
+    isDefault: false,
+    metadata: {
+      type: 'Cardano',
+      policyId: '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d',
+      assetName: '7444524950',
+      ticker: '',
+      longName: '',
+      numberOfDecimals: 0,
+      maxSupply: null,
+    },
+  }),
+  '29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6.4d494e': toTokenInfo({
+    networkId: 300,
+    identifier: '29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6.4d494e',
+    isDefault: false,
+    metadata: {
+      type: 'Cardano',
+      policyId: '29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6',
+      assetName: '4d494e',
+      ticker: '',
+      longName: '',
+      numberOfDecimals: 0,
+      maxSupply: null,
+    },
+  }),
+  '1d129dc9c03f95a863489883914f05a52e13135994a32f0cbeacc65f.74484f444c52': toTokenInfo({
+    networkId: 300,
+    identifier: '1d129dc9c03f95a863489883914f05a52e13135994a32f0cbeacc65f.74484f444c52',
+    isDefault: false,
+    metadata: {
+      type: 'Cardano',
+      policyId: '1d129dc9c03f95a863489883914f05a52e13135994a32f0cbeacc65f',
+      assetName: '74484f444c52',
+      ticker: '',
+      longName: '',
+      numberOfDecimals: 0,
+      maxSupply: null,
+    },
+  }),
+  '1ca1fc0c880d25850cb00303788dfb51bdf2f902f6dce47d1ad09d5b.44': toTokenInfo({
+    networkId: 300,
+    identifier: '1ca1fc0c880d25850cb00303788dfb51bdf2f902f6dce47d1ad09d5b.44',
+    isDefault: false,
+    metadata: {
+      type: 'Cardano',
+      policyId: '1ca1fc0c880d25850cb00303788dfb51bdf2f902f6dce47d1ad09d5b',
+      assetName: '44',
+      ticker: '',
+      longName: '',
+      numberOfDecimals: 0,
+      maxSupply: null,
+    },
+  }),
+  '08d91ec4e6c743a92de97d2fde5ca0d81493555c535894a3097061f7.c8b0': toTokenInfo({
+    networkId: 300,
+    identifier: '08d91ec4e6c743a92de97d2fde5ca0d81493555c535894a3097061f7.c8b0',
+    isDefault: false,
+    metadata: {
+      type: 'Cardano',
+      policyId: '08d91ec4e6c743a92de97d2fde5ca0d81493555c535894a3097061f7',
+      assetName: 'c8b0',
+      ticker: '',
+      longName: '',
+      numberOfDecimals: 0,
+      maxSupply: null,
+    },
+  }),
 }
 
 const stakePoolId = 'af22f95915a19cd57adb14c558dcc4a175f60c6193dc23b8bd2d8beb'
@@ -675,10 +740,9 @@ export const mocks = {
   stakingInfo,
   poolInfoAndHistory,
   tokenEntries,
-  tokenResponses,
   yoroiUnsignedTx,
   yoroiSignedTx,
-
+  utxos,
   fetchCurrentPrice,
   fetchNfts,
   fetchNftModerationStatus,

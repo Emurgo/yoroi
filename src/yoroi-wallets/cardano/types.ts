@@ -145,7 +145,7 @@ export interface WalletInterface {
 
   fetchPoolInfo(request: StakePoolInfoRequest): Promise<StakePoolInfosAndHistories>
 
-  fetchTokenInfo(request: {tokenIds: Array<string>}): Promise<Record<string, TokenInfo | null>>
+  fetchTokenInfo(tokenId: string): Promise<TokenInfo>
 
   fetchFundInfo(): Promise<FundInfoResponse>
 
@@ -219,6 +219,7 @@ export type YoroiWallet = Pick<WalletInterface, YoroiWalletKeys> & {
   networkId: NonNullable<WalletInterface['networkId']>
   walletImplementationId: NonNullable<WalletInterface['walletImplementationId']>
   primaryToken: Readonly<DefaultAsset>
+  primaryTokenInfo: Readonly<TokenInfo>
   checksum: NonNullable<WalletInterface['checksum']>
   isReadOnly: NonNullable<WalletInterface['isReadOnly']>
   rewardAddressHex: NonNullable<WalletInterface['rewardAddressHex']>

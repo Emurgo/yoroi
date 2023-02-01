@@ -73,7 +73,7 @@
       "\\.(ts|tsx)$": "ts-jest"
     },
     "transformIgnorePatterns": [
-      "node_modules/(?!(@react-native|react-native|react-native-iphone-x-helper)/)"
+      "node_modules/(?!(@react-native|react-native|react-native-iphone-x-helper|react-native-color-picker)/)"
     ]
   },
   "resolutions": {

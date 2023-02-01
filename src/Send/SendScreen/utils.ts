@@ -87,7 +87,7 @@ export const recomputeAll = async ({
   addressInput,
   utxos,
   sendAll,
-  selectedTokenInfo,
+  selectedToken,
   defaultAssetAvailableAmount,
   selectedAssetAvailableAmount,
 }: {
@@ -96,13 +96,13 @@ export const recomputeAll = async ({
   amount: string
   utxos: Array<RawUtxo> | undefined | null
   sendAll: boolean
-  selectedTokenInfo: Token
+  selectedToken: Token
   defaultAssetAvailableAmount: Quantity
   selectedAssetAvailableAmount: Quantity
 }) => {
   let addressErrors: AddressValidationErrors = {}
   let address = addressInput
-  let amountErrors = validateAmount(amount, selectedTokenInfo)
+  let amountErrors = validateAmount(amount, selectedToken)
 
   if (isDomain(addressInput)) {
     try {
@@ -127,27 +127,24 @@ export const recomputeAll = async ({
     try {
       // we'll substract minAda from ADA balance if we are sending a token
       const minAda =
-        !selectedTokenInfo.isDefault && isHaskellShelleyNetwork(selectedTokenInfo.networkId)
-          ? ((await getMinAda(selectedTokenInfo, wallet.primaryToken)) as Quantity)
+        !selectedToken.isDefault && isHaskellShelleyNetwork(selectedToken.networkId)
+          ? ((await getMinAda(selectedToken, wallet.primaryToken)) as Quantity)
           : '0'
 
       if (sendAll) {
-        yoroiUnsignedTx = await getTransactionData(wallet, address, amount, sendAll, selectedTokenInfo)
+        yoroiUnsignedTx = await getTransactionData(wallet, address, amount, sendAll, selectedToken)
 
         fee = Amounts.getAmount(yoroiUnsignedTx.fee, wallet.primaryToken.identifier).quantity
 
-        if (selectedTokenInfo.isDefault) {
+        if (selectedToken.isDefault) {
           recomputedAmount = normalizeTokenAmount(
             new BigNumber(Quantities.diff(defaultAssetAvailableAmount, fee)),
-            selectedTokenInfo,
+            selectedToken,
           ).toString()
 
           balanceAfter = '0'
         } else {
-          recomputedAmount = normalizeTokenAmount(
-            new BigNumber(selectedAssetAvailableAmount),
-            selectedTokenInfo,
-          ).toString()
+          recomputedAmount = normalizeTokenAmount(new BigNumber(selectedAssetAvailableAmount), selectedToken).toString()
 
           balanceAfter = Quantities.diff(defaultAssetAvailableAmount, Quantities.sum([fee, minAda]))
         }
@@ -155,11 +152,11 @@ export const recomputeAll = async ({
         // for sendAll we set the amount so the format is error-free
         amountErrors = Object.freeze({})
       } else if (_.isEmpty(amountErrors)) {
-        const parsedAmount = selectedTokenInfo.isDefault
-          ? (parseAmountDecimal(amount, selectedTokenInfo).toString() as Quantity)
+        const parsedAmount = selectedToken.isDefault
+          ? (parseAmountDecimal(amount, selectedToken).toString() as Quantity)
           : '0'
 
-        yoroiUnsignedTx = await getTransactionData(wallet, address, amount, false, selectedTokenInfo)
+        yoroiUnsignedTx = await getTransactionData(wallet, address, amount, false, selectedToken)
 
         fee = Amounts.getAmount(yoroiUnsignedTx.fee, wallet.primaryToken.identifier).quantity
         balanceAfter = Quantities.diff(defaultAssetAvailableAmount, Quantities.sum([parsedAmount, minAda, fee]))

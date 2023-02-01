@@ -8,7 +8,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Checkbox, Spacer, StatusBar, Text, TextInput} from '../../components'
-import {useBalances, useHasPendingTx, useIsOnline, useTokenInfo, useUtxos} from '../../hooks'
+import {useBalances, useHasPendingTx, useIsOnline, useToken, useUtxos} from '../../hooks'
 import {CONFIG} from '../../legacy/config'
 import {formatTokenAmount, getAssetDenominationOrId, truncateWithEllipsis} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
@@ -60,8 +60,8 @@ export const SendScreen = () => {
   const [recomputing, setRecomputing] = React.useState(false)
   const [showSendAllWarning, setShowSendAllWarning] = React.useState(false)
 
-  const tokenInfo = useTokenInfo({wallet, tokenId})
-  const assetDenomination = truncateWithEllipsis(getAssetDenominationOrId(tokenInfo), 20)
+  const token = useToken({wallet, tokenId})
+  const assetDenomination = truncateWithEllipsis(getAssetDenominationOrId(token), 20)
   const amountErrorText = getAmountErrorText(intl, amountErrors, balanceErrors, wallet.primaryToken)
 
   const isValid =
@@ -94,7 +94,7 @@ export const SendScreen = () => {
       addressInput: receiver,
       amount,
       sendAll,
-      selectedTokenInfo: tokenInfo,
+      selectedToken: token,
       defaultAssetAvailableAmount,
       selectedAssetAvailableAmount,
     })
@@ -147,7 +147,7 @@ export const SendScreen = () => {
       <ErrorBanners />
       <AvailableAmountBanner />
 
-      <ScrollView style={styles.content} keyboardDismissMode="on-drag" keyboardShouldPersistTaps>
+      <ScrollView style={styles.content} keyboardDismissMode="on-drag" keyboardShouldPersistTaps="always">
         <BalanceAfterTransaction yoroiUnsignedTx={yoroiUnsignedTx} />
         <Fee yoroiUnsignedTx={yoroiUnsignedTx} />
 
@@ -192,7 +192,7 @@ export const SendScreen = () => {
             right={<Image source={require('../../assets/img/arrow_down_fill.png')} testID="selectAssetButton" />}
             editable={false}
             label={strings.asset}
-            value={`${assetDenomination}: ${formatTokenAmount(new BigNumber(selectedAssetAvailableAmount), tokenInfo)}`}
+            value={`${assetDenomination}: ${formatTokenAmount(new BigNumber(selectedAssetAvailableAmount), token)}`}
             autoComplete={false}
           />
         </TouchableOpacity>
@@ -201,7 +201,9 @@ export const SendScreen = () => {
           checked={sendAll}
           onChange={sendAllChanged}
           text={
-            tokenInfo.isDefault ? strings.checkboxSendAllAssets : strings.checkboxSendAll({assetId: assetDenomination})
+            token.identifier === wallet.primaryToken.identifier
+              ? strings.checkboxSendAllAssets
+              : strings.checkboxSendAll({assetId: assetDenomination})
           }
           testID="sendAllCheckbox"
         />

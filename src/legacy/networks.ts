@@ -46,9 +46,11 @@ const HASKELL_SHELLEY = {
   ENABLED: true,
   CHAIN_NETWORK_ID: '1',
   IS_MAINNET: true,
-  EXPLORER_URL_FOR_ADDRESS: (address: string) => `https://explorer.cardano.org/en/address?address=${address}`,
-  EXPLORER_URL_FOR_TX: (tx: string) => `https://explorer.cardano.org/tx/${tx}`,
+
+  EXPLORER_URL_FOR_ADDRESS: (address: string) => `https://cardanoscan.io/address/${address}`,
+  EXPLORER_URL_FOR_TX: (txid: string) => `https://cardanoscan.io/transaction/${txid}`,
   POOL_EXPLORER: 'https://adapools.yoroiwallet.com/?source=mobile',
+
   BACKEND: {
     API_ROOT: 'https://api.yoroiwallet.com/api',
     NFT_STORAGE_URL: 'https://fibo-validated-nft-images.s3.amazonaws.com',
@@ -89,10 +91,11 @@ const HASKELL_SHELLEY_TESTNET = {
   ENABLED: true,
   CHAIN_NETWORK_ID: '0',
   IS_MAINNET: false,
-  EXPLORER_URL_FOR_ADDRESS: (address: string) =>
-    `https://explorer.cardano-testnet.iohkdev.io/address?address=${address}`,
-  EXPLORER_URL_FOR_TX: (tx: string) => `https://explorer.cardano-testnet.iohkdev.io/tx/${tx}`,
+
+  EXPLORER_URL_FOR_ADDRESS: (address: string) => `https://preprod.cardanoscan.io/address/${address}`,
+  EXPLORER_URL_FOR_TX: (txid: string) => `https://preprod.cardanoscan.io/transaction/${txid}`,
   POOL_EXPLORER: 'https://adapools.yoroiwallet.com/?source=mobile',
+
   BACKEND: {
     API_ROOT: 'https://preprod-backend.yoroiwallet.com/api',
     NFT_STORAGE_URL: 'https://validated-images.s3.amazonaws.com',

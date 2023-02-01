@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import AsyncStorage, {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
-import BigNumber from 'bignumber.js'
 import {delay} from 'bluebird'
 import {mapValues} from 'lodash'
 import * as React from 'react'
@@ -10,24 +9,24 @@ import {
   QueryKey,
   useMutation,
   UseMutationOptions,
+  useQueries,
   useQuery,
   useQueryClient,
   UseQueryOptions,
 } from 'react-query'
 
-import {getDefaultAssetByNetworkId, isNightly} from '../legacy/config'
+import {isNightly} from '../legacy/config'
 import {ObjectValues} from '../legacy/flow'
 import {getAssetFingerprint} from '../legacy/format'
 import {HWDeviceInfo} from '../legacy/ledgerUtils'
-import {getCardanoNetworkConfigById} from '../legacy/networks'
 import {processTxHistoryData} from '../legacy/processTransactions'
 import {WalletMeta} from '../legacy/state'
 import storage from '../legacy/storage'
-import {cardanoValueFromRemoteFormat} from '../legacy/utils'
 import {useWalletManager} from '../WalletManager'
 import {
-  CardanoMobile,
+  calcLockedDeposit,
   NetworkId,
+  toToken,
   TxSubmissionStatus,
   WalletEvent,
   WalletImplementationId,
@@ -38,7 +37,7 @@ import {
 import {generateShelleyPlateFromKey} from '../yoroi-wallets/cardano/shelley/plate'
 import {
   Quantity,
-  Token,
+  TokenInfo,
   Transaction,
   TRANSACTION_DIRECTION,
   TRANSACTION_STATUS,
@@ -49,8 +48,8 @@ import {
   YoroiSignedTx,
   YoroiUnsignedTx,
 } from '../yoroi-wallets/types'
-import {CurrencySymbol, RawUtxo, TipStatusResponse} from '../yoroi-wallets/types/other'
-import {Utxos} from '../yoroi-wallets/utils'
+import {CurrencySymbol, TipStatusResponse} from '../yoroi-wallets/types/other'
+import {Amounts, Utxos} from '../yoroi-wallets/utils'
 import {parseBoolean} from '../yoroi-wallets/utils/parsing'
 
 const crashReportsStorageKey = 'sendCrashReports'
@@ -163,22 +162,6 @@ export const useLockedAmount = (
   return query.data
 }
 
-export const calcLockedDeposit = async (utxos: RawUtxo[], networkId: NetworkId) => {
-  const networkConfig = getCardanoNetworkConfigById(networkId)
-  const minUtxoValue = await CardanoMobile.BigNum.fromStr(networkConfig.MINIMUM_UTXO_VAL)
-  const utxosWithAssets = utxos.filter((utxo) => utxo.assets.length > 0)
-
-  const promises = utxosWithAssets.map(async (utxo) => {
-    return cardanoValueFromRemoteFormat(utxo)
-      .then((value) => CardanoMobile.minAdaRequired(value, minUtxoValue))
-      .then((bigNum) => bigNum.toStr())
-  })
-  const results = await Promise.all(promises)
-  const totalLocked = results.reduce((result, current) => result.plus(current), new BigNumber(0)).toString() as Quantity
-
-  return totalLocked
-}
-
 export const useSync = (wallet: YoroiWallet, options?: UseMutationOptions<void, Error>) => {
   const mutation = useMutation({
     ...options,
@@ -240,13 +223,13 @@ export const useChangeWalletName = (wallet: YoroiWallet, options: UseMutationOpt
 
 export const useTokenInfo = (
   {wallet, tokenId}: {wallet: YoroiWallet; tokenId: string},
-  options?: UseQueryOptions<Token, Error, Token, [string, 'tokenInfo', string]>,
+  options?: UseQueryOptions<TokenInfo, Error, TokenInfo, [string, 'tokenInfo', string]>,
 ) => {
   const query = useQuery({
     ...options,
     suspense: true,
     queryKey: [wallet.id, 'tokenInfo', tokenId],
-    queryFn: () => fetchTokenInfo({wallet, tokenId}),
+    queryFn: () => wallet.fetchTokenInfo(tokenId),
   })
 
   if (!query.data) throw new Error('Invalid token id')
@@ -254,14 +237,9 @@ export const useTokenInfo = (
   return query.data
 }
 
-export const useIsTokenKnownNft = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string}) => {
-  const tokenInfo = useTokenInfo({wallet, tokenId})
+export const useIsTokenKnownNft = ({wallet, fingerprint}: {wallet: YoroiWallet; fingerprint: string}) => {
   const {nfts} = useNfts(wallet)
-  return nfts.some(
-    (nft) =>
-      nft.metadata.policyId === tokenInfo.metadata.policyId &&
-      nft.metadata.assetNameHex === tokenInfo.metadata.assetName,
-  )
+  return nfts.some((nft) => nft.id === fingerprint)
 }
 
 export const useNftModerationStatus = ({wallet, fingerprint}: {wallet: YoroiWallet; fingerprint: string}) => {
@@ -284,47 +262,35 @@ export const useNftImageModerated = ({
   return useMemo(() => (data ? {image: nft.image, status: data} : null), [nft, data])
 }
 
-export const fetchTokenInfo = async ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string}): Promise<Token> => {
-  if ((tokenId === '' || tokenId === 'ADA') && wallet.networkId === 1)
-    return getDefaultAssetByNetworkId(wallet.networkId)
-  if ((tokenId === '' || tokenId === 'ADA' || tokenId === 'TADA') && wallet.networkId === 300)
-    return getDefaultAssetByNetworkId(wallet.networkId)
+export const useToken = (
+  {wallet, tokenId}: {wallet: YoroiWallet; tokenId: string},
+  options?: UseQueryOptions<TokenInfo, Error, TokenInfo, [string, 'tokenInfo', string]>,
+) => {
+  const query = useQuery({
+    ...options,
+    suspense: true,
+    queryKey: [wallet.id, 'tokenInfo', tokenId],
+    queryFn: () => wallet.fetchTokenInfo(tokenId),
+  })
 
-  const tokenSubject = tokenId.replace('.', '')
-  const tokenMetadatas = await wallet.fetchTokenInfo({tokenIds: [tokenSubject]})
-  const tokenMetadata = tokenMetadatas[tokenSubject]
+  if (!query.data) throw new Error('Invalid token id')
 
-  if (!tokenMetadata) {
-    return {
-      networkId: wallet.networkId,
-      identifier: tokenId,
-      isDefault: false,
-      metadata: {
-        type: 'Cardano',
-        policyId: tokenId.split('.')[0],
-        assetName: tokenId.split('.')[1],
-        ticker: null,
-        longName: null,
-        numberOfDecimals: 0,
-        maxSupply: null,
-      },
-    }
-  }
+  return toToken({wallet, tokenInfo: query.data})
+}
 
-  return {
-    networkId: wallet.networkId,
-    identifier: tokenId,
-    isDefault: false,
-    metadata: {
-      type: 'Cardano',
-      policyId: tokenId.split('.')[0],
-      assetName: tokenId.split('.')[1],
-      ticker: tokenMetadata.ticker ?? null,
-      longName: tokenMetadata.longName ?? null,
-      numberOfDecimals: tokenMetadata.decimals ?? 0,
-      maxSupply: null,
-    },
-  }
+export const useTokenInfos = (
+  {wallet, tokenIds}: {wallet: YoroiWallet; tokenIds: Array<string>},
+  options?: UseQueryOptions<TokenInfo, Error, TokenInfo, any>,
+) => {
+  const queries = tokenIds.map((tokenId) => ({
+    ...options,
+    suspense: true,
+    queryKey: [wallet.id, 'tokenInfo', tokenId],
+    queryFn: () => wallet.fetchTokenInfo(tokenId),
+  }))
+  const queryResults = useQueries(queries)
+
+  return queryResults.reduce((result, {data}) => (data ? [...result, data] : result), [] as Array<TokenInfo>)
 }
 
 export const usePlate = ({networkId, publicKeyHex}: {networkId: NetworkId; publicKeyHex: string}) => {
@@ -892,9 +858,13 @@ export const useExchangeRate = ({
 export const useBalances = (wallet: YoroiWallet): YoroiAmounts => {
   const utxos = useUtxos(wallet)
 
-  const primaryTokenId = wallet.primaryToken.identifier
+  return Utxos.toAmounts(utxos, wallet.primaryTokenInfo.id)
+}
 
-  return Utxos.toAmounts(utxos, primaryTokenId)
+export const useBalance = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string}) => {
+  const balances = useBalances(wallet)
+
+  return Amounts.getAmount(balances, tokenId).quantity
 }
 
 export const useResync = (wallet: YoroiWallet, options?: UseMutationOptions<void, Error>) => {

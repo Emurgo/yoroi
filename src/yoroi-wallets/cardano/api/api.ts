@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import _ from 'lodash'
 
-import assert from '../../legacy/assert'
-import {ApiError} from '../../legacy/errors'
-import fetchDefault, {checkedFetch} from '../../legacy/fetch'
-import {ServerStatus} from '..'
-import {NFTAsset, RemoteAsset, StakePoolInfosAndHistories, YoroiNft, YoroiNftModerationStatus} from '../types'
+import assert from '../../../legacy/assert'
+import {ApiError} from '../../../legacy/errors'
+import fetchDefault, {checkedFetch} from '../../../legacy/fetch'
+import {Logger} from '../../../legacy/logging'
 import type {
   AccountStateRequest,
   AccountStateResponse,
@@ -15,16 +14,17 @@ import type {
   PoolInfoRequest,
   PriceResponse,
   RawTransaction,
-  RawUtxo,
+  StakePoolInfosAndHistories,
   TipStatusResponse,
-  TokenInfoRequest,
-  TokenInfoResponse,
   TxHistoryRequest,
   TxStatusRequest,
   TxStatusResponse,
-} from '../types/other'
-import {hasProperties, isObject} from '../utils/parsing'
-import {convertNft} from './nfts'
+} from '../../types'
+import {NFTAsset, RemoteAsset, YoroiNft, YoroiNftModerationStatus} from '../../types'
+import {hasProperties, isObject} from '../../utils/parsing'
+import {ServerStatus} from '..'
+import {convertNft} from '../nfts'
+import {fallbackTokenInfo, tokenInfo, toTokenSubject} from './utils'
 
 type Addresses = Array<string>
 
@@ -42,10 +42,11 @@ export const fetchNewTxHistory = async (
     request.addresses.length <= config.TX_HISTORY_MAX_ADDRESSES,
     'fetchNewTxHistory: too many addresses',
   )
-  const response = (await fetchDefault('v2/txs/history', request, config)) as Array<RawTransaction>
+  const transactions = (await fetchDefault('v2/txs/history', request, config)) as Array<RawTransaction>
+
   return {
-    transactions: response,
-    isLast: response.length < config.TX_HISTORY_RESPONSE_LIMIT,
+    transactions,
+    isLast: transactions.length < config.TX_HISTORY_RESPONSE_LIMIT,
   }
 }
 
@@ -61,33 +62,18 @@ export const filterUsedAddresses = async (addresses: Addresses, config: BackendC
   return copy.filter((addr) => used.includes(addr))
 }
 
-export const fetchUTXOsForAddresses = (addresses: Addresses, config: BackendConfig) => {
-  assert.preconditionCheck(
-    addresses.length <= config.FETCH_UTXOS_MAX_ADDRESSES,
-    'fetchUTXOsForAddresses: too many addresses',
-  )
-  return fetchDefault('txs/utxoForAddresses', {addresses}, config)
-}
-
-export const bulkFetchUTXOsForAddresses = async (
-  addresses: Addresses,
-  config: BackendConfig,
-): Promise<Array<RawUtxo>> => {
-  const chunks = _.chunk(addresses, config.FETCH_UTXOS_MAX_ADDRESSES)
-
-  const responses = await Promise.all(chunks.map((addrs) => fetchUTXOsForAddresses(addrs, config)))
-  return _.flatten(responses) as any
-}
-
 export const submitTransaction = (signedTx: string, config: BackendConfig) => {
   return fetchDefault('txs/signed', {signedTx}, config)
 }
 
-export const getTransactions = (
+export const getTransactions = async (
   txids: Array<string>,
   config: BackendConfig,
 ): Promise<Record<string, RawTransaction>> => {
-  return fetchDefault('v2/txs/get', {txHashes: txids}, config)
+  const txs = await fetchDefault('v2/txs/get', {txHashes: txids}, config)
+  const entries: Array<[string, RawTransaction]> = Object.entries(txs)
+
+  return Object.fromEntries(entries)
 }
 
 export const getAccountState = (request: AccountStateRequest, config: BackendConfig): Promise<AccountStateResponse> => {
@@ -137,63 +123,20 @@ export const getNFTModerationStatus = async (
   })
 }
 
-export const getTokenInfo = async (request: TokenInfoRequest, config: BackendConfig): Promise<TokenInfoResponse> => {
-  const {tokenIds} = request
-  if (config.TOKEN_INFO_SERVICE == null) {
-    throw new Error('Cardano wallets should have a Token metadata provider')
-  }
-  const endpointRoot = `${config.TOKEN_INFO_SERVICE}/metadata`
-  const responses: Array<any> = await Promise.all(
-    tokenIds.map(async (tokenId) => {
-      try {
-        return await checkedFetch({
-          endpoint: `${endpointRoot}/${tokenId}`,
-          method: 'GET',
-          payload: undefined,
-        })
-      } catch (_e) {
-        return {}
-      }
-    }),
-  )
-  return responses.reduce((res, resp) => {
-    if (resp && resp.subject) {
-      const v: {
-        policyId: string
-        assetName: string
-      } & {
-        name?: string
-        decimals?: string
-        longName?: string
-        ticker?: string
-      } = {
-        policyId: resp.subject.slice(0, 56),
-        assetName: resp.subject.slice(56),
-      }
+export const getTokenInfo = async (tokenId: string, apiUrl: string) => {
+  const response = await checkedFetch({
+    endpoint: `${apiUrl}/${toTokenSubject(tokenId)}`,
+    method: 'GET',
+    payload: undefined,
+  }).catch((error) => {
+    Logger.error(error)
 
-      if (resp.name?.value) {
-        v.name = resp.name.value
-      }
+    return undefined
+  })
 
-      if (resp.decimals?.value) {
-        v.decimals = resp.decimals.value
-      }
+  const entry = parseTokenRegistryEntry(response)
 
-      if (resp.description?.value) {
-        v.longName = resp.name.value
-      }
-
-      if (resp.ticker?.value) {
-        v.ticker = resp.ticker.value
-      }
-
-      if (v.name || v.decimals) {
-        res[resp.subject] = v
-      }
-    }
-
-    return res
-  }, {})
+  return entry ? tokenInfo(entry) : fallbackTokenInfo(tokenId)
 }
 
 export const getFundInfo = (config: BackendConfig, isMainnet: boolean): Promise<FundInfoResponse> => {
@@ -211,6 +154,51 @@ export const fetchCurrentPrice = async (currency: CurrencySymbol, config: Backen
   if (response.error) throw new ApiError(response.error)
 
   return response.ticker.prices[currency]
+}
+
+// Token Registry
+// 721: https://github.com/cardano-foundation/cardano-token-registry#semantic-content-of-registry-entries
+export type TokenRegistryEntry = {
+  subject: string
+  name: Property<string>
+
+  description?: Property<string>
+  policy?: string
+  logo?: Property<string>
+  ticker?: Property<string>
+  url?: Property<string>
+  decimals?: Property<number>
+}
+
+type Signature = {
+  publicKey: string
+  signature: string
+}
+
+type Property<T> = {
+  signatures: Array<Signature>
+  sequenceNumber: number
+  value: T | undefined
+}
+
+const parseTokenRegistryEntry = (data: unknown) => {
+  return isTokenRegistryEntry(data) ? data : undefined
+}
+
+const isTokenRegistryEntry = (data: unknown): data is TokenRegistryEntry => {
+  const candidate = data as TokenRegistryEntry
+
+  return (
+    !!candidate &&
+    typeof candidate === 'object' &&
+    'subject' in candidate &&
+    typeof candidate.subject === 'string' &&
+    'name' in candidate &&
+    !!candidate.name &&
+    typeof candidate.name === 'object' &&
+    'value' in candidate.name &&
+    candidate.name.value === 'string'
+  )
 }
 
 export const parseModerationStatus = (status: unknown): YoroiNftModerationStatus | undefined => {
