@@ -1,8 +1,8 @@
-import {Storage} from '../storage'
+import {YoroiStorage} from '../storage'
 import {BackendConfig, Transactions} from '../types'
 import {TransactionCache} from './shelley'
 
-export const makeTransactionManager = async (storage: Storage, backendConfig: BackendConfig) => {
+export const makeTransactionManager = async (storage: YoroiStorage, backendConfig: BackendConfig) => {
   const transactionCache = await TransactionCache.create(storage.join('txs/'))
   const memosManager = await makeMemosManager(storage.join('memos/'))
 
@@ -51,7 +51,7 @@ type Memos = {
   [txId: number]: string
 }
 
-export const makeMemosManager = async (storage: Storage) => {
+export const makeMemosManager = async (storage: YoroiStorage) => {
   const getMemos = () => storage.getAllKeys().then(storage.multiGet).then(Object.fromEntries) ?? {}
   let memos: Readonly<Memos> = await getMemos()
 
