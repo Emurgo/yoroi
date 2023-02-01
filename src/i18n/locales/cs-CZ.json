@@ -250,6 +250,7 @@
   "components.stakingcenter.title": "Staking centrum",
   "components.stakingcenter.delegationTxBuildError": "Chyba při vytváření delegační transakce",
   "components.transfer.transfersummarymodal.unregisterExplanation": "Transakce odhlásí jeden nebo více staking klíčů a vrátí vám zpět depozit {refundAmount}.",
+  "components.txhistory.balancebanner.pairedbalance.error": "Error obtaining {currency} pairing",
   "components.txhistory.flawedwalletmodal.title": "Varování",
   "components.txhistory.flawedwalletmodal.explanation1": "Zdá se, že jste omylem vytvořil nebo obnovil peněženku která je ve speciální verzi určená pro vývojáře. Jako ochranu jsme tuto peněženku zakázali.",
   "components.txhistory.flawedwalletmodal.explanation2": "Stále lze vytvářet či obnovovat bez omezení. Pokud jste nějak byli afektováni, kontaktujte prosím EMURGO.",
