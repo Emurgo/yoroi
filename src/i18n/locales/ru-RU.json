@@ -250,6 +250,7 @@
   "components.stakingcenter.title": "Стейкинг Центр",
   "components.stakingcenter.delegationTxBuildError": "Ошибка при построении транзакции делегирования",
   "components.transfer.transfersummarymodal.unregisterExplanation": "Эта транзакция отменит регистрацию одного или более ключей ставок, вернув вам {refundAmount} с вашего депозита.",
+  "components.txhistory.balancebanner.pairedbalance.error": "Error obtaining {currency} pairing",
   "components.txhistory.flawedwalletmodal.title": "Предупреждение",
   "components.txhistory.flawedwalletmodal.explanation1": "Похоже, что вы случайно создали или восстановили кошелек, который входит только в специальные версии для разработки. В качестве меры безопасности мы отключили этот кошелек.",
   "components.txhistory.flawedwalletmodal.explanation2": "Вы можете без ограничений создать новый кошелек или восстановить имеющийся. Если вы столкнулись с проблемой, пожалуйста, свяжитесь с Emurgo.",
