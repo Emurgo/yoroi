@@ -50,6 +50,7 @@ export const VotingRegistration = () => {
 
           <Stack.Screen name="confirm-pin">
             {/**/}
+
             {() => <ConfirmPin onNext={navigateTo.confirmTx} pin={pin} />}
           </Stack.Screen>
 

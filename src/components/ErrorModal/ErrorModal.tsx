@@ -27,6 +27,7 @@ export const ErrorView = ({title, errorMessage, errorLogs, onDismiss}: ErrorView
     <ScrollView style={styles.scrollView} testID="errorView">
       <View style={styles.headerView}>
         <Text style={styles.title}>{title ?? intl.formatMessage(errorMessages.generalLocalizableError.title)}</Text>
+
         <Image source={image} style={styles.image} />
       </View>
 
@@ -44,6 +45,7 @@ export const ErrorView = ({title, errorMessage, errorLogs, onDismiss}: ErrorView
               <Text style={styles.showErrorTrigger}>
                 {showErrorLogs ? intl.formatMessage(messages.hideError) : intl.formatMessage(messages.showError)}
               </Text>
+
               <Icon.Chevron size={28} color={COLORS.GREY_6} direction={showErrorLogs ? 'left' : 'right'} />
             </View>
           </TouchableOpacity>
@@ -57,6 +59,7 @@ export const ErrorView = ({title, errorMessage, errorLogs, onDismiss}: ErrorView
           )}
         </View>
       )}
+
       <Button
         block
         onPress={onDismiss}

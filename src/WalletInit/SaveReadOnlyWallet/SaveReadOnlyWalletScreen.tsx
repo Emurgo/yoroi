@@ -56,6 +56,7 @@ export const SaveReadOnlyWalletScreen = () => {
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container} testID="saveReadOnlyWalletContainer">
       <StatusBar type="dark" />
+
       <WalletNameForm
         onSubmit={onSubmit}
         defaultWalletName={strings.defaultWalletName}
@@ -163,6 +164,7 @@ const useStrings = () => {
 const CheckSumView = ({icon, checksum}: {icon: string; checksum: string}) => (
   <View style={styles.checksumView}>
     <Icon.WalletAccount iconSeed={icon} />
+
     <Text style={styles.checksumText}>{checksum}</Text>
   </View>
 )
@@ -182,6 +184,7 @@ const WalletInfoView = ({normalizedPath, publicKeyHex, networkId}: WalletInfoPro
       <ScrollView style={styles.scrollView}>
         <View style={styles.checksumContainer}>
           <Text>{strings.checksumLabel}</Text>
+
           {!isEmptyString(plate.accountPlate.ImagePart) && (
             <CheckSumView icon={plate.accountPlate.ImagePart} checksum={plate.accountPlate.TextPart} />
           )}
@@ -189,6 +192,7 @@ const WalletInfoView = ({normalizedPath, publicKeyHex, networkId}: WalletInfoPro
 
         <View style={styles.addressesContainer}>
           <Text>{strings.walletAddressLabel}</Text>
+
           <FlatList
             data={plate.addresses}
             keyExtractor={(item) => item}
@@ -200,6 +204,7 @@ const WalletInfoView = ({normalizedPath, publicKeyHex, networkId}: WalletInfoPro
 
         <View style={styles.keyAttributesContainer}>
           <Text style={styles.label}>{strings.key}</Text>
+
           <View style={styles.keyView}>
             <Text secondary monospace numberOfLines={1} ellipsizeMode="middle">
               {publicKeyHex}
@@ -207,6 +212,7 @@ const WalletInfoView = ({normalizedPath, publicKeyHex, networkId}: WalletInfoPro
           </View>
 
           <Text style={styles.label}>{strings.derivationPath}</Text>
+
           <Text secondary monospace>
             {`m/${normalizedPath[0]}'/${normalizedPath[1]}'/${normalizedPath[2]}`}
           </Text>

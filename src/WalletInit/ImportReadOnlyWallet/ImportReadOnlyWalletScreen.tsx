@@ -48,9 +48,13 @@ export const ImportReadOnlyWalletScreen = () => {
 
       <ScrollView style={styles.scrollView}>
         <Text style={styles.paragraph}>{strings.paragraph}</Text>
+
         <Spacer height={16} />
+
         <BulletPointItem textRow={strings.line1} style={styles.paragraph} />
+
         <Spacer height={16} />
+
         <BulletPointItem textRow={strings.line2({buttonType: strings.buttonType})} style={styles.paragraph} />
       </ScrollView>
     </View>

@@ -30,6 +30,7 @@ export const DeviceItem = ({device, onSelect, disabled}: Props) => {
       disabled={isButtonDisabled}
     >
       <Text style={styles.deviceName}>{device.name}</Text>
+
       {pending && <ActivityIndicator color="black" />}
     </TouchableOpacity>
   )

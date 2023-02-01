@@ -27,14 +27,18 @@ export const WarningBanner = ({
   <View style={[styles.wrapper, style]}>
     <View style={styles.title}>
       {icon != null && <Image source={icon} style={styles.icon} />}
+
       <Text style={styles.titleText}>{title}</Text>
     </View>
+
     <View style={styles.body}>
       <Text style={styles.messageText}>{message}</Text>
     </View>
+
     {buttonTitle !== undefined && action !== undefined && (
       <Button onPress={action} title={buttonTitle} style={styles.button} />
     )}
+
     {showCloseIcon === true && (
       <TouchableOpacity style={styles.close} onPress={onRequestClose}>
         <Icon.Cross size={22} color={COLORS.GRAY} />

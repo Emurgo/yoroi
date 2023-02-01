@@ -11,7 +11,9 @@ export const EmptyHistory = () => {
   return (
     <View style={styles.empty} testID="emptyHistoryComponent">
       <Image style={styles.image} source={image} />
+
       <Spacer height={20} />
+
       <Text style={styles.emptyText}>{strings.noTransactions}</Text>
     </View>
   )

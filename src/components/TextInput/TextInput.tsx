@@ -99,6 +99,7 @@ export const TextInput = React.forwardRef((props: Props, ref: ForwardedRef<RNTex
         render={({style, ...inputProps}) => (
           <InputContainer>
             <RNTextInput {...inputProps} style={[style, {color: faded ? COLORS.GREY_6 : COLORS.BLACK}]} />
+
             {right != null ? <AdornmentContainer style={styles.checkmarkContainer}>{right}</AdornmentContainer> : null}
 
             {secureTextEntry ? (

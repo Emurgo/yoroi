@@ -26,6 +26,7 @@ export const Instructions = ({useUSB, addMargin}: Props) => {
   return (
     <View style={[addMargin === true && styles.blockMargin]}>
       <Text style={styles.paragraphText}>{strings.beforeConfirm}</Text>
+
       {rows.map((row, i) => (
         <BulletPointItem textRow={row} key={i} style={styles.paragraphText} />
       ))}

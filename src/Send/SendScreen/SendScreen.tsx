@@ -145,10 +145,12 @@ export const SendScreen = () => {
       <StatusBar type="dark" />
 
       <ErrorBanners />
+
       <AvailableAmountBanner />
 
       <ScrollView style={styles.content} keyboardDismissMode="on-drag" keyboardShouldPersistTaps="always">
         <BalanceAfterTransaction yoroiUnsignedTx={yoroiUnsignedTx} />
+
         <Fee yoroiUnsignedTx={yoroiUnsignedTx} />
 
         <Spacer height={16} />

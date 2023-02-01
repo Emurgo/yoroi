@@ -73,11 +73,13 @@ class ModalClassComponent extends React.Component<Props & NavigationHookProp, St
         <View style={styles.backdrop}>
           <View style={[styles.container, noPadding && styles.noPadding, !isEmptyString(title) && styles.withTitle]}>
             {!isEmptyString(title) && <Text style={styles.title}>{title}</Text>}
+
             {showCloseIcon && (
               <TouchableOpacity style={styles.close} onPress={onRequestClose}>
                 <Icon.Cross size={26} color={COLORS.TEXT_GRAY3} />
               </TouchableOpacity>
             )}
+
             <View style={[styles.content, noPadding === true && styles.noPadding]}>{children}</View>
           </View>
         </View>

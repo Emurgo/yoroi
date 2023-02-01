@@ -12,6 +12,7 @@ export const Clock = ({size = 40, color}: Props) => (
       d="M13 8C13 7.44772 12.5523 7 12 7C11.4477 7 11 7.44772 11 8V13C11 13.5523 11.4477 14 12 14H16C16.5523 14 17 13.5523 17 13C17 12.4477 16.5523 12 16 12H13V8Z"
       fill={color}
     />
+
     <Path
       fillRule="evenodd"
       clipRule="evenodd"

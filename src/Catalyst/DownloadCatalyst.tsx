@@ -40,7 +40,9 @@ export const DownloadCatalyst = ({onNext}: Props) => {
 
         <Row>
           <AppStoreButton />
+
           <Spacer width={16} />
+
           <PlayStoreButton />
         </Row>
 
