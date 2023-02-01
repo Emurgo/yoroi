@@ -4,7 +4,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {LayoutAnimation, StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import infoIcon from '../assets/img/icon/info-light-green.png'
-import {Boundary, Spacer, StatusBar, Text} from '../components'
+import {Boundary, ResetErrorRef, Spacer, StatusBar, Text} from '../components'
 import {useSync} from '../hooks'
 import {assetMessages, txLabels} from '../i18n/global-messages'
 import {isByron} from '../legacy/config'
@@ -22,6 +22,7 @@ import {WarningBanner} from './WarningBanner'
 type Tab = 'transactions' | 'assets'
 
 export const TxHistory = () => {
+  const resetErrorRef = React.useRef<null | ResetErrorRef>(null)
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const [showWarning, setShowWarning] = useState(isByron(wallet.walletImplementationId))
@@ -41,13 +42,18 @@ export const TxHistory = () => {
     onScrollDown: () => setExpanded(false),
   })
 
+  const onRefresh = () => {
+    resetErrorRef.current?.reset()
+    sync()
+  }
+
   return (
     <View style={styles.scrollView}>
       <StatusBar type="light" />
 
       <View style={styles.container}>
         <CollapsibleHeader expanded={expanded}>
-          <BalanceBanner />
+          <BalanceBanner ref={resetErrorRef} />
 
           <ActionsBanner disabled={isLoading} />
         </CollapsibleHeader>
@@ -96,12 +102,12 @@ export const TxHistory = () => {
               />
             )}
 
-            <TxHistoryList onScroll={onScroll} refreshing={isLoading} onRefresh={() => sync()} />
+            <TxHistoryList onScroll={onScroll} refreshing={isLoading} onRefresh={onRefresh} />
           </TabPanel>
 
           <TabPanel active={activeTab === 'assets'}>
             <Boundary loading={{size: 'full'}}>
-              <AssetList onScroll={onScroll} refreshing={isLoading} onRefresh={() => sync()} />
+              <AssetList onScroll={onScroll} refreshing={isLoading} onRefresh={onRefresh} />
             </Boundary>
           </TabPanel>
         </TabPanels>

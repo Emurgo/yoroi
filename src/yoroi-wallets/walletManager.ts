@@ -12,7 +12,7 @@ import {Logger} from '../legacy/logging'
 import type {WalletMeta} from '../legacy/state'
 import {isWalletMeta, migrateWalletMetas, parseWalletMeta} from '../Storage/migrations/walletMeta'
 import {isYoroiWallet, NetworkId, ShelleyWallet, WalletImplementationId, YoroiProvider, YoroiWallet} from './cardano'
-import {Storage, storage} from './storage'
+import {storage, YoroiStorage} from './storage'
 import {WALLET_IMPLEMENTATION_REGISTRY} from './types/other'
 
 export class WalletClosed extends ExtendableError {}
@@ -34,7 +34,7 @@ export class WalletManager {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   _closePromise: null | Promise<any> = null
   _closeReject: null | ((error: Error) => void) = null
-  storage: Storage
+  storage: YoroiStorage
 
   constructor() {
     // do not await on purpose

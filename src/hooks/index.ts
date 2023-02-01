@@ -19,7 +19,8 @@ import {ObjectValues} from '../legacy/flow'
 import {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {processTxHistoryData} from '../legacy/processTransactions'
 import {WalletMeta} from '../legacy/state'
-import storage from '../legacy/storage'
+import {useStorage} from '../Storage'
+import {parseWalletMeta} from '../Storage/migrations/walletMeta'
 import {useWalletManager} from '../WalletManager'
 import {
   calcLockedDeposit,
@@ -179,10 +180,11 @@ export const useCloseWallet = (options: UseMutationOptions<void, Error> = {}) =>
 }
 
 export const useWalletName = (wallet: YoroiWallet, options?: UseQueryOptions<string, Error>) => {
+  const storage = useStorage()
   const query = useQuery({
     queryKey: [wallet.id, 'name'],
     queryFn: async () => {
-      const walletMeta = await storage.read<WalletMeta>(`/wallet/${wallet.id}`)
+      const walletMeta = await storage.join('wallet/').getItem(wallet.id, parseWalletMeta)
       if (!walletMeta) throw new Error('Invalid wallet id')
 
       return walletMeta.name
@@ -194,12 +196,13 @@ export const useWalletName = (wallet: YoroiWallet, options?: UseQueryOptions<str
 }
 
 export const useChangeWalletName = (wallet: YoroiWallet, options: UseMutationOptions<void, Error, string> = {}) => {
+  const storage = useStorage()
   const mutation = useMutationWithInvalidations<void, Error, string>({
     mutationFn: async (newName) => {
-      const walletMeta = await storage.read<WalletMeta>(`/wallet/${wallet.id}`)
+      const walletMeta = await storage.join('wallet/').getItem(wallet.id, parseWalletMeta)
       if (!walletMeta) throw new Error('Invalid wallet id')
 
-      return storage.write(`/wallet/${wallet.id}`, {...walletMeta, name: newName})
+      return storage.join('wallet/').setItem(wallet.id, {...walletMeta, name: newName})
     },
     invalidateQueries: [[wallet.id, 'name'], ['walletMetas']],
     ...options,

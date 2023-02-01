@@ -4,7 +4,6 @@ import {defineMessages, useIntl} from 'react-intl'
 import {errorMessages} from '../../i18n/global-messages'
 import {showErrorDialog} from '../../legacy/actions'
 import {CONFIG} from '../../legacy/config'
-import {useStorage} from '../../Storage'
 import {useCheckPin} from '../hooks'
 import {PinInput, PinInputRef} from '../PinInput'
 
@@ -12,8 +11,7 @@ export const CheckPinInput = ({onValid}: {onValid: () => void}) => {
   const pinInputRef = React.useRef<null | PinInputRef>(null)
   const intl = useIntl()
   const strings = useStrings()
-  const storage = useStorage()
-  const {checkPin, isLoading} = useCheckPin(storage, {
+  const {checkPin, isLoading} = useCheckPin({
     onSuccess: (isValid) => {
       if (isValid) {
         onValid()
