@@ -51,6 +51,7 @@ function loadStories() {
 	require('../src/Staking/StakingCenter/StakingCenter.stories');
 	require('../src/TxHistory/AssetList/ActionsBanner.stories');
 	require('../src/TxHistory/AssetList/ChipButton/ChipButton.stories');
+	require('../src/TxHistory/AssetList/ModeratedNftIcon.stories');
 	require('../src/TxHistory/BalanceBanner.stories');
 	require('../src/TxHistory/ModalInfo/ModalInfo.stories');
 	require('../src/TxHistory/TxDetails/AssetList.stories');
@@ -156,6 +157,7 @@ const stories = [
 	'../src/Staking/StakingCenter/StakingCenter.stories',
 	'../src/TxHistory/AssetList/ActionsBanner.stories',
 	'../src/TxHistory/AssetList/ChipButton/ChipButton.stories',
+	'../src/TxHistory/AssetList/ModeratedNftIcon.stories',
 	'../src/TxHistory/BalanceBanner.stories',
 	'../src/TxHistory/ModalInfo/ModalInfo.stories',
 	'../src/TxHistory/TxDetails/AssetList.stories',

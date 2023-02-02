@@ -238,7 +238,6 @@ export type FirstRunRouteNavigation = StackNavigationProp<FirstRunRoutes>
 
 export type NftRoutes = {
   nfts: undefined
-  'nfts-gallery': undefined
   'nft-details': {
     id: string
   }
@@ -246,7 +245,7 @@ export type NftRoutes = {
 
 export type NftDetailsRoutes = {
   'nft-details': {id: string}
-  'nft-details-image': {id: string}
+  'image-zoom': {id: string}
 }
 export type NftDetailsNavigation = StackNavigationProp<NftDetailsRoutes>
 

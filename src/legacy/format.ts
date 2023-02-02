@@ -22,13 +22,13 @@ const messages = defineMessages({
     defaultMessage: '!!![Unknown asset name]',
   },
 })
-export const getTokenFingerprint = (token: Token | DefaultAsset) => {
-  const {policyId, assetName} = token.metadata
-  return getAssetFingerprint(policyId, assetName)
+export const getTokenFingerprint = ({policyId, assetNameHex}) => {
+  const assetFingerprint = AssetFingerprint.fromParts(Buffer.from(policyId, 'hex'), Buffer.from(assetNameHex, 'hex'))
+  return assetFingerprint.fingerprint()
 }
 
 export const getAssetFingerprint = (policyId: string, assetName: string) => {
-  return AssetFingerprint.fromParts(Buffer.from(policyId, 'hex'), Buffer.from(assetName, 'hex')).fingerprint()
+  return getTokenFingerprint({policyId, assetNameHex: assetName})
 }
 
 export const ASSET_DENOMINATION = {
@@ -51,7 +51,13 @@ export const getSymbol = (token: Token | DefaultAsset) =>
       : token.metadata.ticker
     : null
 export const getName = (token: Token | DefaultAsset) =>
-  token.metadata.longName || decodeHexAscii(token.metadata.assetName) || getTokenFingerprint(token) || undefined
+  token.metadata.longName ||
+  decodeHexAscii(token.metadata.assetName) ||
+  getTokenFingerprint({
+    policyId: token.metadata.policyId,
+    assetNameHex: token.metadata.assetName,
+  }) ||
+  undefined
 // NOTE: There is a bug when starting fresh, the metadata is empty
 export const getAssetDenomination = (
   token: Token | DefaultAsset,
@@ -68,7 +74,10 @@ export const getAssetDenomination = (
       return getName(token)
 
     case ASSET_DENOMINATION.FINGERPRINT:
-      return getTokenFingerprint(token)
+      return getTokenFingerprint({
+        policyId: token.metadata.policyId,
+        assetNameHex: token.metadata.assetName,
+      })
 
     default:
       return null
@@ -76,13 +85,22 @@ export const getAssetDenomination = (
 }
 export const getAssetDenominationOrId = (token: Token | DefaultAsset, denomination?: AssetDenomination): string => {
   if (denomination !== undefined) {
-    return getAssetDenomination(token, denomination) ?? getTokenFingerprint(token)
+    return (
+      getAssetDenomination(token, denomination) ??
+      getTokenFingerprint({
+        policyId: token.metadata.policyId,
+        assetNameHex: token.metadata.assetName,
+      })
+    )
   }
 
   return (
     getAssetDenomination(token, ASSET_DENOMINATION.TICKER) ||
     getAssetDenomination(token, ASSET_DENOMINATION.NAME) ||
-    getTokenFingerprint(token)
+    getTokenFingerprint({
+      policyId: token.metadata.policyId,
+      assetNameHex: token.metadata.assetName,
+    })
   )
 }
 export const getAssetDenominationOrUnknown = (

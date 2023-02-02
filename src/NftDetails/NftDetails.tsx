@@ -1,4 +1,4 @@
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
+import {RouteProp, useRoute} from '@react-navigation/native'
 import React, {ReactNode, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
@@ -8,7 +8,8 @@ import {CopyButton, FadeIn, Icon, Link, Spacer, Text} from '../components'
 import {Tab, TabPanel, TabPanels, Tabs} from '../components/Tabs'
 import {useNft} from '../hooks'
 import {getAssetFingerprint} from '../legacy/format'
-import {NftDetailsNavigation, NftRoutes} from '../navigation'
+import {NftRoutes} from '../navigation'
+import {useNavigateTo} from '../Nfts/navigation'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
 import {YoroiNft} from '../yoroi-wallets/types'
@@ -20,19 +21,19 @@ export const NftDetails = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
 
-  const navigation = useNavigation<NftDetailsNavigation>()
   const [activeTab, setActiveTab] = useState<ViewTabs>('overview')
   const nft = useNft(wallet, {id})
+  const navigateTo = useNavigateTo()
 
   const stringifiedMetadata = JSON.stringify(nft, undefined, 2)
 
-  const onFullscreen = () => navigation.navigate('nft-details-image', {id})
+  const navigateToImageZoom = () => navigateTo.nftZoom(id)
 
   return (
     <FadeIn style={styles.container}>
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <View style={styles.imageContainer}>
-          <TouchableOpacity onPress={onFullscreen}>
+          <TouchableOpacity onPress={navigateToImageZoom}>
             <Image source={{uri: nft.image}} style={styles.image} />
           </TouchableOpacity>
         </View>
@@ -97,37 +98,39 @@ const NftMetadataPanel = ({nft}: {nft: YoroiNft}) => {
       <MetadataRow title={strings.nftName}>
         <Text secondary>{nft.name}</Text>
       </MetadataRow>
+
       <MetadataRow title={strings.description}>
         <Text secondary>{nft.description}</Text>
       </MetadataRow>
+
       <MetadataRow title={strings.author}>
         <Text secondary>{nft.metadata.originalMetadata.author ?? '-'}</Text>
       </MetadataRow>
+
       <MetadataRow title={strings.fingerprint} copyText={fingerprint}>
         <Text secondary>{fingerprint}</Text>
       </MetadataRow>
+
       <MetadataRow title={strings.policyId} copyText={nft.metadata.policyId}>
         <Text secondary>{nft.metadata.policyId}</Text>
       </MetadataRow>
+
       <MetadataRow title={strings.detailsLinks}>
-        <View>
-          <Link url={`https://cardanoscan.io/token/${fingerprint}`}>
-            <View style={styles.linkContent}>
-              <Icon.ExternalLink size={12} color={COLORS.SHELLEY_BLUE} />
-              <Spacer width={2} />
-              <Text style={styles.linkText}>Cardanoscan</Text>
-            </View>
-          </Link>
-        </View>
-        <View>
-          <Link url={`https://cexplorer.io/asset/${fingerprint}`}>
-            <View style={styles.linkContent}>
-              <Icon.ExternalLink size={12} color={COLORS.SHELLEY_BLUE} />
-              <Spacer width={2} />
-              <Text style={styles.linkText}>Cexplorer</Text>
-            </View>
-          </Link>
-        </View>
+        <Link url={`https://cardanoscan.io/token/${fingerprint}`}>
+          <View style={styles.linkContent}>
+            <Icon.ExternalLink size={12} color={COLORS.SHELLEY_BLUE} />
+            <Spacer width={2} />
+            <Text style={styles.linkText}>Cardanoscan</Text>
+          </View>
+        </Link>
+
+        <Link url={`https://cexplorer.io/asset/${fingerprint}`}>
+          <View style={styles.linkContent}>
+            <Icon.ExternalLink size={12} color={COLORS.SHELLEY_BLUE} />
+            <Spacer width={2} />
+            <Text style={styles.linkText}>Cexplorer</Text>
+          </View>
+        </Link>
       </MetadataRow>
     </>
   )

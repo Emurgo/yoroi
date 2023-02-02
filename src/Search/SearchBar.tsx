@@ -17,7 +17,9 @@ export const SearchBar = ({placeholder, onChangeText, value, onClearPress, onBac
       <TouchableOpacity onPress={onBackPress}>
         <Icon.Chevron direction="left" color="#000000" />
       </TouchableOpacity>
+
       <TextInput autoFocus value={value} placeholder={placeholder} style={styles.input} onChangeText={onChangeText} />
+
       <TouchableOpacity onPress={onClearPress}>
         {value.length > 0 ? <Icon.Cross color="#000000" size={23} /> : null}
       </TouchableOpacity>

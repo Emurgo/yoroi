@@ -98,7 +98,7 @@
   "nft.gallery.nftCount": "NFT count",
   "nft.gallery.errorTitle": "Oops!",
   "nft.gallery.errorDescription": "Something went wrong.",
-  "nft.gallery.reloadApp": "Try to reload this page or restart the app.",
+  "nft.gallery.reloadApp": "Try to restart the app.",
   "nft.navigation.title": "NFT Gallery",
   "nft.navigation.search": "Search NFT",
   "components.common.navigation.nftGallery": "NFT Gallery",

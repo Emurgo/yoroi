@@ -21,15 +21,12 @@ export const SkeletonGallery = ({amount}: {amount: number} = {amount: 3}) => {
   return (
     <FlatList
       bounces={false}
-      contentContainerStyle={styles.galleryContainer}
       columnWrapperStyle={{paddingBottom: ROW_SPACING}}
       data={placeholders}
       numColumns={2}
       horizontal={false}
       keyExtractor={(placeholder, index) => index + ''}
-      renderItem={() => {
-        return <SkeletonImagePlaceholder />
-      }}
+      renderItem={() => <SkeletonImagePlaceholder />}
     />
   )
 }
@@ -40,22 +37,18 @@ export const ImageGallery = ({nfts = [], onSelect, onRefresh, isRefreshing}: Pro
       bounces={false}
       onRefresh={onRefresh}
       refreshing={isRefreshing}
-      contentContainerStyle={styles.galleryContainer}
       columnWrapperStyle={{paddingBottom: ROW_SPACING}}
       data={nfts}
       numColumns={2}
       horizontal={false}
       keyExtractor={(nft) => nft.id}
-      renderItem={({item}) => {
-        return <ModeratedImage onPress={() => onSelect(nfts.indexOf(item))} nft={item} key={item.id} />
-      }}
+      renderItem={({item}) => <ModeratedImage onPress={() => onSelect(nfts.indexOf(item))} nft={item} key={item.id} />}
     />
   )
 }
 
 interface ModeratedImageProps {
   onPress?(event: GestureResponderEvent): void
-
   nft: YoroiNft
 }
 
@@ -72,12 +65,14 @@ const ModeratedImage = ({onPress, nft}: ModeratedImageProps) => {
     }
   }, [moderationStatusQuery.data, moderationStatusQuery])
 
-  const isPendingReview = moderationStatusQuery.data === 'pending' || moderationStatusQuery.data === 'manual_review'
-  const showSkeleton = moderationStatusQuery.isLoading || isPendingReview
+  const isPendingManualReview = moderationStatusQuery.data === 'manual_review'
+  const isPendingAutomaticReview = moderationStatusQuery.data === 'pending'
 
   const isImageApproved = moderationStatusQuery.data === 'approved'
   const isImageWithConsent = moderationStatusQuery.data === 'consent'
   const isImageBlocked = moderationStatusQuery.data === 'blocked'
+
+  const showSkeleton = moderationStatusQuery.isLoading || isPendingAutomaticReview
 
   if (showSkeleton) {
     return <SkeletonImagePlaceholder text={text} />
@@ -91,12 +86,24 @@ const ModeratedImage = ({onPress, nft}: ModeratedImageProps) => {
         <RequiresConsentNft text={text} uri={image} />
       ) : isImageBlocked ? (
         <BlockedNft text={text} />
+      ) : isPendingManualReview ? (
+        <ManualReviewNft text={text} />
       ) : null}
     </TouchableOpacity>
   )
 }
 
 function BlockedNft({text}: {text: string}) {
+  return (
+    <View>
+      <Image source={placeholderImage} style={[styles.image, {width: IMAGE_SIZE, height: IMAGE_SIZE}]} />
+      <Spacer height={IMAGE_PADDING} />
+      <Text style={[styles.textTop, {width: IMAGE_SIZE}]}>{text}</Text>
+    </View>
+  )
+}
+
+function ManualReviewNft({text}: {text: string}) {
   return (
     <View>
       <Image source={placeholderImage} style={[styles.image, {width: IMAGE_SIZE, height: IMAGE_SIZE}]} />
@@ -178,9 +185,6 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  galleryContainer: {
-    flex: 1,
   },
   imageContainer: {
     paddingHorizontal: 5,
