@@ -28,7 +28,6 @@ import {
   getCardanoNetworkConfigById,
   isHaskellShelleyNetwork,
   isJormungandr,
-  PROVIDERS,
 } from '../../legacy/networks'
 import {processTxHistoryData} from '../../legacy/processTransactions'
 import {IsLockedError, nonblockingSynchronize, synchronize} from '../../legacy/promise'
@@ -78,7 +77,6 @@ import {
   WalletImplementationId,
   WalletInterface,
   WalletSubscription,
-  YoroiProvider,
   YoroiWallet,
 } from './types'
 import {yoroiUnsignedTx} from './unsignedTx'
@@ -93,7 +91,6 @@ export type ShelleyWalletJSON = {
 
   networkId: NetworkId
   walletImplementationId: WalletImplementationId
-  provider?: null | YoroiProvider
 
   isHW: boolean
   hwDeviceInfo: null | HWDeviceInfo
@@ -121,7 +118,6 @@ export class ShelleyWallet implements WalletInterface {
   readonly hwDeviceInfo: null | HWDeviceInfo
   readonly isHW: boolean
   readonly isReadOnly: boolean
-  readonly provider: null | undefined | YoroiProvider
   readonly internalChain: AddressChain
   readonly externalChain: AddressChain
   readonly publicKeyHex: string
@@ -144,7 +140,6 @@ export class ShelleyWallet implements WalletInterface {
     networkId,
     implementationId,
     storage,
-    provider,
 
     mnemonic,
     password,
@@ -153,7 +148,6 @@ export class ShelleyWallet implements WalletInterface {
     implementationId: WalletImplementationId
     networkId: NetworkId
     storage: YoroiStorage
-    provider: YoroiProvider | undefined
 
     mnemonic: string
     password: string
@@ -172,7 +166,6 @@ export class ShelleyWallet implements WalletInterface {
       internalChain,
       externalChain,
       isEasyConfirmationEnabled: false,
-      provider,
     })
 
     await wallet.encryptAndSaveRootKey(rootKey, password)
@@ -212,7 +205,6 @@ export class ShelleyWallet implements WalletInterface {
       internalChain,
       externalChain,
       isEasyConfirmationEnabled: false,
-      provider: undefined,
     })
   }
 
@@ -236,7 +228,6 @@ export class ShelleyWallet implements WalletInterface {
       accountPubKeyHex: data.publicKeyHex ?? internalChain.publicKey, // can be null for versions < 3.0.2, in which case we can just retrieve from address generator
       hwDeviceInfo: data.hwDeviceInfo, // hw wallet
       isReadOnly: data.isReadOnly ?? false, // readonly wallet
-      provider: data.provider ?? '',
       isEasyConfirmationEnabled: data.isEasyConfirmationEnabled,
       lastGeneratedAddressIndex: data.lastGeneratedAddressIndex ?? 0, // AddressManager
     })
@@ -257,7 +248,6 @@ export class ShelleyWallet implements WalletInterface {
     accountPubKeyHex,
     hwDeviceInfo, // hw wallet
     isReadOnly, // readonly wallet
-    provider,
     isEasyConfirmationEnabled,
     lastGeneratedAddressIndex = 0,
   }: {
@@ -270,7 +260,6 @@ export class ShelleyWallet implements WalletInterface {
     internalChain: AddressChain
     externalChain: AddressChain
     isReadOnly: boolean
-    provider: YoroiProvider | null | undefined
     isEasyConfirmationEnabled: boolean
     lastGeneratedAddressIndex?: number
   }) => {
@@ -290,7 +279,6 @@ export class ShelleyWallet implements WalletInterface {
       implementationId,
       hwDeviceInfo,
       isReadOnly,
-      provider,
       accountPubKeyHex,
       rewardAddressHex,
       internalChain,
@@ -318,7 +306,6 @@ export class ShelleyWallet implements WalletInterface {
     implementationId,
     hwDeviceInfo,
     isReadOnly,
-    provider,
     accountPubKeyHex,
     rewardAddressHex,
     internalChain,
@@ -334,7 +321,6 @@ export class ShelleyWallet implements WalletInterface {
     implementationId: WalletImplementationId
     hwDeviceInfo: HWDeviceInfo | null
     isReadOnly: boolean
-    provider: YoroiProvider | null | undefined
     accountPubKeyHex: string
     rewardAddressHex: string
     internalChain: AddressChain
@@ -356,7 +342,6 @@ export class ShelleyWallet implements WalletInterface {
     this.isHW = hwDeviceInfo != null
     this.hwDeviceInfo = hwDeviceInfo
     this.isReadOnly = isReadOnly
-    this.provider = provider
     this.transactionManager = transactionManager
     this.internalChain = internalChain
     this.externalChain = externalChain
@@ -445,20 +430,7 @@ export class ShelleyWallet implements WalletInterface {
   // =================== utils =================== //
 
   private getNetworkConfig(): CardanoHaskellShelleyNetwork {
-    switch (this.networkId) {
-      case PROVIDERS.HASKELL_SHELLEY.NETWORK_ID:
-        if (this.provider === 'emurgo-alonzo') {
-          return PROVIDERS.ALONZO_MAINNET
-        }
-        return PROVIDERS.HASKELL_SHELLEY
-      case PROVIDERS.HASKELL_SHELLEY_TESTNET.NETWORK_ID:
-        if (this.provider === 'emurgo-alonzo') {
-          return PROVIDERS.ALONZO_TESTNET
-        }
-        return PROVIDERS.HASKELL_SHELLEY_TESTNET
-      default:
-        throw new Error('network id is not valid')
-    }
+    return getCardanoNetworkConfigById(this.networkId)
   }
 
   private getBaseNetworkConfig() {
@@ -1227,7 +1199,6 @@ export class ShelleyWallet implements WalletInterface {
       hwDeviceInfo: this.hwDeviceInfo,
       isReadOnly: this.isReadOnly,
       isEasyConfirmationEnabled: this.isEasyConfirmationEnabled,
-      provider: this.provider,
     }
   }
 }

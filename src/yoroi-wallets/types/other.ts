@@ -352,8 +352,6 @@ export const YOROI_PROVIDER_IDS = {
   ALONZO_TESTNET: ALONZO_FACTOR + NETWORK_REGISTRY.HASKELL_SHELLEY_TESTNET,
 }
 
-export type YoroiProvider = '' | 'emurgo-alonzo'
-
 export const DERIVATION_TYPES = {
   BIP44: 'bip44',
   CIP1852: 'cip1852',

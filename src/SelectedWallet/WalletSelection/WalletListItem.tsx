@@ -2,7 +2,7 @@ import React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {Icon} from '../../components'
-import {CONFIG, isByron, isHaskellShelley, isJormun, isNightly} from '../../legacy/config'
+import {isByron, isHaskellShelley, isJormun} from '../../legacy/config'
 import {WalletMeta} from '../../legacy/state'
 import {brand, COLORS} from '../../theme'
 type Props = {
@@ -28,12 +28,6 @@ export const WalletListItem = ({wallet, onPress}: Props) => {
               {wallet.checksum != null ? `${wallet.checksum.TextPart} | ${type}` : type}
             </Text>
           </View>
-
-          {(isNightly() || CONFIG.IS_TESTNET_BUILD) && (
-            <View style={styles.providerContainer}>
-              <Text style={[styles.walletMeta, styles.providerText]}>{wallet.provider}</Text>
-            </View>
-          )}
         </TouchableOpacity>
       </View>
     </View>
@@ -101,11 +95,5 @@ const styles = StyleSheet.create({
     color: COLORS.WHITE,
     opacity: 0.5,
     fontSize: 10,
-  },
-  providerContainer: {
-    flex: 1,
-  },
-  providerText: {
-    alignSelf: 'flex-end',
   },
 })

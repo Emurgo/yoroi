@@ -11,7 +11,7 @@ import type {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {Logger} from '../legacy/logging'
 import type {WalletMeta} from '../legacy/state'
 import {isWalletMeta, migrateWalletMetas, parseWalletMeta} from '../Storage/migrations/walletMeta'
-import {isYoroiWallet, NetworkId, ShelleyWallet, WalletImplementationId, YoroiProvider, YoroiWallet} from './cardano'
+import {isYoroiWallet, NetworkId, ShelleyWallet, WalletImplementationId, YoroiWallet} from './cardano'
 import {storage, YoroiStorage} from './storage'
 import {WALLET_IMPLEMENTATION_REGISTRY} from './types/other'
 
@@ -163,7 +163,6 @@ export class WalletManager {
     wallet: YoroiWallet,
     networkId: NetworkId,
     walletImplementationId: WalletImplementationId,
-    provider?: null | YoroiProvider,
   ) {
     this._id = id
 
@@ -177,7 +176,6 @@ export class WalletManager {
       isHW: wallet.isHW,
       checksum: wallet.checksum,
       isEasyConfirmationEnabled: false,
-      provider,
     }
 
     await this.storage.setItem(id, walletMeta)
@@ -302,7 +300,6 @@ export class WalletManager {
     password: string,
     networkId: NetworkId,
     implementationId: WalletImplementationId,
-    provider: YoroiProvider | undefined,
   ) {
     const Wallet = this.getWalletImplementation(implementationId)
     const id = uuid.v4()
@@ -314,10 +311,9 @@ export class WalletManager {
       mnemonic,
       password,
       implementationId,
-      provider,
     })
 
-    return this.saveWallet(id, name, wallet, networkId, implementationId, provider)
+    return this.saveWallet(id, name, wallet, networkId, implementationId)
   }
 
   async createWalletWithBip44Account(
