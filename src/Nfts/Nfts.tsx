@@ -14,6 +14,7 @@ export const Nfts = () => {
   const navigateTo = useNavigateTo()
   const navigateToDetails = (id: string) => navigateTo.nftDetails(id)
   const handleNftSelect = (index: number) => navigateToDetails(filteredNfts[index].id)
+  const strings = useStrings()
 
   if (isError) {
     return (
@@ -39,7 +40,7 @@ export const Nfts = () => {
           contentContainerStyle={styles.scrollViewError}
           refreshControl={<RefreshControl onRefresh={refetch} refreshing={isRefetching} />}
         >
-          <NoNftsScreen />
+          <NoNftsScreen message={strings.noNftsFound} />
         </ScrollView>
       </ScreenWrapper>
     )
@@ -54,6 +55,7 @@ export const Nfts = () => {
           refreshControl={<RefreshControl onRefresh={refetch} refreshing={isRefetching} />}
         >
           <NoNftsScreen
+            message={strings.noNftsInWallet}
             heading={
               <View>
                 <NftCount count={filteredNfts.length} />
@@ -204,6 +206,14 @@ const messages = defineMessages({
     id: 'nft.gallery.reloadApp',
     defaultMessage: '!!!Try to restart the app.',
   },
+  noNftsFound: {
+    id: 'nft.gallery.noNftsFound',
+    defaultMessage: '!!!No NFTs found',
+  },
+  noNftsInWallet: {
+    id: 'nft.gallery.noNftsInWallet',
+    defaultMessage: '!!!No NFTs added to your wallet yet',
+  },
 })
 
 const useStrings = () => {
@@ -214,5 +224,7 @@ const useStrings = () => {
     errorTitle: intl.formatMessage(messages.errorTitle),
     errorDescription: intl.formatMessage(messages.errorDescription),
     reloadApp: intl.formatMessage(messages.reloadApp),
+    noNftsFound: intl.formatMessage(messages.noNftsFound),
+    noNftsInWallet: intl.formatMessage(messages.noNftsInWallet),
   }
 }

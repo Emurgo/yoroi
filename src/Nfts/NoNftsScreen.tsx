@@ -1,13 +1,10 @@
 import React, {ReactNode} from 'react'
-import {defineMessages, useIntl} from 'react-intl'
 import {Image, StyleSheet, Text, View} from 'react-native'
 
 import noNftsImage from '../assets/img/no-nft.png'
 import {Spacer} from '../components'
 
-export function NoNftsScreen({heading}: {heading?: ReactNode}) {
-  const strings = useStrings()
-
+export function NoNftsScreen({heading, message}: {heading?: ReactNode; message: ReactNode}) {
   return (
     <View style={styles.root}>
       <View>{heading}</View>
@@ -15,25 +12,10 @@ export function NoNftsScreen({heading}: {heading?: ReactNode}) {
       <View style={styles.imageContainer}>
         <Image source={noNftsImage} style={styles.image} />
         <Spacer height={20} />
-        <Text style={styles.contentText}>{strings.noNFTs}</Text>
+        <Text style={styles.contentText}>{message}</Text>
       </View>
     </View>
   )
-}
-
-const messages = defineMessages({
-  noNFTs: {
-    id: 'nft.gallery.noNFTs',
-    defaultMessage: '!!!No NFTs found',
-  },
-})
-
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    noNFTs: intl.formatMessage(messages.noNFTs),
-  }
 }
 
 const styles = StyleSheet.create({
