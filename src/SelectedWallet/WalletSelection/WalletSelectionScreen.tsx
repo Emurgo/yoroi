@@ -162,7 +162,6 @@ const ShelleyButton = () => {
           params: {
             networkId: CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
             walletImplementationId: CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
-            provider: '',
           },
         })
       }
@@ -188,7 +187,6 @@ const OnlyNightlyShelleyTestnetButton = () => {
           params: {
             networkId: CONFIG.NETWORKS.HASKELL_SHELLEY_TESTNET.NETWORK_ID,
             walletImplementationId: CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
-            provider: '',
           },
         })
       }
@@ -211,7 +209,6 @@ const ByronButton = () => {
           params: {
             networkId: CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
             walletImplementationId: CONFIG.WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID,
-            provider: '',
           },
         })
       }

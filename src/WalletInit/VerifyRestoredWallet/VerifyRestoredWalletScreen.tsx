@@ -17,7 +17,7 @@ export const VerifyRestoredWalletScreen = () => {
   const strings = useStrings()
   const navigation = useNavigation<WalletInitRouteNavigation>()
   const route = useRoute<RouteProp<WalletInitRoutes, 'wallet-credentials'>>()
-  const {phrase, networkId, walletImplementationId, provider} = route.params
+  const {phrase, networkId, walletImplementationId} = route.params
   const [plate, addresses] = usePlateFromMnemonic({mnemonic: phrase, networkId, walletImplementationId})
 
   const navigateToWalletCredentials = () => {
@@ -25,7 +25,6 @@ export const VerifyRestoredWalletScreen = () => {
       phrase,
       networkId,
       walletImplementationId,
-      provider,
     })
   }
 

@@ -1,5 +1,5 @@
 import type {CardanoTypes} from '../yoroi-wallets'
-import type {NetworkId, WalletImplementationId, YoroiProvider} from '../yoroi-wallets/types/other'
+import type {NetworkId, WalletImplementationId} from '../yoroi-wallets/types/other'
 
 export type WalletMeta = {
   id: string
@@ -11,5 +11,4 @@ export type WalletMeta = {
   // legacy jormungandr
   isEasyConfirmationEnabled: boolean
   checksum: CardanoTypes.WalletChecksum
-  provider?: YoroiProvider | null | undefined
 }

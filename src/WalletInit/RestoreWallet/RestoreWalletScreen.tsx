@@ -14,14 +14,13 @@ export const RestoreWalletScreen = () => {
   const strings = useStrings()
   const navigation = useNavigation<WalletInitRouteNavigation>()
   const route = useRoute<RouteProp<WalletInitRoutes, 'restore-wallet-form'>>()
-  const {networkId, walletImplementationId, provider} = route.params
+  const {networkId, walletImplementationId} = route.params
   const {MNEMONIC_LEN: mnemonicLength} = getWalletConfigById(walletImplementationId)
   const navigateToWalletCredentials = () =>
     navigation.navigate('wallet-account-checksum', {
       phrase,
       networkId,
       walletImplementationId,
-      provider,
     })
 
   const [phrase, setPhrase] = React.useState('')

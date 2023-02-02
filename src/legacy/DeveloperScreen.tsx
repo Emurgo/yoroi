@@ -118,7 +118,6 @@ export const DeveloperScreen = () => {
               networkId: Number(config['WALLET_1_NETWORK_ID'] ?? 300),
               password: '1234567890',
               walletImplementationId: 'haskell-shelley',
-              provider: '',
             })
           }
           title="Restore Wallet 1"
@@ -134,7 +133,6 @@ export const DeveloperScreen = () => {
               networkId: Number(config['WALLET_1_NETWORK_ID'] ?? 300),
               password: '1234567890',
               walletImplementationId: 'haskell-shelley',
-              provider: '',
             })
           }
           title="Restore Wallet 2"
@@ -150,7 +148,6 @@ export const DeveloperScreen = () => {
               networkId: 1,
               password: '1234567890',
               walletImplementationId: 'haskell-shelley',
-              provider: '',
             })
           }
           title="RO Mainnet For Forced Addresses"
