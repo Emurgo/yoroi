@@ -5,45 +5,55 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {Icon} from '../components'
 import {NftRoutes} from '../navigation'
-import {SearchHeader, SearchProvider} from '../Search'
+import {SearchHeader, SearchProvider, useSearch} from '../Search'
 import {Nfts} from './Nfts'
 
 const Stack = createStackNavigator<NftRoutes>()
 
 export const NftsNavigator = () => {
-  const strings = useStrings()
-  const [searchVisible, setSearchVisible] = useState(false)
-
   return (
     <SearchProvider>
-      <Stack.Navigator
-        screenOptions={{
-          headerTitleContainerStyle: {width: '100%', alignItems: 'center'},
-          cardStyle: {backgroundColor: '#fff'},
-        }}
-        initialRouteName="nfts"
-      >
-        <Stack.Screen
-          name="nfts"
-          options={{
-            title: strings.title,
-            headerTitleAlign: 'center',
-            header: searchVisible
-              ? () => <SearchHeader placeholder={strings.search} onClose={() => setSearchVisible(false)} />
-              : undefined,
-            headerLeft: () => <View style={styles.iconPlaceholder} />,
-            headerRight: () => (
-              <TouchableOpacity onPress={() => setSearchVisible(true)} style={styles.center}>
-                <Icon.Magnify size={26} />
-              </TouchableOpacity>
-            ),
-            headerLeftContainerStyle: {paddingLeft: 16},
-            headerRightContainerStyle: {paddingRight: 16},
-          }}
-          component={Nfts}
-        />
-      </Stack.Navigator>
+      <Routes />
     </SearchProvider>
+  )
+}
+
+const Routes = () => {
+  const strings = useStrings()
+  const [searchVisible, setSearchVisible] = useState(false)
+  const {clearSearch} = useSearch()
+  const handleSearchClose = () => {
+    setSearchVisible(false)
+    clearSearch()
+  }
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerTitleContainerStyle: {flex: 1, alignItems: 'center'},
+        cardStyle: {backgroundColor: '#fff'},
+      }}
+      initialRouteName="nfts"
+    >
+      <Stack.Screen
+        name="nfts"
+        options={{
+          title: strings.title,
+          headerTitleAlign: 'center',
+          header: searchVisible
+            ? () => <SearchHeader placeholder={strings.search} onClose={handleSearchClose} />
+            : undefined,
+          headerLeft: () => <View style={styles.iconPlaceholder} />,
+          headerRight: () => (
+            <TouchableOpacity onPress={() => setSearchVisible(true)} style={styles.center}>
+              <Icon.Magnify size={26} />
+            </TouchableOpacity>
+          ),
+          headerLeftContainerStyle: {paddingLeft: 16},
+          headerRightContainerStyle: {paddingRight: 16},
+        }}
+        component={Nfts}
+      />
+    </Stack.Navigator>
   )
 }
 
