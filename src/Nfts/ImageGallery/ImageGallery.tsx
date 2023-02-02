@@ -75,7 +75,19 @@ const ModeratedImage = ({onPress, nft}: ModeratedImageProps) => {
   const showSkeleton = moderationStatusQuery.isLoading || isPendingAutomaticReview
 
   if (showSkeleton) {
-    return <SkeletonImagePlaceholder text={text} />
+    return (
+      <TouchableOpacity disabled={isImageBlocked} onPress={onPress} style={styles.imageContainer}>
+        <SkeletonImagePlaceholder text={text} />
+      </TouchableOpacity>
+    )
+  }
+
+  if (moderationStatusQuery.isError) {
+    return (
+      <TouchableOpacity disabled={isImageBlocked} onPress={onPress} style={styles.imageContainer}>
+        <BlockedNft text={text} />
+      </TouchableOpacity>
+    )
   }
 
   return (

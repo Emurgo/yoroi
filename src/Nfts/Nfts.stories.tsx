@@ -6,7 +6,7 @@ import {SelectedWalletProvider} from '../SelectedWallet'
 import {Nfts} from './Nfts'
 
 storiesOf('NFT/Gallery', module)
-  .add('Loading', () => {
+  .add('Loading metadata', () => {
     const loadingWallet = {...mocks.wallet, fetchNfts: mocks.fetchNfts.loading}
     return (
       <QueryProvider>
@@ -16,7 +16,7 @@ storiesOf('NFT/Gallery', module)
       </QueryProvider>
     )
   })
-  .add('Loaded & Empty', () => {
+  .add('Loaded metadata & Empty', () => {
     const loadedWallet = {
       ...mocks.wallet,
       fetchNfts: mocks.fetchNfts.success.empty,
@@ -31,7 +31,7 @@ storiesOf('NFT/Gallery', module)
       </QueryProvider>
     )
   })
-  .add('Loaded & Approved', () => {
+  .add('Loaded metadata & Approved', () => {
     const loadedWallet = {
       ...mocks.wallet,
       fetchNfts: mocks.fetchNfts.success.many,
@@ -46,7 +46,7 @@ storiesOf('NFT/Gallery', module)
       </QueryProvider>
     )
   })
-  .add('Loaded & Blurred image', () => {
+  .add('Loaded metadata & Blurred image', () => {
     const loadedWallet = {
       ...mocks.wallet,
       fetchNfts: mocks.fetchNfts.success.many,
@@ -61,7 +61,7 @@ storiesOf('NFT/Gallery', module)
       </QueryProvider>
     )
   })
-  .add('Loaded & Not approved', () => {
+  .add('Loaded metadata & Not approved', () => {
     const loadedWallet = {
       ...mocks.wallet,
       fetchNfts: mocks.fetchNfts.success.many,
@@ -76,7 +76,7 @@ storiesOf('NFT/Gallery', module)
       </QueryProvider>
     )
   })
-  .add('Loaded & Pending review', () => {
+  .add('Loaded metadata & Pending review', () => {
     const loadedWallet = {
       ...mocks.wallet,
       fetchNfts: mocks.fetchNfts.success.many,
@@ -91,7 +91,7 @@ storiesOf('NFT/Gallery', module)
       </QueryProvider>
     )
   })
-  .add('Loaded & Mixed moderation type', () => {
+  .add('Loaded metadata & Mixed moderation type', () => {
     const loadedWallet = {
       ...mocks.wallet,
       fetchNfts: mocks.fetchNfts.success.many,
@@ -106,7 +106,22 @@ storiesOf('NFT/Gallery', module)
       </QueryProvider>
     )
   })
-  .add('Error', () => {
+  .add('Loaded metadata & NFT Moderation status is loading', () => {
+    const loadedWallet = {
+      ...mocks.wallet,
+      fetchNfts: mocks.fetchNfts.success.many,
+      fetchNftModerationStatus: mocks.fetchNftModerationStatus.success.loading,
+    }
+
+    return (
+      <QueryProvider>
+        <SelectedWalletProvider wallet={loadedWallet}>
+          <Nfts />
+        </SelectedWalletProvider>
+      </QueryProvider>
+    )
+  })
+  .add('Error loading metadata', () => {
     const errorWallet = {
       ...mocks.wallet,
       fetchNfts: mocks.fetchNfts.error,

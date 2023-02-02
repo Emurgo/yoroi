@@ -339,6 +339,10 @@ const fetchNftModerationStatus = {
       action('fetchNftModerationStatus')(...args)
       return 'pending'
     },
+    loading: async (...args): Promise<YoroiNftModerationStatus> => {
+      action('fetchNftModerationStatus')(...args)
+      return new Promise(() => {}) as any
+    },
     random: async (...args): Promise<YoroiNftModerationStatus> => {
       action('fetchNftModerationStatus')(...args)
       const statuses = ['approved', 'consent', 'blocked', 'pending', 'manual_review'] as const
