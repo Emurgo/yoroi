@@ -6,13 +6,14 @@ import {ScrollView} from 'react-native-gesture-handler'
 
 import {CopyButton, FadeIn, Icon, Link, Spacer, Text} from '../components'
 import {Tab, TabPanel, TabPanels, Tabs} from '../components/Tabs'
-import {useNft} from '../hooks'
+import {useNft, useNftModerationStatus} from '../hooks'
 import {getAssetFingerprint} from '../legacy/format'
 import {NftRoutes} from '../navigation'
 import {useNavigateTo} from '../Nfts/navigation'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
 import {YoroiNft} from '../yoroi-wallets/types'
+import placeholder from './../assets/img/nft-placeholder.png'
 
 type ViewTabs = 'overview' | 'metadata'
 
@@ -23,7 +24,10 @@ export const NftDetails = () => {
 
   const [activeTab, setActiveTab] = useState<ViewTabs>('overview')
   const nft = useNft(wallet, {id})
+  const moderationStatus = useNftModerationStatus({wallet, fingerprint: nft.id})
   const navigateTo = useNavigateTo()
+
+  const canShowNft = moderationStatus.data === 'approved' || moderationStatus.data === 'consent'
 
   const stringifiedMetadata = JSON.stringify(nft, undefined, 2)
 
@@ -33,8 +37,8 @@ export const NftDetails = () => {
     <FadeIn style={styles.container}>
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <View style={styles.imageContainer}>
-          <TouchableOpacity onPress={navigateToImageZoom}>
-            <Image source={{uri: nft.image}} style={styles.image} />
+          <TouchableOpacity onPress={navigateToImageZoom} disabled={!canShowNft} style={styles.imageWrapper}>
+            <Image source={canShowNft ? {uri: nft.image} : placeholder} style={styles.image} resizeMode="contain" />
           </TouchableOpacity>
         </View>
 
@@ -170,6 +174,7 @@ const styles = StyleSheet.create({
   image: {
     flex: 1,
     height: 380,
+    flexGrow: 1,
   },
   contentContainer: {
     paddingHorizontal: 16,
@@ -187,11 +192,14 @@ const styles = StyleSheet.create({
     flexWrap: 'nowrap',
     justifyContent: 'space-between',
   },
-
   copyMetadata: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  imageWrapper: {
+    display: 'flex',
+    flexDirection: 'row',
   },
 })
 
