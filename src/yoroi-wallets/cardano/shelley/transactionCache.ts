@@ -9,13 +9,20 @@ import {ApiHistoryError} from '../../../legacy/errors'
 import {Logger} from '../../../legacy/logging'
 import {YoroiStorage} from '../../storage'
 import type {RemoteCertificateMeta, TxHistoryRequest} from '../../types'
-import {BackendConfig, CERTIFICATE_KIND, RawTransaction, Transaction, TRANSACTION_STATUS} from '../../types/other'
+import {
+  BackendConfig,
+  CERTIFICATE_KIND,
+  RawTransaction,
+  Transaction,
+  TRANSACTION_STATUS,
+  Transactions,
+} from '../../types/other'
 import {parseSafe} from '../../utils/parsing'
 import {Version, versionCompare} from '../../utils/versioning'
 import * as yoroiApi from '../api'
 
 export type TransactionCacheState = {
-  transactions: {[txid: string]: Transaction}
+  transactions: Transactions
   // @deprecated
   perAddressSyncMetadata: Record<string, SyncMetadata>
   // @deprecated

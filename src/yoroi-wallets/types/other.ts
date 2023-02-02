@@ -435,6 +435,7 @@ export const TRANSACTION_TYPE = {
 }
 export type TransactionType = typeof TRANSACTION_TYPE[keyof typeof TRANSACTION_TYPE]
 export type BaseAsset = RemoteAsset
+export type Transactions = {[txid: string]: Transaction}
 export type Transaction = {
   id: string
   type?: TransactionType

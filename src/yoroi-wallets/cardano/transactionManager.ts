@@ -1,5 +1,5 @@
 import {YoroiStorage} from '../storage'
-import {BackendConfig} from '../types'
+import {BackendConfig, Transactions} from '../types'
 import {TransactionCache} from './shelley'
 
 export const makeTransactionManager = async (storage: YoroiStorage, backendConfig: BackendConfig) => {
@@ -10,24 +10,27 @@ export const makeTransactionManager = async (storage: YoroiStorage, backendConfi
     // transactionCache api
     getTransactions() {
       const memos = memosManager.getMemos()
-      return Object.keys(transactionCache.transactions).reduce(
-        (result, current) => ({
+      return Object.entries(transactionCache.transactions).reduce(
+        (result, [txId, tx]) => ({
           ...result,
-          [current]: {
-            ...transactionCache.transactions[current],
-            memo: memos[current],
+          [txId]: {
+            ...tx,
+            memo: memos[txId] ?? null,
           },
         }),
-        {},
+        {} as Transactions,
       )
     },
     getPerRewardAddressCertificates() {
+      // to get the updates
       return transactionCache.perRewardAddressCertificates
     },
     getPerAddressTxs() {
+      // to get the updates
       return transactionCache.perAddressTxs
     },
     getConfirmationCounts() {
+      // to get the updates
       return transactionCache.confirmationCounts
     },
     clear: () => transactionCache.clear(),
@@ -37,30 +40,36 @@ export const makeTransactionManager = async (storage: YoroiStorage, backendConfi
       transactionCache.doSync(addressesByChunks, backendConfig),
 
     // memo api
-    saveMemo: (txId: string, memo: string): Promise<void> => memosManager.saveMemo(txId, memo),
-    clearMemos: (): Promise<void> => memosManager.clear(),
+    saveMemo: (txId: string, memo: string) => memosManager.saveMemo(txId, memo),
+    clearMemos: () => memosManager.clear(),
   } as const
 }
 
 export type TransactionManager = Awaited<ReturnType<typeof makeTransactionManager>>
 
+type Memos = {
+  [txId: number]: string
+}
+
 export const makeMemosManager = async (storage: YoroiStorage) => {
   const getMemos = () => storage.getAllKeys().then(storage.multiGet).then(Object.fromEntries) ?? {}
-  let memos = await getMemos()
+  let memos: Readonly<Memos> = await getMemos()
+
+  const updateMemos = (txId: string, memo: string) => (memos = {...memos, [txId]: memo})
 
   const saveMemo = async (txId: string, memo: string): Promise<void> => {
+    updateMemos(txId, memo)
     await storage.setItem(txId, memo)
-    memos = await getMemos()
   }
 
   const clear = async () => {
-    await storage.getAllKeys().then(storage.multiRemove)
     memos = {}
+    await storage.getAllKeys().then(storage.multiRemove)
   }
 
   return {
     getMemos() {
-      // to get the updated memos
+      // to get the updates
       return memos
     },
     saveMemo,
