@@ -50,7 +50,9 @@ export const LedgerTransportSwitchView = ({onSelectUSB, onSelectBLE}: Props) => 
         <View style={styles.heading}>
           <Text style={styles.title}>{strings.title}</Text>
         </View>
+
         <Text style={styles.paragraph}>{strings.usbExplanation}</Text>
+
         <Button
           block
           onPress={onSelectUSB}
@@ -59,7 +61,9 @@ export const LedgerTransportSwitchView = ({onSelectUSB, onSelectBLE}: Props) => 
           style={styles.button}
           testID="connectWithUSBButton"
         />
+
         <Text style={styles.paragraph}>{strings.bluetoothExplanation}</Text>
+
         <Button
           block
           onPress={() => request()}

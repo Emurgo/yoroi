@@ -19,7 +19,9 @@ export const BalanceAfterTransaction = ({yoroiUnsignedTx}: {yoroiUnsignedTx: Yor
     return (
       <Text style={styles.info} testID="balanceAfterTxText">
         {strings.balanceAfterLabel}
+
         {': '}
+
         {strings.balanceAfterNotAvailable}
       </Text>
     )
@@ -38,7 +40,9 @@ export const BalanceAfterTransaction = ({yoroiUnsignedTx}: {yoroiUnsignedTx: Yor
   return (
     <Text style={styles.info} testID="balanceAfterTxText">
       {strings.balanceAfterLabel}
+
       {': '}
+
       {formatTokenWithSymbol(new BigNumber(primaryAmountAfter.quantity), wallet.primaryToken)}
     </Text>
   )

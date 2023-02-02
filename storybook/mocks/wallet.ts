@@ -33,7 +33,6 @@ const walletMeta: WalletMeta = {
     ImagePart:
       'b04dc22991594170974bbbb5908cc50b48f236d680a9ebfe6c1d00f52f8f4813341943eb66dec48cfe7f3be5beec705b91300a07641e668ff19dfa2fbeccbfba',
   },
-  provider: '',
   walletImplementationId: 'haskell-shelley-24',
 }
 
@@ -53,7 +52,6 @@ const wallet: YoroiWallet = {
   isReadOnly: false,
   isEasyConfirmationEnabled: false,
   rewardAddressHex: 'reward-address-hex',
-  provider: null,
   publicKeyHex: 'publicKeyHex',
   utxos,
   getStakingInfo: async () => {
@@ -449,6 +447,7 @@ const fetchCurrentPrice = {
   },
   error: async (...args) => {
     action('fetchCurrentPrice')(...args)
+    await new Promise((resolve) => setTimeout(resolve, 3000))
     return Promise.reject(new Error('storybook error message'))
   },
   loading: async (...args) => {

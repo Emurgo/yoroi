@@ -64,13 +64,13 @@ export type TokenInfo = {
   id: string
   group: string // policyId
   decimals: number // default to 0
-  description: string
   fingerprint: string
 
-  name?: string // derived from token subject
-  ticker?: string
-  url?: string
-  logo?: string
+  name: string | undefined // derived from token subject
+  description: string | undefined
+  ticker: string | undefined
+  url: string | undefined
+  logo: string | undefined
 }
 
 export type LegacyToken = {

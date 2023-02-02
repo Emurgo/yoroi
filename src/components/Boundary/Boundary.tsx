@@ -205,6 +205,24 @@ export const InlineErrorFallback = ({error, resetErrorBoundary, reset, debug}: E
   )
 }
 
+export type ResetErrorRef = {
+  reset: () => void
+}
+
+type ResetErrorProps = {resetErrorBoundary: FallbackProps['resetErrorBoundary']; children: React.ReactNode}
+export const ResetError = React.forwardRef<ResetErrorRef, ResetErrorProps>(({resetErrorBoundary, children}, ref) => {
+  const {reset} = useQueryErrorResetBoundary()
+
+  React.useImperativeHandle(ref, () => ({
+    reset: () => {
+      reset()
+      resetErrorBoundary()
+    },
+  }))
+
+  return <>{children}</>
+})
+
 const styles = StyleSheet.create({
   stretch: {
     height: '100%',

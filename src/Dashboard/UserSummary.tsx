@@ -32,6 +32,7 @@ export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, onWithdr
 
             <View style={styles.amountBlock}>
               <Text style={styles.label}>{strings.availableFunds}:</Text>
+
               <Text bold style={styles.value} testID="userSummaryAvailableFundsText">
                 {totalAdaSum != null ? formatAdaWithText(totalAdaSum) : '-'}
               </Text>
@@ -45,6 +46,7 @@ export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, onWithdr
 
             <View style={styles.amountBlock}>
               <Text style={styles.label}>{strings.rewardsLabel}:</Text>
+
               <Text bold style={styles.value} testID="userSummaryRewardsText">
                 {totalRewards != null ? formatAdaWithText(totalRewards) : '-'}
               </Text>
@@ -70,6 +72,7 @@ export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, onWithdr
 
             <View style={styles.amountBlock}>
               <Text style={styles.label}>{strings.delegatedLabel}:</Text>
+
               <Text bold style={styles.value} testID="userSummaryDelegatedText">
                 {totalDelegated != null ? formatAdaWithText(totalDelegated) : '-'}
               </Text>

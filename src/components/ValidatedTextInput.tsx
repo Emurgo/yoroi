@@ -38,6 +38,7 @@ export const ValidatedTextInput = ({label, error, style, secureTextEntry, keyboa
             : 'default'
         }
       />
+
       {label != null && (
         <View style={styles.labelWrap}>
           <Text style={[styles.label, error != null && error !== false && styles.labelError]}>{label}</Text>

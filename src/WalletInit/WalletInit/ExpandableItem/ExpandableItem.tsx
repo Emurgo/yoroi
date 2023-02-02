@@ -28,6 +28,7 @@ export const ExpandableItem = ({label, content, disabled, style}: Props) => {
           <Text secondary style={[disabled === true && styles.disabled]}>
             {label}
           </Text>
+
           <Icon.Chevron size={23} direction={expanded ? 'up' : 'down'} color={COLORS.SECONDARY_TEXT} />
         </View>
 

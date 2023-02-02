@@ -112,6 +112,50 @@ describe('prefixed storage', () => {
     await storage.clear()
     expect(await storage.getAllKeys()).toEqual([])
   })
+
+  describe('stringify/parse', () => {
+    it('getItem, setItem', async () => {
+      const storage = yoroiStorage
+      const item = 'text'
+      const storedItem = 'item123'
+
+      await storage.setItem('item', item, (data) => {
+        expect(data).toBe(item)
+        return storedItem
+      }) // overrides JSON.stringify
+
+      const parsedResult = await storage.getItem('item', (data) => {
+        expect(data).toBe(storedItem)
+        return item
+      }) // overrides JSON.parse
+
+      expect(parsedResult).toBe(item)
+    })
+
+    it('multiGet, multiSet', async () => {
+      const storage = yoroiStorage
+      const item1 = 'item1'
+      const storedItem1 = `${item1}-modified`
+      const item2 = 'item2'
+      const storedItem2 = `${item2}-modified`
+      const tuples: [string, unknown][] = [
+        ['item1', item1],
+        ['item2', item2],
+      ]
+
+      await storage.multiSet(tuples, (data) => {
+        expect([item1, item2]).toContain(data)
+        return `${data}-modified`
+      }) // overrides JSON.stringify
+
+      const parsedResult = await storage.multiGet(['item1', 'item2'], (data) => {
+        expect([storedItem1, storedItem2]).toContain(data)
+        return data?.slice(0, 5)
+      }) // overrides JSON.parse
+
+      expect(parsedResult).toEqual(tuples)
+    })
+  })
 })
 
 const item1 = {a: 123, b: 234}

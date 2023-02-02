@@ -17,7 +17,7 @@ export const VerifyRestoredWalletScreen = () => {
   const strings = useStrings()
   const navigation = useNavigation<WalletInitRouteNavigation>()
   const route = useRoute<RouteProp<WalletInitRoutes, 'wallet-credentials'>>()
-  const {phrase, networkId, walletImplementationId, provider} = route.params
+  const {phrase, networkId, walletImplementationId} = route.params
   const [plate, addresses] = usePlateFromMnemonic({mnemonic: phrase, networkId, walletImplementationId})
 
   const navigateToWalletCredentials = () => {
@@ -25,7 +25,6 @@ export const VerifyRestoredWalletScreen = () => {
       phrase,
       networkId,
       walletImplementationId,
-      provider,
     })
   }
 
@@ -44,7 +43,9 @@ export const VerifyRestoredWalletScreen = () => {
           {plate ? (
             <>
               <Icon.WalletAccount iconSeed={plate.ImagePart} />
+
               <Spacer />
+
               <Text style={styles.checksum} testID="walletChecksum">
                 {plate.TextPart}
               </Text>
@@ -58,10 +59,15 @@ export const VerifyRestoredWalletScreen = () => {
 
         <Instructions>
           <Text style={styles.instructionsLabel}>{strings.instructionLabel}</Text>
+
           <BulletPointItem textRow={strings.instructions1} style={styles.bulletPoint} />
+
           <Spacer height={8} />
+
           <BulletPointItem textRow={strings.instructions2} style={styles.bulletPoint} />
+
           <Spacer height={8} />
+
           <BulletPointItem textRow={strings.instructions3} style={styles.bulletPoint} />
         </Instructions>
 
@@ -69,6 +75,7 @@ export const VerifyRestoredWalletScreen = () => {
 
         <Addresses>
           <Text style={styles.addressesLabel}>{strings.walletAddressLabel}</Text>
+
           {addresses ? (
             <WalletAddress addressHash={addresses[0]} networkId={networkId} />
           ) : (

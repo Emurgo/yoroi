@@ -40,16 +40,21 @@ export const PoolWarningModal = ({visible, onPress, onRequestClose, reputationIn
         <View style={styles.content}>
           <View style={styles.heading}>
             <Text style={styles.title}>{intl.formatMessage(messages.title)}</Text>
+
             <Image source={image} />
           </View>
+
           <Text style={styles.paragraph}>{intl.formatMessage(messages.header)}</Text>
+
           <View style={styles.reputationInfoView}>
             {issues.map((issue, i) => (
               <BulletPointItem key={i} textRow={issue} style={styles.text} />
             ))}
           </View>
+
           <Text style={styles.paragraph}>{intl.formatMessage(messages.suggested)}</Text>
         </View>
+
         <View style={styles.buttons}>
           <Button
             block
@@ -70,11 +75,8 @@ type BulletPointProps = {
 }
 
 const BulletPointItem = ({textRow, style}: BulletPointProps) => {
-  return (
-    <Text style={style}>
-      {'\u2022'} {textRow}
-    </Text>
-  )
+  const text = `${'\u2022'} ${textRow}`
+  return <Text style={style}>{text}</Text>
 }
 
 const styles = StyleSheet.create({

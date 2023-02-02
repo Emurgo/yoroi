@@ -11,7 +11,7 @@ import {CONFIG, isByron, isHaskellShelley} from '../../legacy/config'
 import {isJormungandr} from '../../legacy/networks'
 import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
 import {COLORS} from '../../theme'
-import {NetworkId, WalletImplementationId, YoroiProvider} from '../../yoroi-wallets'
+import {NetworkId, WalletImplementationId} from '../../yoroi-wallets'
 import {WalletDescription} from '../WalletDescription'
 import {ExpandableItem} from './ExpandableItem'
 
@@ -20,7 +20,7 @@ export const WalletInitScreen = () => {
   const route = useRoute<RouteProp<WalletInitRoutes, 'choose-create-restore'>>()
   const [modalState, setModalState] = React.useState<ModalState>(MODAL_STATES.CLOSED)
 
-  const {networkId, provider, walletImplementationId: implementationId} = route.params
+  const {networkId, walletImplementationId: implementationId} = route.params
   const navigateTo = useNavigateTo({networkId})
 
   return (
@@ -35,18 +35,19 @@ export const WalletInitScreen = () => {
 
           {!isByron(implementationId) && (
             <Button
-              onPress={() => navigateTo.createWallet(implementationId, provider)}
+              onPress={() => navigateTo.createWallet(implementationId)}
               title={strings.createWalletButton({networkId})}
               style={styles.createButton}
               testID="createWalletButton"
             />
           )}
+
           <Button
             outline
             onPress={() => {
               isHaskellShelley(implementationId)
                 ? setModalState(MODAL_STATES.CHOOSE_MNEMONICS_LEN)
-                : navigateTo.restoreWallet(implementationId, provider)
+                : navigateTo.restoreWallet(implementationId)
             }}
             title={strings.restoreWalletButton({networkId})}
             style={styles.createButton}
@@ -63,6 +64,7 @@ export const WalletInitScreen = () => {
                 style={styles.createButton}
                 testID="createLedgerWalletButton"
               />
+
               <LedgerTransportSwitchModal
                 visible={modalState === MODAL_STATES.LEDGER_TRANSPORT_SWITCH}
                 onRequestClose={() => setModalState(MODAL_STATES.CLOSED)}
@@ -80,7 +82,7 @@ export const WalletInitScreen = () => {
               showCloseIcon
             >
               <Button
-                onPress={() => navigateTo.restoreWallet(implementationId, provider)}
+                onPress={() => navigateTo.restoreWallet(implementationId)}
                 title={strings.restoreNormalWalletLabel}
                 style={styles.mnemonicDialogButton}
                 testID="restoreNormalWalletButton"
@@ -93,9 +95,7 @@ export const WalletInitScreen = () => {
 
               <Button
                 outlineOnLight
-                onPress={() =>
-                  navigateTo.restoreWallet(CONFIG.WALLETS.HASKELL_SHELLEY_24.WALLET_IMPLEMENTATION_ID, provider)
-                }
+                onPress={() => navigateTo.restoreWallet(CONFIG.WALLETS.HASKELL_SHELLEY_24.WALLET_IMPLEMENTATION_ID)}
                 title={strings.restore24WordWalletLabel}
                 style={styles.mnemonicDialogButton}
                 testID="restore24WordWalletButton"
@@ -199,18 +199,16 @@ const useNavigateTo = ({networkId}: {networkId: NetworkId}) => {
   const navigation = useNavigation<WalletInitRouteNavigation>()
 
   return {
-    restoreWallet: (walletImplementationId: WalletImplementationId, provider: YoroiProvider) =>
+    restoreWallet: (walletImplementationId: WalletImplementationId) =>
       navigation.navigate('restore-wallet-form', {
         networkId,
         walletImplementationId,
-        provider,
       }),
 
-    createWallet: (walletImplementationId: WalletImplementationId, provider: YoroiProvider) =>
+    createWallet: (walletImplementationId: WalletImplementationId) =>
       navigation.navigate('create-wallet-form', {
         networkId,
         walletImplementationId,
-        provider,
       }),
 
     checkNanoX: (walletImplementationId: WalletImplementationId, useUSB: boolean) =>

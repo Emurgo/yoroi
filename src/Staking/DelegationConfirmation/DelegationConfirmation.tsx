@@ -57,11 +57,13 @@ export const DelegationConfirmation = () => {
       <ScrollView style={styles.scrollView}>
         <View style={styles.itemBlock}>
           <Text style={styles.itemTitle}>{strings.stakePoolName}</Text>
+
           <StakePoolName stakePoolId={poolId} />
         </View>
 
         <View style={styles.itemBlock}>
           <Text style={styles.itemTitle}>{strings.stakePoolHash}</Text>
+
           <Text testID="stakePoolHashText">{poolId}</Text>
         </View>
 
@@ -74,6 +76,7 @@ export const DelegationConfirmation = () => {
           </Text>
 
           {/* requires a handler so we pass on a dummy function */}
+
           <ValidatedTextInput
             onChangeText={() => undefined}
             editable={false}
@@ -90,6 +93,7 @@ export const DelegationConfirmation = () => {
 
         <View style={styles.itemBlock}>
           <Text style={styles.itemTitle}>{strings.rewardsExplanation}</Text>
+
           <Text style={styles.rewards}>{formatTokenWithText(new BigNumber(reward), wallet.primaryToken)}</Text>
         </View>
 

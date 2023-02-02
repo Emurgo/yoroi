@@ -4,7 +4,7 @@ import {Platform} from 'react-native'
 
 import {HWDeviceInfo} from './legacy/ledgerUtils'
 import {COLORS} from './theme'
-import {NetworkId, WalletImplementationId, YoroiProvider} from './yoroi-wallets'
+import {NetworkId, WalletImplementationId} from './yoroi-wallets'
 import {YoroiUnsignedTx} from './yoroi-wallets/types'
 
 // prettier-ignore
@@ -81,18 +81,15 @@ export type WalletInitRoutes = {
   'choose-create-restore': {
     networkId: NetworkId
     walletImplementationId: WalletImplementationId
-    provider: YoroiProvider
   }
   'initial-choose-create-restore': undefined
   'create-wallet-form': {
     networkId: NetworkId
     walletImplementationId: WalletImplementationId
-    provider: YoroiProvider
   }
   'restore-wallet-form': {
     networkId: NetworkId
     walletImplementationId: WalletImplementationId
-    provider: YoroiProvider
   }
   'import-read-only': {
     networkId: NetworkId
@@ -122,7 +119,6 @@ export type WalletInitRoutes = {
   'mnemonic-show': {
     networkId: NetworkId
     walletImplementationId: WalletImplementationId
-    provider: YoroiProvider
     password: string
     name: string
     mnemonic: string
@@ -130,7 +126,6 @@ export type WalletInitRoutes = {
   'mnemonic-check': {
     networkId: NetworkId
     walletImplementationId: WalletImplementationId
-    provider: YoroiProvider
     password: string
     name: string
     mnemonic: string
@@ -138,13 +133,11 @@ export type WalletInitRoutes = {
   'wallet-account-checksum': {
     networkId: NetworkId
     walletImplementationId: WalletImplementationId
-    provider: YoroiProvider
     phrase: string
   }
   'wallet-credentials': {
     networkId: NetworkId
     walletImplementationId: WalletImplementationId
-    provider: YoroiProvider
     phrase: string
   }
 }

@@ -15,7 +15,7 @@ import {WalletForm} from '../WalletForm'
 export const WalletCredentialsScreen = () => {
   const {resetToWalletSelection} = useWalletNavigation()
   const route = useRoute<RouteProp<WalletInitRoutes, 'wallet-credentials'>>()
-  const {phrase, networkId, walletImplementationId, provider} = route.params
+  const {phrase, networkId, walletImplementationId} = route.params
 
   const intl = useIntl()
   const {createWallet, isLoading, isSuccess} = useCreateWallet({
@@ -36,9 +36,10 @@ export const WalletCredentialsScreen = () => {
           isLoading || isSuccess
             ? NOOP
             : ({name, password}) =>
-                createWallet({name, password, mnemonicPhrase: phrase, networkId, walletImplementationId, provider})
+                createWallet({name, password, mnemonicPhrase: phrase, networkId, walletImplementationId})
         }
       />
+
       {isLoading && <ActivityIndicator color="black" />}
     </SafeAreaView>
   )

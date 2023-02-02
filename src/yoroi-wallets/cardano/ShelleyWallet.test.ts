@@ -24,7 +24,6 @@ describe('migration', () => {
       implementationId: walletMeta.walletImplementationId,
       storage: storage.join(`${walletMeta.id}/`),
       password,
-      provider: undefined,
     })
 
     expect(wallet.id).toMatchInlineSnapshot(`"261c7e0f-dd72-490c-8ce9-6714b512b969"`)
@@ -32,7 +31,6 @@ describe('migration', () => {
     expect(wallet.isEasyConfirmationEnabled).toMatchInlineSnapshot(`false`)
     expect(wallet.isHW).toMatchInlineSnapshot(`false`)
     expect(wallet.hwDeviceInfo).toMatchInlineSnapshot(`null`)
-    expect(wallet.provider).toMatchInlineSnapshot(`undefined`)
     expect(wallet.checksum?.TextPart).toMatchInlineSnapshot(`"OSEC-2869"`)
     expect(wallet.checksum?.ImagePart).toMatchInlineSnapshot(
       `"4252069ffbf52c5bbae1dd6a8e1801dd27cc279a88602292287146b21c5668edc8393502b27b21ca9954062ecde30beea06caf775a3580dd23017cfe19a2c2db"`,
@@ -160,7 +158,6 @@ describe('migration', () => {
     expect(wallet.isEasyConfirmationEnabled).toMatchInlineSnapshot(`false`)
     expect(wallet.isHW).toMatchInlineSnapshot(`false`)
     expect(wallet.hwDeviceInfo).toMatchInlineSnapshot(`null`)
-    expect(wallet.provider).toMatchInlineSnapshot(`""`)
     expect(wallet.checksum?.TextPart).toMatchInlineSnapshot(`"OSEC-2869"`)
     expect(wallet.checksum?.ImagePart).toMatchInlineSnapshot(
       `"4252069ffbf52c5bbae1dd6a8e1801dd27cc279a88602292287146b21c5668edc8393502b27b21ca9954062ecde30beea06caf775a3580dd23017cfe19a2c2db"`,
@@ -309,7 +306,6 @@ describe('migration', () => {
             },
           }
         `)
-    expect(wallet.provider).toMatchInlineSnapshot(`undefined`)
     expect(wallet.checksum?.TextPart).toMatchInlineSnapshot(`"SHCZ-0679"`)
     expect(wallet.checksum?.ImagePart).toMatchInlineSnapshot(
       `"bc210d41df754ddf71057ea8186e7ec61f6effa28e5ea6a205684673da32eea2c3f4115ddd1fe9cbcbf7482cea56b16bd1244614d6e868ff433a92e01b92bcae"`,
@@ -411,7 +407,6 @@ const walletMeta: WalletMeta = {
     TextPart: 'OSEC-2869',
   },
   isEasyConfirmationEnabled: false,
-  provider: '',
 }
 
 const data: WalletJSON = {
@@ -549,7 +544,6 @@ const data: WalletJSON = {
   hwDeviceInfo: null,
   isReadOnly: false,
   isEasyConfirmationEnabled: false,
-  provider: '',
 }
 
 const getBech32InternalChain = (wallet: any) => wallet.internalChain?._addressGenerator._accountPubKeyPtr?.toBech32()

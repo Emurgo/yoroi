@@ -33,11 +33,17 @@ export const DisplayPin = ({pin, onNext}: Props) => {
 
         <Row style={{justifyContent: 'center'}}>
           <PinBox>{pin[0]}</PinBox>
+
           <Spacer width={10} />
+
           <PinBox>{pin[1]}</PinBox>
+
           <Spacer width={10} />
+
           <PinBox>{pin[2]}</PinBox>
+
           <Spacer width={10} />
+
           <PinBox>{pin[3]}</PinBox>
         </Row>
       </ScrollView>

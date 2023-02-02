@@ -82,9 +82,13 @@ export const WalletSelectionScreen = () => {
       />
 
       <SupportTicketLink />
+
       <ShelleyButton />
+
       <OnlyNightlyShelleyTestnetButton />
+
       <ByronButton />
+
       <OnlyDevButton />
 
       <PleaseWaitModal title={strings.loadingWallet} spinnerText={strings.pleaseWait} visible={isLoading} />
@@ -138,6 +142,7 @@ const SupportTicketLink = () => {
   return (
     <TouchableOpacity style={styles.link} onPress={() => onPress()}>
       <Icon.QuestionMark size={22} color="#fff" />
+
       <Text style={styles.linkText}>{strings.supportTicketLink.toLocaleUpperCase()}</Text>
     </TouchableOpacity>
   )
@@ -157,7 +162,6 @@ const ShelleyButton = () => {
           params: {
             networkId: CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
             walletImplementationId: CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
-            provider: '',
           },
         })
       }
@@ -183,7 +187,6 @@ const OnlyNightlyShelleyTestnetButton = () => {
           params: {
             networkId: CONFIG.NETWORKS.HASKELL_SHELLEY_TESTNET.NETWORK_ID,
             walletImplementationId: CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
-            provider: '',
           },
         })
       }
@@ -206,7 +209,6 @@ const ByronButton = () => {
           params: {
             networkId: CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
             walletImplementationId: CONFIG.WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID,
-            provider: '',
           },
         })
       }

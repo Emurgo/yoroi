@@ -57,7 +57,9 @@ export const QrCode = ({onNext, votingKeyEncrypted}: {onNext: () => void; voting
 
         <SecretCodeBox>
           <Text style={{flex: 1}}>{votingKeyEncrypted}</Text>
+
           <Spacer width={16} />
+
           <CopyButton value={votingKeyEncrypted} />
         </SecretCodeBox>
       </ScrollView>

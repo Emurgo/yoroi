@@ -80,9 +80,13 @@ export const WithdrawalTxForm = ({
       }}
     >
       <Markdown style={styles.paragraph}>{strings.explanation1}</Markdown>
+
       <Spacer height={8} />
+
       <Markdown style={styles.paragraph}>{strings.explanation2}</Markdown>
+
       <Spacer height={8} />
+
       <Markdown style={styles.paragraph}>{strings.explanation3}</Markdown>
     </DangerousAction>
   )

@@ -32,6 +32,7 @@ export const WalletFreshInitScreen = () => {
 
         <NightlyOnly>
           <Spacer height={16} />
+
           <ShelleyTestnetButton
             title={`${strings.addWalletButton} on TESTNET (Shelley-era)`}
             onPress={navigateTo.shelleyTestnet}
@@ -90,7 +91,6 @@ const useNavigateTo = () => {
     navigation.navigate('choose-create-restore', {
       networkId,
       walletImplementationId,
-      provider: '',
     })
 
   return {

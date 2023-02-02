@@ -1,20 +1,22 @@
 import BigNumber from 'bignumber.js'
 import React, {useState} from 'react'
+import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
-import {Boundary, Spacer} from '../components'
+import {Boundary, ResetError, ResetErrorRef, Spacer} from '../components'
 import {Icon} from '../components/Icon'
 import {useBalances, useExchangeRate} from '../hooks'
 import {formatTokenWithText, formatTokenWithTextWhenHidden} from '../legacy/format'
 import {useSelectedWallet} from '../SelectedWallet'
 import {useCurrencyContext} from '../Settings/Currency'
 import {COLORS} from '../theme'
+import {CurrencySymbol} from '../yoroi-wallets/types'
 import {Amounts, Quantities} from '../yoroi-wallets/utils'
 
-export const BalanceBanner = () => {
+export const BalanceBanner = React.forwardRef<ResetErrorRef>((_, ref) => {
   const wallet = useSelectedWallet()
-
   const [privacyMode, setPrivacyMode] = useState(false)
+  const {currency} = useCurrencyContext()
 
   return (
     <View style={styles.banner}>
@@ -27,19 +29,31 @@ export const BalanceBanner = () => {
       <Spacer height={10} />
 
       <TouchableOpacity onPress={() => setPrivacyMode(!privacyMode)} style={styles.button}>
-        <Boundary loading={{size: 'small'}} error={{size: 'inline'}}>
-          <Row>
+        <Row>
+          <Boundary loading={{size: 'small'}} error={{size: 'inline'}}>
             <Balance privacyMode={privacyMode} />
-          </Row>
+          </Boundary>
+        </Row>
 
-          <Row>
+        <Row>
+          <Boundary
+            key={currency}
+            loading={{size: 'small'}}
+            error={{
+              fallback: ({resetErrorBoundary}) => (
+                <ResetError resetErrorBoundary={resetErrorBoundary} ref={ref}>
+                  <BalanceError />
+                </ResetError>
+              ),
+            }}
+          >
             <PairedBalance privacyMode={privacyMode} />
-          </Row>
-        </Boundary>
+          </Boundary>
+        </Row>
       </TouchableOpacity>
     </View>
   )
-}
+})
 
 const hiddenBalance = '*.******'
 const Balance = ({privacyMode}: {privacyMode: boolean}) => {
@@ -76,7 +90,7 @@ const PairedBalance = ({privacyMode}: {privacyMode: boolean}) => {
 
   if (rate == null)
     return (
-      <Text style={styles.totalText} testID="pairedTotalText">
+      <Text style={styles.pairedBalanceText} testID="pairedTotalText">
         ... {currency}
       </Text>
     )
@@ -91,12 +105,38 @@ const PairedBalance = ({privacyMode}: {privacyMode: boolean}) => {
     config.decimals,
   )
   const pairedTotal = privacyMode ? hiddenPairedTotal : secondaryExchangeQuantity
-
+  const text = `${pairedTotal} ${currency}`
   return (
-    <Text style={styles.totalText} testID="pairedTotalText">
-      {pairedTotal} {currency}
+    <Text style={styles.pairedBalanceText} testID="pairedTotalText">
+      {text}
     </Text>
   )
+}
+
+const BalanceError = () => {
+  const strings = useStrings()
+  const {currency} = useCurrencyContext()
+
+  return (
+    <Text style={styles.pairedBalanceText} testID="pairedTotalText">
+      {strings.pairedBalanceError(currency)}
+    </Text>
+  )
+}
+
+const messages = defineMessages({
+  pairedBalanceError: {
+    id: 'components.txhistory.balancebanner.pairedbalance.error',
+    defaultMessage: '!!!Error obtaining {currency} pairing',
+  },
+})
+
+const useStrings = () => {
+  const intl = useIntl()
+
+  return {
+    pairedBalanceError: (currency: CurrencySymbol) => intl.formatMessage(messages.pairedBalanceError, {currency}),
+  }
 }
 
 const styles = StyleSheet.create({
@@ -119,7 +159,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Rubik-Medium',
     color: COLORS.ERROR_TEXT_COLOR_DARK,
   },
-  totalText: {
+  pairedBalanceText: {
     fontSize: 14,
     lineHeight: 24,
     fontFamily: 'Rubik-Regular',

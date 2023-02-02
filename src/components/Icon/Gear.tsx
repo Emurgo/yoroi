@@ -14,6 +14,7 @@ export const Gear = ({size = 36, color = 'black'}: Props) => (
       d="M14 10C14 12.206 12.206 14 10 14C7.794 14 6 12.206 6 10C6 7.794 7.794 6 10 6C12.206 6 14 7.794 14 10ZM12 10C12 8.916 11.084 8 10 8C8.916 8 8 8.916 8 10C8 11.084 8.916 12 10 12C11.084 12 12 11.084 12 10Z"
       fill={color}
     />
+
     <Path
       fillRule="evenodd"
       clipRule="evenodd"
