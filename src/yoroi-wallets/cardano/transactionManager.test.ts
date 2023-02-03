@@ -1,10 +1,8 @@
-import {fromPairs} from 'lodash'
 import DeviceInfo from 'react-native-device-info'
 
 import {storage as rootStorage, YoroiStorage} from '../storage'
 import {Transaction} from '../types'
-import {mockApi, mockedAddressesByChunks, mockedBackendConfig, mockedHistoryResponse, mockTx} from './mocks'
-import {perAddressTxsSelector, toCachedTx} from './shelley'
+import {mockApi, mockedAddressesByChunks, mockedBackendConfig, mockTx} from './mocks'
 import {makeMemosManager, makeTransactionManager} from './transactionManager'
 
 jest.mock('./api', () => mockApi)
@@ -12,14 +10,11 @@ jest.mock('./api', () => mockApi)
 describe('transaction manager', () => {
   DeviceInfo.getVersion = () => '9.9.9'
 
-  let txManager
-  beforeEach(async () => {
-    txManager = await makeTransactionManager(mockStorage, mockedBackendConfig)
-  })
-
   afterEach(rootStorage.clear)
 
   it('stores memos', async () => {
+    const txManager = await makeTransactionManager(mockStorage, mockedBackendConfig)
+
     expect(txManager.getTransactions()).toEqual({[mockTx.id]: mockTx})
 
     await txManager.saveMemo(mockTx.id, 'memo 1')
@@ -28,75 +23,18 @@ describe('transaction manager', () => {
   })
 
   it('gets updated tx cache values', async () => {
-    expect(txManager.getTransactions()).toEqual({[mockTx.id]: mockTx})
-    expect(txManager.getPerAddressTxs()).toEqual(
-      perAddressTxsSelector({
-        transactions: {[mockTx.id]: mockTx},
-        perAddressSyncMetadata: {},
-        bestBlockNum: null,
-      }),
-    )
-    expect(txManager.getPerRewardAddressCertificates()).toEqual({
-      e0acab7e493ece4c1e6ae627ef9f5f7c9b1063e599e4aa91f87f0d58ae: {
-        '0a8962dde362eef1f840defe6f916fdf9701ad53c7cb5dd4a74ab85df8e9bffc': {
-          submittedAt: '2021-09-13T18:42:10.000Z',
-          epoch: 156,
-          certificates: [
-            {
-              kind: 'StakeDeregistration',
-              rewardAddress: 'e0acab7e493ece4c1e6ae627ef9f5f7c9b1063e599e4aa91f87f0d58ae',
-            },
-          ],
-        },
-      },
-    })
+    const txManager = await makeTransactionManager(mockStorage, mockedBackendConfig)
+
+    expect(txManager.getTransactions()).toMatchSnapshot()
+    expect(txManager.getPerAddressTxs()).toMatchSnapshot()
+    expect(txManager.getPerRewardAddressCertificates()).toMatchSnapshot()
 
     // tx cache mutation
     await txManager.doSync(mockedAddressesByChunks)
 
-    expect(txManager.getTransactions()).toEqual({
-      [mockTx.id]: mockTx,
-      ...fromPairs(mockedHistoryResponse.transactions.map((t) => [t.hash, toCachedTx(t)])),
-    })
-    expect(txManager.getPerAddressTxs()).toEqual(
-      perAddressTxsSelector({
-        transactions: {
-          [mockTx.id]: mockTx,
-          ...fromPairs(mockedHistoryResponse.transactions.map((t) => [t.hash, toCachedTx(t)])),
-        },
-        perAddressSyncMetadata: {},
-        bestBlockNum: null,
-      }),
-    )
-    expect(txManager.getPerRewardAddressCertificates()).toEqual({
-      e0acab7e493ece4c1e6ae627ef9f5f7c9b1063e599e4aa91f87f0d58ae: {
-        '0a8962dde362eef1f840defe6f916fdf9701ad53c7cb5dd4a74ab85df8e9bffc': {
-          submittedAt: '2021-09-13T18:42:10.000Z',
-          epoch: 156,
-          certificates: [
-            {
-              kind: 'StakeDeregistration',
-              rewardAddress: 'e0acab7e493ece4c1e6ae627ef9f5f7c9b1063e599e4aa91f87f0d58ae',
-            },
-          ],
-        },
-        '54ab3dc8e717040b9b4c523d0756cfc59a30f107e053b4cd474e11e818be0ddg': {
-          submittedAt: '2022-06-12T23:46:47.000Z',
-          epoch: 210,
-          certificates: [
-            {
-              kind: 'StakeRegistration',
-              rewardAddress: 'e0acab7e493ece4c1e6ae627ef9f5f7c9b1063e599e4aa91f87f0d58ae',
-            },
-            {
-              kind: 'StakeDelegation',
-              poolKeyHash: '8a77ce4ffc0c690419675aa5396df9a38c9cd20e36483d2d2465ce86',
-              rewardAddress: 'e0acab7e493ece4c1e6ae627ef9f5f7c9b1063e599e4aa91f87f0d58ae',
-            },
-          ],
-        },
-      },
-    })
+    expect(txManager.getTransactions()).toMatchSnapshot()
+    expect(txManager.getPerAddressTxs()).toMatchSnapshot()
+    expect(txManager.getPerRewardAddressCertificates()).toMatchSnapshot()
   })
 })
 
