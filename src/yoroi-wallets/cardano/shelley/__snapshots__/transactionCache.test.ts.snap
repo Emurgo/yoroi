@@ -13,7 +13,12 @@ Object {
   "0a8962dde362eef1f840defe6f916fdf9701ad53c7cb5dd4a74ab85df8e9bffc": Object {
     "blockHash": "fb418acaa29c66e799a16b594f7beedfe2ef53413e9863b61a418f2df1ff1442",
     "blockNum": 2909238,
-    "certificates": Array [],
+    "certificates": Array [
+      Object {
+        "kind": "StakeDeregistration",
+        "rewardAddress": "e0acab7e493ece4c1e6ae627ef9f5f7c9b1063e599e4aa91f87f0d58ae",
+      },
+    ],
     "collateralInputs": Array [],
     "epoch": 156,
     "fee": "179537",
@@ -112,7 +117,22 @@ Object {
 }
 `;
 
-exports[`transactionCache create loads from storage 3`] = `Object {}`;
+exports[`transactionCache create loads from storage 3`] = `
+Object {
+  "e0acab7e493ece4c1e6ae627ef9f5f7c9b1063e599e4aa91f87f0d58ae": Object {
+    "0a8962dde362eef1f840defe6f916fdf9701ad53c7cb5dd4a74ab85df8e9bffc": Object {
+      "certificates": Array [
+        Object {
+          "kind": "StakeDeregistration",
+          "rewardAddress": "e0acab7e493ece4c1e6ae627ef9f5f7c9b1063e599e4aa91f87f0d58ae",
+        },
+      ],
+      "epoch": 156,
+      "submittedAt": "2021-09-13T18:42:10.000Z",
+    },
+  },
+}
+`;
 
 exports[`transactionCache create loads from storage 4`] = `
 Object {
