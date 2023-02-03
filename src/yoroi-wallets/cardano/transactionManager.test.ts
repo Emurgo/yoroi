@@ -1,47 +1,20 @@
-import {storage as rootStorage} from '../storage'
-import {BackendConfig, Transaction} from '../types'
+import {fromPairs} from 'lodash'
+import DeviceInfo from 'react-native-device-info'
+
+import {storage as rootStorage, YoroiStorage} from '../storage'
+import {Transaction} from '../types'
+import {mockApi, mockedAddressesByChunks, mockedBackendConfig, mockedHistoryResponse, mockTx} from './mocks'
+import {perAddressTxsSelector, toCachedTx} from './shelley'
 import {makeMemosManager, makeTransactionManager} from './transactionManager'
 
-jest.mock('./shelley', () => ({
-  __esModule: true,
-  TransactionCache: class {
-    static create() {
-      // this simulates that the variables evolve between calls
-      let perRewardAddressCertificatesCalls = 0
-      let perAddressTxsCalls = 0
-      let confirmationCountsCalls = 0
-
-      return {
-        get transactions() {
-          return {[mockTx.id]: mockTx}
-        },
-        get perRewardAddressCertificates() {
-          if (perRewardAddressCertificatesCalls++ === 0) {
-            return 'perRewardAddressCertificates test 1'
-          }
-          return 'perRewardAddressCertificates test 2'
-        },
-        get perAddressTxs() {
-          if (perAddressTxsCalls++ === 0) {
-            return 'perAddressTxs test 1'
-          }
-          return 'perAddressTxs test 2'
-        },
-        get confirmationCounts() {
-          if (confirmationCountsCalls++ === 0) {
-            return 'confirmationCounts test 1'
-          }
-          return 'confirmationCounts test 2'
-        },
-      }
-    }
-  },
-}))
+jest.mock('./api', () => mockApi)
 
 describe('transaction manager', () => {
+  DeviceInfo.getVersion = () => '9.9.9'
+
   let txManager
   beforeEach(async () => {
-    txManager = await makeTransactionManager(rootStorage, mockedBackendConfig)
+    txManager = await makeTransactionManager(mockStorage, mockedBackendConfig)
   })
 
   afterEach(rootStorage.clear)
@@ -54,13 +27,76 @@ describe('transaction manager', () => {
     expect(txManager.getTransactions()).toEqual({[mockTx.id]: {...mockTx, memo: 'memo 1'}})
   })
 
-  it.each([
-    ['getPerRewardAddressCertificates', 'perRewardAddressCertificates test 1', 'perRewardAddressCertificates test 2'],
-    ['getPerAddressTxs', 'perAddressTxs test 1', 'perAddressTxs test 2'],
-    ['getConfirmationCounts', 'confirmationCounts test 1', 'confirmationCounts test 2'],
-  ])('gets the updated values with %s', (method, expected1, expected2) => {
-    expect(txManager[method]()).toBe(expected1)
-    expect(txManager[method]()).toBe(expected2)
+  it('gets updated tx cache values', async () => {
+    expect(txManager.getTransactions()).toEqual({[mockTx.id]: mockTx})
+    expect(txManager.getPerAddressTxs()).toEqual(
+      perAddressTxsSelector({
+        transactions: {[mockTx.id]: mockTx},
+        perAddressSyncMetadata: {},
+        bestBlockNum: null,
+      }),
+    )
+    expect(txManager.getPerRewardAddressCertificates()).toEqual({
+      e0acab7e493ece4c1e6ae627ef9f5f7c9b1063e599e4aa91f87f0d58ae: {
+        '0a8962dde362eef1f840defe6f916fdf9701ad53c7cb5dd4a74ab85df8e9bffc': {
+          submittedAt: '2021-09-13T18:42:10.000Z',
+          epoch: 156,
+          certificates: [
+            {
+              kind: 'StakeDeregistration',
+              rewardAddress: 'e0acab7e493ece4c1e6ae627ef9f5f7c9b1063e599e4aa91f87f0d58ae',
+            },
+          ],
+        },
+      },
+    })
+
+    // tx cache mutation
+    await txManager.doSync(mockedAddressesByChunks)
+
+    expect(txManager.getTransactions()).toEqual({
+      [mockTx.id]: mockTx,
+      ...fromPairs(mockedHistoryResponse.transactions.map((t) => [t.hash, toCachedTx(t)])),
+    })
+    expect(txManager.getPerAddressTxs()).toEqual(
+      perAddressTxsSelector({
+        transactions: {
+          [mockTx.id]: mockTx,
+          ...fromPairs(mockedHistoryResponse.transactions.map((t) => [t.hash, toCachedTx(t)])),
+        },
+        perAddressSyncMetadata: {},
+        bestBlockNum: null,
+      }),
+    )
+    expect(txManager.getPerRewardAddressCertificates()).toEqual({
+      e0acab7e493ece4c1e6ae627ef9f5f7c9b1063e599e4aa91f87f0d58ae: {
+        '0a8962dde362eef1f840defe6f916fdf9701ad53c7cb5dd4a74ab85df8e9bffc': {
+          submittedAt: '2021-09-13T18:42:10.000Z',
+          epoch: 156,
+          certificates: [
+            {
+              kind: 'StakeDeregistration',
+              rewardAddress: 'e0acab7e493ece4c1e6ae627ef9f5f7c9b1063e599e4aa91f87f0d58ae',
+            },
+          ],
+        },
+        '54ab3dc8e717040b9b4c523d0756cfc59a30f107e053b4cd474e11e818be0ddg': {
+          submittedAt: '2022-06-12T23:46:47.000Z',
+          epoch: 210,
+          certificates: [
+            {
+              kind: 'StakeRegistration',
+              rewardAddress: 'e0acab7e493ece4c1e6ae627ef9f5f7c9b1063e599e4aa91f87f0d58ae',
+            },
+            {
+              kind: 'StakeDelegation',
+              poolKeyHash: '8a77ce4ffc0c690419675aa5396df9a38c9cd20e36483d2d2465ce86',
+              rewardAddress: 'e0acab7e493ece4c1e6ae627ef9f5f7c9b1063e599e4aa91f87f0d58ae',
+            },
+          ],
+        },
+      },
+    })
   })
 })
 
@@ -87,98 +123,26 @@ describe('memos manager', () => {
 
 // mocks
 
-const mockedBackendConfig: BackendConfig = {
-  API_ROOT: 'https://emurgo.node.api',
-  TOKEN_INFO_SERVICE: 'https://emurgo.token.api',
-  FETCH_UTXOS_MAX_ADDRESSES: 2,
-  TX_HISTORY_MAX_ADDRESSES: 2,
-  FILTER_USED_MAX_ADDRESSES: 2,
-  TX_HISTORY_RESPONSE_LIMIT: 2,
-}
+const mockStorage: YoroiStorage = {
+  join: (path) => {
+    if (path === 'txs/') {
+      return mockStorage
+    }
+    return rootStorage
+  },
+  multiGet: async (txids: Array<string>) => {
+    if (txids[0] !== mockTx.id) throw new Error('invalid path')
 
-const mockTx: Transaction = {
-  id: '0a8962dde362eef1f840defe6f916fdf9701ad53c7cb5dd4a74ab85df8e9bffc',
-  type: 'shelley',
-  fee: '179537',
-  status: 'Successful',
-  inputs: [
-    {
-      address:
-        'addr_test1qrrdv3uxj8shu27ea9djvnn3rl4w3lvh3cyck6yc36mvf6ctlqxj9g0azvpycncr9u600p6t556qhc3psk06uzzw6saq4kvdpq',
-      amount: '967141533',
-      assets: [
-        {
-          amount: '1',
-          assetId: '57e37bc9a9c0a099a6636c3deb93b82e7edec8a9a40883017bae2674.717171717171',
-          policyId: '57e37bc9a9c0a099a6636c3deb93b82e7edec8a9a40883017bae2674',
-          name: '717171717171',
-        },
-        {
-          amount: '1',
-          assetId: 'fc53320cfda5add9cde1e7094c73596eacc26dbe79834b67c14b5dad.656565656565',
-          policyId: 'fc53320cfda5add9cde1e7094c73596eacc26dbe79834b67c14b5dad',
-          name: '656565656565',
-        },
-      ],
-    },
-    {
-      address:
-        'addr_test1qqgxd3r59psq0dg33t7asmvjmtu55tvvcmeq5kmhj0tmqjctlqxj9g0azvpycncr9u600p6t556qhc3psk06uzzw6saqk4x7z6',
-      amount: '2000000',
-      assets: [
-        {
-          amount: '1',
-          assetId: '0b71c073fcf017eeff0664070c790a2bcc47077566904be471c46c13.727272727272',
-          policyId: '0b71c073fcf017eeff0664070c790a2bcc47077566904be471c46c13',
-          name: '727272727272',
-        },
-      ],
-    },
-  ],
-  outputs: [
-    {
-      address:
-        'addr_test1qrxlnftwl73taxvcapnhgctae895l582a6r7k7jjeuwvzp0rvvww4m29k4km54utxag3mlhdsr73m62rsae6ad3hj6kqcexkh8',
-      amount: '7305977',
-      assets: [],
-    },
-    {
-      address:
-        'addr_test1qrqzse20fh7mmt5k9xf4sug3a2lh5fa7x9nr98avp0ac78stlqxj9g0azvpycncr9u600p6t556qhc3psk06uzzw6saq6xr7ra',
-      amount: '961656019',
-      assets: [
-        {
-          amount: '1',
-          assetId: '0b71c073fcf017eeff0664070c790a2bcc47077566904be471c46c13.727272727272',
-          policyId: '0b71c073fcf017eeff0664070c790a2bcc47077566904be471c46c13',
-          name: '727272727272',
-        },
-        {
-          amount: '1',
-          assetId: '57e37bc9a9c0a099a6636c3deb93b82e7edec8a9a40883017bae2674.717171717171',
-          policyId: '57e37bc9a9c0a099a6636c3deb93b82e7edec8a9a40883017bae2674',
-          name: '717171717171',
-        },
-        {
-          amount: '1',
-          assetId: 'fc53320cfda5add9cde1e7094c73596eacc26dbe79834b67c14b5dad.656565656565',
-          policyId: 'fc53320cfda5add9cde1e7094c73596eacc26dbe79834b67c14b5dad',
-          name: '656565656565',
-        },
-      ],
-    },
-  ],
-  lastUpdatedAt: '2021-09-13T18:42:10.000Z',
-  submittedAt: '2021-09-13T18:42:10.000Z',
-  blockNum: 2909238,
-  blockHash: 'fb418acaa29c66e799a16b594f7beedfe2ef53413e9863b61a418f2df1ff1442',
-  txOrdinal: 0,
-  epoch: 156,
-  slot: 166914,
-  withdrawals: [],
-  certificates: [],
-  validContract: true,
-  scriptSize: 0,
-  collateralInputs: [],
-  memo: null,
+    return [[txids[0], mockTx] as [string, Transaction]]
+  },
+  getItem: async (path: string) => {
+    if (path === 'txids') return [mockTx.id]
+    throw new Error('invalid path')
+  },
+  setItem: jest.fn(),
+  multiSet: jest.fn(),
+  removeItem: jest.fn(),
+  multiRemove: jest.fn(),
+  getAllKeys: jest.fn(),
+  clear: jest.fn(),
 }

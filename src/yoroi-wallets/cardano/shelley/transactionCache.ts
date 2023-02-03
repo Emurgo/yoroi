@@ -383,7 +383,7 @@ type TimeForTx = {
   txOrdinal: number
 }
 
-const perAddressTxsSelector = (state: TransactionCacheState) => {
+export const perAddressTxsSelector = (state: TransactionCacheState) => {
   const transactions = state.transactions
   const addressToTxs: Record<string, Array<Transaction['id']>> = {}
 
