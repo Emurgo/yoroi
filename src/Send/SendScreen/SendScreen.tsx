@@ -22,6 +22,7 @@ import type {
 } from '../../yoroi-wallets/utils/validators'
 import {useSend} from '../Context/SendContext'
 import {AmountField} from './../AmountField'
+import {MemoField} from './../MemoField'
 import {AvailableAmountBanner} from './AvailableAmountBanner'
 import {BalanceAfterTransaction} from './BalanceAfterTransaction'
 import {ErrorBanners} from './ErrorBanners'
@@ -198,6 +199,8 @@ export const SendScreen = () => {
             autoComplete={false}
           />
         </TouchableOpacity>
+
+        <MemoField />
 
         <Checkbox
           checked={sendAll}
