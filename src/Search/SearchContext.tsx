@@ -1,12 +1,14 @@
 import React, {createContext, ReactNode, useContext, useReducer} from 'react'
 
-interface SearchContextApi {
+type SearchState = {
   search: string
-  setSearch: (search: string) => void
+}
+type SearchActions = {
+  searchChanged: (search: string) => void
   clearSearch: () => void
 }
 
-const SearchContext = createContext<SearchContextApi | null>(null)
+const SearchContext = createContext<undefined | (SearchState & SearchActions)>(undefined)
 
 export const useSearch = () => {
   const value = useContext(SearchContext)
@@ -16,34 +18,38 @@ export const useSearch = () => {
   return value
 }
 
-export const SearchProvider = ({children, value}: {children: ReactNode; value?: Partial<SearchContextApi>}) => {
-  const [search, dispatch] = useReducer(searchReducer, DEFAULT_SEARCH_VALUE)
-  const clearSearch = () => dispatch({type: 'CLEAR'})
-  const setSearch = (search: string) => dispatch({type: 'SET', payload: search})
-  const defaultValue = {search, setSearch, clearSearch}
-  return <SearchContext.Provider value={{...defaultValue, ...value}}>{children}</SearchContext.Provider>
+export const SearchProvider = ({
+  children,
+  initialState,
+}: {
+  children: ReactNode
+  initialState?: Partial<SearchState>
+}) => {
+  const [state, dispatch] = useReducer(searchReducer, {...defaultState, ...initialState})
+  const actions = React.useRef<SearchActions>({
+    clearSearch: () => dispatch({type: 'clear'}),
+    searchChanged: (search: string) => dispatch({type: 'searchChanged', search}),
+  }).current
+
+  const context = React.useMemo(() => ({...state, ...actions}), [state, actions])
+
+  return <SearchContext.Provider value={context}>{children}</SearchContext.Provider>
 }
 
-type ClearSearchAction = {
-  type: 'CLEAR'
-}
+type SearchAction = {type: 'clear'} | {type: 'searchChanged'; search: string}
 
-type SetSearchAction = {
-  type: 'SET'
-  payload: string
-}
-
-type SearchAction = ClearSearchAction | SetSearchAction
-
-function searchReducer(state: string, action: SearchAction) {
+function searchReducer(state: SearchState, action: SearchAction) {
   switch (action.type) {
-    case 'CLEAR':
-      return DEFAULT_SEARCH_VALUE
-    case 'SET':
-      return action.payload
-    default:
-      return state
+    case 'clear':
+      return {...state, search: ''}
+    case 'searchChanged':
+      return {
+        ...state,
+        search: action.search,
+      }
+
+      throw new Error(`searchReducer invalid action`)
   }
 }
 
-const DEFAULT_SEARCH_VALUE = ''
+const defaultState: SearchState = Object.freeze({search: ''})
