@@ -29,7 +29,6 @@ import {
   isHaskellShelleyNetwork,
   isJormungandr,
 } from '../../legacy/networks'
-import {processTxHistoryData} from '../../legacy/processTransactions'
 import {IsLockedError, nonblockingSynchronize, synchronize} from '../../legacy/promise'
 import type {WalletMeta} from '../../legacy/state'
 import {deriveRewardAddressHex} from '../../legacy/utils'
@@ -44,7 +43,6 @@ import type {
   RawUtxo,
   TipStatusResponse,
   TokenInfo,
-  TransactionInfo,
   TxStatusRequest,
   TxStatusResponse,
 } from '../types'
@@ -67,7 +65,6 @@ import {
 import * as api from './api'
 import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from './chain'
 import {filterAddressesByStakingKey, getDelegationStatus} from './shelley/delegationUtils'
-import {toCachedTx} from './shelley/transactionCache'
 import {yoroiSignedTx} from './signedTx'
 import {makeTransactionManager, TransactionManager} from './transactionManager'
 import {
@@ -926,23 +923,6 @@ export class ShelleyWallet implements WalletInterface {
     const response: any = await api.submitTransaction(signedTx, this.getBackendConfig())
     Logger.info(response)
     return response as any
-  }
-
-  async getTransactions(txids: Array<string>) {
-    const rawTxs = await api.getTransactions(txids, this.getBackendConfig())
-    const txs = Object.values(rawTxs).map((rawTx) => toCachedTx(rawTx))
-    const txInfos = txs.map((tx) => {
-      return processTxHistoryData(
-        tx,
-        this.rewardAddressHex != null
-          ? [...this.internalAddresses, ...this.externalAddresses, ...[this.rewardAddressHex]]
-          : [...this.internalAddresses, ...this.externalAddresses],
-        this.confirmationCounts[tx.id] || 0,
-        this.networkId,
-      )
-    })
-
-    return txInfos.reduce((result, txInfo) => ({...result, [txInfo.id]: txInfo}), {} as Record<string, TransactionInfo>)
   }
 
   private async syncUtxos() {
