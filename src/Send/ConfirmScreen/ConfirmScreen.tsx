@@ -26,7 +26,7 @@ export const ConfirmScreen = () => {
   const wallet = useSelectedWallet()
   const [password, setPassword] = React.useState('')
   const [useUSB, setUseUSB] = React.useState(false)
-  const {resetForm, receiver} = useSend()
+  const {memo, resetForm, receiver} = useSend()
 
   useEffect(() => {
     if (CONFIG.DEBUG.PREFILL_FORMS && __DEV__) {
@@ -34,8 +34,12 @@ export const ConfirmScreen = () => {
     }
   }, [])
 
-  const onSuccess = () => {
+  const onSuccess = async (signedTx) => {
     resetToTxHistory()
+
+    if (memo.length > 0) {
+      await wallet.saveMemo(signedTx.signedTx.id, memo)
+    }
     resetForm()
   }
 
