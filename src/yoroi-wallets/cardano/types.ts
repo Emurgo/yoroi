@@ -9,7 +9,6 @@ import {
   StakePoolInfosAndHistories,
   StakingInfo,
   StakingStatus,
-  TransactionInfo,
   YoroiSignedTx,
   YoroiUnsignedTx,
 } from '../types'
@@ -201,7 +200,6 @@ export type SignedTxLegacy = {
 
 export type YoroiWallet = Pick<WalletInterface, YoroiWalletKeys> & {
   id: string
-  getTransactions: (txids: Array<string>) => Promise<{[txid: string]: TransactionInfo}>
   changePassword: (password: string, newPassword: string) => Promise<void>
   encryptedStorage: WalletEncryptedStorage
   sync: () => Promise<void>

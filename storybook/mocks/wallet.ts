@@ -189,9 +189,6 @@ const wallet: YoroiWallet = {
   resync: async (...args) => {
     action('resync')(...args)
   },
-  getTransactions: () => {
-    throw new Error('not implemented')
-  },
   enableEasyConfirmation: async (rootKey: string) => {
     action('enableEasyConfirmation')(rootKey)
   },

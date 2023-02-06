@@ -259,6 +259,6 @@ export const processTxHistoryData = (
     assurance,
     tokens,
     blockNumber: tx.blockNum ?? 0,
-    memo: null,
+    memo: tx.memo,
   }
 }
