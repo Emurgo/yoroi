@@ -117,7 +117,6 @@ const sendReducer = (state: SendState, action: SendAction) => {
     case 'memoChanged':
       return {
         ...state,
-        sendAll: true,
         memo: action.memo,
       }
 
