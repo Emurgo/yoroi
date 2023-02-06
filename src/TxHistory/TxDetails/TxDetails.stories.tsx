@@ -5,46 +5,16 @@ import {mocks, QueryProvider, RouteProvider} from '../../../storybook'
 import {SelectedWalletProvider} from '../../SelectedWallet'
 import {TxDetails} from './TxDetails'
 
-storiesOf('TxDetails', module)
-  .add('loading', () => (
-    <QueryProvider>
-      <RouteProvider params={{id: mocks.txid}}>
-        <SelectedWalletProvider
-          wallet={{
-            ...mocks.wallet,
-            getTransactions: mocks.getTransactions.loading,
-          }}
-        >
-          <TxDetails />
-        </SelectedWalletProvider>
-      </RouteProvider>
-    </QueryProvider>
-  ))
-  .add('error', () => (
-    <QueryProvider>
-      <RouteProvider params={{id: mocks.txid}}>
-        <SelectedWalletProvider
-          wallet={{
-            ...mocks.wallet,
-            getTransactions: mocks.getTransactions.error,
-          }}
-        >
-          <TxDetails />
-        </SelectedWalletProvider>
-      </RouteProvider>
-    </QueryProvider>
-  ))
-  .add('success', () => (
-    <QueryProvider>
-      <RouteProvider params={{id: mocks.txid}}>
-        <SelectedWalletProvider
-          wallet={{
-            ...mocks.wallet,
-            getTransactions: mocks.getTransactions.success,
-          }}
-        >
-          <TxDetails />
-        </SelectedWalletProvider>
-      </RouteProvider>
-    </QueryProvider>
-  ))
+storiesOf('TxDetails', module).add('Default', () => (
+  <QueryProvider>
+    <RouteProvider params={{id: mocks.txid}}>
+      <SelectedWalletProvider
+        wallet={{
+          ...mocks.wallet,
+        }}
+      >
+        <TxDetails />
+      </SelectedWalletProvider>
+    </RouteProvider>
+  </QueryProvider>
+))
