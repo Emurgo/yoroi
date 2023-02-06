@@ -69,8 +69,6 @@ export const TxDetails = () => {
           </Boundary>
         </Banner>
 
-        <Text style={styles.assetsTitle}>{transaction.memo}</Text>
-
         <Label>{strings.fromAddresses}</Label>
 
         {fromFiltered.map((item) => (
