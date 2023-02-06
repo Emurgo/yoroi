@@ -650,6 +650,7 @@ export const mocks = {
   stakingInfo,
   poolInfoAndHistory,
   tokenEntries,
+  tokenInfos,
   yoroiUnsignedTx,
   yoroiSignedTx,
   utxos,
