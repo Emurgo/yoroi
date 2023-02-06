@@ -1,13 +1,12 @@
 import React from 'react'
 import type {MessageDescriptor} from 'react-intl'
 import {defineMessages, useIntl} from 'react-intl'
-import {InteractionManager, ScrollView, StyleSheet, Switch} from 'react-native'
-import {UseMutationOptions} from 'react-query'
+import {ScrollView, StyleSheet, Switch} from 'react-native'
 
 import {useAuthSetting, useEasyConfirmationEnabled} from '../../auth'
 import {useAuth} from '../../auth/AuthProvider'
 import {StatusBar} from '../../components'
-import {useCloseWallet, useResync, useWalletName} from '../../hooks'
+import {useResync, useWalletName} from '../../hooks'
 import {confirmationMessages} from '../../i18n/global-messages'
 import {DIALOG_BUTTONS, showConfirmationDialog} from '../../legacy/actions'
 import {isByron, isHaskellShelley} from '../../legacy/config'
@@ -124,9 +123,9 @@ const getWalletType = (implementationId: WalletImplementationId): MessageDescrip
 
 const LogoutButton = () => {
   const strings = useStrings()
-  const {logoutWithConfirmation, isLoading} = useLogout()
+  const {logoutWithConfirmation} = useLogout()
 
-  return <PressableSettingsItem label={strings.logout} onPress={logoutWithConfirmation} disabled={isLoading} />
+  return <PressableSettingsItem label={strings.logout} onPress={logoutWithConfirmation} />
 }
 
 const ResyncButton = () => {
@@ -148,36 +147,32 @@ const ResyncButton = () => {
   return <PressableSettingsItem label={strings.resync} onPress={onResync} disabled={isLoading} />
 }
 
-const useLogout = (options?: UseMutationOptions<void, Error>) => {
+const useLogout = () => {
   const {logout} = useAuth()
   const intl = useIntl()
   const setSelectedWallet = useSetSelectedWallet()
   const setSelectedWalletMeta = useSetSelectedWalletMeta()
-  const {closeWallet, ...mutation} = useCloseWallet({
-    onSuccess: () => {
-      setSelectedWallet(undefined)
-      setSelectedWalletMeta(undefined)
-    },
-    ...options,
-  })
+  const selectedWallet = useSelectedWallet()
 
   return {
     logout: () => {
       logout() // triggers navigation to login
-      InteractionManager.runAfterInteractions(() => {
-        closeWallet()
-      })
+      selectedWallet.stop()
+
+      setSelectedWallet(undefined)
+      setSelectedWalletMeta(undefined)
     },
+
     logoutWithConfirmation: async () => {
       const selection = await showConfirmationDialog(confirmationMessages.logout, intl)
       if (selection === DIALOG_BUTTONS.YES) {
         logout() // triggers navigation to login
-        InteractionManager.runAfterInteractions(() => {
-          closeWallet()
-        })
+        selectedWallet.stop()
+
+        setSelectedWallet(undefined)
+        setSelectedWalletMeta(undefined)
       }
     },
-    ...mutation,
   }
 }
 

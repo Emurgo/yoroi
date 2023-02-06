@@ -5,7 +5,7 @@ import {FlatList, InteractionManager, Linking, RefreshControl, StyleSheet, Text,
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Icon, PleaseWaitModal, StatusBar} from '../../components'
-import {useCloseWallet, useOpenWallet, useWalletMetas} from '../../hooks'
+import {useOpenWallet, useWalletMetas} from '../../hooks'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
 import {showErrorDialog} from '../../legacy/actions'
 import {CONFIG, isNightly} from '../../legacy/config'
@@ -29,8 +29,6 @@ export const WalletSelectionScreen = () => {
   const selectWallet = useSetSelectedWallet()
   const intl = useIntl()
 
-  const {closeWallet} = useCloseWallet()
-
   const {openWallet, isLoading} = useOpenWallet({
     onSuccess: ([wallet, walletMeta]) => {
       selectWalletMeta(walletMeta)
@@ -45,8 +43,6 @@ export const WalletSelectionScreen = () => {
       })
     },
     onError: (error) => {
-      closeWallet()
-
       InteractionManager.runAfterInteractions(() => {
         return error instanceof InvalidState
           ? showErrorDialog(errorMessages.walletStateInvalid, intl)

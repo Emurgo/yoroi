@@ -13,6 +13,7 @@ import assert from '../../legacy/assert'
 import {ADDRESS_TYPE_TO_CHANGE, generateWalletRootKey} from '../../legacy/commonUtils'
 import {
   CONFIG,
+  DISABLE_BACKGROUND_SYNC,
   getCardanoBaseConfig,
   getDefaultAssetByNetworkId,
   getWalletConfigById,
@@ -360,6 +361,30 @@ export class ShelleyWallet implements WalletInterface {
           CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
           CONFIG.NUMBERS.STAKING_KEY_INDEX,
         ]
+  }
+
+  timeout: NodeJS.Timeout | null = null
+
+  start() {
+    const backgroundSync = async () => {
+      try {
+        await this.tryDoFullSync()
+        await this.save()
+      } catch (error) {
+        Logger.error((error as Error)?.message)
+      } finally {
+        if (!DISABLE_BACKGROUND_SYNC && process.env.NODE_ENV !== 'test') {
+          this.timeout = setTimeout(() => backgroundSync(), CONFIG.HISTORY_REFRESH_TIME)
+        }
+      }
+    }
+
+    backgroundSync()
+  }
+
+  stop() {
+    if (!this.timeout) return
+    clearTimeout(this.timeout)
   }
 
   get utxos() {

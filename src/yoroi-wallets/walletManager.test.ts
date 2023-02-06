@@ -1,6 +1,8 @@
+/* eslint-disable no-unused-labels */
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import {isYoroiWallet} from './cardano'
+import {parseSafe} from './utils/parsing'
 import walletManager from './walletManager'
 
 describe('walletMananger', () => {
@@ -21,14 +23,46 @@ describe('walletMananger', () => {
     const wallet = await walletManager.createWallet(name, mnemonic, 'password', networkId, walletImplementationId)
     expect(isYoroiWallet(wallet)).toBe(true)
 
-    const walletMetas = await walletManager.listWallets()
-    expect(walletMetas).toHaveLength(1)
-    const [walletMeta] = walletMetas
-    expect(walletMeta.name).toEqual(name)
-    expect(walletMeta.isEasyConfirmationEnabled).toEqual(false)
-    expect(walletMeta.networkId).toEqual(networkId)
-    expect(walletMeta.walletImplementationId).toEqual(walletImplementationId)
-    expect(walletMeta.isHW).toEqual(false)
+    before: {
+      const shot = await snapshot()
+      const walletMeta = getWalletMeta(wallet.id, shot)
+      const walletJSON = getWalletJSON(wallet.id, shot)
+      const masterPassword = getMasterPassword(wallet.id, shot)
+
+      expect(walletMeta).toBeTruthy()
+      expect(walletJSON).toBeTruthy()
+      expect(masterPassword).toBeTruthy()
+
+      expect(await walletManager.listWallets()).toEqual([
+        {
+          checksum: {
+            ImagePart:
+              '33166efaf23401b284eadb3b7d353d6c0d666369e8424d88ec1d00c6188777412412232d9b5f64353c03eac83bec4be0dba9877bce27d7bd7e00788bbdc3e61f',
+            TextPart: 'NNPB-3784',
+          },
+          id: wallet.id,
+          isEasyConfirmationEnabled: false,
+          isHW: false,
+          name: 'name',
+          networkId: 300,
+          walletImplementationId: 'haskell-shelley',
+        },
+      ])
+    }
+
+    await walletManager.removeWallet(wallet.id)
+
+    after: {
+      const shot = await snapshot()
+      const walletMeta = getWalletMeta(wallet.id, shot)
+      const walletJSON = getWalletJSON(wallet.id, shot)
+      const masterPassword = getMasterPassword(wallet.id, shot)
+
+      expect(await walletManager.listWallets()).toEqual([])
+      expect(walletMeta).toBeFalsy()
+      expect(walletJSON).toBeFalsy()
+      expect(masterPassword).toBeFalsy()
+    }
   })
 
   it('creates a readonly wallet', async () => {
@@ -99,3 +133,16 @@ describe('walletMananger', () => {
     expect(walletMeta.isHW).toEqual(true)
   })
 })
+
+const snapshot = async () => {
+  const keys = await AsyncStorage.getAllKeys()
+  const entries = await AsyncStorage.multiGet(keys).then((entries) =>
+    entries.map(([key, value]) => [key, parseSafe(value)]),
+  )
+
+  return Object.fromEntries(entries)
+}
+
+const getWalletMeta = (id: string, snapshot: Record<string, unknown>) => snapshot[`/wallet/${id}`]
+const getWalletJSON = (id: string, snapshot: Record<string, unknown>) => snapshot[`/wallet/${id}/data`]
+const getMasterPassword = (id: string, snapshot: Record<string, unknown>) => snapshot[`/keystore/${id}-MASTER_PASSWORD`]

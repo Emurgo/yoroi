@@ -165,19 +165,6 @@ export const useSync = (wallet: YoroiWallet, options?: UseMutationOptions<void, 
   }
 }
 
-export const useCloseWallet = (options: UseMutationOptions<void, Error> = {}) => {
-  const walletManager = useWalletManager()
-  const mutation = useMutation({
-    mutationFn: () => walletManager.closeWallet(),
-    ...options,
-  })
-
-  return {
-    ...mutation,
-    closeWallet: mutation.mutate,
-  }
-}
-
 export const useWalletName = (wallet: YoroiWallet, options?: UseQueryOptions<string, Error>) => {
   const storage = useStorage()
   const query = useQuery({

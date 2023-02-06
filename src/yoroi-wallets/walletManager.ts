@@ -1,12 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import ExtendableError from 'es6-error'
-import _ from 'lodash'
 import uuid from 'uuid'
 
 import {EncryptedStorage, EncryptedStorageKeys} from '../auth'
 import {Keychain} from '../auth/Keychain'
-import assert from '../legacy/assert'
-import {CONFIG, DISABLE_BACKGROUND_SYNC} from '../legacy/config'
 import type {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {Logger} from '../legacy/logging'
 import type {WalletMeta} from '../legacy/state'
@@ -26,8 +23,6 @@ export type WalletManagerEvent =
 export type WalletManagerSubscription = (event: WalletManagerEvent) => void
 
 export class WalletManager {
-  _wallet: null | YoroiWallet = null
-  _id = ''
   private subscriptions: Array<WalletManagerSubscription> = []
   _onOpenSubscribers: Array<() => void> = []
   _onTxHistoryUpdateSubscribers: Array<() => void> = []
@@ -37,8 +32,6 @@ export class WalletManager {
   storage: YoroiStorage
 
   constructor() {
-    // do not await on purpose
-    this._backgroundSync()
     this.storage = storage.join('wallet/')
   }
 
@@ -61,24 +54,6 @@ export class WalletManager {
   async initialize() {
     const _storedWalletMetas = await this.listWallets()
     return migrateWalletMetas(_storedWalletMetas)
-  }
-
-  getWallet() {
-    if (!this._wallet) {
-      throw new WalletClosed()
-    }
-
-    if (!isYoroiWallet(this._wallet)) {
-      throw new Error('invalid wallet')
-    }
-
-    return this._wallet
-  }
-
-  abortWhenWalletCloses<T>(promise: Promise<T>): Promise<T> {
-    assert.assert(this._closePromise, 'should have closePromise')
-    /* :: if (!this._closePromise) throw 'assert' */
-    return Promise.race([this._closePromise, promise])
   }
 
   // Note(ppershing): needs 'this' to be bound
@@ -135,26 +110,6 @@ export class WalletManager {
     this._notify({type: 'easy-confirmation', enabled: true})
   }
 
-  // =================== synch =================== //
-
-  // Note(ppershing): no need to abortWhenWalletCloses here
-  // Note(v-almonacid): if sync fails because of a chain rollback, we just wait
-  // for the next sync round (tx cache should be wiped out in between)
-  async _backgroundSync() {
-    try {
-      if (this._wallet) {
-        await this._wallet.tryDoFullSync()
-        await this._wallet.save()
-      }
-    } catch (error) {
-      Logger.error((error as Error)?.message)
-    } finally {
-      if (!DISABLE_BACKGROUND_SYNC && process.env.NODE_ENV !== 'test') {
-        setTimeout(() => this._backgroundSync(), CONFIG.HISTORY_REFRESH_TIME)
-      }
-    }
-  }
-
   // =================== state & persistence =================== //
 
   async saveWallet(
@@ -164,8 +119,6 @@ export class WalletManager {
     networkId: NetworkId,
     walletImplementationId: WalletImplementationId,
   ) {
-    this._id = id
-
     await wallet.save()
     if (!wallet.checksum) throw new Error('invalid wallet')
     const walletMeta: WalletMeta = {
@@ -190,9 +143,6 @@ export class WalletManager {
   }
 
   async openWallet(walletMeta: WalletMeta): Promise<YoroiWallet> {
-    await this.closeWallet()
-    assert.preconditionCheck(!!walletMeta.id, 'openWallet:: !!id')
-
     const Wallet = this.getWalletImplementation(walletMeta.walletImplementationId)
 
     const wallet = await Wallet.restore({
@@ -200,68 +150,20 @@ export class WalletManager {
       walletMeta,
     })
 
-    if (!isYoroiWallet(wallet)) throw new Error('invalid wallet')
-
-    this._wallet = wallet
-    this._id = walletMeta.id
-
-    // wallet state might have changed after restore due to migrations, so we
-    // update the data in storage immediately
-    await wallet.save()
-
     wallet.subscribe((event) => this._notify(event as any))
     wallet.subscribeOnTxHistoryUpdate(this._notifyOnTxHistoryUpdate)
-    this._closePromise = new Promise((resolve, reject) => {
-      this._closeReject = reject
-    })
     this._notify({type: 'wallet-opened', wallet})
-
     this._notifyOnOpen()
 
     return wallet
   }
 
-  closeWallet(): Promise<void> {
-    if (!this._wallet) return Promise.resolve()
-
-    Logger.debug('closing wallet...')
-    assert.assert(this._closeReject, 'close: should have _closeReject')
-    /* :: if (!this._closeReject) throw 'assert' */
-    // Abort all async interactions with the wallet
-
-    const reject = this._closeReject
-    this._closePromise = null
-    this._closeReject = null
-
-    this._notify({type: 'wallet-closed', id: this._id})
-
-    this._wallet = null
-    this._id = ''
-
-    // need to reject in next microtask otherwise
-    // closeWallet would throw if some rejection
-    // handler does not catch
-    return Promise.resolve().then(() => {
-      reject?.(new WalletClosed())
-    })
-  }
-
   // wallet pending promises can still write to the storage (requires a semaphore)
   async removeWallet(id: string) {
-    if (!this._wallet) throw new Error('invalid state')
-
-    // wallet.remove
-    await this._wallet.clear()
-
-    // legacy
-    await this.closeWallet()
-
-    // wallet.remove
-
-    await this.storage.removeItem(`${id}/data`) // remove wallet data
+    await this.storage.removeItem(id) // remove wallet meta
+    await this.storage.removeFolder(`${id}/`) // remove wallet folder
     await EncryptedStorage.remove(EncryptedStorageKeys.rootKey(id)) // remove auth with password
     await Keychain.removeWalletKey(id) // remove auth with os
-    await this.storage.removeItem(id) // remove wallet meta
   }
 
   // TODO(ppershing): how should we deal with race conditions?
