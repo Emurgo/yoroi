@@ -1,16 +1,31 @@
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import DeviceInfo from 'react-native-device-info'
 
 import {storage as rootStorage, YoroiStorage} from '../storage'
 import {Transaction} from '../types'
-import {mockApi, mockedAddressesByChunks, mockedBackendConfig, mockTx} from './mocks'
+import {
+  mockedAddressesByChunks,
+  mockedBackendConfig,
+  mockedEmptyHistoryResponse,
+  mockedHistoryResponse,
+  mockedTipStatusResponse,
+  mockTx,
+} from './mocks'
 import {makeMemosManager, makeTransactionManager} from './transactionManager'
 
-jest.mock('./api', () => mockApi)
+jest.mock('./api', () => ({
+  getTipStatus: jest.fn().mockResolvedValue(mockedTipStatusResponse),
+  fetchNewTxHistory: jest
+    .fn()
+    .mockResolvedValueOnce(mockedHistoryResponse)
+    .mockResolvedValueOnce(mockedEmptyHistoryResponse)
+    .mockResolvedValueOnce(mockedEmptyHistoryResponse),
+}))
 
 describe('transaction manager', () => {
   DeviceInfo.getVersion = () => '9.9.9'
 
-  afterEach(rootStorage.clear)
+  beforeEach(() => AsyncStorage.clear())
 
   it('stores memos', async () => {
     const txManager = await makeTransactionManager(mockStorage, mockedBackendConfig)
@@ -39,6 +54,8 @@ describe('transaction manager', () => {
 })
 
 describe('memos manager', () => {
+  beforeEach(() => AsyncStorage.clear())
+
   it('works', async () => {
     const storage = rootStorage.join('memos/')
     const memosManager = await makeMemosManager(storage)
