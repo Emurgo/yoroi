@@ -2,7 +2,6 @@ import * as React from 'react'
 import {Image, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 
 import NoImage from '../../../assets/img/asset_no_image.png'
-import CardanoImage from '../../../assets/img/cardano-icon.png'
 import {Icon} from '../../../components'
 import {Text} from '../../../components/Text'
 import {useBalance} from '../../../hooks'
@@ -21,14 +20,13 @@ export const AssetItem = ({tokenInfo, onPress}: AssetItemProps) => {
   const balance = useBalance({wallet, tokenId: tokenInfo.id})
 
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
-  const icon = isPrimary ? CardanoImage : NoImage
   const name = tokenInfo.ticker ?? tokenInfo.name ?? '-'
   const detail = isPrimary ? tokenInfo.description : tokenInfo.fingerprint
   const quantity = Quantities.denominated(balance, tokenInfo.decimals)
 
   return (
     <TouchableOpacity onPress={onPress} style={styles.button} testID="assetItem">
-      <Left>{isPrimary ? <PrimaryTokenIcon /> : <TokenIcon source={icon} />}</Left>
+      <Left>{isPrimary ? <PrimaryTokenIcon /> : <TokenIcon source={NoImage} />}</Left>
 
       <Middle>
         <Text numberOfLines={1} ellipsizeMode="middle" style={styles.name} testID="tokenInfoText">
