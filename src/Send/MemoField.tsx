@@ -4,32 +4,32 @@ import {StyleSheet, Text, View} from 'react-native'
 
 import {TextInput} from '../components'
 import {COLORS} from '../theme'
+import {useSend} from './Context/SendContext'
 
 const maxMemoValue = 256
 
 export const MemoField = () => {
-  const [memo, setMemo] = React.useState('')
   const strings = useStrings()
+  const {memo, memoChanged} = useSend()
+
+  const showError = memo.length > maxMemoValue
 
   return (
     <View style={styles.container}>
       <TextInput
         value={memo}
-        onChangeText={setMemo}
+        onChangeText={(memo) => memoChanged(memo.trim())}
         label={strings.label}
         autoComplete={false}
         testID="memoFieldInput"
-        errorText="xckckck"
+        errorText={showError ? 'error' : undefined}
+        noErrors={true}
       />
 
       <View style={styles.helper}>
-        <Text style={[styles.warning, {color: memo.trim().length > 5 ? COLORS.ERROR_TEXT_COLOR : undefined}]}>
-          {strings.warning}
-        </Text>
+        <Text style={[styles.warning, showError && styles.error]}>{strings.warning}</Text>
 
-        <Text
-          style={[styles.counter, {color: memo.trim().length > 5 ? COLORS.ERROR_TEXT_COLOR : undefined}]}
-        >{`/${maxMemoValue}`}</Text>
+        <Text style={[styles.counter, showError && styles.error]}>{`${memo.length}/${maxMemoValue}`}</Text>
       </View>
     </View>
   )
@@ -70,5 +70,8 @@ const styles = StyleSheet.create({
   warning: {
     color: COLORS.TEXT_INPUT,
     fontSize: 12,
+  },
+  error: {
+    color: COLORS.ERROR_TEXT_COLOR,
   },
 })

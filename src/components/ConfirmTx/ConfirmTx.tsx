@@ -14,6 +14,7 @@ import {WrongPassword} from '../../legacy/errors'
 import {DeviceId, DeviceObj} from '../../legacy/ledgerUtils'
 import {isEmptyString} from '../../legacy/utils'
 import {useSelectedWallet} from '../../SelectedWallet'
+import {useSend} from '../../Send/Context/SendContext'
 import {COLORS} from '../../theme'
 import {CardanoTypes, walletManager, withBLE, withUSB} from '../../yoroi-wallets'
 import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
@@ -59,6 +60,7 @@ export const ConfirmTx = ({
   const wallet = useSelectedWallet()
 
   const {mutateAsync: submitTx} = useSubmitTx({wallet})
+  const {memo} = useSend()
 
   const [password, setPassword] = useState('')
   const [isProcessing, setIsProcessing] = useState(false)
@@ -158,6 +160,9 @@ export const ConfirmTx = ({
           await smoothModalNotification(submitTx(signedTx))
           setDialogStep(DialogStep.Closed)
           onSuccess(signedTx)
+          if (memo.length > 0) {
+            await wallet.saveMemo(signedTx.signedTx.id, memo)
+          }
         } catch (err) {
           if (err instanceof LocalizableError) {
             showError({
@@ -191,7 +196,7 @@ export const ConfirmTx = ({
         setIsProcessing(false)
       }
     },
-    [onError, onSuccess, password, strings, submitTx, useUSB, wallet, yoroiUnsignedTx],
+    [memo, onError, onSuccess, password, strings, submitTx, useUSB, wallet, yoroiUnsignedTx],
   )
 
   const {authWithOs} = useAuthOsWithEasyConfirmation({id: wallet.id}, {onSuccess: onConfirm})
