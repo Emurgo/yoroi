@@ -1,16 +1,15 @@
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {View} from 'react-native'
-import {QueryClient, QueryClientProvider} from 'react-query'
 
-import {mocks} from '../../storybook'
+import {mocks, QueryProvider} from '../../storybook'
 import {SelectedWalletProvider} from '../SelectedWallet'
 import {PairedBalance} from './PairedBalance'
 
 storiesOf('PairedBalance', module)
   .add('loading', () => {
     return (
-      <QueryClientProvider client={new QueryClient({defaultOptions: {queries: {retry: false}}})}>
+      <QueryProvider>
         <SelectedWalletProvider
           wallet={{
             ...mocks.wallet,
@@ -19,16 +18,16 @@ storiesOf('PairedBalance', module)
         >
           <View style={{flex: 1, justifyContent: 'center'}}>
             <View style={{borderWidth: 1}}>
-              <PairedBalance primaryAmount={{quantity: '2', tokenId: ''}} privacyMode={false} />
+              <PairedBalance primaryAmount={{quantity: '2', tokenId: mocks.wallet.primaryTokenInfo.id}} />
             </View>
           </View>
         </SelectedWalletProvider>
-      </QueryClientProvider>
+      </QueryProvider>
     )
   })
   .add('success', () => {
     return (
-      <QueryClientProvider client={new QueryClient({defaultOptions: {queries: {retry: false}}})}>
+      <QueryProvider>
         <SelectedWalletProvider
           wallet={{
             ...mocks.wallet,
@@ -37,16 +36,16 @@ storiesOf('PairedBalance', module)
         >
           <View style={{flex: 1, justifyContent: 'center'}}>
             <View style={{borderWidth: 1}}>
-              <PairedBalance primaryAmount={{quantity: '2', tokenId: ''}} privacyMode={false} />
+              <PairedBalance primaryAmount={{quantity: '2', tokenId: mocks.wallet.primaryTokenInfo.id}} />
             </View>
           </View>
         </SelectedWalletProvider>
-      </QueryClientProvider>
+      </QueryProvider>
     )
   })
   .add('success (privacy on)', () => {
     return (
-      <QueryClientProvider client={new QueryClient({defaultOptions: {queries: {retry: false}}})}>
+      <QueryProvider>
         <SelectedWalletProvider
           wallet={{
             ...mocks.wallet,
@@ -55,16 +54,16 @@ storiesOf('PairedBalance', module)
         >
           <View style={{flex: 1, justifyContent: 'center'}}>
             <View style={{borderWidth: 1}}>
-              <PairedBalance primaryAmount={{quantity: '2', tokenId: ''}} privacyMode />
+              <PairedBalance primaryAmount={{quantity: '2', tokenId: mocks.wallet.primaryTokenInfo.id}} privacy />
             </View>
           </View>
         </SelectedWalletProvider>
-      </QueryClientProvider>
+      </QueryProvider>
     )
   })
   .add('error', () => {
     return (
-      <QueryClientProvider client={new QueryClient({defaultOptions: {queries: {retry: false}}})}>
+      <QueryProvider>
         <SelectedWalletProvider
           wallet={{
             ...mocks.wallet,
@@ -73,10 +72,10 @@ storiesOf('PairedBalance', module)
         >
           <View style={{flex: 1, justifyContent: 'center'}}>
             <View style={{borderWidth: 1}}>
-              <PairedBalance primaryAmount={{quantity: '2', tokenId: ''}} privacyMode={false} />
+              <PairedBalance primaryAmount={{quantity: '2', tokenId: mocks.wallet.primaryTokenInfo.id}} />
             </View>
           </View>
         </SelectedWalletProvider>
-      </QueryClientProvider>
+      </QueryProvider>
     )
   })

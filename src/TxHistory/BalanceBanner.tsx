@@ -14,8 +14,8 @@ import {PairedBalance} from './PairedBalance'
 export const BalanceBanner = React.forwardRef<ResetErrorRef>((_, ref) => {
   const wallet = useSelectedWallet()
   const balances = useBalances(wallet)
-  const primaryAmount = Amounts.getAmount(balances, wallet.primaryToken.identifier)
-  const [privacyMode, setPrivacyMode] = useState(false)
+  const primaryAmount = Amounts.getAmount(balances, wallet.primaryTokenInfo.id)
+  const [privacy, setPrivacy] = useState(false)
 
   return (
     <View style={styles.banner}>
@@ -27,15 +27,15 @@ export const BalanceBanner = React.forwardRef<ResetErrorRef>((_, ref) => {
 
       <Spacer height={10} />
 
-      <TouchableOpacity onPress={() => setPrivacyMode(!privacyMode)} style={styles.button}>
+      <TouchableOpacity onPress={() => setPrivacy(!privacy)} style={styles.button}>
         <Row>
           <Boundary loading={{size: 'small'}} error={{size: 'inline'}}>
-            <Balance privacyMode={privacyMode} />
+            <Balance privacy={privacy} />
           </Boundary>
         </Row>
 
         <Row>
-          <PairedBalance privacyMode={privacyMode} primaryAmount={primaryAmount} ref={ref} />
+          <PairedBalance privacy={privacy} primaryAmount={primaryAmount} ref={ref} />
         </Row>
       </TouchableOpacity>
     </View>
@@ -43,11 +43,11 @@ export const BalanceBanner = React.forwardRef<ResetErrorRef>((_, ref) => {
 })
 
 const hiddenBalance = '*.******'
-const Balance = ({privacyMode}: {privacyMode: boolean}) => {
+const Balance = ({privacy}: {privacy: boolean}) => {
   const wallet = useSelectedWallet()
   const balances = useBalances(wallet)
 
-  const balance = privacyMode
+  const balance = privacy
     ? formatTokenWithTextWhenHidden(hiddenBalance, wallet.primaryToken)
     : formatTokenWithText(
         new BigNumber(Amounts.getAmount(balances, wallet.primaryToken.identifier).quantity),

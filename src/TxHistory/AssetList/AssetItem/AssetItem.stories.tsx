@@ -2,16 +2,15 @@ import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {Text, View} from 'react-native'
-import {QueryClient, QueryClientProvider} from 'react-query'
 
-import {mocks} from '../../../../storybook'
+import {mocks, QueryProvider} from '../../../../storybook'
 import {Spacer} from '../../../components'
 import {SelectedWalletProvider} from '../../../SelectedWallet'
 import {primaryTokenInfo} from '../../../yoroi-wallets'
 import {AssetItem} from './AssetItem'
 
 storiesOf('AssetItem', module).add('Gallery', () => (
-  <QueryClientProvider client={new QueryClient()}>
+  <QueryProvider>
     <SelectedWalletProvider wallet={mocks.wallet}>
       <View style={{flex: 1, justifyContent: 'center', padding: 16}}>
         <Text>Fungible primary token</Text>
@@ -28,5 +27,5 @@ storiesOf('AssetItem', module).add('Gallery', () => (
         />
       </View>
     </SelectedWalletProvider>
-  </QueryClientProvider>
+  </QueryProvider>
 ))

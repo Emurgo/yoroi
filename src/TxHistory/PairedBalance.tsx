@@ -11,10 +11,10 @@ import {CurrencySymbol, YoroiAmount} from '../yoroi-wallets/types'
 import {Quantities} from '../yoroi-wallets/utils'
 
 type Props = {
-  privacyMode: boolean
+  privacy?: boolean
   primaryAmount: YoroiAmount
 }
-export const PairedBalance = React.forwardRef<ResetErrorRef, Props>(({privacyMode, primaryAmount}, ref) => {
+export const PairedBalance = React.forwardRef<ResetErrorRef, Props>(({privacy, primaryAmount}, ref) => {
   const {currency} = useCurrencyContext()
 
   return (
@@ -29,13 +29,13 @@ export const PairedBalance = React.forwardRef<ResetErrorRef, Props>(({privacyMod
         ),
       }}
     >
-      <Balance privacyMode={privacyMode} primaryAmount={primaryAmount} />
+      <Balance privacy={privacy} primaryAmount={primaryAmount} />
     </Boundary>
   )
 })
 
 const hiddenPairedTotal = '*.**'
-const Balance = ({privacyMode, primaryAmount}: Props) => {
+const Balance = ({privacy, primaryAmount}: Props) => {
   const wallet = useSelectedWallet()
   const {currency, config} = useCurrencyContext()
   const rate = useExchangeRate({wallet, to: currency})
@@ -58,7 +58,7 @@ const Balance = ({privacyMode, primaryAmount}: Props) => {
     Quantities.product([primaryExchangeQuantity, `${rate}`]),
     config.decimals,
   )
-  const pairedTotal = privacyMode ? hiddenPairedTotal : secondaryExchangeQuantity
+  const pairedTotal = privacy ? hiddenPairedTotal : secondaryExchangeQuantity
   const text = `${pairedTotal} ${currency}`
   return (
     <Text style={styles.pairedBalanceText} testID="pairedTotalText">
