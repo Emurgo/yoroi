@@ -225,7 +225,7 @@
     "eslint-plugin-react-prefer-function-component": "^3.0.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "extract-react-intl-messages": "^0.14.0",
-    "husky": ">=6",
+    "husky": ">=8",
     "i18n-unused": "^0.8.0",
     "jest": "^27.5.1",
     "jest-circus": "^27.3.1",
