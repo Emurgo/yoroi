@@ -366,6 +366,8 @@ export class ShelleyWallet implements WalletInterface {
   timeout: NodeJS.Timeout | null = null
 
   start() {
+    Logger.info(`starting wallet: ${this.id}`)
+
     const backgroundSync = async () => {
       try {
         await this.tryDoFullSync()
@@ -384,6 +386,7 @@ export class ShelleyWallet implements WalletInterface {
 
   stop() {
     if (!this.timeout) return
+    Logger.info(`stopping wallet: ${this.id}`)
     clearTimeout(this.timeout)
   }
 

@@ -16,19 +16,12 @@ export class WalletClosed extends ExtendableError {}
 
 export type WalletManagerEvent =
   | {type: 'easy-confirmation'; enabled: boolean}
-  | {type: 'wallet-opened'; wallet: YoroiWallet}
-  | {type: 'wallet-closed'; id: string}
   | {type: 'hw-device-info'; hwDeviceInfo: HWDeviceInfo}
 
 export type WalletManagerSubscription = (event: WalletManagerEvent) => void
 
 export class WalletManager {
   private subscriptions: Array<WalletManagerSubscription> = []
-  _onOpenSubscribers: Array<() => void> = []
-  _onTxHistoryUpdateSubscribers: Array<() => void> = []
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  _closePromise: null | Promise<any> = null
-  _closeReject: null | ((error: Error) => void) = null
   storage: YoroiStorage
 
   constructor() {
@@ -62,28 +55,12 @@ export class WalletManager {
     this.subscriptions.forEach((handler) => handler(event))
   }
 
-  _notifyOnOpen = () => {
-    this._onOpenSubscribers.forEach((handler) => handler())
-  }
-
-  _notifyOnTxHistoryUpdate = () => {
-    this._onTxHistoryUpdateSubscribers.forEach((handler) => handler())
-  }
-
   subscribe(subscription: (event: WalletManagerEvent) => void) {
     this.subscriptions.push(subscription)
 
     return () => {
       this.subscriptions = this.subscriptions.filter((sub) => sub !== subscription)
     }
-  }
-
-  subscribeOnOpen(handler: () => void) {
-    this._onOpenSubscribers.push(handler)
-  }
-
-  subscribeOnTxHistoryUpdate(handler: () => void) {
-    this._onTxHistoryUpdateSubscribers.push(handler)
   }
 
   // ============ security & key management ============ //
@@ -151,9 +128,7 @@ export class WalletManager {
     })
 
     wallet.subscribe((event) => this._notify(event as any))
-    wallet.subscribeOnTxHistoryUpdate(this._notifyOnTxHistoryUpdate)
-    this._notify({type: 'wallet-opened', wallet})
-    this._notifyOnOpen()
+    wallet.start()
 
     return wallet
   }
