@@ -21,6 +21,7 @@ import type {
   BalanceValidationErrors,
 } from '../../yoroi-wallets/utils/validators'
 import {useSend} from '../Context/SendContext'
+import {ScannerButton} from '../ScannerButton'
 import {AmountField} from './../AmountField'
 import {AvailableAmountBanner} from './AvailableAmountBanner'
 import {BalanceAfterTransaction} from './BalanceAfterTransaction'
@@ -157,6 +158,7 @@ export const SendScreen = () => {
 
         <TextInput
           value={receiver}
+          right={<ScannerButton />}
           multiline
           errorOnMount
           onChangeText={receiverChanged}

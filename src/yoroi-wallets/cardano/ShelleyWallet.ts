@@ -1268,14 +1268,14 @@ export const primaryTokenInfo = {
     id: '',
     name: 'ADA',
     decimals: 6,
-    description: '',
+    description: 'Cardano',
     ticker: 'ADA',
   } as TokenInfo,
   testnet: {
     id: '',
     name: 'TADA',
     decimals: 6,
-    description: '',
+    description: 'Cardano',
     ticker: 'TADA',
   } as TokenInfo,
 }
