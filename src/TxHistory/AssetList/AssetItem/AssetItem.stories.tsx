@@ -6,7 +6,6 @@ import {Text, View} from 'react-native'
 import {mocks, QueryProvider} from '../../../../storybook'
 import {Spacer} from '../../../components'
 import {SelectedWalletProvider} from '../../../SelectedWallet'
-import {primaryTokenInfo} from '../../../yoroi-wallets'
 import {AssetItem} from './AssetItem'
 
 storiesOf('AssetItem', module).add('Gallery', () => (
@@ -15,7 +14,7 @@ storiesOf('AssetItem', module).add('Gallery', () => (
       <View style={{flex: 1, justifyContent: 'center', padding: 16}}>
         <Text>Fungible primary token</Text>
 
-        <AssetItem tokenInfo={primaryTokenInfo.mainnet} onPress={action('onPress')} />
+        <AssetItem tokenInfo={mocks.wallet.primaryTokenInfo} onPress={action('onPress')} />
 
         <Spacer height={40} />
 
