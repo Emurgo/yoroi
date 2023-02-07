@@ -538,28 +538,48 @@ export const useWalletNames = (
   walletManager: WalletManager,
   options?: UseQueryOptions<Array<WalletMeta>, Error, Array<string>>,
 ) => {
-  const query = useQuery({
+  const {refetch, ...query} = useQuery({
     queryKey: ['walletMetas'],
     queryFn: async () => walletManager.listWallets(),
     select: (walletMetas) => walletMetas.map((walletMeta) => walletMeta.name),
     ...options,
   })
 
+  React.useEffect(() => {
+    const sub = walletManager.subscribe((event) => {
+      if (event.type !== 'wallet-deleted') return
+      refetch()
+    })
+
+    return sub
+  }, [refetch, walletManager])
+
   return {
     ...query,
+    refetch,
     walletNames: query.data,
   }
 }
 
 export const useWalletMetas = (walletManager: WalletManager, options?: UseQueryOptions<Array<WalletMeta>, Error>) => {
-  const query = useQuery({
+  const {refetch, ...query} = useQuery({
     queryKey: ['walletMetas'],
     queryFn: async () => walletManager.listWallets(),
     ...options,
   })
 
+  React.useEffect(() => {
+    const sub = walletManager.subscribe((event) => {
+      if (event.type !== 'wallet-deleted') return
+      refetch()
+    })
+
+    return sub
+  }, [refetch, walletManager])
+
   return {
     ...query,
+    refetch,
     walletMetas: query.data,
   }
 }
@@ -568,13 +588,22 @@ export const useHasWallets = (
   walletManager: WalletManager,
   options?: UseQueryOptions<Array<WalletMeta>, Error, boolean>,
 ) => {
-  const query = useQuery({
+  const {refetch, ...query} = useQuery({
     queryKey: ['walletMetas'],
     queryFn: async () => walletManager.listWallets(),
     select: (walletMetas) => walletMetas.length > 0,
     suspense: true,
     ...options,
   })
+
+  React.useEffect(() => {
+    const sub = walletManager.subscribe((event) => {
+      if (event.type !== 'wallet-deleted') return
+      refetch()
+    })
+
+    return sub
+  }, [refetch, walletManager])
 
   if (query.data == null) throw new Error('invalid state')
 

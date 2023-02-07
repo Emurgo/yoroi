@@ -16,6 +16,7 @@ import {parseSafe} from './utils/parsing'
 export class WalletClosed extends ExtendableError {}
 
 export type WalletManagerEvent =
+  | {type: 'wallet-deleted'; id: string}
   | {type: 'easy-confirmation'; enabled: boolean}
   | {type: 'hw-device-info'; hwDeviceInfo: HWDeviceInfo}
 
@@ -30,7 +31,8 @@ export class WalletManager {
   }
 
   async listWallets() {
-    const walletIds = await this.storage.getAllKeys()
+    const deletedWalletIds = await this.deletedWalletIds()
+    const walletIds = await this.storage.getAllKeys().then((ids) => ids.filter((id) => !deletedWalletIds.includes(id)))
     const walletMetas = await this.storage
       .multiGet(walletIds, parseWalletMeta)
       .then((tuples) => tuples.map(([_, walletMeta]) => walletMeta))
@@ -159,7 +161,8 @@ export class WalletManager {
 
   async removeWallet(id: string) {
     const deletedWalletIds = await this.deletedWalletIds()
-    return this.storage.setItem('deletedWalletIds', [...deletedWalletIds, id])
+    await this.storage.setItem('deletedWalletIds', [...deletedWalletIds, id])
+    this._notify({type: 'wallet-deleted', id})
   }
 
   // TODO(ppershing): how should we deal with race conditions?

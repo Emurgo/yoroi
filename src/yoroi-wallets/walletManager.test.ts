@@ -52,10 +52,15 @@ describe('walletMananger', () => {
       ])
     }
 
+    const callback = jest.fn()
+    walletManager.subscribe(callback)
     await walletManager.removeWallet(wallet.id)
 
     after: {
       const walletManager = new WalletManager()
+      expect(callback).toHaveBeenCalled()
+      expect(await walletManager.listWallets()).toEqual([])
+
       await walletManager.initialize()
 
       const shot = await snapshot()
