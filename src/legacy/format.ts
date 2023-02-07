@@ -27,8 +27,8 @@ export const getTokenFingerprint = ({policyId, assetNameHex}) => {
   return assetFingerprint.fingerprint()
 }
 
-export const getAssetFingerprint = (policyId: string, assetName: string) => {
-  return getTokenFingerprint({policyId, assetNameHex: assetName})
+export const getAssetFingerprint = (policyId: string, assetNameHex: string) => {
+  return getTokenFingerprint({policyId, assetNameHex})
 }
 
 export const ASSET_DENOMINATION = {

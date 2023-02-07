@@ -4,7 +4,6 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
 import {Icon, Spacer, Text} from '../../components'
 import {useNftModerationStatus} from '../../hooks'
-import {getAssetFingerprint} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {YoroiNft} from '../../yoroi-wallets/types'
 import placeholderImage from './placeholder.png'
@@ -53,8 +52,7 @@ interface ModeratedImageProps {
 }
 
 const ModeratedImage = ({onPress, nft}: ModeratedImageProps) => {
-  const {image, name: text, metadata} = nft
-  const fingerprint = getAssetFingerprint(metadata.policyId, metadata.assetNameHex)
+  const {image, name: text, fingerprint} = nft
   const wallet = useSelectedWallet()
   const moderationStatusQuery = useNftModerationStatus({wallet, fingerprint})
 

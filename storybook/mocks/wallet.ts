@@ -20,10 +20,11 @@ import {
   YoroiSignedTx,
   YoroiUnsignedTx,
 } from '../../src/yoroi-wallets/types'
+import {asciiToHex} from '../../src/yoroi-wallets/utils/parsing'
 import {mockEncryptedStorage} from './storage'
 import {mockTransactionInfo, mockTransactions} from './transaction'
-import {asciiToHex} from '../../src/yoroi-wallets/utils/parsing'
 import {utxos} from './utxos'
+import {getAssetFingerprint, getTokenFingerprint} from '../../src/legacy/format'
 
 const walletMeta: WalletMeta = {
   id: 'wallet-id',
@@ -300,6 +301,7 @@ const fetchNfts = {
           ...nft,
           name: 'NFT ' + index,
           id: index + '',
+          fingerprint: getTokenFingerprint({policyId: nft.metadata.policyId, assetNameHex: asciiToHex('NFT ' + index)}),
           metadata: {...nft.metadata, policyId: nft.metadata.policyId, assetNameHex: asciiToHex('NFT ' + index)},
         }))
       return nfts
@@ -339,7 +341,7 @@ const fetchNftModerationStatus = {
     },
     loading: async (...args): Promise<YoroiNftModerationStatus> => {
       action('fetchNftModerationStatus')(...args)
-      return new Promise(() => {}) as any
+      return new Promise(() => void 0) as any
     },
     random: async (...args): Promise<YoroiNftModerationStatus> => {
       action('fetchNftModerationStatus')(...args)
@@ -717,6 +719,10 @@ const nft: YoroiNft = {
   description: 'NFT 1 description',
   image: 'https://fibo-validated-nft-images.s3.amazonaws.com/asset1a6765qk8cpk2wll3hevw6xy9xry893jrzl9ms3.jpeg',
   thumbnail: 'https://fibo-validated-nft-images.s3.amazonaws.com/p_asset1a6765qk8cpk2wll3hevw6xy9xry893jrzl9ms3.jpeg',
+  fingerprint: getTokenFingerprint({
+    policyId: '8e2c7604711faef7c84c91b286c7327d17df825b7f0c88ec0332c0b4',
+    assetNameHex: '496D6167652031',
+  }),
   metadata: {
     policyId: '8e2c7604711faef7c84c91b286c7327d17df825b7f0c88ec0332c0b4',
     assetNameHex: '496D6167652031',

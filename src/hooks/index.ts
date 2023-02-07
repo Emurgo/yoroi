@@ -17,7 +17,6 @@ import {
 
 import {isNightly} from '../legacy/config'
 import {ObjectValues} from '../legacy/flow'
-import {getAssetFingerprint} from '../legacy/format'
 import {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {processTxHistoryData} from '../legacy/processTransactions'
 import {WalletMeta} from '../legacy/state'
@@ -241,7 +240,7 @@ export const useTokenInfo = (
 
 export const useIsTokenKnownNft = ({wallet, fingerprint}: {wallet: YoroiWallet; fingerprint: string}) => {
   const {nfts} = useNfts(wallet)
-  return nfts.some((nft) => nft.id === fingerprint)
+  return nfts.some((nft) => nft.fingerprint === fingerprint)
 }
 
 export const useNftModerationStatus = ({wallet, fingerprint}: {wallet: YoroiWallet; fingerprint: string}) => {
@@ -259,7 +258,7 @@ export const useNftImageModerated = ({
   nftId: string
 }): {image: string; status: YoroiNftModerationStatus} | null => {
   const nft = useNft(wallet, {id: nftId})
-  const fingerprint = getAssetFingerprint(nft.metadata.policyId, nft.metadata.assetNameHex)
+  const fingerprint = nft.fingerprint
   const {data} = useNftModerationStatus({wallet, fingerprint})
   return useMemo(() => (data ? {image: nft.image, status: data} : null), [nft, data])
 }

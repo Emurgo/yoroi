@@ -65,6 +65,7 @@ export type YoroiNft = {
   description: string
   image: string
   thumbnail: string
+  fingerprint: string
   metadata: {
     policyId: string
     assetNameHex: string

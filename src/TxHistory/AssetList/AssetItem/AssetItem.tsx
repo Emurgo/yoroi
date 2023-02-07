@@ -33,7 +33,7 @@ export const AssetItem = ({tokenInfo, onPress}: AssetItemProps) => {
         {isPrimary ? (
           <PrimaryTokenIcon />
         ) : isTokenNft && SHOW_NFT_GALLERY ? (
-          <NftIcon fingerprint={tokenInfo.fingerprint} />
+          <NftIcon id={tokenInfo.id} />
         ) : (
           <TokenIcon source={NoImage} />
         )}
@@ -76,9 +76,9 @@ const PrimaryTokenIcon = () => (
   </View>
 )
 
-const NftIcon = ({fingerprint}: {fingerprint: string}) => {
+const NftIcon = ({id}: {id: string}) => {
   const wallet = useSelectedWallet()
-  const nftModeratedImage = useNftImageModerated({wallet, nftId: fingerprint})
+  const nftModeratedImage = useNftImageModerated({wallet, nftId: id})
 
   if (!nftModeratedImage) {
     return <ModeratedNftIcon status="pending" />

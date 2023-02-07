@@ -7,7 +7,6 @@ import {ScrollView} from 'react-native-gesture-handler'
 import {CopyButton, FadeIn, Icon, Link, Spacer, Text} from '../components'
 import {Tab, TabPanel, TabPanels, Tabs} from '../components/Tabs'
 import {useNft, useNftModerationStatus} from '../hooks'
-import {getAssetFingerprint} from '../legacy/format'
 import {NftRoutes} from '../navigation'
 import {useNavigateTo} from '../Nfts/navigation'
 import {useSelectedWallet} from '../SelectedWallet'
@@ -24,7 +23,7 @@ export const NftDetails = () => {
 
   const [activeTab, setActiveTab] = useState<ViewTabs>('overview')
   const nft = useNft(wallet, {id})
-  const moderationStatus = useNftModerationStatus({wallet, fingerprint: nft.id})
+  const moderationStatus = useNftModerationStatus({wallet, fingerprint: nft.fingerprint})
   const navigateTo = useNavigateTo()
 
   const canShowNft = moderationStatus.data === 'approved' || moderationStatus.data === 'consent'
@@ -100,7 +99,6 @@ const MetadataRow = ({title, copyText, children}: {title: string; children: Reac
 
 const NftMetadataPanel = ({nft}: {nft: YoroiNft}) => {
   const strings = useStrings()
-  const fingerprint = getAssetFingerprint(nft.metadata.policyId, nft.metadata.assetNameHex)
 
   return (
     <>
@@ -116,8 +114,8 @@ const NftMetadataPanel = ({nft}: {nft: YoroiNft}) => {
         <Text secondary>{nft.metadata.originalMetadata.author ?? '-'}</Text>
       </MetadataRow>
 
-      <MetadataRow title={strings.fingerprint} copyText={fingerprint}>
-        <Text secondary>{fingerprint}</Text>
+      <MetadataRow title={strings.fingerprint} copyText={nft.fingerprint}>
+        <Text secondary>{nft.fingerprint}</Text>
       </MetadataRow>
 
       <MetadataRow title={strings.policyId} copyText={nft.metadata.policyId}>
@@ -125,7 +123,7 @@ const NftMetadataPanel = ({nft}: {nft: YoroiNft}) => {
       </MetadataRow>
 
       <MetadataRow title={strings.detailsLinks}>
-        <Link url={`https://cardanoscan.io/token/${fingerprint}`}>
+        <Link url={`https://cardanoscan.io/token/${nft.fingerprint}`}>
           <View style={styles.linkContent}>
             <Icon.ExternalLink size={12} color={COLORS.SHELLEY_BLUE} />
 
@@ -135,7 +133,7 @@ const NftMetadataPanel = ({nft}: {nft: YoroiNft}) => {
           </View>
         </Link>
 
-        <Link url={`https://cexplorer.io/asset/${fingerprint}`}>
+        <Link url={`https://cexplorer.io/asset/${nft.fingerprint}`}>
           <View style={styles.linkContent}>
             <Icon.ExternalLink size={12} color={COLORS.SHELLEY_BLUE} />
 

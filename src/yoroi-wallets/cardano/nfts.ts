@@ -10,8 +10,10 @@ export const convertNft = (assetMetadata: AssetMetadata, storageUrl: string): Yo
   const fingerprint = getAssetFingerprint(policyId, assetNameHex)
   const description = Array.isArray(metadata.description) ? metadata.description.join(' ') : metadata.description
 
+  const id = `${policyId}.${assetNameHex}`
   return {
-    id: fingerprint,
+    id: id,
+    fingerprint,
     name: metadata.name,
     description: description ?? '',
     thumbnail: `${storageUrl}/p_${fingerprint}.jpeg`,
