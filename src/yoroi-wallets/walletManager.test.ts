@@ -3,12 +3,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import {isYoroiWallet} from './cardano'
 import {parseSafe} from './utils/parsing'
-import walletManager from './walletManager'
+import {WalletManager} from './walletManager'
 
 describe('walletMananger', () => {
   beforeEach(() => AsyncStorage.clear())
 
   it('creates a wallet', async () => {
+    const walletManager = new WalletManager()
+    await walletManager.initialize()
     await expect(walletManager.listWallets()).resolves.toEqual([])
 
     const name = 'name'
@@ -53,6 +55,9 @@ describe('walletMananger', () => {
     await walletManager.removeWallet(wallet.id)
 
     after: {
+      const walletManager = new WalletManager()
+      await walletManager.initialize()
+
       const shot = await snapshot()
       const walletMeta = getWalletMeta(wallet.id, shot)
       const walletJSON = getWalletJSON(wallet.id, shot)
@@ -66,6 +71,8 @@ describe('walletMananger', () => {
   })
 
   it('creates a readonly wallet', async () => {
+    const walletManager = new WalletManager()
+    await walletManager.initialize()
     await expect(walletManager.listWallets()).resolves.toEqual([])
 
     const name = 'name'
@@ -95,6 +102,8 @@ describe('walletMananger', () => {
   })
 
   it('creates a hw wallet', async () => {
+    const walletManager = new WalletManager()
+    await walletManager.initialize()
     await expect(walletManager.listWallets()).resolves.toEqual([])
 
     const name = 'name'

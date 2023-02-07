@@ -2,7 +2,7 @@
 import ExtendableError from 'es6-error'
 import uuid from 'uuid'
 
-import {EncryptedStorage, EncryptedStorageKeys} from '../auth'
+import {makeWalletEncryptedStorage} from '../auth'
 import {Keychain} from '../auth/Keychain'
 import type {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {Logger} from '../legacy/logging'
@@ -11,6 +11,7 @@ import {isWalletMeta, migrateWalletMetas, parseWalletMeta} from '../Storage/migr
 import {isYoroiWallet, NetworkId, ShelleyWallet, WalletImplementationId, YoroiWallet} from './cardano'
 import {storage, YoroiStorage} from './storage'
 import {WALLET_IMPLEMENTATION_REGISTRY} from './types/other'
+import {parseSafe} from './utils/parsing'
 
 export class WalletClosed extends ExtendableError {}
 
@@ -45,8 +46,31 @@ export class WalletManager {
   // The responsibility to check data consistency is left to the each wallet
   // implementation.
   async initialize() {
+    await this.removeDeletedWallets()
     const _storedWalletMetas = await this.listWallets()
     return migrateWalletMetas(_storedWalletMetas)
+  }
+
+  async deletedWalletIds() {
+    return (await this.storage.getItem('deletedWalletIds', parseDeletedWalletIds)) || []
+  }
+
+  private async removeDeletedWallets() {
+    const deletedWalletsIds = await this.deletedWalletIds()
+    if (!deletedWalletsIds) return
+
+    await Promise.all(
+      deletedWalletsIds.map(async (id) => {
+        const encryptedStorage = makeWalletEncryptedStorage(id)
+
+        await this.storage.removeItem(id) // remove wallet meta
+        await this.storage.removeFolder(`${id}/`) // remove wallet folder
+        await encryptedStorage.rootKey.remove() // remove auth with password
+        await Keychain.removeWalletKey(id) // remove auth with os
+      }),
+    )
+
+    await this.storage.setItem('deletedWalletIds', [])
   }
 
   // Note(ppershing): needs 'this' to be bound
@@ -133,12 +157,9 @@ export class WalletManager {
     return wallet
   }
 
-  // wallet pending promises can still write to the storage (requires a semaphore)
   async removeWallet(id: string) {
-    await this.storage.removeItem(id) // remove wallet meta
-    await this.storage.removeFolder(`${id}/`) // remove wallet folder
-    await EncryptedStorage.remove(EncryptedStorageKeys.rootKey(id)) // remove auth with password
-    await Keychain.removeWalletKey(id) // remove auth with os
+    const deletedWalletIds = await this.deletedWalletIds()
+    this.storage.setItem('deletedWalletIds', [...deletedWalletIds, id])
   }
 
   // TODO(ppershing): how should we deal with race conditions?
@@ -226,3 +247,12 @@ export const walletManager = new WalletManager()
 export default walletManager
 
 export const mockWalletManager = {} as WalletManager
+
+const parseDeletedWalletIds = (data: unknown) => {
+  const isWalletIds = (data: unknown): data is Array<string> => {
+    return !!data && Array.isArray(data) && data.every((item) => typeof item === 'string')
+  }
+  const parsed = parseSafe(data)
+
+  return isWalletIds(parsed) ? parsed : undefined
+}
