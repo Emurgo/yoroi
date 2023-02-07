@@ -3,7 +3,7 @@ import AsyncStorage, {AsyncStorageStatic} from '@react-native-async-storage/asyn
 import {delay} from 'bluebird'
 import {mapValues} from 'lodash'
 import * as React from 'react'
-import {useMemo} from 'react'
+import {useCallback, useMemo} from 'react'
 import {
   onlineManager,
   QueryKey,
@@ -96,7 +96,8 @@ export const useCrashReports = () => {
 // WALLET
 export const useWallet = (wallet: YoroiWallet, event: WalletEvent['type']) => {
   const [_, rerender] = React.useState({})
-  useWalletEvent(wallet, event, () => rerender(() => ({})))
+  const callback = useCallback(() => rerender({}), [])
+  useWalletEvent(wallet, event, callback)
 }
 
 export const useWalletEvent = (wallet: YoroiWallet, event: WalletEvent['type'], callback: () => void) => {
@@ -116,8 +117,7 @@ export const useWalletEvent = (wallet: YoroiWallet, event: WalletEvent['type'], 
       unsubWallet()
       unsubWalletManager()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [event, wallet, walletManager])
+  }, [event, wallet, walletManager, callback])
 }
 
 export const useReceiveAddresses = (wallet: YoroiWallet) => {
@@ -880,13 +880,19 @@ export const useResync = (wallet: YoroiWallet, options?: UseMutationOptions<void
 }
 
 export const useNfts = (wallet: YoroiWallet, options: UseQueryOptions<YoroiNft[], Error> = {}) => {
-  const {data, ...rest} = useQuery({
+  const {data, refetch, ...rest} = useQuery({
     queryKey: [wallet.id, 'nfts'],
     queryFn: () => wallet.fetchNfts(),
+    refetchOnMount: false,
+    refetchIntervalInBackground: false,
+    refetchInterval: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
     ...options,
   })
-  useWalletEvent(wallet, 'utxos', () => rest.refetch())
-  return {...rest, nfts: data ?? []}
+  const eventCallback = useCallback(() => refetch(), [refetch])
+  useWalletEvent(wallet, 'utxos', eventCallback)
+  return {...rest, refetch, nfts: data ?? []}
 }
 
 export const useNft = (wallet: YoroiWallet, {id}: {id: string}): YoroiNft => {
