@@ -2,19 +2,20 @@ import BigNumber from 'bignumber.js'
 import React, {useState} from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
-import {Boundary, Spacer} from '../components'
+import {Boundary, ResetErrorRef, Spacer} from '../components'
 import {Icon} from '../components/Icon'
-import {useBalances, useExchangeRate} from '../hooks'
+import {useBalances} from '../hooks'
 import {formatTokenWithText, formatTokenWithTextWhenHidden} from '../legacy/format'
 import {useSelectedWallet} from '../SelectedWallet'
-import {useCurrencyContext} from '../Settings/Currency'
 import {COLORS} from '../theme'
-import {Amounts, Quantities} from '../yoroi-wallets/utils'
+import {Amounts} from '../yoroi-wallets/utils'
+import {PairedBalance} from './PairedBalance'
 
-export const BalanceBanner = () => {
+export const BalanceBanner = React.forwardRef<ResetErrorRef>((_, ref) => {
   const wallet = useSelectedWallet()
-
-  const [privacyMode, setPrivacyMode] = useState(false)
+  const balances = useBalances(wallet)
+  const primaryAmount = Amounts.getAmount(balances, wallet.primaryTokenInfo.id)
+  const [privacy, setPrivacy] = useState(false)
 
   return (
     <View style={styles.banner}>
@@ -26,27 +27,27 @@ export const BalanceBanner = () => {
 
       <Spacer height={10} />
 
-      <TouchableOpacity onPress={() => setPrivacyMode(!privacyMode)} style={styles.button}>
-        <Boundary loading={{size: 'small'}} error={{size: 'inline'}}>
-          <Row>
-            <Balance privacyMode={privacyMode} />
-          </Row>
+      <TouchableOpacity onPress={() => setPrivacy(!privacy)} style={styles.button}>
+        <Row>
+          <Boundary loading={{size: 'small'}} error={{size: 'inline'}}>
+            <Balance privacy={privacy} />
+          </Boundary>
+        </Row>
 
-          <Row>
-            <PairedBalance privacyMode={privacyMode} />
-          </Row>
-        </Boundary>
+        <Row>
+          <PairedBalance privacy={privacy} primaryAmount={primaryAmount} ref={ref} />
+        </Row>
       </TouchableOpacity>
     </View>
   )
-}
+})
 
 const hiddenBalance = '*.******'
-const Balance = ({privacyMode}: {privacyMode: boolean}) => {
+const Balance = ({privacy}: {privacy: boolean}) => {
   const wallet = useSelectedWallet()
   const balances = useBalances(wallet)
 
-  const balance = privacyMode
+  const balance = privacy
     ? formatTokenWithTextWhenHidden(hiddenBalance, wallet.primaryToken)
     : formatTokenWithText(
         new BigNumber(Amounts.getAmount(balances, wallet.primaryToken.identifier).quantity),
@@ -63,41 +64,6 @@ const Balance = ({privacyMode}: {privacyMode: boolean}) => {
 }
 
 const Row = ({children}: {children: React.ReactNode}) => <View style={styles.centered}>{children}</View>
-
-const hiddenPairedTotal = '*.**'
-const PairedBalance = ({privacyMode}: {privacyMode: boolean}) => {
-  const wallet = useSelectedWallet()
-  const balances = useBalances(wallet)
-  const {currency, config} = useCurrencyContext()
-  const rate = useExchangeRate({wallet, to: currency})
-
-  // hide pairing when set to the default asset ticker
-  if (currency === 'ADA') return null
-
-  if (rate == null)
-    return (
-      <Text style={styles.totalText} testID="pairedTotalText">
-        ... {currency}
-      </Text>
-    )
-
-  const primaryAmount = Amounts.getAmount(balances, '')
-  const primaryExchangeQuantity = Quantities.quotient(
-    primaryAmount.quantity,
-    `${10 ** wallet.primaryToken.metadata.numberOfDecimals}`,
-  )
-  const secondaryExchangeQuantity = Quantities.decimalPlaces(
-    Quantities.product([primaryExchangeQuantity, `${rate}`]),
-    config.decimals,
-  )
-  const pairedTotal = privacyMode ? hiddenPairedTotal : secondaryExchangeQuantity
-
-  return (
-    <Text style={styles.totalText} testID="pairedTotalText">
-      {pairedTotal} {currency}
-    </Text>
-  )
-}
 
 const styles = StyleSheet.create({
   banner: {
@@ -118,12 +84,6 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     fontFamily: 'Rubik-Medium',
     color: COLORS.ERROR_TEXT_COLOR_DARK,
-  },
-  totalText: {
-    fontSize: 14,
-    lineHeight: 24,
-    fontFamily: 'Rubik-Regular',
-    color: COLORS.TEXT_INPUT,
   },
   centered: {
     justifyContent: 'center',

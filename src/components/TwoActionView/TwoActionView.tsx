@@ -33,8 +33,10 @@ export const TwoActionView = ({title, children, primaryButton, secondaryButton}:
         <View style={styles.heading}>
           <Text style={styles.titleText}>{title}</Text>
         </View>
+
         {children}
       </View>
+
       <View style={styles.buttons}>
         {secondaryButton != null && (
           <Button
@@ -47,6 +49,7 @@ export const TwoActionView = ({title, children, primaryButton, secondaryButton}:
             testID={secondaryButton.testID}
           />
         )}
+
         <Button
           block
           onPress={primaryButton.onPress}

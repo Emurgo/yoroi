@@ -17,7 +17,7 @@ import BigNumber from 'bignumber.js'
 import moment from 'moment'
 
 import assert from '../legacy/assert'
-import {LANGUAGES} from './languages'
+import {LanguageCode, LANGUAGES} from './languages'
 
 // note(v-almonacid): there is no distinction between trad vs simplified
 // chinese locales in momentjs
@@ -110,7 +110,7 @@ const numberLocales = {
   [LANGUAGES.SLOVAK]: defaultCommaDecimalSeparatorFmt,
 }
 
-export const updateLanguageSettings = (code: string) => {
+export const updateLanguageSettings = (code: LanguageCode) => {
   assert.assert(Object.values(LANGUAGES).includes(code), 'Unknown language', code)
   moment.locale(momentLocales[code])
 

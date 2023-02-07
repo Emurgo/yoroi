@@ -14,6 +14,7 @@ export const EnableLoginWithPin = ({onDone}: {onDone: () => void}) => {
   return (
     <>
       <CreatePinScreen onDone={disableAllEasyConfirmation} />
+
       <LoadingOverlay loading={isLoading} />
     </>
   )

@@ -16,26 +16,31 @@ export const Emurgo = ({width, height, color = COLORS.BLACK}: Props) => (
               fill={color}
               id="path221"
             />
+
             <Path
               d="m 204.457,-23.145 -0.001,105.89 H 179.799 L 143.494,21.632 106.282,82.745 H 81.625 v -105.89 h 27.682 v 54.609 l 27.078,-44.17 h 13.311 l 27.229,45.683 v -56.122 z"
               fill={color}
               id="path223"
             />
+
             <Path
               d="m 283.554,-25.262 c 15.732,0 27.96,4.285 36.684,12.858 8.721,8.571 13.084,20.723 13.084,36.457 V 82.745 H 303.824 V 24.959 c 0,-16.941 -6.656,-25.413 -19.967,-25.413 -13.414,0 -20.119,8.472 -20.119,25.413 V 82.745 H 233.786 V 24.053 c 0,-15.734 4.361,-27.886 13.085,-36.457 8.722,-8.573 20.951,-12.858 36.683,-12.858"
               fill={color}
               id="path224"
             />
+
             <Path
               d="m 428.137,-23.145 h 32.071 l -22.843,33.281 c 6.656,3.226 11.773,7.688 15.354,13.387 3.579,5.696 5.37,12.377 5.37,20.042 0,7.966 -1.917,14.901 -5.749,20.801 -3.833,5.899 -9.279,10.437 -16.337,13.614 -7.059,3.176 -15.378,4.765 -24.96,4.765 h -48.406 v -105.89 h 29.952 V 4.992 h 16.337 z m -0.302,66.71 c 0,-4.941 -1.565,-8.75 -4.69,-11.419 -3.127,-2.673 -7.767,-4.009 -13.916,-4.009 h -16.64 v 31.009 h 16.64 c 6.149,0 10.789,-1.36 13.916,-4.084 3.125,-2.722 4.69,-6.556 4.69,-11.497"
               fill={color}
               id="path225"
             />
+
             <Path
               d="m 554.933,3.025 c -5.043,-2.32 -10.436,-3.479 -16.185,-3.479 -5.85,0 -11.043,1.287 -15.581,3.858 -4.539,2.572 -8.069,6.15 -10.589,10.74 -2.522,4.587 -3.782,9.807 -3.782,15.657 0,9.176 2.773,16.512 8.32,22.01 5.546,5.495 12.858,8.244 21.934,8.244 9.984,0 18.555,-3.934 25.717,-11.799 L 583.826,65.5 c -5.244,6.252 -11.799,11.043 -19.664,14.37 -7.867,3.329 -16.743,4.992 -26.624,4.992 -11.296,0 -21.431,-2.343 -30.406,-7.034 -8.976,-4.688 -15.984,-11.22 -21.026,-19.589 -5.044,-8.372 -7.564,-17.849 -7.564,-28.438 0,-10.589 2.52,-20.07 7.564,-28.439 5.042,-8.372 12,-14.9 20.875,-19.59 8.873,-4.689 18.857,-7.034 29.952,-7.034 7.865,0 15.732,1.16 23.598,3.48 7.866,2.318 14.825,5.646 20.876,9.983 V 32.07 h -26.474 z"
               fill={color}
               id="path226"
             />
+
             <Path
               d="m 662.351,-25.262 c 11.193,0 21.253,2.368 30.178,7.11 8.925,4.739 15.932,11.294 21.026,19.665 5.092,8.37 7.639,17.799 7.639,28.288 0,10.487 -2.547,19.915 -7.639,28.287 -5.094,8.369 -12.101,14.924 -21.026,19.665 -8.925,4.739 -18.985,7.109 -30.178,7.109 -11.195,0 -21.255,-2.37 -30.179,-7.109 -8.924,-4.741 -15.935,-11.296 -21.026,-19.665 -5.094,-8.372 -7.64,-17.8 -7.64,-28.287 0,-10.489 2.546,-19.918 7.64,-28.288 5.091,-8.371 12.102,-14.926 21.026,-19.665 8.924,-4.742 18.984,-7.11 30.179,-7.11 m 0,24.808 c -5.348,0 -10.187,1.261 -14.522,3.783 -4.338,2.519 -7.767,6.073 -10.287,10.664 -2.521,4.587 -3.782,9.857 -3.782,15.808 0,5.949 1.261,11.218 3.782,15.806 2.52,4.589 5.949,8.144 10.287,10.666 4.335,2.519 9.174,3.782 14.522,3.782 5.343,0 10.185,-1.263 14.522,-3.782 4.334,-2.522 7.764,-6.077 10.286,-10.666 2.519,-4.588 3.781,-9.857 3.781,-15.806 0,-5.951 -1.262,-11.221 -3.781,-15.808 -2.522,-4.591 -5.952,-8.145 -10.286,-10.664 -4.337,-2.522 -9.179,-3.783 -14.522,-3.783"
               fill={color}
@@ -44,6 +49,7 @@ export const Emurgo = ({width, height, color = COLORS.BLACK}: Props) => (
           </G>
         </G>
       </G>
+
       <G fill={color} id="g24">
         <G fill={color} id="g26">
           <G fill={color} id="g32">
@@ -57,6 +63,7 @@ export const Emurgo = ({width, height, color = COLORS.BLACK}: Props) => (
           </G>
         </G>
       </G>
+
       <G fill={color} id="g44">
         <G fill={color} id="g46">
           <G fill={color} id="g52">
@@ -70,6 +77,7 @@ export const Emurgo = ({width, height, color = COLORS.BLACK}: Props) => (
           </G>
         </G>
       </G>
+
       <G fill={color} id="g64">
         <G fill={color} id="g66">
           <G fill={color} id="g72">
@@ -83,6 +91,7 @@ export const Emurgo = ({width, height, color = COLORS.BLACK}: Props) => (
           </G>
         </G>
       </G>
+
       <G fill={color} id="g84">
         <G fill={color} id="g86">
           <G fill={color} id="g92">
@@ -96,6 +105,7 @@ export const Emurgo = ({width, height, color = COLORS.BLACK}: Props) => (
           </G>
         </G>
       </G>
+
       <G fill={color} id="g104">
         <G fill={color} id="g106">
           <G fill={color} id="g112">
@@ -109,6 +119,7 @@ export const Emurgo = ({width, height, color = COLORS.BLACK}: Props) => (
           </G>
         </G>
       </G>
+
       <G fill={color} id="g124">
         <G fill={color} id="g126">
           <G fill={color} id="g132">
@@ -122,6 +133,7 @@ export const Emurgo = ({width, height, color = COLORS.BLACK}: Props) => (
           </G>
         </G>
       </G>
+
       <G fill={color} id="g144">
         <G fill={color} id="g146">
           <G fill={color} id="g152">
@@ -135,6 +147,7 @@ export const Emurgo = ({width, height, color = COLORS.BLACK}: Props) => (
           </G>
         </G>
       </G>
+
       <G fill={color} id="g164">
         <G fill={color} id="g166">
           <G fill={color} id="g172">
@@ -148,6 +161,7 @@ export const Emurgo = ({width, height, color = COLORS.BLACK}: Props) => (
           </G>
         </G>
       </G>
+
       <G fill={color} id="g184">
         <G fill={color} id="g186">
           <G fill={color} id="g192">
@@ -161,6 +175,7 @@ export const Emurgo = ({width, height, color = COLORS.BLACK}: Props) => (
           </G>
         </G>
       </G>
+
       <G fill={color} id="g204">
         <G fill={color} id="g206">
           <G fill={color} id="g212">
@@ -174,6 +189,7 @@ export const Emurgo = ({width, height, color = COLORS.BLACK}: Props) => (
           </G>
         </G>
       </G>
+
       <G fill={color} id="g224">
         <G fill={color} id="g226">
           <G fill={color} id="g232">
@@ -187,6 +203,7 @@ export const Emurgo = ({width, height, color = COLORS.BLACK}: Props) => (
           </G>
         </G>
       </G>
+
       <G fill={color} id="g244">
         <G fill={color} id="g246">
           <G fill={color} id="g252">
@@ -200,6 +217,7 @@ export const Emurgo = ({width, height, color = COLORS.BLACK}: Props) => (
           </G>
         </G>
       </G>
+
       <G fill={color} id="g264">
         <G fill={color} id="g266">
           <G fill={color} id="g272">
@@ -213,6 +231,7 @@ export const Emurgo = ({width, height, color = COLORS.BLACK}: Props) => (
           </G>
         </G>
       </G>
+
       <G fill={color} id="g284">
         <G fill={color} id="g286">
           <G fill={color} id="g292">
@@ -226,6 +245,7 @@ export const Emurgo = ({width, height, color = COLORS.BLACK}: Props) => (
           </G>
         </G>
       </G>
+
       <G fill={color} id="g304">
         <G fill={color} id="g306">
           <G fill={color} id="g312">
@@ -239,6 +259,7 @@ export const Emurgo = ({width, height, color = COLORS.BLACK}: Props) => (
           </G>
         </G>
       </G>
+
       <G fill={color} id="g324">
         <G fill={color} id="g326">
           <G fill={color} id="g332">
@@ -252,6 +273,7 @@ export const Emurgo = ({width, height, color = COLORS.BLACK}: Props) => (
           </G>
         </G>
       </G>
+
       <G fill={color} id="g344">
         <G fill={color} id="g346">
           <G fill={color} id="g352">
@@ -265,6 +287,7 @@ export const Emurgo = ({width, height, color = COLORS.BLACK}: Props) => (
           </G>
         </G>
       </G>
+
       <G fill={color} id="g364">
         <G fill={color} id="g366">
           <G fill={color} id="g372">
@@ -278,6 +301,7 @@ export const Emurgo = ({width, height, color = COLORS.BLACK}: Props) => (
           </G>
         </G>
       </G>
+
       <G fill={color} id="g384">
         <G fill={color} id="g386">
           <G fill={color} id="g392">
@@ -291,6 +315,7 @@ export const Emurgo = ({width, height, color = COLORS.BLACK}: Props) => (
           </G>
         </G>
       </G>
+
       <G fill={color} id="g404">
         <G fill={color} id="g406">
           <G fill={color} id="g412">
@@ -304,6 +329,7 @@ export const Emurgo = ({width, height, color = COLORS.BLACK}: Props) => (
           </G>
         </G>
       </G>
+
       <G fill={color} id="g424">
         <G fill={color} id="g426">
           <G fill={color} id="g432">
@@ -317,6 +343,7 @@ export const Emurgo = ({width, height, color = COLORS.BLACK}: Props) => (
           </G>
         </G>
       </G>
+
       <G fill={color} id="g444">
         <G fill={color} id="g446">
           <G fill={color} id="g452">
@@ -330,6 +357,7 @@ export const Emurgo = ({width, height, color = COLORS.BLACK}: Props) => (
           </G>
         </G>
       </G>
+
       <G fill={color} id="g464">
         <G fill={color} id="g466">
           <G fill={color} id="g472">
@@ -343,6 +371,7 @@ export const Emurgo = ({width, height, color = COLORS.BLACK}: Props) => (
           </G>
         </G>
       </G>
+
       <G fill={color} id="g484">
         <G fill={color} id="g486">
           <G fill={color} id="g492">
@@ -356,6 +385,7 @@ export const Emurgo = ({width, height, color = COLORS.BLACK}: Props) => (
           </G>
         </G>
       </G>
+
       <G fill={color} id="g504">
         <G fill={color} id="g506">
           <G fill={color} id="g512">
@@ -369,6 +399,7 @@ export const Emurgo = ({width, height, color = COLORS.BLACK}: Props) => (
           </G>
         </G>
       </G>
+
       <G fill={color} id="g524">
         <G fill={color} id="g526">
           <G fill={color} id="g532">
@@ -382,6 +413,7 @@ export const Emurgo = ({width, height, color = COLORS.BLACK}: Props) => (
           </G>
         </G>
       </G>
+
       <G fill={color} id="g544">
         <G fill={color} id="g546">
           <G fill={color} id="g552">
@@ -395,6 +427,7 @@ export const Emurgo = ({width, height, color = COLORS.BLACK}: Props) => (
           </G>
         </G>
       </G>
+
       <G fill={color} id="g564">
         <G fill={color} id="g566">
           <G fill={color} id="g572">
@@ -408,6 +441,7 @@ export const Emurgo = ({width, height, color = COLORS.BLACK}: Props) => (
           </G>
         </G>
       </G>
+
       <G fill={color} id="g584">
         <G fill={color} id="g586">
           <G fill={color} id="g592">
@@ -421,6 +455,7 @@ export const Emurgo = ({width, height, color = COLORS.BLACK}: Props) => (
           </G>
         </G>
       </G>
+
       <G fill={color} id="g604">
         <G fill={color} id="g606">
           <G fill={color} id="g612">

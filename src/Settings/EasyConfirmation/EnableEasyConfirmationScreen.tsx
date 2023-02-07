@@ -43,6 +43,7 @@ export const EnableEasyConfirmationScreen = () => {
 
       <ScrollView keyboardShouldPersistTaps="always" contentContainerStyle={styles.contentContainer}>
         <Text style={styles.heading}>{strings.enableHeading}</Text>
+
         <Text style={styles.warning}>{strings.enableWarning}</Text>
 
         <PasswordInput

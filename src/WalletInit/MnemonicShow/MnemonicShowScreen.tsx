@@ -16,7 +16,6 @@ export const MnemonicShowScreen = () => {
   const route = useRoute<RouteProp<WalletInitRoutes, 'mnemonic-show'>>()
   const strings = useStrings()
   const mnemonic = route.params.mnemonic
-  const provider = route.params.provider
   const [modal, setModal] = React.useState(false)
   const showModal = () => setModal(true)
   const hideModal = () => setModal(false)
@@ -35,7 +34,6 @@ export const MnemonicShowScreen = () => {
       name,
       networkId,
       walletImplementationId,
-      provider,
     })
     hideModal()
   }
@@ -59,6 +57,7 @@ export const MnemonicShowScreen = () => {
           </View>
 
           {/* If screen is small hide image */}
+
           {Dimensions.get('window').height > 480 && (
             <View style={styles.image}>
               <Image source={recoveryPhrase} />

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`migration create 12`] = `
+exports[`migration create 11`] = `
 Array [
   "addr1q90qj49u70m8xa9v0f6d2frtvv33v5x4gwckvxllv6regw7prmcgc38nvy9hu4k5dcyxhyqcdsfwnf50q5sm03x89e9sv69ppj",
   "addr1qywqe88fzjjsm67f545mt49y05y2c73nh70ksnqlz63gadkprmcgc38nvy9hu4k5dcyxhyqcdsfwnf50q5sm03x89e9s6uufp3",
@@ -55,7 +55,7 @@ Array [
 ]
 `;
 
-exports[`migration create 13`] = `
+exports[`migration create 12`] = `
 Array [
   "addr1qxddgtdqxmsvn0rqp0ltdfpddudvf76qs3esyn3zqf44drkprmcgc38nvy9hu4k5dcyxhyqcdsfwnf50q5sm03x89e9suclpck",
   "addr1qyxg9e0wj478cd6ckvgwgxj075q6hxz2aeepgf6uxv8ju0kprmcgc38nvy9hu4k5dcyxhyqcdsfwnf50q5sm03x89e9s7yq5yx",
@@ -110,7 +110,7 @@ Array [
 ]
 `;
 
-exports[`migration create 37`] = `
+exports[`migration create 36`] = `
 Object {
   "externalChain": Object {
     "addressGenerator": Object {
@@ -246,7 +246,7 @@ Object {
 }
 `;
 
-exports[`migration create hw  12`] = `
+exports[`migration create hw  11`] = `
 Array [
   "addr1qyeacjehv4qpyr68hszxdxrsx4whts8ctkeez4s0e0an6qy68r3aa9x2zd434q86jrtnvrkpledgm0px6snllm89fm3q85yacp",
   "addr1qxsm2v0rrkq2qrp662y2ttgfaxrlmn55gqmxedlutehejku68r3aa9x2zd434q86jrtnvrkpledgm0px6snllm89fm3q4f8v3w",
@@ -301,7 +301,7 @@ Array [
 ]
 `;
 
-exports[`migration create hw  13`] = `
+exports[`migration create hw  12`] = `
 Array [
   "addr1q9yz4c9m9ak7y6nzg8qdgz8u5ulyyjkdz853cr98hyu69yy68r3aa9x2zd434q86jrtnvrkpledgm0px6snllm89fm3q8rhh6l",
   "addr1qxjqh5qcm5uf6779ahvfufpe46ay832nhgh5gudlgl4k86u68r3aa9x2zd434q86jrtnvrkpledgm0px6snllm89fm3q40ey8s",
@@ -356,7 +356,7 @@ Array [
 ]
 `;
 
-exports[`migration create hw  32`] = `
+exports[`migration create hw  31`] = `
 Object {
   "externalChain": Object {
     "addressGenerator": Object {
@@ -501,7 +501,7 @@ Object {
 }
 `;
 
-exports[`migration restore 12`] = `
+exports[`migration restore 11`] = `
 Array [
   "addr1q90qj49u70m8xa9v0f6d2frtvv33v5x4gwckvxllv6regw7prmcgc38nvy9hu4k5dcyxhyqcdsfwnf50q5sm03x89e9sv69ppj",
   "addr1qywqe88fzjjsm67f545mt49y05y2c73nh70ksnqlz63gadkprmcgc38nvy9hu4k5dcyxhyqcdsfwnf50q5sm03x89e9s6uufp3",
@@ -556,7 +556,7 @@ Array [
 ]
 `;
 
-exports[`migration restore 13`] = `
+exports[`migration restore 12`] = `
 Array [
   "addr1qxddgtdqxmsvn0rqp0ltdfpddudvf76qs3esyn3zqf44drkprmcgc38nvy9hu4k5dcyxhyqcdsfwnf50q5sm03x89e9suclpck",
   "addr1qyxg9e0wj478cd6ckvgwgxj075q6hxz2aeepgf6uxv8ju0kprmcgc38nvy9hu4k5dcyxhyqcdsfwnf50q5sm03x89e9s7yq5yx",
@@ -611,7 +611,7 @@ Array [
 ]
 `;
 
-exports[`migration restore 37`] = `
+exports[`migration restore 36`] = `
 Object {
   "externalChain": Object {
     "addressGenerator": Object {
@@ -741,7 +741,6 @@ Object {
   "isReadOnly": false,
   "lastGeneratedAddressIndex": 13,
   "networkId": 1,
-  "provider": "",
   "publicKeyHex": "6c2311e6e7a934751c55054cb21ab844f2e55baa48fc8f298dd54430f116d1c14c5f12d15611670454e05efac74e8f5d5e887ae2c15ef3086e0691d0d8439665",
   "version": "1.5.1",
   "walletImplementationId": "haskell-shelley",

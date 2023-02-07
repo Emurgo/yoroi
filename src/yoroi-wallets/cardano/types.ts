@@ -47,7 +47,6 @@ export interface WalletInterface {
   readonly walletImplementationId: WalletImplementationId
   readonly isHW: boolean
   readonly isReadOnly: boolean
-  readonly provider: null | undefined | YoroiProvider
   readonly internalChain: AddressChain
   readonly externalChain: AddressChain
   readonly publicKeyHex: string
@@ -177,8 +176,6 @@ export type WalletImplementationId = WalletImplementation['WALLET_IMPLEMENTATION
 
 export type NetworkId = number
 
-export type YoroiProvider = '' | 'emurgo-alonzo'
-
 export type ServerStatus = {
   isServerOk: boolean
   isMaintenance: boolean
@@ -258,7 +255,6 @@ type YoroiWalletKeys =
   | 'isReadOnly'
   | 'isUsedAddressIndex'
   | 'numReceiveAddresses'
-  | 'provider'
   | 'publicKeyHex'
   | 'rewardAddressHex'
   | 'save'
@@ -307,7 +303,6 @@ const yoroiWalletKeys: Array<YoroiWalletKeys> = [
   'isReadOnly',
   'isUsedAddressIndex',
   'numReceiveAddresses',
-  'provider',
   'publicKeyHex',
   'rewardAddressHex',
   'save',

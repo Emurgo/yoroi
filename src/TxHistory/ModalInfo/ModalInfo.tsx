@@ -21,6 +21,7 @@ export const ModalInfo = ({visible, hideModalInfo, children}: Props) => {
       <Icon.Info style={styles.infoIcon} size={45} color={COLORS.ACTION_GRAY} />
 
       <Spacer height={32} />
+
       {children}
     </Modal>
   )

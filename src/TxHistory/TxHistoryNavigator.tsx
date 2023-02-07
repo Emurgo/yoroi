@@ -17,7 +17,6 @@ import {AddressReaderQR} from '../Send/AddressReaderQR'
 import {AssetSelectorScreen} from '../Send/AssetSelectorScreen'
 import {ConfirmScreen} from '../Send/ConfirmScreen'
 import {SendProvider} from '../Send/Context/SendContext'
-import {ScannerButton} from '../Send/ScannerButton'
 import {SendScreen} from '../Send/SendScreen'
 import {COLORS} from '../theme'
 import {ModalInfo} from './ModalInfo'
@@ -79,7 +78,6 @@ export const TxHistoryNavigator = () => {
           name="send"
           options={{
             title: strings.sendTitle,
-            headerRight: () => <ScannerButton />,
           }}
         >
           {() => (

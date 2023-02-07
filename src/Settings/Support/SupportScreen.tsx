@@ -17,6 +17,7 @@ export const SupportScreen = () => {
         title={intl.formatMessage(messages.faqLabel)}
         text={intl.formatMessage(messages.faqDescription)}
       />
+
       <LinkingItem
         url={intl.formatMessage(messages.reportUrl)}
         title={intl.formatMessage(messages.reportLabel)}
@@ -38,10 +39,12 @@ const LinkingItem = ({title, text, url}: LinkingItemProps) => {
     <TouchableOpacity onPress={onPress} style={styles.item}>
       <View style={styles.itemWrap}>
         <Text style={styles.title}>{title}</Text>
+
         <Text secondary style={styles.text}>
           {text}
         </Text>
       </View>
+
       <Image source={chevronRight} />
     </TouchableOpacity>
   )

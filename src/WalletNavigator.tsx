@@ -108,9 +108,13 @@ export const WalletNavigator = () => (
     }}
   >
     <Stack.Screen name="wallet-selection" component={WalletSelectionScreen} />
+
     <Stack.Screen name="main-wallet-routes" component={WalletTabNavigator} />
+
     <Stack.Screen name="nft-details-routes" component={NftDetailsNavigator} />
+
     <Stack.Screen name="settings" component={SettingsScreenNavigator} />
+
     <Stack.Screen name="voting-registration" component={VotingRegistration} />
   </Stack.Navigator>
 )

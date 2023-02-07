@@ -15,10 +15,12 @@ export const Info = ({size = 40, color = 'black', style = {}}: Props) => {
         d="M12 7C11.4477 7 11 7.44771 11 8C11 8.55229 11.4477 9 12 9H12.01C12.5623 9 13.01 8.55229 13.01 8C13.01 7.44771 12.5623 7 12.01 7H12Z"
         fill={color}
       />
+
       <Path
         d="M12 10C11.4477 10 11 10.4477 11 11V16C11 16.5523 11.4477 17 12 17C12.5523 17 13 16.5523 13 16V11C13 10.4477 12.5523 10 12 10Z"
         fill={color}
       />
+
       <Path
         fillRule="evenodd"
         clipRule="evenodd"

@@ -21,6 +21,7 @@ import {StorageProvider, useMigrations} from './Storage'
 import {ThemeProvider} from './theme'
 import {WalletManagerProvider} from './WalletManager'
 import {walletManager} from './yoroi-wallets'
+import {storage} from './yoroi-wallets/storage'
 
 setLogLevel(CONFIG.LOG_LEVEL)
 
@@ -61,26 +62,26 @@ global.onunhandledrejection = (error: any) => {
 const queryClient = new QueryClient()
 
 const AppWithProviders = () => {
-  const migrated = useMigrations()
+  const migrated = useMigrations(storage)
 
   return migrated ? (
-    <WalletManagerProvider walletManager={walletManager}>
-      <ErrorBoundary>
-        <QueryClientProvider client={queryClient}>
-          <LoadingBoundary style={StyleSheet.absoluteFill}>
-            <ThemeProvider>
-              <LanguageProvider>
-                <CurrencyProvider>
-                  <StorageProvider>
+    <StorageProvider>
+      <WalletManagerProvider walletManager={walletManager}>
+        <ErrorBoundary>
+          <QueryClientProvider client={queryClient}>
+            <LoadingBoundary style={StyleSheet.absoluteFill}>
+              <ThemeProvider>
+                <LanguageProvider>
+                  <CurrencyProvider>
                     <App />
-                  </StorageProvider>
-                </CurrencyProvider>
-              </LanguageProvider>
-            </ThemeProvider>
-          </LoadingBoundary>
-        </QueryClientProvider>
-      </ErrorBoundary>
-    </WalletManagerProvider>
+                  </CurrencyProvider>
+                </LanguageProvider>
+              </ThemeProvider>
+            </LoadingBoundary>
+          </QueryClientProvider>
+        </ErrorBoundary>
+      </WalletManagerProvider>
+    </StorageProvider>
   ) : null
 }
 

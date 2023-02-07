@@ -32,6 +32,7 @@ export const RemoveWalletScreen = () => {
       <ScrollView bounces={false} contentContainerStyle={styles.contentContainer}>
         <Description>
           {!wallet.isHW && <Text style={styles.description}>{strings.descriptionParagraph1}</Text>}
+
           <Text style={styles.description}>{strings.descriptionParagraph2}</Text>
         </Description>
 
@@ -39,7 +40,9 @@ export const RemoveWalletScreen = () => {
 
         <WalletInfo>
           <Text style={styles.walletNameLabel}>{strings.walletName}</Text>
+
           <Spacer height={8} />
+
           <Text style={styles.walletName}>{walletName}</Text>
 
           <Spacer height={24} />

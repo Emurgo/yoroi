@@ -270,6 +270,7 @@
   "components.stakingcenter.title": "Staking Center",
   "components.stakingcenter.delegationTxBuildError": "Error while building delegation transaction",
   "components.transfer.transfersummarymodal.unregisterExplanation": "This transaction will unregister one or more staking keys, giving you back your {refundAmount} from your deposit.",
+  "components.txhistory.balancebanner.pairedbalance.error": "Error obtaining {currency} pairing",
   "components.txhistory.flawedwalletmodal.title": "Warning",
   "components.txhistory.flawedwalletmodal.explanation1": "It looks like you have accidentally created or restored a wallet that is only included in special versions for development. As a security measure, we have disabled this wallet.",
   "components.txhistory.flawedwalletmodal.explanation2": "You still can create a new wallet or restore one without restrictions. If you were affected in some way by this issue, please contact EMURGO.",

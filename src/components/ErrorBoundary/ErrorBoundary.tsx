@@ -46,9 +46,12 @@ export class ErrorBoundary extends Component<Props, State> {
           <ScrollView>
             <View style={styles.headerView}>
               <Text style={styles.title}>Oops!!! Something went wrong.</Text>
+
               <Spacer height={24} />
+
               <Image source={errorImage} />
             </View>
+
             <Divider />
 
             <Spacer height={16} />
@@ -63,11 +66,13 @@ export class ErrorBoundary extends Component<Props, State> {
             <View style={styles.errorSection}>
               <View style={styles.errorSectionHeader}>
                 <Text style={styles.paragraph}>{this.state.error}</Text>
+
                 <CopyButton value={`${this.state.error}:${this.state.errorInfo}`} />
               </View>
 
               <Spacer height={16} />
             </View>
+
             <ExpandableItem label="Show error" content={this.state.errorInfo} />
           </ScrollView>
 

@@ -19,6 +19,7 @@ export const MnemonicBackupImportanceModal = ({onConfirm, visible, onRequestClos
   return (
     <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
       <Text style={styles.title}>{strings.title}</Text>
+
       <Checkbox
         style={styles.checkbox}
         onChange={setAcceptedKeyStorage}
@@ -26,6 +27,7 @@ export const MnemonicBackupImportanceModal = ({onConfirm, visible, onRequestClos
         text={strings.keysStorageCheckbox}
         testID="mnemonicBackupImportanceModal::checkBox1"
       />
+
       <Checkbox
         style={styles.checkbox}
         onChange={setAcceptedNewDeviceRecovery}
@@ -33,6 +35,7 @@ export const MnemonicBackupImportanceModal = ({onConfirm, visible, onRequestClos
         text={strings.newDeviceRecoveryCheckbox}
         testID="mnemonicBackupImportanceModal::checkBox2"
       />
+
       <Button
         disabled={!acceptedKeyStorage || !acceptedNewDeviceRecovery}
         onPress={onConfirm}

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {flatten} from 'lodash'
 
-import type {NetworkId, YoroiProvider} from '../yoroi-wallets/types/other'
+import type {NetworkId} from '../yoroi-wallets/types/other'
 import {NETWORK_REGISTRY, YOROI_PROVIDER_IDS} from '../yoroi-wallets/types/other'
 import {NUMBERS} from './numbers'
 const _DEFAULT_BACKEND_RULES = {
@@ -168,25 +168,6 @@ const JORMUNGANDR = {
     ADDRESS: 'addr',
   },
 }
-// ALONZO
-const ALONZO_MAINNET = {
-  PROVIDER_ID: YOROI_PROVIDER_IDS.ALONZO_MAINNET,
-  ...(HASKELL_SHELLEY as any),
-  MARKETING_NAME: 'Alonzo Main Net',
-}
-const ALONZO_TESTNET = {
-  PROVIDER_ID: YOROI_PROVIDER_IDS.ALONZO_TESTNET,
-  ...(HASKELL_SHELLEY_TESTNET as any),
-  BACKEND: {
-    ...HASKELL_SHELLEY_TESTNET.BACKEND,
-    API_ROOT: 'https://alonzo-backend.yoroiwallet.com',
-    NFT_STORAGE_URL: 'https://fibo-validated-nft-images.s3.amazonaws.com',
-  },
-  MARKETING_NAME: 'Alonzo Test Net',
-  EXPLORER_URL_FOR_ADDRESS: (address: string) =>
-    `https://explorer.alonzo-purple.dev.cardano.org/address?address=${address}`,
-  EXPLORER_URL_FOR_TX: (tx: string) => `https://explorer.alonzo-purple.dev.cardano.org/tx/${tx}`,
-}
 export const NETWORKS = {
   // Deprecated
   BYRON_MAINNET,
@@ -200,37 +181,6 @@ type NetworkConfig =
   | typeof NETWORKS.HASKELL_SHELLEY
   | typeof NETWORKS.HASKELL_SHELLEY_TESTNET
   | typeof NETWORKS.JORMUNGANDR
-// PROVIDER
-// NOTE: For now we are using the same obj, later we will decouple network/protocol/connection
-export const PROVIDERS = {
-  BYRON_MAINNET,
-  HASKELL_SHELLEY,
-  HASKELL_SHELLEY_TESTNET,
-  ALONZO_MAINNET,
-  ALONZO_TESTNET,
-  JORMUNGANDR,
-}
-export type YoroiProviderConfig =
-  | typeof BYRON_MAINNET
-  | typeof HASKELL_SHELLEY
-  | typeof HASKELL_SHELLEY_TESTNET
-  | typeof ALONZO_MAINNET
-  | typeof ALONZO_TESTNET
-  | typeof JORMUNGANDR
-export const getYoroiProvider = (
-  networkConfig: NetworkConfig,
-  provider: YoroiProvider | null | undefined,
-): YoroiProviderConfig => {
-  if (provider === 'emurgo-alonzo') {
-    if (networkConfig.NETWORK_ID === NETWORK_REGISTRY.HASKELL_SHELLEY) {
-      return PROVIDERS.ALONZO_MAINNET
-    } else if (networkConfig.NETWORK_ID === NETWORK_REGISTRY.HASKELL_SHELLEY_TESTNET) {
-      return PROVIDERS.ALONZO_TESTNET
-    }
-  }
-
-  return networkConfig
-}
 
 /**
  * queries related to blockchain/network parameters
@@ -240,34 +190,23 @@ export const isJormungandr = (networkId: NetworkId): boolean => networkId === NE
 export const isHaskellShelleyNetwork = (networkId: NetworkId): boolean =>
   networkId === NETWORK_REGISTRY.HASKELL_SHELLEY || networkId === NETWORK_REGISTRY.HASKELL_SHELLEY_TESTNET
 export const getCardanoByronConfig = () => NETWORKS.BYRON_MAINNET
-export const getNetworkConfigById = (id: NetworkId, provider?: YoroiProvider | null | undefined): NetworkConfig => {
+export const getNetworkConfigById = (id: NetworkId): NetworkConfig => {
   const idx = Object.values(NETWORK_REGISTRY).indexOf(id)
   const network = Object.keys(NETWORK_REGISTRY)[idx]
 
   if (network != null && network !== 'UNDEFINED' && NETWORKS[network] != null) {
-    return getYoroiProvider(NETWORKS[network], provider)
+    return NETWORKS[network]
   }
 
   throw new Error('invalid networkId')
 }
 export type CardanoHaskellShelleyNetwork = typeof NETWORKS.HASKELL_SHELLEY | typeof NETWORKS.HASKELL_SHELLEY_TESTNET
-export const getCardanoNetworkConfigById = (
-  networkId: NetworkId,
-  provider?: YoroiProvider | null | undefined,
-): CardanoHaskellShelleyNetwork => {
+export const getCardanoNetworkConfigById = (networkId: NetworkId): CardanoHaskellShelleyNetwork => {
   switch (networkId) {
     case NETWORKS.HASKELL_SHELLEY.NETWORK_ID:
-      if (provider === 'emurgo-alonzo') {
-        return PROVIDERS.ALONZO_MAINNET
-      }
-
       return NETWORKS.HASKELL_SHELLEY
 
     case NETWORKS.HASKELL_SHELLEY_TESTNET.NETWORK_ID:
-      if (provider === 'emurgo-alonzo') {
-        return PROVIDERS.ALONZO_TESTNET
-      }
-
       return NETWORKS.HASKELL_SHELLEY_TESTNET
 
     default:

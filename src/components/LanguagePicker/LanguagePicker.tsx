@@ -21,6 +21,7 @@ export const LanguagePicker = () => {
         renderItem={({item: {label, code}}) => (
           <TouchableOpacity style={styles.item} onPress={() => selectLanguageCode(code)} testID="pickLangButton">
             <Text style={styles.itemText}>{label}</Text>
+
             {languageCode === code && <Icon.Check size={24} color={COLORS.SHELLEY_BLUE} />}
           </TouchableOpacity>
         )}

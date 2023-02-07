@@ -1,6 +1,6 @@
 import {LogLevel} from '../legacy/logging'
 import {DefaultAsset} from '../yoroi-wallets/types'
-import type {NetworkId, WalletImplementation, WalletImplementationId, YoroiProvider} from '../yoroi-wallets/types/other'
+import type {NetworkId, WalletImplementation, WalletImplementationId} from '../yoroi-wallets/types/other'
 import {DERIVATION_TYPES, WALLET_IMPLEMENTATION_REGISTRY} from '../yoroi-wallets/types/other'
 import env from './env'
 import type {CardanoHaskellShelleyNetwork} from './networks'
@@ -169,18 +169,9 @@ export const CONFIG = {
   COMMIT: _COMMIT,
 }
 
-// Staking pools for testing/nightly deploys
-const TESTNET_STAKING_POOLS_BY_PROVIDER = new Map<YoroiProvider, Array<string>>([
-  ['emurgo-alonzo', ['03868bffac073e46cfeca68486ce8c8cdb5e3bf2677f63f2954e9cae']],
-])
-const TESTNET_STAKING_POOLS_BY_NETWORK = new Map<NetworkId, Array<string>>([
-  [NETWORKS.HASKELL_SHELLEY_TESTNET.NETWORK_ID, ['fe662c24cf56fb98626161f76d231ac50ab7b47dd83986a30c1d4796']],
-])
-
 /**
  * queries related to wallet parameters
  */
-
 export const isByron = (id: WalletImplementationId): boolean => id === WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON
 
 export const isHaskellShelley = (id: WalletImplementationId): boolean =>
@@ -261,20 +252,4 @@ export const getDefaultAssetByNetworkId = (networkId: NetworkId): DefaultAsset =
   }
   const assetData = defaultAssets[0]
   return _asToken(assetData)
-}
-
-/**
- * @description It will search for the staking pools of the testnets
- * @param  {NetworkId} networkId
- * @param  {YoroiProvider} provider
- * @returns  Array<string>
- */
-export const getTestStakingPool = (networkId: NetworkId, provider: null | undefined | YoroiProvider): Array<string> => {
-  if (isHaskellShelleyNetwork(networkId)) {
-    if (provider) {
-      return TESTNET_STAKING_POOLS_BY_PROVIDER.get(provider) || []
-    }
-    return TESTNET_STAKING_POOLS_BY_NETWORK.get(networkId) || []
-  }
-  return []
 }

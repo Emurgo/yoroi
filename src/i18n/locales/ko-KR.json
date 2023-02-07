@@ -250,6 +250,7 @@
   "components.stakingcenter.title": "스테이킹 센터",
   "components.stakingcenter.delegationTxBuildError": "위임 정보 전송 거래를 만드는 중 오류가 발생했습니다.",
   "components.transfer.transfersummarymodal.unregisterExplanation": "This transaction will unregister one or more staking keys, giving you back your {refundAmount} from your deposit.",
+  "components.txhistory.balancebanner.pairedbalance.error": "Error obtaining {currency} pairing",
   "components.txhistory.flawedwalletmodal.title": "경고",
   "components.txhistory.flawedwalletmodal.explanation1": "특정 개발 버전에만 포함되는 지갑을 생성하거나 복구한 것으로 보입니다. 보안 상 문제로 해당 지갑은 비활성화되었습니다.",
   "components.txhistory.flawedwalletmodal.explanation2": "당신은 여전히 자유롭게 새로운 지갑을 생성하거나 복구할 수 있습니다. 해당 문제로 불편함을 겪고 계시다면, EMURGO에 연락해주세요.",

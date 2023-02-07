@@ -5,7 +5,7 @@ import _ from 'lodash'
 import DeviceInfo from 'react-native-device-info'
 import {defaultMemoize} from 'reselect'
 
-import {EncryptedStorage, EncryptedStorageKeys, makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../auth'
+import {makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../auth'
 import {Keychain} from '../../auth/Keychain'
 import {encryptWithPassword} from '../../Catalyst/catalystCipher'
 import LocalizableError from '../../i18n/LocalizableError'
@@ -28,13 +28,12 @@ import {
   getCardanoNetworkConfigById,
   isHaskellShelleyNetwork,
   isJormungandr,
-  PROVIDERS,
 } from '../../legacy/networks'
 import {processTxHistoryData} from '../../legacy/processTransactions'
 import {IsLockedError, nonblockingSynchronize, synchronize} from '../../legacy/promise'
 import type {WalletMeta} from '../../legacy/state'
 import {deriveRewardAddressHex} from '../../legacy/utils'
-import {Storage} from '../storage'
+import {YoroiStorage} from '../storage'
 import type {
   AccountStateResponse,
   BackendConfig,
@@ -79,7 +78,6 @@ import {
   WalletImplementationId,
   WalletInterface,
   WalletSubscription,
-  YoroiProvider,
   YoroiWallet,
 } from './types'
 import {yoroiUnsignedTx} from './unsignedTx'
@@ -94,7 +92,6 @@ export type ShelleyWalletJSON = {
 
   networkId: NetworkId
   walletImplementationId: WalletImplementationId
-  provider?: null | YoroiProvider
 
   isHW: boolean
   hwDeviceInfo: null | HWDeviceInfo
@@ -122,7 +119,6 @@ export class ShelleyWallet implements WalletInterface {
   readonly hwDeviceInfo: null | HWDeviceInfo
   readonly isHW: boolean
   readonly isReadOnly: boolean
-  readonly provider: null | undefined | YoroiProvider
   readonly internalChain: AddressChain
   readonly externalChain: AddressChain
   readonly publicKeyHex: string
@@ -133,7 +129,7 @@ export class ShelleyWallet implements WalletInterface {
   isEasyConfirmationEnabled = false
 
   private _utxos: RawUtxo[]
-  private readonly storage: Storage
+  private readonly storage: YoroiStorage
   private readonly utxoManager: UtxoManager
   private readonly stakingKeyPath: number[]
 
@@ -144,7 +140,6 @@ export class ShelleyWallet implements WalletInterface {
     networkId,
     implementationId,
     storage,
-    provider,
 
     mnemonic,
     password,
@@ -152,8 +147,7 @@ export class ShelleyWallet implements WalletInterface {
     id: string
     implementationId: WalletImplementationId
     networkId: NetworkId
-    storage: Storage
-    provider: YoroiProvider | undefined
+    storage: YoroiStorage
 
     mnemonic: string
     password: string
@@ -172,7 +166,6 @@ export class ShelleyWallet implements WalletInterface {
       internalChain,
       externalChain,
       isEasyConfirmationEnabled: false,
-      provider,
     })
 
     await wallet.encryptAndSaveRootKey(rootKey, password)
@@ -197,7 +190,7 @@ export class ShelleyWallet implements WalletInterface {
     networkId: NetworkId
 
     isReadOnly: boolean
-    storage: Storage
+    storage: YoroiStorage
   }): Promise<YoroiWallet> {
     const {internalChain, externalChain} = await addressChains.create({implementationId, networkId, accountPubKeyHex})
 
@@ -212,11 +205,10 @@ export class ShelleyWallet implements WalletInterface {
       internalChain,
       externalChain,
       isEasyConfirmationEnabled: false,
-      provider: undefined,
     })
   }
 
-  static async restore({walletMeta, storage}: {storage: Storage; walletMeta: WalletMeta}) {
+  static async restore({walletMeta, storage}: {storage: YoroiStorage; walletMeta: WalletMeta}) {
     const data = await storage.getItem('data', parseWalletJSON)
     if (!data) throw new Error('Cannot read saved data')
     Logger.debug('openWallet::data', data)
@@ -236,7 +228,6 @@ export class ShelleyWallet implements WalletInterface {
       accountPubKeyHex: data.publicKeyHex ?? internalChain.publicKey, // can be null for versions < 3.0.2, in which case we can just retrieve from address generator
       hwDeviceInfo: data.hwDeviceInfo, // hw wallet
       isReadOnly: data.isReadOnly ?? false, // readonly wallet
-      provider: data.provider ?? '',
       isEasyConfirmationEnabled: data.isEasyConfirmationEnabled,
       lastGeneratedAddressIndex: data.lastGeneratedAddressIndex ?? 0, // AddressManager
     })
@@ -257,7 +248,6 @@ export class ShelleyWallet implements WalletInterface {
     accountPubKeyHex,
     hwDeviceInfo, // hw wallet
     isReadOnly, // readonly wallet
-    provider,
     isEasyConfirmationEnabled,
     lastGeneratedAddressIndex = 0,
   }: {
@@ -266,11 +256,10 @@ export class ShelleyWallet implements WalletInterface {
     id: string
     implementationId: WalletImplementationId
     networkId: NetworkId
-    storage: Storage
+    storage: YoroiStorage
     internalChain: AddressChain
     externalChain: AddressChain
     isReadOnly: boolean
-    provider: YoroiProvider | null | undefined
     isEasyConfirmationEnabled: boolean
     lastGeneratedAddressIndex?: number
   }) => {
@@ -287,7 +276,6 @@ export class ShelleyWallet implements WalletInterface {
       implementationId,
       hwDeviceInfo,
       isReadOnly,
-      provider,
       accountPubKeyHex,
       rewardAddressHex,
       transactionCache,
@@ -315,7 +303,6 @@ export class ShelleyWallet implements WalletInterface {
     implementationId,
     hwDeviceInfo,
     isReadOnly,
-    provider,
     accountPubKeyHex,
     rewardAddressHex,
     transactionCache,
@@ -324,14 +311,13 @@ export class ShelleyWallet implements WalletInterface {
     isEasyConfirmationEnabled,
     lastGeneratedAddressIndex,
   }: {
-    storage: Storage
+    storage: YoroiStorage
     networkId: NetworkId
     id: string
     utxoManager: UtxoManager
     implementationId: WalletImplementationId
     hwDeviceInfo: HWDeviceInfo | null
     isReadOnly: boolean
-    provider: YoroiProvider | null | undefined
     accountPubKeyHex: string
     rewardAddressHex: string
     transactionCache: TransactionCache
@@ -353,7 +339,6 @@ export class ShelleyWallet implements WalletInterface {
     this.isHW = hwDeviceInfo != null
     this.hwDeviceInfo = hwDeviceInfo
     this.isReadOnly = isReadOnly
-    this.provider = provider
     this.transactionCache = transactionCache
     this.internalChain = internalChain
     this.externalChain = externalChain
@@ -433,20 +418,7 @@ export class ShelleyWallet implements WalletInterface {
   // =================== utils =================== //
 
   private getNetworkConfig(): CardanoHaskellShelleyNetwork {
-    switch (this.networkId) {
-      case PROVIDERS.HASKELL_SHELLEY.NETWORK_ID:
-        if (this.provider === 'emurgo-alonzo') {
-          return PROVIDERS.ALONZO_MAINNET
-        }
-        return PROVIDERS.HASKELL_SHELLEY
-      case PROVIDERS.HASKELL_SHELLEY_TESTNET.NETWORK_ID:
-        if (this.provider === 'emurgo-alonzo') {
-          return PROVIDERS.ALONZO_TESTNET
-        }
-        return PROVIDERS.HASKELL_SHELLEY_TESTNET
-      default:
-        throw new Error('network id is not valid')
-    }
+    return getCardanoNetworkConfigById(this.networkId)
   }
 
   private getBaseNetworkConfig() {
@@ -1098,9 +1070,8 @@ export class ShelleyWallet implements WalletInterface {
   async changePassword(oldPassword: string, newPassword: string) {
     if (!_.isEmpty(validatePassword(newPassword, newPassword))) throw new Error('New password is not valid')
 
-    const key = EncryptedStorageKeys.rootKey(this.id)
-    const rootKey = await EncryptedStorage.read(key, oldPassword)
-    return EncryptedStorage.write(key, rootKey, newPassword)
+    const rootKey = await this.encryptedStorage.rootKey.read(oldPassword)
+    return this.encryptedStorage.rootKey.write(rootKey, newPassword)
   }
 
   // =================== subscriptions =================== //
@@ -1237,7 +1208,6 @@ export class ShelleyWallet implements WalletInterface {
       hwDeviceInfo: this.hwDeviceInfo,
       isReadOnly: this.isReadOnly,
       isEasyConfirmationEnabled: this.isEasyConfirmationEnabled,
-      provider: this.provider,
     }
   }
 }
@@ -1327,14 +1297,14 @@ export const primaryTokenInfo = {
     id: '',
     name: 'ADA',
     decimals: 6,
-    description: '',
+    description: 'Cardano',
     ticker: 'ADA',
   } as TokenInfo,
   testnet: {
     id: '',
     name: 'TADA',
     decimals: 6,
-    description: '',
+    description: 'Cardano',
     ticker: 'TADA',
   } as TokenInfo,
 }

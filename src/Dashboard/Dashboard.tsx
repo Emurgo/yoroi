@@ -174,7 +174,7 @@ const useCurrentTime = () => {
 const EpochInfo = () => {
   const currentTime = useCurrentTime()
   const wallet = useSelectedWallet()
-  const config = getCardanoBaseConfig(getCardanoNetworkConfigById(wallet.networkId, wallet.provider))
+  const config = getCardanoBaseConfig(getCardanoNetworkConfigById(wallet.networkId))
 
   const toRelativeSlotNumberFn = genToRelativeSlotNumber(config)
   const timeToSlotFn = genTimeToSlot(config)

@@ -43,7 +43,9 @@ const FormattedAmount = ({amount}: {amount: string}) => {
   return (
     <Row>
       <Label />
+
       <Spacer width={4} />
+
       <Text style={{fontFamily: 'Rubik-Medium', color: '#242838', fontSize: 12}}>{amount}</Text>
     </Row>
   )

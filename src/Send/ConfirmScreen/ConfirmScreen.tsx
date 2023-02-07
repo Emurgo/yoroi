@@ -107,10 +107,10 @@ const Fees = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx}) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const feeAmount = Amounts.getAmount(yoroiUnsignedTx.fee, wallet.primaryToken.identifier)
-
+  const text = `${strings.fees}: ${formatTokenWithSymbol(new BigNumber(feeAmount.quantity), wallet.primaryToken)}`
   return (
     <Text small testID="feesText">
-      {strings.fees}: {formatTokenWithSymbol(new BigNumber(feeAmount.quantity), wallet.primaryToken)}
+      {text}
     </Text>
   )
 }
@@ -129,10 +129,13 @@ const BalanceAfter = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx}) => 
     ]),
   )
   const primaryAmountAfter = Amounts.getAmount(balancesAfter, wallet.primaryToken.identifier)
-
+  const text = `${strings.balanceAfterTx}: ${formatTokenWithSymbol(
+    new BigNumber(primaryAmountAfter.quantity),
+    wallet.primaryToken,
+  )}`
   return (
     <Text small testID="balanceAfterTxText">
-      {strings.balanceAfterTx}: {formatTokenWithSymbol(new BigNumber(primaryAmountAfter.quantity), wallet.primaryToken)}
+      {text}
     </Text>
   )
 }
@@ -143,6 +146,7 @@ const Receiver = ({receiver}: {receiver: string}) => {
   return (
     <>
       <Text>{strings.receiver}</Text>
+
       <Text testID="receiverAddressText">{receiver}</Text>
     </>
   )
@@ -156,6 +160,7 @@ const PrimaryTotal = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx}) => 
   return (
     <>
       <Text>{strings.total}</Text>
+
       <Text style={styles.amount} testID="totalAmountText">
         {formatTokenWithSymbol(new BigNumber(primaryAmount.quantity), wallet.primaryToken)}
       </Text>

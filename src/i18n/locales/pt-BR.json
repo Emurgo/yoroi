@@ -250,6 +250,7 @@
   "components.stakingcenter.title": "Centro de delegação",
   "components.stakingcenter.delegationTxBuildError": "Erro ao criar a transação de delegação",
   "components.transfer.transfersummarymodal.unregisterExplanation": "Esta transação cancelará o registro de uma ou mais chaves de delegação, devolvendo-lhe o seu depósito de {refundAmount} . ",
+  "components.txhistory.balancebanner.pairedbalance.error": "Error obtaining {currency} pairing",
   "components.txhistory.flawedwalletmodal.title": "Atenção",
   "components.txhistory.flawedwalletmodal.explanation1": "Parece que você acidentalmente criou ou restaurou uma carteira que está incluída somente em versões especiais para desenvolvimento. Por uma questão de segurança, nós desativamos esta carteira.",
   "components.txhistory.flawedwalletmodal.explanation2": "Você ainda pode criar uma nova carteira ou restaurá-la sem restrições. Se você foi afetado de alguma forma por esse problema, entre em contato com a EMURGO.",

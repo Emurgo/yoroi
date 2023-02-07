@@ -1,23 +1,18 @@
 import React from 'react'
 import {defineMessages} from 'react-intl'
 import {useIntl} from 'react-intl'
-import {Alert, FlatList, FlatListProps, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
-import {Avatar} from 'react-native-paper'
+import {Alert, FlatList, FlatListProps, StyleSheet, View} from 'react-native'
 
-import AdaImage from '../../assets/img/asset_ada.png'
-import NoImage from '../../assets/img/asset_no_image.png'
-import {Boundary, Text} from '../../components'
+import {Boundary} from '../../components'
 import {Spacer} from '../../components/Spacer'
-import {useBalance, useBalances, useIsTokenKnownNft, useNftImageModerated, useTokenInfos} from '../../hooks'
+import {useBalances, useTokenInfos} from '../../hooks'
 import globalMessages, {actionMessages} from '../../i18n/global-messages'
-import {SHOW_NFT_GALLERY} from '../../legacy/config'
 import {useSelectedWallet} from '../../SelectedWallet'
-import {COLORS} from '../../theme'
 import {sortTokenInfos} from '../../utils'
 import {TokenInfo} from '../../yoroi-wallets/types'
-import {Amounts, Quantities} from '../../yoroi-wallets/utils'
+import {Amounts} from '../../yoroi-wallets/utils'
 import {ActionsBanner} from './ActionsBanner'
-import {ModeratedNftIcon} from './ModeratedNftIcon'
+import {AssetItem} from './AssetItem'
 
 type ListProps = FlatListProps<TokenInfo>
 type Props = Partial<ListProps> & {
@@ -65,91 +60,9 @@ export const AssetList = (props: Props) => {
   )
 }
 
-type AssetItemProps = {
-  tokenInfo: TokenInfo
-  onPress?: () => void
-}
-
-const AssetItem = ({tokenInfo, onPress}: AssetItemProps) => {
-  const wallet = useSelectedWallet()
-  const balance = useBalance({wallet, tokenId: tokenInfo.id})
-  const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
-  const isTokenNft = useIsTokenKnownNft({wallet, fingerprint: tokenInfo.fingerprint})
-
-  return (
-    <TouchableOpacity onPress={onPress} style={styles.button} testID="assetItem">
-      <Left>
-        {isTokenNft && SHOW_NFT_GALLERY ? (
-          <NftIcon tokenInfo={tokenInfo} />
-        ) : (
-          <Icon source={isPrimary ? AdaImage : NoImage} />
-        )}
-      </Left>
-
-      <Middle>
-        <Text numberOfLines={1} ellipsizeMode="middle" style={styles.tokenInfo} testID="tokenInfoText">
-          {tokenInfo.ticker ?? tokenInfo.name ?? '-'}
-        </Text>
-
-        <Text numberOfLines={1} ellipsizeMode="middle" style={styles.tokenName} testID="tokenFingerprintText">
-          {isPrimary ? '' : tokenInfo.fingerprint}
-        </Text>
-      </Middle>
-
-      <Right>
-        <Text style={styles.tokenAmount} testID="tokenAmountText">
-          {Quantities.denominated(balance, tokenInfo.decimals)}
-        </Text>
-      </Right>
-    </TouchableOpacity>
-  )
-}
-
-const Left = ({style, ...props}: ViewProps) => <View style={[style, {padding: 4}]} {...props} />
-const Middle = ({style, ...props}: ViewProps) => (
-  <View style={[style, {flex: 1, justifyContent: 'center', padding: 4}]} {...props} />
-)
-const Right = ({style, ...props}: ViewProps) => <View style={[style, {padding: 4}]} {...props} />
-
 const styles = StyleSheet.create({
   assetList: {flex: 1},
-  button: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    borderRadius: 8,
-    elevation: 2,
-    shadowOffset: {width: 0, height: -2},
-    shadowRadius: 10,
-    shadowOpacity: 0.08,
-    shadowColor: '#181a1e',
-    backgroundColor: '#fff',
-    paddingHorizontal: 12,
-    paddingVertical: 12,
-  },
-  tokenInfo: {
-    color: COLORS.DARK_TEXT,
-    fontSize: 14,
-    lineHeight: 22,
-  },
-  tokenName: {
-    color: COLORS.TEXT_INPUT,
-    fontSize: 12,
-    lineHeight: 18,
-  },
-  tokenAmount: {
-    color: COLORS.DARK_TEXT,
-  },
-  assetIcon: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'transparent',
-    height: 32,
-    width: 32,
-  },
 })
-
-const Icon = (props) => <Avatar.Image {...props} size={32} style={styles.assetIcon} />
 
 const messages = defineMessages({
   unknownAsset: {
@@ -157,18 +70,6 @@ const messages = defineMessages({
     defaultMessage: '!!!Unknown asset',
   },
 })
-
-const NftIcon = ({tokenInfo}: {tokenInfo: TokenInfo}) => {
-  const wallet = useSelectedWallet()
-  const fingerprint = tokenInfo.fingerprint
-  const nftModeratedImage = useNftImageModerated({wallet, nftId: fingerprint})
-
-  if (!nftModeratedImage) {
-    return <ModeratedNftIcon status="pending" />
-  }
-
-  return <ModeratedNftIcon image={nftModeratedImage.image} status={nftModeratedImage.status} />
-}
 
 const useStrings = () => {
   const intl = useIntl()
