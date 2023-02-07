@@ -69,13 +69,15 @@ export const TxDetails = () => {
           </Boundary>
         </Banner>
 
+        <Label>{strings.memo}</Label>
+
+        <Text secondary monospace>
+          {transaction.memo !== null && transaction.memo.length > 0 ? transaction.memo : '-'}
+        </Text>
+
         <View style={styles.borderTop}>
-          <Label>{strings.memo}</Label>
+          <Label>{strings.fromAddresses}</Label>
         </View>
-
-        <Text style={styles.assetsTitle}>{transaction.memo}</Text>
-
-        <Label>{strings.fromAddresses}</Label>
 
         {fromFiltered.map((item) => (
           <View key={item.id}>

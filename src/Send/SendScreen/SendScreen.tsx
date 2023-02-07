@@ -22,7 +22,7 @@ import type {
 } from '../../yoroi-wallets/utils/validators'
 import {useSend} from '../Context/SendContext'
 import {AmountField} from './../AmountField'
-import {MemoField} from './../MemoField'
+import {maxMemoLength, MemoField} from './../MemoField'
 import {AvailableAmountBanner} from './AvailableAmountBanner'
 import {BalanceAfterTransaction} from './BalanceAfterTransaction'
 import {ErrorBanners} from './ErrorBanners'
@@ -42,7 +42,8 @@ export const SendScreen = () => {
   const hasPendingTx = useHasPendingTx(wallet)
   const isOnline = useIsOnline(wallet)
 
-  const {tokenId, resetForm, receiverChanged, amountChanged, receiver, amount, sendAll, sendAllChanged} = useSend()
+  const {tokenId, resetForm, receiverChanged, amountChanged, receiver, amount, sendAll, sendAllChanged, memo} =
+    useSend()
 
   const selectedAssetAvailableAmount = Amounts.getAmount(balances, tokenId).quantity
   const defaultAssetAvailableAmount = Amounts.getAmount(balances, wallet.primaryToken.identifier).quantity
@@ -71,7 +72,8 @@ export const SendScreen = () => {
     _.isEmpty(addressErrors) &&
     _.isEmpty(amountErrors) &&
     _.isEmpty(balanceErrors) &&
-    !!yoroiUnsignedTx
+    !!yoroiUnsignedTx &&
+    memo.length <= maxMemoLength
 
   React.useEffect(() => {
     if (CONFIG.DEBUG.PREFILL_FORMS) {

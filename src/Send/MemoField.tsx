@@ -6,13 +6,13 @@ import {TextInput} from '../components'
 import {COLORS} from '../theme'
 import {useSend} from './Context/SendContext'
 
-const maxMemoValue = 256
+export const maxMemoLength = 256
 
 export const MemoField = () => {
   const strings = useStrings()
   const {memo, memoChanged} = useSend()
 
-  const showError = memo.length > maxMemoValue
+  const showError = memo.length > maxMemoLength
 
   return (
     <View style={styles.container}>
@@ -29,7 +29,7 @@ export const MemoField = () => {
       <View style={styles.helper}>
         <Text style={[styles.warning, showError && styles.error]}>{strings.warning}</Text>
 
-        <Text style={[styles.counter, showError && styles.error]}>{`${memo.length}/${maxMemoValue}`}</Text>
+        <Text style={[styles.counter, showError && styles.error]}>{`${memo.length}/${maxMemoLength}`}</Text>
       </View>
     </View>
   )
@@ -60,6 +60,8 @@ const styles = StyleSheet.create({
     paddingBottom: 25,
   },
   helper: {
+    paddingLeft: 10,
+    paddingTop: 5,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },

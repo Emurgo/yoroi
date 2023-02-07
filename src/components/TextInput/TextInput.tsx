@@ -111,7 +111,19 @@ export const TextInput = React.forwardRef((props: Props, ref: ForwardedRef<RNTex
       />
 
       {!noErrors && (
-        <HelperText type={errorTextEnabled && !isEmptyString(errorText) ? 'error' : 'info'} visible>
+        <HelperText
+          theme={{
+            roundness: 8,
+            colors: {
+              background: COLORS.BACKGROUND,
+              placeholder: faded ? COLORS.GREY_6 : COLORS.TEXT_INPUT,
+              primary: faded ? COLORS.GREY_6 : COLORS.BLACK,
+              error: COLORS.ERROR_TEXT_COLOR,
+            },
+          }}
+          type={errorTextEnabled && !isEmptyString(errorText) ? 'error' : 'info'}
+          visible
+        >
           {errorTextEnabled && !isEmptyString(errorText) ? errorText : helperText}
         </HelperText>
       )}
