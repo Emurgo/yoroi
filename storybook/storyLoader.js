@@ -44,9 +44,11 @@ function loadStories() {
 	require('../src/Staking/PoolWarningModal/PoolWarningModal.stories');
 	require('../src/Staking/StakingCenter/StakingCenter.stories');
 	require('../src/TxHistory/AssetList/ActionsBanner.stories');
+	require('../src/TxHistory/AssetList/AssetItem/AssetItem.stories');
 	require('../src/TxHistory/AssetList/ChipButton/ChipButton.stories');
 	require('../src/TxHistory/BalanceBanner.stories');
 	require('../src/TxHistory/ModalInfo/ModalInfo.stories');
+	require('../src/TxHistory/PairedBalance.stories');
 	require('../src/TxHistory/TxDetails/AssetList.stories');
 	require('../src/TxHistory/TxDetails/TxDetails.stories');
 	require('../src/TxHistory/TxHistory.stories');
@@ -144,9 +146,11 @@ const stories = [
 	'../src/Staking/PoolWarningModal/PoolWarningModal.stories',
 	'../src/Staking/StakingCenter/StakingCenter.stories',
 	'../src/TxHistory/AssetList/ActionsBanner.stories',
+	'../src/TxHistory/AssetList/AssetItem/AssetItem.stories',
 	'../src/TxHistory/AssetList/ChipButton/ChipButton.stories',
 	'../src/TxHistory/BalanceBanner.stories',
 	'../src/TxHistory/ModalInfo/ModalInfo.stories',
+	'../src/TxHistory/PairedBalance.stories',
 	'../src/TxHistory/TxDetails/AssetList.stories',
 	'../src/TxHistory/TxDetails/TxDetails.stories',
 	'../src/TxHistory/TxHistory.stories',
