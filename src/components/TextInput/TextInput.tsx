@@ -98,7 +98,7 @@ export const TextInput = React.forwardRef((props: Props, ref: ForwardedRef<RNTex
         error={errorTextEnabled && !isEmptyString(errorText)}
         render={({style, ...inputProps}) => (
           <InputContainer>
-            <RNTextInput {...inputProps} style={[style, {color: faded ? COLORS.GREY_6 : COLORS.BLACK}]} />
+            <RNTextInput {...inputProps} style={[style, {color: faded ? COLORS.GREY_6 : COLORS.BLACK, flex: 1}]} />
 
             {right != null ? <AdornmentContainer style={styles.checkmarkContainer}>{right}</AdornmentContainer> : null}
 
@@ -144,6 +144,7 @@ const AdornmentContainer = ({style, children}: ViewProps) => (
 const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
+    flex: 1,
   },
   checkmarkContainer: {
     paddingRight: 16,
