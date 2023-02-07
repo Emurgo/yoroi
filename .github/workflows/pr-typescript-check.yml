@@ -1,3 +1,5 @@
+name: PR TypeScript Checks
+
 on:
   pull_request:
     types: [ready_for_review]
