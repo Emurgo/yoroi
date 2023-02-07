@@ -159,7 +159,7 @@ export class WalletManager {
 
   async removeWallet(id: string) {
     const deletedWalletIds = await this.deletedWalletIds()
-    this.storage.setItem('deletedWalletIds', [...deletedWalletIds, id])
+    return this.storage.setItem('deletedWalletIds', [...deletedWalletIds, id])
   }
 
   // TODO(ppershing): how should we deal with race conditions?
