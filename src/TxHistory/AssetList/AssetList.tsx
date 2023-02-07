@@ -1,18 +1,18 @@
 import React from 'react'
 import {defineMessages} from 'react-intl'
 import {useIntl} from 'react-intl'
-import {Alert, FlatList, FlatListProps, Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {Alert, FlatList, FlatListProps, StyleSheet, View} from 'react-native'
 
+import {Boundary} from '../../components'
 import {Spacer} from '../../components/Spacer'
 import {useBalances, useTokenInfos} from '../../hooks'
 import globalMessages, {actionMessages} from '../../i18n/global-messages'
-import {getNetworkConfigById} from '../../legacy/networks'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {sortTokenInfos} from '../../utils'
 import {TokenInfo} from '../../yoroi-wallets/types'
 import {Amounts} from '../../yoroi-wallets/utils'
 import {ActionsBanner} from './ActionsBanner'
-import {AssetItem, AssetItemProps} from './AssetItem'
+import {AssetItem} from './AssetItem'
 
 type ListProps = FlatListProps<TokenInfo>
 type Props = Partial<ListProps> & {
@@ -28,8 +28,6 @@ export const AssetList = (props: Props) => {
   const handleOnPressNFTs = () => Alert.alert(strings.soon, strings.soon)
   const handleOnPressTokens = () => Alert.alert(strings.soon, strings.soon)
   const handleSearch = () => Alert.alert(strings.soon, strings.soon)
-
-  const config = getNetworkConfigById(wallet.networkId)
 
   const tokenInfos = useTokenInfos({
     wallet,
@@ -50,11 +48,9 @@ export const AssetList = (props: Props) => {
         {...props}
         data={sortTokenInfos({wallet, tokenInfos})}
         renderItem={({item: tokenInfo}) => (
-          <ExplorableAssetItem
-            tokenInfo={tokenInfo}
-            balance={balances[tokenInfo.id]}
-            onPress={() => Linking.openURL(config.EXPLORER_URL_FOR_TOKEN(tokenInfo.id))}
-          />
+          <Boundary loading={{size: 'small'}} error={{size: 'inline'}}>
+            <AssetItem tokenInfo={tokenInfo} />
+          </Boundary>
         )}
         ItemSeparatorComponent={() => <Spacer height={16} />}
         contentContainerStyle={{paddingTop: 16, paddingHorizontal: 16, paddingBottom: 8}}
@@ -64,30 +60,8 @@ export const AssetList = (props: Props) => {
   )
 }
 
-type ExplorableAssetItemProps = AssetItemProps & {
-  onPress(): void
-}
-const ExplorableAssetItem = ({tokenInfo, balance, onPress}: ExplorableAssetItemProps) => {
-  return (
-    <TouchableOpacity style={styles.assetItem} onPress={onPress} testID="assetSelectorItem">
-      <AssetItem tokenInfo={tokenInfo} balance={balance} />
-    </TouchableOpacity>
-  )
-}
-
 const styles = StyleSheet.create({
   assetList: {flex: 1},
-  assetItem: {
-    backgroundColor: '#fff',
-    shadowColor: '#181a1e',
-    borderRadius: 8,
-    elevation: 2,
-    shadowOffset: {width: 0, height: -2},
-    shadowRadius: 10,
-    shadowOpacity: 0.08,
-    paddingHorizontal: 12,
-    paddingVertical: 12,
-  },
 })
 
 const messages = defineMessages({
