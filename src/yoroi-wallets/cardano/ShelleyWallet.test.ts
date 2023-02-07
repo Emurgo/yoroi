@@ -125,7 +125,7 @@ describe('migration', () => {
     expect(wallet.primaryTokenInfo).toMatchInlineSnapshot(`
       Object {
         "decimals": 6,
-        "description": "",
+        "description": "Cardano",
         "id": "",
         "name": "ADA",
         "ticker": "ADA",
@@ -252,7 +252,7 @@ describe('migration', () => {
     expect(wallet.primaryTokenInfo).toMatchInlineSnapshot(`
       Object {
         "decimals": 6,
-        "description": "",
+        "description": "Cardano",
         "id": "",
         "name": "ADA",
         "ticker": "ADA",
@@ -381,7 +381,7 @@ describe('migration', () => {
     expect(wallet.primaryTokenInfo).toMatchInlineSnapshot(`
       Object {
         "decimals": 6,
-        "description": "",
+        "description": "Cardano",
         "id": "",
         "name": "ADA",
         "ticker": "ADA",
