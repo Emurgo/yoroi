@@ -76,7 +76,7 @@ const ModeratedImage = ({onPress, nft}: ModeratedImageProps) => {
 
   if (showSkeleton) {
     return (
-      <TouchableOpacity disabled={isImageBlocked} onPress={onPress} style={styles.imageContainer}>
+      <TouchableOpacity onPress={onPress} style={styles.imageContainer}>
         <SkeletonImagePlaceholder text={text} />
       </TouchableOpacity>
     )
@@ -84,14 +84,14 @@ const ModeratedImage = ({onPress, nft}: ModeratedImageProps) => {
 
   if (moderationStatusQuery.isError) {
     return (
-      <TouchableOpacity disabled={isImageBlocked} onPress={onPress} style={styles.imageContainer}>
+      <TouchableOpacity onPress={onPress} style={styles.imageContainer}>
         <BlockedNft text={text} />
       </TouchableOpacity>
     )
   }
 
   return (
-    <TouchableOpacity disabled={isImageBlocked} onPress={onPress} style={styles.imageContainer}>
+    <TouchableOpacity onPress={onPress} style={styles.imageContainer}>
       {isImageApproved ? (
         <ApprovedNft text={text} uri={image} />
       ) : isImageWithConsent ? (
