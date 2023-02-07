@@ -4,12 +4,14 @@ import {Image, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native
 import NoImage from '../../../assets/img/asset_no_image.png'
 import {Icon} from '../../../components'
 import {Text} from '../../../components/Text'
-import {useBalance} from '../../../hooks'
+import {useBalance, useIsTokenKnownNft, useNftImageModerated} from '../../../hooks'
+import {SHOW_NFT_GALLERY} from '../../../legacy/config'
 import {useSelectedWallet} from '../../../SelectedWallet'
 import {COLORS} from '../../../theme'
 import {TokenInfo} from '../../../yoroi-wallets/types'
 import {Quantities} from '../../../yoroi-wallets/utils'
 import {PairedBalance} from '../../PairedBalance'
+import {ModeratedNftIcon} from '../ModeratedNftIcon'
 
 type AssetItemProps = {
   tokenInfo: TokenInfo
@@ -18,6 +20,7 @@ type AssetItemProps = {
 export const AssetItem = ({tokenInfo, onPress}: AssetItemProps) => {
   const wallet = useSelectedWallet()
   const balance = useBalance({wallet, tokenId: tokenInfo.id})
+  const isTokenNft = useIsTokenKnownNft({wallet, fingerprint: tokenInfo.fingerprint})
 
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
   const name = tokenInfo.ticker ?? tokenInfo.name ?? '-'
@@ -26,7 +29,15 @@ export const AssetItem = ({tokenInfo, onPress}: AssetItemProps) => {
 
   return (
     <TouchableOpacity onPress={onPress} style={styles.button} testID="assetItem">
-      <Left>{isPrimary ? <PrimaryTokenIcon /> : <TokenIcon source={NoImage} />}</Left>
+      <Left>
+        {isPrimary ? (
+          <PrimaryTokenIcon />
+        ) : isTokenNft && SHOW_NFT_GALLERY ? (
+          <NftIcon fingerprint={tokenInfo.fingerprint} />
+        ) : (
+          <TokenIcon source={NoImage} />
+        )}
+      </Left>
 
       <Middle>
         <Text numberOfLines={1} ellipsizeMode="middle" style={styles.name} testID="tokenInfoText">
@@ -64,6 +75,17 @@ const PrimaryTokenIcon = () => (
     <Icon.Cardano color="white" height={35} width={35} />
   </View>
 )
+
+const NftIcon = ({fingerprint}: {fingerprint: string}) => {
+  const wallet = useSelectedWallet()
+  const nftModeratedImage = useNftImageModerated({wallet, nftId: fingerprint})
+
+  if (!nftModeratedImage) {
+    return <ModeratedNftIcon status="pending" />
+  }
+
+  return <ModeratedNftIcon image={nftModeratedImage.image} status={nftModeratedImage.status} />
+}
 
 const styles = StyleSheet.create({
   primaryTokenIcon: {
