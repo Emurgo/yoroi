@@ -152,12 +152,10 @@ const useLogout = () => {
   const intl = useIntl()
   const setSelectedWallet = useSetSelectedWallet()
   const setSelectedWalletMeta = useSetSelectedWalletMeta()
-  const selectedWallet = useSelectedWallet()
 
   return {
     logout: () => {
       logout() // triggers navigation to login
-      selectedWallet.stop()
 
       setSelectedWallet(undefined)
       setSelectedWalletMeta(undefined)
@@ -167,7 +165,6 @@ const useLogout = () => {
       const selection = await showConfirmationDialog(confirmationMessages.logout, intl)
       if (selection === DIALOG_BUTTONS.YES) {
         logout() // triggers navigation to login
-        selectedWallet.stop()
 
         setSelectedWallet(undefined)
         setSelectedWalletMeta(undefined)
