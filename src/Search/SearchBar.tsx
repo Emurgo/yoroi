@@ -1,14 +1,14 @@
 import React from 'react'
 import {StyleSheet, TextInput, TouchableOpacity, View} from 'react-native'
 
-import {Icon} from '../Icon'
+import {Icon} from '../components/Icon'
 
 type Props = {
   placeholder: string
   onChangeText(value: string): void
   value: string
-  onClearPress(): void
-  onBackPress(): void
+  onClearPress?(): void
+  onBackPress?(): void
 }
 
 export const SearchBar = ({placeholder, onChangeText, value, onClearPress, onBackPress}: Props) => {

@@ -28,6 +28,7 @@ function loadStories() {
 	require('../src/Receive/AddressModal.stories');
 	require('../src/Receive/Addresses.stories');
 	require('../src/Receive/ReceiveScreen.stories');
+	require('../src/Search/SearchBar.stories');
 	require('../src/SelectedWallet/WalletSelection/WalletSelectionScreen.stories');
 	require('../src/Send/AddressReaderQR/AddressReaderQR.stories');
 	require('../src/Send/AssetSelectorScreen/AssetSelectorScreen.stories');
@@ -100,7 +101,6 @@ function loadStories() {
 	require('../src/components/Link/Link.stories');
 	require('../src/components/LoadingOverlay/LoadingOverlay.stories');
 	require('../src/components/Modal/Modal.stories');
-	require('../src/components/SearchBar/SearchBar.stories');
 	require('../src/components/StandardModal/StandardModal.stories');
 	require('../src/components/TextInput/TextInput.stories');
 	require('../src/theme/Palette.stories');
@@ -134,6 +134,7 @@ const stories = [
 	'../src/Receive/AddressModal.stories',
 	'../src/Receive/Addresses.stories',
 	'../src/Receive/ReceiveScreen.stories',
+	'../src/Search/SearchBar.stories',
 	'../src/SelectedWallet/WalletSelection/WalletSelectionScreen.stories',
 	'../src/Send/AddressReaderQR/AddressReaderQR.stories',
 	'../src/Send/AssetSelectorScreen/AssetSelectorScreen.stories',
@@ -206,7 +207,6 @@ const stories = [
 	'../src/components/Link/Link.stories',
 	'../src/components/LoadingOverlay/LoadingOverlay.stories',
 	'../src/components/Modal/Modal.stories',
-	'../src/components/SearchBar/SearchBar.stories',
 	'../src/components/StandardModal/StandardModal.stories',
 	'../src/components/TextInput/TextInput.stories',
 	'../src/theme/Palette.stories',
