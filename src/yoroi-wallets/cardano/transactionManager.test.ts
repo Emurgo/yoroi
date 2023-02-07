@@ -11,7 +11,7 @@ import {
   mockedTipStatusResponse,
   mockTx,
 } from './mocks'
-import {makeMemosManager, makeTransactionManager} from './transactionManager'
+import {makeTransactionManager} from './transactionManager'
 
 jest.mock('./api', () => ({
   getTipStatus: jest.fn().mockResolvedValue(mockedTipStatusResponse),
@@ -23,22 +23,11 @@ jest.mock('./api', () => ({
 }))
 
 describe('transaction manager', () => {
-  DeviceInfo.getVersion = () => '9.9.9'
-
   beforeEach(() => AsyncStorage.clear())
 
-  it('stores memos', async () => {
-    const txManager = await makeTransactionManager(mockStorage, mockedBackendConfig)
-
-    expect(txManager.getTransactions()).toEqual({[mockTx.id]: mockTx})
-
-    await txManager.saveMemo(mockTx.id, 'memo 1')
-
-    expect(txManager.getTransactions()).toEqual({[mockTx.id]: {...mockTx, memo: 'memo 1'}})
-  })
-
-  it('gets updated tx cache values', async () => {
-    const txManager = await makeTransactionManager(mockStorage, mockedBackendConfig)
+  it('New schema: Empty storage, Sync, Memo', async () => {
+    DeviceInfo.getVersion = () => '9.9.9'
+    const txManager = await makeTransactionManager(rootStorage, mockedBackendConfig)
 
     expect(txManager.getTransactions()).toMatchSnapshot()
     expect(txManager.getPerAddressTxs()).toMatchSnapshot()
@@ -50,29 +39,26 @@ describe('transaction manager', () => {
     expect(txManager.getTransactions()).toMatchSnapshot()
     expect(txManager.getPerAddressTxs()).toMatchSnapshot()
     expect(txManager.getPerRewardAddressCertificates()).toMatchSnapshot()
+
+    await txManager.saveMemo('54ab3dc8e717040b9b4c523d0756cfc59a30f107e053b4cd474e11e818be0ddg', 'memo 1')
+
+    expect(txManager.getTransactions()['54ab3dc8e717040b9b4c523d0756cfc59a30f107e053b4cd474e11e818be0ddg'].memo).toBe(
+      'memo 1',
+    )
   })
-})
 
-describe('memos manager', () => {
-  beforeEach(() => AsyncStorage.clear())
+  it('New schema: Non empty storage', async () => {
+    DeviceInfo.getVersion = () => '9.9.9'
+    const txManager = await makeTransactionManager(mockStorage, mockedBackendConfig)
 
-  it('works', async () => {
-    const storage = rootStorage.join('memos/')
-    const memosManager = await makeMemosManager(storage)
+    expect(txManager.getTransactions()).toEqual({[mockTx.id]: mockTx})
+  })
 
-    expect(memosManager.getMemos()).toEqual({})
+  it('Old schema: Non empty storage', async () => {
+    DeviceInfo.getVersion = () => '0.0.1'
+    const txManager = await makeTransactionManager(mockStorage, mockedBackendConfig)
 
-    await memosManager.saveMemo('fake-tx-id-1', 'Send money to my friend')
-    await memosManager.saveMemo('fake-tx-id-2', 'Send money to my girlfriend')
-
-    expect(memosManager.getMemos()).toEqual({
-      'fake-tx-id-1': 'Send money to my friend',
-      'fake-tx-id-2': 'Send money to my girlfriend',
-    })
-
-    await memosManager.clear()
-
-    expect(memosManager.getMemos()).toEqual({})
+    expect(txManager.getTransactions()).toEqual({})
   })
 })
 
