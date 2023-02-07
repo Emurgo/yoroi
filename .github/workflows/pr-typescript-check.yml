@@ -1,0 +1,15 @@
+on:
+  pull_request:
+    types: [ready_for_review]
+
+jobs:
+  typescript-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16.5.0'
+          cache: 'yarn'
+      - run: yarn install
+      - run: yarn tsc
