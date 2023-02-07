@@ -59,6 +59,7 @@ export const Nfts = () => {
             heading={
               <View>
                 <NftCount count={filteredNfts.length} />
+
                 <Spacer height={16} />
               </View>
             }
@@ -74,9 +75,11 @@ export const Nfts = () => {
         {search.length === 0 && (
           <View>
             <NftCount count={filteredNfts.length} />
+
             <Spacer height={16} />
           </View>
         )}
+
         <ImageGallery nfts={filteredNfts} onSelect={handleNftSelect} onRefresh={refetch} isRefreshing={isRefetching} />
       </View>
     </ScreenWrapper>
@@ -88,6 +91,7 @@ function ScreenWrapper({children}: {children: ReactNode}) {
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
       <View style={styles.container}>
         <Spacer height={16} />
+
         {children}
       </View>
     </SafeAreaView>
@@ -105,13 +109,20 @@ function ErrorScreen({onRefresh, isRefreshing}: {onRefresh: () => void; isRefres
     >
       <View style={styles.scrollViewError}>
         <NftCount count="-" />
+
         <Spacer height={16} />
+
         <View style={styles.errorContainer}>
           <Icon.NoNfts size={140} />
+
           <Spacer height={20} />
+
           <Text style={styles.titleText}>{strings.errorTitle}</Text>
+
           <Spacer height={4} />
+
           <Text>{strings.errorDescription}</Text>
+
           <Text>{strings.reloadApp}</Text>
         </View>
       </View>
@@ -121,13 +132,12 @@ function ErrorScreen({onRefresh, isRefreshing}: {onRefresh: () => void; isRefres
 
 function NftCount({count}: {count?: number | string}) {
   const strings = useStrings()
+  const countText = `${strings.nftCount}: ${count ?? '-'}`
 
   return (
     <View>
       <View style={styles.countBar}>
-        <Text style={styles.count}>
-          {strings.nftCount}: {count}
-        </Text>
+        <Text style={styles.count}>{countText}</Text>
       </View>
     </View>
   )
@@ -137,7 +147,9 @@ function LoadingScreen({nftsCount}: {nftsCount: number; onRefresh: () => void; i
   return (
     <View style={styles.galleryContainer}>
       <NftCount count={nftsCount} />
+
       <Spacer height={16} />
+
       <SkeletonGallery amount={6} />
     </View>
   )

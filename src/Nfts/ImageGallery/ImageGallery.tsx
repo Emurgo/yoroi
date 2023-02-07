@@ -109,7 +109,9 @@ function BlockedNft({text}: {text: string}) {
   return (
     <View>
       <Image source={placeholderImage} style={[styles.image, {width: IMAGE_SIZE, height: IMAGE_SIZE}]} />
+
       <Spacer height={IMAGE_PADDING} />
+
       <Text style={[styles.textTop, {width: IMAGE_SIZE}]}>{text}</Text>
     </View>
   )
@@ -119,7 +121,9 @@ function ManualReviewNft({text}: {text: string}) {
   return (
     <View>
       <Image source={placeholderImage} style={[styles.image, {width: IMAGE_SIZE, height: IMAGE_SIZE}]} />
+
       <Spacer height={IMAGE_PADDING} />
+
       <Text style={[styles.textTop, {width: IMAGE_SIZE}]}>{text}</Text>
     </View>
   )
@@ -130,11 +134,14 @@ function RequiresConsentNft({uri, text}: {text: string; uri: string}) {
     <View>
       <View style={styles.imageWrapper}>
         <Image source={{uri}} style={[styles.image, {width: IMAGE_SIZE, height: IMAGE_SIZE}]} blurRadius={20} />
+
         <View style={styles.eyeWrapper}>
           <Icon.EyeOff size={20} color="#FFFFFF" />
         </View>
       </View>
+
       <Spacer height={IMAGE_PADDING} />
+
       <Text style={[styles.textTop, {width: IMAGE_SIZE}]}>{text}</Text>
     </View>
   )
@@ -144,7 +151,9 @@ function ApprovedNft({uri, text}: {text: string; uri: string}) {
   return (
     <View>
       <Image source={{uri}} style={[styles.image, {width: IMAGE_SIZE, height: IMAGE_SIZE}]} />
+
       <Spacer height={IMAGE_PADDING} />
+
       <Text style={[styles.textTop, {width: IMAGE_SIZE}]}>{text}</Text>
     </View>
   )
@@ -158,7 +167,9 @@ function SkeletonImagePlaceholder({text}: {text?: string}) {
           <SkeletonPlaceholder>
             <View style={{width: IMAGE_SIZE, height: IMAGE_SIZE, borderRadius: 8}} />
           </SkeletonPlaceholder>
+
           <Spacer height={IMAGE_PADDING} />
+
           <Text style={[styles.textTop, {width: IMAGE_SIZE}]}>{text}</Text>
         </View>
       </View>
@@ -169,6 +180,7 @@ function SkeletonImagePlaceholder({text}: {text?: string}) {
       <SkeletonPlaceholder>
         <View>
           <View style={{width: IMAGE_SIZE, height: IMAGE_SIZE, borderRadius: 8}} />
+
           <View
             style={{
               marginTop: IMAGE_PADDING,

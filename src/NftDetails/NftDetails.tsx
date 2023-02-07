@@ -50,6 +50,7 @@ export const NftDetails = () => {
               active={activeTab === 'overview'}
               testID="overview"
             />
+
             <Tab
               onPress={() => setActiveTab('metadata')}
               label={strings.metadata}
@@ -69,6 +70,7 @@ export const NftDetails = () => {
                   <Text style={styles.copyText}>{strings.copyMetadata}</Text>
                 </CopyButton>
               </View>
+
               <Spacer height={14} />
 
               <Text>{stringifiedMetadata}</Text>
@@ -85,9 +87,12 @@ const MetadataRow = ({title, copyText, children}: {title: string; children: Reac
     <View style={styles.rowContainer}>
       <View style={styles.rowTitleContainer}>
         <Text>{title}</Text>
+
         {copyText !== undefined ? <CopyButton value={copyText} /> : null}
       </View>
+
       <Spacer height={2} />
+
       {children}
     </View>
   )
@@ -123,7 +128,9 @@ const NftMetadataPanel = ({nft}: {nft: YoroiNft}) => {
         <Link url={`https://cardanoscan.io/token/${fingerprint}`}>
           <View style={styles.linkContent}>
             <Icon.ExternalLink size={12} color={COLORS.SHELLEY_BLUE} />
+
             <Spacer width={2} />
+
             <Text style={styles.linkText}>Cardanoscan</Text>
           </View>
         </Link>
@@ -131,7 +138,9 @@ const NftMetadataPanel = ({nft}: {nft: YoroiNft}) => {
         <Link url={`https://cexplorer.io/asset/${fingerprint}`}>
           <View style={styles.linkContent}>
             <Icon.ExternalLink size={12} color={COLORS.SHELLEY_BLUE} />
+
             <Spacer width={2} />
+
             <Text style={styles.linkText}>Cexplorer</Text>
           </View>
         </Link>

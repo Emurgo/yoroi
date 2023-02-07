@@ -8,10 +8,14 @@ export function NoNftsScreen({heading, message}: {heading?: ReactNode; message: 
   return (
     <View style={styles.root}>
       <View>{heading}</View>
+
       <Spacer height={75} />
+
       <View style={styles.imageContainer}>
         <Image source={noNftsImage} style={styles.image} />
+
         <Spacer height={20} />
+
         <Text style={styles.contentText}>{message}</Text>
       </View>
     </View>

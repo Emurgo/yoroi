@@ -24,6 +24,7 @@ export const NftDetailsNavigator = () => {
         options={{title: strings.title, headerTitleAlign: 'center'}}
         component={NftDetails}
       />
+
       <Stack.Screen name="image-zoom" options={{header: () => null}} component={NftDetailsImage} />
     </Stack.Navigator>
   )

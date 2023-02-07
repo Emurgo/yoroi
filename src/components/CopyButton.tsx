@@ -38,6 +38,7 @@ const AnimatedCopyButton = ({
   return (
     <TouchableOpacity onPress={onCopy} disabled={isCopying} testID="copyButton" style={style}>
       {isCopying ? <Icon.CopySuccess size={26} color={COLORS.GRAY} /> : <Icon.Copy size={26} color={COLORS.GRAY} />}
+
       {children}
     </TouchableOpacity>
   )
