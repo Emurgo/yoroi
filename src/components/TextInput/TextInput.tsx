@@ -2,7 +2,7 @@ import React, {ForwardedRef} from 'react'
 import {
   StyleSheet,
   TextInput as RNTextInput,
-  TextInputProps,
+  TextInputProps as RNTextInputProps,
   TouchableOpacity,
   View,
   ViewProps,
@@ -14,7 +14,7 @@ import {COLORS} from '../../theme'
 import {isEmptyString} from '../../utils/utils'
 import {Icon} from '../Icon'
 
-type Props = TextInputProps &
+export type TextInputProps = RNTextInputProps &
   Omit<React.ComponentProps<typeof RNPTextInput>, 'theme'> & {
     containerStyle?: ViewStyle
     renderComponentStyle?: ViewStyle
@@ -45,7 +45,7 @@ const useDebounced = (callback, value, delay = 1000) => {
   }, [callback, delay, value])
 }
 
-export const TextInput = React.forwardRef((props: Props, ref: ForwardedRef<RNTextInput>) => {
+export const TextInput = React.forwardRef((props: TextInputProps, ref: ForwardedRef<RNTextInput>) => {
   const {
     value,
     containerStyle,
