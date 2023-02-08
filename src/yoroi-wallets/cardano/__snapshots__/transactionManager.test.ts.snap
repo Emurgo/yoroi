@@ -1,12 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`transaction manager New schema: Empty storage, Sync, Memo 1`] = `Object {}`;
+exports[`transaction manager create 1`] = `Object {}`;
 
-exports[`transaction manager New schema: Empty storage, Sync, Memo 2`] = `Object {}`;
+exports[`transaction manager create 2`] = `Object {}`;
 
-exports[`transaction manager New schema: Empty storage, Sync, Memo 3`] = `Object {}`;
+exports[`transaction manager create 3`] = `Object {}`;
 
-exports[`transaction manager New schema: Empty storage, Sync, Memo 4`] = `
+exports[`transaction manager create 4`] = `
 Object {
   "54ab3dc8e717040b9b4c523d0756cfc59a30f107e053b4cd474e11e818be0ddg": Object {
     "blockHash": "3be6615c2711f8c85e5777d1a060682bba507551d99d3568569fe8dfb7dcc690",
@@ -337,7 +337,7 @@ Object {
 }
 `;
 
-exports[`transaction manager New schema: Empty storage, Sync, Memo 5`] = `
+exports[`transaction manager create 5`] = `
 Object {
   "addr_test1qqkv3gr95tsuvwmgy4fcyffpcaxta9xu3df3az4rydxtlmwv60x7wwxgjxt6865rgds3na6sezwl4j483vmm796z0f7s9c9pry": Array [
     "54ab3dc8e717040b9b4c523d0756cfc59a30f107e053b4cd474e11e818be0ddg",
@@ -351,7 +351,7 @@ Object {
 }
 `;
 
-exports[`transaction manager New schema: Empty storage, Sync, Memo 6`] = `
+exports[`transaction manager create 6`] = `
 Object {
   "e0acab7e493ece4c1e6ae627ef9f5f7c9b1063e599e4aa91f87f0d58ae": Object {
     "54ab3dc8e717040b9b4c523d0756cfc59a30f107e053b4cd474e11e818be0ddg": Object {
