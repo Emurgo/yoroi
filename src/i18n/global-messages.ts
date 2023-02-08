@@ -533,6 +533,14 @@ export const currencyNames = defineMessages({
 })
 
 export default defineMessages({
+  apply: {
+    id: 'global.apply',
+    defaultMessage: '!!!Apply',
+  },
+  max: {
+    id: 'global.max',
+    defaultMessage: '!!!Max',
+  },
   allDone: {
     id: 'components.walletinit.restorewallet.upgradeconfirmmodal.noUpgradeLabel',
     defaultMessage: '!!!All done!',
