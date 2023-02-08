@@ -56,6 +56,9 @@ describe('walletMananger', () => {
     walletManager.subscribe(callback)
     await walletManager.removeWallet(wallet.id)
 
+    expect(await walletManager.deletedWalletIds()).toEqual([wallet.id])
+    expect(await walletManager.listWallets()).toEqual([])
+
     after: {
       const walletManager = new WalletManager()
       expect(callback).toHaveBeenCalled()

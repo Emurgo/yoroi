@@ -54,7 +54,9 @@ export class WalletManager {
   }
 
   async deletedWalletIds() {
-    return (await this.storage.getItem('deletedWalletIds', parseDeletedWalletIds)) || []
+    const ids = await this.storage.getItem('deletedWalletIds', parseDeletedWalletIds)
+
+    return ids ?? []
   }
 
   private async removeDeletedWallets() {
