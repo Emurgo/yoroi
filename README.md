@@ -618,7 +618,7 @@ import Screen from '../../components/Screen'
 import AdaIcon from '../../assets/AdaIcon'
 import {confirmationsToAssuranceLevel, printAda} from '../../helpers/utils'
 
-// types
+// types import
 import type {TransactionType} from '../../types/HistoryTransaction'
 ```
 
