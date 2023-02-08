@@ -1,12 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {Resolution} from '@unstoppabledomains/resolution'
 import assert from 'assert'
 import {wordlists} from 'bip39'
 import _ from 'lodash'
 
-import {normalizeToAddress} from '../cardano'
-import {getNetworkConfigById} from '../cardano/networks'
-import {NetworkId, Token} from '../types'
+import {Token} from '../types'
 import {InvalidAssetAmount, parseAmountDecimal} from './parsing'
 
 export type PasswordValidationErrors = {
@@ -121,51 +118,6 @@ export const getWalletNameError = (
     return mustBeFilled
   } else {
     return null
-  }
-}
-
-export const getUnstoppableDomainAddress = async (domain: string) => {
-  try {
-    return await new Resolution().addr(domain, 'ADA')
-  } catch (e) {
-    switch ((e as any).code) {
-      case 'UnsupportedDomain':
-        throw new Error('{"unsupportedDomain": true}')
-      case 'RecordNotFound':
-        throw new Error('{"recordNotFound": true}')
-      case 'UnregisteredDomain':
-        throw new Error('{"unregisteredDomain": true}')
-      default:
-        throw new Error('{"invalidAddress": true}')
-    }
-  } // invalid domain
-}
-
-export const isReceiverAddressValid = async (
-  receiverAddress: string,
-  walletNetworkId: NetworkId,
-): Promise<AddressValidationErrors | void> => {
-  if (!receiverAddress) {
-    return {addressIsRequired: true}
-  }
-
-  const address = await normalizeToAddress(receiverAddress)
-  if (!address) {
-    return {invalidAddress: true}
-  }
-
-  if (walletNetworkId) {
-    try {
-      const networkConfig: any = getNetworkConfigById(walletNetworkId)
-      const configNetworkId = networkConfig.CHAIN_NETWORK_ID && Number(networkConfig.CHAIN_NETWORK_ID)
-      const addressNetworkId = await address.networkId()
-      if (addressNetworkId !== configNetworkId && !isNaN(configNetworkId)) {
-        return {invalidAddress: true}
-      }
-    } catch (e) {
-      // NOTE: should not happen
-      return {invalidAddress: true}
-    }
   }
 }
 

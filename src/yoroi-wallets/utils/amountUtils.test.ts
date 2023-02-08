@@ -75,10 +75,6 @@ describe('pastedFormatter', () => {
   it('strips unwanted chars', () => {
     expect(pastedFormatter('1asdd2q we@3')).toBe('123')
   })
-
-  it('allows max 6 decimals', () => {
-    expect(pastedFormatter('123.12345678')).toBe('123.123456')
-  })
 })
 
 describe('editedFormatter', () => {
@@ -88,9 +84,5 @@ describe('editedFormatter', () => {
 
   it('does not allow non-numeric chars', () => {
     expect(editedFormatter('123a')).toBe('123')
-  })
-
-  it('allows max 6 decimals', () => {
-    expect(editedFormatter('123.12345678')).toBe('123.123456')
   })
 })

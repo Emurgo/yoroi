@@ -43,6 +43,9 @@ export const AppNavigator = () => {
     }
   }
 
+  // RNBootSplash.hide({fade: true})
+  // return <StorybookScreen />
+
   return (
     <NavigationContainer onReady={onReady} ref={navRef}>
       <Stack.Navigator
