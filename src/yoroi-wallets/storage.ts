@@ -29,28 +29,30 @@ const mountStorage = (path: FolderName) => {
 
     getItem,
     multiGet,
-    setItem: <T = unknown>(key: string, value: T, stringify: (data: T) => string = JSON.stringify) => {
+    setItem: async <T = unknown>(key: string, value: T, stringify: (data: T) => string = JSON.stringify) => {
       const item = stringify(value)
-      return AsyncStorage.setItem(withPath(key), item)
+      await AsyncStorage.setItem(withPath(key), item)
     },
-    multiSet: (tuples: Array<[key: string, value: unknown]>, stringify: (data: unknown) => string = JSON.stringify) => {
+    multiSet: async (
+      tuples: Array<[key: string, value: unknown]>,
+      stringify: (data: unknown) => string = JSON.stringify,
+    ) => {
       const items = tuples.map(([key, value]) => [withPath(key), stringify(value)])
-      return AsyncStorage.multiSet(items)
+      await AsyncStorage.multiSet(items)
     },
-    removeItem: (key: string) => {
-      return AsyncStorage.removeItem(withPath(key))
+    removeItem: async (key: string) => {
+      await AsyncStorage.removeItem(withPath(key))
     },
     removeFolder: async (folderName: FolderName) => {
-      const keys = await AsyncStorage.getAllKeys().then((keys) =>
-        keys.filter((key) => {
-          return key.startsWith(path) && withoutPath(key).startsWith(folderName) && isFolderKey({key, path})
-        }),
+      const keys = await AsyncStorage.getAllKeys()
+      const filteredKeys = keys.filter(
+        (key) => key.startsWith(path) && withoutPath(key).startsWith(folderName) && isFolderKey({key, path}),
       )
 
-      return AsyncStorage.multiRemove(keys)
+      await AsyncStorage.multiRemove(filteredKeys)
     },
-    multiRemove: (keys: Array<string>) => {
-      return AsyncStorage.multiRemove(keys.map((key) => withPath(key)))
+    multiRemove: async (keys: Array<string>) => {
+      await AsyncStorage.multiRemove(keys.map((key) => withPath(key)))
     },
     getAllKeys: () => {
       return AsyncStorage.getAllKeys()
@@ -61,7 +63,7 @@ const mountStorage = (path: FolderName) => {
       const keys = await AsyncStorage.getAllKeys()
       const filteredKeys = keys.filter((key) => key.startsWith(path))
 
-      return AsyncStorage.multiRemove(filteredKeys)
+      await AsyncStorage.multiRemove(filteredKeys)
     },
   } as const
 }

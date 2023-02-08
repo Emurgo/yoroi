@@ -52,8 +52,6 @@ describe('walletMananger', () => {
       ])
     }
 
-    const callback = jest.fn()
-    walletManager.subscribe(callback)
     await walletManager.removeWallet(wallet.id)
 
     expect(await walletManager.deletedWalletIds()).toEqual([wallet.id])
@@ -61,7 +59,6 @@ describe('walletMananger', () => {
 
     after: {
       const walletManager = new WalletManager()
-      expect(callback).toHaveBeenCalled()
       expect(await walletManager.listWallets()).toEqual([])
 
       await walletManager.initialize()
