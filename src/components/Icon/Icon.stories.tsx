@@ -87,8 +87,6 @@ storiesOf('Icon', module).add('Gallery', () => {
           title="Pending-Intrawallet"
         />
 
-        <Item icon={<Icon.NoAssetImage />} title="No Asset Image" />
-
         <Item icon={<Icon.Settings size={40} />} title="Settings" />
 
         <Item icon={<Icon.TabWallet size={40} />} title="Tab Wallet" />
