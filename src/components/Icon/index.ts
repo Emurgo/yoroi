@@ -44,7 +44,6 @@ import {Menu} from './Menu'
 import {Message} from './Message'
 import {MultipleWallets} from './MultipleWallets'
 import {NftAsset} from './NftAsset'
-import {NoAssetImage} from './NoAssetImage'
 import {Pin} from './Pin'
 import {Placeholder} from './Placeholder'
 import {PlateNumber} from './PlateNumber'
@@ -133,7 +132,6 @@ export const Icon = {
   Message,
   MultipleWallets,
   NftAsset,
-  NoAssetImage,
   Pin,
   Placeholder,
   PlateNumber,

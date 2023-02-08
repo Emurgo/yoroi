@@ -44,7 +44,6 @@ function loadStories() {
 	require('../src/Staking/PoolWarningModal/PoolWarningModal.stories');
 	require('../src/Staking/StakingCenter/StakingCenter.stories');
 	require('../src/TxHistory/AssetList/ActionsBanner.stories');
-	require('../src/TxHistory/AssetList/AssetItem/AssetItem.stories');
 	require('../src/TxHistory/AssetList/ChipButton/ChipButton.stories');
 	require('../src/TxHistory/BalanceBanner.stories');
 	require('../src/TxHistory/ModalInfo/ModalInfo.stories');
@@ -81,6 +80,7 @@ function loadStories() {
 	require('../src/auth/PinInput/PinInput.stories');
 	require('../src/auth/PinLoginScreen/PinLoginScreen.stories');
 	require('../src/auth/backgroundTimeout.stories');
+	require('../src/components/AssetItem/AssetItem.stories');
 	require('../src/components/Boundary/Boundary.stories');
 	require('../src/components/Button/Button.stories');
 	require('../src/components/Checkbox/Checkbox.stories');
@@ -146,7 +146,6 @@ const stories = [
 	'../src/Staking/PoolWarningModal/PoolWarningModal.stories',
 	'../src/Staking/StakingCenter/StakingCenter.stories',
 	'../src/TxHistory/AssetList/ActionsBanner.stories',
-	'../src/TxHistory/AssetList/AssetItem/AssetItem.stories',
 	'../src/TxHistory/AssetList/ChipButton/ChipButton.stories',
 	'../src/TxHistory/BalanceBanner.stories',
 	'../src/TxHistory/ModalInfo/ModalInfo.stories',
@@ -183,6 +182,7 @@ const stories = [
 	'../src/auth/PinInput/PinInput.stories',
 	'../src/auth/PinLoginScreen/PinLoginScreen.stories',
 	'../src/auth/backgroundTimeout.stories',
+	'../src/components/AssetItem/AssetItem.stories',
 	'../src/components/Boundary/Boundary.stories',
 	'../src/components/Button/Button.stories',
 	'../src/components/Checkbox/Checkbox.stories',
