@@ -110,7 +110,7 @@ export const toTokenInfo = (token: LegacyToken): TokenInfo => {
     symbol: undefined,
     url: undefined,
     logo: undefined,
-    ticker: undefined,
+    ticker: token.metadata?.ticker ?? undefined,
   }
 }
 

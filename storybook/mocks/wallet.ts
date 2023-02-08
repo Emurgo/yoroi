@@ -576,6 +576,7 @@ const balances: YoroiAmounts = {
   '1d129dc9c03f95a863489883914f05a52e13135994a32f0cbeacc65f.74484f444c52': '5',
   '1ca1fc0c880d25850cb00303788dfb51bdf2f902f6dce47d1ad09d5b.44': '2463889379',
   '08d91ec4e6c743a92de97d2fde5ca0d81493555c535894a3097061f7.c8b0': '148',
+  '1d129dc9c03f95a863489883914f05a52e13135994a32f0cbeacc65e.74484f444c53': '100000008',
 }
 
 const tokenInfos: Record<string, TokenInfo> = {
@@ -647,6 +648,20 @@ const tokenInfos: Record<string, TokenInfo> = {
       ticker: '',
       longName: '',
       numberOfDecimals: 0,
+      maxSupply: null,
+    },
+  }),
+  '1d129dc9c03f95a863489883914f05a52e13135994a32f0cbeacc65e.74484f444c53': toTokenInfo({
+    networkId: 300,
+    identifier: '1d129dc9c03f95a863489883914f05a52e13135994a32f0cbeacc65e.74484f444c53',
+    isDefault: false,
+    metadata: {
+      type: 'Cardano',
+      policyId: '1d129dc9c03f95a863489883914f05a52e13135994a32f0cbeacc65e',
+      assetName: '74484f444c53',
+      ticker: '8DEC',
+      longName: '',
+      numberOfDecimals: 8,
       maxSupply: null,
     },
   }),

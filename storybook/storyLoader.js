@@ -34,6 +34,7 @@ function loadStories() {
 	require('../src/Send/AssetSelectorScreen/AssetSelectorScreen.stories');
 	require('../src/Send/ConfirmScreen/ConfirmScreen.stories');
 	require('../src/Send/SendScreen/SendScreen.stories');
+	require('../src/Send/UpdateTokenAmount/UpdateTokenAmount.stories');
 	require('../src/Settings/ApplicationSettings/ApplicationSettingsScreen.stories');
 	require('../src/Settings/ChangeLanguage/ChangeLanguageScreen.stories');
 	require('../src/Settings/ChangePassword/ChangePasswordScreen.stories');
@@ -143,6 +144,7 @@ const stories = [
 	'../src/Send/AssetSelectorScreen/AssetSelectorScreen.stories',
 	'../src/Send/ConfirmScreen/ConfirmScreen.stories',
 	'../src/Send/SendScreen/SendScreen.stories',
+	'../src/Send/UpdateTokenAmount/UpdateTokenAmount.stories',
 	'../src/Settings/ApplicationSettings/ApplicationSettingsScreen.stories',
 	'../src/Settings/ChangeLanguage/ChangeLanguageScreen.stories',
 	'../src/Settings/ChangePassword/ChangePasswordScreen.stories',

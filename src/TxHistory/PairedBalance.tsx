@@ -40,8 +40,11 @@ const Balance = ({privacy, primaryAmount}: Props) => {
   const {currency, config} = useCurrencyContext()
   const rate = useExchangeRate({wallet, to: currency})
 
-  // hide pairing when set to the default asset ticker
+  // hide pairing when set to the primary token
   if (currency === 'ADA') return null
+
+  // hide pairing when is not the primary token
+  if (wallet.primaryTokenInfo.id !== primaryAmount.tokenId) return null
 
   if (rate == null)
     return (
