@@ -12,11 +12,13 @@ import {
 } from '../navigation'
 import {ReceiveScreen} from '../Receive/ReceiveScreen'
 import {useSelectedWallet} from '../SelectedWallet'
-import {AddressReaderQR} from '../Send/AddressReaderQR'
-import {AssetSelectorScreen} from '../Send/AssetSelectorScreen'
-import {ConfirmScreen} from '../Send/ConfirmScreen'
-import {SendProvider} from '../Send/Context/SendContext'
-import {SendScreen} from '../Send/SendScreen'
+import {SendProvider} from '../Send/shared/SendContext'
+import {ConfirmTxScreen} from '../Send/useCases/ConfirmTx'
+import {SelectTokenFromListScreen} from '../Send/useCases/ListSelectedTokens/AddToken/SelectTokenScreen'
+import {EditAmountScreen} from '../Send/useCases/ListSelectedTokens/EditAmountScreen'
+import {ListSelectedTokensScreen} from '../Send/useCases/ListSelectedTokens/ListSelectedTokensScreen'
+import {ReadQRCodeScreen} from '../Send/useCases/StartTx/InputReceiver/ReadQRCodeScreen'
+import {StartTxScreen} from '../Send/useCases/StartTx/StartTxScreen'
 import {COLORS} from '../theme'
 import {useWalletName} from '../yoroi-wallets'
 import {ModalInfo} from './ModalInfo'
@@ -34,7 +36,7 @@ export const TxHistoryNavigator = () => {
   const hideModalInfo = () => setModalInfoState(false)
 
   return (
-    <SendProvider key={wallet.id} wallet={wallet}>
+    <SendProvider key={wallet.id}>
       <Stack.Navigator
         screenOptions={{
           ...defaultStackNavigationOptions,
@@ -75,36 +77,77 @@ export const TxHistoryNavigator = () => {
         />
 
         <Stack.Screen
-          name="send"
+          name="send-start-tx"
           options={{
+            ...defaultStackNavigationOptionsV2,
             title: strings.sendTitle,
           }}
         >
           {() => (
             <Boundary>
-              <SendScreen />
-            </Boundary>
-          )}
-        </Stack.Screen>
-
-        <Stack.Screen name="select-asset" options={{title: strings.selectAssetTitle}}>
-          {() => (
-            <Boundary>
-              <AssetSelectorScreen />
+              <StartTxScreen />
             </Boundary>
           )}
         </Stack.Screen>
 
         <Stack.Screen //
-          name="address-reader-qr"
-          component={AddressReaderQR}
-          options={{title: strings.qrScannerTitle}}
+          name="send-select-token"
+          options={{
+            ...defaultStackNavigationOptionsV2,
+            title: strings.selectAssetTitle,
+          }}
+        >
+          {() => (
+            <Boundary>
+              <SelectTokenFromListScreen />
+            </Boundary>
+          )}
+        </Stack.Screen>
+
+        <Stack.Screen //
+          name="send-selected-tokens"
+          options={{
+            ...defaultStackNavigationOptionsV2,
+            title: strings.selectedTokensTitle,
+          }}
+        >
+          {() => (
+            <Boundary>
+              <ListSelectedTokensScreen />
+            </Boundary>
+          )}
+        </Stack.Screen>
+
+        <Stack.Screen //
+          name="send-edit-token-amount"
+          options={{
+            ...defaultStackNavigationOptionsV2,
+            title: strings.editTokenAmountTitle,
+          }}
+        >
+          {() => (
+            <Boundary>
+              <EditAmountScreen />
+            </Boundary>
+          )}
+        </Stack.Screen>
+
+        <Stack.Screen //
+          name="send-read-qr-code"
+          component={ReadQRCodeScreen}
+          options={{
+            ...defaultStackNavigationOptionsV2,
+            title: strings.qrScannerTitle,
+          }}
         />
 
         <Stack.Screen //
-          name="send-confirm"
-          component={ConfirmScreen}
-          options={{title: strings.confirmTitle}}
+          name="send-confirm-tx"
+          component={ConfirmTxScreen}
+          options={{
+            ...defaultStackNavigationOptionsV2,
+            title: strings.confirmTitle,
+          }}
         />
       </Stack.Navigator>
 
@@ -132,6 +175,14 @@ const messages = defineMessages({
     id: 'components.send.selectasset.title',
     defaultMessage: '!!!Select asset',
   },
+  selectedTokensTitle: {
+    id: 'components.send.selectedtokensscreen.title',
+    defaultMessage: '!!!Selected tokens',
+  },
+  editTokenAmountTitle: {
+    id: 'components.send.edittokenamountscreen.title',
+    defaultMessage: '!!!Selected tokens',
+  },
   confirmTitle: {
     id: 'components.send.confirmscreen.title',
     defaultMessage: '!!!Send',
@@ -155,6 +206,8 @@ const useStrings = () => {
     selectAssetTitle: intl.formatMessage(messages.selectAssetTitle),
     confirmTitle: intl.formatMessage(messages.confirmTitle),
     receiveInfoText: intl.formatMessage(messages.receiveInfoText),
+    editTokenAmountTitle: intl.formatMessage(messages.editTokenAmountTitle),
+    selectedTokensTitle: intl.formatMessage(messages.selectedTokensTitle),
   }
 }
 

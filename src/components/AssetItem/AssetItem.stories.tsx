@@ -23,7 +23,7 @@ storiesOf('Components/AssetItem', module)
 
           <AssetItem
             tokenInfo={primaryTokenInfo}
-            balance={primaryBalance}
+            quantity={primaryBalance}
             style={{backgroundColor: 'white', padding: 16, borderRadius: 8}}
           />
 
@@ -33,7 +33,7 @@ storiesOf('Components/AssetItem', module)
 
           <AssetItem
             tokenInfo={tokenInfo}
-            balance={tokenBalance}
+            quantity={tokenBalance}
             style={{backgroundColor: 'white', padding: 16, borderRadius: 8}}
           />
         </View>
@@ -51,7 +51,7 @@ storiesOf('Components/AssetItem', module)
         <View style={{flex: 1, justifyContent: 'center', padding: 16}}>
           <AssetItem
             tokenInfo={primaryTokenInfo}
-            balance={primaryBalance}
+            quantity={primaryBalance}
             style={{backgroundColor: 'white', padding: 16, borderRadius: 8}}
           />
         </View>
@@ -69,7 +69,7 @@ storiesOf('Components/AssetItem', module)
         <View style={{flex: 1, justifyContent: 'center', padding: 16}}>
           <AssetItem
             tokenInfo={primaryTokenInfo}
-            balance={primaryBalance}
+            quantity={primaryBalance}
             style={{backgroundColor: 'white', padding: 16, borderRadius: 8}}
           />
         </View>

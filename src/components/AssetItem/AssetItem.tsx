@@ -10,16 +10,16 @@ import {Boundary, Placeholder, Text, TokenIcon} from '..'
 
 export type AssetItemProps = {
   tokenInfo: TokenInfo
-  balance: Quantity
+  quantity: Quantity
   style?: ViewProps['style']
 }
-export const AssetItem = ({balance, style, tokenInfo}: AssetItemProps) => {
+export const AssetItem = ({quantity, style, tokenInfo}: AssetItemProps) => {
   const wallet = useSelectedWallet()
 
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
   const name = tokenInfo.ticker ?? tokenInfo.name ?? '-'
   const detail = isPrimary ? tokenInfo.description : tokenInfo.fingerprint
-  const quantity = Quantities.denominated(balance, tokenInfo.decimals)
+  const denominatedQuantity = Quantities.denominated(quantity, tokenInfo.decimals)
 
   return (
     <View style={[style, styles.container]} testID="assetItem">
@@ -41,10 +41,10 @@ export const AssetItem = ({balance, style, tokenInfo}: AssetItemProps) => {
 
       <Right>
         <Text style={styles.quantity} testID="tokenAmountText">
-          {quantity}
+          {denominatedQuantity}
         </Text>
 
-        {isPrimary && <PairedBalance primaryAmount={{quantity: balance, tokenId: tokenInfo.id}} />}
+        {isPrimary && <PairedBalance primaryAmount={{quantity, tokenId: tokenInfo.id}} />}
       </Right>
     </View>
   )

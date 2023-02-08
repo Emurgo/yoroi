@@ -3,7 +3,7 @@ import React from 'react'
 
 import {QueryProvider} from '../../.storybook/decorators'
 import {SelectedWalletProvider} from '../SelectedWallet'
-import {SendProvider} from '../Send/Context/SendContext'
+import {SendProvider} from '../Send/shared/SendContext'
 import {mocks} from '../yoroi-wallets/mocks'
 import {TxHistory} from './TxHistory'
 
@@ -12,7 +12,7 @@ storiesOf('V2/TxHistory', module)
     return (
       <QueryProvider>
         <SelectedWalletProvider wallet={mocks.wallet}>
-          <SendProvider wallet={mocks.wallet}>
+          <SendProvider>
             <TxHistory />
           </SendProvider>
         </SelectedWalletProvider>
@@ -30,14 +30,7 @@ storiesOf('V2/TxHistory', module)
             },
           }}
         >
-          <SendProvider
-            wallet={{
-              ...mocks.wallet,
-              transactions: {
-                [mockTransaction.id]: mockTransaction,
-              },
-            }}
-          >
+          <SendProvider>
             <TxHistory />
           </SendProvider>
         </SelectedWalletProvider>
@@ -53,7 +46,7 @@ storiesOf('V2/TxHistory', module)
     return (
       <QueryProvider>
         <SelectedWalletProvider wallet={wallet}>
-          <SendProvider wallet={wallet}>
+          <SendProvider>
             <TxHistory />
           </SendProvider>
         </SelectedWalletProvider>
@@ -69,7 +62,7 @@ storiesOf('V2/TxHistory', module)
             walletImplementationId: 'haskell-byron',
           }}
         >
-          <SendProvider wallet={mocks.wallet}>
+          <SendProvider>
             <TxHistory />
           </SendProvider>
         </SelectedWalletProvider>
