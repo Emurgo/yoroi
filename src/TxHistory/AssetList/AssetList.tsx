@@ -52,7 +52,7 @@ export const AssetList = (props: Props) => {
         renderItem={({item: tokenInfo}) => (
           <ExplorableAssetItem
             tokenInfo={tokenInfo}
-            balance={balances[tokenInfo.id]}
+            quantity={balances[tokenInfo.id]}
             onPress={() => Linking.openURL(config.EXPLORER_URL_FOR_TOKEN(tokenInfo.id))}
           />
         )}
@@ -68,10 +68,10 @@ export const AssetList = (props: Props) => {
 type ExplorableAssetItemProps = AssetItemProps & {
   onPress(): void
 }
-const ExplorableAssetItem = ({tokenInfo, balance, onPress}: ExplorableAssetItemProps) => {
+const ExplorableAssetItem = ({tokenInfo, quantity, onPress}: ExplorableAssetItemProps) => {
   return (
     <TouchableOpacity style={styles.button} onPress={onPress} testID="assetSelectorItem">
-      <AssetItem tokenInfo={tokenInfo} balance={balance} />
+      <AssetItem tokenInfo={tokenInfo} quantity={quantity} />
     </TouchableOpacity>
   )
 }
