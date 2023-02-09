@@ -1,14 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`transactionManager create drops transaction if invalid format 1`] = `Object {}`;
-
-exports[`transactionManager create drops transaction if invalid format 2`] = `Object {}`;
-
-exports[`transactionManager create drops transaction if invalid format 3`] = `Object {}`;
-
-exports[`transactionManager create drops transaction if invalid format 4`] = `Object {}`;
-
-exports[`transactionManager create loads from storage 1`] = `
+exports[`transactionManager restore, resetState, sync 1`] = `
 Object {
   "0a8962dde362eef1f840defe6f916fdf9701ad53c7cb5dd4a74ab85df8e9bffc": Object {
     "blockHash": "fb418acaa29c66e799a16b594f7beedfe2ef53413e9863b61a418f2df1ff1442",
@@ -100,7 +92,7 @@ Object {
 }
 `;
 
-exports[`transactionManager create loads from storage 2`] = `
+exports[`transactionManager restore, resetState, sync 2`] = `
 Object {
   "addr_test1qqgxd3r59psq0dg33t7asmvjmtu55tvvcmeq5kmhj0tmqjctlqxj9g0azvpycncr9u600p6t556qhc3psk06uzzw6saqk4x7z6": Array [
     "0a8962dde362eef1f840defe6f916fdf9701ad53c7cb5dd4a74ab85df8e9bffc",
@@ -117,7 +109,7 @@ Object {
 }
 `;
 
-exports[`transactionManager create loads from storage 3`] = `
+exports[`transactionManager restore, resetState, sync 3`] = `
 Object {
   "e0acab7e493ece4c1e6ae627ef9f5f7c9b1063e599e4aa91f87f0d58ae": Object {
     "0a8962dde362eef1f840defe6f916fdf9701ad53c7cb5dd4a74ab85df8e9bffc": Object {
@@ -134,43 +126,13 @@ Object {
 }
 `;
 
-exports[`transactionManager create loads from storage 4`] = `
+exports[`transactionManager restore, resetState, sync 4`] = `
 Object {
   "0a8962dde362eef1f840defe6f916fdf9701ad53c7cb5dd4a74ab85df8e9bffc": -2909238,
 }
 `;
 
-exports[`transactionManager create loads from storage 5`] = `Object {}`;
-
-exports[`transactionManager create loads from storage 6`] = `Object {}`;
-
-exports[`transactionManager create loads from storage 7`] = `Object {}`;
-
-exports[`transactionManager create loads from storage 8`] = `Object {}`;
-
-exports[`transactionManager create starts fresh if txids is invalid format 1`] = `Object {}`;
-
-exports[`transactionManager create starts fresh if txids is invalid format 2`] = `Object {}`;
-
-exports[`transactionManager create starts fresh if txids is invalid format 3`] = `Object {}`;
-
-exports[`transactionManager create starts fresh if txids is invalid format 4`] = `Object {}`;
-
-exports[`transactionManager create starts fresh if upgrading from old version 1`] = `Object {}`;
-
-exports[`transactionManager create starts fresh if upgrading from old version 2`] = `Object {}`;
-
-exports[`transactionManager create starts fresh if upgrading from old version 3`] = `Object {}`;
-
-exports[`transactionManager create starts fresh if upgrading from old version 4`] = `Object {}`;
-
-exports[`transactionManager create syncs 1`] = `Object {}`;
-
-exports[`transactionManager create syncs 2`] = `Object {}`;
-
-exports[`transactionManager create syncs 3`] = `Object {}`;
-
-exports[`transactionManager create syncs 4`] = `
+exports[`transactionManager restore, resetState, sync 5`] = `
 Object {
   "54ab3dc8e717040b9b4c523d0756cfc59a30f107e053b4cd474e11e818be0ddg": Object {
     "blockHash": "3be6615c2711f8c85e5777d1a060682bba507551d99d3568569fe8dfb7dcc690",
@@ -501,7 +463,7 @@ Object {
 }
 `;
 
-exports[`transactionManager create syncs 5`] = `
+exports[`transactionManager restore, resetState, sync 6`] = `
 Object {
   "addr_test1qqkv3gr95tsuvwmgy4fcyffpcaxta9xu3df3az4rydxtlmwv60x7wwxgjxt6865rgds3na6sezwl4j483vmm796z0f7s9c9pry": Array [
     "54ab3dc8e717040b9b4c523d0756cfc59a30f107e053b4cd474e11e818be0ddg",
@@ -515,7 +477,7 @@ Object {
 }
 `;
 
-exports[`transactionManager create syncs 6`] = `
+exports[`transactionManager restore, resetState, sync 7`] = `
 Object {
   "e0acab7e493ece4c1e6ae627ef9f5f7c9b1063e599e4aa91f87f0d58ae": Object {
     "54ab3dc8e717040b9b4c523d0756cfc59a30f107e053b4cd474e11e818be0ddg": Object {
