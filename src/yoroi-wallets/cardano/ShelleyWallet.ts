@@ -410,11 +410,6 @@ export class ShelleyWallet implements WalletInterface {
     return this.storage.setItem('data', this.toJSON())
   }
 
-  async remove() {
-    await this.memosManager.clear()
-    await this.clear()
-  }
-
   async clear() {
     await this.transactionManager.clear()
     await this.utxoManager.clear()

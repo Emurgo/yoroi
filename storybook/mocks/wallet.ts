@@ -171,9 +171,6 @@ const wallet: YoroiWallet = {
   save: async (...args) => {
     action('save')(...args)
   },
-  remove: async (...args) => {
-    action('remove')(...args)
-  },
   saveMemo: async (...args) => {
     action('saveMemo')(...args)
   },
