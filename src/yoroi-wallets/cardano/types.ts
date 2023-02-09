@@ -18,7 +18,7 @@ import type {
   FundInfoResponse,
   RawUtxo,
   TipStatusResponse,
-  Transaction,
+  TransactionInfo,
   TxStatusRequest,
   TxStatusResponse,
   WalletState,
@@ -31,7 +31,7 @@ import {AddressChain} from './chain'
 export type WalletEvent =
   | {type: 'initialize'}
   | {type: 'easy-confirmation'; enabled: boolean}
-  | {type: 'transactions'; transactions: Record<string, Transaction>}
+  | {type: 'transactions'; transactions: Record<string, TransactionInfo>}
   | {type: 'addresses'; addresses: Addresses}
   | {type: 'state'; state: WalletState}
   | {type: 'utxos'; utxos: RawUtxo[]}
@@ -70,7 +70,7 @@ export interface WalletInterface {
 
   get numReceiveAddresses(): number
 
-  get transactions(): Record<string, Transaction>
+  get transactions(): Record<string, TransactionInfo>
 
   get confirmationCounts(): Record<string, null | number>
 

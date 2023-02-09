@@ -19,7 +19,7 @@ import {
   YoroiUnsignedTx,
 } from '../../src/yoroi-wallets/types'
 import {mockEncryptedStorage} from './storage'
-import {mockTransactionInfo, mockTransactions} from './transaction'
+import {mockTransactionInfo, mockTransactionInfos} from './transaction'
 import {utxos} from './utxos'
 
 const walletMeta: WalletMeta = {
@@ -152,7 +152,7 @@ const wallet: YoroiWallet = {
   internalAddresses: [],
   externalAddresses: [],
   confirmationCounts: {},
-  transactions: mockTransactions,
+  transactions: mockTransactionInfos,
   isUsedAddressIndex: {},
   numReceiveAddresses: 0,
   receiveAddresses: [],

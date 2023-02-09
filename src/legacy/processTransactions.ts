@@ -81,6 +81,7 @@ export const processTxHistoryData = (
   ownAddresses: Array<string>,
   confirmations: number,
   networkId: NetworkId,
+  memo: string | null,
 ): TransactionInfo => {
   const _strToDefaultMultiAsset = (amount: string) => strToDefaultMultiAsset(amount, networkId)
 
@@ -259,6 +260,6 @@ export const processTxHistoryData = (
     assurance,
     tokens,
     blockNumber: tx.blockNum ?? 0,
-    memo: tx.memo,
+    memo,
   }
 }

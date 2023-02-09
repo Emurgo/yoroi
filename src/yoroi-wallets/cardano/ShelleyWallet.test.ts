@@ -101,10 +101,10 @@ describe('migration', () => {
       `"stake1u8q3auyvgnekzzm72m2xuzrtjqvxcyhf568s2gdhcnrjujcr25kkv"`,
     )
 
-    expect(wallet.transactionManager.getPerRewardAddressCertificates()).toMatchInlineSnapshot(`Object {}`)
-    expect(wallet.transactionManager.getConfirmationCounts()).toMatchInlineSnapshot(`Object {}`)
-    expect(wallet.transactionManager.getPerAddressTxs()).toMatchInlineSnapshot(`Object {}`)
-    expect(wallet.transactionManager.getTransactions()).toMatchInlineSnapshot(`Object {}`)
+    expect(wallet.transactionManager.perRewardAddressCertificates).toMatchInlineSnapshot(`Object {}`)
+    expect(wallet.transactionManager.confirmationCounts).toMatchInlineSnapshot(`Object {}`)
+    expect(wallet.transactionManager.perAddressTxs).toMatchInlineSnapshot(`Object {}`)
+    expect(wallet.transactionManager.transactions).toMatchInlineSnapshot(`Object {}`)
 
     expect(wallet.primaryToken).toMatchInlineSnapshot(`
       Object {
@@ -228,10 +228,10 @@ describe('migration', () => {
       `"stake1u8q3auyvgnekzzm72m2xuzrtjqvxcyhf568s2gdhcnrjujcr25kkv"`,
     )
 
-    expect(wallet.transactionManager.getPerRewardAddressCertificates()).toMatchInlineSnapshot(`Object {}`)
-    expect(wallet.transactionManager.getConfirmationCounts()).toMatchInlineSnapshot(`Object {}`)
-    expect(wallet.transactionManager.getPerAddressTxs()).toMatchInlineSnapshot(`Object {}`)
-    expect(wallet.transactionManager.getTransactions()).toMatchInlineSnapshot(`Object {}`)
+    expect(wallet.transactionManager.perRewardAddressCertificates).toMatchInlineSnapshot(`Object {}`)
+    expect(wallet.transactionManager.confirmationCounts).toMatchInlineSnapshot(`Object {}`)
+    expect(wallet.transactionManager.perAddressTxs).toMatchInlineSnapshot(`Object {}`)
+    expect(wallet.transactionManager.transactions).toMatchInlineSnapshot(`Object {}`)
 
     expect(wallet.primaryToken).toMatchInlineSnapshot(`
       Object {
@@ -357,10 +357,10 @@ describe('migration', () => {
       `"stake1uxdr3c77jn9px6c6srafp4ekpmqluk5dhsndgfllanj5acsqkljgd"`,
     )
 
-    expect(wallet.transactionManager.getPerRewardAddressCertificates()).toMatchInlineSnapshot(`Object {}`)
-    expect(wallet.transactionManager.getConfirmationCounts()).toMatchInlineSnapshot(`Object {}`)
-    expect(wallet.transactionManager.getPerAddressTxs()).toMatchInlineSnapshot(`Object {}`)
-    expect(wallet.transactionManager.getTransactions()).toMatchInlineSnapshot(`Object {}`)
+    expect(wallet.transactionManager.perRewardAddressCertificates).toMatchInlineSnapshot(`Object {}`)
+    expect(wallet.transactionManager.confirmationCounts).toMatchInlineSnapshot(`Object {}`)
+    expect(wallet.transactionManager.perAddressTxs).toMatchInlineSnapshot(`Object {}`)
+    expect(wallet.transactionManager.transactions).toMatchInlineSnapshot(`Object {}`)
 
     expect(wallet.primaryToken).toMatchInlineSnapshot(`
       Object {

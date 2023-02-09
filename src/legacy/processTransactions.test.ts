@@ -1,5 +1,5 @@
 import {MultiToken} from '../yoroi-wallets'
-import {toCachedTx} from '../yoroi-wallets/cardano/shelley/transactionCache'
+import {toCachedTx} from '../yoroi-wallets/cardano/transactionManager'
 import {RawTransaction, TRANSACTION_DIRECTION} from '../yoroi-wallets/types/other'
 import {CONFIG} from './config'
 import {processTxHistoryData} from './processTransactions'
@@ -278,6 +278,7 @@ describe('processTxHistoryData', () => {
       myAddresses,
       100, // confirmations
       NETWORK_ID,
+      'fake memo',
     )
 
     const delta = MultiToken.fromArray(tx.delta)
@@ -293,6 +294,7 @@ describe('processTxHistoryData', () => {
       myAddresses,
       100, // confirmations
       NETWORK_ID,
+      'fake memo',
     )
 
     const delta = MultiToken.fromArray(tx.delta)
@@ -308,6 +310,7 @@ describe('processTxHistoryData', () => {
       myAddresses,
       100, // confirmations
       NETWORK_ID,
+      'fake memo',
     )
 
     const delta = MultiToken.fromArray(tx.delta)
@@ -328,6 +331,7 @@ describe('processTxHistoryData', () => {
       myAddresses,
       100, // confirmations
       NETWORK_ID,
+      'fake memo',
     )
 
     const delta = MultiToken.fromArray(tx.delta)

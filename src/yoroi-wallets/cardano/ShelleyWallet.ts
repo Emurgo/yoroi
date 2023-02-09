@@ -29,6 +29,7 @@ import {
   isHaskellShelleyNetwork,
   isJormungandr,
 } from '../../legacy/networks'
+import {processTxHistoryData} from '../../legacy/processTransactions'
 import {IsLockedError, nonblockingSynchronize, synchronize} from '../../legacy/promise'
 import type {WalletMeta} from '../../legacy/state'
 import {deriveRewardAddressHex} from '../../legacy/utils'
@@ -43,6 +44,7 @@ import type {
   RawUtxo,
   TipStatusResponse,
   TokenInfo,
+  Transaction,
   TxStatusRequest,
   TxStatusResponse,
 } from '../types'
@@ -64,9 +66,10 @@ import {
 } from '.'
 import * as api from './api'
 import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from './chain'
+import {makeMemosManager, MemosManager} from './memosManager'
 import {filterAddressesByStakingKey, getDelegationStatus} from './shelley/delegationUtils'
 import {yoroiSignedTx} from './signedTx'
-import {makeTransactionManager, TransactionManager} from './transactionManager'
+import {TransactionManager} from './transactionManager'
 import {
   isYoroiWallet,
   NetworkId,
@@ -129,6 +132,7 @@ export class ShelleyWallet implements WalletInterface {
   private readonly utxoManager: UtxoManager
   private readonly stakingKeyPath: number[]
   private readonly transactionManager: TransactionManager
+  private readonly memosManager: MemosManager
 
   // =================== create =================== //
 
@@ -263,10 +267,8 @@ export class ShelleyWallet implements WalletInterface {
     const rewardAddressHex = await deriveRewardAddressHex(accountPubKeyHex, networkId)
     const apiUrl = getCardanoNetworkConfigById(networkId).BACKEND.API_ROOT
     const utxoManager = await makeUtxoManager({storage: storage.join('utxoManager/'), apiUrl})
-    const transactionManager = await makeTransactionManager(
-      storage.join('txManager/'),
-      getCardanoNetworkConfigById(networkId).BACKEND,
-    )
+    const transactionManager = await TransactionManager.create(storage.join('txs/'))
+    const memosManager = await makeMemosManager(storage.join('memos/'))
 
     const wallet = new ShelleyWallet({
       storage,
@@ -283,6 +285,7 @@ export class ShelleyWallet implements WalletInterface {
       isEasyConfirmationEnabled,
       lastGeneratedAddressIndex,
       transactionManager,
+      memosManager,
     })
 
     await wallet.discoverAddresses()
@@ -310,6 +313,7 @@ export class ShelleyWallet implements WalletInterface {
     isEasyConfirmationEnabled,
     lastGeneratedAddressIndex,
     transactionManager,
+    memosManager,
   }: {
     storage: YoroiStorage
     networkId: NetworkId
@@ -325,6 +329,7 @@ export class ShelleyWallet implements WalletInterface {
     isEasyConfirmationEnabled: boolean
     lastGeneratedAddressIndex: number
     transactionManager: TransactionManager
+    memosManager: MemosManager
   }) {
     this.id = id
     this.storage = storage
@@ -340,6 +345,7 @@ export class ShelleyWallet implements WalletInterface {
     this.hwDeviceInfo = hwDeviceInfo
     this.isReadOnly = isReadOnly
     this.transactionManager = transactionManager
+    this.memosManager = memosManager
     this.internalChain = internalChain
     this.externalChain = externalChain
     this.rewardAddressHex = rewardAddressHex
@@ -377,7 +383,7 @@ export class ShelleyWallet implements WalletInterface {
   }
 
   async remove() {
-    await this.transactionManager.clearMemos()
+    await this.memosManager.clear()
     await this.clear()
   }
 
@@ -387,7 +393,7 @@ export class ShelleyWallet implements WalletInterface {
   }
 
   saveMemo(txId: string, memo: string): Promise<void> {
-    return this.transactionManager.saveMemo(txId, memo)
+    return this.memosManager.saveMemo(txId, memo)
   }
 
   // =================== persistence =================== //
@@ -573,7 +579,7 @@ export class ShelleyWallet implements WalletInterface {
 
   getDelegationStatus() {
     if (this.rewardAddressHex == null) throw new Error('reward address is null')
-    const certsForKey = this.transactionManager.getPerRewardAddressCertificates()[this.rewardAddressHex]
+    const certsForKey = this.transactionManager.perRewardAddressCertificates[this.rewardAddressHex]
     return Promise.resolve(getDelegationStatus(this.rewardAddressHex, certsForKey))
   }
 
@@ -1002,7 +1008,7 @@ export class ShelleyWallet implements WalletInterface {
   }
 
   get isUsedAddressIndex() {
-    return this._isUsedAddressIndexSelector(this.transactionManager.getPerAddressTxs())
+    return this._isUsedAddressIndexSelector(this.transactionManager.perAddressTxs)
   }
 
   get numReceiveAddresses() {
@@ -1010,11 +1016,22 @@ export class ShelleyWallet implements WalletInterface {
   }
 
   get transactions() {
-    return this.transactionManager.getTransactions()
+    const memos = this.memosManager.getMemos()
+    return _.mapValues(this.transactionManager.transactions, (tx: Transaction) => {
+      return processTxHistoryData(
+        tx,
+        this.rewardAddressHex != null
+          ? [...this.internalAddresses, ...this.externalAddresses, ...[this.rewardAddressHex]]
+          : [...this.internalAddresses, ...this.externalAddresses],
+        this.confirmationCounts[tx.id] || 0,
+        this.networkId,
+        memos[tx.id] ?? null,
+      )
+    })
   }
 
   get confirmationCounts() {
-    return this.transactionManager.getConfirmationCounts()
+    return this.transactionManager.confirmationCounts
   }
 
   // ============ security & key management ============ //
@@ -1109,7 +1126,10 @@ export class ShelleyWallet implements WalletInterface {
 
     await this.discoverAddresses()
 
-    await Promise.all([this.syncUtxos(), this.transactionManager.doSync(this.getAddressesInBlocks())])
+    await Promise.all([
+      this.syncUtxos(),
+      this.transactionManager.doSync(this.getAddressesInBlocks(), this.getBackendConfig()),
+    ])
 
     this.updateLastGeneratedAddressIndex()
   }
@@ -1130,7 +1150,7 @@ export class ShelleyWallet implements WalletInterface {
   }
 
   private isUsedAddress(address: string) {
-    const perAddressTxs = this.transactionManager.getPerAddressTxs()
+    const perAddressTxs = this.transactionManager.perAddressTxs
     return !!perAddressTxs[address] && perAddressTxs[address].length > 0
   }
 
