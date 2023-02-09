@@ -18,7 +18,7 @@ import type {
   FundInfoResponse,
   RawUtxo,
   TipStatusResponse,
-  Transaction,
+  TransactionInfo,
   TxStatusRequest,
   TxStatusResponse,
   WalletState,
@@ -31,7 +31,7 @@ import {AddressChain} from './chain'
 export type WalletEvent =
   | {type: 'initialize'}
   | {type: 'easy-confirmation'; enabled: boolean}
-  | {type: 'transactions'; transactions: Record<string, Transaction>}
+  | {type: 'transactions'; transactions: Record<string, TransactionInfo>}
   | {type: 'addresses'; addresses: Addresses}
   | {type: 'state'; state: WalletState}
   | {type: 'utxos'; utxos: RawUtxo[]}
@@ -70,7 +70,7 @@ export interface WalletInterface {
 
   get numReceiveAddresses(): number
 
-  get transactions(): Record<string, Transaction>
+  get transactions(): Record<string, TransactionInfo>
 
   get confirmationCounts(): Record<string, null | number>
 
@@ -97,8 +97,6 @@ export interface WalletInterface {
   // =================== persistence =================== //
 
   save(): Promise<void>
-
-  remove(): Promise<void>
 
   clear(): Promise<void>
 
@@ -207,6 +205,8 @@ export type YoroiWallet = Pick<WalletInterface, YoroiWalletKeys> & {
   signTx(unsignedTx: YoroiUnsignedTx, rootKey: string): Promise<YoroiSignedTx>
   submitTransaction: (signedTx: string) => Promise<[]>
   subscribe: (subscription: WalletSubscription) => Unsubscribe
+  startSync: () => void
+  stopSync: () => void
 
   // NonNullable
   networkId: NonNullable<WalletInterface['networkId']>
@@ -266,7 +266,6 @@ type YoroiWalletKeys =
   | 'generateNewReceiveAddress'
   | 'tryDoFullSync'
   | 'clear'
-  | 'remove'
   | 'saveMemo'
 
 const yoroiWalletKeys: Array<YoroiWalletKeys> = [
@@ -308,6 +307,5 @@ const yoroiWalletKeys: Array<YoroiWalletKeys> = [
   'walletImplementationId',
   'tryDoFullSync',
   'clear',
-  'remove',
   'saveMemo',
 ]

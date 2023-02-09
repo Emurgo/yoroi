@@ -17,7 +17,7 @@ export const RemoveWalletScreen = () => {
 
   const {resetToWalletSelection} = useWalletNavigation()
   const {removeWallet, isLoading} = useRemoveWallet(wallet.id, {
-    onMutate: () => resetToWalletSelection(),
+    onSuccess: () => resetToWalletSelection(),
   })
 
   const [hasMnemonicWrittenDown, setHasMnemonicWrittenDown] = React.useState(false)

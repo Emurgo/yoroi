@@ -19,7 +19,7 @@ import {
   YoroiUnsignedTx,
 } from '../../src/yoroi-wallets/types'
 import {mockEncryptedStorage} from './storage'
-import {mockTransactionInfo, mockTransactions} from './transaction'
+import {mockTransactionInfo, mockTransactionInfos} from './transaction'
 import {utxos} from './utxos'
 
 const walletMeta: WalletMeta = {
@@ -152,7 +152,7 @@ const wallet: YoroiWallet = {
   internalAddresses: [],
   externalAddresses: [],
   confirmationCounts: {},
-  transactions: mockTransactions,
+  transactions: mockTransactionInfos,
   isUsedAddressIndex: {},
   numReceiveAddresses: 0,
   receiveAddresses: [],
@@ -170,9 +170,6 @@ const wallet: YoroiWallet = {
   },
   save: async (...args) => {
     action('save')(...args)
-  },
-  remove: async (...args) => {
-    action('remove')(...args)
   },
   saveMemo: async (...args) => {
     action('saveMemo')(...args)
@@ -214,6 +211,12 @@ const wallet: YoroiWallet = {
 
   fetchFundInfo: () => {
     throw new Error('not implemented: fetchFundInfo')
+  },
+  startSync: () => {
+    throw new Error('not implemented: start')
+  },
+  stopSync: () => {
+    throw new Error('not implemented: stop')
   },
 }
 
