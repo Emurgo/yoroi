@@ -8,7 +8,7 @@ import type {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {Logger} from '../legacy/logging'
 import type {WalletMeta} from '../legacy/state'
 import {isWalletMeta, migrateWalletMetas, parseWalletMeta} from '../Storage/migrations/walletMeta'
-import {isYoroiWallet, NetworkId, ShelleyWallet, WalletImplementationId, YoroiWallet} from './cardano'
+import {isYoroiWallet, NetworkId, CardanoWallet, WalletImplementationId, YoroiWallet} from './cardano'
 import {storage, YoroiStorage} from './storage'
 import {WALLET_IMPLEMENTATION_REGISTRY} from './types/other'
 import {parseSafe} from './utils/parsing'
@@ -182,12 +182,12 @@ export class WalletManager {
   // returns the corresponding implementation of WalletInterface. Normally we
   // should expect that each blockchain network has 1 wallet implementation.
   // In the case of Cardano, there are two: Byron-era and Shelley-era.
-  private getWalletImplementation(walletImplementationId: WalletImplementationId): typeof ShelleyWallet {
+  private getWalletImplementation(walletImplementationId: WalletImplementationId): typeof CardanoWallet {
     switch (walletImplementationId) {
       case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON:
       case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY:
       case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY_24:
-        return ShelleyWallet
+        return CardanoWallet
       // TODO
       // case WALLET_IMPLEMENTATION_REGISTRY.ERGO:
       //   return ErgoWallet()
