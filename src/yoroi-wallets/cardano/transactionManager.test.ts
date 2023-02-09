@@ -28,97 +28,34 @@ jest.mock('./api', () => ({
 beforeEach(() => AsyncStorage.clear())
 
 describe('transactionManager', () => {
-  describe('create', () => {
-    it('loads from storage', async () => {
-      DeviceInfo.getVersion = () => '9.9.9'
+  it('restore, resetState, sync', async () => {
+    DeviceInfo.getVersion = () => '9.9.9'
 
-      const mockStorage = rootStorage.join('txs/')
-      mockStorage.multiSet([
-        [mockTx.id, mockTx],
-        ['txids', [mockTx.id]],
-      ])
+    const mockStorage = rootStorage.join('txs/')
+    mockStorage.multiSet([
+      [mockTx.id, mockTx],
+      ['txids', [mockTx.id]],
+    ])
 
-      const txManager = await TransactionManager.create(mockStorage)
+    const txManager = await TransactionManager.create(mockStorage)
 
-      expect(txManager.transactions).toMatchSnapshot()
-      expect(txManager.perAddressTxs).toMatchSnapshot()
-      expect(txManager.perRewardAddressCertificates).toMatchSnapshot()
-      expect(txManager.confirmationCounts).toMatchSnapshot()
+    expect(txManager.transactions).toMatchSnapshot()
+    expect(txManager.perAddressTxs).toMatchSnapshot()
+    expect(txManager.perRewardAddressCertificates).toMatchSnapshot()
+    expect(txManager.confirmationCounts).toMatchSnapshot()
 
-      txManager.resetState()
+    txManager.resetState()
 
-      expect(txManager.transactions).toMatchSnapshot()
-      expect(txManager.perAddressTxs).toMatchSnapshot()
-      expect(txManager.perRewardAddressCertificates).toMatchSnapshot()
-      expect(txManager.confirmationCounts).toMatchSnapshot()
-    })
+    expect(txManager.transactions).toEqual({})
+    expect(txManager.perAddressTxs).toEqual({})
+    expect(txManager.perRewardAddressCertificates).toEqual({})
+    expect(txManager.confirmationCounts).toEqual({})
 
-    it('syncs', async () => {
-      DeviceInfo.getVersion = () => '9.9.9'
+    await txManager.doSync(mockedAddressesByChunks, mockedBackendConfig)
 
-      const txManager = await TransactionManager.create(rootStorage)
-
-      expect(txManager.transactions).toMatchSnapshot()
-      expect(txManager.perAddressTxs).toMatchSnapshot()
-      expect(txManager.perRewardAddressCertificates).toMatchSnapshot()
-
-      await txManager.doSync(mockedAddressesByChunks, mockedBackendConfig)
-
-      expect(txManager.transactions).toMatchSnapshot()
-      expect(txManager.perAddressTxs).toMatchSnapshot()
-      expect(txManager.perRewardAddressCertificates).toMatchSnapshot()
-    })
-
-    it('starts fresh if txids is invalid format', async () => {
-      DeviceInfo.getVersion = () => '9.9.9'
-
-      const mockStorage = rootStorage.join('txs/')
-      mockStorage.multiSet([
-        [mockTx.id, mockTx],
-        ['txids', undefined],
-      ])
-
-      const txManager = await TransactionManager.create(mockStorage)
-
-      expect(txManager.transactions).toMatchSnapshot()
-      expect(txManager.perAddressTxs).toMatchSnapshot()
-      expect(txManager.perRewardAddressCertificates).toMatchSnapshot()
-      expect(txManager.confirmationCounts).toMatchSnapshot()
-    })
-
-    it('drops transaction if invalid format', async () => {
-      DeviceInfo.getVersion = () => '9.9.9'
-
-      const mockStorage = rootStorage.join('txs/')
-      mockStorage.multiSet([
-        [mockTx.id, undefined],
-        ['txids', [mockTx.id]],
-      ])
-
-      const txManager = await TransactionManager.create(mockStorage)
-
-      expect(txManager.transactions).toMatchSnapshot()
-      expect(txManager.perAddressTxs).toMatchSnapshot()
-      expect(txManager.perRewardAddressCertificates).toMatchSnapshot()
-      expect(txManager.confirmationCounts).toMatchSnapshot()
-    })
-
-    it('starts fresh if upgrading from old version', async () => {
-      DeviceInfo.getVersion = () => '0.0.1'
-
-      const mockStorage = rootStorage.join('txs/')
-      mockStorage.multiSet([
-        [mockTx.id, mockTx],
-        ['txids', [mockTx.id]],
-      ])
-
-      const txManager = await TransactionManager.create(mockStorage)
-
-      expect(txManager.transactions).toMatchSnapshot()
-      expect(txManager.perAddressTxs).toMatchSnapshot()
-      expect(txManager.perRewardAddressCertificates).toMatchSnapshot()
-      expect(txManager.confirmationCounts).toMatchSnapshot()
-    })
+    expect(txManager.transactions).toMatchSnapshot()
+    expect(txManager.perAddressTxs).toMatchSnapshot()
+    expect(txManager.perRewardAddressCertificates).toMatchSnapshot()
   })
 })
 
@@ -138,6 +75,34 @@ describe('transaction storage', () => {
     })
 
     await clear()
+    await loadTxs().then((txs) => {
+      return expect(txs).toEqual({})
+    })
+  })
+
+  it('drops transaction if invalid format', async () => {
+    const storage = rootStorage.join('txs/')
+    storage.multiSet([
+      [mockTx.id, undefined],
+      ['txids', [mockTx.id]],
+    ])
+
+    const {loadTxs} = makeTxManagerStorage(storage)
+
+    await loadTxs().then((txs) => {
+      return expect(txs).toEqual({})
+    })
+  })
+
+  it('starts fresh if txids is invalid format', async () => {
+    const storage = rootStorage.join('txs/')
+    storage.multiSet([
+      [mockTx.id, mockTx],
+      ['txids', undefined],
+    ])
+
+    const {loadTxs} = makeTxManagerStorage(storage)
+
     await loadTxs().then((txs) => {
       return expect(txs).toEqual({})
     })
