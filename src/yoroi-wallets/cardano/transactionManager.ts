@@ -4,38 +4,45 @@ import {fromPairs, mapValues, max} from 'lodash'
 import DeviceInfo from 'react-native-device-info'
 import {defaultMemoize} from 'reselect'
 
-import assert from '../../../legacy/assert'
-import {ApiHistoryError} from '../../../legacy/errors'
-import {Logger} from '../../../legacy/logging'
-import {YoroiStorage} from '../../storage'
-import type {RemoteCertificateMeta, TxHistoryRequest} from '../../types'
-import {BackendConfig, CERTIFICATE_KIND, RawTransaction, Transaction, TRANSACTION_STATUS} from '../../types/other'
-import {parseSafe} from '../../utils/parsing'
-import {Version, versionCompare} from '../../utils/versioning'
-import * as yoroiApi from '../api'
+import assert from '../../legacy/assert'
+import {ApiHistoryError} from '../../legacy/errors'
+import {Logger} from '../../legacy/logging'
+import {YoroiStorage} from '../storage'
+import type {RemoteCertificateMeta, TxHistoryRequest} from '../types'
+import {
+  BackendConfig,
+  CERTIFICATE_KIND,
+  RawTransaction,
+  Transaction,
+  TRANSACTION_STATUS,
+  Transactions,
+} from '../types/other'
+import {parseSafe} from '../utils/parsing'
+import {Version, versionCompare} from '../utils/versioning'
+import * as yoroiApi from './api'
 
-export type TransactionCacheState = {
-  transactions: {[txid: string]: Transaction}
+export type TransactionManagerState = {
+  transactions: Transactions
   // @deprecated
   perAddressSyncMetadata: Record<string, SyncMetadata>
   // @deprecated
   bestBlockNum: number | null | undefined // global best block, not per address
 }
 
-export class TransactionCache {
-  #state: TransactionCacheState
-  #subscriptions: Array<(transactions: TransactionCacheState['transactions']) => void> = []
+export class TransactionManager {
+  #state: TransactionManagerState
+  #subscriptions: Array<(transactions: TransactionManagerState['transactions']) => void> = []
   #perAddressTxsSelector = defaultMemoize(perAddressTxsSelector)
   #perAddressCertificatesSelector = defaultMemoize(perAddressCertificatesSelector)
   #confirmationCountsSelector = defaultMemoize(confirmationCountsSelector)
-  #storage: TxCacheStorage
+  #storage: TxManagerStorage
 
   static async create(storage: YoroiStorage) {
-    const txStorage = makeTxCacheStorage(storage)
+    const txStorage = makeTxManagerStorage(storage)
     const version = DeviceInfo.getVersion() as Version
     const isDeprecatedSchema = versionCompare(version, '4.1.0') === -1
     if (isDeprecatedSchema) {
-      return new TransactionCache({
+      return new TransactionManager({
         storage: txStorage,
         transactions: {},
       })
@@ -43,13 +50,13 @@ export class TransactionCache {
 
     const txs = await txStorage.loadTxs()
 
-    return new TransactionCache({
+    return new TransactionManager({
       storage: txStorage,
       transactions: txs,
     })
   }
 
-  private constructor({storage, transactions}: {storage: TxCacheStorage; transactions: Record<string, Transaction>}) {
+  private constructor({storage, transactions}: {storage: TxManagerStorage; transactions: Record<string, Transaction>}) {
     this.#storage = storage
     this.#state = {
       perAddressSyncMetadata: {},
@@ -62,7 +69,7 @@ export class TransactionCache {
     this.#subscriptions.push(handler)
   }
 
-  private updateState(update: TransactionCacheState) {
+  private updateState(update: TransactionManagerState) {
     this.#state = {...this.#state, ...update}
     if (Object.keys(this.#state.transactions).length > 0) {
       this.#storage.saveTxs(this.#state.transactions)
@@ -365,6 +372,7 @@ export function toCachedTx(tx: RawTransaction): Transaction {
         name: asset.name,
       })),
     })),
+    memo: null,
   }
 }
 
@@ -375,7 +383,7 @@ type TimeForTx = {
   txOrdinal: number
 }
 
-const perAddressTxsSelector = (state: TransactionCacheState) => {
+const perAddressTxsSelector = (state: TransactionManagerState) => {
   const transactions = state.transactions
   const addressToTxs: Record<string, Array<Transaction['id']>> = {}
 
@@ -400,7 +408,7 @@ export type TimestampedCertMeta = {
 }
 type PerAddressCertificatesDict = Record<string, Record<string, TimestampedCertMeta>>
 
-const perAddressCertificatesSelector = (state: TransactionCacheState): PerAddressCertificatesDict => {
+const perAddressCertificatesSelector = (state: TransactionManagerState): PerAddressCertificatesDict => {
   const transactions = state.transactions
   const addressToPerTxCerts = {}
 
@@ -438,7 +446,7 @@ const perAddressCertificatesSelector = (state: TransactionCacheState): PerAddres
   return addressToPerTxCerts
 }
 
-const confirmationCountsSelector = (state: TransactionCacheState) => {
+const confirmationCountsSelector = (state: TransactionManagerState) => {
   const {perAddressSyncMetadata, transactions} = state
   return mapValues(transactions, (tx: Transaction) => {
     if (tx.status !== TRANSACTION_STATUS.SUCCESSFUL) {
@@ -466,13 +474,13 @@ type SyncMetadata = {
   bestTxHash: string | null | undefined
 }
 
-export type TxCacheStorage = {
+export type TxManagerStorage = {
   loadTxs: () => Promise<Record<string, Transaction>>
   saveTxs: (txs: Record<string, Transaction>) => Promise<void>
   clear: () => Promise<void>
 }
 
-export const makeTxCacheStorage = (storage: YoroiStorage): TxCacheStorage => ({
+export const makeTxManagerStorage = (storage: YoroiStorage): TxManagerStorage => ({
   loadTxs: async () => {
     const txids = await storage.getItem('txids', parseTxids)
     if (!txids) return {}
@@ -480,7 +488,7 @@ export const makeTxCacheStorage = (storage: YoroiStorage): TxCacheStorage => ({
 
     const tuples = await storage.multiGet(txids, parseTx)
 
-    return tuples.reduce((result: TransactionCacheState['transactions'], [txid, tx]) => {
+    return tuples.reduce((result: TransactionManagerState['transactions'], [txid, tx]) => {
       if (!tx) {
         Logger.warn('corrupted transaction', {txid})
         return result
@@ -490,7 +498,7 @@ export const makeTxCacheStorage = (storage: YoroiStorage): TxCacheStorage => ({
     }, {})
   },
 
-  saveTxs: async (txs: TransactionCacheState['transactions']) => {
+  saveTxs: async (txs: TransactionManagerState['transactions']) => {
     const items = Object.entries(txs)
     const txids = Object.keys(txs)
 

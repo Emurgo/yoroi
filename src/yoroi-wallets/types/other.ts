@@ -409,6 +409,7 @@ export type TransactionInfo = {
   assurance: TransactionAssurance
   tokens: Record<string, Token>
   blockNumber: number
+  memo: null | string
 }
 
 export type IOData = {
@@ -434,6 +435,7 @@ export const TRANSACTION_TYPE = {
 }
 export type TransactionType = typeof TRANSACTION_TYPE[keyof typeof TRANSACTION_TYPE]
 export type BaseAsset = RemoteAsset
+export type Transactions = {[txid: string]: Transaction}
 export type Transaction = {
   id: string
   type?: TransactionType
@@ -469,6 +471,7 @@ export type Transaction = {
     amount: string
     assets: Array<BaseAsset>
   }>
+  memo: string | null
 }
 
 export type CommonMetadata = {

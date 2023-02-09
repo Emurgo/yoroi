@@ -9,7 +9,7 @@ import {Logger} from '../../../legacy/logging'
 import {normalizeToAddress} from '../../../legacy/utils'
 import {StakingStatus} from '../../types'
 import {CardanoMobile, CardanoTypes} from '..'
-import type {TimestampedCertMeta} from './transactionCache'
+import type {TimestampedCertMeta} from '../transactionManager'
 
 const addrContainsAccountKey = async (
   address: string,

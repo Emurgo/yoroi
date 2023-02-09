@@ -9,7 +9,6 @@ import {
   StakePoolInfosAndHistories,
   StakingInfo,
   StakingStatus,
-  TransactionInfo,
   YoroiSignedTx,
   YoroiUnsignedTx,
 } from '../types'
@@ -19,7 +18,7 @@ import type {
   FundInfoResponse,
   RawUtxo,
   TipStatusResponse,
-  Transaction,
+  TransactionInfo,
   TxStatusRequest,
   TxStatusResponse,
   WalletState,
@@ -32,7 +31,7 @@ import {AddressChain} from './chain'
 export type WalletEvent =
   | {type: 'initialize'}
   | {type: 'easy-confirmation'; enabled: boolean}
-  | {type: 'transactions'; transactions: Record<string, Transaction>}
+  | {type: 'transactions'; transactions: Record<string, TransactionInfo>}
   | {type: 'addresses'; addresses: Addresses}
   | {type: 'state'; state: WalletState}
   | {type: 'utxos'; utxos: RawUtxo[]}
@@ -71,7 +70,7 @@ export interface WalletInterface {
 
   get numReceiveAddresses(): number
 
-  get transactions(): Record<string, Transaction>
+  get transactions(): Record<string, TransactionInfo>
 
   get confirmationCounts(): Record<string, null | number>
 
@@ -100,6 +99,8 @@ export interface WalletInterface {
   save(): Promise<void>
 
   clear(): Promise<void>
+
+  saveMemo(txId: string, memo: string): Promise<void>
 
   // TODO: type
   toJSON(): unknown
@@ -197,7 +198,6 @@ export type SignedTxLegacy = {
 
 export type YoroiWallet = Pick<WalletInterface, YoroiWalletKeys> & {
   id: string
-  getTransactions: (txids: Array<string>) => Promise<{[txid: string]: TransactionInfo}>
   changePassword: (password: string, newPassword: string) => Promise<void>
   encryptedStorage: WalletEncryptedStorage
   sync: () => Promise<void>
@@ -266,6 +266,7 @@ type YoroiWalletKeys =
   | 'generateNewReceiveAddress'
   | 'tryDoFullSync'
   | 'clear'
+  | 'saveMemo'
 
 const yoroiWalletKeys: Array<YoroiWalletKeys> = [
   'changePassword',
@@ -306,4 +307,5 @@ const yoroiWalletKeys: Array<YoroiWalletKeys> = [
   'walletImplementationId',
   'tryDoFullSync',
   'clear',
+  'saveMemo',
 ]

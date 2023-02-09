@@ -19,7 +19,7 @@ import {
   YoroiUnsignedTx,
 } from '../../src/yoroi-wallets/types'
 import {mockEncryptedStorage} from './storage'
-import {mockTransactionInfo, mockTransactions} from './transaction'
+import {mockTransactionInfo, mockTransactionInfos} from './transaction'
 import {utxos} from './utxos'
 
 const walletMeta: WalletMeta = {
@@ -152,7 +152,7 @@ const wallet: YoroiWallet = {
   internalAddresses: [],
   externalAddresses: [],
   confirmationCounts: {},
-  transactions: mockTransactions,
+  transactions: mockTransactionInfos,
   isUsedAddressIndex: {},
   numReceiveAddresses: 0,
   receiveAddresses: [],
@@ -171,6 +171,9 @@ const wallet: YoroiWallet = {
   save: async (...args) => {
     action('save')(...args)
   },
+  saveMemo: async (...args) => {
+    action('saveMemo')(...args)
+  },
   tryDoFullSync: async (...args) => {
     action('tryDoFullSync')(...args)
   },
@@ -182,9 +185,6 @@ const wallet: YoroiWallet = {
   },
   resync: async (...args) => {
     action('resync')(...args)
-  },
-  getTransactions: () => {
-    throw new Error('not implemented')
   },
   enableEasyConfirmation: async (rootKey: string) => {
     action('enableEasyConfirmation')(rootKey)
