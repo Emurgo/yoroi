@@ -1,3 +1,4 @@
+import {FlashList} from '@shopify/flash-list'
 import React, {useEffect} from 'react'
 import {Dimensions, FlatList, GestureResponderEvent, Image, StyleSheet, TouchableOpacity, View} from 'react-native'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
@@ -14,6 +15,8 @@ type Props = {
   onRefresh: () => void
   isRefreshing: boolean
 }
+
+const TEXT_SIZE = 20
 
 export const SkeletonGallery = ({amount}: {amount: number} = {amount: 3}) => {
   const placeholders = new Array(amount).fill(undefined).map((val, i) => i)
@@ -32,16 +35,24 @@ export const SkeletonGallery = ({amount}: {amount: number} = {amount: 3}) => {
 
 export const ImageGallery = ({nfts = [], onSelect, onRefresh, isRefreshing}: Props) => {
   return (
-    <FlatList
-      bounces={false}
-      onRefresh={onRefresh}
-      refreshing={isRefreshing}
-      columnWrapperStyle={{paddingBottom: ROW_SPACING}}
+    <FlashList
       data={nfts}
       numColumns={2}
-      horizontal={false}
+      onRefresh={onRefresh}
+      refreshing={isRefreshing}
+      renderItem={({item, index}) => (
+        <View
+          style={[
+            index % 2 === 0 ? {paddingRight: IMAGE_HORIZONTAL_PADDING} : {paddingLeft: IMAGE_HORIZONTAL_PADDING},
+            {paddingBottom: ROW_SPACING},
+          ]}
+        >
+          <ModeratedImage onPress={() => onSelect(nfts.indexOf(item))} nft={item} key={item.id} />
+        </View>
+      )}
       keyExtractor={(nft) => nft.id}
-      renderItem={({item}) => <ModeratedImage onPress={() => onSelect(nfts.indexOf(item))} nft={item} key={item.id} />}
+      horizontal={false}
+      estimatedItemSize={IMAGE_SIZE + IMAGE_PADDING + TEXT_SIZE + ROW_SPACING}
     />
   )
 }
@@ -110,7 +121,7 @@ function BlockedNft({text}: {text: string}) {
 
       <Spacer height={IMAGE_PADDING} />
 
-      <Text style={[styles.textTop, {width: IMAGE_SIZE}]}>{text}</Text>
+      <Text style={[styles.text, {width: IMAGE_SIZE}]}>{text}</Text>
     </View>
   )
 }
@@ -122,7 +133,7 @@ function ManualReviewNft({text}: {text: string}) {
 
       <Spacer height={IMAGE_PADDING} />
 
-      <Text style={[styles.textTop, {width: IMAGE_SIZE}]}>{text}</Text>
+      <Text style={[styles.text, {width: IMAGE_SIZE}]}>{text}</Text>
     </View>
   )
 }
@@ -140,7 +151,7 @@ function RequiresConsentNft({uri, text}: {text: string; uri: string}) {
 
       <Spacer height={IMAGE_PADDING} />
 
-      <Text style={[styles.textTop, {width: IMAGE_SIZE}]}>{text}</Text>
+      <Text style={[styles.text, {width: IMAGE_SIZE}]}>{text}</Text>
     </View>
   )
 }
@@ -152,7 +163,7 @@ function ApprovedNft({uri, text}: {text: string; uri: string}) {
 
       <Spacer height={IMAGE_PADDING} />
 
-      <Text style={[styles.textTop, {width: IMAGE_SIZE}]}>{text}</Text>
+      <Text style={[styles.text, {width: IMAGE_SIZE}]}>{text}</Text>
     </View>
   )
 }
@@ -168,7 +179,7 @@ function SkeletonImagePlaceholder({text}: {text?: string}) {
 
           <Spacer height={IMAGE_PADDING} />
 
-          <Text style={[styles.textTop, {width: IMAGE_SIZE}]}>{text}</Text>
+          <Text style={[styles.text, {width: IMAGE_SIZE}]}>{text}</Text>
         </View>
       </View>
     )
@@ -208,24 +219,23 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  imageContainer: {
-    paddingHorizontal: 5,
-  },
+  imageContainer: {},
   image: {
     borderRadius: 8,
   },
-  textTop: {
+  text: {
     fontSize: 14,
-    lineHeight: 22,
+    lineHeight: TEXT_SIZE,
   },
 })
 
 const REFETCH_TIME_IN_MS = 3000
 const IMAGE_PADDING = 8
 const ROW_SPACING = 14
-const TEXT_SIZE = 20
 const NUMBER_OF_COLUMNS = 2
 const CONTAINER_HORIZONTAL_PADDING = 16
+const SPACE_BETWEEN_COLUMNS = CONTAINER_HORIZONTAL_PADDING
 const DIMENSIONS = Dimensions.get('window')
 const MIN_SIZE = Math.min(DIMENSIONS.width, DIMENSIONS.height)
-const IMAGE_SIZE = MIN_SIZE / NUMBER_OF_COLUMNS - CONTAINER_HORIZONTAL_PADDING * 2
+const IMAGE_HORIZONTAL_PADDING = SPACE_BETWEEN_COLUMNS / NUMBER_OF_COLUMNS
+const IMAGE_SIZE = (MIN_SIZE - CONTAINER_HORIZONTAL_PADDING * 2) / NUMBER_OF_COLUMNS - IMAGE_HORIZONTAL_PADDING

@@ -105,6 +105,7 @@
     "@react-navigation/routers": "^6.1.5",
     "@react-navigation/stack": "^6.3.7",
     "@sentry/react-native": "3.3.2",
+    "@shopify/flash-list": "^1.4.1",
     "@unstoppabledomains/resolution": "6.0.3",
     "@wdio/cli": "^7.16.8",
     "add": "2.0.6",
