@@ -212,6 +212,12 @@ const wallet: YoroiWallet = {
   fetchFundInfo: () => {
     throw new Error('not implemented: fetchFundInfo')
   },
+  startSync: () => {
+    throw new Error('not implemented: start')
+  },
+  stopSync: () => {
+    throw new Error('not implemented: stop')
+  },
 }
 
 const hwWallet: YoroiWallet = {

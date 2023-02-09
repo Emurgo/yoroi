@@ -112,6 +112,7 @@ const mockStorage: YoroiStorage = {
   setItem: jest.fn(),
   multiSet: jest.fn(),
   removeItem: jest.fn(),
+  removeFolder: jest.fn(),
   multiRemove: jest.fn(),
   getAllKeys: jest.fn(),
   clear: jest.fn(),

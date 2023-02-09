@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import {storage as yoroiStorage} from './storage'
+import {parseSafe} from './utils/parsing'
 
 describe('prefixed storage', () => {
   beforeEach(() => AsyncStorage.clear())
@@ -156,7 +157,88 @@ describe('prefixed storage', () => {
       expect(parsedResult).toEqual(tuples)
     })
   })
+
+  it('clears sub-storage', async () => {
+    const storage1 = yoroiStorage.join('1/')
+    const storage2 = storage1.join('2/')
+    const storage3 = storage2.join('3/')
+
+    await yoroiStorage.setItem('a', '000')
+    await yoroiStorage.setItem('1', '000')
+    await storage1.setItem('b', 111)
+    await storage2.setItem('c', 222)
+    await storage3.setItem('d', 333)
+
+    expect(await snapshot()).toEqual({
+      // folder named "1"
+      '/1/2/3/d': 333,
+      '/1/2/c': 222,
+      '/1/b': 111,
+
+      // file named "1"
+      '/1': '000',
+      '/a': '000',
+    })
+
+    expect(await storage1.getAllKeys()).toEqual(['b'])
+
+    await storage1.clear()
+
+    expect(await snapshot()).toEqual({
+      '/a': '000',
+      '/1': '000',
+    })
+  })
+
+  it('removeFolder', async () => {
+    const storage1 = yoroiStorage.join('1/')
+    const storage2 = storage1.join('2/')
+    const storage3 = storage2.join('3/')
+
+    await yoroiStorage.setItem('a', '000')
+    await yoroiStorage.setItem('1', '000')
+    await storage1.setItem('b', 111)
+    await storage2.setItem('c', 222)
+    await storage3.setItem('d', 333)
+
+    expect(await snapshot()).toEqual({
+      // folder named "1"
+      '/1/2/3/d': 333,
+      '/1/2/c': 222,
+      '/1/b': 111,
+
+      // root folder
+      '/1': '000',
+      '/a': '000',
+    })
+
+    await storage2.removeFolder('3/')
+
+    expect(await snapshot()).toEqual({
+      '/1/2/c': 222,
+      '/1/b': 111,
+
+      '/1': '000',
+      '/a': '000',
+    })
+
+    await yoroiStorage.removeFolder('1/')
+
+    expect(await snapshot()).toEqual({
+      '/1': '000',
+      '/a': '000',
+    })
+  })
 })
 
 const item1 = {a: 123, b: 234}
 const item2 = {c: 123, d: 234}
+
+const snapshot = async () => {
+  const keys = await AsyncStorage.getAllKeys()
+  const entries = await AsyncStorage.multiGet(keys).then((entries) =>
+    entries.map(([key, value]) => [key, parseSafe(value)]),
+  )
+
+  return Object.fromEntries(entries)
+}
