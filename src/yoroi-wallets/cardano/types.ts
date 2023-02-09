@@ -207,6 +207,8 @@ export type YoroiWallet = Pick<WalletInterface, YoroiWalletKeys> & {
   signTx(unsignedTx: YoroiUnsignedTx, rootKey: string): Promise<YoroiSignedTx>
   submitTransaction: (signedTx: string) => Promise<[]>
   subscribe: (subscription: WalletSubscription) => Unsubscribe
+  startSync: () => void
+  stopSync: () => void
 
   // NonNullable
   networkId: NonNullable<WalletInterface['networkId']>

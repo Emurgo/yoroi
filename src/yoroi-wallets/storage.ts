@@ -3,10 +3,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import {parseSafe} from './utils/parsing'
 
 export type YoroiStorage = ReturnType<typeof mountStorage>
-export type Path = `${string}/`
+export type FolderName = `${string}/`
 
-const mountStorage = (path: Path) => {
-  const withPath = (key: string) => `${path}${key}` as `${Path}${string}`
+const mountStorage = (path: FolderName) => {
+  const withPath = (key: string) => `${path}${key}` as `${FolderName}${string}`
   const withoutPath = (value: string) => value.slice(path.length)
 
   function getItem<T>(key: string, parse: (item: string | null) => T): Promise<T>
@@ -25,38 +25,50 @@ const mountStorage = (path: Path) => {
   }
 
   return {
-    join: (folderName: Path) => mountStorage(`${path}${folderName}`),
+    join: (folderName: FolderName) => mountStorage(`${path}${folderName}`),
 
     getItem,
     multiGet,
-    setItem: <T = unknown>(key: string, value: T, stringify: (data: T) => string = JSON.stringify) => {
+    setItem: async <T = unknown>(key: string, value: T, stringify: (data: T) => string = JSON.stringify) => {
       const item = stringify(value)
-      return AsyncStorage.setItem(withPath(key), item)
+      await AsyncStorage.setItem(withPath(key), item)
     },
-    multiSet: (tuples: Array<[key: string, value: unknown]>, stringify: (data: unknown) => string = JSON.stringify) => {
+    multiSet: async (
+      tuples: Array<[key: string, value: unknown]>,
+      stringify: (data: unknown) => string = JSON.stringify,
+    ) => {
       const items = tuples.map(([key, value]) => [withPath(key), stringify(value)])
-      return AsyncStorage.multiSet(items)
+      await AsyncStorage.multiSet(items)
     },
-    removeItem: (key: string) => {
-      return AsyncStorage.removeItem(withPath(key))
+    removeItem: async (key: string) => {
+      await AsyncStorage.removeItem(withPath(key))
     },
-    multiRemove: (keys: Array<string>) => {
-      return AsyncStorage.multiRemove(keys.map((key) => withPath(key)))
+    removeFolder: async (folderName: FolderName) => {
+      const keys = await AsyncStorage.getAllKeys()
+      const filteredKeys = keys.filter(
+        (key) => key.startsWith(path) && withoutPath(key).startsWith(folderName) && isFolderKey({key, path}),
+      )
+
+      await AsyncStorage.multiRemove(filteredKeys)
+    },
+    multiRemove: async (keys: Array<string>) => {
+      await AsyncStorage.multiRemove(keys.map((key) => withPath(key)))
     },
     getAllKeys: () => {
       return AsyncStorage.getAllKeys()
-        .then((keys) => keys.filter((key) => key.startsWith(path) && isLeafKey({key, path})))
+        .then((keys) => keys.filter((key) => key.startsWith(path) && isFileKey({key, path})))
         .then((filteredKeys) => filteredKeys.map(withoutPath))
     },
     clear: async () => {
       const keys = await AsyncStorage.getAllKeys()
       const filteredKeys = keys.filter((key) => key.startsWith(path))
 
-      return AsyncStorage.multiRemove(filteredKeys)
+      await AsyncStorage.multiRemove(filteredKeys)
     },
   } as const
 }
 
-const isLeafKey = ({key, path}: {key: string; path: string}) => !key.slice(path.length).includes('/')
+const isFileKey = ({key, path}: {key: string; path: string}) => !key.slice(path.length).includes('/')
+const isFolderKey = ({key, path}: {key: string; path: string}) => !isFileKey({key, path})
 
 export const storage = mountStorage('/')

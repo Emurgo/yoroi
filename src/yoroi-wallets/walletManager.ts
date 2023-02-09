@@ -1,12 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import ExtendableError from 'es6-error'
-import _ from 'lodash'
 import uuid from 'uuid'
 
-import {EncryptedStorage, EncryptedStorageKeys} from '../auth'
+import {makeWalletEncryptedStorage} from '../auth'
 import {Keychain} from '../auth/Keychain'
-import assert from '../legacy/assert'
-import {CONFIG, DISABLE_BACKGROUND_SYNC} from '../legacy/config'
 import type {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {Logger} from '../legacy/logging'
 import type {WalletMeta} from '../legacy/state'
@@ -14,36 +11,27 @@ import {isWalletMeta, migrateWalletMetas, parseWalletMeta} from '../Storage/migr
 import {isYoroiWallet, NetworkId, ShelleyWallet, WalletImplementationId, YoroiWallet} from './cardano'
 import {storage, YoroiStorage} from './storage'
 import {WALLET_IMPLEMENTATION_REGISTRY} from './types/other'
+import {parseSafe} from './utils/parsing'
 
 export class WalletClosed extends ExtendableError {}
 
 export type WalletManagerEvent =
   | {type: 'easy-confirmation'; enabled: boolean}
-  | {type: 'wallet-opened'; wallet: YoroiWallet}
-  | {type: 'wallet-closed'; id: string}
   | {type: 'hw-device-info'; hwDeviceInfo: HWDeviceInfo}
 
 export type WalletManagerSubscription = (event: WalletManagerEvent) => void
 
 export class WalletManager {
-  _wallet: null | YoroiWallet = null
-  _id = ''
   private subscriptions: Array<WalletManagerSubscription> = []
-  _onOpenSubscribers: Array<() => void> = []
-  _onTxHistoryUpdateSubscribers: Array<() => void> = []
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  _closePromise: null | Promise<any> = null
-  _closeReject: null | ((error: Error) => void) = null
   storage: YoroiStorage
 
   constructor() {
-    // do not await on purpose
-    this._backgroundSync()
     this.storage = storage.join('wallet/')
   }
 
   async listWallets() {
-    const walletIds = await this.storage.getAllKeys()
+    const deletedWalletIds = await this.deletedWalletIds()
+    const walletIds = await this.storage.getAllKeys().then((ids) => ids.filter((id) => !deletedWalletIds.includes(id)))
     const walletMetas = await this.storage
       .multiGet(walletIds, parseWalletMeta)
       .then((tuples) => tuples.map(([_, walletMeta]) => walletMeta))
@@ -59,26 +47,33 @@ export class WalletManager {
   // The responsibility to check data consistency is left to the each wallet
   // implementation.
   async initialize() {
+    await this.removeDeletedWallets()
     const _storedWalletMetas = await this.listWallets()
     return migrateWalletMetas(_storedWalletMetas)
   }
 
-  getWallet() {
-    if (!this._wallet) {
-      throw new WalletClosed()
-    }
+  async deletedWalletIds() {
+    const ids = await this.storage.getItem('deletedWalletIds', parseDeletedWalletIds)
 
-    if (!isYoroiWallet(this._wallet)) {
-      throw new Error('invalid wallet')
-    }
-
-    return this._wallet
+    return ids ?? []
   }
 
-  abortWhenWalletCloses<T>(promise: Promise<T>): Promise<T> {
-    assert.assert(this._closePromise, 'should have closePromise')
-    /* :: if (!this._closePromise) throw 'assert' */
-    return Promise.race([this._closePromise, promise])
+  private async removeDeletedWallets() {
+    const deletedWalletsIds = await this.deletedWalletIds()
+    if (!deletedWalletsIds) return
+
+    await Promise.all(
+      deletedWalletsIds.map(async (id) => {
+        const encryptedStorage = makeWalletEncryptedStorage(id)
+
+        await this.storage.removeItem(id) // remove wallet meta
+        await this.storage.removeFolder(`${id}/`) // remove wallet folder
+        await encryptedStorage.rootKey.remove() // remove auth with password
+        await Keychain.removeWalletKey(id) // remove auth with os
+      }),
+    )
+
+    await this.storage.setItem('deletedWalletIds', [])
   }
 
   // Note(ppershing): needs 'this' to be bound
@@ -87,28 +82,12 @@ export class WalletManager {
     this.subscriptions.forEach((handler) => handler(event))
   }
 
-  _notifyOnOpen = () => {
-    this._onOpenSubscribers.forEach((handler) => handler())
-  }
-
-  _notifyOnTxHistoryUpdate = () => {
-    this._onTxHistoryUpdateSubscribers.forEach((handler) => handler())
-  }
-
   subscribe(subscription: (event: WalletManagerEvent) => void) {
     this.subscriptions.push(subscription)
 
     return () => {
       this.subscriptions = this.subscriptions.filter((sub) => sub !== subscription)
     }
-  }
-
-  subscribeOnOpen(handler: () => void) {
-    this._onOpenSubscribers.push(handler)
-  }
-
-  subscribeOnTxHistoryUpdate(handler: () => void) {
-    this._onTxHistoryUpdateSubscribers.push(handler)
   }
 
   // ============ security & key management ============ //
@@ -135,26 +114,6 @@ export class WalletManager {
     this._notify({type: 'easy-confirmation', enabled: true})
   }
 
-  // =================== synch =================== //
-
-  // Note(ppershing): no need to abortWhenWalletCloses here
-  // Note(v-almonacid): if sync fails because of a chain rollback, we just wait
-  // for the next sync round (tx cache should be wiped out in between)
-  async _backgroundSync() {
-    try {
-      if (this._wallet) {
-        await this._wallet.tryDoFullSync()
-        await this._wallet.save()
-      }
-    } catch (error) {
-      Logger.error((error as Error)?.message)
-    } finally {
-      if (!DISABLE_BACKGROUND_SYNC && process.env.NODE_ENV !== 'test') {
-        setTimeout(() => this._backgroundSync(), CONFIG.HISTORY_REFRESH_TIME)
-      }
-    }
-  }
-
   // =================== state & persistence =================== //
 
   async saveWallet(
@@ -164,8 +123,6 @@ export class WalletManager {
     networkId: NetworkId,
     walletImplementationId: WalletImplementationId,
   ) {
-    this._id = id
-
     await wallet.save()
     if (!wallet.checksum) throw new Error('invalid wallet')
     const walletMeta: WalletMeta = {
@@ -190,9 +147,6 @@ export class WalletManager {
   }
 
   async openWallet(walletMeta: WalletMeta): Promise<YoroiWallet> {
-    await this.closeWallet()
-    assert.preconditionCheck(!!walletMeta.id, 'openWallet:: !!id')
-
     const Wallet = this.getWalletImplementation(walletMeta.walletImplementationId)
 
     const wallet = await Wallet.restore({
@@ -200,67 +154,15 @@ export class WalletManager {
       walletMeta,
     })
 
-    if (!isYoroiWallet(wallet)) throw new Error('invalid wallet')
-
-    this._wallet = wallet
-    this._id = walletMeta.id
-
-    // wallet state might have changed after restore due to migrations, so we
-    // update the data in storage immediately
-    await wallet.save()
-
     wallet.subscribe((event) => this._notify(event as any))
-    wallet.subscribeOnTxHistoryUpdate(this._notifyOnTxHistoryUpdate)
-    this._closePromise = new Promise((resolve, reject) => {
-      this._closeReject = reject
-    })
-    this._notify({type: 'wallet-opened', wallet})
-
-    this._notifyOnOpen()
+    wallet.startSync()
 
     return wallet
   }
 
-  closeWallet(): Promise<void> {
-    if (!this._wallet) return Promise.resolve()
-
-    Logger.debug('closing wallet...')
-    assert.assert(this._closeReject, 'close: should have _closeReject')
-    /* :: if (!this._closeReject) throw 'assert' */
-    // Abort all async interactions with the wallet
-
-    const reject = this._closeReject
-    this._closePromise = null
-    this._closeReject = null
-
-    this._notify({type: 'wallet-closed', id: this._id})
-
-    this._wallet = null
-    this._id = ''
-
-    // need to reject in next microtask otherwise
-    // closeWallet would throw if some rejection
-    // handler does not catch
-    return Promise.resolve().then(() => {
-      reject?.(new WalletClosed())
-    })
-  }
-
-  // wallet pending promises can still write to the storage (requires a semaphore)
   async removeWallet(id: string) {
-    if (!this._wallet) throw new Error('invalid state')
-
-    await this._wallet.remove()
-
-    // legacy
-    await this.closeWallet()
-
-    // wallet.remove
-
-    await this.storage.removeItem(`${id}/data`) // remove wallet data
-    await EncryptedStorage.remove(EncryptedStorageKeys.rootKey(id)) // remove auth with password
-    await Keychain.removeWalletKey(id) // remove auth with os
-    await this.storage.removeItem(id) // remove wallet meta
+    const deletedWalletIds = await this.deletedWalletIds()
+    await this.storage.setItem('deletedWalletIds', [...deletedWalletIds, id])
   }
 
   // TODO(ppershing): how should we deal with race conditions?
@@ -348,3 +250,12 @@ export const walletManager = new WalletManager()
 export default walletManager
 
 export const mockWalletManager = {} as WalletManager
+
+const parseDeletedWalletIds = (data: unknown) => {
+  const isWalletIds = (data: unknown): data is Array<string> => {
+    return !!data && Array.isArray(data) && data.every((item) => typeof item === 'string')
+  }
+  const parsed = parseSafe(data)
+
+  return isWalletIds(parsed) ? parsed : undefined
+}
