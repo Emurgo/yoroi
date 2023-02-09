@@ -1,5 +1,6 @@
 import {YoroiStorage} from '../storage'
 import {BackendConfig, Transactions} from '../types'
+import {isString, parseString} from '../utils/parsing'
 import {TransactionCache} from './shelley'
 
 export const makeTransactionManager = async (storage: YoroiStorage, backendConfig: BackendConfig) => {
@@ -47,24 +48,26 @@ export const makeTransactionManager = async (storage: YoroiStorage, backendConfi
 
 export type TransactionManager = Awaited<ReturnType<typeof makeTransactionManager>>
 
-type Memos = {
-  [txId: number]: string
-}
-
 export const makeMemosManager = async (storage: YoroiStorage) => {
-  const getMemos = () => storage.getAllKeys().then(storage.multiGet).then(Object.fromEntries) ?? {}
-  let memos: Readonly<Memos> = await getMemos()
+  const getMemos = () =>
+    storage
+      .getAllKeys()
+      .then((keys) => storage.multiGet(keys, parseString))
+      .then(filterCorruptEntries)
+      .then((tuples) => Object.fromEntries(tuples))
+
+  let memos = await getMemos()
 
   const updateMemos = (txId: string, memo: string) => (memos = {...memos, [txId]: memo})
 
   const saveMemo = async (txId: string, memo: string): Promise<void> => {
-    updateMemos(txId, memo)
     await storage.setItem(txId, memo)
+    updateMemos(txId, memo)
   }
 
   const clear = async () => {
-    memos = {}
     await storage.getAllKeys().then(storage.multiRemove)
+    memos = {}
   }
 
   return {
@@ -75,4 +78,8 @@ export const makeMemosManager = async (storage: YoroiStorage) => {
     saveMemo,
     clear,
   } as const
+}
+
+const filterCorruptEntries = (tuples: [string, string | undefined][]) => {
+  return tuples.filter((tuple): tuple is [string, string] => isString(tuple[1]))
 }

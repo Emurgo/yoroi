@@ -1,8 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import DeviceInfo from 'react-native-device-info'
 
-import {storage as rootStorage, YoroiStorage} from '../storage'
-import {Transaction} from '../types'
+import {storage as rootStorage} from '../storage'
 import {
   mockedAddressesByChunks,
   mockedBackendConfig,
@@ -25,7 +24,7 @@ jest.mock('./api', () => ({
 describe('transaction manager', () => {
   beforeEach(() => AsyncStorage.clear())
 
-  it('New schema: Empty storage, Sync, Memo', async () => {
+  it('create', async () => {
     DeviceInfo.getVersion = () => '9.9.9'
     const txManager = await makeTransactionManager(rootStorage, mockedBackendConfig)
 
@@ -47,43 +46,27 @@ describe('transaction manager', () => {
     )
   })
 
-  it('New schema: Non empty storage', async () => {
+  it('restore', async () => {
     DeviceInfo.getVersion = () => '9.9.9'
-    const txManager = await makeTransactionManager(mockStorage, mockedBackendConfig)
+    const mockStorage = rootStorage.join('txs/')
+    mockStorage.multiSet([
+      [mockTx.id, mockTx],
+      ['txids', [mockTx.id]],
+    ])
+    const txManager = await makeTransactionManager(rootStorage, mockedBackendConfig)
 
     expect(txManager.getTransactions()).toEqual({[mockTx.id]: mockTx})
   })
 
-  it('Old schema: Non empty storage', async () => {
+  it('deprecated schema', async () => {
     DeviceInfo.getVersion = () => '0.0.1'
-    const txManager = await makeTransactionManager(mockStorage, mockedBackendConfig)
+    const mockStorage = rootStorage.join('txs/')
+    mockStorage.multiSet([
+      [mockTx.id, mockTx],
+      ['txids', [mockTx.id]],
+    ])
+    const txManager = await makeTransactionManager(rootStorage, mockedBackendConfig)
 
     expect(txManager.getTransactions()).toEqual({})
   })
 })
-
-// mocks
-
-const mockStorage: YoroiStorage = {
-  join: (path) => {
-    if (path === 'txs/') {
-      return mockStorage
-    }
-    return rootStorage
-  },
-  multiGet: async (txids: Array<string>) => {
-    if (txids[0] !== mockTx.id) throw new Error('invalid path')
-
-    return [[txids[0], mockTx] as [string, Transaction]]
-  },
-  getItem: async (path: string) => {
-    if (path === 'txids') return [mockTx.id]
-    throw new Error('invalid path')
-  },
-  setItem: jest.fn(),
-  multiSet: jest.fn(),
-  removeItem: jest.fn(),
-  multiRemove: jest.fn(),
-  getAllKeys: jest.fn(),
-  clear: jest.fn(),
-}
