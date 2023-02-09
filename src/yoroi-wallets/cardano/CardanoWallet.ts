@@ -101,8 +101,8 @@ export type ByronWalletJSON = Omit<ShelleyWalletJSON, 'account'>
 
 export type WalletJSON = ShelleyWalletJSON | ByronWalletJSON
 
-export default ShelleyWallet
-export class ShelleyWallet implements YoroiWallet {
+export default CardanoWallet
+export class CardanoWallet implements YoroiWallet {
   readonly primaryToken: DefaultAsset
   readonly primaryTokenInfo: TokenInfo
   readonly id: string
@@ -262,7 +262,7 @@ export class ShelleyWallet implements YoroiWallet {
     const transactionManager = await TransactionManager.create(storage.join('txs/'))
     const memosManager = await makeMemosManager(storage.join('memos/'))
 
-    const wallet = new ShelleyWallet({
+    const wallet = new CardanoWallet({
       storage,
       networkId,
       id,
@@ -466,7 +466,7 @@ export class ShelleyWallet implements YoroiWallet {
     } else if (isHaskellShelley(this.walletImplementationId)) {
       return CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852
     } else {
-      throw new Error('ShelleyWallet::_getPurpose: invalid wallet impl. id')
+      throw new Error('CardanoWallet::_getPurpose: invalid wallet impl. id')
     }
   }
 
@@ -777,7 +777,7 @@ export class ShelleyWallet implements YoroiWallet {
   }
 
   async createVotingRegTx(pin: string) {
-    Logger.debug('ShelleyWallet::createVotingRegTx called')
+    Logger.debug('CardanoWallet::createVotingRegTx called')
 
     const bytes = await generatePrivateKeyForCatalyst()
       .then((key) => key.toRawKey())

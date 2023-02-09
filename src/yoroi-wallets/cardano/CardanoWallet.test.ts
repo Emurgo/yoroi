@@ -5,8 +5,8 @@ import {EncryptedStorage, EncryptedStorageKeys} from '../../auth'
 import {HWDeviceInfo} from '../../legacy/ledgerUtils'
 import {WalletMeta} from '../../legacy/state'
 import {storage} from '../storage'
+import {CardanoWallet, WalletJSON} from './CardanoWallet'
 import {ShelleyAddressGeneratorJSON} from './chain'
-import {ShelleyWallet, WalletJSON} from './ShelleyWallet'
 import {YoroiWallet} from './types'
 
 describe('migration', () => {
@@ -17,7 +17,7 @@ describe('migration', () => {
       'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon oak'
     const password = 'password'
 
-    const wallet: YoroiWallet & Record<string, any> = await ShelleyWallet.create({
+    const wallet: YoroiWallet & Record<string, any> = await CardanoWallet.create({
       id: walletMeta.id,
       mnemonic,
       networkId: walletMeta.networkId,
@@ -142,7 +142,7 @@ describe('migration', () => {
     const password = 'password'
     await EncryptedStorage.write(EncryptedStorageKeys.rootKey(walletMeta.id), rootKey, password)
 
-    const wallet: YoroiWallet & Record<string, any> = await ShelleyWallet.restore({
+    const wallet: YoroiWallet & Record<string, any> = await CardanoWallet.restore({
       storage: storage.join(`${walletMeta.id}/`),
       walletMeta,
     })
@@ -270,7 +270,7 @@ describe('migration', () => {
     }
     const isReadOnly = false
 
-    const wallet: YoroiWallet & Record<string, any> = await ShelleyWallet.createBip44({
+    const wallet: YoroiWallet & Record<string, any> = await CardanoWallet.createBip44({
       id: walletMeta.id,
       accountPubKeyHex,
       networkId: walletMeta.networkId,
