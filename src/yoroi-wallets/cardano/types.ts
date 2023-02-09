@@ -76,7 +76,7 @@ export type SignedTxLegacy = {
 
 export type YoroiWallet = {
   id: string
-  
+
   publicKeyHex: string
   checksum: CardanoTypes.WalletChecksum
   networkId: NetworkId
