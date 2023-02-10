@@ -31,7 +31,7 @@ import {
 } from '../../legacy/networks'
 import {IsLockedError, nonblockingSynchronize, synchronize} from '../../legacy/promise'
 import type {WalletMeta} from '../../legacy/state'
-import {makeMemosManager, MemosManager} from '../memosManager'
+import {makeMemosManager, MemosManager} from '../memos'
 import {YoroiStorage} from '../storage'
 import type {
   AccountStateResponse,

@@ -1,7 +1,6 @@
 import BigNumber from 'bignumber.js'
 
-import {Quantity, TokenId, YoroiAmount, YoroiAmounts, YoroiEntries, YoroiEntry} from './types'
-import {RawUtxo} from './types/other'
+import {Quantity, RawUtxo, TokenId, YoroiAmount, YoroiAmounts, YoroiEntries, YoroiEntry} from '../types'
 
 export const Entries = {
   first: (entries: YoroiEntries): YoroiEntry => {
