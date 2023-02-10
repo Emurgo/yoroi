@@ -1,6 +1,6 @@
-import {Quantity, YoroiAmount, YoroiAmounts, YoroiEntries, YoroiEntry} from './types'
-import {RawUtxo} from './types/other'
-import {Amounts, Entries, Quantities, Utxos} from './utils'
+import {Quantity, YoroiAmount, YoroiAmounts, YoroiEntries, YoroiEntry} from '../types'
+import {RawUtxo} from '../types/other'
+import {Amounts, Entries, Quantities, Utxos} from '.'
 
 describe('Quantities', () => {
   it('sum', () => {

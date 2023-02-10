@@ -2,16 +2,16 @@
 import ExtendableError from 'es6-error'
 import uuid from 'uuid'
 
-import {makeWalletEncryptedStorage} from '../auth'
-import {Keychain} from '../auth/Keychain'
-import type {HWDeviceInfo} from '../legacy/ledgerUtils'
-import {Logger} from '../legacy/logging'
-import type {WalletMeta} from '../legacy/state'
-import {isWalletMeta, migrateWalletMetas, parseWalletMeta} from '../Storage/migrations/walletMeta'
-import {CardanoWallet, isYoroiWallet, NetworkId, WalletImplementationId, YoroiWallet} from './cardano'
-import {storage, YoroiStorage} from './storage'
-import {WALLET_IMPLEMENTATION_REGISTRY} from './types/other'
-import {parseSafe} from './utils/parsing'
+import {makeWalletEncryptedStorage} from '../../auth'
+import {Keychain} from '../../auth/Keychain'
+import {HWDeviceInfo} from '../../legacy/ledgerUtils'
+import {Logger} from '../../legacy/logging'
+import {WalletMeta} from '../../legacy/state'
+import {isWalletMeta, migrateWalletMetas, parseWalletMeta} from '../../Storage/migrations/walletMeta'
+import {CardanoWallet, isYoroiWallet, NetworkId, WalletImplementationId, YoroiWallet} from '../cardano'
+import {storage, YoroiStorage} from '../storage'
+import {WALLET_IMPLEMENTATION_REGISTRY} from '../types'
+import {parseSafe} from '../utils'
 
 export class WalletClosed extends ExtendableError {}
 

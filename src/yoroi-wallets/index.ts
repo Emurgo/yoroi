@@ -1,4 +1,5 @@
 export * from './cardano'
 export * from './encryption/encryption'
 export * from './hwWallet'
+export * from './utils'
 export * from './walletManager'
