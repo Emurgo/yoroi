@@ -18,11 +18,10 @@ import {useMutation, UseMutationOptions} from 'react-query'
 import {ledgerMessages} from '../i18n/global-messages'
 import LocalizableError from '../i18n/LocalizableError'
 import {Logger} from '../legacy/logging'
-import {CardanoMobile, CardanoTypes} from '../yoroi-wallets'
+import {CardanoMobile, CardanoTypes, normalizeToAddress, verifyFromBip44Root} from '../yoroi-wallets'
 import type {Addressing, NetworkId, WalletImplementationId} from '../yoroi-wallets/types/other'
 import {CONFIG, isByron, isHaskellShelley} from './config'
 import {getNetworkConfigById} from './networks'
-import {normalizeToAddress, verifyFromBip44Root} from './utils'
 
 //
 // ============== Errors ==================

@@ -1,22 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {BigNumber} from 'bignumber.js'
 
-import {Logger} from '../legacy/logging'
-import {getDefaultNetworkTokenEntry, MultiToken, strToDefaultMultiAsset} from '../yoroi-wallets'
-import {Token} from '../yoroi-wallets/types'
+import assert from '../../legacy/assert'
+import {CONFIG} from '../../legacy/config'
+import {Logger} from '../../legacy/logging'
 import {
   BaseAsset,
+  CERTIFICATE_KIND,
   NetworkId,
+  Token,
   Transaction,
   TRANSACTION_DIRECTION,
   TRANSACTION_STATUS,
   TRANSACTION_TYPE,
   TransactionInfo,
-} from '../yoroi-wallets/types/other'
-import {CERTIFICATE_KIND} from '../yoroi-wallets/types/other'
-import assert from './assert'
-import {CONFIG} from './config'
+} from '../types'
+import {getDefaultNetworkTokenEntry, MultiToken, strToDefaultMultiAsset} from './MultiToken'
 import {multiTokenFromRemote} from './utils'
+
 type TransactionAssurance = 'PENDING' | 'FAILED' | 'LOW' | 'MEDIUM' | 'HIGH'
 export const getTransactionAssurance = (
   status: typeof TRANSACTION_STATUS[keyof typeof TRANSACTION_STATUS],

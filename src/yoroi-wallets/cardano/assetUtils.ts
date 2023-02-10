@@ -1,9 +1,9 @@
 import BigNumber from 'bignumber.js'
 
 import {getCardanoNetworkConfigById} from '../../legacy/networks'
-import {cardanoValueFromRemoteFormat} from '../../legacy/utils'
 import {NetworkId, RawUtxo} from '../types/other'
 import {CardanoMobile} from '.'
+import {cardanoValueFromRemoteFormat} from './utils'
 
 export async function calcLockedDeposit(utxos: RawUtxo[], networkId: NetworkId) {
   const networkConfig = getCardanoNetworkConfigById(networkId)
