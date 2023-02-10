@@ -1,7 +1,7 @@
 import {BigNumber} from 'bignumber.js'
 
 import {WalletEncryptedStorage} from '../../auth'
-import type {HWDeviceInfo} from '../../legacy/ledgerUtils'
+import {HWDeviceInfo} from '../hw'
 import {
   AccountStates,
   StakePoolInfoRequest,
