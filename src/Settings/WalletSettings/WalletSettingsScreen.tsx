@@ -10,10 +10,10 @@ import {DIALOG_BUTTONS, showConfirmationDialog} from '../../dialogs'
 import {useResync, useWalletName} from '../../hooks'
 import {confirmationMessages} from '../../i18n/global-messages'
 import {isByron, isHaskellShelley} from '../../legacy/config'
-import {getNetworkConfigById} from '../../legacy/networks'
 import {useWalletNavigation} from '../../navigation'
 import {useSelectedWallet, useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
 import {NetworkId, WalletImplementationId} from '../../yoroi-wallets'
+import {getNetworkConfigById} from '../../yoroi-wallets/cardano/networks'
 import {
   NavigatedSettingsItem,
   PressableSettingsItem,

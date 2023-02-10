@@ -16,10 +16,10 @@ import {useCreateWallet} from '../hooks'
 import {errorMessages} from '../i18n/global-messages'
 import {AppRoutes, useWalletNavigation} from '../navigation'
 import {useSelectedWalletContext} from '../SelectedWallet'
+import {isEmptyString} from '../utils/utils'
 import {generateAdaMnemonic} from '../yoroi-wallets'
 import assert from './assert'
 import {NetworkError} from './errors'
-import {isEmptyString} from './utils'
 
 const routes: Array<{label: string; path: keyof AppRoutes}> = [
   {label: 'Storybook', path: 'storybook'},

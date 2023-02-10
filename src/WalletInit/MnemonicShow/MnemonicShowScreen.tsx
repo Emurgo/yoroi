@@ -7,8 +7,8 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import recoveryPhrase from '../../assets/img/recovery_phrase.png'
 import {Button, StatusBar, Text} from '../../components'
 import assert from '../../legacy/assert'
-import {isEmptyString} from '../../legacy/utils'
 import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
+import {isEmptyString} from '../../utils/utils'
 import {MnemonicBackupImportanceModal} from '../MnemonicBackupModal'
 
 export const MnemonicShowScreen = () => {

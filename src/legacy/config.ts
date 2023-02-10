@@ -1,17 +1,17 @@
 import {LogLevel} from '../legacy/logging'
-import {DefaultAsset} from '../yoroi-wallets/types'
-import type {NetworkId, WalletImplementation, WalletImplementationId} from '../yoroi-wallets/types/other'
-import {DERIVATION_TYPES, WALLET_IMPLEMENTATION_REGISTRY} from '../yoroi-wallets/types/other'
-import env from './env'
-import type {CardanoHaskellShelleyNetwork} from './networks'
+import type {CardanoHaskellShelleyNetwork} from '../yoroi-wallets/cardano/networks'
 import {
   DEFAULT_ASSETS,
   getNetworkConfigById,
   isHaskellShelleyNetwork,
   NETWORKS,
   PRIMARY_ASSET_CONSTANTS,
-} from './networks'
-import {NUMBERS} from './numbers'
+} from '../yoroi-wallets/cardano/networks'
+import {NUMBERS} from '../yoroi-wallets/cardano/numbers'
+import {DefaultAsset} from '../yoroi-wallets/types'
+import type {NetworkId, WalletImplementation, WalletImplementationId} from '../yoroi-wallets/types/other'
+import {DERIVATION_TYPES, WALLET_IMPLEMENTATION_REGISTRY} from '../yoroi-wallets/types/other'
+import env from './env'
 
 const IS_DEBUG = __DEV__
 

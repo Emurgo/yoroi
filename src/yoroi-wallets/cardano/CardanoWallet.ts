@@ -21,12 +21,6 @@ import {
 } from '../../legacy/config'
 import {CardanoError, InvalidState} from '../../legacy/errors'
 import {Logger} from '../../legacy/logging'
-import {
-  CardanoHaskellShelleyNetwork,
-  getCardanoNetworkConfigById,
-  isHaskellShelleyNetwork,
-  isJormungandr,
-} from '../../legacy/networks'
 import {IsLockedError, nonblockingSynchronize, synchronize} from '../../legacy/promise'
 import {HWDeviceInfo} from '../hw'
 import {makeMemosManager, MemosManager} from '../memos'
@@ -67,6 +61,12 @@ import {
 import * as api from './api'
 import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from './chain'
 import {signTxWithLedger} from './hw'
+import {
+  CardanoHaskellShelleyNetwork,
+  getCardanoNetworkConfigById,
+  isHaskellShelleyNetwork,
+  isJormungandr,
+} from './networks'
 import {processTxHistoryData} from './processTransactions'
 import {filterAddressesByStakingKey, getDelegationStatus} from './shelley/delegationUtils'
 import {yoroiSignedTx} from './signedTx'

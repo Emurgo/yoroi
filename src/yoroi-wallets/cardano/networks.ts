@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {flatten} from 'lodash'
 
-import type {NetworkId} from '../yoroi-wallets/types/other'
-import {NETWORK_REGISTRY, YOROI_PROVIDER_IDS} from '../yoroi-wallets/types/other'
+import type {NetworkId} from '../types/other'
+import {NETWORK_REGISTRY, YOROI_PROVIDER_IDS} from '../types/other'
 import {NUMBERS} from './numbers'
 const _DEFAULT_BACKEND_RULES = {
   FETCH_UTXOS_MAX_ADDRESSES: 50,

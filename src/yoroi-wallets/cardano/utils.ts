@@ -3,9 +3,9 @@
 import {BigNumber} from 'bignumber.js'
 
 import {CONFIG} from '../../legacy/config'
-import {getNetworkConfigById} from '../../legacy/networks'
 import type {Addressing, BaseAsset, NetworkId, RawUtxo} from '../types/other'
 import {asciiToHex, CardanoMobile, CardanoTypes, MultiToken, toAssetName, toPolicyId} from '.'
+import {getNetworkConfigById} from './networks'
 
 const PRIMARY_ASSET_CONSTANTS = CONFIG.PRIMARY_ASSET_CONSTANTS
 

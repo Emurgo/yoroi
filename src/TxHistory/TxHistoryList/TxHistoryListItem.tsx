@@ -16,10 +16,10 @@ import {
   getAssetDenominationOrId,
 } from '../../legacy/format'
 import utfSymbols from '../../legacy/utfSymbols'
-import {isEmptyString} from '../../legacy/utils'
 import {TxHistoryRouteNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
+import {isEmptyString} from '../../utils/utils'
 import {MultiToken, YoroiWallet} from '../../yoroi-wallets'
 import {IOData, TransactionAssurance, TransactionDirection, TransactionInfo} from '../../yoroi-wallets/types'
 

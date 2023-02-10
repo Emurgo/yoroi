@@ -12,10 +12,10 @@ import {useLanguage} from '../../i18n'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
 import {CONFIG, isNightly, SHOW_PROD_POOLS_IN_DEV} from '../../legacy/config'
 import {Logger} from '../../legacy/logging'
-import {getNetworkConfigById} from '../../legacy/networks'
 import {StakingCenterRouteNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {NotEnoughMoneyToSendError} from '../../yoroi-wallets'
+import {getNetworkConfigById} from '../../yoroi-wallets/cardano/networks'
 import {PoolDetailScreen} from '../PoolDetails'
 
 export const StakingCenter = () => {
