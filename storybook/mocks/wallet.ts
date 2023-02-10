@@ -4,7 +4,7 @@ import {action} from '@storybook/addon-actions'
 import BigNumber from 'bignumber.js'
 
 import {getDefaultAssetByNetworkId} from '../../src/legacy/config'
-import {PRIMARY_ASSET_CONSTANTS} from '../../src/legacy/networks'
+import {PRIMARY_ASSET_CONSTANTS} from '../../src/yoroi-wallets/cardano/networks'
 import {
   fallbackTokenInfo,
   primaryTokenInfo,

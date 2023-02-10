@@ -1,8 +1,8 @@
 import BigNumber from 'bignumber.js'
 
-import {getCardanoNetworkConfigById} from '../../legacy/networks'
 import {CardanoMobile, cardanoValueFromMultiToken, MultiToken} from '../../yoroi-wallets'
 import {DefaultAsset, Token} from '../types'
+import {getCardanoNetworkConfigById} from './networks'
 
 export const getMinAda = async (selectedToken: Token, defaultAsset: DefaultAsset) => {
   const networkConfig = getCardanoNetworkConfigById(defaultAsset.networkId)

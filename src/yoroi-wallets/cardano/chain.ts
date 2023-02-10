@@ -6,10 +6,10 @@ import {defaultMemoize} from 'reselect'
 import assert from '../../legacy/assert'
 import {CONFIG, isByron, isHaskellShelley} from '../../legacy/config'
 import {Logger} from '../../legacy/logging'
-import {getNetworkConfigById} from '../../legacy/networks'
 import {ADDRESS_TYPE_TO_CHANGE, AddressType, CardanoMobile, CardanoTypes} from '.'
 import type {CryptoAccount} from './byron/util'
 import * as util from './byron/util'
+import {getNetworkConfigById} from './networks'
 import {NetworkId, WalletImplementationId} from './types'
 
 export type AddressBlock = [number, Moment, Array<string>]

@@ -4,8 +4,8 @@ import {Image, LayoutAnimation, ScrollView, StyleSheet, Text, TouchableOpacity, 
 
 import image from '../../assets/img/error.png'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
-import {isEmptyString} from '../../legacy/utils'
 import {brand, COLORS, spacing} from '../../theme'
+import {isEmptyString} from '../../utils/utils'
 import {Button, Icon, Modal} from '..'
 
 type ErrorViewProps = {
