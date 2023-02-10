@@ -1,11 +1,11 @@
-import {YoroiStorage} from '../storage'
-import {isString, parseString} from '../utils/parsing'
+import {YoroiStorage} from './storage'
+import * as parsing from './utils/parsing'
 
 export const makeMemosManager = async (storage: YoroiStorage) => {
   const getMemos = () =>
     storage
       .getAllKeys()
-      .then((keys) => storage.multiGet(keys, parseString))
+      .then((keys) => storage.multiGet(keys, parsing.parseString))
       .then(filterCorruptEntries)
       .then((tuples) => Object.fromEntries(tuples))
 
@@ -34,7 +34,7 @@ export const makeMemosManager = async (storage: YoroiStorage) => {
 }
 
 const filterCorruptEntries = (tuples: [string, string | undefined][]) => {
-  return tuples.filter((tuple): tuple is [string, string] => isString(tuple[1]))
+  return tuples.filter((tuple): tuple is [string, string] => parsing.isString(tuple[1]))
 }
 
 export type MemosManager = Awaited<ReturnType<typeof makeMemosManager>>

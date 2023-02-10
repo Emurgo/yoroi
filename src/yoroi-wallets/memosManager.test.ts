@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-import {storage as rootStorage} from '../storage'
 import {makeMemosManager} from './memosManager'
+import {storage as rootStorage} from './storage'
 
 describe('memos manager', () => {
   beforeEach(() => AsyncStorage.clear())

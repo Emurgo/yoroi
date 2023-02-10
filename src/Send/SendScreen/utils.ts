@@ -5,14 +5,7 @@ import {IntlShape} from 'react-intl'
 
 import {formatTokenAmount, formatTokenInteger, normalizeTokenAmount} from '../../legacy/format'
 import {getCardanoNetworkConfigById, isHaskellShelleyNetwork} from '../../legacy/networks'
-import {cardanoValueFromMultiToken} from '../../legacy/utils'
-import {
-  AssetOverflowError,
-  CardanoMobile,
-  MultiToken,
-  NotEnoughMoneyToSendError,
-  YoroiWallet,
-} from '../../yoroi-wallets'
+import {AssetOverflowError, getMinAda, NotEnoughMoneyToSendError, YoroiWallet} from '../../yoroi-wallets'
 import {DefaultAsset, Quantity, SendTokenList, Token, YoroiUnsignedTx} from '../../yoroi-wallets/types'
 import {RawUtxo} from '../../yoroi-wallets/types/other'
 import {Amounts, Quantities} from '../../yoroi-wallets/utils'
@@ -20,36 +13,6 @@ import {InvalidAssetAmount, parseAmountDecimal} from '../../yoroi-wallets/utils/
 import type {AddressValidationErrors} from '../../yoroi-wallets/utils/validators'
 import {getUnstoppableDomainAddress, isReceiverAddressValid, validateAmount} from '../../yoroi-wallets/utils/validators'
 import {amountInputErrorMessages, messages} from './strings'
-
-export const getMinAda = async (selectedToken: Token, defaultAsset: DefaultAsset) => {
-  const networkConfig = getCardanoNetworkConfigById(defaultAsset.networkId)
-  const fakeAmount = new BigNumber('0') // amount doesn't matter for calculating min UTXO amount
-  const fakeMultitoken = new MultiToken(
-    [
-      {
-        identifier: defaultAsset.identifier,
-        networkId: defaultAsset.networkId,
-        amount: fakeAmount,
-      },
-      {
-        identifier: selectedToken.identifier,
-        networkId: selectedToken.networkId,
-        amount: fakeAmount,
-      },
-    ],
-    {
-      defaultNetworkId: defaultAsset.networkId,
-      defaultIdentifier: defaultAsset.identifier,
-    },
-  )
-  const minAmount = await CardanoMobile.minAdaRequired(
-    await cardanoValueFromMultiToken(fakeMultitoken),
-    await CardanoMobile.BigNum.fromStr(networkConfig.MINIMUM_UTXO_VAL),
-  )
-  // if the user is sending a token, we need to make sure the resulting utxo
-  // has at least the minimum amount of ADA in it
-  return minAmount.toStr()
-}
 
 export const getTransactionData = async (
   wallet: YoroiWallet,

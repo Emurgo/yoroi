@@ -30,10 +30,9 @@ import {
   isHaskellShelleyNetwork,
   isJormungandr,
 } from '../../legacy/networks'
-import {processTxHistoryData} from '../../legacy/processTransactions'
 import {IsLockedError, nonblockingSynchronize, synchronize} from '../../legacy/promise'
 import type {WalletMeta} from '../../legacy/state'
-import {deriveRewardAddressHex} from '../../legacy/utils'
+import {makeMemosManager, MemosManager} from '../memosManager'
 import {YoroiStorage} from '../storage'
 import type {
   AccountStateResponse,
@@ -67,12 +66,13 @@ import {
 } from '.'
 import * as api from './api'
 import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from './chain'
-import {makeMemosManager, MemosManager} from './memosManager'
+import {processTxHistoryData} from './processTransactions'
 import {filterAddressesByStakingKey, getDelegationStatus} from './shelley/delegationUtils'
 import {yoroiSignedTx} from './signedTx'
 import {TransactionManager} from './transactionManager'
 import {isYoroiWallet, NetworkId, WalletEvent, WalletImplementationId, WalletSubscription, YoroiWallet} from './types'
 import {yoroiUnsignedTx} from './unsignedTx'
+import {deriveRewardAddressHex} from './utils'
 import {makeUtxoManager, UtxoManager} from './utxoManager'
 
 type WalletState = {

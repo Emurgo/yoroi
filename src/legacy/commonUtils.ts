@@ -5,13 +5,11 @@
  * TODO: migrate here common utilities from Byron/util.js
  */
 
-import {BigNumber} from 'bignumber.js'
 import {generateMnemonic, mnemonicToEntropy} from 'bip39'
 import cryptoRandomString from 'crypto-random-string'
 import {randomBytes} from 'react-native-randombytes'
 
-import {Cardano, CardanoMobile, DefaultTokenEntry} from '../yoroi-wallets'
-import {MultiToken} from '../yoroi-wallets'
+import {Cardano, CardanoMobile} from '../yoroi-wallets'
 import {SendTokenList} from '../yoroi-wallets/types'
 import type {WalletImplementationId} from '../yoroi-wallets/types/other'
 import {DERIVATION_TYPES} from '../yoroi-wallets/types/other'
@@ -94,54 +92,4 @@ export const hasSendAllDefault = (tokens: SendTokenList): boolean => {
     return false
   })
   return defaultSendAll != null
-}
-
-/**
- * Construct the list of what will be included in the tx output
- */
-export const builtSendTokenList = (
-  defaultToken: DefaultTokenEntry,
-  tokens: SendTokenList,
-  utxos: Array<MultiToken>,
-): MultiToken => {
-  const amount = new MultiToken([], defaultToken)
-
-  for (const token of tokens) {
-    if ((token as any).amount != null) {
-      // if we add a specific amount of a specific token to the output, just add it
-      amount.add({
-        amount: new BigNumber((token as any).amount),
-        identifier: token.token.identifier,
-        networkId: token.token.networkId,
-      })
-    } else if (token.token.isDefault) {
-      // if we add a non-specific amount of the default token
-      // sum amount values in the UTXO
-      const relatedUtxoSum = utxos.reduce((value, next) => value.plus(next.getDefaultEntry().amount), new BigNumber(0))
-      amount.add({
-        amount: relatedUtxoSum,
-        identifier: token.token.identifier,
-        networkId: token.token.networkId,
-      })
-    } else {
-      // if we add a non-specific amount of a given token
-      // sum up the value of all our UTXOs with this token
-      const relatedUtxoSum = utxos.reduce((value, next) => {
-        const assetEntry = next.nonDefaultEntries().find((entry) => entry.identifier === token.token.identifier)
-
-        if (assetEntry != null) {
-          return value.plus(assetEntry.amount)
-        }
-
-        return value
-      }, new BigNumber(0))
-      amount.add({
-        amount: relatedUtxoSum,
-        identifier: token.token.identifier,
-        networkId: token.token.networkId,
-      })
-    }
-  }
-
-  return amount
 }
