@@ -1,5 +1,4 @@
-import {decryptData, encryptData} from '../legacy/commonUtils'
-import {YoroiWallet} from '../yoroi-wallets'
+import {decryptData, encryptData, YoroiWallet} from '../yoroi-wallets'
 import {storage} from '../yoroi-wallets/storage'
 import {parseString} from '../yoroi-wallets/utils/parsing'
 

@@ -5,9 +5,9 @@ import {FlatList, InteractionManager, ScrollView, StyleSheet, View} from 'react-
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Boundary, Icon, Line, StatusBar, Text} from '../../components'
+import {showErrorDialog} from '../../dialogs'
 import {useCreateBip44Wallet, usePlate} from '../../hooks'
 import {errorMessages} from '../../i18n/global-messages'
-import {showErrorDialog} from '../../legacy/actions'
 import {CONFIG} from '../../legacy/config'
 import {NetworkError} from '../../legacy/errors'
 import {isEmptyString} from '../../legacy/utils'

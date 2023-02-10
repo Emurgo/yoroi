@@ -5,9 +5,9 @@ import {FlatList, InteractionManager, Linking, RefreshControl, StyleSheet, Text,
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Icon, PleaseWaitModal, StatusBar} from '../../components'
+import {showErrorDialog} from '../../dialogs'
 import {useOpenWallet, useWalletMetas} from '../../hooks'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
-import {showErrorDialog} from '../../legacy/actions'
 import {CONFIG, isNightly} from '../../legacy/config'
 import {InvalidState, NetworkError} from '../../legacy/errors'
 import {isJormungandr} from '../../legacy/networks'
