@@ -4,8 +4,8 @@ import 'react-intl'
 import type {IntlShape} from 'react-intl'
 import {Alert} from 'react-native'
 
-import globalMessages, {errorMessages} from '../i18n/global-messages'
-import assert from './assert'
+import globalMessages, {errorMessages} from './i18n/global-messages'
+import assert from './legacy/assert'
 
 type DialogOptions = {
   title: string
@@ -78,6 +78,7 @@ export const showErrorDialog = (
     yesButton,
   })
 }
+
 export const showConfirmationDialog = (dialog: any | DialogOptions, intl: IntlShape): Promise<DialogButton> =>
   showDialog({
     title: intl.formatMessage(dialog.title),

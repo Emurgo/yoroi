@@ -1,6 +1,5 @@
-import {AddressType} from '../../../legacy/commonUtils'
 import {CONFIG} from '../../../legacy/config'
-import {AddressGenerator, CardanoMobile, legacyWalletChecksum, walletChecksum} from '../..'
+import {AddressGenerator, AddressType, CardanoMobile, legacyWalletChecksum, walletChecksum} from '../..'
 import type {NetworkId} from '../../types/other'
 import {PlateResponse} from '../../types/other'
 import {getMasterKeyFromMnemonic} from '../byron/util'

@@ -4,8 +4,8 @@ import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {PinInputKeyboard, ProgressStep, Spacer} from '../components'
+import {showErrorDialog} from '../dialogs'
 import {errorMessages} from '../i18n/global-messages'
-import {showErrorDialog} from '../legacy/actions'
 import {Description, PinBox, Row, Title} from './components'
 
 const PIN_LENGTH = 4

@@ -1,6 +1,6 @@
-import {WALLET_IMPLEMENTATION_REGISTRY} from '../yoroi-wallets/types/other'
-import {decryptData, encryptData, formatPath, generateAdaMnemonic, generateWalletRootKey} from './commonUtils'
-import {CardanoError} from './errors'
+import {CardanoError} from '../../legacy/errors'
+import {generateAdaMnemonic, generateWalletRootKey} from '../cardano'
+import {decryptData, encryptData} from './encryption'
 
 const mnemonic = [
   'dry balcony arctic what garbage sort',
@@ -59,12 +59,4 @@ describe('encryption/decryption', () => {
     const decryptedHex = await decryptData(ciphertextHex, password)
     expect(Buffer.from(decryptedHex, 'hex').toString('utf8')).toBe('masterkey')
   })
-})
-
-test('Can format address', () => {
-  expect(formatPath(42, 'Internal', 47, WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON)).toBe("m/44'/1815'/42'/1/47")
-  expect(formatPath(42, 'Internal', 47, WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY)).toBe("m/1852'/1815'/42'/1/47")
-  expect(formatPath(42, 'Internal', 47, WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY_24)).toBe(
-    "m/1852'/1815'/42'/1/47",
-  )
 })

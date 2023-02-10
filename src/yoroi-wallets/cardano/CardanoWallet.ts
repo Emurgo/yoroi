@@ -10,7 +10,6 @@ import {Keychain} from '../../auth/Keychain'
 import {encryptWithPassword} from '../../Catalyst/catalystCipher'
 import LocalizableError from '../../i18n/LocalizableError'
 import assert from '../../legacy/assert'
-import {ADDRESS_TYPE_TO_CHANGE, generateWalletRootKey} from '../../legacy/commonUtils'
 import {
   CONFIG,
   DISABLE_BACKGROUND_SYNC,
@@ -54,10 +53,12 @@ import {parseSafe} from '../utils/parsing'
 import {genTimeToSlot} from '../utils/timeUtils'
 import {validatePassword} from '../utils/validators'
 import {
+  ADDRESS_TYPE_TO_CHANGE,
   Cardano,
   CardanoMobile,
   CardanoTypes,
   generatePrivateKeyForCatalyst,
+  generateWalletRootKey,
   legacyWalletChecksum,
   NoOutputsError,
   NotEnoughMoneyToSendError,
