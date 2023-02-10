@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import AsyncStorage, {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
 import {delay} from 'bluebird'
-import {mapValues} from 'lodash'
 import * as React from 'react'
 import {useCallback, useMemo} from 'react'
 import {
@@ -18,7 +17,6 @@ import {
 import {isNightly} from '../legacy/config'
 import {ObjectValues} from '../legacy/flow'
 import {HWDeviceInfo} from '../legacy/ledgerUtils'
-import {processTxHistoryData} from '../legacy/processTransactions'
 import {WalletMeta} from '../legacy/state'
 import {useStorage} from '../Storage'
 import {parseWalletMeta} from '../Storage/migrations/walletMeta'
@@ -37,10 +35,8 @@ import {generateShelleyPlateFromKey} from '../yoroi-wallets/cardano/shelley/plat
 import {
   Quantity,
   TokenInfo,
-  Transaction,
   TRANSACTION_DIRECTION,
   TRANSACTION_STATUS,
-  TransactionInfo,
   YoroiAmounts,
   YoroiNft,
   YoroiNftModerationStatus,
@@ -170,19 +166,6 @@ export const useSync = (wallet: YoroiWallet, options?: UseMutationOptions<void, 
   return {
     ...mutation,
     sync: mutation.mutate,
-  }
-}
-
-export const useCloseWallet = (options: UseMutationOptions<void, Error> = {}) => {
-  const walletManager = useWalletManager()
-  const mutation = useMutation({
-    mutationFn: () => walletManager.closeWallet(),
-    ...options,
-  })
-
-  return {
-    ...mutation,
-    closeWallet: mutation.mutate,
   }
 }
 
@@ -509,46 +492,13 @@ export const useSignTxWithHW = (
   }
 }
 
-export const useTransactionInfo = (
-  {wallet, txid}: {wallet: YoroiWallet; txid: string},
-  options?: UseQueryOptions<TransactionInfo, Error, TransactionInfo, [string, 'transactionInfo', {txid: string}]>,
-) => {
-  const {data} = useQuery({
-    ...options,
-    suspense: true,
-    refetchInterval: 5000,
-    queryKey: [wallet.id, 'transactionInfo', {txid}],
-    queryFn: async () => {
-      const txInfos = await wallet.getTransactions([txid])
-      return txInfos[txid]
-    },
-  })
-
-  if (!data) throw new Error('invalid state')
-
-  return data
-}
-
-const getTransactionInfos = (wallet: YoroiWallet) =>
-  mapValues(wallet.transactions, (tx: Transaction) => {
-    if (!wallet.networkId) throw new Error('invalid state')
-    return processTxHistoryData(
-      tx,
-      wallet.rewardAddressHex != null
-        ? [...wallet.internalAddresses, ...wallet.externalAddresses, ...[wallet.rewardAddressHex]]
-        : [...wallet.internalAddresses, ...wallet.externalAddresses],
-      wallet.confirmationCounts[tx.id] || 0,
-      wallet.networkId,
-    )
-  })
-
 export const useTransactionInfos = (wallet: YoroiWallet) => {
-  const [transactionInfos, setTransactionInfos] = React.useState(() => getTransactionInfos(wallet))
+  const [transactionInfos, setTransactionInfos] = React.useState(() => wallet.transactions)
   React.useEffect(() => {
     const unsubscribe = wallet.subscribe((event) => {
       if (event.type !== 'transactions') return
 
-      setTransactionInfos(getTransactionInfos(wallet))
+      setTransactionInfos(wallet.transactions)
     })
     return () => unsubscribe?.()
   }, [wallet])

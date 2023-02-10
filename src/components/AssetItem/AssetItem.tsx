@@ -1,41 +1,41 @@
 import * as React from 'react'
-import {Image, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
+import {Image, StyleSheet, View, ViewProps} from 'react-native'
 
-import NoImage from '../../../assets/img/asset_no_image.png'
-import {Icon} from '../../../components'
-import {Text} from '../../../components/Text'
-import {useBalance, useIsTokenKnownNft, useNftImageModerated} from '../../../hooks'
-import {SHOW_NFT_GALLERY} from '../../../legacy/config'
-import {useSelectedWallet} from '../../../SelectedWallet'
-import {COLORS} from '../../../theme'
-import {TokenInfo} from '../../../yoroi-wallets/types'
-import {Quantities} from '../../../yoroi-wallets/utils'
-import {PairedBalance} from '../../PairedBalance'
-import {ModeratedNftIcon} from '../ModeratedNftIcon'
+import {useIsTokenKnownNft, useNftImageModerated} from '../../hooks'
+import {SHOW_NFT_GALLERY} from '../../legacy/config'
+import {useSelectedWallet} from '../../SelectedWallet'
+import {COLORS} from '../../theme'
+import {ModeratedNftIcon} from '../../TxHistory/AssetList/ModeratedNftIcon'
+import {PairedBalance} from '../../TxHistory/PairedBalance'
+import {Quantity, TokenInfo} from '../../yoroi-wallets/types'
+import {Quantities} from '../../yoroi-wallets/utils'
+import {Icon as Icons} from '..'
+import {Text} from '../Text'
 
-type AssetItemProps = {
+export type AssetItemProps = {
   tokenInfo: TokenInfo
-  onPress?(): void
+  balance: Quantity
+  style?: ViewProps['style']
 }
-export const AssetItem = ({tokenInfo, onPress}: AssetItemProps) => {
+export const AssetItem = ({balance, style, tokenInfo}: AssetItemProps) => {
   const wallet = useSelectedWallet()
-  const balance = useBalance({wallet, tokenId: tokenInfo.id})
   const isTokenNft = useIsTokenKnownNft({wallet, fingerprint: tokenInfo.fingerprint})
 
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
   const name = tokenInfo.ticker ?? tokenInfo.name ?? '-'
   const detail = isPrimary ? tokenInfo.description : tokenInfo.fingerprint
   const quantity = Quantities.denominated(balance, tokenInfo.decimals)
+  const logo = tokenInfo.logo ?? ''
 
   return (
-    <TouchableOpacity onPress={onPress} style={styles.button} testID="assetItem">
+    <View style={[style, styles.container]} testID="assetItem">
       <Left>
         {isPrimary ? (
-          <PrimaryTokenIcon />
+          <PrimaryIcon />
         ) : isTokenNft && SHOW_NFT_GALLERY ? (
           <NftIcon id={tokenInfo.id} />
         ) : (
-          <TokenIcon source={NoImage} />
+          <Icon source={{uri: logo}} />
         )}
       </Left>
 
@@ -56,25 +56,31 @@ export const AssetItem = ({tokenInfo, onPress}: AssetItemProps) => {
 
         {isPrimary && <PairedBalance primaryAmount={{quantity: balance, tokenId: tokenInfo.id}} />}
       </Right>
-    </TouchableOpacity>
+    </View>
   )
 }
 
-const Left = ({style, ...props}: ViewProps) => <View style={[style, {padding: 4}]} {...props} />
+const Left = ({style, ...props}: ViewProps) => <View style={style} {...props} />
 const Middle = ({style, ...props}: ViewProps) => (
-  <View style={[style, {flex: 1, justifyContent: 'center', padding: 4}]} {...props} />
+  <View style={[style, {flex: 1, justifyContent: 'center', paddingHorizontal: 8}]} {...props} />
 )
-const Right = ({style, ...props}: ViewProps) => <View style={[style, {padding: 4}]} {...props} />
+const Right = ({style, ...props}: ViewProps) => <View style={style} {...props} />
 
+const Placeholder = () => (
+  <View style={[styles.icon, styles.placeholder]}>
+    <Icons.Tokens color={COLORS.TEXT_INPUT} size={35} />
+  </View>
+)
+const PrimaryIcon = () => (
+  <View style={[styles.icon, styles.primary]}>
+    <Icons.Cardano color="white" height={35} width={35} />
+  </View>
+)
 type IconProps = {
   source: {uri: string}
 }
-const TokenIcon = ({source}: IconProps) => <Image source={source} style={styles.tokenIcon} />
-const PrimaryTokenIcon = () => (
-  <View style={styles.primaryTokenIcon}>
-    <Icon.Cardano color="white" height={35} width={35} />
-  </View>
-)
+const Icon = ({source}: IconProps) =>
+  source.uri.length > 0 ? <Image source={source} style={styles.icon} /> : <Placeholder />
 
 const NftIcon = ({id}: {id: string}) => {
   const wallet = useSelectedWallet()
@@ -88,34 +94,24 @@ const NftIcon = ({id}: {id: string}) => {
 }
 
 const styles = StyleSheet.create({
-  primaryTokenIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 8,
+  primary: {
     backgroundColor: COLORS.SHELLEY_BLUE,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
-  tokenIcon: {
+  placeholder: {
+    backgroundColor: COLORS.BACKGROUND_GRAY,
+  },
+  icon: {
+    backgroundColor: 'transparent',
     width: 40,
     height: 40,
     borderRadius: 8,
-    backgroundColor: 'transparent',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  button: {
+  container: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    borderRadius: 8,
-    elevation: 2,
-    shadowOffset: {width: 0, height: -2},
-    shadowRadius: 10,
-    shadowOpacity: 0.08,
-    shadowColor: '#181a1e',
-    backgroundColor: '#fff',
-    paddingHorizontal: 12,
-    paddingVertical: 12,
+    alignItems: 'center',
   },
   name: {
     color: COLORS.DARK_TEXT,
@@ -128,6 +124,7 @@ const styles = StyleSheet.create({
     color: COLORS.TEXT_INPUT,
     fontSize: 12,
     lineHeight: 18,
+    maxWidth: 140,
   },
   quantity: {
     color: COLORS.DARK_TEXT,

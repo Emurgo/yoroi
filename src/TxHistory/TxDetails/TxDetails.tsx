@@ -8,7 +8,7 @@ import {LayoutAnimation, Linking, StyleSheet, TouchableOpacity, View, ViewProps}
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {Banner, Boundary, Button, CopyButton, FadeIn, Icon, StatusBar, Text} from '../../components'
-import {useTipStatus, useTransactionInfo} from '../../hooks'
+import {useTipStatus, useTransactionInfos} from '../../hooks'
 import globalMessages from '../../i18n/global-messages'
 import {formatDateToSeconds, formatTokenWithSymbol} from '../../legacy/format'
 import {getNetworkConfigById} from '../../legacy/networks'
@@ -31,7 +31,8 @@ export const TxDetails = () => {
   const [expandedInItemId, setExpandedInItemId] = useState<null | ItemId>(null)
   const [expandedOutItemId, setExpandedOutItemId] = useState<null | ItemId>(null)
   const [addressDetail, setAddressDetail] = React.useState<null | string>(null)
-  const transaction = useTransactionInfo({wallet, txid: id})
+  const transactions = useTransactionInfos(wallet)
+  const transaction = transactions[id]
 
   useTitle(formatDateToSeconds(transaction.submittedAt))
 

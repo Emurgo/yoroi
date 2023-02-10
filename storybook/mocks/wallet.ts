@@ -22,7 +22,7 @@ import {
 } from '../../src/yoroi-wallets/types'
 import {asciiToHex} from '../../src/yoroi-wallets/utils/parsing'
 import {mockEncryptedStorage} from './storage'
-import {mockTransactionInfo, mockTransactions} from './transaction'
+import {mockTransactionInfo, mockTransactionInfos} from './transaction'
 import {utxos} from './utxos'
 import {getAssetFingerprint, getTokenFingerprint} from '../../src/legacy/format'
 
@@ -162,7 +162,7 @@ const wallet: YoroiWallet = {
   internalAddresses: [],
   externalAddresses: [],
   confirmationCounts: {},
-  transactions: mockTransactions,
+  transactions: mockTransactionInfos,
   isUsedAddressIndex: {},
   numReceiveAddresses: 0,
   receiveAddresses: [],
@@ -181,6 +181,9 @@ const wallet: YoroiWallet = {
   save: async (...args) => {
     action('save')(...args)
   },
+  saveMemo: async (...args) => {
+    action('saveMemo')(...args)
+  },
   tryDoFullSync: async (...args) => {
     action('tryDoFullSync')(...args)
   },
@@ -192,9 +195,6 @@ const wallet: YoroiWallet = {
   },
   resync: async (...args) => {
     action('resync')(...args)
-  },
-  getTransactions: () => {
-    throw new Error('not implemented')
   },
   enableEasyConfirmation: async (rootKey: string) => {
     action('enableEasyConfirmation')(rootKey)
@@ -221,6 +221,12 @@ const wallet: YoroiWallet = {
 
   fetchFundInfo: () => {
     throw new Error('not implemented: fetchFundInfo')
+  },
+  startSync: () => {
+    throw new Error('not implemented: start')
+  },
+  stopSync: () => {
+    throw new Error('not implemented: stop')
   },
 }
 

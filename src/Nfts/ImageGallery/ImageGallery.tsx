@@ -1,6 +1,6 @@
-import {FlashList} from '@shopify/flash-list'
+import {FlashList, FlashListProps} from '@shopify/flash-list'
 import React, {useEffect} from 'react'
-import {Dimensions, FlatList, GestureResponderEvent, Image, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {Dimensions, GestureResponderEvent, Image, StyleSheet, TouchableOpacity, View} from 'react-native'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
 import {Icon, Spacer, Text} from '../../components'
@@ -20,39 +20,17 @@ const TEXT_SIZE = 20
 
 export const SkeletonGallery = ({amount}: {amount: number} = {amount: 3}) => {
   const placeholders = new Array(amount).fill(undefined).map((val, i) => i)
-  return (
-    <FlatList
-      bounces={false}
-      columnWrapperStyle={{paddingBottom: ROW_SPACING}}
-      data={placeholders}
-      numColumns={2}
-      horizontal={false}
-      keyExtractor={(placeholder, index) => index + ''}
-      renderItem={() => <SkeletonImagePlaceholder />}
-    />
-  )
+
+  return <GalleryList data={placeholders} renderItem={() => <SkeletonImagePlaceholder />} />
 }
 
 export const ImageGallery = ({nfts = [], onSelect, onRefresh, isRefreshing}: Props) => {
   return (
-    <FlashList
+    <GalleryList
       data={nfts}
-      numColumns={2}
       onRefresh={onRefresh}
       refreshing={isRefreshing}
-      renderItem={({item, index}) => (
-        <View
-          style={[
-            index % 2 === 0 ? {paddingRight: IMAGE_HORIZONTAL_PADDING} : {paddingLeft: IMAGE_HORIZONTAL_PADDING},
-            {paddingBottom: ROW_SPACING},
-          ]}
-        >
-          <ModeratedImage onPress={() => onSelect(nfts.indexOf(item))} nft={item} key={item.id} />
-        </View>
-      )}
-      keyExtractor={(nft) => nft.id}
-      horizontal={false}
-      estimatedItemSize={IMAGE_SIZE + IMAGE_PADDING + TEXT_SIZE + ROW_SPACING}
+      renderItem={(item) => <ModeratedImage onPress={() => onSelect(nfts.indexOf(item))} nft={item} key={item.id} />}
     />
   )
 }
@@ -239,3 +217,25 @@ const DIMENSIONS = Dimensions.get('window')
 const MIN_SIZE = Math.min(DIMENSIONS.width, DIMENSIONS.height)
 const IMAGE_HORIZONTAL_PADDING = SPACE_BETWEEN_COLUMNS / NUMBER_OF_COLUMNS
 const IMAGE_SIZE = (MIN_SIZE - CONTAINER_HORIZONTAL_PADDING * 2) / NUMBER_OF_COLUMNS - IMAGE_HORIZONTAL_PADDING
+
+function GalleryList<T>({renderItem, ...rest}: FlashListProps<T> & {renderItem: (item: T) => React.ReactElement}) {
+  return (
+    <FlashList
+      {...rest}
+      numColumns={2}
+      renderItem={({item, index}) => (
+        <View
+          style={[
+            index % 2 === 0 ? {paddingRight: IMAGE_HORIZONTAL_PADDING} : {paddingLeft: IMAGE_HORIZONTAL_PADDING},
+            {paddingBottom: ROW_SPACING},
+          ]}
+        >
+          {renderItem(item)}
+        </View>
+      )}
+      keyExtractor={(placeholder, index) => index + ''}
+      horizontal={false}
+      estimatedItemSize={IMAGE_SIZE + IMAGE_PADDING + TEXT_SIZE + ROW_SPACING}
+    />
+  )
+}
