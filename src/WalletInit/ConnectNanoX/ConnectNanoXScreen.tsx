@@ -9,11 +9,9 @@ import {showErrorDialog} from '../../dialogs'
 import {LedgerConnect} from '../../HW'
 import {errorMessages} from '../../i18n/global-messages'
 import LocalizableError from '../../i18n/LocalizableError'
-import type {DeviceId, DeviceObj} from '../../legacy/ledgerUtils'
-import {getHWDeviceInfo} from '../../legacy/ledgerUtils'
 import {Logger} from '../../legacy/logging'
 import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
-import {NetworkId, WalletImplementationId} from '../../yoroi-wallets'
+import {DeviceId, DeviceObj, getHWDeviceInfo, NetworkId, WalletImplementationId} from '../../yoroi-wallets'
 import {Device} from '../../yoroi-wallets/types'
 
 export type Params = {

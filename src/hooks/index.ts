@@ -14,12 +14,12 @@ import {
 } from 'react-query'
 
 import {isNightly} from '../legacy/config'
-import {HWDeviceInfo} from '../legacy/ledgerUtils'
 import {useStorage} from '../Storage'
 import {parseWalletMeta} from '../Storage/migrations/walletMeta'
 import {useWalletManager} from '../WalletManager'
 import {
   calcLockedDeposit,
+  HWDeviceInfo,
   NetworkId,
   toToken,
   TxSubmissionStatus,

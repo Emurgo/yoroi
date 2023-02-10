@@ -1,5 +1,5 @@
-import {DeviceId, DeviceObj} from '../legacy/ledgerUtils'
-import {YoroiWallet} from './cardano'
+import {YoroiWallet} from '../cardano'
+import {DeviceId, DeviceObj} from './hw'
 
 export const withUSB = (wallet: YoroiWallet, deviceObj: DeviceObj) => {
   if (!wallet.hwDeviceInfo) throw new Error('invalid wallet')

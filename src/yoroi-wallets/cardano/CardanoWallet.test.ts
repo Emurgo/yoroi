@@ -2,7 +2,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import {EncryptedStorage, EncryptedStorageKeys} from '../../auth'
-import {HWDeviceInfo} from '../../legacy/ledgerUtils'
+import {HWDeviceInfo} from '../hw'
 import {storage} from '../storage'
 import {WalletMeta} from '../walletManager'
 import {CardanoWallet, WalletJSON} from './CardanoWallet'
