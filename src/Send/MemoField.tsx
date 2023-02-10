@@ -22,12 +22,13 @@ export const MemoField = () => {
         label={strings.label}
         autoComplete={false}
         testID="memoFieldInput"
-        errorText={showError ? 'error' : undefined}
-        noErrors={true}
+        errorText={showError ? 'error' : undefined} // to show the error styling
+        noErrors={true} // to block the default helper
+        multiline={true}
       />
 
       <View style={styles.helper}>
-        <Text style={[styles.warning, showError && styles.error]}>{strings.warning}</Text>
+        <Text style={[styles.warning, showError && styles.error]}>{showError ? strings.error : strings.warning}</Text>
 
         <Text style={[styles.counter, showError && styles.error]}>{`${memo.length}/${maxMemoLength}`}</Text>
       </View>
@@ -41,6 +42,7 @@ const useStrings = () => {
   return {
     label: intl.formatMessage(messages.label),
     warning: intl.formatMessage(messages.warning),
+    error: intl.formatMessage(messages.error),
   }
 }
 
@@ -52,6 +54,10 @@ export const messages = defineMessages({
   warning: {
     id: 'components.send.memofield.warning',
     defaultMessage: '!!!(Optional) Memo is stored locally',
+  },
+  error: {
+    id: 'components.send.memofield.error',
+    defaultMessage: '!!!Memo is name is too long',
   },
 })
 
