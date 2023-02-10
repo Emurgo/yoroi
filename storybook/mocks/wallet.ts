@@ -145,10 +145,6 @@ const wallet: YoroiWallet = {
     action('fetchCurrentPrice')(...args)
     return Promise.resolve(1.9938153154314795)
   },
-  toJSON: (...args) => {
-    action('toJSON')(...args)
-    return null as any
-  },
   internalAddresses: [],
   externalAddresses: [],
   confirmationCounts: {},

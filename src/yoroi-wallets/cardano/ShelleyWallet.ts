@@ -71,15 +71,7 @@ import {makeMemosManager, MemosManager} from './memosManager'
 import {filterAddressesByStakingKey, getDelegationStatus} from './shelley/delegationUtils'
 import {yoroiSignedTx} from './signedTx'
 import {TransactionManager} from './transactionManager'
-import {
-  isYoroiWallet,
-  NetworkId,
-  WalletEvent,
-  WalletImplementationId,
-  WalletInterface,
-  WalletSubscription,
-  YoroiWallet,
-} from './types'
+import {isYoroiWallet, NetworkId, WalletEvent, WalletImplementationId, WalletSubscription, YoroiWallet} from './types'
 import {yoroiUnsignedTx} from './unsignedTx'
 import {makeUtxoManager, UtxoManager} from './utxoManager'
 
@@ -110,7 +102,7 @@ export type ByronWalletJSON = Omit<ShelleyWalletJSON, 'account'>
 export type WalletJSON = ShelleyWalletJSON | ByronWalletJSON
 
 export default ShelleyWallet
-export class ShelleyWallet implements WalletInterface {
+export class ShelleyWallet implements YoroiWallet {
   readonly primaryToken: DefaultAsset
   readonly primaryTokenInfo: TokenInfo
   readonly id: string
@@ -122,7 +114,7 @@ export class ShelleyWallet implements WalletInterface {
   readonly internalChain: AddressChain
   readonly externalChain: AddressChain
   readonly publicKeyHex: string
-  readonly rewardAddressHex: null | string = null
+  readonly rewardAddressHex: string
   readonly version: string
   readonly checksum: CardanoTypes.WalletChecksum
   readonly encryptedStorage: WalletEncryptedStorage
@@ -170,7 +162,7 @@ export class ShelleyWallet implements WalletInterface {
       isEasyConfirmationEnabled: false,
     })
 
-    await wallet.encryptAndSaveRootKey(rootKey, password)
+    await encryptAndSaveRootKey(wallet, rootKey, password)
 
     return wallet
   }
@@ -190,7 +182,6 @@ export class ShelleyWallet implements WalletInterface {
     id: string
     implementationId: WalletImplementationId
     networkId: NetworkId
-
     isReadOnly: boolean
     storage: YoroiStorage
   }): Promise<YoroiWallet> {
@@ -601,7 +592,6 @@ export class ShelleyWallet implements WalletInterface {
   }
 
   getDelegationStatus() {
-    if (this.rewardAddressHex == null) throw new Error('reward address is null')
     const certsForKey = this.transactionManager.perRewardAddressCertificates[this.rewardAddressHex]
     return Promise.resolve(getDelegationStatus(this.rewardAddressHex, certsForKey))
   }
@@ -625,7 +615,7 @@ export class ShelleyWallet implements WalletInterface {
     return this.generateNewReceiveAddress()
   }
 
-  generateNewReceiveAddress(): boolean {
+  generateNewReceiveAddress() {
     if (!this.canGenerateNewReceiveAddress()) return false
 
     this.updateState({
@@ -870,7 +860,6 @@ export class ShelleyWallet implements WalletInterface {
   }
 
   async createWithdrawalTx(shouldDeregister: boolean): Promise<YoroiUnsignedTx> {
-    if (this.rewardAddressHex == null) throw new Error('reward address is null')
     const timeToSlotFn = genTimeToSlot(getCardanoBaseConfig(this.getNetworkConfig()))
 
     const time = await this.checkServerStatus()
@@ -966,7 +955,6 @@ export class ShelleyWallet implements WalletInterface {
   }
 
   async fetchAccountState(): Promise<AccountStateResponse> {
-    if (this.rewardAddressHex == null) throw new Error('reward address is null')
     return api.bulkGetAccountState([this.rewardAddressHex], this.getBackendConfig())
   }
 
@@ -1001,19 +989,19 @@ export class ShelleyWallet implements WalletInterface {
     return api.fetchCurrentPrice(symbol, this.getBackendConfig())
   }
 
-  state: WalletState = {
+  private state: WalletState = {
     lastGeneratedAddressIndex: 0,
   }
 
   private isInitialized = false
 
-  _doFullSyncMutex: any = {name: 'doFullSyncMutex', lock: null}
+  private _doFullSyncMutex: any = {name: 'doFullSyncMutex', lock: null}
 
   private subscriptions: Array<WalletSubscription> = []
 
-  _onTxHistoryUpdateSubscriptions: Array<(Wallet) => void> = []
+  private _onTxHistoryUpdateSubscriptions: Array<(Wallet) => void> = []
 
-  _isUsedAddressIndexSelector = defaultMemoize((perAddressTxs) =>
+  private _isUsedAddressIndexSelector = defaultMemoize((perAddressTxs) =>
     _.mapValues(perAddressTxs, (txs) => {
       assert.assert(!!txs, 'perAddressTxs cointains false-ish value')
       return txs.length > 0
@@ -1058,9 +1046,6 @@ export class ShelleyWallet implements WalletInterface {
   }
 
   // ============ security & key management ============ //
-  async encryptAndSaveRootKey(rootKey: string, password: string) {
-    return this.encryptedStorage.rootKey.write(rootKey, password)
-  }
 
   async getDecryptedRootKey(password: string) {
     return this.encryptedStorage.rootKey.read(password)
@@ -1208,8 +1193,7 @@ export class ShelleyWallet implements WalletInterface {
 
   // ========== persistence ============= //
 
-  // TODO: move to specific child class?
-  toJSON(): WalletJSON {
+  private toJSON(): WalletJSON {
     return {
       lastGeneratedAddressIndex: this.state.lastGeneratedAddressIndex,
       publicKeyHex: this.publicKeyHex,
@@ -1322,3 +1306,6 @@ export const primaryTokenInfo = {
     ticker: 'TADA',
   } as TokenInfo,
 }
+
+const encryptAndSaveRootKey = (wallet: YoroiWallet, rootKey: string, password: string) =>
+  wallet.encryptedStorage.rootKey.write(rootKey, password)
