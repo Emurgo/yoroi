@@ -30,7 +30,6 @@ import {
   isJormungandr,
 } from '../../legacy/networks'
 import {IsLockedError, nonblockingSynchronize, synchronize} from '../../legacy/promise'
-import type {WalletMeta} from '../../legacy/state'
 import {makeMemosManager, MemosManager} from '../memos'
 import {YoroiStorage} from '../storage'
 import type {
@@ -52,6 +51,7 @@ import {Quantities} from '../utils'
 import {parseSafe} from '../utils/parsing'
 import {genTimeToSlot} from '../utils/timeUtils'
 import {validatePassword} from '../utils/validators'
+import {WalletMeta} from '../walletManager'
 import {
   ADDRESS_TYPE_TO_CHANGE,
   Cardano,

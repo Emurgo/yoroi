@@ -4,7 +4,6 @@ import {CardanoAddressedUtxo} from '@emurgo/yoroi-lib'
 import {sortBy} from 'lodash'
 
 import assert from '../../../legacy/assert'
-import {ObjectValues} from '../../../legacy/flow'
 import {Logger} from '../../../legacy/logging'
 import {StakingStatus} from '../../types'
 import {CardanoMobile, CardanoTypes, normalizeToAddress} from '..'
@@ -63,7 +62,7 @@ export const getDelegationStatus = (
   Logger.debug('txCertificatesForKey', sortedCerts)
   let status: StakingStatus = {isRegistered: false}
 
-  for (const certData of ObjectValues(sortedCerts)) {
+  for (const certData of Object.values(sortedCerts)) {
     const certificates = (certData as any).certificates
 
     for (const cert of certificates) {

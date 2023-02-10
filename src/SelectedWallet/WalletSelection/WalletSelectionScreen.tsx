@@ -11,10 +11,10 @@ import globalMessages, {errorMessages} from '../../i18n/global-messages'
 import {CONFIG, isNightly} from '../../legacy/config'
 import {InvalidState, NetworkError} from '../../legacy/errors'
 import {isJormungandr} from '../../legacy/networks'
-import {WalletMeta} from '../../legacy/state'
 import {useWalletNavigation} from '../../navigation'
 import {COLORS} from '../../theme'
 import {useWalletManager} from '../../WalletManager'
+import {WalletMeta} from '../../yoroi-wallets'
 import {useSetSelectedWallet, useSetSelectedWalletMeta} from '..'
 import {WalletListItem} from './WalletListItem'
 
@@ -54,6 +54,7 @@ export const WalletSelectionScreen = () => {
   })
 
   const onSelect = async (walletMeta: WalletMeta) => {
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (walletMeta.isShelley || isJormungandr(walletMeta.networkId)) {
       await showErrorDialog(errorMessages.itnNotSupported, intl)
       return
