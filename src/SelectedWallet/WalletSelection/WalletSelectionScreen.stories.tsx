@@ -4,9 +4,8 @@ import React from 'react'
 
 import {mocks} from '../../../storybook'
 import {InvalidState, NetworkError} from '../../legacy/errors'
-import {WalletMeta} from '../../legacy/state'
 import {WalletManagerProvider} from '../../WalletManager'
-import {mockWalletManager, WalletManager} from '../../yoroi-wallets'
+import {mockWalletManager, WalletManager, WalletMeta} from '../../yoroi-wallets'
 import {WalletSelectionScreen} from './WalletSelectionScreen'
 
 storiesOf('WalletSelectionScreen', module)
