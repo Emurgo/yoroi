@@ -4,9 +4,9 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
 import {CONFIG} from '../../legacy/config'
-import {NetworkError} from '../../legacy/errors'
 import {WalletManagerProvider} from '../../WalletManager'
 import {WalletManager, walletManager} from '../../yoroi-wallets'
+import {NetworkError} from '../../yoroi-wallets/cardano/errors'
 import {MnemonicCheckScreen} from './MnemonicCheckScreen'
 
 storiesOf('MnemonicCheckScreen', module)

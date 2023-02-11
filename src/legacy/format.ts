@@ -14,15 +14,6 @@ const getTokenFingerprint = ({policyId, assetNameHex}) => {
   return assetFingerprint.fingerprint()
 }
 
-export const ASSET_DENOMINATION = {
-  TICKER: 'ticker',
-  SYMBOL: 'symbol',
-  NAME: 'name',
-  FINGERPRINT: 'fingerprint',
-}
-
-type AssetDenomination = typeof ASSET_DENOMINATION[keyof typeof ASSET_DENOMINATION]
-
 const decodeHexAscii = (text: string) => {
   const bytes = [...Buffer.from(text, 'hex')]
   const isAscii = bytes.every((byte) => byte > 32 && byte < 127)
@@ -47,53 +38,6 @@ const getName = (token: Token | DefaultAsset) =>
   }) ||
   undefined
 
-// NOTE: There is a bug when starting fresh, the metadata is empty
-const getAssetDenomination = (
-  token: Token | DefaultAsset,
-  denomination: AssetDenomination,
-): string | null | undefined => {
-  switch (denomination) {
-    case ASSET_DENOMINATION.TICKER:
-      return getTicker(token)
-
-    case ASSET_DENOMINATION.SYMBOL:
-      return getSymbol(token)
-
-    case ASSET_DENOMINATION.NAME:
-      return getName(token)
-
-    case ASSET_DENOMINATION.FINGERPRINT:
-      return getTokenFingerprint({
-        policyId: token.metadata.policyId,
-        assetNameHex: token.metadata.assetName,
-      })
-
-    default:
-      return null
-  }
-}
-
-export const getAssetDenominationOrId = (token: Token | DefaultAsset, denomination?: AssetDenomination): string => {
-  if (denomination !== undefined) {
-    return (
-      getAssetDenomination(token, denomination) ??
-      getTokenFingerprint({
-        policyId: token.metadata.policyId,
-        assetNameHex: token.metadata.assetName,
-      })
-    )
-  }
-
-  return (
-    getAssetDenomination(token, ASSET_DENOMINATION.TICKER) ||
-    getAssetDenomination(token, ASSET_DENOMINATION.NAME) ||
-    getTokenFingerprint({
-      policyId: token.metadata.policyId,
-      assetNameHex: token.metadata.assetName,
-    })
-  )
-}
-
 export const normalizeTokenAmount = (amount: BigNumber, token: Token | DefaultAsset): BigNumber => {
   const normalizationFactor = Math.pow(10, token.metadata.numberOfDecimals)
   return amount.dividedBy(normalizationFactor).decimalPlaces(token.metadata.numberOfDecimals)
@@ -107,19 +51,36 @@ export const formatTokenAmount = (amount: BigNumber, token: Token | DefaultAsset
 }
 
 export const formatTokenWithSymbol = (amount: BigNumber, token: Token | DefaultAsset): string => {
-  const denomination = getAssetDenominationOrId(token, ASSET_DENOMINATION.SYMBOL)
+  const denomination =
+    getSymbol(token) ??
+    getTokenFingerprint({
+      policyId: token.metadata.policyId,
+      assetNameHex: token.metadata.assetName,
+    })
   return `${formatTokenAmount(amount, token)}${utfSymbols.NBSP}${denomination}`
 }
 // We assume that tickers are non-localized. If ticker doesn't exist, default
 // to identifier
 
 export const formatTokenWithText = (amount: BigNumber, token: Token | DefaultAsset) => {
-  const tickerOrId = getAssetDenominationOrId(token)
+  const tickerOrId =
+    getTicker(token) ||
+    getName(token) ||
+    getTokenFingerprint({
+      policyId: token.metadata.policyId,
+      assetNameHex: token.metadata.assetName,
+    })
   return `${formatTokenAmount(amount, token)}${utfSymbols.NBSP}${tickerOrId}`
 }
 
 export const formatTokenWithTextWhenHidden = (text: string, token: Token | DefaultAsset) => {
-  const tickerOrId = getAssetDenominationOrId(token)
+  const tickerOrId =
+    getTicker(token) ||
+    getName(token) ||
+    getTokenFingerprint({
+      policyId: token.metadata.policyId,
+      assetNameHex: token.metadata.assetName,
+    })
   return `${text}${utfSymbols.NBSP}${tickerOrId}`
 }
 
@@ -149,6 +110,7 @@ export const truncateWithEllipsis = (s: string, n: number) => {
 
   return s
 }
+
 // TODO(multi-asset): consider removing these
 const defaultAssetMeta = getCardanoDefaultAsset().metadata
 const normalizationFactor = Math.pow(10, defaultAssetMeta.numberOfDecimals)

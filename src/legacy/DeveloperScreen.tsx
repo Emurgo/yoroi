@@ -18,8 +18,8 @@ import {AppRoutes, useWalletNavigation} from '../navigation'
 import {useSelectedWalletContext} from '../SelectedWallet'
 import {isEmptyString} from '../utils/utils'
 import {generateAdaMnemonic} from '../yoroi-wallets'
+import {NetworkError} from '../yoroi-wallets/cardano/errors'
 import assert from './assert'
-import {NetworkError} from './errors'
 
 const routes: Array<{label: string; path: keyof AppRoutes}> = [
   {label: 'Storybook', path: 'storybook'},

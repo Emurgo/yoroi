@@ -1,5 +1,7 @@
-import {errorMessages} from '../i18n/global-messages'
-import LocalizableError from '../i18n/LocalizableError'
+import ExtendableError from 'es6-error'
+
+import {errorMessages} from '../../i18n/global-messages'
+import LocalizableError from '../../i18n/LocalizableError'
 
 // thrown when the request did go through but
 // backend returned an unexpected result
@@ -33,9 +35,6 @@ export class ApiHistoryError extends ApiError {
     REFERENCE_BEST_BLOCK_MISMATCH: 'REFERENCE_BEST_BLOCK_MISMATCH',
   }
 }
-
-// TODO(v-almonacid): redefine errors as instances of LocalizableError
-import ExtendableError from 'es6-error'
 
 export class CardanoError extends ExtendableError {}
 export class WrongPassword extends ExtendableError {
