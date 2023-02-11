@@ -19,9 +19,7 @@ import {
   isByron,
   isHaskellShelley,
 } from '../../legacy/config'
-import {CardanoError, InvalidState} from '../../legacy/errors'
 import {Logger} from '../../legacy/logging'
-import {IsLockedError, nonblockingSynchronize, synchronize} from '../../legacy/promise'
 import {HWDeviceInfo} from '../hw'
 import {makeMemosManager, MemosManager} from '../memos'
 import {YoroiStorage} from '../storage'
@@ -60,6 +58,7 @@ import {
 } from '.'
 import * as api from './api'
 import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from './chain'
+import {CardanoError, InvalidState} from './errors'
 import {signTxWithLedger} from './hw'
 import {
   CardanoHaskellShelleyNetwork,
@@ -68,6 +67,7 @@ import {
   isJormungandr,
 } from './networks'
 import {processTxHistoryData} from './processTransactions'
+import {IsLockedError, nonblockingSynchronize, synchronize} from './promise'
 import {filterAddressesByStakingKey, getDelegationStatus} from './shelley/delegationUtils'
 import {yoroiSignedTx} from './signedTx'
 import {TransactionManager} from './transactionManager'
@@ -1298,6 +1298,7 @@ export const primaryTokenInfo = {
     decimals: 6,
     description: 'Cardano',
     ticker: 'ADA',
+    symbol: '₳',
   } as TokenInfo,
   testnet: {
     id: '',
@@ -1305,6 +1306,7 @@ export const primaryTokenInfo = {
     decimals: 6,
     description: 'Cardano',
     ticker: 'TADA',
+    symbol: '₳',
   } as TokenInfo,
 }
 

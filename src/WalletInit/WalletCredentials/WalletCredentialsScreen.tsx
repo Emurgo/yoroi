@@ -7,9 +7,9 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {showErrorDialog} from '../../dialogs'
 import {useCreateWallet} from '../../hooks'
 import {errorMessages} from '../../i18n/global-messages'
-import {NetworkError} from '../../legacy/errors'
 import {useWalletNavigation, WalletInitRoutes} from '../../navigation'
 import {COLORS} from '../../theme'
+import {NetworkError} from '../../yoroi-wallets/cardano/errors'
 import {WalletForm} from '../WalletForm'
 
 export const WalletCredentialsScreen = () => {

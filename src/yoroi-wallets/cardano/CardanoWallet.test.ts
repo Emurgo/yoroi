@@ -123,6 +123,7 @@ describe('migration', () => {
         "description": "Cardano",
         "id": "",
         "name": "ADA",
+        "symbol": "₳",
         "ticker": "ADA",
       }
     `)
@@ -245,6 +246,7 @@ describe('migration', () => {
         "description": "Cardano",
         "id": "",
         "name": "ADA",
+        "symbol": "₳",
         "ticker": "ADA",
       }
     `)
@@ -369,6 +371,7 @@ describe('migration', () => {
         "description": "Cardano",
         "id": "",
         "name": "ADA",
+        "symbol": "₳",
         "ticker": "ADA",
       }
     `)

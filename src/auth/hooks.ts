@@ -5,10 +5,10 @@ import {useMutation, UseMutationOptions, useQuery, useQueryClient, UseQueryOptio
 
 import {useMutationWithInvalidations, useWallet} from '../hooks'
 import globalMessages from '../i18n/global-messages'
-import {WrongPassword} from '../legacy/errors'
 import {useStorage} from '../Storage'
 import {parseWalletMeta} from '../Storage/migrations/walletMeta'
 import {decryptData, encryptData, WalletJSON, walletManager, YoroiWallet} from '../yoroi-wallets'
+import {WrongPassword} from '../yoroi-wallets/cardano/errors'
 import {YoroiStorage} from '../yoroi-wallets/storage'
 import {parseSafe, parseString} from '../yoroi-wallets/utils/parsing'
 import {Keychain} from './Keychain'

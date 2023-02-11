@@ -1,14 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import ExtendableError from 'es6-error'
-import pLimit from 'p-limit'
 
-import {Logger} from './logging'
+import {Logger} from '../../../legacy/logging'
+
 export class IsLockedError extends ExtendableError {}
 export type Mutex = {
   lock: Promise<any> | null | undefined
 }
-// reexport under better name
-export const limitConcurrency = pLimit
 export const delay = (duration: number): Promise<void> => {
   return new Promise((resolve) => {
     setTimeout(resolve, duration)

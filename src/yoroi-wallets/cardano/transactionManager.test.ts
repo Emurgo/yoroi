@@ -2,8 +2,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import {fromPairs} from 'lodash'
 import DeviceInfo from 'react-native-device-info'
 
-import {ApiHistoryError} from '../../legacy/errors'
 import {storage as rootStorage} from '../storage'
+import {ApiHistoryError} from './errors'
 import {
   mockedAddressesByChunks,
   mockedBackendConfig,

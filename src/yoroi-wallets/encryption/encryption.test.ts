@@ -1,5 +1,5 @@
-import {CardanoError} from '../../legacy/errors'
 import {generateAdaMnemonic, generateWalletRootKey} from '../cardano'
+import {CardanoError} from '../cardano/errors'
 import {decryptData, encryptData} from './encryption'
 
 const mnemonic = [

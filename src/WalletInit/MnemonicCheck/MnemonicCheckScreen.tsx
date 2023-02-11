@@ -9,10 +9,10 @@ import {Button, Spacer, StatusBar, Text} from '../../components'
 import {showErrorDialog} from '../../dialogs'
 import {useCreateWallet} from '../../hooks'
 import {errorMessages} from '../../i18n/global-messages'
-import {NetworkError} from '../../legacy/errors'
 import {useWalletNavigation, WalletInitRoutes} from '../../navigation'
 import {COLORS} from '../../theme'
 import {NetworkId, WalletImplementationId} from '../../yoroi-wallets'
+import {NetworkError} from '../../yoroi-wallets/cardano/errors'
 
 export type Params = {
   mnemonic: string
