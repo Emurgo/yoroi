@@ -3,7 +3,7 @@ import assert from 'assert'
 import {expect} from 'chai'
 
 import {WALLETS} from '../../legacy/config'
-import {WalletMeta} from '../../legacy/state'
+import {WalletMeta} from '../../yoroi-wallets'
 import {storage} from '../../yoroi-wallets/storage'
 import {NETWORK_REGISTRY, WALLET_IMPLEMENTATION_REGISTRY} from '../../yoroi-wallets/types'
 import {migrateWalletMetas} from './walletMeta'

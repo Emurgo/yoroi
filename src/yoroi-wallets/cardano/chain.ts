@@ -4,14 +4,12 @@ import type {Moment} from 'moment'
 import {defaultMemoize} from 'reselect'
 
 import assert from '../../legacy/assert'
-import type {AddressType} from '../../legacy/commonUtils'
-import {ADDRESS_TYPE_TO_CHANGE} from '../../legacy/commonUtils'
 import {CONFIG, isByron, isHaskellShelley} from '../../legacy/config'
 import {Logger} from '../../legacy/logging'
-import {getNetworkConfigById} from '../../legacy/networks'
-import {CardanoMobile, CardanoTypes} from '.'
+import {ADDRESS_TYPE_TO_CHANGE, AddressType, CardanoMobile, CardanoTypes} from '.'
 import type {CryptoAccount} from './byron/util'
 import * as util from './byron/util'
+import {getNetworkConfigById} from './networks'
 import {NetworkId, WalletImplementationId} from './types'
 
 export type AddressBlock = [number, Moment, Array<string>]

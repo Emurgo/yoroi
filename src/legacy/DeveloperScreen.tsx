@@ -11,15 +11,15 @@ import * as Keychain from 'react-native-keychain'
 
 import {useAuth} from '../auth/AuthProvider'
 import {Button, StatusBar, Text, TextInput} from '../components'
+import {showErrorDialog} from '../dialogs'
 import {useCreateWallet} from '../hooks'
 import {errorMessages} from '../i18n/global-messages'
 import {AppRoutes, useWalletNavigation} from '../navigation'
 import {useSelectedWalletContext} from '../SelectedWallet'
-import {showErrorDialog} from './actions'
+import {isEmptyString} from '../utils/utils'
+import {generateAdaMnemonic} from '../yoroi-wallets'
+import {NetworkError} from '../yoroi-wallets/cardano/errors'
 import assert from './assert'
-import {generateAdaMnemonic} from './commonUtils'
-import {NetworkError} from './errors'
-import {isEmptyString} from './utils'
 
 const routes: Array<{label: string; path: keyof AppRoutes}> = [
   {label: 'Storybook', path: 'storybook'},

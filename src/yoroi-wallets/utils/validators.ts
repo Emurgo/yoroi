@@ -4,8 +4,8 @@ import {wordlists} from 'bip39'
 import _ from 'lodash'
 
 import assert from '../../legacy/assert'
-import {getNetworkConfigById} from '../../legacy/networks'
-import {normalizeToAddress} from '../../legacy/utils'
+import {normalizeToAddress} from '../cardano'
+import {getNetworkConfigById} from '../cardano/networks'
 import {Token} from '../types'
 import {InvalidAssetAmount, parseAmountDecimal} from './parsing'
 

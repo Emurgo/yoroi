@@ -6,8 +6,8 @@ import {Button, Checkmark, Spacer, TextInput} from '../components'
 import {useWalletNames} from '../hooks'
 import globalMessages from '../i18n/global-messages'
 import {CONFIG} from '../legacy/config'
-import {isEmptyString} from '../legacy/utils'
 import {COLORS} from '../theme'
+import {isEmptyString} from '../utils/utils'
 import {useWalletManager} from '../WalletManager'
 import {
   getWalletNameError,

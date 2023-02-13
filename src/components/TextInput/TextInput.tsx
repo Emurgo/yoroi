@@ -10,8 +10,8 @@ import {
 } from 'react-native'
 import {HelperText, TextInput as RNPTextInput} from 'react-native-paper'
 
-import {isEmptyString} from '../../legacy/utils'
 import {COLORS} from '../../theme'
+import {isEmptyString} from '../../utils/utils'
 import {Icon} from '../Icon'
 
 type Props = TextInputProps &

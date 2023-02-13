@@ -232,6 +232,7 @@ describe('api utils', () => {
 
       name: 'assetName',
       description: 'description',
+      symbol: undefined,
       logo: undefined,
       ticker: undefined,
       url: undefined,

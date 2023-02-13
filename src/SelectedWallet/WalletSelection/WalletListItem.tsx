@@ -3,8 +3,8 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {Icon} from '../../components'
 import {isByron, isHaskellShelley, isJormun} from '../../legacy/config'
-import {WalletMeta} from '../../legacy/state'
 import {brand, COLORS} from '../../theme'
+import {WalletMeta} from '../../yoroi-wallets'
 type Props = {
   wallet: WalletMeta
   onPress: (walletMeta: WalletMeta) => void

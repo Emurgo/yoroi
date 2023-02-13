@@ -1,8 +1,8 @@
 import React from 'react'
 import {useMutation, UseMutationOptions, useQuery, useQueryClient} from 'react-query'
 
-import {isEmptyString} from '../../legacy/utils'
 import {useStorage} from '../../Storage'
+import {isEmptyString} from '../../utils/utils'
 import {ConfigCurrencies, configCurrencies, CurrencySymbol, supportedCurrencies} from '../../yoroi-wallets/types/other'
 import {parseSafe} from '../../yoroi-wallets/utils/parsing'
 

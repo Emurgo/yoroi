@@ -1,6 +1,6 @@
 import assert from '../../legacy/assert'
-import {NUMBERS} from '../../legacy/numbers'
 import {CardanoMobile} from '.'
+import {NUMBERS} from './numbers'
 
 const isString = (s) => typeof s === 'string' || s instanceof String
 
