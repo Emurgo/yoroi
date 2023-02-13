@@ -5,7 +5,7 @@ import moment from 'moment'
 import type {IntlShape} from 'react-intl'
 import {defineMessages} from 'react-intl'
 
-import {DefaultAsset, Token} from '../yoroi-wallets/types'
+import {DefaultAsset, Quantity, Token} from '../yoroi-wallets/types'
 import {getCardanoDefaultAsset} from './config'
 import utfSymbols from './utfSymbols'
 
@@ -38,19 +38,19 @@ const getName = (token: Token | DefaultAsset) =>
   }) ||
   undefined
 
-export const normalizeTokenAmount = (amount: BigNumber, token: Token | DefaultAsset): BigNumber => {
+export const normalizeTokenAmount = (amount: Quantity, token: Token | DefaultAsset): BigNumber => {
   const normalizationFactor = Math.pow(10, token.metadata.numberOfDecimals)
-  return amount.dividedBy(normalizationFactor).decimalPlaces(token.metadata.numberOfDecimals)
+  return new BigNumber(amount).dividedBy(normalizationFactor).decimalPlaces(token.metadata.numberOfDecimals)
 }
 
-export const formatTokenAmount = (amount: BigNumber, token: Token | DefaultAsset): string => {
+export const formatTokenAmount = (amount: Quantity, token: Token | DefaultAsset): string => {
   const normalized = normalizeTokenAmount(amount, token)
   const amountStr = normalized.toFormat(token.metadata.numberOfDecimals)
 
   return amountStr
 }
 
-export const formatTokenWithSymbol = (amount: BigNumber, token: Token | DefaultAsset): string => {
+export const formatTokenWithSymbol = (amount: Quantity, token: Token | DefaultAsset): string => {
   const denomination =
     getSymbol(token) ??
     getTokenFingerprint({
@@ -62,7 +62,7 @@ export const formatTokenWithSymbol = (amount: BigNumber, token: Token | DefaultA
 // We assume that tickers are non-localized. If ticker doesn't exist, default
 // to identifier
 
-export const formatTokenWithText = (amount: BigNumber, token: Token | DefaultAsset) => {
+export const formatTokenWithText = (amount: Quantity, token: Token | DefaultAsset) => {
   const tickerOrId =
     getTicker(token) ||
     getName(token) ||
@@ -84,11 +84,12 @@ export const formatTokenWithTextWhenHidden = (text: string, token: Token | Defau
   return `${text}${utfSymbols.NBSP}${tickerOrId}`
 }
 
-export const formatTokenInteger = (amount: BigNumber, token: Token | DefaultAsset) => {
+export const formatTokenInteger = (amount: Quantity, token: Token | DefaultAsset) => {
   const normalizationFactor = Math.pow(10, token.metadata.numberOfDecimals)
-  const num = amount.dividedToIntegerBy(normalizationFactor)
+  const bigNumber = new BigNumber(amount)
+  const num = bigNumber.dividedToIntegerBy(normalizationFactor)
 
-  if (amount.lt(0) && amount.gt(-normalizationFactor)) {
+  if (bigNumber.lt(0) && bigNumber.gt(-normalizationFactor)) {
     // -0 needs special handling
     return '-0'
   } else {
@@ -96,9 +97,9 @@ export const formatTokenInteger = (amount: BigNumber, token: Token | DefaultAsse
   }
 }
 
-export const formatTokenFractional = (amount: BigNumber, token: Token | DefaultAsset) => {
+export const formatTokenFractional = (amount: Quantity, token: Token | DefaultAsset) => {
   const normalizationFactor = Math.pow(10, token.metadata.numberOfDecimals)
-  const fractional = amount.abs().modulo(normalizationFactor).dividedBy(normalizationFactor)
+  const fractional = new BigNumber(amount).abs().modulo(normalizationFactor).dividedBy(normalizationFactor)
   // remove leading '0'
   return fractional.toFormat(token.metadata.numberOfDecimals).substring(1)
 }
@@ -115,12 +116,12 @@ export const truncateWithEllipsis = (s: string, n: number) => {
 const defaultAssetMeta = getCardanoDefaultAsset().metadata
 const normalizationFactor = Math.pow(10, defaultAssetMeta.numberOfDecimals)
 
-const formatAda = (amount: BigNumber) => {
-  const num = amount.dividedBy(normalizationFactor)
+const formatAda = (amount: Quantity) => {
+  const num = new BigNumber(amount).dividedBy(normalizationFactor)
   return num.toFormat(6)
 }
 
-export const formatAdaWithText = (amount: BigNumber) =>
+export const formatAdaWithText = (amount: Quantity) =>
   `${formatAda(amount)}${utfSymbols.NBSP}${defaultAssetMeta.ticker}`
 
 export const formatTimeToSeconds = (ts: string | any) => {

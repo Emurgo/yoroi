@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {RouteProp, useRoute} from '@react-navigation/native'
-import {BigNumber} from 'bignumber.js'
 import React, {useEffect, useRef} from 'react'
 import {useIntl} from 'react-intl'
 import {Keyboard, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
@@ -107,7 +106,7 @@ const Fees = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx}) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const feeAmount = Amounts.getAmount(yoroiUnsignedTx.fee, wallet.primaryToken.identifier)
-  const text = `${strings.fees}: ${formatTokenWithSymbol(new BigNumber(feeAmount.quantity), wallet.primaryToken)}`
+  const text = `${strings.fees}: ${formatTokenWithSymbol(feeAmount.quantity, wallet.primaryToken)}`
   return (
     <Text small testID="feesText">
       {text}
@@ -129,10 +128,7 @@ const BalanceAfter = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx}) => 
     ]),
   )
   const primaryAmountAfter = Amounts.getAmount(balancesAfter, wallet.primaryToken.identifier)
-  const text = `${strings.balanceAfterTx}: ${formatTokenWithSymbol(
-    new BigNumber(primaryAmountAfter.quantity),
-    wallet.primaryToken,
-  )}`
+  const text = `${strings.balanceAfterTx}: ${formatTokenWithSymbol(primaryAmountAfter.quantity, wallet.primaryToken)}`
   return (
     <Text small testID="balanceAfterTxText">
       {text}
@@ -162,7 +158,7 @@ const PrimaryTotal = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx}) => 
       <Text>{strings.total}</Text>
 
       <Text style={styles.amount} testID="totalAmountText">
-        {formatTokenWithSymbol(new BigNumber(primaryAmount.quantity), wallet.primaryToken)}
+        {formatTokenWithSymbol(primaryAmount.quantity, wallet.primaryToken)}
       </Text>
     </>
   )
@@ -189,7 +185,7 @@ const Amount = ({amount}: {amount: YoroiAmount}) => {
   const wallet = useSelectedWallet()
   const token = useToken({wallet, tokenId: amount.tokenId})
 
-  return <Text style={styles.amount}>{formatTokenWithText(new BigNumber(amount.quantity), token)}</Text>
+  return <Text style={styles.amount}>{formatTokenWithText(amount.quantity, token)}</Text>
 }
 
 const Actions = (props: ViewProps) => <View {...props} style={{padding: 16}} />

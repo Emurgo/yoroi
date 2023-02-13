@@ -14,7 +14,7 @@ import {TxHistoryRouteNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {isEmptyString} from '../../utils/utils'
-import {MultiToken, YoroiWallet} from '../../yoroi-wallets'
+import {asQuantity, MultiToken, YoroiWallet} from '../../yoroi-wallets'
 import {IOData, TransactionAssurance, TransactionDirection, TransactionInfo} from '../../yoroi-wallets/types'
 
 type Props = {
@@ -114,9 +114,9 @@ const Amount = ({wallet, transaction}: {wallet: YoroiWallet; transaction: Transa
   return (
     <View style={styles.amount} testID="transactionAmount">
       <Text style={style} secondary={transaction.assurance === 'PENDING'}>
-        <Text>{formatTokenInteger(amount, wallet.primaryToken)}</Text>
+        <Text>{formatTokenInteger(asQuantity(amount), wallet.primaryToken)}</Text>
 
-        <Text small>{formatTokenFractional(amount, wallet.primaryToken)}</Text>
+        <Text small>{formatTokenFractional(asQuantity(amount), wallet.primaryToken)}</Text>
       </Text>
 
       <Text style={style}>{`${utfSymbols.NBSP}${wallet.primaryTokenInfo.symbol}`}</Text>

@@ -1,4 +1,3 @@
-import BigNumber from 'bignumber.js'
 import React, {useState} from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
@@ -49,10 +48,7 @@ const Balance = ({privacy}: {privacy: boolean}) => {
 
   const balance = privacy
     ? formatTokenWithTextWhenHidden(hiddenBalance, wallet.primaryToken)
-    : formatTokenWithText(
-        new BigNumber(Amounts.getAmount(balances, wallet.primaryToken.identifier).quantity),
-        wallet.primaryToken,
-      )
+    : formatTokenWithText(Amounts.getAmount(balances, wallet.primaryToken.identifier).quantity, wallet.primaryToken)
 
   return (
     <Row>

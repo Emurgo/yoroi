@@ -100,6 +100,8 @@ export const Quantities = {
   },
 }
 
+export const asQuantity = (amount: BigNumber | number | string) => new BigNumber(amount).toString() as Quantity
+
 export const Utxos = {
   toAmounts: (utxos: RawUtxo[], primaryTokenId: TokenId) => {
     return utxos.reduce(

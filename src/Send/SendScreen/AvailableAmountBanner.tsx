@@ -1,4 +1,3 @@
-import BigNumber from 'bignumber.js'
 import React from 'react'
 
 import {Banner} from '../../components'
@@ -17,7 +16,7 @@ export const AvailableAmountBanner = () => {
     <Banner
       label={strings.availableFunds}
       text={formatTokenWithText(
-        new BigNumber(Amounts.getAmount(balances, wallet.primaryToken.identifier).quantity),
+        Amounts.getAmount(balances, wallet.primaryToken.identifier).quantity,
         wallet.primaryToken,
       )}
       boldText

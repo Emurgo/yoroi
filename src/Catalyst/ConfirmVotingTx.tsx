@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import BigNumber from 'bignumber.js'
 import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet} from 'react-native'
@@ -58,7 +57,7 @@ export const ConfirmVotingTx = ({
 
         <TextInput
           value={formatTokenWithSymbol(
-            new BigNumber(Amounts.getAmount(votingRegTx.fee, wallet.primaryToken.identifier).quantity),
+            Amounts.getAmount(votingRegTx.fee, wallet.primaryToken.identifier).quantity,
             wallet.primaryToken,
           )}
           label={strings.fees}

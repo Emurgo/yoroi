@@ -8,7 +8,7 @@ import {AssetOverflowError, getMinAda, NotEnoughMoneyToSendError, YoroiWallet} f
 import {getCardanoNetworkConfigById, isHaskellShelleyNetwork} from '../../yoroi-wallets/cardano/networks'
 import {DefaultAsset, Quantity, SendTokenList, Token, YoroiUnsignedTx} from '../../yoroi-wallets/types'
 import {RawUtxo} from '../../yoroi-wallets/types/other'
-import {Amounts, Quantities} from '../../yoroi-wallets/utils'
+import {Amounts, asQuantity, Quantities} from '../../yoroi-wallets/utils'
 import {InvalidAssetAmount, parseAmountDecimal} from '../../yoroi-wallets/utils/parsing'
 import type {AddressValidationErrors} from '../../yoroi-wallets/utils/validators'
 import {getUnstoppableDomainAddress, isReceiverAddressValid, validateAmount} from '../../yoroi-wallets/utils/validators'
@@ -101,13 +101,13 @@ export const recomputeAll = async ({
 
         if (selectedToken.isDefault) {
           recomputedAmount = normalizeTokenAmount(
-            new BigNumber(Quantities.diff(defaultAssetAvailableAmount, fee)),
+            Quantities.diff(defaultAssetAvailableAmount, fee),
             selectedToken,
           ).toString()
 
           balanceAfter = '0'
         } else {
-          recomputedAmount = normalizeTokenAmount(new BigNumber(selectedAssetAvailableAmount), selectedToken).toString()
+          recomputedAmount = normalizeTokenAmount(selectedAssetAvailableAmount, selectedToken).toString()
 
           balanceAfter = Quantities.diff(defaultAssetAvailableAmount, Quantities.sum([fee, minAda]))
         }
@@ -177,8 +177,8 @@ export const getAmountErrorText = (
       // remove decimal part if it's equal to 0
       const decimalPart = amount.modulo(Math.pow(10, defaultAsset.metadata.numberOfDecimals))
       const minUtxo = decimalPart.eq('0')
-        ? formatTokenInteger(amount, defaultAsset)
-        : formatTokenAmount(amount, defaultAsset)
+        ? formatTokenInteger(asQuantity(amount), defaultAsset)
+        : formatTokenAmount(asQuantity(amount), defaultAsset)
       const ticker = defaultAsset.metadata.ticker
       Object.assign(msgOptions, {minUtxo, ticker})
     }
