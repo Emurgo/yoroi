@@ -842,7 +842,8 @@ export const useNfts = (wallet: YoroiWallet, options: UseQueryOptions<YoroiNft[]
   })
   const eventCallback = useCallback(() => refetch(), [refetch])
   useWalletEvent(wallet, 'utxos', eventCallback)
-  return {...rest, refetch, nfts: data ?? []}
+  const nftsSortedByName = useMemo(() => (data ?? []).sort((a, b) => a.name.localeCompare(b.name)), [data])
+  return {...rest, refetch, nfts: nftsSortedByName}
 }
 
 export const useNft = (wallet: YoroiWallet, {id}: {id: string}): YoroiNft => {
