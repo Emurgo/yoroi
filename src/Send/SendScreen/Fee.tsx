@@ -1,4 +1,3 @@
-import {BigNumber} from 'bignumber.js'
 import React from 'react'
 import {StyleSheet} from 'react-native'
 
@@ -33,7 +32,7 @@ export const Fee = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx | null}
 
       {': '}
 
-      {formatTokenWithSymbol(new BigNumber(primaryAmount.quantity), wallet.primaryToken)}
+      {formatTokenWithSymbol(primaryAmount.quantity, wallet.primaryToken)}
     </Text>
   )
 }

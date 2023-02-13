@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {BigNumber} from 'bignumber.js'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
@@ -69,10 +68,9 @@ export const DelegationConfirmation = () => {
 
         <View style={styles.input} testID="stakingAmount">
           <Text small style={styles.fees}>
-            {`+ ${formatTokenAmount(
-              new BigNumber(yoroiUnsignedTx.fee[wallet.primaryToken.identifier]),
-              wallet.primaryToken,
-            )} ${strings.ofFees}`}
+            {`+ ${formatTokenAmount(yoroiUnsignedTx.fee[wallet.primaryToken.identifier], wallet.primaryToken)} ${
+              strings.ofFees
+            }`}
           </Text>
 
           {/* requires a handler so we pass on a dummy function */}
@@ -80,7 +78,7 @@ export const DelegationConfirmation = () => {
           <ValidatedTextInput
             onChangeText={() => undefined}
             editable={false}
-            value={formatTokenAmount(new BigNumber(stakingAmount.quantity), wallet.primaryToken)}
+            value={formatTokenAmount(stakingAmount.quantity, wallet.primaryToken)}
             label={strings.amount}
           />
         </View>
@@ -94,7 +92,7 @@ export const DelegationConfirmation = () => {
         <View style={styles.itemBlock}>
           <Text style={styles.itemTitle}>{strings.rewardsExplanation}</Text>
 
-          <Text style={styles.rewards}>{formatTokenWithText(new BigNumber(reward), wallet.primaryToken)}</Text>
+          <Text style={styles.rewards}>{formatTokenWithText(reward, wallet.primaryToken)}</Text>
         </View>
 
         {wallet.isHW && <HWInstructions useUSB={useUSB} addMargin />}

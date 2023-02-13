@@ -1,4 +1,3 @@
-import BigNumber from 'bignumber.js'
 import * as React from 'react'
 import {useIntl} from 'react-intl'
 import {Text, View} from 'react-native'
@@ -9,7 +8,7 @@ import globalMessages, {confirmationMessages} from '../i18n/global-messages'
 import {CONFIG} from '../legacy/config'
 import {formatTokenWithText} from '../legacy/format'
 import {useSelectedWallet} from '../SelectedWallet'
-import {Amounts} from '../yoroi-wallets/utils'
+import {Amounts, asQuantity} from '../yoroi-wallets/utils'
 
 export const InsufficientFundsModal = ({visible, onRequestClose}: {visible: boolean; onRequestClose: () => void}) => {
   const strings = useStrings()
@@ -30,9 +29,9 @@ export const InsufficientFundsModal = ({visible, onRequestClose}: {visible: bool
       <View>
         <Text>
           {strings.insufficientBalance({
-            requiredBalance: formatTokenWithText(CONFIG.CATALYST.DISPLAYED_MIN_ADA, wallet.primaryToken),
+            requiredBalance: formatTokenWithText(asQuantity(CONFIG.CATALYST.DISPLAYED_MIN_ADA), wallet.primaryToken),
             currentBalance: formatTokenWithText(
-              new BigNumber(Amounts.getAmount(balances, wallet.primaryToken.identifier).quantity),
+              Amounts.getAmount(balances, wallet.primaryToken.identifier).quantity,
               wallet.primaryToken,
             ),
           })}

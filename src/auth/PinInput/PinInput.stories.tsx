@@ -1,3 +1,4 @@
+import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -22,7 +23,7 @@ const PinInputWrapper = ({enabled = true}: {enabled?: boolean}) => {
         enabled={enabled}
         pinMaxLength={CONFIG.PIN_LENGTH}
         title={strings.title}
-        onDone={() => undefined}
+        onDone={action('onDone')}
       />
     </View>
   )
