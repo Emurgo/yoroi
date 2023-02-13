@@ -2,7 +2,6 @@
 import _ from 'lodash'
 
 import assert from '../../../legacy/assert'
-import {ApiError} from '../../../legacy/errors'
 import fetchDefault, {checkedFetch} from '../../../legacy/fetch'
 import {Logger} from '../../../legacy/logging'
 import {
@@ -21,6 +20,7 @@ import {
   TxStatusResponse,
 } from '../../types'
 import {ServerStatus} from '..'
+import {ApiError} from '../errors'
 import {fallbackTokenInfo, tokenInfo, toTokenSubject} from './utils'
 
 type Addresses = Array<string>

@@ -1,21 +1,9 @@
 import {BigNumber} from 'bignumber.js'
 
 import {getCardanoDefaultAsset} from './config'
-import {
-  ASSET_DENOMINATION,
-  formatTokenAmount,
-  formatTokenFractional,
-  formatTokenInteger,
-  getAssetDenomination,
-} from './format'
+import {formatTokenAmount, formatTokenFractional, formatTokenInteger} from './format'
 
 const defaultCardanoAsset = getCardanoDefaultAsset()
-
-describe('getAssetDenomination', () => {
-  it('correctly represents ADA symbol', () => {
-    expect(getAssetDenomination(defaultCardanoAsset, ASSET_DENOMINATION.SYMBOL)).toEqual('₳')
-  })
-})
 
 describe('formatAda', () => {
   it('formats zero', () => {

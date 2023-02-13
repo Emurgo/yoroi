@@ -5,16 +5,16 @@ import {FlatList, InteractionManager, Linking, RefreshControl, StyleSheet, Text,
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Icon, PleaseWaitModal, StatusBar} from '../../components'
+import {showErrorDialog} from '../../dialogs'
 import {useOpenWallet, useWalletMetas} from '../../hooks'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
-import {showErrorDialog} from '../../legacy/actions'
 import {CONFIG, isNightly} from '../../legacy/config'
-import {InvalidState, NetworkError} from '../../legacy/errors'
-import {isJormungandr} from '../../legacy/networks'
-import {WalletMeta} from '../../legacy/state'
 import {useWalletNavigation} from '../../navigation'
 import {COLORS} from '../../theme'
 import {useWalletManager} from '../../WalletManager'
+import {WalletMeta} from '../../yoroi-wallets'
+import {InvalidState, NetworkError} from '../../yoroi-wallets/cardano/errors'
+import {isJormungandr} from '../../yoroi-wallets/cardano/networks'
 import {useSetSelectedWallet, useSetSelectedWalletMeta} from '..'
 import {WalletListItem} from './WalletListItem'
 
@@ -54,6 +54,7 @@ export const WalletSelectionScreen = () => {
   })
 
   const onSelect = async (walletMeta: WalletMeta) => {
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (walletMeta.isShelley || isJormungandr(walletMeta.networkId)) {
       await showErrorDialog(errorMessages.itnNotSupported, intl)
       return

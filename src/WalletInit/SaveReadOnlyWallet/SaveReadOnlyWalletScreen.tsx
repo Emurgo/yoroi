@@ -5,15 +5,15 @@ import {FlatList, InteractionManager, ScrollView, StyleSheet, View} from 'react-
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Boundary, Icon, Line, StatusBar, Text} from '../../components'
+import {showErrorDialog} from '../../dialogs'
 import {useCreateBip44Wallet, usePlate} from '../../hooks'
 import {errorMessages} from '../../i18n/global-messages'
-import {showErrorDialog} from '../../legacy/actions'
 import {CONFIG} from '../../legacy/config'
-import {NetworkError} from '../../legacy/errors'
-import {isEmptyString} from '../../legacy/utils'
 import {useWalletNavigation, WalletInitRoutes} from '../../navigation'
 import {theme} from '../../theme'
+import {isEmptyString} from '../../utils/utils'
 import {NetworkId} from '../../yoroi-wallets'
+import {NetworkError} from '../../yoroi-wallets/cardano/errors'
 import {WalletAddress} from '../WalletAddress'
 import {WalletNameForm} from '../WalletNameForm'
 

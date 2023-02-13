@@ -4,9 +4,15 @@ import {action} from '@storybook/addon-actions'
 import BigNumber from 'bignumber.js'
 
 import {getDefaultAssetByNetworkId} from '../../src/legacy/config'
-import {PRIMARY_ASSET_CONSTANTS} from '../../src/legacy/networks'
-import {WalletMeta} from '../../src/legacy/state'
-import {fallbackTokenInfo, primaryTokenInfo, TokenEntry, toTokenInfo, YoroiWallet} from '../../src/yoroi-wallets'
+import {
+  fallbackTokenInfo,
+  primaryTokenInfo,
+  TokenEntry,
+  toTokenInfo,
+  WalletMeta,
+  YoroiWallet,
+} from '../../src/yoroi-wallets'
+import {PRIMARY_ASSET_CONSTANTS} from '../../src/yoroi-wallets/cardano/networks'
 import {
   RemotePoolMetaSuccess,
   StakePoolInfosAndHistories,

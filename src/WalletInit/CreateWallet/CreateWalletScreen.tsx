@@ -4,10 +4,10 @@ import React from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {generateAdaMnemonic} from '../../legacy/commonUtils'
-import {isEmptyString} from '../../legacy/utils'
 import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
 import {COLORS} from '../../theme'
+import {isEmptyString} from '../../utils/utils'
+import {generateAdaMnemonic} from '../../yoroi-wallets'
 import {MnemonicExplanationModal} from '../MnemonicExplanationModal'
 import {WalletForm} from '../WalletForm'
 

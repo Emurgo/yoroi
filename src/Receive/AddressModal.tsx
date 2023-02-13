@@ -5,8 +5,8 @@ import {StyleSheet, View} from 'react-native'
 import QRCode from 'react-native-qrcode-svg'
 
 import {CopyButton, Modal, Spacer, Text} from '../components'
-import {AddressType, formatPath} from '../legacy/commonUtils'
 import {useSelectedWallet} from '../SelectedWallet'
+import {AddressType, formatPath} from '../yoroi-wallets'
 import {getSpendingKey, getStakingKey} from '../yoroi-wallets/cardano/addressInfo'
 
 type Path = {

@@ -5,7 +5,6 @@ import DeviceInfo from 'react-native-device-info'
 import {defaultMemoize} from 'reselect'
 
 import assert from '../../legacy/assert'
-import {ApiHistoryError} from '../../legacy/errors'
 import {Logger} from '../../legacy/logging'
 import {YoroiStorage} from '../storage'
 import type {RemoteCertificateMeta, TxHistoryRequest} from '../types'
@@ -20,6 +19,7 @@ import {
 import {parseSafe} from '../utils/parsing'
 import {Version, versionCompare} from '../utils/versioning'
 import * as yoroiApi from './api'
+import {ApiHistoryError} from './errors'
 
 export type TransactionManagerState = {
   transactions: Transactions

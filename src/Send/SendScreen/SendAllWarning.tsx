@@ -1,8 +1,8 @@
 import React from 'react'
 
 import {DangerousActionModal, Text} from '../../components'
-import {useToken} from '../../hooks'
-import {getAssetDenominationOrId, truncateWithEllipsis} from '../../legacy/format'
+import {useTokenInfo} from '../../hooks'
+import {truncateWithEllipsis} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {useStrings} from './strings'
 
@@ -20,11 +20,11 @@ export const SendAllWarning = ({
 }: SendAllWarningProps) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
-  const token = useToken({wallet, tokenId: selectedTokenIdentifier})
-  const assetNameOrId = truncateWithEllipsis(getAssetDenominationOrId(token), 20)
+  const tokenInfo = useTokenInfo({wallet, tokenId: selectedTokenIdentifier})
+  const isPrimaryToken = tokenInfo.id === wallet.primaryTokenInfo.id
+  const assetNameOrId = truncateWithEllipsis(tokenInfo.ticker ?? tokenInfo.name ?? tokenInfo.fingerprint, 20)
   const alertBoxContent = {
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-    content: token.isDefault
+    content: isPrimaryToken
       ? [strings.sendAllWarningAlert1({assetNameOrId}), strings.sendAllWarningAlert2, strings.sendAllWarningAlert3]
       : [strings.sendAllWarningAlert1({assetNameOrId})],
   }

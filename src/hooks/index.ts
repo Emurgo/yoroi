@@ -14,20 +14,19 @@ import {
 } from 'react-query'
 
 import {isNightly} from '../legacy/config'
-import {ObjectValues} from '../legacy/flow'
-import {HWDeviceInfo} from '../legacy/ledgerUtils'
-import {WalletMeta} from '../legacy/state'
 import {useStorage} from '../Storage'
 import {parseWalletMeta} from '../Storage/migrations/walletMeta'
 import {useWalletManager} from '../WalletManager'
 import {
   calcLockedDeposit,
+  HWDeviceInfo,
   NetworkId,
   toToken,
   TxSubmissionStatus,
   WalletEvent,
   WalletImplementationId,
   WalletManager,
+  WalletMeta,
   YoroiWallet,
 } from '../yoroi-wallets'
 import {generateShelleyPlateFromKey} from '../yoroi-wallets/cardano/shelley/plate'
@@ -476,7 +475,7 @@ export const useTransactionInfos = (wallet: YoroiWallet) => {
 export const useHasPendingTx = (wallet: YoroiWallet) => {
   const transactionInfos = useTransactionInfos(wallet)
 
-  return ObjectValues(transactionInfos).some(
+  return Object.values(transactionInfos).some(
     (transactionInfo) =>
       transactionInfo.status === TRANSACTION_STATUS.PENDING &&
       transactionInfo.direction !== TRANSACTION_DIRECTION.RECEIVED,
