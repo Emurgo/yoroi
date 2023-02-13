@@ -3,11 +3,11 @@ import React, {useEffect} from 'react'
 import {Dimensions, GestureResponderEvent, Image, StyleSheet, TouchableOpacity, View} from 'react-native'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
+import placeholderImage from '../../assets/img/nft-placeholder.png'
 import {Icon, Spacer, Text} from '../../components'
 import {useNftModerationStatus} from '../../hooks'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {YoroiNft} from '../../yoroi-wallets/types'
-import placeholderImage from './placeholder.png'
 
 type Props = {
   nfts: YoroiNft[]
