@@ -34,7 +34,7 @@ export const Memo = ({memoChanged, memo}: Props) => {
       <View style={styles.helper}>
         <Message showError={showError} />
 
-        <Counter memo={memo} showError={showError} />
+        <LengthCounter memo={memo} showError={showError} />
       </View>
     </View>
   )
@@ -45,7 +45,7 @@ const Message = ({showError}: {showError: boolean}) => {
   return <HelperText type={showError ? 'error' : 'info'}>{showError ? strings.error : strings.warning}</HelperText>
 }
 
-const Counter = ({memo, showError}: {memo: string; showError: boolean}) => {
+const LengthCounter = ({memo, showError}: {memo: string; showError: boolean}) => {
   return (
     <HelperText type={showError ? 'error' : 'info'}>
       <Text>{`${memo.length}/${maxMemoLength}`}</Text>
