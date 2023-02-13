@@ -142,7 +142,7 @@ const MnemonicWordInput = React.forwardRef<RNTextInput, MnemonicWordInputProps>(
           onSubmitEditing={onSubmitEditing}
           dense
           textAlign="center"
-          noErrors
+          noHelper
           errorDelay={0}
           errorText={matchingWords.length <= 0 ? 'No matching words' : ''}
           autoComplete={false}

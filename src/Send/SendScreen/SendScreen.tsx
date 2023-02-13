@@ -22,9 +22,9 @@ import type {
   BalanceValidationErrors,
 } from '../../yoroi-wallets/utils/validators'
 import {useSend} from '../Context/SendContext'
+import {maxMemoLength, Memo} from '../Memo'
 import {ScannerButton} from '../ScannerButton'
 import {AmountField} from './../AmountField'
-import {maxMemoLength, MemoField} from './../MemoField'
 import {AvailableAmountBanner} from './AvailableAmountBanner'
 import {BalanceAfterTransaction} from './BalanceAfterTransaction'
 import {ErrorBanners} from './ErrorBanners'
@@ -44,8 +44,18 @@ export const SendScreen = () => {
   const hasPendingTx = useHasPendingTx(wallet)
   const isOnline = useIsOnline(wallet)
 
-  const {tokenId, resetForm, receiverChanged, amountChanged, receiver, amount, sendAll, sendAllChanged, memo} =
-    useSend()
+  const {
+    tokenId,
+    resetForm,
+    receiverChanged,
+    amountChanged,
+    receiver,
+    amount,
+    sendAll,
+    sendAllChanged,
+    memo,
+    memoChanged,
+  } = useSend()
 
   const selectedAssetAvailableAmount = Amounts.getAmount(balances, tokenId).quantity
   const defaultAssetAvailableAmount = Amounts.getAmount(balances, wallet.primaryToken.identifier).quantity
@@ -207,7 +217,7 @@ export const SendScreen = () => {
           />
         </TouchableOpacity>
 
-        <MemoField />
+        <Memo memo={memo} memoChanged={memoChanged} />
 
         <Checkbox
           checked={sendAll}

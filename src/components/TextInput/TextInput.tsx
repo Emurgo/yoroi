@@ -8,7 +8,7 @@ import {
   ViewProps,
   ViewStyle,
 } from 'react-native'
-import {HelperText, TextInput as RNPTextInput} from 'react-native-paper'
+import {HelperText as HelperTextRNP, TextInput as RNPTextInput} from 'react-native-paper'
 
 import {COLORS} from '../../theme'
 import {isEmptyString} from '../../utils/utils'
@@ -22,7 +22,7 @@ type Props = TextInputProps &
     disabled?: boolean
     errorOnMount?: boolean
     errorDelay?: number
-    noErrors?: boolean
+    noHelper?: boolean
     dense?: boolean
     faded?: boolean
     showErrorOnBlur?: boolean
@@ -54,7 +54,7 @@ export const TextInput = React.forwardRef((props: Props, ref: ForwardedRef<RNTex
     errorOnMount,
     errorDelay,
     right,
-    noErrors,
+    noHelper,
     textAlign,
     faded,
     showErrorOnBlur,
@@ -110,26 +110,44 @@ export const TextInput = React.forwardRef((props: Props, ref: ForwardedRef<RNTex
         {...restProps}
       />
 
-      {!noErrors && (
-        <HelperText
-          theme={{
-            roundness: 8,
-            colors: {
-              background: COLORS.BACKGROUND,
-              placeholder: faded ? COLORS.GREY_6 : COLORS.TEXT_INPUT,
-              primary: faded ? COLORS.GREY_6 : COLORS.BLACK,
-              error: COLORS.ERROR_TEXT_COLOR,
-            },
-          }}
-          type={errorTextEnabled && !isEmptyString(errorText) ? 'error' : 'info'}
-          visible
-        >
+      {!noHelper && (
+        <HelperText type={errorTextEnabled && !isEmptyString(errorText) ? 'error' : 'info'} visible>
           {errorTextEnabled && !isEmptyString(errorText) ? errorText : helperText}
         </HelperText>
       )}
     </View>
   )
 })
+
+export const HelperText = ({
+  children,
+  type = 'info',
+  faded = false,
+  visible = true,
+  ...props
+}: {
+  children: React.ReactNode
+  type?: 'info' | 'error'
+  faded?: boolean
+  visible?: boolean
+}) => (
+  <HelperTextRNP
+    theme={{
+      roundness: 8,
+      colors: {
+        background: COLORS.BACKGROUND,
+        placeholder: faded ? COLORS.GREY_6 : COLORS.TEXT_INPUT,
+        primary: faded ? COLORS.GREY_6 : COLORS.BLACK,
+        error: COLORS.ERROR_TEXT_COLOR,
+      },
+    }}
+    type={type}
+    visible={visible}
+    {...props}
+  >
+    {children}
+  </HelperTextRNP>
+)
 
 export const Checkmark = () => <Icon.Check size={24} color={COLORS.LIGHT_POSITIVE_GREEN} />
 

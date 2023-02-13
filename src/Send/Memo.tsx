@@ -2,17 +2,20 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {TextInput} from '../components'
-import {COLORS} from '../theme'
-import {useSend} from './Context/SendContext'
+import {HelperText, TextInput} from '../components'
 
 export const maxMemoLength = 256
 
-export const MemoField = () => {
+type Props = {
+  memo: string
+  memoChanged: (memo: string) => void
+}
+
+export const Memo = ({memoChanged, memo}: Props) => {
   const strings = useStrings()
-  const {memo, memoChanged} = useSend()
 
   const showError = memo.length > maxMemoLength
+  const multilineMax = memo.length > 50
 
   return (
     <View style={styles.container}>
@@ -23,16 +26,30 @@ export const MemoField = () => {
         autoComplete={false}
         testID="memoFieldInput"
         errorText={showError ? 'error' : undefined} // to show the error styling
-        noErrors={true} // to block the default helper
+        noHelper={true}
+        style={multilineMax && styles.input}
         multiline={true}
       />
 
       <View style={styles.helper}>
-        <Text style={[styles.warning, showError && styles.error]}>{showError ? strings.error : strings.warning}</Text>
+        <Message showError={showError} />
 
-        <Text style={[styles.counter, showError && styles.error]}>{`${memo.length}/${maxMemoLength}`}</Text>
+        <Counter memo={memo} showError={showError} />
       </View>
     </View>
+  )
+}
+
+const Message = ({showError}: {showError: boolean}) => {
+  const strings = useStrings()
+  return <HelperText type={showError ? 'error' : 'info'}>{showError ? strings.error : strings.warning}</HelperText>
+}
+
+const Counter = ({memo, showError}: {memo: string; showError: boolean}) => {
+  return (
+    <HelperText type={showError ? 'error' : 'info'}>
+      <Text>{`${memo.length}/${maxMemoLength}`}</Text>
+    </HelperText>
   )
 }
 
@@ -66,20 +83,10 @@ const styles = StyleSheet.create({
     paddingBottom: 25,
   },
   helper: {
-    paddingLeft: 10,
-    paddingTop: 5,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  counter: {
-    color: COLORS.TEXT_INPUT,
-    fontSize: 12,
-  },
-  warning: {
-    color: COLORS.TEXT_INPUT,
-    fontSize: 12,
-  },
-  error: {
-    color: COLORS.ERROR_TEXT_COLOR,
+  input: {
+    height: 95,
   },
 })
