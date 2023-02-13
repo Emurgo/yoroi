@@ -8,10 +8,10 @@ export const maxMemoLength = 256
 
 type Props = {
   memo: string
-  memoChanged: (memo: string) => void
+  onChangeText: (memo: string) => void
 }
 
-export const Memo = ({memoChanged, memo}: Props) => {
+export const Memo = ({onChangeText, memo}: Props) => {
   const strings = useStrings()
 
   const showError = memo.length > maxMemoLength
@@ -21,7 +21,7 @@ export const Memo = ({memoChanged, memo}: Props) => {
     <View style={styles.container}>
       <TextInput
         value={memo}
-        onChangeText={(memo) => memoChanged(memo.trim())}
+        onChangeText={(memo) => onChangeText(memo.trim())}
         label={strings.label}
         autoComplete={false}
         testID="memoFieldInput"

@@ -217,7 +217,7 @@ export const SendScreen = () => {
           />
         </TouchableOpacity>
 
-        <Memo memo={memo} memoChanged={memoChanged} />
+        <Memo memo={memo} onChangeText={memoChanged} />
 
         <Checkbox
           checked={sendAll}
