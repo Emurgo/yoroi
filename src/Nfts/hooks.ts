@@ -11,5 +11,7 @@ export const useFilteredNfts = () => {
     searchTermLowerCase.length > 0 && nfts.length > 0
       ? nfts.filter((n) => n.name.toLowerCase().includes(searchTermLowerCase))
       : nfts
-  return {filteredNfts, isLoading, refetch, isRefetching, isError, search} as const
+  const sortedNfts = filteredNfts.sort((a, b) => a.name.localeCompare(b.name))
+
+  return {nfts: sortedNfts, isLoading, refetch, isRefetching, isError, search} as const
 }

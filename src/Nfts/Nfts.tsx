@@ -10,10 +10,10 @@ import {useNavigateTo} from './navigation'
 import {NoNftsScreen} from './NoNftsScreen'
 
 export const Nfts = () => {
-  const {search, filteredNfts, isLoading, refetch, isRefetching, isError} = useFilteredNfts()
+  const {search, nfts, isLoading, refetch, isRefetching, isError} = useFilteredNfts()
   const navigateTo = useNavigateTo()
   const navigateToDetails = (id: string) => navigateTo.nftDetails(id)
-  const handleNftSelect = (index: number) => navigateToDetails(filteredNfts[index].id)
+  const handleNftSelect = (index: number) => navigateToDetails(nfts[index].id)
   const strings = useStrings()
 
   if (isError) {
@@ -27,12 +27,12 @@ export const Nfts = () => {
   if (isLoading) {
     return (
       <ScreenWrapper>
-        <LoadingScreen nftsCount={filteredNfts.length} onRefresh={refetch} isRefreshing={isRefetching} />
+        <LoadingScreen nftsCount={nfts.length} onRefresh={refetch} isRefreshing={isRefetching} />
       </ScreenWrapper>
     )
   }
 
-  if (search.length > 0 && filteredNfts.length === 0) {
+  if (search.length > 0 && nfts.length === 0) {
     return (
       <ScreenWrapper>
         <ScrollView
@@ -46,7 +46,7 @@ export const Nfts = () => {
     )
   }
 
-  if (search.length === 0 && filteredNfts.length === 0) {
+  if (search.length === 0 && nfts.length === 0) {
     return (
       <ScreenWrapper>
         <ScrollView
@@ -58,7 +58,7 @@ export const Nfts = () => {
             message={strings.noNftsInWallet}
             heading={
               <View>
-                <NftCount count={filteredNfts.length} />
+                <NftCount count={nfts.length} />
 
                 <Spacer height={16} />
               </View>
@@ -74,13 +74,13 @@ export const Nfts = () => {
       <View style={styles.galleryContainer}>
         {search.length === 0 && (
           <View>
-            <NftCount count={filteredNfts.length} />
+            <NftCount count={nfts.length} />
 
             <Spacer height={16} />
           </View>
         )}
 
-        <ImageGallery nfts={filteredNfts} onSelect={handleNftSelect} onRefresh={refetch} isRefreshing={isRefetching} />
+        <ImageGallery nfts={nfts} onSelect={handleNftSelect} onRefresh={refetch} isRefreshing={isRefetching} />
       </View>
     </ScreenWrapper>
   )
