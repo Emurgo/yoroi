@@ -2,11 +2,11 @@ import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import {NftDetailsRoutes} from '../navigation'
+import {NftRoutes} from '../navigation'
 import {NftDetails} from './NftDetails'
 import {NftDetailsImage} from './NftDetailsImage'
 
-const Stack = createStackNavigator<NftDetailsRoutes>()
+const Stack = createStackNavigator<NftRoutes>()
 
 export const NftDetailsNavigator = () => {
   const strings = useStrings()

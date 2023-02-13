@@ -32,10 +32,10 @@ const Routes = () => {
         headerTitleContainerStyle: {flex: 1, alignItems: 'center'},
         cardStyle: {backgroundColor: '#fff'},
       }}
-      initialRouteName="nfts"
+      initialRouteName="nft-gallery"
     >
       <Stack.Screen
-        name="nfts"
+        name="nft-gallery"
         options={{
           title: strings.title,
           headerTitleAlign: 'center',
