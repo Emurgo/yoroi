@@ -7,7 +7,7 @@ import {useTokenInfo} from '../../hooks'
 import globalMessages, {txLabels} from '../../i18n/global-messages'
 import {formatTokenAmount} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
-import {TokenEntry, toToken} from '../../yoroi-wallets'
+import {asQuantity, TokenEntry, toToken} from '../../yoroi-wallets'
 import assetListSendStyle from './AssetListSend.style'
 import assetListTransactionStyle from './AssetListTransaction.style'
 import baseStyle from './Base.style'
@@ -71,7 +71,7 @@ const AssetRow = ({styles, entry, backColor, onSelect}: AssetRowProps) => {
       </View>
 
       <View style={styles.assetBalanceView}>
-        <Text style={styles.assetBalance}>{formatTokenAmount(entry.amount, token)}</Text>
+        <Text style={styles.assetBalance}>{formatTokenAmount(asQuantity(entry.amount), token)}</Text>
       </View>
     </>
   )

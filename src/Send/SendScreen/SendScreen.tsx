@@ -1,5 +1,4 @@
 import {useNavigation} from '@react-navigation/native'
-import {BigNumber} from 'bignumber.js'
 import _ from 'lodash'
 import React from 'react'
 import {useIntl} from 'react-intl'
@@ -199,7 +198,7 @@ export const SendScreen = () => {
             right={<Image source={require('../../assets/img/arrow_down_fill.png')} testID="selectAssetButton" />}
             editable={false}
             label={strings.asset}
-            value={`${assetDenomination}: ${formatTokenAmount(new BigNumber(selectedAssetAvailableAmount), token)}`}
+            value={`${assetDenomination}: ${formatTokenAmount(selectedAssetAvailableAmount, token)}`}
             autoComplete={false}
           />
         </TouchableOpacity>
