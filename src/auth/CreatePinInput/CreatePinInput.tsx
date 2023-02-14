@@ -1,13 +1,13 @@
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
+import {showErrorDialog} from '../../dialogs'
 import {errorMessages} from '../../i18n/global-messages'
-import {showErrorDialog} from '../../legacy/actions'
 import {CONFIG} from '../../legacy/config'
 import {useCreatePin} from '../hooks'
 import {PinInput, PinInputRef} from '../PinInput'
 
-type Props = {onDone: () => void}
+type Props = {onDone: (pin: string) => void}
 export const CreatePinInput = ({onDone}: Props) => {
   const pinInputRef = React.useRef<null | PinInputRef>(null)
   const pinConfirmationInputRef = React.useRef<null | PinInputRef>(null)
@@ -16,7 +16,7 @@ export const CreatePinInput = ({onDone}: Props) => {
   const strings = useStrings()
 
   const {createPin, isLoading} = useCreatePin({
-    onSuccess: () => onDone(),
+    onSuccess: (_, pin) => onDone(pin),
     onError: (error) => {
       showErrorDialog(errorMessages.generalError, intl, {message: error.message})
       step === 'pin' ? pinInputRef.current?.clear() : pinConfirmationInputRef.current?.clear()

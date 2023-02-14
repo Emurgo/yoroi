@@ -1,6 +1,6 @@
 import {getAssetFingerprint} from '../../legacy/format'
 import {AssetMetadata, NftMetadata, YoroiNft} from '../types'
-import {asciiToHex} from '../utils/parsing'
+import {asciiToHex} from './api/utils'
 
 export const convertNft = (assetMetadata: AssetMetadata, storageUrl: string): YoroiNft => {
   const policyId = Object.keys(assetMetadata)[0]

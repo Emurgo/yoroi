@@ -4,9 +4,17 @@ import {action} from '@storybook/addon-actions'
 import BigNumber from 'bignumber.js'
 
 import {getDefaultAssetByNetworkId} from '../../src/legacy/config'
-import {PRIMARY_ASSET_CONSTANTS} from '../../src/legacy/networks'
-import {WalletMeta} from '../../src/legacy/state'
-import {fallbackTokenInfo, primaryTokenInfo, TokenEntry, toTokenInfo, YoroiWallet} from '../../src/yoroi-wallets'
+import {getTokenFingerprint} from '../../src/legacy/format'
+import {
+  asciiToHex,
+  fallbackTokenInfo,
+  primaryTokenInfo,
+  TokenEntry,
+  toTokenInfo,
+  WalletMeta,
+  YoroiWallet,
+} from '../../src/yoroi-wallets'
+import {PRIMARY_ASSET_CONSTANTS} from '../../src/yoroi-wallets/cardano/networks'
 import {
   RemotePoolMetaSuccess,
   StakePoolInfosAndHistories,
@@ -20,11 +28,9 @@ import {
   YoroiSignedTx,
   YoroiUnsignedTx,
 } from '../../src/yoroi-wallets/types'
-import {asciiToHex} from '../../src/yoroi-wallets/utils/parsing'
 import {mockEncryptedStorage} from './storage'
 import {mockTransactionInfo, mockTransactionInfos} from './transaction'
 import {utxos} from './utxos'
-import {getAssetFingerprint, getTokenFingerprint} from '../../src/legacy/format'
 
 const walletMeta: WalletMeta = {
   id: 'wallet-id',

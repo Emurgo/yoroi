@@ -21,6 +21,7 @@ export const tokenInfo = (entry: TokenRegistryEntry): TokenInfo => {
     // optional values
     name: assetName,
     description: entry.description?.value,
+    symbol: undefined,
     ticker: entry.ticker?.value,
     url: entry.url?.value,
     logo: entry.logo?.value,
@@ -42,6 +43,7 @@ export const fallbackTokenInfo = (tokenId: string): TokenInfo => {
     }),
     description: undefined,
     logo: undefined,
+    symbol: undefined,
     ticker: undefined,
     url: undefined,
   }
@@ -105,6 +107,7 @@ export const toTokenInfo = (token: LegacyToken): TokenInfo => {
     decimals: token.metadata.numberOfDecimals,
     fingerprint: toTokenFingerprint({policyId: token.metadata.policyId, assetNameHex: token.metadata.assetName}),
     description: token.metadata.longName ?? undefined,
+    symbol: undefined,
     url: undefined,
     logo: undefined,
     ticker: undefined,

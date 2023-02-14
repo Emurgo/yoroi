@@ -1,5 +1,4 @@
 import {useNavigation} from '@react-navigation/native'
-import {BigNumber} from 'bignumber.js'
 import _ from 'lodash'
 import React from 'react'
 import {useIntl} from 'react-intl'
@@ -8,11 +7,12 @@ import {TouchableOpacity} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Checkbox, Spacer, StatusBar, Text, TextInput} from '../../components'
-import {useBalances, useHasPendingTx, useIsOnline, useToken, useUtxos} from '../../hooks'
+import {useBalances, useHasPendingTx, useIsOnline, useTokenInfo, useUtxos} from '../../hooks'
 import {CONFIG} from '../../legacy/config'
-import {formatTokenAmount, getAssetDenominationOrId, truncateWithEllipsis} from '../../legacy/format'
+import {formatTokenAmount, truncateWithEllipsis} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
+import {toToken} from '../../yoroi-wallets'
 import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
 import {Amounts, Quantities} from '../../yoroi-wallets/utils'
 import type {
@@ -61,8 +61,10 @@ export const SendScreen = () => {
   const [recomputing, setRecomputing] = React.useState(false)
   const [showSendAllWarning, setShowSendAllWarning] = React.useState(false)
 
-  const token = useToken({wallet, tokenId})
-  const assetDenomination = truncateWithEllipsis(getAssetDenominationOrId(token), 20)
+  const tokenInfo = useTokenInfo({wallet, tokenId})
+  const isPrimaryToken = tokenInfo.id === wallet.primaryTokenInfo.id
+  const token = toToken({wallet, tokenInfo})
+  const assetDenomination = truncateWithEllipsis(tokenInfo.ticker ?? tokenInfo.name ?? tokenInfo.fingerprint, 20)
   const amountErrorText = getAmountErrorText(intl, amountErrors, balanceErrors, wallet.primaryToken)
 
   const isValid =
@@ -196,7 +198,7 @@ export const SendScreen = () => {
             right={<Image source={require('../../assets/img/arrow_down_fill.png')} testID="selectAssetButton" />}
             editable={false}
             label={strings.asset}
-            value={`${assetDenomination}: ${formatTokenAmount(new BigNumber(selectedAssetAvailableAmount), token)}`}
+            value={`${assetDenomination}: ${formatTokenAmount(selectedAssetAvailableAmount, token)}`}
             autoComplete={false}
           />
         </TouchableOpacity>
@@ -204,11 +206,7 @@ export const SendScreen = () => {
         <Checkbox
           checked={sendAll}
           onChange={sendAllChanged}
-          text={
-            token.identifier === wallet.primaryToken.identifier
-              ? strings.checkboxSendAllAssets
-              : strings.checkboxSendAll({assetId: assetDenomination})
-          }
+          text={isPrimaryToken ? strings.checkboxSendAllAssets : strings.checkboxSendAll({assetId: assetDenomination})}
           testID="sendAllCheckbox"
         />
 

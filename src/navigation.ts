@@ -2,9 +2,8 @@ import {NavigatorScreenParams, useNavigation, useRoute} from '@react-navigation/
 import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/stack'
 import {Platform} from 'react-native'
 
-import {HWDeviceInfo} from './legacy/ledgerUtils'
 import {COLORS} from './theme'
-import {NetworkId, WalletImplementationId} from './yoroi-wallets'
+import {HWDeviceInfo, NetworkId, WalletImplementationId} from './yoroi-wallets'
 import {YoroiUnsignedTx} from './yoroi-wallets/types'
 
 // prettier-ignore

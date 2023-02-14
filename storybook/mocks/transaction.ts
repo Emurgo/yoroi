@@ -3,12 +3,11 @@ import BigNumber from 'bignumber.js'
 import {Transaction, TransactionInfo} from '../../src/yoroi-wallets/types'
 
 export const mockTransactionInfos: Record<string, TransactionInfo> = {
-  'ef147cbd5ccb0b0907a2969a697aeb06117ac83f284ddfae53a4198b03719b52': {
+  ef147cbd5ccb0b0907a2969a697aeb06117ac83f284ddfae53a4198b03719b52: {
     id: 'ef147cbd5ccb0b0907a2969a697aeb06117ac83f284ddfae53a4198b03719b52',
     inputs: [
       {
-        address:
-          'addr_test1vzpwq95z3xyum8vqndgdd9mdnmafh3djcxnc6jemlgdmswcve6tkw',
+        address: 'addr_test1vzpwq95z3xyum8vqndgdd9mdnmafh3djcxnc6jemlgdmswcve6tkw',
         amount: '481040108',
         assets: [
           {
@@ -290,7 +289,7 @@ export const mockTransactionInfos: Record<string, TransactionInfo> = {
       },
     },
     memo: null,
-  }
+  },
 }
 
 export const mockTransactionInfo = (transaction?: Partial<TransactionInfo>): TransactionInfo => {

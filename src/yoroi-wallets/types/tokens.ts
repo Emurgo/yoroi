@@ -69,6 +69,7 @@ export type TokenInfo = {
   name: string | undefined // derived from token subject
   description: string | undefined
   ticker: string | undefined
+  symbol: string | undefined
   url: string | undefined
   logo: string | undefined
 }

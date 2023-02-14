@@ -1,4 +1,3 @@
-import {BigNumber} from 'bignumber.js'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Linking, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
@@ -6,9 +5,9 @@ import {Linking, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-nati
 import {Text} from '../../../components'
 import {confirmationMessages, txLabels} from '../../../i18n/global-messages'
 import {formatTokenWithText} from '../../../legacy/format'
-import {getNetworkConfigById} from '../../../legacy/networks'
 import {COLORS} from '../../../theme'
 import {YoroiWallet} from '../../../yoroi-wallets'
+import {getNetworkConfigById} from '../../../yoroi-wallets/cardano/networks'
 import {YoroiStaking, YoroiUnsignedTx} from '../../../yoroi-wallets/types'
 import {Amounts, Entries} from '../../../yoroi-wallets/utils'
 
@@ -22,7 +21,7 @@ export const TransferSummary = ({wallet, unsignedTx}: {wallet: YoroiWallet; unsi
         <Text>{strings.balanceLabel}</Text>
 
         <Text style={styles.balanceAmount} testID="recoveredBalanceText">
-          {formatTokenWithText(new BigNumber(refundAmount.quantity), wallet.primaryToken)}
+          {formatTokenWithText(refundAmount.quantity, wallet.primaryToken)}
         </Text>
       </Item>
 
@@ -30,7 +29,7 @@ export const TransferSummary = ({wallet, unsignedTx}: {wallet: YoroiWallet; unsi
         <Text>{strings.fees}</Text>
 
         <Text style={styles.balanceAmount} testID="feeAmountText">
-          {formatTokenWithText(new BigNumber(feeAmount.quantity), wallet.primaryToken)}
+          {formatTokenWithText(feeAmount.quantity, wallet.primaryToken)}
         </Text>
       </Item>
 
@@ -38,7 +37,7 @@ export const TransferSummary = ({wallet, unsignedTx}: {wallet: YoroiWallet; unsi
         <Text>{strings.finalBalanceLabel}</Text>
 
         <Text style={styles.balanceAmount} testID="totalAmountText">
-          {formatTokenWithText(new BigNumber(totalAmount.quantity), wallet.primaryToken)}
+          {formatTokenWithText(totalAmount.quantity, wallet.primaryToken)}
         </Text>
       </Item>
 
@@ -134,7 +133,7 @@ const Deregistrations = ({
       <Item>
         <Text>
           {strings.unregisterExplanation({
-            refundAmount: formatTokenWithText(new BigNumber(primaryAmount.quantity), wallet.primaryToken),
+            refundAmount: formatTokenWithText(primaryAmount.quantity, wallet.primaryToken),
           })}
         </Text>
       </Item>

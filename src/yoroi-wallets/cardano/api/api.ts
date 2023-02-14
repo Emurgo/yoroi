@@ -2,7 +2,6 @@
 import _ from 'lodash'
 
 import assert from '../../../legacy/assert'
-import {ApiError} from '../../../legacy/errors'
 import fetchDefault, {checkedFetch} from '../../../legacy/fetch'
 import {Logger} from '../../../legacy/logging'
 import type {
@@ -23,6 +22,7 @@ import type {
 import {NFTAsset, RemoteAsset, YoroiNft, YoroiNftModerationStatus} from '../../types'
 import {hasProperties, isObject} from '../../utils/parsing'
 import {ServerStatus} from '..'
+import {ApiError} from '../errors'
 import {convertNft} from '../nfts'
 import {fallbackTokenInfo, tokenInfo, toTokenSubject} from './utils'
 

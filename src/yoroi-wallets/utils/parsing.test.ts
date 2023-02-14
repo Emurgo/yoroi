@@ -1,5 +1,6 @@
 import {CONFIG, getCardanoDefaultAsset} from '../../legacy/config'
-import {asciiToHex, InvalidAssetAmount, parseAmountDecimal} from './parsing'
+import {asciiToHex} from '../cardano'
+import {InvalidAssetAmount, parseAmountDecimal} from './parsing'
 
 describe('parseAdaDecimal', () => {
   // recall: tests run on mainnet (default network)

@@ -2,8 +2,7 @@
 
 import {WALLETS} from '../../legacy/config'
 import {Logger} from '../../legacy/logging'
-import {WalletMeta} from '../../legacy/state'
-import {CardanoTypes, legacyWalletChecksum, walletChecksum} from '../../yoroi-wallets'
+import {CardanoTypes, legacyWalletChecksum, walletChecksum, WalletMeta} from '../../yoroi-wallets'
 import {storage} from '../../yoroi-wallets/storage'
 import type {NetworkId, WalletImplementationId} from '../../yoroi-wallets/types/other'
 import {NETWORK_REGISTRY, WALLET_IMPLEMENTATION_REGISTRY} from '../../yoroi-wallets/types/other'

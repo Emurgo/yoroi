@@ -8,19 +8,13 @@ import {StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 
 import {Spacer, Text} from '../../components'
 import {Icon} from '../../components/Icon'
-import {
-  ASSET_DENOMINATION,
-  formatTimeToSeconds,
-  formatTokenFractional,
-  formatTokenInteger,
-  getAssetDenominationOrId,
-} from '../../legacy/format'
+import {formatTimeToSeconds, formatTokenFractional, formatTokenInteger} from '../../legacy/format'
 import utfSymbols from '../../legacy/utfSymbols'
-import {isEmptyString} from '../../legacy/utils'
 import {TxHistoryRouteNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
-import {MultiToken, YoroiWallet} from '../../yoroi-wallets'
+import {isEmptyString} from '../../utils/utils'
+import {asQuantity, MultiToken, YoroiWallet} from '../../yoroi-wallets'
 import {IOData, TransactionAssurance, TransactionDirection, TransactionInfo} from '../../yoroi-wallets/types'
 
 type Props = {
@@ -116,17 +110,16 @@ const Amount = ({wallet, transaction}: {wallet: YoroiWallet; transaction: Transa
     : amountToDisplay.gte(0)
     ? styles.positiveAmount
     : styles.negativeAmount
-  const ticker = getAssetDenominationOrId(wallet.primaryToken, ASSET_DENOMINATION.SYMBOL)
 
   return (
     <View style={styles.amount} testID="transactionAmount">
       <Text style={style} secondary={transaction.assurance === 'PENDING'}>
-        <Text>{formatTokenInteger(amount, wallet.primaryToken)}</Text>
+        <Text>{formatTokenInteger(asQuantity(amount), wallet.primaryToken)}</Text>
 
-        <Text small>{formatTokenFractional(amount, wallet.primaryToken)}</Text>
+        <Text small>{formatTokenFractional(asQuantity(amount), wallet.primaryToken)}</Text>
       </Text>
 
-      <Text style={style}>{`${utfSymbols.NBSP}${ticker}`}</Text>
+      <Text style={style}>{`${utfSymbols.NBSP}${wallet.primaryTokenInfo.symbol}`}</Text>
     </View>
   )
 }

@@ -11,12 +11,12 @@ import {Banner, Boundary, Button, CopyButton, FadeIn, Icon, StatusBar, Text} fro
 import {useTipStatus, useTransactionInfos} from '../../hooks'
 import globalMessages from '../../i18n/global-messages'
 import {formatDateToSeconds, formatTokenWithSymbol} from '../../legacy/format'
-import {getNetworkConfigById} from '../../legacy/networks'
-import {isEmptyString} from '../../legacy/utils'
 import AddressModal from '../../Receive/AddressModal'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {brand, COLORS} from '../../theme'
-import {MultiToken, TokenEntry, YoroiWallet} from '../../yoroi-wallets'
+import {isEmptyString} from '../../utils/utils'
+import {asQuantity, MultiToken, TokenEntry, YoroiWallet} from '../../yoroi-wallets'
+import {getNetworkConfigById} from '../../yoroi-wallets/cardano/networks'
 import {TransactionInfo} from '../../yoroi-wallets/types'
 import {AssetList} from './AssetList'
 import assetListStyle from './AssetListTransaction.style'
@@ -177,14 +177,14 @@ const AdaAmount = ({amount}: {amount: BigNumber}) => {
   const wallet = useSelectedWallet()
   const amountStyle = amount.gte(0) ? styles.positiveAmount : styles.negativeAmount
 
-  return <Text style={amountStyle}>{formatTokenWithSymbol(amount, wallet.primaryToken)}</Text>
+  return <Text style={amountStyle}>{formatTokenWithSymbol(asQuantity(amount), wallet.primaryToken)}</Text>
 }
 
 const Fee = ({amount}: {amount: BigNumber}) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
 
-  const text = `${strings.fee} ${formatTokenWithSymbol(amount, wallet.primaryToken)}`
+  const text = `${strings.fee} ${formatTokenWithSymbol(asQuantity(amount), wallet.primaryToken)}`
   return <Text small>{text}</Text>
 }
 
