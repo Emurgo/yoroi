@@ -33,6 +33,7 @@ export const TxDetails = () => {
   const [addressDetail, setAddressDetail] = React.useState<null | string>(null)
   const transactions = useTransactionInfos(wallet)
   const transaction = transactions[id]
+  const memo = !isEmptyString(transaction.memo) ? transaction.memo : '-'
 
   useTitle(formatDateToSeconds(transaction.submittedAt))
 
@@ -72,7 +73,7 @@ export const TxDetails = () => {
         <Label>{strings.memo}</Label>
 
         <Text secondary monospace>
-          {transaction.memo !== null && transaction.memo.length > 0 ? transaction.memo : '-'}
+          {memo}
         </Text>
 
         <View style={styles.borderTop}>
