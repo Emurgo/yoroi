@@ -41,7 +41,7 @@ export const MemoInput = ({onChangeText, memo}: Props) => {
 
 const Message = ({showError}: {showError: boolean}) => {
   const strings = useStrings()
-  return <HelperText type={showError ? 'error' : 'info'}>{showError ? strings.error : strings.warning}</HelperText>
+  return <HelperText type={showError ? 'error' : 'info'}>{showError ? strings.error : strings.message}</HelperText>
 }
 
 const LengthCounter = ({memo, showError}: {memo: string; showError: boolean}) => {
@@ -57,7 +57,7 @@ const useStrings = () => {
 
   return {
     label: intl.formatMessage(messages.label),
-    warning: intl.formatMessage(messages.warning),
+    message: intl.formatMessage(messages.message),
     error: intl.formatMessage(messages.error),
   }
 }
@@ -67,8 +67,8 @@ export const messages = defineMessages({
     id: 'components.send.memofield.label',
     defaultMessage: '!!!Memo',
   },
-  warning: {
-    id: 'components.send.memofield.warning',
+  message: {
+    id: 'components.send.memofield.message',
     defaultMessage: '!!!(Optional) Memo is stored locally',
   },
   error: {

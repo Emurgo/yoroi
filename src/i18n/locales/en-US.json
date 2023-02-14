@@ -108,7 +108,7 @@
   "components.send.addressreaderqr.title": "Scan QR code address",
   "components.send.amountfield.label": "Amount",
   "components.send.memofield.label": "Memo",
-  "components.send.memofield.warning": "(Optional) Memo is stored locally",
+  "components.send.memofield.message": "(Optional) Memo is stored locally",
   "components.send.memofield.error": "Memo name is too long",
   "components.send.biometricauthscreen.DECRYPTION_FAILED": "Biometrics login failed. Please use an alternate login method.",
   "components.send.biometricauthscreen.NOT_RECOGNIZED": "Biometrics were not recognized. Try again",
