@@ -800,8 +800,8 @@ export const useSaveMemo = (
   options?: UseMutationOptions<void, Error, {txId: string; memo: string}>,
 ) => {
   const mutation = useMutation({
-    mutationFn: ({txId, memo}) => wallet.saveMemo(txId, memo),
     ...options,
+    mutationFn: ({txId, memo}) => wallet.saveMemo(txId, memo),
   })
 
   return {
