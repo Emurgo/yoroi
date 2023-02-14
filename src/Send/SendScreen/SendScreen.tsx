@@ -86,7 +86,7 @@ export const SendScreen = () => {
     _.isEmpty(amountErrors) &&
     _.isEmpty(balanceErrors) &&
     !!yoroiUnsignedTx &&
-    memo.length < maxMemoLength
+    memo.length <= maxMemoLength
 
   React.useEffect(() => {
     if (CONFIG.DEBUG.PREFILL_FORMS) {
