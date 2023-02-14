@@ -17,6 +17,7 @@ import {Icon} from '../Icon'
 type Props = TextInputProps &
   Omit<React.ComponentProps<typeof RNPTextInput>, 'theme'> & {
     containerStyle?: ViewStyle
+    renderComponentStyle?: ViewStyle
     helperText?: string
     errorText?: string
     disabled?: boolean
@@ -48,6 +49,7 @@ export const TextInput = React.forwardRef((props: Props, ref: ForwardedRef<RNTex
   const {
     value,
     containerStyle,
+    renderComponentStyle,
     secureTextEntry,
     helperText,
     errorText,
@@ -98,7 +100,10 @@ export const TextInput = React.forwardRef((props: Props, ref: ForwardedRef<RNTex
         error={errorTextEnabled && !isEmptyString(errorText)}
         render={({style, ...inputProps}) => (
           <InputContainer>
-            <RNTextInput {...inputProps} style={[style, {color: faded ? COLORS.GREY_6 : COLORS.BLACK, flex: 1}]} />
+            <RNTextInput
+              {...inputProps}
+              style={[style, renderComponentStyle, {color: faded ? COLORS.GREY_6 : COLORS.BLACK, flex: 1}]}
+            />
 
             {right != null ? <AdornmentContainer style={styles.checkmarkContainer}>{right}</AdornmentContainer> : null}
 

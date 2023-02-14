@@ -2,7 +2,7 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {HelperText, TextInput} from '../components'
+import {HelperText, TextInput as TextInputRNP} from '../components'
 
 export const maxMemoLength = 256
 
@@ -11,24 +11,24 @@ type Props = {
   onChangeText: (memo: string) => void
 }
 
-export const Memo = ({onChangeText, memo}: Props) => {
+export const MemoInput = ({onChangeText, memo}: Props) => {
   const strings = useStrings()
 
-  const showError = memo.length > maxMemoLength
-  const multilineMax = memo.length > 50
+  const showError = memo.length >= maxMemoLength
 
   return (
     <View style={styles.container}>
-      <TextInput
+      <TextInputRNP
         value={memo}
         onChangeText={(memo) => onChangeText(memo.trim())}
         label={strings.label}
         autoComplete={false}
         testID="memoFieldInput"
         errorText={showError ? 'error' : undefined} // to show the error styling
-        noHelper={true}
-        style={multilineMax && styles.input}
-        multiline={true}
+        renderComponentStyle={styles.input}
+        maxLength={maxMemoLength}
+        noHelper
+        multiline
       />
 
       <View style={styles.helper}>
@@ -87,6 +87,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   input: {
-    height: 95,
+    maxHeight: 80,
   },
 })
