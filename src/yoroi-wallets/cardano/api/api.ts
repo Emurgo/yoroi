@@ -218,22 +218,23 @@ function parseNFTs(value: unknown, storageUrl: string): YoroiNft[] {
     throw new Error('Invalid response. Expected to receive object when parsing NFTs')
   }
 
-  const values = Object.values(value)
+  const metadata = Object.values(value)
 
-  const assets = values.map((arrayWithAtLeastOneAsset) => {
-    if (!isArray(arrayWithAtLeastOneAsset)) {
-      throw new Error('Invalid response. Expected object value to be an array when parsing NFTs')
-    }
+  const nftAssets = metadata
+    .map((assets) => {
+      if (!isArray(assets)) {
+        throw new Error('Invalid response. Expected object value to be an array when parsing NFTs')
+      }
 
-    if (arrayWithAtLeastOneAsset.length === 0) {
-      throw new Error(
-        'Invalid response. Expected object value to be an array with at least one element when parsing NFTs',
-      )
-    }
+      if (assets.length === 0) {
+        throw new Error(
+          'Invalid response. Expected object value to be an array with at least one element when parsing NFTs',
+        )
+      }
 
-    return arrayWithAtLeastOneAsset[0]
-  })
-  const nftAssets = assets.filter(isAssetNFT)
+      return assets[0]
+    })
+    .filter(isAssetNFT)
   return nftAssets.map((nft) => convertNft(nft.metadata, storageUrl))
 }
 
