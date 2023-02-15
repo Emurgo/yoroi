@@ -78,6 +78,18 @@ export const isObject = (data: unknown): data is object => {
   return typeof data === 'object' && data !== null && !Array.isArray(data)
 }
 
+export function filterArray<T>(data: unknown[], predicate: (data: unknown) => data is T): T[] {
+  return data.filter(predicate)
+}
+
+export function isArray(data: unknown): data is Array<unknown> {
+  return Array.isArray(data)
+}
+
+export function isRecord(data: unknown): data is Record<string, unknown> {
+  return isObject(data)
+}
+
 export const hasProperties = <T extends object, K extends string>(
   obj: T,
   keys: K[],

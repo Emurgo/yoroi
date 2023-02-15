@@ -20,7 +20,7 @@ import type {
   TxStatusResponse,
 } from '../../types'
 import {NFTAsset, RemoteAsset, YoroiNft, YoroiNftModerationStatus} from '../../types'
-import {hasProperties, isObject} from '../../utils/parsing'
+import {filterArray, hasProperties, isArray, isObject, isRecord} from '../../utils/parsing'
 import {ServerStatus} from '..'
 import {ApiError} from '../errors'
 import {convertNft} from '../nfts'
@@ -214,12 +214,26 @@ export const parseModerationStatus = (status: unknown): YoroiNftModerationStatus
 }
 
 function parseNFTs(value: unknown, storageUrl: string): YoroiNft[] {
-  if (!value || typeof value !== 'object') {
-    return []
+  if (!isRecord(value)) {
+    throw new Error('Invalid response. Expected to receive object when parsing NFTs')
   }
 
-  const assets = Object.values(value).map((arrayWithOneAsset) => arrayWithOneAsset[0])
-  const nftAssets: NFTAsset[] = assets.filter((asset) => isAssetNFT(asset))
+  const values = Object.values(value)
+
+  const assets = values.map((arrayWithAtLeastOneAsset) => {
+    if (!isArray(arrayWithAtLeastOneAsset)) {
+      throw new Error('Invalid response. Expected object value to be an array when parsing NFTs')
+    }
+
+    if (arrayWithAtLeastOneAsset.length === 0) {
+      throw new Error(
+        'Invalid response. Expected object value to be an array with at least one element when parsing NFTs',
+      )
+    }
+
+    return arrayWithAtLeastOneAsset[0]
+  })
+  const nftAssets = filterArray(assets, isAssetNFT)
   return nftAssets.map((nft) => convertNft(nft.metadata, storageUrl))
 }
 
