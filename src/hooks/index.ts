@@ -794,3 +794,18 @@ export const useResync = (wallet: YoroiWallet, options?: UseMutationOptions<void
     resync: mutation.mutate,
   }
 }
+
+export const useSaveMemo = (
+  {wallet}: {wallet: YoroiWallet},
+  options?: UseMutationOptions<void, Error, {txId: string; memo: string}>,
+) => {
+  const mutation = useMutation({
+    ...options,
+    mutationFn: ({txId, memo}) => wallet.saveMemo(txId, memo),
+  })
+
+  return {
+    saveMemo: mutation.mutate,
+    ...mutation,
+  }
+}
