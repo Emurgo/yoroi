@@ -20,7 +20,7 @@ import type {
   TxStatusResponse,
 } from '../../types'
 import {NFTAsset, RemoteAsset, YoroiNft, YoroiNftModerationStatus} from '../../types'
-import {filterArray, hasProperties, isArray, isObject, isRecord} from '../../utils/parsing'
+import {hasProperties, isArray, isObject, isRecord} from '../../utils/parsing'
 import {ServerStatus} from '..'
 import {ApiError} from '../errors'
 import {convertNft} from '../nfts'
@@ -233,7 +233,7 @@ function parseNFTs(value: unknown, storageUrl: string): YoroiNft[] {
 
     return arrayWithAtLeastOneAsset[0]
   })
-  const nftAssets = filterArray(assets, isAssetNFT)
+  const nftAssets = assets.filter(isAssetNFT)
   return nftAssets.map((nft) => convertNft(nft.metadata, storageUrl))
 }
 
