@@ -18,7 +18,7 @@ type Props = {
 
 const TEXT_SIZE = 20
 
-export const SkeletonGallery = ({amount}: {amount: number} = {amount: 3}) => {
+export const SkeletonGallery = ({amount}: {amount: number}) => {
   const placeholders = new Array(amount).fill(undefined).map((val, i) => i)
 
   return <GalleryList data={placeholders} renderItem={() => <SkeletonImagePlaceholder />} />
@@ -30,7 +30,7 @@ export const ImageGallery = ({nfts = [], onSelect, onRefresh, isRefreshing}: Pro
       data={nfts}
       onRefresh={onRefresh}
       refreshing={isRefreshing}
-      renderItem={(item) => <ModeratedImage onPress={() => onSelect(nfts.indexOf(item))} nft={item} key={item.id} />}
+      renderItem={(nft) => <ModeratedImage onPress={() => onSelect(nfts.indexOf(nft))} nft={nft} key={nft.id} />}
     />
   )
 }
@@ -43,23 +43,23 @@ interface ModeratedImageProps {
 const ModeratedImage = ({onPress, nft}: ModeratedImageProps) => {
   const {image, name: text, fingerprint} = nft
   const wallet = useSelectedWallet()
-  const moderationStatusQuery = useNftModerationStatus({wallet, fingerprint})
+  const {isError, moderationStatus, refetch, isLoading} = useNftModerationStatus({wallet, fingerprint})
 
   useEffect(() => {
-    if (moderationStatusQuery.data === 'pending') {
-      const timeout = setTimeout(() => moderationStatusQuery.refetch(), REFETCH_TIME_IN_MS)
+    if (moderationStatus === 'pending') {
+      const timeout = setTimeout(() => refetch(), REFETCH_TIME_IN_MS)
       return () => clearTimeout(timeout)
     }
-  }, [moderationStatusQuery.data, moderationStatusQuery])
+  }, [moderationStatus, refetch])
 
-  const isPendingManualReview = moderationStatusQuery.data === 'manual_review'
-  const isPendingAutomaticReview = moderationStatusQuery.data === 'pending'
+  const isPendingManualReview = moderationStatus === 'manual_review'
+  const isPendingAutomaticReview = moderationStatus === 'pending'
 
-  const isImageApproved = moderationStatusQuery.data === 'approved'
-  const isImageWithConsent = moderationStatusQuery.data === 'consent'
-  const isImageBlocked = moderationStatusQuery.data === 'blocked'
+  const isImageApproved = moderationStatus === 'approved'
+  const isImageWithConsent = moderationStatus === 'consent'
+  const isImageBlocked = moderationStatus === 'blocked'
 
-  const showSkeleton = moderationStatusQuery.isLoading || isPendingAutomaticReview
+  const showSkeleton = isLoading || isPendingAutomaticReview
 
   if (showSkeleton) {
     return (
@@ -69,7 +69,7 @@ const ModeratedImage = ({onPress, nft}: ModeratedImageProps) => {
     )
   }
 
-  if (moderationStatusQuery.isError) {
+  if (isError) {
     return (
       <TouchableOpacity onPress={onPress} style={styles.imageContainer}>
         <BlockedNft text={text} />
@@ -150,15 +150,13 @@ function SkeletonImagePlaceholder({text}: {text?: string}) {
   if (typeof text !== 'undefined')
     return (
       <View style={styles.imageContainer}>
-        <View>
-          <SkeletonPlaceholder>
-            <View style={{width: IMAGE_SIZE, height: IMAGE_SIZE, borderRadius: 8}} />
-          </SkeletonPlaceholder>
+        <SkeletonPlaceholder>
+          <View style={{width: IMAGE_SIZE, height: IMAGE_SIZE, borderRadius: 8}} />
+        </SkeletonPlaceholder>
 
-          <Spacer height={IMAGE_PADDING} />
+        <Spacer height={IMAGE_PADDING} />
 
-          <Text style={[styles.text, {width: IMAGE_SIZE}]}>{text}</Text>
-        </View>
+        <Text style={[styles.text, {width: IMAGE_SIZE}]}>{text}</Text>
       </View>
     )
 
@@ -225,12 +223,11 @@ function GalleryList<T>({renderItem, ...rest}: FlashListProps<T> & {renderItem: 
       numColumns={2}
       renderItem={({item, index}) => (
         <View
-          style={[
-            index % 2 === 0 ? {paddingRight: IMAGE_HORIZONTAL_PADDING} : {paddingLeft: IMAGE_HORIZONTAL_PADDING},
-            {paddingBottom: ROW_SPACING},
-          ]}
+          style={[index % 2 === 0 ? {paddingRight: IMAGE_HORIZONTAL_PADDING} : {paddingLeft: IMAGE_HORIZONTAL_PADDING}]}
         >
-          {renderItem(item)}
+          <View>{renderItem(item)}</View>
+
+          <Spacer height={ROW_SPACING} />
         </View>
       )}
       keyExtractor={(placeholder, index) => index + ''}

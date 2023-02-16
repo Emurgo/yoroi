@@ -1,28 +1,32 @@
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {Text} from 'react-native'
-import {QueryClient, QueryClientProvider} from 'react-query'
 
-import {mocks} from '../../storybook'
+import {mocks, QueryProvider} from '../../storybook'
+import {SearchProvider} from '../Search'
 import {SelectedWalletProvider} from '../SelectedWallet'
 import {NoNftsScreen} from './NoNftsScreen'
 
 storiesOf('NFT/No Nfts Screen', module)
   .add('Default', () => {
     return (
-      <QueryClientProvider client={new QueryClient()}>
+      <QueryProvider>
         <SelectedWalletProvider wallet={mocks.wallet}>
-          <NoNftsScreen message="No NFTs found" />
+          <SearchProvider>
+            <NoNftsScreen message="No NFTs found" />
+          </SearchProvider>
         </SelectedWalletProvider>
-      </QueryClientProvider>
+      </QueryProvider>
     )
   })
   .add('With Header', () => {
     return (
-      <QueryClientProvider client={new QueryClient()}>
+      <QueryProvider>
         <SelectedWalletProvider wallet={mocks.wallet}>
-          <NoNftsScreen message="No NFTs found" heading={<Text>Lorem ipsum</Text>} />
+          <SearchProvider>
+            <NoNftsScreen message="No NFTs found" heading={<Text>Lorem ipsum</Text>} />
+          </SearchProvider>
         </SelectedWalletProvider>
-      </QueryClientProvider>
+      </QueryProvider>
     )
   })

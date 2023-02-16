@@ -232,14 +232,24 @@ function parseNFTs(value: unknown, storageUrl: string): YoroiNft[] {
         )
       }
 
-      return assets[0]
+      const [firstAsset] = assets
+
+      return firstAsset
     })
     .filter(isAssetNFT)
+    .filter(isNftAssetImage)
   return nftAssets.map((nft) => convertNft(nft.metadata, storageUrl))
 }
 
 function isAssetNFT(asset: unknown): asset is NFTAsset {
   return isObject(asset) && hasProperties(asset, ['key']) && asset.key === NFT_METADATA_KEY
+}
+
+export function isNftAssetImage(asset: NFTAsset): boolean {
+  const metadata = asset.metadata
+  const policyId = Object.keys(metadata)[0]
+  const nftMetadata = Object.values(metadata[policyId])[0]
+  return typeof nftMetadata.image !== 'undefined'
 }
 
 const NFT_METADATA_KEY = '721'

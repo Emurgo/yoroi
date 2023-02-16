@@ -3,7 +3,7 @@ import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
-import {Icon} from '../components'
+import {Icon, Spacer} from '../components'
 import {NftRoutes} from '../navigation'
 import {SearchHeader, SearchProvider, useSearch} from '../Search'
 import {Nfts} from './Nfts'
@@ -42,7 +42,11 @@ const Routes = () => {
           header: searchVisible
             ? () => <SearchHeader placeholder={strings.search} onClose={handleSearchClose} />
             : undefined,
-          headerLeft: () => <View style={styles.iconPlaceholder} />,
+          headerLeft: () => (
+            <View>
+              <Spacer width={26} />
+            </View>
+          ),
           headerRight: () => (
             <TouchableOpacity onPress={() => setSearchVisible(true)} style={styles.center}>
               <Icon.Magnify size={26} />
@@ -62,9 +66,6 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  iconPlaceholder: {
-    width: 26,
   },
 })
 

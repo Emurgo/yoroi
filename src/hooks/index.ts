@@ -226,10 +226,15 @@ export const useIsTokenKnownNft = ({wallet, fingerprint}: {wallet: YoroiWallet; 
 }
 
 export const useNftModerationStatus = ({wallet, fingerprint}: {wallet: YoroiWallet; fingerprint: string}) => {
-  return useQuery<YoroiNftModerationStatus>({
+  const query = useQuery<YoroiNftModerationStatus>({
     queryKey: [wallet.id, 'nft', fingerprint],
     queryFn: () => wallet.fetchNftModerationStatus(fingerprint),
   })
+
+  return {
+    ...query,
+    moderationStatus: query.data,
+  }
 }
 
 export const useNftImageModerated = ({

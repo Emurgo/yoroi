@@ -27,7 +27,7 @@ export const Nfts = () => {
   if (isLoading) {
     return (
       <ScreenWrapper>
-        <LoadingScreen nftsCount={nfts.length} onRefresh={refetch} isRefreshing={isRefetching} />
+        <LoadingScreen nftsCount={nfts.length} />
       </ScreenWrapper>
     )
   }
@@ -143,7 +143,7 @@ function NftCount({count}: {count?: number | string}) {
   )
 }
 
-function LoadingScreen({nftsCount}: {nftsCount: number; onRefresh: () => void; isRefreshing: boolean}) {
+function LoadingScreen({nftsCount}: {nftsCount: number}) {
   return (
     <View style={styles.galleryContainer}>
       <NftCount count={nftsCount} />

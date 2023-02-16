@@ -23,10 +23,10 @@ export const NftDetails = () => {
 
   const [activeTab, setActiveTab] = useState<ViewTabs>('overview')
   const nft = useNft(wallet, {id})
-  const moderationStatus = useNftModerationStatus({wallet, fingerprint: nft.fingerprint})
+  const {moderationStatus} = useNftModerationStatus({wallet, fingerprint: nft.fingerprint})
   const navigateTo = useNavigateTo()
 
-  const canShowNft = moderationStatus.data === 'approved' || moderationStatus.data === 'consent'
+  const canShowNft = moderationStatus === 'approved' || moderationStatus === 'consent'
 
   const stringifiedMetadata = JSON.stringify(nft, undefined, 2)
 
