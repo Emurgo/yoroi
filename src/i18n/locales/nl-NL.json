@@ -109,7 +109,7 @@
   "components.send.amountfield.label": "Bedrag",
   "components.send.memofield.label": "Memo",
   "components.send.memofield.message": "(Optioneel) Memo wordt lokaal bewaard",
-  "components.send.memofield.error": "Memonaam is te lang",
+  "components.send.memofield.error": "Naam van de memo is te lang",
   "components.send.biometricauthscreen.DECRYPTION_FAILED": "Biometrische aanmelding mislukt. Gebruik een alternatieve inlogmethode.",
   "components.send.biometricauthscreen.NOT_RECOGNIZED": "Biometrische aanmelding niet herkend, Probeer het opnieuw",
   "components.send.biometricauthscreen.SENSOR_LOCKOUT": "Teveel mislukte pogingen. De sensor is nu uitgeschakeld",
