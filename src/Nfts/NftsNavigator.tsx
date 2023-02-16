@@ -1,7 +1,7 @@
 import {createStackNavigator} from '@react-navigation/stack'
 import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, TouchableOpacity} from 'react-native'
 
 import {Icon, Spacer} from '../components'
 import {NftRoutes} from '../navigation'
@@ -42,11 +42,7 @@ const Routes = () => {
           header: searchVisible
             ? () => <SearchHeader placeholder={strings.search} onClose={handleSearchClose} />
             : undefined,
-          headerLeft: () => (
-            <View>
-              <Spacer width={26} />
-            </View>
-          ),
+          headerLeft: () => <Spacer width={26} />,
           headerRight: () => (
             <TouchableOpacity onPress={() => setSearchVisible(true)} style={styles.center}>
               <Icon.Magnify size={26} />

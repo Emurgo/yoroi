@@ -850,14 +850,14 @@ export const useSaveMemo = (
 
 export const useNfts = (wallet: YoroiWallet, options: UseQueryOptions<YoroiNft[], Error> = {}) => {
   const {data, refetch, ...rest} = useQuery({
-    queryKey: [wallet.id, 'nfts'],
-    queryFn: () => wallet.fetchNfts(),
+    ...options,
     refetchOnMount: false,
     refetchIntervalInBackground: false,
     refetchInterval: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
-    ...options,
+    queryKey: [wallet.id, 'nfts'],
+    queryFn: () => wallet.fetchNfts(),
   })
   const eventCallback = useCallback(() => refetch(), [refetch])
   useWalletEvent(wallet, 'utxos', eventCallback)
