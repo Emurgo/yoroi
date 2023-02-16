@@ -33,6 +33,7 @@ export const TxDetails = () => {
   const [addressDetail, setAddressDetail] = React.useState<null | string>(null)
   const transactions = useTransactionInfos(wallet)
   const transaction = transactions[id]
+  const memo = !isEmptyString(transaction.memo) ? transaction.memo : '-'
 
   useTitle(formatDateToSeconds(transaction.submittedAt))
 
@@ -69,7 +70,15 @@ export const TxDetails = () => {
           </Boundary>
         </Banner>
 
-        <Label>{strings.fromAddresses}</Label>
+        <Label>{strings.memo}</Label>
+
+        <Text secondary monospace>
+          {memo}
+        </Text>
+
+        <View style={styles.borderTop}>
+          <Label>{strings.fromAddresses}</Label>
+        </View>
 
         {fromFiltered.map((item) => (
           <View key={item.id}>
@@ -314,6 +323,7 @@ const useStrings = () => {
     fee: intl.formatMessage(messages.fee),
     fromAddresses: intl.formatMessage(messages.fromAddresses),
     toAddresses: intl.formatMessage(messages.toAddresses),
+    memo: intl.formatMessage(messages.memo),
     transactionId: intl.formatMessage(messages.transactionId),
     txAssuranceLevel: intl.formatMessage(messages.txAssuranceLevel),
     confirmations: (cnt) => intl.formatMessage(messages.confirmations, {cnt}),
@@ -370,6 +380,10 @@ const messages = defineMessages({
   toAddresses: {
     id: 'components.txhistory.txdetails.toAddresses',
     defaultMessage: '!!!To Addresses',
+  },
+  memo: {
+    id: 'components.txhistory.txdetails.memo',
+    defaultMessage: '!!!Memo',
   },
   transactionId: {
     id: 'components.txhistory.txdetails.transactionId',

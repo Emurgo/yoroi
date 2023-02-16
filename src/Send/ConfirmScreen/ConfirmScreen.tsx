@@ -6,7 +6,7 @@ import {Keyboard, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 
 import {Boundary, KeyboardSpacer, Spacer, StatusBar, Text, ValidatedTextInput} from '../../components'
 import {ConfirmTx} from '../../components/ConfirmTx'
-import {useBalances, useToken} from '../../hooks'
+import {useBalances, useSaveMemo, useToken} from '../../hooks'
 import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../i18n/global-messages'
 import {CONFIG} from '../../legacy/config'
 import {formatTokenWithSymbol, formatTokenWithText} from '../../legacy/format'
@@ -25,7 +25,8 @@ export const ConfirmScreen = () => {
   const wallet = useSelectedWallet()
   const [password, setPassword] = React.useState('')
   const [useUSB, setUseUSB] = React.useState(false)
-  const {resetForm, receiver} = useSend()
+  const {memo, resetForm, receiver} = useSend()
+  const {saveMemo} = useSaveMemo({wallet})
 
   useEffect(() => {
     if (CONFIG.DEBUG.PREFILL_FORMS && __DEV__) {
@@ -33,8 +34,12 @@ export const ConfirmScreen = () => {
     }
   }, [])
 
-  const onSuccess = () => {
+  const onSuccess = (signedTx) => {
     resetToTxHistory()
+
+    if (memo.length > 0) {
+      saveMemo({txId: signedTx.signedTx.id, memo})
+    }
     resetForm()
   }
 

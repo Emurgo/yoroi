@@ -21,6 +21,7 @@ import type {
   BalanceValidationErrors,
 } from '../../yoroi-wallets/utils/validators'
 import {useSend} from '../Context/SendContext'
+import {maxMemoLength, MemoInput} from '../Memo'
 import {ScannerButton} from '../ScannerButton'
 import {AmountField} from './../AmountField'
 import {AvailableAmountBanner} from './AvailableAmountBanner'
@@ -42,7 +43,18 @@ export const SendScreen = () => {
   const hasPendingTx = useHasPendingTx(wallet)
   const isOnline = useIsOnline(wallet)
 
-  const {tokenId, resetForm, receiverChanged, amountChanged, receiver, amount, sendAll, sendAllChanged} = useSend()
+  const {
+    tokenId,
+    resetForm,
+    receiverChanged,
+    amountChanged,
+    receiver,
+    amount,
+    sendAll,
+    sendAllChanged,
+    memo,
+    memoChanged,
+  } = useSend()
 
   const selectedAssetAvailableAmount = Amounts.getAmount(balances, tokenId).quantity
   const defaultAssetAvailableAmount = Amounts.getAmount(balances, wallet.primaryToken.identifier).quantity
@@ -73,7 +85,8 @@ export const SendScreen = () => {
     _.isEmpty(addressErrors) &&
     _.isEmpty(amountErrors) &&
     _.isEmpty(balanceErrors) &&
-    !!yoroiUnsignedTx
+    !!yoroiUnsignedTx &&
+    memo.length <= maxMemoLength
 
   React.useEffect(() => {
     if (CONFIG.DEBUG.PREFILL_FORMS) {
@@ -202,6 +215,8 @@ export const SendScreen = () => {
             autoComplete={false}
           />
         </TouchableOpacity>
+
+        <MemoInput memo={memo} onChangeText={memoChanged} />
 
         <Checkbox
           checked={sendAll}
