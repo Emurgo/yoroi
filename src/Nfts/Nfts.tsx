@@ -12,8 +12,7 @@ import {NoNftsScreen} from './NoNftsScreen'
 export const Nfts = () => {
   const {search, nfts, isLoading, refetch, isRefetching, isError} = useFilteredNfts()
   const navigateTo = useNavigateTo()
-  const navigateToDetails = (id: string) => navigateTo.nftDetails(id)
-  const handleNftSelect = (index: number) => navigateToDetails(nfts[index].id)
+  const handleNftSelect = (index: number) => navigateTo.nftDetails(nfts[index].id)
   const strings = useStrings()
 
   if (isError) {
