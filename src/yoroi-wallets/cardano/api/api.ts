@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import _ from 'lodash'
+import _, {uniqBy} from 'lodash'
 
 import assert from '../../../legacy/assert'
 import fetchDefault, {checkedFetch} from '../../../legacy/fetch'
@@ -244,7 +244,8 @@ function parseNFTs(value: unknown, storageUrl: string): YoroiNft[] {
     })
     .filter(isAssetNFT)
     .filter(isNftAssetImage)
-  return nftAssets.flatMap((nft) => convertNfts(nft.metadata, storageUrl))
+  const allNFTs = nftAssets.flatMap((nft) => convertNfts(nft.metadata, storageUrl))
+  return uniqBy(allNFTs, (nft) => nft.id)
 }
 
 function isAssetNFT(asset: unknown): asset is NFTAsset {
