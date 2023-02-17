@@ -6,8 +6,9 @@ import {ScrollView} from 'react-native-gesture-handler'
 
 import {CopyButton, FadeIn, Icon, Link, Spacer, Text} from '../components'
 import {Tab, TabPanel, TabPanels, Tabs} from '../components/Tabs'
-import {useNft, useNftModerationStatus} from '../hooks'
+import {useNft} from '../hooks'
 import {NftRoutes} from '../navigation'
+import {useModeratedNftImage} from '../Nfts/hooks'
 import {useNavigateTo} from '../Nfts/navigation'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
@@ -23,7 +24,7 @@ export const NftDetails = () => {
 
   const [activeTab, setActiveTab] = useState<ViewTabs>('overview')
   const nft = useNft(wallet, {id})
-  const {moderationStatus} = useNftModerationStatus({wallet, fingerprint: nft.fingerprint})
+  const {moderationStatus} = useModeratedNftImage({wallet, fingerprint: nft.fingerprint})
   const navigateTo = useNavigateTo()
 
   const canShowNft = moderationStatus === 'approved' || moderationStatus === 'consent'

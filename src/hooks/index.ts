@@ -225,8 +225,12 @@ export const useIsTokenKnownNft = ({wallet, fingerprint}: {wallet: YoroiWallet; 
   return nfts.some((nft) => nft.fingerprint === fingerprint)
 }
 
-export const useNftModerationStatus = ({wallet, fingerprint}: {wallet: YoroiWallet; fingerprint: string}) => {
-  const query = useQuery<YoroiNftModerationStatus>({
+export const useNftModerationStatus = (
+  {wallet, fingerprint}: {wallet: YoroiWallet; fingerprint: string},
+  options?: UseQueryOptions<YoroiNftModerationStatus, Error, YoroiNftModerationStatus, [string, 'nft', string]>,
+) => {
+  const query = useQuery({
+    ...options,
     queryKey: [wallet.id, 'nft', fingerprint],
     queryFn: () => wallet.fetchNftModerationStatus(fingerprint),
   })
