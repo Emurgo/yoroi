@@ -41,7 +41,7 @@ interface ModeratedImageProps {
 }
 
 const ModeratedImage = ({onPress, nft}: ModeratedImageProps) => {
-  const {image, name: text, fingerprint} = nft
+  const {thumbnail, name: text, fingerprint} = nft
   const wallet = useSelectedWallet()
   const {isError, moderationStatus, isLoading} = useModeratedNftImage({wallet, fingerprint})
 
@@ -73,9 +73,9 @@ const ModeratedImage = ({onPress, nft}: ModeratedImageProps) => {
   return (
     <TouchableOpacity onPress={onPress} style={styles.imageContainer}>
       {isImageApproved ? (
-        <ApprovedNft text={text} uri={image} />
+        <ApprovedNft text={text} uri={thumbnail} />
       ) : isImageWithConsent ? (
-        <RequiresConsentNft text={text} uri={image} />
+        <RequiresConsentNft text={text} uri={thumbnail} />
       ) : isImageBlocked ? (
         <BlockedNft text={text} />
       ) : isPendingManualReview ? (
