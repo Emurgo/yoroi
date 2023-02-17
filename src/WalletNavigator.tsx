@@ -111,7 +111,7 @@ export const WalletNavigator = () => (
 
     <Stack.Screen name="main-wallet-routes" component={WalletTabNavigator} />
 
-    <Stack.Screen name="nft-details-routes" component={NftDetailsNavigator} />
+    {SHOW_NFT_GALLERY && <Stack.Screen name="nft-details-routes" component={NftDetailsNavigator} />}
 
     <Stack.Screen name="settings" component={SettingsScreenNavigator} />
 
