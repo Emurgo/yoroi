@@ -23,7 +23,7 @@ import {NFTAsset, RemoteAsset, YoroiNft, YoroiNftModerationStatus} from '../../t
 import {hasProperties, isArray, isObject, isRecord} from '../../utils/parsing'
 import {ServerStatus} from '..'
 import {ApiError} from '../errors'
-import {convertNft} from '../nfts'
+import {convertNfts} from '../nfts'
 import {fallbackTokenInfo, tokenInfo, toTokenSubject} from './utils'
 
 type Addresses = Array<string>
@@ -244,7 +244,7 @@ function parseNFTs(value: unknown, storageUrl: string): YoroiNft[] {
     })
     .filter(isAssetNFT)
     .filter(isNftAssetImage)
-  return nftAssets.map((nft) => convertNft(nft.metadata, storageUrl))
+  return nftAssets.flatMap((nft) => convertNfts(nft.metadata, storageUrl))
 }
 
 function isAssetNFT(asset: unknown): asset is NFTAsset {
