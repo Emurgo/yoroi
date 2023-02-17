@@ -1,13 +1,13 @@
 import {FlashList, FlashListProps} from '@shopify/flash-list'
-import React, {useEffect} from 'react'
+import React from 'react'
 import {Dimensions, GestureResponderEvent, Image, StyleSheet, TouchableOpacity, View} from 'react-native'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
 import placeholderImage from '../../assets/img/nft-placeholder.png'
 import {Icon, Spacer, Text} from '../../components'
-import {useNftModerationStatus} from '../../hooks'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {YoroiNft} from '../../yoroi-wallets/types'
+import {useModeratedNftImage} from '../hooks'
 
 type Props = {
   nfts: YoroiNft[]
@@ -43,14 +43,7 @@ interface ModeratedImageProps {
 const ModeratedImage = ({onPress, nft}: ModeratedImageProps) => {
   const {image, name: text, fingerprint} = nft
   const wallet = useSelectedWallet()
-  const {isError, moderationStatus, refetch, isLoading} = useNftModerationStatus({wallet, fingerprint})
-
-  useEffect(() => {
-    if (moderationStatus === 'pending') {
-      const timeout = setTimeout(() => refetch(), REFETCH_TIME_IN_MS)
-      return () => clearTimeout(timeout)
-    }
-  }, [moderationStatus, refetch])
+  const {isError, moderationStatus, isLoading} = useModeratedNftImage({wallet, fingerprint})
 
   const isPendingManualReview = moderationStatus === 'manual_review'
   const isPendingAutomaticReview = moderationStatus === 'pending'
@@ -205,7 +198,6 @@ const styles = StyleSheet.create({
   },
 })
 
-const REFETCH_TIME_IN_MS = 3000
 const IMAGE_PADDING = 8
 const ROW_SPACING = 14
 const NUMBER_OF_COLUMNS = 2
