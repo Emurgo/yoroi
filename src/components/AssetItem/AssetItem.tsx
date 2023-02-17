@@ -1,8 +1,11 @@
 import * as React from 'react'
 import {Image, StyleSheet, View, ViewProps} from 'react-native'
 
+import {useIsTokenKnownNft, useNftImageModerated} from '../../hooks'
+import {SHOW_NFT_GALLERY} from '../../legacy/config'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
+import {ModeratedNftIcon} from '../../TxHistory/AssetList/ModeratedNftIcon'
 import {PairedBalance} from '../../TxHistory/PairedBalance'
 import {Quantity, TokenInfo} from '../../yoroi-wallets/types'
 import {Quantities} from '../../yoroi-wallets/utils'
@@ -16,6 +19,7 @@ export type AssetItemProps = {
 }
 export const AssetItem = ({balance, style, tokenInfo}: AssetItemProps) => {
   const wallet = useSelectedWallet()
+  const isTokenNft = useIsTokenKnownNft({wallet, fingerprint: tokenInfo.fingerprint})
 
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
   const name = tokenInfo.ticker ?? tokenInfo.name ?? '-'
@@ -25,7 +29,15 @@ export const AssetItem = ({balance, style, tokenInfo}: AssetItemProps) => {
 
   return (
     <View style={[style, styles.container]} testID="assetItem">
-      <Left>{isPrimary ? <PrimaryIcon /> : <Icon source={{uri: logo}} />}</Left>
+      <Left>
+        {isPrimary ? (
+          <PrimaryIcon />
+        ) : isTokenNft && SHOW_NFT_GALLERY ? (
+          <NftIcon id={tokenInfo.id} />
+        ) : (
+          <Icon source={{uri: logo}} />
+        )}
+      </Left>
 
       <Middle>
         <Text numberOfLines={1} ellipsizeMode="middle" style={styles.name} testID="tokenInfoText">
@@ -69,6 +81,17 @@ type IconProps = {
 }
 const Icon = ({source}: IconProps) =>
   source.uri.length > 0 ? <Image source={source} style={styles.icon} /> : <Placeholder />
+
+const NftIcon = ({id}: {id: string}) => {
+  const wallet = useSelectedWallet()
+  const nftModeratedImage = useNftImageModerated({wallet, nftId: id})
+
+  if (!nftModeratedImage) {
+    return <ModeratedNftIcon status="pending" />
+  }
+
+  return <ModeratedNftIcon image={nftModeratedImage.image} status={nftModeratedImage.status} />
+}
 
 const styles = StyleSheet.create({
   primary: {

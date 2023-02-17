@@ -74,6 +74,25 @@ export const parseString = (data: unknown) => {
   return isString(parsed) ? parsed : undefined
 }
 
+export const isObject = (data: unknown): data is object => {
+  return typeof data === 'object' && data !== null && !Array.isArray(data)
+}
+
+export function isArray(data: unknown): data is Array<unknown> {
+  return Array.isArray(data)
+}
+
+export function isRecord(data: unknown): data is Record<string, unknown> {
+  return isObject(data)
+}
+
+export const hasProperties = <T extends object, K extends string>(
+  obj: T,
+  keys: K[],
+): obj is T & {[J in K]: unknown} => {
+  return !!obj && keys.every((key) => Object.prototype.hasOwnProperty.call(obj, key))
+}
+
 export const parseSafe = (text: any) => {
   try {
     return JSON.parse(text) as unknown

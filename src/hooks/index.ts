@@ -2,6 +2,7 @@
 import AsyncStorage, {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
 import {delay} from 'bluebird'
 import * as React from 'react'
+import {useCallback, useMemo} from 'react'
 import {
   onlineManager,
   QueryKey,
@@ -36,6 +37,8 @@ import {
   TRANSACTION_DIRECTION,
   TRANSACTION_STATUS,
   YoroiAmounts,
+  YoroiNft,
+  YoroiNftModerationStatus,
   YoroiSignedTx,
   YoroiUnsignedTx,
 } from '../yoroi-wallets/types'
@@ -86,24 +89,29 @@ export const useCrashReports = () => {
 
 // WALLET
 export const useWallet = (wallet: YoroiWallet, event: WalletEvent['type']) => {
-  const walletManager = useWalletManager()
   const [_, rerender] = React.useState({})
+  const callback = useCallback(() => rerender({}), [])
+  useWalletEvent(wallet, event, callback)
+}
+
+export const useWalletEvent = (wallet: YoroiWallet, event: WalletEvent['type'], callback: () => void) => {
+  const walletManager = useWalletManager()
 
   React.useEffect(() => {
     const unsubWallet = wallet.subscribe((subscriptionEvent) => {
       if (subscriptionEvent.type !== event) return
-      rerender(() => ({}))
+      callback()
     })
     const unsubWalletManager = walletManager.subscribe((subscriptionEvent) => {
       if (subscriptionEvent.type !== event) return
-      rerender(() => ({}))
+      callback()
     })
 
     return () => {
       unsubWallet()
       unsubWalletManager()
     }
-  }, [event, wallet, walletManager])
+  }, [event, wallet, walletManager, callback])
 }
 
 export const useReceiveAddresses = (wallet: YoroiWallet) => {
@@ -210,6 +218,40 @@ export const useTokenInfo = (
   if (!query.data) throw new Error('Invalid token id')
 
   return query.data
+}
+
+export const useIsTokenKnownNft = ({wallet, fingerprint}: {wallet: YoroiWallet; fingerprint: string}) => {
+  const {nfts} = useNfts(wallet)
+  return nfts.some((nft) => nft.fingerprint === fingerprint)
+}
+
+export const useNftModerationStatus = (
+  {wallet, fingerprint}: {wallet: YoroiWallet; fingerprint: string},
+  options?: UseQueryOptions<YoroiNftModerationStatus, Error, YoroiNftModerationStatus, [string, 'nft', string]>,
+) => {
+  const query = useQuery({
+    ...options,
+    queryKey: [wallet.id, 'nft', fingerprint],
+    queryFn: () => wallet.fetchNftModerationStatus(fingerprint),
+  })
+
+  return {
+    ...query,
+    moderationStatus: query.data,
+  }
+}
+
+export const useNftImageModerated = ({
+  wallet,
+  nftId,
+}: {
+  wallet: YoroiWallet
+  nftId: string
+}): {image: string; status: YoroiNftModerationStatus} | null => {
+  const nft = useNft(wallet, {id: nftId})
+  const fingerprint = nft.fingerprint
+  const {data} = useNftModerationStatus({wallet, fingerprint})
+  return useMemo(() => (data ? {image: nft.image, status: data} : null), [nft, data])
 }
 
 export const useToken = (
@@ -808,4 +850,30 @@ export const useSaveMemo = (
     saveMemo: mutation.mutate,
     ...mutation,
   }
+}
+
+export const useNfts = (wallet: YoroiWallet, options: UseQueryOptions<YoroiNft[], Error> = {}) => {
+  const {data, refetch, ...rest} = useQuery({
+    ...options,
+    refetchOnMount: false,
+    refetchIntervalInBackground: false,
+    refetchInterval: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    queryKey: [wallet.id, 'nfts'],
+    queryFn: () => wallet.fetchNfts(),
+  })
+  const eventCallback = useCallback(() => refetch(), [refetch])
+  useWalletEvent(wallet, 'utxos', eventCallback)
+  return {...rest, refetch, nfts: data ?? []}
+}
+
+export const useNft = (wallet: YoroiWallet, {id}: {id: string}): YoroiNft => {
+  const {nfts} = useNfts(wallet, {suspense: true})
+  const nft = nfts.find((nft) => nft.id === id)
+
+  if (!nft) {
+    throw new Error(`Invalid id used "${id}" to get NFT`)
+  }
+  return nft
 }

@@ -4,7 +4,7 @@ import _ from 'lodash'
 import assert from '../../../legacy/assert'
 import fetchDefault, {checkedFetch} from '../../../legacy/fetch'
 import {Logger} from '../../../legacy/logging'
-import {
+import type {
   AccountStateRequest,
   AccountStateResponse,
   BackendConfig,
@@ -19,8 +19,11 @@ import {
   TxStatusRequest,
   TxStatusResponse,
 } from '../../types'
+import {NFTAsset, RemoteAsset, YoroiNft, YoroiNftModerationStatus} from '../../types'
+import {hasProperties, isArray, isObject, isRecord} from '../../utils/parsing'
 import {ServerStatus} from '..'
 import {ApiError} from '../errors'
+import {convertNft} from '../nfts'
 import {fallbackTokenInfo, tokenInfo, toTokenSubject} from './utils'
 
 type Addresses = Array<string>
@@ -92,6 +95,38 @@ export const bulkGetAccountState = async (
 
 export const getPoolInfo = (request: PoolInfoRequest, config: BackendConfig): Promise<StakePoolInfosAndHistories> => {
   return fetchDefault('pool/info', request, config)
+}
+
+export const getNFTs = async (assets: RemoteAsset[], config: BackendConfig): Promise<YoroiNft[]> => {
+  const request = {assets: assets.map((asset) => ({nameHex: asset.name, policy: asset.policyId}))}
+  const response = await fetchDefault('multiAsset/metadata', request, config)
+  return parseNFTs(response, config.NFT_STORAGE_URL)
+}
+
+export const getNFTModerationStatus = async (
+  fingerprint: string,
+  config: BackendConfig & {mainnet: boolean},
+): Promise<YoroiNftModerationStatus> => {
+  return fetchDefault(
+    'multiAsset/validateNFT/' + fingerprint,
+    config.mainnet ? {envName: 'prod'} : {},
+    config,
+    'POST',
+    {
+      checkResponse: async (response): Promise<YoroiNftModerationStatus> => {
+        if (response.status === 202) {
+          return 'pending'
+        }
+        const json = await response.json()
+        const status = json?.status
+        const parsedStatus = parseModerationStatus(status)
+        if (parsedStatus) {
+          return parsedStatus
+        }
+        throw new Error(`Invalid server response "${status}"`)
+      },
+    },
+  )
 }
 
 export const getTokenInfo = async (tokenId: string, apiUrl: string) => {
@@ -171,3 +206,56 @@ const isTokenRegistryEntry = (data: unknown): data is TokenRegistryEntry => {
     candidate.name.value === 'string'
   )
 }
+
+export const parseModerationStatus = (status: unknown): YoroiNftModerationStatus | undefined => {
+  const statusString = String(status)
+  const map = {
+    RED: 'blocked',
+    YELLOW: 'consent',
+    GREEN: 'approved',
+    PENDING: 'pending',
+    MANUAL_REVIEW: 'manual_review',
+  } as const
+  return map[statusString.toUpperCase() as keyof typeof map]
+}
+
+function parseNFTs(value: unknown, storageUrl: string): YoroiNft[] {
+  if (!isRecord(value)) {
+    throw new Error('Invalid response. Expected to receive object when parsing NFTs')
+  }
+
+  const metadata = Object.values(value)
+
+  const nftAssets = metadata
+    .map((assets) => {
+      if (!isArray(assets)) {
+        throw new Error('Invalid response. Expected object value to be an array when parsing NFTs')
+      }
+
+      if (assets.length === 0) {
+        throw new Error(
+          'Invalid response. Expected object value to be an array with at least one element when parsing NFTs',
+        )
+      }
+
+      const [firstAsset] = assets
+
+      return firstAsset
+    })
+    .filter(isAssetNFT)
+    .filter(isNftAssetImage)
+  return nftAssets.map((nft) => convertNft(nft.metadata, storageUrl))
+}
+
+function isAssetNFT(asset: unknown): asset is NFTAsset {
+  return isObject(asset) && hasProperties(asset, ['key']) && asset.key === NFT_METADATA_KEY
+}
+
+export function isNftAssetImage(asset: NFTAsset): boolean {
+  const metadata = asset.metadata
+  const policyId = Object.keys(metadata)[0]
+  const nftMetadata = Object.values(metadata[policyId])[0]
+  return typeof nftMetadata.image !== 'undefined'
+}
+
+const NFT_METADATA_KEY = '721'

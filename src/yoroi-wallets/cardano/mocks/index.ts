@@ -3,6 +3,7 @@ import {BackendConfig, RawTransaction, TipStatusResponse, Transaction} from '../
 export const mockedBackendConfig: BackendConfig = {
   API_ROOT: 'https://emurgo.node.api',
   TOKEN_INFO_SERVICE: 'https://emurgo.token.api',
+  NFT_STORAGE_URL: 'https://fibo-validated-nft-images.s3.amazonaws.com',
   FETCH_UTXOS_MAX_ADDRESSES: 2,
   TX_HISTORY_MAX_ADDRESSES: 2,
   FILTER_USED_MAX_ADDRESSES: 2,

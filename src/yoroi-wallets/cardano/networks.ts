@@ -56,6 +56,7 @@ const HASKELL_SHELLEY = {
 
   BACKEND: {
     API_ROOT: 'https://api.yoroiwallet.com/api',
+    NFT_STORAGE_URL: 'https://fibo-validated-nft-images.s3.amazonaws.com',
     TOKEN_INFO_SERVICE: 'https://cdn.yoroiwallet.com',
     ..._DEFAULT_BACKEND_RULES,
   },
@@ -104,6 +105,7 @@ const HASKELL_SHELLEY_TESTNET = {
 
   BACKEND: {
     API_ROOT: 'https://preprod-backend.yoroiwallet.com/api',
+    NFT_STORAGE_URL: 'https://validated-nft-images.s3.amazonaws.com',
     TOKEN_INFO_SERVICE: 'https://metadata.cardano-testnet.iohkdev.io',
     ..._DEFAULT_BACKEND_RULES,
   },
@@ -142,6 +144,7 @@ const JORMUNGANDR = {
   PROTOCOL_MAGIC: 764824073,
   BACKEND: {
     API_ROOT: 'https://shelley-itn-yoroi-backend.yoroiwallet.com/api',
+    NFT_STORAGE_URL: 'https://validated-nft-images.s3.amazonaws.com',
     ..._DEFAULT_BACKEND_RULES,
   },
   SEIZA_STAKING_SIMPLE: (ADA: string) =>

@@ -80,3 +80,28 @@ export type LegacyToken = {
   identifier: string
   metadata: TokenMetadata
 }
+
+export type NftMetadata = {
+  name: string
+  image: string | Array<string>
+  mediaType?: string
+  description?: string | Array<string>
+  authors?: string
+  author?: string
+  files?: Array<{
+    name?: string
+    mediaType?: string
+    src?: string | Array<string>
+  }>
+}
+
+export type AssetMetadata = {
+  [policyID: string]: {
+    [assetNameHex: string]: NftMetadata
+  }
+}
+
+export type NFTAsset = {
+  key: '721'
+  metadata: AssetMetadata
+}

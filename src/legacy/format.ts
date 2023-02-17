@@ -9,12 +9,16 @@ import {DefaultAsset, Quantity, Token} from '../yoroi-wallets/types'
 import {getCardanoDefaultAsset} from './config'
 import utfSymbols from './utfSymbols'
 
-const getTokenFingerprint = ({policyId, assetNameHex}) => {
-  const assetFingerprint = new AssetFingerprint(Buffer.from(policyId, 'hex'), Buffer.from(assetNameHex, 'hex'))
+export const getTokenFingerprint = ({policyId, assetNameHex}) => {
+  const assetFingerprint = AssetFingerprint.fromParts(Buffer.from(policyId, 'hex'), Buffer.from(assetNameHex, 'hex'))
   return assetFingerprint.fingerprint()
 }
 
-const decodeHexAscii = (text: string) => {
+export const getAssetFingerprint = (policyId: string, assetNameHex: string) => {
+  return getTokenFingerprint({policyId, assetNameHex})
+}
+
+export const decodeHexAscii = (text: string) => {
   const bytes = [...Buffer.from(text, 'hex')]
   const isAscii = bytes.every((byte) => byte > 32 && byte < 127)
   return isAscii ? String.fromCharCode(...bytes) : undefined

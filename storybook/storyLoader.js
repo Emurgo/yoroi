@@ -20,9 +20,15 @@ function loadStories() {
 	require('../src/HW/LedgerConnect/LedgerConnect.stories');
 	require('../src/HW/LedgerTransportSwitchModal/LedgerTransportSwitchModal.stories');
 	require('../src/Menu/Menu.stories');
+	require('../src/NftDetails/NftDetails.stories');
+	require('../src/NftDetails/NftDetailsImage.stories');
+	require('../src/Nfts/ImageGallery/ImageGallery.stories');
+	require('../src/Nfts/Nfts.stories');
+	require('../src/Nfts/NoNftsScreen.stories');
 	require('../src/Receive/AddressModal.stories');
 	require('../src/Receive/Addresses.stories');
 	require('../src/Receive/ReceiveScreen.stories');
+	require('../src/Search/SearchBar.stories');
 	require('../src/SelectedWallet/WalletSelection/WalletSelectionScreen.stories');
 	require('../src/Send/AddressReaderQR/AddressReaderQR.stories');
 	require('../src/Send/AssetSelectorScreen/AssetSelectorScreen.stories');
@@ -45,6 +51,7 @@ function loadStories() {
 	require('../src/Staking/StakingCenter/StakingCenter.stories');
 	require('../src/TxHistory/AssetList/ActionsBanner.stories');
 	require('../src/TxHistory/AssetList/ChipButton/ChipButton.stories');
+	require('../src/TxHistory/AssetList/ModeratedNftIcon.stories');
 	require('../src/TxHistory/BalanceBanner.stories');
 	require('../src/TxHistory/ModalInfo/ModalInfo.stories');
 	require('../src/TxHistory/PairedBalance.stories');
@@ -122,9 +129,15 @@ const stories = [
 	'../src/HW/LedgerConnect/LedgerConnect.stories',
 	'../src/HW/LedgerTransportSwitchModal/LedgerTransportSwitchModal.stories',
 	'../src/Menu/Menu.stories',
+	'../src/NftDetails/NftDetails.stories',
+	'../src/NftDetails/NftDetailsImage.stories',
+	'../src/Nfts/ImageGallery/ImageGallery.stories',
+	'../src/Nfts/Nfts.stories',
+	'../src/Nfts/NoNftsScreen.stories',
 	'../src/Receive/AddressModal.stories',
 	'../src/Receive/Addresses.stories',
 	'../src/Receive/ReceiveScreen.stories',
+	'../src/Search/SearchBar.stories',
 	'../src/SelectedWallet/WalletSelection/WalletSelectionScreen.stories',
 	'../src/Send/AddressReaderQR/AddressReaderQR.stories',
 	'../src/Send/AssetSelectorScreen/AssetSelectorScreen.stories',
@@ -147,6 +160,7 @@ const stories = [
 	'../src/Staking/StakingCenter/StakingCenter.stories',
 	'../src/TxHistory/AssetList/ActionsBanner.stories',
 	'../src/TxHistory/AssetList/ChipButton/ChipButton.stories',
+	'../src/TxHistory/AssetList/ModeratedNftIcon.stories',
 	'../src/TxHistory/BalanceBanner.stories',
 	'../src/TxHistory/ModalInfo/ModalInfo.stories',
 	'../src/TxHistory/PairedBalance.stories',

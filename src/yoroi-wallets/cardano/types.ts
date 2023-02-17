@@ -8,6 +8,8 @@ import {
   StakePoolInfosAndHistories,
   StakingInfo,
   StakingStatus,
+  YoroiNft,
+  YoroiNftModerationStatus,
   YoroiSignedTx,
   YoroiUnsignedTx,
 } from '../types'
@@ -130,6 +132,10 @@ export type YoroiWallet = {
   generateNewReceiveAddress(): boolean
   generateNewReceiveAddressIfNeeded(): boolean
 
+  // NFTs
+  fetchNfts(): Promise<YoroiNft[]>
+  fetchNftModerationStatus(fingerprint: string): Promise<YoroiNftModerationStatus>
+
   // Sync, Save
   resync(): Promise<void>
   clear(): Promise<void>
@@ -211,6 +217,10 @@ const yoroiWalletKeys: Array<keyof YoroiWallet> = [
   'canGenerateNewReceiveAddress',
   'generateNewReceiveAddress',
   'generateNewReceiveAddressIfNeeded',
+
+  // NFTs
+  'fetchNfts',
+  'fetchNftModerationStatus',
 
   // Sync, Save
   'resync',

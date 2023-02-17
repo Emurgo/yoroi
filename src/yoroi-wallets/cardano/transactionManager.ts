@@ -16,7 +16,7 @@ import {
   TRANSACTION_STATUS,
   Transactions,
 } from '../types/other'
-import {parseSafe} from '../utils/parsing'
+import {isArray, parseSafe} from '../utils/parsing'
 import {Version, versionCompare} from '../utils/versioning'
 import * as yoroiApi from './api'
 import {ApiHistoryError} from './errors'
@@ -549,4 +549,3 @@ const parseTx = (data: string | null | undefined): Transaction | undefined => {
 const exists = <T>(data: unknown): data is NonNullable<T> => !!data
 const isObject = (data: unknown): data is object => typeof data === 'object'
 const isString = (data: unknown): data is string => typeof data === 'string'
-const isArray = (data: unknown): data is Array<unknown> => Array.isArray(data)

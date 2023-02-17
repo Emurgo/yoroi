@@ -7,7 +7,9 @@ import {ApiError, ApiHistoryError, NetworkError} from '../yoroi-wallets/cardano/
 import type {BackendConfig} from '../yoroi-wallets/types/other'
 type RequestMethod = 'POST' | 'GET'
 
-const _checkResponse = async (rawResponse: Record<string, any>, requestPayload: Record<string, any>) => {
+type ResponseChecker<T> = (rawResponse: Record<string, any>, requestPayload: Record<string, any>) => Promise<T>
+
+const _checkResponse: ResponseChecker<Record<string, any>> = async (rawResponse, requestPayload) => {
   let responseBody = {}
 
   try {
@@ -34,14 +36,14 @@ const _checkResponse = async (rawResponse: Record<string, any>, requestPayload: 
   return responseBody
 }
 
-type FetchRequest = {
+type FetchRequest<T> = {
   endpoint: string
   payload: any
   method: RequestMethod
-  checkResponse?: (arg0: Record<string, any>, arg1: Record<string, any>) => Promise<Record<string, any>>
+  checkResponse?: ResponseChecker<T>
   headers?: Record<string, string>
 }
-export const checkedFetch = (request: FetchRequest) => {
+export const checkedFetch = (request: FetchRequest<any>) => {
   const {endpoint, payload, method, headers} = request
   const checkResponse = request.checkResponse || _checkResponse
   Logger.info(`API call: ${endpoint}`)
@@ -75,15 +77,15 @@ export const checkedFetch = (request: FetchRequest) => {
       return response
     })
 }
-export const fetchDefault = (
+export const fetchDefault = <T = Record<string, any>>(
   path: string,
   payload: any,
   networkConfig: BackendConfig,
   method: RequestMethod = 'POST',
-) => {
+  options?: {checkResponse?: ResponseChecker<T>},
+): Promise<T> => {
   const fullPath = `${networkConfig.API_ROOT}/${path}`
-  const platform = Platform.OS === 'android' || Platform.OS === 'ios' ? Platform.OS : '-'
-  const yoroiVersion = `${platform} / ${DeviceInfo.getVersion()}`
+  const yoroiVersion = `${Platform.OS} / ${DeviceInfo.getVersion()}`
   const headers = {
     'Content-Type': 'application/json; charset=utf-8',
     'yoroi-version': yoroiVersion,
@@ -92,7 +94,7 @@ export const fetchDefault = (
     endpoint: fullPath,
     payload,
     method,
-    checkResponse: _checkResponse,
+    checkResponse: options?.checkResponse ?? _checkResponse,
     headers,
   }
   return checkedFetch(request)

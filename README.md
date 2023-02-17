@@ -211,14 +211,14 @@ sudo update-alternatives --config java
 - Install Python 2:
 
 ```shell
-sudo apt-get install python
+sudo apt-get install python2
 ```
 
 - Install the Android SDK:
 
 ```shell
-wget https://dl.google.com/android/repository/commandlinetools-linux-6200805_latest.zip
 cd ~
+wget https://dl.google.com/android/repository/commandlinetools-linux-6200805_latest.zip
 mkdir -p Android/Sdk
 unzip commandlinetools-linux-6200805_latest.zip -d Android/Sdk
 ```

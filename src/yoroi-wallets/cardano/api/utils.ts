@@ -121,6 +121,6 @@ export const toTokenFingerprint = ({
   policyId: string
   assetNameHex: string | undefined
 }) => {
-  const assetFingerprint = new AssetFingerprint(Buffer.from(policyId, 'hex'), Buffer.from(assetNameHex, 'hex'))
+  const assetFingerprint = AssetFingerprint.fromParts(Buffer.from(policyId, 'hex'), Buffer.from(assetNameHex, 'hex'))
   return assetFingerprint.fingerprint()
 }

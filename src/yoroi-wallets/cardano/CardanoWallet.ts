@@ -36,6 +36,8 @@ import type {
   Transaction,
   TxStatusRequest,
   TxStatusResponse,
+  YoroiNft,
+  YoroiNftModerationStatus,
 } from '../types'
 import {NETWORK_REGISTRY, Quantity, SendTokenList, StakingInfo, YoroiSignedTx, YoroiUnsignedTx} from '../types'
 import {Quantities} from '../utils'
@@ -988,6 +990,26 @@ export class CardanoWallet implements YoroiWallet {
 
   async fetchCurrentPrice(symbol: CurrencySymbol): Promise<number> {
     return api.fetchCurrentPrice(symbol, this.getBackendConfig())
+  }
+
+  // TODO: caching
+  async fetchNfts(): Promise<YoroiNft[]> {
+    const utxos = this.utxos
+    const assets = utxos.flatMap((utxo) => utxo.assets ?? [])
+
+    if (assets.length === 0) {
+      return []
+    }
+
+    return api.getNFTs(assets, this.getBackendConfig())
+  }
+
+  // TODO: caching
+  async fetchNftModerationStatus(fingerprint: string): Promise<YoroiNftModerationStatus> {
+    const backendConfig = this.getBackendConfig()
+    const networkConfig = this.getNetworkConfig()
+    const isMainnet = networkConfig.IS_MAINNET
+    return api.getNFTModerationStatus(fingerprint, {...backendConfig, mainnet: isMainnet})
   }
 
   private state: WalletState = {

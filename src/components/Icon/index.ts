@@ -25,6 +25,7 @@ import {Document} from './Document'
 import {Drag} from './Drag'
 import {Emurgo} from './Emurgo'
 import {Export} from './Export'
+import {ExternalLink} from './ExternalLink'
 import {EyeOff} from './EyeOff'
 import {EyeOn} from './EyeOn'
 import {Facebook} from './Facebook'
@@ -44,6 +45,7 @@ import {Menu} from './Menu'
 import {Message} from './Message'
 import {MultipleWallets} from './MultipleWallets'
 import {NftAsset} from './NftAsset'
+import {NoNfts} from './NoNfts'
 import {Pin} from './Pin'
 import {Placeholder} from './Placeholder'
 import {PlateNumber} from './PlateNumber'
@@ -109,12 +111,13 @@ export const Icon = {
   Device,
   DigitalAsset,
   Direction,
-  Drag,
   Document,
+  Drag,
   Emurgo,
+  Export,
+  ExternalLink,
   EyeOff,
   EyeOn,
-  Export,
   Facebook,
   Gear,
   Github,
@@ -123,8 +126,8 @@ export const Icon = {
   Image,
   Info,
   Launchpad,
-  Link,
   Lightning,
+  Link,
   Lock,
   Magnify,
   Megaphone,
@@ -132,6 +135,7 @@ export const Icon = {
   Message,
   MultipleWallets,
   NftAsset,
+  NoNfts,
   Pin,
   Placeholder,
   PlateNumber,
@@ -153,9 +157,9 @@ export const Icon = {
   StarFilled,
   StarOutlined,
   Support,
-  Table,
   TabStaking,
   TabWallet,
+  Table,
   Telegram,
   TermsOfUse,
   ThumbsUp,
@@ -166,10 +170,10 @@ export const Icon = {
   Transaction,
   Twitter,
   Verify,
-  WalletAccount,
   Wallet,
-  Wallets,
+  WalletAccount,
   WalletStack,
+  Wallets,
   YoroiNightly,
   YoroiWallet,
 }

@@ -381,6 +381,7 @@ export type WalletImplementation = {
 export type BackendConfig = {
   API_ROOT: string
   TOKEN_INFO_SERVICE?: string
+  NFT_STORAGE_URL: string
   FETCH_UTXOS_MAX_ADDRESSES: number
   TX_HISTORY_MAX_ADDRESSES: number
   FILTER_USED_MAX_ADDRESSES: number
@@ -479,4 +480,11 @@ export type CommonMetadata = {
   readonly ticker: null | string
   readonly longName: null | string
   readonly maxSupply: null | string
+}
+
+export type MultiAssetRequest = {
+  assets: Array<{
+    nameHex: string
+    policy: string
+  }>
 }

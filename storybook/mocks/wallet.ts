@@ -4,7 +4,9 @@ import {action} from '@storybook/addon-actions'
 import BigNumber from 'bignumber.js'
 
 import {getDefaultAssetByNetworkId} from '../../src/legacy/config'
+import {getTokenFingerprint} from '../../src/legacy/format'
 import {
+  asciiToHex,
   fallbackTokenInfo,
   primaryTokenInfo,
   TokenEntry,
@@ -21,6 +23,8 @@ import {
   TokenInfo,
   TransactionInfo,
   YoroiAmounts,
+  YoroiNft,
+  YoroiNftModerationStatus,
   YoroiSignedTx,
   YoroiUnsignedTx,
 } from '../../src/yoroi-wallets/types'
@@ -78,6 +82,12 @@ const wallet: YoroiWallet = {
   fetchTokenInfo: (tokenId: string) => {
     action('fetchTokenInfo')(tokenId)
     return Promise.resolve(tokenInfos[tokenId] ?? fallbackTokenInfo(tokenId))
+  },
+  fetchNfts() {
+    throw new Error('not implemented: fetchNfts')
+  },
+  fetchNftModerationStatus() {
+    throw new Error('not implemented: fetchNftModerationStatus')
   },
   fetchPoolInfo: (...args) => {
     action('fetchPoolInfo')(...args)
@@ -286,6 +296,74 @@ const fetchPoolInfo = {
   loading: async (...args) => {
     action('fetchPoolInfo')(...args)
     return new Promise(() => null) as unknown as StakePoolInfosAndHistories
+  },
+}
+
+const fetchNfts = {
+  success: {
+    many: async (...args) => {
+      action('fetchNfts')(...args)
+      const nfts = Array(30)
+        .fill(undefined)
+        .map((_, index) => ({
+          ...nft,
+          name: 'NFT ' + index,
+          id: index + '',
+          fingerprint: getTokenFingerprint({policyId: nft.metadata.policyId, assetNameHex: asciiToHex('NFT ' + index)}),
+          metadata: {...nft.metadata, policyId: nft.metadata.policyId, assetNameHex: asciiToHex('NFT ' + index)},
+        }))
+      return nfts
+    },
+    empty: async (...args) => {
+      action('fetchNfts')(...args)
+      return []
+    },
+  },
+  error: async (...args) => {
+    action('fetchNfts')(...args)
+    return Promise.reject(new Error('storybook error message'))
+  },
+  loading: async (...args) => {
+    action('fetchNfts')(...args)
+    return new Promise(() => null) as unknown as YoroiNft[]
+  },
+}
+
+const fetchNftModerationStatus = {
+  success: {
+    approved: async (...args): Promise<YoroiNftModerationStatus> => {
+      action('fetchNftModerationStatus')(...args)
+      return 'approved'
+    },
+    consent: async (...args): Promise<YoroiNftModerationStatus> => {
+      action('fetchNftModerationStatus')(...args)
+      return 'consent'
+    },
+    blocked: async (...args): Promise<YoroiNftModerationStatus> => {
+      action('fetchNftModerationStatus')(...args)
+      return 'blocked'
+    },
+    pendingReview: async (...args): Promise<YoroiNftModerationStatus> => {
+      action('fetchNftModerationStatus')(...args)
+      return 'pending'
+    },
+    loading: async (...args): Promise<YoroiNftModerationStatus> => {
+      action('fetchNftModerationStatus')(...args)
+      return new Promise(() => void 0) as any
+    },
+    random: async (...args): Promise<YoroiNftModerationStatus> => {
+      action('fetchNftModerationStatus')(...args)
+      const statuses = ['approved', 'consent', 'blocked', 'pending', 'manual_review'] as const
+      return statuses[Math.floor(Math.random() * statuses.length)]
+    },
+  },
+  error: async (...args) => {
+    action('fetchNftModerationStatus')(...args)
+    return Promise.reject(new Error('storybook error message'))
+  },
+  loading: async (...args) => {
+    action('fetchNftModerationStatus')(...args)
+    return new Promise(() => null) as unknown as YoroiNftModerationStatus
   },
 }
 
@@ -643,6 +721,27 @@ const yoroiSignedTx: YoroiSignedTx & {mock: true} = {
   mock: true,
 }
 
+const nft: YoroiNft = {
+  id: '1',
+  name: 'Image 1',
+  description: 'NFT 1 description',
+  image: 'https://fibo-validated-nft-images.s3.amazonaws.com/asset1a6765qk8cpk2wll3hevw6xy9xry893jrzl9ms3.jpeg',
+  thumbnail: 'https://fibo-validated-nft-images.s3.amazonaws.com/p_asset1a6765qk8cpk2wll3hevw6xy9xry893jrzl9ms3.jpeg',
+  fingerprint: getTokenFingerprint({
+    policyId: '8e2c7604711faef7c84c91b286c7327d17df825b7f0c88ec0332c0b4',
+    assetNameHex: '496D6167652031',
+  }),
+  metadata: {
+    policyId: '8e2c7604711faef7c84c91b286c7327d17df825b7f0c88ec0332c0b4',
+    assetNameHex: '496D6167652031',
+    originalMetadata: {
+      name: 'Image 1',
+      description: 'NFT 1 description',
+      image: 'https://fibo-validated-nft-images.s3.amazonaws.com/asset1a6765qk8cpk2wll3hevw6xy9xry893jrzl9ms3.jpeg',
+    },
+  },
+}
+
 export const mocks = {
   walletMeta,
   wallet,
@@ -663,6 +762,8 @@ export const mocks = {
   yoroiSignedTx,
   utxos,
   fetchCurrentPrice,
+  fetchNfts,
+  fetchNftModerationStatus,
   txid,
   getTransactions,
   fetchPoolInfo,
