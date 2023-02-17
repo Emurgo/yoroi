@@ -3,7 +3,7 @@ import {AssetMetadata, NftMetadata, YoroiNft} from '../types'
 import {asciiToHex} from './api/utils'
 
 export const convertNfts = (assetMetadata: AssetMetadata, storageUrl: string): YoroiNft[] => {
-  const policyId = Object.keys(assetMetadata)[0]
+  const [policyId] = Object.keys(assetMetadata)
   const allMetadataKeys = Object.keys(assetMetadata[policyId])
   return allMetadataKeys.map((name) => {
     const metadata = assetMetadata[policyId][name]
