@@ -105,22 +105,28 @@ export const getNFTs = async (assets: RemoteAsset[], config: BackendConfig): Pro
 
 export const getNFTModerationStatus = async (
   fingerprint: string,
-  config: BackendConfig,
+  config: BackendConfig & {mainnet: boolean},
 ): Promise<YoroiNftModerationStatus> => {
-  return fetchDefault('multiAsset/validateNFT/' + fingerprint, {envName: 'prod'}, config, 'POST', {
-    checkResponse: async (response): Promise<YoroiNftModerationStatus> => {
-      if (response.status === 202) {
-        return 'pending'
-      }
-      const json = await response.json()
-      const status = json?.status
-      const parsedStatus = parseModerationStatus(status)
-      if (parsedStatus) {
-        return parsedStatus
-      }
-      throw new Error(`Invalid server response "${status}"`)
+  return fetchDefault(
+    'multiAsset/validateNFT/' + fingerprint,
+    config.mainnet ? {envName: 'prod'} : {},
+    config,
+    'POST',
+    {
+      checkResponse: async (response): Promise<YoroiNftModerationStatus> => {
+        if (response.status === 202) {
+          return 'pending'
+        }
+        const json = await response.json()
+        const status = json?.status
+        const parsedStatus = parseModerationStatus(status)
+        if (parsedStatus) {
+          return parsedStatus
+        }
+        throw new Error(`Invalid server response "${status}"`)
+      },
     },
-  })
+  )
 }
 
 export const getTokenInfo = async (tokenId: string, apiUrl: string) => {

@@ -1006,7 +1006,10 @@ export class CardanoWallet implements YoroiWallet {
 
   // TODO: caching
   async fetchNftModerationStatus(fingerprint: string): Promise<YoroiNftModerationStatus> {
-    return api.getNFTModerationStatus(fingerprint, this.getBackendConfig())
+    const backendConfig = this.getBackendConfig()
+    const networkConfig = this.getNetworkConfig()
+    const isMainnet = networkConfig.IS_MAINNET
+    return api.getNFTModerationStatus(fingerprint, {...backendConfig, mainnet: isMainnet})
   }
 
   private state: WalletState = {
