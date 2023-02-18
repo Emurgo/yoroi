@@ -102,7 +102,7 @@
   "nft.gallery.reloadApp": "Redémarrer l'application",
   "nft.navigation.title": "NFT galerie",
   "nft.navigation.search": "Recherche",
-  "components.common.navigation.nftGallery": "components.common.navigation.nftGalerie",
+  "components.common.navigation.nftGallery": "NFT Galerie",
   "components.receive.addressmodal.BIP32path": "Voie de dérivation",
   "components.receive.addressmodal.copiedLabel": "Copié",
   "components.receive.addressmodal.copyLabel": "Copier l'adresse",
