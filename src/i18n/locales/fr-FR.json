@@ -85,7 +85,7 @@
   "components.ma.assetSelector.placeHolder": "Sélectionner un actif",
   "nft.detail.title": "nft.detail.titre",
   "nft.detail.overview": "nft.detail.titre",
-  "nft.detail.metadata": "Metadata",
+  "nft.detail.metadata": "nft.metadata.detail",
   "nft.detail.nftName": "NFT Name",
   "nft.detail.createdAt": "Created",
   "nft.detail.description": "Description",
