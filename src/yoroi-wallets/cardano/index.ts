@@ -31,7 +31,7 @@ import {
 export {legacyWalletChecksum, walletChecksum} from '@emurgo/cip4-js'
 export {RegistrationStatus} from '@emurgo/yoroi-lib'
 
-export const CardanoMobile = init()
+export const CardanoMobile = init('global')
 export {AssetOverflowError, NoOutputsError, NotEnoughMoneyToSendError} from '@emurgo/yoroi-lib/dist/errors'
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace CardanoTypes {

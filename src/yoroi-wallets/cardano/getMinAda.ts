@@ -27,6 +27,7 @@ export const getMinAda = async (selectedToken: Token, defaultAsset: DefaultAsset
   )
   const minAmount = await CardanoMobile.minAdaRequired(
     await cardanoValueFromMultiToken(fakeMultitoken),
+    false,
     await CardanoMobile.BigNum.fromStr(networkConfig.MINIMUM_UTXO_VAL),
   )
   // if the user is sending a token, we need to make sure the resulting utxo
