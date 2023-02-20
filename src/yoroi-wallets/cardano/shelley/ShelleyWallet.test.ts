@@ -549,8 +549,6 @@ const data: ShelleyWalletJSON = {
       type: 'External',
     },
   },
-  networkId: 1,
-  walletImplementationId: 'haskell-shelley',
   isHW: false,
   hwDeviceInfo: null,
   isReadOnly: false,

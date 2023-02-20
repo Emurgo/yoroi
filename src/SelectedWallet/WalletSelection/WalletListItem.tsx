@@ -2,30 +2,26 @@ import React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {Icon} from '../../components'
-import {isByron, isHaskellShelley, isJormun} from '../../legacy/config'
+import {isByron, isHaskellShelley} from '../../legacy/config'
 import {brand, COLORS} from '../../theme'
 import {WalletMeta} from '../../yoroi-wallets'
-type Props = {
-  wallet: WalletMeta
-  onPress: (walletMeta: WalletMeta) => void
-}
 
-export const WalletListItem = ({wallet, onPress}: Props) => {
-  const {type} = getWalletItemMeta(wallet)
+export const WalletListItem = ({walletMeta, onPress}: {walletMeta: WalletMeta; onPress: (walletMeta: WalletMeta) => void}) => {
+  const era = getWalletEra(walletMeta)
 
   return (
     <View style={styles.itemContainer}>
       <View style={styles.item}>
-        <TouchableOpacity activeOpacity={0.5} onPress={() => onPress(wallet)} style={styles.leftSide}>
-          <Icon.WalletAccount iconSeed={wallet.checksum.ImagePart} style={styles.walletAvatar} />
+        <TouchableOpacity activeOpacity={0.5} onPress={() => onPress(walletMeta)} style={styles.leftSide}>
+          <Icon.WalletAccount iconSeed={walletMeta.checksum.ImagePart} style={styles.walletAvatar} />
 
           <View style={styles.walletDetails}>
             <Text style={styles.walletName} numberOfLines={1}>
-              {wallet.name}
+              {walletMeta.name}
             </Text>
 
             <Text style={styles.walletMeta}>
-              {wallet.checksum != null ? `${wallet.checksum.TextPart} | ${type}` : type}
+              {walletMeta.checksum != null ? `${walletMeta.checksum.TextPart} | ${era}` : era}
             </Text>
           </View>
         </TouchableOpacity>
@@ -34,28 +30,12 @@ export const WalletListItem = ({wallet, onPress}: Props) => {
   )
 }
 
-type WalletItemMeta = {
-  type: string
-  icon: React.ReactElement
-}
-const getWalletItemMeta = (walletMeta: WalletMeta): WalletItemMeta => {
+const getWalletEra = (walletMeta: WalletMeta): 'Byron' | 'Shelley' => {
   if (isByron(walletMeta.walletImplementationId)) {
-    return {
-      type: 'Byron',
-      icon: <Icon.Ada size={18} color={COLORS.WHITE} />,
-    }
+    return 'Byron'
   }
   if (isHaskellShelley(walletMeta.walletImplementationId)) {
-    return {
-      type: 'Shelley',
-      icon: <Icon.Ada size={18} color={COLORS.WHITE} />,
-    }
-  }
-  if (isJormun(walletMeta.walletImplementationId)) {
-    return {
-      type: 'Jormungandr',
-      icon: <Icon.Ada size={18} color={COLORS.WHITE} />,
-    }
+    return 'Shelley'
   }
   throw new Error('getWalletItemMeta:: invalid wallet implementation id')
 }

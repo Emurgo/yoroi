@@ -8,9 +8,8 @@ import {WebView, WebViewMessageEvent} from 'react-native-webview'
 import {PleaseWaitModal, Spacer} from '../../components'
 import {useStakingTx} from '../../Dashboard/StakePoolInfos'
 import {showErrorDialog} from '../../dialogs'
-import {useLanguage} from '../../i18n'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
-import {CONFIG, isNightly, SHOW_PROD_POOLS_IN_DEV} from '../../legacy/config'
+import {isNightly, SHOW_PROD_POOLS_IN_DEV} from '../../legacy/config'
 import {Logger} from '../../legacy/logging'
 import {StakingCenterRouteNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
@@ -21,7 +20,6 @@ export const StakingCenter = () => {
   const intl = useIntl()
   const navigation = useNavigation<StakingCenterRouteNavigation>()
 
-  const {languageCode} = useLanguage()
   const wallet = useSelectedWallet()
 
   const [selectedPoolId, setSelectedPoolId] = React.useState<string>()
@@ -74,7 +72,7 @@ export const StakingCenter = () => {
 
             <WebView
               androidLayerType="software"
-              source={{uri: prepareStakingURL(languageCode)}}
+              source={{uri: wallet.networkInfo.explorers.poolExplorer()}}
               onMessage={(event) => handleOnMessage(event)}
             />
           </View>
@@ -96,17 +94,3 @@ const noPoolDataDialog = defineMessages({
     defaultMessage: '!!!The data from the stake pool(s) you selected is invalid. Please try again',
   },
 })
-
-/**
- * Prepares WebView's target staking URI
- * @param {*} poolList : Array of delegated pool hash
- */
-const prepareStakingURL = (locale: string): string => {
-  // source=mobile is constant and already included
-  let finalURL = CONFIG.NETWORKS.HASKELL_SHELLEY.POOL_EXPLORER
-
-  const lang = locale.slice(0, 2)
-  finalURL += `&lang=${lang}`
-
-  return finalURL
-}

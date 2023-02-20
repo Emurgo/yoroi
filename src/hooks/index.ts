@@ -740,7 +740,7 @@ export const useTipStatus = ({
     staleTime: 10000,
     retry: 3,
     retryDelay: 1000,
-    queryKey: [1, 'tipStatus'],
+    queryKey: [wallet.networkInfo.id, 'tipStatus'],
     queryFn: () => wallet.fetchTipStatus(),
     ...options,
   })

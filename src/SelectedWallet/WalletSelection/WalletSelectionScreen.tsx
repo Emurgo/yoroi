@@ -73,7 +73,7 @@ export const WalletSelectionScreen = () => {
         contentContainerStyle={{padding: 16}}
         data={walletMetas}
         keyExtractor={(item) => item.id}
-        renderItem={({item: walletMeta}) => <WalletListItem wallet={walletMeta} onPress={onSelect} />}
+        renderItem={({item: walletMeta}) => <WalletListItem walletMeta={walletMeta} onPress={onSelect} />}
         ListEmptyComponent={null}
         refreshControl={<RefreshControl refreshing={isFetching} onRefresh={refetch} />}
       />

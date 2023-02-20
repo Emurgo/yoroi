@@ -48,7 +48,7 @@ export const ASSURANCE_LEVELS = {
   },
 }
 
-export const _DEFAULT_DISCOVERY_SETTINGS = {
+const _DEFAULT_DISCOVERY_SETTINGS = {
   DISCOVERY_GAP_SIZE: 20,
   DISCOVERY_BLOCK_SIZE: 50, // should be less than API limitations
   MAX_GENERATED_UNUSED: 20, // must be <= gap size
