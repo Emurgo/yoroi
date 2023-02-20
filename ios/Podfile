@@ -24,6 +24,7 @@ target 'emurgo' do
   use_react_native!(:path => config["reactNativePath"])
   platform :ios, '11.0'
 
+  use_flipper!({ 'Flipper' => '0.182.0', 'Flipper-Folly' => '~> 2.6', 'Flipper-RSocket' => '~> 1.4' })
   # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
   # use_frameworks!
   pods()
@@ -42,3 +43,45 @@ target 'emurgo' do
   end
 
 end
+
+#uncomment this if you wanna to build it on apple silicon
+=begin
+post_install do |installer|
+ react_native_post_install(installer)
+ # For Apple Silicon to work at all you need to address a linker problem with react-native and Swift libraries.
+ # Fix as described in: https://github.com/facebookarchive/react-native-fbsdk/issues/755
+ installer.aggregate_targets.each do |aggregate_target|
+   aggregate_target.user_project.native_targets.each do |target|
+     target.build_configurations.each do |config|
+       config.build_settings['LIBRARY_SEARCH_PATHS'] = ['$(SDKROOT)/usr/lib/swift', '$(inherited)']
+     end
+   end
+   aggregate_target.user_project.save
+ end
+ installer.pods_project.build_configurations.each do |config|
+   config.build_settings['ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES'] = '$(inherited)'
+   #config.build_settings['OTHER_LDFLAGS'] = '$(inherited)'
+
+   #emulator specific parameter
+   config.build_settings["ONLY_ACTIVE_ARCH"] = 'YES'
+   #emulator specific parameter
+   config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = ''
+   #emulator specific parameter
+   config.build_settings['ARCHS[sdk=iphonesimulator*]'] =  `uname -m`
+ end
+ installer.pods_project.targets.each do |target|
+   target.build_configurations.each do |config|
+     config.build_settings.delete 'IPHONEOS_DEPLOYMENT_TARGET'
+     #config.build_settings['ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES'] = '$(inherited)'
+     #config.build_settings['OTHER_LDFLAGS'] = '$(inherited)'
+
+     #emulator specific parameter
+     config.build_settings["ONLY_ACTIVE_ARCH"] = 'YES'
+     #emulator specific parameter
+     config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = ''
+     #emulator specific parameter
+     config.build_settings['ARCHS[sdk=iphonesimulator*]'] =  `uname -m`
+   end
+ end
+end
+==end
