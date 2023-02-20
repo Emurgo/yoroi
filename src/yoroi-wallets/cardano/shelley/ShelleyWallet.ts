@@ -33,7 +33,7 @@ import {
 } from '../../types'
 import {Quantities} from '../../utils'
 import {parseSafe} from '../../utils/parsing'
-import {AddressValidationErrors, validatePassword} from '../../utils/validators'
+import {validatePassword} from '../../utils/validators'
 import {WalletMeta} from '../../walletManager'
 import {
   ADDRESS_TYPE_TO_CHANGE,
@@ -58,9 +58,10 @@ import {IsLockedError, nonblockingSynchronize, synchronize} from '../promise'
 import {filterAddressesByStakingKey, getDelegationStatus} from '../shelley/delegationUtils'
 import {yoroiSignedTx} from '../signedTx'
 import {TransactionManager} from '../transactionManager'
-import {isYoroiWallet, NetworkId, WalletEvent, WalletImplementationId, WalletSubscription, YoroiWallet} from '../types'
+import {isYoroiWallet, WalletEvent, WalletSubscription, YoroiWallet} from '../types'
 import {yoroiUnsignedTx} from '../unsignedTx'
 import {makeUtxoManager, UtxoManager} from '../utxoManager'
+import {NetworkInfo, networkInfo} from './networkInfo'
 import {
   ACCOUNT_INDEX,
   API_ROOT,
@@ -86,7 +87,7 @@ import {
   TOKEN_INFO_SERVICE,
   WALLET_IMPLEMENTATION_ID,
 } from './protocol'
-import {deriveKeys, deriveRewardAddressHex, deriveStakingKey, isReceiverAddressValid} from './util'
+import {deriveKeys, deriveRewardAddressHex, deriveStakingKey} from './util'
 
 type Capabilities = {
   registerToVote: boolean
@@ -96,81 +97,6 @@ type Capabilities = {
   nfts: boolean
 }
 
-type NetworkInfo = {
-  id: string
-  displayName: string
-  primaryTokenId: string
-  mnemonicLength: number
-
-  getTime: (utcTimeMS: number) => {
-    epoch: number
-    slot: number
-    absoluteSlot: number
-    slotsRemaining: number
-    slotsPerEpoch: number
-    secondsRemainingInEpoch: number
-    percentageElapsed: number
-  }
-
-  validateAddress: (address: string) => Promise<AddressValidationErrors>
-
-  explorers: {
-    addressExplorer?: (address: string) => string
-    blockExplorer?: (blockId: string) => string
-    transactionExplorer?: (txId: string) => string
-    poolExplorer?: (poolId: string) => string
-    nftExplorer?: (nftId: string) => string
-    tokenExplorer?: (tokenId: string) => string
-    fundExplorer?: () => string
-  }
-}
-
-const networkInfo: NetworkInfo = {
-  id: 'cardano',
-  displayName: 'Cardano',
-  primaryTokenId: '',
-  mnemonicLength: 15,
-
-  getTime(currentTimeMS: number) {
-    // mainnet
-    const shelleyStartTimeMS = 1506203091000
-    const absoluteSlot = Math.floor((currentTimeMS - shelleyStartTimeMS) / 1000)
-    const slotsPerEpoch = 5 * 24 * 60 * 60
-    const epoch = Math.floor(absoluteSlot / slotsPerEpoch)
-    const slotsInPreviousEpochs = epoch * slotsPerEpoch
-    const slot = Math.floor(absoluteSlot - slotsInPreviousEpochs)
-    const slotsRemaining = Math.floor(slotsPerEpoch - slot)
-    const secondsRemainingInEpoch = slotsRemaining * 1
-    const percentageElapsed = Math.floor((100 * slot) / slotsPerEpoch)
-
-    return {
-      epoch,
-      slot,
-      absoluteSlot,
-      slotsRemaining,
-      slotsPerEpoch,
-      secondsRemainingInEpoch,
-      percentageElapsed,
-    }
-  },
-
-  validateAddress: isReceiverAddressValid,
-
-  explorers: {
-    addressExplorer: (address: string) => `https://cardanoscan.io/address/${address}`,
-    transactionExplorer: (txid: string) => `https://cardanoscan.io/transaction/${txid}`,
-    poolExplorer: (_poolId: string) => 'https://adapools.yoroiwallet.com/',
-    tokenExplorer: (fingerprint: string) =>
-      fingerprint ? `https://cardanoscan.io/token/${fingerprint}` : 'https://cardanoscan.io/tokens',
-    // blockExplorer: (blockId: string) => "",
-    // nftExplorer: (nftId: string) => "",
-    // fundExplorer: () => "",
-  },
-}
-
-
-
-export default ShelleyWallet
 export class ShelleyWallet implements Omit<YoroiWallet, 'walletImplementationId' | 'networkId'> {
   readonly id: string
   readonly hwDeviceInfo: null | HWDeviceInfo
@@ -193,7 +119,7 @@ export class ShelleyWallet implements Omit<YoroiWallet, 'walletImplementationId'
     tokens: true,
     nfts: true,
   }
-  
+
   formatPath: (account: number, addressType: AddressType, index: number) => string = formatPathCip1852
 
   private _utxos: RawUtxo[]
@@ -722,11 +648,11 @@ export class ShelleyWallet implements Omit<YoroiWallet, 'walletImplementationId'
 
     try {
       const serverTime = await this.checkServerStatus()
-      .then(({serverTime}) => serverTime || Date.now())
-      .catch(() => Date.now())
+        .then(({serverTime}) => serverTime || Date.now())
+        .catch(() => Date.now())
 
-    const {absoluteSlot} = this.networkInfo.getTime(serverTime)
-    const absSlotNumber = new BigNumber(absoluteSlot)
+      const {absoluteSlot} = this.networkInfo.getTime(serverTime)
+      const absSlotNumber = new BigNumber(absoluteSlot)
       const votingPublicKey = await Promise.resolve(Buffer.from(catalystKeyHex, 'hex'))
         .then((bytes) => CardanoMobile.PrivateKey.fromExtendedBytes(bytes))
         .then((key) => key.toPublic())
@@ -1163,8 +1089,6 @@ const isWalletJSON = (data: unknown): data is ShelleyWalletJSON => {
 
 const keys: Array<keyof ShelleyWalletJSON> = [
   'publicKeyHex',
-  'networkId',
-  'walletImplementationId',
   'internalChain',
   'externalChain',
   'isEasyConfirmationEnabled',
@@ -1180,9 +1104,6 @@ type WalletState = {
 
 export type ShelleyWalletJSON = {
   version: string
-
-  networkId: NetworkId
-  walletImplementationId: WalletImplementationId
 
   isHW: boolean
   hwDeviceInfo: null | HWDeviceInfo

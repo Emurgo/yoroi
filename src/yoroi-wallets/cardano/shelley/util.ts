@@ -1,4 +1,3 @@
-import {AddressValidationErrors} from '../../utils'
 import {ADDRESS_TYPE_TO_CHANGE, AddressType, CardanoMobile} from '..'
 import {
   CHAIN_DERIVATIONS,
@@ -58,6 +57,14 @@ export const formatPathCip1852 = (account: number, type: AddressType, index: num
   return `m/${purpose}'/${COIN}'/${account}'/${ADDRESS_TYPE_TO_CHANGE[type]}/${index}`
 }
 
+export type AddressValidationErrors = {
+  addressIsRequired?: boolean
+  invalidAddress?: boolean
+  unsupportedDomain?: boolean
+  recordNotFound?: boolean
+  unregisteredDomain?: boolean
+}
+
 export const isReceiverAddressValid = async (receiverAddress: string): Promise<AddressValidationErrors> => {
   if (receiverAddress === "") {
     return {addressIsRequired: true}
@@ -89,18 +96,21 @@ export const normalizeToAddress = async (addr: string) => {
     if (await CardanoMobile.ByronAddress.isValid(addr)) {
       return await (await CardanoMobile.ByronAddress.fromBase58(addr)).toAddress()
     }
+  // eslint-disable-next-line no-empty
   } catch (_e) {}
 
   // eslint-disable-line no-empty
   // 2) If already base16, simply return
   try {
     return await CardanoMobile.Address.fromBytes(Buffer.from(addr, 'hex'))
+  // eslint-disable-next-line no-empty
   } catch (_e) {}
 
   // eslint-disable-line no-empty
   // 3) Try converting from bech32
   try {
     return await CardanoMobile.Address.fromBech32(addr)
+  // eslint-disable-next-line no-empty
   } catch (_e) {}
 
   // eslint-disable-line no-empty

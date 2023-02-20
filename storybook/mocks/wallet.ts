@@ -13,6 +13,7 @@ import {
   YoroiWallet,
 } from '../../src/yoroi-wallets'
 import {PRIMARY_ASSET_CONSTANTS} from '../../src/yoroi-wallets/cardano/networks'
+import { networkInfo } from '../../src/yoroi-wallets/cardano/shelley/networkInfo'
 import {
   RemotePoolMetaSuccess,
   StakePoolInfosAndHistories,
@@ -42,7 +43,7 @@ const walletMeta: WalletMeta = {
   walletImplementationId: 'haskell-shelley-24',
 }
 
-const wallet: any = {
+const wallet: YoroiWallet = {
   id: 'wallet-id',
   primaryToken: getDefaultAssetByNetworkId(300),
   primaryTokenInfo: primaryTokenInfo.testnet,
@@ -58,6 +59,17 @@ const wallet: any = {
   rewardAddressHex: 'reward-address-hex',
   publicKeyHex: 'publicKeyHex',
   utxos,
+  networkInfo,
+  capabilities: {
+    registerToVote: true,
+    stake: true,
+    sign: true,
+    tokens: true,
+    nfts: true,
+  },
+  formatPath: () => {
+    throw new Error('not implemented: formatPath')
+  },
   getStakingInfo: async () => {
     throw new Error('not implemented: getStakingInfo')
   },

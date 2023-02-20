@@ -48,6 +48,7 @@ import {
   Cardano,
   CardanoMobile,
   CardanoTypes,
+  formatPathBip44,
   generatePrivateKeyForCatalyst,
   generateWalletRootKey,
   legacyWalletChecksum,
@@ -120,6 +121,18 @@ export class CardanoWallet implements YoroiWallet {
   readonly checksum: CardanoTypes.WalletChecksum
   readonly encryptedStorage: WalletEncryptedStorage
   isEasyConfirmationEnabled = false
+  formatPath = formatPathBip44
+  readonly capabilities = {
+    stake: false,
+    sign: true,
+    registerToVote: false,
+    tokens: true,
+    nfts: true
+  }
+  
+  get networkInfo() {
+    throw new Error('not implemented')
+  }
 
   private _utxos: RawUtxo[]
   private readonly storage: YoroiStorage
