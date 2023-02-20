@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import _, {uniqBy} from 'lodash'
+import _ from 'lodash'
 
 import assert from '../../../legacy/assert'
 import fetchDefault, {checkedFetch} from '../../../legacy/fetch'
@@ -23,7 +23,7 @@ import {NFTAsset, RemoteAsset, YoroiNft, YoroiNftModerationStatus} from '../../t
 import {hasProperties, isArray, isObject, isRecord} from '../../utils/parsing'
 import {ServerStatus} from '..'
 import {ApiError} from '../errors'
-import {convertNfts} from '../nfts'
+import {convertNft} from '../nfts'
 import {fallbackTokenInfo, tokenInfo, toTokenSubject} from './utils'
 
 type Addresses = Array<string>
@@ -224,39 +224,38 @@ function parseNFTs(value: unknown, storageUrl: string): YoroiNft[] {
     throw new Error('Invalid response. Expected to receive object when parsing NFTs')
   }
 
-  const metadata = Object.values(value)
+  const identifiers = Object.keys(value)
 
-  const nftAssets = metadata
-    .map((assets) => {
-      if (!isArray(assets)) {
-        throw new Error('Invalid response. Expected object value to be an array when parsing NFTs')
-      }
+  return identifiers.map((id) => {
+    const assets = value[id]
+    if (!isArray(assets)) {
+      throw new Error('Invalid response. Expected object value to be an array when parsing NFTs')
+    }
 
-      if (assets.length === 0) {
-        throw new Error(
-          'Invalid response. Expected object value to be an array with at least one element when parsing NFTs',
-        )
-      }
+    if (assets.length === 0) {
+      throw new Error(
+        'Invalid response. Expected object value to be an array with at least one element when parsing NFTs',
+      )
+    }
 
-      const [firstAsset] = assets
+    const [firstAsset] = assets
 
-      return firstAsset
-    })
-    .filter(isAssetNFT)
-    .filter(isNftAssetImage)
-  const allNFTs = nftAssets.flatMap((nft) => convertNfts(nft.metadata, storageUrl))
-  return uniqBy(allNFTs, (nft) => nft.id)
+    if (!isAssetNFT(firstAsset)) {
+      throw new Error('Invalid response. Expected asset to be an NFT when parsing NFTs')
+    }
+
+    const [policyId, assetName] = id.split('.')
+    const nftMetadata = firstAsset.metadata?.[policyId]?.[assetName]
+
+    if (!nftMetadata || !nftMetadata.image) {
+      throw new Error('Invalid response. Expected NFT metadata to contain image when parsing NFTs')
+    }
+    return convertNft(nftMetadata, storageUrl, policyId, assetName)
+  })
 }
 
 function isAssetNFT(asset: unknown): asset is NFTAsset {
   return isObject(asset) && hasProperties(asset, ['key']) && asset.key === NFT_METADATA_KEY
-}
-
-export function isNftAssetImage(asset: NFTAsset): boolean {
-  const metadata = asset.metadata
-  const policyId = Object.keys(metadata)[0]
-  const nftMetadata = Object.values(metadata[policyId])[0]
-  return typeof nftMetadata.image !== 'undefined'
 }
 
 const NFT_METADATA_KEY = '721'
