@@ -154,7 +154,7 @@ export const TxDetails = () => {
       </ScrollView>
 
       <Actions>
-        <Button onPress={() => openInExplorer(transaction, wallet.networkId)} title={strings.openInExplorer} />
+        <Button onPress={() => Linking.openURL(wallet.networkInfo.explorers.txExplorer(transaction.id))} title={strings.openInExplorer} />
       </Actions>
 
       {!isEmptyString(addressDetail) && (
@@ -303,11 +303,6 @@ const getShownAddresses = (
     toFiltered,
     cntOmittedTo,
   }
-}
-
-const openInExplorer = async (transaction: TransactionInfo, networkId: number) => {
-  const networkConfig = getNetworkConfigById(networkId)
-  await Linking.openURL(networkConfig.EXPLORER_URL_FOR_TX(transaction.id))
 }
 
 export type Params = {

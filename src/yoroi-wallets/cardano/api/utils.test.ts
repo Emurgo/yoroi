@@ -222,7 +222,7 @@ describe('api utils', () => {
     const wallet = {
       networkId: 300,
       primaryTokenInfo: {id: ''},
-    } as YoroiWallet
+    } as unknown as YoroiWallet
 
     const tokenInfo: TokenInfo = {
       id: '11111111111111111111111111111111111111111111111111111111.61737365744e616d65',

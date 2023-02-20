@@ -11,7 +11,7 @@ import {RawUtxo} from '../../yoroi-wallets/types/other'
 import {Amounts, asQuantity, Quantities} from '../../yoroi-wallets/utils'
 import {InvalidAssetAmount, parseAmountDecimal} from '../../yoroi-wallets/utils/parsing'
 import type {AddressValidationErrors} from '../../yoroi-wallets/utils/validators'
-import {getUnstoppableDomainAddress, isReceiverAddressValid, validateAmount} from '../../yoroi-wallets/utils/validators'
+import {getUnstoppableDomainAddress, validateAmount} from '../../yoroi-wallets/utils/validators'
 import {amountInputErrorMessages, messages} from './strings'
 
 export const getTransactionData = async (
@@ -76,7 +76,7 @@ export const recomputeAll = async ({
   }
 
   if (_.isEmpty(addressErrors)) {
-    addressErrors = (await isReceiverAddressValid(address, wallet.networkId)) || Object.freeze({})
+    addressErrors = await wallet.networkInfo.validateAddress(address)
   }
 
   let balanceErrors = Object.freeze({})

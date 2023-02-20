@@ -66,7 +66,7 @@ storiesOf('V2/TxHistory', module)
         <SelectedWalletProvider
           wallet={{
             ...mocks.wallet,
-            walletImplementationId: 'haskell-byron',
+            // walletImplementationId: 'haskell-byron',
           }}
         >
           <SendProvider wallet={mocks.wallet}>

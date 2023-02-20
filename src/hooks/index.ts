@@ -134,7 +134,7 @@ export const useLockedAmount = (
     ...options,
     suspense: true,
     queryKey: [wallet.id, 'lockedAmount'],
-    queryFn: () => calcLockedDeposit(wallet.utxos, wallet.networkId).then((amount) => amount.toString() as Quantity),
+    queryFn: () => calcLockedDeposit(wallet.utxos, 1).then((amount) => amount.toString() as Quantity),
   })
 
   React.useEffect(() => {
@@ -740,7 +740,7 @@ export const useTipStatus = ({
     staleTime: 10000,
     retry: 3,
     retryDelay: 1000,
-    queryKey: [wallet.networkId, 'tipStatus'],
+    queryKey: [1, 'tipStatus'],
     queryFn: () => wallet.fetchTipStatus(),
     ...options,
   })

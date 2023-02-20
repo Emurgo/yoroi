@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react'
 
 import {useBalances} from '../hooks'
-import {CONFIG, isHaskellShelley} from '../legacy/config'
+import {CONFIG} from '../legacy/config'
 import {YoroiWallet} from '../yoroi-wallets'
 import {Quantity} from '../yoroi-wallets/types'
 import {Amounts, Quantities} from '../yoroi-wallets/utils'
@@ -15,7 +15,7 @@ export const useCanVote = (wallet: YoroiWallet) => {
   )
 
   return {
-    canVote: !wallet.isReadOnly && isHaskellShelley(wallet.walletImplementationId),
+    canVote: wallet.capabilities.sign && wallet.capabilities.registerToVote,
     sufficientFunds,
   }
 }

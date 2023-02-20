@@ -9,7 +9,6 @@ import {useBalances, useTokenInfos} from '../../hooks'
 import globalMessages, {actionMessages} from '../../i18n/global-messages'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {sortTokenInfos} from '../../utils'
-import {getNetworkConfigById} from '../../yoroi-wallets/cardano/networks'
 import {TokenInfo} from '../../yoroi-wallets/types'
 import {Amounts} from '../../yoroi-wallets/utils'
 import {ActionsBanner} from './ActionsBanner'
@@ -28,8 +27,6 @@ export const AssetList = (props: Props) => {
   const handleOnPressNFTs = () => Alert.alert(strings.soon, strings.soon)
   const handleOnPressTokens = () => Alert.alert(strings.soon, strings.soon)
   const handleSearch = () => Alert.alert(strings.soon, strings.soon)
-
-  const config = getNetworkConfigById(wallet.networkId)
 
   const tokenInfos = useTokenInfos({
     wallet,
@@ -53,7 +50,7 @@ export const AssetList = (props: Props) => {
           <ExplorableAssetItem
             tokenInfo={tokenInfo}
             balance={balances[tokenInfo.id]}
-            onPress={() => Linking.openURL(config.EXPLORER_URL_FOR_TOKEN(tokenInfo.id))}
+            onPress={() => Linking.openURL(wallet.networkInfo.explorers.tokenExplorer(tokenInfo.id))}
           />
         )}
         ItemSeparatorComponent={() => <Spacer height={16} />}

@@ -6,7 +6,7 @@ import QRCode from 'react-native-qrcode-svg'
 
 import {CopyButton, Modal, Spacer, Text} from '../components'
 import {useSelectedWallet} from '../SelectedWallet'
-import {AddressType, formatPath} from '../yoroi-wallets'
+import {AddressType} from '../yoroi-wallets'
 import {getSpendingKey, getStakingKey} from '../yoroi-wallets/cardano/addressInfo'
 
 type Path = {
@@ -119,7 +119,7 @@ const PathInfo = ({path}: PathInfoProps) => {
       <Text style={styles.subtitle}>{strings.BIP32path}</Text>
 
       <Text secondary monospace>
-        {formatPath(account, addressType, index, wallet.walletImplementationId)}
+        {wallet.formatPath(account, addressType, index)}
       </Text>
     </>
   )

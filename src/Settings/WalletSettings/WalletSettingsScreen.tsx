@@ -93,32 +93,10 @@ export const WalletSettingsScreen = () => {
       </SettingsSection>
 
       <SettingsSection title={strings.about}>
-        <SettingsBuildItem label={strings.network} value={getNetworkName(wallet.networkId)} />
-
-        <SettingsBuildItem
-          label={strings.walletType}
-          value={intl.formatMessage(getWalletType(wallet.walletImplementationId))}
-        />
+        <SettingsBuildItem label={strings.network} value={wallet.networkInfo.displayName} />
       </SettingsSection>
     </ScrollView>
   )
-}
-
-const getNetworkName = (networkId: NetworkId) => {
-  // note(v-almonacid): this throws when switching wallet
-  try {
-    const config = getNetworkConfigById(networkId)
-    return config.MARKETING_NAME
-  } catch (_e) {
-    return '-'
-  }
-}
-
-const getWalletType = (implementationId: WalletImplementationId): MessageDescriptor => {
-  if (isByron(implementationId)) return messages.byronWallet
-  if (isHaskellShelley(implementationId)) return messages.shelleyWallet
-
-  return messages.unknownWalletType
 }
 
 const LogoutButton = () => {

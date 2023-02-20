@@ -7,7 +7,6 @@ import {confirmationMessages, txLabels} from '../../../i18n/global-messages'
 import {formatTokenWithText} from '../../../legacy/format'
 import {COLORS} from '../../../theme'
 import {YoroiWallet} from '../../../yoroi-wallets'
-import {getNetworkConfigById} from '../../../yoroi-wallets/cardano/networks'
 import {YoroiStaking, YoroiUnsignedTx} from '../../../yoroi-wallets/types'
 import {Amounts, Entries} from '../../../yoroi-wallets/utils'
 
@@ -87,7 +86,7 @@ const Withdrawals = ({
         <TouchableOpacity
           key={address}
           activeOpacity={0.5}
-          onPress={() => Linking.openURL(getNetworkConfigById(wallet.networkId).EXPLORER_URL_FOR_ADDRESS(address))}
+          onPress={() => Linking.openURL(wallet.networkInfo.explorers.addressExplorer(address))}
         >
           <Text numberOfLines={1} ellipsizeMode="middle" secondary>
             {address}
@@ -121,7 +120,7 @@ const Deregistrations = ({
           <TouchableOpacity
             key={address}
             activeOpacity={0.5}
-            onPress={() => Linking.openURL(getNetworkConfigById(wallet.networkId).EXPLORER_URL_FOR_ADDRESS(address))}
+            onPress={() => Linking.openURL(wallet.networkInfo.explorers.addressExplorer(address))}
           >
             <Text numberOfLines={1} ellipsizeMode="middle" secondary>
               {address}

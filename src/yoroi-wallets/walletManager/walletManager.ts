@@ -7,6 +7,7 @@ import {Keychain} from '../../auth/Keychain'
 import {Logger} from '../../legacy/logging'
 import {isWalletMeta, migrateWalletMetas, parseWalletMeta} from '../../Storage/migrations/walletMeta'
 import {CardanoTypes, CardanoWallet, isYoroiWallet, NetworkId, WalletImplementationId, YoroiWallet} from '../cardano'
+import {ShelleyWallet} from '../cardano/shelley/ShelleyWallet'
 import {HWDeviceInfo} from '../hw'
 import {storage, YoroiStorage} from '../storage'
 import {WALLET_IMPLEMENTATION_REGISTRY} from '../types'
@@ -158,9 +159,9 @@ export class WalletManager {
   }
 
   async openWallet(walletMeta: WalletMeta): Promise<YoroiWallet> {
-    const Wallet = this.getWalletImplementation(walletMeta.walletImplementationId)
+    // const Wallet = this.getWalletImplementation(walletMeta.walletImplementationId)
 
-    const wallet = await Wallet.restore({
+    const wallet = await ShelleyWallet.restore({
       storage: this.storage.join(`${walletMeta.id}/`),
       walletMeta,
     })
@@ -194,6 +195,7 @@ export class WalletManager {
   // should expect that each blockchain network has 1 wallet implementation.
   // In the case of Cardano, there are two: Byron-era and Shelley-era.
   private getWalletImplementation(walletImplementationId: WalletImplementationId): typeof CardanoWallet {
+    return ShelleyWallet as any
     switch (walletImplementationId) {
       case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON:
       case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY:

@@ -25,7 +25,7 @@ export const TxHistory = () => {
   const resetErrorRef = React.useRef<null | ResetErrorRef>(null)
   const strings = useStrings()
   const wallet = useSelectedWallet()
-  const [showWarning, setShowWarning] = useState(isByron(wallet.walletImplementationId))
+  const [showWarning, setShowWarning] = useState(!wallet.capabilities.stake)
 
   const [activeTab, setActiveTab] = useState<Tab>('transactions')
   const onSelectTab = (tab: Tab) => {
@@ -88,7 +88,7 @@ export const TxHistory = () => {
           <Spacer height={8} />
 
           <TabPanel active={activeTab === 'transactions'}>
-            {isByron(wallet.walletImplementationId) && showWarning && (
+            {!wallet.capabilities.stake && showWarning && (
               <WarningBanner
                 title={strings.warningTitle.toUpperCase()}
                 icon={infoIcon}

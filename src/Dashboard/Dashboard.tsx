@@ -8,18 +8,10 @@ import {ActivityIndicator, RefreshControl, ScrollView, StyleSheet, View, ViewPro
 import {Banner, Button, Modal, StatusBar} from '../components'
 import {useBalances, useIsOnline, useSync} from '../hooks'
 import globalMessages from '../i18n/global-messages'
-import {getCardanoBaseConfig} from '../legacy/config'
 import {useWalletNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
 import {isEmptyString} from '../utils/utils'
-import {getCardanoNetworkConfigById} from '../yoroi-wallets/cardano/networks'
 import {Amounts} from '../yoroi-wallets/utils'
-import {
-  genCurrentEpochLength,
-  genCurrentSlotLength,
-  genTimeToSlot,
-  genToRelativeSlotNumber,
-} from '../yoroi-wallets/utils/timeUtils'
 import {EpochProgress} from './EpochProgress'
 import {NotDelegatedInfo} from './NotDelegatedInfo'
 import {StakePoolInfos, useStakingInfo} from './StakePoolInfos'
@@ -65,7 +57,7 @@ export const Dashboard = () => {
           {stakingInfo?.status !== 'staked' && <NotDelegatedInfo />}
 
           <Row>
-            <EpochInfo />
+            <EpochProgress />
           </Row>
 
           <Row>
@@ -156,59 +148,6 @@ const SyncErrorBanner = ({showRefresh}: {showRefresh: boolean}) => {
           ? intl.formatMessage(globalMessages.syncErrorBannerTextWithRefresh)
           : intl.formatMessage(globalMessages.syncErrorBannerTextWithoutRefresh)
       }
-    />
-  )
-}
-
-const useCurrentTime = () => {
-  const [currentTime, setCurrentTime] = React.useState(() => Date.now())
-  React.useEffect(() => {
-    const id = setInterval(() => setCurrentTime(Date.now()), 1000)
-
-    return () => clearInterval(id)
-  }, [])
-
-  return currentTime
-}
-
-const EpochInfo = () => {
-  const currentTime = useCurrentTime()
-  const wallet = useSelectedWallet()
-  const config = getCardanoBaseConfig(getCardanoNetworkConfigById(wallet.networkId))
-
-  const toRelativeSlotNumberFn = genToRelativeSlotNumber(config)
-  const timeToSlotFn = genTimeToSlot(config)
-
-  const currentAbsoluteSlot = timeToSlotFn({
-    time: currentTime,
-  })
-
-  const currentRelativeTime = toRelativeSlotNumberFn(
-    timeToSlotFn({
-      time: Date.now(),
-    }).slot,
-  )
-  const epochLength = genCurrentEpochLength(config)()
-  const slotLength = genCurrentSlotLength(config)()
-
-  const secondsLeftInEpoch = (epochLength - currentRelativeTime.slot) * slotLength
-  const timeLeftInEpoch = new Date(1000 * secondsLeftInEpoch - currentAbsoluteSlot.msIntoSlot)
-
-  const leftPadDate = (num: number) => {
-    if (num < 10) return `0${num}`
-    return num.toString()
-  }
-
-  return (
-    <EpochProgress
-      percentage={Math.floor((100 * currentRelativeTime.slot) / epochLength)}
-      currentEpoch={currentRelativeTime.epoch}
-      endTime={{
-        d: leftPadDate(Math.floor(secondsLeftInEpoch / (3600 * 24))),
-        h: leftPadDate(timeLeftInEpoch.getUTCHours()),
-        m: leftPadDate(timeLeftInEpoch.getUTCMinutes()),
-        s: leftPadDate(timeLeftInEpoch.getUTCSeconds()),
-      }}
     />
   )
 }

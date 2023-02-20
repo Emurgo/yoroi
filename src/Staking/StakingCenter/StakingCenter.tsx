@@ -15,7 +15,6 @@ import {Logger} from '../../legacy/logging'
 import {StakingCenterRouteNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {NotEnoughMoneyToSendError} from '../../yoroi-wallets'
-import {getNetworkConfigById} from '../../yoroi-wallets/cardano/networks'
 import {PoolDetailScreen} from '../PoolDetails'
 
 export const StakingCenter = () => {
@@ -60,17 +59,15 @@ export const StakingCenter = () => {
     setSelectedPoolId(selectedPoolHashes[0])
   }
 
-  const config = getNetworkConfigById(wallet.networkId)
-
   return (
     <>
-      {(__DEV__ || (isNightly() && !config.IS_MAINNET)) && (
+      {(__DEV__ || isNightly()) && (
         <View style={{flex: 1}}>
           <PoolDetailScreen onPressDelegate={setSelectedPoolId} />
         </View>
       )}
 
-      {(config.IS_MAINNET || SHOW_PROD_POOLS_IN_DEV) && (
+      {(SHOW_PROD_POOLS_IN_DEV) && (
         <>
           <View style={{flex: 1, backgroundColor: '#fff'}}>
             <Spacer height={8} />

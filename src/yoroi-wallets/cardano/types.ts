@@ -79,13 +79,14 @@ export type YoroiWallet = {
 
   publicKeyHex: string
   checksum: CardanoTypes.WalletChecksum
-  networkId: NetworkId
-  walletImplementationId: WalletImplementationId
   isHW: boolean
   hwDeviceInfo: null | HWDeviceInfo
   isReadOnly: boolean
   primaryToken: Readonly<DefaultAsset>
   primaryTokenInfo: Readonly<TokenInfo>
+  capabilities: any
+  networkInfo: any
+  formatPath: any
 
   // Sending
   createUnsignedTx(
@@ -165,8 +166,6 @@ const yoroiWalletKeys: Array<keyof YoroiWallet> = [
   'id',
   'publicKeyHex',
   'checksum',
-  'networkId',
-  'walletImplementationId',
   'isHW',
   'hwDeviceInfo',
   'isReadOnly',

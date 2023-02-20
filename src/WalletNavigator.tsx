@@ -6,7 +6,6 @@ import {defineMessages, useIntl} from 'react-intl'
 import {VotingRegistration as VotingRegistration} from './Catalyst'
 import {Icon, OfflineBanner} from './components'
 import {DashboardNavigator} from './Dashboard'
-import {isHaskellShelley} from './legacy/config'
 import {MenuNavigator} from './Menu'
 import {WalletStackRoutes, WalletTabRoutes} from './navigation'
 import {useSelectedWallet, WalletSelectionScreen} from './SelectedWallet'
@@ -18,7 +17,7 @@ const Tab = createBottomTabNavigator<WalletTabRoutes>()
 const WalletTabNavigator = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
-  const initialRoute = isHaskellShelley(wallet.walletImplementationId) ? 'staking-dashboard' : 'history'
+  const initialRoute = wallet.capabilities.stake ? 'staking-dashboard' : 'history'
 
   return (
     <>
@@ -49,7 +48,7 @@ const WalletTabNavigator = () => {
           }}
         />
 
-        {isHaskellShelley(wallet.walletImplementationId) && (
+        {wallet.capabilities.stake && (
           <Tab.Screen
             name="staking-dashboard"
             component={DashboardNavigator}

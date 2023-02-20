@@ -77,12 +77,12 @@ export const asciiToHex = (ascii: string) => {
 }
 
 export const toToken = ({wallet, tokenInfo}: {wallet: YoroiWallet; tokenInfo: TokenInfo}): LegacyToken => {
-  if (tokenInfo.id === wallet.primaryTokenInfo.id) return getDefaultAssetByNetworkId(wallet.networkId)
+  if (tokenInfo.id === wallet.primaryTokenInfo.id) return getDefaultAssetByNetworkId(1)
   const assetNameHex = tokenInfo.name ? asciiToHex(tokenInfo.name) : ''
 
   return {
     identifier: `${tokenInfo.group}.${assetNameHex}`,
-    networkId: wallet.networkId,
+    networkId: 1,
     isDefault: tokenInfo.id === wallet.primaryTokenInfo.id,
     metadata: {
       type: 'Cardano',

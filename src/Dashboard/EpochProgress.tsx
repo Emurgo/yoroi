@@ -5,26 +5,30 @@ import {StyleSheet} from 'react-native'
 
 import {ProgressCircle, Text, TitledCard} from '../components'
 import globalMessages from '../i18n/global-messages'
+import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
 
-type Props = {
-  percentage: number
-  currentEpoch: number
-  endTime: {
-    d?: string
-    h: string
-    m: string
-    s: string
-  }
-}
-
-export const EpochProgress = ({percentage, currentEpoch, endTime}: Props) => {
+export const EpochProgress = () => {
   const intl = useIntl()
+  const currentTime = useCurrentTime()
+  const wallet = useSelectedWallet()
+
+  const {currentEpoch, slotsRemaining, secondsRemainingInEpoch, percentageElapsed} =
+    wallet.networkInfo.getTime(currentTime)
+
+  const timeLeftInEpoch = new Date(secondsRemainingInEpoch * 1000)
+
+  const endTime = {
+    d: leftPadDate(Math.floor(slotsRemaining / (3600 * 24))),
+    h: leftPadDate(timeLeftInEpoch.getUTCHours()),
+    m: leftPadDate(timeLeftInEpoch.getUTCMinutes()),
+    s: leftPadDate(timeLeftInEpoch.getUTCSeconds()),
+  }
 
   return (
     <View style={styles.wrapper}>
       <TitledCard title={intl.formatMessage(messages.epochProgressTitle)} testID="epochProgressTitleCard">
-        <ProgressCircle percentage={percentage} />
+        <ProgressCircle percentage={percentageElapsed} />
 
         <View style={styles.stats}>
           <View style={styles.row}>
@@ -108,3 +112,19 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 })
+
+const useCurrentTime = () => {
+  const [currentTime, setCurrentTime] = React.useState(() => Date.now())
+  React.useEffect(() => {
+    const id = setInterval(() => setCurrentTime(Date.now()), 1000)
+
+    return () => clearInterval(id)
+  }, [])
+
+  return currentTime
+}
+
+const leftPadDate = (num: number) => {
+  if (num < 10) return `0${num}`
+  return num.toString()
+}

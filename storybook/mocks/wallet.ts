@@ -42,12 +42,10 @@ const walletMeta: WalletMeta = {
   walletImplementationId: 'haskell-shelley-24',
 }
 
-const wallet: YoroiWallet = {
+const wallet: any = {
   id: 'wallet-id',
   primaryToken: getDefaultAssetByNetworkId(300),
   primaryTokenInfo: primaryTokenInfo.testnet,
-  walletImplementationId: 'haskell-shelley',
-  networkId: 300,
   checksum: {
     TextPart: 'HTAO-3194',
     ImagePart:
