@@ -97,7 +97,7 @@ type Capabilities = {
   nfts: boolean
 }
 
-export class ShelleyWallet implements Omit<YoroiWallet, 'walletImplementationId' | 'networkId'> {
+export class ShelleyWallet implements YoroiWallet {
   readonly id: string
   readonly hwDeviceInfo: null | HWDeviceInfo
   readonly isHW: boolean
