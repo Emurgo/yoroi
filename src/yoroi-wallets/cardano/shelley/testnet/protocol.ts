@@ -1,23 +1,25 @@
-import {DefaultAsset} from '../../types'
-import {CardanoHaskellShelleyNetwork} from '..'
+import {DefaultAsset} from '../../../types'
+import {CardanoHaskellShelleyNetwork} from '../..'
 
 export const HISTORY_REFRESH_TIME = 25 * 1000
 
-export const NETWORK_ID = 1
+export const NETWORK_ID = 300
 export const WALLET_IMPLEMENTATION_ID = 'haskell-shelley'
-export const MARKETING_NAME = 'Cardano Mainnet'
+export const MARKETING_NAME = 'Cardano testnet'
 export const ENABLED = true
-export const CHAIN_NETWORK_ID = 1
-export const IS_MAINNET = true
+export const CHAIN_NETWORK_ID = 0
+export const IS_MAINNET = false
 
-export const EXPLORER_URL_FOR_ADDRESS = (address: string) => `https://cardanoscan.io/address/${address}`
+export const EXPLORER_URL_FOR_ADDRESS = (address: string) => `https://preprod.cardanoscan.io/address/${address}`
 export const EXPLORER_URL_FOR_TOKEN = (fingerprint: string) =>
-  fingerprint.length > 0 ? `https://cardanoscan.io/token/${fingerprint}` : `https://cardanoscan.io/tokens`
-export const EXPLORER_URL_FOR_TX = (txid: string) => `https://cardanoscan.io/transaction/${txid}`
+  fingerprint.length > 0
+    ? `https://preprod.cardanoscan.io/token/${fingerprint}`
+    : `https://preprod.cardanoscan.io/tokens`
+export const EXPLORER_URL_FOR_TX = (txid: string) => `https://preprod.cardanoscan.io/transaction/${txid}`
 export const POOL_EXPLORER = 'https://adapools.yoroiwallet.com/?source=mobile'
 
-export const API_ROOT = 'https://api.yoroiwallet.com/api'
-export const TOKEN_INFO_SERVICE = 'https://cdn.yoroiwallet.com'
+export const API_ROOT = 'https://preprod-backend.yoroiwallet.com/api'
+export const TOKEN_INFO_SERVICE = 'https://metadata.cardano-testnet.iohkdev.io'
 
 export const BACKEND = {
   API_ROOT,
@@ -111,17 +113,17 @@ export const _MNEMONIC_LEN = 15
 
 export const SHELLEY_BASE_CONFIG = {
   // shelley-era
-  START_AT: 208,
+  START_AT: 74,
   SLOTS_PER_EPOCH: 432000,
   SLOT_DURATION: 1,
 }
 
 export const BYRON_BASE_CONFIG = {
   // byron-era
-  PROTOCOL_MAGIC: 764824073,
+  PROTOCOL_MAGIC: 1097911063,
   // aka byron network id
   START_AT: 0,
-  GENESIS_DATE: '1506203091000',
+  GENESIS_DATE: '1563999616000',
   SLOTS_PER_EPOCH: 21600,
   SLOT_DURATION: 20,
 }

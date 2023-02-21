@@ -7,7 +7,7 @@ import {Keychain} from '../../auth/Keychain'
 import {Logger} from '../../legacy/logging'
 import {isWalletMeta, migrateWalletMetas, parseWalletMeta} from '../../Storage/migrations/walletMeta'
 import {CardanoTypes, CardanoWallet, isYoroiWallet, NetworkId, WalletImplementationId, YoroiWallet} from '../cardano'
-import {ShelleyWallet} from '../cardano/shelley/ShelleyWallet'
+import {ShelleyWallet, ShelleyWalletTestnet} from '../cardano/shelley'
 import {HWDeviceInfo} from '../hw'
 import {storage, YoroiStorage} from '../storage'
 import {WALLET_IMPLEMENTATION_REGISTRY} from '../types'
@@ -61,6 +61,8 @@ export class WalletManager {
   async initialize() {
     await this.removeDeletedWallets()
     const _storedWalletMetas = await this.listWallets()
+
+    console.log("QWE", _storedWalletMetas)
     return migrateWalletMetas(_storedWalletMetas)
   }
 
@@ -161,10 +163,16 @@ export class WalletManager {
   async openWallet(walletMeta: WalletMeta): Promise<YoroiWallet> {
     // const Wallet = this.getWalletImplementation(walletMeta.walletImplementationId)
 
-    const wallet = await ShelleyWallet.restore({
-      storage: this.storage.join(`${walletMeta.id}/`),
-      walletMeta,
-    })
+    const wallet =
+      walletMeta.networkId === 0
+        ? await ShelleyWallet.restore({
+            storage: this.storage.join(`${walletMeta.id}/`),
+            walletMeta,
+          })
+        : await ShelleyWalletTestnet.restore({
+            storage: this.storage.join(`${walletMeta.id}/`),
+            walletMeta,
+          })
 
     wallet.subscribe((event) => this._notify(event as any))
     wallet.startSync()

@@ -7,7 +7,7 @@ import {storage} from '../../storage'
 import {WalletMeta} from '../../walletManager'
 import {ShelleyAddressGeneratorJSON} from '../chain'
 import {YoroiWallet} from '../types'
-import {ShelleyWallet, ShelleyWalletJSON} from './ShelleyWallet'
+import { ShelleyWallet } from './mainnet'
 
 describe('migration', () => {
   afterEach(() => AsyncStorage.clear())
@@ -420,7 +420,7 @@ const walletMeta: WalletMeta = {
   isEasyConfirmationEnabled: false,
 }
 
-const data: ShelleyWalletJSON = {
+const data: any = {
   lastGeneratedAddressIndex: 13,
   publicKeyHex:
     '6c2311e6e7a934751c55054cb21ab844f2e55baa48fc8f298dd54430f116d1c14c5f12d15611670454e05efac74e8f5d5e887ae2c15ef3086e0691d0d8439665',

@@ -6,7 +6,7 @@ import {
   COIN_TYPE,
   HARD_DERIVATION_START,
   STAKING_KEY_INDEX,
-} from './protocol'
+} from './mainnet/protocol'
 
 export const toHex = (bytes: Uint8Array) => Buffer.from(bytes).toString('hex')
 

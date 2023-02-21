@@ -5,16 +5,16 @@ import _ from 'lodash'
 import DeviceInfo from 'react-native-device-info'
 import {defaultMemoize} from 'reselect'
 
-import {makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../../auth'
-import {Keychain} from '../../../auth/Keychain'
-import {encryptWithPassword} from '../../../Catalyst/catalystCipher'
-import LocalizableError from '../../../i18n/LocalizableError'
-import assert from '../../../legacy/assert'
-import {DISABLE_BACKGROUND_SYNC} from '../../../legacy/config'
-import {Logger} from '../../../legacy/logging'
-import {HWDeviceInfo} from '../../hw'
-import {makeMemosManager, MemosManager} from '../../memos'
-import {YoroiStorage} from '../../storage'
+import {makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../../../auth'
+import {Keychain} from '../../../../auth/Keychain'
+import {encryptWithPassword} from '../../../../Catalyst/catalystCipher'
+import LocalizableError from '../../../../i18n/LocalizableError'
+import assert from '../../../../legacy/assert'
+import {DISABLE_BACKGROUND_SYNC} from '../../../../legacy/config'
+import {Logger} from '../../../../legacy/logging'
+import {HWDeviceInfo} from '../../../hw'
+import {makeMemosManager, MemosManager} from '../../../memos'
+import {YoroiStorage} from '../../../storage'
 import {
   AccountStateResponse,
   CurrencySymbol,
@@ -30,11 +30,11 @@ import {
   TxStatusResponse,
   YoroiSignedTx,
   YoroiUnsignedTx,
-} from '../../types'
-import {Quantities} from '../../utils'
-import {parseSafe} from '../../utils/parsing'
-import {validatePassword} from '../../utils/validators'
-import {WalletMeta} from '../../walletManager'
+} from '../../../types'
+import {Quantities} from '../../../utils'
+import {parseSafe} from '../../../utils/parsing'
+import {validatePassword} from '../../../utils/validators'
+import {WalletMeta} from '../../../walletManager'
 import {
   ADDRESS_TYPE_TO_CHANGE,
   AddressType,
@@ -48,20 +48,21 @@ import {
   NotEnoughMoneyToSendError,
   RegistrationStatus,
   walletChecksum,
-} from '../'
-import * as api from '../api'
-import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from '../chain'
-import {CardanoError, InvalidState} from '../errors'
-import {signTxWithLedger} from '../hw'
-import {processTxHistoryData} from '../processTransactions'
-import {IsLockedError, nonblockingSynchronize, synchronize} from '../promise'
-import {filterAddressesByStakingKey, getDelegationStatus} from '../shelley/delegationUtils'
-import {yoroiSignedTx} from '../signedTx'
-import {TransactionManager} from '../transactionManager'
-import {isYoroiWallet, WalletEvent, WalletSubscription, YoroiWallet} from '../types'
-import {yoroiUnsignedTx} from '../unsignedTx'
-import {makeUtxoManager, UtxoManager} from '../utxoManager'
-import {NetworkInfo, networkInfo} from './networkInfo'
+} from '../..'
+import * as api from '../../api'
+import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from '../../chain'
+import {CardanoError, InvalidState} from '../../errors'
+import {signTxWithLedger} from '../../hw'
+import {processTxHistoryData} from '../../processTransactions'
+import {IsLockedError, nonblockingSynchronize, synchronize} from '../../promise'
+import {yoroiSignedTx} from '../../signedTx'
+import {TransactionManager} from '../../transactionManager'
+import {isYoroiWallet, WalletEvent, WalletSubscription, YoroiWallet} from '../../types'
+import {yoroiUnsignedTx} from '../../unsignedTx'
+import {makeUtxoManager, UtxoManager} from '../../utxoManager'
+import {filterAddressesByStakingKey, getDelegationStatus} from '../delegationUtils'
+import {NetworkInfo, networkInfo} from '../networkInfo'
+import {deriveKeys, deriveRewardAddressHex, deriveStakingKey} from '../util'
 import {
   ACCOUNT_INDEX,
   API_ROOT,
@@ -87,7 +88,6 @@ import {
   TOKEN_INFO_SERVICE,
   WALLET_IMPLEMENTATION_ID,
 } from './protocol'
-import {deriveKeys, deriveRewardAddressHex, deriveStakingKey} from './util'
 
 type Capabilities = {
   registerToVote: boolean
@@ -958,7 +958,10 @@ export class ShelleyWallet implements YoroiWallet {
 
     await this.discoverAddresses()
 
-    await Promise.all([this.syncUtxos(), this.transactionManager.doSync(this.getAddressesInBlocks(), BACKEND)])
+    await Promise.all([
+      this.syncUtxos(), 
+      this.transactionManager.doSync(this.getAddressesInBlocks(), BACKEND)
+    ])
 
     this.updateLastGeneratedAddressIndex()
   }
@@ -1102,7 +1105,7 @@ type WalletState = {
   lastGeneratedAddressIndex: number
 }
 
-export type ShelleyWalletJSON = {
+type ShelleyWalletJSON = {
   version: string
 
   isHW: boolean
