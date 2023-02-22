@@ -48,7 +48,7 @@ import {
   NotEnoughMoneyToSendError,
   RegistrationStatus,
   walletChecksum,
-} from '../..'
+} from '..'
 import * as api from '../../../shared/api'
 import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from '../../shared/chain'
 import {CardanoError, InvalidState} from '../../errors'

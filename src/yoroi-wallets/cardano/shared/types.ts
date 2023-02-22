@@ -1,7 +1,6 @@
 import {BigNumber} from 'bignumber.js'
 
 import {WalletEncryptedStorage} from '../../auth'
-import {HWDeviceInfo} from './hw'
 import {
   AccountStates,
   StakePoolInfoRequest,
@@ -24,6 +23,7 @@ import type {
 import {DefaultAsset, SendTokenList, TokenInfo} from '../types/tokens'
 import {CardanoTypes} from '.'
 import type {Addresses} from './chain'
+import {HWDeviceInfo} from './hw'
 
 export type WalletEvent =
   | {type: 'initialize'}

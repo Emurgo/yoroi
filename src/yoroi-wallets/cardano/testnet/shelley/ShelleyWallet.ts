@@ -1,23 +1,25 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import {CONFIG, getWalletConfigById, isByron} from '../../../legacy/config'
-import {Logger} from '../../../legacy/logging'
-import {HWDeviceInfo} from '../../hw'
-import {makeMemosManager} from '../../memos'
-import {YoroiStorage} from '../../storage'
-import {parseSafe} from '../../utils/parsing'
-import {WalletMeta} from '../../walletManager'
-import {generateWalletRootKey, ShelleyWallet, ShelleyWalletTestnet} from '..'
-import {AddressChain, AddressChainJSON, AddressGenerator} from '../shared/chain'
-import {getCardanoNetworkConfigById} from '../networks'
-import {TransactionManager} from '../shared/transactionManager'
-import {isYoroiWallet, NetworkId, WalletImplementationId, YoroiWallet} from '../types'
-import {deriveRewardAddressHex} from '../utils'
-import {makeUtxoManager} from '../utxoManager'
+import {Logger} from '../../../../legacy/logging'
+import {HWDeviceInfo} from '../../../hw'
+import {makeMemosManager} from '../../../memos'
+import {YoroiStorage} from '../../../storage'
+import {parseSafe} from '../../../utils/parsing'
+import {WalletFactory, WalletMeta} from '../../../walletManager'
+import {
+  ACCOUNT_INDEX,
+  API_ROOT,
+  CIP1852,
+  COIN_TYPE,
+  DISCOVERY_BLOCK_SIZE,
+  DISCOVERY_GAP_SIZE,
+  HARD_DERIVATION_START,
+  NETWORK_ID,
+  WALLET_IMPLEMENTATION_ID,
+} from './protocol'
 
 export type ShelleyWalletJSON = {
   version: string
-  networkId: NetworkId
   walletImplementationId: WalletImplementationId
   isHW: boolean
   hwDeviceInfo: null | HWDeviceInfo
@@ -33,30 +35,13 @@ export type ByronWalletJSON = Omit<ShelleyWalletJSON, 'account'>
 
 export type WalletJSON = ShelleyWalletJSON | ByronWalletJSON
 
-export const CardanoTestnetWallet = {
-  async create({
-    id,
-    networkId,
-    implementationId,
-    storage,
-    mnemonic,
-    password,
-  }: {
-    id: string
-    implementationId: WalletImplementationId
-    networkId: NetworkId
-    storage: YoroiStorage
-
-    mnemonic: string
-    password: string
-  }): Promise<YoroiWallet> {
-    const {rootKey, accountPubKeyHex} = await makeKeys({mnemonic, implementationId})
-    const {internalChain, externalChain} = await addressChains.create({implementationId, networkId, accountPubKeyHex})
+export const CardanoTestnetShelley: WalletFactory = {
+  async create({id, storage, mnemonic, password}): Promise<YoroiWallet> {
+    const {rootKey, accountPubKeyHex} = await makeKeys({mnemonic})
+    const {internalChain, externalChain} = await addressChains.create({accountPubKeyHex})
 
     const wallet = await this.commonCreate({
       id,
-      networkId,
-      implementationId,
       storage,
       accountPubKeyHex,
       hwDeviceInfo: null, // hw wallet
@@ -73,8 +58,6 @@ export const CardanoTestnetWallet = {
 
   async createBip44({
     id,
-    networkId,
-    implementationId,
     storage,
     accountPubKeyHex,
     hwDeviceInfo, // hw wallet
@@ -83,17 +66,13 @@ export const CardanoTestnetWallet = {
     accountPubKeyHex: string
     hwDeviceInfo: HWDeviceInfo | null
     id: string
-    implementationId: WalletImplementationId
-    networkId: NetworkId
     isReadOnly: boolean
     storage: YoroiStorage
   }): Promise<YoroiWallet> {
-    const {internalChain, externalChain} = await addressChains.create({implementationId, networkId, accountPubKeyHex})
+    const {internalChain, externalChain} = await addressChains.create({accountPubKeyHex})
 
     return this.commonCreate({
       id,
-      networkId,
-      implementationId,
       storage,
       accountPubKeyHex,
       hwDeviceInfo, // hw wallet
@@ -104,23 +83,19 @@ export const CardanoTestnetWallet = {
     })
   },
 
-  async restore({walletMeta, storage}: {storage: YoroiStorage; walletMeta: WalletMeta}) {
+  async restore({walletMeta, storage}) {
     const data = await storage.getItem('data', parseWalletJSON)
     if (!data) throw new Error('Cannot read saved data')
     Logger.debug('openWallet::data', data)
     Logger.info('restore wallet', walletMeta.name)
 
-    const networkId = data.networkId ?? walletMeta.networkId // can be null for versions < 3.0.0
-    const {internalChain, externalChain} = addressChains.restore({data, networkId})
+    const {internalChain, externalChain} = addressChains.restore({data})
 
     const wallet = await this.commonCreate({
       id: walletMeta.id,
-      networkId,
       storage,
       internalChain,
       externalChain,
-
-      implementationId: data.walletImplementationId ?? walletMeta.walletImplementationId, // can be null for versions < 3.0.2
       accountPubKeyHex: data.publicKeyHex ?? internalChain.publicKey, // can be null for versions < 3.0.2, in which case we can just retrieve from address generator
       hwDeviceInfo: data.hwDeviceInfo, // hw wallet
       isReadOnly: data.isReadOnly ?? false, // readonly wallet
@@ -133,11 +108,9 @@ export const CardanoTestnetWallet = {
 
   async commonCreate({
     id,
-    networkId,
     storage,
     internalChain,
     externalChain,
-
     accountPubKeyHex,
     hwDeviceInfo, // hw wallet
     isReadOnly, // readonly wallet
@@ -147,8 +120,6 @@ export const CardanoTestnetWallet = {
     accountPubKeyHex: string
     hwDeviceInfo: HWDeviceInfo | null
     id: string
-    implementationId: WalletImplementationId
-    networkId: NetworkId
     storage: YoroiStorage
     internalChain: AddressChain
     externalChain: AddressChain
@@ -156,44 +127,26 @@ export const CardanoTestnetWallet = {
     isEasyConfirmationEnabled: boolean
     lastGeneratedAddressIndex?: number
   }) {
-    const rewardAddressHex = await deriveRewardAddressHex(accountPubKeyHex, networkId)
-    const apiUrl = getCardanoNetworkConfigById(networkId).BACKEND.API_ROOT
-    const utxoManager = await makeUtxoManager({storage: storage.join('utxoManager/'), apiUrl})
+    const rewardAddressHex = await deriveRewardAddressHex(accountPubKeyHex, NETWORK_ID)
+    const utxoManager = await makeUtxoManager({storage: storage.join('utxoManager/'), apiUrl: API_ROOT})
     const transactionManager = await TransactionManager.create(storage.join('txs/'))
     const memosManager = await makeMemosManager(storage.join('memos/'))
 
-    const wallet: any =
-      networkId === 1
-        ? new ShelleyWallet({
-            storage,
-            id,
-            utxoManager,
-            hwDeviceInfo,
-            isReadOnly,
-            accountPubKeyHex,
-            rewardAddressHex,
-            internalChain,
-            externalChain,
-            isEasyConfirmationEnabled,
-            lastGeneratedAddressIndex,
-            transactionManager,
-            memosManager,
-          })
-        : new ShelleyWalletTestnet({
-            storage,
-            id,
-            utxoManager,
-            hwDeviceInfo,
-            isReadOnly,
-            accountPubKeyHex,
-            rewardAddressHex,
-            internalChain,
-            externalChain,
-            isEasyConfirmationEnabled,
-            lastGeneratedAddressIndex,
-            transactionManager,
-            memosManager,
-          })
+    const wallet = new ShelleyWalletTestnet({
+      storage,
+      id,
+      utxoManager,
+      hwDeviceInfo,
+      isReadOnly,
+      accountPubKeyHex,
+      rewardAddressHex,
+      internalChain,
+      externalChain,
+      isEasyConfirmationEnabled,
+      lastGeneratedAddressIndex,
+      transactionManager,
+      memosManager,
+    })
 
     await wallet.discoverAddresses()
     wallet.setupSubscriptions()
@@ -206,17 +159,15 @@ export const CardanoTestnetWallet = {
   },
 }
 
-const makeKeys = async ({mnemonic, implementationId}: {mnemonic: string; implementationId: WalletImplementationId}) => {
+const makeKeys = async ({mnemonic}: {mnemonic: string}) => {
   const rootKeyPtr = await generateWalletRootKey(mnemonic)
   const rootKey: string = Buffer.from(await rootKeyPtr.asBytes()).toString('hex')
 
-  const purpose = isByron(implementationId)
-    ? CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.BIP44
-    : CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852
+  const purpose = CIP1852
   const accountPubKeyHex = await rootKeyPtr
     .derive(purpose)
-    .then((key) => key.derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO))
-    .then((key) => key.derive(CONFIG.NUMBERS.ACCOUNT_INDEX + CONFIG.NUMBERS.HARD_DERIVATION_START))
+    .then((key) => key.derive(COIN_TYPE))
+    .then((key) => key.derive(ACCOUNT_INDEX + HARD_DERIVATION_START))
     .then((accountKey) => accountKey.toPublic())
     .then((accountPubKey) => accountPubKey.asBytes())
     .then((bytes) => Buffer.from(bytes).toString('hex'))
@@ -228,25 +179,16 @@ const makeKeys = async ({mnemonic, implementationId}: {mnemonic: string; impleme
 }
 
 const addressChains = {
-  create: async ({
-    accountPubKeyHex,
-    implementationId,
-    networkId,
-  }: {
-    accountPubKeyHex: string
-    implementationId: WalletImplementationId
-    networkId: NetworkId
-  }) => {
-    const walletConfig = getWalletConfigById(implementationId)
+  create: async ({accountPubKeyHex}: {accountPubKeyHex: string}) => {
     const internalChain = new AddressChain(
-      new AddressGenerator(accountPubKeyHex, 'Internal', implementationId, networkId),
-      walletConfig.DISCOVERY_BLOCK_SIZE,
-      walletConfig.DISCOVERY_GAP_SIZE,
+      new AddressGenerator(accountPubKeyHex, 'Internal', WALLET_IMPLEMENTATION_ID, NETWORK_ID),
+      DISCOVERY_BLOCK_SIZE,
+      DISCOVERY_GAP_SIZE,
     )
     const externalChain = new AddressChain(
-      new AddressGenerator(accountPubKeyHex, 'External', implementationId, networkId),
-      walletConfig.DISCOVERY_BLOCK_SIZE,
-      walletConfig.DISCOVERY_GAP_SIZE,
+      new AddressGenerator(accountPubKeyHex, 'External', WALLET_IMPLEMENTATION_ID, NETWORK_ID),
+      DISCOVERY_BLOCK_SIZE,
+      DISCOVERY_GAP_SIZE,
     )
 
     // Create at least one address in each block
@@ -256,10 +198,10 @@ const addressChains = {
     return {internalChain, externalChain}
   },
 
-  restore: ({data, networkId}: {data: WalletJSON; networkId: NetworkId}) => {
+  restore: ({data}: {data: WalletJSON}) => {
     return {
-      internalChain: AddressChain.fromJSON(data.internalChain, networkId),
-      externalChain: AddressChain.fromJSON(data.externalChain, networkId),
+      internalChain: AddressChain.fromJSON(data.internalChain, NETWORK_ID),
+      externalChain: AddressChain.fromJSON(data.externalChain, NETWORK_ID),
     }
   },
 }

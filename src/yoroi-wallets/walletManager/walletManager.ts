@@ -6,17 +6,11 @@ import {makeWalletEncryptedStorage} from '../../auth'
 import {Keychain} from '../../auth/Keychain'
 import {Logger} from '../../legacy/logging'
 import {isWalletMeta, migrateWalletMetas, parseWalletMeta} from '../../Storage/migrations/walletMeta'
-import {
-  CardanoTestnetWallet,
-  CardanoTypes,
-  CardanoWallet,
-  isYoroiWallet,
-  NetworkId,
-  WalletImplementationId,
-  YoroiWallet,
-} from '../cardano'
+import {CardanoMainnet, CardanoTestnet} from '../cardano'
+import {isYoroiWallet, YoroiWallet} from '../cardano/shared'
 import {HWDeviceInfo} from '../hw'
 import {storage, YoroiStorage} from '../storage'
+import {NetworkId, WalletChecksum} from '../types'
 import {parseSafe} from '../utils'
 
 export class WalletClosed extends ExtendableError {}
@@ -25,12 +19,9 @@ export type WalletMeta = {
   id: string
   name: string
   networkId: NetworkId
-  walletImplementationId: WalletImplementationId
   isHW: boolean
-  isShelley?: boolean | null | undefined
-  // legacy jormungandr
   isEasyConfirmationEnabled: boolean
-  checksum: CardanoTypes.WalletChecksum
+  checksum: WalletChecksum
 }
 
 export type WalletManagerEvent =
@@ -68,7 +59,6 @@ export class WalletManager {
     await this.removeDeletedWallets()
     const _storedWalletMetas = await this.listWallets()
 
-    console.log('QWE', _storedWalletMetas)
     return migrateWalletMetas(_storedWalletMetas)
   }
 
@@ -136,20 +126,13 @@ export class WalletManager {
 
   // =================== state & persistence =================== //
 
-  async saveWallet(
-    id: string,
-    name: string,
-    wallet: YoroiWallet,
-    networkId: NetworkId,
-    walletImplementationId: WalletImplementationId,
-  ) {
+  async saveWallet(id: string, name: string, wallet: YoroiWallet, networkId: NetworkId) {
     await wallet.save()
     if (!wallet.checksum) throw new Error('invalid wallet')
     const walletMeta: WalletMeta = {
       id,
       name,
       networkId,
-      walletImplementationId,
       isHW: wallet.isHW,
       checksum: wallet.checksum,
       isEasyConfirmationEnabled: false,
@@ -198,13 +181,7 @@ export class WalletManager {
 
   // =================== create =================== //
 
-  async createWallet(
-    name: string,
-    mnemonic: string,
-    password: string,
-    networkId: NetworkId,
-    implementationId: WalletImplementationId,
-  ) {
+  async createWallet(name: string, mnemonic: string, password: string, networkId: NetworkId) {
     const Wallet = getWalletFactory(networkId)
     const id = uuid.v4()
 
@@ -215,14 +192,13 @@ export class WalletManager {
       password,
     })
 
-    return this.saveWallet(id, name, wallet, networkId, implementationId)
+    return this.saveWallet(id, name, wallet, networkId)
   }
 
   async createWalletWithBip44Account(
     name: string,
     accountPubKeyHex: string,
     networkId: NetworkId,
-    implementationId: WalletImplementationId,
     hwDeviceInfo: null | HWDeviceInfo,
     isReadOnly: boolean,
   ) {
@@ -239,7 +215,7 @@ export class WalletManager {
 
     Logger.debug('creating wallet...', wallet)
 
-    return this.saveWallet(id, name, wallet, networkId, implementationId)
+    return this.saveWallet(id, name, wallet, networkId)
   }
 }
 
@@ -258,16 +234,49 @@ const parseDeletedWalletIds = (data: unknown) => {
   return isWalletIds(parsed) ? parsed : undefined
 }
 
-// returns the corresponding implementation of WalletInterface. Normally we
-  // should expect that each blockchain network has 1 wallet implementation.
-  // In the case of Cardano, there are two: Byron-era and Shelley-era.
-  const getWalletFactory = (networkId: NetworkId): typeof CardanoWallet => {
-    switch (networkId) {
-      case 1:
-        return CardanoWallet
-      case 300:
-        return CardanoTestnetWallet
-      default:
-        throw new Error('cannot retrieve wallet implementation')
-    }
+const getWalletFactory = (networkId: NetworkId): WalletFactory => {
+  if (CardanoMainnet.matchNetworkId(networkId)) {
+    return CardanoMainnet.Wallet
   }
+  if (CardanoTestnet.matchNetworkId(networkId)) {
+    return CardanoTestnet.Wallet
+  }
+
+  throw new Error('invalid networkId')
+}
+
+export type WalletModule = {
+  Wallet: WalletFactory
+  matchNetworkId: (networkId: NetworkId) => boolean
+}
+
+export type WalletFactory = {
+  create({
+    id,
+    storage,
+    mnemonic,
+    password,
+  }: {
+    id: string
+    storage: YoroiStorage
+    mnemonic: string
+    password: string
+  }): Promise<YoroiWallet>
+
+  
+  createBip44({
+    storage,
+    id,
+    accountPubKeyHex,
+    hwDeviceInfo,
+    isReadOnly,
+  }: {
+    storage: YoroiStorage
+    id: string
+    accountPubKeyHex: string
+    hwDeviceInfo: HWDeviceInfo | null
+    isReadOnly: boolean | null
+  }): Promise<YoroiWallet>
+
+  restore({storage, walletMeta}: {storage: YoroiStorage; walletMeta}): Promise<YoroiWallet>
+}

@@ -1,4 +1,4 @@
-import {DefaultAsset} from '../../../../types'
+import {DefaultAsset} from '../../../types'
 import {CardanoHaskellShelleyNetwork} from '..'
 
 export const HISTORY_REFRESH_TIME = 25 * 1000

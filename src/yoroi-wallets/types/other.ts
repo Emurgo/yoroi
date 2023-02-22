@@ -1,8 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {BigNumber} from 'bignumber.js'
 
-import {CardanoTypes, MultiToken} from '..'
 import {RemoteAccountState, RemoteCertificateMeta, Token, TokenEntry, TokenEntryPlain} from '.'
+
+export type WalletChecksum = {
+  ImagePart: string,
+  TextPart: string,
+}
+
 export type AddressObj = {
   readonly address: string
 }
