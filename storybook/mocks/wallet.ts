@@ -13,7 +13,7 @@ import {
   YoroiWallet,
 } from '../../src/yoroi-wallets'
 import {PRIMARY_ASSET_CONSTANTS} from '../../src/yoroi-wallets/cardano/networks'
-import { networkInfo } from '../../src/yoroi-wallets/cardano/shelley/networkInfo'
+import { networkInfo } from '../../src/yoroi-wallets/cardano/mainnet/shelley/shared/networkInfo'
 import {
   RemotePoolMetaSuccess,
   StakePoolInfosAndHistories,

@@ -1,0 +1,76 @@
+export const HISTORY_REFRESH_TIME = 25000
+
+export const BACKEND = {
+  FETCH_UTXOS_MAX_ADDRESSES: 50,
+  TX_HISTORY_MAX_ADDRESSES: 50,
+  FILTER_USED_MAX_ADDRESSES: 50,
+  TX_HISTORY_RESPONSE_LIMIT: 50,
+} as const
+
+export const LINEAR_FEE = {
+  COEFFICIENT: '44',
+  CONSTANT: '155381',
+} as const
+
+export const MINIMUM_UTXO_VAL = '1000000'
+
+export const POOL_DEPOSIT = '500000000'
+
+export const KEY_DEPOSIT = '2000000'
+
+export const DISCOVERY_GAP_SIZE = 20
+
+export const DISCOVERY_BLOCK_SIZE = 50 // should be less than API limitations
+
+export const MAX_GENERATED_UNUSED = 20 // must be <= gap size
+
+export const CHAIN_DERIVATIONS = {
+  EXTERNAL: 0,
+  INTERNAL: 1,
+  CHIMERIC_ACCOUNT: 2,
+} as const
+
+export const STAKING_KEY_INDEX = 0
+
+export const HARD_DERIVATION_START = 2147483648
+
+export const CIP1852 = HARD_DERIVATION_START + 1852
+
+export const COIN_TYPE = HARD_DERIVATION_START + 1815
+
+export const ACCOUNT_INDEX = 0
+
+export const BIP44_DERIVATION_LEVELS = {
+  ROOT: 0,
+  PURPOSE: 1,
+  COIN_TYPE: 2,
+  ACCOUNT: 3,
+  CHAIN: 4,
+  ADDRESS: 5,
+} as const
+
+export const ADDRESS_TYPE_TO_CHANGE = {
+  External: 0,
+  Internal: 1,
+} as const
+
+export const STAKING_KEY_PATH = [
+  CIP1852,
+  COIN_TYPE,
+  ACCOUNT_INDEX + HARD_DERIVATION_START,
+  CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
+  STAKING_KEY_INDEX,
+] as const
+
+export const REWARD_ADDRESS_ADDRESSING = {
+  path: [
+    CIP1852,
+    COIN_TYPE,
+    ACCOUNT_INDEX + HARD_DERIVATION_START,
+    CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
+    STAKING_KEY_INDEX,
+  ],
+  startLevel: BIP44_DERIVATION_LEVELS.PURPOSE,
+} as const
+
+export const PER_EPOCH_PERCENTAGE_REWARD = 69344

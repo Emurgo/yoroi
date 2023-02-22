@@ -10,7 +10,7 @@ import {errorMessages} from '../../i18n/global-messages'
 import {Logger} from '../../legacy/logging'
 import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
 import {theme} from '../../theme'
-import {isCIP1852AccountPath, isValidPublicKey} from '../../yoroi-wallets/cardano/bip44Validators'
+import {isCIP1852AccountPath, isValidPublicKey} from '../../yoroi-wallets/cardano/networks/shared/bip44Validators'
 
 export const ImportReadOnlyWalletScreen = () => {
   const intl = useIntl()

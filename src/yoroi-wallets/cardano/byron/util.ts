@@ -1,6 +1,6 @@
 import bs58 from 'bs58'
 
-import {CONFIG} from '../../../legacy/config'
+import {CONFIG} from '../../../../../../legacy/config'
 import {ADDRESS_TYPE_TO_CHANGE, AddressType, CardanoMobile, generateWalletRootKey} from '..'
 import {CardanoError} from '../errors'
 import {getCardanoByronConfig} from '../networks'

@@ -8,8 +8,8 @@ import {BulletPointItem, Button, Icon, Spacer, StatusBar, Text} from '../../comp
 import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
 import {COLORS} from '../../theme'
 import {CardanoTypes, NetworkId, WalletImplementationId} from '../../yoroi-wallets'
-import {generateByronPlateFromMnemonics} from '../../yoroi-wallets/cardano/byron/plate'
-import {generateShelleyPlateFromMnemonics} from '../../yoroi-wallets/cardano/shelley/plate'
+import {generateByronPlateFromMnemonics} from '../../yoroi-wallets/cardano/networks/shared/eras/byron/plate'
+import {generateShelleyPlateFromMnemonics} from '../../yoroi-wallets/cardano/networks/shared/eras/shelley/plate'
 import {WALLET_IMPLEMENTATION_REGISTRY} from '../../yoroi-wallets/types/other'
 import {WalletAddress} from '../WalletAddress'
 

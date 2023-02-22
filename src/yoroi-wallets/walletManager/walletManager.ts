@@ -6,11 +6,17 @@ import {makeWalletEncryptedStorage} from '../../auth'
 import {Keychain} from '../../auth/Keychain'
 import {Logger} from '../../legacy/logging'
 import {isWalletMeta, migrateWalletMetas, parseWalletMeta} from '../../Storage/migrations/walletMeta'
-import {CardanoTypes, CardanoWallet, isYoroiWallet, NetworkId, WalletImplementationId, YoroiWallet} from '../cardano'
-import {ShelleyWallet, ShelleyWalletTestnet} from '../cardano/shelley'
+import {
+  CardanoTestnetWallet,
+  CardanoTypes,
+  CardanoWallet,
+  isYoroiWallet,
+  NetworkId,
+  WalletImplementationId,
+  YoroiWallet,
+} from '../cardano'
 import {HWDeviceInfo} from '../hw'
 import {storage, YoroiStorage} from '../storage'
-import {WALLET_IMPLEMENTATION_REGISTRY} from '../types'
 import {parseSafe} from '../utils'
 
 export class WalletClosed extends ExtendableError {}
@@ -62,7 +68,7 @@ export class WalletManager {
     await this.removeDeletedWallets()
     const _storedWalletMetas = await this.listWallets()
 
-    console.log("QWE", _storedWalletMetas)
+    console.log('QWE', _storedWalletMetas)
     return migrateWalletMetas(_storedWalletMetas)
   }
 
@@ -161,18 +167,11 @@ export class WalletManager {
   }
 
   async openWallet(walletMeta: WalletMeta): Promise<YoroiWallet> {
-    // const Wallet = this.getWalletImplementation(walletMeta.walletImplementationId)
-
-    const wallet =
-      walletMeta.networkId === 0
-        ? await ShelleyWallet.restore({
-            storage: this.storage.join(`${walletMeta.id}/`),
-            walletMeta,
-          })
-        : await ShelleyWalletTestnet.restore({
-            storage: this.storage.join(`${walletMeta.id}/`),
-            walletMeta,
-          })
+    const Wallet = getWalletFactory(walletMeta.networkId)
+    const wallet = await Wallet.restore({
+      storage: this.storage.join(`${walletMeta.id}/`),
+      walletMeta,
+    })
 
     wallet.subscribe((event) => this._notify(event as any))
     wallet.startSync()
@@ -199,24 +198,6 @@ export class WalletManager {
 
   // =================== create =================== //
 
-  // returns the corresponding implementation of WalletInterface. Normally we
-  // should expect that each blockchain network has 1 wallet implementation.
-  // In the case of Cardano, there are two: Byron-era and Shelley-era.
-  private getWalletImplementation(walletImplementationId: WalletImplementationId): typeof CardanoWallet {
-    return ShelleyWallet as any
-    switch (walletImplementationId) {
-      case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON:
-      case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY:
-      case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY_24:
-        return CardanoWallet
-      // TODO
-      // case WALLET_IMPLEMENTATION_REGISTRY.ERGO:
-      //   return ErgoWallet()
-      default:
-        throw new Error('cannot retrieve wallet implementation')
-    }
-  }
-
   async createWallet(
     name: string,
     mnemonic: string,
@@ -224,16 +205,14 @@ export class WalletManager {
     networkId: NetworkId,
     implementationId: WalletImplementationId,
   ) {
-    const Wallet = this.getWalletImplementation(implementationId)
+    const Wallet = getWalletFactory(networkId)
     const id = uuid.v4()
 
     const wallet = await Wallet.create({
       storage: this.storage.join(`${id}/`),
-      networkId,
       id,
       mnemonic,
       password,
-      implementationId,
     })
 
     return this.saveWallet(id, name, wallet, networkId, implementationId)
@@ -247,15 +226,13 @@ export class WalletManager {
     hwDeviceInfo: null | HWDeviceInfo,
     isReadOnly: boolean,
   ) {
-    const Wallet = this.getWalletImplementation(implementationId)
+    const Wallet = getWalletFactory(networkId)
     const id = uuid.v4()
 
     const wallet = await Wallet.createBip44({
       storage: this.storage.join(`${id}/`),
-      networkId,
       id,
       accountPubKeyHex,
-      implementationId,
       hwDeviceInfo,
       isReadOnly,
     })
@@ -280,3 +257,17 @@ const parseDeletedWalletIds = (data: unknown) => {
 
   return isWalletIds(parsed) ? parsed : undefined
 }
+
+// returns the corresponding implementation of WalletInterface. Normally we
+  // should expect that each blockchain network has 1 wallet implementation.
+  // In the case of Cardano, there are two: Byron-era and Shelley-era.
+  const getWalletFactory = (networkId: NetworkId): typeof CardanoWallet => {
+    switch (networkId) {
+      case 1:
+        return CardanoWallet
+      case 300:
+        return CardanoTestnetWallet
+      default:
+        throw new Error('cannot retrieve wallet implementation')
+    }
+  }

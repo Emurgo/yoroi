@@ -1,4 +1,4 @@
-import type {PlateResponse} from '../../types/other'
+import type {PlateResponse} from '../../../../../types/other'
 import {AddressType, generateWalletRootKey, legacyWalletChecksum} from '..'
 import {getAccountFromMasterKey, getAddresses} from './util'
 

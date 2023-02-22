@@ -29,7 +29,7 @@ import {
   WalletMeta,
   YoroiWallet,
 } from '../yoroi-wallets'
-import {generateShelleyPlateFromKey} from '../yoroi-wallets/cardano/shelley/plate'
+import {generateShelleyPlateFromKey} from '../yoroi-wallets/cardano/networks/shared/eras/shelley/plate'
 import {
   Quantity,
   TokenInfo,

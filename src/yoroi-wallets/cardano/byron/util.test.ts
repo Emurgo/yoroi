@@ -1,4 +1,4 @@
-import {CONFIG} from '../../../legacy/config'
+import {CONFIG} from '../../../../../../legacy/config'
 import {getCardanoByronConfig} from '../networks'
 import {getAccountFromMasterKey, getAddressInHex, getExternalAddresses, getMasterKeyFromMnemonic} from './util'
 
