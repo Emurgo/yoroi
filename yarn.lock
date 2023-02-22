@@ -1755,10 +1755,10 @@
     "@ledgerhq/logs" "^5.15.0"
     rxjs "^6.5.5"
 
-"@emurgo/yoroi-lib@^0.3.1":
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/@emurgo/yoroi-lib/-/yoroi-lib-0.3.1.tgz#a9c56dff9f19ae5eb8a902d3525faee726336a20"
-  integrity sha512-CM9mIx4HvEWN+35IDnmhzNf4QaGcSiczmj5JAiWBgwwQOg9JUXAh5FqiVihfmKYpxC+ZsyvBr4G9FgspcglVMg==
+"@emurgo/yoroi-lib@^0.3.2":
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/@emurgo/yoroi-lib/-/yoroi-lib-0.3.2.tgz#fd7ba94b51bd71d2dc8ceb803f77dd8cd6f70847"
+  integrity sha512-1OfmAgU4kBjDxxh2CMXaDBZTLOAIG5BJKY3C3x20cyn+nWjEw4tuDXK9KZWmkhKmxc4wgg7GkWihHS0yalam7Q==
   dependencies:
     "@cardano-foundation/ledgerjs-hw-app-cardano" "^5.1.0"
     "@emurgo/cross-csl-core" "^1.0.0"
