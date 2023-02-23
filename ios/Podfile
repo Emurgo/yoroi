@@ -24,7 +24,9 @@ target 'emurgo' do
   use_react_native!(:path => config["reactNativePath"])
   platform :ios, '11.0'
 
-  use_flipper!({ 'Flipper' => '0.182.0', 'Flipper-Folly' => '~> 2.6', 'Flipper-RSocket' => '~> 1.4' })
+  # Uncomment the next line if you need to use flipper
+  # use_flipper!({ 'Flipper' => '0.182.0', 'Flipper-Folly' => '~> 2.6', 'Flipper-RSocket' => '~> 1.4' })
+
   # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
   # use_frameworks!
   pods()
