@@ -88,7 +88,7 @@
   "nft.detail.metadata": "Metadata",
   "nft.detail.nftName": "NFT Name",
   "nft.detail.createdAt": "Created",
-  "nft.detail.description": "Description",
+  "nft.detail.description": "Описание",
   "nft.detail.author": "Author",
   "nft.detail.fingerprint": "Fingerprint",
   "nft.detail.policyId": "Policy id",
