@@ -236,17 +236,17 @@ const parseDeletedWalletIds = (data: unknown) => {
 
 const getWalletFactory = (networkId: NetworkId): WalletFactory => {
   if (CardanoMainnet.matchNetworkId(networkId)) {
-    return CardanoMainnet.Wallet
+    return CardanoMainnet.WalletFactory
   }
   if (CardanoTestnet.matchNetworkId(networkId)) {
-    return CardanoTestnet.Wallet
+    return CardanoTestnet.WalletFactory
   }
 
   throw new Error('invalid networkId')
 }
 
-export type WalletModule = {
-  Wallet: WalletFactory
+export type NetworkModule = {
+  WalletFactory: WalletFactory
   matchNetworkId: (networkId: NetworkId) => boolean
 }
 
@@ -261,21 +261,6 @@ export type WalletFactory = {
     storage: YoroiStorage
     mnemonic: string
     password: string
-  }): Promise<YoroiWallet>
-
-  
-  createBip44({
-    storage,
-    id,
-    accountPubKeyHex,
-    hwDeviceInfo,
-    isReadOnly,
-  }: {
-    storage: YoroiStorage
-    id: string
-    accountPubKeyHex: string
-    hwDeviceInfo: HWDeviceInfo | null
-    isReadOnly: boolean | null
   }): Promise<YoroiWallet>
 
   restore({storage, walletMeta}: {storage: YoroiStorage; walletMeta}): Promise<YoroiWallet>

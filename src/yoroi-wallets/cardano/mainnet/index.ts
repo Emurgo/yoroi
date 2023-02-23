@@ -1,6 +1,6 @@
-import { WalletModule } from "../.."
+import { NetworkModule } from "../.."
 
-export const CardanoMainnet: WalletModule = {
+export const CardanoMainnet: NetworkModule = {
   Wallet: CardanoMainnetShelley,
   matchNetworkId: (networkId: number) => {
     if (networkId === 0) {

@@ -1,10 +1,11 @@
-import {parseSafe} from '../..'
+import {HWDeviceInfo, parseSafe} from '../..'
 import {YoroiStorage} from '../../storage'
-import {WalletModule} from '../../walletManager'
-import {NETWORK_ID} from './shelley/protocol'
-import {CardanoTestnetShelley, WalletJSON} from './shelley/ShelleyWallet'
+import {NetworkModule} from '../../walletManager'
+import { AddressChainJSON } from '../shared/chain/chain'
+import {NETWORK_ID} from './shelley/constants'
+import {ShelleyWalletFactory} from './shelley/ShelleyWalletFactory'
 
-export const CardanoTestnet: WalletModule = {
+export const CardanoTestnet: NetworkModule = {
   matchNetworkId: (networkId: number) => {
     if (networkId === NETWORK_ID) {
       return true // shelley testnet
@@ -13,50 +14,65 @@ export const CardanoTestnet: WalletModule = {
     return false
   },
 
-  Wallet: {
-    async create(args) {
-      const implementationId = await getImplementationId(args.storage)
-      const Wallet = getWalletImplementation(implementationId)
+  WalletFactory: {
+    async create(args, factoryId: FactoryId) {
+      const {create} = getWalletFactory(factoryId)
 
-      return Wallet.create(args)
-    },
-
-    async createBip44(args) {
-      const implementationId = await getImplementationId(args.storage)
-      const Wallet = getWalletImplementation(implementationId)
-
-      return Wallet.createBip44(args)
+      return create(args)
     },
 
     async restore(args) {
-      const implementationId = await getImplementationId(args.storage)
-      const Wallet = getWalletImplementation(implementationId)
+      const walletJSON = await getWalletJSON(args.storage)
+      const factoryId = getFactoryId(walletJSON)
+      const {restore} = getWalletFactory(factoryId)
 
-      return Wallet.restore(args)
+      return restore(args)
     },
   },
 }
 
-const getImplementationId = async (storage: YoroiStorage) => {
+const getWalletJSON = async (storage: YoroiStorage) => {
   const walletJSON = await storage.getItem('data', parseWalletJSON)
   if (!walletJSON) throw new Error('Cannot read saved data')
-  
-  return walletJSON.walletImplementationId
+
+  return walletJSON
 }
 
-const getWalletImplementation = (implementationId: ImplementationId) => {
-  if (implementationId === 'haskell-shelley') {
-    return CardanoTestnetShelley
+const getFactoryId = (walletJSON: WalletJSON) => {
+  if (walletJSON.isHW) return "bip44"
+  if (walletJSON.isReadOnly) return "bip44"
+  if (walletJSON.walletImplementationId === "haskell-shelley-24") return "cip1852"
+  if (walletJSON.walletImplementationId === "haskell-shelley") return "cip1852"
+
+  throw new Error('Unknown wallet implementation')
+}
+
+const getWalletFactory = (factoryId: FactoryId) => {
+  if (factoryId === 'cip1852') {
+    return ShelleyWalletFactory
   }
 
-  if (implementationId === 'haskell-shelley-24') {
-    return CardanoTestnetShelley
+  if (factoryId === 'bip44') {
+    return Bip44WalletFactory
   }
 
   throw new Error('Unknown wallet implementation')
 }
 
-const parseWalletJSON = (data: unknown) => {
+type WalletJSON = {
+  version: number
+  isHW: boolean
+  hwDeviceInfo: HWDeviceInfo | null
+  publicKeyHex: string
+  isReadOnly: boolean
+  internalChain: AddressChainJSON
+  externalChain: AddressChainJSON
+  isEasyConfirmationEnabled: boolean
+  lastGeneratedAddressIndex: number
+  walletImplementationId: string
+}
+
+export const parseWalletJSON = (data: unknown) => {
   const parsed = parseSafe(data)
   return isWalletJSON(parsed) ? parsed : undefined
 }
@@ -68,11 +84,10 @@ const isWalletJSON = (data: unknown): data is WalletJSON => {
 
 const keys: Array<keyof WalletJSON> = [
   'publicKeyHex',
-  'walletImplementationId',
   'internalChain',
   'externalChain',
   'isEasyConfirmationEnabled',
   'lastGeneratedAddressIndex',
 ]
 
-type ImplementationId = 'haskell-shelley' | 'haskell-shelley-24'
+type FactoryId = 'cip1852' | 'bip44'

@@ -1,5 +1,4 @@
 import {DefaultAsset} from '../../../types'
-import {CardanoHaskellShelleyNetwork} from '..'
 
 export const HISTORY_REFRESH_TIME = 25 * 1000
 
@@ -52,9 +51,9 @@ export const STAKING_KEY_INDEX = 0
 
 export const HARD_DERIVATION_START = 2147483648
 
-export const CIP1852 = 2147485500 // HARD_DERIVATION_START + 1852;
+export const CIP1852 = HARD_DERIVATION_START + 1852
 
-export const COIN_TYPE = 2147485463 // HARD_DERIVATION_START + 1815;
+export const COIN_TYPE = HARD_DERIVATION_START + 1815
 
 export const ACCOUNT_INDEX = 0
 
@@ -128,7 +127,7 @@ export const BYRON_BASE_CONFIG = {
   SLOT_DURATION: 20,
 }
 
-export const CARDANO_HASKELL_SHELLEY_NETWORK: CardanoHaskellShelleyNetwork = {
+export const CARDANO_HASKELL_SHELLEY_NETWORK = {
   NETWORK_ID,
   PROVIDER_ID: 1,
   MARKETING_NAME,
