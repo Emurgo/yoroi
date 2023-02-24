@@ -47,7 +47,6 @@ target 'emurgo' do
 end
 
 #uncomment this if you wanna to build it on apple silicon
-=begin
 post_install do |installer|
  react_native_post_install(installer)
  # For Apple Silicon to work at all you need to address a linker problem with react-native and Swift libraries.
@@ -86,4 +85,3 @@ post_install do |installer|
    end
  end
 end
-==end

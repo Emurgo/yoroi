@@ -233,7 +233,7 @@ PODS:
     - React-Core
   - react-native-config (0.12.0):
     - React
-  - react-native-haskell-shelley (4.0.0-beta.2):
+  - react-native-haskell-shelley (5.0.0):
     - React
   - react-native-pager-view (5.4.15):
     - React-Core
@@ -536,7 +536,7 @@ SPEC CHECKSUMS:
   BVLinearGradient: e3aad03778a456d77928f594a649e96995f1c872
   DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
   FBLazyVector: fa8275d5086566e22a26ddc385ab5772e7f9b1bd
-  FBReactNativeSpec: 82dc48a5c1de8caa2933fce4986a0927ad2391fe
+  FBReactNativeSpec: 5abe9cdd2fee592f3c163240891395c3e514d697
   glog: 73c2498ac6884b13ede40eda8228cb1eee9d9d62
   MultiplatformBleAdapter: 5a6a897b006764392f9cef785e4360f54fb9477d
   Permission-BluetoothPeripheral: a408e2ba4b43e60c5a4b8b4d442bb8abc93394b2
@@ -560,7 +560,7 @@ SPEC CHECKSUMS:
   react-native-ble-plx: f10240444452dfb2d2a13a0e4f58d7783e92d76e
   react-native-camera: 3eae183c1d111103963f3dd913b65d01aef8110f
   react-native-config: f2c2ae45625a068c35681a16b9bfb1ca58b0adc7
-  react-native-haskell-shelley: 47b49a21ea5fb9e74467e55585527b11972ef392
+  react-native-haskell-shelley: 0fb39d601a79556780abd2c72eaa3e67be763992
   react-native-pager-view: b1914469643f40042e65d78cbf3d3dfebd6fb0d9
   react-native-randombytes: b6677f7d495c27e9ee0dbd77ebc97b3c59173729
   react-native-safe-area-context: 806f8370bf9fc9db90a3413aaa1aab0d2e22fdf3
@@ -594,6 +594,6 @@ SPEC CHECKSUMS:
   Sentry: ddcd9fde63cfe7e9e2243da59d98daa382413e49
   Yoga: d1fc3575b8b68891ff5ef3c276daa855e841eb32
 
-PODFILE CHECKSUM: 21c387dc5cbdee9217da9a0e0e620c3f952ec897
+PODFILE CHECKSUM: b63b19e8e8dac7c858f3e819d02f1c966146d47f
 
 COCOAPODS: 1.11.3
