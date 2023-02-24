@@ -20,7 +20,7 @@ import type {
   TxStatusResponse,
 } from '../../types'
 import {NFTAsset, RemoteAsset, YoroiNft, YoroiNftModerationStatus} from '../../types'
-import {hasProperties, isArray, isObject, isRecord} from '../../utils/parsing'
+import {hasProperties, isArray, isNonNullable, isObject, isRecord} from '../../utils/parsing'
 import {ServerStatus} from '..'
 import {ApiError} from '../errors'
 import {convertNft} from '../nfts'
@@ -226,32 +226,28 @@ function parseNFTs(value: unknown, storageUrl: string): YoroiNft[] {
 
   const identifiers = Object.keys(value)
 
-  return identifiers.map((id) => {
+  const tokens: Array<YoroiNft | null> = identifiers.map((id) => {
     const assets = value[id]
     if (!isArray(assets)) {
-      throw new Error('Invalid response. Expected object value to be an array when parsing NFTs')
+      return null
     }
 
-    if (assets.length === 0) {
-      throw new Error(
-        'Invalid response. Expected object value to be an array with at least one element when parsing NFTs',
-      )
-    }
+    const nftAsset = assets.find(isAssetNFT)
 
-    const [firstAsset] = assets
-
-    if (!isAssetNFT(firstAsset)) {
-      throw new Error('Invalid response. Expected asset to be an NFT when parsing NFTs')
+    if (!nftAsset) {
+      return null
     }
 
     const [policyId, assetName] = id.split('.')
-    const nftMetadata = firstAsset.metadata?.[policyId]?.[assetName]
+    const nftMetadata = nftAsset.metadata?.[policyId]?.[assetName]
 
     if (!nftMetadata || !nftMetadata.image) {
-      throw new Error('Invalid response. Expected NFT metadata to contain image when parsing NFTs')
+      return null
     }
     return convertNft(nftMetadata, storageUrl, policyId, assetName)
   })
+
+  return tokens.filter(isNonNullable)
 }
 
 function isAssetNFT(asset: unknown): asset is NFTAsset {
