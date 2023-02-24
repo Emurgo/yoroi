@@ -6,6 +6,7 @@ import {getCardanoNetworkConfigById} from './networks'
 
 export const getMinAda = async (selectedToken: Token, defaultAsset: DefaultAsset) => {
   const networkConfig = getCardanoNetworkConfigById(defaultAsset.networkId)
+  const coinsPerUtxoWord = await CardanoMobile.BigNum.fromStr(networkConfig.COINS_PER_UTXO_WORD)
   const fakeAmount = new BigNumber('0') // amount doesn't matter for calculating min UTXO amount
   const fakeMultitoken = new MultiToken(
     [
@@ -28,7 +29,7 @@ export const getMinAda = async (selectedToken: Token, defaultAsset: DefaultAsset
   const minAmount = await CardanoMobile.minAdaRequired(
     await cardanoValueFromMultiToken(fakeMultitoken),
     false,
-    await CardanoMobile.BigNum.fromStr(networkConfig.MINIMUM_UTXO_VAL),
+    coinsPerUtxoWord,
   )
   // if the user is sending a token, we need to make sure the resulting utxo
   // has at least the minimum amount of ADA in it
