@@ -1,17 +1,21 @@
 import * as React from 'react'
-import {Animated, Keyboard} from 'react-native'
+import {Animated, Keyboard, Platform} from 'react-native'
+
+const keyboardShowEvent = Platform.OS === 'android' ? 'keyboardDidShow' : 'keyboardWillShow'
+const keyboardHideEvent = Platform.OS === 'android' ? 'keyboardDidHide' : 'keyboardWillHide'
 
 type KeyboardSpacerProps = {
   padding?: number
   duration?: number
   debug?: boolean
 }
+
 export const KeyboardSpacer = ({padding = 0, duration = 500, debug}: KeyboardSpacerProps) => {
   const paddingRef = React.useRef(new Animated.Value(0))
 
   React.useEffect(() => {
     const listeners = [
-      Keyboard.addListener('keyboardWillShow', (event) =>
+      Keyboard.addListener(keyboardShowEvent, (event) =>
         Animated.timing(paddingRef.current, {
           toValue: event.endCoordinates.height + padding,
           duration,
@@ -19,7 +23,7 @@ export const KeyboardSpacer = ({padding = 0, duration = 500, debug}: KeyboardSpa
         }).start(),
       ),
 
-      Keyboard.addListener('keyboardWillHide', () =>
+      Keyboard.addListener(keyboardHideEvent, () =>
         Animated.timing(paddingRef.current, {
           toValue: 0,
           duration,
