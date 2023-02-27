@@ -203,7 +203,7 @@ const isTokenRegistryEntry = (data: unknown): data is TokenRegistryEntry => {
     !!candidate.name &&
     typeof candidate.name === 'object' &&
     'value' in candidate.name &&
-    candidate.name.value === 'string'
+    typeof candidate.name.value === 'string'
   )
 }
 
