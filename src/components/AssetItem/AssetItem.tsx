@@ -35,7 +35,7 @@ export const AssetItem = ({balance, style, tokenInfo}: AssetItemProps) => {
         ) : isTokenNft && SHOW_NFT_GALLERY ? (
           <NftIcon id={tokenInfo.id} />
         ) : (
-          <Icon source={{uri: logo}} />
+          <Icon source={{uri: `data:image/png;base64,${logo}`}} />
         )}
       </Left>
 
