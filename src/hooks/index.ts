@@ -560,7 +560,7 @@ export const useRemoveWallet = (id: YoroiWallet['id'], options: UseMutationOptio
 type CreateBip44WalletInfo = {
   name: string
   bip44AccountPublic: string
-  networkId: number
+  networkId: NetworkId
   implementationId: WalletImplementationId
   hwDeviceInfo?: null | HWDeviceInfo
   readOnly: boolean
@@ -592,7 +592,7 @@ export type CreateWalletInfo = {
   name: string
   mnemonicPhrase: string
   password: string
-  networkId: number
+  networkId: NetworkId
   walletImplementationId: WalletImplementationId
 }
 

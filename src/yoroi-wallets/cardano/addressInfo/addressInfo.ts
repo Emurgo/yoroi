@@ -1,4 +1,4 @@
-import {CardanoMobile, CardanoTypes} from '.'
+import {CardanoMobile, CardanoTypes} from '../'
 
 /**
  * @description Get the spending keyHash, resolves null for PointerAddress & EnterpriseAddress missing yoroi-lib impl

@@ -4,10 +4,12 @@ import {WalletEncryptedStorage} from '../../auth'
 import {HWDeviceInfo} from '../hw'
 import {
   AccountStates,
+  NetworkId,
   StakePoolInfoRequest,
   StakePoolInfosAndHistories,
   StakingInfo,
   StakingStatus,
+  WalletImplementationId,
   YoroiSignedTx,
   YoroiUnsignedTx,
 } from '../types'
@@ -37,17 +39,13 @@ export type WalletSubscription = (event: WalletEvent) => void
 export type Unsubscribe = () => void
 
 export type WalletImplementation = {
-  WALLET_IMPLEMENTATION_ID: 'haskell-byron' | 'haskell-shelley' | 'haskell-shelley-24' | 'jormungandr-itn' | ''
+  WALLET_IMPLEMENTATION_ID: WalletImplementationId
   TYPE: 'bip44' | 'cip1852'
   MNEMONIC_LEN: number
   DISCOVERY_GAP_SIZE: number
   DISCOVERY_BLOCK_SIZE: number
   MAX_GENERATED_UNUSED: number
 }
-
-export type WalletImplementationId = WalletImplementation['WALLET_IMPLEMENTATION_ID']
-
-export type NetworkId = number
 
 export type ServerStatus = {
   isServerOk: boolean
@@ -61,11 +59,6 @@ export type Block = {
   epoch: number
   slot: number
   hash: string
-}
-
-export type TxSubmissionStatus = {
-  status: 'WAITING' | 'FAILED' | 'MAX_RETRY_REACHED' | 'SUCCESS'
-  reason?: string | null
 }
 
 export type SignedTxLegacy = {

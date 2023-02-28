@@ -3,9 +3,9 @@ import {initUtxo} from '@emurgo/yoroi-lib'
 import {Utxo, UtxoAtSafePoint, UtxoDiffToBestBlock} from '@emurgo/yoroi-lib/dist/utxo/models'
 import {parseInt} from 'lodash'
 
-import {YoroiStorage} from '../storage'
-import {RawUtxo} from '../types'
-import {parseSafe} from '../utils/parsing'
+import {YoroiStorage} from '../../storage'
+import {RawUtxo} from '../../types'
+import {parseSafe} from '../../utils/parsing'
 
 export const makeUtxoManager = async ({storage, apiUrl}: {storage: YoroiStorage; apiUrl: string}) => {
   const managerStorage = makeUtxoManagerStorage(storage)

@@ -5,27 +5,18 @@ import _ from 'lodash'
 import DeviceInfo from 'react-native-device-info'
 import {defaultMemoize} from 'reselect'
 
-import {makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../auth'
-import {Keychain} from '../../auth/Keychain'
-import {encryptWithPassword} from '../../Catalyst/catalystCipher'
-import LocalizableError from '../../i18n/LocalizableError'
-import assert from '../../legacy/assert'
-import {
-  CONFIG,
-  DISABLE_BACKGROUND_SYNC,
-  getCardanoBaseConfig,
-  getDefaultAssetByNetworkId,
-  getWalletConfigById,
-  isByron,
-  isHaskellShelley,
-} from '../../legacy/config'
-import {Logger} from '../../legacy/logging'
-import {HWDeviceInfo} from '../hw'
-import {makeMemosManager, MemosManager} from '../memos'
-import {YoroiStorage} from '../storage'
+import {makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../../auth'
+import {Keychain} from '../../../auth/Keychain'
+import {encryptWithPassword} from '../../../Catalyst/catalystCipher'
+import LocalizableError from '../../../i18n/LocalizableError'
+import assert from '../../../legacy/assert'
+import {DISABLE_BACKGROUND_SYNC} from '../../../legacy/config'
+import {Logger} from '../../../legacy/logging'
+import {HWDeviceInfo} from '../../hw'
+import {makeMemosManager, MemosManager} from '../../memos'
+import {YoroiStorage} from '../../storage'
 import type {
   AccountStateResponse,
-  BackendConfig,
   CurrencySymbol,
   DefaultAsset,
   FundInfoResponse,
@@ -36,13 +27,12 @@ import type {
   Transaction,
   TxStatusRequest,
   TxStatusResponse,
-} from '../types'
-import {NETWORK_REGISTRY, Quantity, SendTokenList, StakingInfo, YoroiSignedTx, YoroiUnsignedTx} from '../types'
-import {Quantities} from '../utils'
-import {parseSafe} from '../utils/parsing'
-import {genTimeToSlot} from '../utils/timeUtils'
-import {validatePassword} from '../utils/validators'
-import {WalletMeta} from '../walletManager'
+} from '../../types'
+import {Quantity, SendTokenList, StakingInfo, YoroiSignedTx, YoroiUnsignedTx} from '../../types'
+import {Quantities} from '../../utils'
+import {parseSafe} from '../../utils/parsing'
+import {validatePassword} from '../../utils/validators'
+import {WalletMeta} from '../../walletManager'
 import {
   ADDRESS_TYPE_TO_CHANGE,
   Cardano,
@@ -50,31 +40,55 @@ import {
   CardanoTypes,
   generatePrivateKeyForCatalyst,
   generateWalletRootKey,
-  legacyWalletChecksum,
   NoOutputsError,
   NotEnoughMoneyToSendError,
   RegistrationStatus,
   walletChecksum,
-} from '.'
-import * as api from './api'
-import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from './chain'
-import {CardanoError, InvalidState} from './errors'
-import {signTxWithLedger} from './hw'
+} from '..'
+import * as api from '../api'
+import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from '../chain'
+import {CardanoError} from '../errors'
+import {getTime} from '../getTime'
+import {signTxWithLedger} from '../hw'
+import {processTxHistoryData} from '../processTransactions'
+import {IsLockedError, nonblockingSynchronize, synchronize} from '../promise'
+import {filterAddressesByStakingKey, getDelegationStatus} from '../shelley/delegationUtils'
+import {yoroiSignedTx} from '../signedTx'
+import {TransactionManager} from '../transactionManager'
+import {isYoroiWallet, WalletEvent, WalletSubscription, YoroiWallet} from '../types'
+import {yoroiUnsignedTx} from '../unsignedTx'
+import {deriveRewardAddressHex} from '../utils'
+import {makeUtxoManager, UtxoManager} from '../utxoManager'
 import {
-  CardanoHaskellShelleyNetwork,
-  getCardanoNetworkConfigById,
-  isHaskellShelleyNetwork,
-  isJormungandr,
-} from './networks'
-import {processTxHistoryData} from './processTransactions'
-import {IsLockedError, nonblockingSynchronize, synchronize} from './promise'
-import {filterAddressesByStakingKey, getDelegationStatus} from './shelley/delegationUtils'
-import {yoroiSignedTx} from './signedTx'
-import {TransactionManager} from './transactionManager'
-import {isYoroiWallet, NetworkId, WalletEvent, WalletImplementationId, WalletSubscription, YoroiWallet} from './types'
-import {yoroiUnsignedTx} from './unsignedTx'
-import {deriveRewardAddressHex} from './utils'
-import {makeUtxoManager, UtxoManager} from './utxoManager'
+  ACCOUNT_INDEX,
+  API_ROOT,
+  BACKEND,
+  BIP44_DERIVATION_LEVELS,
+  CHAIN_NETWORK_ID,
+  CHIMERIC_ACCOUNT,
+  COIN_TYPE,
+  DISCOVERY_BLOCK_SIZE,
+  DISCOVERY_GAP_SIZE,
+  HARD_DERIVATION_START,
+  HISTORY_REFRESH_TIME,
+  IS_MAINNET,
+  KEY_DEPOSIT,
+  LINEAR_FEE,
+  MAX_GENERATED_UNUSED,
+  MINIMUM_UTXO_VAL,
+  NETWORK_CONFIG,
+  NETWORK_ID,
+  POOL_DEPOSIT,
+  PRIMARY_TOKEN,
+  PRIMARY_TOKEN_INFO,
+  PROTOCOL_MAGIC,
+  PURPOSE,
+  REWARD_ADDRESS_ADDRESSING,
+  STAKING_KEY_INDEX,
+  STAKING_KEY_PATH,
+  TOKEN_INFO_SERVICE,
+  WALLET_IMPLEMENTATION_ID,
+} from './constants'
 
 type WalletState = {
   lastGeneratedAddressIndex: number
@@ -82,9 +96,6 @@ type WalletState = {
 
 export type ShelleyWalletJSON = {
   version: string
-
-  networkId: NetworkId
-  walletImplementationId: WalletImplementationId
 
   isHW: boolean
   hwDeviceInfo: null | HWDeviceInfo
@@ -102,13 +113,12 @@ export type ByronWalletJSON = Omit<ShelleyWalletJSON, 'account'>
 
 export type WalletJSON = ShelleyWalletJSON | ByronWalletJSON
 
-export default CardanoWallet
-export class CardanoWallet implements YoroiWallet {
-  readonly primaryToken: DefaultAsset
-  readonly primaryTokenInfo: TokenInfo
+export class ShelleyWalletTestnet implements YoroiWallet {
+  readonly primaryToken: DefaultAsset = PRIMARY_TOKEN
+  readonly primaryTokenInfo: TokenInfo = PRIMARY_TOKEN_INFO
+  readonly walletImplementationId = WALLET_IMPLEMENTATION_ID
+  readonly networkId = NETWORK_ID
   readonly id: string
-  readonly networkId: NetworkId
-  readonly walletImplementationId: WalletImplementationId
   readonly hwDeviceInfo: null | HWDeviceInfo
   readonly isHW: boolean
   readonly isReadOnly: boolean
@@ -124,7 +134,6 @@ export class CardanoWallet implements YoroiWallet {
   private _utxos: RawUtxo[]
   private readonly storage: YoroiStorage
   private readonly utxoManager: UtxoManager
-  private readonly stakingKeyPath: number[]
   private readonly transactionManager: TransactionManager
   private readonly memosManager: MemosManager
 
@@ -132,28 +141,20 @@ export class CardanoWallet implements YoroiWallet {
 
   static async create({
     id,
-    networkId,
-    implementationId,
     storage,
-
     mnemonic,
     password,
   }: {
     id: string
-    implementationId: WalletImplementationId
-    networkId: NetworkId
     storage: YoroiStorage
-
     mnemonic: string
     password: string
   }): Promise<YoroiWallet> {
-    const {rootKey, accountPubKeyHex} = await makeKeys({mnemonic, implementationId})
-    const {internalChain, externalChain} = await addressChains.create({implementationId, networkId, accountPubKeyHex})
+    const {rootKey, accountPubKeyHex} = await makeKeys({mnemonic})
+    const {internalChain, externalChain} = await addressChains.create({accountPubKeyHex})
 
     const wallet = await this.commonCreate({
       id,
-      networkId,
-      implementationId,
       storage,
       accountPubKeyHex,
       hwDeviceInfo: null, // hw wallet
@@ -170,10 +171,7 @@ export class CardanoWallet implements YoroiWallet {
 
   static async createBip44({
     id,
-    networkId,
-    implementationId,
     storage,
-
     accountPubKeyHex,
     hwDeviceInfo, // hw wallet
     isReadOnly, // readonly wallet
@@ -181,17 +179,13 @@ export class CardanoWallet implements YoroiWallet {
     accountPubKeyHex: string
     hwDeviceInfo: HWDeviceInfo | null
     id: string
-    implementationId: WalletImplementationId
-    networkId: NetworkId
     isReadOnly: boolean
     storage: YoroiStorage
   }): Promise<YoroiWallet> {
-    const {internalChain, externalChain} = await addressChains.create({implementationId, networkId, accountPubKeyHex})
+    const {internalChain, externalChain} = await addressChains.create({accountPubKeyHex})
 
     return this.commonCreate({
       id,
-      networkId,
-      implementationId,
       storage,
       accountPubKeyHex,
       hwDeviceInfo, // hw wallet
@@ -208,17 +202,13 @@ export class CardanoWallet implements YoroiWallet {
     Logger.debug('openWallet::data', data)
     Logger.info('restore wallet', walletMeta.name)
 
-    const networkId = data.networkId ?? walletMeta.networkId // can be null for versions < 3.0.0
-    const {internalChain, externalChain} = addressChains.restore({data, networkId})
+    const {internalChain, externalChain} = addressChains.restore({data})
 
     const wallet = await this.commonCreate({
       id: walletMeta.id,
-      networkId,
       storage,
       internalChain,
       externalChain,
-
-      implementationId: data.walletImplementationId ?? walletMeta.walletImplementationId, // can be null for versions < 3.0.2
       accountPubKeyHex: data.publicKeyHex ?? internalChain.publicKey, // can be null for versions < 3.0.2, in which case we can just retrieve from address generator
       hwDeviceInfo: data.hwDeviceInfo, // hw wallet
       isReadOnly: data.isReadOnly ?? false, // readonly wallet
@@ -226,19 +216,14 @@ export class CardanoWallet implements YoroiWallet {
       lastGeneratedAddressIndex: data.lastGeneratedAddressIndex ?? 0, // AddressManager
     })
 
-    wallet.integrityCheck()
-
     return wallet
   }
 
   private static commonCreate = async ({
     id,
-    networkId,
-    implementationId,
     storage,
     internalChain,
     externalChain,
-
     accountPubKeyHex,
     hwDeviceInfo, // hw wallet
     isReadOnly, // readonly wallet
@@ -248,8 +233,6 @@ export class CardanoWallet implements YoroiWallet {
     accountPubKeyHex: string
     hwDeviceInfo: HWDeviceInfo | null
     id: string
-    implementationId: WalletImplementationId
-    networkId: NetworkId
     storage: YoroiStorage
     internalChain: AddressChain
     externalChain: AddressChain
@@ -257,18 +240,15 @@ export class CardanoWallet implements YoroiWallet {
     isEasyConfirmationEnabled: boolean
     lastGeneratedAddressIndex?: number
   }) => {
-    const rewardAddressHex = await deriveRewardAddressHex(accountPubKeyHex, networkId)
-    const apiUrl = getCardanoNetworkConfigById(networkId).BACKEND.API_ROOT
-    const utxoManager = await makeUtxoManager({storage: storage.join('utxoManager/'), apiUrl})
+    const rewardAddressHex = await deriveRewardAddressHex(accountPubKeyHex, NETWORK_ID)
+    const utxoManager = await makeUtxoManager({storage: storage.join('utxoManager/'), apiUrl: API_ROOT})
     const transactionManager = await TransactionManager.create(storage.join('txs/'))
     const memosManager = await makeMemosManager(storage.join('memos/'))
 
-    const wallet = new CardanoWallet({
+    const wallet = new ShelleyWalletTestnet({
       storage,
-      networkId,
       id,
       utxoManager,
-      implementationId,
       hwDeviceInfo,
       isReadOnly,
       accountPubKeyHex,
@@ -293,10 +273,8 @@ export class CardanoWallet implements YoroiWallet {
 
   private constructor({
     storage,
-    networkId,
     id,
     utxoManager,
-    implementationId,
     hwDeviceInfo,
     isReadOnly,
     accountPubKeyHex,
@@ -309,10 +287,8 @@ export class CardanoWallet implements YoroiWallet {
     memosManager,
   }: {
     storage: YoroiStorage
-    networkId: NetworkId
     id: string
     utxoManager: UtxoManager
-    implementationId: WalletImplementationId
     hwDeviceInfo: HWDeviceInfo | null
     isReadOnly: boolean
     accountPubKeyHex: string
@@ -326,14 +302,9 @@ export class CardanoWallet implements YoroiWallet {
   }) {
     this.id = id
     this.storage = storage
-    this.networkId = networkId === NETWORK_REGISTRY.BYRON_MAINNET ? NETWORK_REGISTRY.HASKELL_SHELLEY : networkId
-    this.primaryToken = getDefaultAssetByNetworkId(this.networkId)
-    this.primaryTokenInfo =
-      networkId === NETWORK_REGISTRY.HASKELL_SHELLEY ? primaryTokenInfo.mainnet : primaryTokenInfo.testnet
     this.utxoManager = utxoManager
     this._utxos = utxoManager.initialUtxos
     this.encryptedStorage = makeWalletEncryptedStorage(id)
-    this.walletImplementationId = implementationId
     this.isHW = hwDeviceInfo != null
     this.hwDeviceInfo = hwDeviceInfo
     this.isReadOnly = isReadOnly
@@ -344,23 +315,12 @@ export class CardanoWallet implements YoroiWallet {
     this.rewardAddressHex = rewardAddressHex
     this.publicKeyHex = accountPubKeyHex
     this.version = DeviceInfo.getVersion()
-    this.checksum = isByron(implementationId)
-      ? legacyWalletChecksum(accountPubKeyHex)
-      : walletChecksum(accountPubKeyHex)
+    this.checksum = walletChecksum(accountPubKeyHex)
     this.setupSubscriptions()
     this.notify({type: 'initialize'})
     this.isInitialized = true
     this.isEasyConfirmationEnabled = isEasyConfirmationEnabled
     this.state = {lastGeneratedAddressIndex}
-    this.stakingKeyPath = isByron(this.walletImplementationId)
-      ? []
-      : [
-          CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852,
-          CONFIG.NUMBERS.COIN_TYPES.CARDANO,
-          CONFIG.NUMBERS.ACCOUNT_INDEX + CONFIG.NUMBERS.HARD_DERIVATION_START,
-          CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
-          CONFIG.NUMBERS.STAKING_KEY_INDEX,
-        ]
   }
 
   timeout: NodeJS.Timeout | null = null
@@ -376,7 +336,7 @@ export class CardanoWallet implements YoroiWallet {
         Logger.error((error as Error)?.message)
       } finally {
         if (!DISABLE_BACKGROUND_SYNC && process.env.NODE_ENV !== 'test') {
-          this.timeout = setTimeout(() => backgroundSync(), CONFIG.HISTORY_REFRESH_TIME)
+          this.timeout = setTimeout(() => backgroundSync(), HISTORY_REFRESH_TIME)
         }
       }
     }
@@ -412,27 +372,6 @@ export class CardanoWallet implements YoroiWallet {
   }
 
   // =================== persistence =================== //
-
-  private integrityCheck(): void {
-    try {
-      assert.assert(isHaskellShelleyNetwork(this.networkId), 'invalid networkId')
-      if (this.walletImplementationId == null) throw new Error('Invalid wallet: walletImplementationId')
-      assert.assert(
-        isByron(this.walletImplementationId) || isHaskellShelley(this.walletImplementationId),
-        'invalid walletImplementationId',
-      )
-      if (isHaskellShelley(this.walletImplementationId)) {
-        assert.assert(this.rewardAddressHex != null, 'reward address is null')
-      }
-      if (this.isHW) {
-        assert.assert(this.hwDeviceInfo != null, 'no device info for hardware wallet')
-      }
-    } catch (e) {
-      Logger.error('wallet::_integrityCheck', e)
-      throw new InvalidState((e as Error).message)
-    }
-  }
-
   async sync() {
     await this.doFullSync()
     await this.save()
@@ -446,35 +385,6 @@ export class CardanoWallet implements YoroiWallet {
   }
 
   // =================== utils =================== //
-
-  private getNetworkConfig(): CardanoHaskellShelleyNetwork {
-    return getCardanoNetworkConfigById(this.networkId)
-  }
-
-  private getBaseNetworkConfig() {
-    return this.getNetworkConfig().BASE_CONFIG.reduce((acc, next) => Object.assign(acc, next), {})
-  }
-
-  private getBackendConfig(): BackendConfig {
-    return this.getNetworkConfig().BACKEND
-  }
-
-  private getPurpose(): number {
-    if (this.walletImplementationId == null) throw new Error('Invalid wallet: walletImplementationId')
-
-    if (isByron(this.walletImplementationId)) {
-      return CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.BIP44
-    } else if (isHaskellShelley(this.walletImplementationId)) {
-      return CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852
-    } else {
-      throw new Error('CardanoWallet::_getPurpose: invalid wallet impl. id')
-    }
-  }
-
-  private getChainNetworkId(): string {
-    return this.getNetworkConfig().CHAIN_NETWORK_ID
-  }
-
   // returns the address in bech32 (Shelley) or base58 (Byron) format
   private getChangeAddress(): string {
     const candidateAddresses = this.internalChain.addresses
@@ -497,14 +407,10 @@ export class CardanoWallet implements YoroiWallet {
   }
 
   private async getStakingKey() {
-    if (this.walletImplementationId == null) throw new Error('Invalid wallet: walletImplementationId')
-
-    assert.assert(isHaskellShelley(this.walletImplementationId), 'cannot get staking key from a byron-era wallet')
-
     const accountPubKey = await CardanoMobile.Bip32PublicKey.fromBytes(Buffer.from(this.publicKeyHex, 'hex'))
     const stakingKey = await accountPubKey
-      .derive(CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT)
-      .then((key) => key.derive(CONFIG.NUMBERS.STAKING_KEY_INDEX))
+      .derive(CHIMERIC_ACCOUNT)
+      .then((key) => key.derive(STAKING_KEY_INDEX))
       .then((key) => key.toRawKey())
 
     Logger.info(`getStakingKey: ${Buffer.from(await stakingKey.asBytes()).toString('hex')}`)
@@ -512,26 +418,10 @@ export class CardanoWallet implements YoroiWallet {
   }
 
   private async getRewardAddress() {
-    if (this.walletImplementationId == null) throw new Error('Invalid wallet: walletImplementationId')
-
-    assert.assert(isHaskellShelley(this.walletImplementationId), 'cannot get reward address from a byron-era wallet')
     const stakingKey = await this.getStakingKey()
     const credential = await CardanoMobile.StakeCredential.fromKeyhash(await stakingKey.hash())
-    const rewardAddr = await CardanoMobile.RewardAddress.new(Number.parseInt(this.getChainNetworkId(), 10), credential)
+    const rewardAddr = await CardanoMobile.RewardAddress.new(CHAIN_NETWORK_ID, credential)
     return rewardAddr.toAddress()
-  }
-
-  private getRewardAddressAddressing() {
-    return {
-      path: [
-        this.getPurpose(),
-        CONFIG.NUMBERS.COIN_TYPES.CARDANO,
-        CONFIG.NUMBERS.ACCOUNT_INDEX + CONFIG.NUMBERS.HARD_DERIVATION_START,
-        CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
-        CONFIG.NUMBERS.STAKING_KEY_INDEX,
-      ],
-      startLevel: CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.PURPOSE,
-    }
   }
 
   async getAllUtxosForKey() {
@@ -543,18 +433,18 @@ export class CardanoWallet implements YoroiWallet {
   }
 
   private getAddressing(address: string) {
-    const purpose = this.getPurpose()
+    const purpose = PURPOSE
 
     if (this.internalChain.isMyAddress(address)) {
       return {
         path: [
           purpose,
-          CONFIG.NUMBERS.COIN_TYPES.CARDANO,
-          CONFIG.NUMBERS.ACCOUNT_INDEX + CONFIG.NUMBERS.HARD_DERIVATION_START,
+          COIN_TYPE,
+          ACCOUNT_INDEX + HARD_DERIVATION_START,
           ADDRESS_TYPE_TO_CHANGE['Internal'],
           this.internalChain.getIndexOfAddress(address),
         ],
-        startLevel: CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.PURPOSE,
+        startLevel: BIP44_DERIVATION_LEVELS.PURPOSE,
       }
     }
 
@@ -562,12 +452,12 @@ export class CardanoWallet implements YoroiWallet {
       return {
         path: [
           purpose,
-          CONFIG.NUMBERS.COIN_TYPES.CARDANO,
-          CONFIG.NUMBERS.ACCOUNT_INDEX + CONFIG.NUMBERS.HARD_DERIVATION_START,
+          COIN_TYPE,
+          ACCOUNT_INDEX + HARD_DERIVATION_START,
           ADDRESS_TYPE_TO_CHANGE['External'],
           this.externalChain.getIndexOfAddress(address),
         ],
-        startLevel: CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.PURPOSE,
+        startLevel: BIP44_DERIVATION_LEVELS.PURPOSE,
       }
     }
 
@@ -600,7 +490,7 @@ export class CardanoWallet implements YoroiWallet {
   canGenerateNewReceiveAddress() {
     const lastUsedIndex = this.getLastUsedIndex(this.externalChain)
     // TODO: should use specific wallet config
-    const maxIndex = lastUsedIndex + CONFIG.WALLETS.HASKELL_SHELLEY.MAX_GENERATED_UNUSED
+    const maxIndex = lastUsedIndex + MAX_GENERATED_UNUSED
     if (this.state.lastGeneratedAddressIndex >= maxIndex) {
       return false
     }
@@ -659,15 +549,13 @@ export class CardanoWallet implements YoroiWallet {
   // =================== tx building =================== //
 
   async createUnsignedTx(receiver: string, tokens: SendTokenList, auxiliaryData?: Array<CardanoTypes.TxMetadata>) {
-    const timeToSlotFn = genTimeToSlot(getCardanoBaseConfig(this.getNetworkConfig()))
     const time = await this.checkServerStatus()
       .then(({serverTime}) => serverTime || Date.now())
       .catch(() => Date.now())
 
-    const absSlotNumber = new BigNumber(timeToSlotFn({time}).slot)
+    const absSlotNumber = new BigNumber(getTime(time).absoluteSlot)
     const changeAddr = await this.getAddressedChangeAddress()
     const addressedUtxos = await this.getAddressedUtxos()
-    const networkConfig = this.getNetworkConfig()
 
     try {
       const unsignedTx = await Cardano.createUnsignedTx(
@@ -677,20 +565,20 @@ export class CardanoWallet implements YoroiWallet {
         changeAddr,
         tokens as any,
         {
-          keyDeposit: networkConfig.KEY_DEPOSIT,
+          keyDeposit: KEY_DEPOSIT,
           linearFee: {
-            coefficient: networkConfig.LINEAR_FEE.COEFFICIENT,
-            constant: networkConfig.LINEAR_FEE.CONSTANT,
+            coefficient: LINEAR_FEE.COEFFICIENT,
+            constant: LINEAR_FEE.CONSTANT,
           },
-          minimumUtxoVal: networkConfig.MINIMUM_UTXO_VAL,
-          poolDeposit: networkConfig.POOL_DEPOSIT,
-          networkId: networkConfig.NETWORK_ID,
+          minimumUtxoVal: MINIMUM_UTXO_VAL,
+          poolDeposit: POOL_DEPOSIT,
+          networkId: NETWORK_ID,
         },
-        this.primaryToken,
+        PRIMARY_TOKEN,
         {metadata: auxiliaryData},
       )
 
-      return yoroiUnsignedTx({unsignedTx, networkConfig: this.getNetworkConfig(), addressedUtxos})
+      return yoroiUnsignedTx({unsignedTx, networkConfig: NETWORK_CONFIG, addressedUtxos})
     } catch (e) {
       if (e instanceof NotEnoughMoneyToSendError || e instanceof NoOutputsError) throw e
       Logger.error(`shelley::createUnsignedTx:: ${(e as Error).message}`, e)
@@ -701,13 +589,13 @@ export class CardanoWallet implements YoroiWallet {
   async signTx(unsignedTx: YoroiUnsignedTx, decryptedMasterKey: string) {
     const masterKey = await CardanoMobile.Bip32PrivateKey.fromBytes(Buffer.from(decryptedMasterKey, 'hex'))
     const accountPrivateKey = await masterKey
-      .derive(this.getPurpose())
-      .then((key) => key.derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO))
-      .then((key) => key.derive(0 + CONFIG.NUMBERS.HARD_DERIVATION_START))
+      .derive(PURPOSE)
+      .then((key) => key.derive(COIN_TYPE))
+      .then((key) => key.derive(0 + HARD_DERIVATION_START))
     const accountPrivateKeyHex = await accountPrivateKey.asBytes().then(toHex)
     const stakingPrivateKey = await accountPrivateKey
-      .derive(CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT)
-      .then((key) => key.derive(CONFIG.NUMBERS.STAKING_KEY_INDEX))
+      .derive(CHIMERIC_ACCOUNT)
+      .then((key) => key.derive(STAKING_KEY_INDEX))
       .then((key) => key.toRawKey())
     const stakingKeys =
       unsignedTx.staking.delegations ||
@@ -718,7 +606,7 @@ export class CardanoWallet implements YoroiWallet {
         : undefined
 
     const signedTx = await unsignedTx.unsignedTx.sign(
-      CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.ACCOUNT,
+      BIP44_DERIVATION_LEVELS.ACCOUNT,
       accountPrivateKeyHex,
       new Set<string>(),
       stakingKeys,
@@ -731,21 +619,19 @@ export class CardanoWallet implements YoroiWallet {
   }
 
   async createDelegationTx(poolId: string | undefined, delegatedAmount: BigNumber) {
-    const timeToSlotFn = genTimeToSlot(getCardanoBaseConfig(this.getNetworkConfig()))
     const time = await this.checkServerStatus()
       .then(({serverTime}) => serverTime || Date.now())
       .catch(() => Date.now())
 
-    const absSlotNumber = new BigNumber(timeToSlotFn({time}).slot)
+    const absSlotNumber = new BigNumber(getTime(time).absoluteSlot)
     const changeAddr = await this.getAddressedChangeAddress()
     const addressedUtxos = await this.getAddressedUtxos()
     const registrationStatus = (await this.getDelegationStatus()).isRegistered
     const stakingKey = await this.getStakingKey()
     const delegationType = registrationStatus ? RegistrationStatus.DelegateOnly : RegistrationStatus.RegisterAndDelegate
-    const networkConfig = this.getNetworkConfig()
     const delegatedAmountMT = {
-      values: [{identifier: '', amount: delegatedAmount, networkId: networkConfig.NETWORK_ID}],
-      defaults: this.primaryToken,
+      values: [{identifier: '', amount: delegatedAmount, networkId: NETWORK_ID}],
+      defaults: PRIMARY_TOKEN,
     }
 
     const unsignedTx = await Cardano.createUnsignedDelegationTx(
@@ -756,23 +642,23 @@ export class CardanoWallet implements YoroiWallet {
       poolId || null,
       changeAddr,
       delegatedAmountMT,
-      this.primaryToken,
+      PRIMARY_TOKEN,
       {},
       {
-        keyDeposit: networkConfig.KEY_DEPOSIT,
+        keyDeposit: KEY_DEPOSIT,
         linearFee: {
-          constant: networkConfig.LINEAR_FEE.CONSTANT,
-          coefficient: networkConfig.LINEAR_FEE.COEFFICIENT,
+          constant: LINEAR_FEE.CONSTANT,
+          coefficient: LINEAR_FEE.COEFFICIENT,
         },
-        minimumUtxoVal: networkConfig.MINIMUM_UTXO_VAL,
-        poolDeposit: networkConfig.POOL_DEPOSIT,
-        networkId: networkConfig.NETWORK_ID,
+        minimumUtxoVal: MINIMUM_UTXO_VAL,
+        poolDeposit: POOL_DEPOSIT,
+        networkId: NETWORK_ID,
       },
     )
 
     return yoroiUnsignedTx({
       unsignedTx,
-      networkConfig,
+      networkConfig: NETWORK_CONFIG,
       addressedUtxos,
     })
   }
@@ -787,46 +673,43 @@ export class CardanoWallet implements YoroiWallet {
     const catalystKeyHex = Buffer.from(bytes).toString('hex')
 
     try {
-      const timeToSlotFn = genTimeToSlot(getCardanoBaseConfig(this.getNetworkConfig()))
       const time = await this.checkServerStatus()
         .then(({serverTime}) => serverTime || Date.now())
         .catch(() => Date.now())
 
-      const absSlotNumber = new BigNumber(timeToSlotFn({time}).slot)
+      const absSlotNumber = new BigNumber(getTime(time).absoluteSlot)
       const votingPublicKey = await Promise.resolve(Buffer.from(catalystKeyHex, 'hex'))
         .then((bytes) => CardanoMobile.PrivateKey.fromExtendedBytes(bytes))
         .then((key) => key.toPublic())
       const stakingPublicKey = await this.getStakingKey()
       const changeAddr = await this.getAddressedChangeAddress()
-      const networkConfig = this.getNetworkConfig()
       const config = {
-        keyDeposit: networkConfig.KEY_DEPOSIT,
+        keyDeposit: KEY_DEPOSIT,
         linearFee: {
-          coefficient: networkConfig.LINEAR_FEE.COEFFICIENT,
-          constant: networkConfig.LINEAR_FEE.CONSTANT,
+          coefficient: LINEAR_FEE.COEFFICIENT,
+          constant: LINEAR_FEE.CONSTANT,
         },
-        minimumUtxoVal: networkConfig.MINIMUM_UTXO_VAL,
-        poolDeposit: networkConfig.POOL_DEPOSIT,
-        networkId: networkConfig.NETWORK_ID,
+        minimumUtxoVal: MINIMUM_UTXO_VAL,
+        poolDeposit: POOL_DEPOSIT,
+        networkId: NETWORK_ID,
       }
       const txOptions = {}
       const nonce = absSlotNumber.toNumber()
-      const chainNetworkConfig = Number.parseInt(this.getChainNetworkId(), 10)
 
       const addressedUtxos = await this.getAddressedUtxos()
 
       const unsignedTx = await Cardano.createUnsignedVotingTx(
         absSlotNumber,
-        this.primaryToken,
+        PRIMARY_TOKEN,
         votingPublicKey,
-        this.stakingKeyPath,
+        STAKING_KEY_PATH,
         stakingPublicKey,
         addressedUtxos,
         changeAddr,
         config,
         txOptions,
         nonce,
-        chainNetworkConfig,
+        CHAIN_NETWORK_ID,
       )
 
       const votingRegistration: {
@@ -848,7 +731,7 @@ export class CardanoWallet implements YoroiWallet {
         votingKeyEncrypted: catalystKeyEncrypted,
         votingRegTx: await yoroiUnsignedTx({
           unsignedTx,
-          networkConfig,
+          networkConfig: NETWORK_CONFIG,
           votingRegistration,
           addressedUtxos,
         }),
@@ -861,28 +744,23 @@ export class CardanoWallet implements YoroiWallet {
   }
 
   async createWithdrawalTx(shouldDeregister: boolean): Promise<YoroiUnsignedTx> {
-    const timeToSlotFn = genTimeToSlot(getCardanoBaseConfig(this.getNetworkConfig()))
-
     const time = await this.checkServerStatus()
       .then(({serverTime}) => serverTime || Date.now())
       .catch(() => Date.now())
 
-    const absSlotNumber = new BigNumber(timeToSlotFn({time}).slot)
+    const absSlotNumber = new BigNumber(getTime(time).absoluteSlot)
     const changeAddr = await this.getAddressedChangeAddress()
     const addressedUtxos = await this.getAddressedUtxos()
-    const accountState = await api.getAccountState(
-      {addresses: [this.rewardAddressHex]},
-      this.getNetworkConfig().BACKEND,
-    )
+    const accountState = await api.getAccountState({addresses: [this.rewardAddressHex]}, BACKEND)
 
     const withdrawalTx = await Cardano.createUnsignedWithdrawalTx(
       accountState,
-      this.primaryToken,
+      PRIMARY_TOKEN,
       absSlotNumber,
       addressedUtxos,
       [
         {
-          addressing: this.getRewardAddressAddressing(),
+          addressing: REWARD_ADDRESS_ADDRESSING,
           rewardAddress: this.rewardAddressHex,
           shouldDeregister,
         },
@@ -890,20 +768,20 @@ export class CardanoWallet implements YoroiWallet {
       changeAddr,
       {
         linearFee: {
-          coefficient: this.getNetworkConfig().LINEAR_FEE.COEFFICIENT,
-          constant: this.getNetworkConfig().LINEAR_FEE.CONSTANT,
+          coefficient: LINEAR_FEE.COEFFICIENT,
+          constant: LINEAR_FEE.CONSTANT,
         },
-        minimumUtxoVal: this.getNetworkConfig().MINIMUM_UTXO_VAL,
-        poolDeposit: this.getNetworkConfig().POOL_DEPOSIT,
-        keyDeposit: this.getNetworkConfig().KEY_DEPOSIT,
-        networkId: this.getNetworkConfig().NETWORK_ID,
+        minimumUtxoVal: MINIMUM_UTXO_VAL,
+        poolDeposit: POOL_DEPOSIT,
+        keyDeposit: KEY_DEPOSIT,
+        networkId: NETWORK_ID,
       },
       {metadata: undefined},
     )
 
     return yoroiUnsignedTx({
       unsignedTx: withdrawalTx,
-      networkConfig: this.getNetworkConfig(),
+      networkConfig: NETWORK_CONFIG,
       addressedUtxos,
     })
   }
@@ -913,16 +791,16 @@ export class CardanoWallet implements YoroiWallet {
 
     const ledgerPayload = await Cardano.buildLedgerPayload(
       unsignedTx.unsignedTx,
-      Number.parseInt(this.getChainNetworkId(), 10),
-      (this.getBaseNetworkConfig() as any).PROTOCOL_MAGIC,
-      this.stakingKeyPath,
+      CHAIN_NETWORK_ID,
+      PROTOCOL_MAGIC,
+      STAKING_KEY_PATH,
     )
 
     const signedLedgerTx = await signTxWithLedger(ledgerPayload, this.hwDeviceInfo, useUSB)
     const signedTx = await Cardano.buildLedgerSignedTx(
       unsignedTx.unsignedTx,
       signedLedgerTx,
-      this.getPurpose(),
+      PURPOSE,
       this.publicKeyHex,
     )
 
@@ -935,11 +813,11 @@ export class CardanoWallet implements YoroiWallet {
   // =================== backend API =================== //
 
   async checkServerStatus() {
-    return api.checkServerStatus(this.getBackendConfig())
+    return api.checkServerStatus(BACKEND)
   }
 
   async submitTransaction(signedTx: string) {
-    const response: any = await api.submitTransaction(signedTx, this.getBackendConfig())
+    const response: any = await api.submitTransaction(signedTx, BACKEND)
     Logger.info(response)
     return response as any
   }
@@ -956,38 +834,33 @@ export class CardanoWallet implements YoroiWallet {
   }
 
   async fetchAccountState(): Promise<AccountStateResponse> {
-    return api.bulkGetAccountState([this.rewardAddressHex], this.getBackendConfig())
+    return api.bulkGetAccountState([this.rewardAddressHex], BACKEND)
   }
 
   async fetchPoolInfo(request: PoolInfoRequest) {
-    return api.getPoolInfo(request, this.getBackendConfig())
+    return api.getPoolInfo(request, BACKEND)
   }
 
   fetchTokenInfo(tokenId: string) {
-    const apiUrl = this.getBackendConfig().TOKEN_INFO_SERVICE
-    if (!apiUrl) throw new Error('invalid wallet')
-
-    return (tokenId === '' || tokenId === 'ADA') && this.networkId === 1
-      ? Promise.resolve(primaryTokenInfo.mainnet)
-      : (tokenId === '' || tokenId === 'ADA' || tokenId === 'TADA') && this.networkId === 300
-      ? Promise.resolve(primaryTokenInfo.testnet)
-      : api.getTokenInfo(tokenId, `${apiUrl}/metadata`)
+    return tokenId === '' || tokenId === 'TADA'
+      ? Promise.resolve(PRIMARY_TOKEN_INFO)
+      : api.getTokenInfo(tokenId, `${TOKEN_INFO_SERVICE}/metadata`)
   }
 
   async fetchFundInfo(): Promise<FundInfoResponse> {
-    return api.getFundInfo(this.getBackendConfig(), this.getNetworkConfig().IS_MAINNET)
+    return api.getFundInfo(BACKEND, IS_MAINNET)
   }
 
   async fetchTxStatus(request: TxStatusRequest): Promise<TxStatusResponse> {
-    return api.fetchTxStatus(request, this.getBackendConfig())
+    return api.fetchTxStatus(request, BACKEND)
   }
 
   async fetchTipStatus(): Promise<TipStatusResponse> {
-    return api.getTipStatus(this.getBackendConfig())
+    return api.getTipStatus(BACKEND)
   }
 
   async fetchCurrentPrice(symbol: CurrencySymbol): Promise<number> {
-    return api.fetchCurrentPrice(symbol, this.getBackendConfig())
+    return api.fetchCurrentPrice(symbol, BACKEND)
   }
 
   private state: WalletState = {
@@ -1036,7 +909,7 @@ export class CardanoWallet implements YoroiWallet {
           ? [...this.internalAddresses, ...this.externalAddresses, ...[this.rewardAddressHex]]
           : [...this.internalAddresses, ...this.externalAddresses],
         this.confirmationCounts[tx.id] || 0,
-        this.networkId,
+        NETWORK_ID,
         memos[tx.id] ?? null,
       )
     })
@@ -1130,15 +1003,11 @@ export class CardanoWallet implements YoroiWallet {
   private async _doFullSync() {
     assert.assert(this.isInitialized, 'doFullSync: isInitialized')
 
-    if (isJormungandr(this.networkId)) return
     Logger.info('Discovery done, now syncing transactions')
 
     await this.discoverAddresses()
 
-    await Promise.all([
-      this.syncUtxos(),
-      this.transactionManager.doSync(this.getAddressesInBlocks(), this.getBackendConfig()),
-    ])
+    await Promise.all([this.syncUtxos(), this.transactionManager.doSync(this.getAddressesInBlocks(), BACKEND)])
 
     this.updateLastGeneratedAddressIndex()
   }
@@ -1154,7 +1023,7 @@ export class CardanoWallet implements YoroiWallet {
 
   private async discoverAddresses() {
     // last chunk gap limit check
-    const filterFn = (addrs) => api.filterUsedAddresses(addrs, this.getBackendConfig())
+    const filterFn = (addrs) => api.filterUsedAddresses(addrs, BACKEND)
     await Promise.all([this.internalChain.sync(filterFn), this.externalChain.sync(filterFn)])
   }
 
@@ -1201,8 +1070,6 @@ export class CardanoWallet implements YoroiWallet {
       version: this.version,
       internalChain: this.internalChain.toJSON(),
       externalChain: this.externalChain.toJSON(),
-      networkId: this.networkId,
-      walletImplementationId: this.walletImplementationId,
       isHW: this.isHW,
       hwDeviceInfo: this.hwDeviceInfo,
       isReadOnly: this.isReadOnly,
@@ -1213,17 +1080,15 @@ export class CardanoWallet implements YoroiWallet {
 
 const toHex = (bytes: Uint8Array) => Buffer.from(bytes).toString('hex')
 
-const makeKeys = async ({mnemonic, implementationId}: {mnemonic: string; implementationId: WalletImplementationId}) => {
+const makeKeys = async ({mnemonic}: {mnemonic: string}) => {
   const rootKeyPtr = await generateWalletRootKey(mnemonic)
   const rootKey: string = Buffer.from(await rootKeyPtr.asBytes()).toString('hex')
 
-  const purpose = isByron(implementationId)
-    ? CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.BIP44
-    : CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852
+  const purpose = PURPOSE
   const accountPubKeyHex = await rootKeyPtr
     .derive(purpose)
-    .then((key) => key.derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO))
-    .then((key) => key.derive(CONFIG.NUMBERS.ACCOUNT_INDEX + CONFIG.NUMBERS.HARD_DERIVATION_START))
+    .then((key) => key.derive(COIN_TYPE))
+    .then((key) => key.derive(ACCOUNT_INDEX + HARD_DERIVATION_START))
     .then((accountKey) => accountKey.toPublic())
     .then((accountPubKey) => accountPubKey.asBytes())
     .then((bytes) => Buffer.from(bytes).toString('hex'))
@@ -1235,25 +1100,16 @@ const makeKeys = async ({mnemonic, implementationId}: {mnemonic: string; impleme
 }
 
 const addressChains = {
-  create: async ({
-    accountPubKeyHex,
-    implementationId,
-    networkId,
-  }: {
-    accountPubKeyHex: string
-    implementationId: WalletImplementationId
-    networkId: NetworkId
-  }) => {
-    const walletConfig = getWalletConfigById(implementationId)
+  create: async ({accountPubKeyHex}: {accountPubKeyHex: string}) => {
     const internalChain = new AddressChain(
-      new AddressGenerator(accountPubKeyHex, 'Internal', implementationId, networkId),
-      walletConfig.DISCOVERY_BLOCK_SIZE,
-      walletConfig.DISCOVERY_GAP_SIZE,
+      new AddressGenerator(accountPubKeyHex, 'Internal', WALLET_IMPLEMENTATION_ID, NETWORK_ID),
+      DISCOVERY_BLOCK_SIZE,
+      DISCOVERY_GAP_SIZE,
     )
     const externalChain = new AddressChain(
-      new AddressGenerator(accountPubKeyHex, 'External', implementationId, networkId),
-      walletConfig.DISCOVERY_BLOCK_SIZE,
-      walletConfig.DISCOVERY_GAP_SIZE,
+      new AddressGenerator(accountPubKeyHex, 'External', WALLET_IMPLEMENTATION_ID, NETWORK_ID),
+      DISCOVERY_BLOCK_SIZE,
+      DISCOVERY_GAP_SIZE,
     )
 
     // Create at least one address in each block
@@ -1263,10 +1119,10 @@ const addressChains = {
     return {internalChain, externalChain}
   },
 
-  restore: ({data, networkId}: {data: WalletJSON; networkId: NetworkId}) => {
+  restore: ({data}: {data: WalletJSON}) => {
     return {
-      internalChain: AddressChain.fromJSON(data.internalChain, networkId),
-      externalChain: AddressChain.fromJSON(data.externalChain, networkId),
+      internalChain: AddressChain.fromJSON(data.internalChain, NETWORK_ID),
+      externalChain: AddressChain.fromJSON(data.externalChain, NETWORK_ID),
     }
   },
 }
@@ -1283,32 +1139,11 @@ const isWalletJSON = (data: unknown): data is WalletJSON => {
 
 const keys: Array<keyof WalletJSON> = [
   'publicKeyHex',
-  'networkId',
-  'walletImplementationId',
   'internalChain',
   'externalChain',
   'isEasyConfirmationEnabled',
   'lastGeneratedAddressIndex',
 ]
-
-export const primaryTokenInfo = {
-  mainnet: {
-    id: '',
-    name: 'ADA',
-    decimals: 6,
-    description: 'Cardano',
-    ticker: 'ADA',
-    symbol: '₳',
-  } as TokenInfo,
-  testnet: {
-    id: '',
-    name: 'TADA',
-    decimals: 6,
-    description: 'Cardano',
-    ticker: 'TADA',
-    symbol: '₳',
-  } as TokenInfo,
-}
 
 const encryptAndSaveRootKey = (wallet: YoroiWallet, rootKey: string, password: string) =>
   wallet.encryptedStorage.rootKey.write(rootKey, password)

@@ -1,5 +1,5 @@
-import {CardanoMobile} from '.'
-import {getSpendingKey, getStakingKey, toWasmAddress} from './addressInfo'
+import {CardanoMobile} from '..'
+import {getSpendingKey, getStakingKey, toWasmAddress} from '.'
 
 // base
 const shelley_mainnet_type0_address =
