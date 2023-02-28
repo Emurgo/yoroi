@@ -2,6 +2,7 @@ import {createStackNavigator} from '@react-navigation/stack'
 import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Icon, Spacer} from '../components'
 import {NftRoutes} from '../navigation'
@@ -40,7 +41,11 @@ const Routes = () => {
           title: strings.title,
           headerTitleAlign: 'center',
           header: searchVisible
-            ? () => <SearchHeader placeholder={strings.search} onClose={handleSearchClose} />
+            ? () => (
+                <SafeAreaView edges={['left', 'top', 'right']}>
+                  <SearchHeader placeholder={strings.search} onClose={handleSearchClose} />
+                </SafeAreaView>
+              )
             : undefined,
           headerLeft: () => <Spacer width={26} />,
           headerRight: () => (
