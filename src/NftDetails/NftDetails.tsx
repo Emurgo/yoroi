@@ -144,6 +144,8 @@ const NftMetadataPanel = ({nft}: {nft: YoroiNft}) => {
           </View>
         </Link>
       </MetadataRow>
+
+      <Spacer height={24} />
     </>
   )
 }
