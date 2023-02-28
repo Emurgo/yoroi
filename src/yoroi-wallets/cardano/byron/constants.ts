@@ -1,5 +1,4 @@
 import {DefaultAsset, TokenInfo} from '../../types'
-import {CardanoHaskellShelleyNetwork} from '..'
 
 export * from '../../cardano/constants'
 
@@ -63,7 +62,7 @@ export const BASE_CONFIG = {
 }
 
 const BASE_CONFIG1 = [BYRON_BASE_CONFIG, SHELLEY_BASE_CONFIG]
-export const NETWORK_CONFIG: CardanoHaskellShelleyNetwork = {
+export const NETWORK_CONFIG = {
   BACKEND,
   BASE_CONFIG: BASE_CONFIG1,
   CHAIN_NETWORK_ID: CHAIN_NETWORK_ID.toString(),

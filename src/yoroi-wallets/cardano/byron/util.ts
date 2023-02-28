@@ -1,11 +1,8 @@
 import bs58 from 'bs58'
 
-import {CONFIG} from '../../../legacy/config'
 import {ADDRESS_TYPE_TO_CHANGE, AddressType, CardanoMobile, generateWalletRootKey} from '..'
 import {CardanoError} from '../errors'
-import {getCardanoByronConfig} from '../networks'
-
-const BYRON_PROTOCOL_MAGIC = getCardanoByronConfig().PROTOCOL_MAGIC
+import {ACCOUNT_INDEX, COIN_TYPE, HARD_DERIVATION_START, PROTOCOL_MAGIC, PURPOSE} from './constants'
 
 export type CryptoAccount = {
   derivation_scheme: string
@@ -38,12 +35,12 @@ export const getMasterKeyFromMnemonic = async (mnemonic: string) => {
  */
 export const getAccountFromMasterKey = async (
   rootKey: string,
-  accountIndex: number = CONFIG.NUMBERS.ACCOUNT_INDEX,
+  accountIndex: number = ACCOUNT_INDEX,
 ): Promise<CryptoAccount> => {
   const rootKeyPtr = await CardanoMobile.Bip32PrivateKey.fromBytes(Buffer.from(rootKey, 'hex'))
   const accountKey = await (
-    await (await rootKeyPtr.derive(CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.BIP44)).derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO)
-  ).derive(accountIndex + CONFIG.NUMBERS.HARD_DERIVATION_START)
+    await (await rootKeyPtr.derive(PURPOSE)).derive(COIN_TYPE)
+  ).derive(accountIndex + HARD_DERIVATION_START)
   const accountPubKey = await accountKey.toPublic()
   // match old byron CryptoAccount type
   return {
@@ -62,7 +59,7 @@ export const getAddresses = async (
   account: CryptoAccount,
   type: AddressType,
   indexes: Array<number>,
-  protocolMagic: number = BYRON_PROTOCOL_MAGIC,
+  protocolMagic: number = PROTOCOL_MAGIC,
 ): Promise<Array<string>> => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const addrs: Array<any> = []
@@ -91,13 +88,13 @@ export const getAddressesFromMnemonics = async (
 export const getExternalAddresses = (
   account: CryptoAccount,
   indexes: Array<number>,
-  protocolMagic: number = BYRON_PROTOCOL_MAGIC,
+  protocolMagic: number = PROTOCOL_MAGIC,
 ): Promise<Array<string>> => getAddresses(account, 'External', indexes, protocolMagic)
 
 export const getInternalAddresses = (
   account: CryptoAccount,
   indexes: Array<number>,
-  protocolMagic: number = BYRON_PROTOCOL_MAGIC,
+  protocolMagic: number = PROTOCOL_MAGIC,
 ): Promise<Array<string>> => getAddresses(account, 'Internal', indexes, protocolMagic)
 
 export const getAddressInHex = (address: string): string => {

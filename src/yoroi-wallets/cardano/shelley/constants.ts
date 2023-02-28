@@ -1,5 +1,4 @@
 import {DefaultAsset, TokenInfo} from '../../types'
-import {CardanoHaskellShelleyNetwork} from '..'
 export * from '../../cardano/constants'
 
 export const NETWORK_ID = 1 // mainnet
@@ -76,18 +75,16 @@ export const BACKEND = {
 } as const
 
 const CARDANO_BASE_CONFIG = [BYRON_BASE_CONFIG, SHELLEY_BASE_CONFIG]
-export const NETWORK_CONFIG: CardanoHaskellShelleyNetwork = {
+export const NETWORK_CONFIG = {
   BACKEND,
   BASE_CONFIG: CARDANO_BASE_CONFIG,
   CHAIN_NETWORK_ID: CHAIN_NETWORK_ID.toString(),
   COIN_TYPE,
   ENABLED: true,
-  EXPLORER_URL_FOR_ADDRESS: (address: string) => `https://preprod.cardanoscan.io/address/${address}`,
+  EXPLORER_URL_FOR_ADDRESS: (address: string) => `https://cardanoscan.io/address/${address}`,
   EXPLORER_URL_FOR_TOKEN: (fingerprint: string) =>
-    fingerprint.length > 0
-      ? `https://preprod.cardanoscan.io/token/${fingerprint}`
-      : `https://preprod.cardanoscan.io/tokens`,
-  EXPLORER_URL_FOR_TX: (txid: string) => `https://preprod.cardanoscan.io/transaction/${txid}`,
+    fingerprint.length > 0 ? `https://cardanoscan.io/token/${fingerprint}` : `https://cardanoscan.io/tokens`,
+  EXPLORER_URL_FOR_TX: (txid: string) => `https://cardanoscan.io/transaction/${txid}`,
   POOL_EXPLORER: 'https://adapools.yoroiwallet.com/?source=mobile',
   IS_MAINNET,
   KEY_DEPOSIT,
