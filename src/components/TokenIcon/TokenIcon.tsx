@@ -4,25 +4,26 @@ import {Image, StyleSheet, View} from 'react-native'
 import {useIsTokenKnownNft, useNftImageModerated, useTokenInfo} from '../../hooks'
 import {SHOW_NFT_GALLERY} from '../../legacy/config'
 import {COLORS} from '../../theme'
-import {ModeratedNftIcon} from '../../TxHistory/AssetList/ModeratedNftIcon'
 import {YoroiWallet} from '../../yoroi-wallets'
 import {Icon} from '..'
+import {ModeratedNftIcon} from './ModeratedNftIcon'
 
 export const TokenIcon = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string}) => {
   const tokenInfo = useTokenInfo({wallet, tokenId})
-  const isTokenNft = useIsTokenKnownNft({wallet, fingerprint: tokenInfo.fingerprint})
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
+  const isTokenNft = useIsTokenKnownNft({wallet, fingerprint: tokenInfo.fingerprint})
 
   if (isPrimary) return <PrimaryIcon />
   if (isTokenNft && SHOW_NFT_GALLERY) return <NftIcon wallet={wallet} tokenId={tokenInfo.id} />
 
-  const logo = isBase64(tokenInfo.logo)
-    ? `data:image/png;base64,${tokenInfo.logo}`
-    : typeof tokenInfo.logo === 'string'
-    ? tokenInfo.logo
-    : null
+  if (typeof tokenInfo.logo === 'string' && tokenInfo.logo.length > 0) {
+    if (isBase64(tokenInfo.logo)) {
+      return <Image source={{uri: `data:image/png;base64,${tokenInfo.logo}`}} style={styles.icon} />
+    } else {
+      return <Image source={{uri: tokenInfo.logo}} style={styles.icon} />
+    }
+  }
 
-  if (logo !== null) return <Image source={{uri: logo}} style={styles.icon} />
   return <Placeholder />
 }
 
@@ -35,10 +36,7 @@ const PrimaryIcon = () => (
 const NftIcon = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string}) => {
   const nftModeratedImage = useNftImageModerated({wallet, nftId: tokenId})
 
-  if (!nftModeratedImage) {
-    return <ModeratedNftIcon status="pending" />
-  }
-
+  if (!nftModeratedImage) return <ModeratedNftIcon status="pending" />
   return <ModeratedNftIcon image={nftModeratedImage.image} status={nftModeratedImage.status} />
 }
 
