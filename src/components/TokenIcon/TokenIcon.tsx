@@ -15,16 +15,10 @@ export const TokenIcon = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: stri
 
   if (isPrimary) return <PrimaryIcon />
   if (isTokenNft && SHOW_NFT_GALLERY) return <NftIcon wallet={wallet} tokenId={tokenInfo.id} />
-
-  if (typeof tokenInfo.logo === 'string' && tokenInfo.logo.length > 0) {
-    if (isBase64(tokenInfo.logo)) {
-      return <Image source={{uri: `data:image/png;base64,${tokenInfo.logo}`}} style={styles.icon} />
-    } else {
-      return <Image source={{uri: tokenInfo.logo}} style={styles.icon} />
-    }
-  }
-
-  return <Placeholder />
+  if (tokenInfo.logo === undefined || tokenInfo.logo.length === 0) return <Placeholder />
+  if (isBase64(tokenInfo.logo))
+    return <Image source={{uri: `data:image/png;base64,${tokenInfo.logo}`}} style={styles.icon} />
+  return <Image source={{uri: tokenInfo.logo}} style={styles.icon} />
 }
 
 const PrimaryIcon = () => (
