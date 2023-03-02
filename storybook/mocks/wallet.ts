@@ -318,6 +318,10 @@ const fetchNfts = {
       action('fetchNfts')(...args)
       return []
     },
+    one: async (...args) => {
+      action('fetchNfts')(...args)
+      return [nft]
+    },
   },
   error: async (...args) => {
     action('fetchNfts')(...args)
@@ -533,6 +537,54 @@ const fetchCurrentPrice = {
   loading: async (...args) => {
     action('fetchCurrentPrice')(...args)
     return new Promise(() => null) as unknown as number
+  },
+}
+
+const fetchTokenInfo = {
+  nft: async (...args) => {
+    action('fetchTokenInfo')(...args)
+    return {
+      decimals: 0,
+      description: undefined,
+      fingerprint: nft.fingerprint,
+      group: '5449dbad479b09de066bdf7934799c8a5aa2b66cf4a11eb759aa76c6',
+      id: nft.id,
+      logo: undefined,
+      name: nft.name,
+      symbol: undefined,
+      ticker: undefined,
+      url: undefined,
+    }
+  },
+  ft: async (...args) => {
+    action('fetchTokenInfo')(...args)
+    return {
+      decimals: 3,
+      description: 'WingRiders testnet wUSDC token.',
+      fingerprint: 'asset1n3weea8202dpev06tshdvhe9xd6f9jcqldpc2q',
+      group: '648823ffdad1610b4162f4dbc87bd47f6f9cf45d772ddef661eff198',
+      id: '648823ffdad1610b4162f4dbc87bd47f6f9cf45d772ddef661eff198.7755534443',
+      logo: 'https://picsum.photos/40',
+      name: 'wUSDC',
+      symbol: undefined,
+      ticker: 'WUSDC',
+      url: 'https://wallet-testnet.nu.fi',
+    }
+  },
+  ftNoImage: async (...args) => {
+    action('fetchTokenInfo')(...args)
+    return {
+      decimals: 3,
+      description: 'WingRiders testnet wUSDC token.',
+      fingerprint: 'asset1n3weea8202dpev06tshdvhe9xd6f9jcqldpc2q',
+      group: '648823ffdad1610b4162f4dbc87bd47f6f9cf45d772ddef661eff198',
+      id: '648823ffdad1610b4162f4dbc87bd47f6f9cf45d772ddef661eff198.7755534443',
+      logo: '',
+      name: 'wUSDC',
+      symbol: undefined,
+      ticker: 'WUSDC',
+      url: 'https://wallet-testnet.nu.fi',
+    }
   },
 }
 
@@ -779,6 +831,7 @@ export const mocks = {
   txid,
   getTransactions,
   fetchPoolInfo,
+  fetchTokenInfo,
   createUnsignedTx,
   createDelegationTx,
   createWithdrawalTx,

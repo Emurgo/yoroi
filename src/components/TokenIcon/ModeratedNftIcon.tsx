@@ -1,13 +1,14 @@
 import React from 'react'
-import {ActivityIndicator, Image, StyleSheet, View} from 'react-native'
+import {Image, StyleSheet} from 'react-native'
 import {Avatar} from 'react-native-paper'
 
 import NftPlaceholder from '../../assets/img/nft-placeholder.png'
 import {YoroiNftModerationStatus} from '../../yoroi-wallets/types'
+import {LoadingIcon} from './TokenIcon'
 
 export const ModeratedNftIcon = ({image, status}: {image?: string; status: YoroiNftModerationStatus}) => {
   if (status === 'pending') {
-    return <PendingNftIcon />
+    return <LoadingIcon />
   }
 
   if (status === 'blocked') {
@@ -43,14 +44,6 @@ function ApprovedNftIcon({image}: {image?: string}) {
 
 function ConsentNftIcon({image}: {image?: string}) {
   return <Image source={{uri: image}} style={styles.assetIcon} blurRadius={20} borderRadius={32} />
-}
-
-function PendingNftIcon() {
-  return (
-    <View style={styles.assetIcon}>
-      <ActivityIndicator size="small" color="black" />
-    </View>
-  )
 }
 
 const styles = StyleSheet.create({
