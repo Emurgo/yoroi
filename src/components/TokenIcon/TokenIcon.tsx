@@ -41,6 +41,7 @@ export const Placeholder = () => (
 )
 
 const isBase64 = (string) => {
+  // https://github.com/miguelmota/is-base64/blob/master/is-base64.js#L17
   return /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/i.test(string)
 }
 
