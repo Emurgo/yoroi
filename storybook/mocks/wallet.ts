@@ -638,7 +638,7 @@ const balances: YoroiAmounts = {
   '08d91ec4e6c743a92de97d2fde5ca0d81493555c535894a3097061f7.c8b0': '148',
 }
 
-export const tokenInfos: Record<string, TokenInfo> = {
+const tokenInfos: Record<string, TokenInfo> = {
   '': primaryTokenInfo.mainnet,
   '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950': toTokenInfo({
     networkId: 300,

@@ -1,7 +1,7 @@
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {mocks, nft, tokenInfos} from '../../../storybook'
+import {mocks, nft} from '../../../storybook'
 import {TokenIcon} from './TokenIcon'
 
 storiesOf('TokenIcon', module)
@@ -28,7 +28,7 @@ storiesOf('TokenIcon', module)
       fetchNfts: mocks.fetchNfts.success.many,
       fetchNftModerationStatus: mocks.fetchNftModerationStatus.success.approved,
       fetchTokenInfo: () =>
-        Promise.resolve(tokenInfos['648823ffdad1610b4162f4dbc87bd47f6f9cf45d772ddef661eff198.7755534443']),
+        Promise.resolve(mocks.tokenInfos['648823ffdad1610b4162f4dbc87bd47f6f9cf45d772ddef661eff198.7755534443']),
     }
     return <TokenIcon wallet={wallet} tokenId="648823ffdad1610b4162f4dbc87bd47f6f9cf45d772ddef661eff198.7755534443" />
   })
