@@ -41,8 +41,18 @@ export const Placeholder = () => (
 )
 
 const isBase64 = (string) => {
-  // https://github.com/miguelmota/is-base64/blob/master/is-base64.js#L17
-  return /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/i.test(string)
+  // https://github.com/validatorjs/validator.js/blob/491d9c0eea23f8401b5739803fb8e55c6860b32b/src/lib/isBase64.js
+  const length = string.length
+  if (length % 4 !== 0 || /[^A-Z0-9+\\/=]/i.test(string)) {
+    return false
+  }
+
+  const firstPaddingChar = string.indexOf('=')
+  return (
+    firstPaddingChar === -1 ||
+    firstPaddingChar === length - 1 ||
+    (firstPaddingChar === length - 2 && string[length - 1] === '=')
+  )
 }
 
 const styles = StyleSheet.create({
