@@ -34,7 +34,7 @@ const NftIcon = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string}) => {
   return <ModeratedNftIcon image={nftModeratedImage.image} status={nftModeratedImage.status} />
 }
 
-const Placeholder = () => (
+export const Placeholder = () => (
   <View style={[styles.icon, styles.placeholder]}>
     <Icon.Tokens color={COLORS.TEXT_INPUT} size={35} />
   </View>

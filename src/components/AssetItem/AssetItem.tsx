@@ -6,7 +6,7 @@ import {COLORS} from '../../theme'
 import {PairedBalance} from '../../TxHistory/PairedBalance'
 import {Quantity, TokenInfo} from '../../yoroi-wallets/types'
 import {Quantities} from '../../yoroi-wallets/utils'
-import {Text, TokenIcon} from '..'
+import {Boundary, Placeholder, Text, TokenIcon} from '..'
 
 export type AssetItemProps = {
   tokenInfo: TokenInfo
@@ -24,7 +24,9 @@ export const AssetItem = ({balance, style, tokenInfo}: AssetItemProps) => {
   return (
     <View style={[style, styles.container]} testID="assetItem">
       <Left>
-        <TokenIcon wallet={wallet} tokenId={tokenInfo.id} />
+        <Boundary error={{fallback: () => <Placeholder />}}>
+          <TokenIcon wallet={wallet} tokenId={tokenInfo.id} />
+        </Boundary>
       </Left>
 
       <Middle>
