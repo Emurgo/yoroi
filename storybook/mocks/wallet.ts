@@ -586,6 +586,14 @@ const fetchTokenInfo = {
       url: 'https://wallet-testnet.nu.fi',
     }
   },
+  loading: async (...args) => {
+    action('fetchTokenInfo')(...args)
+    return new Promise(() => null) as unknown as TokenInfo
+  },
+  error: async (...args) => {
+    action('fetchTokenInfo')(...args)
+    return Promise.reject(new Error('storybook error message'))
+  },
 }
 
 const tokenEntries: Array<TokenEntry> = [
