@@ -1,8 +1,8 @@
 import {CONFIG} from '../../legacy/config'
 import {storage} from '../storage'
 import {BackendConfig} from '../types'
+import {ByronWallet} from './byron/ByronWallet'
 import * as Byron from './byron/constants'
-import {CardanoWallet} from './LegacyWallet'
 import {CardanoHaskellShelleyNetwork} from './networks'
 import * as Shelley from './shelley/constants'
 import * as ShelleyTestnet from './shelley-testnet/constants'
@@ -13,7 +13,7 @@ describe('split wallets', () => {
     const networkId = Byron.NETWORK_ID // mainnet
     const implementationId = Byron.WALLET_IMPLEMENTATION_ID
 
-    const legacyWallet = await CardanoWallet.create({
+    const legacyWallet = await ByronWallet.create({
       id,
       mnemonic,
       networkId,
@@ -62,7 +62,7 @@ describe('split wallets', () => {
     const networkId = Shelley.NETWORK_ID // mainnet
     const implementationId = Shelley.WALLET_IMPLEMENTATION_ID
 
-    const legacyWallet = await CardanoWallet.create({
+    const legacyWallet = await ByronWallet.create({
       id,
       mnemonic,
       networkId,
@@ -111,7 +111,7 @@ describe('split wallets', () => {
     const networkId = ShelleyTestnet.NETWORK_ID // mainnet
     const implementationId = ShelleyTestnet.WALLET_IMPLEMENTATION_ID
 
-    const legacyWallet = await CardanoWallet.create({
+    const legacyWallet = await ByronWallet.create({
       id,
       mnemonic,
       networkId,

@@ -3,9 +3,7 @@ import {flatten} from 'lodash'
 
 import type {NetworkId} from '../types/other'
 import {NETWORK_REGISTRY, YOROI_PROVIDER_IDS} from '../types/other'
-import { BYRON_BASE_CONFIG, NETWORK_CONFIG as HASKELL_BYRON, PROTOCOL_MAGIC } from './byron/constants'
-import {NETWORK_CONFIG as HASKELL_SHELLEY } from './shelley/constants'
-import {NETWORK_CONFIG as HASKELL_SHELLEY_TESTNET } from './shelley-testnet/constants'
+import {NUMBERS} from './numbers'
 const _DEFAULT_BACKEND_RULES = {
   FETCH_UTXOS_MAX_ADDRESSES: 50,
   TX_HISTORY_MAX_ADDRESSES: 50,
@@ -26,24 +24,117 @@ const _DEFAULT_BACKEND_RULES = {
  * - as a general rule, all configuration data should be accessed from a single
  *   global object -> ./config.js and not from here.
  */
-
 const BYRON_MAINNET = {
-  PROVIDER_ID: HASKELL_BYRON.PROVIDER_ID,
-  NETWORK_ID: HASKELL_BYRON.NETWORK_ID,
-  MARKETING_NAME: HASKELL_BYRON.MARKETING_NAME,
+  PROVIDER_ID: YOROI_PROVIDER_IDS.BYRON_MAINNET,
+  NETWORK_ID: NETWORK_REGISTRY.BYRON_MAINNET,
+  MARKETING_NAME: 'Mainnet',
   ENABLED: false,
-  IS_MAINNET: HASKELL_BYRON.IS_MAINNET,
-  EXPLORER_URL_FOR_ADDRESS: HASKELL_BYRON.EXPLORER_URL_FOR_ADDRESS,
-  EXPLORER_URL_FOR_TOKEN: HASKELL_BYRON.EXPLORER_URL_FOR_TOKEN,
-  EXPLORER_URL_FOR_TX: HASKELL_BYRON.EXPLORER_URL_FOR_TX,
-  PROTOCOL_MAGIC: PROTOCOL_MAGIC,
-  GENESIS_DATE: BYRON_BASE_CONFIG.GENESIS_DATE,
-  START_AT: BYRON_BASE_CONFIG.START_AT,
-  SLOTS_PER_EPOCH: BYRON_BASE_CONFIG.SLOTS_PER_EPOCH,
-  SLOT_DURATION: BYRON_BASE_CONFIG.SLOT_DURATION,
-  COIN_TYPE: HASKELL_BYRON.COIN_TYPE,
+  IS_MAINNET: true,
+  EXPLORER_URL_FOR_ADDRESS: (_addr: string) => '',
+  EXPLORER_URL_FOR_TOKEN: (_addr: string) => '',
+  EXPLORER_URL_FOR_TX: (_addr: string) => '',
+  PROTOCOL_MAGIC: 764824073,
+  GENESIS_DATE: '1506203091000',
+  START_AT: 0,
+  SLOTS_PER_EPOCH: 21600,
+  SLOT_DURATION: 20,
+  COIN_TYPE: NUMBERS.COIN_TYPES.CARDANO,
 }
+const HASKELL_SHELLEY = {
+  PROVIDER_ID: YOROI_PROVIDER_IDS.HASKELL_SHELLEY,
+  NETWORK_ID: NETWORK_REGISTRY.HASKELL_SHELLEY,
+  MARKETING_NAME: 'Cardano Mainnet',
+  ENABLED: true,
+  CHAIN_NETWORK_ID: '1',
+  IS_MAINNET: true,
 
+  EXPLORER_URL_FOR_ADDRESS: (address: string) => `https://cardanoscan.io/address/${address}`,
+  EXPLORER_URL_FOR_TOKEN: (fingerprint: string) =>
+    fingerprint.length > 0 ? `https://cardanoscan.io/token/${fingerprint}` : `https://cardanoscan.io/tokens`,
+  EXPLORER_URL_FOR_TX: (txid: string) => `https://cardanoscan.io/transaction/${txid}`,
+  POOL_EXPLORER: 'https://adapools.yoroiwallet.com/?source=mobile',
+
+  BACKEND: {
+    API_ROOT: 'https://api.yoroiwallet.com/api',
+    NFT_STORAGE_URL: 'https://fibo-validated-nft-images.s3.amazonaws.com',
+    TOKEN_INFO_SERVICE: 'https://cdn.yoroiwallet.com',
+    ..._DEFAULT_BACKEND_RULES,
+  },
+  BASE_CONFIG: [
+    {
+      // byron-era
+      PROTOCOL_MAGIC: 764824073,
+      // aka byron network id
+      START_AT: 0,
+      GENESIS_DATE: '1506203091000',
+      SLOTS_PER_EPOCH: 21600,
+      SLOT_DURATION: 20,
+    },
+    {
+      // shelley-era
+      START_AT: 208,
+      SLOTS_PER_EPOCH: 432000,
+      SLOT_DURATION: 1,
+    },
+  ],
+  PER_EPOCH_PERCENTAGE_REWARD: 69344,
+  COIN_TYPE: NUMBERS.COIN_TYPES.CARDANO,
+  LINEAR_FEE: {
+    COEFFICIENT: '44',
+    CONSTANT: '155381',
+  },
+  MINIMUM_UTXO_VAL: '1000000',
+  POOL_DEPOSIT: '500000000',
+  KEY_DEPOSIT: '2000000',
+}
+const HASKELL_SHELLEY_TESTNET = {
+  PROVIDER_ID: YOROI_PROVIDER_IDS.HASKELL_SHELLEY_TESTNET,
+  NETWORK_ID: NETWORK_REGISTRY.HASKELL_SHELLEY_TESTNET,
+  MARKETING_NAME: 'Cardano testnet',
+  ENABLED: true,
+  CHAIN_NETWORK_ID: '0',
+  IS_MAINNET: false,
+
+  EXPLORER_URL_FOR_ADDRESS: (address: string) => `https://preprod.cardanoscan.io/address/${address}`,
+  EXPLORER_URL_FOR_TOKEN: (fingerprint: string) =>
+    fingerprint.length > 0
+      ? `https://preprod.cardanoscan.io/token/${fingerprint}`
+      : `https://preprod.cardanoscan.io/tokens`,
+  EXPLORER_URL_FOR_TX: (txid: string) => `https://preprod.cardanoscan.io/transaction/${txid}`,
+  POOL_EXPLORER: 'https://adapools.yoroiwallet.com/?source=mobile',
+
+  BACKEND: {
+    API_ROOT: 'https://preprod-backend.yoroiwallet.com/api',
+    NFT_STORAGE_URL: 'https://validated-nft-images.s3.amazonaws.com',
+    TOKEN_INFO_SERVICE: 'https://metadata.cardano-testnet.iohkdev.io',
+    ..._DEFAULT_BACKEND_RULES,
+  },
+  BASE_CONFIG: [
+    {
+      PROTOCOL_MAGIC: 1097911063,
+      // aka byron network id
+      START_AT: 0,
+      GENESIS_DATE: '1563999616000',
+      SLOTS_PER_EPOCH: 21600,
+      SLOT_DURATION: 20,
+    },
+    {
+      // shelley-era
+      START_AT: 74,
+      SLOTS_PER_EPOCH: 432000,
+      SLOT_DURATION: 1,
+    },
+  ],
+  PER_EPOCH_PERCENTAGE_REWARD: 69344,
+  COIN_TYPE: NUMBERS.COIN_TYPES.CARDANO,
+  LINEAR_FEE: {
+    COEFFICIENT: '44',
+    CONSTANT: '155381',
+  },
+  MINIMUM_UTXO_VAL: '1000000',
+  POOL_DEPOSIT: '500000000',
+  KEY_DEPOSIT: '2000000',
+}
 const JORMUNGANDR = {
   PROVIDER_ID: YOROI_PROVIDER_IDS.JORMUNGANDR,
   NETWORK_ID: NETWORK_REGISTRY.JORMUNGANDR,
@@ -53,6 +144,7 @@ const JORMUNGANDR = {
   PROTOCOL_MAGIC: 764824073,
   BACKEND: {
     API_ROOT: 'https://shelley-itn-yoroi-backend.yoroiwallet.com/api',
+    NFT_STORAGE_URL: 'https://validated-nft-images.s3.amazonaws.com',
     ..._DEFAULT_BACKEND_RULES,
   },
   SEIZA_STAKING_SIMPLE: (ADA: string) =>
