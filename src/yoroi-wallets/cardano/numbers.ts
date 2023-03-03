@@ -27,4 +27,4 @@ export const NUMBERS = {
   },
   STAKING_KEY_INDEX: 0,
   EPOCH_REWARD_DENOMINATOR: new BigNumber(10).pow(8),
-}
+} as const

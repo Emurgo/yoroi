@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {BigNumber} from 'bignumber.js'
 
-import {CardanoTypes, MultiToken} from '..'
-import {RemoteAccountState, RemoteCertificateMeta, Token, TokenEntry, TokenEntryPlain} from '.'
+import {CardanoTypes, MultiToken, TokenEntryPlain} from '..'
+import {WALLET_CONFIG as HASKELL_SHELLEY, WALLET_CONFIG_24 as HASKELL_SHELLEY_24} from '../cardano/shelley/constants'
+import {RemoteAccountState, RemoteCertificateMeta, Token} from '.'
+
 export type AddressObj = {
   readonly address: string
 }
@@ -262,7 +264,7 @@ export type FundInfoResponse = {
   readonly nextFund: FundInfo | null | undefined
 }
 export type TxSubmissionStatus = {
-  readonly submissionStatus: 'WAITING' | 'FAILED' | 'MAX_RETRY_REACHED' | 'SUCCESS'
+  readonly status: 'WAITING' | 'FAILED' | 'MAX_RETRY_REACHED' | 'SUCCESS'
   readonly reason?: string
 }
 export type TxStatusRequest = {
@@ -340,7 +342,7 @@ export const NETWORK_REGISTRY = {
   // ERGO: 200,
   HASKELL_SHELLEY_TESTNET: 300,
   UNDEFINED: -1,
-}
+} as const
 export type NetworkId = typeof NETWORK_REGISTRY[keyof typeof NETWORK_REGISTRY]
 
 // PROVIDERS
@@ -350,33 +352,28 @@ export const YOROI_PROVIDER_IDS = {
   ...NETWORK_REGISTRY,
   ALONZO_MAINNET: ALONZO_FACTOR + NETWORK_REGISTRY.HASKELL_SHELLEY,
   ALONZO_TESTNET: ALONZO_FACTOR + NETWORK_REGISTRY.HASKELL_SHELLEY_TESTNET,
-}
+} as const
 
 export const DERIVATION_TYPES = {
   BIP44: 'bip44',
   CIP1852: 'cip1852',
 }
-export type DerivationType = typeof DERIVATION_TYPES[keyof typeof DERIVATION_TYPES]
 
 // these are the different wallet implementations we have/had
 export const WALLET_IMPLEMENTATION_REGISTRY = {
   HASKELL_BYRON: 'haskell-byron', // bip44
-  HASKELL_SHELLEY: 'haskell-shelley', // cip1852/15 words
-  HASKELL_SHELLEY_24: 'haskell-shelley-24', // cip1852/24 words
+  HASKELL_SHELLEY: HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID, // cip1852/15 words
+  HASKELL_SHELLEY_24: HASKELL_SHELLEY_24.WALLET_IMPLEMENTATION_ID, // cip1852/24 words
   JORMUNGANDR_ITN: 'jormungandr-itn', // deprecated
-  // ERGO: 'ergo',
   UNDEFINED: '',
 } as const
-export type WalletImplementationId = typeof WALLET_IMPLEMENTATION_REGISTRY[keyof typeof WALLET_IMPLEMENTATION_REGISTRY]
 
-export type WalletImplementation = {
-  WALLET_IMPLEMENTATION_ID: WalletImplementationId
-  TYPE: DerivationType
-  MNEMONIC_LEN: number
-  DISCOVERY_GAP_SIZE: number
-  DISCOVERY_BLOCK_SIZE: number
-  MAX_GENERATED_UNUSED: number
-}
+export type WalletImplementationId =
+  | typeof HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID
+  | typeof HASKELL_SHELLEY_24.WALLET_IMPLEMENTATION_ID
+  | typeof WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON
+  | typeof WALLET_IMPLEMENTATION_REGISTRY.JORMUNGANDR_ITN
+  | typeof WALLET_IMPLEMENTATION_REGISTRY.UNDEFINED
 
 export type BackendConfig = {
   API_ROOT: string
@@ -415,7 +412,7 @@ export type TransactionInfo = {
 
 export type IOData = {
   address: string
-  assets: Array<TokenEntry>
+  assets: Array<CardanoTypes.TokenEntry>
   amount: string
 }
 

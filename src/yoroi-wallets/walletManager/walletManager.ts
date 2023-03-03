@@ -6,10 +6,13 @@ import {makeWalletEncryptedStorage} from '../../auth'
 import {Keychain} from '../../auth/Keychain'
 import {Logger} from '../../legacy/logging'
 import {isWalletMeta, migrateWalletMetas, parseWalletMeta} from '../../Storage/migrations/walletMeta'
-import {CardanoTypes, CardanoWallet, isYoroiWallet, NetworkId, WalletImplementationId, YoroiWallet} from '../cardano'
+import {CardanoTypes, isYoroiWallet, YoroiWallet} from '../cardano'
+import {ByronWallet} from '../cardano/byron/ByronWallet'
+import {ShelleyWallet} from '../cardano/shelley/ShelleyWallet'
+import {ShelleyWalletTestnet} from '../cardano/shelley-testnet/ShelleyWalletTestnet'
 import {HWDeviceInfo} from '../hw'
 import {storage, YoroiStorage} from '../storage'
-import {WALLET_IMPLEMENTATION_REGISTRY} from '../types'
+import {NetworkId, WalletImplementationId} from '../types'
 import {parseSafe} from '../utils'
 
 export class WalletClosed extends ExtendableError {}
@@ -158,10 +161,11 @@ export class WalletManager {
   }
 
   async openWallet(walletMeta: WalletMeta): Promise<YoroiWallet> {
-    const Wallet = this.getWalletImplementation(walletMeta.walletImplementationId)
+    const {id, walletImplementationId, networkId} = walletMeta
+    const Wallet = getWalletImplementation({networkId, implementationId: walletImplementationId})
 
     const wallet = await Wallet.restore({
-      storage: this.storage.join(`${walletMeta.id}/`),
+      storage: this.storage.join(`${id}/`),
       walletMeta,
     })
 
@@ -189,24 +193,6 @@ export class WalletManager {
   }
 
   // =================== create =================== //
-
-  // returns the corresponding implementation of WalletInterface. Normally we
-  // should expect that each blockchain network has 1 wallet implementation.
-  // In the case of Cardano, there are two: Byron-era and Shelley-era.
-  private getWalletImplementation(walletImplementationId: WalletImplementationId): typeof CardanoWallet {
-    switch (walletImplementationId) {
-      case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON:
-      case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY:
-      case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY_24:
-        return CardanoWallet
-      // TODO
-      // case WALLET_IMPLEMENTATION_REGISTRY.ERGO:
-      //   return ErgoWallet()
-      default:
-        throw new Error('cannot retrieve wallet implementation')
-    }
-  }
-
   async createWallet(
     name: string,
     mnemonic: string,
@@ -214,16 +200,14 @@ export class WalletManager {
     networkId: NetworkId,
     implementationId: WalletImplementationId,
   ) {
-    const Wallet = this.getWalletImplementation(implementationId)
+    const Wallet = getWalletImplementation({networkId, implementationId})
     const id = uuid.v4()
 
     const wallet = await Wallet.create({
       storage: this.storage.join(`${id}/`),
-      networkId,
       id,
       mnemonic,
       password,
-      implementationId,
     })
 
     return this.saveWallet(id, name, wallet, networkId, implementationId)
@@ -237,15 +221,13 @@ export class WalletManager {
     hwDeviceInfo: null | HWDeviceInfo,
     isReadOnly: boolean,
   ) {
-    const Wallet = this.getWalletImplementation(implementationId)
+    const Wallet = getWalletImplementation({networkId, implementationId})
     const id = uuid.v4()
 
     const wallet = await Wallet.createBip44({
       storage: this.storage.join(`${id}/`),
-      networkId,
       id,
       accountPubKeyHex,
-      implementationId,
       hwDeviceInfo,
       isReadOnly,
     })
@@ -269,4 +251,37 @@ const parseDeletedWalletIds = (data: unknown) => {
   const parsed = parseSafe(data)
 
   return isWalletIds(parsed) ? parsed : undefined
+}
+
+const getWalletImplementation = ({
+  networkId,
+  implementationId,
+}: {
+  networkId: NetworkId
+  implementationId: WalletImplementationId
+}) => {
+  // cardano mainnet
+  if (networkId === 1) {
+    if (implementationId === 'haskell-shelley') {
+      return ShelleyWallet
+    }
+    if (implementationId === 'haskell-shelley-24') {
+      return ShelleyWallet
+    }
+    if (implementationId === 'haskell-byron') {
+      return ByronWallet
+    }
+  }
+
+  // cardano testnet
+  if (networkId === 300) {
+    if (implementationId === 'haskell-shelley') {
+      return ShelleyWalletTestnet
+    }
+    if (implementationId === 'haskell-shelley-24') {
+      return ShelleyWalletTestnet
+    }
+  }
+
+  throw new Error('invalid wallet type')
 }
