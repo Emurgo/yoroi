@@ -130,7 +130,7 @@ export const DeveloperScreen = () => {
             createWallet({
               mnemonicPhrase: config['WALLET_2_MNEMONIC'],
               name: 'Wallet 2',
-              networkId: Number(config['WALLET_1_NETWORK_ID'] ?? 300) as NetworkId,
+              networkId: Number(config['WALLET_2_NETWORK_ID'] ?? 300) as NetworkId,
               password: '1234567890',
               walletImplementationId: 'haskell-shelley',
             })
