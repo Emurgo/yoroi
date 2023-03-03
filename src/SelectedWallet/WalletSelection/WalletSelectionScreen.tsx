@@ -14,7 +14,7 @@ import {COLORS} from '../../theme'
 import {useWalletManager} from '../../WalletManager'
 import {WalletMeta} from '../../yoroi-wallets'
 import {InvalidState, NetworkError} from '../../yoroi-wallets/cardano/errors'
-import {isJormungandr} from '../../yoroi-wallets/cardano/networks'
+import {isJormungandr, NETWORKS} from '../../yoroi-wallets/cardano/networks'
 import {useSetSelectedWallet, useSetSelectedWalletMeta} from '..'
 import {WalletListItem} from './WalletListItem'
 
@@ -204,7 +204,7 @@ const ByronButton = () => {
         navigation.navigate('new-wallet', {
           screen: 'choose-create-restore',
           params: {
-            networkId: CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
+            networkId: NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
             walletImplementationId: CONFIG.WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID,
           },
         })
