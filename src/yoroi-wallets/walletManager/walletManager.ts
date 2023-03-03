@@ -8,11 +8,13 @@ import {Logger} from '../../legacy/logging'
 import {isWalletMeta, migrateWalletMetas, parseWalletMeta} from '../../Storage/migrations/walletMeta'
 import {CardanoTypes, isYoroiWallet, YoroiWallet} from '../cardano'
 import {ByronWallet} from '../cardano/byron/ByronWallet'
+import * as HASKELL_SHELLEY from '../cardano/shelley/constants'
 import {ShelleyWallet} from '../cardano/shelley/ShelleyWallet'
+import * as HASKELL_SHELLEY_TESTNET from '../cardano/shelley-testnet/constants'
 import {ShelleyWalletTestnet} from '../cardano/shelley-testnet/ShelleyWalletTestnet'
 import {HWDeviceInfo} from '../hw'
 import {storage, YoroiStorage} from '../storage'
-import {NetworkId, WalletImplementationId} from '../types'
+import {NetworkId, WALLET_IMPLEMENTATION_REGISTRY, WalletImplementationId} from '../types'
 import {parseSafe} from '../utils'
 
 export class WalletClosed extends ExtendableError {}
@@ -261,24 +263,24 @@ const getWalletImplementation = ({
   implementationId: WalletImplementationId
 }) => {
   // cardano mainnet
-  if (networkId === 1) {
-    if (implementationId === 'haskell-shelley') {
+  if (networkId === HASKELL_SHELLEY.NETWORK_ID) {
+    if (implementationId === HASKELL_SHELLEY.WALLET_CONFIG.WALLET_IMPLEMENTATION_ID) {
       return ShelleyWallet
     }
-    if (implementationId === 'haskell-shelley-24') {
+    if (implementationId === HASKELL_SHELLEY.WALLET_CONFIG_24.WALLET_IMPLEMENTATION_ID) {
       return ShelleyWallet
     }
-    if (implementationId === 'haskell-byron') {
+    if (implementationId === WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON) {
       return ByronWallet
     }
   }
 
   // cardano testnet
-  if (networkId === 300) {
-    if (implementationId === 'haskell-shelley') {
+  if (networkId === HASKELL_SHELLEY_TESTNET.NETWORK_ID) {
+    if (implementationId === HASKELL_SHELLEY.WALLET_CONFIG.WALLET_IMPLEMENTATION_ID) {
       return ShelleyWalletTestnet
     }
-    if (implementationId === 'haskell-shelley-24') {
+    if (implementationId === HASKELL_SHELLEY.WALLET_CONFIG_24.WALLET_IMPLEMENTATION_ID) {
       return ShelleyWalletTestnet
     }
   }
