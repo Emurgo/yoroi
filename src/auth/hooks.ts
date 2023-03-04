@@ -7,7 +7,7 @@ import {useMutationWithInvalidations, useWallet} from '../hooks'
 import globalMessages from '../i18n/global-messages'
 import {useStorage} from '../Storage'
 import {parseWalletMeta} from '../Storage/migrations/walletMeta'
-import {decryptData, encryptData, WalletJSON, walletManager, YoroiWallet} from '../yoroi-wallets'
+import {decryptData, encryptData, walletManager, YoroiWallet} from '../yoroi-wallets'
 import {WrongPassword} from '../yoroi-wallets/cardano/errors'
 import {YoroiStorage} from '../yoroi-wallets/storage'
 import {parseSafe, parseString} from '../yoroi-wallets/utils/parsing'
@@ -190,7 +190,9 @@ export const disableAllEasyConfirmation = async (storage: YoroiStorage) => {
   })
 
   const updateWalletJSONs = walletIds.map(async (walletId) => {
-    const walletJSON: WalletJSON = await walletStorage.join(`${walletId}/`).getItem('data')
+    const walletJSON: Record<string, unknown> & {isEasyConfirmationEnabled: boolean} = await walletStorage
+      .join(`${walletId}/`)
+      .getItem('data')
     await walletStorage.join(`${walletId}/`).setItem('data', {...walletJSON, isEasyConfirmationEnabled: false})
   })
 

@@ -7,15 +7,15 @@ import {useTokenInfo} from '../../hooks'
 import globalMessages, {txLabels} from '../../i18n/global-messages'
 import {formatTokenAmount} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
-import {asQuantity, TokenEntry, toToken} from '../../yoroi-wallets'
+import {asQuantity, CardanoTypes, toToken} from '../../yoroi-wallets'
 import assetListSendStyle from './AssetListSend.style'
 import assetListTransactionStyle from './AssetListTransaction.style'
 import baseStyle from './Base.style'
 
 type AssetListProps = {
-  assets: Array<TokenEntry>
+  assets: Array<CardanoTypes.TokenEntry>
   styles: NodeStyle
-  onSelect?: (tokenEntry: TokenEntry) => void
+  onSelect?: (tokenEntry: CardanoTypes.TokenEntry) => void
 }
 export const AssetList = ({assets, styles, onSelect}: AssetListProps) => {
   const intl = useIntl()
@@ -47,9 +47,9 @@ export const AssetList = ({assets, styles, onSelect}: AssetListProps) => {
 type NodeStyle = typeof baseStyle | typeof assetListTransactionStyle | typeof assetListSendStyle
 type AssetRowProps = {
   styles: NodeStyle
-  entry: TokenEntry
+  entry: CardanoTypes.TokenEntry
   backColor: {backgroundColor: string}
-  onSelect?: (tokenEntry: TokenEntry) => void
+  onSelect?: (tokenEntry: CardanoTypes.TokenEntry) => void
 }
 const AssetRow = ({styles, entry, backColor, onSelect}: AssetRowProps) => {
   const intl = useIntl()

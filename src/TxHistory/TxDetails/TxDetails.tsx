@@ -15,9 +15,9 @@ import AddressModal from '../../Receive/AddressModal'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {brand, COLORS} from '../../theme'
 import {isEmptyString} from '../../utils/utils'
-import {asQuantity, MultiToken, TokenEntry, YoroiWallet} from '../../yoroi-wallets'
+import {asQuantity, CardanoTypes, MultiToken, YoroiWallet} from '../../yoroi-wallets'
 import {getNetworkConfigById} from '../../yoroi-wallets/cardano/networks'
-import {TransactionInfo} from '../../yoroi-wallets/types'
+import {NetworkId, TransactionInfo} from '../../yoroi-wallets/types'
 import {AssetList} from './AssetList'
 import assetListStyle from './AssetListTransaction.style'
 
@@ -197,12 +197,12 @@ const Fee = ({amount}: {amount: BigNumber}) => {
   return <Text small>{text}</Text>
 }
 
-const ExpandableAssetList: React.VFC<{expanded: boolean; assets: TokenEntry[]}> = ({
+const ExpandableAssetList: React.VFC<{expanded: boolean; assets: CardanoTypes.TokenEntry[]}> = ({
   expanded,
   assets,
 }: {
   expanded: boolean
-  assets: TokenEntry[]
+  assets: CardanoTypes.TokenEntry[]
 }) => (
   <View style={{borderWidth: 1, borderColor: 'transparent'}}>
     {/* ↑↑↑ View wrapper fixes bug ↑↑↑ */}
@@ -305,7 +305,7 @@ const getShownAddresses = (
   }
 }
 
-const openInExplorer = async (transaction: TransactionInfo, networkId: number) => {
+const openInExplorer = async (transaction: TransactionInfo, networkId: NetworkId) => {
   const networkConfig = getNetworkConfigById(networkId)
   await Linking.openURL(networkConfig.EXPLORER_URL_FOR_TX(transaction.id))
 }

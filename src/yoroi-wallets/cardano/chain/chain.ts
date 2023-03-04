@@ -3,14 +3,14 @@ import _ from 'lodash'
 import type {Moment} from 'moment'
 import {defaultMemoize} from 'reselect'
 
-import assert from '../../legacy/assert'
-import {CONFIG, isByron, isHaskellShelley} from '../../legacy/config'
-import {Logger} from '../../legacy/logging'
-import {ADDRESS_TYPE_TO_CHANGE, AddressType, CardanoMobile, CardanoTypes} from '.'
-import type {CryptoAccount} from './byron/util'
-import * as util from './byron/util'
-import {getNetworkConfigById} from './networks'
-import {NetworkId, WalletImplementationId} from './types'
+import assert from '../../../legacy/assert'
+import {CONFIG, isByron, isHaskellShelley} from '../../../legacy/config'
+import {Logger} from '../../../legacy/logging'
+import {NetworkId, WalletImplementationId} from '../../types'
+import {ADDRESS_TYPE_TO_CHANGE, AddressType, CardanoMobile, CardanoTypes} from '../'
+import type {CryptoAccount} from '../byron/util'
+import * as util from '../byron/util'
+import {getNetworkConfigById} from '../networks'
 
 export type AddressBlock = [number, Moment, Array<string>]
 
@@ -20,13 +20,13 @@ export type ShelleyAddressGeneratorJSON = {
   type: AddressType
 }
 
-type ByronAddressGeneratorJSON = {
+export type ByronAddressGeneratorJSON = {
   account: CryptoAccount
   walletImplementationId: WalletImplementationId
   type: AddressType
 }
 
-type AddressGeneratorJSON = ShelleyAddressGeneratorJSON | ByronAddressGeneratorJSON
+export type AddressGeneratorJSON = ShelleyAddressGeneratorJSON | ByronAddressGeneratorJSON
 export class AddressGenerator {
   accountPubKeyHex: string
   type: AddressType

@@ -17,7 +17,7 @@ import {errorMessages} from '../i18n/global-messages'
 import {AppRoutes, useWalletNavigation} from '../navigation'
 import {useSelectedWalletContext} from '../SelectedWallet'
 import {isEmptyString} from '../utils/utils'
-import {generateAdaMnemonic} from '../yoroi-wallets'
+import {generateAdaMnemonic, NetworkId} from '../yoroi-wallets'
 import {NetworkError} from '../yoroi-wallets/cardano/errors'
 import assert from './assert'
 
@@ -115,7 +115,7 @@ export const DeveloperScreen = () => {
             createWallet({
               mnemonicPhrase: config['WALLET_1_MNEMONIC'],
               name: 'Wallet 1',
-              networkId: Number(config['WALLET_1_NETWORK_ID'] ?? 300),
+              networkId: Number(config['WALLET_1_NETWORK_ID'] ?? 300) as NetworkId,
               password: '1234567890',
               walletImplementationId: 'haskell-shelley',
             })
@@ -130,7 +130,7 @@ export const DeveloperScreen = () => {
             createWallet({
               mnemonicPhrase: config['WALLET_2_MNEMONIC'],
               name: 'Wallet 2',
-              networkId: Number(config['WALLET_1_NETWORK_ID'] ?? 300),
+              networkId: Number(config['WALLET_2_NETWORK_ID'] ?? 300) as NetworkId,
               password: '1234567890',
               walletImplementationId: 'haskell-shelley',
             })

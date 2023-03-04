@@ -1,6 +1,6 @@
-import assert from '../../legacy/assert'
-import {CardanoMobile} from '.'
-import {NUMBERS} from './numbers'
+import assert from '../../../legacy/assert'
+import {CardanoMobile} from '../'
+import {NUMBERS} from '../numbers'
 
 const isString = (s) => typeof s === 'string' || s instanceof String
 
