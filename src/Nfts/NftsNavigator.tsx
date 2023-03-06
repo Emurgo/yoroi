@@ -1,9 +1,9 @@
-import {createStackNavigator} from '@react-navigation/stack'
+import {createStackNavigator, StackNavigationOptions} from '@react-navigation/stack'
 import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet, TouchableOpacity} from 'react-native'
+import {StyleSheet, TouchableOpacity, TouchableOpacityProps} from 'react-native'
 
-import {Icon, Spacer} from '../components'
+import {Icon} from '../components'
 import {NftRoutes} from '../navigation'
 import {SearchHeader, SearchProvider, useSearch} from '../Search'
 import {Nfts} from './Nfts'
@@ -26,44 +26,66 @@ const Routes = () => {
     setSearchVisible(false)
     clearSearch()
   }
+
+  const nftGalleryHeaderOptions: StackNavigationOptions = searchVisible
+    ? {
+        headerTitleContainerStyle: styles.headerTitleContainer,
+        headerTitle: () => <SearchHeader placeholder={strings.search} onClose={handleSearchClose} />,
+        ...headerDisableLeft,
+        ...headerDisableRight,
+      }
+    : {
+        headerTitleContainerStyle: styles.headerTitleContainer,
+        title: strings.title,
+        headerRight: () => <SearchButton onPress={() => setSearchVisible(true)} />,
+        headerRightContainerStyle: {
+          ...styles.disableFlex,
+          paddingHorizontal: 16,
+          position: 'absolute',
+          right: 0,
+          bottom: 0,
+          top: 0,
+        },
+        ...headerDisableLeft,
+      }
+
   return (
-    <Stack.Navigator
-      screenOptions={{
-        headerTitleContainerStyle: {flex: 1, alignItems: 'center'},
-        cardStyle: {backgroundColor: '#fff'},
-      }}
-      initialRouteName="nft-gallery"
-    >
-      <Stack.Screen
-        name="nft-gallery"
-        options={{
-          title: strings.title,
-          headerTitleAlign: 'center',
-          header: searchVisible
-            ? () => <SearchHeader placeholder={strings.search} onClose={handleSearchClose} />
-            : undefined,
-          headerLeft: () => <Spacer width={26} />,
-          headerRight: () => (
-            <TouchableOpacity onPress={() => setSearchVisible(true)} style={styles.center}>
-              <Icon.Magnify size={26} />
-            </TouchableOpacity>
-          ),
-          headerLeftContainerStyle: {paddingLeft: 16},
-          headerRightContainerStyle: {paddingRight: 16},
-        }}
-        component={Nfts}
-      />
+    <Stack.Navigator>
+      <Stack.Screen name="nft-gallery" component={Nfts} options={nftGalleryHeaderOptions} />
     </Stack.Navigator>
   )
 }
 
+const SearchButton = (props: TouchableOpacityProps) => (
+  <TouchableOpacity {...props} hitSlop={{top: 100, left: 100, right: 100, bottom: 100}}>
+    <Icon.Magnify size={26} />
+  </TouchableOpacity>
+)
+
 const styles = StyleSheet.create({
-  center: {
-    display: 'flex',
+  disableFlex: {
+    flex: undefined,
+    flexGrow: undefined,
+    flexBasis: undefined,
+    flexShrink: undefined,
+  },
+  headerTitleContainer: {
+    flex: 1,
+    marginHorizontal: undefined,
+    maxWidth: undefined,
     alignItems: 'center',
-    justifyContent: 'center',
   },
 })
+
+const headerDisableLeft: StackNavigationOptions = {
+  headerLeftContainerStyle: styles.disableFlex,
+  headerLeft: () => null,
+}
+
+const headerDisableRight: StackNavigationOptions = {
+  headerRightContainerStyle: styles.disableFlex,
+  headerRight: () => null,
+}
 
 const useStrings = () => {
   const intl = useIntl()
