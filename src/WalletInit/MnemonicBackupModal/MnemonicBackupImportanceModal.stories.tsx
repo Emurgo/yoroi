@@ -1,7 +1,7 @@
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {WithModalProps} from '../../../storybook'
+import {WithModalProps} from '../../../.storybook'
 import {MnemonicBackupImportanceModal} from './MnemonicBackupImportanceModal'
 
 storiesOf('MnemonicBackupImportanceModal', module).add('Default', () => (

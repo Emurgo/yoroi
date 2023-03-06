@@ -2,8 +2,9 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {View} from 'react-native'
 
-import {mocks, QueryProvider} from '../../storybook'
+import {QueryProvider} from '../../.storybook'
 import {SelectedWalletProvider} from '../SelectedWallet'
+import {mocks} from '../yoroi-wallets/mocks'
 import {BalanceBanner} from './BalanceBanner'
 
 storiesOf('BalanceBanner', module)

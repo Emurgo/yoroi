@@ -3,18 +3,11 @@
 import {action} from '@storybook/addon-actions'
 import BigNumber from 'bignumber.js'
 
-import {getDefaultAssetByNetworkId} from '../../src/legacy/config'
-import {getTokenFingerprint} from '../../src/legacy/format'
-import {
-  asciiToHex,
-  CardanoTypes,
-  fallbackTokenInfo,
-  toTokenInfo,
-  WalletMeta,
-  YoroiWallet,
-} from '../../src/yoroi-wallets'
-import {PRIMARY_ASSET_CONSTANTS} from '../../src/yoroi-wallets/cardano/networks'
-import * as HASKELL_SHELLEY_TESTNET from '../../src/yoroi-wallets/cardano/shelley-testnet/constants'
+import {getDefaultAssetByNetworkId} from '../../legacy/config'
+import {getTokenFingerprint} from '../../legacy/format'
+import {asciiToHex, CardanoTypes, fallbackTokenInfo, toTokenInfo, WalletMeta, YoroiWallet} from '..'
+import {PRIMARY_ASSET_CONSTANTS} from '../cardano/networks'
+import * as HASKELL_SHELLEY_TESTNET from '../cardano/shelley-testnet/constants'
 import {
   RemotePoolMetaSuccess,
   StakePoolInfosAndHistories,
@@ -27,7 +20,7 @@ import {
   YoroiNftModerationStatus,
   YoroiSignedTx,
   YoroiUnsignedTx,
-} from '../../src/yoroi-wallets/types'
+} from '../types'
 import {mockEncryptedStorage} from './storage'
 import {mockTransactionInfo, mockTransactionInfos} from './transaction'
 import {utxos} from './utxos'
