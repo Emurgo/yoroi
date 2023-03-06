@@ -103,25 +103,25 @@ const NftOverview = ({nft}: {nft: YoroiNft}) => {
       </MetadataRow>
 
       <HR />
-      
+
       <MetadataRow title={strings.author}>
         <Text secondary>{nft.metadata.originalMetadata.author ?? '-'}</Text>
       </MetadataRow>
 
       <HR />
-      
+
       <MetadataRow title={strings.fingerprint} copyText={nft.fingerprint}>
         <Text secondary>{nft.fingerprint}</Text>
       </MetadataRow>
 
       <HR />
-      
+
       <MetadataRow title={strings.policyId} copyText={nft.metadata.policyId}>
         <Text secondary>{nft.metadata.policyId}</Text>
       </MetadataRow>
 
       <HR />
-      
+
       <MetadataRow title={strings.detailsLinks}>
         <Link url={`https://cardanoscan.io/token/${nft.fingerprint}`}>
           <View style={styles.linkContent}>
@@ -145,6 +145,8 @@ const NftOverview = ({nft}: {nft: YoroiNft}) => {
       </MetadataRow>
 
       <HR />
+
+      <Spacer height={24} />
     </View>
   )
 }
