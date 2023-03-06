@@ -1,8 +1,9 @@
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {mocks, QueryProvider, RouteProvider} from '../../storybook'
+import {QueryProvider, RouteProvider} from '../../.storybook'
 import {SelectedWalletProvider} from '../SelectedWallet'
+import {mocks} from '../yoroi-wallets/mocks'
 import {NftDetails} from './NftDetails'
 
 storiesOf('NFT/Details', module).add('Default', () => {

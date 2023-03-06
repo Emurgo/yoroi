@@ -2,8 +2,8 @@ import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {mocks} from '../../../storybook'
 import {SelectedWalletProvider} from '../../SelectedWallet'
+import {mocks} from '../../yoroi-wallets/mocks'
 import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
 import {ConfirmTx} from './ConfirmTx'
 
