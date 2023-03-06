@@ -2,8 +2,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import {fromPairs} from 'lodash'
 import DeviceInfo from 'react-native-device-info'
 
-import {storage as rootStorage} from '../storage'
-import {ApiHistoryError} from './errors'
+import {storage as rootStorage} from '../../storage'
+import {ApiHistoryError} from '../errors'
 import {
   mockedAddressesByChunks,
   mockedBackendConfig,
@@ -13,10 +13,10 @@ import {
   mockedLocalTransactions,
   mockedTipStatusResponse,
   mockTx,
-} from './mocks'
-import {makeTxManagerStorage, syncTxs, toCachedTx, TransactionManager} from './transactionManager'
+} from '../mocks'
+import {makeTxManagerStorage, syncTxs, toCachedTx, TransactionManager} from '.'
 
-jest.mock('./api', () => ({
+jest.mock('../api', () => ({
   getTipStatus: jest.fn().mockResolvedValue(mockedTipStatusResponse),
   fetchNewTxHistory: jest
     .fn()

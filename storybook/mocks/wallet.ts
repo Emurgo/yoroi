@@ -7,14 +7,14 @@ import {getDefaultAssetByNetworkId} from '../../src/legacy/config'
 import {getTokenFingerprint} from '../../src/legacy/format'
 import {
   asciiToHex,
+  CardanoTypes,
   fallbackTokenInfo,
-  primaryTokenInfo,
-  TokenEntry,
   toTokenInfo,
   WalletMeta,
   YoroiWallet,
 } from '../../src/yoroi-wallets'
 import {PRIMARY_ASSET_CONSTANTS} from '../../src/yoroi-wallets/cardano/networks'
+import * as HASKELL_SHELLEY_TESTNET from '../../src/yoroi-wallets/cardano/shelley-testnet/constants'
 import {
   RemotePoolMetaSuccess,
   StakePoolInfosAndHistories,
@@ -49,7 +49,7 @@ const walletMeta: WalletMeta = {
 const wallet: YoroiWallet = {
   id: 'wallet-id',
   primaryToken: getDefaultAssetByNetworkId(300),
-  primaryTokenInfo: primaryTokenInfo.testnet,
+  primaryTokenInfo: HASKELL_SHELLEY_TESTNET.PRIMARY_TOKEN_INFO,
   walletImplementationId: 'haskell-shelley',
   networkId: 300,
   checksum: {
@@ -596,7 +596,7 @@ const fetchTokenInfo = {
   },
 }
 
-const tokenEntries: Array<TokenEntry> = [
+const tokenEntries: Array<CardanoTypes.TokenEntry> = [
   {
     networkId: 123,
     identifier: '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950',
@@ -639,7 +639,7 @@ const balances: YoroiAmounts = {
 }
 
 const tokenInfos: Record<string, TokenInfo> = {
-  '': primaryTokenInfo.mainnet,
+  '': HASKELL_SHELLEY_TESTNET.PRIMARY_TOKEN_INFO,
   '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950': toTokenInfo({
     networkId: 300,
     identifier: '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950',

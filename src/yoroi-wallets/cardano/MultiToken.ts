@@ -1,19 +1,12 @@
 // taken from Yoroi Frontend's MultiToken class
+import {TokenEntry} from '@emurgo/yoroi-lib'
 import {BigNumber} from 'bignumber.js'
 
 import {getDefaultAssetByNetworkId} from '../../legacy/config'
 import type {NetworkId} from '../types/other'
 export type TokenLookupKey = {
   identifier: string
-
-  /**
-   * note: avoid putting asset metadata here directly
-   * since it can update over time so best not to cache it here
-   */
   networkId: number
-}
-export type TokenEntry = TokenLookupKey & {
-  amount: BigNumber
 }
 export type TokenEntryPlain = TokenLookupKey & {
   amount: string

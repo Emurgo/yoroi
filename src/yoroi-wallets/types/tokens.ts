@@ -1,23 +1,4 @@
-import BigNumber from 'bignumber.js'
-
-export type TokenLookupKey = {
-  identifier: string
-  networkId: number
-}
-
-export type TokenEntry = TokenLookupKey & {
-  amount: BigNumber
-}
-
-export type TokenEntryPlain = TokenLookupKey & {
-  amount: string
-  isDefault: boolean
-}
-
-export type DefaultTokenEntry = {
-  defaultNetworkId: number
-  defaultIdentifier: string
-}
+import {NetworkId} from '.'
 
 export type TokenCommonMetadata = {
   numberOfDecimals: number
@@ -33,7 +14,7 @@ export type TokenMetadata = TokenCommonMetadata & {
 }
 
 export type Token = {
-  networkId: number
+  networkId: NetworkId
   isDefault: boolean
   identifier: string
   metadata: TokenMetadata
@@ -75,7 +56,7 @@ export type TokenInfo = {
 }
 
 export type LegacyToken = {
-  networkId: number
+  networkId: NetworkId
   isDefault: boolean
   identifier: string
   metadata: TokenMetadata

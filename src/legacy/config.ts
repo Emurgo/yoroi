@@ -1,4 +1,5 @@
 import {LogLevel} from '../legacy/logging'
+import {WalletImplementation} from '../yoroi-wallets'
 import type {CardanoHaskellShelleyNetwork} from '../yoroi-wallets/cardano/networks'
 import {
   DEFAULT_ASSETS,
@@ -8,8 +9,12 @@ import {
   PRIMARY_ASSET_CONSTANTS,
 } from '../yoroi-wallets/cardano/networks'
 import {NUMBERS} from '../yoroi-wallets/cardano/numbers'
+import {
+  WALLET_CONFIG as HASKELL_SHELLEY,
+  WALLET_CONFIG_24 as HASKELL_SHELLEY_24,
+} from '../yoroi-wallets/cardano/shelley/constants'
 import {DefaultAsset} from '../yoroi-wallets/types'
-import type {NetworkId, WalletImplementation, WalletImplementationId} from '../yoroi-wallets/types/other'
+import type {NetworkId, WalletImplementationId} from '../yoroi-wallets/types/other'
 import {DERIVATION_TYPES, WALLET_IMPLEMENTATION_REGISTRY} from '../yoroi-wallets/types/other'
 import env from './env'
 
@@ -61,26 +66,16 @@ export const WALLETS = {
     TYPE: DERIVATION_TYPES.BIP44,
     MNEMONIC_LEN: 15,
     ..._DEFAULT_DISCOVERY_SETTINGS,
-  } as WalletImplementation,
-  HASKELL_SHELLEY: {
-    WALLET_IMPLEMENTATION_ID: WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY,
-    TYPE: DERIVATION_TYPES.CIP1852,
-    MNEMONIC_LEN: 15,
-    ..._DEFAULT_DISCOVERY_SETTINGS,
-  } as WalletImplementation,
-  HASKELL_SHELLEY_24: {
-    WALLET_IMPLEMENTATION_ID: WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY_24,
-    TYPE: DERIVATION_TYPES.CIP1852,
-    MNEMONIC_LEN: 24,
-    ..._DEFAULT_DISCOVERY_SETTINGS,
-  } as WalletImplementation,
+  },
+  HASKELL_SHELLEY,
+  HASKELL_SHELLEY_24,
   JORMUNGANDR_ITN: {
     WALLET_IMPLEMENTATION_ID: WALLET_IMPLEMENTATION_REGISTRY.JORMUNGANDR_ITN,
     TYPE: DERIVATION_TYPES.CIP1852,
     MNEMONIC_LEN: 15,
     ..._DEFAULT_DISCOVERY_SETTINGS,
-  } as WalletImplementation,
-}
+  },
+} as const
 
 const HARDWARE_WALLETS = {
   LEDGER_NANO: {
@@ -175,7 +170,7 @@ export const CONFIG = {
 export const isByron = (id: WalletImplementationId): boolean => id === WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON
 
 export const isHaskellShelley = (id: WalletImplementationId): boolean =>
-  id === WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY || id === WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY_24
+  id === HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID || id === HASKELL_SHELLEY_24.WALLET_IMPLEMENTATION_ID
 
 export const isJormun = (id: WalletImplementationId): boolean => id === WALLET_IMPLEMENTATION_REGISTRY.JORMUNGANDR_ITN
 

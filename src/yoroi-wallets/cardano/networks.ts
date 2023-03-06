@@ -24,7 +24,7 @@ const _DEFAULT_BACKEND_RULES = {
  * - as a general rule, all configuration data should be accessed from a single
  *   global object -> ./config.js and not from here.
  */
-const BYRON_MAINNET = {
+export const BYRON_MAINNET = {
   PROVIDER_ID: YOROI_PROVIDER_IDS.BYRON_MAINNET,
   NETWORK_ID: NETWORK_REGISTRY.BYRON_MAINNET,
   MARKETING_NAME: 'Mainnet',
