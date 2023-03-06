@@ -6,4 +6,5 @@
  */
 export default {
   USE_TESTNET: 'false',
+  SHOW_NFT_GALLERY: 'true',
 }
