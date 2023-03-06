@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import {CONFIG, getWalletConfigById} from '../../../legacy/config'
-import {DERIVATION_TYPES} from '../../types'
-import {WalletImplementationId} from '../types'
+import {DERIVATION_TYPES, WalletImplementationId} from '../../types'
 
 export type AddressType = 'Internal' | 'External'
 export const ADDRESS_TYPE_TO_CHANGE: Record<AddressType, number> = {

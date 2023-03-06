@@ -1,0 +1,1 @@
+export const HISTORY_REFRESH_TIME = 25000

@@ -4,8 +4,9 @@ import {expect} from 'chai'
 
 import {WALLETS} from '../../legacy/config'
 import {WalletMeta} from '../../yoroi-wallets'
+import {WALLET_CONFIG_24 as HASKELL_SHELLEY_24} from '../../yoroi-wallets/cardano/shelley/constants'
 import {storage} from '../../yoroi-wallets/storage'
-import {NETWORK_REGISTRY, WALLET_IMPLEMENTATION_REGISTRY} from '../../yoroi-wallets/types'
+import {NETWORK_REGISTRY} from '../../yoroi-wallets/types'
 import {migrateWalletMetas} from './walletMeta'
 
 describe('migrateWalletMetas()', () => {
@@ -320,7 +321,7 @@ const mockedWalletMeta: WalletMeta = {
     ImagePart:
       'b04dc22991594170974bbbb5908cc50b48f236d680a9ebfe6c1d00f52f8f4813341943eb66dec48cfe7f3be5beec705b91300a07641e668ff19dfa2fbeccbfba',
   },
-  walletImplementationId: WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY_24,
+  walletImplementationId: HASKELL_SHELLEY_24.WALLET_IMPLEMENTATION_ID,
 }
 
 // legacy wallet data is any

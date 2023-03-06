@@ -1,6 +1,5 @@
 export * from './api'
 export * from './assetUtils'
-export * from './CardanoWallet'
 export * from './catalyst'
 export * from './chain'
 export * from './formatPath'

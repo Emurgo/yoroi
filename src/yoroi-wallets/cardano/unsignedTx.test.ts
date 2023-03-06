@@ -1,12 +1,12 @@
 import BigNumber from 'bignumber.js'
 
 import {YoroiAmounts, YoroiEntries, YoroiMetadata} from '../types'
-import {CardanoTypes, TokenEntry} from '.'
+import {CardanoTypes} from '.'
 import {toAmounts, toDisplayAddress, toEntries, toMetadata} from './unsignedTx'
 
 describe('YoroiUnsignedTx', () => {
   it('toAmounts converts TokenEntry[] to YoroiAmounts', () => {
-    const tokenEntries: Array<TokenEntry> = [
+    const tokenEntries: Array<CardanoTypes.TokenEntry> = [
       {identifier: '', networkId: 1, amount: new BigNumber('1')},
       {identifier: '', networkId: 1, amount: new BigNumber('3')},
       {identifier: 'token123', networkId: 1, amount: new BigNumber('4')},

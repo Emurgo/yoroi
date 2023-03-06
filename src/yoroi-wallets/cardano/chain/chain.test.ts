@@ -1,5 +1,5 @@
-import type {CryptoAccount} from './byron/util'
-import {AddressChain, AddressGenerator} from './chain'
+import type {CryptoAccount} from '../byron/util'
+import {AddressChain, AddressGenerator} from '.'
 
 const getAddr = (i) => `Addr${i}`
 
