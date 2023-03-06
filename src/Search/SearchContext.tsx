@@ -42,12 +42,14 @@ function searchReducer(state: SearchState, action: SearchAction) {
   switch (action.type) {
     case 'clear':
       return {...state, search: ''}
+
     case 'searchChanged':
       return {
         ...state,
         search: action.search,
       }
 
+    default:
       throw new Error(`searchReducer invalid action`)
   }
 }
