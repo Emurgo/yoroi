@@ -14,16 +14,17 @@ export const TokenIcon = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: stri
   const isTokenNft = useIsTokenKnownNft({wallet, fingerprint: tokenInfo.fingerprint})
 
   if (isPrimary) return <PrimaryIcon />
-  if (isTokenNft && SHOW_NFT_GALLERY)
+  if (tokenInfo.logo != null && tokenInfo.logo.length > 0 && isBase64(tokenInfo.logo)) {
+    return <Image source={{uri: `data:image/png;base64,${tokenInfo.logo}`}} style={styles.icon} />
+  }
+  if (isTokenNft && SHOW_NFT_GALLERY) {
     return MODERATING_NFTS_ENABLED ? (
       <ModeratedIcon wallet={wallet} tokenId={tokenInfo.id} />
     ) : (
       <UnModeratedNftIcon wallet={wallet} tokenId={tokenInfo.id} />
     )
-  if (tokenInfo.logo === undefined || tokenInfo.logo.length === 0) return <Placeholder />
-  if (isBase64(tokenInfo.logo))
-    return <Image source={{uri: `data:image/png;base64,${tokenInfo.logo}`}} style={styles.icon} />
-  return <Image source={{uri: tokenInfo.logo}} style={styles.icon} />
+  }
+  return <Placeholder />
 }
 
 const PrimaryIcon = () => (
@@ -42,14 +43,6 @@ const ModeratedIcon = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string}
 const UnModeratedNftIcon = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string}) => {
   const nft = useNft(wallet, {id: tokenId})
   return <ModeratedNftIcon status="approved" image={nft.image} />
-}
-
-export const LoadingIcon = () => {
-  return (
-    <View style={styles.loading}>
-      <ActivityIndicator size="small" color="black" />
-    </View>
-  )
 }
 
 export const Placeholder = () => (
