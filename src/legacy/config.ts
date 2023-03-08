@@ -25,18 +25,6 @@ const SENTRY = {
 const _COMMIT = env.getString('COMMIT')
 
 const _LOG_LEVEL = IS_DEBUG ? LogLevel.Debug : LogLevel.Warn
-const _ASSURANCE_STRICT = false
-
-export const ASSURANCE_LEVELS = {
-  NORMAL: {
-    LOW: 3,
-    MEDIUM: 9,
-  },
-  STRICT: {
-    LOW: 5,
-    MEDIUM: 15,
-  },
-}
 
 const HARDWARE_WALLETS = {
   LEDGER_NANO: {
@@ -80,7 +68,6 @@ export const CONFIG = {
   MAX_CONCURRENT_REQUESTS: 8,
   SENTRY,
   MNEMONIC_STRENGTH: 160,
-  ASSURANCE_LEVELS: _ASSURANCE_STRICT ? ASSURANCE_LEVELS.STRICT : ASSURANCE_LEVELS.NORMAL,
   HISTORY_REFRESH_TIME: 25 * 1000,
   HARDWARE_WALLETS,
   PIN_LENGTH: 6,

@@ -2,7 +2,6 @@
 import {BigNumber} from 'bignumber.js'
 
 import assert from '../../legacy/assert'
-import {CONFIG} from '../../legacy/config'
 import {Logger} from '../../legacy/logging'
 import {
   BaseAsset,
@@ -19,6 +18,11 @@ import {
 import {getDefaultNetworkTokenEntry, MultiToken, strToDefaultMultiAsset} from './MultiToken'
 import {multiTokenFromRemote} from './utils'
 
+export const ASSURANCE_LEVELS = {
+  LOW: 3,
+  MEDIUM: 9,
+}
+
 type TransactionAssurance = 'PENDING' | 'FAILED' | 'LOW' | 'MEDIUM' | 'HIGH'
 export const getTransactionAssurance = (
   status: typeof TRANSACTION_STATUS[keyof typeof TRANSACTION_STATUS],
@@ -31,7 +35,7 @@ export const getTransactionAssurance = (
     throw new Error('Internal error - unknown transaction status')
   }
 
-  const assuranceLevelCutoffs = CONFIG.ASSURANCE_LEVELS
+  const assuranceLevelCutoffs = ASSURANCE_LEVELS
   if (confirmations < assuranceLevelCutoffs.LOW) return 'LOW'
   if (confirmations < assuranceLevelCutoffs.MEDIUM) return 'MEDIUM'
   return 'HIGH'
