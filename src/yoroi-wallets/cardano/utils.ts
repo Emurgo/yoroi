@@ -2,8 +2,12 @@
 
 import {BigNumber} from 'bignumber.js'
 
-import {CONFIG} from '../../legacy/config'
-import {WALLET_CONFIG as HASKELL_SHELLEY, WALLET_CONFIG_24 as HASKELL_SHELLEY_24} from '../cardano/shelley/constants'
+import {
+  NETWORK_ID as mainnetId,
+  WALLET_CONFIG as HASKELL_SHELLEY,
+  WALLET_CONFIG_24 as HASKELL_SHELLEY_24,
+} from '../cardano/shelley/constants'
+import {NETWORK_ID as testnetId} from '../cardano/shelley-testnet/constants'
 import {
   Addressing,
   BaseAsset,
@@ -19,13 +23,12 @@ import {
   CardanoMobile,
   CardanoTypes,
   MultiToken,
+  PRIMARY_ASSET_CONSTANTS,
   toAssetName,
   toPolicyId,
   WalletImplementation,
 } from '.'
-import {getNetworkConfigById} from './networks'
-
-const PRIMARY_ASSET_CONSTANTS = CONFIG.PRIMARY_ASSET_CONSTANTS
+import {NUMBERS} from './numbers'
 
 export const normalizeToAddress = async (addr: string) => {
   // in Shelley, addresses can be base16, bech32 or base58
@@ -58,13 +61,13 @@ export const normalizeToAddress = async (addr: string) => {
 export const verifyFromBip44Root = (request: Addressing['addressing']) => {
   const accountPosition = request.startLevel
 
-  if (accountPosition !== CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.PURPOSE) {
+  if (accountPosition !== NUMBERS.BIP44_DERIVATION_LEVELS.PURPOSE) {
     throw new Error('verifyFromBip44Root: addressing does not start from root')
   }
 
   const lastLevelSpecified = request.startLevel + request.path.length - 1
 
-  if (lastLevelSpecified !== CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.ADDRESS) {
+  if (lastLevelSpecified !== NUMBERS.BIP44_DERIVATION_LEVELS.ADDRESS) {
     throw new Error('verifyFromBip44Root: incorrect addressing size')
   }
 }
@@ -72,20 +75,12 @@ export const verifyFromBip44Root = (request: Addressing['addressing']) => {
 export const deriveRewardAddressHex = async (accountPubKeyHex: string, networkId: NetworkId): Promise<string> => {
   const accountPubKeyPtr = await CardanoMobile.Bip32PublicKey.fromBytes(Buffer.from(accountPubKeyHex, 'hex'))
   const stakingKey = await (
-    await (
-      await accountPubKeyPtr.derive(CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT)
-    ).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)
+    await (await accountPubKeyPtr.derive(NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT)).derive(NUMBERS.STAKING_KEY_INDEX)
   ).toRawKey()
   const credential = await CardanoMobile.StakeCredential.fromKeyhash(await stakingKey.hash())
-  let chainNetworkId = CONFIG.NETWORKS.HASKELL_SHELLEY.CHAIN_NETWORK_ID
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const config: any = getNetworkConfigById(networkId)
+  const chainNetworkId = toCardanoNetworkId(networkId)
 
-  if (config.CHAIN_NETWORK_ID != null) {
-    chainNetworkId = config.CHAIN_NETWORK_ID
-  }
-
-  const rewardAddr = await CardanoMobile.RewardAddress.new(parseInt(chainNetworkId, 10), credential)
+  const rewardAddr = await CardanoMobile.RewardAddress.new(chainNetworkId, credential)
   const rewardAddrAsAddr = await rewardAddr.toAddress()
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return Buffer.from((await rewardAddrAsAddr.toBytes()) as any, 'hex').toString('hex')
@@ -262,3 +257,22 @@ export const WALLETS = {
     ..._DEFAULT_DISCOVERY_SETTINGS,
   },
 } as const
+
+export const CATALYST = {
+  MIN_ADA: NUMBERS.LOVELACES_PER_ADA.times(450),
+  DISPLAYED_MIN_ADA: NUMBERS.LOVELACES_PER_ADA.times(500),
+  VOTING_ROUNDS: [
+    {
+      ROUND: 4,
+      START_DATE: '2021-06-03T19:00:00Z',
+      END_DATE: '2021-06-10T19:00:00Z',
+    },
+  ],
+}
+
+export const toCardanoNetworkId = (networkId: number) => {
+  if (networkId === mainnetId) return 1
+  if (networkId === testnetId) return 0
+
+  throw new Error('invalid network id')
+}

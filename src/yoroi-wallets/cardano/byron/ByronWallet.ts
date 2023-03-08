@@ -50,6 +50,7 @@ import {
   legacyWalletChecksum,
   NoOutputsError,
   NotEnoughMoneyToSendError,
+  NUMBERS,
   RegistrationStatus,
   walletChecksum,
 } from '..'
@@ -344,11 +345,11 @@ export class ByronWallet implements YoroiWallet {
     this.stakingKeyPath = isByron(this.walletImplementationId)
       ? []
       : [
-          CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852,
-          CONFIG.NUMBERS.COIN_TYPES.CARDANO,
-          CONFIG.NUMBERS.ACCOUNT_INDEX + CONFIG.NUMBERS.HARD_DERIVATION_START,
-          CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
-          CONFIG.NUMBERS.STAKING_KEY_INDEX,
+          NUMBERS.WALLET_TYPE_PURPOSE.CIP1852,
+          NUMBERS.COIN_TYPES.CARDANO,
+          NUMBERS.ACCOUNT_INDEX + NUMBERS.HARD_DERIVATION_START,
+          NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
+          NUMBERS.STAKING_KEY_INDEX,
         ]
   }
 
@@ -452,9 +453,9 @@ export class ByronWallet implements YoroiWallet {
     if (this.walletImplementationId == null) throw new Error('Invalid wallet: walletImplementationId')
 
     if (isByron(this.walletImplementationId)) {
-      return CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.BIP44
+      return NUMBERS.WALLET_TYPE_PURPOSE.BIP44
     } else if (isHaskellShelley(this.walletImplementationId)) {
-      return CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852
+      return NUMBERS.WALLET_TYPE_PURPOSE.CIP1852
     } else {
       throw new Error('CardanoWallet::_getPurpose: invalid wallet impl. id')
     }
@@ -492,8 +493,8 @@ export class ByronWallet implements YoroiWallet {
 
     const accountPubKey = await CardanoMobile.Bip32PublicKey.fromBytes(Buffer.from(this.publicKeyHex, 'hex'))
     const stakingKey = await accountPubKey
-      .derive(CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT)
-      .then((key) => key.derive(CONFIG.NUMBERS.STAKING_KEY_INDEX))
+      .derive(NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT)
+      .then((key) => key.derive(NUMBERS.STAKING_KEY_INDEX))
       .then((key) => key.toRawKey())
 
     Logger.info(`getStakingKey: ${Buffer.from(await stakingKey.asBytes()).toString('hex')}`)
@@ -514,12 +515,12 @@ export class ByronWallet implements YoroiWallet {
     return {
       path: [
         this.getPurpose(),
-        CONFIG.NUMBERS.COIN_TYPES.CARDANO,
-        CONFIG.NUMBERS.ACCOUNT_INDEX + CONFIG.NUMBERS.HARD_DERIVATION_START,
-        CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
-        CONFIG.NUMBERS.STAKING_KEY_INDEX,
+        NUMBERS.COIN_TYPES.CARDANO,
+        NUMBERS.ACCOUNT_INDEX + NUMBERS.HARD_DERIVATION_START,
+        NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
+        NUMBERS.STAKING_KEY_INDEX,
       ],
-      startLevel: CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.PURPOSE,
+      startLevel: NUMBERS.BIP44_DERIVATION_LEVELS.PURPOSE,
     }
   }
 
@@ -538,12 +539,12 @@ export class ByronWallet implements YoroiWallet {
       return {
         path: [
           purpose,
-          CONFIG.NUMBERS.COIN_TYPES.CARDANO,
-          CONFIG.NUMBERS.ACCOUNT_INDEX + CONFIG.NUMBERS.HARD_DERIVATION_START,
+          NUMBERS.COIN_TYPES.CARDANO,
+          NUMBERS.ACCOUNT_INDEX + NUMBERS.HARD_DERIVATION_START,
           ADDRESS_TYPE_TO_CHANGE['Internal'],
           this.internalChain.getIndexOfAddress(address),
         ],
-        startLevel: CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.PURPOSE,
+        startLevel: NUMBERS.BIP44_DERIVATION_LEVELS.PURPOSE,
       }
     }
 
@@ -551,12 +552,12 @@ export class ByronWallet implements YoroiWallet {
       return {
         path: [
           purpose,
-          CONFIG.NUMBERS.COIN_TYPES.CARDANO,
-          CONFIG.NUMBERS.ACCOUNT_INDEX + CONFIG.NUMBERS.HARD_DERIVATION_START,
+          NUMBERS.COIN_TYPES.CARDANO,
+          NUMBERS.ACCOUNT_INDEX + NUMBERS.HARD_DERIVATION_START,
           ADDRESS_TYPE_TO_CHANGE['External'],
           this.externalChain.getIndexOfAddress(address),
         ],
-        startLevel: CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.PURPOSE,
+        startLevel: NUMBERS.BIP44_DERIVATION_LEVELS.PURPOSE,
       }
     }
 
@@ -691,12 +692,12 @@ export class ByronWallet implements YoroiWallet {
     const masterKey = await CardanoMobile.Bip32PrivateKey.fromBytes(Buffer.from(decryptedMasterKey, 'hex'))
     const accountPrivateKey = await masterKey
       .derive(this.getPurpose())
-      .then((key) => key.derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO))
-      .then((key) => key.derive(0 + CONFIG.NUMBERS.HARD_DERIVATION_START))
+      .then((key) => key.derive(NUMBERS.COIN_TYPES.CARDANO))
+      .then((key) => key.derive(0 + NUMBERS.HARD_DERIVATION_START))
     const accountPrivateKeyHex = await accountPrivateKey.asBytes().then(toHex)
     const stakingPrivateKey = await accountPrivateKey
-      .derive(CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT)
-      .then((key) => key.derive(CONFIG.NUMBERS.STAKING_KEY_INDEX))
+      .derive(NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT)
+      .then((key) => key.derive(NUMBERS.STAKING_KEY_INDEX))
       .then((key) => key.toRawKey())
     const stakingKeys =
       unsignedTx.staking.delegations ||
@@ -707,7 +708,7 @@ export class ByronWallet implements YoroiWallet {
         : undefined
 
     const signedTx = await unsignedTx.unsignedTx.sign(
-      CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.ACCOUNT,
+      NUMBERS.BIP44_DERIVATION_LEVELS.ACCOUNT,
       accountPrivateKeyHex,
       new Set<string>(),
       stakingKeys,
@@ -1227,13 +1228,11 @@ const makeKeys = async ({mnemonic, implementationId}: {mnemonic: string; impleme
   const rootKeyPtr = await generateWalletRootKey(mnemonic)
   const rootKey: string = Buffer.from(await rootKeyPtr.asBytes()).toString('hex')
 
-  const purpose = isByron(implementationId)
-    ? CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.BIP44
-    : CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852
+  const purpose = isByron(implementationId) ? NUMBERS.WALLET_TYPE_PURPOSE.BIP44 : NUMBERS.WALLET_TYPE_PURPOSE.CIP1852
   const accountPubKeyHex = await rootKeyPtr
     .derive(purpose)
-    .then((key) => key.derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO))
-    .then((key) => key.derive(CONFIG.NUMBERS.ACCOUNT_INDEX + CONFIG.NUMBERS.HARD_DERIVATION_START))
+    .then((key) => key.derive(NUMBERS.COIN_TYPES.CARDANO))
+    .then((key) => key.derive(NUMBERS.ACCOUNT_INDEX + NUMBERS.HARD_DERIVATION_START))
     .then((accountKey) => accountKey.toPublic())
     .then((accountPubKey) => accountPubKey.asBytes())
     .then((bytes) => Buffer.from(bytes).toString('hex'))

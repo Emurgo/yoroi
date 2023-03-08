@@ -3,7 +3,7 @@ import blake2b from 'blake2b'
 
 import {CONFIG} from '../../../legacy/config'
 import {Logger} from '../../../legacy/logging'
-import {CardanoMobile, CardanoTypes, generateAdaMnemonic} from '..'
+import {CardanoMobile, CardanoTypes, CATALYST, generateAdaMnemonic} from '..'
 
 export const CatalystLabels = {
   DATA: 61284,
@@ -93,7 +93,7 @@ export const isRegistrationOpen = (fundInfo?: null | {registrationStart: string;
     return false
   } else {
     // if we don't get fund info from server, fallback to hardcoded dates
-    const rounds = CONFIG.CATALYST.VOTING_ROUNDS
+    const rounds = CATALYST.VOTING_ROUNDS
     for (const round of rounds) {
       const startDate = new Date(Date.parse(round.START_DATE))
       const endDate = new Date(Date.parse(round.END_DATE))

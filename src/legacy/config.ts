@@ -1,6 +1,4 @@
 import {LogLevel} from '../legacy/logging'
-import {NETWORKS, PRIMARY_ASSET_CONSTANTS} from '../yoroi-wallets/cardano/networks'
-import {NUMBERS} from '../yoroi-wallets/cardano/numbers'
 import env from './env'
 
 const IS_DEBUG = __DEV__
@@ -51,18 +49,6 @@ const HARDWARE_WALLETS = {
   },
 }
 
-const CATALYST = {
-  MIN_ADA: NUMBERS.LOVELACES_PER_ADA.times(450),
-  DISPLAYED_MIN_ADA: NUMBERS.LOVELACES_PER_ADA.times(500),
-  VOTING_ROUNDS: [
-    {
-      ROUND: 4,
-      START_DATE: '2021-06-03T19:00:00Z',
-      END_DATE: '2021-06-10T19:00:00Z',
-    },
-  ],
-}
-
 export const CONFIG = {
   DEBUG: {
     // WARNING: NEVER change these flags
@@ -96,20 +82,7 @@ export const CONFIG = {
   MNEMONIC_STRENGTH: 160,
   ASSURANCE_LEVELS: _ASSURANCE_STRICT ? ASSURANCE_LEVELS.STRICT : ASSURANCE_LEVELS.NORMAL,
   HISTORY_REFRESH_TIME: 25 * 1000,
-  NUMBERS,
-
-  NETWORKS: USE_TESTNET
-    ? {
-        ...NETWORKS,
-        HASKELL_SHELLEY: NETWORKS.HASKELL_SHELLEY_TESTNET,
-      }
-    : {
-        ...NETWORKS,
-        HASKELL_SHELLEY: NETWORKS.HASKELL_SHELLEY,
-      },
-  PRIMARY_ASSET_CONSTANTS,
   HARDWARE_WALLETS,
-  CATALYST,
   PIN_LENGTH: 6,
   LOG_LEVEL: _LOG_LEVEL,
   COMMIT: _COMMIT,

@@ -7,6 +7,7 @@ import {CONFIG} from '../../legacy/config'
 import {WalletManagerProvider} from '../../WalletManager'
 import {WalletManager, walletManager} from '../../yoroi-wallets'
 import {NetworkError} from '../../yoroi-wallets/cardano/errors'
+import {NETWORK_ID} from '../../yoroi-wallets/cardano/shelley-testnet/constants'
 import {MnemonicCheckScreen} from './MnemonicCheckScreen'
 
 storiesOf('MnemonicCheckScreen', module)
@@ -18,7 +19,7 @@ storiesOf('MnemonicCheckScreen', module)
         mnemonic: CONFIG.DEBUG.MNEMONIC1,
         name: CONFIG.DEBUG.WALLET_NAME,
         password: CONFIG.DEBUG.PASSWORD,
-        networkId: CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
+        networkId: NETWORK_ID,
         walletImplementationId: 'haskell-shelley',
       },
     }

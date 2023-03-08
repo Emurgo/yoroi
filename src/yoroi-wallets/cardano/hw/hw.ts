@@ -18,6 +18,7 @@ import {CONFIG} from '../../../legacy/config'
 import {Logger} from '../../../legacy/logging'
 import {DeviceId, DeviceObj, GeneralConnectionError, HWDeviceInfo, LedgerUserError, RejectedByUserError} from '../../hw'
 import {WalletImplementationId} from '../../types'
+import {NUMBERS} from '../numbers'
 import {isByron, isHaskellShelley} from '../utils'
 
 export type WalletType = 'BIP44' | 'CIP1852'
@@ -99,9 +100,9 @@ const mapLedgerError = (e: Error | any): Error | LocalizableError => {
 
 const VENDOR = CONFIG.HARDWARE_WALLETS.LEDGER_NANO.VENDOR
 const MODEL = CONFIG.HARDWARE_WALLETS.LEDGER_NANO.MODEL
-const HARDENED = CONFIG.NUMBERS.HARD_DERIVATION_START
-const WALLET_TYPE_PURPOSE = CONFIG.NUMBERS.WALLET_TYPE_PURPOSE
-const COIN_TYPE = CONFIG.NUMBERS.COIN_TYPES.CARDANO
+const HARDENED = NUMBERS.HARD_DERIVATION_START
+const WALLET_TYPE_PURPOSE = NUMBERS.WALLET_TYPE_PURPOSE
+const COIN_TYPE = NUMBERS.COIN_TYPES.CARDANO
 
 const getWalletType = (id: WalletImplementationId): WalletType => {
   if (isByron(id)) {
@@ -196,7 +197,7 @@ export const getHWDeviceInfo = async (
     Logger.debug('ledgerUtils::getHWDeviceInfo called')
     const appAda = await connectionHandler(deviceId, deviceObj, useUSB)
     // assume single account in Yoroi
-    const accountPath = makeCardanoAccountBIP44Path(getWalletType(walletImplementationId), CONFIG.NUMBERS.ACCOUNT_INDEX)
+    const accountPath = makeCardanoAccountBIP44Path(getWalletType(walletImplementationId), NUMBERS.ACCOUNT_INDEX)
     Logger.debug('bip44 account path', accountPath)
     // get Cardano's first account
     // i.e hdPath = [2147483692, 2147485463, 2147483648]

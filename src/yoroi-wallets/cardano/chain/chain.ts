@@ -4,10 +4,19 @@ import type {Moment} from 'moment'
 import {defaultMemoize} from 'reselect'
 
 import assert from '../../../legacy/assert'
-import {CONFIG} from '../../../legacy/config'
 import {Logger} from '../../../legacy/logging'
 import {NetworkId, WalletImplementationId} from '../../types'
-import {ADDRESS_TYPE_TO_CHANGE, AddressType, CardanoMobile, CardanoTypes, isByron, isHaskellShelley} from '../'
+import {
+  ADDRESS_TYPE_TO_CHANGE,
+  AddressType,
+  CardanoMobile,
+  CardanoTypes,
+  isByron,
+  isHaskellShelley,
+  NETWORKS,
+  NUMBERS,
+  toCardanoNetworkId,
+} from '../'
 import type {CryptoAccount} from '../byron/util'
 import * as util from '../byron/util'
 import {getNetworkConfigById} from '../networks'
@@ -61,11 +70,6 @@ export class AddressGenerator {
     if (!isHaskellShelley(this.walletImplementationId)) {
       return null
     }
-    let chainNetworkId = CONFIG.NETWORKS.HASKELL_SHELLEY.CHAIN_NETWORK_ID
-    const config: any = getNetworkConfigById(this.networkId)
-    if (config.CHAIN_NETWORK_ID != null) {
-      chainNetworkId = config.CHAIN_NETWORK_ID
-    }
     if (this._rewardAddressHex != null) return this._rewardAddressHex
     // cache account public key
     if (this._accountPubKeyPtr == null) {
@@ -73,13 +77,14 @@ export class AddressGenerator {
     }
     const stakingKey = await (
       await (
-        await this._accountPubKeyPtr.derive(CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT)
-      ).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)
+        await this._accountPubKeyPtr.derive(NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT)
+      ).derive(NUMBERS.STAKING_KEY_INDEX)
     ).toRawKey()
 
     // cache reward address
+    const chainNetworkId = toCardanoNetworkId(this.networkId)
     const credential = await CardanoMobile.StakeCredential.fromKeyhash(await stakingKey.hash())
-    const rewardAddr = await CardanoMobile.RewardAddress.new(parseInt(chainNetworkId, 10), credential)
+    const rewardAddr = await CardanoMobile.RewardAddress.new(chainNetworkId, credential)
     const rewardAddrAsAddr = await rewardAddr.toAddress()
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this._rewardAddressHex = Buffer.from((await rewardAddrAsAddr.toBytes()) as any, 'hex').toString('hex')
@@ -89,7 +94,7 @@ export class AddressGenerator {
   async generate(idxs: Array<number>): Promise<Array<string>> {
     if (isHaskellShelley(this.walletImplementationId)) {
       // assume mainnet by default
-      let chainNetworkId = CONFIG.NETWORKS.HASKELL_SHELLEY.CHAIN_NETWORK_ID
+      let chainNetworkId = NETWORKS.HASKELL_SHELLEY.CHAIN_NETWORK_ID
       const config: any = getNetworkConfigById(this.networkId)
       if (config.CHAIN_NETWORK_ID != null) {
         chainNetworkId = config.CHAIN_NETWORK_ID
@@ -101,8 +106,8 @@ export class AddressGenerator {
       const chainKey = await this._accountPubKeyPtr.derive(ADDRESS_TYPE_TO_CHANGE[this.type])
       const stakingKey = await (
         await (
-          await this._accountPubKeyPtr.derive(CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT)
-        ).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)
+          await this._accountPubKeyPtr.derive(NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT)
+        ).derive(NUMBERS.STAKING_KEY_INDEX)
       ).toRawKey()
 
       return Promise.all(
