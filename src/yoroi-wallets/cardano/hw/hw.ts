@@ -14,10 +14,11 @@ import {BleError} from 'react-native-ble-plx'
 
 import {ledgerMessages} from '../../../i18n/global-messages'
 import LocalizableError from '../../../i18n/LocalizableError'
-import {CONFIG, isByron, isHaskellShelley} from '../../../legacy/config'
+import {CONFIG} from '../../../legacy/config'
 import {Logger} from '../../../legacy/logging'
 import {DeviceId, DeviceObj, GeneralConnectionError, HWDeviceInfo, LedgerUserError, RejectedByUserError} from '../../hw'
 import {WalletImplementationId} from '../../types'
+import {isByron, isHaskellShelley} from '../utils'
 
 export type WalletType = 'BIP44' | 'CIP1852'
 

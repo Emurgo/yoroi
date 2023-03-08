@@ -10,14 +10,7 @@ import {Keychain} from '../../../auth/Keychain'
 import {encryptWithPassword} from '../../../Catalyst/catalystCipher'
 import LocalizableError from '../../../i18n/LocalizableError'
 import assert from '../../../legacy/assert'
-import {
-  CONFIG,
-  DISABLE_BACKGROUND_SYNC,
-  getCardanoBaseConfig,
-  getWalletConfigById,
-  isByron,
-  isHaskellShelley,
-} from '../../../legacy/config'
+import {CONFIG, DISABLE_BACKGROUND_SYNC} from '../../../legacy/config'
 import {Logger} from '../../../legacy/logging'
 import {HWDeviceInfo} from '../../hw'
 import {makeMemosManager, MemosManager} from '../../memos'
@@ -72,13 +65,13 @@ import {
 } from '../networks'
 import {processTxHistoryData} from '../processTransactions'
 import {IsLockedError, nonblockingSynchronize, synchronize} from '../promise'
-import {PRIMARY_TOKEN, PRIMARY_TOKEN_INFO} from '../shelley/constants'
+import {MAX_GENERATED_UNUSED, PRIMARY_TOKEN, PRIMARY_TOKEN_INFO} from '../shelley/constants'
 import {filterAddressesByStakingKey, getDelegationStatus} from '../shelley/delegationUtils'
 import {yoroiSignedTx} from '../signedTx'
 import {TransactionManager} from '../transactionManager'
 import {isYoroiWallet, WalletEvent, WalletSubscription, YoroiWallet} from '../types'
 import {yoroiUnsignedTx} from '../unsignedTx'
-import {deriveRewardAddressHex} from '../utils'
+import {deriveRewardAddressHex, getCardanoBaseConfig, getWalletConfigById, isByron, isHaskellShelley} from '../utils'
 import {makeUtxoManager, UtxoManager} from '../utxoManager'
 
 type WalletState = {
@@ -596,7 +589,7 @@ export class ByronWallet implements YoroiWallet {
   canGenerateNewReceiveAddress() {
     const lastUsedIndex = this.getLastUsedIndex(this.externalChain)
     // TODO: should use specific wallet config
-    const maxIndex = lastUsedIndex + CONFIG.WALLETS.HASKELL_SHELLEY.MAX_GENERATED_UNUSED
+    const maxIndex = lastUsedIndex + MAX_GENERATED_UNUSED
     if (this.state.lastGeneratedAddressIndex >= maxIndex) {
       return false
     }

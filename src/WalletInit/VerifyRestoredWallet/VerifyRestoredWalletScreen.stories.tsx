@@ -3,6 +3,7 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
 import {CONFIG} from '../../legacy/config'
+import {NETWORK_ID, WALLET_IMPLEMENTATION_ID} from '../../yoroi-wallets/cardano/shelley-testnet/constants'
 import {cleanMnemonic} from '../../yoroi-wallets/utils/validators'
 import {VerifyRestoredWalletScreen} from './VerifyRestoredWalletScreen'
 
@@ -10,8 +11,8 @@ const route = {
   key: 'key',
   name: 'name',
   params: {
-    networkId: CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
-    walletImplementationId: CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
+    networkId: NETWORK_ID,
+    walletImplementationId: WALLET_IMPLEMENTATION_ID,
     phrase: cleanMnemonic(CONFIG.DEBUG.MNEMONIC3),
   },
 }

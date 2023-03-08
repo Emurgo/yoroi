@@ -4,13 +4,14 @@ import type {Moment} from 'moment'
 import {defaultMemoize} from 'reselect'
 
 import assert from '../../../legacy/assert'
-import {CONFIG, isByron, isHaskellShelley} from '../../../legacy/config'
+import {CONFIG} from '../../../legacy/config'
 import {Logger} from '../../../legacy/logging'
 import {NetworkId, WalletImplementationId} from '../../types'
-import {ADDRESS_TYPE_TO_CHANGE, AddressType, CardanoMobile, CardanoTypes} from '../'
+import {ADDRESS_TYPE_TO_CHANGE, AddressType, CardanoMobile, CardanoTypes, isByron, isHaskellShelley} from '../'
 import type {CryptoAccount} from '../byron/util'
 import * as util from '../byron/util'
 import {getNetworkConfigById} from '../networks'
+import {DISCOVERY_BLOCK_SIZE, DISCOVERY_GAP_SIZE} from '../shelley/constants'
 
 export type AddressBlock = [number, Moment, Array<string>]
 
@@ -176,8 +177,8 @@ export class AddressChain {
 
   constructor(
     addressGenerator: AddressGenerator,
-    blockSize: number = CONFIG.WALLETS.HASKELL_SHELLEY.DISCOVERY_BLOCK_SIZE,
-    gapLimit: number = CONFIG.WALLETS.HASKELL_SHELLEY.DISCOVERY_GAP_SIZE,
+    blockSize: number = DISCOVERY_BLOCK_SIZE,
+    gapLimit: number = DISCOVERY_GAP_SIZE,
   ) {
     assert.assert(blockSize > gapLimit, 'Block size needs to be > gap limit')
 

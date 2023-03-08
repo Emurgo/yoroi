@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import {WALLETS} from '../../legacy/config'
 import {Logger} from '../../legacy/logging'
-import {CardanoTypes, legacyWalletChecksum, walletChecksum, WalletMeta} from '../../yoroi-wallets'
+import {CardanoTypes, legacyWalletChecksum, walletChecksum, WalletMeta, WALLETS} from '../../yoroi-wallets'
 import {storage} from '../../yoroi-wallets/storage'
 import type {NetworkId, WalletImplementationId} from '../../yoroi-wallets/types/other'
 import {NETWORK_REGISTRY, WALLET_IMPLEMENTATION_REGISTRY} from '../../yoroi-wallets/types/other'

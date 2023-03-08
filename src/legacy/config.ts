@@ -1,14 +1,6 @@
 import {LogLevel} from '../legacy/logging'
-import {WalletImplementation} from '../yoroi-wallets'
-import type {CardanoHaskellShelleyNetwork} from '../yoroi-wallets/cardano/networks'
 import {NETWORKS, PRIMARY_ASSET_CONSTANTS} from '../yoroi-wallets/cardano/networks'
 import {NUMBERS} from '../yoroi-wallets/cardano/numbers'
-import {
-  WALLET_CONFIG as HASKELL_SHELLEY,
-  WALLET_CONFIG_24 as HASKELL_SHELLEY_24,
-} from '../yoroi-wallets/cardano/shelley/constants'
-import type {WalletImplementationId} from '../yoroi-wallets/types/other'
-import {DERIVATION_TYPES, WALLET_IMPLEMENTATION_REGISTRY} from '../yoroi-wallets/types/other'
 import env from './env'
 
 const IS_DEBUG = __DEV__
@@ -47,29 +39,6 @@ export const ASSURANCE_LEVELS = {
     MEDIUM: 15,
   },
 }
-
-const _DEFAULT_DISCOVERY_SETTINGS = {
-  DISCOVERY_GAP_SIZE: 20,
-  DISCOVERY_BLOCK_SIZE: 50, // should be less than API limitations
-  MAX_GENERATED_UNUSED: 20, // must be <= gap size
-}
-
-export const WALLETS = {
-  HASKELL_BYRON: {
-    WALLET_IMPLEMENTATION_ID: WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON,
-    TYPE: DERIVATION_TYPES.BIP44,
-    MNEMONIC_LEN: 15,
-    ..._DEFAULT_DISCOVERY_SETTINGS,
-  },
-  HASKELL_SHELLEY,
-  HASKELL_SHELLEY_24,
-  JORMUNGANDR_ITN: {
-    WALLET_IMPLEMENTATION_ID: WALLET_IMPLEMENTATION_REGISTRY.JORMUNGANDR_ITN,
-    TYPE: DERIVATION_TYPES.CIP1852,
-    MNEMONIC_LEN: 15,
-    ..._DEFAULT_DISCOVERY_SETTINGS,
-  },
-} as const
 
 const HARDWARE_WALLETS = {
   LEDGER_NANO: {
@@ -128,7 +97,6 @@ export const CONFIG = {
   ASSURANCE_LEVELS: _ASSURANCE_STRICT ? ASSURANCE_LEVELS.STRICT : ASSURANCE_LEVELS.NORMAL,
   HISTORY_REFRESH_TIME: 25 * 1000,
   NUMBERS,
-  WALLETS,
 
   NETWORKS: USE_TESTNET
     ? {
@@ -147,46 +115,4 @@ export const CONFIG = {
   COMMIT: _COMMIT,
 }
 
-/**
- * queries related to wallet parameters
- */
-export const isByron = (id: WalletImplementationId): boolean => id === WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON
-
-export const isHaskellShelley = (id: WalletImplementationId): boolean =>
-  id === HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID || id === HASKELL_SHELLEY_24.WALLET_IMPLEMENTATION_ID
-
-export const isJormun = (id: WalletImplementationId): boolean => id === WALLET_IMPLEMENTATION_REGISTRY.JORMUNGANDR_ITN
-
-export const getWalletConfigById = (id: WalletImplementationId): WalletImplementation => {
-  const idx = Object.values(WALLET_IMPLEMENTATION_REGISTRY).indexOf(id)
-  const walletKey = Object.keys(WALLET_IMPLEMENTATION_REGISTRY)[idx]
-  if (walletKey != null && walletKey !== 'UNDEFINED' && WALLETS[walletKey] != null) {
-    return WALLETS[walletKey]
-  }
-  throw new Error('invalid walletImplementationId')
-}
-
 export const isNightly = () => CONFIG.BUILD_VARIANT === 'NIGHTLY'
-
-// need to accomodate base config parameters as required by certain API shared
-// by yoroi extension and yoroi mobile
-export const getCardanoBaseConfig = (
-  networkConfig: CardanoHaskellShelleyNetwork,
-): Array<{
-  StartAt?: number
-  GenesisDate?: string
-  SlotsPerEpoch?: number
-  SlotDuration?: number
-}> => [
-  {
-    StartAt: networkConfig.BASE_CONFIG[0].START_AT,
-    GenesisDate: networkConfig.BASE_CONFIG[0].GENESIS_DATE,
-    SlotsPerEpoch: networkConfig.BASE_CONFIG[0].SLOTS_PER_EPOCH,
-    SlotDuration: networkConfig.BASE_CONFIG[0].SLOT_DURATION,
-  },
-  {
-    StartAt: networkConfig.BASE_CONFIG[1].START_AT,
-    SlotsPerEpoch: networkConfig.BASE_CONFIG[1].SLOTS_PER_EPOCH,
-    SlotDuration: networkConfig.BASE_CONFIG[1].SLOT_DURATION,
-  },
-]

@@ -3,6 +3,7 @@ import {AddressGenerator, AddressType, CardanoMobile, legacyWalletChecksum, wall
 import type {NetworkId} from '../../types/other'
 import {PlateResponse} from '../../types/other'
 import {getMasterKeyFromMnemonic} from '../byron/util'
+import {WALLET_IMPLEMENTATION_ID} from './constants'
 
 export const generateShelleyPlateFromKey = async (
   key: string,
@@ -11,12 +12,7 @@ export const generateShelleyPlateFromKey = async (
   isJormungandr = false,
 ): Promise<PlateResponse> => {
   const addrType: AddressType = 'External'
-  const addrGenerator = new AddressGenerator(
-    key,
-    addrType,
-    CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
-    networkId,
-  )
+  const addrGenerator = new AddressGenerator(key, addrType, WALLET_IMPLEMENTATION_ID, networkId)
   const accountPlate = isJormungandr ? legacyWalletChecksum(key) : walletChecksum(key)
   const addresses = await addrGenerator.generate([...Array(count).keys()])
   return {addresses, accountPlate}

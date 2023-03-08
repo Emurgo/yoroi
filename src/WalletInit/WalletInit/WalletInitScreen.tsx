@@ -7,11 +7,12 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Button, Modal, ScreenBackground, StatusBar} from '../../components'
 import {LedgerTransportSwitchModal} from '../../HW'
 import globalMessages from '../../i18n/global-messages'
-import {CONFIG, isByron, isHaskellShelley} from '../../legacy/config'
+import {CONFIG} from '../../legacy/config'
 import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
 import {COLORS} from '../../theme'
-import {NetworkId, WalletImplementationId} from '../../yoroi-wallets'
+import {isByron, isHaskellShelley, NetworkId, WalletImplementationId} from '../../yoroi-wallets'
 import {isJormungandr} from '../../yoroi-wallets/cardano/networks'
+import {WALLET_CONFIG_24} from '../../yoroi-wallets/cardano/shelley/constants'
 import {WalletDescription} from '../WalletDescription'
 import {ExpandableItem} from './ExpandableItem'
 
@@ -95,7 +96,7 @@ export const WalletInitScreen = () => {
 
               <Button
                 outlineOnLight
-                onPress={() => navigateTo.restoreWallet(CONFIG.WALLETS.HASKELL_SHELLEY_24.WALLET_IMPLEMENTATION_ID)}
+                onPress={() => navigateTo.restoreWallet(WALLET_CONFIG_24.WALLET_IMPLEMENTATION_ID)}
                 title={strings.restore24WordWalletLabel}
                 style={styles.mnemonicDialogButton}
                 testID="restore24WordWalletButton"

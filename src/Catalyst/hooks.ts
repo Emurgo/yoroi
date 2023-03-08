@@ -1,8 +1,8 @@
 import {useEffect, useState} from 'react'
 
 import {useBalances} from '../hooks'
-import {CONFIG, isHaskellShelley} from '../legacy/config'
-import {YoroiWallet} from '../yoroi-wallets'
+import {CONFIG} from '../legacy/config'
+import {isHaskellShelley, YoroiWallet} from '../yoroi-wallets'
 import {Quantity} from '../yoroi-wallets/types'
 import {Amounts, Quantities} from '../yoroi-wallets/utils'
 
