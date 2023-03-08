@@ -1,12 +1,13 @@
 import {RouteProp, useRoute} from '@react-navigation/native'
 import React, {ReactNode, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {Image, ImageSourcePropType, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {CopyButton, FadeIn, Icon, Link, Spacer, Text} from '../components'
 import {Tab, TabPanel, TabPanels, Tabs} from '../components/Tabs'
 import {useNft} from '../hooks'
+import {MODERATING_NFTS_ENABLED} from '../legacy/config'
 import {NftRoutes} from '../navigation'
 import {useModeratedNftImage} from '../Nfts/hooks'
 import {useNavigateTo} from '../Nfts/navigation'
@@ -26,7 +27,7 @@ export const NftDetails = () => {
   return (
     <FadeIn style={styles.container}>
       <ScrollView contentContainerStyle={styles.contentContainer}>
-        <NftImage nft={nft} />
+        {MODERATING_NFTS_ENABLED ? <ModeratedNftImage nft={nft} /> : <UnModeratedNftImage nft={nft} />}
 
         <Tabs>
           <Tab
@@ -58,16 +59,39 @@ export const NftDetails = () => {
   )
 }
 
-const NftImage = ({nft}: {nft: YoroiNft}) => {
+const UnModeratedNftImage = ({nft}: {nft: YoroiNft}) => {
+  const navigateTo = useNavigateTo()
+  return <NftImage source={{uri: nft.image}} onPress={() => navigateTo.nftZoom(nft.id)} />
+}
+
+const NftImage = ({
+  source,
+  onPress,
+  disabled,
+}: {
+  source: ImageSourcePropType
+  onPress?: () => void
+  disabled?: boolean
+}) => {
+  return (
+    <TouchableOpacity onPress={onPress} disabled={disabled} style={styles.imageWrapper}>
+      <Image source={source} style={styles.image} resizeMode="contain" />
+    </TouchableOpacity>
+  )
+}
+
+const ModeratedNftImage = ({nft}: {nft: YoroiNft}) => {
   const wallet = useSelectedWallet()
   const navigateTo = useNavigateTo()
   const {moderationStatus} = useModeratedNftImage({wallet, fingerprint: nft.fingerprint})
   const canShowNft = moderationStatus === 'approved' || moderationStatus === 'consent'
 
   return (
-    <TouchableOpacity onPress={() => navigateTo.nftZoom(nft.id)} disabled={!canShowNft} style={styles.imageWrapper}>
-      <Image source={canShowNft ? {uri: nft.image} : placeholder} style={styles.image} resizeMode="contain" />
-    </TouchableOpacity>
+    <NftImage
+      source={canShowNft ? {uri: nft.image} : placeholder}
+      onPress={() => navigateTo.nftZoom(nft.id)}
+      disabled={!canShowNft}
+    />
   )
 }
 

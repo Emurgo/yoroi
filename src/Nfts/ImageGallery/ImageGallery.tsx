@@ -5,6 +5,7 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
 import placeholderImage from '../../assets/img/nft-placeholder.png'
 import {Icon, Spacer, Text} from '../../components'
+import {MODERATING_NFTS_ENABLED} from '../../legacy/config'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {YoroiNft} from '../../yoroi-wallets/types'
 import {useModeratedNftImage} from '../hooks'
@@ -30,7 +31,13 @@ export const ImageGallery = ({nfts = [], onSelect, onRefresh, isRefreshing}: Pro
       data={nfts}
       onRefresh={onRefresh}
       refreshing={isRefreshing}
-      renderItem={(nft) => <ModeratedImage onPress={() => onSelect(nfts.indexOf(nft))} nft={nft} key={nft.id} />}
+      renderItem={(nft) =>
+        MODERATING_NFTS_ENABLED ? (
+          <ModeratedImage onPress={() => onSelect(nfts.indexOf(nft))} nft={nft} key={nft.id} />
+        ) : (
+          <UnModeratedImage onPress={() => onSelect(nfts.indexOf(nft))} nft={nft} key={nft.id} />
+        )
+      }
     />
   )
 }
@@ -38,6 +45,14 @@ export const ImageGallery = ({nfts = [], onSelect, onRefresh, isRefreshing}: Pro
 interface ModeratedImageProps {
   onPress?(event: GestureResponderEvent): void
   nft: YoroiNft
+}
+
+const UnModeratedImage = ({onPress, nft: {image, name}}: ModeratedImageProps) => {
+  return (
+    <TouchableOpacity onPress={onPress} style={styles.imageContainer}>
+      <ApprovedNft text={name} uri={image} />
+    </TouchableOpacity>
+  )
 }
 
 const ModeratedImage = ({onPress, nft}: ModeratedImageProps) => {
