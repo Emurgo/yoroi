@@ -1,7 +1,8 @@
 import {useNavigation} from '@react-navigation/native'
+import {FlashList} from '@shopify/flash-list'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {FlatList, LayoutAnimation, TouchableOpacity, View} from 'react-native'
+import {/* FlatList,  */ LayoutAnimation, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Boundary, Button, Spacer, Text, TextInput} from '../../components'
@@ -50,7 +51,7 @@ export const AssetSelectorScreen = () => {
         <HR />
       </View>
 
-      <FlatList
+      <FlashList
         data={assets}
         renderItem={({item: tokenInfo}: {item: TokenInfo}) => (
           <Boundary>
@@ -66,8 +67,9 @@ export const AssetSelectorScreen = () => {
         )}
         bounces={false}
         contentContainerStyle={{paddingHorizontal: 16}}
-        keyExtractor={(tokenInfo) => tokenInfo.id}
+        keyExtractor={(_, index) => index + ''}
         testID="assetsList"
+        estimatedItemSize={72}
       />
 
       <Actions>
