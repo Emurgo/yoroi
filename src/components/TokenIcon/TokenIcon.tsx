@@ -1,6 +1,5 @@
 import React from 'react'
 import {Image, StyleSheet, View} from 'react-native'
-import {ActivityIndicator} from 'react-native-paper'
 
 import {useIsTokenKnownNft, useNft, useNftImageModerated, useTokenInfo} from '../../hooks'
 import {MODERATING_NFTS_ENABLED, SHOW_NFT_GALLERY} from '../../legacy/config'
@@ -88,13 +87,5 @@ const styles = StyleSheet.create({
   },
   placeholder: {
     backgroundColor: COLORS.BACKGROUND_GRAY,
-  },
-  loading: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'transparent',
-    height: 32,
-    width: 32,
   },
 })

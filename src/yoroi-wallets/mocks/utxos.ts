@@ -1,4 +1,4 @@
-import {RawUtxo} from '../../src/yoroi-wallets/types'
+import {RawUtxo} from '../types'
 
 export const utxos: RawUtxo[] = [
   {

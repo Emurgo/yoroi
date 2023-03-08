@@ -2,10 +2,11 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {QueryClient, QueryClientProvider} from 'react-query'
 
-import {mocks, RouteProvider} from '../../../storybook'
+import {RouteProvider} from '../../../.storybook'
 import {getDefaultAssets} from '../../legacy/config'
 import {StakingCenterRoutes} from '../../navigation'
 import {SelectedWalletProvider} from '../../SelectedWallet'
+import {mocks} from '../../yoroi-wallets/mocks'
 import {DelegationConfirmation} from './DelegationConfirmation'
 
 storiesOf('DelegationConfirmation', module)

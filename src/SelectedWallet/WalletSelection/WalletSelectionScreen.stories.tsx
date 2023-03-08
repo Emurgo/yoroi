@@ -2,10 +2,10 @@ import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {mocks} from '../../../storybook'
 import {WalletManagerProvider} from '../../WalletManager'
 import {mockWalletManager, WalletManager, WalletMeta} from '../../yoroi-wallets'
 import {InvalidState, NetworkError} from '../../yoroi-wallets/cardano/errors'
+import {mocks} from '../../yoroi-wallets/mocks'
 import {WalletSelectionScreen} from './WalletSelectionScreen'
 
 storiesOf('WalletSelectionScreen', module)

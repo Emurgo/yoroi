@@ -1,10 +1,10 @@
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {mocks} from '../../storybook'
-import {QueryProvider} from '../../storybook/decorators'
+import {QueryProvider} from '../../.storybook/decorators'
 import {SelectedWalletProvider} from '../SelectedWallet'
 import {SendProvider} from '../Send/Context/SendContext'
+import {mocks} from '../yoroi-wallets/mocks'
 import {TxHistory} from './TxHistory'
 
 storiesOf('V2/TxHistory', module)

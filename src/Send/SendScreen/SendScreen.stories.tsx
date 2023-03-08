@@ -1,10 +1,11 @@
 import {storiesOf} from '@storybook/react-native'
 import * as React from 'react'
 
-import {mocks, QueryProvider} from '../../../storybook'
+import {QueryProvider} from '../../../.storybook'
 import {Boundary} from '../../components'
 import {SelectedWalletProvider} from '../../SelectedWallet'
 import {YoroiWallet} from '../../yoroi-wallets'
+import {mocks} from '../../yoroi-wallets/mocks'
 import {SendProvider} from '../Context/SendContext'
 import {SendScreen} from './SendScreen'
 

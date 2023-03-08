@@ -2,7 +2,8 @@ import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {mocks, WithModal} from '../../../storybook'
+import {WithModal} from '../../../.storybook'
+import {mocks} from '../../yoroi-wallets/mocks'
 import {WithdrawStakingRewards} from './WithdrawStakingRewards'
 
 storiesOf('WithdrawStakingRewards', module)
