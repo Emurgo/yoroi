@@ -1,10 +1,11 @@
-import {CONFIG, getCardanoDefaultAsset} from '../../legacy/config'
+import {CONFIG} from '../../legacy/config'
 import {asciiToHex} from '../cardano'
+import {PRIMARY_TOKEN} from '../cardano/shelley-testnet/constants'
 import {InvalidAssetAmount, parseAmountDecimal} from './parsing'
 
 describe('parseAdaDecimal', () => {
   // recall: tests run on mainnet (default network)
-  const defaultAsset = getCardanoDefaultAsset()
+  const defaultAsset = PRIMARY_TOKEN
 
   it('throw exception on amount equal to 0', () => {
     const zeroValues = ['0', '0.0', '0.000000']

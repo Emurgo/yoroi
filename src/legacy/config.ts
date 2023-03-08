@@ -1,20 +1,13 @@
 import {LogLevel} from '../legacy/logging'
 import {WalletImplementation} from '../yoroi-wallets'
 import type {CardanoHaskellShelleyNetwork} from '../yoroi-wallets/cardano/networks'
-import {
-  DEFAULT_ASSETS,
-  getNetworkConfigById,
-  isHaskellShelleyNetwork,
-  NETWORKS,
-  PRIMARY_ASSET_CONSTANTS,
-} from '../yoroi-wallets/cardano/networks'
+import {NETWORKS, PRIMARY_ASSET_CONSTANTS} from '../yoroi-wallets/cardano/networks'
 import {NUMBERS} from '../yoroi-wallets/cardano/numbers'
 import {
   WALLET_CONFIG as HASKELL_SHELLEY,
   WALLET_CONFIG_24 as HASKELL_SHELLEY_24,
 } from '../yoroi-wallets/cardano/shelley/constants'
-import {DefaultAsset} from '../yoroi-wallets/types'
-import type {NetworkId, WalletImplementationId} from '../yoroi-wallets/types/other'
+import type {WalletImplementationId} from '../yoroi-wallets/types/other'
 import {DERIVATION_TYPES, WALLET_IMPLEMENTATION_REGISTRY} from '../yoroi-wallets/types/other'
 import env from './env'
 
@@ -126,17 +119,6 @@ export const CONFIG = {
       ? 'addr_test1qpaufs29emf7r62prt8r0l072nuvs4vezrgve2ty5csvvjwr3y3kdut55a40jff00qmg74686vz44v6k363md06qkq0qj8n0y9'
       : 'addr1q8dewyn53xdjyzu20xjj6wg7kkxyqq63upxqevt24jga8fgcdwap96xuy84apchhj8u6r7uvl974sy9qz0sedc7ayjks3sxz7a',
     SEND_AMOUNT: USE_TESTNET ? '3.3333' : '1',
-    POOL_HASH: 'af22f95915a19cd57adb14c558dcc4a175f60c6193dc23b8bd2d8beb',
-    PUB_KEY:
-      '42cfdc53da2220ba52ce62f8e20ab9bb99857a3fceacf43d676d7987ad909b53' +
-      'ed75534e0d0ee8fce835eb2e7c67c5caec18a9c894388d9a046380edebbfc46d',
-    CATALYST_PIN: '1234',
-    CATALYST_NONCE: 1234,
-  },
-  E2E: {
-    // WARNING: NEVER change these flags here, use .env.e2e
-    // we test release configurations so we allow this flag when __DEV__=false
-    IS_TESTING: BUILD_VARIANT === 'E2E',
   },
   BUILD_VARIANT,
   IS_TESTNET_BUILD: BUILD_VARIANT === 'STAGING',
@@ -208,44 +190,3 @@ export const getCardanoBaseConfig = (
     SlotDuration: networkConfig.BASE_CONFIG[1].SLOT_DURATION,
   },
 ]
-
-const _asToken = (asset): DefaultAsset => ({
-  networkId: asset.NETWORK_ID,
-  identifier: asset.IDENTIFIER,
-  isDefault: asset.IS_DEFAULT,
-  metadata: {
-    type: asset.METADATA.TYPE,
-    policyId: asset.METADATA.POLICY_ID,
-    assetName: asset.METADATA.ASSET_NAME,
-    ticker: asset.METADATA.TICKER,
-    longName: asset.METADATA.LONG_NAME,
-    numberOfDecimals: asset.METADATA.NUMBER_OF_DECIMALS,
-    maxSupply: asset.METADATA.MAX_SUPPLY,
-  },
-})
-
-export const getDefaultAssets = (): Array<DefaultAsset> => DEFAULT_ASSETS.map((asset) => _asToken(asset))
-
-/**
- * note: this returns the default asset according to the build variant, ie.
- * ADA for production builds, including nightly, and TADA for staing
- */
-export const getCardanoDefaultAsset = (): DefaultAsset => {
-  const assetData = DEFAULT_ASSETS.filter((network) => {
-    const config = getNetworkConfigById(network.NETWORK_ID)
-    return config.IS_MAINNET !== CONFIG.IS_TESTNET_BUILD && isHaskellShelleyNetwork(network.NETWORK_ID)
-  })[0]
-  return _asToken(assetData)
-}
-
-export const getDefaultAssetByNetworkId = (networkId: NetworkId): DefaultAsset => {
-  const defaultAssets = DEFAULT_ASSETS.filter((asset) => asset.NETWORK_ID === networkId)
-  if (defaultAssets.length === 0) {
-    throw new Error(`No default assset found for network id ${networkId}`)
-  }
-  if (defaultAssets.length > 1) {
-    throw new Error('only one default assset currently supported')
-  }
-  const assetData = defaultAssets[0]
-  return _asToken(assetData)
-}

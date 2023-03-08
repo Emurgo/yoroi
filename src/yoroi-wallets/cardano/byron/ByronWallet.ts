@@ -14,7 +14,6 @@ import {
   CONFIG,
   DISABLE_BACKGROUND_SYNC,
   getCardanoBaseConfig,
-  getDefaultAssetByNetworkId,
   getWalletConfigById,
   isByron,
   isHaskellShelley,
@@ -73,6 +72,7 @@ import {
 } from '../networks'
 import {processTxHistoryData} from '../processTransactions'
 import {IsLockedError, nonblockingSynchronize, synchronize} from '../promise'
+import {PRIMARY_TOKEN, PRIMARY_TOKEN_INFO} from '../shelley/constants'
 import {filterAddressesByStakingKey, getDelegationStatus} from '../shelley/delegationUtils'
 import {yoroiSignedTx} from '../signedTx'
 import {TransactionManager} from '../transactionManager'
@@ -324,9 +324,8 @@ export class ByronWallet implements YoroiWallet {
     this.id = id
     this.storage = storage
     this.networkId = networkId === NETWORK_REGISTRY.BYRON_MAINNET ? NETWORK_REGISTRY.HASKELL_SHELLEY : networkId
-    this.primaryToken = getDefaultAssetByNetworkId(this.networkId)
-    this.primaryTokenInfo =
-      networkId === NETWORK_REGISTRY.HASKELL_SHELLEY ? primaryTokenInfo.mainnet : primaryTokenInfo.testnet
+    this.primaryToken = PRIMARY_TOKEN
+    this.primaryTokenInfo = PRIMARY_TOKEN_INFO
     this.utxoManager = utxoManager
     this._utxos = utxoManager.initialUtxos
     this.encryptedStorage = makeWalletEncryptedStorage(id)
@@ -1055,6 +1054,7 @@ export class ByronWallet implements YoroiWallet {
         this.confirmationCounts[tx.id] || 0,
         this.networkId,
         memos[tx.id] ?? null,
+        this.primaryToken,
       )
     })
   }

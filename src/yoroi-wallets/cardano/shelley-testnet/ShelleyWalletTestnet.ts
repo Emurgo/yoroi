@@ -930,6 +930,7 @@ export class ShelleyWalletTestnet implements YoroiWallet {
         this.confirmationCounts[tx.id] || 0,
         NETWORK_ID,
         memos[tx.id] ?? null,
+        this.primaryToken,
       )
     })
   }
