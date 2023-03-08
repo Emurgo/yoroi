@@ -4,11 +4,11 @@ import {Avatar} from 'react-native-paper'
 
 import NftPlaceholder from '../../assets/img/nft-placeholder.png'
 import {YoroiNftModerationStatus} from '../../yoroi-wallets/types'
-import {LoadingIcon} from './TokenIcon'
+import {Placeholder} from './TokenIcon'
 
 export const ModeratedNftIcon = ({image, status}: {image?: string; status: YoroiNftModerationStatus}) => {
   if (status === 'pending') {
-    return <LoadingIcon />
+    return <Placeholder />
   }
 
   if (status === 'blocked') {

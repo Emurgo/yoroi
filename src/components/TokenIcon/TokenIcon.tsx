@@ -1,6 +1,5 @@
 import React from 'react'
 import {Image, StyleSheet, View} from 'react-native'
-import {ActivityIndicator} from 'react-native-paper'
 
 import {useIsTokenKnownNft, useNftImageModerated, useTokenInfo} from '../../hooks'
 import {SHOW_NFT_GALLERY} from '../../legacy/config'
@@ -33,14 +32,6 @@ const NftIcon = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string}) => {
 
   if (!nftModeratedImage) return <ModeratedNftIcon status="pending" />
   return <ModeratedNftIcon image={nftModeratedImage.image} status={nftModeratedImage.status} />
-}
-
-export const LoadingIcon = () => {
-  return (
-    <View style={styles.loading}>
-      <ActivityIndicator size="small" color="black" />
-    </View>
-  )
 }
 
 export const Placeholder = () => (
@@ -78,13 +69,5 @@ const styles = StyleSheet.create({
   },
   placeholder: {
     backgroundColor: COLORS.BACKGROUND_GRAY,
-  },
-  loading: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'transparent',
-    height: 32,
-    width: 32,
   },
 })
