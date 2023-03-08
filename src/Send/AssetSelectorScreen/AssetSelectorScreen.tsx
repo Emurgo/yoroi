@@ -69,7 +69,7 @@ export const AssetSelectorScreen = () => {
         contentContainerStyle={{paddingHorizontal: 16}}
         keyExtractor={(_, index) => index + ''}
         testID="assetsList"
-        estimatedItemSize={72}
+        estimatedItemSize={78}
       />
 
       <Actions>

@@ -60,7 +60,7 @@ export const AssetList = (props: Props) => {
         ItemSeparatorComponent={() => <Spacer height={16} />}
         contentContainerStyle={{paddingTop: 16, paddingHorizontal: 16, paddingBottom: 8}}
         keyExtractor={(_, index) => index + ''}
-        estimatedItemSize={80}
+        estimatedItemSize={78}
       />
     </View>
   )
