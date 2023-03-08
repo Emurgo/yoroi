@@ -2,7 +2,7 @@ import {useNavigation} from '@react-navigation/native'
 import {FlashList} from '@shopify/flash-list'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {/* FlatList,  */ LayoutAnimation, TouchableOpacity, View} from 'react-native'
+import {LayoutAnimation, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Boundary, Button, Spacer, Text, TextInput} from '../../components'
