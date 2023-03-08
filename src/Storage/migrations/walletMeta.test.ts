@@ -3,7 +3,7 @@ import assert from 'assert'
 import {expect} from 'chai'
 
 import {WALLETS} from '../../legacy/config'
-import {WalletMeta} from '../../yoroi-wallets'
+import {mainnet, testnet, WalletMeta} from '../../yoroi-wallets'
 import {WALLET_CONFIG_24 as HASKELL_SHELLEY_24} from '../../yoroi-wallets/cardano/shelley/constants'
 import {storage} from '../../yoroi-wallets/storage'
 import {NETWORK_REGISTRY} from '../../yoroi-wallets/types'
@@ -41,7 +41,7 @@ describe('migrateWalletMetas()', () => {
           {
             ...mockedWalletMeta,
             isShelley: false,
-            networkId: NETWORK_REGISTRY.HASKELL_SHELLEY,
+            networkId: mainnet.networkInfo.id,
             walletImplementationId: WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID,
           },
         ]
@@ -82,7 +82,7 @@ describe('migrateWalletMetas()', () => {
         await storage.join('wallet/').setItem(meta.id, meta)
         await storage.join('wallet/').join(`${meta.id}/`).setItem('data', mockedWalletData)
         const walletMetas = [meta]
-        const expectedWalletMeta = {...mockedWalletMeta, networkId: NETWORK_REGISTRY.HASKELL_SHELLEY}
+        const expectedWalletMeta = {...mockedWalletMeta, networkId: mainnet.networkInfo.id}
         delete expectedWalletMeta.isShelley
         const expected = [expectedWalletMeta]
 
@@ -96,7 +96,7 @@ describe('migrateWalletMetas()', () => {
         await storage.join('wallet/').setItem(meta.id, meta)
         await storage.join('wallet/').join(`${meta.id}/`).setItem('data', mockedWalletData)
         const walletMetas = [meta]
-        const expectedWalletMeta = {...mockedWalletMeta, networkId: NETWORK_REGISTRY.HASKELL_SHELLEY}
+        const expectedWalletMeta = {...mockedWalletMeta, networkId: mainnet.networkInfo.id}
         delete expectedWalletMeta.isShelley
         const expected = [expectedWalletMeta]
 
@@ -106,12 +106,12 @@ describe('migrateWalletMetas()', () => {
       })
 
       it('should keep networkId if it is not BYRON_MAINNET and not NULL', async () => {
-        const meta = {...mockedWalletMeta, networkId: NETWORK_REGISTRY.HASKELL_SHELLEY_TESTNET}
+        const meta = {...mockedWalletMeta, networkId: testnet.networkInfo.id}
         delete meta.isShelley
         await storage.join('wallet/').setItem(meta.id, meta)
         await storage.join('wallet/').join(`${meta.id}/`).setItem('data', mockedWalletData)
         const walletMetas = [meta]
-        const expectedWalletMeta = {...mockedWalletMeta, networkId: NETWORK_REGISTRY.HASKELL_SHELLEY_TESTNET}
+        const expectedWalletMeta = {...mockedWalletMeta, networkId: testnet.networkInfo.id}
         delete expectedWalletMeta.isShelley
         const expected = [expectedWalletMeta]
 
@@ -312,7 +312,7 @@ describe('migrateWalletMetas()', () => {
 const mockedWalletMeta: WalletMeta = {
   id: 'wallet-id',
   name: 'my-wallet',
-  networkId: NETWORK_REGISTRY.HASKELL_SHELLEY,
+  networkId: mainnet.networkInfo.id,
   isHW: false,
   isShelley: true,
   isEasyConfirmationEnabled: true,

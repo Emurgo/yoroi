@@ -14,6 +14,7 @@ import {useParams, useWalletNavigation} from '../../navigation'
 import {StakingCenterRoutes} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
+import { NUMBERS } from '../../yoroi-wallets'
 import {Quantity} from '../../yoroi-wallets/types'
 import {Amounts, Entries, Quantities} from '../../yoroi-wallets/utils'
 
@@ -168,7 +169,7 @@ const messages = defineMessages({
 const approximateReward = (stakedQuantity: Quantity): Quantity => {
   return Quantities.quotient(
     Quantities.product([stakedQuantity, `${CONFIG.NETWORKS.HASKELL_SHELLEY.PER_EPOCH_PERCENTAGE_REWARD}`]),
-    CONFIG.NUMBERS.EPOCH_REWARD_DENOMINATOR.toString() as Quantity,
+    NUMBERS.EPOCH_REWARD_DENOMINATOR.toString() as Quantity,
   )
 }
 

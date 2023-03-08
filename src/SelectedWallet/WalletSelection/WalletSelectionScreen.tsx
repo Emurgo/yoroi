@@ -14,9 +14,11 @@ import {COLORS} from '../../theme'
 import {useWalletManager} from '../../WalletManager'
 import {WALLET_IMPLEMENTATION_REGISTRY, WalletMeta} from '../../yoroi-wallets'
 import {InvalidState, NetworkError} from '../../yoroi-wallets/cardano/errors'
+import {mainnet} from '../../yoroi-wallets/cardano/mainnet'
 import {isJormungandr} from '../../yoroi-wallets/cardano/networks'
 import * as HASKELL_SHELLEY from '../../yoroi-wallets/cardano/shelley/constants'
 import * as HASKELL_SHELLEY_TESTNET from '../../yoroi-wallets/cardano/shelley-testnet/constants'
+import {testnet} from '../../yoroi-wallets/cardano/testnet'
 import {useSetSelectedWallet, useSetSelectedWalletMeta} from '..'
 import {WalletListItem} from './WalletListItem'
 
@@ -159,7 +161,7 @@ const ShelleyButton = () => {
         navigation.navigate('new-wallet', {
           screen: 'choose-create-restore',
           params: {
-            networkId: HASKELL_SHELLEY.NETWORK_ID,
+            networkId: mainnet.networkInfo.id,
             walletImplementationId: HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
           },
         })
@@ -184,7 +186,7 @@ const OnlyNightlyShelleyTestnetButton = () => {
         navigation.navigate('new-wallet', {
           screen: 'choose-create-restore',
           params: {
-            networkId: HASKELL_SHELLEY_TESTNET.NETWORK_ID,
+            networkId: testnet.networkInfo.id,
             walletImplementationId: HASKELL_SHELLEY_TESTNET.WALLET_IMPLEMENTATION_ID,
           },
         })
@@ -206,7 +208,7 @@ const ByronButton = () => {
         navigation.navigate('new-wallet', {
           screen: 'choose-create-restore',
           params: {
-            networkId: HASKELL_SHELLEY.NETWORK_ID,
+            networkId: mainnet.networkInfo.id,
             walletImplementationId: WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON,
           },
         })

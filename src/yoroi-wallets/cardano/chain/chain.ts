@@ -7,7 +7,7 @@ import assert from '../../../legacy/assert'
 import {CONFIG, isByron, isHaskellShelley} from '../../../legacy/config'
 import {Logger} from '../../../legacy/logging'
 import {NetworkId, WalletImplementationId} from '../../types'
-import {ADDRESS_TYPE_TO_CHANGE, AddressType, CardanoMobile, CardanoTypes} from '../'
+import {ADDRESS_TYPE_TO_CHANGE, AddressType, CardanoMobile, CardanoTypes, NUMBERS} from '../'
 import type {CryptoAccount} from '../byron/util'
 import * as util from '../byron/util'
 import {getNetworkConfigById} from '../networks'
@@ -72,8 +72,8 @@ export class AddressGenerator {
     }
     const stakingKey = await (
       await (
-        await this._accountPubKeyPtr.derive(CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT)
-      ).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)
+        await this._accountPubKeyPtr.derive(NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT)
+      ).derive(NUMBERS.STAKING_KEY_INDEX)
     ).toRawKey()
 
     // cache reward address
@@ -100,8 +100,8 @@ export class AddressGenerator {
       const chainKey = await this._accountPubKeyPtr.derive(ADDRESS_TYPE_TO_CHANGE[this.type])
       const stakingKey = await (
         await (
-          await this._accountPubKeyPtr.derive(CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT)
-        ).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)
+          await this._accountPubKeyPtr.derive(NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT)
+        ).derive(NUMBERS.STAKING_KEY_INDEX)
       ).toRawKey()
 
       return Promise.all(

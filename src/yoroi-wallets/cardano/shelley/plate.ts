@@ -1,5 +1,5 @@
 import {CONFIG} from '../../../legacy/config'
-import {AddressGenerator, AddressType, CardanoMobile, legacyWalletChecksum, walletChecksum} from '../..'
+import {AddressGenerator, AddressType, CardanoMobile, legacyWalletChecksum, NUMBERS, walletChecksum} from '../..'
 import type {NetworkId} from '../../types/other'
 import {PlateResponse} from '../../types/other'
 import {getMasterKeyFromMnemonic} from '../byron/util'
@@ -32,9 +32,9 @@ export const generateShelleyPlateFromMnemonics = async (
   const rootKeyPtr = await CardanoMobile.Bip32PrivateKey.fromBytes(Buffer.from(rootKey, 'hex'))
   const accountKey = await (
     await (
-      await rootKeyPtr.derive(CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852)
-    ).derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO)
-  ).derive(0 + CONFIG.NUMBERS.HARD_DERIVATION_START)
+      await rootKeyPtr.derive(NUMBERS.WALLET_TYPE_PURPOSE.CIP1852)
+    ).derive(NUMBERS.COIN_TYPES.CARDANO)
+  ).derive(0 + NUMBERS.HARD_DERIVATION_START)
   const accountPubKey = await accountKey.toPublic()
   const accountPubKeyHex = Buffer.from(await accountPubKey.asBytes()).toString('hex')
 

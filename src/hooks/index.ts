@@ -42,7 +42,8 @@ import {
   YoroiSignedTx,
   YoroiUnsignedTx,
 } from '../yoroi-wallets/types'
-import {CurrencySymbol, TipStatusResponse} from '../yoroi-wallets/types/other'
+import {TipStatusResponse} from '../yoroi-wallets/types/other'
+import {CurrencySymbol} from '../yoroi-wallets/types/pricing'
 import {Amounts, Utxos} from '../yoroi-wallets/utils'
 import {parseBoolean} from '../yoroi-wallets/utils/parsing'
 

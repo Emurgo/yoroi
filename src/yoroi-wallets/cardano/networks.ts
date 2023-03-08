@@ -3,7 +3,9 @@ import {flatten} from 'lodash'
 
 import type {NetworkId} from '../types/other'
 import {NETWORK_REGISTRY, YOROI_PROVIDER_IDS} from '../types/other'
+import { mainnet } from './mainnet'
 import {NUMBERS} from './numbers'
+import { testnet } from './testnet'
 const _DEFAULT_BACKEND_RULES = {
   FETCH_UTXOS_MAX_ADDRESSES: 50,
   TX_HISTORY_MAX_ADDRESSES: 50,
@@ -42,17 +44,16 @@ export const BYRON_MAINNET = {
 }
 const HASKELL_SHELLEY = {
   PROVIDER_ID: YOROI_PROVIDER_IDS.HASKELL_SHELLEY,
-  NETWORK_ID: NETWORK_REGISTRY.HASKELL_SHELLEY,
+  NETWORK_ID: mainnet.networkInfo.id,
   MARKETING_NAME: 'Cardano Mainnet',
   ENABLED: true,
   CHAIN_NETWORK_ID: '1',
   IS_MAINNET: true,
 
-  EXPLORER_URL_FOR_ADDRESS: (address: string) => `https://cardanoscan.io/address/${address}`,
-  EXPLORER_URL_FOR_TOKEN: (fingerprint: string) =>
-    fingerprint.length > 0 ? `https://cardanoscan.io/token/${fingerprint}` : `https://cardanoscan.io/tokens`,
-  EXPLORER_URL_FOR_TX: (txid: string) => `https://cardanoscan.io/transaction/${txid}`,
-  POOL_EXPLORER: 'https://adapools.yoroiwallet.com/?source=mobile',
+  EXPLORER_URL_FOR_ADDRESS: mainnet.networkInfo.explorers.addressExplorer,
+  EXPLORER_URL_FOR_TOKEN: mainnet.networkInfo.explorers.tokenExplorer,
+  EXPLORER_URL_FOR_TX: mainnet.networkInfo.explorers.transactionExplorer,
+  POOL_EXPLORER: mainnet.networkInfo.explorers.poolExplorer,
 
   BACKEND: {
     API_ROOT: 'https://api.yoroiwallet.com/api',
@@ -89,19 +90,16 @@ const HASKELL_SHELLEY = {
 }
 const HASKELL_SHELLEY_TESTNET = {
   PROVIDER_ID: YOROI_PROVIDER_IDS.HASKELL_SHELLEY_TESTNET,
-  NETWORK_ID: NETWORK_REGISTRY.HASKELL_SHELLEY_TESTNET,
+  NETWORK_ID: testnet.networkInfo.id,
   MARKETING_NAME: 'Cardano testnet',
   ENABLED: true,
   CHAIN_NETWORK_ID: '0',
   IS_MAINNET: false,
 
-  EXPLORER_URL_FOR_ADDRESS: (address: string) => `https://preprod.cardanoscan.io/address/${address}`,
-  EXPLORER_URL_FOR_TOKEN: (fingerprint: string) =>
-    fingerprint.length > 0
-      ? `https://preprod.cardanoscan.io/token/${fingerprint}`
-      : `https://preprod.cardanoscan.io/tokens`,
-  EXPLORER_URL_FOR_TX: (txid: string) => `https://preprod.cardanoscan.io/transaction/${txid}`,
-  POOL_EXPLORER: 'https://adapools.yoroiwallet.com/?source=mobile',
+  EXPLORER_URL_FOR_ADDRESS: testnet.networkInfo.explorers.addressExplorer,
+  EXPLORER_URL_FOR_TOKEN: testnet.networkInfo.explorers.tokenExplorer,
+  EXPLORER_URL_FOR_TX: testnet.networkInfo.explorers.transactionExplorer,
+  POOL_EXPLORER: testnet.networkInfo.explorers.poolExplorer,
 
   BACKEND: {
     API_ROOT: 'https://preprod-backend.yoroiwallet.com/api',
@@ -198,10 +196,10 @@ type NetworkConfig =
 // TODO: perhaps rename as isJormungandrNetwork for better naming consistency
 export const isJormungandr = (networkId: NetworkId): boolean => networkId === NETWORK_REGISTRY.JORMUNGANDR
 export const isHaskellShelleyNetwork = (networkId: NetworkId): boolean =>
-  networkId === NETWORK_REGISTRY.HASKELL_SHELLEY || networkId === NETWORK_REGISTRY.HASKELL_SHELLEY_TESTNET
+  networkId === mainnet.networkInfo.id || networkId === testnet.networkInfo.id
 export const getCardanoByronConfig = () => NETWORKS.BYRON_MAINNET
 export const getNetworkConfigById = (id: NetworkId): NetworkConfig => {
-  const idx = Object.values(NETWORK_REGISTRY).indexOf(id)
+  const idx = Object.values(NETWORK_REGISTRY).indexOf(id as any)
   const network = Object.keys(NETWORK_REGISTRY)[idx]
 
   if (network != null && network !== 'UNDEFINED' && NETWORKS[network] != null) {

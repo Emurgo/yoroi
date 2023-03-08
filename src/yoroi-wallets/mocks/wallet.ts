@@ -3,11 +3,11 @@
 import {action} from '@storybook/addon-actions'
 import BigNumber from 'bignumber.js'
 
-import {getDefaultAssetByNetworkId} from '../../legacy/config'
 import {getTokenFingerprint} from '../../legacy/format'
 import {asciiToHex, CardanoTypes, fallbackTokenInfo, toTokenInfo, WalletMeta, YoroiWallet} from '..'
 import {PRIMARY_ASSET_CONSTANTS} from '../cardano/networks'
-import * as HASKELL_SHELLEY_TESTNET from '../cardano/shelley-testnet/constants'
+import { CAPABILITIES } from '../cardano/shelley/constants'
+import { testnet } from '../cardano/testnet'
 import {
   RemotePoolMetaSuccess,
   StakePoolInfosAndHistories,
@@ -41,10 +41,12 @@ const walletMeta: WalletMeta = {
 
 const wallet: YoroiWallet = {
   id: 'wallet-id',
-  primaryToken: getDefaultAssetByNetworkId(300),
-  primaryTokenInfo: HASKELL_SHELLEY_TESTNET.PRIMARY_TOKEN_INFO,
+  primaryToken: testnet.PRIMARY_TOKEN,
+  primaryTokenInfo: testnet.PRIMARY_TOKEN_INFO,
   walletImplementationId: 'haskell-shelley',
   networkId: 300,
+  networkInfo: testnet.networkInfo,
+  capabilities: CAPABILITIES,
   checksum: {
     TextPart: 'HTAO-3194',
     ImagePart:
@@ -634,7 +636,7 @@ const balances: YoroiAmounts = {
 }
 
 const tokenInfos: Record<string, TokenInfo> = {
-  '': HASKELL_SHELLEY_TESTNET.PRIMARY_TOKEN_INFO,
+  '': testnet.PRIMARY_TOKEN_INFO,
   '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950': toTokenInfo({
     networkId: 300,
     identifier: '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950',

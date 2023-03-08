@@ -8,10 +8,11 @@ import {Logger} from '../../legacy/logging'
 import {isWalletMeta, migrateWalletMetas, parseWalletMeta} from '../../Storage/migrations/walletMeta'
 import {CardanoTypes, isYoroiWallet, YoroiWallet} from '../cardano'
 import {ByronWallet} from '../cardano/byron/ByronWallet'
+import {mainnet} from '../cardano/mainnet'
 import * as HASKELL_SHELLEY from '../cardano/shelley/constants'
 import {ShelleyWallet} from '../cardano/shelley/ShelleyWallet'
-import * as HASKELL_SHELLEY_TESTNET from '../cardano/shelley-testnet/constants'
 import {ShelleyWalletTestnet} from '../cardano/shelley-testnet/ShelleyWalletTestnet'
+import {testnet} from '../cardano/testnet'
 import {HWDeviceInfo} from '../hw'
 import {storage, YoroiStorage} from '../storage'
 import {NetworkId, WALLET_IMPLEMENTATION_REGISTRY, WalletImplementationId} from '../types'
@@ -263,7 +264,7 @@ const getWalletImplementation = ({
   implementationId: WalletImplementationId
 }) => {
   // cardano mainnet
-  if (networkId === HASKELL_SHELLEY.NETWORK_ID) {
+  if (networkId === mainnet.networkInfo.id) {
     if (implementationId === HASKELL_SHELLEY.WALLET_CONFIG.WALLET_IMPLEMENTATION_ID) {
       return ShelleyWallet
     }
@@ -276,7 +277,7 @@ const getWalletImplementation = ({
   }
 
   // cardano testnet
-  if (networkId === HASKELL_SHELLEY_TESTNET.NETWORK_ID) {
+  if (networkId === testnet.networkInfo.id) {
     if (implementationId === HASKELL_SHELLEY.WALLET_CONFIG.WALLET_IMPLEMENTATION_ID) {
       return ShelleyWalletTestnet
     }

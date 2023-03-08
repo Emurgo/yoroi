@@ -1,7 +1,7 @@
-import {DefaultAsset, TokenInfo} from '../../types'
 export * from '../../cardano/constants'
 
-export const NETWORK_ID = 300
+import {testnet} from '../testnet'
+
 export const WALLET_IMPLEMENTATION_ID = 'haskell-shelley'
 export const API_ROOT = 'https://preprod-backend.yoroiwallet.com/api'
 export const TOKEN_INFO_SERVICE = 'https://metadata.cardano-testnet.iohkdev.io'
@@ -84,19 +84,16 @@ export const NETWORK_CONFIG = {
   CHAIN_NETWORK_ID: CHAIN_NETWORK_ID.toString(),
   COIN_TYPE,
   ENABLED: true,
-  EXPLORER_URL_FOR_ADDRESS: (address: string) => `https://preprod.cardanoscan.io/address/${address}`,
-  EXPLORER_URL_FOR_TOKEN: (fingerprint: string) =>
-    fingerprint.length > 0
-      ? `https://preprod.cardanoscan.io/token/${fingerprint}`
-      : `https://preprod.cardanoscan.io/tokens`,
-  EXPLORER_URL_FOR_TX: (txid: string) => `https://preprod.cardanoscan.io/transaction/${txid}`,
-  POOL_EXPLORER: 'https://adapools.yoroiwallet.com/?source=mobile',
+  EXPLORER_URL_FOR_ADDRESS: testnet.networkInfo.explorers.addressExplorer,
+  EXPLORER_URL_FOR_TOKEN: testnet.networkInfo.explorers.tokenExplorer,
+  EXPLORER_URL_FOR_TX: testnet.networkInfo.explorers.transactionExplorer,
+  POOL_EXPLORER: testnet.networkInfo.explorers.poolExplorer,
   IS_MAINNET,
   KEY_DEPOSIT,
   LINEAR_FEE,
-  MARKETING_NAME: 'Cardano testnet',
+  MARKETING_NAME: testnet.networkInfo.displayName,
   MINIMUM_UTXO_VAL,
-  NETWORK_ID,
+  NETWORK_ID: testnet.networkInfo.id,
   PER_EPOCH_PERCENTAGE_REWARD: 69344,
   POOL_DEPOSIT,
   PROVIDER_ID: 300,
@@ -109,32 +106,4 @@ export const WALLET_CONFIG = {
   DISCOVERY_GAP_SIZE,
   DISCOVERY_BLOCK_SIZE, // should be less than API limitations
   MAX_GENERATED_UNUSED, // must be <= gap size
-} as const
-
-export const PRIMARY_TOKEN_INFO: TokenInfo = {
-  id: '',
-  name: 'TADA',
-  decimals: 6,
-  description: 'Cardano',
-  ticker: 'TADA',
-  symbol: '₳',
-  logo: '',
-  url: '',
-  fingerprint: '',
-  group: '',
-} as const
-
-export const PRIMARY_TOKEN: DefaultAsset = {
-  identifier: '',
-  networkId: NETWORK_ID,
-  isDefault: true,
-  metadata: {
-    type: 'Cardano',
-    policyId: '',
-    assetName: '',
-    numberOfDecimals: 6,
-    ticker: 'TADA',
-    longName: null,
-    maxSupply: '45000000000000000',
-  },
 } as const

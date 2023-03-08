@@ -8,6 +8,7 @@ import {Button, Modal, ScreenBackground, StatusBar} from '../../components'
 import {LedgerTransportSwitchModal} from '../../HW'
 import globalMessages from '../../i18n/global-messages'
 import {CONFIG, isByron, isHaskellShelley} from '../../legacy/config'
+import {HARDWARE_WALLETS} from '../../legacy/hw'
 import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
 import {COLORS} from '../../theme'
 import {NetworkId, WalletImplementationId} from '../../yoroi-wallets'
@@ -57,7 +58,7 @@ export const WalletInitScreen = () => {
           {!isJormungandr(networkId) && (
             <>
               <Button
-                disabled={!CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLED}
+                disabled={!HARDWARE_WALLETS.LEDGER_NANO.ENABLED}
                 outline
                 onPress={() => setModalState(MODAL_STATES.LEDGER_TRANSPORT_SWITCH)}
                 title={strings.createWalletWithLedgerButton({networkId})}

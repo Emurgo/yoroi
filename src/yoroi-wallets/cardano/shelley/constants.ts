@@ -1,7 +1,5 @@
-import {DefaultAsset, TokenInfo} from '../../types'
 export * from '../../cardano/constants'
 
-export const NETWORK_ID = 1 // mainnet
 export const WALLET_IMPLEMENTATION_ID = 'haskell-shelley'
 export const PURPOSE = 2147485500 // cip1852
 export const COIN_TYPE = 2147485463
@@ -76,29 +74,6 @@ export const BACKEND = {
   TX_HISTORY_RESPONSE_LIMIT: 50,
 } as const
 
-const CARDANO_BASE_CONFIG = [BYRON_BASE_CONFIG, SHELLEY_BASE_CONFIG]
-export const NETWORK_CONFIG = {
-  BACKEND,
-  BASE_CONFIG: CARDANO_BASE_CONFIG,
-  CHAIN_NETWORK_ID: CHAIN_NETWORK_ID.toString(),
-  COIN_TYPE,
-  ENABLED: true,
-  EXPLORER_URL_FOR_ADDRESS: (address: string) => `https://cardanoscan.io/address/${address}`,
-  EXPLORER_URL_FOR_TOKEN: (fingerprint: string) =>
-    fingerprint.length > 0 ? `https://cardanoscan.io/token/${fingerprint}` : `https://cardanoscan.io/tokens`,
-  EXPLORER_URL_FOR_TX: (txid: string) => `https://cardanoscan.io/transaction/${txid}`,
-  POOL_EXPLORER: 'https://adapools.yoroiwallet.com/?source=mobile',
-  IS_MAINNET,
-  KEY_DEPOSIT,
-  LINEAR_FEE,
-  MARKETING_NAME: 'Cardano Mainnet',
-  MINIMUM_UTXO_VAL,
-  NETWORK_ID,
-  PER_EPOCH_PERCENTAGE_REWARD: 69344,
-  POOL_DEPOSIT,
-  PROVIDER_ID: 1,
-} as const
-
 export const DISCOVERY_GAP_SIZE = 20
 export const DISCOVERY_BLOCK_SIZE = 50 // should be less than API limitations
 export const MAX_GENERATED_UNUSED = 20 // must be <= gap size
@@ -117,30 +92,10 @@ export const WALLET_CONFIG_24 = {
   MNEMONIC_LEN: 24,
 } as const
 
-export const PRIMARY_TOKEN_INFO: TokenInfo = {
-  id: '',
-  name: 'ADA',
-  decimals: 6,
-  description: 'Cardano',
-  ticker: 'ADA',
-  symbol: '₳',
-  logo: '',
-  url: '',
-  fingerprint: '',
-  group: '',
-} as const
-
-export const PRIMARY_TOKEN: DefaultAsset = {
-  identifier: '',
-  networkId: NETWORK_ID,
-  isDefault: true,
-  metadata: {
-    type: 'Cardano',
-    policyId: '',
-    assetName: '',
-    numberOfDecimals: 6,
-    ticker: 'ADA',
-    longName: null,
-    maxSupply: '45000000000000000',
-  },
-} as const
+export const CAPABILITIES = {
+  sign: true,
+  tokens: true,
+  nfts: true,
+  stake: true,
+  registerToVote: true
+}

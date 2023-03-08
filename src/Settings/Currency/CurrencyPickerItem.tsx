@@ -5,7 +5,7 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {Icon} from '../../components/Icon'
 import {Text} from '../../components/Text'
 import {currencyNames} from '../../i18n/global-messages'
-import {CurrencySymbol} from '../../yoroi-wallets/types/other'
+import {CurrencySymbol} from '../../yoroi-wallets/types/pricing'
 
 type Props = {
   nativeName: string

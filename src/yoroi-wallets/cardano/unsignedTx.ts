@@ -1,7 +1,6 @@
 import {Quantity, YoroiAmounts, YoroiEntries, YoroiMetadata, YoroiUnsignedTx, YoroiVoting} from '../types'
 import {Amounts, Entries, Quantities} from '../utils'
 import {Cardano, CardanoMobile, CardanoTypes} from '.'
-import {CardanoHaskellShelleyNetwork} from './networks'
 
 export const yoroiUnsignedTx = async ({
   unsignedTx,
@@ -10,7 +9,7 @@ export const yoroiUnsignedTx = async ({
   addressedUtxos,
 }: {
   unsignedTx: CardanoTypes.UnsignedTx
-  networkConfig: CardanoHaskellShelleyNetwork
+  networkConfig: {KEY_DEPOSIT: string, NETWORK_ID: number}
   votingRegistration?: VotingRegistration
   addressedUtxos: CardanoTypes.CardanoAddressedUtxo[]
 }) => {
@@ -135,7 +134,7 @@ const Staking = {
     networkConfig: {NETWORK_ID, KEY_DEPOSIT},
   }: {
     deregistrations: CardanoTypes.UnsignedTx['deregistrations']
-    networkConfig: CardanoHaskellShelleyNetwork
+    networkConfig: {KEY_DEPOSIT: string, NETWORK_ID: number}
   }) =>
     deregistrations.reduce(async (result, current) => {
       const address = await current
@@ -156,7 +155,7 @@ const Staking = {
     networkConfig: {NETWORK_ID, KEY_DEPOSIT},
   }: {
     registrations: CardanoTypes.UnsignedTx['registrations']
-    networkConfig: CardanoHaskellShelleyNetwork
+    networkConfig: {KEY_DEPOSIT: string, NETWORK_ID: number}
   }) =>
     registrations.reduce(async (result, current) => {
       const address = await current

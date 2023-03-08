@@ -16,7 +16,6 @@ import {
   YoroiUnsignedTx,
 } from '../types'
 import type {
-  CurrencySymbol,
   FundInfoResponse,
   RawUtxo,
   TipStatusResponse,
@@ -25,7 +24,9 @@ import type {
   TxStatusResponse,
   WalletState,
 } from '../types/other'
+import { CurrencySymbol } from '../types/pricing'
 import {DefaultAsset, SendTokenList, TokenInfo} from '../types/tokens'
+import {AddressValidationErrors} from '../utils'
 import {CardanoTypes} from '.'
 import type {Addresses} from './chain'
 
@@ -69,9 +70,44 @@ export type SignedTxLegacy = {
   base64: string
 }
 
+export type Capabilities = {
+  sign: boolean
+  stake: boolean
+  registerToVote: boolean
+}
+
+export type NetworkInfo = {
+  id: number
+  displayName: string
+  primaryTokenId: string
+  getTime(currentTimeMS: number): {
+    epoch: number
+    slot: number
+    absoluteSlot: number
+    slotsRemaining: number
+    slotsPerEpoch: number
+    secondsRemainingInEpoch: number
+    percentageElapsed: number
+  }
+  validateAddress(address: string): Promise<AddressValidationErrors | void>
+  explorers: {
+    addressExplorer(address: string): string
+    transactionExplorer(txid: string): string
+    poolExplorer(_poolId: string): string
+    tokenExplorer(fingerprint: string): string
+  }
+}
+
 export type YoroiWallet = {
   id: string
-
+  networkInfo: NetworkInfo
+  capabilities: {
+    registerToVote: boolean
+    stake: boolean
+    sign: boolean
+    tokens: boolean
+    nfts: boolean
+  }
   publicKeyHex: string
   checksum: CardanoTypes.WalletChecksum
   networkId: NetworkId

@@ -2,7 +2,9 @@
 import {BigNumber} from 'bignumber.js'
 
 import {CardanoTypes, MultiToken, TokenEntryPlain} from '..'
+import {mainnet} from '../cardano/mainnet'
 import {WALLET_CONFIG as HASKELL_SHELLEY, WALLET_CONFIG_24 as HASKELL_SHELLEY_24} from '../cardano/shelley/constants'
+import {testnet} from '../cardano/testnet'
 import {RemoteAccountState, RemoteCertificateMeta, Token} from '.'
 
 export type AddressObj = {
@@ -274,67 +276,7 @@ export type TxStatusResponse = {
   readonly depth?: Record<string, number>
   readonly submissionStatus?: Record<string, TxSubmissionStatus>
 }
-// Pricing api
-export const supportedCurrencies = Object.freeze({
-  ADA: 'ADA',
-  BRL: 'BRL',
-  BTC: 'BTC',
-  CNY: 'CNY',
-  ETH: 'ETH',
-  EUR: 'EUR',
-  JPY: 'JPY',
-  KRW: 'KRW',
-  USD: 'USD',
-})
-export type CurrencySymbol = keyof typeof supportedCurrencies
-export type ConfigCurrencies = typeof configCurrencies
-export const configCurrencies = {
-  [supportedCurrencies.ADA]: {
-    decimals: 6,
-    nativeName: 'Cardano',
-  },
-  [supportedCurrencies.BRL]: {
-    decimals: 2,
-    nativeName: 'Real',
-  },
-  [supportedCurrencies.BTC]: {
-    decimals: 4,
-    nativeName: 'Bitcoin',
-  },
-  [supportedCurrencies.CNY]: {
-    decimals: 2,
-    nativeName: '人民币',
-  },
-  [supportedCurrencies.ETH]: {
-    decimals: 4,
-    nativeName: 'Ethereum',
-  },
-  [supportedCurrencies.EUR]: {
-    decimals: 2,
-    nativeName: 'Euro',
-  },
-  [supportedCurrencies.JPY]: {
-    decimals: 2,
-    nativeName: '日本円',
-  },
-  [supportedCurrencies.KRW]: {
-    decimals: 2,
-    nativeName: '대한민국 원',
-  },
-  [supportedCurrencies.USD]: {
-    decimals: 2,
-    nativeName: 'US Dollar',
-  },
-}
-export type PriceResponse = {
-  error: string | null
-  ticker: {
-    from: 'ADA' // we don't support ERG yet
-    timestamp: number
-    signature: string
-    prices: Record<CurrencySymbol, number>
-  }
-}
+
 export const NETWORK_REGISTRY = {
   BYRON_MAINNET: 0,
   HASKELL_SHELLEY: 1,
@@ -343,15 +285,15 @@ export const NETWORK_REGISTRY = {
   HASKELL_SHELLEY_TESTNET: 300,
   UNDEFINED: -1,
 } as const
-export type NetworkId = typeof NETWORK_REGISTRY[keyof typeof NETWORK_REGISTRY]
+export type NetworkId = typeof mainnet.networkInfo.id | typeof testnet.networkInfo.id
 
 // PROVIDERS
 export const ALONZO_FACTOR = 1000
 
 export const YOROI_PROVIDER_IDS = {
   ...NETWORK_REGISTRY,
-  ALONZO_MAINNET: ALONZO_FACTOR + NETWORK_REGISTRY.HASKELL_SHELLEY,
-  ALONZO_TESTNET: ALONZO_FACTOR + NETWORK_REGISTRY.HASKELL_SHELLEY_TESTNET,
+  ALONZO_MAINNET: ALONZO_FACTOR + mainnet.networkInfo.id,
+  ALONZO_TESTNET: ALONZO_FACTOR + testnet.networkInfo.id,
 } as const
 
 export const DERIVATION_TYPES = {

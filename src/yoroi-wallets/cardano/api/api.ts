@@ -8,10 +8,8 @@ import type {
   AccountStateRequest,
   AccountStateResponse,
   BackendConfig,
-  CurrencySymbol,
   FundInfoResponse,
   PoolInfoRequest,
-  PriceResponse,
   RawTransaction,
   StakePoolInfosAndHistories,
   TipStatusResponse,
@@ -20,6 +18,7 @@ import type {
   TxStatusResponse,
 } from '../../types'
 import {NFTAsset, RemoteAsset, YoroiNft, YoroiNftModerationStatus} from '../../types'
+import { CurrencySymbol, PriceResponse } from '../../types/pricing'
 import {hasProperties, isArray, isNonNullable, isObject, isRecord} from '../../utils/parsing'
 import {ServerStatus} from '..'
 import {ApiError} from '../errors'

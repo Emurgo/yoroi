@@ -17,7 +17,6 @@ import {makeMemosManager, MemosManager} from '../../memos'
 import {YoroiStorage} from '../../storage'
 import type {
   AccountStateResponse,
-  CurrencySymbol,
   DefaultAsset,
   FundInfoResponse,
   PoolInfoRequest,
@@ -31,6 +30,7 @@ import type {
   YoroiNftModerationStatus,
 } from '../../types'
 import {Quantity, SendTokenList, StakingInfo, YoroiSignedTx, YoroiUnsignedTx} from '../../types'
+import { CurrencySymbol } from '../../types/pricing'
 import {Quantities} from '../../utils'
 import {parseSafe} from '../../utils/parsing'
 import {validatePassword} from '../../utils/validators'
@@ -53,6 +53,7 @@ import {HISTORY_REFRESH_TIME} from '../constants'
 import {CardanoError} from '../errors'
 import {getTime} from '../getTime'
 import {signTxWithLedger} from '../hw'
+import {mainnet} from '../mainnet'
 import {processTxHistoryData} from '../processTransactions'
 import {IsLockedError, nonblockingSynchronize, synchronize} from '../promise'
 import {filterAddressesByStakingKey, getDelegationStatus} from '../shelley/delegationUtils'
@@ -67,6 +68,7 @@ import {
   API_ROOT,
   BACKEND,
   BIP44_DERIVATION_LEVELS,
+  CAPABILITIES,
   CHAIN_NETWORK_ID,
   CHIMERIC_ACCOUNT,
   COIN_TYPE,
@@ -78,11 +80,7 @@ import {
   LINEAR_FEE,
   MAX_GENERATED_UNUSED,
   MINIMUM_UTXO_VAL,
-  NETWORK_CONFIG,
-  NETWORK_ID,
   POOL_DEPOSIT,
-  PRIMARY_TOKEN,
-  PRIMARY_TOKEN_INFO,
   PROTOCOL_MAGIC,
   PURPOSE,
   REWARD_ADDRESS_ADDRESSING,
@@ -116,10 +114,10 @@ export type ByronWalletJSON = Omit<ShelleyWalletJSON, 'account'>
 export type WalletJSON = ShelleyWalletJSON | ByronWalletJSON
 
 export class ShelleyWallet implements YoroiWallet {
-  readonly primaryToken: DefaultAsset = PRIMARY_TOKEN
-  readonly primaryTokenInfo: TokenInfo = PRIMARY_TOKEN_INFO
+  readonly primaryToken: DefaultAsset = mainnet.PRIMARY_TOKEN
+  readonly primaryTokenInfo: TokenInfo = mainnet.PRIMARY_TOKEN_INFO
   readonly walletImplementationId = WALLET_IMPLEMENTATION_ID
-  readonly networkId = NETWORK_ID
+  readonly networkId = mainnet.networkInfo.id
   readonly id: string
   readonly hwDeviceInfo: null | HWDeviceInfo
   readonly isHW: boolean
@@ -132,6 +130,8 @@ export class ShelleyWallet implements YoroiWallet {
   readonly checksum: CardanoTypes.WalletChecksum
   readonly encryptedStorage: WalletEncryptedStorage
   isEasyConfirmationEnabled = false
+  readonly networkInfo = mainnet.networkInfo
+  readonly capabilities = CAPABILITIES
 
   private _utxos: RawUtxo[]
   private readonly storage: YoroiStorage
@@ -242,7 +242,7 @@ export class ShelleyWallet implements YoroiWallet {
     isEasyConfirmationEnabled: boolean
     lastGeneratedAddressIndex?: number
   }) => {
-    const rewardAddressHex = await deriveRewardAddressHex(accountPubKeyHex, NETWORK_ID)
+    const rewardAddressHex = await deriveRewardAddressHex(accountPubKeyHex, mainnet.networkInfo.id)
     const utxoManager = await makeUtxoManager({storage: storage.join('utxoManager/'), apiUrl: API_ROOT})
     const transactionManager = await TransactionManager.create(storage.join('txs/'))
     const memosManager = await makeMemosManager(storage.join('memos/'))
@@ -572,13 +572,13 @@ export class ShelleyWallet implements YoroiWallet {
           },
           minimumUtxoVal: MINIMUM_UTXO_VAL,
           poolDeposit: POOL_DEPOSIT,
-          networkId: NETWORK_ID,
+          networkId: this.networkInfo.id,
         },
-        PRIMARY_TOKEN,
+        mainnet.PRIMARY_TOKEN,
         {metadata: auxiliaryData},
       )
 
-      return yoroiUnsignedTx({unsignedTx, networkConfig: NETWORK_CONFIG, addressedUtxos})
+      return yoroiUnsignedTx({unsignedTx, networkConfig: {NETWORK_ID: this.networkInfo.id, KEY_DEPOSIT}, addressedUtxos})
     } catch (e) {
       if (e instanceof NotEnoughMoneyToSendError || e instanceof NoOutputsError) throw e
       Logger.error(`shelley::createUnsignedTx:: ${(e as Error).message}`, e)
@@ -630,8 +630,8 @@ export class ShelleyWallet implements YoroiWallet {
     const stakingKey = await this.getStakingKey()
     const delegationType = registrationStatus ? RegistrationStatus.DelegateOnly : RegistrationStatus.RegisterAndDelegate
     const delegatedAmountMT = {
-      values: [{identifier: '', amount: delegatedAmount, networkId: NETWORK_ID}],
-      defaults: PRIMARY_TOKEN,
+      values: [{identifier: '', amount: delegatedAmount, networkId: this.networkInfo.id}],
+      defaults: mainnet.PRIMARY_TOKEN,
     }
 
     const unsignedTx = await Cardano.createUnsignedDelegationTx(
@@ -642,7 +642,7 @@ export class ShelleyWallet implements YoroiWallet {
       poolId || null,
       changeAddr,
       delegatedAmountMT,
-      PRIMARY_TOKEN,
+      mainnet.PRIMARY_TOKEN,
       {},
       {
         keyDeposit: KEY_DEPOSIT,
@@ -652,13 +652,13 @@ export class ShelleyWallet implements YoroiWallet {
         },
         minimumUtxoVal: MINIMUM_UTXO_VAL,
         poolDeposit: POOL_DEPOSIT,
-        networkId: NETWORK_ID,
+        networkId: this.networkInfo.id,
       },
     )
 
     return yoroiUnsignedTx({
       unsignedTx,
-      networkConfig: NETWORK_CONFIG,
+      networkConfig: {NETWORK_ID: this.networkInfo.id, KEY_DEPOSIT},
       addressedUtxos,
     })
   }
@@ -691,7 +691,7 @@ export class ShelleyWallet implements YoroiWallet {
         },
         minimumUtxoVal: MINIMUM_UTXO_VAL,
         poolDeposit: POOL_DEPOSIT,
-        networkId: NETWORK_ID,
+        networkId: this.networkInfo.id,
       }
       const txOptions = {}
       const nonce = absSlotNumber.toNumber()
@@ -700,7 +700,7 @@ export class ShelleyWallet implements YoroiWallet {
 
       const unsignedTx = await Cardano.createUnsignedVotingTx(
         absSlotNumber,
-        PRIMARY_TOKEN,
+        mainnet.PRIMARY_TOKEN,
         votingPublicKey,
         STAKING_KEY_PATH,
         stakingPublicKey,
@@ -731,7 +731,7 @@ export class ShelleyWallet implements YoroiWallet {
         votingKeyEncrypted: catalystKeyEncrypted,
         votingRegTx: await yoroiUnsignedTx({
           unsignedTx,
-          networkConfig: NETWORK_CONFIG,
+          networkConfig: {NETWORK_ID: this.networkInfo.id, KEY_DEPOSIT},
           votingRegistration,
           addressedUtxos,
         }),
@@ -755,7 +755,7 @@ export class ShelleyWallet implements YoroiWallet {
 
     const withdrawalTx = await Cardano.createUnsignedWithdrawalTx(
       accountState,
-      PRIMARY_TOKEN,
+      mainnet.PRIMARY_TOKEN,
       absSlotNumber,
       addressedUtxos,
       [
@@ -774,14 +774,14 @@ export class ShelleyWallet implements YoroiWallet {
         minimumUtxoVal: MINIMUM_UTXO_VAL,
         poolDeposit: POOL_DEPOSIT,
         keyDeposit: KEY_DEPOSIT,
-        networkId: NETWORK_ID,
+        networkId: this.networkInfo.id,
       },
       {metadata: undefined},
     )
 
     return yoroiUnsignedTx({
       unsignedTx: withdrawalTx,
-      networkConfig: NETWORK_CONFIG,
+      networkConfig: {NETWORK_ID: this.networkInfo.id, KEY_DEPOSIT},
       addressedUtxos,
     })
   }
@@ -843,7 +843,7 @@ export class ShelleyWallet implements YoroiWallet {
 
   fetchTokenInfo(tokenId: string) {
     return tokenId === '' || tokenId === 'ADA'
-      ? Promise.resolve(PRIMARY_TOKEN_INFO)
+      ? Promise.resolve(mainnet.PRIMARY_TOKEN_INFO)
       : api.getTokenInfo(tokenId, `${TOKEN_INFO_SERVICE}/metadata`)
   }
 
@@ -926,7 +926,7 @@ export class ShelleyWallet implements YoroiWallet {
           ? [...this.internalAddresses, ...this.externalAddresses, ...[this.rewardAddressHex]]
           : [...this.internalAddresses, ...this.externalAddresses],
         this.confirmationCounts[tx.id] || 0,
-        NETWORK_ID,
+        this.networkInfo.id,
         memos[tx.id] ?? null,
       )
     })
@@ -1118,12 +1118,12 @@ const makeKeys = async ({mnemonic}: {mnemonic: string}) => {
 const addressChains = {
   create: async ({accountPubKeyHex}: {accountPubKeyHex: string}) => {
     const internalChain = new AddressChain(
-      new AddressGenerator(accountPubKeyHex, 'Internal', WALLET_IMPLEMENTATION_ID, NETWORK_ID),
+      new AddressGenerator(accountPubKeyHex, 'Internal', WALLET_IMPLEMENTATION_ID, mainnet.networkInfo.id),
       DISCOVERY_BLOCK_SIZE,
       DISCOVERY_GAP_SIZE,
     )
     const externalChain = new AddressChain(
-      new AddressGenerator(accountPubKeyHex, 'External', WALLET_IMPLEMENTATION_ID, NETWORK_ID),
+      new AddressGenerator(accountPubKeyHex, 'External', WALLET_IMPLEMENTATION_ID, mainnet.networkInfo.id),
       DISCOVERY_BLOCK_SIZE,
       DISCOVERY_GAP_SIZE,
     )
@@ -1137,8 +1137,8 @@ const addressChains = {
 
   restore: ({data}: {data: WalletJSON}) => {
     return {
-      internalChain: AddressChain.fromJSON(data.internalChain, NETWORK_ID),
-      externalChain: AddressChain.fromJSON(data.externalChain, NETWORK_ID),
+      internalChain: AddressChain.fromJSON(data.internalChain, mainnet.networkInfo.id),
+      externalChain: AddressChain.fromJSON(data.externalChain, mainnet.networkInfo.id),
     }
   },
 }

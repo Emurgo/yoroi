@@ -1,7 +1,7 @@
 import {LogLevel} from '../legacy/logging'
 import {WalletImplementation} from '../yoroi-wallets'
-import type {CardanoHaskellShelleyNetwork} from '../yoroi-wallets/cardano/networks'
 import {
+  CardanoHaskellShelleyNetwork,
   DEFAULT_ASSETS,
   getNetworkConfigById,
   isHaskellShelleyNetwork,
@@ -77,17 +77,6 @@ export const WALLETS = {
   },
 } as const
 
-const HARDWARE_WALLETS = {
-  LEDGER_NANO: {
-    ENABLED: true,
-    VENDOR: 'ledger.com',
-    MODEL: 'Nano',
-    ENABLE_USB_TRANSPORT: true,
-    USB_MIN_SDK: 24, // USB transport officially supported for Android SDK >= 24
-    MIN_ADA_APP_VERSION: '2.2.1',
-  },
-}
-
 const CATALYST = {
   MIN_ADA: NUMBERS.LOVELACES_PER_ADA.times(450),
   DISPLAYED_MIN_ADA: NUMBERS.LOVELACES_PER_ADA.times(500),
@@ -144,7 +133,6 @@ export const CONFIG = {
   MNEMONIC_STRENGTH: 160,
   ASSURANCE_LEVELS: _ASSURANCE_STRICT ? ASSURANCE_LEVELS.STRICT : ASSURANCE_LEVELS.NORMAL,
   HISTORY_REFRESH_TIME: 25 * 1000,
-  NUMBERS,
   WALLETS,
 
   NETWORKS: USE_TESTNET
@@ -157,7 +145,6 @@ export const CONFIG = {
         HASKELL_SHELLEY: NETWORKS.HASKELL_SHELLEY,
       },
   PRIMARY_ASSET_CONSTANTS,
-  HARDWARE_WALLETS,
   CATALYST,
   PIN_LENGTH: 6,
   LOG_LEVEL: _LOG_LEVEL,

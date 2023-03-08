@@ -7,7 +7,8 @@ import {useExchangeRate} from '../hooks'
 import {useSelectedWallet} from '../SelectedWallet'
 import {useCurrencyContext} from '../Settings/Currency'
 import {COLORS} from '../theme'
-import {CurrencySymbol, YoroiAmount} from '../yoroi-wallets/types'
+import { YoroiAmount} from '../yoroi-wallets/types'
+import { CurrencySymbol } from '../yoroi-wallets/types/pricing'
 import {Quantities} from '../yoroi-wallets/utils'
 
 type Props = {

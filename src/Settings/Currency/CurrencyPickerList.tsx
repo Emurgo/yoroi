@@ -1,7 +1,7 @@
 import React from 'react'
 import {FlatList, StyleSheet} from 'react-native'
 
-import {CurrencySymbol} from '../../yoroi-wallets/types/other'
+import {CurrencySymbol} from '../../yoroi-wallets/types/pricing'
 import {useCurrencyContext} from './CurrencyContext'
 import {CurrencyPickerItem} from './CurrencyPickerItem'
 

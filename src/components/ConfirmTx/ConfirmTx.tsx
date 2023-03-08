@@ -10,6 +10,7 @@ import {useSubmitTx} from '../../hooks'
 import {confirmationMessages, errorMessages, txLabels} from '../../i18n/global-messages'
 import LocalizableError from '../../i18n/LocalizableError'
 import {CONFIG} from '../../legacy/config'
+import { HARDWARE_WALLETS } from '../../legacy/hw'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {isEmptyString} from '../../utils/utils'
@@ -199,7 +200,7 @@ export const ConfirmTx = ({
     if (
       wallet.isHW &&
       Platform.OS === 'android' &&
-      CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT &&
+      HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT &&
       chooseTransportOnConfirmation
     ) {
       setDialogStep(DialogStep.ChooseTransport)
@@ -222,7 +223,7 @@ export const ConfirmTx = ({
     if (
       wallet.isHW &&
       Platform.OS === 'android' &&
-      CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT &&
+      HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT &&
       !chooseTransportOnConfirmation
     ) {
       setDialogStep(DialogStep.ChooseTransport)

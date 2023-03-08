@@ -9,8 +9,10 @@ import {isNightly} from '../../legacy/config'
 import {WalletInitRouteNavigation} from '../../navigation'
 import {COLORS} from '../../theme'
 import {NetworkId, WALLET_IMPLEMENTATION_REGISTRY, WalletImplementationId} from '../../yoroi-wallets'
+import {mainnet} from '../../yoroi-wallets/cardano/mainnet'
 import * as HASKELL_SHELLEY from '../../yoroi-wallets/cardano/shelley/constants'
 import * as HASKELL_SHELLEY_TESTNET from '../../yoroi-wallets/cardano/shelley-testnet/constants'
+import {testnet} from '../../yoroi-wallets/cardano/testnet'
 import {WalletDescription} from '../WalletDescription'
 
 export const WalletFreshInitScreen = () => {
@@ -96,9 +98,8 @@ const useNavigateTo = () => {
     })
 
   return {
-    shelley: () => navigateInitWallet(HASKELL_SHELLEY.NETWORK_ID, HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID),
-    byron: () => navigateInitWallet(HASKELL_SHELLEY.NETWORK_ID, WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON),
-    shelleyTestnet: () =>
-      navigateInitWallet(HASKELL_SHELLEY_TESTNET.NETWORK_ID, HASKELL_SHELLEY_TESTNET.WALLET_IMPLEMENTATION_ID),
+    shelley: () => navigateInitWallet(mainnet.networkInfo.id, HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID),
+    byron: () => navigateInitWallet(mainnet.networkInfo.id, WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON),
+    shelleyTestnet: () => navigateInitWallet(testnet.networkInfo.id, HASKELL_SHELLEY_TESTNET.WALLET_IMPLEMENTATION_ID),
   }
 }

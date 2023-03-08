@@ -4,10 +4,8 @@ import {BigNumber} from 'bignumber.js'
 
 import {CONFIG} from '../../legacy/config'
 import type {Addressing, BaseAsset, NetworkId, RawUtxo} from '../types/other'
-import {asciiToHex, CardanoMobile, CardanoTypes, MultiToken, toAssetName, toPolicyId} from '.'
-import {getNetworkConfigById} from './networks'
-
-const PRIMARY_ASSET_CONSTANTS = CONFIG.PRIMARY_ASSET_CONSTANTS
+import {asciiToHex, CardanoMobile, CardanoTypes, MultiToken, NUMBERS, toAssetName, toPolicyId} from '.'
+import {getNetworkConfigById, PRIMARY_ASSET_CONSTANTS} from './networks'
 
 export const normalizeToAddress = async (addr: string) => {
   // in Shelley, addresses can be base16, bech32 or base58
@@ -40,13 +38,13 @@ export const normalizeToAddress = async (addr: string) => {
 export const verifyFromBip44Root = (request: Addressing['addressing']) => {
   const accountPosition = request.startLevel
 
-  if (accountPosition !== CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.PURPOSE) {
+  if (accountPosition !== NUMBERS.BIP44_DERIVATION_LEVELS.PURPOSE) {
     throw new Error('verifyFromBip44Root: addressing does not start from root')
   }
 
   const lastLevelSpecified = request.startLevel + request.path.length - 1
 
-  if (lastLevelSpecified !== CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.ADDRESS) {
+  if (lastLevelSpecified !== NUMBERS.BIP44_DERIVATION_LEVELS.ADDRESS) {
     throw new Error('verifyFromBip44Root: incorrect addressing size')
   }
 }
@@ -55,8 +53,8 @@ export const deriveRewardAddressHex = async (accountPubKeyHex: string, networkId
   const accountPubKeyPtr = await CardanoMobile.Bip32PublicKey.fromBytes(Buffer.from(accountPubKeyHex, 'hex'))
   const stakingKey = await (
     await (
-      await accountPubKeyPtr.derive(CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT)
-    ).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)
+      await accountPubKeyPtr.derive(NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT)
+    ).derive(NUMBERS.STAKING_KEY_INDEX)
   ).toRawKey()
   const credential = await CardanoMobile.StakeCredential.fromKeyhash(await stakingKey.hash())
   let chainNetworkId = CONFIG.NETWORKS.HASKELL_SHELLEY.CHAIN_NETWORK_ID
