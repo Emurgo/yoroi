@@ -1,7 +1,8 @@
+import {FlashList, FlashListProps} from '@shopify/flash-list'
 import React from 'react'
 import {defineMessages} from 'react-intl'
 import {useIntl} from 'react-intl'
-import {Alert, FlatList, FlatListProps, Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {Alert, Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {AssetItem, AssetItemProps} from '../../components/AssetItem'
 import {Spacer} from '../../components/Spacer'
@@ -14,7 +15,7 @@ import {TokenInfo} from '../../yoroi-wallets/types'
 import {Amounts} from '../../yoroi-wallets/utils'
 import {ActionsBanner} from './ActionsBanner'
 
-type ListProps = FlatListProps<TokenInfo>
+type ListProps = FlashListProps<TokenInfo>
 type Props = Partial<ListProps> & {
   onScroll: ListProps['onScroll']
   refreshing: boolean
@@ -46,7 +47,7 @@ export const AssetList = (props: Props) => {
         onSearch={handleSearch}
       />
 
-      <FlatList
+      <FlashList
         {...props}
         data={sortTokenInfos({wallet, tokenInfos})}
         renderItem={({item: tokenInfo}) => (
@@ -58,7 +59,8 @@ export const AssetList = (props: Props) => {
         )}
         ItemSeparatorComponent={() => <Spacer height={16} />}
         contentContainerStyle={{paddingTop: 16, paddingHorizontal: 16, paddingBottom: 8}}
-        keyExtractor={(tokenInfo) => tokenInfo.id}
+        keyExtractor={(_, index) => index.toString()}
+        estimatedItemSize={78}
       />
     </View>
   )
