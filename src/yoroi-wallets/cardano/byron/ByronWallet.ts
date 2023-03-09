@@ -7,7 +7,6 @@ import {defaultMemoize} from 'reselect'
 
 import {makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../../auth'
 import {Keychain} from '../../../auth/Keychain'
-import {encryptWithPassword} from '../../../Catalyst/catalystCipher'
 import LocalizableError from '../../../i18n/LocalizableError'
 import assert from '../../../legacy/assert'
 import {Logger} from '../../../legacy/logging'
@@ -54,6 +53,7 @@ import {
   walletChecksum,
 } from '..'
 import * as api from '../api'
+import {encryptWithPassword} from '../catalyst/catalystCipher'
 import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from '../chain'
 import {HISTORY_REFRESH_TIME} from '../constants'
 import {CardanoError, InvalidState} from '../errors'
