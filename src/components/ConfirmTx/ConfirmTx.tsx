@@ -13,7 +13,7 @@ import {CONFIG} from '../../legacy/config'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {isEmptyString} from '../../utils/utils'
-import {CardanoTypes, DeviceId, DeviceObj, walletManager, withBLE, withUSB} from '../../yoroi-wallets'
+import {CardanoTypes, DeviceId, DeviceObj, HARDWARE_WALLETS, walletManager, withBLE, withUSB} from '../../yoroi-wallets'
 import {WrongPassword} from '../../yoroi-wallets/cardano/errors'
 import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
 import {Button, ButtonProps, ValidatedTextInput} from '..'
@@ -199,7 +199,7 @@ export const ConfirmTx = ({
     if (
       wallet.isHW &&
       Platform.OS === 'android' &&
-      CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT &&
+      HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT &&
       chooseTransportOnConfirmation
     ) {
       setDialogStep(DialogStep.ChooseTransport)
@@ -222,7 +222,7 @@ export const ConfirmTx = ({
     if (
       wallet.isHW &&
       Platform.OS === 'android' &&
-      CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT &&
+      HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT &&
       !chooseTransportOnConfirmation
     ) {
       setDialogStep(DialogStep.ChooseTransport)

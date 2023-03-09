@@ -26,17 +26,6 @@ const _COMMIT = env.getString('COMMIT')
 
 const _LOG_LEVEL = IS_DEBUG ? LogLevel.Debug : LogLevel.Warn
 
-const HARDWARE_WALLETS = {
-  LEDGER_NANO: {
-    ENABLED: true,
-    VENDOR: 'ledger.com',
-    MODEL: 'Nano',
-    ENABLE_USB_TRANSPORT: true,
-    USB_MIN_SDK: 24, // USB transport officially supported for Android SDK >= 24
-    MIN_ADA_APP_VERSION: '2.2.1',
-  },
-}
-
 export const CONFIG = {
   DEBUG: {
     // WARNING: NEVER change these flags
@@ -69,7 +58,6 @@ export const CONFIG = {
   SENTRY,
   MNEMONIC_STRENGTH: 160,
   HISTORY_REFRESH_TIME: 25 * 1000,
-  HARDWARE_WALLETS,
   PIN_LENGTH: 6,
   LOG_LEVEL: _LOG_LEVEL,
   COMMIT: _COMMIT,

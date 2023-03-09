@@ -7,10 +7,9 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Button, Modal, ScreenBackground, StatusBar} from '../../components'
 import {LedgerTransportSwitchModal} from '../../HW'
 import globalMessages from '../../i18n/global-messages'
-import {CONFIG} from '../../legacy/config'
 import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
 import {COLORS} from '../../theme'
-import {isByron, isHaskellShelley, NetworkId, WalletImplementationId} from '../../yoroi-wallets'
+import {HARDWARE_WALLETS, isByron, isHaskellShelley, NetworkId, WalletImplementationId} from '../../yoroi-wallets'
 import {isJormungandr} from '../../yoroi-wallets/cardano/networks'
 import {WALLET_CONFIG_24} from '../../yoroi-wallets/cardano/shelley/constants'
 import {WalletDescription} from '../WalletDescription'
@@ -58,7 +57,7 @@ export const WalletInitScreen = () => {
           {!isJormungandr(networkId) && (
             <>
               <Button
-                disabled={!CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLED}
+                disabled={!HARDWARE_WALLETS.LEDGER_NANO.ENABLED}
                 outline
                 onPress={() => setModalState(MODAL_STATES.LEDGER_TRANSPORT_SWITCH)}
                 title={strings.createWalletWithLedgerButton({networkId})}
