@@ -4,7 +4,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {showErrorDialog} from '../../dialogs'
 import {errorMessages} from '../../i18n/global-messages'
 import {CONFIG} from '../../legacy/config'
-import {useCreatePin} from '../hooks'
+import {useCreatePin} from '../../yoroi-wallets'
 import {PinInput, PinInputRef} from '../PinInput'
 
 type Props = {onDone: (pin: string) => void}

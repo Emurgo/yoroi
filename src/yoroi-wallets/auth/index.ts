@@ -1,18 +1,18 @@
-import React from 'react'
+import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Alert, AppState} from 'react-native'
+import {Alert, AppState, Platform} from 'react-native'
+import RNKeychain from 'react-native-keychain'
 import {useMutation, UseMutationOptions, useQuery, useQueryClient, UseQueryOptions} from 'react-query'
 
-import {useMutationWithInvalidations, useWallet} from '../hooks'
-import globalMessages from '../i18n/global-messages'
-import {useStorage} from '../Storage'
-import {parseWalletMeta} from '../Storage/migrations/walletMeta'
-import {decryptData, encryptData, walletManager, YoroiWallet} from '../yoroi-wallets'
-import {WrongPassword} from '../yoroi-wallets/cardano/errors'
-import {YoroiStorage} from '../yoroi-wallets/storage'
-import {parseSafe, parseString} from '../yoroi-wallets/utils/parsing'
-import {Keychain} from './Keychain'
-import {AuthenticationPrompt, authOsEnabled} from './KeychainStorage'
+import {useMutationWithInvalidations} from '../../hooks'
+import globalMessages from '../../i18n/global-messages'
+import {useWalletManager} from '../../WalletManager'
+import {YoroiWallet} from '../cardano'
+import {WrongPassword} from '../cardano/errors'
+import {decryptData, encryptData} from '../encryption'
+import {parseWalletMeta} from '../migrations'
+import {AuthenticationPrompt, Keychain, useStorage, YoroiStorage} from '../storage'
+import {parseSafe, parseString} from '../utils'
 
 export const useAuthOsEnabled = (options?: UseQueryOptions<boolean, Error>) => {
   const queryClient = useQueryClient()
@@ -127,42 +127,11 @@ export const useAuthOsWithEasyConfirmation = (
   }
 }
 
-export const useDisableEasyConfirmation = (wallet: YoroiWallet, options?: UseMutationOptions) => {
-  const mutation = useMutationWithInvalidations({
-    ...options,
-    mutationFn: () => walletManager.disableEasyConfirmation(wallet),
-    invalidateQueries: [['walletMetas']],
-  })
-
-  return {
-    ...mutation,
-    disableEasyConfirmation: mutation.mutate,
-  }
-}
-
-export const useEnableEasyConfirmation = (wallet: YoroiWallet, options?: UseMutationOptions<void, Error, string>) => {
-  const mutation = useMutationWithInvalidations({
-    ...options,
-    mutationFn: (password: string) => walletManager.enableEasyConfirmation(wallet, password),
-    invalidateQueries: [['walletMetas']],
-  })
-
-  return {
-    ...mutation,
-    enableEasyConfirmation: mutation.mutate,
-  }
-}
-
-export const useEasyConfirmationEnabled = (wallet: YoroiWallet) => {
-  useWallet(wallet, 'easy-confirmation')
-
-  return wallet.isEasyConfirmationEnabled
-}
-
 export const useDisableAllEasyConfirmation = (
   wallet: YoroiWallet | undefined,
   options?: UseMutationOptions<void, Error>,
 ) => {
+  const walletManager = useWalletManager()
   const storage = useStorage()
   const mutation = useMutationWithInvalidations({
     mutationFn: async () => {
@@ -299,3 +268,17 @@ export type AuthSetting = 'pin' | 'os' | undefined
 
 export const AUTH_WITH_OS: AuthSetting = 'os'
 export const AUTH_WITH_PIN: AuthSetting = 'pin'
+
+export function authOsEnabled() {
+  return Platform.select({
+    android: () => RNKeychain.getSupportedBiometryType().then((supportedBioType) => supportedBioType != null),
+    ios: () =>
+      Promise.all([
+        RNKeychain.canImplyAuthentication({
+          authenticationType: RNKeychain.AUTHENTICATION_TYPE.DEVICE_PASSCODE_OR_BIOMETRICS,
+        }),
+        RNKeychain.getSupportedBiometryType(),
+      ]).then(([canAuth, supportedBioType]) => supportedBioType != null && canAuth),
+    default: () => Promise.reject(new Error('OS Authentication is not supported')),
+  })()
+}

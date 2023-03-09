@@ -1,7 +1,7 @@
 import {Platform} from 'react-native'
 import Keychain from 'react-native-keychain'
 
-import {authOsEnabled} from './KeychainStorage'
+import {authOsEnabled} from '../auth'
 
 let mockedBioType = Keychain.BIOMETRY_TYPE.FINGERPRINT
 let mockedCanImply = true

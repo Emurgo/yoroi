@@ -1,7 +1,12 @@
-import {AddressGenerator, AddressType, CardanoMobile, legacyWalletChecksum, NUMBERS, walletChecksum} from '../..'
+import {legacyWalletChecksum, walletChecksum} from '@emurgo/cip4-js'
+
+import {CardanoMobile} from '../../cardano'
 import type {NetworkId} from '../../types/other'
 import {PlateResponse} from '../../types/other'
 import {getMasterKeyFromMnemonic} from '../byron/util'
+import {AddressGenerator} from '../chain'
+import {AddressType} from '../formatPath'
+import {NUMBERS} from '../numbers'
 import {WALLET_IMPLEMENTATION_ID} from './constants'
 
 export const generateShelleyPlateFromKey = async (

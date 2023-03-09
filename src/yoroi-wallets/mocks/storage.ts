@@ -1,4 +1,4 @@
-import {WalletEncryptedStorage} from '../../auth'
+import {WalletEncryptedStorage} from '../storage'
 
 export const mockEncryptedStorage: WalletEncryptedStorage = {
   rootKey: {

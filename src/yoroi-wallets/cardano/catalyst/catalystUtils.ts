@@ -2,7 +2,9 @@ import {mnemonicToEntropy} from 'bip39'
 import blake2b from 'blake2b'
 
 import {Logger} from '../../logging'
-import {CardanoMobile, CardanoTypes, CATALYST, generateAdaMnemonic} from '..'
+import {CardanoMobile, CardanoTypes} from '..'
+import {generateAdaMnemonic} from '../mnemonic'
+import {CATALYST} from '../utils'
 
 export const CatalystLabels = {
   DATA: 61284,

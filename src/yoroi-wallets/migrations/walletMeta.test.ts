@@ -2,10 +2,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import assert from 'assert'
 import {expect} from 'chai'
 
-import {WalletMeta, WALLETS} from '../../yoroi-wallets'
-import {WALLET_CONFIG_24 as HASKELL_SHELLEY_24} from '../../yoroi-wallets/cardano/shelley/constants'
-import {storage} from '../../yoroi-wallets/storage'
-import {NETWORK_REGISTRY} from '../../yoroi-wallets/types'
+import {WalletMeta, WALLETS} from '..'
+import {WALLET_CONFIG_24 as HASKELL_SHELLEY_24} from '../cardano/shelley/constants'
+import {storage} from '../storage'
+import {NETWORK_REGISTRY} from '../types'
 import {migrateWalletMetas} from './walletMeta'
 
 describe('migrateWalletMetas()', () => {

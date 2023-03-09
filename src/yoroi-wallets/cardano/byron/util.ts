@@ -1,8 +1,10 @@
 import bs58 from 'bs58'
 
-import {ADDRESS_TYPE_TO_CHANGE, AddressType, CardanoMobile, generateWalletRootKey, NUMBERS} from '..'
+import {ADDRESS_TYPE_TO_CHANGE, AddressType, CardanoMobile} from '..'
 import {CardanoError} from '../errors'
+import {generateWalletRootKey} from '../mnemonic'
 import {getCardanoByronConfig} from '../networks'
+import {NUMBERS} from '../numbers'
 
 const BYRON_PROTOCOL_MAGIC = getCardanoByronConfig().PROTOCOL_MAGIC
 

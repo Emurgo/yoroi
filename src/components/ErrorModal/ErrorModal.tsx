@@ -6,7 +6,9 @@ import image from '../../assets/img/error.png'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
 import {brand, COLORS, spacing} from '../../theme'
 import {isEmptyString} from '../../utils/utils'
-import {Button, Icon, Modal} from '..'
+import {Button} from '../Button'
+import {Icon} from '../Icon'
+import {Modal} from '../Modal'
 
 type ErrorViewProps = {
   title?: string

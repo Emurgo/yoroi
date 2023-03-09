@@ -2,7 +2,7 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {QueryClient, QueryClientProvider} from 'react-query'
 
-import {RouteProvider} from '../../../.storybook'
+import {RouteProvider} from '../../../.storybook/decorators'
 import {StakingCenterRoutes} from '../../navigation'
 import {SelectedWalletProvider} from '../../SelectedWallet'
 import {mocks} from '../../yoroi-wallets/mocks'

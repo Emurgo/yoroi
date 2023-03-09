@@ -6,13 +6,13 @@ import _ from 'lodash'
 import DeviceInfo from 'react-native-device-info'
 import {defaultMemoize} from 'reselect'
 
-import {makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../../auth'
-import {Keychain} from '../../../auth/Keychain'
 import LocalizableError from '../../../i18n/LocalizableError'
 import {HWDeviceInfo} from '../../hw'
 import {Logger} from '../../logging'
 import {makeMemosManager, MemosManager} from '../../memos'
+import {makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../storage'
 import {YoroiStorage} from '../../storage'
+import {Keychain} from '../../storage/Keychain'
 import type {
   AccountStateResponse,
   CurrencySymbol,

@@ -5,7 +5,6 @@ import React, {useEffect, useState} from 'react'
 import {useIntl} from 'react-intl'
 import {Platform, StyleSheet, View} from 'react-native'
 
-import {useAuthOsWithEasyConfirmation} from '../../auth'
 import {useSubmitTx} from '../../hooks'
 import {confirmationMessages, errorMessages, txLabels} from '../../i18n/global-messages'
 import LocalizableError from '../../i18n/LocalizableError'
@@ -13,7 +12,16 @@ import {CONFIG} from '../../legacy/config'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {isEmptyString} from '../../utils/utils'
-import {CardanoTypes, DeviceId, DeviceObj, HARDWARE_WALLETS, walletManager, withBLE, withUSB} from '../../yoroi-wallets'
+import {
+  CardanoTypes,
+  DeviceId,
+  DeviceObj,
+  HARDWARE_WALLETS,
+  useAuthOsWithEasyConfirmation,
+  walletManager,
+  withBLE,
+  withUSB,
+} from '../../yoroi-wallets'
 import {WrongPassword} from '../../yoroi-wallets/cardano/errors'
 import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
 import {Button, ButtonProps, ValidatedTextInput} from '..'

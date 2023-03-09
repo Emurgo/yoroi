@@ -49,20 +49,6 @@ export const KeychainStorage = {
   Errors,
 } as const
 
-export async function authOsEnabled() {
-  return Platform.select({
-    android: () => Keychain.getSupportedBiometryType().then((supportedBioType) => supportedBioType != null),
-    ios: () =>
-      Promise.all([
-        Keychain.canImplyAuthentication({
-          authenticationType: Keychain.AUTHENTICATION_TYPE.DEVICE_PASSCODE_OR_BIOMETRICS,
-        }),
-        Keychain.getSupportedBiometryType(),
-      ]).then(([canAuth, supportedBioType]) => supportedBioType != null && canAuth),
-    default: () => Promise.reject(new Error('OS Authentication is not supported')),
-  })()
-}
-
 // react-native-keychain doesn't normalize the errors
 // iOS = `Error.code`
 // Android = Error.message

@@ -6,13 +6,12 @@ import _ from 'lodash'
 import DeviceInfo from 'react-native-device-info'
 import {defaultMemoize} from 'reselect'
 
-import {makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../../auth'
-import {Keychain} from '../../../auth/Keychain'
 import LocalizableError from '../../../i18n/LocalizableError'
 import {HWDeviceInfo} from '../../hw'
 import {Logger} from '../../logging'
 import {makeMemosManager, MemosManager} from '../../memos'
-import {YoroiStorage} from '../../storage'
+import {makeWalletEncryptedStorage, WalletEncryptedStorage, YoroiStorage} from '../../storage'
+import {Keychain} from '../../storage/Keychain'
 import type {
   AccountStateResponse,
   CurrencySymbol,
@@ -940,7 +939,7 @@ export class ShelleyWalletTestnet implements YoroiWallet {
 
   // ============ security & key management ============ //
 
-  async getDecryptedRootKey(password: string) {
+  getDecryptedRootKey(password: string) {
     return this.encryptedStorage.rootKey.read(password)
   }
 

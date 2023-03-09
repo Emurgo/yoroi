@@ -17,7 +17,7 @@ import {InvalidState, NetworkError} from '../../yoroi-wallets/cardano/errors'
 import {isJormungandr} from '../../yoroi-wallets/cardano/networks'
 import * as HASKELL_SHELLEY from '../../yoroi-wallets/cardano/shelley/constants'
 import * as HASKELL_SHELLEY_TESTNET from '../../yoroi-wallets/cardano/shelley-testnet/constants'
-import {useSetSelectedWallet, useSetSelectedWalletMeta} from '..'
+import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../Context'
 import {WalletListItem} from './WalletListItem'
 
 export const WalletSelectionScreen = () => {

@@ -15,22 +15,12 @@ import {
 } from 'react-query'
 
 import {isNightly} from '../legacy/config'
-import {useStorage} from '../Storage'
-import {parseWalletMeta} from '../Storage/migrations/walletMeta'
 import {useWalletManager} from '../WalletManager'
-import {
-  calcLockedDeposit,
-  HWDeviceInfo,
-  NetworkId,
-  toToken,
-  TxSubmissionStatus,
-  WalletEvent,
-  WalletImplementationId,
-  WalletManager,
-  WalletMeta,
-  YoroiWallet,
-} from '../yoroi-wallets'
+import {calcLockedDeposit, toToken, WalletEvent, YoroiWallet} from '../yoroi-wallets/cardano'
 import {generateShelleyPlateFromKey} from '../yoroi-wallets/cardano/shelley/plate'
+import {HWDeviceInfo} from '../yoroi-wallets/hw'
+import {parseWalletMeta} from '../yoroi-wallets/migrations/walletMeta'
+import {useStorage} from '../yoroi-wallets/storage'
 import {
   Quantity,
   TokenInfo,
@@ -42,9 +32,16 @@ import {
   YoroiSignedTx,
   YoroiUnsignedTx,
 } from '../yoroi-wallets/types'
-import {CurrencySymbol, TipStatusResponse} from '../yoroi-wallets/types/other'
+import {
+  CurrencySymbol,
+  NetworkId,
+  TipStatusResponse,
+  TxSubmissionStatus,
+  WalletImplementationId,
+} from '../yoroi-wallets/types/other'
 import {Amounts, Utxos} from '../yoroi-wallets/utils'
 import {parseBoolean} from '../yoroi-wallets/utils/parsing'
+import {WalletManager, WalletMeta} from '../yoroi-wallets/walletManager'
 
 const crashReportsStorageKey = 'sendCrashReports'
 
@@ -525,6 +522,40 @@ export const useHasPendingTx = (wallet: YoroiWallet) => {
 }
 
 // WALLET MANAGER
+export const useDisableEasyConfirmation = (wallet: YoroiWallet, options?: UseMutationOptions) => {
+  const walletManager = useWalletManager()
+  const mutation = useMutationWithInvalidations({
+    ...options,
+    mutationFn: () => walletManager.disableEasyConfirmation(wallet),
+    invalidateQueries: [['walletMetas']],
+  })
+
+  return {
+    ...mutation,
+    disableEasyConfirmation: mutation.mutate,
+  }
+}
+
+export const useEnableEasyConfirmation = (wallet: YoroiWallet, options?: UseMutationOptions<void, Error, string>) => {
+  const walletManager = useWalletManager()
+  const mutation = useMutationWithInvalidations({
+    ...options,
+    mutationFn: (password: string) => walletManager.enableEasyConfirmation(wallet, password),
+    invalidateQueries: [['walletMetas']],
+  })
+
+  return {
+    ...mutation,
+    enableEasyConfirmation: mutation.mutate,
+  }
+}
+
+export const useEasyConfirmationEnabled = (wallet: YoroiWallet) => {
+  useWallet(wallet, 'easy-confirmation')
+
+  return wallet.isEasyConfirmationEnabled
+}
+
 export const useOpenWallet = (options?: UseMutationOptions<[YoroiWallet, WalletMeta], Error, WalletMeta>) => {
   const walletManager = useWalletManager()
   const mutation = useMutation({

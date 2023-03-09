@@ -1,4 +1,4 @@
-import {YoroiWallet} from '../yoroi-wallets'
+import {YoroiWallet} from '..'
 import {AuthenticationPrompt, KeychainStorage} from './KeychainStorage'
 
 const authenticate = async (authenticationPrompt: AuthenticationPrompt) => {

@@ -4,9 +4,9 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useDisableEasyConfirmation} from '../../auth'
 import {Button, StatusBar, Text} from '../../components'
 import {LoadingOverlay} from '../../components/LoadingOverlay'
+import {useDisableEasyConfirmation} from '../../hooks'
 import {useSelectedWallet, useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../SelectedWallet'
 
 export const DisableEasyConfirmationScreen = () => {

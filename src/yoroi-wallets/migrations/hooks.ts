@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import {YoroiStorage} from '../../yoroi-wallets/storage'
+import {YoroiStorage} from '../storage'
 import {to4_9_0} from './4_9_0'
 
 export const useMigrations = (storage: YoroiStorage) => {

@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-import {EncryptedStorage, EncryptedStorageKeys} from '../../../auth'
 import {HWDeviceInfo} from '../../hw'
+import {EncryptedStorage, EncryptedStorageKeys} from '../../storage'
 import {storage} from '../../storage'
 import {WalletMeta} from '../../walletManager'
 import {ShelleyAddressGeneratorJSON} from '../chain'

@@ -6,20 +6,11 @@ import {defaultMemoize} from 'reselect'
 
 import {Logger} from '../../logging'
 import {NetworkId, WalletImplementationId} from '../../types'
-import {
-  ADDRESS_TYPE_TO_CHANGE,
-  AddressType,
-  CardanoMobile,
-  CardanoTypes,
-  isByron,
-  isHaskellShelley,
-  NETWORKS,
-  NUMBERS,
-  toCardanoNetworkId,
-} from '../'
+import {CardanoMobile, CardanoTypes, isByron, isHaskellShelley, NUMBERS, toCardanoNetworkId} from '..'
 import type {CryptoAccount} from '../byron/util'
 import * as util from '../byron/util'
-import {getNetworkConfigById} from '../networks'
+import {ADDRESS_TYPE_TO_CHANGE, AddressType} from '../formatPath'
+import {getNetworkConfigById, NETWORKS} from '../networks'
 import {DISCOVERY_BLOCK_SIZE, DISCOVERY_GAP_SIZE} from '../shelley/constants'
 
 export type AddressBlock = [number, Moment, Array<string>]

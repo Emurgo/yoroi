@@ -5,7 +5,7 @@ import {useIsTokenKnownNft, useNft, useNftImageModerated, useTokenInfo} from '..
 import {MODERATING_NFTS_ENABLED, SHOW_NFT_GALLERY} from '../../legacy/config'
 import {COLORS} from '../../theme'
 import {YoroiWallet} from '../../yoroi-wallets'
-import {Icon} from '..'
+import {Icon} from '../Icon'
 import {ModeratedNftIcon} from './ModeratedNftIcon'
 
 export const TokenIcon = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string}) => {
