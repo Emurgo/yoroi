@@ -269,16 +269,49 @@ export type AuthSetting = 'pin' | 'os' | undefined
 export const AUTH_WITH_OS: AuthSetting = 'os'
 export const AUTH_WITH_PIN: AuthSetting = 'pin'
 
-export function authOsEnabled() {
+export const authOsEnabled = () => {
   return Platform.select({
-    android: () => RNKeychain.getSupportedBiometryType().then((supportedBioType) => supportedBioType != null),
-    ios: () =>
-      Promise.all([
-        RNKeychain.canImplyAuthentication({
+    android: async () =>
+      canAuthWithOS({
+        platform: 'android',
+        supportedBiometryType: await RNKeychain.getSupportedBiometryType(),
+      }),
+    ios: async () =>
+      canAuthWithOS({
+        platform: 'ios',
+        supportedBiometryType: await RNKeychain.getSupportedBiometryType(),
+        canImplyAuthentication: await RNKeychain.canImplyAuthentication({
           authenticationType: RNKeychain.AUTHENTICATION_TYPE.DEVICE_PASSCODE_OR_BIOMETRICS,
         }),
-        RNKeychain.getSupportedBiometryType(),
-      ]).then(([canAuth, supportedBioType]) => supportedBioType != null && canAuth),
+      }),
     default: () => Promise.reject(new Error('OS Authentication is not supported')),
   })()
+}
+
+export const canAuthWithOS = (options: IosAuthOptions | AndroidAuthOptions) => {
+  const {platform, supportedBiometryType} = options
+
+  if (platform === 'ios') {
+    const {canImplyAuthentication} = options
+    if (!canImplyAuthentication) return false
+
+    return !!supportedBiometryType
+  }
+
+  if (platform === 'android') {
+    return !!supportedBiometryType
+  }
+
+  return false
+}
+
+type AndroidAuthOptions = {
+  platform: 'android'
+  supportedBiometryType: `${RNKeychain.BIOMETRY_TYPE}` | null
+}
+
+type IosAuthOptions = {
+  platform: 'ios'
+  supportedBiometryType: `${RNKeychain.BIOMETRY_TYPE}` | null
+  canImplyAuthentication: boolean
 }
