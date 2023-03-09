@@ -37,7 +37,7 @@ const mountStorage = (path: FolderName) => {
       tuples: Array<[key: string, value: unknown]>,
       stringify: (data: unknown) => string = JSON.stringify,
     ) => {
-      const items = tuples.map(([key, value]) => [withPath(key), stringify(value)])
+      const items: Array<[string, string]> = tuples.map(([key, value]) => [withPath(key), stringify(value)])
       await AsyncStorage.multiSet(items)
     },
     removeItem: async (key: string) => {

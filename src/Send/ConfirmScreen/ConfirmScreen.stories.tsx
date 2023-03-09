@@ -2,8 +2,8 @@ import {NavigationRouteContext} from '@react-navigation/native'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {mocks} from '../../../storybook'
 import {SelectedWalletProvider} from '../../SelectedWallet'
+import {mocks} from '../../yoroi-wallets/mocks'
 import {SendProvider} from '../Context/SendContext'
 import {ConfirmScreen} from './ConfirmScreen'
 

@@ -1,9 +1,10 @@
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {mocks, QueryProvider} from '../../storybook'
+import {QueryProvider} from '../../.storybook'
 import {SearchProvider} from '../Search'
 import {SelectedWalletProvider} from '../SelectedWallet'
+import {mocks} from '../yoroi-wallets/mocks'
 import {Nfts} from './Nfts'
 
 storiesOf('NFT/Gallery', module)

@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-import {WalletJSON, WalletMeta} from '../yoroi-wallets'
+import {WalletMeta} from '../yoroi-wallets'
 import {storage} from '../yoroi-wallets/storage'
 import {parseSafe} from '../yoroi-wallets/utils/parsing'
 import {disableAllEasyConfirmation, enableAuthWithOs} from './hooks'
@@ -123,4 +123,4 @@ const mockWalletMeta: WalletMeta = {
   walletImplementationId: 'haskell-shelley-24',
 }
 
-const mockWalletJSON = {isEasyConfirmationEnabled: true} as WalletJSON
+const mockWalletJSON = {isEasyConfirmationEnabled: true}

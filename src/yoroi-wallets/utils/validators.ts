@@ -6,7 +6,7 @@ import _ from 'lodash'
 import assert from '../../legacy/assert'
 import {normalizeToAddress} from '../cardano'
 import {getNetworkConfigById} from '../cardano/networks'
-import {Token} from '../types'
+import {NetworkId, Token} from '../types'
 import {InvalidAssetAmount, parseAmountDecimal} from './parsing'
 
 export type PasswordValidationErrors = {
@@ -143,7 +143,7 @@ export const getUnstoppableDomainAddress = async (domain: string) => {
 
 export const isReceiverAddressValid = async (
   receiverAddress: string,
-  walletNetworkId: number,
+  walletNetworkId: NetworkId,
 ): Promise<AddressValidationErrors | void> => {
   if (!receiverAddress) {
     return {addressIsRequired: true}

@@ -130,7 +130,7 @@ const Staking = {
     return result
   },
 
-  toDeregistrations: async ({
+  toDeregistrations: ({
     deregistrations,
     networkConfig: {NETWORK_ID, KEY_DEPOSIT},
   }: {
@@ -151,7 +151,7 @@ const Staking = {
       }
     }, Promise.resolve({} as YoroiEntries)),
 
-  toRegistrations: async ({
+  toRegistrations: ({
     registrations,
     networkConfig: {NETWORK_ID, KEY_DEPOSIT},
   }: {

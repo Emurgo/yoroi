@@ -8,13 +8,15 @@ import {Button, Icon, PleaseWaitModal, StatusBar} from '../../components'
 import {showErrorDialog} from '../../dialogs'
 import {useOpenWallet, useWalletMetas} from '../../hooks'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
-import {CONFIG, isNightly} from '../../legacy/config'
+import {isNightly} from '../../legacy/config'
 import {useWalletNavigation} from '../../navigation'
 import {COLORS} from '../../theme'
 import {useWalletManager} from '../../WalletManager'
-import {WalletMeta} from '../../yoroi-wallets'
+import {WALLET_IMPLEMENTATION_REGISTRY, WalletMeta} from '../../yoroi-wallets'
 import {InvalidState, NetworkError} from '../../yoroi-wallets/cardano/errors'
 import {isJormungandr} from '../../yoroi-wallets/cardano/networks'
+import * as HASKELL_SHELLEY from '../../yoroi-wallets/cardano/shelley/constants'
+import * as HASKELL_SHELLEY_TESTNET from '../../yoroi-wallets/cardano/shelley-testnet/constants'
 import {useSetSelectedWallet, useSetSelectedWalletMeta} from '..'
 import {WalletListItem} from './WalletListItem'
 
@@ -157,8 +159,8 @@ const ShelleyButton = () => {
         navigation.navigate('new-wallet', {
           screen: 'choose-create-restore',
           params: {
-            networkId: CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
-            walletImplementationId: CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
+            networkId: HASKELL_SHELLEY.NETWORK_ID,
+            walletImplementationId: HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
           },
         })
       }
@@ -182,8 +184,8 @@ const OnlyNightlyShelleyTestnetButton = () => {
         navigation.navigate('new-wallet', {
           screen: 'choose-create-restore',
           params: {
-            networkId: CONFIG.NETWORKS.HASKELL_SHELLEY_TESTNET.NETWORK_ID,
-            walletImplementationId: CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
+            networkId: HASKELL_SHELLEY_TESTNET.NETWORK_ID,
+            walletImplementationId: HASKELL_SHELLEY_TESTNET.WALLET_IMPLEMENTATION_ID,
           },
         })
       }
@@ -204,8 +206,8 @@ const ByronButton = () => {
         navigation.navigate('new-wallet', {
           screen: 'choose-create-restore',
           params: {
-            networkId: CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
-            walletImplementationId: CONFIG.WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID,
+            networkId: HASKELL_SHELLEY.NETWORK_ID,
+            walletImplementationId: WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON,
           },
         })
       }

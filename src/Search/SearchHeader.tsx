@@ -10,6 +10,7 @@ export interface Props {
 
 export const SearchHeader = ({placeholder, onClose}: Props) => {
   const {search, searchChanged, clearSearch} = useSearch()
+
   return (
     <SearchBar
       placeholder={placeholder}
