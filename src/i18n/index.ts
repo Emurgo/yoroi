@@ -23,7 +23,6 @@ import 'moment/locale/sl'
 import BigNumber from 'bignumber.js'
 import moment from 'moment'
 
-import assert from '../legacy/assert'
 import {LanguageCode, LANGUAGES} from './languages'
 
 // note(v-almonacid): there is no distinction between trad vs simplified
@@ -130,7 +129,6 @@ const numberLocales = {
 }
 
 export const updateLanguageSettings = (code: LanguageCode) => {
-  assert.assert(Object.values(LANGUAGES).includes(code), 'Unknown language', code)
   moment.locale(momentLocales[code])
 
   BigNumber.config({

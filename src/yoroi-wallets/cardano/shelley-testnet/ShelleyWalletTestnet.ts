@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
 import ExtendableError from 'es6-error'
 import _ from 'lodash'
@@ -8,7 +9,6 @@ import {defaultMemoize} from 'reselect'
 import {makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../../auth'
 import {Keychain} from '../../../auth/Keychain'
 import LocalizableError from '../../../i18n/LocalizableError'
-import assert from '../../../legacy/assert'
 import {Logger} from '../../../legacy/logging'
 import {HWDeviceInfo} from '../../hw'
 import {makeMemosManager, MemosManager} from '../../memos'
@@ -390,7 +390,7 @@ export class ShelleyWalletTestnet implements YoroiWallet {
   private getChangeAddress(): string {
     const candidateAddresses = this.internalChain.addresses
     const unseen = candidateAddresses.filter((addr) => !this.isUsedAddress(addr))
-    assert.assert(unseen.length > 0, 'Cannot find change address')
+    assert(unseen.length > 0, 'Cannot find change address')
     const changeAddress = _.first(unseen)
     if (!changeAddress) throw new Error('invalid wallet state')
 
@@ -895,7 +895,7 @@ export class ShelleyWalletTestnet implements YoroiWallet {
 
   private _isUsedAddressIndexSelector = defaultMemoize((perAddressTxs) =>
     _.mapValues(perAddressTxs, (txs) => {
-      assert.assert(!!txs, 'perAddressTxs cointains false-ish value')
+      assert(!!txs, 'perAddressTxs cointains false-ish value')
       return txs.length > 0
     }),
   )
@@ -1020,7 +1020,7 @@ export class ShelleyWalletTestnet implements YoroiWallet {
   }
 
   private async _doFullSync() {
-    assert.assert(this.isInitialized, 'doFullSync: isInitialized')
+    assert(this.isInitialized, 'doFullSync: isInitialized')
 
     Logger.info('Discovery done, now syncing transactions')
 

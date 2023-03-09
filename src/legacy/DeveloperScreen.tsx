@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {useNavigation} from '@react-navigation/native'
+import assert from 'assert'
 import ExtendableError from 'es6-error'
 import _ from 'lodash'
 import React from 'react'
@@ -19,7 +20,6 @@ import {useSelectedWalletContext} from '../SelectedWallet'
 import {isEmptyString} from '../utils/utils'
 import {generateAdaMnemonic, NetworkId} from '../yoroi-wallets'
 import {NetworkError} from '../yoroi-wallets/cardano/errors'
-import assert from './assert'
 
 const routes: Array<{label: string; path: keyof AppRoutes}> = [
   {label: 'Storybook', path: 'storybook'},
@@ -221,7 +221,7 @@ const checkPathFormat = (path: string) => path.startsWith('/') && !path.endsWith
 const parseJson = (json: string) => (json !== null ? JSON.parse(json) : undefined)
 
 const read = async (path: string) => {
-  assert.preconditionCheck(checkPathFormat(path), 'Wrong storage key path')
+  assert(checkPathFormat(path), 'Wrong storage key path')
 
   try {
     const text = await AsyncStorage.getItem(path)
@@ -233,7 +233,7 @@ const read = async (path: string) => {
 }
 
 const readMany = async (paths: Array<string>) => {
-  assert.preconditionCheck(_.every(paths, checkPathFormat), 'Wrong storage key path')
+  assert(_.every(paths, checkPathFormat), 'Wrong storage key path')
 
   try {
     const items = await AsyncStorage.multiGet(paths)
@@ -246,9 +246,9 @@ const readMany = async (paths: Array<string>) => {
 }
 
 const write = async (path: string, data: any) => {
-  assert.preconditionCheck(path.startsWith('/'), 'Wrong storage key path')
-  assert.preconditionCheck(!path.endsWith('/'), 'Wrong storage key path')
-  assert.preconditionCheck(data !== undefined, 'Cannot store undefined')
+  assert(path.startsWith('/'), 'Wrong storage key path')
+  assert(!path.endsWith('/'), 'Wrong storage key path')
+  assert(data !== undefined, 'Cannot store undefined')
 
   try {
     await AsyncStorage.setItem(path, JSON.stringify(data))
@@ -258,8 +258,8 @@ const write = async (path: string, data: any) => {
 }
 
 const remove = async (path: string) => {
-  assert.preconditionCheck(path.startsWith('/'), 'Wrong storage key path')
-  assert.preconditionCheck(!path.endsWith('/'), 'Wrong storage key path')
+  assert(path.startsWith('/'), 'Wrong storage key path')
+  assert(!path.endsWith('/'), 'Wrong storage key path')
 
   try {
     await AsyncStorage.removeItem(path)

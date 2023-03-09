@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
 import ExtendableError from 'es6-error'
 import _ from 'lodash'
@@ -8,7 +9,6 @@ import {defaultMemoize} from 'reselect'
 import {makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../../auth'
 import {Keychain} from '../../../auth/Keychain'
 import LocalizableError from '../../../i18n/LocalizableError'
-import assert from '../../../legacy/assert'
 import {Logger} from '../../../legacy/logging'
 import {HWDeviceInfo} from '../../hw'
 import {makeMemosManager, MemosManager} from '../../memos'
@@ -405,17 +405,17 @@ export class ByronWallet implements YoroiWallet {
 
   private integrityCheck(): void {
     try {
-      assert.assert(isHaskellShelleyNetwork(this.networkId), 'invalid networkId')
+      assert(isHaskellShelleyNetwork(this.networkId), 'invalid networkId')
       if (this.walletImplementationId == null) throw new Error('Invalid wallet: walletImplementationId')
-      assert.assert(
+      assert(
         isByron(this.walletImplementationId) || isHaskellShelley(this.walletImplementationId),
         'invalid walletImplementationId',
       )
       if (isHaskellShelley(this.walletImplementationId)) {
-        assert.assert(this.rewardAddressHex != null, 'reward address is null')
+        assert(this.rewardAddressHex != null, 'reward address is null')
       }
       if (this.isHW) {
-        assert.assert(this.hwDeviceInfo != null, 'no device info for hardware wallet')
+        assert(this.hwDeviceInfo != null, 'no device info for hardware wallet')
       }
     } catch (e) {
       Logger.error('wallet::_integrityCheck', e)
@@ -469,7 +469,7 @@ export class ByronWallet implements YoroiWallet {
   private getChangeAddress(): string {
     const candidateAddresses = this.internalChain.addresses
     const unseen = candidateAddresses.filter((addr) => !this.isUsedAddress(addr))
-    assert.assert(unseen.length > 0, 'Cannot find change address')
+    assert(unseen.length > 0, 'Cannot find change address')
     const changeAddress = _.first(unseen)
     if (!changeAddress) throw new Error('invalid wallet state')
 
@@ -489,7 +489,7 @@ export class ByronWallet implements YoroiWallet {
   private async getStakingKey() {
     if (this.walletImplementationId == null) throw new Error('Invalid wallet: walletImplementationId')
 
-    assert.assert(isHaskellShelley(this.walletImplementationId), 'cannot get staking key from a byron-era wallet')
+    assert(isHaskellShelley(this.walletImplementationId), 'cannot get staking key from a byron-era wallet')
 
     const accountPubKey = await CardanoMobile.Bip32PublicKey.fromBytes(Buffer.from(this.publicKeyHex, 'hex'))
     const stakingKey = await accountPubKey
@@ -504,7 +504,7 @@ export class ByronWallet implements YoroiWallet {
   private async getRewardAddress() {
     if (this.walletImplementationId == null) throw new Error('Invalid wallet: walletImplementationId')
 
-    assert.assert(isHaskellShelley(this.walletImplementationId), 'cannot get reward address from a byron-era wallet')
+    assert(isHaskellShelley(this.walletImplementationId), 'cannot get reward address from a byron-era wallet')
     const stakingKey = await this.getStakingKey()
     const credential = await CardanoMobile.StakeCredential.fromKeyhash(await stakingKey.hash())
     const rewardAddr = await CardanoMobile.RewardAddress.new(Number.parseInt(this.getChainNetworkId(), 10), credential)
@@ -1014,7 +1014,7 @@ export class ByronWallet implements YoroiWallet {
 
   private _isUsedAddressIndexSelector = defaultMemoize((perAddressTxs) =>
     _.mapValues(perAddressTxs, (txs) => {
-      assert.assert(!!txs, 'perAddressTxs cointains false-ish value')
+      assert(!!txs, 'perAddressTxs cointains false-ish value')
       return txs.length > 0
     }),
   )
@@ -1139,7 +1139,7 @@ export class ByronWallet implements YoroiWallet {
   }
 
   private async _doFullSync() {
-    assert.assert(this.isInitialized, 'doFullSync: isInitialized')
+    assert(this.isInitialized, 'doFullSync: isInitialized')
 
     if (isJormungandr(this.networkId)) return
     Logger.info('Discovery done, now syncing transactions')

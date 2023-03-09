@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import assert from 'assert'
 import _ from 'lodash'
 import type {Moment} from 'moment'
 import {defaultMemoize} from 'reselect'
 
-import assert from '../../../legacy/assert'
 import {Logger} from '../../../legacy/logging'
 import {NetworkId, WalletImplementationId} from '../../types'
 import {
@@ -59,7 +59,7 @@ export class AddressGenerator {
   }
 
   get byronAccount(): CryptoAccount {
-    assert.assert(isByron(this.walletImplementationId), 'chain::get::byronAccount: not a byron wallet')
+    assert(isByron(this.walletImplementationId), 'chain::get::byronAccount: not a byron wallet')
     return {
       derivation_scheme: 'V2',
       root_cached_key: this.accountPubKeyHex,
@@ -185,7 +185,7 @@ export class AddressChain {
     blockSize: number = DISCOVERY_BLOCK_SIZE,
     gapLimit: number = DISCOVERY_GAP_SIZE,
   ) {
-    assert.assert(blockSize > gapLimit, 'Block size needs to be > gap limit')
+    assert(blockSize > gapLimit, 'Block size needs to be > gap limit')
 
     this._addressGenerator = addressGenerator
     this._blockSize = blockSize
@@ -232,10 +232,7 @@ export class AddressChain {
   }
 
   _extendAddresses(newAddresses: Array<string>) {
-    assert.assert(
-      _.intersection(this._addresses, newAddresses).length === 0,
-      'extendAddresses received an existing address',
-    )
+    assert(_.intersection(this._addresses, newAddresses).length === 0, 'extendAddresses received an existing address')
     this._addresses = [...this._addresses, ...newAddresses]
     this._subscriptions.forEach((handler) => handler(newAddresses))
   }
@@ -257,20 +254,20 @@ export class AddressChain {
   _getLastBlock() {
     this._selfCheck()
     const block = _.takeRight(this.addresses, this._blockSize)
-    assert.assert(block.length === this._blockSize, 'AddressChain::_getLastBlock(): block length')
+    assert(block.length === this._blockSize, 'AddressChain::_getLastBlock(): block length')
     return block
   }
 
   async initialize() {
-    assert.assert(!this._isInitialized, 'AddressChain::initialize(): !isInitialized')
+    assert(!this._isInitialized, 'AddressChain::initialize(): !isInitialized')
     await this._discoverNewBlock()
-    assert.assert(!this._isInitialized, 'AddressChain::initialized(): Concurrent modification')
+    assert(!this._isInitialized, 'AddressChain::initialized(): Concurrent modification')
     this._isInitialized = true
   }
 
   _selfCheck() {
-    assert.assert(this._isInitialized, 'AddressChain::_selfCheck(): isInitialized')
-    assert.assert(this._addresses.length % this._blockSize === 0, 'AddressChain::_selfCheck(): lengths')
+    assert(this._isInitialized, 'AddressChain::_selfCheck(): isInitialized')
+    assert(this._addresses.length % this._blockSize === 0, 'AddressChain::_selfCheck(): lengths')
   }
 
   async sync(filterFn: AsyncAddressFilter) {
@@ -309,7 +306,7 @@ export class AddressChain {
   }
 
   getIndexOfAddress(address: string): number {
-    assert.assert(this.isMyAddress(address), 'getIndexOfAddress:: is not my address')
+    assert(this.isMyAddress(address), 'getIndexOfAddress:: is not my address')
     const idx = this.addressToIdxMap[address]
     return idx
   }

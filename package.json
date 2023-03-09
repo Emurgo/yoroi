@@ -109,6 +109,7 @@
     "@unstoppabledomains/resolution": "6.0.3",
     "@wdio/cli": "^7.16.8",
     "add": "2.0.6",
+    "assert": "^2.0.0",
     "base-x": "3.0.8",
     "bignumber.js": "^9.0.0",
     "bip39": "2.5.0",

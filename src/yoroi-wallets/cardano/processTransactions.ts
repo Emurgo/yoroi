@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
 
-import assert from '../../legacy/assert'
 import {Logger} from '../../legacy/logging'
 import {
   BaseAsset,
@@ -232,7 +232,7 @@ export const processTxHistoryData = (
     amount = brutto.joinSubtractMutable(totalFee)
     fee = remoteFee ?? totalFee
   } else {
-    assert.assert(ownInputs.length === 0, 'This cannot be receiving transaction')
+    assert(ownInputs.length === 0, 'This cannot be receiving transaction')
     direction = TRANSACTION_DIRECTION.RECEIVED
     amount = brutto
     fee = null

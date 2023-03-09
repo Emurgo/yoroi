@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import {CardanoAddressedUtxo} from '@emurgo/yoroi-lib'
+import assert from 'assert'
 import {sortBy} from 'lodash'
 
-import assert from '../../../legacy/assert'
 import {Logger} from '../../../legacy/logging'
 import {StakingStatus} from '../../types'
 import {CardanoMobile, CardanoTypes, normalizeToAddress} from '..'
@@ -69,7 +69,7 @@ export const getDelegationStatus = (
       if (cert.rewardAddress !== rewardAddress) continue
 
       if (cert.kind === 'StakeDelegation') {
-        assert.assert(cert.poolKeyHash != null, 'getDelegationStatus:: StakeDelegation certificate without poolKeyHash')
+        assert(cert.poolKeyHash != null, 'getDelegationStatus:: StakeDelegation certificate without poolKeyHash')
         status = {
           poolKeyHash: cert.poolKeyHash,
           isRegistered: true,
