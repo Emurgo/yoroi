@@ -1,5 +1,4 @@
 import {DefaultAsset, TokenInfo} from '../../types'
-export * from '../../cardano/constants'
 
 export const NETWORK_ID = 1 // mainnet
 export const WALLET_IMPLEMENTATION_ID = 'haskell-shelley'

@@ -10,7 +10,6 @@ import {Keychain} from '../../../auth/Keychain'
 import {encryptWithPassword} from '../../../Catalyst/catalystCipher'
 import LocalizableError from '../../../i18n/LocalizableError'
 import assert from '../../../legacy/assert'
-import {DISABLE_BACKGROUND_SYNC} from '../../../legacy/config'
 import {Logger} from '../../../legacy/logging'
 import {HWDeviceInfo} from '../../hw'
 import {makeMemosManager, MemosManager} from '../../memos'
@@ -49,6 +48,7 @@ import {
 } from '..'
 import * as api from '../api'
 import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from '../chain'
+import {HISTORY_REFRESH_TIME} from '../constants'
 import {CardanoError} from '../errors'
 import {getTime} from '../getTime'
 import {signTxWithLedger} from '../hw'
@@ -72,7 +72,6 @@ import {
   DISCOVERY_BLOCK_SIZE,
   DISCOVERY_GAP_SIZE,
   HARD_DERIVATION_START,
-  HISTORY_REFRESH_TIME,
   IS_MAINNET,
   KEY_DEPOSIT,
   LINEAR_FEE,
@@ -337,7 +336,7 @@ export class ShelleyWalletTestnet implements YoroiWallet {
       } catch (error) {
         Logger.error((error as Error)?.message)
       } finally {
-        if (!DISABLE_BACKGROUND_SYNC && process.env.NODE_ENV !== 'test') {
+        if (process.env.NODE_ENV !== 'test') {
           this.timeout = setTimeout(() => backgroundSync(), HISTORY_REFRESH_TIME)
         }
       }

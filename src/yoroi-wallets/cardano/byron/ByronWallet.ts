@@ -10,7 +10,6 @@ import {Keychain} from '../../../auth/Keychain'
 import {encryptWithPassword} from '../../../Catalyst/catalystCipher'
 import LocalizableError from '../../../i18n/LocalizableError'
 import assert from '../../../legacy/assert'
-import {CONFIG, DISABLE_BACKGROUND_SYNC} from '../../../legacy/config'
 import {Logger} from '../../../legacy/logging'
 import {HWDeviceInfo} from '../../hw'
 import {makeMemosManager, MemosManager} from '../../memos'
@@ -56,6 +55,7 @@ import {
 } from '..'
 import * as api from '../api'
 import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from '../chain'
+import {HISTORY_REFRESH_TIME} from '../constants'
 import {CardanoError, InvalidState} from '../errors'
 import {signTxWithLedger} from '../hw'
 import {
@@ -365,8 +365,8 @@ export class ByronWallet implements YoroiWallet {
       } catch (error) {
         Logger.error((error as Error)?.message)
       } finally {
-        if (!DISABLE_BACKGROUND_SYNC && process.env.NODE_ENV !== 'test') {
-          this.timeout = setTimeout(() => backgroundSync(), CONFIG.HISTORY_REFRESH_TIME)
+        if (process.env.NODE_ENV !== 'test') {
+          this.timeout = setTimeout(() => backgroundSync(), HISTORY_REFRESH_TIME)
         }
       }
     }

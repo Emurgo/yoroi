@@ -1,7 +1,6 @@
 import {mnemonicToEntropy} from 'bip39'
 import blake2b from 'blake2b'
 
-import {CONFIG} from '../../../legacy/config'
 import {Logger} from '../../../legacy/logging'
 import {CardanoMobile, CardanoTypes, CATALYST, generateAdaMnemonic} from '..'
 
@@ -67,13 +66,7 @@ export async function auxiliaryDataWithRegistrationMetadata(request: {
 }
 
 export async function generatePrivateKeyForCatalyst() {
-  let mnemonic
-  if (CONFIG.DEBUG.PREFILL_FORMS) {
-    if (!__DEV__) throw new Error('using debug data in non-dev env')
-    mnemonic = CONFIG.DEBUG.MNEMONIC3
-  } else {
-    mnemonic = generateAdaMnemonic()
-  }
+  const mnemonic = generateAdaMnemonic()
   const bip39entropy = mnemonicToEntropy(mnemonic)
   const EMPTY_PASSWORD = Buffer.from('')
   const rootKey = await CardanoMobile.Bip32PrivateKey.fromBip39Entropy(Buffer.from(bip39entropy, 'hex'), EMPTY_PASSWORD)
