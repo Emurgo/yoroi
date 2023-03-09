@@ -2,9 +2,9 @@
 import {Platform} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
-import {Logger} from '../legacy/logging'
-import {ApiError, ApiHistoryError, NetworkError} from '../yoroi-wallets/cardano/errors'
-import type {BackendConfig} from '../yoroi-wallets/types/other'
+import {Logger} from '../../logging'
+import type {BackendConfig} from '../../types/other'
+import {ApiError, ApiHistoryError, NetworkError} from '../errors'
 type RequestMethod = 'POST' | 'GET'
 
 type ResponseChecker<T> = (rawResponse: Record<string, any>, requestPayload: Record<string, any>) => Promise<T>

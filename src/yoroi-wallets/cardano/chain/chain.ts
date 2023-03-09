@@ -4,7 +4,7 @@ import _ from 'lodash'
 import type {Moment} from 'moment'
 import {defaultMemoize} from 'reselect'
 
-import {Logger} from '../../../legacy/logging'
+import {Logger} from '../../logging'
 import {NetworkId, WalletImplementationId} from '../../types'
 import {
   ADDRESS_TYPE_TO_CHANGE,

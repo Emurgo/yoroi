@@ -2,8 +2,7 @@
 import assert from 'assert'
 import _ from 'lodash'
 
-import fetchDefault, {checkedFetch} from '../../../legacy/fetch'
-import {Logger} from '../../../legacy/logging'
+import {Logger} from '../../logging'
 import type {
   AccountStateRequest,
   AccountStateResponse,
@@ -24,6 +23,7 @@ import {hasProperties, isArray, isNonNullable, isObject, isRecord} from '../../u
 import {ServerStatus} from '..'
 import {ApiError} from '../errors'
 import {convertNft} from '../nfts'
+import fetchDefault, {checkedFetch} from './fetch'
 import {fallbackTokenInfo, tokenInfo, toTokenSubject} from './utils'
 
 type Addresses = Array<string>

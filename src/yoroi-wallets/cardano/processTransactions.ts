@@ -2,7 +2,7 @@
 import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
 
-import {Logger} from '../../legacy/logging'
+import {Logger} from '../logging'
 import {
   BaseAsset,
   CERTIFICATE_KIND,

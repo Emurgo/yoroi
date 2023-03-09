@@ -5,7 +5,7 @@ import {fromPairs, mapValues, max} from 'lodash'
 import DeviceInfo from 'react-native-device-info'
 import {defaultMemoize} from 'reselect'
 
-import {Logger} from '../../../legacy/logging'
+import {Logger} from '../../logging'
 import {YoroiStorage} from '../../storage'
 import type {RemoteCertificateMeta, TxHistoryRequest} from '../../types'
 import {

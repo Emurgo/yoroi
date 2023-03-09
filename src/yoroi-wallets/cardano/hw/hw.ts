@@ -14,7 +14,6 @@ import {BleError} from 'react-native-ble-plx'
 
 import {ledgerMessages} from '../../../i18n/global-messages'
 import LocalizableError from '../../../i18n/LocalizableError'
-import {Logger} from '../../../legacy/logging'
 import {
   DeviceId,
   DeviceObj,
@@ -24,6 +23,7 @@ import {
   LedgerUserError,
   RejectedByUserError,
 } from '../../hw'
+import {Logger} from '../../logging'
 import {WalletImplementationId} from '../../types'
 import {NUMBERS} from '../numbers'
 import {isByron, isHaskellShelley} from '../utils'
