@@ -169,22 +169,20 @@ function SkeletonImagePlaceholder({text}: {text?: string}) {
     )
 
   return (
-    <View>
-      <SkeletonPlaceholder>
-        <View>
-          <View style={{width: IMAGE_SIZE, height: IMAGE_SIZE, borderRadius: 8}} />
+    <SkeletonPlaceholder>
+      <View>
+        <View style={{width: IMAGE_SIZE, height: IMAGE_SIZE, borderRadius: 8}} />
 
-          <View
-            style={{
-              marginTop: IMAGE_PADDING,
-              width: (IMAGE_SIZE * 3) / 4,
-              height: TEXT_SIZE,
-              borderRadius: 8,
-            }}
-          />
-        </View>
-      </SkeletonPlaceholder>
-    </View>
+        <View
+          style={{
+            marginTop: IMAGE_PADDING,
+            width: (IMAGE_SIZE * 3) / 4,
+            height: TEXT_SIZE,
+            borderRadius: 8,
+          }}
+        />
+      </View>
+    </SkeletonPlaceholder>
   )
 }
 
