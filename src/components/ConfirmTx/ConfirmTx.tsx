@@ -5,13 +5,13 @@ import React, {useEffect, useState} from 'react'
 import {useIntl} from 'react-intl'
 import {Platform, StyleSheet, View} from 'react-native'
 
-import {useSubmitTx} from '../../hooks'
 import {confirmationMessages, errorMessages, txLabels} from '../../i18n/global-messages'
 import LocalizableError from '../../i18n/LocalizableError'
 import {CONFIG} from '../../legacy/config'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {isEmptyString} from '../../utils/utils'
+import {useSubmitTx} from '../../yoroi-wallets'
 import {
   CardanoTypes,
   DeviceId,

@@ -4,10 +4,10 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {CopyButton, Icon, Spacer, Text} from '../components'
-import {useReceiveAddresses} from '../hooks'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
 import {isEmptyString} from '../utils/utils'
+import {useReceiveAddresses} from '../yoroi-wallets'
 import {Address as AddressType} from '../yoroi-wallets/types'
 import AddressModal from './AddressModal'
 

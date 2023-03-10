@@ -6,7 +6,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {ProgressStep, Spacer, TextInput} from '../components'
 import {ConfirmTx} from '../components/ConfirmTx'
-import {useVotingRegTx} from '../hooks'
+import {useVotingRegTx} from '../yoroi-wallets'
 import {Instructions as HWInstructions} from '../HW'
 import {errorMessages, txLabels} from '../i18n/global-messages'
 import LocalizableError from '../i18n/LocalizableError'

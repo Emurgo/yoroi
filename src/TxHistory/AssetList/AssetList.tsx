@@ -6,7 +6,7 @@ import {Alert, Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {AssetItem, AssetItemProps} from '../../components/AssetItem'
 import {Spacer} from '../../components/Spacer'
-import {useBalances, useTokenInfos} from '../../hooks'
+import {useBalances, useTokenInfos} from '../../yoroi-wallets'
 import globalMessages, {actionMessages} from '../../i18n/global-messages'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {sortTokenInfos} from '../../utils'

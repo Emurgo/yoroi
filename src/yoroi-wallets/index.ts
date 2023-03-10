@@ -1,6 +1,7 @@
 export * from './auth'
 export * from './cardano'
 export * from './encryption/encryption'
+export * from './hooks'
 export * from './hw'
 export * from './migrations'
 export * from './storage'

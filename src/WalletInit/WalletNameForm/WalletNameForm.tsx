@@ -4,10 +4,10 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, Image, ImageSourcePropType, StyleSheet, View, ViewStyle} from 'react-native'
 
 import {Button, ProgressStep, TextInput} from '../../components'
-import {useWalletNames} from '../../hooks'
 import globalMessages from '../../i18n/global-messages'
 import {spacing} from '../../theme'
 import {useWalletManager} from '../../WalletManager'
+import {useWalletNames} from '../../yoroi-wallets'
 import {getWalletNameError, validateWalletName} from '../../yoroi-wallets/utils/validators'
 
 type Props = {

@@ -5,9 +5,9 @@ import {InteractionManager} from 'react-native'
 
 import image from '../../assets/img/ledger_2.png'
 import {showErrorDialog} from '../../dialogs'
-import {useCreateBip44Wallet} from '../../hooks'
 import {errorMessages} from '../../i18n/global-messages'
 import {useWalletNavigation, WalletInitRoutes} from '../../navigation'
+import {useCreateBip44Wallet} from '../../yoroi-wallets'
 import {NetworkError} from '../../yoroi-wallets/cardano/errors'
 import {WalletNameForm} from '../WalletNameForm'
 

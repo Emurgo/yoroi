@@ -6,8 +6,7 @@ import DeviceInfo from 'react-native-device-info'
 import {defaultMemoize} from 'reselect'
 
 import {Logger} from '../../logging'
-import {YoroiStorage} from '../../storage'
-import type {RemoteCertificateMeta, TxHistoryRequest} from '../../types'
+import {YoroiStorage} from '../../storage/storage'
 import {
   BackendConfig,
   CERTIFICATE_KIND,
@@ -15,10 +14,12 @@ import {
   Transaction,
   TRANSACTION_STATUS,
   Transactions,
+  TxHistoryRequest,
 } from '../../types/other'
+import {RemoteCertificateMeta} from '../../types/staking'
 import {isArray, parseSafe} from '../../utils/parsing'
 import {Version, versionCompare} from '../../utils/versioning'
-import * as yoroiApi from '../api'
+import {fetchNewTxHistory, getTipStatus} from '../api/api'
 import {ApiHistoryError} from '../errors'
 
 export type TransactionManagerState = {
@@ -110,7 +111,7 @@ export class TransactionManager {
       addressesByChunks,
       backendConfig,
       transactions: this.#state.transactions,
-      api: yoroiApi,
+      api: {getTipStatus, fetchNewTxHistory},
     })
 
     if (txUpdate) {
@@ -134,7 +135,7 @@ export async function syncTxs({
   addressesByChunks: Array<Array<string>>
   backendConfig: BackendConfig
   transactions: Record<string, Transaction>
-  api: Pick<typeof yoroiApi, 'getTipStatus' | 'fetchNewTxHistory'>
+  api: {getTipStatus: typeof getTipStatus; fetchNewTxHistory: typeof fetchNewTxHistory}
 }>): Promise<Record<string, Transaction> | undefined> {
   const {bestBlock} = await api.getTipStatus(backendConfig)
   if (!bestBlock.hash) return

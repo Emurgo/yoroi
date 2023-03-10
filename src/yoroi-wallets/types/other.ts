@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {BigNumber} from 'bignumber.js'
 
-import {CardanoTypes, MultiToken, TokenEntryPlain} from '..'
+import {CardanoTypes} from '../cardano'
+import {MultiToken, TokenEntryPlain} from '../cardano/MultiToken'
 import {WALLET_CONFIG as HASKELL_SHELLEY, WALLET_CONFIG_24 as HASKELL_SHELLEY_24} from '../cardano/shelley/constants'
-import {RemoteAccountState, RemoteCertificateMeta, Token} from '.'
+import {RemoteAccountState, RemoteCertificateMeta} from './staking'
+import {Token} from './tokens'
 
 export type AddressObj = {
   readonly address: string

@@ -7,11 +7,11 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Button, StatusBar, Text, TextInput} from '../../components'
 import {LoadingOverlay} from '../../components/LoadingOverlay'
 import {showErrorDialog} from '../../dialogs'
-import {useEnableEasyConfirmation} from '../../hooks'
 import {errorMessages} from '../../i18n/global-messages'
 import {useSelectedWallet, useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {isEmptyString} from '../../utils/utils'
+import {useEnableEasyConfirmation} from '../../yoroi-wallets'
 import {WrongPassword} from '../../yoroi-wallets/cardano/errors'
 
 export const EnableEasyConfirmationScreen = () => {

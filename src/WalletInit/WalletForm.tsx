@@ -3,12 +3,12 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, TextInput as RNTextInput, View} from 'react-native'
 
 import {Button, Checkmark, Spacer, TextInput} from '../components'
-import {useWalletNames} from '../hooks'
 import globalMessages from '../i18n/global-messages'
 import {CONFIG} from '../legacy/config'
 import {COLORS} from '../theme'
 import {isEmptyString} from '../utils/utils'
 import {useWalletManager} from '../WalletManager'
+import {useWalletNames} from '../yoroi-wallets'
 import {
   getWalletNameError,
   REQUIRED_PASSWORD_LENGTH,

@@ -3,10 +3,10 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {Boundary, ResetErrorRef, Spacer} from '../components'
 import {Icon} from '../components/Icon'
-import {useBalances} from '../hooks'
 import {formatTokenWithText, formatTokenWithTextWhenHidden} from '../legacy/format'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
+import {useBalances} from '../yoroi-wallets'
 import {Amounts} from '../yoroi-wallets/utils'
 import {PairedBalance} from './PairedBalance'
 

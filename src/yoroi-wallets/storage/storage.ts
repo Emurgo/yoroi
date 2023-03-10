@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-import {parseSafe} from '../utils'
+import {parseSafe} from '../utils/parsing'
 
 export type YoroiStorage = ReturnType<typeof mountStorage>
 export type FolderName = `${string}/`

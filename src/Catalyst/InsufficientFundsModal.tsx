@@ -3,7 +3,7 @@ import {useIntl} from 'react-intl'
 import {Text, View} from 'react-native'
 
 import {StandardModal} from '../components'
-import {useBalances} from '../hooks'
+import {useBalances} from '../yoroi-wallets'
 import globalMessages, {confirmationMessages} from '../i18n/global-messages'
 import {formatTokenWithText} from '../legacy/format'
 import {useSelectedWallet} from '../SelectedWallet'

@@ -5,12 +5,12 @@ import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, TextInput} from '../../components'
-import {useChangeWalletName, useWalletName, useWalletNames} from '../../hooks'
 import globalMessages from '../../i18n/global-messages'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {isEmptyString} from '../../utils/utils'
 import {useWalletManager} from '../../WalletManager'
+import {useChangeWalletName, useWalletName, useWalletNames} from '../../yoroi-wallets'
 import {getWalletNameError, validateWalletName} from '../../yoroi-wallets/utils/validators'
 
 export const ChangeWalletName = () => {

@@ -14,13 +14,13 @@ import {
   UseQueryOptions,
 } from 'react-query'
 
-import {isNightly} from '../legacy/config'
-import {useWalletManager} from '../WalletManager'
-import {calcLockedDeposit, toToken, WalletEvent, YoroiWallet} from '../yoroi-wallets/cardano'
-import {generateShelleyPlateFromKey} from '../yoroi-wallets/cardano/shelley/plate'
-import {HWDeviceInfo} from '../yoroi-wallets/hw'
-import {parseWalletMeta} from '../yoroi-wallets/migrations/walletMeta'
-import {useStorage} from '../yoroi-wallets/storage'
+import {isNightly} from '../../legacy/config'
+import {useWalletManager} from '../../WalletManager'
+import {calcLockedDeposit, toToken, WalletEvent, YoroiWallet} from '../cardano'
+import {generateShelleyPlateFromKey} from '../cardano/shelley/plate'
+import {HWDeviceInfo} from '../hw'
+import {parseWalletMeta} from '../migrations/walletMeta'
+import {useStorage} from '../storage'
 import {
   Quantity,
   TokenInfo,
@@ -31,17 +31,11 @@ import {
   YoroiNftModerationStatus,
   YoroiSignedTx,
   YoroiUnsignedTx,
-} from '../yoroi-wallets/types'
-import {
-  CurrencySymbol,
-  NetworkId,
-  TipStatusResponse,
-  TxSubmissionStatus,
-  WalletImplementationId,
-} from '../yoroi-wallets/types/other'
-import {Amounts, Utxos} from '../yoroi-wallets/utils'
-import {parseBoolean} from '../yoroi-wallets/utils/parsing'
-import {WalletManager, WalletMeta} from '../yoroi-wallets/walletManager'
+} from '../types'
+import {CurrencySymbol, NetworkId, TipStatusResponse, TxSubmissionStatus, WalletImplementationId} from '../types/other'
+import {Amounts, Utxos} from '../utils'
+import {parseBoolean} from '../utils/parsing'
+import {WalletManager, WalletMeta} from '../walletManager'
 
 const crashReportsStorageKey = 'sendCrashReports'
 
@@ -741,7 +735,7 @@ export const useSubmitTx = (
 
 const txQueueRetryDelay = process.env.NODE_ENV === 'test' ? 1 : 1000
 const txQueueRetryTimes = 5
-export const fetchTxStatus = async (
+const fetchTxStatus = async (
   wallet: YoroiWallet,
   txHash: string,
   waitProcessing = false,

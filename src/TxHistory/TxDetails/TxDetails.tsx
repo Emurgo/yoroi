@@ -8,7 +8,7 @@ import {LayoutAnimation, Linking, StyleSheet, TouchableOpacity, View, ViewProps}
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {Banner, Boundary, Button, CopyButton, FadeIn, Icon, StatusBar, Text} from '../../components'
-import {useTipStatus, useTransactionInfos} from '../../hooks'
+import {useTipStatus, useTransactionInfos} from '../../yoroi-wallets'
 import globalMessages from '../../i18n/global-messages'
 import {formatDateToSeconds, formatTokenWithSymbol} from '../../legacy/format'
 import AddressModal from '../../Receive/AddressModal'

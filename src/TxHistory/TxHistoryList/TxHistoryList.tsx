@@ -6,7 +6,7 @@ import {Alert, Platform, SectionList, SectionListProps, StyleSheet, View} from '
 
 import {Spacer, Text} from '../../components'
 import features from '../../features'
-import {useTransactionInfos} from '../../hooks'
+import {useTransactionInfos} from '../../yoroi-wallets'
 import {actionMessages} from '../../i18n/global-messages'
 import {formatDateRelative} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'

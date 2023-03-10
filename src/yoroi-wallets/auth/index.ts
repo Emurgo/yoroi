@@ -4,7 +4,7 @@ import {Alert, AppState, Platform} from 'react-native'
 import RNKeychain from 'react-native-keychain'
 import {useMutation, UseMutationOptions, useQuery, useQueryClient, UseQueryOptions} from 'react-query'
 
-import {useMutationWithInvalidations} from '../../hooks'
+import {useMutationWithInvalidations} from '../hooks'
 import globalMessages from '../../i18n/global-messages'
 import {useWalletManager} from '../../WalletManager'
 import {YoroiWallet} from '../cardano'
