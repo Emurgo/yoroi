@@ -1,18 +1,9 @@
 import {BackendConfig, RawTransaction, TipStatusResponse, Transaction} from '../../types'
 
 export const mockedBackendConfig: BackendConfig = {
-  get API_ROOT() {
-    throw new Error('dont use this in tests')
-    return ''
-  },
-  get TOKEN_INFO_SERVICE() {
-    throw new Error('dont use this in tests')
-    return ''
-  },
-  get NFT_STORAGE_URL() {
-    throw new Error('dont use this in tests')
-    return ''
-  },
+  API_ROOT: 'https://fakeapiroot.com',
+  TOKEN_INFO_SERVICE: 'https://faketokeninfoservice.com',
+  NFT_STORAGE_URL: 'https://fakenftstorageurl.com',
   FETCH_UTXOS_MAX_ADDRESSES: 2,
   TX_HISTORY_MAX_ADDRESSES: 2,
   FILTER_USED_MAX_ADDRESSES: 2,
