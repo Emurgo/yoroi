@@ -49,7 +49,7 @@ interface ModeratedImageProps {
 
 const UnModeratedImage = ({onPress, nft: {image, name}}: ModeratedImageProps) => {
   return (
-    <TouchableOpacity onPress={onPress} style={styles.imageContainer}>
+    <TouchableOpacity onPress={onPress}>
       <ApprovedNft text={name} uri={image} />
     </TouchableOpacity>
   )
@@ -71,7 +71,7 @@ const ModeratedImage = ({onPress, nft}: ModeratedImageProps) => {
 
   if (showSkeleton) {
     return (
-      <TouchableOpacity onPress={onPress} style={styles.imageContainer}>
+      <TouchableOpacity onPress={onPress}>
         <SkeletonImagePlaceholder text={text} />
       </TouchableOpacity>
     )
@@ -79,14 +79,14 @@ const ModeratedImage = ({onPress, nft}: ModeratedImageProps) => {
 
   if (isError) {
     return (
-      <TouchableOpacity onPress={onPress} style={styles.imageContainer}>
+      <TouchableOpacity onPress={onPress}>
         <BlockedNft text={text} />
       </TouchableOpacity>
     )
   }
 
   return (
-    <TouchableOpacity onPress={onPress} style={styles.imageContainer}>
+    <TouchableOpacity onPress={onPress}>
       {isImageApproved ? (
         <ApprovedNft text={text} uri={thumbnail} />
       ) : isImageWithConsent ? (
@@ -157,7 +157,7 @@ function ApprovedNft({uri, text}: {text: string; uri: string}) {
 function SkeletonImagePlaceholder({text}: {text?: string}) {
   if (typeof text !== 'undefined')
     return (
-      <View style={styles.imageContainer}>
+      <View>
         <SkeletonPlaceholder>
           <View style={{width: IMAGE_SIZE, height: IMAGE_SIZE, borderRadius: 8}} />
         </SkeletonPlaceholder>
@@ -169,7 +169,7 @@ function SkeletonImagePlaceholder({text}: {text?: string}) {
     )
 
   return (
-    <View style={styles.imageContainer}>
+    <View>
       <SkeletonPlaceholder>
         <View>
           <View style={{width: IMAGE_SIZE, height: IMAGE_SIZE, borderRadius: 8}} />
@@ -203,9 +203,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  imageContainer: {},
   image: {
     borderRadius: 8,
+    overlayColor: '#FFFFFF',
   },
   text: {
     fontSize: 14,
@@ -237,6 +237,7 @@ function GalleryList<T>({renderItem, ...rest}: FlashListProps<T> & {renderItem: 
           <Spacer height={ROW_SPACING} />
         </View>
       )}
+      contentContainerStyle={{paddingHorizontal: CONTAINER_HORIZONTAL_PADDING}}
       keyExtractor={(placeholder, index) => index + ''}
       horizontal={false}
       estimatedItemSize={IMAGE_SIZE + IMAGE_PADDING + TEXT_SIZE + ROW_SPACING}
