@@ -19,7 +19,7 @@ import {
 import {RemoteCertificateMeta} from '../../types/staking'
 import {isArray, parseSafe} from '../../utils/parsing'
 import {Version, versionCompare} from '../../utils/versioning'
-import {fetchNewTxHistory, getTipStatus} from '../api/api'
+import * as yoroiApi from '../api'
 import {ApiHistoryError} from '../errors'
 
 export type TransactionManagerState = {
@@ -111,7 +111,7 @@ export class TransactionManager {
       addressesByChunks,
       backendConfig,
       transactions: this.#state.transactions,
-      api: {getTipStatus, fetchNewTxHistory},
+      api: yoroiApi,
     })
 
     if (txUpdate) {
@@ -135,7 +135,7 @@ export async function syncTxs({
   addressesByChunks: Array<Array<string>>
   backendConfig: BackendConfig
   transactions: Record<string, Transaction>
-  api: {getTipStatus: typeof getTipStatus; fetchNewTxHistory: typeof fetchNewTxHistory}
+  api: Pick<typeof yoroiApi, 'getTipStatus' | 'fetchNewTxHistory'>
 }>): Promise<Record<string, Transaction> | undefined> {
   const {bestBlock} = await api.getTipStatus(backendConfig)
   if (!bestBlock.hash) return
