@@ -3,11 +3,10 @@ import {useIntl} from 'react-intl'
 import {Text, View} from 'react-native'
 
 import {StandardModal} from '../components'
-import {useBalances} from '../yoroi-wallets'
 import globalMessages, {confirmationMessages} from '../i18n/global-messages'
 import {formatTokenWithText} from '../legacy/format'
 import {useSelectedWallet} from '../SelectedWallet'
-import {CATALYST} from '../yoroi-wallets'
+import {CATALYST, useBalances} from '../yoroi-wallets'
 import {Amounts, asQuantity} from '../yoroi-wallets/utils'
 
 export const InsufficientFundsModal = ({visible, onRequestClose}: {visible: boolean; onRequestClose: () => void}) => {
