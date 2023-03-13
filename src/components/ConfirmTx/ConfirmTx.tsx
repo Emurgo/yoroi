@@ -11,13 +11,13 @@ import LocalizableError from '../../i18n/LocalizableError'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {isEmptyString} from '../../utils/utils'
-import {useSubmitTx} from '../../yoroi-wallets'
 import {
   CardanoTypes,
   DeviceId,
   DeviceObj,
   HARDWARE_WALLETS,
   useAuthOsWithEasyConfirmation,
+  useSubmitTx,
   walletManager,
   withBLE,
   withUSB,

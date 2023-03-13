@@ -3,8 +3,7 @@ import {Image, StyleSheet, View} from 'react-native'
 
 import {features} from '../../features'
 import {COLORS} from '../../theme'
-import {useIsTokenKnownNft, useNft, useNftImageModerated, useTokenInfo} from '../../yoroi-wallets'
-import {YoroiWallet} from '../../yoroi-wallets'
+import {useIsTokenKnownNft, useNft, useNftImageModerated, useTokenInfo, YoroiWallet} from '../../yoroi-wallets'
 import {Icon} from '../Icon'
 import {ModeratedNftIcon} from './ModeratedNftIcon'
 

@@ -3,6 +3,7 @@ import * as Sentry from '@sentry/react-native'
 
 import {CONFIG} from './legacy/config'
 import {Logger} from './legacy/logging'
+
 let _enabled = false
 
 const addLog = (message: string, level: Sentry.Severity = Sentry.Severity.Error) => {

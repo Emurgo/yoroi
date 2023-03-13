@@ -1,6 +1,3 @@
-// Testing purposes forcing prod view
-const __DEV__ = false
-
 export const features = {
   walletHero: {
     fiat: __DEV__ || false,
@@ -20,7 +17,6 @@ export const features = {
 }
 
 export const debugWalletInfo = {
-  // WARNING: NEVER change these flags
   WALLET_NAME: features.useTestnet ? 'Auto Testnet' : 'Auto Nightly',
   PASSWORD: '1234567890',
   MNEMONIC1: ['dry balcony arctic what garbage sort', 'cart shine egg lamp manual bottom', 'slide assault bus'].join(

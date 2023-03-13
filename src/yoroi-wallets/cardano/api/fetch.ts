@@ -5,6 +5,7 @@ import DeviceInfo from 'react-native-device-info'
 import {Logger} from '../../logging'
 import type {BackendConfig} from '../../types/other'
 import {ApiError, ApiHistoryError, NetworkError} from '../errors'
+
 type RequestMethod = 'POST' | 'GET'
 
 type ResponseChecker<T> = (rawResponse: Record<string, any>, requestPayload: Record<string, any>) => Promise<T>

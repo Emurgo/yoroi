@@ -4,6 +4,7 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {Icon} from '../../components'
 import {brand, COLORS} from '../../theme'
 import {isByron, isHaskellShelley, isJormun, WalletMeta} from '../../yoroi-wallets'
+
 type Props = {
   wallet: WalletMeta
   onPress: (walletMeta: WalletMeta) => void

@@ -2,8 +2,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import {HWDeviceInfo} from '../../hw'
-import {EncryptedStorage, EncryptedStorageKeys} from '../../storage'
-import {storage} from '../../storage'
+import {EncryptedStorage, EncryptedStorageKeys, storage} from '../../storage'
 import {WalletMeta} from '../../walletManager'
 import {ShelleyAddressGeneratorJSON} from '../chain'
 import {YoroiWallet} from '../types'
