@@ -194,7 +194,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   galleryContainer: {
-    paddingHorizontal: 16,
     flex: 1,
     flexGrow: 1,
   },
