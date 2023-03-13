@@ -1,4 +1,3 @@
-// @flow
 /* eslint-disable no-undef */
 import {readTextValue, setupWallet} from './utils'
 
