@@ -1,4 +1,4 @@
-import {MODERATING_NFTS_ENABLED} from '../../legacy/config'
+import {features} from '../../features'
 import {getAssetFingerprint} from '../../legacy/format'
 import {NftMetadata, YoroiNft} from '../types'
 import {isArray} from '../utils'
@@ -22,8 +22,8 @@ export const convertNft = (
     fingerprint,
     name: metadata.name,
     description: description ?? '',
-    thumbnail: MODERATING_NFTS_ENABLED ? `${storageUrl}/p_${fingerprint}.jpeg` : convertedImage,
-    image: MODERATING_NFTS_ENABLED ? `${storageUrl}/${fingerprint}.jpeg` : convertedImage,
+    thumbnail: features.moderatingNftsEnabled ? `${storageUrl}/p_${fingerprint}.jpeg` : convertedImage,
+    image: features.moderatingNftsEnabled ? `${storageUrl}/${fingerprint}.jpeg` : convertedImage,
     metadata: {
       policyId,
       assetNameHex,

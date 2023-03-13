@@ -6,9 +6,9 @@ import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {Text, ValidatedTextInput} from '../../components'
 import {ConfirmTx} from '../../components/ConfirmTx'
 import {useStakePoolInfoAndHistory} from '../../Dashboard/StakePoolInfo'
+import {debugWalletInfo, features} from '../../features'
 import {Instructions as HWInstructions} from '../../HW'
 import globalMessages, {txLabels} from '../../i18n/global-messages'
-import {CONFIG} from '../../legacy/config'
 import {formatTokenAmount, formatTokenWithText} from '../../legacy/format'
 import {useParams, useWalletNavigation} from '../../navigation'
 import {StakingCenterRoutes} from '../../navigation'
@@ -45,7 +45,7 @@ export const DelegationConfirmation = () => {
   const [useUSB, setUseUSB] = useState(false)
 
   useEffect(() => {
-    if (CONFIG.DEBUG.PREFILL_FORMS && __DEV__) setPassword(CONFIG.DEBUG.PASSWORD)
+    if (features.prefillWalletInfo && __DEV__) setPassword(debugWalletInfo.PASSWORD)
   }, [])
 
   const onSuccess = () => {

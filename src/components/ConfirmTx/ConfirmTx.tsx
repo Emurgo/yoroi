@@ -5,9 +5,9 @@ import React, {useEffect, useState} from 'react'
 import {useIntl} from 'react-intl'
 import {Platform, StyleSheet, View} from 'react-native'
 
+import {debugWalletInfo, features} from '../../features'
 import {confirmationMessages, errorMessages, txLabels} from '../../i18n/global-messages'
 import LocalizableError from '../../i18n/LocalizableError'
-import {CONFIG} from '../../legacy/config'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {isEmptyString} from '../../utils/utils'
@@ -76,7 +76,7 @@ export const ConfirmTx = ({
   })
   useEffect(() => {
     if (!isProvidingPassword && __DEV__) {
-      setPassword(CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '')
+      setPassword(features.prefillWalletInfo ? debugWalletInfo.PASSWORD : '')
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

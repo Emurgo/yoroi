@@ -1,7 +1,7 @@
 import React from 'react'
 import {Image, StyleSheet, View} from 'react-native'
 
-import {MODERATING_NFTS_ENABLED, SHOW_NFT_GALLERY} from '../../legacy/config'
+import {features} from '../../features'
 import {COLORS} from '../../theme'
 import {useIsTokenKnownNft, useNft, useNftImageModerated, useTokenInfo} from '../../yoroi-wallets'
 import {YoroiWallet} from '../../yoroi-wallets'
@@ -18,8 +18,8 @@ export const TokenIcon = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: stri
     return <Image source={{uri: `data:image/png;base64,${tokenInfo.logo}`}} style={styles.icon} />
   }
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-  if (isTokenNft && SHOW_NFT_GALLERY) {
-    return MODERATING_NFTS_ENABLED ? (
+  if (isTokenNft && features.showNftGallery) {
+    return features.moderatingNftsEnabled ? (
       <ModeratedIcon wallet={wallet} tokenId={tokenInfo.id} />
     ) : (
       <UnModeratedNftIcon wallet={wallet} tokenId={tokenInfo.id} />

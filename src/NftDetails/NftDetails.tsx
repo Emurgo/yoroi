@@ -6,7 +6,7 @@ import {ScrollView} from 'react-native-gesture-handler'
 
 import {CopyButton, FadeIn, Icon, Link, Spacer, Text} from '../components'
 import {Tab, TabPanel, TabPanels, Tabs} from '../components/Tabs'
-import {MODERATING_NFTS_ENABLED} from '../legacy/config'
+import {features} from '../features'
 import {NftRoutes} from '../navigation'
 import {useModeratedNftImage} from '../Nfts/hooks'
 import {useNavigateTo} from '../Nfts/navigation'
@@ -27,7 +27,7 @@ export const NftDetails = () => {
   return (
     <FadeIn style={styles.container}>
       <ScrollView contentContainerStyle={styles.contentContainer}>
-        {MODERATING_NFTS_ENABLED ? <ModeratedNftImage nft={nft} /> : <UnModeratedNftImage nft={nft} />}
+        {features.moderatingNftsEnabled ? <ModeratedNftImage nft={nft} /> : <UnModeratedNftImage nft={nft} />}
 
         <Tabs>
           <Tab

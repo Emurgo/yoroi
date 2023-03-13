@@ -4,7 +4,7 @@ import {useIntl} from 'react-intl'
 import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {Icon, Spacer} from '../components'
-import features from '../features'
+import {features} from '../features'
 import {actionMessages} from '../i18n/global-messages'
 import {TxHistoryRouteNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'

@@ -3,8 +3,8 @@ import {useIntl} from 'react-intl'
 import {ActivityIndicator, View} from 'react-native'
 
 import {TextInput, TwoActionView} from '../../../components'
+import {debugWalletInfo, features} from '../../../features'
 import {confirmationMessages, txLabels} from '../../../i18n/global-messages'
-import {CONFIG} from '../../../legacy/config'
 import {useSignWithPasswordAndSubmitTx} from '../../../yoroi-wallets'
 import {YoroiWallet} from '../../../yoroi-wallets'
 import {YoroiUnsignedTx} from '../../../yoroi-wallets/types'
@@ -19,7 +19,7 @@ type Props = {
 
 export const ConfirmTxWithPassword = ({wallet, onSuccess, onCancel, unsignedTx}: Props) => {
   const strings = useStrings()
-  const [password, setPassword] = React.useState(CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '')
+  const [password, setPassword] = React.useState(features.prefillWalletInfo ? debugWalletInfo.PASSWORD : '')
 
   const {signAndSubmitTx, isLoading} = useSignWithPasswordAndSubmitTx(
     {wallet}, //
