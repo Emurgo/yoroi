@@ -5,12 +5,11 @@ import type {IntlShape} from 'react-intl'
 import {Alert} from 'react-native'
 
 import globalMessages, {errorMessages} from './i18n/global-messages'
-import assert from './legacy/assert'
 
 type DialogOptions = {
   title: string
   message: string
-  yesButton?: string
+  yesButton: string
   noButton?: string
 }
 export const DIALOG_BUTTONS = {
@@ -23,7 +22,6 @@ const showDialog = (translations: DialogOptions): Promise<DialogButton> =>
   new Promise((resolve) => {
     const {title, message, yesButton, noButton} = translations
     const buttons: Array<any> = []
-    assert.assert(yesButton, 'Yes button should be provided')
 
     if (noButton != null) {
       buttons.push({

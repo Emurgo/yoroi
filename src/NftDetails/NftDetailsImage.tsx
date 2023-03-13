@@ -4,9 +4,9 @@ import {Dimensions, Image, StyleSheet, View} from 'react-native'
 import ViewTransformer from 'react-native-easy-view-transformer'
 
 import {FadeIn} from '../components'
-import {useNft} from '../hooks'
 import {NftRoutes} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
+import {useNft} from '../yoroi-wallets'
 
 export const NftDetailsImage = () => {
   const {id} = useRoute<RouteProp<NftRoutes, 'nft-details'>>().params

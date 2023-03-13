@@ -1,7 +1,7 @@
-import {CONFIG} from '../../legacy/config'
 import {MultiToken} from '..'
 import {RawTransaction, TRANSACTION_DIRECTION} from '../types/other'
 import {processTxHistoryData} from './processTransactions'
+import {NETWORK_ID, PRIMARY_TOKEN} from './shelley-testnet/constants'
 import {toCachedTx} from './transactionManager'
 
 //
@@ -22,8 +22,6 @@ import {toCachedTx} from './transactionManager'
 //   10,
 //   2,
 // )
-
-const NETWORK_ID = CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID
 
 const myAddresses = [
   // internals
@@ -279,6 +277,7 @@ describe('processTxHistoryData', () => {
       100, // confirmations
       NETWORK_ID,
       'fake memo',
+      PRIMARY_TOKEN,
     )
 
     const delta = MultiToken.fromArray(tx.delta)
@@ -295,6 +294,7 @@ describe('processTxHistoryData', () => {
       100, // confirmations
       NETWORK_ID,
       'fake memo',
+      PRIMARY_TOKEN,
     )
 
     const delta = MultiToken.fromArray(tx.delta)
@@ -311,6 +311,7 @@ describe('processTxHistoryData', () => {
       100, // confirmations
       NETWORK_ID,
       'fake memo',
+      PRIMARY_TOKEN,
     )
 
     const delta = MultiToken.fromArray(tx.delta)
@@ -332,6 +333,7 @@ describe('processTxHistoryData', () => {
       100, // confirmations
       NETWORK_ID,
       'fake memo',
+      PRIMARY_TOKEN,
     )
 
     const delta = MultiToken.fromArray(tx.delta)

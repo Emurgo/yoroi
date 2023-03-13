@@ -1,6 +1,6 @@
-import {AUTH_WITH_OS, AUTH_WITH_PIN, disableAllEasyConfirmation, getAuthSetting} from '../../auth'
-import {YoroiStorage} from '../../yoroi-wallets/storage'
-import {parseBoolean} from '../../yoroi-wallets/utils/parsing'
+import {AUTH_WITH_OS, AUTH_WITH_PIN, disableAllEasyConfirmation, getAuthSetting} from '../auth'
+import {YoroiStorage} from '../storage'
+import {parseBoolean} from '../utils/parsing'
 
 export const migrateAuthSetting = async (storage: YoroiStorage) => {
   const authSetting = await getAuthSetting(storage)

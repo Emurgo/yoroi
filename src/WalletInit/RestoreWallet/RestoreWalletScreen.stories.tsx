@@ -2,7 +2,7 @@ import {NavigationRouteContext} from '@react-navigation/native'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {CONFIG} from '../../legacy/config'
+import {NETWORK_ID, WALLET_IMPLEMENTATION_ID} from '../../yoroi-wallets/cardano/shelley-testnet/constants'
 import {RestoreWalletScreen} from './RestoreWalletScreen'
 
 storiesOf('RestoreWalletScreen', module).add('Default', () => {
@@ -10,8 +10,8 @@ storiesOf('RestoreWalletScreen', module).add('Default', () => {
     key: 'key',
     name: 'name',
     params: {
-      networkId: CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
-      walletImplementationId: CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
+      networkId: NETWORK_ID,
+      walletImplementationId: WALLET_IMPLEMENTATION_ID,
     },
   }
 

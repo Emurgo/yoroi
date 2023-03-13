@@ -3,6 +3,7 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
 import {CONFIG} from '../../legacy/config'
+import {NETWORK_ID, WALLET_IMPLEMENTATION_ID} from '../../yoroi-wallets/cardano/shelley-testnet/constants'
 import {MnemonicShowScreen} from './MnemonicShowScreen'
 
 storiesOf('MnemonicShowScreen', module).add('Default', () => {
@@ -13,8 +14,8 @@ storiesOf('MnemonicShowScreen', module).add('Default', () => {
       mnemonic: CONFIG.DEBUG.MNEMONIC1,
       name: CONFIG.DEBUG.WALLET_NAME,
       password: CONFIG.DEBUG.PASSWORD,
-      networkId: CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
-      walletImplementationId: CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
+      networkId: NETWORK_ID,
+      walletImplementationId: WALLET_IMPLEMENTATION_ID,
     },
   }
   return (

@@ -1,7 +1,7 @@
 import {storiesOf} from '@storybook/react-native'
 import * as React from 'react'
 
-import {QueryProvider} from '../../../.storybook'
+import {QueryProvider} from '../../../.storybook/decorators'
 import {Boundary} from '../../components'
 import {SelectedWalletProvider} from '../../SelectedWallet'
 import {YoroiWallet} from '../../yoroi-wallets'

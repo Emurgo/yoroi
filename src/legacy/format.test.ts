@@ -1,8 +1,8 @@
 import {asQuantity} from '../yoroi-wallets'
-import {getCardanoDefaultAsset} from './config'
+import {PRIMARY_TOKEN} from '../yoroi-wallets/cardano/shelley/constants'
 import {formatTokenAmount, formatTokenFractional, formatTokenInteger} from './format'
 
-const defaultCardanoAsset = getCardanoDefaultAsset()
+const defaultCardanoAsset = PRIMARY_TOKEN
 
 describe('formatAda', () => {
   it('formats zero', () => {

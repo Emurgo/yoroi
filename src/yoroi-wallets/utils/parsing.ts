@@ -2,8 +2,7 @@
 import {BigNumber} from 'bignumber.js'
 import ExtendableError from 'es6-error'
 
-import {CONFIG, getCardanoDefaultAsset} from '../../legacy/config'
-import {isHaskellShelleyNetwork} from '../cardano/networks'
+import {isHaskellShelleyNetwork, NETWORKS} from '../cardano/networks'
 import {Token} from '../types'
 
 export class InvalidAssetAmount extends ExtendableError {
@@ -26,7 +25,7 @@ export class InvalidAssetAmount extends ExtendableError {
 
 // expects an amount in regular currency units (eg ADA, not Lovelace)
 export const parseAmountDecimal = (amount: string, token: Token): BigNumber => {
-  const assetMeta = token ?? getCardanoDefaultAsset()
+  const assetMeta = token
   const numberOfDecimals: number = assetMeta.metadata.numberOfDecimals
   const normalizationFactor = Math.pow(10, numberOfDecimals)
   const parsed = new BigNumber(amount, 10)
@@ -43,7 +42,7 @@ export const parseAmountDecimal = (amount: string, token: Token): BigNumber => {
 
   if (isHaskellShelleyNetwork(assetMeta.networkId) && assetMeta.isDefault) {
     // ...this is ADA or tADA
-    const minValue = CONFIG.NETWORKS.HASKELL_SHELLEY.MINIMUM_UTXO_VAL
+    const minValue = NETWORKS.HASKELL_SHELLEY.MINIMUM_UTXO_VAL
 
     if (value.lt(minValue)) {
       throw new InvalidAssetAmount(InvalidAssetAmount.ERROR_CODES.LT_MIN_UTXO)

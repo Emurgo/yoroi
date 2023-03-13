@@ -15,13 +15,11 @@ import translations from './i18n/translations'
 import {CONFIG} from './legacy/config'
 import {Logger, setLogLevel} from './legacy/logging'
 import {CurrencyProvider} from './Settings/Currency/CurrencyContext'
-import {StorageProvider, useMigrations} from './Storage'
 import {ThemeProvider} from './theme'
 import {isEmptyString} from './utils/utils'
 import {WalletManagerProvider} from './WalletManager'
-import {walletManager} from './yoroi-wallets'
+import {storage, StorageProvider, useMigrations, walletManager} from './yoroi-wallets'
 import {ApiError, NetworkError} from './yoroi-wallets/cardano/errors'
-import {storage} from './yoroi-wallets/storage'
 
 setLogLevel(CONFIG.LOG_LEVEL)
 
@@ -64,6 +62,7 @@ const queryClient = new QueryClient()
 const AppWithProviders = () => {
   const migrated = useMigrations(storage)
 
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   return migrated ? (
     <StorageProvider>
       <WalletManagerProvider walletManager={walletManager}>

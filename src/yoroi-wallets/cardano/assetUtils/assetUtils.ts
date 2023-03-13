@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js'
 
 import {NetworkId, RawUtxo} from '../../types/other'
-import {CardanoMobile} from '../'
+import {CardanoMobile} from '..'
 import {getCardanoNetworkConfigById} from '../networks'
 import {cardanoValueFromRemoteFormat} from '../utils'
 

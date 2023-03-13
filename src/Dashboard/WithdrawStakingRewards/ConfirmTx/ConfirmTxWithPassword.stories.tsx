@@ -2,7 +2,7 @@ import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {WithModal} from '../../../../.storybook'
+import {WithModal} from '../../../../.storybook/decorators'
 import {Boundary} from '../../../components'
 import {YoroiWallet} from '../../../yoroi-wallets'
 import {mocks} from '../../../yoroi-wallets/mocks'

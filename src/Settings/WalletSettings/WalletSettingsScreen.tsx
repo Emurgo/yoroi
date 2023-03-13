@@ -3,16 +3,14 @@ import type {MessageDescriptor} from 'react-intl'
 import {defineMessages, useIntl} from 'react-intl'
 import {InteractionManager, ScrollView, StyleSheet, Switch} from 'react-native'
 
-import {useAuthSetting, useEasyConfirmationEnabled} from '../../auth'
 import {useAuth} from '../../auth/AuthProvider'
 import {StatusBar} from '../../components'
 import {DIALOG_BUTTONS, showConfirmationDialog} from '../../dialogs'
-import {useResync, useWalletName} from '../../hooks'
 import {confirmationMessages} from '../../i18n/global-messages'
-import {isByron, isHaskellShelley} from '../../legacy/config'
 import {useWalletNavigation} from '../../navigation'
 import {useSelectedWallet, useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
-import {NetworkId, WalletImplementationId} from '../../yoroi-wallets'
+import {useEasyConfirmationEnabled, useResync, useWalletName} from '../../yoroi-wallets'
+import {isByron, isHaskellShelley, NetworkId, useAuthSetting, WalletImplementationId} from '../../yoroi-wallets'
 import {getNetworkConfigById} from '../../yoroi-wallets/cardano/networks'
 import {
   NavigatedSettingsItem,

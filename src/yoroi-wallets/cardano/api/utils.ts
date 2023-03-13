@@ -1,6 +1,5 @@
 import AssetFingerprint from '@emurgo/cip14-js'
 
-import {getDefaultAssetByNetworkId} from '../../../legacy/config'
 import {LegacyToken, TokenInfo} from '../../types'
 import {YoroiWallet} from '../types'
 import {TokenRegistryEntry} from './api'
@@ -77,7 +76,7 @@ export const asciiToHex = (ascii: string) => {
 }
 
 export const toToken = ({wallet, tokenInfo}: {wallet: YoroiWallet; tokenInfo: TokenInfo}): LegacyToken => {
-  if (tokenInfo.id === wallet.primaryTokenInfo.id) return getDefaultAssetByNetworkId(wallet.networkId)
+  if (tokenInfo.id === wallet.primaryTokenInfo.id) return wallet.primaryToken
   const assetNameHex = tokenInfo.name ? asciiToHex(tokenInfo.name) : ''
 
   return {

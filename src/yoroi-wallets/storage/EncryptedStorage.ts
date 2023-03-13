@@ -1,6 +1,7 @@
-import {decryptData, encryptData, YoroiWallet} from '../yoroi-wallets'
-import {storage} from '../yoroi-wallets/storage'
-import {parseString} from '../yoroi-wallets/utils/parsing'
+import {YoroiWallet} from '../cardano'
+import {decryptData, encryptData} from '../encryption'
+import {parseString} from '../utils'
+import {storage} from './storage'
 
 type StorageKey = `${string}-MASTER_PASSWORD`
 export const EncryptedStorageKeys = {

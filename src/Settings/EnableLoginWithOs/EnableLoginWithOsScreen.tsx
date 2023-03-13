@@ -3,9 +3,10 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet} from 'react-native'
 
-import {OsAuthScreen, useEnableAuthWithOs} from '../../auth'
+import {OsAuthScreen} from '../../auth'
 import {Button} from '../../components'
 import globalMessages from '../../i18n/global-messages'
+import {useEnableAuthWithOs} from '../../yoroi-wallets'
 
 export const EnableLoginWithOsScreen = () => {
   const strings = useStrings()

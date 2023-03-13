@@ -6,8 +6,8 @@ import {StatusBar} from '../../components'
 import {showErrorDialog} from '../../dialogs'
 import {errorMessages} from '../../i18n/global-messages'
 import {CONFIG} from '../../legacy/config'
+import {useCheckPin} from '../../yoroi-wallets'
 import {useAuth} from '../AuthProvider'
-import {useCheckPin} from '../hooks'
 import {PinInput, PinInputRef} from '../PinInput'
 
 export const PinLoginScreen = () => {

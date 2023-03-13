@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-import {storage as yoroiStorage} from './storage'
-import {parseSafe} from './utils/parsing'
+import {parseSafe} from '../utils/parsing'
+import {storage as yoroiStorage} from '.'
 
 describe('prefixed storage', () => {
   beforeEach(() => AsyncStorage.clear())

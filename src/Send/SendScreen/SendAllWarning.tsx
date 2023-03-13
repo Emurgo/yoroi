@@ -1,9 +1,9 @@
 import React from 'react'
 
 import {DangerousActionModal, Text} from '../../components'
-import {useTokenInfo} from '../../hooks'
 import {truncateWithEllipsis} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
+import {useTokenInfo} from '../../yoroi-wallets'
 import {useStrings} from './strings'
 
 type SendAllWarningProps = {

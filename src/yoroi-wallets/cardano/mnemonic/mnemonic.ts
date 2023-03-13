@@ -2,10 +2,11 @@
 import {generateMnemonic, mnemonicToEntropy} from 'bip39'
 import {randomBytes} from 'react-native-randombytes'
 
-import {CONFIG} from '../../../legacy/config'
 import {CardanoMobile} from '..'
 
-export const generateAdaMnemonic = () => generateMnemonic(CONFIG.MNEMONIC_STRENGTH, randomBytes)
+const MNEMONIC_STRENGTH = 160
+
+export const generateAdaMnemonic = () => generateMnemonic(MNEMONIC_STRENGTH, randomBytes)
 export const generateWalletRootKey = async (mnemonic: string) => {
   const bip39entropy = mnemonicToEntropy(mnemonic)
   const EMPTY_PASSWORD = Buffer.from('')

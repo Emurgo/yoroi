@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
 
-import assert from '../../legacy/assert'
-import {CONFIG} from '../../legacy/config'
-import {Logger} from '../../legacy/logging'
+import {Logger} from '../logging'
 import {
   BaseAsset,
   CERTIFICATE_KIND,
+  DefaultAsset,
   NetworkId,
   Token,
   Transaction,
@@ -17,6 +17,11 @@ import {
 } from '../types'
 import {getDefaultNetworkTokenEntry, MultiToken, strToDefaultMultiAsset} from './MultiToken'
 import {multiTokenFromRemote} from './utils'
+
+export const ASSURANCE_LEVELS = {
+  LOW: 3,
+  MEDIUM: 9,
+}
 
 type TransactionAssurance = 'PENDING' | 'FAILED' | 'LOW' | 'MEDIUM' | 'HIGH'
 export const getTransactionAssurance = (
@@ -30,7 +35,7 @@ export const getTransactionAssurance = (
     throw new Error('Internal error - unknown transaction status')
   }
 
-  const assuranceLevelCutoffs = CONFIG.ASSURANCE_LEVELS
+  const assuranceLevelCutoffs = ASSURANCE_LEVELS
   if (confirmations < assuranceLevelCutoffs.LOW) return 'LOW'
   if (confirmations < assuranceLevelCutoffs.MEDIUM) return 'MEDIUM'
   return 'HIGH'
@@ -70,10 +75,11 @@ const _sum = (
     assets: Array<BaseAsset>
   }>,
   networkId: NetworkId,
+  defaultAsset: DefaultAsset,
 ): MultiToken =>
   a.reduce(
     (acc: MultiToken, x) => acc.joinAddMutable(multiTokenFromRemote(x, networkId)),
-    new MultiToken([], getDefaultNetworkTokenEntry(networkId)),
+    new MultiToken([], getDefaultNetworkTokenEntry(defaultAsset)),
   )
 
 const _multiPartyWarningCache = {}
@@ -83,8 +89,9 @@ export const processTxHistoryData = (
   confirmations: number,
   networkId: NetworkId,
   memo: string | null,
+  defaultAsset: DefaultAsset,
 ): TransactionInfo => {
-  const _strToDefaultMultiAsset = (amount: string) => strToDefaultMultiAsset(amount, networkId)
+  const _strToDefaultMultiAsset = (amount: string) => strToDefaultMultiAsset(amount, networkId, defaultAsset)
 
   // collateral
   const collateral = tx.collateralInputs || []
@@ -142,13 +149,13 @@ export const processTxHistoryData = (
   const ownInputs = unifiedInputs.filter(({address}) => ownAddresses.includes(address))
   const ownOutputs = unifiedOutputs.filter(({address}) => ownAddresses.includes(address))
 
-  const totalIn = _sum(unifiedInputs, networkId)
+  const totalIn = _sum(unifiedInputs, networkId, defaultAsset)
 
-  const totalOut = _sum(unifiedOutputs, networkId)
+  const totalOut = _sum(unifiedOutputs, networkId, defaultAsset)
 
-  const ownIn = _sum(ownInputs, networkId).joinAddMutable(ownImplicitInput)
+  const ownIn = _sum(ownInputs, networkId, defaultAsset).joinAddMutable(ownImplicitInput)
 
-  const ownOut = _sum(ownOutputs, networkId).joinAddMutable(ownImplicitOutput)
+  const ownOut = _sum(ownOutputs, networkId, defaultAsset).joinAddMutable(ownImplicitOutput)
 
   const hasOnlyOwnInputs = ownInputs.length === unifiedInputs.length
   const hasOnlyOwnOutputs = ownOutputs.length === unifiedOutputs.length
@@ -198,7 +205,9 @@ export const processTxHistoryData = (
   //    balance = sum(delta)
   // recall: if the tx has withdrawals or refunds to this wallet, they are
   // included in own utxo outputs
-  const delta = _sum(ownUtxoOutputs, networkId).joinSubtractMutable(_sum(ownUtxoInputs, networkId))
+  const delta = _sum(ownUtxoOutputs, networkId, defaultAsset).joinSubtractMutable(
+    _sum(ownUtxoInputs, networkId, defaultAsset),
+  )
 
   let amount
   let fee
@@ -223,7 +232,7 @@ export const processTxHistoryData = (
     amount = brutto.joinSubtractMutable(totalFee)
     fee = remoteFee ?? totalFee
   } else {
-    assert.assert(ownInputs.length === 0, 'This cannot be receiving transaction')
+    assert(ownInputs.length === 0, 'This cannot be receiving transaction')
     direction = TRANSACTION_DIRECTION.RECEIVED
     amount = brutto
     fee = null

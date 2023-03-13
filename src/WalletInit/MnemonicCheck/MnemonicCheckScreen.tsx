@@ -7,10 +7,10 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Spacer, StatusBar, Text} from '../../components'
 import {showErrorDialog} from '../../dialogs'
-import {useCreateWallet} from '../../hooks'
 import {errorMessages} from '../../i18n/global-messages'
 import {useWalletNavigation, WalletInitRoutes} from '../../navigation'
 import {COLORS} from '../../theme'
+import {useCreateWallet} from '../../yoroi-wallets'
 import {NetworkId, WalletImplementationId} from '../../yoroi-wallets'
 import {NetworkError} from '../../yoroi-wallets/cardano/errors'
 

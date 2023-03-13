@@ -14,10 +14,21 @@ import {BleError} from 'react-native-ble-plx'
 
 import {ledgerMessages} from '../../../i18n/global-messages'
 import LocalizableError from '../../../i18n/LocalizableError'
-import {CONFIG, isByron, isHaskellShelley} from '../../../legacy/config'
-import {Logger} from '../../../legacy/logging'
-import {DeviceId, DeviceObj, GeneralConnectionError, HWDeviceInfo, LedgerUserError, RejectedByUserError} from '../../hw'
+import {
+  DeviceId,
+  DeviceObj,
+  GeneralConnectionError,
+  HARDWARE_WALLETS,
+  HWDeviceInfo,
+  LedgerUserError,
+  RejectedByUserError,
+} from '../../hw'
+import {Logger} from '../../logging'
 import {WalletImplementationId} from '../../types'
+import {NUMBERS} from '../numbers'
+import {isByron, isHaskellShelley} from '../utils'
+
+const MIN_ADA_APP_VERSION = '2.2.1'
 
 export type WalletType = 'BIP44' | 'CIP1852'
 
@@ -35,7 +46,7 @@ export class DeprecatedAdaAppError extends LocalizableError {
       id: ledgerMessages.deprecatedAdaAppError.id,
       defaultMessage: ledgerMessages.deprecatedAdaAppError.defaultMessage,
       values: {
-        version: `${CONFIG.HARDWARE_WALLETS.LEDGER_NANO.MIN_ADA_APP_VERSION}`,
+        version: `${MIN_ADA_APP_VERSION}`,
       },
     })
   }
@@ -96,11 +107,9 @@ const mapLedgerError = (e: Error | any): Error | LocalizableError => {
 // ============== General util ==================
 //
 
-const VENDOR = CONFIG.HARDWARE_WALLETS.LEDGER_NANO.VENDOR
-const MODEL = CONFIG.HARDWARE_WALLETS.LEDGER_NANO.MODEL
-const HARDENED = CONFIG.NUMBERS.HARD_DERIVATION_START
-const WALLET_TYPE_PURPOSE = CONFIG.NUMBERS.WALLET_TYPE_PURPOSE
-const COIN_TYPE = CONFIG.NUMBERS.COIN_TYPES.CARDANO
+const HARDENED = NUMBERS.HARD_DERIVATION_START
+const WALLET_TYPE_PURPOSE = NUMBERS.WALLET_TYPE_PURPOSE
+const COIN_TYPE = NUMBERS.COIN_TYPES.CARDANO
 
 const getWalletType = (id: WalletImplementationId): WalletType => {
   if (isByron(id)) {
@@ -134,7 +143,7 @@ export const checkDeviceVersion = (versionResponse: GetVersionResponse): void =>
     versionResponse.version.minor,
     versionResponse.version.patch,
   ]
-  const minVersionArray = CONFIG.HARDWARE_WALLETS.LEDGER_NANO.MIN_ADA_APP_VERSION.split('.')
+  const minVersionArray = MIN_ADA_APP_VERSION.split('.')
 
   if (minVersionArray.length !== deviceVersionArray.length) {
     Logger.warn('ledgerUtils::checkDeviceVersion: version formats mismatch')
@@ -195,7 +204,7 @@ export const getHWDeviceInfo = async (
     Logger.debug('ledgerUtils::getHWDeviceInfo called')
     const appAda = await connectionHandler(deviceId, deviceObj, useUSB)
     // assume single account in Yoroi
-    const accountPath = makeCardanoAccountBIP44Path(getWalletType(walletImplementationId), CONFIG.NUMBERS.ACCOUNT_INDEX)
+    const accountPath = makeCardanoAccountBIP44Path(getWalletType(walletImplementationId), NUMBERS.ACCOUNT_INDEX)
     Logger.debug('bip44 account path', accountPath)
     // get Cardano's first account
     // i.e hdPath = [2147483692, 2147485463, 2147483648]
@@ -241,8 +250,8 @@ export const normalizeHWResponse = (resp: LedgerConnectionResponse): HWDeviceInf
   return {
     bip44AccountPublic: extendedPublicKeyResp.publicKeyHex + extendedPublicKeyResp.chainCodeHex,
     hwFeatures: {
-      vendor: VENDOR,
-      model: MODEL,
+      vendor: HARDWARE_WALLETS.LEDGER_NANO.VENDOR,
+      model: HARDWARE_WALLETS.LEDGER_NANO.MODEL,
       deviceId,
       deviceObj,
       serialHex,

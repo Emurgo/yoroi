@@ -1,20 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
 import ExtendableError from 'es6-error'
 import _ from 'lodash'
 import DeviceInfo from 'react-native-device-info'
 import {defaultMemoize} from 'reselect'
 
-import {makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../../auth'
-import {Keychain} from '../../../auth/Keychain'
-import {encryptWithPassword} from '../../../Catalyst/catalystCipher'
 import LocalizableError from '../../../i18n/LocalizableError'
-import assert from '../../../legacy/assert'
-import {DISABLE_BACKGROUND_SYNC} from '../../../legacy/config'
-import {Logger} from '../../../legacy/logging'
 import {HWDeviceInfo} from '../../hw'
+import {Logger} from '../../logging'
 import {makeMemosManager, MemosManager} from '../../memos'
-import {YoroiStorage} from '../../storage'
+import {makeWalletEncryptedStorage, WalletEncryptedStorage, YoroiStorage} from '../../storage'
+import {Keychain} from '../../storage/Keychain'
 import type {
   AccountStateResponse,
   CurrencySymbol,
@@ -48,7 +45,9 @@ import {
   walletChecksum,
 } from '..'
 import * as api from '../api'
+import {encryptWithPassword} from '../catalyst/catalystCipher'
 import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from '../chain'
+import {HISTORY_REFRESH_TIME} from '../constants'
 import {CardanoError} from '../errors'
 import {getTime} from '../getTime'
 import {signTxWithLedger} from '../hw'
@@ -72,7 +71,6 @@ import {
   DISCOVERY_BLOCK_SIZE,
   DISCOVERY_GAP_SIZE,
   HARD_DERIVATION_START,
-  HISTORY_REFRESH_TIME,
   IS_MAINNET,
   KEY_DEPOSIT,
   LINEAR_FEE,
@@ -337,7 +335,7 @@ export class ShelleyWalletTestnet implements YoroiWallet {
       } catch (error) {
         Logger.error((error as Error)?.message)
       } finally {
-        if (!DISABLE_BACKGROUND_SYNC && process.env.NODE_ENV !== 'test') {
+        if (process.env.NODE_ENV !== 'test') {
           this.timeout = setTimeout(() => backgroundSync(), HISTORY_REFRESH_TIME)
         }
       }
@@ -391,7 +389,7 @@ export class ShelleyWalletTestnet implements YoroiWallet {
   private getChangeAddress(): string {
     const candidateAddresses = this.internalChain.addresses
     const unseen = candidateAddresses.filter((addr) => !this.isUsedAddress(addr))
-    assert.assert(unseen.length > 0, 'Cannot find change address')
+    assert(unseen.length > 0, 'Cannot find change address')
     const changeAddress = _.first(unseen)
     if (!changeAddress) throw new Error('invalid wallet state')
 
@@ -896,7 +894,7 @@ export class ShelleyWalletTestnet implements YoroiWallet {
 
   private _isUsedAddressIndexSelector = defaultMemoize((perAddressTxs) =>
     _.mapValues(perAddressTxs, (txs) => {
-      assert.assert(!!txs, 'perAddressTxs cointains false-ish value')
+      assert(!!txs, 'perAddressTxs cointains false-ish value')
       return txs.length > 0
     }),
   )
@@ -930,6 +928,7 @@ export class ShelleyWalletTestnet implements YoroiWallet {
         this.confirmationCounts[tx.id] || 0,
         NETWORK_ID,
         memos[tx.id] ?? null,
+        this.primaryToken,
       )
     })
   }
@@ -940,7 +939,7 @@ export class ShelleyWalletTestnet implements YoroiWallet {
 
   // ============ security & key management ============ //
 
-  async getDecryptedRootKey(password: string) {
+  getDecryptedRootKey(password: string) {
     return this.encryptedStorage.rootKey.read(password)
   }
 
@@ -1020,7 +1019,7 @@ export class ShelleyWalletTestnet implements YoroiWallet {
   }
 
   private async _doFullSync() {
-    assert.assert(this.isInitialized, 'doFullSync: isInitialized')
+    assert(this.isInitialized, 'doFullSync: isInitialized')
 
     Logger.info('Discovery done, now syncing transactions')
 

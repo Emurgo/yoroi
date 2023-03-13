@@ -1,4 +1,4 @@
-import {BackendConfig, RawTransaction, TipStatusResponse, Transaction} from '../../types'
+import {BackendConfig, RawTransaction, TipStatusResponse, Transaction} from '../../types/other'
 
 export const mockedBackendConfig: BackendConfig = {
   API_ROOT: 'https://fakeapiroot.com',

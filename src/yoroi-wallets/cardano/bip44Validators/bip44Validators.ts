@@ -1,4 +1,5 @@
-import assert from '../../../legacy/assert'
+import assert from 'assert'
+
 import {CardanoMobile} from '../'
 import {NUMBERS} from '../numbers'
 
@@ -19,7 +20,7 @@ export const isValidPath = (path: unknown): boolean => {
 }
 
 export const isCIP1852AccountPath = (path: Array<number>): boolean => {
-  assert.preconditionCheck(isValidPath(path), 'invalid bip44 path')
+  assert(isValidPath(path), 'invalid bip44 path')
   // note: allows non-zero accounts
   return (
     path.length === 3 &&

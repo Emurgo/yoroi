@@ -3,11 +3,11 @@
 import {action} from '@storybook/addon-actions'
 import BigNumber from 'bignumber.js'
 
-import {getDefaultAssetByNetworkId} from '../../legacy/config'
 import {getTokenFingerprint} from '../../legacy/format'
 import {asciiToHex, CardanoTypes, fallbackTokenInfo, toTokenInfo, WalletMeta, YoroiWallet} from '..'
 import {PRIMARY_ASSET_CONSTANTS} from '../cardano/networks'
 import * as HASKELL_SHELLEY_TESTNET from '../cardano/shelley-testnet/constants'
+import {PRIMARY_TOKEN, PRIMARY_TOKEN_INFO} from '../cardano/shelley-testnet/constants'
 import {
   RemotePoolMetaSuccess,
   StakePoolInfosAndHistories,
@@ -41,8 +41,8 @@ const walletMeta: WalletMeta = {
 
 const wallet: YoroiWallet = {
   id: 'wallet-id',
-  primaryToken: getDefaultAssetByNetworkId(300),
-  primaryTokenInfo: HASKELL_SHELLEY_TESTNET.PRIMARY_TOKEN_INFO,
+  primaryToken: PRIMARY_TOKEN,
+  primaryTokenInfo: PRIMARY_TOKEN_INFO,
   walletImplementationId: 'haskell-shelley',
   networkId: 300,
   checksum: {

@@ -10,11 +10,11 @@ import {useStakingTx} from '../../Dashboard/StakePoolInfos'
 import {showErrorDialog} from '../../dialogs'
 import {useLanguage} from '../../i18n'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
-import {CONFIG, isNightly, SHOW_PROD_POOLS_IN_DEV} from '../../legacy/config'
+import {isNightly, SHOW_PROD_POOLS_IN_DEV} from '../../legacy/config'
 import {Logger} from '../../legacy/logging'
 import {StakingCenterRouteNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
-import {NotEnoughMoneyToSendError} from '../../yoroi-wallets'
+import {NETWORKS, NotEnoughMoneyToSendError} from '../../yoroi-wallets'
 import {getNetworkConfigById} from '../../yoroi-wallets/cardano/networks'
 import {PoolDetailScreen} from '../PoolDetails'
 
@@ -106,7 +106,7 @@ const noPoolDataDialog = defineMessages({
  */
 const prepareStakingURL = (locale: string): string => {
   // source=mobile is constant and already included
-  let finalURL = CONFIG.NETWORKS.HASKELL_SHELLEY.POOL_EXPLORER
+  let finalURL = NETWORKS.HASKELL_SHELLEY.POOL_EXPLORER
 
   const lang = locale.slice(0, 2)
   finalURL += `&lang=${lang}`
