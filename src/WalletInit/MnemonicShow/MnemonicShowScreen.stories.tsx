@@ -2,7 +2,7 @@ import {NavigationRouteContext} from '@react-navigation/core'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {CONFIG} from '../../legacy/config'
+import {debugWalletInfo} from '../../features'
 import {NETWORK_ID, WALLET_IMPLEMENTATION_ID} from '../../yoroi-wallets/cardano/shelley-testnet/constants'
 import {MnemonicShowScreen} from './MnemonicShowScreen'
 
@@ -11,9 +11,9 @@ storiesOf('MnemonicShowScreen', module).add('Default', () => {
     key: 'key',
     name: 'name',
     params: {
-      mnemonic: CONFIG.DEBUG.MNEMONIC1,
-      name: CONFIG.DEBUG.WALLET_NAME,
-      password: CONFIG.DEBUG.PASSWORD,
+      mnemonic: debugWalletInfo.MNEMONIC1,
+      name: debugWalletInfo.WALLET_NAME,
+      password: debugWalletInfo.PASSWORD,
       networkId: NETWORK_ID,
       walletImplementationId: WALLET_IMPLEMENTATION_ID,
     },

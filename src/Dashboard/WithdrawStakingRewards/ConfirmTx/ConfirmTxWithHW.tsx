@@ -4,8 +4,15 @@ import {useIntl} from 'react-intl'
 import {Boundary, TwoActionView} from '../../../components'
 import {LedgerConnect, LedgerTransportSwitch} from '../../../HW'
 import {confirmationMessages, txLabels} from '../../../i18n/global-messages'
-import {useSignWithHwAndSubmitTx} from '../../../yoroi-wallets'
-import {DeviceId, DeviceObj, walletManager, withBLE, withUSB, YoroiWallet} from '../../../yoroi-wallets'
+import {
+  DeviceId,
+  DeviceObj,
+  useSignWithHwAndSubmitTx,
+  walletManager,
+  withBLE,
+  withUSB,
+  YoroiWallet,
+} from '../../../yoroi-wallets'
 import {YoroiUnsignedTx} from '../../../yoroi-wallets/types'
 import {TransferSummary} from '../TransferSummary'
 

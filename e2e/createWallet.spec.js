@@ -1,6 +1,5 @@
-// @flow
 /* eslint-disable no-undef */
-import {setupWallet, readTextValue} from './utils'
+import {readTextValue, setupWallet} from './utils'
 
 describe('Setup a fresh wallet on Byron network', () => {
   beforeEach(async () => {

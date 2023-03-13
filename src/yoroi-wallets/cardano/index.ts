@@ -12,6 +12,9 @@ export * from './numbers'
 export * from './shelley'
 export * from './types'
 export * from './utils'
+export {legacyWalletChecksum, walletChecksum} from '@emurgo/cip4-js'
+export {RegistrationStatus} from '@emurgo/yoroi-lib'
+export {AssetOverflowError, NoOutputsError, NotEnoughMoneyToSendError} from '@emurgo/yoroi-lib/dist/errors'
 import {WalletChecksum as WalletChecksumType} from '@emurgo/cip4-js'
 import * as CoreTypes from '@emurgo/cross-csl-core'
 import {init} from '@emurgo/cross-csl-mobile'
@@ -27,11 +30,7 @@ import {
   UnsignedTx as UnsignedTxType,
 } from '@emurgo/yoroi-lib'
 
-export {legacyWalletChecksum, walletChecksum} from '@emurgo/cip4-js'
-export {RegistrationStatus} from '@emurgo/yoroi-lib'
-
 export const CardanoMobile = init()
-export {AssetOverflowError, NoOutputsError, NotEnoughMoneyToSendError} from '@emurgo/yoroi-lib/dist/errors'
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace CardanoTypes {
   export type TxMetadata = TxMetadataType

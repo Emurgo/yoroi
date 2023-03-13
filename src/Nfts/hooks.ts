@@ -1,7 +1,6 @@
 import {useSearch} from '../Search'
 import {useSelectedWallet} from '../SelectedWallet'
-import {useNftModerationStatus, useNfts} from '../yoroi-wallets'
-import {YoroiWallet} from '../yoroi-wallets'
+import {useNftModerationStatus, useNfts, YoroiWallet} from '../yoroi-wallets'
 
 export const useFilteredNfts = () => {
   const {search} = useSearch()

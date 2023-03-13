@@ -1,9 +1,6 @@
 import {useEffect, useState} from 'react'
 
-import {useBalances} from '../yoroi-wallets'
-import {CATALYST, isHaskellShelley, YoroiWallet} from '../yoroi-wallets'
-import {Quantity} from '../yoroi-wallets/types'
-import {Amounts, Quantities} from '../yoroi-wallets/utils'
+import {Amounts, CATALYST, isHaskellShelley, Quantities, Quantity, useBalances, YoroiWallet} from '../yoroi-wallets'
 
 export const useCanVote = (wallet: YoroiWallet) => {
   const balances = useBalances(wallet)

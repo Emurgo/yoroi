@@ -7,12 +7,11 @@ import {TouchableOpacity} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Checkbox, Spacer, StatusBar, Text, TextInput} from '../../components'
-import {CONFIG} from '../../legacy/config'
+import {debugWalletInfo, features} from '../../features'
 import {formatTokenAmount, truncateWithEllipsis} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
-import {useBalances, useHasPendingTx, useIsOnline, useTokenInfo, useUtxos} from '../../yoroi-wallets'
-import {toToken} from '../../yoroi-wallets'
+import {toToken, useBalances, useHasPendingTx, useIsOnline, useTokenInfo, useUtxos} from '../../yoroi-wallets'
 import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
 import {Amounts, Quantities} from '../../yoroi-wallets/utils'
 import type {
@@ -89,10 +88,10 @@ export const SendScreen = () => {
     memo.length <= maxMemoLength
 
   React.useEffect(() => {
-    if (CONFIG.DEBUG.PREFILL_FORMS) {
+    if (features.prefillWalletInfo) {
       if (!__DEV__) throw new Error('using debug data in non-dev env')
-      receiverChanged(CONFIG.DEBUG.SEND_ADDRESS)
-      amountChanged(CONFIG.DEBUG.SEND_AMOUNT)
+      receiverChanged(debugWalletInfo.SEND_ADDRESS)
+      amountChanged(debugWalletInfo.SEND_AMOUNT)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

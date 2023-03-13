@@ -3,7 +3,7 @@ import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {CONFIG} from '../../legacy/config'
+import {debugWalletInfo} from '../../features'
 import {WalletManagerProvider} from '../../WalletManager'
 import {WalletManager, walletManager} from '../../yoroi-wallets'
 import {NetworkError} from '../../yoroi-wallets/cardano/errors'
@@ -16,9 +16,9 @@ storiesOf('MnemonicCheckScreen', module)
       key: 'key',
       name: 'name',
       params: {
-        mnemonic: CONFIG.DEBUG.MNEMONIC1,
-        name: CONFIG.DEBUG.WALLET_NAME,
-        password: CONFIG.DEBUG.PASSWORD,
+        mnemonic: debugWalletInfo.MNEMONIC1,
+        name: debugWalletInfo.WALLET_NAME,
+        password: debugWalletInfo.PASSWORD,
         networkId: NETWORK_ID,
         walletImplementationId: 'haskell-shelley',
       },

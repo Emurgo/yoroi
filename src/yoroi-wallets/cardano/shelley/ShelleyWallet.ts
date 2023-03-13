@@ -10,8 +10,7 @@ import LocalizableError from '../../../i18n/LocalizableError'
 import {HWDeviceInfo} from '../../hw'
 import {Logger} from '../../logging'
 import {makeMemosManager, MemosManager} from '../../memos'
-import {makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../storage'
-import {YoroiStorage} from '../../storage'
+import {makeWalletEncryptedStorage, WalletEncryptedStorage, YoroiStorage} from '../../storage'
 import {Keychain} from '../../storage/Keychain'
 import type {
   AccountStateResponse,

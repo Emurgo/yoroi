@@ -9,8 +9,16 @@ import {DIALOG_BUTTONS, showConfirmationDialog} from '../../dialogs'
 import {confirmationMessages} from '../../i18n/global-messages'
 import {useWalletNavigation} from '../../navigation'
 import {useSelectedWallet, useSetSelectedWallet, useSetSelectedWalletMeta} from '../../SelectedWallet'
-import {useEasyConfirmationEnabled, useResync, useWalletName} from '../../yoroi-wallets'
-import {isByron, isHaskellShelley, NetworkId, useAuthSetting, WalletImplementationId} from '../../yoroi-wallets'
+import {
+  isByron,
+  isHaskellShelley,
+  NetworkId,
+  useAuthSetting,
+  useEasyConfirmationEnabled,
+  useResync,
+  useWalletName,
+  WalletImplementationId,
+} from '../../yoroi-wallets'
 import {getNetworkConfigById} from '../../yoroi-wallets/cardano/networks'
 import {
   NavigatedSettingsItem,

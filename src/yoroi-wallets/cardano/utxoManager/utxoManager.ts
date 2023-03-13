@@ -1,5 +1,4 @@
-import {UtxoModels, UtxoStorage} from '@emurgo/yoroi-lib'
-import {initUtxo} from '@emurgo/yoroi-lib'
+import {initUtxo, UtxoModels, UtxoStorage} from '@emurgo/yoroi-lib'
 import {Utxo, UtxoAtSafePoint, UtxoDiffToBestBlock} from '@emurgo/yoroi-lib/dist/utxo/models'
 import {parseInt} from 'lodash'
 
