@@ -1,9 +1,10 @@
 import {RouteProp, useRoute} from '@react-navigation/native'
 import React from 'react'
-import {Dimensions, Image, StyleSheet, View} from 'react-native'
+import {Dimensions, StyleSheet, View} from 'react-native'
 import ViewTransformer from 'react-native-easy-view-transformer'
 
 import {FadeIn} from '../components'
+import {NftPreview} from '../components/NftPreview/NftPreview'
 import {NftRoutes} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
 import {useNft} from '../yoroi-wallets'
@@ -20,7 +21,7 @@ export const NftDetailsImage = () => {
     <FadeIn style={styles.container}>
       <ViewTransformer maxScale={3} minScale={1}>
         <View style={styles.contentContainer}>
-          <Image source={{uri: nft.image}} style={{height: imageSize, width: imageSize}} resizeMode="contain" />
+          <NftPreview nft={nft} width={imageSize} height={imageSize} />
         </View>
       </ViewTransformer>
     </FadeIn>
