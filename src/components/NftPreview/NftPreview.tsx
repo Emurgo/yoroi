@@ -1,5 +1,5 @@
 import React from 'react'
-import {Image, ImageStyle, StyleProp} from 'react-native'
+import {Image, ImageResizeMode, ImageStyle, StyleProp} from 'react-native'
 import {SvgUri} from 'react-native-svg'
 
 import placeholder from '../../assets/img/nft-placeholder.png'
@@ -19,9 +19,9 @@ export const NftPreview = ({
   showPlaceholder?: boolean
   style?: StyleProp<ImageStyle>
   showThumbnail?: boolean
-  height?: number
+  height: number
   width?: number
-  resizeMode?: 'cover' | 'contain' | 'stretch' | 'repeat' | 'center'
+  resizeMode?: ImageResizeMode
   blurRadius?: number
 }) => {
   if (showPlaceholder) {
@@ -29,9 +29,8 @@ export const NftPreview = ({
   }
 
   const uri = showThumbnail ? nft.thumbnail : nft.image
-  const isUriSvg =
-    uri.toLowerCase().endsWith('.svg') ||
-    nft.metadata.originalMetadata?.files?.some((file) => file.src === uri && file.mediaType === 'image/svg+xml')
+  const isUriSvg = uri.toLowerCase().endsWith('.svg') || isSvgMediaType(nft.metadata.originalMetadata.mediaType)
+  nft.metadata.originalMetadata?.files?.some((file) => file.src === uri && isSvgMediaType(file.mediaType))
 
   if (isUriSvg) {
     // passing width or height with value undefined has a different behavior than not passing it at all
@@ -53,4 +52,8 @@ export const NftPreview = ({
       resizeMode={resizeMode ?? 'contain'}
     />
   )
+}
+
+function isSvgMediaType(mediaType: string | undefined): boolean {
+  return mediaType === 'image/svg+xml'
 }
