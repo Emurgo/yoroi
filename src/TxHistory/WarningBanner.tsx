@@ -3,6 +3,7 @@ import {Image, ImageSourcePropType, StyleSheet, TouchableOpacity, View, ViewStyl
 
 import {Button, Icon, Text} from '../components'
 import {COLORS} from '../theme'
+
 type Props = {
   title: string
   icon?: ImageSourcePropType

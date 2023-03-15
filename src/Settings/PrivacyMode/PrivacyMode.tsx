@@ -1,7 +1,6 @@
 import {UseMutationOptions, useQuery} from 'react-query'
 
-import {useMutationWithInvalidations} from '../../yoroi-wallets'
-import {parseSafe, useStorage} from '../../yoroi-wallets'
+import {parseSafe, useMutationWithInvalidations, useStorage} from '../../yoroi-wallets'
 
 export const usePrivacyMode = () => {
   const storage = useStorage()

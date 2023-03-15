@@ -6,8 +6,8 @@ import {Keyboard, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 
 import {Boundary, KeyboardSpacer, Spacer, StatusBar, Text, ValidatedTextInput} from '../../components'
 import {ConfirmTx} from '../../components/ConfirmTx'
+import {debugWalletInfo, features} from '../../features'
 import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../i18n/global-messages'
-import {CONFIG} from '../../legacy/config'
 import {formatTokenWithSymbol, formatTokenWithText} from '../../legacy/format'
 import {TxHistoryRoutes, useWalletNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
@@ -29,8 +29,8 @@ export const ConfirmScreen = () => {
   const {saveMemo} = useSaveMemo({wallet})
 
   useEffect(() => {
-    if (CONFIG.DEBUG.PREFILL_FORMS && __DEV__) {
-      setPassword(CONFIG.DEBUG.PASSWORD)
+    if (features.prefillWalletInfo && __DEV__) {
+      setPassword(debugWalletInfo.PASSWORD)
     }
   }, [])
 

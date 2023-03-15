@@ -1,6 +1,5 @@
 import React from 'react'
-import {LayoutAnimation, TouchableOpacity, View} from 'react-native'
-import {StyleSheet} from 'react-native'
+import {LayoutAnimation, StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {Icon, Text} from '../../../components'
 import {COLORS} from '../../../theme'

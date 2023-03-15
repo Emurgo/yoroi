@@ -5,7 +5,7 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
 import {Icon, Spacer, Text} from '../../components'
 import {NftPreview} from '../../components/NftPreview/NftPreview'
-import {MODERATING_NFTS_ENABLED} from '../../legacy/config'
+import {features} from '../../features'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {YoroiNft} from '../../yoroi-wallets/types'
 import {useModeratedNftImage} from '../hooks'
@@ -32,7 +32,7 @@ export const ImageGallery = ({nfts = [], onSelect, onRefresh, isRefreshing}: Pro
       onRefresh={onRefresh}
       refreshing={isRefreshing}
       renderItem={(nft) =>
-        MODERATING_NFTS_ENABLED ? (
+        features.moderatingNftsEnabled ? (
           <ModeratedImage onPress={() => onSelect(nfts.indexOf(nft))} nft={nft} key={nft.id} />
         ) : (
           <UnModeratedImage onPress={() => onSelect(nfts.indexOf(nft))} nft={nft} key={nft.id} />

@@ -11,12 +11,12 @@ import {NETWORK_ID as testnetId} from '../cardano/shelley-testnet/constants'
 import {
   Addressing,
   BaseAsset,
+  DERIVATION_TYPES,
   NetworkId,
   RawUtxo,
   WALLET_IMPLEMENTATION_REGISTRY,
   WalletImplementationId,
 } from '../types/other'
-import {DERIVATION_TYPES} from '../types/other'
 import {
   asciiToHex,
   CardanoHaskellShelleyNetwork,

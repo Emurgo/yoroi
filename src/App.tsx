@@ -11,8 +11,7 @@ import AppNavigator from './AppNavigator'
 import {AuthProvider} from './auth/AuthProvider'
 import crashReporting from './crashReporting'
 import {SelectedWalletMetaProvider, SelectedWalletProvider} from './SelectedWallet'
-import {getCrashReportsEnabled} from './yoroi-wallets'
-import {useStorage, walletManager, YoroiStorage} from './yoroi-wallets'
+import {getCrashReportsEnabled, useStorage, walletManager, YoroiStorage} from './yoroi-wallets'
 
 enableScreens()
 

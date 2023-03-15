@@ -8,9 +8,10 @@ import {WebView, WebViewMessageEvent} from 'react-native-webview'
 import {PleaseWaitModal, Spacer} from '../../components'
 import {useStakingTx} from '../../Dashboard/StakePoolInfos'
 import {showErrorDialog} from '../../dialogs'
+import {features} from '../../features'
 import {useLanguage} from '../../i18n'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
-import {isNightly, SHOW_PROD_POOLS_IN_DEV} from '../../legacy/config'
+import {isNightly} from '../../legacy/config'
 import {Logger} from '../../legacy/logging'
 import {StakingCenterRouteNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
@@ -70,7 +71,7 @@ export const StakingCenter = () => {
         </View>
       )}
 
-      {(config.IS_MAINNET || SHOW_PROD_POOLS_IN_DEV) && (
+      {(config.IS_MAINNET || features.showProdPoolsInDev) && (
         <>
           <View style={{flex: 1, backgroundColor: '#fff'}}>
             <Spacer height={8} />
