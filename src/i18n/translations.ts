@@ -20,6 +20,7 @@ import ruRU from './locales/ru-RU.json'
 import skSK from './locales/sk-SK.json'
 import slSI from './locales/sl-SI.json'
 import svSE from './locales/sv-SE.json'
+import swKE from './locales/sw-KE.json'
 import ukUA from './locales/uk-UA.json'
 import viVN from './locales/vi-VN.json'
 import zhHans from './locales/zh-Hans.json'
@@ -44,6 +45,7 @@ const translations = {
   [LANGUAGES.DUTCH]: {...defaultLocale, ...nlNL},
   [LANGUAGES.CZECH]: {...defaultLocale, ...csCZ},
   [LANGUAGES.HUNGARIAN]: {...defaultLocale, ...huHU},
+  [LANGUAGES.KENIAN]: {...defaultLocale, ...swKE},
   [LANGUAGES.SLOVAK]: {...defaultLocale, ...skSK},
   [LANGUAGES.VIETNAMESE]: {...defaultLocale, ...viVN},
   [LANGUAGES.FILIPINO]: {...defaultLocale, ...filPH},
