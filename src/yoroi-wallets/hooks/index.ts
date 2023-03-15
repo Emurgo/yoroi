@@ -888,8 +888,6 @@ export const useNfts = (wallet: YoroiWallet, options: UseQueryOptions<YoroiNft[]
     queryKey: [wallet.id, 'nfts'],
     queryFn: () => wallet.fetchNfts(),
   })
-  const eventCallback = useCallback(() => refetch(), [refetch])
-  useWalletEvent(wallet, 'utxos', eventCallback)
   return {...rest, refetch, nfts: data ?? []}
 }
 
