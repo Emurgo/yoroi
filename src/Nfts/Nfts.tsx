@@ -10,15 +10,21 @@ import {useNavigateTo} from './navigation'
 import {NoNftsScreen} from './NoNftsScreen'
 
 export const Nfts = () => {
-  const {search, nfts, isLoading, refetch, isRefetching, isError} = useFilteredNfts()
+  const {search, nfts, isLoading, refetch, isError} = useFilteredNfts()
   const navigateTo = useNavigateTo()
   const handleNftSelect = (index: number) => navigateTo.nftDetails(nfts[index].id)
+  const [isRefreshing, setIsRefreshing] = React.useState(false)
   const strings = useStrings()
+
+  const onRefresh = React.useCallback(() => {
+    setIsRefreshing(true)
+    refetch().then(() => setIsRefreshing(false))
+  }, [refetch])
 
   if (isError) {
     return (
       <ScreenWrapper>
-        <ErrorScreen onRefresh={refetch} isRefreshing={isRefetching} />
+        <ErrorScreen onRefresh={onRefresh} isRefreshing={isRefreshing} />
       </ScreenWrapper>
     )
   }
@@ -37,7 +43,7 @@ export const Nfts = () => {
         <ScrollView
           style={styles.scrollView}
           contentContainerStyle={styles.scrollViewError}
-          refreshControl={<RefreshControl onRefresh={refetch} refreshing={isRefetching} />}
+          refreshControl={<RefreshControl onRefresh={onRefresh} refreshing={isRefreshing} />}
         >
           <NoNftsScreen message={strings.noNftsFound} />
         </ScrollView>
@@ -51,7 +57,7 @@ export const Nfts = () => {
         <ScrollView
           style={styles.scrollView}
           contentContainerStyle={styles.scrollViewError}
-          refreshControl={<RefreshControl onRefresh={refetch} refreshing={isRefetching} />}
+          refreshControl={<RefreshControl onRefresh={onRefresh} refreshing={isRefreshing} />}
         >
           <NoNftsScreen
             message={strings.noNftsInWallet}
@@ -79,7 +85,7 @@ export const Nfts = () => {
           </View>
         )}
 
-        <ImageGallery nfts={nfts} onSelect={handleNftSelect} onRefresh={refetch} isRefreshing={isRefetching} />
+        <ImageGallery nfts={nfts} onSelect={handleNftSelect} onRefresh={onRefresh} isRefreshing={isRefreshing} />
       </View>
     </ScreenWrapper>
   )
