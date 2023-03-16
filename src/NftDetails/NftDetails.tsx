@@ -62,7 +62,7 @@ export const NftDetails = () => {
 const UnModeratedNftImage = ({nft}: {nft: YoroiNft}) => {
   const navigateTo = useNavigateTo()
   return (
-    <TouchableOpacity onPress={() => navigateTo.nftZoom(nft.id)} disabled={false} style={styles.imageWrapper}>
+    <TouchableOpacity onPress={() => navigateTo.nftZoom(nft.id)} style={styles.imageWrapper}>
       <NftPreview nft={nft} style={styles.image} height={380} />
     </TouchableOpacity>
   )

@@ -30,7 +30,7 @@ export const NftPreview = ({
 
   const uri = showThumbnail ? nft.thumbnail : nft.image
   const isUriSvg = uri.toLowerCase().endsWith('.svg') || isSvgMediaType(nft.metadata.originalMetadata.mediaType)
-  nft.metadata.originalMetadata?.files?.some((file) => file.src === uri && isSvgMediaType(file.mediaType))
+  nft.metadata.originalMetadata.files?.some((file) => file.src === uri && isSvgMediaType(file.mediaType))
 
   if (isUriSvg) {
     // passing width or height with value undefined has a different behavior than not passing it at all
