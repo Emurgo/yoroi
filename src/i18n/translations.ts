@@ -45,7 +45,7 @@ const translations = {
   [LANGUAGES.DUTCH]: {...defaultLocale, ...nlNL},
   [LANGUAGES.CZECH]: {...defaultLocale, ...csCZ},
   [LANGUAGES.HUNGARIAN]: {...defaultLocale, ...huHU},
-  [LANGUAGES.KENIAN]: {...defaultLocale, ...swKE},
+  [LANGUAGES.KENYAN]: {...defaultLocale, ...swKE},
   [LANGUAGES.SLOVAK]: {...defaultLocale, ...skSK},
   [LANGUAGES.VIETNAMESE]: {...defaultLocale, ...viVN},
   [LANGUAGES.FILIPINO]: {...defaultLocale, ...filPH},

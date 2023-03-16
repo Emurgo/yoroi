@@ -38,7 +38,7 @@ export const LANGUAGES = {
   INDONESIAN: 'id-ID',
   ITALIAN: 'it-IT',
   JAPANESE: 'ja-JP',
-  KENIAN: 'sw-KE',
+  KENYAN: 'sw-KE',
   KOREAN: 'ko-KR',
   POLISH: 'pl-PL',
   RUSSIAN: 'ru-RU',
