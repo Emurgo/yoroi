@@ -10,21 +10,26 @@ import {useNavigateTo} from './navigation'
 import {NoNftsScreen} from './NoNftsScreen'
 
 export const Nfts = () => {
-  const {search, nfts, isLoading, refetch, isError} = useFilteredNfts()
   const navigateTo = useNavigateTo()
   const handleNftSelect = (index: number) => navigateTo.nftDetails(nfts[index].id)
-  const [isRefreshing, setIsRefreshing] = React.useState(false)
+  const [isManualRefreshing, setIsManualRefreshing] = React.useState(false)
   const strings = useStrings()
 
+  const {search, nfts, isLoading, refetch, isError} = useFilteredNfts({
+    onSettled: () => {
+      if (isManualRefreshing) setIsManualRefreshing(false)
+    },
+  })
+
   const onRefresh = React.useCallback(() => {
-    setIsRefreshing(true)
-    refetch().then(() => setIsRefreshing(false))
+    setIsManualRefreshing(true)
+    refetch()
   }, [refetch])
 
   if (isError) {
     return (
       <ScreenWrapper>
-        <ErrorScreen onRefresh={onRefresh} isRefreshing={isRefreshing} />
+        <ErrorScreen onRefresh={onRefresh} isRefreshing={isManualRefreshing} />
       </ScreenWrapper>
     )
   }
@@ -43,7 +48,7 @@ export const Nfts = () => {
         <ScrollView
           style={styles.scrollView}
           contentContainerStyle={styles.scrollViewError}
-          refreshControl={<RefreshControl onRefresh={onRefresh} refreshing={isRefreshing} />}
+          refreshControl={<RefreshControl onRefresh={onRefresh} refreshing={isManualRefreshing} />}
         >
           <NoNftsScreen message={strings.noNftsFound} />
         </ScrollView>
@@ -57,7 +62,7 @@ export const Nfts = () => {
         <ScrollView
           style={styles.scrollView}
           contentContainerStyle={styles.scrollViewError}
-          refreshControl={<RefreshControl onRefresh={onRefresh} refreshing={isRefreshing} />}
+          refreshControl={<RefreshControl onRefresh={onRefresh} refreshing={isManualRefreshing} />}
         >
           <NoNftsScreen
             message={strings.noNftsInWallet}
@@ -85,7 +90,7 @@ export const Nfts = () => {
           </View>
         )}
 
-        <ImageGallery nfts={nfts} onSelect={handleNftSelect} onRefresh={onRefresh} isRefreshing={isRefreshing} />
+        <ImageGallery nfts={nfts} onSelect={handleNftSelect} onRefresh={onRefresh} isRefreshing={isManualRefreshing} />
       </View>
     </ScreenWrapper>
   )
