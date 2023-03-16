@@ -3,7 +3,7 @@ import {DefaultAsset, TokenInfo} from '../../types'
 export const NETWORK_ID = 300
 export const WALLET_IMPLEMENTATION_ID = 'haskell-shelley'
 export const API_ROOT = 'https://preprod-backend.yoroiwallet.com/api'
-export const TOKEN_INFO_SERVICE = 'https://metadata.cardano-testnet.iohkdev.io'
+export const TOKEN_INFO_SERVICE = 'https://metadata.emurgornd.com'
 export const DISCOVERY_GAP_SIZE = 20
 export const DISCOVERY_BLOCK_SIZE = 50 // should be less than API limitations
 export const MAX_GENERATED_UNUSED = 20 // must be <= gap size
