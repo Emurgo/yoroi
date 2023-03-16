@@ -3,10 +3,10 @@ import _ from 'lodash'
 import React from 'react'
 import {useIntl} from 'react-intl'
 import {ActivityIndicator, Image, StyleSheet, View} from 'react-native'
-import {TouchableOpacity} from 'react-native-gesture-handler'
+import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, Checkbox, KeyboardSpacer, ScrollableView, Spacer, StatusBar, Text, TextInput} from '../../components'
+import {Button, Checkbox, KeyboardSpacer, Spacer, StatusBar, Text, TextInput} from '../../components'
 import {debugWalletInfo, features} from '../../features'
 import {formatTokenAmount, truncateWithEllipsis} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
@@ -163,7 +163,7 @@ export const SendScreen = () => {
 
       <AvailableAmountBanner />
 
-      <ScrollableView bounces={false} style={styles.content}>
+      <ScrollView bounces={false} style={styles.content}>
         <BalanceAfterTransaction yoroiUnsignedTx={yoroiUnsignedTx} />
 
         <Fee yoroiUnsignedTx={yoroiUnsignedTx} />
@@ -231,7 +231,7 @@ export const SendScreen = () => {
             <ActivityIndicator size="large" color="black" />
           </View>
         )}
-      </ScrollableView>
+      </ScrollView>
 
       <View style={styles.actions}>
         <Button onPress={onConfirm} title={strings.continueButton} disabled={!isValid} testID="continueButton" />
