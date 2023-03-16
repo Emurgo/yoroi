@@ -107,7 +107,7 @@ const HASKELL_SHELLEY_TESTNET = {
   BACKEND: {
     API_ROOT: 'https://preprod-backend.yoroiwallet.com/api',
     NFT_STORAGE_URL: 'https://validated-nft-images.s3.amazonaws.com',
-    TOKEN_INFO_SERVICE: 'https://metadata.cardano-testnet.iohkdev.io',
+    TOKEN_INFO_SERVICE: 'https://metadata.emurgornd.com',
     ..._DEFAULT_BACKEND_RULES,
   },
   BASE_CONFIG: [
