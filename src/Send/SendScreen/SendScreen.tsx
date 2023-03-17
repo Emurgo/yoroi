@@ -156,7 +156,7 @@ export const SendScreen = () => {
   }
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
+    <SafeAreaView edges={['left', 'right']} style={styles.container}>
       <StatusBar type="dark" />
 
       <ErrorBanners />
