@@ -31,3 +31,19 @@ export const convertNft = (
     },
   }
 }
+
+export const createPlaceholderNft = ({shortName, policyId}: {shortName: string; policyId: string}): YoroiNft => {
+  const assetNameHex = asciiToHex(shortName)
+  const fingerprint = getAssetFingerprint(policyId, assetNameHex)
+  const id = `${policyId}.${assetNameHex}`
+  return {
+    id,
+    fingerprint,
+    name: shortName,
+    description: '',
+    metadata: {
+      policyId,
+      assetNameHex,
+    },
+  }
+}

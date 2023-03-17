@@ -14,7 +14,7 @@ import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
 import {useNft} from '../yoroi-wallets'
 import {YoroiNft} from '../yoroi-wallets/types'
-import placeholder from './../assets/img/nft-placeholder.png'
+import placeholderImage from './../assets/img/nft-placeholder.png'
 
 export const NftDetails = () => {
   const {id} = useRoute<RouteProp<NftRoutes, 'nft-details'>>().params
@@ -61,7 +61,12 @@ export const NftDetails = () => {
 
 const UnModeratedNftImage = ({nft}: {nft: YoroiNft}) => {
   const navigateTo = useNavigateTo()
-  return <NftImage source={{uri: nft.image}} onPress={() => navigateTo.nftZoom(nft.id)} />
+  return (
+    <NftImage
+      source={typeof nft.image === 'string' ? {uri: nft.image} : placeholderImage}
+      onPress={() => navigateTo.nftZoom(nft.id)}
+    />
+  )
 }
 
 const NftImage = ({
@@ -88,7 +93,7 @@ const ModeratedNftImage = ({nft}: {nft: YoroiNft}) => {
 
   return (
     <NftImage
-      source={canShowNft ? {uri: nft.image} : placeholder}
+      source={canShowNft ? {uri: nft.image} : placeholderImage}
       onPress={() => navigateTo.nftZoom(nft.id)}
       disabled={!canShowNft}
     />
@@ -123,13 +128,13 @@ const NftOverview = ({nft}: {nft: YoroiNft}) => {
       <HR />
 
       <MetadataRow title={strings.description}>
-        <Text secondary>{nft.description}</Text>
+        <Text secondary>{normalizeMetadataString(nft.description)}</Text>
       </MetadataRow>
 
       <HR />
 
       <MetadataRow title={strings.author}>
-        <Text secondary>{nft.metadata.originalMetadata.author ?? '-'}</Text>
+        <Text secondary>{normalizeMetadataString(nft.metadata.originalMetadata?.author)}</Text>
       </MetadataRow>
 
       <HR />
@@ -173,6 +178,10 @@ const NftOverview = ({nft}: {nft: YoroiNft}) => {
       <Spacer height={24} />
     </View>
   )
+}
+
+const normalizeMetadataString = (content?: string): string => {
+  return typeof content === 'undefined' || content.length === 0 ? '-' : content
 }
 
 const HR = () => (

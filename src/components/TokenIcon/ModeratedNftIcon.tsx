@@ -39,10 +39,16 @@ function BlockedNftIcon() {
 }
 
 function ApprovedNftIcon({image}: {image?: string}) {
+  if (typeof image === 'undefined') {
+    return <Icon source={NftPlaceholder} />
+  }
   return <Icon source={{uri: image}} />
 }
 
 function ConsentNftIcon({image}: {image?: string}) {
+  if (typeof image === 'undefined') {
+    return <Icon source={NftPlaceholder} />
+  }
   return <Image source={{uri: image}} style={styles.assetIcon} blurRadius={20} borderRadius={32} />
 }
 

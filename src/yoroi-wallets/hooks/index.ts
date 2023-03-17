@@ -238,7 +238,7 @@ export const useNftImageModerated = ({
 }: {
   wallet: YoroiWallet
   nftId: string
-}): {image: string; status: YoroiNftModerationStatus} | null => {
+}): {image?: string; status: YoroiNftModerationStatus} | null => {
   const nft = useNft(wallet, {id: nftId})
   const fingerprint = nft.fingerprint
   const {data} = useNftModerationStatus({wallet, fingerprint})

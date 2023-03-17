@@ -63,13 +63,13 @@ export type YoroiNft = {
   id: string
   name: string
   description: string
-  image: string
-  thumbnail: string
+  image?: string
+  thumbnail?: string
   fingerprint: string
   metadata: {
     policyId: string
     assetNameHex: string
-    originalMetadata: NftMetadata
+    originalMetadata?: NftMetadata
   }
 }
 

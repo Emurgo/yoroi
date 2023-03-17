@@ -50,7 +50,7 @@ interface ModeratedImageProps {
 const UnModeratedImage = ({onPress, nft: {image, name}}: ModeratedImageProps) => {
   return (
     <TouchableOpacity onPress={onPress}>
-      <ApprovedNft text={name} uri={image} />
+      {typeof image === 'string' ? <ApprovedNft text={name} uri={image} /> : <PlaceholderNft text={name} />}
     </TouchableOpacity>
   )
 }
@@ -87,7 +87,9 @@ const ModeratedImage = ({onPress, nft}: ModeratedImageProps) => {
 
   return (
     <TouchableOpacity onPress={onPress}>
-      {isImageApproved ? (
+      {typeof thumbnail === 'undefined' ? (
+        <PlaceholderNft text={text} />
+      ) : isImageApproved ? (
         <ApprovedNft text={text} uri={thumbnail} />
       ) : isImageWithConsent ? (
         <RequiresConsentNft text={text} uri={thumbnail} />
@@ -101,18 +103,14 @@ const ModeratedImage = ({onPress, nft}: ModeratedImageProps) => {
 }
 
 function BlockedNft({text}: {text: string}) {
-  return (
-    <View>
-      <Image source={placeholderImage} style={[styles.image, {width: IMAGE_SIZE, height: IMAGE_SIZE}]} />
-
-      <Spacer height={IMAGE_PADDING} />
-
-      <Text style={[styles.text, {width: IMAGE_SIZE}]}>{text}</Text>
-    </View>
-  )
+  return <PlaceholderNft text={text} />
 }
 
 function ManualReviewNft({text}: {text: string}) {
+  return <PlaceholderNft text={text} />
+}
+
+function PlaceholderNft({text}: {text: string}) {
   return (
     <View>
       <Image source={placeholderImage} style={[styles.image, {width: IMAGE_SIZE, height: IMAGE_SIZE}]} />
@@ -123,7 +121,6 @@ function ManualReviewNft({text}: {text: string}) {
     </View>
   )
 }
-
 function RequiresConsentNft({uri, text}: {text: string; uri: string}) {
   return (
     <View>
