@@ -2,11 +2,11 @@ import {useNavigation} from '@react-navigation/native'
 import _ from 'lodash'
 import React from 'react'
 import {useIntl} from 'react-intl'
-import {ActivityIndicator, Image, ScrollView, StyleSheet, View} from 'react-native'
-import {TouchableOpacity} from 'react-native-gesture-handler'
+import {ActivityIndicator, Image, StyleSheet, View} from 'react-native'
+import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, Checkbox, Spacer, StatusBar, Text, TextInput} from '../../components'
+import {Button, Checkbox, KeyboardSpacer, Spacer, StatusBar, Text, TextInput} from '../../components'
 import {debugWalletInfo, features} from '../../features'
 import {formatTokenAmount, truncateWithEllipsis} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
@@ -163,7 +163,7 @@ export const SendScreen = () => {
 
       <AvailableAmountBanner />
 
-      <ScrollView style={styles.content} keyboardDismissMode="on-drag" keyboardShouldPersistTaps="always">
+      <ScrollView bounces={false} style={styles.content}>
         <BalanceAfterTransaction yoroiUnsignedTx={yoroiUnsignedTx} />
 
         <Fee yoroiUnsignedTx={yoroiUnsignedTx} />
@@ -223,6 +223,8 @@ export const SendScreen = () => {
           text={isPrimaryToken ? strings.checkboxSendAllAssets : strings.checkboxSendAll({assetId: assetDenomination})}
           testID="sendAllCheckbox"
         />
+
+        <KeyboardSpacer />
 
         {recomputing && (
           <View style={styles.indicator}>
