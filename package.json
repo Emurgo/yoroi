@@ -86,6 +86,7 @@
     "@emurgo/cip14-js": "^3.0.1",
     "@emurgo/cip4-js": "1.0.7",
     "@emurgo/cross-csl-mobile": "^1.0.0",
+    "@emurgo/react-native-blockies-svg": "^0.0.2",
     "@emurgo/react-native-haskell-shelley": "4.0.0-beta.2",
     "@emurgo/react-native-hid": "^5.15.6",
     "@emurgo/yoroi-lib": "^0.3.2",
