@@ -11,6 +11,14 @@ storiesOf('NftPreview', module)
   .add('Showing an SVG', () => (
     <NftPreview nft={{...nft, image: 'https://www.svgrepo.com/show/501883/ice-cream.svg'}} width={200} height={200} />
   ))
+  .add('Showing an SVG with blur radius enabled', () => (
+    <NftPreview
+      nft={{...nft, image: 'https://www.svgrepo.com/show/501883/ice-cream.svg'}}
+      width={200}
+      height={200}
+      blurRadius={5}
+    />
+  ))
   .add('Showing NFT thumbnail', () => (
     <NftPreview
       nft={{...nft, thumbnail: 'https://www.svgrepo.com/show/501883/ice-cream.svg'}}

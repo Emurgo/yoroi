@@ -24,20 +24,21 @@ export const NftPreview = ({
   resizeMode?: ImageResizeMode
   blurRadius?: number
 }) => {
-  if (showPlaceholder) {
-    return <Image source={placeholder} style={[style, {width, height}]} resizeMode={resizeMode ?? 'contain'} />
-  }
-
   const uri = showThumbnail ? nft.thumbnail : nft.image
   const isUriSvg = uri.toLowerCase().endsWith('.svg') || isSvgMediaType(nft.metadata.originalMetadata.mediaType)
   nft.metadata.originalMetadata.files?.some((file) => file.src === uri && isSvgMediaType(file.mediaType))
+
+  if (showPlaceholder || (isUriSvg && blurRadius !== undefined)) {
+    // Since SvgUri does not support blur radius, we show a placeholder
+    return <Image source={placeholder} style={[style, {width, height}]} resizeMode={resizeMode ?? 'contain'} />
+  }
 
   if (isUriSvg) {
     // passing width or height with value undefined has a different behavior than not passing it at all
     return (
       <SvgUri
         {...(width !== undefined ? {width} : undefined)}
-        {...(height !== undefined ? {height} : undefined)}
+        height={height}
         uri={uri}
         style={style}
         preserveAspectRatio="xMinYMin meet"
