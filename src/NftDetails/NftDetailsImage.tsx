@@ -16,16 +16,13 @@ export const NftDetailsImage = () => {
 
   const dimensions = Dimensions.get('window')
   const imageSize = Math.min(dimensions.width, dimensions.height)
+  const source = nft.logo !== undefined ? {uri: nft.logo} : placeholderImage
 
   return (
     <FadeIn style={styles.container}>
       <ViewTransformer maxScale={3} minScale={1}>
         <View style={styles.contentContainer}>
-          <Image
-            source={typeof nft.image === 'string' ? {uri: nft.image} : placeholderImage}
-            style={{height: imageSize, width: imageSize}}
-            resizeMode="contain"
-          />
+          <Image source={source} style={{height: imageSize, width: imageSize}} resizeMode="contain" />
         </View>
       </ViewTransformer>
     </FadeIn>

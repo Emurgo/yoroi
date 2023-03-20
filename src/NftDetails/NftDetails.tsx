@@ -61,12 +61,8 @@ export const NftDetails = () => {
 
 const UnModeratedNftImage = ({nft}: {nft: YoroiNft}) => {
   const navigateTo = useNavigateTo()
-  return (
-    <NftImage
-      source={typeof nft.image === 'string' ? {uri: nft.image} : placeholderImage}
-      onPress={() => navigateTo.nftZoom(nft.id)}
-    />
-  )
+  const source = typeof nft.logo === 'string' ? {uri: nft.logo} : placeholderImage
+  return <NftImage source={source} onPress={() => navigateTo.nftZoom(nft.id)} />
 }
 
 const NftImage = ({
@@ -93,7 +89,7 @@ const ModeratedNftImage = ({nft}: {nft: YoroiNft}) => {
 
   return (
     <NftImage
-      source={canShowNft ? {uri: nft.image} : placeholderImage}
+      source={canShowNft ? {uri: nft.logo} : placeholderImage}
       onPress={() => navigateTo.nftZoom(nft.id)}
       disabled={!canShowNft}
     />

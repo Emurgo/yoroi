@@ -242,7 +242,7 @@ export const useNftImageModerated = ({
   const nft = useNft(wallet, {id: nftId})
   const fingerprint = nft.fingerprint
   const {data} = useNftModerationStatus({wallet, fingerprint})
-  return useMemo(() => (data ? {image: nft.image, status: data} : null), [nft, data])
+  return useMemo(() => (data ? {image: nft.logo, status: data} : null), [nft, data])
 }
 
 export const useToken = (

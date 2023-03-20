@@ -43,7 +43,7 @@ const ModeratedIcon = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string}
 
 const UnModeratedNftIcon = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string}) => {
   const nft = useNft(wallet, {id: tokenId})
-  return <ModeratedNftIcon status="approved" image={nft.image} />
+  return <ModeratedNftIcon status="approved" image={nft.logo} />
 }
 
 export const Placeholder = () => (

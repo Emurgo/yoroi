@@ -22,7 +22,7 @@ import {NFTAsset, RemoteAsset, YoroiNft, YoroiNftModerationStatus} from '../../t
 import {hasProperties, isArray, isNonNullable, isObject, isRecord} from '../../utils/parsing'
 import {ServerStatus} from '..'
 import {ApiError} from '../errors'
-import {convertNft, createPlaceholderNft} from '../nfts'
+import {convertNft} from '../nfts'
 import fetchDefault, {checkedFetch} from './fetch'
 import {fallbackTokenInfo, tokenInfo, toTokenSubject} from './utils'
 
@@ -229,14 +229,9 @@ function parseNFTs(value: unknown, storageUrl: string): YoroiNft[] {
       return null
     }
 
-    const [policyId, assetName] = id.split('.')
-    const nftMetadata = nftAsset.metadata?.[policyId]?.[assetName]
-
-    if (!nftMetadata || !nftMetadata.image) {
-      return createPlaceholderNft({policyId, shortName: assetName})
-    }
-
-    return convertNft(nftMetadata, storageUrl, policyId, assetName)
+    const [policyId, shortName] = id.split('.')
+    const metadata = nftAsset.metadata?.[policyId]?.[shortName]
+    return convertNft({metadata, storageUrl, policyId, shortName: shortName})
   })
 
   return tokens.filter(isNonNullable)

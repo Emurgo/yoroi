@@ -47,10 +47,10 @@ interface ModeratedImageProps {
   nft: YoroiNft
 }
 
-const UnModeratedImage = ({onPress, nft: {image, name}}: ModeratedImageProps) => {
+const UnModeratedImage = ({onPress, nft: {logo, name}}: ModeratedImageProps) => {
   return (
     <TouchableOpacity onPress={onPress}>
-      {typeof image === 'string' ? <ApprovedNft text={name} uri={image} /> : <PlaceholderNft text={name} />}
+      {logo !== undefined ? <ApprovedNft text={name} uri={logo} /> : <PlaceholderNft text={name} />}
     </TouchableOpacity>
   )
 }

@@ -7,6 +7,10 @@ import {YoroiNftModerationStatus} from '../../yoroi-wallets/types'
 import {Placeholder} from './TokenIcon'
 
 export const ModeratedNftIcon = ({image, status}: {image?: string; status: YoroiNftModerationStatus}) => {
+  if (image === undefined) {
+    return <PlaceholderIcon />
+  }
+
   if (status === 'pending') {
     return <Placeholder />
   }
@@ -31,24 +35,22 @@ export const ModeratedNftIcon = ({image, status}: {image?: string; status: Yoroi
 }
 
 function ManualReviewNftIcon() {
-  return <Icon source={NftPlaceholder} />
+  return <PlaceholderIcon />
 }
 
 function BlockedNftIcon() {
+  return <PlaceholderIcon />
+}
+
+function PlaceholderIcon() {
   return <Icon source={NftPlaceholder} />
 }
 
-function ApprovedNftIcon({image}: {image?: string}) {
-  if (typeof image === 'undefined') {
-    return <Icon source={NftPlaceholder} />
-  }
+function ApprovedNftIcon({image}: {image: string}) {
   return <Icon source={{uri: image}} />
 }
 
-function ConsentNftIcon({image}: {image?: string}) {
-  if (typeof image === 'undefined') {
-    return <Icon source={NftPlaceholder} />
-  }
+function ConsentNftIcon({image}: {image: string}) {
   return <Image source={{uri: image}} style={styles.assetIcon} blurRadius={20} borderRadius={32} />
 }
 
