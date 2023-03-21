@@ -1,6 +1,7 @@
 import {features} from '../../features'
 import {getAssetFingerprint} from '../../legacy/format'
 import {NftMetadata, YoroiNft} from '../types'
+import {isString} from '../utils'
 import {asciiToHex} from './api/utils'
 
 export const convertNft = (options: {
@@ -37,6 +38,6 @@ export const convertNft = (options: {
 
 const normalizeProperty = (value: string | string[] | undefined): string | undefined => {
   if (value === undefined) return undefined
-  if (typeof value === 'string') return value
+  if (isString(value)) return value
   return value.join(' ')
 }

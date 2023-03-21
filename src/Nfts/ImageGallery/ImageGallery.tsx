@@ -58,14 +58,14 @@ const UnModeratedImage = ({onPress, nft: {logo, name}}: ModeratedImageProps) => 
 const ModeratedImage = ({onPress, nft}: ModeratedImageProps) => {
   const {thumbnail, name: text, fingerprint} = nft
   const wallet = useSelectedWallet()
-  const {isError, moderationStatus, isLoading} = useModeratedNftImage({wallet, fingerprint})
+  const {isError, status, isLoading} = useModeratedNftImage({wallet, fingerprint})
 
-  const isPendingManualReview = moderationStatus === 'manual_review'
-  const isPendingAutomaticReview = moderationStatus === 'pending'
+  const isPendingManualReview = status === 'manual_review'
+  const isPendingAutomaticReview = status === 'pending'
 
-  const isImageApproved = moderationStatus === 'approved'
-  const isImageWithConsent = moderationStatus === 'consent'
-  const isImageBlocked = moderationStatus === 'blocked'
+  const isImageApproved = status === 'approved'
+  const isImageWithConsent = status === 'consent'
+  const isImageBlocked = status === 'blocked'
 
   const showSkeleton = isLoading || isPendingAutomaticReview
 
@@ -87,7 +87,7 @@ const ModeratedImage = ({onPress, nft}: ModeratedImageProps) => {
 
   return (
     <TouchableOpacity onPress={onPress}>
-      {typeof thumbnail === 'undefined' ? (
+      {thumbnail === undefined ? (
         <PlaceholderNft text={text} />
       ) : isImageApproved ? (
         <ApprovedNft text={text} uri={thumbnail} />

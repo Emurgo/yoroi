@@ -12,6 +12,7 @@ import {useModeratedNftImage} from '../Nfts/hooks'
 import {useNavigateTo} from '../Nfts/navigation'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
+import {isEmptyString} from '../utils'
 import {useNft} from '../yoroi-wallets'
 import {YoroiNft} from '../yoroi-wallets/types'
 import placeholderImage from './../assets/img/nft-placeholder.png'
@@ -61,7 +62,7 @@ export const NftDetails = () => {
 
 const UnModeratedNftImage = ({nft}: {nft: YoroiNft}) => {
   const navigateTo = useNavigateTo()
-  const source = typeof nft.logo === 'string' ? {uri: nft.logo} : placeholderImage
+  const source = !isEmptyString(nft.logo) ? {uri: nft.logo} : placeholderImage
   return <NftImage source={source} onPress={() => navigateTo.nftZoom(nft.id)} />
 }
 
@@ -84,8 +85,8 @@ const NftImage = ({
 const ModeratedNftImage = ({nft}: {nft: YoroiNft}) => {
   const wallet = useSelectedWallet()
   const navigateTo = useNavigateTo()
-  const {moderationStatus} = useModeratedNftImage({wallet, fingerprint: nft.fingerprint})
-  const canShowNft = moderationStatus === 'approved' || moderationStatus === 'consent'
+  const {status} = useModeratedNftImage({wallet, fingerprint: nft.fingerprint})
+  const canShowNft = status === 'approved' || status === 'consent'
 
   return (
     <NftImage
@@ -177,7 +178,7 @@ const NftOverview = ({nft}: {nft: YoroiNft}) => {
 }
 
 const normalizeMetadataString = (content?: string): string => {
-  return typeof content === 'undefined' || content.length === 0 ? '-' : content
+  return isEmptyString(content) || content.length === 0 ? '-' : content
 }
 
 const HR = () => (
