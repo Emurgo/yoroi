@@ -70,16 +70,23 @@ export const Amounts = {
       [tokenId]: quantity,
     }
   },
+  map: (amounts: YoroiAmounts, fn: (amount: YoroiAmount) => YoroiAmount): YoroiAmounts =>
+    Amounts.fromArray(Amounts.toArray(amounts).map(fn)),
   toArray: (amounts: YoroiAmounts) =>
     Object.keys(amounts).reduce(
       (result, current) => [...result, Amounts.getAmount(amounts, current)],
       [] as Array<YoroiAmount>,
     ),
+  fromArray: (amounts: Array<YoroiAmount>) =>
+    Object.fromEntries(amounts.map((amount) => [amount.tokenId, amount.quantity])),
 }
 
 export const Quantities = {
   sum: (quantities: Array<Quantity>) => {
     return quantities.reduce((result, current) => result.plus(current), new BigNumber(0)).toString() as Quantity
+  },
+  max: (...quantities: Array<Quantity>) => {
+    return BigNumber.max(...quantities).toString() as Quantity
   },
   diff: (quantity1: Quantity, quantity2: Quantity) => {
     return new BigNumber(quantity1).minus(new BigNumber(quantity2)).toString() as Quantity
