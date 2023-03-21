@@ -226,7 +226,7 @@ export const SendScreen = () => {
 
         <KeyboardSpacer />
 
-        {recomputing && (
+        {true && (
           <View style={styles.indicator}>
             <ActivityIndicator size="large" color="black" />
           </View>
@@ -260,6 +260,6 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
   },
   indicator: {
-    marginTop: 26,
+    paddingVertical: 26,
   },
 })
