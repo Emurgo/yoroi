@@ -260,6 +260,6 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
   },
   indicator: {
-    marginTop: 26,
+    paddingVertical: 26,
   },
 })
