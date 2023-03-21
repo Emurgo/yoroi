@@ -1,11 +1,6 @@
 import * as React from 'react'
 
-import {Address, Quantity, TokenId, YoroiEntry} from '../../yoroi-wallets/types'
-
-export type YoroiTarget = {
-  receiver: string
-  entry: YoroiEntry
-}
+import {Address, Quantity, TokenId, YoroiTarget} from '../../yoroi-wallets'
 
 type SendState = {
   selectedTargetIndex: number

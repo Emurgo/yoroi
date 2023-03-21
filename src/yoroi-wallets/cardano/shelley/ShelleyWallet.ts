@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {SendToken} from '@emurgo/yoroi-lib'
 import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
 import ExtendableError from 'es6-error'
@@ -24,10 +25,11 @@ import type {
   Transaction,
   TxStatusRequest,
   TxStatusResponse,
+  YoroiEntry,
   YoroiNft,
   YoroiNftModerationStatus,
 } from '../../types'
-import {Quantity, SendTokenList, StakingInfo, YoroiSignedTx, YoroiUnsignedTx} from '../../types'
+import {Quantity, StakingInfo, YoroiSignedTx, YoroiUnsignedTx} from '../../types'
 import {Quantities} from '../../utils'
 import {parseSafe} from '../../utils/parsing'
 import {validatePassword} from '../../utils/validators'
@@ -43,6 +45,7 @@ import {
   NotEnoughMoneyToSendError,
   RegistrationStatus,
   walletChecksum,
+  withMinAmounts,
 } from '..'
 import * as api from '../api'
 import {encryptWithPassword} from '../catalyst/catalystCipher'
@@ -58,7 +61,7 @@ import {yoroiSignedTx} from '../signedTx'
 import {TransactionManager} from '../transactionManager'
 import {isYoroiWallet, WalletEvent, WalletSubscription, YoroiWallet} from '../types'
 import {yoroiUnsignedTx} from '../unsignedTx'
-import {deriveRewardAddressHex} from '../utils'
+import {deriveRewardAddressHex, toSendTokenList} from '../utils'
 import {makeUtxoManager, UtxoManager} from '../utxoManager'
 import {
   ACCOUNT_INDEX,
@@ -546,7 +549,7 @@ export class ShelleyWallet implements YoroiWallet {
 
   // =================== tx building =================== //
 
-  async createUnsignedTx(receiver: string, tokens: SendTokenList, auxiliaryData?: Array<CardanoTypes.TxMetadata>) {
+  async createUnsignedTx(entry: YoroiEntry, auxiliaryData?: Array<CardanoTypes.TxMetadata>) {
     const time = await this.checkServerStatus()
       .then(({serverTime}) => serverTime || Date.now())
       .catch(() => Date.now())
@@ -554,14 +557,15 @@ export class ShelleyWallet implements YoroiWallet {
     const absSlotNumber = new BigNumber(getTime(time).absoluteSlot)
     const changeAddr = await this.getAddressedChangeAddress()
     const addressedUtxos = await this.getAddressedUtxos()
+    const amounts = await withMinAmounts(entry.amounts, this.primaryToken)
 
     try {
       const unsignedTx = await Cardano.createUnsignedTx(
         absSlotNumber,
         addressedUtxos,
-        receiver,
+        entry.address,
         changeAddr,
-        tokens as any,
+        toSendTokenList(amounts, this.primaryToken) as unknown as Array<SendToken>,
         {
           keyDeposit: KEY_DEPOSIT,
           linearFee: {
@@ -937,7 +941,7 @@ export class ShelleyWallet implements YoroiWallet {
 
   // ============ security & key management ============ //
 
-  async getDecryptedRootKey(password: string) {
+  getDecryptedRootKey(password: string) {
     return this.encryptedStorage.rootKey.read(password)
   }
 
