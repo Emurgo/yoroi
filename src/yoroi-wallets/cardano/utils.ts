@@ -8,6 +8,7 @@ import {
   WALLET_CONFIG_24 as HASKELL_SHELLEY_24,
 } from '../cardano/shelley/constants'
 import {NETWORK_ID as testnetId} from '../cardano/shelley-testnet/constants'
+import {SendTokenList, Token, YoroiAmounts} from '../types'
 import {
   Addressing,
   BaseAsset,
@@ -17,6 +18,7 @@ import {
   WALLET_IMPLEMENTATION_REGISTRY,
   WalletImplementationId,
 } from '../types/other'
+import {Amounts} from '../utils'
 import {
   asciiToHex,
   CardanoHaskellShelleyNetwork,
@@ -276,3 +278,20 @@ export const toCardanoNetworkId = (networkId: number) => {
 
   throw new Error('invalid network id')
 }
+
+export const toSendTokenList = (amounts: YoroiAmounts, primaryToken: Token): SendTokenList =>
+  Amounts.toArray(amounts).map((amount) => {
+    const {tokenId, quantity} = amount
+
+    return {
+      token:
+        tokenId === primaryToken.identifier
+          ? primaryToken
+          : ({
+              ...primaryToken,
+              identifier: tokenId,
+              isDefault: false,
+            } as unknown as Token),
+      amount: quantity,
+    }
+  })
