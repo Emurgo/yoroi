@@ -340,8 +340,8 @@ PODS:
   - RNSentry (3.3.2):
     - React-Core
     - Sentry (= 7.10.1)
-  - RNSVG (7.2.1):
-    - React
+  - RNSVG (13.8.0):
+    - React-Core
   - RNVectorIcons (8.1.0):
     - React-Core
   - Sentry (7.10.1):
@@ -546,7 +546,7 @@ SPEC CHECKSUMS:
   BVLinearGradient: e3aad03778a456d77928f594a649e96995f1c872
   DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
   FBLazyVector: fa8275d5086566e22a26ddc385ab5772e7f9b1bd
-  FBReactNativeSpec: 82dc48a5c1de8caa2933fce4986a0927ad2391fe
+  FBReactNativeSpec: 09e71f626dc611ba6f450b2f19f1e2142282a53d
   glog: 73c2498ac6884b13ede40eda8228cb1eee9d9d62
   MultiplatformBleAdapter: 5a6a897b006764392f9cef785e4360f54fb9477d
   Permission-BluetoothPeripheral: a408e2ba4b43e60c5a4b8b4d442bb8abc93394b2
@@ -601,7 +601,7 @@ SPEC CHECKSUMS:
   RNReanimated: c1b56d030d1616239861534d9adb531f8cffab68
   RNScreens: 3ba2198ca3179f77f6158425fc31ba3c90a0d49f
   RNSentry: f8c14c77e400a93331b38538f735c2538f8108a8
-  RNSVG: 6c8e8c6f9e5a0caf910dd25aa6e4216045426e1d
+  RNSVG: c1e76b81c76cdcd34b4e1188852892dc280eb902
   RNVectorIcons: 31cebfcf94e8cf8686eb5303ae0357da64d7a5a4
   Sentry: ddcd9fde63cfe7e9e2243da59d98daa382413e49
   Yoga: d1fc3575b8b68891ff5ef3c276daa855e841eb32
