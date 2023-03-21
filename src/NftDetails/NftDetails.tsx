@@ -77,7 +77,7 @@ const ModeratedNftImage = ({nft}: {nft: YoroiNft}) => {
   if (!canShowNft) {
     return (
       <View style={styles.imageWrapper}>
-        <NftPreview nft={nft} showPlaceholder={true} style={styles.image} height={380} />
+        <NftPreview nft={nft} style={styles.image} height={380} showPlaceholder />
       </View>
     )
   }
