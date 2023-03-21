@@ -99,7 +99,7 @@ const MetadataRow = ({title, copyText, children}: {title: string; children: Reac
   return (
     <View style={styles.rowContainer}>
       <View style={styles.rowTitleContainer}>
-        <Text>{title}</Text>
+        <Text style={styles.title}>{title}</Text>
 
         {copyText !== undefined ? <CopyButton value={copyText} /> : null}
       </View>
@@ -256,6 +256,9 @@ const styles = StyleSheet.create({
   imageWrapper: {
     display: 'flex',
     flexDirection: 'row',
+  },
+  title: {
+    fontWeight: '500',
   },
 })
 
