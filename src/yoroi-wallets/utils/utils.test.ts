@@ -74,6 +74,12 @@ describe('Quantities', () => {
     expect(Quantities.isIndivisible('0000000000000000001', 18)).toBe(true)
     expect(Quantities.isIndivisible('00000000000000000001', 18)).toBe(false)
   })
+  it('max', () => {
+    expect(Quantities.max('1', '2')).toEqual('2')
+    expect(Quantities.max('1', '2', '3')).toEqual('3')
+    expect(Quantities.max('3', '2', '1')).toEqual('3')
+    expect(Quantities.max('1', '1')).toEqual('1')
+  })
 })
 
 describe('Amounts', () => {
@@ -169,6 +175,39 @@ describe('Amounts', () => {
       {tokenId: 'token123', quantity: '456'},
       {tokenId: 'token567', quantity: '-789'},
     ] as Array<YoroiAmount>)
+  })
+
+  it('from Array', () => {
+    const amounts: Array<YoroiAmount> = [
+      {tokenId: '', quantity: '123'},
+      {tokenId: 'SUN', quantity: '456'},
+      {tokenId: 'QWE', quantity: '789'},
+    ]
+
+    expect(Amounts.fromArray(amounts)).toEqual({
+      '': '123',
+      SUN: '456',
+      QWE: '789',
+    } as YoroiAmounts)
+  })
+
+  it('map', () => {
+    const amounts: YoroiAmounts = {
+      '': '1',
+      SUN: '4',
+      QWE: '7',
+    }
+
+    expect(
+      Amounts.map(amounts, (amount) => ({
+        ...amount,
+        quantity: Quantities.sum([amount.quantity, '1']),
+      })),
+    ).toEqual({
+      '': '2',
+      SUN: '5',
+      QWE: '8',
+    } as YoroiAmounts)
   })
 
   describe('save', () => {
