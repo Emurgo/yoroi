@@ -15573,12 +15573,6 @@ react-native-ble-plx@2.0.3, react-native-ble-plx@^2.0.3:
   resolved "https://registry.yarnpkg.com/react-native-ble-plx/-/react-native-ble-plx-2.0.3.tgz#b0a746f33389dbf7fd7b158513330d487d5d0fbb"
   integrity sha512-62LRDBPf/03K7sge+qq2ZuF8PWCGB782G+SBrpgNm5fA5Hs3FCY1ExTJZ1G0tB5ZhBPYEXcKRxPLuFegcDFrqA==
 
-"react-native-blockies-svg@git+https://github.com/Emurgo/react-native-blockies-svg":
-  version "0.0.1"
-  resolved "git+https://github.com/Emurgo/react-native-blockies-svg#f3bca0e23b234e3d9373e56cae8ad5bcd07ed378"
-  dependencies:
-    react-native-svg "^7.2.0"
-
 react-native-bootsplash@3.2.3:
   version "3.2.3"
   resolved "https://registry.yarnpkg.com/react-native-bootsplash/-/react-native-bootsplash-3.2.3.tgz#5f985a492696e14c73dc3b8475be5385b7436593"
@@ -15832,7 +15826,7 @@ react-native-skeleton-placeholder@^5.2.0:
   resolved "https://registry.yarnpkg.com/react-native-skeleton-placeholder/-/react-native-skeleton-placeholder-5.2.0.tgz#eace7e6ec1a2637e0e19d20210e4d36466c0af4d"
   integrity sha512-Usy3nvWeyODHkhV+kpsZGnXE/7gyxazk2sKhr7CgFgm3VGl549TPeLBZ1YK8AM46/uFxLd+CJhQ6saJDVhPUmQ==
 
-react-native-svg@13.8.0, react-native-svg@^7.2.0:
+react-native-svg@13.8.0:
   version "13.8.0"
   resolved "https://registry.yarnpkg.com/react-native-svg/-/react-native-svg-13.8.0.tgz#b6a22cf77f8098f910490a13aeb160a37e182f97"
   integrity sha512-G8Mx6W86da+vFimZBJvA93POw8yz0fgDS5biy6oIjMWVJVQSDzCyzwO/zY0yuZmCDhKSZzogl5m0wXXvW2OcTA==

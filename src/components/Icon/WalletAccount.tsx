@@ -1,6 +1,6 @@
+import Blockies from '@emurgo/react-native-blockies-svg'
 import React from 'react'
 import {StyleSheet, View, ViewStyle} from 'react-native'
-import Blockies from 'react-native-blockies-svg'
 import tinycolor from 'tinycolor2'
 
 import {COLORS as APP_COLORS} from '../../theme'
