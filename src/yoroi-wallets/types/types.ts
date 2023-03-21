@@ -73,4 +73,9 @@ export type YoroiNft = {
   }
 }
 
+export type YoroiTarget = {
+  receiver: string
+  entry: YoroiEntry
+}
+
 export type YoroiNftModerationStatus = 'consent' | 'blocked' | 'approved' | 'pending' | 'manual_review'
