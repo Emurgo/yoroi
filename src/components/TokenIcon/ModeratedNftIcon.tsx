@@ -1,49 +1,87 @@
 import React from 'react'
-import {Image, StyleSheet} from 'react-native'
-import {Avatar} from 'react-native-paper'
+import {StyleSheet, View} from 'react-native'
 
-import NftPlaceholder from '../../assets/img/nft-placeholder.png'
-import {YoroiNftModerationStatus} from '../../yoroi-wallets/types'
+import {YoroiNft, YoroiNftModerationStatus} from '../../yoroi-wallets/types'
+import {NftPreview} from '../NftPreview'
 import {Placeholder} from './TokenIcon'
 
-export const ModeratedNftIcon = ({image, status}: {image?: string; status: YoroiNftModerationStatus}) => {
+const ICON_SIZE = 32
+
+export const ModeratedNftIcon = ({nft, status}: {nft: YoroiNft; status: YoroiNftModerationStatus}) => {
   if (status === 'pending') {
     return <Placeholder />
   }
 
   if (status === 'blocked') {
-    return <BlockedNftIcon />
+    return <BlockedNftIcon nft={nft} />
   }
 
   if (status === 'consent') {
-    return <ConsentNftIcon image={image} />
+    return <ConsentNftIcon nft={nft} />
   }
 
   if (status === 'approved') {
-    return <ApprovedNftIcon image={image} />
+    return <ApprovedNftIcon nft={nft} />
   }
 
   if (status === 'manual_review') {
-    return <ManualReviewNftIcon />
+    return <ManualReviewNftIcon nft={nft} />
   }
 
   return null
 }
 
-function ManualReviewNftIcon() {
-  return <Icon source={NftPlaceholder} />
+function ManualReviewNftIcon({nft}: {nft: YoroiNft}) {
+  return (
+    <View style={styles.wrapper}>
+      <NftPreview
+        nft={nft}
+        height={ICON_SIZE}
+        width={ICON_SIZE}
+        style={styles.assetIcon}
+        showPlaceholder
+        resizeMode="cover"
+      />
+    </View>
+  )
 }
 
-function BlockedNftIcon() {
-  return <Icon source={NftPlaceholder} />
+function BlockedNftIcon({nft}: {nft: YoroiNft}) {
+  return (
+    <View style={styles.wrapper}>
+      <NftPreview
+        nft={nft}
+        height={ICON_SIZE}
+        width={ICON_SIZE}
+        style={styles.assetIcon}
+        showPlaceholder
+        resizeMode="cover"
+      />
+    </View>
+  )
 }
 
-function ApprovedNftIcon({image}: {image?: string}) {
-  return <Icon source={{uri: image}} />
+function ApprovedNftIcon({nft}: {nft: YoroiNft}) {
+  return (
+    <View style={styles.wrapper}>
+      <NftPreview nft={nft} height={ICON_SIZE} width={ICON_SIZE} style={styles.assetIcon} resizeMode="cover" />
+    </View>
+  )
 }
 
-function ConsentNftIcon({image}: {image?: string}) {
-  return <Image source={{uri: image}} style={styles.assetIcon} blurRadius={20} borderRadius={32} />
+function ConsentNftIcon({nft}: {nft: YoroiNft}) {
+  return (
+    <View style={styles.wrapper}>
+      <NftPreview
+        nft={nft}
+        height={ICON_SIZE}
+        width={ICON_SIZE}
+        style={styles.assetIcon}
+        resizeMode="cover"
+        blurRadius={20}
+      />
+    </View>
+  )
 }
 
 const styles = StyleSheet.create({
@@ -52,9 +90,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'transparent',
-    height: 32,
-    width: 32,
+  },
+  wrapper: {
+    borderRadius: ICON_SIZE,
+    overflow: 'hidden',
   },
 })
-
-const Icon = (props) => <Avatar.Image {...props} size={32} style={styles.assetIcon} />
