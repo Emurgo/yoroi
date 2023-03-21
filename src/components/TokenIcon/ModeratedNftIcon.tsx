@@ -94,5 +94,7 @@ const styles = StyleSheet.create({
   wrapper: {
     borderRadius: ICON_SIZE,
     overflow: 'hidden',
+    width: ICON_SIZE,
+    height: ICON_SIZE,
   },
 })
