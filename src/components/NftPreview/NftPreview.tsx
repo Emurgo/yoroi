@@ -32,14 +32,14 @@ export const NftPreview = ({
 
   if (showPlaceholder || (isUriSvg && blurRadius !== undefined) || error) {
     // Since SvgUri does not support blur radius, we show a placeholder
-    return <Image source={placeholder} style={[style, {width, height}]} resizeMode={resizeMode ?? 'contain'} />
+    return <PlaceholderImage height={height} style={style} width={width} resizeMode={resizeMode} />
   }
 
   if (isUriSvg) {
     // passing width or height with value undefined has a different behavior than not passing it at all
     return (
       <ErrorBoundary
-        fallback={<Image source={placeholder} style={[style, {width, height}]} resizeMode={resizeMode ?? 'contain'} />}
+        fallback={<PlaceholderImage height={height} style={style} width={width} resizeMode={resizeMode} />}
       >
         <SvgUri
           {...(width !== undefined ? {width} : undefined)}
@@ -53,9 +53,7 @@ export const NftPreview = ({
     )
   }
   return (
-    <ErrorBoundary
-      fallback={<Image source={placeholder} style={[style, {width, height}]} resizeMode={resizeMode ?? 'contain'} />}
-    >
+    <ErrorBoundary fallback={<PlaceholderImage height={height} style={style} width={width} resizeMode={resizeMode} />}>
       <Image
         blurRadius={blurRadius}
         source={{uri}}
@@ -66,6 +64,18 @@ export const NftPreview = ({
     </ErrorBoundary>
   )
 }
+
+const PlaceholderImage = ({
+  style,
+  width,
+  height,
+  resizeMode,
+}: {
+  style?: StyleProp<ImageStyle>
+  height: number
+  width?: number
+  resizeMode?: ImageResizeMode
+}) => <Image source={placeholder} style={[style, {width, height}]} resizeMode={resizeMode ?? 'contain'} />
 
 function isSvgMediaType(mediaType: string | undefined): boolean {
   return mediaType === 'image/svg+xml'
