@@ -2,7 +2,7 @@ import {RouteProp, useRoute} from '@react-navigation/native'
 import React, {ReactNode, useState} from 'react'
 import {ErrorBoundary} from 'react-error-boundary'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {Dimensions, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {CopyButton, FadeIn, FullErrorFallback, Icon, Link, Spacer, Text} from '../components'
@@ -83,7 +83,7 @@ const UnModeratedNftImage = ({nft}: {nft: YoroiNft}) => {
   const navigateTo = useNavigateTo()
   return (
     <TouchableOpacity onPress={() => navigateTo.nftZoom(nft.id)} style={styles.imageWrapper}>
-      <NftPreview nft={nft} style={styles.image} height={380} />
+      <NftPreview nft={nft} style={styles.image} height={IMAGE_HEIGHT} width={IMAGE_WIDTH} />
     </TouchableOpacity>
   )
 }
@@ -97,14 +97,14 @@ const ModeratedNftImage = ({nft}: {nft: YoroiNft}) => {
   if (!canShowNft) {
     return (
       <View style={styles.imageWrapper}>
-        <NftPreview nft={nft} style={styles.image} height={380} showPlaceholder />
+        <NftPreview nft={nft} style={styles.image} height={IMAGE_HEIGHT} width={IMAGE_WIDTH} showPlaceholder />
       </View>
     )
   }
 
   return (
     <TouchableOpacity onPress={() => navigateTo.nftZoom(nft.id)} style={styles.imageWrapper}>
-      <NftPreview nft={nft} style={styles.image} height={380} />
+      <NftPreview nft={nft} style={styles.image} height={IMAGE_HEIGHT} width={IMAGE_WIDTH} />
     </TouchableOpacity>
   )
 }
@@ -221,6 +221,10 @@ const NftMetadata = ({nft}: {nft: YoroiNft}) => {
   )
 }
 
+const IMAGE_HEIGHT = 380
+const IMAGE_PADDING = 16
+const IMAGE_WIDTH = Dimensions.get('window').width - IMAGE_PADDING * 2
+
 const styles = StyleSheet.create({
   copyButton: {
     flex: 1,
@@ -253,10 +257,10 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   contentContainer: {
-    paddingHorizontal: 16,
+    paddingHorizontal: IMAGE_PADDING,
   },
   rowContainer: {
-    paddingVertical: 16,
+    paddingVertical: IMAGE_PADDING,
   },
   rowTitleContainer: {
     display: 'flex',
