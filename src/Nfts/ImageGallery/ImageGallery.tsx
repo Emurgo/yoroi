@@ -58,14 +58,14 @@ const UnModeratedImage = ({onPress, nft}: ModeratedImageProps) => {
 const ModeratedImage = ({onPress, nft}: ModeratedImageProps) => {
   const {name: text, fingerprint} = nft
   const wallet = useSelectedWallet()
-  const {isError, moderationStatus, isLoading} = useModeratedNftImage({wallet, fingerprint})
+  const {isError, status, isLoading} = useModeratedNftImage({wallet, fingerprint})
 
-  const isPendingManualReview = moderationStatus === 'manual_review'
-  const isPendingAutomaticReview = moderationStatus === 'pending'
+  const isPendingManualReview = status === 'manual_review'
+  const isPendingAutomaticReview = status === 'pending'
 
-  const isImageApproved = moderationStatus === 'approved'
-  const isImageWithConsent = moderationStatus === 'consent'
-  const isImageBlocked = moderationStatus === 'blocked'
+  const isImageApproved = status === 'approved'
+  const isImageWithConsent = status === 'consent'
+  const isImageBlocked = status === 'blocked'
 
   const showSkeleton = isLoading || isPendingAutomaticReview
 
@@ -101,6 +101,10 @@ const ModeratedImage = ({onPress, nft}: ModeratedImageProps) => {
 }
 
 function BlockedNft({nft}: {nft: YoroiNft}) {
+  return <PlaceholderNft nft={nft} />
+}
+
+function PlaceholderNft({nft}: {nft: YoroiNft}) {
   return (
     <View>
       <View style={styles.imageWrapper}>
@@ -122,24 +126,7 @@ function BlockedNft({nft}: {nft: YoroiNft}) {
 }
 
 function ManualReviewNft({nft}: {nft: YoroiNft}) {
-  return (
-    <View>
-      <View style={styles.imageWrapper}>
-        <NftPreview
-          nft={nft}
-          showPlaceholder
-          width={IMAGE_SIZE}
-          height={IMAGE_SIZE}
-          style={styles.image}
-          resizeMode="cover"
-        />
-      </View>
-
-      <Spacer height={IMAGE_PADDING} />
-
-      <Text style={[styles.text, {width: IMAGE_SIZE}]}>{nft.name}</Text>
-    </View>
-  )
+  return <PlaceholderNft nft={nft} />
 }
 
 function RequiresConsentNft({nft}: {nft: YoroiNft}) {

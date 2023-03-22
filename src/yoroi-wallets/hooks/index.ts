@@ -228,7 +228,7 @@ export const useNftModerationStatus = (
 
   return {
     ...query,
-    moderationStatus: query.data,
+    status: query.data,
   }
 }
 
@@ -238,11 +238,11 @@ export const useNftImageModerated = ({
 }: {
   wallet: YoroiWallet
   nftId: string
-}): {image: string; status: YoroiNftModerationStatus} | null => {
+}): {image?: string; status: YoroiNftModerationStatus} | null => {
   const nft = useNft(wallet, {id: nftId})
   const fingerprint = nft.fingerprint
-  const {data} = useNftModerationStatus({wallet, fingerprint})
-  return useMemo(() => (data ? {image: nft.image, status: data} : null), [nft, data])
+  const {status} = useNftModerationStatus({wallet, fingerprint})
+  return useMemo(() => (status ? {image: nft.logo, status} : null), [nft, status])
 }
 
 export const useToken = (

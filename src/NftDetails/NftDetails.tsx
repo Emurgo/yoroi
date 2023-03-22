@@ -13,6 +13,7 @@ import {useModeratedNftImage} from '../Nfts/hooks'
 import {useNavigateTo} from '../Nfts/navigation'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
+import {isEmptyString} from '../utils'
 import {useNft} from '../yoroi-wallets'
 import {YoroiNft} from '../yoroi-wallets/types'
 
@@ -71,8 +72,8 @@ const UnModeratedNftImage = ({nft}: {nft: YoroiNft}) => {
 const ModeratedNftImage = ({nft}: {nft: YoroiNft}) => {
   const wallet = useSelectedWallet()
   const navigateTo = useNavigateTo()
-  const {moderationStatus} = useModeratedNftImage({wallet, fingerprint: nft.fingerprint})
-  const canShowNft = moderationStatus === 'approved' || moderationStatus === 'consent'
+  const {status} = useModeratedNftImage({wallet, fingerprint: nft.fingerprint})
+  const canShowNft = status === 'approved' || status === 'consent'
 
   if (!canShowNft) {
     return (
@@ -117,13 +118,13 @@ const NftOverview = ({nft}: {nft: YoroiNft}) => {
       <HR />
 
       <MetadataRow title={strings.description}>
-        <Text secondary>{nft.description}</Text>
+        <Text secondary>{normalizeMetadataString(nft.description)}</Text>
       </MetadataRow>
 
       <HR />
 
       <MetadataRow title={strings.author}>
-        <Text secondary>{nft.metadata.originalMetadata.author ?? '-'}</Text>
+        <Text secondary>{normalizeMetadataString(nft.metadata.originalMetadata?.author)}</Text>
       </MetadataRow>
 
       <HR />
@@ -167,6 +168,10 @@ const NftOverview = ({nft}: {nft: YoroiNft}) => {
       <Spacer height={24} />
     </View>
   )
+}
+
+const normalizeMetadataString = (content?: string): string => {
+  return isEmptyString(content) || content.length === 0 ? '-' : content
 }
 
 const HR = () => (
