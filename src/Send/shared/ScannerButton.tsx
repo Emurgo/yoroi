@@ -3,7 +3,7 @@ import React from 'react'
 import {TouchableOpacity} from 'react-native'
 
 import {Icon} from '../../components'
-import {SendRouteNavigation} from '../../navigation'
+import {TxHistoryRouteNavigation} from '../../navigation'
 import {COLORS} from '../../theme'
 
 type Props = {
@@ -22,7 +22,7 @@ export const ScannerButton = ({disabled}: Props) => {
 }
 
 const useNavigateTo = () => {
-  const navigation = useNavigation<SendRouteNavigation>()
+  const navigation = useNavigation<TxHistoryRouteNavigation>()
 
   return {
     reader: () => navigation.navigate('send-read-qr-code'),

@@ -2,7 +2,7 @@ import * as React from 'react'
 
 import {Address, Quantity, TokenId, YoroiTarget} from '../../yoroi-wallets'
 
-type SendState = {
+export type SendState = {
   selectedTargetIndex: number
   selectedTokenId: TokenId
 
@@ -190,7 +190,7 @@ const missingProvider = () => {
   throw new Error('SendProvider is missing')
 }
 
-const initialState: SendState = {
+export const initialState: SendState = {
   selectedTargetIndex: 0,
   selectedTokenId: '',
 
