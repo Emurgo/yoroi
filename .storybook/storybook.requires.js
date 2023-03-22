@@ -83,6 +83,7 @@ const getStories = () => {
     "./src/components/Link/Link.stories.tsx": require("../src/components/Link/Link.stories.tsx"),
     "./src/components/LoadingOverlay/LoadingOverlay.stories.tsx": require("../src/components/LoadingOverlay/LoadingOverlay.stories.tsx"),
     "./src/components/Modal/Modal.stories.tsx": require("../src/components/Modal/Modal.stories.tsx"),
+    "./src/components/NftPreview/NftPreview.stories.tsx": require("../src/components/NftPreview/NftPreview.stories.tsx"),
     "./src/components/StandardModal/StandardModal.stories.tsx": require("../src/components/StandardModal/StandardModal.stories.tsx"),
     "./src/components/TextInput/TextInput.stories.tsx": require("../src/components/TextInput/TextInput.stories.tsx"),
     "./src/components/TokenIcon/ModeratedNftIcon.stories.tsx": require("../src/components/TokenIcon/ModeratedNftIcon.stories.tsx"),

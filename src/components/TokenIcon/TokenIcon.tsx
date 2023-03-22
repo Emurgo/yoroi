@@ -35,15 +35,16 @@ const PrimaryIcon = () => (
 
 const ModeratedIcon = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string}) => {
   const nftModeratedImage = useNftImageModerated({wallet, nftId: tokenId})
+  const nft = useNft(wallet, {id: tokenId})
 
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-  if (!nftModeratedImage) return <ModeratedNftIcon status="pending" />
-  return <ModeratedNftIcon image={nftModeratedImage.image} status={nftModeratedImage.status} />
+  if (!nftModeratedImage) return <ModeratedNftIcon nft={nft} status="pending" />
+  return <ModeratedNftIcon nft={nft} status={nftModeratedImage.status} />
 }
 
 const UnModeratedNftIcon = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string}) => {
   const nft = useNft(wallet, {id: tokenId})
-  return <ModeratedNftIcon status="approved" image={nft.logo} />
+  return <ModeratedNftIcon status="approved" nft={nft} />
 }
 
 export const Placeholder = () => (
