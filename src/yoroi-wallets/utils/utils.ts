@@ -120,14 +120,13 @@ export const Quantities = {
   },
   isZero: (quantity: Quantity) => new BigNumber(quantity).isZero(),
   isIndivisible: (quantity: Quantity, denomination: number) => {
-    return (
-      quantity.replace('-', '') ===
-      new BigNumber(1)
-        .dividedBy(new BigNumber(10).pow(denomination))
-        .toFixed(denomination)
-        .toString()
-        .replace(/[.,]/g, '')
-    )
+    const absoluteQuantity = quantity.replace('-', '')
+    const minimalFractionalPart = new BigNumber(1)
+      .dividedBy(new BigNumber(10).pow(denomination))
+      .toFixed(denomination)
+      .toString()
+      .replace(/[.,]/g, '')
+    return absoluteQuantity === minimalFractionalPart
   },
 }
 

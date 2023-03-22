@@ -1,8 +1,8 @@
 import {useSelectedWallet} from '../../SelectedWallet'
 import {useBalance, useLockedAmount} from '../../yoroi-wallets/hooks'
-import {Quantity, TokenId} from '../../yoroi-wallets/types'
+import {Quantity, TokenId, YoroiTarget} from '../../yoroi-wallets/types'
 import {Quantities} from '../../yoroi-wallets/utils'
-import {useSend, YoroiTarget} from './SendContext'
+import {useSend} from './SendContext'
 
 export const useTokenQuantities = (tokenId: TokenId) => {
   const wallet = useSelectedWallet()
