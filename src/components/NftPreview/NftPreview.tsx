@@ -3,7 +3,7 @@ import {Image, ImageResizeMode, ImageStyle, StyleProp} from 'react-native'
 import {SvgUri} from 'react-native-svg'
 
 import placeholder from '../../assets/img/nft-placeholder.png'
-import {YoroiNft} from '../../yoroi-wallets'
+import {isArray, isString, YoroiNft} from '../../yoroi-wallets'
 
 export const NftPreview = ({
   nft,
@@ -24,11 +24,15 @@ export const NftPreview = ({
   resizeMode?: ImageResizeMode
   blurRadius?: number
 }) => {
-  const uri = showThumbnail ? nft.thumbnail : nft.image
-  const isUriSvg = uri.toLowerCase().endsWith('.svg') || isSvgMediaType(nft.metadata.originalMetadata.mediaType)
-  nft.metadata.originalMetadata.files?.some((file) => file.src === uri && isSvgMediaType(file.mediaType))
+  const uri = showThumbnail ? nft.thumbnail : nft.logo
+  const isUriSvg =
+    isString(uri) &&
+    (uri.toLowerCase().endsWith('.svg') ||
+      isSvgMediaType(nft.metadata.originalMetadata?.mediaType) ||
+      isSvgMediaType(getNftFilenameMediaType(nft, uri)))
+  const shouldShowPlaceholder = !isString(uri) || showPlaceholder || (isUriSvg && blurRadius !== undefined)
 
-  if (showPlaceholder || (isUriSvg && blurRadius !== undefined)) {
+  if (shouldShowPlaceholder) {
     // Since SvgUri does not support blur radius, we show a placeholder
     return <Image source={placeholder} style={[style, {width, height}]} resizeMode={resizeMode ?? 'contain'} />
   }
@@ -55,6 +59,14 @@ export const NftPreview = ({
   )
 }
 
-function isSvgMediaType(mediaType: string | undefined): boolean {
+const isSvgMediaType = (mediaType: string | undefined): boolean => {
   return mediaType === 'image/svg+xml'
+}
+
+const getNftFilenameMediaType = (nft: YoroiNft, filename: string): string | undefined => {
+  const files = nft.metadata.originalMetadata?.files ?? []
+  const file = files.find((file) => {
+    return isArray(file.src) ? file.src.join('') === filename : file.src === filename
+  })
+  return file?.mediaType
 }

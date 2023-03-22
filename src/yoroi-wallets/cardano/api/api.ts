@@ -229,13 +229,9 @@ function parseNFTs(value: unknown, storageUrl: string): YoroiNft[] {
       return null
     }
 
-    const [policyId, assetName] = id.split('.')
-    const nftMetadata = nftAsset.metadata?.[policyId]?.[assetName]
-
-    if (!nftMetadata || !nftMetadata.image) {
-      return null
-    }
-    return convertNft(nftMetadata, storageUrl, policyId, assetName)
+    const [policyId, shortName] = id.split('.')
+    const metadata = nftAsset.metadata?.[policyId]?.[shortName]
+    return convertNft({metadata, storageUrl, policyId, shortName: shortName})
   })
 
   return tokens.filter(isNonNullable)
