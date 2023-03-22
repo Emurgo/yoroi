@@ -546,7 +546,7 @@ SPEC CHECKSUMS:
   BVLinearGradient: e3aad03778a456d77928f594a649e96995f1c872
   DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
   FBLazyVector: fa8275d5086566e22a26ddc385ab5772e7f9b1bd
-  FBReactNativeSpec: 09e71f626dc611ba6f450b2f19f1e2142282a53d
+  FBReactNativeSpec: 82dc48a5c1de8caa2933fce4986a0927ad2391fe
   glog: 73c2498ac6884b13ede40eda8228cb1eee9d9d62
   MultiplatformBleAdapter: 5a6a897b006764392f9cef785e4360f54fb9477d
   Permission-BluetoothPeripheral: a408e2ba4b43e60c5a4b8b4d442bb8abc93394b2
