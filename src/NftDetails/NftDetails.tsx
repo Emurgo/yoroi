@@ -1,28 +1,47 @@
 import {RouteProp, useRoute} from '@react-navigation/native'
 import React, {ReactNode, useState} from 'react'
+import {ErrorBoundary} from 'react-error-boundary'
 import {defineMessages, useIntl} from 'react-intl'
 import {Dimensions, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {CopyButton, FadeIn, Icon, Link, Spacer, Text} from '../components'
+import {CopyButton, FadeIn, FullErrorFallback, Icon, Link, Spacer, Text} from '../components'
 import {NftPreview} from '../components/NftPreview/NftPreview'
 import {Tab, TabPanel, TabPanels, Tabs} from '../components/Tabs'
 import {features} from '../features'
-import {NftRoutes} from '../navigation'
+import {NftRoutes, useWalletNavigation} from '../navigation'
 import {useModeratedNftImage} from '../Nfts/hooks'
 import {useNavigateTo} from '../Nfts/navigation'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
 import {isEmptyString} from '../utils'
-import {useNft} from '../yoroi-wallets'
+import {NftNotFoundError, useNft} from '../yoroi-wallets'
 import {YoroiNft} from '../yoroi-wallets/types'
 
 export const NftDetails = () => {
+  const navigation = useWalletNavigation()
+  const handleError = (error: Error) => {
+    if (error instanceof NftNotFoundError) {
+      navigation.navigateToNftGallery()
+    }
+  }
+  return (
+    <ErrorBoundary
+      onError={handleError}
+      fallbackRender={({error}) => (
+        <FullErrorFallback error={error} resetErrorBoundary={() => navigation.navigateToNftGallery()} />
+      )}
+    >
+      <Details />
+    </ErrorBoundary>
+  )
+}
+
+const Details = () => {
   const {id} = useRoute<RouteProp<NftRoutes, 'nft-details'>>().params
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const nft = useNft(wallet, {id})
-
   const [activeTab, setActiveTab] = useState<'overview' | 'metadata'>('overview')
 
   return (

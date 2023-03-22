@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import AsyncStorage, {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
 import {delay} from 'bluebird'
+import ExtendableError from 'es6-error'
 import * as React from 'react'
 import {useCallback, useMemo} from 'react'
 import {
@@ -893,12 +894,14 @@ export const useNfts = (wallet: YoroiWallet, options: UseQueryOptions<YoroiNft[]
   return {...rest, refetch, nfts: data ?? []}
 }
 
+export class NftNotFoundError extends ExtendableError {}
+
 export const useNft = (wallet: YoroiWallet, {id}: {id: string}): YoroiNft => {
   const {nfts} = useNfts(wallet, {suspense: true})
   const nft = nfts.find((nft) => nft.id === id)
 
   if (!nft) {
-    throw new Error(`Invalid id used "${id}" to get NFT`)
+    throw new NftNotFoundError(`Invalid id used "${id}" to get NFT`)
   }
   return nft
 }

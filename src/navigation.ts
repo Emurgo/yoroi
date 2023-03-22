@@ -326,11 +326,24 @@ export const useWalletNavigation = () => {
     })
   }
 
+  const navigateToNftGallery = () => {
+    navigation.navigate('app-root', {
+      screen: 'main-wallet-routes',
+      params: {
+        screen: 'nfts',
+        params: {
+          screen: 'nft-gallery',
+        },
+      },
+    })
+  }
+
   return {
     navigation,
     resetToTxHistory,
     resetToWalletSelection,
     navigateToSettings,
     navigateToTxHistory,
+    navigateToNftGallery,
   }
 }
