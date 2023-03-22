@@ -1,14 +1,12 @@
 import {StackNavigationOptions} from '@react-navigation/stack'
 import React from 'react'
-import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, TouchableOpacityProps} from 'react-native'
 
 import {Icon} from '../components'
 import {SearchBar} from './SearchBar'
 import {useSearch} from './SearchContext'
 
-export const useSearchHeaderOptions = () => {
-  const strings = useStrings()
+export const useSearchHeaderOptions = ({placeHolderText, title}) => {
   const [searchVisible, setSearchVisible] = React.useState(false)
   const {clearSearch} = useSearch()
   const handleSearchClose = () => {
@@ -19,7 +17,7 @@ export const useSearchHeaderOptions = () => {
   const searchHeaderOptions: StackNavigationOptions = searchVisible
     ? {
         headerTitleContainerStyle: styles.headerTitleContainer,
-        headerTitle: () => <SearchHeader placeholder={strings.search} onClose={handleSearchClose} />,
+        headerTitle: () => <SearchHeader placeholder={placeHolderText} onClose={handleSearchClose} />,
         headerLeftContainerStyle: styles.disableFlex,
         headerLeft: () => null,
         headerRightContainerStyle: styles.disableFlex,
@@ -27,7 +25,7 @@ export const useSearchHeaderOptions = () => {
       }
     : {
         headerTitleContainerStyle: styles.headerTitleContainer,
-        title: strings.title,
+        title: title,
         headerRight: () => <SearchButton onPress={() => setSearchVisible(true)} />,
         headerRightContainerStyle: {
           ...styles.disableFlex,
@@ -68,26 +66,6 @@ const SearchButton = (props: TouchableOpacityProps) => (
     <Icon.Magnify size={26} />
   </TouchableOpacity>
 )
-
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    title: intl.formatMessage(messages.title),
-    search: intl.formatMessage(messages.search),
-  }
-}
-
-const messages = defineMessages({
-  title: {
-    id: 'nft.navigation.title',
-    defaultMessage: '!!!NFT Gallery',
-  },
-  search: {
-    id: 'nft.navigation.search',
-    defaultMessage: '!!!Search NFT',
-  },
-})
 
 const styles = StyleSheet.create({
   disableFlex: {
