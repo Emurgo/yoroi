@@ -74,7 +74,7 @@ export const messages = defineMessages({
   },
   error: {
     id: 'components.send.memofield.error',
-    defaultMessage: '!!!Memo name is too long',
+    defaultMessage: '!!!Memo is too long',
   },
 })
 
