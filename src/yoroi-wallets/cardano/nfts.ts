@@ -37,7 +37,6 @@ export const convertNft = (options: {
 }
 
 const normalizeProperty = (value: string | string[] | undefined): string | undefined => {
-  if (value === undefined) return undefined
   if (isString(value)) return value
-  return value.join(' ')
+  if (Array.isArray(value)) return value.join('')
 }
