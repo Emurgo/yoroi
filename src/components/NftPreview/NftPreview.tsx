@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {Image, ImageResizeMode, ImageStyle, StyleProp} from 'react-native'
 import {SvgUri} from 'react-native-svg'
 
@@ -24,11 +24,12 @@ export const NftPreview = ({
   resizeMode?: ImageResizeMode
   blurRadius?: number
 }) => {
+  const [error, setError] = useState(false)
   const uri = showThumbnail ? nft.thumbnail : nft.image
   const isUriSvg = uri.toLowerCase().endsWith('.svg') || isSvgMediaType(nft.metadata.originalMetadata.mediaType)
   nft.metadata.originalMetadata.files?.some((file) => file.src === uri && isSvgMediaType(file.mediaType))
 
-  if (showPlaceholder || (isUriSvg && blurRadius !== undefined)) {
+  if (showPlaceholder || (isUriSvg && blurRadius !== undefined) || error) {
     // Since SvgUri does not support blur radius, we show a placeholder
     return <Image source={placeholder} style={[style, {width, height}]} resizeMode={resizeMode ?? 'contain'} />
   }
@@ -42,6 +43,7 @@ export const NftPreview = ({
         uri={uri}
         style={style}
         preserveAspectRatio="xMinYMin meet"
+        onError={() => setError(true)}
       />
     )
   }
@@ -51,6 +53,7 @@ export const NftPreview = ({
       source={{uri}}
       style={[style, {width, height}]}
       resizeMode={resizeMode ?? 'contain'}
+      onError={() => setError(true)}
     />
   )
 }
