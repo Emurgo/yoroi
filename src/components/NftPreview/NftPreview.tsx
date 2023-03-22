@@ -1,4 +1,5 @@
 import React, {useState} from 'react'
+import {ErrorBoundary} from 'react-error-boundary'
 import {Image, ImageResizeMode, ImageStyle, StyleProp} from 'react-native'
 import {SvgUri} from 'react-native-svg'
 
@@ -37,24 +38,32 @@ export const NftPreview = ({
   if (isUriSvg) {
     // passing width or height with value undefined has a different behavior than not passing it at all
     return (
-      <SvgUri
-        {...(width !== undefined ? {width} : undefined)}
-        height={height}
-        uri={uri}
-        style={style}
-        preserveAspectRatio="xMinYMin meet"
-        onError={() => setError(true)}
-      />
+      <ErrorBoundary
+        fallback={<Image source={placeholder} style={[style, {width, height}]} resizeMode={resizeMode ?? 'contain'} />}
+      >
+        <SvgUri
+          {...(width !== undefined ? {width} : undefined)}
+          height={height}
+          uri={uri}
+          style={style}
+          preserveAspectRatio="xMinYMin meet"
+          onError={() => setError(true)}
+        />
+      </ErrorBoundary>
     )
   }
   return (
-    <Image
-      blurRadius={blurRadius}
-      source={{uri}}
-      style={[style, {width, height}]}
-      resizeMode={resizeMode ?? 'contain'}
-      onError={() => setError(true)}
-    />
+    <ErrorBoundary
+      fallback={<Image source={placeholder} style={[style, {width, height}]} resizeMode={resizeMode ?? 'contain'} />}
+    >
+      <Image
+        blurRadius={blurRadius}
+        source={{uri}}
+        style={[style, {width, height}]}
+        resizeMode={resizeMode ?? 'contain'}
+        onError={() => setError(true)}
+      />
+    </ErrorBoundary>
   )
 }
 
