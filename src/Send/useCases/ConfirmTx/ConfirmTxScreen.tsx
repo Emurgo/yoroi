@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {RouteProp, useRoute} from '@react-navigation/native'
 import React, {useEffect, useRef} from 'react'
 import {useIntl} from 'react-intl'
 import {Keyboard, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
@@ -9,7 +8,7 @@ import {ConfirmTx} from '../../../components/ConfirmTx'
 import {debugWalletInfo, features} from '../../../features'
 import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../../i18n/global-messages'
 import {formatTokenWithSymbol, formatTokenWithText} from '../../../legacy/format'
-import {TxHistoryRoutes, useWalletNavigation} from '../../../navigation'
+import {useWalletNavigation} from '../../../navigation'
 import {useSelectedWallet} from '../../../SelectedWallet'
 import {COLORS} from '../../../theme'
 import {useBalances, useSaveMemo, useToken} from '../../../yoroi-wallets/hooks'
@@ -20,12 +19,11 @@ import {useSend} from '../../shared/SendContext'
 
 export const ConfirmTxScreen = () => {
   const strings = useStrings()
-  const {yoroiUnsignedTx} = useRoute<RouteProp<TxHistoryRoutes, 'send-confirm-tx'>>().params
   const {resetToTxHistory} = useWalletNavigation()
   const wallet = useSelectedWallet()
   const [password, setPassword] = React.useState('')
   const [useUSB, setUseUSB] = React.useState(false)
-  const {memo, resetForm, targets} = useSend()
+  const {memo, resetForm, targets, yoroiUnsignedTx} = useSend()
   const {saveMemo} = useSaveMemo({wallet})
 
   useEffect(() => {
@@ -44,6 +42,8 @@ export const ConfirmTxScreen = () => {
   }
 
   const scrollViewRef = useFlashAndScroll()
+
+  if (!yoroiUnsignedTx) return null
 
   return (
     <View style={styles.root}>

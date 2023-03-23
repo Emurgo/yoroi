@@ -5,15 +5,16 @@ import {StyleProp, StyleSheet, Text, TouchableOpacity, ViewStyle} from 'react-na
 import {Icon, Spacer} from '../../../../components'
 import {COLORS} from '../../../../theme'
 
-type AddTokenProps = {
+type AddTokenButtonProps = {
   onPress(): void
+  disabled?: boolean
   style?: StyleProp<ViewStyle>
 }
-export const AddToken = ({onPress, style}: AddTokenProps) => {
+export const AddTokenButton = ({onPress, disabled, style}: AddTokenButtonProps) => {
   const strings = useStrings()
 
   return (
-    <TouchableOpacity onPress={onPress} testID="addTokenButton" style={[style, styles.button]}>
+    <TouchableOpacity onPress={onPress} disabled={disabled} testID="addTokenButton" style={[style, styles.button]}>
       <Icon.Plus size={26} color={COLORS.SHELLEY_BLUE} />
 
       <Spacer width={4} />
@@ -33,7 +34,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     flexDirection: 'row',
     paddingHorizontal: 16,
-    paddingVertical: 10,
+    paddingVertical: 4,
     justifyContent: 'center',
     alignItems: 'center',
     borderColor: COLORS.SHELLEY_BLUE,

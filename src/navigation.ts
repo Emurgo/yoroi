@@ -154,7 +154,7 @@ export type TxHistoryRoutes = {
   'send-start-tx': undefined
   'send-select-token-from-list': undefined
   'send-read-qr-code': undefined
-  'send-confirm-tx': SendConfirmParams
+  'send-confirm-tx': undefined
   'send-list-selected-tokens': undefined
   'send-edit-amount': undefined
 }
