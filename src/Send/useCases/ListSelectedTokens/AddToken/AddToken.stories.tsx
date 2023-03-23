@@ -3,10 +3,10 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {View} from 'react-native'
 
-import {AddToken} from './AddToken'
+import {AddTokenButton} from './AddToken'
 
 storiesOf('Send/ListSelectedTokens/AddToken', module).add('Default', () => (
   <View style={{justifyContent: 'center', padding: 16}}>
-    <AddToken onPress={() => action(`onPress address`)} />
+    <AddTokenButton onPress={() => action(`onPress address`)} />
   </View>
 ))

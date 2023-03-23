@@ -1,10 +1,11 @@
 import * as React from 'react'
 
-import {Address, Quantity, TokenId, YoroiTarget} from '../../yoroi-wallets'
+import {Address, Quantity, TokenId, YoroiTarget, YoroiUnsignedTx} from '../../yoroi-wallets/types'
 
 export type SendState = {
   selectedTargetIndex: number
   selectedTokenId: TokenId
+  yoroiUnsignedTx: YoroiUnsignedTx | undefined
 
   memo: string
 
@@ -19,6 +20,7 @@ type TargetActions = {
 }
 
 type SendActions = {
+  yoroiUnsignedTxChanged: (yoroiUnsignedTx: YoroiUnsignedTx | undefined) => void
   tokenSelectedChanged: (tokenId: TokenId) => void
   resetForm: () => void
   memoChanged: (memo: string) => void
@@ -46,6 +48,7 @@ export const SendProvider = ({children, ...props}: {initialState?: Partial<SendS
 
     memoChanged: (memo) => dispatch({type: 'memoChanged', memo}),
 
+    yoroiUnsignedTxChanged: (yoroiUnsignedTx) => dispatch({type: 'yoroiUnsignedTxChanged', yoroiUnsignedTx}),
     tokenSelectedChanged: (tokenId: TokenId) => dispatch({type: 'tokenSelectedChanged', tokenId}),
     amountChanged: (quantity: Quantity) => dispatch({type: 'amountChanged', quantity}),
     amountRemoved: (tokenId: TokenId) => dispatch({type: 'amountRemoved', tokenId}),
@@ -68,6 +71,10 @@ type SendAction =
       type: 'tokenSelectedChanged'
       tokenId: TokenId
     }
+  | {
+      type: 'yoroiUnsignedTxChanged'
+      yoroiUnsignedTx: YoroiUnsignedTx | undefined
+    }
 
 const sendReducer = (state: SendState, action: SendAction) => {
   switch (action.type) {
@@ -84,6 +91,12 @@ const sendReducer = (state: SendState, action: SendAction) => {
       return {
         ...state,
         selectedTokenId: action.tokenId,
+      }
+
+    case 'yoroiUnsignedTxChanged':
+      return {
+        ...state,
+        yoroiUnsignedTx: action.yoroiUnsignedTx,
       }
 
     default:
@@ -193,6 +206,7 @@ const missingProvider = () => {
 export const initialState: SendState = {
   selectedTargetIndex: 0,
   selectedTokenId: '',
+  yoroiUnsignedTx: undefined,
 
   memo: '',
 
