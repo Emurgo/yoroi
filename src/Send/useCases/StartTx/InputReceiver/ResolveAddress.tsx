@@ -56,7 +56,7 @@ export const ResolveAddress = ({
 
 export const useReceiver = (
   {wallet, receiver}: {wallet: YoroiWallet; receiver: string},
-  options?: UseQueryOptions<string, Error, string>,
+  options?: UseQueryOptions<string, Error, string, [string, 'receiver']>,
 ) => {
   const query = useQuery({
     queryKey: [receiver, 'receiver'],

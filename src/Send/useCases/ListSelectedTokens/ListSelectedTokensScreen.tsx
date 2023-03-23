@@ -3,6 +3,7 @@ import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 import {FlatList} from 'react-native-gesture-handler'
+import {useQuery, UseQueryOptions} from 'react-query'
 
 import {Boundary, Button, Spacer} from '../../../components'
 import {AssetItem} from '../../../components/AssetItem'
@@ -11,15 +12,16 @@ import {TxHistoryRouteNavigation} from '../../../navigation'
 import {useSelectedWallet} from '../../../SelectedWallet'
 import {COLORS} from '../../../theme'
 import {sortTokenInfos} from '../../../utils'
+import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {useTokenInfo, useTokenInfos} from '../../../yoroi-wallets/hooks'
-import {TokenId, TokenInfo, YoroiAmount} from '../../../yoroi-wallets/types'
+import {TokenId, TokenInfo, YoroiAmount, YoroiEntry, YoroiUnsignedTx} from '../../../yoroi-wallets/types'
 import {Amounts} from '../../../yoroi-wallets/utils'
 import {useSend} from '../../shared/SendContext'
-import {AddToken} from './AddToken/AddToken'
+import {AddTokenButton} from './AddToken/AddToken'
 import {DeleteToken} from './DeleteToken'
 
 export const ListSelectedTokensScreen = () => {
-  const {targets, selectedTargetIndex, tokenSelectedChanged, amountRemoved} = useSend()
+  const {targets, selectedTargetIndex, tokenSelectedChanged, amountRemoved, yoroiUnsignedTxChanged} = useSend()
   const {amounts} = targets[selectedTargetIndex].entry
   const navigateTo = useNavigateTo()
   const strings = useStrings()
@@ -30,20 +32,27 @@ export const ListSelectedTokensScreen = () => {
     tokenIds: Amounts.toArray(amounts).map(({tokenId}) => tokenId),
   })
   const tokens = sortTokenInfos({wallet, tokenInfos})
+  const {refetch} = useSendTx(
+    {wallet, entry: targets[selectedTargetIndex].entry},
+    {
+      onSettled: (yoroiUnsignedTx) => {
+        yoroiUnsignedTxChanged(yoroiUnsignedTx)
+        navigateTo.confirmTx()
+      },
+    },
+  )
 
   const onSelect = (tokenId: TokenId) => {
     tokenSelectedChanged(tokenId)
     navigateTo.editToken()
   }
-  const onDelete = (tokenId: TokenId) => {
-    amountRemoved(tokenId)
-  }
+  const onDelete = (tokenId: TokenId) => amountRemoved(tokenId)
   const onAdd = navigateTo.addToken
-  const onNext = () => console.log('build tx')
+  const onNext = () => refetch()
 
   return (
     <View style={styles.container}>
-      <FlatList
+      <SelectedTokenList
         data={tokens}
         renderItem={({item: {id}}: {item: TokenInfo}) => (
           <Boundary>
@@ -59,12 +68,12 @@ export const ListSelectedTokensScreen = () => {
         <Row>
           <Spacer fill />
 
-          <AddToken onPress={onAdd} />
+          <AddTokenButton onPress={onAdd} />
         </Row>
 
         <Spacer height={33} />
 
-        <Button onPress={onNext} title={strings.next} shelleyTheme />
+        <NextButton onPress={onNext} title={strings.next} shelleyTheme />
       </Actions>
     </View>
   )
@@ -89,6 +98,29 @@ const SelectableToken = ({amount: {quantity, tokenId}, onDelete, onSelect}: Sele
       </TouchableOpacity>
     </DeleteToken>
   )
+}
+
+export const useSendTx = (
+  {wallet, entry}: {wallet: YoroiWallet; entry: YoroiEntry},
+  options?: UseQueryOptions<YoroiUnsignedTx, Error, YoroiUnsignedTx, [string, 'send-tx']>,
+) => {
+  const query = useQuery({
+    ...options,
+    cacheTime: 0,
+    suspense: true,
+    enabled: false,
+    retry: false,
+    retryOnMount: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    queryKey: [wallet.id, 'send-tx'],
+    queryFn: () => wallet.createUnsignedTx(entry),
+  })
+
+  return {
+    ...query,
+    unsignedTx: query.data,
+  }
 }
 
 const Actions = ({style, ...props}: ViewProps) => <View style={[style, styles.transparent]} {...props} />
@@ -116,6 +148,7 @@ const useNavigateTo = () => {
   return {
     addToken: () => navigation.navigate('send-select-token-from-list'),
     editToken: () => navigation.navigate('send-edit-amount'),
+    confirmTx: () => navigation.navigate('send-confirm-tx'),
   }
 }
 
@@ -133,3 +166,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
 })
+
+const NextButton = Button
+const SelectedTokenList = FlatList
