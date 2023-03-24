@@ -4,24 +4,33 @@ import {RefreshControl, ScrollView, StyleSheet, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Icon, Spacer} from '../components'
+import {useSearch} from '../Search'
+import {useSearchResult} from '../Search/SearchHeader'
 import {useSelectedWallet} from '../SelectedWallet'
-import {useNfts, YoroiNft} from '../yoroi-wallets'
+import {useNfts} from '../yoroi-wallets'
 import {ImageGallery, SkeletonGallery} from './ImageGallery'
 import {useNavigateTo} from './navigation'
 import {NoNftsScreen} from './NoNftsScreen'
 
-export const Nfts = ({nftsSearchResult, nftsSearchTerm}: {nftsSearchResult: YoroiNft[]; nftsSearchTerm: string}) => {
+export const Nfts = () => {
   const navigateTo = useNavigateTo()
-  const handleNftSelect = (index: number) => navigateTo.nftDetails(nftsSearchResult[index].id)
   const [isManualRefreshing, setIsManualRefreshing] = React.useState(false)
   const wallet = useSelectedWallet()
   const strings = useStrings()
 
-  const {isLoading, refetch, isError} = useNfts(wallet, {
+  const {isLoading, nfts, refetch, isError} = useNfts(wallet, {
     onSettled: () => {
       if (isManualRefreshing) setIsManualRefreshing(false)
     },
   })
+  const {search: nftsSearchTerm} = useSearch()
+
+  const {searchResult: nftsSearchResult} = useSearchResult({
+    target: nfts,
+    searchBy: 'name',
+  })
+
+  const handleNftSelect = (index: number) => navigateTo.nftDetails(nftsSearchResult[index].id)
 
   const onRefresh = React.useCallback(() => {
     setIsManualRefreshing(true)

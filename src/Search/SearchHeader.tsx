@@ -6,8 +6,7 @@ import {Icon} from '../components'
 import {SearchBar} from './SearchBar'
 import {useSearch} from './SearchContext'
 
-export const useSearchHeader = ({target, searchBy, placeHolderText, title, sort = true}) => {
-  const {searchHeaderOptions} = useSearchHeaderOptions({placeHolderText, title})
+export const useSearchResult = ({target, searchBy, sort = true}) => {
   const {search} = useSearch()
   const searchTermLowerCase = search.toLowerCase()
   const filteredTarget =
@@ -16,11 +15,7 @@ export const useSearchHeader = ({target, searchBy, placeHolderText, title, sort 
       : target
   const searchResult = sort ? filteredTarget.sort((a, b) => a[searchBy].localeCompare(b[searchBy])) : filteredTarget
 
-  return {
-    searchResult,
-    searchTerm: search,
-    searchHeaderOptions,
-  }
+  return {searchResult}
 }
 
 export const useSearchHeaderOptions = ({placeHolderText, title}) => {
