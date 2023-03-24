@@ -18,7 +18,7 @@ export const useSearchHeader = ({target, searchBy, placeHolderText, title, sort 
 
   return {
     searchResult,
-    search,
+    searchTerm: search,
     searchHeaderOptions,
   }
 }

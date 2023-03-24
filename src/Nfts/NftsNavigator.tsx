@@ -23,7 +23,7 @@ const Routes = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const {nfts} = useNfts(wallet)
-  const {searchHeaderOptions, searchResult, search} = useSearchHeader({
+  const {searchHeaderOptions, searchResult, searchTerm} = useSearchHeader({
     target: nfts,
     searchBy: 'name',
     placeHolderText: strings.search,
@@ -33,7 +33,7 @@ const Routes = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen name="nft-gallery" options={searchHeaderOptions}>
-        {() => <Nfts nfts={searchResult} search={search} />}
+        {() => <Nfts nftsSearchResult={searchResult} nftsSearchTerm={searchTerm} />}
       </Stack.Screen>
     </Stack.Navigator>
   )
