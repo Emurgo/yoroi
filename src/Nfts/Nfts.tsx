@@ -10,9 +10,9 @@ import {ImageGallery, SkeletonGallery} from './ImageGallery'
 import {useNavigateTo} from './navigation'
 import {NoNftsScreen} from './NoNftsScreen'
 
-export const Nfts = ({nfts, search}: {nfts: YoroiNft[]; search: string}) => {
+export const Nfts = ({nftsSearchResult, nftsSearchTerm}: {nftsSearchResult: YoroiNft[]; nftsSearchTerm: string}) => {
   const navigateTo = useNavigateTo()
-  const handleNftSelect = (index: number) => navigateTo.nftDetails(nfts[index].id)
+  const handleNftSelect = (index: number) => navigateTo.nftDetails(nftsSearchResult[index].id)
   const [isManualRefreshing, setIsManualRefreshing] = React.useState(false)
   const wallet = useSelectedWallet()
   const strings = useStrings()
@@ -39,12 +39,12 @@ export const Nfts = ({nfts, search}: {nfts: YoroiNft[]; search: string}) => {
   if (isLoading) {
     return (
       <ScreenWrapper>
-        <LoadingScreen nftsCount={nfts.length} />
+        <LoadingScreen nftsCount={nftsSearchResult.length} />
       </ScreenWrapper>
     )
   }
 
-  if (search.length > 0 && nfts.length === 0) {
+  if (nftsSearchTerm.length > 0 && nftsSearchResult.length === 0) {
     return (
       <ScreenWrapper>
         <ScrollView
@@ -58,7 +58,7 @@ export const Nfts = ({nfts, search}: {nfts: YoroiNft[]; search: string}) => {
     )
   }
 
-  if (search.length === 0 && nfts.length === 0) {
+  if (nftsSearchTerm.length === 0 && nftsSearchResult.length === 0) {
     return (
       <ScreenWrapper>
         <ScrollView
@@ -70,7 +70,7 @@ export const Nfts = ({nfts, search}: {nfts: YoroiNft[]; search: string}) => {
             message={strings.noNftsInWallet}
             heading={
               <View>
-                <NftCount count={nfts.length} />
+                <NftCount count={nftsSearchResult.length} />
 
                 <Spacer height={16} />
               </View>
@@ -84,15 +84,20 @@ export const Nfts = ({nfts, search}: {nfts: YoroiNft[]; search: string}) => {
   return (
     <ScreenWrapper>
       <View style={styles.galleryContainer}>
-        {search.length === 0 && (
+        {nftsSearchTerm.length === 0 && (
           <View>
-            <NftCount count={nfts.length} />
+            <NftCount count={nftsSearchResult.length} />
 
             <Spacer height={16} />
           </View>
         )}
 
-        <ImageGallery nfts={nfts} onSelect={handleNftSelect} onRefresh={onRefresh} isRefreshing={isManualRefreshing} />
+        <ImageGallery
+          nfts={nftsSearchResult}
+          onSelect={handleNftSelect}
+          onRefresh={onRefresh}
+          isRefreshing={isManualRefreshing}
+        />
       </View>
     </ScreenWrapper>
   )

@@ -12,7 +12,7 @@ storiesOf('NFT/Gallery', module)
     return (
       <QueryProvider>
         <SelectedWalletProvider wallet={loadingWallet}>
-          <Nfts nfts={[]} search="" />
+          <Nfts nftsSearchResult={[]} nftsSearchTerm="" />
         </SelectedWalletProvider>
       </QueryProvider>
     )
@@ -27,7 +27,7 @@ storiesOf('NFT/Gallery', module)
     return (
       <QueryProvider>
         <SelectedWalletProvider wallet={loadedWallet}>
-          <Nfts nfts={[]} search="" />
+          <Nfts nftsSearchResult={[]} nftsSearchTerm="" />
         </SelectedWalletProvider>
       </QueryProvider>
     )
@@ -42,7 +42,7 @@ storiesOf('NFT/Gallery', module)
     return (
       <QueryProvider>
         <SelectedWalletProvider wallet={loadedWallet}>
-          <Nfts nfts={generateManyNfts()} search="" />
+          <Nfts nftsSearchResult={generateManyNfts()} nftsSearchTerm="" />
         </SelectedWalletProvider>
       </QueryProvider>
     )
@@ -57,7 +57,7 @@ storiesOf('NFT/Gallery', module)
     return (
       <QueryProvider>
         <SelectedWalletProvider wallet={loadedWallet}>
-          <Nfts nfts={generateManyNfts()} search="" />
+          <Nfts nftsSearchResult={generateManyNfts()} nftsSearchTerm="" />
         </SelectedWalletProvider>
       </QueryProvider>
     )
@@ -72,7 +72,7 @@ storiesOf('NFT/Gallery', module)
     return (
       <QueryProvider>
         <SelectedWalletProvider wallet={loadedWallet}>
-          <Nfts nfts={generateManyNfts()} search="" />
+          <Nfts nftsSearchResult={generateManyNfts()} nftsSearchTerm="" />
         </SelectedWalletProvider>
       </QueryProvider>
     )
@@ -87,7 +87,7 @@ storiesOf('NFT/Gallery', module)
     return (
       <QueryProvider>
         <SelectedWalletProvider wallet={loadedWallet}>
-          <Nfts nfts={generateManyNfts()} search="" />
+          <Nfts nftsSearchResult={generateManyNfts()} nftsSearchTerm="" />
         </SelectedWalletProvider>
       </QueryProvider>
     )
@@ -102,7 +102,7 @@ storiesOf('NFT/Gallery', module)
     return (
       <QueryProvider>
         <SelectedWalletProvider wallet={loadedWallet}>
-          <Nfts nfts={generateManyNfts()} search="" />
+          <Nfts nftsSearchResult={generateManyNfts()} nftsSearchTerm="" />
         </SelectedWalletProvider>
       </QueryProvider>
     )
@@ -117,7 +117,7 @@ storiesOf('NFT/Gallery', module)
     return (
       <QueryProvider>
         <SelectedWalletProvider wallet={loadedWallet}>
-          <Nfts nfts={generateManyNfts()} search="" />
+          <Nfts nftsSearchResult={generateManyNfts()} nftsSearchTerm="" />
         </SelectedWalletProvider>
       </QueryProvider>
     )
@@ -130,7 +130,7 @@ storiesOf('NFT/Gallery', module)
     return (
       <QueryProvider>
         <SelectedWalletProvider wallet={errorWallet}>
-          <Nfts nfts={[]} search="" />
+          <Nfts nftsSearchResult={[]} nftsSearchTerm="" />
         </SelectedWalletProvider>
       </QueryProvider>
     )
