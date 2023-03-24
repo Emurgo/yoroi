@@ -27,7 +27,7 @@ export const useSearchResult = ({target, searchBy, sort = true}) => {
       : target
   const searchResult = sort ? filteredTarget.sort((a, b) => a[searchBy].localeCompare(b[searchBy])) : filteredTarget
 
-  return {searchResult}
+  return {searchResult, searchTerm: search}
 }
 
 export const SearchProvider = ({
