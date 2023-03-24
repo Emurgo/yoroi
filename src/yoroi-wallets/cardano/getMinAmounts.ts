@@ -8,9 +8,10 @@ import {MultiToken} from './MultiToken'
 import {MINIMUM_UTXO_VAL} from './shelley/constants'
 
 export const withMinAmounts = async (amounts: YoroiAmounts, primaryToken: Token): Promise<YoroiAmounts> => {
-  const minAmounts = await getMinAmounts(amounts, primaryToken)
+  const amountsWithPrimaryToken = withPrimaryToken(amounts, primaryToken)
+  const minAmounts = await getMinAmounts(amountsWithPrimaryToken, primaryToken)
 
-  return Amounts.map(amounts, (amount) => ({
+  return Amounts.map(amountsWithPrimaryToken, (amount) => ({
     ...amount,
     quantity: Quantities.max(amount.quantity, Amounts.getAmount(minAmounts, amount.tokenId).quantity),
   }))
@@ -41,4 +42,13 @@ export const getMinAmounts = async (amounts: YoroiAmounts, primaryToken: Token) 
   return {
     [primaryToken.identifier]: minAda,
   } as YoroiAmounts
+}
+
+const withPrimaryToken = (amounts: YoroiAmounts, primaryToken: Token): YoroiAmounts => {
+  if (Amounts.includes(amounts, primaryToken.identifier)) return amounts
+
+  return {
+    ...amounts,
+    [primaryToken.identifier]: Quantities.zero(),
+  }
 }

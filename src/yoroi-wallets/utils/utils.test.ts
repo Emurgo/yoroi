@@ -57,13 +57,14 @@ describe('Quantities', () => {
     expect(Quantities.atomic(new BigNumber('0000000000015'), 6)).toBe('15000000')
     expect(Quantities.atomic(new BigNumber(1.5), 6)).toBe('1500000')
   })
-  it('isZero', () => {
+  it('zero & isZero', () => {
     expect(Quantities.isZero(Quantities.atomic('', 15))).toBe(true)
     expect(Quantities.isZero(Quantities.atomic('', 0))).toBe(true)
     expect(Quantities.isZero(Quantities.atomic('0', 2))).toBe(true)
     expect(Quantities.isZero(Quantities.atomic('-1', 2))).toBe(false)
     expect(Quantities.isZero(Quantities.atomic('1', 2))).toBe(false)
     expect(Quantities.isZero(Quantities.atomic('0.00000000000001', 18))).toBe(false)
+    expect(Quantities.isZero(Quantities.zero())).toBe(true)
   })
   it('isIndivisible', () => {
     expect(Quantities.isIndivisible('1', 0)).toBe(true)
@@ -149,6 +150,18 @@ describe('Amounts', () => {
         quantity,
       } as YoroiAmount),
     )
+  })
+
+  it('includes', () => {
+    const amounts: YoroiAmounts = {
+      '': '1',
+      token123: '2',
+      token567: '-2',
+    }
+
+    Object.keys(amounts).forEach((tokenId) => expect(Amounts.includes(amounts, tokenId)).toBe(true))
+
+    expect(Amounts.includes(amounts, 'does-not-include')).toBe(false)
   })
 
   it('remove', () => {

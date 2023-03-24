@@ -45,6 +45,9 @@ export const Amounts = {
   diff: (amounts1: YoroiAmounts, amounts2: YoroiAmounts): YoroiAmounts => {
     return Amounts.sum([amounts1, Amounts.negated(amounts2)])
   },
+  includes: (amounts: YoroiAmounts, tokenId: string): boolean => {
+    return Object.keys(amounts).includes(tokenId)
+  },
   negated: (amounts: YoroiAmounts): YoroiAmounts => {
     const entries = Object.entries(amounts)
     const negatedEntries = entries.map(([tokenId, amount]) => [tokenId, Quantities.negated(amount)])
@@ -59,7 +62,7 @@ export const Amounts = {
   getAmount: (amounts: YoroiAmounts, tokenId: string): YoroiAmount => {
     return {
       tokenId,
-      quantity: amounts[tokenId] || '0',
+      quantity: amounts[tokenId] || Quantities.zero(),
     }
   },
   save: (amounts: YoroiAmounts, amount: YoroiAmount): YoroiAmounts => {
@@ -118,6 +121,7 @@ export const Quantities = {
     const value = (stripped.length > 0 && new BigNumber(stripped).isZero() !== true ? stripped : '0') as Quantity
     return new BigNumber(value).toFixed(denomination).toString().replace(/[.,]/g, '') as Quantity
   },
+  zero: () => '0' as Quantity,
   isZero: (quantity: Quantity) => new BigNumber(quantity).isZero(),
   isIndivisible: (quantity: Quantity, denomination: number) => {
     const absoluteQuantity = quantity.replace('-', '')
@@ -146,7 +150,7 @@ export const Utxos = {
             return {
               ...previousAmountsWithAssets,
               [currentAsset.assetId]: Quantities.sum([
-                previousAmountsWithAssets[currentAsset.assetId] ?? ('0' as Quantity),
+                previousAmountsWithAssets[currentAsset.assetId] ?? Quantities.zero(),
                 currentAsset.amount as Quantity,
               ]),
             }

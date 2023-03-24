@@ -35,7 +35,7 @@ export const ListSelectedTokensScreen = () => {
   const {refetch} = useSendTx(
     {wallet, entry: targets[selectedTargetIndex].entry},
     {
-      onSettled: (yoroiUnsignedTx) => {
+      onSuccess: (yoroiUnsignedTx) => {
         yoroiUnsignedTxChanged(yoroiUnsignedTx)
         navigateTo.confirmTx()
       },
