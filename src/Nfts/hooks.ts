@@ -1,22 +1,4 @@
-import {UseQueryOptions} from 'react-query'
-
-import {useSearch} from '../Search'
-import {useSelectedWallet} from '../SelectedWallet'
-import {useNftModerationStatus, useNfts, YoroiNft, YoroiWallet} from '../yoroi-wallets'
-
-export const useFilteredNfts = (options: UseQueryOptions<YoroiNft[], Error> = {}) => {
-  const {search} = useSearch()
-  const searchTermLowerCase = search.toLowerCase()
-  const wallet = useSelectedWallet()
-  const {nfts, isLoading, refetch, isRefetching, isError} = useNfts(wallet, options)
-  const filteredNfts =
-    searchTermLowerCase.length > 0 && nfts.length > 0
-      ? nfts.filter((n) => n.name.toLowerCase().includes(searchTermLowerCase))
-      : nfts
-  const sortedNfts = filteredNfts.sort((a, b) => a.name.localeCompare(b.name))
-
-  return {nfts: sortedNfts, isLoading, refetch, isRefetching, isError, search} as const
-}
+import {useNftModerationStatus, YoroiWallet} from '../yoroi-wallets'
 
 export const useModeratedNftImage = ({wallet, fingerprint}: {wallet: YoroiWallet; fingerprint: string}) => {
   return useNftModerationStatus(
