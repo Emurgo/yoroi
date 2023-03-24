@@ -134,7 +134,13 @@ export const Quantities = {
   },
 }
 
-export const asQuantity = (amount: BigNumber | number | string) => new BigNumber(amount).toString() as Quantity
+export const asQuantity = (amount: BigNumber | number | string) => {
+  const asBigNumber = new BigNumber(amount)
+  if (asBigNumber.isNaN() || !asBigNumber.isFinite()) {
+    return new BigNumber(0).toString() as Quantity
+  }
+  return asBigNumber.toString() as Quantity
+}
 
 export const Utxos = {
   toAmounts: (utxos: RawUtxo[], primaryTokenId: TokenId) => {

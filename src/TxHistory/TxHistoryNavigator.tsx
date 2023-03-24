@@ -4,6 +4,13 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps} from 'react-native'
 
 import {Boundary, Icon} from '../components'
+import {SendProvider} from '../features/Send/common/SendContext'
+import {ConfirmTxScreen} from '../features/Send/useCases/ConfirmTx/ConfirmTxScreen'
+import {SelectTokenFromListScreen} from '../features/Send/useCases/ListSelectedTokens/AddToken/SelectTokenFromListScreen'
+import {EditAmountScreen} from '../features/Send/useCases/ListSelectedTokens/EditAmount/EditAmountScreen'
+import {ListSelectedTokensScreen} from '../features/Send/useCases/ListSelectedTokens/ListSelectedTokensScreen'
+import {ReadQRCodeScreen} from '../features/Send/useCases/StartTx/InputReceiver/ReadQRCodeScreen'
+import {StartTxScreen} from '../features/Send/useCases/StartTx/StartTxScreen'
 import {
   defaultStackNavigationOptions,
   defaultStackNavigationOptionsV2,
@@ -12,13 +19,6 @@ import {
 } from '../navigation'
 import {ReceiveScreen} from '../Receive/ReceiveScreen'
 import {useSelectedWallet} from '../SelectedWallet'
-import {SendProvider} from '../Send/shared/SendContext'
-import {ConfirmTxScreen} from '../Send/useCases/ConfirmTx/ConfirmTxScreen'
-import {SelectTokenFromListScreen} from '../Send/useCases/ListSelectedTokens/AddToken/SelectTokenFromListScreen'
-import {EditAmountScreen} from '../Send/useCases/ListSelectedTokens/EditAmountScreen'
-import {ListSelectedTokensScreen} from '../Send/useCases/ListSelectedTokens/ListSelectedTokensScreen'
-import {ReadQRCodeScreen} from '../Send/useCases/StartTx/InputReceiver/ReadQRCodeScreen'
-import {StartTxScreen} from '../Send/useCases/StartTx/StartTxScreen'
 import {COLORS} from '../theme'
 import {useWalletName} from '../yoroi-wallets'
 import {ModalInfo} from './ModalInfo'

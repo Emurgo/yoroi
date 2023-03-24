@@ -2,8 +2,8 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
 import {QueryProvider} from '../../.storybook/decorators'
+import {SendProvider} from '../features/Send/common/SendContext'
 import {SelectedWalletProvider} from '../SelectedWallet'
-import {SendProvider} from '../Send/shared/SendContext'
 import {mocks} from '../yoroi-wallets/mocks'
 import {TxHistory} from './TxHistory'
 
