@@ -2,7 +2,6 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
 import {QueryProvider} from '../../.storybook/decorators'
-import {SearchProvider} from '../Search'
 import {SelectedWalletProvider} from '../SelectedWallet'
 import {generateManyNfts, mocks} from '../yoroi-wallets/mocks'
 import {Nfts} from './Nfts'
@@ -13,9 +12,7 @@ storiesOf('NFT/Gallery', module)
     return (
       <QueryProvider>
         <SelectedWalletProvider wallet={loadingWallet}>
-          <SearchProvider>
-            <Nfts nfts={[]} search="" />
-          </SearchProvider>
+          <Nfts nfts={[]} search="" />
         </SelectedWalletProvider>
       </QueryProvider>
     )
@@ -30,14 +27,12 @@ storiesOf('NFT/Gallery', module)
     return (
       <QueryProvider>
         <SelectedWalletProvider wallet={loadedWallet}>
-          <SearchProvider>
-            <Nfts nfts={[]} search="" />
-          </SearchProvider>
+          <Nfts nfts={[]} search="" />
         </SelectedWalletProvider>
       </QueryProvider>
     )
   })
-  .add('Loaded metadata & Approved', async () => {
+  .add('Loaded metadata & Approved', () => {
     const loadedWallet = {
       ...mocks.wallet,
       fetchNfts: mocks.fetchNfts.success.many,
@@ -47,14 +42,12 @@ storiesOf('NFT/Gallery', module)
     return (
       <QueryProvider>
         <SelectedWalletProvider wallet={loadedWallet}>
-          <SearchProvider>
-            <Nfts nfts={generateManyNfts()} search="" />
-          </SearchProvider>
+          <Nfts nfts={generateManyNfts()} search="" />
         </SelectedWalletProvider>
       </QueryProvider>
     )
   })
-  .add('Loaded metadata & Blurred image', async () => {
+  .add('Loaded metadata & Blurred image', () => {
     const loadedWallet = {
       ...mocks.wallet,
       fetchNfts: mocks.fetchNfts.success.many,
@@ -64,14 +57,12 @@ storiesOf('NFT/Gallery', module)
     return (
       <QueryProvider>
         <SelectedWalletProvider wallet={loadedWallet}>
-          <SearchProvider>
-            <Nfts nfts={generateManyNfts()} search="" />
-          </SearchProvider>
+          <Nfts nfts={generateManyNfts()} search="" />
         </SelectedWalletProvider>
       </QueryProvider>
     )
   })
-  .add('Loaded metadata & Not approved', async () => {
+  .add('Loaded metadata & Not approved', () => {
     const loadedWallet = {
       ...mocks.wallet,
       fetchNfts: mocks.fetchNfts.success.many,
@@ -81,14 +72,12 @@ storiesOf('NFT/Gallery', module)
     return (
       <QueryProvider>
         <SelectedWalletProvider wallet={loadedWallet}>
-          <SearchProvider>
-            <Nfts nfts={generateManyNfts()} search="" />
-          </SearchProvider>
+          <Nfts nfts={generateManyNfts()} search="" />
         </SelectedWalletProvider>
       </QueryProvider>
     )
   })
-  .add('Loaded metadata & Pending review', async () => {
+  .add('Loaded metadata & Pending review', () => {
     const loadedWallet = {
       ...mocks.wallet,
       fetchNfts: mocks.fetchNfts.success.many,
@@ -98,14 +87,12 @@ storiesOf('NFT/Gallery', module)
     return (
       <QueryProvider>
         <SelectedWalletProvider wallet={loadedWallet}>
-          <SearchProvider>
-            <Nfts nfts={generateManyNfts()} search="" />
-          </SearchProvider>
+          <Nfts nfts={generateManyNfts()} search="" />
         </SelectedWalletProvider>
       </QueryProvider>
     )
   })
-  .add('Loaded metadata & Mixed moderation type', async () => {
+  .add('Loaded metadata & Mixed moderation type', () => {
     const loadedWallet = {
       ...mocks.wallet,
       fetchNfts: mocks.fetchNfts.success.many,
@@ -115,14 +102,12 @@ storiesOf('NFT/Gallery', module)
     return (
       <QueryProvider>
         <SelectedWalletProvider wallet={loadedWallet}>
-          <SearchProvider>
-            <Nfts nfts={generateManyNfts()} search="" />
-          </SearchProvider>
+          <Nfts nfts={generateManyNfts()} search="" />
         </SelectedWalletProvider>
       </QueryProvider>
     )
   })
-  .add('Loaded metadata & NFT Moderation status is loading', async () => {
+  .add('Loaded metadata & NFT Moderation status is loading', () => {
     const loadedWallet = {
       ...mocks.wallet,
       fetchNfts: mocks.fetchNfts.success.many,
@@ -132,14 +117,12 @@ storiesOf('NFT/Gallery', module)
     return (
       <QueryProvider>
         <SelectedWalletProvider wallet={loadedWallet}>
-          <SearchProvider>
-            <Nfts nfts={generateManyNfts()} search="" />
-          </SearchProvider>
+          <Nfts nfts={generateManyNfts()} search="" />
         </SelectedWalletProvider>
       </QueryProvider>
     )
   })
-  .add('Error loading metadata', async () => {
+  .add('Error loading metadata', () => {
     const errorWallet = {
       ...mocks.wallet,
       fetchNfts: mocks.fetchNfts.error,
@@ -147,9 +130,7 @@ storiesOf('NFT/Gallery', module)
     return (
       <QueryProvider>
         <SelectedWalletProvider wallet={errorWallet}>
-          <SearchProvider>
-            <Nfts nfts={[]} search="" />
-          </SearchProvider>
+          <Nfts nfts={[]} search="" />
         </SelectedWalletProvider>
       </QueryProvider>
     )
