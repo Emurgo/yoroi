@@ -19,12 +19,17 @@ import {Amounts} from '../../../yoroi-wallets/utils'
 import {useSend} from '../../shared/SendContext'
 import {AddTokenButton} from './AddToken/AddToken'
 import {DeleteToken} from './DeleteToken'
+import {useOpenTokenListWhenEmpty} from './OpenTokenListWhenEmpty'
 
 export const ListSelectedTokensScreen = () => {
-  const {targets, selectedTargetIndex, tokenSelectedChanged, amountRemoved, yoroiUnsignedTxChanged} = useSend()
-  const {amounts} = targets[selectedTargetIndex].entry
   const navigateTo = useNavigateTo()
   const strings = useStrings()
+
+  const {targets, selectedTargetIndex, tokenSelectedChanged, amountRemoved, yoroiUnsignedTxChanged} = useSend()
+  const {amounts} = targets[selectedTargetIndex].entry
+
+  const selectedTokensCounter = Object.keys(amounts).length
+  useOpenTokenListWhenEmpty()
 
   const wallet = useSelectedWallet()
   const tokenInfos = useTokenInfos({
@@ -73,7 +78,7 @@ export const ListSelectedTokensScreen = () => {
 
         <Spacer height={33} />
 
-        <NextButton onPress={onNext} title={strings.next} shelleyTheme />
+        <NextButton onPress={onNext} title={strings.next} shelleyTheme disabled={selectedTokensCounter === 0} />
       </Actions>
     </View>
   )
