@@ -1,5 +1,6 @@
 /* eslint-disable no-empty */
 
+import {SendToken} from '@emurgo/yoroi-lib'
 import {BigNumber} from 'bignumber.js'
 
 import {
@@ -8,7 +9,7 @@ import {
   WALLET_CONFIG_24 as HASKELL_SHELLEY_24,
 } from '../cardano/shelley/constants'
 import {NETWORK_ID as testnetId} from '../cardano/shelley-testnet/constants'
-import {SendTokenList, Token, YoroiAmounts} from '../types'
+import {Token, YoroiAmount, YoroiAmounts} from '../types'
 import {
   Addressing,
   BaseAsset,
@@ -279,19 +280,24 @@ export const toCardanoNetworkId = (networkId: number) => {
   throw new Error('invalid network id')
 }
 
-export const toSendTokenList = (amounts: YoroiAmounts, primaryToken: Token): SendTokenList =>
-  Amounts.toArray(amounts).map((amount) => {
+export const toSendTokenList = (amounts: YoroiAmounts, primaryToken: Token): Array<SendToken> => {
+  const asSendToken = toSendToken(primaryToken)
+  return Amounts.toArray(amounts).map(asSendToken)
+}
+
+export const toSendToken =
+  (primaryToken: Token) =>
+  (amount: YoroiAmount): SendToken => {
     const {tokenId, quantity} = amount
+    const isPrimary = tokenId === primaryToken.identifier
 
     return {
-      token:
-        tokenId === primaryToken.identifier
-          ? primaryToken
-          : ({
-              ...primaryToken,
-              identifier: tokenId,
-              isDefault: false,
-            } as unknown as Token),
-      amount: quantity,
+      token: {
+        networkId: primaryToken.networkId,
+        identifier: tokenId,
+        isDefault: isPrimary,
+      },
+      amount: new BigNumber(quantity),
+      shouldSendAll: false,
     }
-  })
+  }

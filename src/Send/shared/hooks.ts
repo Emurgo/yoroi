@@ -1,13 +1,13 @@
 import {useSelectedWallet} from '../../SelectedWallet'
 import {useBalance, useLockedAmount} from '../../yoroi-wallets/hooks'
-import {Quantity, TokenId, YoroiTarget} from '../../yoroi-wallets/types'
+import {TokenId, YoroiTarget} from '../../yoroi-wallets/types'
 import {Quantities} from '../../yoroi-wallets/utils'
 import {useSend} from './SendContext'
 
 export const useTokenQuantities = (tokenId: TokenId) => {
   const wallet = useSelectedWallet()
   const {targets, selectedTargetIndex} = useSend()
-  const initialQuantity = targets[selectedTargetIndex].entry.amounts[tokenId] ?? ('0' as Quantity)
+  const initialQuantity = targets[selectedTargetIndex].entry.amounts[tokenId] ?? Quantities.zero()
 
   const balance = useBalance({wallet, tokenId})
   const used = getTotalUsedByOtherTargets({targets, selectedTokenId: tokenId, selectedTargetIndex})
@@ -15,7 +15,7 @@ export const useTokenQuantities = (tokenId: TokenId) => {
 
   const isPrimary = tokenId === wallet.primaryTokenInfo.id
   const primaryLocked = useLockedAmount({wallet})
-  const locked = isPrimary ? primaryLocked : ('0' as Quantity)
+  const locked = isPrimary ? primaryLocked : Quantities.zero()
 
   const spendable = Quantities.diff(available, locked)
 
@@ -42,9 +42,9 @@ const getTotalUsedByOtherTargets = ({
   selectedTargetIndex: number
   selectedTokenId: string
 }) => {
-  return targets.reduce((acc, target, index) => {
-    if (index === selectedTargetIndex) return acc
-    const quantity = target.entry.amounts[selectedTokenId] ?? ('0' as Quantity)
+  const isNotTheSelectedTarget = (_, index) => index !== selectedTargetIndex
+  return targets.filter(isNotTheSelectedTarget).reduce((acc, target) => {
+    const quantity = target.entry.amounts[selectedTokenId] ?? Quantities.zero()
     return Quantities.sum([acc, quantity])
-  }, '0' as Quantity)
+  }, Quantities.zero())
 }
