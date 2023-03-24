@@ -5,7 +5,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Icon, Spacer} from '../components'
 import {useSearch} from '../Search'
-import {useSearchResult} from '../Search/SearchHeader'
+import {useSearchResult} from '../Search/SearchContext'
 import {useSelectedWallet} from '../SelectedWallet'
 import {useNfts} from '../yoroi-wallets'
 import {ImageGallery, SkeletonGallery} from './ImageGallery'
