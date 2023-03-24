@@ -4,18 +4,20 @@ import {RefreshControl, ScrollView, StyleSheet, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Icon, Spacer} from '../components'
-import {useFilteredNfts} from './hooks'
+import {useSelectedWallet} from '../SelectedWallet'
+import {useNfts, YoroiNft} from '../yoroi-wallets'
 import {ImageGallery, SkeletonGallery} from './ImageGallery'
 import {useNavigateTo} from './navigation'
 import {NoNftsScreen} from './NoNftsScreen'
 
-export const Nfts = () => {
+export const Nfts = ({nfts, search}: {nfts: YoroiNft[]; search: string}) => {
   const navigateTo = useNavigateTo()
   const handleNftSelect = (index: number) => navigateTo.nftDetails(nfts[index].id)
   const [isManualRefreshing, setIsManualRefreshing] = React.useState(false)
+  const wallet = useSelectedWallet()
   const strings = useStrings()
 
-  const {search, nfts, isLoading, refetch, isError} = useFilteredNfts({
+  const {isLoading, refetch, isError} = useNfts(wallet, {
     onSettled: () => {
       if (isManualRefreshing) setIsManualRefreshing(false)
     },

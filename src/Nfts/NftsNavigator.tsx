@@ -4,7 +4,9 @@ import {defineMessages, useIntl} from 'react-intl'
 
 import {NftRoutes} from '../navigation'
 import {SearchProvider} from '../Search'
-import {useSearchHeaderOptions} from '../Search/SearchHeader'
+import {useSearchHeader} from '../Search/SearchHeader'
+import {useSelectedWallet} from '../SelectedWallet'
+import {useNfts} from '../yoroi-wallets'
 import {Nfts} from './Nfts'
 
 const Stack = createStackNavigator<NftRoutes>()
@@ -19,11 +21,20 @@ export const NftsNavigator = () => {
 
 const Routes = () => {
   const strings = useStrings()
-  const {searchHeaderOptions} = useSearchHeaderOptions({placeHolderText: strings.search, title: strings.title})
+  const wallet = useSelectedWallet()
+  const {nfts} = useNfts(wallet)
+  const {searchHeaderOptions, searchResult, search} = useSearchHeader({
+    target: nfts,
+    searchBy: 'name',
+    placeHolderText: strings.search,
+    title: strings.title,
+  })
 
   return (
     <Stack.Navigator>
-      <Stack.Screen name="nft-gallery" component={Nfts} options={searchHeaderOptions} />
+      <Stack.Screen name="nft-gallery" options={searchHeaderOptions}>
+        {() => <Nfts nfts={searchResult} search={search} />}
+      </Stack.Screen>
     </Stack.Navigator>
   )
 }
