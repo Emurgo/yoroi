@@ -14,7 +14,7 @@ export const useSearchHeader = ({target, searchBy, placeHolderText, title, sort 
     searchTermLowerCase.length > 0 && target.length > 0
       ? target.filter((n) => n[searchBy].toLowerCase().includes(searchTermLowerCase))
       : target
-  const searchResult = sort ? filteredTarget.sort((a, b) => a[searchBy].localeCompare(b.name)) : filteredTarget
+  const searchResult = sort ? filteredTarget.sort((a, b) => a[searchBy].localeCompare(b[searchBy])) : filteredTarget
 
   return {
     searchResult,
