@@ -18,6 +18,18 @@ export const useSearch = () => {
   return value
 }
 
+export const useSearchResult = ({target, searchBy, sort = true}) => {
+  const {search} = useSearch()
+  const searchTermLowerCase = search.toLowerCase()
+  const filteredTarget =
+    searchTermLowerCase.length > 0 && target.length > 0
+      ? target.filter((n) => n[searchBy].toLowerCase().includes(searchTermLowerCase))
+      : target
+  const searchResult = sort ? filteredTarget.sort((a, b) => a[searchBy].localeCompare(b[searchBy])) : filteredTarget
+
+  return {searchResult}
+}
+
 export const SearchProvider = ({
   children,
   initialState,
