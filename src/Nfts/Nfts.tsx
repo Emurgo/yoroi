@@ -4,7 +4,6 @@ import {RefreshControl, ScrollView, StyleSheet, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Icon, Spacer} from '../components'
-import {useSearch} from '../Search'
 import {useSearchResult} from '../Search/SearchContext'
 import {useSelectedWallet} from '../SelectedWallet'
 import {useNfts} from '../yoroi-wallets'
@@ -23,9 +22,8 @@ export const Nfts = () => {
       if (isManualRefreshing) setIsManualRefreshing(false)
     },
   })
-  const {search: nftsSearchTerm} = useSearch()
 
-  const {searchResult: nftsSearchResult} = useSearchResult({
+  const {searchResult: nftsSearchResult, searchTerm: nftsSearchTerm} = useSearchResult({
     target: nfts,
     searchBy: 'name',
   })
