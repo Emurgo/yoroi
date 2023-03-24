@@ -1,33 +1,28 @@
-import {SendTokenList, Token, YoroiAmounts} from '../types'
-import {PRIMARY_TOKEN} from './shelley/constants'
-import {toSendTokenList} from './utils'
+import {SendToken} from '@emurgo/yoroi-lib'
 
-describe('makeSendTokenList', () => {
-  it('converts target to send amount token list', async () => {
+import {Token, YoroiAmounts} from '../types'
+import {PRIMARY_TOKEN} from './shelley/constants'
+import {toSendToken, toSendTokenList} from './utils'
+
+describe('toSendTokenList', () => {
+  const asSendToken = toSendToken(PRIMARY_TOKEN)
+
+  it('converts amounts to send token list for tx (lib)', async () => {
     const amounts: YoroiAmounts = {
       [PRIMARY_TOKEN.identifier]: '123',
-      [token.identifier]: '456',
+      [secondaryToken.identifier]: '456',
     }
 
-    const sendTokenList: SendTokenList = [
-      {
-        token: PRIMARY_TOKEN,
-        amount: '123',
-      },
-      {
-        token: {
-          ...token,
-          metadata: {},
-        } as unknown as Token, // metadata is not used when creating a transaction
-        amount: '456',
-      },
-    ]
+    const primaryAsToken = asSendToken({tokenId: PRIMARY_TOKEN.identifier, quantity: '123'})
+    const secondaryAsToken = asSendToken({tokenId: secondaryToken.identifier, quantity: '456'})
+
+    const sendTokenList: Array<SendToken> = [primaryAsToken, secondaryAsToken]
 
     expect(toSendTokenList(amounts, PRIMARY_TOKEN)).toEqual(sendTokenList)
   })
 })
 
-const token: Token = {
+const secondaryToken: Token = {
   identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
   networkId: 1,
   isDefault: false,
