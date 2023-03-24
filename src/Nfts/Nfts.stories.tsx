@@ -116,9 +116,7 @@ storiesOf('NFT/Gallery', module)
       <QueryProvider>
         <SelectedWalletProvider wallet={loadedWallet}>
           <SearchProvider>
-            <SearchProvider>
-              <Nfts />
-            </SearchProvider>
+            <Nfts />
           </SearchProvider>
         </SelectedWalletProvider>
       </QueryProvider>
