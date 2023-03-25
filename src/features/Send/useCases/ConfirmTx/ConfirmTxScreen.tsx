@@ -3,19 +3,21 @@ import React, {useEffect, useRef} from 'react'
 import {useIntl} from 'react-intl'
 import {Keyboard, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 
-import {Boundary, KeyboardSpacer, Spacer, StatusBar, Text, ValidatedTextInput} from '../../../../components'
+import {KeyboardSpacer, Spacer, ValidatedTextInput} from '../../../../components'
 import {ConfirmTx} from '../../../../components/ConfirmTx'
 import {debugWalletInfo, features} from '../../../../features'
 import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../../../i18n/global-messages'
-import {formatTokenWithSymbol, formatTokenWithText} from '../../../../legacy/format'
 import {useWalletNavigation} from '../../../../navigation'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
-import {useBalances, useSaveMemo, useToken} from '../../../../yoroi-wallets/hooks'
-import {YoroiAmount, YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
-import {Amounts, Quantities} from '../../../../yoroi-wallets/utils'
+import {useSaveMemo} from '../../../../yoroi-wallets/hooks'
 import {useSend} from '../../common/SendContext'
-// import {AvailableAmountBanner} from '../SendScreen/AvailableAmountBanner'
+import {BalanceAfter} from './Summary/BalanceAfter'
+import {CurrentBalance} from './Summary/CurrentBalance'
+import {Fees} from './Summary/Fees'
+import {PrimaryTotal} from './Summary/PrimaryTotal'
+import {ReceiverInfo} from './Summary/ReceiverInfo'
+import {SecondaryTotals} from './Summary/SecondaryTotals'
 
 export const ConfirmTxScreen = () => {
   const strings = useStrings()
@@ -23,7 +25,7 @@ export const ConfirmTxScreen = () => {
   const wallet = useSelectedWallet()
   const [password, setPassword] = React.useState('')
   const [useUSB, setUseUSB] = React.useState(false)
-  const {memo, resetForm, targets, yoroiUnsignedTx} = useSend()
+  const {memo, resetForm, yoroiUnsignedTx} = useSend()
   const {saveMemo} = useSaveMemo({wallet})
 
   useEffect(() => {
@@ -47,9 +49,7 @@ export const ConfirmTxScreen = () => {
 
   return (
     <View style={styles.root}>
-      <StatusBar type="dark" />
-
-      {/* <AvailableAmountBanner /> */}
+      <CurrentBalance />
 
       <View style={{paddingTop: 16, paddingHorizontal: 16}}>
         <Fees yoroiUnsignedTx={yoroiUnsignedTx} />
@@ -60,9 +60,7 @@ export const ConfirmTxScreen = () => {
 
         <Spacer height={16} />
 
-        <Boundary loading={{size: 'small'}}>
-          <Receiver receiver={targets[0].receiver} />
-        </Boundary>
+        <ReceiverInfo />
       </View>
 
       <ScrollView
@@ -75,7 +73,7 @@ export const ConfirmTxScreen = () => {
 
         <Spacer height={8} />
 
-        <TokenTotals yoroiUnsignedTx={yoroiUnsignedTx} />
+        <SecondaryTotals yoroiUnsignedTx={yoroiUnsignedTx} />
 
         {!wallet.isEasyConfirmationEnabled && !wallet.isHW && (
           <>
@@ -107,92 +105,6 @@ export const ConfirmTxScreen = () => {
   )
 }
 
-const Fees = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx}) => {
-  const strings = useStrings()
-  const wallet = useSelectedWallet()
-  const feeAmount = Amounts.getAmount(yoroiUnsignedTx.fee, wallet.primaryToken.identifier)
-  const text = `${strings.fees}: ${formatTokenWithSymbol(feeAmount.quantity, wallet.primaryToken)}`
-  return (
-    <Text small testID="feesText">
-      {text}
-    </Text>
-  )
-}
-
-const BalanceAfter = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx}) => {
-  const strings = useStrings()
-  const wallet = useSelectedWallet()
-  const balances = useBalances(wallet)
-
-  // prettier-ignore
-  const balancesAfter = Amounts.diff(
-    balances,
-    Amounts.sum([
-      yoroiUnsignedTx.amounts,
-      yoroiUnsignedTx.fee,
-    ]),
-  )
-  const primaryAmountAfter = Amounts.getAmount(balancesAfter, wallet.primaryToken.identifier)
-  const text = `${strings.balanceAfterTx}: ${formatTokenWithSymbol(primaryAmountAfter.quantity, wallet.primaryToken)}`
-  return (
-    <Text small testID="balanceAfterTxText">
-      {text}
-    </Text>
-  )
-}
-
-const Receiver = ({receiver}: {receiver: string}) => {
-  const strings = useStrings()
-
-  return (
-    <View>
-      <Text>{strings.receiver}</Text>
-
-      <Text testID="receiverAddressText">{receiver}</Text>
-    </View>
-  )
-}
-
-const PrimaryTotal = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx}) => {
-  const strings = useStrings()
-  const wallet = useSelectedWallet()
-  const primaryAmount = Amounts.getAmount(yoroiUnsignedTx.amounts, wallet.primaryToken.identifier)
-
-  return (
-    <View>
-      <Text>{strings.total}</Text>
-
-      <Text style={styles.amount} testID="totalAmountText">
-        {formatTokenWithSymbol(primaryAmount.quantity, wallet.primaryToken)}
-      </Text>
-    </View>
-  )
-}
-
-const TokenTotals = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx}) => {
-  const wallet = useSelectedWallet()
-  const tokens = Amounts.remove(yoroiUnsignedTx.amounts, [wallet.primaryToken.identifier])
-
-  return (
-    <>
-      {Amounts.toArray(tokens)
-        .sort((a, b) => (Quantities.isGreaterThan(a.quantity, b.quantity) ? -1 : 1))
-        .map((amount) => (
-          <Boundary key={amount.tokenId} loading={{size: 'small'}}>
-            <Amount amount={amount} />
-          </Boundary>
-        ))}
-    </>
-  )
-}
-
-const Amount = ({amount}: {amount: YoroiAmount}) => {
-  const wallet = useSelectedWallet()
-  const token = useToken({wallet, tokenId: amount.tokenId})
-
-  return <Text style={styles.amount}>{formatTokenWithText(amount.quantity, token)}</Text>
-}
-
 const Actions = (props: ViewProps) => <View {...props} style={{padding: 16}} />
 
 const styles = StyleSheet.create({
@@ -204,9 +116,6 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.WHITE,
     flex: 1,
   },
-  amount: {
-    color: COLORS.POSITIVE_AMOUNT,
-  },
 })
 
 const useStrings = () => {
@@ -214,9 +123,7 @@ const useStrings = () => {
 
   return {
     availableFunds: intl.formatMessage(globalMessages.availableFunds),
-    fees: intl.formatMessage(txLabels.fees),
     balanceAfterTx: intl.formatMessage(txLabels.balanceAfterTx),
-    receiver: intl.formatMessage(txLabels.receiver),
     total: intl.formatMessage(globalMessages.total),
     password: intl.formatMessage(txLabels.password),
     confirmButton: intl.formatMessage(confirmationMessages.commonButtons.confirmButton),

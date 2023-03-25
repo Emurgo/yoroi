@@ -9,8 +9,8 @@ import {ConfirmTxScreen} from '../features/Send/useCases/ConfirmTx/ConfirmTxScre
 import {SelectTokenFromListScreen} from '../features/Send/useCases/ListSelectedTokens/AddToken/SelectTokenFromListScreen'
 import {EditAmountScreen} from '../features/Send/useCases/ListSelectedTokens/EditAmount/EditAmountScreen'
 import {ListSelectedTokensScreen} from '../features/Send/useCases/ListSelectedTokens/ListSelectedTokensScreen'
-import {ReadQRCodeScreen} from '../features/Send/useCases/StartTx/InputReceiver/ReadQRCodeScreen'
-import {StartTxScreen} from '../features/Send/useCases/StartTx/StartTxScreen'
+import {ReadQRCodeScreen} from '../features/Send/useCases/StartMultiTokenTx/InputReceiver/ReadQRCodeScreen'
+import {StartMultiTokenTxScreen} from '../features/Send/useCases/StartMultiTokenTx/StartMultiTokenTxScreen'
 import {
   defaultStackNavigationOptions,
   defaultStackNavigationOptionsV2,
@@ -85,7 +85,7 @@ export const TxHistoryNavigator = () => {
         >
           {() => (
             <Boundary>
-              <StartTxScreen />
+              <StartMultiTokenTxScreen />
             </Boundary>
           )}
         </Stack.Screen>

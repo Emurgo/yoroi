@@ -4,7 +4,7 @@ import * as React from 'react'
 import {TxHistoryRouteNavigation} from '../../../../navigation'
 import {useSend} from '../../common/SendContext'
 
-export const useOpenTokenListWhenEmpty = () => {
+export const useWhenEmptyAddToken = () => {
   const navigateTo = useNavigateTo()
 
   const {targets, selectedTargetIndex} = useSend()

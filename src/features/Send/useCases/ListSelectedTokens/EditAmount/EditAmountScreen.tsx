@@ -5,7 +5,6 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TextProps,
   TouchableOpacity,
   View,
   ViewProps,
@@ -24,6 +23,8 @@ import {useTokenQuantities} from '../../../common/hooks'
 import {useSend} from '../../../common/SendContext'
 import {useStrings} from '../../../common/strings'
 import {useDeleteAmountWhenZeroed} from './DeleteAmountWhenZeroed'
+import {NoBalance} from './ShowError/NoBalance'
+import {UnableToSpend} from './ShowError/UnableToSpend'
 
 export const EditAmountScreen = () => {
   const strings = useStrings()
@@ -40,7 +41,7 @@ export const EditAmountScreen = () => {
   )
 
   const hasBalance = !Quantities.isGreaterThan(quantity, available)
-  const isOverSpendable = isPrimary && Quantities.isGreaterThan(quantity, spendable)
+  const isUnableToSpend = isPrimary && Quantities.isGreaterThan(quantity, spendable)
 
   const onChangeAmount = (text: string) => {
     setInputAmount(text)
@@ -76,7 +77,7 @@ export const EditAmountScreen = () => {
 
             {!hasBalance && <NoBalance />}
 
-            {isOverSpendable && hasBalance && <OverSpendable />}
+            {isUnableToSpend && hasBalance && <UnableToSpend />}
           </Center>
         </ScrollView>
 
@@ -87,31 +88,11 @@ export const EditAmountScreen = () => {
             onPress={() => onApply(inputAmount)}
             title={strings.apply.toLocaleUpperCase()}
             shelleyTheme
-            disabled={isOverSpendable || !hasBalance}
+            disabled={isUnableToSpend || !hasBalance}
           />
         </Actions>
       </KeyboardAvoidingView>
     </View>
-  )
-}
-
-const NoBalance = ({style, ...props}: TextProps) => {
-  const strings = useStrings()
-
-  return (
-    <Text style={[style, styles.noBalance]} {...props}>
-      {strings.noBalance}
-    </Text>
-  )
-}
-
-const OverSpendable = ({style, ...props}: TextProps) => {
-  const strings = useStrings()
-
-  return (
-    <Text style={[style, styles.overSpendable]} {...props}>
-      {strings.minPrimaryBalanceForTokens}
-    </Text>
   )
 }
 
@@ -194,17 +175,9 @@ const styles = StyleSheet.create({
   actions: {
     padding: 16,
   },
-  noBalance: {
-    color: COLORS.ERROR_TEXT_COLOR,
-    textAlign: 'center',
-  },
   maxBalance: {
     fontFamily: 'Rubik-Medium',
     color: COLORS.SHELLEY_BLUE,
-  },
-  overSpendable: {
-    color: COLORS.TEXT_INPUT,
-    textAlign: 'center',
   },
   amount: {
     fontSize: 24,
