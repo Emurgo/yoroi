@@ -2128,16 +2128,14 @@
     blake2 "^4.0.2"
     int64-buffer "^1.0.1"
 
-"@cardano-foundation/ledgerjs-hw-app-cardano@^5.1.0":
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/@cardano-foundation/ledgerjs-hw-app-cardano/-/ledgerjs-hw-app-cardano-5.1.0.tgz#69b94f7c5055bdb19aa719ff277fa5f683d11067"
-  integrity sha512-ucuz/XbS/0ZD0Bal/GI/kiTm9jDIl8J+A7ypEqcAcBDGicFsyWmtPotOTwuDovTsiM8+eA/5OGTFX0oRqzxstQ==
+"@cardano-foundation/ledgerjs-hw-app-cardano@^6.0.0":
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/@cardano-foundation/ledgerjs-hw-app-cardano/-/ledgerjs-hw-app-cardano-6.0.0.tgz#720f2eb90efd8ca90a055bb09e22d8988bdda7cd"
+  integrity sha512-aiWlERF5sXMzygE62YH9AXrVePu5ZG+QKGv/ZhvYec35vUhDFJK8qPiLzXmTy6MdoDKSqbYVRPd6jY3KKs5pOg==
   dependencies:
-    "@ledgerhq/hw-transport" "^5.12.0"
-    "@types/ledgerhq__hw-transport" "^4.21.3"
+    "@ledgerhq/hw-transport" "^6.27.10"
     base-x "^3.0.5"
     bech32 "^1.1.4"
-    blake2 "^4.0.2"
     int64-buffer "^1.0.1"
 
 "@cnakazawa/watch@^1.0.3":
@@ -2384,12 +2382,12 @@
     "@ledgerhq/logs" "^5.15.0"
     rxjs "^6.5.5"
 
-"@emurgo/yoroi-lib@^0.3.2":
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/@emurgo/yoroi-lib/-/yoroi-lib-0.3.2.tgz#fd7ba94b51bd71d2dc8ceb803f77dd8cd6f70847"
-  integrity sha512-1OfmAgU4kBjDxxh2CMXaDBZTLOAIG5BJKY3C3x20cyn+nWjEw4tuDXK9KZWmkhKmxc4wgg7GkWihHS0yalam7Q==
+"@emurgo/yoroi-lib@0.3.2-alpha.1":
+  version "0.3.2-alpha.1"
+  resolved "https://registry.yarnpkg.com/@emurgo/yoroi-lib/-/yoroi-lib-0.3.2-alpha.1.tgz#c2561dc66c87e22490cb9ef422d715e8a4f547ba"
+  integrity sha512-w+X6SCZemHmQhIzom/IIz7962Zhe4cPShTyIXg3RW7OnwdlUPcpVensnp0rBkQwiVl2xbZfMtrMt44ItRHdIYg==
   dependencies:
-    "@cardano-foundation/ledgerjs-hw-app-cardano" "^5.1.0"
+    "@cardano-foundation/ledgerjs-hw-app-cardano" "^6.0.0"
     "@emurgo/cross-csl-core" "^1.0.0"
     axios "^0.24.0"
     bech32 "^2.0.0"
@@ -3416,6 +3414,16 @@
     rxjs "6"
     semver "^7.3.5"
 
+"@ledgerhq/devices@^8.0.0":
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/@ledgerhq/devices/-/devices-8.0.0.tgz#8fe9f9e442e28b7a20bcdf4c2eed06ce7b8f76ae"
+  integrity sha512-gSnRT0KPca+LIpaC6D/WZQjOAlSI5uCvK1dmxXtKhODLAj735rX5Z3SnGnLUavRCHNbUi44FzgvloF5BKTkh7A==
+  dependencies:
+    "@ledgerhq/errors" "^6.12.3"
+    "@ledgerhq/logs" "^6.10.1"
+    rxjs "6"
+    semver "^7.3.5"
+
 "@ledgerhq/errors@^5.15.0", "@ledgerhq/errors@^5.50.0":
   version "5.50.0"
   resolved "https://registry.yarnpkg.com/@ledgerhq/errors/-/errors-5.50.0.tgz#e3a6834cb8c19346efca214c1af84ed28e69dad9"
@@ -3426,6 +3434,11 @@
   resolved "https://registry.yarnpkg.com/@ledgerhq/errors/-/errors-6.10.1.tgz#510688251b6261744c6b1cde6cfd2dfb13fc27b2"
   integrity sha512-92d1zRQleR1AQ4CAXgWgDtKUms+8EwShLVUcajI+BLWvgJ1Vclmq6PsBIDEQbsm+riVu/Ji3LcHdmgFgmi0VGw==
 
+"@ledgerhq/errors@^6.12.3":
+  version "6.12.3"
+  resolved "https://registry.yarnpkg.com/@ledgerhq/errors/-/errors-6.12.3.tgz#a610caae1eeeb7cb038525e5212fe03217dda683"
+  integrity sha512-djiMSgB/7hnK3aLR/c5ZMMivxjcI7o2+y3VKcsZZpydPoVf9+FXqeJPRfOwmJ0JxbQ//LinUfWpIfHew8LkaVw==
+
 "@ledgerhq/hw-transport@^5.12.0", "@ledgerhq/hw-transport@^5.15.0":
   version "5.51.1"
   resolved "https://registry.yarnpkg.com/@ledgerhq/hw-transport/-/hw-transport-5.51.1.tgz#8dd14a8e58cbee4df0c29eaeef983a79f5f22578"
@@ -3433,6 +3446,15 @@
   dependencies:
     "@ledgerhq/devices" "^5.51.1"
     "@ledgerhq/errors" "^5.50.0"
+    events "^3.3.0"
+
+"@ledgerhq/hw-transport@^6.27.10":
+  version "6.28.1"
+  resolved "https://registry.yarnpkg.com/@ledgerhq/hw-transport/-/hw-transport-6.28.1.tgz#cb22fe9bc23af4682c30f2aac7fe6f7ab13ed65a"
+  integrity sha512-RaZe+abn0zBIz82cE9tp7Y7aZkHWWbEaE2yJpfxT8AhFz3fx+BU0kLYzuRN9fmA7vKueNJ1MTVUCY+Ex9/CHSQ==
+  dependencies:
+    "@ledgerhq/devices" "^8.0.0"
+    "@ledgerhq/errors" "^6.12.3"
     events "^3.3.0"
 
 "@ledgerhq/hw-transport@^6.27.2":
@@ -3453,6 +3475,11 @@
   version "6.10.0"
   resolved "https://registry.yarnpkg.com/@ledgerhq/logs/-/logs-6.10.0.tgz#c012c1ecc1a0e53d50e6af381618dca5268461c1"
   integrity sha512-lLseUPEhSFUXYTKj6q7s2O3s2vW2ebgA11vMAlKodXGf5AFw4zUoEbTz9CoFOC9jS6xY4Qr8BmRnxP/odT4Uuw==
+
+"@ledgerhq/logs@^6.10.1":
+  version "6.10.1"
+  resolved "https://registry.yarnpkg.com/@ledgerhq/logs/-/logs-6.10.1.tgz#5bd16082261d7364eabb511c788f00937dac588d"
+  integrity sha512-z+ILK8Q3y+nfUl43ctCPuR4Y2bIxk/ooCQFwZxhtci1EhAtMDzMAx2W25qx8G1PPL9UUOdnUax19+F0OjXoj4w==
 
 "@ledgerhq/react-native-hw-transport-ble@6.27.3":
   version "6.27.3"
