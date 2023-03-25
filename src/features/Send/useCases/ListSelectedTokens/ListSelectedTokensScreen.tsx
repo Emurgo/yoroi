@@ -19,7 +19,7 @@ import {Amounts} from '../../../../yoroi-wallets/utils'
 import {useSend} from '../../common/SendContext'
 import {AddTokenButton} from './AddToken/AddToken'
 import {DeleteToken} from './DeleteToken'
-import {useOpenTokenListWhenEmpty} from './OpenTokenListWhenEmpty'
+import {useWhenEmptyAddToken} from './WhenEmptyAddToken'
 
 export const ListSelectedTokensScreen = () => {
   const navigateTo = useNavigateTo()
@@ -29,7 +29,7 @@ export const ListSelectedTokensScreen = () => {
   const {amounts} = targets[selectedTargetIndex].entry
 
   const selectedTokensCounter = Object.keys(amounts).length
-  useOpenTokenListWhenEmpty()
+  useWhenEmptyAddToken()
 
   const wallet = useSelectedWallet()
   const tokenInfos = useTokenInfos({

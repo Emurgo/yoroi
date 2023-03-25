@@ -8,9 +8,9 @@ import {YoroiWallet} from '../../../../yoroi-wallets'
 import {mocks as walletMocks} from '../../../../yoroi-wallets/mocks/wallet'
 import {mocks as sendMocks} from '../../common/mocks'
 import {SendProvider} from '../../common/SendContext'
-import {StartTxScreen} from './StartTxScreen'
+import {StartMultiTokenTxScreen} from './StartMultiTokenTxScreen'
 
-storiesOf('Send/StartTx', module)
+storiesOf('Send/StartMultiTokenTx', module)
   .add('initial', () => <Initial />)
   .add('error invalid address', () => <ErrorInvalidAddress />)
   .add('error memo too long', () => <ErrorMemoTooLong />)
@@ -24,7 +24,7 @@ const Initial = () => {
       <SelectedWalletProvider wallet={wallet}>
         <SendProvider>
           <Boundary>
-            <StartTxScreen />
+            <StartMultiTokenTxScreen />
           </Boundary>
         </SendProvider>
       </SelectedWalletProvider>
@@ -40,7 +40,7 @@ const ErrorInvalidAddress = () => {
       <SelectedWalletProvider wallet={wallet}>
         <SendProvider initialState={sendMocks.startTx.error.invalidAddress}>
           <Boundary>
-            <StartTxScreen />
+            <StartMultiTokenTxScreen />
           </Boundary>
         </SendProvider>
       </SelectedWalletProvider>
@@ -56,7 +56,7 @@ const LoadingResolveReceiver = () => {
       <SelectedWalletProvider wallet={wallet}>
         <SendProvider initialState={sendMocks.startTx.loading.resolveReceiver}>
           <Boundary>
-            <StartTxScreen />
+            <StartMultiTokenTxScreen />
           </Boundary>
         </SendProvider>
       </SelectedWalletProvider>
@@ -72,7 +72,7 @@ const ErrorMemoTooLong = () => {
       <SelectedWalletProvider wallet={wallet}>
         <SendProvider initialState={sendMocks.startTx.error.memoTooLong}>
           <Boundary>
-            <StartTxScreen />
+            <StartMultiTokenTxScreen />
           </Boundary>
         </SendProvider>
       </SelectedWalletProvider>

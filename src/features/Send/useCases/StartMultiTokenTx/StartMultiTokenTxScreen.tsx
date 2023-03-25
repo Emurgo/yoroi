@@ -14,7 +14,7 @@ import {InputMemo, maxMemoLength} from './InputMemo'
 import {getAddressErrorMessage, ResolveAddress, useReceiver} from './InputReceiver/ResolveAddress'
 import {ShowErrors} from './ShowErrors'
 
-export const StartTxScreen = () => {
+export const StartMultiTokenTxScreen = () => {
   const strings = useStrings()
   const navigateTo = useNavigateTo()
   const wallet = useSelectedWallet()
