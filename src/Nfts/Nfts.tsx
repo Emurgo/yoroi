@@ -4,7 +4,7 @@ import {RefreshControl, ScrollView, StyleSheet, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Icon, Spacer} from '../components'
-import {useSearchResult} from '../Search/SearchContext'
+import {useSearch} from '../Search/SearchContext'
 import {useSelectedWallet} from '../SelectedWallet'
 import {useNfts} from '../yoroi-wallets'
 import {ImageGallery, SkeletonGallery} from './ImageGallery'
@@ -23,10 +23,13 @@ export const Nfts = () => {
     },
   })
 
-  const {searchResult: nftsSearchResult, searchTerm: nftsSearchTerm} = useSearchResult({
-    target: nfts,
-    searchBy: 'name',
-  })
+  const {search: nftsSearchTerm} = useSearch()
+  const searchTermLowerCase = nftsSearchTerm.toLowerCase()
+  const filteredNfts =
+    searchTermLowerCase.length > 0 && nfts.length > 0
+      ? nfts.filter((nft) => nft.name.toLowerCase().includes(searchTermLowerCase))
+      : nfts
+  const nftsSearchResult = filteredNfts.sort((NftA, NftB) => NftA.name.localeCompare(NftB.name))
 
   const handleNftSelect = (index: number) => navigateTo.nftDetails(nftsSearchResult[index].id)
 
