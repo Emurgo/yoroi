@@ -1,4 +1,6 @@
-export const filterNfts = (nftsSearchTerm, nfts) => {
+import {YoroiNft} from '../yoroi-wallets'
+
+export const filterNfts = (nftsSearchTerm: string, nfts: YoroiNft[]): YoroiNft[] => {
   const searchTermLowerCase = nftsSearchTerm.toLowerCase()
   const filteredNfts =
     searchTermLowerCase.length > 0 && nfts.length > 0
