@@ -18,7 +18,7 @@ import type {
   TxStatusRequest,
   TxStatusResponse,
 } from '../../types'
-import {NFTAsset, RemoteAsset, YoroiNft, YoroiNftModerationStatus} from '../../types'
+import {NFTAsset, YoroiNft, YoroiNftModerationStatus} from '../../types'
 import {hasProperties, isArray, isNonNullable, isObject, isRecord} from '../../utils/parsing'
 import {ServerStatus} from '..'
 import {ApiError} from '../errors'
@@ -88,10 +88,20 @@ export const getPoolInfo = (request: PoolInfoRequest, config: BackendConfig): Pr
   return fetchDefault('pool/info', request, config)
 }
 
-export const getNFTs = async (assets: RemoteAsset[], config: BackendConfig): Promise<YoroiNft[]> => {
+export const getNFTs = async (
+  assets: Array<{name: string; policyId: string}>,
+  config: BackendConfig,
+): Promise<YoroiNft[]> => {
   const request = {assets: assets.map((asset) => ({nameHex: asset.name, policy: asset.policyId}))}
   const response = await fetchDefault('multiAsset/metadata', request, config)
   return parseNFTs(response, config.NFT_STORAGE_URL)
+}
+
+export const getNft = async (id: string, config: BackendConfig): Promise<YoroiNft | null> => {
+  const [policyId, name] = id.split('.')
+  const asset = {name, policyId}
+  const response = await getNFTs([asset], config)
+  return response[0] ?? null
 }
 
 export const getNFTModerationStatus = async (

@@ -79,6 +79,9 @@ const wallet: YoroiWallet = {
   fetchNfts() {
     throw new Error('not implemented: fetchNfts')
   },
+  fetchNft() {
+    throw new Error('not implemented: fetchNft')
+  },
   fetchNftModerationStatus() {
     throw new Error('not implemented: fetchNftModerationStatus')
   },

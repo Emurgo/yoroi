@@ -3,13 +3,17 @@ import {StyleSheet, View} from 'react-native'
 
 import {YoroiNft, YoroiNftModerationStatus} from '../../yoroi-wallets/types'
 import {NftPreview} from '../NftPreview'
-import {Placeholder} from './TokenIcon'
+import {Placeholder} from './Placeholder'
 
 const ICON_SIZE = 32
 
 export const ModeratedNftIcon = ({nft, status}: {nft: YoroiNft; status: YoroiNftModerationStatus}) => {
   if (status === 'pending') {
-    return <Placeholder />
+    return (
+      <View style={styles.wrapper}>
+        <Placeholder />
+      </View>
+    )
   }
 
   if (status === 'blocked') {

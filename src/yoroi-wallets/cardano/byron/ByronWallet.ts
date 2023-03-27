@@ -996,6 +996,10 @@ export class ByronWallet implements YoroiWallet {
     return api.getNFTs(assets, this.getBackendConfig())
   }
 
+  fetchNft(id: string) {
+    return api.getNft(id, this.getBackendConfig())
+  }
+
   // TODO: caching
   fetchNftModerationStatus(fingerprint: string): Promise<YoroiNftModerationStatus> {
     const backendConfig = this.getBackendConfig()

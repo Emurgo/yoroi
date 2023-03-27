@@ -873,6 +873,10 @@ export class ShelleyWallet implements YoroiWallet {
     return api.getNFTs(assets, BACKEND)
   }
 
+  fetchNft(id: string) {
+    return api.getNft(id, BACKEND)
+  }
+
   // TODO: caching
   fetchNftModerationStatus(fingerprint: string): Promise<YoroiNftModerationStatus> {
     return api.getNFTModerationStatus(fingerprint, {...BACKEND, mainnet: true})

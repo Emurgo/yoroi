@@ -895,16 +895,16 @@ export const useNfts = (wallet: YoroiWallet, options: UseQueryOptions<YoroiNft[]
 
 export const useNft = (wallet: YoroiWallet, {id}: {id: string}): YoroiNft => {
   const {nfts} = useNfts(wallet, {suspense: true})
-  const nft1 = nfts.find((nft) => nft.id === id)
+  const nft = nfts.find((nft) => nft.id === id)
 
   const {data: freshNft} = useQuery({
     queryKey: [wallet.id, 'nfts', id],
-    queryFn: () => wallet.fetchNfts().then((r) => r.find((n) => n.id === id)),
-    enabled: !nft1,
+    queryFn: () => wallet.fetchNft(id),
+    enabled: !nft,
     suspense: true,
   })
 
-  const result = nft1 || freshNft
+  const result = nft || freshNft
 
   if (!result) {
     throw new Error(`Invalid id used "${id}" to get NFT`)

@@ -8,6 +8,7 @@ import {useIsTokenKnownNft, useNft, useNftImageModerated, useTokenInfo, YoroiWal
 import {Boundary} from '../Boundary'
 import {Icon} from '../Icon'
 import {ModeratedNftIcon} from './ModeratedNftIcon'
+import {Placeholder} from './Placeholder'
 
 export const TokenIcon = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string}) => {
   const tokenInfo = useTokenInfo({wallet, tokenId})
@@ -58,12 +59,6 @@ const UnModeratedNftIcon = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: st
   return <ModeratedNftIcon status="approved" nft={nft} />
 }
 
-export const Placeholder = () => (
-  <View style={[styles.icon, styles.placeholder]}>
-    <Icon.Tokens color={COLORS.TEXT_INPUT} size={35} />
-  </View>
-)
-
 const isBase64 = (string) => {
   // https://github.com/validatorjs/validator.js/blob/491d9c0eea23f8401b5739803fb8e55c6860b32b/src/lib/isBase64.js
   const length = string.length
@@ -90,8 +85,5 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  placeholder: {
-    backgroundColor: COLORS.BACKGROUND_GRAY,
   },
 })
