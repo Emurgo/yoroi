@@ -7,6 +7,7 @@ import {Icon, Spacer} from '../components'
 import {useSearch} from '../Search/SearchContext'
 import {useSelectedWallet} from '../SelectedWallet'
 import {useNfts} from '../yoroi-wallets'
+import {filterNfts} from './filterNfts'
 import {ImageGallery, SkeletonGallery} from './ImageGallery'
 import {useNavigateTo} from './navigation'
 import {NoNftsScreen} from './NoNftsScreen'
@@ -24,12 +25,7 @@ export const Nfts = () => {
   })
 
   const {search: nftsSearchTerm} = useSearch()
-  const searchTermLowerCase = nftsSearchTerm.toLowerCase()
-  const filteredNfts =
-    searchTermLowerCase.length > 0 && nfts.length > 0
-      ? nfts.filter((nft) => nft.name.toLowerCase().includes(searchTermLowerCase))
-      : nfts
-  const nftsSearchResult = filteredNfts.sort((NftA, NftB) => NftA.name.localeCompare(NftB.name))
+  const nftsSearchResult = filterNfts(nftsSearchTerm, nfts)
 
   const handleNftSelect = (index: number) => navigateTo.nftDetails(nftsSearchResult[index].id)
 
