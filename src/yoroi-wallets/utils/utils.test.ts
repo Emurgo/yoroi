@@ -2,7 +2,7 @@ import BigNumber from 'bignumber.js'
 
 import {Quantity, YoroiAmount, YoroiAmounts, YoroiEntries, YoroiEntry} from '../types'
 import {RawUtxo} from '../types/other'
-import {Amounts, Entries, Quantities, Utxos} from '.'
+import {Amounts, asQuantity, Entries, Quantities, Utxos} from '.'
 
 describe('Quantities', () => {
   it('sum', () => {
@@ -464,5 +464,25 @@ describe('Utxos', () => {
         token567: '8',
       } as YoroiAmounts)
     })
+  })
+})
+
+describe('asQuantity', () => {
+  it.each`
+    input             | output
+    ${'0'}            | ${'0'}
+    ${'1'}            | ${'1'}
+    ${'1.000001'}     | ${'1.000001'}
+    ${undefined}      | ${'0'}
+    ${null}           | ${'0'}
+    ${'0.0000000000'} | ${'0'}
+    ${NaN}            | ${'0'}
+    ${Infinity}       | ${'0'}
+    ${-Infinity}      | ${'0'}
+    ${-0}             | ${'0'}
+    ${1 / 3}          | ${'0.3333333333333333'}
+    ${-1}             | ${'-1'}
+  `('when the input is $input it should return $output', ({input, output}) => {
+    expect(asQuantity(input)).toEqual(output)
   })
 })
