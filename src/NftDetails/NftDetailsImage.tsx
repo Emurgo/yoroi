@@ -1,31 +1,19 @@
 import {RouteProp, useRoute} from '@react-navigation/native'
 import React from 'react'
-import {ErrorBoundary} from 'react-error-boundary'
 import {Dimensions, StyleSheet, View} from 'react-native'
 import ViewTransformer from 'react-native-easy-view-transformer'
 
-import {FadeIn, FullErrorFallback} from '../components'
+import {Boundary, FadeIn} from '../components'
 import {NftPreview} from '../components/NftPreview/NftPreview'
-import {NftRoutes, useWalletNavigation} from '../navigation'
+import {NftRoutes} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
-import {NftNotFoundError, useNft} from '../yoroi-wallets'
+import {useNft} from '../yoroi-wallets'
 
 export const NftDetailsImage = () => {
-  const navigation = useWalletNavigation()
-  const handleError = (error: Error) => {
-    if (error instanceof NftNotFoundError) {
-      navigation.navigateToNftGallery()
-    }
-  }
   return (
-    <ErrorBoundary
-      onError={handleError}
-      fallbackRender={({error}) => (
-        <FullErrorFallback error={error} resetErrorBoundary={() => navigation.navigateToNftGallery()} />
-      )}
-    >
+    <Boundary>
       <ImageZoom />
-    </ErrorBoundary>
+    </Boundary>
   )
 }
 
