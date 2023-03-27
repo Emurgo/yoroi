@@ -1,7 +1,8 @@
+import {YoroiNft} from '../yoroi-wallets'
 import {filterNfts} from './filterNfts'
 
 describe('filterNfts', () => {
-  const nfts = [{name: 'CryptoWolf #1234'}, {name: 'Bored Monkey #4567'}, {name: 'Apple Blocks #7890'}]
+  const nfts = [{name: 'CryptoWolf #1234'}, {name: 'Bored Monkey #4567'}, {name: 'Apple Blocks #7890'}] as YoroiNft[]
 
   it('filters NFTs correctly with capitalized search term', () => {
     const filteredNfts = filterNfts('APple bLOcks', nfts)
