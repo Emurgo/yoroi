@@ -5,7 +5,7 @@ import {Dimensions, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {Boundary, CopyButton, FadeIn, Icon, Link, Spacer, Text} from '../components'
-import {NftPreview} from '../components/NftPreview/NftPreview'
+import {NftPreview} from '../components/NftPreview'
 import {Tab, TabPanel, TabPanels, Tabs} from '../components/Tabs'
 import {features} from '../features'
 import {NftRoutes} from '../navigation'

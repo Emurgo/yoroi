@@ -304,7 +304,7 @@ const fetchNfts = {
         .map((_, index) => ({
           ...nft,
           name: 'NFT ' + index,
-          id: index + '',
+          id: `${nft.metadata.policyId}.${asciiToHex('NFT ' + index)}`,
           fingerprint: getTokenFingerprint({policyId: nft.metadata.policyId, assetNameHex: asciiToHex('NFT ' + index)}),
           metadata: {...nft.metadata, policyId: nft.metadata.policyId, assetNameHex: asciiToHex('NFT ' + index)},
         }))
@@ -326,6 +326,27 @@ const fetchNfts = {
   loading: async (...args) => {
     action('fetchNfts')(...args)
     return new Promise(() => null) as unknown as YoroiNft[]
+  },
+}
+
+const fetchNft = {
+  success: {
+    notFound: async (...args) => {
+      action('fetchNft')(...args)
+      return null
+    },
+    found: async (...args) => {
+      action('fetchNft')(...args)
+      return nft
+    },
+  },
+  error: async (...args) => {
+    action('fetchNft')(...args)
+    return Promise.reject(new Error('storybook error message'))
+  },
+  loading: async (...args) => {
+    action('fetchNft')(...args)
+    return new Promise(() => null) as unknown as YoroiNft
   },
 }
 
@@ -792,21 +813,21 @@ const yoroiSignedTx: YoroiSignedTx & {mock: true} = {
 }
 
 export const nft: YoroiNft = {
-  id: '1',
-  name: 'Image 1',
-  description: 'NFT 1 description',
+  id: `8e2c7604711faef7c84c91b286c7327d17df825b7f0c88ec0332c0b4.${asciiToHex('NFT 0')}`,
+  name: 'NFT 0',
+  description: 'NFT 0 description',
   logo: 'https://fibo-validated-nft-images.s3.amazonaws.com/asset1a6765qk8cpk2wll3hevw6xy9xry893jrzl9ms3.jpeg',
   thumbnail: 'https://fibo-validated-nft-images.s3.amazonaws.com/p_asset1a6765qk8cpk2wll3hevw6xy9xry893jrzl9ms3.jpeg',
   fingerprint: getTokenFingerprint({
     policyId: '8e2c7604711faef7c84c91b286c7327d17df825b7f0c88ec0332c0b4',
-    assetNameHex: '496D6167652031',
+    assetNameHex: asciiToHex('NFT 0'),
   }),
   metadata: {
     policyId: '8e2c7604711faef7c84c91b286c7327d17df825b7f0c88ec0332c0b4',
-    assetNameHex: '496D6167652031',
+    assetNameHex: asciiToHex('NFT 0'),
     originalMetadata: {
-      name: 'Image 1',
-      description: 'NFT 1 description',
+      name: 'NFT 0',
+      description: 'NFT 0 description',
       image: 'https://fibo-validated-nft-images.s3.amazonaws.com/asset1a6765qk8cpk2wll3hevw6xy9xry893jrzl9ms3.jpeg',
     },
   },
@@ -833,6 +854,7 @@ export const mocks = {
   utxos,
   fetchCurrentPrice,
   fetchNfts,
+  fetchNft,
   fetchNftModerationStatus,
   txid,
   getTransactions,

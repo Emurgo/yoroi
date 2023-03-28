@@ -2,7 +2,6 @@ import React from 'react'
 import {Image, StyleSheet, View} from 'react-native'
 
 import {features} from '../../features'
-import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {useIsTokenKnownNft, useNft, useNftImageModerated, useTokenInfo, YoroiWallet} from '../../yoroi-wallets'
 import {Boundary} from '../Boundary'
@@ -23,7 +22,7 @@ export const TokenIcon = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: stri
   if (isTokenNft && features.showNftGallery) {
     return (
       <Boundary loading={{fallback: <Placeholder />}}>
-        <NftIcon tokenId={tokenId} />
+        <NftIcon tokenId={tokenId} wallet={wallet} />
       </Boundary>
     )
   }
@@ -36,8 +35,7 @@ const PrimaryIcon = () => (
   </View>
 )
 
-const NftIcon = ({tokenId}: {tokenId: string}) => {
-  const wallet = useSelectedWallet()
+const NftIcon = ({tokenId, wallet}: {tokenId: string; wallet: YoroiWallet}) => {
   return features.moderatingNftsEnabled ? (
     <ModeratedIcon wallet={wallet} tokenId={tokenId} />
   ) : (
