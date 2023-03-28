@@ -98,6 +98,7 @@ const getStories = () => {
     "./src/features/Send/useCases/ConfirmTx/ConfirmTxScreen.stories.tsx": require("../src/features/Send/useCases/ConfirmTx/ConfirmTxScreen.stories.tsx"),
     "./src/features/Send/useCases/ListSelectedTokens/AddToken/AddToken.stories.tsx": require("../src/features/Send/useCases/ListSelectedTokens/AddToken/AddToken.stories.tsx"),
     "./src/features/Send/useCases/ListSelectedTokens/AddToken/SelectTokenFromListScreen.stories.tsx": require("../src/features/Send/useCases/ListSelectedTokens/AddToken/SelectTokenFromListScreen.stories.tsx"),
+    "./src/features/Send/useCases/ListSelectedTokens/AddToken/ShowError/MaxTokensPerTx.stories.tsx": require("../src/features/Send/useCases/ListSelectedTokens/AddToken/ShowError/MaxTokensPerTx.stories.tsx"),
     "./src/features/Send/useCases/ListSelectedTokens/DeleteToken.stories.tsx": require("../src/features/Send/useCases/ListSelectedTokens/DeleteToken.stories.tsx"),
     "./src/features/Send/useCases/ListSelectedTokens/EditAmount/EditAmountScreen.stories.tsx": require("../src/features/Send/useCases/ListSelectedTokens/EditAmount/EditAmountScreen.stories.tsx"),
     "./src/features/Send/useCases/ListSelectedTokens/ListSelectedTokensScreen.stories.tsx": require("../src/features/Send/useCases/ListSelectedTokens/ListSelectedTokensScreen.stories.tsx"),

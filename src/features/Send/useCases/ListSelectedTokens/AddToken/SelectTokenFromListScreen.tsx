@@ -11,12 +11,14 @@ import {TxHistoryRouteNavigation} from '../../../../../navigation'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
 import {sortTokenInfos} from '../../../../../utils'
+import {maxTokensPerTx} from '../../../../../yoroi-wallets/contants'
 import {useBalances, useTokenInfos} from '../../../../../yoroi-wallets/hooks'
 import {TokenInfo} from '../../../../../yoroi-wallets/types'
 import {Amounts, Quantities} from '../../../../../yoroi-wallets/utils'
-import {useTokenQuantities} from '../../../common/hooks'
+import {useSelectedTokensCounter, useTokenQuantities} from '../../../common/hooks'
 import {useSend} from '../../../common/SendContext'
 import {InputSearch} from './InputSearch'
+import {MaxTokensPerTx} from './ShowError/MaxTokensPerTx'
 
 export const SelectTokenFromListScreen = () => {
   const strings = useStrings()
@@ -30,6 +32,8 @@ export const SelectTokenFromListScreen = () => {
     tokenIds: Amounts.toArray(balances).map(({tokenId}) => tokenId),
   })
   const assets = sortTokenInfos({wallet, tokenInfos}).filter((tokenInfo) => matches(tokenInfo, matcher))
+  const selectedTokensCounter = useSelectedTokensCounter()
+  const canAddToken = selectedTokensCounter < maxTokensPerTx
 
   const onChangeMatcher = (matcher: string) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
@@ -40,6 +44,14 @@ export const SelectTokenFromListScreen = () => {
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <View style={{paddingTop: 16, paddingHorizontal: 16}}>
         <InputSearch onChangeText={(text) => onChangeMatcher(text)} autoComplete />
+
+        {!canAddToken && (
+          <View>
+            <MaxTokensPerTx />
+
+            <Spacer height={16} />
+          </View>
+        )}
 
         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
           <Text style={{color: COLORS.GREY_6}}>{strings.assetsLabel}</Text>
@@ -56,7 +68,7 @@ export const SelectTokenFromListScreen = () => {
         data={assets}
         renderItem={({item: tokenInfo}: {item: TokenInfo}) => (
           <Boundary>
-            <SelectableAssetItem tokenInfo={tokenInfo} />
+            <SelectableAssetItem tokenInfo={tokenInfo} disabled={!canAddToken} />
           </Boundary>
         )}
         bounces={false}
@@ -69,8 +81,8 @@ export const SelectTokenFromListScreen = () => {
   )
 }
 
-type SelectableAssetItemProps = Omit<AssetItemProps, 'quantity'>
-const SelectableAssetItem = ({tokenInfo}: SelectableAssetItemProps) => {
+type SelectableAssetItemProps = {disabled?: boolean} & Omit<AssetItemProps, 'quantity'>
+const SelectableAssetItem = ({tokenInfo, disabled}: SelectableAssetItemProps) => {
   const {tokenSelectedChanged, amountChanged} = useSend()
   const {spendable} = useTokenQuantities(tokenInfo.id)
   const navigation = useNavigation<TxHistoryRouteNavigation>()
@@ -88,7 +100,7 @@ const SelectableAssetItem = ({tokenInfo}: SelectableAssetItemProps) => {
   }
 
   return (
-    <TouchableOpacity style={{paddingVertical: 16}} onPress={onSelect} testID="assetSelectorItem">
+    <TouchableOpacity style={{paddingVertical: 16}} onPress={onSelect} testID="assetSelectorItem" disabled={disabled}>
       <AssetItem tokenInfo={tokenInfo} quantity={spendable} />
     </TouchableOpacity>
   )

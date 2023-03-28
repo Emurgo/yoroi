@@ -48,3 +48,12 @@ const getTotalUsedByOtherTargets = ({
     return Quantities.sum([acc, quantity])
   }, Quantities.zero())
 }
+
+export const useSelectedTokensCounter = () => {
+  const {targets} = useSend()
+  const selectedTokensCounter = targets.reduce((acc, target) => {
+    return Object.keys(target.entry.amounts).length + acc
+  }, 0)
+
+  return selectedTokensCounter
+}
