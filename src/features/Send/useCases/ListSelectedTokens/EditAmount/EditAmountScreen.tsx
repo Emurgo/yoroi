@@ -18,6 +18,7 @@ import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
 import {PairedBalance} from '../../../../../TxHistory/PairedBalance'
 import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
+import {Logger} from '../../../../../yoroi-wallets/logging'
 import {Quantity} from '../../../../../yoroi-wallets/types'
 import {asQuantity, Quantities} from '../../../../../yoroi-wallets/utils'
 import {editedFormatter, pastedFormatter} from '../../../../../yoroi-wallets/utils/amountUtils'
@@ -47,8 +48,13 @@ export const EditAmountScreen = () => {
   const isZero = Quantities.isZero(quantity)
 
   const onChangeQuantity = (text: string) => {
-    setInputQuantity(asQuantity(text))
-    setQuantity(Quantities.fixed(text, tokenInfo.decimals))
+    try {
+      const quantity = asQuantity(text)
+      setInputQuantity(quantity)
+      setQuantity(Quantities.fixed(quantity, tokenInfo.decimals))
+    } catch (error) {
+      Logger.error('EditAmountScreen::onChangeQuantity', error)
+    }
   }
   const onMaxBalance = () => {
     setInputQuantity(Quantities.denominated(spendable, tokenInfo.decimals))
@@ -62,21 +68,21 @@ export const EditAmountScreen = () => {
   return (
     <View style={styles.container}>
       <KeyboardAvoidingView
-        style={styles.flex}
+        style={{flex: 1}}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={86}
       >
         <ScrollView style={styles.scrollView} bounces={false}>
           <Spacer height={16} />
 
-          <AssetItem quantity={available} tokenInfo={tokenInfo} />
+          <AssetItem amount={{quantity: available, tokenId: tokenInfo.id}} wallet={wallet} />
 
           <Spacer height={40} />
 
           <AmountInput onChange={onChangeQuantity} value={inputQuantity} ticker={tokenInfo.ticker} />
 
           <Center>
-            {isPrimary && <PairedBalance primaryAmount={{tokenId: tokenInfo.id, quantity}} />}
+            {isPrimary && <PairedBalance amount={{tokenId: tokenInfo.id, quantity}} />}
 
             <Spacer height={22} />
 
@@ -170,15 +176,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.WHITE,
   },
-  flex: {
-    flex: 1,
-  },
   scrollView: {
     flex: 1,
     paddingHorizontal: 16,
   },
   hr: {
-    height: 1,
+    height: StyleSheet.hairlineWidth,
     backgroundColor: COLORS.BORDER_GRAY,
   },
   actions: {
@@ -193,7 +196,7 @@ const styles = StyleSheet.create({
     lineHeight: 32,
     borderWidth: 0,
     textAlign: 'right',
-    backgroundColor: 'white',
+    backgroundColor: COLORS.WHITE,
   },
   ticker: {
     fontSize: 24,

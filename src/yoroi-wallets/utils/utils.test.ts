@@ -44,27 +44,25 @@ describe('Quantities', () => {
     expect(Quantities.denominated('112345', 3)).toBe('112.345')
     expect(Quantities.denominated('1123456', 10)).toBe('0.0001123456')
   })
-  it('atomic (decimals fixed)', () => {
-    expect(Quantities.fixed('', 15)).toBe('0000000000000000')
-    expect(Quantities.fixed('', 0)).toBe('0')
-    expect(Quantities.fixed(-1, 3)).toBe('-1000')
-    expect(Quantities.fixed(2.5, 2)).toBe('250')
+  it('fixed', () => {
+    expect(Quantities.fixed(Quantities.zero, 15)).toBe('0000000000000000')
+    expect(Quantities.fixed(asQuantity(-1), 3)).toBe('-1000')
+    expect(Quantities.fixed(asQuantity(2.5), 2)).toBe('250')
     expect(Quantities.fixed('1', 2)).toBe('100')
     expect(Quantities.fixed('1000', 2)).toBe('100000')
     expect(Quantities.fixed('123.456', 3)).toBe('123456')
     expect(Quantities.fixed('1.08', 10)).toBe('10800000000')
     expect(Quantities.fixed('1.0800001', 3)).toBe('1080')
-    expect(Quantities.fixed(new BigNumber('0000000000015'), 6)).toBe('15000000')
-    expect(Quantities.fixed(new BigNumber(1.5), 6)).toBe('1500000')
+    expect(Quantities.fixed(asQuantity(new BigNumber('0000000000015')), 6)).toBe('15000000')
+    expect(Quantities.fixed(asQuantity(new BigNumber(1.5)), 6)).toBe('1500000')
   })
   it('zero & isZero', () => {
-    expect(Quantities.isZero(Quantities.fixed('', 15))).toBe(true)
-    expect(Quantities.isZero(Quantities.fixed('', 0))).toBe(true)
+    expect(Quantities.isZero(Quantities.fixed(Quantities.zero, 15))).toBe(true)
     expect(Quantities.isZero(Quantities.fixed('0', 2))).toBe(true)
     expect(Quantities.isZero(Quantities.fixed('-1', 2))).toBe(false)
     expect(Quantities.isZero(Quantities.fixed('1', 2))).toBe(false)
     expect(Quantities.isZero(Quantities.fixed('0.00000000000001', 18))).toBe(false)
-    expect(Quantities.isZero(Quantities.zero())).toBe(true)
+    expect(Quantities.isZero(Quantities.zero)).toBe(true)
   })
   it('isAtomic', () => {
     expect(Quantities.isAtomic('1', 0)).toBe(true)
@@ -473,16 +471,23 @@ describe('asQuantity', () => {
     ${'0'}            | ${'0'}
     ${'1'}            | ${'1'}
     ${'1.000001'}     | ${'1.000001'}
-    ${undefined}      | ${'0'}
-    ${null}           | ${'0'}
     ${'0.0000000000'} | ${'0'}
-    ${NaN}            | ${'0'}
-    ${Infinity}       | ${'0'}
-    ${-Infinity}      | ${'0'}
     ${-0}             | ${'0'}
     ${1 / 3}          | ${'0.3333333333333333'}
     ${-1}             | ${'-1'}
   `('when the input is $input it should return $output', ({input, output}) => {
     expect(asQuantity(input)).toEqual(output)
+  })
+
+  it.each`
+    input
+    ${''}
+    ${undefined}
+    ${null}
+    ${NaN}
+    ${Infinity}
+    ${-Infinity}
+  `('when the input is $input it should throw error', ({input}) => {
+    expect(() => asQuantity(input)).toThrowError('Invalid quantity')
   })
 })

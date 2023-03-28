@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {useIntl} from 'react-intl'
+import {defineMessages, useIntl} from 'react-intl'
 import {View} from 'react-native'
 
 import {Text} from '../../../../../components/Text'
@@ -31,12 +31,12 @@ export const ReceiverInfo = ({receiver, address}: Props) => {
   )
 }
 
-const messages = {
+const messages = defineMessages({
   resolvesTo: {
     id: 'components.send.sendscreen.resolvesTo',
     defaultMessage: '!!!Resolves to',
   },
-}
+})
 
 const useStrings = () => {
   const intl = useIntl()

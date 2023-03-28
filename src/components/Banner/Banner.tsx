@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {StyleSheet, TouchableOpacity, View, ViewStyle} from 'react-native'
+import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {COLORS} from '../../theme'
 import {Text} from '../Text'
@@ -10,11 +10,10 @@ type Props = {
   label?: string
   error?: boolean
   children?: React.ReactNode
-  containerStyle?: ViewStyle
 }
 
-export const Banner = ({error, text, boldText, label, children, containerStyle}: Props) => (
-  <View style={[styles.banner, error === true && styles.bannerError, containerStyle]}>
+export const Banner = ({error, text, boldText, label, children}: Props) => (
+  <View style={[styles.banner, error === true && styles.bannerError]}>
     {label != null && (
       <Text error={error} small style={styles.label}>
         {label}

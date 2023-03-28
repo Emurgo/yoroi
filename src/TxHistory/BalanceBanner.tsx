@@ -34,7 +34,7 @@ export const BalanceBanner = React.forwardRef<ResetErrorRef>((_, ref) => {
         </Row>
 
         <Row>
-          <PairedBalance privacy={privacy} primaryAmount={primaryAmount} ref={ref} />
+          <PairedBalance privacy={privacy} amount={primaryAmount} ref={ref} />
         </Row>
       </TouchableOpacity>
     </View>

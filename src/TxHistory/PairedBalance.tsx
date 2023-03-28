@@ -12,9 +12,9 @@ import {Quantities} from '../yoroi-wallets/utils'
 
 type Props = {
   privacy?: boolean
-  primaryAmount: YoroiAmount
+  amount: YoroiAmount
 }
-export const PairedBalance = React.forwardRef<ResetErrorRef, Props>(({privacy, primaryAmount}, ref) => {
+export const PairedBalance = React.forwardRef<ResetErrorRef, Props>(({privacy, amount}, ref) => {
   const {currency} = useCurrencyContext()
 
   return (
@@ -29,13 +29,13 @@ export const PairedBalance = React.forwardRef<ResetErrorRef, Props>(({privacy, p
         ),
       }}
     >
-      <Balance privacy={privacy} primaryAmount={primaryAmount} />
+      <Balance privacy={privacy} amount={amount} />
     </Boundary>
   )
 })
 
 const hiddenPairedTotal = '*.**'
-const Balance = ({privacy, primaryAmount}: Props) => {
+const Balance = ({privacy, amount}: Props) => {
   const wallet = useSelectedWallet()
   const {currency, config} = useCurrencyContext()
   const rate = useExchangeRate({wallet, to: currency})
@@ -43,8 +43,8 @@ const Balance = ({privacy, primaryAmount}: Props) => {
   // hide pairing when set to the primary token
   if (currency === 'ADA') return null
 
-  // hide pairing when is not the primary token
-  if (wallet.primaryTokenInfo.id !== primaryAmount.tokenId) return null
+  // hide pairing when the amount is not primary
+  if (wallet.primaryTokenInfo.id !== amount.tokenId) return null
 
   if (rate == null)
     return (
@@ -54,7 +54,7 @@ const Balance = ({privacy, primaryAmount}: Props) => {
     )
 
   const primaryExchangeQuantity = Quantities.quotient(
-    primaryAmount.quantity,
+    amount.quantity,
     `${10 ** wallet.primaryToken.metadata.numberOfDecimals}`,
   )
   const secondaryExchangeQuantity = Quantities.decimalPlaces(
@@ -62,10 +62,9 @@ const Balance = ({privacy, primaryAmount}: Props) => {
     config.decimals,
   )
   const pairedTotal = privacy ? hiddenPairedTotal : secondaryExchangeQuantity
-  const text = `${pairedTotal} ${currency}`
   return (
     <Text style={styles.pairedBalanceText} testID="pairedTotalText">
-      {text}
+      {`${pairedTotal} ${currency}`}
     </Text>
   )
 }
