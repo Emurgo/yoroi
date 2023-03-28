@@ -23,7 +23,14 @@ const Routes = () => {
 
   return (
     <Stack.Navigator>
-      <Stack.Screen name="nft-gallery" component={Nfts} options={searchHeaderOptions} />
+      <Stack.Screen
+        name="nft-gallery"
+        component={Nfts}
+        options={{
+          ...searchHeaderOptions,
+          headerLeft: () => null,
+        }}
+      />
     </Stack.Navigator>
   )
 }

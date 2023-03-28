@@ -6,7 +6,7 @@ import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps} from 'react-n
 import {Boundary, Icon} from '../components'
 import {SendProvider} from '../features/Send/common/SendContext'
 import {ConfirmTxScreen} from '../features/Send/useCases/ConfirmTx/ConfirmTxScreen'
-import {SelectTokenFromListScreen} from '../features/Send/useCases/ListSelectedTokens/AddToken/SelectTokenFromListScreen'
+import {SelectTokenFromListScreenNavigator} from '../features/Send/useCases/ListSelectedTokens/AddToken/SelectTokenFromListScreenNavigator'
 import {EditAmountScreen} from '../features/Send/useCases/ListSelectedTokens/EditAmount/EditAmountScreen'
 import {ListSelectedTokensScreen} from '../features/Send/useCases/ListSelectedTokens/ListSelectedTokensScreen'
 import {ReadQRCodeScreen} from '../features/Send/useCases/StartMultiTokenTx/InputReceiver/ReadQRCodeScreen'
@@ -91,18 +91,10 @@ export const TxHistoryNavigator = () => {
         </Stack.Screen>
 
         <Stack.Screen //
-          name="send-select-token-from-list"
-          options={{
-            title: strings.selectAssetTitle,
-            ...sendOptions,
-          }}
-        >
-          {() => (
-            <Boundary>
-              <SelectTokenFromListScreen />
-            </Boundary>
-          )}
-        </Stack.Screen>
+          name="send"
+          component={SelectTokenFromListScreenNavigator}
+          options={{headerShown: false}}
+        />
 
         <Stack.Screen //
           name="send-list-selected-tokens"

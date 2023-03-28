@@ -18,10 +18,10 @@ export const useSearchHeaderOptions = ({placeHolderText, title}) => {
     ? {
         headerTitleContainerStyle: styles.headerTitleContainer,
         headerTitle: () => <SearchHeader placeholder={placeHolderText} onClose={handleSearchClose} />,
-        headerLeftContainerStyle: styles.disableFlex,
-        headerLeft: () => null,
         headerRightContainerStyle: styles.disableFlex,
         headerRight: () => null,
+        headerLeftContainerStyle: styles.disableFlex,
+        headerLeft: () => null,
       }
     : {
         headerTitleContainerStyle: styles.headerTitleContainer,
@@ -36,7 +36,7 @@ export const useSearchHeaderOptions = ({placeHolderText, title}) => {
           top: 0,
         },
         headerLeftContainerStyle: styles.disableFlex,
-        headerLeft: () => null,
+        headerBackTitleVisible: false,
       }
 
   return {searchHeaderOptions}

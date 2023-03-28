@@ -1,7 +1,7 @@
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import {useFocusEffect} from '@react-navigation/native'
 import * as React from 'react'
 
-import {TxHistoryRouteNavigation} from '../../../../navigation'
+import {useWalletNavigation} from '../../../../navigation'
 import {useSend} from '../../common/SendContext'
 
 export const useWhenEmptyAddToken = () => {
@@ -20,9 +20,9 @@ export const useWhenEmptyAddToken = () => {
 }
 
 const useNavigateTo = () => {
-  const navigation = useNavigation<TxHistoryRouteNavigation>()
+  const {navigateSendSelectAssetFromList} = useWalletNavigation()
 
   return {
-    addToken: () => navigation.navigate('send-select-token-from-list'),
+    addToken: () => navigateSendSelectAssetFromList(),
   }
 }

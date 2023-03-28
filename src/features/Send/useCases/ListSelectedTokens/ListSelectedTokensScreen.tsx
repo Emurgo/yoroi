@@ -8,7 +8,7 @@ import {useQuery, UseQueryOptions} from 'react-query'
 import {Boundary, Button, Spacer} from '../../../../components'
 import {AssetItem} from '../../../../components/AssetItem'
 import globalMessages from '../../../../i18n/global-messages'
-import {TxHistoryRouteNavigation} from '../../../../navigation'
+import {TxHistoryRouteNavigation, useWalletNavigation} from '../../../../navigation'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {sortTokenInfos} from '../../../../utils'
@@ -149,9 +149,10 @@ const messages = defineMessages({
 
 const useNavigateTo = () => {
   const navigation = useNavigation<TxHistoryRouteNavigation>()
+  const {navigateSendSelectAssetFromList} = useWalletNavigation()
 
   return {
-    addToken: () => navigation.navigate('send-select-token-from-list'),
+    addToken: () => navigateSendSelectAssetFromList(),
     editToken: () => navigation.navigate('send-edit-amount'),
     confirmTx: () => navigation.navigate('send-confirm-tx'),
   }
