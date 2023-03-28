@@ -3,12 +3,6 @@
 import {BigNumber} from 'bignumber.js'
 
 import {
-  NETWORK_ID as mainnetId,
-  WALLET_CONFIG as HASKELL_SHELLEY,
-  WALLET_CONFIG_24 as HASKELL_SHELLEY_24,
-} from '../cardano/shelley/constants'
-import {NETWORK_ID as testnetId} from '../cardano/shelley-testnet/constants'
-import {
   Addressing,
   BaseAsset,
   DERIVATION_TYPES,
@@ -28,6 +22,12 @@ import {
   toPolicyId,
   WalletImplementation,
 } from '.'
+import {
+  NETWORK_ID as mainnetId,
+  WALLET_CONFIG as HASKELL_SHELLEY,
+  WALLET_CONFIG_24 as HASKELL_SHELLEY_24,
+} from './constants/mainnet/constants'
+import {NETWORK_ID as testnetId} from './constants/testnet/constants'
 import {NUMBERS} from './numbers'
 
 export const normalizeToAddress = async (addr: string) => {

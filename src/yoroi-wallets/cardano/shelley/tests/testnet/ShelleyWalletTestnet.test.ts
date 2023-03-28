@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-import {HWDeviceInfo} from '../../hw'
-import {EncryptedStorage, EncryptedStorageKeys, storage} from '../../storage'
-import {WalletMeta} from '../../walletManager'
-import {ShelleyAddressGeneratorJSON} from '../chain'
-import {YoroiWallet} from '../types'
-import {ShelleyWalletTestnet, WalletJSON} from './ShelleyWalletTestnet'
+import {HWDeviceInfo} from '../../../../hw'
+import {EncryptedStorage, EncryptedStorageKeys, storage} from '../../../../storage'
+import {WalletMeta} from '../../../../walletManager'
+import {ShelleyAddressGeneratorJSON} from '../../../chain'
+import {WalletJSON} from '../../../shelley/ShelleyWallet'
+import {ShelleyWalletTestnet} from '../../../shelley/wallets'
+import {YoroiWallet} from '../../../types'
 
 describe('ShelleyWalletTestnet', () => {
   afterEach(() => AsyncStorage.clear())

@@ -1,25 +1,12 @@
-import {DefaultAsset, TokenInfo} from '../../types'
+import {DefaultAsset, TokenInfo} from '../../../types'
+import {COIN_TYPE, KEY_DEPOSIT, LINEAR_FEE, MINIMUM_UTXO_VAL, POOL_DEPOSIT} from '../common'
+
+export * from '../common'
 
 export const NETWORK_ID = 300
-export const WALLET_IMPLEMENTATION_ID = 'haskell-shelley'
 export const API_ROOT = 'https://preprod-backend.yoroiwallet.com/api'
 export const TOKEN_INFO_SERVICE = 'https://stage-cdn.yoroiwallet.com'
-export const DISCOVERY_GAP_SIZE = 20
-export const DISCOVERY_BLOCK_SIZE = 50 // should be less than API limitations
-export const MAX_GENERATED_UNUSED = 20 // must be <= gap size
-export const PURPOSE = 2147485500
-export const COIN_TYPE = 2147485463
-export const ACCOUNT_INDEX = 0
-export const HARD_DERIVATION_START = 2147483648
-export const CHIMERIC_ACCOUNT = 2
-export const STAKING_KEY_INDEX = 0
-export const STAKING_KEY_PATH = [
-  PURPOSE,
-  COIN_TYPE,
-  ACCOUNT_INDEX + HARD_DERIVATION_START,
-  CHIMERIC_ACCOUNT,
-  STAKING_KEY_INDEX,
-]
+
 export const BACKEND = {
   API_ROOT,
   NFT_STORAGE_URL: 'https://validated-nft-images.s3.amazonaws.com',
@@ -30,25 +17,6 @@ export const BACKEND = {
   TX_HISTORY_RESPONSE_LIMIT: 50,
 } as const
 export const CHAIN_NETWORK_ID = 0
-export const BIP44_DERIVATION_LEVELS = {
-  ROOT: 0,
-  PURPOSE: 1,
-  COIN_TYPE: 2,
-  ACCOUNT: 3,
-  CHAIN: 4,
-  ADDRESS: 5,
-} as const
-export const REWARD_ADDRESS_ADDRESSING = {
-  path: [PURPOSE, COIN_TYPE, ACCOUNT_INDEX + HARD_DERIVATION_START, CHIMERIC_ACCOUNT, STAKING_KEY_INDEX],
-  startLevel: BIP44_DERIVATION_LEVELS.PURPOSE,
-}
-export const KEY_DEPOSIT = '2000000'
-export const POOL_DEPOSIT = '500000000'
-export const LINEAR_FEE = {
-  COEFFICIENT: '44',
-  CONSTANT: '155381',
-} as const
-export const MINIMUM_UTXO_VAL = '1000000'
 
 export const IS_MAINNET = false
 
@@ -99,15 +67,6 @@ export const NETWORK_CONFIG = {
   PER_EPOCH_PERCENTAGE_REWARD: 69344,
   POOL_DEPOSIT,
   PROVIDER_ID: 300,
-} as const
-
-export const WALLET_CONFIG = {
-  WALLET_IMPLEMENTATION_ID,
-  TYPE: 'cip1852',
-  MNEMONIC_LEN: 15,
-  DISCOVERY_GAP_SIZE,
-  DISCOVERY_BLOCK_SIZE, // should be less than API limitations
-  MAX_GENERATED_UNUSED, // must be <= gap size
 } as const
 
 export const PRIMARY_TOKEN_INFO: TokenInfo = {

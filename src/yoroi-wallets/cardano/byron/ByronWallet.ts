@@ -59,7 +59,12 @@ import {
 import * as api from '../api'
 import {encryptWithPassword} from '../catalyst/catalystCipher'
 import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from '../chain'
-import {HISTORY_REFRESH_TIME} from '../constants'
+import {
+  HISTORY_REFRESH_TIME,
+  MAX_GENERATED_UNUSED,
+  PRIMARY_TOKEN,
+  PRIMARY_TOKEN_INFO,
+} from '../constants/mainnet/constants'
 import {CardanoError, InvalidState} from '../errors'
 import {signTxWithLedger} from '../hw'
 import {
@@ -70,7 +75,6 @@ import {
 } from '../networks'
 import {processTxHistoryData} from '../processTransactions'
 import {IsLockedError, nonblockingSynchronize, synchronize} from '../promise'
-import {MAX_GENERATED_UNUSED, PRIMARY_TOKEN, PRIMARY_TOKEN_INFO} from '../shelley/constants'
 import {filterAddressesByStakingKey, getDelegationStatus} from '../shelley/delegationUtils'
 import {yoroiSignedTx} from '../signedTx'
 import {TransactionManager} from '../transactionManager'

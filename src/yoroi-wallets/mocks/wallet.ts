@@ -5,9 +5,9 @@ import BigNumber from 'bignumber.js'
 
 import {getTokenFingerprint} from '../../legacy/format'
 import {asciiToHex, CardanoTypes, fallbackTokenInfo, toTokenInfo, WalletMeta, YoroiWallet} from '..'
+import * as HASKELL_SHELLEY_TESTNET from '../cardano/constants/testnet/constants'
+import {PRIMARY_TOKEN, PRIMARY_TOKEN_INFO} from '../cardano/constants/testnet/constants'
 import {PRIMARY_ASSET_CONSTANTS} from '../cardano/networks'
-import * as HASKELL_SHELLEY_TESTNET from '../cardano/shelley-testnet/constants'
-import {PRIMARY_TOKEN, PRIMARY_TOKEN_INFO} from '../cardano/shelley-testnet/constants'
 import {
   RemotePoolMetaSuccess,
   StakePoolInfosAndHistories,

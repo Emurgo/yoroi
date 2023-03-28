@@ -3,7 +3,7 @@ import assert from 'assert'
 import {expect} from 'chai'
 
 import {WalletMeta, WALLETS} from '..'
-import {WALLET_CONFIG_24 as HASKELL_SHELLEY_24} from '../cardano/shelley/constants'
+import {WALLET_CONFIG_24 as HASKELL_SHELLEY_24} from '../cardano/constants/mainnet/constants'
 import {storage} from '../storage'
 import {NETWORK_REGISTRY} from '../types'
 import {migrateWalletMetas} from './walletMeta'
