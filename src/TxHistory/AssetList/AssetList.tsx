@@ -51,8 +51,8 @@ export const AssetList = (props: Props) => {
         data={sortTokenInfos({wallet, tokenInfos})}
         renderItem={({item: tokenInfo}) => (
           <ExplorableAssetItem
-            tokenInfo={tokenInfo}
-            quantity={balances[tokenInfo.id]}
+            wallet={wallet}
+            amount={Amounts.getAmount(balances, tokenInfo.id)}
             onPress={() => Linking.openURL(config.EXPLORER_URL_FOR_TOKEN(tokenInfo.id))}
           />
         )}
@@ -68,10 +68,10 @@ export const AssetList = (props: Props) => {
 type ExplorableAssetItemProps = AssetItemProps & {
   onPress(): void
 }
-const ExplorableAssetItem = ({tokenInfo, quantity, onPress}: ExplorableAssetItemProps) => {
+const ExplorableAssetItem = ({wallet, amount, onPress}: ExplorableAssetItemProps) => {
   return (
     <TouchableOpacity style={styles.button} onPress={onPress} testID="assetSelectorItem">
-      <AssetItem tokenInfo={tokenInfo} quantity={quantity} />
+      <AssetItem wallet={wallet} amount={amount} />
     </TouchableOpacity>
   )
 }

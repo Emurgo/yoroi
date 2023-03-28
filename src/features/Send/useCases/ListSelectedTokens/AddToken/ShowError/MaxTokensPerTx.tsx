@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {useIntl} from 'react-intl'
+import {defineMessages, useIntl} from 'react-intl'
 import {Text} from 'react-native'
 
 import {ErrorPanel} from '../../../../../../components/ErrorPanel/ErrorPanel'
@@ -22,14 +22,18 @@ export const MaxTokensPerTx = () => {
   )
 }
 
+const messages = defineMessages({
+  maxTokenLimit: {
+    id: 'components.send.sendscreen.errorBannerMaxTokenLimit',
+    defaultMessage: '!!!is the maximum number allowed to send in one transaction',
+  },
+})
+
 const useStrings = () => {
   const intl = useIntl()
 
   return {
-    maxTokenLimit: intl.formatMessage({
-      id: 'components.send.sendscreen.errorBannerMaxTokenLimit',
-      defaultMessage: '!!!is the maximum number allowed to send in one transaction',
-    }),
+    maxTokenLimit: intl.formatMessage(messages.maxTokenLimit),
     assets: intl.formatMessage(globalMessages.assetsLabel),
   }
 }

@@ -28,8 +28,13 @@ type SendActions = {
 
 const combinedReducers = (state: SendState, action: SendAction | TargetAction) => {
   return {
-    ...sendReducer(state, action as SendAction),
-    targets: targetsReducer(state, action as TargetAction),
+    ...sendReducer(
+      {
+        ...state,
+        targets: targetsReducer(state, action as TargetAction),
+      },
+      action as SendAction,
+    ),
   }
 }
 
@@ -79,7 +84,7 @@ type SendAction =
 const sendReducer = (state: SendState, action: SendAction) => {
   switch (action.type) {
     case 'resetForm':
-      return initialState
+      return {...initialState}
 
     case 'memoChanged':
       return {
