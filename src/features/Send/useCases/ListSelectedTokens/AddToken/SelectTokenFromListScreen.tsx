@@ -91,7 +91,7 @@ const SelectableAssetItem = ({tokenInfo, disabled}: SelectableAssetItemProps) =>
     tokenSelectedChanged(tokenInfo.id)
 
     // if the token is indivisible, we don't need to ask for the amount
-    if (Quantities.isIndivisible(spendable, tokenInfo.decimals)) {
+    if (Quantities.isAtomic(spendable, tokenInfo.decimals)) {
       amountChanged(spendable)
       navigation.navigate('send-list-selected-tokens')
     } else {

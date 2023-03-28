@@ -18,7 +18,7 @@ import {TokenId, TokenInfo, YoroiAmount, YoroiEntry, YoroiUnsignedTx} from '../.
 import {Amounts} from '../../../../yoroi-wallets/utils'
 import {useSend} from '../../common/SendContext'
 import {AddTokenButton} from './AddToken/AddToken'
-import {DeleteToken} from './DeleteToken'
+import {RemoveToken} from './RemoveToken'
 import {useWhenEmptyAddToken} from './WhenEmptyAddToken'
 
 export const ListSelectedTokensScreen = () => {
@@ -97,11 +97,11 @@ const SelectableToken = ({amount: {quantity, tokenId}, onDelete, onSelect}: Sele
   const handleSelect = () => onSelect(tokenId)
 
   return (
-    <DeleteToken onDelete={handleDelete} tokenInfo={tokenInfo}>
+    <RemoveToken onDelete={handleDelete} tokenInfo={tokenInfo}>
       <TouchableOpacity style={{paddingVertical: 16}} onPress={handleSelect} testID="selectToken">
         <AssetItem tokenInfo={tokenInfo} quantity={quantity} />
       </TouchableOpacity>
-    </DeleteToken>
+    </RemoveToken>
   )
 }
 

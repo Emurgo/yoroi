@@ -25,7 +25,9 @@ export const ConfirmTxScreen = () => {
   const wallet = useSelectedWallet()
   const [password, setPassword] = React.useState('')
   const [useUSB, setUseUSB] = React.useState(false)
-  const {memo, resetForm, yoroiUnsignedTx} = useSend()
+
+  const {memo, resetForm, yoroiUnsignedTx, targets} = useSend()
+
   const {saveMemo} = useSaveMemo({wallet})
 
   useEffect(() => {
@@ -60,7 +62,9 @@ export const ConfirmTxScreen = () => {
 
         <Spacer height={16} />
 
-        <ReceiverInfo />
+        {targets.map((target, index) => (
+          <ReceiverInfo key={index} address={target.entry.address} receiver={target.receiver} />
+        ))}
       </View>
 
       <ScrollView

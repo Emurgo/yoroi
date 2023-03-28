@@ -23,10 +23,10 @@ export const BalanceAfter = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedT
       ]),
     )
   const primaryAmountAfter = Amounts.getAmount(balancesAfter, wallet.primaryToken.identifier)
-  const text = `${strings.balanceAfterTx}: ${formatTokenWithSymbol(primaryAmountAfter.quantity, wallet.primaryToken)}`
+
   return (
     <Text small testID="balanceAfterTxText">
-      {text}
+      {`${strings.balanceAfterTx}: ${formatTokenWithSymbol(primaryAmountAfter.quantity, wallet.primaryToken)}`}
     </Text>
   )
 }

@@ -11,7 +11,7 @@ export type DeleteTokenProps = {
   onDelete(tokenId: TokenId): void
   style?: StyleProp<ViewStyle>
 }
-export const DeleteToken = ({children, style, tokenInfo, onDelete}: DeleteTokenProps) => {
+export const RemoveToken = ({children, style, tokenInfo, onDelete}: DeleteTokenProps) => {
   return (
     <View style={[style, styles.container]} testID="deleteToken">
       <Left>{children}</Left>
@@ -28,11 +28,10 @@ const Right = ({style, ...props}: ViewProps) => <View style={[style, {paddingLef
 
 type DeleteButtonProps = {
   onPress(): void
-  style?: StyleProp<ViewStyle>
 }
-const DeleteButton = ({onPress, style}: DeleteButtonProps) => {
+const DeleteButton = ({onPress}: DeleteButtonProps) => {
   return (
-    <TouchableOpacity onPress={onPress} testID="deleteTokenButton" style={style}>
+    <TouchableOpacity onPress={onPress} testID="deleteTokenButton">
       <Icon.Delete size={26} color={COLORS.BLACK} />
     </TouchableOpacity>
   )

@@ -116,14 +116,14 @@ export const Quantities = {
   denominated: (quantity: Quantity, denomination: number) => {
     return Quantities.quotient(quantity, `${10 ** denomination}`)
   },
-  atomic: (data: Quantity | BigNumber | string | number, denomination: number) => {
+  fixed: (data: Quantity | BigNumber | string | number, denomination: number) => {
     const stripped = data.toString().replace(/[^0-9.-]/g, '')
     const value = (stripped.length > 0 && new BigNumber(stripped).isZero() !== true ? stripped : '0') as Quantity
     return new BigNumber(value).toFixed(denomination).toString().replace(/[.,]/g, '') as Quantity
   },
   zero: () => '0' as Quantity,
   isZero: (quantity: Quantity) => new BigNumber(quantity).isZero(),
-  isIndivisible: (quantity: Quantity, denomination: number) => {
+  isAtomic: (quantity: Quantity, denomination: number) => {
     const absoluteQuantity = quantity.replace('-', '')
     const minimalFractionalPart = new BigNumber(1)
       .dividedBy(new BigNumber(10).pow(denomination))

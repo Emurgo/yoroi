@@ -4,14 +4,14 @@ import {View} from 'react-native'
 
 import {Text} from '../../../../../components/Text'
 import {txLabels} from '../../../../../i18n/global-messages'
-import {useSend} from '../../../common/SendContext'
 
-export const ReceiverInfo = () => {
+type Props = {
+  receiver: string
+  address: string
+}
+export const ReceiverInfo = ({receiver, address}: Props) => {
   const strings = useStrings()
-  const {targets} = useSend()
 
-  const receiver = targets[0].receiver
-  const address = targets[0].entry.address
   const isResolved = receiver !== address
 
   return (
