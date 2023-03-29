@@ -5,12 +5,12 @@ import {Keyboard, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 
 import {KeyboardSpacer, Spacer, ValidatedTextInput} from '../../../../components'
 import {ConfirmTx} from '../../../../components/ConfirmTx'
-import {debugWalletInfo, features} from '../../../../features'
 import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../../../i18n/global-messages'
 import {useWalletNavigation} from '../../../../navigation'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {useSaveMemo} from '../../../../yoroi-wallets/hooks'
+import {debugWalletInfo, features} from '../../..'
 import {useSend} from '../../common/SendContext'
 import {BalanceAfter} from './Summary/BalanceAfter'
 import {CurrentBalance} from './Summary/CurrentBalance'
@@ -25,7 +25,9 @@ export const ConfirmTxScreen = () => {
   const wallet = useSelectedWallet()
   const [password, setPassword] = React.useState('')
   const [useUSB, setUseUSB] = React.useState(false)
-  const {memo, resetForm, yoroiUnsignedTx} = useSend()
+
+  const {memo, resetForm, yoroiUnsignedTx, targets} = useSend()
+
   const {saveMemo} = useSaveMemo({wallet})
 
   useEffect(() => {
@@ -60,7 +62,9 @@ export const ConfirmTxScreen = () => {
 
         <Spacer height={16} />
 
-        <ReceiverInfo />
+        {targets.map((target, index) => (
+          <ReceiverInfo key={index} address={target.entry.address} receiver={target.receiver} />
+        ))}
       </View>
 
       <ScrollView

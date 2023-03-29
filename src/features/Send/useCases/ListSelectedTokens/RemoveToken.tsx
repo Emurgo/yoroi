@@ -3,21 +3,20 @@ import {StyleProp, StyleSheet, TouchableOpacity, View, ViewProps, ViewStyle} fro
 
 import {Icon} from '../../../../components'
 import {COLORS} from '../../../../theme'
-import {TokenId, TokenInfo} from '../../../../yoroi-wallets/types'
 
 export type DeleteTokenProps = {
-  tokenInfo: TokenInfo
+  tokenId: string
   children: React.ReactNode
-  onDelete(tokenId: TokenId): void
+  onDelete(tokenId: string): void
   style?: StyleProp<ViewStyle>
 }
-export const DeleteToken = ({children, style, tokenInfo, onDelete}: DeleteTokenProps) => {
+export const RemoveToken = ({children, style, tokenId, onDelete}: DeleteTokenProps) => {
   return (
     <View style={[style, styles.container]} testID="deleteToken">
       <Left>{children}</Left>
 
       <Right>
-        <DeleteButton onPress={() => onDelete(tokenInfo.id)} />
+        <DeleteButton onPress={() => onDelete(tokenId)} />
       </Right>
     </View>
   )
@@ -28,11 +27,10 @@ const Right = ({style, ...props}: ViewProps) => <View style={[style, {paddingLef
 
 type DeleteButtonProps = {
   onPress(): void
-  style?: StyleProp<ViewStyle>
 }
-const DeleteButton = ({onPress, style}: DeleteButtonProps) => {
+const DeleteButton = ({onPress}: DeleteButtonProps) => {
   return (
-    <TouchableOpacity onPress={onPress} testID="deleteTokenButton" style={style}>
+    <TouchableOpacity onPress={onPress} testID="deleteTokenButton">
       <Icon.Delete size={26} color={COLORS.BLACK} />
     </TouchableOpacity>
   )

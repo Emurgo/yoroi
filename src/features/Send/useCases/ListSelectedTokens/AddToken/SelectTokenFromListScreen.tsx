@@ -4,15 +4,17 @@ import React from 'react'
 import {TouchableOpacity, View} from 'react-native'
 
 import {Boundary} from '../../../../../components'
-import {AssetItem, AssetItemProps} from '../../../../../components/AssetItem'
+import {AssetItem} from '../../../../../components/AssetItem'
 import {TxHistoryRouteNavigation} from '../../../../../navigation'
 import {useSearch} from '../../../../../Search'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {sortTokenInfos} from '../../../../../utils'
+import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
+import {maxTokensPerTx} from '../../../../../yoroi-wallets/contants'
 import {useBalances, useTokenInfos} from '../../../../../yoroi-wallets/hooks'
 import {TokenInfo} from '../../../../../yoroi-wallets/types'
 import {Amounts, Quantities} from '../../../../../yoroi-wallets/utils'
-import {useTokenQuantities} from '../../../common/hooks'
+import {useSelectedTokensCounter, useTokenQuantities} from '../../../common/hooks'
 import {useSend} from '../../../common/SendContext'
 import {filterAssets} from './filterAssets'
 
@@ -26,16 +28,18 @@ export const SelectTokenFromListScreen = () => {
     tokenIds: Amounts.toArray(balances).map(({tokenId}) => tokenId),
   })
 
+  const selectedTokensCounter = useSelectedTokensCounter()
+  const canAddToken = selectedTokensCounter < maxTokensPerTx
   const {search: assetSearchTerm} = useSearch()
-  const assets = sortTokenInfos({wallet, tokenInfos: filterAssets(assetSearchTerm, tokenInfos)})
+  const sortedTokenInfos = sortTokenInfos({wallet, tokenInfos: filterAssets(assetSearchTerm, tokenInfos)})
 
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <FlashList
-        data={assets}
+        data={sortedTokenInfos}
         renderItem={({item: tokenInfo}: {item: TokenInfo}) => (
           <Boundary>
-            <SelectableAssetItem tokenInfo={tokenInfo} />
+            <SelectableAssetItem tokenInfo={tokenInfo} disabled={!canAddToken} wallet={wallet} />
           </Boundary>
         )}
         bounces={false}
@@ -48,8 +52,8 @@ export const SelectTokenFromListScreen = () => {
   )
 }
 
-type SelectableAssetItemProps = Omit<AssetItemProps, 'quantity'>
-const SelectableAssetItem = ({tokenInfo}: SelectableAssetItemProps) => {
+type SelectableAssetItemProps = {disabled?: boolean; tokenInfo: TokenInfo; wallet: YoroiWallet}
+const SelectableAssetItem = ({tokenInfo, disabled, wallet}: SelectableAssetItemProps) => {
   const {tokenSelectedChanged, amountChanged} = useSend()
   const {spendable} = useTokenQuantities(tokenInfo.id)
   const navigation = useNavigation<TxHistoryRouteNavigation>()
@@ -57,8 +61,8 @@ const SelectableAssetItem = ({tokenInfo}: SelectableAssetItemProps) => {
   const onSelect = () => {
     tokenSelectedChanged(tokenInfo.id)
 
-    // if the token is indivisible, we don't need to ask for the amount
-    if (Quantities.isIndivisible(spendable, tokenInfo.decimals)) {
+    // if the balance is atomic there is no need to edit the amount
+    if (Quantities.isAtomic(spendable, tokenInfo.decimals)) {
       amountChanged(spendable)
       navigation.navigate('send-list-selected-tokens')
     } else {
@@ -67,8 +71,8 @@ const SelectableAssetItem = ({tokenInfo}: SelectableAssetItemProps) => {
   }
 
   return (
-    <TouchableOpacity style={{paddingVertical: 16}} onPress={onSelect} testID="assetSelectorItem">
-      <AssetItem tokenInfo={tokenInfo} quantity={spendable} />
+    <TouchableOpacity style={{paddingVertical: 16}} onPress={onSelect} testID="assetSelectorItem" disabled={disabled}>
+      <AssetItem amount={{tokenId: tokenInfo.id, quantity: spendable}} wallet={wallet} />
     </TouchableOpacity>
   )
 }

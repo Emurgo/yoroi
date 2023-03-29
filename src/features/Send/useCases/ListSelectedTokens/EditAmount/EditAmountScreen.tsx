@@ -1,3 +1,4 @@
+import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {
   KeyboardAvoidingView,
@@ -12,23 +13,25 @@ import {
 
 import {Button, Spacer, TextInput} from '../../../../../components'
 import {AssetItem} from '../../../../../components/AssetItem'
+import {TxHistoryRouteNavigation} from '../../../../../navigation'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
 import {PairedBalance} from '../../../../../TxHistory/PairedBalance'
 import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
+import {Logger} from '../../../../../yoroi-wallets/logging'
 import {Quantity} from '../../../../../yoroi-wallets/types'
-import {Quantities} from '../../../../../yoroi-wallets/utils'
+import {asQuantity, Quantities} from '../../../../../yoroi-wallets/utils'
 import {editedFormatter, pastedFormatter} from '../../../../../yoroi-wallets/utils/amountUtils'
 import {useTokenQuantities} from '../../../common/hooks'
 import {useSend} from '../../../common/SendContext'
 import {useStrings} from '../../../common/strings'
-import {useDeleteAmountWhenZeroed} from './DeleteAmountWhenZeroed'
 import {NoBalance} from './ShowError/NoBalance'
 import {UnableToSpend} from './ShowError/UnableToSpend'
 
 export const EditAmountScreen = () => {
   const strings = useStrings()
-  const {selectedTokenId} = useSend()
+  const navigation = useNavigation<TxHistoryRouteNavigation>()
+  const {selectedTokenId, amountChanged} = useSend()
   const {available, spendable, initialQuantity} = useTokenQuantities(selectedTokenId)
 
   const wallet = useSelectedWallet()
@@ -36,38 +39,50 @@ export const EditAmountScreen = () => {
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
 
   const [quantity, setQuantity] = React.useState<Quantity>(initialQuantity)
-  const [inputAmount, setInputAmount] = React.useState<string>(
+  const [inputQuantity, setInputQuantity] = React.useState<Quantity>(
     Quantities.denominated(initialQuantity, tokenInfo.decimals),
   )
 
   const hasBalance = !Quantities.isGreaterThan(quantity, available)
   const isUnableToSpend = isPrimary && Quantities.isGreaterThan(quantity, spendable)
+  const isZero = Quantities.isZero(quantity)
 
-  const onChangeAmount = (text: string) => {
-    setInputAmount(text)
-    setQuantity(Quantities.atomic(text, tokenInfo.decimals))
+  const onChangeQuantity = (text: string) => {
+    try {
+      const quantity = asQuantity(text)
+      setInputQuantity(quantity)
+      setQuantity(Quantities.fixed(quantity, tokenInfo.decimals))
+    } catch (error) {
+      Logger.error('EditAmountScreen::onChangeQuantity', error)
+    }
   }
-  const onMaxBalance = () => setInputAmount(Quantities.denominated(spendable, tokenInfo.decimals))
-  const onApply = useDeleteAmountWhenZeroed()
+  const onMaxBalance = () => {
+    setInputQuantity(Quantities.denominated(spendable, tokenInfo.decimals))
+    setQuantity(spendable)
+  }
+  const onApply = (quantity: Quantity) => {
+    amountChanged(Quantities.fixed(quantity, tokenInfo.decimals))
+    navigation.navigate('send-list-selected-tokens')
+  }
 
   return (
     <View style={styles.container}>
       <KeyboardAvoidingView
-        style={styles.flex}
+        style={{flex: 1}}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={86}
       >
         <ScrollView style={styles.scrollView} bounces={false}>
           <Spacer height={16} />
 
-          <AssetItem quantity={available} tokenInfo={tokenInfo} />
+          <AssetItem amount={{quantity: available, tokenId: tokenInfo.id}} wallet={wallet} />
 
           <Spacer height={40} />
 
-          <AmountInput onChange={onChangeAmount} value={inputAmount} ticker={tokenInfo.ticker} />
+          <AmountInput onChange={onChangeQuantity} value={inputQuantity} ticker={tokenInfo.ticker} />
 
           <Center>
-            {isPrimary && <PairedBalance primaryAmount={{tokenId: tokenInfo.id, quantity}} />}
+            {isPrimary && <PairedBalance amount={{tokenId: tokenInfo.id, quantity}} />}
 
             <Spacer height={22} />
 
@@ -85,10 +100,10 @@ export const EditAmountScreen = () => {
 
         <Actions>
           <ApplyButton
-            onPress={() => onApply(inputAmount)}
+            onPress={() => onApply(inputQuantity)}
             title={strings.apply.toLocaleUpperCase()}
             shelleyTheme
-            disabled={isUnableToSpend || !hasBalance}
+            disabled={isUnableToSpend || !hasBalance || isZero}
           />
         </Actions>
       </KeyboardAvoidingView>
@@ -123,7 +138,7 @@ const AmountInput = ({value, onChange, ticker}: AmountInputProps) => {
 
     const formatter = wasPasted ? pastedFormatter : editedFormatter
 
-    onChange(formatter(text) as Quantity)
+    onChange(formatter(text))
   }
 
   return (
@@ -161,15 +176,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.WHITE,
   },
-  flex: {
-    flex: 1,
-  },
   scrollView: {
     flex: 1,
     paddingHorizontal: 16,
   },
   hr: {
-    height: 1,
+    height: StyleSheet.hairlineWidth,
     backgroundColor: COLORS.BORDER_GRAY,
   },
   actions: {
@@ -184,7 +196,7 @@ const styles = StyleSheet.create({
     lineHeight: 32,
     borderWidth: 0,
     textAlign: 'right',
-    backgroundColor: 'white',
+    backgroundColor: COLORS.WHITE,
   },
   ticker: {
     fontSize: 24,

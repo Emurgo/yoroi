@@ -62,7 +62,7 @@ export const Amounts = {
   getAmount: (amounts: YoroiAmounts, tokenId: string): YoroiAmount => {
     return {
       tokenId,
-      quantity: amounts[tokenId] || Quantities.zero(),
+      quantity: amounts[tokenId] || Quantities.zero,
     }
   },
   save: (amounts: YoroiAmounts, amount: YoroiAmount): YoroiAmounts => {
@@ -116,14 +116,14 @@ export const Quantities = {
   denominated: (quantity: Quantity, denomination: number) => {
     return Quantities.quotient(quantity, `${10 ** denomination}`)
   },
-  atomic: (data: Quantity | BigNumber | string | number, denomination: number) => {
-    const stripped = data.toString().replace(/[^0-9.-]/g, '')
+  fixed: (quantity: Quantity, denomination: number) => {
+    const stripped = quantity.replace(/[^0-9.-]/g, '')
     const value = (stripped.length > 0 && new BigNumber(stripped).isZero() !== true ? stripped : '0') as Quantity
     return new BigNumber(value).toFixed(denomination).toString().replace(/[.,]/g, '') as Quantity
   },
-  zero: () => '0' as Quantity,
+  zero: '0' as Quantity,
   isZero: (quantity: Quantity) => new BigNumber(quantity).isZero(),
-  isIndivisible: (quantity: Quantity, denomination: number) => {
+  isAtomic: (quantity: Quantity, denomination: number) => {
     const absoluteQuantity = quantity.replace('-', '')
     const minimalFractionalPart = new BigNumber(1)
       .dividedBy(new BigNumber(10).pow(denomination))
@@ -134,12 +134,12 @@ export const Quantities = {
   },
 }
 
-export const asQuantity = (amount: BigNumber | number | string) => {
-  const asBigNumber = new BigNumber(amount)
-  if (asBigNumber.isNaN() || !asBigNumber.isFinite()) {
-    return new BigNumber(0).toString() as Quantity
+export const asQuantity = (value: BigNumber | number | string) => {
+  const bn = new BigNumber(value)
+  if (bn.isNaN() || !bn.isFinite()) {
+    throw new Error('Invalid quantity')
   }
-  return asBigNumber.toString() as Quantity
+  return bn.toString() as Quantity
 }
 
 export const Utxos = {
@@ -156,7 +156,7 @@ export const Utxos = {
             return {
               ...previousAmountsWithAssets,
               [currentAsset.assetId]: Quantities.sum([
-                previousAmountsWithAssets[currentAsset.assetId] ?? Quantities.zero(),
+                Amounts.getAmount(previousAmountsWithAssets, currentAsset.assetId).quantity,
                 currentAsset.amount as Quantity,
               ]),
             }
@@ -165,7 +165,7 @@ export const Utxos = {
 
         return amounts
       },
-      {[primaryTokenId]: '0'} as YoroiAmounts,
+      {[primaryTokenId]: Quantities.zero} as YoroiAmounts,
     )
   },
 }

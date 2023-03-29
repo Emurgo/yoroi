@@ -1,20 +1,21 @@
 import * as React from 'react'
 import {StyleSheet, View, ViewProps} from 'react-native'
 
-import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {PairedBalance} from '../../TxHistory/PairedBalance'
-import {Quantity, TokenInfo} from '../../yoroi-wallets/types'
+import {useTokenInfo, YoroiWallet} from '../../yoroi-wallets'
+import {YoroiAmount} from '../../yoroi-wallets/types'
 import {Quantities} from '../../yoroi-wallets/utils'
 import {Boundary, Placeholder, Text, TokenIcon} from '..'
 
 export type AssetItemProps = {
-  tokenInfo: TokenInfo
-  quantity: Quantity
+  wallet: YoroiWallet
+  amount: YoroiAmount
   style?: ViewProps['style']
 }
-export const AssetItem = ({quantity, style, tokenInfo}: AssetItemProps) => {
-  const wallet = useSelectedWallet()
+export const AssetItem = ({wallet, style, amount}: AssetItemProps) => {
+  const {quantity, tokenId} = amount
+  const tokenInfo = useTokenInfo({wallet, tokenId})
 
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
   const name = tokenInfo.ticker ?? tokenInfo.name ?? '-'
@@ -44,7 +45,7 @@ export const AssetItem = ({quantity, style, tokenInfo}: AssetItemProps) => {
           {denominatedQuantity}
         </Text>
 
-        {isPrimary && <PairedBalance primaryAmount={{quantity, tokenId: tokenInfo.id}} />}
+        {isPrimary && <PairedBalance amount={{quantity, tokenId: tokenInfo.id}} />}
       </Right>
     </View>
   )

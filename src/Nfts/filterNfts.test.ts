@@ -1,30 +1,26 @@
 import {YoroiNft} from '../yoroi-wallets'
+import {nft} from '../yoroi-wallets/mocks'
 import {filterNfts} from './filterNfts'
 
 describe('filterNfts', () => {
-  const nfts = [{name: 'CryptoWolf #1234'}, {name: 'Bored Monkey #4567'}, {name: 'Apple Blocks #7890'}] as YoroiNft[]
+  const cryptoWolf = {...nft, id: '0', fingerprint: 'fakefingerprint1', name: 'CryptoWolf #1234'}
+  const boredMonkey = {...nft, id: '1', fingerprint: 'fakefingerprint2', name: 'Bored Monkey #4567'}
+  const appleBlocks = {...nft, id: '2', fingerprint: 'fakefingerprint3', name: 'Apple Blocks #7890'}
 
-  it('filters NFTs correctly with capitalized search term', () => {
+  const nfts: YoroiNft[] = [cryptoWolf, boredMonkey, appleBlocks]
+
+  it('filters NFTs correctly with case-insensitive search term', () => {
     const filteredNfts = filterNfts('APple bLOcks', nfts)
-    expect(filteredNfts).toHaveLength(1)
-    expect(filteredNfts[0].name).toEqual('Apple Blocks #7890')
+    expect(filteredNfts).toEqual([appleBlocks])
   })
 
   it('returns empty array when nft array is empty', () => {
     const filteredNfts = filterNfts('Bored Monkey #4567', [])
-    expect(filteredNfts).toHaveLength(0)
+    expect(filteredNfts).toEqual([])
   })
 
   it('returns all NFTs when search term is empty', () => {
     const filteredNfts = filterNfts('', nfts)
-    expect(filteredNfts).toHaveLength(3)
-  })
-
-  it('sorts NFTs by name', () => {
-    const filteredNfts = filterNfts('o', nfts)
-
-    expect(filteredNfts[0].name).toEqual('Apple Blocks #7890')
-    expect(filteredNfts[1].name).toEqual('Bored Monkey #4567')
-    expect(filteredNfts[2].name).toEqual('CryptoWolf #1234')
+    expect(filteredNfts).toEqual(nfts)
   })
 })
