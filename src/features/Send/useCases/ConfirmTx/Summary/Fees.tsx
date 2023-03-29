@@ -12,10 +12,10 @@ export const Fees = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx}) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const feeAmount = Amounts.getAmount(yoroiUnsignedTx.fee, wallet.primaryToken.identifier)
-  const text = `${strings.fees}: ${formatTokenWithSymbol(feeAmount.quantity, wallet.primaryToken)}`
+
   return (
     <Text small testID="feesText">
-      {text}
+      {`${strings.fees}: ${formatTokenWithSymbol(feeAmount.quantity, wallet.primaryToken)}`}
     </Text>
   )
 }

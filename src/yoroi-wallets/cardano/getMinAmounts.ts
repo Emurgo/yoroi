@@ -49,6 +49,6 @@ const withPrimaryToken = (amounts: YoroiAmounts, primaryToken: Token): YoroiAmou
 
   return {
     ...amounts,
-    [primaryToken.identifier]: Quantities.zero(),
+    [primaryToken.identifier]: Quantities.zero,
   }
 }

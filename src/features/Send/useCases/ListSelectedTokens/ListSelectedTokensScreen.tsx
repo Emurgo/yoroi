@@ -13,13 +13,12 @@ import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {sortTokenInfos} from '../../../../utils'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
-import {useTokenInfo, useTokenInfos} from '../../../../yoroi-wallets/hooks'
+import {useTokenInfos} from '../../../../yoroi-wallets/hooks'
 import {TokenId, TokenInfo, YoroiAmount, YoroiEntry, YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
 import {Amounts} from '../../../../yoroi-wallets/utils'
 import {useSend} from '../../common/SendContext'
 import {AddTokenButton} from './AddToken/AddToken'
-import {DeleteToken} from './DeleteToken'
-import {useWhenEmptyAddToken} from './WhenEmptyAddToken'
+import {RemoveToken} from './RemoveToken'
 
 export const ListSelectedTokensScreen = () => {
   const navigateTo = useNavigateTo()
@@ -28,8 +27,7 @@ export const ListSelectedTokensScreen = () => {
   const {targets, selectedTargetIndex, tokenSelectedChanged, amountRemoved, yoroiUnsignedTxChanged} = useSend()
   const {amounts} = targets[selectedTargetIndex].entry
 
-  const selectedTokensCounter = Object.keys(amounts).length
-  useWhenEmptyAddToken()
+  const selectedTokensCounter = Amounts.toArray(amounts).length
 
   const wallet = useSelectedWallet()
   const tokenInfos = useTokenInfos({
@@ -51,7 +49,13 @@ export const ListSelectedTokensScreen = () => {
     tokenSelectedChanged(tokenId)
     navigateTo.editToken()
   }
-  const onDelete = (tokenId: TokenId) => amountRemoved(tokenId)
+  const onDelete = (tokenId: TokenId) => {
+    // use case: redirect to add token screen if there is no token left
+    if (selectedTokensCounter === 1) {
+      navigateTo.addToken()
+    }
+    amountRemoved(tokenId)
+  }
   const onAdd = navigateTo.addToken
   const onNext = () => refetch()
 
@@ -61,7 +65,7 @@ export const ListSelectedTokensScreen = () => {
         data={tokens}
         renderItem={({item: {id}}: {item: TokenInfo}) => (
           <Boundary>
-            <SelectableToken amount={{tokenId: id, quantity: amounts[id]}} onDelete={onDelete} onSelect={onSelect} />
+            <SelectableToken amount={Amounts.getAmount(amounts, id)} onDelete={onDelete} onSelect={onSelect} />
           </Boundary>
         )}
         bounces={false}
@@ -89,19 +93,19 @@ type SelectableTokenProps = {
   onSelect(tokenId: TokenId): void
   onDelete(tokenId: TokenId): void
 }
-const SelectableToken = ({amount: {quantity, tokenId}, onDelete, onSelect}: SelectableTokenProps) => {
+const SelectableToken = ({amount, onDelete, onSelect}: SelectableTokenProps) => {
   const wallet = useSelectedWallet()
-  const tokenInfo = useTokenInfo({wallet, tokenId})
+  const {tokenId} = amount
 
   const handleDelete = () => onDelete(tokenId)
   const handleSelect = () => onSelect(tokenId)
 
   return (
-    <DeleteToken onDelete={handleDelete} tokenInfo={tokenInfo}>
+    <RemoveToken onDelete={handleDelete} tokenId={tokenId}>
       <TouchableOpacity style={{paddingVertical: 16}} onPress={handleSelect} testID="selectToken">
-        <AssetItem tokenInfo={tokenInfo} quantity={quantity} />
+        <AssetItem amount={amount} wallet={wallet} />
       </TouchableOpacity>
-    </DeleteToken>
+    </RemoveToken>
   )
 }
 

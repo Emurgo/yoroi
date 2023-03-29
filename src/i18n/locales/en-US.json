@@ -173,6 +173,7 @@
   "components.send.sendscreen.domainNotRegisteredError": "Domain is not registered",
   "components.send.sendscreen.domainRecordNotFoundError": "No Cardano record found for this domain",
   "components.send.sendscreen.domainUnsupportedError": "Domain is not supported",
+  "components.send.sendscreen.errorBannerMaxTokenLimit": "is the maximum number allowed to send in one transaction",
   "components.send.sendscreen.errorBannerNetworkError": "We encountered a problem while fetching your current balance. Click to retry.",
   "components.send.sendscreen.errorBannerPendingOutgoingTransaction": "You cannot send a new transaction while an existing one is still pending",
   "components.send.sendscreen.feeLabel": "Fee",

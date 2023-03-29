@@ -8,39 +8,40 @@ import {Spacer} from '../../../../components'
 import {AssetItem} from '../../../../components/AssetItem'
 import {SelectedWalletProvider} from '../../../../SelectedWallet'
 import {mocks} from '../../../../yoroi-wallets/mocks'
-import {DeleteToken} from './DeleteToken'
+import {Amounts} from '../../../../yoroi-wallets/utils/utils'
+import {RemoveToken} from './RemoveToken'
 
-const primaryTokenInfo = mocks.wallet.primaryTokenInfo
-const primaryBalance = mocks.balances[primaryTokenInfo.id]
+const primaryAmount = Amounts.getAmount(mocks.balances, mocks.wallet.primaryTokenInfo.id)
+const secondaryAmount = Amounts.getAmount(
+  mocks.balances,
+  '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950',
+)
 
-const tokenInfo = mocks.tokenInfos['698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950']
-const tokenBalance = mocks.balances['698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950']
-
-storiesOf('Send/SelectedTokens/DeleteToken', module).add('Gallery', () => (
+storiesOf('Send/SelectedTokens/RemoveToken', module).add('Gallery', () => (
   <QueryProvider>
     <SelectedWalletProvider wallet={mocks.wallet}>
       <View style={{flex: 1, justifyContent: 'center', padding: 16}}>
         <Text>Fungible primary token</Text>
 
-        <DeleteToken
+        <RemoveToken
+          tokenId={primaryAmount.tokenId}
           onDelete={(tokenId: string) => action(`onDelete ${tokenId}`)}
-          tokenInfo={primaryTokenInfo}
           style={{borderColor: 'lightgray', borderWidth: 1, padding: 16, borderRadius: 8}}
         >
-          <AssetItem tokenInfo={primaryTokenInfo} quantity={primaryBalance} />
-        </DeleteToken>
+          <AssetItem amount={primaryAmount} wallet={mocks.wallet} />
+        </RemoveToken>
 
         <Spacer height={40} />
 
         <Text>Fungible non-primary token</Text>
 
-        <DeleteToken
+        <RemoveToken
+          tokenId={secondaryAmount.tokenId}
           onDelete={(tokenId: string) => action(`onDelete ${tokenId}`)}
-          tokenInfo={tokenInfo}
           style={{borderColor: 'lightgray', borderWidth: 1, padding: 16, borderRadius: 8}}
         >
-          <AssetItem tokenInfo={tokenInfo} quantity={tokenBalance} />
-        </DeleteToken>
+          <AssetItem amount={secondaryAmount} wallet={mocks.wallet} />
+        </RemoveToken>
       </View>
     </SelectedWalletProvider>
   </QueryProvider>

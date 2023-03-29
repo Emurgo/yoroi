@@ -19,7 +19,7 @@ storiesOf('PairedBalance', module)
         >
           <View style={{flex: 1, justifyContent: 'center'}}>
             <View style={{borderWidth: 1}}>
-              <PairedBalance primaryAmount={{quantity: '2', tokenId: mocks.wallet.primaryTokenInfo.id}} />
+              <PairedBalance amount={{quantity: '2', tokenId: mocks.wallet.primaryTokenInfo.id}} />
             </View>
           </View>
         </SelectedWalletProvider>
@@ -37,7 +37,7 @@ storiesOf('PairedBalance', module)
         >
           <View style={{flex: 1, justifyContent: 'center'}}>
             <View style={{borderWidth: 1}}>
-              <PairedBalance primaryAmount={{quantity: '2', tokenId: mocks.wallet.primaryTokenInfo.id}} />
+              <PairedBalance amount={{quantity: '2', tokenId: mocks.wallet.primaryTokenInfo.id}} />
             </View>
           </View>
         </SelectedWalletProvider>
@@ -55,7 +55,7 @@ storiesOf('PairedBalance', module)
         >
           <View style={{flex: 1, justifyContent: 'center'}}>
             <View style={{borderWidth: 1}}>
-              <PairedBalance primaryAmount={{quantity: '2', tokenId: mocks.wallet.primaryTokenInfo.id}} privacy />
+              <PairedBalance amount={{quantity: '2', tokenId: mocks.wallet.primaryTokenInfo.id}} privacy />
             </View>
           </View>
         </SelectedWalletProvider>
@@ -73,7 +73,7 @@ storiesOf('PairedBalance', module)
         >
           <View style={{flex: 1, justifyContent: 'center'}}>
             <View style={{borderWidth: 1}}>
-              <PairedBalance primaryAmount={{quantity: '2', tokenId: mocks.wallet.primaryTokenInfo.id}} />
+              <PairedBalance amount={{quantity: '2', tokenId: mocks.wallet.primaryTokenInfo.id}} />
             </View>
           </View>
         </SelectedWalletProvider>

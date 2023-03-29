@@ -4,15 +4,16 @@ import {Text, View} from 'react-native'
 
 import {QueryProvider} from '../../../.storybook/decorators'
 import {SelectedWalletProvider} from '../../SelectedWallet'
+import {Amounts} from '../../yoroi-wallets'
 import {mocks} from '../../yoroi-wallets/mocks'
 import {Spacer} from '..'
 import {AssetItem} from './AssetItem'
 
-const primaryTokenInfo = mocks.wallet.primaryTokenInfo
-const primaryBalance = mocks.balances[primaryTokenInfo.id]
-
-const tokenInfo = mocks.tokenInfos['698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950']
-const tokenBalance = mocks.balances['698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950']
+const primaryAmount = Amounts.getAmount(mocks.balances, mocks.wallet.primaryTokenInfo.id)
+const secondaryAmount = Amounts.getAmount(
+  mocks.balances,
+  '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950',
+)
 
 storiesOf('Components/AssetItem', module)
   .add('Gallery', () => (
@@ -22,8 +23,8 @@ storiesOf('Components/AssetItem', module)
           <Text>Fungible primary token</Text>
 
           <AssetItem
-            tokenInfo={primaryTokenInfo}
-            quantity={primaryBalance}
+            wallet={mocks.wallet}
+            amount={primaryAmount}
             style={{backgroundColor: 'white', padding: 16, borderRadius: 8}}
           />
 
@@ -32,8 +33,8 @@ storiesOf('Components/AssetItem', module)
           <Text>Fungible non-primary token</Text>
 
           <AssetItem
-            tokenInfo={tokenInfo}
-            quantity={tokenBalance}
+            wallet={mocks.wallet}
+            amount={secondaryAmount}
             style={{backgroundColor: 'white', padding: 16, borderRadius: 8}}
           />
         </View>
@@ -50,8 +51,8 @@ storiesOf('Components/AssetItem', module)
       >
         <View style={{flex: 1, justifyContent: 'center', padding: 16}}>
           <AssetItem
-            tokenInfo={primaryTokenInfo}
-            quantity={primaryBalance}
+            wallet={mocks.wallet}
+            amount={primaryAmount}
             style={{backgroundColor: 'white', padding: 16, borderRadius: 8}}
           />
         </View>
@@ -68,8 +69,8 @@ storiesOf('Components/AssetItem', module)
       >
         <View style={{flex: 1, justifyContent: 'center', padding: 16}}>
           <AssetItem
-            tokenInfo={primaryTokenInfo}
-            quantity={primaryBalance}
+            wallet={mocks.wallet}
+            amount={primaryAmount}
             style={{backgroundColor: 'white', padding: 16, borderRadius: 8}}
           />
         </View>
