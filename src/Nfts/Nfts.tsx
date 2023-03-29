@@ -25,7 +25,7 @@ export const Nfts = () => {
   })
 
   const {search: nftsSearchTerm} = useSearch()
-  const nftsSearchResult = filterNfts(nftsSearchTerm, nfts)
+  const nftsSearchResult = filterNfts(nftsSearchTerm, nfts).sort((NftA, NftB) => NftA.name.localeCompare(NftB.name))
 
   const handleNftSelect = (index: number) => navigateTo.nftDetails(nftsSearchResult[index].id)
 
