@@ -292,7 +292,7 @@ const fetchPoolInfo = {
   },
 }
 
-export const generateManyNfts = () => {
+export const generateManyNfts = (): YoroiNft[] => {
   return Array(30)
     .fill(undefined)
     .map((_, index) => ({
