@@ -366,10 +366,9 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
           await this.save()
         } catch (error) {
           Logger.error((error as Error)?.message)
-        } finally {
-          if (process.env.NODE_ENV !== 'test') {
-            this.timeout = setTimeout(() => backgroundSync(), HISTORY_REFRESH_TIME)
-          }
+        }
+        if (process.env.NODE_ENV !== 'test') {
+          this.timeout = setTimeout(() => backgroundSync(), HISTORY_REFRESH_TIME)
         }
       }
 
