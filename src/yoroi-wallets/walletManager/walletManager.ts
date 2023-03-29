@@ -2,7 +2,7 @@
 import ExtendableError from 'es6-error'
 import uuid from 'uuid'
 
-import {CardanoTypes, getWallet as getCardanoWallet, isYoroiWallet, YoroiWallet} from '../cardano'
+import {CardanoTypes, getCardanoWalletFactory, isYoroiWallet, YoroiWallet} from '../cardano'
 import {HWDeviceInfo} from '../hw'
 import {Logger} from '../logging'
 import {isWalletMeta, migrateWalletMetas, parseWalletMeta} from '../migrations/walletMeta'
@@ -158,9 +158,9 @@ export class WalletManager {
 
   async openWallet(walletMeta: WalletMeta): Promise<YoroiWallet> {
     const {id, walletImplementationId, networkId} = walletMeta
-    const Wallet = getWallet({networkId, implementationId: walletImplementationId})
+    const walletFactory = getWalletFactory({networkId, implementationId: walletImplementationId})
 
-    const wallet = await Wallet.restore({
+    const wallet = await walletFactory.restore({
       storage: this.storage.join(`${id}/`),
       walletMeta,
     })
@@ -196,10 +196,10 @@ export class WalletManager {
     networkId: NetworkId,
     implementationId: WalletImplementationId,
   ) {
-    const Wallet = getWallet({networkId, implementationId})
+    const walletFactory = getWalletFactory({networkId, implementationId})
     const id = uuid.v4()
 
-    const wallet = await Wallet.create({
+    const wallet = await walletFactory.create({
       storage: this.storage.join(`${id}/`),
       id,
       mnemonic,
@@ -217,10 +217,10 @@ export class WalletManager {
     hwDeviceInfo: null | HWDeviceInfo,
     isReadOnly: boolean,
   ) {
-    const Wallet = getWallet({networkId, implementationId})
+    const walletFactory = getWalletFactory({networkId, implementationId})
     const id = uuid.v4()
 
-    const wallet = await Wallet.createBip44({
+    const wallet = await walletFactory.createBip44({
       storage: this.storage.join(`${id}/`),
       id,
       accountPubKeyHex,
@@ -249,12 +249,12 @@ const parseDeletedWalletIds = (data: unknown) => {
   return isWalletIds(parsed) ? parsed : undefined
 }
 
-const getWallet = ({networkId, implementationId}: {networkId: number; implementationId: string}) => {
-  const wallet = getCardanoWallet({networkId, implementationId})
+const getWalletFactory = ({networkId, implementationId}: {networkId: number; implementationId: string}) => {
+  const walletFactory = getCardanoWalletFactory({networkId, implementationId})
 
-  if (!wallet) {
+  if (!walletFactory) {
     throw new Error('invalid wallet')
   }
 
-  return wallet
+  return walletFactory
 }
