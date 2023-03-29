@@ -48,7 +48,6 @@ import {
   CardanoMobile,
   CardanoTypes,
   generatePrivateKeyForCatalyst,
-  generateWalletRootKey,
   legacyWalletChecksum,
   NoOutputsError,
   NotEnoughMoneyToSendError,
@@ -82,6 +81,7 @@ import {isYoroiWallet, WalletEvent, WalletSubscription, YoroiWallet} from '../ty
 import {yoroiUnsignedTx} from '../unsignedTx'
 import {deriveRewardAddressHex, getCardanoBaseConfig, getWalletConfigById, isByron, isHaskellShelley} from '../utils'
 import {makeUtxoManager, UtxoManager} from '../utxoManager'
+import {makeKeys} from './makeKeys'
 
 type WalletState = {
   lastGeneratedAddressIndex: number
@@ -151,7 +151,7 @@ export class ByronWallet implements YoroiWallet {
     mnemonic: string
     password: string
   }): Promise<YoroiWallet> {
-    const {rootKey, accountPubKeyHex} = await makeKeys({mnemonic, implementationId})
+    const {rootKey, accountPubKeyHex} = await makeKeys({mnemonic})
     const {internalChain, externalChain} = await addressChains.create({implementationId, networkId, accountPubKeyHex})
 
     const wallet = await this.commonCreate({
@@ -1231,25 +1231,6 @@ export class ByronWallet implements YoroiWallet {
 }
 
 const toHex = (bytes: Uint8Array) => Buffer.from(bytes).toString('hex')
-
-const makeKeys = async ({mnemonic, implementationId}: {mnemonic: string; implementationId: WalletImplementationId}) => {
-  const rootKeyPtr = await generateWalletRootKey(mnemonic)
-  const rootKey: string = Buffer.from(await rootKeyPtr.asBytes()).toString('hex')
-
-  const purpose = isByron(implementationId) ? NUMBERS.WALLET_TYPE_PURPOSE.BIP44 : NUMBERS.WALLET_TYPE_PURPOSE.CIP1852
-  const accountPubKeyHex = await rootKeyPtr
-    .derive(purpose)
-    .then((key) => key.derive(NUMBERS.COIN_TYPES.CARDANO))
-    .then((key) => key.derive(NUMBERS.ACCOUNT_INDEX + NUMBERS.HARD_DERIVATION_START))
-    .then((accountKey) => accountKey.toPublic())
-    .then((accountPubKey) => accountPubKey.asBytes())
-    .then((bytes) => Buffer.from(bytes).toString('hex'))
-
-  return {
-    rootKey,
-    accountPubKeyHex,
-  }
-}
 
 const addressChains = {
   create: async ({

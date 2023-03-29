@@ -38,7 +38,6 @@ import {
   CardanoMobile,
   CardanoTypes,
   generatePrivateKeyForCatalyst,
-  generateWalletRootKey,
   NoOutputsError,
   NotEnoughMoneyToSendError,
   RegistrationStatus,
@@ -61,6 +60,7 @@ import {isYoroiWallet, WalletEvent, WalletSubscription, YoroiWallet} from '../ty
 import {yoroiUnsignedTx} from '../unsignedTx'
 import {deriveRewardAddressHex} from '../utils'
 import {makeUtxoManager, UtxoManager} from '../utxoManager'
+import {makeKeys} from './makeKeys'
 
 type WalletState = {
   lastGeneratedAddressIndex: number
@@ -116,24 +116,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
     TOKEN_INFO_SERVICE,
     WALLET_IMPLEMENTATION_ID,
   } = constants
-
-  const makeKeys = async ({mnemonic}: {mnemonic: string}) => {
-    const rootKeyPtr = await generateWalletRootKey(mnemonic)
-    const rootKey: string = Buffer.from(await rootKeyPtr.asBytes()).toString('hex')
-
-    const accountPubKeyHex = await rootKeyPtr
-      .derive(PURPOSE)
-      .then((key) => key.derive(COIN_TYPE))
-      .then((key) => key.derive(ACCOUNT_INDEX + HARD_DERIVATION_START))
-      .then((accountKey) => accountKey.toPublic())
-      .then((accountPubKey) => accountPubKey.asBytes())
-      .then((bytes) => Buffer.from(bytes).toString('hex'))
-
-    return {
-      rootKey,
-      accountPubKeyHex,
-    }
-  }
 
   const addressChains = {
     create: async ({accountPubKeyHex}: {accountPubKeyHex: string}) => {
