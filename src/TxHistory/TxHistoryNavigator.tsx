@@ -163,10 +163,6 @@ const messages = defineMessages({
     id: 'components.send.addressreaderqr.title',
     defaultMessage: '!!!Scan QR code address',
   },
-  selectAssetTitle: {
-    id: 'components.send.selectasset.title',
-    defaultMessage: '!!!Select asset',
-  },
   selectedTokensTitle: {
     id: 'components.send.selectedtokensscreen.title',
     defaultMessage: '!!!Selected tokens',
@@ -195,7 +191,6 @@ const useStrings = () => {
     receiveTitle: intl.formatMessage(messages.receiveTitle),
     sendTitle: intl.formatMessage(messages.sendTitle),
     qrScannerTitle: intl.formatMessage(messages.qrScannerTitle),
-    selectAssetTitle: intl.formatMessage(messages.selectAssetTitle),
     confirmTitle: intl.formatMessage(messages.confirmTitle),
     receiveInfoText: intl.formatMessage(messages.receiveInfoText),
     editTokenAmountTitle: intl.formatMessage(messages.editTokenAmountTitle),
