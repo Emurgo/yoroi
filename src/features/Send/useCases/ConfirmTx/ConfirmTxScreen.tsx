@@ -47,7 +47,7 @@ export const ConfirmTxScreen = () => {
 
   const scrollViewRef = useFlashAndScroll()
 
-  if (!yoroiUnsignedTx) return null
+  if (!yoroiUnsignedTx) throw new Error('Missing yoroiUnsignedTx')
 
   return (
     <View style={styles.root}>
