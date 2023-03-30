@@ -125,7 +125,6 @@ const getStories = () => {
     "./src/Receive/Addresses.stories.tsx": require("../src/Receive/Addresses.stories.tsx"),
     "./src/Receive/AddressModal.stories.tsx": require("../src/Receive/AddressModal.stories.tsx"),
     "./src/Receive/ReceiveScreen.stories.tsx": require("../src/Receive/ReceiveScreen.stories.tsx"),
-    "./src/Search/SearchBar.stories.tsx": require("../src/Search/SearchBar.stories.tsx"),
     "./src/SelectedWallet/WalletSelection/WalletSelectionScreen.stories.tsx": require("../src/SelectedWallet/WalletSelection/WalletSelectionScreen.stories.tsx"),
     "./src/Settings/ApplicationSettings/ApplicationSettingsScreen.stories.tsx": require("../src/Settings/ApplicationSettings/ApplicationSettingsScreen.stories.tsx"),
     "./src/Settings/ChangeLanguage/ChangeLanguageScreen.stories.tsx": require("../src/Settings/ChangeLanguage/ChangeLanguageScreen.stories.tsx"),
