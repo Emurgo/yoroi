@@ -1,10 +1,10 @@
 import * as React from 'react'
 
-import {Address, Quantity, TokenId, YoroiTarget, YoroiUnsignedTx} from '../../../yoroi-wallets/types'
+import {Address, Quantity, YoroiTarget, YoroiUnsignedTx} from '../../../yoroi-wallets/types'
 
 export type SendState = {
   selectedTargetIndex: number
-  selectedTokenId: TokenId
+  selectedTokenId: string
   yoroiUnsignedTx: YoroiUnsignedTx | undefined
 
   memo: string
@@ -14,19 +14,19 @@ export type SendState = {
 
 type TargetActions = {
   amountChanged: (quantity: Quantity) => void
-  amountRemoved: (tokenId: TokenId) => void
+  amountRemoved: (tokenId: string) => void
   receiverChanged: (receiver: string) => void
   addressChanged: (address: Address) => void
 }
 
 type SendActions = {
   yoroiUnsignedTxChanged: (yoroiUnsignedTx: YoroiUnsignedTx | undefined) => void
-  tokenSelectedChanged: (tokenId: TokenId) => void
+  tokenSelectedChanged: (tokenId: string) => void
   resetForm: () => void
   memoChanged: (memo: string) => void
 }
 
-const combinedReducers = (state: SendState, action: SendAction | TargetAction) => {
+export const combinedReducers = (state: SendState, action: SendAction | TargetAction) => {
   return {
     ...sendReducer(
       {
@@ -54,9 +54,9 @@ export const SendProvider = ({children, ...props}: {initialState?: Partial<SendS
     memoChanged: (memo) => dispatch({type: 'memoChanged', memo}),
 
     yoroiUnsignedTxChanged: (yoroiUnsignedTx) => dispatch({type: 'yoroiUnsignedTxChanged', yoroiUnsignedTx}),
-    tokenSelectedChanged: (tokenId: TokenId) => dispatch({type: 'tokenSelectedChanged', tokenId}),
+    tokenSelectedChanged: (tokenId: string) => dispatch({type: 'tokenSelectedChanged', tokenId}),
     amountChanged: (quantity: Quantity) => dispatch({type: 'amountChanged', quantity}),
-    amountRemoved: (tokenId: TokenId) => dispatch({type: 'amountRemoved', tokenId}),
+    amountRemoved: (tokenId: string) => dispatch({type: 'amountRemoved', tokenId}),
   }).current
 
   const context = React.useMemo(() => ({...state, ...actions}), [actions, state])
@@ -64,7 +64,7 @@ export const SendProvider = ({children, ...props}: {initialState?: Partial<SendS
   return <SendContext.Provider value={context}>{children}</SendContext.Provider>
 }
 
-type SendAction =
+export type SendAction =
   | {
       type: 'resetForm'
     }
@@ -74,7 +74,7 @@ type SendAction =
     }
   | {
       type: 'tokenSelectedChanged'
-      tokenId: TokenId
+      tokenId: string
     }
   | {
       type: 'yoroiUnsignedTxChanged'
@@ -109,7 +109,7 @@ const sendReducer = (state: SendState, action: SendAction) => {
   }
 }
 
-type TargetAction =
+export type TargetAction =
   | {
       type: 'receiverChanged'
       receiver: string
@@ -120,7 +120,7 @@ type TargetAction =
     }
   | {
       type: 'tokenSelectedChanged'
-      tokenId: TokenId
+      tokenId: string
     }
   | {
       type: 'amountChanged'
@@ -128,7 +128,7 @@ type TargetAction =
     }
   | {
       type: 'amountRemoved'
-      tokenId: TokenId
+      tokenId: string
     }
 
 const targetsReducer = (state: SendState, action: TargetAction) => {
