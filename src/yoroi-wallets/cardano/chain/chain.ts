@@ -9,9 +9,9 @@ import {NetworkId, WalletImplementationId} from '../../types'
 import {CardanoMobile, CardanoTypes, isByron, isHaskellShelley, NUMBERS, toCardanoNetworkId} from '..'
 import type {CryptoAccount} from '../byron/util'
 import * as util from '../byron/util'
+import {DISCOVERY_BLOCK_SIZE, DISCOVERY_GAP_SIZE} from '../constants/mainnet/constants'
 import {ADDRESS_TYPE_TO_CHANGE, AddressType} from '../formatPath'
 import {getNetworkConfigById, NETWORKS} from '../networks'
-import {DISCOVERY_BLOCK_SIZE, DISCOVERY_GAP_SIZE} from '../shelley/constants'
 
 export type AddressBlock = [number, Moment, Array<string>]
 

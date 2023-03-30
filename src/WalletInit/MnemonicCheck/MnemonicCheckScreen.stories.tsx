@@ -6,8 +6,8 @@ import React from 'react'
 import {debugWalletInfo} from '../../features'
 import {WalletManagerProvider} from '../../WalletManager'
 import {WalletManager, walletManager} from '../../yoroi-wallets'
+import {NETWORK_ID} from '../../yoroi-wallets/cardano/constants/testnet/constants'
 import {NetworkError} from '../../yoroi-wallets/cardano/errors'
-import {NETWORK_ID} from '../../yoroi-wallets/cardano/shelley-testnet/constants'
 import {MnemonicCheckScreen} from './MnemonicCheckScreen'
 
 storiesOf('MnemonicCheckScreen', module)

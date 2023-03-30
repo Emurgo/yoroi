@@ -6,8 +6,8 @@ import React from 'react'
 import {WalletInitRoutes} from '../../navigation'
 import {WalletManagerProvider} from '../../WalletManager'
 import {WalletManager, walletManager} from '../../yoroi-wallets'
+import {NETWORK_ID, WALLET_IMPLEMENTATION_ID} from '../../yoroi-wallets/cardano/constants/testnet/constants'
 import {NetworkError} from '../../yoroi-wallets/cardano/errors'
-import {NETWORK_ID, WALLET_IMPLEMENTATION_ID} from '../../yoroi-wallets/cardano/shelley-testnet/constants'
 import {SaveNanoXScreen} from './SaveNanoXScreen'
 
 const params: RouteProp<WalletInitRoutes, 'save-nano-x'>['params'] = {
