@@ -28,18 +28,15 @@ type Guard<Params> = (params: Params | object) => params is Params
 
 // OPTIONS
 export const defaultStackNavigationOptionsV2: StackNavigationOptions = {
-  headerTitleStyle: {
-    fontSize: 16,
-    fontFamily: 'Rubik-Medium',
-  },
   headerTintColor: COLORS.ERROR_TEXT_COLOR_DARK,
-  headerTitleContainerStyle: {
-    width: '70%',
-    alignItems: 'center',
-  },
   headerStyle: {
     elevation: 0,
     shadowOpacity: 0,
+  },
+  headerTitleContainerStyle: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
   },
 }
 
@@ -50,8 +47,8 @@ export const defaultStackNavigationOptions: StackNavigationOptions = {
     shadowOpacity: 0,
   },
   headerTintColor: '#fff',
-  headerTitleAlign: 'center',
   headerBackTitleVisible: false,
+  headerTitleAlign: 'center',
   headerLeftContainerStyle: {
     paddingLeft: Platform.OS === 'ios' ? 8 : undefined,
   },
