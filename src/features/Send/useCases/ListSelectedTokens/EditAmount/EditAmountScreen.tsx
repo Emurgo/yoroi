@@ -51,7 +51,7 @@ export const EditAmountScreen = () => {
     try {
       const quantity = asQuantity(text)
       setInputQuantity(quantity)
-      setQuantity(Quantities.fixed(quantity, tokenInfo.decimals))
+      setQuantity(Quantities.integer(quantity, tokenInfo.decimals))
     } catch (error) {
       Logger.error('EditAmountScreen::onChangeQuantity', error)
     }
@@ -61,7 +61,7 @@ export const EditAmountScreen = () => {
     setQuantity(spendable)
   }
   const onApply = (quantity: Quantity) => {
-    amountChanged(Quantities.fixed(quantity, tokenInfo.decimals))
+    amountChanged(Quantities.integer(quantity, tokenInfo.decimals))
     navigation.navigate('send-list-selected-tokens')
   }
 

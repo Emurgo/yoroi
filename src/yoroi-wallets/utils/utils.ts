@@ -86,51 +86,46 @@ export const Amounts = {
 
 export const Quantities = {
   sum: (quantities: Array<Quantity>) => {
-    return quantities.reduce((result, current) => result.plus(current), new BigNumber(0)).toString() as Quantity
+    return quantities.reduce((result, current) => result.plus(current), new BigNumber(0)).toString(10) as Quantity
   },
   max: (...quantities: Array<Quantity>) => {
-    return BigNumber.max(...quantities).toString() as Quantity
+    return BigNumber.max(...quantities).toString(10) as Quantity
   },
   diff: (quantity1: Quantity, quantity2: Quantity) => {
-    return new BigNumber(quantity1).minus(new BigNumber(quantity2)).toString() as Quantity
+    return new BigNumber(quantity1).minus(new BigNumber(quantity2)).toString(10) as Quantity
   },
   negated: (quantity: Quantity) => {
-    return new BigNumber(quantity).negated().toString() as Quantity
+    return new BigNumber(quantity).negated().toString(10) as Quantity
   },
   product: (quantities: Array<Quantity>) => {
     return quantities.reduce((result, quantity) => {
       const x = new BigNumber(result).times(new BigNumber(quantity))
 
-      return x.toString() as Quantity
+      return x.toString(10) as Quantity
     }, '1' as Quantity)
   },
   quotient: (quantity1: Quantity, quantity2: Quantity) => {
-    return new BigNumber(quantity1).dividedBy(new BigNumber(quantity2)).toString() as Quantity
+    return new BigNumber(quantity1).dividedBy(new BigNumber(quantity2)).toString(10) as Quantity
   },
   isGreaterThan: (quantity1: Quantity, quantity2: Quantity) => {
     return new BigNumber(quantity1).isGreaterThan(new BigNumber(quantity2))
   },
   decimalPlaces: (quantity: Quantity, precision: number) => {
-    return new BigNumber(quantity).decimalPlaces(precision).toString() as Quantity
+    return new BigNumber(quantity).decimalPlaces(precision).toString(10) as Quantity
   },
   denominated: (quantity: Quantity, denomination: number) => {
-    return Quantities.quotient(quantity, `${10 ** denomination}`)
+    return Quantities.quotient(quantity, new BigNumber(10).pow(denomination).toString(10) as Quantity)
   },
-  fixed: (quantity: Quantity, denomination: number) => {
-    const stripped = quantity.replace(/[^0-9.-]/g, '')
-    const value = (stripped.length > 0 && new BigNumber(stripped).isZero() !== true ? stripped : '0') as Quantity
-    return new BigNumber(value).toFixed(denomination).toString().replace(/[.,]/g, '') as Quantity
+  integer: (quantity: Quantity, denomination: number) => {
+    return new BigNumber(quantity).decimalPlaces(denomination).shiftedBy(denomination).toString(10) as Quantity
   },
   zero: '0' as Quantity,
   isZero: (quantity: Quantity) => new BigNumber(quantity).isZero(),
   isAtomic: (quantity: Quantity, denomination: number) => {
-    const absoluteQuantity = quantity.replace('-', '')
-    const minimalFractionalPart = new BigNumber(1)
-      .dividedBy(new BigNumber(10).pow(denomination))
-      .toFixed(denomination)
-      .toString()
-      .replace(/[.,]/g, '')
-    return absoluteQuantity === minimalFractionalPart
+    const absoluteQuantity = new BigNumber(quantity).decimalPlaces(denomination).abs()
+    const minimalFractionalPart = new BigNumber(10).pow(new BigNumber(denomination).negated())
+
+    return absoluteQuantity.isEqualTo(minimalFractionalPart)
   },
 }
 
@@ -139,7 +134,7 @@ export const asQuantity = (value: BigNumber | number | string) => {
   if (bn.isNaN() || !bn.isFinite()) {
     throw new Error('Invalid quantity')
   }
-  return bn.toString() as Quantity
+  return bn.toString(10) as Quantity
 }
 
 export const Utxos = {
