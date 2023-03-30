@@ -1,9 +1,9 @@
 import {StackNavigationOptions} from '@react-navigation/stack'
 import React from 'react'
-import {StyleSheet, TouchableOpacity, TouchableOpacityProps} from 'react-native'
+import {TextInput, TouchableOpacity, TouchableOpacityProps} from 'react-native'
 
 import {Icon} from '../components'
-import {SearchBar} from './SearchBar'
+import {defaultStackNavigationOptionsV2} from '../navigation'
 import {useSearch} from './SearchContext'
 
 export const useSearchHeaderOptions = ({placeHolderText, title}) => {
@@ -16,26 +16,19 @@ export const useSearchHeaderOptions = ({placeHolderText, title}) => {
 
   const searchHeaderOptions: StackNavigationOptions = searchVisible
     ? {
-        headerTitleContainerStyle: styles.headerTitleContainer,
-        headerTitle: () => <SearchHeader placeholder={placeHolderText} onClose={handleSearchClose} />,
-        headerRightContainerStyle: styles.disableFlex,
-        headerRight: () => null,
-        headerLeftContainerStyle: styles.disableFlex,
-        headerLeft: () => null,
+        ...defaultStackNavigationOptionsV2,
+        headerTitle: () => <SearchHeader placeholder={placeHolderText} />,
+        headerRight: () => <CloseButton onPress={handleSearchClose} />,
+        headerTitleContainerStyle: {
+          flex: 1,
+        },
+        headerTitleAlign: 'left',
+        headerBackTitleVisible: false,
       }
     : {
-        headerTitleContainerStyle: styles.headerTitleContainer,
+        ...defaultStackNavigationOptionsV2,
         title: title,
         headerRight: () => <SearchButton onPress={() => setSearchVisible(true)} />,
-        headerRightContainerStyle: {
-          ...styles.disableFlex,
-          paddingHorizontal: 16,
-          position: 'absolute',
-          right: 0,
-          bottom: 0,
-          top: 0,
-        },
-        headerLeftContainerStyle: styles.disableFlex,
         headerBackTitleVisible: false,
       }
 
@@ -44,19 +37,18 @@ export const useSearchHeaderOptions = ({placeHolderText, title}) => {
 
 interface Props {
   placeholder: string
-  onClose?(): void
 }
 
-export const SearchHeader = ({placeholder, onClose}: Props) => {
-  const {search, searchChanged, clearSearch} = useSearch()
+export const SearchHeader = ({placeholder}: Props) => {
+  const {search, searchChanged} = useSearch()
 
   return (
-    <SearchBar
+    <TextInput
+      autoFocus
+      value={search}
       placeholder={placeholder}
       onChangeText={(search) => searchChanged(search)}
-      value={search}
-      onClearPress={clearSearch}
-      onBackPress={onClose}
+      style={{flex: 1}}
     />
   )
 }
@@ -67,17 +59,8 @@ const SearchButton = (props: TouchableOpacityProps) => (
   </TouchableOpacity>
 )
 
-const styles = StyleSheet.create({
-  disableFlex: {
-    flex: undefined,
-    flexGrow: undefined,
-    flexBasis: undefined,
-    flexShrink: undefined,
-  },
-  headerTitleContainer: {
-    flex: 1,
-    marginHorizontal: undefined,
-    maxWidth: undefined,
-    alignItems: 'center',
-  },
-})
+const CloseButton = (props: TouchableOpacityProps) => (
+  <TouchableOpacity {...props} hitSlop={{top: 100, left: 100, right: 100, bottom: 100}}>
+    <Icon.Cross size={20} />
+  </TouchableOpacity>
+)

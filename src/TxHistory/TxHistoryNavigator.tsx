@@ -165,7 +165,7 @@ const messages = defineMessages({
   },
   selectedTokensTitle: {
     id: 'components.send.selectedtokensscreen.title',
-    defaultMessage: '!!!Selected tokens',
+    defaultMessage: '!!!Assets Addeds',
   },
   editTokenAmountTitle: {
     id: 'components.send.edittokenamountscreen.title',
