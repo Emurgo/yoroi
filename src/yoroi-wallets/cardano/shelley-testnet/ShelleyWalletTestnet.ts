@@ -864,19 +864,8 @@ export class ShelleyWalletTestnet implements YoroiWallet {
   }
 
   // TODO: caching
-  fetchNfts(): Promise<YoroiNft[]> {
-    const utxos = this.utxos
-    const assets = utxos.flatMap((utxo) => utxo.assets ?? [])
-
-    if (assets.length === 0) {
-      return Promise.resolve([])
-    }
-
-    return api.getNFTs(assets, BACKEND)
-  }
-
-  fetchNft(id: string) {
-    return api.getNft(id, BACKEND)
+  fetchNfts(ids): Promise<YoroiNft[]> {
+    return api.getNFTs(ids, BACKEND)
   }
 
   // TODO: caching

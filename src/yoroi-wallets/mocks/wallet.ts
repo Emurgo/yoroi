@@ -79,9 +79,6 @@ const wallet: YoroiWallet = {
   fetchNfts() {
     throw new Error('not implemented: fetchNfts')
   },
-  fetchNft() {
-    throw new Error('not implemented: fetchNft')
-  },
   fetchNftModerationStatus() {
     throw new Error('not implemented: fetchNftModerationStatus')
   },
@@ -299,20 +296,23 @@ const fetchNfts = {
   success: {
     many: async (...args) => {
       action('fetchNfts')(...args)
-      const nfts = Array(30)
-        .fill(undefined)
-        .map((_, index) => ({
-          ...nft,
-          name: 'NFT ' + index,
-          id: `${nft.metadata.policyId}.${asciiToHex('NFT ' + index)}`,
-          fingerprint: getTokenFingerprint({policyId: nft.metadata.policyId, assetNameHex: asciiToHex('NFT ' + index)}),
-          metadata: {...nft.metadata, policyId: nft.metadata.policyId, assetNameHex: asciiToHex('NFT ' + index)},
-        }))
       return nfts
     },
     empty: async (...args) => {
       action('fetchNfts')(...args)
       return []
+    },
+    emptyAndLaterFound: async (ids: string[]) => {
+      return ids.length === 1 && ids[0] === nft.id ? [nft] : []
+    },
+    emptyAndLaterNotFound: async (ids: string[]) => {
+      return ids.length === 1 && ids[0] === nft.id ? [] : []
+    },
+    emptyAndLaterPending: async (ids: string[]): Promise<YoroiNft[]> => {
+      return ids.length === 1 && ids[0] === nft.id ? new Promise(() => null) : []
+    },
+    emptyAndLaterError: async (ids: string[]): Promise<YoroiNft[]> => {
+      return ids.length === 1 && ids[0] === nft.id ? Promise.reject(new Error('storybook error message')) : []
     },
     one: async (...args) => {
       action('fetchNfts')(...args)
@@ -326,27 +326,6 @@ const fetchNfts = {
   loading: async (...args) => {
     action('fetchNfts')(...args)
     return new Promise(() => null) as unknown as YoroiNft[]
-  },
-}
-
-const fetchNft = {
-  success: {
-    notFound: async (...args) => {
-      action('fetchNft')(...args)
-      return null
-    },
-    found: async (...args) => {
-      action('fetchNft')(...args)
-      return nft
-    },
-  },
-  error: async (...args) => {
-    action('fetchNft')(...args)
-    return Promise.reject(new Error('storybook error message'))
-  },
-  loading: async (...args) => {
-    action('fetchNft')(...args)
-    return new Promise(() => null) as unknown as YoroiNft
   },
 }
 
@@ -833,6 +812,16 @@ export const nft: YoroiNft = {
   },
 }
 
+const nfts = Array(30)
+  .fill(undefined)
+  .map((_, index) => ({
+    ...nft,
+    name: 'NFT ' + index,
+    id: `${nft.metadata.policyId}.${asciiToHex('NFT ' + index)}`,
+    fingerprint: getTokenFingerprint({policyId: nft.metadata.policyId, assetNameHex: asciiToHex('NFT ' + index)}),
+    metadata: {...nft.metadata, policyId: nft.metadata.policyId, assetNameHex: asciiToHex('NFT ' + index)},
+  }))
+
 export const mocks = {
   walletMeta,
   wallet,
@@ -854,7 +843,6 @@ export const mocks = {
   utxos,
   fetchCurrentPrice,
   fetchNfts,
-  fetchNft,
   fetchNftModerationStatus,
   txid,
   getTransactions,

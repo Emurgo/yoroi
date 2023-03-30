@@ -26,8 +26,7 @@ storiesOf('NFT/Details', module)
   .add('NFT not found in the wallet and loading details', () => {
     const wallet = {
       ...mocks.wallet,
-      fetchNfts: mocks.fetchNfts.success.empty,
-      fetchNft: mocks.fetchNft.loading,
+      fetchNfts: mocks.fetchNfts.success.emptyAndLaterPending,
       fetchNftModerationStatus: mocks.fetchNftModerationStatus.success.approved,
     }
     return (
@@ -43,8 +42,7 @@ storiesOf('NFT/Details', module)
   .add('NFT not found in the wallet and loaded successfully', () => {
     const wallet = {
       ...mocks.wallet,
-      fetchNfts: mocks.fetchNfts.success.empty,
-      fetchNft: mocks.fetchNft.success.found,
+      fetchNfts: mocks.fetchNfts.success.emptyAndLaterFound,
       fetchNftModerationStatus: mocks.fetchNftModerationStatus.success.approved,
     }
     return (
@@ -60,8 +58,7 @@ storiesOf('NFT/Details', module)
   .add('NFT not found in the wallet and metadata not found', () => {
     const wallet = {
       ...mocks.wallet,
-      fetchNfts: mocks.fetchNfts.success.empty,
-      fetchNft: mocks.fetchNft.success.notFound,
+      fetchNfts: mocks.fetchNfts.success.emptyAndLaterNotFound,
       fetchNftModerationStatus: mocks.fetchNftModerationStatus.success.approved,
     }
     return (
@@ -77,8 +74,7 @@ storiesOf('NFT/Details', module)
   .add('NFT not found in the wallet and error loading metadata', () => {
     const wallet = {
       ...mocks.wallet,
-      fetchNfts: mocks.fetchNfts.success.empty,
-      fetchNft: mocks.fetchNft.error,
+      fetchNfts: mocks.fetchNfts.success.emptyAndLaterError,
       fetchNftModerationStatus: mocks.fetchNftModerationStatus.success.approved,
     }
     return (

@@ -88,19 +88,20 @@ export const getPoolInfo = (request: PoolInfoRequest, config: BackendConfig): Pr
   return fetchDefault('pool/info', request, config)
 }
 
-export const getNFTs = async (
-  assets: Array<{name: string; policyId: string}>,
-  config: BackendConfig,
-): Promise<YoroiNft[]> => {
-  const request = {assets: assets.map((asset) => ({nameHex: asset.name, policy: asset.policyId}))}
-  const response = await fetchDefault('multiAsset/metadata', request, config)
+export const getNFTs = async (ids: string[], config: BackendConfig): Promise<YoroiNft[]> => {
+  if (ids.length === 0) {
+    return []
+  }
+  const assets = ids.map((id) => {
+    const [policy, nameHex] = id.split('.')
+    return {policy, nameHex}
+  })
+  const response = await fetchDefault('multiAsset/metadata', {assets}, config)
   return parseNFTs(response, config.NFT_STORAGE_URL)
 }
 
 export const getNft = async (id: string, config: BackendConfig): Promise<YoroiNft | null> => {
-  const [policyId, name] = id.split('.')
-  const asset = {name, policyId}
-  const response = await getNFTs([asset], config)
+  const response = await getNFTs([id], config)
   return response[0] ?? null
 }
 

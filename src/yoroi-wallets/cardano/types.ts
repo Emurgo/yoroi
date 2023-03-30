@@ -126,8 +126,7 @@ export type YoroiWallet = {
   generateNewReceiveAddressIfNeeded(): boolean
 
   // NFTs
-  fetchNfts(): Promise<YoroiNft[]>
-  fetchNft(id: string): Promise<YoroiNft | null>
+  fetchNfts(ids: string[]): Promise<YoroiNft[]>
   fetchNftModerationStatus(fingerprint: string): Promise<YoroiNftModerationStatus>
 
   // Sync, Save

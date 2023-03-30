@@ -23,6 +23,7 @@ import {parseWalletMeta} from '../migrations/walletMeta'
 import {useStorage} from '../storage'
 import {
   Quantity,
+  RemoteAsset,
   TokenInfo,
   TRANSACTION_DIRECTION,
   TRANSACTION_STATUS,
@@ -116,6 +117,11 @@ export const useUtxos = (wallet: YoroiWallet) => {
   useWallet(wallet, 'utxos')
 
   return wallet.utxos
+}
+
+export const useAssets = (wallet: YoroiWallet): RemoteAsset[] => {
+  const utxos = useUtxos(wallet)
+  return utxos.flatMap((utxo) => utxo.assets)
 }
 
 /**
@@ -878,6 +884,7 @@ export const useSaveMemo = (
 }
 
 export const useNfts = (wallet: YoroiWallet, options: UseQueryOptions<YoroiNft[], Error> = {}) => {
+  const assets = useAssets(wallet)
   const {data, refetch, ...rest} = useQuery({
     ...options,
     refetchOnMount: false,
@@ -886,7 +893,7 @@ export const useNfts = (wallet: YoroiWallet, options: UseQueryOptions<YoroiNft[]
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
     queryKey: [wallet.id, 'nfts'],
-    queryFn: () => wallet.fetchNfts(),
+    queryFn: () => wallet.fetchNfts(assets.map((a) => a.assetId)),
   })
   const eventCallback = useCallback(() => refetch(), [refetch])
   useWalletEvent(wallet, 'utxos', eventCallback)
@@ -899,7 +906,7 @@ export const useNft = (wallet: YoroiWallet, {id}: {id: string}): YoroiNft => {
 
   const {data: freshNft} = useQuery({
     queryKey: [wallet.id, 'nfts', id],
-    queryFn: () => wallet.fetchNft(id),
+    queryFn: () => wallet.fetchNfts([id]).then((r) => r[0]),
     enabled: !nft,
     suspense: true,
   })
