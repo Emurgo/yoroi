@@ -904,9 +904,14 @@ export const useNft = (wallet: YoroiWallet, {id}: {id: string}): YoroiNft => {
   const {nfts} = useNfts(wallet, {suspense: true})
   const nft = nfts.find((nft) => nft.id === id)
 
+  const fetchNft = async (id: string) => {
+    const [nft] = await wallet.fetchNfts([id])
+    return nft
+  }
+
   const {data: freshNft} = useQuery({
     queryKey: [wallet.id, 'nfts', id],
-    queryFn: () => wallet.fetchNfts([id]).then((r) => r[0]),
+    queryFn: () => fetchNft(id),
     enabled: !nft,
     suspense: true,
   })
