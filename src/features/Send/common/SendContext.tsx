@@ -26,7 +26,7 @@ type SendActions = {
   memoChanged: (memo: string) => void
 }
 
-export const combinedReducers = (state: SendState, action: SendAction | TargetAction) => {
+const combinedReducers = (state: SendState, action: SendAction | TargetAction) => {
   return {
     ...sendReducer(
       {
