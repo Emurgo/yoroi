@@ -28,6 +28,10 @@ type Guard<Params> = (params: Params | object) => params is Params
 
 // OPTIONS
 export const defaultStackNavigationOptionsV2: StackNavigationOptions = {
+  headerTitleStyle: {
+    fontSize: 16,
+    fontFamily: 'Rubik-Medium',
+  },
   headerTintColor: COLORS.ERROR_TEXT_COLOR_DARK,
   headerStyle: {
     elevation: 0,
