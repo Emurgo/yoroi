@@ -38,6 +38,12 @@ export const defaultStackNavigationOptionsV2: StackNavigationOptions = {
     alignItems: 'center',
     flex: 1,
   },
+  headerLeftContainerStyle: {
+    paddingLeft: Platform.OS === 'ios' ? 8 : undefined,
+  },
+  headerRightContainerStyle: {
+    paddingRight: Platform.OS === 'ios' ? 8 : undefined,
+  },
 }
 
 export const defaultStackNavigationOptions: StackNavigationOptions = {
