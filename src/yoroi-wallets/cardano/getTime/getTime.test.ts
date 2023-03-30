@@ -1,5 +1,5 @@
+import {GENESIS_DATE} from '../constants/mainnet/constants'
 import {getTime} from './getTime'
-import {GENESIS_DATE} from './shelley/constants'
 
 describe('getTime', () => {
   test('genesis', () => {

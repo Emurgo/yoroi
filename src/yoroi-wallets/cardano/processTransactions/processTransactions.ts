@@ -2,7 +2,7 @@
 import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
 
-import {Logger} from '../logging'
+import {Logger} from '../../logging'
 import {
   BaseAsset,
   CERTIFICATE_KIND,
@@ -14,9 +14,9 @@ import {
   TRANSACTION_STATUS,
   TRANSACTION_TYPE,
   TransactionInfo,
-} from '../types'
-import {getDefaultNetworkTokenEntry, MultiToken, strToDefaultMultiAsset} from './MultiToken'
-import {multiTokenFromRemote} from './utils'
+} from '../../types'
+import {getDefaultNetworkTokenEntry, MultiToken, strToDefaultMultiAsset} from '../MultiToken'
+import {multiTokenFromRemote} from '../utils'
 
 export const ASSURANCE_LEVELS = {
   LOW: 3,

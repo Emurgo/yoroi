@@ -1,8 +1,8 @@
-import {MultiToken} from '..'
-import {RawTransaction, TRANSACTION_DIRECTION} from '../types/other'
-import {processTxHistoryData} from './processTransactions'
-import {NETWORK_ID, PRIMARY_TOKEN} from './shelley-testnet/constants'
-import {toCachedTx} from './transactionManager'
+import {MultiToken} from '../..'
+import {RawTransaction, TRANSACTION_DIRECTION} from '../../types/other'
+import {NETWORK_ID, PRIMARY_TOKEN} from '../constants/testnet/constants'
+import {toCachedTx} from '../transactionManager'
+import {processTxHistoryData} from '.'
 
 //
 // addresses from:

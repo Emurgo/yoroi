@@ -2,8 +2,11 @@
 import {BigNumber} from 'bignumber.js'
 
 import {CardanoTypes} from '../cardano'
+import {
+  WALLET_CONFIG as HASKELL_SHELLEY,
+  WALLET_CONFIG_24 as HASKELL_SHELLEY_24,
+} from '../cardano/constants/mainnet/constants'
 import {MultiToken, TokenEntryPlain} from '../cardano/MultiToken'
-import {WALLET_CONFIG as HASKELL_SHELLEY, WALLET_CONFIG_24 as HASKELL_SHELLEY_24} from '../cardano/shelley/constants'
 import {RemoteAccountState, RemoteCertificateMeta} from './staking'
 import {Token} from './tokens'
 

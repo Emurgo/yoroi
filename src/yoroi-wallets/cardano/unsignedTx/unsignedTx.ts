@@ -1,7 +1,7 @@
-import {Quantity, YoroiAmounts, YoroiEntries, YoroiMetadata, YoroiUnsignedTx, YoroiVoting} from '../types'
-import {Amounts, Entries, Quantities} from '../utils'
-import {Cardano, CardanoMobile, CardanoTypes} from '.'
-import {CardanoHaskellShelleyNetwork} from './networks'
+import {Quantity, YoroiAmounts, YoroiEntries, YoroiMetadata, YoroiUnsignedTx, YoroiVoting} from '../../types'
+import {Amounts, Entries, Quantities} from '../../utils'
+import {Cardano, CardanoMobile, CardanoTypes} from '../'
+import {CardanoHaskellShelleyNetwork} from '../networks'
 
 export const yoroiUnsignedTx = async ({
   unsignedTx,

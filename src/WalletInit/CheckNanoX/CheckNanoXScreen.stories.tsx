@@ -3,7 +3,7 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
 import {WalletInitRoutes} from '../../navigation'
-import {NETWORK_ID, WALLET_IMPLEMENTATION_ID} from '../../yoroi-wallets/cardano/shelley-testnet/constants'
+import {NETWORK_ID, WALLET_IMPLEMENTATION_ID} from '../../yoroi-wallets/cardano/constants/testnet/constants'
 import {CheckNanoXScreen} from './CheckNanoXScreen'
 
 storiesOf('CheckNanoXScreen', module)
