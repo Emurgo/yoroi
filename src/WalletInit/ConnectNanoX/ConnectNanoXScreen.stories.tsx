@@ -2,7 +2,7 @@ import {NavigationRouteContext} from '@react-navigation/native'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {NETWORK_ID, WALLET_IMPLEMENTATION_ID} from '../../yoroi-wallets/cardano/shelley-testnet/constants'
+import {NETWORK_ID, WALLET_IMPLEMENTATION_ID} from '../../yoroi-wallets/cardano/constants/testnet/constants'
 import {ConnectNanoXScreen} from './ConnectNanoXScreen'
 
 const devices = [

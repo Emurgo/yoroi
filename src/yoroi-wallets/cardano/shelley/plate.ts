@@ -5,9 +5,9 @@ import type {NetworkId} from '../../types/other'
 import {PlateResponse} from '../../types/other'
 import {getMasterKeyFromMnemonic} from '../byron/util'
 import {AddressGenerator} from '../chain'
+import {WALLET_IMPLEMENTATION_ID} from '../constants/mainnet/constants'
 import {AddressType} from '../formatPath'
 import {NUMBERS} from '../numbers'
-import {WALLET_IMPLEMENTATION_ID} from './constants'
 
 export const generateShelleyPlateFromKey = async (
   key: string,

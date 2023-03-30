@@ -4,13 +4,6 @@ import {SendToken} from '@emurgo/yoroi-lib'
 import {BigNumber} from 'bignumber.js'
 
 import {
-  NETWORK_ID as mainnetId,
-  WALLET_CONFIG as HASKELL_SHELLEY,
-  WALLET_CONFIG_24 as HASKELL_SHELLEY_24,
-} from '../cardano/shelley/constants'
-import {NETWORK_ID as testnetId} from '../cardano/shelley-testnet/constants'
-import {Token, YoroiAmount, YoroiAmounts} from '../types'
-import {
   Addressing,
   BaseAsset,
   DERIVATION_TYPES,
@@ -19,6 +12,8 @@ import {
   WALLET_IMPLEMENTATION_REGISTRY,
   WalletImplementationId,
 } from '../types/other'
+import {Token} from '../types/tokens'
+import {YoroiAmount, YoroiAmounts} from '../types/types'
 import {Amounts} from '../utils'
 import {
   asciiToHex,
@@ -31,6 +26,12 @@ import {
   toPolicyId,
   WalletImplementation,
 } from '.'
+import {
+  NETWORK_ID as mainnetId,
+  WALLET_CONFIG as HASKELL_SHELLEY,
+  WALLET_CONFIG_24 as HASKELL_SHELLEY_24,
+} from './constants/mainnet/constants'
+import {NETWORK_ID as testnetId} from './constants/testnet/constants'
 import {NUMBERS} from './numbers'
 
 export const normalizeToAddress = async (addr: string) => {
@@ -281,8 +282,7 @@ export const toCardanoNetworkId = (networkId: number) => {
 }
 
 export const toSendTokenList = (amounts: YoroiAmounts, primaryToken: Token): Array<SendToken> => {
-  const asSendToken = toSendToken(primaryToken)
-  return Amounts.toArray(amounts).map(asSendToken)
+  return Amounts.toArray(amounts).map(toSendToken(primaryToken))
 }
 
 export const toSendToken =

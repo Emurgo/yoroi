@@ -1,5 +1,5 @@
 import {WALLET_IMPLEMENTATION_REGISTRY} from '../../types'
-import {WALLET_CONFIG as HASKELL_SHELLEY, WALLET_CONFIG_24 as HASKELL_SHELLEY_24} from '../shelley/constants'
+import {WALLET_CONFIG as HASKELL_SHELLEY, WALLET_CONFIG_24 as HASKELL_SHELLEY_24} from '../constants/mainnet/constants'
 import {formatPath} from './formatPath'
 
 test('Can format address', () => {

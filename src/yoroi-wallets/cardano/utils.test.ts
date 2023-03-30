@@ -1,7 +1,7 @@
 import {SendToken} from '@emurgo/yoroi-lib'
 
 import {Token, YoroiAmounts} from '../types'
-import {PRIMARY_TOKEN} from './shelley/constants'
+import {PRIMARY_TOKEN} from './constants/mainnet/constants'
 import {toSendToken, toSendTokenList} from './utils'
 
 describe('toSendTokenList', () => {
