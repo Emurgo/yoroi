@@ -1,4 +1,4 @@
-import {GENESIS_DATE} from './shelley/constants'
+import {GENESIS_DATE} from '../constants/mainnet/constants'
 
 export const getTime = (currentTimeMS: number) => {
   // mainnet

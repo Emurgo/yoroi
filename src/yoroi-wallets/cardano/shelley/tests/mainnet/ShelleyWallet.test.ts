@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-import {HWDeviceInfo} from '../../hw'
-import {EncryptedStorage, EncryptedStorageKeys, storage} from '../../storage'
-import {WalletMeta} from '../../walletManager'
-import {ShelleyAddressGeneratorJSON} from '../chain'
-import {YoroiWallet} from '../types'
-import {ShelleyWallet, WalletJSON} from './ShelleyWallet'
+import {HWDeviceInfo} from '../../../../hw'
+import {EncryptedStorage, EncryptedStorageKeys, storage} from '../../../../storage'
+import {WalletMeta} from '../../../../walletManager'
+import {ShelleyAddressGeneratorJSON} from '../../../chain'
+import {YoroiWallet} from '../../../types'
+import {WalletJSON} from '../../ShelleyWallet'
+import {ShelleyWalletMainnet} from '../../wallets'
 
 describe('ShelleyWallet', () => {
   afterEach(() => AsyncStorage.clear())
@@ -16,7 +17,7 @@ describe('ShelleyWallet', () => {
       'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon oak'
     const password = 'password'
 
-    const wallet: YoroiWallet & Record<string, any> = await ShelleyWallet.create({
+    const wallet: YoroiWallet & Record<string, any> = await ShelleyWalletMainnet.create({
       id: walletMeta.id,
       mnemonic,
       storage: storage.join(`${walletMeta.id}/`),
@@ -126,7 +127,7 @@ describe('ShelleyWallet', () => {
     const password = 'password'
     await EncryptedStorage.write(EncryptedStorageKeys.rootKey(walletMeta.id), rootKey, password)
 
-    const wallet: YoroiWallet & Record<string, any> = await ShelleyWallet.restore({
+    const wallet: YoroiWallet & Record<string, any> = await ShelleyWalletMainnet.restore({
       storage: storage.join(`${walletMeta.id}/`),
       walletMeta,
     })
@@ -241,7 +242,7 @@ describe('ShelleyWallet', () => {
     }
     const isReadOnly = false
 
-    const wallet: YoroiWallet & Record<string, any> = await ShelleyWallet.createBip44({
+    const wallet: YoroiWallet & Record<string, any> = await ShelleyWalletMainnet.createBip44({
       id: walletMeta.id,
       accountPubKeyHex,
       storage: storage.join(`${walletMeta.id}/`),

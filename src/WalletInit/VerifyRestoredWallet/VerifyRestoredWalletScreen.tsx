@@ -12,7 +12,7 @@ import {generateByronPlateFromMnemonics} from '../../yoroi-wallets/cardano/byron
 import {
   WALLET_CONFIG as HASKELL_SHELLEY,
   WALLET_CONFIG_24 as HASKELL_SHELLEY_24,
-} from '../../yoroi-wallets/cardano/shelley/constants'
+} from '../../yoroi-wallets/cardano/constants/mainnet/constants'
 import {generateShelleyPlateFromMnemonics} from '../../yoroi-wallets/cardano/shelley/plate'
 import {WalletAddress} from '../WalletAddress'
 
