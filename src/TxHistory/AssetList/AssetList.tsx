@@ -3,7 +3,7 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Alert, Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 
-import {AssetItem, AssetItemProps} from '../../components/AssetItem'
+import {AmountItem, AmountItemProps} from '../../components/AmountItem/AmountItem'
 import {Spacer} from '../../components/Spacer'
 import globalMessages, {actionMessages} from '../../i18n/global-messages'
 import {useSelectedWallet} from '../../SelectedWallet'
@@ -65,13 +65,13 @@ export const AssetList = (props: Props) => {
   )
 }
 
-type ExplorableAssetItemProps = AssetItemProps & {
+type ExplorableAssetItemProps = AmountItemProps & {
   onPress(): void
 }
 const ExplorableAssetItem = ({wallet, amount, onPress}: ExplorableAssetItemProps) => {
   return (
     <TouchableOpacity style={styles.button} onPress={onPress} testID="assetSelectorItem">
-      <AssetItem wallet={wallet} amount={amount} />
+      <AmountItem wallet={wallet} amount={amount} />
     </TouchableOpacity>
   )
 }

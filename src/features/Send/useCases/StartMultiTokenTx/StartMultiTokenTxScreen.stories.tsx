@@ -10,7 +10,7 @@ import {mocks as sendMocks} from '../../common/mocks'
 import {SendProvider} from '../../common/SendContext'
 import {StartMultiTokenTxScreen} from './StartMultiTokenTxScreen'
 
-storiesOf('Send/StartMultiTokenTx', module)
+storiesOf('Start MultiToken Tx', module)
   .add('initial', () => <Initial />)
   .add('error invalid address', () => <ErrorInvalidAddress />)
   .add('error memo too long', () => <ErrorMemoTooLong />)

@@ -6,9 +6,9 @@ import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps} from 'react-n
 import {Boundary, Icon} from '../components'
 import {SendProvider} from '../features/Send/common/SendContext'
 import {ConfirmTxScreen} from '../features/Send/useCases/ConfirmTx/ConfirmTxScreen'
-import {SelectTokenFromListScreen} from '../features/Send/useCases/ListSelectedTokens/AddToken/SelectTokenFromListScreen'
-import {EditAmountScreen} from '../features/Send/useCases/ListSelectedTokens/EditAmount/EditAmountScreen'
-import {ListSelectedTokensScreen} from '../features/Send/useCases/ListSelectedTokens/ListSelectedTokensScreen'
+import {ListAmountsToSendScreen} from '../features/Send/useCases/ListAmountsToSend'
+import {SelectTokenFromListScreen} from '../features/Send/useCases/ListAmountsToSend/AddToken/SelectTokenFromListScreen'
+import {EditAmountScreen} from '../features/Send/useCases/ListAmountsToSend/EditAmount/EditAmountScreen'
 import {ReadQRCodeScreen} from '../features/Send/useCases/StartMultiTokenTx/InputReceiver/ReadQRCodeScreen'
 import {StartMultiTokenTxScreen} from '../features/Send/useCases/StartMultiTokenTx/StartMultiTokenTxScreen'
 import {
@@ -105,15 +105,15 @@ export const TxHistoryNavigator = () => {
         </Stack.Screen>
 
         <Stack.Screen //
-          name="send-list-selected-tokens"
+          name="send-list-amounts-to-send"
           options={{
-            title: strings.selectedTokensTitle,
+            title: strings.listAmountsToSendTitle,
             ...sendOptions,
           }}
         >
           {() => (
             <Boundary>
-              <ListSelectedTokensScreen />
+              <ListAmountsToSendScreen />
             </Boundary>
           )}
         </Stack.Screen>
@@ -121,7 +121,7 @@ export const TxHistoryNavigator = () => {
         <Stack.Screen //
           name="send-edit-amount"
           options={{
-            title: strings.editTokenAmountTitle,
+            title: strings.editAmountTitle,
             ...sendOptions,
           }}
         >
@@ -175,17 +175,17 @@ const messages = defineMessages({
     id: 'components.send.selectasset.title',
     defaultMessage: '!!!Select asset',
   },
-  selectedTokensTitle: {
-    id: 'components.send.selectedtokensscreen.title',
+  listAmountsToSendTitle: {
+    id: 'components.send.listamountstosendscreen.title',
     defaultMessage: '!!!Selected tokens',
   },
-  editTokenAmountTitle: {
-    id: 'components.send.edittokenamountscreen.title',
-    defaultMessage: '!!!Selected tokens',
+  editAmountTitle: {
+    id: 'components.send.editamountscreen.title',
+    defaultMessage: '!!!Edit amount',
   },
   confirmTitle: {
     id: 'components.send.confirmscreen.title',
-    defaultMessage: '!!!Send',
+    defaultMessage: '!!!Confirm',
   },
   receiveInfoText: {
     id: 'components.receive.receivescreen.infoText',
@@ -206,8 +206,8 @@ const useStrings = () => {
     selectAssetTitle: intl.formatMessage(messages.selectAssetTitle),
     confirmTitle: intl.formatMessage(messages.confirmTitle),
     receiveInfoText: intl.formatMessage(messages.receiveInfoText),
-    editTokenAmountTitle: intl.formatMessage(messages.editTokenAmountTitle),
-    selectedTokensTitle: intl.formatMessage(messages.selectedTokensTitle),
+    editAmountTitle: intl.formatMessage(messages.editAmountTitle),
+    listAmountsToSendTitle: intl.formatMessage(messages.listAmountsToSendTitle),
   }
 }
 

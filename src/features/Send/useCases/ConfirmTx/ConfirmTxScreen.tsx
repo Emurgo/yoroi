@@ -26,7 +26,7 @@ export const ConfirmTxScreen = () => {
   const [password, setPassword] = React.useState('')
   const [useUSB, setUseUSB] = React.useState(false)
 
-  const {memo, resetForm, yoroiUnsignedTx, targets} = useSend()
+  const {memo, yoroiUnsignedTx, targets} = useSend()
 
   const {saveMemo} = useSaveMemo({wallet})
 
@@ -42,7 +42,6 @@ export const ConfirmTxScreen = () => {
     if (memo.length > 0) {
       saveMemo({txId: signedTx.signedTx.id, memo})
     }
-    resetForm()
   }
 
   const scrollViewRef = useFlashAndScroll()

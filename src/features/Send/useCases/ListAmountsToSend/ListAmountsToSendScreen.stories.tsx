@@ -2,15 +2,15 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
 import {SelectedWalletProvider} from '../../../../SelectedWallet'
-import {mocks} from '../../../../yoroi-wallets/mocks'
+import {mocks} from '../../../../yoroi-wallets/mocks/wallet'
 import {SendProvider} from '../../common/SendContext'
-import {ConfirmTxScreen} from './ConfirmTxScreen'
+import {ListAmountsToSendScreen} from './ListAmountsToSendScreen'
 
-storiesOf('Confirm Tx', module).add('initial', () => {
+storiesOf('List Amounts To Send', module).add('initial', () => {
   return (
     <SelectedWalletProvider wallet={mocks.wallet}>
       <SendProvider initialState={{}}>
-        <ConfirmTxScreen />
+        <ListAmountsToSendScreen />
       </SendProvider>
     </SelectedWalletProvider>
   )

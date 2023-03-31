@@ -4,7 +4,7 @@ import {View} from 'react-native'
 
 import {MaxTokensPerTx} from './MaxTokensPerTx'
 
-storiesOf('Send/ListSelectedTokens/MaxTokensPerTx', module).add('Default', () => (
+storiesOf('Max Tokens Per Tx', module).add('initial', () => (
   <View style={{justifyContent: 'center', padding: 16}}>
     <MaxTokensPerTx />
   </View>

@@ -12,7 +12,7 @@ import {
 } from 'react-native'
 
 import {Button, Spacer, TextInput} from '../../../../../components'
-import {AssetItem} from '../../../../../components/AssetItem'
+import {AmountItem} from '../../../../../components/AmountItem/AmountItem'
 import {TxHistoryRouteNavigation} from '../../../../../navigation'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
@@ -22,8 +22,7 @@ import {Logger} from '../../../../../yoroi-wallets/logging'
 import {Quantity} from '../../../../../yoroi-wallets/types'
 import {asQuantity, Quantities} from '../../../../../yoroi-wallets/utils'
 import {editedFormatter, pastedFormatter} from '../../../../../yoroi-wallets/utils/amountUtils'
-import {useTokenQuantities} from '../../../common/hooks'
-import {useSend} from '../../../common/SendContext'
+import {useSend, useTokenQuantities} from '../../../common/SendContext'
 import {useStrings} from '../../../common/strings'
 import {NoBalance} from './ShowError/NoBalance'
 import {UnableToSpend} from './ShowError/UnableToSpend'
@@ -62,7 +61,7 @@ export const EditAmountScreen = () => {
   }
   const onApply = (quantity: Quantity) => {
     amountChanged(Quantities.integer(quantity, tokenInfo.decimals))
-    navigation.navigate('send-list-selected-tokens')
+    navigation.navigate('send-list-amounts-to-send')
   }
 
   return (
@@ -75,7 +74,7 @@ export const EditAmountScreen = () => {
         <ScrollView style={styles.scrollView} bounces={false}>
           <Spacer height={16} />
 
-          <AssetItem amount={{quantity: available, tokenId: tokenInfo.id}} wallet={wallet} />
+          <AmountItem amount={{quantity: available, tokenId: tokenInfo.id}} wallet={wallet} />
 
           <Spacer height={40} />
 

@@ -7,7 +7,7 @@ import {SelectedWalletProvider} from '../../SelectedWallet'
 import {Amounts} from '../../yoroi-wallets'
 import {mocks} from '../../yoroi-wallets/mocks'
 import {Spacer} from '..'
-import {AssetItem} from './AssetItem'
+import {AmountItem} from './AmountItem'
 
 const primaryAmount = Amounts.getAmount(mocks.balances, mocks.wallet.primaryTokenInfo.id)
 const secondaryAmount = Amounts.getAmount(
@@ -15,14 +15,14 @@ const secondaryAmount = Amounts.getAmount(
   '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950',
 )
 
-storiesOf('Components/AssetItem', module)
+storiesOf('AmountItem', module)
   .add('Gallery', () => (
     <QueryProvider>
       <SelectedWalletProvider wallet={mocks.wallet}>
         <View style={{flex: 1, justifyContent: 'center', padding: 16}}>
           <Text>Fungible primary token</Text>
 
-          <AssetItem
+          <AmountItem
             wallet={mocks.wallet}
             amount={primaryAmount}
             style={{backgroundColor: 'white', padding: 16, borderRadius: 8}}
@@ -32,7 +32,7 @@ storiesOf('Components/AssetItem', module)
 
           <Text>Fungible non-primary token</Text>
 
-          <AssetItem
+          <AmountItem
             wallet={mocks.wallet}
             amount={secondaryAmount}
             style={{backgroundColor: 'white', padding: 16, borderRadius: 8}}
@@ -50,7 +50,7 @@ storiesOf('Components/AssetItem', module)
         }}
       >
         <View style={{flex: 1, justifyContent: 'center', padding: 16}}>
-          <AssetItem
+          <AmountItem
             wallet={mocks.wallet}
             amount={primaryAmount}
             style={{backgroundColor: 'white', padding: 16, borderRadius: 8}}
@@ -68,7 +68,7 @@ storiesOf('Components/AssetItem', module)
         }}
       >
         <View style={{flex: 1, justifyContent: 'center', padding: 16}}>
-          <AssetItem
+          <AmountItem
             wallet={mocks.wallet}
             amount={primaryAmount}
             style={{backgroundColor: 'white', padding: 16, borderRadius: 8}}

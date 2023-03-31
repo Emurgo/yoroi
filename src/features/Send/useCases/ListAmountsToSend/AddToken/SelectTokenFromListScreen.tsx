@@ -5,7 +5,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {LayoutAnimation, TouchableOpacity, View} from 'react-native'
 
 import {Boundary, Spacer, Text} from '../../../../../components'
-import {AssetItem} from '../../../../../components/AssetItem'
+import {AmountItem} from '../../../../../components/AmountItem/AmountItem'
 import globalMessages, {txLabels} from '../../../../../i18n/global-messages'
 import {TxHistoryRouteNavigation} from '../../../../../navigation'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
@@ -16,8 +16,7 @@ import {maxTokensPerTx} from '../../../../../yoroi-wallets/contants'
 import {useBalances, useTokenInfos} from '../../../../../yoroi-wallets/hooks'
 import {TokenInfo} from '../../../../../yoroi-wallets/types'
 import {Amounts, Quantities} from '../../../../../yoroi-wallets/utils'
-import {useSelectedTokensCounter, useTokenQuantities} from '../../../common/hooks'
-import {useSend} from '../../../common/SendContext'
+import {useSelectedTokensCounter, useSend, useTokenQuantities} from '../../../common/SendContext'
 import {InputSearch} from './InputSearch'
 import {MaxTokensPerTx} from './ShowError/MaxTokensPerTx'
 
@@ -94,15 +93,15 @@ const SelectableAssetItem = ({tokenInfo, disabled, wallet}: SelectableAssetItemP
     // if the balance is atomic there is no need to edit the amount
     if (Quantities.isAtomic(spendable, tokenInfo.decimals)) {
       amountChanged(spendable)
-      navigation.navigate('send-list-selected-tokens')
+      navigation.navigate('send-list-amounts-to-send')
     } else {
       navigation.navigate('send-edit-amount')
     }
   }
 
   return (
-    <TouchableOpacity style={{paddingVertical: 16}} onPress={onSelect} testID="assetSelectorItem" disabled={disabled}>
-      <AssetItem amount={{tokenId: tokenInfo.id, quantity: spendable}} wallet={wallet} />
+    <TouchableOpacity style={{paddingVertical: 16}} onPress={onSelect} testID="selectTokenButton" disabled={disabled}>
+      <AmountItem amount={{tokenId: tokenInfo.id, quantity: spendable}} wallet={wallet} />
     </TouchableOpacity>
   )
 }

@@ -8,12 +8,12 @@ import {YoroiAmount} from '../../yoroi-wallets/types'
 import {Quantities} from '../../yoroi-wallets/utils'
 import {Boundary, Placeholder, Text, TokenIcon} from '..'
 
-export type AssetItemProps = {
+export type AmountItemProps = {
   wallet: YoroiWallet
   amount: YoroiAmount
   style?: ViewProps['style']
 }
-export const AssetItem = ({wallet, style, amount}: AssetItemProps) => {
+export const AmountItem = ({wallet, style, amount}: AmountItemProps) => {
   const {quantity, tokenId} = amount
   const tokenInfo = useTokenInfo({wallet, tokenId})
 

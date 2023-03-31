@@ -5,8 +5,8 @@ import {View} from 'react-native'
 
 import {AddTokenButton} from './AddToken'
 
-storiesOf('Send/ListSelectedTokens/AddToken', module).add('Default', () => (
+storiesOf('Add Token Button', module).add('initial', () => (
   <View style={{justifyContent: 'center', padding: 16}}>
-    <AddTokenButton onPress={() => action(`onPress address`)} />
+    <AddTokenButton onPress={() => action(`onPress`)} />
   </View>
 ))

@@ -1,6 +1,9 @@
 import * as React from 'react'
 
+import {useSelectedWallet} from '../../../SelectedWallet/Context/SelectedWalletContext'
+import {useBalance, useLockedAmount} from '../../../yoroi-wallets/hooks'
 import {Address, Quantity, YoroiTarget, YoroiUnsignedTx} from '../../../yoroi-wallets/types'
+import {Amounts, Quantities} from '../../../yoroi-wallets/utils/utils'
 
 export type SendState = {
   selectedTargetIndex: number
@@ -224,4 +227,58 @@ export const initialState: SendState = {
       },
     },
   ],
+}
+
+export const useTokenQuantities = (tokenId: string) => {
+  const wallet = useSelectedWallet()
+  const {targets, selectedTargetIndex} = useSend()
+  const initialQuantity = Amounts.getAmount(targets[selectedTargetIndex].entry.amounts, tokenId).quantity
+
+  const balance = useBalance({wallet, tokenId})
+  const used = getTotalUsedByOtherTargets({targets, selectedTokenId: tokenId, selectedTargetIndex})
+  const available = Quantities.diff(balance, used)
+
+  const isPrimary = tokenId === wallet.primaryTokenInfo.id
+  const primaryLocked = useLockedAmount({wallet})
+  const locked = isPrimary ? primaryLocked : Quantities.zero
+
+  const spendable = Quantities.diff(available, locked)
+
+  return {
+    balance,
+    used,
+    available,
+    initialQuantity,
+    locked,
+    spendable,
+  }
+}
+
+/**
+ * @summary Returns the total amount of tokens used by other targets
+ * @returns Quantity
+ */
+const getTotalUsedByOtherTargets = ({
+  targets,
+  selectedTargetIndex,
+  selectedTokenId,
+}: {
+  targets: Array<YoroiTarget>
+  selectedTargetIndex: number
+  selectedTokenId: string
+}) => {
+  const isNotTheSelectedTarget = (_, index) => index !== selectedTargetIndex
+  return targets.filter(isNotTheSelectedTarget).reduce((acc, target) => {
+    const quantity = Amounts.getAmount(target.entry.amounts, selectedTokenId).quantity
+    return Quantities.sum([acc, quantity])
+  }, Quantities.zero)
+}
+
+export const useSelectedTokensCounter = () => {
+  const {targets} = useSend()
+  const selectedTokensCounter = targets.reduce((acc, target) => {
+    return Amounts.toArray(target.entry.amounts).length + acc
+  }, 0)
+
+  return selectedTokensCounter
 }

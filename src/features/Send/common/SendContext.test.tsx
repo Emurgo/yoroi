@@ -1,13 +1,35 @@
 import {act, renderHook} from '@testing-library/react-hooks'
+import {fireEvent, render} from '@testing-library/react-native'
 import * as React from 'react'
+import {TextInput} from 'react-native'
 
+import {Button} from '../../../components/Button/Button'
 import {mocks} from '../../../yoroi-wallets/mocks'
 import {Amounts} from '../../../yoroi-wallets/utils/utils'
 import {initialState, SendProvider, useSend} from './SendContext'
 
 const wrapper = ({children}: {children: React.ReactNode}) => <SendProvider>{children}</SendProvider>
 
-describe('SendContext', () => {
+describe('SendContext :: ui', () => {
+  test('resetForm', () => {
+    const {getByTestId, getByText} = render(
+      <SendProvider>
+        <ResetFormTest />
+      </SendProvider>,
+    )
+
+    const memoInput = getByTestId('memoInput')
+    fireEvent.changeText(memoInput, 'Test memo')
+    expect(memoInput.props.value).toEqual('Test memo')
+
+    const resetButton = getByText('Reset')
+    fireEvent.press(resetButton)
+
+    expect(getByTestId('memoInput').props.value).toEqual('')
+  })
+})
+
+describe('SendContext :: hooks', () => {
   test('resetForm', () => {
     const {result} = renderHook(() => useSend(), {wrapper})
 
@@ -126,3 +148,15 @@ describe('SendContext', () => {
     expect(result.error).toEqual(Error('SendProvider is missing'))
   })
 })
+
+const ResetFormTest = () => {
+  const {memoChanged, resetForm, memo} = useSend()
+
+  return (
+    <>
+      <TextInput testID="memoInput" value={memo} onChangeText={memoChanged} />
+
+      <Button title="Reset" onPress={resetForm} />
+    </>
+  )
+}

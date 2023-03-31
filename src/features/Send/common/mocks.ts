@@ -1,5 +1,10 @@
+import {Amounts, asQuantity, Quantities} from '../../../yoroi-wallets'
+import {mocks as walletMocks} from '../../../yoroi-wallets/mocks/wallet'
 import {initialState} from './SendContext'
 
+const secondaryTokenId = '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950'
+const secondaryAmount = Amounts.getAmount(walletMocks.balances, secondaryTokenId)
+const primaryAmount = Amounts.getAmount(walletMocks.balances, walletMocks.wallet.primaryTokenInfo.id)
 export const mocks = {
   startTx: {
     error: {
@@ -27,13 +32,89 @@ export const mocks = {
         targets: [
           {
             ...initialState.targets[0],
-            receiver: 'x.com',
             entry: {
               ...initialState.targets[0].entry,
             },
           },
         ],
       },
+    },
+  },
+  editingAmount: {
+    adding: {
+      ...initialState,
+      selectedTokenId: walletMocks.wallet.primaryTokenInfo.id,
+      targets: [
+        {
+          ...initialState.targets[0],
+          entry: {
+            ...initialState.targets[0].entry,
+            amounts: {
+              [walletMocks.wallet.primaryTokenInfo.id]: Quantities.zero,
+            },
+          },
+        },
+      ],
+    },
+    initialQuantity: {
+      ...initialState,
+      selectedTokenId: walletMocks.wallet.primaryTokenInfo.id,
+      targets: [
+        {
+          ...initialState.targets[0],
+          entry: {
+            ...initialState.targets[0].entry,
+            amounts: {
+              [walletMocks.wallet.primaryTokenInfo.id]: asQuantity(50000),
+            },
+          },
+        },
+      ],
+    },
+    insuficientBalance: {
+      ...initialState,
+      selectedTokenId: secondaryTokenId,
+      targets: [
+        {
+          ...initialState.targets[0],
+          entry: {
+            ...initialState.targets[0].entry,
+            amounts: {
+              [secondaryTokenId]: Quantities.sum([secondaryAmount.quantity, asQuantity(1000)]),
+            },
+          },
+        },
+      ],
+    },
+    secondaryToken: {
+      ...initialState,
+      selectedTokenId: secondaryTokenId,
+      targets: [
+        {
+          ...initialState.targets[0],
+          entry: {
+            ...initialState.targets[0].entry,
+            amounts: {
+              [secondaryTokenId]: secondaryAmount.quantity,
+            },
+          },
+        },
+      ],
+    },
+    overSpendable: {
+      ...initialState,
+      selectedTokenId: walletMocks.wallet.primaryTokenInfo.id,
+      targets: [
+        {
+          ...initialState.targets[0],
+          entry: {
+            ...initialState.targets[0].entry,
+            amounts: {
+              [walletMocks.wallet.primaryTokenInfo.id]: Quantities.sum([primaryAmount.quantity, asQuantity(1000)]),
+            },
+          },
+        },
+      ],
     },
   },
 }

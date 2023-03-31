@@ -68,12 +68,8 @@
     "setupFiles": [
       "<rootDir>/jestSetup.ts"
     ],
-    "transform": {
-      "^.+\\.(js)$": "babel-jest",
-      "\\.(ts|tsx)$": "ts-jest"
-    },
     "transformIgnorePatterns": [
-      "node_modules/(?!(@react-native|react-native|react-native-iphone-x-helper|react-native-color-picker)/)"
+      "node_modules/(?!(jest-)?(@react-native|react-native|react-native-iphone-x-helper|react-native-color-picker)/)"
     ]
   },
   "resolutions": {

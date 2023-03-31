@@ -6,7 +6,7 @@ import {FlatList} from 'react-native-gesture-handler'
 import {useQuery, UseQueryOptions} from 'react-query'
 
 import {Boundary, Button, Spacer} from '../../../../components'
-import {AssetItem} from '../../../../components/AssetItem'
+import {AmountItem} from '../../../../components/AmountItem/AmountItem'
 import globalMessages from '../../../../i18n/global-messages'
 import {TxHistoryRouteNavigation} from '../../../../navigation'
 import {useSelectedWallet} from '../../../../SelectedWallet'
@@ -14,13 +14,13 @@ import {COLORS} from '../../../../theme'
 import {sortTokenInfos} from '../../../../utils'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {useTokenInfos} from '../../../../yoroi-wallets/hooks'
-import {TokenId, TokenInfo, YoroiAmount, YoroiEntry, YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
+import {TokenInfo, YoroiAmount, YoroiEntry, YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
 import {Amounts} from '../../../../yoroi-wallets/utils'
 import {useSend} from '../../common/SendContext'
 import {AddTokenButton} from './AddToken/AddToken'
-import {RemoveToken} from './RemoveToken'
+import {RemoveAmountButton} from './RemoveAmount'
 
-export const ListSelectedTokensScreen = () => {
+export const ListAmountsToSendScreen = () => {
   const navigateTo = useNavigateTo()
   const strings = useStrings()
 
@@ -45,27 +45,26 @@ export const ListSelectedTokensScreen = () => {
     },
   )
 
-  const onSelect = (tokenId: TokenId) => {
+  const onEdit = (tokenId: string) => {
     tokenSelectedChanged(tokenId)
-    navigateTo.editToken()
+    navigateTo.editAmount()
   }
-  const onDelete = (tokenId: TokenId) => {
+  const onRemove = (tokenId: string) => {
     // use case: redirect to add token screen if there is no token left
     if (selectedTokensCounter === 1) {
       navigateTo.addToken()
     }
     amountRemoved(tokenId)
   }
-  const onAdd = navigateTo.addToken
   const onNext = () => refetch()
 
   return (
     <View style={styles.container}>
-      <SelectedTokenList
+      <AmountsList
         data={tokens}
         renderItem={({item: {id}}: {item: TokenInfo}) => (
           <Boundary>
-            <SelectableToken amount={Amounts.getAmount(amounts, id)} onDelete={onDelete} onSelect={onSelect} />
+            <ActionableAmount amount={Amounts.getAmount(amounts, id)} onRemove={onRemove} onEdit={onEdit} />
           </Boundary>
         )}
         bounces={false}
@@ -77,7 +76,7 @@ export const ListSelectedTokensScreen = () => {
         <Row>
           <Spacer fill />
 
-          <AddTokenButton onPress={onAdd} />
+          <AddTokenButton onPress={navigateTo.addToken} />
         </Row>
 
         <Spacer height={33} />
@@ -88,24 +87,48 @@ export const ListSelectedTokensScreen = () => {
   )
 }
 
-type SelectableTokenProps = {
+type ActionableAmountProps = {
   amount: YoroiAmount
-  onSelect(tokenId: TokenId): void
-  onDelete(tokenId: TokenId): void
+  onEdit(tokenId: string): void
+  onRemove(tokenId: string): void
 }
-const SelectableToken = ({amount, onDelete, onSelect}: SelectableTokenProps) => {
+const ActionableAmount = ({amount, onRemove, onEdit}: ActionableAmountProps) => {
   const wallet = useSelectedWallet()
   const {tokenId} = amount
 
-  const handleDelete = () => onDelete(tokenId)
-  const handleSelect = () => onSelect(tokenId)
+  const handleRemove = () => onRemove(tokenId)
+  const handleEdit = () => onEdit(tokenId)
 
   return (
-    <RemoveToken onDelete={handleDelete} tokenId={tokenId}>
-      <TouchableOpacity style={{paddingVertical: 16}} onPress={handleSelect} testID="selectToken">
-        <AssetItem amount={amount} wallet={wallet} />
-      </TouchableOpacity>
-    </RemoveToken>
+    <View style={styles.amountItem} testID="amountItem">
+      <Left>
+        <EditAmountButton onPress={handleEdit}>
+          <AmountItem amount={amount} wallet={wallet} />
+        </EditAmountButton>
+      </Left>
+
+      <Right>
+        <RemoveAmountButton onPress={handleRemove} />
+      </Right>
+    </View>
+  )
+}
+
+const Left = ({style, ...props}: ViewProps) => <View style={[style, {flex: 1}]} {...props} />
+const Right = ({style, ...props}: ViewProps) => <View style={[style, {paddingLeft: 16}]} {...props} />
+const Actions = ({style, ...props}: ViewProps) => <View style={[style, styles.transparent]} {...props} />
+const Row = ({style, ...props}: ViewProps) => <View style={[style, styles.row]} {...props} />
+
+// use case: edit amount
+type EditAmountButtonProps = {
+  onPress(): void
+  children?: React.ReactNode
+}
+const EditAmountButton = ({onPress, children}: EditAmountButtonProps) => {
+  return (
+    <TouchableOpacity style={{paddingVertical: 16}} onPress={onPress} testID="editAmountButton">
+      {children}
+    </TouchableOpacity>
   )
 }
 
@@ -132,9 +155,6 @@ export const useSendTx = (
   }
 }
 
-const Actions = ({style, ...props}: ViewProps) => <View style={[style, styles.transparent]} {...props} />
-const Row = ({style, ...props}: ViewProps) => <View style={[style, styles.row]} {...props} />
-
 export const useStrings = () => {
   const intl = useIntl()
 
@@ -156,7 +176,7 @@ const useNavigateTo = () => {
 
   return {
     addToken: () => navigation.navigate('send-select-token-from-list'),
-    editToken: () => navigation.navigate('send-edit-amount'),
+    editAmount: () => navigation.navigate('send-edit-amount'),
     confirmTx: () => navigation.navigate('send-confirm-tx'),
   }
 }
@@ -174,7 +194,12 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.WHITE,
     paddingHorizontal: 16,
   },
+  amountItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
 })
 
 const NextButton = Button
-const SelectedTokenList = FlatList
+const AmountsList = FlatList

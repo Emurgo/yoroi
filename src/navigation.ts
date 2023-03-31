@@ -155,7 +155,7 @@ export type TxHistoryRoutes = {
   'send-select-token-from-list': undefined
   'send-read-qr-code': undefined
   'send-confirm-tx': undefined
-  'send-list-selected-tokens': undefined
+  'send-list-amounts-to-send': undefined
   'send-edit-amount': undefined
 }
 export type TxHistoryRouteNavigation = StackNavigationProp<TxHistoryRoutes>

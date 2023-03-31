@@ -91,7 +91,7 @@ const useNavigateTo = () => {
   const navigation = useNavigation<TxHistoryRouteNavigation>()
 
   return {
-    selectedTokens: () => navigation.navigate('send-list-selected-tokens'),
+    selectedTokens: () => navigation.navigate('send-list-amounts-to-send'),
     selectToken: () => navigation.navigate('send-select-token-from-list'),
   }
 }

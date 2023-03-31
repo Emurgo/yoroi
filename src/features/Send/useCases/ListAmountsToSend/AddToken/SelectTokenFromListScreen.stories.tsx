@@ -6,7 +6,7 @@ import {mocks} from '../../../../../yoroi-wallets/mocks/wallet'
 import {SendProvider} from '../../../common/SendContext'
 import {SelectTokenFromListScreen} from './SelectTokenFromListScreen'
 
-storiesOf('Send/SelectTokenFromList', module).add('Default', () => {
+storiesOf('Select Token From List', module).add('initial', () => {
   return (
     <SelectedWalletProvider wallet={mocks.wallet}>
       <SendProvider>
