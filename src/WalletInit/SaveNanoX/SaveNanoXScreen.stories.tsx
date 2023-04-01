@@ -3,16 +3,16 @@ import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {CONFIG} from '../../legacy/config'
 import {WalletInitRoutes} from '../../navigation'
 import {WalletManagerProvider} from '../../WalletManager'
 import {WalletManager, walletManager} from '../../yoroi-wallets'
+import {NETWORK_ID, WALLET_IMPLEMENTATION_ID} from '../../yoroi-wallets/cardano/constants/testnet/constants'
 import {NetworkError} from '../../yoroi-wallets/cardano/errors'
 import {SaveNanoXScreen} from './SaveNanoXScreen'
 
 const params: RouteProp<WalletInitRoutes, 'save-nano-x'>['params'] = {
-  networkId: CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
-  walletImplementationId: CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
+  networkId: NETWORK_ID,
+  walletImplementationId: WALLET_IMPLEMENTATION_ID,
   hwDeviceInfo: {
     bip44AccountPublic: '0x1',
     hwFeatures: {

@@ -6,7 +6,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {VotingRegistration as VotingRegistration} from './Catalyst'
 import {Icon, OfflineBanner} from './components'
 import {DashboardNavigator} from './Dashboard'
-import {isHaskellShelley, SHOW_NFT_GALLERY} from './legacy/config'
+import {features} from './features'
 import {MenuNavigator} from './Menu'
 import {WalletStackRoutes, WalletTabRoutes} from './navigation'
 import {NftDetailsNavigator} from './NftDetails/NftDetailsNavigator'
@@ -15,6 +15,7 @@ import {useSelectedWallet, WalletSelectionScreen} from './SelectedWallet'
 import {SettingsScreenNavigator} from './Settings'
 import {theme} from './theme'
 import {TxHistoryNavigator} from './TxHistory'
+import {isHaskellShelley} from './yoroi-wallets/cardano'
 
 const Tab = createBottomTabNavigator<WalletTabRoutes>()
 const WalletTabNavigator = () => {
@@ -51,7 +52,7 @@ const WalletTabNavigator = () => {
           }}
         />
 
-        {SHOW_NFT_GALLERY && (
+        {features.showNftGallery && (
           <Tab.Screen
             name="nfts"
             component={NftsNavigator}
@@ -111,7 +112,7 @@ export const WalletNavigator = () => (
 
     <Stack.Screen name="main-wallet-routes" component={WalletTabNavigator} />
 
-    {SHOW_NFT_GALLERY && <Stack.Screen name="nft-details-routes" component={NftDetailsNavigator} />}
+    {features.showNftGallery && <Stack.Screen name="nft-details-routes" component={NftDetailsNavigator} />}
 
     <Stack.Screen name="settings" component={SettingsScreenNavigator} />
 

@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import assert from 'assert'
 import _ from 'lodash'
 
-import assert from '../../../legacy/assert'
-import fetchDefault, {checkedFetch} from '../../../legacy/fetch'
-import {Logger} from '../../../legacy/logging'
+import {Logger} from '../../logging'
 import type {
   AccountStateRequest,
   AccountStateResponse,
@@ -24,6 +23,7 @@ import {hasProperties, isArray, isNonNullable, isObject, isRecord} from '../../u
 import {ServerStatus} from '..'
 import {ApiError} from '../errors'
 import {convertNft} from '../nfts'
+import fetchDefault, {checkedFetch} from './fetch'
 import {fallbackTokenInfo, tokenInfo, toTokenSubject} from './utils'
 
 type Addresses = Array<string>
@@ -38,10 +38,7 @@ export const fetchNewTxHistory = async (
   request: TxHistoryRequest,
   config: BackendConfig,
 ): Promise<{isLast: boolean; transactions: Array<RawTransaction>}> => {
-  assert.preconditionCheck(
-    request.addresses.length <= config.TX_HISTORY_MAX_ADDRESSES,
-    'fetchNewTxHistory: too many addresses',
-  )
+  assert(request.addresses.length <= config.TX_HISTORY_MAX_ADDRESSES, 'fetchNewTxHistory: too many addresses')
   const transactions = (await fetchDefault('v2/txs/history', request, config)) as Array<RawTransaction>
 
   return {
@@ -51,10 +48,7 @@ export const fetchNewTxHistory = async (
 }
 
 export const filterUsedAddresses = async (addresses: Addresses, config: BackendConfig): Promise<Addresses> => {
-  assert.preconditionCheck(
-    addresses.length <= config.FILTER_USED_MAX_ADDRESSES,
-    'filterUsedAddresses: too many addresses',
-  )
+  assert(addresses.length <= config.FILTER_USED_MAX_ADDRESSES, 'filterUsedAddresses: too many addresses')
   // Take a copy in case underlying data mutates during await
   const copy = [...addresses]
   const used: any = await fetchDefault('v2/addresses/filterUsed', {addresses: copy}, config)
@@ -77,10 +71,7 @@ export const getTransactions = async (
 }
 
 export const getAccountState = (request: AccountStateRequest, config: BackendConfig): Promise<AccountStateResponse> => {
-  assert.preconditionCheck(
-    request.addresses.length <= config.FETCH_UTXOS_MAX_ADDRESSES,
-    'getAccountState: too many addresses',
-  )
+  assert(request.addresses.length <= config.FETCH_UTXOS_MAX_ADDRESSES, 'getAccountState: too many addresses')
   return fetchDefault('account/state', request, config)
 }
 
@@ -238,13 +229,9 @@ function parseNFTs(value: unknown, storageUrl: string): YoroiNft[] {
       return null
     }
 
-    const [policyId, assetName] = id.split('.')
-    const nftMetadata = nftAsset.metadata?.[policyId]?.[assetName]
-
-    if (!nftMetadata || !nftMetadata.image) {
-      return null
-    }
-    return convertNft(nftMetadata, storageUrl, policyId, assetName)
+    const [policyId, shortName] = id.split('.')
+    const metadata = nftAsset.metadata?.[policyId]?.[shortName]
+    return convertNft({metadata, storageUrl, policyId, shortName: shortName})
   })
 
   return tokens.filter(isNonNullable)

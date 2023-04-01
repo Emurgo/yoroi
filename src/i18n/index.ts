@@ -1,29 +1,28 @@
-import 'moment/locale/ko'
-import 'moment/locale/ja'
-import 'moment/locale/zh-cn'
-import 'moment/locale/ru'
-import 'moment/locale/es'
-import 'moment/locale/id'
-import 'moment/locale/pt'
-import 'moment/locale/de'
-import 'moment/locale/fr'
-import 'moment/locale/it'
-import 'moment/locale/nl'
-import 'moment/locale/cs'
-import 'moment/locale/hu'
-import 'moment/locale/sk'
-import 'moment/locale/tl-ph'
-import 'moment/locale/uk'
 import 'moment/locale/bn'
+import 'moment/locale/cs'
+import 'moment/locale/de'
+import 'moment/locale/es'
+import 'moment/locale/fr'
+import 'moment/locale/hu'
+import 'moment/locale/id'
+import 'moment/locale/it'
+import 'moment/locale/ja'
+import 'moment/locale/ko'
+import 'moment/locale/nl'
+import 'moment/locale/pl'
+import 'moment/locale/pt'
+import 'moment/locale/ru'
+import 'moment/locale/sk'
+import 'moment/locale/sl'
 import 'moment/locale/sv'
 import 'moment/locale/sw'
-import 'moment/locale/pl'
-import 'moment/locale/sl'
+import 'moment/locale/tl-ph'
+import 'moment/locale/uk'
+import 'moment/locale/zh-cn'
 
 import BigNumber from 'bignumber.js'
 import moment from 'moment'
 
-import assert from '../legacy/assert'
 import {LanguageCode, LANGUAGES} from './languages'
 
 // note(v-almonacid): there is no distinction between trad vs simplified
@@ -39,7 +38,7 @@ const momentLocales = {
   [LANGUAGES.FRENCH]: 'fr',
   [LANGUAGES.GERMAN]: 'de',
   [LANGUAGES.HUNGARIAN]: 'hu',
-  [LANGUAGES.KENIAN]: 'sw',
+  [LANGUAGES.KENYAN]: 'sw',
   [LANGUAGES.INDONESIAN]: 'id',
   [LANGUAGES.ITALIAN]: 'it',
   [LANGUAGES.JAPANESE]: 'ja',
@@ -117,7 +116,7 @@ const numberLocales = {
   [LANGUAGES.INDONESIAN]: defaultCommaDecimalSeparatorFmt,
   [LANGUAGES.ITALIAN]: defaultCommaDecimalSeparatorFmt,
   [LANGUAGES.JAPANESE]: defaultNumberFmt,
-  [LANGUAGES.KENIAN]: defaultNumberFmt,
+  [LANGUAGES.KENYAN]: defaultNumberFmt,
   [LANGUAGES.KOREAN]: defaultNumberFmt,
   [LANGUAGES.POLISH]: defaultCommaDecimalSeparatorFmt,
   [LANGUAGES.RUSSIAN]: russianNumberFmt,
@@ -130,7 +129,6 @@ const numberLocales = {
 }
 
 export const updateLanguageSettings = (code: LanguageCode) => {
-  assert.assert(Object.values(LANGUAGES).includes(code), 'Unknown language', code)
   moment.locale(momentLocales[code])
 
   BigNumber.config({

@@ -2,17 +2,16 @@ import {useNavigation} from '@react-navigation/native'
 import _ from 'lodash'
 import React from 'react'
 import {useIntl} from 'react-intl'
-import {ActivityIndicator, Image, ScrollView, StyleSheet, View} from 'react-native'
-import {TouchableOpacity} from 'react-native-gesture-handler'
+import {ActivityIndicator, Image, StyleSheet, View} from 'react-native'
+import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, Checkbox, Spacer, StatusBar, Text, TextInput} from '../../components'
-import {useBalances, useHasPendingTx, useIsOnline, useTokenInfo, useUtxos} from '../../hooks'
-import {CONFIG} from '../../legacy/config'
+import {Button, Checkbox, KeyboardSpacer, Spacer, StatusBar, Text, TextInput} from '../../components'
+import {debugWalletInfo, features} from '../../features'
 import {formatTokenAmount, truncateWithEllipsis} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
-import {toToken} from '../../yoroi-wallets'
+import {toToken, useBalances, useHasPendingTx, useIsOnline, useTokenInfo, useUtxos} from '../../yoroi-wallets'
 import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
 import {Amounts, Quantities} from '../../yoroi-wallets/utils'
 import type {
@@ -89,10 +88,10 @@ export const SendScreen = () => {
     memo.length <= maxMemoLength
 
   React.useEffect(() => {
-    if (CONFIG.DEBUG.PREFILL_FORMS) {
+    if (features.prefillWalletInfo) {
       if (!__DEV__) throw new Error('using debug data in non-dev env')
-      receiverChanged(CONFIG.DEBUG.SEND_ADDRESS)
-      amountChanged(CONFIG.DEBUG.SEND_AMOUNT)
+      receiverChanged(debugWalletInfo.SEND_ADDRESS)
+      amountChanged(debugWalletInfo.SEND_AMOUNT)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -164,7 +163,7 @@ export const SendScreen = () => {
 
       <AvailableAmountBanner />
 
-      <ScrollView style={styles.content} keyboardDismissMode="on-drag" keyboardShouldPersistTaps="always">
+      <ScrollView bounces={false} style={styles.content}>
         <BalanceAfterTransaction yoroiUnsignedTx={yoroiUnsignedTx} />
 
         <Fee yoroiUnsignedTx={yoroiUnsignedTx} />
@@ -225,6 +224,8 @@ export const SendScreen = () => {
           testID="sendAllCheckbox"
         />
 
+        <KeyboardSpacer />
+
         {recomputing && (
           <View style={styles.indicator}>
             <ActivityIndicator size="large" color="black" />
@@ -259,6 +260,6 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
   },
   indicator: {
-    marginTop: 26,
+    paddingVertical: 26,
   },
 })

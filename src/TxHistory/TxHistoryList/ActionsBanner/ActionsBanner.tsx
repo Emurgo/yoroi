@@ -2,7 +2,7 @@ import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {Icon} from '../../../components'
-import features from '../../../features'
+import {features} from '../../../features'
 
 type Props = {
   onExport: () => void

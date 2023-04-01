@@ -2,19 +2,13 @@
 import ExtendableError from 'es6-error'
 import uuid from 'uuid'
 
-import {makeWalletEncryptedStorage} from '../../auth'
-import {Keychain} from '../../auth/Keychain'
-import {Logger} from '../../legacy/logging'
-import {isWalletMeta, migrateWalletMetas, parseWalletMeta} from '../../Storage/migrations/walletMeta'
-import {CardanoTypes, isYoroiWallet, YoroiWallet} from '../cardano'
-import {ByronWallet} from '../cardano/byron/ByronWallet'
-import * as HASKELL_SHELLEY from '../cardano/shelley/constants'
-import {ShelleyWallet} from '../cardano/shelley/ShelleyWallet'
-import * as HASKELL_SHELLEY_TESTNET from '../cardano/shelley-testnet/constants'
-import {ShelleyWalletTestnet} from '../cardano/shelley-testnet/ShelleyWalletTestnet'
+import {CardanoTypes, getCardanoWalletFactory, isYoroiWallet, YoroiWallet} from '../cardano'
 import {HWDeviceInfo} from '../hw'
-import {storage, YoroiStorage} from '../storage'
-import {NetworkId, WALLET_IMPLEMENTATION_REGISTRY, WalletImplementationId} from '../types'
+import {Logger} from '../logging'
+import {isWalletMeta, migrateWalletMetas, parseWalletMeta} from '../migrations/walletMeta'
+import {makeWalletEncryptedStorage, storage, YoroiStorage} from '../storage'
+import {Keychain} from '../storage/Keychain'
+import {NetworkId, WalletImplementationId} from '../types'
 import {parseSafe} from '../utils'
 
 export class WalletClosed extends ExtendableError {}
@@ -164,9 +158,9 @@ export class WalletManager {
 
   async openWallet(walletMeta: WalletMeta): Promise<YoroiWallet> {
     const {id, walletImplementationId, networkId} = walletMeta
-    const Wallet = getWalletImplementation({networkId, implementationId: walletImplementationId})
+    const walletFactory = getWalletFactory({networkId, implementationId: walletImplementationId})
 
-    const wallet = await Wallet.restore({
+    const wallet = await walletFactory.restore({
       storage: this.storage.join(`${id}/`),
       walletMeta,
     })
@@ -202,10 +196,10 @@ export class WalletManager {
     networkId: NetworkId,
     implementationId: WalletImplementationId,
   ) {
-    const Wallet = getWalletImplementation({networkId, implementationId})
+    const walletFactory = getWalletFactory({networkId, implementationId})
     const id = uuid.v4()
 
-    const wallet = await Wallet.create({
+    const wallet = await walletFactory.create({
       storage: this.storage.join(`${id}/`),
       id,
       mnemonic,
@@ -223,10 +217,10 @@ export class WalletManager {
     hwDeviceInfo: null | HWDeviceInfo,
     isReadOnly: boolean,
   ) {
-    const Wallet = getWalletImplementation({networkId, implementationId})
+    const walletFactory = getWalletFactory({networkId, implementationId})
     const id = uuid.v4()
 
-    const wallet = await Wallet.createBip44({
+    const wallet = await walletFactory.createBip44({
       storage: this.storage.join(`${id}/`),
       id,
       accountPubKeyHex,
@@ -255,35 +249,12 @@ const parseDeletedWalletIds = (data: unknown) => {
   return isWalletIds(parsed) ? parsed : undefined
 }
 
-const getWalletImplementation = ({
-  networkId,
-  implementationId,
-}: {
-  networkId: NetworkId
-  implementationId: WalletImplementationId
-}) => {
-  // cardano mainnet
-  if (networkId === HASKELL_SHELLEY.NETWORK_ID) {
-    if (implementationId === HASKELL_SHELLEY.WALLET_CONFIG.WALLET_IMPLEMENTATION_ID) {
-      return ShelleyWallet
-    }
-    if (implementationId === HASKELL_SHELLEY.WALLET_CONFIG_24.WALLET_IMPLEMENTATION_ID) {
-      return ShelleyWallet
-    }
-    if (implementationId === WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON) {
-      return ByronWallet
-    }
+const getWalletFactory = ({networkId, implementationId}: {networkId: number; implementationId: string}) => {
+  const walletFactory = getCardanoWalletFactory({networkId, implementationId})
+
+  if (!walletFactory) {
+    throw new Error('invalid wallet')
   }
 
-  // cardano testnet
-  if (networkId === HASKELL_SHELLEY_TESTNET.NETWORK_ID) {
-    if (implementationId === HASKELL_SHELLEY.WALLET_CONFIG.WALLET_IMPLEMENTATION_ID) {
-      return ShelleyWalletTestnet
-    }
-    if (implementationId === HASKELL_SHELLEY.WALLET_CONFIG_24.WALLET_IMPLEMENTATION_ID) {
-      return ShelleyWalletTestnet
-    }
-  }
-
-  throw new Error('invalid wallet type')
+  return walletFactory
 }

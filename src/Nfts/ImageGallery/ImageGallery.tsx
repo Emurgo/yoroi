@@ -1,11 +1,11 @@
 import {FlashList, FlashListProps} from '@shopify/flash-list'
 import React from 'react'
-import {Dimensions, GestureResponderEvent, Image, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {Dimensions, GestureResponderEvent, StyleSheet, TouchableOpacity, View} from 'react-native'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
-import placeholderImage from '../../assets/img/nft-placeholder.png'
 import {Icon, Spacer, Text} from '../../components'
-import {MODERATING_NFTS_ENABLED} from '../../legacy/config'
+import {NftPreview} from '../../components/NftPreview/NftPreview'
+import {features} from '../../features'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {YoroiNft} from '../../yoroi-wallets/types'
 import {useModeratedNftImage} from '../hooks'
@@ -32,7 +32,7 @@ export const ImageGallery = ({nfts = [], onSelect, onRefresh, isRefreshing}: Pro
       onRefresh={onRefresh}
       refreshing={isRefreshing}
       renderItem={(nft) =>
-        MODERATING_NFTS_ENABLED ? (
+        features.moderatingNftsEnabled ? (
           <ModeratedImage onPress={() => onSelect(nfts.indexOf(nft))} nft={nft} key={nft.id} />
         ) : (
           <UnModeratedImage onPress={() => onSelect(nfts.indexOf(nft))} nft={nft} key={nft.id} />
@@ -47,31 +47,31 @@ interface ModeratedImageProps {
   nft: YoroiNft
 }
 
-const UnModeratedImage = ({onPress, nft: {image, name}}: ModeratedImageProps) => {
+const UnModeratedImage = ({onPress, nft}: ModeratedImageProps) => {
   return (
-    <TouchableOpacity onPress={onPress} style={styles.imageContainer}>
-      <ApprovedNft text={name} uri={image} />
+    <TouchableOpacity onPress={onPress}>
+      <ApprovedNft nft={nft} />
     </TouchableOpacity>
   )
 }
 
 const ModeratedImage = ({onPress, nft}: ModeratedImageProps) => {
-  const {thumbnail, name: text, fingerprint} = nft
+  const {name: text, fingerprint} = nft
   const wallet = useSelectedWallet()
-  const {isError, moderationStatus, isLoading} = useModeratedNftImage({wallet, fingerprint})
+  const {isError, status, isLoading} = useModeratedNftImage({wallet, fingerprint})
 
-  const isPendingManualReview = moderationStatus === 'manual_review'
-  const isPendingAutomaticReview = moderationStatus === 'pending'
+  const isPendingManualReview = status === 'manual_review'
+  const isPendingAutomaticReview = status === 'pending'
 
-  const isImageApproved = moderationStatus === 'approved'
-  const isImageWithConsent = moderationStatus === 'consent'
-  const isImageBlocked = moderationStatus === 'blocked'
+  const isImageApproved = status === 'approved'
+  const isImageWithConsent = status === 'consent'
+  const isImageBlocked = status === 'blocked'
 
   const showSkeleton = isLoading || isPendingAutomaticReview
 
   if (showSkeleton) {
     return (
-      <TouchableOpacity onPress={onPress} style={styles.imageContainer}>
+      <TouchableOpacity onPress={onPress}>
         <SkeletonImagePlaceholder text={text} />
       </TouchableOpacity>
     )
@@ -79,56 +79,68 @@ const ModeratedImage = ({onPress, nft}: ModeratedImageProps) => {
 
   if (isError) {
     return (
-      <TouchableOpacity onPress={onPress} style={styles.imageContainer}>
-        <BlockedNft text={text} />
+      <TouchableOpacity onPress={onPress}>
+        <BlockedNft nft={nft} />
       </TouchableOpacity>
     )
   }
 
   return (
-    <TouchableOpacity onPress={onPress} style={styles.imageContainer}>
+    <TouchableOpacity onPress={onPress}>
       {isImageApproved ? (
-        <ApprovedNft text={text} uri={thumbnail} />
+        <ApprovedNft nft={nft} />
       ) : isImageWithConsent ? (
-        <RequiresConsentNft text={text} uri={thumbnail} />
+        <RequiresConsentNft nft={nft} />
       ) : isImageBlocked ? (
-        <BlockedNft text={text} />
+        <BlockedNft nft={nft} />
       ) : isPendingManualReview ? (
-        <ManualReviewNft text={text} />
+        <ManualReviewNft nft={nft} />
       ) : null}
     </TouchableOpacity>
   )
 }
 
-function BlockedNft({text}: {text: string}) {
-  return (
-    <View>
-      <Image source={placeholderImage} style={[styles.image, {width: IMAGE_SIZE, height: IMAGE_SIZE}]} />
-
-      <Spacer height={IMAGE_PADDING} />
-
-      <Text style={[styles.text, {width: IMAGE_SIZE}]}>{text}</Text>
-    </View>
-  )
+function BlockedNft({nft}: {nft: YoroiNft}) {
+  return <PlaceholderNft nft={nft} />
 }
 
-function ManualReviewNft({text}: {text: string}) {
-  return (
-    <View>
-      <Image source={placeholderImage} style={[styles.image, {width: IMAGE_SIZE, height: IMAGE_SIZE}]} />
-
-      <Spacer height={IMAGE_PADDING} />
-
-      <Text style={[styles.text, {width: IMAGE_SIZE}]}>{text}</Text>
-    </View>
-  )
-}
-
-function RequiresConsentNft({uri, text}: {text: string; uri: string}) {
+function PlaceholderNft({nft}: {nft: YoroiNft}) {
   return (
     <View>
       <View style={styles.imageWrapper}>
-        <Image source={{uri}} style={[styles.image, {width: IMAGE_SIZE, height: IMAGE_SIZE}]} blurRadius={20} />
+        <NftPreview
+          nft={nft}
+          showPlaceholder
+          width={IMAGE_SIZE}
+          height={IMAGE_SIZE}
+          style={styles.image}
+          resizeMode="cover"
+        />
+      </View>
+
+      <Spacer height={IMAGE_PADDING} />
+
+      <Text style={[styles.text, {width: IMAGE_SIZE}]}>{nft.name}</Text>
+    </View>
+  )
+}
+
+function ManualReviewNft({nft}: {nft: YoroiNft}) {
+  return <PlaceholderNft nft={nft} />
+}
+
+function RequiresConsentNft({nft}: {nft: YoroiNft}) {
+  return (
+    <View>
+      <View style={styles.imageWrapper}>
+        <NftPreview
+          showThumbnail
+          nft={nft}
+          width={IMAGE_SIZE}
+          height={IMAGE_SIZE}
+          style={styles.image}
+          resizeMode="cover"
+        />
 
         <View style={styles.eyeWrapper}>
           <Icon.EyeOff size={20} color="#FFFFFF" />
@@ -137,19 +149,28 @@ function RequiresConsentNft({uri, text}: {text: string; uri: string}) {
 
       <Spacer height={IMAGE_PADDING} />
 
-      <Text style={[styles.text, {width: IMAGE_SIZE}]}>{text}</Text>
+      <Text style={[styles.text, {width: IMAGE_SIZE}]}>{nft.name}</Text>
     </View>
   )
 }
 
-function ApprovedNft({uri, text}: {text: string; uri: string}) {
+function ApprovedNft({nft}: {nft: YoroiNft}) {
   return (
     <View>
-      <Image source={{uri}} style={[styles.image, {width: IMAGE_SIZE, height: IMAGE_SIZE}]} />
+      <View style={styles.imageWrapper}>
+        <NftPreview
+          resizeMode="cover"
+          showThumbnail
+          nft={nft}
+          width={IMAGE_SIZE}
+          height={IMAGE_SIZE}
+          style={styles.image}
+        />
+      </View>
 
       <Spacer height={IMAGE_PADDING} />
 
-      <Text style={[styles.text, {width: IMAGE_SIZE}]}>{text}</Text>
+      <Text style={[styles.text, {width: IMAGE_SIZE}]}>{nft.name}</Text>
     </View>
   )
 }
@@ -157,7 +178,7 @@ function ApprovedNft({uri, text}: {text: string; uri: string}) {
 function SkeletonImagePlaceholder({text}: {text?: string}) {
   if (typeof text !== 'undefined')
     return (
-      <View style={styles.imageContainer}>
+      <View>
         <SkeletonPlaceholder>
           <View style={{width: IMAGE_SIZE, height: IMAGE_SIZE, borderRadius: 8}} />
         </SkeletonPlaceholder>
@@ -169,28 +190,28 @@ function SkeletonImagePlaceholder({text}: {text?: string}) {
     )
 
   return (
-    <View style={styles.imageContainer}>
-      <SkeletonPlaceholder>
-        <View>
-          <View style={{width: IMAGE_SIZE, height: IMAGE_SIZE, borderRadius: 8}} />
+    <SkeletonPlaceholder>
+      <View>
+        <View style={{width: IMAGE_SIZE, height: IMAGE_SIZE, borderRadius: 8}} />
 
-          <View
-            style={{
-              marginTop: IMAGE_PADDING,
-              width: (IMAGE_SIZE * 3) / 4,
-              height: TEXT_SIZE,
-              borderRadius: 8,
-            }}
-          />
-        </View>
-      </SkeletonPlaceholder>
-    </View>
+        <View
+          style={{
+            marginTop: IMAGE_PADDING,
+            width: (IMAGE_SIZE * 3) / 4,
+            height: TEXT_SIZE,
+            borderRadius: 8,
+          }}
+        />
+      </View>
+    </SkeletonPlaceholder>
   )
 }
 
 const styles = StyleSheet.create({
   imageWrapper: {
     position: 'relative',
+    overflow: 'hidden',
+    borderRadius: 8,
   },
   eyeWrapper: {
     position: 'absolute',
@@ -203,9 +224,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  imageContainer: {},
   image: {
     borderRadius: 8,
+    overlayColor: '#FFFFFF',
   },
   text: {
     fontSize: 14,
@@ -237,6 +258,7 @@ function GalleryList<T>({renderItem, ...rest}: FlashListProps<T> & {renderItem: 
           <Spacer height={ROW_SPACING} />
         </View>
       )}
+      contentContainerStyle={{paddingHorizontal: CONTAINER_HORIZONTAL_PADDING}}
       keyExtractor={(placeholder, index) => index + ''}
       horizontal={false}
       estimatedItemSize={IMAGE_SIZE + IMAGE_PADDING + TEXT_SIZE + ROW_SPACING}

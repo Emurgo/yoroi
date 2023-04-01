@@ -4,6 +4,7 @@ import {flatten} from 'lodash'
 import type {NetworkId} from '../types/other'
 import {NETWORK_REGISTRY, YOROI_PROVIDER_IDS} from '../types/other'
 import {NUMBERS} from './numbers'
+
 const _DEFAULT_BACKEND_RULES = {
   FETCH_UTXOS_MAX_ADDRESSES: 50,
   TX_HISTORY_MAX_ADDRESSES: 50,
@@ -106,7 +107,7 @@ const HASKELL_SHELLEY_TESTNET = {
   BACKEND: {
     API_ROOT: 'https://preprod-backend.yoroiwallet.com/api',
     NFT_STORAGE_URL: 'https://validated-nft-images.s3.amazonaws.com',
-    TOKEN_INFO_SERVICE: 'https://metadata.cardano-testnet.iohkdev.io',
+    TOKEN_INFO_SERVICE: 'https://stage-cdn.yoroiwallet.com',
     ..._DEFAULT_BACKEND_RULES,
   },
   BASE_CONFIG: [

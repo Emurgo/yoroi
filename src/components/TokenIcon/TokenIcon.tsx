@@ -1,11 +1,10 @@
 import React from 'react'
 import {Image, StyleSheet, View} from 'react-native'
 
-import {useIsTokenKnownNft, useNft, useNftImageModerated, useTokenInfo} from '../../hooks'
-import {MODERATING_NFTS_ENABLED, SHOW_NFT_GALLERY} from '../../legacy/config'
+import {features} from '../../features'
 import {COLORS} from '../../theme'
-import {YoroiWallet} from '../../yoroi-wallets'
-import {Icon} from '..'
+import {useIsTokenKnownNft, useNft, useNftImageModerated, useTokenInfo, YoroiWallet} from '../../yoroi-wallets'
+import {Icon} from '../Icon'
 import {ModeratedNftIcon} from './ModeratedNftIcon'
 
 export const TokenIcon = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string}) => {
@@ -17,8 +16,9 @@ export const TokenIcon = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: stri
   if (tokenInfo.logo != null && tokenInfo.logo.length > 0 && isBase64(tokenInfo.logo)) {
     return <Image source={{uri: `data:image/png;base64,${tokenInfo.logo}`}} style={styles.icon} />
   }
-  if (isTokenNft && SHOW_NFT_GALLERY) {
-    return MODERATING_NFTS_ENABLED ? (
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+  if (isTokenNft && features.showNftGallery) {
+    return features.moderatingNftsEnabled ? (
       <ModeratedIcon wallet={wallet} tokenId={tokenInfo.id} />
     ) : (
       <UnModeratedNftIcon wallet={wallet} tokenId={tokenInfo.id} />
@@ -35,14 +35,16 @@ const PrimaryIcon = () => (
 
 const ModeratedIcon = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string}) => {
   const nftModeratedImage = useNftImageModerated({wallet, nftId: tokenId})
+  const nft = useNft(wallet, {id: tokenId})
 
-  if (!nftModeratedImage) return <ModeratedNftIcon status="pending" />
-  return <ModeratedNftIcon image={nftModeratedImage.image} status={nftModeratedImage.status} />
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+  if (!nftModeratedImage) return <ModeratedNftIcon nft={nft} status="pending" />
+  return <ModeratedNftIcon nft={nft} status={nftModeratedImage.status} />
 }
 
 const UnModeratedNftIcon = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string}) => {
   const nft = useNft(wallet, {id: tokenId})
-  return <ModeratedNftIcon status="approved" image={nft.image} />
+  return <ModeratedNftIcon status="approved" nft={nft} />
 }
 
 export const Placeholder = () => (

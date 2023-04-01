@@ -6,14 +6,14 @@ import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {Text, ValidatedTextInput} from '../../components'
 import {ConfirmTx} from '../../components/ConfirmTx'
 import {useStakePoolInfoAndHistory} from '../../Dashboard/StakePoolInfo'
+import {debugWalletInfo, features} from '../../features'
 import {Instructions as HWInstructions} from '../../HW'
 import globalMessages, {txLabels} from '../../i18n/global-messages'
-import {CONFIG} from '../../legacy/config'
 import {formatTokenAmount, formatTokenWithText} from '../../legacy/format'
-import {useParams, useWalletNavigation} from '../../navigation'
-import {StakingCenterRoutes} from '../../navigation'
+import {StakingCenterRoutes, useParams, useWalletNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
+import {NETWORKS, NUMBERS} from '../../yoroi-wallets'
 import {Quantity} from '../../yoroi-wallets/types'
 import {Amounts, Entries, Quantities} from '../../yoroi-wallets/utils'
 
@@ -44,7 +44,7 @@ export const DelegationConfirmation = () => {
   const [useUSB, setUseUSB] = useState(false)
 
   useEffect(() => {
-    if (CONFIG.DEBUG.PREFILL_FORMS && __DEV__) setPassword(CONFIG.DEBUG.PASSWORD)
+    if (features.prefillWalletInfo && __DEV__) setPassword(debugWalletInfo.PASSWORD)
   }, [])
 
   const onSuccess = () => {
@@ -167,8 +167,8 @@ const messages = defineMessages({
  */
 const approximateReward = (stakedQuantity: Quantity): Quantity => {
   return Quantities.quotient(
-    Quantities.product([stakedQuantity, `${CONFIG.NETWORKS.HASKELL_SHELLEY.PER_EPOCH_PERCENTAGE_REWARD}`]),
-    CONFIG.NUMBERS.EPOCH_REWARD_DENOMINATOR.toString() as Quantity,
+    Quantities.product([stakedQuantity, `${NETWORKS.HASKELL_SHELLEY.PER_EPOCH_PERCENTAGE_REWARD}`]),
+    NUMBERS.EPOCH_REWARD_DENOMINATOR.toString() as Quantity,
   )
 }
 

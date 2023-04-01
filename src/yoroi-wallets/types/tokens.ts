@@ -77,9 +77,11 @@ export type NftMetadata = {
 }
 
 export type AssetMetadata = {
-  [policyID: string]: {
-    [assetNameHex: string]: NftMetadata
-  }
+  [policyID: string]:
+    | {
+        [assetNameHex: string]: NftMetadata | undefined
+      }
+    | undefined
 }
 
 export type NFTAsset = {

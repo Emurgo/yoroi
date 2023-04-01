@@ -4,7 +4,6 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useEnableEasyConfirmation} from '../../auth'
 import {Button, StatusBar, Text, TextInput} from '../../components'
 import {LoadingOverlay} from '../../components/LoadingOverlay'
 import {showErrorDialog} from '../../dialogs'
@@ -12,6 +11,7 @@ import {errorMessages} from '../../i18n/global-messages'
 import {useSelectedWallet, useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {isEmptyString} from '../../utils/utils'
+import {useEnableEasyConfirmation} from '../../yoroi-wallets'
 import {WrongPassword} from '../../yoroi-wallets/cardano/errors'
 
 export const EnableEasyConfirmationScreen = () => {

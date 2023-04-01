@@ -3,11 +3,11 @@
 import {action} from '@storybook/addon-actions'
 import BigNumber from 'bignumber.js'
 
-import {getDefaultAssetByNetworkId} from '../../legacy/config'
 import {getTokenFingerprint} from '../../legacy/format'
 import {asciiToHex, CardanoTypes, fallbackTokenInfo, toTokenInfo, WalletMeta, YoroiWallet} from '..'
+import * as HASKELL_SHELLEY_TESTNET from '../cardano/constants/testnet/constants'
+import {PRIMARY_TOKEN, PRIMARY_TOKEN_INFO} from '../cardano/constants/testnet/constants'
 import {PRIMARY_ASSET_CONSTANTS} from '../cardano/networks'
-import * as HASKELL_SHELLEY_TESTNET from '../cardano/shelley-testnet/constants'
 import {
   RemotePoolMetaSuccess,
   StakePoolInfosAndHistories,
@@ -41,8 +41,8 @@ const walletMeta: WalletMeta = {
 
 const wallet: YoroiWallet = {
   id: 'wallet-id',
-  primaryToken: getDefaultAssetByNetworkId(300),
-  primaryTokenInfo: HASKELL_SHELLEY_TESTNET.PRIMARY_TOKEN_INFO,
+  primaryToken: PRIMARY_TOKEN,
+  primaryTokenInfo: PRIMARY_TOKEN_INFO,
   walletImplementationId: 'haskell-shelley',
   networkId: 300,
   checksum: {
@@ -792,7 +792,7 @@ export const nft: YoroiNft = {
   id: '1',
   name: 'Image 1',
   description: 'NFT 1 description',
-  image: 'https://fibo-validated-nft-images.s3.amazonaws.com/asset1a6765qk8cpk2wll3hevw6xy9xry893jrzl9ms3.jpeg',
+  logo: 'https://fibo-validated-nft-images.s3.amazonaws.com/asset1a6765qk8cpk2wll3hevw6xy9xry893jrzl9ms3.jpeg',
   thumbnail: 'https://fibo-validated-nft-images.s3.amazonaws.com/p_asset1a6765qk8cpk2wll3hevw6xy9xry893jrzl9ms3.jpeg',
   fingerprint: getTokenFingerprint({
     policyId: '8e2c7604711faef7c84c91b286c7327d17df825b7f0c88ec0332c0b4',

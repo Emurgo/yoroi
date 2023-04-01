@@ -6,13 +6,13 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {ProgressStep, Spacer, TextInput} from '../components'
 import {ConfirmTx} from '../components/ConfirmTx'
-import {useVotingRegTx} from '../hooks'
+import {debugWalletInfo, features} from '../features'
 import {Instructions as HWInstructions} from '../HW'
 import {errorMessages, txLabels} from '../i18n/global-messages'
 import LocalizableError from '../i18n/LocalizableError'
-import {CONFIG} from '../legacy/config'
 import {formatTokenWithSymbol} from '../legacy/format'
 import {useSelectedWallet} from '../SelectedWallet'
+import {useVotingRegTx} from '../yoroi-wallets'
 import {Amounts} from '../yoroi-wallets/utils'
 import {Actions, Description, Title} from './components'
 
@@ -31,7 +31,7 @@ export const ConfirmVotingTx = ({
     {wallet, pin}, //
     {onSuccess: ({votingKeyEncrypted}) => onSuccess(votingKeyEncrypted)},
   )
-  const [password, setPassword] = useState(CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '')
+  const [password, setPassword] = useState(features.prefillWalletInfo ? debugWalletInfo.PASSWORD : '')
   const [useUSB, setUseUSB] = useState<boolean>(false)
 
   return (

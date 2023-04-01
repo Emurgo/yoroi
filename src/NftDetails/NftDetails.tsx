@@ -1,33 +1,53 @@
 import {RouteProp, useRoute} from '@react-navigation/native'
 import React, {ReactNode, useState} from 'react'
+import {ErrorBoundary} from 'react-error-boundary'
 import {defineMessages, useIntl} from 'react-intl'
-import {Image, ImageSourcePropType, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {Dimensions, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {CopyButton, FadeIn, Icon, Link, Spacer, Text} from '../components'
+import {CopyButton, FadeIn, FullErrorFallback, Icon, Link, Spacer, Text} from '../components'
+import {NftPreview} from '../components/NftPreview/NftPreview'
 import {Tab, TabPanel, TabPanels, Tabs} from '../components/Tabs'
-import {useNft} from '../hooks'
-import {MODERATING_NFTS_ENABLED} from '../legacy/config'
-import {NftRoutes} from '../navigation'
+import {features} from '../features'
+import {NftRoutes, useWalletNavigation} from '../navigation'
 import {useModeratedNftImage} from '../Nfts/hooks'
 import {useNavigateTo} from '../Nfts/navigation'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
+import {isEmptyString} from '../utils'
+import {NftNotFoundError, useNft} from '../yoroi-wallets'
 import {YoroiNft} from '../yoroi-wallets/types'
-import placeholder from './../assets/img/nft-placeholder.png'
 
 export const NftDetails = () => {
+  const navigation = useWalletNavigation()
+  const handleError = (error: Error) => {
+    if (error instanceof NftNotFoundError) {
+      navigation.navigateToNftGallery()
+    }
+  }
+  return (
+    <ErrorBoundary
+      onError={handleError}
+      fallbackRender={({error}) => (
+        <FullErrorFallback error={error} resetErrorBoundary={() => navigation.navigateToNftGallery()} />
+      )}
+    >
+      <Details />
+    </ErrorBoundary>
+  )
+}
+
+const Details = () => {
   const {id} = useRoute<RouteProp<NftRoutes, 'nft-details'>>().params
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const nft = useNft(wallet, {id})
-
   const [activeTab, setActiveTab] = useState<'overview' | 'metadata'>('overview')
 
   return (
     <FadeIn style={styles.container}>
       <ScrollView contentContainerStyle={styles.contentContainer}>
-        {MODERATING_NFTS_ENABLED ? <ModeratedNftImage nft={nft} /> : <UnModeratedNftImage nft={nft} />}
+        {features.moderatingNftsEnabled ? <ModeratedNftImage nft={nft} /> : <UnModeratedNftImage nft={nft} />}
 
         <Tabs>
           <Tab
@@ -61,21 +81,9 @@ export const NftDetails = () => {
 
 const UnModeratedNftImage = ({nft}: {nft: YoroiNft}) => {
   const navigateTo = useNavigateTo()
-  return <NftImage source={{uri: nft.image}} onPress={() => navigateTo.nftZoom(nft.id)} />
-}
-
-const NftImage = ({
-  source,
-  onPress,
-  disabled,
-}: {
-  source: ImageSourcePropType
-  onPress?: () => void
-  disabled?: boolean
-}) => {
   return (
-    <TouchableOpacity onPress={onPress} disabled={disabled} style={styles.imageWrapper}>
-      <Image source={source} style={styles.image} resizeMode="contain" />
+    <TouchableOpacity onPress={() => navigateTo.nftZoom(nft.id)} style={styles.imageWrapper}>
+      <NftPreview nft={nft} style={styles.image} height={IMAGE_HEIGHT} width={IMAGE_WIDTH} />
     </TouchableOpacity>
   )
 }
@@ -83,15 +91,21 @@ const NftImage = ({
 const ModeratedNftImage = ({nft}: {nft: YoroiNft}) => {
   const wallet = useSelectedWallet()
   const navigateTo = useNavigateTo()
-  const {moderationStatus} = useModeratedNftImage({wallet, fingerprint: nft.fingerprint})
-  const canShowNft = moderationStatus === 'approved' || moderationStatus === 'consent'
+  const {status} = useModeratedNftImage({wallet, fingerprint: nft.fingerprint})
+  const canShowNft = status === 'approved' || status === 'consent'
+
+  if (!canShowNft) {
+    return (
+      <View style={styles.imageWrapper}>
+        <NftPreview nft={nft} style={styles.image} height={IMAGE_HEIGHT} width={IMAGE_WIDTH} showPlaceholder />
+      </View>
+    )
+  }
 
   return (
-    <NftImage
-      source={canShowNft ? {uri: nft.image} : placeholder}
-      onPress={() => navigateTo.nftZoom(nft.id)}
-      disabled={!canShowNft}
-    />
+    <TouchableOpacity onPress={() => navigateTo.nftZoom(nft.id)} style={styles.imageWrapper}>
+      <NftPreview nft={nft} style={styles.image} height={IMAGE_HEIGHT} width={IMAGE_WIDTH} />
+    </TouchableOpacity>
   )
 }
 
@@ -99,7 +113,7 @@ const MetadataRow = ({title, copyText, children}: {title: string; children: Reac
   return (
     <View style={styles.rowContainer}>
       <View style={styles.rowTitleContainer}>
-        <Text>{title}</Text>
+        <Text style={styles.title}>{title}</Text>
 
         {copyText !== undefined ? <CopyButton value={copyText} /> : null}
       </View>
@@ -123,13 +137,13 @@ const NftOverview = ({nft}: {nft: YoroiNft}) => {
       <HR />
 
       <MetadataRow title={strings.description}>
-        <Text secondary>{nft.description}</Text>
+        <Text secondary>{normalizeMetadataString(nft.description)}</Text>
       </MetadataRow>
 
       <HR />
 
       <MetadataRow title={strings.author}>
-        <Text secondary>{nft.metadata.originalMetadata.author ?? '-'}</Text>
+        <Text secondary>{normalizeMetadataString(nft.metadata.originalMetadata?.author)}</Text>
       </MetadataRow>
 
       <HR />
@@ -175,6 +189,10 @@ const NftOverview = ({nft}: {nft: YoroiNft}) => {
   )
 }
 
+const normalizeMetadataString = (content?: string): string => {
+  return isEmptyString(content) || content.length === 0 ? '-' : content
+}
+
 const HR = () => (
   <View
     style={{
@@ -202,6 +220,10 @@ const NftMetadata = ({nft}: {nft: YoroiNft}) => {
     </View>
   )
 }
+
+const IMAGE_HEIGHT = 380
+const IMAGE_PADDING = 16
+const IMAGE_WIDTH = Dimensions.get('window').width - IMAGE_PADDING * 2
 
 const styles = StyleSheet.create({
   copyButton: {
@@ -232,14 +254,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   image: {
-    height: 380,
     flexGrow: 1,
   },
   contentContainer: {
-    paddingHorizontal: 16,
+    paddingHorizontal: IMAGE_PADDING,
   },
   rowContainer: {
-    paddingVertical: 16,
+    paddingVertical: IMAGE_PADDING,
   },
   rowTitleContainer: {
     display: 'flex',
@@ -256,6 +277,9 @@ const styles = StyleSheet.create({
   imageWrapper: {
     display: 'flex',
     flexDirection: 'row',
+  },
+  title: {
+    fontWeight: '500',
   },
 })
 

@@ -1,16 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import assert from 'assert'
 import _ from 'lodash'
 import type {Moment} from 'moment'
 import {defaultMemoize} from 'reselect'
 
-import assert from '../../../legacy/assert'
-import {CONFIG, isByron, isHaskellShelley} from '../../../legacy/config'
-import {Logger} from '../../../legacy/logging'
+import {Logger} from '../../logging'
 import {NetworkId, WalletImplementationId} from '../../types'
-import {ADDRESS_TYPE_TO_CHANGE, AddressType, CardanoMobile, CardanoTypes} from '../'
+import {CardanoMobile, CardanoTypes, isByron, isHaskellShelley, NUMBERS, toCardanoNetworkId} from '..'
 import type {CryptoAccount} from '../byron/util'
 import * as util from '../byron/util'
-import {getNetworkConfigById} from '../networks'
+import {DISCOVERY_BLOCK_SIZE, DISCOVERY_GAP_SIZE} from '../constants/mainnet/constants'
+import {ADDRESS_TYPE_TO_CHANGE, AddressType} from '../formatPath'
+import {getNetworkConfigById, NETWORKS} from '../networks'
 
 export type AddressBlock = [number, Moment, Array<string>]
 
@@ -49,7 +50,7 @@ export class AddressGenerator {
   }
 
   get byronAccount(): CryptoAccount {
-    assert.assert(isByron(this.walletImplementationId), 'chain::get::byronAccount: not a byron wallet')
+    assert(isByron(this.walletImplementationId), 'chain::get::byronAccount: not a byron wallet')
     return {
       derivation_scheme: 'V2',
       root_cached_key: this.accountPubKeyHex,
@@ -60,11 +61,6 @@ export class AddressGenerator {
     if (!isHaskellShelley(this.walletImplementationId)) {
       return null
     }
-    let chainNetworkId = CONFIG.NETWORKS.HASKELL_SHELLEY.CHAIN_NETWORK_ID
-    const config: any = getNetworkConfigById(this.networkId)
-    if (config.CHAIN_NETWORK_ID != null) {
-      chainNetworkId = config.CHAIN_NETWORK_ID
-    }
     if (this._rewardAddressHex != null) return this._rewardAddressHex
     // cache account public key
     if (this._accountPubKeyPtr == null) {
@@ -72,13 +68,14 @@ export class AddressGenerator {
     }
     const stakingKey = await (
       await (
-        await this._accountPubKeyPtr.derive(CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT)
-      ).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)
+        await this._accountPubKeyPtr.derive(NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT)
+      ).derive(NUMBERS.STAKING_KEY_INDEX)
     ).toRawKey()
 
     // cache reward address
+    const chainNetworkId = toCardanoNetworkId(this.networkId)
     const credential = await CardanoMobile.StakeCredential.fromKeyhash(await stakingKey.hash())
-    const rewardAddr = await CardanoMobile.RewardAddress.new(parseInt(chainNetworkId, 10), credential)
+    const rewardAddr = await CardanoMobile.RewardAddress.new(chainNetworkId, credential)
     const rewardAddrAsAddr = await rewardAddr.toAddress()
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this._rewardAddressHex = Buffer.from((await rewardAddrAsAddr.toBytes()) as any, 'hex').toString('hex')
@@ -88,7 +85,7 @@ export class AddressGenerator {
   async generate(idxs: Array<number>): Promise<Array<string>> {
     if (isHaskellShelley(this.walletImplementationId)) {
       // assume mainnet by default
-      let chainNetworkId = CONFIG.NETWORKS.HASKELL_SHELLEY.CHAIN_NETWORK_ID
+      let chainNetworkId = NETWORKS.HASKELL_SHELLEY.CHAIN_NETWORK_ID
       const config: any = getNetworkConfigById(this.networkId)
       if (config.CHAIN_NETWORK_ID != null) {
         chainNetworkId = config.CHAIN_NETWORK_ID
@@ -100,8 +97,8 @@ export class AddressGenerator {
       const chainKey = await this._accountPubKeyPtr.derive(ADDRESS_TYPE_TO_CHANGE[this.type])
       const stakingKey = await (
         await (
-          await this._accountPubKeyPtr.derive(CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT)
-        ).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)
+          await this._accountPubKeyPtr.derive(NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT)
+        ).derive(NUMBERS.STAKING_KEY_INDEX)
       ).toRawKey()
 
       return Promise.all(
@@ -176,10 +173,10 @@ export class AddressChain {
 
   constructor(
     addressGenerator: AddressGenerator,
-    blockSize: number = CONFIG.WALLETS.HASKELL_SHELLEY.DISCOVERY_BLOCK_SIZE,
-    gapLimit: number = CONFIG.WALLETS.HASKELL_SHELLEY.DISCOVERY_GAP_SIZE,
+    blockSize: number = DISCOVERY_BLOCK_SIZE,
+    gapLimit: number = DISCOVERY_GAP_SIZE,
   ) {
-    assert.assert(blockSize > gapLimit, 'Block size needs to be > gap limit')
+    assert(blockSize > gapLimit, 'Block size needs to be > gap limit')
 
     this._addressGenerator = addressGenerator
     this._blockSize = blockSize
@@ -226,10 +223,7 @@ export class AddressChain {
   }
 
   _extendAddresses(newAddresses: Array<string>) {
-    assert.assert(
-      _.intersection(this._addresses, newAddresses).length === 0,
-      'extendAddresses received an existing address',
-    )
+    assert(_.intersection(this._addresses, newAddresses).length === 0, 'extendAddresses received an existing address')
     this._addresses = [...this._addresses, ...newAddresses]
     this._subscriptions.forEach((handler) => handler(newAddresses))
   }
@@ -251,20 +245,20 @@ export class AddressChain {
   _getLastBlock() {
     this._selfCheck()
     const block = _.takeRight(this.addresses, this._blockSize)
-    assert.assert(block.length === this._blockSize, 'AddressChain::_getLastBlock(): block length')
+    assert(block.length === this._blockSize, 'AddressChain::_getLastBlock(): block length')
     return block
   }
 
   async initialize() {
-    assert.assert(!this._isInitialized, 'AddressChain::initialize(): !isInitialized')
+    assert(!this._isInitialized, 'AddressChain::initialize(): !isInitialized')
     await this._discoverNewBlock()
-    assert.assert(!this._isInitialized, 'AddressChain::initialized(): Concurrent modification')
+    assert(!this._isInitialized, 'AddressChain::initialized(): Concurrent modification')
     this._isInitialized = true
   }
 
   _selfCheck() {
-    assert.assert(this._isInitialized, 'AddressChain::_selfCheck(): isInitialized')
-    assert.assert(this._addresses.length % this._blockSize === 0, 'AddressChain::_selfCheck(): lengths')
+    assert(this._isInitialized, 'AddressChain::_selfCheck(): isInitialized')
+    assert(this._addresses.length % this._blockSize === 0, 'AddressChain::_selfCheck(): lengths')
   }
 
   async sync(filterFn: AsyncAddressFilter) {
@@ -303,7 +297,7 @@ export class AddressChain {
   }
 
   getIndexOfAddress(address: string): number {
-    assert.assert(this.isMyAddress(address), 'getIndexOfAddress:: is not my address')
+    assert(this.isMyAddress(address), 'getIndexOfAddress:: is not my address')
     const idx = this.addressToIdxMap[address]
     return idx
   }

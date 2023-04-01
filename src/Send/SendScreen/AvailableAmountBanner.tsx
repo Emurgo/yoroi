@@ -1,9 +1,9 @@
 import React from 'react'
 
 import {Banner} from '../../components'
-import {useBalances} from '../../hooks'
 import {formatTokenWithText} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
+import {useBalances} from '../../yoroi-wallets'
 import {Amounts} from '../../yoroi-wallets/utils'
 import {useStrings} from './strings'
 

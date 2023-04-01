@@ -1,7 +1,7 @@
 import {BigNumber} from 'bignumber.js'
 
-import {WalletEncryptedStorage} from '../../auth'
 import {HWDeviceInfo} from '../hw'
+import {WalletEncryptedStorage} from '../storage'
 import {
   AccountStates,
   NetworkId,

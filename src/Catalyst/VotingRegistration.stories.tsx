@@ -3,7 +3,7 @@ import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {QueryProvider, WithModalProps} from '../../.storybook'
+import {QueryProvider, WithModalProps} from '../../.storybook/decorators'
 import {Boundary} from '../components'
 import {SelectedWalletProvider} from '../SelectedWallet'
 import {YoroiWallet} from '../yoroi-wallets'

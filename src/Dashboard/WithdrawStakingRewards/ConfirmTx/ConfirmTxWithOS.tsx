@@ -1,12 +1,10 @@
 import React from 'react'
 import {useIntl} from 'react-intl'
 
-import {useAuthOsWithEasyConfirmation} from '../../../auth'
 import {TwoActionView} from '../../../components'
 import {LoadingOverlay} from '../../../components/LoadingOverlay'
-import {useSignAndSubmitTx} from '../../../hooks'
 import {confirmationMessages, txLabels} from '../../../i18n/global-messages'
-import {YoroiWallet} from '../../../yoroi-wallets'
+import {useAuthOsWithEasyConfirmation, useSignAndSubmitTx, YoroiWallet} from '../../../yoroi-wallets'
 import {YoroiUnsignedTx} from '../../../yoroi-wallets/types'
 import {TransferSummary} from '../TransferSummary'
 

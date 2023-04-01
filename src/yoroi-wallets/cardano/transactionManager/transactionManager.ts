@@ -1,13 +1,12 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import assert from 'assert'
 import {fromPairs, mapValues, max} from 'lodash'
 import DeviceInfo from 'react-native-device-info'
 import {defaultMemoize} from 'reselect'
 
-import assert from '../../../legacy/assert'
-import {Logger} from '../../../legacy/logging'
-import {YoroiStorage} from '../../storage'
-import type {RemoteCertificateMeta, TxHistoryRequest} from '../../types'
+import {Logger} from '../../logging'
+import {YoroiStorage} from '../../storage/storage'
 import {
   BackendConfig,
   CERTIFICATE_KIND,
@@ -15,7 +14,9 @@ import {
   Transaction,
   TRANSACTION_STATUS,
   Transactions,
+  TxHistoryRequest,
 } from '../../types/other'
+import {RemoteCertificateMeta} from '../../types/staking'
 import {isArray, parseSafe} from '../../utils/parsing'
 import {Version, versionCompare} from '../../utils/versioning'
 import * as yoroiApi from '../api'
@@ -462,7 +463,7 @@ const confirmationCountsSelector = (state: TransactionManagerState) => {
       ...tx.inputs.map(getBlockNum),
       ...tx.outputs.map(getBlockNum),
     ])
-    assert.assert(tx.blockNum, 'Successfull tx should have blockNum')
+    assert(tx.blockNum, 'Successfull tx should have blockNum')
 
     return bestBlockNum - (tx as any).blockNum
   })

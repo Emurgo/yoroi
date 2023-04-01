@@ -1,17 +1,15 @@
 import {RouteProp, useRoute} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {InteractionManager, ScrollView, TouchableOpacity, View} from 'react-native'
-import {StyleSheet} from 'react-native'
+import {InteractionManager, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Spacer, StatusBar, Text} from '../../components'
 import {showErrorDialog} from '../../dialogs'
-import {useCreateWallet} from '../../hooks'
 import {errorMessages} from '../../i18n/global-messages'
 import {useWalletNavigation, WalletInitRoutes} from '../../navigation'
 import {COLORS} from '../../theme'
-import {NetworkId, WalletImplementationId} from '../../yoroi-wallets'
+import {NetworkId, useCreateWallet, WalletImplementationId} from '../../yoroi-wallets'
 import {NetworkError} from '../../yoroi-wallets/cardano/errors'
 
 export type Params = {

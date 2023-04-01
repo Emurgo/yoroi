@@ -1,7 +1,6 @@
 import _ from 'lodash'
 import React from 'react'
-import {View} from 'react-native'
-import {StyleSheet} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 
 import {BACKSPACE, NumericKeyboard} from '../../components/NumericKeyboard'
 import {Spacer} from '../../components/Spacer'

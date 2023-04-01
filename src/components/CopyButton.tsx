@@ -1,7 +1,7 @@
 import React from 'react'
 import {StyleProp, TouchableOpacity, ViewStyle} from 'react-native'
 
-import {Icon} from '../components'
+import {Icon} from '../components/Icon'
 import {useCopy} from '../legacy/useCopy'
 import {COLORS} from '../theme'
 

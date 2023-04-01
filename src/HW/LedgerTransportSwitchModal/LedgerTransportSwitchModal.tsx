@@ -5,9 +5,8 @@ import DeviceInfo from 'react-native-device-info'
 
 import {Button, Modal, Text} from '../../components'
 import globalMessages from '../../i18n/global-messages'
-import {CONFIG} from '../../legacy/config'
 import {spacing} from '../../theme'
-import {useLedgerPermissions} from '../../yoroi-wallets'
+import {HARDWARE_WALLETS, useLedgerPermissions} from '../../yoroi-wallets'
 
 type Props = {
   onSelectUSB: () => void
@@ -18,7 +17,7 @@ const useIsUsbSupported = () => {
   const [isUSBSupported, setUSBSupported] = React.useState(false)
   React.useEffect(() => {
     DeviceInfo.getApiLevel().then((sdk) =>
-      setUSBSupported(Platform.OS === 'android' && sdk >= CONFIG.HARDWARE_WALLETS.LEDGER_NANO.USB_MIN_SDK),
+      setUSBSupported(Platform.OS === 'android' && sdk >= HARDWARE_WALLETS.LEDGER_NANO.USB_MIN_SDK),
     )
   }, [])
 
@@ -37,7 +36,7 @@ export const LedgerTransportSwitchView = ({onSelectUSB, onSelectBLE}: Props) => 
   const getUsbButtonTitle = (): string => {
     if (Platform.OS === 'ios') {
       return strings.usbButtonDisabled
-    } else if (!CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT || !isUSBSupported) {
+    } else if (!HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT || !isUSBSupported) {
       return strings.usbButtonNotSupported
     } else {
       return strings.usbButton
@@ -57,7 +56,7 @@ export const LedgerTransportSwitchView = ({onSelectUSB, onSelectBLE}: Props) => 
           block
           onPress={onSelectUSB}
           title={getUsbButtonTitle()}
-          disabled={!isUSBSupported || !CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT}
+          disabled={!isUSBSupported || !HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT}
           style={styles.button}
           testID="connectWithUSBButton"
         />

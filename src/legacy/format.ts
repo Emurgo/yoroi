@@ -6,7 +6,6 @@ import type {IntlShape} from 'react-intl'
 import {defineMessages} from 'react-intl'
 
 import {DefaultAsset, Quantity, Token} from '../yoroi-wallets/types'
-import {getCardanoDefaultAsset} from './config'
 import utfSymbols from './utfSymbols'
 
 export const getTokenFingerprint = ({policyId, assetNameHex}) => {
@@ -117,16 +116,18 @@ export const truncateWithEllipsis = (s: string, n: number) => {
 }
 
 // TODO(multi-asset): consider removing these
-const defaultAssetMeta = getCardanoDefaultAsset().metadata
-const normalizationFactor = Math.pow(10, defaultAssetMeta.numberOfDecimals)
 
-const formatAda = (amount: Quantity) => {
+const formatAda = (amount: Quantity, defaultAsset: DefaultAsset) => {
+  const defaultAssetMeta = defaultAsset.metadata
+  const normalizationFactor = Math.pow(10, defaultAssetMeta.numberOfDecimals)
   const num = new BigNumber(amount).dividedBy(normalizationFactor)
   return num.toFormat(6)
 }
 
-export const formatAdaWithText = (amount: Quantity) =>
-  `${formatAda(amount)}${utfSymbols.NBSP}${defaultAssetMeta.ticker}`
+export const formatAdaWithText = (amount: Quantity, defaultAsset: DefaultAsset) => {
+  const defaultAssetMeta = defaultAsset.metadata
+  return `${formatAda(amount, defaultAsset)}${utfSymbols.NBSP}${defaultAssetMeta.ticker}`
+}
 
 export const formatTimeToSeconds = (ts: string | any) => {
   return moment(ts).format((moment(0) as any)._locale._format.timeToSeconds)

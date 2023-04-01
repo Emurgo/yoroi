@@ -1,12 +1,12 @@
+import assert from 'assert'
 import cryptoRandomString from 'crypto-random-string'
 
-import assert from '../../legacy/assert'
 import {Cardano} from '../cardano'
 import {CardanoError, WrongPassword} from '../cardano/errors'
 
 export const encryptData = async (plaintextHex: string, secretKey: string): Promise<string> => {
-  assert.assert(!!plaintextHex, 'encrypt:: !!plaintextHex')
-  assert.assert(!!secretKey, 'encrypt:: !!secretKey')
+  assert(!!plaintextHex, 'encrypt:: !!plaintextHex')
+  assert(!!secretKey, 'encrypt:: !!secretKey')
   const secretKeyHex = Buffer.from(secretKey, 'utf8').toString('hex')
   const saltHex = cryptoRandomString({
     length: 2 * 32,
@@ -18,8 +18,8 @@ export const encryptData = async (plaintextHex: string, secretKey: string): Prom
 }
 
 export const decryptData = async (ciphertext: string, secretKey: string): Promise<string> => {
-  assert.assert(!!ciphertext, 'decrypt:: !!cyphertext')
-  assert.assert(!!secretKey, 'decrypt:: !!secretKey')
+  assert(!!ciphertext, 'decrypt:: !!cyphertext')
+  assert(!!secretKey, 'decrypt:: !!secretKey')
   const secretKeyHex = Buffer.from(secretKey, 'utf8').toString('hex')
 
   try {

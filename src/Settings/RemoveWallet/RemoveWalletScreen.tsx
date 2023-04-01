@@ -1,14 +1,13 @@
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ScrollView, View} from 'react-native'
-import {StyleSheet} from 'react-native'
+import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Checkbox, Checkmark, Spacer, StatusBar, Text, TextInput} from '../../components'
-import {useRemoveWallet, useWalletName} from '../../hooks'
 import {useWalletNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
+import {useRemoveWallet, useWalletName} from '../../yoroi-wallets'
 
 export const RemoveWalletScreen = () => {
   const strings = useStrings()

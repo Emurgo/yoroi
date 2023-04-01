@@ -1,13 +1,14 @@
-import {useNftModerationStatus, useNfts} from '../hooks'
+import {UseQueryOptions} from 'react-query'
+
 import {useSearch} from '../Search'
 import {useSelectedWallet} from '../SelectedWallet'
-import {YoroiWallet} from '../yoroi-wallets'
+import {useNftModerationStatus, useNfts, YoroiNft, YoroiWallet} from '../yoroi-wallets'
 
-export const useFilteredNfts = () => {
+export const useFilteredNfts = (options: UseQueryOptions<YoroiNft[], Error> = {}) => {
   const {search} = useSearch()
   const searchTermLowerCase = search.toLowerCase()
   const wallet = useSelectedWallet()
-  const {nfts, isLoading, refetch, isRefetching, isError} = useNfts(wallet)
+  const {nfts, isLoading, refetch, isRefetching, isError} = useNfts(wallet, options)
   const filteredNfts =
     searchTermLowerCase.length > 0 && nfts.length > 0
       ? nfts.filter((n) => n.name.toLowerCase().includes(searchTermLowerCase))

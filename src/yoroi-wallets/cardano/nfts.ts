@@ -1,33 +1,42 @@
-import {MODERATING_NFTS_ENABLED} from '../../legacy/config'
+import {features} from '../../features'
 import {getAssetFingerprint} from '../../legacy/format'
 import {NftMetadata, YoroiNft} from '../types'
-import {isArray} from '../utils'
+import {isString} from '../utils'
 import {asciiToHex} from './api/utils'
 
-export const convertNft = (
-  metadata: NftMetadata,
-  storageUrl: string,
-  policyId: string,
-  shortName: string,
-): YoroiNft => {
+export const convertNft = (options: {
+  metadata?: NftMetadata
+  storageUrl: string
+  policyId: string
+  shortName: string
+}): YoroiNft => {
+  const {metadata, storageUrl, policyId, shortName} = options
   const assetNameHex = asciiToHex(shortName)
   const fingerprint = getAssetFingerprint(policyId, assetNameHex)
-  const description = Array.isArray(metadata.description) ? metadata.description.join(' ') : metadata.description
-  const originalImage = isArray(metadata.image) ? metadata.image.join('') : metadata.image
-  const isIpfsImage = originalImage.startsWith('ipfs://')
-  const convertedImage = isIpfsImage ? originalImage.replace('ipfs://', `https://ipfs.io/ipfs/`) : originalImage
+  const description = normalizeProperty(metadata?.description)
+  const originalImage = normalizeProperty(metadata?.image)
+  const isIpfsImage = !!originalImage?.startsWith('ipfs://')
+  const convertedImage = isIpfsImage ? originalImage?.replace('ipfs://', `https://ipfs.io/ipfs/`) : originalImage
+
   const id = `${policyId}.${assetNameHex}`
+  const name = metadata?.name ?? shortName
+
   return {
     id,
     fingerprint,
-    name: metadata.name,
-    description: description ?? '',
-    thumbnail: MODERATING_NFTS_ENABLED ? `${storageUrl}/p_${fingerprint}.jpeg` : convertedImage,
-    image: MODERATING_NFTS_ENABLED ? `${storageUrl}/${fingerprint}.jpeg` : convertedImage,
+    name,
+    description,
+    thumbnail: features.moderatingNftsEnabled ? `${storageUrl}/p_${fingerprint}.jpeg` : convertedImage,
+    logo: features.moderatingNftsEnabled ? `${storageUrl}/${fingerprint}.jpeg` : convertedImage,
     metadata: {
       policyId,
       assetNameHex,
       originalMetadata: metadata,
     },
   }
+}
+
+const normalizeProperty = (value: string | string[] | undefined): string | undefined => {
+  if (isString(value)) return value
+  if (Array.isArray(value)) return value.join('')
 }

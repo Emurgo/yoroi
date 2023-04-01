@@ -6,13 +6,11 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Boundary, Icon, Line, StatusBar, Text} from '../../components'
 import {showErrorDialog} from '../../dialogs'
-import {useCreateBip44Wallet, usePlate} from '../../hooks'
 import {errorMessages} from '../../i18n/global-messages'
-import {CONFIG} from '../../legacy/config'
 import {useWalletNavigation, WalletInitRoutes} from '../../navigation'
 import {theme} from '../../theme'
 import {isEmptyString} from '../../utils/utils'
-import {NetworkId} from '../../yoroi-wallets'
+import {NetworkId, NUMBERS, useCreateBip44Wallet, usePlate} from '../../yoroi-wallets'
 import {NetworkError} from '../../yoroi-wallets/cardano/errors'
 import {WalletAddress} from '../WalletAddress'
 import {WalletNameForm} from '../WalletNameForm'
@@ -26,8 +24,8 @@ export const SaveReadOnlyWalletScreen = () => {
   const {publicKeyHex, path, networkId, walletImplementationId} = route.params
 
   const normalizedPath = path.map((i) => {
-    if (i >= CONFIG.NUMBERS.HARD_DERIVATION_START) {
-      return i - CONFIG.NUMBERS.HARD_DERIVATION_START
+    if (i >= NUMBERS.HARD_DERIVATION_START) {
+      return i - NUMBERS.HARD_DERIVATION_START
     }
     return i
   })

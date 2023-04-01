@@ -1,8 +1,8 @@
 import React from 'react'
 
 import {Banner, ClickableBanner} from '../../components'
-import {useHasPendingTx, useSync} from '../../hooks'
 import {useSelectedWallet} from '../../SelectedWallet'
+import {useHasPendingTx, useSync} from '../../yoroi-wallets'
 import {useStrings} from './strings'
 
 export const ErrorBanners = () => {

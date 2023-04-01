@@ -5,10 +5,10 @@ import {ActivityIndicator, InteractionManager, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {showErrorDialog} from '../../dialogs'
-import {useCreateWallet} from '../../hooks'
 import {errorMessages} from '../../i18n/global-messages'
 import {useWalletNavigation, WalletInitRoutes} from '../../navigation'
 import {COLORS} from '../../theme'
+import {useCreateWallet} from '../../yoroi-wallets'
 import {NetworkError} from '../../yoroi-wallets/cardano/errors'
 import {WalletForm} from '../WalletForm'
 

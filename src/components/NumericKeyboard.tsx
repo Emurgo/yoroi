@@ -1,7 +1,6 @@
 /* eslint-disable react/jsx-newline */
 import React from 'react'
-import {Image, TouchableHighlight, View, ViewProps} from 'react-native'
-import {StyleSheet} from 'react-native'
+import {Image, StyleSheet, TouchableHighlight, View, ViewProps} from 'react-native'
 
 import backspaceIcon from '../assets/img/backspace.png'
 import {Text} from './Text'
