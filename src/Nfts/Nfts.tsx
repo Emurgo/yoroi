@@ -30,6 +30,7 @@ export const Nfts = () => {
 
   const handleNftSelect = (index: number) => navigateTo.nftDetails(nftsSearchResult[index].id)
   const hasEmptySearchResult = nftsSearchTerm.length > 0 && nftsSearchResult.length === 0
+  const hasNotNfts = nftsSearchTerm.length === 0 && nftsSearchResult.length === 0
 
   const onRefresh = React.useCallback(() => {
     setIsManualRefreshing(true)
@@ -66,7 +67,7 @@ export const Nfts = () => {
     )
   }
 
-  if (nftsSearchTerm.length === 0 && nftsSearchResult.length === 0) {
+  if (hasNotNfts) {
     return (
       <ScreenWrapper>
         <ScrollView
