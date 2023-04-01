@@ -6,7 +6,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Icon, Spacer} from '../components'
 import {useSearch} from '../Search/SearchContext'
 import {useSelectedWallet} from '../SelectedWallet'
-import {useNfts} from '../yoroi-wallets'
+import {useNfts, YoroiNft} from '../yoroi-wallets'
 import {filterNfts} from './filterNfts'
 import {ImageGallery, SkeletonGallery} from './ImageGallery'
 import {useNavigateTo} from './navigation'
@@ -25,9 +25,11 @@ export const Nfts = () => {
   })
 
   const {search: nftsSearchTerm} = useSearch()
-  const nftsSearchResult = filterNfts(nftsSearchTerm, nfts).sort((nftA, nftB) => nftA.name.localeCompare(nftB.name))
+  const sortedNfts = sortNfts(nfts)
+  const nftsSearchResult = filterNfts(nftsSearchTerm, sortedNfts)
 
   const handleNftSelect = (index: number) => navigateTo.nftDetails(nftsSearchResult[index].id)
+  const hasEmptySearchResult = nftsSearchTerm.length > 0 && nftsSearchResult.length === 0
 
   const onRefresh = React.useCallback(() => {
     setIsManualRefreshing(true)
@@ -50,7 +52,7 @@ export const Nfts = () => {
     )
   }
 
-  if (nftsSearchTerm.length > 0 && nftsSearchResult.length === 0) {
+  if (hasEmptySearchResult) {
     return (
       <ScreenWrapper>
         <ScrollView
@@ -177,6 +179,8 @@ function LoadingScreen({nftsCount}: {nftsCount: number}) {
     </View>
   )
 }
+
+const sortNfts = (nfts: YoroiNft[]): YoroiNft[] => nfts.sort((nftA, nftB) => nftA.name.localeCompare(nftB.name))
 
 const styles = StyleSheet.create({
   safeAreaView: {
