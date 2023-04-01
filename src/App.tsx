@@ -9,12 +9,9 @@ import uuid from 'uuid'
 
 import AppNavigator from './AppNavigator'
 import {AuthProvider} from './auth/AuthProvider'
-import {getCrashReportsEnabled} from './hooks'
-import crashReporting from './legacy/crashReporting'
+import crashReporting from './crashReporting'
 import {SelectedWalletMetaProvider, SelectedWalletProvider} from './SelectedWallet'
-import {useStorage} from './Storage'
-import {walletManager} from './yoroi-wallets'
-import {YoroiStorage} from './yoroi-wallets/storage'
+import {getCrashReportsEnabled, useStorage, walletManager, YoroiStorage} from './yoroi-wallets'
 
 enableScreens()
 

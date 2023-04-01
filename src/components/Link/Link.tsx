@@ -5,13 +5,14 @@ import {COLORS} from '../../theme'
 
 type Props = {
   url: string
-  text: string
+  text?: string
   style?: TextStyle
+  children?: React.ReactNode
 }
 
-export const Link = ({url, text, style}: Props) => (
+export const Link = ({url, text, style, children}: Props) => (
   <TouchableOpacity onPress={() => Linking.openURL(url)}>
-    <Text style={[styles.text, style]}>{text}</Text>
+    {children === undefined ? <Text style={[styles.text, style]}>{text}</Text> : children}
   </TouchableOpacity>
 )
 

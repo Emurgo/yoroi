@@ -7,10 +7,13 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {BulletPointItem, Button, Icon, Spacer, StatusBar, Text} from '../../components'
 import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
 import {COLORS} from '../../theme'
-import {CardanoTypes, NetworkId, WalletImplementationId} from '../../yoroi-wallets'
+import {CardanoTypes, NetworkId, WALLET_IMPLEMENTATION_REGISTRY, WalletImplementationId} from '../../yoroi-wallets'
 import {generateByronPlateFromMnemonics} from '../../yoroi-wallets/cardano/byron/plate'
+import {
+  WALLET_CONFIG as HASKELL_SHELLEY,
+  WALLET_CONFIG_24 as HASKELL_SHELLEY_24,
+} from '../../yoroi-wallets/cardano/constants/mainnet/constants'
 import {generateShelleyPlateFromMnemonics} from '../../yoroi-wallets/cardano/shelley/plate'
-import {WALLET_IMPLEMENTATION_REGISTRY} from '../../yoroi-wallets/types/other'
 import {WalletAddress} from '../WalletAddress'
 
 export const VerifyRestoredWalletScreen = () => {
@@ -150,7 +153,7 @@ const usePlateFromMnemonic = ({
   walletImplementationId,
 }: {
   mnemonic: string
-  networkId: number
+  networkId: NetworkId
   walletImplementationId: WalletImplementationId
 }) => {
   const [addresses, setAddresses] = useState<undefined | Array<string>>(undefined)
@@ -164,8 +167,8 @@ const usePlateFromMnemonic = ({
       count: number,
     ) => {
       switch (walletImplId) {
-        case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY:
-        case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY_24:
+        case HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID:
+        case HASKELL_SHELLEY_24.WALLET_IMPLEMENTATION_ID:
           return generateShelleyPlateFromMnemonics(mnemonic, count, networkId)
         case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON:
           return generateByronPlateFromMnemonics(mnemonic, count)

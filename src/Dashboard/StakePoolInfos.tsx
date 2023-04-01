@@ -88,6 +88,7 @@ export const useStakingTx = (
       if (poolId == null) throw new Error('invalid state')
       const accountStates = await wallet.fetchAccountState()
       const accountState = accountStates[wallet.rewardAddressHex]
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (!accountState) throw new Error('Account state not found')
 
       const stakingUtxos = await wallet.getAllUtxosForKey()

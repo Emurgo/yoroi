@@ -4,11 +4,11 @@ import {defineMessages, useIntl} from 'react-intl'
 import {InteractionManager} from 'react-native'
 
 import image from '../../assets/img/ledger_2.png'
-import {useCreateBip44Wallet} from '../../hooks'
+import {showErrorDialog} from '../../dialogs'
 import {errorMessages} from '../../i18n/global-messages'
-import {showErrorDialog} from '../../legacy/actions'
-import {NetworkError} from '../../legacy/errors'
 import {useWalletNavigation, WalletInitRoutes} from '../../navigation'
+import {useCreateBip44Wallet} from '../../yoroi-wallets'
+import {NetworkError} from '../../yoroi-wallets/cardano/errors'
 import {WalletNameForm} from '../WalletNameForm'
 
 export const SaveNanoXScreen = () => {

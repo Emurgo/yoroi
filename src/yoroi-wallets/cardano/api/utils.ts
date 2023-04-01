@@ -1,6 +1,5 @@
 import AssetFingerprint from '@emurgo/cip14-js'
 
-import {getDefaultAssetByNetworkId} from '../../../legacy/config'
 import {LegacyToken, TokenInfo} from '../../types'
 import {YoroiWallet} from '../types'
 import {TokenRegistryEntry} from './api'
@@ -21,6 +20,7 @@ export const tokenInfo = (entry: TokenRegistryEntry): TokenInfo => {
     // optional values
     name: assetName,
     description: entry.description?.value,
+    symbol: undefined,
     ticker: entry.ticker?.value,
     url: entry.url?.value,
     logo: entry.logo?.value,
@@ -42,6 +42,7 @@ export const fallbackTokenInfo = (tokenId: string): TokenInfo => {
     }),
     description: undefined,
     logo: undefined,
+    symbol: undefined,
     ticker: undefined,
     url: undefined,
   }
@@ -75,7 +76,7 @@ export const asciiToHex = (ascii: string) => {
 }
 
 export const toToken = ({wallet, tokenInfo}: {wallet: YoroiWallet; tokenInfo: TokenInfo}): LegacyToken => {
-  if (tokenInfo.id === wallet.primaryTokenInfo.id) return getDefaultAssetByNetworkId(wallet.networkId)
+  if (tokenInfo.id === wallet.primaryTokenInfo.id) return wallet.primaryToken
   const assetNameHex = tokenInfo.name ? asciiToHex(tokenInfo.name) : ''
 
   return {
@@ -105,6 +106,7 @@ export const toTokenInfo = (token: LegacyToken): TokenInfo => {
     decimals: token.metadata.numberOfDecimals,
     fingerprint: toTokenFingerprint({policyId: token.metadata.policyId, assetNameHex: token.metadata.assetName}),
     description: token.metadata.longName ?? undefined,
+    symbol: undefined,
     url: undefined,
     logo: undefined,
     ticker: undefined,
@@ -118,6 +120,6 @@ export const toTokenFingerprint = ({
   policyId: string
   assetNameHex: string | undefined
 }) => {
-  const assetFingerprint = new AssetFingerprint(Buffer.from(policyId, 'hex'), Buffer.from(assetNameHex, 'hex'))
+  const assetFingerprint = AssetFingerprint.fromParts(Buffer.from(policyId, 'hex'), Buffer.from(assetNameHex, 'hex'))
   return assetFingerprint.fingerprint()
 }

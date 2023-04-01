@@ -10,10 +10,10 @@ import {useCanVote} from '../Catalyst/hooks'
 import {InsufficientFundsModal} from '../Catalyst/InsufficientFundsModal'
 import {Boundary, Icon, Spacer, Text} from '../components'
 import {usePrefetchStakingInfo} from '../Dashboard/StakePoolInfos'
-import {useWalletMetas} from '../hooks'
 import {defaultStackNavigationOptions, useWalletNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
 import {useWalletManager} from '../WalletManager'
+import {useWalletMetas} from '../yoroi-wallets'
 
 const MenuStack = createStackNavigator()
 

@@ -1,23 +1,4 @@
-import BigNumber from 'bignumber.js'
-
-export type TokenLookupKey = {
-  identifier: string
-  networkId: number
-}
-
-export type TokenEntry = TokenLookupKey & {
-  amount: BigNumber
-}
-
-export type TokenEntryPlain = TokenLookupKey & {
-  amount: string
-  isDefault: boolean
-}
-
-export type DefaultTokenEntry = {
-  defaultNetworkId: number
-  defaultIdentifier: string
-}
+import {NetworkId} from '.'
 
 export type TokenCommonMetadata = {
   numberOfDecimals: number
@@ -33,7 +14,7 @@ export type TokenMetadata = TokenCommonMetadata & {
 }
 
 export type Token = {
-  networkId: number
+  networkId: NetworkId
   isDefault: boolean
   identifier: string
   metadata: TokenMetadata
@@ -69,13 +50,41 @@ export type TokenInfo = {
   name: string | undefined // derived from token subject
   description: string | undefined
   ticker: string | undefined
+  symbol: string | undefined
   url: string | undefined
   logo: string | undefined
 }
 
 export type LegacyToken = {
-  networkId: number
+  networkId: NetworkId
   isDefault: boolean
   identifier: string
   metadata: TokenMetadata
+}
+
+export type NftMetadata = {
+  name: string
+  image: string | Array<string>
+  mediaType?: string
+  description?: string | Array<string>
+  authors?: string
+  author?: string
+  files?: Array<{
+    name?: string
+    mediaType?: string
+    src?: string | Array<string>
+  }>
+}
+
+export type AssetMetadata = {
+  [policyID: string]:
+    | {
+        [assetNameHex: string]: NftMetadata | undefined
+      }
+    | undefined
+}
+
+export type NFTAsset = {
+  key: '721'
+  metadata: AssetMetadata
 }

@@ -1,4 +1,5 @@
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
+import assert from 'assert'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Dimensions, Image, ScrollView, StyleSheet, View} from 'react-native'
@@ -6,9 +7,8 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import recoveryPhrase from '../../assets/img/recovery_phrase.png'
 import {Button, StatusBar, Text} from '../../components'
-import assert from '../../legacy/assert'
-import {isEmptyString} from '../../legacy/utils'
 import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
+import {isEmptyString} from '../../utils/utils'
 import {MnemonicBackupImportanceModal} from '../MnemonicBackupModal'
 
 export const MnemonicShowScreen = () => {
@@ -22,11 +22,11 @@ export const MnemonicShowScreen = () => {
 
   const navigateToMnemonicCheck = () => {
     const {name, password, networkId, walletImplementationId} = route.params
-    assert.assert(!isEmptyString(mnemonic), 'navigateToMnemonicCheck:: mnemonic')
-    assert.assert(!isEmptyString(password), 'navigateToMnemonicCheck:: password')
-    assert.assert(!isEmptyString(name), 'navigateToMnemonicCheck:: name')
-    assert.assert(networkId != null, 'navigateToMnemonicCheck:: networkId')
-    assert.assert(!isEmptyString(walletImplementationId), 'walletImplementationId')
+    assert(!isEmptyString(mnemonic), 'navigateToMnemonicCheck:: mnemonic')
+    assert(!isEmptyString(password), 'navigateToMnemonicCheck:: password')
+    assert(!isEmptyString(name), 'navigateToMnemonicCheck:: name')
+    assert(networkId != null, 'navigateToMnemonicCheck:: networkId')
+    assert(!isEmptyString(walletImplementationId), 'walletImplementationId')
 
     navigation.navigate('mnemonic-check', {
       mnemonic,

@@ -4,11 +4,11 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
 import {SettingsButton} from '../components/Button'
-import {useWalletName} from '../hooks'
 import {DashboardRoutes, defaultStackNavigationOptions, useWalletNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
 import {DelegationConfirmation} from '../Staking'
 import {StakingCenter} from '../Staking/StakingCenter'
+import {useWalletName} from '../yoroi-wallets'
 import {Dashboard} from './Dashboard'
 
 const Stack = createStackNavigator<DashboardRoutes>()

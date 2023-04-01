@@ -1,19 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {RouteProp, useRoute} from '@react-navigation/native'
-import {BigNumber} from 'bignumber.js'
 import React, {useEffect, useRef} from 'react'
 import {useIntl} from 'react-intl'
 import {Keyboard, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 
 import {Boundary, KeyboardSpacer, Spacer, StatusBar, Text, ValidatedTextInput} from '../../components'
 import {ConfirmTx} from '../../components/ConfirmTx'
-import {useBalances, useToken} from '../../hooks'
+import {debugWalletInfo, features} from '../../features'
 import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../i18n/global-messages'
-import {CONFIG} from '../../legacy/config'
 import {formatTokenWithSymbol, formatTokenWithText} from '../../legacy/format'
 import {TxHistoryRoutes, useWalletNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
+import {useBalances, useSaveMemo, useToken} from '../../yoroi-wallets'
 import {YoroiAmount, YoroiUnsignedTx} from '../../yoroi-wallets/types'
 import {Amounts, Quantities} from '../../yoroi-wallets/utils'
 import {useSend} from '../Context/SendContext'
@@ -26,16 +25,21 @@ export const ConfirmScreen = () => {
   const wallet = useSelectedWallet()
   const [password, setPassword] = React.useState('')
   const [useUSB, setUseUSB] = React.useState(false)
-  const {resetForm, receiver} = useSend()
+  const {memo, resetForm, receiver} = useSend()
+  const {saveMemo} = useSaveMemo({wallet})
 
   useEffect(() => {
-    if (CONFIG.DEBUG.PREFILL_FORMS && __DEV__) {
-      setPassword(CONFIG.DEBUG.PASSWORD)
+    if (features.prefillWalletInfo && __DEV__) {
+      setPassword(debugWalletInfo.PASSWORD)
     }
   }, [])
 
-  const onSuccess = () => {
+  const onSuccess = (signedTx) => {
     resetToTxHistory()
+
+    if (memo.length > 0) {
+      saveMemo({txId: signedTx.signedTx.id, memo})
+    }
     resetForm()
   }
 
@@ -107,7 +111,7 @@ const Fees = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx}) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const feeAmount = Amounts.getAmount(yoroiUnsignedTx.fee, wallet.primaryToken.identifier)
-  const text = `${strings.fees}: ${formatTokenWithSymbol(new BigNumber(feeAmount.quantity), wallet.primaryToken)}`
+  const text = `${strings.fees}: ${formatTokenWithSymbol(feeAmount.quantity, wallet.primaryToken)}`
   return (
     <Text small testID="feesText">
       {text}
@@ -129,10 +133,7 @@ const BalanceAfter = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx}) => 
     ]),
   )
   const primaryAmountAfter = Amounts.getAmount(balancesAfter, wallet.primaryToken.identifier)
-  const text = `${strings.balanceAfterTx}: ${formatTokenWithSymbol(
-    new BigNumber(primaryAmountAfter.quantity),
-    wallet.primaryToken,
-  )}`
+  const text = `${strings.balanceAfterTx}: ${formatTokenWithSymbol(primaryAmountAfter.quantity, wallet.primaryToken)}`
   return (
     <Text small testID="balanceAfterTxText">
       {text}
@@ -162,7 +163,7 @@ const PrimaryTotal = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx}) => 
       <Text>{strings.total}</Text>
 
       <Text style={styles.amount} testID="totalAmountText">
-        {formatTokenWithSymbol(new BigNumber(primaryAmount.quantity), wallet.primaryToken)}
+        {formatTokenWithSymbol(primaryAmount.quantity, wallet.primaryToken)}
       </Text>
     </>
   )
@@ -189,7 +190,7 @@ const Amount = ({amount}: {amount: YoroiAmount}) => {
   const wallet = useSelectedWallet()
   const token = useToken({wallet, tokenId: amount.tokenId})
 
-  return <Text style={styles.amount}>{formatTokenWithText(new BigNumber(amount.quantity), token)}</Text>
+  return <Text style={styles.amount}>{formatTokenWithText(amount.quantity, token)}</Text>
 }
 
 const Actions = (props: ViewProps) => <View {...props} style={{padding: 16}} />

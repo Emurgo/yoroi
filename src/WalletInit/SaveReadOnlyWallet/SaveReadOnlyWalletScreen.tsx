@@ -5,15 +5,13 @@ import {FlatList, InteractionManager, ScrollView, StyleSheet, View} from 'react-
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Boundary, Icon, Line, StatusBar, Text} from '../../components'
-import {useCreateBip44Wallet, usePlate} from '../../hooks'
+import {showErrorDialog} from '../../dialogs'
 import {errorMessages} from '../../i18n/global-messages'
-import {showErrorDialog} from '../../legacy/actions'
-import {CONFIG} from '../../legacy/config'
-import {NetworkError} from '../../legacy/errors'
-import {isEmptyString} from '../../legacy/utils'
 import {useWalletNavigation, WalletInitRoutes} from '../../navigation'
 import {theme} from '../../theme'
-import {NetworkId} from '../../yoroi-wallets'
+import {isEmptyString} from '../../utils/utils'
+import {NetworkId, NUMBERS, useCreateBip44Wallet, usePlate} from '../../yoroi-wallets'
+import {NetworkError} from '../../yoroi-wallets/cardano/errors'
 import {WalletAddress} from '../WalletAddress'
 import {WalletNameForm} from '../WalletNameForm'
 
@@ -26,8 +24,8 @@ export const SaveReadOnlyWalletScreen = () => {
   const {publicKeyHex, path, networkId, walletImplementationId} = route.params
 
   const normalizedPath = path.map((i) => {
-    if (i >= CONFIG.NUMBERS.HARD_DERIVATION_START) {
-      return i - CONFIG.NUMBERS.HARD_DERIVATION_START
+    if (i >= NUMBERS.HARD_DERIVATION_START) {
+      return i - NUMBERS.HARD_DERIVATION_START
     }
     return i
   })

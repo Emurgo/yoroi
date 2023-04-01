@@ -2,7 +2,7 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {ColorSchemeName, ScrollView, Text, TextInput, View} from 'react-native'
 
-import {mockTransactionInfo} from '../../../storybook/mocks'
+import {mockTransactionInfo} from '../../yoroi-wallets/mocks'
 import {Icon} from '..'
 
 storiesOf('Icon', module).add('Gallery', () => {
@@ -86,8 +86,6 @@ storiesOf('Icon', module).add('Gallery', () => {
           icon={<Icon.Direction transaction={mockTransactionInfo({direction: 'SELF', status: 'PENDING'})} />}
           title="Pending-Intrawallet"
         />
-
-        <Item icon={<Icon.NoAssetImage />} title="No Asset Image" />
 
         <Item icon={<Icon.Settings size={40} />} title="Settings" />
 
@@ -206,6 +204,10 @@ storiesOf('Icon', module).add('Gallery', () => {
         <Item icon={<Icon.WalletStack size={40} />} title="Wallet Stack" />
 
         <Item icon={<Icon.Wallet size={40} />} title="Wallet" />
+
+        <Item icon={<Icon.NoNfts size={40} />} title="No NFTs" />
+
+        <Item icon={<Icon.ExternalLink size={40} />} title="External link" />
       </ScrollView>
     </FilterProvider>
   )

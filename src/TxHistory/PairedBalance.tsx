@@ -3,10 +3,10 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text} from 'react-native'
 
 import {Boundary, ResetError, ResetErrorRef} from '../components'
-import {useExchangeRate} from '../hooks'
 import {useSelectedWallet} from '../SelectedWallet'
 import {useCurrencyContext} from '../Settings/Currency'
 import {COLORS} from '../theme'
+import {useExchangeRate} from '../yoroi-wallets'
 import {CurrencySymbol, YoroiAmount} from '../yoroi-wallets/types'
 import {Quantities} from '../yoroi-wallets/utils'
 

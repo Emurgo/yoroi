@@ -1,10 +1,9 @@
-import BigNumber from 'bignumber.js'
 import React from 'react'
 
 import {Banner} from '../../components'
-import {useBalances} from '../../hooks'
 import {formatTokenWithText} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
+import {useBalances} from '../../yoroi-wallets'
 import {Amounts} from '../../yoroi-wallets/utils'
 import {useStrings} from './strings'
 
@@ -17,7 +16,7 @@ export const AvailableAmountBanner = () => {
     <Banner
       label={strings.availableFunds}
       text={formatTokenWithText(
-        new BigNumber(Amounts.getAmount(balances, wallet.primaryToken.identifier).quantity),
+        Amounts.getAmount(balances, wallet.primaryToken.identifier).quantity,
         wallet.primaryToken,
       )}
       boldText

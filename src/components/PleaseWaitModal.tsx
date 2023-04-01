@@ -3,6 +3,7 @@ import {ActivityIndicator, StyleSheet, Text, View} from 'react-native'
 
 import {Modal} from './Modal'
 import {Spacer} from './Spacer'
+
 type PleaseWaitViewProps = {
   title: string
   spinnerText: string

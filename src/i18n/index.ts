@@ -1,44 +1,56 @@
-import 'moment/locale/ko'
-import 'moment/locale/ja'
-import 'moment/locale/zh-cn'
-import 'moment/locale/ru'
-import 'moment/locale/es'
-import 'moment/locale/id'
-import 'moment/locale/pt'
-import 'moment/locale/de'
-import 'moment/locale/fr'
-import 'moment/locale/it'
-import 'moment/locale/nl'
+import 'moment/locale/bn'
 import 'moment/locale/cs'
+import 'moment/locale/de'
+import 'moment/locale/es'
+import 'moment/locale/fr'
 import 'moment/locale/hu'
+import 'moment/locale/id'
+import 'moment/locale/it'
+import 'moment/locale/ja'
+import 'moment/locale/ko'
+import 'moment/locale/nl'
+import 'moment/locale/pl'
+import 'moment/locale/pt'
+import 'moment/locale/ru'
 import 'moment/locale/sk'
+import 'moment/locale/sl'
+import 'moment/locale/sv'
+import 'moment/locale/sw'
+import 'moment/locale/tl-ph'
+import 'moment/locale/uk'
+import 'moment/locale/zh-cn'
 
 import BigNumber from 'bignumber.js'
 import moment from 'moment'
 
-import assert from '../legacy/assert'
 import {LanguageCode, LANGUAGES} from './languages'
 
 // note(v-almonacid): there is no distinction between trad vs simplified
 // chinese locales in momentjs
 const momentLocales = {
-  [LANGUAGES.ENGLISH]: 'en',
-  [LANGUAGES.CHINESE_SIMPLIFIED]: 'zh-cn',
-  // TODO: Add when chinese traditional is available
-  // [LANGUAGES.CHINESE_TRADITIONAL]: 'zh-cn',
-  [LANGUAGES.KOREAN]: 'ko',
-  [LANGUAGES.JAPANESE]: 'ja',
-  [LANGUAGES.RUSSIAN]: 'ru',
-  [LANGUAGES.SPANISH]: 'es',
-  [LANGUAGES.INDONESIAN]: 'id',
+  [LANGUAGES.BENGALI]: 'bn',
   [LANGUAGES.BRAZILIAN]: 'pt',
-  [LANGUAGES.GERMAN]: 'de',
-  [LANGUAGES.FRENCH]: 'fr',
-  [LANGUAGES.ITALIAN]: 'it',
-  [LANGUAGES.DUTCH]: 'nl',
+  [LANGUAGES.CHINESE_SIMPLIFIED]: 'zh-cn',
   [LANGUAGES.CZECH]: 'cs',
+  [LANGUAGES.DUTCH]: 'nl',
+  [LANGUAGES.ENGLISH]: 'en',
+  [LANGUAGES.FILIPINO]: 'tl-ph',
+  [LANGUAGES.FRENCH]: 'fr',
+  [LANGUAGES.GERMAN]: 'de',
   [LANGUAGES.HUNGARIAN]: 'hu',
+  [LANGUAGES.KENYAN]: 'sw',
+  [LANGUAGES.INDONESIAN]: 'id',
+  [LANGUAGES.ITALIAN]: 'it',
+  [LANGUAGES.JAPANESE]: 'ja',
+  [LANGUAGES.KOREAN]: 'ko',
+  [LANGUAGES.POLISH]: 'pl',
+  [LANGUAGES.RUSSIAN]: 'ru',
   [LANGUAGES.SLOVAK]: 'sk',
+  [LANGUAGES.SLOVENIAN]: 'sl',
+  [LANGUAGES.SPANISH]: 'es',
+  [LANGUAGES.SWEDISH]: 'sv',
+  [LANGUAGES.UKRAINIAN]: 'uk',
+  [LANGUAGES.VIETNAMESE]: 'vi',
 }
 
 // Add default custom formatting functions
@@ -91,27 +103,32 @@ const spanishNumberFmt = {
 }
 
 const numberLocales = {
-  [LANGUAGES.ENGLISH]: defaultNumberFmt,
-  [LANGUAGES.CHINESE_SIMPLIFIED]: defaultNumberFmt,
-  // TODO: Add when chinese traditional is available
-  // [LANGUAGES.CHINESE_TRADITIONAL]: customNumberFmt,
-  [LANGUAGES.KOREAN]: defaultNumberFmt,
-  [LANGUAGES.JAPANESE]: defaultNumberFmt,
-  [LANGUAGES.RUSSIAN]: russianNumberFmt,
-  [LANGUAGES.SPANISH]: spanishNumberFmt,
-  [LANGUAGES.INDONESIAN]: defaultCommaDecimalSeparatorFmt,
+  [LANGUAGES.BENGALI]: defaultCommaDecimalSeparatorFmt,
   [LANGUAGES.BRAZILIAN]: defaultCommaDecimalSeparatorFmt,
-  [LANGUAGES.GERMAN]: defaultCommaDecimalSeparatorFmt,
-  [LANGUAGES.FRENCH]: defaultCommaDecimalSeparatorFmt,
-  [LANGUAGES.ITALIAN]: defaultCommaDecimalSeparatorFmt,
-  [LANGUAGES.DUTCH]: defaultNumberFmt,
+  [LANGUAGES.CHINESE_SIMPLIFIED]: defaultNumberFmt,
   [LANGUAGES.CZECH]: defaultCommaDecimalSeparatorFmt,
+  [LANGUAGES.DUTCH]: defaultNumberFmt,
+  [LANGUAGES.ENGLISH]: defaultNumberFmt,
+  [LANGUAGES.FILIPINO]: defaultCommaDecimalSeparatorFmt,
+  [LANGUAGES.FRENCH]: defaultCommaDecimalSeparatorFmt,
+  [LANGUAGES.GERMAN]: defaultCommaDecimalSeparatorFmt,
   [LANGUAGES.HUNGARIAN]: defaultCommaDecimalSeparatorFmt,
+  [LANGUAGES.INDONESIAN]: defaultCommaDecimalSeparatorFmt,
+  [LANGUAGES.ITALIAN]: defaultCommaDecimalSeparatorFmt,
+  [LANGUAGES.JAPANESE]: defaultNumberFmt,
+  [LANGUAGES.KENYAN]: defaultNumberFmt,
+  [LANGUAGES.KOREAN]: defaultNumberFmt,
+  [LANGUAGES.POLISH]: defaultCommaDecimalSeparatorFmt,
+  [LANGUAGES.RUSSIAN]: russianNumberFmt,
   [LANGUAGES.SLOVAK]: defaultCommaDecimalSeparatorFmt,
+  [LANGUAGES.SLOVENIAN]: defaultCommaDecimalSeparatorFmt,
+  [LANGUAGES.SPANISH]: spanishNumberFmt,
+  [LANGUAGES.SWEDISH]: defaultCommaDecimalSeparatorFmt,
+  [LANGUAGES.UKRAINIAN]: defaultCommaDecimalSeparatorFmt,
+  [LANGUAGES.VIETNAMESE]: defaultCommaDecimalSeparatorFmt,
 }
 
 export const updateLanguageSettings = (code: LanguageCode) => {
-  assert.assert(Object.values(LANGUAGES).includes(code), 'Unknown language', code)
   moment.locale(momentLocales[code])
 
   BigNumber.config({

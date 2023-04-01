@@ -2,7 +2,7 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {Text} from 'react-native'
 
-import {WithModalProps} from '../../../storybook'
+import {WithModalProps} from '../../../.storybook/decorators'
 import {ModalInfo} from './ModalInfo'
 
 storiesOf('Modal Info', module).add('default', () => (

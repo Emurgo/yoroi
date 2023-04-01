@@ -5,10 +5,12 @@ import {StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, ButtonProps, Spacer, StatusBar} from '../../components'
-import {CONFIG, isNightly} from '../../legacy/config'
+import {isNightly} from '../../legacy/config'
 import {WalletInitRouteNavigation} from '../../navigation'
 import {COLORS} from '../../theme'
-import {NetworkId, WalletImplementationId} from '../../yoroi-wallets'
+import {NetworkId, WALLET_IMPLEMENTATION_REGISTRY, WalletImplementationId} from '../../yoroi-wallets'
+import * as HASKELL_SHELLEY from '../../yoroi-wallets/cardano/constants/mainnet/constants'
+import * as HASKELL_SHELLEY_TESTNET from '../../yoroi-wallets/cardano/constants/testnet/constants'
 import {WalletDescription} from '../WalletDescription'
 
 export const WalletFreshInitScreen = () => {
@@ -94,20 +96,9 @@ const useNavigateTo = () => {
     })
 
   return {
-    shelley: () =>
-      navigateInitWallet(
-        CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
-        CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
-      ),
-    byron: () =>
-      navigateInitWallet(
-        CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
-        CONFIG.WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID,
-      ),
+    shelley: () => navigateInitWallet(HASKELL_SHELLEY.NETWORK_ID, HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID),
+    byron: () => navigateInitWallet(HASKELL_SHELLEY.NETWORK_ID, WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON),
     shelleyTestnet: () =>
-      navigateInitWallet(
-        CONFIG.NETWORKS.HASKELL_SHELLEY_TESTNET.NETWORK_ID,
-        CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
-      ),
+      navigateInitWallet(HASKELL_SHELLEY_TESTNET.NETWORK_ID, HASKELL_SHELLEY_TESTNET.WALLET_IMPLEMENTATION_ID),
   }
 }

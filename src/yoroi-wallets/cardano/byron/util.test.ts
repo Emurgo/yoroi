@@ -1,5 +1,5 @@
-import {CONFIG} from '../../../legacy/config'
-import {getCardanoByronConfig} from '../../../legacy/networks'
+import {getCardanoByronConfig} from '../networks'
+import {NUMBERS} from '../numbers'
 import {getAccountFromMasterKey, getAddressInHex, getExternalAddresses, getMasterKeyFromMnemonic} from './util'
 
 const BYRON_PROTOCOL_MAGIC = getCardanoByronConfig().PROTOCOL_MAGIC
@@ -20,7 +20,7 @@ test('Can generate external addresses', async () => {
   expect.assertions(1)
 
   const rootKey = await getMasterKeyFromMnemonic(mnemonic)
-  const account = await getAccountFromMasterKey(rootKey, CONFIG.NUMBERS.ACCOUNT_INDEX)
+  const account = await getAccountFromMasterKey(rootKey, NUMBERS.ACCOUNT_INDEX)
   const addresses = await getExternalAddresses(account, [0, 1], BYRON_PROTOCOL_MAGIC)
 
   expect(addresses).toEqual(externalAddresses)

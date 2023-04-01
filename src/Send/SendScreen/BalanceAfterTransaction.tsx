@@ -1,11 +1,10 @@
-import {BigNumber} from 'bignumber.js'
 import React from 'react'
 import {StyleSheet} from 'react-native'
 
 import {Text} from '../../components'
-import {useBalances} from '../../hooks'
 import {formatTokenWithSymbol} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
+import {useBalances} from '../../yoroi-wallets'
 import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
 import {Amounts} from '../../yoroi-wallets/utils'
 import {useStrings} from './strings'
@@ -43,7 +42,7 @@ export const BalanceAfterTransaction = ({yoroiUnsignedTx}: {yoroiUnsignedTx: Yor
 
       {': '}
 
-      {formatTokenWithSymbol(new BigNumber(primaryAmountAfter.quantity), wallet.primaryToken)}
+      {formatTokenWithSymbol(primaryAmountAfter.quantity, wallet.primaryToken)}
     </Text>
   )
 }

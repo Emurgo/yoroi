@@ -2,8 +2,7 @@ import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {StorageProvider} from '../../Storage'
-import {storage} from '../../yoroi-wallets/storage'
+import {storage, StorageProvider} from '../../yoroi-wallets'
 import {CheckPinInput} from './CheckPinInput'
 
 storiesOf('CheckPinInput', module).add('Default', () => (

@@ -1,20 +1,20 @@
+import {FlashList, FlashListProps} from '@shopify/flash-list'
 import React from 'react'
-import {defineMessages} from 'react-intl'
-import {useIntl} from 'react-intl'
-import {Alert, FlatList, FlatListProps, StyleSheet, View} from 'react-native'
+import {defineMessages, useIntl} from 'react-intl'
+import {Alert, Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 
-import {Boundary} from '../../components'
+import {AssetItem, AssetItemProps} from '../../components/AssetItem'
 import {Spacer} from '../../components/Spacer'
-import {useBalances, useTokenInfos} from '../../hooks'
 import globalMessages, {actionMessages} from '../../i18n/global-messages'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {sortTokenInfos} from '../../utils'
+import {useBalances, useTokenInfos} from '../../yoroi-wallets'
+import {getNetworkConfigById} from '../../yoroi-wallets/cardano/networks'
 import {TokenInfo} from '../../yoroi-wallets/types'
 import {Amounts} from '../../yoroi-wallets/utils'
 import {ActionsBanner} from './ActionsBanner'
-import {AssetItem} from './AssetItem'
 
-type ListProps = FlatListProps<TokenInfo>
+type ListProps = FlashListProps<TokenInfo>
 type Props = Partial<ListProps> & {
   onScroll: ListProps['onScroll']
   refreshing: boolean
@@ -28,6 +28,8 @@ export const AssetList = (props: Props) => {
   const handleOnPressNFTs = () => Alert.alert(strings.soon, strings.soon)
   const handleOnPressTokens = () => Alert.alert(strings.soon, strings.soon)
   const handleSearch = () => Alert.alert(strings.soon, strings.soon)
+
+  const config = getNetworkConfigById(wallet.networkId)
 
   const tokenInfos = useTokenInfos({
     wallet,
@@ -44,24 +46,49 @@ export const AssetList = (props: Props) => {
         onSearch={handleSearch}
       />
 
-      <FlatList
+      <FlashList
         {...props}
         data={sortTokenInfos({wallet, tokenInfos})}
         renderItem={({item: tokenInfo}) => (
-          <Boundary loading={{size: 'small'}} error={{size: 'inline'}}>
-            <AssetItem tokenInfo={tokenInfo} />
-          </Boundary>
+          <ExplorableAssetItem
+            tokenInfo={tokenInfo}
+            balance={balances[tokenInfo.id]}
+            onPress={() => Linking.openURL(config.EXPLORER_URL_FOR_TOKEN(tokenInfo.id))}
+          />
         )}
         ItemSeparatorComponent={() => <Spacer height={16} />}
         contentContainerStyle={{paddingTop: 16, paddingHorizontal: 16, paddingBottom: 8}}
-        keyExtractor={(tokenInfo) => tokenInfo.id}
+        keyExtractor={(_, index) => index.toString()}
+        estimatedItemSize={78}
       />
     </View>
   )
 }
 
+type ExplorableAssetItemProps = AssetItemProps & {
+  onPress(): void
+}
+const ExplorableAssetItem = ({tokenInfo, balance, onPress}: ExplorableAssetItemProps) => {
+  return (
+    <TouchableOpacity style={styles.button} onPress={onPress} testID="assetSelectorItem">
+      <AssetItem tokenInfo={tokenInfo} balance={balance} />
+    </TouchableOpacity>
+  )
+}
+
 const styles = StyleSheet.create({
   assetList: {flex: 1},
+  button: {
+    backgroundColor: '#fff',
+    shadowColor: '#181a1e',
+    borderRadius: 8,
+    elevation: 2,
+    shadowOffset: {width: 0, height: -2},
+    shadowRadius: 10,
+    shadowOpacity: 0.08,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+  },
 })
 
 const messages = defineMessages({

@@ -1,13 +1,12 @@
-import BigNumber from 'bignumber.js'
 import React from 'react'
 import {useIntl} from 'react-intl'
 import {View} from 'react-native'
 
 import {Boundary, Spacer, Text} from '../components'
-import {useLockedAmount} from '../hooks'
 import globalMessages from '../i18n/global-messages'
 import {formatTokenWithText, formatTokenWithTextWhenHidden} from '../legacy/format'
 import {useSelectedWallet} from '../SelectedWallet'
+import {useLockedAmount} from '../yoroi-wallets'
 
 type Props = {
   privacyMode?: boolean
@@ -35,7 +34,7 @@ export const LockedDeposit = ({privacyMode}: Props) => {
 const LockedAmount = () => {
   const wallet = useSelectedWallet()
   const lockedAmount = useLockedAmount({wallet})
-  const amount = formatTokenWithText(new BigNumber(lockedAmount), wallet.primaryToken)
+  const amount = formatTokenWithText(lockedAmount, wallet.primaryToken)
   return <FormattedAmount amount={amount} />
 }
 

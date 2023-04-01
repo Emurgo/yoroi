@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {Resolution} from '@unstoppabledomains/resolution'
+import assert from 'assert'
 import {wordlists} from 'bip39'
 import _ from 'lodash'
 
-import assert from '../../legacy/assert'
-import {getNetworkConfigById} from '../../legacy/networks'
-import {normalizeToAddress} from '../../legacy/utils'
-import {Token} from '../types'
+import {normalizeToAddress} from '../cardano'
+import {getNetworkConfigById} from '../cardano/networks'
+import {NetworkId, Token} from '../types'
 import {InvalidAssetAmount, parseAmountDecimal} from './parsing'
 
 export type PasswordValidationErrors = {
@@ -143,7 +143,7 @@ export const getUnstoppableDomainAddress = async (domain: string) => {
 
 export const isReceiverAddressValid = async (
   receiverAddress: string,
-  walletNetworkId: number,
+  walletNetworkId: NetworkId,
 ): Promise<AddressValidationErrors | void> => {
   if (!receiverAddress) {
     return {addressIsRequired: true}
@@ -186,7 +186,7 @@ export const validateAmount = (value: string, token: Token): AmountValidationErr
 }
 
 wordlists.EN.forEach((word) => {
-  assert.assert(word === word.toLowerCase(), 'we expect wordlist to contain only lowercase words')
+  assert(word === word.toLowerCase(), 'we expect wordlist to contain only lowercase words')
 })
 
 export const cleanMnemonic = (mnemonic: string) => {

@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {BigNumber} from 'bignumber.js'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
@@ -7,14 +6,14 @@ import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {Text, ValidatedTextInput} from '../../components'
 import {ConfirmTx} from '../../components/ConfirmTx'
 import {useStakePoolInfoAndHistory} from '../../Dashboard/StakePoolInfo'
+import {debugWalletInfo, features} from '../../features'
 import {Instructions as HWInstructions} from '../../HW'
 import globalMessages, {txLabels} from '../../i18n/global-messages'
-import {CONFIG} from '../../legacy/config'
 import {formatTokenAmount, formatTokenWithText} from '../../legacy/format'
-import {useParams, useWalletNavigation} from '../../navigation'
-import {StakingCenterRoutes} from '../../navigation'
+import {StakingCenterRoutes, useParams, useWalletNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
+import {NETWORKS, NUMBERS} from '../../yoroi-wallets'
 import {Quantity} from '../../yoroi-wallets/types'
 import {Amounts, Entries, Quantities} from '../../yoroi-wallets/utils'
 
@@ -45,7 +44,7 @@ export const DelegationConfirmation = () => {
   const [useUSB, setUseUSB] = useState(false)
 
   useEffect(() => {
-    if (CONFIG.DEBUG.PREFILL_FORMS && __DEV__) setPassword(CONFIG.DEBUG.PASSWORD)
+    if (features.prefillWalletInfo && __DEV__) setPassword(debugWalletInfo.PASSWORD)
   }, [])
 
   const onSuccess = () => {
@@ -69,10 +68,9 @@ export const DelegationConfirmation = () => {
 
         <View style={styles.input} testID="stakingAmount">
           <Text small style={styles.fees}>
-            {`+ ${formatTokenAmount(
-              new BigNumber(yoroiUnsignedTx.fee[wallet.primaryToken.identifier]),
-              wallet.primaryToken,
-            )} ${strings.ofFees}`}
+            {`+ ${formatTokenAmount(yoroiUnsignedTx.fee[wallet.primaryToken.identifier], wallet.primaryToken)} ${
+              strings.ofFees
+            }`}
           </Text>
 
           {/* requires a handler so we pass on a dummy function */}
@@ -80,7 +78,7 @@ export const DelegationConfirmation = () => {
           <ValidatedTextInput
             onChangeText={() => undefined}
             editable={false}
-            value={formatTokenAmount(new BigNumber(stakingAmount.quantity), wallet.primaryToken)}
+            value={formatTokenAmount(stakingAmount.quantity, wallet.primaryToken)}
             label={strings.amount}
           />
         </View>
@@ -94,7 +92,7 @@ export const DelegationConfirmation = () => {
         <View style={styles.itemBlock}>
           <Text style={styles.itemTitle}>{strings.rewardsExplanation}</Text>
 
-          <Text style={styles.rewards}>{formatTokenWithText(new BigNumber(reward), wallet.primaryToken)}</Text>
+          <Text style={styles.rewards}>{formatTokenWithText(reward, wallet.primaryToken)}</Text>
         </View>
 
         {wallet.isHW && <HWInstructions useUSB={useUSB} addMargin />}
@@ -169,8 +167,8 @@ const messages = defineMessages({
  */
 const approximateReward = (stakedQuantity: Quantity): Quantity => {
   return Quantities.quotient(
-    Quantities.product([stakedQuantity, `${CONFIG.NETWORKS.HASKELL_SHELLEY.PER_EPOCH_PERCENTAGE_REWARD}`]),
-    CONFIG.NUMBERS.EPOCH_REWARD_DENOMINATOR.toString() as Quantity,
+    Quantities.product([stakedQuantity, `${NETWORKS.HASKELL_SHELLEY.PER_EPOCH_PERCENTAGE_REWARD}`]),
+    NUMBERS.EPOCH_REWARD_DENOMINATOR.toString() as Quantity,
   )
 }
 

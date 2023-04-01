@@ -3,11 +3,11 @@ import {defineMessages, useIntl} from 'react-intl'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {StatusBar} from '../../components'
+import {showErrorDialog} from '../../dialogs'
 import {errorMessages} from '../../i18n/global-messages'
-import {showErrorDialog} from '../../legacy/actions'
 import {CONFIG} from '../../legacy/config'
+import {useCheckPin} from '../../yoroi-wallets'
 import {useAuth} from '../AuthProvider'
-import {useCheckPin} from '../hooks'
 import {PinInput, PinInputRef} from '../PinInput'
 
 export const PinLoginScreen = () => {

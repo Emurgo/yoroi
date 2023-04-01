@@ -9,7 +9,7 @@ type Props = {
 
 export const Document = ({size = 40, color = 'black', backgroundColor = 'transparent'}: Props) => (
   <Svg width={size} height={size} viewBox="0 0 24 24">
-    <G transform={{scale: 1.25, translateX: -3, translateY: -3}}>
+    <G transform="scale(1.25) translateX(-3px) translateY(-3px)">
       <Rect
         id="document"
         stroke={color}

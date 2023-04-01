@@ -2,7 +2,8 @@ import {NavigationRouteContext} from '@react-navigation/native'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {CONFIG} from '../../legacy/config'
+import {NETWORKS, WALLETS} from '../../yoroi-wallets'
+import {NETWORK_ID, WALLET_IMPLEMENTATION_ID} from '../../yoroi-wallets/cardano/constants/mainnet/constants'
 import {WalletInitScreen} from './WalletInitScreen'
 
 storiesOf('WalletInitScreen', module)
@@ -12,8 +13,8 @@ storiesOf('WalletInitScreen', module)
         key: 'key',
         name: 'name',
         params: {
-          networkId: CONFIG.NETWORKS.JORMUNGANDR.NETWORK_ID,
-          walletImplementationId: CONFIG.WALLETS.JORMUNGANDR_ITN.WALLET_IMPLEMENTATION_ID,
+          networkId: NETWORKS.JORMUNGANDR.NETWORK_ID,
+          walletImplementationId: WALLETS.JORMUNGANDR_ITN.WALLET_IMPLEMENTATION_ID,
         },
       }}
     >
@@ -26,8 +27,8 @@ storiesOf('WalletInitScreen', module)
         key: 'key',
         name: 'name',
         params: {
-          networkId: CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
-          walletImplementationId: CONFIG.WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID,
+          networkId: NETWORK_ID,
+          walletImplementationId: WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID,
         },
       }}
     >
@@ -40,8 +41,8 @@ storiesOf('WalletInitScreen', module)
         key: 'key',
         name: 'name',
         params: {
-          networkId: CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
-          walletImplementationId: CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
+          networkId: NETWORK_ID,
+          walletImplementationId: WALLET_IMPLEMENTATION_ID,
         },
       }}
     >

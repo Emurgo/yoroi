@@ -1,8 +1,8 @@
 import React from 'react'
 import {Platform, StyleSheet, TextInput, TextInputProps, TouchableOpacity, View, ViewStyle} from 'react-native'
 
-import {isEmptyString} from '../legacy/utils'
 import {COLORS} from '../theme'
+import {isEmptyString} from '../utils/utils'
 import {Icon} from './Icon'
 import {Text} from './Text'
 

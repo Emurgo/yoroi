@@ -2,10 +2,10 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {QueryClient, QueryClientProvider} from 'react-query'
 
-import {mocks, RouteProvider} from '../../../storybook'
-import {getDefaultAssets} from '../../legacy/config'
+import {RouteProvider} from '../../../.storybook/decorators'
 import {StakingCenterRoutes} from '../../navigation'
 import {SelectedWalletProvider} from '../../SelectedWallet'
+import {mocks} from '../../yoroi-wallets/mocks'
 import {DelegationConfirmation} from './DelegationConfirmation'
 
 storiesOf('DelegationConfirmation', module)
@@ -14,7 +14,7 @@ storiesOf('DelegationConfirmation', module)
       <SelectedWalletProvider
         wallet={{
           ...mocks.wallet,
-          primaryToken: getDefaultAssets()[0],
+
           fetchPoolInfo: mocks.fetchPoolInfo.success.poolFound,
         }}
       >
@@ -29,7 +29,7 @@ storiesOf('DelegationConfirmation', module)
       <SelectedWalletProvider
         wallet={{
           ...mocks.wallet,
-          primaryToken: getDefaultAssets()[0],
+
           fetchPoolInfo: mocks.fetchPoolInfo.loading,
         }}
       >
@@ -44,7 +44,7 @@ storiesOf('DelegationConfirmation', module)
       <SelectedWalletProvider
         wallet={{
           ...mocks.wallet,
-          primaryToken: getDefaultAssets()[0],
+
           fetchPoolInfo: mocks.fetchPoolInfo.error,
         }}
       >

@@ -7,15 +7,16 @@ import {WebView, WebViewMessageEvent} from 'react-native-webview'
 
 import {PleaseWaitModal, Spacer} from '../../components'
 import {useStakingTx} from '../../Dashboard/StakePoolInfos'
+import {showErrorDialog} from '../../dialogs'
+import {features} from '../../features'
 import {useLanguage} from '../../i18n'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
-import {showErrorDialog} from '../../legacy/actions'
-import {CONFIG, isNightly, SHOW_PROD_POOLS_IN_DEV} from '../../legacy/config'
+import {isNightly} from '../../legacy/config'
 import {Logger} from '../../legacy/logging'
-import {getNetworkConfigById} from '../../legacy/networks'
 import {StakingCenterRouteNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
-import {NotEnoughMoneyToSendError} from '../../yoroi-wallets'
+import {NETWORKS, NotEnoughMoneyToSendError} from '../../yoroi-wallets'
+import {getNetworkConfigById} from '../../yoroi-wallets/cardano/networks'
 import {PoolDetailScreen} from '../PoolDetails'
 
 export const StakingCenter = () => {
@@ -70,7 +71,7 @@ export const StakingCenter = () => {
         </View>
       )}
 
-      {(config.IS_MAINNET || SHOW_PROD_POOLS_IN_DEV) && (
+      {(config.IS_MAINNET || features.showProdPoolsInDev) && (
         <>
           <View style={{flex: 1, backgroundColor: '#fff'}}>
             <Spacer height={8} />
@@ -106,7 +107,7 @@ const noPoolDataDialog = defineMessages({
  */
 const prepareStakingURL = (locale: string): string => {
   // source=mobile is constant and already included
-  let finalURL = CONFIG.NETWORKS.HASKELL_SHELLEY.POOL_EXPLORER
+  let finalURL = NETWORKS.HASKELL_SHELLEY.POOL_EXPLORER
 
   const lang = locale.slice(0, 2)
   finalURL += `&lang=${lang}`

@@ -1,19 +1,13 @@
 // taken from Yoroi Frontend's MultiToken class
+import {TokenEntry} from '@emurgo/yoroi-lib'
 import {BigNumber} from 'bignumber.js'
 
-import {getDefaultAssetByNetworkId} from '../../legacy/config'
+import {DefaultAsset} from '../types'
 import type {NetworkId} from '../types/other'
+
 export type TokenLookupKey = {
   identifier: string
-
-  /**
-   * note: avoid putting asset metadata here directly
-   * since it can update over time so best not to cache it here
-   */
   networkId: number
-}
-export type TokenEntry = TokenLookupKey & {
-  amount: BigNumber
 }
 export type TokenEntryPlain = TokenLookupKey & {
   amount: string
@@ -195,15 +189,14 @@ export class MultiToken {
 /**
  * Utility functions
  */
-export const getDefaultNetworkTokenEntry = (networkId: NetworkId): DefaultTokenEntry => {
-  const defaultAsset = getDefaultAssetByNetworkId(networkId)
+export const getDefaultNetworkTokenEntry = (defaultAsset: DefaultAsset): DefaultTokenEntry => {
   return {
     defaultNetworkId: defaultAsset.networkId,
     defaultIdentifier: defaultAsset.identifier,
   }
 }
-export const strToDefaultMultiAsset = (amount: string, networkId: NetworkId) => {
-  const defaultTokenEntry = getDefaultNetworkTokenEntry(networkId)
+export const strToDefaultMultiAsset = (amount: string, networkId: NetworkId, defaultAsset: DefaultAsset) => {
+  const defaultTokenEntry = getDefaultNetworkTokenEntry(defaultAsset)
   return new MultiToken(
     [
       {

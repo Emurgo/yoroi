@@ -4,7 +4,7 @@ import {useIntl} from 'react-intl'
 import {ErrorView, Modal, PleaseWaitView} from '../../components'
 import {LedgerConnect, LedgerTransportSwitchView} from '../../HW'
 import globalMessages, {ledgerMessages, txLabels} from '../../i18n/global-messages'
-import type {DeviceId, DeviceObj} from '../../legacy/ledgerUtils'
+import {DeviceId, DeviceObj} from '../../yoroi-wallets'
 
 type ErrorData = {
   errorMessage: string

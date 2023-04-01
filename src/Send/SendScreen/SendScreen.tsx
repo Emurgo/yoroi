@@ -1,18 +1,17 @@
 import {useNavigation} from '@react-navigation/native'
-import {BigNumber} from 'bignumber.js'
 import _ from 'lodash'
 import React from 'react'
 import {useIntl} from 'react-intl'
-import {ActivityIndicator, Image, ScrollView, StyleSheet, View} from 'react-native'
-import {TouchableOpacity} from 'react-native-gesture-handler'
+import {ActivityIndicator, Image, StyleSheet, View} from 'react-native'
+import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, Checkbox, Spacer, StatusBar, Text, TextInput} from '../../components'
-import {useBalances, useHasPendingTx, useIsOnline, useToken, useUtxos} from '../../hooks'
-import {CONFIG} from '../../legacy/config'
-import {formatTokenAmount, getAssetDenominationOrId, truncateWithEllipsis} from '../../legacy/format'
+import {Button, Checkbox, KeyboardSpacer, Spacer, StatusBar, Text, TextInput} from '../../components'
+import {debugWalletInfo, features} from '../../features'
+import {formatTokenAmount, truncateWithEllipsis} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
+import {toToken, useBalances, useHasPendingTx, useIsOnline, useTokenInfo, useUtxos} from '../../yoroi-wallets'
 import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
 import {Amounts, Quantities} from '../../yoroi-wallets/utils'
 import type {
@@ -21,6 +20,7 @@ import type {
   BalanceValidationErrors,
 } from '../../yoroi-wallets/utils/validators'
 import {useSend} from '../Context/SendContext'
+import {maxMemoLength, MemoInput} from '../Memo'
 import {ScannerButton} from '../ScannerButton'
 import {AmountField} from './../AmountField'
 import {AvailableAmountBanner} from './AvailableAmountBanner'
@@ -42,7 +42,18 @@ export const SendScreen = () => {
   const hasPendingTx = useHasPendingTx(wallet)
   const isOnline = useIsOnline(wallet)
 
-  const {tokenId, resetForm, receiverChanged, amountChanged, receiver, amount, sendAll, sendAllChanged} = useSend()
+  const {
+    tokenId,
+    resetForm,
+    receiverChanged,
+    amountChanged,
+    receiver,
+    amount,
+    sendAll,
+    sendAllChanged,
+    memo,
+    memoChanged,
+  } = useSend()
 
   const selectedAssetAvailableAmount = Amounts.getAmount(balances, tokenId).quantity
   const defaultAssetAvailableAmount = Amounts.getAmount(balances, wallet.primaryToken.identifier).quantity
@@ -61,8 +72,10 @@ export const SendScreen = () => {
   const [recomputing, setRecomputing] = React.useState(false)
   const [showSendAllWarning, setShowSendAllWarning] = React.useState(false)
 
-  const token = useToken({wallet, tokenId})
-  const assetDenomination = truncateWithEllipsis(getAssetDenominationOrId(token), 20)
+  const tokenInfo = useTokenInfo({wallet, tokenId})
+  const isPrimaryToken = tokenInfo.id === wallet.primaryTokenInfo.id
+  const token = toToken({wallet, tokenInfo})
+  const assetDenomination = truncateWithEllipsis(tokenInfo.ticker ?? tokenInfo.name ?? tokenInfo.fingerprint, 20)
   const amountErrorText = getAmountErrorText(intl, amountErrors, balanceErrors, wallet.primaryToken)
 
   const isValid =
@@ -71,13 +84,14 @@ export const SendScreen = () => {
     _.isEmpty(addressErrors) &&
     _.isEmpty(amountErrors) &&
     _.isEmpty(balanceErrors) &&
-    !!yoroiUnsignedTx
+    !!yoroiUnsignedTx &&
+    memo.length <= maxMemoLength
 
   React.useEffect(() => {
-    if (CONFIG.DEBUG.PREFILL_FORMS) {
+    if (features.prefillWalletInfo) {
       if (!__DEV__) throw new Error('using debug data in non-dev env')
-      receiverChanged(CONFIG.DEBUG.SEND_ADDRESS)
-      amountChanged(CONFIG.DEBUG.SEND_AMOUNT)
+      receiverChanged(debugWalletInfo.SEND_ADDRESS)
+      amountChanged(debugWalletInfo.SEND_AMOUNT)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -149,7 +163,7 @@ export const SendScreen = () => {
 
       <AvailableAmountBanner />
 
-      <ScrollView style={styles.content} keyboardDismissMode="on-drag" keyboardShouldPersistTaps="always">
+      <ScrollView bounces={false} style={styles.content}>
         <BalanceAfterTransaction yoroiUnsignedTx={yoroiUnsignedTx} />
 
         <Fee yoroiUnsignedTx={yoroiUnsignedTx} />
@@ -196,21 +210,21 @@ export const SendScreen = () => {
             right={<Image source={require('../../assets/img/arrow_down_fill.png')} testID="selectAssetButton" />}
             editable={false}
             label={strings.asset}
-            value={`${assetDenomination}: ${formatTokenAmount(new BigNumber(selectedAssetAvailableAmount), token)}`}
+            value={`${assetDenomination}: ${formatTokenAmount(selectedAssetAvailableAmount, token)}`}
             autoComplete={false}
           />
         </TouchableOpacity>
 
+        <MemoInput memo={memo} onChangeText={memoChanged} />
+
         <Checkbox
           checked={sendAll}
           onChange={sendAllChanged}
-          text={
-            token.identifier === wallet.primaryToken.identifier
-              ? strings.checkboxSendAllAssets
-              : strings.checkboxSendAll({assetId: assetDenomination})
-          }
+          text={isPrimaryToken ? strings.checkboxSendAllAssets : strings.checkboxSendAll({assetId: assetDenomination})}
           testID="sendAllCheckbox"
         />
+
+        <KeyboardSpacer />
 
         {recomputing && (
           <View style={styles.indicator}>
@@ -246,6 +260,6 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
   },
   indicator: {
-    marginTop: 26,
+    paddingVertical: 26,
   },
 })

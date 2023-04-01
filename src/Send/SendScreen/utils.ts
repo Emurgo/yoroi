@@ -4,52 +4,15 @@ import _ from 'lodash'
 import {IntlShape} from 'react-intl'
 
 import {formatTokenAmount, formatTokenInteger, normalizeTokenAmount} from '../../legacy/format'
-import {getCardanoNetworkConfigById, isHaskellShelleyNetwork} from '../../legacy/networks'
-import {cardanoValueFromMultiToken} from '../../legacy/utils'
-import {
-  AssetOverflowError,
-  CardanoMobile,
-  MultiToken,
-  NotEnoughMoneyToSendError,
-  YoroiWallet,
-} from '../../yoroi-wallets'
+import {AssetOverflowError, getMinAda, NotEnoughMoneyToSendError, YoroiWallet} from '../../yoroi-wallets'
+import {getCardanoNetworkConfigById, isHaskellShelleyNetwork} from '../../yoroi-wallets/cardano/networks'
 import {DefaultAsset, Quantity, SendTokenList, Token, YoroiUnsignedTx} from '../../yoroi-wallets/types'
 import {RawUtxo} from '../../yoroi-wallets/types/other'
-import {Amounts, Quantities} from '../../yoroi-wallets/utils'
+import {Amounts, asQuantity, Quantities} from '../../yoroi-wallets/utils'
 import {InvalidAssetAmount, parseAmountDecimal} from '../../yoroi-wallets/utils/parsing'
 import type {AddressValidationErrors} from '../../yoroi-wallets/utils/validators'
 import {getUnstoppableDomainAddress, isReceiverAddressValid, validateAmount} from '../../yoroi-wallets/utils/validators'
 import {amountInputErrorMessages, messages} from './strings'
-
-export const getMinAda = async (selectedToken: Token, defaultAsset: DefaultAsset) => {
-  const networkConfig = getCardanoNetworkConfigById(defaultAsset.networkId)
-  const fakeAmount = new BigNumber('0') // amount doesn't matter for calculating min UTXO amount
-  const fakeMultitoken = new MultiToken(
-    [
-      {
-        identifier: defaultAsset.identifier,
-        networkId: defaultAsset.networkId,
-        amount: fakeAmount,
-      },
-      {
-        identifier: selectedToken.identifier,
-        networkId: selectedToken.networkId,
-        amount: fakeAmount,
-      },
-    ],
-    {
-      defaultNetworkId: defaultAsset.networkId,
-      defaultIdentifier: defaultAsset.identifier,
-    },
-  )
-  const minAmount = await CardanoMobile.minAdaRequired(
-    await cardanoValueFromMultiToken(fakeMultitoken),
-    await CardanoMobile.BigNum.fromStr(networkConfig.MINIMUM_UTXO_VAL),
-  )
-  // if the user is sending a token, we need to make sure the resulting utxo
-  // has at least the minimum amount of ADA in it
-  return minAmount.toStr()
-}
 
 export const getTransactionData = async (
   wallet: YoroiWallet,
@@ -138,13 +101,13 @@ export const recomputeAll = async ({
 
         if (selectedToken.isDefault) {
           recomputedAmount = normalizeTokenAmount(
-            new BigNumber(Quantities.diff(defaultAssetAvailableAmount, fee)),
+            Quantities.diff(defaultAssetAvailableAmount, fee),
             selectedToken,
           ).toString()
 
           balanceAfter = '0'
         } else {
-          recomputedAmount = normalizeTokenAmount(new BigNumber(selectedAssetAvailableAmount), selectedToken).toString()
+          recomputedAmount = normalizeTokenAmount(selectedAssetAvailableAmount, selectedToken).toString()
 
           balanceAfter = Quantities.diff(defaultAssetAvailableAmount, Quantities.sum([fee, minAda]))
         }
@@ -214,8 +177,8 @@ export const getAmountErrorText = (
       // remove decimal part if it's equal to 0
       const decimalPart = amount.modulo(Math.pow(10, defaultAsset.metadata.numberOfDecimals))
       const minUtxo = decimalPart.eq('0')
-        ? formatTokenInteger(amount, defaultAsset)
-        : formatTokenAmount(amount, defaultAsset)
+        ? formatTokenInteger(asQuantity(amount), defaultAsset)
+        : formatTokenAmount(asQuantity(amount), defaultAsset)
       const ticker = defaultAsset.metadata.ticker
       Object.assign(msgOptions, {minUtxo, ticker})
     }

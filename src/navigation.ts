@@ -2,9 +2,8 @@ import {NavigatorScreenParams, useNavigation, useRoute} from '@react-navigation/
 import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/stack'
 import {Platform} from 'react-native'
 
-import {HWDeviceInfo} from './legacy/ledgerUtils'
 import {COLORS} from './theme'
-import {NetworkId, WalletImplementationId} from './yoroi-wallets'
+import {HWDeviceInfo, NetworkId, WalletImplementationId} from './yoroi-wallets'
 import {YoroiUnsignedTx} from './yoroi-wallets/types'
 
 // prettier-ignore
@@ -66,12 +65,14 @@ export type WalletTabRoutes = {
   'receive-ada': NavigatorScreenParams<ReceiveRoutes>
   'staking-dashboard': NavigatorScreenParams<DashboardRoutes>
   'staking-center': NavigatorScreenParams<StakingCenterRoutes>
+  nfts: NavigatorScreenParams<NftRoutes>
   menu: NavigatorScreenParams<MenuRoutes>
 }
 
 export type WalletStackRoutes = {
   'wallet-selection': undefined
   'main-wallet-routes': NavigatorScreenParams<WalletTabRoutes>
+  'nft-details-routes': NavigatorScreenParams<NftRoutes>
   settings: NavigatorScreenParams<SettingsStackRoutes>
   'voting-registration': NavigatorScreenParams<VotingRegistrationRoutes>
 }
@@ -227,6 +228,12 @@ export type FirstRunRoutes = {
 }
 export type FirstRunRouteNavigation = StackNavigationProp<FirstRunRoutes>
 
+export type NftRoutes = {
+  'nft-gallery': undefined
+  'nft-details': {id: string}
+  'image-zoom': {id: string}
+}
+
 export type MenuRoutes = {
   menu: undefined
   'voting-registration': undefined
@@ -319,11 +326,24 @@ export const useWalletNavigation = () => {
     })
   }
 
+  const navigateToNftGallery = () => {
+    navigation.navigate('app-root', {
+      screen: 'main-wallet-routes',
+      params: {
+        screen: 'nfts',
+        params: {
+          screen: 'nft-gallery',
+        },
+      },
+    })
+  }
+
   return {
     navigation,
     resetToTxHistory,
     resetToWalletSelection,
     navigateToSettings,
     navigateToTxHistory,
+    navigateToNftGallery,
   }
 }

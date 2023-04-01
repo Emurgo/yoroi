@@ -1,11 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import assert from 'assert'
 import _ from 'lodash'
 
-import assert from '../../../legacy/assert'
-import {ApiError} from '../../../legacy/errors'
-import fetchDefault, {checkedFetch} from '../../../legacy/fetch'
-import {Logger} from '../../../legacy/logging'
-import {
+import {Logger} from '../../logging'
+import type {
   AccountStateRequest,
   AccountStateResponse,
   BackendConfig,
@@ -20,7 +18,12 @@ import {
   TxStatusRequest,
   TxStatusResponse,
 } from '../../types'
+import {NFTAsset, RemoteAsset, YoroiNft, YoroiNftModerationStatus} from '../../types'
+import {hasProperties, isArray, isNonNullable, isObject, isRecord} from '../../utils/parsing'
 import {ServerStatus} from '..'
+import {ApiError} from '../errors'
+import {convertNft} from '../nfts'
+import fetchDefault, {checkedFetch} from './fetch'
 import {fallbackTokenInfo, tokenInfo, toTokenSubject} from './utils'
 
 type Addresses = Array<string>
@@ -35,10 +38,7 @@ export const fetchNewTxHistory = async (
   request: TxHistoryRequest,
   config: BackendConfig,
 ): Promise<{isLast: boolean; transactions: Array<RawTransaction>}> => {
-  assert.preconditionCheck(
-    request.addresses.length <= config.TX_HISTORY_MAX_ADDRESSES,
-    'fetchNewTxHistory: too many addresses',
-  )
+  assert(request.addresses.length <= config.TX_HISTORY_MAX_ADDRESSES, 'fetchNewTxHistory: too many addresses')
   const transactions = (await fetchDefault('v2/txs/history', request, config)) as Array<RawTransaction>
 
   return {
@@ -48,10 +48,7 @@ export const fetchNewTxHistory = async (
 }
 
 export const filterUsedAddresses = async (addresses: Addresses, config: BackendConfig): Promise<Addresses> => {
-  assert.preconditionCheck(
-    addresses.length <= config.FILTER_USED_MAX_ADDRESSES,
-    'filterUsedAddresses: too many addresses',
-  )
+  assert(addresses.length <= config.FILTER_USED_MAX_ADDRESSES, 'filterUsedAddresses: too many addresses')
   // Take a copy in case underlying data mutates during await
   const copy = [...addresses]
   const used: any = await fetchDefault('v2/addresses/filterUsed', {addresses: copy}, config)
@@ -74,10 +71,7 @@ export const getTransactions = async (
 }
 
 export const getAccountState = (request: AccountStateRequest, config: BackendConfig): Promise<AccountStateResponse> => {
-  assert.preconditionCheck(
-    request.addresses.length <= config.FETCH_UTXOS_MAX_ADDRESSES,
-    'getAccountState: too many addresses',
-  )
+  assert(request.addresses.length <= config.FETCH_UTXOS_MAX_ADDRESSES, 'getAccountState: too many addresses')
   return fetchDefault('account/state', request, config)
 }
 
@@ -92,6 +86,38 @@ export const bulkGetAccountState = async (
 
 export const getPoolInfo = (request: PoolInfoRequest, config: BackendConfig): Promise<StakePoolInfosAndHistories> => {
   return fetchDefault('pool/info', request, config)
+}
+
+export const getNFTs = async (assets: RemoteAsset[], config: BackendConfig): Promise<YoroiNft[]> => {
+  const request = {assets: assets.map((asset) => ({nameHex: asset.name, policy: asset.policyId}))}
+  const response = await fetchDefault('multiAsset/metadata', request, config)
+  return parseNFTs(response, config.NFT_STORAGE_URL)
+}
+
+export const getNFTModerationStatus = async (
+  fingerprint: string,
+  config: BackendConfig & {mainnet: boolean},
+): Promise<YoroiNftModerationStatus> => {
+  return fetchDefault(
+    'multiAsset/validateNFT/' + fingerprint,
+    config.mainnet ? {envName: 'prod'} : {},
+    config,
+    'POST',
+    {
+      checkResponse: async (response): Promise<YoroiNftModerationStatus> => {
+        if (response.status === 202) {
+          return 'pending'
+        }
+        const json = await response.json()
+        const status = json?.status
+        const parsedStatus = parseModerationStatus(status)
+        if (parsedStatus) {
+          return parsedStatus
+        }
+        throw new Error(`Invalid server response "${status}"`)
+      },
+    },
+  )
 }
 
 export const getTokenInfo = async (tokenId: string, apiUrl: string) => {
@@ -168,6 +194,51 @@ const isTokenRegistryEntry = (data: unknown): data is TokenRegistryEntry => {
     !!candidate.name &&
     typeof candidate.name === 'object' &&
     'value' in candidate.name &&
-    candidate.name.value === 'string'
+    typeof candidate.name.value === 'string'
   )
 }
+
+export const parseModerationStatus = (status: unknown): YoroiNftModerationStatus | undefined => {
+  const statusString = String(status)
+  const map = {
+    RED: 'blocked',
+    YELLOW: 'consent',
+    GREEN: 'approved',
+    PENDING: 'pending',
+    MANUAL_REVIEW: 'manual_review',
+  } as const
+  return map[statusString.toUpperCase() as keyof typeof map]
+}
+
+function parseNFTs(value: unknown, storageUrl: string): YoroiNft[] {
+  if (!isRecord(value)) {
+    throw new Error('Invalid response. Expected to receive object when parsing NFTs')
+  }
+
+  const identifiers = Object.keys(value)
+
+  const tokens: Array<YoroiNft | null> = identifiers.map((id) => {
+    const assets = value[id]
+    if (!isArray(assets)) {
+      return null
+    }
+
+    const nftAsset = assets.find(isAssetNFT)
+
+    if (!nftAsset) {
+      return null
+    }
+
+    const [policyId, shortName] = id.split('.')
+    const metadata = nftAsset.metadata?.[policyId]?.[shortName]
+    return convertNft({metadata, storageUrl, policyId, shortName: shortName})
+  })
+
+  return tokens.filter(isNonNullable)
+}
+
+function isAssetNFT(asset: unknown): asset is NFTAsset {
+  return isObject(asset) && hasProperties(asset, ['key']) && asset.key === NFT_METADATA_KEY
+}
+
+const NFT_METADATA_KEY = '721'

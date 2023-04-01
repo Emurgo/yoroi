@@ -5,17 +5,24 @@ import React, {useEffect, useState} from 'react'
 import {useIntl} from 'react-intl'
 import {Platform, StyleSheet, View} from 'react-native'
 
-import {useAuthOsWithEasyConfirmation} from '../../auth'
-import {useSubmitTx} from '../../hooks'
+import {debugWalletInfo, features} from '../../features'
 import {confirmationMessages, errorMessages, txLabels} from '../../i18n/global-messages'
 import LocalizableError from '../../i18n/LocalizableError'
-import {CONFIG} from '../../legacy/config'
-import {WrongPassword} from '../../legacy/errors'
-import {DeviceId, DeviceObj} from '../../legacy/ledgerUtils'
-import {isEmptyString} from '../../legacy/utils'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
-import {CardanoTypes, walletManager, withBLE, withUSB} from '../../yoroi-wallets'
+import {isEmptyString} from '../../utils/utils'
+import {
+  CardanoTypes,
+  DeviceId,
+  DeviceObj,
+  HARDWARE_WALLETS,
+  useAuthOsWithEasyConfirmation,
+  useSubmitTx,
+  walletManager,
+  withBLE,
+  withUSB,
+} from '../../yoroi-wallets'
+import {WrongPassword} from '../../yoroi-wallets/cardano/errors'
 import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
 import {Button, ButtonProps, ValidatedTextInput} from '..'
 import {Dialog, Step as DialogStep} from './Dialog'
@@ -69,7 +76,7 @@ export const ConfirmTx = ({
   })
   useEffect(() => {
     if (!isProvidingPassword && __DEV__) {
-      setPassword(CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '')
+      setPassword(features.prefillWalletInfo ? debugWalletInfo.PASSWORD : '')
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -200,7 +207,7 @@ export const ConfirmTx = ({
     if (
       wallet.isHW &&
       Platform.OS === 'android' &&
-      CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT &&
+      HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT &&
       chooseTransportOnConfirmation
     ) {
       setDialogStep(DialogStep.ChooseTransport)
@@ -223,7 +230,7 @@ export const ConfirmTx = ({
     if (
       wallet.isHW &&
       Platform.OS === 'android' &&
-      CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT &&
+      HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT &&
       !chooseTransportOnConfirmation
     ) {
       setDialogStep(DialogStep.ChooseTransport)

@@ -1,10 +1,10 @@
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
+import {showErrorDialog} from '../../dialogs'
 import {errorMessages} from '../../i18n/global-messages'
-import {showErrorDialog} from '../../legacy/actions'
 import {CONFIG} from '../../legacy/config'
-import {useCheckPin} from '../hooks'
+import {useCheckPin} from '../../yoroi-wallets'
 import {PinInput, PinInputRef} from '../PinInput'
 
 export const CheckPinInput = ({onValid}: {onValid: () => void}) => {

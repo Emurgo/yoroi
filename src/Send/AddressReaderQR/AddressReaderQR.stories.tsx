@@ -2,7 +2,7 @@ import {NavigationRouteContext} from '@react-navigation/native'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {mocks} from '../../../storybook'
+import {mocks} from '../../yoroi-wallets/mocks'
 import {SendProvider} from '../Context/SendContext'
 import {AddressReaderQR} from './AddressReaderQR'
 

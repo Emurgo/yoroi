@@ -1,9 +1,9 @@
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import {useAuthWithOs} from '../../auth'
 import {useAuth} from '../../auth/AuthProvider'
 import {Button} from '../../components'
+import {useAuthWithOs} from '../../yoroi-wallets'
 import {OsAuthScreen} from '../OsAuthScreen'
 
 export const OsLoginScreen = () => {

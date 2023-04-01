@@ -2,7 +2,7 @@ import {NavigationRouteContext} from '@react-navigation/native'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {CONFIG} from '../../legacy/config'
+import {NETWORK_ID, WALLET_IMPLEMENTATION_ID} from '../../yoroi-wallets/cardano/constants/testnet/constants'
 import {ConnectNanoXScreen} from './ConnectNanoXScreen'
 
 const devices = [
@@ -18,8 +18,8 @@ const bleRoute = {
   name: 'name',
   params: {
     useUSB: false,
-    networkId: CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
-    walletImplementationId: CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
+    networkId: NETWORK_ID,
+    walletImplementationId: WALLET_IMPLEMENTATION_ID,
   },
 }
 
@@ -28,8 +28,8 @@ const usbRoute = {
   name: 'name',
   params: {
     useUSB: true,
-    networkId: CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
-    walletImplementationId: CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
+    networkId: NETWORK_ID,
+    walletImplementationId: WALLET_IMPLEMENTATION_ID,
   },
 }
 
