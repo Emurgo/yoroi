@@ -89,16 +89,14 @@ export const getPoolInfo = (request: PoolInfoRequest, config: BackendConfig): Pr
 }
 
 export const getNFTs = async (assets: RemoteAsset[], config: BackendConfig): Promise<YoroiNft[]> => {
-  const request = {assets: assets.map((asset) => ({nameHex: asset.name, policy: asset.policyId}))}
-  const [nftResponse, supplies] = await Promise.all([
-    fetchDefault('multiAsset/metadata', request, config),
-    fetchTokensSupplies(
-      assets.map((asset) => asset.assetId),
-      config,
-    ),
+  const assetIds = assets.map((asset) => asset.assetId)
+  const metadataPayload = {assets: assets.map((asset) => ({nameHex: asset.name, policy: asset.policyId}))}
+  const [metadataResponse, supplies] = await Promise.all([
+    fetchDefault('multiAsset/metadata', metadataPayload, config),
+    fetchTokensSupplies(assetIds, config),
   ])
 
-  const possibleNfts = parseNFTs(nftResponse, config.NFT_STORAGE_URL)
+  const possibleNfts = parseNFTs(metadataResponse, config.NFT_STORAGE_URL)
   return possibleNfts.filter((nft) => supplies[nft.id] === 1)
 }
 
@@ -106,8 +104,8 @@ export const fetchTokensSupplies = async (
   tokenIds: string[],
   config: BackendConfig,
 ): Promise<Record<string, number | null>> => {
-  const request = {assets: tokenIds.map((tokenId) => ({policy: toPolicyId(tokenId), name: toAssetName(tokenId)}))}
-  const response = await fetchDefault<Record<string, unknown>>('multiAsset/supply', request, config)
+  const payload = {assets: tokenIds.map((tokenId) => ({policy: toPolicyId(tokenId), name: toAssetName(tokenId)}))}
+  const response = await fetchDefault<Record<string, unknown>>('multiAsset/supply', payload, config)
   const supplies = tokenIds.map((tokenId) => {
     const key = `${toPolicyId(tokenId)}.${toAssetName(tokenId)}`
 
