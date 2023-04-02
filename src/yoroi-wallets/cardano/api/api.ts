@@ -19,8 +19,8 @@ import type {
   TxStatusResponse,
 } from '../../types'
 import {NFTAsset, RemoteAsset, YoroiNft, YoroiNftModerationStatus} from '../../types'
-import {hasProperties, isArray, isNonNullable, isObject, isRecord} from '../../utils/parsing'
-import {ServerStatus} from '..'
+import {hasProperties, isArray, isNonNullable, isNumber, isObject, isRecord} from '../../utils/parsing'
+import {ServerStatus, toAssetName, toPolicyId} from '..'
 import {ApiError} from '../errors'
 import {convertNft} from '../nfts'
 import fetchDefault, {checkedFetch} from './fetch'
@@ -90,8 +90,35 @@ export const getPoolInfo = (request: PoolInfoRequest, config: BackendConfig): Pr
 
 export const getNFTs = async (assets: RemoteAsset[], config: BackendConfig): Promise<YoroiNft[]> => {
   const request = {assets: assets.map((asset) => ({nameHex: asset.name, policy: asset.policyId}))}
-  const response = await fetchDefault('multiAsset/metadata', request, config)
-  return parseNFTs(response, config.NFT_STORAGE_URL)
+  const [nftResponse, supplies] = await Promise.all([
+    fetchDefault('multiAsset/metadata', request, config),
+    fetchTokensSupplies(
+      assets.map((asset) => asset.assetId),
+      config,
+    ),
+  ])
+
+  const possibleNfts = parseNFTs(nftResponse, config.NFT_STORAGE_URL)
+  return possibleNfts.filter((nft) => supplies[nft.id] === 1)
+}
+
+export const fetchTokensSupplies = async (
+  tokenIds: string[],
+  config: BackendConfig,
+): Promise<Record<string, number | null>> => {
+  const request = {assets: tokenIds.map((tokenId) => ({policy: toPolicyId(tokenId), name: toAssetName(tokenId)}))}
+  const response = await fetchDefault<Record<string, unknown>>('multiAsset/supply', request, config)
+  const supplies = tokenIds.map((tokenId) => {
+    const key = `${toPolicyId(tokenId)}.${toAssetName(tokenId)}`
+
+    const supply =
+      hasProperties(response, ['supplies']) && isRecord(response.supplies) && hasProperties(response.supplies, [key])
+        ? response.supplies[key]
+        : null
+
+    return isNumber(supply) ? supply : null
+  })
+  return Object.fromEntries(tokenIds.map((tokenId, index) => [tokenId, supplies[index]]))
 }
 
 export const getNFTModerationStatus = async (
