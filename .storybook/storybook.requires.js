@@ -50,7 +50,7 @@ if (parameters) {
 
 try {
   argsEnhancers.forEach((enhancer) => addArgsEnhancer(enhancer));
-} catch {}
+} catch { }
 
 const getStories = () => {
   return {
@@ -99,10 +99,8 @@ const getStories = () => {
     "./src/features/Send/useCases/ListAmountsToSend/AddToken/AddToken.stories.tsx": require("../src/features/Send/useCases/ListAmountsToSend/AddToken/AddToken.stories.tsx"),
     "./src/features/Send/useCases/ListAmountsToSend/AddToken/SelectTokenFromListScreen.stories.tsx": require("../src/features/Send/useCases/ListAmountsToSend/AddToken/SelectTokenFromListScreen.stories.tsx"),
     "./src/features/Send/useCases/ListAmountsToSend/AddToken/ShowError/MaxTokensPerTx.stories.tsx": require("../src/features/Send/useCases/ListAmountsToSend/AddToken/ShowError/MaxTokensPerTx.stories.tsx"),
-    "./src/features/Send/useCases/ListAmountsToSend/EditAmount/EditAmount.stories.tsx": require("../src/features/Send/useCases/ListAmountsToSend/EditAmount/EditAmount.stories.tsx"),
     "./src/features/Send/useCases/ListAmountsToSend/EditAmount/EditAmountScreen.stories.tsx": require("../src/features/Send/useCases/ListAmountsToSend/EditAmount/EditAmountScreen.stories.tsx"),
     "./src/features/Send/useCases/ListAmountsToSend/ListAmountsToSendScreen.stories.tsx": require("../src/features/Send/useCases/ListAmountsToSend/ListAmountsToSendScreen.stories.tsx"),
-    "./src/features/Send/useCases/ListAmountsToSend/RemoveAmount.stories.tsx": require("../src/features/Send/useCases/ListAmountsToSend/RemoveAmount.stories.tsx"),
     "./src/features/Send/useCases/StartMultiTokenTx/InputReceiver/ReadQRCodeScreen.stories.tsx": require("../src/features/Send/useCases/StartMultiTokenTx/InputReceiver/ReadQRCodeScreen.stories.tsx"),
     "./src/features/Send/useCases/StartMultiTokenTx/StartMultiTokenTxScreen.stories.tsx": require("../src/features/Send/useCases/StartMultiTokenTx/StartMultiTokenTxScreen.stories.tsx"),
     "./src/FirstRun/LanguagePickerScreen/LanguagePickerScreen.stories.tsx": require("../src/FirstRun/LanguagePickerScreen/LanguagePickerScreen.stories.tsx"),
