@@ -25,12 +25,14 @@ export const Nfts = () => {
   })
 
   const {search: nftsSearchTerm} = useSearch()
-  const sortedNfts = sortNfts(nfts)
+  const filteredNfts = filterNfts(nftsSearchTerm, nfts)
+  const sortedNfts = filteredNfts.sort(sortNfts)
   const nftsSearchResult = filterNfts(nftsSearchTerm, sortedNfts)
 
-  const handleNftSelect = (index: number) => navigateTo.nftDetails(nftsSearchResult[index].id)
   const hasEmptySearchResult = nftsSearchTerm.length > 0 && nftsSearchResult.length === 0
   const hasNotNfts = nftsSearchTerm.length === 0 && nftsSearchResult.length === 0
+
+  const handleNftSelect = (index: number) => navigateTo.nftDetails(nftsSearchResult[index].id)
 
   const onRefresh = React.useCallback(() => {
     setIsManualRefreshing(true)
@@ -39,23 +41,23 @@ export const Nfts = () => {
 
   if (isError) {
     return (
-      <ScreenWrapper>
+      <Wrapper>
         <ErrorScreen onRefresh={onRefresh} isRefreshing={isManualRefreshing} />
-      </ScreenWrapper>
+      </Wrapper>
     )
   }
 
   if (isLoading) {
     return (
-      <ScreenWrapper>
+      <Wrapper>
         <LoadingScreen nftsCount={nftsSearchResult.length} />
-      </ScreenWrapper>
+      </Wrapper>
     )
   }
 
   if (hasEmptySearchResult) {
     return (
-      <ScreenWrapper>
+      <Wrapper>
         <ScrollView
           style={styles.scrollView}
           contentContainerStyle={styles.scrollViewError}
@@ -63,13 +65,13 @@ export const Nfts = () => {
         >
           <NoNftsScreen message={strings.noNftsFound} />
         </ScrollView>
-      </ScreenWrapper>
+      </Wrapper>
     )
   }
 
   if (hasNotNfts) {
     return (
-      <ScreenWrapper>
+      <Wrapper>
         <ScrollView
           style={styles.scrollView}
           contentContainerStyle={styles.scrollViewError}
@@ -79,19 +81,19 @@ export const Nfts = () => {
             message={strings.noNftsInWallet}
             heading={
               <View>
-                <NftCount count={nftsSearchResult.length} />
+                <NftCount count={0} />
 
                 <Spacer height={16} />
               </View>
             }
           />
         </ScrollView>
-      </ScreenWrapper>
+      </Wrapper>
     )
   }
 
   return (
-    <ScreenWrapper>
+    <Wrapper>
       <View style={styles.galleryContainer}>
         {nftsSearchTerm.length === 0 && (
           <View>
@@ -108,11 +110,11 @@ export const Nfts = () => {
           isRefreshing={isManualRefreshing}
         />
       </View>
-    </ScreenWrapper>
+    </Wrapper>
   )
 }
 
-function ScreenWrapper({children}: {children: ReactNode}) {
+const Wrapper = ({children}: {children: ReactNode}) => {
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
       <View style={styles.container}>
@@ -124,7 +126,7 @@ function ScreenWrapper({children}: {children: ReactNode}) {
   )
 }
 
-function ErrorScreen({onRefresh, isRefreshing}: {onRefresh: () => void; isRefreshing: boolean}) {
+const ErrorScreen = ({onRefresh, isRefreshing}: {onRefresh: () => void; isRefreshing: boolean}) => {
   const strings = useStrings()
 
   return (
@@ -156,7 +158,7 @@ function ErrorScreen({onRefresh, isRefreshing}: {onRefresh: () => void; isRefres
   )
 }
 
-function NftCount({count}: {count?: number | string}) {
+const NftCount = ({count}: {count?: number | string}) => {
   const strings = useStrings()
   const countText = `${strings.nftCount}: ${count ?? '-'}`
 
@@ -169,7 +171,7 @@ function NftCount({count}: {count?: number | string}) {
   )
 }
 
-function LoadingScreen({nftsCount}: {nftsCount: number}) {
+const LoadingScreen = ({nftsCount}: {nftsCount: number}) => {
   return (
     <View style={styles.galleryContainer}>
       <NftCount count={nftsCount} />
@@ -181,7 +183,7 @@ function LoadingScreen({nftsCount}: {nftsCount: number}) {
   )
 }
 
-const sortNfts = (nfts: YoroiNft[]): YoroiNft[] => nfts.sort((nftA, nftB) => nftA.name.localeCompare(nftB.name))
+const sortNfts = (nftA: YoroiNft, nftB: YoroiNft): number => nftA.name.localeCompare(nftB.name)
 
 const styles = StyleSheet.create({
   safeAreaView: {
