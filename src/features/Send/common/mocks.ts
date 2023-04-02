@@ -117,4 +117,24 @@ export const mocks = {
       ],
     },
   },
+  confirmTx: {
+    success: {
+      ...initialState,
+      yoroiUnsignedTx: walletMocks.yoroiUnsignedTx,
+      selectedTokenId: walletMocks.wallet.primaryTokenInfo.id,
+      targets: [
+        {
+          ...initialState.targets[0],
+          entry: {
+            ...initialState.targets[0].entry,
+            amounts: {
+              [walletMocks.wallet.primaryTokenInfo.id]: asQuantity(
+                walletMocks.yoroiUnsignedTx.amounts[walletMocks.wallet.primaryTokenInfo.id],
+              ),
+            },
+          },
+        },
+      ],
+    },
+  },
 }
