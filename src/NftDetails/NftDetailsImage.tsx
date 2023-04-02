@@ -3,21 +3,13 @@ import React from 'react'
 import {Dimensions, StyleSheet, View} from 'react-native'
 import ViewTransformer from 'react-native-easy-view-transformer'
 
-import {Boundary, FadeIn} from '../components'
-import {NftPreview} from '../components/NftPreview/NftPreview'
+import {FadeIn} from '../components'
+import {NftPreview} from '../components/NftPreview'
 import {NftRoutes} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
 import {useNft} from '../yoroi-wallets'
 
 export const NftDetailsImage = () => {
-  return (
-    <Boundary>
-      <ImageZoom />
-    </Boundary>
-  )
-}
-
-const ImageZoom = () => {
   const {id} = useRoute<RouteProp<NftRoutes, 'nft-details'>>().params
   const wallet = useSelectedWallet()
   const nft = useNft(wallet, {id})

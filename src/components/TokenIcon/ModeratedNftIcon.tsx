@@ -24,7 +24,7 @@ export const ModeratedNftIcon = ({nft, status}: {nft: YoroiNft; status: YoroiNft
   }
 
   if (status === 'manual_review') {
-    return <ManualReviewNftIcon nft={nft} />
+    return <PlaceholderNftIcon nft={nft} />
   }
 
   return null
@@ -43,10 +43,6 @@ function PlaceholderNftIcon({nft}: {nft: YoroiNft}) {
       />
     </View>
   )
-}
-
-function ManualReviewNftIcon({nft}: {nft: YoroiNft}) {
-  return <PlaceholderNftIcon nft={nft} />
 }
 
 function BlockedNftIcon({nft}: {nft: YoroiNft}) {

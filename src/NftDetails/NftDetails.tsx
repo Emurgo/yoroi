@@ -4,7 +4,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Dimensions, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {Boundary, CopyButton, FadeIn, Icon, Link, Spacer, Text} from '../components'
+import {CopyButton, FadeIn, Icon, Link, Spacer, Text} from '../components'
 import {NftPreview} from '../components/NftPreview'
 import {Tab, TabPanel, TabPanels, Tabs} from '../components/Tabs'
 import {features} from '../features'
@@ -15,17 +15,9 @@ import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
 import {isEmptyString} from '../utils'
 import {useNft} from '../yoroi-wallets'
-import {YoroiNft} from '../yoroi-wallets/types'
+import {YoroiNft} from '../yoroi-wallets'
 
 export const NftDetails = () => {
-  return (
-    <Boundary>
-      <Details />
-    </Boundary>
-  )
-}
-
-const Details = () => {
   const {id} = useRoute<RouteProp<NftRoutes, 'nft-details'>>().params
   const strings = useStrings()
   const wallet = useSelectedWallet()
