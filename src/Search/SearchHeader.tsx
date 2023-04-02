@@ -8,7 +8,7 @@ import {useSearch} from './SearchContext'
 
 export const useSearchHeaderOptions = ({placeHolderText, title}) => {
   const [searchVisible, setSearchVisible] = React.useState(false)
-  const {clearSearch} = useSearch()
+  const {search, clearSearch} = useSearch()
   const handleSearchClose = () => {
     setSearchVisible(false)
     clearSearch()
@@ -18,7 +18,8 @@ export const useSearchHeaderOptions = ({placeHolderText, title}) => {
     ? {
         ...defaultStackNavigationOptionsV2,
         headerTitle: () => <SearchHeader placeholder={placeHolderText} />,
-        headerRight: () => <CloseButton onPress={handleSearchClose} />,
+        headerRight: () => (search.length > 0 ? <EraseButton onPress={clearSearch} /> : null),
+        headerLeft: () => <BackButton onPress={handleSearchClose} />,
         headerTitleContainerStyle: {
           flex: 1,
         },
@@ -32,10 +33,10 @@ export const useSearchHeaderOptions = ({placeHolderText, title}) => {
         headerBackTitleVisible: false,
       }
 
-  return {searchHeaderOptions}
+  return searchHeaderOptions
 }
 
-interface Props {
+type Props = {
   placeholder: string
 }
 
@@ -59,8 +60,14 @@ const SearchButton = (props: TouchableOpacityProps) => (
   </TouchableOpacity>
 )
 
-const CloseButton = (props: TouchableOpacityProps) => (
+const EraseButton = (props: TouchableOpacityProps) => (
   <TouchableOpacity {...props} hitSlop={{top: 100, left: 100, right: 100, bottom: 100}}>
     <Icon.Cross size={20} />
+  </TouchableOpacity>
+)
+
+const BackButton = (props: TouchableOpacityProps) => (
+  <TouchableOpacity {...props} hitSlop={{top: 100, left: 100, right: 100, bottom: 100}}>
+    <Icon.Chevron direction="left" color="#000000" />
   </TouchableOpacity>
 )

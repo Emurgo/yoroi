@@ -20,7 +20,7 @@ export const SelectTokenFromListScreenNavigator = () => {
 
 const Routes = () => {
   const strings = useStrings()
-  const {searchHeaderOptions} = useSearchHeaderOptions({
+  const searchHeaderOptions = useSearchHeaderOptions({
     placeHolderText: strings.searchPlaceholder,
     title: strings.searchTitle,
   })

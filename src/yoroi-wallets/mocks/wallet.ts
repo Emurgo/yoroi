@@ -639,7 +639,7 @@ const balances: YoroiAmounts = {
   '1d129dc9c03f95a863489883914f05a52e13135994a32f0cbeacc65e.74484f444c55': '100000000000000000020',
 }
 
-const tokenInfos: Record<string, TokenInfo> = {
+export const tokenInfos: Record<string, TokenInfo> = {
   '': HASKELL_SHELLEY_TESTNET.PRIMARY_TOKEN_INFO,
   '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950': toTokenInfo({
     networkId: 300,
@@ -649,7 +649,7 @@ const tokenInfos: Record<string, TokenInfo> = {
       type: 'Cardano',
       policyId: '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d',
       assetName: '7444524950',
-      ticker: '',
+      ticker: 'Token 1',
       longName: '',
       numberOfDecimals: 0,
       maxSupply: null,
