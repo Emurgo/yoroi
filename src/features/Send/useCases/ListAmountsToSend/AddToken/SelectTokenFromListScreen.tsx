@@ -2,12 +2,13 @@ import {useNavigation} from '@react-navigation/native'
 import {FlashList} from '@shopify/flash-list'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {LayoutAnimation, TouchableOpacity, View} from 'react-native'
+import {TouchableOpacity, View} from 'react-native'
 
 import {Boundary, Spacer, Text} from '../../../../../components'
 import {AmountItem} from '../../../../../components/AmountItem/AmountItem'
 import globalMessages, {txLabels} from '../../../../../i18n/global-messages'
 import {TxHistoryRouteNavigation} from '../../../../../navigation'
+import {useSearch} from '../../../../../Search'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
 import {sortTokenInfos} from '../../../../../utils'
@@ -17,7 +18,7 @@ import {useBalances, useTokenInfos} from '../../../../../yoroi-wallets/hooks'
 import {TokenInfo} from '../../../../../yoroi-wallets/types'
 import {Amounts, Quantities} from '../../../../../yoroi-wallets/utils'
 import {useSelectedTokensCounter, useSend, useTokenQuantities} from '../../../common/SendContext'
-import {InputSearch} from './InputSearch'
+import {filterAssets} from './filterAssets'
 import {MaxTokensPerTx} from './ShowError/MaxTokensPerTx'
 
 export const SelectTokenFromListScreen = () => {
@@ -25,26 +26,20 @@ export const SelectTokenFromListScreen = () => {
   const wallet = useSelectedWallet()
 
   const balances = useBalances(wallet)
-  const [matcher, setMatcher] = React.useState('')
 
   const tokenInfos = useTokenInfos({
     wallet,
     tokenIds: Amounts.toArray(balances).map(({tokenId}) => tokenId),
   })
-  const sortedTokenInfos = sortTokenInfos({wallet, tokenInfos}).filter((tokenInfo) => matches(tokenInfo, matcher))
   const selectedTokensCounter = useSelectedTokensCounter()
   const canAddToken = selectedTokensCounter < maxTokensPerTx
 
-  const onChangeMatcher = (matcher: string) => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-    setMatcher(matcher)
-  }
+  const {search: assetSearchTerm} = useSearch()
+  const assets = sortTokenInfos({wallet, tokenInfos: filterAssets(assetSearchTerm, tokenInfos)})
 
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <View style={{paddingTop: 16, paddingHorizontal: 16}}>
-        <InputSearch onChangeText={(text) => onChangeMatcher(text)} autoComplete />
-
         {!canAddToken && (
           <View>
             <MaxTokensPerTx />
@@ -65,7 +60,7 @@ export const SelectTokenFromListScreen = () => {
       </View>
 
       <FlashList
-        data={sortedTokenInfos}
+        data={assets}
         renderItem={({item: tokenInfo}: {item: TokenInfo}) => (
           <Boundary>
             <SelectableAssetItem tokenInfo={tokenInfo} disabled={!canAddToken} wallet={wallet} />
@@ -107,13 +102,6 @@ const SelectableAssetItem = ({tokenInfo, disabled, wallet}: SelectableAssetItemP
 }
 
 const HR = (props) => <View {...props} style={{height: 1, backgroundColor: COLORS.GRAY}} />
-
-const matches = (tokenInfo: TokenInfo, matcher: string) =>
-  Object.values(tokenInfo)
-    .filter((value): value is string | number => value != null)
-    .some((value) => normalize(value).includes(normalize(matcher)))
-
-const normalize = (text: string | number) => String(text).trim().toLocaleLowerCase()
 
 const useStrings = () => {
   const intl = useIntl()

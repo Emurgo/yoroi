@@ -4,7 +4,7 @@ import React from 'react'
 import {KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 
 import {Button, Spacer} from '../../../../components'
-import {TxHistoryRouteNavigation} from '../../../../navigation'
+import {TxHistoryRouteNavigation, useWalletNavigation} from '../../../../navigation'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {useHasPendingTx, useIsOnline} from '../../../../yoroi-wallets/hooks'
@@ -89,10 +89,11 @@ const Actions = ({style, ...props}: ViewProps) => <View style={[styles.actions, 
 
 const useNavigateTo = () => {
   const navigation = useNavigation<TxHistoryRouteNavigation>()
+  const {navigateSendSelectAssetFromList} = useWalletNavigation()
 
   return {
     selectedTokens: () => navigation.navigate('send-list-amounts-to-send'),
-    selectToken: () => navigation.navigate('send-select-token-from-list'),
+    selectToken: () => navigateSendSelectAssetFromList(),
   }
 }
 

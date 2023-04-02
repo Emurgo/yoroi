@@ -7,7 +7,7 @@ import {Boundary, Icon} from '../components'
 import {SendProvider} from '../features/Send/common/SendContext'
 import {ConfirmTxScreen} from '../features/Send/useCases/ConfirmTx/ConfirmTxScreen'
 import {ListAmountsToSendScreen} from '../features/Send/useCases/ListAmountsToSend'
-import {SelectTokenFromListScreen} from '../features/Send/useCases/ListAmountsToSend/AddToken/SelectTokenFromListScreen'
+import {SelectTokenFromListScreenNavigator} from '../features/Send/useCases/ListAmountsToSend/AddToken/SelectTokenFromListScreenNavigator'
 import {EditAmountScreen} from '../features/Send/useCases/ListAmountsToSend/EditAmount/EditAmountScreen'
 import {ReadQRCodeScreen} from '../features/Send/useCases/StartMultiTokenTx/InputReceiver/ReadQRCodeScreen'
 import {StartMultiTokenTxScreen} from '../features/Send/useCases/StartMultiTokenTx/StartMultiTokenTxScreen'
@@ -91,18 +91,10 @@ export const TxHistoryNavigator = () => {
         </Stack.Screen>
 
         <Stack.Screen //
-          name="send-select-token-from-list"
-          options={{
-            title: strings.selectAssetTitle,
-            ...sendOptions,
-          }}
-        >
-          {() => (
-            <Boundary>
-              <SelectTokenFromListScreen />
-            </Boundary>
-          )}
-        </Stack.Screen>
+          name="send"
+          component={SelectTokenFromListScreenNavigator}
+          options={{headerShown: false}}
+        />
 
         <Stack.Screen //
           name="send-list-amounts-to-send"
