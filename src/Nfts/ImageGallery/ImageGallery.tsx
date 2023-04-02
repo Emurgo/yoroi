@@ -12,7 +12,7 @@ import {useModeratedNftImage} from '../hooks'
 
 type Props = {
   nfts: YoroiNft[]
-  onSelect: (index: number) => void
+  onSelect: (id: string) => void
   onRefresh: () => void
   isRefreshing: boolean
 }
@@ -33,9 +33,9 @@ export const ImageGallery = ({nfts = [], onSelect, onRefresh, isRefreshing}: Pro
       refreshing={isRefreshing}
       renderItem={(nft) =>
         features.moderatingNftsEnabled ? (
-          <ModeratedImage onPress={() => onSelect(nfts.indexOf(nft))} nft={nft} key={nft.id} />
+          <ModeratedImage onPress={() => onSelect(nft.id)} nft={nft} key={nft.id} />
         ) : (
-          <UnModeratedImage onPress={() => onSelect(nfts.indexOf(nft))} nft={nft} key={nft.id} />
+          <UnModeratedImage onPress={() => onSelect(nft.id)} nft={nft} key={nft.id} />
         )
       }
     />
