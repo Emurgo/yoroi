@@ -32,8 +32,6 @@ export const Nfts = () => {
   const hasEmptySearchResult = nftsSearchTerm.length > 0 && nftsSearchResult.length === 0
   const hasNotNfts = nftsSearchTerm.length === 0 && nftsSearchResult.length === 0
 
-  const handleNftSelect = (id: string) => navigateTo.nftDetails(id)
-
   const onRefresh = React.useCallback(() => {
     setIsManualRefreshing(true)
     refetch()
@@ -105,7 +103,7 @@ export const Nfts = () => {
 
         <ImageGallery
           nfts={nftsSearchResult}
-          onSelect={handleNftSelect}
+          onSelect={navigateTo.nftDetails}
           onRefresh={onRefresh}
           isRefreshing={isManualRefreshing}
         />
