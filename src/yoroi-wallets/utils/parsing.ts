@@ -103,4 +103,5 @@ export const parseSafe = (text: any) => {
 export const isBoolean = (data: unknown): data is boolean => typeof data === 'boolean'
 export const isString = (data: unknown): data is string => typeof data === 'string'
 export const isNonNullable = <T>(data: T | null | undefined): data is T => data !== null && data !== undefined
-export const isNumber = (data: unknown): data is number => typeof data === 'number'
+export const isNumber = (data: unknown): data is number =>
+  typeof data === 'number' && !Number.isNaN(data) && Number.isFinite(data)

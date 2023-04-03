@@ -90,14 +90,14 @@ export const getPoolInfo = (request: PoolInfoRequest, config: BackendConfig): Pr
 
 export const getNFTs = async (assets: RemoteAsset[], config: BackendConfig): Promise<YoroiNft[]> => {
   const assetIds = assets.map((asset) => asset.assetId)
-  const metadataPayload = {assets: assets.map((asset) => ({nameHex: asset.name, policy: asset.policyId}))}
-  const [metadataResponse, supplies] = await Promise.all([
-    fetchDefault('multiAsset/metadata', metadataPayload, config),
+  const payload = {assets: assets.map((asset) => ({nameHex: asset.name, policy: asset.policyId}))}
+  const [assetMetadatas, assetSupplies] = await Promise.all([
+    fetchDefault<Record<string, unknown>>('multiAsset/metadata', payload, config),
     fetchTokensSupplies(assetIds, config),
   ])
 
-  const possibleNfts = parseNFTs(metadataResponse, config.NFT_STORAGE_URL)
-  return possibleNfts.filter((nft) => supplies[nft.id] === 1)
+  const possibleNfts = parseNFTs(assetMetadatas, config.NFT_STORAGE_URL)
+  return possibleNfts.filter((nft) => assetSupplies[nft.id] === 1)
 }
 
 export const fetchTokensSupplies = async (
