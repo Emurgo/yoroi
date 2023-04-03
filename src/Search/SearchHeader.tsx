@@ -6,7 +6,15 @@ import {Icon} from '../components'
 import {defaultStackNavigationOptionsV2} from '../navigation'
 import {useSearch} from './SearchContext'
 
-export const useSearchHeaderOptions = ({placeHolderText, title, noBack = false}) => {
+export const useSearchHeaderOptions = ({
+  placeHolderText,
+  title,
+  noBack = false,
+}: {
+  placeHolderText: string
+  title: string
+  noBack?: boolean
+}) => {
   const [searchVisible, setSearchVisible] = React.useState(false)
   const {search, clearSearch} = useSearch()
   const handleSearchClose = () => {
