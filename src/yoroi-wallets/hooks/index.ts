@@ -23,6 +23,7 @@ import {parseWalletMeta} from '../migrations/walletMeta'
 import {useStorage} from '../storage'
 import {
   Quantity,
+  TokenId,
   TokenInfo,
   TRANSACTION_DIRECTION,
   TRANSACTION_STATUS,
@@ -118,7 +119,7 @@ export const useUtxos = (wallet: YoroiWallet) => {
   return wallet.utxos
 }
 
-export const useAssetIds = (wallet: YoroiWallet): string[] => {
+export const useAssetIds = (wallet: YoroiWallet): TokenId[] => {
   const utxos = useUtxos(wallet)
   return utxos.flatMap((utxo) => utxo.assets).map((asset) => asset.assetId)
 }

@@ -100,11 +100,6 @@ export const getNFTs = async (ids: string[], config: BackendConfig): Promise<Yor
   return parseNFTs(response, config.NFT_STORAGE_URL)
 }
 
-export const getNft = async (id: string, config: BackendConfig): Promise<YoroiNft | null> => {
-  const response = await getNFTs([id], config)
-  return response[0] ?? null
-}
-
 export const getNFTModerationStatus = async (
   fingerprint: string,
   config: BackendConfig & {mainnet: boolean},
