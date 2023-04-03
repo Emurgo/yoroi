@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet, View, ViewProps} from 'react-native'
+import {StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 import {FlatList} from 'react-native-gesture-handler'
 import {useQuery, UseQueryOptions} from 'react-query'
 
@@ -18,7 +18,6 @@ import {TokenInfo, YoroiAmount, YoroiEntry, YoroiUnsignedTx} from '../../../../y
 import {Amounts} from '../../../../yoroi-wallets/utils'
 import {useSend} from '../../common/SendContext'
 import {AddTokenButton} from './AddToken/AddToken'
-import {EditAmountButton} from './EditAmount/EditAmount'
 import {RemoveAmountButton} from './RemoveAmount'
 
 export const ListAmountsToSendScreen = () => {
@@ -119,6 +118,19 @@ const Left = ({style, ...props}: ViewProps) => <View style={[style, {flex: 1}]} 
 const Right = ({style, ...props}: ViewProps) => <View style={[style, {paddingLeft: 16}]} {...props} />
 const Actions = ({style, ...props}: ViewProps) => <View style={[style, styles.transparent]} {...props} />
 const Row = ({style, ...props}: ViewProps) => <View style={[style, styles.row]} {...props} />
+
+// use case: edit amount
+type EditAmountButtonProps = {
+  onPress(): void
+  children?: React.ReactNode
+}
+const EditAmountButton = ({onPress, children}: EditAmountButtonProps) => {
+  return (
+    <TouchableOpacity style={{paddingVertical: 16}} onPress={onPress} testID="editAmountButton">
+      {children}
+    </TouchableOpacity>
+  )
+}
 
 export const useSendTx = (
   {wallet, entry}: {wallet: YoroiWallet; entry: YoroiEntry},
