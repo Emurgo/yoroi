@@ -32,10 +32,10 @@ export const Nfts = () => {
   const hasEmptySearchResult = nftsSearchTerm.length > 0 && nftsSearchResult.length === 0
   const hasNotNfts = nftsSearchResult.length === 0
 
-  const onRefresh = React.useCallback(() => {
+  const onRefresh = () => {
     setIsManualRefreshing(true)
     refetch()
-  }, [refetch])
+  }
 
   if (isError) {
     return (
