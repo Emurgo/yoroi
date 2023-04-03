@@ -22,18 +22,12 @@ const Routes = () => {
   const searchHeaderOptions = useSearchHeaderOptions({
     placeHolderText: strings.search,
     title: strings.title,
+    noBack: true,
   })
 
   return (
     <Stack.Navigator>
-      <Stack.Screen
-        name="nft-gallery"
-        component={Nfts}
-        options={{
-          ...searchHeaderOptions,
-          headerLeft: () => null,
-        }}
-      />
+      <Stack.Screen name="nft-gallery" component={Nfts} options={searchHeaderOptions} />
     </Stack.Navigator>
   )
 }

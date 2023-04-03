@@ -1,7 +1,9 @@
 import {NavigatorScreenParams, useNavigation, useRoute} from '@react-navigation/native'
 import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/stack'
-import {Platform} from 'react-native'
+import React from 'react'
+import {Platform, TouchableOpacity} from 'react-native'
 
+import {Icon} from './components'
 import {COLORS} from './theme'
 import {HWDeviceInfo, NetworkId, WalletImplementationId} from './yoroi-wallets'
 import {YoroiUnsignedTx} from './yoroi-wallets/types'
@@ -33,11 +35,27 @@ export const defaultStackNavigationOptionsV2: StackNavigationOptions = {
     elevation: 0,
     shadowOpacity: 0,
   },
-  headerTitleContainerStyle: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    flex: 1,
+  headerTitleStyle: {
+    fontSize: 16,
+    fontFamily: 'Rubik-Medium',
   },
+  headerTitleAlign: 'center',
+  headerTitleContainerStyle: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  headerLeftContainerStyle: {
+    paddingLeft: 9,
+  },
+  headerRightContainerStyle: {
+    paddingRight: 9,
+  },
+  headerLeft: (props) => (
+    <TouchableOpacity {...props}>
+      <Icon.Chevron direction="left" color="#000000" />
+    </TouchableOpacity>
+  ),
 }
 
 export const defaultStackNavigationOptions: StackNavigationOptions = {
