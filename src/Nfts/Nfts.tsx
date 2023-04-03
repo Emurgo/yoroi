@@ -6,7 +6,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Icon, Spacer} from '../components'
 import {useSearch} from '../Search/SearchContext'
 import {useSelectedWallet} from '../SelectedWallet'
-import {useNfts, YoroiNft} from '../yoroi-wallets'
+import {useNfts} from '../yoroi-wallets'
 import {filterNfts} from './filterNfts'
 import {ImageGallery, SkeletonGallery} from './ImageGallery'
 import {useNavigateTo} from './navigation'
@@ -26,11 +26,11 @@ export const Nfts = () => {
 
   const {search: nftsSearchTerm} = useSearch()
   const filteredNfts = filterNfts(nftsSearchTerm, nfts)
-  const sortedNfts = filteredNfts.sort(sortNfts)
+  const sortedNfts = filteredNfts.sort((NftA, NftB) => sortNfts(NftA.name, NftB.name))
   const nftsSearchResult = filterNfts(nftsSearchTerm, sortedNfts)
 
   const hasEmptySearchResult = nftsSearchTerm.length > 0 && nftsSearchResult.length === 0
-  const hasNotNfts = nftsSearchTerm.length === 0 && nftsSearchResult.length === 0
+  const hasNotNfts = nftsSearchResult.length === 0
 
   const onRefresh = React.useCallback(() => {
     setIsManualRefreshing(true)
@@ -94,11 +94,11 @@ export const Nfts = () => {
     <Wrapper>
       <View style={styles.galleryContainer}>
         {nftsSearchTerm.length === 0 && (
-          <View>
+          <>
             <NftCount count={nftsSearchResult.length} />
 
             <Spacer height={16} />
-          </View>
+          </>
         )}
 
         <ImageGallery
@@ -158,13 +158,10 @@ const ErrorScreen = ({onRefresh, isRefreshing}: {onRefresh: () => void; isRefres
 
 const NftCount = ({count}: {count?: number | string}) => {
   const strings = useStrings()
-  const countText = `${strings.nftCount}: ${count ?? '-'}`
 
   return (
-    <View>
-      <View style={styles.countBar}>
-        <Text style={styles.count}>{countText}</Text>
-      </View>
+    <View style={styles.countBar}>
+      <Text style={styles.count}>{`${strings.nftCount}: ${count ?? '-'}`}</Text>
     </View>
   )
 }
@@ -181,7 +178,7 @@ const LoadingScreen = ({nftsCount}: {nftsCount: number}) => {
   )
 }
 
-const sortNfts = (nftA: YoroiNft, nftB: YoroiNft): number => nftA.name.localeCompare(nftB.name)
+const sortNfts = (nftNameA: string, nftNameB: string): number => nftNameA.localeCompare(nftNameB)
 
 const styles = StyleSheet.create({
   safeAreaView: {
