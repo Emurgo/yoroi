@@ -5,9 +5,9 @@ import {COLORS} from '../../theme'
 import {Icon} from '../Icon'
 import {Spacer} from '../Spacer'
 
-export const ErrorPanel = ({style, children}: ViewProps) => {
+export const ErrorPanel = ({style, children, ...props}: ViewProps) => {
   return (
-    <View style={[styles.container, style]}>
+    <View {...props} style={[style, styles.container]}>
       <Icon.Info color={COLORS.ERROR_TEXT_COLOR} />
 
       <Spacer height={10} />
