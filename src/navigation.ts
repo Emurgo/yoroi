@@ -33,21 +33,14 @@ export const defaultStackNavigationOptionsV2: StackNavigationOptions = {
     fontFamily: 'Rubik-Medium',
   },
   headerTintColor: COLORS.ERROR_TEXT_COLOR_DARK,
+  headerTitleContainerStyle: {
+    width: '70%',
+    alignItems: 'center',
+  },
   headerStyle: {
     elevation: 0,
     shadowOpacity: 0,
     backgroundColor: COLORS.BACKGROUND_GRAY,
-  },
-  headerTitleContainerStyle: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    flex: 1,
-  },
-  headerLeftContainerStyle: {
-    paddingLeft: Platform.OS === 'ios' ? 8 : undefined,
-  },
-  headerRightContainerStyle: {
-    paddingRight: Platform.OS === 'ios' ? 8 : undefined,
   },
 }
 
@@ -58,8 +51,8 @@ export const defaultStackNavigationOptions: StackNavigationOptions = {
     shadowOpacity: 0,
   },
   headerTintColor: '#fff',
-  headerBackTitleVisible: false,
   headerTitleAlign: 'center',
+  headerBackTitleVisible: false,
   headerLeftContainerStyle: {
     paddingLeft: Platform.OS === 'ios' ? 8 : undefined,
   },
