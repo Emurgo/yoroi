@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {SendToken} from '@emurgo/yoroi-lib'
 import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
 import ExtendableError from 'es6-error'
@@ -596,7 +595,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
           addressedUtxos,
           entry.address,
           changeAddr,
-          toSendTokenList(amounts, this.primaryToken) as unknown as Array<SendToken>,
+          toSendTokenList(amounts, this.primaryToken),
           {
             keyDeposit: KEY_DEPOSIT,
             linearFee: {
