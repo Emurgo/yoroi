@@ -18,7 +18,7 @@ export const useSearchHeaderOptions = ({placeHolderText, title}) => {
     ? {
         ...defaultStackNavigationOptionsV2,
         headerTitle: () => <SearchHeader placeholder={placeHolderText} />,
-        headerRight: () => <CloseButton /* style={{flex: 1,paddingRight: 10}}  */ onPress={handleSearchClose} />,
+        headerRight: () => <CloseButton onPress={handleSearchClose} />,
         headerTitleContainerStyle: {
           flex: 1,
         },
