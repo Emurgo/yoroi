@@ -631,6 +631,9 @@ const balances: YoroiAmounts = {
   '1d129dc9c03f95a863489883914f05a52e13135994a32f0cbeacc65f.74484f444c52': '5',
   '1ca1fc0c880d25850cb00303788dfb51bdf2f902f6dce47d1ad09d5b.44': '2463889379',
   '08d91ec4e6c743a92de97d2fde5ca0d81493555c535894a3097061f7.c8b0': '148',
+  '1d129dc9c03f95a863489883914f05a52e13135994a32f0cbeacc65e.74484f444c53': '100000008',
+  '1d129dc9c03f95a863489883914f05a52e13135994a32f0cbeacc65e.74484f444c54': '1000000000012',
+  '1d129dc9c03f95a863489883914f05a52e13135994a32f0cbeacc65e.74484f444c55': '100000000000000000020',
 }
 
 const tokenInfos: Record<string, TokenInfo> = {
@@ -717,6 +720,48 @@ const tokenInfos: Record<string, TokenInfo> = {
     ticker: 'WUSDC',
     url: 'https://wallet-testnet.nu.fi',
   },
+  '1d129dc9c03f95a863489883914f05a52e13135994a32f0cbeacc65e.74484f444c53': toTokenInfo({
+    networkId: 300,
+    identifier: '1d129dc9c03f95a863489883914f05a52e13135994a32f0cbeacc65e.74484f444c53',
+    isDefault: false,
+    metadata: {
+      type: 'Cardano',
+      policyId: '1d129dc9c03f95a863489883914f05a52e13135994a32f0cbeacc65e',
+      assetName: '74484f444c53',
+      ticker: '8DEC',
+      longName: '',
+      numberOfDecimals: 8,
+      maxSupply: null,
+    },
+  }),
+  '1d129dc9c03f95a863489883914f05a52e13135994a32f0cbeacc65e.74484f444c54': toTokenInfo({
+    networkId: 300,
+    identifier: '1d129dc9c03f95a863489883914f05a52e13135994a32f0cbeacc65e.74484f444c54',
+    isDefault: false,
+    metadata: {
+      type: 'Cardano',
+      policyId: '1d129dc9c03f95a863489883914f05a52e13135994a32f0cbeacc65e',
+      assetName: '74484f444c53',
+      ticker: '12DEC',
+      longName: '',
+      numberOfDecimals: 12,
+      maxSupply: null,
+    },
+  }),
+  '1d129dc9c03f95a863489883914f05a52e13135994a32f0cbeacc65e.74484f444c55': toTokenInfo({
+    networkId: 300,
+    identifier: '1d129dc9c03f95a863489883914f05a52e13135994a32f0cbeacc65e.74484f444c55',
+    isDefault: false,
+    metadata: {
+      type: 'Cardano',
+      policyId: '1d129dc9c03f95a863489883914f05a52e13135994a32f0cbeacc65e',
+      assetName: '74484f444c53',
+      ticker: '20DEC',
+      longName: '',
+      numberOfDecimals: 20,
+      maxSupply: null,
+    },
+  }),
 }
 
 const stakePoolId = 'af22f95915a19cd57adb14c558dcc4a175f60c6193dc23b8bd2d8beb'

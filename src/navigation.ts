@@ -61,10 +61,7 @@ export const defaultStackNavigationOptions: StackNavigationOptions = {
 // ROUTES
 export type WalletTabRoutes = {
   history: NavigatorScreenParams<TxHistoryRoutes>
-  'send-ada': NavigatorScreenParams<SendRoutes>
-  'receive-ada': NavigatorScreenParams<ReceiveRoutes>
   'staking-dashboard': NavigatorScreenParams<DashboardRoutes>
-  'staking-center': NavigatorScreenParams<StakingCenterRoutes>
   nfts: NavigatorScreenParams<NftRoutes>
   menu: NavigatorScreenParams<MenuRoutes>
 }
@@ -154,10 +151,12 @@ export type TxHistoryRoutes = {
     id: string
   }
   receive: undefined
-  send: undefined
-  'select-asset': undefined
-  'address-reader-qr': undefined
-  'send-confirm': SendConfirmParams
+  'send-start-tx': undefined
+  'send-select-token-from-list': undefined
+  'send-read-qr-code': undefined
+  'send-confirm-tx': undefined
+  'send-list-amounts-to-send': undefined
+  'send-edit-amount': undefined
 }
 export type TxHistoryRouteNavigation = StackNavigationProp<TxHistoryRoutes>
 
@@ -197,13 +196,6 @@ export type SettingsRouteNavigation = StackNavigationProp<SettingsStackRoutes>
 export type SendConfirmParams = {
   yoroiUnsignedTx: YoroiUnsignedTx
 }
-export type SendRoutes = {
-  'send-ada-main': undefined
-  'select-asset': undefined
-  'address-reader-qr': undefined
-  'send-ada-confirm': SendConfirmParams
-}
-export type SendRouteNavigation = StackNavigationProp<SendRoutes>
 
 export type DashboardRoutes = {
   'staking-dashboard-main': undefined

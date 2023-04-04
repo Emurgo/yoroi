@@ -4,6 +4,13 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps} from 'react-native'
 
 import {Boundary, Icon} from '../components'
+import {SendProvider} from '../features/Send/common/SendContext'
+import {ConfirmTxScreen} from '../features/Send/useCases/ConfirmTx/ConfirmTxScreen'
+import {ListAmountsToSendScreen} from '../features/Send/useCases/ListAmountsToSend'
+import {SelectTokenFromListScreen} from '../features/Send/useCases/ListAmountsToSend/AddToken/SelectTokenFromListScreen'
+import {EditAmountScreen} from '../features/Send/useCases/ListAmountsToSend/EditAmount/EditAmountScreen'
+import {ReadQRCodeScreen} from '../features/Send/useCases/StartMultiTokenTx/InputReceiver/ReadQRCodeScreen'
+import {StartMultiTokenTxScreen} from '../features/Send/useCases/StartMultiTokenTx/StartMultiTokenTxScreen'
 import {
   defaultStackNavigationOptions,
   defaultStackNavigationOptionsV2,
@@ -12,11 +19,6 @@ import {
 } from '../navigation'
 import {ReceiveScreen} from '../Receive/ReceiveScreen'
 import {useSelectedWallet} from '../SelectedWallet'
-import {AddressReaderQR} from '../Send/AddressReaderQR'
-import {AssetSelectorScreen} from '../Send/AssetSelectorScreen'
-import {ConfirmScreen} from '../Send/ConfirmScreen'
-import {SendProvider} from '../Send/Context/SendContext'
-import {SendScreen} from '../Send/SendScreen'
 import {COLORS} from '../theme'
 import {useWalletName} from '../yoroi-wallets'
 import {ModalInfo} from './ModalInfo'
@@ -34,7 +36,7 @@ export const TxHistoryNavigator = () => {
   const hideModalInfo = () => setModalInfoState(false)
 
   return (
-    <SendProvider key={wallet.id} wallet={wallet}>
+    <SendProvider key={wallet.id}>
       <Stack.Navigator
         screenOptions={{
           ...defaultStackNavigationOptions,
@@ -75,36 +77,77 @@ export const TxHistoryNavigator = () => {
         />
 
         <Stack.Screen
-          name="send"
+          name="send-start-tx"
           options={{
             title: strings.sendTitle,
+            ...sendOptions,
           }}
         >
           {() => (
             <Boundary>
-              <SendScreen />
-            </Boundary>
-          )}
-        </Stack.Screen>
-
-        <Stack.Screen name="select-asset" options={{title: strings.selectAssetTitle}}>
-          {() => (
-            <Boundary>
-              <AssetSelectorScreen />
+              <StartMultiTokenTxScreen />
             </Boundary>
           )}
         </Stack.Screen>
 
         <Stack.Screen //
-          name="address-reader-qr"
-          component={AddressReaderQR}
-          options={{title: strings.qrScannerTitle}}
+          name="send-select-token-from-list"
+          options={{
+            title: strings.selectAssetTitle,
+            ...sendOptions,
+          }}
+        >
+          {() => (
+            <Boundary>
+              <SelectTokenFromListScreen />
+            </Boundary>
+          )}
+        </Stack.Screen>
+
+        <Stack.Screen //
+          name="send-list-amounts-to-send"
+          options={{
+            title: strings.listAmountsToSendTitle,
+            ...sendOptions,
+          }}
+        >
+          {() => (
+            <Boundary>
+              <ListAmountsToSendScreen />
+            </Boundary>
+          )}
+        </Stack.Screen>
+
+        <Stack.Screen //
+          name="send-edit-amount"
+          options={{
+            title: strings.editAmountTitle,
+            ...sendOptions,
+          }}
+        >
+          {() => (
+            <Boundary>
+              <EditAmountScreen />
+            </Boundary>
+          )}
+        </Stack.Screen>
+
+        <Stack.Screen //
+          name="send-read-qr-code"
+          component={ReadQRCodeScreen}
+          options={{
+            title: strings.qrScannerTitle,
+            ...sendOptions,
+          }}
         />
 
         <Stack.Screen //
-          name="send-confirm"
-          component={ConfirmScreen}
-          options={{title: strings.confirmTitle}}
+          name="send-confirm-tx"
+          component={ConfirmTxScreen}
+          options={{
+            title: strings.confirmTitle,
+            ...sendOptions,
+          }}
         />
       </Stack.Navigator>
 
@@ -132,9 +175,17 @@ const messages = defineMessages({
     id: 'components.send.selectasset.title',
     defaultMessage: '!!!Select asset',
   },
+  listAmountsToSendTitle: {
+    id: 'components.send.listamountstosendscreen.title',
+    defaultMessage: '!!!Selected tokens',
+  },
+  editAmountTitle: {
+    id: 'components.send.editamountscreen.title',
+    defaultMessage: '!!!Edit amount',
+  },
   confirmTitle: {
     id: 'components.send.confirmscreen.title',
-    defaultMessage: '!!!Send',
+    defaultMessage: '!!!Confirm',
   },
   receiveInfoText: {
     id: 'components.receive.receivescreen.infoText',
@@ -155,6 +206,8 @@ const useStrings = () => {
     selectAssetTitle: intl.formatMessage(messages.selectAssetTitle),
     confirmTitle: intl.formatMessage(messages.confirmTitle),
     receiveInfoText: intl.formatMessage(messages.receiveInfoText),
+    editAmountTitle: intl.formatMessage(messages.editAmountTitle),
+    listAmountsToSendTitle: intl.formatMessage(messages.listAmountsToSendTitle),
   }
 }
 
@@ -192,3 +245,12 @@ const styles = StyleSheet.create({
     paddingRight: 12,
   },
 })
+
+const sendOptions = {
+  ...defaultStackNavigationOptionsV2,
+  headerStyle: {
+    elevation: 0,
+    shadowOpacity: 0,
+    backgroundColor: '#fff',
+  },
+}

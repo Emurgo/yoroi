@@ -5,10 +5,10 @@ import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {Icon, Spacer} from '../components'
 import {features} from '../features'
+import {useSend} from '../features/Send/common/SendContext'
 import {actionMessages} from '../i18n/global-messages'
 import {TxHistoryRouteNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
-import {useSend} from '../Send/Context/SendContext'
 import {COLORS} from '../theme'
 
 const ACTION_PROPS = {
@@ -137,7 +137,7 @@ const useNavigateTo = () => {
   const strings = useStrings()
 
   return {
-    send: () => navigation.navigate('send'),
+    send: () => navigation.navigate('send-start-tx'),
     receive: () => navigation.navigate('receive'),
     buy: () => Alert.alert(strings.messageBuy, strings.messageBuy),
   }
