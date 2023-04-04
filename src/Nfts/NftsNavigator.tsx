@@ -19,7 +19,7 @@ export const NftsNavigator = () => {
 
 const Routes = () => {
   const strings = useStrings()
-  const {searchHeaderOptions} = useSearchHeaderOptions({
+const {searchHeaderOptions} = useSearchHeaderOptions({
     placeHolderText: strings.search,
     title: strings.title,
   })
