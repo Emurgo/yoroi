@@ -292,20 +292,23 @@ const fetchPoolInfo = {
   },
 }
 
+export const generateManyNfts = (): YoroiNft[] => {
+  return Array(30)
+    .fill(undefined)
+    .map((_, index) => ({
+      ...nft,
+      name: 'NFT ' + index,
+      id: index + '',
+      fingerprint: getTokenFingerprint({policyId: nft.metadata.policyId, assetNameHex: asciiToHex('NFT ' + index)}),
+      metadata: {...nft.metadata, policyId: nft.metadata.policyId, assetNameHex: asciiToHex('NFT ' + index)},
+    }))
+}
+
 const fetchNfts = {
   success: {
     many: async (...args) => {
       action('fetchNfts')(...args)
-      const nfts = Array(30)
-        .fill(undefined)
-        .map((_, index) => ({
-          ...nft,
-          name: 'NFT ' + index,
-          id: index + '',
-          fingerprint: getTokenFingerprint({policyId: nft.metadata.policyId, assetNameHex: asciiToHex('NFT ' + index)}),
-          metadata: {...nft.metadata, policyId: nft.metadata.policyId, assetNameHex: asciiToHex('NFT ' + index)},
-        }))
-      return nfts
+      return generateManyNfts()
     },
     empty: async (...args) => {
       action('fetchNfts')(...args)
