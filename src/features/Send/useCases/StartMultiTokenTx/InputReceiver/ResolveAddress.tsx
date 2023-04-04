@@ -56,10 +56,10 @@ export const ResolveAddress = ({
 
 export const useReceiver = (
   {wallet, receiver}: {wallet: YoroiWallet; receiver: string},
-  options?: UseQueryOptions<string, Error, string, [string, 'receiver']>,
+  options?: UseQueryOptions<string, Error, string, ['receiver', string]>,
 ) => {
   const query = useQuery({
-    queryKey: [receiver, 'receiver'],
+    queryKey: ['receiver', receiver],
     queryFn: () => resolveAndCheckAddress(receiver, wallet.networkId),
     ...options,
   })
