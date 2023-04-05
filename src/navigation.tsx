@@ -46,10 +46,10 @@ export const defaultStackNavigationOptionsV2: StackNavigationOptions = {
     justifyContent: 'center',
   },
   headerLeftContainerStyle: {
-    paddingLeft: 9,
+    paddingLeft: 10,
   },
   headerRightContainerStyle: {
-    paddingRight: 9,
+    paddingRight: 10,
   },
   headerLeft: (props) => (
     <TouchableOpacity {...props}>
