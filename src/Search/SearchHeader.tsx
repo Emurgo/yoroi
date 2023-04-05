@@ -64,13 +64,13 @@ export const SearchHeader = ({placeholder}: Props) => {
 }
 
 const SearchButton = (props: TouchableOpacityProps) => (
-  <TouchableOpacity {...props} hitSlop={{top: 100, left: 100, right: 100, bottom: 100}}>
+  <TouchableOpacity {...props}>
     <Icon.Magnify size={26} />
   </TouchableOpacity>
 )
 
 const EraseButton = (props: TouchableOpacityProps) => (
-  <TouchableOpacity {...props} hitSlop={{top: 100, left: 100, right: 100, bottom: 100}}>
+  <TouchableOpacity {...props}>
     <Icon.Cross size={20} />
   </TouchableOpacity>
 )

@@ -126,8 +126,6 @@
   "components.send.assetselectorscreen.searchlabel": "Search by name or subject",
   "components.send.assetselectorscreen.sendallassets": "SELECT ALL ASSETS",
   "components.send.assetselectorscreen.unknownAsset": "Unknown Asset",
-  "components.send.assetselectorscreen.counter1": "{count} assets",
-  "components.send.assetselectorscreen.counter2": "found",
   "components.send.assetselectorscreen.noAssets": "No assets found",
   "components.send.addressreaderqr.title": "Scan QR code address",
   "components.send.amountfield.label": "Amount",
@@ -578,5 +576,6 @@
   "global.next": "Next",
   "utils.format.today": "Today",
   "utils.format.unknownAssetName": "[Unknown asset name]",
-  "utils.format.yesterday": "Yesterday"
+  "utils.format.yesterday": "Yesterday",
+  "global.all": "All"
 }
