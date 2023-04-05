@@ -17,8 +17,8 @@ import {maxTokensPerTx} from '../../../../../yoroi-wallets/contants'
 import {useBalances, useTokenInfos} from '../../../../../yoroi-wallets/hooks'
 import {TokenInfo} from '../../../../../yoroi-wallets/types'
 import {Amounts, Quantities} from '../../../../../yoroi-wallets/utils'
+import {filterAssets} from '../../../common/filterAssets'
 import {useSelectedTokensCounter, useSend, useTokenQuantities} from '../../../common/SendContext'
-import {filterAssets} from './filterAssets'
 import {MaxTokensPerTx} from './ShowError/MaxTokensPerTx'
 
 export const SelectTokenFromListScreen = () => {
