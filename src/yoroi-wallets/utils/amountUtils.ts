@@ -39,7 +39,6 @@ export const formatMultiLangSeparator = (number: string) => number.replace(/,/g,
 
 export const pastedFormatter = compose(
   formatSeparatorWithoutDigits,
-  stripExcessiveDecimals,
   stripAllButLastDecimalSeparators,
   stripCommas,
   stripInvalidCharacters,
@@ -47,7 +46,6 @@ export const pastedFormatter = compose(
 
 export const editedFormatter = compose(
   formatSeparatorWithoutDigits,
-  stripExcessiveDecimals,
   stripAllButFirstDecimalSeparator,
   formatMultiLangSeparator,
   stripInvalidCharacters,
