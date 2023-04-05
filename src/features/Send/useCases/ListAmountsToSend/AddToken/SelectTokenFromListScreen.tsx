@@ -37,8 +37,8 @@ export const SelectTokenFromListScreen = () => {
   const selectedTokensCounter = useSelectedTokensCounter()
   const canAddToken = selectedTokensCounter < maxTokensPerTx
 
-  const {search: assetSearchTerm} = useSearch()
-  const searchFilteredTokens = filterTokenInfos(assetSearchTerm, tokenInfos)
+  const {search: tokenInfoSearchTerm} = useSearch()
+  const searchFilteredTokens = filterTokenInfos(tokenInfoSearchTerm, tokenInfos)
   const tabFilteredTokens = filterTokenInfosByTab({nfts, activeTab, tokenInfos: searchFilteredTokens})
   const sortedFilteredTokenInfos = sortTokenInfos({wallet, tokenInfos: tabFilteredTokens})
 
@@ -69,7 +69,7 @@ export const SelectTokenFromListScreen = () => {
         testID="assetsList"
         estimatedItemSize={78}
         ListEmptyComponent={
-          assetSearchTerm.length > 0 && sortedFilteredTokenInfos.length === 0 ? <NoAssets /> : undefined
+          tokenInfoSearchTerm.length > 0 && sortedFilteredTokenInfos.length === 0 ? <NoAssets /> : undefined
         }
       />
     </View>
