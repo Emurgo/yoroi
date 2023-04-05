@@ -3,21 +3,12 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
 import {NftRoutes} from '../navigation'
-import {SearchProvider} from '../Search'
 import {useSearchHeaderOptions} from '../Search/SearchHeader'
 import {Nfts} from './Nfts'
 
 const Stack = createStackNavigator<NftRoutes>()
 
 export const NftsNavigator = () => {
-  return (
-    <SearchProvider>
-      <Routes />
-    </SearchProvider>
-  )
-}
-
-const Routes = () => {
   const strings = useStrings()
   const searchHeaderOptions = useSearchHeaderOptions({
     placeHolderText: strings.search,

@@ -11,6 +11,7 @@ import {MenuNavigator} from './Menu'
 import {WalletStackRoutes, WalletTabRoutes} from './navigation'
 import {NftDetailsNavigator} from './NftDetails/NftDetailsNavigator'
 import {NftsNavigator} from './Nfts/NftsNavigator'
+import {SearchProvider} from './Search'
 import {useSelectedWallet, WalletSelectionScreen} from './SelectedWallet'
 import {SettingsScreenNavigator} from './Settings'
 import {theme} from './theme'
@@ -39,7 +40,6 @@ const WalletTabNavigator = () => {
       >
         <Tab.Screen
           name="history"
-          component={TxHistoryNavigator}
           options={{
             tabBarIcon: ({focused}) => (
               <Icon.TabWallet
@@ -50,12 +50,17 @@ const WalletTabNavigator = () => {
             tabBarLabel: strings.walletTabBarLabel,
             tabBarTestID: 'walletTabBarButton',
           }}
-        />
+        >
+          {() => (
+            <SearchProvider>
+              <TxHistoryNavigator />
+            </SearchProvider>
+          )}
+        </Tab.Screen>
 
         {features.showNftGallery && (
           <Tab.Screen
             name="nfts"
-            component={NftsNavigator}
             options={{
               tabBarIcon: ({focused}) => (
                 <Icon.Image
@@ -66,7 +71,13 @@ const WalletTabNavigator = () => {
               tabBarLabel: strings.nftsTabBarLabel,
               tabBarTestID: 'nftsTabBarButton',
             }}
-          />
+          >
+            {() => (
+              <SearchProvider>
+                <NftsNavigator />
+              </SearchProvider>
+            )}
+          </Tab.Screen>
         )}
 
         {isHaskellShelley(wallet.walletImplementationId) && (
