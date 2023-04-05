@@ -92,7 +92,7 @@ export const getNFTs = async (assets: RemoteAsset[], config: BackendConfig): Pro
   const assetIds = assets.map((asset) => asset.assetId)
   const payload = {assets: assets.map((asset) => ({nameHex: asset.name, policy: asset.policyId}))}
   const [assetMetadatas, assetSupplies] = await Promise.all([
-    fetchDefault<Record<string, unknown>>('multiAsset/metadata', payload, config),
+    fetchDefault<unknown>('multiAsset/metadata', payload, config),
     fetchTokensSupplies(assetIds, config),
   ])
 
@@ -105,12 +105,15 @@ export const fetchTokensSupplies = async (
   config: BackendConfig,
 ): Promise<Record<string, number | null>> => {
   const payload = {assets: tokenIds.map((tokenId) => ({policy: toPolicyId(tokenId), name: toAssetName(tokenId)}))}
-  const response = await fetchDefault<Record<string, unknown>>('multiAsset/supply', payload, config)
+  const response = await fetchDefault<unknown>('multiAsset/supply', payload, config)
   const supplies = tokenIds.map((tokenId) => {
     const key = `${toPolicyId(tokenId)}.${toAssetName(tokenId)}`
 
     const supply =
-      hasProperties(response, ['supplies']) && isRecord(response.supplies) && hasProperties(response.supplies, [key])
+      isRecord(response) &&
+      hasProperties(response, ['supplies']) &&
+      isRecord(response.supplies) &&
+      hasProperties(response.supplies, [key])
         ? response.supplies[key]
         : null
 
