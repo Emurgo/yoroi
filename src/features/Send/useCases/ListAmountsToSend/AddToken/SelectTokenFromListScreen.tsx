@@ -35,7 +35,7 @@ export const SelectTokenFromListScreen = () => {
   const canAddToken = selectedTokensCounter < maxTokensPerTx
 
   const {search: assetSearchTerm} = useSearch()
-  const assets = sortTokenInfos({wallet, tokenInfos: filterAssets(assetSearchTerm, tokenInfos)})
+  const sortedTokenInfos = sortTokenInfos({wallet, tokenInfos: filterAssets(assetSearchTerm, tokenInfos)})
 
   return (
     <View style={styles.container}>
@@ -50,7 +50,7 @@ export const SelectTokenFromListScreen = () => {
       </View>
 
       <FlashList
-        data={assets}
+        data={sortedTokenInfos}
         renderItem={({item: tokenInfo}: {item: TokenInfo}) => (
           <Boundary>
             <SelectableAssetItem tokenInfo={tokenInfo} disabled={!canAddToken} wallet={wallet} />
@@ -61,11 +61,11 @@ export const SelectTokenFromListScreen = () => {
         keyExtractor={(_, index) => index.toString()}
         testID="assetsList"
         estimatedItemSize={78}
-        ListEmptyComponent={assetSearchTerm.length > 0 && assets.length === 0 ? <NoAssets /> : undefined}
+        ListEmptyComponent={assetSearchTerm.length > 0 && sortedTokenInfos.length === 0 ? <NoAssets /> : undefined}
       />
 
       <View style={styles.counter}>
-        <Text style={styles.counterText1}>{strings.counter1(assets.length)}</Text>
+        <Text style={styles.counterText1}>{strings.counter1(sortedTokenInfos.length)}</Text>
 
         <Text style={styles.counterText2}>{` ${strings.counter2}`}</Text>
       </View>
