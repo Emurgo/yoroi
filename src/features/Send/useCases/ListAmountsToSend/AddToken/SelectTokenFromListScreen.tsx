@@ -14,21 +14,18 @@ import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {sortTokenInfos} from '../../../../../utils'
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
 import {maxTokensPerTx} from '../../../../../yoroi-wallets/contants'
-import {useBalances, useNfts, useTokenInfos} from '../../../../../yoroi-wallets/hooks'
-import {TokenInfo, YoroiNft} from '../../../../../yoroi-wallets/types'
+import {useBalances, useTokenInfos} from '../../../../../yoroi-wallets/hooks'
+import {TokenInfo} from '../../../../../yoroi-wallets/types'
 import {Amounts, Quantities} from '../../../../../yoroi-wallets/utils'
-import {filterTokenInfos} from '../../../common/filterTokenInfos'
 import {useSelectedTokensCounter, useSend, useTokenQuantities} from '../../../common/SendContext'
+import {filterAssets} from './filterAssets'
 import {MaxTokensPerTx} from './ShowError/MaxTokensPerTx'
 
-export type Tabs = 'all' | 'tokens' | 'nfts'
-
 export const SelectTokenFromListScreen = () => {
+  const strings = useStrings()
   const wallet = useSelectedWallet()
-  const [activeTab, setActiveTab] = React.useState<Tabs>('all')
 
   const balances = useBalances(wallet)
-  const {nfts} = useNfts(wallet)
 
   const tokenInfos = useTokenInfos({
     wallet,
@@ -38,9 +35,7 @@ export const SelectTokenFromListScreen = () => {
   const canAddToken = selectedTokensCounter < maxTokensPerTx
 
   const {search: assetSearchTerm} = useSearch()
-  const searchFilteredTokens = filterTokenInfos(assetSearchTerm, tokenInfos)
-  const tabFilteredTokens = filterTokenInfosByTab({nfts, activeTab, tokenInfos: searchFilteredTokens})
-  const sortedFilteredTokenInfos = sortTokenInfos({wallet, tokenInfos: tabFilteredTokens})
+  const sortedTokenInfos = sortTokenInfos({wallet, tokenInfos: filterAssets(assetSearchTerm, tokenInfos)})
 
   return (
     <View style={styles.container}>
@@ -52,71 +47,29 @@ export const SelectTokenFromListScreen = () => {
             <Spacer height={16} />
           </>
         )}
-
-        <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
       </View>
 
       <FlashList
-        data={sortedFilteredTokenInfos}
+        data={sortedTokenInfos}
         renderItem={({item: tokenInfo}: {item: TokenInfo}) => (
           <Boundary>
             <SelectableAssetItem tokenInfo={tokenInfo} disabled={!canAddToken} wallet={wallet} />
           </Boundary>
         )}
         bounces={false}
-        contentContainerStyle={styles.list}
+        contentContainerStyle={{paddingHorizontal: 16}}
         keyExtractor={(_, index) => index.toString()}
         testID="assetsList"
         estimatedItemSize={78}
-        ListEmptyComponent={
-          assetSearchTerm.length > 0 && sortedFilteredTokenInfos.length === 0 ? <NoAssets /> : undefined
-        }
+        ListEmptyComponent={assetSearchTerm.length > 0 && sortedTokenInfos.length === 0 ? <NoAssets /> : undefined}
       />
+
+      <View style={styles.counter}>
+        <Text style={styles.counterText1}>{strings.counter1(sortedTokenInfos.length)}</Text>
+
+        <Text style={styles.counterText2}>{` ${strings.counter2}`}</Text>
+      </View>
     </View>
-  )
-}
-
-const Tabs = ({setActiveTab, activeTab}: {setActiveTab: (activeTab: Tabs) => void; activeTab: Tabs}) => {
-  const strings = useStrings()
-
-  return (
-    <View style={styles.tabs}>
-      <Tab activeTab={activeTab} setActiveTab={setActiveTab} text={strings.all} tab="all" />
-
-      <Tab activeTab={activeTab} setActiveTab={setActiveTab} text={strings.tokens} tab="tokens" />
-
-      <Tab activeTab={activeTab} setActiveTab={setActiveTab} text={strings.nfts} tab="nfts" />
-    </View>
-  )
-}
-
-const Tab = ({
-  setActiveTab,
-  activeTab,
-  tab,
-  text,
-}: {
-  setActiveTab: (activeTab: Tabs) => void
-  activeTab: Tabs
-  tab: Tabs
-  text: string
-}) => {
-  return (
-    <TouchableOpacity
-      onPress={() => setActiveTab(tab)}
-      style={[styles.tabContainer, activeTab === tab && styles.tabContainerActive]}
-    >
-      <Text
-        style={[
-          styles.tab,
-          {
-            color: activeTab === tab ? '#3154CB' : '#6B7384',
-          },
-        ]}
-      >
-        {text}
-      </Text>
-    </TouchableOpacity>
   )
 }
 
@@ -159,25 +112,6 @@ export const NoAssets = () => {
     </View>
   )
 }
-
-const filterTokenInfosByTab = ({
-  nfts,
-  activeTab,
-  tokenInfos,
-}: {
-  nfts: YoroiNft[]
-  activeTab: Tabs
-  tokenInfos: TokenInfo[]
-}) => {
-  if (activeTab === 'nfts') {
-    return tokenInfos.filter((tokenInfo) => nfts.some((nft) => nft.fingerprint === tokenInfo.fingerprint))
-  } else if (activeTab === 'tokens') {
-    return tokenInfos.filter((tokenInfo) => !nfts.some((nft) => nft.fingerprint === tokenInfo.fingerprint))
-  }
-
-  return tokenInfos
-}
-
 const useStrings = () => {
   const intl = useIntl()
 
@@ -185,10 +119,9 @@ const useStrings = () => {
     unknownAsset: intl.formatMessage(messages.unknownAsset),
     assetsLabel: intl.formatMessage(globalMessages.assetsLabel),
     amount: intl.formatMessage(txLabels.amount),
+    counter1: (count) => intl.formatMessage(messages.counter1, {count}),
+    counter2: intl.formatMessage(messages.counter2),
     noAssets: intl.formatMessage(messages.noAssets),
-    nfts: intl.formatMessage(globalMessages.nfts, {qty: 2}),
-    tokens: intl.formatMessage(globalMessages.tokens, {qty: 2}),
-    all: intl.formatMessage(globalMessages.all),
   }
 }
 
@@ -197,6 +130,14 @@ const messages = defineMessages({
     id: 'components.send.assetselectorscreen.unknownAsset',
     defaultMessage: '!!!Unknown asset',
   },
+  counter1: {
+    id: 'components.send.assetselectorscreen.counter1',
+    defaultMessage: '!!!{count} assets',
+  },
+  counter2: {
+    id: 'components.send.assetselectorscreen.counter2',
+    defaultMessage: '!!!found',
+  },
   noAssets: {
     id: 'components.send.assetselectorscreen.noAssets',
     defaultMessage: '!!!No assets found',
@@ -204,27 +145,20 @@ const messages = defineMessages({
 })
 
 const styles = StyleSheet.create({
-  tabs: {
+  counter: {
+    justifyContent: 'center',
     flexDirection: 'row',
   },
-  tabContainer: {
-    flex: 1,
-  },
-  tabContainerActive: {
-    borderBottomColor: '#3154CB',
-    borderBottomWidth: 2,
-  },
-  tab: {
-    textAlign: 'center',
+  counterText1: {
     fontWeight: 'bold',
-    paddingVertical: 12,
+    color: '#3154CB',
   },
-  list: {
-    paddingHorizontal: 16,
-    paddingTop: 9,
+  counterText2: {
+    fontWeight: '400',
+    color: '#3154CB',
   },
   item: {
-    paddingVertical: 9,
+    paddingVertical: 16,
   },
   subheader: {
     paddingTop: 16,

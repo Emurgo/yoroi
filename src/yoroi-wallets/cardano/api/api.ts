@@ -237,7 +237,7 @@ function parseNFTs(value: unknown, storageUrl: string): YoroiNft[] {
   return tokens.filter(isNonNullable)
 }
 
-export function isAssetNFT(asset: unknown): asset is NFTAsset {
+function isAssetNFT(asset: unknown): asset is NFTAsset {
   return isObject(asset) && hasProperties(asset, ['key']) && asset.key === NFT_METADATA_KEY
 }
 

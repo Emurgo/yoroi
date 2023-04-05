@@ -1,6 +1,6 @@
 import {TokenInfo} from '../../../yoroi-wallets'
 
-export const filterTokenInfos = (searchTerm: string, tokenInfos: TokenInfo[]): TokenInfo[] => {
+export const filterAssets = (searchTerm: string, tokenInfos: TokenInfo[]): TokenInfo[] => {
   const searchTermLowerCase = searchTerm.toLowerCase()
   return searchTermLowerCase.length > 0
     ? tokenInfos.filter((tokenInfo) => {
