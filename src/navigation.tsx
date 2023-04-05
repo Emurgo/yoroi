@@ -161,7 +161,6 @@ export type ReceiveRoutes = {
 
 export type TxHistoryRoutes = {
   'history-list': undefined
-  send: NavigatorScreenParams<SendRoutes>
   'history-details': {
     id: string
   }
@@ -171,6 +170,7 @@ export type TxHistoryRoutes = {
   'send-confirm-tx': undefined
   'send-list-amounts-to-send': undefined
   'send-edit-amount': undefined
+  'send-select-token-from-list': undefined
 }
 export type TxHistoryRouteNavigation = StackNavigationProp<TxHistoryRoutes>
 
@@ -234,10 +234,6 @@ export type FirstRunRoutes = {
 }
 export type FirstRunRouteNavigation = StackNavigationProp<FirstRunRoutes>
 
-export type SendRoutes = {
-  'send-select-token-from-list': undefined
-}
-
 export type NftRoutes = {
   'nft-gallery': undefined
   'nft-details': {id: string}
@@ -255,7 +251,6 @@ export type AppRoutes = {
   storybook: undefined
   'new-wallet': NavigatorScreenParams<WalletInitRoutes>
   'app-root': NavigatorScreenParams<WalletStackRoutes>
-  send: NavigatorScreenParams<SendRoutes>
   'custom-pin-auth': undefined
   'bio-auth-initial': undefined
   'enable-login-with-pin': undefined
@@ -349,21 +344,6 @@ export const useWalletNavigation = () => {
     })
   }
 
-  const navigateSendSelectAssetFromList = () => {
-    navigation.navigate('app-root', {
-      screen: 'main-wallet-routes',
-      params: {
-        screen: 'history',
-        params: {
-          screen: 'send',
-          params: {
-            screen: 'send-select-token-from-list',
-          },
-        },
-      },
-    })
-  }
-
   return {
     navigation,
     resetToTxHistory,
@@ -371,6 +351,5 @@ export const useWalletNavigation = () => {
     navigateToSettings,
     navigateToTxHistory,
     navigateToNftGallery,
-    navigateSendSelectAssetFromList,
   }
 }
