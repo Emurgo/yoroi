@@ -25,7 +25,7 @@ export const SHELLEY_BASE_CONFIG = {
   START_AT: 208,
   SLOTS_PER_EPOCH: 432000,
   SLOT_DURATION: 1,
-}
+} as const
 
 export const BASE_CONFIG = {
   GENESIS_DATE,
@@ -33,7 +33,7 @@ export const BASE_CONFIG = {
   SLOTS_PER_EPOCH: 432000,
   SLOT_DURATION: 1,
   START_AT: 208,
-}
+} as const
 
 export const IS_MAINNET = true
 export const API_ROOT = 'https://api.yoroiwallet.com/api'

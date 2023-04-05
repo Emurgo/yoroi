@@ -4,47 +4,58 @@ import {RefreshControl, ScrollView, StyleSheet, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Icon, Spacer} from '../components'
-import {useFilteredNfts} from './hooks'
+import {useSearch} from '../Search/SearchContext'
+import {useSelectedWallet} from '../SelectedWallet'
+import {useNfts} from '../yoroi-wallets'
+import {filterNfts} from './filterNfts'
 import {ImageGallery, SkeletonGallery} from './ImageGallery'
 import {useNavigateTo} from './navigation'
 import {NoNftsScreen} from './NoNftsScreen'
 
 export const Nfts = () => {
   const navigateTo = useNavigateTo()
-  const handleNftSelect = (index: number) => navigateTo.nftDetails(nfts[index].id)
   const [isManualRefreshing, setIsManualRefreshing] = React.useState(false)
+  const wallet = useSelectedWallet()
   const strings = useStrings()
 
-  const {search, nfts, isLoading, refetch, isError} = useFilteredNfts({
+  const {isLoading, nfts, refetch, isError} = useNfts(wallet, {
     onSettled: () => {
       if (isManualRefreshing) setIsManualRefreshing(false)
     },
   })
 
-  const onRefresh = React.useCallback(() => {
+  const {search: nftsSearchTerm} = useSearch()
+  const filteredNfts = filterNfts(nftsSearchTerm, nfts)
+  const sortedNfts = filteredNfts.sort((NftA, NftB) => sortNfts(NftA.name, NftB.name))
+  const nftsSearchResult = filterNfts(nftsSearchTerm, sortedNfts)
+
+  const hasEmptySearchResult = nftsSearchTerm.length > 0 && nftsSearchResult.length === 0
+  const hasNotNfts = nftsSearchResult.length === 0
+
+  const onRefresh = () => {
     setIsManualRefreshing(true)
     refetch()
-  }, [refetch])
+  }
 
   if (isError) {
     return (
-      <ScreenWrapper>
+      <Wrapper>
         <ErrorScreen onRefresh={onRefresh} isRefreshing={isManualRefreshing} />
-      </ScreenWrapper>
+      </Wrapper>
     )
   }
 
   if (isLoading) {
     return (
-      <ScreenWrapper>
-        <LoadingScreen nftsCount={nfts.length} />
-      </ScreenWrapper>
+      <Wrapper>
+        <LoadingScreen nftsCount={nftsSearchResult.length} />
+      </Wrapper>
     )
   }
 
-  if (search.length > 0 && nfts.length === 0) {
+  if (hasEmptySearchResult) {
     return (
-      <ScreenWrapper>
+      <Wrapper>
         <ScrollView
           style={styles.scrollView}
           contentContainerStyle={styles.scrollViewError}
@@ -52,13 +63,13 @@ export const Nfts = () => {
         >
           <NoNftsScreen message={strings.noNftsFound} />
         </ScrollView>
-      </ScreenWrapper>
+      </Wrapper>
     )
   }
 
-  if (search.length === 0 && nfts.length === 0) {
+  if (hasNotNfts) {
     return (
-      <ScreenWrapper>
+      <Wrapper>
         <ScrollView
           style={styles.scrollView}
           contentContainerStyle={styles.scrollViewError}
@@ -68,35 +79,40 @@ export const Nfts = () => {
             message={strings.noNftsInWallet}
             heading={
               <View>
-                <NftCount count={nfts.length} />
+                <NftCount count={0} />
 
                 <Spacer height={16} />
               </View>
             }
           />
         </ScrollView>
-      </ScreenWrapper>
+      </Wrapper>
     )
   }
 
   return (
-    <ScreenWrapper>
+    <Wrapper>
       <View style={styles.galleryContainer}>
-        {search.length === 0 && (
-          <View>
-            <NftCount count={nfts.length} />
+        {nftsSearchTerm.length === 0 && (
+          <>
+            <NftCount count={nftsSearchResult.length} />
 
             <Spacer height={16} />
-          </View>
+          </>
         )}
 
-        <ImageGallery nfts={nfts} onSelect={handleNftSelect} onRefresh={onRefresh} isRefreshing={isManualRefreshing} />
+        <ImageGallery
+          nfts={nftsSearchResult}
+          onSelect={navigateTo.nftDetails}
+          onRefresh={onRefresh}
+          isRefreshing={isManualRefreshing}
+        />
       </View>
-    </ScreenWrapper>
+    </Wrapper>
   )
 }
 
-function ScreenWrapper({children}: {children: ReactNode}) {
+const Wrapper = ({children}: {children: ReactNode}) => {
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
       <View style={styles.container}>
@@ -108,7 +124,7 @@ function ScreenWrapper({children}: {children: ReactNode}) {
   )
 }
 
-function ErrorScreen({onRefresh, isRefreshing}: {onRefresh: () => void; isRefreshing: boolean}) {
+const ErrorScreen = ({onRefresh, isRefreshing}: {onRefresh: () => void; isRefreshing: boolean}) => {
   const strings = useStrings()
 
   return (
@@ -140,20 +156,17 @@ function ErrorScreen({onRefresh, isRefreshing}: {onRefresh: () => void; isRefres
   )
 }
 
-function NftCount({count}: {count?: number | string}) {
+const NftCount = ({count}: {count?: number | string}) => {
   const strings = useStrings()
-  const countText = `${strings.nftCount}: ${count ?? '-'}`
 
   return (
-    <View>
-      <View style={styles.countBar}>
-        <Text style={styles.count}>{countText}</Text>
-      </View>
+    <View style={styles.countBar}>
+      <Text style={styles.count}>{`${strings.nftCount}: ${count ?? '-'}`}</Text>
     </View>
   )
 }
 
-function LoadingScreen({nftsCount}: {nftsCount: number}) {
+const LoadingScreen = ({nftsCount}: {nftsCount: number}) => {
   return (
     <View style={styles.galleryContainer}>
       <NftCount count={nftsCount} />
@@ -164,6 +177,8 @@ function LoadingScreen({nftsCount}: {nftsCount: number}) {
     </View>
   )
 }
+
+const sortNfts = (nftNameA: string, nftNameB: string): number => nftNameA.localeCompare(nftNameB)
 
 const styles = StyleSheet.create({
   safeAreaView: {

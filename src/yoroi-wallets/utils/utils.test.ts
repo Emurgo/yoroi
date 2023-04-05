@@ -1,6 +1,8 @@
+import BigNumber from 'bignumber.js'
+
 import {Quantity, YoroiAmount, YoroiAmounts, YoroiEntries, YoroiEntry} from '../types'
 import {RawUtxo} from '../types/other'
-import {Amounts, Entries, Quantities, Utxos} from '.'
+import {Amounts, asQuantity, Entries, Quantities, Utxos} from '.'
 
 describe('Quantities', () => {
   it('sum', () => {
@@ -30,7 +32,7 @@ describe('Quantities', () => {
     expect(Quantities.isGreaterThan('2', '2')).toBe(false)
     expect(Quantities.isGreaterThan('2', '1')).toBe(true)
   })
-  it('toPrecision', () => {
+  it('decimalPlaces', () => {
     expect(Quantities.decimalPlaces('1', 2)).toBe('1')
     expect(Quantities.decimalPlaces('1.00000', 2)).toBe('1')
     expect(Quantities.decimalPlaces('1.123456', 2)).toBe('1.12')
@@ -41,6 +43,45 @@ describe('Quantities', () => {
     expect(Quantities.denominated('1000', 2)).toBe('10')
     expect(Quantities.denominated('112345', 3)).toBe('112.345')
     expect(Quantities.denominated('1123456', 10)).toBe('0.0001123456')
+    expect(Quantities.denominated('1123456', 20)).toBe('0.00000000000001123456')
+  })
+  it('integer', () => {
+    expect(Quantities.integer(Quantities.zero, 15)).toBe('0')
+    expect(Quantities.integer(asQuantity(-1), 3)).toBe('-1000')
+    expect(Quantities.integer(asQuantity(2.5), 2)).toBe('250')
+    expect(Quantities.integer('1', 2)).toBe('100')
+    expect(Quantities.integer('1000', 2)).toBe('100000')
+    expect(Quantities.integer('123.456', 3)).toBe('123456')
+    expect(Quantities.integer('1.08', 10)).toBe('10800000000')
+    expect(Quantities.integer('1.0800001', 3)).toBe('1080')
+    expect(Quantities.integer(asQuantity(new BigNumber('0000000000015')), 6)).toBe('15000000')
+    expect(Quantities.integer(asQuantity(new BigNumber(1.5)), 6)).toBe('1500000')
+  })
+  it('zero & isZero', () => {
+    expect(Quantities.isZero(Quantities.integer(Quantities.zero, 15))).toBe(true)
+    expect(Quantities.isZero(Quantities.integer('0', 2))).toBe(true)
+    expect(Quantities.isZero(Quantities.integer('-1', 2))).toBe(false)
+    expect(Quantities.isZero(Quantities.integer('1', 2))).toBe(false)
+    expect(Quantities.isZero(Quantities.integer('0.00000000000001', 18))).toBe(false)
+    expect(Quantities.isZero(Quantities.zero)).toBe(true)
+  })
+  it('isAtomic', () => {
+    expect(Quantities.isAtomic('1', 0)).toBe(true)
+    expect(Quantities.isAtomic('0', 0)).toBe(false)
+    expect(Quantities.isAtomic('1', 1)).toBe(false)
+    expect(Quantities.isAtomic('1', 10)).toBe(false)
+    expect(Quantities.isAtomic('-1', 0)).toBe(true)
+    expect(Quantities.isAtomic('0.0000000001', 10)).toBe(true)
+    expect(Quantities.isAtomic('0.0000000001', 11)).toBe(false)
+    expect(Quantities.isAtomic('100000', 6)).toBe(false)
+    expect(Quantities.isAtomic('2', 0)).toBe(false)
+    expect(Quantities.isAtomic('-2', 0)).toBe(false)
+  })
+  it('max', () => {
+    expect(Quantities.max('1', '2')).toEqual('2')
+    expect(Quantities.max('1', '2', '3')).toEqual('3')
+    expect(Quantities.max('3', '2', '1')).toEqual('3')
+    expect(Quantities.max('1', '1')).toEqual('1')
   })
 })
 
@@ -112,6 +153,18 @@ describe('Amounts', () => {
     )
   })
 
+  it('includes', () => {
+    const amounts: YoroiAmounts = {
+      '': '1',
+      token123: '2',
+      token567: '-2',
+    }
+
+    Object.keys(amounts).forEach((tokenId) => expect(Amounts.includes(amounts, tokenId)).toBe(true))
+
+    expect(Amounts.includes(amounts, 'does-not-include')).toBe(false)
+  })
+
   it('remove', () => {
     const amounts: YoroiAmounts = {
       '': '123',
@@ -137,6 +190,70 @@ describe('Amounts', () => {
       {tokenId: 'token123', quantity: '456'},
       {tokenId: 'token567', quantity: '-789'},
     ] as Array<YoroiAmount>)
+  })
+
+  it('from Array', () => {
+    const amounts: Array<YoroiAmount> = [
+      {tokenId: '', quantity: '123'},
+      {tokenId: 'SUN', quantity: '456'},
+      {tokenId: 'QWE', quantity: '789'},
+    ]
+
+    expect(Amounts.fromArray(amounts)).toEqual({
+      '': '123',
+      SUN: '456',
+      QWE: '789',
+    } as YoroiAmounts)
+  })
+
+  it('map', () => {
+    const amounts: YoroiAmounts = {
+      '': '1',
+      SUN: '4',
+      QWE: '7',
+    }
+
+    expect(
+      Amounts.map(amounts, (amount) => ({
+        ...amount,
+        quantity: Quantities.sum([amount.quantity, '1']),
+      })),
+    ).toEqual({
+      '': '2',
+      SUN: '5',
+      QWE: '8',
+    } as YoroiAmounts)
+  })
+
+  describe('save', () => {
+    it('updating when already exists', () => {
+      const amounts: YoroiAmounts = {
+        updateToken: '456',
+      }
+      const updateAmount: YoroiAmount = {
+        tokenId: 'updateToken',
+        quantity: '321',
+      }
+
+      expect(Amounts.save(amounts, updateAmount)).toEqual({
+        updateToken: '321',
+      })
+    })
+
+    it('adding when it doesnt exist', () => {
+      const amounts: YoroiAmounts = {
+        updateToken: '456',
+      }
+      const addAmount: YoroiAmount = {
+        tokenId: 'addToken',
+        quantity: '789',
+      }
+
+      expect(Amounts.save(amounts, addAmount)).toEqual({
+        addToken: '789',
+        updateToken: '456',
+      })
+    })
   })
 })
 
@@ -348,5 +465,32 @@ describe('Utxos', () => {
         token567: '8',
       } as YoroiAmounts)
     })
+  })
+})
+
+describe('asQuantity', () => {
+  it.each`
+    input             | output
+    ${'0'}            | ${'0'}
+    ${'1'}            | ${'1'}
+    ${'1.000001'}     | ${'1.000001'}
+    ${'0.0000000000'} | ${'0'}
+    ${-0}             | ${'0'}
+    ${1 / 3}          | ${'0.3333333333333333'}
+    ${-1}             | ${'-1'}
+  `('when the input is $input it should return $output', ({input, output}) => {
+    expect(asQuantity(input)).toEqual(output)
+  })
+
+  it.each`
+    input
+    ${''}
+    ${undefined}
+    ${null}
+    ${NaN}
+    ${Infinity}
+    ${-Infinity}
+  `('when the input is $input it should throw error', ({input}) => {
+    expect(() => asQuantity(input)).toThrowError('Invalid quantity')
   })
 })

@@ -1,5 +1,6 @@
 /* eslint-disable no-empty */
 
+import {SendToken} from '@emurgo/yoroi-lib'
 import {BigNumber} from 'bignumber.js'
 
 import {
@@ -11,6 +12,9 @@ import {
   WALLET_IMPLEMENTATION_REGISTRY,
   WalletImplementationId,
 } from '../types/other'
+import {Token} from '../types/tokens'
+import {YoroiAmount, YoroiAmounts} from '../types/types'
+import {Amounts} from '../utils'
 import {
   asciiToHex,
   CardanoHaskellShelleyNetwork,
@@ -276,3 +280,24 @@ export const toCardanoNetworkId = (networkId: number) => {
 
   throw new Error('invalid network id')
 }
+
+export const toSendTokenList = (amounts: YoroiAmounts, primaryToken: Token): Array<SendToken> => {
+  return Amounts.toArray(amounts).map(toSendToken(primaryToken))
+}
+
+export const toSendToken =
+  (primaryToken: Token) =>
+  (amount: YoroiAmount): SendToken => {
+    const {tokenId, quantity} = amount
+    const isPrimary = tokenId === primaryToken.identifier
+
+    return {
+      token: {
+        networkId: primaryToken.networkId,
+        identifier: tokenId,
+        isDefault: isPrimary,
+      },
+      amount: new BigNumber(quantity),
+      shouldSendAll: false,
+    }
+  }
