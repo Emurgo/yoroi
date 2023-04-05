@@ -10,6 +10,7 @@ import {
   StakingInfo,
   StakingStatus,
   WalletImplementationId,
+  YoroiEntry,
   YoroiNft,
   YoroiNftModerationStatus,
   YoroiSignedTx,
@@ -25,7 +26,7 @@ import type {
   TxStatusResponse,
   WalletState,
 } from '../types/other'
-import {DefaultAsset, SendTokenList, TokenInfo} from '../types/tokens'
+import {DefaultAsset, TokenInfo} from '../types/tokens'
 import {CardanoTypes} from '.'
 import type {Addresses} from './chain'
 
@@ -83,11 +84,7 @@ export type YoroiWallet = {
   primaryTokenInfo: Readonly<TokenInfo>
 
   // Sending
-  createUnsignedTx(
-    receiver: string,
-    tokens: SendTokenList,
-    metadata?: Array<CardanoTypes.TxMetadata>,
-  ): Promise<YoroiUnsignedTx>
+  createUnsignedTx(entry: YoroiEntry, metadata?: Array<CardanoTypes.TxMetadata>): Promise<YoroiUnsignedTx>
   signTxWithLedger(request: YoroiUnsignedTx, useUSB: boolean): Promise<YoroiSignedTx>
   signTx(signRequest: YoroiUnsignedTx, rootKey: string): Promise<YoroiSignedTx>
   submitTransaction(signedTx: string): Promise<[]>

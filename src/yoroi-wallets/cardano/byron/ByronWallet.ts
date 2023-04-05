@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import * as yoroiLib from '@emurgo/yoroi-lib'
 import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
 import ExtendableError from 'es6-error'
@@ -23,7 +24,6 @@ import {
   PoolInfoRequest,
   Quantity,
   RawUtxo,
-  SendTokenList,
   StakingInfo,
   TipStatusResponse,
   TokenInfo,
@@ -32,6 +32,7 @@ import {
   TxStatusResponse,
   WALLET_IMPLEMENTATION_REGISTRY,
   WalletImplementationId,
+  YoroiEntry,
   YoroiNft,
   YoroiNftModerationStatus,
   YoroiSignedTx,
@@ -54,6 +55,7 @@ import {
   NUMBERS,
   RegistrationStatus,
   walletChecksum,
+  withMinAmounts,
 } from '..'
 import * as api from '../api'
 import {encryptWithPassword} from '../catalyst/catalystCipher'
@@ -79,7 +81,14 @@ import {yoroiSignedTx} from '../signedTx'
 import {TransactionManager} from '../transactionManager'
 import {isYoroiWallet, WalletEvent, WalletSubscription, YoroiWallet} from '../types'
 import {yoroiUnsignedTx} from '../unsignedTx'
-import {deriveRewardAddressHex, getCardanoBaseConfig, getWalletConfigById, isByron, isHaskellShelley} from '../utils'
+import {
+  deriveRewardAddressHex,
+  getCardanoBaseConfig,
+  getWalletConfigById,
+  isByron,
+  isHaskellShelley,
+  toSendTokenList,
+} from '../utils'
 import {makeUtxoManager, UtxoManager} from '../utxoManager'
 import {makeKeys} from './makeKeys'
 
@@ -656,7 +665,7 @@ export class ByronWallet implements YoroiWallet {
 
   // =================== tx building =================== //
 
-  async createUnsignedTx(receiver: string, tokens: SendTokenList, auxiliaryData?: Array<CardanoTypes.TxMetadata>) {
+  async createUnsignedTx(entry: YoroiEntry, auxiliaryData?: Array<CardanoTypes.TxMetadata>) {
     const timeToSlotFn = genTimeToSlot(getCardanoBaseConfig(this.getNetworkConfig()))
     const time = await this.checkServerStatus()
       .then(({serverTime}) => serverTime || Date.now())
@@ -666,14 +675,15 @@ export class ByronWallet implements YoroiWallet {
     const changeAddr = await this.getAddressedChangeAddress()
     const addressedUtxos = await this.getAddressedUtxos()
     const networkConfig = this.getNetworkConfig()
+    const amounts = await withMinAmounts(entry.amounts, this.primaryToken)
 
     try {
       const unsignedTx = await Cardano.createUnsignedTx(
         absSlotNumber,
         addressedUtxos,
-        receiver,
+        entry.address,
         changeAddr,
-        tokens as any,
+        toSendTokenList(amounts, this.primaryToken) as unknown as Array<yoroiLib.SendToken>,
         {
           keyDeposit: networkConfig.KEY_DEPOSIT,
           linearFee: {

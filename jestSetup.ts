@@ -32,19 +32,6 @@ jest.mock('react-native-reanimated', () => {
   Reanimated.default.call = () => {}
   return Reanimated
 })
-jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper')
-jest.mock('react-native', () => {
-  const RN = jest.requireActual('react-native')
-
-  RN.NativeModules.SettingsManager = {
-    settings: {
-      AppLocale: true,
-      AppleLanguages: ['en-US'],
-    },
-  }
-
-  return RN
-})
 
 Logger.setLogLevel(LogLevel.Nothing)
 YoroiLogging.Logger.setLogLevel(YoroiLogging.LogLevel.Nothing)

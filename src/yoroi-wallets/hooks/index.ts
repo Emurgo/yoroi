@@ -126,8 +126,6 @@ export const useAssetIds = (wallet: YoroiWallet): TokenId[] => {
 
 /**
  * Calculate the lovelace locked up to hold utxos with assets
- * Important `minAdaRequired` is missing `has_hash_data`
- * which could be adding 10 in size to calc the words of the utxo
  *
  * @summary Returns the locked amount in Lovelace
  */
