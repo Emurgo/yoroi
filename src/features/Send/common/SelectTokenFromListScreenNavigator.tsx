@@ -2,11 +2,11 @@ import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import {Boundary} from '../../../../../components'
-import {defaultStackNavigationOptionsV2, SendRoutes} from '../../../../../navigation'
-import {SearchProvider} from '../../../../../Search'
-import {useSearchHeaderOptions} from '../../../../../Search/SearchHeader'
-import {SelectTokenFromListScreen} from './SelectTokenFromListScreen'
+import {Boundary} from '../../../components'
+import {defaultStackNavigationOptionsV2, SendRoutes} from '../../../navigation'
+import {SearchProvider} from '../../../Search'
+import {useSearchHeaderOptions} from '../../../Search/SearchHeader'
+import {SelectTokenFromListScreen} from '../useCases/ListAmountsToSend/AddToken/SelectTokenFromListScreen'
 
 const Stack = createStackNavigator<SendRoutes>()
 
