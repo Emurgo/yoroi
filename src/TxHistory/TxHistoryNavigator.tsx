@@ -199,11 +199,11 @@ const messages = defineMessages({
   },
   searchTitle: {
     id: 'components.send.sendscreen.searchTitle',
-    defaultMessage: '!!!Select Assets',
+    defaultMessage: '!!!Search assets',
   },
   searchPlaceholder: {
     id: 'components.send.sendscreen.searchPlaceholder',
-    defaultMessage: '!!!Search Assets',
+    defaultMessage: '!!!Search assets',
   },
 })
 
