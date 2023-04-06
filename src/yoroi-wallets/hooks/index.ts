@@ -120,8 +120,8 @@ export const useUtxos = (wallet: YoroiWallet) => {
 }
 
 export const useAssetIds = (wallet: YoroiWallet): TokenId[] => {
-  const utxos = useUtxos(wallet)
-  return utxos.flatMap((utxo) => utxo.assets).map((asset) => asset.assetId)
+  const balances = useBalances(wallet)
+  return Object.keys(balances).filter(Boolean)
 }
 
 /**
