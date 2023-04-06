@@ -1,4 +1,10 @@
+import {useNavigation} from '@react-navigation/native'
+import {StackNavigationOptions} from '@react-navigation/stack'
 import React, {createContext, ReactNode, useContext, useReducer} from 'react'
+import {TextInput, TouchableOpacity, TouchableOpacityProps} from 'react-native'
+
+import {Icon} from '../components/Icon'
+import {defaultStackNavigationOptionsV2} from '../navigation'
 
 type SearchState = {
   search: string
@@ -55,3 +61,87 @@ function searchReducer(state: SearchState, action: SearchAction) {
 }
 
 const defaultState: SearchState = Object.freeze({search: ''})
+
+export const useSearchOnNavBar = ({
+  placeholder,
+  title,
+  noBack = false,
+}: {
+  placeholder: string
+  title: string
+  noBack?: boolean
+}) => {
+  const navigation = useNavigation()
+
+  const [visible, setVisible] = React.useState(false)
+  const {clearSearch} = useSearch()
+
+  const handleSearchClose = () => {
+    setVisible(false)
+    clearSearch()
+  }
+  const handleGoBack = () => {
+    handleSearchClose()
+    navigation.goBack()
+  }
+
+  const withSearchInput: StackNavigationOptions = {
+    ...defaultStackNavigationOptionsV2,
+    headerTitle: () => <InputSearch placeholder={placeholder} />,
+    headerRight: () => <EraseButton onPress={handleSearchClose} />,
+    headerLeft: () => <BackButton onPress={handleGoBack} />,
+    headerTitleAlign: 'left',
+    headerTitleContainerStyle: {
+      flex: 1,
+    },
+    headerBackTitleVisible: false,
+  }
+
+  const withSearchButton: StackNavigationOptions = {
+    ...defaultStackNavigationOptionsV2,
+    headerTitle: title,
+    headerTitleAlign: 'center',
+    headerRight: () => <SearchButton onPress={() => setVisible(true)} />,
+    ...(noBack ? {headerLeft: () => null} : {}),
+    headerBackTitleVisible: false,
+  }
+
+  React.useLayoutEffect(() => {
+    navigation.setOptions(visible ? withSearchInput : withSearchButton)
+  })
+}
+
+type Props = {
+  placeholder: string
+}
+const InputSearch = ({placeholder}: Props) => {
+  const {search, searchChanged} = useSearch()
+
+  return (
+    <TextInput
+      autoFocus
+      value={search}
+      placeholder={placeholder}
+      onChangeText={(search) => searchChanged(search)}
+      style={{flex: 1}}
+    />
+  )
+}
+
+const SearchButton = (props: TouchableOpacityProps) => (
+  <TouchableOpacity {...props} hitSlop={{top: 100, left: 100, right: 100, bottom: 100}}>
+    <Icon.Magnify size={26} />
+  </TouchableOpacity>
+)
+
+const EraseButton = (props: TouchableOpacityProps) => (
+  <TouchableOpacity {...props} hitSlop={{top: 100, left: 100, right: 100, bottom: 100}}>
+    <Icon.Cross size={20} />
+  </TouchableOpacity>
+)
+
+const BackButton = (props: TouchableOpacityProps) => (
+  <TouchableOpacity {...props}>
+    <Icon.Chevron direction="left" color="#000000" />
+  </TouchableOpacity>
+)

@@ -18,7 +18,6 @@ import {
   useWalletNavigation,
 } from '../navigation'
 import {ReceiveScreen} from '../Receive/ReceiveScreen'
-import {useSearchHeaderOptions} from '../Search/SearchHeader'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
 import {useWalletName} from '../yoroi-wallets'
@@ -35,11 +34,6 @@ export const TxHistoryNavigator = () => {
   const [modalInfoState, setModalInfoState] = React.useState(false)
   const showModalInfo = () => setModalInfoState(true)
   const hideModalInfo = () => setModalInfoState(false)
-
-  const searchHeaderOptions = useSearchHeaderOptions({
-    placeHolderText: strings.searchPlaceholder,
-    title: strings.searchTitle,
-  })
 
   return (
     <SendProvider key={wallet.id}>
@@ -98,7 +92,10 @@ export const TxHistoryNavigator = () => {
 
         <Stack.Screen
           name="send-select-token-from-list"
-          options={{...defaultStackNavigationOptionsV2, ...searchHeaderOptions}}
+          options={{
+            title: strings.selectAssetTitle,
+            ...sendOptions,
+          }}
         >
           {() => (
             <Boundary>
@@ -197,14 +194,6 @@ const messages = defineMessages({
       'To protect your privacy, new addresses are ' +
       'generated automatically once you use them.',
   },
-  searchTitle: {
-    id: 'components.send.sendscreen.searchTitle',
-    defaultMessage: '!!!Search assets',
-  },
-  searchPlaceholder: {
-    id: 'components.send.sendscreen.searchPlaceholder',
-    defaultMessage: '!!!Search assets',
-  },
 })
 
 const useStrings = () => {
@@ -219,8 +208,6 @@ const useStrings = () => {
     receiveInfoText: intl.formatMessage(messages.receiveInfoText),
     editAmountTitle: intl.formatMessage(messages.editAmountTitle),
     listAmountsToSendTitle: intl.formatMessage(messages.listAmountsToSendTitle),
-    searchTitle: intl.formatMessage(messages.searchTitle),
-    searchPlaceholder: intl.formatMessage(messages.searchPlaceholder),
   }
 }
 
