@@ -1,6 +1,7 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {ErrorBoundary} from 'react-error-boundary'
-import {Image, ImageResizeMode, ImageStyle, StyleProp} from 'react-native'
+import {Image, ImageResizeMode, ImageStyle, StyleProp, View} from 'react-native'
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 import {SvgUri} from 'react-native-svg'
 
 import placeholder from '../../assets/img/nft-placeholder.png'
@@ -21,11 +22,12 @@ export const NftPreview = ({
   style?: StyleProp<ImageStyle>
   showThumbnail?: boolean
   height: number
-  width?: number
+  width: number
   resizeMode?: ImageResizeMode
   blurRadius?: number
 }) => {
   const [error, setError] = useState(false)
+  const [loading, setLoading] = useState(true)
   const uri = showThumbnail ? nft.thumbnail : nft.logo
   const isUriSvg =
     isString(uri) &&
@@ -34,37 +36,47 @@ export const NftPreview = ({
       isSvgMediaType(getNftFilenameMediaType(nft, uri)))
   const shouldShowPlaceholder = !isString(uri) || showPlaceholder || (isUriSvg && blurRadius !== undefined) || error
 
+  useEffect(() => {
+    setLoading(true)
+  }, [uri])
+
   if (shouldShowPlaceholder) {
     // Since SvgUri does not support blur radius, we show a placeholder
     return <PlaceholderImage height={height} style={style} width={width} resizeMode={resizeMode} />
   }
 
-  if (isUriSvg) {
-    // passing width or height with value undefined has a different behavior than not passing it at all
-    return (
-      <ErrorBoundary
-        fallback={<PlaceholderImage height={height} style={style} width={width} resizeMode={resizeMode} />}
-      >
-        <SvgUri
-          {...(width !== undefined ? {width} : undefined)}
-          height={height}
-          uri={uri}
-          style={style}
-          preserveAspectRatio="xMinYMin meet"
-          onError={() => setError(true)}
-        />
-      </ErrorBoundary>
-    )
-  }
   return (
     <ErrorBoundary fallback={<PlaceholderImage height={height} style={style} width={width} resizeMode={resizeMode} />}>
-      <Image
-        blurRadius={blurRadius}
-        source={{uri}}
-        style={[style, {width, height}]}
-        resizeMode={resizeMode ?? 'contain'}
-        onError={() => setError(true)}
-      />
+      <View style={{width, height, overflow: 'hidden'}}>
+        {loading ? (
+          <SkeletonPlaceholder enabled={true}>
+            <View style={{width, height}} />
+          </SkeletonPlaceholder>
+        ) : null}
+
+        {isUriSvg ? (
+          <SvgUri
+            {...(width !== undefined ? {width} : undefined)}
+            height={height}
+            uri={uri}
+            style={style}
+            preserveAspectRatio="xMinYMin meet"
+            onError={() => setError(true)}
+            onLoad={() => setLoading(false)}
+          />
+        ) : (
+          <Image
+            blurRadius={blurRadius}
+            source={{uri}}
+            style={[style, {width, height}]}
+            width={width}
+            height={height}
+            resizeMode={resizeMode ?? 'contain'}
+            onError={() => setError(true)}
+            onLoadEnd={() => setLoading(false)}
+          />
+        )}
+      </View>
     </ErrorBoundary>
   )
 }
