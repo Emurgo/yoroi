@@ -1,7 +1,9 @@
 import {NavigatorScreenParams, useNavigation, useRoute} from '@react-navigation/native'
 import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/stack'
-import {Platform} from 'react-native'
+import React from 'react'
+import {Platform, TouchableOpacity} from 'react-native'
 
+import {Icon} from './components'
 import {COLORS} from './theme'
 import {HWDeviceInfo, NetworkId, WalletImplementationId} from './yoroi-wallets'
 import {YoroiUnsignedTx} from './yoroi-wallets/types'
@@ -28,20 +30,32 @@ type Guard<Params> = (params: Params | object) => params is Params
 
 // OPTIONS
 export const defaultStackNavigationOptionsV2: StackNavigationOptions = {
+  headerTintColor: COLORS.ERROR_TEXT_COLOR_DARK,
+  headerStyle: {
+    elevation: 0,
+    shadowOpacity: 0,
+  },
   headerTitleStyle: {
     fontSize: 16,
     fontFamily: 'Rubik-Medium',
   },
-  headerTintColor: COLORS.ERROR_TEXT_COLOR_DARK,
+  headerTitleAlign: 'center',
   headerTitleContainerStyle: {
-    width: '70%',
+    flex: 1,
     alignItems: 'center',
+    justifyContent: 'center',
   },
-  headerStyle: {
-    elevation: 0,
-    shadowOpacity: 0,
-    backgroundColor: COLORS.BACKGROUND_GRAY,
+  headerLeftContainerStyle: {
+    paddingLeft: 10,
   },
+  headerRightContainerStyle: {
+    paddingRight: 10,
+  },
+  headerLeft: (props) => (
+    <TouchableOpacity {...props}>
+      <Icon.Chevron direction="left" color="#000000" />
+    </TouchableOpacity>
+  ),
 }
 
 export const defaultStackNavigationOptions: StackNavigationOptions = {
@@ -51,8 +65,8 @@ export const defaultStackNavigationOptions: StackNavigationOptions = {
     shadowOpacity: 0,
   },
   headerTintColor: '#fff',
-  headerTitleAlign: 'center',
   headerBackTitleVisible: false,
+  headerTitleAlign: 'center',
   headerLeftContainerStyle: {
     paddingLeft: Platform.OS === 'ios' ? 8 : undefined,
   },
@@ -152,11 +166,11 @@ export type TxHistoryRoutes = {
   }
   receive: undefined
   'send-start-tx': undefined
-  'send-select-token-from-list': undefined
   'send-read-qr-code': undefined
   'send-confirm-tx': undefined
   'send-list-amounts-to-send': undefined
   'send-edit-amount': undefined
+  'send-select-token-from-list': undefined
 }
 export type TxHistoryRouteNavigation = StackNavigationProp<TxHistoryRoutes>
 
