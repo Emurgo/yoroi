@@ -43,7 +43,7 @@ export const StartMultiTokenTxScreen = () => {
 
   const onNext = () => {
     navigateTo.selectedTokens()
-    if (shouldOpenSelectToken) navigateTo.selectToken()
+    if (shouldOpenSelectToken) navigateTo.addToken()
   }
 
   return (
@@ -92,7 +92,7 @@ const useNavigateTo = () => {
 
   return {
     selectedTokens: () => navigation.navigate('send-list-amounts-to-send'),
-    selectToken: () => navigation.navigate('send-select-token-from-list'),
+    addToken: () => navigation.navigate('send-select-token-from-list'),
   }
 }
 
