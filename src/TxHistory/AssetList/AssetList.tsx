@@ -104,7 +104,7 @@ const useStrings = () => {
   return {
     unknown: intl.formatMessage(messages.unknownAsset),
     tokens: (qty: number) => `${intl.formatMessage(globalMessages.tokens, {qty})} (${qty})`,
-    nfts: (qty: number) => `${intl.formatMessage(globalMessages.nfts, {qty})} (${qty})`,
+    nfts: (qty: number) => `${intl.formatMessage(globalMessages.nftsCounter, {qty})} (${qty})`,
     soon: intl.formatMessage(actionMessages.soon),
   }
 }

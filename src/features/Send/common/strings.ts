@@ -1,6 +1,6 @@
 import {defineMessages, useIntl} from 'react-intl'
 
-import globalMessages, {confirmationMessages} from '../../../i18n/global-messages'
+import globalMessages, {confirmationMessages, txLabels} from '../../../i18n/global-messages'
 
 export const useStrings = () => {
   const intl = useIntl()
@@ -8,8 +8,12 @@ export const useStrings = () => {
   return {
     addressInputErrorInvalidAddress: intl.formatMessage(messages.addressInputErrorInvalidAddress),
     addressInputLabel: intl.formatMessage(messages.addressInputLabel),
+    all: intl.formatMessage(globalMessages.all),
+    amount: intl.formatMessage(txLabels.amount),
     apply: intl.formatMessage(globalMessages.apply),
     asset: intl.formatMessage(messages.asset),
+    assetsCounter: (cnt: number) => intl.formatMessage(txLabels.assetsCounter, {cnt}),
+    assetsLabel: intl.formatMessage(globalMessages.assetsLabel),
     availableFunds: intl.formatMessage(globalMessages.availableFunds),
     availableFundsBannerIsFetching: intl.formatMessage(messages.availableFundsBannerIsFetching),
     availableFundsBannerNotAvailable: intl.formatMessage(messages.availableFundsBannerNotAvailable),
@@ -19,6 +23,7 @@ export const useStrings = () => {
     checkboxSendAll: (options) => intl.formatMessage(messages.checkboxSendAll, options),
     checkboxSendAllAssets: intl.formatMessage(messages.checkboxSendAllAssets),
     continueButton: intl.formatMessage(messages.continueButton),
+    counter2: intl.formatMessage(messages.counter2),
     domainNotRegisteredError: intl.formatMessage(messages.domainNotRegisteredError),
     domainRecordNotFoundError: intl.formatMessage(messages.domainRecordNotFoundError),
     domainUnsupportedError: intl.formatMessage(messages.domainUnsupportedError),
@@ -26,18 +31,27 @@ export const useStrings = () => {
     errorBannerPendingOutgoingTransaction: intl.formatMessage(messages.errorBannerPendingOutgoingTransaction),
     feeLabel: intl.formatMessage(messages.feeLabel),
     feeNotAvailable: intl.formatMessage(messages.feeNotAvailable),
+    found: intl.formatMessage(globalMessages.found),
     max: intl.formatMessage(globalMessages.max),
+    nftsCounter: (cnt: number) => intl.formatMessage(globalMessages.nftsCounter, {cnt}),
+    nftsLabel: intl.formatMessage(globalMessages.nftsLabelPlural),
     minPrimaryBalanceForTokens: intl.formatMessage(amountInputErrorMessages.minPrimaryBalanceForTokens),
     next: intl.formatMessage(globalMessages.next),
+    noAssets: intl.formatMessage(messages.noAssets),
     noBalance: intl.formatMessage(amountInputErrorMessages.insufficientBalance),
     pleaseWait: intl.formatMessage(globalMessages.pleaseWait),
     resolvesTo: intl.formatMessage(messages.resolvesTo),
+    searchTokens: intl.formatMessage(messages.searchTokens),
+    selecteAssetTitle: intl.formatMessage(messages.selectAssetTitle),
     sendAllContinueButton: intl.formatMessage(confirmationMessages.commonButtons.continueButton),
     sendAllWarningAlert1: (options) => intl.formatMessage(messages.sendAllWarningAlert1, options),
     sendAllWarningAlert2: intl.formatMessage(messages.sendAllWarningAlert2),
     sendAllWarningAlert3: intl.formatMessage(messages.sendAllWarningAlert3),
     sendAllWarningText: intl.formatMessage(messages.sendAllWarningText),
     sendAllWarningTitle: intl.formatMessage(messages.sendAllWarningTitle),
+    tokens: (qty: number) => intl.formatMessage(globalMessages.tokens, {qty}),
+    tokensLabel: intl.formatMessage(globalMessages.tokensLabelPlural),
+    unknownAsset: intl.formatMessage(messages.unknownAsset),
   }
 }
 
@@ -139,6 +153,30 @@ export const messages = defineMessages({
   resolvesTo: {
     id: 'components.send.sendscreen.resolvesTo',
     defaultMessage: '!!!Resolves to',
+  },
+  searchTokens: {
+    id: 'components.send.sendscreen.searchTokens',
+    defaultMessage: '!!!Search tokens',
+  },
+  selectAssetTitle: {
+    id: 'components.send.selectasset.title',
+    defaultMessage: '!!!Select asset',
+  },
+  unknownAsset: {
+    id: 'components.send.assetselectorscreen.unknownAsset',
+    defaultMessage: '!!!Unknown asset',
+  },
+  counter1: {
+    id: 'components.send.assetselectorscreen.counter1',
+    defaultMessage: '!!!{count} assets',
+  },
+  counter2: {
+    id: 'components.send.assetselectorscreen.counter2',
+    defaultMessage: '!!!found',
+  },
+  noAssets: {
+    id: 'components.send.assetselectorscreen.noAssets',
+    defaultMessage: '!!!No assets found',
   },
   sendAllWarningTitle: {
     id: 'components.send.sendscreen.sendAllWarningTitle',

@@ -2,6 +2,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
+import {View} from 'react-native'
 
 import {VotingRegistration as VotingRegistration} from './Catalyst'
 import {Icon, OfflineBanner} from './components'
@@ -11,7 +12,7 @@ import {MenuNavigator} from './Menu'
 import {WalletStackRoutes, WalletTabRoutes} from './navigation'
 import {NftDetailsNavigator} from './NftDetails/NftDetailsNavigator'
 import {NftsNavigator} from './Nfts/NftsNavigator'
-import {SearchProvider} from './Search'
+import {SearchProvider} from './Search/SearchContext'
 import {useSelectedWallet, WalletSelectionScreen} from './SelectedWallet'
 import {SettingsScreenNavigator} from './Settings'
 import {theme} from './theme'
@@ -25,7 +26,7 @@ const WalletTabNavigator = () => {
   const initialRoute = isHaskellShelley(wallet.walletImplementationId) ? 'staking-dashboard' : 'history'
 
   return (
-    <>
+    <View>
       <OfflineBanner />
 
       <Tab.Navigator
@@ -107,7 +108,7 @@ const WalletTabNavigator = () => {
           }}
         />
       </Tab.Navigator>
-    </>
+    </View>
   )
 }
 

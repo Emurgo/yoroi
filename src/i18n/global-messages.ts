@@ -79,6 +79,10 @@ export const txLabels = defineMessages({
     id: 'global.txLabels.amount',
     defaultMessage: '!!!Amount',
   },
+  assetsCounter: {
+    id: 'global.txLabels.assets',
+    defaultMessage: '!!!Assets',
+  },
   balanceAfterTx: {
     id: 'global.txLabels.balanceAfterTx',
     defaultMessage: '!!!Balance after transaction',
@@ -649,13 +653,21 @@ export default defineMessages({
       'but you only have {currentBalance}. Unwithdrawn rewards are ' +
       'not included in this amount',
   },
-  nfts: {
-    id: 'global.nfts',
-    defaultMessage: '!!! NFTs',
+  nftsCounter: {
+    id: 'nfts.counter',
+    defaultMessage: '!!! {cnt} NFTs',
+  },
+  nftsLabelPlural: {
+    id: 'nfts.label.plural',
+    defaultMessage: '!!!NFTs',
   },
   tokens: {
     id: 'global.tokens',
-    defaultMessage: '!!! Tokens',
+    defaultMessage: '!!! {qty} Tokens',
+  },
+  tokensLabelPlural: {
+    id: 'tokens.label.plural',
+    defaultMessage: '!!!Tokens',
   },
   all: {
     id: 'global.all',
@@ -684,5 +696,9 @@ export default defineMessages({
   cancel: {
     id: 'global.cancel',
     defaultMessage: '!!!Cancel',
+  },
+  found: {
+    id: 'global.found',
+    defaultMessage: '!!!Found',
   },
 })

@@ -4,7 +4,7 @@ import {RefreshControl, ScrollView, StyleSheet, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Icon, Spacer} from '../components'
-import {useSearch} from '../Search/SearchContext'
+import {useSearch, useSearchOnNavBar} from '../Search/SearchContext'
 import {useSelectedWallet} from '../SelectedWallet'
 import {useNfts} from '../yoroi-wallets'
 import {filterNfts} from './filterNfts'
@@ -14,9 +14,17 @@ import {NoNftsScreen} from './NoNftsScreen'
 
 export const Nfts = () => {
   const navigateTo = useNavigateTo()
-  const [isManualRefreshing, setIsManualRefreshing] = React.useState(false)
-  const wallet = useSelectedWallet()
   const strings = useStrings()
+
+  // use case: search nfts
+  useSearchOnNavBar({
+    title: strings.title,
+    placeholder: strings.search,
+    noBack: true,
+  })
+
+  const wallet = useSelectedWallet()
+  const [isManualRefreshing, setIsManualRefreshing] = React.useState(false)
 
   const {isLoading, nfts, refetch, isError} = useNfts(wallet, {
     onSettled: () => {
@@ -250,12 +258,22 @@ const messages = defineMessages({
     id: 'nft.gallery.noNftsInWallet',
     defaultMessage: '!!!No NFTs added to your wallet yet',
   },
+  title: {
+    id: 'nft.navigation.title',
+    defaultMessage: '!!!NFT Gallery',
+  },
+  search: {
+    id: 'nft.navigation.search',
+    defaultMessage: '!!!Search NFT',
+  },
 })
 
 const useStrings = () => {
   const intl = useIntl()
 
   return {
+    title: intl.formatMessage(messages.title),
+    search: intl.formatMessage(messages.search),
     nftCount: intl.formatMessage(messages.nftCount),
     errorTitle: intl.formatMessage(messages.errorTitle),
     errorDescription: intl.formatMessage(messages.errorDescription),
