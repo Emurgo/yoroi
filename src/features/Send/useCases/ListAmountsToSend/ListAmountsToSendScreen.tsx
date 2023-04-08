@@ -9,6 +9,7 @@ import {Boundary, Button, Spacer} from '../../../../components'
 import {AmountItem} from '../../../../components/AmountItem/AmountItem'
 import globalMessages from '../../../../i18n/global-messages'
 import {TxHistoryRouteNavigation} from '../../../../navigation'
+import {useSearch} from '../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {sortTokenInfos} from '../../../../utils'
@@ -23,6 +24,7 @@ import {RemoveAmountButton} from './RemoveAmount'
 export const ListAmountsToSendScreen = () => {
   const navigateTo = useNavigateTo()
   const strings = useStrings()
+  const {clearSearch} = useSearch()
 
   const {targets, selectedTargetIndex, tokenSelectedChanged, amountRemoved, yoroiUnsignedTxChanged} = useSend()
   const {amounts} = targets[selectedTargetIndex].entry
@@ -52,11 +54,16 @@ export const ListAmountsToSendScreen = () => {
   const onRemove = (tokenId: string) => {
     // use case: redirect to add token screen if there is no token left
     if (selectedTokensCounter === 1) {
+      clearSearch()
       navigateTo.addToken()
     }
     amountRemoved(tokenId)
   }
   const onNext = () => refetch()
+  const onAdd = () => {
+    clearSearch()
+    navigateTo.addToken()
+  }
 
   return (
     <View style={styles.container}>
@@ -76,7 +83,7 @@ export const ListAmountsToSendScreen = () => {
         <Row>
           <Spacer fill />
 
-          <AddTokenButton onPress={navigateTo.addToken} />
+          <AddTokenButton onPress={onAdd} />
         </Row>
 
         <Spacer height={33} />
