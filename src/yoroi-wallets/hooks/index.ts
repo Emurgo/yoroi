@@ -120,7 +120,7 @@ export const useUtxos = (wallet: YoroiWallet) => {
 
 export const useAssetIds = (wallet: YoroiWallet): string[] => {
   const balances = useBalances(wallet)
-  return Object.keys(balances).filter(Boolean)
+  return Object.keys(balances).filter((id) => wallet.primaryTokenInfo.id !== id)
 }
 
 /**
