@@ -22,6 +22,43 @@ storiesOf('TokenIcon', module)
     }
     return <TokenIcon wallet={wallet} tokenId={nft.id} />
   })
+  .add('Nft - not available in the wallet and fetching info', () => {
+    const wallet = {
+      ...mocks.wallet,
+      fetchNfts: mocks.fetchNfts.success.emptyAndLaterPending,
+      fetchNftModerationStatus: mocks.fetchNftModerationStatus.success.approved,
+      fetchTokenInfo: mocks.fetchTokenInfo.success.nft,
+    }
+    return <TokenIcon wallet={wallet} tokenId={nft.id} />
+  })
+  .add('Nft - not available in the wallet but found online', () => {
+    const wallet = {
+      ...mocks.wallet,
+      fetchNfts: mocks.fetchNfts.success.emptyAndLaterFound,
+      fetchNftModerationStatus: mocks.fetchNftModerationStatus.success.approved,
+      fetchTokenInfo: mocks.fetchTokenInfo.success.nft,
+    }
+    return <TokenIcon wallet={wallet} tokenId={nft.id} />
+  })
+  .add('Nft - not available in the wallet not found online', () => {
+    const wallet = {
+      ...mocks.wallet,
+      fetchNfts: mocks.fetchNfts.success.emptyAndLaterNotFound,
+      fetchNftModerationStatus: mocks.fetchNftModerationStatus.success.approved,
+      fetchTokenInfo: mocks.fetchTokenInfo.success.nft,
+    }
+    return <TokenIcon wallet={wallet} tokenId={nft.id} />
+  })
+  .add('Nft - not available in the wallet error when fetching info', () => {
+    const wallet = {
+      ...mocks.wallet,
+      fetchNfts: mocks.fetchNfts.success.emptyAndLaterError,
+      fetchNftModerationStatus: mocks.fetchNftModerationStatus.success.approved,
+      fetchTokenInfo: mocks.fetchTokenInfo.success.nft,
+    }
+    return <TokenIcon wallet={wallet} tokenId={nft.id} />
+  })
+
   .add('Ft - base64 image', () => {
     const wallet = {
       ...mocks.wallet,

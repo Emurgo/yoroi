@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import AsyncStorage, {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
 import {delay} from 'bluebird'
-import ExtendableError from 'es6-error'
 import * as React from 'react'
 import {useCallback, useMemo} from 'react'
 import {
@@ -117,6 +116,11 @@ export const useUtxos = (wallet: YoroiWallet) => {
   useWallet(wallet, 'utxos')
 
   return wallet.utxos
+}
+
+export const useAssetIds = (wallet: YoroiWallet): string[] => {
+  const balances = useBalances(wallet)
+  return Object.keys(balances).filter((id) => wallet.primaryTokenInfo.id !== id)
 }
 
 /**
@@ -879,6 +883,7 @@ export const useSaveMemo = (
 }
 
 export const useNfts = (wallet: YoroiWallet, options: UseQueryOptions<YoroiNft[], Error> = {}) => {
+  const assetIds = useAssetIds(wallet)
   const {data, refetch, ...rest} = useQuery({
     ...options,
     refetchOnMount: false,
@@ -887,21 +892,33 @@ export const useNfts = (wallet: YoroiWallet, options: UseQueryOptions<YoroiNft[]
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
     queryKey: [wallet.id, 'nfts'],
-    queryFn: () => wallet.fetchNfts(),
+    queryFn: () => wallet.fetchNfts(assetIds),
   })
   const eventCallback = useCallback(() => refetch(), [refetch])
   useWalletEvent(wallet, 'utxos', eventCallback)
   return {...rest, refetch, nfts: data ?? []}
 }
 
-export class NftNotFoundError extends ExtendableError {}
-
 export const useNft = (wallet: YoroiWallet, {id}: {id: string}): YoroiNft => {
   const {nfts} = useNfts(wallet, {suspense: true})
   const nft = nfts.find((nft) => nft.id === id)
 
-  if (!nft) {
-    throw new NftNotFoundError(`Invalid id used "${id}" to get NFT`)
+  const fetchNft = async (id: string) => {
+    const [nft] = await wallet.fetchNfts([id])
+    return nft
   }
-  return nft
+
+  const {data: freshNft} = useQuery({
+    queryKey: [wallet.id, 'nfts', id],
+    queryFn: () => fetchNft(id),
+    enabled: !nft,
+    suspense: true,
+  })
+
+  const result = nft || freshNft
+
+  if (!result) {
+    throw new Error(`Invalid id used "${id}" to get NFT`)
+  }
+  return result
 }
