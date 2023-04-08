@@ -4,6 +4,7 @@ import {Image, StyleSheet, View} from 'react-native'
 import {features} from '../../features'
 import {COLORS} from '../../theme'
 import {useIsTokenKnownNft, useNft, useNftImageModerated, useTokenInfo, YoroiWallet} from '../../yoroi-wallets'
+import {Boundary} from '../Boundary'
 import {Icon} from '../Icon'
 import {ModeratedNftIcon} from './ModeratedNftIcon'
 
@@ -18,10 +19,10 @@ export const TokenIcon = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: stri
   }
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (isTokenNft && features.showNftGallery) {
-    return features.moderatingNftsEnabled ? (
-      <ModeratedIcon wallet={wallet} tokenId={tokenInfo.id} />
-    ) : (
-      <UnModeratedNftIcon wallet={wallet} tokenId={tokenInfo.id} />
+    return (
+      <Boundary loading={{fallback: <Placeholder />}}>
+        <NftIcon tokenId={tokenId} wallet={wallet} />
+      </Boundary>
     )
   }
   return <Placeholder />
@@ -32,6 +33,14 @@ const PrimaryIcon = () => (
     <Icon.Cardano color="white" height={35} width={35} />
   </View>
 )
+
+const NftIcon = ({tokenId, wallet}: {tokenId: string; wallet: YoroiWallet}) => {
+  return features.moderatingNftsEnabled ? (
+    <ModeratedIcon wallet={wallet} tokenId={tokenId} />
+  ) : (
+    <UnModeratedNftIcon wallet={wallet} tokenId={tokenId} />
+  )
+}
 
 const ModeratedIcon = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string}) => {
   const nftModeratedImage = useNftImageModerated({wallet, nftId: tokenId})

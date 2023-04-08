@@ -999,15 +999,8 @@ export class ByronWallet implements YoroiWallet {
   }
 
   // TODO: caching
-  fetchNfts(): Promise<YoroiNft[]> {
-    const utxos = this.utxos
-    const assets = utxos.flatMap((utxo) => utxo.assets ?? [])
-
-    if (assets.length === 0) {
-      return Promise.resolve([])
-    }
-
-    return api.getNFTs(assets, this.getBackendConfig())
+  fetchNfts(ids): Promise<YoroiNft[]> {
+    return api.getNFTs(ids, this.getBackendConfig())
   }
 
   // TODO: caching
