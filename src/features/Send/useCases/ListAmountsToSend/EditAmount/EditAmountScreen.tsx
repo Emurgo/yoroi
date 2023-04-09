@@ -38,7 +38,7 @@ export const EditAmountScreen = () => {
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
 
   const [quantity, setQuantity] = React.useState<Quantity>(initialQuantity)
-  const [inputQuantity, setInputQuantity] = React.useState<Quantity>(
+  const [inputQuantity, setInputQuantity] = React.useState<string>(
     Quantities.denominated(initialQuantity, tokenInfo.decimals),
   )
 
@@ -49,7 +49,7 @@ export const EditAmountScreen = () => {
   const onChangeQuantity = (text: string) => {
     try {
       const quantity = asQuantity(text)
-      setInputQuantity(quantity)
+      setInputQuantity(text)
       setQuantity(Quantities.integer(quantity, tokenInfo.decimals))
     } catch (error) {
       Logger.error('EditAmountScreen::onChangeQuantity', error)
@@ -59,8 +59,8 @@ export const EditAmountScreen = () => {
     setInputQuantity(Quantities.denominated(spendable, tokenInfo.decimals))
     setQuantity(spendable)
   }
-  const onApply = (quantity: Quantity) => {
-    amountChanged(Quantities.integer(quantity, tokenInfo.decimals))
+  const onApply = () => {
+    amountChanged(quantity)
     navigation.navigate('send-list-amounts-to-send')
   }
 
@@ -99,7 +99,7 @@ export const EditAmountScreen = () => {
 
         <Actions>
           <ApplyButton
-            onPress={() => onApply(inputQuantity)}
+            onPress={onApply}
             title={strings.apply.toLocaleUpperCase()}
             shelleyTheme
             disabled={isUnableToSpend || !hasBalance || isZero}
