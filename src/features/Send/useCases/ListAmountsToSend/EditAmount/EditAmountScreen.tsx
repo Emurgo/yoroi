@@ -143,7 +143,7 @@ const AmountInput = ({value, onChange, ticker}: AmountInputProps) => {
   return (
     <TextInput
       returnKeyType="done"
-      keyboardType="decimal-pad"
+      keyboardType="numeric"
       mode="flat"
       autoComplete={false}
       value={value}
