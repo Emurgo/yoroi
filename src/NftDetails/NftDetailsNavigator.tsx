@@ -2,7 +2,7 @@ import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import {NftRoutes} from '../navigation'
+import {defaultStackNavigationOptionsV2, NftRoutes} from '../navigation'
 import {NftDetails} from './NftDetails'
 import {NftDetailsImage} from './NftDetailsImage'
 
@@ -14,6 +14,7 @@ export const NftDetailsNavigator = () => {
   return (
     <Stack.Navigator
       screenOptions={{
+        ...defaultStackNavigationOptionsV2,
         headerTitleContainerStyle: {alignItems: 'center'},
         cardStyle: {backgroundColor: '#fff'},
       }}
