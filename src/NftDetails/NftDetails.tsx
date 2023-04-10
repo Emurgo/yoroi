@@ -259,7 +259,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   title: {
-    fontWeight: '500',
+    fontWeight: 'bold',
   },
 })
 
