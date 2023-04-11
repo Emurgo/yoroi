@@ -10,15 +10,15 @@ import {useSearch, useSearchOnNavBar} from '../../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../../SelectedWallet/Context/SelectedWalletContext'
 import {sortTokenInfos} from '../../../../../utils'
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
-import {maxTokensPerTx} from '../../../../../yoroi-wallets/contants'
+import {limitOfSecondaryAmountsPerTx} from '../../../../../yoroi-wallets/contants'
 import {useBalances, useTokenInfos} from '../../../../../yoroi-wallets/hooks'
 import {TokenInfo} from '../../../../../yoroi-wallets/types'
 import {Amounts, Quantities} from '../../../../../yoroi-wallets/utils'
 import {filterAssets} from '../../../common/filterAssets'
-import {useSelectedTokensCounter, useSend, useTokenQuantities} from '../../../common/SendContext'
+import {useSelectedSecondaryAmountsCounter, useSend, useTokenQuantities} from '../../../common/SendContext'
 import {useStrings} from '../../../common/strings'
 import {EmptySearchResult} from './Show/EmptySearchResult'
-import {MaxTokensPerTx} from './Show/MaxTokensPerTx'
+import {MaxAmountsPerTx} from './Show/MaxAmountsPerTx'
 
 export const SelectTokenFromListScreen = () => {
   const strings = useStrings()
@@ -36,8 +36,8 @@ export const SelectTokenFromListScreen = () => {
     wallet,
     tokenIds: Amounts.toArray(balances).map(({tokenId}) => tokenId),
   })
-  const selectedTokensCounter = useSelectedTokensCounter()
-  const canAddToken = selectedTokensCounter < maxTokensPerTx
+  const secondaryAmountsCounter = useSelectedSecondaryAmountsCounter(wallet)
+  const canAddAmount = secondaryAmountsCounter < limitOfSecondaryAmountsPerTx
 
   const {search: assetSearchTerm} = useSearch()
   const sortedTokenInfos = sortTokenInfos({wallet, tokenInfos: filterAssets(assetSearchTerm, tokenInfos)})
@@ -45,9 +45,9 @@ export const SelectTokenFromListScreen = () => {
 
   return (
     <View style={styles.root}>
-      {!canAddToken && (
+      {!canAddAmount && (
         <View style={styles.panel}>
-          <MaxTokensPerTx />
+          <MaxAmountsPerTx />
 
           <Spacer height={16} />
         </View>
@@ -57,7 +57,7 @@ export const SelectTokenFromListScreen = () => {
         data={sortedTokenInfos}
         renderItem={({item: tokenInfo}: {item: TokenInfo}) => (
           <Boundary>
-            <SelectableAssetItem tokenInfo={tokenInfo} disabled={!canAddToken} wallet={wallet} />
+            <SelectableAssetItem tokenInfo={tokenInfo} disabled={!canAddAmount} wallet={wallet} />
           </Boundary>
         )}
         bounces={false}

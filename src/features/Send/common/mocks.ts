@@ -137,4 +137,54 @@ export const mocks = {
       ],
     },
   },
+  counters: {
+    onlyPrimary: {
+      ...initialState,
+      targets: [
+        {
+          ...initialState.targets[0],
+          entry: {
+            ...initialState.targets[0].entry,
+            amounts: {
+              [walletMocks.wallet.primaryTokenInfo.id]: asQuantity(50000),
+            },
+          },
+        },
+      ],
+    },
+    onlySecondary: {
+      ...initialState,
+      targets: [
+        {
+          ...initialState.targets[0],
+          entry: {
+            ...initialState.targets[0].entry,
+            amounts: {
+              [secondaryTokenId]: asQuantity(1),
+              ['other.01']: asQuantity(2),
+              ['another.02']: asQuantity(3),
+            },
+          },
+        },
+      ],
+    },
+    both: {
+      ...initialState,
+      targets: [
+        {
+          ...initialState.targets[0],
+          entry: {
+            ...initialState.targets[0].entry,
+            amounts: {
+              [secondaryTokenId]: asQuantity(1),
+              ['other.01']: asQuantity(2),
+              ['another.02']: asQuantity(3),
+              ['more.03']: asQuantity(4),
+              [walletMocks.wallet.primaryTokenInfo.id]: asQuantity(50000),
+            },
+          },
+        },
+      ],
+    },
+  },
 }

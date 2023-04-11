@@ -4,9 +4,10 @@ import * as React from 'react'
 import {TextInput} from 'react-native'
 
 import {Button} from '../../../components/Button/Button'
-import {mocks} from '../../../yoroi-wallets/mocks'
+import {mocks as walletMocks} from '../../../yoroi-wallets/mocks'
 import {Amounts} from '../../../yoroi-wallets/utils/utils'
-import {initialState, SendProvider, useSend} from './SendContext'
+import {mocks as sendMocks} from './mocks'
+import {initialState, SendProvider, useSelectedSecondaryAmountsCounter, useSend} from './SendContext'
 
 const wrapper = ({children}: {children: React.ReactNode}) => <SendProvider>{children}</SendProvider>
 
@@ -64,20 +65,20 @@ describe('SendContext :: hooks', () => {
     const {result} = renderHook(() => useSend(), {wrapper})
 
     act(() => {
-      result.current.tokenSelectedChanged(mocks.wallet.primaryTokenInfo.id)
+      result.current.tokenSelectedChanged(walletMocks.wallet.primaryTokenInfo.id)
     })
 
-    expect(result.current.selectedTokenId).toBe(mocks.wallet.primaryTokenInfo.id)
+    expect(result.current.selectedTokenId).toBe(walletMocks.wallet.primaryTokenInfo.id)
   })
 
   test('yoroiUnsignedTxChanged', () => {
     const {result} = renderHook(() => useSend(), {wrapper})
 
     act(() => {
-      result.current.yoroiUnsignedTxChanged(mocks.yoroiUnsignedTx)
+      result.current.yoroiUnsignedTxChanged(walletMocks.yoroiUnsignedTx)
     })
 
-    expect(result.current.yoroiUnsignedTx).toEqual(mocks.yoroiUnsignedTx)
+    expect(result.current.yoroiUnsignedTx).toEqual(walletMocks.yoroiUnsignedTx)
 
     act(() => {
       result.current.yoroiUnsignedTxChanged(undefined)
@@ -108,7 +109,7 @@ describe('SendContext :: hooks', () => {
 
   test('amountChanged', () => {
     const {result} = renderHook(() => useSend(), {wrapper})
-    const amount = Amounts.getAmount(mocks.balances, mocks.wallet.primaryTokenInfo.id)
+    const amount = Amounts.getAmount(walletMocks.balances, walletMocks.wallet.primaryTokenInfo.id)
 
     act(() => {
       result.current.tokenSelectedChanged(amount.tokenId)
@@ -123,7 +124,7 @@ describe('SendContext :: hooks', () => {
 
   test('amountRemoved', () => {
     const {result} = renderHook(() => useSend(), {wrapper})
-    const amount = Amounts.getAmount(mocks.balances, mocks.wallet.primaryTokenInfo.id)
+    const amount = Amounts.getAmount(walletMocks.balances, walletMocks.wallet.primaryTokenInfo.id)
 
     act(() => {
       result.current.tokenSelectedChanged(amount.tokenId)
@@ -160,3 +161,37 @@ const ResetFormTest = () => {
     </>
   )
 }
+
+describe('useSelectedSecondaryAmountsCounter', () => {
+  it('empty', () => {
+    const {result} = renderHook(() => useSelectedSecondaryAmountsCounter(walletMocks.wallet), {
+      wrapper: ({children}) => <SendProvider>{children}</SendProvider>,
+    })
+
+    expect(result.current).toEqual(0)
+  })
+
+  it('only secondary token(s)', () => {
+    const {result} = renderHook(() => useSelectedSecondaryAmountsCounter(walletMocks.wallet), {
+      wrapper: ({children}) => <SendProvider initialState={sendMocks.counters.onlySecondary}>{children}</SendProvider>,
+    })
+
+    expect(result.current).toEqual(3)
+  })
+
+  it('both token(s)', () => {
+    const {result} = renderHook(() => useSelectedSecondaryAmountsCounter(walletMocks.wallet), {
+      wrapper: ({children}) => <SendProvider initialState={sendMocks.counters.both}>{children}</SendProvider>,
+    })
+
+    expect(result.current).toEqual(4)
+  })
+
+  it('only primary token(s)', () => {
+    const {result} = renderHook(() => useSelectedSecondaryAmountsCounter(walletMocks.wallet), {
+      wrapper: ({children}) => <SendProvider initialState={sendMocks.counters.onlyPrimary}>{children}</SendProvider>,
+    })
+
+    expect(result.current).toEqual(0)
+  })
+})

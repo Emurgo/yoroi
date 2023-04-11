@@ -1,8 +1,9 @@
 import * as React from 'react'
 
 import {useSelectedWallet} from '../../../SelectedWallet/Context/SelectedWalletContext'
+import {YoroiWallet} from '../../../yoroi-wallets'
 import {useBalance, useLockedAmount} from '../../../yoroi-wallets/hooks'
-import {Address, Quantity, YoroiTarget, YoroiUnsignedTx} from '../../../yoroi-wallets/types'
+import {Address, Quantity, YoroiAmount, YoroiTarget, YoroiUnsignedTx} from '../../../yoroi-wallets/types'
 import {Amounts, Quantities} from '../../../yoroi-wallets/utils/utils'
 
 export type SendState = {
@@ -274,11 +275,16 @@ const getTotalUsedByOtherTargets = ({
   }, Quantities.zero)
 }
 
-export const useSelectedTokensCounter = () => {
+export const useSelectedSecondaryAmountsCounter = (wallet: YoroiWallet) => {
   const {targets} = useSend()
-  const selectedTokensCounter = targets.reduce((acc, target) => {
-    return Amounts.toArray(target.entry.amounts).length + acc
-  }, 0)
+  const isSecondaryAmount = isSecondaryAmountFilter(wallet)
 
-  return selectedTokensCounter
+  return targets.reduce((acc, target) => {
+    return Amounts.toArray(target.entry.amounts).filter(isSecondaryAmount).length + acc
+  }, 0)
 }
+
+const isSecondaryAmountFilter =
+  (wallet: YoroiWallet) =>
+  ({tokenId}: YoroiAmount) =>
+    tokenId !== wallet.primaryTokenInfo.id
