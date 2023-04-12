@@ -2,10 +2,10 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {View} from 'react-native'
 
-import {MaxTokensPerTx} from './MaxTokensPerTx'
+import {MaxAmountsPerTx} from './MaxAmountsPerTx'
 
-storiesOf('Max Tokens Per Tx', module).add('initial', () => (
+storiesOf('Max Amounts Per Tx', module).add('initial', () => (
   <View style={{justifyContent: 'center', padding: 16}}>
-    <MaxTokensPerTx />
+    <MaxAmountsPerTx />
   </View>
 ))

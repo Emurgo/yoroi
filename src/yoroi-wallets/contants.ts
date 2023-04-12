@@ -1,1 +1,1 @@
-export const maxTokensPerTx = 10
+export const limitOfSecondaryAmountsPerTx = 10
