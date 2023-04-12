@@ -112,10 +112,10 @@ export const fetchTokensSupplies = async (
   tokenIds: string[],
   config: BackendConfig,
 ): Promise<Record<string, number | null>> => {
-  const payload = {assets: tokenIds.map((tokenId) => ({policy: toPolicyId(tokenId), name: toAssetName(tokenId)}))}
-  const response = await fetchDefault<unknown>('multiAsset/supply', payload, config)
-  const supplies = tokenIds.map((tokenId) => {
-    const key = `${toPolicyId(tokenId)}.${toAssetName(tokenId)}`
+  const assets = tokenIds.map((tokenId) => ({policy: toPolicyId(tokenId), name: toAssetName(tokenId) || ''}))
+  const response = await fetchDefault<unknown>('multiAsset/supply', {assets}, config)
+  const supplies = assets.map((asset) => {
+    const key = `${asset.policy}.${asset.name}`
 
     const supply =
       isRecord(response) &&
