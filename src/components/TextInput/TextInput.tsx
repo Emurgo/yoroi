@@ -1,5 +1,6 @@
 import React, {ForwardedRef} from 'react'
 import {
+  Platform,
   StyleSheet,
   TextInput as RNTextInput,
   TextInputProps as RNTextInputProps,
@@ -102,10 +103,22 @@ export const TextInput = React.forwardRef((props: TextInputProps, ref: Forwarded
           <InputContainer>
             <RNTextInput
               {...inputProps}
-              style={[style, renderComponentStyle, {color: faded ? COLORS.GREY_6 : COLORS.BLACK, flex: 1}]}
+              style={[
+                style,
+                renderComponentStyle,
+                Platform.OS === 'ios' && right != null ? styles.inputIOSHack : styles.input,
+                {
+                  color: faded ? COLORS.GREY_6 : COLORS.BLACK,
+                  maxHeight: restProps.multiline ? 100 : undefined, // getting the multiline prop form the destructured object disables multiline on IOS!!
+                },
+              ]}
             />
 
-            {right != null ? <AdornmentContainer style={styles.checkmarkContainer}>{right}</AdornmentContainer> : null}
+            {right != null ? (
+              <AdornmentContainer style={Platform.OS === 'ios' ? styles.inputRightIOSHack : styles.inputRight}>
+                {right}
+              </AdornmentContainer>
+            ) : null}
 
             {secureTextEntry ? (
               <SecureTextEntryToggle showPassword={showPassword} onPress={() => setShowPassword(!showPassword)} />
@@ -178,11 +191,39 @@ const AdornmentContainer = ({style, children}: ViewProps) => (
 
 const styles = StyleSheet.create({
   inputContainer: {
-    flexDirection: 'row',
     flex: 1,
+    flexDirection: 'row',
   },
-  checkmarkContainer: {
+  input: {
+    flex: 1,
     paddingRight: 16,
+    paddingBottom: 16,
+    paddingTop: 16,
+    paddingLeft: 16,
+    fontSize: 16,
+    textAlignVertical: 'center',
+    lineHeight: 24,
+  },
+  inputIOSHack: {
+    flex: 1,
+    paddingRight: 62,
+    paddingLeft: 18,
+    marginRight: -10, // to hide the scrollbar
+    fontSize: 16,
+    lineHeight: 24,
+  },
+  inputRight: {
+    paddingRight: 16,
+    paddingBottom: 16,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  inputRightIOSHack: {
+    // to hide the scrollbar
+    padding: 16,
+    position: 'absolute',
+    right: 0,
+    bottom: 0,
   },
   secureTextEntryToggleContainer: {
     paddingRight: 16,

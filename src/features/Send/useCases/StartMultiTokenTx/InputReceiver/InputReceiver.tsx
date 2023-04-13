@@ -1,7 +1,6 @@
 import {useNavigation} from '@react-navigation/native'
 import _ from 'lodash'
 import React from 'react'
-import {StyleSheet} from 'react-native'
 
 import {TextInput, TextInputProps} from '../../../../../components'
 import {TxHistoryRouteNavigation} from '../../../../../navigation'
@@ -17,7 +16,6 @@ export const InputReceiver = ({isLoading, ...props}: {isLoading: boolean} & Text
       right={<ScannerButton disabled={isLoading} onPress={navigateTo.reader} />}
       label={strings.addressInputLabel}
       testID="receiverInput"
-      style={styles.receiver}
       autoCorrect={false}
       focusable
       autoFocus
@@ -30,12 +28,6 @@ export const InputReceiver = ({isLoading, ...props}: {isLoading: boolean} & Text
     />
   )
 }
-
-const styles = StyleSheet.create({
-  receiver: {
-    height: 120,
-  },
-})
 
 const useNavigateTo = () => {
   const navigation = useNavigation<TxHistoryRouteNavigation>()

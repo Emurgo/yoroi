@@ -25,7 +25,6 @@ export const InputMemo = ({onChangeText, memo}: Props) => {
         autoComplete={false}
         testID="memoFieldInput"
         errorText={showError ? 'error' : undefined} // to show the error styling
-        renderComponentStyle={styles.input}
         noHelper
         multiline
         focusable
@@ -85,8 +84,5 @@ const styles = StyleSheet.create({
   helper: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-  },
-  input: {
-    maxHeight: 80,
   },
 })
