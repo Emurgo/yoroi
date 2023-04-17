@@ -2,9 +2,8 @@ import {NavigatorScreenParams, useNavigation, useRoute} from '@react-navigation/
 import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/stack'
 import {Platform} from 'react-native'
 
-import {HWDeviceInfo} from './legacy/ledgerUtils'
 import {COLORS} from './theme'
-import {NetworkId, WalletImplementationId, YoroiProvider} from './yoroi-wallets'
+import {HWDeviceInfo, NetworkId, WalletImplementationId} from './yoroi-wallets'
 import {YoroiUnsignedTx} from './yoroi-wallets/types'
 
 // prettier-ignore
@@ -66,12 +65,14 @@ export type WalletTabRoutes = {
   'receive-ada': NavigatorScreenParams<ReceiveRoutes>
   'staking-dashboard': NavigatorScreenParams<DashboardRoutes>
   'staking-center': NavigatorScreenParams<StakingCenterRoutes>
+  nfts: NavigatorScreenParams<NftRoutes>
   menu: NavigatorScreenParams<MenuRoutes>
 }
 
 export type WalletStackRoutes = {
   'wallet-selection': undefined
   'main-wallet-routes': NavigatorScreenParams<WalletTabRoutes>
+  'nft-details-routes': NavigatorScreenParams<NftRoutes>
   settings: NavigatorScreenParams<SettingsStackRoutes>
   'voting-registration': NavigatorScreenParams<VotingRegistrationRoutes>
 }
@@ -81,18 +82,15 @@ export type WalletInitRoutes = {
   'choose-create-restore': {
     networkId: NetworkId
     walletImplementationId: WalletImplementationId
-    provider: YoroiProvider
   }
   'initial-choose-create-restore': undefined
   'create-wallet-form': {
     networkId: NetworkId
     walletImplementationId: WalletImplementationId
-    provider: YoroiProvider
   }
   'restore-wallet-form': {
     networkId: NetworkId
     walletImplementationId: WalletImplementationId
-    provider: YoroiProvider
   }
   'import-read-only': {
     networkId: NetworkId
@@ -122,7 +120,6 @@ export type WalletInitRoutes = {
   'mnemonic-show': {
     networkId: NetworkId
     walletImplementationId: WalletImplementationId
-    provider: YoroiProvider
     password: string
     name: string
     mnemonic: string
@@ -130,7 +127,6 @@ export type WalletInitRoutes = {
   'mnemonic-check': {
     networkId: NetworkId
     walletImplementationId: WalletImplementationId
-    provider: YoroiProvider
     password: string
     name: string
     mnemonic: string
@@ -138,13 +134,11 @@ export type WalletInitRoutes = {
   'wallet-account-checksum': {
     networkId: NetworkId
     walletImplementationId: WalletImplementationId
-    provider: YoroiProvider
     phrase: string
   }
   'wallet-credentials': {
     networkId: NetworkId
     walletImplementationId: WalletImplementationId
-    provider: YoroiProvider
     phrase: string
   }
 }
@@ -233,6 +227,12 @@ export type FirstRunRoutes = {
   'enable-login-with-pin': undefined
 }
 export type FirstRunRouteNavigation = StackNavigationProp<FirstRunRoutes>
+
+export type NftRoutes = {
+  'nft-gallery': undefined
+  'nft-details': {id: string}
+  'image-zoom': {id: string}
+}
 
 export type MenuRoutes = {
   menu: undefined
@@ -326,11 +326,24 @@ export const useWalletNavigation = () => {
     })
   }
 
+  const navigateToNftGallery = () => {
+    navigation.navigate('app-root', {
+      screen: 'main-wallet-routes',
+      params: {
+        screen: 'nfts',
+        params: {
+          screen: 'nft-gallery',
+        },
+      },
+    })
+  }
+
   return {
     navigation,
     resetToTxHistory,
     resetToWalletSelection,
     navigateToSettings,
     navigateToTxHistory,
+    navigateToNftGallery,
   }
 }

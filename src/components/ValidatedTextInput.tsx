@@ -1,8 +1,8 @@
 import React from 'react'
 import {Platform, StyleSheet, TextInput, TextInputProps, TouchableOpacity, View, ViewStyle} from 'react-native'
 
-import {isEmptyString} from '../legacy/utils'
 import {COLORS} from '../theme'
+import {isEmptyString} from '../utils/utils'
 import {Icon} from './Icon'
 import {Text} from './Text'
 
@@ -38,6 +38,7 @@ export const ValidatedTextInput = ({label, error, style, secureTextEntry, keyboa
             : 'default'
         }
       />
+
       {label != null && (
         <View style={styles.labelWrap}>
           <Text style={[styles.label, error != null && error !== false && styles.labelError]}>{label}</Text>

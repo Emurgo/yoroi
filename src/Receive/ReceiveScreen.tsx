@@ -4,9 +4,9 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native'
 
 import {Button, Spacer, StatusBar} from '../components'
-import {useReceiveAddresses} from '../hooks'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
+import {useReceiveAddresses} from '../yoroi-wallets'
 import {AddressDetail} from './AddressDetail'
 import {UnusedAddresses, UsedAddresses} from './Addresses'
 
@@ -51,7 +51,9 @@ export const ReceiveScreen = () => {
           <Spacer height={24} />
 
           <UnusedAddresses />
+
           <Spacer height={24} />
+
           <UsedAddresses />
         </Content>
       </ScrollView>

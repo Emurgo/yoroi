@@ -57,6 +57,7 @@ export const VotingBanner = ({onPress, disabled}: Props) => {
       <TouchableOpacity onPress={handleOnPress} disabled={disabled}>
         <View style={styles.button}>
           <Icon.Catalyst size={26} color={COLORS.LIGHT_POSITIVE_GREEN} />
+
           <Text style={styles.text}>{strings.name.toLocaleUpperCase()}</Text>
         </View>
       </TouchableOpacity>

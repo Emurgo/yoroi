@@ -2,8 +2,7 @@
 import {BigNumber} from 'bignumber.js'
 import ExtendableError from 'es6-error'
 
-import {CONFIG, getCardanoDefaultAsset} from '../../legacy/config'
-import {isHaskellShelleyNetwork} from '../../legacy/networks'
+import {isHaskellShelleyNetwork, NETWORKS} from '../cardano/networks'
 import {Token} from '../types'
 
 export class InvalidAssetAmount extends ExtendableError {
@@ -26,7 +25,7 @@ export class InvalidAssetAmount extends ExtendableError {
 
 // expects an amount in regular currency units (eg ADA, not Lovelace)
 export const parseAmountDecimal = (amount: string, token: Token): BigNumber => {
-  const assetMeta = token ?? getCardanoDefaultAsset()
+  const assetMeta = token
   const numberOfDecimals: number = assetMeta.metadata.numberOfDecimals
   const normalizationFactor = Math.pow(10, numberOfDecimals)
   const parsed = new BigNumber(amount, 10)
@@ -43,7 +42,7 @@ export const parseAmountDecimal = (amount: string, token: Token): BigNumber => {
 
   if (isHaskellShelleyNetwork(assetMeta.networkId) && assetMeta.isDefault) {
     // ...this is ADA or tADA
-    const minValue = CONFIG.NETWORKS.HASKELL_SHELLEY.MINIMUM_UTXO_VAL
+    const minValue = NETWORKS.HASKELL_SHELLEY.MINIMUM_UTXO_VAL
 
     if (value.lt(minValue)) {
       throw new InvalidAssetAmount(InvalidAssetAmount.ERROR_CODES.LT_MIN_UTXO)
@@ -69,13 +68,40 @@ export const parseBoolean = (data: unknown) => {
   const parsed = parseSafe(data)
   return isBoolean(parsed) ? parsed : undefined
 }
+export const parseString = (data: unknown) => {
+  const parsed = parseSafe(data)
+  return isString(parsed) ? parsed : undefined
+}
+
+export const isObject = (data: unknown): data is object => {
+  return typeof data === 'object' && data !== null && !Array.isArray(data)
+}
+
+export function isArray(data: unknown): data is Array<unknown> {
+  return Array.isArray(data)
+}
+
+export function isRecord(data: unknown): data is Record<string, unknown> {
+  return isObject(data)
+}
+
+export const hasProperties = <T extends object, K extends string>(
+  obj: T,
+  keys: K[],
+): obj is T & {[J in K]: unknown} => {
+  return !!obj && keys.every((key) => Object.prototype.hasOwnProperty.call(obj, key))
+}
 
 export const parseSafe = (text: any) => {
   try {
-    return JSON.parse(text)
+    return JSON.parse(text) as unknown
   } catch (_) {
     return undefined
   }
 }
 
 export const isBoolean = (data: unknown): data is boolean => typeof data === 'boolean'
+export const isString = (data: unknown): data is string => typeof data === 'string'
+export const isNonNullable = <T>(data: T | null | undefined): data is T => data !== null && data !== undefined
+export const isNumber = (data: unknown): data is number =>
+  typeof data === 'number' && !Number.isNaN(data) && Number.isFinite(data)

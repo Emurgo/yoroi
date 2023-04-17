@@ -16,6 +16,7 @@ export const NotDelegatedInfo = () => {
       </View>
 
       <Text style={[styles.text, styles.textFirstLine]}>{strings.firstLine}</Text>
+
       <Text style={[styles.text, styles.textSecondLine]}>{strings.secondLine}</Text>
 
       <Line />

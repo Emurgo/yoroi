@@ -8,16 +8,15 @@ import {LayoutAnimation, Linking, StyleSheet, TouchableOpacity, View, ViewProps}
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {Banner, Boundary, Button, CopyButton, FadeIn, Icon, StatusBar, Text} from '../../components'
-import {useTipStatus, useTokenInfo, useTransactionInfo} from '../../hooks'
 import globalMessages from '../../i18n/global-messages'
 import {formatDateToSeconds, formatTokenWithSymbol} from '../../legacy/format'
-import {getNetworkConfigById} from '../../legacy/networks'
-import {isEmptyString} from '../../legacy/utils'
 import AddressModal from '../../Receive/AddressModal'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {brand, COLORS} from '../../theme'
-import {MultiToken, TokenEntry, YoroiWallet} from '../../yoroi-wallets'
-import {TransactionInfo} from '../../yoroi-wallets/types'
+import {isEmptyString} from '../../utils/utils'
+import {asQuantity, CardanoTypes, MultiToken, useTipStatus, useTransactionInfos, YoroiWallet} from '../../yoroi-wallets'
+import {getNetworkConfigById} from '../../yoroi-wallets/cardano/networks'
+import {NetworkId, TransactionInfo} from '../../yoroi-wallets/types'
 import {AssetList} from './AssetList'
 import assetListStyle from './AssetListTransaction.style'
 
@@ -31,7 +30,9 @@ export const TxDetails = () => {
   const [expandedInItemId, setExpandedInItemId] = useState<null | ItemId>(null)
   const [expandedOutItemId, setExpandedOutItemId] = useState<null | ItemId>(null)
   const [addressDetail, setAddressDetail] = React.useState<null | string>(null)
-  const transaction = useTransactionInfo({wallet, txid: id})
+  const transactions = useTransactionInfos(wallet)
+  const transaction = transactions[id]
+  const memo = !isEmptyString(transaction.memo) ? transaction.memo : '-'
 
   useTitle(formatDateToSeconds(transaction.submittedAt))
 
@@ -63,14 +64,25 @@ export const TxDetails = () => {
         <Banner label={strings[transaction.direction]}>
           <Boundary>
             <AdaAmount amount={amount} />
+
             {txFee && <Fee amount={txFee} />}
           </Boundary>
         </Banner>
 
-        <Label>{strings.fromAddresses}</Label>
+        <Label>{strings.memo}</Label>
+
+        <Text secondary monospace>
+          {memo}
+        </Text>
+
+        <View style={styles.borderTop}>
+          <Label>{strings.fromAddresses}</Label>
+        </View>
+
         {fromFiltered.map((item) => (
           <View key={item.id}>
             <AddressEntry {...item} showModalForAddress={setAddressDetail} />
+
             {item.assets.length > 0 && (
               <TouchableOpacity
                 style={styles.assetsExpandable}
@@ -78,6 +90,7 @@ export const TxDetails = () => {
                 onPress={() => toggleExpandIn(item.id)}
               >
                 <Text style={styles.assetsTitle}>{` -${item.assets.length} ${strings.assetsLabel} `}</Text>
+
                 <Icon.Chevron
                   direction={expandedInItemId === item.id ? 'up' : 'down'}
                   color={COLORS.ACTION_GRAY}
@@ -85,6 +98,7 @@ export const TxDetails = () => {
                 />
               </TouchableOpacity>
             )}
+
             <ExpandableAssetList expanded={expandedInItemId === item.id} assets={item.assets} />
           </View>
         ))}
@@ -92,9 +106,11 @@ export const TxDetails = () => {
         <View style={styles.borderTop}>
           <Label>{strings.toAddresses}</Label>
         </View>
+
         {toFiltered.map((item) => (
           <View key={item.id}>
             <AddressEntry {...item} showModalForAddress={setAddressDetail} />
+
             {item.assets.length > 0 && (
               <TouchableOpacity
                 style={styles.assetsExpandable}
@@ -102,6 +118,7 @@ export const TxDetails = () => {
                 onPress={() => toggleExpandOut(item.id)}
               >
                 <Text style={styles.assetsTitle}>{` +${item.assets.length} ${strings.assetsLabel} `}</Text>
+
                 <Icon.Chevron
                   direction={expandedOutItemId === item.id ? 'up' : 'down'}
                   color={COLORS.ACTION_GRAY}
@@ -109,11 +126,13 @@ export const TxDetails = () => {
                 />
               </TouchableOpacity>
             )}
+
             <ExpandableAssetList expanded={expandedOutItemId === item.id} assets={item.assets} />
           </View>
         ))}
 
         {cntOmittedTo > 0 && <Text>{strings.omittedCount(cntOmittedTo)}</Text>}
+
         <View style={styles.borderTop}>
           <Label>{strings.txAssuranceLevel}</Label>
         </View>
@@ -121,12 +140,14 @@ export const TxDetails = () => {
         <Boundary loading={{size: 'small'}}>
           <Confirmations transaction={transaction} wallet={wallet} />
         </Boundary>
+
         <Label>{strings.transactionId}</Label>
 
         <View style={styles.dataContainer}>
           <Text secondary monospace numberOfLines={1} ellipsizeMode="middle">
             {transaction.id}
           </Text>
+
           <CopyButton value={transaction.id} />
         </View>
       </ScrollView>
@@ -162,34 +183,31 @@ const Label = ({children}: {children: string}) => <Text style={styles.label}>{ch
 
 const AdaAmount = ({amount}: {amount: BigNumber}) => {
   const wallet = useSelectedWallet()
-  const tokenInfo = useTokenInfo({wallet, tokenId: ''})
   const amountStyle = amount.gte(0) ? styles.positiveAmount : styles.negativeAmount
 
-  return <Text style={amountStyle}>{formatTokenWithSymbol(amount, tokenInfo)}</Text>
+  return <Text style={amountStyle}>{formatTokenWithSymbol(asQuantity(amount), wallet.primaryToken)}</Text>
 }
 
 const Fee = ({amount}: {amount: BigNumber}) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
-  const tokenInfo = useTokenInfo({wallet, tokenId: ''})
 
-  return (
-    <Text small>
-      {strings.fee} {formatTokenWithSymbol(amount, tokenInfo)}
-    </Text>
-  )
+  const text = `${strings.fee} ${formatTokenWithSymbol(asQuantity(amount), wallet.primaryToken)}`
+  return <Text small>{text}</Text>
 }
 
-const ExpandableAssetList: React.VFC<{expanded: boolean; assets: TokenEntry[]}> = ({
+const ExpandableAssetList: React.VFC<{expanded: boolean; assets: CardanoTypes.TokenEntry[]}> = ({
   expanded,
   assets,
 }: {
   expanded: boolean
-  assets: TokenEntry[]
+  assets: CardanoTypes.TokenEntry[]
 }) => (
   <View style={{borderWidth: 1, borderColor: 'transparent'}}>
     {/* ↑↑↑ View wrapper fixes bug ↑↑↑ */}
+
     {expanded && <AssetList styles={assetListStyle} assets={assets} />}
+
     {/* ↓↓↓ View wrapper fixes bug ↓↓↓ */}
   </View>
 )
@@ -201,10 +219,11 @@ type AddressEntryProps = {
   showModalForAddress: (string) => void
 }
 const AddressEntry = ({address, path, isHighlighted, showModalForAddress}: AddressEntryProps) => {
+  const text = `(${path}) ${address}`
   return (
     <TouchableOpacity activeOpacity={0.5} onPress={() => showModalForAddress(address)}>
       <Text secondary bold={isHighlighted}>
-        ({path}) {address}
+        {text}
       </Text>
     </TouchableOpacity>
   )
@@ -285,7 +304,7 @@ const getShownAddresses = (
   }
 }
 
-const openInExplorer = async (transaction: TransactionInfo, networkId: number) => {
+const openInExplorer = async (transaction: TransactionInfo, networkId: NetworkId) => {
   const networkConfig = getNetworkConfigById(networkId)
   await Linking.openURL(networkConfig.EXPLORER_URL_FOR_TX(transaction.id))
 }
@@ -303,6 +322,7 @@ const useStrings = () => {
     fee: intl.formatMessage(messages.fee),
     fromAddresses: intl.formatMessage(messages.fromAddresses),
     toAddresses: intl.formatMessage(messages.toAddresses),
+    memo: intl.formatMessage(messages.memo),
     transactionId: intl.formatMessage(messages.transactionId),
     txAssuranceLevel: intl.formatMessage(messages.txAssuranceLevel),
     confirmations: (cnt) => intl.formatMessage(messages.confirmations, {cnt}),
@@ -359,6 +379,10 @@ const messages = defineMessages({
   toAddresses: {
     id: 'components.txhistory.txdetails.toAddresses',
     defaultMessage: '!!!To Addresses',
+  },
+  memo: {
+    id: 'components.txhistory.txdetails.memo',
+    defaultMessage: '!!!Memo',
   },
   transactionId: {
     id: 'components.txhistory.txdetails.transactionId',

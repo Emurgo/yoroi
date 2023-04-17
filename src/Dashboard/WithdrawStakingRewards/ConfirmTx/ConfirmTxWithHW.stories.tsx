@@ -2,8 +2,9 @@ import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {mocks, WithModal} from '../../../../storybook'
+import {WithModal} from '../../../../.storybook/decorators'
 import {Boundary} from '../../../components'
+import {mocks} from '../../../yoroi-wallets/mocks'
 import {ConfirmTxWithHW} from './ConfirmTxWithHW'
 
 storiesOf('ConfirmWithdrawalTx/HW', module)

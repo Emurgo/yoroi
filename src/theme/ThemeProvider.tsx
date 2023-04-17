@@ -1,21 +1,20 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import React from 'react'
 import {useColorScheme} from 'react-native'
 import {useMutation, UseMutationOptions, useQuery, useQueryClient} from 'react-query'
 
-import {isEmptyString} from '../legacy/utils'
+import {parseSafe, useStorage} from '../yoroi-wallets'
 import {darkTheme} from './darkTheme'
 import {lightTheme} from './lightTheme'
 import {Theme} from './types'
 
 const ThemeContext = React.createContext<undefined | ThemeContext>(undefined)
 export const ThemeProvider = ({children}: {children: React.ReactNode}) => {
-  const defaultColorScheme = useColorScheme() ?? 'light'
+  const systemColorScheme = useColorScheme() ?? 'light'
   const savedColorScheme = useSavedColorScheme()
 
   const selectColorScheme = useSaveColorScheme()
-  const colorScheme = savedColorScheme ?? defaultColorScheme
-  const theme = themes[colorScheme]
+  const colorScheme = savedColorScheme ?? systemColorScheme
+  const theme = themes[isColorScheme(colorScheme) ? colorScheme : systemColorScheme]
 
   return <ThemeContext.Provider value={{theme, colorScheme, selectColorScheme}}>{children}</ThemeContext.Provider>
 }
@@ -27,25 +26,22 @@ const missingProvider = () => {
 }
 
 const useSavedColorScheme = () => {
-  const query = useQuery<ColorScheme | null>({
-    queryKey: ['theme'],
-    queryFn: async () => {
-      const savedTheme = await AsyncStorage.getItem('/appSettings/theme')
-
-      return !isEmptyString(savedTheme) ? JSON.parse(savedTheme) : null
-    },
+  const storage = useStorage()
+  const query = useQuery<ColorSchemeOption | undefined>({
+    queryKey: ['colorScheme'],
+    queryFn: () => storage.join('appSettings/').getItem('colorScheme', parseColorScheme),
     suspense: true,
   })
 
   return query.data
 }
 
-const useSaveColorScheme = (options: UseMutationOptions<void, Error, string> = {}) => {
+const useSaveColorScheme = (options: UseMutationOptions<void, Error, ColorSchemeOption> = {}) => {
   const queryClient = useQueryClient()
-
+  const storage = useStorage()
   const mutation = useMutation({
-    mutationFn: async (theme) => AsyncStorage.setItem('/appSettings/theme', JSON.stringify(theme)),
-    onSuccess: () => queryClient.invalidateQueries('theme'),
+    mutationFn: async (colorScheme) => storage.join('appSettings/').setItem('colorScheme', colorScheme),
+    onSuccess: () => queryClient.invalidateQueries('colorScheme'),
     ...options,
   })
 
@@ -53,14 +49,21 @@ const useSaveColorScheme = (options: UseMutationOptions<void, Error, string> = {
 }
 
 type SelectColorScheme = ReturnType<typeof useSaveColorScheme>
+type ColorSchemeOption = 'light' | 'dark' | 'system'
 type ThemeContext = {
   theme: Theme
-  colorScheme: ColorScheme
+  colorScheme: ColorSchemeOption
   selectColorScheme: SelectColorScheme
 }
 
-type ColorScheme = 'light' | 'dark'
-const themes: Record<ColorScheme, Theme> = {
+const themes: Record<'light' | 'dark', Theme> = {
   light: lightTheme,
   dark: darkTheme,
+}
+
+const isColorScheme = (data: unknown): data is 'light' | 'dark' => data === 'light' || data === 'dark'
+const parseColorScheme = (data: unknown) => {
+  const parsed = parseSafe(data)
+
+  return isColorScheme(parsed) ? parsed : undefined
 }

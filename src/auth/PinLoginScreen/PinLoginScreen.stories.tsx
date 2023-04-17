@@ -1,14 +1,13 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {StorageProvider} from '../../Storage'
+import {storage, StorageProvider} from '../../yoroi-wallets'
 import {PinLoginScreen} from './PinLoginScreen'
 
 storiesOf('PinLoginScreen', module).add('Default', () => (
   <StorageProvider
     storage={{
-      ...AsyncStorage,
+      ...storage,
       getItem: async () => {
         return encryptedKeyHash
       },

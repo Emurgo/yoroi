@@ -4,9 +4,11 @@ import {Image, LayoutAnimation, ScrollView, StyleSheet, Text, TouchableOpacity, 
 
 import image from '../../assets/img/error.png'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
-import {isEmptyString} from '../../legacy/utils'
 import {brand, COLORS, spacing} from '../../theme'
-import {Button, Icon, Modal} from '..'
+import {isEmptyString} from '../../utils/utils'
+import {Button} from '../Button'
+import {Icon} from '../Icon'
+import {Modal} from '../Modal'
 
 type ErrorViewProps = {
   title?: string
@@ -27,6 +29,7 @@ export const ErrorView = ({title, errorMessage, errorLogs, onDismiss}: ErrorView
     <ScrollView style={styles.scrollView} testID="errorView">
       <View style={styles.headerView}>
         <Text style={styles.title}>{title ?? intl.formatMessage(errorMessages.generalLocalizableError.title)}</Text>
+
         <Image source={image} style={styles.image} />
       </View>
 
@@ -44,6 +47,7 @@ export const ErrorView = ({title, errorMessage, errorLogs, onDismiss}: ErrorView
               <Text style={styles.showErrorTrigger}>
                 {showErrorLogs ? intl.formatMessage(messages.hideError) : intl.formatMessage(messages.showError)}
               </Text>
+
               <Icon.Chevron size={28} color={COLORS.GREY_6} direction={showErrorLogs ? 'left' : 'right'} />
             </View>
           </TouchableOpacity>
@@ -57,6 +61,7 @@ export const ErrorView = ({title, errorMessage, errorLogs, onDismiss}: ErrorView
           )}
         </View>
       )}
+
       <Button
         block
         onPress={onDismiss}

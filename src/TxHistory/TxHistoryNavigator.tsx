@@ -4,7 +4,6 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps} from 'react-native'
 
 import {Boundary, Icon} from '../components'
-import {useWalletName} from '../hooks'
 import {
   defaultStackNavigationOptions,
   defaultStackNavigationOptionsV2,
@@ -17,9 +16,9 @@ import {AddressReaderQR} from '../Send/AddressReaderQR'
 import {AssetSelectorScreen} from '../Send/AssetSelectorScreen'
 import {ConfirmScreen} from '../Send/ConfirmScreen'
 import {SendProvider} from '../Send/Context/SendContext'
-import {ScannerButton} from '../Send/ScannerButton'
 import {SendScreen} from '../Send/SendScreen'
 import {COLORS} from '../theme'
+import {useWalletName} from '../yoroi-wallets'
 import {ModalInfo} from './ModalInfo'
 import {TxDetails} from './TxDetails'
 import {TxHistory} from './TxHistory'
@@ -79,7 +78,6 @@ export const TxHistoryNavigator = () => {
           name="send"
           options={{
             title: strings.sendTitle,
-            headerRight: () => <ScannerButton />,
           }}
         >
           {() => (

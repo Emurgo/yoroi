@@ -1,47 +1,48 @@
-import {BigNumber} from 'bignumber.js'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Linking, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 
 import {Text} from '../../../components'
-import {useTokenInfo} from '../../../hooks'
 import {confirmationMessages, txLabels} from '../../../i18n/global-messages'
 import {formatTokenWithText} from '../../../legacy/format'
-import {getNetworkConfigById} from '../../../legacy/networks'
 import {COLORS} from '../../../theme'
 import {YoroiWallet} from '../../../yoroi-wallets'
+import {getNetworkConfigById} from '../../../yoroi-wallets/cardano/networks'
 import {YoroiStaking, YoroiUnsignedTx} from '../../../yoroi-wallets/types'
 import {Amounts, Entries} from '../../../yoroi-wallets/utils'
 
 export const TransferSummary = ({wallet, unsignedTx}: {wallet: YoroiWallet; unsignedTx: YoroiUnsignedTx}) => {
   const strings = useStrings()
-  const tokenInfo = useTokenInfo({wallet, tokenId: ''})
   const {deregistrations, withdrawals, refundAmount, feeAmount, totalAmount} = withdrawalInfo(unsignedTx)
 
   return (
     <>
       <Item>
         <Text>{strings.balanceLabel}</Text>
+
         <Text style={styles.balanceAmount} testID="recoveredBalanceText">
-          {formatTokenWithText(new BigNumber(refundAmount.quantity), tokenInfo)}
+          {formatTokenWithText(refundAmount.quantity, wallet.primaryToken)}
         </Text>
       </Item>
 
       <Item>
         <Text>{strings.fees}</Text>
+
         <Text style={styles.balanceAmount} testID="feeAmountText">
-          {formatTokenWithText(new BigNumber(feeAmount.quantity), tokenInfo)}
+          {formatTokenWithText(feeAmount.quantity, wallet.primaryToken)}
         </Text>
       </Item>
 
       <Item>
         <Text>{strings.finalBalanceLabel}</Text>
+
         <Text style={styles.balanceAmount} testID="totalAmountText">
-          {formatTokenWithText(new BigNumber(totalAmount.quantity), tokenInfo)}
+          {formatTokenWithText(totalAmount.quantity, wallet.primaryToken)}
         </Text>
       </Item>
 
       {withdrawals && <Withdrawals wallet={wallet} withdrawals={withdrawals} />}
+
       {deregistrations && <Deregistrations wallet={wallet} deregistrations={deregistrations} />}
     </>
   )
@@ -81,6 +82,7 @@ const Withdrawals = ({
   return (
     <Item>
       <Text>{strings.withdrawals}</Text>
+
       {Object.keys(withdrawals).map((address) => (
         <TouchableOpacity
           key={address}
@@ -104,7 +106,6 @@ const Deregistrations = ({
   deregistrations: NonNullable<YoroiStaking['deregistrations']>
 }) => {
   const strings = useStrings()
-  const tokenInfo = useTokenInfo({wallet, tokenId: ''})
   const refundAmounts = Entries.toAmounts(deregistrations)
   const primaryAmount = Amounts.getAmount(refundAmounts, '')
 
@@ -115,6 +116,7 @@ const Deregistrations = ({
     <>
       <Item>
         <Text>{strings.stakeDeregistration}</Text>
+
         {addresses.map((address) => (
           <TouchableOpacity
             key={address}
@@ -131,7 +133,7 @@ const Deregistrations = ({
       <Item>
         <Text>
           {strings.unregisterExplanation({
-            refundAmount: formatTokenWithText(new BigNumber(primaryAmount.quantity), tokenInfo),
+            refundAmount: formatTokenWithText(primaryAmount.quantity, wallet.primaryToken),
           })}
         </Text>
       </Item>

@@ -1,12 +1,11 @@
 import _ from 'lodash'
 import React from 'react'
-import {View} from 'react-native'
-import {StyleSheet} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 
+import {BACKSPACE, NumericKeyboard} from '../../components/NumericKeyboard'
 import {Spacer} from '../../components/Spacer'
 import {Text} from '../../components/Text'
 import {COLORS} from '../../theme'
-import {BACKSPACE, Keyboard} from './Keyboard'
 
 type Props = {
   title?: string
@@ -69,7 +68,7 @@ export const PinInput = React.forwardRef<PinInputRef, Props>((props, ref) => {
         </View>
       </View>
 
-      <Keyboard onKeyDown={onKeyDown} />
+      <NumericKeyboard onKeyDown={onKeyDown} />
     </View>
   )
 })

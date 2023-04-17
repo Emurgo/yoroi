@@ -1,24 +1,22 @@
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
+import {showErrorDialog} from '../../dialogs'
 import {errorMessages} from '../../i18n/global-messages'
-import {showErrorDialog} from '../../legacy/actions'
 import {CONFIG} from '../../legacy/config'
-import {useStorage} from '../../Storage'
-import {useCreatePin} from '../hooks'
+import {useCreatePin} from '../../yoroi-wallets'
 import {PinInput, PinInputRef} from '../PinInput'
 
-type Props = {onDone: () => void}
+type Props = {onDone: (pin: string) => void}
 export const CreatePinInput = ({onDone}: Props) => {
   const pinInputRef = React.useRef<null | PinInputRef>(null)
   const pinConfirmationInputRef = React.useRef<null | PinInputRef>(null)
 
   const intl = useIntl()
   const strings = useStrings()
-  const storage = useStorage()
 
-  const {createPin, isLoading} = useCreatePin(storage, {
-    onSuccess: () => onDone(),
+  const {createPin, isLoading} = useCreatePin({
+    onSuccess: (_, pin) => onDone(pin),
     onError: (error) => {
       showErrorDialog(errorMessages.generalError, intl, {message: error.message})
       step === 'pin' ? pinInputRef.current?.clear() : pinConfirmationInputRef.current?.clear()

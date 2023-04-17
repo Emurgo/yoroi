@@ -1,6 +1,5 @@
 import React from 'react'
-import {LayoutAnimation, TouchableOpacity, View} from 'react-native'
-import {StyleSheet} from 'react-native'
+import {LayoutAnimation, StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {Icon, Text} from '../../../components'
 import {COLORS} from '../../../theme'
@@ -28,6 +27,7 @@ export const ExpandableItem = ({label, content, disabled, style}: Props) => {
           <Text secondary style={[disabled === true && styles.disabled]}>
             {label}
           </Text>
+
           <Icon.Chevron size={23} direction={expanded ? 'up' : 'down'} color={COLORS.SECONDARY_TEXT} />
         </View>
 

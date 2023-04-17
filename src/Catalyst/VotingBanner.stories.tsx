@@ -3,7 +3,7 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
 import {SelectedWalletProvider} from '../../src/SelectedWallet'
-import {mocks} from '../../storybook'
+import {mocks} from '../yoroi-wallets/mocks'
 import {VotingBanner} from './VotingBanner'
 
 storiesOf('Voting Banner', module)

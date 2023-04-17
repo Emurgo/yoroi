@@ -4,14 +4,13 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useAuthOsEnabled, useEnableAuthWithOs} from '../../auth'
 import {useAuth} from '../../auth/AuthProvider'
 import {Button, Checkbox, PleaseWaitModal, Spacer, StatusBar} from '../../components'
 import {useLanguage} from '../../i18n'
 import globalMessages from '../../i18n/global-messages'
 import {TermsOfService} from '../../Legal'
 import {FirstRunRouteNavigation} from '../../navigation'
-import {useStorage} from '../../Storage'
+import {useAuthOsEnabled, useEnableAuthWithOs} from '../../yoroi-wallets'
 
 export const TermsOfServiceScreen = () => {
   const strings = useStrings()
@@ -22,11 +21,10 @@ export const TermsOfServiceScreen = () => {
   // should be another step in the first run flow -> auth method
   const {login} = useAuth()
   const authOsEnabled = useAuthOsEnabled()
-  const storage = useStorage()
-  const {enableAuthWithOs, isLoading} = useEnableAuthWithOs(
-    {storage},
-    {onSuccess: login, onError: () => navigation.navigate('enable-login-with-pin')},
-  )
+  const {enableAuthWithOs, isLoading} = useEnableAuthWithOs({
+    onSuccess: login,
+    onError: () => navigation.navigate('enable-login-with-pin'),
+  })
 
   const onAccept = () => {
     if (authOsEnabled) {

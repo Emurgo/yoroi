@@ -12,12 +12,14 @@ export const DigitalAsset = ({size = 36, color = 'black'}: Props) => (
       d="M6 7C6 6.44772 6.44772 6 7 6H9C9.55228 6 10 6.44772 10 7V10H11C11.5523 10 12 10.4477 12 11C12 11.5523 11.5523 12 11 12H7C6.44772 12 6 11.5523 6 11C6 10.4477 6.44772 10 7 10H8V8H7C6.44772 8 6 7.55228 6 7Z"
       fill={color}
     />
+
     <Path
       fillRule="evenodd"
       clipRule="evenodd"
       d="M14 11C13.4477 11 13 11.4477 13 12V17C13 17.5523 13.4477 18 14 18H17C17.5523 18 18 17.5523 18 17V12C18 11.4477 17.5523 11 17 11H14ZM15 16V13H16V16H15Z"
       fill={color}
     />
+
     <Path
       fillRule="evenodd"
       clipRule="evenodd"

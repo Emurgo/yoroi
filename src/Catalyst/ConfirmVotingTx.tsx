@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import BigNumber from 'bignumber.js'
 import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet} from 'react-native'
@@ -7,13 +6,13 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {ProgressStep, Spacer, TextInput} from '../components'
 import {ConfirmTx} from '../components/ConfirmTx'
-import {useTokenInfo, useVotingRegTx} from '../hooks'
+import {debugWalletInfo, features} from '../features'
 import {Instructions as HWInstructions} from '../HW'
 import {errorMessages, txLabels} from '../i18n/global-messages'
 import LocalizableError from '../i18n/LocalizableError'
-import {CONFIG} from '../legacy/config'
 import {formatTokenWithSymbol} from '../legacy/format'
 import {useSelectedWallet} from '../SelectedWallet'
+import {useVotingRegTx} from '../yoroi-wallets'
 import {Amounts} from '../yoroi-wallets/utils'
 import {Actions, Description, Title} from './components'
 
@@ -32,9 +31,8 @@ export const ConfirmVotingTx = ({
     {wallet, pin}, //
     {onSuccess: ({votingKeyEncrypted}) => onSuccess(votingKeyEncrypted)},
   )
-  const [password, setPassword] = useState(CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '')
+  const [password, setPassword] = useState(features.prefillWalletInfo ? debugWalletInfo.PASSWORD : '')
   const [useUSB, setUseUSB] = useState<boolean>(false)
-  const tokenInfo = useTokenInfo({wallet, tokenId: wallet.defaultAsset.identifier})
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
@@ -58,7 +56,10 @@ export const ConfirmVotingTx = ({
         <Spacer height={48} />
 
         <TextInput
-          value={formatTokenWithSymbol(new BigNumber(Amounts.getAmount(votingRegTx.fee, '').quantity), tokenInfo)}
+          value={formatTokenWithSymbol(
+            Amounts.getAmount(votingRegTx.fee, wallet.primaryToken.identifier).quantity,
+            wallet.primaryToken,
+          )}
           label={strings.fees}
           editable={false}
           autoComplete={false}

@@ -6,13 +6,12 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, RefreshControl, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 
 import {Banner, Button, Modal, StatusBar} from '../components'
-import {useBalances, useIsOnline, useSync} from '../hooks'
 import globalMessages from '../i18n/global-messages'
-import {getCardanoBaseConfig} from '../legacy/config'
-import {getCardanoNetworkConfigById} from '../legacy/networks'
-import {isEmptyString} from '../legacy/utils'
 import {useWalletNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
+import {isEmptyString} from '../utils/utils'
+import {getCardanoBaseConfig, useBalances, useIsOnline, useSync} from '../yoroi-wallets'
+import {getCardanoNetworkConfigById} from '../yoroi-wallets/cardano/networks'
 import {Amounts} from '../yoroi-wallets/utils'
 import {
   genCurrentEpochLength,
@@ -174,7 +173,7 @@ const useCurrentTime = () => {
 const EpochInfo = () => {
   const currentTime = useCurrentTime()
   const wallet = useSelectedWallet()
-  const config = getCardanoBaseConfig(getCardanoNetworkConfigById(wallet.networkId, wallet.provider))
+  const config = getCardanoBaseConfig(getCardanoNetworkConfigById(wallet.networkId))
 
   const toRelativeSlotNumberFn = genToRelativeSlotNumber(config)
   const timeToSlotFn = genTimeToSlot(config)

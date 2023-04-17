@@ -7,17 +7,20 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {BulletPointItem, Button, Icon, Spacer, StatusBar, Text} from '../../components'
 import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
 import {COLORS} from '../../theme'
-import {CardanoTypes, NetworkId, WalletImplementationId} from '../../yoroi-wallets'
+import {CardanoTypes, NetworkId, WALLET_IMPLEMENTATION_REGISTRY, WalletImplementationId} from '../../yoroi-wallets'
 import {generateByronPlateFromMnemonics} from '../../yoroi-wallets/cardano/byron/plate'
+import {
+  WALLET_CONFIG as HASKELL_SHELLEY,
+  WALLET_CONFIG_24 as HASKELL_SHELLEY_24,
+} from '../../yoroi-wallets/cardano/constants/mainnet/constants'
 import {generateShelleyPlateFromMnemonics} from '../../yoroi-wallets/cardano/shelley/plate'
-import {WALLET_IMPLEMENTATION_REGISTRY} from '../../yoroi-wallets/types/other'
 import {WalletAddress} from '../WalletAddress'
 
 export const VerifyRestoredWalletScreen = () => {
   const strings = useStrings()
   const navigation = useNavigation<WalletInitRouteNavigation>()
   const route = useRoute<RouteProp<WalletInitRoutes, 'wallet-credentials'>>()
-  const {phrase, networkId, walletImplementationId, provider} = route.params
+  const {phrase, networkId, walletImplementationId} = route.params
   const [plate, addresses] = usePlateFromMnemonic({mnemonic: phrase, networkId, walletImplementationId})
 
   const navigateToWalletCredentials = () => {
@@ -25,7 +28,6 @@ export const VerifyRestoredWalletScreen = () => {
       phrase,
       networkId,
       walletImplementationId,
-      provider,
     })
   }
 
@@ -44,7 +46,9 @@ export const VerifyRestoredWalletScreen = () => {
           {plate ? (
             <>
               <Icon.WalletAccount iconSeed={plate.ImagePart} />
+
               <Spacer />
+
               <Text style={styles.checksum} testID="walletChecksum">
                 {plate.TextPart}
               </Text>
@@ -58,10 +62,15 @@ export const VerifyRestoredWalletScreen = () => {
 
         <Instructions>
           <Text style={styles.instructionsLabel}>{strings.instructionLabel}</Text>
+
           <BulletPointItem textRow={strings.instructions1} style={styles.bulletPoint} />
+
           <Spacer height={8} />
+
           <BulletPointItem textRow={strings.instructions2} style={styles.bulletPoint} />
+
           <Spacer height={8} />
+
           <BulletPointItem textRow={strings.instructions3} style={styles.bulletPoint} />
         </Instructions>
 
@@ -69,6 +78,7 @@ export const VerifyRestoredWalletScreen = () => {
 
         <Addresses>
           <Text style={styles.addressesLabel}>{strings.walletAddressLabel}</Text>
+
           {addresses ? (
             <WalletAddress addressHash={addresses[0]} networkId={networkId} />
           ) : (
@@ -143,7 +153,7 @@ const usePlateFromMnemonic = ({
   walletImplementationId,
 }: {
   mnemonic: string
-  networkId: number
+  networkId: NetworkId
   walletImplementationId: WalletImplementationId
 }) => {
   const [addresses, setAddresses] = useState<undefined | Array<string>>(undefined)
@@ -157,8 +167,8 @@ const usePlateFromMnemonic = ({
       count: number,
     ) => {
       switch (walletImplId) {
-        case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY:
-        case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY_24:
+        case HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID:
+        case HASKELL_SHELLEY_24.WALLET_IMPLEMENTATION_ID:
           return generateShelleyPlateFromMnemonics(mnemonic, count, networkId)
         case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON:
           return generateByronPlateFromMnemonics(mnemonic, count)

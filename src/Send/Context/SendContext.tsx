@@ -8,12 +8,14 @@ type SendState = {
   receiver: string
   amount: string
   sendAll: boolean
+  memo: string
 }
 
 type SendActions = {
   receiverChanged: (receiver: SendState['receiver']) => void
   amountChanged: (amount: SendState['amount']) => void
   tokenSelected: (tokenId: SendState['tokenId']) => void
+  memoChanged: (memo: SendState['memo']) => void
   sendAllChanged: () => void
   allTokensSelected: () => void
   resetForm: () => void
@@ -30,7 +32,7 @@ export const SendProvider = ({
   children: React.ReactNode
 }) => {
   const [state, dispatch] = React.useReducer(sendReducer, {
-    ...initialState(wallet.defaultAsset.identifier),
+    ...initialState(wallet.primaryToken.identifier),
     ...props.initialState,
   })
 
@@ -38,9 +40,10 @@ export const SendProvider = ({
     receiverChanged: (receiver) => dispatch({type: 'receiverChanged', receiver}),
     amountChanged: (amount) => dispatch({type: 'amountChanged', amount}),
     tokenSelected: (tokenId) => dispatch({type: 'tokenSelected', tokenId}),
+    memoChanged: (memo) => dispatch({type: 'memoChanged', memo}),
     sendAllChanged: () => dispatch({type: 'sendAllChanged'}),
-    allTokensSelected: () => dispatch({type: 'allTokensSelected', primaryTokenId: wallet.defaultAsset.identifier}),
-    resetForm: () => dispatch({type: 'resetForm', primaryTokenId: wallet.defaultAsset.identifier}),
+    allTokensSelected: () => dispatch({type: 'allTokensSelected', primaryTokenId: wallet.primaryTokenInfo.id}),
+    resetForm: () => dispatch({type: 'resetForm', primaryTokenId: wallet.primaryTokenInfo.id}),
   }).current
 
   const context = React.useMemo(() => ({...state, ...actions}), [actions, state])
@@ -56,6 +59,10 @@ type SendAction =
   | {
       type: 'amountChanged'
       amount: string
+    }
+  | {
+      type: 'memoChanged'
+      memo: SendState['memo']
     }
   | {
       type: 'sendAllChanged'
@@ -107,6 +114,12 @@ const sendReducer = (state: SendState, action: SendAction) => {
         tokenId: action.primaryTokenId,
       }
 
+    case 'memoChanged':
+      return {
+        ...state,
+        memo: action.memo,
+      }
+
     case 'resetForm':
       return initialState(action.primaryTokenId)
 
@@ -127,4 +140,5 @@ const initialState = (primaryTokenId: TokenId) => ({
   receiver: '',
   amount: '',
   sendAll: false,
+  memo: '',
 })

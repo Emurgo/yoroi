@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import {WalletMeta} from '../../legacy/state'
+import {WalletMeta} from '../../yoroi-wallets'
 
 type SelectedWalletMeta = WalletMeta
 type SetSelectedWalletMeta = (selectedWalletMeta?: SelectedWalletMeta) => void
@@ -39,6 +39,7 @@ export const SelectedWalletMetaBoundary = ({
 }) => {
   const [walletMeta] = useSelectedWalletMetaContext()
 
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (!walletMeta) return <>{fallback}</>
 
   return <>{children}</>

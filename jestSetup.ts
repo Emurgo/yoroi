@@ -5,6 +5,7 @@ import 'react-native-gesture-handler/jestSetup'
 import fetch from 'node-fetch'
 
 import {Logger, LogLevel} from './src/legacy/logging'
+import * as YoroiLogging from './src/yoroi-wallets/logging'
 
 global.fetch = fetch
 Logger.setLogLevel(LogLevel.Warn)
@@ -18,8 +19,10 @@ jest.mock('react-native-ble-plx', () => ({}))
 jest.mock('@react-native-async-storage/async-storage', () =>
   require('@react-native-async-storage/async-storage/jest/async-storage-mock'),
 )
-jest.mock('react-native-keychain', () => {})
-jest.mock('react-native-blockies-svg', () => {})
+jest.mock('react-native-keychain', () => ({
+  resetGenericPassword: jest.fn(),
+}))
+jest.mock('@emurgo/react-native-blockies-svg', () => {})
 
 jest.mock('react-native-reanimated', () => {
   const Reanimated = require('react-native-reanimated/mock')
@@ -44,3 +47,4 @@ jest.mock('react-native', () => {
 })
 
 Logger.setLogLevel(LogLevel.Nothing)
+YoroiLogging.Logger.setLogLevel(YoroiLogging.LogLevel.Nothing)

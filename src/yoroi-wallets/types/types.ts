@@ -1,4 +1,8 @@
-import {CardanoTypes} from '../cardano'
+import {CardanoTypes, YoroiWallet} from '../cardano'
+import {HWDeviceInfo} from '../hw'
+import {YoroiStorage} from '../storage'
+import {WalletMeta} from '../walletManager'
+import {NftMetadata} from './tokens'
 
 export type YoroiUnsignedTx = YoroiTxInfo & {
   unsignedTx: CardanoTypes.UnsignedTx
@@ -56,4 +60,50 @@ export type YoroiAmount = {
 
 export type YoroiMetadata = {
   [label: string]: string
+}
+
+export type YoroiNft = {
+  id: string
+  name: string
+  description: string | undefined
+  logo: string | undefined
+  thumbnail: string | undefined
+  fingerprint: string
+  metadata: {
+    policyId: string
+    assetNameHex: string
+    originalMetadata: NftMetadata | undefined
+  }
+}
+
+export type YoroiNftModerationStatus = 'consent' | 'blocked' | 'approved' | 'pending' | 'manual_review'
+
+export type WalletFactory = {
+  create({
+    id,
+    storage,
+    mnemonic,
+    password,
+  }: {
+    id: string
+    storage: YoroiStorage
+    mnemonic: string
+    password: string
+  }): Promise<YoroiWallet>
+
+  createBip44({
+    id,
+    storage,
+    accountPubKeyHex,
+    hwDeviceInfo, // hw wallet
+    isReadOnly, // readonly wallet
+  }: {
+    accountPubKeyHex: string
+    hwDeviceInfo: HWDeviceInfo | null
+    id: string
+    isReadOnly: boolean
+    storage: YoroiStorage
+  }): Promise<YoroiWallet>
+
+  restore({walletMeta, storage}: {storage: YoroiStorage; walletMeta: WalletMeta}): Promise<YoroiWallet>
 }

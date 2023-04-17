@@ -14,6 +14,7 @@ export const HardwareWallet = ({size = 36, color1 = 'black', color2 = '#C4CAD7'}
       fill={color1}
       stroke="black"
     />
+
     <Path
       fillRule="evenodd"
       clipRule="evenodd"

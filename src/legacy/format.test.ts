@@ -1,25 +1,12 @@
-import {BigNumber} from 'bignumber.js'
+import {asQuantity} from '../yoroi-wallets'
+import {PRIMARY_TOKEN} from '../yoroi-wallets/cardano/constants/mainnet/constants'
+import {formatTokenAmount, formatTokenFractional, formatTokenInteger} from './format'
 
-import {getCardanoDefaultAsset} from './config'
-import {
-  ASSET_DENOMINATION,
-  formatTokenAmount,
-  formatTokenFractional,
-  formatTokenInteger,
-  getAssetDenomination,
-} from './format'
-
-const defaultCardanoAsset = getCardanoDefaultAsset()
-
-describe('getAssetDenomination', () => {
-  it('correctly represents ADA symbol', () => {
-    expect(getAssetDenomination(defaultCardanoAsset, ASSET_DENOMINATION.SYMBOL)).toEqual('₳')
-  })
-})
+const defaultCardanoAsset = PRIMARY_TOKEN
 
 describe('formatAda', () => {
   it('formats zero', () => {
-    expect(formatTokenAmount(new BigNumber(0), defaultCardanoAsset)).toEqual('0.000000')
+    expect(formatTokenAmount(asQuantity(0), defaultCardanoAsset)).toEqual('0.000000')
   })
 
   it('formats positive', () => {
@@ -32,7 +19,7 @@ describe('formatAda', () => {
       ['9999999000000', '9,999,999.000000'],
     ]
     tests.forEach(([ada, formatted]) => {
-      expect(formatTokenAmount(new BigNumber(ada, 10), defaultCardanoAsset)).toEqual(formatted)
+      expect(formatTokenAmount(asQuantity(ada), defaultCardanoAsset)).toEqual(formatted)
     })
   })
   it('formats negative', () => {
@@ -45,14 +32,14 @@ describe('formatAda', () => {
       ['-9999999000000', '-9,999,999.000000'],
     ]
     tests.forEach(([ada, formatted]) => {
-      expect(formatTokenAmount(new BigNumber(ada, 10), defaultCardanoAsset)).toEqual(formatted)
+      expect(formatTokenAmount(asQuantity(ada), defaultCardanoAsset)).toEqual(formatted)
     })
   })
 })
 
 describe('formatAdaFractional', () => {
   it('formats zero', () => {
-    expect(formatTokenFractional(new BigNumber(0), defaultCardanoAsset)).toEqual('.000000')
+    expect(formatTokenFractional(asQuantity(0), defaultCardanoAsset)).toEqual('.000000')
   })
 
   it('formats positive', () => {
@@ -65,7 +52,7 @@ describe('formatAdaFractional', () => {
       ['9999999000000', '.000000'],
     ]
     tests.forEach(([ada, formatted]) => {
-      expect(formatTokenFractional(new BigNumber(ada, 10), defaultCardanoAsset)).toEqual(formatted)
+      expect(formatTokenFractional(asQuantity(ada), defaultCardanoAsset)).toEqual(formatted)
     })
   })
   it('formats negative', () => {
@@ -78,14 +65,14 @@ describe('formatAdaFractional', () => {
       ['-9999999000000', '.000000'],
     ]
     tests.forEach(([ada, formatted]) => {
-      expect(formatTokenFractional(new BigNumber(ada, 10), defaultCardanoAsset)).toEqual(formatted)
+      expect(formatTokenFractional(asQuantity(ada), defaultCardanoAsset)).toEqual(formatted)
     })
   })
 })
 
 describe('formatAdaInteger', () => {
   it('formats zero', () => {
-    expect(formatTokenInteger(new BigNumber(0), defaultCardanoAsset)).toEqual('0')
+    expect(formatTokenInteger(asQuantity(0), defaultCardanoAsset)).toEqual('0')
   })
 
   it('formats positive', () => {
@@ -99,7 +86,7 @@ describe('formatAdaInteger', () => {
       ['9999999000000', '9,999,999'],
     ]
     tests.forEach(([ada, formatted]) => {
-      expect(formatTokenInteger(new BigNumber(ada, 10), defaultCardanoAsset)).toEqual(formatted)
+      expect(formatTokenInteger(asQuantity(ada), defaultCardanoAsset)).toEqual(formatted)
     })
   })
   it('formats negative', () => {
@@ -113,7 +100,7 @@ describe('formatAdaInteger', () => {
       ['-9999999000000', '-9,999,999'],
     ]
     tests.forEach(([ada, formatted]) => {
-      expect(formatTokenInteger(new BigNumber(ada, 10), defaultCardanoAsset)).toEqual(formatted)
+      expect(formatTokenInteger(asQuantity(ada), defaultCardanoAsset)).toEqual(formatted)
     })
   })
 })

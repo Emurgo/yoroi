@@ -5,23 +5,22 @@ import {View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, KeyboardSpacer, ScrollableView, Spacer, StatusBar, Text} from '../../components'
-import {getWalletConfigById} from '../../legacy/config'
-import {isEmptyString} from '../../legacy/utils'
 import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
+import {isEmptyString} from '../../utils/utils'
+import {getWalletConfigById} from '../../yoroi-wallets'
 import {MnemonicInput} from '../MnemonicInput'
 
 export const RestoreWalletScreen = () => {
   const strings = useStrings()
   const navigation = useNavigation<WalletInitRouteNavigation>()
   const route = useRoute<RouteProp<WalletInitRoutes, 'restore-wallet-form'>>()
-  const {networkId, walletImplementationId, provider} = route.params
+  const {networkId, walletImplementationId} = route.params
   const {MNEMONIC_LEN: mnemonicLength} = getWalletConfigById(walletImplementationId)
   const navigateToWalletCredentials = () =>
     navigation.navigate('wallet-account-checksum', {
       phrase,
       networkId,
       walletImplementationId,
-      provider,
     })
 
   const [phrase, setPhrase] = React.useState('')

@@ -1,9 +1,9 @@
 import React from 'react'
 
 import {DangerousActionModal, Text} from '../../components'
-import {useTokenInfo} from '../../hooks'
-import {getAssetDenominationOrId, truncateWithEllipsis} from '../../legacy/format'
+import {truncateWithEllipsis} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
+import {useTokenInfo} from '../../yoroi-wallets'
 import {useStrings} from './strings'
 
 type SendAllWarningProps = {
@@ -21,9 +21,10 @@ export const SendAllWarning = ({
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const tokenInfo = useTokenInfo({wallet, tokenId: selectedTokenIdentifier})
-  const assetNameOrId = truncateWithEllipsis(getAssetDenominationOrId(tokenInfo), 20)
+  const isPrimaryToken = tokenInfo.id === wallet.primaryTokenInfo.id
+  const assetNameOrId = truncateWithEllipsis(tokenInfo.ticker ?? tokenInfo.name ?? tokenInfo.fingerprint, 20)
   const alertBoxContent = {
-    content: tokenInfo.isDefault
+    content: isPrimaryToken
       ? [strings.sendAllWarningAlert1({assetNameOrId}), strings.sendAllWarningAlert2, strings.sendAllWarningAlert3]
       : [strings.sendAllWarningAlert1({assetNameOrId})],
   }

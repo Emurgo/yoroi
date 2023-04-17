@@ -5,17 +5,18 @@ import {FlatList, InteractionManager, Linking, RefreshControl, StyleSheet, Text,
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Icon, PleaseWaitModal, StatusBar} from '../../components'
-import {useCloseWallet, useOpenWallet, useWalletMetas} from '../../hooks'
+import {showErrorDialog} from '../../dialogs'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
-import {showErrorDialog} from '../../legacy/actions'
-import {CONFIG, isNightly} from '../../legacy/config'
-import {InvalidState, NetworkError} from '../../legacy/errors'
-import {isJormungandr} from '../../legacy/networks'
-import {WalletMeta} from '../../legacy/state'
+import {isNightly} from '../../legacy/config'
 import {useWalletNavigation} from '../../navigation'
 import {COLORS} from '../../theme'
 import {useWalletManager} from '../../WalletManager'
-import {useSetSelectedWallet, useSetSelectedWalletMeta} from '..'
+import {useOpenWallet, useWalletMetas, WALLET_IMPLEMENTATION_REGISTRY, WalletMeta} from '../../yoroi-wallets'
+import * as HASKELL_SHELLEY from '../../yoroi-wallets/cardano/constants/mainnet/constants'
+import * as HASKELL_SHELLEY_TESTNET from '../../yoroi-wallets/cardano/constants/testnet/constants'
+import {InvalidState, NetworkError} from '../../yoroi-wallets/cardano/errors'
+import {isJormungandr} from '../../yoroi-wallets/cardano/networks'
+import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../Context'
 import {WalletListItem} from './WalletListItem'
 
 export const WalletSelectionScreen = () => {
@@ -28,8 +29,6 @@ export const WalletSelectionScreen = () => {
   const selectWalletMeta = useSetSelectedWalletMeta()
   const selectWallet = useSetSelectedWallet()
   const intl = useIntl()
-
-  const {closeWallet} = useCloseWallet()
 
   const {openWallet, isLoading} = useOpenWallet({
     onSuccess: ([wallet, walletMeta]) => {
@@ -45,8 +44,6 @@ export const WalletSelectionScreen = () => {
       })
     },
     onError: (error) => {
-      closeWallet()
-
       InteractionManager.runAfterInteractions(() => {
         return error instanceof InvalidState
           ? showErrorDialog(errorMessages.walletStateInvalid, intl)
@@ -58,6 +55,7 @@ export const WalletSelectionScreen = () => {
   })
 
   const onSelect = async (walletMeta: WalletMeta) => {
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (walletMeta.isShelley || isJormungandr(walletMeta.networkId)) {
       await showErrorDialog(errorMessages.itnNotSupported, intl)
       return
@@ -82,9 +80,13 @@ export const WalletSelectionScreen = () => {
       />
 
       <SupportTicketLink />
+
       <ShelleyButton />
+
       <OnlyNightlyShelleyTestnetButton />
+
       <ByronButton />
+
       <OnlyDevButton />
 
       <PleaseWaitModal title={strings.loadingWallet} spinnerText={strings.pleaseWait} visible={isLoading} />
@@ -138,6 +140,7 @@ const SupportTicketLink = () => {
   return (
     <TouchableOpacity style={styles.link} onPress={() => onPress()}>
       <Icon.QuestionMark size={22} color="#fff" />
+
       <Text style={styles.linkText}>{strings.supportTicketLink.toLocaleUpperCase()}</Text>
     </TouchableOpacity>
   )
@@ -155,9 +158,8 @@ const ShelleyButton = () => {
         navigation.navigate('new-wallet', {
           screen: 'choose-create-restore',
           params: {
-            networkId: CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
-            walletImplementationId: CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
-            provider: '',
+            networkId: HASKELL_SHELLEY.NETWORK_ID,
+            walletImplementationId: HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
           },
         })
       }
@@ -181,9 +183,8 @@ const OnlyNightlyShelleyTestnetButton = () => {
         navigation.navigate('new-wallet', {
           screen: 'choose-create-restore',
           params: {
-            networkId: CONFIG.NETWORKS.HASKELL_SHELLEY_TESTNET.NETWORK_ID,
-            walletImplementationId: CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
-            provider: '',
+            networkId: HASKELL_SHELLEY_TESTNET.NETWORK_ID,
+            walletImplementationId: HASKELL_SHELLEY_TESTNET.WALLET_IMPLEMENTATION_ID,
           },
         })
       }
@@ -204,9 +205,8 @@ const ByronButton = () => {
         navigation.navigate('new-wallet', {
           screen: 'choose-create-restore',
           params: {
-            networkId: CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
-            walletImplementationId: CONFIG.WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID,
-            provider: '',
+            networkId: HASKELL_SHELLEY.NETWORK_ID,
+            walletImplementationId: WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON,
           },
         })
       }

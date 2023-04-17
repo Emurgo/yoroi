@@ -2,7 +2,7 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {Text} from 'react-native'
 
-import {WithModalProps, withModalProps} from '../../../storybook'
+import {WithModalProps, withModalProps} from '../../../.storybook/decorators'
 import {DangerousActionModal} from './DangerousActionModal'
 
 storiesOf('DangerousActionModal', module)

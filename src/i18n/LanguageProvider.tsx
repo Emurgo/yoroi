@@ -1,12 +1,11 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import React from 'react'
 import {IntlProvider} from 'react-intl'
 import {NativeModules, Platform, Text} from 'react-native'
 import {useMutation, UseMutationOptions, useQuery, useQueryClient, UseQueryOptions} from 'react-query'
 
-import {isEmptyString} from '../legacy/utils'
+import {parseSafe, useStorage} from '../yoroi-wallets'
 import {updateLanguageSettings} from '.'
-import {supportedLanguages} from './languages'
+import {LanguageCode, supportedLanguages} from './languages'
 import translations from './translations'
 
 const LanguageContext = React.createContext<undefined | LanguageContext>(undefined)
@@ -29,19 +28,14 @@ const missingProvider = () => {
   throw new Error('LanguageProvider is missing')
 }
 
-const useLanguageCode = ({onSuccess, ...options}: UseQueryOptions<string> = {}) => {
+const useLanguageCode = ({onSuccess, ...options}: UseQueryOptions<LanguageCode> = {}) => {
+  const storage = useStorage()
   const query = useQuery({
     queryKey: ['languageCode'],
     queryFn: async () => {
-      const languageCode = await AsyncStorage.getItem('/appSettings/languageCode')
+      const languageCode = await storage.join('appSettings/').getItem('languageCode', parseLanguageCode)
 
-      if (!isEmptyString(languageCode)) {
-        const parsedLanguageCode = JSON.parse(languageCode)
-        const stillSupported = supportedLanguages.some((language) => language.code === parsedLanguageCode)
-        if (stillSupported) return parsedLanguageCode
-      }
-
-      return defaultLanguageCode
+      return languageCode ?? defaultLanguageCode
     },
     onSuccess: (languageCode) => {
       updateLanguageSettings(languageCode)
@@ -51,16 +45,18 @@ const useLanguageCode = ({onSuccess, ...options}: UseQueryOptions<string> = {}) 
     ...options,
   })
 
-  if (isEmptyString(query.data)) throw new Error('Invalid state')
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+  if (!query.data) throw new Error('Invalid state')
 
   return query.data
 }
 
-const useSaveLanguageCode = ({onSuccess, ...options}: UseMutationOptions<void, Error, string> = {}) => {
+const useSaveLanguageCode = ({onSuccess, ...options}: UseMutationOptions<void, Error, LanguageCode> = {}) => {
+  const storage = useStorage()
   const queryClient = useQueryClient()
 
   const mutation = useMutation({
-    mutationFn: async (languageCode) => AsyncStorage.setItem('/appSettings/languageCode', JSON.stringify(languageCode)),
+    mutationFn: (languageCode) => storage.join('appSettings/').setItem('languageCode', languageCode),
     onSuccess: (data, languageCode, context) => {
       updateLanguageSettings(languageCode)
       queryClient.invalidateQueries('languageCode')
@@ -72,7 +68,6 @@ const useSaveLanguageCode = ({onSuccess, ...options}: UseMutationOptions<void, E
   return mutation.mutate
 }
 
-type LanguageCode = string
 type SaveLanguageCode = ReturnType<typeof useSaveLanguageCode>
 type SupportedLanguages = typeof supportedLanguages
 type LanguageContext = {
@@ -89,3 +84,12 @@ const systemLanguageCode = Platform.select({
 })()
 
 const defaultLanguageCode = supportedLanguages.some((v) => v.code === systemLanguageCode) ? systemLanguageCode : 'en-US'
+
+const parseLanguageCode = (data: unknown) => {
+  const isLanguageCode = (data: unknown): data is LanguageCode =>
+    supportedLanguages.some((language) => language.code === data)
+
+  const parsed = parseSafe(data)
+
+  return isLanguageCode(parsed) ? parsed : undefined
+}

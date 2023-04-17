@@ -5,8 +5,8 @@ import {ScrollView, StatusBar, StyleSheet, View} from 'react-native'
 import QRCodeScanner from 'react-native-qrcode-scanner'
 
 import {BulletPointItem, Spacer, Text} from '../../components'
+import {showErrorDialog} from '../../dialogs'
 import {errorMessages} from '../../i18n/global-messages'
-import {showErrorDialog} from '../../legacy/actions'
 import {Logger} from '../../legacy/logging'
 import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
 import {theme} from '../../theme'
@@ -48,9 +48,13 @@ export const ImportReadOnlyWalletScreen = () => {
 
       <ScrollView style={styles.scrollView}>
         <Text style={styles.paragraph}>{strings.paragraph}</Text>
+
         <Spacer height={16} />
+
         <BulletPointItem textRow={strings.line1} style={styles.paragraph} />
+
         <Spacer height={16} />
+
         <BulletPointItem textRow={strings.line2({buttonType: strings.buttonType})} style={styles.paragraph} />
       </ScrollView>
     </View>

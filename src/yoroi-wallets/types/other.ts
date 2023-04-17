@@ -1,8 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {BigNumber} from 'bignumber.js'
 
-import {CardanoTypes, MultiToken} from '..'
-import {RemoteAccountState, RemoteCertificateMeta, Token, TokenEntry, TokenEntryPlain, TokenInfo} from '.'
+import {CardanoTypes} from '../cardano'
+import {
+  WALLET_CONFIG as HASKELL_SHELLEY,
+  WALLET_CONFIG_24 as HASKELL_SHELLEY_24,
+} from '../cardano/constants/mainnet/constants'
+import {MultiToken, TokenEntryPlain} from '../cardano/MultiToken'
+import {RemoteAccountState, RemoteCertificateMeta} from './staking'
+import {Token} from './tokens'
+
 export type AddressObj = {
   readonly address: string
 }
@@ -158,12 +165,6 @@ export type RemotePoolMetaFailure = {
 export type PoolInfoRequest = {
   poolIds: Array<string>
 }
-// getTokenInfo
-export type TokenInfoRequest = {
-  tokenIds: Array<string>
-}
-
-export type TokenInfoResponse = Record<string, TokenInfo | null>
 
 // reputation
 export type ReputationObject = {
@@ -203,7 +204,7 @@ export type TxHistoryRequest = {
 export type RemoteTransactionInputBase = {
   readonly address: string
   readonly amount: string
-  readonly assets: ReadonlyArray<RemoteAsset>
+  readonly assets: Array<RemoteAsset>
 }
 export type RemoteTransactionUtxoInput = {
   readonly id: string
@@ -211,12 +212,12 @@ export type RemoteTransactionUtxoInput = {
   readonly index: number
   readonly txHash: string
 }
-// not considering acount txs for now
+// not considering account txs for now
 export type RemoteTransactionInput = RemoteTransactionInputBase & RemoteTransactionUtxoInput
 export type RemoteTransactionOutput = {
   readonly address: string
   readonly amount: string
-  readonly assets: ReadonlyArray<RemoteAsset>
+  readonly assets: Array<RemoteAsset>
 }
 
 /**
@@ -253,6 +254,7 @@ export type RemoteTxInfo = {
   readonly collateral_inputs?: Array<RemoteTransactionInput>
 }
 export type RawTransaction = Partial<RemoteTxBlockMeta> & RemoteTxInfo
+
 // Catalyst
 type FundInfo = {
   readonly id: number
@@ -267,7 +269,7 @@ export type FundInfoResponse = {
   readonly nextFund: FundInfo | null | undefined
 }
 export type TxSubmissionStatus = {
-  readonly submissionStatus: 'WAITING' | 'FAILED' | 'MAX_RETRY_REACHED' | 'SUCCESS'
+  readonly status: 'WAITING' | 'FAILED' | 'MAX_RETRY_REACHED' | 'SUCCESS'
   readonly reason?: string
 }
 export type TxStatusRequest = {
@@ -345,7 +347,7 @@ export const NETWORK_REGISTRY = {
   // ERGO: 200,
   HASKELL_SHELLEY_TESTNET: 300,
   UNDEFINED: -1,
-}
+} as const
 export type NetworkId = typeof NETWORK_REGISTRY[keyof typeof NETWORK_REGISTRY]
 
 // PROVIDERS
@@ -355,39 +357,33 @@ export const YOROI_PROVIDER_IDS = {
   ...NETWORK_REGISTRY,
   ALONZO_MAINNET: ALONZO_FACTOR + NETWORK_REGISTRY.HASKELL_SHELLEY,
   ALONZO_TESTNET: ALONZO_FACTOR + NETWORK_REGISTRY.HASKELL_SHELLEY_TESTNET,
-}
-
-export type YoroiProvider = '' | 'emurgo-alonzo'
+} as const
 
 export const DERIVATION_TYPES = {
   BIP44: 'bip44',
   CIP1852: 'cip1852',
 }
-export type DerivationType = typeof DERIVATION_TYPES[keyof typeof DERIVATION_TYPES]
 
 // these are the different wallet implementations we have/had
 export const WALLET_IMPLEMENTATION_REGISTRY = {
   HASKELL_BYRON: 'haskell-byron', // bip44
-  HASKELL_SHELLEY: 'haskell-shelley', // cip1852/15 words
-  HASKELL_SHELLEY_24: 'haskell-shelley-24', // cip1852/24 words
+  HASKELL_SHELLEY: HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID, // cip1852/15 words
+  HASKELL_SHELLEY_24: HASKELL_SHELLEY_24.WALLET_IMPLEMENTATION_ID, // cip1852/24 words
   JORMUNGANDR_ITN: 'jormungandr-itn', // deprecated
-  // ERGO: 'ergo',
   UNDEFINED: '',
 } as const
-export type WalletImplementationId = typeof WALLET_IMPLEMENTATION_REGISTRY[keyof typeof WALLET_IMPLEMENTATION_REGISTRY]
 
-export type WalletImplementation = {
-  WALLET_IMPLEMENTATION_ID: WalletImplementationId
-  TYPE: DerivationType
-  MNEMONIC_LEN: number
-  DISCOVERY_GAP_SIZE: number
-  DISCOVERY_BLOCK_SIZE: number
-  MAX_GENERATED_UNUSED: number
-}
+export type WalletImplementationId =
+  | typeof HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID
+  | typeof HASKELL_SHELLEY_24.WALLET_IMPLEMENTATION_ID
+  | typeof WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON
+  | typeof WALLET_IMPLEMENTATION_REGISTRY.JORMUNGANDR_ITN
+  | typeof WALLET_IMPLEMENTATION_REGISTRY.UNDEFINED
 
 export type BackendConfig = {
   API_ROOT: string
   TOKEN_INFO_SERVICE?: string
+  NFT_STORAGE_URL: string
   FETCH_UTXOS_MAX_ADDRESSES: number
   TX_HISTORY_MAX_ADDRESSES: number
   FILTER_USED_MAX_ADDRESSES: number
@@ -416,11 +412,12 @@ export type TransactionInfo = {
   assurance: TransactionAssurance
   tokens: Record<string, Token>
   blockNumber: number
+  memo: null | string
 }
 
 export type IOData = {
   address: string
-  assets: Array<TokenEntry>
+  assets: Array<CardanoTypes.TokenEntry>
   amount: string
 }
 
@@ -441,6 +438,7 @@ export const TRANSACTION_TYPE = {
 }
 export type TransactionType = typeof TRANSACTION_TYPE[keyof typeof TRANSACTION_TYPE]
 export type BaseAsset = RemoteAsset
+export type Transactions = {[txid: string]: Transaction}
 export type Transaction = {
   id: string
   type?: TransactionType
@@ -476,6 +474,7 @@ export type Transaction = {
     amount: string
     assets: Array<BaseAsset>
   }>
+  memo: string | null
 }
 
 export type CommonMetadata = {
@@ -483,4 +482,11 @@ export type CommonMetadata = {
   readonly ticker: null | string
   readonly longName: null | string
   readonly maxSupply: null | string
+}
+
+export type MultiAssetRequest = {
+  assets: Array<{
+    nameHex: string
+    policy: string
+  }>
 }

@@ -1,16 +1,16 @@
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {View} from 'react-native'
-import {QueryClient, QueryClientProvider} from 'react-query'
 
-import {mocks} from '../../storybook'
+import {QueryProvider} from '../../.storybook/decorators'
 import {SelectedWalletProvider} from '../SelectedWallet'
+import {mocks} from '../yoroi-wallets/mocks'
 import {BalanceBanner} from './BalanceBanner'
 
-storiesOf('V2/BalanceBanner', module)
+storiesOf('BalanceBanner', module)
   .add('loading', () => {
     return (
-      <QueryClientProvider client={new QueryClient({defaultOptions: {queries: {retry: false}}})}>
+      <QueryProvider>
         <SelectedWalletProvider
           wallet={{
             ...mocks.wallet,
@@ -23,12 +23,12 @@ storiesOf('V2/BalanceBanner', module)
             </View>
           </View>
         </SelectedWalletProvider>
-      </QueryClientProvider>
+      </QueryProvider>
     )
   })
   .add('success', () => {
     return (
-      <QueryClientProvider client={new QueryClient({defaultOptions: {queries: {retry: false}}})}>
+      <QueryProvider>
         <SelectedWalletProvider
           wallet={{
             ...mocks.wallet,
@@ -41,12 +41,12 @@ storiesOf('V2/BalanceBanner', module)
             </View>
           </View>
         </SelectedWalletProvider>
-      </QueryClientProvider>
+      </QueryProvider>
     )
   })
   .add('error', () => {
     return (
-      <QueryClientProvider client={new QueryClient({defaultOptions: {queries: {retry: false}}})}>
+      <QueryProvider>
         <SelectedWalletProvider
           wallet={{
             ...mocks.wallet,
@@ -59,6 +59,6 @@ storiesOf('V2/BalanceBanner', module)
             </View>
           </View>
         </SelectedWalletProvider>
-      </QueryClientProvider>
+      </QueryProvider>
     )
   })

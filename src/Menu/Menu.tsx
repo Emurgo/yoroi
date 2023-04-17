@@ -10,10 +10,10 @@ import {useCanVote} from '../Catalyst/hooks'
 import {InsufficientFundsModal} from '../Catalyst/InsufficientFundsModal'
 import {Boundary, Icon, Spacer, Text} from '../components'
 import {usePrefetchStakingInfo} from '../Dashboard/StakePoolInfos'
-import {useWalletMetas} from '../hooks'
 import {defaultStackNavigationOptions, useWalletNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
 import {useWalletManager} from '../WalletManager'
+import {useWalletMetas} from '../yoroi-wallets'
 
 const MenuStack = createStackNavigator()
 
@@ -49,6 +49,7 @@ export const Menu = () => {
           onPress={navigateTo.allWallets}
           left={<Icon.Wallets size={26} color="#6B7384" />}
         />
+
         <HR />
 
         <Boundary loading={{size: 'small', style: {padding: 16}}} error={{size: 'inline'}}>
@@ -58,6 +59,7 @@ export const Menu = () => {
             left={<Icon.Catalyst size={26} color="#6B7384" />}
           />
         </Boundary>
+
         <HR />
 
         <Settings //
@@ -65,6 +67,7 @@ export const Menu = () => {
           onPress={navigateTo.settings}
           left={<Icon.Gear size={26} color="#6B7384" />}
         />
+
         <HR />
 
         <KnowledgeBase //
@@ -72,6 +75,7 @@ export const Menu = () => {
           onPress={navigateTo.knowledgeBase}
           left={<Icon.Info size={24} color="#6B7384" />}
         />
+
         <HR />
 
         <Spacer fill />
@@ -91,10 +95,14 @@ const SupportLink = () => {
       <View style={styles.supportTitle}>
         <Text style={styles.supportTitleText}>{strings.supportTitle}</Text>
       </View>
+
       <Spacer height={10} />
+
       <TouchableOpacity onPress={navigateTo.support} style={styles.supportLink}>
         <Image source={SupportImage} />
+
         <Spacer width={10} />
+
         <Text bold style={styles.supportLinkText}>
           {strings.supportLink.toLocaleUpperCase()}
         </Text>
@@ -117,9 +125,13 @@ const Item = ({
   return (
     <TouchableOpacity onPress={onPress} style={styles.item} disabled={disabled}>
       {left}
+
       <Spacer width={12} />
+
       <Text style={styles.itemText}>{label}</Text>
+
       <Spacer fill />
+
       <Icon.Chevron direction="right" size={16} color="#6B7384" />
     </TouchableOpacity>
   )

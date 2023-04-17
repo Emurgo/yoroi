@@ -4,10 +4,10 @@ import React from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {generateAdaMnemonic} from '../../legacy/commonUtils'
-import {isEmptyString} from '../../legacy/utils'
 import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
 import {COLORS} from '../../theme'
+import {isEmptyString} from '../../utils/utils'
+import {generateAdaMnemonic} from '../../yoroi-wallets'
 import {MnemonicExplanationModal} from '../MnemonicExplanationModal'
 import {WalletForm} from '../WalletForm'
 
@@ -28,7 +28,7 @@ export const CreateWalletScreen = () => {
   const navigateToMnemonicScreen = () => {
     hideMnemonicExplanation()
     const mnemonic = generateAdaMnemonic()
-    const {networkId, walletImplementationId, provider} = route.params
+    const {networkId, walletImplementationId} = route.params
     const name = formData?.name
     const password = formData?.password
 
@@ -39,7 +39,6 @@ export const CreateWalletScreen = () => {
       mnemonic,
       networkId,
       walletImplementationId,
-      provider,
       name,
       password,
     })
@@ -48,6 +47,7 @@ export const CreateWalletScreen = () => {
   return (
     <SafeAreaView style={styles.container} edges={['left', 'right', 'bottom']}>
       <WalletForm onSubmit={setFormData} />
+
       <MnemonicExplanationModal
         visible={visibleMnemonicExplanation}
         onRequestClose={hideMnemonicExplanation}

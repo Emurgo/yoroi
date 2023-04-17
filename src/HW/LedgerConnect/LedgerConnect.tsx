@@ -11,10 +11,9 @@ import usbImage from '../../assets/img/ledger-nano-usb.png'
 import {BulletPointItem, Button, Text} from '../../components'
 import globalMessages, {confirmationMessages, ledgerMessages} from '../../i18n/global-messages'
 import LocalizableError from '../../i18n/LocalizableError'
-import type {DeviceId, DeviceObj} from '../../legacy/ledgerUtils'
-import {BluetoothDisabledError, RejectedByUserError} from '../../legacy/ledgerUtils'
 import {Logger} from '../../legacy/logging'
 import {COLORS, spacing} from '../../theme'
+import {BluetoothDisabledError, DeviceId, DeviceObj, RejectedByUserError} from '../../yoroi-wallets'
 import {Device} from '../../yoroi-wallets/types'
 import {DeviceItem} from './DeviceItem'
 
@@ -198,6 +197,7 @@ class _LedgerConnect extends React.Component<Props, State> {
     const ListHeaderWrapper = ({msg, err}: {msg: string; err?: string | null}) => (
       <View style={styles.listHeader}>
         <Text style={[styles.paragraph, styles.paragraphText]}>{msg}</Text>
+
         {err != null && <Text style={[styles.error, styles.paragraphText]}>{err}</Text>}
       </View>
     )
@@ -233,20 +233,24 @@ class _LedgerConnect extends React.Component<Props, State> {
         <View style={[styles.container, fillSpace === true && styles.fillSpace]}>
           <View style={styles.heading}>
             <Image source={useUSB === true ? usbImage : bleImage} />
+
             {!useUSB && (
               <Text secondary style={styles.caption}>
                 {intl.formatMessage(messages.caption)}
               </Text>
             )}
           </View>
+
           {((!useUSB && devices.length === 0) || (useUSB && deviceObj == null)) && (
             <View style={styles.instructionsBlock}>
               <Text style={styles.paragraphText}>{intl.formatMessage(messages.introline)}</Text>
+
               {rows.map((row, i) => (
                 <BulletPointItem textRow={row} key={i} style={styles.item} />
               ))}
             </View>
           )}
+
           <ScrollView style={styles.scrollView}>
             <FlatList
               extraData={[error, deviceId]}
@@ -268,6 +272,7 @@ class _LedgerConnect extends React.Component<Props, State> {
             />
           </ScrollView>
         </View>
+
         {useUSB === true && (
           <Button
             onPress={() => {
@@ -283,6 +288,7 @@ class _LedgerConnect extends React.Component<Props, State> {
             style={styles.button}
           />
         )}
+
         {waiting && <ActivityIndicator color="black" />}
       </>
     )

@@ -1,15 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import {CardanoAddressedUtxo} from '@emurgo/yoroi-lib'
+import assert from 'assert'
 import {sortBy} from 'lodash'
 
-import assert from '../../../legacy/assert'
-import {ObjectValues} from '../../../legacy/flow'
-import {Logger} from '../../../legacy/logging'
-import {normalizeToAddress} from '../../../legacy/utils'
+import {Logger} from '../../logging'
 import {StakingStatus} from '../../types'
 import {CardanoMobile, CardanoTypes} from '..'
-import type {TimestampedCertMeta} from './transactionCache'
+import type {TimestampedCertMeta} from '../transactionManager'
+import {normalizeToAddress} from '../utils'
 
 const addrContainsAccountKey = async (
   address: string,
@@ -64,14 +63,14 @@ export const getDelegationStatus = (
   Logger.debug('txCertificatesForKey', sortedCerts)
   let status: StakingStatus = {isRegistered: false}
 
-  for (const certData of ObjectValues(sortedCerts)) {
+  for (const certData of Object.values(sortedCerts)) {
     const certificates = (certData as any).certificates
 
     for (const cert of certificates) {
       if (cert.rewardAddress !== rewardAddress) continue
 
       if (cert.kind === 'StakeDelegation') {
-        assert.assert(cert.poolKeyHash != null, 'getDelegationStatus:: StakeDelegation certificate without poolKeyHash')
+        assert(cert.poolKeyHash != null, 'getDelegationStatus:: StakeDelegation certificate without poolKeyHash')
         status = {
           poolKeyHash: cert.poolKeyHash,
           isRegistered: true,

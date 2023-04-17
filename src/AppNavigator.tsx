@@ -5,24 +5,16 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Alert, AppState, AppStateStatus, Platform} from 'react-native'
 import RNBootSplash from 'react-native-bootsplash'
 
-import {
-  AuthSetting,
-  OsLoginScreen,
-  PinLoginScreen,
-  useAuthOsEnabled,
-  useAuthSetting,
-  useAuthWithOs,
-  useBackgroundTimeout,
-} from './auth'
+import StorybookScreen from '../.storybook'
+import {OsLoginScreen, PinLoginScreen, useBackgroundTimeout} from './auth'
 import {useAuth} from './auth/AuthProvider'
 import {EnableLoginWithPin} from './auth/EnableLoginWithPin'
 import {FirstRunNavigator} from './FirstRun/FirstRunNavigator'
 import {DeveloperScreen} from './legacy/DeveloperScreen'
 import {AppRoutes} from './navigation'
-import {useStorage} from './Storage'
-import StorybookScreen from './StorybookScreen'
 import {WalletInitNavigator} from './WalletInit/WalletInitNavigator'
 import {WalletNavigator} from './WalletNavigator'
+import {AuthSetting, useAuthOsEnabled, useAuthSetting, useAuthWithOs} from './yoroi-wallets'
 
 const Stack = createStackNavigator<AppRoutes>()
 const navRef = React.createRef<NavigationContainerRef<ReactNavigation.RootParamList>>()
@@ -60,9 +52,11 @@ export const AppNavigator = () => {
         }}
       >
         {/* Not Authenticated */}
+
         {isLoggedOut && (
           <Stack.Group>
             {authAction === 'first-run' && <Stack.Screen name="first-run" component={FirstRunNavigator} />}
+
             {authAction === 'auth-with-pin' && (
               <Stack.Screen
                 name="custom-pin-auth"
@@ -70,9 +64,11 @@ export const AppNavigator = () => {
                 options={{title: strings.loginPinTitle}}
               />
             )}
+
             {authAction === 'auth-with-os' && (
               <Stack.Screen name="bio-auth-initial" component={OsLoginScreen} options={{headerShown: false}} />
             )}
+
             {authAction === 'request-new-pin' && (
               <Stack.Screen //
                 name="enable-login-with-pin"
@@ -84,17 +80,21 @@ export const AppNavigator = () => {
         )}
 
         {/* Authenticated */}
+
         {isLoggedIn && (
           <Stack.Group>
             <Stack.Screen name="app-root" component={WalletNavigator} />
+
             <Stack.Screen name="new-wallet" component={WalletInitNavigator} />
           </Stack.Group>
         )}
 
         {/* Development */}
+
         {__DEV__ && (
           <Stack.Group>
             <Stack.Screen name="developer" component={DeveloperScreen} options={{headerShown: false}} />
+
             <Stack.Screen name="storybook" component={StorybookScreen} />
           </Stack.Group>
         )}
@@ -142,8 +142,7 @@ const messages = defineMessages({
 })
 
 const useAutoLogout = () => {
-  const storage = useStorage()
-  const authSetting = useAuthSetting(storage)
+  const authSetting = useAuthSetting()
   const strings = useStrings()
   const {logout} = useAuth()
   const authOsEnabled = useAuthOsEnabled()
@@ -192,8 +191,7 @@ const getAuthAction = (authOsEnabled: boolean, authSetting: AuthSetting): AuthAc
 }
 
 const useAuthAction = () => {
-  const storage = useStorage()
-  const authSetting = useAuthSetting(storage)
+  const authSetting = useAuthSetting()
   const authOsEnabled = useAuthOsEnabled()
 
   return getAuthAction(authOsEnabled, authSetting)

@@ -1,23 +1,4 @@
-import BigNumber from 'bignumber.js'
-
-export type TokenLookupKey = {
-  identifier: string
-  networkId: number
-}
-
-export type TokenEntry = TokenLookupKey & {
-  amount: BigNumber
-}
-
-export type TokenEntryPlain = TokenLookupKey & {
-  amount: string
-  isDefault: boolean
-}
-
-export type DefaultTokenEntry = {
-  defaultNetworkId: number
-  defaultIdentifier: string
-}
+import {NetworkId} from '.'
 
 export type TokenCommonMetadata = {
   numberOfDecimals: number
@@ -33,14 +14,8 @@ export type TokenMetadata = TokenCommonMetadata & {
 }
 
 export type Token = {
-  networkId: number
+  networkId: NetworkId
   isDefault: boolean
-  /**
-   * For Ergo, this is the tokenId (box id of first input in tx)
-   * for Cardano, this is policyId || assetName
-   * Note: we don't use null for the primary token of the chain
-   * As some blockchains have multiple primary tokens
-   */
   identifier: string
   metadata: TokenMetadata
 }
@@ -67,22 +42,49 @@ export type DefaultAsset = Token & {
 }
 
 export type TokenInfo = {
-  name: string
-  decimals?: number
-  assetName: string
-  policyId: string
-  longName?: string
-  ticker?: string
+  id: string
+  group: string // policyId
+  decimals: number // default to 0
+  fingerprint: string
+
+  name: string | undefined // derived from token subject
+  description: string | undefined
+  ticker: string | undefined
+  symbol: string | undefined
+  url: string | undefined
+  logo: string | undefined
 }
 
-// https://github.com/cardano-foundation/cardano-token-registry#semantic-content-of-registry-entries
-export type TokenRegistryEntry = {
-  subject: string
+export type LegacyToken = {
+  networkId: NetworkId
+  isDefault: boolean
+  identifier: string
+  metadata: TokenMetadata
+}
+
+export type NftMetadata = {
   name: string
-  description: string
-  policy?: string
-  ticker?: string
-  url?: string
-  logo?: string
-  decimals?: number
+  image: string | Array<string>
+  mediaType?: string
+  description?: string | Array<string>
+  authors?: string
+  author?: string
+  files?: Array<{
+    name?: string
+    mediaType?: string
+    src?: string | Array<string>
+  }>
+}
+
+export type AssetMetadata = {
+  [policyID: string]:
+    | {
+        [assetNameHex: string]: NftMetadata | undefined
+      }
+    | undefined
+}
+
+export type NFTAsset = {
+  key: '721'
+  metadata: AssetMetadata
 }

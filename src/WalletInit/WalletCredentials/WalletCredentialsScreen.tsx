@@ -4,18 +4,18 @@ import {useIntl} from 'react-intl'
 import {ActivityIndicator, InteractionManager, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useCreateWallet} from '../../hooks'
+import {showErrorDialog} from '../../dialogs'
 import {errorMessages} from '../../i18n/global-messages'
-import {showErrorDialog} from '../../legacy/actions'
-import {NetworkError} from '../../legacy/errors'
 import {useWalletNavigation, WalletInitRoutes} from '../../navigation'
 import {COLORS} from '../../theme'
+import {useCreateWallet} from '../../yoroi-wallets'
+import {NetworkError} from '../../yoroi-wallets/cardano/errors'
 import {WalletForm} from '../WalletForm'
 
 export const WalletCredentialsScreen = () => {
   const {resetToWalletSelection} = useWalletNavigation()
   const route = useRoute<RouteProp<WalletInitRoutes, 'wallet-credentials'>>()
-  const {phrase, networkId, walletImplementationId, provider} = route.params
+  const {phrase, networkId, walletImplementationId} = route.params
 
   const intl = useIntl()
   const {createWallet, isLoading, isSuccess} = useCreateWallet({
@@ -36,9 +36,10 @@ export const WalletCredentialsScreen = () => {
           isLoading || isSuccess
             ? NOOP
             : ({name, password}) =>
-                createWallet({name, password, mnemonicPhrase: phrase, networkId, walletImplementationId, provider})
+                createWallet({name, password, mnemonicPhrase: phrase, networkId, walletImplementationId})
         }
       />
+
       {isLoading && <ActivityIndicator color="black" />}
     </SafeAreaView>
   )

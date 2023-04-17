@@ -1,10 +1,10 @@
 import {mnemonicToEntropy} from 'bip39'
 import blake2b from 'blake2b'
 
-import {generateAdaMnemonic} from '../../../legacy/commonUtils'
-import {CONFIG} from '../../../legacy/config'
-import {Logger} from '../../../legacy/logging'
+import {Logger} from '../../logging'
 import {CardanoMobile, CardanoTypes} from '..'
+import {generateAdaMnemonic} from '../mnemonic'
+import {CATALYST} from '../utils'
 
 export const CatalystLabels = {
   DATA: 61284,
@@ -68,13 +68,7 @@ export async function auxiliaryDataWithRegistrationMetadata(request: {
 }
 
 export async function generatePrivateKeyForCatalyst() {
-  let mnemonic
-  if (CONFIG.DEBUG.PREFILL_FORMS) {
-    if (!__DEV__) throw new Error('using debug data in non-dev env')
-    mnemonic = CONFIG.DEBUG.MNEMONIC3
-  } else {
-    mnemonic = generateAdaMnemonic()
-  }
+  const mnemonic = generateAdaMnemonic()
   const bip39entropy = mnemonicToEntropy(mnemonic)
   const EMPTY_PASSWORD = Buffer.from('')
   const rootKey = await CardanoMobile.Bip32PrivateKey.fromBip39Entropy(Buffer.from(bip39entropy, 'hex'), EMPTY_PASSWORD)
@@ -94,7 +88,7 @@ export const isRegistrationOpen = (fundInfo?: null | {registrationStart: string;
     return false
   } else {
     // if we don't get fund info from server, fallback to hardcoded dates
-    const rounds = CONFIG.CATALYST.VOTING_ROUNDS
+    const rounds = CATALYST.VOTING_ROUNDS
     for (const round of rounds) {
       const startDate = new Date(Date.parse(round.START_DATE))
       const endDate = new Date(Date.parse(round.END_DATE))

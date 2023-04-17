@@ -2,7 +2,7 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
 import {SelectedWalletProvider} from '../../src/SelectedWallet'
-import {mocks} from '../../storybook'
+import {mocks} from '../yoroi-wallets/mocks'
 import {ReceiveScreen} from './ReceiveScreen'
 
 storiesOf('ReceiveScreen', module).add('Default', () => (

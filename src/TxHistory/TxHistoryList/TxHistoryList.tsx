@@ -5,11 +5,11 @@ import {useIntl} from 'react-intl'
 import {Alert, Platform, SectionList, SectionListProps, StyleSheet, View} from 'react-native'
 
 import {Spacer, Text} from '../../components'
-import features from '../../features'
-import {useTransactionInfos} from '../../hooks'
+import {features} from '../../features'
 import {actionMessages} from '../../i18n/global-messages'
 import {formatDateRelative} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
+import {useTransactionInfos} from '../../yoroi-wallets'
 import {TransactionInfo} from '../../yoroi-wallets/types'
 import {ActionsBanner} from './ActionsBanner'
 import {EmptyHistory} from './EmptyHistory'
@@ -35,6 +35,7 @@ export const TxHistoryList = (props: Props) => {
       {(features.txHistory.export || features.txHistory.search) && (
         <ActionsBanner onExport={handleExport} onSearch={handleSearch} />
       )}
+
       <SectionList
         {...props}
         key={key}

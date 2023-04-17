@@ -1,24 +1,20 @@
 import {useNavigation} from '@react-navigation/native'
-import BigNumber from 'bignumber.js'
+import {FlashList} from '@shopify/flash-list'
 import React from 'react'
-import {defineMessages} from 'react-intl'
-import {useIntl} from 'react-intl'
-import {FlatList, LayoutAnimation, TouchableOpacity, View} from 'react-native'
-import {Avatar} from 'react-native-paper'
+import {defineMessages, useIntl} from 'react-intl'
+import {LayoutAnimation, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import AdaImage from '../../assets/img/asset_ada.png'
-import NoImage from '../../assets/img/asset_no_image.png'
 import {Boundary, Button, Spacer, Text, TextInput} from '../../components'
-import {useBalances, useTokenInfo} from '../../hooks'
+import {AssetItem, AssetItemProps} from '../../components/AssetItem'
 import globalMessages, {txLabels} from '../../i18n/global-messages'
-import {decodeHexAscii, formatTokenAmount, getAssetDenominationOrId, getTokenFingerprint} from '../../legacy/format'
 import {TxHistoryRouteNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
-import {YoroiWallet} from '../../yoroi-wallets'
-import {Quantity, Token, TokenId} from '../../yoroi-wallets/types'
-import {Quantities} from '../../yoroi-wallets/utils'
+import {sortTokenInfos} from '../../utils'
+import {useBalances, useTokenInfos} from '../../yoroi-wallets'
+import {TokenInfo} from '../../yoroi-wallets/types'
+import {Amounts} from '../../yoroi-wallets/utils'
 import {useSend} from '../Context/SendContext'
 
 export const AssetSelectorScreen = () => {
@@ -28,25 +24,25 @@ export const AssetSelectorScreen = () => {
   const [matcher, setMatcher] = React.useState('')
   const navigation = useNavigation<TxHistoryRouteNavigation>()
   const {tokenSelected, allTokensSelected} = useSend()
+  const tokenInfos = useTokenInfos({
+    wallet,
+    tokenIds: Amounts.toArray(balances).map(({tokenId}) => tokenId),
+  })
+  const assets = sortTokenInfos({wallet, tokenInfos}).filter((tokenInfo) => matches(tokenInfo, matcher))
 
   const onChangeMatcher = (matcher: string) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     setMatcher(matcher)
   }
 
-  const sortedBalance: Array<[TokenId, Quantity]> = Object.entries(balances)
-    .sort(([, quantityA]: [TokenId, Quantity], [, quantityB]: [TokenId, Quantity]) =>
-      Quantities.isGreaterThan(quantityA, quantityB) ? -1 : 1,
-    )
-    .sort(([tokenId]: [TokenId, Quantity]) => (tokenId === wallet.defaultAsset.identifier ? -1 : 1)) // default first
-
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={{flex: 1, backgroundColor: 'white'}}>
       <View style={{paddingTop: 16, paddingHorizontal: 16}}>
-        <SearchInput onChangeText={(text) => onChangeMatcher(normalize(text))} />
+        <SearchInput onChangeText={(text) => onChangeMatcher(text)} />
 
         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
           <Text style={{color: COLORS.GREY_6}}>{strings.assetsLabel}</Text>
+
           <Text style={{color: COLORS.GREY_6}}>{strings.amount}</Text>
         </View>
 
@@ -55,26 +51,25 @@ export const AssetSelectorScreen = () => {
         <HR />
       </View>
 
-      <FlatList
-        data={sortedBalance}
-        renderItem={({item: [tokenId, quantity]}: {item: [TokenId, Quantity]}) => (
+      <FlashList
+        data={assets}
+        renderItem={({item: tokenInfo}: {item: TokenInfo}) => (
           <Boundary>
-            <AssetSelectorItem
-              wallet={wallet}
-              tokenId={tokenId}
-              quantity={quantity}
+            <SelectableAssetItem
+              tokenInfo={tokenInfo}
               onSelect={() => {
-                tokenSelected(tokenId)
+                tokenSelected(tokenInfo.id)
                 navigation.navigate('send')
               }}
-              matcher={matcher}
+              balance={balances[tokenInfo.id]}
             />
           </Boundary>
         )}
         bounces={false}
         contentContainerStyle={{paddingHorizontal: 16}}
-        keyExtractor={([tokenId]) => tokenId}
+        keyExtractor={(_, index) => index.toString()}
         testID="assetsList"
+        estimatedItemSize={78}
       />
 
       <Actions>
@@ -92,59 +87,20 @@ export const AssetSelectorScreen = () => {
   )
 }
 
-type AssetSelectorItemProps = {
-  wallet: YoroiWallet
-  tokenId: TokenId
-  quantity: Quantity
-  onSelect: () => void
-  matcher: string
+type SelectableAssetItemProps = AssetItemProps & {
+  onSelect(): void
 }
-
-const AssetSelectorItem = ({wallet, tokenId, quantity, onSelect, matcher}: AssetSelectorItemProps) => {
-  const tokenInfo = useTokenInfo({wallet, tokenId})
-
-  if (!matches(tokenInfo, matcher)) return null
-
+const SelectableAssetItem = ({tokenInfo, balance, onSelect}: SelectableAssetItemProps) => {
   return (
     <TouchableOpacity style={{paddingVertical: 16}} onPress={onSelect} testID="assetSelectorItem">
-      <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-        <View style={{padding: 4}}>
-          <Icon source={tokenInfo.isDefault ? AdaImage : NoImage} />
-        </View>
-
-        <View style={{flex: 1, padding: 4}}>
-          <Text numberOfLines={1} ellipsizeMode="middle" style={{color: COLORS.BLUE_LIGHTER}} testID="tokenInfoText">
-            {getAssetDenominationOrId(tokenInfo)}
-          </Text>
-          <Text
-            numberOfLines={1}
-            ellipsizeMode="middle"
-            style={{color: COLORS.TEXT_INPUT}}
-            testID="tokenFingerprintText"
-          >
-            {tokenInfo.isDefault ? '' : getTokenFingerprint(tokenInfo)}
-          </Text>
-        </View>
-
-        <View style={{flex: 1, alignItems: 'flex-end', padding: 4}} testID="tokenAmountText">
-          <Text style={{color: COLORS.DARK_TEXT}}>{formatTokenAmount(new BigNumber(quantity), tokenInfo)}</Text>
-        </View>
-      </View>
+      <AssetItem tokenInfo={tokenInfo} balance={balance} />
     </TouchableOpacity>
   )
 }
 
 const HR = (props) => <View {...props} style={{height: 1, backgroundColor: COLORS.GRAY}} />
-const Icon = (props) => (
-  <Avatar.Image
-    {...props}
-    size={32}
-    style={{alignItems: 'center', justifyContent: 'center', backgroundColor: 'transparent'}}
-  />
-)
-const Actions = (props) => <View {...props} style={{padding: 16}} />
 
-const normalize = (text: string) => text.trim().toLowerCase()
+const Actions = (props) => <View {...props} style={{padding: 16}} />
 
 const SearchInput = (props) => {
   const strings = useStrings()
@@ -152,14 +108,12 @@ const SearchInput = (props) => {
   return <TextInput {...props} label={strings.searchLabel} />
 }
 
-const matches = (token: Token, matcher: string) =>
-  normalize(decodeHexAscii(token.metadata.assetName) ?? '').includes(matcher) ||
-  normalize(getTokenFingerprint(token) ?? '').includes(matcher) ||
-  normalize(token.metadata.ticker ?? '').includes(matcher) ||
-  normalize(token.metadata.longName ?? '').includes(matcher) ||
-  normalize(token.identifier).includes(matcher) ||
-  normalize(token.metadata.assetName).includes(matcher) ||
-  normalize(token.metadata.policyId).includes(matcher)
+const matches = (tokenInfo: TokenInfo, matcher: string) =>
+  Object.values(tokenInfo)
+    .filter((value): value is string | number => value != null)
+    .some((value) => normalize(value).includes(normalize(matcher)))
+
+const normalize = (text: string | number) => String(text).trim().toLocaleLowerCase()
 
 const useStrings = () => {
   const intl = useIntl()

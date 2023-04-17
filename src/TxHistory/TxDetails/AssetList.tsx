@@ -3,19 +3,18 @@ import {defineMessages, useIntl} from 'react-intl'
 import {FlatList, Text, TouchableOpacity, View} from 'react-native'
 
 import {Boundary} from '../../components'
-import {useTokenInfo} from '../../hooks'
 import globalMessages, {txLabels} from '../../i18n/global-messages'
-import {formatTokenAmount, getName, getTicker, getTokenFingerprint} from '../../legacy/format'
+import {formatTokenAmount} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
-import {TokenEntry} from '../../yoroi-wallets'
+import {asQuantity, CardanoTypes, toToken, useTokenInfo} from '../../yoroi-wallets'
 import assetListSendStyle from './AssetListSend.style'
 import assetListTransactionStyle from './AssetListTransaction.style'
 import baseStyle from './Base.style'
 
 type AssetListProps = {
-  assets: Array<TokenEntry>
+  assets: Array<CardanoTypes.TokenEntry>
   styles: NodeStyle
-  onSelect?: (tokenEntry: TokenEntry) => void
+  onSelect?: (tokenEntry: CardanoTypes.TokenEntry) => void
 }
 export const AssetList = ({assets, styles, onSelect}: AssetListProps) => {
   const intl = useIntl()
@@ -25,6 +24,7 @@ export const AssetList = ({assets, styles, onSelect}: AssetListProps) => {
     <View>
       <View style={styles.assetTitle}>
         <Text style={styles.assetHeading}>{intl.formatMessage(globalMessages.assetsLabel)}</Text>
+
         <Text style={styles.assetHeading}>{intl.formatMessage(txLabels.amount)}</Text>
       </View>
 
@@ -46,31 +46,31 @@ export const AssetList = ({assets, styles, onSelect}: AssetListProps) => {
 type NodeStyle = typeof baseStyle | typeof assetListTransactionStyle | typeof assetListSendStyle
 type AssetRowProps = {
   styles: NodeStyle
-  entry: TokenEntry
+  entry: CardanoTypes.TokenEntry
   backColor: {backgroundColor: string}
-  onSelect?: (tokenEntry: TokenEntry) => void
+  onSelect?: (tokenEntry: CardanoTypes.TokenEntry) => void
 }
 const AssetRow = ({styles, entry, backColor, onSelect}: AssetRowProps) => {
   const intl = useIntl()
   const wallet = useSelectedWallet()
   const tokenInfo = useTokenInfo({wallet, tokenId: entry.identifier})
+  const token = toToken({wallet, tokenInfo})
+  const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
 
   const item = (
     <>
       <View style={styles.tokenMetaView}>
         <Text style={styles.assetName}>
-          {tokenInfo.isDefault
-            ? getTicker(tokenInfo)
-            : getName(tokenInfo) ?? intl.formatMessage(messages.unknownAssetName)}
+          {isPrimary ? tokenInfo.ticker : tokenInfo.name ?? intl.formatMessage(messages.unknownAssetName)}
         </Text>
 
         <Text style={styles.assetMeta} ellipsizeMode="middle" numberOfLines={1}>
-          {tokenInfo.isDefault ? '' : getTokenFingerprint(tokenInfo)}
+          {isPrimary ? '' : tokenInfo.fingerprint}
         </Text>
       </View>
 
       <View style={styles.assetBalanceView}>
-        <Text style={styles.assetBalance}>{formatTokenAmount(entry.amount, tokenInfo)}</Text>
+        <Text style={styles.assetBalance}>{formatTokenAmount(asQuantity(entry.amount), token)}</Text>
       </View>
     </>
   )

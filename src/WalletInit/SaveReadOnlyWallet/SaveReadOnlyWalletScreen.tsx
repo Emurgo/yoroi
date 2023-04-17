@@ -5,15 +5,13 @@ import {FlatList, InteractionManager, ScrollView, StyleSheet, View} from 'react-
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Boundary, Icon, Line, StatusBar, Text} from '../../components'
-import {useCreateBip44Wallet, usePlate} from '../../hooks'
+import {showErrorDialog} from '../../dialogs'
 import {errorMessages} from '../../i18n/global-messages'
-import {showErrorDialog} from '../../legacy/actions'
-import {CONFIG} from '../../legacy/config'
-import {NetworkError} from '../../legacy/errors'
-import {isEmptyString} from '../../legacy/utils'
 import {useWalletNavigation, WalletInitRoutes} from '../../navigation'
 import {theme} from '../../theme'
-import {NetworkId} from '../../yoroi-wallets'
+import {isEmptyString} from '../../utils/utils'
+import {NetworkId, NUMBERS, useCreateBip44Wallet, usePlate} from '../../yoroi-wallets'
+import {NetworkError} from '../../yoroi-wallets/cardano/errors'
 import {WalletAddress} from '../WalletAddress'
 import {WalletNameForm} from '../WalletNameForm'
 
@@ -26,8 +24,8 @@ export const SaveReadOnlyWalletScreen = () => {
   const {publicKeyHex, path, networkId, walletImplementationId} = route.params
 
   const normalizedPath = path.map((i) => {
-    if (i >= CONFIG.NUMBERS.HARD_DERIVATION_START) {
-      return i - CONFIG.NUMBERS.HARD_DERIVATION_START
+    if (i >= NUMBERS.HARD_DERIVATION_START) {
+      return i - NUMBERS.HARD_DERIVATION_START
     }
     return i
   })
@@ -56,6 +54,7 @@ export const SaveReadOnlyWalletScreen = () => {
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container} testID="saveReadOnlyWalletContainer">
       <StatusBar type="dark" />
+
       <WalletNameForm
         onSubmit={onSubmit}
         defaultWalletName={strings.defaultWalletName}
@@ -163,6 +162,7 @@ const useStrings = () => {
 const CheckSumView = ({icon, checksum}: {icon: string; checksum: string}) => (
   <View style={styles.checksumView}>
     <Icon.WalletAccount iconSeed={icon} />
+
     <Text style={styles.checksumText}>{checksum}</Text>
   </View>
 )
@@ -182,6 +182,7 @@ const WalletInfoView = ({normalizedPath, publicKeyHex, networkId}: WalletInfoPro
       <ScrollView style={styles.scrollView}>
         <View style={styles.checksumContainer}>
           <Text>{strings.checksumLabel}</Text>
+
           {!isEmptyString(plate.accountPlate.ImagePart) && (
             <CheckSumView icon={plate.accountPlate.ImagePart} checksum={plate.accountPlate.TextPart} />
           )}
@@ -189,6 +190,7 @@ const WalletInfoView = ({normalizedPath, publicKeyHex, networkId}: WalletInfoPro
 
         <View style={styles.addressesContainer}>
           <Text>{strings.walletAddressLabel}</Text>
+
           <FlatList
             data={plate.addresses}
             keyExtractor={(item) => item}
@@ -200,6 +202,7 @@ const WalletInfoView = ({normalizedPath, publicKeyHex, networkId}: WalletInfoPro
 
         <View style={styles.keyAttributesContainer}>
           <Text style={styles.label}>{strings.key}</Text>
+
           <View style={styles.keyView}>
             <Text secondary monospace numberOfLines={1} ellipsizeMode="middle">
               {publicKeyHex}
@@ -207,6 +210,7 @@ const WalletInfoView = ({normalizedPath, publicKeyHex, networkId}: WalletInfoPro
           </View>
 
           <Text style={styles.label}>{strings.derivationPath}</Text>
+
           <Text secondary monospace>
             {`m/${normalizedPath[0]}'/${normalizedPath[1]}'/${normalizedPath[2]}`}
           </Text>

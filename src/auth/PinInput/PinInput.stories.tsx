@@ -1,3 +1,4 @@
+import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -16,12 +17,13 @@ const PinInputWrapper = ({enabled = true}: {enabled?: boolean}) => {
       <View style={styles.button}>
         <Button title="Clean Pin" onPress={() => pinInputRef.current?.clear()} />
       </View>
+
       <PinInput
         ref={pinInputRef}
         enabled={enabled}
         pinMaxLength={CONFIG.PIN_LENGTH}
         title={strings.title}
-        onDone={() => undefined}
+        onDone={action('onDone')}
       />
     </View>
   )

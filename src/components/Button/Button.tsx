@@ -48,6 +48,7 @@ export const Button = (props: ButtonProps) => {
         ]}
       >
         {iconImage != null && <Image source={iconImage} />}
+
         <Text
           style={[
             styles.text,
@@ -101,6 +102,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     padding: 8,
     fontSize: 14,
+    fontWeight: '500',
+    fontFamily: 'Rubik-Medium',
     textTransform: 'uppercase',
   },
   textOutlineOnLight: {

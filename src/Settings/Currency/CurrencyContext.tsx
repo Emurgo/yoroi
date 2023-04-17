@@ -1,9 +1,15 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import React from 'react'
 import {useMutation, UseMutationOptions, useQuery, useQueryClient} from 'react-query'
 
-import {isEmptyString} from '../../legacy/utils'
-import {ConfigCurrencies, configCurrencies, CurrencySymbol, supportedCurrencies} from '../../yoroi-wallets/types/other'
+import {isEmptyString} from '../../utils'
+import {
+  ConfigCurrencies,
+  configCurrencies,
+  CurrencySymbol,
+  parseSafe,
+  supportedCurrencies,
+  useStorage,
+} from '../../yoroi-wallets'
 
 const CurrencyContext = React.createContext<undefined | CurrencyContext>(undefined)
 export const CurrencyProvider = ({children}: {children: React.ReactNode}) => {
@@ -33,15 +39,15 @@ const missingProvider = () => {
 }
 
 const useCurrency = () => {
+  const storage = useStorage()
   const query = useQuery<CurrencySymbol, Error>({
     queryKey: ['currencySymbol'],
     queryFn: async () => {
-      const storedCurrencySymbol = await AsyncStorage.getItem('/appSettings/currencySymbol')
+      const currencySymbol = await storage.join('appSettings/').getItem('currencySymbol', parseCurrencySymbol)
 
-      if (!isEmptyString(storedCurrencySymbol)) {
-        const parsedCurrencySymbol = JSON.parse(storedCurrencySymbol)
-        const stillSupported = Object.values(supportedCurrencies).includes(parsedCurrencySymbol)
-        if (stillSupported) return parsedCurrencySymbol
+      if (currencySymbol != null) {
+        const stillSupported = Object.values(supportedCurrencies).includes(currencySymbol)
+        if (stillSupported) return currencySymbol
       }
 
       return defaultCurrency
@@ -56,10 +62,10 @@ const useCurrency = () => {
 
 const useSaveCurrency = ({onSuccess, ...options}: UseMutationOptions<void, Error, CurrencySymbol> = {}) => {
   const queryClient = useQueryClient()
+  const storage = useStorage()
 
   const mutation = useMutation({
-    mutationFn: async (currencySymbol) =>
-      AsyncStorage.setItem('/appSettings/currencySymbol', JSON.stringify(currencySymbol)),
+    mutationFn: async (currencySymbol) => storage.join('appSettings/').setItem('currencySymbol', currencySymbol),
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries('currencySymbol')
       onSuccess?.(data, variables, context)
@@ -79,4 +85,14 @@ type CurrencyContext = {
 
   supportedCurrencies: typeof supportedCurrencies
   configCurrencies: ConfigCurrencies
+}
+
+const parseCurrencySymbol = (data: unknown) => {
+  const isCurrencySymbol = (data: unknown): data is CurrencySymbol =>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    Object.values(supportedCurrencies).includes(data as any)
+
+  const parsed = parseSafe(data)
+
+  return isCurrencySymbol(parsed) ? parsed : undefined
 }

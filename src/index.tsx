@@ -9,18 +9,17 @@ import App from './App'
 import {name as appName} from './app.json'
 import {LoadingBoundary} from './components'
 import {ErrorBoundary} from './components/ErrorBoundary'
+import {handleGeneralError} from './dialogs'
 import {LanguageProvider} from './i18n'
 import translations from './i18n/translations'
-import {handleGeneralError} from './legacy/actions'
 import {CONFIG} from './legacy/config'
-import {ApiError, NetworkError} from './legacy/errors'
 import {Logger, setLogLevel} from './legacy/logging'
-import {isEmptyString} from './legacy/utils'
 import {CurrencyProvider} from './Settings/Currency/CurrencyContext'
-import {StorageProvider, useMigrations} from './Storage'
 import {ThemeProvider} from './theme'
+import {isEmptyString} from './utils/utils'
 import {WalletManagerProvider} from './WalletManager'
-import {walletManager} from './yoroi-wallets'
+import {storage, StorageProvider, useMigrations, walletManager} from './yoroi-wallets'
+import {ApiError, NetworkError} from './yoroi-wallets/cardano/errors'
 
 setLogLevel(CONFIG.LOG_LEVEL)
 
@@ -61,26 +60,27 @@ global.onunhandledrejection = (error: any) => {
 const queryClient = new QueryClient()
 
 const AppWithProviders = () => {
-  const migrated = useMigrations()
+  const migrated = useMigrations(storage)
 
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   return migrated ? (
-    <WalletManagerProvider walletManager={walletManager}>
-      <ErrorBoundary>
-        <QueryClientProvider client={queryClient}>
-          <LoadingBoundary style={StyleSheet.absoluteFill}>
-            <ThemeProvider>
-              <LanguageProvider>
-                <CurrencyProvider>
-                  <StorageProvider>
+    <StorageProvider>
+      <WalletManagerProvider walletManager={walletManager}>
+        <ErrorBoundary>
+          <QueryClientProvider client={queryClient}>
+            <LoadingBoundary style={StyleSheet.absoluteFill}>
+              <ThemeProvider>
+                <LanguageProvider>
+                  <CurrencyProvider>
                     <App />
-                  </StorageProvider>
-                </CurrencyProvider>
-              </LanguageProvider>
-            </ThemeProvider>
-          </LoadingBoundary>
-        </QueryClientProvider>
-      </ErrorBoundary>
-    </WalletManagerProvider>
+                  </CurrencyProvider>
+                </LanguageProvider>
+              </ThemeProvider>
+            </LoadingBoundary>
+          </QueryClientProvider>
+        </ErrorBoundary>
+      </WalletManagerProvider>
+    </StorageProvider>
   ) : null
 }
 

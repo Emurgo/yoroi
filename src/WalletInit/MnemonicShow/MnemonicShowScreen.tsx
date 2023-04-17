@@ -1,4 +1,5 @@
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
+import assert from 'assert'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Dimensions, Image, ScrollView, StyleSheet, View} from 'react-native'
@@ -6,9 +7,8 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import recoveryPhrase from '../../assets/img/recovery_phrase.png'
 import {Button, StatusBar, Text} from '../../components'
-import assert from '../../legacy/assert'
-import {isEmptyString} from '../../legacy/utils'
 import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
+import {isEmptyString} from '../../utils/utils'
 import {MnemonicBackupImportanceModal} from '../MnemonicBackupModal'
 
 export const MnemonicShowScreen = () => {
@@ -16,18 +16,17 @@ export const MnemonicShowScreen = () => {
   const route = useRoute<RouteProp<WalletInitRoutes, 'mnemonic-show'>>()
   const strings = useStrings()
   const mnemonic = route.params.mnemonic
-  const provider = route.params.provider
   const [modal, setModal] = React.useState(false)
   const showModal = () => setModal(true)
   const hideModal = () => setModal(false)
 
   const navigateToMnemonicCheck = () => {
     const {name, password, networkId, walletImplementationId} = route.params
-    assert.assert(!isEmptyString(mnemonic), 'navigateToMnemonicCheck:: mnemonic')
-    assert.assert(!isEmptyString(password), 'navigateToMnemonicCheck:: password')
-    assert.assert(!isEmptyString(name), 'navigateToMnemonicCheck:: name')
-    assert.assert(networkId != null, 'navigateToMnemonicCheck:: networkId')
-    assert.assert(!isEmptyString(walletImplementationId), 'walletImplementationId')
+    assert(!isEmptyString(mnemonic), 'navigateToMnemonicCheck:: mnemonic')
+    assert(!isEmptyString(password), 'navigateToMnemonicCheck:: password')
+    assert(!isEmptyString(name), 'navigateToMnemonicCheck:: name')
+    assert(networkId != null, 'navigateToMnemonicCheck:: networkId')
+    assert(!isEmptyString(walletImplementationId), 'walletImplementationId')
 
     navigation.navigate('mnemonic-check', {
       mnemonic,
@@ -35,7 +34,6 @@ export const MnemonicShowScreen = () => {
       name,
       networkId,
       walletImplementationId,
-      provider,
     })
     hideModal()
   }
@@ -59,6 +57,7 @@ export const MnemonicShowScreen = () => {
           </View>
 
           {/* If screen is small hide image */}
+
           {Dimensions.get('window').height > 480 && (
             <View style={styles.image}>
               <Image source={recoveryPhrase} />

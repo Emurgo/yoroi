@@ -3,9 +3,10 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {PinInputKeyboard, ProgressStep, Spacer} from '../components'
+import {ProgressStep, Spacer} from '../components'
+import {BACKSPACE, NumericKeyboard} from '../components/NumericKeyboard'
+import {showErrorDialog} from '../dialogs'
 import {errorMessages} from '../i18n/global-messages'
-import {showErrorDialog} from '../legacy/actions'
 import {Description, PinBox, Row, Title} from './components'
 
 const PIN_LENGTH = 4
@@ -19,14 +20,15 @@ export const ConfirmPin = ({pin, onNext}: Props) => {
   const strings = useStrings()
   const [confirmPin, setConfirmPin] = useState('')
 
-  const pinChange = (enteredPin: string) => {
+  const onKeyDown = (key: string) => {
+    const enteredPin = key === BACKSPACE ? confirmPin.slice(0, confirmPin.length - 1) : confirmPin + key
     setConfirmPin(enteredPin)
-    if (enteredPin.length === PIN_LENGTH) {
-      if (pin === enteredPin) {
-        onNext()
-      } else {
-        showErrorDialog(errorMessages.incorrectPin, intl)
-      }
+    if (enteredPin.length !== PIN_LENGTH) return
+
+    if (enteredPin === pin) {
+      onNext()
+    } else {
+      showErrorDialog(errorMessages.incorrectPin, intl)
     }
   }
 
@@ -47,11 +49,17 @@ export const ConfirmPin = ({pin, onNext}: Props) => {
 
         <Row style={{justifyContent: 'center'}}>
           <PinBox selected={confirmPin.length === 0}>{confirmPin[0]}</PinBox>
+
           <Spacer width={16} />
+
           <PinBox selected={confirmPin.length === 1}>{confirmPin[1]}</PinBox>
+
           <Spacer width={16} />
+
           <PinBox selected={confirmPin.length === 2}>{confirmPin[2]}</PinBox>
+
           <Spacer width={16} />
+
           <PinBox selected={confirmPin.length === 3}>{confirmPin[3]}</PinBox>
         </Row>
       </ScrollView>
@@ -59,7 +67,7 @@ export const ConfirmPin = ({pin, onNext}: Props) => {
       <Spacer fill />
 
       <View style={{height: 250}}>
-        <PinInputKeyboard pinLength={PIN_LENGTH} onPinChange={pinChange} />
+        <NumericKeyboard onKeyDown={onKeyDown} />
       </View>
     </SafeAreaView>
   )

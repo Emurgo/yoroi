@@ -9,6 +9,7 @@ export const ChangeCurrencyScreen = () => {
   return (
     <SafeAreaView edges={['bottom', 'right', 'left']} style={styles.safeAreaView}>
       <StatusBar type="light" />
+
       <Boundary>
         <CurrencyPickerList />
       </Boundary>

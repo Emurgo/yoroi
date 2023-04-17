@@ -1,5 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import {useNavigation} from '@react-navigation/native'
+import assert from 'assert'
+import ExtendableError from 'es6-error'
+import _ from 'lodash'
 import React from 'react'
 import {useIntl} from 'react-intl'
 import {Alert, InteractionManager, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity} from 'react-native'
@@ -8,15 +12,13 @@ import * as Keychain from 'react-native-keychain'
 
 import {useAuth} from '../auth/AuthProvider'
 import {Button, StatusBar, Text, TextInput} from '../components'
-import {useCreateWallet} from '../hooks'
+import {showErrorDialog} from '../dialogs'
 import {errorMessages} from '../i18n/global-messages'
 import {AppRoutes, useWalletNavigation} from '../navigation'
 import {useSelectedWalletContext} from '../SelectedWallet'
-import {showErrorDialog} from './actions'
-import {generateAdaMnemonic} from './commonUtils'
-import {NetworkError} from './errors'
-import storage from './storage'
-import {isEmptyString} from './utils'
+import {isEmptyString} from '../utils/utils'
+import {generateAdaMnemonic, NetworkId, useCreateWallet} from '../yoroi-wallets'
+import {NetworkError} from '../yoroi-wallets/cardano/errors'
 
 const routes: Array<{label: string; path: keyof AppRoutes}> = [
   {label: 'Storybook', path: 'storybook'},
@@ -81,17 +83,21 @@ export const DeveloperScreen = () => {
             title={route.label}
           />
         ))}
+
         <TouchableOpacity onPress={() => storage.clearAll()}>
           <Text style={styles.link}>Clear storage</Text>
         </TouchableOpacity>
+
         <TouchableOpacity onPress={crash}>
           <Text style={styles.link}>Crash</Text>
         </TouchableOpacity>
+
         <Button
           title="All kc"
           style={styles.button}
           onPress={() => Keychain.getAllGenericPasswordServices().then(console.log)}
         />
+
         <Button
           title="Logout"
           style={styles.button}
@@ -100,6 +106,7 @@ export const DeveloperScreen = () => {
             navigation.goBack()
           }}
         />
+
         <Button
           disabled={isLoading}
           style={styles.button}
@@ -107,14 +114,14 @@ export const DeveloperScreen = () => {
             createWallet({
               mnemonicPhrase: config['WALLET_1_MNEMONIC'],
               name: 'Wallet 1',
-              networkId: Number(config['WALLET_1_NETWORK_ID'] ?? 300),
+              networkId: Number(config['WALLET_1_NETWORK_ID'] ?? 300) as NetworkId,
               password: '1234567890',
               walletImplementationId: 'haskell-shelley',
-              provider: '',
             })
           }
           title="Restore Wallet 1"
         />
+
         <Button
           disabled={isLoading}
           style={styles.button}
@@ -122,14 +129,14 @@ export const DeveloperScreen = () => {
             createWallet({
               mnemonicPhrase: config['WALLET_2_MNEMONIC'],
               name: 'Wallet 2',
-              networkId: Number(config['WALLET_1_NETWORK_ID'] ?? 300),
+              networkId: Number(config['WALLET_2_NETWORK_ID'] ?? 300) as NetworkId,
               password: '1234567890',
               walletImplementationId: 'haskell-shelley',
-              provider: '',
             })
           }
           title="Restore Wallet 2"
         />
+
         <Button
           disabled={isLoading}
           style={styles.button}
@@ -140,11 +147,11 @@ export const DeveloperScreen = () => {
               networkId: 1,
               password: '1234567890',
               walletImplementationId: 'haskell-shelley',
-              provider: '',
             })
           }
           title="RO Mainnet For Forced Addresses"
         />
+
         {wallet?.networkId !== 1 && (
           <>
             <TextInput
@@ -158,6 +165,7 @@ export const DeveloperScreen = () => {
               style={{padding: 2, fontSize: 8}}
               placeholder="Paste all addresses here separated by comma"
             />
+
             <Button
               disabled={isLoading || addresses.split(',').length > 50 || addresses.length === 0}
               style={styles.button}
@@ -203,4 +211,88 @@ export const DeveloperScreen = () => {
       </ScrollView>
     </SafeAreaView>
   )
+}
+
+export class StorageError extends ExtendableError {}
+
+const checkPathFormat = (path: string) => path.startsWith('/') && !path.endsWith('/')
+
+const parseJson = (json: string) => (json !== null ? JSON.parse(json) : undefined)
+
+const read = async (path: string) => {
+  assert(checkPathFormat(path), 'Wrong storage key path')
+
+  try {
+    const text = await AsyncStorage.getItem(path)
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return parseJson(text!)
+  } catch (error) {
+    throw new StorageError((error as Error).message)
+  }
+}
+
+const readMany = async (paths: Array<string>) => {
+  assert(_.every(paths, checkPathFormat), 'Wrong storage key path')
+
+  try {
+    const items = await AsyncStorage.multiGet(paths)
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return items.map(([key, value]) => [key, parseJson(value!)])
+  } catch (error) {
+    throw new StorageError((error as Error).message)
+  }
+}
+
+const write = async (path: string, data: any) => {
+  assert(path.startsWith('/'), 'Wrong storage key path')
+  assert(!path.endsWith('/'), 'Wrong storage key path')
+  assert(data !== undefined, 'Cannot store undefined')
+
+  try {
+    await AsyncStorage.setItem(path, JSON.stringify(data))
+  } catch (error) {
+    throw new StorageError((error as Error).message)
+  }
+}
+
+const remove = async (path: string) => {
+  assert(path.startsWith('/'), 'Wrong storage key path')
+  assert(!path.endsWith('/'), 'Wrong storage key path')
+
+  try {
+    await AsyncStorage.removeItem(path)
+  } catch (error) {
+    console.warn(`Missing storage key ${path}`)
+    return false
+  }
+  return true
+}
+
+const clearAll = async () => {
+  try {
+    await AsyncStorage.clear()
+  } catch (error) {
+    throw new StorageError((error as Error).message)
+  }
+}
+
+const keys = async (path: string, includeSubdirs?: boolean): Promise<Array<string>> => {
+  try {
+    const all = await AsyncStorage.getAllKeys()
+    const matched = all.filter((key) => key.startsWith(path)).map((key) => key.substring(path.length))
+
+    return includeSubdirs === true ? matched : matched.filter((key) => !key.includes('/'))
+  } catch (error) {
+    throw new StorageError((error as Error).message)
+  }
+}
+
+const storage = {
+  read,
+  readMany,
+  write,
+  remove,
+  clearAll,
+  keys,
 }

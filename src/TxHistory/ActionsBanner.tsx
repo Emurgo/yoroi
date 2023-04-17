@@ -4,7 +4,7 @@ import {useIntl} from 'react-intl'
 import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {Icon, Spacer} from '../components'
-import features from '../features'
+import {features} from '../features'
 import {actionMessages} from '../i18n/global-messages'
 import {TxHistoryRouteNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
@@ -38,6 +38,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
               <TouchableOpacity style={styles.actionIcon} onPress={onSend} testID="sendButton" disabled={disabled}>
                 <Icon.Send {...ACTION_PROPS} />
               </TouchableOpacity>
+
               <Text style={styles.actionLabel}>{strings.sendLabel}</Text>
             </View>
           )}
@@ -53,6 +54,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
             >
               <Icon.Received {...ACTION_PROPS} />
             </TouchableOpacity>
+
             <Text style={styles.actionLabel}>{strings.receiveLabel}</Text>
           </View>
 
@@ -62,8 +64,10 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
             <View style={styles.centralized}>
               <TouchableOpacity style={[styles.actionIcon, styles.cta]} onPress={navigateTo.buy}>
                 {/* TODO: request buy icon to the design team */}
+
                 <Text style={styles.buyButton}>+</Text>
               </TouchableOpacity>
+
               <Text style={styles.actionLabel}>{strings.buyLabel}</Text>
             </View>
           )}

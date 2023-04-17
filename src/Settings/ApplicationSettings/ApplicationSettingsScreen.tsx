@@ -3,13 +3,11 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, Switch} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
-import {useAuthOsEnabled, useAuthSetting, useAuthWithOs} from '../../auth'
 import {StatusBar} from '../../components'
-import {useCrashReports} from '../../hooks'
 import globalMessages from '../../i18n/global-messages'
 import {CONFIG, isNightly} from '../../legacy/config'
 import {useWalletNavigation} from '../../navigation'
-import {useStorage} from '../../Storage'
+import {useAuthOsEnabled, useAuthSetting, useAuthWithOs, useCrashReports} from '../../yoroi-wallets'
 import {useCurrencyContext} from '../Currency'
 import {NavigatedSettingsItem, SettingsBuildItem, SettingsItem, SettingsSection} from '../SettingsItems'
 
@@ -17,13 +15,12 @@ const version = DeviceInfo.getVersion()
 
 export const ApplicationSettingsScreen = () => {
   const strings = useStrings()
-  const storage = useStorage()
 
   const {navigation} = useWalletNavigation()
   const {currency} = useCurrencyContext()
   const crashReports = useCrashReports()
 
-  const authSetting = useAuthSetting(storage)
+  const authSetting = useAuthSetting()
   const authOsEnabled = useAuthOsEnabled()
   const {authWithOs} = useAuthWithOs({onSuccess: () => navigation.navigate('enable-login-with-pin')})
 

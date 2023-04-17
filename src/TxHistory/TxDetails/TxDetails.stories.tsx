@@ -1,18 +1,21 @@
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {mocks, QueryProvider, RouteProvider} from '../../../storybook'
+import {QueryProvider, RouteProvider} from '../../../.storybook/decorators'
 import {SelectedWalletProvider} from '../../SelectedWallet'
+import {mocks} from '../../yoroi-wallets/mocks'
 import {TxDetails} from './TxDetails'
 
 storiesOf('TxDetails', module)
-  .add('loading', () => (
+  .add('Default', () => (
     <QueryProvider>
-      <RouteProvider params={{id: mocks.txid}}>
+      <RouteProvider params={{id: mockTransaction.id}}>
         <SelectedWalletProvider
           wallet={{
             ...mocks.wallet,
-            getTransactions: mocks.getTransactions.loading,
+            transactions: {
+              [mockTransaction.id]: mockTransaction,
+            },
           }}
         >
           <TxDetails />
@@ -20,13 +23,18 @@ storiesOf('TxDetails', module)
       </RouteProvider>
     </QueryProvider>
   ))
-  .add('error', () => (
+  .add('With memo', () => (
     <QueryProvider>
-      <RouteProvider params={{id: mocks.txid}}>
+      <RouteProvider params={{id: mockTransaction.id}}>
         <SelectedWalletProvider
           wallet={{
             ...mocks.wallet,
-            getTransactions: mocks.getTransactions.error,
+            transactions: {
+              [mockTransaction.id]: {
+                ...mockTransaction,
+                memo: 'Fake Memo',
+              },
+            },
           }}
         >
           <TxDetails />
@@ -34,17 +42,5 @@ storiesOf('TxDetails', module)
       </RouteProvider>
     </QueryProvider>
   ))
-  .add('success', () => (
-    <QueryProvider>
-      <RouteProvider params={{id: mocks.txid}}>
-        <SelectedWalletProvider
-          wallet={{
-            ...mocks.wallet,
-            getTransactions: mocks.getTransactions.success,
-          }}
-        >
-          <TxDetails />
-        </SelectedWalletProvider>
-      </RouteProvider>
-    </QueryProvider>
-  ))
+
+const mockTransaction = Object.values(mocks.wallet.transactions)[0]

@@ -3,12 +3,12 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, TextInput as RNTextInput, View} from 'react-native'
 
 import {Button, Checkmark, Spacer, TextInput} from '../components'
-import {useWalletNames} from '../hooks'
+import {debugWalletInfo, features} from '../features'
 import globalMessages from '../i18n/global-messages'
-import {CONFIG} from '../legacy/config'
-import {isEmptyString} from '../legacy/utils'
 import {COLORS} from '../theme'
+import {isEmptyString} from '../utils/utils'
 import {useWalletManager} from '../WalletManager'
+import {useWalletNames} from '../yoroi-wallets'
 import {
   getWalletNameError,
   REQUIRED_PASSWORD_LENGTH,
@@ -24,7 +24,7 @@ export const WalletForm = ({onSubmit}: Props) => {
   const strings = useStrings()
   const walletManager = useWalletManager()
   const {walletNames} = useWalletNames(walletManager)
-  const [name, setName] = React.useState(CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.WALLET_NAME : '')
+  const [name, setName] = React.useState(features.prefillWalletInfo ? debugWalletInfo.WALLET_NAME : '')
   const nameErrors = validateWalletName(name, null, walletNames ?? [])
   const walletNameErrorText = getWalletNameError(
     {tooLong: strings.tooLong, nameAlreadyTaken: strings.nameAlreadyTaken, mustBeFilled: strings.mustBeFilled},
@@ -32,11 +32,11 @@ export const WalletForm = ({onSubmit}: Props) => {
   )
 
   const passwordRef = React.useRef<RNTextInput>(null)
-  const [password, setPassword] = React.useState(CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '')
+  const [password, setPassword] = React.useState(features.prefillWalletInfo ? debugWalletInfo.PASSWORD : '')
 
   const passwordConfirmationRef = React.useRef<RNTextInput>(null)
   const [passwordConfirmation, setPasswordConfirmation] = React.useState(
-    CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '',
+    features.prefillWalletInfo ? debugWalletInfo.PASSWORD : '',
   )
   const passwordErrors = validatePassword(password, passwordConfirmation)
   const passwordErrorText = passwordErrors.passwordIsWeak
