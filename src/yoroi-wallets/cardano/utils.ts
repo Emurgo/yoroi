@@ -12,13 +12,12 @@ import {
   WalletImplementationId,
 } from '../types/other'
 import {
-  asciiToHex,
   CardanoHaskellShelleyNetwork,
   CardanoMobile,
   CardanoTypes,
   MultiToken,
   PRIMARY_ASSET_CONSTANTS,
-  toAssetName,
+  toAssetNameHex,
   toPolicyId,
   WalletImplementation,
 } from '.'
@@ -96,7 +95,7 @@ const identifierToCardanoAsset = async (
   name: CardanoTypes.AssetName
 }> => {
   const policyId = toPolicyId(tokenId)
-  const assetNameHex = asciiToHex(toAssetName(tokenId) ?? '')
+  const assetNameHex = toAssetNameHex(tokenId)
 
   return {
     policyId: await CardanoMobile.ScriptHash.fromBytes(Buffer.from(policyId, 'hex')),

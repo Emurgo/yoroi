@@ -31,6 +31,9 @@ describe('api utils', () => {
     const noName = policyId
     expect(toPolicyId(noName)).toEqual(policyId)
     expect(toAssetName(noName)).toEqual(undefined)
+
+    const longName = '1'.repeat(128)
+    expect(toAssetName(policyId + '.' + asciiToHex(longName))).toEqual('1'.repeat(32))
   })
 
   describe('toTokenSubject', () => {
