@@ -57,7 +57,11 @@ export const SelectTokenFromListScreen = () => {
         data={sortedTokenInfos}
         renderItem={({item: tokenInfo}: {item: TokenInfo}) => (
           <Boundary>
-            <SelectableAssetItem tokenInfo={tokenInfo} disabled={!canAddAmount} wallet={wallet} />
+            <SelectableAssetItem
+              tokenInfo={tokenInfo}
+              disabled={!canAddAmount && tokenInfo.id !== wallet.primaryTokenInfo.id}
+              wallet={wallet}
+            />
           </Boundary>
         )}
         bounces={false}
