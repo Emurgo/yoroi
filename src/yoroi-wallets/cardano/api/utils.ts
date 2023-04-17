@@ -53,15 +53,19 @@ export const toPolicyId = (tokenIdentifier: string) => {
   return tokenSubject.slice(0, 56)
 }
 export const toAssetName = (tokenIdentifier: string) => {
+  return hexToAscii(toAssetNameHex(tokenIdentifier)) || undefined
+}
+
+export const toAssetNameHex = (tokenIdentifier: string) => {
   const tokenSubject = toTokenSubject(tokenIdentifier)
-  const assetName = hexToAscii(tokenSubject.slice(56)) || undefined
-  return assetName
+  const maxAssetNameLengthInBytes = 32
+  return tokenSubject.slice(56, 56 + maxAssetNameLengthInBytes * 2)
 }
 
 export const toTokenSubject = (tokenIdentifier: string) => tokenIdentifier.replace('.', '')
 export const toTokenId = (tokenIdentifier: string) => {
   const tokenSubject = toTokenSubject(tokenIdentifier)
-  return `${tokenSubject.slice(0, 56)}.${tokenSubject.slice(56)}`
+  return `${tokenSubject.slice(0, 56)}.${toAssetNameHex(tokenIdentifier)}`
 }
 
 export const hexToAscii = (hex: string) => Buffer.from(hex, 'hex').toLocaleString()
