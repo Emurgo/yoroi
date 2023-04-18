@@ -8,6 +8,7 @@ export const useStrings = () => {
   return {
     addressInputErrorInvalidAddress: intl.formatMessage(messages.addressInputErrorInvalidAddress),
     addressInputLabel: intl.formatMessage(messages.addressInputLabel),
+    all: intl.formatMessage(globalMessages.all),
     amount: intl.formatMessage(txLabels.amount),
     apply: intl.formatMessage(globalMessages.apply),
     asset: intl.formatMessage(messages.asset),
@@ -33,6 +34,7 @@ export const useStrings = () => {
     max: intl.formatMessage(globalMessages.max),
     minPrimaryBalanceForTokens: intl.formatMessage(amountInputErrorMessages.minPrimaryBalanceForTokens),
     next: intl.formatMessage(globalMessages.next),
+    nfts: (qty: number) => intl.formatMessage(globalMessages.nfts, {qty}),
     noAssets: intl.formatMessage(messages.noAssets),
     noBalance: intl.formatMessage(amountInputErrorMessages.insufficientBalance),
     pleaseWait: intl.formatMessage(globalMessages.pleaseWait),
@@ -45,6 +47,7 @@ export const useStrings = () => {
     sendAllWarningAlert3: intl.formatMessage(messages.sendAllWarningAlert3),
     sendAllWarningText: intl.formatMessage(messages.sendAllWarningText),
     sendAllWarningTitle: intl.formatMessage(messages.sendAllWarningTitle),
+    tokens: (qty: number) => intl.formatMessage(globalMessages.tokens, {qty}),
     unknownAsset: intl.formatMessage(messages.unknownAsset),
   }
 }

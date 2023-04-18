@@ -3,18 +3,21 @@ import React from 'react'
 import {Dimensions, GestureResponderEvent, StyleSheet, TouchableOpacity, View} from 'react-native'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
-import {Icon, Spacer, Text} from '../../components'
-import {NftPreview} from '../../components/NftPreview/NftPreview'
 import {features} from '../../features'
+import {useModeratedNftImage} from '../../Nfts/hooks'
 import {useSelectedWallet} from '../../SelectedWallet'
-import {YoroiNft} from '../../yoroi-wallets/types'
-import {useModeratedNftImage} from '../hooks'
+import {YoroiNft} from '../../yoroi-wallets'
+import {Icon} from '../Icon'
+import {NftPreview} from '../NftPreview'
+import {Spacer} from '../Spacer'
+import {Text} from '../Text'
 
 type Props = {
   nfts: YoroiNft[]
   onSelect: (id: string) => void
   onRefresh: () => void
   isRefreshing: boolean
+  bounces?: boolean
 }
 
 const TEXT_SIZE = 20
@@ -25,12 +28,13 @@ export const SkeletonGallery = ({amount}: {amount: number}) => {
   return <GalleryList data={placeholders} renderItem={() => <SkeletonImagePlaceholder />} />
 }
 
-export const ImageGallery = ({nfts = [], onSelect, onRefresh, isRefreshing}: Props) => {
+export const NftImageGallery = ({nfts = [], onSelect, onRefresh, isRefreshing, bounces = true}: Props) => {
   return (
     <GalleryList
       data={nfts}
       onRefresh={onRefresh}
       refreshing={isRefreshing}
+      bounces={bounces}
       renderItem={(nft) =>
         features.moderatingNftsEnabled ? (
           <ModeratedImage onPress={() => onSelect(nft.id)} nft={nft} key={nft.id} />
