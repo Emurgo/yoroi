@@ -42,7 +42,6 @@ export const SelectTokenFromListScreen = () => {
     tokenIds: Amounts.toArray(balances).map(({tokenId}) => tokenId),
   })
   const secondaryAmountsCounter = useSelectedSecondaryAmountsCounter(wallet)
-  const canAddAmount = secondaryAmountsCounter < limitOfSecondaryAmountsPerTx
 
   const {search: assetSearchTerm, inputSearchVisible} = useSearch()
 
@@ -61,9 +60,14 @@ export const SelectTokenFromListScreen = () => {
 
   const onSelectNft = useOnSelectNft()
 
+  const canAddAmount = secondaryAmountsCounter < limitOfSecondaryAmountsPerTx
+  const isNftListVisible = activeTab === 'nfts' && !inputSearchVisible
+
   return (
     <View style={styles.root}>
-      <>
+      <View style={styles.subheader}>
+        {!inputSearchVisible && <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />}
+
         {!canAddAmount && (
           <View style={styles.panel}>
             <MaxAmountsPerTx />
@@ -71,11 +75,9 @@ export const SelectTokenFromListScreen = () => {
             <Spacer height={16} />
           </View>
         )}
+      </View>
 
-        {!inputSearchVisible && <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />}
-      </>
-
-      {activeTab === 'nfts' && !inputSearchVisible ? (
+      {isNftListVisible ? (
         <NftList nfts={nfts} onSelect={onSelectNft} />
       ) : (
         <NoNftList
@@ -252,8 +254,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
   },
+  subheader: {
+    paddingHorizontal: 16,
+  },
   item: {
-    paddingVertical: 16,
+    paddingVertical: 14,
   },
   borderBottom: {
     borderBottomColor: '#DCE0E9',
@@ -263,7 +268,6 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   tabs: {
-    paddingHorizontal: 16,
     flexDirection: 'row',
   },
   tabContainer: {
@@ -279,7 +283,6 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   nftList: {
-    paddingHorizontal: 16,
     paddingTop: 18,
     flex: 1,
   },
@@ -288,7 +291,6 @@ const styles = StyleSheet.create({
   },
   list: {
     paddingHorizontal: 16,
-    paddingTop: 16,
   },
   image: {
     flex: 1,
