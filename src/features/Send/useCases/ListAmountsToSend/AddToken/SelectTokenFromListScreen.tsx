@@ -137,7 +137,12 @@ const useFilteredTokenInfos = ({activeTab}: {activeTab: Tabs}) => {
   return sortedFilteredTokenInfos
 }
 
-const Tabs = ({setActiveTab, activeTab}: {setActiveTab: (activeTab: Tabs) => void; activeTab: Tabs}) => {
+type TabsProps = {
+  setActiveTab: (activeTab: Tabs) => void
+  activeTab: Tabs
+}
+
+const Tabs = ({setActiveTab, activeTab}: TabsProps) => {
   const strings = useStrings()
 
   return (
@@ -151,14 +156,14 @@ const Tabs = ({setActiveTab, activeTab}: {setActiveTab: (activeTab: Tabs) => voi
   )
 }
 
-type Tab = {
+type TabProps = {
   setActiveTab: (activeTab: Tabs) => void
   activeTab: Tabs
   tab: Tabs
   text: string
 }
 
-const Tab = ({setActiveTab, activeTab, tab, text}: Tab) => (
+const Tab = ({setActiveTab, activeTab, tab, text}: TabProps) => (
   <TouchableOpacity
     onPress={() => setActiveTab(tab)}
     style={[styles.tabContainer, activeTab === tab && styles.tabContainerActive]}
