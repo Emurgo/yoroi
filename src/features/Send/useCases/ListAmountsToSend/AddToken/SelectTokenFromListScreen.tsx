@@ -59,7 +59,7 @@ export const SelectTokenFromListScreen = () => {
       {isNftListVisible ? (
         <NftList activeTab={activeTab} />
       ) : (
-        <NoNftList activeTab={activeTab} canAddToken={canAddAmount} />
+        <AssetList activeTab={activeTab} canAddToken={canAddAmount} />
       )}
     </View>
   )
@@ -99,12 +99,12 @@ const NftList = ({activeTab}: NftList) => {
   )
 }
 
-type NoNftList = {
+type AssetListProps = {
   canAddToken: boolean
   activeTab: Tabs
 }
 
-const NoNftList = ({canAddToken, activeTab}: NoNftList) => {
+const AssetList = ({canAddToken, activeTab}: AssetListProps) => {
   const wallet = useSelectedWallet()
   const {search: assetSearchTerm, inputSearchVisible} = useSearch()
   const filteredTokenInfos = useFilteredTokenInfos({activeTab})
@@ -153,7 +153,7 @@ const useFilteredTokenInfos = ({activeTab}: {activeTab: Tabs}) => {
 
   const tabFilteredTokenInfos = filterTokenInfosByTab({
     nfts,
-    activeTab: inputSearchVisible ? 'all' : activeTab,
+    activeTab: inputSearchVisible ? 'all' : activeTab, // all assets avaliable when searching
     tokenInfos: searchFilteredTokens,
   })
 
@@ -165,7 +165,12 @@ const useFilteredTokenInfos = ({activeTab}: {activeTab: Tabs}) => {
   return sortedFilteredTokenInfos
 }
 
-const Tabs = ({setActiveTab, activeTab}: {setActiveTab: (activeTab: Tabs) => void; activeTab: Tabs}) => {
+type TabsProps = {
+  setActiveTab: (activeTab: Tabs) => void
+  activeTab: Tabs
+}
+
+const Tabs = ({setActiveTab, activeTab}: TabsProps) => {
   const strings = useStrings()
 
   return (
@@ -179,14 +184,14 @@ const Tabs = ({setActiveTab, activeTab}: {setActiveTab: (activeTab: Tabs) => voi
   )
 }
 
-type Tab = {
+type TabProps = {
   setActiveTab: (activeTab: Tabs) => void
   activeTab: Tabs
   tab: Tabs
   text: string
 }
 
-const Tab = ({setActiveTab, activeTab, tab, text}: Tab) => (
+const Tab = ({setActiveTab, activeTab, tab, text}: TabProps) => (
   <TouchableOpacity
     onPress={() => setActiveTab(tab)}
     style={[styles.tabContainer, activeTab === tab && styles.tabContainerActive]}
