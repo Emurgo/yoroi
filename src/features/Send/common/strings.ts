@@ -22,8 +22,6 @@ export const useStrings = () => {
     checkboxSendAll: (options) => intl.formatMessage(messages.checkboxSendAll, options),
     checkboxSendAllAssets: intl.formatMessage(messages.checkboxSendAllAssets),
     continueButton: intl.formatMessage(messages.continueButton),
-    counter1: (count) => intl.formatMessage(messages.counter1, {count}),
-    counter2: intl.formatMessage(messages.counter2),
     domainNotRegisteredError: intl.formatMessage(messages.domainNotRegisteredError),
     domainRecordNotFoundError: intl.formatMessage(messages.domainRecordNotFoundError),
     domainUnsupportedError: intl.formatMessage(messages.domainUnsupportedError),
@@ -162,14 +160,6 @@ export const messages = defineMessages({
   unknownAsset: {
     id: 'components.send.assetselectorscreen.unknownAsset',
     defaultMessage: '!!!Unknown asset',
-  },
-  counter1: {
-    id: 'components.send.assetselectorscreen.counter1',
-    defaultMessage: '!!!{count} assets',
-  },
-  counter2: {
-    id: 'components.send.assetselectorscreen.counter2',
-    defaultMessage: '!!!found',
   },
   noAssets: {
     id: 'components.send.assetselectorscreen.noAssets',
