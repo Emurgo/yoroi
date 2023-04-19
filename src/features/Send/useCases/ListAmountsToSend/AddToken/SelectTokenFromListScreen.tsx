@@ -125,7 +125,7 @@ const useFilteredTokenInfos = ({activeTab}: {activeTab: Tabs}) => {
 
   const tabFilteredTokenInfos = filterTokenInfosByTab({
     nfts,
-    activeTab: inputSearchVisible ? 'all' : activeTab,
+    activeTab: inputSearchVisible ? 'all' : activeTab, // all assets avaliable when searching
     tokenInfos: searchFilteredTokens,
   })
 
