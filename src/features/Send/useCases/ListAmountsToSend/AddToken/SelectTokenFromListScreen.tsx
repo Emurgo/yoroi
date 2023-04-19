@@ -35,8 +35,6 @@ export const SelectTokenFromListScreen = () => {
 
   const wallet = useSelectedWallet()
 
-  const {nfts} = useNfts(wallet)
-
   const secondaryAmountsCounter = useSelectedSecondaryAmountsCounter(wallet)
 
   const {inputSearchVisible} = useSearch()
@@ -61,20 +59,22 @@ export const SelectTokenFromListScreen = () => {
       </View>
 
       {isNftListVisible ? (
-        <NftList nfts={nfts} onSelect={onSelectNft} />
+        <NftList onSelect={onSelectNft} />
       ) : (
-        <NoNftList activeTab={activeTab} nfts={nfts} wallet={wallet} canAddToken={canAddAmount} />
+        <NoNftList activeTab={activeTab} canAddToken={canAddAmount} />
       )}
     </View>
   )
 }
 
 type NftList = {
-  nfts: YoroiNft[]
   onSelect: (nftId: string) => void
 }
 
-const NftList = ({nfts, onSelect}: NftList) => {
+const NftList = ({onSelect}: NftList) => {
+  const wallet = useSelectedWallet()
+  const {nfts} = useNfts(wallet)
+
   return (
     <View style={styles.nftList}>
       <NftImageGallery nfts={nfts} onRefresh={() => null} onSelect={onSelect} isRefreshing={false} bounces={false} />
@@ -83,13 +83,12 @@ const NftList = ({nfts, onSelect}: NftList) => {
 }
 
 type NoNftList = {
-  nfts: YoroiNft[]
-  wallet: YoroiWallet
   canAddToken: boolean
   activeTab: Tabs
 }
 
-const NoNftList = ({wallet, canAddToken, activeTab}: NoNftList) => {
+const NoNftList = ({canAddToken, activeTab}: NoNftList) => {
+  const wallet = useSelectedWallet()
   const {search: assetSearchTerm} = useSearch()
   const filteredTokenInfos = useFilteredTokenInfos({activeTab})
 
