@@ -39,8 +39,6 @@ export const SelectTokenFromListScreen = () => {
 
   const {inputSearchVisible} = useSearch()
 
-  const onSelectNft = useOnSelectNft()
-
   const canAddAmount = secondaryAmountsCounter < limitOfSecondaryAmountsPerTx
   const isNftListVisible = activeTab === 'nfts' && !inputSearchVisible
 
@@ -58,22 +56,22 @@ export const SelectTokenFromListScreen = () => {
         )}
       </View>
 
-      {isNftListVisible ? (
-        <NftList onSelect={onSelectNft} />
-      ) : (
-        <NoNftList activeTab={activeTab} canAddToken={canAddAmount} />
-      )}
+      {isNftListVisible ? <NftList /> : <NoNftList activeTab={activeTab} canAddToken={canAddAmount} />}
     </View>
   )
 }
 
-type NftList = {
-  onSelect: (nftId: string) => void
-}
-
-const NftList = ({onSelect}: NftList) => {
+const NftList = () => {
   const wallet = useSelectedWallet()
   const {nfts} = useNfts(wallet)
+  const navigation = useNavigation<TxHistoryRouteNavigation>()
+  const {tokenSelectedChanged, amountChanged} = useSend()
+
+  const onSelect = (nftId) => {
+    tokenSelectedChanged(nftId)
+    amountChanged('1')
+    navigation.navigate('send-list-amounts-to-send')
+  }
 
   return (
     <View style={styles.nftList}>
@@ -223,19 +221,6 @@ export const NoAssets = () => {
       <Text style={styles.contentText}>{strings.noAssets}</Text>
     </View>
   )
-}
-
-const useOnSelectNft = () => {
-  const navigation = useNavigation<TxHistoryRouteNavigation>()
-  const {tokenSelectedChanged, amountChanged} = useSend()
-
-  const onSelectNft = (nftId) => {
-    tokenSelectedChanged(nftId)
-    amountChanged('1')
-    navigation.navigate('send-list-amounts-to-send')
-  }
-
-  return onSelectNft
 }
 
 const filterTokenInfosByTab = ({
