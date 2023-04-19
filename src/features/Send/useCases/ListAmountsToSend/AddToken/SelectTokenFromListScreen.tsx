@@ -238,16 +238,6 @@ const Counter = ({
 }) => {
   const strings = useStrings()
 
-  // if true & true => null
-  if (isInputSearchVisible && !isInputSearchEmpty)
-    return (
-      <View style={styles.counter}>
-        <Text style={styles.counterTextBold}>{`${total} ${strings.assets(total)} `}</Text>
-
-        <Text style={styles.counterText}>{strings.found}</Text>
-      </View>
-    )
-
   if (!isInputSearchVisible && activeTab === 'all')
     return (
       <View style={styles.counter}>
@@ -272,6 +262,16 @@ const Counter = ({
         <Text style={styles.counterText}>{strings.youHave}</Text>
 
         <Text style={styles.counterTextBold}>{` ${total} ${strings.nfts(total)}`}</Text>
+      </View>
+    )
+
+  if (isInputSearchVisible && !isInputSearchEmpty)
+    // if true & true => null
+    return (
+      <View style={styles.counter}>
+        <Text style={styles.counterTextBold}>{`${total} ${strings.assets(total)} `}</Text>
+
+        <Text style={styles.counterText}>{strings.found}</Text>
       </View>
     )
 
