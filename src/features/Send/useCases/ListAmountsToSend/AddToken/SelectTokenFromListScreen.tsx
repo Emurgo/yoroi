@@ -39,8 +39,6 @@ export const SelectTokenFromListScreen = () => {
 
   const {inputSearchVisible} = useSearch()
 
-  const onSelectNft = useOnSelectNft()
-
   const canAddAmount = secondaryAmountsCounter < limitOfSecondaryAmountsPerTx
   const isNftListVisible = activeTab === 'nfts' && !inputSearchVisible
 
@@ -59,9 +57,9 @@ export const SelectTokenFromListScreen = () => {
       </View>
 
       {isNftListVisible ? (
-        <NftList activeTab={activeTab} onSelect={onSelectNft} />
+        <NftList activeTab={activeTab} />
       ) : (
-        <NoNftList activeTab={activeTab} wallet={wallet} canAddToken={canAddAmount} />
+        <NoNftList activeTab={activeTab} canAddToken={canAddAmount} />
       )}
     </View>
   )
@@ -69,14 +67,21 @@ export const SelectTokenFromListScreen = () => {
 
 type NftList = {
   activeTab: Tabs
-  onSelect: (nftId: string) => void
 }
 
-const NftList = ({onSelect, activeTab}: NftList) => {
+const NftList = ({activeTab}: NftList) => {
   const wallet = useSelectedWallet()
   const {nfts} = useNfts(wallet)
   const {search: assetSearchTerm, inputSearchVisible} = useSearch()
   const filteredTokenInfos = useFilteredTokenInfos({activeTab})
+  const navigation = useNavigation<TxHistoryRouteNavigation>()
+  const {tokenSelectedChanged, amountChanged} = useSend()
+
+  const onSelect = (nftId) => {
+    tokenSelectedChanged(nftId)
+    amountChanged('1')
+    navigation.navigate('send-list-amounts-to-send')
+  }
 
   return (
     <>
@@ -95,7 +100,6 @@ const NftList = ({onSelect, activeTab}: NftList) => {
 }
 
 type NoNftList = {
-  wallet: YoroiWallet
   canAddToken: boolean
   activeTab: Tabs
 }
@@ -298,19 +302,6 @@ const Counter = ({
     )
 
   return null
-}
-
-const useOnSelectNft = () => {
-  const navigation = useNavigation<TxHistoryRouteNavigation>()
-  const {tokenSelectedChanged, amountChanged} = useSend()
-
-  const onSelectNft = (nftId) => {
-    tokenSelectedChanged(nftId)
-    amountChanged('1')
-    navigation.navigate('send-list-amounts-to-send')
-  }
-
-  return onSelectNft
 }
 
 const filterTokenInfosByTab = ({
