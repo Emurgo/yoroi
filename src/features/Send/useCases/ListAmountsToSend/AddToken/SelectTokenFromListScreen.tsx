@@ -91,7 +91,7 @@ export const SelectTokenFromListScreen = () => {
       <Counter
         activeTab={activeTab}
         isInputSearchVisible={inputSearchVisible}
-        isInputSearchEmpty={inputSearchVisible && assetSearchTerm.length === 0}
+        isInputSearchEmpty={assetSearchTerm.length === 0}
         total={sortedFilteredTokenInfos.length}
       />
     </View>
@@ -370,6 +370,7 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   counter: {
+    padding: 16,
     justifyContent: 'center',
     flexDirection: 'row',
   },
