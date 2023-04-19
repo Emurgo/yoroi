@@ -87,6 +87,13 @@ export const SelectTokenFromListScreen = () => {
           tokenInfoSearchTerm={assetSearchTerm}
         />
       )}
+
+      <Counter
+        activeTab={activeTab}
+        isInputSearchVisible={inputSearchVisible}
+        isInputSearchEmpty={inputSearchVisible && assetSearchTerm.length === 0}
+        total={sortedFilteredTokenInfos.length}
+      />
     </View>
   )
 }
@@ -203,7 +210,7 @@ const SelectableAssetItem = ({tokenInfo, disabled, wallet}: SelectableAssetItemP
   )
 }
 
-export const NoAssets = () => {
+const NoAssets = () => {
   const strings = useStrings()
   return (
     <View style={styles.imageContainer}>
@@ -216,6 +223,59 @@ export const NoAssets = () => {
       <Text style={styles.contentText}>{strings.noAssets}</Text>
     </View>
   )
+}
+
+const Counter = ({
+  activeTab,
+  total,
+  isInputSearchVisible,
+  isInputSearchEmpty,
+}: {
+  activeTab: Tabs
+  total: number
+  isInputSearchVisible: boolean
+  isInputSearchEmpty: boolean
+}) => {
+  const strings = useStrings()
+
+  // if true & true => null
+  if (isInputSearchVisible && !isInputSearchEmpty)
+    return (
+      <View style={styles.counter}>
+        <Text style={styles.counterTextBold}>{`${total} ${strings.assets(total)}`}</Text>
+
+        <Text style={styles.counterText}>{` ${strings.found}`}</Text>
+      </View>
+    )
+
+  if (!isInputSearchVisible && activeTab === 'all')
+    return (
+      <View style={styles.counter}>
+        <Text style={styles.counterText}>{`${strings.youHave} `}</Text>
+
+        <Text style={styles.counterTextBold}>{`${total} ${strings.assets(total)}`}</Text>
+      </View>
+    )
+
+  if (!isInputSearchVisible && activeTab === 'tokens')
+    return (
+      <View style={styles.counter}>
+        <Text style={styles.counterText}>{`${strings.youHave} `}</Text>
+
+        <Text style={styles.counterTextBold}>{`${total} ${strings.tokens(total)}`}</Text>
+      </View>
+    )
+
+  if (!isInputSearchVisible && activeTab === 'nfts')
+    return (
+      <View style={styles.counter}>
+        <Text style={styles.counterText}>{`${strings.youHave} `}</Text>
+
+        <Text style={styles.counterTextBold}>{`${total} ${strings.nfts(total)}`}</Text>
+      </View>
+    )
+
+  return null
 }
 
 const useOnSelectNft = () => {
@@ -308,5 +368,17 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     fontSize: 20,
     color: '#000',
+  },
+  counter: {
+    justifyContent: 'center',
+    flexDirection: 'row',
+  },
+  counterText: {
+    fontWeight: '400',
+    color: '#3154CB',
+  },
+  counterTextBold: {
+    fontWeight: 'bold',
+    color: '#3154CB',
   },
 })
