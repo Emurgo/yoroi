@@ -56,7 +56,7 @@ export const SelectTokenFromListScreen = () => {
         )}
       </View>
 
-      {isNftListVisible ? <NftList /> : <NoNftList activeTab={activeTab} canAddToken={canAddAmount} />}
+      {isNftListVisible ? <NftList /> : <AssetList activeTab={activeTab} canAddToken={canAddAmount} />}
     </View>
   )
 }
@@ -80,12 +80,12 @@ const NftList = () => {
   )
 }
 
-type NoNftList = {
+type AssetListProps = {
   canAddToken: boolean
   activeTab: Tabs
 }
 
-const NoNftList = ({canAddToken, activeTab}: NoNftList) => {
+const AssetList = ({canAddToken, activeTab}: AssetListProps) => {
   const wallet = useSelectedWallet()
   const {search: assetSearchTerm} = useSearch()
   const filteredTokenInfos = useFilteredTokenInfos({activeTab})
