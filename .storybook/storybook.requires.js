@@ -99,7 +99,6 @@ const getStories = () => {
     "./src/features/Send/useCases/ConfirmTx/ConfirmTxScreen.stories.tsx": require("../src/features/Send/useCases/ConfirmTx/ConfirmTxScreen.stories.tsx"),
     "./src/features/Send/useCases/ListAmountsToSend/AddToken/AddToken.stories.tsx": require("../src/features/Send/useCases/ListAmountsToSend/AddToken/AddToken.stories.tsx"),
     "./src/features/Send/useCases/ListAmountsToSend/AddToken/SelectTokenFromListScreen.stories.tsx": require("../src/features/Send/useCases/ListAmountsToSend/AddToken/SelectTokenFromListScreen.stories.tsx"),
-    "./src/features/Send/useCases/ListAmountsToSend/AddToken/Show/EmptySearchResult.stories.tsx": require("../src/features/Send/useCases/ListAmountsToSend/AddToken/Show/EmptySearchResult.stories.tsx"),
     "./src/features/Send/useCases/ListAmountsToSend/AddToken/Show/MaxAmountsPerTx.stories.tsx": require("../src/features/Send/useCases/ListAmountsToSend/AddToken/Show/MaxAmountsPerTx.stories.tsx"),
     "./src/features/Send/useCases/ListAmountsToSend/EditAmount/EditAmountScreen.stories.tsx": require("../src/features/Send/useCases/ListAmountsToSend/EditAmount/EditAmountScreen.stories.tsx"),
     "./src/features/Send/useCases/ListAmountsToSend/ListAmountsToSendScreen.stories.tsx": require("../src/features/Send/useCases/ListAmountsToSend/ListAmountsToSendScreen.stories.tsx"),

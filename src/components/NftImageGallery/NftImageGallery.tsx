@@ -12,14 +12,6 @@ import {NftPreview} from '../NftPreview'
 import {Spacer} from '../Spacer'
 import {Text} from '../Text'
 
-type Props = {
-  nfts: YoroiNft[]
-  onSelect: (id: string) => void
-  onRefresh: () => void
-  isRefreshing: boolean
-  bounces?: boolean
-}
-
 const TEXT_SIZE = 20
 
 export const SkeletonGallery = ({amount}: {amount: number}) => {
@@ -28,13 +20,30 @@ export const SkeletonGallery = ({amount}: {amount: number}) => {
   return <GalleryList data={placeholders} renderItem={() => <SkeletonImagePlaceholder />} />
 }
 
-export const NftImageGallery = ({nfts = [], onSelect, onRefresh, isRefreshing, bounces = true}: Props) => {
+type Props = {
+  nfts: YoroiNft[]
+  onSelect: (id: string) => void
+  onRefresh: () => void
+  isRefreshing: boolean
+  bounces?: FlashListProps<YoroiNft>['bounces']
+  ListEmptyComponent?: FlashListProps<YoroiNft>['ListEmptyComponent']
+}
+
+export const NftImageGallery = ({
+  nfts = [],
+  onSelect,
+  onRefresh,
+  isRefreshing,
+  bounces = false,
+  ListEmptyComponent = undefined,
+}: Props) => {
   return (
     <GalleryList
       data={nfts}
       onRefresh={onRefresh}
       refreshing={isRefreshing}
       bounces={bounces}
+      ListEmptyComponent={ListEmptyComponent}
       renderItem={(nft) =>
         features.moderatingNftsEnabled ? (
           <ModeratedImage onPress={() => onSelect(nft.id)} nft={nft} key={nft.id} />

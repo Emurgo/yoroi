@@ -14,18 +14,19 @@ import {sortTokenInfos} from '../../../../../utils'
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
 import {limitOfSecondaryAmountsPerTx} from '../../../../../yoroi-wallets/contants'
 import {useBalances, useNfts, useTokenInfos} from '../../../../../yoroi-wallets/hooks'
-import {TokenInfo, YoroiNft} from '../../../../../yoroi-wallets/types'
+import {TokenInfo} from '../../../../../yoroi-wallets/types'
 import {Amounts, Quantities} from '../../../../../yoroi-wallets/utils'
-import {filterTokenInfos} from '../../../common/filterTokenInfos'
+import {filterByFungibility} from '../../../common/filterByFungibility'
+import {filterBySearch} from '../../../common/filterBySearch'
 import {useSelectedSecondaryAmountsCounter, useSend, useTokenQuantities} from '../../../common/SendContext'
 import {useStrings} from '../../../common/strings'
 import {MaxAmountsPerTx} from './Show/MaxAmountsPerTx'
 
-export type Tabs = 'all' | 'tokens' | 'nfts'
+export type Fungibility = 'all' | 'ft' | 'nft'
 
 export const SelectTokenFromListScreen = () => {
-  const [activeTab, setActiveTab] = React.useState<Tabs>('all')
   const strings = useStrings()
+  const [fungibility, setFungibility] = React.useState<Fungibility>('all')
 
   // use case: search listed tokens
   useSearchOnNavBar({
@@ -40,18 +41,17 @@ export const SelectTokenFromListScreen = () => {
   const {visible: isSearching} = useSearch()
 
   const canAddAmount = secondaryAmountsCounter < limitOfSecondaryAmountsPerTx
-  const isNftListVisible = activeTab === 'nfts' && !isSearching
 
   return (
     <View style={styles.root}>
       <View style={styles.subheader}>
         {!isSearching && (
           <Tabs>
-            <Tab active={activeTab} onPress={setActiveTab} label={strings.all} tab="all" />
+            <Tab active={fungibility} onPress={setFungibility} label={strings.all} tab="all" />
 
-            <Tab active={activeTab} onPress={setActiveTab} label={strings.tokens(2)} tab="tokens" />
+            <Tab active={fungibility} onPress={setFungibility} label={strings.tokens(2)} tab="ft" />
 
-            <Tab active={activeTab} onPress={setActiveTab} label={strings.nfts(2)} tab="nfts" />
+            <Tab active={fungibility} onPress={setFungibility} label={strings.nfts(2)} tab="nft" />
           </Tabs>
         )}
 
@@ -64,12 +64,25 @@ export const SelectTokenFromListScreen = () => {
         )}
       </View>
 
-      {isNftListVisible ? <NftList /> : <AssetList activeTab={activeTab} canAddAmount={canAddAmount} />}
+      <List fungibility={fungibility} isSearching={isSearching} canAddAmount={canAddAmount} />
     </View>
   )
 }
 
-const NftList = () => {
+type ListProps = {
+  fungibility: Fungibility
+  isSearching: boolean
+  canAddAmount: boolean
+}
+
+const List = ({fungibility, isSearching, canAddAmount}: ListProps) => {
+  const isNftListVisible = fungibility === 'nft' && !isSearching
+
+  if (isNftListVisible) return <NftList fungibility={fungibility} />
+  return <AssetList fungibility={fungibility} canAddAmount={canAddAmount} />
+}
+
+const NftList = ({fungibility}: {fungibility: Fungibility}) => {
   const wallet = useSelectedWallet()
   const {nfts} = useNfts(wallet)
   const navigation = useNavigation<TxHistoryRouteNavigation>()
@@ -85,26 +98,45 @@ const NftList = () => {
   }
 
   return (
-    <View style={styles.nftList}>
-      <NftImageGallery nfts={nfts} onRefresh={() => null} onSelect={onSelect} isRefreshing={false} bounces={false} />
+    <View
+      style={[
+        styles.list,
+        nfts.length > 0 && {paddingTop: 16} /* to keep the same layout when there is no NFT or token */,
+      ]}
+    >
+      <NftImageGallery
+        nfts={nfts}
+        onRefresh={() => null}
+        onSelect={onSelect}
+        isRefreshing={false}
+        bounces={false}
+        ListEmptyComponent={<AssetListEmptyComponent fungibility={fungibility} />}
+      />
     </View>
   )
 }
 
 type AssetListProps = {
   canAddAmount: boolean
-  activeTab: Tabs
+  fungibility: Fungibility
 }
 
-const AssetList = ({canAddAmount, activeTab}: AssetListProps) => {
+const AssetList = ({canAddAmount, fungibility}: AssetListProps) => {
   const wallet = useSelectedWallet()
+  const filteredTokenInfos = useFilteredTokenInfos({fungibility})
+  const isWalletEmpty = useIsWalletEmpty()
   const {search: assetSearchTerm} = useSearch()
-  const filteredTokenInfos = useFilteredTokenInfos({activeTab})
+
+  /*
+   * to show the list empty component
+   * filteredTokenInfos is not empty when the tab is ft or all and the search term is empty (primary token)
+   */
+  const data = fungibility === 'ft' && isWalletEmpty && assetSearchTerm.length === 0 ? [] : filteredTokenInfos
 
   return (
-    <View style={styles.noNftList}>
+    <View style={styles.list}>
       <FlashList
-        data={filteredTokenInfos}
+        data={data}
         renderItem={({item: tokenInfo}: {item: TokenInfo}) => (
           <Boundary>
             <SelectableAssetItem
@@ -115,41 +147,14 @@ const AssetList = ({canAddAmount, activeTab}: AssetListProps) => {
           </Boundary>
         )}
         bounces={false}
-        contentContainerStyle={styles.list}
+        contentContainerStyle={styles.assetListContent}
         keyExtractor={(_, index) => index.toString()}
         testID="assetsList"
         estimatedItemSize={78}
-        ListEmptyComponent={assetSearchTerm.length > 0 && filteredTokenInfos.length === 0 ? <NoAssets /> : undefined}
+        ListEmptyComponent={<AssetListEmptyComponent fungibility={fungibility} />}
       />
     </View>
   )
-}
-
-const useFilteredTokenInfos = ({activeTab}: {activeTab: Tabs}) => {
-  const wallet = useSelectedWallet()
-  const {nfts} = useNfts(wallet)
-  const {search: assetSearchTerm, visible} = useSearch()
-  const balances = useBalances(wallet)
-
-  const tokenInfos = useTokenInfos({
-    wallet,
-    tokenIds: Amounts.toArray(balances).map(({tokenId}) => tokenId),
-  })
-
-  const searchFilteredTokens = filterTokenInfos(assetSearchTerm, tokenInfos)
-
-  const tabFilteredTokenInfos = filterTokenInfosByTab({
-    nfts,
-    activeTab: visible ? 'all' : activeTab, // all assets avaliable when searching
-    tokenInfos: searchFilteredTokens,
-  })
-
-  const sortedFilteredTokenInfos = sortTokenInfos({
-    wallet,
-    tokenInfos: tabFilteredTokenInfos,
-  })
-
-  return sortedFilteredTokenInfos
 }
 
 const Tabs = ({children}: {children: React.ReactNode}) => {
@@ -157,9 +162,9 @@ const Tabs = ({children}: {children: React.ReactNode}) => {
 }
 
 type TabProps = {
-  onPress: (active: Tabs) => void
-  active: Tabs
-  tab: Tabs
+  onPress: (active: Fungibility) => void
+  active: Fungibility
+  tab: Fungibility
   label: string
 }
 
@@ -213,7 +218,40 @@ const SelectableAssetItem = ({tokenInfo, disabled, wallet}: SelectableAssetItemP
   )
 }
 
-export const NoAssets = () => {
+const AssetListEmptyComponent = ({fungibility}: {fungibility: Fungibility}) => {
+  const {search: assetSearchTerm, visible: isSearching} = useSearch()
+  const wallet = useSelectedWallet()
+  const {nfts} = useNfts(wallet)
+  const filteredTokenInfos = useFilteredTokenInfos({fungibility})
+  const strings = useStrings()
+
+  const isWalletEmpty = useIsWalletEmpty()
+
+  if (isSearching && assetSearchTerm.length > 0 && filteredTokenInfos.length === 0) return <EmptySearchResult />
+
+  if (fungibility === 'ft' && isWalletEmpty && assetSearchTerm.length === 0)
+    return <NoAssetsYet text={strings.noAddetYet(strings.tokens(2))} />
+
+  if (fungibility === 'nft' && nfts.length === 0) return <NoAssetsYet text={strings.noAddetYet(strings.nfts(2))} />
+
+  return null
+}
+
+const NoAssetsYet = ({text}: {text: string}) => {
+  return (
+    <View style={styles.imageContainer}>
+      <Spacer height={160} />
+
+      <Image source={noAssetsImage} style={styles.image} />
+
+      <Spacer height={25} />
+
+      <Text style={styles.contentText}>{text}</Text>
+    </View>
+  )
+}
+
+const EmptySearchResult = () => {
   const strings = useStrings()
   return (
     <View style={styles.imageContainer}>
@@ -228,22 +266,47 @@ export const NoAssets = () => {
   )
 }
 
-const filterTokenInfosByTab = ({
-  nfts,
-  activeTab,
-  tokenInfos,
-}: {
-  nfts: YoroiNft[]
-  activeTab: Tabs
-  tokenInfos: TokenInfo[]
-}) => {
-  if (activeTab === 'nfts') {
-    return tokenInfos.filter((tokenInfo) => nfts.some((nft) => nft.fingerprint === tokenInfo.fingerprint))
-  } else if (activeTab === 'tokens') {
-    return tokenInfos.filter((tokenInfo) => !nfts.some((nft) => nft.fingerprint === tokenInfo.fingerprint))
-  }
+const useIsWalletEmpty = () => {
+  const wallet = useSelectedWallet()
+  const balances = useBalances(wallet)
 
-  return tokenInfos
+  const tokenInfos = useTokenInfos({
+    wallet,
+    tokenIds: Amounts.toArray(balances).map(({tokenId}) => tokenId),
+  })
+
+  return (
+    tokenInfos.length === 1 &&
+    tokenInfos[0].id === wallet.primaryTokenInfo.id &&
+    Amounts.getAmount(balances, wallet.primaryTokenInfo.id).quantity === Quantities.zero
+  )
+}
+
+// filteredTokenInfos is not empty when the tab is ft/all and the search term is empty (primary token)
+const useFilteredTokenInfos = ({fungibility}: {fungibility: Fungibility}) => {
+  const wallet = useSelectedWallet()
+  const {nfts} = useNfts(wallet)
+  const {search: assetSearchTerm, visible: isSearching} = useSearch()
+  const balances = useBalances(wallet)
+
+  const tokenInfos = useTokenInfos({
+    wallet,
+    tokenIds: Amounts.toArray(balances).map(({tokenId}) => tokenId),
+  })
+
+  const filteredBySearch = tokenInfos.filter(filterBySearch(assetSearchTerm))
+
+  const filteredByFungibility = filteredBySearch.filter(
+    filterByFungibility({
+      nfts,
+      fungibility: isSearching ? 'all' : fungibility, // all assets avalilable when searching
+    }),
+  )
+
+  return sortTokenInfos({
+    wallet,
+    tokenInfos: filteredByFungibility,
+  })
 }
 
 const styles = StyleSheet.create({
@@ -279,14 +342,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     paddingVertical: 12,
   },
-  nftList: {
-    paddingTop: 18,
-    flex: 1,
-  },
-  noNftList: {
-    flex: 1,
-  },
   list: {
+    paddingTop: 16,
+    flex: 1,
+  },
+  assetListContent: {
     paddingHorizontal: 16,
   },
   image: {
