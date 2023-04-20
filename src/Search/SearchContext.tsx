@@ -126,7 +126,7 @@ export const useSearchOnNavBar = ({
   }
 
   React.useLayoutEffect(() => {
-    navigation.setOptions(inputSearchVisible ? withSearchInput : withSearchButton)
+    navigation.setOptions(visible ? withSearchInput : withSearchButton)
   })
 }
 
