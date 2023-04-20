@@ -64,36 +64,24 @@ export const SelectTokenFromListScreen = () => {
         )}
       </View>
 
-      {isNftListVisible ? (
-        <NftList activeTab={activeTab} />
-      ) : (
-        <AssetList activeTab={activeTab} canAddToken={canAddAmount} />
-      )}
+      {isNftListVisible ? <NftList /> : <AssetList activeTab={activeTab} canAddToken={canAddAmount} />}
     </View>
   )
 }
 
-const NftList = ({activeTab}: {activeTab: Tabs}) => {
+const NftList = () => {
   const wallet = useSelectedWallet()
   const {nfts} = useNfts(wallet)
   const navigation = useNavigation<TxHistoryRouteNavigation>()
   const {tokenSelectedChanged, amountChanged} = useSend()
-  const filteredTokenInfos = useFilteredTokenInfos({activeTab})
   const balances = useBalances(wallet)
 
   const onSelect = (nftId) => {
     tokenSelectedChanged(nftId)
 
     const quantity = Amounts.getAmount(balances, nftId).quantity
-    const tokenInfo = filteredTokenInfos.filter((tokenInfo) => tokenInfo.id === nftId)[0]
-
-    // if the balance is atomic there is no need to edit the amount
-    if (Quantities.isAtomic(quantity, tokenInfo.decimals)) {
-      amountChanged(quantity)
-      navigation.navigate('send-list-amounts-to-send')
-    } else {
-      navigation.navigate('send-edit-amount')
-    }
+    amountChanged(quantity)
+    navigation.navigate('send-list-amounts-to-send')
   }
 
   return (
