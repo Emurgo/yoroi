@@ -34,7 +34,7 @@ export const useStrings = () => {
     next: intl.formatMessage(globalMessages.next),
     nfts: (qty: number) => intl.formatMessage(globalMessages.nfts, {qty}),
     noAssets: intl.formatMessage(messages.noAssets),
-    noAddetYet: (fungible) => intl.formatMessage(messages.noAddetYet, {fungible}),
+    noAddedYet: (fungible) => intl.formatMessage(messages.noAddedYet, {fungible}),
     noBalance: intl.formatMessage(amountInputErrorMessages.insufficientBalance),
     pleaseWait: intl.formatMessage(globalMessages.pleaseWait),
     resolvesTo: intl.formatMessage(messages.resolvesTo),
@@ -166,8 +166,8 @@ export const messages = defineMessages({
     id: 'components.send.assetselectorscreen.noAssets',
     defaultMessage: '!!!No assets found',
   },
-  noAddetYet: {
-    id: 'components.send.assetselectorscreen.noAddetYet',
+  noAddedYet: {
+    id: 'components.send.assetselectorscreen.noAddedYet',
     defaultMessage: '!!!No {fungible} added yet',
   },
   sendAllWarningTitle: {
