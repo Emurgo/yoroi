@@ -157,10 +157,10 @@ const Tabs = ({setActiveTab, activeTab}: TabsProps) => {
 }
 
 type TabProps = {
-  setActiveTab: (activeTab: Tabs) => void
-  activeTab: Tabs
+  onPress: () => void
+  active: boolean
   tab: Tabs
-  text: string
+  label: string
 }
 
 const Tab = ({setActiveTab, activeTab, tab, text}: TabProps) => (
