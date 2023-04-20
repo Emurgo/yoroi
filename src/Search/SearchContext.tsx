@@ -94,7 +94,7 @@ export const useSearchOnNavBar = ({
 }) => {
   const navigation = useNavigation()
 
-  const {search, inputSearchVisible, inputSearchVisibleChanged, clearSearch} = useSearch()
+  const {search, visible, showSearch, hideSearch, clearSearch} = useSearch()
 
   const handleSearchClose = () => {
     inputSearchVisibleChanged(false)
