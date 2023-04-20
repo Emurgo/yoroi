@@ -8,7 +8,7 @@ import {defaultStackNavigationOptionsV2} from '../navigation'
 
 type SearchState = {
   search: string
-  inputSearchVisible: boolean
+  visible: boolean
 }
 type SearchActions = {
   searchChanged: (search: string) => void
