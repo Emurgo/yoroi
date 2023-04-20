@@ -64,10 +64,16 @@ function searchReducer(state: SearchState, action: SearchAction) {
         search: action.search,
       }
 
-    case 'inputSearchVisibleChanged':
+    case 'showSearch':
       return {
         ...state,
-        inputSearchVisible: action.inputSearchVisible,
+        visible: true,
+      }
+
+    case 'hideSearch':
+      return {
+        ...state,
+        visible: false,
       }
 
     default:
