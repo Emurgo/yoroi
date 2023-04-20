@@ -126,7 +126,7 @@ const AssetList = ({canAddAmount, fungibility}: AssetListProps) => {
 
   /*
    * to show the empty list component
-   * filteredTokenInfos has primary token when the search term is empty and the ft/all tab is selected (primary token)
+   * filteredTokenInfos has primary token when the search term is empty and the ft/all tab is selected
    */
   const data = fungibility === 'ft' && isWalletEmpty && assetSearchTerm.length === 0 ? [] : filteredTokenInfos
 
