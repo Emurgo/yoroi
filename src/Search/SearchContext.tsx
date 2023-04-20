@@ -49,7 +49,8 @@ export const SearchProvider = ({
 type SearchAction =
   | {type: 'clear'}
   | {type: 'searchChanged'; search: string}
-  | {type: 'inputSearchVisibleChanged'; inputSearchVisible: boolean}
+  | {type: 'showSearch'}
+  | {type: 'hideSearch'}
 
 function searchReducer(state: SearchState, action: SearchAction) {
   switch (action.type) {
