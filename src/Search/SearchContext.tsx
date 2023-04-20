@@ -13,7 +13,8 @@ type SearchState = {
 type SearchActions = {
   searchChanged: (search: string) => void
   clearSearch: () => void
-  inputSearchVisibleChanged: (inputSearchVisible: boolean) => void
+  showSearch: () => void
+  hideSearch: () = void
 }
 
 const SearchContext = createContext<undefined | (SearchState & SearchActions)>(undefined)
