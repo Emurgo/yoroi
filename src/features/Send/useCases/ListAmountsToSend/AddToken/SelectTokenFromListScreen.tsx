@@ -37,7 +37,7 @@ export const SelectTokenFromListScreen = () => {
 
   const secondaryAmountsCounter = useSelectedSecondaryAmountsCounter(wallet)
 
-  const {inputSearchVisible} = useSearch()
+  const {visible: isSearching} = useSearch()
 
   const canAddAmount = secondaryAmountsCounter < limitOfSecondaryAmountsPerTx
   const isNftListVisible = activeTab === 'nfts' && !inputSearchVisible
