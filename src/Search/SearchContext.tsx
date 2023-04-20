@@ -101,7 +101,7 @@ export const useSearchOnNavBar = ({
     clearSearch()
   }
   const handleGoBack = () => {
-    handleSearchClose()
+    handleCloseSearch()
     if (!inputSearchVisible) navigation.goBack()
   }
 
