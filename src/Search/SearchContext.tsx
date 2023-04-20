@@ -37,8 +37,8 @@ export const SearchProvider = ({
   const actions = React.useRef<SearchActions>({
     clearSearch: () => dispatch({type: 'clear'}),
     searchChanged: (search: string) => dispatch({type: 'searchChanged', search}),
-    inputSearchVisibleChanged: (inputSearchVisible: boolean) =>
-      dispatch({type: 'inputSearchVisibleChanged', inputSearchVisible}),
+    showSearch: () => dispatch({type: 'showSearch'}),
+    hideSearch: () => dispatch({type: 'hideSearch'}),
   }).current
 
   const context = React.useMemo(() => ({...state, ...actions}), [state, actions])
