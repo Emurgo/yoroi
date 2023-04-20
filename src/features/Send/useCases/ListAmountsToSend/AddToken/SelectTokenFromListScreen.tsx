@@ -45,7 +45,15 @@ export const SelectTokenFromListScreen = () => {
   return (
     <View style={styles.root}>
       <View style={styles.subheader}>
-        {!isSearching && <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />}
+        {!isSearching && (
+          <Tabs>
+            <Tab active={activeTab} onPress={setActiveTab} label={strings.all} tab="all" />
+
+            <Tab active={activeTab} onPress={setActiveTab} label={strings.tokens(2)} tab="tokens" />
+
+            <Tab active={activeTab} onPress={setActiveTab} label={strings.nfts(2)} tab="nfts" />
+          </Tabs>
+        )}
 
         {!canAddAmount && (
           <View style={styles.panel}>
@@ -113,7 +121,7 @@ const AssetList = ({canAddToken, activeTab}: AssetListProps) => {
 const useFilteredTokenInfos = ({activeTab}: {activeTab: Tabs}) => {
   const wallet = useSelectedWallet()
   const {nfts} = useNfts(wallet)
-  const {search: assetSearchTerm, inputSearchVisible} = useSearch()
+  const {search: assetSearchTerm, visible} = useSearch()
   const balances = useBalances(wallet)
 
   const tokenInfos = useTokenInfos({
@@ -125,7 +133,7 @@ const useFilteredTokenInfos = ({activeTab}: {activeTab: Tabs}) => {
 
   const tabFilteredTokenInfos = filterTokenInfosByTab({
     nfts,
-    activeTab: inputSearchVisible ? 'all' : activeTab, // all assets avaliable when searching
+    activeTab: visible ? 'all' : activeTab, // all assets avaliable when searching
     tokenInfos: searchFilteredTokens,
   })
 
@@ -137,46 +145,31 @@ const useFilteredTokenInfos = ({activeTab}: {activeTab: Tabs}) => {
   return sortedFilteredTokenInfos
 }
 
-type TabsProps = {
-  setActiveTab: (activeTab: Tabs) => void
-  activeTab: Tabs
-}
-
-const Tabs = ({setActiveTab, activeTab}: TabsProps) => {
-  const strings = useStrings()
-
-  return (
-    <View style={styles.tabs}>
-      <Tab activeTab={activeTab} setActiveTab={setActiveTab} text={strings.all} tab="all" />
-
-      <Tab activeTab={activeTab} setActiveTab={setActiveTab} text={strings.tokens(2)} tab="tokens" />
-
-      <Tab activeTab={activeTab} setActiveTab={setActiveTab} text={strings.nfts(2)} tab="nfts" />
-    </View>
-  )
+const Tabs = ({children}: {children: React.ReactNode}) => {
+  return <View style={styles.tabs}>{children}</View>
 }
 
 type TabProps = {
-  onPress: () => void
-  active: boolean
+  onPress: (active: Tabs) => void
+  active: Tabs
   tab: Tabs
   label: string
 }
 
-const Tab = ({setActiveTab, activeTab, tab, text}: TabProps) => (
+const Tab = ({onPress, active, tab, label}: TabProps) => (
   <TouchableOpacity
-    onPress={() => setActiveTab(tab)}
-    style={[styles.tabContainer, activeTab === tab && styles.tabContainerActive]}
+    onPress={() => onPress(active)}
+    style={[styles.tabContainer, active === tab && styles.tabContainerActive]}
   >
     <Text
       style={[
         styles.tab,
         {
-          color: activeTab === tab ? '#3154CB' : '#6B7384',
+          color: active === tab ? '#3154CB' : '#6B7384',
         },
       ]}
     >
-      {text}
+      {label}
     </Text>
   </TouchableOpacity>
 )

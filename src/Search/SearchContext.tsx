@@ -14,7 +14,7 @@ type SearchActions = {
   searchChanged: (search: string) => void
   clearSearch: () => void
   showSearch: () => void
-  hideSearch: () = void
+  hideSearch: () => void
 }
 
 const SearchContext = createContext<undefined | (SearchState & SearchActions)>(undefined)
@@ -102,13 +102,13 @@ export const useSearchOnNavBar = ({
   }
   const handleGoBack = () => {
     handleCloseSearch()
-    if (!inputSearchVisible) navigation.goBack()
+    if (!visible) navigation.goBack()
   }
 
   const withSearchInput: StackNavigationOptions = {
     ...defaultStackNavigationOptionsV2,
     headerTitle: () => <InputSearch placeholder={placeholder} />,
-    headerRight: () => (search.length > 0 ? <EraseButton onPress={handleSearchClose} /> : null),
+    headerRight: () => (search.length > 0 ? <EraseButton onPress={handleCloseSearch} /> : null),
     headerLeft: () => <BackButton onPress={handleGoBack} />,
     headerTitleAlign: 'left',
     headerTitleContainerStyle: {
