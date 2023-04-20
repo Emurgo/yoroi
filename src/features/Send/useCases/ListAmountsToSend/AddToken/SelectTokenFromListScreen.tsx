@@ -84,10 +84,12 @@ const List = ({fungibility, isSearching, canAddAmount}: ListProps) => {
 
 const NftList = ({fungibility}: {fungibility: Fungibility}) => {
   const wallet = useSelectedWallet()
-  const {nfts} = useNfts(wallet)
   const navigation = useNavigation<TxHistoryRouteNavigation>()
   const {tokenSelectedChanged, amountChanged} = useSend()
   const balances = useBalances(wallet)
+
+  const {nfts} = useNfts(wallet)
+  const sortedNfts = nfts.sort((NftA, NftB) => sortNfts(NftA.name, NftB.name))
 
   const onSelect = (nftId) => {
     tokenSelectedChanged(nftId)
@@ -105,11 +107,10 @@ const NftList = ({fungibility}: {fungibility: Fungibility}) => {
       ]}
     >
       <NftImageGallery
-        nfts={nfts}
-        onRefresh={() => null}
+        nfts={sortedNfts}
+        onRefresh={() => undefined}
         onSelect={onSelect}
         isRefreshing={false}
-        bounces={false}
         ListEmptyComponent={<AssetListEmptyComponent fungibility={fungibility} />}
       />
     </View>
@@ -308,6 +309,8 @@ const useFilteredTokenInfos = ({fungibility}: {fungibility: Fungibility}) => {
     tokenInfos: filteredByFungibility,
   })
 }
+
+const sortNfts = (nftNameA: string, nftNameB: string): number => nftNameA.localeCompare(nftNameB)
 
 const styles = StyleSheet.create({
   root: {
