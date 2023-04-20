@@ -107,7 +107,11 @@ const AssetList = ({canAddToken, activeTab}: AssetListProps) => {
         data={filteredTokenInfos}
         renderItem={({item: tokenInfo}: {item: TokenInfo}) => (
           <Boundary>
-            <SelectableAssetItem tokenInfo={tokenInfo} disabled={!canAddToken} wallet={wallet} />
+            <SelectableAssetItem
+              tokenInfo={tokenInfo}
+              disabled={!canAddAmount && tokenInfo.id !== wallet.primaryTokenInfo.id}
+              wallet={wallet}
+            />
           </Boundary>
         )}
         bounces={false}
