@@ -27,6 +27,7 @@ type Props = {
   isRefreshing: boolean
   bounces?: FlashListProps<YoroiNft>['bounces']
   ListEmptyComponent?: FlashListProps<YoroiNft>['ListEmptyComponent']
+  withPaddingVertical?: boolean
 }
 
 export const NftImageGallery = ({
@@ -36,6 +37,7 @@ export const NftImageGallery = ({
   isRefreshing,
   bounces = false,
   ListEmptyComponent = undefined,
+  withPaddingVertical = undefined,
 }: Props) => {
   return (
     <GalleryList
@@ -44,6 +46,7 @@ export const NftImageGallery = ({
       refreshing={isRefreshing}
       bounces={bounces}
       ListEmptyComponent={ListEmptyComponent}
+      withPaddingVertical={withPaddingVertical}
       renderItem={(nft) =>
         features.moderatingNftsEnabled ? (
           <ModeratedImage onPress={() => onSelect(nft.id)} nft={nft} key={nft.id} />
@@ -251,13 +254,18 @@ const IMAGE_PADDING = 8
 const ROW_SPACING = 14
 const NUMBER_OF_COLUMNS = 2
 const CONTAINER_HORIZONTAL_PADDING = 16
+const CONTAINER_VERTICAL_PADDING = 16
 const SPACE_BETWEEN_COLUMNS = CONTAINER_HORIZONTAL_PADDING
 const DIMENSIONS = Dimensions.get('window')
 const MIN_SIZE = Math.min(DIMENSIONS.width, DIMENSIONS.height)
 const IMAGE_HORIZONTAL_PADDING = SPACE_BETWEEN_COLUMNS / NUMBER_OF_COLUMNS
 const IMAGE_SIZE = (MIN_SIZE - CONTAINER_HORIZONTAL_PADDING * 2) / NUMBER_OF_COLUMNS - IMAGE_HORIZONTAL_PADDING
 
-function GalleryList<T>({renderItem, ...rest}: FlashListProps<T> & {renderItem: (item: T) => React.ReactElement}) {
+function GalleryList<T>({
+  renderItem,
+  withPaddingVertical = false,
+  ...rest
+}: FlashListProps<T> & {renderItem: (item: T) => React.ReactElement; withPaddingVertical?: boolean}) {
   return (
     <FlashList
       {...rest}
@@ -271,7 +279,10 @@ function GalleryList<T>({renderItem, ...rest}: FlashListProps<T> & {renderItem: 
           <Spacer height={ROW_SPACING} />
         </View>
       )}
-      contentContainerStyle={{paddingHorizontal: CONTAINER_HORIZONTAL_PADDING}}
+      contentContainerStyle={{
+        paddingHorizontal: CONTAINER_HORIZONTAL_PADDING,
+        paddingVertical: withPaddingVertical ? CONTAINER_VERTICAL_PADDING : undefined,
+      }}
       keyExtractor={(placeholder, index) => index + ''}
       horizontal={false}
       estimatedItemSize={IMAGE_SIZE + IMAGE_PADDING + TEXT_SIZE + ROW_SPACING}

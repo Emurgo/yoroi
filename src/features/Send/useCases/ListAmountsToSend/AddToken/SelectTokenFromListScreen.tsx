@@ -100,17 +100,13 @@ const NftList = ({fungibility}: {fungibility: Fungibility}) => {
   }
 
   return (
-    <View
-      style={[
-        styles.list,
-        nfts.length > 0 && {paddingTop: 16} /* to keep consistent the empty list layout for all tabs */,
-      ]}
-    >
+    <View style={styles.list}>
       <NftImageGallery
         nfts={sortedNfts}
         onRefresh={() => undefined}
         onSelect={onSelect}
         isRefreshing={false}
+        withPaddingVertical={nfts.length > 0} /* to keep consistency in between tabs when the list is not empty */
         ListEmptyComponent={<AssetListEmptyComponent fungibility={fungibility} />}
       />
     </View>
