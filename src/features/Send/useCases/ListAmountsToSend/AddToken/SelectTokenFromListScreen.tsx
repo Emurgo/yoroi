@@ -295,7 +295,7 @@ const styles = StyleSheet.create({
   contentText: {
     flex: 1,
     textAlign: 'center',
-    fontWeight: '700',
+    fontWeight: 'bold',
     fontSize: 20,
     color: '#000',
   },
