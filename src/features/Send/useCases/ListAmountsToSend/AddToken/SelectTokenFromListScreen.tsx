@@ -64,21 +64,36 @@ export const SelectTokenFromListScreen = () => {
         )}
       </View>
 
-      {isNftListVisible ? <NftList /> : <AssetList activeTab={activeTab} canAddToken={canAddAmount} />}
+      {isNftListVisible ? (
+        <NftList activeTab={activeTab} />
+      ) : (
+        <AssetList activeTab={activeTab} canAddToken={canAddAmount} />
+      )}
     </View>
   )
 }
 
-const NftList = () => {
+const NftList = ({activeTab}: {activeTab: Tabs}) => {
   const wallet = useSelectedWallet()
   const {nfts} = useNfts(wallet)
   const navigation = useNavigation<TxHistoryRouteNavigation>()
   const {tokenSelectedChanged, amountChanged} = useSend()
+  const filteredTokenInfos = useFilteredTokenInfos({activeTab})
+  const balances = useBalances(wallet)
 
   const onSelect = (nftId) => {
     tokenSelectedChanged(nftId)
-    amountChanged('1')
-    navigation.navigate('send-list-amounts-to-send')
+
+    const quantity = Amounts.getAmount(balances, nftId).quantity
+    const tokenInfo = filteredTokenInfos.filter((tokenInfo) => tokenInfo.id === nftId)[0]
+
+    // if the balance is atomic there is no need to edit the amount
+    if (Quantities.isAtomic(quantity, tokenInfo.decimals)) {
+      amountChanged(quantity)
+      navigation.navigate('send-list-amounts-to-send')
+    } else {
+      navigation.navigate('send-edit-amount')
+    }
   }
 
   return (
@@ -158,7 +173,7 @@ type TabProps = {
 
 const Tab = ({onPress, active, tab, label}: TabProps) => (
   <TouchableOpacity
-    onPress={() => onPress(active)}
+    onPress={() => onPress(tab)}
     style={[styles.tabContainer, active === tab && styles.tabContainerActive]}
   >
     <Text
