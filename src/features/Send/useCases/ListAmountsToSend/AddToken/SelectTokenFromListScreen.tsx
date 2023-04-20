@@ -45,7 +45,7 @@ export const SelectTokenFromListScreen = () => {
   return (
     <View style={styles.root}>
       <View style={styles.subheader}>
-        {!inputSearchVisible && <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />}
+        {!isSearching && <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />}
 
         {!canAddAmount && (
           <View style={styles.panel}>
