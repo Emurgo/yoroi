@@ -81,7 +81,7 @@ function searchReducer(state: SearchState, action: SearchAction) {
   }
 }
 
-const defaultState: SearchState = Object.freeze({search: '', inputSearchVisible: false})
+const defaultState: SearchState = Object.freeze({search: '', visible: false})
 
 export const useSearchOnNavBar = ({
   placeholder,
