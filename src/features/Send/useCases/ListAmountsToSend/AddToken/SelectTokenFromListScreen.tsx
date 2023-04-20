@@ -103,7 +103,7 @@ const NftList = ({fungibility}: {fungibility: Fungibility}) => {
     <View
       style={[
         styles.list,
-        nfts.length > 0 && {paddingTop: 16} /* to keep the same layout when there is no NFT or token */,
+        nfts.length > 0 && {paddingTop: 16} /* to keep consistent the empty list layout for all tabs */,
       ]}
     >
       <NftImageGallery
@@ -129,8 +129,8 @@ const AssetList = ({canAddAmount, fungibility}: AssetListProps) => {
   const {search: assetSearchTerm} = useSearch()
 
   /*
-   * to show the list empty component
-   * filteredTokenInfos is not empty when the tab is ft or all and the search term is empty (primary token)
+   * to show the empty list component
+   * filteredTokenInfos has primary token when the search term is empty and the ft/all tab is selected (primary token)
    */
   const data = fungibility === 'ft' && isWalletEmpty && assetSearchTerm.length === 0 ? [] : filteredTokenInfos
 
@@ -300,7 +300,7 @@ const useFilteredTokenInfos = ({fungibility}: {fungibility: Fungibility}) => {
   const filteredByFungibility = filteredBySearch.filter(
     filterByFungibility({
       nfts,
-      fungibility: isSearching ? 'all' : fungibility, // all assets avalilable when searching
+      fungibility: isSearching ? 'all' : fungibility, // all assets must be available when searching
     }),
   )
 
@@ -346,7 +346,6 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   list: {
-    paddingTop: 16,
     flex: 1,
   },
   assetListContent: {
