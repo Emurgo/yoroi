@@ -120,7 +120,7 @@ export const useSearchOnNavBar = ({
   const withSearchButton: StackNavigationOptions = {
     ...defaultStackNavigationOptionsV2,
     headerTitle: title,
-    headerRight: () => <SearchButton onPress={() => inputSearchVisibleChanged(true)} />,
+    headerRight: () => <SearchButton onPress={() => showSearch()} />,
     ...(noBack ? {headerLeft: () => null} : {}),
     headerBackTitleVisible: false,
   }
