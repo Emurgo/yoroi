@@ -106,8 +106,8 @@ const NftList = ({fungibility}: {fungibility: Fungibility}) => {
         onRefresh={() => undefined}
         onSelect={onSelect}
         isRefreshing={false}
-        withPaddingVertical={nfts.length > 0} /* to keep consistency in between tabs when the list is not empty */
-        ListEmptyComponent={<AssetListEmptyComponent fungibility={fungibility} />}
+        withPaddingVertical={nfts.length > 0} // to keep consistency in between tabs when the list is not empty
+        ListEmptyComponent={<ListEmptyComponent fungibility={fungibility} />}
       />
     </View>
   )
@@ -148,7 +148,7 @@ const AssetList = ({canAddAmount, fungibility}: AssetListProps) => {
         keyExtractor={(_, index) => index.toString()}
         testID="assetsList"
         estimatedItemSize={78}
-        ListEmptyComponent={<AssetListEmptyComponent fungibility={fungibility} />}
+        ListEmptyComponent={<ListEmptyComponent fungibility={fungibility} />}
       />
     </View>
   )
@@ -215,7 +215,7 @@ const SelectableAssetItem = ({tokenInfo, disabled, wallet}: SelectableAssetItemP
   )
 }
 
-const AssetListEmptyComponent = ({fungibility}: {fungibility: Fungibility}) => {
+const ListEmptyComponent = ({fungibility}: {fungibility: Fungibility}) => {
   const {search: assetSearchTerm, visible: isSearching} = useSearch()
   const wallet = useSelectedWallet()
   const {nfts} = useNfts(wallet)
@@ -279,7 +279,7 @@ const useIsWalletEmpty = () => {
   )
 }
 
-// filteredTokenInfos is not empty when the tab is ft/all and the search term is empty (primary token)
+// filteredTokenInfos has primary token when the search term is empty and the ft/all tab is selected
 const useFilteredTokenInfos = ({fungibility}: {fungibility: Fungibility}) => {
   const wallet = useSelectedWallet()
   const {nfts} = useNfts(wallet)
