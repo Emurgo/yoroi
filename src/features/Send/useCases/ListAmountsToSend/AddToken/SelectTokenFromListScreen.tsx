@@ -40,7 +40,7 @@ export const SelectTokenFromListScreen = () => {
   const {visible: isSearching} = useSearch()
 
   const canAddAmount = secondaryAmountsCounter < limitOfSecondaryAmountsPerTx
-  const isNftListVisible = activeTab === 'nfts' && !inputSearchVisible
+  const isNftListVisible = activeTab === 'nfts' && !isSearching
 
   return (
     <View style={styles.root}>
