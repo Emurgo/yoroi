@@ -1,9 +1,8 @@
 import {useNavigation} from '@react-navigation/native'
 import {FlashList} from '@shopify/flash-list'
 import React from 'react'
-import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
-import noAssetsImage from '../../../../../assets/img/no-assets-found.png'
 import {Boundary, Spacer, Text} from '../../../../../components'
 import {AmountItem} from '../../../../../components/AmountItem/AmountItem'
 import {NftImageGallery} from '../../../../../components/NftImageGallery'
@@ -18,6 +17,7 @@ import {TokenInfo} from '../../../../../yoroi-wallets/types'
 import {Amounts, Quantities} from '../../../../../yoroi-wallets/utils'
 import {filterByFungibility} from '../../../common/filterByFungibility'
 import {filterBySearch} from '../../../common/filterBySearch'
+import {NoAssetFounfImage} from '../../../common/NoAssetFoundImage'
 import {useSelectedSecondaryAmountsCounter, useSend, useTokenQuantities} from '../../../common/SendContext'
 import {useStrings} from '../../../common/strings'
 import {MaxAmountsPerTx} from './Show/MaxAmountsPerTx'
@@ -241,7 +241,7 @@ const NoAssetsYet = ({text}: {text: string}) => {
     <View style={styles.imageContainer}>
       <Spacer height={160} />
 
-      <Image source={noAssetsImage} style={styles.image} />
+      <NoAssetFounfImage style={styles.image} />
 
       <Spacer height={25} />
 
@@ -256,7 +256,7 @@ const EmptySearchResult = () => {
     <View style={styles.imageContainer}>
       <Spacer height={160} />
 
-      <Image source={noAssetsImage} style={styles.image} />
+      <NoAssetFounfImage style={styles.image} />
 
       <Spacer height={25} />
 
