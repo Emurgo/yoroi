@@ -96,24 +96,24 @@ describe('filterByFungibility', () => {
   const nftTokenInfos: TokenInfo[] = [fakeToken3, fakeToken4]
   const ftTokenInfos: TokenInfo[] = [fakeToken1, fakeToken2]
 
-  it.each<{fungibility: FungibilityFilter; result: TokenInfo[]}>([
+  it.each<{fungibilityFilter: FungibilityFilter; result: TokenInfo[]}>([
     {
-      fungibility: 'all',
+      fungibilityFilter: 'all',
       result: allTokenInfos,
     },
     {
-      fungibility: 'nft',
+      fungibilityFilter: 'nft',
       result: nftTokenInfos,
     },
     {
-      fungibility: 'ft',
+      fungibilityFilter: 'ft',
       result: ftTokenInfos,
     },
     {
-      fungibility: 'random-value' as FungibilityFilter,
+      fungibilityFilter: 'random-value' as FungibilityFilter,
       result: allTokenInfos,
     },
-  ])('should return correct tokenInfos if fungibility is "$fungibility"', ({fungibility, result}) => {
-    expect(allTokenInfos.filter(filterByFungibility({nfts, fungibility}))).toEqual(result)
+  ])('should return correct tokenInfos if fungibility is "$fungibility"', ({fungibilityFilter, result}) => {
+    expect(allTokenInfos.filter(filterByFungibility({nfts, fungibilityFilter}))).toEqual(result)
   })
 })
