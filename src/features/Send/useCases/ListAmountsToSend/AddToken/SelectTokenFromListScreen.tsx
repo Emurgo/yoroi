@@ -78,7 +78,7 @@ type ListProps = {
 const List = ({fungibility, isSearching, canAddAmount}: ListProps) => {
   const isNftListVisible = fungibility === 'nft' && !isSearching
 
-  if (isNftListVisible) return <NftList fungibility={fungibility} />
+  if (isNftListVisible) return <NftList />
   return <AssetList fungibility={fungibility} canAddAmount={canAddAmount} />
 }
 
