@@ -26,7 +26,7 @@ export type FungibilityFilter = 'all' | 'ft' | 'nft'
 
 export const SelectTokenFromListScreen = () => {
   const strings = useStrings()
-  const [fungibility, setFungibility] = React.useState<FungibilityFilter>('all')
+  const [fungibilityFilter, setFungibilityFilter] = React.useState<FungibilityFilter>('all')
 
   // use case: search listed tokens
   useSearchOnNavBar({
@@ -47,11 +47,11 @@ export const SelectTokenFromListScreen = () => {
       <View style={styles.subheader}>
         {!isSearching && (
           <Tabs>
-            <Tab active={fungibility} onPress={setFungibility} label={strings.all} tab="all" />
+            <Tab active={fungibilityFilter} onPress={setFungibilityFilter} label={strings.all} tab="all" />
 
-            <Tab active={fungibility} onPress={setFungibility} label={strings.tokens(2)} tab="ft" />
+            <Tab active={fungibilityFilter} onPress={setFungibilityFilter} label={strings.tokens(2)} tab="ft" />
 
-            <Tab active={fungibility} onPress={setFungibility} label={strings.nfts(2)} tab="nft" />
+            <Tab active={fungibilityFilter} onPress={setFungibilityFilter} label={strings.nfts(2)} tab="nft" />
           </Tabs>
         )}
 
@@ -64,22 +64,22 @@ export const SelectTokenFromListScreen = () => {
         )}
       </View>
 
-      <List fungibility={fungibility} isSearching={isSearching} canAddAmount={canAddAmount} />
+      <List fungibilityFilter={fungibilityFilter} isSearching={isSearching} canAddAmount={canAddAmount} />
     </View>
   )
 }
 
 type ListProps = {
-  fungibility: FungibilityFilter
+  fungibilityFilter: FungibilityFilter
   isSearching: boolean
   canAddAmount: boolean
 }
 
-const List = ({fungibility, isSearching, canAddAmount}: ListProps) => {
-  const isNftListVisible = fungibility === 'nft' && !isSearching
+const List = ({fungibilityFilter, isSearching, canAddAmount}: ListProps) => {
+  const isNftListVisible = fungibilityFilter === 'nft' && !isSearching
 
   if (isNftListVisible) return <NftList />
-  return <AssetList fungibility={fungibility} canAddAmount={canAddAmount} />
+  return <AssetList fungibilityFilter={fungibilityFilter} canAddAmount={canAddAmount} />
 }
 
 const NftList = () => {
@@ -107,7 +107,7 @@ const NftList = () => {
         onSelect={onSelect}
         isRefreshing={false}
         withVerticalPadding={nfts.length > 0} // to keep consistency between tabs when the list is not empty
-        ListEmptyComponent={<ListEmptyComponent fungibility="nft" />}
+        ListEmptyComponent={<ListEmptyComponent fungibilityFilter="nft" />}
       />
     </View>
   )
@@ -115,12 +115,12 @@ const NftList = () => {
 
 type AssetListProps = {
   canAddAmount: boolean
-  fungibility: FungibilityFilter
+  fungibilityFilter: FungibilityFilter
 }
 
-const AssetList = ({canAddAmount, fungibility}: AssetListProps) => {
+const AssetList = ({canAddAmount, fungibilityFilter}: AssetListProps) => {
   const wallet = useSelectedWallet()
-  const filteredTokenInfos = useFilteredTokenInfos({fungibility})
+  const filteredTokenInfos = useFilteredTokenInfos({fungibilityFilter})
   const isWalletEmpty = useIsWalletEmpty()
   const {search: assetSearchTerm} = useSearch()
 
@@ -130,7 +130,7 @@ const AssetList = ({canAddAmount, fungibility}: AssetListProps) => {
    *    - "ft" tab has to have primary token hidden when wallet is empty and show the empty list component
    *    - "all" tab has to display the primary token
    */
-  const data = fungibility === 'ft' && isWalletEmpty && assetSearchTerm.length === 0 ? [] : filteredTokenInfos
+  const data = fungibilityFilter === 'ft' && isWalletEmpty && assetSearchTerm.length === 0 ? [] : filteredTokenInfos
 
   return (
     <View style={styles.list}>
@@ -150,7 +150,7 @@ const AssetList = ({canAddAmount, fungibility}: AssetListProps) => {
         keyExtractor={(_, index) => index.toString()}
         testID="assetsList"
         estimatedItemSize={78}
-        ListEmptyComponent={<ListEmptyComponent fungibility={fungibility} />}
+        ListEmptyComponent={<ListEmptyComponent fungibilityFilter={fungibilityFilter} />}
       />
     </View>
   )
@@ -217,21 +217,21 @@ const SelectableAssetItem = ({tokenInfo, disabled, wallet}: SelectableAssetItemP
   )
 }
 
-const ListEmptyComponent = ({fungibility}: {fungibility: FungibilityFilter}) => {
+const ListEmptyComponent = ({fungibilityFilter}: {fungibilityFilter: FungibilityFilter}) => {
   const {search: assetSearchTerm, visible: isSearching} = useSearch()
   const wallet = useSelectedWallet()
   const {nfts} = useNfts(wallet)
-  const filteredTokenInfos = useFilteredTokenInfos({fungibility})
+  const filteredTokenInfos = useFilteredTokenInfos({fungibilityFilter})
   const strings = useStrings()
 
   const isWalletEmpty = useIsWalletEmpty()
 
   if (isSearching && assetSearchTerm.length > 0 && filteredTokenInfos.length === 0) return <EmptySearchResult />
 
-  if (fungibility === 'ft' && isWalletEmpty && assetSearchTerm.length === 0)
+  if (fungibilityFilter === 'ft' && isWalletEmpty && assetSearchTerm.length === 0)
     return <NoAssetsYet text={strings.noAssetsAddedYet(strings.tokens(2))} />
 
-  if (fungibility === 'nft' && nfts.length === 0)
+  if (fungibilityFilter === 'nft' && nfts.length === 0)
     return <NoAssetsYet text={strings.noAssetsAddedYet(strings.nfts(2))} />
 
   return null
@@ -283,7 +283,7 @@ const useIsWalletEmpty = () => {
 }
 
 // filteredTokenInfos has primary token when the search term and the wallet are empty and the ft/all tab is selected
-const useFilteredTokenInfos = ({fungibility}: {fungibility: FungibilityFilter}) => {
+const useFilteredTokenInfos = ({fungibilityFilter}: {fungibilityFilter: FungibilityFilter}) => {
   const wallet = useSelectedWallet()
   const {nfts} = useNfts(wallet)
   const {search: assetSearchTerm, visible: isSearching} = useSearch()
@@ -299,7 +299,7 @@ const useFilteredTokenInfos = ({fungibility}: {fungibility: FungibilityFilter}) 
   const filteredByFungibility = filteredBySearch.filter(
     filterByFungibility({
       nfts,
-      fungibility: isSearching ? 'all' : fungibility, // all assets must be available when searching
+      fungibilityFilter: isSearching ? 'all' : fungibilityFilter, // all assets must be available when searching
     }),
   )
 
