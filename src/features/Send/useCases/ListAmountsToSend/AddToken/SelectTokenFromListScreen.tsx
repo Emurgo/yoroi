@@ -82,7 +82,7 @@ const List = ({fungibility, isSearching, canAddAmount}: ListProps) => {
   return <AssetList fungibility={fungibility} canAddAmount={canAddAmount} />
 }
 
-const NftList = ({fungibility}: {fungibility: Fungibility}) => {
+const NftList = () => {
   const wallet = useSelectedWallet()
   const navigation = useNavigation<TxHistoryRouteNavigation>()
   const {tokenSelectedChanged, amountChanged} = useSend()
