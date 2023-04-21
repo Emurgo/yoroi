@@ -1,5 +1,5 @@
 import {TokenInfo, YoroiNft} from '../../../yoroi-wallets'
-import {Fungibility} from '../useCases/ListAmountsToSend/AddToken/SelectTokenFromListScreen'
+import {FungibilityFilter} from '../useCases/ListAmountsToSend/AddToken/SelectTokenFromListScreen'
 import {filterByFungibility} from './filterByFungibility'
 
 describe('filterByFungibility', () => {
@@ -96,7 +96,7 @@ describe('filterByFungibility', () => {
   const nftTokenInfos: TokenInfo[] = [fakeToken3, fakeToken4]
   const ftTokenInfos: TokenInfo[] = [fakeToken1, fakeToken2]
 
-  it.each<{fungibility: Fungibility; result: TokenInfo[]}>([
+  it.each<{fungibility: FungibilityFilter; result: TokenInfo[]}>([
     {
       fungibility: 'all',
       result: allTokenInfos,
@@ -110,7 +110,7 @@ describe('filterByFungibility', () => {
       result: ftTokenInfos,
     },
     {
-      fungibility: 'random-value' as Fungibility,
+      fungibility: 'random-value' as FungibilityFilter,
       result: allTokenInfos,
     },
   ])('should return correct tokenInfos if fungibility is "$fungibility"', ({fungibility, result}) => {

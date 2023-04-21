@@ -22,11 +22,11 @@ import {useSelectedSecondaryAmountsCounter, useSend, useTokenQuantities} from '.
 import {useStrings} from '../../../common/strings'
 import {MaxAmountsPerTx} from './Show/MaxAmountsPerTx'
 
-export type Fungibility = 'all' | 'ft' | 'nft'
+export type FungibilityFilter = 'all' | 'ft' | 'nft'
 
 export const SelectTokenFromListScreen = () => {
   const strings = useStrings()
-  const [fungibility, setFungibility] = React.useState<Fungibility>('all')
+  const [fungibility, setFungibility] = React.useState<FungibilityFilter>('all')
 
   // use case: search listed tokens
   useSearchOnNavBar({
@@ -70,7 +70,7 @@ export const SelectTokenFromListScreen = () => {
 }
 
 type ListProps = {
-  fungibility: Fungibility
+  fungibility: FungibilityFilter
   isSearching: boolean
   canAddAmount: boolean
 }
@@ -78,11 +78,11 @@ type ListProps = {
 const List = ({fungibility, isSearching, canAddAmount}: ListProps) => {
   const isNftListVisible = fungibility === 'nft' && !isSearching
 
-  if (isNftListVisible) return <NftList fungibility={fungibility} />
+  if (isNftListVisible) return <NftList />
   return <AssetList fungibility={fungibility} canAddAmount={canAddAmount} />
 }
 
-const NftList = ({fungibility}: {fungibility: Fungibility}) => {
+const NftList = () => {
   const wallet = useSelectedWallet()
   const navigation = useNavigation<TxHistoryRouteNavigation>()
   const {tokenSelectedChanged, amountChanged} = useSend()
@@ -107,7 +107,7 @@ const NftList = ({fungibility}: {fungibility: Fungibility}) => {
         onSelect={onSelect}
         isRefreshing={false}
         withVerticalPadding={nfts.length > 0} // to keep consistency between tabs when the list is not empty
-        ListEmptyComponent={<ListEmptyComponent fungibility={fungibility} />}
+        ListEmptyComponent={<ListEmptyComponent fungibility="nft" />}
       />
 
       <Counter fungibility={fungibility} />
@@ -117,7 +117,7 @@ const NftList = ({fungibility}: {fungibility: Fungibility}) => {
 
 type AssetListProps = {
   canAddAmount: boolean
-  fungibility: Fungibility
+  fungibility: FungibilityFilter
 }
 
 const AssetList = ({canAddAmount, fungibility}: AssetListProps) => {
@@ -165,9 +165,9 @@ const Tabs = ({children}: {children: React.ReactNode}) => {
 }
 
 type TabProps = {
-  onPress: (active: Fungibility) => void
-  active: Fungibility
-  tab: Fungibility
+  onPress: (active: FungibilityFilter) => void
+  active: FungibilityFilter
+  tab: FungibilityFilter
   label: string
 }
 
@@ -221,7 +221,7 @@ const SelectableAssetItem = ({tokenInfo, disabled, wallet}: SelectableAssetItemP
   )
 }
 
-const ListEmptyComponent = ({fungibility}: {fungibility: Fungibility}) => {
+const ListEmptyComponent = ({fungibility}: {fungibility: FungibilityFilter}) => {
   const {search: assetSearchTerm, visible: isSearching} = useSearch()
   const wallet = useSelectedWallet()
   const {nfts} = useNfts(wallet)
@@ -346,7 +346,7 @@ const useIsWalletEmpty = () => {
 }
 
 // filteredTokenInfos has primary token when the search term and the wallet are empty and the ft/all tab is selected
-const useFilteredTokenInfos = ({fungibility}: {fungibility: Fungibility}) => {
+const useFilteredTokenInfos = ({fungibility}: {fungibility: FungibilityFilter}) => {
   const wallet = useSelectedWallet()
   const {nfts} = useNfts(wallet)
   const {search: assetSearchTerm, visible: isSearching} = useSearch()
