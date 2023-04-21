@@ -21,14 +21,14 @@ import type {
   RawUtxo,
   TipStatusResponse,
   TokenInfo,
+  TokenInfoFT,
   Transaction,
   TxStatusRequest,
   TxStatusResponse,
   YoroiEntry,
-  YoroiNft,
   YoroiNftModerationStatus,
 } from '../../types'
-import {Quantity, StakingInfo, YoroiSignedTx, YoroiUnsignedTx} from '../../types'
+import {Quantity, StakingInfo, TokenInfoNFT, YoroiSignedTx, YoroiUnsignedTx} from '../../types'
 import {Quantities} from '../../utils'
 import {parseSafe} from '../../utils/parsing'
 import {validatePassword} from '../../utils/validators'
@@ -149,7 +149,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
   return class ShelleyWallet implements YoroiWallet {
     readonly primaryToken: DefaultAsset = PRIMARY_TOKEN
-    readonly primaryTokenInfo: TokenInfo = PRIMARY_TOKEN_INFO
+    readonly primaryTokenInfo: TokenInfoFT = PRIMARY_TOKEN_INFO
     readonly walletImplementationId = WALLET_IMPLEMENTATION_ID
     readonly networkId = NETWORK_ID
     readonly id: string
@@ -878,7 +878,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
     fetchTokenInfo(tokenId: string) {
       return tokenId === '' || tokenId === 'ADA'
         ? Promise.resolve(PRIMARY_TOKEN_INFO)
-        : api.getTokenInfo(tokenId, `${TOKEN_INFO_SERVICE}/metadata`)
+        : api.getTokenInfo(tokenId, `${TOKEN_INFO_SERVICE}/metadata`, BACKEND)
     }
 
     async fetchFundInfo(): Promise<FundInfoResponse> {
@@ -898,8 +898,9 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
     }
 
     // TODO: caching
-    fetchNfts(ids): Promise<YoroiNft[]> {
-      return api.getNFTs(ids, BACKEND)
+    async fetchNfts(ids): Promise<TokenInfoNFT[]> {
+      const results: TokenInfo[] = await Promise.all(ids.map((id) => this.fetchTokenInfo(id)))
+      return results.filter((r) => r.kind === 'nft') as TokenInfoNFT[]
     }
 
     // TODO: caching

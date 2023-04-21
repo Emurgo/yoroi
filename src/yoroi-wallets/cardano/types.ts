@@ -9,9 +9,10 @@ import {
   StakePoolInfosAndHistories,
   StakingInfo,
   StakingStatus,
+  TokenInfo,
+  TokenInfoNFT,
   WalletImplementationId,
   YoroiEntry,
-  YoroiNft,
   YoroiNftModerationStatus,
   YoroiSignedTx,
   YoroiUnsignedTx,
@@ -26,7 +27,7 @@ import type {
   TxStatusResponse,
   WalletState,
 } from '../types/other'
-import {DefaultAsset, TokenInfo} from '../types/tokens'
+import {DefaultAsset, TokenInfoFT} from '../types/tokens'
 import {CardanoTypes} from '.'
 import type {Addresses} from './chain'
 
@@ -81,7 +82,7 @@ export type YoroiWallet = {
   hwDeviceInfo: null | HWDeviceInfo
   isReadOnly: boolean
   primaryToken: Readonly<DefaultAsset>
-  primaryTokenInfo: Readonly<TokenInfo>
+  primaryTokenInfo: Readonly<TokenInfoFT>
 
   // Sending
   createUnsignedTx(entry: YoroiEntry, metadata?: Array<CardanoTypes.TxMetadata>): Promise<YoroiUnsignedTx>
@@ -123,7 +124,7 @@ export type YoroiWallet = {
   generateNewReceiveAddressIfNeeded(): boolean
 
   // NFTs
-  fetchNfts(ids: string[]): Promise<YoroiNft[]>
+  fetchNfts(ids: string[]): Promise<TokenInfoNFT[]>
   fetchNftModerationStatus(fingerprint: string): Promise<YoroiNftModerationStatus>
 
   // Sync, Save

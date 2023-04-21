@@ -18,9 +18,10 @@ export const AmountItem = ({wallet, style, amount}: AmountItemProps) => {
   const tokenInfo = useTokenInfo({wallet, tokenId})
 
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
-  const name = tokenInfo.ticker ?? tokenInfo.name ?? '-'
+  const name = tokenInfo.kind === 'ft' ? tokenInfo.metadata.ticker ?? tokenInfo.name ?? '-' : tokenInfo.name ?? '-'
   const detail = isPrimary ? tokenInfo.description : tokenInfo.fingerprint
-  const denominatedQuantity = Quantities.denominated(quantity, tokenInfo.decimals)
+  const denominatedQuantity =
+    tokenInfo.kind === 'nft' ? '1' : Quantities.denominated(quantity, tokenInfo.metadata.decimals)
 
   return (
     <View style={[style, styles.container]} testID="assetItem">

@@ -6,8 +6,9 @@ import {CardanoTypes, getCardanoWalletFactory, isYoroiWallet, YoroiWallet} from 
 import {HWDeviceInfo} from '../hw'
 import {Logger} from '../logging'
 import {isWalletMeta, migrateWalletMetas, parseWalletMeta} from '../migrations/walletMeta'
-import {makeWalletEncryptedStorage, storage, YoroiStorage} from '../storage'
+import {makeWalletEncryptedStorage} from '../storage/EncryptedStorage'
 import {Keychain} from '../storage/Keychain'
+import {storage, YoroiStorage} from '../storage/storage'
 import {NetworkId, WalletImplementationId} from '../types'
 import {parseSafe} from '../utils'
 

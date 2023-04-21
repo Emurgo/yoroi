@@ -71,17 +71,20 @@ export const NETWORK_CONFIG = {
   PROVIDER_ID: 1,
 } as const
 
-export const PRIMARY_TOKEN_INFO: TokenInfo = {
+export const PRIMARY_TOKEN_INFO: TokenInfo<'ft'> = {
   id: '',
   name: 'ADA',
-  decimals: 6,
   description: 'Cardano',
-  ticker: 'ADA',
-  symbol: '₳',
-  logo: '',
-  url: '',
   fingerprint: '',
-  group: '',
+  kind: 'ft',
+  metadata: {
+    decimals: 6,
+    ticker: 'ADA',
+    symbol: '₳',
+    logo: '',
+    url: '',
+    group: '',
+  },
 } as const
 
 export const PRIMARY_TOKEN: DefaultAsset = {

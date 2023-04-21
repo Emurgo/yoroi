@@ -33,7 +33,7 @@ export const Nfts = () => {
 
   const {search: nftsSearchTerm} = useSearch()
   const filteredNfts = filterNfts(nftsSearchTerm, nfts)
-  const sortedNfts = filteredNfts.sort((NftA, NftB) => sortNfts(NftA.name, NftB.name))
+  const sortedNfts = filteredNfts.sort((NftA, NftB) => sortNfts(NftA.name ?? '', NftB.name ?? ''))
   const nftsSearchResult = filterNfts(nftsSearchTerm, sortedNfts)
 
   const hasEmptySearchResult = nftsSearchTerm.length > 0 && nftsSearchResult.length === 0

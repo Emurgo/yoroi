@@ -1,50 +1,54 @@
 import AssetFingerprint from '@emurgo/cip14-js'
 
-import {LegacyToken, TokenInfo} from '../../types'
-import {YoroiWallet} from '../types'
+import {LegacyToken, TokenInfoFT} from '../../types'
 import {TokenRegistryEntry} from './api'
 
-export const tokenInfo = (entry: TokenRegistryEntry): TokenInfo => {
+export const tokenInfo = (entry: TokenRegistryEntry): TokenInfoFT => {
   const policyId = toPolicyId(entry.subject)
   const assetName = toAssetName(entry.subject)
 
   return {
     id: toTokenId(entry.subject),
-    group: policyId,
-    decimals: entry.decimals?.value ?? 0,
+    kind: 'ft',
+    name: assetName,
+    description: entry.description?.value,
     fingerprint: toTokenFingerprint({
       policyId,
       assetNameHex: assetName ? asciiToHex(assetName) : undefined,
     }),
-
-    // optional values
-    name: assetName,
-    description: entry.description?.value,
-    symbol: undefined,
-    ticker: entry.ticker?.value,
-    url: entry.url?.value,
-    logo: entry.logo?.value,
+    metadata: {
+      group: policyId,
+      decimals: entry.decimals?.value ?? 0,
+      symbol: undefined,
+      ticker: entry.ticker?.value,
+      url: entry.url?.value,
+      logo: entry.logo?.value,
+    },
   }
 }
 
-export const fallbackTokenInfo = (tokenId: string): TokenInfo => {
+export const fallbackTokenInfo = (tokenId: string): TokenInfoFT => {
   const policyId = toPolicyId(tokenId)
   const assetName = toAssetName(tokenId)
 
   return {
     id: toTokenId(tokenId),
     name: assetName,
-    group: policyId,
-    decimals: 0,
+    kind: 'ft',
+    description: undefined,
     fingerprint: toTokenFingerprint({
       policyId,
-      assetNameHex: assetName ? asciiToHex(assetName) : undefined,
+      assetNameHex: toAssetNameHex(tokenId) || undefined,
     }),
-    description: undefined,
-    logo: undefined,
-    symbol: undefined,
-    ticker: undefined,
-    url: undefined,
+
+    metadata: {
+      group: policyId,
+      decimals: 0,
+      logo: undefined,
+      symbol: undefined,
+      ticker: undefined,
+      url: undefined,
+    },
   }
 }
 
@@ -79,41 +83,25 @@ export const asciiToHex = (ascii: string) => {
   return result.join('')
 }
 
-export const toToken = ({wallet, tokenInfo}: {wallet: YoroiWallet; tokenInfo: TokenInfo}): LegacyToken => {
-  if (tokenInfo.id === wallet.primaryTokenInfo.id) return wallet.primaryToken
-  const assetNameHex = tokenInfo.name ? asciiToHex(tokenInfo.name) : ''
-
-  return {
-    identifier: `${tokenInfo.group}.${assetNameHex}`,
-    networkId: wallet.networkId,
-    isDefault: tokenInfo.id === wallet.primaryTokenInfo.id,
-    metadata: {
-      type: 'Cardano',
-      policyId: tokenInfo.group,
-      assetName: assetNameHex,
-      numberOfDecimals: tokenInfo.decimals,
-      ticker: tokenInfo.ticker ?? null,
-      longName: tokenInfo.description ?? null,
-      maxSupply: null,
-    },
-  }
-}
-
-export const toTokenInfo = (token: LegacyToken): TokenInfo => {
+export const toTokenInfo = (token: LegacyToken): TokenInfoFT => {
   const policyId = toPolicyId(token.identifier)
   const assetName = toAssetName(token.identifier)
 
   return {
     id: toTokenId(token.identifier),
-    group: policyId,
+    kind: 'ft',
     name: assetName,
-    decimals: token.metadata.numberOfDecimals,
     fingerprint: toTokenFingerprint({policyId: token.metadata.policyId, assetNameHex: token.metadata.assetName}),
     description: token.metadata.longName ?? undefined,
-    symbol: undefined,
-    url: undefined,
-    logo: undefined,
-    ticker: token.metadata?.ticker ?? undefined,
+
+    metadata: {
+      group: policyId,
+      decimals: token.metadata.numberOfDecimals,
+      symbol: undefined,
+      url: undefined,
+      logo: undefined,
+      ticker: token.metadata?.ticker ?? undefined,
+    },
   }
 }
 

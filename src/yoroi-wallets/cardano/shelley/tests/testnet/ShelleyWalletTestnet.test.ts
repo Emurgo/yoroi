@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import {HWDeviceInfo} from '../../../../hw'
 import {EncryptedStorage, EncryptedStorageKeys, storage} from '../../../../storage'
+import {DefaultAsset, TokenInfo} from '../../../../types'
 import {WalletMeta} from '../../../../walletManager'
 import {ShelleyAddressGeneratorJSON} from '../../../chain'
 import {WalletJSON} from '../../../shelley/ShelleyWallet'
@@ -87,7 +88,7 @@ describe('ShelleyWalletTestnet', () => {
       'stake_test1urq3auyvgnekzzm72m2xuzrtjqvxcyhf568s2gdhcnrjujcyq75j3',
     )
 
-    expect(wallet.primaryToken).toEqual({
+    expect(wallet.primaryToken).toEqual<DefaultAsset>({
       identifier: '',
       isDefault: true,
       metadata: {
@@ -101,17 +102,20 @@ describe('ShelleyWalletTestnet', () => {
       },
       networkId: 300,
     })
-    expect(wallet.primaryTokenInfo).toEqual({
-      fingerprint: '',
-      group: '',
-      logo: '',
-      url: '',
-      decimals: 6,
-      description: 'Cardano',
+    expect(wallet.primaryTokenInfo).toEqual<TokenInfo>({
+      kind: 'ft',
       id: '',
       name: 'TADA',
-      symbol: '₳',
-      ticker: 'TADA',
+      description: 'Cardano',
+      fingerprint: '',
+      metadata: {
+        group: '',
+        logo: '',
+        url: '',
+        decimals: 6,
+        symbol: '₳',
+        ticker: 'TADA',
+      },
     })
     await expect(getStakingKey(wallet)).resolves.toBe(
       'ed25519_pk158gpk02jqrsxa58aw2e4f0ww6fffu7p2qsflenapdz7a3r5lxx4sn9nx84',
@@ -198,7 +202,7 @@ describe('ShelleyWalletTestnet', () => {
       'stake_test1urq3auyvgnekzzm72m2xuzrtjqvxcyhf568s2gdhcnrjujcyq75j3',
     )
 
-    expect(wallet.primaryToken).toEqual({
+    expect(wallet.primaryToken).toEqual<DefaultAsset>({
       identifier: '',
       isDefault: true,
       metadata: {
@@ -212,17 +216,20 @@ describe('ShelleyWalletTestnet', () => {
       },
       networkId: 300,
     })
-    expect(wallet.primaryTokenInfo).toEqual({
+    expect(wallet.primaryTokenInfo).toEqual<TokenInfo>({
+      kind: 'ft',
+      name: 'TADA',
       fingerprint: '',
-      group: '',
-      logo: '',
-      url: '',
-      decimals: 6,
       description: 'Cardano',
       id: '',
-      name: 'TADA',
-      symbol: '₳',
-      ticker: 'TADA',
+      metadata: {
+        group: '',
+        logo: '',
+        url: '',
+        decimals: 6,
+        symbol: '₳',
+        ticker: 'TADA',
+      },
     })
     await expect(getStakingKey(wallet)).resolves.toBe(
       'ed25519_pk158gpk02jqrsxa58aw2e4f0ww6fffu7p2qsflenapdz7a3r5lxx4sn9nx84',
@@ -298,7 +305,7 @@ describe('ShelleyWalletTestnet', () => {
       'stake_test1uzdr3c77jn9px6c6srafp4ekpmqluk5dhsndgfllanj5acs8u4svs',
     )
 
-    expect(wallet.primaryToken).toEqual({
+    expect(wallet.primaryToken).toEqual<DefaultAsset>({
       identifier: '',
       isDefault: true,
       metadata: {
@@ -312,17 +319,20 @@ describe('ShelleyWalletTestnet', () => {
       },
       networkId: 300,
     })
-    expect(wallet.primaryTokenInfo).toEqual({
+    expect(wallet.primaryTokenInfo).toEqual<TokenInfo>({
+      kind: 'ft',
       fingerprint: '',
-      group: '',
-      logo: '',
-      url: '',
-      decimals: 6,
       description: 'Cardano',
       id: '',
       name: 'TADA',
-      symbol: '₳',
-      ticker: 'TADA',
+      metadata: {
+        group: '',
+        logo: '',
+        url: '',
+        decimals: 6,
+        symbol: '₳',
+        ticker: 'TADA',
+      },
     })
     await expect(getStakingKey(wallet)).resolves.toBe(
       'ed25519_pk1su9gfd9nkxw0uchht47cluxus3lqlf50mruvvuv2pqpph9qgmhzq08a7zq',

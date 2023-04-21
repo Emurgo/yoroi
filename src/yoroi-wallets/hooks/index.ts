@@ -16,7 +16,7 @@ import {
 
 import {isNightly} from '../../legacy/config'
 import {useWalletManager} from '../../WalletManager'
-import {calcLockedDeposit, toToken, WalletEvent, YoroiWallet} from '../cardano'
+import {calcLockedDeposit, WalletEvent, YoroiWallet} from '../cardano'
 import {generateShelleyPlateFromKey} from '../cardano/shelley/plate'
 import {HWDeviceInfo} from '../hw'
 import {parseWalletMeta} from '../migrations/walletMeta'
@@ -24,10 +24,10 @@ import {useStorage} from '../storage'
 import {
   Quantity,
   TokenInfo,
+  TokenInfoNFT,
   TRANSACTION_DIRECTION,
   TRANSACTION_STATUS,
   YoroiAmounts,
-  YoroiNft,
   YoroiNftModerationStatus,
   YoroiSignedTx,
   YoroiUnsignedTx,
@@ -198,9 +198,9 @@ export const useChangeWalletName = (wallet: YoroiWallet, options: UseMutationOpt
   }
 }
 
-export const useTokenInfo = (
+export const useTokenInfo = <T extends TokenInfo>(
   {wallet, tokenId}: {wallet: YoroiWallet; tokenId: string},
-  options?: UseQueryOptions<TokenInfo, Error, TokenInfo, [string, 'tokenInfo', string]>,
+  options?: UseQueryOptions<TokenInfo, Error, T, [string, 'tokenInfo', string]>,
 ) => {
   const query = useQuery({
     ...options,
@@ -245,23 +245,14 @@ export const useNftImageModerated = ({
   const nft = useNft(wallet, {id: nftId})
   const fingerprint = nft.fingerprint
   const {status} = useNftModerationStatus({wallet, fingerprint})
-  return useMemo(() => (status ? {image: nft.logo, status} : null), [nft, status])
+  return useMemo(() => (status ? {image: nft.metadata.image, status} : null), [nft, status])
 }
 
 export const useToken = (
   {wallet, tokenId}: {wallet: YoroiWallet; tokenId: string},
   options?: UseQueryOptions<TokenInfo, Error, TokenInfo, [string, 'tokenInfo', string]>,
 ) => {
-  const query = useQuery({
-    ...options,
-    suspense: true,
-    queryKey: [wallet.id, 'tokenInfo', tokenId],
-    queryFn: () => wallet.fetchTokenInfo(tokenId),
-  })
-
-  if (!query.data) throw new Error('Invalid token id')
-
-  return toToken({wallet, tokenInfo: query.data})
+  return useTokenInfos({wallet, tokenIds: [tokenId]}, options)[0]
 }
 
 export const useTokenInfos = (
@@ -880,24 +871,14 @@ export const useSaveMemo = (
   }
 }
 
-export const useNfts = (wallet: YoroiWallet, options: UseQueryOptions<YoroiNft[], Error> = {}) => {
+export const useNfts = (wallet: YoroiWallet, options: UseQueryOptions<TokenInfo[], Error> = {}) => {
   const assetIds = useAssetIds(wallet)
-  const {data, refetch, ...rest} = useQuery({
-    ...options,
-    refetchOnMount: false,
-    refetchIntervalInBackground: false,
-    refetchInterval: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-    queryKey: [wallet.id, 'nfts'],
-    queryFn: () => wallet.fetchNfts(assetIds),
-  })
-  const eventCallback = useCallback(() => refetch(), [refetch])
-  useWalletEvent(wallet, 'utxos', eventCallback)
-  return {...rest, refetch, nfts: data ?? []}
+  const tokenInfos = useTokenInfos({wallet, tokenIds: assetIds}, {suspense: options.suspense})
+  const nfts = tokenInfos.filter((t): t is TokenInfo<'nft'> => t.kind === 'nft')
+  return {nfts, refetch: () => void 0, error: null, isLoading: false, isError: false}
 }
 
-export const useNft = (wallet: YoroiWallet, {id}: {id: string}): YoroiNft => {
+export const useNft = (wallet: YoroiWallet, {id}: {id: string}): TokenInfoNFT => {
   const {nfts} = useNfts(wallet, {suspense: true})
   const nft = nfts.find((nft) => nft.id === id)
 

@@ -91,8 +91,12 @@ const SelectableAssetItem = ({tokenInfo, disabled, wallet}: SelectableAssetItemP
     tokenSelectedChanged(tokenInfo.id)
 
     // if the balance is atomic there is no need to edit the amount
-    if (Quantities.isAtomic(spendable, tokenInfo.decimals)) {
+    if (tokenInfo.kind === 'ft' && Quantities.isAtomic(spendable, tokenInfo.metadata.decimals)) {
       amountChanged(spendable)
+      navigation.navigate('send-list-amounts-to-send')
+    }
+    if (tokenInfo.kind === 'nft') {
+      amountChanged('1')
       navigation.navigate('send-list-amounts-to-send')
     } else {
       navigation.navigate('send-edit-amount')

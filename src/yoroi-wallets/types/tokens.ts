@@ -41,20 +41,6 @@ export type DefaultAsset = Token & {
   metadata: DefaultAssetMetadata
 }
 
-export type TokenInfo = {
-  id: string
-  group: string // policyId
-  decimals: number // default to 0
-  fingerprint: string
-
-  name: string | undefined // derived from token subject
-  description: string | undefined
-  ticker: string | undefined
-  symbol: string | undefined
-  url: string | undefined
-  logo: string | undefined
-}
-
 export type LegacyToken = {
   networkId: NetworkId
   isDefault: boolean
@@ -77,14 +63,47 @@ export type NftMetadata = {
 }
 
 export type AssetMetadata = {
-  [policyID: string]:
-    | {
-        [assetNameHex: string]: NftMetadata | undefined
-      }
-    | undefined
+  [policyID: string]: {[assetNameHex: string]: NftMetadata | undefined} | undefined
 }
 
 export type NFTAsset = {
   key: '721'
   metadata: AssetMetadata
 }
+
+type TokeInfoCommon = {
+  id: string
+  fingerprint: string
+  name?: string
+  description?: string
+}
+
+export type TokenInfoNFT = TokeInfoCommon & {
+  kind: 'nft'
+  metadata: {
+    image?: string
+    thumbnail?: string
+    policyId: string
+    assetNameHex: string
+    originalMetadata?: NftMetadata
+  }
+}
+
+export type TokenInfoFT = TokeInfoCommon & {
+  kind: 'ft'
+  metadata: {
+    group: string // policyId
+    decimals: number // default to 0
+
+    ticker: string | undefined
+    symbol: string | undefined
+    url: string | undefined
+    logo: string | undefined
+  }
+}
+
+export type TokenInfo<T extends 'ft' | 'nft' | 'all' = 'all'> = {
+  ft: TokenInfoFT
+  nft: TokenInfoNFT
+  all: TokenInfoFT | TokenInfoNFT
+}[T]

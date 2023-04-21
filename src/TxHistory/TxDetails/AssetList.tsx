@@ -6,7 +6,7 @@ import {Boundary} from '../../components'
 import globalMessages, {txLabels} from '../../i18n/global-messages'
 import {formatTokenAmount} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
-import {asQuantity, CardanoTypes, toToken, useTokenInfo} from '../../yoroi-wallets'
+import {asQuantity, CardanoTypes, useTokenInfo} from '../../yoroi-wallets'
 import assetListSendStyle from './AssetListSend.style'
 import assetListTransactionStyle from './AssetListTransaction.style'
 import baseStyle from './Base.style'
@@ -54,14 +54,14 @@ const AssetRow = ({styles, entry, backColor, onSelect}: AssetRowProps) => {
   const intl = useIntl()
   const wallet = useSelectedWallet()
   const tokenInfo = useTokenInfo({wallet, tokenId: entry.identifier})
-  const token = toToken({wallet, tokenInfo})
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
+  const primaryTicker = wallet.primaryTokenInfo.metadata.ticker
 
   const item = (
     <>
       <View style={styles.tokenMetaView}>
         <Text style={styles.assetName}>
-          {isPrimary ? tokenInfo.ticker : tokenInfo.name ?? intl.formatMessage(messages.unknownAssetName)}
+          {isPrimary ? primaryTicker : tokenInfo.name ?? intl.formatMessage(messages.unknownAssetName)}
         </Text>
 
         <Text style={styles.assetMeta} ellipsizeMode="middle" numberOfLines={1}>
@@ -70,7 +70,7 @@ const AssetRow = ({styles, entry, backColor, onSelect}: AssetRowProps) => {
       </View>
 
       <View style={styles.assetBalanceView}>
-        <Text style={styles.assetBalance}>{formatTokenAmount(asQuantity(entry.amount), token)}</Text>
+        <Text style={styles.assetBalance}>{formatTokenAmount(asQuantity(entry.amount), tokenInfo)}</Text>
       </View>
     </>
   )

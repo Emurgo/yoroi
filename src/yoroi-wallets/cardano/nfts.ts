@@ -1,15 +1,15 @@
 import {features} from '../../features'
 import {getAssetFingerprint} from '../../legacy/format'
-import {NftMetadata, YoroiNft} from '../types'
+import {NftMetadata, TokenInfoNFT} from '../types'
 import {isString} from '../utils'
-import {asciiToHex} from './api/utils'
+import {asciiToHex} from './api'
 
 export const convertNft = (options: {
   metadata?: NftMetadata
   storageUrl: string
   policyId: string
   shortName: string
-}): YoroiNft => {
+}): TokenInfoNFT => {
   const {metadata, storageUrl, policyId, shortName} = options
   const assetNameHex = asciiToHex(shortName)
   const fingerprint = getAssetFingerprint(policyId, assetNameHex)
@@ -20,18 +20,21 @@ export const convertNft = (options: {
 
   const id = `${policyId}.${assetNameHex}`
   const name = metadata?.name ?? shortName
+  const image = features.moderatingNftsEnabled ? `${storageUrl}/${fingerprint}.jpeg` : convertedImage
+  const thumbnail = features.moderatingNftsEnabled ? `${storageUrl}/p_${fingerprint}.jpeg` : convertedImage
 
   return {
+    kind: 'nft',
     id,
-    fingerprint,
-    name,
     description,
-    thumbnail: features.moderatingNftsEnabled ? `${storageUrl}/p_${fingerprint}.jpeg` : convertedImage,
-    logo: features.moderatingNftsEnabled ? `${storageUrl}/${fingerprint}.jpeg` : convertedImage,
+    name,
+    fingerprint,
     metadata: {
       policyId,
-      assetNameHex,
       originalMetadata: metadata,
+      assetNameHex,
+      image,
+      thumbnail,
     },
   }
 }

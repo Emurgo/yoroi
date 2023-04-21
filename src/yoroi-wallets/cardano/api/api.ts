@@ -14,13 +14,14 @@ import type {
   RawTransaction,
   StakePoolInfosAndHistories,
   TipStatusResponse,
+  TokenInfo,
   TxHistoryRequest,
   TxStatusRequest,
   TxStatusResponse,
 } from '../../types'
-import {NFTAsset, YoroiNft, YoroiNftModerationStatus} from '../../types'
+import {NFTAsset, TokenInfoNFT, YoroiNftModerationStatus} from '../../types'
 import {hasProperties, isArray, isNonNullable, isNumber, isObject, isRecord} from '../../utils/parsing'
-import {ServerStatus, toAssetName, toPolicyId} from '..'
+import {ServerStatus, toAssetName, toAssetNameHex, toPolicyId} from '..'
 import {ApiError} from '../errors'
 import {convertNft} from '../nfts'
 import fetchDefault, {checkedFetch} from './fetch'
@@ -88,12 +89,13 @@ export const getPoolInfo = (request: PoolInfoRequest, config: BackendConfig): Pr
   return fetchDefault('pool/info', request, config)
 }
 
-export const getNFTs = async (ids: string[], config: BackendConfig): Promise<YoroiNft[]> => {
+export const getNFTs = async (ids: string[], config: BackendConfig): Promise<TokenInfoNFT[]> => {
   if (ids.length === 0) {
     return []
   }
   const assets = ids.map((id) => {
-    const [policy, nameHex] = id.split('.')
+    const policy = toPolicyId(id)
+    const nameHex = toAssetNameHex(id)
     return {policy, nameHex}
   })
 
@@ -106,6 +108,11 @@ export const getNFTs = async (ids: string[], config: BackendConfig): Promise<Yor
 
   const possibleNfts = parseNFTs(assetMetadatas, config.NFT_STORAGE_URL)
   return possibleNfts.filter((nft) => assetSupplies[nft.id] === 1)
+}
+
+export const getNFT = async (id: string, config: BackendConfig): Promise<TokenInfoNFT | null> => {
+  const [nft] = await getNFTs([id], config)
+  return nft || null
 }
 
 export const fetchTokensSupplies = async (
@@ -156,8 +163,14 @@ export const getNFTModerationStatus = async (
   )
 }
 
-export const getTokenInfo = async (tokenId: string, apiUrl: string) => {
-  const response = await checkedFetch({
+export const getTokenInfo = async (tokenId: string, apiUrl: string, config: BackendConfig): Promise<TokenInfo> => {
+  const nft = await getNFT(tokenId, config)
+
+  if (nft) {
+    return nft
+  }
+
+  const response: unknown = await checkedFetch({
     endpoint: `${apiUrl}/${toTokenSubject(tokenId)}`,
     method: 'GET',
     payload: undefined,
@@ -169,7 +182,11 @@ export const getTokenInfo = async (tokenId: string, apiUrl: string) => {
 
   const entry = parseTokenRegistryEntry(response)
 
-  return entry ? tokenInfo(entry) : fallbackTokenInfo(tokenId)
+  if (entry) {
+    return tokenInfo(entry)
+  }
+
+  return fallbackTokenInfo(tokenId)
 }
 
 export const getFundInfo = (config: BackendConfig, isMainnet: boolean): Promise<FundInfoResponse> => {
@@ -246,14 +263,14 @@ export const parseModerationStatus = (status: unknown): YoroiNftModerationStatus
   return map[statusString.toUpperCase() as keyof typeof map]
 }
 
-function parseNFTs(value: unknown, storageUrl: string): YoroiNft[] {
+function parseNFTs(value: unknown, storageUrl: string): TokenInfoNFT[] {
   if (!isRecord(value)) {
     throw new Error('Invalid response. Expected to receive object when parsing NFTs')
   }
 
   const identifiers = Object.keys(value)
 
-  const tokens: Array<YoroiNft | null> = identifiers.map((id) => {
+  const tokens: Array<TokenInfoNFT | null> = identifiers.map((id) => {
     const assets = value[id]
     if (!isArray(assets)) {
       return null
