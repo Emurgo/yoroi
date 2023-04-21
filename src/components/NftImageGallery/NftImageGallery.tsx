@@ -27,7 +27,7 @@ type Props = {
   isRefreshing: boolean
   bounces?: FlashListProps<YoroiNft>['bounces']
   ListEmptyComponent?: FlashListProps<YoroiNft>['ListEmptyComponent']
-  withPaddingVertical?: boolean
+  withVerticalPadding?: boolean
 }
 
 export const NftImageGallery = ({
@@ -37,7 +37,7 @@ export const NftImageGallery = ({
   isRefreshing,
   bounces = false,
   ListEmptyComponent = undefined,
-  withPaddingVertical = undefined,
+  withVerticalPadding = undefined,
 }: Props) => {
   return (
     <GalleryList
@@ -46,7 +46,7 @@ export const NftImageGallery = ({
       refreshing={isRefreshing}
       bounces={bounces}
       ListEmptyComponent={ListEmptyComponent}
-      withPaddingVertical={withPaddingVertical}
+      withVerticalPadding={withVerticalPadding}
       renderItem={(nft) =>
         features.moderatingNftsEnabled ? (
           <ModeratedImage onPress={() => onSelect(nft.id)} nft={nft} key={nft.id} />
@@ -263,9 +263,9 @@ const IMAGE_SIZE = (MIN_SIZE - CONTAINER_HORIZONTAL_PADDING * 2) / NUMBER_OF_COL
 
 function GalleryList<T>({
   renderItem,
-  withPaddingVertical = false,
+  withVerticalPadding = false,
   ...rest
-}: FlashListProps<T> & {renderItem: (item: T) => React.ReactElement; withPaddingVertical?: boolean}) {
+}: FlashListProps<T> & {renderItem: (item: T) => React.ReactElement; withVerticalPadding?: boolean}) {
   return (
     <FlashList
       {...rest}
@@ -281,7 +281,7 @@ function GalleryList<T>({
       )}
       contentContainerStyle={{
         paddingHorizontal: CONTAINER_HORIZONTAL_PADDING,
-        paddingVertical: withPaddingVertical ? CONTAINER_VERTICAL_PADDING : undefined,
+        paddingVertical: withVerticalPadding ? CONTAINER_VERTICAL_PADDING : undefined,
       }}
       keyExtractor={(placeholder, index) => index + ''}
       horizontal={false}

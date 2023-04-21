@@ -106,7 +106,7 @@ const NftList = ({fungibility}: {fungibility: Fungibility}) => {
         onRefresh={() => undefined}
         onSelect={onSelect}
         isRefreshing={false}
-        withPaddingVertical={nfts.length > 0} // to keep consistency in between tabs when the list is not empty
+        withVerticalPadding={nfts.length > 0} // to keep consistency in between tabs when the list is not empty
         ListEmptyComponent={<ListEmptyComponent fungibility={fungibility} />}
       />
     </View>
