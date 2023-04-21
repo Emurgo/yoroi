@@ -228,7 +228,7 @@ const ListEmptyComponent = ({fungibilityFilter}: {fungibilityFilter: Fungibility
 
   if (isSearching && assetSearchTerm.length > 0 && filteredTokenInfos.length === 0) return <EmptySearchResult />
 
-  if (fungibilityFilter === 'ft' && isWalletEmpty && assetSearchTerm.length === 0)
+  if (fungibilityFilter === 'ft' && isWalletEmpty && !isSearching)
     return <NoAssetsYet text={strings.noAssetsAddedYet(strings.tokens(2))} />
 
   if (fungibilityFilter === 'nft' && nfts.length === 0)
