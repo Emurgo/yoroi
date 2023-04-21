@@ -2,7 +2,7 @@
 import assert from 'assert'
 import _ from 'lodash'
 
-import {Logger} from '../../logging'
+import {promiseAny} from '../../../utils'
 import type {
   AccountStateRequest,
   AccountStateResponse,
@@ -164,29 +164,29 @@ export const getNFTModerationStatus = async (
 }
 
 export const getTokenInfo = async (tokenId: string, apiUrl: string, config: BackendConfig): Promise<TokenInfo> => {
-  const nft = await getNFT(tokenId, config)
-
-  if (nft) {
+  const nftPromise = getNFT(tokenId, config).then((nft) => {
+    if (!nft) throw new Error('NFT not found')
     return nft
-  }
+  })
 
-  const response: unknown = await checkedFetch({
+  const tokenPromise = checkedFetch({
     endpoint: `${apiUrl}/${toTokenSubject(tokenId)}`,
     method: 'GET',
     payload: undefined,
-  }).catch((error) => {
-    Logger.error(error)
-
-    return undefined
   })
+    .then((response) => (response ? parseTokenRegistryEntry(response) : null))
+    .then((entry) => (entry ? tokenInfo(entry) : null))
+    .then((token) => {
+      if (!token) throw new Error('Token not found')
+      return token
+    })
 
-  const entry = parseTokenRegistryEntry(response)
-
-  if (entry) {
-    return tokenInfo(entry)
+  try {
+    const result = await promiseAny<TokenInfo>([nftPromise, tokenPromise])
+    return result ?? fallbackTokenInfo(tokenId)
+  } catch (e) {
+    return fallbackTokenInfo(tokenId)
   }
-
-  return fallbackTokenInfo(tokenId)
 }
 
 export const getFundInfo = (config: BackendConfig, isMainnet: boolean): Promise<FundInfoResponse> => {

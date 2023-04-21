@@ -20,7 +20,6 @@ import type {
   PoolInfoRequest,
   RawUtxo,
   TipStatusResponse,
-  TokenInfo,
   TokenInfoFT,
   Transaction,
   TxStatusRequest,
@@ -28,7 +27,7 @@ import type {
   YoroiEntry,
   YoroiNftModerationStatus,
 } from '../../types'
-import {Quantity, StakingInfo, TokenInfoNFT, YoroiSignedTx, YoroiUnsignedTx} from '../../types'
+import {Quantity, StakingInfo, YoroiSignedTx, YoroiUnsignedTx} from '../../types'
 import {Quantities} from '../../utils'
 import {parseSafe} from '../../utils/parsing'
 import {validatePassword} from '../../utils/validators'
@@ -895,12 +894,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
     async fetchCurrentPrice(symbol: CurrencySymbol): Promise<number> {
       return api.fetchCurrentPrice(symbol, BACKEND)
-    }
-
-    // TODO: caching
-    async fetchNfts(ids): Promise<TokenInfoNFT[]> {
-      const results: TokenInfo[] = await Promise.all(ids.map((id) => this.fetchTokenInfo(id)))
-      return results.filter((r) => r.kind === 'nft') as TokenInfoNFT[]
     }
 
     // TODO: caching

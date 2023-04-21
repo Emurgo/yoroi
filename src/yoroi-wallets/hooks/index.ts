@@ -255,7 +255,7 @@ export const useToken = (
   return useTokenInfos({wallet, tokenIds: [tokenId]}, options)[0]
 }
 
-export const useTokenInfos = (
+export const useTokenInfosDetailed = (
   {wallet, tokenIds}: {wallet: YoroiWallet; tokenIds: Array<string>},
   options?: UseQueryOptions<TokenInfo, Error, TokenInfo, any>,
 ) => {
@@ -265,9 +265,15 @@ export const useTokenInfos = (
     queryKey: [wallet.id, 'tokenInfo', tokenId],
     queryFn: () => wallet.fetchTokenInfo(tokenId),
   }))
-  const queryResults = useQueries(queries)
+  return useQueries(queries)
+}
 
-  return queryResults.reduce((result, {data}) => (data ? [...result, data] : result), [] as Array<TokenInfo>)
+export const useTokenInfos = (
+  {wallet, tokenIds}: {wallet: YoroiWallet; tokenIds: Array<string>},
+  options?: UseQueryOptions<TokenInfo, Error, TokenInfo, any>,
+) => {
+  const results = useTokenInfosDetailed({wallet, tokenIds}, options)
+  return results.reduce((result, {data}) => (data ? [...result, data] : result), [] as Array<TokenInfo>)
 }
 
 export const usePlate = ({networkId, publicKeyHex}: {networkId: NetworkId; publicKeyHex: string}) => {
@@ -873,31 +879,21 @@ export const useSaveMemo = (
 
 export const useNfts = (wallet: YoroiWallet, options: UseQueryOptions<TokenInfo[], Error> = {}) => {
   const assetIds = useAssetIds(wallet)
-  const tokenInfos = useTokenInfos({wallet, tokenIds: assetIds}, {suspense: options.suspense})
-  const nfts = tokenInfos.filter((t): t is TokenInfo<'nft'> => t.kind === 'nft')
-  return {nfts, refetch: () => void 0, error: null, isLoading: false, isError: false}
+  const results = useTokenInfosDetailed({wallet, tokenIds: assetIds}, {suspense: options.suspense})
+
+  const nfts = results.map((r) => r.data).filter((t): t is TokenInfo<'nft'> => t?.kind === 'nft')
+  const isLoading = results.some((r) => r.isLoading)
+  const isError = results.some((r) => r.isError)
+  const error = results.find((r) => r.isError)?.error
+  const refetch = () => results.forEach((r) => r.refetch())
+  return {nfts, refetch, error, isLoading, isError}
 }
 
 export const useNft = (wallet: YoroiWallet, {id}: {id: string}): TokenInfoNFT => {
-  const {nfts} = useNfts(wallet, {suspense: true})
-  const nft = nfts.find((nft) => nft.id === id)
+  const tokenInfo = useTokenInfo({wallet, tokenId: id}, {suspense: true})
 
-  const fetchNft = async (id: string) => {
-    const [nft] = await wallet.fetchNfts([id])
-    return nft
-  }
-
-  const {data: freshNft} = useQuery({
-    queryKey: [wallet.id, 'nfts', id],
-    queryFn: () => fetchNft(id),
-    enabled: !nft,
-    suspense: true,
-  })
-
-  const result = nft || freshNft
-
-  if (!result) {
+  if (tokenInfo.kind !== 'nft') {
     throw new Error(`Invalid id used "${id}" to get NFT`)
   }
-  return result
+  return tokenInfo
 }

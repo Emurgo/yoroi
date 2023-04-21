@@ -26,9 +26,7 @@ import {
   RawUtxo,
   StakingInfo,
   TipStatusResponse,
-  TokenInfo,
   TokenInfoFT,
-  TokenInfoNFT,
   Transaction,
   TxStatusRequest,
   TxStatusResponse,
@@ -1004,12 +1002,6 @@ export class ByronWallet implements YoroiWallet {
 
   async fetchCurrentPrice(symbol: CurrencySymbol): Promise<number> {
     return api.fetchCurrentPrice(symbol, this.getBackendConfig())
-  }
-
-  // TODO: caching
-  async fetchNfts(ids): Promise<TokenInfoNFT[]> {
-    const results: TokenInfo[] = await Promise.all(ids.map((id) => this.fetchTokenInfo(id)))
-    return results.filter((r) => r.kind === 'nft') as TokenInfoNFT[]
   }
 
   // TODO: caching

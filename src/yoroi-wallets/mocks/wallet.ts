@@ -84,9 +84,6 @@ const wallet: YoroiWallet = {
     action('fetchTokenInfo')(tokenId)
     return Promise.resolve(tokenInfos[tokenId] ?? fallbackTokenInfo(tokenId))
   },
-  fetchNfts() {
-    throw new Error('not implemented: fetchNfts')
-  },
   fetchNftModerationStatus() {
     throw new Error('not implemented: fetchNftModerationStatus')
   },

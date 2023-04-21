@@ -10,7 +10,6 @@ import {
   StakingInfo,
   StakingStatus,
   TokenInfo,
-  TokenInfoNFT,
   WalletImplementationId,
   YoroiEntry,
   YoroiNftModerationStatus,
@@ -124,7 +123,6 @@ export type YoroiWallet = {
   generateNewReceiveAddressIfNeeded(): boolean
 
   // NFTs
-  fetchNfts(ids: string[]): Promise<TokenInfoNFT[]>
   fetchNftModerationStatus(fingerprint: string): Promise<YoroiNftModerationStatus>
 
   // Sync, Save
@@ -210,7 +208,6 @@ const yoroiWalletKeys: Array<keyof YoroiWallet> = [
   'generateNewReceiveAddressIfNeeded',
 
   // NFTs
-  'fetchNfts',
   'fetchNftModerationStatus',
 
   // Sync, Save
