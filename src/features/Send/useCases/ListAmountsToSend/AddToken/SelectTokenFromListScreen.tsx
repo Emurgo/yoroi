@@ -124,15 +124,18 @@ const AssetList = ({canAddAmount, fungibilityFilter}: AssetListProps) => {
   const wallet = useSelectedWallet()
   const filteredTokenInfos = useFilteredTokenInfos({fungibilityFilter})
   const isWalletEmpty = useIsWalletEmpty()
-  const {search: assetSearchTerm} = useSearch()
+  const {search: assetSearchTerm, visible: isSearching} = useSearch()
 
   /*
    * to show the empty list component:
-   *    - filteredTokenInfos has primary token when the search term and the wallet are empty and the ft tab is selected
-   *    - "ft" tab has to have primary token hidden when wallet is empty and show the empty list component
-   *    - "all" tab has to display the primary token
+   *    - filteredTokenInfos has primary token when the search term and the wallet are empty and the ft oot all tab are selected
+   *    - "ft" tab has to have primary token hidden when wallet is empty and to show the empty list component
+   *    - "all" tab has to display the primary token and not to show the empty list component
    */
-  const data = fungibilityFilter === 'ft' && isWalletEmpty && assetSearchTerm.length === 0 ? [] : filteredTokenInfos
+  const data =
+    fungibilityFilter === 'ft' && isWalletEmpty && assetSearchTerm.length === 0 && !isSearching
+      ? []
+      : filteredTokenInfos
 
   return (
     <View style={styles.list}>
@@ -232,7 +235,7 @@ const ListEmptyComponent = ({fungibilityFilter}: {fungibilityFilter: Fungibility
 
   if (isSearching && assetSearchTerm.length > 0 && filteredTokenInfos.length === 0) return <EmptySearchResult />
 
-  if (fungibilityFilter === 'ft' && isWalletEmpty && assetSearchTerm.length === 0)
+  if (fungibilityFilter === 'ft' && isWalletEmpty && !isSearching)
     return <NoAssetsYet text={strings.noAssetsAddedYet(strings.tokens(2))} />
 
   if (fungibilityFilter === 'nft' && nfts.length === 0)
