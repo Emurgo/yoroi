@@ -313,7 +313,7 @@ const Counter = ({fungibilityFilter}: {fungibilityFilter: FungibilityFilter}) =>
     )
   }
 
-  // if is searching and typing the counter is shown
+  // if it is searching and typing the counter is shown
   if (isSearching && assetSearchTerm.length > 0) {
     const total = filteredTokenInfos.length
 
