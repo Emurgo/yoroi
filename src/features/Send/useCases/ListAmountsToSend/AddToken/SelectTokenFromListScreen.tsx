@@ -110,7 +110,7 @@ const NftList = () => {
         ListEmptyComponent={<ListEmptyComponent fungibility="nft" />}
       />
 
-      <Counter fungibility={fungibility} />
+      <Counter fungibility="nft" />
     </View>
   )
 }
@@ -270,7 +270,7 @@ const EmptySearchResult = () => {
   )
 }
 
-const Counter = ({fungibility}: {fungibility: Fungibility}) => {
+const Counter = ({fungibility}: {fungibility: FungibilityFilter}) => {
   const {search: assetSearchTerm, visible: isSearching} = useSearch()
   const strings = useStrings()
   const wallet = useSelectedWallet()
