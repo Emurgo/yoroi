@@ -8,12 +8,13 @@ import {defaultStackNavigationOptionsV2} from '../navigation'
 
 type SearchState = {
   search: string
-  inputSearchVisible: boolean
+  visible: boolean
 }
 type SearchActions = {
   searchChanged: (search: string) => void
   clearSearch: () => void
-  inputSearchVisibleChanged: (inputSearchVisible: boolean) => void
+  showSearch: () => void
+  hideSearch: () => void
 }
 
 const SearchContext = createContext<undefined | (SearchState & SearchActions)>(undefined)
@@ -37,8 +38,8 @@ export const SearchProvider = ({
   const actions = React.useRef<SearchActions>({
     clearSearch: () => dispatch({type: 'clear'}),
     searchChanged: (search: string) => dispatch({type: 'searchChanged', search}),
-    inputSearchVisibleChanged: (inputSearchVisible: boolean) =>
-      dispatch({type: 'inputSearchVisibleChanged', inputSearchVisible}),
+    showSearch: () => dispatch({type: 'showSearch'}),
+    hideSearch: () => dispatch({type: 'hideSearch'}),
   }).current
 
   const context = React.useMemo(() => ({...state, ...actions}), [state, actions])
@@ -49,7 +50,8 @@ export const SearchProvider = ({
 type SearchAction =
   | {type: 'clear'}
   | {type: 'searchChanged'; search: string}
-  | {type: 'inputSearchVisibleChanged'; inputSearchVisible: boolean}
+  | {type: 'showSearch'}
+  | {type: 'hideSearch'}
 
 function searchReducer(state: SearchState, action: SearchAction) {
   switch (action.type) {
@@ -62,10 +64,16 @@ function searchReducer(state: SearchState, action: SearchAction) {
         search: action.search,
       }
 
-    case 'inputSearchVisibleChanged':
+    case 'showSearch':
       return {
         ...state,
-        inputSearchVisible: action.inputSearchVisible,
+        visible: true,
+      }
+
+    case 'hideSearch':
+      return {
+        ...state,
+        visible: false,
       }
 
     default:
@@ -73,7 +81,7 @@ function searchReducer(state: SearchState, action: SearchAction) {
   }
 }
 
-const defaultState: SearchState = Object.freeze({search: '', inputSearchVisible: false})
+const defaultState: SearchState = Object.freeze({search: '', visible: false})
 
 export const useSearchOnNavBar = ({
   placeholder,
@@ -86,21 +94,26 @@ export const useSearchOnNavBar = ({
 }) => {
   const navigation = useNavigation()
 
-  const {search, inputSearchVisible, inputSearchVisibleChanged, clearSearch} = useSearch()
+  const {search, visible, showSearch, hideSearch, clearSearch} = useSearch()
 
-  const handleSearchClose = () => {
-    inputSearchVisibleChanged(false)
+  const handleCloseSearch = () => {
+    hideSearch()
     clearSearch()
   }
   const handleGoBack = () => {
-    handleSearchClose()
-    if (!inputSearchVisible) navigation.goBack()
+    handleCloseSearch()
+    /*
+     * goBack button has two actions:
+     *   1) go back when the search input is visible
+     *   2) close the search input when the search input is not visible
+     */
+    if (!visible) navigation.goBack()
   }
 
   const withSearchInput: StackNavigationOptions = {
     ...defaultStackNavigationOptionsV2,
     headerTitle: () => <InputSearch placeholder={placeholder} />,
-    headerRight: () => (search.length > 0 ? <EraseButton onPress={handleSearchClose} /> : null),
+    headerRight: () => (search.length > 0 ? <EraseButton onPress={handleCloseSearch} /> : null),
     headerLeft: () => <BackButton onPress={handleGoBack} />,
     headerTitleAlign: 'left',
     headerTitleContainerStyle: {
@@ -112,13 +125,13 @@ export const useSearchOnNavBar = ({
   const withSearchButton: StackNavigationOptions = {
     ...defaultStackNavigationOptionsV2,
     headerTitle: title,
-    headerRight: () => <SearchButton onPress={() => inputSearchVisibleChanged(true)} />,
+    headerRight: () => <SearchButton onPress={() => showSearch()} />,
     ...(noBack ? {headerLeft: () => null} : {}),
     headerBackTitleVisible: false,
   }
 
   React.useLayoutEffect(() => {
-    navigation.setOptions(inputSearchVisible ? withSearchInput : withSearchButton)
+    navigation.setOptions(visible ? withSearchInput : withSearchButton)
   })
 }
 

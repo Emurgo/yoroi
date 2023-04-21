@@ -12,14 +12,6 @@ import {NftPreview} from '../NftPreview'
 import {Spacer} from '../Spacer'
 import {Text} from '../Text'
 
-type Props = {
-  nfts: YoroiNft[]
-  onSelect: (id: string) => void
-  onRefresh: () => void
-  isRefreshing: boolean
-  bounces?: boolean
-}
-
 const TEXT_SIZE = 20
 
 export const SkeletonGallery = ({amount}: {amount: number}) => {
@@ -28,13 +20,33 @@ export const SkeletonGallery = ({amount}: {amount: number}) => {
   return <GalleryList data={placeholders} renderItem={() => <SkeletonImagePlaceholder />} />
 }
 
-export const NftImageGallery = ({nfts = [], onSelect, onRefresh, isRefreshing, bounces = true}: Props) => {
+type Props = {
+  nfts: YoroiNft[]
+  onSelect: (id: string) => void
+  onRefresh: () => void
+  isRefreshing: boolean
+  bounces?: FlashListProps<YoroiNft>['bounces']
+  ListEmptyComponent?: FlashListProps<YoroiNft>['ListEmptyComponent']
+  withVerticalPadding?: boolean
+}
+
+export const NftImageGallery = ({
+  nfts = [],
+  onSelect,
+  onRefresh,
+  isRefreshing,
+  bounces = false,
+  ListEmptyComponent = undefined,
+  withVerticalPadding = undefined,
+}: Props) => {
   return (
     <GalleryList
       data={nfts}
       onRefresh={onRefresh}
       refreshing={isRefreshing}
       bounces={bounces}
+      ListEmptyComponent={ListEmptyComponent}
+      withVerticalPadding={withVerticalPadding}
       renderItem={(nft) =>
         features.moderatingNftsEnabled ? (
           <ModeratedImage onPress={() => onSelect(nft.id)} nft={nft} key={nft.id} />
@@ -242,13 +254,18 @@ const IMAGE_PADDING = 8
 const ROW_SPACING = 14
 const NUMBER_OF_COLUMNS = 2
 const CONTAINER_HORIZONTAL_PADDING = 16
+const CONTAINER_VERTICAL_PADDING = 16
 const SPACE_BETWEEN_COLUMNS = CONTAINER_HORIZONTAL_PADDING
 const DIMENSIONS = Dimensions.get('window')
 const MIN_SIZE = Math.min(DIMENSIONS.width, DIMENSIONS.height)
 const IMAGE_HORIZONTAL_PADDING = SPACE_BETWEEN_COLUMNS / NUMBER_OF_COLUMNS
 const IMAGE_SIZE = (MIN_SIZE - CONTAINER_HORIZONTAL_PADDING * 2) / NUMBER_OF_COLUMNS - IMAGE_HORIZONTAL_PADDING
 
-function GalleryList<T>({renderItem, ...rest}: FlashListProps<T> & {renderItem: (item: T) => React.ReactElement}) {
+function GalleryList<T>({
+  renderItem,
+  withVerticalPadding = false,
+  ...rest
+}: FlashListProps<T> & {renderItem: (item: T) => React.ReactElement; withVerticalPadding?: boolean}) {
   return (
     <FlashList
       {...rest}
@@ -262,7 +279,10 @@ function GalleryList<T>({renderItem, ...rest}: FlashListProps<T> & {renderItem: 
           <Spacer height={ROW_SPACING} />
         </View>
       )}
-      contentContainerStyle={{paddingHorizontal: CONTAINER_HORIZONTAL_PADDING}}
+      contentContainerStyle={{
+        paddingHorizontal: CONTAINER_HORIZONTAL_PADDING,
+        paddingVertical: withVerticalPadding ? CONTAINER_VERTICAL_PADDING : undefined,
+      }}
       keyExtractor={(placeholder, index) => index + ''}
       horizontal={false}
       estimatedItemSize={IMAGE_SIZE + IMAGE_PADDING + TEXT_SIZE + ROW_SPACING}
