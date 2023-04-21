@@ -107,7 +107,7 @@ const NftList = () => {
         onSelect={onSelect}
         isRefreshing={false}
         withVerticalPadding={nfts.length > 0} // to keep consistency between tabs when the list is not empty
-        ListEmptyComponent={<ListEmptyComponent fungibility={fungibility} />}
+        ListEmptyComponent={<ListEmptyComponent fungibility="nft" />}
       />
     </View>
   )
