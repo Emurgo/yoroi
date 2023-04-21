@@ -110,7 +110,7 @@ const NftList = () => {
         ListEmptyComponent={<ListEmptyComponent fungibilityFilter="nft" />}
       />
 
-      <Counter fungibility="nft" />
+      <Counter fungibilityFilter="nft" />
     </View>
   )
 }
@@ -155,7 +155,7 @@ const AssetList = ({canAddAmount, fungibilityFilter}: AssetListProps) => {
         ListEmptyComponent={<ListEmptyComponent fungibilityFilter={fungibilityFilter} />}
       />
 
-      <Counter fungibility={fungibility} />
+      <Counter fungibilityFilter={fungibilityFilter} />
     </View>
   )
 }
@@ -270,14 +270,14 @@ const EmptySearchResult = () => {
   )
 }
 
-const Counter = ({fungibility}: {fungibility: FungibilityFilter}) => {
+const Counter = ({fungibilityFilter}: {fungibilityFilter: FungibilityFilter}) => {
   const {search: assetSearchTerm, visible: isSearching} = useSearch()
   const strings = useStrings()
   const wallet = useSelectedWallet()
-  const filteredTokenInfos = useFilteredTokenInfos({fungibility})
+  const filteredTokenInfos = useFilteredTokenInfos({fungibilityFilter})
   const {nfts} = useNfts(wallet)
 
-  if (!isSearching && fungibility === 'all') {
+  if (!isSearching && fungibilityFilter === 'all') {
     const total = filteredTokenInfos.length
 
     return (
@@ -289,7 +289,7 @@ const Counter = ({fungibility}: {fungibility: FungibilityFilter}) => {
     )
   }
 
-  if (!isSearching && fungibility === 'ft') {
+  if (!isSearching && fungibilityFilter === 'ft') {
     const total = filteredTokenInfos.length
 
     return (
@@ -301,7 +301,7 @@ const Counter = ({fungibility}: {fungibility: FungibilityFilter}) => {
     )
   }
 
-  if (!isSearching && fungibility === 'nft') {
+  if (!isSearching && fungibilityFilter === 'nft') {
     const total = nfts.length
 
     return (
