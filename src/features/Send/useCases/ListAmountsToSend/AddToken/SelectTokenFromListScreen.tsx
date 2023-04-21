@@ -125,8 +125,8 @@ const AssetList = ({canAddAmount, fungibility}: AssetListProps) => {
   const {search: assetSearchTerm} = useSearch()
 
   /*
-   * to show the empty list component
-   * filteredTokenInfos has primary token when the search term is empty and the ft/all tab is selected
+   * to show the empty list component:
+   *    - filteredTokenInfos has primary token when the search term and the wallet are empty and the ft/all tab is selected
    */
   const data = fungibility === 'ft' && isWalletEmpty && assetSearchTerm.length === 0 ? [] : filteredTokenInfos
 
@@ -279,7 +279,7 @@ const useIsWalletEmpty = () => {
   )
 }
 
-// filteredTokenInfos has primary token when the search term is empty and the ft/all tab is selected
+// filteredTokenInfos has primary token when the search term and the wallet are empty and the ft/all tab is selected
 const useFilteredTokenInfos = ({fungibility}: {fungibility: Fungibility}) => {
   const wallet = useSelectedWallet()
   const {nfts} = useNfts(wallet)
