@@ -1,0 +1,47 @@
+[
+  {
+    "id": "components.send.biometricauthscreen.headings1",
+    "defaultMessage": "!!!Authorize with your",
+    "file": "src/auth/OsLoginScreen/OsLoginScreen.tsx",
+    "start": {
+      "line": 35,
+      "column": 13,
+      "index": 939
+    },
+    "end": {
+      "line": 38,
+      "column": 3,
+      "index": 1047
+    }
+  },
+  {
+    "id": "components.send.biometricauthscreen.headings2",
+    "defaultMessage": "!!!biometrics",
+    "file": "src/auth/OsLoginScreen/OsLoginScreen.tsx",
+    "start": {
+      "line": 39,
+      "column": 13,
+      "index": 1062
+    },
+    "end": {
+      "line": 42,
+      "column": 3,
+      "index": 1161
+    }
+  },
+  {
+    "id": "components.login.appstartscreen.loginButton",
+    "defaultMessage": "!!!Login",
+    "file": "src/auth/OsLoginScreen/OsLoginScreen.tsx",
+    "start": {
+      "line": 43,
+      "column": 9,
+      "index": 1172
+    },
+    "end": {
+      "line": 46,
+      "column": 3,
+      "index": 1264
+    }
+  }
+]

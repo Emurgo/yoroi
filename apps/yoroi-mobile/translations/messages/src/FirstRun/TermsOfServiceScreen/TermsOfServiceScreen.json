@@ -1,0 +1,47 @@
+[
+  {
+    "id": "components.firstrun.acepttermsofservicescreen.aggreeClause",
+    "defaultMessage": "!!!I agree with terms of service",
+    "file": "src/FirstRun/TermsOfServiceScreen/TermsOfServiceScreen.tsx",
+    "start": {
+      "line": 84,
+      "column": 16,
+      "index": 2506
+    },
+    "end": {
+      "line": 87,
+      "column": 3,
+      "index": 2637
+    }
+  },
+  {
+    "id": "components.firstrun.acepttermsofservicescreen.continueButton",
+    "defaultMessage": "!!!Accept",
+    "file": "src/FirstRun/TermsOfServiceScreen/TermsOfServiceScreen.tsx",
+    "start": {
+      "line": 88,
+      "column": 18,
+      "index": 2657
+    },
+    "end": {
+      "line": 91,
+      "column": 3,
+      "index": 2767
+    }
+  },
+  {
+    "id": "components.firstrun.acepttermsofservicescreen.savingConsentModalTitle",
+    "defaultMessage": "!!!Initializing",
+    "file": "src/FirstRun/TermsOfServiceScreen/TermsOfServiceScreen.tsx",
+    "start": {
+      "line": 92,
+      "column": 27,
+      "index": 2796
+    },
+    "end": {
+      "line": 95,
+      "column": 3,
+      "index": 2921
+    }
+  }
+]

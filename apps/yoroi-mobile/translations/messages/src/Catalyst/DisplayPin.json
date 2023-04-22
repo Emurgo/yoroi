@@ -1,0 +1,32 @@
+[
+  {
+    "id": "components.catalyst.step2.subTitle",
+    "defaultMessage": "!!!Write Down PIN",
+    "file": "src/Catalyst/DisplayPin.tsx",
+    "start": {
+      "line": 65,
+      "column": 12,
+      "index": 1661
+    },
+    "end": {
+      "line": 68,
+      "column": 3,
+      "index": 1753
+    }
+  },
+  {
+    "id": "components.catalyst.step2.description",
+    "defaultMessage": "!!!Please write down this PIN as you will need it every time you want to access the Catalyst Voting app",
+    "file": "src/Catalyst/DisplayPin.tsx",
+    "start": {
+      "line": 69,
+      "column": 15,
+      "index": 1770
+    },
+    "end": {
+      "line": 73,
+      "column": 3,
+      "index": 1957
+    }
+  }
+]

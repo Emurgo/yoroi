@@ -1,0 +1,17 @@
+[
+  {
+    "id": "utils.format.unknownAssetName",
+    "defaultMessage": "!!![Unknown asset name]",
+    "file": "src/TxHistory/TxDetails/AssetList.tsx",
+    "start": {
+      "line": 90,
+      "column": 20,
+      "index": 3179
+    },
+    "end": {
+      "line": 93,
+      "column": 3,
+      "index": 3272
+    }
+  }
+]

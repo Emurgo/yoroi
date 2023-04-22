@@ -1,0 +1,32 @@
+[
+  {
+    "id": "components.walletinit.walletfreshinitscreen.addWalletButton",
+    "defaultMessage": "!!!Add wallet",
+    "file": "src/WalletInit/WalletFreshInit/WalletFreshInitScreen.tsx",
+    "start": {
+      "line": 56,
+      "column": 19,
+      "index": 2266
+    },
+    "end": {
+      "line": 59,
+      "column": 3,
+      "index": 2379
+    }
+  },
+  {
+    "id": "components.walletinit.walletfreshinitscreen.addWalletOnShelleyButton",
+    "defaultMessage": "!!!Add wallet (Shelley Testnet)",
+    "file": "src/WalletInit/WalletFreshInit/WalletFreshInitScreen.tsx",
+    "start": {
+      "line": 60,
+      "column": 28,
+      "index": 2409
+    },
+    "end": {
+      "line": 63,
+      "column": 3,
+      "index": 2549
+    }
+  }
+]

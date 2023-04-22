@@ -1,0 +1,92 @@
+[
+  {
+    "id": "components.walletinit.walletform.walletNameInputLabel",
+    "defaultMessage": "!!!Wallet name",
+    "file": "src/WalletInit/WalletForm.tsx",
+    "start": {
+      "line": 131,
+      "column": 24,
+      "index": 4739
+    },
+    "end": {
+      "line": 134,
+      "column": 3,
+      "index": 4847
+    }
+  },
+  {
+    "id": "components.walletinit.walletform.newPasswordInput",
+    "defaultMessage": "!!!Spending password",
+    "file": "src/WalletInit/WalletForm.tsx",
+    "start": {
+      "line": 135,
+      "column": 20,
+      "index": 4869
+    },
+    "end": {
+      "line": 138,
+      "column": 3,
+      "index": 4979
+    }
+  },
+  {
+    "id": "components.walletinit.walletform.continueButton",
+    "defaultMessage": "!!!Continue",
+    "file": "src/WalletInit/WalletForm.tsx",
+    "start": {
+      "line": 139,
+      "column": 18,
+      "index": 4999
+    },
+    "end": {
+      "line": 142,
+      "column": 3,
+      "index": 5098
+    }
+  },
+  {
+    "id": "components.walletinit.createwallet.createwalletscreen.passwordLengthRequirement",
+    "defaultMessage": "!!!Minimum characters",
+    "file": "src/WalletInit/WalletForm.tsx",
+    "start": {
+      "line": 143,
+      "column": 31,
+      "index": 5131
+    },
+    "end": {
+      "line": 146,
+      "column": 3,
+      "index": 5272
+    }
+  },
+  {
+    "id": "components.walletinit.walletform.repeatPasswordInputLabel",
+    "defaultMessage": "!!!Repeat password",
+    "file": "src/WalletInit/WalletForm.tsx",
+    "start": {
+      "line": 147,
+      "column": 28,
+      "index": 5302
+    },
+    "end": {
+      "line": 150,
+      "column": 3,
+      "index": 5418
+    }
+  },
+  {
+    "id": "components.walletinit.walletform.repeatPasswordInputError",
+    "defaultMessage": "!!!Passwords do not match",
+    "file": "src/WalletInit/WalletForm.tsx",
+    "start": {
+      "line": 151,
+      "column": 28,
+      "index": 5448
+    },
+    "end": {
+      "line": 154,
+      "column": 3,
+      "index": 5571
+    }
+  }
+]

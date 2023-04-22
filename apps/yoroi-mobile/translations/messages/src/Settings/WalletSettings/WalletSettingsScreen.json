@@ -1,0 +1,212 @@
+[
+  {
+    "id": "components.settings.walletsettingscreen.switchWallet",
+    "defaultMessage": "!!!Switch wallet",
+    "file": "src/Settings/WalletSettings/WalletSettingsScreen.tsx",
+    "start": {
+      "line": 176,
+      "column": 16,
+      "index": 5268
+    },
+    "end": {
+      "line": 179,
+      "column": 3,
+      "index": 5377
+    }
+  },
+  {
+    "id": "components.settings.walletsettingscreen.logout",
+    "defaultMessage": "!!!Logout",
+    "file": "src/Settings/WalletSettings/WalletSettingsScreen.tsx",
+    "start": {
+      "line": 180,
+      "column": 10,
+      "index": 5389
+    },
+    "end": {
+      "line": 183,
+      "column": 3,
+      "index": 5485
+    }
+  },
+  {
+    "id": "components.settings.walletsettingscreen.walletName",
+    "defaultMessage": "!!!Wallet name",
+    "file": "src/Settings/WalletSettings/WalletSettingsScreen.tsx",
+    "start": {
+      "line": 184,
+      "column": 14,
+      "index": 5501
+    },
+    "end": {
+      "line": 187,
+      "column": 3,
+      "index": 5606
+    }
+  },
+  {
+    "id": "components.settings.walletsettingscreen.security",
+    "defaultMessage": "!!!Security",
+    "file": "src/Settings/WalletSettings/WalletSettingsScreen.tsx",
+    "start": {
+      "line": 188,
+      "column": 12,
+      "index": 5620
+    },
+    "end": {
+      "line": 191,
+      "column": 3,
+      "index": 5720
+    }
+  },
+  {
+    "id": "components.settings.walletsettingscreen.changePassword",
+    "defaultMessage": "!!!Change password",
+    "file": "src/Settings/WalletSettings/WalletSettingsScreen.tsx",
+    "start": {
+      "line": 192,
+      "column": 18,
+      "index": 5740
+    },
+    "end": {
+      "line": 195,
+      "column": 3,
+      "index": 5853
+    }
+  },
+  {
+    "id": "components.settings.walletsettingscreen.easyConfirmation",
+    "defaultMessage": "!!!Easy transaction confirmation",
+    "file": "src/Settings/WalletSettings/WalletSettingsScreen.tsx",
+    "start": {
+      "line": 196,
+      "column": 20,
+      "index": 5875
+    },
+    "end": {
+      "line": 199,
+      "column": 3,
+      "index": 6004
+    }
+  },
+  {
+    "id": "components.settings.walletsettingscreen.removeWallet",
+    "defaultMessage": "!!!Remove wallet",
+    "file": "src/Settings/WalletSettings/WalletSettingsScreen.tsx",
+    "start": {
+      "line": 200,
+      "column": 16,
+      "index": 6022
+    },
+    "end": {
+      "line": 203,
+      "column": 3,
+      "index": 6131
+    }
+  },
+  {
+    "id": "components.settings.applicationsettingsscreen.network",
+    "defaultMessage": "!!!Network:",
+    "file": "src/Settings/WalletSettings/WalletSettingsScreen.tsx",
+    "start": {
+      "line": 205,
+      "column": 11,
+      "index": 6192
+    },
+    "end": {
+      "line": 208,
+      "column": 3,
+      "index": 6297
+    }
+  },
+  {
+    "id": "components.settings.walletsettingscreen.walletType",
+    "defaultMessage": "!!!Wallet type:",
+    "file": "src/Settings/WalletSettings/WalletSettingsScreen.tsx",
+    "start": {
+      "line": 209,
+      "column": 14,
+      "index": 6313
+    },
+    "end": {
+      "line": 212,
+      "column": 3,
+      "index": 6419
+    }
+  },
+  {
+    "id": "components.settings.walletsettingscreen.byronWallet",
+    "defaultMessage": "!!!Byron-era wallet",
+    "file": "src/Settings/WalletSettings/WalletSettingsScreen.tsx",
+    "start": {
+      "line": 213,
+      "column": 15,
+      "index": 6436
+    },
+    "end": {
+      "line": 216,
+      "column": 3,
+      "index": 6547
+    }
+  },
+  {
+    "id": "components.settings.walletsettingscreen.shelleyWallet",
+    "defaultMessage": "!!!Shelley-era wallet",
+    "file": "src/Settings/WalletSettings/WalletSettingsScreen.tsx",
+    "start": {
+      "line": 217,
+      "column": 17,
+      "index": 6566
+    },
+    "end": {
+      "line": 220,
+      "column": 3,
+      "index": 6681
+    }
+  },
+  {
+    "id": "components.settings.walletsettingscreen.unknownWalletType",
+    "defaultMessage": "!!!Unknown Wallet Type",
+    "file": "src/Settings/WalletSettings/WalletSettingsScreen.tsx",
+    "start": {
+      "line": 221,
+      "column": 21,
+      "index": 6704
+    },
+    "end": {
+      "line": 224,
+      "column": 3,
+      "index": 6824
+    }
+  },
+  {
+    "id": "components.settings.walletsettingscreen.about",
+    "defaultMessage": "!!!About",
+    "file": "src/Settings/WalletSettings/WalletSettingsScreen.tsx",
+    "start": {
+      "line": 225,
+      "column": 9,
+      "index": 6835
+    },
+    "end": {
+      "line": 228,
+      "column": 3,
+      "index": 6929
+    }
+  },
+  {
+    "id": "components.settings.walletsettingscreen.resyncWallet",
+    "defaultMessage": "!!!Resync",
+    "file": "src/Settings/WalletSettings/WalletSettingsScreen.tsx",
+    "start": {
+      "line": 229,
+      "column": 10,
+      "index": 6941
+    },
+    "end": {
+      "line": 232,
+      "column": 3,
+      "index": 7043
+    }
+  }
+]

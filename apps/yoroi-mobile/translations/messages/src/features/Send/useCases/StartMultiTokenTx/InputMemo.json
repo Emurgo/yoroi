@@ -1,0 +1,47 @@
+[
+  {
+    "id": "components.send.memofield.label",
+    "defaultMessage": "!!!Memo",
+    "file": "src/features/Send/useCases/StartMultiTokenTx/InputMemo.tsx",
+    "start": {
+      "line": 67,
+      "column": 9,
+      "index": 1733
+    },
+    "end": {
+      "line": 70,
+      "column": 3,
+      "index": 1812
+    }
+  },
+  {
+    "id": "components.send.memofield.message",
+    "defaultMessage": "!!!(Optional) Memo is stored locally",
+    "file": "src/features/Send/useCases/StartMultiTokenTx/InputMemo.tsx",
+    "start": {
+      "line": 71,
+      "column": 11,
+      "index": 1825
+    },
+    "end": {
+      "line": 74,
+      "column": 3,
+      "index": 1935
+    }
+  },
+  {
+    "id": "components.send.memofield.error",
+    "defaultMessage": "!!!Memo is too long",
+    "file": "src/features/Send/useCases/StartMultiTokenTx/InputMemo.tsx",
+    "start": {
+      "line": 75,
+      "column": 9,
+      "index": 1946
+    },
+    "end": {
+      "line": 78,
+      "column": 3,
+      "index": 2037
+    }
+  }
+]

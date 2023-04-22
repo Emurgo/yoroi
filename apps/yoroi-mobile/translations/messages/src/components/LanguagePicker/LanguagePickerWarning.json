@@ -1,0 +1,32 @@
+[
+  {
+    "id": "components.common.languagepicker.acknowledgement",
+    "defaultMessage": "!!!**The selected language translation is fully provided by the community**. EMURGO is grateful to all those who have contributed",
+    "file": "src/components/LanguagePicker/LanguagePickerWarning.tsx",
+    "start": {
+      "line": 61,
+      "column": 11,
+      "index": 1484
+    },
+    "end": {
+      "line": 66,
+      "column": 3,
+      "index": 1719
+    }
+  },
+  {
+    "id": "components.common.languagepicker.contributors",
+    "defaultMessage": "_",
+    "file": "src/components/LanguagePicker/LanguagePickerWarning.tsx",
+    "start": {
+      "line": 67,
+      "column": 16,
+      "index": 1737
+    },
+    "end": {
+      "line": 70,
+      "column": 3,
+      "index": 1824
+    }
+  }
+]

@@ -6,20 +6,22 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: '16.5.0'
+          node-version: '16.10.0'
           cache: 'yarn'
+        working-directory: ./apps/yoroi-mobile
       - run: yarn install
       - run: yarn lint
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: '16.5.0'
+          node-version: '16.10.0'
           cache: 'yarn'
+        working-directory: ./apps/yoroi-mobile
       - run: yarn install
       - run: yarn test --ci --bail --silent
