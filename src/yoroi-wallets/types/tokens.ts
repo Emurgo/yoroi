@@ -78,7 +78,7 @@ type TokeInfoCommon = {
   description?: string
 }
 
-export type TokenInfoNFT = TokeInfoCommon & {
+type TokenInfoNFT = TokeInfoCommon & {
   kind: 'nft'
   metadata: {
     image?: string
@@ -89,7 +89,7 @@ export type TokenInfoNFT = TokeInfoCommon & {
   }
 }
 
-export type TokenInfoFT = TokeInfoCommon & {
+type TokenInfoFT = TokeInfoCommon & {
   kind: 'ft'
   metadata: {
     group: string // policyId

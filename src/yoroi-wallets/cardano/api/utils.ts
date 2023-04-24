@@ -1,9 +1,9 @@
 import AssetFingerprint from '@emurgo/cip14-js'
 
-import {LegacyToken, TokenInfoFT} from '../../types'
+import {LegacyToken, TokenInfo} from '../../types'
 import {TokenRegistryEntry} from './api'
 
-export const tokenInfo = (entry: TokenRegistryEntry): TokenInfoFT => {
+export const tokenInfo = (entry: TokenRegistryEntry): TokenInfo<'ft'> => {
   const policyId = toPolicyId(entry.subject)
   const assetName = toAssetName(entry.subject)
 
@@ -27,7 +27,7 @@ export const tokenInfo = (entry: TokenRegistryEntry): TokenInfoFT => {
   }
 }
 
-export const fallbackTokenInfo = (tokenId: string): TokenInfoFT => {
+export const fallbackTokenInfo = (tokenId: string): TokenInfo<'ft'> => {
   const policyId = toPolicyId(tokenId)
   const assetName = toAssetName(tokenId)
 
@@ -83,7 +83,7 @@ export const asciiToHex = (ascii: string) => {
   return result.join('')
 }
 
-export const toTokenInfo = (token: LegacyToken): TokenInfoFT => {
+export const toTokenInfo = (token: LegacyToken): TokenInfo<'ft'> => {
   const policyId = toPolicyId(token.identifier)
   const assetName = toAssetName(token.identifier)
 

@@ -4,16 +4,7 @@ import {action} from '@storybook/addon-actions'
 import BigNumber from 'bignumber.js'
 
 import {getTokenFingerprint} from '../../legacy/format'
-import {
-  asciiToHex,
-  CardanoTypes,
-  fallbackTokenInfo,
-  TokenInfo,
-  TokenInfoNFT,
-  toTokenInfo,
-  WalletMeta,
-  YoroiWallet,
-} from '..'
+import {asciiToHex, CardanoTypes, fallbackTokenInfo, TokenInfo, toTokenInfo, WalletMeta, YoroiWallet} from '..'
 import * as HASKELL_SHELLEY_TESTNET from '../cardano/constants/testnet/constants'
 import {PRIMARY_TOKEN, PRIMARY_TOKEN_INFO} from '../cardano/constants/testnet/constants'
 import {PRIMARY_ASSET_CONSTANTS} from '../cardano/networks'
@@ -22,7 +13,6 @@ import {
   StakePoolInfosAndHistories,
   StakingInfo,
   StakingStatus,
-  TokenInfoFT,
   TransactionInfo,
   YoroiAmounts,
   YoroiNftModerationStatus,
@@ -297,7 +287,7 @@ const fetchPoolInfo = {
   },
 }
 
-export const generateManyNfts = (): TokenInfoNFT[] => {
+export const generateManyNfts = (): TokenInfo<'nft'>[] => {
   return Array(30)
     .fill(undefined)
     .map((_, index) => ({
@@ -568,7 +558,7 @@ const fetchTokenInfo = {
   },
   loading: async (...args) => {
     action('fetchTokenInfo')(...args)
-    return new Promise(() => null) as unknown as TokenInfoFT
+    return new Promise(() => null) as unknown as TokenInfo<'ft'>
   },
   error: async (...args) => {
     action('fetchTokenInfo')(...args)
@@ -621,7 +611,7 @@ const balances: YoroiAmounts = {
   '1d129dc9c03f95a863489883914f05a52e13135994a32f0cbeacc65e.74484f444c55': '100000000000000000020',
 }
 
-const tokenInfos: Record<string, TokenInfoFT> = {
+const tokenInfos: Record<string, TokenInfo<'ft'>> = {
   '': HASKELL_SHELLEY_TESTNET.PRIMARY_TOKEN_INFO,
   '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950': toTokenInfo({
     networkId: 300,
@@ -821,7 +811,7 @@ const yoroiSignedTx: YoroiSignedTx & {mock: true} = {
   mock: true,
 }
 
-export const nft: TokenInfoNFT = {
+export const nft: TokenInfo<'nft'> = {
   kind: 'nft',
   id: `8e2c7604711faef7c84c91b286c7327d17df825b7f0c88ec0332c0b4.${asciiToHex('NFT 0')}`,
   name: 'NFT 0',

@@ -26,7 +26,7 @@ import {
   RawUtxo,
   StakingInfo,
   TipStatusResponse,
-  TokenInfoFT,
+  TokenInfo,
   Transaction,
   TxStatusRequest,
   TxStatusResponse,
@@ -123,7 +123,7 @@ const implementationId = WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON
 export default ByronWallet
 export class ByronWallet implements YoroiWallet {
   readonly primaryToken: DefaultAsset
-  readonly primaryTokenInfo: TokenInfoFT
+  readonly primaryTokenInfo: TokenInfo<'ft'>
   readonly id: string
   readonly networkId: NetworkId
   readonly walletImplementationId: WalletImplementationId
@@ -1293,13 +1293,13 @@ const keys: Array<keyof WalletJSON> = [
   'lastGeneratedAddressIndex',
 ]
 
-export const primaryTokenInfo: Record<'mainnet' | 'testnet', TokenInfoFT> = {
+export const primaryTokenInfo: Record<'mainnet' | 'testnet', TokenInfo<'ft'>> = {
   mainnet: {
     id: '',
     name: 'ADA',
     description: 'Cardano',
     kind: 'ft',
-    fingerprint: '', // TODO: check ADA/TADA fingerprint and group
+    fingerprint: '',
     metadata: {
       decimals: 6,
       ticker: 'ADA',

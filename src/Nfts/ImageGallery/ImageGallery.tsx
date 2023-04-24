@@ -7,11 +7,11 @@ import {Icon, Spacer, Text} from '../../components'
 import {NftPreview} from '../../components/NftPreview/NftPreview'
 import {features} from '../../features'
 import {useSelectedWallet} from '../../SelectedWallet'
-import {TokenInfoNFT} from '../../yoroi-wallets/types'
+import {TokenInfo} from '../../yoroi-wallets/types'
 import {useModeratedNftImage} from '../hooks'
 
 type Props = {
-  nfts: TokenInfoNFT[]
+  nfts: TokenInfo<'nft'>[]
   onSelect: (id: string) => void
   onRefresh: () => void
   isRefreshing: boolean
@@ -44,7 +44,7 @@ export const ImageGallery = ({nfts = [], onSelect, onRefresh, isRefreshing}: Pro
 
 interface ModeratedImageProps {
   onPress?(event: GestureResponderEvent): void
-  nft: TokenInfoNFT
+  nft: TokenInfo<'nft'>
 }
 
 const UnModeratedImage = ({onPress, nft}: ModeratedImageProps) => {
@@ -100,11 +100,11 @@ const ModeratedImage = ({onPress, nft}: ModeratedImageProps) => {
   )
 }
 
-function BlockedNft({nft}: {nft: TokenInfoNFT}) {
+function BlockedNft({nft}: {nft: TokenInfo<'nft'>}) {
   return <PlaceholderNft nft={nft} />
 }
 
-function PlaceholderNft({nft}: {nft: TokenInfoNFT}) {
+function PlaceholderNft({nft}: {nft: TokenInfo<'nft'>}) {
   return (
     <View>
       <View style={styles.imageWrapper}>
@@ -125,11 +125,11 @@ function PlaceholderNft({nft}: {nft: TokenInfoNFT}) {
   )
 }
 
-function ManualReviewNft({nft}: {nft: TokenInfoNFT}) {
+function ManualReviewNft({nft}: {nft: TokenInfo<'nft'>}) {
   return <PlaceholderNft nft={nft} />
 }
 
-function RequiresConsentNft({nft}: {nft: TokenInfoNFT}) {
+function RequiresConsentNft({nft}: {nft: TokenInfo<'nft'>}) {
   return (
     <View>
       <View style={styles.imageWrapper}>
@@ -154,7 +154,7 @@ function RequiresConsentNft({nft}: {nft: TokenInfoNFT}) {
   )
 }
 
-function ApprovedNft({nft}: {nft: TokenInfoNFT}) {
+function ApprovedNft({nft}: {nft: TokenInfo<'nft'>}) {
   return (
     <View>
       <View style={styles.imageWrapper}>

@@ -5,7 +5,7 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 import {SvgUri} from 'react-native-svg'
 
 import placeholder from '../../assets/img/nft-placeholder.png'
-import {isArray, isString, TokenInfoNFT} from '../../yoroi-wallets'
+import {isArray, isString, TokenInfo} from '../../yoroi-wallets'
 
 export const NftPreview = ({
   nft,
@@ -17,7 +17,7 @@ export const NftPreview = ({
   resizeMode,
   blurRadius,
 }: {
-  nft: TokenInfoNFT
+  nft: TokenInfo<'nft'>
   showPlaceholder?: boolean
   style?: StyleProp<ImageStyle>
   showThumbnail?: boolean
@@ -97,7 +97,7 @@ const isSvgMediaType = (mediaType: string | undefined): boolean => {
   return mediaType === 'image/svg+xml'
 }
 
-const getNftFilenameMediaType = (nft: TokenInfoNFT, filename: string): string | undefined => {
+const getNftFilenameMediaType = (nft: TokenInfo<'nft'>, filename: string): string | undefined => {
   const files = nft.metadata.originalMetadata?.files ?? []
   const file = files.find((file) => {
     return isArray(file.src) ? file.src.join('') === filename : file.src === filename

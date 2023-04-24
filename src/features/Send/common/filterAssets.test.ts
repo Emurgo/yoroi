@@ -1,8 +1,8 @@
-import {TokenInfoFT} from '../../../yoroi-wallets'
+import {TokenInfo} from '../../../yoroi-wallets'
 import {filterAssets} from './filterAssets'
 
 describe('filterAssets', () => {
-  const fakeToken1: TokenInfoFT = {
+  const fakeToken1: TokenInfo<'ft'> = {
     kind: 'ft',
     id: '',
     name: 'TADANAME',
@@ -18,7 +18,7 @@ describe('filterAssets', () => {
     },
   } as const
 
-  const fakeToken2: TokenInfoFT = {
+  const fakeToken2: TokenInfo<'ft'> = {
     kind: 'ft',
     id: '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950',
     fingerprint: 'asset1nvcwnq60jnm27efjm87xnhqt6alsv024tdyxjm',
@@ -34,7 +34,7 @@ describe('filterAssets', () => {
     },
   }
 
-  const tokenInfos: TokenInfoFT[] = [fakeToken1, fakeToken2]
+  const tokenInfos: TokenInfo<'ft'>[] = [fakeToken1, fakeToken2]
 
   it('should return all tokenInfos if searchTerm is empty', () => {
     const searchTerm = ''

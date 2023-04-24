@@ -1,6 +1,6 @@
 import {features} from '../../features'
 import {getAssetFingerprint} from '../../legacy/format'
-import {NftMetadata, TokenInfoNFT} from '../types'
+import {NftMetadata, TokenInfo} from '../types'
 import {isString} from '../utils'
 import {asciiToHex} from './api'
 
@@ -9,7 +9,7 @@ export const convertNft = (options: {
   storageUrl: string
   policyId: string
   shortName: string
-}): TokenInfoNFT => {
+}): TokenInfo<'nft'> => {
   const {metadata, storageUrl, policyId, shortName} = options
   const assetNameHex = asciiToHex(shortName)
   const fingerprint = getAssetFingerprint(policyId, assetNameHex)

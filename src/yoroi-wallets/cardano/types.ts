@@ -26,7 +26,7 @@ import type {
   TxStatusResponse,
   WalletState,
 } from '../types/other'
-import {DefaultAsset, TokenInfoFT} from '../types/tokens'
+import {DefaultAsset} from '../types/tokens'
 import {CardanoTypes} from '.'
 import type {Addresses} from './chain'
 
@@ -81,7 +81,7 @@ export type YoroiWallet = {
   hwDeviceInfo: null | HWDeviceInfo
   isReadOnly: boolean
   primaryToken: Readonly<DefaultAsset>
-  primaryTokenInfo: Readonly<TokenInfoFT>
+  primaryTokenInfo: Readonly<TokenInfo<'ft'>>
 
   // Sending
   createUnsignedTx(entry: YoroiEntry, metadata?: Array<CardanoTypes.TxMetadata>): Promise<YoroiUnsignedTx>

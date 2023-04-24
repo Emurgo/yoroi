@@ -24,7 +24,6 @@ import {useStorage} from '../storage'
 import {
   Quantity,
   TokenInfo,
-  TokenInfoNFT,
   TRANSACTION_DIRECTION,
   TRANSACTION_STATUS,
   YoroiAmounts,
@@ -889,7 +888,7 @@ export const useNfts = (wallet: YoroiWallet, options: UseQueryOptions<TokenInfo[
   return {nfts, refetch, error, isLoading, isError}
 }
 
-export const useNft = (wallet: YoroiWallet, {id}: {id: string}): TokenInfoNFT => {
+export const useNft = (wallet: YoroiWallet, {id}: {id: string}): TokenInfo<'nft'> => {
   const tokenInfo = useTokenInfo({wallet, tokenId: id}, {suspense: true})
 
   if (tokenInfo.kind !== 'nft') {

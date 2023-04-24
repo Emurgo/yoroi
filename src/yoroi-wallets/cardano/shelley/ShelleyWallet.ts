@@ -20,7 +20,7 @@ import type {
   PoolInfoRequest,
   RawUtxo,
   TipStatusResponse,
-  TokenInfoFT,
+  TokenInfo,
   Transaction,
   TxStatusRequest,
   TxStatusResponse,
@@ -148,7 +148,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
   return class ShelleyWallet implements YoroiWallet {
     readonly primaryToken: DefaultAsset = PRIMARY_TOKEN
-    readonly primaryTokenInfo: TokenInfoFT = PRIMARY_TOKEN_INFO
+    readonly primaryTokenInfo: TokenInfo<'ft'> = PRIMARY_TOKEN_INFO
     readonly walletImplementationId = WALLET_IMPLEMENTATION_ID
     readonly networkId = NETWORK_ID
     readonly id: string

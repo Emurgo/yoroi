@@ -1,12 +1,12 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {TokenInfoNFT, YoroiNftModerationStatus} from '../../yoroi-wallets'
+import {TokenInfo, YoroiNftModerationStatus} from '../../yoroi-wallets'
 import {NftPreview} from '../NftPreview'
 
 const ICON_SIZE = 32
 
-export const ModeratedNftIcon = ({nft, status}: {nft: TokenInfoNFT; status: YoroiNftModerationStatus}) => {
+export const ModeratedNftIcon = ({nft, status}: {nft: TokenInfo<'nft'>; status: YoroiNftModerationStatus}) => {
   if (status === 'pending') {
     return <PlaceholderNftIcon nft={nft} />
   }
@@ -30,7 +30,7 @@ export const ModeratedNftIcon = ({nft, status}: {nft: TokenInfoNFT; status: Yoro
   return null
 }
 
-function PlaceholderNftIcon({nft}: {nft: TokenInfoNFT}) {
+function PlaceholderNftIcon({nft}: {nft: TokenInfo<'nft'>}) {
   return (
     <View style={styles.wrapper}>
       <NftPreview
@@ -45,11 +45,11 @@ function PlaceholderNftIcon({nft}: {nft: TokenInfoNFT}) {
   )
 }
 
-function BlockedNftIcon({nft}: {nft: TokenInfoNFT}) {
+function BlockedNftIcon({nft}: {nft: TokenInfo<'nft'>}) {
   return <PlaceholderNftIcon nft={nft} />
 }
 
-function ApprovedNftIcon({nft}: {nft: TokenInfoNFT}) {
+function ApprovedNftIcon({nft}: {nft: TokenInfo<'nft'>}) {
   return (
     <View style={styles.wrapper}>
       <NftPreview nft={nft} height={ICON_SIZE} width={ICON_SIZE} style={styles.assetIcon} resizeMode="cover" />
@@ -57,7 +57,7 @@ function ApprovedNftIcon({nft}: {nft: TokenInfoNFT}) {
   )
 }
 
-function ConsentNftIcon({nft}: {nft: TokenInfoNFT}) {
+function ConsentNftIcon({nft}: {nft: TokenInfo<'nft'>}) {
   return (
     <View style={styles.wrapper}>
       <NftPreview
