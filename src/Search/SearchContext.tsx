@@ -13,6 +13,7 @@ type SearchState = {
 type SearchActions = {
   searchChanged: (search: string) => void
   clearSearch: () => void
+  closeSearch: () => void
   showSearch: () => void
   hideSearch: () => void
 }
@@ -37,6 +38,7 @@ export const SearchProvider = ({
   const [state, dispatch] = useReducer(searchReducer, {...defaultState, ...initialState})
   const actions = React.useRef<SearchActions>({
     clearSearch: () => dispatch({type: 'clear'}),
+    closeSearch: () => dispatch({type: 'close'}),
     searchChanged: (search: string) => dispatch({type: 'searchChanged', search}),
     showSearch: () => dispatch({type: 'showSearch'}),
     hideSearch: () => dispatch({type: 'hideSearch'}),
@@ -49,6 +51,7 @@ export const SearchProvider = ({
 
 type SearchAction =
   | {type: 'clear'}
+  | {type: 'close'}
   | {type: 'searchChanged'; search: string}
   | {type: 'showSearch'}
   | {type: 'hideSearch'}
@@ -57,6 +60,9 @@ function searchReducer(state: SearchState, action: SearchAction) {
   switch (action.type) {
     case 'clear':
       return {...state, search: ''}
+
+    case 'close':
+      return {...state, search: '', visible: false}
 
     case 'searchChanged':
       return {
