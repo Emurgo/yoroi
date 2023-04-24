@@ -125,24 +125,11 @@ type AssetListProps = {
 const AssetList = ({canAddAmount, fungibilityFilter}: AssetListProps) => {
   const wallet = useSelectedWallet()
   const filteredTokenInfos = useFilteredTokenInfos({fungibilityFilter})
-  const isWalletEmpty = useIsWalletEmpty()
-  const {search: assetSearchTerm, visible: isSearching} = useSearch()
-
-  /*
-   * to show the empty list component:
-   *    - filteredTokenInfos has primary token when the search term and the wallet are empty and the ft oot all tab are selected
-   *    - "ft" tab has to have primary token hidden when wallet is empty and to show the empty list component
-   *    - "all" tab has to display the primary token and not to show the empty list component
-   */
-  const data =
-    fungibilityFilter === 'ft' && isWalletEmpty && assetSearchTerm.length === 0 && !isSearching
-      ? []
-      : filteredTokenInfos
 
   return (
     <View style={styles.list}>
       <FlashList
-        data={data}
+        data={filteredTokenInfos}
         renderItem={({item: tokenInfo}: {item: TokenInfo}) => (
           <Boundary>
             <SelectableAssetItem
@@ -347,27 +334,36 @@ const useFilteredTokenInfos = ({fungibilityFilter}: {fungibilityFilter: Fungibil
   const {search: assetSearchTerm, visible: isSearching} = useSearch()
   const balances = useBalances(wallet)
   const {targets, selectedTargetIndex} = useSend()
+  const isWalletEmpty = useIsWalletEmpty()
 
   const tokenInfos = useTokenInfos({
     wallet,
     tokenIds: Amounts.toArray(balances).map(({tokenId}) => tokenId),
   })
 
+  /*
+   * to show the empty list component:
+   *    - filteredTokenInfos has primary token when the search term and the wallet are empty and the ft or all tab are selected
+   *    - "ft" tab has to have primary token hidden when wallet is empty and to show the empty list component
+   *    - "all" tab has to display the primary token and not to show the empty list component
+   */
+  if (fungibilityFilter === 'ft' && isWalletEmpty && assetSearchTerm.length === 0 && !isSearching) return []
+
   const selectedAddresses = Object.keys(targets[selectedTargetIndex].entry.amounts)
-  const filteredBySelection = tokenInfos.filter(filterBySelection(selectedAddresses))
 
-  const filteredBySearch = filteredBySelection.filter(filterBySearch(assetSearchTerm))
-
-  const filteredByFungibility = filteredBySearch.filter(
-    filterByFungibility({
-      nfts,
-      fungibilityFilter: isSearching ? 'all' : fungibilityFilter, // all assets must be available when searching
-    }),
-  )
+  const filteredTokenInfos = tokenInfos
+    .filter(filterBySelection(selectedAddresses))
+    .filter(filterBySearch(assetSearchTerm))
+    .filter(
+      filterByFungibility({
+        nfts,
+        fungibilityFilter: isSearching ? 'all' : fungibilityFilter, // all assets must be available when searching
+      }),
+    )
 
   return sortTokenInfos({
     wallet,
-    tokenInfos: filteredByFungibility,
+    tokenInfos: filteredTokenInfos,
   })
 }
 
