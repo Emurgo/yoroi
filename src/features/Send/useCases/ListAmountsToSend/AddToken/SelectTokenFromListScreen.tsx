@@ -345,7 +345,7 @@ const useFilteredTokenInfos = ({fungibilityFilter}: {fungibilityFilter: Fungibil
   const amountsSelected = Object.keys(targets[selectedTargetIndex].entry.amounts)
 
   const filteredTokenInfos = tokenInfos
-    .filter(filterOutSelected(selectedTokensIds))
+    .filter(filterOutSelected(amountsSelected))
     .filter(filterBySearch(assetSearchTerm))
     .filter(
       filterByFungibility({
