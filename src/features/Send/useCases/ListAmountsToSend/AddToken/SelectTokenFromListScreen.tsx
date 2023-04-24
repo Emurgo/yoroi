@@ -112,7 +112,7 @@ const NftList = () => {
         ListEmptyComponent={<ListEmptyComponent fungibilityFilter="nft" />}
       />
 
-      <Counter fungibilityFilter="nft" />
+      <Counter fungibilityFilter="nft" counter={sortedNfts.length} />
     </View>
   )
 }
@@ -147,7 +147,7 @@ const AssetList = ({canAddAmount, fungibilityFilter}: AssetListProps) => {
         ListEmptyComponent={<ListEmptyComponent fungibilityFilter={fungibilityFilter} />}
       />
 
-      <Counter fungibilityFilter={fungibilityFilter} />
+      <Counter fungibilityFilter={fungibilityFilter} counter={filteredTokenInfos.length} />
     </View>
   )
 }
@@ -264,56 +264,45 @@ const EmptySearchResult = () => {
   )
 }
 
-const Counter = ({fungibilityFilter}: {fungibilityFilter: FungibilityFilter}) => {
+const Counter = ({fungibilityFilter, counter}: {fungibilityFilter: FungibilityFilter; counter: number}) => {
   const {search: assetSearchTerm, visible: isSearching} = useSearch()
   const strings = useStrings()
-  const wallet = useSelectedWallet()
-  const filteredTokenInfos = useFilteredTokenInfos({fungibilityFilter})
-  const {nfts} = useNfts(wallet)
 
   if (!isSearching && fungibilityFilter === 'all') {
-    const total = filteredTokenInfos.length
-
     return (
       <View style={styles.counter}>
         <Text style={styles.counterText}>{strings.youHave}</Text>
 
-        <Text style={styles.counterTextBold}>{` ${total} ${strings.assets(total)}`}</Text>
+        <Text style={styles.counterTextBold}>{` ${counter} ${strings.assets(counter)}`}</Text>
       </View>
     )
   }
 
   if (!isSearching && fungibilityFilter === 'ft') {
-    const total = filteredTokenInfos.length
-
     return (
       <View style={styles.counter}>
         <Text style={styles.counterText}>{strings.youHave}</Text>
 
-        <Text style={styles.counterTextBold}>{` ${total} ${strings.tokens(total)}`}</Text>
+        <Text style={styles.counterTextBold}>{` ${counter} ${strings.tokens(counter)}`}</Text>
       </View>
     )
   }
 
   if (!isSearching && fungibilityFilter === 'nft') {
-    const total = nfts.length
-
     return (
       <View style={styles.counter}>
         <Text style={styles.counterText}>{strings.youHave}</Text>
 
-        <Text style={styles.counterTextBold}>{` ${total} ${strings.nfts(total)}`}</Text>
+        <Text style={styles.counterTextBold}>{` ${counter} ${strings.nfts(counter)}`}</Text>
       </View>
     )
   }
 
   // if it is searching and typing the counter is shown
   if (isSearching && assetSearchTerm.length > 0) {
-    const total = filteredTokenInfos.length
-
     return (
       <View style={styles.counter}>
-        <Text style={styles.counterTextBold}>{`${total} ${strings.assets(total)} `}</Text>
+        <Text style={styles.counterTextBold}>{`${counter} ${strings.assets(counter)} `}</Text>
 
         <Text style={styles.counterText}>{strings.found}</Text>
       </View>
