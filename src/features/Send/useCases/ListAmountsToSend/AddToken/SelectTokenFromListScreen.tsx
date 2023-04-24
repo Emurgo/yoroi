@@ -349,10 +349,10 @@ const useFilteredTokenInfos = ({fungibilityFilter}: {fungibilityFilter: Fungibil
    */
   if (fungibilityFilter === 'ft' && isWalletEmpty && assetSearchTerm.length === 0 && !isSearching) return []
 
-  const selectedAddresses = Object.keys(targets[selectedTargetIndex].entry.amounts)
+  const selectedTokensIds = Object.keys(targets[selectedTargetIndex].entry.amounts)
 
   const filteredTokenInfos = tokenInfos
-    .filter(filterBySelection(selectedAddresses))
+    .filter(filterBySelection(selectedTokensIds))
     .filter(filterBySearch(assetSearchTerm))
     .filter(
       filterByFungibility({
@@ -367,8 +367,8 @@ const useFilteredTokenInfos = ({fungibilityFilter}: {fungibilityFilter: Fungibil
   })
 }
 
-const filterBySelection = (selectedAddresses: Array<string>) => (target: YoroiNft | TokenInfo) =>
-  selectedAddresses.includes(target.id) !== true
+const filterBySelection = (selectedTokensIds: Array<string>) => (target: YoroiNft | TokenInfo) =>
+  selectedTokensIds.includes(target.id) !== true
 
 const sortNfts = (nftNameA: string, nftNameB: string): number => nftNameA.localeCompare(nftNameB)
 
