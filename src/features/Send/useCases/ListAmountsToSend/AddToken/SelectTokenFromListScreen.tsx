@@ -263,7 +263,7 @@ const EmptySearchResult = () => {
 const useIsWalletEmpty = () => {
   const wallet = useSelectedWallet()
   const balances = useBalances(wallet)
-  return Amounts.toArray(balances).every(({quantity}) => quantity === Quantities.zero)
+  return Amounts.toArray(balances).every(({quantity}) => Quantities.isZero(quantity))
 }
 
 // filteredTokenInfos has primary token when the search term and the wallet are empty and the ft/all tab is selected
