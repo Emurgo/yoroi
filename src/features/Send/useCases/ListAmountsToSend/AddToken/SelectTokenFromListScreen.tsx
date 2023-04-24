@@ -90,7 +90,7 @@ const NftList = () => {
   const balances = useBalances(wallet)
 
   const {nfts} = useNfts(wallet)
-  const selectedAddresses = Object.keys(targets[selectedTargetIndex].entry.amounts)
+  const amountsSelected = Object.keys(targets[selectedTargetIndex].entry.amounts)
   const filtered = nfts.filter(filterOutSelected(selectedAddresses))
   const sortedNfts = filtered.sort((NftA, NftB) => sortNfts(NftA.name, NftB.name))
 
