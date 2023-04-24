@@ -111,6 +111,8 @@ const NftList = () => {
         withVerticalPadding={nfts.length > 0} // to keep consistency between tabs when the list is not empty
         ListEmptyComponent={<ListEmptyComponent fungibilityFilter="nft" />}
       />
+
+      <Counter fungibilityFilter="nft" counter={sortedNfts.length} />
     </View>
   )
 }
@@ -144,6 +146,8 @@ const AssetList = ({canAddAmount, fungibilityFilter}: AssetListProps) => {
         estimatedItemSize={78}
         ListEmptyComponent={<ListEmptyComponent fungibilityFilter={fungibilityFilter} />}
       />
+
+      <Counter fungibilityFilter={fungibilityFilter} counter={filteredTokenInfos.length} />
     </View>
   )
 }
@@ -260,6 +264,54 @@ const EmptySearchResult = () => {
   )
 }
 
+const Counter = ({fungibilityFilter, counter}: {fungibilityFilter: FungibilityFilter; counter: number}) => {
+  const {search: assetSearchTerm, visible: isSearching} = useSearch()
+  const strings = useStrings()
+
+  if (!isSearching && fungibilityFilter === 'all') {
+    return (
+      <View style={styles.counter}>
+        <Text style={styles.counterText}>{strings.youHave}</Text>
+
+        <Text style={styles.counterTextBold}>{` ${counter} ${strings.assets(counter)}`}</Text>
+      </View>
+    )
+  }
+
+  if (!isSearching && fungibilityFilter === 'ft') {
+    return (
+      <View style={styles.counter}>
+        <Text style={styles.counterText}>{strings.youHave}</Text>
+
+        <Text style={styles.counterTextBold}>{` ${counter} ${strings.tokens(counter)}`}</Text>
+      </View>
+    )
+  }
+
+  if (!isSearching && fungibilityFilter === 'nft') {
+    return (
+      <View style={styles.counter}>
+        <Text style={styles.counterText}>{strings.youHave}</Text>
+
+        <Text style={styles.counterTextBold}>{` ${counter} ${strings.nfts(counter)}`}</Text>
+      </View>
+    )
+  }
+
+  // if it is searching and typing the counter is shown
+  if (isSearching && assetSearchTerm.length > 0) {
+    return (
+      <View style={styles.counter}>
+        <Text style={styles.counterTextBold}>{`${counter} ${strings.assets(counter)} `}</Text>
+
+        <Text style={styles.counterText}>{strings.found}</Text>
+      </View>
+    )
+  }
+
+  return null
+}
+
 const useIsWalletEmpty = () => {
   const wallet = useSelectedWallet()
   const balances = useBalances(wallet)
@@ -357,5 +409,18 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 20,
     color: '#000',
+  },
+  counter: {
+    padding: 16,
+    justifyContent: 'center',
+    flexDirection: 'row',
+  },
+  counterText: {
+    fontWeight: '400',
+    color: '#3154CB',
+  },
+  counterTextBold: {
+    fontWeight: 'bold',
+    color: '#3154CB',
   },
 })

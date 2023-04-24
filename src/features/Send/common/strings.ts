@@ -12,6 +12,7 @@ export const useStrings = () => {
     amount: intl.formatMessage(txLabels.amount),
     apply: intl.formatMessage(globalMessages.apply),
     asset: intl.formatMessage(messages.asset),
+    assets: (qty: number) => intl.formatMessage(globalMessages.assets, {qty}),
     assetsLabel: intl.formatMessage(globalMessages.assetsLabel),
     availableFunds: intl.formatMessage(globalMessages.availableFunds),
     availableFundsBannerIsFetching: intl.formatMessage(messages.availableFundsBannerIsFetching),
@@ -29,6 +30,7 @@ export const useStrings = () => {
     errorBannerPendingOutgoingTransaction: intl.formatMessage(messages.errorBannerPendingOutgoingTransaction),
     feeLabel: intl.formatMessage(messages.feeLabel),
     feeNotAvailable: intl.formatMessage(messages.feeNotAvailable),
+    found: intl.formatMessage(messages.found),
     max: intl.formatMessage(globalMessages.max),
     minPrimaryBalanceForTokens: intl.formatMessage(amountInputErrorMessages.minPrimaryBalanceForTokens),
     next: intl.formatMessage(globalMessages.next),
@@ -48,6 +50,7 @@ export const useStrings = () => {
     sendAllWarningTitle: intl.formatMessage(messages.sendAllWarningTitle),
     tokens: (qty: number) => intl.formatMessage(globalMessages.tokens, {qty}),
     unknownAsset: intl.formatMessage(messages.unknownAsset),
+    youHave: intl.formatMessage(messages.youHave),
   }
 }
 
@@ -165,6 +168,14 @@ export const messages = defineMessages({
   noAssets: {
     id: 'components.send.assetselectorscreen.noAssets',
     defaultMessage: '!!!No assets found',
+  },
+  found: {
+    id: 'components.send.assetselectorscreen.found',
+    defaultMessage: '!!!found',
+  },
+  youHave: {
+    id: 'components.send.assetselectorscreen.youHave',
+    defaultMessage: '!!!You have',
   },
   noAssetsAddedYet: {
     id: 'components.send.assetselectorscreen.noAssetsAddedYet',
