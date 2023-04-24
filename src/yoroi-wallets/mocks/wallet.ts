@@ -309,43 +309,6 @@ export const generateManyNfts = (): TokenInfoNFT[] => {
     }))
 }
 
-const fetchNfts = {
-  success: {
-    many: async (...args) => {
-      action('fetchNfts')(...args)
-      return generateManyNfts()
-    },
-    empty: async (...args) => {
-      action('fetchNfts')(...args)
-      return []
-    },
-    emptyAndLaterFound: async (ids: string[]) => {
-      return ids.length === 1 && ids[0] === nft.id ? [nft] : []
-    },
-    emptyAndLaterNotFound: async (ids: string[]) => {
-      return ids.length === 1 && ids[0] === nft.id ? [] : []
-    },
-    emptyAndLaterPending: async (ids: string[]): Promise<TokenInfoNFT[]> => {
-      return ids.length === 1 && ids[0] === nft.id ? new Promise(() => null) : []
-    },
-    emptyAndLaterError: async (ids: string[]): Promise<TokenInfoNFT[]> => {
-      return ids.length === 1 && ids[0] === nft.id ? Promise.reject(new Error('storybook error message')) : []
-    },
-    one: async (...args) => {
-      action('fetchNfts')(...args)
-      return [nft]
-    },
-  },
-  error: async (...args) => {
-    action('fetchNfts')(...args)
-    return Promise.reject(new Error('storybook error message'))
-  },
-  loading: async (...args) => {
-    action('fetchNfts')(...args)
-    return new Promise(() => null) as unknown as TokenInfoNFT[]
-  },
-}
-
 const fetchNftModerationStatus = {
   success: {
     approved: async (...args): Promise<YoroiNftModerationStatus> => {
@@ -558,6 +521,11 @@ const fetchTokenInfo = {
     nft: async (...args): Promise<TokenInfo<'nft'>> => {
       action('fetchTokenInfo')(...args)
       return nft
+    },
+    randomNft: async (...args): Promise<TokenInfo<'nft'>> => {
+      action('fetchTokenInfo')(...args)
+      const allNfts = generateManyNfts()
+      return allNfts[Math.floor(Math.random() * allNfts.length)]
     },
     ft: async (...args): Promise<TokenInfo<'ft'>> => {
       action('fetchTokenInfo')(...args)
@@ -896,7 +864,6 @@ export const mocks = {
   yoroiSignedTx,
   utxos,
   fetchCurrentPrice,
-  fetchNfts,
   fetchNftModerationStatus,
   txid,
   getTransactions,
