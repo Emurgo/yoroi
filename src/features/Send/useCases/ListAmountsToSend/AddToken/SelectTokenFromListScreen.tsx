@@ -13,7 +13,7 @@ import {sortTokenInfos} from '../../../../../utils'
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
 import {limitOfSecondaryAmountsPerTx} from '../../../../../yoroi-wallets/contants'
 import {useBalances, useNfts, useTokenInfos} from '../../../../../yoroi-wallets/hooks'
-import {TokenInfo} from '../../../../../yoroi-wallets/types'
+import {TokenInfo, YoroiNft} from '../../../../../yoroi-wallets/types'
 import {Amounts, Quantities} from '../../../../../yoroi-wallets/utils'
 import {filterByFungibility} from '../../../common/filterByFungibility'
 import {filterBySearch} from '../../../common/filterBySearch'
@@ -85,12 +85,14 @@ const List = ({fungibilityFilter, isSearching, canAddAmount}: ListProps) => {
 const NftList = () => {
   const wallet = useSelectedWallet()
   const navigation = useNavigation<TxHistoryRouteNavigation>()
-  const {tokenSelectedChanged, amountChanged} = useSend()
+  const {tokenSelectedChanged, amountChanged, targets, selectedTargetIndex} = useSend()
   const {closeSearch} = useSearch()
   const balances = useBalances(wallet)
 
   const {nfts} = useNfts(wallet)
-  const sortedNfts = nfts.sort((NftA, NftB) => sortNfts(NftA.name, NftB.name))
+  const amountsSelected = Object.keys(targets[selectedTargetIndex].entry.amounts)
+  const filtered = nfts.filter(filterOutSelected(amountsSelected))
+  const sortedNfts = filtered.sort((NftA, NftB) => sortNfts(NftA.name, NftB.name))
 
   const onSelect = (nftId) => {
     tokenSelectedChanged(nftId)
@@ -324,6 +326,7 @@ const useFilteredTokenInfos = ({fungibilityFilter}: {fungibilityFilter: Fungibil
   const {nfts} = useNfts(wallet)
   const {search: assetSearchTerm, visible: isSearching} = useSearch()
   const balances = useBalances(wallet)
+  const {targets, selectedTargetIndex} = useSend()
   const isWalletEmpty = useIsWalletEmpty()
 
   const tokenInfos = useTokenInfos({
@@ -339,18 +342,26 @@ const useFilteredTokenInfos = ({fungibilityFilter}: {fungibilityFilter: Fungibil
    */
   if (fungibilityFilter === 'ft' && isWalletEmpty && assetSearchTerm.length === 0 && !isSearching) return []
 
-  const filteredTokenInfos = tokenInfos.filter(filterBySearch(assetSearchTerm)).filter(
-    filterByFungibility({
-      nfts,
-      fungibilityFilter: isSearching ? 'all' : fungibilityFilter, // all assets must be available when searching
-    }),
-  )
+  const amountsSelected = Object.keys(targets[selectedTargetIndex].entry.amounts)
+
+  const filteredTokenInfos = tokenInfos
+    .filter(filterOutSelected(amountsSelected))
+    .filter(filterBySearch(assetSearchTerm))
+    .filter(
+      filterByFungibility({
+        nfts,
+        fungibilityFilter: isSearching ? 'all' : fungibilityFilter, // all assets must be available when searching
+      }),
+    )
 
   return sortTokenInfos({
     wallet,
     tokenInfos: filteredTokenInfos,
   })
 }
+
+const filterOutSelected = (selectedTokensIds: Array<string>) => (token: YoroiNft | TokenInfo) =>
+  !selectedTokensIds.includes(token.id)
 
 const sortNfts = (nftNameA: string, nftNameB: string): number => nftNameA.localeCompare(nftNameB)
 
