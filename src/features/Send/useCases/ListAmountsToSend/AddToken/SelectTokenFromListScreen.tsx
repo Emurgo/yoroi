@@ -360,7 +360,7 @@ const useFilteredTokenInfos = ({fungibilityFilter}: {fungibilityFilter: Fungibil
   })
 }
 
-const filterBySelection = (selectedTokensIds: Array<string>) => (target: YoroiNft | TokenInfo) =>
+const filterOutSelected = (selectedTokensIds: Array<string>) => (token: YoroiNft | TokenInfo) =>
   selectedTokensIds.includes(target.id) !== true
 
 const sortNfts = (nftNameA: string, nftNameB: string): number => nftNameA.localeCompare(nftNameB)
