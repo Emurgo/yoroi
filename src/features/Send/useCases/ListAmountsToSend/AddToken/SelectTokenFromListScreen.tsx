@@ -287,14 +287,12 @@ const useFilteredTokenInfos = ({fungibilityFilter}: {fungibilityFilter: Fungibil
     tokenIds: Amounts.toArray(balances).map(({tokenId}) => tokenId),
   })
 
-  const filteredBySearch = tokenInfos.filter(filterBySearch(assetSearchTerm))
-
-  const filteredByFungibility = filteredBySearch.filter(
-    filterByFungibility({
+  const filteredTokenInfos = tokenInfos
+    .filter(filterBySearch(assetSearchTerm))
+    .filter(filterByFungibility({
       nfts,
       fungibilityFilter: isSearching ? 'all' : fungibilityFilter, // all assets must be available when searching
-    }),
-  )
+    }))
 
   return sortTokenInfos({
     wallet,
