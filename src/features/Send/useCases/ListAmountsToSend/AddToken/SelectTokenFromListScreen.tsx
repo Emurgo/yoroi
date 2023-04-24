@@ -12,7 +12,7 @@ import {useSelectedWallet} from '../../../../../SelectedWallet/Context/SelectedW
 import {sortTokenInfos} from '../../../../../utils'
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
 import {limitOfSecondaryAmountsPerTx} from '../../../../../yoroi-wallets/contants'
-import {useBalances, useNfts, useTokenInfos} from '../../../../../yoroi-wallets/hooks'
+import {useBalances, useIsWalletEmpty, useNfts, useTokenInfos} from '../../../../../yoroi-wallets/hooks'
 import {TokenInfo, YoroiNft} from '../../../../../yoroi-wallets/types'
 import {Amounts, Quantities} from '../../../../../yoroi-wallets/utils'
 import {filterByFungibility} from '../../../common/filterByFungibility'
@@ -74,15 +74,14 @@ type ListProps = {
   isSearching: boolean
   canAddAmount: boolean
 }
-
 const List = ({fungibilityFilter, isSearching, canAddAmount}: ListProps) => {
   const isNftListVisible = fungibilityFilter === 'nft' && !isSearching
 
-  if (isNftListVisible) return <NftList />
+  if (isNftListVisible) return <NftList canAddAmount={canAddAmount} />
   return <AssetList fungibilityFilter={fungibilityFilter} canAddAmount={canAddAmount} />
 }
 
-const NftList = () => {
+const NftList = ({canAddAmount}: {canAddAmount: boolean}) => {
   const wallet = useSelectedWallet()
   const navigation = useNavigation<TxHistoryRouteNavigation>()
   const {tokenSelectedChanged, amountChanged, targets, selectedTargetIndex} = useSend()
@@ -91,8 +90,8 @@ const NftList = () => {
 
   const {nfts} = useNfts(wallet)
   const amountsSelected = Object.keys(targets[selectedTargetIndex].entry.amounts)
-  const filtered = nfts.filter(filterOutSelected(amountsSelected))
-  const sortedNfts = filtered.sort((NftA, NftB) => sortNfts(NftA.name, NftB.name))
+  const filteredAndSorted = nfts.filter(filterOutSelected(amountsSelected)).sort((a, b) => sortNfts(a.name, b.name))
+  const counter = filteredAndSorted.length
 
   const onSelect = (nftId) => {
     tokenSelectedChanged(nftId)
@@ -106,15 +105,16 @@ const NftList = () => {
   return (
     <View style={styles.list}>
       <NftImageGallery
-        nfts={sortedNfts}
+        nfts={filteredAndSorted}
         onRefresh={() => undefined}
         onSelect={onSelect}
+        readOnly={!canAddAmount}
         isRefreshing={false}
         withVerticalPadding={nfts.length > 0} // to keep consistency between tabs when the list is not empty
         ListEmptyComponent={<ListEmptyComponent fungibilityFilter="nft" />}
       />
 
-      <Counter fungibilityFilter="nft" counter={sortedNfts.length} />
+      <Counter fungibilityFilter="nft" counter={counter} />
     </View>
   )
 }
@@ -123,7 +123,6 @@ type AssetListProps = {
   canAddAmount: boolean
   fungibilityFilter: FungibilityFilter
 }
-
 const AssetList = ({canAddAmount, fungibilityFilter}: AssetListProps) => {
   const wallet = useSelectedWallet()
   const filteredTokenInfos = useFilteredTokenInfos({fungibilityFilter})
@@ -164,7 +163,6 @@ type TabProps = {
   tab: FungibilityFilter
   label: string
 }
-
 const Tab = ({onPress, active, tab, label}: TabProps) => (
   <TouchableOpacity
     onPress={() => onPress(tab)}
@@ -224,7 +222,7 @@ const ListEmptyComponent = ({fungibilityFilter}: {fungibilityFilter: Fungibility
   const filteredTokenInfos = useFilteredTokenInfos({fungibilityFilter})
   const strings = useStrings()
 
-  const isWalletEmpty = useIsWalletEmpty()
+  const isWalletEmpty = useIsWalletEmpty(wallet)
 
   if (isSearching && assetSearchTerm.length > 0 && filteredTokenInfos.length === 0) return <EmptySearchResult />
 
@@ -314,12 +312,6 @@ const Counter = ({fungibilityFilter, counter}: {fungibilityFilter: FungibilityFi
   return null
 }
 
-const useIsWalletEmpty = () => {
-  const wallet = useSelectedWallet()
-  const balances = useBalances(wallet)
-  return Amounts.toArray(balances).every(({quantity}) => Quantities.isZero(quantity))
-}
-
 // filteredTokenInfos has primary token when the search term and the wallet are empty and the ft/all tab is selected
 const useFilteredTokenInfos = ({fungibilityFilter}: {fungibilityFilter: FungibilityFilter}) => {
   const wallet = useSelectedWallet()
@@ -327,7 +319,7 @@ const useFilteredTokenInfos = ({fungibilityFilter}: {fungibilityFilter: Fungibil
   const {search: assetSearchTerm, visible: isSearching} = useSearch()
   const balances = useBalances(wallet)
   const {targets, selectedTargetIndex} = useSend()
-  const isWalletEmpty = useIsWalletEmpty()
+  const isWalletEmpty = useIsWalletEmpty(wallet)
 
   const tokenInfos = useTokenInfos({
     wallet,
