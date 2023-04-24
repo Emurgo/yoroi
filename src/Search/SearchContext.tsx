@@ -104,8 +104,8 @@ export const useSearchOnNavBar = ({
     handleCloseSearch()
     /*
      * goBack button has two actions:
-     *   1) go back when the search input is visible
-     *   2) close the search input when the search input is not visible
+     *   1) go back when the search input is not visible
+     *   2) close the search input when the search input is visible
      */
     if (!visible) navigation.goBack()
   }
