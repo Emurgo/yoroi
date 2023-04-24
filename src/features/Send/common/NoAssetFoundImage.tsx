@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Svg, {ClipPath, Defs, G, LinearGradient, Path, Stop} from 'react-native-svg'
 
-export function NoAssetFounfImage(props) {
+export function NoAssetFoundImage(props) {
   return (
     <Svg width={245} height={260} viewBox="0 0 245 260" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
       <G clipPath="url(#clip0_1993_69811)">

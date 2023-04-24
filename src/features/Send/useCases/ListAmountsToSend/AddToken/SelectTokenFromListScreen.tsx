@@ -17,7 +17,7 @@ import {TokenInfo} from '../../../../../yoroi-wallets/types'
 import {Amounts, Quantities} from '../../../../../yoroi-wallets/utils'
 import {filterByFungibility} from '../../../common/filterByFungibility'
 import {filterBySearch} from '../../../common/filterBySearch'
-import {NoAssetFounfImage} from '../../../common/NoAssetFoundImage'
+import {NoAssetFoundImage} from '../../../common/NoAssetFoundImage'
 import {useSelectedSecondaryAmountsCounter, useSend, useTokenQuantities} from '../../../common/SendContext'
 import {useStrings} from '../../../common/strings'
 import {MaxAmountsPerTx} from './Show/MaxAmountsPerTx'
@@ -86,6 +86,7 @@ const NftList = () => {
   const wallet = useSelectedWallet()
   const navigation = useNavigation<TxHistoryRouteNavigation>()
   const {tokenSelectedChanged, amountChanged} = useSend()
+  const {closeSearch} = useSearch()
   const balances = useBalances(wallet)
 
   const {nfts} = useNfts(wallet)
@@ -93,6 +94,7 @@ const NftList = () => {
 
   const onSelect = (nftId) => {
     tokenSelectedChanged(nftId)
+    closeSearch()
 
     const quantity = Amounts.getAmount(balances, nftId).quantity
     amountChanged(quantity)
@@ -177,6 +179,7 @@ const Tab = ({onPress, active, tab, label}: TabProps) => (
 
 type SelectableAssetItemProps = {disabled?: boolean; tokenInfo: TokenInfo; wallet: YoroiWallet}
 const SelectableAssetItem = ({tokenInfo, disabled, wallet}: SelectableAssetItemProps) => {
+  const {closeSearch} = useSearch()
   const {tokenSelectedChanged, amountChanged} = useSend()
   const {spendable} = useTokenQuantities(tokenInfo.id)
   const navigation = useNavigation<TxHistoryRouteNavigation>()
@@ -185,6 +188,7 @@ const SelectableAssetItem = ({tokenInfo, disabled, wallet}: SelectableAssetItemP
 
   const onSelect = () => {
     tokenSelectedChanged(tokenInfo.id)
+    closeSearch()
 
     // if the balance is atomic there is no need to edit the amount
     if (Quantities.isAtomic(spendable, tokenInfo.decimals)) {
@@ -232,7 +236,7 @@ const NoAssetsYet = ({text}: {text: string}) => {
     <View style={styles.imageContainer}>
       <Spacer height={160} />
 
-      <NoAssetFounfImage style={styles.image} />
+      <NoAssetFoundImage style={styles.image} />
 
       <Spacer height={25} />
 
@@ -247,7 +251,7 @@ const EmptySearchResult = () => {
     <View style={styles.imageContainer}>
       <Spacer height={160} />
 
-      <NoAssetFounfImage style={styles.image} />
+      <NoAssetFoundImage style={styles.image} />
 
       <Spacer height={25} />
 
