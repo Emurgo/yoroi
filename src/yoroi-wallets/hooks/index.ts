@@ -213,11 +213,6 @@ export const useTokenInfo = <T extends TokenInfo>(
   return query.data
 }
 
-export const useIsTokenKnownNft = ({wallet, fingerprint}: {wallet: YoroiWallet; fingerprint: string}) => {
-  const {nfts} = useNfts(wallet)
-  return nfts.some((nft) => nft.fingerprint === fingerprint)
-}
-
 export const useNftModerationStatus = (
   {wallet, fingerprint}: {wallet: YoroiWallet; fingerprint: string},
   options?: UseQueryOptions<YoroiNftModerationStatus, Error, YoroiNftModerationStatus, [string, 'nft', string]>,

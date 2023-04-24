@@ -3,14 +3,7 @@ import {Image, StyleSheet, View} from 'react-native'
 
 import {features} from '../../features'
 import {COLORS} from '../../theme'
-import {
-  isString,
-  useIsTokenKnownNft,
-  useNft,
-  useNftImageModerated,
-  useTokenInfo,
-  YoroiWallet,
-} from '../../yoroi-wallets'
+import {isString, useNft, useNftImageModerated, useTokenInfo, YoroiWallet} from '../../yoroi-wallets'
 import {Boundary} from '../Boundary'
 import {Icon} from '../Icon'
 import {ModeratedNftIcon} from './ModeratedNftIcon'
@@ -18,7 +11,6 @@ import {ModeratedNftIcon} from './ModeratedNftIcon'
 export const TokenIcon = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string}) => {
   const tokenInfo = useTokenInfo({wallet, tokenId})
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
-  const isTokenNft = useIsTokenKnownNft({wallet, fingerprint: tokenInfo.fingerprint})
 
   if (isPrimary) return <PrimaryIcon />
 
@@ -29,7 +21,7 @@ export const TokenIcon = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: stri
   }
 
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-  if (isTokenNft && features.showNftGallery) {
+  if (tokenInfo.kind === 'nft' && features.showNftGallery) {
     return (
       <Boundary loading={{fallback: <Placeholder />}}>
         <NftIcon tokenId={tokenId} wallet={wallet} />
