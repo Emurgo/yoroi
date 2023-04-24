@@ -75,9 +75,10 @@ type ListProps = {
   canAddAmount: boolean
 }
 const List = ({fungibilityFilter, isSearching, canAddAmount}: ListProps) => {
-  const isNftListVisible = fungibilityFilter === 'nft' && !isSearching
+  const showNftList = fungibilityFilter === 'nft' && !isSearching
 
-  if (isNftListVisible) return <NftList canAddAmount={canAddAmount} />
+  if (showNftList) return <NftList canAddAmount={canAddAmount} />
+
   return <AssetList fungibilityFilter={fungibilityFilter} canAddAmount={canAddAmount} />
 }
 
