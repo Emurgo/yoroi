@@ -8,6 +8,7 @@ export const useStrings = () => {
   return {
     addressInputErrorInvalidAddress: intl.formatMessage(messages.addressInputErrorInvalidAddress),
     addressInputLabel: intl.formatMessage(messages.addressInputLabel),
+    all: intl.formatMessage(globalMessages.all),
     amount: intl.formatMessage(txLabels.amount),
     apply: intl.formatMessage(globalMessages.apply),
     asset: intl.formatMessage(messages.asset),
@@ -21,8 +22,6 @@ export const useStrings = () => {
     checkboxSendAll: (options) => intl.formatMessage(messages.checkboxSendAll, options),
     checkboxSendAllAssets: intl.formatMessage(messages.checkboxSendAllAssets),
     continueButton: intl.formatMessage(messages.continueButton),
-    counter1: (count) => intl.formatMessage(messages.counter1, {count}),
-    counter2: intl.formatMessage(messages.counter2),
     domainNotRegisteredError: intl.formatMessage(messages.domainNotRegisteredError),
     domainRecordNotFoundError: intl.formatMessage(messages.domainRecordNotFoundError),
     domainUnsupportedError: intl.formatMessage(messages.domainUnsupportedError),
@@ -33,7 +32,9 @@ export const useStrings = () => {
     max: intl.formatMessage(globalMessages.max),
     minPrimaryBalanceForTokens: intl.formatMessage(amountInputErrorMessages.minPrimaryBalanceForTokens),
     next: intl.formatMessage(globalMessages.next),
+    nfts: (qty: number) => intl.formatMessage(globalMessages.nfts, {qty}),
     noAssets: intl.formatMessage(messages.noAssets),
+    noAssetsAddedYet: (fungible) => intl.formatMessage(messages.noAssetsAddedYet, {fungible}),
     noBalance: intl.formatMessage(amountInputErrorMessages.insufficientBalance),
     pleaseWait: intl.formatMessage(globalMessages.pleaseWait),
     resolvesTo: intl.formatMessage(messages.resolvesTo),
@@ -45,6 +46,7 @@ export const useStrings = () => {
     sendAllWarningAlert3: intl.formatMessage(messages.sendAllWarningAlert3),
     sendAllWarningText: intl.formatMessage(messages.sendAllWarningText),
     sendAllWarningTitle: intl.formatMessage(messages.sendAllWarningTitle),
+    tokens: (qty: number) => intl.formatMessage(globalMessages.tokens, {qty}),
     unknownAsset: intl.formatMessage(messages.unknownAsset),
   }
 }
@@ -160,17 +162,13 @@ export const messages = defineMessages({
     id: 'components.send.assetselectorscreen.unknownAsset',
     defaultMessage: '!!!Unknown asset',
   },
-  counter1: {
-    id: 'components.send.assetselectorscreen.counter1',
-    defaultMessage: '!!!{count} assets',
-  },
-  counter2: {
-    id: 'components.send.assetselectorscreen.counter2',
-    defaultMessage: '!!!found',
-  },
   noAssets: {
     id: 'components.send.assetselectorscreen.noAssets',
     defaultMessage: '!!!No assets found',
+  },
+  noAssetsAddedYet: {
+    id: 'components.send.assetselectorscreen.noAssetsAddedYet',
+    defaultMessage: '!!!No {fungible} added yet',
   },
   sendAllWarningTitle: {
     id: 'components.send.sendscreen.sendAllWarningTitle',
