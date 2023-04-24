@@ -335,17 +335,7 @@ const Counter = ({fungibilityFilter}: {fungibilityFilter: FungibilityFilter}) =>
 const useIsWalletEmpty = () => {
   const wallet = useSelectedWallet()
   const balances = useBalances(wallet)
-
-  const tokenInfos = useTokenInfos({
-    wallet,
-    tokenIds: Amounts.toArray(balances).map(({tokenId}) => tokenId),
-  })
-
-  return (
-    tokenInfos.length === 1 &&
-    tokenInfos[0].id === wallet.primaryTokenInfo.id &&
-    Amounts.getAmount(balances, wallet.primaryTokenInfo.id).quantity === Quantities.zero
-  )
+  return Amounts.toArray(balances).every(({quantity}) => quantity === Quantities.zero)
 }
 
 // filteredTokenInfos has primary token when the search term and the wallet are empty and the ft/all tab is selected
