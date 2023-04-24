@@ -342,7 +342,7 @@ const useFilteredTokenInfos = ({fungibilityFilter}: {fungibilityFilter: Fungibil
    */
   if (fungibilityFilter === 'ft' && isWalletEmpty && assetSearchTerm.length === 0 && !isSearching) return []
 
-  const selectedTokensIds = Object.keys(targets[selectedTargetIndex].entry.amounts)
+  const amountsSelected = Object.keys(targets[selectedTargetIndex].entry.amounts)
 
   const filteredTokenInfos = tokenInfos
     .filter(filterOutSelected(selectedTokensIds))
