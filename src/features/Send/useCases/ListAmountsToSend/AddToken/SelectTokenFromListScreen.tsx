@@ -91,7 +91,7 @@ const NftList = () => {
 
   const {nfts} = useNfts(wallet)
   const selectedAddresses = Object.keys(targets[selectedTargetIndex].entry.amounts)
-  const filtered = nfts.filter(filterBySelection(selectedAddresses))
+  const filtered = nfts.filter(filterOutSelected(selectedAddresses))
   const sortedNfts = filtered.sort((NftA, NftB) => sortNfts(NftA.name, NftB.name))
 
   const onSelect = (nftId) => {
@@ -345,7 +345,7 @@ const useFilteredTokenInfos = ({fungibilityFilter}: {fungibilityFilter: Fungibil
   const selectedTokensIds = Object.keys(targets[selectedTargetIndex].entry.amounts)
 
   const filteredTokenInfos = tokenInfos
-    .filter(filterBySelection(selectedTokensIds))
+    .filter(filterOutSelected(selectedTokensIds))
     .filter(filterBySearch(assetSearchTerm))
     .filter(
       filterByFungibility({
