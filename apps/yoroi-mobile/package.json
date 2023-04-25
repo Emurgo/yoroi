@@ -113,7 +113,6 @@
     "expo": ">=48.0.0-0 <49.0.0",
     "expo-barcode-scanner": "~12.3.2",
     "immer": "8.0.1",
-    "intl": "^1.2.5",
     "jsc-android": "241213.1.0",
     "lodash": "^4.17.21",
     "moment": "2.29.1",
