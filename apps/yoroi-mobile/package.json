@@ -142,6 +142,7 @@
     "react-native-permissions": "^3.3.1",
     "react-native-qrcode-svg": "6.0.6",
     "react-native-randombytes": "3.6.0",
+    "react-native-reanimated": "^3.1.0",
     "react-native-safe-area-context": "^4.5.0",
     "react-native-screens": "3.1.0",
     "react-native-skeleton-placeholder": "^5.2.0",

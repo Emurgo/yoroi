@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ShelleyWalletTestnet create 1`] = `
-Array [
+[
   "addr_test1qp0qj49u70m8xa9v0f6d2frtvv33v5x4gwckvxllv6regw7prmcgc38nvy9hu4k5dcyxhyqcdsfwnf50q5sm03x89e9s0vcpdd",
   "addr_test1qqwqe88fzjjsm67f545mt49y05y2c73nh70ksnqlz63gadkprmcgc38nvy9hu4k5dcyxhyqcdsfwnf50q5sm03x89e9se2pfdw",
   "addr_test1qz8hn3xs999mlm4j222kd8vffpcst6r6k0g39t8gvqnu6ewprmcgc38nvy9hu4k5dcyxhyqcdsfwnf50q5sm03x89e9sr220xf",
@@ -56,7 +56,7 @@ Array [
 `;
 
 exports[`ShelleyWalletTestnet create 2`] = `
-Array [
+[
   "addr_test1qzddgtdqxmsvn0rqp0ltdfpddudvf76qs3esyn3zqf44drkprmcgc38nvy9hu4k5dcyxhyqcdsfwnf50q5sm03x89e9slwzp5f",
   "addr_test1qqxg9e0wj478cd6ckvgwgxj075q6hxz2aeepgf6uxv8ju0kprmcgc38nvy9hu4k5dcyxhyqcdsfwnf50q5sm03x89e9saja5ge",
   "addr_test1qzkpmv5pzle28wv52v9p0gpsuw90r35wyj903ay99ehpcwkprmcgc38nvy9hu4k5dcyxhyqcdsfwnf50q5sm03x89e9sst50qy",
@@ -111,14 +111,14 @@ Array [
 `;
 
 exports[`ShelleyWalletTestnet create 6`] = `
-Object {
-  "externalChain": Object {
-    "addressGenerator": Object {
+{
+  "externalChain": {
+    "addressGenerator": {
       "accountPubKeyHex": "6c2311e6e7a934751c55054cb21ab844f2e55baa48fc8f298dd54430f116d1c14c5f12d15611670454e05efac74e8f5d5e887ae2c15ef3086e0691d0d8439665",
       "type": "External",
       "walletImplementationId": "haskell-shelley",
     },
-    "addresses": Array [
+    "addresses": [
       "addr_test1qzddgtdqxmsvn0rqp0ltdfpddudvf76qs3esyn3zqf44drkprmcgc38nvy9hu4k5dcyxhyqcdsfwnf50q5sm03x89e9slwzp5f",
       "addr_test1qqxg9e0wj478cd6ckvgwgxj075q6hxz2aeepgf6uxv8ju0kprmcgc38nvy9hu4k5dcyxhyqcdsfwnf50q5sm03x89e9saja5ge",
       "addr_test1qzkpmv5pzle28wv52v9p0gpsuw90r35wyj903ay99ehpcwkprmcgc38nvy9hu4k5dcyxhyqcdsfwnf50q5sm03x89e9sst50qy",
@@ -174,13 +174,13 @@ Object {
     "gapLimit": 20,
   },
   "hwDeviceInfo": null,
-  "internalChain": Object {
-    "addressGenerator": Object {
+  "internalChain": {
+    "addressGenerator": {
       "accountPubKeyHex": "6c2311e6e7a934751c55054cb21ab844f2e55baa48fc8f298dd54430f116d1c14c5f12d15611670454e05efac74e8f5d5e887ae2c15ef3086e0691d0d8439665",
       "type": "Internal",
       "walletImplementationId": "haskell-shelley",
     },
-    "addresses": Array [
+    "addresses": [
       "addr_test1qp0qj49u70m8xa9v0f6d2frtvv33v5x4gwckvxllv6regw7prmcgc38nvy9hu4k5dcyxhyqcdsfwnf50q5sm03x89e9s0vcpdd",
       "addr_test1qqwqe88fzjjsm67f545mt49y05y2c73nh70ksnqlz63gadkprmcgc38nvy9hu4k5dcyxhyqcdsfwnf50q5sm03x89e9se2pfdw",
       "addr_test1qz8hn3xs999mlm4j222kd8vffpcst6r6k0g39t8gvqnu6ewprmcgc38nvy9hu4k5dcyxhyqcdsfwnf50q5sm03x89e9sr220xf",
@@ -245,7 +245,7 @@ Object {
 `;
 
 exports[`ShelleyWalletTestnet create hw  1`] = `
-Array [
+[
   "addr_test1qqeacjehv4qpyr68hszxdxrsx4whts8ctkeez4s0e0an6qy68r3aa9x2zd434q86jrtnvrkpledgm0px6snllm89fm3qyzea57",
   "addr_test1qzsm2v0rrkq2qrp662y2ttgfaxrlmn55gqmxedlutehejku68r3aa9x2zd434q86jrtnvrkpledgm0px6snllm89fm3qkl6va3",
   "addr_test1qpn3vzfgtw3l7fheyhkd728pcqwwtfn392dfla35rs6ahzv68r3aa9x2zd434q86jrtnvrkpledgm0px6snllm89fm3q5g99e0",
@@ -300,7 +300,7 @@ Array [
 `;
 
 exports[`ShelleyWalletTestnet create hw  2`] = `
-Array [
+[
   "addr_test1qpyz4c9m9ak7y6nzg8qdgz8u5ulyyjkdz853cr98hyu69yy68r3aa9x2zd434q86jrtnvrkpledgm0px6snllm89fm3qy42hkq",
   "addr_test1qzjqh5qcm5uf6779ahvfufpe46ay832nhgh5gudlgl4k86u68r3aa9x2zd434q86jrtnvrkpledgm0px6snllm89fm3qkeyyt0",
   "addr_test1qpnzth29p2z04ngdsmxx2df62ppucyhwlkv8awujndr2r2y68r3aa9x2zd434q86jrtnvrkpledgm0px6snllm89fm3qr4xt0e",
@@ -355,14 +355,14 @@ Array [
 `;
 
 exports[`ShelleyWalletTestnet create hw  3`] = `
-Object {
-  "externalChain": Object {
-    "addressGenerator": Object {
+{
+  "externalChain": {
+    "addressGenerator": {
       "accountPubKeyHex": "1ba2332dca14d6f1f5a5282512e725852a34d3aee1cc26057e9cfb2c2730f1665934fa0b0fa42e16ded504fa81198e45dc22d10dab69398e730542a198dcbfcf",
       "type": "External",
       "walletImplementationId": "haskell-shelley",
     },
-    "addresses": Array [
+    "addresses": [
       "addr_test1qpyz4c9m9ak7y6nzg8qdgz8u5ulyyjkdz853cr98hyu69yy68r3aa9x2zd434q86jrtnvrkpledgm0px6snllm89fm3qy42hkq",
       "addr_test1qzjqh5qcm5uf6779ahvfufpe46ay832nhgh5gudlgl4k86u68r3aa9x2zd434q86jrtnvrkpledgm0px6snllm89fm3qkeyyt0",
       "addr_test1qpnzth29p2z04ngdsmxx2df62ppucyhwlkv8awujndr2r2y68r3aa9x2zd434q86jrtnvrkpledgm0px6snllm89fm3qr4xt0e",
@@ -417,9 +417,9 @@ Object {
     "blockSize": 50,
     "gapLimit": 20,
   },
-  "hwDeviceInfo": Object {
+  "hwDeviceInfo": {
     "bip44AccountPublic": "1ba2332dca14d6f1f5a5282512e725852a34d3aee1cc26057e9cfb2c2730f1665934fa0b0fa42e16ded504fa81198e45dc22d10dab69398e730542a198dcbfcf",
-    "hwFeatures": Object {
+    "hwFeatures": {
       "deviceId": "DE:F1:F3:14:AE:93",
       "deviceObj": null,
       "model": "Nano",
@@ -427,13 +427,13 @@ Object {
       "vendor": "ledger.com",
     },
   },
-  "internalChain": Object {
-    "addressGenerator": Object {
+  "internalChain": {
+    "addressGenerator": {
       "accountPubKeyHex": "1ba2332dca14d6f1f5a5282512e725852a34d3aee1cc26057e9cfb2c2730f1665934fa0b0fa42e16ded504fa81198e45dc22d10dab69398e730542a198dcbfcf",
       "type": "Internal",
       "walletImplementationId": "haskell-shelley",
     },
-    "addresses": Array [
+    "addresses": [
       "addr_test1qqeacjehv4qpyr68hszxdxrsx4whts8ctkeez4s0e0an6qy68r3aa9x2zd434q86jrtnvrkpledgm0px6snllm89fm3qyzea57",
       "addr_test1qzsm2v0rrkq2qrp662y2ttgfaxrlmn55gqmxedlutehejku68r3aa9x2zd434q86jrtnvrkpledgm0px6snllm89fm3qkl6va3",
       "addr_test1qpn3vzfgtw3l7fheyhkd728pcqwwtfn392dfla35rs6ahzv68r3aa9x2zd434q86jrtnvrkpledgm0px6snllm89fm3q5g99e0",
@@ -498,7 +498,7 @@ Object {
 `;
 
 exports[`ShelleyWalletTestnet restore 1`] = `
-Array [
+[
   "addr_test1q90qj49u70m8xa9v0f6d2frtvv33v5x4gwckvxllv6regw7prmcgc38nvy9hu4k5dcyxhyqcdsfwnf50q5sm03x89e9sv69ppj",
   "addr_test1qywqe88fzjjsm67f545mt49y05y2c73nh70ksnqlz63gadkprmcgc38nvy9hu4k5dcyxhyqcdsfwnf50q5sm03x89e9s6uufp3",
   "addr_test1qx8hn3xs999mlm4j222kd8vffpcst6r6k0g39t8gvqnu6ewprmcgc38nvy9hu4k5dcyxhyqcdsfwnf50q5sm03x89e9squh02k",
@@ -553,7 +553,7 @@ Array [
 `;
 
 exports[`ShelleyWalletTestnet restore 2`] = `
-Array [
+[
   "addr_test1qxddgtdqxmsvn0rqp0ltdfpddudvf76qs3esyn3zqf44drkprmcgc38nvy9hu4k5dcyxhyqcdsfwnf50q5sm03x89e9suclpck",
   "addr_test1qyxg9e0wj478cd6ckvgwgxj075q6hxz2aeepgf6uxv8ju0kprmcgc38nvy9hu4k5dcyxhyqcdsfwnf50q5sm03x89e9s7yq5yx",
   "addr_test1qxkpmv5pzle28wv52v9p0gpsuw90r35wyj903ay99ehpcwkprmcgc38nvy9hu4k5dcyxhyqcdsfwnf50q5sm03x89e9snaf0vm",
@@ -608,14 +608,14 @@ Array [
 `;
 
 exports[`ShelleyWalletTestnet restore 6`] = `
-Object {
-  "externalChain": Object {
-    "addressGenerator": Object {
+{
+  "externalChain": {
+    "addressGenerator": {
       "accountPubKeyHex": "6c2311e6e7a934751c55054cb21ab844f2e55baa48fc8f298dd54430f116d1c14c5f12d15611670454e05efac74e8f5d5e887ae2c15ef3086e0691d0d8439665",
       "type": "External",
       "walletImplementationId": "haskell-shelley",
     },
-    "addresses": Array [
+    "addresses": [
       "addr_test1qxddgtdqxmsvn0rqp0ltdfpddudvf76qs3esyn3zqf44drkprmcgc38nvy9hu4k5dcyxhyqcdsfwnf50q5sm03x89e9suclpck",
       "addr_test1qyxg9e0wj478cd6ckvgwgxj075q6hxz2aeepgf6uxv8ju0kprmcgc38nvy9hu4k5dcyxhyqcdsfwnf50q5sm03x89e9s7yq5yx",
       "addr_test1qxkpmv5pzle28wv52v9p0gpsuw90r35wyj903ay99ehpcwkprmcgc38nvy9hu4k5dcyxhyqcdsfwnf50q5sm03x89e9snaf0vm",
@@ -671,13 +671,13 @@ Object {
     "gapLimit": 20,
   },
   "hwDeviceInfo": null,
-  "internalChain": Object {
-    "addressGenerator": Object {
+  "internalChain": {
+    "addressGenerator": {
       "accountPubKeyHex": "6c2311e6e7a934751c55054cb21ab844f2e55baa48fc8f298dd54430f116d1c14c5f12d15611670454e05efac74e8f5d5e887ae2c15ef3086e0691d0d8439665",
       "type": "Internal",
       "walletImplementationId": "haskell-shelley",
     },
-    "addresses": Array [
+    "addresses": [
       "addr_test1q90qj49u70m8xa9v0f6d2frtvv33v5x4gwckvxllv6regw7prmcgc38nvy9hu4k5dcyxhyqcdsfwnf50q5sm03x89e9sv69ppj",
       "addr_test1qywqe88fzjjsm67f545mt49y05y2c73nh70ksnqlz63gadkprmcgc38nvy9hu4k5dcyxhyqcdsfwnf50q5sm03x89e9s6uufp3",
       "addr_test1qx8hn3xs999mlm4j222kd8vffpcst6r6k0g39t8gvqnu6ewprmcgc38nvy9hu4k5dcyxhyqcdsfwnf50q5sm03x89e9squh02k",
