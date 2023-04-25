@@ -1,7 +1,7 @@
 import {TokenInfo} from '../../../yoroi-wallets'
-import {filterAssets} from './filterAssets'
+import {filterBySearch} from './filterBySearch'
 
-describe('filterAssets', () => {
+describe('filterBySearch', () => {
   const fakeToken1: TokenInfo = {
     id: '',
     name: 'TADANAME',
@@ -32,25 +32,25 @@ describe('filterAssets', () => {
 
   it('should return all tokenInfos if searchTerm is empty', () => {
     const searchTerm = ''
-    const filteredTokenInfos = filterAssets(searchTerm, tokenInfos)
+    const filteredTokenInfos = tokenInfos.filter(filterBySearch(searchTerm))
     expect(filteredTokenInfos).toEqual(tokenInfos)
   })
 
   it('should return filtered tokenInfos if searchTerm is not empty and it is a ticker', () => {
     const searchTerm = 'TADANAME'
-    const filteredTokenInfos = filterAssets(searchTerm, tokenInfos)
+    const filteredTokenInfos = tokenInfos.filter(filterBySearch(searchTerm))
     expect(filteredTokenInfos).toEqual([fakeToken1])
   })
 
   it('should return filtered tokenInfos if searchTerm is not empty and it is a name', () => {
     const searchTerm = 'TADATICKER'
-    const filteredTokenInfos = filterAssets(searchTerm, tokenInfos)
+    const filteredTokenInfos = tokenInfos.filter(filterBySearch(searchTerm))
     expect(filteredTokenInfos).toEqual([fakeToken2])
   })
 
   it('should not return any tokenInfos if searchTerm does not match any ticker or name', () => {
     const searchTerm = 'RANDOM'
-    const filteredTokenInfos = filterAssets(searchTerm, tokenInfos)
+    const filteredTokenInfos = tokenInfos.filter(filterBySearch(searchTerm))
     expect(filteredTokenInfos).toEqual([])
   })
 })
