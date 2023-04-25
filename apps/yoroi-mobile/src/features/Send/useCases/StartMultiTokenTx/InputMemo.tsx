@@ -22,7 +22,7 @@ export const InputMemo = ({onChangeText, memo}: Props) => {
         value={memo}
         onChangeText={(memo) => onChangeText(memo.trim())}
         label={strings.label}
-        autoComplete={false}
+        autoComplete="off"
         testID="memoFieldInput"
         errorText={showError ? 'error' : undefined} // to show the error styling
         renderComponentStyle={styles.input}

@@ -168,7 +168,7 @@ const MODAL_STATES = {
   CHOOSE_MNEMONICS_LEN: 'CHOOSE_MNEMONICS_LEN',
   LEDGER_TRANSPORT_SWITCH: 'LEDGER_TRANSPORT_SWITCH',
 } as const
-type ModalState = typeof MODAL_STATES[keyof typeof MODAL_STATES]
+type ModalState = (typeof MODAL_STATES)[keyof typeof MODAL_STATES]
 
 const useStrings = () => {
   const intl = useIntl()

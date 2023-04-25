@@ -64,7 +64,7 @@ const route = {
   name: 'route.name',
 }
 
-export const RouteProvider: React.FC<{params?: Record<string, unknown>}> = ({children, params}) => (
+export const RouteProvider: React.FC<React.PropsWithChildren<{params?: Record<string, unknown>}>> = ({children, params}) => (
   <NavigationRouteContext.Provider value={params ? {...route, params} : route}>
     {children}
   </NavigationRouteContext.Provider>

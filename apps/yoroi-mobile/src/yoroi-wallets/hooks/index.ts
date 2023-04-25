@@ -880,7 +880,10 @@ export const useSaveMemo = (
   }
 }
 
-export const useNfts = (wallet: YoroiWallet, options: UseQueryOptions<YoroiNft[], Error> = {}) => {
+export const useNfts = (
+  wallet: YoroiWallet,
+  options: UseQueryOptions<YoroiNft[], Error, YoroiNft[], [string, string]> = {},
+) => {
   const assetIds = useAssetIds(wallet)
   const {data, refetch, ...rest} = useQuery({
     ...options,

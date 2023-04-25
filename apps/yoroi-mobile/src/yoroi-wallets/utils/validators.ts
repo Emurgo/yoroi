@@ -29,7 +29,7 @@ export type AddressValidationErrors = {
 
 export type AmountValidationErrors = {
   amountIsRequired?: boolean
-  invalidAmount?: typeof InvalidAssetAmount.ERROR_CODES[keyof typeof InvalidAssetAmount.ERROR_CODES]
+  invalidAmount?: (typeof InvalidAssetAmount.ERROR_CODES)[keyof typeof InvalidAssetAmount.ERROR_CODES]
 }
 
 export type BalanceValidationErrors = {
@@ -44,7 +44,7 @@ export const INVALID_PHRASE_ERROR_CODES = {
   INVALID_CHECKSUM: 'INVALID_CHECKSUM',
 }
 
-export type InvalidPhraseErrorCode = typeof INVALID_PHRASE_ERROR_CODES[keyof typeof INVALID_PHRASE_ERROR_CODES]
+export type InvalidPhraseErrorCode = (typeof INVALID_PHRASE_ERROR_CODES)[keyof typeof INVALID_PHRASE_ERROR_CODES]
 export type InvalidPhraseError =
   | {
       code: 'TOO_LONG' | 'TOO_SHORT' | 'INVALID_CHECKSUM'

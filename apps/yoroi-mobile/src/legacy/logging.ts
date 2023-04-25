@@ -24,7 +24,7 @@ export const setLogger = (logger: any) => {
   _logger = logger
 }
 
-export const setLogLevel = (level: typeof LogLevel[keyof typeof LogLevel]) => {
+export const setLogLevel = (level: (typeof LogLevel)[keyof typeof LogLevel]) => {
   _logLevel = level
 }
 

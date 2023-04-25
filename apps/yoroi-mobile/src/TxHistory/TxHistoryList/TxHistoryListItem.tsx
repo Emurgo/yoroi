@@ -49,8 +49,9 @@ export const TxHistoryListItem = ({transaction}: Props) => {
     ? styles.positiveAmount
     : styles.negativeAmount
 
-  const outputsToMyWallet =
-    (isReceived && getTxIOMyWallet(transaction.outputs, externalAddressIndex, internalAddressIndex)) || []
+  const outputsToMyWallet = isReceived
+    ? getTxIOMyWallet(transaction.outputs, externalAddressIndex, internalAddressIndex)
+    : []
 
   const totalAssets = outputsToMyWallet.reduce((acc, {assets}) => acc + Number(assets.length), 0)
 

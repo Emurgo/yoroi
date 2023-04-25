@@ -25,7 +25,7 @@ export const ASSURANCE_LEVELS = {
 
 type TransactionAssurance = 'PENDING' | 'FAILED' | 'LOW' | 'MEDIUM' | 'HIGH'
 export const getTransactionAssurance = (
-  status: typeof TRANSACTION_STATUS[keyof typeof TRANSACTION_STATUS],
+  status: (typeof TRANSACTION_STATUS)[keyof typeof TRANSACTION_STATUS],
   confirmations: number,
 ): TransactionAssurance => {
   if (status === TRANSACTION_STATUS.PENDING) return 'PENDING'

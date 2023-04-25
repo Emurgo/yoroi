@@ -1921,18 +1921,48 @@
     }
   },
   {
-    "id": "global.lockedDeposit",
-    "defaultMessage": "!!!Locked deposit",
+    "id": "global.assets",
+    "defaultMessage": "!!! Assets",
     "file": "src/i18n/global-messages.ts",
     "start": {
       "line": 660,
-      "column": 17,
-      "index": 20253
+      "column": 10,
+      "index": 20246
     },
     "end": {
       "line": 663,
       "column": 3,
-      "index": 20331
+      "index": 20310
+    }
+  },
+  {
+    "id": "global.all",
+    "defaultMessage": "!!!All",
+    "file": "src/i18n/global-messages.ts",
+    "start": {
+      "line": 664,
+      "column": 7,
+      "index": 20319
+    },
+    "end": {
+      "line": 667,
+      "column": 3,
+      "index": 20376
+    }
+  },
+  {
+    "id": "global.lockedDeposit",
+    "defaultMessage": "!!!Locked deposit",
+    "file": "src/i18n/global-messages.ts",
+    "start": {
+      "line": 668,
+      "column": 17,
+      "index": 20395
+    },
+    "end": {
+      "line": 671,
+      "column": 3,
+      "index": 20473
     }
   },
   {
@@ -1940,14 +1970,14 @@
     "defaultMessage": "!!!Locked deposit hint",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 664,
+      "line": 672,
       "column": 21,
-      "index": 20354
+      "index": 20496
     },
     "end": {
-      "line": 667,
+      "line": 675,
       "column": 3,
-      "index": 20441
+      "index": 20583
     }
   },
   {
@@ -1955,14 +1985,14 @@
     "defaultMessage": "!!!Currency",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 668,
+      "line": 676,
       "column": 12,
-      "index": 20455
+      "index": 20597
     },
     "end": {
-      "line": 671,
+      "line": 679,
       "column": 3,
-      "index": 20522
+      "index": 20664
     }
   },
   {
@@ -1970,14 +2000,14 @@
     "defaultMessage": "!!!Next",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 672,
+      "line": 680,
       "column": 8,
-      "index": 20532
+      "index": 20674
     },
     "end": {
-      "line": 675,
+      "line": 683,
       "column": 3,
-      "index": 20591
+      "index": 20733
     }
   },
   {
@@ -1985,14 +2015,14 @@
     "defaultMessage": "!!!Error",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 676,
+      "line": 684,
       "column": 9,
-      "index": 20602
+      "index": 20744
     },
     "end": {
-      "line": 679,
+      "line": 687,
       "column": 3,
-      "index": 20663
+      "index": 20805
     }
   },
   {
@@ -2000,14 +2030,14 @@
     "defaultMessage": "!!!Cancel",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 680,
+      "line": 688,
       "column": 10,
-      "index": 20675
+      "index": 20817
     },
     "end": {
-      "line": 683,
+      "line": 691,
       "column": 3,
-      "index": 20738
+      "index": 20880
     }
   }
 ]

@@ -38,7 +38,7 @@ export const ResolveAddress = ({
         error={isError}
         errorText={errorMessage}
         isLoading={isLoading}
-        autoComplete={false}
+        autoComplete="off"
       />
 
       <HelperText type={isError ? 'error' : 'info'}>

@@ -60,6 +60,7 @@ export const TextInput = React.forwardRef((props: TextInputProps, ref: Forwarded
     textAlign,
     faded,
     showErrorOnBlur,
+    autoComplete = 'off',
     ...restProps
   } = props
 
@@ -79,7 +80,7 @@ export const TextInput = React.forwardRef((props: TextInputProps, ref: Forwarded
         value={value}
         onChange={() => setErrorTextEnabled(false)}
         autoCorrect={false}
-        autoCompleteType="off"
+        autoComplete={autoComplete}
         autoCapitalize="none"
         onBlur={() => {
           if (showErrorOnBlur && !errorTextEnabled && !isEmptyString(errorText)) {

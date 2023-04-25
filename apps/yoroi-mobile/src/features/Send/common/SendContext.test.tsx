@@ -9,7 +9,7 @@ import {Amounts} from '../../../yoroi-wallets/utils/utils'
 import {mocks as sendMocks} from './mocks'
 import {initialState, SendProvider, useSelectedSecondaryAmountsCounter, useSend} from './SendContext'
 
-const wrapper = ({children}: {children: React.ReactNode}) => <SendProvider>{children}</SendProvider>
+const wrapper: React.FC<React.PropsWithChildren> = ({children}) => <SendProvider>{children}</SendProvider>
 
 describe('SendContext :: ui', () => {
   test('resetForm', () => {
@@ -165,7 +165,7 @@ const ResetFormTest = () => {
 describe('useSelectedSecondaryAmountsCounter', () => {
   it('empty', () => {
     const {result} = renderHook(() => useSelectedSecondaryAmountsCounter(walletMocks.wallet), {
-      wrapper: ({children}) => <SendProvider>{children}</SendProvider>,
+      wrapper: ({children}: {children: React.ReactNode}) => <SendProvider>{children}</SendProvider>,
     })
 
     expect(result.current).toEqual(0)
@@ -173,7 +173,9 @@ describe('useSelectedSecondaryAmountsCounter', () => {
 
   it('only secondary token(s)', () => {
     const {result} = renderHook(() => useSelectedSecondaryAmountsCounter(walletMocks.wallet), {
-      wrapper: ({children}) => <SendProvider initialState={sendMocks.counters.onlySecondary}>{children}</SendProvider>,
+      wrapper: ({children}: {children: React.ReactNode}) => (
+        <SendProvider initialState={sendMocks.counters.onlySecondary}>{children}</SendProvider>
+      ),
     })
 
     expect(result.current).toEqual(3)
@@ -181,7 +183,9 @@ describe('useSelectedSecondaryAmountsCounter', () => {
 
   it('both token(s)', () => {
     const {result} = renderHook(() => useSelectedSecondaryAmountsCounter(walletMocks.wallet), {
-      wrapper: ({children}) => <SendProvider initialState={sendMocks.counters.both}>{children}</SendProvider>,
+      wrapper: ({children}: {children: React.ReactNode}) => (
+        <SendProvider initialState={sendMocks.counters.both}>{children}</SendProvider>
+      ),
     })
 
     expect(result.current).toEqual(4)
@@ -189,7 +193,9 @@ describe('useSelectedSecondaryAmountsCounter', () => {
 
   it('only primary token(s)', () => {
     const {result} = renderHook(() => useSelectedSecondaryAmountsCounter(walletMocks.wallet), {
-      wrapper: ({children}) => <SendProvider initialState={sendMocks.counters.onlyPrimary}>{children}</SendProvider>,
+      wrapper: ({children}: {children: React.ReactNode}) => (
+        <SendProvider initialState={sendMocks.counters.onlyPrimary}>{children}</SendProvider>
+      ),
     })
 
     expect(result.current).toEqual(0)

@@ -152,7 +152,7 @@ export const CERTIFICATE_KIND = {
   POOL_RETIREMENT: 'PoolRetirement',
   MOVE_INSTANTANEOUS_REWARDS: 'MoveInstantaneousRewardsCert',
 }
-export type CertificateKind = typeof CERTIFICATE_KIND[keyof typeof CERTIFICATE_KIND]
+export type CertificateKind = (typeof CERTIFICATE_KIND)[keyof typeof CERTIFICATE_KIND]
 // getAccountState
 export type AccountStateRequest = {
   addresses: Array<string>
@@ -348,7 +348,7 @@ export const NETWORK_REGISTRY = {
   HASKELL_SHELLEY_TESTNET: 300,
   UNDEFINED: -1,
 } as const
-export type NetworkId = typeof NETWORK_REGISTRY[keyof typeof NETWORK_REGISTRY]
+export type NetworkId = (typeof NETWORK_REGISTRY)[keyof typeof NETWORK_REGISTRY]
 
 // PROVIDERS
 export const ALONZO_FACTOR = 1000
@@ -395,7 +395,7 @@ export const TRANSACTION_STATUS = {
   PENDING: 'Pending',
   FAILED: 'Failed',
 }
-export type TransactionStatus = typeof TRANSACTION_STATUS[keyof typeof TRANSACTION_STATUS]
+export type TransactionStatus = (typeof TRANSACTION_STATUS)[keyof typeof TRANSACTION_STATUS]
 
 export type TransactionInfo = {
   id: string
@@ -430,13 +430,13 @@ export const TRANSACTION_DIRECTION = {
   // intra-wallet
   MULTI: 'MULTI', // multi-party
 }
-export type TransactionDirection = typeof TRANSACTION_DIRECTION[keyof typeof TRANSACTION_DIRECTION]
+export type TransactionDirection = (typeof TRANSACTION_DIRECTION)[keyof typeof TRANSACTION_DIRECTION]
 
 export const TRANSACTION_TYPE = {
   BYRON: 'byron',
   SHELLEY: 'shelley',
 }
-export type TransactionType = typeof TRANSACTION_TYPE[keyof typeof TRANSACTION_TYPE]
+export type TransactionType = (typeof TRANSACTION_TYPE)[keyof typeof TRANSACTION_TYPE]
 export type BaseAsset = RemoteAsset
 export type Transactions = {[txid: string]: Transaction}
 export type Transaction = {

@@ -463,7 +463,7 @@ PODS:
     - React-Core
   - RNDeviceInfo (6.0.1):
     - React
-  - RNFlashList (1.4.2):
+  - RNFlashList (1.4.3):
     - React-Core
   - RNGestureHandler (2.9.0):
     - React-Core
@@ -799,7 +799,7 @@ SPEC CHECKSUMS:
   RNCMaskedView: 949696f25ec596bfc697fc88e6f95cf0c79669b6
   RNDateTimePicker: 7658208086d86d09e1627b5c34ba0cf237c60140
   RNDeviceInfo: 6dd5c07a482f2a5e4a29fe8a9d99eadd4277175a
-  RNFlashList: 7fbca4fc075484a9426f1610d648dbea2de94eb0
+  RNFlashList: ade81b4e928ebd585dd492014d40fb8d0e848aab
   RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
   RNKeychain: f75b8c8b2f17d3b2aa1f25b4a0ac5b83d947ff8f
   RNPermissions: 215c54462104b3925b412b0fb3c9c497b21c358b

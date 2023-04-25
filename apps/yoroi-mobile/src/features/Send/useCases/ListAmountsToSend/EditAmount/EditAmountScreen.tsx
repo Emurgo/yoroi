@@ -145,7 +145,7 @@ const AmountInput = ({value, onChange, ticker}: AmountInputProps) => {
       returnKeyType="done"
       keyboardType="numeric"
       mode="flat"
-      autoComplete={false}
+      autoComplete="off"
       value={value}
       placeholder={value}
       onChangeText={onChangeText}

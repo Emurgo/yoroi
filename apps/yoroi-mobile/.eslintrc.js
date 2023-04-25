@@ -3,7 +3,8 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 'latest',
     sourceType: 'module',
-    project: ['tsconfig.json'],
+    tsconfigRootDir: __dirname,
+    project: ['./tsconfig.json'],
   },
   overrides: [
     {
@@ -49,6 +50,7 @@ module.exports = {
     react: {version: 'detect'},
   },
   rules: {
+    'react/prop-types': 'off',
     'array-callback-return': 2,
     'lines-between-class-members': [1, 'always', {exceptAfterSingleLine: true}],
     'no-multiple-empty-lines': ['warn', {max: 2, maxEOF: 0}],

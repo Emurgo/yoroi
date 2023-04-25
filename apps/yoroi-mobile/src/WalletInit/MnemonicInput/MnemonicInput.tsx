@@ -45,7 +45,7 @@ export const MnemonicInput = ({
       render={({ref: _ref, ...inputProps}) => (
         <MnemonicWordsInput onSelect={onSelect} words={mnemonicWords} {...inputProps} />
       )}
-      autoComplete={false}
+      autoComplete="off"
     />
   )
 }
@@ -145,7 +145,7 @@ const MnemonicWordInput = React.forwardRef<RNTextInput, MnemonicWordInputProps>(
           noHelper
           errorDelay={0}
           errorText={matchingWords.length <= 0 ? 'No matching words' : ''}
-          autoComplete={false}
+          autoComplete="off"
         />
       }
       visible={menuEnabled && word.length > 0 && !isEmptyString(word)}

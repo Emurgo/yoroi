@@ -50,4 +50,4 @@ export const LANGUAGES = {
   VIETNAMESE: 'vi-VN',
 } as const
 
-export type LanguageCode = typeof LANGUAGES[keyof typeof LANGUAGES]
+export type LanguageCode = (typeof LANGUAGES)[keyof typeof LANGUAGES]

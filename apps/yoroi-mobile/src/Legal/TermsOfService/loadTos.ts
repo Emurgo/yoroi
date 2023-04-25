@@ -1,5 +1,3 @@
-import loadLocalResource from 'react-native-local-resource'
-
 import BN_BD_TOS from './tos/bn-BD.md'
 import CS_CZ_TOS from './tos/cs-CZ.md'
 import DE_DE_TOS from './tos/de-DE.md'
@@ -50,8 +48,6 @@ const tosByCode = {
   'zh-Hans': ZH_CN_TOS,
 }
 
-export const loadTOS = async (languageCode: string): Promise<string> => {
-  const tosFile = tosByCode[languageCode]
-  const tos = await loadLocalResource(tosFile)
-  return tos
+export const loadTOS = (languageCode: string): string => {
+  return tosByCode[languageCode]
 }

@@ -69,8 +69,6 @@ export const NftPreview = ({
             blurRadius={blurRadius}
             source={{uri}}
             style={[style, {width, height}]}
-            width={width}
-            height={height}
             resizeMode={resizeMode ?? 'contain'}
             onError={() => setError(true)}
             onLoadEnd={() => setLoading(false)}

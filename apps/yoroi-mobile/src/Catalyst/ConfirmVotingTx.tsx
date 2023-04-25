@@ -62,7 +62,7 @@ export const ConfirmVotingTx = ({
           )}
           label={strings.fees}
           editable={false}
-          autoComplete={false}
+          autoComplete="off"
         />
 
         {!wallet.isEasyConfirmationEnabled && !wallet.isHW && (
@@ -71,7 +71,7 @@ export const ConfirmVotingTx = ({
             value={password}
             label={strings.password}
             onChangeText={setPassword}
-            autoComplete={false}
+            autoComplete="off"
           />
         )}
       </ScrollView>

@@ -16,7 +16,7 @@ export const DIALOG_BUTTONS = {
   YES: 'Yes',
   NO: 'No',
 }
-type DialogButton = typeof DIALOG_BUTTONS[keyof typeof DIALOG_BUTTONS]
+type DialogButton = (typeof DIALOG_BUTTONS)[keyof typeof DIALOG_BUTTONS]
 
 const showDialog = (translations: DialogOptions): Promise<DialogButton> =>
   new Promise((resolve) => {

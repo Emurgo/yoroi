@@ -224,7 +224,7 @@
     "eslint-config-vacuumlabs": "1.9.0",
     "eslint-plugin-import": "^2.24.2",
     "eslint-plugin-react": "^7.26.1",
-    "eslint-plugin-react-hooks": "4.2.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-native": "3.11.0",
     "eslint-plugin-react-prefer-function-component": "^3.0.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",

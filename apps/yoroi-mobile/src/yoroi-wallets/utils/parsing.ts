@@ -17,7 +17,7 @@ export class InvalidAssetAmount extends ExtendableError {
     NEGATIVE: 'NEGATIVE',
   }
 
-  constructor(errorCode: typeof InvalidAssetAmount.ERROR_CODES[keyof typeof InvalidAssetAmount.ERROR_CODES]) {
+  constructor(errorCode: (typeof InvalidAssetAmount.ERROR_CODES)[keyof typeof InvalidAssetAmount.ERROR_CODES]) {
     super('InvalidAssetAmount')
     ;(this as any).errorCode = errorCode
   }
@@ -34,8 +34,13 @@ export const parseAmountDecimal = (amount: string, token: Token): BigNumber => {
     throw new InvalidAssetAmount(InvalidAssetAmount.ERROR_CODES.INVALID_AMOUNT)
   }
 
-  if (parsed.decimalPlaces() > numberOfDecimals) {
-    throw new InvalidAssetAmount(InvalidAssetAmount.ERROR_CODES.TOO_MANY_DECIMAL_PLACES)
+  try {
+    const decimals = parsed.decimalPlaces()
+    if (decimals != null && decimals > numberOfDecimals) {
+      throw new InvalidAssetAmount(InvalidAssetAmount.ERROR_CODES.TOO_MANY_DECIMAL_PLACES)
+    }
+  } catch (_) {
+    throw new InvalidAssetAmount(InvalidAssetAmount.ERROR_CODES.INVALID_AMOUNT)
   }
 
   const value = parsed.times(normalizationFactor)

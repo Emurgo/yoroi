@@ -36,7 +36,7 @@ export const WithModalProps = ({children, autoClose}: {children: childrenFn; aut
 
 export const withModalProps = (Story: any) => <WithModalProps>{(props) => <Story {...props} />}</WithModalProps>
 
-export const WithModal: React.FC = ({children}) => {
+export const WithModal: React.FC<React.PropsWithChildren> = ({children}) => {
   return (
     <WithModalProps>
       {(modalProps) => (
