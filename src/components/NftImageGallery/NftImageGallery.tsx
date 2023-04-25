@@ -1,6 +1,6 @@
 import {FlashList, FlashListProps} from '@shopify/flash-list'
 import React from 'react'
-import {Dimensions, GestureResponderEvent, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {Dimensions, StyleSheet, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
 import {features} from '../../features'
@@ -28,13 +28,14 @@ type Props = {
   bounces?: FlashListProps<YoroiNft>['bounces']
   ListEmptyComponent?: FlashListProps<YoroiNft>['ListEmptyComponent']
   withVerticalPadding?: boolean
+  readOnly?: boolean
 }
-
 export const NftImageGallery = ({
   nfts = [],
   onSelect,
   onRefresh,
   isRefreshing,
+  readOnly,
   bounces = false,
   ListEmptyComponent = undefined,
   withVerticalPadding = undefined,
@@ -49,29 +50,26 @@ export const NftImageGallery = ({
       withVerticalPadding={withVerticalPadding}
       renderItem={(nft) =>
         features.moderatingNftsEnabled ? (
-          <ModeratedImage onPress={() => onSelect(nft.id)} nft={nft} key={nft.id} />
+          <ModeratedImage onPress={() => onSelect(nft.id)} nft={nft} key={nft.id} disabled={readOnly} />
         ) : (
-          <UnModeratedImage onPress={() => onSelect(nft.id)} nft={nft} key={nft.id} />
+          <UnModeratedImage onPress={() => onSelect(nft.id)} nft={nft} key={nft.id} disabled={readOnly} />
         )
       }
     />
   )
 }
 
-interface ModeratedImageProps {
-  onPress?(event: GestureResponderEvent): void
+type ModeratedImageProps = TouchableOpacityProps & {
   nft: YoroiNft
 }
-
-const UnModeratedImage = ({onPress, nft}: ModeratedImageProps) => {
+const UnModeratedImage = ({nft, ...props}: ModeratedImageProps) => {
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity {...props}>
       <ApprovedNft nft={nft} />
     </TouchableOpacity>
   )
 }
-
-const ModeratedImage = ({onPress, nft}: ModeratedImageProps) => {
+const ModeratedImage = ({nft, ...props}: ModeratedImageProps) => {
   const {name: text, fingerprint} = nft
   const wallet = useSelectedWallet()
   const {isError, status, isLoading} = useModeratedNftImage({wallet, fingerprint})
@@ -87,7 +85,7 @@ const ModeratedImage = ({onPress, nft}: ModeratedImageProps) => {
 
   if (showSkeleton) {
     return (
-      <TouchableOpacity onPress={onPress}>
+      <TouchableOpacity {...props}>
         <SkeletonImagePlaceholder text={text} />
       </TouchableOpacity>
     )
@@ -95,23 +93,21 @@ const ModeratedImage = ({onPress, nft}: ModeratedImageProps) => {
 
   if (isError) {
     return (
-      <TouchableOpacity onPress={onPress}>
+      <TouchableOpacity {...props}>
         <BlockedNft nft={nft} />
       </TouchableOpacity>
     )
   }
 
   return (
-    <TouchableOpacity onPress={onPress}>
-      {isImageApproved ? (
-        <ApprovedNft nft={nft} />
-      ) : isImageWithConsent ? (
-        <RequiresConsentNft nft={nft} />
-      ) : isImageBlocked ? (
-        <BlockedNft nft={nft} />
-      ) : isPendingManualReview ? (
-        <ManualReviewNft nft={nft} />
-      ) : null}
+    <TouchableOpacity {...props}>
+      {isImageApproved && <ApprovedNft nft={nft} />}
+
+      {isImageWithConsent && <RequiresConsentNft nft={nft} />}
+
+      {isImageBlocked && <BlockedNft nft={nft} />}
+
+      {isPendingManualReview && <ManualReviewNft nft={nft} />}
     </TouchableOpacity>
   )
 }
