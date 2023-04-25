@@ -1,5 +1,7 @@
 import {useNavigation} from '@react-navigation/native'
-import React from 'react'
+import {BarCodeScanner} from 'expo-barcode-scanner'
+import * as React from 'react'
+import {Text} from 'react-native'
 
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {Quantity} from '../../../../../yoroi-wallets'
@@ -46,11 +48,33 @@ const getParams = (params: string) => {
   return result
 }
 
-export const QRCodeScanner = ({onRead}: {onRead: ({data}: {data: string}) => void}) => {
-  const devices = useCameraDevices()
-  const device = devices.back
+const QRCodeScanner = ({onRead}: {onRead: ({data}: {data: string}) => void}) => {
+  const [hasPermission, setHasPermission] = React.useState(false)
+  const [scanned, setScanned] = React.useState(false)
 
-  if (device == null) return null
+  React.useEffect(() => {
+    const getBarCodeScannerPermissions = async () => {
+      const {status} = await BarCodeScanner.requestPermissionsAsync()
+      setHasPermission(status === 'granted')
+    }
 
-  return <Camera device={device} isActive onError={() => onRead({data: 'error'})} />
+    getBarCodeScannerPermissions()
+  }, [])
+
+  console.log('hasPermission', hasPermission, 'scanned', scanned)
+
+  const handleBarCodeScanned = ({type, data}) => {
+    setScanned(true)
+    onRead({data})
+    alert(`Bar code with type ${type} and data ${data} has been scanned!`)
+  }
+
+  if (hasPermission === null) {
+    return <Text>Requesting for camera permission</Text>
+  }
+  if (hasPermission === false) {
+    return <Text>No access to camera</Text>
+  }
+
+  return <BarCodeScanner onBarCodeScanned={handleBarCodeScanned} />
 }
