@@ -10350,11 +10350,6 @@ human-signals@^4.3.0:
   resolved "https://registry.yarnpkg.com/human-signals/-/human-signals-4.3.1.tgz#ab7f811e851fca97ffbd2c1fe9a958964de321b2"
   integrity sha512-nZXjEF2nbo7lIw3mgYjItAfgQXog3OjJogSbKa2CQIIvSGWcKgeJnQlNXip6NglNzYH45nSRiEVimMvYL8DDqQ==
 
-husky@>=6:
-  version "8.0.3"
-  resolved "https://registry.yarnpkg.com/husky/-/husky-8.0.3.tgz#4936d7212e46d1dea28fef29bb3a108872cd9184"
-  integrity sha512-+dQSyqPh4x1hlO1swXBiNb2HzTDN1I2IGLQx1GrBuiqFJfoMrnZWwVmatvSiO+Iz8fBUnf+lekwNo4c2LlXItg==
-
 i18n-unused@^0.8.0:
   version "0.8.0"
   resolved "https://registry.yarnpkg.com/i18n-unused/-/i18n-unused-0.8.0.tgz#93e5166734495b06ebd91874eedbadefa341db1f"
@@ -15228,16 +15223,6 @@ react-native-gradle-plugin@^0.71.17:
   version "0.71.17"
   resolved "https://registry.yarnpkg.com/react-native-gradle-plugin/-/react-native-gradle-plugin-0.71.17.tgz#cf780a27270f0a32dca8184eff91555d7627dd00"
   integrity sha512-OXXYgpISEqERwjSlaCiaQY6cTY5CH6j73gdkWpK0hedxtiWMWgH+i5TOi4hIGYitm9kQBeyDu+wim9fA8ROFJA==
-
-"react-native-inhibit-warnings@git+https://github.com/Emurgo/react-native-inhibit-warnings.git":
-  version "1.1.0"
-  resolved "git+https://github.com/Emurgo/react-native-inhibit-warnings.git#e80b42e3c8f8ae99dcb138e69572a47750ae5ea6"
-  dependencies:
-    chalk "^1.1.3"
-    glob "^7.1.1"
-    path "^0.12.7"
-    plist "^2.0.1"
-    xcode "^0.9.1"
 
 react-native-iphone-x-helper@^1.3.1:
   version "1.3.1"
