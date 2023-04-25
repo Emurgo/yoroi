@@ -353,7 +353,7 @@ PODS:
     - React
   - react-native-haskell-shelley (5.0.1-beta.1):
     - React
-  - react-native-pager-view (5.4.25):
+  - react-native-pager-view (6.2.0):
     - React-Core
   - react-native-randombytes (3.6.0):
     - React-Core
@@ -775,7 +775,7 @@ SPEC CHECKSUMS:
   react-native-ble-plx: f10240444452dfb2d2a13a0e4f58d7783e92d76e
   react-native-config: f2c2ae45625a068c35681a16b9bfb1ca58b0adc7
   react-native-haskell-shelley: 684ca47b5cb37f8acd21af2b8da1fa39c61e9914
-  react-native-pager-view: da490aa1f902c9a5aeecf0909cc975ad0e92e53e
+  react-native-pager-view: 0ccb8bf60e2ebd38b1f3669fa3650ecce81db2df
   react-native-randombytes: b6677f7d495c27e9ee0dbd77ebc97b3c59173729
   react-native-safe-area-context: f5549f36508b1b7497434baa0cd97d7e470920d4
   react-native-slider: e99fc201cefe81270fc9d81714a7a0f5e566b168

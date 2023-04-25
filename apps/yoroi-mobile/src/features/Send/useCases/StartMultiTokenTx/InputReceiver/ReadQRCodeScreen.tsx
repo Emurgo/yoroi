@@ -1,6 +1,5 @@
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
-import QRCodeScanner from 'react-native-qrcode-scanner'
 
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {Quantity} from '../../../../../yoroi-wallets'
@@ -45,4 +44,13 @@ const getParams = (params: string) => {
     result[item[0]] = decodeURIComponent(item[1])
   })
   return result
+}
+
+export const QRCodeScanner = ({onRead}: {onRead: ({data}: {data: string}) => void}) => {
+  const devices = useCameraDevices()
+  const device = devices.back
+
+  if (device == null) return null
+
+  return <Camera device={device} isActive onError={() => onRead({data: 'error'})} />
 }
