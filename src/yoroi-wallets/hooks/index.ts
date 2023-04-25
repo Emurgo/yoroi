@@ -279,6 +279,17 @@ export const useTokenInfos = (
   return queryResults.reduce((result, {data}) => (data ? [...result, data] : result), [] as Array<TokenInfo>)
 }
 
+export const useAllTokenInfos = ({wallet}: {wallet: YoroiWallet}) => {
+  const balances = useBalances(wallet)
+
+  const tokenInfos = useTokenInfos({
+    wallet,
+    tokenIds: Amounts.toArray(balances).map(({tokenId}) => tokenId),
+  })
+
+  return tokenInfos
+}
+
 export const usePlate = ({networkId, publicKeyHex}: {networkId: NetworkId; publicKeyHex: string}) => {
   const query = useQuery({
     suspense: true,
