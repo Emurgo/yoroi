@@ -81,6 +81,10 @@ export function isArray(data: unknown): data is Array<unknown> {
   return Array.isArray(data)
 }
 
+export function isArrayOfType<T>(data: unknown, predicate: (data: unknown) => data is T): data is Array<T> {
+  return isArray(data) && data.every(predicate)
+}
+
 export function isRecord(data: unknown): data is Record<string, unknown> {
   return isObject(data)
 }

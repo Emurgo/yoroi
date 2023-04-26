@@ -5,7 +5,8 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 import {SvgUri} from 'react-native-svg'
 
 import placeholder from '../../assets/img/nft-placeholder.png'
-import {isArray, isString, YoroiNft} from '../../yoroi-wallets'
+import {isRecord, isString, YoroiNft} from '../../yoroi-wallets'
+import {getNftFilenameMediaType, isSvgMediaType} from '../../yoroi-wallets/cardano/nfts'
 
 export const NftPreview = ({
   nft,
@@ -32,7 +33,7 @@ export const NftPreview = ({
   const isUriSvg =
     isString(uri) &&
     (uri.toLowerCase().endsWith('.svg') ||
-      isSvgMediaType(nft.metadata.originalMetadata?.mediaType) ||
+      (isRecord(nft.metadata.originalMetadata) && isSvgMediaType(nft.metadata.originalMetadata?.mediaType)) ||
       isSvgMediaType(getNftFilenameMediaType(nft, uri)))
   const shouldShowPlaceholder = !isString(uri) || showPlaceholder || (isUriSvg && blurRadius !== undefined) || error
 
@@ -92,15 +93,3 @@ const PlaceholderImage = ({
   width?: number
   resizeMode?: ImageResizeMode
 }) => <Image source={placeholder} style={[style, {width, height}]} resizeMode={resizeMode ?? 'contain'} />
-
-const isSvgMediaType = (mediaType: string | undefined): boolean => {
-  return mediaType === 'image/svg+xml'
-}
-
-const getNftFilenameMediaType = (nft: YoroiNft, filename: string): string | undefined => {
-  const files = nft.metadata.originalMetadata?.files ?? []
-  const file = files.find((file) => {
-    return isArray(file.src) ? file.src.join('') === filename : file.src === filename
-  })
-  return file?.mediaType
-}

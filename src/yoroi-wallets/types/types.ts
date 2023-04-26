@@ -2,7 +2,6 @@ import {CardanoTypes, YoroiWallet} from '../cardano'
 import {HWDeviceInfo} from '../hw'
 import {YoroiStorage} from '../storage'
 import {WalletMeta} from '../walletManager'
-import {NftMetadata} from './tokens'
 
 export type YoroiUnsignedTx = YoroiTxInfo & {
   unsignedTx: CardanoTypes.UnsignedTx
@@ -72,7 +71,7 @@ export type YoroiNft = {
   metadata: {
     policyId: string
     assetNameHex: string
-    originalMetadata: NftMetadata | undefined
+    originalMetadata: unknown
   }
 }
 
