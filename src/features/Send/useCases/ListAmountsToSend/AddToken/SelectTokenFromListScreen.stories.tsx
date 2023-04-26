@@ -7,14 +7,32 @@ import {mocks} from '../../../../../yoroi-wallets/mocks/wallet'
 import {SendProvider} from '../../../common/SendContext'
 import {SelectTokenFromListScreen} from './SelectTokenFromListScreen'
 
-storiesOf('Select Token From List', module).add('initial', () => {
-  return (
-    <SelectedWalletProvider wallet={mocks.wallet}>
-      <SearchProvider>
-        <SendProvider>
-          <SelectTokenFromListScreen />
-        </SendProvider>
-      </SearchProvider>
-    </SelectedWalletProvider>
-  )
-})
+storiesOf('Select Token From List', module)
+  .add('initial', () => {
+    return (
+      <SelectedWalletProvider wallet={mocks.wallet}>
+        <SearchProvider>
+          <SendProvider>
+            <SelectTokenFromListScreen />
+          </SendProvider>
+        </SearchProvider>
+      </SelectedWalletProvider>
+    )
+  })
+  .add('Loading', () => {
+    const wallet = {
+      ...mocks.wallet,
+      fetchNfts: mocks.fetchNfts.loading,
+      fetchTokenInfo: mocks.fetchTokenInfo.loading,
+      getTransactions: mocks.getTransactions.loading,
+    }
+    return (
+      <SelectedWalletProvider wallet={wallet}>
+        <SearchProvider>
+          <SendProvider>
+            <SelectTokenFromListScreen />
+          </SendProvider>
+        </SearchProvider>
+      </SelectedWalletProvider>
+    )
+  })
