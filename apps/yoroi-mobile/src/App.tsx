@@ -1,5 +1,3 @@
-import 'intl'
-
 import React, {useEffect} from 'react'
 import {Platform, UIManager} from 'react-native'
 import * as RNP from 'react-native-paper'

@@ -2,11 +2,10 @@
 import bluebird from 'bluebird'
 import React from 'react'
 import {createIntl, createIntlCache} from 'react-intl'
-import {AppRegistry, LogBox, StyleSheet} from 'react-native'
+import {LogBox, StyleSheet} from 'react-native'
 import {QueryClient, QueryClientProvider} from 'react-query'
 
 import App from './App'
-import {name as appName} from './app.json'
 import {LoadingBoundary} from './components'
 import {ErrorBoundary} from './components/ErrorBoundary'
 import {handleGeneralError} from './dialogs'
@@ -59,7 +58,7 @@ global.onunhandledrejection = (error: any) => {
 
 const queryClient = new QueryClient()
 
-const AppWithProviders = () => {
+export const YoroiApp = () => {
   const migrated = useMigrations(storage)
 
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
@@ -83,5 +82,3 @@ const AppWithProviders = () => {
     </StorageProvider>
   ) : null
 }
-
-AppRegistry.registerComponent(appName, () => AppWithProviders)

@@ -43,6 +43,7 @@ module.exports = {
     '@typescript-eslint',
     'react-prefer-function-component',
     'eslint-plugin-simple-import-sort',
+    'formatjs',
   ],
   env: {'react-native/react-native': true},
   settings: {
@@ -73,6 +74,7 @@ module.exports = {
     'require-await': 'off',
     '@typescript-eslint/require-await': 'error',
     '@typescript-eslint/await-thenable': 'error',
+    'formatjs/no-offset': 'error',
   },
   globals: {
     Buffer: false,
