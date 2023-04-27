@@ -3,7 +3,7 @@ module.exports = {
   forbidden: [
     /* rules from the 'recommended' preset: */
     {
-      name: 'no-circular',
+      name: 'fix-circular',
       severity: 'error',
       comment:
         'This dependency is part of a circular relationship. You might want to revise ' +
