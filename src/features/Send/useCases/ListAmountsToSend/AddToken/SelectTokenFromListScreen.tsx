@@ -79,11 +79,7 @@ const List = ({fungibilityFilter, isSearching, canAddAmount}: ListProps) => {
 
   if (showNftList) return <NftList canAddAmount={canAddAmount} />
 
-  return (
-    <Boundary loading={{fallback: <Text>TEST</Text>}}>
-      <AssetList fungibilityFilter={fungibilityFilter} canAddAmount={canAddAmount} />
-    </Boundary>
-  )
+  return <AssetList fungibilityFilter={fungibilityFilter} canAddAmount={canAddAmount} />
 }
 
 const NftList = ({canAddAmount}: {canAddAmount: boolean}) => {
