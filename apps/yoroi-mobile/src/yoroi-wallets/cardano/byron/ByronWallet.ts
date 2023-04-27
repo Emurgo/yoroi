@@ -43,22 +43,10 @@ import {parseSafe} from '../../utils/parsing'
 import {genTimeToSlot} from '../../utils/timeUtils'
 import {validatePassword} from '../../utils/validators'
 import {WalletMeta} from '../../walletManager'
-import {
-  ADDRESS_TYPE_TO_CHANGE,
-  Cardano,
-  CardanoMobile,
-  CardanoTypes,
-  generatePrivateKeyForCatalyst,
-  legacyWalletChecksum,
-  NoOutputsError,
-  NotEnoughMoneyToSendError,
-  NUMBERS,
-  RegistrationStatus,
-  walletChecksum,
-  withMinAmounts,
-} from '..'
+import {Cardano, CardanoMobile} from '../../wallets'
 import * as api from '../api'
 import {encryptWithPassword} from '../catalyst/catalystCipher'
+import {generatePrivateKeyForCatalyst} from '../catalyst/catalystUtils'
 import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from '../chain'
 import {
   HISTORY_REFRESH_TIME,
@@ -67,6 +55,8 @@ import {
   PRIMARY_TOKEN_INFO,
 } from '../constants/mainnet/constants'
 import {CardanoError, InvalidState} from '../errors'
+import {ADDRESS_TYPE_TO_CHANGE} from '../formatPath'
+import {withMinAmounts} from '../getMinAmounts'
 import {signTxWithLedger} from '../hw'
 import {
   CardanoHaskellShelleyNetwork,
@@ -74,12 +64,24 @@ import {
   isHaskellShelleyNetwork,
   isJormungandr,
 } from '../networks'
+import {NUMBERS} from '../numbers'
 import {processTxHistoryData} from '../processTransactions'
 import {IsLockedError, nonblockingSynchronize, synchronize} from '../promise'
 import {filterAddressesByStakingKey, getDelegationStatus} from '../shelley/delegationUtils'
 import {yoroiSignedTx} from '../signedTx'
 import {TransactionManager} from '../transactionManager'
-import {isYoroiWallet, WalletEvent, WalletSubscription, YoroiWallet} from '../types'
+import {
+  CardanoTypes,
+  isYoroiWallet,
+  legacyWalletChecksum,
+  NoOutputsError,
+  NotEnoughMoneyToSendError,
+  RegistrationStatus,
+  walletChecksum,
+  WalletEvent,
+  WalletSubscription,
+  YoroiWallet,
+} from '../types'
 import {yoroiUnsignedTx} from '../unsignedTx'
 import {
   deriveRewardAddressHex,

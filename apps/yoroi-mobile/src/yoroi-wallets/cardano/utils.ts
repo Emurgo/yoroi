@@ -13,25 +13,20 @@ import {
   WalletImplementationId,
 } from '../types/other'
 import {Token} from '../types/tokens'
-import {YoroiAmount, YoroiAmounts} from '../types/types'
+import {YoroiAmount, YoroiAmounts} from '../types/yoroi'
 import {Amounts} from '../utils'
-import {
-  CardanoHaskellShelleyNetwork,
-  CardanoMobile,
-  CardanoTypes,
-  MultiToken,
-  PRIMARY_ASSET_CONSTANTS,
-  toAssetNameHex,
-  toPolicyId,
-  WalletImplementation,
-} from '.'
+import {CardanoMobile} from '../wallets'
+import {toAssetNameHex, toPolicyId} from './api/utils'
 import {
   NETWORK_ID as mainnetId,
   WALLET_CONFIG as HASKELL_SHELLEY,
   WALLET_CONFIG_24 as HASKELL_SHELLEY_24,
 } from './constants/mainnet/constants'
 import {NETWORK_ID as testnetId} from './constants/testnet/constants'
+import {MultiToken} from './MultiToken'
+import {CardanoHaskellShelleyNetwork, PRIMARY_ASSET_CONSTANTS} from './networks'
 import {NUMBERS} from './numbers'
+import {CardanoTypes, WalletImplementation} from './types'
 
 export const normalizeToAddress = async (addr: string) => {
   // in Shelley, addresses can be base16, bech32 or base58

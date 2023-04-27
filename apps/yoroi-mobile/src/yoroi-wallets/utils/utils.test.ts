@@ -2,7 +2,7 @@ import BigNumber from 'bignumber.js'
 
 import {Quantity, YoroiAmount, YoroiAmounts, YoroiEntries, YoroiEntry} from '../types'
 import {RawUtxo} from '../types/other'
-import {Amounts, asQuantity, Entries, Quantities, Utxos} from '.'
+import {Amounts, asQuantity, Entries, Quantities, Utxos} from './utils'
 
 describe('Quantities', () => {
   it('sum', () => {

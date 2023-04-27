@@ -1,4 +1,4 @@
-import {Quantity} from './types'
+import {Quantity} from './yoroi'
 
 export type StakingInfo =
   | {status: 'not-registered'}

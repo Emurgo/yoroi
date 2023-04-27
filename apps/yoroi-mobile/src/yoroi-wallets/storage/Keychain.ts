@@ -1,4 +1,4 @@
-import {YoroiWallet} from '..'
+import {YoroiWallet} from '../cardano/types'
 import {AuthenticationPrompt, KeychainStorage} from './KeychainStorage'
 
 const authenticate = async (authenticationPrompt: AuthenticationPrompt) => {

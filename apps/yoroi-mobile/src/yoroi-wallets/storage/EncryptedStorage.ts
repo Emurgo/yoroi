@@ -1,4 +1,4 @@
-import {YoroiWallet} from '../cardano'
+import {YoroiWallet} from '../cardano/types'
 import {decryptData, encryptData} from '../encryption'
 import {parseString} from '../utils'
 import {storage} from './storage'

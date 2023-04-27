@@ -6,7 +6,10 @@ import {Text, View, ViewProps} from 'react-native'
 import {useQuery, UseQueryOptions} from 'react-query'
 
 import {HelperText} from '../../../../../components'
-import {getNetworkConfigById, NetworkId, normalizeToAddress, YoroiWallet} from '../../../../../yoroi-wallets'
+import {getNetworkConfigById} from '../../../../../yoroi-wallets/cardano/networks'
+import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
+import {normalizeToAddress} from '../../../../../yoroi-wallets/cardano/utils'
+import {NetworkId} from '../../../../../yoroi-wallets/types'
 import {useStrings} from '../../../common/strings'
 import {InputReceiver} from './InputReceiver'
 

@@ -4,8 +4,7 @@ import {NativeModules, Platform, Text} from 'react-native'
 import {useMutation, UseMutationOptions, useQuery, useQueryClient, UseQueryOptions} from 'react-query'
 
 import {parseSafe, useStorage} from '../yoroi-wallets'
-import {updateLanguageSettings} from '.'
-import {LanguageCode, supportedLanguages} from './languages'
+import {LanguageCode, supportedLanguages, updateLanguageSettings} from './languages'
 import translations from './translations'
 
 const LanguageContext = React.createContext<undefined | LanguageContext>(undefined)

@@ -2,7 +2,7 @@
 import {generateMnemonic, mnemonicToEntropy} from 'bip39'
 import {randomBytes} from 'react-native-randombytes'
 
-import {CardanoMobile} from '..'
+import {CardanoMobile} from '../../wallets'
 
 const MNEMONIC_STRENGTH = 160
 

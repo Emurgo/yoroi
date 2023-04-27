@@ -7,13 +7,14 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {BulletPointItem, Button, Icon, Spacer, StatusBar, Text} from '../../components'
 import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
 import {COLORS} from '../../theme'
-import {CardanoTypes, NetworkId, WALLET_IMPLEMENTATION_REGISTRY, WalletImplementationId} from '../../yoroi-wallets'
 import {generateByronPlateFromMnemonics} from '../../yoroi-wallets/cardano/byron/plate'
 import {
   WALLET_CONFIG as HASKELL_SHELLEY,
   WALLET_CONFIG_24 as HASKELL_SHELLEY_24,
 } from '../../yoroi-wallets/cardano/constants/mainnet/constants'
 import {generateShelleyPlateFromMnemonics} from '../../yoroi-wallets/cardano/shelley/plate'
+import {CardanoTypes} from '../../yoroi-wallets/cardano/types'
+import {NetworkId, WALLET_IMPLEMENTATION_REGISTRY, WalletImplementationId} from '../../yoroi-wallets/types'
 import {WalletAddress} from '../WalletAddress'
 
 export const VerifyRestoredWalletScreen = () => {

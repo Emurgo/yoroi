@@ -1,4 +1,4 @@
-import {parseModerationStatus} from '.'
+import {parseModerationStatus} from './api'
 
 describe('parseModerationStatus', () => {
   it('should return status on valid NFT Moderation status', () => {

@@ -1,4 +1,4 @@
-import {YoroiWallet} from '../cardano'
+import {YoroiWallet} from '../cardano/types'
 import {DeviceId, DeviceObj} from './hw'
 
 export const withUSB = (wallet: YoroiWallet, deviceObj: DeviceObj) => {

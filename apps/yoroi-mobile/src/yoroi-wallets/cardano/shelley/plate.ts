@@ -1,8 +1,8 @@
 import {legacyWalletChecksum, walletChecksum} from '@emurgo/cip4-js'
 
-import {CardanoMobile} from '../../cardano'
 import type {NetworkId} from '../../types/other'
 import {PlateResponse} from '../../types/other'
+import {CardanoMobile} from '../../wallets'
 import {getMasterKeyFromMnemonic} from '../byron/util'
 import {AddressGenerator} from '../chain'
 import {WALLET_IMPLEMENTATION_ID} from '../constants/mainnet/constants'

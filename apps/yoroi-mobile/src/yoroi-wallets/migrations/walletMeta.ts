@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import {Logger} from '../../legacy/logging'
-import {CardanoTypes, legacyWalletChecksum, walletChecksum, WalletMeta, WALLETS} from '..'
+import {CardanoTypes, legacyWalletChecksum, walletChecksum} from '../cardano/types'
+import {WALLETS} from '../cardano/utils'
 import {storage} from '../storage'
 import type {NetworkId, WalletImplementationId} from '../types/other'
 import {NETWORK_REGISTRY, WALLET_IMPLEMENTATION_REGISTRY} from '../types/other'
 import {parseSafe} from '../utils/parsing'
+import {WalletMeta} from '../walletManager'
 
 async function toShelleyWalletMeta(currentWalletMeta: Partial<WalletMeta>): Promise<WalletMeta> {
   if (!currentWalletMeta.id) throw new Error(`Wallet meta stored is corrupted. ${JSON.stringify(currentWalletMeta)}`)

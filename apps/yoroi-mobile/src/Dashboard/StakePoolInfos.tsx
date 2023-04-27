@@ -4,7 +4,7 @@ import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {useQuery, useQueryClient, UseQueryOptions} from 'react-query'
 
 import {useSelectedWallet} from '../SelectedWallet'
-import {YoroiWallet} from '../yoroi-wallets'
+import {YoroiWallet} from '../yoroi-wallets/cardano/types'
 import {Quantity, StakingInfo, YoroiUnsignedTx} from '../yoroi-wallets/types'
 import {Quantities} from '../yoroi-wallets/utils'
 import {StakePoolInfo} from './StakePoolInfo'

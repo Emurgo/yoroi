@@ -1,5 +1,6 @@
-import {asciiToHex, NETWORKS} from '../cardano'
+import {asciiToHex} from '../cardano/api/utils'
 import {PRIMARY_TOKEN} from '../cardano/constants/testnet/constants'
+import {NETWORKS} from '../cardano/networks'
 import {InvalidAssetAmount, parseAmountDecimal} from './parsing'
 
 describe('parseAdaDecimal', () => {

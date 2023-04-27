@@ -1,4 +1,5 @@
-import {useNftModerationStatus, YoroiWallet} from '../yoroi-wallets'
+import {YoroiWallet} from '../yoroi-wallets/cardano/types'
+import {useNftModerationStatus} from '../yoroi-wallets/hooks'
 
 export const useModeratedNftImage = ({wallet, fingerprint}: {wallet: YoroiWallet; fingerprint: string}) => {
   return useNftModerationStatus(

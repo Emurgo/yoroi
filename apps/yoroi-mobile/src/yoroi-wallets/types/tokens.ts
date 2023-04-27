@@ -1,4 +1,4 @@
-import {NetworkId} from '.'
+import {NetworkId} from './other'
 
 export type TokenCommonMetadata = {
   numberOfDecimals: number

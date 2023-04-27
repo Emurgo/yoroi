@@ -1,7 +1,8 @@
 import bs58 from 'bs58'
 
-import {ADDRESS_TYPE_TO_CHANGE, AddressType, CardanoMobile} from '..'
+import {CardanoMobile} from '../../wallets'
 import {CardanoError} from '../errors'
+import {ADDRESS_TYPE_TO_CHANGE, AddressType} from '../formatPath'
 import {generateWalletRootKey} from '../mnemonic'
 import {getCardanoByronConfig} from '../networks'
 import {NUMBERS} from '../numbers'

@@ -3,7 +3,7 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
 import {SelectedWalletProvider} from '../../SelectedWallet'
-import {YoroiWallet} from '../../yoroi-wallets'
+import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
 import {mocks} from '../../yoroi-wallets/mocks'
 import {ChangePasswordScreen} from './ChangePasswordScreen'
 

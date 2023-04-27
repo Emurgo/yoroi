@@ -1,4 +1,4 @@
-import {CardanoTypes, YoroiWallet} from '../cardano'
+import {CardanoTypes, YoroiWallet} from '../cardano/types'
 import {HWDeviceInfo} from '../hw'
 import {YoroiStorage} from '../storage'
 import {WalletMeta} from '../walletManager'

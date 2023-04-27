@@ -2,7 +2,8 @@
 import ExtendableError from 'es6-error'
 import uuid from 'uuid'
 
-import {CardanoTypes, getCardanoWalletFactory, isYoroiWallet, YoroiWallet} from '../cardano'
+import {getCardanoWalletFactory} from '../cardano'
+import {CardanoTypes, isYoroiWallet, YoroiWallet} from '../cardano/types'
 import {HWDeviceInfo} from '../hw'
 import {Logger} from '../logging'
 import {isWalletMeta, migrateWalletMetas, parseWalletMeta} from '../migrations/walletMeta'

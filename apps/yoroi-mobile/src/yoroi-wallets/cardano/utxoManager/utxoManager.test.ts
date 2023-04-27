@@ -1,5 +1,5 @@
 import {storage as rootStorage} from '../../storage'
-import {makeUtxoManagerStorage, makeUtxoStorage} from '.'
+import {makeUtxoManagerStorage, makeUtxoStorage} from './utxoManager'
 
 describe('utxo manager storage', () => {
   it('works', async () => {

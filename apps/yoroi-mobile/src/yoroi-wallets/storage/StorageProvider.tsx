@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {storage as rootStorage, YoroiStorage} from '.'
+import {storage as rootStorage, YoroiStorage} from './storage'
 
 const StorageContext = React.createContext<undefined | YoroiStorage>(undefined)
 export const StorageProvider = ({

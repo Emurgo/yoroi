@@ -6,8 +6,8 @@ import {useMutation, UseMutationOptions, useQuery, useQueryClient, UseQueryOptio
 
 import globalMessages from '../../i18n/global-messages'
 import {useWalletManager} from '../../WalletManager'
-import {YoroiWallet} from '../cardano'
 import {WrongPassword} from '../cardano/errors'
+import {YoroiWallet} from '../cardano/types'
 import {decryptData, encryptData} from '../encryption'
 import {useMutationWithInvalidations} from '../hooks'
 import {parseWalletMeta} from '../migrations'

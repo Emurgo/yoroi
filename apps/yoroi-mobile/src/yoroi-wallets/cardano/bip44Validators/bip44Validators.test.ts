@@ -1,4 +1,4 @@
-import {isCIP1852AccountPath, isValidPath} from '.'
+import {isCIP1852AccountPath, isValidPath} from './bip44Validators'
 
 describe('Check BIP44/CIP1852 paths', () => {
   it('valid CIP1852 paths', () => {

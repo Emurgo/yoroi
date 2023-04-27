@@ -4,10 +4,11 @@ import {action} from '@storybook/addon-actions'
 import BigNumber from 'bignumber.js'
 
 import {getTokenFingerprint} from '../../legacy/format'
-import {asciiToHex, CardanoTypes, fallbackTokenInfo, toTokenInfo, WalletMeta, YoroiWallet} from '..'
+import {asciiToHex, fallbackTokenInfo, toTokenInfo} from '../cardano/api/utils'
 import * as HASKELL_SHELLEY_TESTNET from '../cardano/constants/testnet/constants'
 import {PRIMARY_TOKEN, PRIMARY_TOKEN_INFO} from '../cardano/constants/testnet/constants'
 import {PRIMARY_ASSET_CONSTANTS} from '../cardano/networks'
+import {CardanoTypes, YoroiWallet} from '../cardano/types'
 import {
   RemotePoolMetaSuccess,
   StakePoolInfosAndHistories,
@@ -21,6 +22,7 @@ import {
   YoroiSignedTx,
   YoroiUnsignedTx,
 } from '../types'
+import {WalletMeta} from '../walletManager'
 import {mockEncryptedStorage} from './storage'
 import {mockTransactionInfo, mockTransactionInfos} from './transaction'
 import {utxos} from './utxos'

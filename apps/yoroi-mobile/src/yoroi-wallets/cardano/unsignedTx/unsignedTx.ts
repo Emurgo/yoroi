@@ -1,7 +1,8 @@
 import {Quantity, YoroiAmounts, YoroiEntries, YoroiMetadata, YoroiUnsignedTx, YoroiVoting} from '../../types'
 import {Amounts, Entries, Quantities} from '../../utils'
-import {Cardano, CardanoMobile, CardanoTypes} from '../'
+import {Cardano, CardanoMobile} from '../../wallets'
 import {CardanoHaskellShelleyNetwork} from '../networks'
+import {CardanoTypes} from '../types'
 
 export const yoroiUnsignedTx = async ({
   unsignedTx,
@@ -40,7 +41,7 @@ export const yoroiUnsignedTx = async ({
     change,
     staking: {
       withdrawals:
-        (unsignedTx.withdrawals.hasValue() && (await unsignedTx.withdrawals.len())) > 0
+        unsignedTx.withdrawals.hasValue() && (await unsignedTx.withdrawals.len()) > 0
           ? await Staking.toWithdrawals(unsignedTx.withdrawals)
           : undefined,
       registrations:

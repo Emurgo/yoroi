@@ -1,8 +1,8 @@
 import assert from 'assert'
 import cryptoRandomString from 'crypto-random-string'
 
-import {Cardano} from '../cardano'
 import {CardanoError, WrongPassword} from '../cardano/errors'
+import {Cardano} from '../wallets'
 
 export const encryptData = async (plaintextHex: string, secretKey: string): Promise<string> => {
   assert(!!plaintextHex, 'encrypt:: !!plaintextHex')

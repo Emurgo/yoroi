@@ -4,7 +4,7 @@ import React from 'react'
 
 import {WithModal} from '../../../../.storybook/decorators'
 import {Boundary} from '../../../components'
-import {YoroiWallet} from '../../../yoroi-wallets'
+import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {mocks} from '../../../yoroi-wallets/mocks'
 import {YoroiUnsignedTx} from '../../../yoroi-wallets/types'
 import {ConfirmTxWithPassword} from './ConfirmTxWithPassword'

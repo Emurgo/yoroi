@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-labels */
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-import {isYoroiWallet} from '../cardano'
+import {isYoroiWallet} from '../cardano/types'
 import {parseSafe} from '../utils/parsing'
-import {WalletManager} from '.'
+import {WalletManager} from './walletManager'
 
 describe('walletMananger', () => {
   beforeEach(() => AsyncStorage.clear())

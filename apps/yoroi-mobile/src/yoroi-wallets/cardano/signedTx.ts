@@ -1,5 +1,5 @@
 import {YoroiSignedTx, YoroiTxInfo, YoroiUnsignedTx} from '../types'
-import {CardanoTypes} from '.'
+import {CardanoTypes} from './types'
 
 type YoroiSignedTxInfo = {
   unsignedTx: YoroiUnsignedTx

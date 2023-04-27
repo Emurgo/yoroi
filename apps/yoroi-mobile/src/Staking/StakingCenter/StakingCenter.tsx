@@ -15,8 +15,8 @@ import {isNightly} from '../../legacy/config'
 import {Logger} from '../../legacy/logging'
 import {StakingCenterRouteNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
-import {NETWORKS, NotEnoughMoneyToSendError} from '../../yoroi-wallets'
-import {getNetworkConfigById} from '../../yoroi-wallets/cardano/networks'
+import {getNetworkConfigById, NETWORKS} from '../../yoroi-wallets/cardano/networks'
+import {NotEnoughMoneyToSendError} from '../../yoroi-wallets/cardano/types'
 import {PoolDetailScreen} from '../PoolDetails'
 
 export const StakingCenter = () => {

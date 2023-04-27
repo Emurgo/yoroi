@@ -3,9 +3,10 @@ import BigNumber from 'bignumber.js'
 
 import {Token, YoroiAmounts} from '../types'
 import {Amounts, asQuantity, Quantities} from '../utils'
-import {CardanoMobile, cardanoValueFromMultiToken} from '.'
+import {CardanoMobile} from '../wallets'
 import {MINIMUM_UTXO_VAL} from './constants/common'
 import {MultiToken} from './MultiToken'
+import {cardanoValueFromMultiToken} from './utils'
 
 export const withMinAmounts = async (amounts: YoroiAmounts, primaryToken: Token): Promise<YoroiAmounts> => {
   const amountsWithPrimaryToken = withPrimaryToken(amounts, primaryToken)

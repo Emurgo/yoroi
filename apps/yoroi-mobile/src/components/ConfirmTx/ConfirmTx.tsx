@@ -12,7 +12,6 @@ import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {isEmptyString} from '../../utils/utils'
 import {
-  CardanoTypes,
   DeviceId,
   DeviceObj,
   HARDWARE_WALLETS,
@@ -23,6 +22,7 @@ import {
   withUSB,
 } from '../../yoroi-wallets'
 import {WrongPassword} from '../../yoroi-wallets/cardano/errors'
+import {CardanoTypes} from '../../yoroi-wallets/cardano/types'
 import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
 import {Button, ButtonProps, ValidatedTextInput} from '..'
 import {Dialog, Step as DialogStep} from './Dialog'

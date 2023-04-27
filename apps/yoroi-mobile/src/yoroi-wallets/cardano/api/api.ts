@@ -20,11 +20,11 @@ import type {
 } from '../../types'
 import {NFTAsset, YoroiNft, YoroiNftModerationStatus} from '../../types'
 import {hasProperties, isArray, isNonNullable, isNumber, isObject, isRecord} from '../../utils/parsing'
-import {ServerStatus, toAssetName, toPolicyId} from '..'
 import {ApiError} from '../errors'
 import {convertNft} from '../nfts'
+import {ServerStatus} from '../types'
 import fetchDefault, {checkedFetch} from './fetch'
-import {fallbackTokenInfo, tokenInfo, toTokenSubject} from './utils'
+import {fallbackTokenInfo, toAssetName, tokenInfo, toPolicyId, toTokenSubject} from './utils'
 
 type Addresses = Array<string>
 

@@ -3,7 +3,7 @@ import React from 'react'
 
 import {QueryProvider} from '../../.storybook/decorators'
 import {SelectedWalletProvider} from '../SelectedWallet'
-import {YoroiWallet} from '../yoroi-wallets'
+import {YoroiWallet} from '../yoroi-wallets/cardano/types'
 import {mocks} from '../yoroi-wallets/mocks'
 import {Dashboard} from './Dashboard'
 

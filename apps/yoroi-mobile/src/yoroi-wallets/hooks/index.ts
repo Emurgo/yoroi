@@ -16,8 +16,10 @@ import {
 
 import {isNightly} from '../../legacy/config'
 import {useWalletManager} from '../../WalletManager'
-import {calcLockedDeposit, toToken, WalletEvent, YoroiWallet} from '../cardano'
+import {toToken} from '../cardano/api/utils'
+import {calcLockedDeposit} from '../cardano/assetUtils'
 import {generateShelleyPlateFromKey} from '../cardano/shelley/plate'
+import {WalletEvent, YoroiWallet} from '../cardano/types'
 import {HWDeviceInfo} from '../hw'
 import {parseWalletMeta} from '../migrations/walletMeta'
 import {useStorage} from '../storage'

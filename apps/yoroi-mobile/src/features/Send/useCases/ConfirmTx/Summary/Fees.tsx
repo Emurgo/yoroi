@@ -5,7 +5,7 @@ import {Text} from '../../../../../components/Text'
 import {txLabels} from '../../../../../i18n/global-messages'
 import {formatTokenWithSymbol} from '../../../../../legacy/format'
 import {useSelectedWallet} from '../../../../../SelectedWallet/Context/SelectedWalletContext'
-import {YoroiUnsignedTx} from '../../../../../yoroi-wallets/types/types'
+import {YoroiUnsignedTx} from '../../../../../yoroi-wallets/types/yoroi'
 import {Amounts} from '../../../../../yoroi-wallets/utils/utils'
 
 export const Fees = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx}) => {

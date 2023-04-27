@@ -16,7 +16,7 @@ import {useSelectedWallet, WalletSelectionScreen} from './SelectedWallet'
 import {SettingsScreenNavigator} from './Settings'
 import {theme} from './theme'
 import {TxHistoryNavigator} from './TxHistory'
-import {isHaskellShelley} from './yoroi-wallets/cardano'
+import {isHaskellShelley} from './yoroi-wallets/cardano/utils'
 
 const Tab = createBottomTabNavigator<WalletTabRoutes>()
 const WalletTabNavigator = () => {

@@ -7,7 +7,7 @@ import {Button, CopyButton, Text, TitledCard} from '../components'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
 import {isEmptyString} from '../utils/utils'
-import {YoroiWallet} from '../yoroi-wallets'
+import {YoroiWallet} from '../yoroi-wallets/cardano/types'
 import {StakePoolInfoAndHistory} from '../yoroi-wallets/types'
 
 export const StakePoolInfo = ({stakePoolId}: {stakePoolId: string}) => {

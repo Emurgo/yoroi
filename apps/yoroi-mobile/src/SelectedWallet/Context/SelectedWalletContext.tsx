@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import {YoroiWallet} from '../../yoroi-wallets'
+import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
 
 type SelectedWallet = YoroiWallet
 type SetSelectedWallet = (selectedWallet?: SelectedWallet) => void

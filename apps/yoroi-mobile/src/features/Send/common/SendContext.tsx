@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 import {useSelectedWallet} from '../../../SelectedWallet/Context/SelectedWalletContext'
-import {YoroiWallet} from '../../../yoroi-wallets'
+import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {useBalance, useLockedAmount} from '../../../yoroi-wallets/hooks'
 import {Address, Quantity, YoroiAmount, YoroiTarget, YoroiUnsignedTx} from '../../../yoroi-wallets/types'
 import {Amounts, Quantities} from '../../../yoroi-wallets/utils/utils'

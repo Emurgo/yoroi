@@ -2,7 +2,7 @@ import {MultiToken} from '../..'
 import {RawTransaction, TRANSACTION_DIRECTION} from '../../types/other'
 import {NETWORK_ID, PRIMARY_TOKEN} from '../constants/testnet/constants'
 import {toCachedTx} from '../transactionManager'
-import {processTxHistoryData} from '.'
+import {processTxHistoryData} from './processTransactions'
 
 //
 // addresses from:

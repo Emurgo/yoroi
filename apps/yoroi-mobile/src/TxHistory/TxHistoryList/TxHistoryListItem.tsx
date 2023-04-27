@@ -14,8 +14,10 @@ import {TxHistoryRouteNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {isEmptyString} from '../../utils/utils'
-import {asQuantity, MultiToken, YoroiWallet} from '../../yoroi-wallets'
+import {MultiToken} from '../../yoroi-wallets/cardano/MultiToken'
+import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
 import {IOData, TransactionAssurance, TransactionDirection, TransactionInfo} from '../../yoroi-wallets/types'
+import {asQuantity} from '../../yoroi-wallets/utils'
 
 type Props = {
   transaction: TransactionInfo

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {YoroiWallet} from '../../../yoroi-wallets'
+import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {YoroiUnsignedTx} from '../../../yoroi-wallets/types'
 import {ConfirmTxWithHW} from './ConfirmTxWithHW'
 import {ConfirmTxWithOS} from './ConfirmTxWithOS'

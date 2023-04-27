@@ -6,8 +6,9 @@ import {sortBy} from 'lodash'
 
 import {Logger} from '../../logging'
 import {StakingStatus} from '../../types'
-import {CardanoMobile, CardanoTypes} from '..'
+import {CardanoMobile} from '../../wallets'
 import type {TimestampedCertMeta} from '../transactionManager'
+import {CardanoTypes} from '../types'
 import {normalizeToAddress} from '../utils'
 
 const addrContainsAccountKey = async (
