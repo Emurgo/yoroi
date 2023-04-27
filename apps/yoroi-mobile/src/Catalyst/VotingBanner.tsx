@@ -8,7 +8,7 @@ import globalMessages, {confirmationMessages} from '../i18n/global-messages'
 import {isNightly} from '../legacy/config'
 import {Logger} from '../legacy/logging'
 import {COLORS} from '../theme'
-import {isRegistrationOpen} from '../yoroi-wallets'
+import {isRegistrationOpen} from '../yoroi-wallets/cardano/catalyst/catalystUtils'
 import {useCanVote} from './hooks'
 import {InsufficientFundsModal} from './InsufficientFundsModal'
 

@@ -7,7 +7,7 @@ import {FadeIn} from '../components'
 import {NftPreview} from '../components/NftPreview'
 import {NftRoutes} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
-import {useNft} from '../yoroi-wallets'
+import {useNft} from '../yoroi-wallets/hooks'
 
 export const NftDetailsImage = () => {
   const {id} = useRoute<RouteProp<NftRoutes, 'nft-details'>>().params

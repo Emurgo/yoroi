@@ -5,8 +5,8 @@ import {Platform, TouchableOpacity} from 'react-native'
 
 import {Icon} from './components'
 import {COLORS} from './theme'
-import {HWDeviceInfo, NetworkId, WalletImplementationId} from './yoroi-wallets'
-import {YoroiUnsignedTx} from './yoroi-wallets/types'
+import {HWDeviceInfo} from './yoroi-wallets/hw'
+import {NetworkId, WalletImplementationId, YoroiUnsignedTx} from './yoroi-wallets/types'
 
 // prettier-ignore
 export const useUnsafeParams = <Params, >() => {

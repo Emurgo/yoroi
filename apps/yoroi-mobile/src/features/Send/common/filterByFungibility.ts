@@ -1,4 +1,4 @@
-import {TokenInfo, YoroiNft} from '../../../yoroi-wallets'
+import {TokenInfo, YoroiNft} from '../../../yoroi-wallets/types'
 import {FungibilityFilter} from '../useCases/ListAmountsToSend/AddToken/SelectTokenFromListScreen'
 
 export const filterByFungibility = ({

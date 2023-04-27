@@ -5,7 +5,8 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 import {SvgUri} from 'react-native-svg'
 
 import placeholder from '../../assets/img/nft-placeholder.png'
-import {isArray, isString, YoroiNft} from '../../yoroi-wallets'
+import {YoroiNft} from '../../yoroi-wallets/types'
+import {isArray, isString} from '../../yoroi-wallets/utils'
 
 export const NftPreview = ({
   nft,

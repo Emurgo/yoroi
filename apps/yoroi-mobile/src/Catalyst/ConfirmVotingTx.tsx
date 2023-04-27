@@ -12,7 +12,7 @@ import {errorMessages, txLabels} from '../i18n/global-messages'
 import LocalizableError from '../i18n/LocalizableError'
 import {formatTokenWithSymbol} from '../legacy/format'
 import {useSelectedWallet} from '../SelectedWallet'
-import {useVotingRegTx} from '../yoroi-wallets'
+import {useVotingRegTx} from '../yoroi-wallets/hooks'
 import {Amounts} from '../yoroi-wallets/utils'
 import {Actions, Description, Title} from './components'
 

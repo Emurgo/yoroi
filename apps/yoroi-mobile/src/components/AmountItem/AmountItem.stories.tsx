@@ -4,8 +4,8 @@ import {Text, View} from 'react-native'
 
 import {QueryProvider} from '../../../.storybook/decorators'
 import {SelectedWalletProvider} from '../../SelectedWallet'
-import {Amounts} from '../../yoroi-wallets'
 import {mocks} from '../../yoroi-wallets/mocks'
+import {Amounts} from '../../yoroi-wallets/utils'
 import {Spacer} from '..'
 import {AmountItem} from './AmountItem'
 

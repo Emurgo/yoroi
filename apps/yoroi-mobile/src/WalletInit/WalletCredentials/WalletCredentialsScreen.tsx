@@ -8,8 +8,8 @@ import {showErrorDialog} from '../../dialogs'
 import {errorMessages} from '../../i18n/global-messages'
 import {useWalletNavigation, WalletInitRoutes} from '../../navigation'
 import {COLORS} from '../../theme'
-import {useCreateWallet} from '../../yoroi-wallets'
 import {NetworkError} from '../../yoroi-wallets/cardano/errors'
+import {useCreateWallet} from '../../yoroi-wallets/hooks'
 import {WalletForm} from '../WalletForm'
 
 export const WalletCredentialsScreen = () => {

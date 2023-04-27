@@ -8,9 +8,9 @@ import {Button, ButtonProps, Spacer, StatusBar} from '../../components'
 import {isNightly} from '../../legacy/config'
 import {WalletInitRouteNavigation} from '../../navigation'
 import {COLORS} from '../../theme'
-import {NetworkId, WALLET_IMPLEMENTATION_REGISTRY, WalletImplementationId} from '../../yoroi-wallets'
 import * as HASKELL_SHELLEY from '../../yoroi-wallets/cardano/constants/mainnet/constants'
 import * as HASKELL_SHELLEY_TESTNET from '../../yoroi-wallets/cardano/constants/testnet/constants'
+import {NetworkId, WALLET_IMPLEMENTATION_REGISTRY, WalletImplementationId} from '../../yoroi-wallets/types'
 import {WalletDescription} from '../WalletDescription'
 
 export const WalletFreshInitScreen = () => {

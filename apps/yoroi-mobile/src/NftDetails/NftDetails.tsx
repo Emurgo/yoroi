@@ -14,8 +14,8 @@ import {useNavigateTo} from '../Nfts/navigation'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
 import {isEmptyString} from '../utils'
-import {useNft} from '../yoroi-wallets'
-import {YoroiNft} from '../yoroi-wallets'
+import {useNft} from '../yoroi-wallets/hooks'
+import {YoroiNft} from '../yoroi-wallets/types'
 
 export const NftDetails = () => {
   const {id} = useRoute<RouteProp<NftRoutes, 'nft-details'>>().params

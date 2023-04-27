@@ -1,4 +1,4 @@
-import {TokenInfo} from '../../../yoroi-wallets'
+import {TokenInfo} from '../../../yoroi-wallets/types'
 import {filterBySearch} from './filterBySearch'
 
 describe('filterBySearch', () => {

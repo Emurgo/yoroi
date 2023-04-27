@@ -1,7 +1,7 @@
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {storage, StorageProvider} from '../../yoroi-wallets'
+import {storage, StorageProvider} from '../../yoroi-wallets/storage'
 import {PinLoginScreen} from './PinLoginScreen'
 
 storiesOf('PinLoginScreen', module).add('Default', () => (

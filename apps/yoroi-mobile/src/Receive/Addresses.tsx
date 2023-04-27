@@ -7,7 +7,7 @@ import {CopyButton, Icon, Spacer, Text} from '../components'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
 import {isEmptyString} from '../utils/utils'
-import {useReceiveAddresses} from '../yoroi-wallets'
+import {useReceiveAddresses} from '../yoroi-wallets/hooks'
 import {Address as AddressType} from '../yoroi-wallets/types'
 import AddressModal from './AddressModal'
 

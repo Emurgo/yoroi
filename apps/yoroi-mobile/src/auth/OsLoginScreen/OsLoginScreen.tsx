@@ -3,7 +3,7 @@ import {defineMessages, useIntl} from 'react-intl'
 
 import {useAuth} from '../../auth/AuthProvider'
 import {Button} from '../../components'
-import {useAuthWithOs} from '../../yoroi-wallets'
+import {useAuthWithOs} from '../../yoroi-wallets/auth'
 import {OsAuthScreen} from '../OsAuthScreen'
 
 export const OsLoginScreen = () => {

@@ -6,7 +6,7 @@ import DeviceInfo from 'react-native-device-info'
 import {Button, Modal, Text} from '../../components'
 import globalMessages from '../../i18n/global-messages'
 import {spacing} from '../../theme'
-import {HARDWARE_WALLETS, useLedgerPermissions} from '../../yoroi-wallets'
+import {HARDWARE_WALLETS, useLedgerPermissions} from '../../yoroi-wallets/hw'
 
 type Props = {
   onSelectUSB: () => void

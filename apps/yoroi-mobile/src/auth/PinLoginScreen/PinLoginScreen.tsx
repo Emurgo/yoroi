@@ -6,7 +6,7 @@ import {StatusBar} from '../../components'
 import {showErrorDialog} from '../../dialogs'
 import {errorMessages} from '../../i18n/global-messages'
 import {CONFIG} from '../../legacy/config'
-import {useCheckPin} from '../../yoroi-wallets'
+import {useCheckPin} from '../../yoroi-wallets/auth'
 import {useAuth} from '../AuthProvider'
 import {PinInput, PinInputRef} from '../PinInput'
 

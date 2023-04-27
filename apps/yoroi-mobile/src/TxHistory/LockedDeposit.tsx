@@ -6,7 +6,7 @@ import {Boundary, Spacer, Text} from '../components'
 import globalMessages from '../i18n/global-messages'
 import {formatTokenWithText, formatTokenWithTextWhenHidden} from '../legacy/format'
 import {useSelectedWallet} from '../SelectedWallet'
-import {useLockedAmount} from '../yoroi-wallets'
+import {useLockedAmount} from '../yoroi-wallets/hooks'
 
 type Props = {
   privacyMode?: boolean

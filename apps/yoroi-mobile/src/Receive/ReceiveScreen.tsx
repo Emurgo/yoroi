@@ -6,7 +6,7 @@ import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native'
 import {Button, Spacer, StatusBar} from '../components'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
-import {useReceiveAddresses} from '../yoroi-wallets'
+import {useReceiveAddresses} from '../yoroi-wallets/hooks'
 import {AddressDetail} from './AddressDetail'
 import {UnusedAddresses, UsedAddresses} from './Addresses'
 

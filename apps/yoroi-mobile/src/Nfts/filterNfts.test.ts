@@ -1,5 +1,5 @@
-import {YoroiNft} from '../yoroi-wallets'
 import {nft} from '../yoroi-wallets/mocks'
+import {YoroiNft} from '../yoroi-wallets/types'
 import {filterNfts} from './filterNfts'
 
 describe('filterNfts', () => {

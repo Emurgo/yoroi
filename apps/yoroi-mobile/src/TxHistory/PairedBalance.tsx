@@ -6,7 +6,7 @@ import {Boundary, ResetError, ResetErrorRef} from '../components'
 import {useSelectedWallet} from '../SelectedWallet'
 import {useCurrencyContext} from '../Settings/Currency'
 import {COLORS} from '../theme'
-import {useExchangeRate} from '../yoroi-wallets'
+import {useExchangeRate} from '../yoroi-wallets/hooks'
 import {CurrencySymbol, YoroiAmount} from '../yoroi-wallets/types'
 import {Quantities} from '../yoroi-wallets/utils'
 

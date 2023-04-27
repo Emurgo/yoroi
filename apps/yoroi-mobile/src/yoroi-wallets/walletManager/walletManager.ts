@@ -2,7 +2,7 @@
 import ExtendableError from 'es6-error'
 import uuid from 'uuid'
 
-import {getCardanoWalletFactory} from '../cardano'
+import {getCardanoWalletFactory} from '../cardano/getWallet'
 import {CardanoTypes, isYoroiWallet, YoroiWallet} from '../cardano/types'
 import {HWDeviceInfo} from '../hw'
 import {Logger} from '../logging'

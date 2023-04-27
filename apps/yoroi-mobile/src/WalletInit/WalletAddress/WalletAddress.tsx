@@ -2,8 +2,8 @@ import React from 'react'
 import {Linking, StyleSheet, TouchableOpacity, View, ViewStyle} from 'react-native'
 
 import {CopyButton, Text} from '../../components'
-import {NetworkId} from '../../yoroi-wallets'
 import {getNetworkConfigById} from '../../yoroi-wallets/cardano/networks'
+import {NetworkId} from '../../yoroi-wallets/types'
 
 export const WalletAddress = ({
   addressHash,

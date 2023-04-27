@@ -10,8 +10,9 @@ import globalMessages from '../i18n/global-messages'
 import {useWalletNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
 import {isEmptyString} from '../utils/utils'
-import {getCardanoBaseConfig, useBalances, useIsOnline, useSync} from '../yoroi-wallets'
 import {getCardanoNetworkConfigById} from '../yoroi-wallets/cardano/networks'
+import {getCardanoBaseConfig} from '../yoroi-wallets/cardano/utils'
+import {useBalances, useIsOnline, useSync} from '../yoroi-wallets/hooks'
 import {Amounts} from '../yoroi-wallets/utils'
 import {
   genCurrentEpochLength,

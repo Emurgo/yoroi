@@ -8,7 +8,7 @@ import globalMessages from '../i18n/global-messages'
 import {formatAdaWithText} from '../legacy/format'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
-import {asQuantity} from '../yoroi-wallets'
+import {asQuantity} from '../yoroi-wallets/utils'
 
 const ICON_DIM = 44
 

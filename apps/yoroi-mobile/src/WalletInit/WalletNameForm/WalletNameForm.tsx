@@ -7,7 +7,7 @@ import {Button, ProgressStep, TextInput} from '../../components'
 import globalMessages from '../../i18n/global-messages'
 import {spacing} from '../../theme'
 import {useWalletManager} from '../../WalletManager'
-import {useWalletNames} from '../../yoroi-wallets'
+import {useWalletNames} from '../../yoroi-wallets/hooks'
 import {getWalletNameError, validateWalletName} from '../../yoroi-wallets/utils/validators'
 
 type Props = {

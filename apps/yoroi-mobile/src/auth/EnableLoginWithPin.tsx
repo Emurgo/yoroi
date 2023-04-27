@@ -2,7 +2,7 @@ import React from 'react'
 
 import {LoadingOverlay} from '../components/LoadingOverlay'
 import {useSelectedWalletContext} from '../SelectedWallet'
-import {useDisableAllEasyConfirmation} from '../yoroi-wallets'
+import {useDisableAllEasyConfirmation} from '../yoroi-wallets/auth'
 import {CreatePinScreen} from './CreatePinScreen'
 
 export const EnableLoginWithPin = ({onDone}: {onDone: () => void}) => {

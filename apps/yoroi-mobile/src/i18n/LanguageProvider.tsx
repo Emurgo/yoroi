@@ -3,7 +3,8 @@ import {IntlProvider} from 'react-intl'
 import {NativeModules, Platform, Text} from 'react-native'
 import {useMutation, UseMutationOptions, useQuery, useQueryClient, UseQueryOptions} from 'react-query'
 
-import {parseSafe, useStorage} from '../yoroi-wallets'
+import {useStorage} from '../yoroi-wallets/storage'
+import {parseSafe} from '../yoroi-wallets/utils'
 import {LanguageCode, supportedLanguages, updateLanguageSettings} from './languages'
 import translations from './translations'
 

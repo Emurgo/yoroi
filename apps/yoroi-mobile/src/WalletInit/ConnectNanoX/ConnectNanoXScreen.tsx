@@ -11,8 +11,9 @@ import {errorMessages} from '../../i18n/global-messages'
 import LocalizableError from '../../i18n/LocalizableError'
 import {Logger} from '../../legacy/logging'
 import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
-import {DeviceId, DeviceObj, getHWDeviceInfo, NetworkId, WalletImplementationId} from '../../yoroi-wallets'
-import {Device} from '../../yoroi-wallets/types'
+import {getHWDeviceInfo} from '../../yoroi-wallets/cardano/hw'
+import {DeviceId, DeviceObj} from '../../yoroi-wallets/hw'
+import {Device, NetworkId, WalletImplementationId} from '../../yoroi-wallets/types'
 
 export type Params = {
   useUSB?: boolean

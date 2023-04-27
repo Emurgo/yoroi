@@ -7,7 +7,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
 import {COLORS} from '../../theme'
 import {isEmptyString} from '../../utils/utils'
-import {generateAdaMnemonic} from '../../yoroi-wallets'
+import {generateAdaMnemonic} from '../../yoroi-wallets/cardano/mnemonic'
 import {MnemonicExplanationModal} from '../MnemonicExplanationModal'
 import {WalletForm} from '../WalletForm'
 

@@ -8,7 +8,7 @@ import globalMessages from '../i18n/global-messages'
 import {COLORS} from '../theme'
 import {isEmptyString} from '../utils/utils'
 import {useWalletManager} from '../WalletManager'
-import {useWalletNames} from '../yoroi-wallets'
+import {useWalletNames} from '../yoroi-wallets/hooks'
 import {
   getWalletNameError,
   REQUIRED_PASSWORD_LENGTH,

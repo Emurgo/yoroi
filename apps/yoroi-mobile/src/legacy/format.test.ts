@@ -1,5 +1,5 @@
-import {asQuantity} from '../yoroi-wallets'
 import {PRIMARY_TOKEN} from '../yoroi-wallets/cardano/constants/mainnet/constants'
+import {asQuantity} from '../yoroi-wallets/utils'
 import {formatTokenAmount, formatTokenFractional, formatTokenInteger} from './format'
 
 const defaultCardanoAsset = PRIMARY_TOKEN

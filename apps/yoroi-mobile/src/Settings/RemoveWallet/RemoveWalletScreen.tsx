@@ -7,7 +7,7 @@ import {Button, Checkbox, Checkmark, Spacer, StatusBar, Text, TextInput} from '.
 import {useWalletNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
-import {useRemoveWallet, useWalletName} from '../../yoroi-wallets'
+import {useRemoveWallet, useWalletName} from '../../yoroi-wallets/hooks'
 
 export const RemoveWalletScreen = () => {
   const strings = useStrings()

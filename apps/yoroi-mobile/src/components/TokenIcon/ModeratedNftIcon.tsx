@@ -1,7 +1,7 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {YoroiNft, YoroiNftModerationStatus} from '../../yoroi-wallets'
+import {YoroiNft, YoroiNftModerationStatus} from '../../yoroi-wallets/types'
 import {NftPreview} from '../NftPreview'
 
 const ICON_SIZE = 32

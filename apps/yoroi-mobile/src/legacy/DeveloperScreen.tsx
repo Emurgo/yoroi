@@ -17,8 +17,10 @@ import {errorMessages} from '../i18n/global-messages'
 import {AppRoutes, useWalletNavigation} from '../navigation'
 import {useSelectedWalletContext} from '../SelectedWallet'
 import {isEmptyString} from '../utils/utils'
-import {generateAdaMnemonic, NetworkId, useCreateWallet} from '../yoroi-wallets'
 import {NetworkError} from '../yoroi-wallets/cardano/errors'
+import {generateAdaMnemonic} from '../yoroi-wallets/cardano/mnemonic'
+import {useCreateWallet} from '../yoroi-wallets/hooks'
+import {NetworkId} from '../yoroi-wallets/types'
 
 const routes: Array<{label: string; path: keyof AppRoutes}> = [
   {label: 'Storybook', path: 'storybook'},

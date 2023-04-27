@@ -6,7 +6,8 @@ import {StandardModal} from '../components'
 import globalMessages, {confirmationMessages} from '../i18n/global-messages'
 import {formatTokenWithText} from '../legacy/format'
 import {useSelectedWallet} from '../SelectedWallet'
-import {CATALYST, useBalances} from '../yoroi-wallets'
+import {CATALYST} from '../yoroi-wallets/cardano/utils'
+import {useBalances} from '../yoroi-wallets/hooks'
 import {Amounts, asQuantity} from '../yoroi-wallets/utils'
 
 export const InsufficientFundsModal = ({visible, onRequestClose}: {visible: boolean; onRequestClose: () => void}) => {

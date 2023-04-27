@@ -13,7 +13,7 @@ import {usePrefetchStakingInfo} from '../Dashboard/StakePoolInfos'
 import {defaultStackNavigationOptions, useWalletNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
 import {useWalletManager} from '../WalletManager'
-import {useWalletMetas} from '../yoroi-wallets'
+import {useWalletMetas} from '../yoroi-wallets/hooks'
 
 const MenuStack = createStackNavigator()
 

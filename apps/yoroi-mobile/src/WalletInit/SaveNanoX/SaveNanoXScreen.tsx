@@ -7,8 +7,8 @@ import image from '../../assets/img/ledger_2.png'
 import {showErrorDialog} from '../../dialogs'
 import {errorMessages} from '../../i18n/global-messages'
 import {useWalletNavigation, WalletInitRoutes} from '../../navigation'
-import {useCreateBip44Wallet} from '../../yoroi-wallets'
 import {NetworkError} from '../../yoroi-wallets/cardano/errors'
+import {useCreateBip44Wallet} from '../../yoroi-wallets/hooks'
 import {WalletNameForm} from '../WalletNameForm'
 
 export const SaveNanoXScreen = () => {

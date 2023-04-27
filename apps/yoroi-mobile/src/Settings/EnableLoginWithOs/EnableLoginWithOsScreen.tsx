@@ -6,7 +6,7 @@ import {StyleSheet} from 'react-native'
 import {OsAuthScreen} from '../../auth'
 import {Button} from '../../components'
 import globalMessages from '../../i18n/global-messages'
-import {useEnableAuthWithOs} from '../../yoroi-wallets'
+import {useEnableAuthWithOs} from '../../yoroi-wallets/auth'
 
 export const EnableLoginWithOsScreen = () => {
   const strings = useStrings()

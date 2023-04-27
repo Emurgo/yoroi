@@ -4,8 +4,8 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
 import {WalletManagerProvider} from '../../WalletManager'
-import {WalletManager, walletManager} from '../../yoroi-wallets'
 import {NetworkError} from '../../yoroi-wallets/cardano/errors'
+import {WalletManager, walletManager} from '../../yoroi-wallets/walletManager'
 import {WalletCredentialsScreen} from './WalletCredentialsScreen'
 
 storiesOf('WalletCredentialsScreen', module)

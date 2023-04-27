@@ -1,4 +1,4 @@
-import {AUTH_WITH_OS, AUTH_WITH_PIN, disableAllEasyConfirmation, getAuthSetting} from '../auth'
+import {AUTH_WITH_OS, AUTH_WITH_PIN, disableAllEasyConfirmation, getAuthSetting} from '../auth/auth'
 import {YoroiStorage} from '../storage'
 import {parseBoolean} from '../utils/parsing'
 

@@ -20,7 +20,7 @@ import {
 import {ReceiveScreen} from '../Receive/ReceiveScreen'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
-import {useWalletName} from '../yoroi-wallets'
+import {useWalletName} from '../yoroi-wallets/hooks'
 import {ModalInfo} from './ModalInfo'
 import {TxDetails} from './TxDetails'
 import {TxHistory} from './TxHistory'

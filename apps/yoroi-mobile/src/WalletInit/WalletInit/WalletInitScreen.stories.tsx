@@ -2,8 +2,9 @@ import {NavigationRouteContext} from '@react-navigation/native'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {NETWORKS, WALLETS} from '../../yoroi-wallets'
 import {NETWORK_ID, WALLET_IMPLEMENTATION_ID} from '../../yoroi-wallets/cardano/constants/mainnet/constants'
+import {NETWORKS} from '../../yoroi-wallets/cardano/networks'
+import {WALLETS} from '../../yoroi-wallets/cardano/utils'
 import {WalletInitScreen} from './WalletInitScreen'
 
 storiesOf('WalletInitScreen', module)

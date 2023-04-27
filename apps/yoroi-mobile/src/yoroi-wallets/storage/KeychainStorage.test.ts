@@ -1,4 +1,4 @@
-import {canAuthWithOS} from '../auth'
+import {canAuthWithOS} from '../auth/auth'
 
 describe('authOsEnabled', () => {
   describe('android', () => {

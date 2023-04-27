@@ -8,7 +8,7 @@ import {DashboardRoutes, defaultStackNavigationOptions, useWalletNavigation} fro
 import {useSelectedWallet} from '../SelectedWallet'
 import {DelegationConfirmation} from '../Staking'
 import {StakingCenter} from '../Staking/StakingCenter'
-import {useWalletName} from '../yoroi-wallets'
+import {useWalletName} from '../yoroi-wallets/hooks'
 import {Dashboard} from './Dashboard'
 
 const Stack = createStackNavigator<DashboardRoutes>()

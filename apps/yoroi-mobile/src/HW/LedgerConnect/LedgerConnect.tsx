@@ -13,7 +13,7 @@ import globalMessages, {confirmationMessages, ledgerMessages} from '../../i18n/g
 import LocalizableError from '../../i18n/LocalizableError'
 import {Logger} from '../../legacy/logging'
 import {COLORS, spacing} from '../../theme'
-import {BluetoothDisabledError, DeviceId, DeviceObj, RejectedByUserError} from '../../yoroi-wallets'
+import {BluetoothDisabledError, DeviceId, DeviceObj, RejectedByUserError} from '../../yoroi-wallets/hw'
 import {Device} from '../../yoroi-wallets/types'
 import {DeviceItem} from './DeviceItem'
 

@@ -11,19 +11,13 @@ import LocalizableError from '../../i18n/LocalizableError'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {isEmptyString} from '../../utils/utils'
-import {
-  DeviceId,
-  DeviceObj,
-  HARDWARE_WALLETS,
-  useAuthOsWithEasyConfirmation,
-  useSubmitTx,
-  walletManager,
-  withBLE,
-  withUSB,
-} from '../../yoroi-wallets'
+import {useAuthOsWithEasyConfirmation} from '../../yoroi-wallets/auth'
 import {WrongPassword} from '../../yoroi-wallets/cardano/errors'
 import {CardanoTypes} from '../../yoroi-wallets/cardano/types'
+import {useSubmitTx} from '../../yoroi-wallets/hooks'
+import {DeviceId, DeviceObj, HARDWARE_WALLETS, withBLE, withUSB} from '../../yoroi-wallets/hw'
 import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
+import {walletManager} from '../../yoroi-wallets/walletManager'
 import {Button, ButtonProps, ValidatedTextInput} from '..'
 import {Dialog, Step as DialogStep} from './Dialog'
 

@@ -1,4 +1,4 @@
-import {TokenInfo} from '../../../yoroi-wallets'
+import {TokenInfo} from '../../../yoroi-wallets/types'
 
 export const filterBySearch = (searchTerm: string) => {
   const searchTermLowerCase = searchTerm.toLocaleLowerCase()

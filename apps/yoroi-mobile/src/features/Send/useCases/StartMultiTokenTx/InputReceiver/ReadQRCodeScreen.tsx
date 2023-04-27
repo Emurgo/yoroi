@@ -4,7 +4,7 @@ import * as React from 'react'
 import {Text} from 'react-native'
 
 import {useSelectedWallet} from '../../../../../SelectedWallet'
-import {Quantity} from '../../../../../yoroi-wallets'
+import {Quantity} from '../../../../../yoroi-wallets/types'
 import {pastedFormatter} from '../../../../../yoroi-wallets/utils'
 import {useSend} from '../../../common/SendContext'
 

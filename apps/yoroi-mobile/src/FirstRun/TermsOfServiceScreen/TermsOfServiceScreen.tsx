@@ -10,7 +10,7 @@ import {useLanguage} from '../../i18n'
 import globalMessages from '../../i18n/global-messages'
 import {TermsOfService} from '../../Legal'
 import {FirstRunRouteNavigation} from '../../navigation'
-import {useAuthOsEnabled, useEnableAuthWithOs} from '../../yoroi-wallets'
+import {useAuthOsEnabled, useEnableAuthWithOs} from '../../yoroi-wallets/auth'
 
 export const TermsOfServiceScreen = () => {
   const strings = useStrings()
