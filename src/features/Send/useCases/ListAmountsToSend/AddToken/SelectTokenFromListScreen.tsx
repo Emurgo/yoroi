@@ -86,6 +86,7 @@ const SelectableAssetItem = ({tokenInfo, disabled, wallet}: SelectableAssetItemP
   const {tokenSelectedChanged, amountChanged} = useSend()
   const {spendable} = useTokenQuantities(tokenInfo.id)
   const navigation = useNavigation<TxHistoryRouteNavigation>()
+  const balances = useBalances(wallet)
 
   const onSelect = () => {
     tokenSelectedChanged(tokenInfo.id)
@@ -96,7 +97,8 @@ const SelectableAssetItem = ({tokenInfo, disabled, wallet}: SelectableAssetItemP
       navigation.navigate('send-list-amounts-to-send')
     }
     if (tokenInfo.kind === 'nft') {
-      amountChanged('1')
+      const quantity = Amounts.getAmount(balances, tokenInfo.id).quantity
+      amountChanged(quantity)
       navigation.navigate('send-list-amounts-to-send')
     } else {
       navigation.navigate('send-edit-amount')
